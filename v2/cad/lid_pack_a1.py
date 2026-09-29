@@ -63,7 +63,8 @@ for ref, c in P.TOGGLES:
     # 28.00 (20PN) from the panel, cap 14.00 wide, support plate 17.00, 39.40 to 44.00 tall, 49.00 open arc: the class bound taken.
     FACE.append((ref + "_GUARD", rect_c(c[0], c[1], 14.0, 49.0), 28.00, "APEM guard class p2: 28.00 closed (20PN), cap 14.00 x 49.00 arc (INFERRED for the CSG)"))
     FACE.append((ref + "_PLATE", rect_c(c[0], c[1], 17.0, 49.0), 2.00, "guard support plate 17.00 wide, 2.00 high (INFERRED)"))
-FACE.append(("SW_LIGHT", rect_c(P.LIGHT[1][0], P.LIGHT[1][1], 8.0, 20.0), 20.75, "NKK M2044 lever not read: bounded by the APEM figure (INFERRED)"))
+FACE.append(("SW_LIGHT", rect_c(P.LIGHT[1][0], P.LIGHT[1][1], 8.0, 20.0), 16.40,
+             "NKK Series M sheet, PDF page 3 ordering table: M2044SD3A01 = S bat .413 in (10.5) on D3 bushing .350 in (8.9); less the 3.0 plate"))
 # Floyd Bell MC-09-530-Q spec page 2: thread 0.46 in (11.7) through a panel up to 6.35, ring 0.31 in (7.9) thick, d 1.41 in (35.8), gasket
 # 0.062 in (1.57); tolerance +-0.03 in (0.76): max(11.7 - 3.0 plate, 7.9 + 1.57) + 0.76 = 10.23
 FACE.append(("BZ1", rect_c(P.SOUNDER[1][0], P.SOUNDER[1][1], 35.8, 35.8), 10.23, "Floyd Bell MC-09-530-Q p2: ring d 35.8; max(11.7-3.0, 7.9+1.57)+0.76"))

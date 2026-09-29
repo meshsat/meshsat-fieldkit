@@ -68,7 +68,7 @@ owner decision required.
 | Part | Height | From |
 |---|---|---|
 | SOS, EMCON, ZEROIZE toggles with guards (X -150) | 28.00 | APEM switch guards page 2 (series 20PN closed; the held series is for 12 mm bushings, the CSG for the 5000 is not held: a class bound); without a guard the lever stands 20.75 (APEM 5000 series, RS copy, page 13: -2V lever 14.75 over a 9.00 bushing, less the 3.0 plate) |
-| light toggle NKK M2044 (X -150) | 20.75 bound | not read from the NKK sheet; bounded by the APEM figure; under no lid item |
+| light toggle NKK M2044SD3A01 (X -150) | 16.40 | NKK Series M sheet, PDF page 3 (ordering table): S bat 10.5 on a D3 bushing 8.9, less the 3.0 plate; under no lid item |
 | sounder BZ1 | 10.23 | Floyd Bell MC-09-530-Q page 2: max(11.7 - 3.0, 7.9 + 1.57) + 0.76 |
 | headset jacks J_HSJ1, J_HSJ2 | **TBD** | U-174/U: no drawing held; their 30 x 30 plan is kept clear of every lid item |
 | XFRAME screw heads (the Xenarc rear frame) | 4.00 | cap head class (the r2 record's bound) |
@@ -286,7 +286,7 @@ ARCHITECTURE.md section 11. No new maker document was filed: Samsung's tablet pa
 
 Generated on the rented CAD box (Ubuntu 24.04.5 LTS, Python 3.12.3, the d7fit CAD venv whose `pip freeze` equals
 `v2/cad/requirements-cad.lock` line for line apart from its comment line; build123d 0.13.0) from commit `91f9f749` of
-`fnd/a1mech` (the solids and `cad/lid_pack_a1_cad.out`); the one later change to `lid_pack_a1.py` is a printed line of its
-retention rows, which the solids do not read. `lid_pack_a1.out` and the drawing set are regenerated on the runner at the
+`fnd/a1mech` (the solids and `cad/lid_pack_a1_cad.out`); the later changes to `lid_pack_a1.py` (printed lines, the QMX DC
+lead's route, the centre-of-mass rows) are not read by the solids. `lid_pack_a1.out` and the drawing set are regenerated on the runner at the
 branch's last commit (plain Python 3; matplotlib 3.10.9 for the sheets). AI review only; no qualified mechanical or battery engineer has reviewed this work (D-09's qualified battery
 review applies to both packs).
