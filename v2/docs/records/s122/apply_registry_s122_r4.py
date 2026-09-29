@@ -4,7 +4,9 @@ set 14's line (`1bafab8c`, where `apply_registry_s122.py` has already run and re
 documents `apply_docs_s122_r4.py`, `apply_docs_s122_r5.py` and `apply_docs_s122_r6.py` changed (round 5 re-issued this
 script for its diff: V2-SPEC.md lines 81, 83, 84 and 86 and correction 35, the role rule and the wider finder; round 6
 re-issued it again for its diff: V2-SPEC.md line 47 and correction 36, the fixtures and the figure scan of the gate;
-round 7 for correction 36's wording, the figure comparison, and the follow-up item of step 5).
+round 7 for correction 36's wording, the figure comparison, and the follow-up item of step 5; round 8 for the
+finder's clause of the scope statement (check-s122-7 B1), one list of escape classes read by both texts, and
+correction 36's unit wording).
 
 It writes `v2/ecad/tools/pcb_requirements.yaml`, `v2/ecad/tools/pcb_envelope.yaml` and
 `v2/ecad/tools/pcb_rules_coverage.yaml` and nothing else:
@@ -46,21 +48,37 @@ R1.BASE = BASE             # the helpers' diff base
 REG, ENV, COV = R1.REG, R1.ENV, R1.COV
 DOCS = {"v2/docs/V2-SPEC.md": "1e1547e1462904f7", "v2/docs/OPERATING-ENVELOPE.md": "a8e65995c594546b",
         "v2/docs/handover/DEFINITION-STATUS.md": "2db0ad36da754fa4"}
-REF = "v2/docs/records/s122/apply_docs_s122_r4.py, apply_docs_s122_r5.py, apply_docs_s122_r6.py and apply_docs_s122_r7.py"
+REF = ("v2/docs/records/s122/apply_docs_s122_r4.py, apply_docs_s122_r5.py, apply_docs_s122_r6.py, apply_docs_s122_r7.py "
+       "and apply_docs_s122_r8.py")
 FOLLOW_MARK = "(stream s122, the regression instrument's known escape classes"
+# round 8 (check-s122-7 B1 and m4): the escape classes, one text read by S-122's title sentence and by the follow-up
+# item's title, so the item lists every class the scope statement names; the finder's clause says what s122lib does
+# (a DS code of five digits is dropped by the literature filter, PN_LIT, not read)
+ESCAPES = (
+    "a number with no unit (a form factor such as 2242, a port such as USB 3, 'an NVMe 2280 socket'), a figure in a "
+    "form the scan does not read ('135-175 MHz', '25 \u00b0C'), and any figure off the closing list; a role noun outside "
+    "the rule's list (FET, source, generator, interface: 'the TPS22810 bias FET', 'the TPS22810 bias source', 'the "
+    "TLV75801 gate-bias generator'); a second role noun joined by 'and' with no part of its own ('the PCM2912A USB codec "
+    "and amplifier', read only as the USB codec); a qualifier holding a digit, which forms no role phrase ('the "
+    "CSD18510Q5B VBUS20 switch'); a part named after its load in words other than 'to the'; the one-word qualifier test, "
+    "which takes only active parts (U and Q designators) as the holders of a function and sets aside a value that names "
+    "'<qualifier> <noun>' as its load; a list item '<part> <noun> on <slot or rail>', judged by the target rule, not the "
+    "list rule; a stale part in a clause that states a date or a history word ('the TUSB2046B hub fitted since 26 "
+    "September 2026', 'the grade that was bought', 'named on the BOM'); a designator written beside a part it does not "
+    "carry ('the TLV75801 gate-bias LDO on PA_KEY (U17', 'the AP64500 buck on slots 1 and 3, U5 and U7'), which needs "
+    "lists of parts and designators paired in order ('the BME688 and BMI270 (U14, U15'); and the finder's shapes, which "
+    "still read some upper-case commits (1C187977), 'SMBJ15A/BAT54' as one token, a DS code of four digits (Maxim's "
+    "DS3231 shape) and the EMC test methods' names (CE102, RE102) as part numbers, which a judgement must then excuse, "
+    "and do not read a DS code of five digits (Dallas's DS12887 shape, which the literature filter drops), "
+    "'SMBJ15A-based' or a plural 'SMBJ15As', nor a maker's number after 'Lapp article' ('The Lapp article 0021917 "
+    "cable')")
 FOLLOW_TITLE = (
-    FOLLOW_MARK + "; the independent checks v2/docs/records/s122/checks/check-s122-5.md and check-s122-6.md, m2 and m4) "
+    FOLLOW_MARK + "; the independent checks v2/docs/records/s122/checks/check-s122-5.md to check-s122-7.md) "
     "Harden S-122's regression instrument (v2/docs/records/s122: s122lib.py's part-number finder, verdicts.py's role "
-    "rule and figure scan, close_s122.py's gate) against the escape classes its scope statement names: a role noun "
-    "outside ROLE_NOUN read as no role (check-s122-6's 'the TPS22810 bias FET', 'the TPS22810 bias source', 'the "
-    "TLV75801 gate-bias generator'); a stale part in a clause that states a date or a history word ('the TUSB2046B hub "
-    "fitted since 26 September 2026', 'the grade that was bought', 'named on the BOM'), for which a history excuse should "
-    "tie to a past-tense verb on the part itself; a designator written beside a part it does not carry ('the TLV75801 "
-    "gate-bias LDO on PA_KEY (U17', 'the AP64500 buck on slots 1 and 3, U5 and U7'), which needs a rule that pairs a "
-    "list of parts with a list of designators in order ('the BME688 and BMI270 (U14, U15'); a number with no unit and "
-    "any figure off the closing list ('an NVMe 2280 socket'); and the finder's conservative false hits and misses (an "
-    "upper-case commit, 'SMBJ15A/BAT54' as one token, a DS code of four or five digits, the EMC test methods' names (CE102, RE102), "
-    "'SMBJ15A-based', a plural 'SMBJ15As'). Open until each class is closed by a rule with a fixture that "
+    "rule and figure scan, close_s122.py's gate) against every escape class its scope statement (S-122's title) names: "
+    + ESCAPES + ". Where the fix is known it is: a history excuse tied to a past-tense verb on the part itself, and a "
+    "rule that pairs a list of parts with a list of designators in order. Open until each class is closed by a rule "
+    "with a fixture that "
     "close_s122.py runs, or carried with its reason.")
 FOLLOW_WHY = (
     "The documents S-122 names are the subject of S-122 and CFL-016; this item is about detecting a regression in them. "
@@ -112,16 +130,8 @@ S122_ADD4 = (
     "their keys rewritten and the assertions kept, must be refused by that comparison. test_close_s122.py turns each "
     "test of the role rule (forward, the one-word and two-word qualifiers, rails, word matching, the load phrase) and "
     "the history tie off in turn, and removes the comparison, and the gate then refuses. The instrument's known escape "
-    "classes, which the gate does not catch: a number with no unit (a form factor such as 2242, a port such as USB 3) "
-    "and any figure off the closing list; a role noun outside the rule's list (FET, source, generator, interface); a "
-    "stale part in a clause that states a date or a history word ('the TUSB2046B hub fitted since 26 September 2026'); "
-    "a designator written beside a part it does not carry ('the TLV75801 gate-bias LDO on PA_KEY (U17'), which needs "
-    "lists of parts and designators paired in order ('the BME688 and BMI270 (U14, U15'); the one-word qualifier test "
-    "takes only active parts (U and Q designators) as the holders of a function; a list item '<part> <noun> on <slot "
-    "or rail>' is judged by the target rule, not the list rule; and the finder's shapes, which still read an upper-case "
-    "commit, 'SMBJ15A/BAT54', a DS code of four or five digits (Maxim's DS3231 and DS12887 shapes among them) and the "
-    "EMC test methods' names (CE102, RE102) as part numbers, which a judgement must then excuse, and do not read 'SMBJ15A-based' or "
-    "a plural 'SMBJ15As'. These classes are carried by {FOLLOW}, which apply_registry_s122_r4.py opens at the next "
+    "classes, which the gate does not catch: " + ESCAPES + ". These classes are carried by {FOLLOW}, which "
+    "apply_registry_s122_r4.py opens at the next "
     "free S number with disposition PROCESS and in no record's waits_on: the documents do not hang on it. "
     "Confirming that each correction is true in substance remains the filed check's job.")
 
@@ -227,7 +237,8 @@ def main():
              "v2/docs/records/s122/checks/check-s122-6.md): line 81's 14.4 V node is bound to gen_sch_p.py's declared cell "
              "node CELL4 (the BQ4050 sheet's test condition dropped), a figure is compared by its values in order with "
              "their signs and units, and V2-SPEC.md's correction 36 says the scan reads figures with a unit and spelled "
-             "counts (apply_docs_s122_r7.py). This record stays FAIL and waits on S-122; this entry changes no result." % per)
+             "counts (apply_docs_s122_r7.py) and compares a unit only where the source states one (round 8, "
+             "apply_docs_s122_r8.py). This record stays FAIL and waits on S-122; this entry changes no result." % per)
     out = R1.append_entry(out, "CFL-016", entry)
     # CFL-016's notes: m7
     A_ = A

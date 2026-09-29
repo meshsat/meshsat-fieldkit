@@ -17,8 +17,45 @@ makers' part numbers; round 4 answers them and check-s122-3's three minors (belo
 and 5 (`checks/check-s122-4.md`, `checks/check-s122-5.md`) found a part in a role it does not hold and a rating the
 closing list carried unjudged; rounds 5 and 6 answer them (below). The independent check of round 6
 (`checks/check-s122-6.md`) found a figure bound to a source that did not state it and six minors; round 7 answers them
-under the coordinator's change of diagnosis (below). Every statement below about what was read is what one
+under the coordinator's change of diagnosis (below). The independent check of round 7 (`checks/check-s122-7.md`) found
+one phrase of the registry's scope statement false and five minors; round 8 answers it (below). Every statement below about what was read is what one
 of these scripts read, or a filed check's own words quoted with its file.
+
+## Round 8: one phrase of the scope statement (check-s122-7)
+
+The independent check of round 7 (`checks/check-s122-7.md`, filed byte for byte from the checker's report) found 1
+blocking and 5 minor items. It reads the 45 figures of the closing lines against their sources and reports "0
+mismatches", and replays the set 15 order (review D first, then S-122: the follow-up opens as S-135, CFL-016 reads PASS,
+0 errors).
+
+* **B1, the finder's clause of the scope statement.** Round 7's sentence said the finder reads "a DS code of four or
+  five digits (Maxim's DS3231 and DS12887 shapes among them)" as part numbers; `s122lib.PN_LIT` drops a five-digit DS
+  code, so that was false. The clause now reads, in the check's wording: "a DS code of four digits (Maxim's DS3231
+  shape) and the EMC test methods' names (CE102, RE102) as part numbers, which a judgement must then excuse, and do not
+  read a DS code of five digits (Dallas's DS12887 shape, which the literature filter drops), 'SMBJ15A-based' or a plural
+  'SMBJ15As'". The script's read-back compares S-122's title with the constant it appends, so the constant and the
+  read-back stay one text.
+* **m4, one list.** The escape classes are one constant, `apply_registry_s122_r4.ESCAPES`, which S-122's title sentence
+  and the follow-up item's title both read, so the item names every class the scope statement names. The list now also
+  carries check-s122-7 m3's two role mutants, each read TRUE here with its row's judgement ("the PCM2912A USB codec and
+  amplifier", read only as the USB codec; "the CSD18510Q5B VBUS20 switch", a qualifier holding a digit), a load named in
+  words other than "to the", the one-word test's two limits, the list item judged by the target rule, two figure forms
+  the scan does not read ("135-175 MHz", "25 °C"), and the finder's "Lapp article" miss (m5). "An upper-case commit"
+  is now "some upper-case commits (1C187977)" (the check: 1BAFAB8C is not read).
+* **m1.** Correction 36 now also says the closing check "compares a unit only where the source states one"
+  (`apply_docs_s122_r8.py`, 1 edit after reading that V2-SPEC.md is not a baseline; `apply_docs_s122_r7.py`'s committed
+  text is kept and extended, not rewritten; refuses a second run). The closure's evidence says the same.
+* **m2.** The closure's evidence names `apply_docs_s122_r7.py` and `apply_docs_s122_r8.py`. Round 7's README said it
+  named `_r7.py`; it did not (the check's m2), and that sentence of round 7's replay is corrected below.
+* **m3 and m5 stay minors.** m3's two mutants are in the list (above). Of m5: the "Lapp article" miss is in the list;
+  "135-175 MHz" and "25 °C" are in the list; the eight-digit date does not reproduce here (`s122lib.names` returns no
+  part for "on 20260929 the" or "20260929"; the report does not give the form it ran).
+* **Outputs.** Regenerated; only the header lines of `inventory.out` and `verdicts.out` move (V2-SPEC.md's sha); the
+  other seven are byte identical. `test_close_s122.py`: ALL PASS.
+
+The scope statement's list, as `ESCAPES` holds it:
+
+> a number with no unit (a form factor such as 2242, a port such as USB 3, 'an NVMe 2280 socket'), a figure in a form the scan does not read ('135-175 MHz', '25 °C'), and any figure off the closing list; a role noun outside the rule's list (FET, source, generator, interface: 'the TPS22810 bias FET', 'the TPS22810 bias source', 'the TLV75801 gate-bias generator'); a second role noun joined by 'and' with no part of its own ('the PCM2912A USB codec and amplifier', read only as the USB codec); a qualifier holding a digit, which forms no role phrase ('the CSD18510Q5B VBUS20 switch'); a part named after its load in words other than 'to the'; the one-word qualifier test, which takes only active parts (U and Q designators) as the holders of a function and sets aside a value that names '<qualifier> <noun>' as its load; a list item '<part> <noun> on <slot or rail>', judged by the target rule, not the list rule; a stale part in a clause that states a date or a history word ('the TUSB2046B hub fitted since 26 September 2026', 'the grade that was bought', 'named on the BOM'); a designator written beside a part it does not carry ('the TLV75801 gate-bias LDO on PA_KEY (U17', 'the AP64500 buck on slots 1 and 3, U5 and U7'), which needs lists of parts and designators paired in order ('the BME688 and BMI270 (U14, U15'); and the finder's shapes, which still read some upper-case commits (1C187977), 'SMBJ15A/BAT54' as one token, a DS code of four digits (Maxim's DS3231 shape) and the EMC test methods' names (CE102, RE102) as part numbers, which a judgement must then excuse, and do not read a DS code of five digits (Dallas's DS12887 shape, which the literature filter drops), 'SMBJ15A-based' or a plural 'SMBJ15As', nor a maker's number after 'Lapp article' ('The Lapp article 0021917 cable').
 
 ## Round 7: the instrument's scope, and one follow-up item (check-s122-6)
 
@@ -122,7 +159,8 @@ below), and opens ONE follow-up item for instrument hardening.
 * **m6.** `figures_uncovered` reads a `counts_ok` that is a string as covering nothing (no crash), and a hex address
   (0x22) is not an "NxM" figure.
 
-**The instrument's known escape classes** (what the gate does not catch; carried by the follow-up item):
+**The instrument's known escape classes** (what the gate does not catch; carried by the follow-up item; round 8
+keeps them in one list, `ESCAPES`, above, which adds to these):
 * a number with no unit (a form factor such as 2242, a port such as USB 3) and any figure off the closing list (the
   check's "an NVMe 2280 socket" on line 82, "`Y1` 16 MHz" on PANEL.md line 55);
 * a role noun outside `ROLE_NOUN` (the check's FET, source, generator, interface: "the TPS22810 bias FET", "the TPS22810
@@ -366,8 +404,9 @@ a circuit correction updates the status page and the records it names, not the b
 | `apply_docs_s122_r5.py` | round 5: V2-SPEC.md lines 81, 83, 84 and 86 and correction 35; 33 assertions held first; refuses a second run |
 | `apply_docs_s122_r6.py` | round 6: V2-SPEC.md line 47 and correction 36, after reading that V2-SPEC.md is not a baseline; 9 assertions held first; refuses a second run |
 | `apply_docs_s122_r7.py` | round 7: correction 36's wording (figures with a unit and spelled counts), after reading that V2-SPEC.md is not a baseline; refuses a second run |
+| `apply_docs_s122_r8.py` | round 8: correction 36 compares a unit only where the source states one; refuses a second run |
 | `test_close_s122.py` | rounds 6 and 7: the gate's fixture and mutation tests (T1 to T5); writes nothing |
-| `checks/` | the filed independent checks, `check-s122-1.md` to `check-s122-6.md` (rounds 1 to 6) |
+| `checks/` | the filed independent checks, `check-s122-1.md` to `check-s122-7.md` (rounds 1 to 7) |
 | `apply_registry_s122.py` | rounds 1 to 3's registry script (run at set 14, `9eaf406f`; refuses since) |
 | `apply_registry_s122_r4.py` | for the integrator: the rebinds for rounds 4 to 7 (re-issued in rounds 5 to 7 for their diffs), CFL-016's entry and note, S-122's title sentence, the envelope re-pin, and the follow-up item (round 7) |
 | `close_s122.py` | S-122's closure, for the integrator, last |
@@ -556,7 +595,8 @@ statements), and S-123.
     header line moved, 1011 sentences, 0 STALE, 0 UNJUDGED) and committed with the registry and the pages; a fixture
     check (not filed; the marker and the eight lines) refused while only staged, then committed; `test_close_s122.py`
     ALL PASS; `close_s122.py` closed S-122 (CFL-016 PASS, its waits_on dropped; the closing evidence names S-126 and
-    `apply_docs_s122_r5.py` to `_r7.py`; S-123 to S-126 still open) and refused a second run; after it
+    the apply scripts to `_r6.py`, not `_r7.py`, which round 8 corrects, check-s122-7 m2; S-123 to S-126 still open)
+    and refused a second run; after it
     `rules_lib.py requirements` 0 errors and the same 2 warnings, `rules_lib.py` 59 rules and 0 errors, the tests 72
     passed after the trace page's render, `claims_check` PASS, 91 of 91.
   * The first run of that sequence, on `c3490c9b`, refused at the registry script: its screen reads a standard's
@@ -660,7 +700,10 @@ statements), and S-123.
 If a document of the scope changes on main before step 5, re-run `inventory.py` and `verdicts.py`, judge the new text
 in `judgements.py`, and commit the outputs, or the closure refuses.
 
-**On set 15 (`fnd/int16`, tip `36bb1d12`), round 7 (check-s122-6 m5):**
+**On set 15 (`fnd/int16`, tip `36bb1d12`), round 7 (check-s122-6 m5); round 8: review D (`fnd/reviewdc`, `4795d5bf`)
+goes first, by its own run order (its `apply_findings.py` opens S-126 to S-134); its merge conflicts with `fnd/int16` in
+`v2/vendor/sources.txt` only, resolved by keeping both sides; this stream's registry script then opens its follow-up
+item as S-135:**
 1. Merge `fnd/s122c`, then `python3 v2/docs/records/s122/apply_registry_s122_r4.py`: it rebinds the records bound to
    V2-SPEC.md, OPERATING-ENVELOPE.md and DEFINITION-STATUS.md, re-pins the envelope and ENV-001, and opens the follow-up
    item at the next free S number (it prints the number).
