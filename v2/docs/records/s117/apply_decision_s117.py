@@ -52,7 +52,7 @@ REVERSED_BY = (
     "take the 800 kHz row on the same land with v2/docs/records/s117/apply_gen_sch_a_s117.py's calls changed: L2 "
     "XAL1010-332ME (3.3 uH), R219 169k 1 percent, R25 16.9k 1 percent, C26 3.3 nF, C235 1200 pF (R220 15k, C234 33 pF, C27 "
     "15 pF and C233 unchanged), FW-A17 written to set PWM_FREQ = 0b before the charge current is raised, the EMC row at 800 "
-    "kHz and C121 optional; only once board A's power FETs keep 2 x Qg(6 V) x 920 kHz under REGN's 50 mA (the FET item this "
+    "kHz and C121 optional; only once board A's power FETs keep 4 x Qg(6 V) x 920 kHz (2 x in buck mode alone) under REGN's 50 mA (the FET item this "
     "stream opens), or if R16 becomes 5 mOhm with an input limit above 6.35 A (Table 9-1, printed page 26, gives the 10 A limit "
     "for the 3.3 uH row and no 4.7 uH row).")
 ASK = ("run TI's 400 kHz row with a 4.7 uH inductor (191 kOhm on IADPT) or its 800 kHz row with 3.3 uH (169 kOhm), on the drawn "
@@ -61,8 +61,9 @@ RECOMMENDATION = (
     "THE 400 kHz ROW ON THE XAL1010 LAND. The XAL60xx land fails the charger's own input bound with either row's part; on the "
     "XAL1010 land both rows pass the inductor's ratings, and the 400 kHz row halves every switching term with the drawn FETs "
     "(6.6 to 8.6 W less at the bound, 4.4 to 5.6 W less at the front end's typical 5.0 A), asks half the gate current of REGN "
-    "and agrees with PWM_FREQ's power-on value without a host. It does not make the drawn FETs fit REGN: 46 to 60 mA at a "
-    "typical 400 kHz against the 50 mA minimum limit is the FET item's, opened beside this decision.")
+    "and agrees with PWM_FREQ's power-on value without a host. It does not make the drawn FETs fit REGN: 60 to 89 mA at "
+    "400 kHz with two FETs switching, 120 to 177 mA with all four, against the 50 mA minimum limit, is the FET item's "
+    "(S-118), answered by decision 57.")
 EVIDENCE = (
     "TI SLUSE66A (v2/vendor/ti/bq25731-datasheet.pdf) printed pages 6, 9, 11, 12, 15, 16, 25 to 28, 42, 43, 80 and 84 to 88; "
     "Coilcraft Documents 887-1 to 887-4 and 804-1 to 804-4 (v2/vendor/coilcraft/coilcraft-xal60xx-series.pdf, "

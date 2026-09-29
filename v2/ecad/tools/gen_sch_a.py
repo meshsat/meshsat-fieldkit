@@ -857,8 +857,43 @@ ic("U3", 33, "BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, 
  "1": "VBUS20", "2": "CH_ACN_F", "3": "CH_ACP_F", "4": "CHRG_OK", "5": "GND", "6": "CHG_ILIM", "7": "CH_VDDA", "8": "IADPT", "9": "IBAT", "10": "PSYS", "11": "PROCHOT", "12": "SDA", "13": "SCL",
  "14": "GND", "15": "NC", "16": "CH_COMP1", "17": "CH_COMP2", "18": "CH_CELL", "19": "CH_SRN_F", "20": "CH_SRP_F", "21": "NC", "22": "VBAT", "23": "CH_SW2", "24": "CH_HIDRV2", "25": "CH_BTST2", "26": "CH_LODRV2",
  "27": "GND", "28": "REGN", "29": "CH_LODRV1", "30": "CH_BTST1", "31": "CH_HIDRV1", "32": "CH_SW1", "33": "GND"}, "C2871872")
-for _qr, _g, _d, _s in (("Q7", "CH_HIDRV1", "CH_ACN", "CH_SW1"), ("Q8", "CH_LODRV1", "CH_SW1", "GND"), ("Q9", "CH_LODRV2", "CH_SW2", "GND"), ("Q10", "CH_HIDRV2", "VBAT", "CH_SW2")): nfet(_qr, "CSD18510Q5B 40 V N-FET", _g, _d, _s)
-part("L2", "Device", "L", "3.3uH XAL6030-332ME (Isat 12.2 A)", "L6060", {"1": "CH_SW1", "2": "CH_SW2"})
+# S-117'S FINDING F1 (stream s117, second issue, 29 September 2026, MESHSAT-1357; the S-117 F1 session decision in
+# tools/pcb_decisions.yaml): THE CHARGER'S FETS ARE CHOSEN FOR THE BQ25731'S OWN 6 V GATE DRIVE. All four were CSD18510Q5B
+# (40 V, 0.79 mOhm, about 75 nC of gate charge at 6 V, SLPS632), a part for a slow high-current switch. The BQ25731 drives
+# its FETs from REGN (SLUSE66A pin table pp.5 and 6); in buck mode Q7 and Q8 switch every cycle (Table 9-3, page 27), so
+# REGN supplies 2 x Qg x fS: 60 mA at a typical 400 kHz and up to 89 mA at the makers' maxima, against VREGN_REG's 0 to 60
+# mA condition and IREGN_LIM's 50 mA minimum (8.5, page 11; TI's own switching tests there use "MOSFET Qg = 4 nC"). And
+# TI's Equations 6 to 22 (pages 86 to 88) put 4.8 W in Q7 at the energy model's peak hour: the charger reads 0.943 there,
+# 0.92 to 0.96 across the readings, where the energy chain carries 0.98. Q7, the hard-switched high side of the buck leg,
+# becomes a CSD17578Q5A (30 V; Qg 10.3 nC at 6 V, Qgd 2.0 and Qgs 3.1 nC, Qrr 6.5 nC, 6.6 mOhm at 6 V: SLPS526 p.3 and
+# Figures 4 and 7, p.5). Q8, the synchronous low side, and Q9 and Q10, the boost leg that sits on in buck mode and switches
+# in the buck-boost region whose threshold TI does not state (9.3.10, page 27), become CSD17577Q5A (30 V; 16 nC at 6 V, Qrr
+# 8.2 nC, 3.9 mOhm at 6 V: SLPS516 p.3 and p.5). REGN then supplies 10.5 mA typical in buck mode and 36.5 mA at the
+# maxima with all four switching at 460 kHz; the charger reads 0.979 at the peak by TI's method (0.972 to 0.983 across the
+# readings; the day's energy-weighted 0.979 at entry E2), R16 and R17 counted, core loss excluded, and Q7 dissipates 1.0
+# to 1.5 W there (v2/docs/records/s117/efficiency.out). 30 V at VBUS20's 20.7 V maximum is inside derate.py's 20 percent
+# screen (24.8 V); the switch node's ringing is a layout and bench item. Both are TI's SON 5 x 6 mm (Q5A) with the Q5B's
+# pin order (1 to 3 source, 4 gate, the drain tab) on the PowerPAK SO-8 land this board already uses for the Q5B parts;
+# the land's fit to the Q5A pattern (SLPS526 and SLPS516 7.2, page 9) and both order codes are the parts stream's to
+# confirm. The datasheets are held back by TI's terms (v2/vendor/sources.txt; records/s117/fetch_held_back.py).
+for _qr, _g, _d, _s, _v in (("Q7", "CH_HIDRV1", "CH_ACN", "CH_SW1", "CSD17578Q5A 30 V N-FET"), ("Q8", "CH_LODRV1", "CH_SW1", "GND", "CSD17577Q5A 30 V N-FET"), ("Q9", "CH_LODRV2", "CH_SW2", "GND", "CSD17577Q5A 30 V N-FET"), ("Q10", "CH_HIDRV2", "VBAT", "CH_SW2", "CSD17577Q5A 30 V N-FET")): nfet(_qr, _v, _g, _d, _s)
+# S-117 (stream s117, 29 September 2026, MESHSAT-1357; the S-117 session decision in tools/pcb_decisions.yaml): THE
+# CHARGER RUNS TI'S 400 kHz ROW ON A 4.7 uH XAL1010. The BQ25731 reads its switching frequency and its inductance from
+# the resistor on IADPT before it starts (SLUSE66A 9.3.11 and Table 9-4, printed page 27). The 3.3 uH XAL6030-332ME drawn
+# here until today (Isat 12.2 A, Irms 6.0 / 8.0 A at 20 / 40 C rise, 20.81 mOhm maximum; Coilcraft 887-1) sits under the
+# charger's own input bound: the front end's 5.7 A at 20.7 V into a pack at its 10.0 V CUV puts 11.8 A through this
+# inductor, where it fails SLUSE66A Equation 2 (ISAT >= ICHG + IRIPPLE / 2, page 85) at either row and runs at 148
+# percent of its 40 C rise current (103 to 104 percent already with the pack at its 14.4 V nominal). The XAL1010-472ME (4.7 uH,
+# Isat 25.4 A, Irms 17.5 / 24.0 A, 5.70 mOhm maximum; Coilcraft 804-1), on the land L1 and L8 already use, peaks at 14.1
+# A worst at that bound (L at -20 percent with its fall, 340 kHz) and carries 49 percent of its 40 C rise current.
+# 400 kHz and not 800 kHz: with the drawn CSD18510Q5B FETs (about 75 nC of gate charge at 6 V, SLPS632 Figure 4) the
+# gate drive at 800 kHz asks 93 to 120 mA of REGN, whose current limit is 50 mA minimum (8.5, page 11), and every
+# switching term doubles; and 400 kHz is PWM_FREQ's power-on value (Table 9-8, page 43), so the resistor, the register
+# and the compensation agree before any host write. C121's 10 nF is the CDIFF 10.2.2.2 asks for at 400 kHz. Every figure:
+# v2/docs/records/s117/charger_l_f.out. LAYOUT, OWED: the XAL1010 body is 11.3 x 10.0 mm and 10.0 mm tall where the
+# XAL60xx seat of gen_pcb_a3.py's CHQ row was sized for a 7.15 x 7.35 mm courtyard, so board A's layout writer re-seats
+# L2 in the charger's row (with S-115's pass), and seats R219, R220 and C233 to C235 with the charger's passives.
+part("L2", "Device", "L", "4.7uH XAL1010-472ME (Isat 25.4 A)", "L1010", {"1": "CH_SW1", "2": "CH_SW2"})
 r("R16", "10mOhm 1% 2512 (RAC, input current sense)", "VBUS20", "CH_ACN", "RS2512"); r("R17", "5mOhm 1% 2512 (RSR, charge current sense)", "VBAT", "CELL_FUSED", "RS2512")
 # S-04, 26 September 2026: R17 now carries the pack's DISCHARGE current as well as its charge current, because the
 # system is on its converter side. At the pack's 10 A typical it dissipates 0.50 W, at the 18 A peak 1.62 W and at
@@ -907,7 +942,21 @@ for k in range(3): c("C%d" % (20 + k), "10u 50V X7R 1210", "VBUS20", "GND", "C12
 c("C190", "10n", "CH_ACN", "GND", lcsc="C57112"); c("C191", "1n", "CH_ACN", "GND", lcsc="C1588")
 for k in range(3): c("C%d" % (23 + k), "22u 25V 1210", "VBAT", "GND", "C1210")   # the charger's VSYS capacitors, at Q10's drain (S-04, 26 Sep 2026)
 r("R19", "16.5k 1%", "REGN", "CHG_ILIM"); r("R20", "34.8k 1%", "CHG_ILIM", "GND"); part("Q6", "Transistor_FET", "2N7002", "2N7002: CHG_INHIBIT high = ILIM_HIZ low = charger in HiZ", "SOT23", {"1": "CHG_INHIBIT", "2": "GND", "3": "CHG_ILIM"}); r("R21", "4.7k", "CHG_INHIBIT", "GND")   # S-08, 26 September 2026: 4.7k, see the pull-down note at U26
-r("R22", "10k", "CHRG_OK", "+3V3"); r("R23", "10k", "PROCHOT", "+3V3"); r("R24", "10k (PSYS load)", "PSYS", "GND"); r("R25", "10k", "CH_COMP1", "CH_COMP1C"); c("C26", "10n", "CH_COMP1C", "GND"); c("C27", "1n", "CH_COMP2", "GND")
+r("R22", "10k", "CHRG_OK", "+3V3"); r("R23", "10k", "PROCHOT", "+3V3"); r("R24", "10k (PSYS load)", "PSYS", "GND")
+# S-117 (29 September 2026): THE COMPENSATION AND THE INDUCTANCE RESISTOR OF TI'S 400 kHz ROW. SLUSE66A 9.3.12 and Table
+# 9-5 (printed page 27), the row for 4.7 uH at 400 kHz, drawn as Figure 9-2 draws it (page 28; its names R1, C11, C12,
+# R2, C21 and C22 are TI's, not this board's references): COMP1 = R1 40.2 kOhm in series with C11 4.7 nF to ground, and
+# C12 33 pF from the pin to ground; COMP2 = R2 15 kOhm in series with C21 680 pF, and C22 15 pF from the pin to ground. "It is not recommended to change the compensation network value due to the
+# complexity of various operation modes." Here R25 and C26 are R1 and C11, C234 is C12, R220 and C235 are R2 and C21, and
+# C27 is C22 (TI's names on the right). Until today they were 10k with 10 nF (no C12) and 1 nF alone, the values of neither row (round 4's O-24).
+r("R25", "40.2k 1%", "CH_COMP1", "CH_COMP1C"); c("C26", "4.7n", "CH_COMP1C", "GND"); c("C234", "33p", "CH_COMP1", "GND")
+r("R220", "15k 1%", "CH_COMP2", "CH_COMP2C", lcsc="C22809"); c("C235", "680p", "CH_COMP2C", "GND", lcsc="C30816"); c("C27", "15p NP0", "CH_COMP2", "GND")
+# IADPT (pin 8): 9.3.11 and Table 9-4, 191 or 187 kOhm for 4.7 uH, and "A surface mount chip resistor with +/-3% or better
+# tolerance must to be used for an accurate inductance detection". REQUIRED of the part the parts stream codes: 1 percent,
+# 0603, 100 ppm/C or better, so 1 plus 0.65 percent stays inside 3 percent from -40 to +85 C. The pin table (page 6) asks "a 100-pF or less ceramic decoupling capacitor
+# from IADPT pin to ground" and 8.5 gives CIADPT_MAX 100 pF (page 12): 33 pF C0G, C234's part, stays under it with its 5
+# percent and the land's few picofarads. TP19 stays on the net; nothing on this board reads IADPT as a current monitor.
+r("R219", "191k 1%", "IADPT", "GND"); c("C233", "33p", "IADPT", "GND")
 # S-03, 26 September 2026 (W2 F-CH-01, adjudication A02): THE STRAP READ 2S. 60.4k over 40.2k puts CELL_BATPRESZ at
 # 39.96 percent of VDDA (39.48 to 40.44 at 1 percent), inside SLUSE66A 8.5's VCELL_2S window of 35 / 40 / 48.5
 # percent, so the charger loaded 8.4 V, a 12 V SYSOVP and would latch off against a 4S pack. Swapping the two gives
@@ -1641,7 +1690,7 @@ SECTIONS = [("PACK NODE OVER THE DOCK BLOCK (32.56): 9 A PINS, PRE-CHARGE, 25 A 
             ("MAIN POWER CONTROL LTC2954", ["U1", "C4", "R2", "R184", "R3", "R4", "C152", "Q1", "R5", "J_MAINSW"]),
             ("FRONT END: LM5176 FROM THE 9 TO 36 V INPUT TO THE 20 V CHARGE BUS", ["U2", "Q2", "Q3", "Q4", "Q5", "L1", "R6", "R7", "R8", "C147", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R11", "R12", "R13", "R14", "R15", "C11", "C12", "C13", "C14", "C15", "R119", "D2", "D9", "D10", "C163", "C178", "C179", "C180"] + ["C%d" % k for k in range(181, 190)] + ["C192", "C199", "C200"] + ["C%d" % k for k in range(201, 207)] + ["D19", "C207"]
              + ["R195", "U34", "R196", "C210", "C211", "C212", "R197", "Q36", "R200", "D22", "C214", "R198", "R199", "R206", "C213", "Q37", "R201", "Q38", "R202", "R203", "R204", "R205"]),   # fourth fix-up: VISNS's 2 k and the restart guard (R4A-N15)
-            ("CHARGER BQ25731: 4S FROM THE 20 V BUS, SYSTEM ON VSYS (VBAT), PACK BEYOND RSR, I2C 0x6B", ["U3", "Q7", "Q8", "Q9", "Q10", "L2", "R16", "R17", "C16", "C17", "C18", "R18", "C19", "C20", "C21", "C22", "C190", "C191", "C23", "C24", "C25", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27"]),
+            ("CHARGER BQ25731: 4S FROM THE 20 V BUS, SYSTEM ON VSYS (VBAT), PACK BEYOND RSR, I2C 0x6B", ["U3", "Q7", "Q8", "Q9", "Q10", "L2", "R16", "R17", "C16", "C17", "C18", "R18", "C19", "C20", "C21", "C22", "C190", "C191", "C23", "C24", "C25", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C234", "R220", "C235", "C27", "R219", "C233", "R26", "R27"]),
             ("SLOT RAIL S1: AP64500 5.1 V + INA226 0x40", ["U4", "L3", "C28", "C29", "C30", "C31", "C32", "C33", "R28", "R29", "R30", "R31", "R45", "R129", "C112", "U8", "J_5V_S1"]),
             ("SLOT RAIL S2: LM5176 5.1 V (7.2 A MINIMUM LIMIT) + INA226 0x41", ["U5", "Q28", "Q29", "Q30", "Q31", "L4", "R32", "R33", "R46", "C133", "R130", "C113", "C134", "C135", "C136", "C34", "C137", "D5", "D6", "R35", "R170", "R171", "C35", "C36", "C37", "C38", "C39", "C164", "C165", "C166", "C193", "C219", "R172", "R173", "R174", "C138", "R175", "R176", "C139", "R34", "U9", "J_5V_S2"]),
             ("SLOT RAIL S3: AP64500 5.1 V + INA226 0x44", ["U6", "L5", "C40", "C41", "C42", "C43", "C44", "C45", "R36", "R37", "R38", "R39", "R47", "R131", "C114", "U10", "J_5V_S3"]),
