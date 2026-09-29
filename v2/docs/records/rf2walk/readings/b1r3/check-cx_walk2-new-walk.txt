@@ -1,0 +1,11 @@
+CX10 CX9 latch on B + a bench SW on B's TX_INHIBIT_n           EMCON_HW      FAIL      B U30 pin 4 (74LVC1G34 buffer) on U30_DRV, reached through R55 330R 1%: a second BUF output on the net (74LVC1G34 buffer) | with board C unpowered (the line's source ther
+CX10 CX9 latch on B + a bench SW on B's TX_INHIBIT_n           TX_INHIBIT_n  FAIL      B U30 pin 4 (74LVC1G34 buffer) on U30_DRV, reached through B J_PANEL pin 11 = C J_PANEL pin 11 > D23 diode > C J_PANEL pin 8 = B J_PANEL pin 8 > R55 330R 1%: a second BUF
+    _switch_board(B) = False  sources EMCON_HW on B: []
+CX10b CX9 latch on B + SW on B from TX_INHIBIT_n to +3V3_DEV   EMCON_HW      FAIL      B U30 pin 4 (74LVC1G34 buffer) on U30_DRV, reached through R55 330R 1%: a second BUF output on the net (74LVC1G34 buffer) | with board C unpowered (the line's source ther
+CX10b CX9 latch on B + SW on B from TX_INHIBIT_n to +3V3_DEV   TX_INHIBIT_n  FAIL      B SW_X pin 1 (EMCON locking toggle (closed = TX inhibi) on TX_INHIBIT_n: a switch contact ties the net to +3V3_DEV when closed, against the level EMCON forces | B U30 pin
+CX11 legit 2nd buffer on C (+3V3 made on C) behind 330R        EMCON_HW      PASS      
+CX11 legit 2nd buffer on C (+3V3 made on C) behind 330R        TX_INHIBIT_n  PASS      
+CX12 latch on C from C's own +3V3                              EMCON_HW      PASS      
+CX12 latch on C from C's own +3V3                              TX_INHIBIT_n  PASS      
+CX13 EMCON_HW made on B from TX_INHIBIT_n (toggle on C)        EMCON_HW      FAIL      B U30 pin 4 (74LVC1G34 buffer) on EMCON_HW: a second BUF output on the net (74LVC1G34 buffer) | with no source on the line at all, boards B: EMCON_HW rises to 3.46 V (the
+CX13 EMCON_HW made on B from TX_INHIBIT_n (toggle on C)        TX_INHIBIT_n  PASS      

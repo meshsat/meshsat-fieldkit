@@ -10,8 +10,11 @@ FAIL  R551 between  and  (expected +5V_DEV and RB_TD_CT)
 FAIL  net RB_TD_CT carries  (expected U543 pin 4 and one R551 pin)
 PASS  U543 pin 3 (MR) open: 'unconnected-(U543-NC-Pad3)'
 FAIL  +3V3_CM1 loads name every logic part on it (4 on the netlist; missing U112, U113, U114, U115)
+FAIL  +3V3_CM1 loads name its LED feeds Q101, R148 (missing Q101, R148)
 FAIL  +3V3_CM2 loads name every logic part on it (6 on the netlist; missing U212, U213, U214, U215, U220, U554)
+FAIL  +3V3_CM2 loads name its LED feeds Q201, R248 (missing Q201, R248)
 FAIL  +3V3_CM3 loads name every logic part on it (14 on the netlist; missing U312, U313, U314, U315, U544, U545, U546, U547, U548, U549, U550, U551, U552, U553)
+FAIL  +3V3_CM3 loads name its LED feeds Q301, R348 (missing Q301, R348)
 FAIL  +3V3_ZB loads name R536, R537, R538 (J_ZBDBG1, J_ZBDBG2, U13, U14)
 
-RESULT: 10 check(s) fail
+RESULT: 13 check(s) fail
