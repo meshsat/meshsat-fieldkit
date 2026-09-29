@@ -1,0 +1,104 @@
+THE LID PACK'S BQ4050 WORDS UNDER A CURRENT-SCALE CALIBRATION OF k = 2 (gauge_scale.py, stream a1elec, MESHSAT-1357)
+PROTOTYPE DESIGN; AI arithmetic; every true value a design requirement, NOT_YET_TESTED. Source: TI SLUUAQ3A (sha256 525d16b2bdee44e5...),
+Table 14-1 as its text layer prints it; the page is the PDF page, which is the manual's printed page number.
+
+1. WHY k: the two design-capacity rows and the pack
+   0x444d Design Capacity mAh      max  32767 mAh : the pack's  40200 mAh is ABOVE its maximum; at k = 2 it is written  20100 (61.3 percent of the maximum)
+   0x444f Design Capacity cWh      max  32767 cWh : the pack's  57888 cWh is ABOVE its maximum; at k = 2 it is written  28944 (88.3 percent of the maximum)
+   With the specification's typical 3.45 Ah a cell the pack is 41,400 mAh and 59,616 cWh: written 20,700 and 29,808 at k = 2.
+   k = 2 is the smallest integer that fits both; the internal current range of an I2 word (-32,768 to 32,767) then spans
+   -65.5 to +65.5 A true, above the pack path's 25 A blade, so no current the path can carry is clipped.
+
+2. THE CALIBRATION WORDS (written by the gauge's own current calibration, not by hand)
+   0x4006 CC Gain          type F4, range 0.1 to 4.0, TI default 3.58422 (page 185)
+   0x400a Capacity Gain    type F4, range 29800.0 to 1190000.0, TI default 1069035.256 (page 185)
+   Procedure (SLUUBF9 3.3.3, TI's EVM guide; SLUA760 2.3 for the scaled case): apply a known current, enter its value
+   in Applied Current. For k = 2 the value entered is half the applied true current (apply -4000 mA through the pack
+   path, enter -2000; SLUA760's own example). The firmware
+   then computes both gains so that its unit is 2 mA; their ratio stays TI's (1069035.256 / 3.58422 = 298261.6).
+   The manual does not state how CC Gain relates to the sense resistance, so its value after calibration is READ BACK
+   at commissioning and must lie inside the row's range; that read-back is a bench item, not shown here.
+
+3. EVERY WORD IN A CURRENT, CHARGE, ENERGY OR POWER UNIT (63 rows parsed from Table 14-1)
+   address type name                           unit       min      max  TI dflt     true  WRITTEN kind  context and why
+   0x43c6  U1   Deadband                       mA           0      255        3        4        2 A     [Calibration Current Deadband | Model, p.186] deadband: TI's 3 mA rounded UP to the next internal step (4 mA true), the side that ignores noise
+   0x440d  I2   Init Discharge Set             mAh          0    32767      150      300      150 I     [Settings BTP, p.187] BTP init discharge set: BTP is not used by the kit (no pin to the host); TI's 150 mAh x 2 kept in proportion
+   0x440f  I2   Init Charge Set                mAh          0    32767      175      350      175 I     [Settings BTP, p.187] BTP init charge set: as above
+   0x4497  I2   Threshold                      mA      -32768    32767     6000    10000     5000 P     [Protections OCC1, p.187] OCC1: the lid's U3B ChargeCurrent 8.0 A plus 25 percent; 0.83 A a cell against the 35E's 2.0 A maximum (spec 3.7); delay 2 s as the base (base 4S6P image: 5000)
+   0x449a  I2   Threshold                      mA      -32768    32767     8000    12000     6000 P     [Protections OCC2, p.187] OCC2: 1.0 A a cell, under the cell's 2.0 A; TI's delay kept
+   0x449d  I2   Recovery Threshold             mA      -32768    32767     -200     -200     -100 A     [Protections OCC, p.187] OCC recovery: TI's -200 mA as the true value
+   0x44a0  I2   Threshold                      mA      -32768    32767    -6000   -20000   -10000 P     [Protections OCD1, p.187] OCD1: board PL's path is board P's (F1 25 A, Q1 and Q2 CSD17570Q5B, R10 2 mOhm), so the base's -20 A, 2 s; the cells would allow 12 x 8 A (base 4S6P image: -20000)
+   0x44a3  I2   Threshold                      mA      -32768    32767    -8000   -24000   -12000 P     [Protections OCD2, p.188] OCD2: as the base, -24 A, 1 s (TBD by the reviewer there as here) (base 4S6P image: -24000)
+   0x44a6  I2   Recovery Threshold             mA      -32768    32767      200      200      100 A     [Protections OCD, p.188] OCD recovery: TI's 200 mA as the true value
+   0x44cf  I2   Charge Threshold               mA      -32768    32767     2000     2000     1000 A     [Protections PTO, p.188] PTO charge threshold: TI's default as the true value (the precharge timeout's current)
+   0x44d1  I2   Suspend Threshold              mA      -32768    32767     1800     1800      900 A     [Protections PTO, p.188] PTO suspend threshold: TI's default as the true value
+   0x44d5  I2   Reset                          mAh          0    32767        2        2        1 A     [Protections PTO, p.188] PTO reset: TI's 2 mAh; written 1 (2 mAh true)
+   0x44d7  I2   Charge Threshold               mA      -32768    32767     2500     8000     4000 C     [Protections CTO, p.188] CTO charge threshold: the lid's charge current, so the charge timeout counts the lid's fast charge
+   0x44d9  I2   Suspend Threshold              mA      -32768    32767     2000     6000     3000 C     [Protections CTO, p.188] CTO suspend threshold: 75 percent of the charge current
+   0x44dd  I2   Reset                          mAh          0    32767        2        2        1 A     [Protections CTO, p.188] CTO reset: TI's 2 mAh; written 1
+   0x44df  I2   Threshold                      mAh     -32768    32767      300     3000     1500 S     [Protections OC, p.188] OC (over-charge) threshold: TI's 300 mAh on its 4400 mAh default is 6.8 percent; 3000 mAh is 7.5 percent of 40,200
+   0x44e1  I2   Recovery                       mAh     -32768    32767        2        2        1 A     [Protections OC, p.188] OC recovery: TI's 2 mAh; written 1
+   0x44e9  I2   Threshold                      mA      -32768    32767      500     1000      500 P     [Protections CHGC, p.189] CHGC (charge above the requested current): 1.0 A true, 12.5 percent of the 8.0 A request
+   0x44ec  I2   Recovery Threshold             mA      -32768    32767      100      200      100 A     [Protections CHGC, p.189] CHGC recovery: TI's 100 mA doubled with the threshold
+   0x44ef  I2   Threshold                      mA      -32768    32767       50      500      250 P     [Protections PCHGC, p.189] PCHGC (precharge above request): 500 mA true, 12 percent of the 4.2 A precharge
+   0x44f2  I2   Recovery Threshold             mA      -32768    32767       10       20       10 A     [Protections PCHGC, p.189] PCHGC recovery: TI's 10 mA as true, written 10 (20 mA true), the next step up
+   0x44ff  I2   Threshold                      mA      -32768    32767    10000    16000     8000 I     [Permanent Fail SOCC, p.189] SOCC (permanent fail): 1.33 A a cell; inert while Enabled PF A[SOCC] = 0 (the base's image, until Q-P3)
+   0x4502  I2   Threshold                      mA      -32768    32767   -10000   -30000   -15000 I     [Permanent Fail SOCD, p.189] SOCD (permanent fail): above OCD2; inert while Enabled PF A[SOCD] = 0 (until Q-P3)
+   0x4514  I2   Check Current                  mA           0    32767       10       10        5 A     [Permanent Fail VIMR, p.189] VIMR check current: TI's 10 mA as true (acts only if PF B is enabled, Q-P3)
+   0x451d  I2   Check Current                  mA           0    32767       50       50       25 A     [Permanent Fail VIMA, p.189] VIMA check current: TI's 50 mA as true (as above)
+   0x4522  I2   OFF Threshold                  mA           0      500        5       10        5 A     [Permanent Fail CFET, p.189] CFET OFF threshold: 10 mA true, the next step above TI's 5 mA, so a leaking twelve-string pack is not a false FET fail
+   0x4525  I2   OFF Threshold                  mA        -500        0       -5      -10       -5 A     [Permanent Fail DFET, p.189] DFET OFF threshold: as CFET
+   0x4528  I2   Threshold                      mA           0      255        5       10        5 A     [Permanent Fail FUSE, p.189] FUSE threshold: 10 mA true, as CFET
+   0x453e  I2   Current Low                    mA           0    32767      132     4000     2000 C     [Advanced Charge Low Temp | Algorithm Charging, p.190] low temperature range (T1 to T2, 1 to 12 C) charge current, low voltage band: 0.33 A a cell
+   0x4540  I2   Current Med                    mA           0    32767      352     4000     2000 C     [Advanced Charge Low Temp | Algorithm Charging, p.190] low temperature range, medium band
+   0x4542  I2   Current High                   mA           0    32767      264     4000     2000 C     [Advanced Charge Low Temp | Algorithm Charging, p.190] low temperature range, high band
+   0x4546  I2   Current Low                    mA           0    32767     1980     8000     4000 C     [Advanced Charge Standard Temp | Algorithm Charging, p.190] standard temperature range charge current, low band: the U3B setting, 0.67 A a cell
+   0x4548  I2   Current Med                    mA           0    32767     4004     8000     4000 C     [Advanced Charge Standard Temp | Algorithm Charging, p.190] standard temperature range, medium band
+   0x454a  I2   Current High                   mA           0    32767     2992     8000     4000 C     [Advanced Charge Standard Temp | Algorithm Charging, p.190] standard temperature range, high band
+   0x454e  I2   Current Low                    mA           0    32767     1012     4000     2000 C     [Advanced Charge High Temp | Algorithm Charging, p.190] high temperature range (T3 to T4, 42 to 43 C), low band
+   0x4550  I2   Current Med                    mA           0    32767     1980     4000     2000 C     [Advanced Charge High Temp | Algorithm Charging, p.190] high temperature range, medium band
+   0x4552  I2   Current High                   mA           0    32767     1496     4000     2000 C     [Advanced Charge High Temp | Algorithm Charging, p.190] high temperature range, high band
+   0x4556  I2   Current Low                    mA           0    32767     2508     8000     4000 C     [Advanced Charge Rec Temp | Algorithm Charging, p.190] recommended temperature range (T2 to T5 region per 4.2), low band
+   0x4558  I2   Current Med                    mA           0    32767     4488     8000     4000 C     [Advanced Charge Rec Temp | Algorithm Charging, p.190] recommended temperature range, medium band
+   0x455a  I2   Current High                   mA           0    32767     3520     8000     4000 C     [Advanced Charge Rec Temp | Algorithm Charging, p.190] recommended temperature range, high band
+   0x455c  I2   Current                        mA           0    32767       88     4200     2100 C     [Pre-Charging | Advanced Charge | Algorithm, p.190] pre-charging current: 0.1C of 12 x 3.45 Ah = 4.14 A, rounded up to 4.2 A (the base's 1.0 A is 0.1C of 3P)
+   0x455e  I2   Current                        mA           0    32767       44        0        0 C     [Advanced Charge Maintenance | Algorithm Charging, p.190] maintenance charging current: 0, no maintenance charge after termination (4.10); the host decides a recharge
+   0x456c  I2   Charge Term Taper Current      mA           0    32767      250      800      400 C     [Advanced Charge Termination | Algorithm Config, p.191] charge term taper current: 0.02C of 40.2 Ah (TI's 250 mA is 0.057C of its 4400 mAh default); PROVISIONAL until the bench's termination test
+   0x4575  I2   CCC Current Threshold          mA           0    32767     3520     8000     4000 I     [Advanced Charge Charge Loss | Algorithm Compensation, p.191] CCC current threshold: inert while Configuration[CCC] = 0 (4.x, the base's image does not enable it)
+   0x4586  I2   Dsg Current Threshold          mA      -32768    32767      100      100       50 A     [Gas Gauging | Current | Thresholds, p.191] Dsg Current Threshold: TI's 100 mA as true
+   0x4588  I2   Chg Current Threshold          mA      -32768    32767       50       50       25 A     [Gas Gauging | Current | Thresholds, p.191] Chg Current Threshold: TI's 50 mA as true
+   0x458a  I2   Quit Current                   mA           0    32767       10       10        5 A     [Gas Gauging | Current | Thresholds, p.191] Quit Current: TI's 10 mA as true
+   0x444d  I2   Design Capacity mAh            mAh          0    32767     4400    40200    20100 S     [Gas Gauging Design | Thresholds, p.191] Design Capacity mAh: 12 x 3,350 mAh at the specification minimum (the base's 4S6P writes 20,100 unscaled) (base 4S6P image: 20100)
+   0x444f  I2   Design Capacity cWh            cWh          0    32767     6336    57888    28944 S     [Gas Gauging Design, p.191] Design Capacity cWh: 40.2 Ah x 14.40 V (Design Voltage 14400 mV, unscaled) (base 4S6P image: 28944)
+   0x4100  I2   Learned Full Charge Capacity   mAh          0    32767     4400    40200    20100 S     [Gas Gauging State, p.191] Learned Full Charge Capacity, initial: the design capacity
+   0x4602  I2   OverLoad Current               mA           0    32767     5000    10000     5000 C     [Gas Gauging CEDV cfg | 0.01%/da, p.192] CEDV OverLoad Current: 10 A true (TI's 5000 mA on a 4.4 Ah default); the CEDV profile itself is fitted on logs taken under the scaled calibration, so its coefficients are in the internal unit by construction
+   0x4607  I2   Electronics Load               3 µA         0      255        0        0        0 A     [Gas Gauging CEDV cfg | y, p.192] CEDV Electronics Load (steps of 3 uA): TI's 0 kept; if the bench measures board PL's unsensed draw it is entered at half its true steps
+   0x4609  I2   Near Full                      mAh          0    32767      200     1800      900 S     [Gas Gauging CEDV cfg, p.192] CEDV Near Full: TI's 200 mAh is 4.5 percent of 4400; 4.5 percent of 40,200
+   0x460b  I2   Reserve Capacity               mAh          0    32767        0        0        0 S     [Gas Gauging CEDV cfg, p.192] CEDV Reserve Capacity: 0, the kit's 5 percent reserve is the host's RSOC line (CONOPS 4c)
+   0x4475  U2   Max Smoothing Current          mA           0    65535     8000    16000     8000 A     [Gas Gauging | CEDV Smoothing | Config, p.192] Max Smoothing Current (U2): TI's 8000 mA doubled so that smoothing acts over the same share of the lid's range
+   0x441d  I2   Sleep Current                  mA           0    32767       10       10        5 A     [Power Sleep, p.193] Sleep Current: TI's 10 mA as true
+   0x4267  I2   Current                        mA      -32768    32767        0        0        0 R     [PF Status | Device Current | Data, p.194] PF Status Current: a record; the host multiplies it by k
+   0x4443  I2   Remaining AH Cap. Alarm        mAh          0    32767      300     4020     2010 S     [SBS Configuration Data, p.195] Remaining AH Capacity Alarm: 10 percent of design
+   0x4445  I2   Remaining WH Cap. Alarm        cWh          0    32767      432     5789     2895 S     [SBS Configuration Data, p.195] Remaining WH Capacity Alarm: 10 percent of design
+   0x4192  I2   Max Charge Current             mA           0    32767        0        0        0 R     [Lifetimes Current, p.197] Lifetimes Max Charge Current: a record; host x k
+   0x4194  I2   Max Discharge Current          mA      -32768        0        0        0        0 R     [Lifetimes Current, p.197] Lifetimes Max Discharge Current: a record; host x k
+   0x4196  I2   Max Avg Dsg Current            mA      -32768        0        0        0        0 R     [Lifetimes Current, p.197] Lifetimes Max Avg Dsg Current: a record; host x k
+   0x4198  I2   Max Avg Dsg Power              cW      -32768        0        0        0        0 R     [Lifetimes Current, p.197] Lifetimes Max Avg Dsg Power: a record; host x k
+
+   every scaled word has a stated true value and its written value lies inside its row's range; addresses in the
+   true-value table that Table 14-1 does not list with a scaled unit: none
+
+4. NOT SCALED (the other 322 rows by unit): % 27, 0.01% 1, 0.10% 1, 0.1°C 20, 0.1°K 7, 116 nV 1, 2h 12, cycles 13, date 1, events 14, mV 77, min 3, s 71, steps 2, °C 13, µs 3, (no unit) 56
+   Voltages (COV, CUV, the charge voltages, Design Voltage 14400 mV), temperatures, times and bit fields are written as
+   the base's image writes them. The AFE words (AOLD, ASCC, ASCD thresholds in AFE Protection Control and their codes)
+   are voltages across the real shunt: set on R10's true 2 mOhm, as board P's, because board PL's path limits are board P's.
+
+5. WHAT THE HOST MUST SCALE (k = 2): every SBS or MAC value in mA, mAh, 10 mWh or cW: Current(), AverageCurrent(),
+   RemainingCapacity(), FullChargeCapacity(), DesignCapacity(), ChargingCurrent(), MaxError is a percent (not scaled),
+   RunTimeToEmpty and the other times are computed by the gauge from its own consistent units (not scaled), the
+   Lifetimes and PF Status current records, and any value it writes (none in the kit's contract). ChargingCurrent()
+   is multiplied by k BEFORE the host writes U3B's ChargeCurrent (FW-A02's lid row, CHARGER.md). Voltages, cell voltages,
+   temperatures, RSOC and flags are not scaled. The marker: Manufacturer Info Block A (0x4041 onward, page 194) carries
+   the ASCII text 'IPSCALE2' and the host refuses the lid gauge's currents and capacities until it has read it.
+
+END.

@@ -53,6 +53,7 @@ sciosense    current   # AS3935 lightning sensor of the approved suite
 seals        current   # the gasket, O-ring and IP-rating documents behind the sealed face
 sensirion    current   # inside climate sensing
 silabs       current   # CP2102N, the console bridge on B, D and P
+solar        current   # PVGIS answers for the site (M1's solar resource) and Option A(i)'s panel candidates (records/a1solar, design basis A1SOLAR-01)
 st           current   # STM32H743VIT6, the three I/O supervisors of the high-availability layer
 standards    current   # ECSS-Q-ST-70-12C Annex D, the published current-rating models rule PI-001 cites;
                        # a TRANSCRIPTION of the clauses used, not a copy of the standard (16 September 2026)
