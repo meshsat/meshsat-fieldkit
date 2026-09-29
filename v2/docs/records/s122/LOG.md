@@ -103,3 +103,28 @@ No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py
   trace page's render, 71 passed after; `close_s122.py` refused the fixture while staged, closed S-122 with it
   committed (862 sentences, 0 STALE, 0 UNJUDGED; CFL-016 PASS; S-123 and S-42 open) and refused a second run; after it
   0 errors, 71 passed, `claims_check` PASS 91 of 91. The clone is deleted.
+
+## Round 4 (set 14: makers' part numbers; `fnd/s122c` from `1bafab8c`)
+
+- 20:52 Worktree `s122c` on `fnd/s122c` from `1bafab8c` (set 14, `fnd/int15`). Read whole: S-122's title in the
+  registry at `1bafab8c` (its three set 14 additions), `records/int15/checks/check-int15-1.md` to `-3.md`, the fourth
+  check of set 14 (the integrator's `CHECK-4.md`, not filed), `checks/check-s122-3.md`, and `close_s122.py`'s
+  `gate_set14`.
+- 21:16 (one label for the round's work up to the README, read from `date`):
+  - `s122lib.partnos`: makers' part numbers by shape (and in cited sheets' file names), returned by `names()` under
+    `parts`; a table cell carries its row label. `verdicts.check_parts` judges each against the six netlists' part
+    values (a part on no netlist, or not on the one board a sentence and its row name, needs `parts_ok`; a NOT
+    DERIVABLE judgement is never an excuse). New assertion form `PDF:` (pdftotext). The absent rule's wordings widened
+    (check-s122-3 m2). First run: 951, then 986 sentences with 149 UNJUDGED and 11 STALE before judging.
+  - `apply_docs_s122_r4.py --check`, then its run on `1bafab8c`'s documents: 12 edits, 51 assertions held first; a
+    second run refuses. V2-SPEC.md lines 47, 82, 84, 86 and correction 34; OPERATING-ENVELOPE.md lines 77 and 83 and
+    a correction note (the LM5069's range from `ti/ti-lm5069.pdf` SNVS452G 7.3, the TE socket's from
+    `m2/te-2199119-m2-b-key.pdf`, both read by pdftotext); row DC-10; the int15 docstring (q4).
+  - Every new or changed sentence judged in `judgements.py` (round 4 block): 985 sentences, 410 TRUE, 0 STALE, 40
+    BASELINE, 535 NOT DERIVABLE, 0 UNJUDGED, 3219 assertions. `verdicts-set14.out` (the documents at `1bafab8c`): 7
+    STALE, each corrected; `verdicts-base.out` (`e57a7365`): 72 STALE.
+  - `close_s122.py`'s `gate_set14` rewritten (probes made up at run time, sentences found by what they say and TRUE,
+    the closing check's marker with their lines). On this tree it refused `check-s122-3.md` at the marker, and a
+    fixture with the marker and no lines listing the six lines.
+  - `apply_registry_s122_r4.py` written (rebinds against `1bafab8c`, CFL-016's entry and note, S-122's sentence, the
+    envelope re-pin); its two new sentences pass claims_check's screen.

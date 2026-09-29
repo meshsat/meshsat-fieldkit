@@ -1349,3 +1349,364 @@ J["0a5b716f9c"]["a"] = J["0a5b716f9c"]["a"] + [
     "REG:CON-022.evidence~its remedy (b) and (c) is not drawn",
     "REG:CON-003.evidence_bound_to~pcb-b-compute.net@3ef9b8c49a01b728",
     "REG:CON-022.evidence_bound_to~pcb-b-compute.net@3ef9b8c49a01b728"]
+
+# ================================================================== ROUND 4 (set 14: part numbers; check-s122-3's minors)
+# Every maker's part number a sentence names is judged by verdicts.check_parts against the six netlists' part values;
+# `parts_ok` names each one the netlists do not carry (a kind and a colon, or an own assertion that names it).
+DOCK = "document: "
+def PK(**kw): return {k.replace("__", "-").replace("_S_", "/"): v for k, v in kw.items()}
+CELL = {"INR18650-35E": "bought: Samsung's cell of the built pack, not a board part"}
+BANKS = ["B:U109~bank 1: B = slot 1 USB3-0 (home), C = slot 2", "B:U209~bank 2: B = slot 2 USB3-0 (home), C = slot 3",
+         "B:U309~bank 3: B = slot 3 USB3-0 (home), C = slot 1", "B:U110~bank 1: port 1 = slot 1 (home), port 2 = slot 2",
+         "B:U210~bank 2: port 1 = slot 2 (home), port 2 = slot 3", "B:U310~bank 3: port 1 = slot 3 (home), port 2 = slot 1",
+         "B:U102@USB_DP_DN4=RB_DP", "B:U18~CP2102N", "B:U102@USB_DP_DN2=USB_PNL_P", "B:U202@USB_DP_DN1=GNSS_DP",
+         "B:U302@USB_DP_DN1=USB_D8_P", "B:U302@USB_DP_DN2=USB_E6_P", "B:U302@USB_DP_DN3=USB_WALL_P",
+         "B:U302@USB_DP_DN4=USB_5G_P", "B:USB_5G_P>=J_M2C2,U302", "B:LORA_MOSI>=U12,U548", "B:SPI3_MOSI>=J_SPI3,R549,U32A,U548",
+         "B:CARD2_TX_P>J_M2C2", "B:U12~E22-900M30S"]
+R4 = "round 4: "
+J.update({
+    # PANEL.md section 7, the bus table's part cells
+    "cbb687f780": T("C7's VEML7700", "C:U_LIGHT~VEML7700"),
+    "3d47dcd92b": T("C7's two PCA9555", "C:U1~PCA9555", "C:U2~PCA9555"),
+    "8a07cc5c6c": T("D8's PCA9555", "D:U16~PCA9555"),
+    "de5bf6a8af": T("B16's TMP117 under the coolers", "B:U10~TMP117", "B:U10~under the coolers"),
+    "2773e818ae": T("A22's BQ25731 U3 on the kit bus (pins 12 and 13); no pin of it is on a thermistor or gauge net; the pin "
+                    "table is TI's (SLUSE66A)", "A:U3~BQ25731", "A:U3.12=SDA", "A:U3.13=SCL"),
+    "4b0726e6eb": N(FW + " (a rule of operation; the clamp is the PCA9555's own behaviour)"),
+    # CONOPS.md
+    "8b09cd80ae": T("the LoRa module's SPI reaches slot 3's module only (U32A through U548) and the 5G card's PCIe lane is "
+                    "slot 2's card socket; the named exceptions are IOHA's record", *BANKS),
+    "cbdee784c7": N(DOCN + " (the night's routes, D-01, D-06)",
+                    absent_ok={"which has no location found": "a case location for a deferred pack, not the circuit"}),
+    "f2b4ff58e0": T("the heat stage as generated: slot 2 hosts bank 1 as its failover (the RockBLOCK's bridge U18 and the "
+                    "panel's USB) and bank 2 at home (GNSS), the 5G card is slot 2's; the LoRa module is slot 3's SPI and "
+                    "APRS and the pack's readings are bank 3's (slot 3, failover slot 1); the thresholds and D-01 are the "
+                    "document's", *BANKS,
+                    absent_ok={"it has no ambient sensor in prototype 1's core": "the scope of prototype 1's core (D-01 "
+                               "defers the outside pod), not a part the netlists lack"}),
+    "96aecf2119": N(DOCN + " (one module running, the consequence of D-02b)",
+                    absent_ok={"the kit has no compute redundancy left": "one module running, an operating consequence, "
+                               "not a part the netlists lack"}),
+    "4971a13c0c": N(DOCN + " (the cell maker's restriction)", parts_ok=dict(CELL)),
+    "36447f2d08": T("the heat stage as generated: with slots 1 and 3 off, bank 3 (home slot 3, failover slot 1) has no host, "
+                    "and on it are D8 (APRS), E6's sensor controller, the wall port and the 5G module's USB (port 4); the "
+                    "LoRa module is slot 3's SPI; the module's update path is Quectel's", *BANKS),
+    "074bdf07a1": T("slot 2 has neither the LoRa mesh (slot 3's SPI) nor APRS (D8 on bank 3, slots 3 and 1); BANK-R1 is not "
+                    "in the generator (the hub ports as at 45bde541) and REQ-052 reads FAIL", *(BANKS + BANKR1)),
+    "8f75710147": N(FW + " (the gauge's firmware and the charger's writes; the charger's pins are TI's)",
+                    absent_ok={"it has no thermistor input": "the charger's own pin table (TI SLUSE66A), which no "
+                               "netlist states"}),
+    "f3cd846998": N(DOCN + " (the row's sources)", parts_ok=PK(SLUSE66A=DOCK + "TI's BQ25731 data sheet number")),
+    "20e78504cb": dict(J["20e78504cb"], absent_ok={"a drive unlocks at boot only through the secure element, the panel "
+                                                   "controller and the kit I2C bus": "the accepted residual risk of D-03, "
+                                                   "a ruling's words"}),
+    "84d9aff12f": N(DOCN + " (the storage state, the cell maker's figures)", parts_ok=dict(CELL)),
+    "c2eb51a8b1": N(DOCN, absent_ok={"Storage humidity has no number in any held source": "a figure no held document "
+                                     "states, not the circuit"}),
+    "a4b075a1f3": N(DOCN + " (the runtime method, the cell's specification)", parts_ok=dict(CELL)),
+    "9ae1bb37fb": T("slot 3 alone hosts no bank 1 (slots 1 and 2), so neither Iridium's bridge nor the panel's USB; BANK-R1 "
+                    "is the record's", *BANKS),
+    "3abf30a0b4": dict(J["3abf30a0b4"], parts_ok=dict(CELL)),
+    "d9695f53c9": N(DOCN + " (the cell's specification)", parts_ok=dict(CELL)),
+    "e2d0db85e8": T("B16's E22-900M30S", "B:U12~E22-900M30S"),
+    "89644c8c06": T("B16's two E72 (CC2652P)", "B:U13~E72-2G4M20S1E CC2652P", "B:U14~E72-2G4M20S1E CC2652P"),
+    "c1b59fa740": T("the RM520N-GL on board B's key-B socket", "B:J_M2C2~RM520N-GL"),
+    "c581f604c7": N(DOCN + " (the maker's datasheet and the Linux driver)",
+                    absent_ok={"the mainline Linux driver has no code for it": "a driver's source, not the circuit"}),
+    "5990559fb8": T("D8's SA868 and the PA's leads", "D:*~SA868", "D:*~RA30H1317M1"),
+    "24f6f52515": T("B16's LG290P; the DCF77 and lightning headers on E6", "B:U11~LG290P", "E:J_DCF?", "E:J_LTG?"),
+    "c4d07a0485": T("the transmitters named are on the netlists (D's SA868 and the PA's leads, the RockBLOCK site, the two "
+                    "card sockets, the E22, both E72, the LimeSDR bay, the QMX lead)", "D:*~SA868", "B:J_RB9704?",
+                    "B:J_M2C1~AW7915", "B:J_M2C3?", "B:U12~E22-900M30S", "B:U13?", "B:U14?", "B:J_LIME?", "B:J_QMX?"),
+    "a9e17ab4ef": T("bank 3 hosts E6's sensor controller, whose reed is the lid; the mode rule is the firmware's", *BANKS),
+    "e2340ccf73": T("as generated: slot 3 alone hosts neither bank 1 (Iridium's bridge, the panel) nor slot 2's; slot 1 "
+                    "alone hosts bank 1 at home and bank 3 as failover, not bank 2 (GNSS)", *BANKS),
+    "975e9e1f83": N(DOCN + " (INFERRED from the model; the cell maker's words)", parts_ok=dict(CELL)),
+    "1a31a2702b": T("the path through a compute module needs bank 3's host (E6's sensor controller on bank 3), which the "
+                    "heat stage as generated (slot 2 alone) does not have", *BANKS),
+    "8d098165cb": dict(J["8d098165cb"], parts_ok=PK(**{"103AT-2": "owed: a proposed comparator's thermistor; the part is "
+                                                     "board D's and board P's NTC"})),
+    "0f4d72d9d5": N(DOCN + " (the core's scope under D-01)",
+                    absent_ok={"The kit has no ambient sensor in prototype 1's core": "the scope of prototype 1's core "
+                               "(D-01 defers the outside pod), not a part the netlists lack"}),
+    "10987af00a": N(DOCN + " (the makers' ranges, PWR-F09)"),
+    "c20f2e4cda": T("as generated, with slots 1 and 2 lost, bank 1 (home slot 1, failover slot 2) has no host, and on it are "
+                    "the RockBLOCK's bridge and the panel's USB; the drive unlock and BANK-R1 are the records'", *BANKS),
+    "48a9631e39": T("in the heat stage as generated (slot 2 alone) bank 3, which carries E6's sensor controller, has no "
+                    "host; the response and its thresholds are firmware (TBD)", *BANKS),
+    "66ae2dcfc0": N(DOCN + " (the AS3935's estimate; the sensor deferred by D-01)"),
+    "caa82ce9b2": T("bank 3, which carries E6's sensor controller, has no host in the heat stage as generated; the alarm is "
+                    "firmware (REQ-041)", *BANKS),
+    "f61fe4f4f1": N(DOCN + " (Quectel's hardware design figures)"),
+    "de89ad0ee9": T("B16's E22-900M30S", "B:U12~E22-900M30S"),
+    "3acba2f6fc": N(DOCN + " (the RockBLOCK's datasheet figures)", parts_ok=PK(RB9704=DOCK + "the RockBLOCK 9704 datasheet's "
+                                                                              "file name")),
+    "c12b61e3ba": N(DOCN + " (a ruling's words, section 7)", absent_ok={"No hardware is added": "a ruling's scope, not a "
+                                                                                          "statement of the circuit"}),
+    "658f83be64": N(DOCN + " (ruling D-03's words)", absent_ok={"a drive unlocks at boot only through the secure element, the "
+                                                                "panel controller and the kit I2C bus": "the accepted "
+                                                                "residual risk of D-03, a ruling's words"}),
+    "5fda2c0bd4": B("DC-10", "check-s122-3 m1: the D-13 row calls the STM32H753 in the schematic open; U41, U51 and U61 read "
+                    "STM32H743VIT6 since 458b2873 and CON-017 reads PASS", "B:U41~STM32H743VIT6", "B:U51~STM32H743VIT6",
+                    "B:U61~STM32H743VIT6", "REG:CON-017.evidence_result=PASS"),
+    "357b03f343": N(DOCN + " (the pack, a ruling)", absent_ok={"and has no test summary": "a bought item's paperwork, not "
+                                                                                          "the circuit"}),
+    "680903352b": T("the reed is E6's sensor controller's alone (J_TAMP on board E); board C carries no lid input", "E:J_TAMP?",
+                    "C:!J_TAMP"),
+    "1e4489cd65": N(DOCN + " (REL-001, D-02c)", absent_ok={"so REL-001 still has no life to judge against": "a rule's "
+                                                           "input, not the circuit"}),
+    "bdd11249b1": B("DC-02", "section 7a's HOT-R1 row, second cell: 'only through the bridge' as generated; HOT-R1 is drawn "
+                    "since w4ae (DC-02 names the row whole)", *HOTR1),
+    "bd4ddb1b81": N(H + " (a dated correction of the appendix)", absent_ok={"were driven only by a software I/O expander":
+                                                                           "the circuit before 458b2873, a dated record"}),
+    "e2d0f2006b": N(H + " (a dated correction of the appendix)", absent_ok={"with no hardware tie to the PA keying":
+                                                                           "the circuit before 458b2873, a dated record"}),
+})
+J["ad42c9eb94"] = dict(J["ad42c9eb94"], absent_ok=dict(J["ad42c9eb94"]["absent_ok"], **{
+    "The second pack has no location found yet": "a case location for a deferred pack, not the circuit"}))
+J["8b09cd80ae"]["absent_ok"] = {}
+J["f3cd846998"] = N(DOCN + " (the row's sources)")
+for _d, _p, _a in (
+        ("5f2cf03744", {"SBAS444E": DOCK + "TI's ADS1115 data sheet number"}, []),
+        ("e405a3ce91", {"C9866": "stock: the LCSC code the DS3231SN is bought under"}, []),
+        ("385ae55b43", {"ATECC608B": "elsewhere: board B's U8; board D is named for the ADS1115",
+                        "BQ25731": "elsewhere: board A's U3", "TPS23861": "elsewhere: board B's U5"}, []),
+        ("919c0ea875", {"TCA9517A": "asserted: B:!~TCA9517A"}, ["A:!~TCA9517A", "B:!~TCA9517A"])):
+    J[_d] = dict(J[_d], parts_ok=_p, a=list(J[_d].get("a", [])) + _a)
+
+# V2-SPEC.md
+T7P = ("the boards table's row read part by part against set 14's netlists (round 4: the heading's date excuses no part; "
+       "each part the row names is on the netlists, or named with its date and asserted there)")
+J.update({
+    "13ce1d1ded": N(CASE + " (the case and its frame)", parts_ok=PK(**{"1450PF": "case: Peli's panel frame"})),
+    "c73b56fb81": dict(J["c73b56fb81"], parts_ok=PK(**{"BB-2590/U": "withdrawn: the bought pack that did not fit (32.62)"})),
+    "306d6f0471": dict(J["306d6f0471"], parts_ok=dict(CELL)),
+    "cee0d6d5e5": T("board P's BQ4050 gauge; the pack and its ruling are the document's", "P:U1~BQ4050",
+                    parts_ok=PK(**{"BB-2590/U": "withdrawn: the bought pack that did not fit (32.62)"})),
+    "7827ee0779": T("E6's LT8705A solar tracker; the input's qualification is D-16's", "E:U5~LT8705A",
+                    parts_ok=PK(**{"MIL-STD-461": DOCK + "a standard"}) if False else {}),
+    "dd4dba6ddd": N(H + " (the withdrawn run time)", parts_ok=PK(**{"BB-2590/U": "withdrawn: the bought pack the figures were for"})),
+    "dcf3b13f2a": T("per slot a PI7C9X2G404 feeding an NVMe M-key socket and one card socket; the hubs and the display "
+                    "switches are board B's", "B:U101~PI7C9X2G404", "B:U201~PI7C9X2G404", "B:U301~PI7C9X2G404",
+                    "B:J_M2N1~M-key 2242", "B:J_M2C1~E-key", "B:J_M2C2~B-key", "B:J_M2C3~E-key"),
+    "c69433aac0": T("the supervisors are STM32H743 (U41, U51, U61); the boot floor is D-13's", "B:U41~STM32H743",
+                    "B:U51~STM32H743", "B:U61~STM32H743"),
+    "b37e8f58fe": T("the RockBLOCK 9704 site on B16; the helical antenna is a case item", "B:J_RB9704~RockBLOCK 9704",
+                    parts_ok=PK(**{"M1621HCT-P-SMA": "case: Maxtena's antenna on the east wall"})),
+    "26edd0867a": T("two AW7915-AED on card sockets of slots 1 and 3, through the changeover", "B:J_M2C1~AW7915",
+                    "B:J_M2C3?", "B:J_WOA?", "B:J_WOB?"),
+    "a5aa823360": T("B16's E22-900M30S on SPI; the software cap is the firmware's", "B:U12~E22-900M30S"),
+    "d93fb7e9b9": T("B16's E72-2G4M20S1E (CC2652P) coordinator", "B:U13~E72-2G4M20S1E CC2652P (Zigbee coordinator)"),
+    "c60dec6ff0": T("round 4's correction of line 47: D8's SA868 and the RA30H1317M1's leads, the PCM2912A U6; the sheet is "
+                    "held and a row of OPERATING-ENVELOPE.md section 2", "D:*~SA868", "D:*~RA30H1317M1", "D:U6~PCM2912A",
+                    "D:!~WM8960", "PDF:v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf~RA30H1317M1",
+                    "DOC:v2/docs/OPERATING-ENVELOPE.md~| Mitsubishi RA30H1317M1 30 W VHF power amplifier |"),
+    "26424f2f31": dict(J["26424f2f31"], parts_ok=PK(LG290P="elsewhere: board B's U11; E6 here is the Galileo band",
+                                                    YEGD006U1A="case: Quectel's antenna puck on the wall")),
+    "3ca8195c32": T("C7's e-paper ZIF for the E2370KS0C1", "C:J_EPD~E2370KS0C1"),
+    "181b0ac69c": N(H + " (the open items closed on 7 September)"),
+    "de16befa62": T(T7P + "; the TPS55288 is named as having left the design, at c5de605d", "A:U3~BQ25731", "A:U4~AP64500",
+                    "A:U18~TPS25740A", "A:U19~LM5176", "A:*~INA226", "A:!~TPS55288",
+                    "G@c5de605d:gen_sch_a.py:267~TPS55288",
+                    parts_ok=PK(TPS55288="asserted: G@c5de605d:gen_sch_a.py:267~TPS55288")),
+    "4d190b7091": T(T7P + "; the two TS3DV642 and the DS3231SN corrected in round 4 (correction 34)",
+                    "B:U3~TS3DV642", "B:U4~TS3DV642", "B:U9~DS3231SN", "B:!~TMDS341", "B:U101~PI7C9X2G404",
+                    "B:U102~TUSB8041", "B:U109~TMUXHS4212", "B:U110~TS3USB221A", "B:U41~STM32H743", "B:U1~KSZ9897",
+                    "B:U11~LG290P", "B:U8~ATECC608B", "B:U10~TMP117", "REG:CON-017.evidence_result=PASS",
+                    "DOC@b2709118:v2/ecad/tools/gen_sch_b.py~DS3231M",
+                    parts_ok=PK(DS3231M="asserted: DOC@b2709118:v2/ecad/tools/gen_sch_b.py~DS3231M")),
+    "ce86a25f41": T(T7P + "; the TUSB2046I corrected in round 4 (correction 34)", "D:*~SA868", "D:*~RA30H1317M1",
+                    "D:U6~PCM2912A", "D:U7~TPA6132A2", "D:U4~TUSB2046IBVFR", "D:U3~CP2102N", "D:U21~TPS22810", "D:U16~PCA9555",
+                    "DOC@b2709118:v2/ecad/tools/gen_sch_d.py~TUSB2046B",
+                    parts_ok=PK(TUSB2046B="asserted: DOC@b2709118:v2/ecad/tools/gen_sch_d.py~TUSB2046B")),
+    "86f3aabede": T(T7P + " (board P: the BQ4050 and the two CSD17570Q5B)", "P:U1~BQ4050", "P:Q1~CSD17570Q5B", "P:Q2~CSD17570Q5B"),
+    "c69d9ba744": T(T7P + "; the LM5069 U6 and A22's LM5176 U2 corrected in round 4 (correction 34)", "E:U6~LM5069",
+                    "E:!~LM5176", "A:U2~LM5176", "E:U5~LT8705A", "E:U14~BME688", "E:U15~BMI270"),
+    "5e3035b8b7": N(DOCN + " (the cost estimate of 6 September 2026)"),
+    "d807665aa1": N(DOCN + " (the cost estimate of 6 September 2026)"),
+    "898c6bd452": N(DOCN + " (the cost estimate of 6 September 2026)"),
+    "01d914fdce": N(H + " (the battery correction, D-06)", parts_ok=dict(CELL)),
+    "003da078bf": N(H + " (the dividers before 458b2873)", parts_ok=PK(SLVSET8A=DOCK + "TI's TPS2596 data sheet number")),
+    "5afecc328b": N(H + " (the run time withdrawn)", parts_ok=PK(**{"BB-2590/U": "withdrawn: the bought pack the figures were for"})),
+    "0a081567c0": N(DOCN + " (the secure element's documents, ZEROIZE.md)"),
+    "3dce1898a0": T("the LG290P's time pulse on board B, the DCF77 pulse on E's J_DCF; the lines are dated by the correction",
+                    "B:U11~LG290P", "E:J_DCF?",
+                    parts_ok=PK(LG290P="elsewhere: board B's U11; the sentence names board E for the DCF77")),
+    "b32df4fdd7": T("the RM520N-GL on the key-B socket; its key is Quectel's", "B:J_M2C2~RM520N-GL", "B:J_M2C2~B-key"),
+    "fe71bf585a": N(H + " (the socket until 458b2873, TE's table)",
+                    parts_ok=PK(**{"1-2199119-5": "asserted: PDF:v2/vendor/m2/te-2199119-m2-b-key.pdf~2199119"}),
+                    a=["PDF:v2/vendor/m2/te-2199119-m2-b-key.pdf~2199119"]),
+    "b8d33d5ffb": N(H + " (D-13's words)"),
+    "c8178dd548": dict(J["c8178dd548"], parts_ok=PK(C114409="stock: the LCSC code of the supervisors bought",
+                                                    STM32H753="asserted: B@68bc9e8f:U41~STM32H753VITx"),
+                       a=list(J["c8178dd548"].get("a", [])) + ["B@68bc9e8f:U41~STM32H753VITx"]),
+    "488d983a0f": dict(J["488d983a0f"], parts_ok=PK(**{"1450PF": "case: Peli's panel frame"})),
+    "269867362d": dict(J["269867362d"], parts_ok=PK(TPS55288="asserted: G@c5de605d:gen_sch_a.py:267~TPS55288")),
+    "da60e25645": T("round 4's correction 34: no schematic generator has held a TMDS341A; gen_sch_b.py held the TS3DV642 at "
+                    "b2709118; U3 and U4 are TS3DV642A0RUAR", "B:!~TMDS341", "DOC@b2709118:v2/ecad/tools/gen_sch_b.py~TS3DV642",
+                    "B:U3~TS3DV642A0RUAR", "B:U4~TS3DV642A0RUAR", parts_ok=PK(TMDS341A="asserted: B:!~TMDS341A"),
+                    **{"a": ["B:!~TMDS341A", "DOC@b2709118:v2/ecad/tools/gen_sch_b.py~TS3DV642", "B:U3~TS3DV642A0RUAR",
+                             "B:U4~TS3DV642A0RUAR"]}),
+    "0fcfa0f90d": T("round 4's correction 34: at b2709118 gen_sch_e.py carried the LM5069 and sent the bus into A22's LM5176; "
+                    "E's U6 and A's U2 today", "DOC@b2709118:v2/ecad/tools/gen_sch_e.py~LM5069 hot-swap",
+                    "DOC@b2709118:v2/ecad/tools/gen_sch_e.py~into A22's LM5176 front end", "E:U6~LM5069", "A:U2~LM5176"),
+    "aea29035dd": T("round 4's correction 34: the WM8960 left gen_sch_d.py at bdfc7b3f; D's U6 is the PCM2912A; the "
+                    "amplifier's sheet held", "DOC@bdfc7b3f^:v2/ecad/tools/gen_sch_d.py~WM8960",
+                    "DOC@bdfc7b3f:v2/ecad/tools/gen_sch_d.py!~WM8960", "D:U6~PCM2912A", "D:!~WM8960",
+                    "PDF:v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf~RA30H1317M1",
+                    parts_ok=PK(WM8960="asserted: D:!~WM8960")),
+    "2d74aca5ee": T("round 4's correction 34: the DS3231M and the TUSB2046B at b2709118; B's U9 DS3231SN and D's U4 "
+                    "TUSB2046IBVFR today", "DOC@b2709118:v2/ecad/tools/gen_sch_b.py~DS3231M",
+                    "DOC@b2709118:v2/ecad/tools/gen_sch_d.py~TUSB2046B", "B:U9~DS3231SN", "D:U4~TUSB2046IBVFR",
+                    "DOC:v2/ecad/tools/gen_sch_d.py~THE HUB'S OWN RAIL (W6-F5, 26 September 2026)",
+                    parts_ok=PK(DS3231M="asserted: DOC@b2709118:v2/ecad/tools/gen_sch_b.py~DS3231M",
+                                TUSB2046B="asserted: DOC@b2709118:v2/ecad/tools/gen_sch_d.py~TUSB2046B")),
+    "63d017d3ba": dict(J["63d017d3ba"], parts_ok=PK(ATECC608B="elsewhere: board B's U8; the toggle is C7's")),
+    "5290ae6443": dict(J.get("5290ae6443", N(DOCN)), parts_ok={}),
+})
+def _add(d, parts=None, a=(), counts=None, absent=None, **kw):
+    x = dict(J[d]); x["a"] = list(x.get("a", [])) + [y for y in a if y not in x.get("a", [])]
+    if parts is not None: x["parts_ok"] = dict(x.get("parts_ok") or {}, **parts)
+    if counts is not None: x["counts_ok"] = counts
+    if absent is not None: x["absent_ok"] = dict(x.get("absent_ok") or {}, **absent)
+    x.update(kw); J[d] = x
+_add("d45adb955f", parts={"1450PF": "case: Peli's panel frame"})
+_add("26edd0867a", parts={"MT7915": "module: MediaTek's chipset inside the bought AW7915-AED card"})
+_add("de16befa62", a=["A:#val~rail monitor +5V_S=3"], counts={"three 5.1 V slot": "asserted: A:#val~rail monitor +5V_S=3"})
+_add("4d190b7091", a=["B:U30A?", "B:U31A?", "B:U32A?", "B:#val~STM32H743=3", "B:#val~TS3DV642=2"],
+     counts={"three CM5 slots": "the three slots are the receptacles U30A, U31A and U32A, asserted",
+             "three STM32H743 supervisors": "asserted: B:#val~STM32H743=3",
+             "two TS3DV642 display switches": "asserted: B:#val~TS3DV642=2"})
+_add("ce86a25f41", a=["D:#ref~J_HS=2"], counts={"two headset jacks": "asserted: D:#ref~J_HS=2"})
+_add("c69d9ba744", a=["E:#ref~J_FAN=2"], counts={"two mixer fan": "asserted: E:#ref~J_FAN=2"})
+J["003da078bf"] = N(H + " (the dividers before 458b2873)")
+J["fe71bf585a"] = N(H + " (the socket until 458b2873, TE's key table)", "B@1f614233:J_M2C2~1-2199119-5",
+                    parts_ok={"TE 1-2199119-5": "asserted: B@1f614233:J_M2C2~1-2199119-5"})
+
+# OPERATING-ENVELOPE.md, TEST-PLAN.md, ASSEMBLY.md, decisions and the status page (round 4)
+SRC = DOCN + " (the row's source, a held maker's sheet)"
+GLENAIR = "case: Glenair's plug, contacts, tools or strain relief, a cable item"
+J.update({
+    "0fea03e077": T("C7's e-paper ZIF for the E2370KS0C1", "C:J_EPD~E2370KS0C1"),
+    "ee3ef3ae81": N(SRC),
+    "355e205565": N(SRC, parts_ok=dict(CELL)),
+    "e5f22b220e": T("round 4's row: board E's U6, the LM5069MM-2 on the 9 to 36 V input", "E:U6~LM5069MM-2",
+                    "E:U6~9 V on, 40 V off"),
+    "f51d88cef4": N(SRC + ", its 7.3 read by pdftotext", "PDF:v2/vendor/ti/ti-lm5069.pdf~7.3 Recommended Operating Conditions|SNVS452G",
+                    parts_ok={"SNVS452G": DOCK + "TI's LM5069 data sheet number"}),
+    "ccb27feb51": T("the RM520N-GL on board B's key-B socket", "B:J_M2C2~RM520N-GL"),
+    "617d80160b": N(SRC),
+    "97dbd8caef": T("B16's E22-900M30S", "B:U12~E22-900M30S"),
+    "19e176369f": N(SRC),
+    "2e18543607": T("B16's LG290P", "B:U11~LG290P"),
+    "2f7f58223c": T("round 4's row: board B's J_M2C2, the TE 2199119-3 M.2 B-key socket", "B:J_M2C2~TE 2199119-3",
+                    "B:J_M2C2~M.2 B-key"),
+    "0ad2dab960": N(SRC + ", its Performance Ratings read by pdftotext",
+                    "PDF:v2/vendor/m2/te-2199119-m2-b-key.pdf~Service Temperature -40 ~ +80|Product Specifications: 108-115042/ 108-115049",
+                    parts_ok={"108-115042": DOCK + "TE's product specification number",
+                              "108-115049": DOCK + "TE's product specification number"}),
+    "fb87fd6753": T("D8's SA868", "D:*~SA868"),
+    "37526b22ec": N(SRC + "s", parts_ok={"ELX1135": DOCK + "Eaton's SCF9550 data sheet number"}),
+    "ab9bf69309": T("the two AW7915-AED card sockets of slots 1 and 3", "B:J_M2C1~AW7915", "B:J_M2C3?"),
+    "d61d2ad023": N(SRC + "s"),
+    "de8421d357": T("the RA30H1317M1's leads on D8", "D:*~RA30H1317M1"),
+    "8470300799": N(SRC),
+    "75f96bbf14": T("round 4's correction note: no netlist carries a TRACO part; board E's U6 is the LM5069; the generator's "
+                    "words; the range TI's 7.3", "A:!~TRACO", "B:!~TRACO", "C:!~TRACO", "D:!~TRACO", "E:!~TRACO", "P:!~TRACO",
+                    "E:!~40-2412WIN", "E:U6~LM5069", "DOC:v2/ecad/tools/gen_sch_e.py~the isolated TRACO converter of E4 is gone",
+                    "PDF:v2/vendor/ti/ti-lm5069.pdf~7.3 Recommended Operating Conditions|TJ Junction temperature –40 125 °C",
+                    parts_ok={"TEN 40-2412WIN": "asserted: E:!~40-2412WIN"}),
+    "3641ee0106": T("round 4's correction note: no netlist carries the MDT420B01001; board B's B-key socket is TE 2199119-3 "
+                    "J_M2C2 at -40 to +80 C (TE's brochure, and Amphenol's sheet the same), and the Amphenol M-key "
+                    "MDT420M02001 is on J_M2N1 to J_M2N3", "B:!~MDT420B01001", "B:J_M2C2~TE 2199119-3",
+                    "PDF:v2/vendor/m2/te-2199119-m2-b-key.pdf~Service Temperature -40 ~ +80",
+                    "PDF:v2/vendor/m2/amphenol-mdt420b01001-m2-b-key.pdf~Operating Temperature: -40°C to +80°C",
+                    "B:J_M2N1~Amphenol MDT420M02001", "B:J_M2N2~Amphenol MDT420M02001", "B:J_M2N3~Amphenol MDT420M02001",
+                    parts_ok={"MDT420B01001": "asserted: B:!~MDT420B01001"}),
+    "f2fe408269": N(H + " (20 September 2026)"),
+    "b6626c78f7": N(H + " (the cell sheet, 26 September 2026)", parts_ok=dict(CELL)),
+    "46f0dd0453": N(H + " (the list's history)"),
+    "ed340e0341": N(DOCN + " (PWR-F09)"),
+    "421b320d94": N(DOCN + " (TI's pin table)"),
+    "8f9ef47522": N(FW + " (the cold charge rule)", parts_ok={"PRO 245-556": "bought: the RS PRO heater mat, RS stock number "
+                                                                           "245-556, a case item"}),
+    "ceb6a5b184": N(DOCN + " (the stored configuration, the cell maker's figures)", parts_ok=dict(CELL)),
+    "0f99282a22": T("E6's LT8705A", "E:U5~LT8705A"),
+    "5021436cab": N(H + " (the states' history)", parts_ok={"BB-2590/U": "withdrawn: the bought pack of 7 September"}),
+    "a4d044e1b0": N(TEST, parts_ok={"CE102": DOCK + "a MIL-STD-461 test method"}),
+    "8d0565d141": N(TEST, parts_ok={"CS101": DOCK + "a MIL-STD-461 test method"}),
+    "27f1725b81": N(TEST, parts_ok={"CS114": DOCK + "a MIL-STD-461 test method"}),
+    "83d8d5a9da": N(TEST, parts_ok={"RE102": DOCK + "a MIL-STD-461 test method"}),
+    "f82bf4c812": N(TEST, parts_ok={"RS103": DOCK + "a MIL-STD-461 test method"}),
+    "9d1fb48fd2": N(TEST + " (the protection table's derivation); the gauge is board P's BQ4050RSMR", "P:U1~BQ4050RSMR",
+                    parts_ok=dict(CELL)),
+    "e99719b420": N(TEST + " (the cell maker's ratings)", parts_ok=dict(CELL)),
+    "277514ee5e": T("board P's BQ7720700 U2; its window is TI's and the network's", "P:U2~BQ7720700"),
+    "c55bd6d85e": N(TEST, parts_ok={"1450PF": "case: Peli's panel frame"}),
+    "05c16cdb21": T("E6's DC entry lead comes from the D38999 receptacle", "E:J_DCIN~D38999"),
+    "7508456414": T("E6's panel lead comes from the D38999 spare pair", "E:J_SOLAR~D38999"),
+    "f15f34a47b": T("the RA30H1317M1's leads on D8", "D:*~RA30H1317M1"),
+    "d8da1b19ae": T("C7's two U-174/U jack lands", "C:J_HSJ1~U-174/U", "C:J_HSJ2~U-174/U"),
+    "71cd0b1fad": N(CASE + " (the heater mat)", parts_ok={"PRO 245-556": "bought: the RS PRO heater mat, RS stock number "
+                                                                         "245-556, a case item"}),
+    "9b7ccbd8ec": T("the RM520N-GL on the key-B socket; its ports are Quectel's", "B:J_M2C2~RM520N-GL"),
+    "cda4473e43": N(CASE + " (the connector plate's six items)", parts_ok={"PX0833": "case: a candidate RJ45 the row rejects",
+                                                                           "PXP4043/C": "case: the sealed USB-C's panel part",
+                                                                           "D38999/20": "case: the DC receptacle's shell"}),
+    "c5afe71421": N(FW + " (the gauge's charge window; board P's BQ4050)", "P:U1~BQ4050"),
+    "a66de8d3b1": N(H + " (the step's correction; TI's pin table)"),
+    "1f1b7f0b3f": N(DOCN + " (W2 finding F-DEC40)"),
+    "c2d955fc38": T("the passage DC-10 keeps", "DOC:v2/docs/CONOPS.md~the component mismatch with the STM32H753 in the "
+                    "schematic closes only when", "B@68bc9e8f:U41~STM32H753VITx",
+                    parts_ok={"STM32H753": "asserted: B@68bc9e8f:U41~STM32H753VITx"}),
+    "53772fb573": T("DC-10's value: U41, U51 and U61 read STM32H743VIT6 since 458b2873, STM32H753VITx at 68bc9e8f where "
+                    "the row was written; CON-017 PASS", "B:U41~STM32H743VIT6", "B:U51~STM32H743VIT6", "B:U61~STM32H743VIT6",
+                    "B@458b2873:U41~STM32H743VIT6", "B@68bc9e8f:U41~STM32H753VITx",
+                    "DOC@68bc9e8f:v2/docs/CONOPS.md~the component mismatch with the STM32H753 in the schematic closes only when",
+                    "REG:CON-017.evidence_result=PASS",
+                    "REG:CON-017.statement~the STM32H743VIT6 the project buys, in the schematic text, the symbol value and the BOM",
+                    parts_ok={"STM32H753VITx": "asserted: B@68bc9e8f:U41~STM32H753VITx"}),
+})
+_add("dfd6170bf6", a=["G@c5de605d:gen_sch_a.py:267~TPS55288"], parts={"TPS55288": "asserted: G@c5de605d:gen_sch_a.py:267~TPS55288"})
+_add("f7d96bf556", parts={"SA868": "elsewhere: board D's U2 and U13; board B is named for the RockBLOCK"})
+_add("93f1cf837d", parts={"1450PF": "case: Peli's panel frame"})
+_add("18891567a1", parts=dict(CELL))
+_add("00410dee37", parts={"TMP117": "elsewhere: board B's U10; board A is named for its converters"})
+_add("ef9f31ab35", parts={"BB-2590/U": "withdrawn: the bought pack of 7 September",
+                          "BTA-70762-2": "asserted: G@45bde541:gen_sch_e.py:193~J_BATT|BTA-70762-2"})
+_add("643c162767", parts={"DP8005": "bought: 3M's DP8005 adhesive, a case material"})
+_add("a60b800d87", parts={"C144395": "stock: the LCSC code of the JST B4B-XH-A", "C594232": "stock: the LCSC code of the gold "
+                                                                                          "variant the row sets aside"})
+_add("20f3ba1ddd", parts={"BB-2590/U": "withdrawn: the bought pack of 7 September"})
+_add("27280d94b4", parts={"R222M80500": "case: Radiall's plug on the float clamp's cable"})
+_add("3a53e10db7", parts={k: GLENAIR for k in ("D38999/26FC4SN", "M39029/56-352", "M22520/1-01", "M22520/1-04",
+                                               "M81969/14-03", "M85049/38S13N")})
+_add("7211912728", parts={"R222M80500": "case: Radiall's plug on the float clamp's cable"})
+_add("cd9739a701", parts={"7871EC": "bought: 3M's serial label, a case item", "DP8005": "bought: 3M's DP8005 adhesive, a case material"})
+_add("60324e1220", parts={"JLC04162H-7628": "stackup: JLCPCB's stackup code"})
+_add("ad17cbd96a", a=["B:!~TCA9517A"], parts={"TCA9517A": "asserted: B:!~TCA9517A"})
+J["53772fb573"] = dict(J["53772fb573"], parts_ok={}, a=J["53772fb573"]["a"] + ["B:#val~STM32H743=3"],
+                       counts_ok={"three supervisors": "asserted: B:#val~STM32H743=3"})
+
+# the texts round 4 corrected, as they stood on set 14 (1bafab8c) and at the base: STALE, with what the netlists carry
+J.update({
+    "2d94b4029a": S("the WM8960 left gen_sch_d.py at bdfc7b3f and D8's codec is the PCM2912A U6; the RA30H1317M1's sheet is "
+                    "held (corrected in round 4, correction 34)", "D:!~WM8960", "D:U6~PCM2912A",
+                    "DOC@bdfc7b3f:v2/ecad/tools/gen_sch_d.py!~WM8960", "PDF:v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf~RA30H1317M1"),
+    "b1e7494b6d": S("the TMDS341A no generator has held (board B's display switches are the TS3DV642 U3 and U4, as at "
+                    "b2709118) and the DS3231M (board B's U9 is the DS3231SN) (corrected in round 4, correction 34)",
+                    "B:!~TMDS341", "B:U3~TS3DV642", "B:U4~TS3DV642", "B:U9~DS3231SN",
+                    "DOC@b2709118:v2/ecad/tools/gen_sch_b.py~TS3DV642"),
+    "40489568ae": S("the TUSB2046B: board D's U4 is the TUSB2046IBVFR since 26 September 2026 (corrected in round 4, "
+                    "correction 34)", "D:U4~TUSB2046IBVFR", "D:!~TUSB2046B"),
+    "0a2d2b6e41": S("the LM5176 front end on E6: board E carries the LM5069 U6, and the LM5176 front end is A22's U2, as "
+                    "at b2709118 (corrected in round 4, correction 34)", "E:U6~LM5069", "E:!~LM5176", "A:U2~LM5176",
+                    "DOC@b2709118:v2/ecad/tools/gen_sch_e.py~into A22's LM5176 front end"),
+    "2b5ab8d2af": S("no netlist carries a TRACO part; board E's input part is the LM5069 U6 (replaced in round 4)",
+                    "A:!~TRACO", "B:!~TRACO", "C:!~TRACO", "D:!~TRACO", "E:!~TRACO", "P:!~TRACO", "E:U6~LM5069"),
+    "40344bc9e0": S("the row's source is Amphenol's MDT420B01001, on no netlist; board B's B-key socket is TE 2199119-3 "
+                    "J_M2C2 (replaced in round 4)", "B:!~MDT420B", "B:J_M2C2~TE 2199119-3"),
+})
+J["9743b00cb6"] = S("the holdover clock is board B's DS3231SN U9 on the kit bus, not the panel controller's (corrected in "
+                    "round 1, correction 32); the base's text, inventoried since round 4 by its part number", "B:U9~DS3231SN",
+                    "B:U11~LG290P", "C:!~DS3231")
