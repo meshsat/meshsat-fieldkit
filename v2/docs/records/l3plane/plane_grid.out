@@ -1,0 +1,510 @@
+M1'S DEPLOYMENT CONDITION ON THE FULL PLANE GRID FOR THE TWO LID OPTIONS (plane_grid.py, stream l3plane, MESHSAT-1357).
+PROTOTYPE DESIGN: nothing built, ordered or measured. Every figure is MODELED on the reference day of SC-37 (September
+mean day at Leiden, PVGIS DRcalc 2005 to 2020, each plane its own day); every condition is INFERRED from the grid. AI
+arithmetic, not a qualified review. Model: reconcile_lid_panel.py's run() over a1elec's energy_two_pack.py (pinned),
+400 Wp (2S2P Renogy RNG-100DB-H), 200 W stage, entry E2's front end, base +20 C, lid at 13.23 C (the September mean
+day's minimum air), both start hours, 42.8 W, aged 80 percent; U3 0.979, U3B at code 62 (7.936 A) and 0.972 carried.
+Ratios per plane from energy_runs.py (imported, pinned): B typical, C adverse; PVGIS's 0.9417 (40/0) kept for every plane.
+
+0. REPRODUCTION OF THE COMMITTED OUTPUTS
+   0a. v2/docs/records/a1int/reconcile_lid_panel.out: 8 of 8 rows (4S14P and 4S15P; B, C; U3 6.1 and 6.0 A) reproduced byte for byte through the plane
+       machinery on the 40/0 anchor (energy_runs.py's file scaled by 1.007820) with that output's own ratios
+   0b. v2/docs/records/a1solar/energy_runs.out section 6: 50 of 50 plane rows (the 4S12P lid, entry E2) reproduced byte for byte
+   0c. v2/docs/records/s119/reconcile_s119.out section 7: 13 of 13 plane rows (both lid options, U3B hour by hour) reproduced byte for byte
+   The grid below therefore runs the committed model; only the plane's day and its two ratios change from row to row.
+
+   The cases (each both starts, lid at 13.23 C; 'both' = the lowest store of the two packs together, Wh):
+     P    U3 6.1 A (minimum), U3B carried 0.972
+     I    U3 6.0 A (bracket), U3B carried
+     H    U3 6.1 A, U3B hour by hour (TI curve)
+     V20  U3 6.1 A at the bus's nominal 20.00 V (122.0 W)
+     V19  U3 6.1 A at the DC band's low end 19.08 V (116.4 W)
+   V20 and V19 are a SENSITIVITY this stream adds (INFERRED): the model turns U3's current limit into power at its
+   V_BUS20 of 20.7 V; v2/docs/records/s120/vbus20_bound.out section 2 prints the bus's nominal regulation 20.000 V and DC band 19.080 to 20.960 V.
+   The case passes 5.8937 A and 5.6226 A at 20.7 V, the same power. The model and its committed outputs are not changed.
+
+1. 4S14P LID, THE TABLET OUT OF THE LID (4S20P IN ALL): THE GRID (azimuth in degrees, negative east of south; flat is run once)
+   1.1 Case P, both / lid Wh or NOT MET
+   slope  azim  kWh/m2/d B ratio C ratio   B typical        C adverse       
+       0    +0     3.203  0.9900  0.9159   NOT MET          NOT MET         
+      10   -45     3.409  0.9897  0.9148     36.3 /   0.0   NOT MET         
+      10   -30     3.465  0.9899  0.9148     57.1 /  10.1   NOT MET         
+      10   -15     3.502  0.9902  0.9148     72.4 /  20.8   NOT MET         
+      10    +0     3.518  0.9904  0.9148     75.4 /  26.3   NOT MET         
+      10   +15     3.510  0.9905  0.9148     75.0 /  27.1   NOT MET         
+      10   +30     3.480  0.9905  0.9148     67.2 /  20.4   NOT MET         
+      10   +45     3.430  0.9904  0.9148     53.2 /   8.2   NOT MET         
+      20   -45     3.566  0.9894  0.9134     46.4 /   2.5   NOT MET         
+      20   -30     3.666  0.9897  0.9131     79.6 /  27.8      9.2 /   0.0  
+      20   -15     3.733  0.9901  0.9130     90.4 /  41.1     44.6 /   1.4  
+      20    +0     3.764  0.9905  0.9131     95.1 /  45.6     59.8 /  11.9  
+      20   +15     3.749  0.9906  0.9130     95.5 /  46.0     52.8 /   8.7  
+      20   +30     3.694  0.9906  0.9130     96.8 /  46.8     37.0 /   0.0  
+      20   +45     3.605  0.9906  0.9132     82.6 /  33.5      2.7 /   0.0  
+      30   -45     3.661  0.9890  0.9118     44.1 /   0.8   NOT MET         
+      30   -30     3.799  0.9895  0.9116     82.9 /  34.8     20.9 /   0.0  
+      30   -15     3.888  0.9899  0.9113     94.6 /  45.3     64.0 /  14.8  
+      30    +0     3.931  0.9904  0.9114     94.7 /  45.3     79.7 /  31.2  
+      30   +15     3.910  0.9905  0.9112     95.4 /  45.8     79.8 /  31.1  
+      30   +30     3.838  0.9906  0.9113     95.5 /  45.9     58.7 /  12.8  
+      30   +45     3.708  0.9905  0.9112     79.1 /  31.0      8.2 /   0.0  
+      40   -45     3.696  0.9886  0.9107     22.8 /   0.0   NOT MET         
+      40   -30     3.849  0.9891  0.9102     74.9 /  25.3     10.7 /   0.0  
+      40   -15     3.963  0.9897  0.9102     94.8 /  45.4     66.3 /  16.4  
+      40    +0     4.014  0.9903  0.9103     93.7 /  44.6     85.4 /  37.3  
+      40   +15     3.988  0.9904  0.9099     95.2 /  45.7     82.3 /  33.8  
+      40   +30     3.900  0.9905  0.9098     92.2 /  43.6     56.4 /  10.9  
+      40   +45     3.755  0.9904  0.9098     72.9 /  24.2      6.7 /   0.0  
+      50   -45     3.650  0.9880  0.9097   NOT MET          NOT MET         
+      50   -30     3.820  0.9886  0.9093     50.2 /   4.9   NOT MET         
+      50   -15     3.951  0.9895  0.9098     91.6 /  43.2     52.1 /   6.4  
+      50    +0     4.008  0.9902  0.9100     92.0 /  43.5     80.4 /  32.7  
+      50   +15     3.981  0.9903  0.9095     94.9 /  45.5     76.2 /  28.7  
+      50   +30     3.875  0.9902  0.9088     83.7 /  36.5     37.6 /   0.0  
+      50   +45     3.720  0.9900  0.9086     42.3 /   0.0   NOT MET         
+      60   -45     3.525  0.9870  0.9088   NOT MET          NOT MET         
+      60   -30     3.717  0.9881  0.9093     12.8 /   0.0   NOT MET         
+      60   -15     3.850  0.9892  0.9101     77.8 /  31.0     20.4 /   0.0  
+      60    +0     3.911  0.9900  0.9104     89.8 /  41.9     67.2 /  21.5  
+      60   +15     3.884  0.9902  0.9098     90.0 /  42.1     52.1 /   8.5  
+      60   +30     3.770  0.9898  0.9085     57.2 /  11.3   NOT MET         
+      60   +45     3.601  0.9895  0.9076   NOT MET          NOT MET         
+      70   -45     3.346  0.9861  0.9094   NOT MET          NOT MET         
+      70   -30     3.531  0.9874  0.9104   NOT MET          NOT MET         
+      70   -15     3.663  0.9888  0.9116     37.1 /   0.0   NOT MET         
+      70    +0     3.725  0.9897  0.9114     78.8 /  31.7     25.7 /   0.0  
+      70   +15     3.699  0.9899  0.9106     70.8 /  24.7      7.0 /   0.0  
+      70   +30     3.588  0.9894  0.9088      6.9 /   0.0   NOT MET         
+      70   +45     3.414  0.9887  0.9069   NOT MET          NOT MET         
+   1.2 Every case, the lowest store of both packs in Wh (NOT = NOT MET); B typical / C adverse
+   slope  azim  P              I              H              V20            V19          
+       0    +0     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT
+      10   -45    36.3    NOT    19.5    NOT    37.3    NOT     NOT    NOT     NOT    NOT
+      10   -30    57.1    NOT    38.5    NOT    57.4    NOT    18.6    NOT     NOT    NOT
+      10   -15    72.4    NOT    54.7    NOT    72.6    NOT    34.8    NOT     NOT    NOT
+      10    +0    75.4    NOT    65.4    NOT    75.6    NOT    47.7    NOT     NOT    NOT
+      10   +15    75.0    NOT    62.5    NOT    75.2    NOT    46.7    NOT     0.6    NOT
+      10   +30    67.2    NOT    52.1    NOT    67.6    NOT    37.5    NOT     NOT    NOT
+      10   +45    53.2    NOT    39.4    NOT    53.5    NOT    23.5    NOT     NOT    NOT
+      20   -45    46.4    NOT    28.5    NOT    47.5    NOT     8.6    NOT     NOT    NOT
+      20   -30    79.6    9.2    64.0    NOT    80.2   10.1    44.1    NOT     NOT    NOT
+      20   -15    90.4   44.6    83.5   26.0    90.7   44.8    72.9    6.1    22.2    NOT
+      20    +0    95.1   59.8    93.9   44.8    95.1   60.1    82.7   28.9    36.1    NOT
+      20   +15    95.5   52.8    95.5   39.7    95.5   53.1    83.3   23.8    33.8    NOT
+      20   +30    96.8   37.0    87.3   22.1    97.2   38.0    75.9    6.2    27.6    NOT
+      20   +45    82.6    2.7    66.1    NOT    83.2    3.6    48.9    NOT     NOT    NOT
+      30   -45    44.1    NOT    25.5    NOT    45.2    NOT     2.0    NOT     NOT    NOT
+      30   -30    82.9   20.9    74.5    5.3    83.6   21.9    54.4    NOT     NOT    NOT
+      30   -15    94.6   64.0    91.9   45.3    94.6   65.1    85.0   25.5    41.9    NOT
+      30    +0    94.7   79.7    94.7   71.6    94.7   79.9    94.4   57.2    57.7    3.3
+      30   +15    95.4   79.8    95.4   71.6    95.4   80.0    93.3   51.3    52.8    NOT
+      30   +30    95.5   58.7    95.5   42.6    95.5   59.8    86.8   22.8    35.3    NOT
+      30   +45    79.1    8.2    63.1    NOT    80.3    9.1    41.1    NOT     NOT    NOT
+      40   -45    22.8    NOT     4.1    NOT    23.6    NOT     NOT    NOT     NOT    NOT
+      40   -30    74.9   10.7    57.0    NOT    76.2   11.7    33.2    NOT     NOT    NOT
+      40   -15    94.8   66.3    94.8   47.6    94.8   67.5    87.2   27.8    42.6    NOT
+      40    +0    93.7   85.4    93.7   76.1    93.7   85.8    93.7   66.4    65.1    9.4
+      40   +15    95.2   82.3    95.2   75.5    95.2   82.9    95.2   56.5    55.2    5.2
+      40   +30    92.2   56.4    88.5   40.0    92.2   57.6    74.7   20.1    19.6    NOT
+      40   +45    72.9    6.7    55.5    NOT    74.0    7.5    31.7    NOT     NOT    NOT
+      50   -45     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT
+      50   -30    50.2    NOT    27.9    NOT    51.4    NOT     4.1    NOT     NOT    NOT
+      50   -15    91.6   52.1    87.3   33.4    91.6   53.2    80.0   13.6    26.7    NOT
+      50    +0    92.0   80.4    92.0   71.8    92.0   80.7    92.0   61.2    57.7    2.5
+      50   +15    94.9   76.2    94.9   64.3    94.9   76.8    94.9   45.8    47.1    NOT
+      50   +30    83.7   37.6    69.1   19.9    84.3   38.7    50.6    NOT     NOT    NOT
+      50   +45    42.3    NOT    23.6    NOT    42.3    NOT     3.8    NOT     NOT    NOT
+      60   -45     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT
+      60   -30    12.8    NOT     NOT    NOT    13.8    NOT     NOT    NOT     NOT    NOT
+      60   -15    77.8   20.4    71.4    1.7    78.5   21.4    52.6    NOT     NOT    NOT
+      60    +0    89.8   67.2    89.8   56.3    89.8   67.5    78.2   36.4    35.5    NOT
+      60   +15    90.0   52.1    89.7   36.3    90.0   53.3    80.2   16.7    23.6    NOT
+      60   +30    57.2    NOT    37.0    NOT    58.4    NOT    13.2    NOT     NOT    NOT
+      60   +45     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT
+      70   -45     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT
+      70   -30     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT
+      70   -15    37.1    NOT    18.5    NOT    38.2    NOT     NOT    NOT     NOT    NOT
+      70    +0    78.8   25.7    70.0   10.8    79.1   25.8    59.4    NOT     NOT    NOT
+      70   +15    70.8    7.0    54.8    NOT    71.4    8.0    38.0    NOT     NOT    NOT
+      70   +30     6.9    NOT     NOT    NOT     7.8    NOT     NOT    NOT     NOT    NOT
+      70   +45     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT
+   1.3 Verdict maps: BC meets in both B and C, B in the typical case only, - in neither
+   case P (U3 6.1 A (minimum), U3B carried 0.972)
+         slope    -45   -30   -15    +0   +15   +30   +45
+             0      .     .     .     -     .     .     .
+            10      B     B     B     B     B     B     B
+            20      B    BC    BC    BC    BC    BC    BC
+            30      B    BC    BC    BC    BC    BC    BC
+            40      B    BC    BC    BC    BC    BC    BC
+            50      -     B    BC    BC    BC    BC     B
+            60      -     B    BC    BC    BC     B     -
+            70      -     -     B    BC    BC     B     -
+   case I (U3 6.0 A (bracket), U3B carried)
+         slope    -45   -30   -15    +0   +15   +30   +45
+             0      .     .     .     -     .     .     .
+            10      B     B     B     B     B     B     B
+            20      B     B    BC    BC    BC    BC     B
+            30      B    BC    BC    BC    BC    BC     B
+            40      B     B    BC    BC    BC    BC     B
+            50      -     B    BC    BC    BC    BC     B
+            60      -     -    BC    BC    BC     B     -
+            70      -     -     B    BC     B     -     -
+   case H (U3 6.1 A, U3B hour by hour (TI curve))
+         slope    -45   -30   -15    +0   +15   +30   +45
+             0      .     .     .     -     .     .     .
+            10      B     B     B     B     B     B     B
+            20      B    BC    BC    BC    BC    BC    BC
+            30      B    BC    BC    BC    BC    BC    BC
+            40      B    BC    BC    BC    BC    BC    BC
+            50      -     B    BC    BC    BC    BC     B
+            60      -     B    BC    BC    BC     B     -
+            70      -     -     B    BC    BC     B     -
+   case V20 (U3 6.1 A at the bus's nominal 20.00 V (122.0 W))
+         slope    -45   -30   -15    +0   +15   +30   +45
+             0      .     .     .     -     .     .     .
+            10      -     B     B     B     B     B     B
+            20      B     B    BC    BC    BC    BC     B
+            30      B     B    BC    BC    BC    BC     B
+            40      -     B    BC    BC    BC    BC     B
+            50      -     B    BC    BC    BC     B     B
+            60      -     -     B    BC    BC     B     -
+            70      -     -     -     B     B     -     -
+   case V19 (U3 6.1 A at the DC band's low end 19.08 V (116.4 W))
+         slope    -45   -30   -15    +0   +15   +30   +45
+             0      .     .     .     -     .     .     .
+            10      -     -     -     -     B     -     -
+            20      -     -     B     B     B     B     -
+            30      -     -     B    BC     B     B     -
+            40      -     -     B    BC    BC     B     -
+            50      -     -     B    BC     B     -     -
+            60      -     -     -     B     B     -     -
+            70      -     -     -     -     -     -     -
+
+2. 4S15P LID, THE QMX OUT OF THE LID (4S21P IN ALL): THE GRID (azimuth in degrees, negative east of south; flat is run once)
+   2.1 Case P, both / lid Wh or NOT MET
+   slope  azim  kWh/m2/d B ratio C ratio   B typical        C adverse       
+       0    +0     3.203  0.9900  0.9159     15.6 /   0.0   NOT MET         
+      10   -45     3.409  0.9897  0.9148     67.0 /  17.9   NOT MET         
+      10   -30     3.465  0.9899  0.9148     87.9 /  32.7   NOT MET         
+      10   -15     3.502  0.9902  0.9148    103.2 /  43.6     16.6 /   0.0  
+      10    +0     3.518  0.9904  0.9148    106.5 /  49.2     27.9 /   0.0  
+      10   +15     3.510  0.9905  0.9148    106.1 /  50.1     28.6 /   0.0  
+      10   +30     3.480  0.9905  0.9148     98.0 /  43.0     14.6 /   0.0  
+      10   +45     3.430  0.9904  0.9148     84.0 /  30.8   NOT MET         
+      20   -45     3.566  0.9894  0.9134     77.2 /  24.9   NOT MET         
+      20   -30     3.666  0.9897  0.9131    110.7 /  50.7     39.8 /   0.0  
+      20   -15     3.733  0.9901  0.9130    121.7 /  64.3     75.3 /  23.8  
+      20    +0     3.764  0.9905  0.9131    126.6 /  69.1     90.5 /  34.6  
+      20   +15     3.749  0.9906  0.9130    127.0 /  69.4     83.6 /  31.2  
+      20   +30     3.694  0.9906  0.9130    128.1 /  69.9     67.8 /  18.4  
+      20   +45     3.605  0.9906  0.9132    113.7 /  56.6     33.3 /   0.0  
+      30   -45     3.661  0.9890  0.9118     74.9 /  23.2   NOT MET         
+      30   -30     3.799  0.9895  0.9116    114.2 /  57.9     51.6 /   6.8  
+      30   -15     3.888  0.9899  0.9113    126.1 /  68.7     94.8 /  37.5  
+      30    +0     3.931  0.9904  0.9114    126.2 /  68.8    110.9 /  54.3  
+      30   +15     3.910  0.9905  0.9112    126.9 /  69.3    110.9 /  54.2  
+      30   +30     3.838  0.9906  0.9113    127.0 /  69.4     89.5 /  35.5  
+      30   +45     3.708  0.9905  0.9112    110.2 /  54.0     38.8 /   0.0  
+      40   -45     3.696  0.9886  0.9107     53.4 /   8.0   NOT MET         
+      40   -30     3.849  0.9891  0.9102    105.9 /  48.2     41.3 /   0.0  
+      40   -15     3.963  0.9897  0.9102    126.3 /  68.9     97.1 /  39.1  
+      40    +0     4.014  0.9903  0.9103    125.2 /  68.1    116.6 /  60.3  
+      40   +15     3.988  0.9904  0.9099    126.7 /  69.1    113.5 /  56.9  
+      40   +30     3.900  0.9905  0.9098    123.7 /  67.0     87.2 /  33.5  
+      40   +45     3.755  0.9904  0.9098    103.9 /  47.0     37.4 /   0.0  
+      50   -45     3.650  0.9880  0.9097     12.2 /   0.0   NOT MET         
+      50   -30     3.820  0.9886  0.9093     80.9 /  27.4     14.6 /   0.0  
+      50   -15     3.951  0.9895  0.9098    123.1 /  66.6     82.8 /  28.9  
+      50    +0     4.008  0.9902  0.9100    123.5 /  66.9    111.6 /  55.7  
+      50   +15     3.981  0.9903  0.9095    126.4 /  69.0    107.4 /  51.7  
+      50   +30     3.875  0.9902  0.9088    115.0 /  59.7     68.3 /  18.5  
+      50   +45     3.720  0.9900  0.9086     73.0 /  21.9      3.0 /   0.0  
+      60   -45     3.525  0.9870  0.9088   NOT MET          NOT MET         
+      60   -30     3.717  0.9881  0.9093     43.4 /   0.8   NOT MET         
+      60   -15     3.850  0.9892  0.9101    109.1 /  54.1     51.0 /   6.3  
+      60    +0     3.911  0.9900  0.9104    121.3 /  65.3     98.4 /  44.4  
+      60   +15     3.884  0.9902  0.9098    121.5 /  65.4     83.0 /  31.0  
+      60   +30     3.770  0.9898  0.9085     88.0 /  33.9     25.1 /   0.0  
+      60   +45     3.601  0.9895  0.9076     11.1 /   0.0   NOT MET         
+      70   -45     3.346  0.9861  0.9094   NOT MET          NOT MET         
+      70   -30     3.531  0.9874  0.9104   NOT MET          NOT MET         
+      70   -15     3.663  0.9888  0.9116     67.8 /  18.1   NOT MET         
+      70    +0     3.725  0.9897  0.9114    109.9 /  54.7     56.3 /  10.2  
+      70   +15     3.699  0.9899  0.9106    101.9 /  47.7     37.6 /   0.0  
+      70   +30     3.588  0.9894  0.9088     37.5 /   0.0   NOT MET         
+      70   +45     3.414  0.9887  0.9069   NOT MET          NOT MET         
+   2.2 Every case, the lowest store of both packs in Wh (NOT = NOT MET); B typical / C adverse
+   slope  azim  P              I              H              V20            V19          
+       0    +0    15.6    NOT     5.1    NOT    15.6    NOT     NOT    NOT     NOT    NOT
+      10   -45    67.0    NOT    50.1    NOT    68.0    NOT    30.3    NOT     NOT    NOT
+      10   -30    87.9    NOT    69.2    NOT    88.2    NOT    49.3    NOT     NOT    NOT
+      10   -15   103.2   16.6    85.4    5.4   103.6   16.6    65.5    NOT    14.9    NOT
+      10    +0   106.5   27.9    96.1   15.7   106.8   28.0    78.4    NOT    27.8    NOT
+      10   +15   106.1   28.6    93.2   13.6   106.4   28.6    77.5    NOT    31.3    NOT
+      10   +30    98.0   14.6    82.9    3.4    98.4   14.5    68.3    NOT    23.4    NOT
+      10   +45    84.0    NOT    70.1    NOT    84.4    NOT    54.2    NOT     8.1    NOT
+      20   -45    77.2    NOT    59.1    NOT    78.3    NOT    39.3    NOT     NOT    NOT
+      20   -30   110.7   39.8    94.7   25.0   111.3   40.8    74.8    6.9    24.2    NOT
+      20   -15   121.7   75.3   114.6   56.6   122.0   75.6   103.6   36.8    52.9    NOT
+      20    +0   126.6   90.5   125.0   75.5   126.6   90.9   113.9   59.6    66.8    9.1
+      20   +15   127.0   83.6   126.7   70.4   127.0   84.0   114.5   54.5    64.5   10.9
+      20   +30   128.1   67.8   118.5   52.8   128.7   68.8   106.8   36.9    58.3    NOT
+      20   +45   113.7   33.3    97.0   22.2   114.4   34.3    79.6    8.9    28.9    NOT
+      30   -45    74.9    NOT    56.2    NOT    75.9    NOT    32.7    NOT     NOT    NOT
+      30   -30   114.2   51.6   105.2   35.9   114.9   52.6    85.1   16.2    24.3    NOT
+      30   -15   126.1   94.8   123.2   76.0   126.1   95.9   116.1   56.2    72.6    5.6
+      30    +0   126.2  110.9   126.2  102.7   126.2  111.1   125.5   88.0    88.5   34.0
+      30   +15   126.9  110.9   126.9  102.4   126.9  111.2   124.5   82.1    83.6   30.2
+      30   +30   127.0   89.5   127.0   73.3   127.0   90.7   118.0   53.4    66.0    2.8
+      30   +45   110.2   38.8    93.9   23.9   111.4   39.8    71.8    8.1    11.0    NOT
+      40   -45    53.4    NOT    34.8    NOT    54.3    NOT    15.0    NOT     NOT    NOT
+      40   -30   105.9   41.3    87.7   26.4   107.2   42.3    63.8    8.1     3.1    NOT
+      40   -15   126.3   97.1   126.3   78.4   126.3   98.3   118.4   58.5    73.4    7.9
+      40    +0   125.2  116.6   125.2  107.2   125.2  116.9   125.2   97.5    95.9   40.1
+      40   +15   126.7  113.5   126.7  106.6   126.7  114.1   126.7   87.4    86.1   35.8
+      40   +30   123.7   87.2   119.9   70.7   123.7   88.4   105.7   50.8    50.3    NOT
+      40   +45   103.9   37.4    86.3   18.7   105.0   38.2    62.4    NOT     1.6    NOT
+      50   -45    12.2    NOT     NOT    NOT    13.6    NOT     NOT    NOT     NOT    NOT
+      50   -30    80.9   14.6    58.5    NOT    82.1   15.5    34.7    NOT     NOT    NOT
+      50   -15   123.1   82.8   118.6   64.1   123.1   84.0   111.2   44.2    57.4    NOT
+      50    +0   123.5  111.6   123.5  102.9   123.5  111.9   123.3   92.0    88.5   33.1
+      50   +15   126.4  107.4   126.4   95.1   126.4  108.0   126.3   76.6    77.8   27.0
+      50   +30   115.0   68.3   100.1   50.6   115.7   69.5    81.4   26.8    20.6    NOT
+      50   +45    73.0    3.0    54.3    NOT    73.1    4.3    34.4    NOT     NOT    NOT
+      60   -45     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT
+      60   -30    43.4    NOT    24.8    NOT    44.4    NOT     2.7    NOT     NOT    NOT
+      60   -15   109.1   51.0   102.5   32.3   109.8   52.1    83.4   12.5    23.3    NOT
+      60    +0   121.3   98.4   121.3   87.0   121.3   98.6   109.4   67.1    66.2   13.2
+      60   +15   121.5   83.0   120.9   67.0   121.5   84.2   111.4   47.3    54.3    NOT
+      60   +30    88.0   25.1    67.7    7.9    89.2   26.1    43.8    NOT     NOT    NOT
+      60   +45    11.1    NOT     NOT    NOT    11.8    NOT     NOT    NOT     NOT    NOT
+      70   -45     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT
+      70   -30     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT
+      70   -15    67.8    NOT    49.1    NOT    69.0    NOT    29.3    NOT     NOT    NOT
+      70    +0   109.9   56.3   101.1   41.4   110.2   56.5    90.4   24.7    29.5    NOT
+      70   +15   101.9   37.6    85.7   19.0   102.6   38.7    68.7    NOT    15.1    NOT
+      70   +30    37.5    NOT    18.9    NOT    38.4    NOT     NOT    NOT     NOT    NOT
+      70   +45     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT
+   2.3 Verdict maps: BC meets in both B and C, B in the typical case only, - in neither
+   case P (U3 6.1 A (minimum), U3B carried 0.972)
+         slope    -45   -30   -15    +0   +15   +30   +45
+             0      .     .     .     B     .     .     .
+            10      B     B    BC    BC    BC    BC     B
+            20      B    BC    BC    BC    BC    BC    BC
+            30      B    BC    BC    BC    BC    BC    BC
+            40      B    BC    BC    BC    BC    BC    BC
+            50      B    BC    BC    BC    BC    BC    BC
+            60      -     B    BC    BC    BC    BC     B
+            70      -     -     B    BC    BC     B     -
+   case I (U3 6.0 A (bracket), U3B carried)
+         slope    -45   -30   -15    +0   +15   +30   +45
+             0      .     .     .     B     .     .     .
+            10      B     B    BC    BC    BC    BC     B
+            20      B    BC    BC    BC    BC    BC    BC
+            30      B    BC    BC    BC    BC    BC    BC
+            40      B    BC    BC    BC    BC    BC    BC
+            50      -     B    BC    BC    BC    BC     B
+            60      -     B    BC    BC    BC    BC     -
+            70      -     -     B    BC    BC     B     -
+   case H (U3 6.1 A, U3B hour by hour (TI curve))
+         slope    -45   -30   -15    +0   +15   +30   +45
+             0      .     .     .     B     .     .     .
+            10      B     B    BC    BC    BC    BC     B
+            20      B    BC    BC    BC    BC    BC    BC
+            30      B    BC    BC    BC    BC    BC    BC
+            40      B    BC    BC    BC    BC    BC    BC
+            50      B    BC    BC    BC    BC    BC    BC
+            60      -     B    BC    BC    BC    BC     B
+            70      -     -     B    BC    BC     B     -
+   case V20 (U3 6.1 A at the bus's nominal 20.00 V (122.0 W))
+         slope    -45   -30   -15    +0   +15   +30   +45
+             0      .     .     .     -     .     .     .
+            10      B     B     B     B     B     B     B
+            20      B    BC    BC    BC    BC    BC    BC
+            30      B    BC    BC    BC    BC    BC    BC
+            40      B    BC    BC    BC    BC    BC     B
+            50      -     B    BC    BC    BC    BC     B
+            60      -     B    BC    BC    BC     B     -
+            70      -     -     B    BC     B     -     -
+   case V19 (U3 6.1 A at the DC band's low end 19.08 V (116.4 W))
+         slope    -45   -30   -15    +0   +15   +30   +45
+             0      .     .     .     -     .     .     .
+            10      -     -     B     B     B     B     B
+            20      -     B     B    BC    BC     B     B
+            30      -     B    BC    BC    BC    BC     B
+            40      -     B    BC    BC    BC     B     B
+            50      -     -     B    BC    BC     B     -
+            60      -     -     B    BC     B     -     -
+            70      -     -     -     B     B     -     -
+
+3. THE CONDITIONS THE GRIDS ALLOW (INFERRED; only grid points that meet in BOTH B and C; flat counts for every azimuth)
+   A rectangle is a slope range by an azimuth range whose every grid point meets both; 'maximal' = inside no larger one;
+   'least' = its smallest lowest store of both packs over its points, cases B and C and the cases named, with the plane.
+   'Within x of south' = the azimuth range -x to +x. The model's grid is its resolution: nothing between grid points is run.
+   The floor: 4.2 Wh, the larger lowest-store drop reconcile_lid_panel.out's NOTES print for a 0.01 h step (its check,
+   at 40/0 and the second issue's settings); a point whose least store is at or under it is not counted in a floored set.
+   4S14P lid, the tablet out of the lid (4S20P in all)
+      case P (the grid's condition):
+         slope 20 to 40, azimuth -30 to +45: 18 grid points; least   2.7 Wh at 20/+45 (P C)
+         slope 20 to 50, azimuth -15 to +30: 16 grid points; least  37.0 Wh at 20/+30 (P C)
+         slope 20 to 60, azimuth -15 to +15: 15 grid points; least  20.4 Wh at 60/-15 (P C)
+         slope 20 to 70, azimuth  +0 to +15: 12 grid points; least   7.0 Wh at 70/+15 (P C)
+         within  0 of south: slope 20 to 70 (least 25.7 Wh at 70/+0, P C)
+         within 15 of south: slope 20 to 60 (least 20.4 Wh at 60/-15, P C)
+         within 30 of south: slope 20 to 40 (least 9.2 Wh at 20/-30, P C)
+         within 45 of south: no slope
+      case I:
+         slope 20 to 50, azimuth -15 to +30: 16 grid points; least  19.9 Wh at 50/+30 (I C)
+         slope 20 to 60, azimuth -15 to +15: 15 grid points; least   1.7 Wh at 60/-15 (I C)
+         slope 20 to 70, azimuth  +0 to  +0:  6 grid points; least  10.8 Wh at 70/+0 (I C)
+         slope 30 to 30, azimuth -30 to +30:  5 grid points; least   5.3 Wh at 30/-30 (I C)
+         within  0 of south: slope 20 to 70 (least 10.8 Wh at 70/+0, I C)
+         within 15 of south: slope 20 to 60 (least 1.7 Wh at 60/-15, I C)
+         within 30 of south: slope 30 to 30 (least 5.3 Wh at 30/-30, I C)
+         within 45 of south: no slope
+      case H:
+         slope 20 to 40, azimuth -30 to +45: 18 grid points; least   3.6 Wh at 20/+45 (H C)
+         slope 20 to 50, azimuth -15 to +30: 16 grid points; least  38.0 Wh at 20/+30 (H C)
+         slope 20 to 60, azimuth -15 to +15: 15 grid points; least  21.4 Wh at 60/-15 (H C)
+         slope 20 to 70, azimuth  +0 to +15: 12 grid points; least   8.0 Wh at 70/+15 (H C)
+         within  0 of south: slope 20 to 70 (least 25.8 Wh at 70/+0, H C)
+         within 15 of south: slope 20 to 60 (least 21.4 Wh at 60/-15, H C)
+         within 30 of south: slope 20 to 40 (least 10.1 Wh at 20/-30, H C)
+         within 45 of south: no slope
+      case V20:
+         slope 20 to 40, azimuth -15 to +30: 12 grid points; least   6.1 Wh at 20/-15 (V20 C)
+         slope 20 to 50, azimuth -15 to +15: 12 grid points; least   6.1 Wh at 20/-15 (V20 C)
+         slope 20 to 60, azimuth  +0 to +15: 10 grid points; least  16.7 Wh at 60/+15 (V20 C)
+         within  0 of south: slope 20 to 60 (least 28.9 Wh at 20/+0, V20 C)
+         within 15 of south: slope 20 to 50 (least 6.1 Wh at 20/-15, V20 C)
+         within 30 of south: no slope
+         within 45 of south: no slope
+      case V19:
+         slope 30 to 50, azimuth  +0 to  +0:  3 grid points; least   2.5 Wh at 50/+0 (V19 C)
+         slope 40 to 40, azimuth  +0 to +15:  2 grid points; least   5.2 Wh at 40/+15 (V19 C)
+         within  0 of south: slope 30 to 50 (least 2.5 Wh at 50/+0, V19 C)
+         within 15 of south: no slope
+         within 30 of south: no slope
+         within 45 of south: no slope
+      CONSERVATIVE: P, I and H at once, above the floor:
+         slope 20 to 50, azimuth -15 to +30: 16 grid points; least  19.9 Wh at 50/+30 (I C)
+         slope 20 to 60, azimuth  +0 to +15: 10 grid points; least  36.3 Wh at 60/+15 (I C)
+         slope 20 to 70, azimuth  +0 to  +0:  6 grid points; least  10.8 Wh at 70/+0 (I C)
+         slope 30 to 30, azimuth -30 to +30:  5 grid points; least   5.3 Wh at 30/-30 (I C)
+         within  0 of south: slope 20 to 70 (least 10.8 Wh at 70/+0, I C)
+         within 15 of south: slope 20 to 50 (least 26.0 Wh at 20/-15, I C)
+         within 30 of south: slope 30 to 30 (least 5.3 Wh at 30/-30, I C)
+         within 45 of south: no slope
+      CONSERVATIVE with the bus at its nominal: P, I, H and V20 at once, above the floor:
+         slope 20 to 40, azimuth -15 to +30: 12 grid points; least   6.1 Wh at 20/-15 (V20 C)
+         slope 20 to 50, azimuth -15 to +15: 12 grid points; least   6.1 Wh at 20/-15 (V20 C)
+         slope 20 to 60, azimuth  +0 to +15: 10 grid points; least  16.7 Wh at 60/+15 (V20 C)
+         within  0 of south: slope 20 to 60 (least 28.9 Wh at 20/+0, V20 C)
+         within 15 of south: slope 20 to 50 (least 6.1 Wh at 20/-15, V20 C)
+         within 30 of south: no slope
+         within 45 of south: no slope
+   4S15P lid, the QMX out of the lid (4S21P in all)
+      case P (the grid's condition):
+         slope 10 to 60, azimuth -15 to +30: 24 grid points; least  14.6 Wh at 10/+30 (P C)
+         slope 20 to 50, azimuth -30 to +45: 24 grid points; least   3.0 Wh at 50/+45 (P C)
+         slope 10 to 70, azimuth  +0 to +15: 14 grid points; least  27.9 Wh at 10/+0 (P C)
+         within  0 of south: slope 10 to 70 (least 27.9 Wh at 10/+0, P C)
+         within 15 of south: slope 10 to 60 (least 16.6 Wh at 10/-15, P C)
+         within 30 of south: slope 20 to 50 (least 14.6 Wh at 50/-30, P C)
+         within 45 of south: no slope
+      case I:
+         slope 10 to 60, azimuth -15 to +30: 24 grid points; least   3.4 Wh at 10/+30 (I C)
+         slope 20 to 40, azimuth -30 to +45: 18 grid points; least  18.7 Wh at 40/+45 (I C)
+         slope 10 to 70, azimuth  +0 to +15: 14 grid points; least  13.6 Wh at 10/+15 (I C)
+         within  0 of south: slope 10 to 70 (least 15.7 Wh at 10/+0, I C)
+         within 15 of south: slope 10 to 60 (least 5.4 Wh at 10/-15, I C)
+         within 30 of south: slope 20 to 40 (least 25.0 Wh at 20/-30, I C)
+         within 45 of south: no slope
+      case H:
+         slope 10 to 60, azimuth -15 to +30: 24 grid points; least  14.5 Wh at 10/+30 (H C)
+         slope 20 to 50, azimuth -30 to +45: 24 grid points; least   4.3 Wh at 50/+45 (H C)
+         slope 10 to 70, azimuth  +0 to +15: 14 grid points; least  28.0 Wh at 10/+0 (H C)
+         within  0 of south: slope 10 to 70 (least 28.0 Wh at 10/+0, H C)
+         within 15 of south: slope 10 to 60 (least 16.6 Wh at 10/-15, H C)
+         within 30 of south: slope 20 to 50 (least 15.5 Wh at 50/-30, H C)
+         within 45 of south: no slope
+      case V20:
+         slope 20 to 50, azimuth -15 to +30: 16 grid points; least  26.8 Wh at 50/+30 (V20 C)
+         slope 20 to 40, azimuth -30 to +30: 15 grid points; least   6.9 Wh at 20/-30 (V20 C)
+         slope 20 to 60, azimuth -15 to +15: 15 grid points; least  12.5 Wh at 60/-15 (V20 C)
+         slope 20 to 30, azimuth -30 to +45: 12 grid points; least   6.9 Wh at 20/-30 (V20 C)
+         slope 20 to 70, azimuth  +0 to  +0:  6 grid points; least  24.7 Wh at 70/+0 (V20 C)
+         within  0 of south: slope 20 to 70 (least 24.7 Wh at 70/+0, V20 C)
+         within 15 of south: slope 20 to 60 (least 12.5 Wh at 60/-15, V20 C)
+         within 30 of south: slope 20 to 40 (least 6.9 Wh at 20/-30, V20 C)
+         within 45 of south: no slope
+      case V19:
+         slope 20 to 50, azimuth  +0 to +15:  8 grid points; least   9.1 Wh at 20/+0 (V19 C)
+         slope 30 to 40, azimuth -15 to +15:  6 grid points; least   5.6 Wh at 30/-15 (V19 C)
+         slope 20 to 60, azimuth  +0 to  +0:  5 grid points; least   9.1 Wh at 20/+0 (V19 C)
+         slope 30 to 30, azimuth -15 to +30:  4 grid points; least   2.8 Wh at 30/+30 (V19 C)
+         within  0 of south: slope 20 to 60 (least 9.1 Wh at 20/+0, V19 C)
+         within 15 of south: slope 30 to 40 (least 5.6 Wh at 30/-15, V19 C)
+         within 30 of south: no slope
+         within 45 of south: no slope
+      CONSERVATIVE: P, I and H at once, above the floor:
+         slope 20 to 60, azimuth -15 to +30: 20 grid points; least   7.9 Wh at 60/+30 (I C)
+         slope 10 to 60, azimuth -15 to +15: 18 grid points; least   5.4 Wh at 10/-15 (I C)
+         slope 20 to 40, azimuth -30 to +45: 18 grid points; least  18.7 Wh at 40/+45 (I C)
+         slope 10 to 70, azimuth  +0 to +15: 14 grid points; least  13.6 Wh at 10/+15 (I C)
+         within  0 of south: slope 10 to 70 (least 15.7 Wh at 10/+0, I C)
+         within 15 of south: slope 10 to 60 (least 5.4 Wh at 10/-15, I C)
+         within 30 of south: slope 20 to 40 (least 25.0 Wh at 20/-30, I C)
+         within 45 of south: no slope
+      CONSERVATIVE with the bus at its nominal: P, I, H and V20 at once, above the floor:
+         slope 20 to 50, azimuth -15 to +30: 16 grid points; least  26.8 Wh at 50/+30 (V20 C)
+         slope 20 to 40, azimuth -30 to +30: 15 grid points; least   6.9 Wh at 20/-30 (V20 C)
+         slope 20 to 60, azimuth -15 to +15: 15 grid points; least  12.5 Wh at 60/-15 (V20 C)
+         slope 20 to 30, azimuth -30 to +45: 12 grid points; least   6.9 Wh at 20/-30 (V20 C)
+         slope 20 to 70, azimuth  +0 to  +0:  6 grid points; least  24.7 Wh at 70/+0 (V20 C)
+         within  0 of south: slope 20 to 70 (least 24.7 Wh at 70/+0, V20 C)
+         within 15 of south: slope 20 to 60 (least 12.5 Wh at 60/-15, V20 C)
+         within 30 of south: slope 20 to 40 (least 6.9 Wh at 20/-30, V20 C)
+         within 45 of south: no slope
+
+4. THE LOWEST STORES AT THE OLD RULE'S EDGES (ARRAY.md section 7: 20 to 50 degrees within 15 degrees of south, computed
+   for the 4S12P lid), and on the planes one grid step outside it; case P unless named; both / lid Wh or NOT MET
+   4S14P lid, the tablet out of the lid (4S20P in all)
+      case P   B: every rule plane MEETS; lowest store  90.4 Wh at 20/-15 (lid  41.1 Wh)
+      case P   C: every rule plane MEETS; lowest store  44.6 Wh at 20/-15 (lid   1.4 Wh)
+      case I   B: every rule plane MEETS; lowest store  83.5 Wh at 20/-15 (lid  34.2 Wh)
+      case I   C: every rule plane MEETS; lowest store  26.0 Wh at 20/-15 (lid   0.0 Wh)
+      case H   B: every rule plane MEETS; lowest store  90.7 Wh at 20/-15 (lid  41.5 Wh)
+      case H   C: every rule plane MEETS; lowest store  44.8 Wh at 20/-15 (lid   1.6 Wh)
+      case V20 B: every rule plane MEETS; lowest store  72.9 Wh at 20/-15 (lid  21.1 Wh)
+      case V20 C: every rule plane MEETS; lowest store   6.1 Wh at 20/-15 (lid   0.0 Wh)
+      case V19 B: every rule plane MEETS; lowest store  22.2 Wh at 20/-15 (lid   0.0 Wh)
+      case V19 C: NOT every rule plane meets: NOT MET at 20/-15, 20/+0, 20/+15, 30/-15, 30/+15, 40/-15, 50/-15, 50/+15
+      the rule's edge planes, case P: 20/-15 B 90.4 C 44.6; 20/+0 B 95.1 C 59.8; 20/+15 B 95.5 C 52.8; 30/-15 B 94.6 C 64.0; 30/+15 B 95.4 C 79.8; 40/-15 B 94.8 C 66.3; 40/+15 B 95.2 C 82.3; 50/-15 B 91.6 C 52.1; 50/+0 B 92.0 C 80.4; 50/+15 B 94.9 C 76.2
+      one step outside, case P: 10/-30 B 57.1 C NOT; 10/-15 B 72.4 C NOT; 10/+0 B 75.4 C NOT; 10/+15 B 75.0 C NOT; 10/+30 B 67.2 C NOT; 20/-30 B 79.6 C 9.2; 20/+30 B 96.8 C 37.0; 30/-30 B 82.9 C 20.9; 30/+30 B 95.5 C 58.7; 40/-30 B 74.9 C 10.7; 40/+30 B 92.2 C 56.4; 50/-30 B 50.2 C NOT; 50/+30 B 83.7 C 37.6; 60/-30 B 12.8 C NOT; 60/-15 B 77.8 C 20.4; 60/+0 B 89.8 C 67.2; 60/+15 B 90.0 C 52.1; 60/+30 B 57.2 C NOT
+      laid flat (slope 0): case P: B NOT MET, C NOT MET; case I: B NOT MET, C NOT MET; case H: B NOT MET, C NOT MET; case V20: B NOT MET, C NOT MET; case V19: B NOT MET, C NOT MET
+   4S15P lid, the QMX out of the lid (4S21P in all)
+      case P   B: every rule plane MEETS; lowest store 121.7 Wh at 20/-15 (lid  64.3 Wh)
+      case P   C: every rule plane MEETS; lowest store  75.3 Wh at 20/-15 (lid  23.8 Wh)
+      case I   B: every rule plane MEETS; lowest store 114.6 Wh at 20/-15 (lid  57.3 Wh)
+      case I   C: every rule plane MEETS; lowest store  56.6 Wh at 20/-15 (lid  10.6 Wh)
+      case H   B: every rule plane MEETS; lowest store 122.0 Wh at 20/-15 (lid  64.7 Wh)
+      case H   C: every rule plane MEETS; lowest store  75.6 Wh at 20/-15 (lid  24.1 Wh)
+      case V20 B: every rule plane MEETS; lowest store 103.6 Wh at 20/-15 (lid  43.9 Wh)
+      case V20 C: every rule plane MEETS; lowest store  36.8 Wh at 20/-15 (lid   0.0 Wh)
+      case V19 B: every rule plane MEETS; lowest store  52.9 Wh at 20/-15 (lid   8.0 Wh)
+      case V19 C: NOT every rule plane meets: NOT MET at 20/-15, 50/-15
+      the rule's edge planes, case P: 20/-15 B 121.7 C 75.3; 20/+0 B 126.6 C 90.5; 20/+15 B 127.0 C 83.6; 30/-15 B 126.1 C 94.8; 30/+15 B 126.9 C 110.9; 40/-15 B 126.3 C 97.1; 40/+15 B 126.7 C 113.5; 50/-15 B 123.1 C 82.8; 50/+0 B 123.5 C 111.6; 50/+15 B 126.4 C 107.4
+      one step outside, case P: 10/-30 B 87.9 C NOT; 10/-15 B 103.2 C 16.6; 10/+0 B 106.5 C 27.9; 10/+15 B 106.1 C 28.6; 10/+30 B 98.0 C 14.6; 20/-30 B 110.7 C 39.8; 20/+30 B 128.1 C 67.8; 30/-30 B 114.2 C 51.6; 30/+30 B 127.0 C 89.5; 40/-30 B 105.9 C 41.3; 40/+30 B 123.7 C 87.2; 50/-30 B 80.9 C 14.6; 50/+30 B 115.0 C 68.3; 60/-30 B 43.4 C NOT; 60/-15 B 109.1 C 51.0; 60/+0 B 121.3 C 98.4; 60/+15 B 121.5 C 83.0; 60/+30 B 88.0 C 25.1
+      laid flat (slope 0): case P: B 15.6 /   0.0, C NOT MET; case I: B 5.1 /   0.0, C NOT MET; case H: B 15.6 /   0.0, C NOT MET; case V20: B NOT MET, C NOT MET; case V19: B NOT MET, C NOT MET
+
+5. WHAT THE MODEL'S INPUTS TIE THE RESULT TO (read from the files)
+   plane days (DRcalc): latitude 52.160, longitude 4.497, PVGIS-SARAH2 2005 to 2020: 50 of 50 planes
+   the monthly mean that scales the day (v2/vendor/solar/pvgis-leiden-monthly-2015-2020.json): latitude 52.160, longitude 4.497, PVGIS-SARAH2 2015 to 2020;
+     September 4.014 kWh/m2 a day on 40/0; the scale 1.007820 is it over the 40/0 DRcalc day's sum
+   the lid basis 13.23 C: the minimum of the 40/0 DRcalc file's September T2m (energy_two_pack.py's DRCALC)
+   the ratio 0.9417: energy_inputs.yaml solar.panel.performance_ratio, src "PVGIS PVcalc totals l_aoi, l_spec, l_tg, l_total (AI arithmetic); the low is this stream's bracket for the fixed-voltage penalty, INFERRED"
+   Every day, the scale, the lid basis and the ratio come from that one site; no other site's file is in the tree,
+   so no other site is run here.
+
+END. Each line is the model's arithmetic on the September reference day; nothing is measured.
