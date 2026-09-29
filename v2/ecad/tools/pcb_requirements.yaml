@@ -3533,24 +3533,6 @@ open_items:
       the exciter keys. Figures: v2/docs/records/s99a/codec_floor.out (codec_floor.py). Closed by the owners'
       declarations and those readings giving the codec at least 4.35 V at the declared peak, or by a document or a board
       D declaration that bounds the peak the codec must operate through.
-  - id: S-119
-    class: SESSION
-    status: OPEN
-    title: >-
-      (stream s117, S-117's finding F2; the independent check of stream s117, blocking item B2) The charger rows of the
-      energy chain are not supported with the drawn CSD18510Q5B by SLUSE66A Equations 6 to 22 (printed pages 86 to 88):
-      U3 at 0.98 (v2/docs/records/energy/energy_inputs.yaml, read from Figure 8-4, whose FETs TI does not name) and U3B
-      at 0.975 (v2/docs/records/a1elec/energy_two_pack.py, read from Figure 8-3). With the drawn FETs U3 reads 0.943 at
-      the model's peak hour by TI's method (0.924 with the makers' maxima to 0.964 on the most favourable reading),
-      0.933 to 0.948 across the pack's 12.0 to 16.8 V, 0.879 to 0.888 in the day's first and last hours, and 0.939 over
-      the reference day weighted by energy at entry E2 (0.936 at E1); U3B as drafted reads 0.896 in buck mode and 0.802
-      as a buck-boost bound. With the FETs of decision 57 U3 reads 0.979 at the peak (0.972 to 0.983) and 0.979 over the
-      day at E2 (0.981 at E1), and U3B 0.961 (800 kHz, CSD17578Q5A x 4) or 0.974 (400 kHz row) at its worst mode; R16
-      and R17 are counted and the inductor's core loss is excluded, so every figure is high by it
-      (v2/docs/records/s117/efficiency.out, sections 1, 2, 4 and 7). The accepted Option A(i) reconciliation
-      (v2/docs/records/a1int/reconcile_lid_panel.py) rests on 0.98 and 0.975. Owner: the energy record's writer. Closed
-      when both rows are restated from the drawn FETs' losses, or from FETs that meet them, and the lid reconciliation
-      is re-run.
   - id: S-120
     class: SESSION
     status: OPEN
@@ -4290,6 +4272,57 @@ closed_items:
       board A's writer. Closed when board A's regenerated netlist carries those four parts (readback_s117.py --fets
       reads PASS), or other FETs whose gate charge at 6 V keeps 4 x Qg x 460 kHz under 50 mA with the stage's losses
       re-read by v2/docs/records/s117/efficiency.py.
+  - id: S-119
+    closed_by: commit 3309c9fabe4bc329d9f01ebee6095a4a4fa315bc
+    closing_evidence: >-
+      The charger rows restated from the FETs' losses by TI's SLUSE66A Equations 6 to 22 (printed pages 86 to 88), each
+      with its sense resistors inside and the inductors' core loss excluded (Coilcraft Document 804-1 prints none; every
+      figure is high by it): U3 in v2/docs/records/energy/energy_inputs.yaml at 0.979 (0.972 to 0.983, the reference day
+      weighted by energy at entry E2, decision 57's FETs; was 0.98) with chain_eta 0.9105, equal to
+      v2/docs/records/s117/efficiency.out section 7; U3B in v2/docs/records/a1elec/energy_two_pack.py at 0.972 (0.963 to
+      0.978; was 0.975) on U3's 400 kHz row, which decision 58 draws for it, weighted by energy over the model's own
+      hours (v2/docs/records/s119/u3b_hourly.out), with its 6.2 A input limit and the charge loop at 23 mOhm. Every
+      script of the chain re-issued with its pins moved and its output regenerated, each reproduced byte for byte when
+      this closure was applied, committed by 3309c9fabe4bc329d9f01ebee6095a4a4fa315bc. The lid reconciliation re-run
+      with U3 at its 6.1 A minimum on the 40 degree south plane: the tablet-out lid (4S14P) 93.7 Wh typical and 85.5 Wh
+      adverse at the lowest (was 93.7 and 87.4; 93.7 and 85.8 Wh with U3B's efficiency taken hour by hour), the QMX-out
+      lid (4S15P) 125.2 and 116.6 Wh (was 125.2 and 118.5; 125.2 and 116.9 hour by hour), both functions kept (4S9P) not
+      met; with the chargers at the FETs first drawn and drafted (U3 0.939, U3B 0.802) every case reads NOT MET
+      (v2/docs/records/s119/reconcile_s119.out, with the sensitivity, the room for the core loss and the deployment
+      rule's planes). Model results on the reference day; U3B's FET finding is S-121.
+    title: >-
+      (stream s117, S-117's finding F2; the independent check of stream s117, blocking item B2) The charger rows of the
+      energy chain are not supported with the drawn CSD18510Q5B by SLUSE66A Equations 6 to 22 (printed pages 86 to 88):
+      U3 at 0.98 (v2/docs/records/energy/energy_inputs.yaml, read from Figure 8-4, whose FETs TI does not name) and U3B
+      at 0.975 (v2/docs/records/a1elec/energy_two_pack.py, read from Figure 8-3). With the drawn FETs U3 reads 0.943 at
+      the model's peak hour by TI's method (0.924 with the makers' maxima to 0.964 on the most favourable reading),
+      0.933 to 0.948 across the pack's 12.0 to 16.8 V, 0.879 to 0.888 in the day's first and last hours, and 0.939 over
+      the reference day weighted by energy at entry E2 (0.936 at E1); U3B as drafted reads 0.896 in buck mode and 0.802
+      as a buck-boost bound. With the FETs of decision 57 U3 reads 0.979 at the peak (0.972 to 0.983) and 0.979 over the
+      day at E2 (0.981 at E1), and U3B 0.961 (800 kHz, CSD17578Q5A x 4) or 0.974 (400 kHz row) at its worst mode; R16
+      and R17 are counted and the inductor's core loss is excluded, so every figure is high by it
+      (v2/docs/records/s117/efficiency.out, sections 1, 2, 4 and 7). The accepted Option A(i) reconciliation
+      (v2/docs/records/a1int/reconcile_lid_panel.py) rests on 0.98 and 0.975. Owner: the energy record's writer. Closed
+      when both rows are restated from the drawn FETs' losses, or from FETs that meet them, and the lid reconciliation
+      is re-run.
+  - id: S-121
+    closed_by: commit 3309c9fabe4bc329d9f01ebee6095a4a4fa315bc
+    closing_evidence: >-
+      Decision 58 (SESSION) draws U3B on U3's 400 kHz row and v2/docs/records/a1elec/TOPOLOGY.md 3b and CHARGER.md carry
+      it at 3309c9fabe4bc329d9f01ebee6095a4a4fa315bc: Q7B and Q9B CSD17578Q5A, Q8B and Q10B CSD17577Q5A, L2B
+      XAL1010-472ME, 191 k on IADPT, Table 9-5's 400 kHz compensation, R16B 10 mOhm, IIN_HOST 6.2 A. REGN then supplies
+      32.6 mA at the makers' maxima in buck-boost against its 50 mA minimum limit (v2/docs/records/s117/efficiency.out
+      section 5); U3B reads 0.972 over the model's hours, which energy_two_pack.py carries; the inductor at 400 kHz
+      peaks at 9.74 A against Isat 25.4 A and runs at most 8.00 A RMS against 17.5 A for a 20 C rise (Coilcraft 804-1
+      page 1; v2/docs/records/s119/inductor_u3b.out). A draft closed on its page: U3B is on no generator, and its switch
+      node, loop, REGN current and temperatures are bench items.
+    title: >-
+      (stream s119, S-119's U3B finding) U3B, Option A(i)'s drafted lid charger, was drawn in
+      v2/docs/records/a1elec/TOPOLOGY.md 3b with Q7B to Q10B CSD18510Q5B on an 800 kHz row, which its 6 V REGN cannot
+      drive (120 mA in buck mode and 240 mA in buck-boost against IREGN_LIM's 50 mA minimum, SLUSE66A 8.5, printed page
+      11) and with which it reads 0.802 by TI's method; with that figure the adverse case of both lid options reads NOT
+      MET even with U3 as drawn (v2/docs/records/s119/reconcile_s119.out section 4). Owner: Option A(i)'s electrical
+      writer. Closed when U3B's draft carries FETs its REGN can drive and the energy chain carries their figure.
 records:
   - id: REQ-001
     kind: requirement
@@ -6877,7 +6910,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-06, D-20]
     choices: [SC-36, SC-21, SC-37]
-    waits_on: [S-53, M-02, S-114, S-119]
+    waits_on: [S-53, M-02, S-114]
     status: DEFINED
     evidence_result: FAIL
     evidence_phase: SCHEMATIC
@@ -6932,6 +6965,17 @@ records:
           substitute for the balance it states; the reconciliation study S-114 is opened and this record waits on it.
           This entry changes no result, statement or acceptance.
       - 'v2/docs/records/energy/ENERGY-RECONCILIATION.md (stream energy, 28 September 2026, on the owner''s instruction of that day; energy_budget.py, inputs pinned by sha256): the balance re-run hour by hour on the reference day with the loads of POWER-THERMAL.md section 4 (42.8 W, 39 loads: 20 maker figures, 8 inside a maker''s bound, 8 declarations, 3 placeholders, none measured), the aged pack''s usable energy from the cell sheet and the 3.00 V graceful line (107.9 Wh, against the record''s 108.1) and a 100 Wp panel in the 100 W window (320 Wh a day at the node in September, 90 in December). The kit stops 8 h after a 06:00 start and 2 h after an 18:00 start; a September night (11.3 h of sun down) asks 483 Wh at 42.8 W; no panel size inside the window and no panel size without it closes the 72 hours on one pack; the load would have to fall to 8.4 W or the pack grow to 2120 Wh alone. Verdict unchanged: FAIL. The options and the smallest justified changes are that record''s sections 6 and 7 and its DECISION-PARAGRAPH.md.'
+      - >-
+          v2/docs/records/s119/README.md (stream s119, S-119, 29 September 2026, two rounds): the energy chain's charger
+          rows restated from the FETs' losses (U3 0.98 to 0.979, decision 57's FETs on board A; U3B 0.975 to 0.972 on
+          U3's 400 kHz row, decision 58, weighted over the model's hours; core loss excluded) and every script of the
+          chain re-issued with its output regenerated. The single-pack balance of ENERGY-RECONCILIATION.md moves by
+          about 0.1 percent: 320 and 90 Wh a day at the node, the stops at hours 8 and 2, the 483 Wh night and the 8.4 W
+          stand as quoted above, the pack that would carry M1 alone is 2121 Wh (was 2120). Option A(i), not adopted,
+          meets M1 on the model with the tablet-out lid at 93.7 Wh typical and 85.5 Wh adverse at the lowest (was 87.4;
+          85.8 hour by hour) and the QMX-out lid at 125.2 and 116.6 Wh (was 118.5; 116.9 hour by hour), both functions
+          kept not met; the chargers at the FETs first drawn and drafted read NOT MET in every case. This entry changes
+          no result, statement or acceptance: the verdict stays FAIL.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
       - "v2/docs/feasibility/POWER-THERMAL.md@ad3ba27cef9e0f68"
@@ -13751,6 +13795,13 @@ records:
           line. No filed reading has re-read the rest of the named documents against set 12's netlists. So this record
           reads FAIL on set 12 and waits on S-122; CONOPS.md section 4b and section 4's EMCON row stay as rewritten, and
           check-int13-3 read them true pin by pin. The result is FAIL (was PASS).
+      - >-
+          v2/ecad/tools/pcb_decisions.yaml re-read at integration set 13
+          (v2/docs/records/int14/apply_rebind_decisions_set13.py, 44107103b49d036c to a41df5d12ff95995): parsed against
+          HEAD's file, every decision it holds is present and identical, and exactly one is added (58: stream s119's U3B
+          on U3's 400 kHz row, Option A(i)'s drafted lid charger); this record reads decisions 28 and 40, which are
+          identical; decision 58 concerns a drafted lid charger that no generator carries and no document this record
+          names describes; rebound to a41df5d12ff95995. No result changes.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
@@ -13759,7 +13810,7 @@ records:
       - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
-      - "v2/ecad/tools/pcb_decisions.yaml@44107103b49d036c"
+      - "v2/ecad/tools/pcb_decisions.yaml@a41df5d12ff95995"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@87b69472ac83ca5a"
