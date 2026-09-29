@@ -1,6 +1,7 @@
 {
  "board": "p",
  "counts": {
+  "allowed_nets": 0,
   "answered_nets": 4,
   "bound_decided_nets": 1,
   "bound_edge_nets": 5,
@@ -213,6 +214,7 @@
    "layout_bound": [
     "BTP_INT"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -387,6 +389,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
