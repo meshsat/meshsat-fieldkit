@@ -139,13 +139,13 @@ Sized at a maker's figure above the declaration (SIZED_TO; POWER-THERMAL.md sect
 
 ```bound
 board      c
-netlist    v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256/16 87b69472ac83ca5a
-intent     v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json sha256/16 d321f2979e0c4244
+netlist    v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256/16 c9f7394594201045
+intent     v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json sha256/16 6db304b8ce504a09
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
 ```
 
-Intent written 2026-09-29 11:42. Stack: six layers, owner decision 27 (board file still four, JLC04161H-7628, the same copper).
+Intent written 2026-09-29 15:11. Stack: six layers, owner decision 27 (board file still four, JLC04161H-7628, the same copper).
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|

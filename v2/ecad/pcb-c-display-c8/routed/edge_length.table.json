@@ -1,24 +1,25 @@
 {
  "board": "c",
  "counts": {
-  "answered_nets": 10,
-  "bound_decided_nets": 23,
-  "bound_edge_nets": 29,
-  "classes": 48,
+  "allowed_nets": 11,
+  "answered_nets": 29,
+  "bound_decided_nets": 7,
+  "bound_edge_nets": 32,
+  "classes": 53,
   "contradicted_nets": 0,
-  "decided_nets": 33,
-  "layout_bound_nets": 23,
-  "low_speed_nets": 101,
+  "decided_nets": 36,
+  "layout_bound_nets": 7,
+  "low_speed_nets": 103,
   "maker_edge_nets": 4,
   "maker_held_nets": 0,
-  "may_be_long_nets": 33,
+  "may_be_long_nets": 36,
   "models_absent": 0,
-  "models_asked": 6,
-  "signal_nets": 135,
+  "models_asked": 5,
+  "signal_nets": 139,
   "unasked_part_nets": 0,
   "undecided_model_absent_nets": 0,
-  "undecided_nets": 1,
-  "undecided_no_declaration_nets": 1,
+  "undecided_nets": 0,
+  "undecided_no_declaration_nets": 0,
   "undecided_other_nets": 0
  },
  "inputs": {
@@ -29,40 +30,40 @@
   },
   "board_table": {
    "path": "tools/boards/c.json",
-   "sha256_16": "7d7bcbccef4f1630"
+   "sha256_16": "fe5b32bf8174daa1"
   },
   "critical_k": 6,
   "document_1": {
-   "path": "v2/docs/records/hc5/kit_i2c_budget.round8-d.out.txt",
-   "sha256_16": "7967404c281d4e12"
+   "path": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+   "sha256_16": "5a71e9d681dc99e7"
   },
   "document_10": {
    "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
    "sha256_16": "be56fbb75ba0ae9e"
   },
   "document_11": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+   "sha256_16": "51c4f430153fcdbf"
+  },
+  "document_12": {
    "path": "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf",
    "sha256_16": "f6e620179006c8c4"
   },
-  "document_12": {
+  "document_13": {
    "path": "v2/vendor/standards/nxp-um10204-rev6-i2c-bus-specification.pdf",
    "sha256_16": "b7619700e8bb9dd4"
   },
-  "document_13": {
+  "document_14": {
    "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "sha256_16": "2ecb40606d4b84fe"
   },
-  "document_14": {
+  "document_15": {
    "path": "v2/vendor/ti/bq25731-datasheet.pdf",
    "sha256_16": "3e5e927fdf63cf6a"
   },
-  "document_15": {
+  "document_16": {
    "path": "v2/vendor/ti/lm5176-datasheet.pdf",
    "sha256_16": "98191bec36d43771"
-  },
-  "document_16": {
-   "path": "v2/vendor/ti/ti-sn74lvc1g34.pdf",
-   "sha256_16": "04384d3a3cf65b2b"
   },
   "document_17": {
    "path": "v2/vendor/ti/tps23861-datasheet.pdf",
@@ -77,16 +78,16 @@
    "sha256_16": "81af3f69b0bff95f"
   },
   "document_2": {
+   "path": "v2/docs/records/hc5/kit_i2c_budget.round8-d.out.txt",
+   "sha256_16": "7967404c281d4e12"
+  },
+  "document_3": {
    "path": "v2/vendor/adi/adi-ds3231sn.pdf",
    "sha256_16": "dc81cd89bee82d0c"
   },
-  "document_3": {
+  "document_4": {
    "path": "v2/vendor/cm5/cm5-datasheet.pdf",
    "sha256_16": "80070fefd8db6e8a"
-  },
-  "document_4": {
-   "path": "v2/vendor/diodes/diodes-74lvc1g34.pdf",
-   "sha256_16": "efd2d7978bb880b7"
   },
   "document_5": {
    "path": "v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf",
@@ -131,7 +132,7 @@
   },
   "intent": {
    "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
-   "sha256_16": "d321f2979e0c4244"
+   "sha256_16": "6db304b8ce504a09"
   },
   "model_1": {
    "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
@@ -154,11 +155,6 @@
    "sha256_16": "56c19a4da921e38c"
   },
   "model_5": {
-   "path": "v2/vendor/ti/ibis/sn74lvc1g00.ibs",
-   "pinned_sha256_16": "e085986b1ed2969e",
-   "sha256_16": "e085986b1ed2969e"
-  },
-  "model_6": {
    "path": "v2/vendor/ti/ibis/tmp117.ibs",
    "pinned_sha256_16": "5c71fbcce9e13803",
    "sha256_16": "5c71fbcce9e13803"
@@ -166,16 +162,16 @@
   "model_state": {
    "absent": 0,
    "absent_files": [],
-   "asked": 6,
+   "asked": 5,
    "how_to_fetch": "python3 v2/ecad/tools/ibis_fetch.py --fetch",
    "manifest": "v2/vendor/ibis-manifest.yaml",
-   "present": 6,
+   "present": 5,
    "state": "PRESENT"
   },
   "netlist": {
-   "content16": "424a8b6ee5851775",
+   "content16": "e6d5f09e7a983901",
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "87b69472ac83ca5a"
+   "sha256_16": "c9f7394594201045"
   },
   "project": {
    "path": "pcb-c-display-c8/pcb-c-display.kicad_pro",
@@ -198,31 +194,6 @@
  },
  "notes": [],
  "rows": [
-  {
-   "basis": "",
-   "class": "UNKNOWN",
-   "drivers": {
-    "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)": [
-     "U9"
-    ]
-   },
-   "net_edges": {},
-   "nets": [
-    "EMCON_HW_DRV"
-   ],
-   "pattern": "(no declaration)",
-   "rise_ns": null,
-   "status": "UNDECIDED",
-   "undecided": {
-    "EMCON_HW_DRV": [
-     "no signal-class declaration"
-    ]
-   },
-   "undecided_kind": {
-    "EMCON_HW_DRV": "NO_DECLARATION"
-   },
-   "why": "no signal-class declaration names these nets, so neither their class nor their edge is known"
-  },
   {
    "basis": "an indicator LED anode: a static level or a blink of a few hertz",
    "class": "LOW_SPEED_OR_DC",
@@ -511,6 +482,25 @@
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "basis": "the EMCON buffer's own output, U9 pin 4 (Diodes 74LVC1G17) to R52 (330R), the driver side of EMCON_HW since stream d4emcon's D4E-F1: the same static level, move",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)": [
+     "U9"
+    ]
+   },
+   "net_edges": {},
+   "nets": [
+    "EMCON_HW_DRV"
+   ],
+   "pattern": "EMCON_HW_DRV",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
    "basis": "the panel controller's one-way copy of EMCON_HW, U13 pin 4 (74LVC1G17 Schmitt buffer) to R46: a copy of the EMCON inhibit, a level that moves when a person move",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
@@ -580,11 +570,11 @@
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
-   "answered": {},
+   "answered": {
+    "EPD_CS": "series resistor R56 27R to EPD_CS_R (a screen)"
+   },
    "basis": "the e-paper's chip select, an edge per transfer",
-   "bound_decides": [
-    "EPD_CS"
-   ],
+   "bound_decides": [],
    "bound_nets": [
     "EPD_CS"
    ],
@@ -594,14 +584,9 @@
    },
    "critical_mm": 0.0,
    "document": null,
-   "drivers": {
-    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
-     "U3"
-    ]
-   },
-   "layout_bound": [
-    "EPD_CS"
-   ],
+   "drivers": {},
+   "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -610,15 +595,15 @@
     "EPD_CS": {
      "basis": "BOUND",
      "bound_drivers": [
-      "RPI-RP2040: U3 pin 7 GPIO5",
-      "FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD"
+      "FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD",
+      "RPI-RP2040: across R56 from EPD_CS_R: U3 pin 7 GPIO5"
      ],
-     "by": "U3 pin 7 GPIO5",
+     "by": "beyond J_EPD (far end C-EPD): FAR-PDI-EPD",
      "decided_by": "BOUND",
      "edge_ns": 0.0,
      "maker_by": null,
      "maker_edge_ns": null,
-     "source": "RPI-RP2040"
+     "source": "FAR-PDI-EPD"
     }
    },
    "nets": [
@@ -634,11 +619,64 @@
    "why": "no interface record covers the entry"
   },
   {
-   "answered": {},
-   "basis": "the e-paper's data and command select, an edge per transfer",
-   "bound_decides": [
-    "EPD_DC"
+   "answered": {
+    "EPD_CS_R": "series resistor R56 27R to EPD_CS (a screen)"
+   },
+   "basis": "the e-paper's chip select between the RP2040's pin and its 27R series termination, a few millimetres; the same edges as EPD_CS (29 September 2026, stream csi, C",
+   "bound_decides": [],
+   "bound_nets": [
+    "EPD_CS_R"
    ],
+   "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "EPD_CS_R": 0.0
+   },
+   "critical_mm": 0.0,
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "layout_bound": [],
+   "length_limits": {},
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "EPD_CS_R": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RPI-RP2040: U3 pin 7 GPIO5",
+      "FAR-PDI-EPD: across R56 from EPD_CS: beyond J_EPD (far end C-EPD): FAR-PDI-EPD"
+     ],
+     "by": "U3 pin 7 GPIO5",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RPI-RP2040"
+    }
+   },
+   "nets": [
+    "EPD_CS_R"
+   ],
+   "pattern": "EPD_CS_R",
+   "rise_ns": 0.0,
+   "source": null,
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
+  },
+  {
+   "answered": {
+    "EPD_DC": "series resistor R55 27R to EPD_DC_R (a screen)"
+   },
+   "basis": "the e-paper's data and command select, an edge per transfer",
+   "bound_decides": [],
    "bound_nets": [
     "EPD_DC"
    ],
@@ -648,14 +686,9 @@
    },
    "critical_mm": 0.0,
    "document": null,
-   "drivers": {
-    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
-     "U3"
-    ]
-   },
-   "layout_bound": [
-    "EPD_DC"
-   ],
+   "drivers": {},
+   "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -664,15 +697,15 @@
     "EPD_DC": {
      "basis": "BOUND",
      "bound_drivers": [
-      "RPI-RP2040: U3 pin 6 GPIO4",
-      "FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD"
+      "FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD",
+      "RPI-RP2040: across R55 from EPD_DC_R: U3 pin 6 GPIO4"
      ],
-     "by": "U3 pin 6 GPIO4",
+     "by": "beyond J_EPD (far end C-EPD): FAR-PDI-EPD",
      "decided_by": "BOUND",
      "edge_ns": 0.0,
      "maker_by": null,
      "maker_edge_ns": null,
-     "source": "RPI-RP2040"
+     "source": "FAR-PDI-EPD"
     }
    },
    "nets": [
@@ -688,11 +721,64 @@
    "why": "no interface record covers the entry"
   },
   {
-   "answered": {},
-   "basis": "the e-paper's SPI clock, a few megahertz at most",
-   "bound_decides": [
-    "EPD_SCL"
+   "answered": {
+    "EPD_DC_R": "series resistor R55 27R to EPD_DC (a screen)"
+   },
+   "basis": "the e-paper's data and command select between the RP2040's pin and its 27R series termination, a few millimetres; the same edges as EPD_DC (29 September 2026, s",
+   "bound_decides": [],
+   "bound_nets": [
+    "EPD_DC_R"
    ],
+   "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "EPD_DC_R": 0.0
+   },
+   "critical_mm": 0.0,
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "layout_bound": [],
+   "length_limits": {},
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "EPD_DC_R": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RPI-RP2040: U3 pin 6 GPIO4",
+      "FAR-PDI-EPD: across R55 from EPD_DC: beyond J_EPD (far end C-EPD): FAR-PDI-EPD"
+     ],
+     "by": "U3 pin 6 GPIO4",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RPI-RP2040"
+    }
+   },
+   "nets": [
+    "EPD_DC_R"
+   ],
+   "pattern": "EPD_DC_R",
+   "rise_ns": 0.0,
+   "source": null,
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
+  },
+  {
+   "answered": {
+    "EPD_SCL": "series resistor R53 27R to EPD_SCL_R (a screen)"
+   },
+   "basis": "the e-paper's SPI clock, a few megahertz at most",
+   "bound_decides": [],
    "bound_nets": [
     "EPD_SCL"
    ],
@@ -702,14 +788,9 @@
    },
    "critical_mm": 0.0,
    "document": null,
-   "drivers": {
-    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
-     "U3"
-    ]
-   },
-   "layout_bound": [
-    "EPD_SCL"
-   ],
+   "drivers": {},
+   "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -718,15 +799,15 @@
     "EPD_SCL": {
      "basis": "BOUND",
      "bound_drivers": [
-      "RPI-RP2040: U3 pin 4 GPIO2",
-      "FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD"
+      "FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD",
+      "RPI-RP2040: across R53 from EPD_SCL_R: U3 pin 4 GPIO2"
      ],
-     "by": "U3 pin 4 GPIO2",
+     "by": "beyond J_EPD (far end C-EPD): FAR-PDI-EPD",
      "decided_by": "BOUND",
      "edge_ns": 0.0,
      "maker_by": null,
      "maker_edge_ns": null,
-     "source": "RPI-RP2040"
+     "source": "FAR-PDI-EPD"
     }
    },
    "nets": [
@@ -742,11 +823,64 @@
    "why": "no interface record covers the entry"
   },
   {
-   "answered": {},
-   "basis": "the e-paper's SPI data, same rate",
-   "bound_decides": [
-    "EPD_SDA"
+   "answered": {
+    "EPD_SCL_R": "series resistor R53 27R to EPD_SCL (a screen)"
+   },
+   "basis": "the e-paper's SPI clock between the RP2040's pin and its 27R series termination, a few millimetres; the same edges as EPD_SCL (29 September 2026, stream csi, CS",
+   "bound_decides": [],
+   "bound_nets": [
+    "EPD_SCL_R"
    ],
+   "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "EPD_SCL_R": 0.0
+   },
+   "critical_mm": 0.0,
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "layout_bound": [],
+   "length_limits": {},
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "EPD_SCL_R": {
+     "basis": "BOUND",
+     "bound_drivers": [
+      "RPI-RP2040: U3 pin 4 GPIO2",
+      "FAR-PDI-EPD: across R53 from EPD_SCL: beyond J_EPD (far end C-EPD): FAR-PDI-EPD"
+     ],
+     "by": "U3 pin 4 GPIO2",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "RPI-RP2040"
+    }
+   },
+   "nets": [
+    "EPD_SCL_R"
+   ],
+   "pattern": "EPD_SCL_R",
+   "rise_ns": 0.0,
+   "source": null,
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
+  },
+  {
+   "answered": {
+    "EPD_SDA": "series resistor R54 27R to EPD_SDA_R (a screen)"
+   },
+   "basis": "the e-paper's SPI data, same rate",
+   "bound_decides": [],
    "bound_nets": [
     "EPD_SDA"
    ],
@@ -756,14 +890,9 @@
    },
    "critical_mm": 0.0,
    "document": null,
-   "drivers": {
-    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
-     "U3"
-    ]
-   },
-   "layout_bound": [
-    "EPD_SDA"
-   ],
+   "drivers": {},
+   "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -772,8 +901,61 @@
     "EPD_SDA": {
      "basis": "BOUND",
      "bound_drivers": [
+      "FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD",
+      "RPI-RP2040: across R54 from EPD_SDA_R: U3 pin 5 GPIO3"
+     ],
+     "by": "beyond J_EPD (far end C-EPD): FAR-PDI-EPD",
+     "decided_by": "BOUND",
+     "edge_ns": 0.0,
+     "maker_by": null,
+     "maker_edge_ns": null,
+     "source": "FAR-PDI-EPD"
+    }
+   },
+   "nets": [
+    "EPD_SDA"
+   ],
+   "pattern": "EPD_SDA",
+   "rise_ns": 0.0,
+   "source": null,
+   "status": "DECIDED",
+   "undecided": {},
+   "undecided_kind": {},
+   "undecided_models": {},
+   "why": "no interface record covers the entry"
+  },
+  {
+   "answered": {
+    "EPD_SDA_R": "series resistor R54 27R to EPD_SDA (a screen)"
+   },
+   "basis": "the e-paper's SPI data (the panel answers on it in a read) between the RP2040's pin and its 27R series termination, a few millimetres; the same edges as EPD_SDA",
+   "bound_decides": [],
+   "bound_nets": [
+    "EPD_SDA_R"
+   ],
+   "class": "CLOCKED_DIGITAL",
+   "critical_by_net": {
+    "EPD_SDA_R": 0.0
+   },
+   "critical_mm": 0.0,
+   "document": null,
+   "drivers": {
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ]
+   },
+   "layout_bound": [],
+   "length_limits": {},
+   "maker_holds": [],
+   "maker_nets": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 0.0 mm",
+   "net_edges": {
+    "EPD_SDA_R": {
+     "basis": "BOUND",
+     "bound_drivers": [
       "RPI-RP2040: U3 pin 5 GPIO3",
-      "FAR-PDI-EPD: beyond J_EPD (far end C-EPD): FAR-PDI-EPD"
+      "FAR-PDI-EPD: across R54 from EPD_SDA: beyond J_EPD (far end C-EPD): FAR-PDI-EPD"
      ],
      "by": "U3 pin 5 GPIO3",
      "decided_by": "BOUND",
@@ -784,9 +966,9 @@
     }
    },
    "nets": [
-    "EPD_SDA"
+    "EPD_SDA_R"
    ],
-   "pattern": "EPD_SDA",
+   "pattern": "EPD_SDA_R",
    "rise_ns": 0.0,
    "source": null,
    "status": "DECIDED",
@@ -814,6 +996,7 @@
    "layout_bound": [
     "EPD_SW"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -876,6 +1059,7 @@
    "layout_bound": [
     "EXP_INT"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -947,6 +1131,7 @@
     "HB2",
     "HB3"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1105,6 +1290,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1176,6 +1362,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1207,6 +1394,21 @@
    "why": "no interface record covers the entry"
   },
   {
+   "basis": "the TX lamp FET's gate (Q3, 2N7002), behind R37 (1 k) from TR_APRS and R38 (100 k) to GND: a copy of the transmit indication TR_APRS, which this table declares ",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "net_edges": {},
+   "nets": [
+    "Q3_G"
+   ],
+   "pattern": "Q3_G",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "undecided": {},
+   "undecided_kind": {},
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
    "answered": {
     "Q2_D": "series resistor R18 47R to Q1_G (a screen)"
    },
@@ -1223,6 +1425,7 @@
    "document": null,
    "drivers": {},
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1260,28 +1463,23 @@
     "Q4_G": "series resistor R44 100R to PWM1 (a screen)"
    },
    "basis": "a FET gate drive",
-   "bound_decides": [
-    "Q3_G"
-   ],
+   "bound_decides": [],
    "bound_nets": [
     "Q1_G",
     "Q2_G",
-    "Q3_G",
     "Q4_G"
    ],
    "class": "HIGH_SPEED_DIGITAL",
    "critical_by_net": {
     "Q1_G": 0.0,
     "Q2_G": 0.0,
-    "Q3_G": 0.0,
     "Q4_G": 0.0
    },
    "critical_mm": 0.0,
    "document": null,
    "drivers": {},
-   "layout_bound": [
-    "Q3_G"
-   ],
+   "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1311,19 +1509,6 @@
      "maker_edge_ns": null,
      "source": "RPI-RP2040"
     },
-    "Q3_G": {
-     "basis": "BOUND",
-     "bound_drivers": [
-      "LVC1G34-BUFFER: across R37 from TR_APRS: beyond J_PANEL on board D: across R48 from PTT_MIR: U18 pin 4 PTT_MIR",
-      "RPI-RP2040: across R37 from TR_APRS: U3 pin 35 GPIO23"
-     ],
-     "by": "across R37 from TR_APRS: beyond J_PANEL on board D: across R48 from PTT_MIR: U18 pin 4 PTT_MIR",
-     "decided_by": "BOUND",
-     "edge_ns": 0.0,
-     "maker_by": null,
-     "maker_edge_ns": null,
-     "source": "LVC1G34-BUFFER"
-    },
     "Q4_G": {
      "basis": "BOUND",
      "bound_drivers": [
@@ -1340,7 +1525,6 @@
    "nets": [
     "Q1_G",
     "Q2_G",
-    "Q3_G",
     "Q4_G"
    ],
    "pattern": "Q?_G",
@@ -1353,16 +1537,16 @@
    "why": "no interface record covers the entry"
   },
   {
-   "answered": {},
+   "answered": {
+    "QSPI_D0": "declared in edge_allow, pending the layout: at most 13.1 mm (the RP2040's QSPI flash bus: the maker asks for it wired dir)",
+    "QSPI_D1": "declared in edge_allow, pending the layout: at most 13.1 mm (the RP2040's QSPI flash bus: the maker asks for it wired dir)",
+    "QSPI_D2": "declared in edge_allow, pending the layout: at most 13.1 mm (the RP2040's QSPI flash bus: the maker asks for it wired dir)",
+    "QSPI_D3": "declared in edge_allow, pending the layout: at most 13.1 mm (the RP2040's QSPI flash bus: the maker asks for it wired dir)",
+    "QSPI_SCLK": "declared in edge_allow, pending the layout: at most 8.0 mm (the RP2040's QSPI flash bus: the maker asks for it wired dir)",
+    "QSPI_SS": "declared in edge_allow, pending the layout: at most 17.7 mm (the RP2040's QSPI flash bus: the maker asks for it wired dir)"
+   },
    "basis": "the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM bootloader",
-   "bound_decides": [
-    "QSPI_D0",
-    "QSPI_D1",
-    "QSPI_D2",
-    "QSPI_D3",
-    "QSPI_SCLK",
-    "QSPI_SS"
-   ],
+   "bound_decides": [],
    "bound_nets": [
     "QSPI_D0",
     "QSPI_D1",
@@ -1390,14 +1574,15 @@
      "U4"
     ]
    },
-   "layout_bound": [
-    "QSPI_D0",
-    "QSPI_D1",
-    "QSPI_D2",
-    "QSPI_D3",
-    "QSPI_SCLK",
-    "QSPI_SS"
-   ],
+   "layout_bound": [],
+   "length_limits": {
+    "QSPI_D0": 13.1,
+    "QSPI_D1": 13.1,
+    "QSPI_D2": 13.1,
+    "QSPI_D3": 13.1,
+    "QSPI_SCLK": 8.0,
+    "QSPI_SS": 17.7
+   },
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1534,6 +1719,7 @@
    "layout_bound": [
     "SCL"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1606,6 +1792,7 @@
    "layout_bound": [
     "SDA"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1720,12 +1907,12 @@
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
-   "answered": {},
+   "answered": {
+    "SWCLK": "declared in edge_allow, pending the layout: at most 20.1 mm (the SWD port. The maker's words (p. 62): a debug port drives)",
+    "SWDIO": "declared in edge_allow, pending the layout: at most 18.9 mm (the SWD port. The maker's words (p. 62): a debug port drives)"
+   },
    "basis": "the SWD debug port, a few megahertz and used only with a probe attached",
-   "bound_decides": [
-    "SWCLK",
-    "SWDIO"
-   ],
+   "bound_decides": [],
    "bound_nets": [
     "SWCLK",
     "SWDIO"
@@ -1742,10 +1929,11 @@
      "U3"
     ]
    },
-   "layout_bound": [
-    "SWCLK",
-    "SWDIO"
-   ],
+   "layout_bound": [],
+   "length_limits": {
+    "SWCLK": 20.1,
+    "SWDIO": 18.9
+   },
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1873,6 +2061,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [
     "USB_DM_R",
@@ -1936,6 +2125,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [
     "USB_PNL_N",
@@ -1979,11 +2169,11 @@
    "why": "USB 2.0 Table 7-9, TFR and TFF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
   },
   {
-   "answered": {},
+   "answered": {
+    "XIN": "declared in edge_allow, pending the layout: at most 8.7 mm (a crystal node of the RP2040's 12 MHz oscillator, which CLK-)"
+   },
    "basis": "the 12 MHz crystal drive node",
-   "bound_decides": [
-    "XIN"
-   ],
+   "bound_decides": [],
    "bound_nets": [
     "XIN"
    ],
@@ -1998,9 +2188,10 @@
      "U3"
     ]
    },
-   "layout_bound": [
-    "XIN"
-   ],
+   "layout_bound": [],
+   "length_limits": {
+    "XIN": 8.7
+   },
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -2032,12 +2223,12 @@
    "why": "A crystal oscillator's input and output nodes carry the amplifier's output shaped by the c: pcb_edge_rates.yaml OSCILLATOR-NODES"
   },
   {
-   "answered": {},
+   "answered": {
+    "XOUT": "declared in edge_allow, pending the layout: at most 4.0 mm (a crystal node of the RP2040's 12 MHz oscillator, which CLK-)",
+    "XOUT_R": "declared in edge_allow, pending the layout: at most 2.1 mm (a crystal node of the RP2040's 12 MHz oscillator, which CLK-)"
+   },
    "basis": "the other half of the same crystal loop",
-   "bound_decides": [
-    "XOUT",
-    "XOUT_R"
-   ],
+   "bound_decides": [],
    "bound_nets": [
     "XOUT",
     "XOUT_R"
@@ -2054,10 +2245,11 @@
      "U3"
     ]
    },
-   "layout_bound": [
-    "XOUT",
-    "XOUT_R"
-   ],
+   "layout_bound": [],
+   "length_limits": {
+    "XOUT": 4.0,
+    "XOUT_R": 2.1
+   },
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,

@@ -574,7 +574,7 @@ boards:
         names the wall RJ45 port it powers; nothing is mated on it"
 
  c:
-   written_against: {artefact: netlist, path: "pcb-c-display-c8/out/pcb-c-display.net", sha256_16: "87b69472ac83ca5a", content16: "424a8b6ee5851775"}
+   written_against: {artefact: netlist, path: "pcb-c-display-c8/out/pcb-c-display.net", sha256_16: "c9f7394594201045", content16: "e6d5f09e7a983901"}
    classes:
     - name: "the panel ribbon header"
       refs: ["J_PANEL"]

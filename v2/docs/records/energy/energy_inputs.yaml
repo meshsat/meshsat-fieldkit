@@ -215,14 +215,14 @@ solar:
   chain:
     - {stage: "board E's LT8705A stage, PV_P (17.6 V) to TRK_OUT (15.1 V)", eta: 0.93, low: 0.90, high: 0.97, src: "the intent's declared 0.93 (gen_sch_e.py:606, rail TRK_OUT); NOT PLOTTED at this ratio (8705af plots a 48 V design); the bracket is this stream's"}
     - {stage: "board A's front end LM5176 U2, VIN_RAW to VBUS20 (20 V)", eta: 0.93, low: 0.90, high: 0.97, src: "the intent's declared 0.93 (gen_sch_a.py:103, rail VBUS20); NOT PLOTTED at 20 V out"}
-    - {stage: "board A's charger BQ25731, VBUS20 to the system node", eta: 0.98, low: 0.965, high: 0.984, src: "SLUSE66A Figure 8-4 (PDF page 19), VIN 20 V, VOUT 14.8 V: 96.6 percent at 1 A, 98.0 at 2 A, 98.4 at 4 A (d4energy's AI reading)"}
+    - {stage: "board A's charger BQ25731, VBUS20 to the system node", eta: 0.979, low: 0.972, high: 0.983, src: "INFERRED by TI's method, not a figure TI states for this circuit: SLUSE66A Equations 6 to 22 (printed pages 86 to 88) with decision 57's FETs (Q7 CSD17578Q5A; Q8, Q9, Q10 CSD17577Q5A) on S-117's row (L2 XAL1010-472ME, 400 kHz, R16 10 mOhm, R17 5 mOhm), the reference day weighted by energy at entry E2: TI's reading 0.979, the makers' maxima 0.972, the most favourable reading 0.983 (v2/docs/records/s117/efficiency.out sections 2 and 7; 0.979 at the model's peak hour, 0.981 over the day at E1). R16 and R17 are counted; the inductor's core loss is EXCLUDED (Coilcraft Document 804-1 prints none and refers to an online calculator this tree does not hold), so every figure is high by it. Second issue (stream s119, S-119, 29 September 2026); the first issue's 0.98 (0.965 to 0.984) was d4energy's reading of Figure 8-4 (PDF page 19), whose FETs TI does not name, and is superseded"}
   vehicle_entry:
     range_v: [9.0, 36.0]
     guaranteed_a: {value: 4.85, src: "gen_sch_e.py:66-76: LM5069 U6 with R19 = 10 mOhm limits at VCL / RS, VCL 48.5 min to 61.5 max mV, so 4.85 A guaranteed and 6.15 A carried continuously"}
     carried_a: 6.15
     fuse_f1_a: {value: 10.0, src: "gen_sch_e.py:288: F1 10 A mini blade"}
     connector: "J_DCIN JST-VH 10 A from the D38999 wall receptacle's DC pair (gen_sch_e.py:287)"
-    chain_eta: {value: 0.9114, src: "the front end 0.93 x the charger 0.98 (the entry's own ideal diode, hot-swap FET and choke drop about 0.1 V at 5 A, under 1 percent at 12 V, not counted)"}
+    chain_eta: {value: 0.9105, src: "the front end 0.93 x the charger 0.979 (solar.chain's U3 row, second issue, stream s119; the first issue's 0.9114 took the charger at 0.98) (the entry's own ideal diode, hot-swap FET and choke drop about 0.1 V at 5 A, under 1 percent at 12 V, not counted)"}
 
 # ------------------------------------------------------------------------------------------------------ the mission
 mission:

@@ -1701,9 +1701,12 @@ def fet_family(nl, ref):
 # unconnected; "lug 2 is the common", APEM 5000 series sheet, 5636 row, cited there) and v2/docs/PANEL.md (the Switches row:
 # SW_EMCON, an APEM locking toggle; EMCON is a hardware line: SW_EMCON closes TX_INHIBIT_n to ground, SOURCES above).
 EMCON_TOGGLES = [
-    dict(board="C", ref="SW_EMCON", value=r"EMCON locking toggle", line="TX_INHIBIT_n",
+    dict(board="C", ref="SW_EMCON", value=r"EMCON locking toggle", line="TX_INHIBIT_n", lugs=("1", "2"),
          why="the panel's EMCON toggle, its contact between TX_INHIBIT_n and GND: the one element that asserts the inhibit "
-             "(gen_sch_c.py, the SW_EMCON part line; PANEL.md, the Switches row)"),
+             "(gen_sch_c.py, the SW_EMCON part line; PANEL.md, the Switches row)",
+         lugs_src="APEM 5000 series sheet, page 6, the 5636 row: lugs 1 and 2 closed in lever position I, 2 and 3 in "
+                  "position III, lug 2 the common (v2/vendor/seals/apem-5000-series-datasheet-rs-copy.pdf; gen_sch_c.py's "
+                  "note above SW_SOS). Which position the hinged cover forces is an assembly item"),
 ]
 # The declarations in force: the kit's own, unless judge() is given a fixture's (as it is given ACCESSORIES and the rest).
 _TOGGLES_NOW = EMCON_TOGGLES
@@ -1711,20 +1714,27 @@ _TOGGLES_NOW = EMCON_TOGGLES
 
 def _is_toggle(k, nl, ref):
     """The declaration (EMCON_TOGGLES, or a fixture's through judge) when `ref` on board `k` is a declared EMCON toggle:
-    its board (when `k` is given; a direct call with k None reads the rest only), its reference, its value, one pin on the
-    declared line, one on ground and every other pin unconnected; else None. A part that matches a reference but is wired
-    otherwise is not the toggle."""
+    its board, its reference, its value, and its declared contact lugs (`lugs`, the pair the maker's sheet closes
+    together) carrying the declared line and ground, one each in either order, with every other pin unconnected; else
+    None. A part that matches a reference but is wired otherwise is not the toggle: a line on a lug outside the pair (the
+    other lever position's throw, or two throws that never close together) is not. THE BOARD KEY AND THE LUGS ARE
+    REQUIRED (the independent check of stream rf2walk, round 3, minors): a call without `k` matched a declaration on any
+    board, and a declaration without lugs let a miswired toggle read as the source, so both are refused, not defaulted."""
+    if k is None: raise ValueError("_is_toggle: the board key is required")
     if ref not in nl["comps"]: return None
     for d in _TOGGLES_NOW:
-        if ref != d["ref"] or (k is not None and k != d["board"]): continue
+        if len(set(str(x) for x in (d.get("lugs") or ()))) != 2 or len(d.get("lugs") or ()) != 2: raise ValueError("EMCON toggle declaration %s/%s names no contact lug pair of two distinct lugs" % (d.get("board"), d.get("ref")))
+        if ref != d["ref"] or k != d["board"]: continue
         if not re.search(d["value"], value(nl, ref), re.I): continue
-        live = [x for x in (nl["pin"].get((ref, p), "") for p in pins_of(nl, ref)) if not _dead(x)]
-        if len(live) == 2 and live.count(d["line"]) == 1 and sum(1 for x in live if is_ground(x)) == 1:
+        live = {p: x for p, x in ((p, nl["pin"].get((ref, p), "")) for p in pins_of(nl, ref)) if not _dead(x)}
+        if set(live) != set(d["lugs"]): continue
+        nets = list(live.values())
+        if nets.count(d["line"]) == 1 and sum(1 for x in nets if is_ground(x)) == 1:
             return d
     return None
 
 
-def _switch_board(nl, k=None):
+def _switch_board(nl, k):
     """True when this board carries the declared EMCON toggle (EMCON_TOGGLE, _is_toggle); no other switch counts. THE
     LINE'S OWN BUFFER IS ONLY ON THAT BOARD (stream rf2walk2, the independent check of set 12, blocking B1): a gate that
     follows the other asserted line is the line's own source only where it shares the toggle's board, whose fail-safe state
@@ -1737,7 +1747,7 @@ def _switch_board(nl, k=None):
     return any(_is_toggle(k, nl, d["ref"]) is not None for d in _TOGGLES_NOW)
 
 
-def _source_output(nl, ref, pin, s, k=None):
+def _source_output(nl, ref, pin, s, k):
     """(fam, gate kind, input nets) when `pin` of `ref` is the output of a mapped logic gate every one of whose inputs
     sits on an asserted line other than `s` (the panel's buffer: its input on TX_INHIBIT_n, its output EMCON_HW), on the
     board that carries the declared toggle (_switch_board); else None."""
@@ -1751,7 +1761,7 @@ def _source_output(nl, ref, pin, s, k=None):
     return None
 
 
-def drive_net(nl, n, k=None):
+def drive_net(nl, n, k):
     """THE LINE'S OWN SOURCE BEHIND ITS SERIES RESISTOR (stream rf2walk, 29 September 2026). Board C's round of stream
     d4emcon (finding D4E-F1, set 12) moved U9's output onto a private net, EMCON_HW_DRV, that reaches EMCON_HW only
     through R52 (330R 1%), so that D23 can clamp the line to TX_INHIBIT_n. Read at net level the source was then "a
@@ -1776,7 +1786,7 @@ def drive_net(nl, n, k=None):
     return dict(line=far, ref=g, pin=gp, res=r, fam=fam, kind=kind, ins=ins)
 
 
-def _line_sources(nl, s, k=None):
+def _line_sources(nl, s, k):
     """[(ref, why)] of the parts that make the asserted line on net s: the declared toggle (EMCON_TOGGLE, on its line
     only) and, on the toggle's board, a logic output whose input sits on the other asserted line (the panel's buffer), on
     the net itself or behind its series resistor on its drive net (drive_net). No other switch is a source."""

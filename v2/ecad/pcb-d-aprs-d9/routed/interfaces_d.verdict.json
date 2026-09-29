@@ -54,12 +54,12 @@
  },
  "tool": "interfaces_d",
  "tools": {
-  "git_head": "a46db71be8a1",
-  "tools_tree_sha": "6031704bb86457d7"
+  "git_head": "4f4fd31d15df",
+  "tools_tree_sha": "fd71d03702e5de42"
  },
- "ts": "2026-09-29T13:43:51Z",
+ "ts": "2026-09-29T15:17:31Z",
  "verdict": "PASS",
- "version": "a46db71be8a1",
+ "version": "4f4fd31d15df",
  "writer": {
   "file": "interfaces.py",
   "sha16": "7b7e4f3a0241cf35"

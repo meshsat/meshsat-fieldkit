@@ -94,6 +94,11 @@
    "basis": "the e-paper's boost converter switching node"
   },
   {
+   "pattern": "Q3_G",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the TX lamp FET's gate (Q3, 2N7002), behind R37 (1 k) from TR_APRS and R38 (100 k) to GND: a copy of the transmit indication TR_APRS, which this table declares a static level; nothing samples it on its edge, it sets whether the lamp is lit. Physically the node is R37 into Q3's input capacitance (JSCJ 2N7002 datasheet p. 2: Ciss at most 50 pF), an RC of tens of nanoseconds at the values printed; no minimum capacitance is published, so that is supporting and not a bound. LOW_SPEED_OR_DC by what the net carries, as EMCLAMP_G, the EMCON lamp's gate, is (W5SI2-D1); the glob Q?_G below was written for the PWM gates. Not a claim that its drivers are slow: board D's U18 (74LVC1G34) and the RP2040 publish no transition (29 September 2026, stream csi, CSI-D7, W5SI2-D2 taken)"
+  },
+  {
    "pattern": "Q?_G",
    "class": "HIGH_SPEED_DIGITAL",
    "basis": "a FET gate drive"
@@ -132,6 +137,26 @@
    "pattern": "EPD_DC",
    "class": "CLOCKED_DIGITAL",
    "basis": "the e-paper's data and command select, an edge per transfer"
+  },
+  {
+   "pattern": "EPD_SCL_R",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the e-paper's SPI clock between the RP2040's pin and its 27R series termination, a few millimetres; the same edges as EPD_SCL (29 September 2026, stream csi, CSI-D3)"
+  },
+  {
+   "pattern": "EPD_SDA_R",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the e-paper's SPI data (the panel answers on it in a read) between the RP2040's pin and its 27R series termination, a few millimetres; the same edges as EPD_SDA (29 September 2026, stream csi, CSI-D3)"
+  },
+  {
+   "pattern": "EPD_DC_R",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the e-paper's data and command select between the RP2040's pin and its 27R series termination, a few millimetres; the same edges as EPD_DC (29 September 2026, stream csi, CSI-D3)"
+  },
+  {
+   "pattern": "EPD_CS_R",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the e-paper's chip select between the RP2040's pin and its 27R series termination, a few millimetres; the same edges as EPD_CS (29 September 2026, stream csi, CSI-D3)"
   },
   {
    "pattern": "SW*",
@@ -247,6 +272,11 @@
    "pattern": "EMCON_HW",
    "class": "LOW_SPEED_OR_DC",
    "basis": "the emission-control line, a static level"
+  },
+  {
+   "pattern": "EMCON_HW_DRV",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the EMCON buffer's own output, U9 pin 4 (Diodes 74LVC1G17) to R52 (330R), the driver side of EMCON_HW since stream d4emcon's D4E-F1: the same static level, moved by a person at the EMCON toggle, that EMCON_HW carries and this table declares LOW_SPEED_OR_DC; nothing samples it on its edge. By content, not by a slow driver: Diodes DS35124 prints propagation delay only (29 September 2026, stream csi, CSI-D8)"
   },
   {
    "pattern": "EMCLAMP_Y",
@@ -402,5 +432,301 @@
  "conformal_coated": false,
  "_conformal_coated_why": "ASSEMBLY.md section 5 does not name this board: its UNDERSIDE is coated after the silicone beads cure, with J_PANEL, J_EPD, the lead lands and the eight standoff rings masked, and its top side is explicitly not coated where the LEDs stand, so the board as a whole is not a coated surface. Judged on the bare column of ECSS-Q-ST-70-12C Table 13-3, which is the stricter one, because a declaration that cannot be found must never be the reason a rule gets easier.",
  "return_reach_mm": 3.0,
- "_return_reach_mm_why": "OWNER DECISION 32, RULED BY THE SESSION ON 21 SEPTEMBER 2026. The screen asks for a ground via within 1.5 mm and this board cannot satisfy it at every judged via. THE NUMBER IS THE TOOL'S OWN: return_via's fixer searches outward on rings of 0.75, 1.0, 1.25 and 1.5 mm and then 1.75, 2.0, 2.25, 2.5 and 3.0, so 3.0 mm is the distance THIS PROJECT ALREADY PLACES A GROUND VIA AT, and a judge that refuses what its own fixer places is two rules. Every via accepted this way carries its measured distance in the verdict's evidence, which is what the ruling asks for, and a via whose nearest ground via is beyond 3.0 mm or absent altogether stays a failure with its number on the record. The alternative was measured and refused: a ground-via grid takes board C from 32 lacking of 85 to 12 of 69 AND COSTS IT ITS ROUTE, 21 open connections against zero (boards/c.json). A longer return loop is a shorter one than none. Reverse by removing this key, which puts the rule back to the 1.5 mm screen as written."
+ "_return_reach_mm_why": "OWNER DECISION 32, RULED BY THE SESSION ON 21 SEPTEMBER 2026. The screen asks for a ground via within 1.5 mm and this board cannot satisfy it at every judged via. THE NUMBER IS THE TOOL'S OWN: return_via's fixer searches outward on rings of 0.75, 1.0, 1.25 and 1.5 mm and then 1.75, 2.0, 2.25, 2.5 and 3.0, so 3.0 mm is the distance THIS PROJECT ALREADY PLACES A GROUND VIA AT, and a judge that refuses what its own fixer places is two rules. Every via accepted this way carries its measured distance in the verdict's evidence, which is what the ruling asks for, and a via whose nearest ground via is beyond 3.0 mm or absent altogether stays a failure with its number on the record. The alternative was measured and refused: a ground-via grid takes board C from 32 lacking of 85 to 12 of 69 AND COSTS IT ITS ROUTE, 21 open connections against zero (boards/c.json). A longer return loop is a shorter one than none. Reverse by removing this key, which puts the rule back to the 1.5 mm screen as written.",
+ "edge_allow": [
+  {
+   "pattern": "QSPI_SCLK",
+   "why": "the RP2040's QSPI flash bus: the maker asks for it wired directly and short, so a series resistor is against its guidance; neither the RP2040 nor the W25Q16JV publishes an edge; held to the maker's own reference lengths",
+   "decision": "CSI-D4",
+   "document": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+   "sha256_16": "51c4f430153fcdbf",
+   "page": 10,
+   "quote": "the QSPI pins of RP2040 should be wired directly to the flash, using short connections to maintain the signal integrity",
+   "checked": [
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line of the net QSPI_SCLK",
+     "quote": "QSPI_SCLK 10.38 mm"
+    },
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line that states the reference layout's delay",
+     "quote": "reference t_pd 5.572 ps/mm"
+    }
+   ],
+   "reference_nets": [
+    "QSPI_SCLK"
+   ],
+   "max_mm": 8.0,
+   "max_mm_basis": "the maker's minimal design (RP-008296-DS, MIT) routes its QSPI clock at, 10.38 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 8.0 mm",
+   "reverse": "delete the entry: the net reads LAYOUT_BOUND on the RPI-RP2040 bound again",
+   "ruled_by": "SESSION (stream csi) under the owner's standing rule of 26 September 2026",
+   "ruled_on": "2026-09-29",
+   "authority": "SESSION",
+   "authority_why": "an engineering judgement with one option standing after the maker's documents were read; no reserved line, no money, no residual risk no measurement can remove (owner ruling of 21 September 2026)",
+   "reference_ps_per_mm": 5.572
+  },
+  {
+   "pattern": "QSPI_D?",
+   "why": "the RP2040's QSPI flash bus: the maker asks for it wired directly and short, so a series resistor is against its guidance; neither the RP2040 nor the W25Q16JV publishes an edge; held to the maker's own reference lengths",
+   "decision": "CSI-D4",
+   "document": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+   "sha256_16": "51c4f430153fcdbf",
+   "page": 10,
+   "quote": "the QSPI pins of RP2040 should be wired directly to the flash, using short connections to maintain the signal integrity",
+   "checked": [
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line of the net QSPI_SD0",
+     "quote": "QSPI_SD0 8.20 mm"
+    },
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line of the net QSPI_SD1",
+     "quote": "QSPI_SD1 16.85 mm"
+    },
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line of the net QSPI_SD2",
+     "quote": "QSPI_SD2 12.91 mm"
+    },
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line of the net QSPI_SD3",
+     "quote": "QSPI_SD3 11.82 mm"
+    },
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line that states the reference layout's delay",
+     "quote": "reference t_pd 5.572 ps/mm"
+    }
+   ],
+   "reference_nets": [
+    "QSPI_SD0",
+    "QSPI_SD1",
+    "QSPI_SD2",
+    "QSPI_SD3"
+   ],
+   "max_mm": 13.1,
+   "max_mm_basis": "the maker's minimal design routes its QSPI data lines at 8.20 to 16.85 mm, the longest, 16.85 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 13.1 mm",
+   "reverse": "delete the entry: the net reads LAYOUT_BOUND on the RPI-RP2040 bound again",
+   "ruled_by": "SESSION (stream csi) under the owner's standing rule of 26 September 2026",
+   "ruled_on": "2026-09-29",
+   "authority": "SESSION",
+   "authority_why": "an engineering judgement with one option standing after the maker's documents were read; no reserved line, no money, no residual risk no measurement can remove (owner ruling of 21 September 2026)",
+   "reference_ps_per_mm": 5.572
+  },
+  {
+   "pattern": "QSPI_SS",
+   "why": "the RP2040's QSPI flash bus: the maker asks for it wired directly and short, so a series resistor is against its guidance; neither the RP2040 nor the W25Q16JV publishes an edge; held to the maker's own reference lengths",
+   "decision": "CSI-D4",
+   "document": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+   "sha256_16": "51c4f430153fcdbf",
+   "page": 10,
+   "quote": "the QSPI pins of RP2040 should be wired directly to the flash, using short connections to maintain the signal integrity",
+   "checked": [
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line of the net QSPI_SS",
+     "quote": "QSPI_SS 22.73 mm"
+    },
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line that states the reference layout's delay",
+     "quote": "reference t_pd 5.572 ps/mm"
+    }
+   ],
+   "reference_nets": [
+    "QSPI_SS"
+   ],
+   "max_mm": 17.7,
+   "max_mm_basis": "the maker's minimal design routes QSPI_SS, with its BOOTSEL resistor, at, 22.73 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 17.7 mm",
+   "reverse": "delete the entry: the net reads LAYOUT_BOUND on the RPI-RP2040 bound again",
+   "ruled_by": "SESSION (stream csi) under the owner's standing rule of 26 September 2026",
+   "ruled_on": "2026-09-29",
+   "authority": "SESSION",
+   "authority_why": "an engineering judgement with one option standing after the maker's documents were read; no reserved line, no money, no residual risk no measurement can remove (owner ruling of 21 September 2026)",
+   "reference_ps_per_mm": 5.572
+  },
+  {
+   "pattern": "XIN",
+   "why": "a crystal node of the RP2040's 12 MHz oscillator, which CLK-001 holds (load, stray 3 pF, one series resistor); the maker asks for the layout as short as possible; held to the maker's own reference length",
+   "decision": "CSI-D5",
+   "document": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+   "sha256_16": "51c4f430153fcdbf",
+   "page": 11,
+   "quote": "Try and keep the layout as short as possible.",
+   "checked": [
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line of the net XIN",
+     "quote": "XIN 11.23 mm"
+    },
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line that states the reference layout's delay",
+     "quote": "reference t_pd 5.572 ps/mm"
+    }
+   ],
+   "reference_nets": [
+    "XIN"
+   ],
+   "max_mm": 8.7,
+   "max_mm_basis": "the maker's minimal design routes XIN (RP2040 pin 20, the crystal and its load capacitor) at, 11.23 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 8.7 mm",
+   "reverse": "delete the entry: the net reads LAYOUT_BOUND on the OSCILLATOR-NODES bound again",
+   "ruled_by": "SESSION (stream csi) under the owner's standing rule of 26 September 2026",
+   "ruled_on": "2026-09-29",
+   "authority": "SESSION",
+   "authority_why": "an engineering judgement with one option standing after the maker's documents were read; no reserved line, no money, no residual risk no measurement can remove (owner ruling of 21 September 2026)",
+   "reference_ps_per_mm": 5.572
+  },
+  {
+   "pattern": "XOUT_R",
+   "why": "a crystal node of the RP2040's 12 MHz oscillator, which CLK-001 holds (load, stray 3 pF, one series resistor); the maker asks for the layout as short as possible; held to the maker's own reference length",
+   "decision": "CSI-D5",
+   "document": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+   "sha256_16": "51c4f430153fcdbf",
+   "page": 11,
+   "quote": "Try and keep the layout as short as possible.",
+   "checked": [
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line of the net XOUT",
+     "quote": "XOUT 2.76 mm"
+    },
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line that states the reference layout's delay",
+     "quote": "reference t_pd 5.572 ps/mm"
+    }
+   ],
+   "reference_nets": [
+    "XOUT"
+   ],
+   "max_mm": 2.1,
+   "max_mm_basis": "the maker's minimal design routes XOUT (RP2040 pin 21 to its 1 k series resistor) at, 2.76 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 2.1 mm",
+   "reverse": "delete the entry: the net reads LAYOUT_BOUND on the OSCILLATOR-NODES bound again",
+   "ruled_by": "SESSION (stream csi) under the owner's standing rule of 26 September 2026",
+   "ruled_on": "2026-09-29",
+   "authority": "SESSION",
+   "authority_why": "an engineering judgement with one option standing after the maker's documents were read; no reserved line, no money, no residual risk no measurement can remove (owner ruling of 21 September 2026)",
+   "reference_ps_per_mm": 5.572
+  },
+  {
+   "pattern": "XOUT",
+   "why": "a crystal node of the RP2040's 12 MHz oscillator, which CLK-001 holds (load, stray 3 pF, one series resistor); the maker asks for the layout as short as possible; held to the maker's own reference length",
+   "decision": "CSI-D5",
+   "document": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+   "sha256_16": "51c4f430153fcdbf",
+   "page": 11,
+   "quote": "Try and keep the layout as short as possible.",
+   "checked": [
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line of the net Net-(C3-Pad1)",
+     "quote": "Net-(C3-Pad1) 5.26 mm"
+    },
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line that states the reference layout's delay",
+     "quote": "reference t_pd 5.572 ps/mm"
+    }
+   ],
+   "reference_nets": [
+    "Net-(C3-Pad1)"
+   ],
+   "max_mm": 4.0,
+   "max_mm_basis": "the maker's minimal design routes the node from its 1 k resistor to the crystal and its load capacitor (Net-(C3-Pad1)) at, 5.26 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 4.0 mm",
+   "reverse": "delete the entry: the net reads LAYOUT_BOUND on the OSCILLATOR-NODES bound again",
+   "ruled_by": "SESSION (stream csi) under the owner's standing rule of 26 September 2026",
+   "ruled_on": "2026-09-29",
+   "authority": "SESSION",
+   "authority_why": "an engineering judgement with one option standing after the maker's documents were read; no reserved line, no money, no residual risk no measurement can remove (owner ruling of 21 September 2026)",
+   "reference_ps_per_mm": 5.572
+  },
+  {
+   "pattern": "SWCLK",
+   "why": "the SWD port. The maker's words (p. 62): a debug port drives SWDIO only when a debug host addresses it and tristates otherwise; SWCLK is an input driven by the host. That the host is a bench probe attached only at bring-up and service, so that these nets carry no edge in any state of the kit's use, is the SESSION's reading of this board (TP1 and TP2 are its only access), not the maker's words; held to the maker's own reference length",
+   "decision": "CSI-D6",
+   "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e",
+   "page": 62,
+   "quote": "Each DAP will only respond to debug commands if correctly addressed by a SWD TARGETSEL command; all others tristate their outputs.",
+   "checked": [
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line of the net SWCLK",
+     "quote": "SWCLK 25.92 mm"
+    },
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line that states the reference layout's delay",
+     "quote": "reference t_pd 5.572 ps/mm"
+    }
+   ],
+   "reference_nets": [
+    "SWCLK"
+   ],
+   "max_mm": 20.1,
+   "max_mm_basis": "the maker's minimal design routes SWCLK from the RP2040 to its debug header at, 25.92 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 20.1 mm",
+   "reverse": "delete the entry: the net reads LAYOUT_BOUND on its bound again",
+   "ruled_by": "SESSION (stream csi) under the owner's standing rule of 26 September 2026",
+   "ruled_on": "2026-09-29",
+   "authority": "SESSION",
+   "authority_why": "an engineering judgement with one option standing after the maker's documents were read; no reserved line, no money, no residual risk no measurement can remove (owner ruling of 21 September 2026)",
+   "reference_ps_per_mm": 5.572
+  },
+  {
+   "pattern": "SWDIO",
+   "why": "the SWD port. The maker's words (p. 62): a debug port drives SWDIO only when a debug host addresses it and tristates otherwise; SWCLK is an input driven by the host. That the host is a bench probe attached only at bring-up and service, so that these nets carry no edge in any state of the kit's use, is the SESSION's reading of this board (TP1 and TP2 are its only access), not the maker's words; held to the maker's own reference length",
+   "decision": "CSI-D6",
+   "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e",
+   "page": 62,
+   "quote": "Each DAP will only respond to debug commands if correctly addressed by a SWD TARGETSEL command; all others tristate their outputs.",
+   "checked": [
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line of the net SWD",
+     "quote": "SWD 24.34 mm"
+    },
+    {
+     "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+     "sha256_16": "5a71e9d681dc99e7",
+     "where": "the line that states the reference layout's delay",
+     "quote": "reference t_pd 5.572 ps/mm"
+    }
+   ],
+   "reference_nets": [
+    "SWD"
+   ],
+   "max_mm": 18.9,
+   "max_mm_basis": "the maker's minimal design routes SWD (SWDIO) from the RP2040 to its debug header at, 24.34 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 18.9 mm",
+   "reverse": "delete the entry: the net reads LAYOUT_BOUND on its bound again",
+   "ruled_by": "SESSION (stream csi) under the owner's standing rule of 26 September 2026",
+   "ruled_on": "2026-09-29",
+   "authority": "SESSION",
+   "authority_why": "an engineering judgement with one option standing after the maker's documents were read; no reserved line, no money, no residual risk no measurement can remove (owner ruling of 21 September 2026)",
+   "reference_ps_per_mm": 5.572
+  }
+ ],
+ "_edge_allow_why": "Stream csi, 29 September 2026 (MESHSAT-1357), corrected on the independent check of that day. A net SI-001 finds may be electrically long is answered by an impedance target, a series termination or an entry here. An entry answers only with its basis held (CSI-D1: document, sha256_16, page, quote, checked; the same checks as pcb_edge_rates.yaml) and only with a max_mm tied to what it cites (CSI-D2, its method replaced on the re-check of that day: the entry names its reference_nets on Raspberry Pi's own reference layout, cites only their length rows and the delay row of that one listing, and max_mm is at most their longest length scaled by that layout's delay over this board's slowest). While edge_length.ALLOW_PENDS_LAYOUT is set these nets keep the schematic reading INCONCLUSIVE. The nets it answers are ALLOWED, PENDING THE LAYOUT: the SI-001 table hands max_mm to the layout (length_limits) and the routed half (edge_length_routed) holds every net an entry names to it, but no rule names that reading yet and the placement generator does not yet seat the parts close enough (the only routed board C, C24, runs these nets at 4.3 to 30.7 times these limits). Record: v2/docs/records/csi/README.md"
 }

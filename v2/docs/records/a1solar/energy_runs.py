@@ -22,6 +22,12 @@ Planes (section 6): each plane's own PVGIS DRcalc mean-day profile (the query of
 the model's own September factor found on the 40/0 anchor (which it must reproduce exactly). Before printing, the
 scripts' own published design-case figures are reproduced with the unchanged ratio (exit 4 otherwise).
 
+Third issue (stream s119, S-119, 29 September 2026): both pins moved to the scripts' second issues, which carry board A's
+charger U3 at 0.979 (was 0.98, through energy_inputs.yaml) and the lid charger U3B at 0.972 on the 400 kHz row of the
+S-119 decision, weighted over the model's hours (was 0.975; records/s119/u3b_hourly.out), each from the FETs' losses; the reproduction checks of section 0 take the regenerated
+figures (4S18P 90.9 Wh, was 91.0; the two-pack design case 31.0 Wh, was 31.1). The ratios of section 2 do not depend on
+the chargers; nothing else changed.
+
 Run from the repository root:  python3 v2/docs/records/a1solar/energy_runs.py > v2/docs/records/a1solar/energy_runs.out
 Exit 3: a pinned script or input changed or is missing; exit 4: a reproduction check failed."""
 import hashlib
@@ -35,8 +41,8 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 EDIR = os.path.join(ROOT, "v2", "docs", "records", "energy")
 A1ROOT = os.environ.get("A1ELEC_ROOT", ROOT)
 TPDIR = os.path.join(A1ROOT, "v2", "docs", "records", "a1elec")
-EA_SHA = "5cab5edfadb736d3ce104c42a4060a235fd122258df89f8f3d9d2093c7610eb4"   # energy_architecture.py as committed
-TP_SHA = "81694b2bfc5dfef10c7f2895cd5fc4bae3682cc764e9d1c969757387c393f027"   # energy_two_pack.py at fnd/a1elec 06568798
+EA_SHA = "18851486ce4304f1d802bb1faab8284f9eeaddaf43786252c7f5236f2833199d"   # energy_architecture.py, second issue (s119; was 5cab5edf)
+TP_SHA = "a3426880bf607d38b08449ec0a880f10a064ee2767324afad2c250cd5a9444f4"   # energy_two_pack.py, second issue (s119; was 81694b2b, fnd/a1elec 06568798)
 ANCHOR = "v2/docs/records/a1solar/inputs/pvgis-leiden-daily-profile-2005-2020.json"
 ANCHOR_SHA = "4d974567cc49315dade4a63736b0d428fce9b5e645362052390c94c56fde1210"   # the file energy_inputs.yaml names (40/0)
 PLANE_DIR = "v2/vendor/solar/pvgis-planes"
@@ -246,12 +252,12 @@ def main():
     ok20, low20, _ = ea_case(pr0, 20.0)
     ok15, low15, _ = ea_case(pr0, 15.0)
     tpok, tpline, _ = tp_case(pr0)
-    checks = [("energy_architecture 4S18P 400 Wp 200 W +20 C MEETS 91.0 Wh", ok20 and abs(low20 - 91.0) < 0.05),
+    checks = [("energy_architecture 4S18P 400 Wp 200 W +20 C MEETS 90.9 Wh", ok20 and abs(low20 - 90.9) < 0.05),
               ("energy_architecture +15 C MEETS 26.8 Wh", ok15 and abs(low15 - 26.8) < 0.05),
-              ("energy_two_pack design case MEETS, both 31.1 Wh", tpok and "both   31.1 Wh" in tpline),
+              ("energy_two_pack design case MEETS, both 31.0 Wh", tpok and "both   31.0 Wh" in tpline),
               ("the 40/0 anchor scaled by %.6f reproduces the model's September profile" % k_scale, True)]
     P("THE ENERGY MODEL'S DESIGN CASES WITH THE CHOSEN ARRAY'S PERFORMANCE RATIO, AND THE PLANES (energy_runs.py, stream a1solar,")
-    P("MESHSAT-1357, second issue). PROTOTYPE DESIGN: nothing built, ordered or measured. Reference-day MODEL results (September at")
+    P("MESHSAT-1357, third issue). PROTOTYPE DESIGN: nothing built, ordered or measured. Reference-day MODEL results (September at")
     P("Leiden, PVGIS mean days), AI arithmetic, not a qualified review. Both scripts imported unchanged (sha256 pinned).")
     P("")
     P("0. REPRODUCTION OF THE PUBLISHED FIGURES WITH THE PINNED RATIO %.4f" % pr0)

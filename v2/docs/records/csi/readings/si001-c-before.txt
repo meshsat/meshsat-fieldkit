@@ -1,0 +1,51 @@
+edge_length: SI-001 schematic table, board C: k 6, slowest layer JLC04161H-7628 In2.Cu at 7.154 ps/mm, extent 572.0 mm; 135 signal net(s), 33 decided, 1 undecided, 101 declared slow or DC, 0 contradicted; of the decided 33 may be electrically long, 10 answered in the netlist and 23 layout-bound; of the decided, 4 by a published figure on every driver and 29 by a bound or model; of the layout-bound, 0 by a published figure on every driver and 23 by a bound (BOUND_DECIDES)
+  models: state PRESENT, 6 asked for, 6 in this tree, 0 absent (pinned by v2/vendor/ibis-manifest.yaml); undecided by reason: 1 with no signal-class declaration, 0 waiting only on a model that is not in this tree, 0 other
+  UNDECIDED    (no declaration)       UNKNOWN                1 net(s)
+  LOW_SPEED_OR_DC *_A                    LOW_SPEED_OR_DC       23 net(s)
+  LOW_SPEED_OR_DC *_A2                   LOW_SPEED_OR_DC        2 net(s)
+  LOW_SPEED_OR_DC *_B                    LOW_SPEED_OR_DC        2 net(s)
+  LOW_SPEED_OR_DC *_B2                   LOW_SPEED_OR_DC        2 net(s)
+  LOW_SPEED_OR_DC *_K                    LOW_SPEED_OR_DC       19 net(s)
+  LOW_SPEED_OR_DC *_SENSE                LOW_SPEED_OR_DC        1 net(s)
+  LOW_SPEED_OR_DC *_SW                   LOW_SPEED_OR_DC        3 net(s)
+  LOW_SPEED_OR_DC BOOT_J                 LOW_SPEED_OR_DC        1 net(s)
+  LOW_SPEED_OR_DC C_DVDD                 LOW_SPEED_OR_DC        1 net(s)
+  LOW_SPEED_OR_DC C_RUN                  LOW_SPEED_OR_DC        1 net(s)
+  LOW_SPEED_OR_DC EMCLAMP_G              LOW_SPEED_OR_DC        1 net(s)
+  LOW_SPEED_OR_DC EMCLAMP_Y              LOW_SPEED_OR_DC        1 net(s)
+  LOW_SPEED_OR_DC EMCON_HW               LOW_SPEED_OR_DC        1 net(s)
+  LOW_SPEED_OR_DC EMCON_RD               LOW_SPEED_OR_DC        1 net(s)
+  LOW_SPEED_OR_DC EMCON_RD_R             LOW_SPEED_OR_DC        1 net(s)
+  LOW_SPEED_OR_DC EPD_*                  LOW_SPEED_OR_DC       13 net(s)
+  DECIDED      EPD_CS                 CLOCKED_DIGITAL        1 net(s), 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, 0 answered, 1 layout-bound, 1 decided by a bound
+  DECIDED      EPD_DC                 CLOCKED_DIGITAL        1 net(s), 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, 0 answered, 1 layout-bound, 1 decided by a bound
+  DECIDED      EPD_SCL                CLOCKED_DIGITAL        1 net(s), 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, 0 answered, 1 layout-bound, 1 decided by a bound
+  DECIDED      EPD_SDA                CLOCKED_DIGITAL        1 net(s), 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, 0 answered, 1 layout-bound, 1 decided by a bound
+  DECIDED      EPD_SW                 HIGH_SPEED_DIGITAL     1 net(s), 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, 0 answered, 1 layout-bound, 1 decided by a bound
+  DECIDED      EXP_INT                CLOCKED_DIGITAL        1 net(s), 0.000 ns BOUND TI-PCA9555, critical 0.0 mm, 0 answered, 1 layout-bound, 1 decided by a bound
+  DECIDED      HB?                    CLOCKED_DIGITAL        3 net(s), 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, 0 answered, 3 layout-bound, 3 decided by a bound
+  LOW_SPEED_OR_DC HDMI_SEL?              LOW_SPEED_OR_DC        2 net(s)
+  LOW_SPEED_OR_DC LED_STAT*              LOW_SPEED_OR_DC        1 net(s)
+  LOW_SPEED_OR_DC LIGHT_*                LOW_SPEED_OR_DC        2 net(s)
+  LOW_SPEED_OR_DC PANEL_ID               LOW_SPEED_OR_DC        1 net(s)
+  DECIDED      PANEL_PWM              CLOCKED_DIGITAL        1 net(s), 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, 1 answered, 0 layout-bound
+  LOW_SPEED_OR_DC PI_*                   LOW_SPEED_OR_DC        2 net(s)
+  DECIDED      PWM1                   CLOCKED_DIGITAL        1 net(s), 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, 1 answered, 0 layout-bound
+  DECIDED      Q?_D                   HIGH_SPEED_DIGITAL     1 net(s), 0.000 ns BOUND DISCRETE-MOSFET, critical 0.0 mm, 1 answered, 0 layout-bound
+  DECIDED      Q?_G                   HIGH_SPEED_DIGITAL     4 net(s), 0.000 ns BOUND DISCRETE-MOSFET, critical 0.0 mm, 3 answered, 1 layout-bound, 1 decided by a bound
+  DECIDED      QSPI_*                 HIGH_SPEED_DIGITAL     6 net(s), 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, 0 answered, 6 layout-bound, 6 decided by a bound
+  DECIDED      SCL                    CLOCKED_DIGITAL        1 net(s), 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, 0 answered, 1 layout-bound, 1 decided by a bound
+  DECIDED      SDA                    CLOCKED_DIGITAL        1 net(s), 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, 0 answered, 1 layout-bound, 1 decided by a bound
+  LOW_SPEED_OR_DC SHORE_INHIBIT          LOW_SPEED_OR_DC        1 net(s)
+  LOW_SPEED_OR_DC SLOT_EN?               LOW_SPEED_OR_DC        3 net(s)
+  LOW_SPEED_OR_DC SPARE*                 LOW_SPEED_OR_DC       12 net(s)
+  DECIDED      SW*                    CLOCKED_DIGITAL        2 net(s), 0.000 ns BOUND FAR-BENCH-PROBE, critical 0.0 mm, 0 answered, 2 layout-bound, 2 decided by a bound
+  LOW_SPEED_OR_DC TR_APRS                LOW_SPEED_OR_DC        1 net(s)
+  LOW_SPEED_OR_DC TX_INHIBIT_n           LOW_SPEED_OR_DC        1 net(s)
+  LOW_SPEED_OR_DC TX_LAMPTEST            LOW_SPEED_OR_DC        1 net(s)
+  DECIDED      USB_D*_R               HIGH_SPEED_DIGITAL     2 net(s), 4.000 ns STANDARD USB2-FS, critical 93.2 mm, 2 answered, 0 layout-bound
+  DECIDED      USB_PNL_*              HIGH_SPEED_DIGITAL     2 net(s), 4.000 ns STANDARD USB2-FS, critical 93.2 mm, 2 answered, 0 layout-bound
+  DECIDED      XIN                    HIGH_SPEED_DIGITAL     1 net(s), 0.000 ns BOUND OSCILLATOR-NODES, critical 0.0 mm, 0 answered, 1 layout-bound, 1 decided by a bound
+  DECIDED      XOUT*                  HIGH_SPEED_DIGITAL     2 net(s), 0.000 ns BOUND OSCILLATOR-NODES, critical 0.0 mm, 0 answered, 2 layout-bound, 2 decided by a bound
+  LOW_SPEED_OR_DC ZEROIZE_HW             LOW_SPEED_OR_DC        1 net(s)
+verdict: edge_length            INCONCLUSIVE of 135 {"answered_nets": 10, "bound_decided_nets": 23, "bound_edge_nets": 29, "classes": 48, "contradicted_nets": 0, "decided_nets": 33, "layout_bound_nets": 23, "low_speed_nets": 101, "maker_edge_nets": 4, "maker_held_nets": 0, "may_be_long_nets": 33, "models_absent": 0, "models_asked": 6, "signal_nets": 135, "unasked_part_nets": 0, "undecided_model_absent_nets": 0, "undecided_nets": 1, "undecided_no_declaration_nets": 1, "undecided_other_nets": 0} | SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default. Since 27 September 2026 every edge is a record of tools/pcb_edge_rates.yaml (a configuration input, by sha in inputs.edge_rates): a class entry's interface record, or per net the fastest of its drivers' families (a maker's IBIS model read per pin, a published minimum, a model or a bound), its far ends and one series resistor away; a net whose driver has no record is UNDECIDED. The governing edge of a net is the fastest any driver on it can produce, so one driver with no published minimum makes the net decided by a bound whatever the others publish (ER-D13); a layout-bound net a bound decides is named under BOUND_DECIDES and holds the reading INCONCLUSIVE. counts: decided = maker_edge + bound_edge; layout_bound = maker_held + bound_decided. Since 28 September 2026 the makers' IBIS models are pinned by v2/vendor/ibis-manifest.yaml (inputs.ibis_manifest) and are not in the repository: a pinned model the checkout does not hold decides nothing, its nets read UNDECIDED naming it, and inputs.model_state says which state the reading was taken in (ER-D17); undecided = undecided_no_declaration + undecided_model_absent + undecided_other; a pin whose [Ramp] cell the model's own V-t table contradicts takes the instantaneous bound (ER-D16)

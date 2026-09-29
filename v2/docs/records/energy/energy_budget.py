@@ -27,7 +27,11 @@ import sys
 import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-INPUTS_SHA256 = "64dd014bee56d855023d43caeaf848cfd6dc54f65b58e341d6696851460f7470"  # energy_inputs.yaml, set by --pin
+INPUTS_SHA256 = "74a6e4ab0074648ed459cc62daf7000798ae6247cd5056e19cae5e4d56f55aed"  # energy_inputs.yaml, set by --pin
+# Pin moved by stream s119 (S-119, 29 September 2026): the inputs' second issue restates board A's charger row (0.98 to
+# 0.979, bracket 0.972 to 0.983, v2/docs/records/s117/efficiency.out) and chain_eta (0.9114 to 0.9105); the previous pin
+# was 64dd014bee56d855023d43caeaf848cfd6dc54f65b58e341d6696851460f7470. The only other change: section 4 prints the chain's
+# factors to three places (at two it printed the new 0.979 as 0.98).
 
 
 class InputError(Exception):
@@ -364,7 +368,7 @@ def section4(o, d, monthly_json):
     o("   scaled to the pinned monthly mean. Panel: STC rating x G / 1000 x %.4f (PVGIS's own angle, spectral and" % pr)
     o("   temperature losses, no system loss; maximum-power tracking assumed, which the fixed 17.6 V stage does not do:")
     o("   the low bracket takes 0.80). Window: at most %.0f W into the stage (REQ-016); above it the stage clips." % window)
-    o("   Chain into the node: %.2f x %.2f x %.2f = %.4f (bracket %.3f to %.3f); the panel's 5.68 A at 17.6 V sits" % (
+    o("   Chain into the node: %.3f x %.3f x %.3f = %.4f (bracket %.3f to %.3f); the panel's 5.68 A at 17.6 V sits" % (
         s["chain"][0]["eta"], s["chain"][1]["eta"], s["chain"][2]["eta"], eta, eta_lo, eta_hi))
     o("   under F2's and J_SOLAR's 10 A.")
     o()

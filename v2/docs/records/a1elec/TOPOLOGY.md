@@ -1,5 +1,7 @@
 # TOPOLOGY: two separately protected packs at the system node (Option A(i), stream a1elec, MESHSAT-1357)
 
+**Second issue of the charger rows (stream s119, S-119, 29 September 2026).** The energy chain now carries board A's charger U3 at 0.979 (bracket 0.972 to 0.983; was 0.98, read from SLUSE66A Figure 8-4), with the FETs of decision 57, and Option A(i)'s lid charger U3B at 0.972 (bracket 0.963 to 0.978; was 0.975, read from Figure 8-3) on U3's 400 kHz row, which a session decision draws for it (the FET pair of decision 57, XAL1010-472ME, R16B 10 mOhm, IIN_HOST 6.2 A; `records/s119/apply_decision_s119.py`), weighted by energy over the model's own hours. Both are TI's loss equations (SLUSE66A Equations 6 to 22, printed pages 86 to 88) with the sense resistors inside each figure and the inductors' core loss excluded, so each is high by it (`records/s117/efficiency.out` section 7, `records/s119/u3b_hourly.out`). The chain's scripts were re-issued with their pins moved and every output regenerated (`records/s119/README.md`, `records/s119/headline_diff.out`). Where this page quotes a figure listed here, the page's figure is the first issue's and is superseded by the one given here. Model results on the September reference day; nothing is measured. **In this page, the two-pack model (`energy_two_pack.out`, second issue):** the design case (E2, lid at 13.23 C) keeps 30.3 Wh in the base and 0.7 Wh in the lid, **31.0 Wh together (was 31.1)**, down to a lid at +9.6 C (unchanged); the aggregate 4S18P 90.9 Wh (was 91.0); the base at +15 C as well 9.6 Wh (was 9.7). The entry requirement: at least **5.57 A (115.4 W)** into U3 held at the limit's minimum (was 5.56 A, 115.1 W) and 5.83 A (120.6 W) for the full 31.0 Wh (was 5.81 A, 120.3 W, 31.1 Wh). As generated (E1, U3 at 4.15 A): NOT MET, 377.2 Wh unserved, stops at hours 44 and 32 (was 374.5 Wh); the front end at its limits: 4.3 A 332.2 Wh unserved (was 329.4), 5.0 A 122.4 Wh (was 119.1), 5.7 A MEETS with 17.1 Wh (was 18.6); E1 with 650 and 800 Wp 225.9 and 187.2 Wh unserved (were 222.8 and 184.1). At E2's busiest hour U3 loses 2.7 W at 0.979 (was 2.6 W at 0.98) and U3B 1.5 W at 0.972 on 55.2 W in (was 1.4 W at 0.975 on 55.3 W), each with its sense resistors inside, so board A's charging peak is about **13.9 W** (was about 14.2 W, which counted R16, R17, R16B and R17B twice); over 72 h U3B loses 25.1 to 35.6 Wh (was 22.3 to 31.7) and the charge loop, now 23 mOhm without U3B's RSR, 4.7 to 6.7 Wh (was 5.7 to 8.2). U3's L2 is drawn as 4.7 uH XAL1010-472ME at 400 kHz (decision 56): 2.31 A p-p ripple and a 9.82 A peak at that hour (the first issue's 3.3 uH figures describe the inductor board A no longer draws). **U3B** is drawn on U3's 400 kHz row by the session decision of `records/s119/apply_decision_s119.py` (TOPOLOGY.md 3b and CHARGER.md 2 carry it as their second issue): Q7B and Q9B CSD17578Q5A, Q8B and Q10B CSD17577Q5A, L2B XAL1010-472ME, 191 k, R16B 10 mOhm, IIN_HOST 6.2 A; REGN 32.6 mA at the makers' maxima against its 50 mA minimum limit; with the first-drafted CSD18510Q5B U3B read 0.802 and ratio C of both lid options was NOT MET (`records/s119/reconcile_s119.out` section 4).
+
 29 September 2026. **Prototype design, AI review: nothing drawn in a generator, built, ordered or measured.** This
 page is the electrical design the energy model (`energy_two_pack.py`) runs, written for the generators' owners as a
 DRAFT. Figures marked `.out` are printed by that script (`energy_two_pack.out`, section named); makers' figures carry
@@ -79,16 +81,37 @@ gauge's image at k = 2 (`GAUGE.md`). Its thresholds are in section 4.
 4. U3B's own loops give the lid its own CC-CV charge (16.8 V, 4S strap as U3's R26/R27), its own current (ChargeCurrent
    through R17B) and its own input limit from the node (IIN_HOST through R16B).
 
-**The parts** (drafts for board A's generator; the U3 set copied): U3B BQ25731RSNR; Q7B to Q10B CSD18510Q5B; **L2B
-Coilcraft XAL1010-332ME** (3.3 uH, DCR 3.70 / 4.10 mOhm, Isat 27.4 A, Irms 18.2 A at a 20 C rise; held
-`v2/vendor/power/coilcraft-xal1010.pdf`); **R16B 5 mOhm** (RAC; RSNS_RAC = 1b) and **R17B 5 mOhm** (RSR; RSNS_RSR = 1b),
-2512; the IADPT resistor for 3.3 uH (169 k, SLUSE66A 9.3.11 and Table 9-4) so that Table 9-1 (page 26) allows 10 A of
-input current; U3's filter set (R146 to R149, C121, C122) and input and VSYS capacitors copied; its VBUS pin on VBAT (12 to 16.8 V, inside the charger's input operating range VINPUT_OP, 3.5 to 26 V, SLUSE66A 8.5, page 9).
+**The parts, second issue** (stream s119, 29 September 2026, the session decision of `records/s119/apply_decision_s119.py`:
+U3B takes U3's 400 kHz row and the FET pair of decision 57, because REGN cannot drive the first issue's CSD18510Q5B, 120
+to 240 mA against its 50 mA minimum limit, SLUSE66A 8.5, printed page 11). Drafts for board A's generator; U3's set
+copied:
+
+| Ref | Part or value | Basis |
+|---|---|---|
+| U3B | BQ25731RSNR | as U3 |
+| Q7B | CSD17578Q5A | the buck leg's hard-switched high side (TI SLPS526) |
+| Q8B | CSD17577Q5A | the buck leg's synchronous low side (TI SLPS516) |
+| Q9B | CSD17578Q5A | the boost leg's hard-switched low side (TI SLPS526) |
+| Q10B | CSD17577Q5A | the boost leg's synchronous high side (TI SLPS516) |
+| L2B | Coilcraft XAL1010-472ME, 4.7 uH | Coilcraft 804-1 p.1: DCR 5.20 / 5.70 mOhm, Isat 25.4 A, Irms 17.5 A at a 20 C rise; `records/s119/inductor_u3b.out` |
+| R_IADPT_B | 191 k 1 percent | SLUSE66A Table 9-4, printed page 27: 4.7 uH at 400 kHz |
+| R16B | 10 mOhm 2512 (RAC; RSNS_RAC = 0b) | IIN_HOST clamps at 6.35 A, 9.3.5 and Table 9-1, pages 25 and 26 |
+| R17B | 5 mOhm 2512 (RSR; RSNS_RSR = 1b) | as the first issue |
+| COMP1_B | 40.2 k, 4.7 nF, 33 pF | Table 9-5's 400 kHz row, pages 27 and 28 |
+| COMP2_B | 15 k, 680 pF, 15 pF | Table 9-5's 400 kHz row |
+
+U3's filter set (R146 to R149, C121 10 nF, C122) and input and VSYS capacitors are copied; its VBUS pin is on VBAT (12 to
+16.8 V, inside the charger's input operating range VINPUT_OP, 3.5 to 26 V, SLUSE66A 8.5, page 9). With these parts REGN
+supplies 10.5 mA typical in buck mode and 32.6 mA at the makers' maxima in buck-boost at 460 kHz
+(`records/s117/efficiency.out` section 5). The first issue's parts (CSD18510Q5B x 4, XAL1010-332ME, 169 k, R16B 5 mOhm)
+are superseded.
 
 **Settings** (CHARGER.md has the figures): ChargeVoltage 16.8 V (the strap's 4S default); ChargeCurrent at most **7.936 A**
-(62 x 128 mA) and never above the lid gauge's ChargingCurrent() x 2 (GAUGE.md); IIN_HOST **8.0 A** nominal from VBAT
-(code 80: seven bits of 100 mA with RAC 5 mOhm, SLUSE66A 9.6.22 and Table 9-50, page 80; the register text adds 200 mA
-for the maximum, 8.2 A); InputVoltage (VINDPM) at 12.0 V so that U3B backs off before it could pull the node below the
+(62 x 128 mA) and never above the lid gauge's ChargingCurrent() x 2 (GAUGE.md); IIN_HOST **6.2 A** nominal from VBAT
+(code 124 in 50 mA steps with RAC 10 mOhm, SLUSE66A 9.6.22, page 80; the register text adds 100 mA for the maximum,
+6.3 A, under the 6.35 A clamp; second issue, was 8.0 A on 5 mOhm; the model's largest U3B input is 4.08 A,
+`records/s119/reconcile_s119.out` section 8); PWM_FREQ at its power-on 1b, 400 kHz (Table 9-8, page 43);
+InputVoltage (VINDPM) at 12.0 V so that U3B backs off before it could pull the node below the
 base's graceful line (a firmware choice, bounded by the charger's own VINDPM loop).
 
 **The interlock: U3B may run only while U3 reports outside input (CHRG_OK), and never while the lid path is on.** U3B's ILIM_HIZ pin is
@@ -98,8 +121,10 @@ so a dead host leaves it low) are high. **The default must be off without any lo
 VBAT and is always present: "the BQ25731 itself does charge without a host, at a 256 mA register default, and its
 watchdog does not stop it" (adjudication A02, `records/adj/A02-charger-without-host/`, on TI E2E thread 1316778), which
 would move energy from the base into the lid with the kit switched off. So: ILIM_HIZ_B carries TI's
-divider from U3B's own VDDA (the pin sets the input limit as 1 V + 40 x IDPM x RAC, SLUSE66A pin table page 6; 2.6 V is
-8.0 A on 5 mOhm, the Electrical Characteristics row on page 10, the same as IIN_HOST); a 2N7002 **Q_E1** holds the pin
+divider from U3B's own VDDA (the pin sets the input limit as 1 V + 40 x IDPM x RAC, SLUSE66A pin table page 6; second
+issue: 3.48 V is 6.2 A on 10 mOhm, the same as IIN_HOST, and with EN_EXTILIM at its power-on 1b the lower of the two
+applies; VDDA sits at REGN through 10 Ohm, so 3.48 V is within its reach; SLUSE66A prints the pin's accuracy on page 10
+for 5 mOhm only); a 2N7002 **Q_E1** holds the pin
 at ground with its gate pulled up to U3B's REGN (REGN stays enabled in HiZ, 9.3.8), so U3B sits in HiZ by default; a
 second 2N7002 **Q_E2** pulls Q_E1's gate down, released only while an SN74LVC1G08 AND (held,
 `v2/vendor/ti/ti-sn74lvc1g08.pdf`) of CHRG_OK and LID_CHG_EN is high. An unpowered gate, a low input or a dead host
@@ -207,7 +232,7 @@ level from TI SLUSEG7D (Device Comparison Table, 6.5, 6.6); the fuses from Litte
 | lid path, forward (fault-free) | LM5069-2, 5.6 mOhm | (none: hard-wired) | **8.7 / 9.8 / 11.0 A** | 2.0 A a BASE cell (the join) |
 | lid path, reverse | LM74700-Q1 | (none) | **V(AK) -17 / -11 / -2 mV, under 0.75 us** | no charge from the node |
 | board A's end of the lid lead | F_LA, 15 A MINI (297) | (none) | holds 16.5 A (110 %) for 360,000 s; 4.58 mOhm, 270 A2s | the harness, for a double fault |
-| lid charge | U3B ChargeCurrent, IIN_HOST | (U3: at most 3.968 A) | **at most 7.936 A; 8.0 A in (8.2 A maximum)** | 2.0 A a cell |
+| lid charge | U3B ChargeCurrent, IIN_HOST | (U3: at most 3.968 A) | **at most 7.936 A; 6.2 A in (6.3 A maximum, 6.35 A clamp; second issue)** | 2.0 A a cell |
 
 **The lid's prospective fault** (the method `pcb_energy_chain.yaml` uses for board P): 4 x 35 mOhm / 12 + about 15
 mOhm of strip and lead = 26.7 mOhm, 630 A at 16.8 V from the AC impedance (the DC figure is lower); inside F1's 1000 A
@@ -292,7 +317,7 @@ as well as board E's stage; the L2, 800 kHz and R16 changes of the first issue a
 - **Board A area** for U3B's set, the lid path, F_LA, J_LID, the TCA9543A and the interlock: about 40 x 45 mm (ESTIMATE:
   QFN-32, six 5 x 6 mm FETs, a 10 x 10 mm inductor, three 2512 shunts, a MINI holder, an XT60, small logic). If board A
   has no room, a small daughter board on VBAT near the hinge carries the same circuit (its VBAT feed then carries up to 11
-  A out and 8.2 A in).
+  A out and 6.3 A in; second issue, was 8.2 A).
 - **Standby drain of the lid path** (check item M9): the LM5069 draws 1.3 / 1.6 mA enabled (SNVS452G page 5, IIN-EN)
   and the LM74700-Q1 80 / 130 uA (SNOSD17G 6.5) from the lid, whose path is default on: 1.38 to 1.73 mA, **1.0 to 1.25
   Ah a month** (2.5 to 3.1 percent of 40.2 Ah; ESTIMATE, the makers' typical and maximum), plus U3B in HiZ from VBAT (its
