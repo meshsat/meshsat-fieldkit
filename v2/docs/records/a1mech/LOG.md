@@ -29,3 +29,8 @@ Worker: one Claude author, worktree `a1mech`, branch `fnd/a1mech` from `13b5352b
 - 02:50: the tablet search widened (landscape and portrait, every place 1.0 mm in X and 0.5 mm in Y, both bounds; the bracket may
   overhang the cover by 10 at most): A stays 35 (4S8P), C rises to 58 (4S14P, the tablet in the south-east), C10 47 (a 2 mm grid
   had missed its 0.47 mm window). The tablet's sounder and guard plan rows now print only where the tablet lies beside them.
+- 02:52: the plate-side harness tie moved from the rebated band (5.0 wide under the lid wall at Y 130.9: a 4.4 lead does not fit)
+  to the full face at Y 122; the lead grows to 169.7, bending at R 94 to 102. A tipping-line sensitivity added (feet 14.5 further
+  in: 5.7 degrees at 100 degrees of opening). Hand counts of two other constructions (holders, cells along Y) recorded as ESTIMATE.
+- 02:53: the solids and their check re-run on the box at `91f9f749`: PASS for A, B, C, C10, D, both controls fail as they must.
+- 02:54: `DECISION-A1.md` (274 words) drafted for the integrator; the lid's growth stated from 1.4 kg (shell and QMX set).
