@@ -1,0 +1,23 @@
+# Log, stream w5identc (29 September 2026, times CEST, read from `date`)
+
+- 19:20 worktree `fnd/w5identc` from `b874b744`. Read the brief, WORKER-RULES, w5ident's README and the results of its
+  three checks (grouping, identity, drafts) from the integrator's workflow journal wf_c058de22-937.
+- 19:25 board C's netlist parsed: 225 parts, 50 exclude_from_bom, 175 BOM parts; the committed BOM export has 167 rows
+  and lacks D23, R50 to R56, and reads R14 as 10k (the netlist 2.2k 1%).
+- 19:28 `adapt_tool.py` applied eight edits to w5ident's tool (parsed netlist, V-1 (a') and (g), imports); rows, check,
+  render and main rewritten; docstring rewritten.
+- 19:30 probe of every document w5ident bound for board C: the eight IC and discrete documents on main print their part
+  numbers (pages recorded); none of the passive series sheets on fnd/w5ident prints a complete part number.
+- 19:31 `build_table.py` first run; `part_identities.py check` 0 problems. Checkpoint `6542fcdf`.
+- 19:36 fetched Vishay's VEML7700 sheet and AOS's AO3401A sheet (both name their parts; Vishay's reads "ALL RIGHTS
+  RESERVED"); Winbond's W25Q16JV URL gave 404, Abracon's ABM8-272-T3 404, Hirose's FH34SRJ 403. Then found that the
+  tree already holds AO3401A, VEML7700, TLV755P and W25Q16JV documents (read every PDF of 21 vendor folders for each
+  owed part number): the fetched copies were deleted, nothing was filed, nothing is held back.
+- 19:38 Abracon's sheet tried at the archive: 404 twice.
+- 19:39 held documents bound (5 selections); maker name of the 2N7002 as its sheet prints it; table 87 selections,
+  RESOLVED 20, UNRESOLVED 63, NOT_A_PART 4; check HOLDS; tests 16 of 16; `apply_identities_c.py --check` holds; applied
+  once and refused a second time on a scratch copy. Commit `b0a2b61c`.
+- 19:40 V-1 on board C measured (`readings/v1-on-board-c.txt`): no floor net; rule (g) moves 21 nets, 0 keys.
+- Lint tests run once each on this tree: test_rule_windows 6/0, test_import_before_use 3/0, test_documented_options
+  6/0, test_swallowed 6/0, test_shipped_strings 5/0, test_driver_hygiene 78/0, test_public_tables 2/0. The full suite
+  was not run (the integrator's, on the box).
