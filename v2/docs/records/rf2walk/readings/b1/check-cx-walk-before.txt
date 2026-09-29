@@ -1,0 +1,27 @@
+CX0 D4E-F1 shape                                           EMCON_HW      PASS      
+CX0 D4E-F1 shape                                           TX_INHIBIT_n  PASS      
+CX0' rebuilt baseline                                      EMCON_HW      PASS      
+CX0' rebuilt baseline                                      TX_INHIBIT_n  PASS      
+CX1 expander pin behind own R54 onto EMCON_HW (C)          EMCON_HW      FAIL      C U3 pin 4 (PCA9555PW 0x20: outputs) on FW_DRV, reached through B J_PANEL pin 8 = C J_PANEL pin 8 > R54 330R 1%: a pin whose direction firmware sets: a firmware error drives the gate net, so the gate depends on software | UNDECIDE
+CX2 2nd buffer (B, +3V3_DEV), input firmware, behind R55   EMCON_HW      FAIL      B U30 pin 4 (74LVC1G34 buffer) on U30_DRV, reached through R55 330R 1%: a second BUF output on the net (74LVC1G34 buffer) | with board C unpowered (the line's source there is off), boards B, C: EMCON_HW rises to 3.36 V (the bound:
+CX3 2nd buffer on B (+3V3_DEV), input TX_INHIBIT_n, behind R55 EMCON_HW      PASS      
+CX3 2nd buffer on B (+3V3_DEV), input TX_INHIBIT_n, behind R55 TX_INHIBIT_n  FAIL      with board C unpowered (the line's source there is off), boards B, C: TX_INHIBIT_n rises to 3.34 V (the bound: with B's +3V3_DEV up and every other part at the worse of its powered and unpowered current; ideal one-way elements, no
+CX3b as CX3 + live pull-up R60 on TX_INHIBIT_n (B)         EMCON_HW      PASS      
+CX3b as CX3 + live pull-up R60 on TX_INHIBIT_n (B)         TX_INHIBIT_n  FAIL      with board C unpowered (the line's source there is off), boards B, C: TX_INHIBIT_n rises to 3.34 V (the bound: with B's +3V3_DEV up and every other part at the worse of its powered and unpowered current; ideal one-way elements, no
+CX3c buffer directly on EMCON_HW + pull-up R60 (old rule)  EMCON_HW      PASS      
+CX3c buffer directly on EMCON_HW + pull-up R60 (old rule)  TX_INHIBIT_n  FAIL      with board C unpowered (the line's source there is off), boards B, C: TX_INHIBIT_n rises to 3.46 V (the bound: with B's +3V3_DEV up and every other part at the worse of its powered and unpowered current; ideal one-way elements, no
+CX4a BAT46 anode +3V3_DEV (B), cathode EMCON_HW            EMCON_HW      FAIL      B D30 pin 1 (BAT46W-7-F Schottky 100V (EMCON_HW clamp) on EMCON_HW: a diode from +3V3_DEV (anode) onto the net (cathode) lifts it against the level EMCON forces | with board C unpowered (the line's source there is off), boards B, 
+CX4b BAT46 cathode +3V3_DEV (B), anode EMCON_HW            EMCON_HW      UNDECIDED UNDECIDED with board C unpowered (the line's source there is off), boards B, C: EMCON_HW reads 0.20 V from the currents that are known (with B's +3V3_DEV up and every other part at the worse of its powered and unpowered current), 
+CX5 pull-up R61 10k EMCON_HW -> +3V3_DEV (B)               EMCON_HW      FAIL      with board C unpowered (the line's source there is off), boards B, C: EMCON_HW rises to 1.89 V (the bound: with B's +3V3_DEV up and every other part at the worse of its powered and unpowered current; ideal one-way elements, no for
+CX5 pull-up R61 10k EMCON_HW -> +3V3_DEV (B)               TX_INHIBIT_n  PASS      
+CX6 clamp D31 on EMCON_HW_DRV to +3V3 (C)                  EMCON_HW      FAIL      C U9 pin 4 (74LVC1G17 Schmitt-trigger non-inverting ) on EMCON_HW_DRV, reached through B J_PANEL pin 8 = C J_PANEL pin 8 > R52 330R 1%: a second BUF output on the net (74LVC1G17 Schmitt buffer) | with no source on the line at all,
+CX7 inverter U31 (C) input TX_INHIBIT_n behind R56 onto EMCON_HW EMCON_HW      FAIL      C U31 pin 4 (74LVC1G04 inverter) on U31_DRV, reached through B J_PANEL pin 8 = C J_PANEL pin 8 > R56 330R 1%: a second INV output on the net (74LVC1G04 inverter)
+CX8 D23 reversed: anode TX_INHIBIT_n, cathode EMCON_HW     EMCON_HW      PASS      
+CX8 D23 reversed: anode TX_INHIBIT_n, cathode EMCON_HW     TX_INHIBIT_n  PASS      
+CX9 cross-coupled buffers on B behind R55/R57 (new rule)   EMCON_HW      PASS      
+CX9 cross-coupled buffers on B behind R55/R57 (new rule)   TX_INHIBIT_n  PASS      
+   drive_net B U30_DRV: U30  U32_DRV: U32
+   sources EMCON_HW B: [('U30', 'the 74LVC1G34 buffer from TX_INHIBIT_n, through its series resistor R55 on U30_DRV')]  TX_INHIBIT_n B: [('U32', 'the 74LVC1G34 buffer from EMCON_HW, through its series resistor R57 on U32_DRV')]
+CX9c the same pair directly on the lines (old rule)        EMCON_HW      PASS      
+CX9c the same pair directly on the lines (old rule)        TX_INHIBIT_n  PASS      
+   CX9 all rows: [('the asserted line EMCON_HW: nothing on a', True), ('the asserted line TX_INHIBIT_n: nothing ', True), ('B: every part that names a radio is a li', True), ('C: every part that names a radio is a li', True)]

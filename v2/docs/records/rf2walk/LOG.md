@@ -65,3 +65,28 @@ RockBLOCK, undeclared). No circuit defect; no apply script. With the fixed walk:
 main reads byte for byte what set 12's unfixed walk read on main (0 FAIL, 11 UNDECIDED, 15 PASS). For the integrator: merge
 `fnd/rf2walk`, re-take RF-002 (`inhibit_chain_<letter>`) and the rest of set 12's re-take, rebind the registry records bound
 to board B and C's regenerated netlists and `gen_sch_b.py`, render.
+
+## Second round: the independent check of set 12 (branch `fnd/rf2walk2` from `fnd/int13` at `eafb324d`)
+
+- 13:56 The check read (`_scratch/chk-set12/CHECK.md`, read only; its `_chk/` scripts run from a scratch cwd with the tools
+  directory as argument, nothing written there): mergeable no, 1 blocking, 7 minor; the remedies B-1 to B-5 and D4E-F1 hold
+  at the stated worst case. Worktree `rf2walk2` created from `fnd/int13` at `eafb324d`.
+- 13:57 to 13:59 B1 (blocking). The check's CX9, two 74LVC1G34 on board B cross-coupled between the two lines (each input on
+  one line, each output on the other, behind its own 330R or directly), read PASS on both lines under this stream's first
+  walk: each gate was classed "the line's own source" and `fail_safe` took board B down with it in every state, so the
+  powered latch was never solved; the direct form had read PASS under every walk since the on-net rule. Fix in
+  `tx_inhibit.py`: `_switch_board(nl)`, a board carrying a SW part with a pin on an asserted line (board C's SW_EMCON on
+  TX_INHIBIT_n); a logic output counts as a line's own source (the census's on-net clause, `_source_output`, so
+  `drive_net` and `_line_sources`) only on that board; and `_fs_base` no longer forces a counted source off whatever its
+  rails do (`off` empty): the toggle's board down removes the rails it makes, and a gate on a rail that board receives over a
+  plugged ribbon stays powered and is solved.
+- 13:59 to 14:00 Readings, each `check_contracts.py` into scratch on a `git archive` of the whole `v2/ecad`: set 12 at
+  `eafb324d` before and after, byte-identical (0 FAIL, 11 UNDECIDED, 114 PASS); main `2c7730a4` with the previous walk and
+  with this one, byte-identical (0 FAIL, 11 UNDECIDED); main with its own walk 0 FAIL, 7 UNDECIDED (the `7dc74508` rows, as
+  before). The check's `cx_walk.py` on the previous and the new walk (`readings/b1/check-cx-walk-*.txt`): CX9 behind and
+  direct, and CX3, CX3b, CX3c, move from PASS to FAIL on EMCON_HW (and CX9 on TX_INHIBIT_n); every other counterexample reads
+  as before. Fixtures `t_a_latch_of_two_buffers_across_the_lines_fails_both_lines` (CX9 on board B behind resistors and direct,
+  and on board C from the +5V it receives, both lines FAIL; D4E-F1's shape still passes) and
+  `t_a_follower_off_the_switchs_board_is_a_second_driver` (CX3b): `test_tx_inhibit` 138 passed; both new tests FAIL on the
+  previous walk (CX9 on board B reads PASS on both lines there, on board C UNDECIDED and FAIL). `tests/run.py contract inhibit
+  requirements evidence rules_status stale`: 388 passed, 0 failed, 8 skipped; the tree unchanged but for the two files.
