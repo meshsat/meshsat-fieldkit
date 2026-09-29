@@ -51,12 +51,12 @@
  },
  "tool": "safe_lines_e5",
  "tools": {
-  "git_head": "36ac4bef1ade",
+  "git_head": "13b5352b2d8a",
   "tools_tree_sha": "fedf14205ed9e57d"
  },
- "ts": "2026-09-29T00:03:24Z",
+ "ts": "2026-09-29T00:12:24Z",
  "verdict": "PASS",
- "version": "36ac4bef1ade",
+ "version": "13b5352b2d8a",
  "writer": {
   "file": "safe_lines.py",
   "sha16": "8529487f405ec55d"

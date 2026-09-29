@@ -92,12 +92,12 @@
  },
  "tool": "reliability",
  "tools": {
-  "git_head": "36ac4bef1ade",
+  "git_head": "13b5352b2d8a",
   "tools_tree_sha": "fedf14205ed9e57d"
  },
- "ts": "2026-09-29T00:03:53Z",
+ "ts": "2026-09-29T00:12:37Z",
  "verdict": "INCONCLUSIVE",
- "version": "36ac4bef1ade",
+ "version": "13b5352b2d8a",
  "writer": {
   "file": "reliability.py",
   "sha16": "c50f2b8b35d1d57b"

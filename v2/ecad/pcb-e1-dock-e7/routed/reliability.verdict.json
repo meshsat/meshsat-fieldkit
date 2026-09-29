@@ -31,15 +31,15 @@
   "figures_none_published": 3,
   "figures_not_mated": 1,
   "figures_owed": 1,
-  "inconclusive": 7,
+  "inconclusive": 8,
   "measures_owed": 0,
   "per_board": {
    "e": {
     "artefact": {
      "kind": "netlist",
-     "sha256_16": "56adc9746d61c4e0"
+     "sha256_16": "2ed95a0e8069ebf8"
     },
-    "bound": true,
+    "bound": false,
     "candidates": 35,
     "citations_unjudged": 0,
     "classed": 21,
@@ -60,6 +60,7 @@
  },
  "denominator": 35,
  "evidence": [
+  "board E's declaration was written against the netlist of sha256 56adc9746d61c4e0 and the declared phase's netlist pcb-e1-dock-e7/out/pcb-e1-dock.net reads 2ed95a0e8069ebf8: its components and nets are the same (a re-export of the same design): read the values against the list and re-pin it (reliability.py --pins)",
   "E: class lead headers on 2.54 mm lands, mated in service owes its cycle figure (open item REL-O-02: the 2.54 mm pin header lands carry no named part: their values in the netlists name the lead, the module or the bench use and no header, and whether a header is fitted or the lead is soldered into the holes is a build choice not made. ASSEMBLY.md section 4 names JST PH housings for J_CAM, J_QMX, J_POD and the three sensor modules and SH housings for board E's two mixer fans, and the netlists draw 2.54 mm pin header lands for all of them. Board B's ten bench and commissioning headers are owed under the same item: whether a header is fitted on them at all is the same choice)",
   "E: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings and compares them with nothing (next action: when a service life is ruled, state the expected mates per connector from CONOPS section 5 and compare each class's figure with it)",
   "E: open item REL-O-08 holds the board: the joints under heavy soldered parts (the soldered radio modules, the magnetics, the large inductors) are joints that carry load in transport, and this inventory cannot find them: a netlist carries no mass (next action: list the parts above a mass limit from the makers' documents and add them as a class per board with the staking or support each needs)",
@@ -81,11 +82,11 @@
    "content16": "dc06b84a39724641",
    "parts": 189,
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256": "56adc9746d61c4e016bbf8afe0d6f62d8f595c6c91bddadea9f9cd231edf715e",
-   "sha256_16": "56adc9746d61c4e0"
+   "sha256": "2ed95a0e8069ebf8ad31f4567a14015e863182a83b6de7b3b13218488d8316d4",
+   "sha256_16": "2ed95a0e8069ebf8"
   }
  },
- "missing_input": null,
+ "missing_input": "board E's declaration was written against the netlist of sha256 56adc9746d61c4e0 and the declared phase's netlist pcb-e1-dock-e7/out/pcb-e1-dock.net reads 2ed95a0e8069ebf8: its components and nets are the same (a re-export of the same design): read the values against the list and re-pin it (reliability.py --pins)",
  "note": "every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the measure taken, or under one declared exclusion with its reason. A desk reading of a netlist and a list: it tests nothing and replaces no physical verification; REL-001 is verified at the prototype and no board has been built",
  "policy": {
   "hard_types": 15,
@@ -102,12 +103,12 @@
  },
  "tool": "reliability",
  "tools": {
-  "git_head": "36ac4bef1ade",
+  "git_head": "13b5352b2d8a",
   "tools_tree_sha": "fedf14205ed9e57d"
  },
- "ts": "2026-09-29T00:03:52Z",
+ "ts": "2026-09-29T00:12:37Z",
  "verdict": "INCONCLUSIVE",
- "version": "36ac4bef1ade",
+ "version": "13b5352b2d8a",
  "writer": {
   "file": "reliability.py",
   "sha16": "c50f2b8b35d1d57b"
