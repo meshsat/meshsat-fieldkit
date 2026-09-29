@@ -4,7 +4,8 @@
 (set 9) with the part sets for this change: the added parts are exactly C233, C234, C235, R219 and R220, the changed ones exactly
 C26, C27, L2, Q7, Q8, Q9, Q10 and R25, none removed, no added part a connector; the decision 31 hold and the reviewed port set move
 only if every external pin the reviewed set holds for board A is on the same net; the reliability list only if the inventory's
-counts equal main's and the new line is the one reliability.py --pins prints. Refuses when a proof fails or on a second run."""
+counts equal main's and the new line is the one reliability.py --pins prints. Refuses when a proof fails or on a second run. Moves whatever board A's pins hold now (main's, or an earlier set 12 export),
+always proving against main."""
 import hashlib, json, os, subprocess, sys, tempfile
 
 import yaml
@@ -73,6 +74,11 @@ def main():
     new_wa = line[0].strip().split("   #")[0].strip()
     # the three moves
     edits = []
+    rl = [l for l in open(os.path.join(TOOLS, "pcb_reliability.yaml"), encoding="utf-8").read().split("\n") if l.strip().startswith("written_against:") and '"pcb-a-power-a23/out/pcb-a-power.net"' in l]
+    if len(rl) != 1: refuse("the reliability list does not pin board A once")
+    cur16 = rl[0].split('sha256_16: "')[1][:16]
+    if cur16 == n16: refuse("board A is already pinned at %s" % n16)
+    o16 = cur16   # the pin to move: main's at the first run, a later set 12 export after; every proof above compared with main
     hp = os.path.join(TOOLS, "pcb_board_holds.yaml")
     ht = open(hp, encoding="utf-8").read()
     if ht.count('netlist_sha16: "%s"' % o16) != 1: refuse("the hold does not pin %s once" % o16)

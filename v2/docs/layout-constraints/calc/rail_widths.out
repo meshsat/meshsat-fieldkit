@@ -2,13 +2,13 @@
 
 ```bound
 board      a
-netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 d68ce269daa23080
-intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 177519f94291a882
+netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 6c40250c47195ebb
+intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 b75d0e156142af59
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
 ```
 
-Intent written 2026-09-29 12:20. Stack: six layers, measured (LAYER-DECISIONS-2026-09-11.md, A arm 345 open at four); copper weight OPEN. Pack path, judged at 18 A (PWR-F12): CELL+, CELL_FUSED, VBAT.
+Intent written 2026-09-29 12:33. Stack: six layers, measured (LAYER-DECISIONS-2026-09-11.md, A arm 345 open at four); copper weight OPEN. Pack path, judged at 18 A (PWR-F12): CELL+, CELL_FUSED, VBAT.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
@@ -52,13 +52,13 @@ Intent written 2026-09-29 12:20. Stack: six layers, measured (LAYER-DECISIONS-20
 
 ```bound
 board      b
-netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 1aec97f435080163
-intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 30fb871954f76b2a
+netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 e7e683207d084d61
+intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 65f525bb5ae37e0d
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
 ```
 
-Intent written 2026-09-29 12:20. Stack: six layers as built; eight (JLC08161H-2116, the same copper) under decision 43's measurement.
+Intent written 2026-09-29 12:33. Stack: six layers as built; eight (JLC08161H-2116, the same copper) under decision 43's measurement.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|

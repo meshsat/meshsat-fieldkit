@@ -19,11 +19,11 @@ paragraph below is its own binding's).
 ```bound
 sheet      B
 board      b
-read       2026-09-29 at 33fe3c9c
+read       2026-09-29 at 3d3e32d6
 current    section 2: the power table, and the figures the text under it quotes from it
 older      sections 1 and 3 to 11: read at e3aedb25, with the H2 line's changes marked at ef144760
-netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 1aec97f435080163 changed 33fe3c9c
-intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 30fb871954f76b2a changed 33fe3c9c
+netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 e7e683207d084d61 changed 3d3e32d6
+intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 65f525bb5ae37e0d changed 3d3e32d6
 board_file v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb sha256/16 2e64b5bf2d9cd3bc changed f2541bea
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
