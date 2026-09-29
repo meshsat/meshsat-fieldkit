@@ -81,7 +81,7 @@ gauge's image at k = 2 (`GAUGE.md`). Its thresholds are in section 4.
 Coilcraft XAL1010-332ME** (3.3 uH, DCR 3.70 / 4.10 mOhm, Isat 27.4 A, Irms 18.2 A at a 20 C rise; held
 `v2/vendor/power/coilcraft-xal1010.pdf`); **R16B 5 mOhm** (RAC; RSNS_RAC = 1b) and **R17B 5 mOhm** (RSR; RSNS_RSR = 1b),
 2512; the IADPT resistor for 3.3 uH (169 k, SLUSE66A 9.3.11 and Table 9-4) so that Table 9-1 (page 26) allows 10 A of
-input current; U3's filter set (R146 to R149, C121, C122) and input and VSYS capacitors copied; its VBUS pin on VBAT.
+input current; U3's filter set (R146 to R149, C121, C122) and input and VSYS capacitors copied; its VBUS pin on VBAT (12 to 16.8 V, inside the charger's input operating range VINPUT_OP, 3.5 to 26 V, SLUSE66A 8.5, page 9).
 
 **Settings** (CHARGER.md has the figures): ChargeVoltage 16.8 V (the strap's 4S default); ChargeCurrent at most **7.936 A**
 (62 x 128 mA) and never above the lid gauge's ChargingCurrent() x 2 (GAUGE.md); IIN_HOST **8.0 A** nominal from VBAT
