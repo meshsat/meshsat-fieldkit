@@ -11,7 +11,7 @@ WHERE THE REQUIREMENT LIVES (read by this stream at b874b744, by parsing, not by
 
 WHAT IT DOES (two files, each change asserted):
   1. pcb_requirements.yaml: one open item at the end of `open_items`, at the next free S number (computed from the file,
-     since set 14 may open S-124 first), class SESSION, disposition LAYOUT_STAGE with its why: board C's exact-part
+     since set 14 may open S-124 first), class SESSION, disposition LAYOUT_ENTRY_PACKET with its why (a disposition does not hold layout entry; the README drafts the feasibility stage that would): board C's exact-part
      requirement read by part_identities.py check, with the reading's counts and its sha256. It closes when every
      selection of board C reads RESOLVED on the netlist the board holds.
   2. LAYER-STATUS.md, item 6.1's evidence cell: one sentence naming board C's reading and the open item.
@@ -27,7 +27,7 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", "..", "..", ".."))
 REQ = os.path.join(ROOT, "v2", "ecad", "tools", "pcb_requirements.yaml")
 LAYER = os.path.join(ROOT, "v2", "docs", "handover", "LAYER-STATUS.md")
 READING = os.path.join(HERE, "readings", "check-board-c-b874b744.json")
-READING_SHA256 = "3d3775e2f23c0acaf010e35d0d23f73f44bf93175113c190370e9032649cfeb8"
+READING_SHA256 = "602b2c246be6dd9beb6db922e2d89c11b11c3c6d373d7f9d0759e5a7f9a1ec3d"
 NETLIST_SHA256 = "c9f7394594201045be328a07284328a7eef2c2f451e35e0828a98ac3e5510609"
 MARKER = "(stream w5identc, board C's part identities)"
 ANCHOR_REQ = "\nclosed_items:\n"
@@ -71,16 +71,19 @@ def main(argv):
              "by sha256) and the table re-derived by v2/docs/records/w5identc/build_table.py."
              % (MARKER, NETLIST_SHA256[:16], counts, READING_SHA256[:16]))
     dwhy = ("No registry record's verdict rests on part identities: CMP-001 judges ratings, CMP-002 and SUP-001 order "
-            "codes and stock, SCH-005 pads, and no feasibility stage names identities, so rules_status.layout_entry does "
-            "not count it. Board C's layout-entry packet (EXECUTION-PLAN review D) reads this item; the integrator may "
-            "instead stage it on a feasibility record at LAYOUT_ENTRY, which would make it a layout-entry reason.")
-    block = ("  - id: %s\n    class: SESSION\n    status: OPEN\n    title: >-\n%s\n    disposition: LAYOUT_STAGE\n"
+            "codes and stock, SCH-005 pads. EXECUTION-PLAN review D makes exact part identities a precondition of board "
+            "C's layout entry, and this disposition does not hold it: rules_status.layout_entry counts required "
+            "schematic rules, holds and feasibility stages only. The binding that holds it is a feasibility record staged "
+            "at LAYOUT_ENTRY holding board C (the shape of FEA-006) whose waits_on names this item; drafted as the "
+            "integrator's option in v2/docs/records/w5identc/README.md, not applied, because layer 6 item 6.1 asks the same "
+            "of every board with a schematic and staging it moves every board's layout readiness.")
+    block = ("  - id: %s\n    class: SESSION\n    status: OPEN\n    title: >-\n%s\n    disposition: LAYOUT_ENTRY_PACKET\n"
              "    disposition_why: >-\n%s\n" % (sid, _wrap(title, 6), _wrap(dwhy, 6)))
     new_req = req_txt.replace(ANCHOR_REQ, "\n" + block + "closed_items:\n", 1)
     assert new_req != req_txt
     reg2 = yaml.safe_load(new_req)
     got = [x for x in reg2["open_items"] if x.get("id") == sid]
-    assert len(got) == 1 and MARKER in got[0]["title"] and got[0]["disposition"] == "LAYOUT_STAGE", "the item does not parse back"
+    assert len(got) == 1 and MARKER in " ".join(got[0]["title"].split()) and got[0]["disposition"] == "LAYOUT_ENTRY_PACKET", "the item does not parse back"
     assert len(reg2["open_items"]) == len(reg["open_items"]) + 1 and reg2["closed_items"] == reg["closed_items"]
     lay = open(LAYER, encoding="utf-8").read()
     assert lay.count(ANCHOR_ROW) == 1, "LAYER-STATUS item 6.1's row is not present exactly once"

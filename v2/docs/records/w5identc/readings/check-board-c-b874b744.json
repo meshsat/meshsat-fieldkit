@@ -1,7 +1,7 @@
 {
  "identity_status": {
-  "NOT_A_PART": 4,
-  "RESOLVED": 43,
+  "NOT_A_PART": 3,
+  "RESOLVED": 44,
   "UNRESOLVED": 40
  },
  "inputs": [
@@ -219,10 +219,16 @@
    "status": "NOT_A_PART"
   },
   {
+   "binding": "PRINTED",
+   "document": "v2/vendor/hirose/hirose-fh34-series-ffc-connectors.pdf",
    "id": "S-13d7058c0e",
-   "reason_class": "DOCUMENT_OWED",
+   "line": "FH34SRJ-24S-0.5SH(##) CL0580-1255-6-## 24 14.0 11.5 12.57 13.38",
+   "mpn": "FH34SRJ-24S-0.5SH(50)",
+   "page": 6,
    "rows": 1,
-   "status": "UNRESOLVED"
+   "state": "READ",
+   "status": "RESOLVED",
+   "why": "page 6 prints FH34SRJ-24S-0.5SH(##) and keys (##) to (50)"
   },
   {
    "id": "S-ce3bc3dcc6",
@@ -238,9 +244,9 @@
   },
   {
    "id": "S-ccd83888e1",
-   "reason_class": null,
+   "reason_class": "CHOICE_OWED",
    "rows": 1,
-   "status": "NOT_A_PART"
+   "status": "UNRESOLVED"
   },
   {
    "id": "S-30334f702e",
@@ -322,19 +328,19 @@
   },
   {
    "id": "S-722b702520",
-   "reason_class": "DOCUMENT_OWED",
+   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
    "rows": 1,
    "status": "UNRESOLVED"
   },
   {
    "id": "S-0a37bce91a",
-   "reason_class": "DOCUMENT_OWED",
+   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
    "rows": 1,
    "status": "UNRESOLVED"
   },
   {
    "id": "S-ff16699f19",
-   "reason_class": "DOCUMENT_OWED",
+   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
    "rows": 1,
    "status": "UNRESOLVED"
   },
@@ -346,7 +352,7 @@
   },
   {
    "id": "S-b2e775c075",
-   "reason_class": "DOCUMENT_OWED",
+   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
    "rows": 1,
    "status": "UNRESOLVED"
   },
@@ -708,7 +714,7 @@
   },
   {
    "id": "S-62ab53c6e1",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "reason_class": "PART_DOES_NOT_MEET_THE_REQUIREMENT",
    "rows": 1,
    "status": "UNRESOLVED"
   },
@@ -973,11 +979,11 @@
  ],
  "resolved_bindings": {
   "DECODED": 23,
-  "READ": 20
+  "READ": 21
  },
  "resolved_by_binding": {
   "DECODED": 23,
-  "PRINTED": 20
+  "PRINTED": 21
  },
  "rows": 175,
  "scope": [
@@ -985,12 +991,14 @@
  ],
  "selections": 87,
  "table": "v2/ecad/tools/pcb_part_identities.yaml",
- "table_sha256": "5b992b42d08794e37bfb814df3fcf66d064d7a60319b8c773d9010064e05cd52",
- "tool_sha256": "dfda17dd1317f523e0701a5c208b933a0d9ff73ef4a40f346dc5446fcab2a8be",
+ "table_sha256": "2dce2a39a9a99c1910e173a664463e32affc620816f6c4b46bdd141163bf7917",
+ "tool_sha256": "20adab11d0bd2d4da960e0e2b56d91a3b657a673c05515e1fcb9cb9196a5c4f9",
+ "unfetched_ok": false,
  "unresolved_by_reason": {
-  "CHOICE_OWED": 22,
-  "DOCUMENT_DOES_NOT_NAME_THE_PART": 5,
-  "DOCUMENT_OWED": 13
+  "CHOICE_OWED": 23,
+  "DOCUMENT_DOES_NOT_NAME_THE_PART": 8,
+  "DOCUMENT_OWED": 8,
+  "PART_DOES_NOT_MEET_THE_REQUIREMENT": 1
  },
  "verdict": "HOLDS",
  "what": "part_identities.py check: the table against the committed netlists, and rule D-2 read on every RESOLVED binding (the cited page's text layer names the part number)"
