@@ -2,13 +2,13 @@
 
 ```bound
 board      a
-netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 599ee964a9c23d6e
-intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 070b4c5e41e023e5
+netlist    v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 30ad87746d1801ca
+intent     v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json sha256/16 f9e4827ba2f6d2bd
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
 ```
 
-Intent written 2026-09-28 22:18. Stack: six layers, measured (LAYER-DECISIONS-2026-09-11.md, A arm 345 open at four); copper weight OPEN. Pack path, judged at 18 A (PWR-F12): CELL+, CELL_FUSED, VBAT.
+Intent written 2026-09-29 00:08. Stack: six layers, measured (LAYER-DECISIONS-2026-09-11.md, A arm 345 open at four); copper weight OPEN. Pack path, judged at 18 A (PWR-F12): CELL+, CELL_FUSED, VBAT.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
@@ -52,13 +52,13 @@ Intent written 2026-09-28 22:18. Stack: six layers, measured (LAYER-DECISIONS-20
 
 ```bound
 board      b
-netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 21a1f74a3ec1ae28
-intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 a7bf625c8b878dd5
+netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 97823ef1171a61ce
+intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 9fd37fd39026c102
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
 ```
 
-Intent written 2026-09-28 21:11. Stack: six layers as built; eight (JLC08161H-2116, the same copper) under decision 43's measurement.
+Intent written 2026-09-29 00:09. Stack: six layers as built; eight (JLC08161H-2116, the same copper) under decision 43's measurement.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
@@ -139,13 +139,13 @@ Sized at a maker's figure above the declaration (SIZED_TO; POWER-THERMAL.md sect
 
 ```bound
 board      c
-netlist    v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256/16 3fddbb3edcd4248a
-intent     v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json sha256/16 270ebb4ccf1d0e8e
+netlist    v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256/16 fef4df255c00f4db
+intent     v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json sha256/16 03af8453948d391c
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
 ```
 
-Intent written 2026-09-27 15:35. Stack: six layers, owner decision 27 (board file still four, JLC04161H-7628, the same copper).
+Intent written 2026-09-29 00:11. Stack: six layers, owner decision 27 (board file still four, JLC04161H-7628, the same copper).
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
@@ -159,13 +159,13 @@ Intent written 2026-09-27 15:35. Stack: six layers, owner decision 27 (board fil
 
 ```bound
 board      d
-netlist    v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net sha256/16 7a2c0ac2190b141a
-intent     v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json sha256/16 8d9f3b2256521b0d
+netlist    v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net sha256/16 a2d48972d171aad1
+intent     v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json sha256/16 19fa94a2bce5dd52
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC04161H-7628 outer 0.0350 mm inner 0.0152 mm
 ```
 
-Intent written 2026-09-27 14:28. Stack: four layers, the RF ground-plane reason (LAYER-DECISIONS-2026-09-11.md).
+Intent written 2026-09-29 00:11. Stack: four layers, the RF ground-plane reason (LAYER-DECISIONS-2026-09-11.md).
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
@@ -180,13 +180,13 @@ Intent written 2026-09-27 14:28. Stack: four layers, the RF ground-plane reason 
 
 ```bound
 board      e
-netlist    v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 56adc9746d61c4e0
-intent     v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json sha256/16 dad1163afd720b5e
+netlist    v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 2ed95a0e8069ebf8
+intent     v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json sha256/16 4b328380172ff2c7
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC04161H-7628 outer 0.0350 mm inner 0.0152 mm
 ```
 
-Intent written 2026-09-27 14:51. Stack: four layers, the routing half and In1 (LAYER-DECISIONS-2026-09-11.md). Pack path, judged at 18 A (PWR-F12): CELL_F, CELL+.
+Intent written 2026-09-29 00:12. Stack: four layers, the routing half and In1 (LAYER-DECISIONS-2026-09-11.md). Pack path, judged at 18 A (PWR-F12): CELL_F, CELL+.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
@@ -227,13 +227,13 @@ Currents: the chain's stage DOCK_BLOCK. Stack: two layers at 2 oz, owner ruling 
 
 ```bound
 board      p
-netlist    v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net sha256/16 760ac6f74d62d194
-intent     v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json sha256/16 12f92bd3ce7a8264
+netlist    v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net sha256/16 20c7b0795593d761
+intent     v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json sha256/16 657f4c42db51e4da
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC04162H-7628 outer 0.0700 mm inner 0.0152 mm
 ```
 
-Intent written 2026-09-27 15:23. Stack: four layers 2 oz outer, owner decision 28; inner weight OPEN (0.5 oz default shown). Pack path, judged at 18 A (PWR-F12): PACK_P, CELL4, FUSED, SCP_OUT, PACK_N, SW.
+Intent written 2026-09-29 00:12. Stack: four layers 2 oz outer, owner decision 28; inner weight OPEN (0.5 oz default shown). Pack path, judged at 18 A (PWR-F12): PACK_P, CELL4, FUSED, SCP_OUT, PACK_N, SW.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|

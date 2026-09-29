@@ -17,11 +17,11 @@ below is its own binding's).
 ```bound
 sheet      E
 board      e
-read       2026-09-27 at 760d7f41
+read       2026-09-29 at d41f85ec
 current    section 2: the power table, and the figures the text under it quotes from it
 older      sections 1 and 3 to 10: read at e3aedb25, with the H2 line's changes marked at ef144760
-netlist    v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 56adc9746d61c4e0 changed c4ad8350
-intent     v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json sha256/16 dad1163afd720b5e changed c4ad8350
+netlist    v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 2ed95a0e8069ebf8 changed d41f85ec
+intent     v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json sha256/16 4b328380172ff2c7 changed d41f85ec
 board_file v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb sha256/16 a462ac2620b9b8d3 changed bed211b6
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC04161H-7628 outer 0.0350 mm inner 0.0152 mm
