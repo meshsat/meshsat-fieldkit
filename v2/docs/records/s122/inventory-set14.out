@@ -1,7 +1,7 @@
 # Stream s122 inventory: every in-scope sentence of the documents CFL-016 names that names a part, net, board,
 # rail, gate function or generator line. Written by v2/docs/records/s122/inventory.py at the commit it ran in.
 # Netlists parsed (tx_inhibit.parse_netlist): A v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb, B v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728, C v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@c9f7394594201045, D v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1, E v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8, P v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761
-# Documents: v2/docs/PANEL.md@b396d028b41e880d, v2/docs/CONOPS.md@6cb7b241cb84d729, v2/docs/V2-SPEC.md@2c722c9b5457bd56, v2/docs/OPERATING-ENVELOPE.md@26e98ecfd2e4ec2f, v2/docs/TEST-PLAN.md@42a3dff33442c860, v2/docs/ASSEMBLY.md@942d562edd128759, v2/ecad/tools/pcb_decisions.yaml@a41df5d12ff95995, v2/docs/feasibility/EMCON.md@c8eb306265110076, v2/docs/handover/DEFINITION-STATUS.md@f7f0d7324b94dbc8
+# Documents: v2/docs/PANEL.md@b396d028b41e880d, v2/docs/CONOPS.md@6cb7b241cb84d729, v2/docs/V2-SPEC.md@1e1547e1462904f7, v2/docs/OPERATING-ENVELOPE.md@a8e65995c594546b, v2/docs/TEST-PLAN.md@42a3dff33442c860, v2/docs/ASSEMBLY.md@942d562edd128759, v2/ecad/tools/pcb_decisions.yaml@a41df5d12ff95995, v2/docs/feasibility/EMCON.md@c8eb306265110076, v2/docs/handover/DEFINITION-STATUS.md@2db0ad36da754fa4
 # Scope: PANEL.md 1, 2, 3, 5, 6, 7, 9, 10; CONOPS.md 2a, M2, M4, 4, 4a, 4b, 4b.1, 4c, 4d, 4e, 4f, 5; V2-SPEC.md whole; OPERATING-ENVELOPE.md 2, 3, 4; TEST-PLAN.md whole; ASSEMBLY.md 2, 4, 8, 9; pcb_decisions.yaml 28, 40; EMCON.md 0a.1; DEFINITION-STATUS.md Current values of CONOPS's circuit passages (stream s122, 29 September 2026)
 
 PANEL.md#1:L55:cell:1:s1 [d2e1df041f]
@@ -1498,9 +1498,9 @@ V2-SPEC.md#Bearers and radios:L45:cell:2:s1 [bd1020ac37]
 V2-SPEC.md#Bearers and radios:L46:cell:2:s1 [bd1020ac37]
     B16 UART
     names: boards=B16; row=Thread and Matter
-V2-SPEC.md#Bearers and radios:L47:cell:1:s1 [6df916ee4f]
-    NiceRF SA868 VHF 2 W exciter (`U2`, correction 36) with a 30 W VHF amplifier stage (the Mitsubishi RA30H1317M1, T/R relay, low-pass filter; the amplifier's sheet held since 27 September 2026, `OPERATING-ENVELOPE.md` section 2), Direwolf on D8's PCM2912A USB codec (`U6`), hardware PTT inhibit (correction 34)
-    names: refs=D8,U2,U6; boards=D8; parts=PCM2912A,RA30H1317M1,SA868; row=APRS and VHF voice
+V2-SPEC.md#Bearers and radios:L47:cell:1:s1 [2d94b4029a]
+    NiceRF SA868 1 W with a 30 W VHF amplifier stage (RA30H1317M class, T/R relay, low-pass filter; sheet *owed*), Direwolf on the WM8960 codec, hardware PTT inhibit
+    names: parts=RA30H1317M,SA868,WM8960; row=APRS and VHF voice
 V2-SPEC.md#Bearers and radios:L47:cell:2:s1 [00075b673b]
     D8, west jack
     names: refs=D8; boards=D8; row=APRS and VHF voice
@@ -1558,36 +1558,36 @@ V2-SPEC.md#Open items (the generators have run; these remain owed):L76:para:s2 [
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L81:cell:0:s1 [0536e7eccf]
     A22
     names: boards=A22; row=A22
-V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L81:cell:1:s1 [a77bf9d173]
-    power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 V node, BQ25731 SMBus charger, the 9 to 36 V input passed up from E6, three 5.1 V slot rails and a device rail (the AP64500 buck on slots 1 and 3, `U4` and `U6`, and LM5176 stages on slot 2 and the device rail, `U5` and `U7`, all four AP64500 on 7 September, correction 35; INA226 monitored), the 13.8 V PA and 12 V HF rails (LM5176, EMCON gated), the 54 V PoE rail, the 45 W USB-C outlet (TPS25740A and an LM5176 stage; the TPS55288 had left the design on 7 September, correction 32), 3.3 V logic, eleven SMP-MAX blind-mate sites, the D8 mezzanine site, the 2x13 ribbon to B16
-    names: refs=D8,U4,U5,U6,U7; boards=B16,D8,E6; rails=rail,rails; gates=gated; topic=EMCON; counts=three 5.1 V slot; parts=AP64500,BQ25731,INA226,LM5176,TPS25740A,TPS55288; row=A22
+V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L81:cell:1:s1 [de16befa62]
+    power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 V node, BQ25731 SMBus charger, the 9 to 36 V input passed up from E6, three 5.1 V slot rails and a device rail (AP64500, INA226 monitored), the 13.8 V PA and 12 V HF rails (LM5176, EMCON gated), the 54 V PoE rail, the 45 W USB-C outlet (TPS25740A and an LM5176 stage; the TPS55288 had left the design on 7 September, correction 32), 3.3 V logic, eleven SMP-MAX blind-mate sites, the D8 mezzanine site, the 2x13 ribbon to B16
+    names: refs=D8; boards=B16,D8,E6; rails=rail,rails; gates=gated; topic=EMCON; counts=three 5.1 V slot; parts=AP64500,BQ25731,INA226,LM5176,TPS25740A,TPS55288; row=A22
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L82:cell:0:s1 [bc215963d1]
     B16
     names: boards=B16; row=B16
-V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L82:cell:1:s1 [4d190b7091]
-    compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the 5 V planes; decision 43 of 25 Sep 2026: measured on eight layers first, its whole-board run EXPERIMENTAL): three CM5 slots, per slot a PI7C9X2G404 PCIe switch, an NVMe 2242 socket, a card socket, a TUSB8041 USB 3 hub and a cooler fan header; the I/O high-availability layer of `ARCH-PCB-B-IOHA.md` (per bank a TMUXHS4212 and a TS3USB221A selecting between the home module and a neighbour, three STM32H743 supervisors (the part bought, which the owner accepted under D-13; the schematic text of `U41`, `U51` and `U61` reads H743 and CON-017 reads PASS in the requirements registry, corrections 14 and 32) on two CAN-FD fabrics, seven 2-of-3 voters and the antenna changeover); the KSZ9897 Ethernet switch, the two TS3DV642 display switches (`U3`, `U4`; correction 34), the LimeSDR bay, the RockBLOCK site, the LG290P, the E22 LoRa module, two E72, the DS3231SN clock (`U9`; the DS3231M on 7 September, correction 34), the ATECC608B, the TMP117, the panel and A22 ribbons
-    names: refs=U3,U4,U41,U51,U61,U9; boards=A22,PCB-B; counts=three CM5 slots,three STM32H743 supervisors,two TS3DV642 display switches; parts=ATECC608B,DS3231M,DS3231SN,KSZ9897,LG290P,PI7C9X2G404,STM32H743,TMP117,TMUXHS4212,TS3DV642,TS3USB221A,TUSB8041; row=B16
+V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L82:cell:1:s1 [b1e7494b6d]
+    compute and radios, 330 x 200 mm, six layers (In1 solid ground, In4 the 5 V planes; decision 43 of 25 Sep 2026: measured on eight layers first, its whole-board run EXPERIMENTAL): three CM5 slots, per slot a PI7C9X2G404 PCIe switch, an NVMe 2242 socket, a card socket, a TUSB8041 USB 3 hub and a cooler fan header; the I/O high-availability layer of `ARCH-PCB-B-IOHA.md` (per bank a TMUXHS4212 and a TS3USB221A selecting between the home module and a neighbour, three STM32H743 supervisors (the part bought, which the owner accepted under D-13; the schematic text of `U41`, `U51` and `U61` reads H743 and CON-017 reads PASS in the requirements registry, corrections 14 and 32) on two CAN-FD fabrics, seven 2-of-3 voters and the antenna changeover); the KSZ9897 Ethernet switch, the TMDS341A display switch, the LimeSDR bay, the RockBLOCK site, the LG290P, the E22 LoRa module, two E72, the DS3231M clock, the ATECC608B, the TMP117, the panel and A22 ribbons
+    names: refs=U41,U51,U61; boards=A22,PCB-B; counts=three CM5 slots,three STM32H743 supervisors; parts=ATECC608B,DS3231M,KSZ9897,LG290P,PI7C9X2G404,STM32H743,TMDS341A,TMP117,TMUXHS4212,TS3USB221A,TUSB8041; row=B16
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L83:cell:0:s1 [f167717fb2]
     C7
     names: refs=C7; boards=C7; row=C7
-V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L83:cell:1:s1 [3f426d1736]
-    panel backer under the plate, a 344 x 228 ring with a 240 x 176 void, four layers (six ruled by the owner on 25 Sep 2026, decision 27, not yet regenerated): the RP2040 panel controller (a USB device with the hardware EMCON and ZEROIZE lines), seventeen 3 mm LEDs under light guides (`D1` to `D16` and, since board C's round 8, the hardware EMCON lamp `D22`, whose guide in the plate is owed, open item S-44; correction 35), two PCA9555, the PDi e-paper ZIF and its boost stage, the sounder driver, the VEML7700, the switch lands, the headset jack and camera holes, the notch for the monitor's connector block; the PA flange sits in its void
-    names: refs=D1,D16,D22; boards=board C; topic=EMCON; counts=seventeen 3 mm LEDs; parts=PCA9555,RP2040,VEML7700; row=C7
+V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L83:cell:1:s1 [fa00f9ca7e]
+    panel backer under the plate, a 344 x 228 ring with a 240 x 176 void, four layers (six ruled by the owner on 25 Sep 2026, decision 27, not yet regenerated): the RP2040 panel controller (a USB device with the hardware EMCON and ZEROIZE lines), sixteen LEDs under light guides, two PCA9555, the PDi e-paper ZIF and its boost stage, the sounder driver, the VEML7700, the switch lands, the headset jack and camera holes, the notch for the monitor's connector block; the PA flange sits in its void
+    names: topic=EMCON; counts=sixteen LEDs; parts=PCA9555,RP2040,VEML7700; row=C7
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L84:cell:0:s1 [e32ddc3033]
     D8
     names: refs=D8; boards=D8; row=D8
-V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L84:cell:1:s1 [2955447136]
-    VHF APRS mezzanine on A22, 100 x 80 mm, four layers: the SA868 exciter, the G6K T/R relay, the low-pass filter and the leads to the RA30H1317M1 on the plate, the PCM2912A USB codec and TPA6132A2 amplifier for the two headset jacks, the TUSB2046I hub (`U4`, TUSB2046IBVFR, the industrial grade since 26 September 2026; the TUSB2046B on 7 September, correction 34) and CP2102N bridge, the PTT and EMCON gate logic, the TLV75801 gate-bias LDO on `PA_KEY` (`U15`; on 7 September a TPS22810 switched the bias, correction 35), the TPS22810 load switch of the exciter's `+5V_TX` (`U21`), a PCA9555
-    names: refs=U15,U21,U4; nets=+5V_TX,PA_KEY; boards=A22; rails=+5V_TX; gates=gate,load switch; topic=EMCON; counts=two headset jacks; parts=CP2102N,PCA9555,PCM2912A,RA30H1317M1,SA868,TLV75801,TPA6132A2,TPS22810,TUSB2046B,TUSB2046I,TUSB2046IBVFR; row=D8
+V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L84:cell:1:s1 [40489568ae]
+    VHF APRS mezzanine on A22, 100 x 80 mm, four layers: the SA868 exciter, the G6K T/R relay, the low-pass filter and the leads to the RA30H1317M1 on the plate, the PCM2912A USB codec and TPA6132A2 amplifier for the two headset jacks, the TUSB2046B hub and CP2102N bridge, the PTT and EMCON gate logic, the TPS22810 gate-bias switch, a PCA9555
+    names: boards=A22; gates=gate; topic=EMCON; counts=two headset jacks; parts=CP2102N,PCA9555,PCM2912A,RA30H1317M1,SA868,TPA6132A2,TPS22810,TUSB2046B; row=D8
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L85:cell:1:s1 [86f3aabede]
     the pack BMS board, 70 x 44 mm, two layers, 2 oz (four layers at 2 oz ruled by the owner on 25 Sep 2026, decision 28, not yet regenerated): BQ4050 SMBus gauge with protection and balancing, two CSD17570Q5B high-side FETs, 2 mohm shunt, 25 A blade, tap, thermistor and SMBus headers, lead lands (appendix 32.62)
     names: parts=BQ4050,CSD17570Q5B; row=P1
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L86:cell:0:s1 [b073b98568]
     E6
     names: boards=E6; row=E6
-V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L86:cell:1:s1 [ef24592b40]
-    dock strip, 267 x 68 mm, four layers, and the block E5: the LM5069 hot swap on the 9 to 36 V input (`U6`), which passes the bus up to A22's LM5176 front end (`U2`; correction 34), the LT8705A solar tracker, the pack entry (XT60, 25 A fuse, SMBus), eleven float clamps, the sensor controller with the BME688 and BMI270 (`U14`, `U15`; the magnetometer is in the outside pod, reached through `J_POD`, correction 35), the water electrodes, the gas sensor, the DCF77, Geiger, lightning and outside-pod headers, two mixer fan headers
-    names: refs=J_POD,U14,U15,U2,U6; boards=A22,E5; counts=two mixer fan; parts=BME688,BMI270,DCF77,LM5069,LM5176,LT8705A,XT60; row=E6
+V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L86:cell:1:s1 [0a2d2b6e41]
+    dock strip, 267 x 68 mm, four layers, and the block E5: the LM5176 9 to 36 V front end, the LT8705A solar tracker, the pack entry (XT60, 25 A fuse, SMBus), eleven float clamps, the sensor controller with the BME688, BMI270 and magnetometer, the water electrodes, the gas sensor, the DCF77, Geiger, lightning and outside-pod headers, two mixer fan headers
+    names: boards=E5; counts=two mixer fan; parts=BME688,BMI270,DCF77,LM5176,LT8705A,XT60; row=E6
 V2-SPEC.md#Estimated cost per kit (parts only, prototype quantities, 6 Sep 2026):L95:cell:0:s1 [c64a44b1c1]
     Xenarc 709GNK monitor
     names: parts=709GNK; row=Xenarc 709GNK monitor
@@ -1816,36 +1816,6 @@ V2-SPEC.md#Corrections, 29 September 2026:L289:item:s1 [479d562a75]
 V2-SPEC.md#Corrections, 29 September 2026:L289:item:s2 [8c1edc6932]
     Stream s122 restored `CONOPS.md` to its baselined text at `c5430071`, where section 4b is a baseline value; the circuit as generated is kept in `feasibility/EMCON.md` section 0a.1 (`handover/DEFINITION-STATUS.md`, row DC-01), which line 24 now cites.
     names: boards=as generated; topic=EMCON
-V2-SPEC.md#Corrections, 29 September 2026:L296:item:s1 [da60e25645]
-    Line 82 named the TMDS341A display switch, which no schematic generator has carried: `gen_sch_b.py` carried the TS3DV642 when this table was written (`b2709118`), and board B's display switches are `U3` and `U4`, TS3DV642A0RUAR.
-    names: refs=U3,U4; boards=board B; gens=gen_sch_b.py; parts=TMDS341A,TS3DV642,TS3DV642A0RUAR
-V2-SPEC.md#Corrections, 29 September 2026:L296:item:s2 [0fcfa0f90d]
-    Line 86 put the LM5176 front end on E6; at `b2709118` too board E's generator carried the LM5069 hot swap and sent the bus up the dock contacts into A22's LM5176 front end, today board E's `U6` and board A's `U2`.
-    names: refs=U2,U6; boards=A22,E6,board A,board E; parts=LM5069,LM5176
-V2-SPEC.md#Corrections, 29 September 2026:L296:item:s3 [aea29035dd]
-    Line 47 named the WM8960 codec, which left `gen_sch_d.py` with the D8 generators at `bdfc7b3f` (7 September); D8's codec is the PCM2912A `U6`, and the RA30H1317M1's sheet, which the line called owed, is held (a row of `OPERATING-ENVELOPE.md` section 2 since 27 September 2026).
-    names: refs=D8,U6; boards=D8; gens=gen_sch_d.py; parts=PCM2912A,RA30H1317M1,WM8960
-V2-SPEC.md#Corrections, 29 September 2026:L296:item:s4 [2d74aca5ee]
-    Two names were true on 7 September and are not today: line 82's DS3231M, now board B's DS3231SN `U9`, and line 84's TUSB2046B, now board D's TUSB2046I `U4` (TUSB2046IBVFR, since 26 September 2026).
-    names: refs=U4,U9; boards=board B,board D; parts=DS3231M,DS3231SN,TUSB2046B,TUSB2046I,TUSB2046IBVFR
-V2-SPEC.md#Corrections, 29 September 2026:L310:item:s1 [a5dd468127]
-    Line 84 called the TPS22810 the gate-bias switch: board D's gate bias is `U15`, a TLV75801 LDO enabled by `PA_KEY`, since `faf8c981`, and its TPS22810 is `U21`, the load switch of the exciter's `+5V_TX`; on 7 September (`b2709118`) a TPS22810 switched the bias.
-    names: refs=U15,U21; nets=+5V_TX,PA_KEY; boards=board D; rails=+5V_TX; gates=enabled,gate,load switch; parts=TLV75801,TPS22810
-V2-SPEC.md#Corrections, 29 September 2026:L310:item:s2 [cce8eb40b9]
-    Line 81 gave the three slot rails and the device rail to the AP64500: board A's `U4` and `U6` are AP64500 bucks for slots 1 and 3, and `U5` and `U7` are LM5176 stages for slot 2 and the device rail; all four were AP64500 at `b2709118`.
-    names: refs=U4,U5,U6,U7; boards=board A; rails=rail,rails; counts=three slot; parts=AP64500,LM5176
-V2-SPEC.md#Corrections, 29 September 2026:L310:item:s3 [9426065bb9]
-    Line 86 put a magnetometer on the sensor controller; board E carries the BME688 `U14` and the BMI270 `U15`, and `gen_sch_e.py` puts the magnetometer in the outside pod, reached through `J_POD`.
-    names: refs=J_POD,U14,U15; boards=board E; gens=gen_sch_e.py; parts=BME688,BMI270
-V2-SPEC.md#Corrections, 29 September 2026:L310:item:s4 [2d75300367]
-    Line 83 counted sixteen LEDs; board C carries seventeen, `D22` the seventeenth.
-    names: refs=D22; boards=board C; counts=sixteen LEDs
-V2-SPEC.md#Corrections, 29 September 2026:L322:item:s1 [e2179973eb]
-    Line 47 named the NiceRF SA868 a 1 W part, the figure of the device set of 6 September (appendix 32.49).
-    names: parts=SA868
-V2-SPEC.md#Corrections, 29 September 2026:L322:item:s2 [1f465555dc]
-    Board D's `U2` is the SA868 VHF 2 W exciter; `gen_sch_d.py` has said 2 W high and 0.5 W low since `bdfc7b3f` (7 September), and the maker's sheet v1.3 (`v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf`) gives 31 to 33 dBm on high power and 24 to 26 dBm on low.
-    names: refs=U2; boards=D's; gens=gen_sch_d.py; parts=SA868
 OPERATING-ENVELOPE.md#2:L72:cell:0:s1 [0fea03e077]
     Pervasive Displays E2370KS0C1 e-paper
     names: parts=E2370KS0C1; row=Pervasive Displays E2370KS0C1 e-paper
@@ -1864,12 +1834,12 @@ OPERATING-ENVELOPE.md#2:L74:cell:3:s1 [355e205565]
 OPERATING-ENVELOPE.md#2:L76:cell:0:s1 [c64a44b1c1]
     Xenarc 709GNK monitor
     names: parts=709GNK; row=Xenarc 709GNK monitor
-OPERATING-ENVELOPE.md#2:L77:cell:0:s1 [e5f22b220e]
-    TI LM5069 hot-swap controller on the 9 to 36 V input (board E `U6`)
-    names: refs=U6; boards=board E; parts=LM5069; row=TI LM5069 hot-swap controller on the 9 t
-OPERATING-ENVELOPE.md#2:L77:cell:3:s1 [f51d88cef4]
-    `ti/ti-lm5069.pdf` (SNVS452G, 7.3)
-    names: parts=LM5069; row=TI LM5069 hot-swap controller on the 9 t
+OPERATING-ENVELOPE.md#2:L77:cell:0:s1 [2b5ab8d2af]
+    TRACO TEN 40-2412WIN
+    names: parts=TEN 40-2412WIN; row=TRACO TEN 40-2412WIN
+OPERATING-ENVELOPE.md#2:L77:cell:3:s1 [3f5e49de5a]
+    `traco/ten40win_datasheet-3049699.pdf`
+    names: parts=TEN40WIN; row=TRACO TEN 40-2412WIN
 OPERATING-ENVELOPE.md#2:L78:cell:0:s1 [ccb27feb51]
     Quectel RM520N-GL 5G
     names: parts=RM520N-GL; row=Quectel RM520N-GL 5G
@@ -1891,12 +1861,9 @@ OPERATING-ENVELOPE.md#2:L81:cell:3:s1 [19e176369f]
 OPERATING-ENVELOPE.md#2:L82:cell:0:s1 [2e18543607]
     Quectel LG290P GNSS
     names: parts=LG290P; row=Quectel LG290P GNSS
-OPERATING-ENVELOPE.md#2:L83:cell:0:s1 [2f7f58223c]
-    TE 2199119-3 M.2 B-key socket (board B `J_M2C2`)
-    names: refs=J_M2C2; boards=board B; parts=TE 2199119-3; row=TE 2199119-3 M.2 B-key socket (board B J
-OPERATING-ENVELOPE.md#2:L83:cell:3:s1 [0ad2dab960]
-    `m2/te-2199119-m2-b-key.pdf` (Performance Ratings, product specifications 108-115042 and 108-115049)
-    names: parts=108-115042,108-115049; row=TE 2199119-3 M.2 B-key socket (board B J
+OPERATING-ENVELOPE.md#2:L83:cell:3:s1 [40344bc9e0]
+    `m2/amphenol-mdt420b01001-m2-b-key.pdf`
+    names: parts=MDT420B01001; row=Amphenol M.2 B-key socket
 OPERATING-ENVELOPE.md#2:L84:cell:0:s1 [fb87fd6753]
     NiceRF SA868 VHF module
     names: parts=SA868; row=NiceRF SA868 VHF module
@@ -1924,127 +1891,121 @@ OPERATING-ENVELOPE.md#2:L88:cell:3:s1 [8470300799]
 OPERATING-ENVELOPE.md#2:L89:cell:1:s1 [ae0e5de42a]
     three M.2 slots, inside
     names: counts=three M.2 slots; row=NVMe drive, 2242 (not picked)
-OPERATING-ENVELOPE.md#2:L91:para:s1 [75f96bbf14]
-    The TRACO TEN 40-2412WIN row is replaced by board E's input part, the LM5069 `U6` (`gen_sch_e.py` records that the isolated TRACO converter of E4 is gone); its range is the junction range TI's sheet recommends.
-    names: refs=U6; boards=E4,board E; gens=gen_sch_e.py; parts=LM5069,TEN 40-2412WIN
-OPERATING-ENVELOPE.md#2:L91:para:s2 [3641ee0106]
-    The Amphenol M.2 B-key socket row (Amphenol's MDT420B01001) is replaced by board B's socket, TE 2199119-3 `J_M2C2`, whose service temperature is the same -40 to +80 C; board B's Amphenol sockets are the M-key MDT420M02001 of the NVMe slots.
-    names: refs=J_M2C2; boards=board B; parts=MDT420B01001,MDT420M02001,TE 2199119-3
-OPERATING-ENVELOPE.md#2:L99:para:s1 [f2fe408269]
+OPERATING-ENVELOPE.md#2:L91:para:s1 [f2fe408269]
     **TWO OF THE SEVEN OWED RANGES WERE IN THE TREE ALL ALONG (20 September 2026).** The SA868's own datasheet states its working range in a table and the pack's protection board states both of its ranges; neither needed a measurement or a letter.
     names: parts=SA868
-OPERATING-ENVELOPE.md#2:L105:para:s1 [b6626c78f7]
+OPERATING-ENVELOPE.md#2:L97:para:s1 [b6626c78f7]
     **Corrected 26 September 2026: the cell sheet was in the tree as well.** Samsung's INR18650-35E specification Ver. 1.1 (`battery/samsung-35e-orbtronic.pdf`, sha256 5ec577b952b9...) states charge 0 to 45 C and discharge -10 to 60 C at the cell surface (its 3.12), and storage of -20 to 45 C for three months and -20 to 25 C for a year at the ex-factory 30 percent charge (its 3.13).
     names: parts=INR18650-35E
-OPERATING-ENVELOPE.md#2:L112:para:s1 [8f59ec89ff]
+OPERATING-ENVELOPE.md#2:L104:para:s1 [8f59ec89ff]
     The pack's protection is board P; its narrowest part is the chemical fuse F2 at -20 to +60 C, whose top is the cells' own +60 C discharge limit and whose bottom is the envelope's -20 C, so no bound moves.
     names: refs=F2; boards=board P
-OPERATING-ENVELOPE.md#2:L118:para:s1 [ab5d01673b]
+OPERATING-ENVELOPE.md#2:L110:para:s1 [ab5d01673b]
     **Still owed, and now named as documents this tree does NOT hold rather than as open questions:** the RockBLOCK 9704 (its datasheet here is three and a half thousand characters and states no temperature at all), the QMX HF unit (the tree holds its operating and CAT manuals, neither of which states one) and the five fans (their pick waits on D-18).
     names: counts=five fans
-OPERATING-ENVELOPE.md#2:L118:para:s2 [46f0dd0453]
+OPERATING-ENVELOPE.md#2:L110:para:s2 [46f0dd0453]
     The 4S pack's cell sheet was on this list until 26 September 2026; the LimeSDR Mini 2.4 (whose maker's page states its range) and the 30 W PA stage (the RA30H1317M1's sheet) left it on 27 September 2026, and both are rows of the table above.
     names: parts=RA30H1317M1
-OPERATING-ENVELOPE.md#2:L118:para:s3 [ed340e0341]
+OPERATING-ENVELOPE.md#2:L110:para:s3 [ed340e0341]
     **Two of the new rows do narrow it at the cold end** (`feasibility/POWER-THERMAL.md` section 9.4, PWR-F09): the AW7915-AED from 0 C (or -10 C) and the LimeSDR from 0 C in use and in storage, and the LimeSDR also below the +71 C storage margin.
     names: parts=AW7915-AED
-OPERATING-ENVELOPE.md#3:L130:para:s1 [8a93588273]
+OPERATING-ENVELOPE.md#3:L122:para:s1 [8a93588273]
     Appendix 32.53, the no-vent ruling: heat leaves through the aluminium face plate and the case walls, five fans couple the inside air to the skin, and with the lid closed the kit runs the reduced mode.
     names: counts=five fans
-OPERATING-ENVELOPE.md#3:L151:cell:0:s1 [3a41b60ff9]
+OPERATING-ENVELOPE.md#3:L143:cell:0:s1 [3a41b60ff9]
     the heat stage as generated (PS-SURV, slot 2), lid closed, fans
     names: boards=as generated; row=the heat stage as generated (PS-SURV, sl
-OPERATING-ENVELOPE.md#3:L152:cell:0:s1 [33087d52ba]
+OPERATING-ENVELOPE.md#3:L144:cell:0:s1 [33087d52ba]
     the heat stage as generated (PS-SURV, slot 2), lid open, fans
     names: boards=as generated; row=the heat stage as generated (PS-SURV, sl
-OPERATING-ENVELOPE.md#3:L157:cell:1:s1 [c5648bf2c9]
+OPERATING-ENVELOPE.md#3:L149:cell:1:s1 [c5648bf2c9]
     SGP41 at +55 C
     names: parts=SGP41; row=State and enclosure
-OPERATING-ENVELOPE.md#3:L163:cell:0:s1 [af35e56cae]
+OPERATING-ENVELOPE.md#3:L155:cell:0:s1 [af35e56cae]
     the heat stage as generated, lid closed
     names: boards=as generated; row=the heat stage as generated, lid closed
-OPERATING-ENVELOPE.md#3:L164:cell:0:s1 [b2237301f8]
+OPERATING-ENVELOPE.md#3:L156:cell:0:s1 [b2237301f8]
     the heat stage as generated, lid open
     names: boards=as generated; row=the heat stage as generated, lid open
-OPERATING-ENVELOPE.md#3:L166:para:s1 [fc58cb90ed]
+OPERATING-ENVELOPE.md#3:L158:para:s1 [fc58cb90ed]
     **The worst inside air in use**, at the envelope's +40 C with the kit shed to its heat stage (the last stage that keeps a module running; past it the hot stop of section 4 removes every module): in the required stage after BANK-R1, +59.2 C lid open and +62.1 C lid closed on the independent bound's lowest conductance, and +47.8 C and +55.6 C on 32.53's; in the stage board B gives as generated, +57.9 C and +60.6 C, and +47.3 C and +54.6 C (INFERRED: 40 C plus the stage's rise above, rounded down to one decimal).
     names: boards=as generated,board B
-OPERATING-ENVELOPE.md#3:L166:para:s2 [8b5aa200e3]
+OPERATING-ENVELOPE.md#3:L158:para:s2 [8b5aa200e3]
     At the independent bound that is past the SGP41's +55 C, and lid closed past the cells' +60 C, which is why the SGP41 and the cells are the first parts to judge when the conductance is measured.
     names: parts=SGP41
-OPERATING-ENVELOPE.md#3:L175:para:s1 [0c1acec366]
+OPERATING-ENVELOPE.md#3:L167:para:s1 [0c1acec366]
     **What was estimated before, kept as the record.** The table this section carried until 27 September 2026, on 32.53's 10 K and 16 K: three modules loaded, lid open, the SGP41's +55 C reached at +39 C ambient; one module, lid open, at +45 C; and charging held off from about +25 C.
     names: parts=SGP41
-OPERATING-ENVELOPE.md#3:L194:para:s1 [421b320d94]
+OPERATING-ENVELOPE.md#3:L186:para:s1 [421b320d94]
     The charger has no such input: TI's BQ25731 datasheet (SLUSE66A, Table 7-1, pin functions, `ti/bq25731-datasheet.pdf`) lists no thermistor, TS or JEITA pin.
     names: parts=BQ25731
-OPERATING-ENVELOPE.md#3:L194:para:s2 [e20bc8f1b4]
+OPERATING-ENVELOPE.md#3:L186:para:s2 [e20bc8f1b4]
     The hold-off is the pack gauge's own: the BQ4050 on board P opens its charge FET outside 0 to 45 C read at the cell surface (`pcb_pack_protection.yaml`, CHARGE_TEMPERATURE_WINDOW), a threshold held in the gauge's data flash rather than fixed in hardware, with the panel's cold-charge inhibit below 0 C on top (`PANEL.md` section 10).
     names: boards=board P; parts=BQ4050
-OPERATING-ENVELOPE.md#3:L194:para:s3 [31985580ef]
+OPERATING-ENVELOPE.md#3:L186:para:s3 [31985580ef]
     Decision 40, ruled by the owner on 26 September 2026, adds hardware beside the gauge, and board P's schematic carries it since `faf8c981`: a BQ7720700 second level (cell over-voltage 4.325 V, under-voltage 2.25 V, open wire, and a fixed 70 C over-temperature on its own thermistor since `d90f30e4`) that blows the Eaton SCF9550 chemical fuse F2 once the arming jumper is closed at commissioning, and the gauge's PTC input enabled (`gen_sch_p.py` lines 243, 288 and 414 to 502 at `45bde541`).
     names: refs=F2; boards=board P; gates=enabled; gens=gen_sch_p.py; parts=BQ7720700,SCF9550
-OPERATING-ENVELOPE.md#4:L215:item:s1 [8f9ef47522]
+OPERATING-ENVELOPE.md#4:L207:item:s1 [8f9ef47522]
     **below -10 C:** the pack is warmed by its heater mat before charge (the mat is RS PRO 245-556, ruled 4 September); discharge continues to the cells' own -10 C surface limit.
     names: parts=PRO 245-556
-OPERATING-ENVELOPE.md#4:L222:item:s1 [d242bb413f]
+OPERATING-ENVELOPE.md#4:L214:item:s1 [d242bb413f]
     **the hot end, on measured temperatures (restated 27 September 2026):** the kit sheds to the reduced mode (slots 2 and 3, monitor off) when its inside air reaches +50 C or any cell +55 C, and, if those are reached again, to one module (the heat stage: slot 3 once board B carries BANK-R1, slot 2 as generated, `CONOPS.md` section 4c); it restores 5 K below (control C1, `feasibility/POWER-THERMAL.md` section 9.3, `CONOPS.md` section 4c).
     names: refs=C1; boards=as generated,board B
-OPERATING-ENVELOPE.md#4:L222:item:s2 [69c53126c9]
+OPERATING-ENVELOPE.md#4:L214:item:s2 [69c53126c9]
     Until 27 September 2026 this line read "above +35 C: the kit runs the reduced mode (one module) so the inside air stays under the +55 C that the battery-bay sensor and the pack need", the figure the owner's D-02b consequence was argued at (section 8), which is not where the current analysis puts it: on 32.53's conductance three typical modules reach C1 at +28.6 to +30.5 C.
     names: refs=C1
-OPERATING-ENVELOPE.md#4:L222:item:s3 [4dc19331ec]
+OPERATING-ENVELOPE.md#4:L214:item:s3 [4dc19331ec]
     What it is for: REQ-077 requires the kit to act before any cell passes +60 C, idle cells on an input included, where the enclosure alone cannot keep them under it, and the design intends the stop to do that with HOT-R1, which the generators of boards A and E carry since stream w4ae (board E's `Q11` on the dock line, read on board A's `U27`), and on the provisional error budget (`TEST-PLAN.md` P14); the kit runs no module while it acts.
     names: refs=Q11,U27; boards=board A,board E,boards A and E
-OPERATING-ENVELOPE.md#4:L243:item:s1 [9ba46bddfe]
+OPERATING-ENVELOPE.md#4:L235:item:s1 [9ba46bddfe]
     **below 0 C inside air:** the two AW7915-AED WiFi link cards and the LimeSDR are powered only once the inside air reads 0 C or more, and the kit's cold warm-up (the pack heater with the three modules loaded) is what brings it there: lid open with the fans, the warm-up reaches 0 C from an ambient of -22.0 to -24.2 C on appendix 32.53's conductance and lower still on the independent bound, while the idle and typical states, with or without the heater, need at least -11.3 to -20.3 C there (`CONOPS.md` section 4c; `records/hc2/pwr_red2.out`).
     names: counts=two AW7915-AED WiFi link cards; parts=AW7915-AED
-OPERATING-ENVELOPE.md#4:L243:item:s2 [c836951a27]
+OPERATING-ENVELOPE.md#4:L235:item:s2 [c836951a27]
     At the envelope's -20 C the warm-up holds only while the conductance, lid open with the fans, is at most about 3.6 W/K, which no measurement has shown (T-H1): above it the link cards stay off, the kit-to-kit link is lost at the cold end and `TEST-PLAN.md` E4-O fails on it.
     names: boards=E4
-OPERATING-ENVELOPE.md#4:L243:item:s3 [84c26222a6]
+OPERATING-ENVELOPE.md#4:L235:item:s3 [84c26222a6]
     That bound stays open, with an extended-grade card and SDR (layer 6, decided before board B's layout entry if a socket or supply changes) as the route that removes it.
     names: boards=board B
-OPERATING-ENVELOPE.md#4:L256:para:s1 [ceb6a5b184]
+OPERATING-ENVELOPE.md#4:L248:para:s1 [ceb6a5b184]
     **The stored configuration (27 September 2026, `CONOPS.md` section 4, Storage row):** closed and latched, the pack fitted, brought to the cells' ex-factory state (3.49 to 3.69 V per cell, about 30 percent of charge: Samsung INR18650-35E Ver. 1.1 7.11, and 3.13 note 1, the charge its storage ratings are stated at), and put in its gauge's shutdown, so that no load drains it; dry and preferably below +20 C (the maker's handling notes); at most a month up to +60 C (3.13); never where the temperature may exceed +60 C.
     names: parts=INR18650-35E
-OPERATING-ENVELOPE.md#4:L270:para:s1 [22912384cc]
+OPERATING-ENVELOPE.md#4:L262:para:s1 [22912384cc]
     **Altitude: 0 to 3000 m in use, 0 to 4500 m in transport, ruled by the owner on 26 September 2026 (D-02c, section 8).** It was proposed here without a source, and it is not free: IEC 60664-1 derates clearance above 2000 m, so the PoE 54 V rail and the isolated converter's barrier both depend on it, which is why ISO-001 cannot close without it.
     names: rails=rail
-OPERATING-ENVELOPE.md#4:L287:cell:1:s1 [0f99282a22]
+OPERATING-ENVELOPE.md#4:L279:cell:1:s1 [0f99282a22]
     tracker input, LT8705A
     names: parts=LT8705A; row=solar
-OPERATING-ENVELOPE.md#4:L287:cell:2:s1 [ffc36a06e2]
+OPERATING-ENVELOPE.md#4:L279:cell:2:s1 [ffc36a06e2]
     the tracker's own window, board E
     names: boards=board E; row=solar
-OPERATING-ENVELOPE.md#4:L288:cell:2:s1 [9bab90eb18]
+OPERATING-ENVELOPE.md#4:L280:cell:2:s1 [9bab90eb18]
     Corrected 26 September 2026: the 4S4P 18650 and 4S3P 21700 packs this row named are not expected to fit beside board P under board B, and the 4S3P 18650 fits only without a rigid enclosure (adjudication A06 of 25 September 2026, whose working files are filed at `v2/docs/records/adj/A06-pack-geometry/`; the same finding is carried by `ASSEMBLY.md` section 3; INFERRED from the committed board heights; the case side at the worst of Peli's figures, `CASE-MARGINS.md`)
     names: boards=board B,board P; row=pack
-OPERATING-ENVELOPE.md#4:L289:cell:2:s1 [d84bfb5308]
+OPERATING-ENVELOPE.md#4:L281:cell:2:s1 [d84bfb5308]
     the rail that makes ISO-001 and the altitude question real
     names: rails=rail; row=Power over Ethernet out
-OPERATING-ENVELOPE.md#4:L290:cell:2:s1 [dfd6170bf6]
+OPERATING-ENVELOPE.md#4:L282:cell:2:s1 [dfd6170bf6]
     TPS25740A with an LM5176 stage, 5, 9 and 15 V at 3 A (`gen_sch_a.py` line 1003 at `45bde541`); corrected 26 September 2026: the TPS55288 this row named left the design on 7 September
     names: gens=gen_sch_a.py; parts=LM5176,TPS25740A,TPS55288; row=USB-C Power Delivery out
-OPERATING-ENVELOPE.md#4:L292:para:s1 [cbef354fca]
+OPERATING-ENVELOPE.md#4:L284:para:s1 [cbef354fca]
     **Operating modes**, each already in the design: full (three modules, lid open), reduced (slots 2 and 3; lid closed, or the measured-temperature and current triggers of `CONOPS.md` section 4c) with its heat stage (one module) and, past it, the hot stop (no module), blackout (LEDs and sounder muted), NVG (panel lighting), EMCON (a hardware line on every transmitter and on the PA's rail and bias; what it removes is set out below), and charge (mains, vehicle or solar, gated by the pack thermistor and by the cold-charge inhibit).
     names: rails=rail; gates=gated; topic=EMCON
-OPERATING-ENVELOPE.md#4:L292:para:s2 [b719e651bd]
+OPERATING-ENVELOPE.md#4:L284:para:s2 [b719e651bd]
     **Corrected 26 September 2026, as generated at `45bde541`:** EMCON removes the supply of the SDR, the Iridium modem, the LoRa, Zigbee and Thread radios, the HF unit, the two WiFi link cards and the PA rail, so those stop receiving too; it pulls the compute modules' own WiFi and Bluetooth disables low in hardware; and it puts the 5G module in airplane mode through its disable pin, a mode the module's firmware carries out; since board B's round 8 (27 September 2026) it also removes the 5G module's supply by hardware at once (SD-EMC-1r8, `feasibility/EMCON.md` section 4b) (`PANEL.md` section 6, `CONOPS.md` section 4b).
     names: boards=as generated,board B; rails=rail; topic=EMCON; counts=two WiFi link cards
-OPERATING-ENVELOPE.md#4:L292:para:s3 [d23664c78f]
+OPERATING-ENVELOPE.md#4:L284:para:s3 [d23664c78f]
     **D-05, owner ruling of 26 September 2026: under EMCON the radios go DARK.** Every radio with an emission path is powered off or RF-disabled in hardware; the VHF path keeps listening, because its gate is on transmit only; GNSS, DCF77 and the lightning detector continue.
     names: gates=gate; topic=EMCON; parts=DCF77
-OPERATING-ENVELOPE.md#4:L292:para:s4 [f7d96bf556]
+OPERATING-ENVELOPE.md#4:L284:para:s4 [f7d96bf556]
     What is left under that ruling is session engineering: the items every row of the line shares, the SA868's PTT threshold and the RockBLOCK 9704's response to its ENABLE (forced low in hardware since board B's stream w4b), the 5G module's supply removal being drawn since board B's round 8 (`feasibility/EMCON.md` sections 0a, 5 and 7).
     names: boards=board B; topic=EMCON; parts=SA868
-OPERATING-ENVELOPE.md#4:L292:para:s5 [c98651fe06]
+OPERATING-ENVELOPE.md#4:L284:para:s5 [c98651fe06]
     The charge gate is the pack gauge's thermistor window (section 3).
     names: gates=gate
-OPERATING-ENVELOPE.md#4:L308:para:s1 [8f3480949a]
+OPERATING-ENVELOPE.md#4:L300:para:s1 [8f3480949a]
     **Single-fault conditions the design is expected to survive**, written as the design's own protections so that PWR-003 and BAT-002 have something to be judged against: a short on any downstream rail (eFuses), a reversed or over-voltage input (the ideal diode and the 9 to 36 V front end), a shorted pack lead (the 25 A blade and the pack's own protector), a failed module (the voted I/O fabric and the per-bank USB ring), a cell driven past its limits with the gauge's firmware wrong or dead (board P's second level and chemical fuse, decision 40), loss of the panel controller (the hardware EMCON line is independent of any module), and water on the floor of the case (the floor water sensor with pack shutdown).
     names: boards=board P; rails=rail; topic=EMCON
-OPERATING-ENVELOPE.md#4:L308:para:s2 [4acb82ab42]
+OPERATING-ENVELOPE.md#4:L300:para:s2 [4acb82ab42]
     **Corrected 26 September 2026:** the loss of the panel controller leaves the transmitters safe but, as generated, no compute module powers without it (`ARCH-PCB-B-IOHA.md` section 10), so it is survived for EMCON and not for compute.
     names: boards=PCB-B,as generated; topic=EMCON
 TEST-PLAN.md#MeshSat field kit V2, qualification test plan (MIL-STD-810 and MIL-STD-461 methods; approved 6 Sep 2026, appendix 32.50 item 16e):L3:para:s1 [f1c2c8d45e]
@@ -3031,21 +2992,15 @@ DEFINITION-STATUS.md#Current values of CONOPS's circuit passages (stream s122, 2
 DEFINITION-STATUS.md#Current values of CONOPS's circuit passages (stream s122, 29 September 2026):L131:cell:2:s1 [8238c2f0de]
     the array is drawn: board A's `U31` (TPD2E2U06) on `PD_CC1` and `PD_CC2`, the CC pins of `J_USBC_OUT`, since `458b2873`, and so at `45bde541` and at `c5430071`; the row was written at `68bc9e8f`, before `458b2873` drew it
     names: refs=J_USBC_OUT,U31; nets=PD_CC1,PD_CC2; boards=board A; parts=TPD2E2U06; row=DC-09
-DEFINITION-STATUS.md#Current values of CONOPS's circuit passages (stream s122, 29 September 2026):L132:cell:1:s1 [c2d955fc38]
-    section 7's D-13 row: the STM32H753 in the schematic, the component mismatch with the H743 called open (check-s122-3 m1)
-    names: parts=STM32H753; row=DC-10
-DEFINITION-STATUS.md#Current values of CONOPS's circuit passages (stream s122, 29 September 2026):L132:cell:2:s1 [53772fb573]
-    the three supervisors' schematic text is the H743 the project buys: board B's `U41`, `U51` and `U61` read STM32H743VIT6 since `458b2873` (STM32H753VITx at `68bc9e8f`, where the row was written), and CON-017, which asks that text, the BOM and regeneration parity, reads PASS
-    names: refs=U41,U51,U61; boards=board B; counts=three supervisors; parts=STM32H743VIT6,STM32H753VITx; row=DC-10
 
 # counts per document
 v2/docs/PANEL.md: 167 sentences
 v2/docs/CONOPS.md: 288 sentences
-v2/docs/V2-SPEC.md: 159 sentences
-v2/docs/OPERATING-ENVELOPE.md: 67 sentences
+v2/docs/V2-SPEC.md: 149 sentences
+v2/docs/OPERATING-ENVELOPE.md: 64 sentences
 v2/docs/TEST-PLAN.md: 110 sentences
 v2/docs/ASSEMBLY.md: 160 sentences
 v2/ecad/tools/pcb_decisions.yaml: 10 sentences
 v2/docs/feasibility/EMCON.md: 26 sentences
-v2/docs/handover/DEFINITION-STATUS.md: 24 sentences
-total: 1011 sentences
+v2/docs/handover/DEFINITION-STATUS.md: 22 sentences
+total: 996 sentences
