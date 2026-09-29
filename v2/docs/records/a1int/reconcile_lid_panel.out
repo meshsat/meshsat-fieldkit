@@ -1,5 +1,5 @@
 OPTION A(i), THE LID OPTIONS WITH THE CHOSEN ARRAY'S RATIOS (reconcile_lid_panel.py, third issue). Model: a1elec's
-energy_two_pack.py (pinned, second issue: U3 0.979, U3B 0.961), unchanged but for the lid's parallel count, the ratio
+energy_two_pack.py (pinned, second issue: U3 0.979, U3B 0.972), unchanged but for the lid's parallel count, the ratio
 and U3's input limit; U3B's charge current at code 62, 7.936 A, for every lid; 400 Wp, 200 W stage, front end R11
 6.2 mOhm (entry E2), base at +20 C, lid at 13.23 C (the September mean day's minimum air), both start hours, 42.8 W,
 aged 80 percent; the 40 degree south plane.
@@ -34,11 +34,11 @@ Ratios read from v2/docs/records/a1solar/energy_runs.out section 2:
       lowest lid temperature that still meets M1: +3.8 C
    B, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   49.0 Wh ( 22.4 %), lid   44.6 Wh ( 10.1 %), both   93.7 Wh; unserved    0.0 Wh
       lowest lid temperature that still meets M1: +3.8 C
-   C, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   39.2 Wh (  8.9 %), both   87.4 Wh; unserved    0.0 Wh
+   C, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   42.7 Wh (  9.7 %), both   90.9 Wh; unserved    0.0 Wh
       lowest lid temperature that still meets M1: +4.1 C
-   C, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   32.4 Wh (  7.3 %), both   80.6 Wh; unserved    0.0 Wh
+   C, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   37.3 Wh (  8.4 %), both   85.5 Wh; unserved    0.0 Wh
       lowest lid temperature that still meets M1: +6.0 C
-   C, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   22.0 Wh (  5.0 %), both   71.4 Wh; unserved    0.0 Wh
+   C, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   27.9 Wh (  6.3 %), both   76.1 Wh; unserved    0.0 Wh
       lowest lid temperature that still meets M1: +6.1 C
 
 4S15P lid: the QMX out of the lid (C), 4S21P in all
@@ -50,11 +50,11 @@ Ratios read from v2/docs/records/a1solar/energy_runs.out section 2:
       lowest lid temperature that still meets M1: +1.5 C
    B, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   57.1 Wh ( 26.1 %), lid   68.1 Wh ( 14.4 %), both  125.2 Wh; unserved    0.0 Wh
       lowest lid temperature that still meets M1: +1.5 C
-   C, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   62.2 Wh ( 13.1 %), both  118.5 Wh; unserved    0.0 Wh
+   C, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   66.1 Wh ( 13.9 %), both  122.4 Wh; unserved    0.0 Wh
       lowest lid temperature that still meets M1: +2.1 C
-   C, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   55.3 Wh ( 11.7 %), both  111.6 Wh; unserved    0.0 Wh
-      lowest lid temperature that still meets M1: +3.9 C
-   C, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   44.8 Wh (  9.5 %), both  102.4 Wh; unserved    0.0 Wh
+   C, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   60.3 Wh ( 12.7 %), both  116.6 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +2.3 C
+   C, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   50.9 Wh ( 10.8 %), both  107.2 Wh; unserved    0.0 Wh
       lowest lid temperature that still meets M1: +4.0 C
 
 NOTES (the independent checks' minor items, measured at the SECOND issue's settings, U3 0.98 and U3B 0.975, and

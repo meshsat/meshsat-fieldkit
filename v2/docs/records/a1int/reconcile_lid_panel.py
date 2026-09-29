@@ -18,8 +18,9 @@ the lowest lid temperature that still meets M1. Model results on the reference d
 is measured.
 
 Third issue (stream s119, S-119, 29 September 2026): TP_SHA moved to energy_two_pack.py's second issue, which carries
-board A's charger U3 at 0.979 (was 0.98, through energy_inputs.yaml) and the lid charger U3B at 0.961 (was 0.975), both
-from the drawn or drafted FETs' losses by TI's method (records/s117/efficiency.out), and energy_runs.out is its third
+board A's charger U3 at 0.979 (was 0.98, through energy_inputs.yaml) and the lid charger U3B at 0.972 (was 0.975) on the
+400 kHz row of the S-119 decision, weighted over the model's hours, both by TI's method (records/s117/efficiency.out,
+records/s119/u3b_hourly.out), and energy_runs.out is its third
 issue (the ratios A, B and C unchanged). The NOTES below were measured by the checks at the second issue's settings and
 are labelled so; the per-lid comparison with the second issue, the failing case and the sensitivity are
 records/s119/reconcile_s119.py's. Run from the repository root: python3 v2/docs/records/a1int/reconcile_lid_panel.py"""
@@ -29,7 +30,7 @@ sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_output=True, check=True).stdout.decode().strip()
 TPDIR = os.path.join(HERE, "..", "a1elec")
-TP_SHA = "2c8e52c8eec8d753c0bdeac43170c8f9f330ea9c4fe1be619e17c5dc360786f3"   # energy_two_pack.py second issue (s119; was 81694b2b), the pin energy_runs.py carries
+TP_SHA = "a3426880bf607d38b08449ec0a880f10a064ee2767324afad2c250cd5a9444f4"   # energy_two_pack.py second issue (s119; was 81694b2b), the pin energy_runs.py carries
 if hashlib.sha256(open(os.path.join(TPDIR, "energy_two_pack.py"), "rb").read()).hexdigest() != TP_SHA:
     sys.stderr.write("reconcile_lid_panel: energy_two_pack.py is not the pinned file; refusing\n"); sys.exit(2)
 sys.path.insert(0, TPDIR)
