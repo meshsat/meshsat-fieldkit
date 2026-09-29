@@ -209,6 +209,41 @@ Since stream d4emcon (29 September 2026), section 4d marks every row on the set 
 NEEDS HARDWARE against FEA-002's layout-entry stage: 0, 15 and 2 of 17 as committed; 0, 2 and 15 predicted once its drafts
 are applied and read back. The two columns above are unchanged.
 
+### 0a.1 What EMCON does to each radio, as generated (kept here since 29 September 2026)
+
+`CONOPS.md` is a baselined definition: by the rule its head states and `../handover/DEFINITION-STATUS.md` keeps, a
+circuit correction goes to this page and the records the status page names, not to the baseline. On 29 September
+2026 stream s122 restored `CONOPS.md` to its text at `c5430071`, withdrawing the circuit rewrite of its section 4b
+and of section 4's EMCON row that set 12 had made (`a46db71b`, `7a9f7b5b`). That rewrite, as `7a9f7b5b` committed
+it, is kept below, read on the committed netlists of integration set 13 (board A `6c40250c47195ebb`, board B
+`3ef9b8c49a01b728`, board C `c9f7394594201045`, board D `a2d48972d171aad1`). `v2/docs/records/s122/apply_docs_s122_r2.py`
+asserted, before writing it, every pin, value and net its rows name on those netlists (its list `EMCON_A`: the 146
+pin assignments of `v2/docs/records/int13/apply_conops_4b_set12.py` and the parts that script did not assert, among
+them `U9`, `R52` and `D23`'s pins, `U214` and `U314`, `U22` to `U24`, the source of `LIME_HW_EN`, the inputs of `U540`
+to `U542` and `U547` to `U550`, and the supplies the rows call not gated), and `v2/docs/records/s122/verdicts.py`
+judges each sentence again. The receive column and the module behaviour in the removal column rest on the makers'
+documents and sections 4.4, 4b and 4c, not on the netlists.
+
+"Asserted" means
+`SW_EMCON` closed: `TX_INHIBIT_n` goes low; on board C `U9` buffers it onto `EMCON_HW` through `R52` (330 Ohm) and `D23`
+clamps `EMCON_HW` to `TX_INHIBIT_n` (finding D4E-F1); board B inverts `EMCON_HW` once per slot into `EMCON_ON1..3` (high =
+asserted), each from that module's own 3.3 V (`U112`, `U212`, `U312`); board A gates its PA and HF rails on both lines.
+
+| Radio | What the line drives | What EMCON removes | Receive under EMCON |
+|---|---|---|---|
+| LimeSDR Mini 2.4 | the enable of the eFuse that feeds its USB VBUS, its only supply: `EMCON_HW` AND the hub's port power AND the software enable (`U501`, `U502`) | power | lost |
+| RockBLOCK 9704 | the enable of the eFuse that feeds its external supply pin, the only supply wired (`RB_EN` = `EMCON_HW` AND `RB_SW_EN`, `U503`); its ENABLE, forced low in hardware since stream w4b: `U536` drives it as `EMCON_HW` AND the firmware's request `RB_SW_IEN`, through `R532` since set 12, and `U543`, a TPS3808G30 supervisor powered from `+5V_DEV` that watches `+3V3_DEV`, holds it low below 2.79 V; since set 12 the module's RXD and P_EN inputs pass only while `RB_GO` = `RB_IEN` AND its `I_BTD` status (`U537`, `U538`, `U539`; sections 4c and 4d) | power at that pin, and the ENABLE; the module's own two 10 F supercapacitors (about 16 J) keep it powered after the supply gate opens, and what it does when ENABLE falls is in no held document, so its local chain stays OPEN (sections 4.4 and 4c) | lost, at the latest once its own stored energy is spent (about 4.5 minutes idle, INFERRED, section 4.4) |
+| E22-900M30S LoRa | the enable of the load switch that feeds its VCC pins (`E22_EN` = `EMCON_HW` AND `LORA_ON`, `U504`); since set 12 its TXEN, RXEN, NRST and SPI inputs pass slot 3's lines only while that enable is high: `LORA_GO`, a copy of `E22_EN` on slot 3's own 3.3 V (`U544`), gates `LORA_TXEN` into TXEN (`U546`), `LORA_RXEN` into RXEN (`U545`) and NRST, MOSI, SCK and NSS (`U547` to `U550`), TXEN and RXEN held low by 100 k (`R542`, `R543`; section 4d) | power; TXEN held low | lost |
+| Two E72 CC2652P (Zigbee, Thread) | the enable of the load switch that feeds both (`E72_EN` = `EMCON_HW` AND `ZB_ON`, `U505`, into `U22`); since set 12 the host's receive, reset and boot-select lines reach them only through open-drain buffers (`U540` to `U542`), the receive lines pulled up to the modules' own switched rail `+3V3_ZB` (`R536`, `R537`; section 4d) | power | lost |
+| RM520N-GL 5G | the enable of its 3.3 V buck (`U203`): `S2A_EN` = `EMCON_HW` AND `PCIE_PWR_EN2`, driven by `U216` from slot 2's own 5 V since stream w4b; its FULL_CARD_POWER_OFF# pulled low by `U220` from `EMCON_ON2`, and held low by `U221`, a TPS3808G30 on the buck's output, through `U554` while that rail comes up (finding D4E-F2, set 12); its W_DISABLE1# pulled low by `U215` from `EMCON_ON2`; its socket rail discharged through 15 Ohm (`Q212`, `R295`) | power, with no firmware in the path: RF off within about 1.2 ms plus 1.8 ms per mF of the module's own input capacitance, which no held document states (section 4b, SD-EMC-1r8); Quectel warns that cutting the supply of a working module can corrupt its flash, a residual accepted | lost |
+| Two AW7915-AED WiFi link cards | the enable of each card's 3.3 V buck: `S1A_EN` and `S3A_EN` = `EMCON_HW` AND the slot's `PCIE_PWR_EN`, driven by `U116` and `U316` from the slot's own 5 V since stream w4b; each card's W_DISABLE1#, pulled low by `U115` and `U315` from `EMCON_ON1` and `EMCON_ON3` | power (the disable pin is not counted: the maker's datasheet does not mention it and the mainline Linux driver has no code for it) | lost |
+| SA868 VHF with the 30 W PA | the KEY gate on board D (`KEY` = `PTT_ANY` AND `TX_INHIBIT_n`, `U12`) and, through it, the PA's keying (`PA_KEY` = `KEY` AND `PA_EN`, `U14`); the PA rail on board A (`PA_EN` = `TX_INHIBIT_n` AND `EMCON_HW` AND the software hold `PA_HOLD`, `U35` and `U36` on their own supply `+3V3_EMCON`; section 4a); the exciter's supply is not gated and the resting relay joins antenna to exciter | transmit only | continues |
+| QMX HF | the enable of the converter that feeds its DC input (`HF_EN` = `TX_INHIBIT_n` AND `EMCON_HW` AND the software hold `HF_HOLD`, `U37` and `U38` on `+3V3_EMCON`); its USB supply is not gated | power (its receiver runs from the DC input per its manual) | lost |
+| The three compute modules' own WiFi and Bluetooth | each module's WL_nDisable and BT_nDisable, only ever pulled low, by open-drain outputs run from the module's own 3.3 V: `U{s}13` from `EMCON_ON{s}` and `U{s}14` from the software request | RF (the module's radio disabled in hardware, Compute Module 5 datasheet sections 2.1.1 and 2.1.2) | lost |
+| LG290P GNSS, DCF77, lightning sensor | nothing | receive-only; nothing to remove | continues |
+
+**Section 4's EMCON row of `CONOPS.md`, as generated (the cells `7a9f7b5b` wrote).** What is off or held: radios dark (owner ruling D-05), as section 4b: power removed from the SDR, the RockBLOCK (its ENABLE forced low as well), the LoRa module, both E72, the HF unit and the two WiFi link cards; the compute modules' own WiFi and Bluetooth disabled through open drains; the 5G module's supply removed by hardware with its disable pins pulled low at the same moment (since board B's round 8, section 4b); the PA rail and keying off; software holds every send, an SOS included. Hardware or software: HW for the gated rails, the module radio disables, the RockBLOCK's ENABLE and the VHF keying; the RockBLOCK stays powered on its own stored energy after its supply gate opens, and what it does when its ENABLE falls is in no held document (sections 4.4 and 4c); SW hold on top. What is owed: session work owed under D-05 (S-01), each with its dependency in section 4d.5: the Iridium 9704's response to its ENABLE (a maker's document, or bench E-04); `U536`'s residual race and the band of `U{s}12` to `U{s}15` (E-11); the SA868's PTT threshold (bench E-01, S-92); row 3's ground on board A in the LM5176's shutdown (S-93); RF-002's walk classes for set 12's new parts (a tools item); the hardware EMCON lamp's plate light guide (S-44; the lamp is drawn on board C since its round 8); every row's radio-side latency (E-01 to E-10, E-12); twelve bench tests, none of them with the kit's own SDR (section 6). Drawn and closed at desk: the 5G module's staged supply removal since board B's round 8 (SD-EMC-1r8), the RockBLOCK's ENABLE in hardware and the enable dividers of `U501` to `U504` since stream w4b, and the back-feed paths into the RockBLOCK, the E22 and the E72 since set 12 (sections 4c and 4d).
+
 ## 1. Evidence base
 
 ### 1.1 Netlists read
