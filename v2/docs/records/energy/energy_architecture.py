@@ -28,7 +28,9 @@ import energy_budget as EB
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 WINDOWS = [(100.0, "100 W (REQ-016)"), (200.0, "200 W"), (300.0, "300 W"), (400.0, "400 W"), (1e9, "no window")]
 PANELS = list(range(100, 3001, 50))
-EB_SHA256 = "cf6c377fa1015a468a61dc83f1c735e54b5f778eb3bb39834495ee2eb24d02c1"  # energy_budget.py, the model this script imports; a changed model refuses (exit 3)
+EB_SHA256 = "6a8ac4642bd2aaf35d5ad6b75c5004c24d3e11ed1ede09a4b7a1041cd103235c"  # energy_budget.py, the model this script imports; a changed model refuses (exit 3)
+# Pin moved by stream s119 (S-119, 29 September 2026) from cf6c377fa1015a468a61dc83f1c735e54b5f778eb3bb39834495ee2eb24d02c1: energy_budget.py's second issue
+# pins the inputs whose charger row is restated (0.98 to 0.979) and prints the chain to three places; nothing else changed.
 LOADS = [42.8, 40.0, 37.5, 35.0, 30.0]
 NP_MAX = 80
 MONTH = 9
