@@ -39,3 +39,6 @@ AGENTS.md
 # Makers' IBIS models (stream w5si, SI-001): held locally and fetched by their manifest, never committed,
 # because several of their headers forbid redistribution (owner decision pending; v2/docs/EXECUTION-PLAN.md).
 v2/vendor/*/ibis/*.ibs
+# Makers' documents held back from the public tree by their terms (stream a1solar, 29 September 2026): fetched by
+# v2/docs/records/a1solar/fetch_held_back.py and checked by sha256, never committed.
+v2/vendor/solar/held/
