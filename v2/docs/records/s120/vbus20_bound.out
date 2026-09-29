@@ -109,10 +109,11 @@ netlist E v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 2ed95a0e8069ebf8
      U3 SW1 below ground: -2 V, and -4 V for 25 ns (p.8)
    MODEL for the layout writer (not a bound): Q7's current falls in (Qgs - Qg(th)) / (VPLT / (RDS_HI_OFF + RG)) =
    1.4 nC / (2.7 V / (1.3 + 1.8 Ohm)) = 1.61 ns (SLPS526 p.3; SLUSE66A p.16, typical; plateau INFERRED); each nH of
-   hot loop then adds L x di/dt, and each nH between the VBUS20 bank and C190 / C191 lifts CH_ACN by I x sqrt(L / 11 nF):
-     A2, L2 peak 15.71 A:  9.77 A/ns, 9.77 V per nH of loop and 4.74 V per nH before C190; for the 30 V budget 0.92 nH, for 26 V 0.52 nH
-     G1, L2 peak 14.10 A:  8.77 A/ns, 8.77 V per nH of loop and 4.25 V per nH before C190; for the 30 V budget 1.03 nH, for 26 V 0.57 nH
-     A1, L2 peak 10.70 A:  6.66 A/ns, 6.66 V per nH of loop and 3.23 V per nH before C190; for the 30 V budget 1.36 nH, for 26 V 0.76 nH
+   hot loop then adds L x di/dt, and the inductance between the VBUS20 bank and C190 / C191 lifts CH_ACN by I x sqrt(L /
+   11 nF), which grows as the square root of L (the figure below is at 1 nH):
+     A2, L2 peak 15.71 A:  9.77 A/ns, 9.77 V per nH of loop and 4.74 V at 1 nH before C190; for the 30 V budget 0.92 nH, for 26 V 0.52 nH
+     G1, L2 peak 14.10 A:  8.77 A/ns, 8.77 V per nH of loop and 4.25 V at 1 nH before C190; for the 30 V budget 1.03 nH, for 26 V 0.57 nH
+     A1, L2 peak 10.70 A:  6.66 A/ns, 6.66 V per nH of loop and 3.23 V at 1 nH before C190; for the 30 V budget 1.36 nH, for 26 V 0.76 nH
    Avalanche, if a ring does pass 30 V: EAS 23 mJ (CSD17578Q5A) and 39 mJ (CSD17577Q5A), single pulse, p.1; a repetitive
    rating is not stated, so no margin is taken from it.
 

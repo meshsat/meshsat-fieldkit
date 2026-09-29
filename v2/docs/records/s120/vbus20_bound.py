@@ -88,6 +88,8 @@ IL1_AT_MAX_DRAW = 16.2                # gen_sch_a.py line 751: L1 16.2 A peak at
 IL2_PK = {"A2": 15.71, "G1": 14.10, "A1": 10.70}   # s117 charger_l_f.out section 2, XAL1010-472ME, worst peak
 VIN_SERVICE = (9.0, 36.0)             # REQ-015; v2/docs/OPERATING-ENVELOPE.md section 4
 
+FIG = {}                              # main() leaves its figures here for apply_registry_s120.py (read, never re-typed)
+
 
 def sha16(path):
     return hashlib.sha256(open(path, "rb").read()).hexdigest()[:16]
@@ -189,6 +191,7 @@ def main(argv=None):
     for name, ok, detail in fs:
         P("   %-4s %-20s %s" % ("PASS" if ok else "FAIL", name, detail))
     nbad = sum(1 for _, ok, _ in fs if not ok)
+    FIG.update(sha_a=sha16(ar.net_a), sha_e=sha16(ar.net_e), facts=len(fs), facts_bad=nbad)
     P("   facts: %d of %d hold" % (len(fs) - nbad, len(fs)))
     P("")
 
@@ -303,6 +306,8 @@ def main(argv=None):
     P("")
 
     # 8. the answer for the bus
+    FIG.update(v_lo=v_lo, v_hi=v_hi, ovp_hi=ovp_hi, bound=ovp_res, dump=dump[I_IN_DECL], dump_a2=dump[I_IN_A2],
+               line=v_hi + dv_line, d1_a2=d1_at(IL2_PK["A2"]), vbat_ovp=vbat_ovp, sysovp=SYSOVP_4S[2], ov_lo=ov_lo, ov_hi=ov_hi)
     P("8. THE BUS'S WORST CASE")
     P("   DC                        %6.3f V   (section 2)" % v_hi)
     P("   load dump, MODEL          %6.3f V   (section 4, the declared 8.0 A)" % dump[I_IN_DECL])
@@ -354,11 +359,15 @@ def main(argv=None):
     P("   MODEL for the layout writer (not a bound): Q7's current falls in (Qgs - Qg(th)) / (VPLT / (RDS_HI_OFF + RG)) =")
     P("   %.1f nC / (%.1f V / (%.1f + %.1f Ohm)) = %.2f ns (SLPS526 p.3; SLUSE66A p.16, typical; plateau INFERRED); each nH of"
       % ((Q7["qgs"] - Q7["qgth"]) * 1e9, Q7_VPLT, RDS_HI_OFF_TYP, Q7["rg"], t_fi * 1e9))
-    P("   hot loop then adds L x di/dt, and each nH between the VBUS20 bank and C190 / C191 lifts CH_ACN by I x sqrt(L / 11 nF):")
+    P("   hot loop then adds L x di/dt, and the inductance between the VBUS20 bank and C190 / C191 lifts CH_ACN by I x sqrt(L /")
+    P("   11 nF), which grows as the square root of L (the figure below is at 1 nH):")
+    FIG.update(t_fi=t_fi)
     for pt in ("A2", "G1", "A1"):
         i = IL2_PK[pt]
         didt = i / t_fi
-        P("     %s, L2 peak %5.2f A: %5.2f A/ns, %4.2f V per nH of loop and %4.2f V per nH before C190; for the 30 V budget "
+        FIG["ring_" + pt] = dict(i=i, vpn=didt * 1e-9, vacn=i * math.sqrt(1e-9 / 11e-9),
+                                 l30=(FET_VDS - v_hi) / (didt * 1e-9), l26=(BQ_REC["SW1, SW2"] - v_hi) / (didt * 1e-9))
+        P("     %s, L2 peak %5.2f A: %5.2f A/ns, %4.2f V per nH of loop and %4.2f V at 1 nH before C190; for the 30 V budget "
           "%.2f nH, for 26 V %.2f nH" % (pt, i, didt * 1e-9, didt * 1e-9, i * math.sqrt(1e-9 / 11e-9),
                                           (FET_VDS - v_hi) / (didt * 1e-9), (BQ_REC["SW1, SW2"] - v_hi) / (didt * 1e-9)))
     P("   Avalanche, if a ring does pass 30 V: EAS 23 mJ (CSD17578Q5A) and 39 mJ (CSD17577Q5A), single pulse, p.1; a repetitive")
