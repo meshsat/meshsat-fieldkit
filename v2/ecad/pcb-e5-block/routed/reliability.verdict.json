@@ -71,8 +71,8 @@
   },
   "list": {
    "path": "tools/pcb_reliability.yaml",
-   "sha256": "fee24b863c5f824c5a58823ee59aa7798c5779952e2767be55e547f009939b97",
-   "sha256_16": "fee24b863c5f824c"
+   "sha256": "5e2585c373cba41a408205592119edf2a176bc32e79afd2dbfb9bbeb78ef1e16",
+   "sha256_16": "5e2585c373cba41a"
   }
  },
  "missing_input": null,
@@ -92,12 +92,12 @@
  },
  "tool": "reliability",
  "tools": {
-  "git_head": "d75384201515",
-  "tools_tree_sha": "254a65b96010ac03"
+  "git_head": "8263b60a25d4",
+  "tools_tree_sha": "d690cc33e4cc6968"
  },
- "ts": "2026-09-29T11:48:41Z",
+ "ts": "2026-09-29T12:54:07Z",
  "verdict": "INCONCLUSIVE",
- "version": "d75384201515",
+ "version": "8263b60a25d4",
  "writer": {
   "file": "reliability.py",
   "sha16": "c50f2b8b35d1d57b"

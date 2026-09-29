@@ -14,11 +14,11 @@
   "may_be_long_nets": 545,
   "models_absent": 0,
   "models_asked": 10,
-  "signal_nets": 907,
+  "signal_nets": 908,
   "unasked_part_nets": 8,
   "undecided_model_absent_nets": 0,
-  "undecided_nets": 38,
-  "undecided_no_declaration_nets": 29,
+  "undecided_nets": 39,
+  "undecided_no_declaration_nets": 30,
   "undecided_other_nets": 9
  },
  "inputs": {
@@ -159,7 +159,7 @@
   "extent_mm": 530.0,
   "far_netlist_a": {
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "30ad87746d1801ca"
+   "sha256_16": "6c40250c47195ebb"
   },
   "far_netlist_c": {
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
@@ -175,7 +175,7 @@
   },
   "intent": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
-   "sha256_16": "84d2e641a3db261a"
+   "sha256_16": "6e46bc5651e17d8d"
   },
   "model_1": {
    "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
@@ -237,9 +237,9 @@
    "state": "PRESENT"
   },
   "netlist": {
-   "content16": "31190f043dc21cfa",
+   "content16": "ccdeb5659d62553e",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "5b89d5ef6fe0299a"
+   "sha256_16": "3ef9b8c49a01b728"
   },
   "project": {
    "path": "pcb-b-compute-b19/pcb-b-compute.kicad_pro",
@@ -369,6 +369,9 @@
     ],
     "TPS3808G30DBVR supervisor on +3V3_S2A: holds FULL_CARD_POWER_OFF# low for 180 to 420 ms after the rail (RM520N Tpr >= 100 ms)": [
      "U221"
+    ],
+    "TPS3808G30DBVR supervisor on +5V_DEV watching +3V3_DEV: holds the RockBLOCK's I_EN low below 2.79 V and 180 to 420 ms after (L4 on U536, D4E-B, CHK12-B)": [
+     "U543"
     ]
    },
    "net_edges": {},
@@ -396,6 +399,7 @@
     "RB_GO",
     "RB_IEN_DRV",
     "RB_RXD_H",
+    "RB_TD_CT",
     "ZBA_BSL_H",
     "ZBA_RST_H",
     "ZBA_RXD_H",
@@ -476,6 +480,9 @@
     "RB_RXD_H": [
      "no signal-class declaration"
     ],
+    "RB_TD_CT": [
+     "no signal-class declaration"
+    ],
     "ZBA_BSL_H": [
      "no signal-class declaration"
     ],
@@ -519,6 +526,7 @@
     "RB_GO": "NO_DECLARATION",
     "RB_IEN_DRV": "NO_DECLARATION",
     "RB_RXD_H": "NO_DECLARATION",
+    "RB_TD_CT": "NO_DECLARATION",
     "ZBA_BSL_H": "NO_DECLARATION",
     "ZBA_RST_H": "NO_DECLARATION",
     "ZBA_RXD_H": "NO_DECLARATION",
@@ -1834,7 +1842,7 @@
     "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK inputs allowed: I_EN AND I_BTD (SD-EMC-2, D4E-B)": [
      "U537"
     ],
-    "TPS3808G30DBVR supervisor on +5V_DEV watching +3V3_DEV: holds the RockBLOCK's I_EN low below 2.79 V (L4 on U536, D4E-B)": [
+    "TPS3808G30DBVR supervisor on +5V_DEV watching +3V3_DEV: holds the RockBLOCK's I_EN low below 2.79 V and 180 to 420 ms after (L4 on U536, D4E-B, CHK12-B)": [
      "U543"
     ]
    },

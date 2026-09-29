@@ -55,7 +55,7 @@
   },
   "port_reviews": {
    "path": "tools/pcb_port_reviews.json",
-   "sha256_16": "e133de673ba31fa7"
+   "sha256_16": "d5cd26c8b92801d6"
   }
  },
  "missing_input": null,
@@ -75,12 +75,12 @@
  },
  "tool": "port_protect_e",
  "tools": {
-  "git_head": "d75384201515",
-  "tools_tree_sha": "254a65b96010ac03"
+  "git_head": "8263b60a25d4",
+  "tools_tree_sha": "d690cc33e4cc6968"
  },
- "ts": "2026-09-29T11:48:07Z",
+ "ts": "2026-09-29T12:53:32Z",
  "verdict": "PASS",
- "version": "d75384201515",
+ "version": "8263b60a25d4",
  "writer": {
   "file": "port_protect.py",
   "sha16": "7acd5333fc59f8d0"

@@ -62,12 +62,12 @@
  },
  "tool": "pack_protection",
  "tools": {
-  "git_head": "d75384201515",
-  "tools_tree_sha": "254a65b96010ac03"
+  "git_head": "8263b60a25d4",
+  "tools_tree_sha": "d690cc33e4cc6968"
  },
- "ts": "2026-09-29T11:48:35Z",
+ "ts": "2026-09-29T12:54:00Z",
  "verdict": "FAIL",
- "version": "d75384201515",
+ "version": "8263b60a25d4",
  "writer": {
   "file": "pack_protection.py",
   "sha16": "bcd644b9822c724d"

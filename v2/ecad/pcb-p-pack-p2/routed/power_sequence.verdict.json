@@ -53,12 +53,12 @@
  },
  "tool": "power_sequence",
  "tools": {
-  "git_head": "d75384201515",
-  "tools_tree_sha": "254a65b96010ac03"
+  "git_head": "8263b60a25d4",
+  "tools_tree_sha": "d690cc33e4cc6968"
  },
- "ts": "2026-09-29T11:48:20Z",
+ "ts": "2026-09-29T12:53:45Z",
  "verdict": "PASS",
- "version": "d75384201515",
+ "version": "8263b60a25d4",
  "writer": {
   "file": "power_sequence.py",
   "sha16": "2ba1e2e1a719c9d1"

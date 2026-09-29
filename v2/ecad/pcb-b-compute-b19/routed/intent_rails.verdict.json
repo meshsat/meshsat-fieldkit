@@ -11,7 +11,7 @@
    "fan_select.py": "39fff82524253c05",
    "hardset.py": "be29a44c4a592876",
    "intent.py": "0071fe553548eb5d",
-   "intent_checks.py": "68afac7a314ccf3b",
+   "intent_checks.py": "082b701e7bab36d9",
    "kicad_compat.py": "6b8f77490466e939",
    "netclass.py": "4cc1adf0ddae0390",
    "netlist_board.py": "655bc402d36b0fa5",
@@ -27,13 +27,13 @@
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "789f7841536ca92f",
+  "sha16": "ed6cecb873c5d32b",
   "unresolved": []
  },
  "counts": {
   "census_nets": 2039,
   "checks": 59,
-  "declared_nodes": 35,
+  "declared_nodes": 43,
   "declared_not_in_netlist": 0,
   "declared_rails": 58,
   "fail": 0,
@@ -45,11 +45,11 @@
   "switches_unresolved": 0,
   "undecided": 0,
   "undeclared": 0,
-  "unmarked": 732
+  "unmarked": 728
  },
  "denominator": 59,
  "evidence": [
-  "census of the 2039 nets: 58 counted, 154 declared node, 0 ground, 50 settled, 1045 unconnected, 0 undecided, 732 unmarked",
+  "census of the 2039 nets: 58 counted, 159 declared node, 0 ground, 50 settled, 1044 unconnected, 0 undecided, 728 unmarked",
   "settled, they supply nothing (50): BOB, CANT2_A, CANT2_B, CANT_A, CANT_B, E22_CT, E72_CT, HUB1_RST_n, HUB1_VBUS, HUB1_XI, HUB1_XO, HUB2_RST_n, HUB2_VBUS, HUB2_XI, HUB2_XO, HUB3_RST_n, HUB3_VBUS, HUB3_XI, HUB3_XO, IOCA_LDO_EN, IOCA_XI, IOCA_XO, IOCB_LDO_EN, IOCB_XI, IOCB_XO, IOCC_LDO_EN, IOCC_XI, IOCC_XO, KSZC_SS, KSZ_RST_n, KSZ_XI, KSZ_XO, S1A_COMPC, S1B_COMPC, S1C_SS, S1D_SS, S2A_COMPC, S2B_COMPC, S2C_SS, S2D_SS, S3A_COMPC, S3B_COMPC, S3C_SS, S3D_SS, TCT1, TCT2, TCT3, TCT4, U23_DVDT, U24_DVDT",
   "declared as a node, not a rail: DEV_BST (supply pin by its held datasheet (U25.6 BST: v2/vendor/diodes/diodes-ap63200-series-buck.pdf))",
   "declared as a node, not a rail: DEV_SW (power class PWR in the netlist; supply pin by its held datasheet (U25.5 SW: v2/vendor/diodes/diodes-ap63200-series-buck.)",
@@ -59,8 +59,8 @@
   "declared as a node, not a rail: IOCC_VCAP (supply pin by name (U61.48 VCAP, U61.73 VCAP), and the intent's bypass list decouples it (C447:U61.48, C448:U61.73))",
   "declared as a node, not a rail: KSZC_BST (supply pin by its held datasheet (U26.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
   "declared as a node, not a rail: KSZC_SW (power class PWR in the netlist; supply pin by its held datasheet (U26.5 SW: v2/vendor/ti/ti-tps62933.pdf); series conduc)",
-  "declared as a node, not a rail: RB_3V3 (supply pin by name (U18.6 VDD), and the intent's bypass list decouples it (C59:U18.6, C60:U18.6))",
-  "declared as a node, not a rail: S1A_BOOT (supply pin by its held datasheet (U103.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))",
+  "declared as a node, not a rail: LED_ACT_A1 (series conductor: the load R148 of rail +3V3_CM1 at 0.00 A)",
+  "declared as a node, not a rail: LED_ACT_A2 (series conductor: the load R248 of rail +3V3_CM2 at 0.00 A)",
   "settled, it supplies nothing: BOB: only resistors, capacitors and test points",
   "settled, it supplies nothing: CANT2_A: only resistors, capacitors and test points",
   "settled, it supplies nothing: CANT2_B: only resistors, capacitors and test points",
@@ -156,12 +156,12 @@
   },
   "intent": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
-   "sha256_16": "84d2e641a3db261a"
+   "sha256_16": "6e46bc5651e17d8d"
   },
   "netlist": {
-   "content16": "31190f043dc21cfa",
+   "content16": "ccdeb5659d62553e",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "5b89d5ef6fe0299a"
+   "sha256_16": "3ef9b8c49a01b728"
   },
   "threshold_a": 0.0
  },
@@ -183,14 +183,14 @@
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "d75384201515",
-  "tools_tree_sha": "254a65b96010ac03"
+  "git_head": "8263b60a25d4",
+  "tools_tree_sha": "d690cc33e4cc6968"
  },
- "ts": "2026-09-29T11:46:26Z",
+ "ts": "2026-09-29T12:51:52Z",
  "verdict": "PASS",
- "version": "d75384201515",
+ "version": "8263b60a25d4",
  "writer": {
   "file": "intent_checks.py",
-  "sha16": "68afac7a314ccf3b"
+  "sha16": "082b701e7bab36d9"
  }
 }

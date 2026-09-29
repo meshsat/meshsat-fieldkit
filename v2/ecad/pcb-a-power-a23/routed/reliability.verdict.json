@@ -37,7 +37,7 @@
    "a": {
     "artefact": {
      "kind": "netlist",
-     "sha256_16": "30ad87746d1801ca"
+     "sha256_16": "6c40250c47195ebb"
     },
     "bound": true,
     "candidates": 82,
@@ -76,15 +76,15 @@
   "board": "a",
   "list": {
    "path": "tools/pcb_reliability.yaml",
-   "sha256": "fee24b863c5f824c5a58823ee59aa7798c5779952e2767be55e547f009939b97",
-   "sha256_16": "fee24b863c5f824c"
+   "sha256": "5e2585c373cba41a408205592119edf2a176bc32e79afd2dbfb9bbeb78ef1e16",
+   "sha256_16": "5e2585c373cba41a"
   },
   "netlist": {
-   "content16": "2efce63fe72079f1",
-   "parts": 622,
+   "content16": "3876a0a8e689f1a5",
+   "parts": 627,
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256": "30ad87746d1801cacc89a3e92e432513f8d6c6b79b59a7b8966c1e2358f5e6c0",
-   "sha256_16": "30ad87746d1801ca"
+   "sha256": "6c40250c47195ebb7b2ae1388e284dc7f2fba9f2e683f654a47c98444290e8c5",
+   "sha256_16": "6c40250c47195ebb"
   }
  },
  "missing_input": null,
@@ -104,12 +104,12 @@
  },
  "tool": "reliability",
  "tools": {
-  "git_head": "d75384201515",
-  "tools_tree_sha": "254a65b96010ac03"
+  "git_head": "8263b60a25d4",
+  "tools_tree_sha": "d690cc33e4cc6968"
  },
- "ts": "2026-09-29T11:48:36Z",
+ "ts": "2026-09-29T12:54:02Z",
  "verdict": "INCONCLUSIVE",
- "version": "d75384201515",
+ "version": "8263b60a25d4",
  "writer": {
   "file": "reliability.py",
   "sha16": "c50f2b8b35d1d57b"
