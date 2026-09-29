@@ -36,7 +36,8 @@ def main():
            "lid at %.2f C (the September mean day's minimum air), both start hours, 42.8 W, aged 80 percent." % tmin, ""]
     for n, what in ((8, "4S8P lid: both owner-approved lid functions kept (a1mech: 35 places), 4S14P in all"),
                     (12, "4S12P lid: a1elec's assumption, 4S18P in all"),
-                    (14, "4S14P lid: the tablet (B, 56 places) or the QMX (C, 58 places) out of the lid, 4S20P in all")):
+                    (14, "4S14P lid: the tablet out of the lid (B, 56 places), 4S20P in all"),
+                    (15, "4S15P lid: the QMX out of the lid (C, 61 places after the mechanical check), 4S21P in all")):
         rs, _ = case(n, tmin)
         out.append("%s" % what)
         out.append("   at %.2f C: %s" % (tmin, TP.fmt_run(rs)))
