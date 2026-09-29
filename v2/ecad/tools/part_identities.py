@@ -1025,11 +1025,11 @@ SCHEMES = {
         maker_mark="YAGEO", layout="numbered_placeholders", scheme_row="CC XXXX X X X7R X BB XXX",
         labels={"SIZE": "size", "TOLERANCE": "tolerance", "PACKING STYLE": "packaging", "RATED VOLTAGE": "voltage",
                 "CAPACITANCE VALUE": "value"},
-        literals={"CC": "series", "X7R": "dielectric", "BB": "process"}, section_end="NOTE",
+        literals={"CC": "series", "X7R": "dielectric", "BB": "process"}, section_end="NOTE", size_form="inch (metric)",
         construction=("MLCC", "Ceramic Multilayer Capacitors"), value_rule="pf_2sig"),
     "uniroyal-thick-film-p2": dict(
         sha256="11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef", page=2, kind="resistor",
-        resistor_kinds=("general",), maker_mark="UNI-ROYAL", layout="numbered_positions",
+        resistor_kinds=("general",), maker_mark="UNI-ROYAL", layout="numbered_positions", size_form="list",
         labels={"Part name": "size", "Power rating": "power", "Tolerance": "tolerance", "Resistance Value": "value",
                 "Packaging Type": "packaging", "Standard Packing Quantity": "quantity", "Special features": "special"},
         section_end="3. Ordering Procedure", value_rule="ohm_3sig"),
@@ -1039,6 +1039,17 @@ RES_KEYS = {"value", "package", "resistor_kind", "tolerance_max_pct", "power_min
 MUST = {"capacitor": ("value", "package", "tolerance", "voltage", "dielectric", "construction"),
         "resistor": ("value", "package", "tolerance", "power")}
 _ORD = r"(\d+)(?:st|nd|rd|th)"
+
+
+_ENTRY = re.compile(r"(?<![A-Za-z0-9.~])([A-Za-z0-9]{1,3})\s*[=:：]\s*")
+
+
+def row_entries(row):
+    """[(code, meaning)] of a table row written as `code = meaning` entries: a code of one to three letters or digits
+    that no letter, digit, full stop or tilde precedes (so the "E" of "E.g." and the "th" of "12th code:" are not codes),
+    the separator required, the meaning running to the next entry."""
+    ms = list(_ENTRY.finditer(row))
+    return [(m.group(1), row[m.end():(ms[i + 1].start() if i + 1 < len(ms) else len(row))].strip()) for i, m in enumerate(ms)]
 
 
 def scheme_slots(sc, flat):
@@ -1134,13 +1145,26 @@ def read_decoded(ds, mpn, maker, req, kind, text, first_page_text, doc_sha256):
             if row not in segment(label): return ("REFUSED", "field %s (%s): its row is not under the page's %r" % (skind, code, label), {})
             if not _token(code, row): return ("REFUSED", "field %s: the code %r is not in its row %r" % (skind, code, row), {})
             if skind in MEANING_KINDS:
+                # the row read as the table it is: its `code = meaning` entries, the separator required and each meaning
+                # running to the next entry; the field's code must be exactly one entry's code and its meaning that
+                # entry's (round 4's check, BB1: a unit letter or the "E" of "E.g." passed as a code and took the next
+                # entry's meaning)
                 means = _flat(f.get("means") or "")
-                if not means or not re.search(r"(?<![A-Za-z0-9])" + re.escape(code) + r"\s*[=:：]?\s*" + re.escape(means), row):
-                    return ("REFUSED", "field %s: the row does not map %r to %r" % (skind, code, means), {})
+                ents = row_entries(row)
+                hit = [m for c, m in ents if c == code]
+                if len(hit) != 1:
+                    return ("REFUSED", "field %s: %r is not one code of its row's entries (%s)" % (skind, code, ", ".join(c for c, _ in ents) or "none"), {})
+                if not means or not hit[0].startswith(means):
+                    return ("REFUSED", "field %s: the row maps %r to %r, not %r" % (skind, code, hit[0], means), {})
                 if skind == "tolerance": got["tolerance_pct"] = _pct(means)
                 if skind == "voltage": got["volts"] = _volts(means)
                 if skind == "power": got["watts"] = _watts(means)
-            if skind == "size": got["package"] = piece
+            if skind == "size":
+                # the size code must be the row's own code: Yageo's rows are "INCH (METRIC)", so the code must be the inch
+                # code before the brackets, never the metric one in them (round 4's check, minor 5)
+                if sc.get("size_form") == "inch (metric)" and not re.fullmatch(re.escape(code) + r" \(\d{4}\)", row):
+                    return ("REFUSED", "field size: %r is not the inch code of its row %r" % (code, row), {})
+                got["package"] = piece
         if skind == "dielectric": got["dielectric"] = piece.upper().replace("NP0", "C0G")
         if skind == "value":
             for r in [f.get("row")] + ([f["means_row"]] if f.get("means_row") else []):
@@ -1239,6 +1263,31 @@ def read_binding(ds, mpn, root=REPO, maker=None, req=None, kind=None):
     return dict(state="READ", why="page %s names it" % page, line=line, binding=bkind)
 
 
+CATALOGUE = os.path.join(V2, "docs", "parts", "readings", "lcsc-2026-09-27.json")   # this tree's own catalogue reading
+PACKING_SUFFIXES = ("R", "T", "-TR", "TR", "-7", "-13")                              # a reel or tape code after the part
+
+
+def printed_is_the_design_part(values, codes, mpn, packing_code=None):
+    """(True, how) when a PRINTED part number is the part the design names (round 4's check, minor 1: a PRINTED binding
+    was checked for identity only, so a 4.7 uF capacitor could be bound to PCA9555PWR): the value text names the part
+    number, or names it less its packing code or less a reel suffix (PCA9555PW for PCA9555PWR, VEML7700 for
+    VEML7700-TR), or every order code the netlist carries for the rows reads as that part number in this tree's catalogue
+    reading (v2/docs/parts/readings/lcsc-2026-09-27.json)."""
+    base = mpn[:len(mpn) - len(packing_code)] if packing_code and mpn.endswith(packing_code) else mpn
+    cands = [base] + [base[:-len(x)] for x in PACKING_SUFFIXES if base.upper().endswith(x) and len(base) - len(x) >= 6]
+    for c in cands:
+        if all(names_part(v, c)[0] for v in values):
+            return True, "the value names %s" % c
+    if codes:
+        try:
+            rows = {r["code"]: r for r in json.load(open(CATALOGUE, encoding="utf-8"))["rows"]}
+        except (OSError, ValueError, KeyError):
+            rows = {}
+        if all((rows.get(c) or {}).get("model") and str(rows[c]["model"]).upper() == mpn.upper() for c in codes):
+            return True, "the netlist's order code %s reads %s in this tree's catalogue reading" % (", ".join(sorted(codes)), mpn)
+    return False, "neither the value nor the netlist's order code names %s" % mpn
+
+
 def _judged(req):
     """A selection's requirements as bindings are judged on them: v_working_bound is per row (it is left out of the
     key, K-1), so it is left out here too; everything else is the selection's."""
@@ -1266,6 +1315,8 @@ def check(argv):
     # the requirements every binding is judged against are DERIVED here from the committed netlist, the intent and the
     # generator's value text, never taken from the table (round 3's check, B1: a table whose C37 said 6.3 V held)
     now_req = {"%s:%s" % (p["board"], p["ref"]): (p["kind"], _judged(p["requirements"])) for p in rs}
+    rowv = {"%s:%s" % (p["board"], p["ref"]): p["value"] for p in rs}
+    rowc = {"%s:%s" % (p["board"], p["ref"]): p.get("generator_lcsc") for p in rs}
     seen, bad, reading = {}, [], []
     inputs = {str(i.get("board")): i for i in (t.get("inputs") or [])}
     for m in meta:
@@ -1300,6 +1351,12 @@ def check(argv):
                            % (s["id"], ", ".join(sorted(k for k in set(dreq) | set(_judged(s.get("requirements") or {}))
                                                          if dreq.get(k) != _judged(s.get("requirements") or {}).get(k))) or "the kind"))
             r = read_binding(i.get("datasheet") or {}, i.get("mpn"), maker=i.get("maker"), req=dreq, kind=dkind)
+            if r["state"] == "READ":
+                vals = sorted({rowv[x] for x in s["rows"] if x in rowv})
+                codes = {rowc[x] for x in s["rows"] if rowc.get(x)}
+                ok, how = printed_is_the_design_part(vals, codes, i.get("mpn") or "", ((i.get("datasheet") or {}).get("packing") or {}).get("code"))
+                r["design_part"] = how
+                if not ok: bad.append("%s: a PRINTED binding of a part the design does not name: %s" % (s["id"], how))
             if r["state"] in ("READ", "DECODED") and r.get("binding") != ((i.get("datasheet") or {}).get("binding") or "PRINTED"):
                 bad.append("%s: its binding reads %s where the table says %s" % (s["id"], r.get("binding"), (i.get("datasheet") or {}).get("binding")))
             row.update(mpn=i.get("mpn"), document=(i.get("datasheet") or {}).get("path"), page=(i.get("datasheet") or {}).get("page"), **r)
