@@ -100,3 +100,12 @@ E-02); (6) an apply script for FEA-002's evidence line once EMCON.md's new hash 
   read-back in FEA-002, rebinds its board B netlist, restates S-01 with what closed at desk). Tested in the worktree: `page`
   ran, its diff read (8 records: 7 rebound plus S-01), a second run refused, the registry restored with `git checkout`; `after`
   refuses on set 10 (read-back 56 FAIL). The registry is NOT changed on this branch.
+- 12:31 to 12:36 Self-review of `apply_b_d4e.py`: slot 3's GPIO bank is powered from `+3V3_CM3` (U32A pin 78 GPIO_VREF on
+  `+3V3_CM3`, read on set 10), so B-3's gates share the host pins' supply as intended. Found: the new gates' host-side inputs
+  would float while slot 3's firmware has not configured its pins (SCES217AA: inputs must be held); added R546 to R550
+  (100 k 1%) on RXEN, TXEN, IO26 (NRST), MOSI and SCK to GND (the PA off and the module in reset until the host drives them;
+  NSS keeps R25); the read-back gains those nodes (B now 59 checks, all FAIL on set 10). Corrected B-4's asserted level to
+  at most 0.15 V (the maker's divider at V_IN 5.3 V through R532), in the script and in 4d.3.
+- 12:36 `tools/selftest_readback_c.py`: from board C's committed netlist it writes a synthetic netlist carrying exactly
+  D4E-F1's draft and three mutants; the read-back PASSES the synthetic one and FAILS each mutant
+  (`readings/set10/readback/selftest-readback-c.txt`), so its FAIL on set 10 is not the only thing it can print.
