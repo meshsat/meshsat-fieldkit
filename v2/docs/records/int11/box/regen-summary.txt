@@ -1,0 +1,61 @@
+board a phase A65 in pcb-a-power-a23: wrote pcb-a-power.kicad_sch parts: 651 lib symbols: 102; lands: 42 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable; gen_sch exit 0; build_sch exit 0; erc_gate erc_gate exit 0
+  parity schematic  PARITY_AFTER_NOISE
+  parity netlist    PARITY_AFTER_NOISE
+  parity intent     PARITY_AFTER_NOISE
+  parity provenance DIFFERENT
+  parity bom        PARITY
+  parity erc        PARITY_AFTER_NOISE
+board b phase B21 in pcb-b-compute-b19: wrote pcb-b-compute.kicad_sch parts: 1328 lib symbols: 162; lands: 68 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable; gen_sch exit 0; build_sch exit 0; erc_gate erc_gate exit 0
+  parity schematic  PARITY_AFTER_NOISE
+  parity netlist    PARITY_AFTER_NOISE
+  parity intent     PARITY_AFTER_NOISE
+  parity provenance DIFFERENT
+  parity bom        PARITY
+  parity erc        PARITY_AFTER_NOISE
+board c phase C24 in pcb-c-display-c8: wrote pcb-c-display.kicad_sch parts: 224 lib symbols: 33; lands: 31 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable; gen_sch exit 0; build_sch exit 0; erc_gate erc_gate exit 0
+  parity schematic  PARITY_AFTER_NOISE
+  parity netlist    PARITY_AFTER_NOISE
+  parity intent     PARITY_AFTER_NOISE
+  parity provenance DIFFERENT
+  parity bom        PARITY
+  parity erc        PARITY_AFTER_NOISE
+board d phase D37P in pcb-d-aprs-d9: wrote pcb-d-aprs.kicad_sch parts: 253 lib symbols: 45; lands: 36 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable; gen_sch exit 0; build_sch exit 0; erc_gate erc_gate exit 0
+  parity schematic  PARITY_AFTER_NOISE
+  parity netlist    PARITY_AFTER_NOISE
+  parity intent     PARITY_AFTER_NOISE
+  parity provenance DIFFERENT
+  parity bom        PARITY
+  parity erc        PARITY_AFTER_NOISE
+board e phase E42P in pcb-e1-dock-e7: wrote pcb-e1-dock.kicad_sch parts: 206 lib symbols: 43; lands: 42 footprint(s) judged, 18 pin(s) on a pad the land does not carry, 0 land(s) unreadable; gen_sch exit 0; build_sch exit 0; erc_gate erc_gate exit 0
+  parity schematic  PARITY_AFTER_NOISE
+  parity netlist    PARITY_AFTER_NOISE
+  parity intent     PARITY_AFTER_NOISE
+  parity provenance DIFFERENT
+  parity bom        PARITY
+  parity erc        PARITY_AFTER_NOISE
+board p phase P4 in pcb-p-pack-p2: wrote pcb-p-pack.kicad_sch parts: 95 lib symbols: 21; lands: 21 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable; gen_sch exit 0; build_sch exit 0; erc_gate erc_gate exit 0
+  parity schematic  PARITY_AFTER_NOISE
+  parity netlist    PARITY_AFTER_NOISE
+  parity intent     PARITY_AFTER_NOISE
+  parity provenance DIFFERENT
+  parity bom        PARITY
+  parity erc        PARITY_AFTER_NOISE
+== check_contracts
+verdict: check_contracts        PASS         of 99 {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}
+== interfaces
+interfaces: 12 interface assignment(s) over 7 board(s) against the parts' own specifications; 0 disagreement(s)
+  note C USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say
+  note D USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say
+== driver
+  E5  interfaces.py      rc 0       2.0s  interfaces_e5 PASS
+  E5  block_contract.py  rc 1       1.5s  check_contracts_e5 FAIL
+  E5  port_protect.py    rc 0       0.7s  port_protect_e5 PASS
+
+board A   pcb-a-power-a23 REFUSED (inputs not committed: pcb-a-power-a23/pcb-a-power.kicad_sch differs from its commit (M ); pcb-a-power-a23/out/pcb-a-power.net differs from its commit (M ); pcb-a-power-a23/out/pcb-a-power.net.prov.json differs from its commit (M ); pcb-a-power-a23/out/pcb-a-power-intent.json differs from its commit (M )) 0 reading(s) in 0.0s: ; 0 file(s) copied to routed/
+board B   pcb-b-compute-b19 REFUSED (inputs not committed: pcb-b-compute-b19/pcb-b-compute.kicad_sch differs from its commit (M ); pcb-b-compute-b19/out/pcb-b-compute.net differs from its commit (M ); pcb-b-compute-b19/out/pcb-b-compute.net.prov.json differs from its commit (M ); pcb-b-compute-b19/out/pcb-b-compute-intent.json differs from its commit (M )) 0 reading(s) in 0.0s: ; 0 file(s) copied to routed/
+board C   pcb-c-display-c8 REFUSED (inputs not committed: pcb-c-display-c8/pcb-c-display.kicad_sch differs from its commit (M ); pcb-c-display-c8/out/pcb-c-display.net differs from its commit (M ); pcb-c-display-c8/out/pcb-c-display.net.prov.json differs from its commit (M ); pcb-c-display-c8/out/pcb-c-display-intent.json differs from its commit (M )) 0 reading(s) in 0.0s: ; 0 file(s) copied to routed/
+board D   pcb-d-aprs-d9 REFUSED (inputs not committed: pcb-d-aprs-d9/pcb-d-aprs.kicad_sch differs from its commit (M ); pcb-d-aprs-d9/out/pcb-d-aprs.net differs from its commit (M ); pcb-d-aprs-d9/out/pcb-d-aprs.net.prov.json differs from its commit (M ); pcb-d-aprs-d9/out/pcb-d-aprs-intent.json differs from its commit (M )) 0 reading(s) in 0.0s: ; 0 file(s) copied to routed/
+board E   pcb-e1-dock-e7 REFUSED (inputs not committed: pcb-e1-dock-e7/pcb-e1-dock.kicad_sch differs from its commit (M ); pcb-e1-dock-e7/out/pcb-e1-dock.net differs from its commit (M ); pcb-e1-dock-e7/out/pcb-e1-dock.net.prov.json differs from its commit (M ); pcb-e1-dock-e7/out/pcb-e1-dock-intent.json differs from its commit (M )) 0 reading(s) in 0.0s: ; 0 file(s) copied to routed/
+board E5  pcb-e5-block 7 reading(s) in 7.1s: check_contracts_e5 FAIL, derate PASS, energy_chain PASS, energy_chain_e5 PASS, interfaces_e5 PASS, port_protect_e5 PASS, safe_lines_e5 PASS; 7 file(s) copied to routed/
+board P   pcb-p-pack-p2 REFUSED (inputs not committed: pcb-p-pack-p2/pcb-p-pack.kicad_sch differs from its commit (M ); pcb-p-pack-p2/out/pcb-p-pack.net differs from its commit (M ); pcb-p-pack-p2/out/pcb-p-pack.net.prov.json differs from its commit (M ); pcb-p-pack-p2/out/pcb-p-pack-intent.json differs from its commit (M )) 0 reading(s) in 0.0s: ; 0 file(s) copied to routed/
+retake_schematic_phase: INCOMPLETE (see above) in 7.9s

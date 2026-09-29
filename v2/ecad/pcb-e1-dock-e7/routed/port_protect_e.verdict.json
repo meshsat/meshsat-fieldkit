@@ -5,7 +5,8 @@
   "entry": "port_protect.py",
   "files": {
    "boardtable.py": "41bd92e61f12c374",
-   "intent.py": "f1ac033e0f3c10f1",
+   "decoupling_rules.py": "f4d06f6789c6ec48",
+   "intent.py": "0071fe553548eb5d",
    "kisch.py": "3e28374d15be25e0",
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
@@ -15,7 +16,7 @@
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "dc13fd58ac5b7922",
+  "sha16": "e80c59dd6bb0b955",
   "unresolved": []
  },
  "counts": {
@@ -45,16 +46,16 @@
   "board": "e",
   "intent": {
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
-   "sha256_16": "dad1163afd720b5e"
+   "sha256_16": "4b328380172ff2c7"
   },
   "netlist": {
    "content16": "dc06b84a39724641",
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "56adc9746d61c4e0"
+   "sha256_16": "2ed95a0e8069ebf8"
   },
   "port_reviews": {
    "path": "tools/pcb_port_reviews.json",
-   "sha256_16": "626fb85002cfc9b8"
+   "sha256_16": "e133de673ba31fa7"
   }
  },
  "missing_input": null,
@@ -64,7 +65,7 @@
   "rule_fingerprints": {
    "TRN-001": "5d38bd6db7d4e11f"
   },
-  "rule_set_fingerprint": "635ff031f210f48c"
+  "rule_set_fingerprint": "a9b1e7f7412f9c0c"
  },
  "rules": [
   "TRN-001"
@@ -74,12 +75,12 @@
  },
  "tool": "port_protect_e",
  "tools": {
-  "git_head": "cef7cb77c420",
-  "tools_tree_sha": "8639c5ed4c65deea"
+  "git_head": "958a7de7a15f",
+  "tools_tree_sha": "7a55e9ef29ec7734"
  },
- "ts": "2026-09-28T22:46:38Z",
+ "ts": "2026-09-29T00:17:26Z",
  "verdict": "PASS",
- "version": "cef7cb77c420",
+ "version": "958a7de7a15f",
  "writer": {
   "file": "port_protect.py",
   "sha16": "7acd5333fc59f8d0"

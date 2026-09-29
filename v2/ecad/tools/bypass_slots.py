@@ -16,10 +16,20 @@ Call it from a placement generator between the FIXED placement and the region lo
 
 `place(ref, x, y, rot, back)` is the generator's own placer in case-frame mm; `to_case(vec)` converts a board
 VECTOR2I to case-frame mm. A capacitor with no free spot within the limit is left for the packer and reported, so the
-gate still sees it as far away rather than the tool pretending it fitted."""
-import json, math, pcbnew
+gate still sees it as far away rather than the tool pretending it fitted.
 
-LIMIT = 3.0
+SINCE 27 SEPTEMBER 2026 THE SEAT IS DECISION 42's (DECOUPLING.md section 6; MESHSAT-1357). The limit is the entry's
+CLASS's and is measured from the capacitor's rail pad, the four orientations are tried, the fan set is the escape
+pass's own, a fan is opened for a class D or L entry's own-pin window and for a converter's own class R parts, and a
+board already assembled on both sides is offered the other side. All of that is `bypass_search.search`, which
+`bypass_place.py` calls too; this file keeps what is its own: it runs BEFORE the packer, it never gives a seated
+capacitor a second footprint, and it writes down which capacitors the generator had seated. An entry with no ruled
+class is refused by name and left to the packer: the limit has no default."""
+import json, math, os, sys, pcbnew
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import decoupling_rules as _dr
+import fan_select, bypass_search
+
 _DETACHED = []   # KiCad 9: a footprint removed from the board must stay referenced in Python or the next FootprintLoad dies inside the IO plugin
 
 def _courtyard(f):
@@ -35,40 +45,41 @@ def _fan_box(f, fan):
     cb = _courtyard(f); i = int(pcbnew.FromMM(fan))
     return pcbnew.BOX2I(pcbnew.VECTOR2I(cb.GetLeft() - i, cb.GetTop() - i), pcbnew.VECTOR2I(cb.GetWidth() + 2 * i, cb.GetHeight() + 2 * i))
 
-def _needs_fan(f):
-    """Any part that will be escaped needs the room its fan takes. The first cut used the 0.7 mm fine-pitch test and let five capacitors
-    land 1.9 to 2.6 mm from a 0.8 mm TQFP's pins, which cost the part beside it six of seventeen escapes (D10 and C9, 9 September 2026).
-    An IC is a part with eight or more SMD pads whose closest two are 1.0 mm apart or less; that is the set whose fans must stay clear."""
-    ps = [q.GetPosition() for q in f.Pads() if q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD]
-    if len(ps) < 8: return False
-    best = 1e9
-    for i in range(len(ps)):
-        for j in range(i + 1, len(ps)):
-            d = math.hypot(ps[i].x - ps[j].x, ps[i].y - ps[j].y)
-            if 0 < d < best: best = d
-    return best <= pcbnew.FromMM(1.0)
+# WHICH PART GETS A FAN is `fan_select.is_fanned` (decision 42, T1): every part the escape pass escapes, and every part
+# of eight or more NUMBERED COPPER pads 1.0 mm apart or less. The test that stood here counted every SMD pad, so the
+# four paste apertures of a SOIC-8-1EP made a 1.27 mm part fine pitch (DECOUPLING.md 3.2(a)), and it knew nothing of
+# the six-pin parts the escape pass escapes (3.2(g)). The 9 September lesson it carried stays in the second term:
+# five capacitors 1.9 to 2.6 mm from a 0.8 mm TQFP's pins cost the part beside it six of seventeen escapes (D10, C9).
 
-def reserve(board, place, to_case, entries, limit=LIMIT, quiet=False, fan=2.2):
-    """Places each declared capacitor beside its pin. Returns the set of references it placed."""
+def reserve(board, place, to_case, entries, limit=None, quiet=False, fan=_dr.FAN_MM, intent=None):
+    """Places each declared capacitor beside its pin. Returns the set of references it placed.
+
+    `limit` is no longer a distance every entry shares: None takes each entry's own class's limit, which is the
+    ruling. A number can only TIGHTEN it (an arm that asks what a smaller screen would seat), and is said."""
     if not entries: return set()
-    edge = board.GetBoardEdgesBoundingBox()
-    rule = [z for z in board.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowFootprints()]   # only a no-footprint area blocks a part
     # D10 and C9, 9 September 2026: the first floor-plan pass put capacitors 1 mm from QFN and ZIF pins, and the escape pass then had no
     # room for the fans: U7 lost 6 of 17 pads, C9's U3 lost 23 of 57. A fine-pitch part's fan is not free space, so its courtyard grown by
     # `fan` mm is closed to this pass. A capacitor that cannot be served outside every fan is named, not forced.
-    fans = []
-    for g in board.GetFootprints():
-        if _needs_fan(g):
-            fans.append((g.GetReference(), _fan_box(g, fan)))
+    path = board.GetFileName() or ""
+    ctx = bypass_search.Context(board, path, fan)
+    nets = bypass_search.netlist_beside(path)
+    if intent is None:
+        try:
+            ip = os.path.join(os.path.dirname(os.path.abspath(path)) or ".", "out", os.path.splitext(os.path.basename(path))[0] + "-intent.json")
+            intent = json.load(open(ip, encoding="utf-8")) if path and os.path.exists(ip) else {}
+        except Exception: intent = {}
     done, stuck, report, already = set(), [], [], []
     for e in entries:
         cap, ref, pin = e.get("cap"), e.get("part"), str(e.get("pin"))
         if not cap or cap in done: continue
+        bad = _dr.form_problems(e)
+        if e.get("class") not in _dr.CLASSES:
+            stuck.append((cap, ref, pin, "refused: " + (bad[0].split(": ", 1)[-1] if bad else "no ruled class"))); continue
         p = board.FindFootprintByReference(ref)
         if p is None: stuck.append((cap, ref, pin, "its part is not placed yet")); continue
         pad = next((q for q in p.Pads() if q.GetNumber() == pin), None)
         if pad is None: stuck.append((cap, ref, pin, "no such pin")); continue
-        pc = pad.GetPosition(); side = p.GetLayer(); pcy = _courtyard(p)
+        pc = pad.GetPosition(); side = p.GetLayer()
         cx, cy = to_case(pc)
         # A CAPACITOR THAT IS ALREADY ON THE BOARD HAS A SEAT, AND THIS PASS MUST NOT GIVE IT A SECOND
         # (20 September 2026). `place()` CREATES a footprint, so calling it for a capacitor the generator's
@@ -84,35 +95,23 @@ def reserve(board, place, to_case, entries, limit=LIMIT, quiet=False, fan=2.2):
             d = math.hypot(seated.GetPosition().x - pc.x, seated.GetPosition().y - pc.y) / 1e6
             done.add(cap); already.append((cap, ref, pin, d)); continue
         fp = place(cap, cx, cy, 0.0, side != pcbnew.F_Cu)   # on the part's own side, then walked out to a free spot
-        cyd = _courtyard(fp); w, h = cyd.GetWidth(), cyd.GetHeight()
-        def free(at):
-            box = pcbnew.BOX2I(pcbnew.VECTOR2I(at.x - w // 2, at.y - h // 2), pcbnew.VECTOR2I(w, h))
-            if not edge.Contains(box): return False
-            for g in board.GetFootprints():
-                if g.GetReference() in (cap,) or g.GetLayer() != fp.GetLayer(): continue
-                if _courtyard(g).Intersects(box): return False
-            for _r, fb in fans:
-                if fb.Intersects(box): return False
-            for z in rule:
-                if z.GetBoundingBox().Intersects(box): return False
-            return True
-        out = (pc.x - p.GetPosition().x, pc.y - p.GetPosition().y)
-        n = math.hypot(*out) or 1.0; ux, uy = out[0] / n, out[1] / n
-        spot = None
-        for r10 in range(8, int(limit * 10) + 1):
-            r = pcbnew.FromMM(r10 / 10.0)
-            for ang in range(0, 360, 10):
-                th = math.radians(ang); dx, dy = ux * math.cos(th) - uy * math.sin(th), ux * math.sin(th) + uy * math.cos(th)
-                at = pcbnew.VECTOR2I(int(pc.x + dx * r), int(pc.y + dy * r))
-                if pcy.Contains(at): continue                      # never inside the part it serves
-                if free(at): spot = (at, r10 / 10.0); break
-            if spot: break
-        if spot is None:
-            board.Remove(fp); _DETACHED.append(fp); stuck.append((cap, ref, pin, "no free spot within %.1f mm" % limit)); continue
-        fp.SetPosition(spot[0]); done.add(cap); report.append((cap, ref, pin, spot[1]))
+        res = bypass_search.search(ctx, e, fp, p, pad, intent=intent, netlist_pins=nets.get(cap),
+                                   tighten=None if limit is None else float(limit))
+        if res.get("seat") is None:
+            board.Remove(fp); _DETACHED.append(fp); stuck.append((cap, ref, pin, res.get("why") or "no free seat")); continue
+        bypass_search.apply(fp, res); done.add(cap)
+        report.append((cap, ref, pin, res["d_mm"], e.get("class"), res))
     if not quiet:
-        print("bypass_slots: %d of %d declared capacitors reserved a slot within %.1f mm of their pin" % (len(done), len({e.get("cap") for e in entries}), limit))
-        for cap, ref, pin, d in report[:6]: print("bypass_slots:   %-6s beside %s.%-3s at %.1f mm" % (cap, ref, pin, d))
+        print("bypass_slots: %d of %d declared capacitors reserved a seat within their class's limit, rail pad to pin%s; SMD parts on the "
+              "board now %d front and %d back, so the other side is %s; via allowance %s"
+              % (len(done), len({e.get("cap") for e in entries}), (" (this arm: no seat past %.1f mm)" % float(limit)) if limit is not None else "",
+                 ctx.smd[0], ctx.smd[1], "offered" if ctx.two_sided else "not offered",
+                 ("%.1f mm (%s)" % (ctx.allow_mm, ctx.allow_src)) if ctx.allow_mm is not None else ctx.allow_src))
+        print("bypass_slots: %s" % ctx.closed_note)
+        for cap, ref, pin, d, k, res in report[:6]:
+            print("bypass_slots:   %-6s class %-2s beside %s.%-3s rail pad at %.1f mm%s, turned %d (%s)"
+                  % (cap, k, ref, pin, d, (", the other side, loop-equivalent %.1f mm" % res["loop_mm"]) if res.get("far") else "",
+                     int(res["rotation"]), res["rail"]))
         for cap, ref, pin, why in stuck: print("bypass_slots:   LEFT TO THE PACKER %-6s for %s.%-3s: %s" % (cap, ref, pin, why))
         for cap, ref, pin, d in already:
             print("bypass_slots:   ALREADY SEATED %-6s beside %s.%-3s at %.1f mm, left where the generator put it"

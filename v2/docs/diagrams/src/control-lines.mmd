@@ -2,7 +2,7 @@
 title: "Control lines across the boards, read from the netlists named in each board's box (design diagram of an unbuilt prototype)"
 ---
 flowchart LR
-  subgraph brdC["C panel backer, netlist 11eabc2dddca5161 at 9f28c238"]
+  subgraph brdC["C panel backer, netlist 3fddbb3edcd4248a at e28f91a60"]
     direction TB
     C_SW_EMCON["SW_EMCON EMCON locking toggle<br/>closed: TX_INHIBIT_n to GND"]:::switch
     C_J_PANEL["C J_PANEL"]:::conn
@@ -12,26 +12,29 @@ flowchart LR
     C_SW_ZERO["SW_ZERO ZEROIZE locking toggle, maintained<br/>closed: ZEROIZE_SW to GND"]:::switch
     C_U12["U12 74LVC1G17<br/>ZEROIZE_SW gates ZEROIZE_HW"]:::part
     C_U3["U3 RP2040<br/>GPIO22 on ZEROIZE_SW<br/>GPIO13 drives SLOT_EN1<br/>GPIO14 drives SLOT_EN2<br/>GPIO15 drives SLOT_EN3<br/>GPIO19 drives PI_KILL<br/>GPIO20 drives SHORE_INHIBIT"]:::mcu
-    C_pulls["pulls and filters on C (what the line reads with its source gone)<br/>TX_INHIBIT_n: C24 10n to GND, R14 10k to +3V3<br/>ZEROIZE_SW: C20 10n to GND, R10 10k to +3V3"]:::pulls
+    C_pulls["pulls and filters on C (what the line reads with its source gone)<br/>TX_INHIBIT_n: C24 10n to GND, R14 2.2k 1% to +3V3, R50 10k 1% to GND<br/>ZEROIZE_SW: C20 10n to GND, R10 10k to +3V3"]:::pulls
   end
-  subgraph brdB["B compute, netlist 8b78c59754a6a0c7 at caba1876"]
+  subgraph brdB["B compute, netlist 21a1f74a3ec1ae28 at 19a2bb15a"]
     direction TB
     B_J_PANEL["B J_PANEL"]:::conn
     B_J_AB1["B J_AB1"]:::conn
     B_U112["U112 SN74LVC1G04DBVR<br/>EMCON_HW gates EMCON_ON1"]:::part
+    B_U116_U216_U316["U116, U216, U316 SN74LV1T08DBVR<br/>U116: EMCON_HW gates S1A_EN, to U103 AP64500SP-13 (+3V3_S1A) S1A_EN<br/>U216: EMCON_HW gates S2A_EN, to U203 AP64500SP-13 (+3V3_S2A) S2A_EN<br/>U316: EMCON_HW gates S3A_EN, to U303 AP64500SP-13 (+3V3_S3A) S3A_EN"]:::part
     B_U212["U212 SN74LVC1G04DBVR<br/>EMCON_HW gates EMCON_ON2"]:::part
     B_U312["U312 SN74LVC1G04DBVR<br/>EMCON_HW gates EMCON_ON3"]:::part
-    B_U501_U503_U504_U505["U501, U503, U504, U505 SN74LVC1G08DBVR<br/>U501: EMCON_HW gates LIME_EN_A, to U502 to LIME_EN to U23 TPS259631DDAR (+5V_DEV) LIME_EN<br/>U503: EMCON_HW gates RB_EN, to U24 TPS259631DDAR (+5V_DEV) RB_EN<br/>U504: EMCON_HW gates E22_EN, to U21 TPS22810DRV EN/UVLO<br/>U505: EMCON_HW gates E72_EN, to U22 TPS22810DRV EN/UVLO"]:::part
+    B_U501_U503_U504_U505_U536["U501, U503, U504, U505, U536 SN74LVC1G08DBVR<br/>U501: EMCON_HW gates LIME_EN_A, to U502 to LIME_EN to R529 (series) to LIME_UVLO: U23 TPS259631DDAR (+5V_DEV) LIME_UVLO<br/>U503: EMCON_HW gates RB_EN, to R530 (series) to RB_UVLO: U24 TPS259631DDAR (+5V_DEV) RB_UVLO<br/>U504: EMCON_HW gates E22_EN, to R531 (series) to E22_UVLO: U21 TPS22810DRV EN/UVLO<br/>U505: EMCON_HW gates E72_EN, to U22 TPS22810DRV EN/UVLO<br/>U536: EMCON_HW gates RB_IEN, to J_RB9704.3"]:::part
     B_U506["U506 74LVC1G34<br/>EMCON_HW gates EMCON_SUP, to U41 STM32H743VIT6 PC5; U51 STM32H743VIT6 PC5; U61 STM32H743VIT6 PC5"]:::part
-    B_U113_U115["U113, U115 SN74LVC2G06DBVR<br/>U113: EMCON_ON1 gates WL_nDIS1, to U30A CM5 S1 receptacle WL_nDisable<br/>U113: EMCON_ON1 gates BT_nDIS1, to U30A CM5 S1 receptacle BT_nDisable<br/>U115: EMCON_ON1 gates WIFI_W_DIS_n, to J_M2C1.56<br/>U115: EMCON_ON1 gates S1A_EN, to R164 (series) to PCIE_PWR_EN1: U30B CM5 S1 receptacle PCIE_PWR_EN; U103 AP64500SP-13 (+3V3_S1A) S1A_EN"]:::part
+    B_U113["U113 SN74LVC2G06DBVR<br/>EMCON_ON1 gates WL_nDIS1, to U30A CM5 S1 receptacle WL_nDisable<br/>EMCON_ON1 gates BT_nDIS1, to U30A CM5 S1 receptacle BT_nDisable"]:::part
+    B_U115["U115 SN74LVC2G06DBVR<br/>EMCON_ON1 gates WIFI_W_DIS_n, to J_M2C1.56"]:::part
     B_Q212["Q212 AO3400A<br/>EMCON_ON2 high pulls 5G_DCHG low"]:::part
-    B_U213_U215["U213, U215 SN74LVC2G06DBVR<br/>U213: EMCON_ON2 gates WL_nDIS2, to U31A CM5 S2 receptacle WL_nDisable<br/>U213: EMCON_ON2 gates BT_nDIS2, to U31A CM5 S2 receptacle BT_nDisable<br/>U215: EMCON_ON2 gates 5G_W_DIS_n, to J_M2C2.8<br/>U215: EMCON_ON2 gates S2A_EN, to R264 (series) to PCIE_PWR_EN2: U31B CM5 S2 receptacle PCIE_PWR_EN; U203 AP64500SP-13 (+3V3_S2A) S2A_EN"]:::part
-    B_U220["U220 SN74LVC2G06DBVR<br/>EMCON_ON2 gates 5G_PWROFF_n, to J_M2C2.6; U221 TPS3808G30DBVR (+3V3_S2A) 5G_PWROFF_n"]:::part
-    B_U313_U315["U313, U315 SN74LVC2G06DBVR<br/>U313: EMCON_ON3 gates WL_nDIS3, to U32A CM5 S3 receptacle WL_nDisable<br/>U313: EMCON_ON3 gates BT_nDIS3, to U32A CM5 S3 receptacle BT_nDisable<br/>U315: EMCON_ON3 gates WIFI2_W_DIS_n, to J_M2C3.56<br/>U315: EMCON_ON3 gates S3A_EN, to R364 (series) to PCIE_PWR_EN3: U32B CM5 S3 receptacle PCIE_PWR_EN; U303 AP64500SP-13 (+3V3_S3A) S3A_EN"]:::part
+    B_U213["U213 SN74LVC2G06DBVR<br/>EMCON_ON2 gates WL_nDIS2, to U31A CM5 S2 receptacle WL_nDisable<br/>EMCON_ON2 gates BT_nDIS2, to U31A CM5 S2 receptacle BT_nDisable"]:::part
+    B_U215_U220["U215, U220 SN74LVC2G06DBVR<br/>U215: EMCON_ON2 gates 5G_W_DIS_n, to J_M2C2.8<br/>U220: EMCON_ON2 gates 5G_PWROFF_n, to J_M2C2.6; U221 TPS3808G30DBVR (+3V3_S2A) 5G_PWROFF_n"]:::part
+    B_U313["U313 SN74LVC2G06DBVR<br/>EMCON_ON3 gates WL_nDIS3, to U32A CM5 S3 receptacle WL_nDisable<br/>EMCON_ON3 gates BT_nDIS3, to U32A CM5 S3 receptacle BT_nDisable"]:::part
+    B_U315["U315 SN74LVC2G06DBVR<br/>EMCON_ON3 gates WIFI2_W_DIS_n, to J_M2C3.56"]:::part
     B_Q103_Q203_Q303["Q103, Q203, Q303 2N7002<br/>Q103: level stage on PI_KILL: gate +3V3_CM1, source PI_KILL_CM1 to U30A CM5 S1 receptacle GPIO17<br/>Q203: level stage on PI_KILL: gate +3V3_CM2, source PI_KILL_CM2 to U31A CM5 S2 receptacle GPIO17<br/>Q303: level stage on PI_KILL: gate +3V3_CM3, source PI_KILL_CM3 to U32A CM5 S3 receptacle GPIO17"]:::part
     B_pulls["pulls and filters on B (what the line reads with its source gone)<br/>TX_INHIBIT_n: R59 100k to GND<br/>EMCON_HW: R58 4.7k 1% to GND<br/>EMCON_ON2: R296 10k to GND"]:::pulls
   end
-  subgraph brdA["A power and I/O, netlist da05dc02bc1e612f at b7f96784"]
+  subgraph brdA["A power and I/O, netlist 599ee964a9c23d6e at c11375421"]
     direction TB
     A_J_AB1["A J_AB1"]:::conn
     A_J_MEZZ1["A J_MEZZ1"]:::conn
@@ -43,13 +46,13 @@ flowchart LR
     A_J_DOCK["A J_DOCK"]:::conn
     A_pulls["pulls and filters on A (what the line reads with its source gone)<br/>TX_INHIBIT_n: R145 100k to GND<br/>EMCON_HW: R102 10k 1% to GND<br/>ZEROIZE_HW: R117 10k to +3V3<br/>SLOT_EN1: R30 100k to GND<br/>SLOT_EN2: R34 100k to GND<br/>SLOT_EN3: R38 100k to GND<br/>PI_KILL: R5 1k to GND<br/>SHORE_INHIBIT: R118 100k to GND"]:::pulls
   end
-  subgraph brdD["D VHF APRS, netlist 76700a687eb6187f at b7f96784"]
+  subgraph brdD["D VHF APRS, netlist 7a2c0ac2190b141a at 932cf9d75"]
     direction TB
     D_J_HARN1["D J_HARN1"]:::conn
     D_U12["U12 74LVC1G08<br/>TX_INHIBIT_n gates KEY, to U13 to SA_PTT_n to U2 SA868 PTT_n; U14 to PA_KEY to R52 (series) to RLY_DRV: Q2 pulls RLY_K, U15 TLV75801PDRVR PA_KEY, U20 to X_PA_KEY_B; U18 to PTT_MIR to R48 (series) to TR_APRS: J_HARN1.7; U19 to X_KEY_B to R86 (series) to X_KEY: U16 PCA9555PW IO0_3"]:::part
     D_pulls["pulls and filters on D (what the line reads with its source gone)<br/>TX_INHIBIT_n: R2 100k to GND"]:::pulls
   end
-  subgraph brdE["E dock strip, netlist d6137f50059e5cbc at b7f96784"]
+  subgraph brdE["E dock strip, netlist 56adc9746d61c4e0 at c4ad83502"]
     direction TB
     E_J_BLK["E J_BLK"]:::conn
     E_Q8["Q8 2N7002<br/>SHORE_INHIBIT high pulls HS_UVLO low, to U6 LM5069MM-2 HS_UVLO"]:::part
@@ -68,15 +71,18 @@ flowchart LR
   C_U9 -->|"EMCON_HW"| C_U13
   C_U9 -->|"EMCON_HW"| C_U14
   B_J_PANEL -->|"EMCON_HW"| B_U112
+  B_J_PANEL -->|"EMCON_HW"| B_U116_U216_U316
   B_J_PANEL -->|"EMCON_HW"| B_U212
   B_J_PANEL -->|"EMCON_HW"| B_U312
-  B_J_PANEL -->|"EMCON_HW"| B_U501_U503_U504_U505
+  B_J_PANEL -->|"EMCON_HW"| B_U501_U503_U504_U505_U536
   B_J_PANEL -->|"EMCON_HW"| B_U506
-  B_U112 -->|"EMCON_ON1"| B_U113_U115
+  B_U112 -->|"EMCON_ON1"| B_U113
+  B_U112 -->|"EMCON_ON1"| B_U115
   B_U212 -->|"EMCON_ON2"| B_Q212
-  B_U212 -->|"EMCON_ON2"| B_U213_U215
-  B_U212 -->|"EMCON_ON2"| B_U220
-  B_U312 -->|"EMCON_ON3"| B_U313_U315
+  B_U212 -->|"EMCON_ON2"| B_U213
+  B_U212 -->|"EMCON_ON2"| B_U215_U220
+  B_U312 -->|"EMCON_ON3"| B_U313
+  B_U312 -->|"EMCON_ON3"| B_U315
   C_SW_ZERO -->|"ZEROIZE_SW"| C_U12
   C_SW_ZERO -.->|"ZEROIZE_SW"| C_U3
   C_U12 -->|"ZEROIZE_HW"| C_J_PANEL
@@ -114,23 +120,26 @@ flowchart LR
   linkStyle 17 stroke:#c62828,stroke-width:2px
   linkStyle 18 stroke:#c62828,stroke-width:2px
   linkStyle 19 stroke:#c62828,stroke-width:2px
-  linkStyle 20 stroke:#6a1b9a,stroke-width:2px
-  linkStyle 21 stroke:#6a1b9a,stroke-width:2px,stroke-dasharray:4 3
-  linkStyle 22 stroke:#6a1b9a,stroke-width:2px
-  linkStyle 23 stroke:#212121,stroke-width:2px
-  linkStyle 24 stroke:#1565c0,stroke-width:2px
-  linkStyle 25 stroke:#1565c0,stroke-width:2px
-  linkStyle 26 stroke:#1565c0,stroke-width:2px
-  linkStyle 27 stroke:#e65100,stroke-width:2px,stroke-dasharray:4 3
-  linkStyle 28 stroke:#e65100,stroke-width:2px
-  linkStyle 29 stroke:#2e7d32,stroke-width:2px
-  linkStyle 30 stroke:#2e7d32,stroke-width:2px
-  linkStyle 31 stroke:#2e7d32,stroke-width:2px,stroke-dasharray:4 3
-  linkStyle 32 stroke:#455a64,stroke-width:3px
-  linkStyle 33 stroke:#455a64,stroke-width:3px
-  linkStyle 34 stroke:#455a64,stroke-width:3px
+  linkStyle 20 stroke:#c62828,stroke-width:2px
+  linkStyle 21 stroke:#c62828,stroke-width:2px
+  linkStyle 22 stroke:#c62828,stroke-width:2px
+  linkStyle 23 stroke:#6a1b9a,stroke-width:2px
+  linkStyle 24 stroke:#6a1b9a,stroke-width:2px,stroke-dasharray:4 3
+  linkStyle 25 stroke:#6a1b9a,stroke-width:2px
+  linkStyle 26 stroke:#212121,stroke-width:2px
+  linkStyle 27 stroke:#1565c0,stroke-width:2px
+  linkStyle 28 stroke:#1565c0,stroke-width:2px
+  linkStyle 29 stroke:#1565c0,stroke-width:2px
+  linkStyle 30 stroke:#e65100,stroke-width:2px,stroke-dasharray:4 3
+  linkStyle 31 stroke:#e65100,stroke-width:2px
+  linkStyle 32 stroke:#2e7d32,stroke-width:2px
+  linkStyle 33 stroke:#2e7d32,stroke-width:2px
+  linkStyle 34 stroke:#2e7d32,stroke-width:2px,stroke-dasharray:4 3
   linkStyle 35 stroke:#455a64,stroke-width:3px
   linkStyle 36 stroke:#455a64,stroke-width:3px
+  linkStyle 37 stroke:#455a64,stroke-width:3px
+  linkStyle 38 stroke:#455a64,stroke-width:3px
+  linkStyle 39 stroke:#455a64,stroke-width:3px
   classDef conn fill:#eceff1,stroke:#455a64,color:#000
   classDef part fill:#ffffff,stroke:#37474f,color:#000
   classDef switch fill:#fff3e0,stroke:#e65100,color:#000

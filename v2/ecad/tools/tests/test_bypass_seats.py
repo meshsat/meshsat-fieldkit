@@ -57,7 +57,10 @@ def _fixture(tmp, fine):
     part("C1", 30.0, 20.0, [(-0.5, 0.0), (0.5, 0.0)])
     path = os.path.join(tmp, "fix.kicad_pcb"); b.Save(path)
     os.makedirs(os.path.join(tmp, "out"), exist_ok=True)
-    json.dump({"bypass": [{"cap": "C1", "part": "U1", "pin": "1", "net": "VDD"}]},
+    # the entry carries its class since 29 September 2026 (decision 42, T2): the report's limit is the class's, and
+    # an entry with none is refused
+    json.dump({"bypass": [{"cap": "C1", "part": "U1", "pin": "1", "net": "VDD", "class": "D",
+                           "basis": "the fixture's maker: a capacitor at the supply pin"}]},
               open(os.path.join(tmp, "out", "fix-intent.json"), "w"))
     return path
 

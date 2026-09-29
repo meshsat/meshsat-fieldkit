@@ -18,11 +18,11 @@ below is its own binding's).
 ```bound
 sheet      P
 board      p
-read       2026-09-27 at 760d7f41
+read       2026-09-29 at d41f85ec
 current    section 2: the power table, and the figures the text under it quotes from it
 older      sections 1 and 3 to 10: read at e3aedb25, with the H2 line's changes marked at ef144760
-netlist    v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net sha256/16 760ac6f74d62d194 changed 932cf9d7
-intent     v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json sha256/16 12f92bd3ce7a8264 changed 932cf9d7
+netlist    v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net sha256/16 20c7b0795593d761 changed d41f85ec
+intent     v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json sha256/16 657f4c42db51e4da changed d41f85ec
 board_file v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_pcb sha256/16 d79865e7b1aceb95 changed 6d1b5a15
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC04162H-7628 outer 0.0700 mm inner 0.0152 mm

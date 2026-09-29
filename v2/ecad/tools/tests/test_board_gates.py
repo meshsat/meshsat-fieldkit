@@ -735,7 +735,11 @@ b.BuildListOfNets(); keep = [b.FindNet("+3V3"), b.FindNet("GND")]; code = {n: b.
 part(b, "U1", 10.0, 10.0, ["+3V3", "GND"], code, "the part")
 part(b, "C1", 20.0 if FAR else 11.5, 10.0, ["+3V3", "GND"], code, "100n")
 d = tempfile.mkdtemp(prefix="intent-fixture-"); os.makedirs(os.path.join(d, "out")); path = os.path.join(d, "fixture.kicad_pcb"); b.Save(path)
-json.dump({"bypass": [{"cap": "C1", "part": "U1", "pin": "1", "net": "+3V3"}], "rails": {}, "nodes": {}, "pair_classes": {}},
+# the entry carries its class since 27 September 2026 (decision 42, T2): the limit is the class's, and an entry with
+# none is refused (tests/test_decoupling_board.py holds that); class D keeps this pair's 3.0 mm
+json.dump({"bypass": [{"cap": "C1", "part": "U1", "pin": "1", "net": "+3V3", "class": "D",
+                       "basis": "the fixture's maker: a 100 nF at the supply pin, as close as possible"}],
+           "rails": {}, "nodes": {}, "pair_classes": {}},
           open(os.path.join(d, "out", "fixture-intent.json"), "w"))
 r = subprocess.run([sys.executable, os.path.join(TOOLS, "intent_checks.py"), path], cwd=d, capture_output=True, text=True)
 v = json.load(open(os.path.join(d, "out", "intent_decoupling.verdict.json")))

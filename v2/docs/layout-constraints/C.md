@@ -17,11 +17,11 @@ current on this candidate; a count of reasons in a paragraph below is its own bi
 ```bound
 sheet      C
 board      c
-read       2026-09-27 at 760d7f41
+read       2026-09-29 at d41f85ec
 current    section 2: the power table, and the figures the text under it quotes from it
 older      sections 1 and 3 to 10: read at e3aedb25, with the H2 line's changes marked at ef144760
-netlist    v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256/16 3fddbb3edcd4248a changed e28f91a6
-intent     v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json sha256/16 270ebb4ccf1d0e8e changed e28f91a6
+netlist    v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256/16 fef4df255c00f4db changed d41f85ec
+intent     v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json sha256/16 03af8453948d391c changed d41f85ec
 board_file v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb sha256/16 2a273803757c68fb changed 9527a3d2
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm

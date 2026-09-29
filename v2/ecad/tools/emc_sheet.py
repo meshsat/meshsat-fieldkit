@@ -35,7 +35,7 @@ EMC = os.path.join(HERE, "pcb_emc.yaml")
 # Part numbers that switch current in this design. A part here and not in a board's sheet is a defect; a part
 # NOT here that switches is a gap in this list, so it is stated in one place and tested against the netlist.
 SWITCHERS = ("AP64500", "AP63203", "AP63205", "AP63200", "TPS62933", "LM5176", "LT8705", "TPS55288",
-             "TPS56637", "LMR33640", "TPS23861")
+             "TPS56637", "LMR33640", "TPS23861", "BQ25731")
 
 
 def netlist_for(stem, ecad=None):

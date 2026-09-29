@@ -1,0 +1,114 @@
+{
+ "what": "the six schematic generators under this branch's intent.py; intents compared with the committed ones",
+ "rows": [
+  {
+   "board": "a",
+   "exit": 0,
+   "intent_written": true,
+   "refused": [],
+   "noted": [
+    "intent: bypass C29: class R without `same_side: true` (R3: a converter's power stage is never on the other side) (decision 42, T5; noted, not refused)",
+    "intent: bypass C30: class R without `same_side: true` (R3: a converter's power stage is never on the other side) (decision 42, T5; noted, not refused)",
+    "intent: bypass C41: class R without `same_side: true` (R3: a converter's power stage is never on the other side) (decision 42, T5; noted, not refused)",
+    "intent: bypass C42: class R without `same_side: true` (R3: a converter's power stage is never on the other side) (decision 42, T5; noted, not refused)",
+    "intent: bypass C159: class R without `same_side: true` (R3: a converter's power stage is never on the other side) (decision 42, T5; noted, not refused)",
+    "intent: bypass C160: class R without `same_side: true` (R3: a converter's power stage is never on the other side) (decision 42, T5; noted, not refused)",
+    "intent: bypass C54: class R without `same_side: true` (R3: a converter's power stage is never on the other side) (decision 42, T5; noted, not refused)",
+    "intent: bypass C223: class R without `same_side: true` (R3: a converter's power stage is never on the other side) (decision 42, T5; noted, not refused)"
+   ],
+   "tail": [
+    "intent: bypass C160: class R without `same_side: true` (R3: a converter's power stage is never on the other side) (decision 42, T5; noted, not refused)",
+    "intent: bypass C54: class R without `same_side: true` (R3: a converter's power stage is never on the other side) (decision 42, T5; noted, not refused)",
+    "intent: bypass C223: class R without `same_side: true` (R3: a converter's power stage is never on the other side) (decision 42, T5; noted, not refused)",
+    "intent: /root/d6dec/t5/v2/ecad/gencheck-a/out/pcb-a-power-intent.json (56 bypass, 34 rails, 89 nodes, 5 pair classes)"
+   ],
+   "same_as_committed": true
+  },
+  {
+   "board": "b",
+   "exit": 0,
+   "intent_written": true,
+   "refused": [],
+   "noted": [],
+   "tail": [
+    "layout: 43 A3 pages on a 6 x 8 sheet -> paper \"User\" 2514.60 2377.44",
+    "wrote pcb-b-compute.kicad_sch parts: 1328 lib symbols: 162",
+    "nets: 973 single-pin nets (should be empty or intentional): []",
+    "intent: /root/d6dec/t5/v2/ecad/gencheck-b/out/pcb-b-compute-intent.json (281 bypass, 58 rails, 154 nodes, 5 pair classes)"
+   ],
+   "same_as_committed": true
+  },
+  {
+   "board": "c",
+   "exit": 0,
+   "intent_written": true,
+   "refused": [],
+   "noted": [],
+   "tail": [
+    "layout: 5 A3 pages on a 2 x 3 sheet -> paper \"User\" 838.20 891.54",
+    "wrote pcb-c-display.kicad_sch parts: 224 lib symbols: 33",
+    "nets: 140 single-pin nets (should be empty or intentional): []",
+    "intent: /root/d6dec/t5/v2/ecad/gencheck-c/out/pcb-c-display-intent.json (24 bypass, 5 rails, 58 nodes, 5 pair classes)"
+   ],
+   "same_as_committed": true
+  },
+  {
+   "board": "d",
+   "exit": 0,
+   "intent_written": true,
+   "refused": [],
+   "noted": [
+    "intent: bypass C8: class L without `esr_max`: the maker's ESR bound, or 'not stated by the maker' (decision 42, T5; noted, not refused)",
+    "intent: bypass C9: class L without `esr_max`: the maker's ESR bound, or 'not stated by the maker' (decision 42, T5; noted, not refused)",
+    "intent: bypass C65: class L without `esr_max`: the maker's ESR bound, or 'not stated by the maker' (decision 42, T5; noted, not refused)",
+    "intent: bypass C62: class L without `esr_max`: the maker's ESR bound, or 'not stated by the maker' (decision 42, T5; noted, not refused)",
+    "intent: bypass C19: class L without `value_floor`: the maker's stability floor, or 'not stated by the maker' with the value its application circuit draws (decision 42, T5; noted, not refused)",
+    "intent: bypass C19: class L without `esr_max`: the maker's ESR bound, or 'not stated by the maker' (decision 42, T5; noted, not refused)",
+    "intent: bypass C20: class L without `value_floor`: the maker's stability floor, or 'not stated by the maker' with the value its application circuit draws (decision 42, T5; noted, not refused)",
+    "intent: bypass C20: class L without `esr_max`: the maker's ESR bound, or 'not stated by the maker' (decision 42, T5; noted, not refused)",
+    "intent: bypass C21: class L without `value_floor`: the maker's stability floor, or 'not stated by the maker' with the value its application circuit draws (decision 42, T5; noted, not refused)",
+    "intent: bypass C21: class L without `esr_max`: the maker's ESR bound, or 'not stated by the maker' (decision 42, T5; noted, not refused)",
+    "intent: bypass C22: class L without `value_floor`: the maker's stability floor, or 'not stated by the maker' with the value its application circuit draws (decision 42, T5; noted, not refused)",
+    "intent: bypass C22: class L without `esr_max`: the maker's ESR bound, or 'not stated by the maker' (decision 42, T5; noted, not refused)",
+    "intent: bypass C23: class L without `value_floor`: the maker's stability floor, or 'not stated by the maker' with the value its application circuit draws (decision 42, T5; noted, not refused)",
+    "intent: bypass C23: class L without `esr_max`: the maker's ESR bound, or 'not stated by the maker' (decision 42, T5; noted, not refused)",
+    "intent: bypass C31: class L without `esr_max`: the maker's ESR bound, or 'not stated by the maker' (decision 42, T5; noted, not refused)"
+   ],
+   "tail": [
+    "intent: bypass C23: class L without `value_floor`: the maker's stability floor, or 'not stated by the maker' with the value its application circuit draws (decision 42, T5; noted, not refused)",
+    "intent: bypass C23: class L without `esr_max`: the maker's ESR bound, or 'not stated by the maker' (decision 42, T5; noted, not refused)",
+    "intent: bypass C31: class L without `esr_max`: the maker's ESR bound, or 'not stated by the maker' (decision 42, T5; noted, not refused)",
+    "intent: /root/d6dec/t5/v2/ecad/gencheck-d/out/pcb-d-aprs-intent.json (31 bypass, 6 rails, 29 nodes, 5 pair classes)"
+   ],
+   "same_as_committed": true
+  },
+  {
+   "board": "e",
+   "exit": 0,
+   "intent_written": true,
+   "refused": [],
+   "noted": [],
+   "tail": [
+    "layout: 4 A3 pages on a 2 x 2 sheet -> paper \"User\" 838.20 594.36",
+    "wrote pcb-e1-dock.kicad_sch parts: 206 lib symbols: 43",
+    "nets: 103 single-pin nets (should be empty or intentional): []",
+    "intent: /root/d6dec/t5/v2/ecad/gencheck-e/out/pcb-e1-dock-intent.json (29 bypass, 15 rails, 17 nodes, 5 pair classes)"
+   ],
+   "same_as_committed": true
+  },
+  {
+   "board": "p",
+   "exit": 0,
+   "intent_written": true,
+   "refused": [],
+   "noted": [],
+   "tail": [
+    "layout: 2 A3 pages on a 2 x 1 sheet -> paper \"User\" 838.20 297.18",
+    "wrote pcb-p-pack.kicad_sch parts: 95 lib symbols: 21",
+    "nets: 51 single-pin nets (should be empty or intentional): []",
+    "intent: /root/d6dec/t5/v2/ecad/gencheck-p/out/pcb-p-pack-intent.json (4 bypass, 10 rails, 8 nodes, 5 pair classes)"
+   ],
+   "same_as_committed": true
+  }
+ ]
+}

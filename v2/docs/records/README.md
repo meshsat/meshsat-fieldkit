@@ -81,6 +81,9 @@ Worktrees:
 | `s99a/` | stream s99a (28 and 29 September 2026): S-99's corrected D8 split applied to board A's generator (decision 55): U41's divider arithmetic, the parsed comparison, the codec-floor and layout open items, the registry draft and the tests |
 | `od01/` | the OD-01 case package for the owner (28 September 2026): the checkout list, the machining request, the operator's test brief, and the two AI checks under `checks/`; purchasing stays with the owner |
 | `int10/` | integration set 9 (29 September 2026, branch `fnd/int10`): the regeneration of board A with S-99's D8 split, the pins moved on a parsed proof, sheet A re-bound, the judged rebind of the records bound to board A's netlist and generator, stream s99reg's scripts for S-99's registry texts, decision 55, the interface rows and the pages (with its dry run and the erratum to the decision 31 review), the records index, the page rebind, and the box records |
+| `d6dec/` | stream d6dec (28 and 29 September 2026): decision 42's decoupling tools T1 to T6, T9 and T10 (the class rules, the fan selection, the escape cost), DEC-001's registry apply script (T7), the basis check of every declaration's quotation against the held PDFs (BASIS.md), the inventory, the box records and the log |
+| `diag/` | the rebuild of the eleven diagrams after sets 6 to 9 (29 September 2026, branch `fnd/diag`): the readback's output (every SVG readable and labelled, every PDF at its drawing's size) |
+| `int11/` | integration set 10 (29 September 2026, branch `fnd/int11`): streams d6dec, energy (section 9) and diag; DEC-001's registry text; set 9's carried items M2, M10 and M11 (S-117); the regeneration of all six schematics after the decoupling tools entered every generator's import closure, with the pins, records and sheets re-bound on proofs of identity; two re-takes; the page rebind; the closure record |
 
 ## Filed files
 

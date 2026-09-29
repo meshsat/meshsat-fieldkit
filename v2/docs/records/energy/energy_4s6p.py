@@ -40,7 +40,9 @@ PINS = {
     "v2/docs/records/energy/energy_inputs.yaml": "64dd014bee56d855023d43caeaf848cfd6dc54f65b58e341d6696851460f7470",
     "v2/ecad/tools/gen_sch_p.py": "740817ada5c8e14af8c8e001b775e09cbae94d6a03ad462ee2e1c1755bc935a3",
     "v2/ecad/tools/pcb_pack_protection.yaml": "ab1dbc3f3f69aa4687a4fa9745c0cbdc96d0521146dc5d3f84698656e33c484b",
-    "v2/ecad/tools/gen_sch_a.py": "9684e7a9606aede6fdd41972f12530365f9b883e94e0174b2fddb621199c4e55",
+    # re-pinned 29 September 2026 after sets 8 and 9 changed the file: the three calls this script parses (the VHEAT and
+    # VHEAT_IN rails and the U22 efuse) were compared as parsed trees against the pinned version (c4ad8350) and are identical
+    "v2/ecad/tools/gen_sch_a.py": "eb2e347e4d371e0f94718a97e60188274ed9c89d7cded6e084bfcbb81488da3d",
     "v2/ecad/tools/panel1450.py": "3bdb88df9826024484326e8e7d67c74789ae20f610ce3e4ed69988bfc9f0340f",
     "v2/docs/records/adj/A06-pack-geometry/drafts/pack_fit.py": "a2a050dc24c461f207bb0485ef98851f238641f449f30151605042970bccf02c",
 }
@@ -60,7 +62,7 @@ TYPED = {
     "drop_zone": ((-165.0, 98.0), "CASE-MARGINS.md 3.4 (West): the drop zone, X -165 to the west wall at |Y| up to 98 from the floor to Z 54, is the west jumpers'"),
     "key_peak_a": (18.0, "PWR-F12: 18 A for 60 s for every PA key-down (pcb_pack_protection.yaml declared_peak_a)"),
     "heater_w": (7.5, "RS PRO 245-556: 7.5 W at 12 V, 50 x 150 mm (v2/vendor/battery/heater/rs-pro-245-556-heater-mat-sheet.pdf)"),
-    "tps2596_rilm": ((903.0, 0.0112), "gen_sch_a.py at efuse(): TPS2596 equation 7, RILM = 903 / (ILIM + 0.0112) ohm"),
+    "tps2596_rilm": ((903.0, 0.0112), "TPS2596 equation 7 (SLVSET8A printed page 28): RILM = 903 / (ILIM - 0.0112) ohm, so ILIM = 903 / RILM + 0.0112 A; corrected 29 September 2026 (S-99 found the sign reversed in gen_sch_a.py and this constant had copied it)"),
 }
 
 
@@ -515,7 +517,7 @@ def run(root):
     vhin_a = ast.literal_eval(hvin[0].args[2])
     ilim_txt = ast.literal_eval(u22[0].args[6])
     r_ilm = float(ilim_txt.split("R")[0])
-    ilim = rilm_a / r_ilm - rilm_b
+    ilim = rilm_a / r_ilm + rilm_b
     o("4c. The heater branch on board A (gen_sch_a.py, parsed): VHEAT declared %.2f A at 12 V (efficiency %.2f), VHEAT_IN %.2f A at 14.4 V," % (vh_a, eff, vhin_a))
     o("   U22's ILM resistor %s gives %.2f A (TPS2596 equation 7; the generator's note rounds it to 1.0 A). Two mats (one under each block, %.1f W each at 12 V):" % (ilim_txt.split(" (")[0], ilim, T["heater_w"]))
     rows = []
@@ -525,7 +527,7 @@ def run(root):
             i_in = p_out / eff / v
             rows.append(["%d" % n, "%.1f" % p_out, "%.2f" % (p_out / 12.0), "%.1f" % v, "%.2f" % i_in, "yes" if i_in <= ilim else "NO"])
     o.table(["mats", "W at 12 V", "VHEAT A", "pack V", "VHEAT_IN A", "under U22's limit"], rows)
-    r_new = rilm_a / (2.0 + rilm_b)
+    r_new = rilm_a / (2.0 - rilm_b)
     o("   A 2.0 A limit needs RILM %.0f ohm (the 453R the same comment lists). At full duty (the mats' rating, an upper bound; the" % r_new)
     o("   duty is set by the loss, which no held figure gives) the heater at the pack is %.1f W with one mat and %.1f W with two:" % (T["heater_w"] / eff, 2 * T["heater_w"] / eff))
     rows = []

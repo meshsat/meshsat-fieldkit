@@ -25,16 +25,16 @@
   "board": "d",
   "intent": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
-   "sha256_16": "8d9f3b2256521b0d"
+   "sha256_16": "19fa94a2bce5dd52"
   },
   "netlist": {
    "content16": "be4194ed867c8406",
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "sha256_16": "7a2c0ac2190b141a"
+   "sha256_16": "a2d48972d171aad1"
   },
   "spec": {
    "path": "tools/pcb_interfaces.yaml",
-   "sha256_16": "363af4715553e42b"
+   "sha256_16": "9ec50ccfae3b70a0"
   }
  },
  "missing_input": null,
@@ -44,7 +44,7 @@
   "rule_fingerprints": {
    "INT-001": "6c054dd67edd4099"
   },
-  "rule_set_fingerprint": "635ff031f210f48c"
+  "rule_set_fingerprint": "a9b1e7f7412f9c0c"
  },
  "rules": [
   "INT-001"
@@ -54,12 +54,12 @@
  },
  "tool": "interfaces_d",
  "tools": {
-  "git_head": "cef7cb77c420",
-  "tools_tree_sha": "8639c5ed4c65deea"
+  "git_head": "958a7de7a15f",
+  "tools_tree_sha": "7a55e9ef29ec7734"
  },
- "ts": "2026-09-28T22:46:14Z",
+ "ts": "2026-09-29T00:17:00Z",
  "verdict": "PASS",
- "version": "cef7cb77c420",
+ "version": "958a7de7a15f",
  "writer": {
   "file": "interfaces.py",
   "sha16": "7b7e4f3a0241cf35"

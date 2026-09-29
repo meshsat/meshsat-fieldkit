@@ -3513,6 +3513,20 @@ open_items:
       the exciter keys. Figures: v2/docs/records/s99a/codec_floor.out (codec_floor.py). Closed by the owners'
       declarations and those readings giving the codec at least 4.35 V at the declared peak, or by a document or a board
       D declaration that bounds the peak the codec must operate through.
+  - id: S-117
+    class: SESSION
+    status: OPEN
+    title: >-
+      (set 10's AI check, blocking item B1; round 4's finding O-24, records/r4a/r4-open-items.md) Board A's charger U3
+      (BQ25731) reads its switching frequency and its inductance from the resistor on its IADPT pin before the converter
+      starts (TI SLUSE66A 9.3.11 and Table 9-4, printed page 27: 169 kOhm, 3 percent or better, for 3.3 uH at 800 kHz;
+      191 or 187 kOhm for 4.7 uH at 400 kHz). Board A's IADPT net carries only U3 pin 8 and TP19: no resistor, and not
+      the 100 pF capacitor the pin table asks for, so the frequency and inductance the drawn circuit starts with are not
+      established. Its COMP1 and COMP2 networks are not those of the datasheet's compensation table for either
+      frequency, and PWM_FREQ's power-on default (1b, 400 kHz) is the frequency TI pairs with 4.7 uH, where board A fits
+      3.3 uH (L2). Closes when board A's writer draws the IADPT resistor and capacitor for the chosen inductor and
+      frequency and the compensation networks from the datasheet's table, the firmware contract declares PWM_FREQ to
+      match, and the EMC sheet's U3 row carries that frequency.
 closed_items:
   - id: S-89
     closed_by: commit aaed6daa4434f2ae94331cdafb3134056fb1eb97
@@ -4380,9 +4394,15 @@ records:
           tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
           byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
           rebound (apply_rebind_netlists_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 21a1f74a3ec1ae28 and the tree's at 97823ef1171a61ce were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@97823ef1171a61ce"
       - "v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md@97b1f63aa6ea11f1"
     release_effect: MUST_JUSTIFY
     source:
@@ -4915,9 +4935,15 @@ records:
           tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
           byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
           rebound (apply_rebind_netlists_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 21a1f74a3ec1ae28 and the tree's at 97823ef1171a61ce were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@97823ef1171a61ce"
     release_effect: BLOCKER
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md:87-93"
@@ -5029,9 +5055,15 @@ records:
           tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
           byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
           rebound (apply_rebind_netlists_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 21a1f74a3ec1ae28 and the tree's at 97823ef1171a61ce were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@97823ef1171a61ce"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 5.2", "v2/docs/feasibility/FAILOVER-FABRIC.md section 10"]
     source_check: VERIFIED
@@ -5483,9 +5515,15 @@ records:
           tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
           byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
           rebound (apply_rebind_netlists_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 21a1f74a3ec1ae28 and the tree's at 97823ef1171a61ce were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@97823ef1171a61ce"
       - "v2/docs/parts/STM32H743-COMPATIBILITY.md@67335ea42747e22f"
       - "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf@f6e620179006c8c4"
       - "v2/vendor/st/st-rm0433-rev8.pdf@9ba54135736a47a3"
@@ -6160,9 +6198,15 @@ records:
           latency); every other line is byte-identical, among them sections 0, 0a, 1, 3, 4 with 4.2 to 4.18, 4a, the
           rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; section 0's TX-lamp sentence and bench E-02, on which this reading
           rests, are byte-identical, so it stands FAIL on the file at 367c52bcba7eb2a1
+      - >-
+          v2/ecad/pcb-c-display-c8/out/pcb-c-display.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 3fddbb3edcd4248a and the tree's at fef4df255c00f4db were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
-      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
+      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@fef4df255c00f4db"
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/PANEL.md:135", "v2/docs/PANEL.md:189"]
     source_check: VERIFIED
@@ -6397,7 +6441,7 @@ records:
       decisions: [31, 34]
     rule_coverage: PARTIAL
     rulings: [D-16]
-    waits_on: [S-106, S-107, S-111]
+    waits_on: [S-106, S-107, S-111, S-117]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
@@ -6961,10 +7005,22 @@ records:
           H2 differences; both are the same parts with the same values, and only the generator's printed limit for R209
           moved from 0.18 to 0.20 A by TPS2596 equation 7's true sign (SLVSET8A printed page 28); rebound to the new
           files (netlist 599ee964a9c23d6e). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          599ee964a9c23d6e and the tree's at 30ad87746d1801ca were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net re-read at integration set 10 (29 September 2026): regenerated on the
+          KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          7a2c0ac2190b141a and the tree's at a2d48972d171aad1 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_a.py@eb2e347e4d371e0f"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@599ee964a9c23d6e"
-      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
+      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
     release_effect: BLOCKER
     source: ["owner ruling D-11", "v2/docs/MESHSAT-709-geometry-appendix.md:2932", "v2/ecad/tools/gen_sch_a.py:1177-1190, 1237-1245"]
     source_check: VERIFIED
@@ -7798,9 +7854,15 @@ records:
           differences; both are the same parts with the same values, and only the generator's printed limit for R209
           moved from 0.18 to 0.20 A by TPS2596 equation 7's true sign (SLVSET8A printed page 28); rebound to the new
           files (netlist 599ee964a9c23d6e). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          599ee964a9c23d6e and the tree's at 30ad87746d1801ca were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_a.py@eb2e347e4d371e0f"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@599ee964a9c23d6e"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
       - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
     release_effect: MUST_JUSTIFY
     source: ["owner ruling D-17", "v2/ecad/tools/gen_sch_a.py:1104-1114", "v2/ecad/tools/pcb_decisions.yaml:256-429 (decision 31)"]
@@ -8001,9 +8063,15 @@ records:
           EXPECTED CHANGES'), it differs only in Q11 and R58 added, U10 pin 30 moved from no connection to the new net
           HOT_R1_G, D7 and D8 carrying their order code C51897884, and J_BLK's value; U17, R57, C57, C58, SDA1 and SCL1
           are unchanged, so it stands PASS on the file at 56adc9746d61c4e0
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          56adc9746d61c4e0 and the tree's at 2ed95a0e8069ebf8 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
     release_effect: ADVISORY
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2896 (32.54)"
@@ -8255,9 +8323,15 @@ records:
           tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
           byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
           rebound (apply_rebind_netlists_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 21a1f74a3ec1ae28 and the tree's at 97823ef1171a61ce were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@97823ef1171a61ce"
     release_effect: BLOCKER
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)"
@@ -8461,9 +8535,15 @@ records:
           tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
           byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
           rebound (apply_rebind_netlists_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 21a1f74a3ec1ae28 and the tree's at 97823ef1171a61ce were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@97823ef1171a61ce"
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
     release_effect: BLOCKER
     source:
@@ -8603,9 +8683,15 @@ records:
           tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
           byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
           rebound (apply_rebind_netlists_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 21a1f74a3ec1ae28 and the tree's at 97823ef1171a61ce were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@97823ef1171a61ce"
     release_effect: ADVISORY
     source:
       - "v2/ecad/tools/gen_sch_b.py:820-866"
@@ -8834,9 +8920,15 @@ records:
           tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
           byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
           rebound (apply_rebind_netlists_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 21a1f74a3ec1ae28 and the tree's at 97823ef1171a61ce were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@97823ef1171a61ce"
     release_effect: BLOCKER
     source:
       - "v2/ecad/tools/gen_sch_b.py:813-880"
@@ -9038,9 +9130,15 @@ records:
           are the same parts with the same values, and only the generator's printed limit for R209 moved from 0.18 to
           0.20 A by TPS2596 equation 7's true sign (SLVSET8A printed page 28); rebound to the new files (netlist
           599ee964a9c23d6e). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          599ee964a9c23d6e and the tree's at 30ad87746d1801ca were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/docs/PANEL.md@4647782f5aca7c13"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@599ee964a9c23d6e"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
     release_effect: ADVISORY
     source:
       - "v2/docs/PANEL.md section 7"
@@ -9570,11 +9668,44 @@ records:
           599ee964a9c23d6e); board C's inhibit_chain_c reads PASS of 6 on netlist 3fddbb3edcd4248a. This entry rebinds
           the page and re-decides nothing: the result stands as the predicate of this integration's entry set it, bound
           to the file at f1050e398b6bc2e0.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          599ee964a9c23d6e and the tree's at 30ad87746d1801ca were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net re-read at integration set 10 (29 September 2026): regenerated on the
+          KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          7a2c0ac2190b141a and the tree's at a2d48972d171aad1 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the FINAL render of integration set 10 of 29 September 2026 (branch
+          fnd/int11: stream d6dec's decoupling tools, T1 to T6, T9 and T10, with DEC-001's registry text and coverage
+          row (T7) and the pages (T8); the energy record's section 9, the rebuilt diagrams and set 9's carried items M2,
+          M10 and M11 (board A's charger declared as a switching source, S-117 opened); one consolidated re-take of
+          every schematic-phase reading after the tools changed), rules_status three times and rules_render on the tree
+          with the re-take's evidence installed (the file at f1050e398b6bc2e0 before). Of the page's 15 sections 7
+          differ from that file (The candidate each board is judged against; Holds; Readings whose class changed when
+          the tool identity became the code bundle; Rules with a PASS on the current candidate; Why the rest awaits
+          revalidation; Desk reviews, which are not physical tests; Historical aggregate, mixed revisions) and 8 are
+          byte-identical (the head (headline and introduction); Layout entry, per board: the exact remaining blockers;
+          Held at later stages: fabrication release and prototype verification; Feasibility blockers; Evidence classes,
+          per board; Reused under a recorded rationale; Writers whose configuration is not declared yet; How this page
+          is computed); layout-entry reasons 34 to 34 (A 6 to 6, B 8 to 8, C 4 to 4, D 6 to 6, E 3 to 3, P 5 to 5, E5 2
+          to 2). The rows this record rests on, re-read on the new page: RF-002 reads INCONCLUSIVE on CURRENT_CANDIDATE
+          (BOUND) evidence on board D (inhibit_chain_d 7 pass, 0 failed, 1 undecided of 8 on netlist a2d48972d171aad1)
+          and INCONCLUSIVE on board A (inhibit_chain_a 7 pass, 0 failed, 2 undecided of 9 on netlist 30ad87746d1801ca);
+          SCH-004 reads PASS on both (safe_lines_d on a2d48972d171aad1, safe_lines_a on 30ad87746d1801ca); board C's
+          inhibit_chain_c reads PASS of 6 on netlist fef4df255c00f4db. This entry rebinds the page and re-decides
+          nothing: the result stands as the predicate of this integration's entry set it, bound to the file at
+          545ec33794283272.
     evidence_bound_to:
-      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@599ee964a9c23d6e"
+      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
-      - "v2/docs/CURRENT-EVIDENCE.md@f1050e398b6bc2e0"
+      - "v2/docs/CURRENT-EVIDENCE.md@545ec33794283272"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
     source_check: VERIFIED
@@ -9741,9 +9872,15 @@ records:
           rest of 4b, 5, 5a, 6, 7, 8 and 9 to 9d; section 7's common-element row (board C's lamp D22, U14 and Q7, its
           plate light guide still owed), which this reading cites, is byte-identical, so it stands FAIL on the file at
           367c52bcba7eb2a1
+      - >-
+          v2/ecad/pcb-c-display-c8/out/pcb-c-display.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 3fddbb3edcd4248a and the tree's at fef4df255c00f4db were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
-      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
+      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@fef4df255c00f4db"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7 (the common element)", "session choice SC-11"]
     source_check: VERIFIED
@@ -9988,9 +10125,15 @@ records:
           tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
           byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
           rebound (apply_rebind_netlists_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 21a1f74a3ec1ae28 and the tree's at 97823ef1171a61ce were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@97823ef1171a61ce"
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
@@ -10406,9 +10549,15 @@ records:
           HOT_R1_G, D7 and D8 carrying their order code C51897884, and J_BLK's value; J_TAMP, R52, R53, C52,
           TAMPER_LEAD, TAMPER_IO and U12's CELL_F pins are unchanged, and no board routes the lead to ZEROIZE_HW or the
           panel controller, so it stands PASS on the file at 56adc9746d61c4e0
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          56adc9746d61c4e0 and the tree's at 2ed95a0e8069ebf8 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
     release_effect: MUST_JUSTIFY
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2790 (item 6)"
@@ -11137,10 +11286,38 @@ records:
           -10.0 to 60.0). The review D-09 asks for before the pack board is released is still not engaged, and a
           re-render changes nothing of that; this entry rebinds the page and re-decides nothing, so the record stays
           INCONCLUSIVE, bound to the file at f1050e398b6bc2e0.
+      - >-
+          v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net re-read at integration set 10 (29 September 2026): regenerated on the
+          KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          760ac6f74d62d194 and the tree's at 20c7b0795593d761 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the FINAL render of integration set 10 of 29 September 2026 (branch
+          fnd/int11: stream d6dec's decoupling tools, T1 to T6, T9 and T10, with DEC-001's registry text and coverage
+          row (T7) and the pages (T8); the energy record's section 9, the rebuilt diagrams and set 9's carried items M2,
+          M10 and M11 (board A's charger declared as a switching source, S-117 opened); one consolidated re-take of
+          every schematic-phase reading after the tools changed), rules_status three times and rules_render on the tree
+          with the re-take's evidence installed (the file at f1050e398b6bc2e0 before). Of the page's 15 sections 7
+          differ from that file (The candidate each board is judged against; Holds; Readings whose class changed when
+          the tool identity became the code bundle; Rules with a PASS on the current candidate; Why the rest awaits
+          revalidation; Desk reviews, which are not physical tests; Historical aggregate, mixed revisions) and 8 are
+          byte-identical (the head (headline and introduction); Layout entry, per board: the exact remaining blockers;
+          Held at later stages: fabrication release and prototype verification; Feasibility blockers; Evidence classes,
+          per board; Reused under a recorded rationale; Writers whose configuration is not declared yet; How this page
+          is computed); layout-entry reasons 34 to 34 (A 6 to 6, B 8 to 8, C 4 to 4, D 6 to 6, E 3 to 3, P 5 to 5, E5 2
+          to 2). The row this record rests on, re-read on the new page: board P's BAT-001 reads FAIL on
+          CURRENT_CANDIDATE (BOUND) evidence (pack_protection on netlist 20c7b0795593d761, 3 of 63 checks failed:
+          FUSE_OVER_CURRENT_DISCHARGE trips at 33.8 A and 3 cells in parallel are rated 24.0 A
+          (max_continuous_discharge_ma); SECOND_LEVEL_CELL_UNDER_VOLTAGE trips at 2.25, BELOW the cell maker's own
+          overdischarge_protect_v of 2.3; SECOND_LEVEL_OVER_TEMPERATURE allows -inf to 70.0 and the cell maker allows
+          -10.0 to 60.0). The review D-09 asks for before the pack board is released is still not engaged, and a
+          re-render changes nothing of that; this entry rebinds the page and re-decides nothing, so the record stays
+          INCONCLUSIVE, bound to the file at 545ec33794283272.
     evidence_bound_to:
-      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194"
+      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761"
       - "v2/ecad/tools/gen_sch_p.py@740817ada5c8e14a"
-      - "v2/docs/CURRENT-EVIDENCE.md@f1050e398b6bc2e0"
+      - "v2/docs/CURRENT-EVIDENCE.md@545ec33794283272"
       - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a"
     release_effect: BLOCKER
     source:
@@ -11538,11 +11715,23 @@ records:
           (TPS62933 pin 2) on RAIL_EN too, so the D8 rail now falls with the same kill as U12 and the path the record
           states is unchanged; the panel controller still takes +5V_DEV through board B's F1; the added GND and VBAT
           nodes are U41's return and input; rebound to the new files (netlist 599ee964a9c23d6e). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          599ee964a9c23d6e and the tree's at 30ad87746d1801ca were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          56adc9746d61c4e0 and the tree's at 2ed95a0e8069ebf8 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
       - "v2/ecad/tools/gen_sch_a.py@eb2e347e4d371e0f"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@599ee964a9c23d6e"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
       - "v2/docs/records/w4ae/hot_r1_trace.py@2350c321fa744293"
     release_effect: BLOCKER
     source:
@@ -12511,19 +12700,55 @@ records:
           corrected after set 9's AI check, minor item M1); both are the same parts with the same values, and only the
           generator's printed limit for R209 moved from 0.18 to 0.20 A by TPS2596 equation 7's true sign (SLVSET8A
           printed page 28); rebound to the new files (netlist 599ee964a9c23d6e). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          599ee964a9c23d6e and the tree's at 30ad87746d1801ca were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 21a1f74a3ec1ae28 and the tree's at 97823ef1171a61ce were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-c-display-c8/out/pcb-c-display.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 3fddbb3edcd4248a and the tree's at fef4df255c00f4db were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net re-read at integration set 10 (29 September 2026): regenerated on the
+          KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          7a2c0ac2190b141a and the tree's at a2d48972d171aad1 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          56adc9746d61c4e0 and the tree's at 2ed95a0e8069ebf8 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net re-read at integration set 10 (29 September 2026): regenerated on the
+          KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          760ac6f74d62d194 and the tree's at 20c7b0795593d761 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
-      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
+      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
       - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/docs/CONOPS.md@6cb7b241cb84d729"
       - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
       - "v2/ecad/tools/pcb_decisions.yaml@ad64649584227d29"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@599ee964a9c23d6e"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
-      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
-      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@97823ef1171a61ce"
+      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@fef4df255c00f4db"
+      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761"
     release_effect: BLOCKER
     source:
       - "v2/docs/PANEL.md section 6"
@@ -14157,9 +14382,15 @@ records:
           the hardware ENABLE was owed) and correction 31 added at the end; every other line is byte-identical to the
           file at a92ea2ef3793a3c9; line 35 and correction 8, which this reading rests on, are byte-identical, so it
           stands PASS on the file at e1fdcebe8638e471
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          56adc9746d61c4e0 and the tree's at 2ed95a0e8069ebf8 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
     release_effect: ADVISORY
     source: ["v2/docs/V2-SPEC.md:35", "v2/ecad/tools/gen_sch_e.py:678"]
     source_check: VERIFIED
@@ -14504,12 +14735,18 @@ records:
           are the same parts with the same values, and only the generator's printed limit for R209 moved from 0.18 to
           0.20 A by TPS2596 equation 7's true sign (SLVSET8A printed page 28); rebound to the new files (netlist
           599ee964a9c23d6e). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          599ee964a9c23d6e and the tree's at 30ad87746d1801ca were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/docs/CONOPS.md@6cb7b241cb84d729"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/ecad/tools/gen_sch_a.py@eb2e347e4d371e0f"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@599ee964a9c23d6e"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
       - "v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337"
     release_effect: BLOCKER
     source:
@@ -14744,9 +14981,21 @@ records:
           generator cite brought to gen_sch_a.py:1613-1618; every other line is byte-identical, the rows and steps this
           reading cites among them, which the script asserts line by line; so this reading stands on
           v2/docs/ASSEMBLY.md@ee4eff52fc5df307
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          56adc9746d61c4e0 and the tree's at 2ed95a0e8069ebf8 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net re-read at integration set 10 (29 September 2026): regenerated on the
+          KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          760ac6f74d62d194 and the tree's at 20c7b0795593d761 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
-      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
+      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761"
       - "v2/docs/ASSEMBLY.md@ee4eff52fc5df307"
       - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/ecad/tools/check_contracts.py@5e14f456a0791c35"
@@ -14956,9 +15205,15 @@ records:
           tree's at 21a1f74a3ec1ae28 were compared with only their 4 date and source line(s) dropped and are
           byte-identical, so every component, value, footprint, pin and net this record's reading rests on is unchanged;
           rebound (apply_rebind_netlists_s98.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 21a1f74a3ec1ae28 and the tree's at 97823ef1171a61ce were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_b.py@a57047c3daa946f3"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@97823ef1171a61ce"
     release_effect: BLOCKER
     source:
       - "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf (key B p.15 and p.20; Table 32)"
@@ -15213,13 +15468,49 @@ records:
           differences; both are the same parts with the same values, and only the generator's printed limit for R209
           moved from 0.18 to 0.20 A by TPS2596 equation 7's true sign (SLVSET8A printed page 28); rebound to the new
           files (netlist 599ee964a9c23d6e). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          599ee964a9c23d6e and the tree's at 30ad87746d1801ca were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 21a1f74a3ec1ae28 and the tree's at 97823ef1171a61ce were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-c-display-c8/out/pcb-c-display.net re-read at integration set 10 (29 September 2026): regenerated
+          on the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file
+          at 3fddbb3edcd4248a and the tree's at fef4df255c00f4db were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net re-read at integration set 10 (29 September 2026): regenerated on the
+          KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          7a2c0ac2190b141a and the tree's at a2d48972d171aad1 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net re-read at integration set 10 (29 September 2026): regenerated on
+          the KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          56adc9746d61c4e0 and the tree's at 2ed95a0e8069ebf8 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net re-read at integration set 10 (29 September 2026): regenerated on the
+          KiCad box after stream d6dec's decoupling tools entered every generator's import closure; main's file at
+          760ac6f74d62d194 and the tree's at 20c7b0795593d761 were compared with only their 4 date and source line(s)
+          dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
+          on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
     evidence_bound_to:
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@599ee964a9c23d6e"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@21a1f74a3ec1ae28"
-      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
-      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
-      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@97823ef1171a61ce"
+      - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@fef4df255c00f4db"
+      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
+      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761"
     release_effect: BLOCKER
     source:
       - "v2/ecad/tools/gen_sch_e.py:351"

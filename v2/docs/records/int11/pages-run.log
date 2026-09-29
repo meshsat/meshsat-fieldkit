@@ -1,0 +1,377 @@
+claims_check: 91 claim sentence(s) in 12 document(s), 0 without a qualifier, an evidence reference or a declared reason
+verdict: claims_check           PASS         of 91 {"claims": 91, "unqualified": 0} | a rating claimed without its test is a promise to whoever carries the kit
+A   NOT_READY                    PASS 29  FAIL 12  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006, FEA-007
+B   NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 35  WAIVED 0  of 56 required rule(s), historical aggregate
+    board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21
+    layout entry: not ready, 8 reason(s); feasibility at later stages: FEA-001, FEA-002, FEA-003, FEA-006, FEA-007
+C   NOT_READY                    PASS 32  FAIL 4  INCONCLUSIVE 12  WAIVED 0  of 48 required rule(s), historical aggregate
+    board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24
+    layout entry: not ready, 4 reason(s); feasibility at later stages: FEA-002, FEA-006, FEA-007
+D   NOT_READY                    PASS 34  FAIL 2  INCONCLUSIVE 15  WAIVED 0  of 51 required rule(s), historical aggregate
+    board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006
+E   NOT_READY                    PASS 35  FAIL 6  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17
+    layout entry: not ready, 3 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-006, FEA-007
+E5  NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 4  WAIVED 0  of 25 required rule(s), historical aggregate
+    board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5
+    layout entry: not ready, 2 reason(s)
+P   NOT_READY                    PASS 31  FAIL 7  INCONCLUSIVE 10  WAIVED 0  of 48 required rule(s), historical aggregate
+    board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4
+    layout entry: not ready, 5 reason(s); feasibility at later stages: FEA-004, FEA-005, FEA-006, FEA-007
+
+readiness: NOT_READY   (manifest 2026-09-16.1, rule set a9b1e7f7412f9c0c, promotion frozen)
+historical aggregate, mixed revisions: PASS 57.7%  waived 0.0%  failed 11.5%  inconclusive 30.8%  of 338 applicable required rule-board pair(s)
+evidence: 69 PASS on the current candidate; CURRENT_CANDIDATE 83  VALID_HISTORICAL 0  AWAITING_REVALIDATION 206  DESK_REVIEW 28  PHYSICAL_TEST 0  NO_EVIDENCE 21
+provenance: 2 required row(s) changed evidence class when the code bundle replaced the entry-script hash (102 changed cause within the class)
+evidence: 2 reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): out/hardset.verdict.json, out/routeflow_validate.verdict.json
+
+NOTE: 3 reading(s) that declare a MISSING INPUT stand in front of a measured one, because the measured one was taken under a superseded version of the rule it decides (asked rule by rule where the verdict carries its digests, and by the set fingerprint where it does not). Re-take those on the board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:
+  final_gate_b           displaces a reading taken under 4a03222f910fe5f5; it lacked: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder i
+  jlc_certify_b          displaces a reading taken under 4a03222f910fe5f5; it lacked: no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree ho
+  verify_deliverable_b   displaces a reading taken under 4a03222f910fe5f5; it lacked: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a
+verdict: rules_status           FAIL         of 338 {"FAIL": 39, "INCONCLUSIVE": 104, "PASS": 195, "WAIVED": 0, "denominator": 338, "fail_percent": 11.5, "inconclusive_percent": 30.8, "pass_percent": 57.7, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+A   NOT_READY                    PASS 29  FAIL 12  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006, FEA-007
+B   NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 35  WAIVED 0  of 56 required rule(s), historical aggregate
+    board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21
+    layout entry: not ready, 8 reason(s); feasibility at later stages: FEA-001, FEA-002, FEA-003, FEA-006, FEA-007
+C   NOT_READY                    PASS 32  FAIL 4  INCONCLUSIVE 12  WAIVED 0  of 48 required rule(s), historical aggregate
+    board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24
+    layout entry: not ready, 4 reason(s); feasibility at later stages: FEA-002, FEA-006, FEA-007
+D   NOT_READY                    PASS 34  FAIL 2  INCONCLUSIVE 15  WAIVED 0  of 51 required rule(s), historical aggregate
+    board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006
+E   NOT_READY                    PASS 35  FAIL 6  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17
+    layout entry: not ready, 3 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-006, FEA-007
+E5  NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 4  WAIVED 0  of 25 required rule(s), historical aggregate
+    board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5
+    layout entry: not ready, 2 reason(s)
+P   NOT_READY                    PASS 31  FAIL 7  INCONCLUSIVE 10  WAIVED 0  of 48 required rule(s), historical aggregate
+    board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4
+    layout entry: not ready, 5 reason(s); feasibility at later stages: FEA-004, FEA-005, FEA-006, FEA-007
+
+readiness: NOT_READY   (manifest 2026-09-16.1, rule set a9b1e7f7412f9c0c, promotion frozen)
+historical aggregate, mixed revisions: PASS 57.7%  waived 0.0%  failed 11.5%  inconclusive 30.8%  of 338 applicable required rule-board pair(s)
+evidence: 69 PASS on the current candidate; CURRENT_CANDIDATE 83  VALID_HISTORICAL 0  AWAITING_REVALIDATION 206  DESK_REVIEW 28  PHYSICAL_TEST 0  NO_EVIDENCE 21
+provenance: 2 required row(s) changed evidence class when the code bundle replaced the entry-script hash (102 changed cause within the class)
+evidence: 2 reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): out/hardset.verdict.json, out/routeflow_validate.verdict.json
+
+NOTE: 3 reading(s) that declare a MISSING INPUT stand in front of a measured one, because the measured one was taken under a superseded version of the rule it decides (asked rule by rule where the verdict carries its digests, and by the set fingerprint where it does not). Re-take those on the board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:
+  final_gate_b           displaces a reading taken under 4a03222f910fe5f5; it lacked: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder i
+  jlc_certify_b          displaces a reading taken under 4a03222f910fe5f5; it lacked: no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree ho
+  verify_deliverable_b   displaces a reading taken under 4a03222f910fe5f5; it lacked: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a
+verdict: rules_status           FAIL         of 338 {"FAIL": 39, "INCONCLUSIVE": 104, "PASS": 195, "WAIVED": 0, "denominator": 338, "fail_percent": 11.5, "inconclusive_percent": 30.8, "pass_percent": 57.7, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+A   NOT_READY                    PASS 29  FAIL 12  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006, FEA-007
+B   NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 35  WAIVED 0  of 56 required rule(s), historical aggregate
+    board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21
+    layout entry: not ready, 8 reason(s); feasibility at later stages: FEA-001, FEA-002, FEA-003, FEA-006, FEA-007
+C   NOT_READY                    PASS 32  FAIL 4  INCONCLUSIVE 12  WAIVED 0  of 48 required rule(s), historical aggregate
+    board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24
+    layout entry: not ready, 4 reason(s); feasibility at later stages: FEA-002, FEA-006, FEA-007
+D   NOT_READY                    PASS 34  FAIL 2  INCONCLUSIVE 15  WAIVED 0  of 51 required rule(s), historical aggregate
+    board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006
+E   NOT_READY                    PASS 35  FAIL 6  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17
+    layout entry: not ready, 3 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-006, FEA-007
+E5  NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 4  WAIVED 0  of 25 required rule(s), historical aggregate
+    board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5
+    layout entry: not ready, 2 reason(s)
+P   NOT_READY                    PASS 31  FAIL 7  INCONCLUSIVE 10  WAIVED 0  of 48 required rule(s), historical aggregate
+    board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4
+    layout entry: not ready, 5 reason(s); feasibility at later stages: FEA-004, FEA-005, FEA-006, FEA-007
+
+readiness: NOT_READY   (manifest 2026-09-16.1, rule set a9b1e7f7412f9c0c, promotion frozen)
+historical aggregate, mixed revisions: PASS 57.7%  waived 0.0%  failed 11.5%  inconclusive 30.8%  of 338 applicable required rule-board pair(s)
+evidence: 69 PASS on the current candidate; CURRENT_CANDIDATE 83  VALID_HISTORICAL 0  AWAITING_REVALIDATION 206  DESK_REVIEW 28  PHYSICAL_TEST 0  NO_EVIDENCE 21
+provenance: 2 required row(s) changed evidence class when the code bundle replaced the entry-script hash (102 changed cause within the class)
+evidence: 2 reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): out/hardset.verdict.json, out/routeflow_validate.verdict.json
+
+NOTE: 3 reading(s) that declare a MISSING INPUT stand in front of a measured one, because the measured one was taken under a superseded version of the rule it decides (asked rule by rule where the verdict carries its digests, and by the set fingerprint where it does not). Re-take those on the board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:
+  final_gate_b           displaces a reading taken under 4a03222f910fe5f5; it lacked: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder i
+  jlc_certify_b          displaces a reading taken under 4a03222f910fe5f5; it lacked: no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree ho
+  verify_deliverable_b   displaces a reading taken under 4a03222f910fe5f5; it lacked: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a
+verdict: rules_status           FAIL         of 338 {"FAIL": 39, "INCONCLUSIVE": 104, "PASS": 195, "WAIVED": 0, "denominator": 338, "fail_percent": 11.5, "inconclusive_percent": 30.8, "pass_percent": 57.7, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+rules_render: wrote ../../docs/REQUIREMENTS-TRACE.md (4206 lines)
+rules_render: wrote ../../docs/CURRENT-EVIDENCE.md (369 lines)
+rules_render: wrote ../../docs/PCB-OPEN-PAIRS.md (279 lines)
+apply_rebind_page_int11: the page at HEAD is 373800dd3175a91e and the records are bound to f1050e398b6bc2e0; comparing with the bound page from history
+apply_rebind_page_int11: CON-010 rebound from f1050e398b6bc2e0 to 545ec33794283272, evidence_result INCONCLUSIVE unchanged
+apply_rebind_page_int11: REQ-044 rebound from f1050e398b6bc2e0 to 545ec33794283272, evidence_result INCONCLUSIVE unchanged
+apply_rebind_page_int11: sections that differ: The candidate each board is judged against; Holds; Readings whose class changed when the tool identity became the code bundle; Rules with a PASS on the current candidate; Why the rest awaits revalidation; Desk reviews, which are not physical tests; Historical aggregate, mixed revisions
+apply_rebind_page_int11: layout-entry reasons 34 to 34 (A 6 to 6, B 8 to 8, C 4 to 4, D 6 to 6, E 3 to 3, P 5 to 5, E5 2 to 2)
+A   NOT_READY                    PASS 29  FAIL 12  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006, FEA-007
+B   NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 35  WAIVED 0  of 56 required rule(s), historical aggregate
+    board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21
+    layout entry: not ready, 8 reason(s); feasibility at later stages: FEA-001, FEA-002, FEA-003, FEA-006, FEA-007
+C   NOT_READY                    PASS 32  FAIL 4  INCONCLUSIVE 12  WAIVED 0  of 48 required rule(s), historical aggregate
+    board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24
+    layout entry: not ready, 4 reason(s); feasibility at later stages: FEA-002, FEA-006, FEA-007
+D   NOT_READY                    PASS 34  FAIL 2  INCONCLUSIVE 15  WAIVED 0  of 51 required rule(s), historical aggregate
+    board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006
+E   NOT_READY                    PASS 35  FAIL 6  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17
+    layout entry: not ready, 3 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-006, FEA-007
+E5  NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 4  WAIVED 0  of 25 required rule(s), historical aggregate
+    board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5
+    layout entry: not ready, 2 reason(s)
+P   NOT_READY                    PASS 31  FAIL 7  INCONCLUSIVE 10  WAIVED 0  of 48 required rule(s), historical aggregate
+    board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4
+    layout entry: not ready, 5 reason(s); feasibility at later stages: FEA-004, FEA-005, FEA-006, FEA-007
+
+readiness: NOT_READY   (manifest 2026-09-16.1, rule set a9b1e7f7412f9c0c, promotion frozen)
+historical aggregate, mixed revisions: PASS 57.7%  waived 0.0%  failed 11.5%  inconclusive 30.8%  of 338 applicable required rule-board pair(s)
+evidence: 69 PASS on the current candidate; CURRENT_CANDIDATE 83  VALID_HISTORICAL 0  AWAITING_REVALIDATION 206  DESK_REVIEW 28  PHYSICAL_TEST 0  NO_EVIDENCE 21
+provenance: 2 required row(s) changed evidence class when the code bundle replaced the entry-script hash (102 changed cause within the class)
+evidence: 2 reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): out/hardset.verdict.json, out/routeflow_validate.verdict.json
+
+NOTE: 3 reading(s) that declare a MISSING INPUT stand in front of a measured one, because the measured one was taken under a superseded version of the rule it decides (asked rule by rule where the verdict carries its digests, and by the set fingerprint where it does not). Re-take those on the board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:
+  final_gate_b           displaces a reading taken under 4a03222f910fe5f5; it lacked: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder i
+  jlc_certify_b          displaces a reading taken under 4a03222f910fe5f5; it lacked: no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree ho
+  verify_deliverable_b   displaces a reading taken under 4a03222f910fe5f5; it lacked: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a
+verdict: rules_status           FAIL         of 338 {"FAIL": 39, "INCONCLUSIVE": 104, "PASS": 195, "WAIVED": 0, "denominator": 338, "fail_percent": 11.5, "inconclusive_percent": 30.8, "pass_percent": 57.7, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+A   NOT_READY                    PASS 29  FAIL 12  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006, FEA-007
+B   NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 35  WAIVED 0  of 56 required rule(s), historical aggregate
+    board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21
+    layout entry: not ready, 8 reason(s); feasibility at later stages: FEA-001, FEA-002, FEA-003, FEA-006, FEA-007
+C   NOT_READY                    PASS 32  FAIL 4  INCONCLUSIVE 12  WAIVED 0  of 48 required rule(s), historical aggregate
+    board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24
+    layout entry: not ready, 4 reason(s); feasibility at later stages: FEA-002, FEA-006, FEA-007
+D   NOT_READY                    PASS 34  FAIL 2  INCONCLUSIVE 15  WAIVED 0  of 51 required rule(s), historical aggregate
+    board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006
+E   NOT_READY                    PASS 35  FAIL 6  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17
+    layout entry: not ready, 3 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-006, FEA-007
+E5  NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 4  WAIVED 0  of 25 required rule(s), historical aggregate
+    board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5
+    layout entry: not ready, 2 reason(s)
+P   NOT_READY                    PASS 31  FAIL 7  INCONCLUSIVE 10  WAIVED 0  of 48 required rule(s), historical aggregate
+    board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4
+    layout entry: not ready, 5 reason(s); feasibility at later stages: FEA-004, FEA-005, FEA-006, FEA-007
+
+readiness: NOT_READY   (manifest 2026-09-16.1, rule set a9b1e7f7412f9c0c, promotion frozen)
+historical aggregate, mixed revisions: PASS 57.7%  waived 0.0%  failed 11.5%  inconclusive 30.8%  of 338 applicable required rule-board pair(s)
+evidence: 69 PASS on the current candidate; CURRENT_CANDIDATE 83  VALID_HISTORICAL 0  AWAITING_REVALIDATION 206  DESK_REVIEW 28  PHYSICAL_TEST 0  NO_EVIDENCE 21
+provenance: 2 required row(s) changed evidence class when the code bundle replaced the entry-script hash (102 changed cause within the class)
+evidence: 2 reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): out/hardset.verdict.json, out/routeflow_validate.verdict.json
+
+NOTE: 3 reading(s) that declare a MISSING INPUT stand in front of a measured one, because the measured one was taken under a superseded version of the rule it decides (asked rule by rule where the verdict carries its digests, and by the set fingerprint where it does not). Re-take those on the board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:
+  final_gate_b           displaces a reading taken under 4a03222f910fe5f5; it lacked: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder i
+  jlc_certify_b          displaces a reading taken under 4a03222f910fe5f5; it lacked: no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree ho
+  verify_deliverable_b   displaces a reading taken under 4a03222f910fe5f5; it lacked: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a
+verdict: rules_status           FAIL         of 338 {"FAIL": 39, "INCONCLUSIVE": 104, "PASS": 195, "WAIVED": 0, "denominator": 338, "fail_percent": 11.5, "inconclusive_percent": 30.8, "pass_percent": 57.7, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+rules_render: wrote ../../docs/REQUIREMENTS-TRACE.md (4210 lines)
+## after the coverage stamp
+A   NOT_READY                    PASS 29  FAIL 12  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006, FEA-007
+B   NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 35  WAIVED 0  of 56 required rule(s), historical aggregate
+    board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21
+    layout entry: not ready, 8 reason(s); feasibility at later stages: FEA-001, FEA-002, FEA-003, FEA-006, FEA-007
+C   NOT_READY                    PASS 32  FAIL 4  INCONCLUSIVE 12  WAIVED 0  of 48 required rule(s), historical aggregate
+    board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24
+    layout entry: not ready, 4 reason(s); feasibility at later stages: FEA-002, FEA-006, FEA-007
+D   NOT_READY                    PASS 34  FAIL 2  INCONCLUSIVE 15  WAIVED 0  of 51 required rule(s), historical aggregate
+    board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006
+E   NOT_READY                    PASS 35  FAIL 6  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17
+    layout entry: not ready, 3 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-006, FEA-007
+E5  NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 4  WAIVED 0  of 25 required rule(s), historical aggregate
+    board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5
+    layout entry: not ready, 2 reason(s)
+P   NOT_READY                    PASS 31  FAIL 7  INCONCLUSIVE 10  WAIVED 0  of 48 required rule(s), historical aggregate
+    board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4
+    layout entry: not ready, 5 reason(s); feasibility at later stages: FEA-004, FEA-005, FEA-006, FEA-007
+
+readiness: NOT_READY   (manifest 2026-09-16.1, rule set a9b1e7f7412f9c0c, promotion frozen)
+historical aggregate, mixed revisions: PASS 57.7%  waived 0.0%  failed 11.5%  inconclusive 30.8%  of 338 applicable required rule-board pair(s)
+evidence: 62 PASS on the current candidate; CURRENT_CANDIDATE 76  VALID_HISTORICAL 0  AWAITING_REVALIDATION 213  DESK_REVIEW 28  PHYSICAL_TEST 0  NO_EVIDENCE 21
+provenance: 2 required row(s) changed evidence class when the code bundle replaced the entry-script hash (102 changed cause within the class)
+evidence: 2 reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): out/hardset.verdict.json, out/routeflow_validate.verdict.json
+
+NOTE: 3 reading(s) that declare a MISSING INPUT stand in front of a measured one, because the measured one was taken under a superseded version of the rule it decides (asked rule by rule where the verdict carries its digests, and by the set fingerprint where it does not). Re-take those on the board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:
+  final_gate_b           displaces a reading taken under 4a03222f910fe5f5; it lacked: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder i
+  jlc_certify_b          displaces a reading taken under 4a03222f910fe5f5; it lacked: no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree ho
+  verify_deliverable_b   displaces a reading taken under 4a03222f910fe5f5; it lacked: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a
+verdict: rules_status           FAIL         of 338 {"FAIL": 39, "INCONCLUSIVE": 104, "PASS": 195, "WAIVED": 0, "denominator": 338, "fail_percent": 11.5, "inconclusive_percent": 30.8, "pass_percent": 57.7, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+A   NOT_READY                    PASS 29  FAIL 12  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006, FEA-007
+B   NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 35  WAIVED 0  of 56 required rule(s), historical aggregate
+    board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21
+    layout entry: not ready, 8 reason(s); feasibility at later stages: FEA-001, FEA-002, FEA-003, FEA-006, FEA-007
+C   NOT_READY                    PASS 32  FAIL 4  INCONCLUSIVE 12  WAIVED 0  of 48 required rule(s), historical aggregate
+    board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24
+    layout entry: not ready, 4 reason(s); feasibility at later stages: FEA-002, FEA-006, FEA-007
+D   NOT_READY                    PASS 34  FAIL 2  INCONCLUSIVE 15  WAIVED 0  of 51 required rule(s), historical aggregate
+    board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006
+E   NOT_READY                    PASS 35  FAIL 6  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17
+    layout entry: not ready, 3 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-006, FEA-007
+E5  NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 4  WAIVED 0  of 25 required rule(s), historical aggregate
+    board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5
+    layout entry: not ready, 2 reason(s)
+P   NOT_READY                    PASS 31  FAIL 7  INCONCLUSIVE 10  WAIVED 0  of 48 required rule(s), historical aggregate
+    board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4
+    layout entry: not ready, 5 reason(s); feasibility at later stages: FEA-004, FEA-005, FEA-006, FEA-007
+
+readiness: NOT_READY   (manifest 2026-09-16.1, rule set a9b1e7f7412f9c0c, promotion frozen)
+historical aggregate, mixed revisions: PASS 57.7%  waived 0.0%  failed 11.5%  inconclusive 30.8%  of 338 applicable required rule-board pair(s)
+evidence: 69 PASS on the current candidate; CURRENT_CANDIDATE 83  VALID_HISTORICAL 0  AWAITING_REVALIDATION 206  DESK_REVIEW 28  PHYSICAL_TEST 0  NO_EVIDENCE 21
+provenance: 2 required row(s) changed evidence class when the code bundle replaced the entry-script hash (102 changed cause within the class)
+evidence: 2 reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): out/hardset.verdict.json, out/routeflow_validate.verdict.json
+
+NOTE: 3 reading(s) that declare a MISSING INPUT stand in front of a measured one, because the measured one was taken under a superseded version of the rule it decides (asked rule by rule where the verdict carries its digests, and by the set fingerprint where it does not). Re-take those on the board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:
+  final_gate_b           displaces a reading taken under 4a03222f910fe5f5; it lacked: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder i
+  jlc_certify_b          displaces a reading taken under 4a03222f910fe5f5; it lacked: no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree ho
+  verify_deliverable_b   displaces a reading taken under 4a03222f910fe5f5; it lacked: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a
+verdict: rules_status           FAIL         of 338 {"FAIL": 39, "INCONCLUSIVE": 104, "PASS": 195, "WAIVED": 0, "denominator": 338, "fail_percent": 11.5, "inconclusive_percent": 30.8, "pass_percent": 57.7, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+A   NOT_READY                    PASS 29  FAIL 12  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006, FEA-007
+B   NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 35  WAIVED 0  of 56 required rule(s), historical aggregate
+    board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21
+    layout entry: not ready, 8 reason(s); feasibility at later stages: FEA-001, FEA-002, FEA-003, FEA-006, FEA-007
+C   NOT_READY                    PASS 32  FAIL 4  INCONCLUSIVE 12  WAIVED 0  of 48 required rule(s), historical aggregate
+    board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24
+    layout entry: not ready, 4 reason(s); feasibility at later stages: FEA-002, FEA-006, FEA-007
+D   NOT_READY                    PASS 34  FAIL 2  INCONCLUSIVE 15  WAIVED 0  of 51 required rule(s), historical aggregate
+    board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006
+E   NOT_READY                    PASS 35  FAIL 6  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17
+    layout entry: not ready, 3 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-006, FEA-007
+E5  NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 4  WAIVED 0  of 25 required rule(s), historical aggregate
+    board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5
+    layout entry: not ready, 2 reason(s)
+P   NOT_READY                    PASS 31  FAIL 7  INCONCLUSIVE 10  WAIVED 0  of 48 required rule(s), historical aggregate
+    board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4
+    layout entry: not ready, 5 reason(s); feasibility at later stages: FEA-004, FEA-005, FEA-006, FEA-007
+
+readiness: NOT_READY   (manifest 2026-09-16.1, rule set a9b1e7f7412f9c0c, promotion frozen)
+historical aggregate, mixed revisions: PASS 57.7%  waived 0.0%  failed 11.5%  inconclusive 30.8%  of 338 applicable required rule-board pair(s)
+evidence: 69 PASS on the current candidate; CURRENT_CANDIDATE 83  VALID_HISTORICAL 0  AWAITING_REVALIDATION 206  DESK_REVIEW 28  PHYSICAL_TEST 0  NO_EVIDENCE 21
+provenance: 2 required row(s) changed evidence class when the code bundle replaced the entry-script hash (102 changed cause within the class)
+evidence: 2 reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): out/hardset.verdict.json, out/routeflow_validate.verdict.json
+
+NOTE: 3 reading(s) that declare a MISSING INPUT stand in front of a measured one, because the measured one was taken under a superseded version of the rule it decides (asked rule by rule where the verdict carries its digests, and by the set fingerprint where it does not). Re-take those on the board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:
+  final_gate_b           displaces a reading taken under 4a03222f910fe5f5; it lacked: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder i
+  jlc_certify_b          displaces a reading taken under 4a03222f910fe5f5; it lacked: no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree ho
+  verify_deliverable_b   displaces a reading taken under 4a03222f910fe5f5; it lacked: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a
+verdict: rules_status           FAIL         of 338 {"FAIL": 39, "INCONCLUSIVE": 104, "PASS": 195, "WAIVED": 0, "denominator": 338, "fail_percent": 11.5, "inconclusive_percent": 30.8, "pass_percent": 57.7, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+## after S-117's restatement
+A   NOT_READY                    PASS 29  FAIL 12  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006, FEA-007
+B   NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 35  WAIVED 0  of 56 required rule(s), historical aggregate
+    board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21
+    layout entry: not ready, 8 reason(s); feasibility at later stages: FEA-001, FEA-002, FEA-003, FEA-006, FEA-007
+C   NOT_READY                    PASS 32  FAIL 4  INCONCLUSIVE 12  WAIVED 0  of 48 required rule(s), historical aggregate
+    board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24
+    layout entry: not ready, 4 reason(s); feasibility at later stages: FEA-002, FEA-006, FEA-007
+D   NOT_READY                    PASS 34  FAIL 2  INCONCLUSIVE 15  WAIVED 0  of 51 required rule(s), historical aggregate
+    board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006
+E   NOT_READY                    PASS 35  FAIL 6  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17
+    layout entry: not ready, 3 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-006, FEA-007
+E5  NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 4  WAIVED 0  of 25 required rule(s), historical aggregate
+    board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5
+    layout entry: not ready, 2 reason(s)
+P   NOT_READY                    PASS 31  FAIL 7  INCONCLUSIVE 10  WAIVED 0  of 48 required rule(s), historical aggregate
+    board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4
+    layout entry: not ready, 5 reason(s); feasibility at later stages: FEA-004, FEA-005, FEA-006, FEA-007
+
+readiness: NOT_READY   (manifest 2026-09-16.1, rule set a9b1e7f7412f9c0c, promotion frozen)
+historical aggregate, mixed revisions: PASS 57.7%  waived 0.0%  failed 11.5%  inconclusive 30.8%  of 338 applicable required rule-board pair(s)
+evidence: 69 PASS on the current candidate; CURRENT_CANDIDATE 83  VALID_HISTORICAL 0  AWAITING_REVALIDATION 206  DESK_REVIEW 28  PHYSICAL_TEST 0  NO_EVIDENCE 21
+provenance: 2 required row(s) changed evidence class when the code bundle replaced the entry-script hash (102 changed cause within the class)
+evidence: 2 reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): out/hardset.verdict.json, out/routeflow_validate.verdict.json
+
+NOTE: 3 reading(s) that declare a MISSING INPUT stand in front of a measured one, because the measured one was taken under a superseded version of the rule it decides (asked rule by rule where the verdict carries its digests, and by the set fingerprint where it does not). Re-take those on the board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:
+  final_gate_b           displaces a reading taken under 4a03222f910fe5f5; it lacked: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder i
+  jlc_certify_b          displaces a reading taken under 4a03222f910fe5f5; it lacked: no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree ho
+  verify_deliverable_b   displaces a reading taken under 4a03222f910fe5f5; it lacked: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a
+verdict: rules_status           FAIL         of 338 {"FAIL": 39, "INCONCLUSIVE": 104, "PASS": 195, "WAIVED": 0, "denominator": 338, "fail_percent": 11.5, "inconclusive_percent": 30.8, "pass_percent": 57.7, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+A   NOT_READY                    PASS 29  FAIL 12  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006, FEA-007
+B   NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 35  WAIVED 0  of 56 required rule(s), historical aggregate
+    board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21
+    layout entry: not ready, 8 reason(s); feasibility at later stages: FEA-001, FEA-002, FEA-003, FEA-006, FEA-007
+C   NOT_READY                    PASS 32  FAIL 4  INCONCLUSIVE 12  WAIVED 0  of 48 required rule(s), historical aggregate
+    board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24
+    layout entry: not ready, 4 reason(s); feasibility at later stages: FEA-002, FEA-006, FEA-007
+D   NOT_READY                    PASS 34  FAIL 2  INCONCLUSIVE 15  WAIVED 0  of 51 required rule(s), historical aggregate
+    board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006
+E   NOT_READY                    PASS 35  FAIL 6  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17
+    layout entry: not ready, 3 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-006, FEA-007
+E5  NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 4  WAIVED 0  of 25 required rule(s), historical aggregate
+    board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5
+    layout entry: not ready, 2 reason(s)
+P   NOT_READY                    PASS 31  FAIL 7  INCONCLUSIVE 10  WAIVED 0  of 48 required rule(s), historical aggregate
+    board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4
+    layout entry: not ready, 5 reason(s); feasibility at later stages: FEA-004, FEA-005, FEA-006, FEA-007
+
+readiness: NOT_READY   (manifest 2026-09-16.1, rule set a9b1e7f7412f9c0c, promotion frozen)
+historical aggregate, mixed revisions: PASS 57.7%  waived 0.0%  failed 11.5%  inconclusive 30.8%  of 338 applicable required rule-board pair(s)
+evidence: 69 PASS on the current candidate; CURRENT_CANDIDATE 83  VALID_HISTORICAL 0  AWAITING_REVALIDATION 206  DESK_REVIEW 28  PHYSICAL_TEST 0  NO_EVIDENCE 21
+provenance: 2 required row(s) changed evidence class when the code bundle replaced the entry-script hash (102 changed cause within the class)
+evidence: 2 reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): out/hardset.verdict.json, out/routeflow_validate.verdict.json
+
+NOTE: 3 reading(s) that declare a MISSING INPUT stand in front of a measured one, because the measured one was taken under a superseded version of the rule it decides (asked rule by rule where the verdict carries its digests, and by the set fingerprint where it does not). Re-take those on the board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:
+  final_gate_b           displaces a reading taken under 4a03222f910fe5f5; it lacked: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder i
+  jlc_certify_b          displaces a reading taken under 4a03222f910fe5f5; it lacked: no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree ho
+  verify_deliverable_b   displaces a reading taken under 4a03222f910fe5f5; it lacked: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a
+verdict: rules_status           FAIL         of 338 {"FAIL": 39, "INCONCLUSIVE": 104, "PASS": 195, "WAIVED": 0, "denominator": 338, "fail_percent": 11.5, "inconclusive_percent": 30.8, "pass_percent": 57.7, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+A   NOT_READY                    PASS 29  FAIL 12  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006, FEA-007
+B   NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 35  WAIVED 0  of 56 required rule(s), historical aggregate
+    board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21
+    layout entry: not ready, 8 reason(s); feasibility at later stages: FEA-001, FEA-002, FEA-003, FEA-006, FEA-007
+C   NOT_READY                    PASS 32  FAIL 4  INCONCLUSIVE 12  WAIVED 0  of 48 required rule(s), historical aggregate
+    board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24
+    layout entry: not ready, 4 reason(s); feasibility at later stages: FEA-002, FEA-006, FEA-007
+D   NOT_READY                    PASS 34  FAIL 2  INCONCLUSIVE 15  WAIVED 0  of 51 required rule(s), historical aggregate
+    board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12
+    layout entry: not ready, 6 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-002, FEA-004, FEA-006
+E   NOT_READY                    PASS 35  FAIL 6  INCONCLUSIVE 14  WAIVED 0  of 55 required rule(s), historical aggregate
+    board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17
+    layout entry: not ready, 3 reason(s); held later: decision 31 at FABRICATION_RELEASE; feasibility at later stages: FEA-006, FEA-007
+E5  NOT_READY                    PASS 17  FAIL 4  INCONCLUSIVE 4  WAIVED 0  of 25 required rule(s), historical aggregate
+    board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5
+    layout entry: not ready, 2 reason(s)
+P   NOT_READY                    PASS 31  FAIL 7  INCONCLUSIVE 10  WAIVED 0  of 48 required rule(s), historical aggregate
+    board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4
+    layout entry: not ready, 5 reason(s); feasibility at later stages: FEA-004, FEA-005, FEA-006, FEA-007
+
+readiness: NOT_READY   (manifest 2026-09-16.1, rule set a9b1e7f7412f9c0c, promotion frozen)
+historical aggregate, mixed revisions: PASS 57.7%  waived 0.0%  failed 11.5%  inconclusive 30.8%  of 338 applicable required rule-board pair(s)
+evidence: 69 PASS on the current candidate; CURRENT_CANDIDATE 83  VALID_HISTORICAL 0  AWAITING_REVALIDATION 206  DESK_REVIEW 28  PHYSICAL_TEST 0  NO_EVIDENCE 21
+provenance: 2 required row(s) changed evidence class when the code bundle replaced the entry-script hash (102 changed cause within the class)
+evidence: 2 reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): out/hardset.verdict.json, out/routeflow_validate.verdict.json
+
+NOTE: 3 reading(s) that declare a MISSING INPUT stand in front of a measured one, because the measured one was taken under a superseded version of the rule it decides (asked rule by rule where the verdict carries its digests, and by the set fingerprint where it does not). Re-take those on the board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:
+  final_gate_b           displaces a reading taken under 4a03222f910fe5f5; it lacked: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder i
+  jlc_certify_b          displaces a reading taken under 4a03222f910fe5f5; it lacked: no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree ho
+  verify_deliverable_b   displaces a reading taken under 4a03222f910fe5f5; it lacked: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a
+verdict: rules_status           FAIL         of 338 {"FAIL": 39, "INCONCLUSIVE": 104, "PASS": 195, "WAIVED": 0, "denominator": 338, "fail_percent": 11.5, "inconclusive_percent": 30.8, "pass_percent": 57.7, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
+rules_render: wrote ../../docs/REQUIREMENTS-TRACE.md (4210 lines)
