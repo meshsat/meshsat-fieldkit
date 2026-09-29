@@ -8,7 +8,7 @@
    "boardtable.py": "41bd92e61f12c374",
    "bypass_search.py": "f6197f4be2ce6859",
    "decoupling_rules.py": "f4d06f6789c6ec48",
-   "edge_length.py": "8b6e41131623e14b",
+   "edge_length.py": "6097be168fffac47",
    "fan_select.py": "39fff82524253c05",
    "hardset.py": "be29a44c4a592876",
    "ibis_manifest.py": "ff27099a74e5efe9",
@@ -32,7 +32,7 @@
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "32dd315e6c35386c",
+  "sha16": "e54bcff4a858a97c",
   "unresolved": []
  },
  "counts": {
@@ -60,7 +60,7 @@
  "denominator": 139,
  "evidence": [
   "BOUND_DECIDES 7 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): EPD_SW, EXP_INT, HB1, HB2, HB3, SCL, SDA",
-  "ALLOWED 11 net(s) answered by an edge_allow declaration whose basis holds (CSI-D1), each with the length the layout holds it to where it declares one (CSI-D2): QSPI_D0 <= 16.8 mm, QSPI_D1 <= 16.8 mm, QSPI_D2 <= 16.8 mm, QSPI_D3 <= 16.8 mm, QSPI_SCLK <= 16.8 mm, QSPI_SS <= 22.7 mm, SWCLK <= 25.9 mm, SWDIO <= 24.3 mm, XIN <= 11.2 mm, XOUT <= 5.2 mm, XOUT_R <= 2.7 mm",
+  "ALLOWED 11 net(s), pending the layout: answered at this phase by an edge_allow declaration whose basis holds (CSI-D1), each held to the length it declares (CSI-D2) by the routed half, edge_length_routed, which decides no rule yet: QSPI_D0 <= 13.1 mm, QSPI_D1 <= 13.1 mm, QSPI_D2 <= 13.1 mm, QSPI_D3 <= 13.1 mm, QSPI_SCLK <= 8.0 mm, QSPI_SS <= 17.7 mm, SWCLK <= 20.1 mm, SWDIO <= 18.9 mm, XIN <= 8.7 mm, XOUT <= 4.0 mm, XOUT_R <= 2.1 mm",
   "LAYOUT_BOUND EPD_SW (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): EPD_SW",
   "LAYOUT_BOUND EXP_INT (CLOCKED_DIGITAL, 0.000 ns BOUND TI-PCA9555, critical 0.0 mm, decided by a bound): EXP_INT",
   "LAYOUT_BOUND HB? (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): HB1, HB2, HB3",
@@ -75,12 +75,12 @@
   },
   "board_table": {
    "path": "tools/boards/c.json",
-   "sha256_16": "0671bb5195f37cd8"
+   "sha256_16": "3defffcb6cc95d47"
   },
   "critical_k": 6,
   "document_1": {
    "path": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-   "sha256_16": "d3289bd7df6531c2"
+   "sha256_16": "5ebc2bdea342d20f"
   },
   "document_10": {
    "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
@@ -255,12 +255,12 @@
  "tool": "edge_length",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6e250c1c5972a56b"
+  "tools_tree_sha": "a26a8b7679616fa5"
  },
  "verdict": "INCONCLUSIVE",
  "version": "unknown",
  "writer": {
   "file": "edge_length.py",
-  "sha16": "8b6e41131623e14b"
+  "sha16": "6097be168fffac47"
  }
 }

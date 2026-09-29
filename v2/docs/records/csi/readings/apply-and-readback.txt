@@ -38,7 +38,7 @@ readback_board_c_epd_series.py on the stand-in netlist tools/sim_netlist_c.py wr
 readback_board_c_epd_series: HOLDS (0 check(s) failing)
 exit 0
 
-apply_board_c_epd_series.py --root <scratch view of fnd/csi a18e90e9>, first and second run:
+apply_board_c_epd_series.py --root <scratch view of fnd/csi 69409613>, first and second run:
 apply_board_c_epd_series: written: gen_sch_c.py (U3 pins 4 to 7, R53 to R56 27R) and boards/c.json (four class entries). Owed: board C regenerated on the box, readback_board_c_epd_series.py on the new netlist, the four resistors placed at U3's pins by gen_pcb_c3.py, SI-001 re-taken
 exit 0
 apply_board_c_epd_series: refused: gen_sch_c.py already carries the series resistors (a second run)
