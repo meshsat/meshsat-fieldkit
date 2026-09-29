@@ -253,7 +253,7 @@ def names(s, nets):
     topic = ["EMCON"] if TOPIC.search(body) else []
     counts = sorted({m.group(0) for m in COUNT.finditer(body)})
     return {"refs": refs, "nets": sorted(nn), "boards": boards, "rails": rails, "gates": gates, "gens": gens,
-            "topic": topic, "counts": counts, "parts": partnos(body)}
+            "topic": topic, "counts": counts, "parts": partnos(body, nets)}
 
 
 # round 3 read four words; round 4 (check-s122-3 m2: other wordings of the same class) reads the wordings the check swept
@@ -307,12 +307,34 @@ PN_MONTHS = {"January", "February", "March", "April", "May", "June", "July", "Au
              "November", "December"}
 
 
-def is_partno(t):
-    """True when the token has a maker's part number's shape (the rules above)."""
+# round 6 (check-s122-5 m4): literature codes (TI's SNVA559, SLVA505; ST's AN2606, RM0433, ES0392, PM0253, UM2179,
+# TN1204, DS12110), connector and bus standards (RJ45, RS485, 1000BASE-T) are not part numbers
+PN_LIT = re.compile(r"^S[LNBCW][A-Z]{1,4}\d{1,3}[A-Z]?$|^(?:AN|RM|ES|PM|UM|TN)\d{4}$|^DS\d{5}$|^(?:RJ|RS)\d{2,3}$"
+                    r"|^\d+BASE-[A-Z0-9]+$")
+_DESIG = []        # the designators of the six netlists, read once (a token that names one is a designator)
+
+
+def designators():
+    if not _DESIG:
+        d = set()
+        for nl in netlists().values(): d |= set(nl["comps"])
+        _DESIG.append(d)
+    return _DESIG[0]
+
+
+def is_partno(t, nets=None):
+    """True when the token has a maker's part number's shape (the rules above). Round 6 (check-s122-5 m4): a token of a
+    designator's shape is a designator only when one of the six netlists carries it (L76K is a part, L76 would be a
+    coil); a net of the netlists (VBUS20) is not a part number; a digit-only token of nine digits or more is a maker's
+    number (5023520600); a token led by a standard body's letters (UN38.3) is not."""
     digits, caps = len(re.findall(r"\d", t)), len(re.findall(r"[A-Z]", t))
-    if not digits or PN_PIN.match(t) or REF.fullmatch(t): return False   # a designator is not a part number
+    if not digits or PN_PIN.match(t) or PN_LIT.match(t): return False
+    if REF.fullmatch(t) and t in designators(): return False   # a designator is not a part number
+    if nets is not None and t in nets: return False
+    if re.fullmatch(r"\d{9,}", t): return not re.fullmatch(r"20\d{6}", t)
     if t[0].isalpha():
-        if PN_ID.match(t) or re.split(r"[-/]", t)[0] in STDBODY: return False
+        lead = re.match(r"^[A-Z]+", t)
+        if PN_ID.match(t) or re.split(r"[-/]", t)[0] in STDBODY or (lead and lead.group(0) in STDBODY): return False
         if re.search(r"[a-z]", t):
             return caps >= 2 and digits >= 3
         if len(t) >= 5 and re.search(r"\d{3}", t): return True         # round 4's rule (M39029/56-352, D38999/20)
@@ -327,9 +349,9 @@ def is_partno(t):
 PN_SHEET = re.compile(r"[\w./-]*?([\w-]+)\.(?:pdf|html?)\b")
 
 
-def partnos(s):
+def partnos(s, nets=None):
     """The makers' part numbers a sentence names, by shape (`is_partno`), a series word kept with its number, and those
-    in the file names of the sheets it cites."""
+    in the file names of the sheets it cites; `nets` (the netlists' nets) keeps net names out."""
     out = set()
     for m in PN_SHEET.finditer(s):
         for seg in re.split(r"[-_]", m.group(1)):
@@ -341,7 +363,7 @@ def partnos(s):
         if m.group(1) not in PN_MONTHS: out.add(m.group(2))
     for m in PN_TOK.finditer(body):
         tok = m.group(1)
-        if is_partno(tok) and not any(tok != x and tok in x.split(" ") for x in out): out.add(tok)
+        if is_partno(tok, nets) and not any(tok != x and tok in x.split(" ") for x in out): out.add(tok)
     return sorted(out)
 
 

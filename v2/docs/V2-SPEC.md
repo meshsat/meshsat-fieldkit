@@ -44,7 +44,7 @@ The node, the inputs, every rail with its part and its EMCON gate: appendix 32.5
 | LoRa mesh | bare 1 W SPI module of the E22-900M30S class (SX1262 + 30 dBm amplifier), meshtasticd on the CM5, EU power capped in software | B16 SPI, east jack |
 | Zigbee | Ebyte E72-2G4M20S1E (CC2652P) as coordinator, on-board antenna | B16 UART |
 | Thread and Matter | a second E72 as OpenThread radio for a Thread border router and Matter controller | B16 UART |
-| APRS and VHF voice | NiceRF SA868 1 W with a 30 W VHF amplifier stage (the Mitsubishi RA30H1317M1, T/R relay, low-pass filter; the amplifier's sheet held since 27 September 2026, `OPERATING-ENVELOPE.md` section 2), Direwolf on D8's PCM2912A USB codec (`U6`), hardware PTT inhibit (correction 34) | D8, west jack |
+| APRS and VHF voice | NiceRF SA868 VHF 2 W exciter (`U2`, correction 36) with a 30 W VHF amplifier stage (the Mitsubishi RA30H1317M1, T/R relay, low-pass filter; the amplifier's sheet held since 27 September 2026, `OPERATING-ENVELOPE.md` section 2), Direwolf on D8's PCM2912A USB codec (`U6`), hardware PTT inhibit (correction 34) | D8, west jack |
 | HF beyond line of sight | the assembled QRP Labs QMX (5 W, USB CAT and audio) in its lid tray, Rhizomatica's Mercury modem (open, VARA-compatible, Reticulum over its KISS/TCP broadcast port; ARDOP or VARA as alternatives), Winlink and TAK data; wire antenna kit outside; proven first on the V1 kits (MESHSAT-1318) | B16 USB (`J_QMX`), A22's 12 V HF rail, the HF jack |
 | SDR | LimeSDR Mini 2.4 (10 MHz to 3.5 GHz, transmit and receive) with a receive limiter or relay during PA key-down | B16 USB 3, west jack |
 | GNSS | Quectel LG290P (all six constellations, L1/L2/L5/E6, RTK capable) with the Quectel YEGD006U1A puck or the u-blox ANN-MB2 | B16 UART, west jack |
@@ -318,3 +318,11 @@ Stream s122 (MESHSAT-1357, open item S-122) read the lines above against the com
     controller; board E carries the BME688 `U14` and the BMI270 `U15`, and `gen_sch_e.py` puts the magnetometer in
     the outside pod, reached through `J_POD`. Line 83 counted sixteen LEDs; board C carries seventeen, `D22` the
     seventeenth. Nothing is built.
+
+36. **The exciter's rating (line 47).** Session reading of stream s122, round 6 (29 September 2026, MESHSAT-1357,
+    open item S-122; its independent check, `v2/docs/records/s122/checks/check-s122-5.md`, B1), whose closing check
+    since that round asserts every figure and unit on the lines it closes. Line 47 named the NiceRF SA868 a 1 W
+    part, the figure of the device set of 6 September (appendix 32.49). Board D's `U2` is the SA868 VHF 2 W
+    exciter; `gen_sch_d.py` has said 2 W high and 0.5 W low since `bdfc7b3f` (7 September), and the maker's sheet
+    v1.3 (`v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf`) gives 31 to 33 dBm on high power and 24 to 26 dBm on
+    low. Nothing is built.
