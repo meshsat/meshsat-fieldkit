@@ -60,6 +60,18 @@ def run_assert(a, nls):
         seg = "\n".join(text[lo - 1:hi])
         ok = all(w in seg for w in g.group("w").split("|"))
         return ok, "%s lines %d to %d at %s hold %s" % (os.path.basename(rel), lo, hi, g.group("c"), g.group("w").replace("|", ", "))
+    av = re.match(r"^([ABCDEP]):\*~(.+)$", a.strip())
+    if av:
+        hits = sorted(r for r in nls[av.group(1)]["comps"] if av.group(2) in L.TX.value(nls[av.group(1)], r))
+        return bool(hits), "board %s has a part whose value holds %r (%s)" % (av.group(1), av.group(2), ",".join(hits[:6]) or "none")
+    nv = re.match(r"^([ABCDEP]):!~(.+)$", a.strip())
+    if nv:
+        hits = sorted(r for r in nls[nv.group(1)]["comps"] if nv.group(2) in L.TX.value(nls[nv.group(1)], r))
+        return not hits, "board %s has no part whose value holds %r (found: %s)" % (nv.group(1), nv.group(2), ",".join(hits) or "none")
+    sm = re.match(r"^SHA:([ABCDEP])=([0-9a-f]+)$", a.strip())
+    if sm:
+        got = nls[sm.group(1)]["sha16"]
+        return got == sm.group(2), "board %s netlist sha256/16 %s (read: %s)" % (sm.group(1), sm.group(2), got)
     dm = DOCASSERT.match(a.strip())
     if dm:
         txt = " ".join(open(os.path.join(L.TOP, dm.group("f")), encoding="utf-8").read().split())

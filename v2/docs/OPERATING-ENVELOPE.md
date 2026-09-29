@@ -229,8 +229,7 @@ circuit before `faf8c981`.
   4c). The sensor controller detects and the panel controller acts, on the pack and on every input. It is not a
   carve-out and moves no limit. What it is for: REQ-077 requires the kit to act before any cell passes +60 C, idle
   cells on an input included, where the enclosure alone cannot keep them under it, and the design intends the stop to
-  do that once HOT-R1 is in the generators of boards A and E (the requirement reads FAIL on the generated boards until
-  then) and on the provisional error budget (`TEST-PLAN.md` P14); the kit runs no module while it acts. Whether it acts inside -20 to +40 C is
+  do that with HOT-R1, which the generators of boards A and E carry since stream w4ae (board E's `Q11` on the dock line, read on board A's `U27`), and on the provisional error budget (`TEST-PLAN.md` P14); the kit runs no module while it acts. Whether it acts inside -20 to +40 C is
   FEA-004's, open until the conductance is measured (T-H1): at the independent bound's worst corner it acts from
   +33.2 C, on appendix 32.53's conductance not below +40.3 C (`records/hc2/hotstop_bounds.out`, INFERRED).
 - **below 0 C inside air:** the two AW7915-AED WiFi link cards and the LimeSDR are powered only once the inside air
@@ -280,12 +279,11 @@ Neither test has been run, so nothing is qualified to them.
 | solar | tracker input, LT8705A | the tracker's own window, board E |
 | pack | 4S, about 14.4 V nominal | **one 4S3P pack of Samsung 35E 18650 cells, about 145 Wh, shrink-wrapped in the east pocket** (D-06, owner ruling of 26 September 2026); the case measurement it was subject to was withdrawn by the owner on 26 September 2026 (D-08 reversed), and the fit is designed against the worst of Peli's own figures (`CASE-MARGINS.md` M4a to M6; M4a and M5 OPEN until the pack's hold-down and the targeted mock-up before boards A and P enter layout). Missions longer than the pack rely on vehicle or solar input. The runtime requirement is battery-only hours in the idle and typical modes at +20 C for an aged pack; that number is not computed yet and no runtime is claimed here. Corrected 26 September 2026: the 4S4P 18650 and 4S3P 21700 packs this row named are not expected to fit beside board P under board B, and the 4S3P 18650 fits only without a rigid enclosure (adjudication A06 of 25 September 2026, whose working files are filed at `v2/docs/records/adj/A06-pack-geometry/`; the same finding is carried by `ASSEMBLY.md` section 3; INFERRED from the committed board heights; the case side at the worst of Peli's figures, `CASE-MARGINS.md`) |
 | Power over Ethernet out | 54 V | the rail that makes ISO-001 and the altitude question real |
-| USB-C Power Delivery out | 45 W | TPS25740A with an LM5176 stage, 5, 9 and 15 V at 3 A (`gen_sch_a.py` line 1003); corrected 26 September 2026: the TPS55288 this row named left the design on 7 September |
+| USB-C Power Delivery out | 45 W | TPS25740A with an LM5176 stage, 5, 9 and 15 V at 3 A (`gen_sch_a.py` line 1003 at `45bde541`); corrected 26 September 2026: the TPS55288 this row named left the design on 7 September |
 
 **Operating modes**, each already in the design: full (three modules, lid open), reduced (slots 2 and 3; lid
 closed, or the measured-temperature and current triggers of `CONOPS.md` section 4c) with its heat stage (one
-module) and, past it, the hot stop (no module), blackout (LEDs and sounder muted), NVG (panel lighting), EMCON (a hardware line
-gates every transmitter rail and the PA bias), and charge (mains, vehicle or solar, gated by the pack
+module) and, past it, the hot stop (no module), blackout (LEDs and sounder muted), NVG (panel lighting), EMCON (a hardware line on every transmitter; what it removes is set out below), and charge (mains, vehicle or solar, gated by the pack
 thermistor and by the cold-charge inhibit). **Corrected 26 September 2026, as generated at `45bde541`:** EMCON removes the
 supply of the SDR, the Iridium modem, the LoRa, Zigbee and Thread radios, the HF unit, the two WiFi link cards and
 the PA rail, so those stop receiving too; it pulls the compute modules' own WiFi and Bluetooth disables low in
@@ -293,7 +291,7 @@ hardware; and it puts the 5G module in airplane mode through its disable pin, a 
 (`PANEL.md` section 6, `CONOPS.md` section 4b). **D-05, owner ruling of 26 September 2026: under EMCON the radios go
 DARK.** Every radio with an emission path is powered off or RF-disabled in hardware; the VHF path keeps listening,
 because its gate is on transmit only; GNSS, DCF77 and the lightning detector continue. What is left under that ruling
-is session engineering: the items every row of the line shares, the SA868's PTT threshold and the RockBLOCK 9704's ENABLE, the 5G module's supply removal being drawn since board B's round 8
+is session engineering: the items every row of the line shares, the SA868's PTT threshold and the RockBLOCK 9704's response to its ENABLE (forced low in hardware since board B's stream w4b), the 5G module's supply removal being drawn since board B's round 8
 (`feasibility/EMCON.md` sections 0a, 5 and 7). This paragraph first recorded the compute modules' own radios and the WiFi
 cards' disable pin as gaps; both are closed in the schematic since `458b2873` (S-07). The charge gate
 is the pack gauge's thermistor window (section 3). The closed-lid reduced mode is the owner's ruling of 25
