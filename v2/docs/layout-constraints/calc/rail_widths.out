@@ -52,13 +52,13 @@ Intent written 2026-09-29 12:33. Stack: six layers, measured (LAYER-DECISIONS-20
 
 ```bound
 board      b
-netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 e7e683207d084d61
-intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 65f525bb5ae37e0d
+netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 3ef9b8c49a01b728
+intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 6e46bc5651e17d8d
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
 ```
 
-Intent written 2026-09-29 12:33. Stack: six layers as built; eight (JLC08161H-2116, the same copper) under decision 43's measurement.
+Intent written 2026-09-29 12:45. Stack: six layers as built; eight (JLC08161H-2116, the same copper) under decision 43's measurement.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
