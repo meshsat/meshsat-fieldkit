@@ -35,7 +35,7 @@ recorded per selection (`order_code.read_by`). One selection's netlist orders an
 
 `env -C v2/ecad/tools python3 part_identities.py check --out <this folder>/readings/check-board-c-b874b744.json`, with
 the held Uniroyal sheet fetched: **175 rows, 87 selections, 0 rows uncovered, READ 21 and DECODED 23, 0 problems,
-verdict HOLDS** (reading `45d8f109...`, table `bea90e3c...`, tool `26c7862e...`). Without the fetched sheet it reads 13
+verdict HOLDS** (reading `29840bee...`, table `1f4c513c...`, tool `26c7862e...`, re-pinned at integration set 15 by `records/int16/apply_panjit_held_w5identc.py`, which marked the three PANJIT bindings of D19 to D21 held back; they read UNREAD likewise without PANJIT's sheet, fetched by `records/int16/fetch_held_back.py`). Without the fetched sheet it reads 13
 bindings UNREAD and 13 problems; `--unfetched-ok` then writes verdict `HOLDS_WITH_UNREAD` with `unfetched_ok: true`, which
 `apply_identities_c.py` refuses.
 

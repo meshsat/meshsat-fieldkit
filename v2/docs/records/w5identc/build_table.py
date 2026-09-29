@@ -259,7 +259,8 @@ def resolve_document(ident, sel_id, log):
     if where != "this tree":
         return None, "%s names it on page %d but is not in this tree (read from %s); file it first" % (path, pages[0], where)
     ok, line = PI.names_part(PI.page_text(full, pages[0]), mpn)
-    return dict(path=path, sha256=got, page=pages[0], names=line, joined_by=ds.get("joined_by") or "this stream"), None
+    return dict(path=path, sha256=got, page=pages[0], names=line, joined_by=ds.get("joined_by") or "this stream",
+                **{k: ds[k] for k in ("held_back", "fetch") if k in ds}), None   # records/int16/apply_panjit_held_w5identc.py
 
 
 # ------------------------------------------------------------------------------------------------ round 3: re-read

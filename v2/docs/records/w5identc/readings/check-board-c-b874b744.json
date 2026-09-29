@@ -1012,7 +1012,7 @@
  ],
  "selections": 87,
  "table": "v2/ecad/tools/pcb_part_identities.yaml",
- "table_sha256": "7e427ab4d562db4e1f0c424d7afbbab93da02931d2fb8149e7203aa36b3bde0a",
+ "table_sha256": "1f4c513cf50bccfb474b1aa8c8b08d979cf86be9140e596ac6d172e45b9cad28",
  "tool_sha256": "26c7862e2dd212d41bf650261d1507bba472c28695947a245e027f0e2bfc7e6f",
  "unfetched_ok": false,
  "unresolved_by_reason": {
