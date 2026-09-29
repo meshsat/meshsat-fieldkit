@@ -195,16 +195,19 @@ counts:
   rows: 175
   selections: 87
   identity_status:
-    UNRESOLVED: 63
-    RESOLVED: 20
+    UNRESOLVED: 40
+    RESOLVED: 43
     NOT_A_PART: 4
   unresolved_by_reason:
     CHOICE_OWED: 22
-    DOCUMENT_OWED: 16
-    DOCUMENT_DOES_NOT_NAME_THE_PART: 25
+    DOCUMENT_OWED: 13
+    DOCUMENT_DOES_NOT_NAME_THE_PART: 5
+  resolved_by_binding:
+    PRINTED: 20
+    DECODED: 23
   rows_by_identity_status:
-    UNRESOLVED: 145
-    RESOLVED: 26
+    UNRESOLVED: 56
+    RESOLVED: 115
     NOT_A_PART: 4
 selections:
 - id: S-a5c3762a4c
@@ -1977,15 +1980,58 @@ selections:
     - 'rule C-T2: class 2 below 10 uF, unstated'
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: YAGEO
     mpn: CC0603KRX7R9BB104
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names YAGEO CC0603KRX7R9BB104 and binds a document that does not print it: v2/vendor/passives/yageo-cc-series.pdf
-      (read from fnd/w5ident c08f4d5a (not in this tree), sha256 61a606825ab314ea, 29 pages) prints CC0603KRX7R9BB104 on none
-      of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of YAGEO's that prints CC0603KRX7R9BB104 (a part specification, not a series sheet), or take
-      a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/yageo-cc-series.pdf
+      page: 2
+      publisher: YAGEO
+      maker_mark: YAGEO
+      table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
+        V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
+      fields:
+      - field: series
+        code: CC
+        row: CC XXXX X X X7R X BB XXX
+        means: Ceramic Multilayer
+        means_row: Surface-Mount Ceramic Multilayer Capacitors
+      - field: size
+        code: '0603'
+        row: 0603 (1608)
+      - field: tolerance
+        code: K
+        row: K = ± 10%
+        means: ± 10%
+      - field: packaging
+        code: R
+        row: R = Paper/PE taping reel; Reel 7 inch
+        means: Paper/PE taping reel
+      - field: dielectric
+        code: X7R
+        row: CC XXXX X X X7R X BB XXX
+      - field: voltage
+        code: '9'
+        row: 9 = 50 V
+        means: 50 V
+      - field: process
+        code: BB
+        row: CC XXXX X X X7R X BB XXX
+      - field: value
+        code: '104'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
+      sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+      established:
+      - value
+      - package
+      - tolerance
+      - voltage
+      - dielectric
+      - construction
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^100n') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -2073,15 +2119,58 @@ selections:
     - 'rule C-T2: class 2 at 10 uF and above, unstated'
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: YAGEO
     mpn: CC0805KKX7R7BB106
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names YAGEO CC0805KKX7R7BB106 and binds a document that does not print it: v2/vendor/passives/yageo-cc-series.pdf
-      (read from fnd/w5ident c08f4d5a (not in this tree), sha256 61a606825ab314ea, 29 pages) prints CC0805KKX7R7BB106 on none
-      of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of YAGEO's that prints CC0805KKX7R7BB106 (a part specification, not a series sheet), or take
-      a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/yageo-cc-series.pdf
+      page: 2
+      publisher: YAGEO
+      maker_mark: YAGEO
+      table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
+        V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
+      fields:
+      - field: series
+        code: CC
+        row: CC XXXX X X X7R X BB XXX
+        means: Ceramic Multilayer
+        means_row: Surface-Mount Ceramic Multilayer Capacitors
+      - field: size
+        code: 0805
+        row: 0805 (2012)
+      - field: tolerance
+        code: K
+        row: K = ± 10%
+        means: ± 10%
+      - field: packaging
+        code: K
+        row: K = Blister taping reel; Reel 7 inch
+        means: Blister taping reel
+      - field: dielectric
+        code: X7R
+        row: CC XXXX X X X7R X BB XXX
+      - field: voltage
+        code: '7'
+        row: 7 = 16 V
+        means: 16 V
+      - field: process
+        code: BB
+        row: CC XXXX X X X7R X BB XXX
+      - field: value
+        code: '106'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
+      sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+      established:
+      - value
+      - package
+      - tolerance
+      - voltage
+      - dielectric
+      - construction
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: 'rule I-1: extended library, maker tier YAGEO, stock 259244'
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -2169,15 +2258,58 @@ selections:
   findings:
   - V_UNBOUNDED
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: YAGEO
     mpn: CC0603KRX7R8BB105
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names YAGEO CC0603KRX7R8BB105 and binds a document that does not print it: v2/vendor/passives/yageo-cc-series.pdf
-      (read from fnd/w5ident c08f4d5a (not in this tree), sha256 61a606825ab314ea, 29 pages) prints CC0603KRX7R8BB105 on none
-      of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of YAGEO's that prints CC0603KRX7R8BB105 (a part specification, not a series sheet), or take
-      a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/yageo-cc-series.pdf
+      page: 2
+      publisher: YAGEO
+      maker_mark: YAGEO
+      table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
+        V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
+      fields:
+      - field: series
+        code: CC
+        row: CC XXXX X X X7R X BB XXX
+        means: Ceramic Multilayer
+        means_row: Surface-Mount Ceramic Multilayer Capacitors
+      - field: size
+        code: '0603'
+        row: 0603 (1608)
+      - field: tolerance
+        code: K
+        row: K = ± 10%
+        means: ± 10%
+      - field: packaging
+        code: R
+        row: R = Paper/PE taping reel; Reel 7 inch
+        means: Paper/PE taping reel
+      - field: dielectric
+        code: X7R
+        row: CC XXXX X X X7R X BB XXX
+      - field: voltage
+        code: '8'
+        row: 8 = 25 V
+        means: 25 V
+      - field: process
+        code: BB
+        row: CC XXXX X X X7R X BB XXX
+      - field: value
+        code: '105'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
+      sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+      established:
+      - value
+      - package
+      - tolerance
+      - voltage
+      - dielectric
+      - construction
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -2221,15 +2353,58 @@ selections:
   findings:
   - V_UNBOUNDED
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: YAGEO
     mpn: CC0603KRX7R8BB105
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names YAGEO CC0603KRX7R8BB105 and binds a document that does not print it: v2/vendor/passives/yageo-cc-series.pdf
-      (read from fnd/w5ident c08f4d5a (not in this tree), sha256 61a606825ab314ea, 29 pages) prints CC0603KRX7R8BB105 on none
-      of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of YAGEO's that prints CC0603KRX7R8BB105 (a part specification, not a series sheet), or take
-      a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/yageo-cc-series.pdf
+      page: 2
+      publisher: YAGEO
+      maker_mark: YAGEO
+      table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
+        V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
+      fields:
+      - field: series
+        code: CC
+        row: CC XXXX X X X7R X BB XXX
+        means: Ceramic Multilayer
+        means_row: Surface-Mount Ceramic Multilayer Capacitors
+      - field: size
+        code: '0603'
+        row: 0603 (1608)
+      - field: tolerance
+        code: K
+        row: K = ± 10%
+        means: ± 10%
+      - field: packaging
+        code: R
+        row: R = Paper/PE taping reel; Reel 7 inch
+        means: Paper/PE taping reel
+      - field: dielectric
+        code: X7R
+        row: CC XXXX X X X7R X BB XXX
+      - field: voltage
+        code: '8'
+        row: 8 = 25 V
+        means: 25 V
+      - field: process
+        code: BB
+        row: CC XXXX X X X7R X BB XXX
+      - field: value
+        code: '105'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
+      sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+      established:
+      - value
+      - package
+      - tolerance
+      - voltage
+      - dielectric
+      - construction
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -2273,15 +2448,58 @@ selections:
   findings:
   - V_UNBOUNDED
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: YAGEO
     mpn: CC0603KRX7R8BB105
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names YAGEO CC0603KRX7R8BB105 and binds a document that does not print it: v2/vendor/passives/yageo-cc-series.pdf
-      (read from fnd/w5ident c08f4d5a (not in this tree), sha256 61a606825ab314ea, 29 pages) prints CC0603KRX7R8BB105 on none
-      of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of YAGEO's that prints CC0603KRX7R8BB105 (a part specification, not a series sheet), or take
-      a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/yageo-cc-series.pdf
+      page: 2
+      publisher: YAGEO
+      maker_mark: YAGEO
+      table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
+        V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
+      fields:
+      - field: series
+        code: CC
+        row: CC XXXX X X X7R X BB XXX
+        means: Ceramic Multilayer
+        means_row: Surface-Mount Ceramic Multilayer Capacitors
+      - field: size
+        code: '0603'
+        row: 0603 (1608)
+      - field: tolerance
+        code: K
+        row: K = ± 10%
+        means: ± 10%
+      - field: packaging
+        code: R
+        row: R = Paper/PE taping reel; Reel 7 inch
+        means: Paper/PE taping reel
+      - field: dielectric
+        code: X7R
+        row: CC XXXX X X X7R X BB XXX
+      - field: voltage
+        code: '8'
+        row: 8 = 25 V
+        means: 25 V
+      - field: process
+        code: BB
+        row: CC XXXX X X X7R X BB XXX
+      - field: value
+        code: '105'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
+      sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+      established:
+      - value
+      - package
+      - tolerance
+      - voltage
+      - dielectric
+      - construction
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -2325,15 +2543,58 @@ selections:
   findings:
   - V_UNBOUNDED
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: YAGEO
     mpn: CC0603KRX7R8BB105
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names YAGEO CC0603KRX7R8BB105 and binds a document that does not print it: v2/vendor/passives/yageo-cc-series.pdf
-      (read from fnd/w5ident c08f4d5a (not in this tree), sha256 61a606825ab314ea, 29 pages) prints CC0603KRX7R8BB105 on none
-      of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of YAGEO's that prints CC0603KRX7R8BB105 (a part specification, not a series sheet), or take
-      a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/yageo-cc-series.pdf
+      page: 2
+      publisher: YAGEO
+      maker_mark: YAGEO
+      table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
+        V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
+      fields:
+      - field: series
+        code: CC
+        row: CC XXXX X X X7R X BB XXX
+        means: Ceramic Multilayer
+        means_row: Surface-Mount Ceramic Multilayer Capacitors
+      - field: size
+        code: '0603'
+        row: 0603 (1608)
+      - field: tolerance
+        code: K
+        row: K = ± 10%
+        means: ± 10%
+      - field: packaging
+        code: R
+        row: R = Paper/PE taping reel; Reel 7 inch
+        means: Paper/PE taping reel
+      - field: dielectric
+        code: X7R
+        row: CC XXXX X X X7R X BB XXX
+      - field: voltage
+        code: '8'
+        row: 8 = 25 V
+        means: 25 V
+      - field: process
+        code: BB
+        row: CC XXXX X X X7R X BB XXX
+      - field: value
+        code: '105'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
+      sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+      established:
+      - value
+      - package
+      - tolerance
+      - voltage
+      - dielectric
+      - construction
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -2377,15 +2638,58 @@ selections:
   findings:
   - V_UNBOUNDED
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: YAGEO
     mpn: CC0603KRX7R8BB105
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names YAGEO CC0603KRX7R8BB105 and binds a document that does not print it: v2/vendor/passives/yageo-cc-series.pdf
-      (read from fnd/w5ident c08f4d5a (not in this tree), sha256 61a606825ab314ea, 29 pages) prints CC0603KRX7R8BB105 on none
-      of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of YAGEO's that prints CC0603KRX7R8BB105 (a part specification, not a series sheet), or take
-      a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/yageo-cc-series.pdf
+      page: 2
+      publisher: YAGEO
+      maker_mark: YAGEO
+      table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
+        V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
+      fields:
+      - field: series
+        code: CC
+        row: CC XXXX X X X7R X BB XXX
+        means: Ceramic Multilayer
+        means_row: Surface-Mount Ceramic Multilayer Capacitors
+      - field: size
+        code: '0603'
+        row: 0603 (1608)
+      - field: tolerance
+        code: K
+        row: K = ± 10%
+        means: ± 10%
+      - field: packaging
+        code: R
+        row: R = Paper/PE taping reel; Reel 7 inch
+        means: Paper/PE taping reel
+      - field: dielectric
+        code: X7R
+        row: CC XXXX X X X7R X BB XXX
+      - field: voltage
+        code: '8'
+        row: 8 = 25 V
+        means: 25 V
+      - field: process
+        code: BB
+        row: CC XXXX X X X7R X BB XXX
+      - field: value
+        code: '105'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
+      sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+      established:
+      - value
+      - package
+      - tolerance
+      - voltage
+      - dielectric
+      - construction
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -2430,15 +2734,58 @@ selections:
   findings:
   - V_UNBOUNDED
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: YAGEO
     mpn: CC0603KRX7R8BB105
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names YAGEO CC0603KRX7R8BB105 and binds a document that does not print it: v2/vendor/passives/yageo-cc-series.pdf
-      (read from fnd/w5ident c08f4d5a (not in this tree), sha256 61a606825ab314ea, 29 pages) prints CC0603KRX7R8BB105 on none
-      of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of YAGEO's that prints CC0603KRX7R8BB105 (a part specification, not a series sheet), or take
-      a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/yageo-cc-series.pdf
+      page: 2
+      publisher: YAGEO
+      maker_mark: YAGEO
+      table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
+        V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
+      fields:
+      - field: series
+        code: CC
+        row: CC XXXX X X X7R X BB XXX
+        means: Ceramic Multilayer
+        means_row: Surface-Mount Ceramic Multilayer Capacitors
+      - field: size
+        code: '0603'
+        row: 0603 (1608)
+      - field: tolerance
+        code: K
+        row: K = ± 10%
+        means: ± 10%
+      - field: packaging
+        code: R
+        row: R = Paper/PE taping reel; Reel 7 inch
+        means: Paper/PE taping reel
+      - field: dielectric
+        code: X7R
+        row: CC XXXX X X X7R X BB XXX
+      - field: voltage
+        code: '8'
+        row: 8 = 25 V
+        means: 25 V
+      - field: process
+        code: BB
+        row: CC XXXX X X X7R X BB XXX
+      - field: value
+        code: '105'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
+      sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+      established:
+      - value
+      - package
+      - tolerance
+      - voltage
+      - dielectric
+      - construction
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -2483,15 +2830,58 @@ selections:
   findings:
   - V_UNBOUNDED
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: YAGEO
     mpn: CC0603KRX7R8BB105
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names YAGEO CC0603KRX7R8BB105 and binds a document that does not print it: v2/vendor/passives/yageo-cc-series.pdf
-      (read from fnd/w5ident c08f4d5a (not in this tree), sha256 61a606825ab314ea, 29 pages) prints CC0603KRX7R8BB105 on none
-      of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of YAGEO's that prints CC0603KRX7R8BB105 (a part specification, not a series sheet), or take
-      a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/yageo-cc-series.pdf
+      page: 2
+      publisher: YAGEO
+      maker_mark: YAGEO
+      table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
+        V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
+      fields:
+      - field: series
+        code: CC
+        row: CC XXXX X X X7R X BB XXX
+        means: Ceramic Multilayer
+        means_row: Surface-Mount Ceramic Multilayer Capacitors
+      - field: size
+        code: '0603'
+        row: 0603 (1608)
+      - field: tolerance
+        code: K
+        row: K = ± 10%
+        means: ± 10%
+      - field: packaging
+        code: R
+        row: R = Paper/PE taping reel; Reel 7 inch
+        means: Paper/PE taping reel
+      - field: dielectric
+        code: X7R
+        row: CC XXXX X X X7R X BB XXX
+      - field: voltage
+        code: '8'
+        row: 8 = 25 V
+        means: 25 V
+      - field: process
+        code: BB
+        row: CC XXXX X X X7R X BB XXX
+      - field: value
+        code: '105'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
+      sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+      established:
+      - value
+      - package
+      - tolerance
+      - voltage
+      - dielectric
+      - construction
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^1u 25V$') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -2532,15 +2922,58 @@ selections:
     - 'rule C-T2: class 2 below 10 uF, unstated'
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: YAGEO
     mpn: CC0603KRX7R7BB105
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names YAGEO CC0603KRX7R7BB105 and binds a document that does not print it: v2/vendor/passives/yageo-cc-series.pdf
-      (read from fnd/w5ident c08f4d5a (not in this tree), sha256 61a606825ab314ea, 29 pages) prints CC0603KRX7R7BB105 on none
-      of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of YAGEO's that prints CC0603KRX7R7BB105 (a part specification, not a series sheet), or take
-      a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/yageo-cc-series.pdf
+      page: 2
+      publisher: YAGEO
+      maker_mark: YAGEO
+      table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
+        V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
+      fields:
+      - field: series
+        code: CC
+        row: CC XXXX X X X7R X BB XXX
+        means: Ceramic Multilayer
+        means_row: Surface-Mount Ceramic Multilayer Capacitors
+      - field: size
+        code: '0603'
+        row: 0603 (1608)
+      - field: tolerance
+        code: K
+        row: K = ± 10%
+        means: ± 10%
+      - field: packaging
+        code: R
+        row: R = Paper/PE taping reel; Reel 7 inch
+        means: Paper/PE taping reel
+      - field: dielectric
+        code: X7R
+        row: CC XXXX X X X7R X BB XXX
+      - field: voltage
+        code: '7'
+        row: 7 = 16 V
+        means: 16 V
+      - field: process
+        code: BB
+        row: CC XXXX X X X7R X BB XXX
+      - field: value
+        code: '105'
+        rule: pf_2sig
+        row: 2 significant digits+number of zeros
+      sha256: 61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648
+      established:
+      - value
+      - package
+      - tolerance
+      - voltage
+      - dielectric
+      - construction
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: 'rule I-1: extended library, maker tier YAGEO, stock 904962'
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -2744,15 +3177,56 @@ selections:
     - PWM1 [BOUND] to Q4_G [BOUND]
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: UNI-ROYAL (Uniroyal Electronics)
     mpn: 0603WAF1000T5E
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names UNI-ROYAL (Uniroyal Electronics) 0603WAF1000T5E and binds a document that does not print
-      it: v2/vendor/passives/uniroyal-series-11cd644d.pdf (read from fnd/w5ident c08f4d5a (not in this tree), sha256 11cd644d5d8a34a6,
-      9 pages) prints 0603WAF1000T5E on none of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of UNI-ROYAL (Uniroyal Electronics)'s that prints 0603WAF1000T5E (a part specification, not
-      a series sheet), or take a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
+      page: 2
+      publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
+      maker_mark: UNI-ROYAL
+      held_back: true
+      fetch: v2/docs/records/w5identc/fetch_held_back.py
+      table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
+      fields:
+      - field: size
+        code: '0603'
+        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+      - field: power
+        code: WA
+        row: 'E.g.: WA=1/10W W4=1/4W'
+        means: 1/10W
+      - field: tolerance
+        code: F
+        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        means: ±1%
+      - field: value
+        code: '1000'
+        rule: ohm_3sig
+        row: 2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance,
+          and 11th code is the power of ten.
+        means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
+      - field: packaging
+        code: T
+        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        means: Tape/Reel
+      - field: quantity
+        code: '5'
+        row: 4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs
+        means: 5000pcs
+      - field: special
+        code: E
+        row: E = Environmental Protection, Lead Free, or Standard type.
+        means: Environmental Protection
+      sha256: 11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef
+      established:
+      - value
+      - package
+      - tolerance
+      - power
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^100R$') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -2793,15 +3267,56 @@ selections:
   findings:
   - V_UNBOUNDED
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: UNI-ROYAL (Uniroyal Electronics)
     mpn: 0603WAF1003T5E
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names UNI-ROYAL (Uniroyal Electronics) 0603WAF1003T5E and binds a document that does not print
-      it: v2/vendor/passives/uniroyal-series-11cd644d.pdf (read from fnd/w5ident c08f4d5a (not in this tree), sha256 11cd644d5d8a34a6,
-      9 pages) prints 0603WAF1003T5E on none of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of UNI-ROYAL (Uniroyal Electronics)'s that prints 0603WAF1003T5E (a part specification, not
-      a series sheet), or take a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
+      page: 2
+      publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
+      maker_mark: UNI-ROYAL
+      held_back: true
+      fetch: v2/docs/records/w5identc/fetch_held_back.py
+      table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
+      fields:
+      - field: size
+        code: '0603'
+        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+      - field: power
+        code: WA
+        row: 'E.g.: WA=1/10W W4=1/4W'
+        means: 1/10W
+      - field: tolerance
+        code: F
+        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        means: ±1%
+      - field: value
+        code: '1003'
+        rule: ohm_3sig
+        row: 2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance,
+          and 11th code is the power of ten.
+        means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
+      - field: packaging
+        code: T
+        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        means: Tape/Reel
+      - field: quantity
+        code: '5'
+        row: 4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs
+        means: 5000pcs
+      - field: special
+        code: E
+        row: E = Environmental Protection, Lead Free, or Standard type.
+        means: Environmental Protection
+      sha256: 11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef
+      established:
+      - value
+      - package
+      - tolerance
+      - power
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^100k$') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -2837,16 +3352,56 @@ selections:
     - GND [GROUND] to TX_INHIBIT_n [DECLARED]
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: UNI-ROYAL (Uniroyal Electronics)
     mpn: 0603WAF1002T5E
-    reason_class: DOCUMENT_OWED
-    reason: 'the generator''s order code C25804 is Uniroyal 0603WAF1002T5E by stream w5ident''s catalogue reading of 27 September
-      2026 (its selection S-d499541fe0 on boards A, B and E, the same key); the only Uniroyal document either stream holds
-      for it is the thick film series sheet w5ident filed, whose text layer prints no complete part number (read by this stream
-      on all 9 pages: an ordering scheme, not the part)'
-    next_action: file a Uniroyal document that prints 0603WAF1002T5E (a part specification or a certificate of conformance),
-      or take a 10 kOhm 1 percent 0603 part whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
+      page: 2
+      publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
+      maker_mark: UNI-ROYAL
+      held_back: true
+      fetch: v2/docs/records/w5identc/fetch_held_back.py
+      table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
+      fields:
+      - field: size
+        code: '0603'
+        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+      - field: power
+        code: WA
+        row: 'E.g.: WA=1/10W W4=1/4W'
+        means: 1/10W
+      - field: tolerance
+        code: F
+        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        means: ±1%
+      - field: value
+        code: '1002'
+        rule: ohm_3sig
+        row: 2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance,
+          and 11th code is the power of ten.
+        means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
+      - field: packaging
+        code: T
+        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        means: Tape/Reel
+      - field: quantity
+        code: '5'
+        row: 4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs
+        means: 5000pcs
+      - field: special
+        code: E
+        row: E = Environmental Protection, Lead Free, or Standard type.
+        means: Environmental Protection
+      sha256: 11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef
+      established:
+      - value
+      - package
+      - tolerance
+      - power
+      not_established: []
+    decoded_after: DOCUMENT_OWED under PRINTED
     from: stream w5identc (this builder's DECISIONS)
   order_code:
     code: C25804
@@ -2899,15 +3454,56 @@ selections:
     - LED_RAIL_SW [DECLARED] to RAIL_SENSE [DECLARED]
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: UNI-ROYAL (Uniroyal Electronics)
     mpn: 0603WAF1002T5E
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names UNI-ROYAL (Uniroyal Electronics) 0603WAF1002T5E and binds a document that does not print
-      it: v2/vendor/passives/uniroyal-series-11cd644d.pdf (read from fnd/w5ident c08f4d5a (not in this tree), sha256 11cd644d5d8a34a6,
-      9 pages) prints 0603WAF1002T5E on none of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of UNI-ROYAL (Uniroyal Electronics)'s that prints 0603WAF1002T5E (a part specification, not
-      a series sheet), or take a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
+      page: 2
+      publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
+      maker_mark: UNI-ROYAL
+      held_back: true
+      fetch: v2/docs/records/w5identc/fetch_held_back.py
+      table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
+      fields:
+      - field: size
+        code: '0603'
+        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+      - field: power
+        code: WA
+        row: 'E.g.: WA=1/10W W4=1/4W'
+        means: 1/10W
+      - field: tolerance
+        code: F
+        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        means: ±1%
+      - field: value
+        code: '1002'
+        rule: ohm_3sig
+        row: 2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance,
+          and 11th code is the power of ten.
+        means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
+      - field: packaging
+        code: T
+        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        means: Tape/Reel
+      - field: quantity
+        code: '5'
+        row: 4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs
+        means: 5000pcs
+      - field: special
+        code: E
+        row: E = Environmental Protection, Lead Free, or Standard type.
+        means: Environmental Protection
+      sha256: 11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef
+      established:
+      - value
+      - package
+      - tolerance
+      - power
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^10k$') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -2962,15 +3558,56 @@ selections:
     - LED_RAIL [DECLARED] to SHORE_A [DECLARED]
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: UNI-ROYAL (Uniroyal Electronics)
     mpn: 0603WAF1800T5E
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names UNI-ROYAL (Uniroyal Electronics) 0603WAF1800T5E and binds a document that does not print
-      it: v2/vendor/passives/uniroyal-series-11cd644d.pdf (read from fnd/w5ident c08f4d5a (not in this tree), sha256 11cd644d5d8a34a6,
-      9 pages) prints 0603WAF1800T5E on none of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of UNI-ROYAL (Uniroyal Electronics)'s that prints 0603WAF1800T5E (a part specification, not
-      a series sheet), or take a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
+      page: 2
+      publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
+      maker_mark: UNI-ROYAL
+      held_back: true
+      fetch: v2/docs/records/w5identc/fetch_held_back.py
+      table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
+      fields:
+      - field: size
+        code: '0603'
+        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+      - field: power
+        code: WA
+        row: 'E.g.: WA=1/10W W4=1/4W'
+        means: 1/10W
+      - field: tolerance
+        code: F
+        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        means: ±1%
+      - field: value
+        code: '1800'
+        rule: ohm_3sig
+        row: 2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance,
+          and 11th code is the power of ten.
+        means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
+      - field: packaging
+        code: T
+        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        means: Tape/Reel
+      - field: quantity
+        code: '5'
+        row: 4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs
+        means: 5000pcs
+      - field: special
+        code: E
+        row: E = Environmental Protection, Lead Free, or Standard type.
+        means: Environmental Protection
+      sha256: 11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef
+      established:
+      - value
+      - package
+      - tolerance
+      - power
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (generator) meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -3017,15 +3654,56 @@ selections:
   findings:
   - V_UNBOUNDED
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: UNI-ROYAL (Uniroyal Electronics)
     mpn: 0603WAF1001T5E
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names UNI-ROYAL (Uniroyal Electronics) 0603WAF1001T5E and binds a document that does not print
-      it: v2/vendor/passives/uniroyal-series-11cd644d.pdf (read from fnd/w5ident c08f4d5a (not in this tree), sha256 11cd644d5d8a34a6,
-      9 pages) prints 0603WAF1001T5E on none of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of UNI-ROYAL (Uniroyal Electronics)'s that prints 0603WAF1001T5E (a part specification, not
-      a series sheet), or take a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
+      page: 2
+      publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
+      maker_mark: UNI-ROYAL
+      held_back: true
+      fetch: v2/docs/records/w5identc/fetch_held_back.py
+      table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
+      fields:
+      - field: size
+        code: '0603'
+        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+      - field: power
+        code: WA
+        row: 'E.g.: WA=1/10W W4=1/4W'
+        means: 1/10W
+      - field: tolerance
+        code: F
+        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        means: ±1%
+      - field: value
+        code: '1001'
+        rule: ohm_3sig
+        row: 2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance,
+          and 11th code is the power of ten.
+        means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
+      - field: packaging
+        code: T
+        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        means: Tape/Reel
+      - field: quantity
+        code: '5'
+        row: 4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs
+        means: 5000pcs
+      - field: special
+        code: E
+        row: E = Environmental Protection, Lead Free, or Standard type.
+        means: Environmental Protection
+      sha256: 11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef
+      established:
+      - value
+      - package
+      - tolerance
+      - power
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^1k$') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -3060,14 +3738,56 @@ selections:
     - +3V3 [DECLARED] to TX_INHIBIT_n [DECLARED]
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: UNI-ROYAL (Uniroyal Electronics)
     mpn: 0603WAF2201T5E
-    reason_class: DOCUMENT_OWED
-    reason: the generator's order code C4190 is Uniroyal 0603WAF2201T5E by stream w5ident's catalogue reading of 27 September
-      2026 (its selection S-099e530a08); no held document prints that part number (the series sheet w5ident filed prints none)
-    next_action: file a Uniroyal document that prints 0603WAF2201T5E, or take a 2.2 kOhm 1 percent 0603 part whose maker prints
-      its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
+      page: 2
+      publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
+      maker_mark: UNI-ROYAL
+      held_back: true
+      fetch: v2/docs/records/w5identc/fetch_held_back.py
+      table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
+      fields:
+      - field: size
+        code: '0603'
+        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+      - field: power
+        code: WA
+        row: 'E.g.: WA=1/10W W4=1/4W'
+        means: 1/10W
+      - field: tolerance
+        code: F
+        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        means: ±1%
+      - field: value
+        code: '2201'
+        rule: ohm_3sig
+        row: 2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance,
+          and 11th code is the power of ten.
+        means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
+      - field: packaging
+        code: T
+        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        means: Tape/Reel
+      - field: quantity
+        code: '5'
+        row: 4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs
+        means: 5000pcs
+      - field: special
+        code: E
+        row: E = Environmental Protection, Lead Free, or Standard type.
+        means: Environmental Protection
+      sha256: 11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef
+      established:
+      - value
+      - package
+      - tolerance
+      - power
+      not_established: []
+    decoded_after: DOCUMENT_OWED under PRINTED
     from: stream w5identc (this builder's DECISIONS)
   order_code:
     code: C4190
@@ -3105,15 +3825,56 @@ selections:
   findings:
   - V_UNBOUNDED
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: UNI-ROYAL (Uniroyal Electronics)
     mpn: 0603WAF2201T5E
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names UNI-ROYAL (Uniroyal Electronics) 0603WAF2201T5E and binds a document that does not print
-      it: v2/vendor/passives/uniroyal-series-11cd644d.pdf (read from fnd/w5ident c08f4d5a (not in this tree), sha256 11cd644d5d8a34a6,
-      9 pages) prints 0603WAF2201T5E on none of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of UNI-ROYAL (Uniroyal Electronics)'s that prints 0603WAF2201T5E (a part specification, not
-      a series sheet), or take a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
+      page: 2
+      publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
+      maker_mark: UNI-ROYAL
+      held_back: true
+      fetch: v2/docs/records/w5identc/fetch_held_back.py
+      table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
+      fields:
+      - field: size
+        code: '0603'
+        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+      - field: power
+        code: WA
+        row: 'E.g.: WA=1/10W W4=1/4W'
+        means: 1/10W
+      - field: tolerance
+        code: F
+        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        means: ±1%
+      - field: value
+        code: '2201'
+        rule: ohm_3sig
+        row: 2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance,
+          and 11th code is the power of ten.
+        means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
+      - field: packaging
+        code: T
+        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        means: Tape/Reel
+      - field: quantity
+        code: '5'
+        row: 4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs
+        means: 5000pcs
+      - field: special
+        code: E
+        row: E = Environmental Protection, Lead Free, or Standard type.
+        means: Environmental Protection
+      sha256: 11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef
+      established:
+      - value
+      - package
+      - tolerance
+      - power
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^2\\.2k$') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -3166,15 +3927,56 @@ selections:
   findings:
   - V_UNBOUNDED
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: UNI-ROYAL (Uniroyal Electronics)
     mpn: 0603WAF270JT5E
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names UNI-ROYAL (Uniroyal Electronics) 0603WAF270JT5E and binds a document that does not print
-      it: v2/vendor/passives/uniroyal-series-11cd644d.pdf (read from fnd/w5ident c08f4d5a (not in this tree), sha256 11cd644d5d8a34a6,
-      9 pages) prints 0603WAF270JT5E on none of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of UNI-ROYAL (Uniroyal Electronics)'s that prints 0603WAF270JT5E (a part specification, not
-      a series sheet), or take a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
+      page: 2
+      publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
+      maker_mark: UNI-ROYAL
+      held_back: true
+      fetch: v2/docs/records/w5identc/fetch_held_back.py
+      table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
+      fields:
+      - field: size
+        code: '0603'
+        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+      - field: power
+        code: WA
+        row: 'E.g.: WA=1/10W W4=1/4W'
+        means: 1/10W
+      - field: tolerance
+        code: F
+        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        means: ±1%
+      - field: value
+        code: 270J
+        rule: ohm_3sig
+        row: 2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance,
+          and 11th code is the power of ten.
+        means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
+      - field: packaging
+        code: T
+        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        means: Tape/Reel
+      - field: quantity
+        code: '5'
+        row: 4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs
+        means: 5000pcs
+      - field: special
+        code: E
+        row: E = Environmental Protection, Lead Free, or Standard type.
+        means: Environmental Protection
+      sha256: 11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef
+      established:
+      - value
+      - package
+      - tolerance
+      - power
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (lcsc_fill MAP '^27R$') meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -3219,15 +4021,56 @@ selections:
     - LED_RAIL [DECLARED] to TX_A [DECLARED]
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: UNI-ROYAL (Uniroyal Electronics)
     mpn: 0603WAF3000T5E
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names UNI-ROYAL (Uniroyal Electronics) 0603WAF3000T5E and binds a document that does not print
-      it: v2/vendor/passives/uniroyal-series-11cd644d.pdf (read from fnd/w5ident c08f4d5a (not in this tree), sha256 11cd644d5d8a34a6,
-      9 pages) prints 0603WAF3000T5E on none of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of UNI-ROYAL (Uniroyal Electronics)'s that prints 0603WAF3000T5E (a part specification, not
-      a series sheet), or take a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
+      page: 2
+      publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
+      maker_mark: UNI-ROYAL
+      held_back: true
+      fetch: v2/docs/records/w5identc/fetch_held_back.py
+      table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
+      fields:
+      - field: size
+        code: '0603'
+        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+      - field: power
+        code: WA
+        row: 'E.g.: WA=1/10W W4=1/4W'
+        means: 1/10W
+      - field: tolerance
+        code: F
+        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        means: ±1%
+      - field: value
+        code: '3000'
+        rule: ohm_3sig
+        row: 2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance,
+          and 11th code is the power of ten.
+        means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
+      - field: packaging
+        code: T
+        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        means: Tape/Reel
+      - field: quantity
+        code: '5'
+        row: 4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs
+        means: 5000pcs
+      - field: special
+        code: E
+        row: E = Environmental Protection, Lead Free, or Standard type.
+        means: Environmental Protection
+      sha256: 11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef
+      established:
+      - value
+      - package
+      - tolerance
+      - power
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (generator) meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -3262,14 +4105,56 @@ selections:
     - EMCON_HW [DECLARED] to EMCON_HW_DRV [BOUND]
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: UNI-ROYAL (Uniroyal Electronics)
     mpn: 0603WAF3300T5E
-    reason_class: DOCUMENT_OWED
-    reason: the generator's order code C23138 is Uniroyal 0603WAF3300T5E by stream w5ident's catalogue reading of 27 September
-      2026 (its selection S-c62c375c58 on board B); no held document prints that part number
-    next_action: file a Uniroyal document that prints 0603WAF3300T5E, or take a 330 Ohm 1 percent 0603 part whose maker prints
-      its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
+      page: 2
+      publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
+      maker_mark: UNI-ROYAL
+      held_back: true
+      fetch: v2/docs/records/w5identc/fetch_held_back.py
+      table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
+      fields:
+      - field: size
+        code: '0603'
+        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+      - field: power
+        code: WA
+        row: 'E.g.: WA=1/10W W4=1/4W'
+        means: 1/10W
+      - field: tolerance
+        code: F
+        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        means: ±1%
+      - field: value
+        code: '3300'
+        rule: ohm_3sig
+        row: 2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance,
+          and 11th code is the power of ten.
+        means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
+      - field: packaging
+        code: T
+        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        means: Tape/Reel
+      - field: quantity
+        code: '5'
+        row: 4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs
+        means: 5000pcs
+      - field: special
+        code: E
+        row: E = Environmental Protection, Lead Free, or Standard type.
+        means: Environmental Protection
+      sha256: 11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef
+      established:
+      - value
+      - package
+      - tolerance
+      - power
+      not_established: []
+    decoded_after: DOCUMENT_OWED under PRINTED
     from: stream w5identc (this builder's DECISIONS)
   order_code:
     code: C23138
@@ -3304,15 +4189,56 @@ selections:
     - LED_RAIL_SW [DECLARED] to MAINRING_A [DECLARED]
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: UNI-ROYAL (Uniroyal Electronics)
     mpn: 0603WAF4700T5E
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names UNI-ROYAL (Uniroyal Electronics) 0603WAF4700T5E and binds a document that does not print
-      it: v2/vendor/passives/uniroyal-series-11cd644d.pdf (read from fnd/w5ident c08f4d5a (not in this tree), sha256 11cd644d5d8a34a6,
-      9 pages) prints 0603WAF4700T5E on none of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of UNI-ROYAL (Uniroyal Electronics)'s that prints 0603WAF4700T5E (a part specification, not
-      a series sheet), or take a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
+      page: 2
+      publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
+      maker_mark: UNI-ROYAL
+      held_back: true
+      fetch: v2/docs/records/w5identc/fetch_held_back.py
+      table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
+      fields:
+      - field: size
+        code: '0603'
+        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+      - field: power
+        code: WA
+        row: 'E.g.: WA=1/10W W4=1/4W'
+        means: 1/10W
+      - field: tolerance
+        code: F
+        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        means: ±1%
+      - field: value
+        code: '4700'
+        rule: ohm_3sig
+        row: 2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance,
+          and 11th code is the power of ten.
+        means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
+      - field: packaging
+        code: T
+        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        means: Tape/Reel
+      - field: quantity
+        code: '5'
+        row: 4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs
+        means: 5000pcs
+      - field: special
+        code: E
+        row: E = Environmental Protection, Lead Free, or Standard type.
+        means: Environmental Protection
+      sha256: 11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef
+      established:
+      - value
+      - package
+      - tolerance
+      - power
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (generator) meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -3402,15 +4328,56 @@ selections:
     - Q1_G [DECLARED] to Q2_D [BOUND]
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: UNI-ROYAL (Uniroyal Electronics)
     mpn: 0603WAF470JT5E
-    reason_class: DOCUMENT_DOES_NOT_NAME_THE_PART
-    reason: 'w5ident''s table names UNI-ROYAL (Uniroyal Electronics) 0603WAF470JT5E and binds a document that does not print
-      it: v2/vendor/passives/uniroyal-series-11cd644d.pdf (read from fnd/w5ident c08f4d5a (not in this tree), sha256 11cd644d5d8a34a6,
-      9 pages) prints 0603WAF470JT5E on none of its pages (read page by page by this stream, rule D-2)'
-    next_action: file a document of UNI-ROYAL (Uniroyal Electronics)'s that prints 0603WAF470JT5E (a part specification, not
-      a series sheet), or take a part meeting the same requirement whose maker prints its part number
+    datasheet:
+      binding: DECODED
+      path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
+      page: 2
+      publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
+      maker_mark: UNI-ROYAL
+      held_back: true
+      fetch: v2/docs/records/w5identc/fetch_held_back.py
+      table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
+      fields:
+      - field: size
+        code: '0603'
+        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+      - field: power
+        code: WA
+        row: 'E.g.: WA=1/10W W4=1/4W'
+        means: 1/10W
+      - field: tolerance
+        code: F
+        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        means: ±1%
+      - field: value
+        code: 470J
+        rule: ohm_3sig
+        row: 2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance,
+          and 11th code is the power of ten.
+        means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
+      - field: packaging
+        code: T
+        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        means: Tape/Reel
+      - field: quantity
+        code: '5'
+        row: 4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs
+        means: 5000pcs
+      - field: special
+        code: E
+        row: E = Environmental Protection, Lead Free, or Standard type.
+        means: Environmental Protection
+      sha256: 11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef
+      established:
+      - value
+      - package
+      - tolerance
+      - power
+      not_established: []
+    decoded_after: DOCUMENT_DOES_NOT_NAME_THE_PART under PRINTED
     chosen_by: the incumbent (generator) meets every requirement
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
