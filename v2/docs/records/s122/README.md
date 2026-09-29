@@ -540,6 +540,28 @@ statements), and S-123.
     the absent rule holds through its 0 UNJUDGED;
   * needs the check committed at HEAD, starting `mergeable: yes`, and naming every document and `verdicts.out`;
   * then closes S-122 and sets CFL-016 to PASS.
+* **Round 7, replayed on two throwaway clones (deleted after):**
+  * of the tip `c3490c9b`: the nine outputs reproduce byte for byte (`inventory.out`, `verdicts.out`, `-base` at
+    `e57a7365`, `-set14` at `1bafab8c`, `verdicts-r4.out` at `edead832`, `verdicts-r5.out` at `a6429e66`,
+    `verdicts-r6.out` at `1c187977`); `apply_docs_s122_r7.py` refuses on the tip, with V2-SPEC.md checked out from
+    `1c187977` writes 1 edit and the file equals the tip, and a second run refuses; `test_close_s122.py` ALL PASS;
+  * of `fnd/int16` at `36bb1d12` (set 15; S-125 open, CFL-016 FAIL waiting on S-122), with int16's ignored files
+    installed from its worktree and `43b5a25c` merged with no conflict: `apply_registry_s122_r4.py` rebound 5 records
+    (CFL-010, CFL-013, CFL-014, CFL-016, REQ-005), opened S-126 (the highest S number there was S-125) with disposition
+    PROCESS and no record waiting on it, re-pinned the envelope and ENV-001, and refused a second run; `rules_lib.py
+    requirements` 144 records, 0 errors, 0 warnings; `rules_render.py --requirements`; `rules_status.py` (gate state
+    NOT_READY: 39 FAIL, 104 INCONCLUSIVE, 195 PASS of 338) and the full `rules_render.py`, which moved
+    CURRENT-EVIDENCE.md from `c9b98931` to `0f2c59cb` and the seven status pages, after which `rules_lib.py
+    requirements` read 0 errors and 2 warnings, CON-010 and REQ-044; `inventory.py` and `verdicts.py` re-run (their
+    header line moved, 1011 sentences, 0 STALE, 0 UNJUDGED) and committed with the registry and the pages; a fixture
+    check (not filed; the marker and the eight lines) refused while only staged, then committed; `test_close_s122.py`
+    ALL PASS; `close_s122.py` closed S-122 (CFL-016 PASS, its waits_on dropped; the closing evidence names S-126 and
+    `apply_docs_s122_r5.py` to `_r7.py`; S-123 to S-126 still open) and refused a second run; after it
+    `rules_lib.py requirements` 0 errors and the same 2 warnings, `rules_lib.py` 59 rules and 0 errors, the tests 72
+    passed after the trace page's render, `claims_check` PASS, 91 of 91.
+  * The first run of that sequence, on `c3490c9b`, refused at the registry script: its screen reads a standard's
+    number ("MIL-STD-461") as a claim word, and the follow-up item's title named the EMC test methods by it.
+    `43b5a25c` names them without it.
 * **Round 6, replayed on a throwaway clone of `19bddf75` (deleted after):**
   * the eight outputs reproduce byte for byte (`inventory.out`, `verdicts.out`, `-base` at `e57a7365`, `-set14` at
     `1bafab8c`, `verdicts-r4.out` at `edead832`, `verdicts-r5.out` at `a6429e66`);
