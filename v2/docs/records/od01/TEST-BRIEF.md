@@ -13,14 +13,15 @@ these tests use an empty case, made plates, dummy blocks and printed stand-ins, 
 
 ## 1. The two tests, in this order (one case: the heat test needs the sealed skin, the mock-up drills it)
 
-**Before either:** the receipt checks R1 to R8 on the case and frame (`MACHINING-RFQ.md` section 6). H1, C6, C1 and the
-entry plates are released for cutting only after the checks their row names have passed; quotes may be asked earlier.
+**Before either:** the receipt checks R1 to R8 on the case and frame (`MACHINING-RFQ.md` section 6). H1, C6, C1, the
+entry plates C4 and the gaskets G1 to G3 are released for cutting only after the checks their row names have passed;
+the connector plate C3 is quoted only and waits for the build; quotes may be asked earlier.
 
 **A. Heat balance** (`TEST-PROCEDURE.md` sections 3 to 6).
 - Set-up: the case on its frame and four legs (C6), the blank plate H1 (sheet H1-1) on the frame's o-ring. Three 6.8 ohm
   Arcol HS50 heaters bolted with compound to H2 (330 x 200 x 3.0, both faces painted matt black) at the stack's place on
   nylon stand-offs; the pack block in its pocket; eight thermocouples on the channel map; four normally closed
-  thermostats holding a latching relay in the heater supply.
+  thermostats holding two latching relays, K1 and K2, whose contacts are in series in the heater supply.
 - Runs: 21, 42 and 64 W (12.0 V on one, two, three heaters), lid open and closed, fans off, each to the steady-state
   criterion (CH2 and CH3 change under 0.2 K in 30 min, the room under 0.5 K in 60 min, and at least 3 h). Then, attended,
   the Arcol HS100 patch resistor on H1's four PEM S-M3 nuts: 45 and 83 W for 20, 30 and 60 s from a plate at or under
@@ -49,7 +50,7 @@ entry plates are released for cutting only after the checks their row names have
 
 Mechanical fitting from a drawing: caliper, height gauge and feeler gauges; drilling a polypropylene wall from a paper
 template; drilling and tapping M3 in aluminium; a torque driver; bonding with tape. Low-voltage bench work: setting a
-supply's voltage and current limit, reading volts and amps, crimping terminals and wiring a relay socket and two
+supply's voltage and current limit, reading volts and amps, crimping terminals and wiring two relay sockets, two diodes and two
 pushbuttons from a wiring list, taping thermocouples on, starting a logger and exporting its file. No soldering (have a
 heater's leads fitted by someone who solders if its tags need it).
 
@@ -63,7 +64,7 @@ heater's leads fitted by someone who solders if its tags need it).
   an aluminium block of about 50 x 50 x 10 mm (verification V1); optionally an ultrasonic thickness gauge (R7); an
   8-channel type K logger with cold-junction compensation, 0.1 K resolution and a CSV export (`CHECKOUT-LIST.md` section
   6); ten type K thermocouples with plugs to suit it; a second 15 V, 7 A supply if the patch runs are to keep the heaters
-  on; the heaters, compound, the four thermostats, the relay and its socket (`CHECKOUT-LIST.md` lines 5 to 7 and 10 to
+  on; the heaters, compound, the four thermostats, the two relays with their sockets and diodes (`CHECKOUT-LIST.md` lines 5 to 7 and 10 to
   15); four M4 x 45 mm nylon (PA66) stand-offs; 3M VHB 5952; ten 6-32 x 1/2 in pan-head screws; M3 A2 screws and washers;
   silicone wire of 0.75 mm2 or more with crimp terminals; the printed stand-ins and the made plates (`MACHINING-RFQ.md`).
 
@@ -79,11 +80,12 @@ initials (`TEST-PROCEDURE.md` section 9).
 12 to 13.5 V at up to 6.1 A: no shock hazard, but heat and fire. Peli gives the case body a maximum of 88 C (its 1450EU
 page): no heater or hot plate touches the polypropylene; H2 stands on stand-offs clear of the walls and floor.
 - **Unattended heating only behind the automatic shutdown** (`TEST-PROCEDURE.md` section 3): four normally closed
-  Elmwood 2455R thermostats in series with the coil of a Finder 40.52 relay that switches the heaters and holds itself in:
+  Elmwood 2455R thermostats in series with the coils of two Finder 40.52 relays, K1 and K2 (a diode across each coil),
+  whose contacts in series switch the heaters and hold both relays in:
   TS1 on H2 (opens by 96 C), TS2 on the floor under H2 (by 63 C), TS3 on H1 (by 63 C), TS4 on the middle heater's body
   (by 144 C). A trip, a pressed STOP, a broken wire or a supply loss turns the heaters off and **keeps them off** until
   START is pressed. Each thermostat's opening temperature is verified on a hot block (V1), the latch on the bench (V2)
-  and in place (V3) before the case is first heated, and STOP/TEST is pressed at the start of every step (V4). **Without
+  and in place (V3) before the case is first heated, and at the start of every step each relay contact is read open with the supply off and STOP/TEST is pressed (V4). **Without
   V1 to V4, every hour of heating is attended continuously** by a person at the case who reads the logger at least every
   10 minutes. **The supply's current limit (6.5 A) and the fuses do not enforce any temperature limit.**
 - **The patch runs are always attended**, each pulse timed by hand, and stopped at once at 110 C on the resistor's body.

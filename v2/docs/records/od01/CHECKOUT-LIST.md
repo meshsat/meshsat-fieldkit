@@ -91,20 +91,20 @@ lead as the page shows them.
 **Added 29 September 2026: the automatic over-temperature shutdown** (`TEST-PROCEDURE.md` section 3; the owner's
 instruction R5). Read at reichelt's Netherlands shop on 28 September 2026 between 23:24 and 23:33 UTC (29 September,
 01:24 to 01:33 CEST), in the same parcel as lines 5 to 7. The thermostats' maker states AC contact ratings only, so they
-carry only the relay coil's 54 mA and the relay (DC1 breaking capacity 8 A at 30 V, Finder's sheet) switches the heaters.
+carry only the two relay coils' current (about 108 mA, 54 mA each) and the relays' contacts in series (DC1 breaking capacity 8 A at 30 V each, Finder's sheet) switch the heaters.
 
 | # | Part (exact number) | Seller and page | Unit price as shown, VAT status | Qty | Line total | Shipping to NL as stated | Stock or lead as shown | Read (UTC) |
 |---|---|---|---|---|---|---|---|---|
 | 10 | Elmwood (Honeywell) 2455R thermostat, 90 C, normally closed, automatic reset; reichelt "2455R 90 NC" (TS1) | reichelt elektronik, Netherlands shop (O21) | EUR 12.71 "incl. 21 % VAT" (EUR 10.50 excl., arithmetic) | 1 | EUR 10.50 excl., 12.71 incl. | as line 5 (one reichelt parcel; "Shipping costs from EUR 6.95") | "in stock, delivery within 2 - 3 business days" | 23:31 |
 | 11 | Elmwood (Honeywell) 2455R thermostat, 60 C +-3 C, normally closed, closes at 45 C, with bracket B203-S; reichelt "2455R 60 NC" (TS2, TS3) | reichelt elektronik, Netherlands shop (O20) | EUR 13.47 "incl. 21 % VAT" (EUR 11.13 excl., arithmetic) | 2 | EUR 22.26 excl., 26.94 incl. | as line 5 (one reichelt parcel; "Shipping costs from EUR 6.95") | "in stock, delivery within 2 - 3 business days" | 23:31 |
 | 12 | Elmwood (Honeywell) 2455R thermostat, 140 C, normally closed; reichelt "2455R 140 NC" (TS4) | reichelt elektronik, Netherlands shop (O22) | EUR 23.69 "incl. 21 % VAT" (EUR 19.58 excl., arithmetic) | 1 | EUR 19.58 excl., 23.69 incl. | as line 5 (one reichelt parcel; "Shipping costs from EUR 6.95") | "in stock, delivery within 2 - 3 business days" | 23:24 |
-| 13 | Finder 40.52.9.012.0000 relay, 2 changeover, 8 A, 12 V DC coil; reichelt "FIN 40.52.9 12V" (K1) | reichelt elektronik, Netherlands shop (O23) | EUR 4.98 "incl. 21 % VAT" (EUR 4.12 excl., arithmetic) | 2 (K1, K2) | EUR 8.24 excl., 9.96 incl. | as line 5 (one reichelt parcel; "Shipping costs from EUR 6.95") | "in stock, delivery within 2 - 3 business days" | 23:33 |
-| 14 | Finder 95.05 relay socket for the 40.52, screw terminals, DIN rail; reichelt "FIN 95.05" (X1) | reichelt elektronik, Netherlands shop (O24) | EUR 4.73 "incl. 21 % VAT" (EUR 3.91 excl., arithmetic) | 2 (X1, X2) | EUR 7.82 excl., 9.46 incl. | as line 5 (one reichelt parcel; "Shipping costs from EUR 6.95") | "in stock, delivery within 2 - 3 business days" | 23:33 |
+| 13 | Finder 40.52.9.012.0000 relay, 2 changeover, 8 A, 12 V DC coil; reichelt "FIN 40.52.9 12V" (K1, K2) | reichelt elektronik, Netherlands shop (O23) | EUR 4.98 "incl. 21 % VAT" (EUR 4.12 excl., arithmetic) | 2 (K1, K2) | EUR 8.24 excl., 9.96 incl. | as line 5 (one reichelt parcel; "Shipping costs from EUR 6.95") | "in stock, delivery within 2 - 3 business days" | 23:33 |
+| 14 | Finder 95.05 relay socket for the 40.52, screw terminals, DIN rail; reichelt "FIN 95.05" (X1, X2) | reichelt elektronik, Netherlands shop (O24) | EUR 4.73 "incl. 21 % VAT" (EUR 3.91 excl., arithmetic) | 2 (X1, X2) | EUR 7.82 excl., 9.46 incl. | as line 5 (one reichelt parcel; "Shipping costs from EUR 6.95") | "in stock, delivery within 2 - 3 business days" | 23:33 |
 | 15 | Unpriced small items: two panel pushbuttons (one normally open START, one normally closed STOP/TEST, each 1 A at 24 V DC or more); two in-line blade fuse holders with a 7.5 A and a 1 A fuse (F1, F2); two 1N4007 diodes (D1, D2); a three-way link block; four M4 x 45 mm PA66 (nylon) stand-offs; M3 A2 screws, nuts and washers; heat-resistant matt black paint rated to 200 C or more (H2) | not read | **unpriced** | 1 set | unpriced | - | - | |
 
 Lines 10 to 14 together: **EUR 68.40 excl. VAT, EUR 82.76 incl. 21 % VAT** (with the second relay and socket of the independent check's m2) (arithmetic from the page prices). They are not
 added into the totals of section 3, which stay the reviewed figures for lines 1 to 8; with them, lines 1 to 14 would be EUR
-476.77 excl. VAT (arithmetic).
+484.80 excl. VAT (arithmetic: 416.40 + 68.40).
 
 Alternatives read, not on the list: for lines 1 and 2, Multi-Cases.nl lists `1450-001-110E` from EUR 158,00 (in stock) and `1450-300-110E` from EUR 31,00 (read by the independent check; its VAT basis was not read), a Dutch seller; also for line 8, Kiwi Electronics' Adafruit `P270` type K glass braid 1 m (bare wire
 ends, no plug), EUR 11.48 incl. VAT, "EUR 9.49 Ex. VAT", "10 or more EUR 10.91 Ea.", "13 piece(s) in stock" (O17, 20:48),

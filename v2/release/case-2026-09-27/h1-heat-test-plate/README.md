@@ -60,23 +60,30 @@ lists every file an engineer needs, this folder's included, by path and sha256.
 
 ## Source revision
 
-Generated on 29 September 2026 at 01:53 CEST (23:53 UTC on 28 September, the date the sheet's title block prints) on the
-rented CAD box (Ubuntu 24.04, Python 3.12.3, x86_64) from branch `fnd/od01b` at `c5a95973`
-(`CASE_BASE_COMMIT=c5a95973`). Three earlier builds carried the same geometry (the STL bytes are identical in all four and
-the check record is identical to the second's): at `c0ec7684` the sheet misread the HS100's mounting hole, at `b8880536`
-its note 5 named the receipt checks R1 to R8 rather than the five that gate H1, and at `f2294a69` the sheet still typed the
-insert pattern's spans and its title figures, which it now reads from `panel1450.py` (the rule
-`test_h1_heat_test_plate.t_h1_scripts_type_no_design_number` holds both scripts to that). The venv whose `pip freeze` equals `v2/cad/requirements-cad.lock` line for line
+Generated on 29 September 2026 at about 02:18 CEST (00:18 UTC, the drawing PDF's creation time) on the rented CAD box
+(Ubuntu 24.04, Python 3.12.3, x86_64) from branch `fnd/od01b` at `e0cd5ec1` (`CASE_BASE_COMMIT=e0cd5ec1`), after PEM's
+bulletin CL set the nut hole to 4.22 +0.08/-0.00: the four PEM holes, and so the STL and STEP, differ from every earlier
+build; the rest of the geometry does not. Four earlier builds carried a 4.2 nut hole: at `c0ec7684` the sheet misread the
+HS100's mounting hole, at `b8880536` its note 5 named the receipt checks R1 to R8 rather than the five that gate H1, at
+`f2294a69` the sheet still typed the insert pattern's spans and its title figures, which it now reads from `panel1450.py`
+(the rule `test_h1_heat_test_plate.t_h1_scripts_type_no_design_number` holds both scripts to that), and `c5a95973` was
+the last with the 4.2 hole. The venv whose `pip freeze` equals `v2/cad/requirements-cad.lock` line for line
 (build123d 0.13.0, cadquery-ocp-novtk 8.0.1.0.0, ezdxf 1.4.4, matplotlib 3.11.2). Commands, from the repository root:
 
     python v2/cad/h1_heat_test_plate.py <out>/h1-heat-test-plate
     python v2/cad/h1_heat_test_plate_drawing.py <out>/h1-heat-test-plate/h1-heat-test-plate-drawing.pdf <out>/h1.png
-    python v2/cad/case_manifest.py <out>/h1-heat-test-plate --base c5a95973     (after this README is written)
+    python v2/cad/case_manifest.py <out>/h1-heat-test-plate --base e0cd5ec1     (after this README is written)
 
-Inputs, sha256 first 16: `v2/ecad/tools/panel1450.py` 3bdb88df98260244 (the same file the release names);
+Inputs, sha256 first 16: `v2/cad/h1_heat_test_plate.py` 9e949f9e1b9237a2 and `v2/cad/h1_heat_test_plate_drawing.py`
+8e0d56a6a030240f (the generator and the drawing script, as the check record and the sheet print them);
+`v2/ecad/tools/panel1450.py` 3bdb88df98260244 (the same file the release names);
 `v2/release/case-2026-09-27/face-plate/face-plate.dxf` 19703fa5838f9e4a; `v2/vendor/arcol/arcol-hs-datasheet-12-14-08.pdf`
 ec17870c5a92d11e. The sheet was rendered to an image and read back before this folder was written (AI read-back of
 legibility and of the figures against the check record).
+
+The check record prints the PEM holes as "4.2" because that one line formats the diameter with one decimal; the value it
+compares, and the DXF's four circles, are 4.22. The format is corrected at H1's next build on the box (it sits in the
+generator, whose hash the sheet and the record print).
 
 ## Before cutting
 

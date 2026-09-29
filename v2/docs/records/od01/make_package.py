@@ -79,11 +79,12 @@ FILES = [
     ("K. Generators (to regenerate H1)", "v2/ecad/tools/panel1450.py", "the single geometry source of C1 and H1"),
     ("K. Generators (to regenerate H1)", "v2/cad/case_manifest.py", "writes a release folder's manifest"),
     ("K. Generators (to regenerate H1)", "v2/cad/requirements-cad.lock", "the pinned CAD venv"),
-    ("A. Read first", OD + "checks/check-3.md", "independent AI check 3 (29 Sep) of the corrected package; its items answered by patch_od01c.py"),
-    ("D. Referenced records", "v2/docs/reviews/READY-TO-ACT.md", "the ready-to-act review the checkout list and RFQ cite"),
-    ("D. Referenced records", "v2/docs/ASSEMBLY.md", "the assembly steps the RFQ and the procedure cite"),
-    ("D. Referenced records", REL + "lid-tray-qmx-r2/README.md", "the lid tray r2 the RFQ names as printed, not machined"),
-    ("D. Referenced records", "v2/vendor/pem/pem-cl-self-clinching-nuts-bulletin.pdf", "PEM bulletin CL: the S-M3-2 nut, its 4.22 +0.08 hole, insertion after finishing"),
+    ("L. Independent checks 3 and 4, and the records the documents cite", OD + "checks/check-3.md", "independent AI check 3 (29 Sep) of the corrected package; its items answered by patch_od01c.py"),
+    ("L. Independent checks 3 and 4, and the records the documents cite", OD + "checks/check-4.md", "independent AI check 4 (29 Sep): N1 and N2 and the minor items answered by patch_od01d.py, n6 carried"),
+    ("L. Independent checks 3 and 4, and the records the documents cite", "v2/docs/reviews/READY-TO-ACT.md", "the ready-to-act review the checkout list and RFQ cite"),
+    ("L. Independent checks 3 and 4, and the records the documents cite", "v2/docs/ASSEMBLY.md", "the assembly steps the RFQ and the procedure cite"),
+    ("L. Independent checks 3 and 4, and the records the documents cite", REL + "lid-tray-qmx-r2/README.md", "the lid tray r2 the RFQ names as printed, not machined"),
+    ("L. Independent checks 3 and 4, and the records the documents cite", "v2/vendor/pem/pem-cl-self-clinching-nuts-bulletin.pdf", "PEM bulletin CL: the S-M3-2 nut, its 4.22 +0.08 hole, insertion after finishing"),
 ]
 
 
@@ -110,7 +111,7 @@ def main():
           "Prototype: nothing in the package has been made, bought, sent or run. **Export:** copy every path below keeping the",
           "repository paths, then from the repository root `sha256sum -c v2/docs/records/od01/PACKAGE.sha256` reads OK for all %d files" % len(FILES),
           "(%.1f MB in all). Groups A to G are what a shop needs for the quotes (each part's drawing PDF governs its DXF and STEP); A, H, I and J" % (total / 1e6),
-          "what the operator needs for the tests; K regenerates H1. This file, `PACKAGE.sha256` and `LOG-od01b.md` are not in the list.",
+          "what the operator needs for the tests; K regenerates H1; L holds the later independent checks and the records the documents cite. This file, `PACKAGE.sha256` and `LOG-od01b.md` are not in the list.",
           ""] + rows + [""]
     open(os.path.join(HERE, "PACKAGE.md"), "w", encoding="utf-8").write("\n".join(md))
     open(os.path.join(HERE, "PACKAGE.sha256"), "w", encoding="utf-8").write("\n".join(sums) + "\n")
