@@ -1,0 +1,19 @@
+The hardware EMCON lamp read back on the committed netlists (stream d4emcon, tools/lamp_check.py)
+  board B  pcb-b-compute-b19/out/pcb-b-compute.net  sha256/16 97823ef1171a61ce
+  board C  pcb-c-display-c8/out/pcb-c-display.net  sha256/16 fef4df255c00f4db
+
+PASS  L-1  C net TX_INHIBIT_n: 8 nodes, C24.1, J_PANEL.11, R14.1, R50.1, SW_EMCON.1, TP10.1, U14.3, U9.2; firmware-set pins on it: none
+PASS  L-1  C net EMCON_HW: 5 nodes, J_PANEL.8, TP11.1, U13.2, U14.6, U9.4; firmware-set pins on it: none
+PASS  L-1  C net EMCLAMP_Y: 2 nodes, R48.1, U14.4; firmware-set pins on it: none
+PASS  L-1  C net EMCLAMP_G: 3 nodes, Q7.1, R48.2, R49.1; firmware-set pins on it: none
+PASS  L-1  C net EMCLAMP_K: 2 nodes, D22.1, Q7.3; firmware-set pins on it: none
+PASS  L-1  C net EMCLAMP_A: 2 nodes, D22.2, R47.2; firmware-set pins on it: none
+PASS  L-1  C net LED_RAIL_SW: 7 nodes, Q1.2, R15.1, R17.1, R39.1, R47.1, SW_LIGHT.1, TP5.1; firmware-set pins on it: none
+PASS  L-2  C U14 SN74LVC1G57DBVR configurable gate wired : pins {'1': 'GND', '2': 'GND', '3': 'TX_INHIBIT_n', '4': 'EMCLAMP_Y', '5': '+3V3', '6': 'EMCON_HW'} (SCES414P Figure 7, In1 held LOW selects Y = NOT(In0 OR In2))
+PASS  L-3  D22 K on [('D22', '1'), ('Q7', '3')], A on [('D22', '2'), ('R47', '2')]; Q7 S on GND, G on [('Q7', '1'), ('R48', '2'), ('R49', '1')]; R47 470R, R48 100R, R49 10k
+PASS  L-4  SW_LIGHT pins {'1': 'LED_RAIL_SW', '2': '+5V', '3': 'unconnected-(SW_LIGHT-Pin_3-Pad3)', '4': 'GND', '5': 'LIGHT_DAY_n', '6': 'LIGHT_NIGHT_n'}; U5 TLV75533PDBV 3.3 V 500 m pins {'1': '+5V', '2': 'GND', '3': '+5V', '4': 'unconnected-(U5-NC-Pad4)', '5': '+3V3'}; C +5V non-capacitor nodes [('BZ1', '2'), ('J_PANEL', '1'), ('J_PANEL', '2'), ('SW_LIGHT', '2'), ('TP6', '1'), ('U5', '1'), ('U5', '3')]; B J_PANEL pins 1, 2 on ('PANEL_5V', 'PANEL_5V'); B F1 1.1A hold 1812 (Bour pins on ('+5V_DEV', 'PANEL_5V'); B PANEL_5V non-capacitor nodes [('F1', '2'), ('J_PANEL', '1'), ('J_PANEL', '2')]
+
+L-5  firmware-set pins one two-pin part away from the lamp's path (not on it):
+     LED_RAIL_SW -- R15 10k -- RAIL_SENSE (RP2040 panel controller (USB d) pin 38 GPIO26_A0
+
+RESULT: every check holds

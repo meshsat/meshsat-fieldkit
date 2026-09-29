@@ -1,0 +1,65 @@
+The read-back of stream d4emcon's circuit drafts (tools/readback_d4e.py)
+  board B  v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net  sha256/16 97823ef1171a61ce
+
+FAIL  net RB_RXD         2 nodes; missing R533.1, U538.4; must not be on it U18.26
+FAIL  net RB_RXD_H       0 nodes; missing U18.26, U538.1; must not be on it none
+FAIL  net RB_CTRL        2 nodes; missing R534.1, U539.4; must not be on it U6.20
+FAIL  net RB_CTRL_H      0 nodes; missing U539.1, U6.20; must not be on it none
+FAIL  net RB_GO          0 nodes; missing U537.4, U538.2, U539.2; must not be on it none
+FAIL  net RB_STATUS      3 nodes; missing U537.2; must not be on it none
+PASS  net RB_XMTG        3 nodes; missing none; must not be on it none
+FAIL  net RB_TXD         2 nodes; missing R535.1; must not be on it none
+FAIL  net RB_IEN         3 nodes; missing R532.2, U537.1, U543.1; must not be on it U536.4
+FAIL  net RB_IEN_DRV     0 nodes; missing R532.1, U536.4; must not be on it none
+FAIL  net ZBA_RXD        2 nodes; missing R536.1, U540.6; must not be on it U16.26
+FAIL  net ZBA_RST_n      4 nodes; missing U540.4; must not be on it U16.24
+FAIL  net ZBA_BSL        3 nodes; missing U541.6; must not be on it U16.28
+FAIL  net ZBB_RXD        2 nodes; missing R537.1, U542.6; must not be on it U17.26
+FAIL  net ZBB_RST_n      4 nodes; missing U542.4; must not be on it U17.24
+FAIL  net ZBB_BSL        3 nodes; missing U541.4; must not be on it U17.28
+FAIL  net +3V3_ZB        14 nodes; missing R536.2, R537.2, R538.1; must not be on it none
+FAIL  net LORA_GO        0 nodes; missing U544.4, U545.2, U546.2, U547.2, U548.2, U549.2, U550.2; must not be on it none
+FAIL  net E22_EN         2 nodes; missing U544.2; must not be on it none
+FAIL  net LORA_RXEN_G    0 nodes; missing R543.1, U12.6, U545.4; must not be on it none
+FAIL  net LORA_TXEN_G    0 nodes; missing R542.1, U12.7, U546.4; must not be on it none
+FAIL  net LORA_NRST      0 nodes; missing R544.1, U12.15, U547.4; must not be on it none
+FAIL  net LORA_MOSI      0 nodes; missing U12.17, U548.4; must not be on it none
+FAIL  net LORA_SCLK      0 nodes; missing U12.18, U549.4; must not be on it none
+FAIL  net LORA_NSS       0 nodes; missing U12.19, U550.4; must not be on it none
+FAIL  net LORA_DIO1      0 nodes; missing R539.1, U12.13, U551.2; must not be on it none
+FAIL  net LORA_BUSY      0 nodes; missing R540.1, U12.14, U552.2; must not be on it none
+FAIL  net LORA_MISO      0 nodes; missing R541.1, U12.16, U553.2; must not be on it none
+FAIL  net LORA_RXEN      2 nodes; missing R546.1, U545.1; must not be on it U12.6
+FAIL  net LORA_TXEN      2 nodes; missing R547.1, U546.1; must not be on it U12.7
+FAIL  net SPI3_MISO      3 nodes; missing U553.4; must not be on it U12.16
+FAIL  net SPI3_CE1       4 nodes; missing U550.1; must not be on it U12.19
+FAIL  net SPI3_IO26      3 nodes; missing R548.1, U547.1; must not be on it U12.15
+FAIL  net SPI3_MOSI      3 nodes; missing R549.1, U548.1; must not be on it U12.17
+FAIL  net SPI3_SCLK      3 nodes; missing R550.1, U549.1; must not be on it U12.18
+FAIL  net 5G_TPR_n       0 nodes; missing R545.1, U221.1, U554.1; must not be on it none
+FAIL  net 5G_PWROFF_n    5 nodes; missing U554.6; must not be on it U221.1
+FAIL  value R41   '10k' (expected to start with '2.2k 1%')
+FAIL  value R42   '10k' (expected to start with '2.2k 1%')
+FAIL  value R527  '10k' (expected to start with '15k 1%')
+FAIL  value R532  '' (expected to start with '2.2k 1%')
+FAIL  value R238  '10k' (expected to start with '100k 1%')
+FAIL  value R538  '' (expected to start with '4.7k 1%')
+FAIL  supply U537 pin 5 on None (expected +3V3_DEV)
+FAIL  supply U538 pin 5 on None (expected +3V3_DEV)
+FAIL  supply U539 pin 5 on None (expected +3V3_DEV)
+FAIL  supply U540 pin 5 on None (expected +3V3_DEV)
+FAIL  supply U541 pin 5 on None (expected +3V3_DEV)
+FAIL  supply U542 pin 5 on None (expected +3V3_DEV)
+FAIL  supply U543 pin 6 on None (expected +5V_DEV)
+FAIL  supply U544 pin 5 on None (expected +3V3_CM3)
+FAIL  supply U545 pin 5 on None (expected +3V3_CM3)
+FAIL  supply U550 pin 5 on None (expected +3V3_CM3)
+FAIL  supply U551 pin 5 on None (expected +3V3_CM3)
+FAIL  supply U553 pin 5 on None (expected +3V3_CM3)
+FAIL  supply U554 pin 5 on None (expected +3V3_CM2)
+FAIL  pin U543.5 on None (expected +3V3_DEV)
+FAIL  pin R538.2 on None (expected GND)
+FAIL  pin R41.2 on +3V3_DEV (expected GND)
+FAIL  pin R42.2 on +3V3_DEV (expected GND)
+
+RESULT: 59 check(s) fail

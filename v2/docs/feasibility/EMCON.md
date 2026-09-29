@@ -42,6 +42,13 @@ module, against `fc144600`, as a section 0a. At integration it became section 4b
 sections 0, 2, 3 and 4's board B statements, and sections 7 and 8 are brought in line, and the L2 sum is re-taken on
 main's boards A and C (0.36 V).
 
+**Stream d4emcon (29 September 2026, MESHSAT-1357, set 10 at `7b2caadd`).** Section 4d answers FEA-002's layout-entry
+stage row by row on the set 10 netlists (CLOSED AT DESK 0, OPEN 15, NEEDS HARDWARE 2 of 17), completes SD-EMC-2's back-feed
+census with a remedy per line, adds findings D4E-F1 (board C's U9 in its band, L4) and D4E-F2 (the Tpr hold's level), and
+names the drafts that close them at desk once applied (`v2/docs/records/d4emcon/apply_b_d4e.py`, `apply_c_d4e_f1.py`), with
+their read-back (`tools/readback_d4e.py`). Nothing in it is applied or regenerated; sections 0 to 4c stand where 4d does not
+name an item.
+
 What EMCON has to do is ruled: owner ruling D-05 (26 September 2026), "radios dark": every radio with an emission path
 is powered off or RF-disabled in hardware; the VHF path keeps listening behind a transmit-only gate; GNSS, DCF77 and the
 lightning sensor continue (`v2/docs/CONOPS.md:307` at main `b69f20db`, unchanged at `01469100`). The rule that judges it
@@ -197,6 +204,10 @@ end to end 0 of 17.** Every end-to-end row waits on
 the circuit round's remedies for the shared items (section 7) and on section 5a's latency, and then on its bench test
 (section 6). "CLOSED" in section 4 and in `v2/ecad/tools/pcb_requirements.yaml` readings of this page means LOCAL
 unless it says end to end.
+
+Since stream d4emcon (29 September 2026), section 4d marks every row on the set 10 netlists as CLOSED AT DESK, OPEN or
+NEEDS HARDWARE against FEA-002's layout-entry stage: 0, 15 and 2 of 17 as committed; 0, 2 and 15 predicted once its drafts
+are applied and read back. The two columns above are unchanged.
 
 ## 1. Evidence base
 
@@ -1215,6 +1226,153 @@ pull-ups on the module's outputs `RB_STATUS` and `RB_XMTG`), the E22 and both E7
 each interface's edge budget); the Iridium 9704's response to ENABLE (a maker's document owed); U536's own L4 band; Q212's
 conduction over temperature; and every row's bench test.
 
+## 4d. Stream d4emcon: FEA-002's layout-entry stage row by row on the set 10 netlists, the back-feed census, and the drafts that close it at desk
+
+Written by stream d4emcon (MESHSAT-1357) on 29 September 2026 against the committed netlists of main `7b2caadd` (set 10:
+A `30ad87746d1801ca`, B `97823ef1171a61ce`, C `fef4df255c00f4db`, D `a2d48972d171aad1`; `netdiff.py` finds no part or net
+difference from set 9 on any board, `v2/docs/records/d4emcon/readings/set10/WHAT-MOVED.md`). It answers FEA-002's
+LAYOUT_ENTRY stage (`v2/ecad/tools/pcb_requirements.yaml`) item by item. Every reading is a parse of a committed netlist
+(`tools/path_walk.py`, `tools/walk_report.py` for RF-002's walk, `tools/fault_levels.py`, `tools/lamp_check.py`,
+`tools/netq.py`, `tools/readback_d4e.py`, all under `v2/docs/records/d4emcon/`) or a maker's document under `v2/vendor/`.
+Circuit changes are DRAFTS for the integrator (`apply_b_d4e.py` for board B, `apply_c_d4e_f1.py` for board C): none is
+applied, regenerated or read back yet, so no row below is closed by them. Each is taken by the session under the owner's
+standing rule of 26 September 2026. For the items it names, this section supersedes sections 0 to 4c where they differ.
+
+**How a row is marked.** CLOSED AT DESK: the hardware path holds in every fault state F1 to F9 of section 5a on the committed
+netlist and every term of its latency is bounded by a held document. OPEN: something the desk can still do is missing (a
+circuit draft to apply, regenerate and read back, or a maker's document to find); the missing piece is named. NEEDS HARDWARE:
+everything the desk can do is done on the committed netlist, and what remains is a figure only a bench can produce; the bench
+row of section 6 is named. A path that needs working firmware in its failure case closes no row.
+
+**The shared items on set 10.** L1 CLOSED at desk on B and C (RF-002's walk: nothing on any board but its own source can drive
+`EMCON_HW` or `TX_INHIBIT_n`, `readings/set10/walk/walk-full.txt` lines 8 and 9). L2 CLOSED at desk (the same two walk lines:
+each line's pull-downs hold it under 0.8 V against every stated pin current with its source unpowered or unplugged). L3 CLOSED
+at desk on B (4b). L7 CLOSED at desk on B's open drains (4b), Q212 named (25 C rows, E-12). L4: case (2) on board A CLOSED at
+desk by the 0.6 enable dividers (4a, SD-A8-3); on board D CLOSED at desk by U21 except the decay race (E-11); on board B
+closed on U501 to U504 by their dividers (4c), not applicable to U505, INFERRED on U{s}12 to U{s}15 (the module's own boot
+order, E-11), and OPEN on U536 (draft B-4 below); on board C OPEN: **finding D4E-F1**, U9 on board C's +3V3 in its 0 to
+1.65 V band drives `EMCON_HW` to an unspecified level up to 1.65 V, which board B's readers (VIL 0.8 V) cannot be shown to read
+LOW, and every board B row reads `EMCON_HW` alone; the remedy is drafted (`apply_c_d4e_f1.py`: R52 330R 1 percent and D23
+BAT46W clamping `EMCON_HW` to within one Schottky drop of `TX_INHIBIT_n`, re-run on set 10's `gen_sch_c.py`: applies once,
+refuses a second run). Rows 2 and 3 are untouched by D4E-F1: board A's gates and board D's read `TX_INHIBIT_n`, which the
+toggle's contact grounds whatever board C's rail does. The shared element (SD-EMC-6): the hardware EMCON lamp is read back on
+board C's set 10 netlist, `D22` through `U14` (the NOR of both lines) and `Q7`, with no pin a firmware sets on any net of its
+path (`readings/set10/lamp-check-set10.txt`, L-1 to L-4 PASS; one firmware pin sits one resistor away, GPIO26 behind R15 10 k
+on `LED_RAIL_SW`, and can neither light nor darken it in DAY or NIGHT). CON-021's lamp on board C is therefore CLOSED at desk;
+its face-plate light guide is FABRICATION_RELEASE's (S-44).
+
+### 4d.1 The row table (set 10)
+
+F1 to F3: every processor that can reach the row in reset, unpowered or running a hostile image. F6: the line's own logic rail
+at 0 V or in its 0 to 1.65 V band (board C's +3V3 for `EMCON_HW`; each gate's own rail). F7: back-power from parts that stay
+powered. Latency: from the contact closing to RF off, against section 5a's L_max.
+
+| # | Transmitter | Dominant hardware chain on set 10 | L_max | F1 to F3 | F6 | F7 | Latency terms | Status on set 10 | With the drafts applied and read back |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | SA868 (D, U2) | `TX_INHIBIT_n` > D U12 (AND) > U13 (open drain) released > `SA_PTT_n` held by R88/R89 | 1 s | held: no processor reaches KEY (4.1; walk: `TX_INHIBIT_n` PASS) | +3V3_D8 in band: U21 removes +5V_TX and with it the exciter's +5V_SA through FB1 (L4 D), except the decay race | not applicable (supply kept, D-05) | the SA868's PTT-release-to-carrier time, pin 5's "1" threshold and current, U13's off-state current while powered: none stated (S-92) | NEEDS HARDWARE: E-01 (threshold, input current, and U13's off-state current added to it), E-11 (the race) | unchanged |
+| 2 | RA30H1317M1 PA (plate) | path (b): `TX_INHIBIT_n` > D U12 > U14 > U15 EN low (TLV75801P), VGG discharged through R82 + R83 (81.5 k 1 percent) with C62 2.2 uF; K1 at rest. Path (a) on A, the second path | 1 s | held (walk: D `J_VGG` PASS) | +3V3_D8 in band: U21 removes +5V_TX, U15 unpowered, except the race; board C's rail: the contact holds `TX_INHIBIT_n` | not applicable | VGG from 4.6 V to 0.5 V in at most 0.49 s through 81.5 k 1 percent (C62 +20 percent), to 0.1 V in 0.84 s; U15's active discharge (95 Ohm, typical only, TLV758P) and its disable delay are not bounded; the RA30's output at a VGG above 0 V is not stated ("IDD~0 @ VGG=0V", pin 2 "Power Control"): the level at which it meets the pass line is a bench figure | NEEDS HARDWARE: E-02 (VGG and RF from the contact), E-11 (the race); path (a)'s S-93 grounds do not hold the row | unchanged |
+| 3 | QMX (lid; A `J_HF`) | `TX_INHIBIT_n` AND `EMCON_HW` (A U37) AND the software hold (U38) > HF_EN > 0.6 divider > U15 (LM5176) EN > +12V_HF off | 1 s | held (4a; dominant through `TX_INHIBIT_n`) | A's +3V3 in band: the 0.6 divider keeps EN under 1.17 V (4a, SD-A8-3); +3V3 over 3.83 V: U39 (EQ-17) | USB VBUS not connected inside the QMX (SD-EMC-4, revision recorded at intake) | the LM5176's high-side drive in shutdown is not stated (SNVSAI1D 7.4.1): the walk reads the row UNDECIDED on Q24 (S-93); the QMX's input capacitance and behaviour under 6.0 V TBD (4a) | OPEN: S-93's ground on board A (a hardware element that holds Q24's gate off in shutdown, or TI's figure; board A's author), then E-03 | OPEN on S-93 (this stream drafts nothing for board A); then NEEDS HARDWARE, E-03 |
+| 4 | RockBLOCK 9704 (B, `J_RB9704`) | `EMCON_HW` > U503 > 0.6 divider > U24 off (`+5V_RB`); `EMCON_HW` > U536 > `RB_IEN` (the module's ENABLE) low | 1 s | held (U503, U536; L1) | +3V3_DEV in band: U503 by its divider (4c); U536 unspecified up to 1.65 V against the maker's 0.4 V Logic In LOW; board C's rail: D4E-F1 | four pins live with the module off: `RB_RXD` (U18 TXD), `RB_CTRL` (U6), `RB_STATUS` and `RB_XMTG` (R41, R42 to +3V3_DEV), against Ground Control's "no voltage applied to any input pins" | 16 J on the module's supercapacitors; what the 9704 does when ENABLE falls: in no held document | OPEN: D4E-F1 (board C), B-1 and B-4 (board B), and the Iridium 9704 module's ENABLE document (a lookup) | OPEN on the Iridium 9704 ENABLE document; NEEDS HARDWARE, E-04, as its alternative |
+| 5 | RM520N-GL 5G (B, `J_M2C2`) | SD-EMC-1r8: `EMCON_HW` > U216 (on +5V_S2) > `S2A_EN` low > U203 off; `EMCON_ON2` (U212) > U215 (W_DISABLE1#), U220 (FULL_CARD_POWER_OFF#), Q212 through R295 15 Ohm | 20 s (5a; 0 at power-up under EMCON; W_DISABLE1# within 1 s) | held; F2 held by U216 (4c); F4 moot (the supply goes) | +3V3_DEV: not on the path (L3); board C's rail: D4E-F1 | CLOSED at desk: about 77 mA into 15 Ohm, 1.2 V under 3.135 V (4b) | 1.16 ms plus 1.84 ms per mF of the module's own input capacitance (unstated): 20 s is met below about 10 F, 1 s below about 0.54 F (E-12); Q212's 25 C rows | OPEN: D4E-F1 | NEEDS HARDWARE: E-12 |
+| 6, 7 | AW7915-AED, slots 1 and 3 | `EMCON_HW` > U116 / U316 (on +5V_S1, +5V_S3) > `S{s}A_EN` low > U103 / U303 off | 1 s | held; F2 held by U116, U316 (4c) | board C's rail: D4E-F1 | PERST# through 100 Ohm, REFCLK, PCIe pairs, PEWAKE#: bounded, but AsiaRF states no minimum operating voltage to judge against | the card's own capacitance, unstated | OPEN: D4E-F1 | NEEDS HARDWARE: E-07 (the rail with the lines live, and the time to RF off) |
+| 8 to 13 | CM5 WiFi and Bluetooth, slots 1 to 3 | `EMCON_HW` > U{s}12 (on +3V3_CM{s}) > `EMCON_ON{s}` > U{s}13 open drains > `WL_nDisable`, `BT_nDisable` | 1 s | held (walk PASS, all six) | +3V3_DEV: not on the path (L3); U{s}12 to U{s}15 in their band only while the module's own 3.3 V rises (INFERRED, 4b); board C's rail: D4E-F1 | not applicable | the module's time from the pin low to RF off: not stated | OPEN: D4E-F1 | NEEDS HARDWARE: E-08 (and E-11 for the INFERRED band) |
+| 14 | E22-900M30S (B, U12) | `EMCON_HW` > U504 > 0.6 divider > U21 off (`+5V_LORA`, QOD to VOUT) | 1 s | held | +3V3_DEV in band: U504 by its divider (4c); board C's rail: D4E-F1 | nine CM5 slot 3 pins on the module with no series resistance; OPEN (4d.2) | the module's own capacitance, unstated; U21's RPD 250 to 400 Ohm at 5 V | OPEN: D4E-F1, B-3 | NEEDS HARDWARE: E-09 |
+| 15, 16 | E72 CC2652P x2 (B, U13, U14) | `EMCON_HW` > U505 > U22 off (`+3V3_ZB`, QOD to VOUT) | 1 s | held | +3V3_DEV in band: U22's input is +3V3_DEV itself (4.15); board C's rail: D4E-F1 | each CP2102N drives RX, RESET_N and BSL push-pull, and R28 to R31 lead RTS and DTR into the gated rail; OPEN (4d.2) | the modules' own capacitance, unstated; U22's RPD unstated at 3.3 V | OPEN: D4E-F1, B-2 | NEEDS HARDWARE: E-10 |
+| 17 | LimeSDR Mini 2.4 (B, `J_LIME`) | `EMCON_HW` > U501 > 0.6 divider > U23 off (`+5V_LIME`) | 1 s | held | +3V3_DEV in band: U501, U502 by the divider (4c); board C's rail: D4E-F1 | CLOSED at desk: bounded (4.17); the walk's UNDECIDED on U33's VBUS is its own class gap (section 8) | the board's VBUS capacitance, unstated | OPEN: D4E-F1 | NEEDS HARDWARE: E-06 |
+
+**Counts on set 10: CLOSED AT DESK 0 of 17, OPEN 15 (rows 3 to 17), NEEDS HARDWARE 2 (rows 1 and 2).** With every draft of
+this section applied, regenerated and read back (a prediction, not a result): CLOSED AT DESK 0, OPEN 2 (row 3 on S-93, row 4
+on the Iridium 9704's ENABLE document), NEEDS HARDWARE 15. No row can be CLOSED AT DESK by desk work alone: every one has a
+radio-side time term (the radio's own capacitance, or its response to its pin) that no held document states, which is what
+FEA-002's stage allows with `needs: [DESK, DEVELOPMENT_HARDWARE]`.
+
+### 4d.2 SD-EMC-2: the back-feed census on board B (set 10) and its remedies
+
+Every signal pin of each gated radio, with every node of its net (`tools/netq.py` on `B` `97823ef1171a61ce`). "Live" means
+driven or pulled by a part that stays powered while EMCON holds the radio's supply off. The remedies are draft B-1 to B-3 of
+`apply_b_d4e.py`; their arithmetic uses only held figures.
+
+| Radio, pin | Net on set 10 | What stays live into it | Bound as drawn | Remedy (draft) and bound after |
+|---|---|---|---|---|
+| RockBLOCK 14 RXD (in) | `RB_RXD` | U18 TXD, CP2102N push-pull, VOH at least VIO - 0.7 V at 7 mA (Rev 1.5) | a live 3.3 V on an input, against Ground Control's "no voltage applied to any input pins" with I_BTD low | B-1: U538 `RB_RXD = RB_RXD_H AND RB_GO`, `RB_GO = RB_IEN AND I_BTD` (U537), R533 10 k 1% to GND: EMCON 0.1 V (VOL at 100 uA, SCES217AA); gates unpowered 0.10 V (Ioff 10 uA); the inputs fall with I_EN rather than after I_BTD, a stated departure from the maker's shutdown order that keeps `EMCON_HW` free of a new reader |
+| RockBLOCK 6 P_EN (in) | `RB_CTRL` | U6 IO1_7 (PCA9555, push-pull or 100 uA pull-up) | as RXD | B-1: U539 and R534, as RXD; P_EN low is the maker's "enables the charge circuit", with no supply to charge from |
+| RockBLOCK 7 I_BTD (out) | `RB_STATUS` | R41 10 k to +3V3_DEV and U7's pull-up (IIL 100 uA, SCPS131J) | 0.33 mA into a dead output | B-1: R41 2.2 k 1% to GND: 100 uA x 2.2 k = 0.22 V, under the maker's 0.4 V LOW; the module drives 3.4 V into it, 1.56 mA, inside its 2 mA |
+| RockBLOCK 8 XMT_G (out) | `RB_XMTG` | R42 10 k to +3V3_DEV, U7's pull-up | as I_BTD | B-1: R42 2.2 k 1% to GND, as I_BTD |
+| RockBLOCK 13 TXD (out) | `RB_TXD` | U18 RXD's weak pull-up, 10 to 30 uA (IPU, Rev 1.5) | 30 uA | B-1: R535 10 k 1% to GND: 0.30 V |
+| RockBLOCK 3 I_EN (in) | `RB_IEN` | U536 (EMCON AND request); the maker's own divider | CLOSED at desk under EMCON (4c) | B-4 (below) for U536's band |
+| E72 7 RX (in), x2 | `ZBA_RXD`, `ZBB_RXD` | U16 / U17 TXD push-pull, no series resistance | unbounded but for the CP2102N's drive; into `+3V3_ZB`, whose only sink is U22's RPD, unstated at 3.3 V | B-2: SN74LVC2G07 open drains on +3V3_DEV (U540, U542), pull-ups R536 and R537 (4.7 k 1%) to the gated rail: no line driven up with U22 off |
+| E72 24 RESET_N (in), x2 | `ZBA_RST_n`, `ZBB_RST_n` | U16 / U17 RTS push-pull, and through R28 / R29 (10 k) into `+3V3_ZB` itself | 0.36 mA per line into the rail through the pull-up alone | B-2: U540, U542 open drains; R28, R29 stay the pull-ups to the gated rail |
+| E72 10 BSL (in), x2 | `ZBA_BSL`, `ZBB_BSL` | U16 / U17 DTR push-pull, and through R30 / R31 into `+3V3_ZB` | as RESET_N | B-2: U541 open drains |
+| E72 8 TX (out), x2 | `ZBA_TXD`, `ZBB_TXD` | U16 / U17 RXD's weak pull-up, 30 uA at most | 30 uA each | B-2: R538 (4.7 k 1%) bleeds `+3V3_ZB`: 2 x 30 uA, plus 6 x 10 uA of the open drains' Ioff with +3V3_DEV lost, is 120 uA into 4.653 k, 0.56 V, under the E72's 1.9 V minimum (Ebyte manual); 0.71 mA while the radios run |
+| E72 13, 14 cJTAG, 20 VCC | `ZBx_TMSC`, `ZBx_TCKC`, `+3V3_ZB` | J_ZBDBG1, J_ZBDBG2, declared accessories (bench headers) | nothing fitted in the kit | none: the walk's UNDECIDED on them is a declaration item for the tools author (section 8) |
+| E22 6 RXEN, 7 TXEN, 15 NRST, 17 MOSI, 18 SCK, 19 NSS (in) | `LORA_RXEN`, `LORA_TXEN`, `SPI3_IO26`, `SPI3_MOSI`, `SPI3_SCLK`, `SPI3_CE1` (+ R25 10 k to +3V3_S3B) | CM5 slot 3 GPIOs, driven by firmware (F3) | no series resistance. A series resistance cannot close it: at 10 Mbps (E22 manual v1.20) the edge allows at most 680 Ohm, and nine lines at 3.3 V through 680 Ohm against U21's 400 Ohm hold +5V_LORA at about 2.8 V, over the module's 2.5 V minimum | B-3: U545 to U550 (SN74LVC1G08 on +3V3_CM3): each line AND `LORA_GO` (U544, a 74LVC1G34 copy of `E22_EN`, II 1 uA at VCC 0 to 5.5 V): EMCON 0.1 V on every input; R542 to R544 (100 k) hold TXEN, RXEN and NRST low with the gates unpowered, and R546 to R550 (100 k) the gates' host-side inputs while slot 3 has not configured its pins |
+| E22 13 DIO1, 14 BUSY, 16 MISO (out) | `SPI3_IO24`, `SPI3_IO23`, `SPI3_MISO` | CM5 slot 3 GPIOs (inputs, or outputs under F3) | as above | B-3: U551 to U553 (74LVC1G34 on +3V3_CM3) between the module and the host: the module's outputs see only the buffers' inputs, 1 uA each (DS36108); R539 to R541 (100 k) hold them low while it is off. Into +5V_LORA: at most 3 uA, about 1 mV on U21's RPD |
+| RM520N-GL (every socket line) | `J_M2C2` | USB, PERST#, REFCLK, PEWAKE#, SIM | CLOSED at desk: 77 mA into 15 Ohm, 1.2 V (4b) | none |
+| AW7915-AED x2 | `J_M2C1`, `J_M2C3` | PERST# through 100 Ohm, REFCLK, PCIe pairs, PEWAKE# | bounded; no maker floor | none at desk; E-07 records the rail |
+| LimeSDR | `J_LIME` | the hub's D+/D- through U33 | CLOSED at desk (4.17) | none |
+
+### 4d.3 L1 to L4 and L7 per board (set 10)
+
+| Board | L1 | L2 | L3 | L4 | L7 | Draft |
+|---|---|---|---|---|---|---|
+| A | not applicable (no firmware pin on either line; walk PASS) | CLOSED (R102 10 k 1%, 4a) | not applicable | CLOSED at desk (0.6 dividers, SD-A8-3) | not applicable (no FET on an EMCON line) | none needed |
+| B | CLOSED (U506, 4b) | CLOSED (R58 4.7 k 1%, 0.58 V worst with the w4b readers, 4c) | CLOSED (per-slot `EMCON_ON{s}`) | U501 to U504 CLOSED, U505 not applicable, U{s}12 to U{s}15 INFERRED (E-11), **U536 OPEN** | CLOSED (SN74LVC2G06 open drains; Q212 named) | B-4 for U536 |
+| C | CLOSED (U13, R46, round 8) | CLOSED (R50 on `TX_INHIBIT_n`; `EMCON_HW` in B's sum) | not applicable | **U9 OPEN (D4E-F1)**; U13, U14 on the lamp and the RP2040 copy only | not applicable | `apply_c_d4e_f1.py` |
+| D | not applicable (reads `TX_INHIBIT_n` only; walk PASS) | CLOSED (R2 and the line's sum, walk PASS) | not applicable | CLOSED at desk by U21 except the decay race (E-11) | not applicable | none (the race is a bench item) |
+
+**B-4, U536's band (draft, `apply_b_d4e.py`).** The maker's Logic In LOW is 0.4 V and its HIGH 2.0 V, so a divider on a gate
+that reaches at most 1.65 V in its band cannot meet both. U543, a TPS3808G30 (SBVS050N: VIT 2.79 V +-1.25 percent over -40 to
++85 C, VDD 1.7 to 6.5 V, open-drain RESET with VOL 0.4 V at 1 mA, SENSE independent of VDD) on +5V_DEV, the input of +3V3_DEV's
+buck U25, watches +3V3_DEV and holds `RB_IEN` low below VIT; U536 drives `RB_IEN` through R532 (2.2 k 1%), so in its band it
+pushes at most 1.65 V / 2.178 k = 0.76 mA into the supervisor, inside the 1 mA row: `RB_IEN` at most 0.4 V. R527 becomes
+15 k 1%. Released: `RB_IEN` at least 2.08 V (U536's VOH 2.4 V through 2.222 k and the maker's divider, 2.457 V Thevenin
+through 166 k at the module's 4.0 V minimum input, into 14.85 k, less U537's 5 uA), over the maker's 2.0 V. EMCON asserted: at
+most 0.15 V. Every rail lost: 20.3 uA of stated leakage into 15 k parallel 166 k, 0.28 V. Residual: the supervisor's
+SENSE-to-RESET delay is stated as 20 us typical with no maximum, so a +3V3_DEV that falls from 2.79 V into the band faster
+than that is a race: bench E-11 with E-04 steps +3V3_DEV down with +5V_DEV up and records `RB_IEN`.
+
+### 4d.4 SD-EMC-1 on board B: the two stages, the supervisor that sets Tpr, fallback (iii), and finding D4E-F2
+
+Read back on set 10's board B netlist (`tools/netq.py`): stage 1, the supply: `S2A_EN` is U216's output (SN74LV1T08 on +5V_S2,
+`EMCON_HW AND PCIE_PWR_EN2`), U203's enable; Q212 (gate `EMCON_ON2`) discharges `+3V3_M2C2` through R295 (15R 1% 2512 1 W).
+Stage 2, the maker's turn-off pin: `5G_PWROFF_n` carries U220 pin 6 (SN74LVC2G06, input `EMCON_ON2`, VCC +3V3_CM2), Q207, R238
+and U221 pin 1. `W_DISABLE1#` (`5G_W_DIS_n`) is U215 pin 6. All three act at once (SD-EMC-1r8, 4b). The supervisor that sets
+Tpr: U221, TPS3808G30, VDD and SENSE on `+3V3_S2A`, CT on `5G_TPR_CT` through R297 49.9 k 1% to VDD (SBVS050N: 40 k to 200 k
+gives td 180 to 420 ms), MR open; Quectel asks Tpr of at least 100 ms (HD v1.1 Table 10). **Fallback (iii)** (remove the supply
+at once when EMCON meets a boot board B can see) is contained in this circuit: the supply is removed at once on every EMCON,
+whatever the module is doing, so there is no boot window left for a fallback to cover, and the bench alternative E-05 (b) to
+(d) no longer decides anything for the layout.
+
+**Finding D4E-F2 (new): the Tpr hold is not shown inside Quectel's LOW.** HD v1.1 Table 9: FULL_CARD_POWER_OFF# VIL max 0.2 V,
+VIH min 1.19 V, "Pull down with a 100 kOhm resistor" inside the module. During Tpr, U221 sinks R238's current (10 k to a rail at
+3.135 to 3.545 V, 0.31 mA or more), and SBVS050N states VOL only as 0.4 V at 1 mA, so the pin is not shown at or under 0.2 V.
+It is not on the inhibit path (under EMCON R238's rail is removed and U220 holds the pin). Draft B-5: U221 drives a new net
+`5G_TPR_n` (R545, 100 k 1% to the rail, inside the maker's 10 k to 1 M), which U554, an SN74LVC2G07 on +3V3_CM2, repeats
+open-drain onto the pin; R238 becomes 100 k 1%: at most 36 uA held, VOL 0.1 V (SCES308L 6.5, 100 uA row), under 0.2 V;
+released 1.56 V, over 1.19 V (the module's 100 k taken nominal, its tolerance unstated: INFERRED).
+
+### 4d.5 What the integrator runs, and what stays open
+
+On the KiCad box: `apply_c_d4e_f1.py <tree>` then board C's chain; `apply_b_d4e.py <tree>` then board B's chain; then
+`tools/readback_d4e.py --board C` and `--board B` on the regenerated netlists (every check must PASS; on set 10 they FAIL 4 and
+56, `readings/set10/readback/`), RF-002's walk (`tools/tx_inhibit.py`: until the tools author adds the TPS3808 and the
+SN74LVC2G07 to its classes, the walk may read U543 and U540 to U542, U554 as unmodelled, a tool item) and the suite. The
+decoupling classifier gains the SN74LVC2G07's clause with the draft; if the generators' completeness tests ask for a load or
+PWR-001 entry for the new nets (`RB_IEN_DRV`, `LORA_GO`, `5G_TPR_n`, `EMCON_HW_DRV`) or for the +3V3_CM3 gates, that is the
+integrator's settling, not a circuit change.
+Registry: `v2/docs/records/d4emcon/apply_registry_d4e.py page` at the merge (it rebinds the seven records bound to this page,
+adds D4E-F1 and D4E-F2 to S-01's open scope and E-01's new measurement to S-92; it closes nothing; the generated pages are
+rendered after it, since the trace page prints the entries), and
+`apply_registry_d4e.py after` only once both read-backs hold on the committed regenerated netlists (it runs them itself and
+refuses otherwise). `tools/selftest_readback_c.py` shows the read-back passing a synthetic board C netlist that carries
+D4E-F1's draft and failing three mutants of it.
+
+Open after the drafts, each with its exact dependency: row 3, S-93's ground (board A's author: a gate hold on Q24 and Q14 in
+the LM5176's shutdown, or TI's figure); row 4, the Iridium 9704 module's ENABLE behaviour (a maker's document to find, or E-04);
+U536's residual race and the band of U{s}12 to U{s}15 (E-11); every row's radio-side latency term (E-01 to E-10, E-12); the
+SA868's threshold (E-01); RF-002's walk classes for the TPS3808, the SN74LVC2G07, the USBLC6-2's VBUS and the declared bench
+headers (tools author); the plate's light guide (S-44, fabrication release).
+
 ## 5. Decisions taken by the session under the owner's standing rule of 26 September 2026
 
 Each had more than one option and no owner judgement standing. None spends money or changes what the kit is claimed to
@@ -1662,7 +1820,7 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
 
 | Id | Radio | Procedure | Pass |
 |---|---|---|---|
-| E-01 | SA868 | r6d's bench rows (`v2/docs/records/r6d/r6-decisions.md` section 5): U1 fitted, unfitted and shorted; U16 bits forced high under EMCON; pin 5's "1" threshold and input current measured | no carrier in any state; the threshold is at or below 2.677 V |
+| E-01 | SA868 | r6d's bench rows (`v2/docs/records/r6d/r6-decisions.md` section 5): U1 fitted, unfitted and shorted; U16 bits forced high under EMCON; pin 5's "1" threshold and input current measured; since stream d4emcon (29 September 2026, S-92 ground (3)): U13 pin 4's off-state current while powered and released, with `SA_PTT_n` held by R88 and R89 alone | no carrier in any state; the threshold is at or below 2.677 V; `SA_PTT_n` stays at or above the measured threshold with U13's measured off-state current |
 | E-02 | 30 W PA and the common element | EMCON asserted with PTT held, then each downstream single fault: A's `J_AB1` unplugged; D's U1 unfitted; a firmware image that drives A's `PA_SW_EN` high. Then the shared-element cases of SD-EMC-6, into a dummy load, each with LIGHTING at DAY and at NIGHT: (1) the toggle at EMCON with its lug 1 lead open, PTT held; (2) the toggle at EMCON with U9's output forced high; (3) EMCON correctly asserted with the panel RP2040 held in reset (`C_RUN` low) and then with it unflashed; (4) EMCON released with the controller in reset. Then (1) with LIGHTING at BLACKOUT | downstream faults: no RF at the PA output; `+13V8_PA`, VGG and K1 recorded. (1): both paths release, as the design predicts, and the EMCON lamp stays dark; the e-paper shows EMCON not asserted when the controller and the display owner run. (2): the EMCON lamp dark. (3): the EMCON lamp lit, with the controller not running. (4): the lamp dark. BLACKOUT: every lamp dark, as the design intends; recorded, not a failure. The TX lamp's behaviour is recorded in each case; it is not a pass condition, because its feed needs `PANEL_PWM` |
 | E-03 | QMX | EMCON asserted: +12V_HF off, VBUS_QMX live, USB enumeration attempted from the host; current into VBUS | no RF at the BNC; VBUS current under 1 mA |
 | E-04 | RockBLOCK 9704 | EMCON asserted with `RB_SW_IEN` (the ENABLE request, since stream w4b; `RB_IEN` is U536's output, 4c), `RB_CTRL` and `RB_RXD` driven high by U6 and U18; V_EXT_RAW and every reachable module rail read; a 10 min watch covering a ring-alert slot. Added in the sixth revision (4.4): EMCON asserted during a transmission and while idle, first as drawn (`RB_IEN` high from U6, then U6 in reset), recording V_CAPS, the module's 3.3 V I/O rail and RF until the module stops; then with the ENABLE remedy, recording the time from ENABLE low to RF off and to V_CAPS falling below the supervisor's threshold | no RF at the SMA after the row's L_max (section 5a); the module rails stay below the level SD-EMC-2 sets; the as-drawn runs are recorded, not a pass |
@@ -1672,10 +1830,13 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
 | E-08 | CM5 WiFi and BT (x6) | each radio in AP mode, beaconing and BLE advertising, then EMCON; each pin's low level recorded (L7); then the +3V3_DEV fault of L3 once its remedy exists | beacons and advertising stop within the time TEST-PLAN sets; they stay stopped; each pin under the CM5's input-low level |
 | E-09 | E22-900M30S | EMCON with slot 3 clocking SPI and TXEN high; `+5V_LORA` recorded | no RF at the LoRa jack; the rail below 2.5 V less a margin |
 | E-10 | E72 (x2) | EMCON with each CP2102N sending and RTS and DTR high; `+3V3_ZB` recorded | no RF at 2.4 GHz from either module; the rail below 1.9 V less a margin |
-| E-11 | the lines | panel unplugged; `J_AB1` unplugged on A alone; +3V3_DEV, +3V3_D8 and A's +3V3 held at 0 V and in their 0 to 1.65 V bands; each STM32 and the RP2040 loaded with a firmware that drives its `EMCON_HW` pin high; `EMCON_ON` and each open drain's gate and drain recorded; on board D, +5V_TX (TP27) and `TXSUP_EN` recorded with +3V3_D8 held at 0 to 2.8 V and stepped down from 3.3 V to 0 V while +5V_D8 stays up (L4, round 8); on board A, +3V3 stepped from 3.3 V to 9 V (under D3's clamp) with `+3V3_EMCON`, `EMCON_EF_FLT` (TP3), `PA_UVLO` and `HF_UVLO` recorded (EQ-17, stream w3a) | every gate reads EMCON asserted (after L1 to L4 and L7 are remedied); +5V_TX is under the exciter's 3.3 V floor whenever +3V3_D8 is under 1.65 V, including during the step; on board A, `+3V3_EMCON` stays under 4.6 V through the step, `EMCON_EF_FLT` asserts, and `PA_UVLO` and `HF_UVLO` stay under VEN(STBY) |
-| E-12 | RM520N-GL, FULL_CARD_POWER_OFF# and supply stages (SD-EMC-1) | (a) registered, full uplink, then FULL_CARD_POWER_OFF# driven low with no AT+CFUN=0 and W_DISABLE1# left high: whether RF stops, and the time to RF off and to module off; (b) the same after AT+CFUN=0 and its OK: Tpd; (c) with W_DISABLE1# already low, AT+CFUN=0's response time, and the host's whole sequence from EMCON (panel report, AT+CFUN=0, OK, PERST#, RESET#, `5G_OFF`) timed over repeated runs, registered and unregistered: this sets T_off; (d) the staged EMCON as built, cooperating (the host's sequence runs) and withheld (no handshake): times to silence, to the pin falling, and to the supply removal; T_off and T_cut recorded; (e) flash integrity: the cooperating case of (d) and the withheld case each repeated for a cycle count the TEST-PLAN owner fixes, then the module booted after every cycle: firmware revision, IMEI, the AT+QCFG values of E-05 and a registration checked; (f) release: the rail and the pin recorded, Tpr measured, the module re-enumerated; (g) `+3V3_M2C2` recorded with PERST#, REFCLK, the PCIe TX pair, USB D+/D- and PEWAKE# live; (h) power-up under EMCON: the kit powered with the toggle locked at EMCON, +3V3_DEV, `SLOT_EN2`, `PCIE_PWR_EN2`, `+3V3_S2A`, FULL_CARD_POWER_OFF#, W_DISABLE1# and RF recorded from power-on until slot 2's CM5 has booted and 120 s beyond; then, from a power-up with EMCON released, EMCON asserted while slot 2's CM5 is booting, before it raises `PCIE_PWR_EN2`; (i) the booting case, cause by cause, with the host's sequence running: (1) continuing from (h)'s cold start under EMCON, and repeated after an EMCON on a running module, EMCON released and then re-asserted inside the release's Tpr hold; (2) EMCON asserted at the boot instants of E-05 (b) and at the first AT answer, in boots started by an EMCON release, by a cold start of the kit with EMCON released, by slot 2's CM5 lowering and re-raising `PCIE_PWR_EN2` (a short cycle and a long one), by a warm reset through `5G_RESET`, by a hard reset through `5G_RESET` and `5G_OFF`, and by AT+CFUN=1,1 from slot 2's host and from bank 3's; (3) EMCON asserted on a running module, and then, before T_off, each of the resets of (2) and a lowering of `PCIE_PWR_EN2`; in every run `PCIE_PWR_EN2`, `+3V3_S2A`, FULL_CARD_POWER_OFF#, W_DISABLE1#, `5G_RESET` and RF recorded, with the time from the boot's start to the first AT answer and whether the host's sequence finished before T_off; in the AT+CFUN=1,1 runs also RESET#, CLKREQ#, PEWAKE# and the LED pin, with RESET# probed at an input current far below its 1.5 uA pull-up, to find whether any socket pin marks a restart the module starts; one run with PERST# pulsed alone through slot 2's switch records whether that restarts the module; (e)'s flash checks after each, over the same cycle count | (a) to (c) recorded as found (they set T_cut and T_off, not a pass); (d) the cooperating sequence completes before T_off, and there is no emission after T_off + T_cut in either case; (e) the module boots and every recorded value is unchanged after every cycle, in both cases; (f) the pin rises at least 100 ms after the rail, and the module re-enumerates; (g) the rail stays below 3.135 V less a margin; (h) `+3V3_S2A` never rises and there is no RF, in both parts; (i) (1) the pin never rises, the rail falls at once and there is no RF, and the module then boots with every value of (e) unchanged; (2) and (3) no emission after T_off + T_cut in any cause; after a lowering of `PCIE_PWR_EN2` under EMCON the rail does not rise again; emission before T_off + T_cut, the boot time and every flash check recorded per cause as the bound of SD-EMC-1's residual risks in the booting case (T_boot of the fallback is taken from here, over every cause); whether a socket pin marks the AT+CFUN=1,1 restart, and whether PERST# alone restarts the module, recorded, not a pass |
+| E-11 | the lines | panel unplugged; `J_AB1` unplugged on A alone; +3V3_DEV, +3V3_D8 and A's +3V3 held at 0 V and in their 0 to 1.65 V bands; each STM32 and the RP2040 loaded with a firmware that drives its `EMCON_HW` pin high; `EMCON_ON` and each open drain's gate and drain recorded; on board D, +5V_TX (TP27) and `TXSUP_EN` recorded with +3V3_D8 held at 0 to 2.8 V and stepped down from 3.3 V to 0 V while +5V_D8 stays up (L4, round 8); on board A, +3V3 stepped from 3.3 V to 9 V (under D3's clamp) with `+3V3_EMCON`, `EMCON_EF_FLT` (TP3), `PA_UVLO` and `HF_UVLO` recorded (EQ-17, stream w3a); since stream d4emcon (29 September 2026, EMCON.md 4d): on board C, +3V3 held at 0 V and stepped through its 0 to 1.65 V band with the toggle at EMCON, `EMCON_HW` recorded at board B's readers (D4E-F1); on board B, +3V3_DEV stepped from 3.3 V to 0 V at several rates with +5V_DEV up, `RB_IEN` and U543's RESET recorded (L4 on U536, D4E-B B-4) | every gate reads EMCON asserted (after L1 to L4 and L7 are remedied); +5V_TX is under the exciter's 3.3 V floor whenever +3V3_D8 is under 1.65 V, including during the step; on board A, `+3V3_EMCON` stays under 4.6 V through the step, `EMCON_EF_FLT` asserts, and `PA_UVLO` and `HF_UVLO` stay under VEN(STBY); on board C, `EMCON_HW` under 0.8 V at board B's readers throughout (D4E-F1); on board B, `RB_IEN` under 0.4 V whenever +3V3_DEV is under 2.79 V (D4E-B B-4) |
+| E-12 | RM520N-GL, FULL_CARD_POWER_OFF# and supply stages (SD-EMC-1) | (a) registered, full uplink, then FULL_CARD_POWER_OFF# driven low with no AT+CFUN=0 and W_DISABLE1# left high: whether RF stops, and the time to RF off and to module off; (b) the same after AT+CFUN=0 and its OK: Tpd; (c) with W_DISABLE1# already low, AT+CFUN=0's response time, and the host's whole sequence from EMCON (panel report, AT+CFUN=0, OK, PERST#, RESET#, `5G_OFF`) timed over repeated runs, registered and unregistered: this sets T_off; (d) the staged EMCON as built, cooperating (the host's sequence runs) and withheld (no handshake): times to silence, to the pin falling, and to the supply removal; T_off and T_cut recorded; (e) flash integrity: the cooperating case of (d) and the withheld case each repeated for a cycle count the TEST-PLAN owner fixes, then the module booted after every cycle: firmware revision, IMEI, the AT+QCFG values of E-05 and a registration checked; (f) release: the rail and the pin recorded, Tpr measured, the module re-enumerated, and FULL_CARD_POWER_OFF#'s level through Tpr recorded against Quectel's 0.2 V (D4E-F2, stream d4emcon); (g) `+3V3_M2C2` recorded with PERST#, REFCLK, the PCIe TX pair, USB D+/D- and PEWAKE# live; (h) power-up under EMCON: the kit powered with the toggle locked at EMCON, +3V3_DEV, `SLOT_EN2`, `PCIE_PWR_EN2`, `+3V3_S2A`, FULL_CARD_POWER_OFF#, W_DISABLE1# and RF recorded from power-on until slot 2's CM5 has booted and 120 s beyond; then, from a power-up with EMCON released, EMCON asserted while slot 2's CM5 is booting, before it raises `PCIE_PWR_EN2`; (i) the booting case, cause by cause, with the host's sequence running: (1) continuing from (h)'s cold start under EMCON, and repeated after an EMCON on a running module, EMCON released and then re-asserted inside the release's Tpr hold; (2) EMCON asserted at the boot instants of E-05 (b) and at the first AT answer, in boots started by an EMCON release, by a cold start of the kit with EMCON released, by slot 2's CM5 lowering and re-raising `PCIE_PWR_EN2` (a short cycle and a long one), by a warm reset through `5G_RESET`, by a hard reset through `5G_RESET` and `5G_OFF`, and by AT+CFUN=1,1 from slot 2's host and from bank 3's; (3) EMCON asserted on a running module, and then, before T_off, each of the resets of (2) and a lowering of `PCIE_PWR_EN2`; in every run `PCIE_PWR_EN2`, `+3V3_S2A`, FULL_CARD_POWER_OFF#, W_DISABLE1#, `5G_RESET` and RF recorded, with the time from the boot's start to the first AT answer and whether the host's sequence finished before T_off; in the AT+CFUN=1,1 runs also RESET#, CLKREQ#, PEWAKE# and the LED pin, with RESET# probed at an input current far below its 1.5 uA pull-up, to find whether any socket pin marks a restart the module starts; one run with PERST# pulsed alone through slot 2's switch records whether that restarts the module; (e)'s flash checks after each, over the same cycle count | (a) to (c) recorded as found (they set T_cut and T_off, not a pass); (d) the cooperating sequence completes before T_off, and there is no emission after T_off + T_cut in either case; (e) the module boots and every recorded value is unchanged after every cycle, in both cases; (f) the pin rises at least 100 ms after the rail, and the module re-enumerates; (g) the rail stays below 3.135 V less a margin; (h) `+3V3_S2A` never rises and there is no RF, in both parts; (i) (1) the pin never rises, the rail falls at once and there is no RF, and the module then boots with every value of (e) unchanged; (2) and (3) no emission after T_off + T_cut in any cause; after a lowering of `PCIE_PWR_EN2` under EMCON the rail does not rise again; emission before T_off + T_cut, the boot time and every flash check recorded per cause as the bound of SD-EMC-1's residual risks in the booting case (T_boot of the fallback is taken from here, over every cause); whether a socket pin marks the AT+CFUN=1,1 restart, and whether PERST# alone restarts the module, recorded, not a pass |
 
 ## 7. What remains open
+
+Since stream d4emcon (29 September 2026), section 4d.5 lists what stays open on the set 10 netlists with that stream's
+drafts, each with its dependency; this table is kept as written.
 
 | Item | Bound | Owner |
 |---|---|---|

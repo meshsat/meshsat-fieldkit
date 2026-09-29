@@ -54,7 +54,15 @@ where it did (board A's INA226, 'XCM5 filter', the PCA9555's SCL, board B's R111
 EQ-18 (stream w3t, 27 September 2026): board C's U14, a TI SN74LVC1G57 configurable gate, is read by its maker's row only in
 the wiring that row holds (Figure 7: In1 on its own GND pin, Y = NOR(In0, In2) by Table 1), and any other wiring is UNDECIDED
 by any pin; the five fixtures at the end of the file, each both ways, with SCES414P's Table 1 transcribed as the independent
-check of the NOR it selects, and a HIGH at a Schmitt input (this part's and the 74LVC1G17's) never read as passing."""
+check of the NOR it selects, and a HIGH at a Schmitt input (this part's and the 74LVC1G17's) never read as passing.
+
+Stream d4emcon (27 September 2026, open item S-82 and EMCON.md L6): the rows agree with what the parts' documents say. A
+supervisor and a monitor are read by their makers' rows (TI TPS3808, SBVS050N; TI INA226, SBOS547C); a FET whose symbol names
+its pins after their nets is read by its maker's pinout (TI CSD18510Q5B, SLPS632); the TLV75801P is a switch and the PA's gate
+bias an entry of the table; a rail whose switch's enable hangs on a dead rail falls with it; the radio's own pins are read
+while its supply is off, a driver on the gated rail being no holder; and another radio on the same gated rail is read in its
+own row. The fixtures at the end of the file, each both ways; two earlier fixtures changed with it, each marked where it did
+(board A's INA226 and its Q14)."""
 import os, sys, tempfile
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -1876,11 +1884,15 @@ def t_a_power_stage_behind_its_sense_shunt_is_read_like_the_rail():
     pins its other pins share. A P-channel FET from VBAT onto PA_OUT, gate on a GPIO, FAILS. ACCEPTABLE: the sense and
     feedback network alone (the ISNS filter into U13, the FB divider) PASSES. *Changed in the twelfth pass (R4T-D70): the
     INA226 across R55 was part of the ACCEPTABLE network; it is a part in no class, which the eleventh pass read as a load
-    without a word (limit (1)), and it reads UNDECIDED now, naming its three pins.*"""
+    without a word (limit (1)), and it reads UNDECIDED now, naming its three pins.* *Changed by stream d4emcon (27 September
+    2026): the INA226 is read by its maker's row and stays UNDECIDED, on TI SBOS547C's note 3; and Q14 is read by its maker's
+    pinout (TI SLPS632), so it reads what Q4 reads, UNDECIDED on the LM5176's gate drive with the enable low, which TI
+    SNVSAI1D does not state.*"""
     ina = _tx(T.judge({"A": _pa_sensed({}, {})}, table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
-    assert ina["ok"] is None and "U14 pin 10 (INA226 PA rail monitor (0x46), 'IN+') sits on the rail's conductor, and it is a " \
-        "pin of a part no class here reads" in ina["detail"] and "U14 pin 8 (INA226 PA rail monitor (0x46), 'VBUS')" in \
-        ina["detail"], ina
+    assert ina["ok"] is None and "U14 pin 10 (INA226 PA rail monitor (0x46), 'IN+') sits on the rail's conductor and is pin " \
+        "10 ('IN+') of U14 (INA226 monitor), whose supply pin is on +3V3, which stays up with the rail off" in ina["detail"] \
+        and "U14 pin 8 (INA226 PA rail monitor (0x46), 'VBUS')" in ina["detail"] \
+        and "Negative leakage currents can occur under different input conditions', whose size no page states" in ina["detail"], ina
     base = _pa_sensed({}, {})
     ok = _tx(T.judge({"A": _edit(base, move={("U14", "10"): "unconnected-(U14-IN+-Pad10)", ("U14", "9"): "unconnected-(U14-IN--Pad9)",
                                              ("U14", "8"): "unconnected-(U14-VBUS-Pad8)"})},
@@ -1899,9 +1911,11 @@ def t_a_power_stage_behind_its_sense_shunt_is_read_like_the_rail():
     a = _tx(T.judge({"A": _pa_sensed({"Q14": q14}, {"PA_SW2": [("Q14", p, "PA_SW2") for p in ("1", "2", "3")],
                                                     "PA_HDRV2": [("Q14", "4", "PA_HDRV2")], "PA_OUT": [("Q14", "5", "PA_OUT")]})},
                     table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
-    assert a["ok"] is None and "PA_OUT, joined to +13V8_PA through R55" in a["detail"] and "Q14 pin 5" in a["detail"] \
-        and "cannot read" in a["detail"] and "its other pins sit on PA_HDRV2, PA_SW2, where U13, the gated switch itself, has its " \
-        "pins 19, 18" in a["detail"], a
+    assert a["ok"] is None and "PA_OUT, joined to +13V8_PA through R55" in a["detail"] and "cannot read" not in a["detail"] \
+        and "fed from PA_SW2 through Q14's channel (N-channel, read by its maker's pinout (TI CSD18510Q5B, SLPS632 (March " \
+        "2017), page 1, Top View of the SON 5 mm x 6 mm package)), whose gate PA_HDRV2 is driven by U13, the gated switch " \
+        "itself; that its gate drive is off with its enable is not stated by its maker: TI SNVSAI1D 7.4.1 (page 20)" \
+        in a["detail"], a
     p = _tx(T.judge({"A": _pa_sensed({"Q9": PFET, "U77": CPU}, {"PA_OUT": [("Q9", "3", "D")], "VBAT": [("Q9", "2", "S")],
                                                                 "BYP_n": [("Q9", "1", "G"), ("U77", "10", "GPIO5")]})},
                     table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
@@ -3013,8 +3027,15 @@ def t_a_pin_of_a_part_in_no_class_or_a_protection_part_is_a_load_only_by_its_row
               "+3V3": [("R9", "2", "")]},
              "its I/O pin 1 is on DP, where R9 pin 1 (1k5, ''), a resistor from +3V3, a supply is not shown to be unable to hold "
              "it up; and ST DS4260 Rev 7 (v2/vendor/st/st-usblc6-2-esd-protection.pdf), page 1 pinout"),
+            # *Changed by stream d4emcon (27 September 2026): the INA226 has a row now (MONITORS) and is UNDECIDED on its
+            # maker's own note 3; the part in no class is a TLV9062 op-amp, for which no row is held.*
             ({"U14": INA}, {"+5V_X": [("U14", "8", "VBUS")], "+3V3": [("U14", "6", "VS")], "GND": [("U14", "7", "GND")]},
-             "+5V_X: U14 pin 8 (INA226 PA rail monitor (0x46), 'VBUS') sits on the rail's conductor, and it is a pin of a part "
+             "+5V_X: U14 pin 8 (INA226 PA rail monitor (0x46), 'VBUS') sits on the rail's conductor and is pin 8 ('VBUS') of "
+             "U14 (INA226 monitor), whose supply pin is on +3V3, which stays up with the rail off, and its maker's words for "
+             "the pin are: SBOS547C 6.2 (page 10)"),
+            ({"U15": ("TLV9062 op-amp", "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm", "X:Y")},
+             {"+5V_X": [("U15", "3", "IN1+")], "+3V3": [("U15", "8", "V+")], "GND": [("U15", "4", "V-")]},
+             "+5V_X: U15 pin 3 (TLV9062 op-amp, 'IN1+') sits on the rail's conductor, and it is a pin of a part "
              "no class here reads (no pin map, switch entry, protection row or firmware table of its maker's is held here for "
              "it), so whether it can feed the rail is not known"),
             ({"U33": ULC}, {"+5V_X": [("U33", "1", "I/O1")], "+5V_DEV": [("U33", "5", "VBUS")], "GND": [("U33", "2", "GND")]},
@@ -3432,3 +3453,313 @@ def t_a_high_held_at_a_schmitt_input_is_not_read_as_passing():
     assert "DS35124" in row17["vih_gap"] and all(not f.get("vih_gap") for f in T.LOGIC
                                                  if f["name"] not in ("74LVC1G17 Schmitt buffer", "74LVC1G57 configurable gate",
                                                                       "74LV1T08 AND"))
+
+
+# ---------------------------------------------------------------- stream d4emcon (27 September 2026, MESHSAT-1357)
+# THE ROWS AGREE WITH WHAT THE PARTS' DOCUMENTS SAY (open item S-82, EMCON.md L6; taken by the session under the owner's
+# standing rule of 26 September 2026). Each DEFECTIVE fixture below reads PASS, or UNDECIDED for a reason that is this file's
+# and not the part's maker's, on the tool at 73ae2f21 (sha256/16 7dd14f45f5d62cb4); each ACCEPTABLE one reads UNDECIDED or
+# FAIL there. v2/docs/records/d4emcon/readings/tests-before-and-after.txt is both runs.
+SUP = ("TPS3808G30DBVR supervisor on the rail it watches", "Package_TO_SOT_SMD:SOT-23-6", "meshsat_ic:U221")
+
+
+def _sup(vdd="+5V_X", mr=None):
+    """Board B's U221 form on the fixture's gated rail +5V_X: a TPS3808 with SENSE (pin 5) on the rail, VDD (pin 6) on
+    `vdd`, RESET (pin 1) on PWROFF_n behind R238 from the rail, CT (pin 4) behind R297 from the rail, and MR (pin 3) open
+    (`mr` None), pulled to +3V3 through 10 k ("pull") or on an expander's pin ("exp")."""
+    comps = {"U221": SUP, "R238": ("10k", "R", "Device:R"), "R297": ("49.9k 1%", "R", "Device:R")}
+    nets = {"+5V_X": [("U221", "5", "SENSE"), ("R238", "2", ""), ("R297", "1", "")], "GND": [("U221", "2", "GND")],
+            "PWROFF_n": [("U221", "1", "RESET"), ("R238", "1", "")], "TPR_CT": [("U221", "4", "CT"), ("R297", "2", "")]}
+    nets.setdefault(vdd, []).append(("U221", "6", "VDD"))
+    if mr == "pull":
+        comps["R9"] = ("10k", "R", "Device:R")
+        nets["MR_n"] = [("U221", "3", "MR"), ("R9", "1", "")]; nets.setdefault("+3V3", []).append(("R9", "2", ""))
+    elif mr == "exp":
+        nets["SW_EN"] = [("U221", "3", "MR")]                    # the fixture's expander already drives SW_EN
+    else:
+        nets["unconnected-(U221-MR-Pad3)"] = [("U221", "3", "MR")]
+    return _on_rail(comps, nets)
+
+
+def t_a_supervisor_on_the_rail_it_watches_is_read_by_its_makers_rows():
+    """S-82's first class. ACCEPTABLE: board B's U221 as drawn, a TPS3808 whose VDD and SENSE sit on the gated rail, RESET
+    behind the rail's pull-up, CT behind 49.9 k from the rail and MR open: a load, the PASS quoting TI SBVS050N for the
+    supply, for SENSE and for RESET. The tool at 73ae2f21 read each pin as 'a pin of a part no class here reads'.
+    DEFECTIVE, each UNDECIDED naming the maker's words: MR pulled up to a live +3V3, or on a firmware pin, with VDD on the
+    rail (SBVS050N Table 5-1: 'MR is internally tied to VDD by a 90kOhm pull-up resistor', so what holds MR up reaches the
+    rail through it); and VDD on a live +5V_DEV with CT behind a resistor from the rail (the part then sources CT)."""
+    tx = _sup()
+    assert tx["ok"] is True, tx
+    for needle in ("U221 pin 6 (TPS3808G30DBVR supervisor on t, 'VDD') is the supply pin of U221 (TPS3808 supervisor) by its "
+                   "maker's pin table (TI TPS3808, SBVS050N (August 2026), Table 5-1 Pin Functions, SOT-23)",
+                   "U221 pin 5 (TPS3808G30DBVR supervisor on t, 'SENSE') is an input of U221 (TPS3808 supervisor)",
+                   "U221 pin 1 (TPS3808G30DBVR supervisor on t, 'RESET') is an open-drain pin of U221 (TPS3808 supervisor), "
+                   "which only pulls low: SBVS050N Table 5-1 (page 4): 'RESET is an open-drain output'",
+                   "U221 pin 4 (TPS3808G30DBVR supervisor on t, 'CT') is pin 4 ('CT') of U221 (TPS3808 supervisor), whose own "
+                   "supply falls with the net or is on no live net"):
+        assert needle in tx["detail"], (needle, tx["detail"])
+    assert "no class here reads" not in tx["detail"], tx
+    for mr, holder in (("pull", "R9 pin 1 (10k, ''), a resistor from +3V3, a supply"), ("exp", "U6 pin 4")):
+        tx = _sup(mr=mr)
+        assert tx["ok"] is None and "U221 pin 6" in tx["detail"] and "is the supply pin of U221 (TPS3808 supervisor), and its " \
+            "pin 3 ('MR') is on " in tx["detail"] and holder in tx["detail"] and "'MR is internally tied to VDD by a 90kOhm " \
+            "pull-up resistor'" in tx["detail"], (mr, tx)
+    tx = _sup(vdd="+5V_DEV")
+    assert tx["ok"] is None and "U221 pin 4 (TPS3808G30DBVR supervisor on t, 'CT') sits behind a resistor from it and is pin 4 " \
+        "('CT') of U221 (TPS3808 supervisor), whose supply pin is on +5V_DEV, which stays up with the rail off" in tx["detail"] \
+        and "SBVS050N 6.1 (page 5): VCT at most 'VDD + 0.3' V" in tx["detail"], tx
+    # a TPS3808 on another land is not read by this row: its pin numbers would be a guess there (the WSON's differ)
+    other = dict(SUP=("TPS3808G30DRVR supervisor", "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm", "X:Y"))
+    tx = _on_rail({"U221": other["SUP"]}, {"+5V_X": [("U221", "1", "VDD"), ("U221", "2", "SENSE")], "GND": [("U221", "5", "GND")]})
+    assert tx["ok"] is None and "no class here reads" in tx["detail"], tx
+
+
+def t_a_monitor_across_a_gated_rail_is_read_by_its_makers_words():
+    """S-82's class, board A's U14. DEFECTIVE: an INA226 with its supply VS on a live +3V3 and VBUS, IN- or IN+ on the gated
+    rail is UNDECIDED, and says why in TI's words: SBOS547C states the inputs independent of the supply and bounds the
+    leakage INTO them, and its note 3 adds that 'Negative leakage currents can occur under different input conditions',
+    without a size. The tool at 73ae2f21 read it UNDECIDED as 'a part no class here reads', which named this file and not
+    the sheet. ACCEPTABLE: the same part run from the rail it measures (VS on the gated rail, its bus pins held by
+    nothing): it has nothing to source a pin from, and passes quoting 6.2. DEFECTIVE again: that part with SCL pulled up
+    to a live rail, since SBOS547C 5.1 rates VSCL at most VVS + 0.3 V."""
+    tx = _on_rail({"U14": INA}, {"+5V_X": [("U14", "8", "VBUS"), ("U14", "9", "IN-")], "+3V3": [("U14", "6", "VS")],
+                                 "GND": [("U14", "7", "GND")]})
+    assert tx["ok"] is None and "U14 pin 9 (INA226 PA rail monitor (0x46), 'IN-') sits on the rail's conductor and is pin 9 " \
+        "('IN-') of U14 (INA226 monitor), whose supply pin is on +3V3, which stays up with the rail off" in tx["detail"] \
+        and "note 3 (page 6) adds: 'Input leakage is positive (current flowing into the pin) for the conditions shown at the " \
+        "top of this table. Negative leakage currents can occur under different input conditions'" in tx["detail"] \
+        and "no class here reads" not in tx["detail"], tx
+    own = {"+5V_X": [("U14", "8", "VBUS"), ("U14", "9", "IN-"), ("U14", "10", "IN+"), ("U14", "6", "VS")],
+           "GND": [("U14", "7", "GND")]}
+    tx = _on_rail({"U14": INA}, own)
+    assert tx["ok"] is True and "U14 pin 6 (INA226 PA rail monitor (0x46), 'VS') is the supply pin of U14 (INA226 monitor) by " \
+        "its maker's pin table (TI INA226, SBOS547C (August 2026), Table 4-1 Pin Functions)" in tx["detail"] \
+        and "whose own supply falls with the net or is on no live net, so the part has nothing to source it from: SBOS547C " \
+        "6.2 (page 10)" in tx["detail"], tx
+    tx = _on_rail({"U14": INA, "R9": ("4.7k", "R", "Device:R")},
+                  dict(own, SCL_X=[("U14", "5", "SCL"), ("R9", "1", "")], **{"+3V3": [("R9", "2", "")]}))
+    assert tx["ok"] is None and "is the supply pin of U14 (INA226 monitor), and its pin 5 ('SCL') is on SCL_X, where R9 pin 1 " \
+        "(4.7k, ''), a resistor from +3V3, a supply is not shown to be unable to hold it up, and SBOS547C 5.1 Absolute " \
+        "Maximum Ratings (page 4): VSCL at most 'VVS + 0.3' V" in tx["detail"], tx
+
+
+Q14F = ("CSD18510Q5B 40 V N-FET", "Package_SO:PowerPAK_SO-8_Single", "meshsat_ic:Q14")
+
+
+def _q14(src="PA_SW2", gate="PA_HDRV2", drain="PA_OUT", extra_c=None, extra_n=None, fet=Q14F, split=None):
+    """Board A's Q14 form on _pa_sensed (its INA226 left out, so the FET alone decides): a CSD18510Q5B on a generated
+    symbol whose pins carry their nets' names, pins 1 to 3 the source, 4 the gate, 5 the drain."""
+    base = _edit(_pa_sensed({}, {}), move={("U14", "10"): "unconnected-(U14-IN+-Pad10)", ("U14", "9"): "unconnected-(U14-IN--Pad9)",
+                                           ("U14", "8"): "unconnected-(U14-VBUS-Pad8)"})
+    nets = {}
+    for i, p in enumerate(("1", "2", "3")):
+        n = (split if (split and i == 2) else src)
+        nets.setdefault(n, []).append(("Q14", p, n))
+    nets.setdefault(gate, []).append(("Q14", "4", gate)); nets.setdefault(drain, []).append(("Q14", "5", drain))
+    for k_, v_ in (extra_n or {}).items(): nets.setdefault(k_, []).extend(v_)
+    nl = _edit(base, comps=dict({"Q14": fet}, **(extra_c or {})), nets=nets)
+    return _tx(T.judge({"A": nl}, table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
+
+
+def t_a_fet_whose_symbol_names_its_pins_after_their_nets_is_read_by_its_makers_pinout():
+    """Board A's power FETs (FET_PINMAPS). The tool at 73ae2f21 read every case below UNDECIDED as 'a transistor whose type
+    or pin map this file cannot read'. DEFECTIVE: a CSD18510Q5B from VBAT onto the power stage's node with its gate on a
+    firmware pin is a second switch around the gated one, and FAILS, naming TI SLPS632's pinout. ACCEPTABLE: the same part
+    as a discharge switch, drain on the node and its three source pins on ground, only takes current off the rail, and
+    PASSES. Board A's own Q14, its gate on the LM5176's HDRV2, stays UNDECIDED on what TI does not state of that driver
+    (t_a_power_stage_behind_its_sense_shunt_is_read_like_the_rail). NOT READ, as before: the part with its three source
+    pins on two nets, the part on a land its maker's pinout is not for, and a pin the pinout does not place."""
+    bad = _q14(src="VBAT", gate="BYP", extra_c={"U77": CPU}, extra_n={"BYP": [("U77", "10", "GPIO5")]})
+    assert bad["ok"] is False and "fed from VBAT through Q14's channel (N-channel, gate on BYP, read by its maker's pinout (TI " \
+        "CSD18510Q5B, SLPS632 (March 2017), page 1, Top View of the SON 5 mm x 6 mm package)), a second switch around the " \
+        "gated one" in bad["detail"], bad
+    good = _q14(src="GND", gate="DIS", extra_c={"U77": CPU}, extra_n={"DIS": [("U77", "10", "GPIO5")]})
+    assert good["ok"] is True, good
+    for kw, what in ((dict(split="PA_SW2B"), "its source pins on two nets"),
+                     (dict(fet=("CSD18510Q5B 40 V N-FET", "Package_TO_SOT_SMD:SOT-23", "meshsat_ic:Q14")), "another land")):
+        tx = _q14(**kw)
+        assert tx["ok"] is None and "Q14 pin 5" in tx["detail"] and "cannot read" in tx["detail"], (what, tx)
+    tx = _q14(extra_n={"X9": [("Q14", "10", "X9")]})
+    assert tx["ok"] is None and "cannot read" in tx["detail"], tx
+    # the map itself: one pin per terminal, and every other pin of a terminal taken as that one
+    nl = _nl({"Q14": Q14F}, {"S": [("Q14", p, "S_NET") for p in ("1", "2", "3")], "G": [("Q14", "4", "G_NET")],
+                             "D": [("Q14", "5", "D_NET")]})
+    kind, pp = T.fet_of(nl, "Q14")
+    assert kind == "N" and (pp["G"], pp["S"], pp["D"]) == ("4", "1", "5"), pp
+    assert [T._fet_canon(pp, p) for p in ("1", "2", "3", "4", "5")] == ["1", "1", "1", "4", "5"]
+
+
+LDO = ("TLV75801PDRVR adjustable LDO, PA gate bias VGG", "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm", "meshsat_ic:U15")
+_VGG = [dict(name="test PA bias", options=[dict(board="D", ref="J_VGG", kind="power", supply_pins=("1",),
+                                                bias_cite="the PA module's maker, for VGG at 0 V")])]
+
+
+def _vgg(txsup="divider", on_key=None):
+    """Board D's gate-bias path at set 6: TX_INHIBIT_n (the toggle SW1, R2 to ground) into U12 (KEY = PTT_ANY AND
+    TX_INHIBIT_n), KEY into U14 (PA_KEY = KEY AND PA_EN), PA_KEY on the enable of U15, a TLV75801P whose output VGG_SW is the
+    lead J_VGG; R84 and R85 (10 k) hold KEY and PA_KEY with the gates unpowered. U15's input +5V_TX is the output of U21, a
+    TPS22810 on +5V_D8 whose EN/UVLO is `txsup`: "divider", R90 11 k from the gates' rail +3V3_D8 over R91 10 k to ground,
+    as board D draws it; "none", no U21, U15's input straight on +5V_D8; "pulled", the divider with a second pull-up to
+    +5V_D8, which stays up. `on_key`: a part whose pin is put on PA_KEY."""
+    r = lambda v: (v, "R", "Device:R")
+    comps = {"SW1": TOGGLE, "R2": PD, "U12": AND1, "U14": AND1, "R84": r("10k"), "R85": r("10k"), "U15": LDO,
+             "R82": r("71.5k 1%"), "R83": r("10.0k 1%"), "C62": ("2.2u", "C", "Device:C"),
+             "J_VGG": ("JST-PH 1x2 socket: PA gate bias, VGG GND", "Connector_JST:JST_PH", "Connector_Generic:Conn_01x02")}
+    nets = {"TX_INHIBIT_n": [("SW1", "1", ""), ("R2", "1", ""), ("U12", "2", "")],
+            "GND": [("SW1", "2", ""), ("R2", "2", ""), ("U12", "3", ""), ("U14", "3", ""), ("R84", "2", ""), ("R85", "2", ""),
+                    ("U15", "3", "GND"), ("R83", "2", ""), ("C62", "2", ""), ("J_VGG", "2", "Pin_2")],
+            "PTT_ANY": [("U12", "1", "")], "PA_EN": [("U14", "2", "")], "+3V3_D8": [("U12", "5", ""), ("U14", "5", "")],
+            "KEY": [("U12", "4", ""), ("U14", "1", ""), ("R84", "1", "")],
+            "PA_KEY": [("U14", "4", ""), ("R85", "1", ""), ("U15", "4", "EN")],
+            "VGG_SW": [("U15", "1", "OUT"), ("R82", "1", ""), ("C62", "1", ""), ("J_VGG", "1", "Pin_1")],
+            "VGG_FB": [("U15", "2", "FB"), ("R82", "2", ""), ("R83", "1", "")]}
+    if txsup == "none":
+        nets["+5V_D8"] = [("U15", "6", "IN")]
+    else:
+        comps.update({"U21": LSW, "R90": r("11k 1%"), "R91": r("10k 1%")})
+        nets["+5V_TX"] = [("U15", "6", "IN"), ("U21", "1", "VOUT")]
+        nets["+5V_D8"] = [("U21", "6", "VIN")]
+        nets["TXSUP_EN"] = [("U21", "5", "EN/UVLO"), ("R90", "2", ""), ("R91", "1", "")]
+        nets["+3V3_D8"].append(("R90", "1", "")); nets["GND"] += [("R91", "2", ""), ("U21", "4", "GND")]
+        if txsup == "pulled":
+            comps["R92"] = r("100k"); nets["TXSUP_EN"].append(("R92", "2", "")); nets["+5V_D8"].append(("R92", "1", ""))
+    if on_key:
+        comps["U16"] = on_key; nets["PA_KEY"].append(("U16", "8", "IO0_4"))
+    return _tx(T.judge({"D": _nl(comps, nets)}, table=_VGG, accessories=[], receivers=[], owed=[]), "test PA bias")
+
+
+def t_the_pa_gate_bias_behind_its_regulator_is_a_hardware_gate():
+    """EMCON.md L6 and CON-010: board D's path (b). ACCEPTABLE: the path as set 6 draws it PASSES, the enable of the
+    TLV75801P forced low by TX_INHIBIT_n through two ANDs, and the PASS carries the module maker's words for the pin. The
+    tool at 73ae2f21 knew no switch with its output on VGG_SW and the entry could not be written. DEFECTIVE: an expander's
+    pin on PA_KEY FAILS (firmware can drive the enable). And without board D's U21, or with U21's enable also pulled to a
+    rail that stays up, the gates' rail can fall with the regulator still powered: PA_KEY is then held by R85 against an
+    enable current TI states as a typical figure only (SBVS351D 5.5: IEN 10 nA typical, no maximum), which is UNDECIDED."""
+    tx = _vgg()
+    assert tx["ok"] is True and "VGG_SW off: U15 enable pin 4 through TX_INHIBIT_n (asserted LOW) > U12 AND 2->4 > U14 AND 1->4" \
+        in tx["detail"] and "what the radio does with this pin at 0 V is its maker's: the PA module's maker" in tx["detail"], tx
+    tx = _vgg(on_key=EXP)
+    assert tx["ok"] is False and "U16 pin 8" in tx["detail"] and "a pin whose direction firmware sets" in tx["detail"], tx
+    for txsup in ("none", "pulled"):
+        tx = _vgg(txsup=txsup)
+        assert tx["ok"] is None and "with U14's supply +3V3_D8 down" in tx["detail"] and "U14 no longer drives PA_KEY" in \
+            tx["detail"] and "its sheet bounds no enable current at the off threshold (SBVS351D 5.5" in tx["detail"], (txsup, tx)
+
+
+def t_a_rail_whose_switchs_enable_hangs_on_a_dead_rail_falls_with_it():
+    """Board D's L4 remedy, read (own_supply, _falls_with). The SA868 on +5V_SA behind a bead from +5V_TX, the output of a
+    TPS22810 whose EN/UVLO is R90 11 k from +3V3_D8 over R91 10 k: with the keying gates' rail +3V3_D8 down the exciter has
+    no supply, so the state 'U13's supply down' is not one the board can be in with the exciter powered. ACCEPTABLE: that
+    state is not judged; what is left UNDECIDED is the released state alone (the SA868's maker states no threshold).
+    DEFECTIVE, the state still judged: the switch's enable also pulled to a rail that stays up; its enable with no resistor
+    to ground; its enable on a gate's output. The tool at 73ae2f21 judged the state in every case."""
+    def board(en):
+        nl = _key_board(logic_rail="+3V3_D8", od=True, divider=("1.2k", "2k"))
+        r = lambda v: (v, "R", "Device:R")
+        comps = {"FB1": ("600R 2A ferrite", "Inductor_SMD:L_0805", "Device:FerriteBead"), "U21": LSW, "R90": r("11k 1%")}
+        nets = {"+5V_SA": [("FB1", "2", "")], "+5V_TX": [("FB1", "1", ""), ("U21", "1", "VOUT")], "+5V_D8": [("U21", "6", "VIN")],
+                "TXSUP_EN": [("U21", "5", "EN/UVLO"), ("R90", "2", "")], "+3V3_D8": [("R90", "1", "")], "GND": [("U21", "4", "GND")]}
+        if en != "floating":
+            comps["R91"] = r("10k 1%"); nets["TXSUP_EN"].append(("R91", "1", "")); nets["GND"].append(("R91", "2", ""))
+        if en == "pulled":
+            comps["R92"] = r("100k"); nets["TXSUP_EN"].append(("R92", "2", "")); nets["+5V_D8"].append(("R92", "1", ""))
+        if en == "gate":
+            comps["U9"] = BUF1
+            nets["TXSUP_EN"].append(("U9", "4", "")); nets["X_IN"] = [("U9", "2", "")]
+            nets["+5V_D8"].append(("U9", "5", "")); nets["GND"].append(("U9", "3", ""))
+        return _edit(nl, comps=comps, nets=nets)
+    gone = "with U13's supply +3V3_D8 down"
+    tx = _key(board("divider"))
+    assert tx["ok"] is None and gone not in tx["detail"] and "with EMCON on, the open-drain U13 is released" in tx["detail"], tx
+    for en in ("pulled", "floating", "gate"):
+        tx = _key(board(en))
+        assert tx["ok"] is not True and gone in tx["detail"], (en, tx)
+    # the arithmetic: the enable's own leakage into the resistor to ground at the top of its tolerance
+    nl = board("divider")
+    v = T._enable_hangs(nl, "D", "U21", T.switch_of(nl, "U21"), {("D", "+3V3_D8")})
+    assert abs(v - 0.1e-6 * 10e3 * 1.01) < 1e-9, v
+    assert T._enable_hangs(nl, "D", "U21", T.switch_of(nl, "U21"), set()) is None          # the rail up: a pull to a live rail
+    dead = T._falls_with({"D": nl}, "D", {("D", "+3V3_D8")})
+    assert {("D", "+5V_TX"), ("D", "+5V_SA")} <= dead, dead
+
+
+def t_a_radios_own_pins_are_read_while_its_supply_is_off():
+    """EMCON.md SD-EMC-2, limit (1) of the walk until stream d4emcon. DEFECTIVE, each UNDECIDED naming the pin and what
+    holds it: the LoRa module's MOSI on an expander's pin; its NRST pulled up to a rail that stays up. Both read PASS on
+    the tool at 73ae2f21, in silence. With `io_words` the result carries the radio maker's own sentence about such a pin.
+    ACCEPTABLE, PASS: the same line through a 74LVC1G34 that runs from the gated rail itself (its maker states Ioff, and
+    its supply falls with the rail), the PASS quoting it; a module output into a logic input on a rail that stays up (its
+    sheet states only its leakage); and a module pin on a net EMCON itself forces low."""
+    exp = {"U6": EXP}
+    tx = _on_rail(exp, {"MOSI": [("U12", "17", "MOSI"), ("U6", "5", "IO0_1")]})
+    assert tx["ok"] is None and "U12's own pins can be held up with its supply off, past the switch EMCON opens: pin 17 " \
+        "('MOSI') on MOSI, where U6 pin 5" in tx["detail"] and "no held document of the radio's maker states what the " \
+        "unpowered radio passes from such a pin into its supply" in tx["detail"], tx
+    tx = _on_rail({"R9": ("10k", "R", "Device:R")}, {"NRST": [("U12", "15", "NRST"), ("R9", "1", "")], "+3V3": [("R9", "2", "")]})
+    assert tx["ok"] is None and "pin 15 ('NRST') on NRST, where R9 pin 1 (10k, ''), a resistor from +3V3, a supply" in tx["detail"], tx
+    said = [dict(name="test LoRa", options=[dict(board="B", ref="U12", kind="power", io_words="ITS MAKER: no voltage on any input")])]
+    nl = _edit(_power_board({"and", "expander_sw"}), comps=exp, nets={"MOSI": [("U12", "17", "MOSI"), ("U6", "5", "IO0_1")]})
+    tx = _tx(T.judge({"B": nl}, table=said, accessories=[], receivers=[], owed=[]), "test LoRa")
+    assert tx["ok"] is None and tx["detail"].endswith("ITS MAKER: no voltage on any input"), tx
+    # ACCEPTABLE: the buffer on the gated rail
+    tx = _on_rail(dict(exp, U7=BUF1), {"MOSI_H": [("U7", "2", ""), ("U6", "5", "IO0_1")], "MOSI": [("U12", "17", "MOSI"), ("U7", "4", "")],
+                                       "+5V_X": [("U7", "5", "")], "GND": [("U7", "3", "")]})
+    assert tx["ok"] is True and "U12's own pins, taken on their makers' words: U7 pin 4 (74LVC1G34 buffer, '') on MOSI is the " \
+        "push-pull output of 74LVC1G34 buffer, whose supply (+5V_X) falls with the rail, and its maker states Ioff for that " \
+        "state (SCES519O 5.5" in tx["detail"], tx
+    # the same buffer on a rail that stays up holds the pin
+    tx = _on_rail(dict(exp, U7=BUF1), {"MOSI_H": [("U7", "2", ""), ("U6", "5", "IO0_1")], "MOSI": [("U12", "17", "MOSI"), ("U7", "4", "")],
+                                       "+3V3": [("U7", "5", "")], "GND": [("U7", "3", "")]})
+    assert tx["ok"] is None and "pin 17 ('MOSI') on MOSI, where U7 pin 4 (74LVC1G34 buffer, ''), the push-pull output of " \
+        "74LVC1G34 buffer" in tx["detail"], tx
+    tx = _on_rail({"U8": BUF1}, {"MISO": [("U12", "16", "MISO"), ("U8", "2", "")], "MISO_H": [("U8", "4", "")],
+                                 "+3V3": [("U8", "5", "")], "GND": [("U8", "3", "")]})
+    assert tx["ok"] is True, tx
+    # a module pin on a net EMCON itself forces low (board B's RB_IEN form: a second AND from the line) holds nothing up;
+    # the same gate fed by the software request alone does
+    for first, want in (("EMCON_HW", True), ("SW_EN2", None)):
+        tx = _on_rail({"U9": AND1}, {first: [("U9", "1", "")], "SW_EN": [("U9", "2", "")], "MOD_EN": [("U9", "4", ""), ("U12", "6", "RXEN")],
+                                     "+3V3": [("U9", "5", "")], "GND": [("U9", "3", "")]})
+        assert tx["ok"] is want and (want or "pin 6 ('RXEN') on MOD_EN, where U9 pin 4" in tx["detail"]), (first, tx)
+
+
+def t_another_radio_on_the_same_gated_rail_is_read_in_its_own_row():
+    """Board B's two E72 modules on +3V3_ZB, read with this file's own table. ACCEPTABLE: each module's row no longer
+    names the other's supply pin as 'a part no class here reads' (the tool at 73ae2f21 read both rows UNDECIDED on it),
+    and with nothing else on the rail both PASS. DEFECTIVE: a third module on the rail that the table does not list is
+    still named, in both rows."""
+    e72 = lambda w: ("Ebyte E72-2G4M20S1E CC2652P (%s)" % w, "meshsat:Ebyte_E72-2G4M20S1E", "meshsat_ic:U")
+
+    def board(third=False):
+        comps = {"SW1": TOGGLE, "R58": ("4.7k 1%", "R", "Device:R"), "U505": AND1, "R517": ("10k", "R", "Device:R"), "U22": LSW,
+                 "U13": e72("Zigbee coordinator"), "U14": e72("OpenThread RCP")}
+        nets = {"EMCON_HW": [("SW1", "1", ""), ("R58", "1", ""), ("U505", "1", "")],
+                "GND": [("SW1", "2", ""), ("R58", "2", ""), ("U505", "3", ""), ("R517", "2", ""), ("U22", "4", "GND"),
+                        ("U13", "1", "GND"), ("U14", "1", "GND")],
+                "ZB_ON": [("U505", "2", "")], "+3V3_DEV": [("U505", "5", ""), ("U22", "6", "VIN")],
+                "E72_EN": [("U505", "4", ""), ("R517", "1", ""), ("U22", "5", "EN/UVLO")],
+                "+3V3_ZB": [("U22", "1", "VOUT"), ("U13", "20", "+3V3_ZB"), ("U14", "20", "+3V3_ZB")]}
+        if third:
+            comps["U99"] = e72("a third one"); nets["+3V3_ZB"].append(("U99", "20", "+3V3_ZB")); nets["GND"].append(("U99", "1", "GND"))
+        return [x for x in T.judge({"B": _nl(comps, nets)}) if x["text"].startswith("E72 CC2652P")]
+    rows = board()
+    assert len(rows) == 2 and all(x["ok"] is True for x in rows), rows
+    rows = board(third=True)
+    assert len(rows) == 2 and all(x["ok"] is None and "U99 pin 20" in x["detail"] and "no class here reads" in x["detail"]
+                                  and "U13 pin 20" not in x["detail"] and "U14 pin 20" not in x["detail"] for x in rows), rows
+
+
+def t_the_table_carries_the_pa_gate_bias_and_the_rockblocks_makers_words():
+    """The table itself (stream d4emcon): the PA's gate bias is an entry of its own on board D, anchored on J_VGG pin 1, and
+    J_VGG is no longer a declared accessory; the PA's drain supply on board A stays the entry it was; the RockBLOCK's option
+    carries Ground Control's sentence on its input pins; and the TLV75801P's enable states no maximum current."""
+    by = {t["name"]: t for t in T.TRANSMITTERS}
+    bias = by["30 W VHF power amplifier, its gate bias (RA30H1317M1 pin 2, VGG)"]["options"]
+    assert [(o["board"], o["ref"], o["kind"], o["supply_pins"]) for o in bias] == [("D", "J_VGG", "power", ("1",))], bias
+    assert "IDD~0 @ VDD=12.5V, VGG=0V" in bias[0]["bias_cite"]
+    assert [(o["board"], o["ref"]) for o in by["30 W VHF power amplifier (RA30H1317M1 on the plate)"]["options"]] == [("A", "J_PA")]
+    assert not [a for a in T.ACCESSORIES if a["ref"] == "J_VGG"]
+    assert "there should be no voltage applied to any input pins, other than I_EN" in by["RockBLOCK 9704 (Iridium)"]["options"][0]["io_words"]
+    sw = [x for x in T.SWITCHES if x["name"].startswith("TLV758P")][0]
+    assert (sw["en"], sw["out"], sw["vin"], sw["en_off"], sw["en_leak"]) == ("4", ["1"], ["6"], 0.3, None), sw
+    assert len(T.TRANSMITTERS) == 18

@@ -1,0 +1,5 @@
+PASS  synthetic after                        read-back exit 0 (RESULT: every check holds)
+PASS  mutant: U9 pin 4 still on EMCON_HW     read-back exit 1 (RESULT: 1 check(s) fail)
+PASS  mutant: D23 pin 1 missing              read-back exit 1 (RESULT: 1 check(s) fail)
+PASS  mutant: R52 at 3.3k                    read-back exit 1 (RESULT: 1 check(s) fail)
+RESULT: the read-back passes the synthetic after-netlist and fails every mutant

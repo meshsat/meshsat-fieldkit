@@ -1,0 +1,25 @@
+ADD part C227 100n
+ADD part C228 10n
+ADD part C229 10u 25V 1210
+ADD part C230 100n
+ADD part C231 22u 10V X7R 1210
+ADD part C232 22u 10V X7R 1210
+ADD part L13 6.8uH XAL6060-682ME (Isat 9.2 A)
+ADD part R217 56.2k 0.1% 25ppm
+ADD part R218 10.7k 0.1% 25ppm
+ADD part U41 TPS62933DRLR 3 A buck, 5.0 V for the D8 mezzanine
+CHG part R186 '1k 1% (ILM: 0.89 A)' -> '1k 1% (ILM: 0.91 A)'
+CHG part R209 '4.7k 1% (ILM: 0.18 A)' -> '4.7k 1% (ILM: 0.20 A)'
+CHG part U23 'TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))' -> 'TPS259631DDAR eFuse +5V_D8IN -> +5V_D8 (453R 1% (ILM: 2.0 A))'
+CHG part U32 'TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.89 A))' -> 'TPS259631DDAR eFuse +5V_DEV -> VBUS_WALL (1k 1% (ILM: 0.91 A))'
+CHG part U39 'TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.18 A))' -> 'TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.20 A))'
+ADD net +5V_D8IN [('C103', '1'), ('C231', '1'), ('C232', '1'), ('L13', '2'), ('R100', '1'), ('R217', '1'), ('U23', '4')]
+ADD net D8B_BST [('C227', '1'), ('U41', '6')]
+ADD net D8B_FB [('R217', '2'), ('R218', '1'), ('U41', '8')]
+ADD net D8B_SS [('C228', '1'), ('U41', '7')]
+ADD net D8B_SW [('C227', '2'), ('L13', '1'), ('U41', '5')]
+ADD net unconnected-(U41-NC-Pad1) [('U41', '1')]
+CHG net +5V_DEV + [] - [('C103', '1'), ('R100', '1'), ('U23', '4')]
+CHG net GND + [('C228', '2'), ('C229', '2'), ('C230', '2'), ('C231', '2'), ('C232', '2'), ('R218', '2'), ('U41', '4')] - []
+CHG net RAIL_EN + [('U41', '2')] - []
+CHG net VBAT + [('C229', '1'), ('C230', '1'), ('U41', '3')] - []
