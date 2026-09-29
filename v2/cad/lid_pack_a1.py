@@ -539,8 +539,9 @@ def main(fp):
         CELL_L, len(aB["cells"]) * CELL_M * 100 * 9.81 / 8))
     w("     at 100 g, against the r2 record's 1019 N for a button head on a 3.0 printed part (a 1.0 cover takes less; the cover's spans of")
     w("     65 to 200 between bays are not a beam that carries the block: the glue is the primary hold, the cover a catch). OPEN at E1.")
-    w("     Peli states no load for its hinges or the lid's stop; the lid grows from about 1.0 to %.1f kg: T-A1-4 (and the lid stay, section 4)." % (
-        sum(i[2] for i in items if i[1] == "lid")))
+    w("     Peli states no load for its hinges or the lid's stop; the lid grows from about %.1f (shell and QMX set) to %.1f kg: T-A1-4 (and the" % (
+        sum(i[2] for i in items if i[0].startswith(("QMX", "lid shell"))), sum(i[2] for i in items if i[1] == "lid")))
+    w("     lid stay, section 4).")
     w("     heater: the lid pack's own mat (9h: the charge window starts at 0 C) is not placed; a 1.0 mat between the plate and the block")
     w("     deepens both depths by 1.0: the tightest rows (the window 3.10, the LED bar 2.40 at the worst) still meet 1.0.")
     w()
