@@ -3529,43 +3529,6 @@ open_items:
       the exciter keys. Figures: v2/docs/records/s99a/codec_floor.out (codec_floor.py). Closed by the owners'
       declarations and those readings giving the codec at least 4.35 V at the declared peak, or by a document or a board
       D declaration that bounds the peak the codec must operate through.
-  - id: S-117
-    class: SESSION
-    status: OPEN
-    title: >-
-      (set 10's AI check, blocking item B1; round 4's finding O-24, records/r4a/r4-open-items.md) Board A's charger U3
-      (BQ25731) reads its switching frequency and its inductance from the resistor on its IADPT pin before the converter
-      starts (TI SLUSE66A 9.3.11 and Table 9-4, printed page 27: 169 kOhm, 3 percent or better, for 3.3 uH at 800 kHz;
-      191 or 187 kOhm for 4.7 uH at 400 kHz). Board A's IADPT net carries only U3 pin 8 and TP19: no resistor, and not
-      the 100 pF capacitor the pin table asks for, so the frequency and inductance the drawn circuit starts with are not
-      established. Its COMP1 and COMP2 networks are not those of the datasheet's compensation table for either
-      frequency, and PWM_FREQ's power-on default (1b, 400 kHz) is the frequency TI pairs with 4.7 uH, where board A fits
-      3.3 uH (L2). Closes when board A's writer draws the IADPT resistor and capacitor for the chosen inductor and
-      frequency and the compensation networks from the datasheet's table, the firmware contract declares PWM_FREQ to
-      match, and the EMC sheet's U3 row carries that frequency.
-  - id: S-118
-    class: SESSION
-    status: OPEN
-    title: >-
-      (stream s117, S-117's finding F1; decision 56, the remedy decision 57) Board A's charger FETs Q7 to Q10 were drawn
-      as CSD18510Q5B (Qg 58 nC at 4.5 V and 118 nC at 10 V, TI SLPS632 p.3; about 75 nC at 6 V read from its Figure 4,
-      p.5), which ask more gate current of the BQ25731's own 6 V regulator than it is specified to give. REGN feeds both
-      low-side drivers and, through the integrated bootstrap diodes, both high-side drivers (SLUSE66A pin table, printed
-      pages 5 and 6); in buck mode Q7 and Q8 switch every cycle (Table 9-3, page 27), so REGN supplies 2 x Qg x fS: 60
-      mA at a typical 400 kHz with a 6 V drive and up to 77 mA (89 mA at 460 kHz) from the makers' maxima, against
-      VREGN_REG's 0 to 60 mA condition and IREGN_LIM's 50 mA minimum (8.5, page 11), whose switching tests assume a
-      MOSFET Qg of 4 nC (8.5, pages 11 and 12); twice that if the converter runs buck-boost with all four switching,
-      whose threshold the maker does not state (9.3.10, page 27). TI's loss equations (10.2.2.6, pages 86 to 88) put 4.8
-      W in Q7 at the energy model's peak and read U3 at 0.943 there (0.924 to 0.964 across the readings, R16 and R17
-      counted, core loss excluded), where TI's Figure 8-4 (page 19) loses about 0.96 W in all at 4 A: less than the
-      drawn FETs' gate drive alone (v2/docs/records/s117/efficiency.out). Option A(i)'s drafted U3B
-      (v2/docs/records/a1elec/TOPOLOGY.md) carries the same FETs as Q7B to Q10B. The remedy is the session's decision
-      57: Q7 CSD17578Q5A and Q8 to Q10 CSD17577Q5A on the land they have (REGN 10.5 mA typical in buck mode, 36.5 mA at
-      the maxima with all four switching; U3 0.979 at the peak by TI's method), drawn by
-      v2/docs/records/s117/apply_gen_sch_a_fets_s117.py with PWR-001's pin roles (apply_intent_checks_s117.py). Owner:
-      board A's writer. Closed when board A's regenerated netlist carries those four parts (readback_s117.py --fets
-      reads PASS), or other FETs whose gate charge at 6 V keeps 4 x Qg x 460 kHz under 50 mA with the stage's losses
-      re-read by v2/docs/records/s117/efficiency.py.
   - id: S-119
     class: SESSION
     status: OPEN
@@ -3584,6 +3547,17 @@ open_items:
       (v2/docs/records/a1int/reconcile_lid_panel.py) rests on 0.98 and 0.975. Owner: the energy record's writer. Closed
       when both rows are restated from the drawn FETs' losses, or from FETs that meet them, and the lid reconciliation
       is re-run.
+  - id: S-120
+    class: SESSION
+    status: OPEN
+    title: >-
+      (the independent re-check of stream s117, minor n1; integration set 12) Decision 57 moves board A's charger switching
+      FETs Q7 to Q10 from the 40 V CSD18510Q5B to the 30 V CSD17578Q5A (Q7) and CSD17577Q5A (Q8 to Q10). They sit on the
+      charger's input bus VBUS20, which the front end U2 (LM5176) holds at about 20.7 V, and on the pack side; no open item
+      bounds the bus's worst case (a front-end fault, a load dump through the front end, a transient) against the FETs' new
+      30 V rating and the BQ25731's own input limit (TI SLUSE66A, absolute maximum ratings). Closed when that worst case is
+      bounded from the front end's own protection or a clamp on VBUS20, with its figures and pages, or the FETs' rating is
+      restated with the reason.
 closed_items:
   - id: S-89
     closed_by: commit aaed6daa4434f2ae94331cdafb3134056fb1eb97
@@ -4238,6 +4212,65 @@ closed_items:
       board B's owner: the supervisor LDOs U40, U50 and U60 at 0.05 A against their child rails' 0.12 and 0.25 A, the
       LoRa module U21 at 0.6 A against Ebyte's 0.65 A transmit figure, and U25's comment of 1.4 A against the declared
       1.2 A on +3V3_DEV.
+  - id: S-117
+    closed_by: commit 230fdd65949524d275ea3d9dbe4d8cfd1c34c711
+    closing_evidence: >-
+      Board A regenerated with v2/docs/records/s117/apply_gen_sch_a_s117.py (decision 56) and committed by
+      230fdd65949524d275ea3d9dbe4d8cfd1c34c711: v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (sha256/16 6c40250c47195ebb)
+      is this tree's generator's by sch_prov and v2/docs/records/s117/readback_s117.py reads 23 of 23 checks PASS on it:
+      L2 4.7uH XAL1010-472ME (Isat 25.4 A) on L_Coilcraft_XAL1010-XXX between CH_SW1 and CH_SW2; IADPT holds U3 pin 8,
+      TP19, R219 191k 1% to GND and C233 33p to GND (SLUSE66A Table 9-4, printed page 27; the pin table, page 6);
+      CH_COMP1 holds U3 pin 16, R25 40.2k 1% to C26 4.7n and C234 33p; CH_COMP2 holds U3 pin 17, R220 15k 1% to C235
+      680p and C27 15p NP0 (Table 9-5's 400 kHz row, pages 27 and 28); C121 10n across the input sense (10.2.2.2, page
+      84). v2/ecad/tools/pcb_emc.yaml's U3 row reads 400 kHz; v2/docs/HW-FW-CONTRACT.md's FW-A17 holds PWM_FREQ at its
+      power-on 1b (Table 9-8, page 43) with V-A05. A schematic item closed on the netlist: the switch node's frequency,
+      the IADPT reading and the loop are bench items (V-A05), L2's seat and the new parts' seats are S-115's, and the
+      FETs' gate drive is S-118.
+    title: >-
+      (set 10's AI check, blocking item B1; round 4's finding O-24, records/r4a/r4-open-items.md) Board A's charger U3
+      (BQ25731) reads its switching frequency and its inductance from the resistor on its IADPT pin before the converter
+      starts (TI SLUSE66A 9.3.11 and Table 9-4, printed page 27: 169 kOhm, 3 percent or better, for 3.3 uH at 800 kHz;
+      191 or 187 kOhm for 4.7 uH at 400 kHz). Board A's IADPT net carries only U3 pin 8 and TP19: no resistor, and not
+      the 100 pF capacitor the pin table asks for, so the frequency and inductance the drawn circuit starts with are not
+      established. Its COMP1 and COMP2 networks are not those of the datasheet's compensation table for either
+      frequency, and PWM_FREQ's power-on default (1b, 400 kHz) is the frequency TI pairs with 4.7 uH, where board A fits
+      3.3 uH (L2). Closes when board A's writer draws the IADPT resistor and capacitor for the chosen inductor and
+      frequency and the compensation networks from the datasheet's table, the firmware contract declares PWM_FREQ to
+      match, and the EMC sheet's U3 row carries that frequency.
+  - id: S-118
+    closed_by: commit 230fdd65949524d275ea3d9dbe4d8cfd1c34c711
+    closing_evidence: >-
+      Board A regenerated with v2/docs/records/s117/apply_gen_sch_a_fets_s117.py (decision 57) and committed by
+      230fdd65949524d275ea3d9dbe4d8cfd1c34c711: v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (sha256/16 6c40250c47195ebb)
+      is this tree's generator's by sch_prov and v2/docs/records/s117/readback_s117.py --fets reads 8 of 8 FET checks
+      PASS on it: Q7 CSD17578Q5A 30 V N-FET, Q8 CSD17577Q5A 30 V N-FET, Q9 CSD17577Q5A 30 V N-FET and Q10 CSD17577Q5A 30
+      V N-FET, each on the PowerPAK SO-8 land with its pads on the nets it had; v2/ecad/tools/intent_checks.py's
+      PIN_ROLES names both parts (apply_intent_checks_s117.py). With them REGN supplies 10.5 mA typical in buck mode and
+      36.5 mA at the makers' maxima with all four switching at 460 kHz, against its 50 mA minimum limit (SLUSE66A 8.5,
+      printed page 11), and U3 reads 0.979 at the energy model's peak by TI's Equations 6 to 22
+      (v2/docs/records/s117/efficiency.out). A schematic item closed on the netlist: the order codes and the Q5A land
+      fit are the parts stream's, the FETs' temperatures and the switch node are layout and bench items, and the energy
+      chain's rows are F2's.
+    title: >-
+      (stream s117, S-117's finding F1; decision 56, the remedy decision 57) Board A's charger FETs Q7 to Q10 were drawn
+      as CSD18510Q5B (Qg 58 nC at 4.5 V and 118 nC at 10 V, TI SLPS632 p.3; about 75 nC at 6 V read from its Figure 4,
+      p.5), which ask more gate current of the BQ25731's own 6 V regulator than it is specified to give. REGN feeds both
+      low-side drivers and, through the integrated bootstrap diodes, both high-side drivers (SLUSE66A pin table, printed
+      pages 5 and 6); in buck mode Q7 and Q8 switch every cycle (Table 9-3, page 27), so REGN supplies 2 x Qg x fS: 60
+      mA at a typical 400 kHz with a 6 V drive and up to 77 mA (89 mA at 460 kHz) from the makers' maxima, against
+      VREGN_REG's 0 to 60 mA condition and IREGN_LIM's 50 mA minimum (8.5, page 11), whose switching tests assume a
+      MOSFET Qg of 4 nC (8.5, pages 11 and 12); twice that if the converter runs buck-boost with all four switching,
+      whose threshold the maker does not state (9.3.10, page 27). TI's loss equations (10.2.2.6, pages 86 to 88) put 4.8
+      W in Q7 at the energy model's peak and read U3 at 0.943 there (0.924 to 0.964 across the readings, R16 and R17
+      counted, core loss excluded), where TI's Figure 8-4 (page 19) loses about 0.96 W in all at 4 A: less than the
+      drawn FETs' gate drive alone (v2/docs/records/s117/efficiency.out). Option A(i)'s drafted U3B
+      (v2/docs/records/a1elec/TOPOLOGY.md) carries the same FETs as Q7B to Q10B. The remedy is the session's decision
+      57: Q7 CSD17578Q5A and Q8 to Q10 CSD17577Q5A on the land they have (REGN 10.5 mA typical in buck mode, 36.5 mA at
+      the maxima with all four switching; U3 0.979 at the peak by TI's method), drawn by
+      v2/docs/records/s117/apply_gen_sch_a_fets_s117.py with PWR-001's pin roles (apply_intent_checks_s117.py). Owner:
+      board A's writer. Closed when board A's regenerated netlist carries those four parts (readback_s117.py --fets
+      reads PASS), or other FETs whose gate charge at 6 V keeps 4 x Qg x 460 kHz under 50 mA with the stage's losses
+      re-read by v2/docs/records/s117/efficiency.py.
 records:
   - id: REQ-001
     kind: requirement
@@ -6713,7 +6746,7 @@ records:
       decisions: [31, 34]
     rule_coverage: PARTIAL
     rulings: [D-16]
-    waits_on: [S-106, S-107, S-111, S-117, S-118]
+    waits_on: [S-106, S-107, S-111, S-120]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
