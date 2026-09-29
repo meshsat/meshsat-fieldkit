@@ -542,15 +542,17 @@ the ready queue when its task returns. Nothing blocked is adopted, approved or w
 The session stops only on the owner's instruction, a real runtime or resource limit, or an empty ready queue, and then
 names the dependencies that emptied it.
 
-**The four owner decisions open for Option A(i) (model results; the two-pack figures are provisional until the
-independent check running now passes):**
+**The four owner decisions open for Option A(i) (model results; the two-pack figures were checked independently on
+29 September, `records/a1int/checks/check-a1int-1.md` and `-2.md` on `fnd/a1int` at `6a007879`: with U3's input limit at
+its minimum, the tablet-out lid's lowest store is 93.7 Wh typical and 87.4 Wh adverse, the QMX-out lid's 125.2 and
+118.5 Wh; both functions kept does not meet M1):**
 
 | Decision | Recommendation (the session's) | Trade-off | Blocks exactly |
 |---|---|---|---|
 | Q1. Which lid function you approved on 6 September leaves the lid for the lid pack (DECISION-A1, reopening D-01's deferral) | Option 1: the tablet bracket (16d) leaves; the HF QMX (16a) stays inside | Keeps a radio bearer inside; REQ-011's bracket is not met; open-lid stability under about 3 degrees of slope toward the hinge until the feet are measured. Option 2 keeps the bracket and loses HF inside, level ground only. Keeping both: M1 not met on the model | adopting a lid pack size (4S14P or 4S15P) in the energy design case and the case set; the lid pack's CAD release; the sealed lead crossing to the lid; the lid gauge's scale at that size; the records of 16a, 16d and REQ-011 |
 | Q2. REQ-016 restated for the 200 W stage | The 2S2P wording of `records/a1solar/ARRAY.md` 5: open-circuit at most 51.3 V at -20 C cells, every entry part rated above 56.3 V, the array held at 34.1 V, the entry rated for the 20 A fuse | 80 to 100 V class parts on board E's entry; the 1S4P alternative keeps low voltage but needs 36.8 A at the entry and a fuse per panel | adopting board E's 200 W entry into `gen_sch_e.py` and the baseline; A1SOLAR-01 in `pcb_decisions.yaml`; PV_IN and PV_P declarations; the entry's fuse and connector selection for ordering |
 | Q3. D-06: the battery grows from 145 Wh to what M1 needs | Approve the growth the chosen lid option needs: about 870 Wh nominal for 4S18P (DECISION-OPTIONS), about 970 Wh for 4S20P (arithmetic, 20/18 of it) | Mass and cost of the cells; a larger lithium transport class; the approved 145 Wh stands until you change it | adopting the grown pack into the baseline; board P and the pack's protection sized for it; BAT-001's pack basis; REQ-072 leaving FAIL on the model |
-| Q4. A deployment rule for the panels | Adopt it as a CONOPS line with a stand: 20 to 50 degrees of slope, facing within 15 degrees of south (a model result; flat does not meet M1) | A set-up constraint and a stand to carry; without it M1 is met only where the operator happens to prop the panels well | the CONOPS line; the scope of any M1 claim; the stand's design |
+| Q4. A deployment rule for the panels | Adopt it as a CONOPS line with a stand: 20 to 50 degrees of slope, facing within 15 degrees of south (a model result, sufficient for both lid options; laid flat the tablet-out lid does not meet M1 and the QMX-out lid meets it only at the typical ratio) | A set-up constraint and a stand to carry; without it M1 is met only where the operator happens to prop the panels well | the CONOPS line; the scope of any M1 claim; the stand's design |
 
 **Not blocked, running or ready:** the independent check of the two-pack calculation; FEA-002's desk work for layout
 entry on boards A to D (stream d4emcon); board E's 200 W entry as a reversible candidate (analysed and drafted, not
