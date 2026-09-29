@@ -22,6 +22,10 @@ a maker's document. AI engineering work, not a qualified review. No agent, no ot
   U3's OTG/VAP/FRS pin is on GND, so the charger cannot drive VBUS20. TI prefers 30 V FETs for a 19 to 20 V input (SLUSE66A
   p.86); board A's DC band reaches 20.96 V with the divider's TCR. No TI note giving a layout-independent ringing bound is
   held in the tree (searched `v2/vendor/` and `sources.txt`).
-- 17:26 to 17:32 `vbus20_bound.py` (parses both netlists, 18 circuit facts, then sections 2 to 12) and `.out`: bus bound
+- 17:26 to 17:28 `vbus20_bound.py` (parses both netlists, 18 circuit facts, then sections 2 to 12) and `.out`: bus bound
   23.19 V (the OVP trip at VREF maximum and the worst divider ratio, plus L1's energy at its peak limit), 6.81 V under the
   FETs' 30 V; the switch node INCONCLUSIVE with a 9.04 V budget over the steady bus.
+- 17:28 Checkpoint `5a868570` (the script, its output, this log).
+- 17:29 to 17:33 `vbus20_bound.py` leaves its figures in `FIG` for the registry script (output unchanged byte for byte);
+  the CH_ACN figure is worded as the square root of L it is. `apply_registry_s120.py` drafted (one phase, `close <commit>`).
+  `README.md` written: answer (a).
