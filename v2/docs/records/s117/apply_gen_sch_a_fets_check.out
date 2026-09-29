@@ -1,0 +1,2 @@
+apply_gen_sch_a_fets_s117: gen_sch_a.py sha256/16 eb2e347e4d371e0f -> 4a2e569e17f36ad5; Q7 CSD17578Q5A 30 V N-FET, Q8 to Q10 CSD17577Q5A 30 V N-FET; nets, land and pin map unchanged; the loop read back from the parsed source
+CHECK ONLY: 1 anchor, 4 rows read back, 1 generator; no writes, no marker.
