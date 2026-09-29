@@ -139,6 +139,26 @@
    "basis": "the e-paper's data and command select, an edge per transfer"
   },
   {
+   "pattern": "EPD_SCL_R",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the e-paper's SPI clock between the RP2040's pin and its 27R series termination, a few millimetres; the same edges as EPD_SCL (29 September 2026, stream csi, CSI-D3)"
+  },
+  {
+   "pattern": "EPD_SDA_R",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the e-paper's SPI data (the panel answers on it in a read) between the RP2040's pin and its 27R series termination, a few millimetres; the same edges as EPD_SDA (29 September 2026, stream csi, CSI-D3)"
+  },
+  {
+   "pattern": "EPD_DC_R",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the e-paper's data and command select between the RP2040's pin and its 27R series termination, a few millimetres; the same edges as EPD_DC (29 September 2026, stream csi, CSI-D3)"
+  },
+  {
+   "pattern": "EPD_CS_R",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the e-paper's chip select between the RP2040's pin and its 27R series termination, a few millimetres; the same edges as EPD_CS (29 September 2026, stream csi, CSI-D3)"
+  },
+  {
    "pattern": "SW*",
    "class": "CLOCKED_DIGITAL",
    "basis": "the SWD debug port, a few megahertz and used only with a probe attached"

@@ -145,13 +145,20 @@ for i in range(1, 6): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", 
 #   fix, a BOOTSEL activity mask of 0 or GPIO25 only) belong in PANEL.md section 6 beside ZEROIZE and in decision 30 of pcb_decisions.yaml.
 synth("U3", "RP2040", "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)", "QFN56", {
  1: "+3V3", 10: "+3V3", 22: "+3V3", 33: "+3V3", 42: "+3V3", 49: "+3V3", 43: "+3V3", 44: "+3V3", 48: "+3V3", 23: "C_DVDD", 50: "C_DVDD", 45: "C_DVDD", 57: "GND", 19: "GND",
- 2: "SDA", 3: "SCL", 4: "EPD_SCL", 5: "EPD_SDA", 6: "EPD_DC", 7: "EPD_CS", 8: "EPD_RST", 9: "EPD_BUSY", 11: "PANEL_PWM", 12: "PWM1", 13: "HB1", 14: "HB2", 15: "HB3", 16: "SLOT_EN1", 17: "SLOT_EN2", 18: "SLOT_EN3",
+ 2: "SDA", 3: "SCL", 4: "EPD_SCL_R", 5: "EPD_SDA_R", 6: "EPD_DC_R", 7: "EPD_CS_R", 8: "EPD_RST", 9: "EPD_BUSY", 11: "PANEL_PWM", 12: "PWM1", 13: "HB1", 14: "HB2", 15: "HB3", 16: "SLOT_EN1", 17: "SLOT_EN2", 18: "SLOT_EN3",
  20: "XIN", 21: "XOUT_R", 24: "SWCLK", 25: "SWDIO", 26: "C_RUN", 27: "HDMI_SEL1", 28: "HDMI_SEL2", 29: "PI_SHDN_REQ", 30: "PI_KILL", 31: "SHORE_INHIBIT", 32: "EMCON_RD_R", 34: "ZEROIZE_SW", 35: "TR_APRS", 36: "EXP_INT",
  37: "LED_STAT", 38: "RAIL_SENSE", 39: "TEST_SW", 40: "SOS_SW", 41: "EPD_PWR_n", 46: "USB_DM_R", 47: "USB_DP_R", 51: "QSPI_D3", 52: "QSPI_SCLK", 53: "QSPI_D0", 54: "QSPI_D2", 55: "QSPI_D1", 56: "QSPI_SS"}, "C2040")
 ic("U4", 9, "W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)", "USON8", {"1": "QSPI_SS", "2": "QSPI_D1", "3": "QSPI_D2", "4": "GND", "5": "QSPI_D0", "6": "QSPI_SCLK", "7": "QSPI_D3", "8": "+3V3", "9": "GND"}, "C2843335")
 part("Y1", "Device", "Crystal_GND24", "12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND", "XTAL", {"1": "XIN", "2": "GND", "3": "XOUT", "4": "GND"}, "C20625731")
 c("C5", "15p NP0", "XIN", "GND", "C0402"); c("C6", "15p NP0", "XOUT", "GND", "C0402"); r("R1", "1k", "XOUT_R", "XOUT")
 r("R2", "27R", "USB_DP_R", "USB_PNL_P"); r("R3", "27R", "USB_DM_R", "USB_PNL_N"); r("R4", "10k", "C_RUN", "+3V3"); r("R5", "1k (BOOTSEL)", "QSPI_SS", "BOOT_J")
+# THE E-PAPER LINES ARE SERIES-TERMINATED AT THE CONTROLLER (stream csi, CSI-D3, 29 September 2026, taken under the
+# owner's standing rule of 26 September 2026). SI-001 found EPD_SCL, EPD_SDA, EPD_DC and EPD_CS layout-bound: the RP2040 publishes no
+# edge (no IBIS model, no minimum transition) and the lines run from the cluster to J_EPD. 27R at each pin, the value the maker
+# series-terminates this chip's USB pins with (hardware design guide p. 12); INFERRED for a GPIO pad, the edge at J_EPD is owed
+# at bring-up. Place each within a few millimetres of U3's pin (the layout generator's item). Reverse: delete the four lines
+# below and put U3 pins 4 to 7 back on EPD_SCL, EPD_SDA, EPD_DC and EPD_CS.
+r("R53", "27R", "EPD_SCL_R", "EPD_SCL"); r("R54", "27R", "EPD_SDA_R", "EPD_SDA"); r("R55", "27R", "EPD_DC_R", "EPD_DC"); r("R56", "27R", "EPD_CS_R", "EPD_CS")
 part("JP1", "Jumper", "SolderJumper_2_Open", "BOOTSEL: short while powering to enter the USB bootloader", "JP2", {"1": "BOOT_J", "2": "GND"})
 for k in range(7, 14): c("C%d" % k, "100n", "+3V3", "GND")
 # EVERY RP2040 SUPPLY PIN HAS ITS OWN CAPACITOR (MESHSAT-1357 round 8, DECOUPLING.md 8.3 items G9 and G13; decision 42). The maker, RP2040
