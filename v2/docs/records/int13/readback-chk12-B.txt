@@ -1,0 +1,17 @@
+The read-back of apply_b_chk12.py (stream rf2walk2, tools/readback_chk12.py)
+  netlist v2/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net  sha256/16 1aec97f435080163
+  intent  v2/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json  sha256/16 30fb871954f76b2a
+
+PASS  value R238 '49.9k 1%' (expected '49.9k 1%')
+PASS  value R532 '2.7k 1%' (expected '2.7k 1%')
+PASS  value R527 '20.0k 1%' (expected '20.0k 1%')
+PASS  value R551 '49.9k 1%' (expected '49.9k 1%')
+PASS  R551 between +5V_DEV and RB_TD_CT (expected +5V_DEV and RB_TD_CT)
+PASS  net RB_TD_CT carries R551.2, U543.4 (expected U543 pin 4 and one R551 pin)
+PASS  U543 pin 3 (MR) open: 'unconnected-(U543-NC-Pad3)'
+PASS  +3V3_CM1 loads name every logic part on it (4 on the netlist; missing none)
+PASS  +3V3_CM2 loads name every logic part on it (6 on the netlist; missing none)
+PASS  +3V3_CM3 loads name every logic part on it (14 on the netlist; missing none)
+PASS  +3V3_ZB loads name R536, R537, R538 (J_ZBDBG1, J_ZBDBG2, R536, R537, R538, U13, U14)
+
+RESULT: every check holds
