@@ -1,6 +1,6 @@
 {
  "board": "pcb-b-compute",
- "written": "2026-09-29 10:39",
+ "written": "2026-09-29 12:20",
  "bypass": [
   {
    "cap": "C112",
@@ -2707,9 +2707,13 @@
    "amps_peak": 0.2,
    "source": "U30A",
    "loads": {
-    "U30A": 0.1
+    "U30A": 0.1,
+    "U112": 0.001,
+    "U113": 0.001,
+    "U114": 0.001,
+    "U115": 0.001
    },
-   "note": "slot 1's module-supplied 3.3 V. This board only decouples it and level-shifts against it; nothing on the carrier draws from it beyond its own bypass network",
+   "note": "slot 1's module-supplied 3.3 V. This board decouples it, level-shifts against it (Q101 to Q105 and their pull-ups) and runs from it the slot's EMCON gates U112 to U115 (round 8, EMCON L3); 1 mA a gate",
    "always_on": true,
    "always_on_why": "the module's OWN 3.3 V output on its receptacle: this board consumes it and cannot switch it",
    "converted": false
@@ -2803,9 +2807,15 @@
    "amps_peak": 0.2,
    "source": "U31A",
    "loads": {
-    "U31A": 0.1
+    "U31A": 0.1,
+    "U212": 0.001,
+    "U213": 0.001,
+    "U214": 0.001,
+    "U215": 0.001,
+    "U220": 0.001,
+    "U554": 0.001
    },
-   "note": "slot 2's module-supplied 3.3 V. This board only decouples it and level-shifts against it; nothing on the carrier draws from it beyond its own bypass network",
+   "note": "slot 2's module-supplied 3.3 V. This board decouples it, level-shifts against it (Q201 to Q205 and their pull-ups) and runs from it the slot's EMCON gates U212 to U215 (round 8, EMCON L3), U220 (SD-EMC-1r8) and U554 (D4E-B B-5); 1 mA a gate",
    "always_on": true,
    "always_on_why": "the module's OWN 3.3 V output on its receptacle: this board consumes it and cannot switch it",
    "converted": false
@@ -2899,9 +2909,23 @@
    "amps_peak": 0.2,
    "source": "U32A",
    "loads": {
-    "U32A": 0.1
+    "U32A": 0.1,
+    "U312": 0.001,
+    "U313": 0.001,
+    "U314": 0.001,
+    "U315": 0.001,
+    "U544": 0.001,
+    "U545": 0.001,
+    "U546": 0.001,
+    "U547": 0.001,
+    "U548": 0.001,
+    "U549": 0.001,
+    "U550": 0.001,
+    "U551": 0.001,
+    "U552": 0.001,
+    "U553": 0.001
    },
-   "note": "slot 3's module-supplied 3.3 V. This board only decouples it and level-shifts against it; nothing on the carrier draws from it beyond its own bypass network",
+   "note": "slot 3's module-supplied 3.3 V. This board decouples it, level-shifts against it (Q301 to Q305 and their pull-ups) and runs from it the slot's EMCON gates U312 to U315 (round 8, EMCON L3) and the E22's gates and buffers U544 to U553 (D4E-B B-3); 1 mA a gate",
    "always_on": true,
    "always_on_why": "the module's OWN 3.3 V output on its receptacle: this board consumes it and cannot switch it",
    "converted": false
@@ -3016,9 +3040,12 @@
     "U13": 0.04,
     "U14": 0.04,
     "J_ZBDBG1": 0.01,
-    "J_ZBDBG2": 0.01
+    "J_ZBDBG2": 0.01,
+    "R538": 0.00071,
+    "R536": 0.00071,
+    "R537": 0.00071
    },
-   "note": "the two CC2652P radios behind their load switch, plus the two bench debug headers. 0.3 A peak is both radios transmitting at once, which the fabric never asks for but the copper must carry",
+   "note": "the two CC2652P radios behind their load switch, plus the two bench debug headers, R538's bleed (0.71 mA) and the RX pull-ups R536 and R537 (0.71 mA each while their open drain holds the line low; CHK12-B M5). 0.3 A peak is both radios transmitting at once, which the fabric never asks for but the copper must carry",
    "converted": false,
    "fed_from": "+3V3_DEV"
   },

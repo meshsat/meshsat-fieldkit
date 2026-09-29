@@ -1,0 +1,37 @@
+readback_s117: v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (sha256/16 d68ce269daa23080)
+  PASS L2 is the XAL1010-472ME                              value '4.7uH XAL1010-472ME (Isat 25.4 A)'
+  PASS L2 on the XAL1010 land                               footprint 'Inductor_SMD:L_Coilcraft_XAL1010-XXX'
+  PASS L2 between CH_SW1 and CH_SW2                         L2 pins on ['CH_SW1', 'CH_SW2']
+  PASS L2 is 4.7 uH                                         value '4.7uH XAL1010-472ME (Isat 25.4 A)'
+  PASS U3 pins 8, 16, 17 on IADPT, CH_COMP1, CH_COMP2       pin 8 IADPT, 16 CH_COMP1, 17 CH_COMP2
+  PASS IADPT holds U3, TP19, one resistor and one capacitor IADPT: [('C233', '1'), ('R219', '1'), ('TP19', '1'), ('U3', '8')]
+  PASS IADPT resistor R219 is 191 or 187 kOhm               value '191k 1%'
+  PASS IADPT resistor R219 at 1 percent or better           value '191k 1%'
+  PASS IADPT resistor R219 on an 0603 land                  footprint 'Resistor_SMD:R_0603_1608Metric'
+  PASS IADPT resistor R219 to GND                           R219 pins on ['GND', 'IADPT']
+  PASS IADPT capacitor C233 is 100 pF or less               value '33p'
+  PASS IADPT capacitor C233 to GND                          C233 pins on ['GND', 'IADPT']
+  PASS CH_COMP1 holds U3, R25 and C234 only                 CH_COMP1: [('C234', '1'), ('R25', '1'), ('U3', '16')]
+  PASS CH_COMP1C holds R25 and C26 only                     CH_COMP1C: [('C26', '1'), ('R25', '2')]
+  PASS R25 is 40.2 kOhm                                     value '40.2k 1%'
+  PASS C26 is 4.7 nF to GND                                 value '4.7n', C26 pins on ['CH_COMP1C', 'GND']
+  PASS C234 is 33 pF to GND                                 value '33p', C234 pins on ['CH_COMP1', 'GND']
+  PASS CH_COMP2 holds U3, R220 and C27 only                 CH_COMP2: [('C27', '1'), ('R220', '1'), ('U3', '17')]
+  PASS CH_COMP2C holds R220 and C235 only                   CH_COMP2C: [('C235', '1'), ('R220', '2')]
+  PASS R220 is 15 kOhm                                      value '15k 1%'
+  PASS C235 is 680 pF to GND                                value '680p', C235 pins on ['CH_COMP2C', 'GND']
+  PASS C27 is 15 pF to GND                                  value '15p NP0', C27 pins on ['CH_COMP2', 'GND']
+  PASS C121 is 10 nF across CH_ACP_F and CH_ACN_F           value '10n', C121 pins on ['CH_ACN_F', 'CH_ACP_F']
+  PASS Q7 is the CSD17578Q5A                                value 'CSD17578Q5A 30 V N-FET'
+  PASS Q7 on the PowerPAK SO-8 land, pads on their nets     footprint 'Package_SO:PowerPAK_SO-8_Single', pads {'5': 'CH_ACN', '4': 'CH_HIDRV1', '1': 'CH_SW1', '2': 'CH_SW1', '3': 'CH_SW1'}
+  PASS Q8 is the CSD17577Q5A                                value 'CSD17577Q5A 30 V N-FET'
+  PASS Q8 on the PowerPAK SO-8 land, pads on their nets     footprint 'Package_SO:PowerPAK_SO-8_Single', pads {'4': 'CH_LODRV1', '5': 'CH_SW1', '1': 'GND', '2': 'GND', '3': 'GND'}
+  PASS Q9 is the CSD17577Q5A                                value 'CSD17577Q5A 30 V N-FET'
+  PASS Q9 on the PowerPAK SO-8 land, pads on their nets     footprint 'Package_SO:PowerPAK_SO-8_Single', pads {'4': 'CH_LODRV2', '5': 'CH_SW2', '1': 'GND', '2': 'GND', '3': 'GND'}
+  PASS Q10 is the CSD17577Q5A                               value 'CSD17577Q5A 30 V N-FET'
+  PASS Q10 on the PowerPAK SO-8 land, pads on their nets    footprint 'Package_SO:PowerPAK_SO-8_Single', pads {'4': 'CH_HIDRV2', '1': 'CH_SW2', '2': 'CH_SW2', '3': 'CH_SW2', '5': 'VBAT'}
+  PASS parts added are exactly the five new ones            added ['C233', 'C234', 'C235', 'R219', 'R220']
+  PASS no part removed                                      removed []
+  PASS parts changed are exactly C26, C27, L2, Q10, Q7, Q8, Q9, R25 changed ['C26', 'C27', 'L2', 'Q10', 'Q7', 'Q8', 'Q9', 'R25']
+  PASS net members moved exactly by the change's pins       beyond the change: []; missing: []
+readback_s117: PASS, 35 of 35 checks hold
