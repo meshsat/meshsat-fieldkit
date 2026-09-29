@@ -5,7 +5,7 @@
 > cannot prove, with its uncertainty and every difference from the finished kit, is stated (R5); unattended heating runs
 > only behind an automatic, latching over-temperature shutdown verified before the case is heated, otherwise under
 > continuous supervision, and the Arcol ratings' dependence on their heatsink is stated (R5); nothing fit-dependent is cut
-> before the receipt checks R1 to R8 (R6); H1 has its own drawing. `PACKAGE.md` lists every file by path and sha256.
+> before the receipt checks that gate it (the table of `MACHINING-RFQ.md` section 6) (R6); H1 has its own drawing. `PACKAGE.md` lists every file by path and sha256.
 
 MESHSAT-1357, 28 September 2026, prepared by an AI session so the owner can assign the work (ruling D-19); revised after
 the independent AI checks `checks/check-1.md` and `checks/check-2.md` (both in the package). Prototype: nothing is built;
@@ -26,7 +26,7 @@ entry plates are released for cutting only after the checks their row names have
   the Arcol HS100 patch resistor on H1's four PEM S-M3 nuts: 45 and 83 W for 20, 30 and 60 s from a plate at or under
   +50 C, and its cooling.
 - **What it can prove:** the enclosure's conductance for heat released into the inside air, fans off, lid open and
-  closed, in still indoor air, to about -2 to +4 % at 64 W and -3 to +8 % at 21 W (the session's budget, INFERRED), and the rise
+  closed, in still indoor air, to about -2 to +4 % at 64 W and -4 to +8 % at 21 W (rounded outward) (the session's budget, INFERRED), and the rise
   of H1 under a 45 to 83 W block. **What it cannot:** any part's temperature, the fans-on case, the face with the monitor
   and its openings, sun and wind, the kit's transients, or anything about sealing; its readings close neither final
   thermal nor sealing acceptance. It may close FEA-004's conductance clause and W4 T9's spread, and feed the desk
@@ -81,7 +81,7 @@ page): no heater or hot plate touches the polypropylene; H2 stands on stand-offs
 - **Unattended heating only behind the automatic shutdown** (`TEST-PROCEDURE.md` section 3): four normally closed
   Elmwood 2455R thermostats in series with the coil of a Finder 40.52 relay that switches the heaters and holds itself in:
   TS1 on H2 (opens by 96 C), TS2 on the floor under H2 (by 63 C), TS3 on H1 (by 63 C), TS4 on the middle heater's body
-  (by 144 C). A trip, a pressed STOP, a broken wire or a supply dip turns the heaters off and **keeps them off** until
+  (by 144 C). A trip, a pressed STOP, a broken wire or a supply loss turns the heaters off and **keeps them off** until
   START is pressed. Each thermostat's opening temperature is verified on a hot block (V1), the latch on the bench (V2)
   and in place (V3) before the case is first heated, and STOP/TEST is pressed at the start of every step (V4). **Without
   V1 to V4, every hour of heating is attended continuously** by a person at the case who reads the logger at least every

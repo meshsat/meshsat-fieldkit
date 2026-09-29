@@ -17,7 +17,7 @@ F 35.0 +-0.3 by G 37.0 +-0.3, mounting holes L 4.4 +-0.25 (Arcol "HS Aluminium H
 v2/vendor/arcol/; the "3.2 max." on that page is the solder tag's hole, not the mounting hole), centred on
 the PA flange site, G 37.0 along the plate's X and F 35.0 along its Y (the owner's instruction of 29 Sep 2026, R6), so the
 resistor's long axis (B 88.0 max) runs along Y. The nuts go in 4.2 holes like C1's PEM hardware (panel1450 has no nut hole
-constant; face_plate.py writes 4.2 for its PEM nuts and standoffs, and so does this file, named PEM_HOLE below).
+constant; face_plate.py writes 4.2 for its PEM nuts and standoffs; this file writes PEM's own 4.22 +0.08, PEM_HOLE below).
 
 Omitted from C1 on purpose (H1 must stay a closed skin): both windows and the e-paper pocket, every control and light-guide hole,
 the monitor frame's four 4.5 holes, the eight PEM SO-M3-10 standoffs and C1's two PA nuts 60 apart. No laser marking.
@@ -39,7 +39,9 @@ import panel1450 as L
 
 C1_DXF = os.path.join(REPO, "v2", "release", "case-2026-09-27", "face-plate", "face-plate.dxf")
 W, H, T = L.PLATE
-PEM_HOLE = 4.2                      # as face_plate.py's PEM holes; the nut's own figures are the maker's (see HS100 and PEM notes in the README)
+PEM_HOLE = 4.22                     # PEM bulletin CL (v2/vendor/pem/, S metric table): M3 x 0.5 shank code 2, mounting hole
+PEM_HOLE_TOL = "+0.08/-0.00"         # 4.22 +0.08 (the independent check of od01b, minor item m1); face_plate.py's 4.2 for C1 is
+                                     # a separate open item of the case set, not changed here
 PEM_PART = "PEM S-M3-2"             # self-clinching nut, M3, shank code 2 (for sheets of 1.4 mm and thicker); steel, zinc plated
 # Arcol HS sheet 12/14.08 page 2 (v2/vendor/arcol/arcol-hs-datasheet-12-14-08.pdf), HS100 row
 HS100 = dict(F=35.0, G=37.0, FG_tol=0.3, L_hole=4.4, L_tol=0.25, A_max=47.5, B_max=88.0, C_max=24.1, D_max=27.3, K_max=3.7)

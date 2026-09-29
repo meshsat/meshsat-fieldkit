@@ -1,0 +1,2 @@
+# PEM (PennEngineering) documents held for OD-01 (MESHSAT-1357): file, URL, fetched (UTC), sha256
+pem-cl-self-clinching-nuts-bulletin.pdf  https://www.pemnet.com/wp-content/uploads/sites/2/2022/06/cldata.pdf  2026-09-29T00:16:57Z  8296128324e3954db753661ce257e5b01cbe98a364964af1d4f862e9cc04fe0e  (PEM bulletin CL, self-clinching nuts: the S metric table gives M3 x 0.5 shank code 2 for a minimum sheet of 1.4 mm and the hole 4.22 +0.08; installation after finishing; found by the independent check of od01b)

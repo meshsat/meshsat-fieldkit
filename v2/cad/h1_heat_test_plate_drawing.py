@@ -77,10 +77,10 @@ with PdfPages(out_pdf) as pdf:
     K.dim_h(ax, xs[0], xs[1], ys[0], "%.1f +-0.10 (G)" % (xs[1] - xs[0]), off=-8, fs=5.3, color="#0b5394")
     K.dim_v(ax, xs[0], ys[0], ys[1], "%.1f +-0.10 (F)" % (ys[1] - ys[0]), off=-8, fs=5.3, color="#0b5394")
     K.dim_h(ax, cx, 0, 0, "%.1f" % abs(cx), off=-18, fs=5.3, color="#0b5394"); K.dim_v(ax, 0, 0, cy, "%.1f" % cy, off=10, fs=5.3, color="#0b5394")
-    ax.text(cx, y0 - 3, "4 x %s, holes d%.1f THRU, pressed from the TOP face,\nflush on the underside; pattern centre (%.1f, %.1f) = the PA flange site" % (P.PEM_PART, P.PEM_HOLE, cx, cy),
+    ax.text(cx, y0 - 3, "4 x %s, holes d%.2f %s THRU (PEM bulletin CL), pressed from the TOP face,\nflush on the underside; pattern centre (%.1f, %.1f) = the PA flange site" % (P.PEM_PART, P.PEM_HOLE, P.PEM_HOLE_TOL, cx, cy),
             fontsize=5.6, ha="center", va="top", color="#0b5394")
     rx0, ry0, rx1, ry1, rd = L.RELIEF_POCKET
-    ax.text((rx0 + rx1) / 2, ry1 + 1.5, "relief %.1f x %.1f x %.1f deep in the UNDERSIDE" % (rx1 - rx0, ry1 - ry0, rd), fontsize=5.0, ha="center", va="bottom")
+    ax.text((rx0 + rx1) / 2, ry1 + 1.5, "relief %.1f x %.1f x %.1f deep in the UNDERSIDE, X %.1f to %.1f, Y %.1f to %.1f" % (rx1 - rx0, ry1 - ry0, rd, rx0, rx1, ry0, ry1), fontsize=5.0, ha="center", va="bottom")
     for (x, y) in L.FRAME_BOSSES: ax.text(x, y + 3.6, "6-32", fontsize=4.6, ha="center")
     ax.text(0, 0, "+", fontsize=9, ha="center", va="center"); ax.text(2, -5, "case centre (datum)", fontsize=5.0)
     ax.text(0, H / 2 + 22, "SEEN FROM ABOVE (the top face). X along the case, +Y toward the hinge wall. No other feature: H1 is a closed skin.", fontsize=6, ha="center")
@@ -111,7 +111,7 @@ with PdfPages(out_pdf) as pdf:
              "through this plate and the finish sets its emissivity. The four PEM nuts are pressed AFTER anodising. No marking, no paint."),
             ("Outline and seal", "%.1f x %.1f R%.0f; band outside %.1f x %.1f (R%.0f) rebated %.1f from the top, 1.0 left; relief %.1f x %.1f x %.1f in the underside over the frame's "
              "lettering; underside otherwise flat: it covers Peli's o-ring as C1 does" % (W, H, L.PLATE_R, L.REB_IN[0], L.REB_IN[1], L.REBATE_R, L.REBATE, rx1 - rx0, ry1 - ry0, rd)),
-            ("Holes", "10 x d%.1f THRU at Peli's insert bores (the same places as C1), for 6-32 UNC x 1/2 in A2 pan heads by hand; 4 x d%.1f THRU for %s on the HS100's "
+            ("Holes", "10 x d%.1f THRU at Peli's insert bores (the same places as C1), for 6-32 UNC x 1/2 in A2 pan heads by hand; 4 x d%.2f THRU (+0.08/-0.00, PEM bulletin CL) for %s on the HS100's "
              "pattern, G 37.0 along X and F 35.0 along Y, centre (%.1f, %.1f)" % (L.FACE_HOLE, P.PEM_HOLE, P.PEM_PART, cx, cy)),
             ("Omitted from C1", "both windows and the e-paper pocket, all control, light-guide, sounder, headset and camera holes, the monitor frame's four 4.5 holes, the eight "
              "PEM SO-M3-10 standoffs and C1's two PA nuts 60 apart"),
@@ -138,8 +138,8 @@ with PdfPages(out_pdf) as pdf:
              "that request's receipt checks R1, R2, R3, R5 and R6 (its section 6)."]
     nx.text(0, 1, "\n".join(sum((textwrap.wrap(n, 130) for n in notes), [])), fontsize=5.4, va="top", linespacing=1.15)
     K.tolerance_box(fig, None, extra=["H1 (this sheet): outline +-0.10; thickness 3.0 +-0.13; rebate depth 2.0 and its line +-0.10; relief depth 0.8 +-0.10; the ten "
-                                      "6-32 holes and the four PEM holes on position +-0.10 from the datum; hole diameters as drawn +0.10/-0.00 unless the nut maker's "
-                                      "installation data ask otherwise (tell us)."])
+                                      "6-32 holes and the four PEM holes on position +-0.10 from the datum; the ten 6-32 holes +0.10/-0.00; the four PEM holes "
+                                      "4.22 +0.08/-0.00 (PEM bulletin CL); the relief's position +-0.5."])
     pdf.savefig(fig)
     if out_png: fig.savefig(out_png, dpi=110)
     plt.close(fig)
