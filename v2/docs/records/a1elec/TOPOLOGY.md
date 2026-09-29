@@ -92,10 +92,18 @@ base's graceful line (a firmware choice, bounded by the charger's own VINDPM loo
 **The interlock: U3B charges only from outside energy, and never while the lid discharges.** U3B's ILIM_HIZ pin is
 pulled below 0.4 V (HiZ, the converter off; above 0.8 V it runs; SLUSE66A pin table page 6 and 9.3.8, pages 26 and 27)
 unless BOTH U3's CHRG_OK (open drain, R22 to +3V3: input present and no fault) AND the host's LID_CHG_EN (pulled down,
-so a dead host leaves it low) are high: an SN74LVC1G00 NAND (held, `v2/vendor/ti/ti-sn74lvc1g00.pdf`) drives a 2N7002
-from ILIM_HIZ_B to ground. With the kit on batteries alone U3's CHRG_OK is low and U3B cannot run, so **the base can
-never charge the lid on battery**. The same two inputs into an SN74LVC1G08 AND (held, `ti-sn74lvc1g08.pdf`) drive a
-second 2N7002 that pulls the LM5069's UVLO low (3c): **whenever U3B may run, the lid's discharge path is off.** Without
+so a dead host leaves it low) are high. **The default must be off without any logic supply**, because U3B's VBUS is
+VBAT and is always present: "the BQ25731 itself does charge without a host, at a 256 mA register default, and its
+watchdog does not stop it" (adjudication A02, `records/adj/A02-charger-without-host/`, on TI E2E thread 1316778), which
+would move energy from the base into the lid with the kit switched off. So: ILIM_HIZ_B carries TI's
+divider from U3B's own VDDA (the pin sets the input limit as 1 V + 40 x IDPM x RAC, SLUSE66A pin table page 6; 2.6 V is
+8.0 A on 5 mOhm, the Electrical Characteristics row on page 10, the same as IIN_HOST); a 2N7002 **Q_E1** holds the pin
+at ground with its gate pulled up to U3B's REGN (REGN stays enabled in HiZ, 9.3.8), so U3B sits in HiZ by default; a
+second 2N7002 **Q_E2** pulls Q_E1's gate down, released only while an SN74LVC1G08 AND (held,
+`v2/vendor/ti/ti-sn74lvc1g08.pdf`) of CHRG_OK and LID_CHG_EN is high. An unpowered gate, a low input or a dead host
+leave U3B in HiZ. With the kit on batteries alone U3's CHRG_OK is low and U3B cannot run, so **the base can never
+charge the lid on battery**. The same AND output drives a third 2N7002 that pulls the LM5069's UVLO low (3c):
+**whenever U3B may run, the lid's discharge path is off.** Without
 it, U3B's output would lift the lid's end of the harness (the charge current through the lead and the cells, about 0.3 V
 at 8 A over the cells' 11.7 mOhm and the charge loop's 28 mOhm of `.out` section 0) above the node, and the ideal diode would return U3B's current into VBAT, a
 circulating loop that also charges the base outside U3's control. The model never charges and discharges the lid in the
@@ -244,7 +252,7 @@ fails outright. So Option A(i) as the energy record states it needs board A's en
 
 - **`gen_sch_a.py`** (board A): the U3B set of 3b; the lid path of 3c (U_LD, Q_LD, U_LS, Q_LS, R_LS, the UVLO divider,
   the LID_DSG_OFF transistor); F_LA 15 A MINI in a Keystone 3568 holder and the lid lead's entry connector J_LID (XT60
-  class, as the base lead's on board E); the TCA9543A at 0x70 with its pull-ups and RESET; the NAND and AND interlock with LID_CHG_EN's pull-down (3b); the entry
+  class, as the base lead's on board E); the TCA9543A at 0x70 with its pull-ups and RESET; the AND interlock with Q_E1, Q_E2, the UVLO transistor and LID_CHG_EN's pull-down (3b); the entry
   changes of CHARGER.md. New rails LID_IN (lid lead to F_LA, 16.8 V, 11 A), LID_F (behind F_LA), LID_ID (between the
   ideal diode and the switch), VBUS_B (U3B's input, on VBAT), CHB_ACN, LID_CHG (U3B's output to R17B); every one declared
   with its current for the intent checks.
