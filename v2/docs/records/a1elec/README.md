@@ -32,7 +32,9 @@ temperature alone takes 57.9 Wh of it.
 
 **The outside review's point 2** (the BQ4050's 32,767 limit on the lid's 40,200 mAh and 57,888 cWh). `GAUGE.md`:
 IPScale is not used (TI's manual contradicts itself on it); the lid's board PL runs the BQ4050 with a current-scale
-calibration of k = 2 made by TI's own calibration procedure, and `gauge_scale.py` parses TI's data-flash table to find
+calibration of k = 2 made by TI's own calibration procedure, the way TI's engineer answered for this part (E2E thread
+854878: "the only way, ie fooling the gauge via calibration"; "all current related parameters will be cut in half") with
+TI's application report SLUA760 as the method, and `gauge_scale.py` parses TI's data-flash table to find
 all **63** words in a current, charge, energy or power unit, writes each at half its true value and checks its range.
 What TI's documents do not settle is drafted as two questions for TI (not sent) and a bench list.
 
@@ -49,8 +51,9 @@ What TI's documents do not settle is drafted as two questions for TI (not sent) 
 | `apply_records_readme_row.py` | DRAFT for the integrator: this folder's row in `v2/docs/records/README.md` (tested on a copy: added once, refused a second run) | apply script, not executed |
 | `LOG.md` | the running log | record |
 
-Also filed by this stream: `v2/vendor/ti/ti-tca9543a.pdf` (TI SCPS206B, fetched from ti.com on 29 September 2026) with its
-line in `v2/vendor/ti/sources.txt`.
+Also filed by this stream, each with its line in `v2/vendor/ti/sources.txt` (URL, date, sha256), fetched on 29 September
+2026: `v2/vendor/ti/ti-tca9543a.pdf` (TI SCPS206B), `v2/vendor/ti/ti-slua760-bq34z100-g1-high-capacity.pdf` (TI SLUA760)
+and `v2/vendor/ti/ti-e2e-854878-bq4050-current-scaling.html` (TI E2E thread 854878).
 
 ## What is shown at desk, what is a draft, what is bench-only
 
