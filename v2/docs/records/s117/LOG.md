@@ -34,6 +34,10 @@ a maker's document. No agent, no other model, no box, no purchase, no contact.
   target files moved; merged at 13:06 as `910494e7` under the owner's identity after the pre-commit check. The a1elec references now
   point at `v2/docs/records/a1elec/` on main.
 - 13:12 README written; the U3B statement read from `records/a1elec/TOPOLOGY.md` 3b and `CHARGER.md` 2 (read only).
+- 13:13 to 13:16 README and LOG committed (`e48d5a7d`); `readback_s117.py` gains `--against <old.net>` (the regenerated
+  netlist held to exactly the drawn change) with three more self-test cases (`a57e69c4`); README corrected in five places
+  (the front end's limit cited to SNVSAI1D 6.5, the nominal-pack figure stated with its condition, the XAL1010 order codes,
+  Table 9-1's rows, the buck-boost expectation marked INFERRED).
 
 ## Where the stream stands (resume from here)
 
