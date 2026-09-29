@@ -209,12 +209,19 @@ for _s in (1, 2, 3):
                  loads={"U%d02" % _s: 0.4},
                  note="slot %d's USB hub core from U%d06 through L%d04, on the DEVICE rail and always on: the "
                       "bank outlives the module it is failing away from" % (_s, _s, _s))
+    # CHK12-B M5 (stream rf2walk2, the check of set 12, minor 5): the note "nothing on the carrier draws from it beyond its own
+    # bypass network" was already stale at round 8, whose per-slot EMCON gates U{s}12 to U{s}15 (and slot 2's U220) run from the
+    # module's own 3.3 V (EMCON L3); D4E-B added slot 2's U554 (B-5) and slot 3's E22 gates and buffers U544 to U553 (B-3). Read
+    # from set 12's netlist. 1 mA a gate is the generous figure _3V3_LOADS uses for board B's single gates (ICC 10 uA at most).
+    _cm_gates = ["U%d%02d" % (_s, _g) for _g in (12, 13, 14, 15)] + {2: ["U220", "U554"], 3: ["U%d" % _u for _u in range(544, 554)]}.get(_s, [])
     _intent.rail("+3V3_CM%d" % _s, 3.3, 0.10, 0.20, "U3%dA" % (_s - 1), always_on=True, converted=False,
                  always_on_why="the module's OWN 3.3 V output on its receptacle: this board consumes it and cannot switch it",
                  source_ic="the module GENERATES this rail and hands it out on its receptacle: the pin IS the source",
-                 loads={"U3%dA" % (_s - 1): 0.10},
-                 note="slot %d's module-supplied 3.3 V. This board only decouples it and level-shifts against "
-                      "it; nothing on the carrier draws from it beyond its own bypass network" % _s)
+                 loads=dict([("U3%dA" % (_s - 1), 0.10)] + [(_u, 0.001) for _u in _cm_gates]),
+                 note="slot %d's module-supplied 3.3 V. This board decouples it, level-shifts against it (Q%d01 to Q%d05 and "
+                      "their pull-ups) and runs from it the slot's EMCON gates U%d12 to U%d15 (round 8, EMCON L3)%s; 1 mA a "
+                      "gate" % (_s, _s, _s, _s, _s, {2: ", U220 (SD-EMC-1r8) and U554 (D4E-B B-5)",
+                                                     3: " and the E22's gates and buffers U544 to U553 (D4E-B B-3)"}.get(_s, "")))
     _intent.rail("+1V8_CM%d" % _s, 1.8, 0.02, 0.05, "U3%dA" % (_s - 1), always_on=True, converted=False,
                  always_on_why="the module's OWN 1.8 V output on its receptacle",
                  source_ic="the module GENERATES this rail and hands it out on its receptacle",
@@ -241,8 +248,9 @@ _intent.rail("+2V5_KSZ", 2.5, 0.15, 0.25, "U27", budget=0.03, always_on=True, co
              note="the Ethernet switch's analogue 2.5 V. Budget 3 percent: the switch's own range is wider")
 _intent.rail("+3V3_ZB", 3.3, 0.10, 0.30, "U22", converted=False, fed_from="+3V3_DEV",  # U22 pin 6 IN
              source_ic="U22 is a TPS22810 load switch: its OUT pin IS the power path, which is what it is for",
-             loads={"U13": 0.04, "U14": 0.04, "J_ZBDBG1": 0.01, "J_ZBDBG2": 0.01},
-             note="the two CC2652P radios behind their load switch, plus the two bench debug headers. 0.3 A "
+             loads={"U13": 0.04, "U14": 0.04, "J_ZBDBG1": 0.01, "J_ZBDBG2": 0.01, "R538": 0.00071, "R536": 0.00071, "R537": 0.00071},
+             note="the two CC2652P radios behind their load switch, plus the two bench debug headers, R538's bleed (0.71 mA) and "
+                  "the RX pull-ups R536 and R537 (0.71 mA each while their open drain holds the line low; CHK12-B M5). 0.3 A "
                   "peak is both radios transmitting at once, which the fabric never asks for but the copper must carry")
 # Stream w4b (W4B-D2, 27 September 2026): the three switches' EN/UVLO pins sit on their own nodes behind 10 k over 15 k from
 # the EMCON gates, so each rail names its switch and enable net, as board A's PA_UVLO does (power_sequence reads EN by name).
@@ -817,7 +825,10 @@ def slot(s):
         # ANT0 and ANT2 always and ANT3 as the third jack when the case measurement (D-08) confirms board A's site at X +46.
         part("J_M2C2", "Connector", "Bus_M.2_Socket_B", "M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the module's ANT0, ANT2 and, subject to D-08, ANT3 to board A's 5G jacks)", "M2B", dict(B, **_M2_MECH), "C590866")
         r(R(37), "10k", "5G_W_DIS_n", a33)   # W_DISABLE1# is pulled low by U215's 1Y (round 8, L7), not Q206
-        r(R(38), "100k 1%", "5G_PWROFF_n", a33, lcsc="C25803"); nfet(Q(7), "5G_OFF", "GND", "5G_PWROFF_n", "2N7002 expander -> FULL_CARD_POWER_OFF#")   # D4E-F2: 100 k so the held pin carries at most 36 uA (U554, SCES308L 100 uA row)
+        # CHK12-B M1 (stream rf2walk2, 29 September 2026, the check of set 12, minor 1): R238 49.9 k 1%, the code R297 already
+        # carries. Held by U554 at most 72 uA (SCES308L's 100 uA row, VOL 0.1 V); released 2.08 V at the module's nominal
+        # 100 k pull-down, whose tolerance Quectel does not state, and at or over the 1.19 V VIH down to a 30.8 k pull-down.
+        r(R(38), "49.9k 1%", "5G_PWROFF_n", a33, lcsc="C23184"); nfet(Q(7), "5G_OFF", "GND", "5G_PWROFF_n", "2N7002 expander -> FULL_CARD_POWER_OFF#")
         # O-15, 26 September 2026 (round-4 review, minor; taken in the round-4 fix-up under the owner's standing rule):
         # RESET# (pin 67) is a 1.8 V input "internally pulled up to 1.8 V" (HD v1.1 Table 12, Figure 12: a 1.5 uA
         # source), and "Voltage at Digital Pins" is at most 2.3 V absolute (HD v1.1 Table 50). The 10 k pull-up to this
@@ -993,8 +1004,9 @@ def slot(s):
         # Quectel HD v1.1 Table 9 asks FULL_CARD_POWER_OFF# at most 0.2 V for "turn off" and at least 1.19 V for "turn on", with a
         # 100 kOhm pull-down inside the module. U221's RESET held the pin against R238 (10 k) at 0.31 mA or more, where SBVS050N
         # states VOL only as 0.4 V at 1 mA. Now U221 drives 5G_TPR_n (R545, 100 k 1% to the rail it watches, inside the maker's
-        # 10 k to 1 M) and U554, an SN74LVC2G07 on +3V3_CM2 (U220's rail), repeats it open-drain onto the pin, with R238 at 100 k:
-        # at most 36 uA held, VOL 0.1 V (SCES308L 6.5, 100 uA row); released 1.56 V (module pull-down nominal, INFERRED). U554's
+        # 10 k to 1 M) and U554, an SN74LVC2G07 on +3V3_CM2 (U220's rail), repeats it open-drain onto the pin, with R238 at 49.9 k
+        # since CHK12-B M1 (100 k in D4E-B): at most 72 uA held, VOL 0.1 V (SCES308L 6.5, 100 uA row); released 2.08 V (module
+        # pull-down nominal, its tolerance unstated: INFERRED). U554's
         # second channel is spare, its input on GND (SCES308L 6.3 note 1).
         lvc2g07("U554", "5G_TPR_n", "5G_PWROFF_n", "GND", "NC", cm33, "C685", "U221's Tpr hold repeated onto FULL_CARD_POWER_OFF# (D4E-F2); channel 2 spare")
         r("R545", "100k 1%", "5G_TPR_n", a33, lcsc="C25803")
@@ -1592,10 +1604,19 @@ r("R517", "10k", "E72_EN", "GND")
 # open (90 k to VDD inside). Residual: no maximum SENSE-to-RESET delay is stated (20 us typical), bench E-11 with E-04. Reverse:
 # U536's output back on RB_IEN, R527 10 k, R532, U543 and C684 out.
 lvc1g08("U536", "EMCON_HW", "RB_SW_IEN", "RB_IEN_DRV", "+3V3_DEV", "C559", "RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), EMCON AND software (EMCON.md 4.4, W4B-D1), through R532 (D4E-B)")
-r("R532", "2.2k 1%", "RB_IEN_DRV", "RB_IEN", lcsc="C4190")
-r("R527", "15k 1%", "RB_IEN", "GND", lcsc="C22809"); r("R528", "4.7k", "RB_SW_IEN", "GND")
-ic("U543", 6, "TPS3808G30DBVR supervisor on +5V_DEV watching +3V3_DEV: holds the RockBLOCK's I_EN low below 2.79 V (L4 on U536, D4E-B)", "SOT236",
-   {"1": "RB_IEN", "2": "GND", "3": "NC", "4": "NC", "5": "+3V3_DEV", "6": "+5V_DEV"}, "C189211")
+# CHK12-B M2 (stream rf2walk2, 29 September 2026, the check of set 12, minor 2). (a) Between 1.65 V and U543's rising threshold
+# (2.90 V at most, SBVS050N VIT and VHYS) U536 may drive high while U543 holds RB_IEN: R532 2.7 k 1% keeps U543's sink at 0.955 mA
+# at most, inside its 1 mA VOL row (0.4 V), so RB_IEN is low whenever +3V3_DEV is under the threshold; R527 20.0 k 1% keeps the
+# released level at 2.10 V (over the maker's 2.0 V), asserted 0.16 V, every rail lost 0.37 V (under the maker's 0.4 V). (b) CT to
+# VDD through R551 49.9 k 1%: td 180 to 420 ms (SBVS050N 6.6, 40 k to 200 k), so a dip holds I_EN low that long before release;
+# Ground Control asks I_EN be driven high again only after I_BTD has gone low, and how long that takes is in no held document:
+# bench E-04 measures it, and CT becomes a capacitor if it can exceed 180 ms. At power-up I_EN then waits 180 ms or more after
+# +3V3_DEV, the maker's own startup order. Reverse: R532 2.2 k, R527 15 k 1%, U543 pin 4 open, R551 out.
+r("R532", "2.7k 1%", "RB_IEN_DRV", "RB_IEN", lcsc="C13167")
+r("R527", "20.0k 1%", "RB_IEN", "GND", lcsc="C4184"); r("R528", "4.7k", "RB_SW_IEN", "GND")
+ic("U543", 6, "TPS3808G30DBVR supervisor on +5V_DEV watching +3V3_DEV: holds the RockBLOCK's I_EN low below 2.79 V and 180 to 420 ms after (L4 on U536, D4E-B, CHK12-B)", "SOT236",
+   {"1": "RB_IEN", "2": "GND", "3": "NC", "4": "RB_TD_CT", "5": "+3V3_DEV", "6": "+5V_DEV"}, "C189211")
+r("R551", "49.9k 1%", "+5V_DEV", "RB_TD_CT", lcsc="C23184")
 c("C684", "100n", "+5V_DEV", "GND", bypass=("U543", "6"))
 # 9 September 2026 (ARCH-PCB-B-IOHA section 2, defect 3): three expander-driven FET gates had no pull-down, so they float
 # through the PCA9555's power-on reset, when its ports come up as high-impedance inputs. KSZ_RST holds the Ethernet switch

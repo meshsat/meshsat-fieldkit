@@ -6324,8 +6324,18 @@ records:
           EMCON_HW_DRV, TX_INHIBIT_n. The TX lamp's path from the VHF KEY line is untouched; EMCON_HW and TX_INHIBIT_n
           are named for the EMCON lamp and the line, which D4E-F1 clamps; the reading stays as it was; rebound to
           87b69472ac83ca5a. No result changes.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk2's section 4d.6 (29 September 2026,
+          MESHSAT-1357; the file at 173bc6357996d467 before): 1 section(s) added (4d.6 After the independent check of
+          set 12 (29 September 2026, stream rf2walk2)) and 1 of the 40 earlier sections differ (6. Bench tests owed (for
+          TEST-PLAN; none has run, nothing is built)), the rest byte-identical. The added section records the
+          independent check of set 12's minor items on stream d4emcon's remedies (B-5's release level, B-4's sink
+          current above 1.65 V and its reset pulse, B-3's turn-on exposure and breakout cost, B-1's margin, D4E-F1's
+          figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
+          check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
+          this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@173bc6357996d467"
+      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@87b69472ac83ca5a"
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/PANEL.md:135", "v2/docs/PANEL.md:189"]
@@ -8480,8 +8490,18 @@ records:
           unconnected-(U554-NC-Pad4). The change is the FEA-002 remedy set this requirement's reading waits on;
           FEA-002's layout-entry stage stays open (EMCON.md 4d: rows 3 and 4 open on desk items, every other row needs
           hardware), so the reading stays as it was; rebound to 5b89d5ef6fe0299a. No result changes.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk2's section 4d.6 (29 September 2026,
+          MESHSAT-1357; the file at 173bc6357996d467 before): 1 section(s) added (4d.6 After the independent check of
+          set 12 (29 September 2026, stream rf2walk2)) and 1 of the 40 earlier sections differ (6. Bench tests owed (for
+          TEST-PLAN; none has run, nothing is built)), the rest byte-identical. The added section records the
+          independent check of set 12's minor items on stream d4emcon's remedies (B-5's release level, B-4's sink
+          current above 1.65 V and its reset pulse, B-3's turn-on exposure and breakout cost, B-1's margin, D4E-F1's
+          figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
+          check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
+          this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@173bc6357996d467"
+      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
     release_effect: BLOCKER
     source:
@@ -8723,8 +8743,18 @@ records:
           unconnected-(U554-NC-Pad4). The change is the FEA-002 remedy set this requirement's reading waits on; every
           row's radio-side timing term still needs a bench test (EMCON.md 4d), so the reading stays as it was; rebound
           to 5b89d5ef6fe0299a. No result changes.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk2's section 4d.6 (29 September 2026,
+          MESHSAT-1357; the file at 173bc6357996d467 before): 1 section(s) added (4d.6 After the independent check of
+          set 12 (29 September 2026, stream rf2walk2)) and 1 of the 40 earlier sections differ (6. Bench tests owed (for
+          TEST-PLAN; none has run, nothing is built)), the rest byte-identical. The added section records the
+          independent check of set 12's minor items on stream d4emcon's remedies (B-5's release level, B-4's sink
+          current above 1.65 V and its reset pulse, B-3's turn-on exposure and breakout cost, B-1's margin, D4E-F1's
+          figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
+          check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
+          this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@173bc6357996d467"
+      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
     release_effect: BLOCKER
@@ -9161,8 +9191,18 @@ records:
           unconnected-(U554-NC-Pad4). The change gates the back-feed into the RockBLOCK, the E22 and both E72 and
           repeats the 5G card's power-off line; whether each radio is off in hardware under EMCON still waits on
           FEA-002's open rows, so the reading stays as it was; rebound to 5b89d5ef6fe0299a. No result changes.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk2's section 4d.6 (29 September 2026,
+          MESHSAT-1357; the file at 173bc6357996d467 before): 1 section(s) added (4d.6 After the independent check of
+          set 12 (29 September 2026, stream rf2walk2)) and 1 of the 40 earlier sections differ (6. Bench tests owed (for
+          TEST-PLAN; none has run, nothing is built)), the rest byte-identical. The added section records the
+          independent check of set 12's minor items on stream d4emcon's remedies (B-5's release level, B-4's sink
+          current above 1.65 V and its reset pulse, B-3's turn-on exposure and breakout cost, B-1's margin, D4E-F1's
+          figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
+          check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
+          this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@173bc6357996d467"
+      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
     release_effect: BLOCKER
     source:
@@ -9970,10 +10010,20 @@ records:
           inhibit_chain_c reads PASS of 6 on netlist 87b69472ac83ca5a. This entry rebinds the page and re-decides
           nothing: the result stands as the predicate of this integration's entry set it, bound to the file at
           ad6dd5e28a94b674.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk2's section 4d.6 (29 September 2026,
+          MESHSAT-1357; the file at 173bc6357996d467 before): 1 section(s) added (4d.6 After the independent check of
+          set 12 (29 September 2026, stream rf2walk2)) and 1 of the 40 earlier sections differ (6. Bench tests owed (for
+          TEST-PLAN; none has run, nothing is built)), the rest byte-identical. The added section records the
+          independent check of set 12's minor items on stream d4emcon's remedies (B-5's release level, B-4's sink
+          current above 1.65 V and its reset pulse, B-3's turn-on exposure and breakout cost, B-1's margin, D4E-F1's
+          figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
+          check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
+          this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
-      - "v2/docs/feasibility/EMCON.md@173bc6357996d467"
+      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
       - "v2/docs/CURRENT-EVIDENCE.md@ad6dd5e28a94b674"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
@@ -10169,8 +10219,18 @@ records:
           (U14 reads EMCON_HW and TX_INHIBIT_n; d4emcon's lamp check and readback_d4e hold on the regenerated board C);
           the face plate's light guide stays open (S-44), so the reading stays as it was; rebound to 87b69472ac83ca5a.
           No result changes.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk2's section 4d.6 (29 September 2026,
+          MESHSAT-1357; the file at 173bc6357996d467 before): 1 section(s) added (4d.6 After the independent check of
+          set 12 (29 September 2026, stream rf2walk2)) and 1 of the 40 earlier sections differ (6. Bench tests owed (for
+          TEST-PLAN; none has run, nothing is built)), the rest byte-identical. The added section records the
+          independent check of set 12's minor items on stream d4emcon's remedies (B-5's release level, B-4's sink
+          current above 1.65 V and its reset pulse, B-3's turn-on exposure and breakout cost, B-1's margin, D4E-F1's
+          figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
+          check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
+          this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@173bc6357996d467"
+      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@87b69472ac83ca5a"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7 (the common element)", "session choice SC-11"]
@@ -10452,10 +10512,20 @@ records:
           87b69472ac83ca5a (U9 on EMCON_HW_DRV, R52 to EMCON_HW, D23 from EMCON_HW to TX_INHIBIT_n), which closes D4E-F1
           at desk: EMCON_HW sits at most one Schottky drop above TX_INHIBIT_n whatever board C's +3V3 does. The result
           is unchanged.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk2's section 4d.6 (29 September 2026,
+          MESHSAT-1357; the file at 173bc6357996d467 before): 1 section(s) added (4d.6 After the independent check of
+          set 12 (29 September 2026, stream rf2walk2)) and 1 of the 40 earlier sections differ (6. Bench tests owed (for
+          TEST-PLAN; none has run, nothing is built)), the rest byte-identical. The added section records the
+          independent check of set 12's minor items on stream d4emcon's remedies (B-5's release level, B-4's sink
+          current above 1.65 V and its reset pulse, B-3's turn-on exposure and breakout cost, B-1's margin, D4E-F1's
+          figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
+          check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
+          this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
     evidence_bound_to:
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
-      - "v2/docs/feasibility/EMCON.md@173bc6357996d467"
+      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
     source_check: VERIFIED
