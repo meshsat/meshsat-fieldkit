@@ -7,7 +7,7 @@ PANEL.md#1:L55:cell:1:s1 [d2e1df041f] TRUE
     `U3` RP2040, `U4` W25Q16 QSPI flash, `Y1` 12 MHz, `R5`/`JP1` BOOTSEL strap, `TP1`..`TP3` SWD
     judgement: the controller's parts; TP3 is the RUN line of the SWD set
     names looked up: 7 parts, 0 nets
-    part numbers (1): RP2040 on B (J_PANEL), C (U3), E (U10)
+    part numbers (2): RP2040 on B (J_PANEL), C (U3), E (U10); W25Q16 on C (U4), E (U11)
     asserted (7): C U3 value has 'RP2040' (netlist: "RP2040 panel controller (USB device on B16's slot-1 hub, the"); C U4 value has 'W25Q16' (netlist: 'W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/'); C Y1 value has '12 MHz' (netlist: '12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND'); C R5.2 on BOOT_J (netlist: BOOT_J); C JP1.1 on BOOT_J (netlist: BOOT_J); C TP1.1 on SWCLK (netlist: SWCLK); C TP2.1 on SWDIO (netlist: SWDIO)
 PANEL.md#1:L56:cell:1:s1 [dc87e613e5] TRUE
     16 THT LEDs `D1`..`D16` through Mentor light guides in the plate, sinks on two PCA9555 (`U1` 0x22, `U2` 0x23), the TX lamp `D3` on `Q3`; since round 8 of MESHSAT-1357 (26 September 2026) a seventeenth LED on the face, the hardware EMCON lamp `D22` (amber) on `Q7`, which no expander and no firmware drives (sections 4 and 6; its light guide in the plate is owed, S-44; section 9's seventeen controller-lit indicators are a different count, which leaves `D22` out)
@@ -57,7 +57,7 @@ PANEL.md#1:L62:cell:1:s1 [514b8face2] TRUE
     judgement: the ZEROIZE line; the citation is dated
     names looked up: 6 parts, 2 nets; SW_ZERO on C (sentence names ABD)
     citations: gen_sch_c.py:168-178 at 45bde541 holds C20,R10,R117,U12,ZEROIZE_HW,ZEROIZE_SW
-    part numbers (1): 74LVC1G17 on B (U507,U508,U509,U510), C (U12,U13,U9)
+    part numbers (1): 74LVC1G17 on B (U507,U508,U509,U510), C (U12,U13,U9); 74LVC1G17 as buffer
     asserted (15): C SW_ZERO.1 on ZEROIZE_SW (netlist: ZEROIZE_SW); C SW_ZERO.2 on GND (netlist: GND); C R10 value has '10k' (netlist: '10k'); C R10.1 on ZEROIZE_SW (netlist: ZEROIZE_SW); C R10.2 on +3V3 (netlist: +3V3); C C20 value has '10n' (netlist: '10n'); C C20.1 on ZEROIZE_SW (netlist: ZEROIZE_SW); C U3 GPIO22 on ZEROIZE_SW (netlist: ZEROIZE_SW); C U12 value has '74LVC1G17' (netlist: '74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC'); C U12.2 on ZEROIZE_SW (netlist: ZEROIZE_SW); C U12.4 on ZEROIZE_HW (netlist: ZEROIZE_HW); B net ZEROIZE_HW holds J_AB1,J_PANEL,TP8 (missing: none); D net ZEROIZE_HW holds J_HARN1,TP9 (missing: none); A net ZEROIZE_HW holds J_AB1,J_MEZZ1,R117 (missing: none); A R117 value has '10k' (netlist: '10k')
 PANEL.md#1:L63:cell:0:s1 [0d1bf77d7e] NOT DERIVABLE
     EMCON logic
@@ -68,12 +68,13 @@ PANEL.md#1:L63:cell:1:s1 [b205d79502] TRUE
     judgement: U9 as drawn; the citation is dated at 45bde541, where lines 157 to 166 hold U9
     names looked up: 2 parts, 2 nets
     citations: gen_sch_c.py:157-166 at 45bde541 holds EMCON_HW,TX_INHIBIT_n,U9
-    part numbers (2): 74LVC1G17 on B (U507,U508,U509,U510), C (U12,U13,U9); 74LVC1G34 on B (U506,U544,U551,U552), D (U18,U19,U20)
+    part numbers (2): 74LVC1G17 on B (U507,U508,U509,U510), C (U12,U13,U9); 74LVC1G34 on B (U506,U544,U551,U552), D (U18,U19,U20); 74LVC1G17 as Schmitt-trigger buffer
     asserted (11): C U9 value has '74LVC1G17' (netlist: '74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC'); C U9.2 on TX_INHIBIT_n (netlist: TX_INHIBIT_n); C U9.4 on EMCON_HW_DRV (netlist: EMCON_HW_DRV); C U9.5 on +3V3 (netlist: +3V3); C R52 value has '330R' (netlist: '330R 1%'); C R52.1 on EMCON_HW_DRV (netlist: EMCON_HW_DRV); C R52.2 on EMCON_HW (netlist: EMCON_HW); C D23 value has 'BAT46W' (netlist: 'BAT46W-7-F Schottky 100V (EMCON_HW clamp to TX_INHIBIT_n, D4'); C D23.1 on TX_INHIBIT_n (netlist: TX_INHIBIT_n); C D23.2 on EMCON_HW (netlist: EMCON_HW); gen_sch_c.py lines 157 to 166 at 45bde541 hold U9
 PANEL.md#1:L63:cell:1:s2 [59d336fd94] TRUE
     Since set 12 (stream d4emcon, finding D4E-F1) `U9` drives the line through `R52` (330 Ohm) and `D23` (BAT46W) clamps `EMCON_HW` to `TX_INHIBIT_n`, so `EMCON_HW` still follows `TX_INHIBIT_n`.
     judgement: set 12's R52 and D23 on board C
     names looked up: 3 parts, 2 nets
+    part numbers (1): BAT46W on A (D10,D11,D12,D13), C (D23)
     asserted (10): C U9 value has '74LVC1G17' (netlist: '74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC'); C U9.2 on TX_INHIBIT_n (netlist: TX_INHIBIT_n); C U9.4 on EMCON_HW_DRV (netlist: EMCON_HW_DRV); C U9.5 on +3V3 (netlist: +3V3); C R52 value has '330R' (netlist: '330R 1%'); C R52.1 on EMCON_HW_DRV (netlist: EMCON_HW_DRV); C R52.2 on EMCON_HW (netlist: EMCON_HW); C D23 value has 'BAT46W' (netlist: 'BAT46W-7-F Schottky 100V (EMCON_HW clamp to TX_INHIBIT_n, D4'); C D23.1 on TX_INHIBIT_n (netlist: TX_INHIBIT_n); C D23.2 on EMCON_HW (netlist: EMCON_HW)
 PANEL.md#1:L63:cell:1:s3 [f4587ac12e] TRUE
     Since EQ-25 (stream w4c, 27 September 2026, SC-67) `R14` is 2.2 k 1 % and `R50` (10 k 1 %) holds `TX_INHIBIT_n` down on this board too: with the panel unpowered the line reads 0.24 V under the RF-002 walk's worst-case Ioff sums (1.09 V before), released it rests at 2.57 V (2.37 V at the adverse ends), and it rises with a 17 us time constant.
@@ -84,7 +85,7 @@ PANEL.md#1:L63:cell:1:s4 [79b33e8889] TRUE
     Since round 8 of MESHSAT-1357 (26 September 2026): the controller reads `EMCON_HW` only through `U13`, a second 74LVC1G17, and `R46` (1k) on GPIO 21, so no firmware pin sits on the line (`feasibility/EMCON.md` item L1); and the hardware EMCON lamp of SD-EMC-6 is drawn: `U14`, a TI SN74LVC1G57 wired as a NOR with Schmitt inputs, reads `TX_INHIBIT_n` and `EMCON_HW` and turns on `Q7` (Si2300DS), which sinks `D22` from `LED_RAIL_SW` through `R47` (470R), so the lamp is lit only while both lines read LOW, with no processor in its path.
     judgement: the read-back and the lamp
     names looked up: 7 parts, 3 nets
-    part numbers (1): 74LVC1G17 on B (U507,U508,U509,U510), C (U12,U13,U9)
+    part numbers (3): 74LVC1G17 on B (U507,U508,U509,U510), C (U12,U13,U9); SN74LVC1G57 on C (U14); Si2300DS on C (Q6,Q7)
     asserted (15): C U13 value has '74LVC1G17' (netlist: '74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC'); C U13.2 on EMCON_HW (netlist: EMCON_HW); C U13.4 on EMCON_RD (netlist: EMCON_RD); C R46 value has '1k' (netlist: '1k'); C R46.1 on EMCON_RD (netlist: EMCON_RD); C R46.2 on EMCON_RD_R (netlist: EMCON_RD_R); C U3 GPIO21 on EMCON_RD_R (netlist: EMCON_RD_R); C U14 value has 'SN74LVC1G57' (netlist: 'SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Sc'); C U14.3 on TX_INHIBIT_n (netlist: TX_INHIBIT_n); C U14.6 on EMCON_HW (netlist: EMCON_HW); C Q7 value has 'Si2300DS' (netlist: 'Si2300DS-T1-GE3 N-FET (Vishay, SOT-23, G S D like the 2N7002'); C R47 value has '470R' (netlist: '470R'); C R47.1 on LED_RAIL_SW (netlist: LED_RAIL_SW); C R47.2 on EMCLAMP_A (netlist: EMCLAMP_A); C D22.2 on EMCLAMP_A (netlist: EMCLAMP_A)
 PANEL.md#1:L63:cell:1:s5 [f52539503d] NOT DERIVABLE
     Its light-guide hole in the plate beside `SW_EMCON` is owed (S-44)
@@ -453,7 +454,7 @@ PANEL.md#6:L155:cell:2:s1 [cdbf8e9747] TRUE
     judgement: D8's KEY gate and board A's four gates; the citation is dated at the base; D22 through U14
     names looked up: 8 parts, 7 nets
     citations: citations judged: gen_sch_a.py:1572-1575 at e57a7365 asserted below
-    part numbers (1): SA868 on D (U13,U2)
+    part numbers (2): SA868 on D (U13,U2); SN74AUP1G08 on A (U35,U36,U37,U38)
     asserted (31): D U12 value has '74LVC1G08' (netlist: "74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's h"); D U12.1 on PTT_ANY (netlist: PTT_ANY); D U12.2 on TX_INHIBIT_n (netlist: TX_INHIBIT_n); D U12.4 on KEY (netlist: KEY); D U14.1 on KEY (netlist: KEY); D U14.2 on PA_EN (netlist: PA_EN); D U14.4 on PA_KEY (netlist: PA_KEY); A U35 value has 'SN74AUP1G08' (netlist: 'SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (th'); A U35.1 on TX_INHIBIT_n (netlist: TX_INHIBIT_n); A U35.2 on EMCON_HW (netlist: EMCON_HW); A U35.4 on PA_TXOK (netlist: PA_TXOK); A U35.5 on +3V3_EMCON (netlist: +3V3_EMCON); A U36.1 on PA_TXOK (netlist: PA_TXOK); A U36.2 on PA_HOLD (netlist: PA_HOLD); A U36.4 on PA_EN (netlist: PA_EN); A U36.5 on +3V3_EMCON (netlist: +3V3_EMCON); A U37.1 on TX_INHIBIT_n (netlist: TX_INHIBIT_n); A U37.2 on EMCON_HW (netlist: EMCON_HW); A U37.4 on HF_TXOK (netlist: HF_TXOK); A U37.5 on +3V3_EMCON (netlist: +3V3_EMCON); A U38.1 on HF_TXOK (netlist: HF_TXOK); A U38.2 on HF_HOLD (netlist: HF_HOLD); A U38.4 on HF_EN (netlist: HF_EN); A U38.5 on +3V3_EMCON (netlist: +3V3_EMCON); A U40.6 on PA_HOLD (netlist: PA_HOLD); A U40.1 on PA_SW_EN (netlist: PA_SW_EN); A U40.4 on HF_HOLD (netlist: HF_HOLD); A U40.3 on HF_SW_EN (netlist: HF_SW_EN); gen_sch_a.py lines 1572 to 1575 at e57a7365 hold U35, U36, U37, U38; C U14.3 on TX_INHIBIT_n (netlist: TX_INHIBIT_n); C U14.6 on EMCON_HW (netlist: EMCON_HW)
 PANEL.md#6:L156:cell:0:s1 [428ab166dc] TRUE
     EMCON_HW
@@ -470,12 +471,13 @@ PANEL.md#6:L156:cell:2:s1 [05ad0e2bee] TRUE
     judgement: board A's gates (U26 dated at 45bde541) and board B's EMCON stages, the RockBLOCK clause with set 12's R532, U543 and RB_GO gates; the 5G timing bound is EMCON.md's
     names looked up: 34 parts, 9 nets
     citations: citations judged: the two citations asserted below
-    part numbers (1): AO3400A on B (Q212), P (Q3)
+    part numbers (4): AO3400A on B (Q212), P (Q3); SN74LV1T08 on B (U116,U216,U316); SN74LVC1G08 on B (U501,U502,U503,U504); SN74LVC2G06 on B (U113,U114,U115,U213)
     asserted (162): A U35 value has 'SN74AUP1G08' (netlist: 'SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (th'); A U35.1 on TX_INHIBIT_n (netlist: TX_INHIBIT_n); A U35.2 on EMCON_HW (netlist: EMCON_HW); A U35.4 on PA_TXOK (netlist: PA_TXOK); A U35.5 on +3V3_EMCON (netlist: +3V3_EMCON); A U36.1 on PA_TXOK (netlist: PA_TXOK); A U36.2 on PA_HOLD (netlist: PA_HOLD); A U36.4 on PA_EN (netlist: PA_EN); A U36.5 on +3V3_EMCON (netlist: +3V3_EMCON); A U37.1 on TX_INHIBIT_n (netlist: TX_INHIBIT_n); A U37.2 on EMCON_HW (netlist: EMCON_HW); A U37.4 on HF_TXOK (netlist: HF_TXOK); A U37.5 on +3V3_EMCON (netlist: +3V3_EMCON); A U38.1 on HF_TXOK (netlist: HF_TXOK); A U38.2 on HF_HOLD (netlist: HF_HOLD); A U38.4 on HF_EN (netlist: HF_EN); A U38.5 on +3V3_EMCON (netlist: +3V3_EMCON); A U40.6 on PA_HOLD (netlist: PA_HOLD); A U40.1 on PA_SW_EN (netlist: PA_SW_EN); A U40.4 on HF_HOLD (netlist: HF_HOLD); A U40.3 on HF_SW_EN (netlist: HF_SW_EN); A U26 value has 'outlet interlock' (netlist: 'SN74LVC08APWR quad AND: the outlet interlock for PoE and USB'); gen_sch_a.py lines 1572 to 1575 at e57a7365 hold U35, U36, U37, U38; gen_sch_a.py lines 1102 to 1102 at 45bde541 hold U26, EMCON gates; B U501 value has 'SN74LVC1G08' (netlist: 'SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage'); B U501.1 on EMCON_HW (netlist: EMCON_HW); B U501.2 on LIME_HW_EN (netlist: LIME_HW_EN); B U501.4 on LIME_EN_A (netlist: LIME_EN_A); B U501.5 on +3V3_DEV (netlist: +3V3_DEV); B U502.1 on LIME_EN_A (netlist: LIME_EN_A); B U502.2 on LIME_SW_EN (netlist: LIME_SW_EN); B U502.4 on LIME_EN (netlist: LIME_EN); B U102 PWRCTL1 on LIME_HW_EN (netlist: LIME_HW_EN); B U503.1 on EMCON_HW (netlist: EMCON_HW); B U503.2 on RB_SW_EN (netlist: RB_SW_EN); B U503.4 on RB_EN (netlist: RB_EN); B U503.5 on +3V3_DEV (netlist: +3V3_DEV); B R530.1 on RB_EN (netlist: RB_EN); B R530.2 on RB_UVLO (netlist: RB_UVLO); B U24 value has 'TPS259631' (netlist: 'TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))'); B U24.3 on RB_UVLO (netlist: RB_UVLO); B U24.4 on +5V_DEV (netlist: +5V_DEV); B U24.5 on +5V_RB (netlist: +5V_RB); B J_RB9704.15 on +5V_RB (netlist: +5V_RB); B U6 IO0_2 on RB_SW_EN (netlist: RB_SW_EN); B U536 value has 'SN74LVC1G08' (netlist: 'SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENA'); B U536.1 on EMCON_HW (netlist: EMCON_HW); B U536.2 on RB_SW_IEN (netlist: RB_SW_IEN); B U536.4 on RB_IEN_DRV (netlist: RB_IEN_DRV); B U536.5 on +3V3_DEV (netlist: +3V3_DEV); B U6 IO1_6 on RB_SW_IEN (netlist: RB_SW_IEN); B R532 value has '2.7k' (netlist: '2.7k 1%'); B R532.1 on RB_IEN_DRV (netlist: RB_IEN_DRV); B R532.2 on RB_IEN (netlist: RB_IEN); B R527.1 on RB_IEN (netlist: RB_IEN); B R527.2 on GND (netlist: GND); B J_RB9704.3 on RB_IEN (netlist: RB_IEN); B U543 value has 'TPS3808G30' (netlist: 'TPS3808G30DBVR supervisor on +5V_DEV watching +3V3_DEV: hold'); B U543.1 on RB_IEN (netlist: RB_IEN); B U543.5 on +3V3_DEV (netlist: +3V3_DEV); B U543.6 on +5V_DEV (netlist: +5V_DEV); B U537.1 on RB_IEN (netlist: RB_IEN); B U537.2 on RB_STATUS (netlist: RB_STATUS); B U537.4 on RB_GO (netlist: RB_GO); B J_RB9704.7 on RB_STATUS (netlist: RB_STATUS); B U538.1 on RB_RXD_H (netlist: RB_RXD_H); B U538.2 on RB_GO (netlist: RB_GO); B U538.4 on RB_RXD (netlist: RB_RXD); B J_RB9704.14 on RB_RXD (netlist: RB_RXD); B U539.1 on RB_CTRL_H (netlist: RB_CTRL_H); B U539.2 on RB_GO (netlist: RB_GO); B U539.4 on RB_CTRL (netlist: RB_CTRL); B J_RB9704.6 on RB_CTRL (netlist: RB_CTRL); B U504 value has 'SN74LVC1G08' (netlist: 'SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON A'); B U504.1 on EMCON_HW (netlist: EMCON_HW); B U504.2 on LORA_ON (netlist: LORA_ON); B U504.4 on E22_EN (netlist: E22_EN); B U505 value has 'SN74LVC1G08' (netlist: 'SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, E'); B U505.1 on EMCON_HW (netlist: EMCON_HW); B U505.2 on ZB_ON (netlist: ZB_ON); B U505.4 on E72_EN (netlist: E72_EN); B U112 value has 'SN74LVC1G04' (netlist: 'SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW'); B U112.2 on EMCON_HW (netlist: EMCON_HW); B U112.4 on EMCON_ON1 (netlist: EMCON_ON1); B U112.5 on +3V3_CM1 (netlist: +3V3_CM1); B U212.2 on EMCON_HW (netlist: EMCON_HW); B U212.4 on EMCON_ON2 (netlist: EMCON_ON2); B U212.5 on +3V3_CM2 (netlist: +3V3_CM2); B U312.2 on EMCON_HW (netlist: EMCON_HW); B U312.4 on EMCON_ON3 (netlist: EMCON_ON3); B U312.5 on +3V3_CM3 (netlist: +3V3_CM3); B U113.1 on EMCON_ON1 (netlist: EMCON_ON1); B U113.3 on EMCON_ON1 (netlist: EMCON_ON1); B U113.6 on WL_nDIS1 (netlist: WL_nDIS1); B U113.4 on BT_nDIS1 (netlist: BT_nDIS1); B U113.5 on +3V3_CM1 (netlist: +3V3_CM1); B U213.1 on EMCON_ON2 (netlist: EMCON_ON2); B U213.6 on WL_nDIS2 (netlist: WL_nDIS2); B U213.5 on +3V3_CM2 (netlist: +3V3_CM2); B U313.1 on EMCON_ON3 (netlist: EMCON_ON3); B U313.6 on WL_nDIS3 (netlist: WL_nDIS3); B U313.5 on +3V3_CM3 (netlist: +3V3_CM3); B U114.1 on WL_nDIS1_OFF (netlist: WL_nDIS1_OFF); B U114.6 on WL_nDIS1 (netlist: WL_nDIS1); B U114.4 on BT_nDIS1 (netlist: BT_nDIS1); B U214.6 on WL_nDIS2 (netlist: WL_nDIS2); B U214.4 on BT_nDIS2 (netlist: BT_nDIS2); B U314.6 on WL_nDIS3 (netlist: WL_nDIS3); B U314.4 on BT_nDIS3 (netlist: BT_nDIS3); B U6 IO1_0 on WL_nDIS1_OFF (netlist: WL_nDIS1_OFF); B U6 IO1_3 on BT_nDIS1_OFF (netlist: BT_nDIS1_OFF); B U116 value has 'SN74LV1T08' (netlist: 'SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 '); B U116.1 on EMCON_HW (netlist: EMCON_HW); B U116.2 on PCIE_PWR_EN1 (netlist: PCIE_PWR_EN1); B U116.4 on S1A_EN (netlist: S1A_EN); B U116.5 on +5V_S1 (netlist: +5V_S1); B U316.1 on EMCON_HW (netlist: EMCON_HW); B U316.2 on PCIE_PWR_EN3 (netlist: PCIE_PWR_EN3); B U316.4 on S3A_EN (netlist: S3A_EN); B U316.5 on +5V_S3 (netlist: +5V_S3); B U103.3 on S1A_EN (netlist: S1A_EN); B U303.3 on S3A_EN (netlist: S3A_EN); B U115.1 on EMCON_ON1 (netlist: EMCON_ON1); B U115.6 on WIFI_W_DIS_n (netlist: WIFI_W_DIS_n); B U115.3 on GND (netlist: GND); B U315.1 on EMCON_ON3 (netlist: EMCON_ON3); B U315.6 on WIFI2_W_DIS_n (netlist: WIFI2_W_DIS_n); B U315.3 on GND (netlist: GND); B U203 value has 'AP64500' (netlist: 'AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A'); B U203.3 on S2A_EN (netlist: S2A_EN); B U216 value has 'SN74LV1T08' (netlist: 'SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 '); B U216.1 on EMCON_HW (netlist: EMCON_HW); B U216.2 on PCIE_PWR_EN2 (netlist: PCIE_PWR_EN2); B U216.4 on S2A_EN (netlist: S2A_EN); B U216.5 on +5V_S2 (netlist: +5V_S2); B U220 value has 'SN74LVC2G06' (netlist: 'SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 '); B U220.1 on EMCON_ON2 (netlist: EMCON_ON2); B U220.6 on 5G_PWROFF_n (netlist: 5G_PWROFF_n); B U221 value has 'TPS3808G30' (netlist: 'TPS3808G30DBVR supervisor on +3V3_S2A: holds FULL_CARD_POWER'); B U221.1 on 5G_TPR_n (netlist: 5G_TPR_n); B U221.5 on +3V3_S2A (netlist: +3V3_S2A); B U554.1 on 5G_TPR_n (netlist: 5G_TPR_n); B U554.6 on 5G_PWROFF_n (netlist: 5G_PWROFF_n); B U215 value has 'SN74LVC2G06' (netlist: 'SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 '); B U215.1 on EMCON_ON2 (netlist: EMCON_ON2); B U215.6 on 5G_W_DIS_n (netlist: 5G_W_DIS_n); B U215.3 on GND (netlist: GND); B Q212.1 on EMCON_ON2 (netlist: EMCON_ON2); B Q212.3 on 5G_DCHG (netlist: 5G_DCHG); B R295 value has '15R' (netlist: '15R 1% 2512 1W (EMCON discharge of +3V3_M2C2, SD-EMC-1)'); B R295.1 on +3V3_M2C2 (netlist: +3V3_M2C2); B R295.2 on 5G_DCHG (netlist: 5G_DCHG); B U506.2 on EMCON_HW (netlist: EMCON_HW); B U506.4 on EMCON_SUP (netlist: EMCON_SUP); B U506.5 on +3V3_DEV (netlist: +3V3_DEV); B U41 PC5 on EMCON_SUP (netlist: EMCON_SUP); B Q212 value has 'AO3400A' (netlist: "AO3400A: EMCON discharges the 5G module's rail through R295 "); board B: 3 parts whose value holds 'STM32H743' (read: 3, U41,U51,U61); board B: 3 parts whose value holds 'SN74LV1T08' (read: 3, U116,U216,U316); B R529.2 on LIME_UVLO (netlist: LIME_UVLO); B R530.2 on RB_UVLO (netlist: RB_UVLO); B R531.2 on E22_UVLO (netlist: E22_UVLO)
 PANEL.md#6:L156:cell:2:s2 [f46acf5130] NOT DERIVABLE
     Ruled 32.50 item 3 ("every transmitter") and, on 26 September 2026, by the owner's D-05: **under EMCON the radios go DARK.** Every radio with an emission path is powered off or RF-disabled in hardware; the VHF path keeps listening (D8's gate is on transmit only, as ruled); GNSS, DCF77 and the lightning detector continue.
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the rulings 32.50 item 3 and D-05)
     names looked up: 1 parts, 0 nets; D8 on ACE (sentence names D)
+    part numbers (1): DCF77 elsewhere: board E's J_DCF; board D is named for its transmit gate
 PANEL.md#6:L156:cell:2:s3 [7aab87b020] NOT DERIVABLE
     The cost of the 5G supply removal is Quectel's flash warning, accepted as a residual; the bridge's AT+CFUN=0 on EMCON remains care of the module's flash, not the inhibit.
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim
@@ -574,8 +576,8 @@ PANEL.md#7:L168:cell:1:s1 [3d47dcd92b] TRUE
     PCA9555 panel expanders (section 4)
     judgement: C7's two PCA9555
     names looked up: 0 parts, 0 nets
-    part numbers (1): PCA9555 on A (U27,U28), B (U6,U7), C (U1,U2), D (U16)
-    asserted (2): C U1 value has 'PCA9555' (netlist: 'PCA9555PW 0x22: LED sinks, light mode inputs'); C U2 value has 'PCA9555' (netlist: 'PCA9555PW 0x23: LED sinks, the battery bar, lamp test')
+    part numbers (1): PCA9555 on A (U27,U28), B (U6,U7), C (U1,U2), D (U16); PCA9555 expander on C:U1 (PCA9555PW 0x22: LED sinks, light mode inputs)
+    asserted (3): C U1 value has 'PCA9555' (netlist: 'PCA9555PW 0x22: LED sinks, light mode inputs'); C U2 value has 'PCA9555' (netlist: 'PCA9555PW 0x23: LED sinks, the battery bar, lamp test'); C U1 value has 'PCA9555PW 0x22: LED sinks, light mode inputs' (netlist: 'PCA9555PW 0x22: LED sinks, light mode inputs')
 PANEL.md#7:L168:cell:2:s1 [f167717fb2] TRUE
     C7
     judgement: a board name as a row label
@@ -594,7 +596,7 @@ PANEL.md#7:L170:cell:1:s1 [12ab5b6b01] TRUE
     TPS23861 PoE PSE controller `U5`, at its factory address with its A3 pin open (pulled up inside the part); every TPS23861 also answers the broadcast address 0x30 (TI SLUSBX9I, sections 7.3.13 and 8.3.3.1)
     judgement: U5 on the bus with its A3 pin open; the broadcast address is the maker's
     names looked up: 1 parts, 0 nets
-    part numbers (1): TPS23861 on B (U5)
+    part numbers (1): TPS23861 on B (U5); TPS23861 as PoE PSE controller
     asserted (3): B U5 value has 'TPS23861' (netlist: 'TI TPS23861PWR PoE PSE controller, port 1 to the wall RJ45 ('); B U5.23 on unconnected-(U5-A3-Pad23) (netlist: unconnected-(U5-A3-Pad23)); B net SDA holds U5 (missing: none)
 PANEL.md#7:L170:cell:2:s1 [bc215963d1] TRUE
     B16
@@ -604,7 +606,7 @@ PANEL.md#7:L171:cell:1:s1 [406b1d5e9e] TRUE
     the three STM32H743 I/O supervisors `U41`, `U51`, `U61`, I2C1 targets on PB6 and PB7 for status only (`ARCH-PCB-B-IOHA.md` section 6; the addresses are the supervisors' firmware contract, I3-F01: never 0x30 to 0x32, never a master, never 0x60)
     judgement: U41, U51 and U61 on PB6 and PB7; the addresses are the firmware contract
     names looked up: 3 parts, 0 nets
-    part numbers (1): STM32H743 on B (U41,U51,U61)
+    part numbers (1): STM32H743 on B (U41,U51,U61); STM32H743 as I/O supervisor
     asserted (6): B U41 value has 'STM32H743' (netlist: 'STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD '); B U41 PB6 on SCL (netlist: SCL); B U41 PB7 on SDA (netlist: SDA); B U51 PB7 on SDA (netlist: SDA); B U61 PB7 on SDA (netlist: SDA); board B: 3 parts whose value holds 'STM32H743' (read: 3, U41,U51,U61)
 PANEL.md#7:L171:cell:2:s1 [bc215963d1] TRUE
     B16
@@ -614,7 +616,7 @@ PANEL.md#7:L172:cell:1:s1 [977cb01ecc] TRUE
     INA226 rail monitors: the three slot rails (5.1 V), the device rail, the PA rail (13.8 V), the PoE rail (54 V)
     judgement: the six INA226 on board A's bus, their straps giving 0x40, 0x41, 0x44, 0x45, 0x46 and 0x47 by TI's table
     names looked up: 0 parts, 0 nets
-    part numbers (1): INA226 on A (U10,U11,U14,U17)
+    part numbers (1): INA226 on A (U10,U11,U14,U17); INA226 as rail monitor
     asserted (20): A U8 value has '+5V_S1' (netlist: 'INA226 rail monitor +5V_S1'); A U8.1 on GND (netlist: GND); A U8.2 on GND (netlist: GND); A U9 value has '+5V_S2' (netlist: 'INA226 rail monitor +5V_S2'); A U9.1 on GND (netlist: GND); A U9.2 on +3V3 (netlist: +3V3); A U10 value has '+5V_S3' (netlist: 'INA226 rail monitor +5V_S3'); A U10.1 on +3V3 (netlist: +3V3); A U10.2 on GND (netlist: GND); A U11 value has '+5V_DEV' (netlist: 'INA226 rail monitor +5V_DEV'); A U11.1 on +3V3 (netlist: +3V3); A U11.2 on +3V3 (netlist: +3V3); A U14 value has 'PA rail' (netlist: 'INA226 PA rail monitor (0x46)'); A U14.1 on +3V3 (netlist: +3V3); A U14.2 on SDA (netlist: SDA); A U17 value has 'PoE rail' (netlist: 'INA226 PoE rail monitor (0x47)'); A U17.1 on +3V3 (netlist: +3V3); A U17.2 on SCL (netlist: SCL); A net SDA holds U10,U11,U14,U17,U8,U9 (missing: none); board A: 3 parts whose value holds 'rail monitor +5V_S' (read: 3, U10,U8,U9)
 PANEL.md#7:L172:cell:2:s1 [0536e7eccf] TRUE
     A22
@@ -624,7 +626,7 @@ PANEL.md#7:L173:cell:1:s1 [5f2cf03744] TRUE
     ADS1115 `U22`, the power amplifier's flange temperature: a Semitec 103AT-2 NTC on the lead `J_FLANGE`, read ratiometric against the harness +3V3 (ADDR to GND, TI SBAS444E Table 7-2); the key-down rules K2 (+75 C) and C4 (+85 C) of `feasibility/POWER-THERMAL.md` read it, in firmware (PWR-F15, round 8 of MESHSAT-1357)
     judgement: U22 with ADDR to GND on the flange lead; the key-down rules are firmware
     names looked up: 4 parts, 1 nets
-    part numbers (3): 103AT-2 on D (J_FLANGE), P (J_TS,J_TS2,U2); ADS1115 on D (U22); SBAS444E document: TI's ADS1115 data sheet number
+    part numbers (2): 103AT-2 on D (J_FLANGE), P (J_TS,J_TS2,U2); ADS1115 on D (U22)
     asserted (5): D U22 value has 'ADS1115' (netlist: 'ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 '); D U22.1 on GND (netlist: GND); D U22.9 on SDA (netlist: SDA); D U22.4 on FLANGE_AIN0 (netlist: FLANGE_AIN0); D J_FLANGE present
 PANEL.md#7:L173:cell:2:s1 [e32ddc3033] TRUE
     D8
@@ -644,7 +646,7 @@ PANEL.md#7:L175:cell:1:s1 [31ce2cbb07] TRUE
     KSZ9897R Ethernet switch, I2C management (a fixed address: "The 7-bit device address is fixed as 1011_111", Microchip's datasheet in `v2/vendor/microchip/`; I2C management selected by the strap `R57`)
     judgement: the KSZ9897R on the bus with the strap R57; the fixed address is the maker's
     names looked up: 1 parts, 0 nets
-    part numbers (1): KSZ9897R on B (U1)
+    part numbers (1): KSZ9897R on B (U1); KSZ9897R as Ethernet switch
     asserted (3): B U1 value has 'KSZ9897' (netlist: 'Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 t'); B R57 value has 'I2C management' (netlist: '1k (strap [LED4_1, LED3_1] = 01: I2C management, Table 3-3)'); B net SDA holds U1 (missing: none)
 PANEL.md#7:L175:cell:2:s1 [bc215963d1] TRUE
     B16
@@ -664,7 +666,7 @@ PANEL.md#7:L177:cell:1:s1 [e405a3ce91] TRUE
     DS3231SN holdover clock U9 (CR2032 backed; the part code C9866 has always bought, drawn on its own 16 SO land since board B's round 8)
     judgement: U9 on B16, CR2032-backed on VBAT_RTC; the order code history is a record
     names looked up: 1 parts, 0 nets
-    part numbers (3): C9866 stock: the LCSC code the DS3231SN is bought under; CR2032 on B (BT1,U9); DS3231SN on B (U9)
+    part numbers (3): C9866 stock: the LCSC code the DS3231SN is bought under; CR2032 on B (BT1,U9); DS3231SN on B (U9); DS3231SN as holdover clock
     asserted (3): B U9 value has 'DS3231SN' (netlist: 'DS3231SN# holdover clock (I2C 0x68, TCXO and crystal), CR203'); B U9.15 on SDA (netlist: SDA); B U9.14 on VBAT_RTC (netlist: VBAT_RTC)
 PANEL.md#7:L177:cell:2:s1 [bc215963d1] TRUE
     B16
@@ -674,7 +676,7 @@ PANEL.md#7:L178:cell:1:s1 [2773e818ae] TRUE
     BQ25731 charger (an I2C target on the kit bus; it has no conductor to the pack's gauge and no thermistor input)
     judgement: A22's BQ25731 U3 on the kit bus (pins 12 and 13); no pin of it is on a thermistor or gauge net; the pin table is TI's (SLUSE66A)
     names looked up: 0 parts, 0 nets
-    part numbers (1): BQ25731 on A (U3)
+    part numbers (1): BQ25731 on A (U3); BQ25731 as charger
     asserted (3): A U3 value has 'BQ25731' (netlist: 'BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V'); A U3.12 on SDA (netlist: SDA); A U3.13 on SCL (netlist: SCL)
 PANEL.md#7:L178:cell:2:s1 [0536e7eccf] TRUE
     A22
@@ -847,6 +849,11 @@ CONOPS.md#2:L79:cell:1:s1 [c530f82b50] NOT DERIVABLE
     Relay messages between local off-grid networks and remote correspondents when internet and cellular infrastructure are absent or down.
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (a need of section 2)
     names looked up: 0 parts, 0 nets
+CONOPS.md#2a:L101:para:s1 [fda86ae247] NOT DERIVABLE
+    The functions the ruling names as outside the core are the Geiger counter, the lightning detector, DCF77, the outside sensor pod, the camera, net audio recording, the tablet bracket, the NVG claim, HF and a second pack.
+    judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (D-01's list of what is outside the core)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): DCF77 on E (J_DCF)
 CONOPS.md#2a:L107:para:s1 [ad42c9eb94] NOT DERIVABLE
     The second pack has no location found yet: no pack is expected to fit the 160 mm west pocket as the board set stands (INFERRED from the committed board B underside, `v2/ecad/tools/panel1450.py` line 23, against the pocket of appendix 32.62; no case measurement is owed since the owner reversed D-08 on 26 September 2026), and the pack ruling D-06 of 26 September 2026 sets one pack in the east pocket, with missions longer than it relying on vehicle or solar input.
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the second pack's location, INFERRED from the board B underside against appendix 32.62)
@@ -908,6 +915,7 @@ CONOPS.md#M4:L250:para:s4 [1922b27e39] NOT DERIVABLE
     **Ruled (D-05, 26 September 2026): radios dark.** Every radio with an emission path is powered off or RF-disabled in hardware; the VHF path keeps listening because its gate is on the transmit side only; GNSS, DCF77 and the lightning sensor continue.
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (ruling D-05)
     names looked up: 0 parts, 0 nets
+    part numbers (1): DCF77 on E (J_DCF)
 CONOPS.md#M4:L250:para:s5 [1d9b5fd4ae] NOT DERIVABLE
     The kit therefore stops RECEIVING on every other radio while EMCON is closed.
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the radios' behaviour with their supplies removed)
@@ -1147,6 +1155,11 @@ CONOPS.md#4:L315:cell:1:s1 [835e712c2f] TRUE
     judgement: the EMCON toggle
     names looked up: 1 parts, 0 nets
     asserted (2): C SW_EMCON value has 'locking toggle' (netlist: 'EMCON locking toggle (closed = TX inhibit, a hardware line: '); C SW_EMCON.1 on TX_INHIBIT_n (netlist: TX_INHIBIT_n)
+CONOPS.md#4:L315:cell:3:s1 [1e4516ad21] NOT DERIVABLE
+    receive-only radios (GNSS, DCF77, lightning sensor), the VHF receiver, compute, display in its lighting mode
+    judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (what EMCON leaves running, D-05)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): DCF77 on E (J_DCF)
 CONOPS.md#4:L315:cell:4:s1 [5c2c10a0f9] TRUE
     radios dark (owner ruling D-05), as section 4b: power removed from the SDR, the RockBLOCK, the LoRa module, both E72, the HF unit and the two WiFi link cards; the compute modules' own WiFi and Bluetooth disabled through open drains; the 5G module's supply removed by hardware with its disable pins pulled low at the same moment (since board B's round 8, section 4b); the PA rail and keying off; software holds every send, an SOS included
     judgement: the removals the cell names hold on set 13
@@ -1228,6 +1241,7 @@ CONOPS.md#4:L322:cell:5:s1 [2f097181b1] NOT DERIVABLE
     procedure (owner ruling D-14): before the lift the kit is off, the pack's XT60 unplugged and shore removed, and an insulating cap covers the dock block E5 while the stack is out
     judgement: FIRMWARE: the firmware contract or an operating procedure, not a netlist claim (the D-14 procedure)
     names looked up: 0 parts, 0 nets
+    part numbers (1): XT60 on E (J_BATT), P (W_N,W_P)
 CONOPS.md#4:L322:cell:7:s1 [9a868f70ce] NOT DERIVABLE
     `V2-SPEC.md` line 13; 32.50 items 2 and 16f; `ARCH-PCB-B-IOHA.md` section 2; `ASSEMBLY.md` sections 4 and 7
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (references)
@@ -1329,6 +1343,7 @@ CONOPS.md#4b:L399:para:s3 [8120d05470] BASELINE
     FAILS: U211 is on no netlisted board
     FAILS: U311 is on no netlisted board
     names looked up: 16 parts, 4 nets
+    part numbers (1): SN74LVC2G06 on B (U113,U114,U115,U213)
     asserted (10): B U112 value has 'SN74LVC1G04' (netlist: 'SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW'); B U112.2 on EMCON_HW (netlist: EMCON_HW); B U112.4 on EMCON_ON1 (netlist: EMCON_ON1); B U112.5 on +3V3_CM1 (netlist: +3V3_CM1); B U212.2 on EMCON_HW (netlist: EMCON_HW); B U212.4 on EMCON_ON2 (netlist: EMCON_ON2); B U212.5 on +3V3_CM2 (netlist: +3V3_CM2); B U312.2 on EMCON_HW (netlist: EMCON_HW); B U312.4 on EMCON_ON3 (netlist: EMCON_ON3); B U312.5 on +3V3_CM3 (netlist: +3V3_CM3)
 CONOPS.md#4b:L408:cell:2:s1 [e7f1fe94db] NOT DERIVABLE
     What EMCON removes
@@ -1441,12 +1456,13 @@ CONOPS.md#4b:L419:cell:0:s1 [24f6f52515] TRUE
     LG290P GNSS, DCF77, lightning sensor
     judgement: B16's LG290P; the DCF77 and lightning headers on E6
     names looked up: 0 parts, 0 nets
-    part numbers (1): LG290P on B (BT1,J_GNSS2,U11)
+    part numbers (2): DCF77 on E (J_DCF); LG290P on B (BT1,J_GNSS2,U11)
     asserted (3): B U11 value has 'LG290P' (netlist: 'Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1'); E J_DCF present; E J_LTG present
 CONOPS.md#4b:L421:para:s1 [6688b32a1a] NOT DERIVABLE
     **Owner ruling D-05 (26 September 2026): EMCON means radios dark, as generated and completed.** Every radio with an emission path is powered off or RF-disabled in hardware; the VHF path keeps listening because its gate is on the transmit side only; GNSS, DCF77 and the lightning sensor continue.
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (ruling D-05)
     names looked up: 0 parts, 0 nets
+    part numbers (1): DCF77 on E (J_DCF)
 CONOPS.md#4b:L421:para:s2 [98a110f4dd] NOT DERIVABLE
     The 5G module's own GNSS receiver is not counted in the last row: the kit's position source is the LG290P, the module's GNSS ports (L5 on ANT1, L1 on ANT3, Quectel hardware design v1.1 Table 32) are fitted only in part under D-07, and whether W_DISABLE1# stops it is not established.
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (Quectel's GNSS ports)
@@ -1952,6 +1968,12 @@ CONOPS.md#4e:L887:cell:1:s1 [48a9631e39] TRUE
     judgement: in the heat stage as generated (slot 2 alone) bank 3, which carries E6's sensor controller, has no host; the response and its thresholds are firmware (TBD)
     names looked up: 0 parts, 1 nets
     asserted (19): B U109 value has 'bank 1: B = slot 1 USB3-0 (home), C = slot 2' (netlist: 'TI TMUXHS4212 SuperSpeed 2:1 host select, bank 1: B = slot 1'); B U209 value has 'bank 2: B = slot 2 USB3-0 (home), C = slot 3' (netlist: 'TI TMUXHS4212 SuperSpeed 2:1 host select, bank 2: B = slot 2'); B U309 value has 'bank 3: B = slot 3 USB3-0 (home), C = slot 1' (netlist: 'TI TMUXHS4212 SuperSpeed 2:1 host select, bank 3: B = slot 3'); B U110 value has 'bank 1: port 1 = slot 1 (home), port 2 = slot 2' (netlist: 'TI TS3USB221A USB2 2:1 host select, bank 1: port 1 = slot 1 '); B U210 value has 'bank 2: port 1 = slot 2 (home), port 2 = slot 3' (netlist: 'TI TS3USB221A USB2 2:1 host select, bank 2: port 1 = slot 2 '); B U310 value has 'bank 3: port 1 = slot 3 (home), port 2 = slot 1' (netlist: 'TI TS3USB221A USB2 2:1 host select, bank 3: port 1 = slot 3 '); B U102 USB_DP_DN4 on RB_DP (netlist: RB_DP); B U18 value has 'CP2102N' (netlist: 'CP2102N-A02-GQFN28 USB-UART bridge (RB)'); B U102 USB_DP_DN2 on USB_PNL_P (netlist: USB_PNL_P); B U202 USB_DP_DN1 on GNSS_DP (netlist: GNSS_DP); B U302 USB_DP_DN1 on USB_D8_P (netlist: USB_D8_P); B U302 USB_DP_DN2 on USB_E6_P (netlist: USB_E6_P); B U302 USB_DP_DN3 on USB_WALL_P (netlist: USB_WALL_P); B U302 USB_DP_DN4 on USB_5G_P (netlist: USB_5G_P); B net USB_5G_P holds exactly J_M2C2,U302 (read: J_M2C2,U302); B net LORA_MOSI holds exactly U12,U548 (read: U12,U548); B net SPI3_MOSI holds exactly J_SPI3,R549,U32A,U548 (read: J_SPI3,R549,U32A,U548); B net CARD2_TX_P holds J_M2C2 (missing: none); B U12 value has 'E22-900M30S' (netlist: 'Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPI')
+CONOPS.md#4e:L888:cell:0:s1 [9d165f761a] TRUE
+    gas in the battery bay (the SGP41; its response to hydrogen **TBD**)
+    judgement: E6's SGP41 U17; its response to hydrogen is TBD
+    names looked up: 0 parts, 0 nets
+    part numbers (1): SGP41 on E (U17)
+    asserted (1): E U17 value has 'SGP41' (netlist: 'SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59')
 CONOPS.md#4e:L890:cell:1:s1 [cee55e9271] NOT DERIVABLE
     the hot stop (section 4c): at +56.5 C, the hottest cell as the gauge reads it, every module shut down cleanly and the switched loads and the charge held off (H1); at +57.0 C the kit shut down by `PI_KILL` (H2); behind it the gauge's OTD and the destructive backstops
     judgement: FIRMWARE: the firmware contract or an operating procedure, not a netlist claim (the hot stop, CONOPS 4c)
@@ -2218,6 +2240,7 @@ V2-SPEC.md#Case and construction:L13:cell:1:s1 [38a91feb23] NOT DERIVABLE
     face plate off (ten 6-32 screws, case choice C1; correction 20), the rod stack lifted straight up off the blind-mate joint without unscrewing a cable, the pack out of its cradle; before the lift the kit is off, the pack's XT60 unplugged and shore removed, and an insulating cap covers the dock block E5 while the stack is out (owner ruling D-14, 26 Sep 2026: lifting live is an accepted, recorded residual risk, and a stack-present interlock is studied at Review D; correction 15)
     judgement: FIRMWARE: the firmware contract or an operating procedure, not a netlist claim (the D-14 procedure) and CASE: a mechanical or case item, not a netlist claim
     names looked up: 1 parts, 0 nets
+    part numbers (1): XT60 on E (J_BATT), P (W_N,W_P)
 V2-SPEC.md#Power:L17:para:s1 [f6633e61d3] NOT DERIVABLE
     The node, the inputs, every rail with its part and its EMCON gate: appendix 32.55 (7 Sep 2026).
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (appendix 32.55)
@@ -2231,14 +2254,14 @@ V2-SPEC.md#Power:L20:cell:1:s2 [cee0d6d5e5] TRUE
     It is built for the kit rather than bought (appendix 32.62, ruling 7 Sep 2026: the BB-2590/U does not fit beside the board set and the case stays the 1450), with the BQ4050 SMBus gauge with protection and balancing on the P board; missions longer than the pack rely on vehicle or solar input; the second pack that the owner's scope ruling D-01 lists as deferred has no location found (correction 1); to be tested with the kit under `TEST-PLAN.md`
     judgement: board P's BQ4050 gauge; the pack and its ruling are the document's
     names looked up: 0 parts, 0 nets
-    part numbers (2): BB-2590/U withdrawn: the bought pack that did not fit (32.62); BQ4050 on P (RT1,U1)
+    part numbers (2): BB-2590/U withdrawn: the bought pack that did not fit (32.62); BQ4050 on P (RT1,U1); BQ4050 as SMBus gauge
     asserted (1): P U1 value has 'BQ4050' (netlist: 'BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S bala')
 V2-SPEC.md#Power:L21:cell:1:s1 [7827ee0779] TRUE
     9 to 36 V filtered vehicle and shore input (MIL-STD-461 class line filter, NATO 2-pin plug cable, the 38999 receptacle) with no vehicle surge claim: the entry is recorded as not qualified and is not for 24 V military vehicle buses (owner ruling D-16, 26 Sep 2026; correction 16); the LT8705A solar tracker
     judgement: E6's LT8705A solar tracker; the input's qualification is D-16's
     names looked up: 0 parts, 0 nets
-    part numbers (1): LT8705A on E (U5)
-    asserted (1): E U5 value has 'LT8705A' (netlist: 'LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exp')
+    part numbers (1): LT8705A on E (U5); LT8705A tracker on E:U5 (PV_P)
+    asserted (2): E U5 value has 'LT8705A' (netlist: 'LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exp'); E U5.32 on PV_P (netlist: PV_P)
 V2-SPEC.md#Power:L22:cell:1:s1 [cea8161b55] TRUE
     14.4 V node; SMBus charger; bucks for 5 V and 3.3 V; 13.8 V rail for the PA stage; the monitor on its own eFuse from the 14.4 V node, the pack heater on its own eFuse and a regulated 12 V buck (corrections 2 and 19); PoE out; USB-C PD out
     judgement: the rails as drawn on board A
@@ -2257,6 +2280,7 @@ V2-SPEC.md#Power:L24:cell:1:s1 [5d18d3f4e9] NOT DERIVABLE
     a hardware line from the panel toggle plus a software hold, meant to silence every transmitter (32.50 item 3); on 26 September 2026 the owner ruled that EMCON means radios dark, with the VHF receiver listening behind its transmit-only gate and GNSS, DCF77 and the lightning sensor continuing (D-05).
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (ruling D-05)
     names looked up: 0 parts, 0 nets
+    part numbers (1): DCF77 on E (J_DCF)
 V2-SPEC.md#Power:L24:cell:1:s2 [90d51e8ca0] TRUE
     As generated since `458b2873` the line removes the supply of the SDR, the RockBLOCK, the LoRa module, both E72, the HF unit and the two WiFi link cards, turns off the PA rail, bias and keying while the VHF exciter keeps receiving, pulls the compute modules' own WiFi and Bluetooth disables low through open drains, and puts the 5G module in airplane mode through its disable pin, a mode the module's firmware carries out; since board B's round 8 (27 September 2026) it also removes the 5G module's supply by hardware at once (SD-EMC-1r8, `feasibility/EMCON.md` section 4b; correction 28); read transmitter by transmitter (`feasibility/EMCON.md` section 0a), the radio's own chain closes at desk for 15 of the kit's 17 transmitters and is open for two, the SA868 (its maker publishes no receive threshold for the PTT pin the design holds at 2.677 V or more; bench E-01) and the RockBLOCK 9704 (with its supply cut it runs on its own supercapacitors, about 16 J; its ENABLE is held low by the EMCON hardware since board B's stream w4b, and what the Iridium module does when ENABLE falls is stated in no held document, sections 4.4 and 4c; correction 31), the 5G module's chain closing at desk since board B's round 8; end to end, from the toggle to silence at each antenna port within the latency the session set (1 s, and 20 s for a running 5G module; SD-EMC-7, requirement REQ-071), 0 of 17 rows is closed, every row also waiting on the items the rows share (the toggle and its conductor, accepted by SD-EMC-6 only with a hardware EMCON lamp on board C, drawn since board C's round 8 (`D22`, no processor in its path) with its light guide in the face plate owed (open item S-44), and the line's open items, `feasibility/EMCON.md` sections 3 and 7), and no row has been shown on a bench: feasibility blocker FEA-002 (`feasibility/EMCON.md` section 0a.1; corrections 4, 19, 26, 28, 30 and 33); blackout and NVG panel modes beside it
     judgement: the line's effects as generated since 458b2873 and board B's round 8; the counts are feasibility/EMCON.md section 0a's, not netlist claims; the per-radio citation is EMCON.md section 0a.1 since round 3 (check-s122-2 m2)
@@ -2279,18 +2303,24 @@ V2-SPEC.md#Compute, storage, expansion (B16, about 330 x 200 mm; the distributed
     names looked up: 0 parts, 0 nets
     part numbers (1): PI7C9X2G404SL on B (U101,U201,U301)
     asserted (7): B U101 value has 'PI7C9X2G404' (netlist: 'Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane'); B U201 value has 'PI7C9X2G404' (netlist: 'Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane'); B U301 value has 'PI7C9X2G404' (netlist: 'Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane'); B J_M2N1 value has 'M-key 2242' (netlist: 'M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff:'); B J_M2C1 value has 'E-key' (netlist: 'M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF A'); B J_M2C2 value has 'B-key' (netlist: 'M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel '); B J_M2C3 value has 'E-key' (netlist: 'M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the seco')
-V2-SPEC.md#Compute, storage, expansion (B16, about 330 x 200 mm; the distributed fabric of 32.52):L32:cell:1:s1 [90a63397b8] TRUE
+V2-SPEC.md#Compute, storage, expansion (B16, about 330 x 200 mm; the distributed fabric of 32.52):L32:cell:1:s1 [70e56e5818] TRUE
+    most radios, the sensor controller and the panel are USB devices on a slot's hub (USB-serial bridges for the UART radios, two RP2040-class controllers for the panel and the sensors, a USB audio and control set for the APRS board); the HAL shares them to the other modules over the network.
+    judgement: the USB devices on the slots' hubs: the bridges U15 to U18 on B, the panel controller on C and the sensor controller on E (RP2040), D8's audio set; the HAL is software
+    names looked up: 0 parts, 0 nets
+    part numbers (1): RP2040-class module: a class of controller; the RP2040 on boards C and E is asserted
+    asserted (5): B U15 value has 'CP2102N' (netlist: 'CP2102N-A02-GQFN28 USB-UART bridge (GNSS)'); B U18 value has 'CP2102N' (netlist: 'CP2102N-A02-GQFN28 USB-UART bridge (RB)'); board C has a part whose value holds 'RP2040' (U3); E U10 value has 'RP2040' (netlist: 'RP2040 sensor controller (USB to B16 through the dock)'); D U6 value has 'PCM2912A' (netlist: 'TI PCM2912A USB audio codec (TQFP-32): mono input from the e')
+V2-SPEC.md#Compute, storage, expansion (B16, about 330 x 200 mm; the distributed fabric of 32.52):L32:cell:1:s2 [90a63397b8] TRUE
     Not everything is on a hub: the LoRa module is on slot 3's SPI, the 5G module's data on slot 2's PCIe lane (its management link is USB), the two WiFi link cards on the PCIe switches of slots 1 and 3, the compute modules' own WiFi and Bluetooth on each module, and the secure element, the holdover clock and the TMP117 on the kit I2C bus (correction 6).
     judgement: the attachments as drawn
     names looked up: 0 parts, 0 nets
     part numbers (1): TMP117 on B (U10)
     asserted (6): B U548.1 on SPI3_MOSI (netlist: SPI3_MOSI); board B: 2 parts whose value holds 'M.2 E-key' (read: 2, J_M2C1,J_M2C3); B net SDA holds U10,U8,U9 (missing: none); B U8 value has 'ATECC608B' (netlist: 'ATECC608B-SSHDA-T secure element (I2C 0x60): keys behind ZER'); B U9 value has 'DS3231SN' (netlist: 'DS3231SN# holdover clock (I2C 0x68, TCXO and crystal), CR203'); B U10 value has 'TMP117' (netlist: 'TMP117AIDRVR board temperature under the coolers (I2C 0x49; ')
-V2-SPEC.md#Compute, storage, expansion (B16, about 330 x 200 mm; the distributed fabric of 32.52):L32:cell:1:s2 [bd895a6727] NOT DERIVABLE
+V2-SPEC.md#Compute, storage, expansion (B16, about 330 x 200 mm; the distributed fabric of 32.52):L32:cell:1:s3 [bd895a6727] NOT DERIVABLE
     **The physical owner is a hardware fabric choice, not a cabling one:** each of the three hub banks is switched between a home module and one neighbour by a 2-of-3 voted selection driven by three I/O supervisors (`ARCH-PCB-B-IOHA.md`), so the loss of one module is meant to move its bank rather than remove it.
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the IOHA fabric)
     names looked up: 0 parts, 0 nets
     asserted (1): board B: 3 parts whose value holds 'STM32H743' (read: 3, U41,U51,U61)
-V2-SPEC.md#Compute, storage, expansion (B16, about 330 x 200 mm; the distributed fabric of 32.52):L32:cell:1:s3 [13651ca141] NOT DERIVABLE
+V2-SPEC.md#Compute, storage, expansion (B16, about 330 x 200 mm; the distributed fabric of 32.52):L32:cell:1:s4 [13651ca141] NOT DERIVABLE
     The LoRa module and the 5G data path have no second path and go with their module (`ARCH-PCB-B-IOHA.md` section 15), the named exceptions to line 29's requirement for prototype 1 (`ARCH-PCB-B-IOHA.md` section 15a; correction 6).
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (IOHA sections 15 and 15a)
     names looked up: 0 parts, 0 nets
@@ -2308,13 +2338,13 @@ V2-SPEC.md#Compute, storage, expansion (B16, about 330 x 200 mm; the distributed
     Firmware integrity: software-verified boot on the STM32H743 I/O supervisors, and on the compute modules if Raspberry Pi documents it, is the prototype's floor, and a hardware root of trust is required at a production trigger (owner ruling D-13, 26 Sep 2026; correction 14).
     judgement: the supervisors are STM32H743 (U41, U51, U61); the boot floor is D-13's
     names looked up: 0 parts, 0 nets
-    part numbers (1): STM32H743 on B (U41,U51,U61)
+    part numbers (1): STM32H743 on B (U41,U51,U61); STM32H743 as I/O supervisor
     asserted (3): B U41 value has 'STM32H743' (netlist: 'STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD '); B U51 value has 'STM32H743' (netlist: 'STM32H743VIT6 I/O supervisor B: 2-of-3 quorum on two CAN-FD '); B U61 value has 'STM32H743' (netlist: 'STM32H743VIT6 I/O supervisor C: 2-of-3 quorum on two CAN-FD ')
 V2-SPEC.md#Compute, storage, expansion (B16, about 330 x 200 mm; the distributed fabric of 32.52):L35:cell:1:s1 [6b8e35c93d] TRUE
     the LG290P's time pulse fanned out to every slot; the DCF77 pulse reaches only the sensor controller on E (correction 8); a holdover RTC on the kit I2C bus that the panel controller masters (board B's DS3231SN `U9`; correction 32), chrony on each module
     judgement: the holdover clock is B's DS3231SN on the kit bus that C's RP2040 masters; the time pulses are the correction 8 record's
     names looked up: 1 parts, 0 nets
-    part numbers (2): DS3231SN on B (U9); LG290P on B (BT1,J_GNSS2,U11)
+    part numbers (3): DCF77 elsewhere: board E's J_DCF, as the sentence says; board B is named for the clock; DS3231SN on B (U9); LG290P on B (BT1,J_GNSS2,U11)
     asserted (4): B U9 value has 'DS3231SN' (netlist: 'DS3231SN# holdover clock (I2C 0x68, TCXO and crystal), CR203'); B U9.15 on SDA (netlist: SDA); C U3 GPIO0 on SDA (netlist: SDA); B net SDA holds J_PANEL (missing: none)
 V2-SPEC.md#Bearers and radios:L40:cell:1:s1 [b37e8f58fe] TRUE
     RockBLOCK 9704 SMA (Iridium Messaging Transport) with the Maxtena M1621HCT-P-SMA helical
@@ -2368,7 +2398,7 @@ V2-SPEC.md#Bearers and radios:L45:cell:1:s1 [d93fb7e9b9] TRUE
     Ebyte E72-2G4M20S1E (CC2652P) as coordinator, on-board antenna
     judgement: B16's E72-2G4M20S1E (CC2652P) coordinator
     names looked up: 0 parts, 0 nets
-    part numbers (1): CC2652P on B (J_ZBDBG1,J_ZBDBG2,U13,U14)
+    part numbers (2): CC2652P on B (J_ZBDBG1,J_ZBDBG2,U13,U14); E72-2G4M20S1E on B (U13,U14)
     asserted (1): B U13 value has 'E72-2G4M20S1E CC2652P (Zigbee coordinator)' (netlist: 'Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 R')
 V2-SPEC.md#Bearers and radios:L45:cell:2:s1 [bd1020ac37] TRUE
     B16 UART
@@ -2464,23 +2494,27 @@ V2-SPEC.md#Open items (the generators have run; these remain owed):L76:para:s1 [
     the third 5G jack of the key-B socket (TE 2199119-3 since `458b2873`, whose land carries the maker's two locating holes and whose SIM holders carry the TVS arrays since board B's round 8; corrections 9, 22 and 28), which waits on the board E clamp fit (D-07; its case half is laid out, `CASE-MARGINS.md` section 3.4; correction 12); the KSZ9897, ATECC608B (its full datasheet is under NDA), DS3231, LIS3MDL, TE and Amphenol M.2 drawings (laptop list, 32.54); the sealed USB-C and RJ45 wall parts; the U-174/U headset jacks; the SOS and ZEROIZE cover part; the 2 m antenna; the tablet; the IP68 fans (owner question D-18, open and conditional: it arises only if no 40 mm IP68 fan fits the coolers, and the session then settles it under the owner's standing rule); and, of the design changes the owner's rulings of 26 September 2026 leave to the session, the ones still owed: the RockBLOCK 9704's response to its ENABLE, which the EMCON hardware forces low since board B's stream w4b (`U536`; a maker's document or bench E-04; correction 32), the SA868's PTT threshold (bench E-01), the hardware EMCON lamp's light guide in the face plate (SD-EMC-6; the lamp is drawn on board C since its round 8, correction 30) and the items every row of the EMCON line shares (D-05, `feasibility/EMCON.md` sections 0a and 7; correction 26; the 5G module's supply removal is drawn since board B's round 8, correction 28), the key-down time and state-of-charge floor as pass lines, PROVISIONAL today (D-11), and the VHF band lock (D-04); in the schematics since `faf8c981`, `458b2873` and `d90f30e4`, and neither laid out nor built: the compute modules' radios and the WiFi link cards' supplies on the EMCON line (D-05), the outlet interlock (D-11), the wall USB data path to the Glenair 233-370 (D-12; correction 13), the pack's secondary protection floor on board P (D-15) and the external ESD array at board A's USB-C CC pins (D-17) (correction 19).
     judgement: U536 forces the ENABLE low; the rest of the list is owed items and history
     names looked up: 1 parts, 0 nets
-    part numbers (6): ATECC608B on B (U8); DS3231 on B (BT1,U9); KSZ9897 on B (U1); SA868 on D (U13,U2) (the sentence names ABCEP); TE 2199119-3 on B (J_M2C2); U-174/U on C (J_HSJ1,J_HSJ2), D (J_HS1,J_HS2)
-    asserted (22): B U503.1 on EMCON_HW (netlist: EMCON_HW); B U503.2 on RB_SW_EN (netlist: RB_SW_EN); B U503.4 on RB_EN (netlist: RB_EN); B U503.5 on +3V3_DEV (netlist: +3V3_DEV); B R530.1 on RB_EN (netlist: RB_EN); B R530.2 on RB_UVLO (netlist: RB_UVLO); B U24 value has 'TPS259631' (netlist: 'TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))'); B U24.3 on RB_UVLO (netlist: RB_UVLO); B U24.4 on +5V_DEV (netlist: +5V_DEV); B U24.5 on +5V_RB (netlist: +5V_RB); B J_RB9704.15 on +5V_RB (netlist: +5V_RB); B U6 IO0_2 on RB_SW_EN (netlist: RB_SW_EN); B U536 value has 'SN74LVC1G08' (netlist: 'SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENA'); B U536.1 on EMCON_HW (netlist: EMCON_HW); B U536.2 on RB_SW_IEN (netlist: RB_SW_IEN); B U536.4 on RB_IEN_DRV (netlist: RB_IEN_DRV); B U536.5 on +3V3_DEV (netlist: +3V3_DEV); B U6 IO1_6 on RB_SW_IEN (netlist: RB_SW_IEN); B R532 value has '2.7k' (netlist: '2.7k 1%'); B R532.1 on RB_IEN_DRV (netlist: RB_IEN_DRV); B J_M2C2 value has '2199119' (netlist: 'M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel '); B U222 value has 'TPD4E001' (netlist: 'TPD4E001DBVR SIM 1 ESD array (IO1 RST, IO2 CLK, IO3 IO, VCC ')
+    part numbers (8): ATECC608B on B (U8); DS3231 on B (BT1,U9); KSZ9897 on B (U1); LIS3MDL owed: the outside pod's magnetometer, in a pod no netlist carries (gen_sch_e.py); RJ45 on B (J_ETH,T1,U1,U5); SA868 on D (U13,U2) (the sentence names ABCEP); TE 2199119-3 on B (J_M2C2); U-174/U on C (J_HSJ1,J_HSJ2), D (J_HS1,J_HS2)
+    asserted (24): B U503.1 on EMCON_HW (netlist: EMCON_HW); B U503.2 on RB_SW_EN (netlist: RB_SW_EN); B U503.4 on RB_EN (netlist: RB_EN); B U503.5 on +3V3_DEV (netlist: +3V3_DEV); B R530.1 on RB_EN (netlist: RB_EN); B R530.2 on RB_UVLO (netlist: RB_UVLO); B U24 value has 'TPS259631' (netlist: 'TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))'); B U24.3 on RB_UVLO (netlist: RB_UVLO); B U24.4 on +5V_DEV (netlist: +5V_DEV); B U24.5 on +5V_RB (netlist: +5V_RB); B J_RB9704.15 on +5V_RB (netlist: +5V_RB); B U6 IO0_2 on RB_SW_EN (netlist: RB_SW_EN); B U536 value has 'SN74LVC1G08' (netlist: 'SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENA'); B U536.1 on EMCON_HW (netlist: EMCON_HW); B U536.2 on RB_SW_IEN (netlist: RB_SW_IEN); B U536.4 on RB_IEN_DRV (netlist: RB_IEN_DRV); B U536.5 on +3V3_DEV (netlist: +3V3_DEV); B U6 IO1_6 on RB_SW_IEN (netlist: RB_SW_IEN); B R532 value has '2.7k' (netlist: '2.7k 1%'); B R532.1 on RB_IEN_DRV (netlist: RB_IEN_DRV); B J_M2C2 value has '2199119' (netlist: 'M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel '); B U222 value has 'TPD4E001' (netlist: 'TPD4E001DBVR SIM 1 ESD array (IO1 RST, IO2 CLK, IO3 IO, VCC '); v2/ecad/tools/gen_sch_e.py says 'the magnetometer sits in the outside pod (32.57)'; board E has no part whose value holds 'LIS3MDL' (found: none)
 V2-SPEC.md#Open items (the generators have run; these remain owed):L76:para:s2 [181b0ac69c] NOT DERIVABLE
     Closed on 7 Sep 2026: the PCIe switch (Diodes), the hubs, the display switch, the bridges, the controllers, the sensors' stock, the SA868 sheet, the PA sheet and heat path, Xenarc's drawing, the vent (none), the ASM118x question (0 stock).
     judgement: HISTORY: a dated record of an earlier reading or wording, true as history, not re-derived against set 12 (the open items closed on 7 September)
     names looked up: 0 parts, 0 nets
-    part numbers (1): SA868 on D (U13,U2)
+    part numbers (2): ASM118x withdrawn: the PCIe switch candidate the line closes (0 stock); SA868 on D (U13,U2)
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L81:cell:0:s1 [0536e7eccf] TRUE
     A22
     judgement: a board name as a row label
     names looked up: 0 parts, 0 nets
-V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L81:cell:1:s1 [de16befa62] TRUE
+V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L81:cell:1:s1 [de16befa62] STALE
     power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 V node, BQ25731 SMBus charger, the 9 to 36 V input passed up from E6, three 5.1 V slot rails and a device rail (AP64500, INA226 monitored), the 13.8 V PA and 12 V HF rails (LM5176, EMCON gated), the 54 V PoE rail, the 45 W USB-C outlet (TPS25740A and an LM5176 stage; the TPS55288 had left the design on 7 September, correction 32), 3.3 V logic, eleven SMP-MAX blind-mate sites, the D8 mezzanine site, the 2x13 ribbon to B16
-    judgement: the boards table's row read part by part against set 14's netlists (round 4: the heading's date excuses no part; each part the row names is on the netlists, or named with its date and asserted there); the TPS55288 is named as having left the design, at c5de605d
+    judgement: check-s122-4 B1: the AP64500 is the buck of slots 1 and 3 only (A's U4, U6); U5 and U7, slot 2 and the device rail, are LM5176 stages (corrected in round 5, correction 35)
+    FAILS: no counts_ok entry for 'three 5.1 V slot'
+    FAILS: TPS55288 is on no netlist's part values
+    FAILS: AP64500 is given the slot rail; A:U5 is LM5176PWPR buck-boost controller, +5V_S2 from VBAT
+    FAILS: AP64500 is given the device rail; A:U7 is LM5176PWPR buck-boost controller, +5V_DEV from VBA
     names looked up: 1 parts, 0 nets
-    part numbers (6): AP64500 on A (U4,U6), B (U103,U104,U203,U204); BQ25731 on A (U3); INA226 on A (U10,U11,U14,U17); LM5176 on A (U13,U15,U16,U19); TPS25740A on A (U18); TPS55288 asserted
-    asserted (8): A U3 value has 'BQ25731' (netlist: 'BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V'); A U4 value has 'AP64500' (netlist: 'AP64500SP-13 5 A buck, 5.1 V rail +5V_S1'); A U18 value has 'TPS25740A' (netlist: 'TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9,'); A U19 value has 'LM5176' (netlist: 'LM5176PWPR buck-boost controller, PD_VPWR from VBAT'); board A has a part whose value holds 'INA226' (U10,U11,U14,U17,U8,U9); board A has no part whose value holds 'TPS55288' (found: none); gen_sch_a.py lines 267 to 267 at c5de605d hold TPS55288; board A: 3 parts whose value holds 'rail monitor +5V_S' (read: 3, U10,U8,U9)
+    part numbers (6): AP64500 on A (U4,U6), B (U103,U104,U203,U204); BQ25731 on A (U3); INA226 on A (U10,U11,U14,U17); LM5176 on A (U13,U15,U16,U19); TPS25740A on A (U18); BQ25731 as SMBus charger; LM5176 as stage; INA226 on the slot rail: U10,U8,U9; INA226 on the device rail: U11
+    asserted (6): A U4 value has 'AP64500' (netlist: 'AP64500SP-13 5 A buck, 5.1 V rail +5V_S1'); A U6 value has 'AP64500' (netlist: 'AP64500SP-13 5 A buck, 5.1 V rail +5V_S3'); A U5 value has 'LM5176' (netlist: 'LM5176PWPR buck-boost controller, +5V_S2 from VBAT'); A U5 value has '+5V_S2' (netlist: 'LM5176PWPR buck-boost controller, +5V_S2 from VBAT'); A U7 value has 'LM5176' (netlist: 'LM5176PWPR buck-boost controller, +5V_DEV from VBAT'); A U7 value has '+5V_DEV' (netlist: 'LM5176PWPR buck-boost controller, +5V_DEV from VBAT')
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L82:cell:0:s1 [bc215963d1] TRUE
     B16
     judgement: a board name as a row label
@@ -2493,17 +2527,19 @@ V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owne
     FAILS: DS3231M is on no netlist's part values
     FAILS: TMDS341A is on no netlist's part values
     names looked up: 3 parts, 0 nets; U51 on B (sentence names A); U61 on B (sentence names A)
-    part numbers (11): ATECC608B on B (U8); KSZ9897 on B (U1); LG290P on B (BT1,J_GNSS2,U11); PI7C9X2G404 on B (U101,U201,U301); STM32H743 on B (U41,U51,U61); TMP117 on B (U10); TMUXHS4212 on B (U109,U209,U309); TS3USB221A on B (U110,U210,U310); TUSB8041 on B (U102,U202,U302)
+    part numbers (11): ATECC608B on B (U8); KSZ9897 on B (U1); LG290P on B (BT1,J_GNSS2,U11); PI7C9X2G404 on B (U101,U201,U301); STM32H743 on B (U41,U51,U61); TMP117 on B (U10); TMUXHS4212 on B (U109,U209,U309); TS3USB221A on B (U110,U210,U310); TUSB8041 on B (U102,U202,U302); KSZ9897 as Ethernet switch; PI7C9X2G404 as PCIe switch; STM32H743 as supervisor; TUSB8041 as USB 3 hub
     asserted (5): board B has no part whose value holds 'TMDS341' (found: none); B U3 value has 'TS3DV642' (netlist: 'TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)'); B U4 value has 'TS3DV642' (netlist: 'TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO)'); B U9 value has 'DS3231SN' (netlist: 'DS3231SN# holdover clock (I2C 0x68, TCXO and crystal), CR203'); v2/ecad/tools/gen_sch_b.py at b2709118 says 'TS3DV642'
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L83:cell:0:s1 [f167717fb2] TRUE
     C7
     judgement: a board name as a row label
     names looked up: 1 parts, 0 nets
-V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L83:cell:1:s1 [fa00f9ca7e] NOT DERIVABLE
+V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L83:cell:1:s1 [fa00f9ca7e] STALE
     panel backer under the plate, a 344 x 228 ring with a 240 x 176 void, four layers (six ruled by the owner on 25 Sep 2026, decision 27, not yet regenerated): the RP2040 panel controller (a USB device with the hardware EMCON and ZEROIZE lines), sixteen LEDs under light guides, two PCA9555, the PDi e-paper ZIF and its boost stage, the sounder driver, the VEML7700, the switch lands, the headset jack and camera holes, the notch for the monitor's connector block; the PA flange sits in its void
-    judgement: HISTORY: the boards table is headed 'as generated on 7 September 2026', a dated record, not re-derived against set 12
+    judgement: check-s122-4 m3: board C carries seventeen 3 mm LEDs, D22 the seventeenth; the heading's date excuses no count (corrected in round 5, correction 35)
+    FAILS: no counts_ok entry for 'sixteen LEDs'
     names looked up: 0 parts, 0 nets
-    part numbers (3): PCA9555 on A (U27,U28), B (U6,U7), C (U1,U2), D (U16); RP2040 on B (J_PANEL), C (U3), E (U10); VEML7700 on C (U_LIGHT)
+    part numbers (3): PCA9555 on A (U27,U28), B (U6,U7), C (U1,U2), D (U16); RP2040 on B (J_PANEL), C (U3), E (U10); VEML7700 on C (U_LIGHT); RP2040 as panel controller
+    asserted (2): board C: 17 parts whose footprint holds 'LED_D3.0mm' (read: 17, D1,D10,D11,D12,D13,D14,D15,D16,D2,D22,D3,D4,D5,D6,D7,D8,D9); C D22 value has 'EMCON' (netlist: '3 mm EMCON amber (hardware, no processor), sunlight viewable')
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L84:cell:0:s1 [e32ddc3033] TRUE
     D8
     judgement: a board name as a row label
@@ -2513,14 +2549,15 @@ V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owne
     judgement: the TUSB2046B: board D's U4 is the TUSB2046IBVFR since 26 September 2026 (corrected in round 4, correction 34)
     FAILS: no counts_ok entry for 'two headset jacks'
     FAILS: TUSB2046B is on no netlist's part values
+    FAILS: TPS22810 is named the gate-bias switch; the gate-bias is D:J_VGG (JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H13), and TPS22810 is not
     names looked up: 0 parts, 0 nets
-    part numbers (8): CP2102N on B (U15,U16,U17,U18), D (U3); PCA9555 on A (U27,U28), B (U6,U7), C (U1,U2), D (U16); PCM2912A on D (U6); RA30H1317M1 on D (J_PAIN,J_PAOUT,J_VGG); SA868 on D (U13,U2); TPA6132A2 on D (U7); TPS22810 on B (U21,U22), D (U21), E (U16)
+    part numbers (8): CP2102N on B (U15,U16,U17,U18), D (U3); PCA9555 on A (U27,U28), B (U6,U7), C (U1,U2), D (U16); PCM2912A on D (U6); RA30H1317M1 on D (J_PAIN,J_PAOUT,J_VGG); SA868 on D (U13,U2); TPA6132A2 on D (U7); TPS22810 on B (U21,U22), D (U21), E (U16); CP2102N as bridge; PCM2912A as USB codec; SA868 as exciter; TPA6132A2 as amplifier
     asserted (2): D U4 value has 'TUSB2046IBVFR' (netlist: 'TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 '); board D has no part whose value holds 'TUSB2046B' (found: none)
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L85:cell:1:s1 [86f3aabede] TRUE
     the pack BMS board, 70 x 44 mm, two layers, 2 oz (four layers at 2 oz ruled by the owner on 25 Sep 2026, decision 28, not yet regenerated): BQ4050 SMBus gauge with protection and balancing, two CSD17570Q5B high-side FETs, 2 mohm shunt, 25 A blade, tap, thermistor and SMBus headers, lead lands (appendix 32.62)
     judgement: the boards table's row read part by part against set 14's netlists (round 4: the heading's date excuses no part; each part the row names is on the netlists, or named with its date and asserted there) (board P: the BQ4050 and the two CSD17570Q5B)
     names looked up: 0 parts, 0 nets
-    part numbers (2): BQ4050 on P (RT1,U1); CSD17570Q5B on P (Q1,Q2)
+    part numbers (2): BQ4050 on P (RT1,U1); CSD17570Q5B on P (Q1,Q2); BQ4050 as SMBus gauge
     asserted (3): P U1 value has 'BQ4050' (netlist: 'BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S bala'); P Q1 value has 'CSD17570Q5B' (netlist: 'CSD17570Q5B 30 V N-FET, charge switch'); P Q2 value has 'CSD17570Q5B' (netlist: 'CSD17570Q5B 30 V N-FET, discharge switch')
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L86:cell:0:s1 [b073b98568] TRUE
     E6
@@ -2531,8 +2568,9 @@ V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owne
     judgement: the LM5176 front end on E6: board E carries the LM5069 U6, and the LM5176 front end is A22's U2, as at b2709118 (corrected in round 4, correction 34)
     FAILS: no counts_ok entry for 'two mixer fan'
     FAILS: LM5176 is on A (U13,U15,U16,U19), not on board E, the one board the sentence names
+    FAILS: LT8705A is named a solar tracker; its designators state another role (E:U5 LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exp)
     names looked up: 0 parts, 0 nets
-    part numbers (4): BME688 on E (U14); BMI270 on E (U15); LT8705A on E (U5)
+    part numbers (6): BME688 on E (U14); BMI270 on E (U15); DCF77 on E (J_DCF); LT8705A on E (U5); XT60 on E (J_BATT), P (W_N,W_P)
     asserted (4): E U6 value has 'LM5069' (netlist: 'LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current an'); board E has no part whose value holds 'LM5176' (found: none); A U2 value has 'LM5176' (netlist: 'LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW'); v2/ecad/tools/gen_sch_e.py at b2709118 says "into A22's LM5176 front end"
 V2-SPEC.md#Estimated cost per kit (parts only, prototype quantities, 6 Sep 2026):L100:cell:0:s1 [5e3035b8b7] NOT DERIVABLE
     AW7915-AED WiFi card
@@ -2553,6 +2591,7 @@ V2-SPEC.md#Estimated cost per kit (parts only, prototype quantities, 6 Sep 2026)
     Two NVMe drives, two PCIe switches, secure element, RTC, DCF77
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the cost estimate of 6 September 2026)
     names looked up: 0 parts, 0 nets
+    part numbers (1): DCF77 on E (J_DCF)
     asserted (1): board B: 3 parts whose value holds 'PI7C9X2G404' (read: 3, U101,U201,U301)
 V2-SPEC.md#Estimated cost per kit (parts only, prototype quantities, 6 Sep 2026):L108:cell:0:s1 [36abc030f1] NOT DERIVABLE
     Two headset jacks, camera
@@ -2589,7 +2628,7 @@ V2-SPEC.md#Corrections, 26 September 2026:L123:item:s3 [79125fde3c] NOT DERIVABL
     Since then 143 k over 10 k trips at about 17.6 to 19.0 V, above the 16.8 V 4S termination, and the heater mat, a 12 V and 7.5 W part, is fed a regulated 12.0 V by a TPS62933 buck behind its eFuse (`gen_sch_a.py` lines 1041 to 1076 at `45bde541`; correction 19).
     judgement: HISTORY: a dated record of an earlier reading or wording, true as history, not re-derived against set 12
     names looked up: 0 parts, 0 nets
-    part numbers (1): TPS62933 on A (U12,U33,U41), B (U105,U106,U205,U206)
+    part numbers (1): TPS62933 on A (U12,U33,U41), B (U105,U106,U205,U206); TPS62933 as buck
 V2-SPEC.md#Corrections, 26 September 2026:L124:item:s1 [5afecc328b] NOT DERIVABLE
     **Run time (line 23).** Withdrawn (session reading): the figures were computed for the BB-2590/U, which does not fit (32.62), from its energy over a battery-side load with no derating.
     judgement: HISTORY: a dated record of an earlier reading or wording, true as history, not re-derived against set 12 (the run time withdrawn)
@@ -2644,7 +2683,7 @@ V2-SPEC.md#Corrections, 26 September 2026:L129:item:s1 [3dce1898a0] TRUE
     The LG290P's time pulse reaches every slot (`gen_sch_b.py` lines 576 and 669); the DCF77 pulse runs from `J_DCF` pin 3 only to the sensor controller's GPIO6 on board E, with a 10 k pull-up (`gen_sch_e.py` lines 353, 381 and 395).
     judgement: the LG290P's time pulse on board B, the DCF77 pulse on E's J_DCF; the lines are dated by the correction
     names looked up: 1 parts, 0 nets
-    part numbers (1): LG290P elsewhere: board B's U11; the sentence names board E for the DCF77
+    part numbers (2): DCF77 on E (J_DCF); LG290P elsewhere: board B's U11; the sentence names board E for the DCF77
     asserted (2): B U11 value has 'LG290P' (netlist: 'Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1'); E J_DCF present
 V2-SPEC.md#Corrections, 26 September 2026:L130:item:s1 [b32df4fdd7] TRUE
     The RM520N-GL, still the working assumption of appendix 32.49 (line 2760), is key B (hardware design v1.1).
@@ -2705,7 +2744,7 @@ V2-SPEC.md#Corrections, 26 September 2026:L135:item:s1 [b8d33d5ffb] NOT DERIVABL
     **Firmware integrity and the supervisors (lines 34 and 82).** Owner ruling D-13 (26 September 2026): software-verified boot on the STM32H743 supervisors, and on the compute modules if Raspberry Pi documents it, is the prototype's floor; a hardware root of trust is required at a production trigger; the H743 is accepted.
     judgement: HISTORY: a dated record of an earlier reading or wording, true as history, not re-derived against set 12 (D-13's words)
     names looked up: 0 parts, 0 nets
-    part numbers (1): STM32H743 on B (U41,U51,U61)
+    part numbers (1): STM32H743 on B (U41,U51,U61); STM32H743 as supervisor
 V2-SPEC.md#Corrections, 26 September 2026:L135:item:s2 [c8178dd548] NOT DERIVABLE
     The STM32H753 in the schematic against the STM32H743 bought (`gen_sch_b.py` line 829, part C114409) stays a component mismatch until the schematic text and the BOM are aligned to the H743 and regeneration parity has been shown again; changing this document's text does not close it.
     judgement: HISTORY: a dated record of an earlier reading or wording, true as history, not re-derived against set 12 (the H753 and H743 mismatch record; U41's value text now reads STM32H743VIT6)
@@ -2716,6 +2755,7 @@ V2-SPEC.md#Corrections, 26 September 2026:L136:item:s1 [66790359c6] NOT DERIVABL
     **Disassembly (line 13).** Owner ruling D-14 (26 September 2026): the procedure (kit off, pack XT60 unplugged, shore removed) plus an insulating cap over the dock block E5 while the stack is out; lifting live is an accepted, recorded residual risk; a hardware stack-present interlock is studied at Review D.
     judgement: HISTORY: a dated record of an earlier reading or wording, true as history, not re-derived against set 12
     names looked up: 0 parts, 0 nets
+    part numbers (1): XT60 on E (J_BATT), P (W_N,W_P)
 V2-SPEC.md#Corrections, 26 September 2026:L138:item:s1 [0c3fab1f42] NOT DERIVABLE
     **Switches (line 58).** Owner ruling D-10 (26 September 2026): what SOS sends, to whom, and how it meets EMCON.
     judgement: HISTORY: a dated record of an earlier reading or wording, true as history, not re-derived against set 12
@@ -2806,7 +2846,7 @@ V2-SPEC.md#Corrections, 27 September 2026:L240:item:s2 [ee30c5f3b0] TRUE
     Four shared elements are outside that set and are single points of failure of the kit as generated: the `+5V_DEV` converter on board A and the `+3V3_DEV` converter on board B (one each; correction 32), the `J_PANEL` ribbon, the KSZ9897R Ethernet switch, and the kit I2C bus with the panel controller as its one master.
     judgement: the device-rail converters on A and B; the ribbon, the Ethernet switch and the bus as drawn
     names looked up: 1 parts, 2 nets
-    part numbers (1): KSZ9897R on B (U1)
+    part numbers (1): KSZ9897R on B (U1); KSZ9897R as Ethernet switch
     asserted (10): A U7 value has 'LM5176' (netlist: 'LM5176PWPR buck-boost controller, +5V_DEV from VBAT'); A U7.12 on +5V_DEV (netlist: +5V_DEV); B U25 value has 'AP63203' (netlist: 'AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV)'); B U25.2 on +5V_DEV (netlist: +5V_DEV); B U25.5 on DEV_SW (netlist: DEV_SW); B L1.1 on DEV_SW (netlist: DEV_SW); B L1.2 on +3V3_DEV (netlist: +3V3_DEV); board A has no part whose value holds 'AP63203' (found: none); B J_PANEL present; B U1 value has 'KSZ9897' (netlist: 'Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 t')
 V2-SPEC.md#Corrections, 27 September 2026:L249:item:s1 [6b5ffb2144] NOT DERIVABLE
     Since `c351115d` the case generators carry the case choices C1 to C6: `panel1450.py` (the plate 377.2 x 263.0 x 3.0 on ten 6-32 UNC; the twelve PolyPhaser GTH-SFF-AL at Z 59), `case_wall_cutouts.py` and `v2/cad/face_plate.py`, and the current case set (CAD, dimensioned drawings, 1:1 templates and the QMX lid tray) is `release/case-2026-09-27/`; `release/revA/case/` is marked historical and is not to be made from.
@@ -2844,7 +2884,7 @@ V2-SPEC.md#Corrections, 29 September 2026:L273:item:s2 [269867362d] TRUE
     Line 81 named the TPS55288, which had left the design before the 7 September generation (`gen_sch_a.py` line 267 at `c5de605d`); the USB-C outlet is the TPS25740A with an LM5176 stage.
     judgement: the TPS55288 left before 7 September; the outlet's parts
     names looked up: 0 parts, 0 nets
-    part numbers (3): LM5176 on A (U13,U15,U16,U19); TPS25740A on A (U18); TPS55288 asserted
+    part numbers (3): LM5176 on A (U13,U15,U16,U19); TPS25740A on A (U18); TPS55288 asserted; LM5176 as stage
     asserted (4): gen_sch_a.py lines 267 to 267 at c5de605d hold TPS55288; A U18 value has 'TPS25740A' (netlist: 'TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9,'); A U19 value has 'LM5176' (netlist: 'LM5176PWPR buck-boost controller, PD_VPWR from VBAT'); board A has no part whose value holds 'TPS55288' (found: none)
 V2-SPEC.md#Corrections, 29 September 2026:L273:item:s3 [7e0ae0ffa3] TRUE
     Line 82's closing condition for the supervisors is met: the schematic text of `U41`, `U51` and `U61` reads STM32H743 and CON-017 reads PASS.
@@ -2893,6 +2933,17 @@ OPERATING-ENVELOPE.md#2:L72:cell:3:s1 [ee3ef3ae81] NOT DERIVABLE
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the row's source, a held maker's sheet)
     names looked up: 0 parts, 0 nets
     part numbers (1): E2370KS0C1 on C (J_EPD)
+OPERATING-ENVELOPE.md#2:L73:cell:0:s1 [c095df105a] TRUE
+    Sensirion SGP41 VOC sensor
+    judgement: E6's SGP41 U17
+    names looked up: 0 parts, 0 nets
+    part numbers (1): SGP41 on E (U17); SGP41 as VOC sensor
+    asserted (1): E U17 value has 'SGP41' (netlist: 'SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59')
+OPERATING-ENVELOPE.md#2:L73:cell:3:s1 [39d7edd5fb] NOT DERIVABLE
+    `sensirion/sgp41-datasheet.pdf`
+    judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the row's source, a held maker's sheet)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): SGP41 on E (U17)
 OPERATING-ENVELOPE.md#2:L74:cell:3:s1 [355e205565] NOT DERIVABLE
     `battery/samsung-35e-orbtronic.pdf`, Samsung INR18650-35E Ver. 1.1, 3.12 (source corrected 26 September 2026)
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the row's source, a held maker's sheet)
@@ -2905,6 +2956,13 @@ OPERATING-ENVELOPE.md#2:L77:cell:0:s1 [2b5ab8d2af] STALE
     names looked up: 0 parts, 0 nets
     part numbers (1): none judged
     asserted (7): board A has no part whose value holds 'TRACO' (found: none); board B has no part whose value holds 'TRACO' (found: none); board C has no part whose value holds 'TRACO' (found: none); board D has no part whose value holds 'TRACO' (found: none); board E has no part whose value holds 'TRACO' (found: none); board P has no part whose value holds 'TRACO' (found: none); E U6 value has 'LM5069' (netlist: 'LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current an')
+OPERATING-ENVELOPE.md#2:L77:cell:3:s1 [3f5e49de5a] STALE
+    `traco/ten40win_datasheet-3049699.pdf`
+    judgement: the TRACO sheet of a converter no netlist carries (the row replaced in round 4)
+    FAILS: TEN40WIN is on no netlist's part values
+    names looked up: 0 parts, 0 nets
+    part numbers (1): none judged
+    asserted (1): board E has no part whose value holds 'TRACO' (found: none)
 OPERATING-ENVELOPE.md#2:L78:cell:0:s1 [ccb27feb51] TRUE
     Quectel RM520N-GL 5G
     judgement: the RM520N-GL on board B's key-B socket
@@ -2926,6 +2984,12 @@ OPERATING-ENVELOPE.md#2:L80:cell:0:s1 [97dbd8caef] TRUE
     names looked up: 0 parts, 0 nets
     part numbers (1): E22-900M30S on B (U12)
     asserted (1): B U12 value has 'E22-900M30S' (netlist: 'Ebyte E22-900M30S 1 W LoRa (SX1262) on S3 SPI0 CE1: TXEN GPI')
+OPERATING-ENVELOPE.md#2:L81:cell:0:s1 [0ace90f506] TRUE
+    Ebyte E72-2G4M20S1E
+    judgement: B16's two E72-2G4M20S1E
+    names looked up: 0 parts, 0 nets
+    part numbers (1): E72-2G4M20S1E on B (U13,U14)
+    asserted (2): B U13 value has 'E72-2G4M20S1E' (netlist: 'Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 R'); B U14 value has 'E72-2G4M20S1E' (netlist: 'Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 D')
 OPERATING-ENVELOPE.md#2:L81:cell:3:s1 [19e176369f] NOT DERIVABLE
     `zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf`
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the row's source, a held maker's sheet)
@@ -3036,6 +3100,11 @@ OPERATING-ENVELOPE.md#3:L144:cell:0:s1 [33087d52ba] NOT DERIVABLE
     the heat stage as generated (PS-SURV, slot 2), lid open, fans
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (a thermal table's row label)
     names looked up: 0 parts, 0 nets
+OPERATING-ENVELOPE.md#3:L149:cell:1:s1 [c5648bf2c9] NOT DERIVABLE
+    SGP41 at +55 C
+    judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the SGP41's maker range, a row of the thermal table)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): SGP41 on E (U17)
 OPERATING-ENVELOPE.md#3:L155:cell:0:s1 [af35e56cae] NOT DERIVABLE
     the heat stage as generated, lid closed
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (a thermal table's row label)
@@ -3048,6 +3117,16 @@ OPERATING-ENVELOPE.md#3:L158:para:s1 [fc58cb90ed] NOT DERIVABLE
     **The worst inside air in use**, at the envelope's +40 C with the kit shed to its heat stage (the last stage that keeps a module running; past it the hot stop of section 4 removes every module): in the required stage after BANK-R1, +59.2 C lid open and +62.1 C lid closed on the independent bound's lowest conductance, and +47.8 C and +55.6 C on 32.53's; in the stage board B gives as generated, +57.9 C and +60.6 C, and +47.3 C and +54.6 C (INFERRED: 40 C plus the stage's rise above, rounded down to one decimal).
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the thermal bounds)
     names looked up: 0 parts, 0 nets
+OPERATING-ENVELOPE.md#3:L158:para:s2 [8b5aa200e3] NOT DERIVABLE
+    At the independent bound that is past the SGP41's +55 C, and lid closed past the cells' +60 C, which is why the SGP41 and the cells are the first parts to judge when the conductance is measured.
+    judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the independent bound, POWER-THERMAL.md)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): SGP41 on E (U17)
+OPERATING-ENVELOPE.md#3:L167:para:s1 [0c1acec366] NOT DERIVABLE
+    **What was estimated before, kept as the record.** The table this section carried until 27 September 2026, on 32.53's 10 K and 16 K: three modules loaded, lid open, the SGP41's +55 C reached at +39 C ambient; one module, lid open, at +45 C; and charging held off from about +25 C.
+    judgement: HISTORY: a dated record of an earlier reading or wording, true as history, not re-derived against set 12 (the table kept as the record)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): SGP41 on E (U17)
 OPERATING-ENVELOPE.md#3:L186:para:s1 [421b320d94] NOT DERIVABLE
     The charger has no such input: TI's BQ25731 datasheet (SLUSE66A, Table 7-1, pin functions, `ti/bq25731-datasheet.pdf`) lists no thermistor, TS or JEITA pin.
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (TI's pin table)
@@ -3128,7 +3207,7 @@ OPERATING-ENVELOPE.md#4:L282:cell:2:s1 [dfd6170bf6] TRUE
     TPS25740A with an LM5176 stage, 5, 9 and 15 V at 3 A (`gen_sch_a.py` line 1003 at `45bde541`); corrected 26 September 2026: the TPS55288 this row named left the design on 7 September
     judgement: U18 TPS25740A and U19 LM5176; the citation is dated
     names looked up: 0 parts, 0 nets
-    part numbers (3): LM5176 on A (U13,U15,U16,U19); TPS25740A on A (U18); TPS55288 asserted
+    part numbers (3): LM5176 on A (U13,U15,U16,U19); TPS25740A on A (U18); TPS55288 asserted; LM5176 as stage
     asserted (4): A U18 value has 'TPS25740A' (netlist: 'TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9,'); A U19 value has 'LM5176' (netlist: 'LM5176PWPR buck-boost controller, PD_VPWR from VBAT'); gen_sch_a.py lines 1003 to 1003 at 45bde541 hold TPS25740A; gen_sch_a.py lines 267 to 267 at c5de605d hold TPS55288
 OPERATING-ENVELOPE.md#4:L284:para:s1 [cbef354fca] TRUE
     **Operating modes**, each already in the design: full (three modules, lid open), reduced (slots 2 and 3; lid closed, or the measured-temperature and current triggers of `CONOPS.md` section 4c) with its heat stage (one module) and, past it, the hot stop (no module), blackout (LEDs and sounder muted), NVG (panel lighting), EMCON (a hardware line on every transmitter and on the PA's rail and bias; what it removes is set out below), and charge (mains, vehicle or solar, gated by the pack thermistor and by the cold-charge inhibit).
@@ -3144,6 +3223,7 @@ OPERATING-ENVELOPE.md#4:L284:para:s3 [d23664c78f] NOT DERIVABLE
     **D-05, owner ruling of 26 September 2026: under EMCON the radios go DARK.** Every radio with an emission path is powered off or RF-disabled in hardware; the VHF path keeps listening, because its gate is on transmit only; GNSS, DCF77 and the lightning detector continue.
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (ruling D-05)
     names looked up: 0 parts, 0 nets
+    part numbers (1): DCF77 on E (J_DCF)
 OPERATING-ENVELOPE.md#4:L284:para:s4 [f7d96bf556] TRUE
     What is left under that ruling is session engineering: the items every row of the line shares, the SA868's PTT threshold and the RockBLOCK 9704's response to its ENABLE (forced low in hardware since board B's stream w4b), the 5G module's supply removal being drawn since board B's round 8 (`feasibility/EMCON.md` sections 0a, 5 and 7).
     judgement: the RockBLOCK's ENABLE is forced low by U536; the owed items are EMCON.md's
@@ -3171,6 +3251,7 @@ TEST-PLAN.md#MeshSat field kit V2, qualification test plan (MIL-STD-810 and MIL-
     **Pass 2, later on 27 September 2026, answering the first pass of Review A (`reviews/REVIEW-A-LAYER-2-2026-09-27-pass1.md`):** E3-L carries E3-A's whole pass line with the lid closed, requires the owner's D-02b example set with the SOS path at every level (the generated board's shortfall is not waived), and fails on an SGP41 above +55 C (findings B4 and B5); E4-O restores round 8's +1.0 C charge floor and -9.0 C discharge stop and requires the kit-to-kit link after the cold warm-up (B7, m10); T-H3 replaces `ASSEMBLY.md`'s ten-minute key-down (B6); the transport and stored states have every input unplugged (m5).
     judgement: HISTORY: a dated record of an earlier reading or wording, true as history, not re-derived against set 12 (the plan's revision notes)
     names looked up: 0 parts, 0 nets
+    part numbers (1): SGP41 elsewhere: board E's U17; board A is named for its converters
 TEST-PLAN.md#MeshSat field kit V2, qualification test plan (MIL-STD-810 and MIL-STD-461 methods; approved 6 Sep 2026, appendix 32.50 item 16e):L3:para:s3 [b9f3eb411b] NOT DERIVABLE
     **The second release attempt of layers 1 to 3, later on 27 September 2026 (the release checks' layer 2 B2 and layer 3 R4):** P15 (section 7) forces the hot stop at room temperature on the pack and on shore, so REQ-077 is verifiable whatever a chamber reaches; E3-H gains a stepped run beyond the envelope and the rule that a step that acted in no run reads NOT_VERIFIED; E3-L's pass line is unchanged.
     judgement: HISTORY: a dated record of an earlier reading or wording, true as history, not re-derived against set 12 (the plan's revision notes)
@@ -3190,6 +3271,11 @@ TEST-PLAN.md#1:L16:item:s2 [18891567a1] NOT DERIVABLE
     judgement: TEST: a test procedure, a condition or a pass line, not a netlist claim
     names looked up: 0 parts, 0 nets
     part numbers (1): INR18650-35E bought: Samsung's cell of the built pack, not a board part
+TEST-PLAN.md#2:L26:cell:3:s1 [c9db060f24] NOT DERIVABLE
+    survive and recover (D-02a): no damage, no deformation, no lost data or keys, CM5 throttling logged but no shutdown, and the functional check passes once the kit is back inside the envelope with its pack refitted; the LimeSDR (storage 0 to +70 C) and the SGP41 (+70 C short-term storage) are rated below +71 C and are judged here (`feasibility/POWER-THERMAL.md` section 9.4, PWR-F11)
+    judgement: TEST: a test procedure, a condition or a pass line, not a netlist claim (the pass line; the parts' storage ranges are their makers')
+    names looked up: 0 parts, 0 nets
+    part numbers (1): SGP41 on E (U17)
 TEST-PLAN.md#2:L27:cell:0:s1 [de793ba193] NOT DERIVABLE
     E4
     judgement: TEST: a test procedure, a condition or a pass line, not a netlist claim
@@ -3418,6 +3504,7 @@ TEST-PLAN.md#6:L128:para:s1 [a78c5399d6] TRUE
     **The deviation's arrangement (E3-O and E5).** The kit deployed, on shore or vehicle input; the pack outside the chamber at room temperature, joined to board E by an extension of its XT60 lead (`J_BATT`) and its four-wire SMBus lead (`J_SMB`, with PRES); a thermal dummy of the pack in its pocket (the pack's outline with the cells' heat capacity, about 480 to 660 J/K).
     judgement: the pack's two leads on board E
     names looked up: 2 parts, 0 nets
+    part numbers (1): XT60 on E (J_BATT), P (W_N,W_P)
     asserted (2): E J_BATT value has 'XT60' (netlist: 'Amass XT60-M: the 4S pack power lead from board P, 12 AWG (p'); E J_SMB.4 on PRES_LEAD (netlist: PRES_LEAD)
 TEST-PLAN.md#6:L128:para:s2 [4fdfa062e2] NOT DERIVABLE
     Recorded with each run: the kit's controls read room-temperature cells, so of their temperature triggers only C1's inside-air trigger sheds modules.
@@ -3451,7 +3538,12 @@ TEST-PLAN.md#6:L145:cell:4:s2 [77b3aec47b] NOT DERIVABLE
     **Plus the stage criteria:** at every level the kit is in the stage its controls select and that stage's bearers pass traffic: the reduced mode's set (GNSS, the LoRa mesh, Iridium, APRS beacons, the SOS path, 5G) up to the ambient at which C1 acts, and at every level, +40 C included, at least the owner's D-02b example (GNSS, the LoRa mesh, Iridium and APRS beacons) with the SOS path and a live position, the heat stage's required set (REQ-052); the start with the lid closed enters the reduced mode once the lid is read, and the lid switch enters and leaves it.
     judgement: TEST: a test procedure, a condition or a pass line, not a netlist claim
     names looked up: 1 parts, 0 nets
-TEST-PLAN.md#6:L145:cell:4:s3 [23e452be7d] NOT DERIVABLE
+TEST-PLAN.md#6:L145:cell:4:s3 [0db8c79894] NOT DERIVABLE
+    **And every part inside its published range (REQ-052):** the inside air at or under the SGP41's +55 C; an SGP41 above +55 C fails E3-L, and is also recorded as a finding against the part.
+    judgement: TEST: a test procedure, a condition or a pass line, not a netlist claim (REQ-052's part ranges)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): SGP41 on E (U17)
+TEST-PLAN.md#6:L145:cell:4:s4 [23e452be7d] NOT DERIVABLE
     On board B as generated the stage criteria fail at any level where the heat stage is entered, because its one-module stage lacks the LoRa mesh and APRS (`CONOPS.md` section 4c): that failure is expected until BANK-R1 is in board B's generator, and it is not waived
     judgement: TEST: a test procedure, a condition or a pass line, not a netlist claim
     names looked up: 0 parts, 0 nets
@@ -3649,6 +3741,7 @@ ASSEMBLY.md#2:L84:item:s1 [6374505c78] TRUE
     Dock strip E6: solder the entry leads (vehicle and shore pair to `J_DCIN`, solar pair to `J_SOLAR`, VH crimps), the pack cable's XT60 counterpart at `J_BATT` and the SMBus socket `J_SMB` (JST-XH 1x4), the lid and tamper reed's lead into `J_TAMP`, the sensor headers (`J_DCF`, `J_GEIGER`, `J_LTG`, `J_POD`), the two mixer fans (`J_FAN1`, `J_FAN2`), the water electrode leads; fit the three fuse holders with their blades, and check the 20 V bus at the block lands with 9 V and 36 V in.
     judgement: build step 1's connectors exist on board E, with its three fuse holders F1 to F3; the order is the procedure's
     names looked up: 11 parts, 0 nets
+    part numbers (1): XT60 on E (J_BATT), P (W_N,W_P)
     asserted (16): E J_DCIN present; E J_SOLAR present; E J_BATT value has 'XT60' (netlist: 'Amass XT60-M: the 4S pack power lead from board P, 12 AWG (p'); E J_SMB present; E J_TAMP present; E J_DCF present; E J_GEIGER present; E J_LTG present; E J_POD present; E J_FAN1 present; E J_FAN2 present; E F1 value has 'Keystone' (netlist: '10 A mini blade (Keystone 3568 holder): vehicle input'); E F2 value has 'Keystone' (netlist: '10 A mini blade (Keystone 3568 holder): panel input'); E F3 value has 'Keystone' (netlist: '25 A mini blade (Keystone 3568 holder): pack to the block'); board E: 3 parts whose value holds 'Keystone' (read: 3, F1,F2,F3); board E: 2 parts whose designator holds 'J_FAN' (read: 2, J_FAN1,J_FAN2)
 ASSEMBLY.md#2:L85:item:s1 [5bc0a319b6] NOT DERIVABLE
     Dock block E5 on its four M3 x 6 standoffs above the strip.
@@ -3684,6 +3777,7 @@ ASSEMBLY.md#2:L90:item:s1 [d392049f19] TRUE
     judgement: the pack's leads and sockets; the citation holds at the base
     names looked up: 2 parts, 0 nets
     citations: citations judged: gen_sch_p.py:347-348 asserted below
+    part numbers (1): XT60 on E (J_BATT), P (W_N,W_P)
     asserted (3): gen_sch_p.py lines 347 to 348 at HEAD hold W_P, W_N; E J_BATT value has 'XT60' (netlist: 'Amass XT60-M: the 4S pack power lead from board P, 12 AWG (p'); E J_SMB.4 on PRES_LEAD (netlist: PRES_LEAD)
 ASSEMBLY.md#2:L90:item:s2 [e458a114de] TRUE
     Board P's chemical fuse stays disarmed (its jumper `JP1` open) until commissioning, section 8 step 12.
@@ -3732,6 +3826,11 @@ ASSEMBLY.md#2:L94:item:s1 [040a11165b] NOT DERIVABLE
     Nothing on the face stands more than 0.05 mm proud since the monitor was recessed (9 September 2026), so the whole space between the plate and the lid's inner face is free (**Corrected 27 September 2026 (MESHSAT-1357, the case set C1 to C6):** 47.92 mm nominal from the face top at Z 106.52 to the lid's inner ceiling at Z 154.44, 44.39 at the worst; it read 46.5 before C1); the QMX tray hangs 28 mm from that face and its plan window was sized against the old boxed monitor's east edge, which no longer constrains it (appendix 32.60 item 5, 32.85). **r2 (27 September 2026):** with its lid plate the set's frame stands 32.30 below the ceiling, its six screw heads 33.95, the unit's top face 29.30 and its knob tips 40.90 (knob 11.6, INFERRED).
     judgement: CASE: a mechanical or case item, not a netlist claim
     names looked up: 2 parts, 0 nets
+ASSEMBLY.md#2:L94:item:s2 [2ef464f93e] NOT DERIVABLE
+    Every face part under the set has its own row in `lid-tray-qmx-r2-check.out` section B, from the deepest solid over it and the part's height from its maker's sheet: the three buttons stand under the frame with heads of 3.50 and 2.50 (C&K ATP19 and ATP16 with their O-rings), 7.96 and 8.96 mm clear at the worst; the knob tips are 3.06 over the flat face and 2.26 over the monitor's window at the worst, 0.35 and -0.45 with every unstated allowance taken twice, so the two knob rows are OPEN until T9; the knobs sit west of the buttons' column.
+    judgement: CASE: a mechanical or case item, not a netlist claim (the face parts' heights, lid-tray-qmx-r2-check.out)
+    names looked up: 0 parts, 0 nets
+    part numbers (2): ATP16 on C (SW_PI,SW_TEST); ATP19 on C (SW_MAIN)
 ASSEMBLY.md#4:L120:cell:0:s1 [88e82bc9f0] TRUE
     Pack power (fused at the pack: the 25 A blade `F1` and, behind it, the chemical fuse `F2` of D-15)
     judgement: the pack's two fuses on board P
@@ -3747,18 +3846,26 @@ ASSEMBLY.md#4:L120:cell:2:s1 [b04a6b1603] TRUE
     E6 `J_BATT` (XT60)
     judgement: the part named exists on the board named (the names check); a connector's type is its footprint, not asserted
     names looked up: 1 parts, 0 nets
+    part numbers (1): XT60 on E (J_BATT), P (W_N,W_P)
+ASSEMBLY.md#4:L120:cell:4:s1 [b6d8561165] TRUE
+    XT60 pair
+    judgement: the XT60 pair: board P's and board E's XT60 leads
+    names looked up: 0 parts, 0 nets
+    part numbers (1): XT60 on E (J_BATT), P (W_N,W_P)
+    asserted (1): E J_BATT value has 'XT60' (netlist: 'Amass XT60-M: the 4S pack power lead from board P, 12 AWG (p')
 ASSEMBLY.md#4:L121:cell:1:s1 [a60b800d87] TRUE
     P1 `J_SMB`: JST-XH B4B-XH-A, 1x4, 2.50 mm (1 SMBC, 2 SMBD, 3 PACK_N, 4 PRES; `gen_sch_p.py:514`, LCSC C144395, B4B-XH-A(LF)(SN), carried by the generator since round 8, R8P-02; C594232 from `lcsc_fill.py:158` was the gold -G variant JST's catalogue does not list)
     judgement: P's J_SMB at gen_sch_p.py:514; its order code is a BOM item
     names looked up: 1 parts, 1 nets
     citations: citations judged: gen_sch_p.py:514 asserted below
-    part numbers (2): C144395 stock: the LCSC code of the JST B4B-XH-A; C594232 stock: the LCSC code of the gold variant the row sets aside
+    part numbers (3): B4B-XH-A on E (J_SMB); C144395 stock: the LCSC code of the JST B4B-XH-A; C594232 stock: the LCSC code of the gold variant the row sets aside
     asserted (3): P J_SMB.3 on PACK_N (netlist: PACK_N); P J_SMB.4 on PRES_J (netlist: PRES_J); gen_sch_p.py lines 514 to 514 at HEAD hold J_SMB
 ASSEMBLY.md#4:L121:cell:2:s1 [7085887937] TRUE
     E6 `J_SMB`: the same JST-XH B4B-XH-A, 1x4, 2.50 mm, in P1's pin order (1 SMBC, 2 SMBD, 3 GND, 4 PRES to the sensor controller's GPIO17; `gen_sch_e.py:218` at `45bde541`)
     judgement: E's J_SMB pin order; PRES reaches U10 pin 28 (GPIO17 on the RP2040's QFN-56) through R54; the citation is dated
     names looked up: 1 parts, 0 nets
     citations: gen_sch_e.py:218 at 45bde541 holds J_SMB
+    part numbers (1): B4B-XH-A on E (J_SMB)
     asserted (8): E J_SMB.1 on SMBC (netlist: SMBC); E J_SMB.2 on SMBD (netlist: SMBD); E J_SMB.3 on GND (netlist: GND); E J_SMB.4 on PRES_LEAD (netlist: PRES_LEAD); E R54.1 on PRES_LEAD (netlist: PRES_LEAD); E R54.2 on PRES_IO (netlist: PRES_IO); E U10.28 on PRES_IO (netlist: PRES_IO); gen_sch_e.py lines 218 to 218 at 45bde541 hold J_SMB
 ASSEMBLY.md#4:L121:cell:4:s1 [20f3ba1ddd] NOT DERIVABLE
     **Corrected 26 September 2026 (twice).** This row first said "XH2.5 x 6", then recorded that no lead mated both ends: E6 carried a 2.54 mm 1x6 pin header left from the withdrawn BB-2590/U, and a straight lead would have crossed clock and data.
@@ -3774,7 +3881,7 @@ ASSEMBLY.md#4:L122:cell:1:s1 [05c16cdb21] TRUE
     D38999 receptacle on the back-wall plate, DC pair
     judgement: E6's DC entry lead comes from the D38999 receptacle
     names looked up: 0 parts, 0 nets
-    part numbers (1): D38999 on E (J_DCIN,J_SOLAR)
+    part numbers (1): D38999 on E (J_DCIN,J_SOLAR); D38999 as receptacle
     asserted (1): E J_DCIN value has 'D38999' (netlist: 'JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead')
 ASSEMBLY.md#4:L122:cell:2:s1 [e87677183b] TRUE
     E6 `J_DCIN` (JST-VH), the lead tied along the back wall, the west end wall and the front wall
@@ -3784,7 +3891,7 @@ ASSEMBLY.md#4:L123:cell:1:s1 [7508456414] TRUE
     D38999 receptacle, spare pair
     judgement: E6's panel lead comes from the D38999 spare pair
     names looked up: 0 parts, 0 nets
-    part numbers (1): D38999 on E (J_DCIN,J_SOLAR)
+    part numbers (1): D38999 on E (J_DCIN,J_SOLAR); D38999 as receptacle
     asserted (1): E J_SOLAR value has 'D38999' (netlist: 'JST-VH socket, 10 A: bare panel in (lead from the D38999 spa')
 ASSEMBLY.md#4:L123:cell:2:s1 [07376ca281] TRUE
     E6 `J_SOLAR` (JST-VH), with the DC lead
@@ -3867,7 +3974,7 @@ ASSEMBLY.md#4:L132:cell:0:s1 [db20368ea7] TRUE
     judgement: the slot rails: AP64500 bucks on slots 1 and 3, an LM5176 stage on slot 2; the citation is dated
     names looked up: 0 parts, 0 nets
     citations: citations judged: dated lines asserted below
-    part numbers (3): AP64500 on A (U4,U6), B (U103,U104,U203,U204); INA226 on A (U10,U11,U14,U17); LM5176 on A (U13,U15,U16,U19)
+    part numbers (3): AP64500 on A (U4,U6), B (U103,U104,U203,U204); INA226 on A (U10,U11,U14,U17); LM5176 on A (U13,U15,U16,U19); LM5176 as stage
     asserted (5): A U4 value has 'AP64500' (netlist: 'AP64500SP-13 5 A buck, 5.1 V rail +5V_S1'); A U6 value has 'AP64500' (netlist: 'AP64500SP-13 5 A buck, 5.1 V rail +5V_S3'); A U5 value has 'LM5176' (netlist: 'LM5176PWPR buck-boost controller, +5V_S2 from VBAT'); gen_sch_a.py lines 840 to 841 at 45bde541 hold buck5; gen_sch_a.py lines 873 to 873 at 45bde541 hold lm5176
 ASSEMBLY.md#4:L132:cell:1:s1 [0b99dbc698] TRUE
     A22 `J_5V_S1..3` (VH)
@@ -3882,7 +3989,7 @@ ASSEMBLY.md#4:L133:cell:0:s1 [b4d813c5fb] TRUE
     judgement: the device rail's LM5176; the citation is dated
     names looked up: 0 parts, 0 nets
     citations: citations judged: gen_sch_a.py:881 at 45bde541 asserted below
-    part numbers (1): LM5176 on A (U13,U15,U16,U19)
+    part numbers (1): LM5176 on A (U13,U15,U16,U19); LM5176 as stage
     asserted (3): A U7 value has 'LM5176' (netlist: 'LM5176PWPR buck-boost controller, +5V_DEV from VBAT'); A U7.12 on +5V_DEV (netlist: +5V_DEV); gen_sch_a.py lines 881 to 881 at 45bde541 hold U7, +5V_DEV
 ASSEMBLY.md#4:L133:cell:1:s1 [c2347385d2] TRUE
     A22 `J_5V_DEV` (VH)
@@ -4040,6 +4147,17 @@ ASSEMBLY.md#4:L148:cell:1:s1 [999fee59d1] TRUE
     B16 `J_ETH` (RJ45)
     judgement: the part named exists on the board named (the names check); a connector's type is its footprint, not asserted
     names looked up: 1 parts, 0 nets
+    part numbers (1): RJ45 on B (J_ETH,T1,U1,U5)
+ASSEMBLY.md#4:L148:cell:2:s1 [654cac0bee] NOT DERIVABLE
+    the sealed RJ45 on the connector plate (PoE out on 1-2 and 3-6)
+    judgement: CASE: a mechanical or case item, not a netlist claim (the sealed RJ45 on the connector plate)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): RJ45 on B (J_ETH,T1,U1,U5)
+ASSEMBLY.md#4:L148:cell:4:s1 [c6b30de010] NOT DERIVABLE
+    RJ45 both ends
+    judgement: CASE: a mechanical or case item, not a netlist claim (a lead's ends)
+    names looked up: 0 parts, 0 nets
+    part numbers (1): RJ45 on B (J_ETH,T1,U1,U5)
 ASSEMBLY.md#4:L149:cell:1:s1 [5cfe79e7d4] TRUE
     A22 `J_USBC_OUT` (5-pin: VBUS CC1 CC2 GND GND; the ESD array `U31` on CC1 and CC2, D-17, `gen_sch_a.py:1015-1026` at `45bde541`, to be placed at the header in board A's next phase)
     judgement: J_USBC_OUT's five pins and U31 on CC1 and CC2; the citation is dated
@@ -4113,6 +4231,7 @@ ASSEMBLY.md#4:L156:cell:1:s1 [6a22616079] NOT DERIVABLE
     the DCF77, Geiger and lightning boards on their standoffs beside E6
     judgement: LEAD: how a lead ends or is made, not a netlist claim
     names looked up: 0 parts, 0 nets
+    part numbers (1): DCF77 on E (J_DCF)
 ASSEMBLY.md#4:L156:cell:2:s1 [4209111b84] TRUE
     E6 `J_DCF`, `J_GEIGER`, `J_LTG`
     judgement: the part named exists on the board named (the names check); a connector's type is its footprint, not asserted
@@ -4158,7 +4277,7 @@ ASSEMBLY.md#4:L161:cell:1:s1 [ca405f41c2] TRUE
     judgement: J_WOA and J_WOB and the SKY13351 switches; the citation is dated
     names looked up: 2 parts, 0 nets
     citations: citations judged: gen_sch_b.py:1253-1272 at 45bde541 asserted below
-    part numbers (1): SKY13351 on B (U82,U83)
+    part numbers (1): SKY13351 on B (U82,U83); SKY13351 as switch
     asserted (5): B J_WOA present; B J_WOB present; board B has a part whose value holds 'SKY13351' (U82,U83); gen_sch_b.py lines 1253 to 1272 at 45bde541 hold SKY13351, WIFI_SEC; board B: 2 parts whose value holds 'SKY13351' (read: 2, U82,U83)
 ASSEMBLY.md#4:L161:cell:2:s1 [5258fad5f4] TRUE
     A22 `J_RF6`, `J_RF7` (P2P A, P2P B)
@@ -4219,7 +4338,7 @@ ASSEMBLY.md#4:L167:cell:4:s1 [cda4473e43] NOT DERIVABLE
     carries all six ruled items at the centres of `CASE-MARGINS.md` 3.3: A the sealed RJ45 (-28.5, 36.6; pick OPEN, the PX0833 fails the shell 15 envelope and 54 V), C the D38999/20 shell 13 DC receptacle (+4.2, 34.0), B the sealed USB-C (+33.7, 36.6; the PXP4043/C panel drawing OPEN), E the pod over its M8 receptacle (-30.0, 70.0; sheet not held), D the 233-370 USB feed-through (+4.6, 67.0), F the M6 ground stud (+34.6, 64.5); A, C and D each on a Glenair 930-001 gasket with M3 into threads tapped in the plate.
     judgement: CASE: a mechanical or case item, not a netlist claim (the connector plate's six items)
     names looked up: 0 parts, 0 nets
-    part numbers (3): D38999/20 case: the DC receptacle's shell; PX0833 case: a candidate RJ45 the row rejects; PXP4043/C case: the sealed USB-C's panel part
+    part numbers (4): D38999/20 case: the DC receptacle's shell; PX0833 case: a candidate RJ45 the row rejects; PXP4043/C case: the sealed USB-C's panel part; RJ45 on B (J_ETH,T1,U1,U5)
 ASSEMBLY.md#4:L175:cell:1:s1 [3a53e10db7] NOT DERIVABLE
     Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-352 size 16 socket contacts, key N, electroless nickel), crimped with the M22520/1-01 tool and the M22520/1-04 positioner, seated with M81969/14-03; Glenair M85049/38S13N self-locking straight strain relief on the plug's M18 x 1 thread
     judgement: LEAD: the plug
@@ -4316,7 +4435,7 @@ ASSEMBLY.md#9:L217:item:s1 [f6186bbdf0] TRUE
     A22: the Preci-Dip 813-S1-012-10-016101 spring connector and the seventeen Mill-Max 0858 class power pins on the underside (nine for the pack and, since EQ-16, eight for the input, section 4) (tails soldered on the top face), the eleven Radiall R222M00720 blind-mate receptacles, the Keystone 3568 holder with its 25 A mini blade, the inductors that have no assembler equivalent (read the ORDER-NOTES), the rail leads, the PA, HF, monitor and heater leads, the MAIN button lead, the wall USB-C leads.
     judgement: board A's bench-fit counts
     names looked up: 0 parts, 0 nets
-    part numbers (2): 813-S1-012-10-016101 on A (J_DOCK); R222M00720 on A (J_BM1,J_BM10,J_BM11,J_BM2)
+    part numbers (2): 813-S1-012-10-016101 on A (J_DOCK); R222M00720 on A (J_BM1,J_BM10,J_BM11,J_BM2); R222M00720 as blind-mate receptacle
     asserted (5): board A: 17 parts whose footprint holds 'Mill-Max_0858' (read: 17, J_CN1,J_CN2,J_CN3,J_CN4,J_CP1,J_CP2,J_CP3,J_CP4,J_PRE1,J_VN1,J_VN2,J_VN3,J_VN4,J_VR1,J_VR2,J_VR3,J_VR4); board A: 11 parts whose designator holds 'J_BM' (read: 11, J_BM1,J_BM10,J_BM11,J_BM2,J_BM3,J_BM4,J_BM5,J_BM6,J_BM7,J_BM8,J_BM9); A J_BM1 value has 'R222M00720' (netlist: 'SMP-MAX slide-on receptacle R222M00720 (underside), VHF to t'); A F1 value has 'Keystone 3568' (netlist: '25 A mini blade (Keystone 3568 holder): pack node to the RSR'); A J_DOCK value has 'Preci-Dip 813-S1-012-10-016101' (netlist: 'spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-')
 ASSEMBLY.md#9:L218:item:s1 [a039b91bf4] TRUE
     B16: the three Compute Modules (CM5108064) on their receptacles and standoffs, the three coolers with their fan leads, the two WiFi link cards (`J_M2C1`, `J_M2C3`), the 5G module with its two SIMs, the three NVMe drives, the LimeSDR, the RockBLOCK on its bracket, the CR2032, the rail and PoE leads from A22, the antenna pigtails, the HDMI cable, the camera and QMX leads, the panel and A-B ribbons; the LG290P, the E22 and the two E72 are assembled where JLCPCB stocks them, else hand-soldered.
@@ -4339,7 +4458,7 @@ ASSEMBLY.md#9:L221:item:s1 [7211912728] NOT DERIVABLE
     E6: the three Keystone holders with their blades, the JST-VH DC and solar leads, the XT60 counterpart and the SMBus socket (JST-XH 1x4), the lid and tamper reed on `J_TAMP`, the twelve signal wires and the 12 AWG pair up to the block, the printed float clamp bar (`v2/cad/float_clamp.py`: one part, twelve 8.5 mm cavities, 22 M3 x 8 into the strip's clamp holes at the mid-pitch points between cavities, each plug's cable laid in its own slot to the south or north and tied through the bar's two tie slots beside it) with their Radiall R222M80500 plugs, the DCF77, Geiger and lightning modules on standoffs beside the strip, the two mixer fans, the water strips, four VHB pads.
     judgement: LEAD: the bench-fit list
     names looked up: 1 parts, 0 nets
-    part numbers (1): R222M80500 case: Radiall's plug on the float clamp's cable
+    part numbers (3): DCF77 on E (J_DCF); R222M80500 case: Radiall's plug on the float clamp's cable; XT60 on E (J_BATT), P (W_N,W_P)
     asserted (2): board E: 3 parts whose value holds 'Keystone' (read: 3, F1,F2,F3); board E: 2 parts whose designator holds 'J_FAN' (read: 2, J_FAN1,J_FAN2)
 ASSEMBLY.md#9:L222:item:s1 [c648bf2ea2] NOT DERIVABLE
     P1 (inside the pack): the 25 A blade in F1, the four 2.5 mm2 solder lands (the block's B+ and B- straps, the pack's two 12 AWG leads), the five tap wires into J_CELL, the four cell thermistors into J_TS and the second level's own thermistor into J_TS2 (on the hottest cell), the SMBus lead into J_SMB; the gauge's golden image from bqStudio over the SMBus before the lid goes on, and the arming jumper JP1 left open until section 8 step 12 (corrected 26 September 2026, S-07).
@@ -4354,7 +4473,7 @@ ASSEMBLY.md#9:L224:item:s1 [cd9739a701] NOT DERIVABLE
     Case and face (**Corrected 27 September 2026 (MESHSAT-1357, the case set C1 to C6):** C1 to C6): the four setting legs with their VHB 5952 pads, the printed locator and the two pairs of printed wedges; the connector plate (114.0 x 68.3 x 5.0) and its gasket with its receptacles on the back wall, each on a Glenair 930-001 silicone flange gasket, the six M4 x 25 plate screws with bonded sealing washers; the twelve PolyPhaser GTH-SFF-AL arrestors on the two 6.0 mm RF entry plates with their two gaskets and sixteen M4 x 12 ISO 7380 screws on rubber-faced sealing washers (in place of the eleven Amphenol 132170 couplers at Z 88); the sensor pod on its M8; ten 6-32 UNC x 1/2 in A2 pan heads for the plate (in place of the M3 x 10 with star washers); the face seals and hardware of `vendor/seals/` and `vendor/mentor/`: the e-paper tape frames from `face-plate.dxf` (the PORON ring is dropped, C1), the 2.0 mm UV polycarbonate lens with 3M Primer 94, three Silex GP60 silicone washers, the NKK AT516 spare O-ring and AT428H boot, the APEM K seals, the Floyd Bell 61663 gasket, sixteen Mentor 1282.5004 light guides, eight PEM SO-M3-10 standoffs and two S-M3 nuts, the Xenarc window gasket, DOWSIL 3145 clear for the beads, MG Chemicals 422B for the backer's underside, the 3M 7871EC serial label; the QMX tray r2 (the printed tray and retaining frame, the 5052 lid plate, ten M3 x 5 countersunk A2, six M3 x 10 button head A2 with six M3 square nuts, two PORON 4701-30 pads, DP8005 for the plate, bonded tie mounts for the lid harness).
     judgement: CASE: a mechanical or case item, not a netlist claim
     names looked up: 2 parts, 0 nets
-    part numbers (4): 7871EC bought: 3M's serial label, a case item; AT428H on C (SW_LIGHT); AT516 on C (SW_LIGHT); DP8005 bought: 3M's DP8005 adhesive, a case material
+    part numbers (6): 7871EC bought: 3M's serial label, a case item; AT428H on C (SW_LIGHT); AT516 on C (SW_LIGHT); DP8005 bought: 3M's DP8005 adhesive, a case material; GP60 bought: Silex's silicone washers, a case item; SO-M3-10 case: PEM standoffs
 pcb_decisions.yaml#28:L52:field:outcome:s1 [27a657c309] NOT DERIVABLE
     owner ruling 25 September 2026, asked one decision at a time with the options and the recommendation: four layers at 2 oz outer copper for board P, the arm P8 measured at 0 hard and 0 unrouted at the fabricator's 0.16 mm floor.
     judgement: HELD DOCUMENT: a maker's figure, an analysis, a ruling or a record, not a netlist claim (the ruling and the route arm P8)
@@ -4440,7 +4559,7 @@ EMCON.md#0a.1:L235:cell:1:s1 [1e5189646e] TRUE
     the enable of the eFuse that feeds its external supply pin, the only supply wired (`RB_EN` = `EMCON_HW` AND `RB_SW_EN`, `U503`); its ENABLE, forced low in hardware since stream w4b: `U536` drives it as `EMCON_HW` AND the firmware's request `RB_SW_IEN`, through `R532` since set 12, and `U543`, a TPS3808G30 supervisor powered from `+5V_DEV` that watches `+3V3_DEV`, holds it low below 2.79 V; since set 12 the module's RXD and P_EN inputs pass only while `RB_GO` = `RB_IEN` AND its `I_BTD` status (`U537`, `U538`, `U539`; sections 4c and 4d)
     judgement: the RockBLOCK's gates
     names looked up: 7 parts, 8 nets
-    part numbers (1): TPS3808G30 on B (U221,U543)
+    part numbers (1): TPS3808G30 on B (U221,U543); TPS3808G30 as supervisor
     asserted (40): B U503.1 on EMCON_HW (netlist: EMCON_HW); B U503.2 on RB_SW_EN (netlist: RB_SW_EN); B U503.4 on RB_EN (netlist: RB_EN); B U503.5 on +3V3_DEV (netlist: +3V3_DEV); B R530.1 on RB_EN (netlist: RB_EN); B R530.2 on RB_UVLO (netlist: RB_UVLO); B U24 value has 'TPS259631' (netlist: 'TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))'); B U24.3 on RB_UVLO (netlist: RB_UVLO); B U24.4 on +5V_DEV (netlist: +5V_DEV); B U24.5 on +5V_RB (netlist: +5V_RB); B J_RB9704.15 on +5V_RB (netlist: +5V_RB); B U6 IO0_2 on RB_SW_EN (netlist: RB_SW_EN); B U536 value has 'SN74LVC1G08' (netlist: 'SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENA'); B U536.1 on EMCON_HW (netlist: EMCON_HW); B U536.2 on RB_SW_IEN (netlist: RB_SW_IEN); B U536.4 on RB_IEN_DRV (netlist: RB_IEN_DRV); B U536.5 on +3V3_DEV (netlist: +3V3_DEV); B U6 IO1_6 on RB_SW_IEN (netlist: RB_SW_IEN); B R532 value has '2.7k' (netlist: '2.7k 1%'); B R532.1 on RB_IEN_DRV (netlist: RB_IEN_DRV); B R532.2 on RB_IEN (netlist: RB_IEN); B R527.1 on RB_IEN (netlist: RB_IEN); B R527.2 on GND (netlist: GND); B J_RB9704.3 on RB_IEN (netlist: RB_IEN); B U543 value has 'TPS3808G30' (netlist: 'TPS3808G30DBVR supervisor on +5V_DEV watching +3V3_DEV: hold'); B U543.1 on RB_IEN (netlist: RB_IEN); B U543.5 on +3V3_DEV (netlist: +3V3_DEV); B U543.6 on +5V_DEV (netlist: +5V_DEV); B U537.1 on RB_IEN (netlist: RB_IEN); B U537.2 on RB_STATUS (netlist: RB_STATUS); B U537.4 on RB_GO (netlist: RB_GO); B J_RB9704.7 on RB_STATUS (netlist: RB_STATUS); B U538.1 on RB_RXD_H (netlist: RB_RXD_H); B U538.2 on RB_GO (netlist: RB_GO); B U538.4 on RB_RXD (netlist: RB_RXD); B J_RB9704.14 on RB_RXD (netlist: RB_RXD); B U539.1 on RB_CTRL_H (netlist: RB_CTRL_H); B U539.2 on RB_GO (netlist: RB_GO); B U539.4 on RB_CTRL (netlist: RB_CTRL); B J_RB9704.6 on RB_CTRL (netlist: RB_CTRL)
 EMCON.md#0a.1:L235:cell:2:s1 [9620597168] NOT DERIVABLE
     power at that pin, and the ENABLE; the module's own two 10 F supercapacitors (about 16 J) keep it powered after the supply gate opens, and what it does when ENABLE falls is in no held document, so its local chain stays OPEN (sections 4.4 and 4c)
@@ -4516,7 +4635,7 @@ EMCON.md#0a.1:L243:cell:0:s1 [24f6f52515] TRUE
     LG290P GNSS, DCF77, lightning sensor
     judgement: B16's LG290P; the DCF77 and lightning headers on E6
     names looked up: 0 parts, 0 nets
-    part numbers (1): LG290P on B (BT1,J_GNSS2,U11)
+    part numbers (2): DCF77 on E (J_DCF); LG290P on B (BT1,J_GNSS2,U11)
     asserted (3): B U11 value has 'LG290P' (netlist: 'Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1'); E J_DCF present; E J_LTG present
 EMCON.md#0a.1:L245:para:s1 [85a57b63a6] TRUE
     **Section 4's EMCON row of `CONOPS.md`, as generated (the cells `7a9f7b5b` wrote).** What is off or held: radios dark (owner ruling D-05), as section 4b: power removed from the SDR, the RockBLOCK (its ENABLE forced low as well), the LoRa module, both E72, the HF unit and the two WiFi link cards; the compute modules' own WiFi and Bluetooth disabled through open drains; the 5G module's supply removed by hardware with its disable pins pulled low at the same moment (since board B's round 8, section 4b); the PA rail and keying off; software holds every send, an SOS included.
@@ -4646,16 +4765,17 @@ DEFINITION-STATUS.md#Current values of CONOPS's circuit passages (stream s122, 2
     the array is drawn: board A's `U31` (TPD2E2U06) on `PD_CC1` and `PD_CC2`, the CC pins of `J_USBC_OUT`, since `458b2873`, and so at `45bde541` and at `c5430071`; the row was written at `68bc9e8f`, before `458b2873` drew it
     judgement: the array on set 13, at 458b2873, 45bde541 and c5430071, and where the row was written (68bc9e8f, the file's first commit, without it)
     names looked up: 2 parts, 2 nets
+    part numbers (1): TPD2E2U06 on A (U31)
     asserted (11): A U31 value has 'TPD2E2U06' (netlist: 'TPD2E2U06QDBZRQ1 low-capacitance ESD array, USB-C CC1 and CC'); A U31.1 on PD_CC1 (netlist: PD_CC1); A U31.2 on PD_CC2 (netlist: PD_CC2); A U31.3 on GND (netlist: GND); A J_USBC_OUT.2 on PD_CC1 (netlist: PD_CC1); A J_USBC_OUT.3 on PD_CC2 (netlist: PD_CC2); at 458b2873: A U31 value has 'TPD2E2U06' (netlist: 'TPD2E2U06QDBZRQ1 low-capacitance ESD array, USB-C CC1 and CC'); at c5430071: A U31 value has 'TPD2E2U06' (netlist: 'TPD2E2U06QDBZRQ1 low-capacitance ESD array, USB-C CC1 and CC'); at 45bde541: A U31 value has 'TPD2E2U06' (netlist: 'TPD2E2U06QDBZRQ1 low-capacitance ESD array, USB-C CC1 and CC'); at 68bc9e8f: U31 absent on A; v2/docs/CONOPS.md at 68bc9e8f says 'riding on the board A update already owed'
 
 # counts per document (sentences, TRUE, STALE, BASELINE, NOT DERIVABLE, UNJUDGED, assertions evaluated)
-PANEL.md: 167 sentences, 131 TRUE, 0 STALE, 0 BASELINE, 36 NOT DERIVABLE, 0 UNJUDGED, 786 assertions
-CONOPS.md: 284 sentences, 50 TRUE, 1 STALE, 39 BASELINE, 194 NOT DERIVABLE, 0 UNJUDGED, 783 assertions
-V2-SPEC.md: 146 sentences, 48 TRUE, 4 STALE, 0 BASELINE, 94 NOT DERIVABLE, 0 UNJUDGED, 326 assertions
-OPERATING-ENVELOPE.md: 56 sentences, 16 TRUE, 2 STALE, 0 BASELINE, 38 NOT DERIVABLE, 0 UNJUDGED, 147 assertions
-TEST-PLAN.md: 109 sentences, 18 TRUE, 0 STALE, 0 BASELINE, 91 NOT DERIVABLE, 0 UNJUDGED, 128 assertions
-ASSEMBLY.md: 156 sentences, 90 TRUE, 0 STALE, 0 BASELINE, 66 NOT DERIVABLE, 0 UNJUDGED, 241 assertions
+PANEL.md: 167 sentences, 131 TRUE, 0 STALE, 0 BASELINE, 36 NOT DERIVABLE, 0 UNJUDGED, 787 assertions
+CONOPS.md: 287 sentences, 51 TRUE, 1 STALE, 39 BASELINE, 196 NOT DERIVABLE, 0 UNJUDGED, 784 assertions
+V2-SPEC.md: 147 sentences, 48 TRUE, 6 STALE, 0 BASELINE, 93 NOT DERIVABLE, 0 UNJUDGED, 334 assertions
+OPERATING-ENVELOPE.md: 63 sentences, 18 TRUE, 3 STALE, 0 BASELINE, 42 NOT DERIVABLE, 0 UNJUDGED, 151 assertions
+TEST-PLAN.md: 111 sentences, 18 TRUE, 0 STALE, 0 BASELINE, 93 NOT DERIVABLE, 0 UNJUDGED, 128 assertions
+ASSEMBLY.md: 160 sentences, 91 TRUE, 0 STALE, 0 BASELINE, 69 NOT DERIVABLE, 0 UNJUDGED, 242 assertions
 pcb_decisions.yaml: 9 sentences, 6 TRUE, 0 STALE, 0 BASELINE, 3 NOT DERIVABLE, 0 UNJUDGED, 17 assertions
 EMCON.md: 26 sentences, 22 TRUE, 0 STALE, 0 BASELINE, 4 NOT DERIVABLE, 0 UNJUDGED, 455 assertions
 DEFINITION-STATUS.md: 22 sentences, 15 TRUE, 0 STALE, 0 BASELINE, 7 NOT DERIVABLE, 0 UNJUDGED, 265 assertions
-total: 975 sentences, 396 TRUE, 7 STALE, 39 BASELINE, 533 NOT DERIVABLE, 0 UNJUDGED, 3148 assertions
+total: 992 sentences, 400 TRUE, 10 STALE, 39 BASELINE, 543 NOT DERIVABLE, 0 UNJUDGED, 3163 assertions
