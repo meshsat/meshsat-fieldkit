@@ -1,0 +1,45 @@
+readback_board_c_epd_series.py on the committed netlist v2/ecad/pcb-c-display-c8/out/pcb-c-display.net (the failing case):
+  FAILS EPD_SCL_R carries U3 pin 4 and R53 pin 1 only (reads no such net)
+  FAILS R53 is 27R (reads None)
+  FAILS EPD_SCL carries R53 pin 2 and J_EPD pin 13
+  FAILS EPD_SCL carries no U3 pin
+  FAILS EPD_SDA_R carries U3 pin 5 and R54 pin 1 only (reads no such net)
+  FAILS R54 is 27R (reads None)
+  FAILS EPD_SDA carries R54 pin 2 and J_EPD pin 14
+  FAILS EPD_SDA carries no U3 pin
+  FAILS EPD_DC_R carries U3 pin 6 and R55 pin 1 only (reads no such net)
+  FAILS R55 is 27R (reads None)
+  FAILS EPD_DC carries R55 pin 2 and J_EPD pin 11
+  FAILS EPD_DC carries no U3 pin
+  FAILS EPD_CS_R carries U3 pin 7 and R56 pin 1 only (reads no such net)
+  FAILS R56 is 27R (reads None)
+  FAILS EPD_CS carries R56 pin 2 and J_EPD pin 12
+  FAILS EPD_CS carries no U3 pin
+readback_board_c_epd_series: FAILS (16 check(s) failing)
+exit 1
+
+readback_board_c_epd_series.py on the stand-in netlist tools/sim_netlist_c.py writes from it (NOT a regenerated netlist):
+  HOLDS EPD_SCL_R carries U3 pin 4 and R53 pin 1 only (reads [('R53', '1'), ('U3', '4')])
+  HOLDS R53 is 27R (reads '27R')
+  HOLDS EPD_SCL carries R53 pin 2 and J_EPD pin 13
+  HOLDS EPD_SCL carries no U3 pin
+  HOLDS EPD_SDA_R carries U3 pin 5 and R54 pin 1 only (reads [('R54', '1'), ('U3', '5')])
+  HOLDS R54 is 27R (reads '27R')
+  HOLDS EPD_SDA carries R54 pin 2 and J_EPD pin 14
+  HOLDS EPD_SDA carries no U3 pin
+  HOLDS EPD_DC_R carries U3 pin 6 and R55 pin 1 only (reads [('R55', '1'), ('U3', '6')])
+  HOLDS R55 is 27R (reads '27R')
+  HOLDS EPD_DC carries R55 pin 2 and J_EPD pin 11
+  HOLDS EPD_DC carries no U3 pin
+  HOLDS EPD_CS_R carries U3 pin 7 and R56 pin 1 only (reads [('R56', '1'), ('U3', '7')])
+  HOLDS R56 is 27R (reads '27R')
+  HOLDS EPD_CS carries R56 pin 2 and J_EPD pin 12
+  HOLDS EPD_CS carries no U3 pin
+readback_board_c_epd_series: HOLDS (0 check(s) failing)
+exit 0
+
+apply_board_c_epd_series.py --root <scratch view of fnd/csi a18e90e9>, first and second run:
+apply_board_c_epd_series: written: gen_sch_c.py (U3 pins 4 to 7, R53 to R56 27R) and boards/c.json (four class entries). Owed: board C regenerated on the box, readback_board_c_epd_series.py on the new netlist, the four resistors placed at U3's pins by gen_pcb_c3.py, SI-001 re-taken
+exit 0
+apply_board_c_epd_series: refused: gen_sch_c.py already carries the series resistors (a second run)
+exit 2
