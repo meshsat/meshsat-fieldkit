@@ -3642,6 +3642,31 @@ open_items:
       September 2026 and were not re-taken (via_audit reads neither class, and its two values did not change on board
       C). Owner: the tools author. Closed when the three tools record the board table in their readings, rules_status
       declares it for them, and board C's return_via and return_stitch readings are re-taken on the box.
+  - id: S-125
+    class: SESSION
+    status: OPEN
+    title: >-
+      (stream w5identc, board C's part identities) Layer 6's exact-part requirement (LAYER-STATUS item 6.1;
+      EXECUTION-PLAN review D, exact part identities before a board's layout entry; EQ-21) read on board C by
+      tools/part_identities.py check at b874b744, netlist c9f7394594201045: 175 BOM parts in 87 selections: RESOLVED
+      44 (PRINTED 21, DECODED 23), UNRESOLVED 41 (CHOICE_OWED 24, DOCUMENT_DOES_NOT_NAME_THE_PART 8, DOCUMENT_OWED 8,
+      PART_DOES_NOT_MEET_THE_REQUIREMENT 1), NOT_A_PART 2. Rule D-2: a selection is RESOLVED only where its held
+      maker's document's cited page prints the part number (PRINTED) or is the maker's ordering-code table that
+      decodes it field by field against the selection (DECODED, the session's decision drafted by
+      apply_decision_decoded.py; it does not show the value is made at that rating), read by the tool
+      (v2/docs/records/w5identc/readings/check-board-c-b874b744.json, sha256 42ce2b3ea2c1a406). Owner: the parts
+      writer and board C's author. Closed when every selection of board C reads RESOLVED by part_identities.py check
+      on the netlist board C holds then, with the documents held (or held back by their terms and fetched by sha256)
+      and the table re-derived by v2/docs/records/w5identc/build_table.py.
+    disposition: LAYOUT_ENTRY_PACKET
+    disposition_why: >-
+      No registry record's verdict rests on part identities: CMP-001 judges ratings, CMP-002 and SUP-001 order codes
+      and stock, SCH-005 pads. EXECUTION-PLAN review D makes exact part identities a precondition of board C's layout
+      entry, and this disposition does not hold it: rules_status.layout_entry counts required schematic rules, holds
+      and feasibility stages only. The binding that holds it is a feasibility record staged at LAYOUT_ENTRY holding
+      board C (the shape of FEA-006) whose waits_on names this item; drafted as the integrator's option in
+      v2/docs/records/w5identc/README.md, not applied, because layer 6 item 6.1 asks the same of every board with a
+      schematic and staging it moves every board's layout readiness.
 closed_items:
   - id: S-89
     closed_by: commit aaed6daa4434f2ae94331cdafb3134056fb1eb97
@@ -14326,6 +14351,13 @@ records:
           this line; this record reads FAIL and waits on S-122, extended with these sentences. Its reading also rests on
           v2/docs/handover/DEFINITION-STATUS.md (rows DC-01 to DC-09), v2/docs/feasibility/EMCON.md section 0a.1 and
           v2/docs/ASSEMBLY.md, which it is bound to here (2db0ad36da754fa4, c8eb306265110076, 942d562edd128759).
+      - >-
+          v2/ecad/tools/pcb_decisions.yaml re-read after decision 59 was appended
+          (v2/docs/records/w5identc/apply_rebind_decisions_w5identc.py, a41df5d12ff95995 to 823a6b32baf41481): parsed
+          against HEAD's file, every decision it holds is present and identical, and exactly one is added (59: a part
+          identity may be RESOLVED on the maker's ordering-code table, a DECODED binding counted apart from PRINTED,
+          stream w5identc); the decisions this record names in satisfied_by (28, 40) are identical in both files,
+          parsed; rebound to 823a6b32baf41481. No result changes.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
@@ -14334,7 +14366,7 @@ records:
       - "v2/docs/V2-SPEC.md@1e1547e1462904f7"
       - "v2/docs/OPERATING-ENVELOPE.md@a8e65995c594546b"
       - "v2/docs/TEST-PLAN.md@42a3dff33442c860"
-      - "v2/ecad/tools/pcb_decisions.yaml@a41df5d12ff95995"
+      - "v2/ecad/tools/pcb_decisions.yaml@823a6b32baf41481"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@c9f7394594201045"

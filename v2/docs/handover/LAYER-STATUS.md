@@ -351,7 +351,7 @@ FAIL with six; r8b: second check with no blocking finding).
 
 | Item | Acceptance item (short) | At H2 | Evidence, or what remains |
 |---|---|---|---|
-| 6.1 | exact manufacturer, MPN, package and grade per fitted part | **OPEN** | no MPN field; 1630 of 2393 per-reference BOM rows without an LCSC code (EQ-21); grades in `v2/docs/parts/GRADE-CHECK.md`, AW7915-AED and LimeSDR OUTSIDE |
+| 6.1 | exact manufacturer, MPN, package and grade per fitted part | **OPEN** | no MPN field; 1630 of 2393 per-reference BOM rows without an LCSC code (EQ-21); grades in `v2/docs/parts/GRADE-CHECK.md`, AW7915-AED and LimeSDR OUTSIDE; board C at b874b744 (stream w5identc, board C's part identities): 175 BOM parts in 87 selections: RESOLVED 44 (PRINTED 21, DECODED 23), UNRESOLVED 41 (CHOICE_OWED 24, DOCUMENT_DOES_NOT_NAME_THE_PART 8, DOCUMENT_OWED 8, PART_DOES_NOT_MEET_THE_REQUIREMENT 1), NOT_A_PART 2 (`v2/docs/records/w5identc/`, rule D-2, open item S-125) |
 | 6.2 | supporting documents with revision, source and currency | PARTLY | fourteen SOURCES entries added (hc6); the documents START-HERE section 8 names are not held |
 | 6.3 | selection rationale recorded | PARTLY | for critical parts (hc6); not for the passive and connector majority |
 | 6.4 | compatibility findings; mismatches stay mismatches | PARTLY | `jlc_certify.py` reads the declared mismatches (`661ca3a4`); the standing wrong models not re-checked at H2 |
