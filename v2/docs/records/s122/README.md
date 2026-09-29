@@ -314,6 +314,21 @@ statements), and S-123.
     the absent rule holds through its 0 UNJUDGED;
   * needs the check committed at HEAD, starting `mergeable: yes`, and naming every document and `verdicts.out`;
   * then closes S-122 and sets CFL-016 to PASS.
+* **Round 5, replayed on a throwaway clone of `8d7874f5` (deleted after):**
+  * the seven outputs reproduce byte for byte (`inventory.out`, `verdicts.out`, `-base` at `e57a7365`, `-set14` at
+    `1bafab8c`, `verdicts-r4.out` at `edead832`);
+  * `apply_docs_s122_r5.py` refuses on the tip; with V2-SPEC.md checked out from `edead832` it writes 5 edits after 33
+    assertions and the tree equals the tip byte for byte; a second run refuses;
+  * the gate refused: round 4's finder (at the netlists' SMCJ18A); the role rule switched off (condition (e), the D8
+    fixture); V2-SPEC.md as at `edead832`; the TPS22810 gate-bias switch put back; the AP64500 list put back; the
+    magnetometer put back; sixteen LEDs put back; a check whose closing section leaves out line 81;
+  * `apply_registry_s122_r4.py` rebound 5 records (CFL-010, CFL-013, CFL-014, CFL-016, REQ-005) and refused a second
+    run; `rules_lib.py requirements`: 144 records, 0 errors, 0 warnings; `rules_lib.py`: 59 rules, 0 errors;
+  * `test_envelope_data` with `test_requirements`: 69 passed and 2 failed (the trace page) before
+    `rules_render.py --requirements`, 71 passed after;
+  * the closure refused the fixture while only staged, closed S-122 with it committed (not filed; the marker and the
+    eight lines; 1005 sentences, 0 STALE, 0 UNJUDGED; CFL-016 PASS; S-42, S-123 and S-124 still open) and refused a
+    second run; after it `rules_lib.py requirements` 0 errors, the tests 71 passed, `claims_check` PASS, 91 of 91.
 * **Round 4, replayed on a throwaway clone of `e5fdf670` (deleted after):**
   * the six outputs reproduce byte for byte (`inventory.out` and `verdicts.out`; `-base` with `S122_AT=e57a7365`;
     `-set14` with `S122_AT=1bafab8c`);
