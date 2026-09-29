@@ -11,6 +11,16 @@ sys.path.insert(0, HERE)
 import yaml
 import energy_budget as EB
 
+# Second issue (stream s119, S-119, 29 September 2026): the first issue imported energy_budget.py and read
+# energy_inputs.yaml without a pin, so its .out stayed the record of its run at energy_budget.py cf6c377f and
+# energy_inputs.yaml 64dd014b (board A's charger at 0.98). This issue pins both (the inputs' second issue restates the
+# charger at 0.979) and refuses to run on any other pair; the checker's algorithm is unchanged.
+PINS = {"energy_budget.py": "6a8ac4642bd2aaf35d5ad6b75c5004c24d3e11ed1ede09a4b7a1041cd103235c",
+        "energy_inputs.yaml": "74a6e4ab0074648ed459cc62daf7000798ae6247cd5056e19cae5e4d56f55aed"}
+for _n, _want in PINS.items():
+    if EB.sha256_of(os.path.join(HERE, _n)) != _want:
+        sys.stderr.write("recompute: %s is not the pinned file; refusing\n" % _n); sys.exit(2)
+
 d = yaml.safe_load(open(os.path.join(HERE, "energy_inputs.yaml")))
 pvgis = json.load(open(os.path.join(REPO, "v2/vendor/solar/pvgis-leiden-monthly-2015-2020.json")))
 L = 42.8
