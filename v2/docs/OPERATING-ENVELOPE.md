@@ -283,7 +283,7 @@ Neither test has been run, so nothing is qualified to them.
 
 **Operating modes**, each already in the design: full (three modules, lid open), reduced (slots 2 and 3; lid
 closed, or the measured-temperature and current triggers of `CONOPS.md` section 4c) with its heat stage (one
-module) and, past it, the hot stop (no module), blackout (LEDs and sounder muted), NVG (panel lighting), EMCON (a hardware line on every transmitter; what it removes is set out below), and charge (mains, vehicle or solar, gated by the pack
+module) and, past it, the hot stop (no module), blackout (LEDs and sounder muted), NVG (panel lighting), EMCON (a hardware line on every transmitter and on the PA's rail and bias; what it removes is set out below), and charge (mains, vehicle or solar, gated by the pack
 thermistor and by the cold-charge inhibit). **Corrected 26 September 2026, as generated at `45bde541`:** EMCON removes the
 supply of the SDR, the Iridium modem, the LoRa, Zigbee and Thread radios, the HF unit, the two WiFi link cards and
 the PA rail, so those stop receiving too; it pulls the compute modules' own WiFi and Bluetooth disables low in

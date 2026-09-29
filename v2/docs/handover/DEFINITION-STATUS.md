@@ -101,6 +101,28 @@ are rebound with an entry each naming that change. No reading is bound to the br
 | The kit's fit in the Peli 1450 and the case set the generators carry | `v2/docs/CASE-MARGINS.md`, `v2/docs/CASE-FIT-UNCERTAINTIES.md` and `v2/release/case-2026-09-27/`; FEA-007 in the registry | the brief, "What the V2 kit is" (the pack, the antenna entries); CONOPS section 4a (the pack) |
 | ZEROIZE on the fitted secure element | `v2/docs/feasibility/ZEROIZE.md`; FEA-001 in the registry | the brief, "What the V2 kit is" (key protection); CONOPS section 4, ZEROIZE row |
 | Each layer of the handover and its reviews | `v2/docs/handover/LAYER-STATUS.md` | the appendix of each document |
+| CONOPS's circuit passages whose values differ from the committed netlists (EMCON, HOT-R1, the TX lamp, the device rails, generator line numbers) | the section "Current values of CONOPS's circuit passages (stream s122, 29 September 2026)" below | `CONOPS.md` sections 4, 4b, 4c, 4e and 4f |
+
+## Current values of CONOPS's circuit passages (stream s122, 29 September 2026)
+
+`CONOPS.md` is restored to its text at `c5430071` (the owner's rulings of 28 September, the last change the rule
+above allows; stream s122 withdrew set 12's circuit edits `a46db71b` and `7a9f7b5b` and its own round 1), and its
+circuit statements are read through this page (CFL-016 and S-122 of the requirements registry). A statement of
+`CONOPS.md` about the circuit, and a figure, a commit, a generator line or an "as generated" remark inside it, is its
+value when the document was baselined or last reopened. Where the committed netlists now differ, or where the value
+is a line number of a generator that has since moved, the current value is kept where the row below says, and that
+place is judged against the netlists by `v2/docs/records/s122/verdicts.py`. Read on the committed netlists of
+integration set 13: board A `6c40250c47195ebb`, B `3ef9b8c49a01b728`, C `c9f7394594201045`, D `a2d48972d171aad1`, E
+`2ed95a0e8069ebf8`.
+
+| Row | `CONOPS.md` passage | The current value | Where it is kept |
+|---|---|---|---|
+| DC-01 | section 4's EMCON row; section 4b's preamble and table | what EMCON drives and removes, radio by radio, as set 12 draws it and set 13 keeps it: the RockBLOCK's ENABLE forced low in hardware (`U536`, `U543`), the back-feed gates of the RockBLOCK, the E22 and the E72 (`U537` to `U553`), the card bucks' enables from `U116`, `U216` and `U316`, and board A's PA and HF gates `U35` to `U38` | `feasibility/EMCON.md` section 0a.1; FEA-002, REQ-030 and REQ-071 in the registry |
+| DC-02 | section 4's Heat stage and Hot stop rows; section 4c's HOT-R1 passages; section 4f's row of the pack's safety | HOT-R1 is drawn on boards A and E since stream w4ae: board E's `Q11` (2N7002), its gate on `HOT_R1_G` from `U10` pin 30 and held off by `R58`, pulls the dock line `BLK_SPARE` at `J_BLK` pin 12; board A reads it as `DOCK_SPARE` at `J_DOCK` pin 12, pulled up by `R216`, on `U27` pin 18 (IO1_5); REQ-077 reads INCONCLUSIVE and waits on S-58 | REQ-077 in the registry |
+| DC-03 | section 4e, the panel controller lost | EMCON and MAIN PWR act without the panel controller, and so does the EMCON lamp `D22`, fed from `LED_RAIL_SW` through `R47`; the TX lamp `D3` does not: its feed `LED_RAIL` is `Q1`'s drain, which only `Q2` turns on, from `PANEL_PWM` (GPIO 8) | `PANEL.md` sections 1 and 4; `feasibility/EMCON.md` section 8 |
+| DC-04 | section 4e, a device rail lost | `+5V_DEV` is made by board A's `U7` (LM5176) and `+3V3_DEV` by board B's `U25` (AP63203) from `+5V_DEV` | this row; `V2-SPEC.md` correction 32 |
+| DC-05 | section 4e, a device rail lost, what the loss releases | a loss of `+3V3_DEV` releases no module radio: each slot makes `EMCON_ON1..3` from its own 3.3 V (`U112`, `U212`, `U312`; EMCON.md L3, closed at desk in board B's round 8), and `U543`, run from `+5V_DEV`, holds the RockBLOCK's ENABLE (`RB_IEN`) low while `+3V3_DEV` is below its threshold | `feasibility/EMCON.md` sections 0a.1 and 7 |
+| DC-06 | every generator or tool line number the definition cites (sections 4, 4c and 4e among them) | the line of the commit the citation names, or, undated, of the commit its passage was written at; where stream s122 read the parts at `e57a7365`: `R42` at `gen_sch_a.py:1104`, `R2`, `R184` and `R4` at 338 to 339, `R103` and `R104` at 1598, `R111` at 1611, `U21` at 1340, `U22` at 1372, `R26` and `R27` at 972, `J_USBC_OUT` at 1306, `J_USBW` at 1668, and `J_TAMP` at `gen_sch_e.py:796` | the generators at the commit read; `v2/docs/records/s122/verdicts.out` |
 
 ## What the two documents carried at their baselines
 
