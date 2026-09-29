@@ -44,6 +44,7 @@ checkout was used. Buying these parts closes no measurement gate; only the tests
 - The heatsink pick: Raspberry Pi's own product brief gives SC1752 as 12.7 mm tall while M1's chain carries 21.0 mm (the
   line is removed from the list); which cooler the kit uses decides what T4 measures.
 - Prices not found in the time box: 3M VHB 5952, 6-32 x 1/2 in pan-head screws, and the shutdown's small items (line 15).
-- PEM's S-type bulletin is not held (pemnet.com and its Archive copies answered 404 on 29 September): the nut code
-  S-M3-2 on sheet H1-1 is the session's reading (INFERRED) and the shop is asked to follow PEM's installation data.
+- Closed on 29 September: PEM's bulletin CL is held (`v2/vendor/pem/pem-cl-self-clinching-nuts-bulletin.pdf`). Its
+  page CL-4 gives S-M3-2 as the code for an M3 S nut in a sheet of 1.4 mm or more, in a 4.22 +0.08/-0.00 hole; sheet
+  H1-1, H1's DXF and the request text carry that hole, and the nuts are pressed after anodising (PEM's instruction).
 - Reading the receipt checks R1 to R8 when the case is in hand, and writing the release for cutting part by part.

@@ -27,7 +27,7 @@ files OK). Sheet numbers are those of the release. H1's folder `h1-heat-test-pla
 | C1 | Face plate, complete | 1 | 5754 or 6061, 3.0 | black anodised | CNC | mock-up T2 and T4 | second; cut only after R1, R2, R3, R5 and R6 |
 | C4-E, C4-W | RF entry plates, east (5 arrestors) and west (7) | 1 each | 6061 (or 5052) aluminium, 6.0 | edges broken | CNC (spot-faces) | mock-up T11 (one plate, or a coupon), build T6 and T7 | second (east plate only), rest at build; cut only after R1, R3, R7 and R8 |
 | C3 | Connector plate | 1 | 5052-H32 or 6061-T6, 5.0 | edges broken | CNC | build (T6 runs on the paper templates) | quote now, **do not release for cutting** (note 3); when released, after R1, R3, R7 and R8 |
-| G1 to G3 | Gaskets: connector plate, east and west entry plates | 1 each | 2.0 closed-cell EPDM or neoprene | none | knife or waterjet | build (T7) | optional on this quote |
+| G1 to G3 | Gaskets: connector plate, east and west entry plates | 1 each | 2.0 closed-cell EPDM or neoprene | none | knife or waterjet | build (T7) | optional on this quote; if cut, only after R1 and R8 of section 6, and never before the plate each seals is released |
 | H2 | Dummy stack plate for the heaters: 330 x 200 x 3.0, the stack's outline (board B's in zstack.json), four 4.5 holes at X +-110, Y +-90 from its centre (10 from the long edges) for the M4 stand-offs, clear of the pack pocket; the heaters' M3 holes are drilled and tapped by the operator, marked from the parts (`TEST-PROCEDURE.md` section 4). A bare or smaller plate passes H2's 100 C stop limit at 42 and 64 W (check-2's estimate, INFERRED); each 21.2 W heater exceeds the HS50's 14 W rating without a heatsink, so they are bolted to it with compound | 1 | aluminium, 3.0 (any alloy) | **both faces painted matt black with a heat-resistant paint rated to 200 C or more** (note 7) | shear or saw | heat test | first, may be the operator's |
 | H3 | Dummy pack block | 1 | aluminium block | none | saw | heat test and mock-up T4 | first, size owed (note 4) |
 | L1 | QMX lid plate r2 | 1 | 5052-H32, 2.0 | none | laser plus tapping | build (T8, T9) | optional |
@@ -74,11 +74,11 @@ tolerances and notes a DXF or STEP does not.
 > Parts and files as in the attached table (lines H1, C6, C1, C4-E, C4-W, C3, optional G1 to G3, H2, H3, L1). Units are
 > millimetres. Each part has a drawing PDF; where a DXF or STEP and the PDF differ, the PDF governs and we ask you to
 > tell us. Please quote now; **we will confirm the release for cutting part by part** after our checks on the case the
-> parts fit (the fit-dependent parts are H1, C6, C1, C4 and C3).
+> parts fit (the fit-dependent parts are H1, C6, C1, C4, C3 and the gaskets G1 to G3).
 >
 > - **H1** is its own part, drawn on sheet H1-1 with its own DXF and STEP: the outline 377.2 x 263.0 x 3.0 with R16
 >   corners, the rebated band (outside 368.0 x 253.0, 2.0 deep from the top face, 1.0 left), the 44.0 x 9.0 x 0.8 relief
->   in the underside, ten 4.6 holes, and four PEM S-M3-2 self-clinching nuts in 4.2 holes on 37.0 along X by 35.0 along
+>   in the underside, ten 4.6 holes, and four PEM S-M3-2 self-clinching nuts in 4.22 +0.08/-0.00 holes (PEM bulletin CL) on 37.0 along X by 35.0 along
 >   Y about X -45.0, Y 70.0, pressed from the top face after anodising, flush on the underside. Nothing else. EN AW-5754
 >   or 6061-T6, black anodised all over; flatness 0.5 after anodising and insertion, please report it.
 > - **C1** is sheet 1 complete: the H1 features plus the monitor window 205.75 x 140.09 R15 at (0, -24), the e-paper
@@ -167,7 +167,7 @@ before these checks; cutting may not.
 
 | Check | What is read | Value, and the range the design assumes | Gauge | Gates the cutting of |
 |---|---|---|---|---|
-| R1 | Identity (T1): the carton label (Peli part number `1450-001-110E`, the EAN); "1450" and the country of origin moulded on the base; the date wheel's month and year (photograph); the inner ribs: six on the end walls at Y 0 and +-76.2, five on one long wall at X 0, +-76.2, +-152.4 and four on the other at X +-76.2, +-152.4, tops about Z 84.6; the frame: kit label `1450-300-110E`, "1450 FRONT" moulded on its top face, the kit's 1 frame, 1 o-ring, 10 inserts, 4 screws | a 1450EU of the 2025 moulding (drawing 1451-931), the 1450PF for it | eyes, camera, steel rule (rib positions to +-2) | everything below (H1, C6, C1, C4, C3) |
+| R1 | Identity (T1): the carton label (Peli part number `1450-001-110E`, the EAN); "1450" and the country of origin moulded on the base; the date wheel's month and year (photograph); the inner ribs: six on the end walls at Y 0 and +-76.2, five on one long wall at X 0, +-76.2, +-152.4 and four on the other at X +-76.2, +-152.4, tops about Z 84.6; the frame: kit label `1450-300-110E`, "1450 FRONT" moulded on its top face, the kit's 1 frame, 1 o-ring, 10 inserts, 4 screws | a 1450EU of the 2025 moulding (drawing 1451-931), the 1450PF for it | eyes, camera, steel rule (rib positions to +-2) | everything below (H1, C6, C1, C4, C3, G1 to G3) |
 | R2 | The rim zone's inside length and width at the rim face, mid-length and mid-width, the jaws' tips at the rim face, where Peli's STEP figures are taken | 382.58 x 268.28 (STEP #1324, #1689), range 381.82 to 383.34 and 267.52 to 269.04 | 500 mm caliper with inside jaws, or a rod gauge and feeler | H1, C1 (the plate edge to the rim zone, M8x and M8y) |
 | R3 | Floor to the shoulder ledge and floor to the rim face, at the middle of each of the four walls | shoulder 101.04 (range 100.28 to 101.80); rim face 108.97 (range 108.21 to 109.73; the drawing says 109) | height gauge or depth rod on the floor, straightedge across the rim | C6 (the legs' pad height 94.13 is derived from the shoulder's highest), H1 and C1 (M8z), the Z of C3 and C4 |
 | R4 | The flat floor under the four feet: the fillet's tangent line and the floor's flatness over each foot's place (X +-156.0 to +-169.0, Y +-106.4 to +-112.4) | tangent at X +-171.64 and Y +-114.49 (so each foot is 2.64 inside it); flat within 0.5 under a straightedge over each foot's place (the session's figure) | steel rule, straightedge, feeler gauges | C6 |
