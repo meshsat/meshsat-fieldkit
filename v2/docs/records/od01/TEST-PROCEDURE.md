@@ -31,24 +31,29 @@ stopped at a limit before steady state gives none, section 8): the enclosure's c
 `G = P / (T_air,in - T_room)` in W/K, with `T_air,in` read at the named point CH2 (section 4, item 6). The patch runs give the
 rise of H1 under a 45 to 83 W block (an Arcol HS100 on its 35.0 x 37.0 fixing) for 20, 30 and 60 s, and its cooling.
 
-**Applicability to Option A(i)'s proposed lid pack (29 September 2026).** Option A(i) (a 400 Wp array into a 200 W stage,
-`v2/docs/records/a1solar/`, `a1elec/`, `a1mech/` and `a1int/` on branch `fnd/a1int`, not yet on main) proposes a second
-pack of 56 or 60 cells in the lid over the face, a harness across the hinge and a stay; it waits on the owner's decisions
-(which lid function leaves, REQ-016, D-06, the deployment rule: `v2/docs/EXECUTION-PLAN.md`, the standing rule of 29
-September). Nothing below adopts it. What each OD-01 test still gives if it is adopted:
+**Applicability to Option A(i)'s proposal (29 September 2026, second issue after check 10).** Option A(i) (a 400 Wp
+array into a 200 W stage; `v2/docs/records/a1solar/`, `a1elec/`, `a1mech/` and `a1int/` on branch `fnd/a1int`, not yet on
+main) proposes two changes inside the case: the base pockets' 4S6P, a second 4S3P block in the west pocket beside the
+east one, and a lid pack of 4S14P or 4S15P (`a1int/RECONCILE.md`) over the face, with a harness across the hinge and a lid
+stay. It waits on the owner's decisions (which lid function leaves, REQ-016, D-06, the deployment rule: the standing rule
+of 29 September in `v2/docs/EXECUTION-PLAN.md` on main, commit `bf68ad9e`). Nothing below adopts it. What each OD-01 test
+still gives if it is adopted:
 
-| Test | Applies unchanged? | Why, and what the lid pack would add |
+| Test | Applies unchanged? | Why, and what Option A(i) would add |
 |---|---|---|
 | Receipt checks R1 to R8 | yes | the case, the frame and the walls are the same |
-| H1, C6 and the gates of RFQ section 6 | yes | the heat-test plate and the legs do not meet the lid |
-| C1 (face plate) for the mock-up | yes for T2 and T4 | as drawn it has no sealed crossing for the lid's lead (not designed, S-95): it is a mock-up plate, not the kit's final face under Option A(i) |
+| H1, C6 and the gates of RFQ section 6 | yes | the heat-test plate and the legs meet neither the lid nor the west block |
+| C1 (face plate) for the mock-up | yes for T2 and T4 | as drawn it has no sealed crossing for the lid's lead nor for the QMX leads (S-95, which predates Option A(i)): a mock-up plate, not the kit's final face |
+| C4-W (west entry plate) for the mock-up | no, as the kit's plate | the west block takes the room the west RF jumpers were planned in; the west RF entry is re-planned before the west block is taken (`a1mech/README.md` item 6): C4-W as drawn is a mock-up plate; C4-E is unchanged |
 | Shutdown V1 to V4, stop limits, records | yes | the test rig, not the kit |
-| Test A, lid-open steps S1, S4, S5 | yes | the open lid stands away from the base volume the test measures (INFERRED; the lid pack's own heat when charging is not in the test) |
-| Test A, lid-closed steps S2, S3, S6 | no, as a measure of Option A(i) | with the lid pack the closed lid's space over the face is mostly cells; the conductance with the lid closed would need a lid-pack thermal dummy in the lid (a new step) |
-| Patch runs | yes | the plate's spreading under the PA flange site does not depend on the lid |
-| Test B: T1, T2, T5, T11 | yes | case, frame, legs, walls, arrestor |
-| Test B: T4 and T6 | partly | T4 has no lid-pack stand-in; T6's open-lid clearance to the mated plugs would change with a lid pack |
-| New for the lid pack (not in OD-01) | none yet | `records/a1mech/README.md` names T-A1-1 (the lid's depth to the ceiling), T-A1-2 (the U-174/U jack), T-A1-3 (the stop, the hinge axis, the open case on a slope) and T-A1-4 (200 lid cycles with a dummy module and the harness), plus the sealed lid-lead crossing (S-95) |
+| Test A, lid-open steps S1, S4, S5 | yes, for the base as set up | the open lid stands away from the base volume the test measures (INFERRED; the lid pack's own heat when charging is not in the test); the west block is not in the set-up (H3 stands for the east block only), so the steps measure the base without it |
+| Test A, lid-closed steps S2, S3, S6 | no, as a measure of Option A(i) | with the lid pack the closed lid's space over the face is mostly cells; the conductance with the lid closed would need a lid-pack thermal dummy in the lid and the west block's twin of H3 (new steps) |
+| Patch runs | yes | the plate's spreading under the PA flange site does not depend on the lid or the pockets |
+| Test B: T1, T2, T11 | yes | case, frame, legs, the arrestor on the east plate |
+| Test B: T5 | partly | the end wall east and the back wall unchanged; the west wall's holes wait on the west RF re-plan |
+| Test B: T4 | partly | it has no lid-pack stand-in and no stand-in for the west block |
+| Test B: T6 | yes, as a bound (INFERRED) | the lid pack is inside the lid and leaves its outer skin unchanged; the stay stops the lid at 100 degrees, short of Peli's stop, so T6's open-lid reading at Peli's stop bounds Option A(i) unless T-A1-3 finds otherwise |
+| New for Option A(i) (not in OD-01) | none yet | `records/a1mech/README.md` section 7: T-A1-1 (the lid's depth to the ceiling), T-A1-2 (the U-174/U jack), T-A1-3 (the stop, the hinge axis, the open case on a slope), T-A1-4 (200 lid cycles with a dummy module and the harness); T9 with a dummy module; T8's pull test at the module's load; E1 and E2 with an accelerometer on the lid; T10 and T5 at the west wall after the west RF re-plan; the sealed lid-lead crossing (S-95) |
 
 **Its uncertainty (the session's budget, INFERRED until the operator's own instruments' stated accuracies replace the
 typical figures used here):**
@@ -57,7 +62,7 @@ typical figures used here):**
 |---|---|---|---|
 | Power, volts x amps on two meters | about 1.1 % | about 1.1 % | typical handheld DC accuracy, 0.5 % on volts and 1 % on amps |
 | The rise, after the 15-minute common soak removes each channel's offset | about 0.3 K = 1.0 % | about 0.3 K = 3 % | same logger, same cold junction; type K slope differences between channels of one batch |
-| Not yet steady at the criterion of section 5.3 | at most 0.33 K = 1.1 % low | at most 0.33 K = 3.3 % low | 0.2 K per 30 min on a 50 min time constant leaves at most 0.33 K to come |
+| Not yet steady at the criterion of section 5.3 | the rise up to 0.33 K low, so `G` up to 1.1 % high | the rise up to 0.33 K low, so `G` up to 3.3 % high | 0.2 K per 30 min on a 50 min time constant leaves at most 0.33 K to come |
 | Heat conducted out along the leads and past the seal at the lead exit | under 1 %, reads G high | under 1 %, reads G high | check-2 (about 0.006 W/K against 2.1 W/K) |
 | **Combined** | **-1.5 % to +3.6 %** | **-3.2 % to +7.5 %** | the two random terms by root sum of squares; the two biases, both reading `G` high, added in their sign |
 
@@ -408,7 +413,9 @@ of the sequence, recorded as starting cold. A trip in S3 to S6 is recorded, not 
 limit" with every reading up to the trip, the time and what tripped. Those readings are kept as transient data and are **not** a
 steady-state result. While the case still warms, part of the input goes into storage (`P = G (T - T_room) + C dT/dt`),
 so `P / (T - T_room)` before steady state can exceed the true conductance (64 W, a 20 K rise and 24 W still stored is
-2 W/K, not 3.2), and with several temperature nodes and a local trip no general bound holds in either direction. A
+2 W/K, not 3.2). For a step that warms from below its own steady state, that reading is at most an upper bound on
+`G`; room drift, a step that starts above its steady state and cools (S4 after S3), and a point reading of stratified
+air under natural convection remove even that. A
 stopped step therefore yields no `G`; any conductance the session infers from it needs a stated transient model with
 its uncertainty, is labelled so, and closes no row of section 1 until that model is itself checked. **No limit is raised to let a step
 finish.** On the check-2 estimate H2 may reach about 93 C at 64 W lid closed with a 30 K inside rise, so TS1 may open in S6: that is the arrangement doing its job, and
