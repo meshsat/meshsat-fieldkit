@@ -6379,8 +6379,17 @@ records:
           figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
           check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
           this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk3's items in section 4d.6 (29 September
+          2026, MESHSAT-1357; the file at 096ed6822d6517a3 before): 0 section(s) added () and 2 of the 41 earlier
+          sections differ (4d.6 After the independent check of set 12 (29 September 2026, stream rf2walk2); 6. Bench
+          tests owed (for TEST-PLAN; none has run, nothing is built)), the rest byte-identical. Section 4d.6 gains the
+          re-check of set 12's items: RF-002's walk takes the line's source only from the declared toggle (board C's
+          SW_EMCON), B-4's margin with every rail lost stated (30 mV) and its start-up case, and the LED feed loads
+          drafted as a follow-up; bench E-04 gains the start-up dip. No row closes and no reading this record rests on
+          moves, so its result is unchanged, bound to the file at e919e9b2c633deef.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
+      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@87b69472ac83ca5a"
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/PANEL.md:135", "v2/docs/PANEL.md:189"]
@@ -8545,8 +8554,17 @@ records:
           figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
           check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
           this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk3's items in section 4d.6 (29 September
+          2026, MESHSAT-1357; the file at 096ed6822d6517a3 before): 0 section(s) added () and 2 of the 41 earlier
+          sections differ (4d.6 After the independent check of set 12 (29 September 2026, stream rf2walk2); 6. Bench
+          tests owed (for TEST-PLAN; none has run, nothing is built)), the rest byte-identical. Section 4d.6 gains the
+          re-check of set 12's items: RF-002's walk takes the line's source only from the declared toggle (board C's
+          SW_EMCON), B-4's margin with every rail lost stated (30 mV) and its start-up case, and the LED feed loads
+          drafted as a follow-up; bench E-04 gains the start-up dip. No row closes and no reading this record rests on
+          moves, so its result is unchanged, bound to the file at e919e9b2c633deef.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
+      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
     release_effect: BLOCKER
     source:
@@ -8798,8 +8816,17 @@ records:
           figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
           check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
           this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk3's items in section 4d.6 (29 September
+          2026, MESHSAT-1357; the file at 096ed6822d6517a3 before): 0 section(s) added () and 2 of the 41 earlier
+          sections differ (4d.6 After the independent check of set 12 (29 September 2026, stream rf2walk2); 6. Bench
+          tests owed (for TEST-PLAN; none has run, nothing is built)), the rest byte-identical. Section 4d.6 gains the
+          re-check of set 12's items: RF-002's walk takes the line's source only from the declared toggle (board C's
+          SW_EMCON), B-4's margin with every rail lost stated (30 mV) and its start-up case, and the LED feed loads
+          drafted as a follow-up; bench E-04 gains the start-up dip. No row closes and no reading this record rests on
+          moves, so its result is unchanged, bound to the file at e919e9b2c633deef.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
+      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
     release_effect: BLOCKER
@@ -9246,8 +9273,17 @@ records:
           figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
           check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
           this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk3's items in section 4d.6 (29 September
+          2026, MESHSAT-1357; the file at 096ed6822d6517a3 before): 0 section(s) added () and 2 of the 41 earlier
+          sections differ (4d.6 After the independent check of set 12 (29 September 2026, stream rf2walk2); 6. Bench
+          tests owed (for TEST-PLAN; none has run, nothing is built)), the rest byte-identical. Section 4d.6 gains the
+          re-check of set 12's items: RF-002's walk takes the line's source only from the declared toggle (board C's
+          SW_EMCON), B-4's margin with every rail lost stated (30 mV) and its start-up case, and the LED feed loads
+          drafted as a follow-up; bench E-04 gains the start-up dip. No row closes and no reading this record rests on
+          moves, so its result is unchanged, bound to the file at e919e9b2c633deef.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
+      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
     release_effect: BLOCKER
     source:
@@ -10065,10 +10101,19 @@ records:
           figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
           check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
           this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk3's items in section 4d.6 (29 September
+          2026, MESHSAT-1357; the file at 096ed6822d6517a3 before): 0 section(s) added () and 2 of the 41 earlier
+          sections differ (4d.6 After the independent check of set 12 (29 September 2026, stream rf2walk2); 6. Bench
+          tests owed (for TEST-PLAN; none has run, nothing is built)), the rest byte-identical. Section 4d.6 gains the
+          re-check of set 12's items: RF-002's walk takes the line's source only from the declared toggle (board C's
+          SW_EMCON), B-4's margin with every rail lost stated (30 mV) and its start-up case, and the LED feed loads
+          drafted as a follow-up; bench E-04 gains the start-up dip. No row closes and no reading this record rests on
+          moves, so its result is unchanged, bound to the file at e919e9b2c633deef.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
-      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
+      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
       - "v2/docs/CURRENT-EVIDENCE.md@ad6dd5e28a94b674"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
@@ -10274,8 +10319,17 @@ records:
           figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
           check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
           this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk3's items in section 4d.6 (29 September
+          2026, MESHSAT-1357; the file at 096ed6822d6517a3 before): 0 section(s) added () and 2 of the 41 earlier
+          sections differ (4d.6 After the independent check of set 12 (29 September 2026, stream rf2walk2); 6. Bench
+          tests owed (for TEST-PLAN; none has run, nothing is built)), the rest byte-identical. Section 4d.6 gains the
+          re-check of set 12's items: RF-002's walk takes the line's source only from the declared toggle (board C's
+          SW_EMCON), B-4's margin with every rail lost stated (30 mV) and its start-up case, and the LED feed loads
+          drafted as a follow-up; bench E-04 gains the start-up dip. No row closes and no reading this record rests on
+          moves, so its result is unchanged, bound to the file at e919e9b2c633deef.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
+      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@87b69472ac83ca5a"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7 (the common element)", "session choice SC-11"]
@@ -10567,10 +10621,19 @@ records:
           figure to cite, board B's intent) and their drafts, which are not applied, and the walk's change for the
           check's blocking item; bench E-04 gains the 9704's I_EN-low-to-I_BTD-low time. No row closes and no reading
           this record rests on moves, so its result is unchanged, bound to the file at 096ed6822d6517a3.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the merge of stream rf2walk3's items in section 4d.6 (29 September
+          2026, MESHSAT-1357; the file at 096ed6822d6517a3 before): 0 section(s) added () and 2 of the 41 earlier
+          sections differ (4d.6 After the independent check of set 12 (29 September 2026, stream rf2walk2); 6. Bench
+          tests owed (for TEST-PLAN; none has run, nothing is built)), the rest byte-identical. Section 4d.6 gains the
+          re-check of set 12's items: RF-002's walk takes the line's source only from the declared toggle (board C's
+          SW_EMCON), B-4's margin with every rail lost stated (30 mV) and its start-up case, and the LED feed loads
+          drafted as a follow-up; bench E-04 gains the start-up dip. No row closes and no reading this record rests on
+          moves, so its result is unchanged, bound to the file at e919e9b2c633deef.
     evidence_bound_to:
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
-      - "v2/docs/feasibility/EMCON.md@096ed6822d6517a3"
+      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
     source_check: VERIFIED
