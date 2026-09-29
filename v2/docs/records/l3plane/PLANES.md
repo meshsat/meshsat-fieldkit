@@ -7,6 +7,12 @@ not a qualified review. Prototype design: nothing is bought, built, powered or m
 MODELED on the reference day of SC-37 (the September mean day at Leiden, PVGIS), and every condition is INFERRED from the
 model's grid.** All figures are printed by `plane_grid.py` into `plane_grid.out` (section named); this page transcribes them.
 
+**Second issue, 30 September 2026.** The word "adverse" is withdrawn from this page and from `plane_grid.out`: the case it
+named is **WAB, the worst array build** (the worst panel fit, set point, cell heat and lead) on the SAME September mean day.
+It is not a weather case, and no worse-weather case is established here. No figure moved. **The bus basis of this page
+(the model's 20.7 V, and the V20 and V19 sensitivities) is superseded by `ENERGY-BASIS.md`**, which establishes the charge
+bus's range from the design and the makers' pages and gives the corrected comparison table for the owner's decisions.
+
 ## 0. Tools, outputs and commands
 
 | File | What it is |
@@ -39,7 +45,7 @@ ratio and U3's input limit set; 400 Wp (four Renogy RNG-100DB-H in 2S2P), the 20
 base at +20 C, **the lid at 13.23 C** (the September mean day's minimum air), both start hours, 42.8 W, aged 80 percent,
 U3 at 0.979 and U3B at code 62 (7.936 A) and 0.972 (stream s119's rows). Each of the 50 planes (slopes 0 to 70 degrees in
 10 degree steps, azimuths 45 degrees east to 45 degrees west in 15 degree steps, flat once) runs on its own PVGIS DRcalc
-September mean day, scaled by the model's factor 1.007820, with that plane's own ratios B (typical) and C (adverse) from
+September mean day, scaled by the model's factor 1.007820, with that plane's own ratios B (TYP, the typical array build) and C (WAB, the worst array build) from
 `energy_runs.py`. A plane MEETS when both start hours end the 72 hours without a stop. The ratios are carried unrounded,
 as `energy_runs.py` and `reconcile_s119.py` carry them; at 40/0 that reads 85.4 Wh (4S14P, C, case P) where
 `reconcile_lid_panel.out`, which reads them rounded to four places, prints 85.5 Wh (4S15P: 116.6 Wh in both).
@@ -64,7 +70,7 @@ the second issue's settings; parsed by the script). It is a floor against the mo
 
 ## 2. 4S14P lid, the tablet out of the lid (4S20P in all)
 
-### 2.1 The grid, case P (`plane_grid.out` 1.1 and 1.2): lowest store of both packs, B typical / C adverse, Wh; bold = meets in both; azimuth negative east of south
+### 2.1 The grid, case P (`plane_grid.out` 1.1 and 1.2): lowest store of both packs, B TYP / C WAB, Wh; bold = meets in both; azimuth negative east of south
 
 | slope \ azimuth | -45 | -30 | -15 | +0 | +15 | +30 | +45 |
 |---|---|---|---|---|---|---|---|
@@ -187,7 +193,7 @@ azimuth from 30 east to 45 west at 20 to 40 degrees, but on points whose least s
 Every one of the rule's twelve planes (20 to 50 degrees, 15 east to 15 west) meets in both cases in P, I, H and V20. The
 lowest store inside the rule is at its corner **20/-15** in every case: **P 90.4 Wh (B) and 44.6 Wh (C, the lid at 1.4
 Wh)**, I 83.5 and 26.0 Wh, H 90.7 and 44.8 Wh, V20 72.9 and 6.1 Wh. In V19 the rule fails in C at eight of its twelve
-planes. One grid step outside the rule (case P, C adverse): 10 degrees NOT MET at every azimuth from 30 east to 30 west;
+planes. One grid step outside the rule (case P, C WAB): 10 degrees NOT MET at every azimuth from 30 east to 30 west;
 60 degrees 20.4 Wh at 15 E, 67.2 at south, 52.1 at 15 W, NOT MET at 30 E and 30 W; at 30 degrees east 9.2 Wh at slope
 20, 20.9 at 30, 10.7 at 40, NOT MET at 50; at 30 degrees west 37.0 Wh at slope 20, 58.7 at 30, 56.4 at 40, 37.6 at 50.
 
@@ -195,7 +201,7 @@ planes. One grid step outside the rule (case P, C adverse): 10 degrees NOT MET a
 
 ## 3. 4S15P lid, the QMX out of the lid (4S21P in all)
 
-### 3.1 The grid, case P (`plane_grid.out` 2.1 and 2.2): lowest store of both packs, B typical / C adverse, Wh; bold = meets in both; azimuth negative east of south
+### 3.1 The grid, case P (`plane_grid.out` 2.1 and 2.2): lowest store of both packs, B TYP / C WAB, Wh; bold = meets in both; azimuth negative east of south
 
 | slope \ azimuth | -45 | -30 | -15 | +0 | +15 | +30 | +45 |
 |---|---|---|---|---|---|---|---|
@@ -316,12 +322,12 @@ table; the choice among them is the owner's, and a larger rectangle has a thinne
 Every one of the rule's twelve planes meets in both cases in P, I, H and V20. The lowest store inside the rule is at
 **20/-15** in every case: **P 121.7 Wh (B) and 75.3 Wh (C, the lid at 23.8 Wh)**, I 114.6 and 56.6 Wh, H 122.0 and 75.6
 Wh, V20 103.6 and 36.8 Wh. In V19 the rule fails in C at 20/-15 and 50/-15. One grid step outside the rule (case P, C
-adverse): 10 degrees 16.6 Wh at 15 E, 27.9 at south, 28.6 at 15 W, 14.6 at 30 W, NOT MET at 30 E; 60 degrees 51.0 at
+WAB): 10 degrees 16.6 Wh at 15 E, 27.9 at south, 28.6 at 15 W, 14.6 at 30 W, NOT MET at 30 E; 60 degrees 51.0 at
 15 E, 98.4 at south, 83.0 at 15 W, 25.1 at 30 W, NOT MET at 30 E; at 30 degrees east 39.8 Wh at slope 20, 51.6 at 30,
 41.3 at 40, 14.6 at 50; at 30 degrees west 67.8 at slope 20, 89.5 at 30, 87.2 at 40, 68.3 at 50.
 
 **Laid flat (slope 0): meets in the typical case only (P 15.6 Wh, the lid emptied to 0.0 Wh; I 5.1 Wh; H 15.6 Wh), NOT MET
-in the adverse case, and NOT MET in either case at V20 and V19.**
+in the WAB case, and NOT MET in either case at V20 and V19.**
 
 ## 4. The two options side by side (INFERRED on this model; for the owner's decision)
 
@@ -330,7 +336,7 @@ in the adverse case, and NOT MET in either case at V20 and V19.**
 | derived condition (P, I and H, above the floor) | **slope 20 to 50, azimuth 15 E to 30 W** (least 19.9 Wh) | **slope 20 to 60, azimuth 15 E to 30 W** (least 7.9 Wh) |
 | its symmetric form | 20 to 50 within 15 of south (least 26.0 Wh) | 10 to 60 within 15 of south (least 5.4 Wh) |
 | lowest store at the old rule's worst corner, 20/-15, case P (B / C) | 90.4 / 44.6 Wh | 121.7 / 75.3 Wh |
-| laid flat | NOT MET in either case | typical only (15.6 Wh), adverse NOT MET |
+| laid flat | NOT MET in either case | typical only (15.6 Wh), WAB NOT MET |
 | if the bus sits at its nominal 20.0 V (V20, with P, I and H) | 20 to 40 at 15 E to 30 W, or 20 to 50 within 15 of south (least 6.1 Wh) | 20 to 50 at 15 E to 30 W (least 26.8 Wh) |
 | at the bus's DC band low end, 19.08 V (V19) | due south only, 30 to 50 (least 2.5 Wh, under the floor); the old rule fails at 8 of 12 planes | within 15 of south only 30 to 40 (least 5.6 Wh); the old rule fails at 2 of 12 |
 

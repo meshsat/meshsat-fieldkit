@@ -13,8 +13,10 @@ September basis. The only change to reconcile_lid_panel.py is run()'s optional p
 its own output is unchanged to the byte. Each plane of records/a1solar/energy_runs.py's grid (slopes 0 to 70 degrees in
 10 degree steps, azimuths 45 degrees east to 45 degrees west in 15 degree steps, 50 planes with flat counted once: 49
 files under v2/vendor/solar/pvgis-planes/ and the 40/0 anchor) is run on its own PVGIS DRcalc September mean day, scaled
-by the model's factor found on the 40/0 anchor, with that plane's own fixed-point ratios B (typical) and C (adverse), all
-from energy_runs.py imported unchanged (pinned).
+by the model's factor found on the 40/0 anchor, with that plane's own fixed-point ratios B (TYP, the typical array build)
+and C (WAB, the worst array build: the worst panel fit, set point, cell heat and lead on the SAME mean day, which the
+earlier records call 'adverse'; it is not weather), all from energy_runs.py imported unchanged (pinned). Second issue (30
+September 2026, energy_basis.py's stream): the word 'adverse' is replaced in the printed text; no figure moved.
 
 The cases, each at the lid basis:
   * P, the primary: U3's input limit at its minimum 6.1 A, U3B at its carried figure (reconcile_lid_panel.py's model);
@@ -161,7 +163,8 @@ def main():
     P("400 Wp (2S2P Renogy RNG-100DB-H), 200 W stage, entry E2's front end, base +%.0f C, lid at %.2f C (the September mean" % (TP.v("t_base_c"), tmin))
     P("day's minimum air), both start hours, 42.8 W, aged 80 percent; U3 %.3f, U3B at code 62 (%.3f A) and %.3f carried." % (
         TP.chain(d0)[2], TP.v("chg_a_lid"), TP.v("eta_u3b")))
-    P("Ratios per plane from energy_runs.py (imported, pinned): B typical, C adverse; PVGIS's 0.9417 (40/0) kept for every plane.")
+    P("Ratios per plane from energy_runs.py (imported, pinned): B the typical array build (TYP), C the worst array build (WAB,")
+    P("the worst panel fit, set point, cell heat and lead on the SAME mean day: not weather); PVGIS's 0.9417 (40/0) kept for every plane.")
     P("")
 
     # 0. reproduction
@@ -277,12 +280,12 @@ def main():
     for idx, (n, what) in enumerate(LIDS):
         P("%d. %s: THE GRID (azimuth in degrees, negative east of south; flat is run once)" % (1 + idx, what.upper()))
         P("   %d.1 Case P, both / lid Wh or NOT MET" % (1 + idx))
-        P("   %5s %5s %9s %7s %7s   %-16s %-16s" % ("slope", "azim", "kWh/m2/d", "B ratio", "C ratio", "B typical", "C adverse"))
+        P("   %5s %5s %9s %7s %7s   %-16s %-16s" % ("slope", "azim", "kWh/m2/d", "B ratio", "C ratio", "B TYP", "C WAB"))
         for sl, az in planes:
             kwh, rb, rc = meta[(sl, az)]
             b, c = res[(n, "P", sl, az)]
             P("   %5d %+5d %9.3f %7.4f %7.4f   %-16s %-16s" % (sl, az, kwh, rb, rc, cell(b), cell(c)))
-        P("   %d.2 Every case, the lowest store of both packs in Wh (NOT = NOT MET); B typical / C adverse" % (1 + idx))
+        P("   %d.2 Every case, the lowest store of both packs in Wh (NOT = NOT MET); B TYP / C WAB" % (1 + idx))
         P("   %5s %5s  %s" % ("slope", "azim", "  ".join("%-13s" % k for k, _w in cases)))
         for sl, az in planes:
             P("   %5d %+5d  %s" % (sl, az, "  ".join("%s %s" % (short(res[(n, k, sl, az)][0]), short(res[(n, k, sl, az)][1])) for k, _w in cases)))

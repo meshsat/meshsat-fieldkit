@@ -1,0 +1,77 @@
+VBUS20 AT U3'S INPUT, UNDER LOAD AND TEMPERATURE, FROM THE DESIGN AS GENERATED (vbus20_range.py, stream l3plane,
+MESHSAT-1357). PROTOTYPE DESIGN: desk arithmetic, nothing built, powered or measured. Basis per figure: MAKER (document,
+page, read from its text layer here), NETLIST, or INFERRED (reason given).
+
+1. THE CIRCUIT (NETLIST v2/ecad/pcb-a-power-a23/out/pcb-a-power.net, sha256/16 6c40250c47195ebb)
+   PASS the FB divider                     R6 240k 1% on ['FE_FB', 'VBUS20'], R7 10k 1% on ['FE_FB', 'GND'], U2 (LM5176PWPR) pin 11 on FE_FB
+   PASS R11, the front end's ISNS shunt    10mOhm 1% 2512 (ISNS), pin 1 FE_OUT, pin 2 VBUS20: the divider's R6 is on VBUS20, the shunt's far side
+   PASS U3's input                         R16 10mOhm 1% 2512 (RAC, input current sense) from VBUS20 to CH_ACN; U3 (BQ25731RSNR) pin 1 VBUS on VBUS20
+   PASS no purchase code in the netlist    R6 None, R7 None
+   So U2 regulates VBUS20 itself (R6's pin on VBUS20): R11's drop (FE_OUT to VBUS20) is INSIDE the loop and does not
+   lower VBUS20. U3's VBUS pin and R16 sit on the same net; the copper between R6's tap and R16's pin carries U3's input
+   current, and its resistance is a layout quantity.
+
+2. R6 AND R7, THE PARTS
+   the netlist carries no purchase code for either (fact 4); lcsc_fill.py's MAP (applied as that script applies it) gives
+   R6 '240k 1%' 0603 -> C137765 and R7 '10k 1%' 0603 -> C25804; the released A24 BOM rows read R6 ('240k 1%', 'C137765') and R7 ('10k 1%', 'C25804') (agree)
+   R6 C137765: YAGEO RC0603FR-07240KL (lcsc_fill.py's own comment; decoded on YAGEO p.2: F = 1 %, R = paper reel, 07 = 7 inch
+      reel and standard power, TCR 'based on spec'), v2/vendor/passives/yageo-rc-l-series-v12.pdf sha256/16 e7dbabb061192522, p.5 Table 2, RC0603 rows as read:
+        | 5% (E24) 1Ω≦R≦10Ω Rated Current
+        | 1Ω≦R≦22MΩ ± 200ppm°C 1.0A
+        | 1% (E24/E96) 10Ω<R≦10MΩ Maximum
+        | 1Ω≦R≦10MΩ ± 100ppm°C Current
+        | 1/10 W -55℃ to 155℃ 75V 150V 150V 0.5% (E24/E96) 10MΩ<R≦22MΩ 2.0A
+        | 1Ω≦R≦1MΩ ± 200ppm°C
+        | RC0603 0.1% (E24/E96)
+        | 10Ω≦R≦1MΩ
+        | Jumper<50mΩ
+      -> RC0603, 1 %, 10 Ohm < R <= 10 MOhm: 100 ppm/K from +25 C (MAKER, YAGEO RC_L V.12 p.5 Table 2; p.8 t1 = +25 C)
+   R7 C25804: UNI-ROYAL 0603WAF1002T5E (LCSC reading lcsc-2026-09-27.json: '±1%', '±100ppm/℃'); decoded on UNI-ROYAL p.2: WA = 1/10 W, F = 1 %
+      v2/vendor/passives/held/uniroyal-series-11cd644d.pdf sha256/16 11cd644d5d8a34a6: p.6 rows read for 0603: 1Ω≤R≤10Ω: ±200PPM/°C; >10Ω: ±100PPM/℃; reference t1 +25 C
+      -> 0603, R > 10 Ohm: 100 ppm/K from +25 C (MAKER, UNI-ROYAL V.3 p.6; the sheet is held back, not in the tree)
+
+3. THE CONTROLLER (MAKER, TI SNVSAI1D, read here)
+   VREF 0.788 / 0.800 / 0.812 V at FB = COMP, limits over TJ -40 to 125 C (6.5 p.6; TJ -40 to 125 C recommended, 6.3 p.5)
+   IBIAS(FB) 25 nA maximum, FB in regulation (p.6); gmEA 1.31 mS and ROUT 20 MOhm, both TYPICAL only (p.6);
+   VCC 7.88 V maximum (p.6), the ceiling of COMP; no load or line regulation is specified anywhere in the sheet's tables
+   VSNS, the front end's own constant-current loop: 43 / 50 / 57 mV (p.7)
+
+4. THE KIT'S TEMPERATURE AT THE DIVIDER (the resistors' TCR runs from +25 C)
+   the envelope, any in-use condition    -20.0 to  +62.1 C, the largest distance from +25 C 45.0 K
+      in-use ambient minimum -20 C (the divider at the air before any warm-up, INFERRED) to the worst inside air in use 62.1 C (lid closed; pcb_envelope.yaml worst_inside_air_c, itself INFERRED)
+   M1 on the reference day               +26.4 to  +53.9 C, the largest distance from +25 C 28.9 K
+      the reference day's air 13.23 to 18.33 C (the 40/0 DRcalc T2m) plus PS-IDLE-SPEC's lid-open inside-air rise 13.16 to 35.58 K (pcb_envelope.yaml inside_air_bounds_k, both bounds; INFERRED, nothing measured)
+   Board A's own local rise over the inside air near the divider is not established (no current layout): INFERRED zero.
+
+5. THE TERMS AT THE REGULATION POINT (R6's tap), the envelope's temperature, against the nominal 20.000 V
+   term                                                                             low, V  high, V   basis; kind
+   VREF 0.788 / 0.800 / 0.812 V over TJ -40 to 125 C                                -0.300   +0.300   MAKER SNVSAI1D 6.5 p.6; part to part AND temperature: TI prints one band for both, and its typical characteristics (pp.9 to 12, read) plot no reference, so a unit may sit at either end at any temperature
+   R6 and R7 at 1 %, opposite directions                                            -0.380   +0.388   MAKER YAGEO p.2 code F, UNI-ROYAL p.2 code F; NETLIST values; part to part: a fixed offset per unit
+   R6 and R7 TCR 100 ppm/K each over 45.0 K from +25 C, opposite directions         -0.172   +0.174   MAKER YAGEO p.5 Table 2, UNI-ROYAL p.6; the direction INFERRED (no tracking figure); temperature: drifts with the divider's temperature
+   IBIAS(FB) at most 25 nA through R6, either direction                             -0.006   +0.006   MAKER SNVSAI1D p.6 (maximum; direction not stated); part to part and temperature (a maximum over the range)
+   the error amplifier's finite DC gain, COMP anywhere up to VCC's 7.88 V maximum   -0.008   +0.008   INFERRED: gm 1.31 mS x ROUT 20 MOhm = 26200 (TYPICAL figures, p.6; TI prints no minimum); load and line: COMP moves with the current the loop asks for and with VIN; TI specifies no load or line regulation
+
+6. THE RANGE (min, nominal, max) at the regulation point, all terms together (tolerance and TCR opposite on R6 and R7)
+   the printed figures alone (VREF and 1 %): 19.326 to 20.694 V
+   the envelope, any in-use condition   min 19.146 V, nominal 20.000 V, max 20.887 V
+   M1 on the reference day              min 19.205 V, nominal 20.000 V, max 20.823 V
+   stream s120's band (65 K of TCR assumed, no amplifier term): 19.080 to 20.960 V
+
+7. UNDER LOAD: U3'S INPUT CURRENT AGAINST THE FRONT END'S CURRENT LIMIT, AND THE COPPER
+   U3's IIN_HOST 6.2 A nominal, 6.3 A maximum (energy_two_pack.py PAR u3_iin_draft_a; SLUSE66A 9.6.22 p.80).
+   As generated, R11 10 mOhm: the front end's constant-current loop holds 4.30 / 5.00 / 5.70 A (VSNS over R11, MAKER p.7 with
+   NETLIST R11): below U3's 6.2 A, so at U3's full input current THE BUS IS NOT IN VOLTAGE REGULATION as generated: the
+   front end limits its current and VBUS20 falls below the band until the charger's input loops settle (energy_two_pack
+   entry E1 is that regime, U3 held at 4.15 A). Every Option A(i) figure uses entry E2, the DRAFTED re-rate R11 6.2 mOhm
+   (a1elec TOPOLOGY.md 7; not in the generator): 6.94 / 8.06 / 9.19 A, above U3's 6.3 A maximum, so the bus stays in
+   voltage regulation and the range above applies at the regulation point.
+   The copper from R6's tap to R16's pin: NOT ESTABLISHED (board A's routed file is of 15 September, A32, and predates the
+   netlist read here). Each 1 mOhm of it lowers U3's input by 6.3 mV at 6.3 A (0.03 % of the bus), load-proportional.
+   Not included: the resistors' long-term drift (the makers' endurance limits, YAGEO p.8 and UNI-ROYAL p.7, are test
+   limits of +-(1 % + 0.05 Ohm) after 1000 h at 70 C, not an in-service rate).
+
+8. THE KINDS: part to part (a fixed offset per unit): the resistors' 1 % and, as far as TI says anything, VREF's band;
+   temperature: the resistors' TCR (and any part of VREF's band TI does not separate); load and line: the amplifier's finite
+   gain and the copper to R16. The first two dominate: VREF 1.5 % and the ratio's 1 % pair about 1.9 %; TCR at most 0.9 %.
+
+END. Desk figures on the makers' pages and the committed netlist; nothing is measured.

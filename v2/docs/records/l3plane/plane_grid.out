@@ -4,7 +4,8 @@ mean day at Leiden, PVGIS DRcalc 2005 to 2020, each plane its own day); every co
 arithmetic, not a qualified review. Model: reconcile_lid_panel.py's run() over a1elec's energy_two_pack.py (pinned),
 400 Wp (2S2P Renogy RNG-100DB-H), 200 W stage, entry E2's front end, base +20 C, lid at 13.23 C (the September mean
 day's minimum air), both start hours, 42.8 W, aged 80 percent; U3 0.979, U3B at code 62 (7.936 A) and 0.972 carried.
-Ratios per plane from energy_runs.py (imported, pinned): B typical, C adverse; PVGIS's 0.9417 (40/0) kept for every plane.
+Ratios per plane from energy_runs.py (imported, pinned): B the typical array build (TYP), C the worst array build (WAB,
+the worst panel fit, set point, cell heat and lead on the SAME mean day: not weather); PVGIS's 0.9417 (40/0) kept for every plane.
 
 0. REPRODUCTION OF THE COMMITTED OUTPUTS
    0a. v2/docs/records/a1int/reconcile_lid_panel.out: 8 of 8 rows (4S14P and 4S15P; B, C; U3 6.1 and 6.0 A) reproduced byte for byte through the plane
@@ -25,7 +26,7 @@ Ratios per plane from energy_runs.py (imported, pinned): B typical, C adverse; P
 
 1. 4S14P LID, THE TABLET OUT OF THE LID (4S20P IN ALL): THE GRID (azimuth in degrees, negative east of south; flat is run once)
    1.1 Case P, both / lid Wh or NOT MET
-   slope  azim  kWh/m2/d B ratio C ratio   B typical        C adverse       
+   slope  azim  kWh/m2/d B ratio C ratio   B TYP            C WAB           
        0    +0     3.203  0.9900  0.9159   NOT MET          NOT MET         
       10   -45     3.409  0.9897  0.9148     36.3 /   0.0   NOT MET         
       10   -30     3.465  0.9899  0.9148     57.1 /  10.1   NOT MET         
@@ -76,7 +77,7 @@ Ratios per plane from energy_runs.py (imported, pinned): B typical, C adverse; P
       70   +15     3.699  0.9899  0.9106     70.8 /  24.7      7.0 /   0.0  
       70   +30     3.588  0.9894  0.9088      6.9 /   0.0   NOT MET         
       70   +45     3.414  0.9887  0.9069   NOT MET          NOT MET         
-   1.2 Every case, the lowest store of both packs in Wh (NOT = NOT MET); B typical / C adverse
+   1.2 Every case, the lowest store of both packs in Wh (NOT = NOT MET); B TYP / C WAB
    slope  azim  P              I              H              V20            V19          
        0    +0     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT     NOT    NOT
       10   -45    36.3    NOT    19.5    NOT    37.3    NOT     NOT    NOT     NOT    NOT
@@ -182,7 +183,7 @@ Ratios per plane from energy_runs.py (imported, pinned): B typical, C adverse; P
 
 2. 4S15P LID, THE QMX OUT OF THE LID (4S21P IN ALL): THE GRID (azimuth in degrees, negative east of south; flat is run once)
    2.1 Case P, both / lid Wh or NOT MET
-   slope  azim  kWh/m2/d B ratio C ratio   B typical        C adverse       
+   slope  azim  kWh/m2/d B ratio C ratio   B TYP            C WAB           
        0    +0     3.203  0.9900  0.9159     15.6 /   0.0   NOT MET         
       10   -45     3.409  0.9897  0.9148     67.0 /  17.9   NOT MET         
       10   -30     3.465  0.9899  0.9148     87.9 /  32.7   NOT MET         
@@ -233,7 +234,7 @@ Ratios per plane from energy_runs.py (imported, pinned): B typical, C adverse; P
       70   +15     3.699  0.9899  0.9106    101.9 /  47.7     37.6 /   0.0  
       70   +30     3.588  0.9894  0.9088     37.5 /   0.0   NOT MET         
       70   +45     3.414  0.9887  0.9069   NOT MET          NOT MET         
-   2.2 Every case, the lowest store of both packs in Wh (NOT = NOT MET); B typical / C adverse
+   2.2 Every case, the lowest store of both packs in Wh (NOT = NOT MET); B TYP / C WAB
    slope  azim  P              I              H              V20            V19          
        0    +0    15.6    NOT     5.1    NOT    15.6    NOT     NOT    NOT     NOT    NOT
       10   -45    67.0    NOT    50.1    NOT    68.0    NOT    30.3    NOT     NOT    NOT
