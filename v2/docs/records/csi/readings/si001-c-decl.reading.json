@@ -79,7 +79,7 @@
   },
   "board_table": {
    "path": "tools/boards/c.json",
-   "sha256_16": "113d3dea06a07d6d"
+   "sha256_16": "4123d73720197f4b"
   },
   "critical_k": 6,
   "document_1": {
@@ -258,11 +258,11 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "171fb51a80ab",
-  "tools_tree_sha": "c0e5c403e1884e5b"
+  "git_head": "8a0ae9b62354",
+  "tools_tree_sha": "4a8e00c956a5ebc5"
  },
  "verdict": "INCONCLUSIVE",
- "version": "171fb51a80ab",
+ "version": "8a0ae9b62354+dirty",
  "writer": {
   "file": "edge_length.py",
   "sha16": "ed37e9f2b70ef365"
