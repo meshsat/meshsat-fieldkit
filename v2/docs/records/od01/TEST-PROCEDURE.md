@@ -128,7 +128,8 @@ limit does not enforce any temperature limit and is not part of the shutdown.**
 | F1, F2 | in-line blade fuse holders: F1 with a 7.5 A fuse in the heater lead at the supply's +, before K1; F2 with a 1 A fuse at the start of the coil chain | not priced | outside the case |
 
 **What each trip enforces:** TS1 holds H2 at or under 96 C (its stop limit is 100 C); TS2 holds the polypropylene nearest
-H2 at or under 63 C (the wall stop is 70 C, Peli's case maximum 88 C); TS3 holds H1 at or under 63 C, and so its edge
+H2 at or under 63 C (the wall stop is 70 C, Peli's case maximum 88 C); in the steady-state steps (not the patch runs, whose
+limits are the operator's, section 6) TS3 holds H1 at or under 63 C, and so its edge
 over the o-ring (stop 70 C), which on a 3 mm aluminium plate heated from below differs from the underside near the
 window's edge by a few kelvin at most (INFERRED); TS4 holds the middle heater's body at or under 144 C (stop 150 C, Arcol's
 hot spot 200 C). Arcol's 3.0 K/W is a body's rise over the air on a standard heatsink: at 21.2 W about 64 K, so about 120 C
@@ -269,7 +270,7 @@ without V4, or with any of V1 to V3 failed, is an attended step.
    band and the frame's o-ring, and, lid closed, under the lid gasket, on a straight run of the seal, never where it
    turns a corner. The four heater leads (three + and the common) lie side by side on one run, the thermocouple wires on
    another; the thermostat chain's two single wires each on a run of its own, at least 50 mm from the other and from
-   every heater lead (section 3, wiring item 2). Photograph it. Do not replace Peli's purge valve with a gland. Then V3
+   every heater lead (section 3, wiring item 2). Lay every lead at least 10 mm from the ten screw holes (sheet H1-1). Photograph it. Do not replace Peli's purge valve with a gland. Then V3
    (a), H1 still lifted.
 8. **H1 on:** the ten 6-32 x 1/2 in A2 pan heads into Peli's inserts **by hand, no pressure** (Peli step 4: excess pressure
    pushes the inserts out). Check H1 seats evenly on the frame all round (feeler 0.05 at the edge, no gap except over the leads; every lead at least 10 mm from the ten screws) and that the
@@ -325,11 +326,12 @@ CH8. `P` = the mean of the readings in that window. Uncertainty per section 1.
    Refit H1 on the frame with its ten screws, the leads out under the seal as before. The shutdown switches nothing in
    the patch runs (the heaters stay off and the supply feeds the HS100 alone), so V3 is not repeated: the patch runs are
    attended, and section 8's 110 C limit on the HS100 is the operator's.
-3. **Patch channel map** (CH5, CH6, CH7 and CH8 were freed in step 2; tape CH3, CH5, CH6 and CH8 on H1's top face now; keep CH1, CH2 and CH4):
+3. **Patch channel map** (CH5, CH6, CH7 and CH8 were freed in step 2; tape CH3, CH5, CH6 and CH8 on H1's top face now; move CH4 to the band nearest the resistor; keep CH1 and CH2):
 
 | Ch | Where | Stop limit |
 |---|---|---|
 | CH3 | H1's top face directly over the resistor's centre, X -45.0, Y 70.0 | none |
+| CH4 | H1's edge over the o-ring nearest the resistor: the top face of the rebated band at X -45.0, Y +129.0 | **70 C** |
 | CH5 | H1's top face at X +5.0, Y 70.0 (50 mm along +X) | none |
 | CH6 | H1's top face at X +55.0, Y 70.0 (100 mm along +X) | none |
 | CH7 | the HS100's body, on its top | **110 C** |
@@ -339,7 +341,7 @@ CH8. `P` = the mean of the readings in that window. Uncertainty per section 1.
    class), current limit 6.5 A, output off; the heaters' link block stays open.
 5. The pulses, each from a plate (CH3) at or under +50 C, recording the plate's start temperature:
    45 W (9.95 V, 4.5 A) for 20, 30 and 60 s; then 83 W (13.5 V, 6.1 A) for 20, 30 and 60 s. Time each pulse with a
-   stopwatch, switching the supply's output on and off by hand. **Switch off at once if CH7 reaches 110 C**, and record the
+   stopwatch, switching the supply's output on and off by hand. **Switch off at once if CH7 reaches 110 C or CH4 reaches 70 C**, and record the
    time; with 83 W from a warm plate this may come before 60 s (on the record's figure, taken linear, 110 C is reached in
    about 43 s from +50 C, INFERRED).
 6. After each pulse, wait until CH3 is within 1 K of its value before the pulse, or 15 min, whichever is longer, logging
@@ -371,11 +373,14 @@ empty. Time: T1 15 min; drilling 2 to 3 h; T2 1 h after the legs' tape has cured
 | Reading | Limit | Enforced automatically by |
 |---|---|---|
 | Case floor or wall (CH5) | 70 C | TS2 (opens by 63 C) |
-| H1's edge over the o-ring (CH4) | 70 C | TS3 on H1 (opens by 63 C) |
+| H1's edge over the o-ring (CH4) | 70 C | TS3 on H1 (opens by 63 C) in the steady-state steps; in the patch runs the attending operator (CH4 on the band nearest the resistor) |
 | H2 (CH6) | 100 C | TS1 (opens by 96 C) |
 | A heater body (CH7, test A) | 150 C | TS4 on the middle heater (opens by 144 C) |
 | The patch resistor's body (CH7, patch runs) | 110 C | the attending operator |
 | Any smell or smoke | - | the operator: supply off, lid open, nothing touched bare-handed |
+
+TS1 to TS4 act only in the steady-state steps: in the patch runs the heaters are off and the shutdown switches nothing
+(section 6), so every limit there is the operator's.
 
 At a limit or a trip: supply off; do not press START; note the time and every channel; let the case cool with the lid
 open; photograph what tripped. To resume: when every channel reads within 5 K of the room, V4 in full, then the next step
