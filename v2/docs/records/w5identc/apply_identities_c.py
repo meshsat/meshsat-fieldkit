@@ -27,7 +27,7 @@ ROOT = os.path.normpath(os.path.join(HERE, "..", "..", "..", ".."))
 REQ = os.path.join(ROOT, "v2", "ecad", "tools", "pcb_requirements.yaml")
 LAYER = os.path.join(ROOT, "v2", "docs", "handover", "LAYER-STATUS.md")
 READING = os.path.join(HERE, "readings", "check-board-c-b874b744.json")
-READING_SHA256 = "83c0d79374608634e3536c702659092ae47901d79c1b118b765421d2c4b8becb"
+READING_SHA256 = "3d3775e2f23c0acaf010e35d0d23f73f44bf93175113c190370e9032649cfeb8"
 NETLIST_SHA256 = "c9f7394594201045be328a07284328a7eef2c2f451e35e0828a98ac3e5510609"
 MARKER = "(stream w5identc, board C's part identities)"
 ANCHOR_REQ = "\nclosed_items:\n"
@@ -48,19 +48,24 @@ def main(argv):
     assert r["inputs"][0]["netlist_sha256"] == NETLIST_SHA256, "the reading judged another netlist"
     st, why = r["identity_status"], r["unresolved_by_reason"]
     req_txt = open(REQ, encoding="utf-8").read()
-    assert MARKER not in req_txt, "refused: the open item is already in pcb_requirements.yaml (a second run)"
     assert req_txt.count(ANCHOR_REQ) == 1, "the anchor 'closed_items:' is not present exactly once"
     reg = yaml.safe_load(req_txt)
+    # read on the PARSED items: a folded title can split the marker over two lines of the file
+    assert not any(MARKER in " ".join(str(x.get("title", "")).split()) for x in (reg.get("open_items") or []) + (reg.get("closed_items") or [])), \
+        "refused: the open item is already in pcb_requirements.yaml (a second run)"
     used = [int(m.group(1)) for x in (reg.get("open_items") or []) + (reg.get("closed_items") or [])
             for m in [re.match(r"S-(\d+)$", str(x.get("id")))] if m]
     sid = "S-%d" % (max(used) + 1)
-    counts = ("%d BOM parts in %d selections: RESOLVED %d, UNRESOLVED %d (%s), NOT_A_PART %d"
-              % (r["rows"], r["selections"], st.get("RESOLVED", 0), st.get("UNRESOLVED", 0),
-                 ", ".join("%s %d" % kv for kv in sorted(why.items())), st.get("NOT_A_PART", 0)))
+    bb = r.get("resolved_by_binding") or {}
+    counts = ("%d BOM parts in %d selections: RESOLVED %d (PRINTED %d, DECODED %d), UNRESOLVED %d (%s), NOT_A_PART %d"
+              % (r["rows"], r["selections"], st.get("RESOLVED", 0), bb.get("PRINTED", 0), bb.get("DECODED", 0),
+                 st.get("UNRESOLVED", 0), ", ".join("%s %d" % kv for kv in sorted(why.items())), st.get("NOT_A_PART", 0)))
     title = ("%s Layer 6's exact-part requirement (LAYER-STATUS item 6.1; EXECUTION-PLAN review D, exact part identities "
              "before a board's layout entry; EQ-21) read on board C by tools/part_identities.py check at b874b744, netlist "
-             "%s: %s. Rule D-2: a selection is RESOLVED only where its held document's cited page prints the part number, "
-             "read by the tool (v2/docs/records/w5identc/readings/check-board-c-b874b744.json, sha256 %s). Owner: the parts "
+             "%s: %s. Rule D-2: a selection is RESOLVED only where its held maker's document's cited page prints the part "
+             "number (PRINTED) or is the maker's ordering-code table that decodes it field by field against the "
+             "selection (DECODED, the session's decision drafted by apply_decision_decoded.py; it does not show the value "
+             "is made at that rating), read by the tool (v2/docs/records/w5identc/readings/check-board-c-b874b744.json, sha256 %s). Owner: the parts "
              "writer and board C's author. Closed when every selection of board C reads RESOLVED by part_identities.py "
              "check on the netlist board C holds then, with the documents held (or held back by their terms and fetched "
              "by sha256) and the table re-derived by v2/docs/records/w5identc/build_table.py."

@@ -1,8 +1,8 @@
 {
  "identity_status": {
   "NOT_A_PART": 4,
-  "RESOLVED": 20,
-  "UNRESOLVED": 63
+  "RESOLVED": 43,
+  "UNRESOLVED": 40
  },
  "inputs": [
   {
@@ -141,6 +141,7 @@
    "status": "UNRESOLVED"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/diodes/diodes-bat46w.pdf",
    "id": "S-479b8ebac6",
    "line": "BAT46W-7-F SOD123 3,000 Tape & Reel",
@@ -158,6 +159,7 @@
    "status": "UNRESOLVED"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/power/panjit-ss2020fl-series.pdf",
    "id": "S-330f4dd290",
    "line": "PARAMETER SYMBOL SS2020FL SS2030FL SS2040FL SS2060FL SS20100FL UNITS",
@@ -169,6 +171,7 @@
    "why": "page 1 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/power/panjit-ss2020fl-series.pdf",
    "id": "S-a95bcbbc1e",
    "line": "PARAMETER SYMBOL SS2020FL SS2030FL SS2040FL SS2060FL SS20100FL UNITS",
@@ -180,6 +183,7 @@
    "why": "page 1 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/power/panjit-ss2020fl-series.pdf",
    "id": "S-af1ea25d67",
    "line": "PARAMETER SYMBOL SS2020FL SS2030FL SS2040FL SS2060FL SS20100FL UNITS",
@@ -251,6 +255,7 @@
    "status": "NOT_A_PART"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/power/jscj-2n7002-c8545.pdf",
    "id": "S-b9d2bcde2e",
    "line": "2N7002 MOSFET (N-Channel)",
@@ -262,6 +267,7 @@
    "why": "page 1 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
    "id": "S-55e88b2fbd",
    "line": "AO3401A",
@@ -273,6 +279,7 @@
    "why": "page 1 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
    "id": "S-cae89bf0ce",
    "line": "AO3401A",
@@ -284,6 +291,7 @@
    "why": "page 1 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/vishay/vishay-si2300ds.pdf",
    "id": "S-7917d94eb1",
    "line": "Lead (Pb)-free and halogen-free Si2300DS-T1-GE3",
@@ -295,6 +303,7 @@
    "why": "page 1 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/vishay/vishay-si2300ds.pdf",
    "id": "S-2c230ffa91",
    "line": "Lead (Pb)-free and halogen-free Si2300DS-T1-GE3",
@@ -348,6 +357,7 @@
    "status": "UNRESOLVED"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/vishay/veml7700-datasheet.pdf",
    "id": "S-8362226c90",
    "line": "VEML7700-TR Tape and reel MOQ: 2300 (MOQ is one reel) Side view",
@@ -359,6 +369,7 @@
    "why": "page 1 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
    "id": "S-3399dc8073",
    "line": "74LVC1G17W5-7 W5 SOT25 3,000/Tape & Reel -7",
@@ -370,6 +381,7 @@
    "why": "page 9 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
    "id": "S-82a0c53bb2",
    "line": "74LVC1G17W5-7 W5 SOT25 3,000/Tape & Reel -7",
@@ -381,6 +393,7 @@
    "why": "page 9 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
    "id": "S-ac3ac5929e",
    "line": "74LVC1G17W5-7 W5 SOT25 3,000/Tape & Reel -7",
@@ -392,6 +405,7 @@
    "why": "page 9 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/ti/ti-pca9555.pdf",
    "id": "S-2005fc2180",
    "line": "PCA9555PWR Active Production TSSOP (PW) | 24 2000 | LARGE T&R Yes NIPDAU Level-1-260C-UNLIM -40 to 85 PD9555",
@@ -403,6 +417,7 @@
    "why": "page 31 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/ti/ti-pca9555.pdf",
    "id": "S-ad00071efd",
    "line": "PCA9555PWR Active Production TSSOP (PW) | 24 2000 | LARGE T&R Yes NIPDAU Level-1-260C-UNLIM -40 to 85 PD9555",
@@ -414,6 +429,7 @@
    "why": "page 31 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
    "id": "S-75a8527525",
    "line": "RP2040 Datasheet",
@@ -425,6 +441,7 @@
    "why": "page 2 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/ti/ti-sn74lvc1g57.pdf",
    "id": "S-a3081131d9",
    "line": "SN74LVC1G57DBVR Active Production SOT-23 (DBV) | 6 3000 | LARGE T&R Yes NIPDAU Level-1-260C-UNLIM -40 to 125 (CA7O, CA7R)",
@@ -436,6 +453,7 @@
    "why": "page 14 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/power/ti-tlv755p-ldo.pdf",
    "id": "S-3da103208a",
    "line": "TLV75533PDBVR Active Production SOT-23 (DBV) | 5 3000 | LARGE T&R Yes SN Level-1-260C-UNLIM -40 to 125 1FWF",
@@ -447,6 +465,7 @@
    "why": "page 28 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/st/st-usblc6-2-esd-protection.pdf",
    "id": "S-e1dcd70451",
    "line": "The USBLC6-2SC6 and USBLC6-2P6 are monolithic application specific devices",
@@ -458,6 +477,7 @@
    "why": "page 1 names it"
   },
   {
+   "binding": "PRINTED",
    "document": "v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf",
    "id": "S-dfbcfc88f2",
    "line": "USON-8 16M-bit W25Q16JVUXIQ",
@@ -475,10 +495,24 @@
    "status": "UNRESOLVED"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "voltage",
+    "dielectric",
+    "construction"
+   ],
    "id": "S-45ad5deffe",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "CC0603KRX7R9BB104",
+   "not_established": [],
+   "page": 2,
    "rows": 21,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
   },
   {
    "id": "S-8b55c1443b",
@@ -487,10 +521,24 @@
    "status": "UNRESOLVED"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "voltage",
+    "dielectric",
+    "construction"
+   ],
    "id": "S-6d1de2f8e8",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "CC0805KKX7R7BB106",
+   "not_established": [],
+   "page": 2,
    "rows": 2,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
   },
   {
    "id": "S-8b1dfb7d63",
@@ -499,52 +547,164 @@
    "status": "UNRESOLVED"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "voltage",
+    "dielectric",
+    "construction"
+   ],
    "id": "S-9ae5738976",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
    "rows": 1,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "voltage",
+    "dielectric",
+    "construction"
+   ],
    "id": "S-12603c7856",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
    "rows": 1,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "voltage",
+    "dielectric",
+    "construction"
+   ],
    "id": "S-c3afdba8a6",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
    "rows": 1,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "voltage",
+    "dielectric",
+    "construction"
+   ],
    "id": "S-69d0f41966",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
    "rows": 1,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "voltage",
+    "dielectric",
+    "construction"
+   ],
    "id": "S-bd25452813",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
    "rows": 1,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "voltage",
+    "dielectric",
+    "construction"
+   ],
    "id": "S-9121e77997",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
    "rows": 1,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "voltage",
+    "dielectric",
+    "construction"
+   ],
    "id": "S-a9d5694441",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
    "rows": 1,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "voltage",
+    "dielectric",
+    "construction"
+   ],
    "id": "S-5eeee312c8",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "CC0603KRX7R7BB105",
+   "not_established": [],
+   "page": 2,
    "rows": 4,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
   },
   {
    "id": "S-62ab53c6e1",
@@ -571,76 +731,220 @@
    "status": "UNRESOLVED"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "power"
+   ],
    "id": "S-d7aa8a0726",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "0603WAF1000T5E",
+   "not_established": [],
+   "page": 2,
    "rows": 3,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "power"
+   ],
    "id": "S-a44109c662",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "0603WAF1003T5E",
+   "not_established": [],
+   "page": 2,
    "rows": 3,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "power"
+   ],
    "id": "S-d499541fe0",
-   "reason_class": "DOCUMENT_OWED",
+   "mpn": "0603WAF1002T5E",
+   "not_established": [],
+   "page": 2,
    "rows": 1,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "power"
+   ],
    "id": "S-50018f6fcc",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "0603WAF1002T5E",
+   "not_established": [],
+   "page": 2,
    "rows": 11,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "power"
+   ],
    "id": "S-e35e0a5cd2",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "0603WAF1800T5E",
+   "not_established": [],
+   "page": 2,
    "rows": 11,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "power"
+   ],
    "id": "S-0baee211d0",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "0603WAF1001T5E",
+   "not_established": [],
+   "page": 2,
    "rows": 5,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "power"
+   ],
    "id": "S-bf6f910c86",
-   "reason_class": "DOCUMENT_OWED",
+   "mpn": "0603WAF2201T5E",
+   "not_established": [],
+   "page": 2,
    "rows": 1,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "power"
+   ],
    "id": "S-099e530a08",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "0603WAF2201T5E",
+   "not_established": [],
+   "page": 2,
    "rows": 3,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "power"
+   ],
    "id": "S-b3916fa625",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "0603WAF270JT5E",
+   "not_established": [],
+   "page": 2,
    "rows": 6,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "power"
+   ],
    "id": "S-293aa5edf9",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "0603WAF3000T5E",
+   "not_established": [],
+   "page": 2,
    "rows": 6,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "power"
+   ],
    "id": "S-f8c96deae3",
-   "reason_class": "DOCUMENT_OWED",
+   "mpn": "0603WAF3300T5E",
+   "not_established": [],
+   "page": 2,
    "rows": 1,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "power"
+   ],
    "id": "S-900262aed5",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "0603WAF4700T5E",
+   "not_established": [],
+   "page": 2,
    "rows": 3,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
   },
   {
    "id": "S-8fcb029420",
@@ -649,14 +953,31 @@
    "status": "UNRESOLVED"
   },
   {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "established": [
+    "value",
+    "package",
+    "tolerance",
+    "power"
+   ],
    "id": "S-6b277c1b9f",
-   "reason_class": "DOCUMENT_DOES_NOT_NAME_THE_PART",
+   "mpn": "0603WAF470JT5E",
+   "not_established": [],
+   "page": 2,
    "rows": 1,
-   "status": "UNRESOLVED"
+   "state": "DECODED",
+   "status": "RESOLVED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
   }
  ],
  "resolved_bindings": {
+  "DECODED": 23,
   "READ": 20
+ },
+ "resolved_by_binding": {
+  "DECODED": 23,
+  "PRINTED": 20
  },
  "rows": 175,
  "scope": [
@@ -664,12 +985,12 @@
  ],
  "selections": 87,
  "table": "v2/ecad/tools/pcb_part_identities.yaml",
- "table_sha256": "3203a225ce731abfd4ee5c0e4d4cb3c01095d056ca0b0a978e73c481a28b77d7",
- "tool_sha256": "471b175ee34e6c9ca1f9ff95b5bf14c0788ef50ea35e2143695ce79edfa1b1ba",
+ "table_sha256": "febe247b6a1113684c5a73655bfc49e32002f2a38748efabd9b9ccba3e45046c",
+ "tool_sha256": "60b3f6db4349abb3e0ab3149c83e183189f05e45477b3b865a4e705671f203a2",
  "unresolved_by_reason": {
   "CHOICE_OWED": 22,
-  "DOCUMENT_DOES_NOT_NAME_THE_PART": 25,
-  "DOCUMENT_OWED": 16
+  "DOCUMENT_DOES_NOT_NAME_THE_PART": 5,
+  "DOCUMENT_OWED": 13
  },
  "verdict": "HOLDS",
  "what": "part_identities.py check: the table against the committed netlists, and rule D-2 read on every RESOLVED binding (the cited page's text layer names the part number)"

@@ -237,11 +237,15 @@ def t_a_connector_pin_is_set_on_its_far_side():
 
 
 def _pdf(pages):
-    """A minimal PDF, one text line per page, written by hand (no library): the fixture a document reader must read."""
-    objs = ["<< /Type /Catalog /Pages 2 0 R >>", None, "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>"]
+    """A minimal PDF written by hand (no library): each page one text line, or a list of lines, in Helvetica with the
+    WinAnsi encoding (so a plus-minus sign is one). The fixture a document reader must read."""
+    objs = ["<< /Type /Catalog /Pages 2 0 R >>", None,
+            "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>"]
     kids = []
     for text in pages:
-        stream = "BT /F1 12 Tf 72 720 Td (%s) Tj ET" % text.replace("(", "[").replace(")", "]")
+        lines = [text] if isinstance(text, str) else list(text)
+        body = " ".join("(%s) Tj 0 -16 Td" % l.replace("\\", "/").replace("(", "\\(").replace(")", "\\)") for l in lines)
+        stream = "BT /F1 11 Tf 72 740 Td %s ET" % body
         objs.append("<< /Length %d >>\nstream\n%s\nendstream" % (len(stream), stream))
         objs.append("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents %d 0 R >>" % (len(objs)))
         kids.append(len(objs))
@@ -338,3 +342,79 @@ def t_the_committed_table_is_whole():
     assert c["identity_status"] == dict(collections.Counter(s["identity"]["status"] for s in t["selections"]))
     assert sum(c["rows_by_identity_status"].values()) == c["rows"]
     assert {r["id"] for r in t["rules"]} >= {"K-1", "V-1", "V-2", "D-2", "N-1", "C-D3"}
+
+
+YAGEO_PAGE = ["YAGEO Product specification", "Surface-Mount Ceramic Multilayer Capacitors X7R 6.3 V to 250 V",
+              "YAGEO BRAND ordering code", "CC XXXX X X X7R X BB XXX", "0402 (1005)", "0603 (1608)",
+              "K = ± 10%", "M = ± 20%", "R = Paper/PE taping reel; Reel 7 inch", "8 = 25 V", "9 = 50 V",
+              "2 significant digits+number of zeros"]
+CAP_REQ = {"value": "100nF", "package": "0603", "construction": "MLCC", "dielectric": "X7R", "v_rating_min": 6.3,
+           "tolerance_max_pct": 10.0}
+
+
+def _yageo_fields(tol="K", volt="9", volt_row="9 = 50 V", volt_means="50 V"):
+    return [dict(field="series", code="CC", row="CC XXXX X X X7R X BB XXX", means="Ceramic Multilayer",
+                 means_row="Surface-Mount Ceramic Multilayer Capacitors X7R 6.3 V to 250 V"),
+            dict(field="size", code="0603", row="0603 (1608)"),
+            dict(field="tolerance", code=tol, row="%s = ± %s%%" % (tol, {"K": 10, "M": 20}[tol]), means="± %s%%" % {"K": 10, "M": 20}[tol]),
+            dict(field="packaging", code="R", row="R = Paper/PE taping reel; Reel 7 inch", means="Paper/PE taping reel"),
+            dict(field="dielectric", code="X7R", row="CC XXXX X X X7R X BB XXX"),
+            dict(field="voltage", code=volt, row=volt_row, means=volt_means),
+            dict(field="process", code="BB", row="CC XXXX X X X7R X BB XXX"),
+            dict(field="value", code="104", rule="pf_2sig", row="2 significant digits+number of zeros")]
+
+
+def _decoded(page, fields, publisher="YAGEO", mark="YAGEO"):
+    d, p = _fixture_doc([page])
+    h = hashlib.sha256(open(p, "rb").read()).hexdigest()
+    return d, dict(path=os.path.basename(p), sha256=h, page=1, binding="DECODED", publisher=publisher, maker_mark=mark, fields=fields)
+
+
+def t_a_decoded_binding_that_holds():
+    """The session's DECODED rule (29 September 2026): the maker's ordering-code table on the cited page decodes the
+    part number field by field, each code with its meaning in the table's own row, and the decoded part meets the
+    selection's value, package, tolerance, voltage and dielectric."""
+    d, ds = _decoded(YAGEO_PAGE, _yageo_fields())
+    r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ)
+    assert r["state"] == "DECODED" and r["binding"] == "DECODED", r
+    assert set(r["established"]) >= {"value", "package", "tolerance", "voltage", "dielectric", "construction"}, r
+    ds2 = dict(ds, fields=_yageo_fields()[:-1] + [dict(field="value", code="104", rule="pf_2sig", row="2 significant digits+number of zeros")])
+    r = PI.read_binding(ds2, "CC0603KRX7R9BB105", root=d, maker="YAGEO", req=CAP_REQ)
+    assert r["state"] == "REFUSED" and "spell" in r["why"], "fields that do not spell the part number were accepted: %r" % (r,)
+
+
+def t_a_decoded_tolerance_that_contradicts_the_selection_is_refused():
+    d, ds = _decoded(YAGEO_PAGE, _yageo_fields(tol="M"))
+    r = PI.read_binding(ds, "CC0603MRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ)
+    assert r["state"] == "REFUSED" and "tolerance" in r["why"], "a 20 percent part met a 10 percent selection: %r" % (r,)
+    r = PI.read_binding(ds, "CC0603MRX7R9BB104", root=d, maker="YAGEO", req=dict(CAP_REQ, tolerance_max_pct=20.0))
+    assert r["state"] == "DECODED", r
+
+
+def t_a_decoded_binding_on_a_page_that_lacks_a_field_is_refused():
+    page = [l for l in YAGEO_PAGE if l != "9 = 50 V"]       # the table page without the voltage code 9
+    d, ds = _decoded(page, _yageo_fields())
+    r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ)
+    assert r["state"] == "REFUSED" and "not on the cited page" in r["why"], r
+    # and a row that is on the page but does not map the code to what the binding claims
+    d, ds = _decoded(YAGEO_PAGE, _yageo_fields(volt_row="8 = 25 V", volt_means="50 V", volt="8"))
+    r = PI.read_binding(ds, "CC0603KRX7R8BB104", root=d, maker="YAGEO", req=CAP_REQ)
+    assert r["state"] == "REFUSED" and "does not map" in r["why"], r
+
+
+def t_a_decoded_binding_on_a_distributors_page_is_refused():
+    page = ["LCSC Electronics product detail"] + YAGEO_PAGE[1:]
+    d, ds = _decoded(page, _yageo_fields(), publisher="LCSC Electronics", mark="LCSC")
+    r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ)
+    assert r["state"] == "REFUSED" and "distributor" in r["why"], r
+    d, ds = _decoded(page + ["YAGEO"], _yageo_fields())   # the maker named, but the page is the distributor's
+    r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ)
+    assert r["state"] == "REFUSED" and "distributor" in r["why"], r
+
+
+def t_resistor_values_decode_by_the_makers_power_row():
+    assert abs(PI._decode_value("1002", "ohm_3sig") - 10000.0) < 1e-9
+    assert abs(PI._decode_value("270J", "ohm_3sig") - 27.0) < 1e-9
+    assert abs(PI._decode_value("104", "pf_2sig") - 100e-9) < 1e-18
+    assert abs(PI._decode_value("1R5", "pf_2sig") - 1.5e-12) < 1e-21
+    assert PI._decode_value("10", "pf_2sig") is None and PI._decode_value("1002", "nope") is None

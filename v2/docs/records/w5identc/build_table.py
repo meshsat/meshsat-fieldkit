@@ -98,6 +98,88 @@ HELD = {
 MAKER_AS_PRINTED = {"S-b9d2bcde2e": "Jiangsu Changjiang Electronics Technology Co., Ltd."}
 
 
+# DECODED bindings (the session's decision of 29 September 2026, drafted by apply_decision_decoded.py): the maker's own
+# ordering-code table decodes the part number field by field. Each spec names the document, the page of the table, the
+# maker's mark and publisher, and for each field of the part number the row of that page that states it (as the text
+# layer prints it, whitespace collapsed) and the meaning the row gives the code. part_identities.read_binding asserts
+# every row against the page and every decoded property against the selection; nothing here is taken on trust.
+YAGEO_SCHEME = "CC XXXX X X X7R X BB XXX"
+YAGEO_ROWS = {
+    "size": {"0402": "0402 (1005)", "0603": "0603 (1608)", "0805": "0805 (2012)", "1206": "1206 (3216)"},
+    "tolerance": {"J": ("J = ± 5%", "± 5%"), "K": ("K = ± 10%", "± 10%"), "M": ("M = ± 20%", "± 20%")},
+    "packaging": {"R": ("R = Paper/PE taping reel; Reel 7 inch", "Paper/PE taping reel"),
+                  "K": ("K = Blister taping reel; Reel 7 inch", "Blister taping reel")},
+    "voltage": {"5": ("5 = 6.3 V", "6.3 V"), "6": ("6 = 10 V", "10 V"), "7": ("7 = 16 V", "16 V"),
+                "8": ("8 = 25 V", "25 V"), "9": ("9 = 50 V", "50 V")},
+}
+UNIROYAL_ROWS = {
+    "size": "2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.",
+    "power": ("E.g.: WA=1/10W W4=1/4W", "1/10W"),
+    "tolerance": ("2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%", "±1%"),
+    "value": "2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the "
+             "resistance, and 11th code is the power of ten.",
+    "power_of_ten": "0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6",
+    "packaging": ("2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel", "Tape/Reel"),
+    "quantity": ("4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs", "5000pcs"),
+    "special": ("E = Environmental Protection, Lead Free, or Standard type.", "Environmental Protection"),
+}
+
+
+def decode_spec(mpn):
+    """The DECODED binding this stream drafts for a part number, or None when no maker's table is read for its series."""
+    import re
+    m = re.match(r"^CC(\d{4})([JKM])([RK])(X7R)([5-9])(BB)(\d{3})$", mpn)
+    if m:
+        size, tol, pack, diel, volt, proc, val = m.groups()
+        if size not in YAGEO_ROWS["size"]: return None
+        return dict(binding="DECODED", path="v2/vendor/passives/yageo-cc-series.pdf", page=2, publisher="YAGEO",
+                    maker_mark="YAGEO", table="YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, "
+                    "General Purpose & High Cap., X7R 6.3 V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, "
+                    "GLOBAL PART NUMBER",
+                    fields=[dict(field="series", code="CC", row=YAGEO_SCHEME, means="Ceramic Multilayer",
+                                 means_row="Surface-Mount Ceramic Multilayer Capacitors"),
+                            dict(field="size", code=size, row=YAGEO_ROWS["size"][size]),
+                            dict(field="tolerance", code=tol, row=YAGEO_ROWS["tolerance"][tol][0], means=YAGEO_ROWS["tolerance"][tol][1]),
+                            dict(field="packaging", code=pack, row=YAGEO_ROWS["packaging"][pack][0], means=YAGEO_ROWS["packaging"][pack][1]),
+                            dict(field="dielectric", code=diel, row=YAGEO_SCHEME),
+                            dict(field="voltage", code=volt, row=YAGEO_ROWS["voltage"][volt][0], means=YAGEO_ROWS["voltage"][volt][1]),
+                            dict(field="process", code=proc, row=YAGEO_SCHEME),
+                            dict(field="value", code=val, rule="pf_2sig", row="2 significant digits+number of zeros")])
+    m = re.match(r"^(0603)(WA)(F)(\d{3}[0-9J])(T)(5)(E)$", mpn)
+    if m:
+        size, pw, tol, val, pack, qty, sp = m.groups()
+        U = UNIROYAL_ROWS
+        return dict(binding="DECODED", path="v2/vendor/passives/held/uniroyal-series-11cd644d.pdf", page=2,
+                    publisher="UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)", maker_mark="UNI-ROYAL", held_back=True,
+                    fetch="v2/docs/records/w5identc/fetch_held_back.py",
+                    table="Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System",
+                    fields=[dict(field="size", code=size, row=U["size"]),
+                            dict(field="power", code=pw, row=U["power"][0], means=U["power"][1]),
+                            dict(field="tolerance", code=tol, row=U["tolerance"][0], means=U["tolerance"][1]),
+                            dict(field="value", code=val, rule="ohm_3sig", row=U["value"], means_row=U["power_of_ten"]),
+                            dict(field="packaging", code=pack, row=U["packaging"][0], means=U["packaging"][1]),
+                            dict(field="quantity", code=qty, row=U["quantity"][0], means=U["quantity"][1]),
+                            dict(field="special", code=sp, row=U["special"][0], means=U["special"][1])])
+    return None
+
+
+def try_decode(ident, req, sid, log):
+    """(datasheet, None) when the maker's table decodes the part for this selection, else (None, why)."""
+    ds = decode_spec(ident.get("mpn") or "")
+    if ds is None: return None, None
+    full = os.path.join(REPO, ds["path"])
+    if not os.path.exists(full):
+        raise SystemExit("build_table: %s is held back and not fetched: run %s first" % (ds["path"], ds.get("fetch")))
+    ds["sha256"] = sha(full)
+    r = PI.read_binding(ds, ident["mpn"], maker=ident.get("maker"), req=req)
+    log.append(dict(selection=sid, mpn=ident["mpn"], document=ds["path"], binding="DECODED", page=ds["page"],
+                    sha256=ds["sha256"], state=r["state"], why=r["why"], not_established=r.get("not_established")))
+    if r["state"] == "DECODED":
+        ds["established"] = r.get("established"); ds["not_established"] = r.get("not_established") or []
+        return ds, None
+    return None, "%s page %d, DECODED binding refused: %s" % (ds["path"], ds["page"], r["why"])
+
+
 def rules(w5):
     """w5ident's rules, carried, with V-1 amended and D-2 added by this stream; the resolver's own rules (D-1, M-1, I-1,
     I-2, F-2) are carried as the rules the carried identities were chosen under, and this stream ran no resolver."""
@@ -227,6 +309,14 @@ def main(argv):
             ident["reason"] = d.get("reason")
         else:
             raise SystemExit("build_table: %s has the status %r" % (sid, st))
+        if ident["status"] == "UNRESOLVED" and ident.get("mpn") and ident.get("reason_class") in ("DOCUMENT_DOES_NOT_NAME_THE_PART", "DOCUMENT_OWED"):
+            dec, why = try_decode(ident, s["requirements"], sid, log)
+            if dec:
+                was = ident.pop("reason_class"); ident.pop("reason", None); ident.pop("next_action", None)
+                ident["status"] = "RESOLVED"; ident["datasheet"] = dec
+                ident["decoded_after"] = "%s under PRINTED" % was
+            elif why:
+                ident["reason"] += "; " + why
         if d.get("chosen_by"): ident["chosen_by"] = d["chosen_by"]
         ident["from"] = src
         table_sel.append(collections.OrderedDict(
@@ -239,6 +329,8 @@ def main(argv):
     rc = collections.Counter(x["identity"].get("reason_class") for x in table_sel if x["identity"]["status"] == "UNRESOLVED")
     rows_by = collections.Counter()
     for x in table_sel: rows_by[x["identity"]["status"]] += x["n_rows"]
+    by_binding = collections.Counter(((x["identity"].get("datasheet") or {}).get("binding") or "PRINTED")
+                                     for x in table_sel if x["identity"]["status"] == "RESOLVED")
     t = collections.OrderedDict(
         schema_version=2,
         what=("The identity of every distinct part selection on the boards in `scope` (layer 6's exact-part requirement: "
@@ -255,6 +347,7 @@ def main(argv):
                      excluded_from_bom=m["excluded_from_bom"]) for m in meta],
         rules=rules(carried["w5ident_rules"]),
         counts=dict(rows=len(rs), selections=len(table_sel), identity_status=dict(st), unresolved_by_reason=dict(rc),
+                    resolved_by_binding=dict(by_binding),
                     rows_by_identity_status=dict(rows_by)),
         selections=table_sel)
     import yaml
@@ -263,7 +356,8 @@ def main(argv):
     open(out, "w", encoding="utf-8").write(txt)
     json.dump(dict(what="rule D-2 as the builder read it: every identity that claimed a document, the pages read and the first page printing the part number",
                    documents=log), open(os.path.join(HERE, "readings", "builder-document-reads.json"), "w"), indent=1, sort_keys=True)
-    print("build_table: %d rows, %d selections, %s, unresolved by reason %s -> %s" % (len(rs), len(table_sel), dict(st), dict(rc), os.path.relpath(out, REPO)))
+    print("build_table: %d rows, %d selections, %s, resolved by binding %s, unresolved by reason %s -> %s"
+          % (len(rs), len(table_sel), dict(st), dict(by_binding), dict(rc), os.path.relpath(out, REPO)))
     return 0
 
 
