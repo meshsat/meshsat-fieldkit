@@ -25,8 +25,9 @@ Branch `fnd/int13`. The integrator's scripts, read-backs and checks for set 12. 
 
 | Check | Result | Answered by |
 |---|---|---|
-| `checks/check-set12-1.md` (the substance check, and its re-checks on rf2walk2 and rf2walk3) | remedies hold; B1 the walk; rf2walk3 accepted | streams rf2walk2 and rf2walk3 |
+| `checks/check-set12-1.md` (the substance check), `checks/check-set12-2.md` and `-3.md` (its re-checks on rf2walk2 and rf2walk3) | remedies hold; B1 the walk; rf2walk3 accepted | streams rf2walk2 and rf2walk3 |
 | `checks/check-int13-1.md` (the integration check at `005e5f5e`) | not mergeable: B1, and minors m1 to m9 | `apply_check13_fixes.py` (B1, m1, m2, m3, m6, m8, m9), this README (m4, m5, m7), the re-take at the corrected commit (m5) |
+| `checks/check-int13-2.md` (the focused re-check at `69156cad`) | not mergeable: B1 carried (the first answer claimed rows it had not read), and five minors | `apply_conops_4b_set12.py` (section 4b and the EMCON row rewritten whole from the netlists, B1 and minors 1 to 3), this README (minors 4 and 5) |
 
 The suite at `005e5f5e` failed 3 tests:
 - a 191k resistor with no order code;
@@ -38,7 +39,7 @@ census test.
 ## Notes the check asked for
 
 - **m4, line citations.** The generator entries of set 12 do not state the line shifts.
-  - `gen_sch_a.py` moved by +35 lines after line 857 and by +55 after line 907, as the check measured.
+  - `gen_sch_a.py` moved by +35 lines from main's line 860 and by +55 from main's line 910 (the focused re-check's measure; the first note said after 857 and 907).
   - Older registry citations of `gen_sch_a.py` lines are dated to the sha they were read at, so read them there. Examples:
     CON-019 `:1237-1245` and `:1291-1304`, CON-018 `:1200-1210`, and REQ-077 lines 1262 and 1267.
   - The second-pass `gen_sch_b.py` entries also cover the LED feed loads of `apply_b_chk12_led.py`.
