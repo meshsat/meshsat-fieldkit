@@ -8,7 +8,7 @@
    "boardtable.py": "41bd92e61f12c374",
    "bypass_search.py": "f6197f4be2ce6859",
    "decoupling_rules.py": "f4d06f6789c6ec48",
-   "edge_length.py": "21d61d18e18e56a8",
+   "edge_length.py": "ed37e9f2b70ef365",
    "fan_select.py": "39fff82524253c05",
    "hardset.py": "be29a44c4a592876",
    "ibis_manifest.py": "ff27099a74e5efe9",
@@ -32,49 +32,40 @@
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "d59545707562acb5",
+  "sha16": "06b578216dd3aac6",
   "unresolved": []
  },
  "counts": {
-  "answered_nets": 10,
-  "bound_decided_nets": 23,
-  "bound_edge_nets": 29,
-  "classes": 48,
+  "allowed_nets": 11,
+  "answered_nets": 29,
+  "bound_decided_nets": 7,
+  "bound_edge_nets": 32,
+  "classes": 53,
   "contradicted_nets": 0,
-  "decided_nets": 33,
-  "layout_bound_nets": 23,
-  "low_speed_nets": 101,
+  "decided_nets": 36,
+  "layout_bound_nets": 7,
+  "low_speed_nets": 103,
   "maker_edge_nets": 4,
   "maker_held_nets": 0,
-  "may_be_long_nets": 33,
+  "may_be_long_nets": 36,
   "models_absent": 0,
-  "models_asked": 6,
-  "signal_nets": 135,
+  "models_asked": 5,
+  "signal_nets": 139,
   "unasked_part_nets": 0,
   "undecided_model_absent_nets": 0,
-  "undecided_nets": 1,
-  "undecided_no_declaration_nets": 1,
+  "undecided_nets": 0,
+  "undecided_no_declaration_nets": 0,
   "undecided_other_nets": 0
  },
- "denominator": 135,
+ "denominator": 139,
  "evidence": [
-  "UNDECIDED (no declaration) (UNKNOWN, 1 of 1 net(s)): no signal-class declaration; ICs on them: 74LVC1G17 Schmitt-trigger U9",
-  "BOUND_DECIDES 23 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): EPD_CS, EPD_DC, EPD_SCL, EPD_SDA, EPD_SW, EXP_INT, HB1, HB2, HB3, Q3_G, QSPI_D0, QSPI_D1 ...",
-  "LAYOUT_BOUND EPD_CS (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): EPD_CS",
-  "LAYOUT_BOUND EPD_DC (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): EPD_DC",
-  "LAYOUT_BOUND EPD_SCL (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): EPD_SCL",
-  "LAYOUT_BOUND EPD_SDA (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): EPD_SDA",
+  "BOUND_DECIDES 7 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): EPD_SW, EXP_INT, HB1, HB2, HB3, SCL, SDA",
+  "ALLOWED 11 net(s), pending the layout: answered at this phase by an edge_allow declaration whose basis holds (CSI-D1), each held to the length it declares (CSI-D2) by the routed half, edge_length_routed, which decides no rule yet, so they keep this reading INCONCLUSIVE (ALLOW_PENDS_LAYOUT): QSPI_D0 <= 13.1 mm, QSPI_D1 <= 13.1 mm, QSPI_D2 <= 13.1 mm, QSPI_D3 <= 13.1 mm, QSPI_SCLK <= 8.0 mm, QSPI_SS <= 17.7 mm, SWCLK <= 20.1 mm, SWDIO <= 18.9 mm, XIN <= 8.7 mm, XOUT <= 4.0 mm, XOUT_R <= 2.1 mm",
   "LAYOUT_BOUND EPD_SW (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): EPD_SW",
   "LAYOUT_BOUND EXP_INT (CLOCKED_DIGITAL, 0.000 ns BOUND TI-PCA9555, critical 0.0 mm, decided by a bound): EXP_INT",
   "LAYOUT_BOUND HB? (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): HB1, HB2, HB3",
-  "LAYOUT_BOUND Q?_G (HIGH_SPEED_DIGITAL, 0.000 ns BOUND LVC1G34-BUFFER, critical 0.0 mm, decided by a bound): Q3_G",
-  "LAYOUT_BOUND QSPI_* (HIGH_SPEED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): QSPI_D0, QSPI_D1, QSPI_D2, QSPI_D3, QSPI_SCLK, QSPI_SS",
   "LAYOUT_BOUND SCL (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): SCL",
-  "LAYOUT_BOUND SDA (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): SDA",
-  "LAYOUT_BOUND SW* (CLOCKED_DIGITAL, 0.000 ns BOUND FAR-BENCH-PROBE, critical 0.0 mm, decided by a bound): SWCLK",
-  "LAYOUT_BOUND SW* (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): SWDIO",
-  "LAYOUT_BOUND XIN (HIGH_SPEED_DIGITAL, 0.000 ns BOUND OSCILLATOR-NODES, critical 0.0 mm, decided by a bound): XIN",
-  "LAYOUT_BOUND XOUT* (HIGH_SPEED_DIGITAL, 0.000 ns BOUND OSCILLATOR-NODES, critical 0.0 mm, decided by a bound): XOUT, XOUT_R"
+  "LAYOUT_BOUND SDA (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): SDA"
  ],
  "inputs": {
   "board": "c",
@@ -84,40 +75,40 @@
   },
   "board_table": {
    "path": "tools/boards/c.json",
-   "sha256_16": "7d7bcbccef4f1630"
+   "sha256_16": "fe5b32bf8174daa1"
   },
   "critical_k": 6,
   "document_1": {
-   "path": "v2/docs/records/hc5/kit_i2c_budget.round8-d.out.txt",
-   "sha256_16": "7967404c281d4e12"
+   "path": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+   "sha256_16": "5a71e9d681dc99e7"
   },
   "document_10": {
    "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
    "sha256_16": "be56fbb75ba0ae9e"
   },
   "document_11": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+   "sha256_16": "51c4f430153fcdbf"
+  },
+  "document_12": {
    "path": "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf",
    "sha256_16": "f6e620179006c8c4"
   },
-  "document_12": {
+  "document_13": {
    "path": "v2/vendor/standards/nxp-um10204-rev6-i2c-bus-specification.pdf",
    "sha256_16": "b7619700e8bb9dd4"
   },
-  "document_13": {
+  "document_14": {
    "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
    "sha256_16": "2ecb40606d4b84fe"
   },
-  "document_14": {
+  "document_15": {
    "path": "v2/vendor/ti/bq25731-datasheet.pdf",
    "sha256_16": "3e5e927fdf63cf6a"
   },
-  "document_15": {
+  "document_16": {
    "path": "v2/vendor/ti/lm5176-datasheet.pdf",
    "sha256_16": "98191bec36d43771"
-  },
-  "document_16": {
-   "path": "v2/vendor/ti/ti-sn74lvc1g34.pdf",
-   "sha256_16": "04384d3a3cf65b2b"
   },
   "document_17": {
    "path": "v2/vendor/ti/tps23861-datasheet.pdf",
@@ -132,16 +123,16 @@
    "sha256_16": "81af3f69b0bff95f"
   },
   "document_2": {
+   "path": "v2/docs/records/hc5/kit_i2c_budget.round8-d.out.txt",
+   "sha256_16": "7967404c281d4e12"
+  },
+  "document_3": {
    "path": "v2/vendor/adi/adi-ds3231sn.pdf",
    "sha256_16": "dc81cd89bee82d0c"
   },
-  "document_3": {
+  "document_4": {
    "path": "v2/vendor/cm5/cm5-datasheet.pdf",
    "sha256_16": "80070fefd8db6e8a"
-  },
-  "document_4": {
-   "path": "v2/vendor/diodes/diodes-74lvc1g34.pdf",
-   "sha256_16": "efd2d7978bb880b7"
   },
   "document_5": {
    "path": "v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf",
@@ -186,7 +177,7 @@
   },
   "intent": {
    "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
-   "sha256_16": "d321f2979e0c4244"
+   "sha256_16": "6db304b8ce504a09"
   },
   "model_1": {
    "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
@@ -209,11 +200,6 @@
    "sha256_16": "56c19a4da921e38c"
   },
   "model_5": {
-   "path": "v2/vendor/ti/ibis/sn74lvc1g00.ibs",
-   "pinned_sha256_16": "e085986b1ed2969e",
-   "sha256_16": "e085986b1ed2969e"
-  },
-  "model_6": {
    "path": "v2/vendor/ti/ibis/tmp117.ibs",
    "pinned_sha256_16": "5c71fbcce9e13803",
    "sha256_16": "5c71fbcce9e13803"
@@ -221,16 +207,16 @@
   "model_state": {
    "absent": 0,
    "absent_files": [],
-   "asked": 6,
+   "asked": 5,
    "how_to_fetch": "python3 v2/ecad/tools/ibis_fetch.py --fetch",
    "manifest": "v2/vendor/ibis-manifest.yaml",
-   "present": 6,
+   "present": 5,
    "state": "PRESENT"
   },
   "netlist": {
-   "content16": "424a8b6ee5851775",
+   "content16": "e6d5f09e7a983901",
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "87b69472ac83ca5a"
+   "sha256_16": "c9f7394594201045"
   },
   "project": {
    "path": "pcb-c-display-c8/pcb-c-display.kicad_pro",
@@ -252,7 +238,7 @@
   "t_pd_ps_per_mm": 7.154
  },
  "missing_input": null,
- "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default. Since 27 September 2026 every edge is a record of tools/pcb_edge_rates.yaml (a configuration input, by sha in inputs.edge_rates): a class entry's interface record, or per net the fastest of its drivers' families (a maker's IBIS model read per pin, a published minimum, a model or a bound), its far ends and one series resistor away; a net whose driver has no record is UNDECIDED. The governing edge of a net is the fastest any driver on it can produce, so one driver with no published minimum makes the net decided by a bound whatever the others publish (ER-D13); a layout-bound net a bound decides is named under BOUND_DECIDES and holds the reading INCONCLUSIVE. counts: decided = maker_edge + bound_edge; layout_bound = maker_held + bound_decided. Since 28 September 2026 the makers' IBIS models are pinned by v2/vendor/ibis-manifest.yaml (inputs.ibis_manifest) and are not in the repository: a pinned model the checkout does not hold decides nothing, its nets read UNDECIDED naming it, and inputs.model_state says which state the reading was taken in (ER-D17); undecided = undecided_no_declaration + undecided_model_absent + undecided_other; a pin whose [Ramp] cell the model's own V-t table contradicts takes the instantaneous bound (ER-D16)",
+ "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default. Since 27 September 2026 every edge is a record of tools/pcb_edge_rates.yaml (a configuration input, by sha in inputs.edge_rates): a class entry's interface record, or per net the fastest of its drivers' families (a maker's IBIS model read per pin, a published minimum, a model or a bound), its far ends and one series resistor away; a net whose driver has no record is UNDECIDED. The governing edge of a net is the fastest any driver on it can produce, so one driver with no published minimum makes the net decided by a bound whatever the others publish (ER-D13); a layout-bound net a bound decides is named under BOUND_DECIDES and holds the reading INCONCLUSIVE. counts: decided = maker_edge + bound_edge; layout_bound = maker_held + bound_decided. Since 28 September 2026 the makers' IBIS models are pinned by v2/vendor/ibis-manifest.yaml (inputs.ibis_manifest) and are not in the repository: a pinned model the checkout does not hold decides nothing, its nets read UNDECIDED naming it, and inputs.model_state says which state the reading was taken in (ER-D17); undecided = undecided_no_declaration + undecided_model_absent + undecided_other; a pin whose [Ramp] cell the model's own V-t table contradicts takes the instantaneous bound (ER-D16). Since 29 September 2026 an edge_allow declaration answers a net only with its basis held, a refused one FAILS the reading, and the length it declares is handed to the layout (length_limits; CSI-D1, CSI-D2)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -268,14 +254,14 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "a46db71be8a1",
-  "tools_tree_sha": "6031704bb86457d7"
+  "git_head": "4f4fd31d15df",
+  "tools_tree_sha": "fd71d03702e5de42"
  },
- "ts": "2026-09-29T13:43:18Z",
+ "ts": "2026-09-29T15:16:58Z",
  "verdict": "INCONCLUSIVE",
- "version": "a46db71be8a1",
+ "version": "4f4fd31d15df",
  "writer": {
   "file": "edge_length.py",
-  "sha16": "21d61d18e18e56a8"
+  "sha16": "ed37e9f2b70ef365"
  }
 }

@@ -8,7 +8,7 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
   f846e138cb53a8c6  v2/ecad/tools/gen_sch_e.py
   bb695d4f8e9fce1c  v2/docs/records/energy/night_bounds.out
   1af26f00624e17d7  v2/docs/records/energy/packfit_west.out
-  64dd014bee56d855  v2/docs/records/energy/energy_inputs.yaml
+  74a6e4ab0074648e  v2/docs/records/energy/energy_inputs.yaml
 
 1. THE LOADS OF THE STATES M1 USES (battery-side W, PLAN, 14.4 V; kinds S maker / R maker's bound at a duty /
    D declaration / T placeholder; MEASURED: none, the tree holds no measurement of any load)
@@ -150,35 +150,35 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
    scaled to the pinned monthly mean. Panel: STC rating x G / 1000 x 0.9417 (PVGIS's own angle, spectral and
    temperature losses, no system loss; maximum-power tracking assumed, which the fixed 17.6 V stage does not do:
    the low bracket takes 0.80). Window: at most 100 W into the stage (REQ-016); above it the stage clips.
-   Chain into the node: 0.93 x 0.93 x 0.98 = 0.8476 (bracket 0.782 to 0.926); the panel's 5.68 A at 17.6 V sits
+   Chain into the node: 0.930 x 0.930 x 0.979 = 0.8467 (bracket 0.787 to 0.925); the panel's 5.68 A at 17.6 V sits
    under F2's and J_SOLAR's 10 A.
 
   month      kWh/m2 a day  profile scale  panel Wp  panel Wh/day  panel peak W  hours clipped  into node Wh/day (100 W window)  no window  low bracket  high bracket
   ---------  ------------  -------------  --------  ------------  ------------  -------------  -------------------------------  ---------  -----------  ------------
-  June       5.49          1.008          100       516.9         61.5          0              438.1                            438.1      343.3        478.6       
-  June       5.49          1.008          150       775.4         92.3          0              657.2                            657.2      514.9        717.9       
-  June       5.49          1.008          200       1033.9        123.0         5              813.2                            876.3      637.1        888.3       
-  June       5.49          1.008          266       1375.0        163.6         8              902.4                            1165.5     706.9        985.7       
-  June       5.49          1.008          330       1705.9        203.0         8              956.3                            1445.9     749.2        1044.6      
-  June       5.49          1.008          400       2067.7        246.1         10             998.0                            1752.6     781.9        1090.1      
-  September  4.01          1.008          100       378.0         49.0          0              320.4                            320.4      251.0        350.0       
-  September  4.01          1.008          150       567.0         73.6          0              480.6                            480.6      376.5        525.0       
-  September  4.01          1.008          200       756.0         98.1          0              640.8                            640.8      502.0        700.0       
-  September  4.01          1.008          266       1005.5        130.4         6              751.1                            852.3      588.4        820.4       
-  September  4.01          1.008          330       1247.4        161.8         8              807.0                            1057.3     632.2        881.5       
-  September  4.01          1.008          400       1512.1        196.1         8              834.4                            1281.6     653.7        911.4       
-  December   1.13          1.006          100       106.1         21.4          0              90.0                             90.0       70.5         98.3        
-  December   1.13          1.006          150       159.2         32.1          0              134.9                            134.9      105.7        147.4       
-  December   1.13          1.006          200       212.3         42.9          0              179.9                            179.9      141.0        196.5       
-  December   1.13          1.006          266       282.3         57.0          0              239.3                            239.3      187.5        261.4       
-  December   1.13          1.006          330       350.3         70.7          0              296.9                            296.9      232.6        324.3       
-  December   1.13          1.006          400       424.6         85.7          0              359.9                            359.9      281.9        393.1       
+  June       5.49          1.008          100       516.9         61.5          0              437.7                            437.7      345.7        478.1       
+  June       5.49          1.008          150       775.4         92.3          0              656.5                            656.5      518.6        717.2       
+  June       5.49          1.008          200       1033.9        123.0         5              812.4                            875.4      641.7        887.4       
+  June       5.49          1.008          266       1375.0        163.6         8              901.5                            1164.3     712.1        984.7       
+  June       5.49          1.008          330       1705.9        203.0         8              955.4                            1444.4     754.7        1043.6      
+  June       5.49          1.008          400       2067.7        246.1         10             997.0                            1750.8     787.5        1089.0      
+  September  4.01          1.008          100       378.0         49.0          0              320.1                            320.1      252.8        349.6       
+  September  4.01          1.008          150       567.0         73.6          0              480.1                            480.1      379.3        524.4       
+  September  4.01          1.008          200       756.0         98.1          0              640.2                            640.2      505.7        699.3       
+  September  4.01          1.008          266       1005.5        130.4         6              750.3                            851.4      592.7        819.6       
+  September  4.01          1.008          330       1247.4        161.8         8              806.2                            1056.3     636.8        880.6       
+  September  4.01          1.008          400       1512.1        196.1         8              833.5                            1280.3     658.4        910.5       
+  December   1.13          1.006          100       106.1         21.4          0              89.9                             89.9       71.0         98.2        
+  December   1.13          1.006          150       159.2         32.1          0              134.8                            134.8      106.5        147.3       
+  December   1.13          1.006          200       212.3         42.9          0              179.7                            179.7      142.0        196.3       
+  December   1.13          1.006          266       282.3         57.0          0              239.1                            239.1      188.8        261.1       
+  December   1.13          1.006          330       350.3         70.7          0              296.6                            296.6      234.3        324.0       
+  December   1.13          1.006          400       424.6         85.7          0              359.5                            359.5      284.0        392.7       
 
    Reading the table: a 100 Wp panel never reaches 100 W (its peak is under it) and gives 320 Wh a day at the
-   node in September and 90 in December (the low brackets 251 and 70). A larger panel is clipped here at 100 W
+   node in September and 90 in December (the low brackets 253 and 71). A larger panel is clipped here at 100 W
    into the stage for the hours shown (a MODEL assumption: as generated nothing in the stage holds it to 100 W, 6e).
-   The window's own ceiling, a panel large enough to be clipped in every lit hour (20 kWp), is 1356 Wh a day at the
-   node in June, 1024 in September and 624 in December, against the 1027 Wh a day PS-IDLE-SPEC asks: above it in
+   The window's own ceiling, a panel large enough to be clipped in every lit hour (20 kWp), is 1355 Wh a day at the
+   node in June, 1023 in September and 623 in December, against the 1027 Wh a day PS-IDLE-SPEC asks: above it in
    June, under it in September and December. A panel above about 150 Wp of the 12 V class also exceeds F2's and
    J_SOLAR's 10 A at its short circuit (about 6.25 A per 100 Wp), so it re-rates the entry whatever the stage does.
 
@@ -188,40 +188,40 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
 5a. The design case in full: PS-IDLE-SPEC 42.8 W, September, start 06:00 UTC, cells +20 C, usable 107.9 Wh.
   h   UTC    G W/m2  sun at node W  load W  cells +/- W  cells Wh left  running
   --  -----  ------  -------------  ------  -----------  -------------  -------
-  0   06:00  57.5    4.6            42.8    -38.2        69.7           yes    
+  0   06:00  57.5    4.6            42.8    -38.2        69.6           yes    
   1   07:00  191.5   15.3           42.8    -27.5        42.1           yes    
   2   08:00  329.2   26.3           42.8    -16.5        25.6           yes    
-  3   09:00  440.8   35.2           42.8    -7.6         18.0           yes    
-  4   10:00  502.8   40.1           42.8    -2.7         15.3           yes    
-  5   11:00  516.5   41.2           42.8    -1.6         13.8           yes    
-  6   12:00  520.7   41.6           42.8    -1.2         12.5           yes    
-  7   13:00  483.6   38.6           42.8    -4.2         8.3            yes    
+  3   09:00  440.8   35.1           42.8    -7.7         17.9           yes    
+  4   10:00  502.8   40.1           42.8    -2.7         15.2           yes    
+  5   11:00  516.5   41.2           42.8    -1.6         13.6           yes    
+  6   12:00  520.7   41.5           42.8    -1.3         12.3           yes    
+  7   13:00  483.6   38.6           42.8    -4.2         8.1            yes    
   8   14:00  407.5   32.5           42.8    -10.3        0.0            STOPPED
   9   15:00  323.7   25.8           0.0     +24.5        24.5           STOPPED
-  10  16:00  188.8   15.1           0.0     +14.3        38.9           STOPPED
+  10  16:00  188.8   15.1           0.0     +14.3        38.8           STOPPED
   11  17:00  51.3    4.1            0.0     +3.9         42.7           STOPPED
-  12  18:00  0.4     0.0            0.0     +0.0         42.8           STOPPED
-  13  19:00  0.0     0.0            0.0     +0.0         42.8           STOPPED
-  14  20:00  0.0     0.0            0.0     +0.0         42.8           STOPPED
-  15  21:00  0.0     0.0            0.0     +0.0         42.8           STOPPED
-  16  22:00  0.0     0.0            0.0     +0.0         42.8           STOPPED
-  17  23:00  0.0     0.0            0.0     +0.0         42.8           STOPPED
-  18  00:00  0.0     0.0            0.0     +0.0         42.8           STOPPED
-  19  01:00  0.0     0.0            0.0     +0.0         42.8           STOPPED
-  20  02:00  0.0     0.0            0.0     +0.0         42.8           STOPPED
-  21  03:00  0.0     0.0            0.0     +0.0         42.8           STOPPED
-  22  04:00  0.0     0.0            0.0     +0.0         42.8           STOPPED
-  23  05:00  0.0     0.0            0.0     +0.0         42.8           STOPPED
+  12  18:00  0.4     0.0            0.0     +0.0         42.7           STOPPED
+  13  19:00  0.0     0.0            0.0     +0.0         42.7           STOPPED
+  14  20:00  0.0     0.0            0.0     +0.0         42.7           STOPPED
+  15  21:00  0.0     0.0            0.0     +0.0         42.7           STOPPED
+  16  22:00  0.0     0.0            0.0     +0.0         42.7           STOPPED
+  17  23:00  0.0     0.0            0.0     +0.0         42.7           STOPPED
+  18  00:00  0.0     0.0            0.0     +0.0         42.7           STOPPED
+  19  01:00  0.0     0.0            0.0     +0.0         42.7           STOPPED
+  20  02:00  0.0     0.0            0.0     +0.0         42.7           STOPPED
+  21  03:00  0.0     0.0            0.0     +0.0         42.7           STOPPED
+  22  04:00  0.0     0.0            0.0     +0.0         42.7           STOPPED
+  23  05:00  0.0     0.0            0.0     +0.0         42.7           STOPPED
   24  06:00  57.5    4.6            0.0     +4.4         47.1           STOPPED
-  25  07:00  191.5   15.3           0.0     +14.5        61.7           STOPPED
-  26  08:00  329.2   26.3           42.8    -16.5        45.1           yes    
-  27  09:00  440.8   35.2           42.8    -7.6         37.5           yes    
-  28  10:00  502.8   40.1           42.8    -2.7         34.8           yes    
-  29  11:00  516.5   41.2           42.8    -1.6         33.3           yes    
-  30  12:00  520.7   41.6           42.8    -1.2         32.0           yes    
-  31  13:00  483.6   38.6           42.8    -4.2         27.8           yes    
-  32  14:00  407.5   32.5           42.8    -10.3        17.6           yes    
-  33  15:00  323.7   25.8           42.8    -17.0        0.6            yes    
+  25  07:00  191.5   15.3           0.0     +14.5        61.6           STOPPED
+  26  08:00  329.2   26.3           42.8    -16.5        45.0           yes    
+  27  09:00  440.8   35.1           42.8    -7.7         37.4           yes    
+  28  10:00  502.8   40.1           42.8    -2.7         34.7           yes    
+  29  11:00  516.5   41.2           42.8    -1.6         33.1           yes    
+  30  12:00  520.7   41.5           42.8    -1.3         31.8           yes    
+  31  13:00  483.6   38.6           42.8    -4.2         27.5           yes    
+  32  14:00  407.5   32.5           42.8    -10.3        17.2           yes    
+  33  15:00  323.7   25.8           42.8    -17.0        0.2            yes    
   34  16:00  188.8   15.1           42.8    -27.7        0.0            STOPPED
   35  17:00  51.3    4.1            0.0     +3.9         3.9            STOPPED
   36  18:00  0.4     0.0            0.0     +0.0         3.9            STOPPED
@@ -238,15 +238,15 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
   47  05:00  0.0     0.0            0.0     +0.0         3.9            STOPPED
   48  06:00  57.5    4.6            0.0     +4.4         8.3            STOPPED
   49  07:00  191.5   15.3           0.0     +14.5        22.8           STOPPED
-  50  08:00  329.2   26.3           0.0     +25.0        47.8           STOPPED
-  51  09:00  440.8   35.2           0.0     +33.4        81.2           STOPPED
-  52  10:00  502.8   40.1           42.8    -2.7         78.5           yes    
-  53  11:00  516.5   41.2           42.8    -1.6         76.9           yes    
-  54  12:00  520.7   41.6           42.8    -1.2         75.7           yes    
-  55  13:00  483.6   38.6           42.8    -4.2         71.5           yes    
-  56  14:00  407.5   32.5           42.8    -10.3        61.2           yes    
-  57  15:00  323.7   25.8           42.8    -17.0        44.3           yes    
-  58  16:00  188.8   15.1           42.8    -27.7        16.5           yes    
+  50  08:00  329.2   26.3           0.0     +24.9        47.7           STOPPED
+  51  09:00  440.8   35.1           0.0     +33.4        81.1           STOPPED
+  52  10:00  502.8   40.1           42.8    -2.7         78.4           yes    
+  53  11:00  516.5   41.2           42.8    -1.6         76.8           yes    
+  54  12:00  520.7   41.5           42.8    -1.3         75.5           yes    
+  55  13:00  483.6   38.6           42.8    -4.2         71.3           yes    
+  56  14:00  407.5   32.5           42.8    -10.3        60.9           yes    
+  57  15:00  323.7   25.8           42.8    -17.0        44.0           yes    
+  58  16:00  188.8   15.1           42.8    -27.7        16.2           yes    
   59  17:00  51.3    4.1            42.8    -38.7        0.0            STOPPED
   60  18:00  0.4     0.0            0.0     +0.0         0.0            STOPPED
   61  19:00  0.0     0.0            0.0     +0.0         0.0            STOPPED
@@ -261,53 +261,53 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
   70  04:00  0.0     0.0            0.0     +0.0         0.0            STOPPED
   71  05:00  0.0     0.0            0.0     +0.0         0.0            STOPPED
 
-   First stop at hour 8; ran 23 of 72 hours; load unserved over the 72 h 1870 Wh of 3082 asked; the pack's draw
-   in each period of sun below the load: 107.9, 61.7, 81.2 Wh.
+   First stop at hour 8; ran 23 of 72 hours; load unserved over the 72 h 1871 Wh of 3082 asked; the pack's draw
+   in each period of sun below the load: 107.9, 61.6, 81.1 Wh.
 
 5b. Every state, both months, both start hours (aged 80 percent; December's cells at +5 C, f_T 0.706):
   state           W     month      start  usable Wh  sun-down h  h sun < load  Wh a night at that load  first stop h  h run of 72  Wh unserved  72 h   
   --------------  ----  ---------  -----  ---------  ----------  ------------  -----------------------  ------------  -----------  -----------  -------
-  PS-IDLE-SPEC    42.8  September  06:00  107.9      11.3        24            1027.2                   8             23           1869.7       NOT MET
-  PS-IDLE-SPEC    42.8  September  18:00  107.9      11.3        24            1027.2                   2             23           1780.7       NOT MET
-  PS-IDLE-SPEC    42.8  December   06:00  76.2       16.2        24            1027.2                   1             5            2593.5       NOT MET
-  PS-IDLE-SPEC    42.8  December   18:00  76.2       16.2        24            1027.2                   1             5            2593.5       NOT MET
-  PS-IDLE-SPEC    42.8  June       06:00  107.9      7.3         19            813.2                    12            32           1526.4       NOT MET
-  PS-IDLE-SPEC    42.8  June       18:00  107.9      7.3         19            813.2                    2             31           1501.5       NOT MET
-  PS-RED2         31.4  September  06:00  109.1      11.3        18            564.8                    13            33           1107.5       NOT MET
-  PS-RED2         31.4  September  18:00  109.1      11.3        18            564.8                    3             32           1097.3       NOT MET
-  PS-RED2         31.4  December   06:00  77.0       16.2        24            753.1                    2             8            1782.2       NOT MET
-  PS-RED2         31.4  December   18:00  77.0       16.2        24            753.1                    2             8            1780.4       NOT MET
-  PS-RED2         31.4  June       06:00  109.1      7.3         16            502.1                    14            38           896.9        NOT MET
-  PS-RED2         31.4  June       18:00  109.1      7.3         16            502.1                    3             37           901.7        NOT MET
-  PS-SURV-R       23.3  September  06:00  109.2      11.3        16            372.3                    15            41           645.4        NOT MET
-  PS-SURV-R       23.3  September  18:00  109.2      11.3        16            372.3                    4             40           644.7        NOT MET
-  PS-SURV-R       23.3  December   06:00  77.1       16.2        24            558.5                    3             12           1191.7       NOT MET
-  PS-SURV-R       23.3  December   18:00  77.1       16.2        24            558.5                    3             12           1196.6       NOT MET
-  PS-SURV-R       23.3  June       06:00  109.2      7.3         15            349.1                    16            44           527.9        NOT MET
-  PS-SURV-R       23.3  June       18:00  109.2      7.3         15            349.1                    4             42           531.2        NOT MET
-  PS-SURV         21.7  September  06:00  109.2      11.3        16            347.7                    15            41           574.6        NOT MET
-  PS-SURV         21.7  September  18:00  109.2      11.3        16            347.7                    5             41           573.9        NOT MET
-  PS-SURV         21.7  December   06:00  77.1       16.2        24            521.5                    4             14           1081.0       NOT MET
-  PS-SURV         21.7  December   18:00  77.1       16.2        24            521.5                    3             15           1085.8       NOT MET
-  PS-SURV         21.7  June       06:00  109.2      7.3         14            304.2                    16            46           462.1        NOT MET
-  PS-SURV         21.7  June       18:00  109.2      7.3         14            304.2                    5             46           464.1        NOT MET
-  PS-NIGHT-RELAY  16.2  September  06:00  109.2      11.3        16            259.2                    17            47           320.2        NOT MET
-  PS-NIGHT-RELAY  16.2  September  18:00  109.2      11.3        16            259.2                    6             46           319.5        NOT MET
-  PS-NIGHT-RELAY  16.2  December   06:00  77.1       16.2        22            356.4                    10            20           766.6        NOT MET
-  PS-NIGHT-RELAY  16.2  December   18:00  77.1       16.2        22            356.4                    4             19           739.9        NOT MET
-  PS-NIGHT-RELAY  16.2  June       06:00  109.2      7.3         14            226.8                    18            52           235.4        NOT MET
-  PS-NIGHT-RELAY  16.2  June       18:00  109.2      7.3         14            226.8                    7             52           237.4        NOT MET
+  PS-IDLE-SPEC    42.8  September  06:00  107.9      11.3        24            1027.2                   8             23           1870.8       NOT MET
+  PS-IDLE-SPEC    42.8  September  18:00  107.9      11.3        24            1027.2                   2             23           1781.9       NOT MET
+  PS-IDLE-SPEC    42.8  December   06:00  76.2       16.2        24            1027.2                   1             5            2593.9       NOT MET
+  PS-IDLE-SPEC    42.8  December   18:00  76.2       16.2        24            1027.2                   1             5            2593.9       NOT MET
+  PS-IDLE-SPEC    42.8  June       06:00  107.9      7.3         19            813.2                    12            32           1527.8       NOT MET
+  PS-IDLE-SPEC    42.8  June       18:00  107.9      7.3         19            813.2                    2             31           1502.6       NOT MET
+  PS-RED2         31.4  September  06:00  109.1      11.3        18            564.8                    13            33           1108.6       NOT MET
+  PS-RED2         31.4  September  18:00  109.1      11.3        18            564.8                    3             32           1098.1       NOT MET
+  PS-RED2         31.4  December   06:00  77.0       16.2        24            753.1                    2             8            1782.6       NOT MET
+  PS-RED2         31.4  December   18:00  77.0       16.2        24            753.1                    2             8            1780.8       NOT MET
+  PS-RED2         31.4  June       06:00  109.1      7.3         16            502.1                    14            38           897.2        NOT MET
+  PS-RED2         31.4  June       18:00  109.1      7.3         16            502.1                    3             37           901.9        NOT MET
+  PS-SURV-R       23.3  September  06:00  109.2      11.3        16            372.3                    15            41           646.0        NOT MET
+  PS-SURV-R       23.3  September  18:00  109.2      11.3        16            372.3                    4             40           645.2        NOT MET
+  PS-SURV-R       23.3  December   06:00  77.1       16.2        24            558.5                    3             12           1192.1       NOT MET
+  PS-SURV-R       23.3  December   18:00  77.1       16.2        24            558.5                    3             12           1197.1       NOT MET
+  PS-SURV-R       23.3  June       06:00  109.2      7.3         15            349.1                    16            44           528.0        NOT MET
+  PS-SURV-R       23.3  June       18:00  109.2      7.3         15            349.1                    4             42           531.3        NOT MET
+  PS-SURV         21.7  September  06:00  109.2      11.3        16            347.7                    15            41           574.7        NOT MET
+  PS-SURV         21.7  September  18:00  109.2      11.3        16            347.7                    5             41           574.0        NOT MET
+  PS-SURV         21.7  December   06:00  77.1       16.2        24            521.5                    4             14           1081.4       NOT MET
+  PS-SURV         21.7  December   18:00  77.1       16.2        24            521.5                    3             15           1086.2       NOT MET
+  PS-SURV         21.7  June       06:00  109.2      7.3         14            304.2                    16            46           462.2        NOT MET
+  PS-SURV         21.7  June       18:00  109.2      7.3         14            304.2                    5             46           464.2        NOT MET
+  PS-NIGHT-RELAY  16.2  September  06:00  109.2      11.3        16            259.2                    17            47           320.3        NOT MET
+  PS-NIGHT-RELAY  16.2  September  18:00  109.2      11.3        16            259.2                    6             46           319.6        NOT MET
+  PS-NIGHT-RELAY  16.2  December   06:00  77.1       16.2        22            356.4                    10            20           766.9        NOT MET
+  PS-NIGHT-RELAY  16.2  December   18:00  77.1       16.2        22            356.4                    4             19           740.3        NOT MET
+  PS-NIGHT-RELAY  16.2  June       06:00  109.2      7.3         14            226.8                    18            52           235.5        NOT MET
+  PS-NIGHT-RELAY  16.2  June       18:00  109.2      7.3         14            226.8                    7             52           237.5        NOT MET
 
    'h sun < load' counts the hours of the mean day in which the 100 Wp panel's power at the node is below the load:
    the pack carries those hours, and they are longer than the astronomical night because a 100 Wp panel exceeds
-   42.8 W at the node only above about 536 W/m2.
+   42.8 W at the node only above about 537 W/m2.
 
 5c. SENSITIVITY, the design case (PS-IDLE-SPEC, September, start 06:00, aged 80 percent): what each input alone would
    have to be for the 72 hours to end above the graceful threshold, the others as they are.
   input                                    value that closes M1 alone                    meaning                                                                                                       
   ---------------------------------------  --------------------------------------------  --------------------------------------------------------------------------------------------------------------
   load W at the pack (42.8 now)            8.4                                           the whole kit at 20 percent of PS-IDLE-SPEC: below the heat stage's 21.7 W and this record's night state      
-  usable pack energy Wh (108 aged now)     2120.4                                        19.7 packs of the ruled size, aged; 15.7 new (2120 Wh)                                                        
+  usable pack energy Wh (108 aged now)     2121.4                                        19.7 packs of the ruled size, aged; 15.7 new (2121 Wh)                                                        
   panel Wp in the 100 W window (100 now)   none: no panel size passes inside the window  the night binds first: a 20 kWp panel in the window leaves 12 h below the load, asking 507 Wh of a 108 Wh pack
   panel Wp with no window (re-rated path)  none: no panel size passes with this pack     the night binds: the pack empties whatever the day gives                                                      
   night h the pack carries at 42.8 W       2.52                                          against 11.3 h of sun-down and 24 h of sun below the load in September                                        
@@ -316,93 +316,93 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
    2.80 V line of (b), the panel and window of (e)); EACH STATE IS HELD FOR ALL 72 HOURS, DAY AND NIGHT:
   state           W     graceful line  panel Wp  window W  month      usable Wh  one 4S3P pack (the ruled one)         two 4S3P packs (D-01's deferred second)
   --------------  ----  -------------  --------  --------  ---------  ---------  ------------------------------------  ---------------------------------------
-  PS-IDLE-SPEC    42.8  3v00           100       100       September  107.9      NOT MET, unserved 1870 Wh, stop h 8   NOT MET, unserved 1671 Wh              
-  PS-IDLE-SPEC    42.8  3v00           100       100       June       107.9      NOT MET, unserved 1526 Wh, stop h 12  NOT MET, unserved 1339 Wh              
+  PS-IDLE-SPEC    42.8  3v00           100       100       September  107.9      NOT MET, unserved 1871 Wh, stop h 8   NOT MET, unserved 1672 Wh              
+  PS-IDLE-SPEC    42.8  3v00           100       100       June       107.9      NOT MET, unserved 1528 Wh, stop h 12  NOT MET, unserved 1340 Wh              
   PS-IDLE-SPEC    42.8  3v00           100       100       December   76.2       NOT MET, unserved 2594 Wh, stop h 1   NOT MET, unserved 2487 Wh              
   PS-IDLE-SPEC    42.8  3v00           200       100       September  107.9      NOT MET, unserved 1451 Wh, stop h 13  NOT MET, unserved 1119 Wh              
   PS-IDLE-SPEC    42.8  3v00           200       100       June       107.9      NOT MET, unserved 1229 Wh, stop h 14  NOT MET, unserved 897 Wh               
-  PS-IDLE-SPEC    42.8  3v00           200       100       December   76.2       NOT MET, unserved 2306 Wh, stop h 1   NOT MET, unserved 2114 Wh              
+  PS-IDLE-SPEC    42.8  3v00           200       100       December   76.2       NOT MET, unserved 2306 Wh, stop h 1   NOT MET, unserved 2115 Wh              
   PS-IDLE-SPEC    42.8  3v00           330       300       September  107.9      NOT MET, unserved 1360 Wh, stop h 13  NOT MET, unserved 1028 Wh              
   PS-IDLE-SPEC    42.8  3v00           330       300       June       107.9      NOT MET, unserved 1104 Wh, stop h 15  NOT MET, unserved 772 Wh               
-  PS-IDLE-SPEC    42.8  3v00           330       300       December   76.2       NOT MET, unserved 2031 Wh, stop h 1   NOT MET, unserved 1963 Wh              
+  PS-IDLE-SPEC    42.8  3v00           330       300       December   76.2       NOT MET, unserved 2031 Wh, stop h 1   NOT MET, unserved 1964 Wh              
   PS-IDLE-SPEC    42.8  3v00           400       none      September  107.9      NOT MET, unserved 1345 Wh, stop h 13  NOT MET, unserved 1013 Wh              
-  PS-IDLE-SPEC    42.8  3v00           400       none      June       107.9      NOT MET, unserved 1069 Wh, stop h 15  NOT MET, unserved 737 Wh               
-  PS-IDLE-SPEC    42.8  3v00           400       none      December   76.2       NOT MET, unserved 1984 Wh, stop h 1   NOT MET, unserved 1847 Wh              
-  PS-IDLE-SPEC    42.8  2v80           100       100       September  109.7      NOT MET, unserved 1868 Wh, stop h 8   NOT MET, unserved 1668 Wh              
-  PS-IDLE-SPEC    42.8  2v80           100       100       June       109.7      NOT MET, unserved 1524 Wh, stop h 12  NOT MET, unserved 1336 Wh              
-  PS-IDLE-SPEC    42.8  2v80           100       100       December   77.5       NOT MET, unserved 2592 Wh, stop h 1   NOT MET, unserved 2484 Wh              
+  PS-IDLE-SPEC    42.8  3v00           400       none      June       107.9      NOT MET, unserved 1069 Wh, stop h 15  NOT MET, unserved 738 Wh               
+  PS-IDLE-SPEC    42.8  3v00           400       none      December   76.2       NOT MET, unserved 1984 Wh, stop h 1   NOT MET, unserved 1849 Wh              
+  PS-IDLE-SPEC    42.8  2v80           100       100       September  109.7      NOT MET, unserved 1869 Wh, stop h 8   NOT MET, unserved 1669 Wh              
+  PS-IDLE-SPEC    42.8  2v80           100       100       June       109.7      NOT MET, unserved 1526 Wh, stop h 12  NOT MET, unserved 1337 Wh              
+  PS-IDLE-SPEC    42.8  2v80           100       100       December   77.5       NOT MET, unserved 2593 Wh, stop h 1   NOT MET, unserved 2485 Wh              
   PS-IDLE-SPEC    42.8  2v80           200       100       September  109.7      NOT MET, unserved 1445 Wh, stop h 13  NOT MET, unserved 1110 Wh              
   PS-IDLE-SPEC    42.8  2v80           200       100       June       109.7      NOT MET, unserved 1223 Wh, stop h 14  NOT MET, unserved 888 Wh               
-  PS-IDLE-SPEC    42.8  2v80           200       100       December   77.5       NOT MET, unserved 2304 Wh, stop h 1   NOT MET, unserved 2112 Wh              
+  PS-IDLE-SPEC    42.8  2v80           200       100       December   77.5       NOT MET, unserved 2305 Wh, stop h 1   NOT MET, unserved 2113 Wh              
   PS-IDLE-SPEC    42.8  2v80           330       300       September  109.7      NOT MET, unserved 1354 Wh, stop h 13  NOT MET, unserved 1019 Wh              
   PS-IDLE-SPEC    42.8  2v80           330       300       June       109.7      NOT MET, unserved 1098 Wh, stop h 15  NOT MET, unserved 763 Wh               
-  PS-IDLE-SPEC    42.8  2v80           330       300       December   77.5       NOT MET, unserved 2026 Wh, stop h 1   NOT MET, unserved 1961 Wh              
+  PS-IDLE-SPEC    42.8  2v80           330       300       December   77.5       NOT MET, unserved 2026 Wh, stop h 1   NOT MET, unserved 1962 Wh              
   PS-IDLE-SPEC    42.8  2v80           400       none      September  109.7      NOT MET, unserved 1339 Wh, stop h 13  NOT MET, unserved 1004 Wh              
-  PS-IDLE-SPEC    42.8  2v80           400       none      June       109.7      NOT MET, unserved 1064 Wh, stop h 15  NOT MET, unserved 728 Wh               
-  PS-IDLE-SPEC    42.8  2v80           400       none      December   77.5       NOT MET, unserved 1979 Wh, stop h 1   NOT MET, unserved 1845 Wh              
-  PS-RED2         31.4  3v00           100       100       September  109.1      NOT MET, unserved 1108 Wh, stop h 13  NOT MET, unserved 998 Wh               
-  PS-RED2         31.4  3v00           100       100       June       109.1      NOT MET, unserved 897 Wh, stop h 14   NOT MET, unserved 736 Wh               
-  PS-RED2         31.4  3v00           100       100       December   77.0       NOT MET, unserved 1782 Wh, stop h 2   NOT MET, unserved 1664 Wh              
+  PS-IDLE-SPEC    42.8  2v80           400       none      June       109.7      NOT MET, unserved 1064 Wh, stop h 15  NOT MET, unserved 729 Wh               
+  PS-IDLE-SPEC    42.8  2v80           400       none      December   77.5       NOT MET, unserved 1979 Wh, stop h 1   NOT MET, unserved 1846 Wh              
+  PS-RED2         31.4  3v00           100       100       September  109.1      NOT MET, unserved 1109 Wh, stop h 13  NOT MET, unserved 999 Wh               
+  PS-RED2         31.4  3v00           100       100       June       109.1      NOT MET, unserved 897 Wh, stop h 14   NOT MET, unserved 737 Wh               
+  PS-RED2         31.4  3v00           100       100       December   77.0       NOT MET, unserved 1783 Wh, stop h 2   NOT MET, unserved 1665 Wh              
   PS-RED2         31.4  3v00           200       100       September  109.1      NOT MET, unserved 922 Wh, stop h 14   NOT MET, unserved 594 Wh               
   PS-RED2         31.4  3v00           200       100       June       109.1      NOT MET, unserved 757 Wh, stop h 15   NOT MET, unserved 429 Wh               
-  PS-RED2         31.4  3v00           200       100       December   77.0       NOT MET, unserved 1488 Wh, stop h 2   NOT MET, unserved 1460 Wh              
+  PS-RED2         31.4  3v00           200       100       December   77.0       NOT MET, unserved 1488 Wh, stop h 2   NOT MET, unserved 1461 Wh              
   PS-RED2         31.4  3v00           330       300       September  109.1      NOT MET, unserved 888 Wh, stop h 14   NOT MET, unserved 560 Wh               
-  PS-RED2         31.4  3v00           330       300       June       109.1      NOT MET, unserved 680 Wh, stop h 16   NOT MET, unserved 352 Wh               
-  PS-RED2         31.4  3v00           330       300       December   77.0       NOT MET, unserved 1366 Wh, stop h 2   NOT MET, unserved 1226 Wh              
+  PS-RED2         31.4  3v00           330       300       June       109.1      NOT MET, unserved 681 Wh, stop h 16   NOT MET, unserved 352 Wh               
+  PS-RED2         31.4  3v00           330       300       December   77.0       NOT MET, unserved 1366 Wh, stop h 2   NOT MET, unserved 1227 Wh              
   PS-RED2         31.4  3v00           400       none      September  109.1      NOT MET, unserved 873 Wh, stop h 15   NOT MET, unserved 545 Wh               
-  PS-RED2         31.4  3v00           400       none      June       109.1      NOT MET, unserved 655 Wh, stop h 16   NOT MET, unserved 326 Wh               
+  PS-RED2         31.4  3v00           400       none      June       109.1      NOT MET, unserved 655 Wh, stop h 16   NOT MET, unserved 327 Wh               
   PS-RED2         31.4  3v00           400       none      December   77.0       NOT MET, unserved 1361 Wh, stop h 2   NOT MET, unserved 1120 Wh              
-  PS-RED2         31.4  2v80           100       100       September  110.6      NOT MET, unserved 1106 Wh, stop h 13  NOT MET, unserved 995 Wh               
-  PS-RED2         31.4  2v80           100       100       June       110.6      NOT MET, unserved 892 Wh, stop h 14   NOT MET, unserved 733 Wh               
-  PS-RED2         31.4  2v80           100       100       December   78.1       NOT MET, unserved 1781 Wh, stop h 2   NOT MET, unserved 1662 Wh              
-  PS-RED2         31.4  2v80           200       100       September  110.6      NOT MET, unserved 917 Wh, stop h 14   NOT MET, unserved 584 Wh               
-  PS-RED2         31.4  2v80           200       100       June       110.6      NOT MET, unserved 752 Wh, stop h 15   NOT MET, unserved 420 Wh               
-  PS-RED2         31.4  2v80           200       100       December   78.1       NOT MET, unserved 1487 Wh, stop h 2   NOT MET, unserved 1458 Wh              
+  PS-RED2         31.4  2v80           100       100       September  110.6      NOT MET, unserved 1107 Wh, stop h 13  NOT MET, unserved 996 Wh               
+  PS-RED2         31.4  2v80           100       100       June       110.6      NOT MET, unserved 893 Wh, stop h 14   NOT MET, unserved 734 Wh               
+  PS-RED2         31.4  2v80           100       100       December   78.1       NOT MET, unserved 1782 Wh, stop h 2   NOT MET, unserved 1663 Wh              
+  PS-RED2         31.4  2v80           200       100       September  110.6      NOT MET, unserved 917 Wh, stop h 14   NOT MET, unserved 585 Wh               
+  PS-RED2         31.4  2v80           200       100       June       110.6      NOT MET, unserved 753 Wh, stop h 15   NOT MET, unserved 420 Wh               
+  PS-RED2         31.4  2v80           200       100       December   78.1       NOT MET, unserved 1487 Wh, stop h 2   NOT MET, unserved 1459 Wh              
   PS-RED2         31.4  2v80           330       300       September  110.6      NOT MET, unserved 884 Wh, stop h 14   NOT MET, unserved 551 Wh               
   PS-RED2         31.4  2v80           330       300       June       110.6      NOT MET, unserved 676 Wh, stop h 16   NOT MET, unserved 343 Wh               
-  PS-RED2         31.4  2v80           330       300       December   78.1       NOT MET, unserved 1361 Wh, stop h 2   NOT MET, unserved 1224 Wh              
+  PS-RED2         31.4  2v80           330       300       December   78.1       NOT MET, unserved 1362 Wh, stop h 2   NOT MET, unserved 1225 Wh              
   PS-RED2         31.4  2v80           400       none      September  110.6      NOT MET, unserved 869 Wh, stop h 15   NOT MET, unserved 536 Wh               
   PS-RED2         31.4  2v80           400       none      June       110.6      NOT MET, unserved 650 Wh, stop h 16   NOT MET, unserved 317 Wh               
   PS-RED2         31.4  2v80           400       none      December   78.1       NOT MET, unserved 1357 Wh, stop h 2   NOT MET, unserved 1114 Wh              
-  PS-SURV-R       23.3  3v00           100       100       September  109.2      NOT MET, unserved 645 Wh, stop h 15   NOT MET, unserved 536 Wh               
-  PS-SURV-R       23.3  3v00           100       100       June       109.2      NOT MET, unserved 528 Wh, stop h 16   NOT MET, unserved 241 Wh               
+  PS-SURV-R       23.3  3v00           100       100       September  109.2      NOT MET, unserved 646 Wh, stop h 15   NOT MET, unserved 537 Wh               
+  PS-SURV-R       23.3  3v00           100       100       June       109.2      NOT MET, unserved 528 Wh, stop h 16   NOT MET, unserved 242 Wh               
   PS-SURV-R       23.3  3v00           100       100       December   77.1       NOT MET, unserved 1192 Wh, stop h 3   NOT MET, unserved 1081 Wh              
   PS-SURV-R       23.3  3v00           200       100       September  109.2      NOT MET, unserved 583 Wh, stop h 16   NOT MET, unserved 256 Wh               
   PS-SURV-R       23.3  3v00           200       100       June       109.2      NOT MET, unserved 436 Wh, stop h 17   NOT MET, unserved 108 Wh               
   PS-SURV-R       23.3  3v00           200       100       December   77.1       NOT MET, unserved 1016 Wh, stop h 10  NOT MET, unserved 939 Wh               
   PS-SURV-R       23.3  3v00           330       300       September  109.2      NOT MET, unserved 555 Wh, stop h 16   NOT MET, unserved 228 Wh               
   PS-SURV-R       23.3  3v00           330       300       June       109.2      NOT MET, unserved 388 Wh, stop h 17   NOT MET, unserved 60 Wh                
-  PS-SURV-R       23.3  3v00           330       300       December   77.1       NOT MET, unserved 941 Wh, stop h 12   NOT MET, unserved 720 Wh               
+  PS-SURV-R       23.3  3v00           330       300       December   77.1       NOT MET, unserved 941 Wh, stop h 12   NOT MET, unserved 721 Wh               
   PS-SURV-R       23.3  3v00           400       none      September  109.2      NOT MET, unserved 540 Wh, stop h 16   NOT MET, unserved 213 Wh               
-  PS-SURV-R       23.3  3v00           400       none      June       109.2      NOT MET, unserved 362 Wh, stop h 17   NOT MET, unserved 34 Wh                
+  PS-SURV-R       23.3  3v00           400       none      June       109.2      NOT MET, unserved 362 Wh, stop h 17   NOT MET, unserved 35 Wh                
   PS-SURV-R       23.3  3v00           400       none      December   77.1       NOT MET, unserved 938 Wh, stop h 12   NOT MET, unserved 707 Wh               
-  PS-SURV-R       23.3  2v80           100       100       September  110.7      NOT MET, unserved 644 Wh, stop h 15   NOT MET, unserved 533 Wh               
-  PS-SURV-R       23.3  2v80           100       100       June       110.7      NOT MET, unserved 523 Wh, stop h 16   NOT MET, unserved 238 Wh               
+  PS-SURV-R       23.3  2v80           100       100       September  110.7      NOT MET, unserved 644 Wh, stop h 15   NOT MET, unserved 534 Wh               
+  PS-SURV-R       23.3  2v80           100       100       June       110.7      NOT MET, unserved 523 Wh, stop h 16   NOT MET, unserved 239 Wh               
   PS-SURV-R       23.3  2v80           100       100       December   78.2       NOT MET, unserved 1191 Wh, stop h 3   NOT MET, unserved 1079 Wh              
   PS-SURV-R       23.3  2v80           200       100       September  110.7      NOT MET, unserved 579 Wh, stop h 16   NOT MET, unserved 247 Wh               
   PS-SURV-R       23.3  2v80           200       100       June       110.7      NOT MET, unserved 432 Wh, stop h 17   NOT MET, unserved 99 Wh                
-  PS-SURV-R       23.3  2v80           200       100       December   78.2       NOT MET, unserved 1015 Wh, stop h 11  NOT MET, unserved 936 Wh               
+  PS-SURV-R       23.3  2v80           200       100       December   78.2       NOT MET, unserved 1015 Wh, stop h 10  NOT MET, unserved 937 Wh               
   PS-SURV-R       23.3  2v80           330       300       September  110.7      NOT MET, unserved 551 Wh, stop h 16   NOT MET, unserved 219 Wh               
-  PS-SURV-R       23.3  2v80           330       300       June       110.7      NOT MET, unserved 383 Wh, stop h 17   NOT MET, unserved 51 Wh                
-  PS-SURV-R       23.3  2v80           330       300       December   78.2       NOT MET, unserved 938 Wh, stop h 12   NOT MET, unserved 718 Wh               
-  PS-SURV-R       23.3  2v80           400       none      September  110.7      NOT MET, unserved 536 Wh, stop h 16   NOT MET, unserved 203 Wh               
+  PS-SURV-R       23.3  2v80           330       300       June       110.7      NOT MET, unserved 384 Wh, stop h 17   NOT MET, unserved 51 Wh                
+  PS-SURV-R       23.3  2v80           330       300       December   78.2       NOT MET, unserved 938 Wh, stop h 12   NOT MET, unserved 719 Wh               
+  PS-SURV-R       23.3  2v80           400       none      September  110.7      NOT MET, unserved 536 Wh, stop h 16   NOT MET, unserved 204 Wh               
   PS-SURV-R       23.3  2v80           400       none      June       110.7      NOT MET, unserved 358 Wh, stop h 17   NOT MET, unserved 25 Wh                
   PS-SURV-R       23.3  2v80           400       none      December   78.2       NOT MET, unserved 935 Wh, stop h 12   NOT MET, unserved 700 Wh               
   PS-NIGHT-RELAY  16.2  3v00           100       100       September  109.2      NOT MET, unserved 320 Wh, stop h 17   NOT MET, unserved 108 Wh               
   PS-NIGHT-RELAY  16.2  3v00           100       100       June       109.2      NOT MET, unserved 235 Wh, stop h 18   MET                                    
-  PS-NIGHT-RELAY  16.2  3v00           100       100       December   77.1       NOT MET, unserved 767 Wh, stop h 10   NOT MET, unserved 689 Wh               
+  PS-NIGHT-RELAY  16.2  3v00           100       100       December   77.1       NOT MET, unserved 767 Wh, stop h 10   NOT MET, unserved 690 Wh               
   PS-NIGHT-RELAY  16.2  3v00           200       100       September  109.2      NOT MET, unserved 293 Wh, stop h 18   MET                                    
   PS-NIGHT-RELAY  16.2  3v00           200       100       June       109.2      NOT MET, unserved 182 Wh, stop h 19   MET                                    
   PS-NIGHT-RELAY  16.2  3v00           200       100       December   77.1       NOT MET, unserved 586 Wh, stop h 13   NOT MET, unserved 507 Wh               
   PS-NIGHT-RELAY  16.2  3v00           330       300       September  109.2      NOT MET, unserved 265 Wh, stop h 18   MET                                    
-  PS-NIGHT-RELAY  16.2  3v00           330       300       June       109.2      NOT MET, unserved 133 Wh, stop h 20   MET                                    
+  PS-NIGHT-RELAY  16.2  3v00           330       300       June       109.2      NOT MET, unserved 134 Wh, stop h 20   MET                                    
   PS-NIGHT-RELAY  16.2  3v00           330       300       December   77.1       NOT MET, unserved 581 Wh, stop h 13   NOT MET, unserved 349 Wh               
   PS-NIGHT-RELAY  16.2  3v00           400       none      September  109.2      NOT MET, unserved 255 Wh, stop h 18   MET                                    
   PS-NIGHT-RELAY  16.2  3v00           400       none      June       109.2      NOT MET, unserved 122 Wh, stop h 20   MET                                    
   PS-NIGHT-RELAY  16.2  3v00           400       none      December   77.1       NOT MET, unserved 578 Wh, stop h 13   NOT MET, unserved 346 Wh               
-  PS-NIGHT-RELAY  16.2  2v80           100       100       September  110.7      NOT MET, unserved 316 Wh, stop h 18   NOT MET, unserved 119 Wh               
+  PS-NIGHT-RELAY  16.2  2v80           100       100       September  110.7      NOT MET, unserved 316 Wh, stop h 18   NOT MET, unserved 120 Wh               
   PS-NIGHT-RELAY  16.2  2v80           100       100       June       110.7      NOT MET, unserved 231 Wh, stop h 19   MET                                    
-  PS-NIGHT-RELAY  16.2  2v80           100       100       December   78.2       NOT MET, unserved 766 Wh, stop h 10   NOT MET, unserved 687 Wh               
+  PS-NIGHT-RELAY  16.2  2v80           100       100       December   78.2       NOT MET, unserved 766 Wh, stop h 10   NOT MET, unserved 688 Wh               
   PS-NIGHT-RELAY  16.2  2v80           200       100       September  110.7      NOT MET, unserved 289 Wh, stop h 18   MET                                    
   PS-NIGHT-RELAY  16.2  2v80           200       100       June       110.7      NOT MET, unserved 177 Wh, stop h 19   MET                                    
   PS-NIGHT-RELAY  16.2  2v80           200       100       December   78.2       NOT MET, unserved 583 Wh, stop h 13   NOT MET, unserved 505 Wh               
@@ -501,8 +501,8 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
     protection commissioning (TEST-PLAN section 5 twice).
 
 6e. The panel and the 100 W window (S-53's route): the table of section 4. Into the node per day, September /
-    December: 100 Wp 320 / 90 Wh; 200 Wp 641 / 180 (clipped 0 h in September); 330 Wp 807 / 297 (clipped
-    8 h); with no window at all 330 Wp gives 1057 / 297. PS-IDLE-SPEC asks 1027 Wh a day, the reduced mode 753,
+    December: 100 Wp 320 / 90 Wh; 200 Wp 640 / 180 (clipped 0 h in September); 330 Wp 806 / 297 (clipped
+    8 h); with no window at all 330 Wp gives 1056 / 297. PS-IDLE-SPEC asks 1027 Wh a day, the reduced mode 753,
     the heat stage 558, the night state 389. So: inside the window no panel carries PS-IDLE-SPEC's day; a
     re-rated path to about 300 W with a 330 Wp panel carries the heat stage's September day and the night state's
     December day; what it cannot do is carry any night, which is the pack's. A panel above about 150 Wp of 12 V
@@ -552,16 +552,16 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
 
 6f. An external DC source on the 9 to 36 V entry, as an OPTION and not the mission's basis: the entry guarantees
     4.85 A (carries 6.15 A) through F1 10 A, the LM74700 diode, the LM5069 hot-swap and the choke into board A's
-    front end, chain 0.911 to the node. At 12 V the guaranteed 4.85 A is 58 W at the source and 53 W at the node,
+    front end, chain 0.910 to the node. At 12 V the guaranteed 4.85 A is 58 W at the source and 53 W at the node,
     above every state M1 uses (42.8 W needs 3.9 A at 12 V, 2.0 A at 24 V at the source). Energy a source must
     give per night, the sun-down hours of section 3 (September 11.3 h, December 16.2 h; by day the panel's
     shortfall against the load is on top of it, section 5b's 'h sun < load'):
   state           W     September night Wh from the source  Ah at 12 V  Ah of a 12.8 V LiFePO4  December night Wh  Ah at 12 V
   --------------  ----  ----------------------------------  ----------  ----------------------  -----------------  ----------
-  PS-IDLE-SPEC    42.8  529.6                               44.1        41.4                    759.7              63.3      
-  PS-RED2         31.4  388.3                               32.4        30.3                    557.0              46.4      
-  PS-SURV-R       23.3  288.0                               24.0        22.5                    413.0              34.4      
-  PS-NIGHT-RELAY  16.2  200.5                               16.7        15.7                    287.5              24.0      
+  PS-IDLE-SPEC    42.8  530.2                               44.2        41.4                    760.4              63.4      
+  PS-RED2         31.4  388.7                               32.4        30.4                    557.5              46.5      
+  PS-SURV-R       23.3  288.2                               24.0        22.5                    413.4              34.5      
+  PS-NIGHT-RELAY  16.2  200.7                               16.7        15.7                    287.8              24.0      
     A vehicle's 70 Ah lead-acid battery gives about 35 Ah before half discharge, a 100 Ah LiFePO4 about 80 Ah:
     PS-IDLE-SPEC takes a vehicle battery below half in one night, the night state does not. The entry needs no
     board change (EQ-13, route b). It changes M1's setting from 'pack and solar', which is why it is stated here
@@ -577,9 +577,9 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
    the owner's decision, not a fulfilment of REQ-072. From a full aged pack, cells as section 5 takes them:
   change set (two packs)                                                            September (cells +20 C)                                                             June (cells +20 C)                                                                  December (cells +5 C)                                                            
   --------------------------------------------------------------------------------  ----------------------------------------------------------------------------------  ----------------------------------------------------------------------------------  ---------------------------------------------------------------------------------
-  1. night state (a) for all 72 h + 2.80 V line (b) + second 4S3P pack (d), 100 Wp  NOT MET, first stop h 44 (a night asks 259 Wh, 16.2 W x 16 h; two packs hold 221)   MET, lowest point 32.3 Wh (a night asks 227 Wh, 16.2 W x 14 h; two packs hold 221)  NOT MET, first stop h 15 (a night asks 356 Wh, 16.2 W x 22 h; two packs hold 156)
+  1. night state (a) for all 72 h + 2.80 V line (b) + second 4S3P pack (d), 100 Wp  NOT MET, first stop h 44 (a night asks 259 Wh, 16.2 W x 16 h; two packs hold 221)   MET, lowest point 32.2 Wh (a night asks 227 Wh, 16.2 W x 14 h; two packs hold 221)  NOT MET, first stop h 15 (a night asks 356 Wh, 16.2 W x 22 h; two packs hold 156)
   2. as 1 with a 200 Wp panel (the stage's 100 W: route A or B of 6e)               MET, lowest point 12.1 Wh (a night asks 227 Wh, 16.2 W x 14 h; two packs hold 221)  MET, lowest point 51.7 Wh (a night asks 194 Wh, 16.2 W x 12 h; two packs hold 221)  NOT MET, first stop h 18 (a night asks 292 Wh, 16.2 W x 18 h; two packs hold 156)
-  3. as 1 with the path re-rated to 300 W and a 330 Wp panel (e)                    MET, lowest point 23.4 Wh (a night asks 227 Wh, 16.2 W x 14 h; two packs hold 221)  MET, lowest point 67.8 Wh (a night asks 194 Wh, 16.2 W x 12 h; two packs hold 221)  NOT MET, first stop h 18 (a night asks 292 Wh, 16.2 W x 18 h; two packs hold 156)
+  3. as 1 with the path re-rated to 300 W and a 330 Wp panel (e)                    MET, lowest point 23.4 Wh (a night asks 227 Wh, 16.2 W x 14 h; two packs hold 221)  MET, lowest point 67.7 Wh (a night asks 194 Wh, 16.2 W x 12 h; two packs hold 221)  NOT MET, first stop h 18 (a night asks 292 Wh, 16.2 W x 18 h; two packs hold 156)
   4. heat stage PS-SURV-R for all 72 h + (b) + second pack + 300 W path, 330 Wp     NOT MET, first stop h 21 (a night asks 326 Wh, 23.3 W x 14 h; two packs hold 221)   NOT MET, first stop h 22 (a night asks 279 Wh, 23.3 W x 12 h; two packs hold 221)   NOT MET, first stop h 15 (a night asks 419 Wh, 23.3 W x 18 h; two packs hold 156)
   5. reduced mode PS-RED2 for all 72 h + (b) + second pack + 300 W path, 330 Wp     NOT MET, first stop h 18 (a night asks 439 Wh, 31.4 W x 14 h; two packs hold 221)   NOT MET, first stop h 19 (a night asks 377 Wh, 31.4 W x 12 h; two packs hold 221)   NOT MET, first stop h 14 (a night asks 565 Wh, 31.4 W x 18 h; two packs hold 156)
   6. PS-IDLE-SPEC as written + (b) + second pack + 300 W path, 330 Wp               NOT MET, first stop h 16 (a night asks 599 Wh, 42.8 W x 14 h; two packs hold 219)   NOT MET, first stop h 17 (a night asks 556 Wh, 42.8 W x 13 h; two packs hold 219)   NOT MET, first stop h 10 (a night asks 856 Wh, 42.8 W x 20 h; two packs hold 155)
@@ -609,26 +609,26 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
   case                                                      month      panel Wp  window W  72 h                                     
   --------------------------------------------------------  ---------  --------  --------  -----------------------------------------
   ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          June       100       100       NOT MET, first stop h 22, unserved 28 Wh 
-  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          June       200       100       MET, lowest point 3.2 Wh                 
-  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          June       330       300       MET, lowest point 10.7 Wh                
+  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          June       200       100       MET, lowest point 3.1 Wh                 
+  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          June       330       300       MET, lowest point 10.6 Wh                
   ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          June       400       none      MET, lowest point 12.8 Wh                
   ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          September  100       100       NOT MET, first stop h 21, unserved 98 Wh 
-  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          September  200       100       NOT MET, first stop h 21, unserved 76 Wh 
+  ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          September  200       100       NOT MET, first stop h 21, unserved 77 Wh 
   ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          September  330       300       NOT MET, first stop h 22, unserved 64 Wh 
   ONE pack, night state LOW 11.02 W, 2.80 V, +20 C          September  400       none      NOT MET, first stop h 22, unserved 64 Wh 
   TWO packs, night state PLAN 16.20 W, 2.80 V, +5 C         December   200       100       NOT MET, first stop h 18, unserved 505 Wh
   TWO packs, night state PLAN 16.20 W, 2.80 V, +5 C         December   330       300       NOT MET, first stop h 18, unserved 343 Wh
   TWO packs, night state PLAN 16.20 W, 2.80 V, +5 C         December   400       none      NOT MET, first stop h 18, unserved 340 Wh
   TWO packs, night state PLAN 16.20 W, 2.80 V, +20 C        December   200       100       NOT MET, first stop h 22, unserved 440 Wh
-  TWO packs, night state PLAN 16.20 W, 2.80 V, +20 C        December   330       300       NOT MET, first stop h 22, unserved 212 Wh
+  TWO packs, night state PLAN 16.20 W, 2.80 V, +20 C        December   330       300       NOT MET, first stop h 22, unserved 213 Wh
   TWO packs, night state PLAN 16.20 W, 2.80 V, +20 C        December   400       none      NOT MET, first stop h 22, unserved 145 Wh
-  TWO packs, night state LOW 11.02 W, 2.80 V, +5 C          December   200       100       NOT MET, first stop h 23, unserved 181 Wh
+  TWO packs, night state LOW 11.02 W, 2.80 V, +5 C          December   200       100       NOT MET, first stop h 23, unserved 182 Wh
   TWO packs, night state LOW 11.02 W, 2.80 V, +5 C          December   330       300       NOT MET, first stop h 23, unserved 79 Wh 
   TWO packs, night state LOW 11.02 W, 2.80 V, +5 C          December   400       none      NOT MET, first stop h 23, unserved 76 Wh 
   TWO packs, night state LOW 11.02 W, 2.80 V, +20 C         December   200       100       NOT MET, first stop h 44, unserved 120 Wh
   TWO packs, night state LOW 11.02 W, 2.80 V, +20 C         December   330       300       MET, lowest point 30.0 Wh                
   TWO packs, night state LOW 11.02 W, 2.80 V, +20 C         December   400       none      MET, lowest point 31.4 Wh                
-  TWO packs, PS-IDLE-SPEC at its LOW 33.1 W, 2.80 V, +20 C  September  400       none      NOT MET, first stop h 18, unserved 606 Wh
+  TWO packs, PS-IDLE-SPEC at its LOW 33.1 W, 2.80 V, +20 C  September  400       none      NOT MET, first stop h 18, unserved 607 Wh
   TWO packs, PS-IDLE-SPEC at its LOW 33.1 W, 2.80 V, +20 C  June       400       none      NOT MET, first stop h 19, unserved 379 Wh
 
    The largest load ONE aged pack carries for 72 h (cells +20 C): June 12.30 W with 400 Wp and no window (2.80 V),
@@ -641,15 +641,15 @@ figure is arithmetic on makers' figures, generator declarations and stated assum
    compute modules are OFF (6a). Check: on a constant schedule the scheduled run equals simulate() (3 cases): PASS.
   set                   month      cells C  h a day at PS-IDLE-SPEC  h a day REDUCED  full-power hours (UTC)  two packs (4S6P)                     one pack                           
   --------------------  ---------  -------  -----------------------  ---------------  ----------------------  -----------------------------------  -----------------------------------
-  set 1: 100 Wp, 100 W  September  +20      0                        24               none                    NOT MET, stop h 44, unserved 119 Wh  NOT MET, stop h 18, unserved 316 Wh
+  set 1: 100 Wp, 100 W  September  +20      0                        24               none                    NOT MET, stop h 44, unserved 120 Wh  NOT MET, stop h 18, unserved 316 Wh
   set 1: 100 Wp, 100 W  June       +20      5                        19               10:00 to 14:59          NOT MET, stop h 44, unserved 125 Wh  NOT MET, stop h 19, unserved 234 Wh
-  set 1: 100 Wp, 100 W  December   +5       0                        24               none                    NOT MET, stop h 15, unserved 687 Wh  NOT MET, stop h 10, unserved 766 Wh
+  set 1: 100 Wp, 100 W  December   +5       0                        24               none                    NOT MET, stop h 15, unserved 688 Wh  NOT MET, stop h 10, unserved 766 Wh
   set 2: 200 Wp, 100 W  September  +20      8                        16               08:00 to 15:59          MET, lowest 12.1 Wh                  NOT MET, stop h 18, unserved 292 Wh
   set 2: 200 Wp, 100 W  June       +20      10                       14               07:00 to 16:59          MET, lowest 51.7 Wh                  NOT MET, stop h 19, unserved 180 Wh
   set 2: 200 Wp, 100 W  December   +5       0                        24               none                    NOT MET, stop h 18, unserved 505 Wh  NOT MET, stop h 13, unserved 583 Wh
   set 3: 330 Wp, 300 W  September  +20      10                       14               07:00 to 16:59          MET, lowest 23.4 Wh                  NOT MET, stop h 18, unserved 264 Wh
-  set 3: 330 Wp, 300 W  June       +20      11                       13               07:00 to 17:59          MET, lowest 67.8 Wh                  NOT MET, stop h 20, unserved 132 Wh
-  set 3: 330 Wp, 300 W  December   +5       4                        20               10:00 to 13:59          NOT MET, stop h 18, unserved 479 Wh  NOT MET, stop h 13, unserved 579 Wh
+  set 3: 330 Wp, 300 W  June       +20      11                       13               07:00 to 17:59          MET, lowest 67.7 Wh                  NOT MET, stop h 20, unserved 132 Wh
+  set 3: 330 Wp, 300 W  December   +5       4                        20               10:00 to 13:59          NOT MET, stop h 18, unserved 480 Wh  NOT MET, stop h 13, unserved 579 Wh
    REQ-072 (PS-IDLE-SPEC for all 72 hours) reads FAIL under this schedule as under every set: the kit runs reduced in
    every hour the table counts.
 

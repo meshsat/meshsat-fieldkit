@@ -158,17 +158,25 @@ def routed_main(a):
         if _is_rail(a_) or _is_rail(b_) or a_ == b_: continue      # a pull-up is not a termination
         for this, other in ((a_, b_), (b_, a_)):
             series.setdefault(this, []).append("%s %s to %s" % (fp.GetReference(), fp.GetValue(), other.lstrip("/")))
-    _allow = _bt.value(letter, "edge_allow", []) or []
+    # an allowance answers a net only with its basis held, and never past the length it declares (CSI-D1, CSI-D2)
+    try: _tpd_decl = worst_delay(letter)[0]
+    except Exception: _tpd_decl = None
+    _allow, _allow_bad = load_allow(letter, REPO, tpd=_tpd_decl)
     import fnmatch as _fn
-    def mitigation(net):
+    def _entry(net):
+        nm = net.lstrip("/")
+        return next((e for e in _allow if _fn.fnmatch(nm, e.get("pattern", ""))), None)
+    def mitigation(net, L=None):
         nm = net.lstrip("/")
         if (cls_target or {}).get(net) or (cls_target or {}).get(nm):
             return "an impedance target on its class, so it is a designed transmission line"
         if net in series or nm in series:
             return "a series resistor on it (%s), which is what a source termination looks like from the board" % \
                    ", ".join(series.get(net) or series.get(nm))[:80]
-        for e in _allow:
-            if _fn.fnmatch(nm, e.get("pattern", "")): return "declared: %s" % str(e.get("why", ""))[:90]
+        e = _entry(net)
+        if e is not None:
+            ok, words = allow_answers(e, L)
+            return words if ok else None
         return None
     length, worst_layer, mitigated = {}, {}, []
     for t in b.GetTracks():
@@ -178,19 +186,34 @@ def routed_main(a):
         s, e = t.GetStart(), t.GetEnd()
         length[n] = length.get(n, 0.0) + math.hypot(mm(s.x) - mm(e.x), mm(s.y) - mm(e.y))
         worst_layer.setdefault(n, set()).add(t.GetLayer())
+    # EVERY NET A HELD ALLOWANCE NAMES IS HELD TO ITS max_mm FIRST (the independent check of 29 September 2026, B1 and
+    # m10): whatever its class, whether its class declares a rise time, whether it is past its critical length, and
+    # whether a series resistor or an impedance target also answers it. The length is the declaration's condition.
+    allow_over, allow_held, over_limit = [], set(), set()
+    for n, L in sorted(length.items()):
+        e = _entry(n)
+        if e is None: continue
+        ok, words = allow_answers(e, L)
+        if ok: allow_held.add(n)
+        else: allow_over.append("%s: %s" % (n.lstrip("/"), words)); over_limit.add(n.lstrip("/"))
     rows, over, undeclared = [], [], []
     for n, L in sorted(length.items()):
         c = (cls.get(n) or ("UNKNOWN", ""))[0]
         tr, _why = rise_for(n, c)
         if not tr:
-            if c != "LOW_SPEED_OR_DC": undeclared.append("%s (%s)" % (n.lstrip("/"), c))
+            # a net an allowance holds within its declared length is answered by it; one over it is named above
+            if c != "LOW_SPEED_OR_DC" and n not in allow_held and n.lstrip("/") not in over_limit:
+                undeclared.append("%s (%s)" % (n.lstrip("/"), c))
             continue
         # the SLOWEST layer the net uses decides: a stripline's delay is the longer one
         tpd = max(t_pd_ps_per_mm(er, Lr in outer) for Lr in worst_layer[n])
         crit = (float(tr) * 1000.0) / (float(k) * tpd)
         rows.append(dict(net=n.lstrip("/"), cls=c, mm=round(L, 1), critical_mm=round(crit, 1), rise_ns=tr))
+        if n.lstrip("/") in over_limit:
+            rows[-1]["mitigation"] = "over its declared limit"
+            continue
         if L > crit:
-            why = mitigation(n)
+            why = mitigation(n, L)
             rows[-1]["mitigation"] = why or "none"
             if why: mitigated.append("%s (%s): %.0f mm past %.0f mm, %s" % (n.lstrip("/"), c, L, crit, why))
             else:
@@ -205,11 +228,18 @@ def routed_main(a):
     if undeclared: print("  no declared edge: %s%s" % (", ".join(sorted(undeclared)[:12]),
                                                        " ..." if len(undeclared) > 12 else ""))
     for x in sorted(over)[:20]: print("  OVER %s" % x)
+    for x in sorted(allow_over)[:20]: print("  OVER ITS DECLARED LIMIT %s" % x)
+    for x in _allow_bad: print("  FAIL edge_allow refused: %s" % x)
     if "--json" in a: print(json.dumps(rows, indent=1))
-    return _v.write("edge_length_routed", _v.FAIL if over else (_v.INCONCLUSIVE if (not rows or undeclared) else _v.PASS),
+    return _v.write("edge_length_routed", _v.FAIL if (over or _allow_bad or allow_over) else
+                    (_v.INCONCLUSIVE if ((not rows and not allow_held) or undeclared) else _v.PASS),
                     counts={"judged": len(rows), "over_critical_length": len(over),
-                            "long_and_answered": len(mitigated), "no_declared_edge": len(undeclared)},
-                    denominator=len(rows) or 1, evidence=sorted(over)[:20],
+                            "long_and_answered": len(mitigated), "no_declared_edge": len(undeclared),
+                            "over_declared_limit": len(allow_over), "held_within_declared_limit": len(allow_held),
+                            "allowances_refused": len(_allow_bad)},
+                    denominator=len({r["net"] for r in rows} | {x.lstrip("/") for x in allow_held} | over_limit) or 1,
+                    evidence=(["edge_allow refused: %s" % x for x in _allow_bad]
+                              + ["OVER ITS DECLARED LIMIT %s" % x for x in sorted(allow_over)] + sorted(over))[:20],
                     inputs={"board": path, "critical_k": k, "epsilon_r": round(er, 3)},
                     note=("no net on this board carries a class with a declared rise time" if not rows else
                           "every signal net's routed length against the critical length its own class implies, "
@@ -677,6 +707,9 @@ def _quotes_hold(rec, repo):
     for c in citations(rec):
         doc, q = c["document"], c["quote"]
         p = os.path.join(repo, doc)
+        root = os.path.normpath(os.path.abspath(repo))
+        if os.path.isabs(str(doc)) or not os.path.normpath(os.path.abspath(p)).startswith(root + os.sep):
+            return "the document %s lies outside the repository: a citation names a file of this tree" % doc
         bad = _model_cited(repo, doc)
         if bad: return bad
         if not os.path.isfile(p): return "the document %s it names is not in this tree" % doc
@@ -780,6 +813,152 @@ def edge_source(letter, pattern, rise_ns, repo=None):
         return "UNDECIDED", None, ("declares %s ns and no held document is named for it in pcb_edge_rates.yaml"
                                    % rise_ns)
     return "NOT_COVERED", None, "no interface record covers the entry"
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# A DECLARED ALLOWANCE CARRIES ITS BASIS AND THE LENGTH IT HOLDS (29 September 2026, stream csi, MESHSAT-1357; session
+# decisions CSI-D1 and CSI-D2, under the owner's standing rule of 26 September 2026, authority SESSION).
+# `edge_allow` in boards/<letter>.json answers a net that may be electrically long, beside an impedance target and a
+# series termination. Until today an entry was a pattern and a sentence, and a sentence turned a net green (finding
+# F-Q1's W5SI-D3 refused to write one for that reason: "a declaration names what holds a net's length"). So:
+#   CSI-D1  an entry answers a net only when it carries its basis the way a record of pcb_edge_rates.yaml does: `why`,
+#           `ruled_by`, and a citation (`document`, its `sha256_16`, `page` or `where`, the words quoted in `quote`, and
+#           any further citations under `checked`), held by the same checks (_cite_shape, _quotes_hold) on every run.
+#           An entry that does not hold is refused and FAILS the reading, as a refused record does: the declaration is
+#           wrong, and every net it names is left layout-bound. Every document a held entry cites is an input of the
+#           reading by sha. Since the independent check of 29 September 2026 (its B2 and m7) an entry is also refused
+#           when its pattern has fewer than three characters that are no wildcard, its own quote is shorter than five
+#           words, it cites a PDF with no page, or it cites a file outside the repository (_quotes_hold, for every
+#           record). Reverse: accept an entry with `why` alone in allow_refusal.
+#   CSI-D2  an entry states `max_mm`, the longest the layout may route a net it answers, with `max_mm_basis`; an entry
+#           with none is refused (the check's B2). The number is tied to what the entry cites (allow_limit; its method
+#           replaced on the re-check's R2-B1): the entry names the reference layout's nets it rests on
+#           (`reference_nets`), its `checked` rows are only those nets' length rows ("<net> <x> mm") and the reference
+#           layout's delay row ("reference t_pd <x> ps/mm", stated as `reference_ps_per_mm`), all from ONE document, and
+#           max_mm may be at most the longest of those lengths times that delay over this board's slowest (worst_delay),
+#           so the limit holds the delay the reference runs at on whichever stack the layout is drawn on. While
+#           ALLOW_PENDS_LAYOUT is set, a net an allowance answers keeps the schematic reading INCONCLUSIVE (the re-check's
+#           m3). The schematic table hands max_mm to the layout (row
+#           ["length_limits"]; the net reads "pending the layout"), and the routed half holds EVERY net a held entry
+#           names to it first, whatever its class, its rise time, its critical length or any series resistor on it (the
+#           check's B1 and m10): past it the net is named OVER ITS DECLARED LIMIT and the routed verdict fails.
+#           edge_length_routed decides no rule yet, so the limit binds a rule only once one names that reading.
+#           Reverse: drop the length test in allow_answers and allow_limit.
+# ------------------------------------------------------------------------------------------------------------------
+LENGTH_ROW = re.compile(r"^\s*(\S+)\s+(\d+(?:\.\d+)?)\s*mm\s*$")          # a length row's whole quote: "<net> <x> mm"
+TPD_ROW = re.compile(r"^\s*reference t_pd\s+(\d+(?:\.\d+)?)\s*ps/mm\s*$")   # the delay row's whole quote
+ALLOW_QUOTE_WORDS = 5        # the entry's own quote: a sentence of its document, not a word (the check's m7)
+ALLOW_PATTERN_LITERALS = 3   # a pattern names nets: at least three characters that are no wildcard (m7)
+# WHILE NO RULE DECIDES ON THE ROUTED READING, A NET AN ALLOWANCE ANSWERS IS PENDING THE LAYOUT, and the schematic reading
+# stays INCONCLUSIVE naming it (the re-check of 29 September 2026, its m3): an allowance is a layout constraint, and the
+# only reading that holds it (edge_length_routed) decides nothing yet. Reverse: False, once a rule names that reading.
+ALLOW_PENDS_LAYOUT = True
+
+
+def allow_limit(entry, tpd):
+    """(limit_mm, how) or (None, why not): the longest a net may be routed on THIS board by what the entry cites. THE
+    METHOD (the re-check of 29 September 2026, R2-B1, which found the first method taking the longest length any row of
+    any file quoted, for any net): the entry names the reference layout's nets it rests on (`reference_nets`); every
+    `checked` row is either a length row whose whole quote is "<net> <x> mm" for one of those nets, or the delay row
+    "reference t_pd <x> ps/mm"; every reference net has its length row; and all of them cite ONE document. A row that
+    names another net, or no net, is refused. The limit is the longest of the reference nets' lengths times the
+    reference layout's delay (`reference_ps_per_mm`, which the delay row quotes) over this board's slowest delay, so it
+    holds the delay the maker's layout runs these nets at."""
+    refs = entry.get("reference_nets")
+    if not (isinstance(refs, list) and refs and all(isinstance(x, str) and x.strip() for x in refs)):
+        return None, "no reference_nets: the reference layout's nets the length rests on, named"
+    rows = [c for c in entry.get("checked") or [] if isinstance(c, dict)]
+    lens, tpds, docs = {}, [], set()
+    for j, c in enumerate(rows):
+        q = str(c.get("quote") or "")
+        m, d = LENGTH_ROW.match(q), TPD_ROW.match(q)
+        if m:
+            if m.group(1) not in refs:
+                return None, "checked[%d] quotes %r, a length of %s, which is none of its reference_nets (%s)" % (
+                    j, q, m.group(1), ", ".join(refs))
+            lens[m.group(1)] = float(m.group(2))
+        elif d:
+            tpds.append(float(d.group(1)))
+        else:
+            return None, "checked[%d] quotes %r, which names no reference net (\"<net> <x> mm\") and is no delay row" % (j, q)
+        docs.add(c.get("document"))
+    missing = [x for x in refs if x not in lens]
+    if missing: return None, "no checked row quotes the length of its reference net(s) %s" % ", ".join(missing)
+    if len(docs) != 1:
+        return None, "its length and delay rows cite %d documents (%s): they come from one" % (len(docs), ", ".join(sorted(map(str, docs))))
+    ref = entry.get("reference_ps_per_mm")
+    if isinstance(ref, bool) or not isinstance(ref, (int, float)) or ref <= 0:
+        return None, "no reference_ps_per_mm: the delay per millimetre of the layout the length was measured on"
+    if not any(abs(q - float(ref)) < 0.0005 for q in tpds):
+        return None, "reference_ps_per_mm %s is quoted by no delay row (\"reference t_pd <x> ps/mm\")" % ref
+    if not tpd: return None, "no declared stack to scale the reference length to"
+    top = max(lens.values())
+    lim = top * float(ref) / float(tpd)
+    return lim, "%.2f mm measured (%s), times %.3f / %.3f ps/mm = %.2f mm" % (
+        top, ", ".join("%s %.2f" % kv for kv in sorted(lens.items())), float(ref), float(tpd), lim)
+
+
+def allow_refusal(entry, tpd=None):
+    """None, or why an edge_allow entry cannot answer a net: its shape, and its max_mm against the lengths it cites
+    scaled to this board (allow_limit). Whether its documents say what it quotes is asked by _quotes_hold."""
+    if not isinstance(entry, dict) or not str(entry.get("pattern") or "").strip(): return "an entry with no pattern"
+    if len(re.sub(r"[*?\[\]!]", "", str(entry["pattern"]))) < ALLOW_PATTERN_LITERALS:
+        return "the pattern %r names no nets: fewer than %d characters that are no wildcard" % (entry["pattern"], ALLOW_PATTERN_LITERALS)
+    for f in ("why", "ruled_by"):
+        if not str(entry.get(f) or "").strip(): return "no %s" % f
+    if not entry.get("document"):
+        return "no basis: an allowance cites the document it rests on (document, sha256_16, page or where, quote)"
+    if len(str(entry.get("quote") or "").split()) < ALLOW_QUOTE_WORDS:
+        return "the quote %r is shorter than %d words: an allowance quotes the sentence it rests on" % (entry.get("quote"), ALLOW_QUOTE_WORDS)
+    for c in citations(entry):
+        if str(c["document"]).lower().endswith(".pdf") and c["page"] is None:
+            return "%s cites the PDF %s with no page: a PDF is cited by its page" % (c["at"], c["document"])
+    mm = entry.get("max_mm")
+    if mm is None:
+        return "no max_mm: an allowance holds the net to a length, or it answers nothing"
+    if isinstance(mm, bool) or not isinstance(mm, (int, float)) or mm <= 0:
+        return "max_mm %r is not a length in millimetres" % (mm,)
+    if not str(entry.get("max_mm_basis") or "").strip(): return "a max_mm with no max_mm_basis"
+    bad = _cite_shape(entry)
+    if bad: return bad
+    lim, how = allow_limit(entry, tpd)
+    if lim is None: return how
+    if float(mm) > lim + 1e-9:
+        return "max_mm %.2f is above what its checked rows support on this board (%s)" % (float(mm), how)
+    return None
+
+
+def load_allow(letter, repo=None, used=None, tpd=None):
+    """(the entries of the board's edge_allow that answer, [why each other entry is refused]). `used` collects the
+    documents the held entries cite, by sha. `tpd` is the board's slowest delay (worst_delay), read here when not given."""
+    repo = repo or REPO
+    if tpd is None:
+        try: tpd = worst_delay(letter)[0]
+        except Exception: tpd = None
+    held, refused = [], []
+    for i, e in enumerate(_bt.value(letter, "edge_allow", []) or []):
+        why = allow_refusal(e, tpd) or _quotes_hold(e, repo)
+        if why:
+            refused.append("edge_allow[%d] (%s): %s" % (i, e.get("pattern") if isinstance(e, dict) else e, why))
+            continue
+        held.append(e)
+        if used is not None:
+            for c in citations(e): used[c["document"]] = _sha16(os.path.join(repo, c["document"]))
+    return held, refused
+
+
+def allow_answers(entry, length_mm=None):
+    """(answers, words) for one net an entry's pattern matches. At the schematic phase (no length) it answers and says
+    the length the layout must hold the net to, pending the layout; at the routed phase it answers only while the routed
+    length is at most the entry's max_mm. An entry with no max_mm answers nothing (B2 of the check)."""
+    mm = entry.get("max_mm")
+    if mm is None: return False, "an edge_allow entry with no max_mm holds no length and answers nothing"
+    if length_mm is not None and float(length_mm) > float(mm):
+        return False, "routed %.2f mm, past the %.2f mm its edge_allow declaration holds it to (%s)" % (
+            float(length_mm), float(mm), str(entry.get("max_mm_basis", ""))[:80])
+    if length_mm is not None:
+        return True, "declared in edge_allow: routed %.2f mm, within its %.2f mm" % (float(length_mm), float(mm))
+    return True, "declared in edge_allow, pending the layout: at most %.1f mm (%s)" % (float(mm), str(entry.get("why", ""))[:60])
 
 
 # ------------------------------------------------------------------------------------------------------------------
@@ -1173,7 +1352,9 @@ def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=No
     for x in bad: res["fails"].append("signal class declaration refused: %s" % x)
     table = _bt.value(letter, "signal_classes", []) or []          # the same table signal_class reads
     rise_of = {e.get("pattern"): e.get("rise_ns") for e in table}
-    allow = _bt.value(letter, "edge_allow", []) or []
+    allow_docs = {}
+    allow, allow_bad = load_allow(letter, repo, allow_docs, tpd=tpd)
+    for x in allow_bad: res["fails"].append("edge_allow refused: %s" % x)
 
     def cls_of(n):
         c = nets[n]["class"]
@@ -1231,7 +1412,7 @@ def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=No
               "contradicted_nets": 0, "may_be_long_nets": 0, "answered_nets": 0, "layout_bound_nets": 0,
               "classes": len(rows), "maker_edge_nets": 0, "bound_edge_nets": 0, "bound_decided_nets": 0,
               "maker_held_nets": 0, "undecided_no_declaration_nets": 0, "undecided_model_absent_nets": 0,
-              "undecided_other_nets": 0}
+              "undecided_other_nets": 0, "allowed_nets": 0}
     for x in RATES_REFUSALS: res["fails"].append("edge data refused: %s" % x)
     res["inputs"]["edge_rates"] = {"path": _shown(RATES["path"]), "sha256_16": RATES.get("sha16")}
     ctx = _Ctx(letter, nets, values, RATES, repo, signals, rails, netlists=netlists)
@@ -1310,7 +1491,7 @@ def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=No
             row["answered"], row["layout_bound"], row["bound_decides"], row["maker_holds"] = {}, [], [], []
             continue
         row["needs"] = "an impedance target, a series termination or a declaration, or every net under %.1f mm" % row["critical_mm"]
-        ans, bound = {}, []
+        ans, bound, limits = {}, [], {}
         for n in sorted(long_nets):
             c, how = cls_of(n)
             if c in targets:
@@ -1319,9 +1500,13 @@ def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=No
                 ans[n] = "series resistor %s (a screen)" % "; ".join(series[n])[:80]
             else:
                 dec = next((e for e in allow if fnmatch.fnmatch(n, e.get("pattern", ""))), None)
-                if dec: ans[n] = "declared in edge_allow: %s" % str(dec.get("why", ""))[:80]
+                if dec:
+                    ans[n] = allow_answers(dec)[1]
+                    counts["allowed_nets"] += 1
+                    if dec.get("max_mm") is not None: limits[n] = float(dec["max_mm"])
                 else: bound.append(n)
         row["answered"] = ans
+        row["length_limits"] = limits
         row["layout_bound"] = bound
         # THE BOUND DECIDES (ER-D9 with ER-D13): a layout-bound net on which at least one driver has no published
         # minimum. Its governing edge is that driver's bound and so is its critical length, whatever the other drivers'
@@ -1361,8 +1546,10 @@ def schematic_table(net_path, letter=None, intent_path=None, facts=None, repo=No
         res["inputs"]["far_netlist_%s" % L2] = rec
     for fid, why in sorted(ctx.contradicted.items()):
         res["fails"].append("pcb_edge_rates.yaml family %s: %s" % (fid, why))
-    # every held document this board's edges are taken from, by sha, so a corrected transcription is seen
+    # every held document this board's edges are taken from, by sha, so a corrected transcription is seen; and every
+    # document a held edge_allow entry rests on (CSI-D1)
     used.update(ctx.used_docs)
+    used.update(allow_docs)
     for d in list(used):
         m = model_record(repo, d)
         if m is not None:
@@ -1404,6 +1591,8 @@ def schematic_result(res):
     if not c.get("signal_nets") or c.get("undecided_nets"): return _v.INCONCLUSIVE
     if c.get("layout_bound_nets") or any(r.get("layout_bound") for r in res.get("rows") or []):
         return _v.INCONCLUSIVE
+    if ALLOW_PENDS_LAYOUT and c.get("allowed_nets"):
+        return _v.INCONCLUSIVE        # nets answered by an allowance wait on a routed check no rule decides (m3)
     return _v.PASS
 
 
@@ -1463,6 +1652,15 @@ def write_schematic_verdict(res, out_dir=None, quiet=False, table_file=True):
     if mh:
         ev.append("MAKER_HELD %d layout-bound net(s) on which every driver has a published minimum: %s%s" % (
             len(mh), ", ".join(n for _p, n in mh[:12]), " ..." if len(mh) > 12 else ""))
+    al = [(n, r["pattern"], (r.get("length_limits") or {}).get(n)) for r in res.get("rows") or []
+          for n, w in sorted((r.get("answered") or {}).items()) if w.startswith("declared in edge_allow")]
+    if al:
+        ev.append("ALLOWED %d net(s), pending the layout: answered at this phase by an edge_allow declaration whose basis "
+                  "holds (CSI-D1), each held to the length it declares (CSI-D2) by the routed half, edge_length_routed, which "
+                  "decides no rule yet, so %s: %s" % (
+                      len(al), "they keep this reading INCONCLUSIVE (ALLOW_PENDS_LAYOUT)" if ALLOW_PENDS_LAYOUT else
+                      "they are counted answered",
+                      ", ".join("%s%s" % (n, " <= %.1f mm" % mm if mm is not None else "") for n, _p, mm in al[:16])))
     for r in res.get("rows") or []:
         for who, edge, basis, source, crit, nets in _layout_bound_groups(r):
             ev.append("LAYOUT_BOUND %s (%s, %.3f ns %s %s, critical %.1f mm, decided by %s): %s%s" % (
@@ -1514,7 +1712,9 @@ def write_schematic_verdict(res, out_dir=None, quiet=False, table_file=True):
                           "the checkout does not hold decides nothing, its nets read UNDECIDED naming it, and "
                           "inputs.model_state says which state the reading was taken in (ER-D17); undecided = "
                           "undecided_no_declaration + undecided_model_absent + undecided_other; a pin whose [Ramp] "
-                          "cell the model's own V-t table contradicts takes the instantaneous bound (ER-D16)"))
+                          "cell the model's own V-t table contradicts takes the instantaneous bound (ER-D16). Since 29 September 2026 an "
+                          "edge_allow declaration answers a net only with its basis held, a refused one FAILS the reading, "
+                          "and the length it declares is handed to the layout (length_limits; CSI-D1, CSI-D2)"))
 
 
 def print_table(res):

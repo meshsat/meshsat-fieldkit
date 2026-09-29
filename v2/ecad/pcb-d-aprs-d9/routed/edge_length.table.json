@@ -1,6 +1,7 @@
 {
  "board": "d",
  "counts": {
+  "allowed_nets": 0,
   "answered_nets": 26,
   "bound_decided_nets": 11,
   "bound_edge_nets": 19,
@@ -107,7 +108,7 @@
   },
   "far_netlist_c": {
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "87b69472ac83ca5a"
+   "sha256_16": "c9f7394594201045"
   },
   "ibis_manifest": {
    "path": "v2/vendor/ibis-manifest.yaml",
@@ -386,6 +387,7 @@
    "layout_bound": [
     "EXP_INT"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -506,6 +508,7 @@
    "layout_bound": [
     "HUB_DM4"
    ],
+   "length_limits": {},
    "maker_holds": [
     "HUB_DM4"
    ],
@@ -614,6 +617,7 @@
    "layout_bound": [
     "HUB_DP4"
    ],
+   "length_limits": {},
    "maker_holds": [
     "HUB_DP4"
    ],
@@ -736,6 +740,7 @@
    "layout_bound": [
     "HUB_RST_n"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -797,6 +802,7 @@
     "HUB_XTAL2",
     "HUB_XTAL2R"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1124,6 +1130,7 @@
     "PCM_XTI",
     "PCM_XTO"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1249,6 +1256,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1472,6 +1480,7 @@
    "layout_bound": [
     "SA_RXD"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1529,6 +1538,7 @@
    "layout_bound": [
     "SA_TXD"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1585,6 +1595,7 @@
    "layout_bound": [
     "SCL"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1648,6 +1659,7 @@
    "layout_bound": [
     "SDA"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1750,6 +1762,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [
     "USB1_N",
@@ -1844,6 +1857,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [
     "USB1_P",
@@ -1931,6 +1945,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [
     "USB1_NR",

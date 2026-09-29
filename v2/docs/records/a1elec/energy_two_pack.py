@@ -27,7 +27,19 @@ hour (first stop, lowest point and unserved energy) on eight cases; it refuses t
 Scope, as section 9's: the September reference day (PVGIS's monthly-average hourly profile repeated for three days),
 aged to 80 percent, the 3.00 V line with the 5 percent reserve, both start hours (06:00 and 18:00 UTC), PS-IDLE-SPEC
 at 42.8 W at the pack terminals, the stage's input window as stated per run. A reference-day model result, not a
-field-weather reliability claim. Run from the repository root:
+field-weather reliability claim.
+
+Second issue (stream s119, S-119, 29 September 2026, its second round after the independent check): the charger rows
+restated from the drawn FETs' losses (TI SLUSE66A Equations 6 to 22). U3's row comes in through energy_inputs.yaml (0.98
+to 0.979, decision 57's FETs on board A, v2/docs/records/s117/efficiency.out) with energy_budget.py re-pinned. U3B is
+drawn on the 400 kHz row by the S-119 session decision (records/s119/apply_decision_s119.py): eta_u3b moves from 0.975
+to 0.972 (0.963 to 0.978), weighted over the model's own hours (records/s119/u3b_hourly.out); IIN_HOST 8.0 to 6.2 A on
+the 10 mOhm R16B; the charge loop 28 to 23 mOhm (U3B's RSR is inside eta_u3b and was counted twice). Section 4's U3B
+bracket rows take that bracket and the input clamp; section 7 prints U3's loss at the chain's figure, the sense
+resistors as parts of each charger's loss, and U3's L2 as board A draws it (4.7 uH XAL1010-472ME at 400 kHz, decision
+56). U3B's efficiency may also be given as a function of its input power (eta_at), which only the analysis scripts of
+records/s119 use; the model's own runs carry the figure. Nothing else changed.
+Run from the repository root:
   python3 v2/docs/records/a1elec/energy_two_pack.py > v2/docs/records/a1elec/energy_two_pack.out
 Deterministic: no date, host or absolute path in the output. Exit 2: energy_inputs.yaml is not the pinned file;
 exit 3: energy_budget.py, a pinned input or the daily profile changed; exit 4: the equivalence check failed."""
@@ -44,7 +56,7 @@ sys.path.insert(0, EDIR)
 import yaml  # noqa: E402
 import energy_budget as EB  # noqa: E402
 
-EB_SHA256 = "cf6c377fa1015a468a61dc83f1c735e54b5f778eb3bb39834495ee2eb24d02c1"   # the model section 9 pinned
+EB_SHA256 = "6a8ac4642bd2aaf35d5ad6b75c5004c24d3e11ed1ede09a4b7a1041cd103235c"   # energy_budget.py second issue (s119; was cf6c377f, the model section 9 pinned)
 DRCALC = os.path.join(HERE, "inputs", "pvgis-leiden-daily-profile-2005-2020.json")
 DRCALC_SHA256 = "4d974567cc49315dade4a63736b0d428fce9b5e645362052390c94c56fde1210"  # the value energy_inputs.yaml names
 MONTH = 9
@@ -59,12 +71,14 @@ PAR = {
     "t_base_c": (20.0, "REQ-014's +20 C, the basis of sections 8 and 9: the base pack in the closed base with the kit's own heat"),
     "chg_a_base": (3.968, "SESSION (section 8a's 4.0 A for the 4S6P base as a register value): U3 ChargeCurrent code 31 x 128 mA = 3.968 A (SLUSE66A Table 9-7), the nearest at or below 4.0 A; OCC1 5.0 A unchanged"),
     "chg_a_lid": (7.936, "SESSION: U3B ChargeCurrent code 62 x 128 mA = 7.936 A for the 4S12P lid, 0.66 A a cell; the lid gauge's OCC1 at 10.0 A true (GAUGE.md)"),
-    "iin_lid_a": (8.0, "SESSION: U3B IIN_HOST 8.0 A nominal from VBAT, code 80 (seven bits of 100 mA with RAC 5 mOhm, RSNS_RAC = 1b, SLUSE66A 9.6.22 Table 9-50, page 80; 8.2 A maximum with the 200 mA the register text adds); 3.3 uH on IADPT's 169 k so that Table 9-1 allows 10 A"),
-    "eta_u3b": (0.975, "MAKER, read from a plot: SLUSE66A Figure 8-3 (VIN 15 V, VOUT 14.8 V, RAC = RSR = 5 mOhm, 4.7 uH, 400 kHz) reads about 98.5 percent from 3 to 6 A and 98 at 8 A (AI reading of the page image); 0.975 carries board A's 3.3 uH and layout; bracket 0.96 to 0.985"),
+    "iin_lid_a": (6.2, "SESSION (the S-119 U3B decision, records/s119/apply_decision_s119.py): U3B IIN_HOST 6.2 A nominal from VBAT with R16B 10 mOhm (RSNS_RAC = 0b, 50 mA steps, code 124; SLUSE66A 9.6.22 page 80 adds 100 mA for the maximum, 6.3 A), under the 6.35 A clamp of 9.3.5 and Table 9-1 (pages 25 and 26), 4.7 uH on IADPT's 191 k (Table 9-4, page 27); the model's largest U3B input is about 4.1 A, so the limit does not bind. The first issue's 8.0 A on 5 mOhm and 3.3 uH is superseded"),
+    "eta_u3b": (0.972, "INFERRED by TI's method, not a figure TI states for this circuit: SLUSE66A Equations 6 to 22 (printed pages 86 to 88) as records/s117/efficiency.py implements them, on U3B as the S-119 decision draws it (the 400 kHz row: L2B XAL1010-472ME, 191 k on IADPT, R16B 10 mOhm and R17B 5 mOhm counted, Q7B and Q9B CSD17578Q5A, Q8B and Q10B CSD17577Q5A), in the buck-boost bound at every hour and weighted by the energy U3B takes in each of the model's own hours; the lowest over both lid options, both ratio cases and both starts, TI's reading 0.9724 rounded down (records/s119/u3b_hourly.out). 0.974 at the model's peak hour and 0.943 in the worst hour of 5 W or more. The inductor's core loss is EXCLUDED (Coilcraft Document 804-1 prints none), so the figure is high by it. Second issue (stream s119, S-119), second round after its independent check (item M1): the first round's 0.961 was the 800 kHz row at the peak hour, U3B's most favourable load; the first issue's 0.975 was an AI reading of Figure 8-3, superseded"),
+    "eta_u3b_lo": (0.963, "the bracket's low end: eta_u3b's method at the makers' maxima, the lowest over the same cases (records/s119/u3b_hourly.out)"),
+    "eta_u3b_hi": (0.978, "the bracket's high end: eta_u3b's method at the most favourable reading, the highest over the same cases (records/s119/u3b_hourly.out)"),
     "r_lid_dsg": (0.030, "ESTIMATE, ohm: the lid's discharge loop: hinge harness 12 AWG 2 x 0.6 m at 5.21 mOhm/m (6.3), two inline blade fuses (2 x 3.0, no maker resistance held), two XT60 pairs (2 x 0.5), board PL's F1, F2, Q1, Q2 and R10 (3.0 + 2.0 + 0.69 + 0.69 + 2.0 at the makers' maxima where held), the LM5069 FET 0.96 and its sense 5.6 mOhm; bracket 0.020 to 0.045"),
     "r_cl": (0.0056, "SESSION: the LM5069's sense resistor, 5.6 mOhm: VCL 48.5 / 55 / 61.5 mV (SNVS452G page 6) gives 8.7 / 9.8 / 11.0 A, so a join can never push more than 11.0 A (1.83 A a base cell, under the 35E's 2.0 A maximum charge, spec 3.7) into the base, and the lid's share of the kit's 10 A continuous (6.7 A) stays under the 8.7 A minimum"),
     "v_ak": (0.020, "MAKER: LM74700-Q1 regulated forward V(AK) 13 / 20 / 29 mV (SNOSD17G 6.5, page 6): the ideal diode holds 20 mV across its FET until the FET is fully on"),
-    "r_lid_chg": (0.028, "ESTIMATE, ohm: the lid's charge loop: U3B's RSR 5 mOhm, the same harness, fuses and connectors (14.3), board PL's F1, F2, Q1, Q2, R10 (8.4); bracket 0.020 to 0.045"),
+    "r_lid_chg": (0.023, "ESTIMATE, ohm: the lid's charge loop beyond U3B's own sense resistors: the harness, fuses and connectors (14.3) and board PL's F1, F2, Q1, Q2, R10 (8.4); R16B and R17B are inside eta_u3b (TI's method counts them), so the first issue's 5 mOhm for U3B's RSR, counted twice, is removed (the check of stream s119, item M3); bracket 0.015 to 0.040"),
     "fe_out_w": (4.3 * 20.7, "MAKER: board A's front end U2 (LM5176) regulates its output current at VSNS 43 / 50 / 57 mV min / typ / max (TI SNVSAI1D 6.5, PDF page 7, the constant current loop) over R11 10 mOhm: 4.3 / 5.0 / 5.7 A at 20.7 V; a limit that must hold a load is taken at its MINIMUM, 4.3 A (gen_sch_e.py:104-107 quotes the triple and uses 57 mV only to size copper)"),
     "fe_r11_draft_mohm": (6.2, "SESSION (draft): R11 6.2 mOhm, so the re-rated front end limits at 43 / 50 / 57 mV / 6.2 mOhm = 6.94 / 8.06 / 9.19 A; the stage and its copper are checked at 9.19 A by the generator owner"),
     "u3_iin_draft_a": (6.2, "SESSION (draft): U3 IIN_HOST 6.2 A nominal with R16 as generated (10 mOhm, RSNS_RAC = 0b, 50 mA steps, code 124; SLUSE66A 9.6.22 page 80 adds 100 mA for the maximum, 6.3 A, under the 6.35 A clamp of 9.3.5 and under the re-rated front end's 6.94 A minimum), so U3's input loop, not the front end's current limit, holds the bus"),
@@ -147,6 +161,25 @@ def taper(cap, soc, t):
     return cap if soc < t else cap * max(0.0, (1.0 - soc) / (1.0 - t))
 
 
+def eta_at(eb, p_w):
+    """U3B's efficiency: a figure, or (analysis scripts only) a function of U3B's input power from VBAT in W."""
+    return eb(p_w) if callable(eb) else eb
+
+
+def lid_node_for_terminal(t_w, v_l, eb, r):
+    """Node power U3B draws to put t_w into the lid's terminals; eb a figure or a function of that node power."""
+    if not callable(eb):
+        return lid_node_from_terminal(t_w, v_l, eb, r)
+    lo, hi = 0.0, 4.0 * (t_w + (t_w / v_l) ** 2 * r) + 1.0
+    for _ in range(60):
+        mid = 0.5 * (lo + hi)
+        if lid_terminal_from_node(mid, v_l, eta_at(eb, mid), r) < t_w:
+            lo = mid
+        else:
+            hi = mid
+    return hi
+
+
 def lid_node_from_terminal(t_w, v_l, eta_b, r):
     """Node power U3B must draw to put t_w into the lid pack's terminals (conversion, then the charge loop's I2R)."""
     i = t_w / v_l
@@ -154,7 +187,9 @@ def lid_node_from_terminal(t_w, v_l, eta_b, r):
 
 
 def lid_terminal_from_node(a_w, v_l, eta_b, r):
-    """The inverse of lid_node_from_terminal, by bisection (monotone)."""
+    """The inverse of lid_node_from_terminal, by bisection (monotone); nothing reaches the lid at no efficiency."""
+    if eta_b <= 0.0:
+        return 0.0
     lo, hi = 0.0, a_w * eta_b
     for _ in range(60):
         mid = 0.5 * (lo + hi)
@@ -229,7 +264,7 @@ def sim(d, pack, res4, prof, wp, window, start_h, t_b, t_l, cfg, trace=None):
             cb = taper(cap_b, e_b / eb_full, tp) if (can_b and eb_full > 0) else 0.0
             if can_l and el_full > 0:
                 cl_t = taper(cap_l, e_l / el_full, tp)
-                cl = min(lid_node_from_terminal(cl_t, v_l, cfg["eta_b"], cfg["r_chg"]), cfg["iin_l"] * v_b)
+                cl = min(lid_node_for_terminal(cl_t, v_l, cfg["eta_b"], cfg["r_chg"]), cfg["iin_l"] * v_b)
             else:
                 cl = 0.0
             if cfg["cpol"] == "ah":
@@ -244,9 +279,10 @@ def sim(d, pack, res4, prof, wp, window, start_h, t_b, t_l, cfg, trace=None):
                 a_l = min(s, cl); a_b = min(s - a_l, cb)
             e_b = min(eb_full, e_b + a_b * eta_c)
             if a_l > 0.0:
-                t_w = lid_terminal_from_node(a_l, v_l, cfg["eta_b"], cfg["r_chg"])
-                loss["u3b"] += a_l * (1.0 - cfg["eta_b"])
-                loss["chg_loop"] += a_l * cfg["eta_b"] - t_w
+                e_h = eta_at(cfg["eta_b"], a_l)
+                t_w = lid_terminal_from_node(a_l, v_l, e_h, cfg["r_chg"])
+                loss["u3b"] += a_l * (1.0 - e_h)
+                loss["chg_loop"] += a_l * e_h - t_w
                 e_l = min(el_full, e_l + t_w * eta_c)
         else:
             deficit = load - p_sun
@@ -423,9 +459,9 @@ def main():
                       ("charge lid first, discharge 'ah'", {"cpol": "lid_first"}),
                       ("charge 'ah', discharge lid first", {"dpol": "lid_first"}),
                       ("charge 'ah', discharge base first", {"dpol": "base_first"}),
-                      ("U3B at 0.96, loops at 45 mOhm, V(AK) 29 mV", {"eta_b": 0.96, "r_dsg": 0.045, "r_chg": 0.045, "v_ak": 0.029}),
-                      ("U3B at 0.985, loops at 20 mOhm", {"eta_b": 0.985, "r_dsg": 0.020, "r_chg": 0.020}),
-                      ("ceilings at the cycle-life 1.02 A a cell (6.12 A, 12.24 A; U3B input 10 A)", {"chg_a_b": 6.12, "chg_a_l": 12.24, "iin_l": 10.0}),
+                      ("U3B at %.3f (makers' maxima), loops 40 and 45 mOhm, V(AK) 29 mV" % v("eta_u3b_lo"), {"eta_b": v("eta_u3b_lo"), "r_dsg": 0.045, "r_chg": 0.040, "v_ak": 0.029}),
+                      ("U3B at %.3f (most favourable), loops 15 and 20 mOhm" % v("eta_u3b_hi"), {"eta_b": v("eta_u3b_hi"), "r_dsg": 0.020, "r_chg": 0.015}),
+                      ("ceilings at the cycle-life 1.02 A a cell (6.12 A, 12.24 A; U3B input at its 6.35 A clamp)", {"chg_a_b": 6.12, "chg_a_l": 12.24, "iin_l": 6.35}),
                       ("base ceiling at FW-A02's 3.0 A as filed", {"chg_a_b": 3.0})):
         cfg = base_cfg(); cfg.update(over)
         P("   %-72s %s" % (lab + ":", fmt_run(both(d, pack, res4, prof, 400, 200.0, v("t_base_c"), t_basis, cfg))))
@@ -497,19 +533,20 @@ def main():
         i_out = p_node / vb
         i_b = a_b / vb
         i_u3b_in = a_l / vb
-        t_w = lid_terminal_from_node(a_l, r["v_l"], cfg["eta_b"], cfg["r_chg"]) if a_l > 0 else 0.0
+        e_b7 = eta_at(cfg["eta_b"], a_l)
+        t_w = lid_terminal_from_node(a_l, r["v_l"], e_b7, cfg["r_chg"]) if a_l > 0 else 0.0
         i_l = t_w / r["v_l"]
         P("   %s: hour %d (%02d UTC), the sun offers %.1f W at the node: stage in %.1f W; front end out %.1f W = %.2f A on VBUS20 at %.1f V (as generated it limits at 4.3 / 5.0 / 5.7 A);" % (
             lab, h, hh, p_sun, p_stage_in, p_fe, i_in, V_BUS20))
-        P("       front end loss %.1f W (at 0.93); U3 in %.2f A through R16 (10 mOhm: %.2f W; 5 mOhm: %.2f W), U3 loss %.1f W (at 0.98);" % (
-            p_fe * (1.0 / e_fe - 1.0), i_in, i_in * i_in * 0.010, i_in * i_in * 0.005, p_fe * (1.0 - e_ch)))
-        P("       U3 out %.1f W = %.2f A at the node's %.2f V (load %.1f W, base %.1f W = %.2f A through R17: %.2f W; U3B %.1f W = %.2f A from VBAT);" % (
-            p_node, i_out, vb, load, a_b, i_b, i_b * i_b * 0.005, a_l, i_u3b_in))
-        P("       U3B loss %.1f W (at %.3f), R16B 5 mOhm %.2f W, lid charge %.2f A (R17B 5 mOhm %.2f W), charge loop I2R %.2f W" % (
-            a_l * (1.0 - cfg["eta_b"]), cfg["eta_b"], i_u3b_in * i_u3b_in * 0.005, i_l, i_l * i_l * 0.005, i_l * i_l * cfg["r_chg"]))
-        for fsw in (400e3, 800e3):
-            ripple = (V_BUS20 - vb) * vb / (V_BUS20 * 3.3e-6 * fsw)
-            P("       U3's L2 (3.3 uH; Isat 12.2 A by its value text XAL6030-332ME, on footprint L6060: a generator mismatch) in buck mode at %.0f kHz: average %.2f A, ripple %.2f A p-p, peak %.2f A" % (
+        P("       front end loss %.1f W (at %.2f); U3 in %.2f A, U3 loss %.1f W (at %.3f, R16 10 mOhm %.2f W and R17 5 mOhm %.2f W inside it);" % (
+            p_fe * (1.0 / e_fe - 1.0), e_fe, i_in, p_fe * (1.0 - e_ch), e_ch, i_in * i_in * 0.010, i_b * i_b * 0.005))
+        P("       U3 out %.1f W = %.2f A at the node's %.2f V (load %.1f W, base %.1f W = %.2f A; U3B %.1f W = %.2f A from VBAT);" % (
+            p_node, i_out, vb, load, a_b, i_b, a_l, i_u3b_in))
+        P("       U3B loss %.1f W (at %.3f, R16B 10 mOhm %.2f W and R17B 5 mOhm %.2f W inside it), lid charge %.2f A, charge loop I2R %.2f W" % (
+            a_l * (1.0 - e_b7), e_b7, i_u3b_in * i_u3b_in * 0.010, i_l * i_l * 0.005, i_l, i_l * i_l * cfg["r_chg"]))
+        for fsw in (400e3,):
+            ripple = (V_BUS20 - vb) * vb / (V_BUS20 * 4.7e-6 * fsw)
+            P("       U3's L2 as drawn (4.7 uH XAL1010-472ME, Isat 25.4 A, Coilcraft Document 804-1; decision 56) in buck mode at %.0f kHz: average %.2f A, ripple %.2f A p-p, peak %.2f A" % (
                 fsw / 1e3, i_out, ripple, i_out + ripple / 2.0))
     ld = LOAD * NP_L / NP_T / r["v_l"]
     P("   the lid's discharge path at the night's share (%.2f A): LM74700-Q1 %.3f W (20 mV), LM5069 FET %.3f W (0.96 mOhm max)," % (

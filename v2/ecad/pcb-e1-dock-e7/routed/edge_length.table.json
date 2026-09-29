@@ -1,6 +1,7 @@
 {
  "board": "e",
  "counts": {
+  "allowed_nets": 0,
   "answered_nets": 10,
   "bound_decided_nets": 31,
   "bound_edge_nets": 37,
@@ -162,6 +163,7 @@
    "layout_bound": [
     "E6_BST"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -280,6 +282,7 @@
    "layout_bound": [
     "DCF_PULSE"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -405,6 +408,7 @@
     "FAN1_SW",
     "FAN2_SW"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -519,6 +523,7 @@
    "document": null,
    "drivers": {},
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -586,6 +591,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -773,6 +779,7 @@
    "layout_bound": [
     "HS_GATE"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -833,6 +840,7 @@
     "IMU_CSB",
     "IMU_INT1"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -921,6 +929,7 @@
    "layout_bound": [
     "LTG_IRQ"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1000,6 +1009,7 @@
     "Q1_G",
     "Q2_G"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1089,6 +1099,7 @@
     "QSPI_SCLK",
     "QSPI_SS"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1222,6 +1233,7 @@
    "layout_bound": [
     "SCL1"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1290,6 +1302,7 @@
    "layout_bound": [
     "SDA1"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1372,6 +1385,7 @@
     "SMBC",
     "SMBD"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1444,6 +1458,7 @@
     "SWCLK",
     "SWDIO"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1534,6 +1549,7 @@
     "TRK_BG1",
     "TRK_BG2"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1604,6 +1620,7 @@
     "TRK_BOOST1",
     "TRK_BOOST2"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1664,6 +1681,7 @@
    "document": null,
    "drivers": {},
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1857,6 +1875,7 @@
     "TRK_TG1",
     "TRK_TG2"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1959,6 +1978,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [
     "USB_DM_R",
@@ -2063,6 +2083,7 @@
    "layout_bound": [
     "XIN"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -2120,6 +2141,7 @@
     "XOUT",
     "XOUT_R"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,

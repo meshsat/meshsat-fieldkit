@@ -14,11 +14,11 @@
    "phase_artefacts.py": "96642ce767188c73",
    "regen_compare.py": "341d7f129a1e6f24",
    "sch_prov.py": "a98e5a71ac74ccee",
-   "tx_inhibit.py": "a6a7a016f87d83ce",
+   "tx_inhibit.py": "e67b6e5bd33a5e9d",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "d913c37a5a486852",
+  "sha16": "28f10fd16ba70541",
   "unresolved": []
  },
  "counts": {
@@ -43,7 +43,7 @@
   },
   "intent_c": {
    "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
-   "sha256_16": "d321f2979e0c4244"
+   "sha256_16": "6db304b8ce504a09"
   },
   "intent_d": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
@@ -60,9 +60,9 @@
    "sha256_16": "3ef9b8c49a01b728"
   },
   "netlist_c": {
-   "content16": "424a8b6ee5851775",
+   "content16": "e6d5f09e7a983901",
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "87b69472ac83ca5a"
+   "sha256_16": "c9f7394594201045"
   },
   "netlist_d": {
    "content16": "be4194ed867c8406",
@@ -87,12 +87,12 @@
  },
  "tool": "inhibit_chain_d",
  "tools": {
-  "git_head": "a46db71be8a1",
-  "tools_tree_sha": "6031704bb86457d7"
+  "git_head": "4f4fd31d15df",
+  "tools_tree_sha": "fd71d03702e5de42"
  },
- "ts": "2026-09-29T13:43:49Z",
+ "ts": "2026-09-29T15:17:29Z",
  "verdict": "INCONCLUSIVE",
- "version": "a46db71be8a1",
+ "version": "4f4fd31d15df",
  "writer": {
   "file": "check_contracts.py",
   "sha16": "5e14f456a0791c35"
