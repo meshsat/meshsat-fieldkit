@@ -26,7 +26,8 @@ the connector plate C3 is quoted only and waits for the build; quotes may be ask
   criterion (CH2 and CH3 change under 0.2 K in 30 min, the room under 0.5 K in 60 min, and at least 3 h). Then, attended,
   the Arcol HS100 patch resistor on H1's four PEM S-M3 nuts: 45 and 83 W for 20, 30 and 60 s from a plate at or under
   +50 C, and its cooling.
-- **What it can prove:** the enclosure's conductance for heat released into the inside air, fans off, lid open and
+- **What it can prove:** from each step that reaches steady state (a step stopped at a limit gives no conductance,
+  procedure section 8), the enclosure's conductance for heat released into the inside air, fans off, lid open and
   closed, in still indoor air, to about -2 to +4 % at 64 W and -4 to +8 % at 21 W (rounded outward) (the session's budget, INFERRED), and the rise
   of H1 under a 45 to 83 W block. **What it cannot:** any part's temperature, the fans-on case, the face with the monitor
   and its openings, sun and wind, the kit's transients, or anything about sealing; its readings close neither final
