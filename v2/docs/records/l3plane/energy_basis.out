@@ -1,0 +1,294 @@
+THE ENERGY BASIS OF LAYER 3'S DECISIONS L3-OD1, L3-OD2 AND L3-OD4 (energy_basis.py, stream l3plane, MESHSAT-1357).
+PROTOTYPE DESIGN: nothing built, powered or measured. Energy figures MODELED (a1elec's energy_two_pack.py, pinned, as
+reconcile_lid_panel.py runs it); the bus range from vbus20_range.py (MAKER, NETLIST, INFERRED per term); bands INFERRED
+from the model's grid. AI arithmetic, not a qualified review.
+
+0. REPRODUCTION
+   0a. v2/docs/records/a1int/reconcile_lid_panel.out: 21 of 21 rows reproduced byte for byte by this script's runs at 20.7 V
+   0b. U3's day at E2 (20.7 V, 6.2 A): 0.9722 / 0.9790 / 0.9826, equal to efficiency.py's daily() and to v2/docs/records/s117/efficiency.out section 7 (yes)
+   0c. v2/docs/records/l3plane/plane_grid.out case P (6.1 A, U3B carried, 20.7 V): 100 of 100 plane cells (both lid options, both array builds) reproduced
+   0d. the mean day fed as a 72 hour series reproduces the mean-day runs exactly (both lids, both starts): yes
+
+1. THE CASES, EXACTLY
+   1a. THE WEATHER: SC-37's reference day, the only weather these runs establish
+       resource: PVGIS 5.2, PVGIS-SARAH2 monthly means 2015 to 2020 at latitude 52.160, longitude 4.497 (v2/vendor/solar/pvgis-leiden-monthly-2015-2020.json), the September mean day
+       on the 40 degree, azimuth 0 plane (PVGIS's optimum): 4.014 kWh/m2 a day
+       shape: PVGIS DRcalc's September mean-day profile, PVGIS-SARAH2 2005 to 2020, hourly, UTC, on that plane (v2/docs/records/a1solar/inputs/pvgis-leiden-daily-profile-2005-2020.json: 3.983 kWh/m2),
+       scaled by 1.007820 to the monthly mean; the same 24 hours repeated for 72 hours; runs from 06 and 18 UTC, a full pack;
+       air 13.23 to 18.33 C (the profile's T2m), the lid pack at 13.23 C (its minimum) and the base pack at +20 C for 72 hours.
+       Other planes: each plane's own DRcalc mean day (v2/vendor/solar/pvgis-planes/), scaled by the same factor.
+       NO WORSE-WEATHER CASE IS ESTABLISHED BY THESE RUNS: a mean day is not a cloudy day; section 6 is INFORMATIVE only.
+   1b. THE ARRAY BUILD (both on the SAME mean day; the ratio multiplies PVGIS's 0.9417, the 40/0 plane's losses kept for every plane)
+       TYP, the typical build: fit 'Rs 0 (section 3)', the FBIN point at 34.29 V, NOCT 45 C, a 5 m lead (0.0465 ohm loop).
+       WAB, the WORST ARRAY BUILD (the earlier records' case C, renamed; it is NOT weather): the worst of the three single-diode
+       fits (Rs 0 (section 3), Rs 0.1, Rs 0.2), the FBIN point at the worse end of its window (33.05 or 35.57 V: FBIN over temperature and R8, R9 at 1 %),
+       cells 10 K above the NOCT model, a 10 m lead (twice the loop), and the hotter cells' own loss of maximum-power energy
+       (the lower of the model's and the maker's -0.42 %/K). At 40/0: TYP 0.9903, WAB 0.9103 of the tracked energy.
+   1c. THE ELECTRICAL INPUTS
+       NOM   nominal: VBUS20 20.000 V (the regulation's nominal), U3 at 6.2 A (IIN_HOST's nominal), U3 0.9793 (TI's reading at that bus), U3B 0.972, stage 0.93, front end 0.93, pack charge 0.95, lid loops 0.030 / 0.023 ohm, V(AK) 20 mV
+       WE    the established worst electrical inputs: VBUS20 19.146 V (the envelope's minimum, vbus20_range.out 6), U3 at 6.1 A (its minimum), U3 0.9733 (the makers' maxima at that bus), U3B 0.963 (its lower bracket); the other losses nominal
+       WE60  WE with U3 at the 6.0 A bracket (U3 0.9734)
+       WA    every bracket unfavourable at once: WE60 plus stage 0.90, front end 0.90, pack charge 0.90, lid loops 0.045 / 0.040 ohm, V(AK) 29 mV
+       GEN   board A AS GENERATED: R11 10 mOhm, so the front end limits at 4.30 A minimum (vbus20_range.out 7) and U3's limit is set under it at 4.15 A (energy_two_pack entry E1); bus nominal, U3 0.9810 (TI's reading there), the rest nominal
+       M207  for comparison, the model as published: 20.7 V, 6.1 A, U3 0.979 and U3B 0.972 carried (plane_grid.out case P)
+       SC76  for comparison, SC-76's basis: 19.08 V, 6.1 A, U3 and U3B carried (plane_grid.out case V19)
+       Common to every case: 400 Wp (four Renogy RNG-100DB-H in 2S2P) into a 200 W stage window, the drafted entry (R11
+       6.2 mOhm: the front end limits at 6.94 A minimum, above U3; as generated R11 is 10 mOhm and the bus cannot carry U3's
+       limit, vbus20_range.out 7), U3B at code 62 (7.936 A), PS-IDLE-SPEC 42.8 W at the pack terminals, the cells aged to 80
+       percent, the 3.00 V line with the 5 percent reserve, the charge and discharge split by capacity.
+
+2. U3'S EFFICIENCY AGAINST THE BUS AND ITS LIMIT (efficiency.py's method, the reference day at 40/0, the drafted entry)
+   bus, limit                                      lower       TI    upper   power into U3 at the limit
+   the envelope's minimum 19.146 V, 6.0 A         0.9734   0.9797   0.9831    114.9 W
+   the envelope's minimum 19.146 V, 6.1 A         0.9733   0.9796   0.9830    116.8 W
+   the envelope's minimum 19.146 V, 6.2 A         0.9731   0.9796   0.9829    118.7 W
+   the reference day's minimum 19.205 V, 6.0 A    0.9733   0.9797   0.9831    115.2 W
+   the reference day's minimum 19.205 V, 6.1 A    0.9732   0.9796   0.9830    117.2 W
+   the reference day's minimum 19.205 V, 6.2 A    0.9731   0.9795   0.9829    119.1 W
+   SC-76 19.080 V, 6.0 A                          0.9734   0.9798   0.9831    114.5 W
+   SC-76 19.080 V, 6.1 A                          0.9733   0.9797   0.9830    116.4 W
+   SC-76 19.080 V, 6.2 A                          0.9732   0.9796   0.9829    118.3 W
+   nominal 20.000 V, 6.0 A                        0.9729   0.9795   0.9829    120.0 W
+   nominal 20.000 V, 6.1 A                        0.9728   0.9794   0.9828    122.0 W
+   nominal 20.000 V, 6.2 A                        0.9727   0.9793   0.9828    124.0 W
+   the model's 20.700 V, 6.0 A                    0.9725   0.9792   0.9828    124.2 W
+   the model's 20.700 V, 6.1 A                    0.9724   0.9791   0.9827    126.3 W
+   the model's 20.700 V, 6.2 A                    0.9722   0.9790   0.9826    128.3 W
+   the envelope's maximum 20.887 V, 6.0 A         0.9724   0.9791   0.9827    125.3 W
+   the envelope's maximum 20.887 V, 6.1 A         0.9722   0.9790   0.9826    127.4 W
+   the envelope's maximum 20.887 V, 6.2 A         0.9721   0.9789   0.9825    129.5 W
+   At a lower bus U3 bucks a smaller ratio and loses slightly less; the power it may take falls in proportion to the bus.
+
+3. SENSITIVITY ON THE REFERENCE PLANE (40 degrees, south), one input at a time from NOM with the TYP build; the lowest
+   store of both packs in Wh (or the energy left unserved), and its change from NOM
+   4S9P, both lid functions kept (4S15P in all): NOM NOT MET, 165.7 Wh unserved
+      VBUS20 (and U3's TI reading at it)     19.146 V       NOT MET, 165.6 Wh unserved        +0.0   20.887 V       NOT MET, 165.7 Wh unserved        -0.0
+      U3's input limit (and its TI reading)  6.0 A          NOT MET, 165.6 Wh unserved        +0.0   6.1 A          NOT MET, 165.7 Wh unserved        +0.0
+      U3's efficiency                        lower 0.9727   NOT MET, 166.2 Wh unserved        -0.6   upper 0.9828   NOT MET, 165.4 Wh unserved        +0.3
+      U3B's efficiency                       0.963          NOT MET, 165.7 Wh unserved        +0.0   0.978          NOT MET, 165.7 Wh unserved        +0.0
+      the stage's efficiency                 0.90           NOT MET, 168.4 Wh unserved        -2.8   0.97           NOT MET, 162.0 Wh unserved        +3.7
+      the front end's efficiency             0.90           NOT MET, 168.4 Wh unserved        -2.8   0.97           NOT MET, 162.0 Wh unserved        +3.7
+      the pack's charge efficiency           0.90           NOT MET, 165.7 Wh unserved        +0.0   0.98           NOT MET, 165.7 Wh unserved        +0.0
+      the lid's discharge loop               0.045 ohm      NOT MET, 167.1 Wh unserved        -1.5   0.020 ohm      NOT MET, 164.7 Wh unserved        +1.0
+      the lid's charge loop                  0.040 ohm      NOT MET, 165.7 Wh unserved        +0.0   0.015 ohm      NOT MET, 165.7 Wh unserved        +0.0
+      the ideal diode's V(AK)                29 mV          NOT MET, 166.2 Wh unserved        -0.5   13 mV          NOT MET, 165.3 Wh unserved        +0.4
+      the array build                        WAB            NOT MET, 172.6 Wh unserved        -6.9   TYP            NOT MET, 165.7 Wh unserved        +0.0
+      ranked by the unfavourable end: the array build -6.9; the front end's efficiency -2.8; the stage's efficiency -2.8; the lid's discharge loop -1.5; U3's efficiency -0.6
+   4S14P, the tablet bracket out (4S20P in all): NOM MEETS   93.7
+      VBUS20 (and U3's TI reading at it)     19.146 V       MEETS   79.7                     -14.0   20.887 V       MEETS   93.7                      -0.0
+      U3's input limit (and its TI reading)  6.0 A          MEETS   85.7                      -8.0   6.1 A          MEETS   93.7                      +0.0
+      U3's efficiency                        lower 0.9727   MEETS   93.4                      -0.2   upper 0.9828   MEETS   93.8                      +0.1
+      U3B's efficiency                       0.963          MEETS   93.7                      +0.0   0.978          MEETS   93.7                      +0.0
+      the stage's efficiency                 0.90           MEETS   92.5                      -1.1   0.97           MEETS   95.2                      +1.5
+      the front end's efficiency             0.90           MEETS   92.5                      -1.1   0.97           MEETS   95.2                      +1.5
+      the pack's charge efficiency           0.90           MEETS   78.0                     -15.6   0.98           MEETS   93.7                      +0.0
+      the lid's discharge loop               0.045 ohm      MEETS   92.9                      -0.8   0.020 ohm      MEETS   94.2                      +0.5
+      the lid's charge loop                  0.040 ohm      MEETS   93.7                      +0.0   0.015 ohm      MEETS   93.7                      +0.0
+      the ideal diode's V(AK)                29 mV          MEETS   93.4                      -0.2   13 mV          MEETS   93.9                      +0.2
+      the array build                        WAB            MEETS   75.7                     -18.0   TYP            MEETS   93.7                      +0.0
+      ranked by the unfavourable end: the array build -18.0; the pack's charge efficiency -15.6; VBUS20 (and U3's TI reading at it) -14.0; U3's input limit (and its TI reading) -8.0; the stage's efficiency -1.1
+   4S15P, the QMX HF set out (4S21P in all): NOM MEETS  125.2
+      VBUS20 (and U3's TI reading at it)     19.146 V       MEETS  110.8                     -14.4   20.887 V       MEETS  125.2                      -0.0
+      U3's input limit (and its TI reading)  6.0 A          MEETS  116.8                      -8.3   6.1 A          MEETS  125.2                      +0.0
+      U3's efficiency                        lower 0.9727   MEETS  124.9                      -0.2   upper 0.9828   MEETS  125.3                      +0.1
+      U3B's efficiency                       0.963          MEETS  125.2                      +0.0   0.978          MEETS  125.2                      +0.0
+      the stage's efficiency                 0.90           MEETS  124.0                      -1.1   0.97           MEETS  126.7                      +1.5
+      the front end's efficiency             0.90           MEETS  124.0                      -1.1   0.97           MEETS  126.7                      +1.5
+      the pack's charge efficiency           0.90           MEETS  109.1                     -16.0   0.98           MEETS  125.2                      +0.0
+      the lid's discharge loop               0.045 ohm      MEETS  124.3                      -0.8   0.020 ohm      MEETS  125.7                      +0.6
+      the lid's charge loop                  0.040 ohm      MEETS  125.2                      +0.0   0.015 ohm      MEETS  125.2                      +0.0
+      the ideal diode's V(AK)                29 mV          MEETS  124.9                      -0.3   13 mV          MEETS  125.4                      +0.2
+      the array build                        WAB            MEETS  106.8                     -18.4   TYP            MEETS  125.2                      +0.0
+      ranked by the unfavourable end: the array build -18.4; the pack's charge efficiency -16.0; VBUS20 (and U3's TI reading at it) -14.4; U3's input limit (and its TI reading) -8.3; the stage's efficiency -1.1
+   (a NOT MET row's metric is minus the unserved energy, so the change counts across the verdict)
+
+3b. THE LOWEST STORE AGAINST THE POWER U3 MAY TAKE (the bus times U3's limit), every other input at NOM, on 40/0: the
+    electrical inputs VBUS20 and IIN_HOST act only through this product (and U3's efficiency, section 2)
+   into U3    4S14P TYP                    4S14P WAB                    4S15P TYP                    4S15P WAB                  
+    108.0 W  NOT MET,  25.2 Wh unserved   NOT MET,  80.9 Wh unserved   MEETS    5.5                 NOT MET,  50.2 Wh unserved 
+    110.0 W  NOT MET,   3.6 Wh unserved   NOT MET,  59.2 Wh unserved   MEETS   27.1                 NOT MET,  28.5 Wh unserved 
+    112.0 W  MEETS   18.1                 NOT MET,  37.6 Wh unserved   MEETS   48.7                 NOT MET,   6.9 Wh unserved 
+    114.0 W  MEETS   39.7                 NOT MET,  15.9 Wh unserved   MEETS   70.5                 MEETS   14.8               
+    116.0 W  MEETS   61.4                 MEETS    5.7                 MEETS   92.2                 MEETS   36.4               
+    118.0 W  MEETS   76.1                 MEETS   27.4                 MEETS  107.2                 MEETS   58.1               
+    120.0 W  MEETS   85.4                 MEETS   49.0                 MEETS  116.6                 MEETS   79.8               
+    122.0 W  MEETS   93.7                 MEETS   66.7                 MEETS  125.2                 MEETS   97.8               
+    124.0 W  MEETS   93.7                 MEETS   75.7                 MEETS  125.2                 MEETS  106.8               
+    126.0 W  MEETS   93.7                 MEETS   84.3                 MEETS  125.2                 MEETS  115.4               
+    128.0 W  MEETS   93.7                 MEETS   90.9                 MEETS  125.2                 MEETS  122.4               
+    130.0 W  MEETS   93.7                 MEETS   90.9                 MEETS  125.2                 MEETS  122.4               
+   (the bus's established range 19.146 to 20.887 V is 116.8 to 127.4 W at 6.1 A and 114.9 to 125.3 W at 6.0 A; nominal 124.0 W at 6.2 A)
+
+4. THE COMBINED CASES ON THE REFERENCE PLANE (40/0): verdict, lowest store of both packs / lid / base in Wh, unserved
+   lid option                                   case  TYP                                          WAB                                         
+   4S9P                                         NOM   NOT MET, unserved  165.7 Wh                  NOT MET, unserved  172.6 Wh                 
+   4S9P                                         WE    NOT MET, unserved  166.2 Wh                  NOT MET, unserved  173.0 Wh                 
+   4S9P                                         WE60  NOT MET, unserved  166.2 Wh                  NOT MET, unserved  173.0 Wh                 
+   4S9P                                         WA    NOT MET, unserved  190.9 Wh                  NOT MET, unserved  245.4 Wh                 
+   4S9P                                         GEN   NOT MET, unserved  494.7 Wh                  NOT MET, unserved  522.4 Wh                 
+   4S9P                                         M207  NOT MET, unserved  165.7 Wh                  NOT MET, unserved  172.6 Wh                 
+   4S9P                                         SC76  NOT MET, unserved  165.7 Wh                  NOT MET, unserved  172.6 Wh                 
+   4S14P                                        NOM   MEETS  both   93.7, lid  44.6, base  49.0    MEETS  both   75.7, lid  27.5, base  48.2   
+   4S14P                                        WE    MEETS  both   51.1, lid   4.0, base  44.3    NOT MET, unserved    3.9 Wh                 
+   4S14P                                        WE60  MEETS  both   30.9, lid   0.0, base  30.9    NOT MET, unserved   24.1 Wh                 
+   4S14P                                        WA    NOT MET, unserved   70.3 Wh                  NOT MET, unserved  120.5 Wh                 
+   4S14P                                        GEN   NOT MET, unserved  357.5 Wh                  NOT MET, unserved  383.8 Wh                 
+   4S14P                                        M207  MEETS  both   93.7, lid  44.6, base  49.0    MEETS  both   85.4, lid  37.3, base  48.2   
+   4S14P                                        SC76  MEETS  both   65.1, lid  15.8, base  45.5    MEETS  both    9.4, lid   0.0, base   9.4   
+   4S15P                                        NOM   MEETS  both  125.2, lid  68.1, base  57.1    MEETS  both  106.8, lid  50.5, base  56.3   
+   4S15P                                        WE    MEETS  both   81.7, lid  26.4, base  52.6    MEETS  both   26.7, lid   0.0, base  26.7   
+   4S15P                                        WE60  MEETS  both   61.4, lid  12.1, base  49.3    MEETS  both    6.4, lid   0.0, base   6.4   
+   4S15P                                        WA    NOT MET, unserved   40.0 Wh                  NOT MET, unserved   91.8 Wh                 
+   4S15P                                        GEN   NOT MET, unserved  326.6 Wh                  NOT MET, unserved  352.8 Wh                 
+   4S15P                                        M207  MEETS  both  125.2, lid  68.1, base  57.1    MEETS  both  116.6, lid  60.3, base  56.3   
+   4S15P                                        SC76  MEETS  both   95.9, lid  38.5, base  53.7    MEETS  both   40.1, lid   0.0, base  40.1   
+
+5. THE PLANES AT NOM, WE, WE60 AND WA (each plane's own mean day and ratios); a point COUNTS when TYP and WAB both meet with
+   every lowest store above the floor 4.2 Wh (reconcile_lid_panel.out's NOTES: the model's hourly-step sensitivity)
+   4S14P, the tablet bracket out (4S20P in all)
+      case NOM, maps (BW both builds count, T the TYP build only meets, - neither counts)
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     T    T    T    T    T    T    T
+             20     T    T   BW   BW   BW   BW    T
+             30     T    T   BW   BW   BW   BW    T
+             40     T    T   BW   BW   BW   BW    T
+             50     -    T   BW   BW   BW   BW    T
+             60     -    -    T   BW   BW    T    -
+             70     -    -    T   BW    T    -    -
+         band: slope 20 to 50, azimuth -15 to +30 (16 points); least  18.3 Wh at 50/+30 (WAB)
+         band: slope 20 to 60, azimuth  +0 to +15 (10 points); least  35.2 Wh at 60/+15 (WAB)
+         band: slope 20 to 70, azimuth  +0 to  +0 ( 6 points); least   9.8 Wh at 70/+0 (WAB)
+         within  0 of south: slope 20 to 70
+         within 15 of south: slope 20 to 50
+         within 30 of south: no slope
+      case WE, maps (BW both builds count, T the TYP build only meets, - neither counts)
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    T    T    T    T    -
+             30     -    -    T    T    T    T    -
+             40     -    -    T    T    T    T    -
+             50     -    -    T    T    T    -    -
+             60     -    -    -    T    T    -    -
+             70     -    -    -    -    -    -    -
+         band: none (no grid point counts)
+         within  0 of south: no slope
+         within 15 of south: no slope
+         within 30 of south: no slope
+      case WE60, maps (BW both builds count, T the TYP build only meets, - neither counts)
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    -    T    T    -    -
+             30     -    -    T    T    T    -    -
+             40     -    -    T    T    T    -    -
+             50     -    -    -    T    T    -    -
+             60     -    -    -    T    -    -    -
+             70     -    -    -    -    -    -    -
+         band: none (no grid point counts)
+         within  0 of south: no slope
+         within 15 of south: no slope
+         within 30 of south: no slope
+      case WA, maps (BW both builds count, T the TYP build only meets, - neither counts)
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    -    -    -    -    -
+             30     -    -    -    -    -    -    -
+             40     -    -    -    -    -    -    -
+             50     -    -    -    -    -    -    -
+             60     -    -    -    -    -    -    -
+             70     -    -    -    -    -    -    -
+         band: none (no grid point counts)
+         within  0 of south: no slope
+         within 15 of south: no slope
+         within 30 of south: no slope
+   4S15P, the QMX HF set out (4S21P in all)
+      case NOM, maps (BW both builds count, T the TYP build only meets, - neither counts)
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    T    .    .    .
+             10     T    T   BW   BW   BW    T    T
+             20     T   BW   BW   BW   BW   BW   BW
+             30     T   BW   BW   BW   BW   BW   BW
+             40     T   BW   BW   BW   BW   BW   BW
+             50     -    T   BW   BW   BW   BW    T
+             60     -    T   BW   BW   BW   BW    -
+             70     -    -    T   BW   BW    T    -
+         band: slope 20 to 60, azimuth -15 to +30 (20 points); least   6.6 Wh at 60/+30 (WAB)
+         band: slope 10 to 60, azimuth -15 to +15 (18 points); least   4.8 Wh at 10/-15 (WAB)
+         band: slope 20 to 40, azimuth -30 to +45 (18 points); least  17.4 Wh at 40/+45 (WAB)
+         band: slope 10 to 70, azimuth  +0 to +15 (14 points); least  12.7 Wh at 10/+15 (WAB)
+         within  0 of south: slope 10 to 70
+         within 15 of south: slope 10 to 60
+         within 30 of south: slope 20 to 40
+      case WE, maps (BW both builds count, T the TYP build only meets, - neither counts)
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    T    T    T    T    -
+             20     -    T    T    T    T    T    T
+             30     -    T    T   BW   BW    T    -
+             40     -    -    T   BW   BW    T    -
+             50     -    -    T   BW   BW    T    -
+             60     -    -    T    T    T    -    -
+             70     -    -    -    T    T    -    -
+         band: slope 30 to 50, azimuth  +0 to +15 ( 6 points); least  12.6 Wh at 50/+15 (WAB)
+         within  0 of south: slope 30 to 50
+         within 15 of south: no slope
+         within 30 of south: no slope
+      case WE60, maps (BW both builds count, T the TYP build only meets, - neither counts)
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    T    T    T    T    -
+             30     -    -    T    T    T    T    -
+             40     -    -    T   BW    T    T    -
+             50     -    -    T    T    T    -    -
+             60     -    -    -    T    T    -    -
+             70     -    -    -    -    -    -    -
+         band: slope 40 to 40, azimuth  +0 to  +0 ( 1 points); least   6.4 Wh at 40/+0 (WAB)
+         within  0 of south: slope 40 to 40
+         within 15 of south: no slope
+         within 30 of south: no slope
+      case WA, maps (BW both builds count, T the TYP build only meets, - neither counts)
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    -    -    -    -    -
+             30     -    -    -    -    -    -    -
+             40     -    -    -    -    -    -    -
+             50     -    -    -    -    -    -    -
+             60     -    -    -    -    -    -    -
+             70     -    -    -    -    -    -    -
+         band: none (no grid point counts)
+         within  0 of south: no slope
+         within 15 of south: no slope
+         within 30 of south: no slope
+
+5b. THE EDGES OF EACH OPTION'S WE BAND (the largest rectangle of case WE), lowest store TYP / WAB in Wh per case
+   4S14P, the tablet bracket out (4S20P in all): no WE band
+   4S15P, the QMX HF set out (4S21P in all): WE band slope 30 to 50, azimuth +0 to +15
+      NOM   30/+0 126.2/102.1; 30/+15 126.9/101.0; 40/+0 125.2/106.8; 40/+15 126.7/106.0; 50/+0 123.5/102.3; 50/+15 126.4/93.7
+      WE    30/+0 74.5/20.7; 30/+15 70.5/16.8; 40/+0 81.7/26.7; 40/+15 73.6/22.1; 50/+0 74.4/19.8; 50/+15 64.3/12.6
+      WE60  30/+0 54.2/0.4; 30/+15 50.2/NOT; 40/+0 61.4/6.4; 40/+15 50.2/1.9; 50/+0 54.1/NOT; 50/+15 40.6/NOT
+      WA    30/+0 NOT/NOT; 30/+15 NOT/NOT; 40/+0 NOT/NOT; 40/+15 NOT/NOT; 50/+0 NOT/NOT; 50/+15 NOT/NOT
+
+6. INFORMATIVE ONLY, NOT A REQUIREMENT CASE: M1 IN SEPTEMBER'S ACTUAL WEATHER, 2005 TO 2020, AT 40/0
+   data: v2/vendor/solar/pvgis-series/pvgis-leiden-seriescalc-2005-2020-september-slope40-aspect0.json (fetched by fetch_pvgis_series.py: PVGIS 5.2 seriescalc, PVGIS-SARAH2 2005 to 2020, latitude 52.160, longitude 4.497, slope 40,
+   azimuth 0, hourly averages, UTC): its mean September day is 3.983 kWh/m2, the DRcalc profile's 3.983 (hour by hour equal: yes).
+   Method (one site, one plane, one method): every 72 hour window starting at 06 or 18 UTC on 1 to 27 September of each year
+   (864 windows); the series as PVGIS gives it (NOT scaled to the 2015 to 2020 monthly mean); each calendar day's own TYP or
+   WAB ratio folded into its hours; the lid pack at the window's own minimum air; a full pack at the start; the rest as 1.
+   72 hour irradiation over the windows: lowest 3.17, 10th percentile 7.36, median 11.45 kWh/m2; the reference day x 3: 12.04
+   lid option                                   case      windows meeting M1     the darkest window                       the 10th percentile window               meets from / fails up to (kWh/m2)
+   4S14P                                        NOM TYP    207 of  864 ( 24.0 %)   2019-09-23 18h 3.17 kWh/m2, NOT MET 1461 Wh 2011-09-19 18h 7.36 kWh/m2, NOT MET 846 Wh 9.86 / 18.23
+   4S14P                                        WE TYP     169 of  864 ( 19.6 %)   2019-09-23 18h 3.17 kWh/m2, NOT MET 1468 Wh 2011-09-19 18h 7.36 kWh/m2, NOT MET 861 Wh 11.24 / 18.36
+   4S14P                                        WE WAB     128 of  864 ( 14.8 %)   2019-09-23 18h 3.17 kWh/m2, NOT MET 1569 Wh 2011-09-19 18h 7.36 kWh/m2, NOT MET 953 Wh 11.80 / 19.22
+   4S15P                                        NOM TYP    235 of  864 ( 27.2 %)   2019-09-23 18h 3.17 kWh/m2, NOT MET 1436 Wh 2011-09-19 18h 7.36 kWh/m2, NOT MET 815 Wh 9.86 / 18.23
+   4S15P                                        WE TYP     199 of  864 ( 23.0 %)   2019-09-23 18h 3.17 kWh/m2, NOT MET 1443 Wh 2011-09-19 18h 7.36 kWh/m2, NOT MET 830 Wh 9.86 / 18.23
+   4S15P                                        WE WAB     157 of  864 ( 18.2 %)   2019-09-23 18h 3.17 kWh/m2, NOT MET 1545 Wh 2011-09-19 18h 7.36 kWh/m2, NOT MET 922 Wh 11.45 / 18.68
+   4S9P is not run here: it does not meet M1 on the mean day in any case (section 4).
+   Limits of this case: PVGIS's 0.9417 is an average loss applied to single days; one plane; the base at +20 C; a full pack
+   at every window's start (no carry-over from the days before); SARAH2's hourly averages as given.
+
+END. Each line is the model's arithmetic; nothing is measured.
