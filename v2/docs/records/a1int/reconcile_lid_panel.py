@@ -23,7 +23,12 @@ board A's charger U3 at 0.979 (was 0.98, through energy_inputs.yaml) and the lid
 records/s119/u3b_hourly.out), and energy_runs.out is its third
 issue (the ratios A, B and C unchanged). The NOTES below were measured by the checks at the second issue's settings and
 are labelled so; the per-lid comparison with the second issue, the failing case and the sensitivity are
-records/s119/reconcile_s119.py's. Run from the repository root: python3 v2/docs/records/a1int/reconcile_lid_panel.py"""
+records/s119/reconcile_s119.py's.
+
+Stream l3plane (MESHSAT-1357, 30 September 2026) added run()'s optional prof, an hourly September irradiance profile in
+place of the model's own (the 40 degree south plane), for the plane grid of records/l3plane/plane_grid.py. main() does
+not pass it, so the output is unchanged to the byte (records/l3plane/PLANES.md section 0).
+Run from the repository root: python3 v2/docs/records/a1int/reconcile_lid_panel.py"""
 import hashlib, os, re, subprocess, sys
 
 sys.dont_write_bytecode = True
@@ -55,10 +60,11 @@ def ratios():
     return got
 
 
-def run(n_lid, t_l, pr, u3_a):
+def run(n_lid, t_l, pr, u3_a, prof=None):
     TP.NP_L = n_lid; TP.NP_T = TP.NP_B + n_lid
     d, pack, res4, t2m = TP.load_model()
-    prof = res4["months"][TP.MONTH]["profile"]
+    if prof is None:
+        prof = res4["months"][TP.MONTH]["profile"]
     r = dict(res4); r["pr"] = pr
     TP.ENTRIES["_u3"] = {"fe_out_w": TP.ENTRIES["E2"]["fe_out_w"], "u3_in_w": u3_a * TP.V_BUS20, "what": ""}
     cfg = TP.base_cfg(); cfg["entry"] = "_u3"          # chg_a_l stays at U3B's code 62, 7.936 A
