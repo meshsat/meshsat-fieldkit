@@ -56,7 +56,7 @@ PARTS = {
 # The input bound AS GENERATED: the front end's constant-current loop, VSNS 43 / 50 / 57 mV over R11 10 mOhm = 4.3 / 5.0 /
 # 5.7 A (TI SNVSAI1D 6.5; gen_sch_a.py's front-end comment "VSNS 57 mV over R11's 10 mOhm; the charger can ask for it"),
 # under U3's own IIN_HOST clamp of 6.35 A at RSNS_RAC = 0b (SLUSE66A 9.3.5 p.25; 9.6.22 p.80 adds 100 mA for the maximum).
-# Option A(i) (fnd/a1int, records/a1elec/CHARGER.md, not on main) re-rates R11 to 6.2 mOhm (6.94 / 8.06 / 9.19 A), so U3's
+# Option A(i) (v2/docs/records/a1elec/CHARGER.md, a record on main since set 11; not drawn on any board) re-rates R11 to 6.2 mOhm (6.94 / 8.06 / 9.19 A), so U3's
 # own clamp becomes the bound: 6.35 A + 0.1 A = 6.45 A; its drafted setting is IIN_HOST 6.2 A.
 POINTS = [
     # name, VIN, IIN, VSYS, what it is

@@ -39,7 +39,7 @@ L2_NEW = '''# S-117 (stream s117, 29 September 2026, MESHSAT-1357; the S-117 ses
 # here until today (Isat 12.2 A, Irms 6.0 / 8.0 A at 20 / 40 C rise, 20.81 mOhm maximum; Coilcraft 887-1) sits under the
 # charger's own input bound: the front end's 5.7 A at 20.7 V into a pack at its 10.0 V CUV puts 11.8 A through this
 # inductor, where it fails SLUSE66A Equation 2 (ISAT >= ICHG + IRIPPLE / 2, page 85) at either row and runs at 148
-# percent of its 40 C rise current (103 percent already with the pack at its 14.4 V nominal). The XAL1010-472ME (4.7 uH,
+# percent of its 40 C rise current (103 to 104 percent already with the pack at its 14.4 V nominal). The XAL1010-472ME (4.7 uH,
 # Isat 25.4 A, Irms 17.5 / 24.0 A, 5.70 mOhm maximum; Coilcraft 804-1), on the land L1 and L8 already use, peaks at 14.1
 # A worst at that bound (L at -20 percent with its fall, 340 kHz) and carries 49 percent of its 40 C rise current.
 # 400 kHz and not 800 kHz: with the drawn CSD18510Q5B FETs (about 75 nC of gate charge at 6 V, SLPS632 Figure 4) the
