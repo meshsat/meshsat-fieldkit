@@ -1,0 +1,235 @@
+OPTION A(i): PANEL CANDIDATES, ARRAY WIRINGS AND THE FIXED-VOLTAGE STAGE (array_calc.py, stream a1solar, MESHSAT-1357).
+PROTOTYPE DESIGN: nothing bought, built or measured. AI arithmetic on the makers' published figures; not a qualified review.
+
+0. CONSTANTS
+   cold cells -20 C; hot cells +70 C at 1000 W/m2; edge-of-cloud factor 1.25 (SunPower 524958 Rev F 3.0); rating factor 1.25
+   stage window 200 W; energy model's performance ratio 0.9417 (MPPT assumed); LT8705A FBIN 1.184 / 1.205 / 1.226 V (8705af p.4)
+   board E as generated: R8 102k over R9 7.50k holds the input at 17.29 / 17.59 / 17.90 V (min / typ / max)
+   lead ESTIMATE: 5 m each way of 4 mm2 copper at 40 C = 0.0465 ohm loop
+   coefficient bound where unpublished: Voc -0.35 %/K, Pmax -0.45 %/K, Isc +0.05 %/K (worst held mono c-Si values)
+
+1. THE CANDIDATES (maker's STC figures; coefficient kind in brackets)
+   VIC150  Victron BlueSolar Mono 150W-12V (SPM041501200), rigid, the 12 V class reference
+      document: v2/vendor/solar/victron-bluesolar-monocrystalline-panels-datasheet-en.pdf, p.1 table and coefficient rows
+      Pmax 150 W, Vmp 18.20 V, Imp 8.25 A, Voc 22.30 V, Isc 8.69 A, cells 36, mono c-Si
+      beta_voc  -0.350 %/K  [MAKER]
+      alpha_isc +0.040 %/K  [MAKER]
+      gamma_p   -0.450 %/K  [MAKER]
+      operating range -40 to +85 C; NOCT not published; 1485 x 668 x 30 mm, rigid glass and aluminium frame; 11.0 kg; not stated ("sealed, waterproof, multi-functional junction box"); MC4 (PV-ST01), 900 mm; max system voltage 1000 V; series fuse not published
+      Wp per kg 13.6
+   REN100  Renogy RNG-100DB-H 100 W flexible (semi-rigid), 12 V class
+      document: v2/vendor/solar/renogy-rng-100db-h-flexible-100w-datasheet-2018.pdf, p.2 Electrical, Thermal, Mechanical
+      Pmax 100 W, Vmp 18.90 V, Imp 5.29 A, Voc 22.50 V, Isc 5.75 A, cells 36, mono c-Si
+      beta_voc  -0.310 %/K  [MAKER]
+      alpha_isc +0.050 %/K  [MAKER]
+      gamma_p   -0.420 %/K  [MAKER]
+      operating range -40 to +85 C; NOCT 45 C; 1219 x 549 x 2 mm, frameless flexible laminate; 1.9 kg; junction box IP68, connectors IP67 (30 A, 1000 V); "Solar Connectors" (MC4 class), 12 AWG leads; max system voltage 600 V; series fuse 15 A
+      Wp per kg 52.6
+   SPR100  SunPower SPR-E-Flex-100 flexible (semi-rigid), 12 V class, 32 IBC cells
+      document: v2/vendor/solar/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf and sunpower-flex-safety-installation-524958-revf.pdf Table 1
+      Pmax 100 W, Vmp 17.10 V, Imp 5.90 A, Voc 21.40 V, Isc 6.30 A, cells 32, mono c-Si (IBC)
+      beta_voc  -0.275 %/K  [MAKER (absolute, as a fraction of the STC value)]
+      alpha_isc +0.041 %/K  [MAKER (absolute, as a fraction of the STC value)]
+      gamma_p   -0.350 %/K  [MAKER]
+      operating range -40 to +85 C; NOCT not published; 1153 x 556 x 20 mm with the box, 2 mm without; 2.0 kg; junction box IP67 (guide 5.2); Tyco PV4-S, 4 mm2, 450 mm; max system voltage 45 V; series fuse 15 A
+      Wp per kg 50.0
+   PF120L  PowerFilm 120W Foldable F16-7200 (15.4 V), amorphous, military tested
+      document: v2/vendor/solar/powerfilm-f16-7200-120w-foldable-15v-spec.pdf, p.2
+      Pmax 120 W, Vmp 15.40 V, Imp 7.20 A, Voc 21.90 V, Isc 9.10 A, cells not published, amorphous Si
+      beta_voc  -0.300 %/K  [MAKER]
+      alpha_isc +0.109 %/K  [MAKER]
+      gamma_p   -0.200 %/K  [MAKER]
+      operating range not published; NOCT not published; 2197 x 1397 mm unfolded, 368 x 356 x 76 mm folded; 2.9 kg; not stated; "Not designed for use in the rain"; Aptiv Weather Pack; max system voltage not published; series fuse not published
+      Wp per kg 41.4
+   PF120H  PowerFilm 120W Foldable (30V) F32-3600 as printed (F16-3600 on the maker's page), amorphous
+      document: v2/vendor/solar/powerfilm-120w-foldable-30v-spec.pdf, p.2
+      Pmax 120 W, Vmp 30.80 V, Imp 3.60 A, Voc 43.70 V, Isc 4.60 A, cells not published, amorphous Si
+      beta_voc  -0.300 %/K  [MAKER]
+      alpha_isc +0.109 %/K  [MAKER]
+      gamma_p   -0.200 %/K  [MAKER]
+      operating range not published; NOCT not published; 2197 x 1397 mm unfolded, 368 x 356 x 76 mm folded; 2.9 kg; not stated; "Not designed for use in the rain"; Aptiv Metri-Pack; max system voltage not published; series fuse not published
+      Wp per kg 41.4
+   BLU420  BLUETTI PV420 one-piece folding, 420 W
+      document: v2/vendor/solar/bluetti-pv420-product-page-2026-09-29.md (the maker's page, transcribed)
+      Pmax 420 W, Vmp not published, Imp not published, Voc 44.30 V, Isc 12.20 A, cells not published, mono c-Si
+      beta_voc  -0.350 %/K  [BOUND (worst held mono c-Si value; not published by the maker)]
+      alpha_isc +0.050 %/K  [BOUND (worst held mono c-Si value; not published by the maker)]
+      gamma_p   -0.450 %/K  [BOUND (worst held mono c-Si value; not published by the maker)]
+      operating range -10 to +65 C; NOCT not published; 2675 x 975 mm unfolded, 975 x 660 x 45 mm folded; 14.0 kg; IP65; MC4; max system voltage not published; series fuse not published
+      Wp per kg 30.0
+
+2. THE WIRINGS THAT GIVE ABOUT 400 Wp
+   Voc cold = Ns x Voc at -20 C cells; Voc x1.25 = the maker's clause on the STC figure; V rating = the larger.
+   Isc hot = Np x Isc at +70 C and 1000 W/m2; Isc eoc = x1.25; I rating (fuse, connector) = x1.25 of Isc eoc.
+   Backfeed = (Np - 1) x Isc eoc into one faulted string, against the module's series fuse rating.
+   panel   NsxNp     Wp  Voc cold Voc x1.25  V rating  Isc hot  Isc eoc  I rating   backfeed      vs fuse
+   VIC150  1x3      450     25.81     27.88     27.88    26.54    33.17     41.47      22.12     fuse n/p
+   VIC150  3x1      450     77.44     83.62     83.62     8.85    11.06     13.82       0.00   one string
+   REN100  1x4      400     25.64     28.12     28.12    23.52    29.40     36.75      22.05    OVER 15 A
+   REN100  2x2      400     51.28     56.25     56.25    11.76    14.70     18.37       7.35   UNDER 15 A
+   REN100  4x1      400    102.55    112.50    112.50     5.88     7.35      9.19       0.00   one string
+   SPR100  1x4      400     24.05     26.75     26.75    25.67    32.09     40.11      24.06    OVER 15 A
+   SPR100  2x2      400     48.10     53.50     53.50    12.83    16.04     20.05       8.02   UNDER 15 A
+   SPR100  4x1      400     96.20    107.00    107.00     6.42     8.02     10.03       0.00   one string
+   PF120L  1x3      360     24.86     27.38     27.38    28.64    35.80     44.75      23.87     fuse n/p
+   PF120L  3x1      360     74.57     82.12     82.12     9.55    11.93     14.92       0.00   one string
+   PF120L  1x4      480     24.86     27.38     27.38    38.19    47.73     59.66      35.80     fuse n/p
+   PF120L  2x2      480     49.71     54.75     54.75    19.09    23.87     29.83      11.93     fuse n/p
+   PF120L  4x1      480     99.43    109.50    109.50     9.55    11.93     14.92       0.00   one string
+   PF120L  1x5      600     24.86     27.38     27.38    47.73    59.66     74.58      47.73     fuse n/p
+   PF120L  5x1      600    124.28    136.88    136.88     9.55    11.93     14.92       0.00   one string
+   PF120H  1x3      360     49.60     54.62     54.62    14.48    18.10     22.62      12.06     fuse n/p
+   PF120H  3x1      360    148.80    163.88    163.88     4.83     6.03      7.54       0.00   one string
+   PF120H  1x4      480     49.60     54.62     54.62    19.30    24.13     30.16      18.10     fuse n/p
+   PF120H  2x2      480     99.20    109.25    109.25     9.65    12.06     15.08       6.03     fuse n/p
+   PF120H  4x1      480    198.40    218.50    218.50     4.83     6.03      7.54       0.00   one string
+   PF120H  1x5      600     49.60     54.62     54.62    24.13    30.16     37.70      24.13     fuse n/p
+   PF120H  5x1      600    248.00    273.12    273.12     4.83     6.03      7.54       0.00   one string
+   BLU420  1x1      420     51.28     55.38     55.38    12.47    15.59     19.49       0.00   one string
+
+   Limits the wirings meet or break (each named with its source):
+   - LT8705A VIN 80 V absolute maximum and 5.5 to 80 V operating (8705af pp.2, 3); SW1 81 V.
+   - board E as generated on PV_P: Q3 BSC028N06NS 60 V, C11/C12 35 V polymer, C13/C14 50 V, D4 SMCJ28A 28 V standoff
+     (gen_sch_e.py:478-480, 495); REQ-016: 25 V cold Voc, 100 W, F2 and J_SOLAR 10 A.
+   - module maximum system voltage (Victron 1000 V, Renogy 600 V, SunPower 45 V with its note that the flex panels are
+     not UL or IEC certified; PowerFilm and BLUETTI do not publish one).
+   - 60 V: the coordinator's safety-extra-low-voltage ceiling (README of this folder); the standard behind it is not held.
+
+3. THE SINGLE-DIODE FITS (no shunt term; A = n Ns kT/q of the module)
+   VIC150  A 0.8943 V, Rs 0.1736 ohm (exact fit: dP/dV = 0 at the maker's (Vmp, Imp), Rs >= 0); model at STC: Pmp 150.15 W at 18.20 V (maker 150.0 W at 18.20 V), Voc 22.30 V
+           implied Pmax coefficient -0.442 %/K against the maker's -0.450 %/K [MAKER]; ideality per cell 0.97
+   REN100  A 1.4253 V, Rs 0.0000 ohm (fallback: Rs = 0, A through (Vmp, Imp); dP/dV = 0 not at the maker's point); model at STC: Pmp 100.05 W at 18.72 V (maker 100.0 W at 18.90 V), Voc 22.50 V
+           implied Pmax coefficient -0.390 %/K against the maker's -0.420 %/K [MAKER]; ideality per cell 1.54
+   SPR100  A 1.0673 V, Rs 0.2301 ohm (exact fit: dP/dV = 0 at the maker's (Vmp, Imp), Rs >= 0); model at STC: Pmp 100.89 W at 17.10 V (maker 100.0 W at 17.10 V), Voc 21.40 V
+           implied Pmax coefficient -0.364 %/K against the maker's -0.350 %/K [MAKER]; ideality per cell 1.30
+   PF120L  not fitted: its fill factor 0.556 comes from shunt conduction that a no-shunt model assigns to ideality, which
+           makes the model's voltage fall steeply at low light (a-Si's makers state the opposite); no fixed-voltage
+           figure is printed for it rather than a figure of the model's own making
+   PF120H  not fitted: its fill factor 0.552 comes from shunt conduction that a no-shunt model assigns to ideality, which
+           makes the model's voltage fall steeply at low light (a-Si's makers state the opposite); no fixed-voltage
+           figure is printed for it rather than a figure of the model's own making
+   BLU420  not fitted: the maker publishes no Vmp or Imp
+   The model's temperature slope of Pmax differs from the makers' (milder for Victron and Renogy, steeper for SunPower):
+   its absolute losses are used only for the hotter cells' loss of section 6, charged at the lower of the model's and
+   the maker's figure; elsewhere only the RATIO of the fixed-voltage power to the maximum-power power at the same cells.
+
+4. THE MAXIMUM-POWER VOLTAGE OVER THE ENVELOPE (model, per wiring), V
+   panel   NsxNp   1000/-20C    1000/25C    1000/70C     200/25C     200/70C     100/10C
+   VIC150  1x3         21.86       18.20       14.66       17.87       14.10       18.71
+   VIC150  3x1         65.57       54.60       43.97       53.60       42.30       56.14
+   REN100  1x4         22.06       18.72       15.51       16.59       13.12       16.91
+   REN100  2x2         44.12       37.45       31.02       33.18       26.23       33.81
+   REN100  4x1         88.24       74.90       62.04       66.36       52.47       67.63
+   SPR100  1x4         19.91       17.10       14.39       16.44       13.48       16.91
+   SPR100  2x2         39.83       34.20       28.78       32.88       26.95       33.82
+   SPR100  4x1         79.66       68.40       57.55       65.76       53.90       67.64
+
+5. THE STAGE AT 200 W (input current at the fixed input voltage, and at the hot maximum-power voltage)
+   VIC150  1x3    200 W at the hot Vmpp 14.66 V = 13.65 A; the array's own maximum at 1000 W/m2 and 70 C: 360.9 W
+   VIC150  3x1    200 W at the hot Vmpp 43.97 V = 4.55 A; the array's own maximum at 1000 W/m2 and 70 C: 360.9 W
+   REN100  1x4    200 W at the hot Vmpp 15.51 V = 12.89 A; the array's own maximum at 1000 W/m2 and 70 C: 329.9 W
+   REN100  2x2    200 W at the hot Vmpp 31.02 V = 6.45 A; the array's own maximum at 1000 W/m2 and 70 C: 329.9 W
+   REN100  4x1    200 W at the hot Vmpp 62.04 V = 3.22 A; the array's own maximum at 1000 W/m2 and 70 C: 329.9 W
+   SPR100  1x4    200 W at the hot Vmpp 14.39 V = 13.90 A; the array's own maximum at 1000 W/m2 and 70 C: 337.5 W
+   SPR100  2x2    200 W at the hot Vmpp 28.78 V = 6.95 A; the array's own maximum at 1000 W/m2 and 70 C: 337.5 W
+   SPR100  4x1    200 W at the hot Vmpp 57.55 V = 3.48 A; the array's own maximum at 1000 W/m2 and 70 C: 337.5 W
+
+6. THE FIXED INPUT VOLTAGE ON THE SEPTEMBER REFERENCE DAY (PVGIS DRcalc mean day G(i), T2m; NOCT cell model)
+   ratio = energy delivered at the board with the stage holding the array at V_set, through the lead, over the energy
+   the array gives at its maximum-power point with no lead, the same cells and hours. The energy model's 0.9417
+   already carries the MPPT panel's temperature, spectral and angle losses; the ratio multiplies it.
+   VIC150  1x3   NOCT 47 C (cells to 35.5 C): best V_set 17.20 V -> ratio 0.9699 (0.9934 without the lead); window min/max 0.9608 / 0.9542;
+                 board E as generated (17.29 / 17.59 / 17.90 V x Ns): 0.9695 / 0.9641 / 0.9509; NOCT +10 K at the same V_set: 0.9596; MPP day 1743 Wh
+                 the hotter cells' own MPP loss (NOCT +10 K over NOCT): model 0.9757, maker's Pmax coefficient 0.9760; charged 0.9757
+                 all at once (the window's worse extreme, NOCT +10 K, a 10 m lead, and that loss charged): 0.8276
+   VIC150  3x1   NOCT 47 C (cells to 35.5 C): best V_set 52.69 V -> ratio 0.9952 (0.9983 without the lead); window min/max 0.9845 / 0.9788;
+                 board E as generated (17.29 / 17.59 / 17.90 V x Ns): 0.9929 / 0.9952 / 0.9914; NOCT +10 K at the same V_set: 0.9864; MPP day 1743 Wh
+                 the hotter cells' own MPP loss (NOCT +10 K over NOCT): model 0.9757, maker's Pmax coefficient 0.9760; charged 0.9757
+                 all at once (the window's worse extreme, NOCT +10 K, a 10 m lead, and that loss charged): 0.9087
+   REN100  1x4   NOCT 45 C (cells to 34.2 C): best V_set 16.68 V -> ratio 0.9743 (0.9944 without the lead); window min/max 0.9667 / 0.9648;
+                 board E as generated (17.29 / 17.59 / 17.90 V x Ns): 0.9653 / 0.9517 / 0.9304; NOCT +10 K at the same V_set: 0.9713; MPP day 1446 Wh
+                 the hotter cells' own MPP loss (NOCT +10 K over NOCT): model 0.9765, maker's Pmax coefficient 0.9778; charged 0.9765
+                 all at once (the window's worse extreme, NOCT +10 K, a 10 m lead, and that loss charged): 0.8799
+   REN100  2x2   NOCT 45 C (cells to 34.2 C): best V_set 33.93 V -> ratio 0.9913 (0.9969 without the lead); window min/max 0.9841 / 0.9796;
+                 board E as generated (17.29 / 17.59 / 17.90 V x Ns): 0.9883 / 0.9797 / 0.9639; NOCT +10 K at the same V_set: 0.9884; MPP day 1446 Wh
+                 the hotter cells' own MPP loss (NOCT +10 K over NOCT): model 0.9765, maker's Pmax coefficient 0.9778; charged 0.9765
+                 all at once (the window's worse extreme, NOCT +10 K, a 10 m lead, and that loss charged): 0.9265
+   REN100  4x1   NOCT 45 C (cells to 34.2 C): best V_set 68.04 V -> ratio 0.9956 (0.9969 without the lead); window min/max 0.9880 / 0.9841;
+                 board E as generated (17.29 / 17.59 / 17.90 V x Ns): 0.9935 / 0.9860 / 0.9716; NOCT +10 K at the same V_set: 0.9931; MPP day 1446 Wh
+                 the hotter cells' own MPP loss (NOCT +10 K over NOCT): model 0.9765, maker's Pmax coefficient 0.9778; charged 0.9765
+                 all at once (the window's worse extreme, NOCT +10 K, a 10 m lead, and that loss charged): 0.9399
+   SPR100  1x4   NOCT 47 C (cells to 35.5 C): best V_set 16.03 V -> ratio 0.9713 (0.9948 without the lead); window min/max 0.9628 / 0.9603;
+                 board E as generated (17.29 / 17.59 / 17.90 V x Ns): 0.9126 / 0.8731 / 0.8200; NOCT +10 K at the same V_set: 0.9668; MPP day 1549 Wh
+                 the hotter cells' own MPP loss (NOCT +10 K over NOCT): model 0.9795, maker's Pmax coefficient 0.9815; charged 0.9795
+                 all at once (the window's worse extreme, NOCT +10 K, a 10 m lead, and that loss charged): 0.8652
+   SPR100  2x2   NOCT 47 C (cells to 35.5 C): best V_set 32.66 V -> ratio 0.9922 (0.9988 without the lead); window min/max 0.9833 / 0.9798;
+                 board E as generated (17.29 / 17.59 / 17.90 V x Ns): 0.9579 / 0.9265 / 0.8811; NOCT +10 K at the same V_set: 0.9884; MPP day 1549 Wh
+                 the hotter cells' own MPP loss (NOCT +10 K over NOCT): model 0.9795, maker's Pmax coefficient 0.9815; charged 0.9795
+                 all at once (the window's worse extreme, NOCT +10 K, a 10 m lead, and that loss charged): 0.9249
+   SPR100  4x1   NOCT 47 C (cells to 35.5 C): best V_set 65.66 V -> ratio 0.9974 (0.9991 without the lead); window min/max 0.9886 / 0.9841;
+                 board E as generated (17.29 / 17.59 / 17.90 V x Ns): 0.9684 / 0.9392 / 0.8961; NOCT +10 K at the same V_set: 0.9935; MPP day 1549 Wh
+                 the hotter cells' own MPP loss (NOCT +10 K over NOCT): model 0.9795, maker's Pmax coefficient 0.9815; charged 0.9795
+                 all at once (the window's worse extreme, NOCT +10 K, a 10 m lead, and that loss charged): 0.9392
+
+7. THE SAME SET POINTS IN JUNE AND DECEMBER (the September optimum kept; ratio as in section 6)
+   VIC150  1x3   V_set 17.20 V: June 0.9564, December 0.9452
+   VIC150  3x1   V_set 52.69 V: June 0.9901, December 0.9632
+   REN100  1x4   V_set 16.68 V: June 0.9682, December 0.9775
+   REN100  2x2   V_set 33.93 V: June 0.9882, December 0.9882
+   REN100  4x1   V_set 68.04 V: June 0.9932, December 0.9904
+   SPR100  1x4   V_set 16.03 V: June 0.9628, December 0.9644
+   SPR100  2x2   V_set 32.66 V: June 0.9890, December 0.9785
+   SPR100  4x1   V_set 65.66 V: June 0.9953, December 0.9824
+
+8. THE RATIO AT FIXED IRRADIANCE LEVELS (the mean day averages clear and cloudy hours; a real day is a mix)
+   REN100  1x4   V_set 16.68 V, air 14.5 C: 100: 0.987; 200: 0.988; 400: 0.975; 600: 0.965; 800: 0.955; 1000: 0.941
+   REN100  2x2   V_set 33.93 V, air 14.5 C: 100: 0.983; 200: 0.997; 400: 0.992; 600: 0.989; 800: 0.987; 1000: 0.986
+   REN100  4x1   V_set 68.04 V, air 14.5 C: 100: 0.983; 200: 0.999; 400: 0.996; 600: 0.995; 800: 0.995; 1000: 0.996
+   SPR100  1x4   V_set 16.03 V, air 14.5 C: 100: 0.992; 200: 0.981; 400: 0.972; 600: 0.960; 800: 0.933; 1000: 0.887
+   SPR100  2x2   V_set 32.66 V, air 14.5 C: 100: 0.998; 200: 0.994; 400: 0.991; 600: 0.990; 800: 0.981; 1000: 0.959
+   SPR100  4x1   V_set 65.66 V, air 14.5 C: 100: 0.999; 200: 0.997; 400: 0.996; 600: 0.997; 800: 0.992; 1000: 0.976
+
+9. THE PLANE: a panel laid flat against the energy model's 40 degree south plane (pinned PVGIS monthly, 2015 to 2020)
+   month  6: horizontal 169.04, 40 degrees 164.68 kWh/m2 a month; flat / inclined = 1.0265
+   month  9: horizontal 95.57, 40 degrees 120.42 kWh/m2 a month; flat / inclined = 0.7936
+   month 12: horizontal 17.45, 40 degrees 34.94 kWh/m2 a month; flat / inclined = 0.4995
+
+10. THE PERFORMANCE RATIO FOR THE ENERGY MODEL (September, the design month)
+   VIC150  1x3   at its best V_set 17.20 V: 0.9417 x 0.9699 = 0.9133 (all at once 0.7793); at board E's 17.6 V point x Ns: 0.9079
+   VIC150  3x1   at its best V_set 52.69 V: 0.9417 x 0.9952 = 0.9372 (all at once 0.8557); at board E's 17.6 V point x Ns: 0.9372
+   REN100  1x4   at its best V_set 16.68 V: 0.9417 x 0.9743 = 0.9175 (all at once 0.8286); at board E's 17.6 V point x Ns: 0.8963
+   REN100  2x2   at its best V_set 33.93 V: 0.9417 x 0.9913 = 0.9335 (all at once 0.8725); at board E's 17.6 V point x Ns: 0.9225
+   REN100  4x1   at its best V_set 68.04 V: 0.9417 x 0.9956 = 0.9375 (all at once 0.8851); at board E's 17.6 V point x Ns: 0.9285
+   SPR100  1x4   at its best V_set 16.03 V: 0.9417 x 0.9713 = 0.9147 (all at once 0.8148); at board E's 17.6 V point x Ns: 0.8222
+   SPR100  2x2   at its best V_set 32.66 V: 0.9417 x 0.9922 = 0.9344 (all at once 0.8710); at board E's 17.6 V point x Ns: 0.8725
+   SPR100  4x1   at its best V_set 65.66 V: 0.9417 x 0.9974 = 0.9393 (all at once 0.8844); at board E's 17.6 V point x Ns: 0.8845
+
+11. FIT SENSITIVITY FOR THE DESIGN BASIS (REN100): the September ratio under the second fit of DiodeVmp and the
+    Rs > 0 bracket of section 12 (the fits with Rs 0.1 and 0.2 ohm)
+   section 3's fit  A 1.4253 V, Rs 0.0000 ohm, STC MPP 100.05 W at 18.72 V: 2x2 at 34.14 V 0.9910 (best 0.9914); 2x2 at 34.29 V 0.9903 (best 0.9914); 1x4 at 17.59 V 0.9517 (best 0.9743)
+   DiodeVmp         A 1.3187 V, Rs 0.0000 ohm, STC MPP 101.59 W at 18.90 V: 2x2 at 34.14 V 0.9914 (best 0.9919); 2x2 at 34.29 V 0.9918 (best 0.9919); 1x4 at 17.59 V 0.9637 (best 0.9749)
+   Rs 0.1           A 1.2159 V, Rs 0.1000 ohm, STC MPP 100.21 W at 18.60 V: 2x2 at 34.14 V 0.9916 (best 0.9928); 2x2 at 34.29 V 0.9923 (best 0.9928); 1x4 at 17.59 V 0.9664 (best 0.9753)
+   Rs 0.2           A 1.0064 V, Rs 0.2000 ohm, STC MPP 100.49 W at 18.49 V: 2x2 at 34.14 V 0.9847 (best 0.9932); 2x2 at 34.29 V 0.9866 (best 0.9932); 1x4 at 17.59 V 0.9739 (best 0.9752)
+
+12. THE FBIN DIVIDER FOR 2S2P: E96 pairs, their set-point window (FBIN's range and 1 percent resistors), and the
+    ratio across the three fits (Rs 0, 0.1, 0.2 ohm) at the window's three points; the draft is the best worst case
+   fit Rs 0 (section 3)  A 1.4253 V (ideality 1.54 a cell), Rs 0.00 ohm, STC maximum 100.05 W at 18.72 V
+   fit Rs 0.1            A 1.2159 V (ideality 1.31 a cell), Rs 0.10 ohm, STC maximum 100.21 W at 18.60 V
+   fit Rs 0.2            A 1.0064 V (ideality 1.09 a cell), Rs 0.20 ohm, STC maximum 100.49 W at 18.49 V
+   R8   205k R9 7.50k: 32.91 / 34.14 / 35.41 V; at the typical point 0.9848 to 0.9916 across the fits; worst in the window 0.9633
+   R8   210k R9 7.50k: 33.68 / 34.95 / 36.25 V; at the typical point 0.9838 to 0.9923 across the fits; worst in the window 0.9469
+   R8   232k R9 8.45k: 33.05 / 34.29 / 35.57 V; at the typical point 0.9866 to 0.9923 across the fits; worst in the window 0.9662   <- the draft
+   R8   187k R9 6.81k: 33.05 / 34.29 / 35.57 V; at the typical point 0.9867 to 0.9923 across the fits; worst in the window 0.9663
+   R8   165k R9 5.90k: 33.64 / 34.90 / 36.21 V; at the typical point 0.9844 to 0.9922 across the fits; worst in the window 0.9487
+   R8   200k R9 7.15k: 33.65 / 34.91 / 36.21 V; at the typical point 0.9843 to 0.9921 across the fits; worst in the window 0.9484
+   (a set point between the E96 steps, about 34.6 V, is the fits' common optimum; the E96 pairs give 34.14 or 34.29 V
+    or about 34.9 V, and the window of about +-3.7 percent dominates the choice)
+
+13. REQ-016'S 'COLDEST OPERATING TEMPERATURE': the envelope's -20 C cells (pcb_envelope.yaml in_use min, used above)
+    against the panels' own lower limit, -40 C (Renogy p.2; SunPower guide 5.1; Victron p.1), open-circuit V per wiring
+   REN100  2x2   at -20 C  51.28 V; at -40 C  54.07 V; 1.25 x STC  56.25 V
+   REN100  1x4   at -20 C  25.64 V; at -40 C  27.03 V; 1.25 x STC  28.12 V
+   SPR100  1x4   at -20 C  24.05 V; at -40 C  25.23 V; 1.25 x STC  26.75 V
+   PF120L  1x4   at -20 C  24.86 V; at -40 C  26.17 V; 1.25 x STC  27.38 V
+   VIC150  1x3   at -20 C  25.81 V; at -40 C  27.37 V; 1.25 x STC  27.88 V
+   BLU420  1x1   at -20 C  51.28 V; at -40 C  54.38 V; 1.25 x STC  55.38 V
