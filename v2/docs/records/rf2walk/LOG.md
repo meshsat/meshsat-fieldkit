@@ -50,14 +50,14 @@ reading is of a committed netlist or a maker's document; nothing is built.
   its reverse element never conducts. No circuit defect, no apply script. README.md written with the table of the 21 FAILs,
   the readings and what remains (the 11 UNDECIDED rows, the same rows as main's under the same walk, their grounds narrower on
   set 12 for the RockBLOCK, the E22 and both E72).
-- 13:33 to 13:34 `tests/run.py contract inhibit requirements`: 289 passed, 4 failed, 5 skipped. The four are
+- 13:33 `tests/run.py contract inhibit requirements`: 289 passed, 4 failed, 5 skipped. The four are
   `test_requirements`' registry and trace-page tests, failing on set 12's own state: PASS records (CON-017, CON-025, CFL-001,
   CFL-004, CFL-016) are bound to `gen_sch_b.py` and boards B and C's netlists at their hashes before set 12's regeneration.
   No record binds `tx_inhibit.py` or its tests, and this stream's commits touch only those two files and this folder, so the
   rebind is the integrator's, as after every regeneration. The tree's committed `inhibit_chain_<letter>` verdicts were written
   by the unfixed walk and are re-taken by the integrator with the tool change (no gate was run in the tree here).
 
-## Where the stream stands (29 September 2026, 13:34)
+## Where the stream stands (29 September 2026, 13:33)
 
 All 21 FAILs are the instrument: 2 asserted-line rows (the panel's buffer behind its series resistor R52 not recognised as
 the line's source), 18 transmitter rows inherited from them, and 1 census row (U543, a TPS3808 whose value names the
