@@ -12,7 +12,8 @@ Worker: one Claude author, worktree `a1mech`, branch `fnd/a1mech` from `13b5352b
   Wayback index); the 8 and 10 inch rugged classes are carried as INFERRED envelopes.
 - 02:25: first layout by hand: one layer of lying cells in holders (21.9 deep) gave about 33 cells beside the QMX set; the A06 block
   construction (cells touching at 18.55, 0.5 wrap, 1.0 end joints, the ruled base block's own basis) with a second layer nested in
-  the grooves (16.065 higher) makes a 40.06 module that the worst room (44.39) takes over every face part up to 0.69 high, with the
+  the grooves (16.065 higher) makes a 40.06 module that the worst room (44.39) takes over every face part up to 2.90 high (corrected after the check, M8: the
+  first entry read 0.69, which was never the generator's rule), with the
   Xenarc window (0.8) at 3.10 worst, OPEN at the sensitivity reading.
 - 02:30 to 02:36: `v2/cad/lid_pack_a1.py` written and run (`lid_pack_a1.out`): per-slice south edges from the face (the headset jacks
   and the sounder limit only the west slice), layer-2 places refused where a face part is too tall (the XFRAME screws), P2 placed at
@@ -44,3 +45,9 @@ Worker: one Claude author, worktree `a1mech`, branch `fnd/a1mech` from `13b5352b
 - 02:59: a sensitivity of the counts to the module's INFERRED allowances added to the generator (most and least favourable
   settings, every face row re-judged): A 35, B 56, C 58 at both ends; C10 47 and 45; D 77 and 74. The finding does not hinge on them.
 - 03:00: the solids and their check re-run at `f2432732`, where `lid_pack_a1.py` has its final content: PASS, both controls fail.
+- 03:15 to 03:25: correction pass after the independent AI check (`_scratch/chk-a1mech/CHECK.md`, acceptable: no). B1: the rule
+  keeping P2 off the tablet's plan dropped (no reason; P2 lies above the cover, the tablet below it): A 39, 4S9P, 4S15P in all;
+  C 61, C10 48. M1 P2 on 2.5 standoffs; M2 the plate per slice; M3 1.0 beside the guard caps; M4 hinge Z swept; M5 the stay
+  sized; M6 operator pushes; M7 C's mass and angles; M8 to M11 in the README. DECISION-A1.md option 3 restated from the
+  coordinator's two-pack run for a 4S9P lid.
+- 03:25: the solids and their check (the lid plate per slice, judged as zones) re-run on the box at `9c9afa40`: PASS for A, B, C, C10 and D, both controls fail; `lid_pack_a1.out` reproduced byte for byte on the runner; sheet A1-3 footer corrected.

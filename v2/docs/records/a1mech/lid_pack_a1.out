@@ -42,43 +42,52 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    stack from the ceiling: bond 0.20 + 5052-H32 plate 2.00 + block (19.55 one layer, 35.61 two) + PORON pad 1.00 + cover 1.25
    module depth: one layer 24.00, two layers 40.06; own allowances {'bond': 0.1, 'plate': 0.13, 'standoff': 0.1, 'cover': 0.1} = 0.43 (INFERRED, none stated by a source)
    P2 (ASSUMPTION until fnd/a1elec reports): board P's outline 70 x 44, tallest part 16.17 (Keystone 3568 with its blade, packfit_west.out),
-   on 3.0 standoffs: depth 22.97, inside the one-layer depth
+   on 2.5 standoffs: depth 22.47, inside the one-layer depth
    venting: the maker's sheet names venting as a failure outcome (8.1.2) and states no clearance; every cell end faces its 1.0 joint, the
    cover's X-end bays are open slots, so gas from a cell is not sealed in the module: it enters the closed case, which Peli's pressure valve
    relieves (ruling 7 Sep 2026 00:52). Heat: the sheet asks the pack away from heat sources (page 17); the lid is away from the PA and CM5s.
 
    ARRANGEMENT B: HF kept, no tablet in the lid
-     module X -141.00..72.75, north edge Y 114.93; 3 slices of 65.25 along X (block 199.75 + two 7.0 bays); per slice (X, south edge, cells across):
-       X -134.00..-66.75 from Y -75.07, 10; X -67.75..-0.50 from Y -112.17, 12; X -1.50..65.75 from Y -112.17, 12
-     P2 at X -134.00..-90.00, Y -73.32..-3.32 (the corner that costs the fewest cells)
+     module X -140.94..72.81, north edge Y 114.93; 3 slices of 65.25 along X (block 199.75 + two 7.0 bays); per slice (X, south edge, cells across):
+       X -133.94..-66.69 from Y -75.07, 10; X -67.69..-0.44 from Y -112.17, 12; X -1.44..65.81 from Y -112.17, 12
+     P2 at X -133.94..-89.94, Y -73.32..-3.32 (the corner that costs the fewest cells)
      cells: 56 (layer 1 30, layer 2 26); layer-2 places refused by the face: 3 (XFRAME_1, XFRAME_3); cells under P2 removed: 6
      => 4S14P (56 cells used, 675.4 Wh nominal at 3.35 Ah min); with the base 4S6P: 4S20P
-     face rows (lid zone over face part): 52 rows, 0 NOT MET, 26 OPEN; plan rows 3, 0 below their minimum
+     face rows (lid zone over face part): 68 rows, 0 NOT MET, 26 OPEN; plan rows 5, 0 below their minimum
        module, two layers           over D              h  1.50  nominal   6.36  worst   2.40  x2  -0.31  OPEN
        module, two layers           over XENARC_WINDOW  h  0.80  nominal   7.06  worst   3.10  x2   0.39  OPEN
        module, two layers           over EPAPER_LENS    h  0.05  nominal   7.81  worst   3.85  x2   1.14  MET
        module, one layer            over XFRAME         h  4.00  nominal  19.92  worst  15.96  x2  13.25  MET
-       P2 board                     over XFRAME         h  4.00  nominal  20.95  worst  16.99  x2  14.28  MET
+       P2 board                     over XFRAME         h  4.00  nominal  21.45  worst  17.49  x2  14.78  MET
        module, one layer            over SW_SOS_PLATE   h  2.00  nominal  21.92  worst  17.96  x2  15.25  MET
        module, one layer            over SW_EMCON_PLATE h  2.00  nominal  21.92  worst  17.96  x2  15.25  MET
        module, one layer            over SW_ZERO_PLATE  h  2.00  nominal  21.92  worst  17.96  x2  15.25  MET
        module, one layer            over D              h  1.50  nominal  22.42  worst  18.46  x2  15.75  MET
        module, one layer            over XENARC_WINDOW  h  0.80  nominal  23.12  worst  19.16  x2  16.45  MET
        module, one layer            over EPAPER_LENS    h  0.05  nominal  23.87  worst  19.91  x2  17.20  MET
-       P2 board                     over XENARC_WINDOW  h  0.80  nominal  24.15  worst  20.19  x2  17.48  MET
-       plan: module inside the flat ceiling, X                                                                      32.08 (min 1.0) ok
+       P2 board                     over XENARC_WINDOW  h  0.80  nominal  24.65  worst  20.69  x2  17.98  MET
+       lid plate                    over XFRAME         h  4.00  nominal  41.72  worst  37.76  x2  35.05  MET
+       lid plate                    over SW_SOS_PLATE   h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over SW_EMCON_PLATE h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over SW_ZERO_PLATE  h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over D              h  1.50  nominal  44.22  worst  40.26  x2  37.55  MET
+       lid plate                    over XENARC_WINDOW  h  0.80  nominal  44.92  worst  40.96  x2  38.25  MET
+       lid plate                    over EPAPER_LENS    h  0.05  nominal  45.67  worst  41.71  x2  39.00  MET
+       plan: module inside the flat ceiling, X                                                                      32.14 (min 1.0) ok
        plan: module inside the flat ceiling, Y                                                                       1.00 (min 1.0) ok
-       plan: module east edge to the QMX tray's west edge (both on the ceiling)                                     10.45 (min 1.0) ok
+       plan: module west edge to the guard caps (X -143.0) with the plan allowance                                   1.00 (min 1.0) ok
+       plan: P2's tallest part inside the cover's inner face (one-layer depth less the cover)                        0.28 (min 0.0) ok
+       plan: module east edge to the QMX tray's west edge (both on the ceiling)                                     10.39 (min 1.0) ok
 
    ARRANGEMENT A: HF kept, 8 inch tablet kept
-     module X -141.00..72.75, north edge Y 114.93; 3 slices of 65.25 along X (block 199.75 + two 7.0 bays); per slice (X, south edge, cells across):
-       X -134.00..-66.75 from Y -75.07, 10; X -67.75..-0.50 from Y -112.17, 12; X -1.50..65.75 from Y -112.17, 12
-     P2 at X 21.75..65.75, Y -110.42..-40.42 (the corner that costs the fewest cells)
-     tablet places tried (landscape and portrait, 1.0 mm in X and 0.5 mm in Y and both bounds, every face row met at the worst): 1083; the best kept
-     tablet 8 inch rugged class 214 x 127 x 10.1 in a bracket 220 x 133 (lips 3.0), X -141.94..78.06, Y -24.43..108.57, depth 36.60 from the ceiling
-     cells: 35 (layer 1 30, layer 2 5); layer-2 places refused by the face: 1 (XFRAME_3); cells under P2 removed: 8
-     => 4S8P (32 cells used, 385.9 Wh nominal at 3.35 Ah min); with the base 4S6P: 4S14P
-     face rows (lid zone over face part): 32 rows, 0 NOT MET, 10 OPEN; plan rows 7, 0 below their minimum
+     module X -140.94..72.81, north edge Y 114.93; 3 slices of 65.25 along X (block 199.75 + two 7.0 bays); per slice (X, south edge, cells across):
+       X -133.94..-66.69 from Y -75.07, 10; X -67.69..-0.44 from Y -112.17, 12; X -1.44..65.81 from Y -112.17, 12
+     P2 at X -133.94..-89.94, Y 43.18..113.18 (the corner that costs the fewest cells)
+     tablet places tried (landscape and portrait, 1.0 mm in X and 0.5 mm in Y and both bounds, every face row met at the worst): 962; the best kept
+     tablet 8 inch rugged class 214 x 127 x 10.1 in a bracket 220 x 133 (lips 3.0), X -140.94..79.06, Y -24.43..108.57, depth 36.60 from the ceiling
+     cells: 39 (layer 1 30, layer 2 9); layer-2 places refused by the face: 1 (XFRAME_3); cells under P2 removed: 4
+     => 4S9P (36 cells used, 434.2 Wh nominal at 3.35 Ah min); with the base 4S6P: 4S15P
+     face rows (lid zone over face part): 54 rows, 0 NOT MET, 16 OPEN; plan rows 9, 0 below their minimum
        module, two layers           over D              h  1.50  nominal   6.36  worst   2.40  x2  -0.31  OPEN
        tablet 8 inch rugged class   over XFRAME         h  4.00  nominal   7.32  worst   2.96  x2  -0.15  OPEN
        module, two layers           over XENARC_WINDOW  h  0.80  nominal   7.06  worst   3.10  x2   0.39  OPEN
@@ -94,25 +103,35 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
        module, one layer            over D              h  1.50  nominal  22.42  worst  18.46  x2  15.75  MET
        module, one layer            over XENARC_WINDOW  h  0.80  nominal  23.12  worst  19.16  x2  16.45  MET
        module, one layer            over EPAPER_LENS    h  0.05  nominal  23.87  worst  19.91  x2  17.20  MET
-       P2 board                     over XENARC_WINDOW  h  0.80  nominal  24.15  worst  20.19  x2  17.48  MET
-       plan: module inside the flat ceiling, X                                                                      32.08 (min 1.0) ok
+       P2 board                     over XENARC_WINDOW  h  0.80  nominal  24.65  worst  20.69  x2  17.98  MET
+       lid plate                    over XFRAME         h  4.00  nominal  41.72  worst  37.76  x2  35.05  MET
+       lid plate                    over SW_SOS_PLATE   h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over SW_EMCON_PLATE h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over SW_ZERO_PLATE  h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over D              h  1.50  nominal  44.22  worst  40.26  x2  37.55  MET
+       lid plate                    over XENARC_WINDOW  h  0.80  nominal  44.92  worst  40.96  x2  38.25  MET
+       lid plate                    over EPAPER_LENS    h  0.05  nominal  45.67  worst  41.71  x2  39.00  MET
+       plan: module inside the flat ceiling, X                                                                      32.14 (min 1.0) ok
        plan: module inside the flat ceiling, Y                                                                       1.00 (min 1.0) ok
-       plan: module east edge to the QMX tray's west edge (both on the ceiling)                                     10.45 (min 1.0) ok
-       plan: tablet bracket east edge to the QMX tray (the tray reaches 29.30 deep, the tablet from 24.00)           5.14 (min 1.0) ok
+       plan: module west edge to the guard caps (X -143.0) with the plan allowance                                   1.00 (min 1.0) ok
+       plan: P2's tallest part inside the cover's inner face (one-layer depth less the cover)                        0.28 (min 0.0) ok
+       plan: module east edge to the QMX tray's west edge (both on the ceiling)                                     10.39 (min 1.0) ok
+       plan: tablet bracket east edge to the QMX tray (the tray reaches 29.30 deep, the tablet from 24.00)           4.14 (min 1.0) ok
        plan: tablet bracket to the nearest two-layer zone, in Y                                                      0.26 (min 0.0) ok
-       plan: tablet bracket west edge to the guard caps (X -143.0) with the plan allowance                           0.00 (min 0.0) ok
+       plan: tablet bracket west edge to the guard caps (X -143.0) with the plan allowance                           1.00 (min 1.0) ok
        plan: tablet bracket south edge to the sounder ring (Y -79.1) with the plan allowance                        53.61 (min 0.0) ok
 
    ARRANGEMENT C: 8 inch tablet kept, HF out of the lid
-     module X -141.00..172.08, north edge Y 114.93; 4 slices of 65.25 along X (block 266.00 + two 7.0 bays); per slice (X, south edge, cells across):
-       X -134.00..-66.75 from Y -75.07, 10; X -67.75..-0.50 from Y -112.17, 12; X -1.50..65.75 from Y -112.17, 12; X 64.75..132.00 from Y -112.17, 12
-     P2 at X 95.08..165.08, Y 69.18..113.18 (the corner that costs the fewest cells)
-     tablet places tried (landscape and portrait, 1.0 mm in X and 0.5 mm in Y and both bounds, every face row met at the worst): 16239; the best kept
+     module X -140.94..172.08, north edge Y 114.93; 4 slices of 65.25 along X (block 266.00 + two 7.0 bays); per slice (X, south edge, cells across):
+       X -133.94..-66.69 from Y -75.07, 10; X -67.69..-0.44 from Y -112.17, 12; X -1.44..65.81 from Y -112.17, 12; X 64.81..132.06 from Y -112.17, 12
+     P2 at X 95.08..165.08, Y -110.42..-66.42 (the corner that costs the fewest cells)
+     tablet places tried (landscape and portrait, 1.0 mm in X and 0.5 mm in Y and both bounds, every face row met at the worst): 16118; the best kept
      tablet 8 inch rugged class 214 x 127 x 10.1 in a bracket 220 x 133 (lips 3.0), X -65.94..154.06, Y -114.93..18.07, depth 36.60 from the ceiling
-     cells: 58 (layer 1 43, layer 2 15); layer-2 places refused by the face: 3 (XFRAME_1, XFRAME_3); cells under P2 removed: 6
-     => 4S14P (56 cells used, 675.4 Wh nominal at 3.35 Ah min); with the base 4S6P: 4S20P
-     face rows (lid zone over face part): 75 rows, 0 NOT MET, 14 OPEN; plan rows 3, 0 below their minimum
+     cells: 61 (layer 1 43, layer 2 18); layer-2 places refused by the face: 3 (XFRAME_1, XFRAME_3); cells under P2 removed: 3
+     => 4S15P (60 cells used, 723.6 Wh nominal at 3.35 Ah min); with the base 4S6P: 4S21P
+     face rows (lid zone over face part): 114 rows, 0 NOT MET, 18 OPEN; plan rows 5, 0 below their minimum
        module, two layers           over D              h  1.50  nominal   6.36  worst   2.40  x2  -0.31  OPEN
+       module, two layers           over U_LIGHT        h  1.50  nominal   6.36  worst   2.40  x2  -0.31  OPEN
        tablet 8 inch rugged class   over XFRAME         h  4.00  nominal   7.32  worst   2.96  x2  -0.15  OPEN
        module, two layers           over XENARC_WINDOW  h  0.80  nominal   7.06  worst   3.10  x2   0.39  OPEN
        module, two layers           over EPAPER_LENS    h  0.05  nominal   7.81  worst   3.85  x2   1.14  MET
@@ -124,7 +143,7 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
        module, one layer            over SW_MAIN        h  3.50  nominal  20.42  worst  16.46  x2  13.75  MET
        module, one layer            over SW_PI          h  2.50  nominal  21.42  worst  17.46  x2  14.75  MET
        module, one layer            over SW_TEST        h  2.50  nominal  21.42  worst  17.46  x2  14.75  MET
-       P2 board                     over SW_MAIN        h  3.50  nominal  21.45  worst  17.49  x2  14.78  MET
+       P2 board                     over XFRAME         h  4.00  nominal  21.45  worst  17.49  x2  14.78  MET
        module, one layer            over SW_SOS_PLATE   h  2.00  nominal  21.92  worst  17.96  x2  15.25  MET
        module, one layer            over SW_EMCON_PLATE h  2.00  nominal  21.92  worst  17.96  x2  15.25  MET
        module, one layer            over SW_ZERO_PLATE  h  2.00  nominal  21.92  worst  17.96  x2  15.25  MET
@@ -133,20 +152,34 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
        module, one layer            over XENARC_WINDOW  h  0.80  nominal  23.12  worst  19.16  x2  16.45  MET
        module, one layer            over EPAPER_LENS    h  0.05  nominal  23.87  worst  19.91  x2  17.20  MET
        module, one layer            over CAM1_WINDOW    h  0.05  nominal  23.87  worst  19.91  x2  17.20  MET
-       P2 board                     over CAM1_WINDOW    h  0.05  nominal  24.90  worst  20.94  x2  18.23  MET
+       P2 board                     over XENARC_WINDOW  h  0.80  nominal  24.65  worst  20.69  x2  17.98  MET
+       lid plate                    over XFRAME         h  4.00  nominal  41.72  worst  37.76  x2  35.05  MET
+       lid plate                    over SW_MAIN        h  3.50  nominal  42.22  worst  38.26  x2  35.55  MET
+       lid plate                    over SW_PI          h  2.50  nominal  43.22  worst  39.26  x2  36.55  MET
+       lid plate                    over SW_TEST        h  2.50  nominal  43.22  worst  39.26  x2  36.55  MET
+       lid plate                    over SW_SOS_PLATE   h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over SW_EMCON_PLATE h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over SW_ZERO_PLATE  h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over D              h  1.50  nominal  44.22  worst  40.26  x2  37.55  MET
+       lid plate                    over U_LIGHT        h  1.50  nominal  44.22  worst  40.26  x2  37.55  MET
+       lid plate                    over XENARC_WINDOW  h  0.80  nominal  44.92  worst  40.96  x2  38.25  MET
+       lid plate                    over EPAPER_LENS    h  0.05  nominal  45.67  worst  41.71  x2  39.00  MET
+       lid plate                    over CAM1_WINDOW    h  0.05  nominal  45.67  worst  41.71  x2  39.00  MET
        plan: module inside the flat ceiling, X                                                                       1.00 (min 1.0) ok
        plan: module inside the flat ceiling, Y                                                                       1.00 (min 1.0) ok
+       plan: module west edge to the guard caps (X -143.0) with the plan allowance                                   1.00 (min 1.0) ok
+       plan: P2's tallest part inside the cover's inner face (one-layer depth less the cover)                        0.28 (min 0.0) ok
        plan: tablet bracket to the nearest two-layer zone, in Y                                                      9.38 (min 0.0) ok
 
    ARRANGEMENT C10: 10 inch tablet kept, HF out of the lid
-     module X -141.00..172.08, north edge Y 114.93; 4 slices of 65.25 along X (block 266.00 + two 7.0 bays); per slice (X, south edge, cells across):
-       X -134.00..-66.75 from Y -75.07, 10; X -67.75..-0.50 from Y -112.17, 12; X -1.50..65.75 from Y -112.17, 12; X 64.75..132.00 from Y -112.17, 12
-     P2 at X 95.08..165.08, Y -110.42..-66.42 (the corner that costs the fewest cells)
-     tablet places tried (landscape and portrait, 1.0 mm in X and 0.5 mm in Y and both bounds, every face row met at the worst): 1555; the best kept
-     tablet 10 inch rugged class 243 x 170 x 10.2 in a bracket 249 x 176 (lips 3.0), X -141.94..107.06, Y -61.43..114.57, depth 36.70 from the ceiling
-     cells: 47 (layer 1 43, layer 2 4); layer-2 places refused by the face: 1 (XFRAME_4); cells under P2 removed: 4
-     => 4S11P (44 cells used, 530.6 Wh nominal at 3.35 Ah min); with the base 4S6P: 4S17P
-     face rows (lid zone over face part): 56 rows, 0 NOT MET, 14 OPEN; plan rows 5, 0 below their minimum
+     module X -140.94..172.08, north edge Y 114.93; 4 slices of 65.25 along X (block 266.00 + two 7.0 bays); per slice (X, south edge, cells across):
+       X -133.94..-66.69 from Y -75.07, 10; X -67.69..-0.44 from Y -112.17, 12; X -1.44..65.81 from Y -112.17, 12; X 64.81..132.06 from Y -112.17, 12
+     P2 at X 95.08..165.08, Y 69.18..113.18 (the corner that costs the fewest cells)
+     tablet places tried (landscape and portrait, 1.0 mm in X and 0.5 mm in Y and both bounds, every face row met at the worst): 3080; the best kept
+     tablet 10 inch rugged class 243 x 170 x 10.2 in a bracket 249 x 176 (lips 3.0), X -140.94..108.06, Y -61.43..114.57, depth 36.70 from the ceiling
+     cells: 48 (layer 1 43, layer 2 5); layer-2 places refused by the face: 1 (XFRAME_4); cells under P2 removed: 3
+     => 4S12P (48 cells used, 578.9 Wh nominal at 3.35 Ah min); with the base 4S6P: 4S18P
+     face rows (lid zone over face part): 92 rows, 0 NOT MET, 15 OPEN; plan rows 7, 0 below their minimum
        module, two layers           over D              h  1.50  nominal   6.36  worst   2.40  x2  -0.31  OPEN
        tablet 10 inch rugged class  over XFRAME         h  4.00  nominal   7.22  worst   2.86  x2  -0.25  OPEN
        module, two layers           over XENARC_WINDOW  h  0.80  nominal   7.06  worst   3.10  x2   0.39  OPEN
@@ -157,40 +190,54 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
        tablet 10 inch rugged class  over EPAPER_LENS    h  0.05  nominal  11.17  worst   6.81  x2   3.70  MET
        module, one layer            over XFRAME         h  4.00  nominal  19.92  worst  15.96  x2  13.25  MET
        module, one layer            over SW_MAIN        h  3.50  nominal  20.42  worst  16.46  x2  13.75  MET
-       P2 board                     over XFRAME         h  4.00  nominal  20.95  worst  16.99  x2  14.28  MET
        module, one layer            over SW_PI          h  2.50  nominal  21.42  worst  17.46  x2  14.75  MET
        module, one layer            over SW_TEST        h  2.50  nominal  21.42  worst  17.46  x2  14.75  MET
        module, one layer            over SW_SOS_PLATE   h  2.00  nominal  21.92  worst  17.96  x2  15.25  MET
        module, one layer            over SW_EMCON_PLATE h  2.00  nominal  21.92  worst  17.96  x2  15.25  MET
        module, one layer            over SW_ZERO_PLATE  h  2.00  nominal  21.92  worst  17.96  x2  15.25  MET
+       P2 board                     over SW_MAIN        h  3.50  nominal  21.95  worst  17.99  x2  15.28  MET
        module, one layer            over D              h  1.50  nominal  22.42  worst  18.46  x2  15.75  MET
        module, one layer            over U_LIGHT        h  1.50  nominal  22.42  worst  18.46  x2  15.75  MET
        module, one layer            over XENARC_WINDOW  h  0.80  nominal  23.12  worst  19.16  x2  16.45  MET
        module, one layer            over EPAPER_LENS    h  0.05  nominal  23.87  worst  19.91  x2  17.20  MET
        module, one layer            over CAM1_WINDOW    h  0.05  nominal  23.87  worst  19.91  x2  17.20  MET
-       P2 board                     over XENARC_WINDOW  h  0.80  nominal  24.15  worst  20.19  x2  17.48  MET
+       P2 board                     over CAM1_WINDOW    h  0.05  nominal  25.40  worst  21.44  x2  18.73  MET
+       lid plate                    over XFRAME         h  4.00  nominal  41.72  worst  37.76  x2  35.05  MET
+       lid plate                    over SW_MAIN        h  3.50  nominal  42.22  worst  38.26  x2  35.55  MET
+       lid plate                    over SW_PI          h  2.50  nominal  43.22  worst  39.26  x2  36.55  MET
+       lid plate                    over SW_TEST        h  2.50  nominal  43.22  worst  39.26  x2  36.55  MET
+       lid plate                    over SW_SOS_PLATE   h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over SW_EMCON_PLATE h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over SW_ZERO_PLATE  h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over D              h  1.50  nominal  44.22  worst  40.26  x2  37.55  MET
+       lid plate                    over U_LIGHT        h  1.50  nominal  44.22  worst  40.26  x2  37.55  MET
+       lid plate                    over XENARC_WINDOW  h  0.80  nominal  44.92  worst  40.96  x2  38.25  MET
+       lid plate                    over EPAPER_LENS    h  0.05  nominal  45.67  worst  41.71  x2  39.00  MET
+       lid plate                    over CAM1_WINDOW    h  0.05  nominal  45.67  worst  41.71  x2  39.00  MET
        plan: module inside the flat ceiling, X                                                                       1.00 (min 1.0) ok
        plan: module inside the flat ceiling, Y                                                                       1.00 (min 1.0) ok
+       plan: module west edge to the guard caps (X -143.0) with the plan allowance                                   1.00 (min 1.0) ok
+       plan: P2's tallest part inside the cover's inner face (one-layer depth less the cover)                        0.28 (min 0.0) ok
        plan: tablet bracket to the nearest two-layer zone, in Y                                                      0.37 (min 0.0) ok
-       plan: tablet bracket west edge to the guard caps (X -143.0) with the plan allowance                           0.00 (min 0.0) ok
+       plan: tablet bracket west edge to the guard caps (X -143.0) with the plan allowance                           1.00 (min 1.0) ok
        plan: tablet bracket south edge to the sounder ring (Y -79.1) with the plan allowance                        16.61 (min 0.0) ok
 
    ARRANGEMENT D: HF and tablet both out of the lid
-     module X -141.00..172.08, north edge Y 114.93; 4 slices of 65.25 along X (block 266.00 + two 7.0 bays); per slice (X, south edge, cells across):
-       X -134.00..-66.75 from Y -75.07, 10; X -67.75..-0.50 from Y -112.17, 12; X -1.50..65.75 from Y -112.17, 12; X 64.75..132.00 from Y -112.17, 12
+     module X -140.94..172.08, north edge Y 114.93; 4 slices of 65.25 along X (block 266.00 + two 7.0 bays); per slice (X, south edge, cells across):
+       X -133.94..-66.69 from Y -75.07, 10; X -67.69..-0.44 from Y -112.17, 12; X -1.44..65.81 from Y -112.17, 12; X 64.81..132.06 from Y -112.17, 12
      P2 at X 95.08..165.08, Y -110.42..-66.42 (the corner that costs the fewest cells)
      cells: 77 (layer 1 43, layer 2 34); layer-2 places refused by the face: 7 (XFRAME_1, XFRAME_2, XFRAME_3, XFRAME_4); cells under P2 removed: 4
      => 4S19P (76 cells used, 916.6 Wh nominal at 3.35 Ah min); with the base 4S6P: 4S25P
-     face rows (lid zone over face part): 89 rows, 0 NOT MET, 44 OPEN; plan rows 2, 0 below their minimum
+     face rows (lid zone over face part): 124 rows, 0 NOT MET, 44 OPEN; plan rows 4, 0 below their minimum
        module, two layers           over D              h  1.50  nominal   6.36  worst   2.40  x2  -0.31  OPEN
        module, two layers           over U_LIGHT        h  1.50  nominal   6.36  worst   2.40  x2  -0.31  OPEN
        module, two layers           over XENARC_WINDOW  h  0.80  nominal   7.06  worst   3.10  x2   0.39  OPEN
        module, two layers           over EPAPER_LENS    h  0.05  nominal   7.81  worst   3.85  x2   1.14  MET
        module, one layer            over XFRAME         h  4.00  nominal  19.92  worst  15.96  x2  13.25  MET
        module, one layer            over SW_MAIN        h  3.50  nominal  20.42  worst  16.46  x2  13.75  MET
-       P2 board                     over XFRAME         h  4.00  nominal  20.95  worst  16.99  x2  14.28  MET
        module, one layer            over SW_PI          h  2.50  nominal  21.42  worst  17.46  x2  14.75  MET
        module, one layer            over SW_TEST        h  2.50  nominal  21.42  worst  17.46  x2  14.75  MET
+       P2 board                     over XFRAME         h  4.00  nominal  21.45  worst  17.49  x2  14.78  MET
        module, one layer            over SW_SOS_PLATE   h  2.00  nominal  21.92  worst  17.96  x2  15.25  MET
        module, one layer            over SW_EMCON_PLATE h  2.00  nominal  21.92  worst  17.96  x2  15.25  MET
        module, one layer            over SW_ZERO_PLATE  h  2.00  nominal  21.92  worst  17.96  x2  15.25  MET
@@ -199,24 +246,38 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
        module, one layer            over XENARC_WINDOW  h  0.80  nominal  23.12  worst  19.16  x2  16.45  MET
        module, one layer            over EPAPER_LENS    h  0.05  nominal  23.87  worst  19.91  x2  17.20  MET
        module, one layer            over CAM1_WINDOW    h  0.05  nominal  23.87  worst  19.91  x2  17.20  MET
-       P2 board                     over XENARC_WINDOW  h  0.80  nominal  24.15  worst  20.19  x2  17.48  MET
+       P2 board                     over XENARC_WINDOW  h  0.80  nominal  24.65  worst  20.69  x2  17.98  MET
+       lid plate                    over XFRAME         h  4.00  nominal  41.72  worst  37.76  x2  35.05  MET
+       lid plate                    over SW_MAIN        h  3.50  nominal  42.22  worst  38.26  x2  35.55  MET
+       lid plate                    over SW_PI          h  2.50  nominal  43.22  worst  39.26  x2  36.55  MET
+       lid plate                    over SW_TEST        h  2.50  nominal  43.22  worst  39.26  x2  36.55  MET
+       lid plate                    over SW_SOS_PLATE   h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over SW_EMCON_PLATE h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over SW_ZERO_PLATE  h  2.00  nominal  43.72  worst  39.76  x2  37.05  MET
+       lid plate                    over D              h  1.50  nominal  44.22  worst  40.26  x2  37.55  MET
+       lid plate                    over U_LIGHT        h  1.50  nominal  44.22  worst  40.26  x2  37.55  MET
+       lid plate                    over XENARC_WINDOW  h  0.80  nominal  44.92  worst  40.96  x2  38.25  MET
+       lid plate                    over EPAPER_LENS    h  0.05  nominal  45.67  worst  41.71  x2  39.00  MET
+       lid plate                    over CAM1_WINDOW    h  0.05  nominal  45.67  worst  41.71  x2  39.00  MET
        plan: module inside the flat ceiling, X                                                                       1.00 (min 1.0) ok
        plan: module inside the flat ceiling, Y                                                                       1.00 (min 1.0) ok
+       plan: module west edge to the guard caps (X -143.0) with the plan allowance                                   1.00 (min 1.0) ok
+       plan: P2's tallest part inside the cover's inner face (one-layer depth less the cover)                        0.28 (min 0.0) ok
 
-   RESULT: 48 cells (4S12P) with HF and the tablet bracket both preserved: DOES NOT FIT. Arrangement A holds 35 cells (4S8P) at its best tablet
-   place (13 short of 48; 16 short in whole groups of four). B (HF kept, no tablet in the lid) holds 56 (4S14P); C (8 inch tablet kept, HF out of the
-   lid) 58 (4S14P); C10 (10 inch tablet kept, HF out) 47 (4S11P); D (both out) 77 (4S19P).
-   With HF in the lid, the 10 inch class (243 x 170 + lips) needs 249 in X between the guard caps (-141.94) and the QMX tray (83.20 less 1.0), 224.14 available:
+   RESULT: 48 cells (4S12P) with HF and the tablet bracket both preserved: DOES NOT FIT. Arrangement A holds 39 cells (4S9P) at its best tablet
+   place (9 short of 48; 12 short in whole groups of four). B (HF kept, no tablet in the lid) holds 56 (4S14P); C (8 inch tablet kept, HF out of the
+   lid) 61 (4S15P); C10 (10 inch tablet kept, HF out) 48 (4S12P); D (both out) 77 (4S19P).
+   With HF in the lid, the 10 inch class (243 x 170 + lips) needs 249 in X between the guard caps (-140.94) and the QMX tray (83.20 less 1.0), 223.14 available:
    it does not fit beside the QMX set in any arrangement, pack or no pack; the 8 inch class is the one that fits with HF.
    SENSITIVITY of the counts to the module's INFERRED allowances (a sensitivity reading, not a bound; every face row re-judged):
      most favourable: plan 0.76, bays 5.0, joints 1.0, wrap 0.5, lips 2.0, own allowances halved:
-       A 35 (4S8P), B 56 (4S14P), C 58 (4S14P), C10 47 (4S11P), D 77 (4S19P)
+       A 39 (4S9P), B 56 (4S14P), C 61 (4S15P), C10 48 (4S12P), D 77 (4S19P)
      least favourable: plan 1.50, bays 9.0, joints 1.5, wrap 0.6, lips 4.0, own allowances doubled:
-       A 35 (4S8P), B 56 (4S14P), C 58 (4S14P), C10 45 (4S11P), D 74 (4S18P)
+       A 39 (4S9P), B 56 (4S14P), C 60 (4S15P), C10 46 (4S11P), D 74 (4S18P)
    (the finding holds at both ends if A stays under 48 and B and C stay at 48 or more)
 
    RETENTION of the module (arrangement B, every place filled: 56 cells), to the r2 set's load case: 100 g in each direction
-     module 3.46 kg (cells at 50 g max, the rest ESTIMATE): 3390 N at 100 g. Bond area under the lid plate about 46502 mm2 (the slices and bays):
+     module 3.44 kg (cells at 50 g max, the rest ESTIMATE): 3378 N at 100 g. Bond area under the lid plate about 46502 mm2 (the slices and bays):
      mean stress 0.073 MPa in tension (a drop on the base pulls the module off the ceiling) or shear (on an end). DP8005's sheet gives no
      strength on polypropylene (its 0.3 MPa is the overlap shear at which a part may be handled, a cure milestone, not a rating) and no
      peel figure but T-peel on 0.5 mm HDPE: the bond is bounded by no held figure, OPEN at T8 (a pull test of a bonded plate on Peli's
@@ -248,7 +309,7 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
      150 deg  ( 178.63,  124.07)     59.29                161.29
      180 deg  ( 182.00,  110.50)     60.13                161.60
    T_L turns at R 27.0 about the axis. Lead between the ties: 169.7 (the longest chord, 161.6 at 180 degrees, plus 5 percent).
-   Closed, the lead bows 33.1 (in the X-Z plane of the back channel, which is about 14 wide in Y and 40 tall), radius about 102; fully
+   Closed, the lead bows 33.1 (in the X-Z plane of the back channel, which is about 16 wide in Y and 40 tall), radius about 102; fully
    open it is an S across an offset of 60.1 over 150, radius about 94. Requirement on the pick (INFERRED class): a flexing radius of
    10 x OD = 44 or less, met by both figures above: yes.
    route (B): from P2 (X -134..-90, Y -73..-3) through the module's west bay (X -141..-134) north to the back channel (Y 114.93 to the lid's
@@ -257,8 +318,11 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    strain relief: a bonded tie mount at T_L and at T_P and every 60 mm or less along both runs (the r2 set's tie-mount rule), and a
    printed guide on the lid's back wall that keeps the free lead inboard of the cavity wall (Y < 130.9) so that closing folds it toward
    the face and never over the rim or the seal.
-   disconnect: at the lid side beside P2, an XT60 pair (Amass XT60, the tree's pack connector, v2/vendor/battery/amass-xt60-spec-tme.pdf)
-   and a JST XH 1x4 for SMBus, so that the lid comes off its hinge as ASSEMBLY.md section 7 has it; fused at P2 (the string fuse of 8a's class).
+   disconnect: an XT60 pair and a JST XH 1x4 for SMBus in the back channel at X -135..-100, lying along X, so that the lid comes off its
+   hinge as ASSEMBLY.md section 7 has it; fused at P2 (the string fuse of 8a's class). Amass XT60-F sheet V1.2 (v2/vendor/battery/
+   amass-xt60-spec-tme.pdf): 30 A rated, 60 A instantaneous, 12 AWG recommended, 1000 mating cycles, -20 to 120 C, 0.55 mOhm.
+   the two 4.4 leads from P2 lie one above the other in the 7.0 west bay (8.8 of its depth). No conductor sheet is held: the 10 x OD
+   flexing radius and any flex life are INFERRED requirements on the pick.
    crossing the sealed face: NOT designed; it is S-95's crossing (EQ-31), which the QMX leads already need. This harness adds to it: two
    power poles of 25 A or more and four signal contacts, sealed mated and unmated, on the plate's back band or at a site outside every
    lid item's plan; on the plate it must clear the frame's ring, the backer's top strip and B16's tall parts. Until it is designed, the
@@ -266,64 +330,104 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    the QMX's DC lead (r2: looped back at R 20 WEST of the tray) is re-routed EAST because the pack now lies west of the tray: (106.3, -37.5) -> (106.3, -92.9) -> (126.3, -112.9) -> (158.0, -112.9) -> (178.0, -92.9) -> (178.0, 100.0)
 
 4. MASS AND STABILITY (arrangement B, which holds 48 cells or more with HF; A for comparison)
-   B: HF kept, no tablet in the lid: lid 4.90 kg in all
+   B: HF kept, no tablet in the lid: lid 4.89 kg in all
      lid pack cells, 56 x 50 g max (spec 3.10)                                               2.800 kg at (  -18.7,    12.0,  135.0)
-     lid plate 5052-H32 2.0 (2.68 g/cm3)                                                     0.260 kg at (  -34.1,     1.4,  153.2)
+     lid plate 5052-H32 2.0 (2.68 g/cm3)                                                     0.248 kg at (  -34.1,     1.4,  153.2)
      cover, printed V-0 class 1.0 (1.25 g/cm3, ESTIMATE)                                     0.105 kg at (  -34.1,     1.4,  129.4)
      nickel strip and group links (ESTIMATE)                                                 0.097 kg at (  -18.7,    12.0,  135.0)
      wrap, fish paper, cell glue, pad, standoffs, bond (ESTIMATE)                            0.114 kg at (  -18.7,    12.0,  135.0)
-     P2 protection board (ASSUMPTION, board P class)                                         0.080 kg at ( -112.0,   -38.3,  142.4)
+     P2 protection board (ASSUMPTION, board P class)                                         0.080 kg at ( -111.9,   -38.3,  142.4)
      lid harness to the hinge: 2 x 12 AWG 0.45 m, sense leads, connector (ESTIMATE)          0.080 kg at (  -34.1,   110.0,  134.4)
      QMX set r2: unit and plugs 0.240, tray, frame, plate (r2 record D)                      0.372 kg at (  127.1,    10.0,  139.4)
      lid shell, 39.7 percent of 2.5 kg (ESTIMATE)                                            0.993 kg at (    0.0,     0.0,  146.0)
-     added to the lid by the pack (cells, plate, cover, strip, wrap, P2, harness): 3.54 kg
-   A: HF kept, 8 inch tablet kept: lid 4.33 kg in all
-     lid pack cells, 35 x 50 g max (spec 3.10)                                               1.750 kg at (  -39.8,     6.7,  140.2)
-     lid plate 5052-H32 2.0 (2.68 g/cm3)                                                     0.260 kg at (  -34.1,     1.4,  153.2)
+     added to the lid by the pack (cells, plate, cover, strip, wrap, P2, harness): 3.52 kg
+   A: HF kept, 8 inch tablet kept: lid 4.53 kg in all
+     lid pack cells, 39 x 50 g max (spec 3.10)                                               1.950 kg at (  -18.8,   -15.7,  138.8)
+     lid plate 5052-H32 2.0 (2.68 g/cm3)                                                     0.248 kg at (  -34.1,     1.4,  153.2)
      cover, printed V-0 class 1.0 (1.25 g/cm3, ESTIMATE)                                     0.105 kg at (  -34.1,     1.4,  129.4)
-     nickel strip and group links (ESTIMATE)                                                 0.072 kg at (  -39.8,     6.7,  140.2)
-     wrap, fish paper, cell glue, pad, standoffs, bond (ESTIMATE)                            0.082 kg at (  -39.8,     6.7,  140.2)
-     P2 protection board (ASSUMPTION, board P class)                                         0.080 kg at (   43.8,   -75.4,  142.4)
+     nickel strip and group links (ESTIMATE)                                                 0.077 kg at (  -18.8,   -15.7,  138.8)
+     wrap, fish paper, cell glue, pad, standoffs, bond (ESTIMATE)                            0.088 kg at (  -18.8,   -15.7,  138.8)
+     P2 protection board (ASSUMPTION, board P class)                                         0.080 kg at ( -111.9,    78.2,  142.4)
      lid harness to the hinge: 2 x 12 AWG 0.45 m, sense leads, connector (ESTIMATE)          0.080 kg at (  -34.1,   110.0,  134.4)
      QMX set r2: unit and plugs 0.240, tray, frame, plate (r2 record D)                      0.372 kg at (  127.1,    10.0,  139.4)
-     tablet, 8 inch rugged class (INFERRED) and bracket 0.10 (ESTIMATE)                      0.540 kg at (  -31.9,    42.1,  124.4)
+     tablet, 8 inch rugged class (INFERRED) and bracket 0.10 (ESTIMATE)                      0.540 kg at (  -30.9,    42.1,  124.4)
      lid shell, 39.7 percent of 2.5 kg (ESTIMATE)                                            0.993 kg at (    0.0,     0.0,  146.0)
-     added to the lid by the pack (cells, plate, cover, strip, wrap, P2, harness, tablet): 2.97 kg
+     added to the lid by the pack (cells, plate, cover, strip, wrap, P2, harness, tablet): 3.17 kg
    base: shell 1.51 kg; contents swept 7 to 14 kg (ARCHITECTURE.md 11: sourced floor about 7.0 with 12 cells; +0.75 for section 8's 4S6P;
    the CM5s, coolers, cards, drives, fans, PA, frame, legs, harness have no sourced mass) at Z 45 to 65, Y -20 to +20 (ESTIMATE)
    tipping line: Y 114.49 (the outer flat bottom's edge, INFERRED), feet at Z -8.38; hinge axis Y 155.0, Z 111.0 (ESTIMATE); the lid's stop angle
    is stated by no held Peli file (TBD): swept 90 to 180 degrees; each row is the worst over base 7 to 14 kg, CG Y -20..+20, Z 45..65
    and the hinge axis Y 147..163
-   B, central estimate (base 9 kg at (0, 0, 55)), lid at   0 deg: case 15.41 kg, centre of mass (-2.2, 3.0, 80.1); lid alone (-6.8, 9.4, 138.5)
-   B, central estimate (base 9 kg at (0, 0, 55)), lid at  90 deg: case 15.41 kg, centre of mass (-2.2, 58.1, 117.7); lid alone (-6.8, 182.5, 256.6)
-   B, central estimate (base 9 kg at (0, 0, 55)), lid at 100 deg: case 15.41 kg, centre of mass (-2.2, 66.0, 115.4); lid alone (-6.8, 207.4, 249.6)
+   B, central estimate (base 9 kg at (0, 0, 55)), lid at   0 deg: case 15.40 kg, centre of mass (-2.1, 3.0, 80.0); lid alone (-6.7, 9.4, 138.5)
+   B, central estimate (base 9 kg at (0, 0, 55)), lid at  90 deg: case 15.40 kg, centre of mass (-2.1, 57.9, 117.5); lid alone (-6.7, 182.5, 256.6)
+   B, central estimate (base 9 kg at (0, 0, 55)), lid at 100 deg: case 15.40 kg, centre of mass (-2.1, 65.8, 115.3); lid alone (-6.7, 207.4, 249.6)
    arrangement  lid open   worst CG Y   level ground   worst critical back slope (tips beyond)
-   B                0 deg      13.87     stands          45.9 deg
-   B               90 deg      80.08     stands          13.5 deg
-   B              100 deg      89.68     stands          10.0 deg
-   B              110 deg      98.68     stands           6.6 deg
-   B              120 deg     106.80     stands           3.4 deg
-   B              135 deg     116.83     TIPS            -1.2 deg
-   B              150 deg     123.67     TIPS            -5.4 deg
-   B              180 deg     126.16     TIPS            -9.9 deg
-   A                0 deg      14.21     stands          46.3 deg
-   A               90 deg      75.68     stands          15.7 deg
-   A              100 deg      84.51     stands          12.5 deg
-   A              110 deg      92.78     stands           9.4 deg
-   A              120 deg     100.23     stands           6.5 deg
-   A              135 deg     109.38     stands           2.5 deg
-   A              150 deg     115.58     TIPS            -0.7 deg
-   A              180 deg     117.62     TIPS            -2.7 deg
-   sensitivity: the feet's place is not in Peli's files; with the tipping line at Y 100 (feet inboard, INFERRED bound) B at 100 degrees
-   stands on a back slope of 5.7 deg at the worst, and tips on level ground from 120 degrees (hinge axis Y 155)
+   (each row the worst over base 7..14 kg, CG Y -20..+20, Z 45..65, the hinge axis Y 147..163 and Z 106..116: check M4)
+   B                0 deg      13.89     stands          45.9 deg
+   B               90 deg      81.79     stands          13.0 deg
+   B              100 deg      91.34     stands           9.5 deg
+   B              110 deg     100.24     stands           6.1 deg
+   B              120 deg     108.22     stands           2.8 deg
+   B              135 deg     117.95     TIPS            -1.9 deg
+   B              150 deg     124.40     TIPS            -6.1 deg
+   B              180 deg     125.98     TIPS           -10.3 deg
+   A                0 deg      11.40     stands          46.9 deg
+   A               90 deg      78.95     stands          14.2 deg
+   A              100 deg      88.50     stands          10.7 deg
+   A              110 deg      97.40     stands           7.3 deg
+   A              120 deg     105.40     stands           4.1 deg
+   A              135 deg     115.16     TIPS            -0.4 deg
+   A              150 deg     121.66     TIPS            -4.5 deg
+   A              180 deg     123.38     TIPS            -8.1 deg
+   C                0 deg      14.08     stands          45.2 deg
+   C               90 deg      86.71     stands          10.7 deg
+   C              100 deg      96.89     stands           7.0 deg
+   C              110 deg     106.38     stands           3.4 deg
+   C              120 deg     114.88     TIPS            -0.2 deg
+   C              135 deg     125.22     TIPS            -5.6 deg
+   C              150 deg     132.06     TIPS           -10.4 deg
+   C              180 deg     133.65     TIPS           -16.7 deg
+   B's lid, every place filled (56 cells): 4.89 kg
+   C's lid, every place filled (61 cells): 5.48 kg
+   sensitivity (feet inboard, tipping line Y 100, INFERRED bound), over the same sweep: B at 100 degrees stands on a back slope of
+   3.6 deg at the worst and tips on level ground from 110 degrees
    verdict (B): the open case stands on level ground up to a lid opening of 120 degrees in every swept case; beyond it a light base with
    its CG back and high tips on level ground (first at 135 degrees swept). Fix, the session's (authority SESSION, reversible): a lid stay
-   that stops the lid at 100 degrees (a webbing strap between two bonded anchors, one on the lid's inner back wall, one on the face
-   plate's rebated back band; no hole in the case or the plate; about EUR 10, ESTIMATE; it folds into the back channel when the lid
-   closes), which also carries the lid's added mass off Peli's hinge stop. With it the
-   worst back slope the open case stands on is 10.0 deg (B) and 12.5 deg (A); the operator's sheet states: open the lid only on ground
-   sloping less than 9 degrees toward the hinge side. If Peli's own stop is at or under 100 degrees the stay is not needed for
-   stability; the stop angle and the hinge axis are read on the mock-up (T-A1-3).
+   that stops the lid at 100 degrees. With it the worst back slope the open case stands on is 9.5 deg (B), 10.7 deg (A), 7.0 deg (C)
+   at the flat-bottom tipping line, and 3.6 deg (B) with the feet inboard. The operator's sheet: open the lid only on ground sloping
+   less than 6 degrees toward the hinge side until T-A1-3 has measured the feet, the stop and the hinge axis.
+   THE STAY (check M5): a polyester webbing strap at X -179 (the lid's west end zone, outside the flat ceiling and clear of the guard
+   caps at X -157..-143 and the back channel), from a tab bonded (DP8005) to the lid's inner west end wall at (Y 60, Z 140) closed, to a
+   stainless tab under the face plate's 6-32 pan head at (X -179.07, Y 75.95), which pulls Peli's brass insert against the ring's
+   underside, its strong direction (CASE-MARGINS 2.5).
+     B, hinge (155, 111): lid 4.89 kg, moment at 100 deg 2.51 N m, strap lever 44.9 mm, tension 56 N static, 168 N at an arrest
+        factor of 3 (ESTIMATE); strap 153.7 long open, 34.9 between the anchors closed (the slack folds in the west end zone)
+     B, hinge (163, 106): lid 4.89 kg, moment at 100 deg 2.81 N m, strap lever 50.8 mm, tension 55 N static, 166 N at an arrest
+        factor of 3 (ESTIMATE); strap 166.5 long open, 34.9 between the anchors closed (the slack folds in the west end zone)
+     B, hinge (147, 116): lid 4.89 kg, moment at 100 deg 2.21 N m, strap lever 39.1 mm, tension 56 N static, 169 N at an arrest
+        factor of 3 (ESTIMATE); strap 141.1 long open, 34.9 between the anchors closed (the slack folds in the west end zone)
+     A, hinge (155, 111): lid 4.53 kg, moment at 100 deg 2.42 N m, strap lever 44.9 mm, tension 54 N static, 162 N at an arrest
+        factor of 3 (ESTIMATE); strap 153.7 long open, 34.9 between the anchors closed (the slack folds in the west end zone)
+     A, hinge (163, 106): lid 4.53 kg, moment at 100 deg 2.70 N m, strap lever 50.8 mm, tension 53 N static, 159 N at an arrest
+        factor of 3 (ESTIMATE); strap 166.5 long open, 34.9 between the anchors closed (the slack folds in the west end zone)
+     A, hinge (147, 116): lid 4.53 kg, moment at 100 deg 2.14 N m, strap lever 39.1 mm, tension 55 N static, 164 N at an arrest
+        factor of 3 (ESTIMATE); strap 141.1 long open, 34.9 between the anchors closed (the slack folds in the west end zone)
+     C, hinge (155, 111): lid 5.48 kg, moment at 100 deg 2.82 N m, strap lever 44.9 mm, tension 63 N static, 188 N at an arrest
+        factor of 3 (ESTIMATE); strap 153.7 long open, 34.9 between the anchors closed (the slack folds in the west end zone)
+     C, hinge (163, 106): lid 5.48 kg, moment at 100 deg 3.16 N m, strap lever 50.8 mm, tension 62 N static, 186 N at an arrest
+        factor of 3 (ESTIMATE); strap 166.5 long open, 34.9 between the anchors closed (the slack folds in the west end zone)
+     C, hinge (147, 116): lid 5.48 kg, moment at 100 deg 2.48 N m, strap lever 39.1 mm, tension 63 N static, 190 N at an arrest
+        factor of 3 (ESTIMATE); strap 141.1 long open, 34.9 between the anchors closed (the slack folds in the west end zone)
+     the bonded tab on Peli's polypropylene has no held strength (DP8005's sheet gives none on PP) and Peli states none for its inserts:
+     both OPEN at T8 (a pull test of the tab at 3 times the largest tension above) and T-A1-3 (the stay on the mock-up, the lid dropped
+     open onto it). Stay parts: 25 mm polyester webbing, two stainless tabs; about EUR 10 (ESTIMATE).
+   OPERATOR LOADS (check M6): a horizontal backward push on the open lid at the QMX set's height (B, A) or the tablet's (C) tips the
+   worst swept case on level ground when it exceeds:
+     B at 100 deg: 13.40 kg, CG Y 91.34, restoring 3.04 N m; push at Z 251: 11.7 N (1.2 kgf)
+     A at 100 deg: 13.04 kg, CG Y 88.50, restoring 3.32 N m; push at Z 251: 12.8 N (1.3 kgf)
+     C at 100 deg: 13.99 kg, CG Y 96.89, restoring 2.41 N m; push at Z 251: 9.3 N (0.9 kgf)
+     so pressing the QMX's controls, plugging its jacks or tapping a tablet in the lid must be done with a hand on the case, or the
+     case stood with its back against something: a use limit on the operator's sheet; with the base's real mass and CG (T-A1-3) it may rise.
 
 5. THE BASE POCKETS: section 8's 4S6P (east block as ruled, west block mirrored) at the same worst figures
    row      margin                                                                 min  nominal  worst  x2     verdict
