@@ -34,7 +34,8 @@ the connector plate C3 is quoted only and waits for the build; quotes may be ask
   re-derivation of the +35 and +25 C controls, 32.56's patch figure and the placement freeze of the pack and the PA
   flange (the full table and the nine differences D1 to D9: `TEST-PROCEDURE.md` section 1).
 - Time: about 2 days of logging for the six steps, half a day attended for the patch runs, plus the shutdown's
-  verification (about 2 h).
+  verification (about 4 to 5 h: V1, V2 (b) and V3 (b) wait for each thermostat to reclose, near 45 C for TS2
+  and TS3; INFERRED).
 
 **B. Mock-up (after A; `TEST-PROCEDURE.md` section 7).**
 - Set-up: drill the case from the 1:1 templates; plate C1 with a printed monitor stand-in; stand-ins for boards A, B and E
@@ -60,11 +61,10 @@ heater's leads fitted by someone who solders if its tags need it).
   a bench supply of 15 V and 7 A with a current limit; two multimeters; torque driver (6-32, M3 and M4); chalk; a drill
   with hole saws of 29, 27, 22 and 18 mm, drills of 8, 5.0, 4.5 and 2.5 mm, an M3 tap and a step drill; deburring tool;
   phone camera; Kapton and aluminium tape; a stopwatch.
-- **To buy or borrow:** a 500 mm caliper with inside jaws (receipt checks R2, R5, R6); a hot plate or a hot-air gun and
-  an aluminium block of about 50 x 50 x 10 mm (verification V1); optionally an ultrasonic thickness gauge (R7); an
+- **To buy or borrow:** a 500 mm caliper with inside jaws (receipt checks R2, R5, R6); a hot-air gun (V1 to V3; a hot plate may serve V1 only) and
+  an aluminium block of about 50 x 50 x 10 mm (V1); optionally an ultrasonic thickness gauge (R7); an
   8-channel type K logger with cold-junction compensation, 0.1 K resolution and a CSV export (`CHECKOUT-LIST.md` section
-  6); ten type K thermocouples with plugs to suit it; a second 15 V, 7 A supply if the patch runs are to keep the heaters
-  on; the heaters, compound, the four thermostats, the two relays with their sockets and diodes (`CHECKOUT-LIST.md` lines 5 to 7 and 10 to
+  6); ten type K thermocouples with plugs to suit it; the heaters, compound, the four thermostats, the two relays with their sockets and diodes (`CHECKOUT-LIST.md` lines 5 to 7 and 10 to
   15); four M4 x 45 mm nylon (PA66) stand-offs; 3M VHB 5952; ten 6-32 x 1/2 in pan-head screws; M3 A2 screws and washers;
   silicone wire of 0.75 mm2 or more with crimp terminals; the printed stand-ins and the made plates (`MACHINING-RFQ.md`).
 
@@ -98,7 +98,8 @@ page): no heater or hot plate touches the polypropylene; H2 stands on stand-offs
 - **Stop limits** (`TEST-PROCEDURE.md` section 8): a wall or the floor 70 C, H1's edge over the o-ring 70 C, H2 100 C, a
   heater body 150 C, the patch resistor 110 C, any smell or smoke. No limit is raised to let a step finish.
 - **The lead exit** (check-2, in the package): the leads pass as flat silicone wires between H1 and the frame's o-ring,
-  and under the lid gasket with the lid closed, each on a straight run of the seal; they read the conductance high by
+  and under the lid gasket with the lid closed, each on a straight run of the seal, the thermostat chain's two wires
+  each on a run of its own at least 50 mm from the other and from every heater lead; they read the conductance high by
   well under 1 percent (check-2's estimate). Peli's purge valve stays (appendix 32.53 item 1; without it 35 K of heating
   raises the pressure by about 12 kPa).
 - Drill the case clamped and empty; eye protection; gloves for the patch plate.
