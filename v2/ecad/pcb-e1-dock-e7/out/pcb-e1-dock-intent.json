@@ -1,6 +1,6 @@
 {
  "board": "pcb-e1-dock",
- "written": "2026-09-27 14:51",
+ "written": "2026-09-29 00:12",
  "bypass": [
   {
    "cap": "C16",

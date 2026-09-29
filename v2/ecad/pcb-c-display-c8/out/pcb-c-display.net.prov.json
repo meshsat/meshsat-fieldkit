@@ -2,10 +2,11 @@
  "what": "the generator that wrote this netlist, by content",
  "letter": "c",
  "netlist": "pcb-c-display.net",
- "generator_sha": "0ace9f5aaf1f36b2",
+ "generator_sha": "b96c17bc9e853c8c",
  "identity_since": "2026-09-26",
  "generator_files": [
   "boards/c.json#gen_env",
+  "decoupling_rules.py",
   "gen_footprints_b16.py",
   "gen_footprints_e.py",
   "gen_footprints_idc.py",
@@ -77,12 +78,13 @@
  ],
  "generator_file_sha": {
   "boards/c.json#gen_env": "44136fa355b3678a",
+  "decoupling_rules.py": "f4d06f6789c6ec48",
   "gen_footprints_b16.py": "e0ad5ba833f1d169",
   "gen_footprints_e.py": "1c1fab411acfa1d5",
   "gen_footprints_idc.py": "17716f42fc0824a5",
   "gen_footprints_panel.py": "8291174d7f0a2993",
   "gen_sch_c.py": "6405a8db2b21c662",
-  "intent.py": "f1ac033e0f3c10f1",
+  "intent.py": "0071fe553548eb5d",
   "kisch.py": "3e28374d15be25e0",
   "meshsat.pretty/BackerScrew_M3_GND.kicad_mod": "e0b8f321b6539d37",
   "meshsat.pretty/CM5_Amphenol_10164227.kicad_mod": "e5ad42053038d917",
@@ -146,6 +148,6 @@
   "meshsat.pretty/WireLands_2x6.kicad_mod": "83be0b1d2c58cd4e",
   "schlayout.py": "a9eee3d6b0b38bae"
  },
- "schematic_sha256": "9dfeeff5d8d6bdecb98b91ded4e52d15",
- "taken": "2026-09-27T15:35:32+00:00"
+ "schematic_sha256": "4ac606196fbb38ba705aa35c0e053908",
+ "taken": "2026-09-29T00:11:40+00:00"
 }

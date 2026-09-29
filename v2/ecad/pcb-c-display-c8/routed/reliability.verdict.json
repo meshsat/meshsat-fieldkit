@@ -31,15 +31,15 @@
   "figures_none_published": 0,
   "figures_not_mated": 4,
   "figures_owed": 2,
-  "inconclusive": 4,
+  "inconclusive": 5,
   "measures_owed": 0,
   "per_board": {
    "c": {
     "artefact": {
      "kind": "netlist",
-     "sha256_16": "3fddbb3edcd4248a"
+     "sha256_16": "fef4df255c00f4db"
     },
-    "bound": true,
+    "bound": false,
     "candidates": 74,
     "citations_unjudged": 0,
     "classed": 24,
@@ -59,6 +59,7 @@
  },
  "denominator": 74,
  "evidence": [
+  "board C's declaration was written against the netlist of sha256 3fddbb3edcd4248a and the declared phase's netlist pcb-c-display-c8/out/pcb-c-display.net reads fef4df255c00f4db: its components and nets are the same (a re-export of the same design): read the values against the list and re-pin it (reliability.py --pins)",
   "C: class the panel ribbon header owes its cycle figure (open item REL-O-04: board C's panel ribbon header is a session pick that no generator carries, XFCN BH254VS-26P (v2/docs/parts/PROCUREMENT.md section 5, HC6-SC-7; v2/vendor/SOURCES.yaml reads the pick's identity NOT_PINNED), its value in the netlist names no part, and no document of its maker is held)",
   "C: class headset jacks in the plate owes its cycle figure (open item REL-O-05: board C's two headset jacks are a U-174/U class panel jack with no maker's part picked and its drawing owed (the value says so; ASSEMBLY.md section 1))",
   "C: open item REL-O-07 holds the board: the expected number of mates of each connector over a service life is stated nowhere (REQ-028: no life requirement for prototype 1), so this list carries ratings and compares them with nothing (next action: when a service life is ruled, state the expected mates per connector from CONOPS section 5 and compare each class's figure with it)",
@@ -77,11 +78,11 @@
    "content16": "ebde053efc0a3906",
    "parts": 219,
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256": "3fddbb3edcd4248a2a6c969b19809323ae59bf6525b2cfd1e8ea9c24eb351e15",
-   "sha256_16": "3fddbb3edcd4248a"
+   "sha256": "fef4df255c00f4dbe03c53498e33476f8091eef51a543ae0ae2ae2c18ce36388",
+   "sha256_16": "fef4df255c00f4db"
   }
  },
- "missing_input": null,
+ "missing_input": "board C's declaration was written against the netlist of sha256 3fddbb3edcd4248a and the declared phase's netlist pcb-c-display-c8/out/pcb-c-display.net reads fef4df255c00f4db: its components and nets are the same (a re-export of the same design): read the values against the list and re-pin it (reliability.py --pins)",
  "note": "every candidate part of the inventory falls in one declared class, with its cycle figure from the maker's document or the reason it has none, its load and the measure taken, or under one declared exclusion with its reason. A desk reading of a netlist and a list: it tests nothing and replaces no physical verification; REL-001 is verified at the prototype and no board has been built",
  "policy": {
   "hard_types": 15,
@@ -98,12 +99,12 @@
  },
  "tool": "reliability",
  "tools": {
-  "git_head": "36ac4bef1ade",
+  "git_head": "13b5352b2d8a",
   "tools_tree_sha": "fedf14205ed9e57d"
  },
- "ts": "2026-09-29T00:03:50Z",
+ "ts": "2026-09-29T00:12:35Z",
  "verdict": "INCONCLUSIVE",
- "version": "36ac4bef1ade",
+ "version": "13b5352b2d8a",
  "writer": {
   "file": "reliability.py",
   "sha16": "c50f2b8b35d1d57b"
