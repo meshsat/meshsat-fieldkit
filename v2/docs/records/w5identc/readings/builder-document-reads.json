@@ -46,6 +46,24 @@
    "sha256": "7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6"
   },
   {
+   "document": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "AO3401A",
+   "pages": 5,
+   "read_from": "this tree",
+   "selection": "S-55e88b2fbd",
+   "sha256": "0d8e3261ae280e007b5837fff60c55142f2d92af71edc4d02aee6f7a760a785c"
+  },
+  {
+   "document": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "AO3401A",
+   "pages": 5,
+   "read_from": "this tree",
+   "selection": "S-cae89bf0ce",
+   "sha256": "0d8e3261ae280e007b5837fff60c55142f2d92af71edc4d02aee6f7a760a785c"
+  },
+  {
    "document": "v2/vendor/vishay/vishay-si2300ds.pdf",
    "first_page_naming_it": 1,
    "mpn": "SI2300DS-T1-GE3",
@@ -62,6 +80,15 @@
    "read_from": "this tree",
    "selection": "S-2c230ffa91",
    "sha256": "cffcc3972eeb825d822def9e5d649e76ae74f94de08dab8021ff194b9175f231"
+  },
+  {
+   "document": "v2/vendor/vishay/veml7700-datasheet.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "VEML7700-TR",
+   "pages": 15,
+   "read_from": "this tree",
+   "selection": "S-8362226c90",
+   "sha256": "f338cf7d5911828a2f2ac8ae8324049380c852e34aa5afa43ac92c98ffe827d1"
   },
   {
    "document": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
@@ -127,6 +154,15 @@
    "sha256": "078364de617898af0dd4cee99931ab1d36b622824a06e8f9b7fa95087644af24"
   },
   {
+   "document": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+   "first_page_naming_it": 28,
+   "mpn": "TLV75533PDBVR",
+   "pages": 51,
+   "read_from": "this tree",
+   "selection": "S-3da103208a",
+   "sha256": "7eb7bc6935bf6c1d247b2fce62c9e5a49a474fd94359ddc390a4baf0ac1f5293"
+  },
+  {
    "document": "v2/vendor/st/st-usblc6-2-esd-protection.pdf",
    "first_page_naming_it": 1,
    "mpn": "USBLC6-2SC6",
@@ -134,6 +170,15 @@
    "read_from": "this tree",
    "selection": "S-e1dcd70451",
    "sha256": "bc30154f310cd631043214ed52571daefe04270587ec55072d49a23bd18b9068"
+  },
+  {
+   "document": "v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf",
+   "first_page_naming_it": 73,
+   "mpn": "W25Q16JVUXIQ",
+   "pages": 75,
+   "read_from": "this tree",
+   "selection": "S-dfbcfc88f2",
+   "sha256": "81af3f69b0bff95fd1097949a1005431dc5b3a6ecb5f1947e695a17298e7cf1b"
   },
   {
    "document": "v2/vendor/passives/yageo-cc-series.pdf",

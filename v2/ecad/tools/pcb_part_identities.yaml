@@ -195,16 +195,16 @@ counts:
   rows: 175
   selections: 87
   identity_status:
-    UNRESOLVED: 68
-    RESOLVED: 15
+    UNRESOLVED: 63
+    RESOLVED: 20
     NOT_A_PART: 4
   unresolved_by_reason:
     CHOICE_OWED: 22
-    DOCUMENT_OWED: 21
+    DOCUMENT_OWED: 16
     DOCUMENT_DOES_NOT_NAME_THE_PART: 25
   rows_by_identity_status:
-    UNRESOLVED: 150
-    RESOLVED: 21
+    UNRESOLVED: 145
+    RESOLVED: 26
     NOT_A_PART: 4
 selections:
 - id: S-a5c3762a4c
@@ -737,12 +737,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C7502705
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:35:52Z'
     jlc_stock: 154424
-    lcsc_read_utc: '2026-09-27T20:35:53Z'
-    lcsc_stock: 153000
     need_5_kits: 7
     status: IN_STOCK
 - id: S-330f4dd290
@@ -774,12 +770,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C268712
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:36:11Z'
     jlc_stock: 9693
-    lcsc_read_utc: '2026-09-27T20:36:11Z'
-    lcsc_stock: 9690
     need_5_kits: 7
     status: IN_STOCK
 - id: S-a95bcbbc1e
@@ -811,12 +803,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C268712
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:36:11Z'
     jlc_stock: 9693
-    lcsc_read_utc: '2026-09-27T20:36:11Z'
-    lcsc_stock: 9690
     need_5_kits: 7
     status: IN_STOCK
 - id: S-af1ea25d67
@@ -848,12 +836,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C268712
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:36:11Z'
     jlc_stock: 9693
-    lcsc_read_utc: '2026-09-27T20:36:11Z'
-    lcsc_stock: 9690
     need_5_kits: 7
     status: IN_STOCK
 - id: S-d58aa066ad
@@ -884,12 +868,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C2986059
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:36:13Z'
     jlc_stock: 299027
-    lcsc_read_utc: '2026-09-27T20:36:13Z'
-    lcsc_stock: 285800
     need_5_kits: 7
     status: IN_STOCK
 - id: S-fdd8168950
@@ -995,12 +975,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C324726
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:36:26Z'
     jlc_stock: 6470
-    lcsc_read_utc: '2026-09-27T20:36:26Z'
-    lcsc_stock: 6235
     need_5_kits: 7
     status: IN_STOCK
 - id: S-ce3bc3dcc6
@@ -1113,12 +1089,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C48687640
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:36:38Z'
     jlc_stock: 186
-    lcsc_read_utc: '2026-09-27T20:36:38Z'
-    lcsc_stock: 60
     need_5_kits: 7
     status: IN_STOCK
 - id: S-f85fe2a707
@@ -1160,7 +1132,7 @@ selections:
   findings: []
   identity:
     status: RESOLVED
-    maker: Jiangsu Changjing Electronics Technology Co., Ltd.
+    maker: Jiangsu Changjiang Electronics Technology Co., Ltd.
     mpn: 2N7002
     datasheet:
       path: v2/vendor/power/jscj-2n7002-c8545.pdf
@@ -1172,12 +1144,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C8545
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:36:48Z'
     jlc_stock: 1745429
-    lcsc_read_utc: '2026-09-27T20:36:48Z'
-    lcsc_stock: 1312050
     need_5_kits: 111
     status: IN_STOCK
 - id: S-55e88b2fbd
@@ -1196,24 +1164,21 @@ selections:
   basis: {}
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: Alpha & Omega Semicon
     mpn: AO3401A
-    reason_class: DOCUMENT_OWED
-    reason: maker and part number named (the incumbent (generator) carries the named part); no document held in this tree
-      prints the part number
-    next_action: file Alpha & Omega Semicon's document that prints AO3401A under v2/vendor/ (held back where its terms forbid
-      redistribution, with a sources.txt line and a fetch script), and re-run this builder
+    datasheet:
+      path: v2/vendor/power/aos-ao3401a-p-mosfet.pdf
+      sha256: 0d8e3261ae280e007b5837fff60c55142f2d92af71edc4d02aee6f7a760a785c
+      page: 1
+      names: AO3401A
+      joined_by: 'this stream: a held document found by reading the vendor folders'
     chosen_by: the incumbent (generator) carries the named part
-    from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
+    from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged; the document bound by stream w5identc
   order_code:
     code: C15127
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:36:51Z'
     jlc_stock: 884564
-    lcsc_read_utc: '2026-09-27T20:36:51Z'
-    lcsc_stock: 496865
     need_5_kits: 7
     status: IN_STOCK
 - id: S-cae89bf0ce
@@ -1232,24 +1197,21 @@ selections:
   basis: {}
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: Alpha & Omega Semicon
     mpn: AO3401A
-    reason_class: DOCUMENT_OWED
-    reason: maker and part number named (the incumbent (generator) carries the named part); no document held in this tree
-      prints the part number
-    next_action: file Alpha & Omega Semicon's document that prints AO3401A under v2/vendor/ (held back where its terms forbid
-      redistribution, with a sources.txt line and a fetch script), and re-run this builder
+    datasheet:
+      path: v2/vendor/power/aos-ao3401a-p-mosfet.pdf
+      sha256: 0d8e3261ae280e007b5837fff60c55142f2d92af71edc4d02aee6f7a760a785c
+      page: 1
+      names: AO3401A
+      joined_by: 'this stream: a held document found by reading the vendor folders'
     chosen_by: the incumbent (generator) carries the named part
-    from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
+    from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged; the document bound by stream w5identc
   order_code:
     code: C15127
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:36:51Z'
     jlc_stock: 884564
-    lcsc_read_utc: '2026-09-27T20:36:51Z'
-    lcsc_stock: 496865
     need_5_kits: 7
     status: IN_STOCK
 - id: S-7917d94eb1
@@ -1284,12 +1246,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C72271
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:37:00Z'
     jlc_stock: 30000
-    lcsc_read_utc: '2026-09-27T20:37:00Z'
-    lcsc_stock: 30000
     need_5_kits: 7
     status: IN_STOCK
 - id: S-2c230ffa91
@@ -1324,12 +1282,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C72271
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:37:00Z'
     jlc_stock: 30000
-    lcsc_read_utc: '2026-09-27T20:37:00Z'
-    lcsc_stock: 30000
     need_5_kits: 7
     status: IN_STOCK
 - id: S-3a7e735184
@@ -1578,24 +1532,21 @@ selections:
   basis: {}
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: Vishay
     mpn: VEML7700-TR
-    reason_class: DOCUMENT_OWED
-    reason: maker and part number named (the incumbent (generator) carries the named part); no document held in this tree
-      prints the part number
-    next_action: file Vishay's document that prints VEML7700-TR under v2/vendor/ (held back where its terms forbid redistribution,
-      with a sources.txt line and a fetch script), and re-run this builder
+    datasheet:
+      path: v2/vendor/vishay/veml7700-datasheet.pdf
+      sha256: f338cf7d5911828a2f2ac8ae8324049380c852e34aa5afa43ac92c98ffe827d1
+      page: 1
+      names: 'VEML7700-TR Tape and reel MOQ: 2300 (MOQ is one reel) Side view'
+      joined_by: 'this stream: a held document found by reading the vendor folders'
     chosen_by: the incumbent (generator) carries the named part
-    from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
+    from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged; the document bound by stream w5identc
   order_code:
     code: C504893
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:37:07Z'
     jlc_stock: 3435
-    lcsc_read_utc: '2026-09-27T20:37:07Z'
-    lcsc_stock: 3435
     need_5_kits: 7
     status: IN_STOCK
 - id: S-3399dc8073
@@ -1630,12 +1581,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C151394
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:37:14Z'
     jlc_stock: 11986
-    lcsc_read_utc: '2026-09-27T20:37:14Z'
-    lcsc_stock: 11985
     need_5_kits: 7
     status: IN_STOCK
 - id: S-82a0c53bb2
@@ -1670,12 +1617,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C151394
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:37:14Z'
     jlc_stock: 11986
-    lcsc_read_utc: '2026-09-27T20:37:14Z'
-    lcsc_stock: 11985
     need_5_kits: 7
     status: IN_STOCK
 - id: S-ac3ac5929e
@@ -1710,12 +1653,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C151394
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:37:14Z'
     jlc_stock: 11986
-    lcsc_read_utc: '2026-09-27T20:37:14Z'
-    lcsc_stock: 11985
     need_5_kits: 7
     status: IN_STOCK
 - id: S-2005fc2180
@@ -1747,12 +1686,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C2864778
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:37:50Z'
     jlc_stock: 12871
-    lcsc_read_utc: '2026-09-27T20:37:50Z'
-    lcsc_stock: 12871
     need_5_kits: 7
     status: IN_STOCK
 - id: S-ad00071efd
@@ -1784,12 +1719,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C2864778
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:37:50Z'
     jlc_stock: 12871
-    lcsc_read_utc: '2026-09-27T20:37:50Z'
-    lcsc_stock: 12871
     need_5_kits: 7
     status: IN_STOCK
 - id: S-75a8527525
@@ -1821,12 +1752,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C2040
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:37:53Z'
     jlc_stock: 72650
-    lcsc_read_utc: '2026-09-27T20:37:53Z'
-    lcsc_stock: 66147
     need_5_kits: 7
     status: IN_STOCK
 - id: S-a3081131d9
@@ -1862,12 +1789,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C485080
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:38:03Z'
     jlc_stock: 1832
-    lcsc_read_utc: '2026-09-27T20:38:04Z'
-    lcsc_stock: 1830
     need_5_kits: 7
     status: IN_STOCK
 - id: S-3da103208a
@@ -1886,24 +1809,21 @@ selections:
   basis: {}
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: Texas Instruments
     mpn: TLV75533PDBVR
-    reason_class: DOCUMENT_OWED
-    reason: maker and part number named (the incumbent (lcsc_fill MAP '^TLV75533PDBV') carries the named part); no document
-      held in this tree prints the part number
-    next_action: file Texas Instruments's document that prints TLV75533PDBVR under v2/vendor/ (held back where its terms forbid
-      redistribution, with a sources.txt line and a fetch script), and re-run this builder
+    datasheet:
+      path: v2/vendor/power/ti-tlv755p-ldo.pdf
+      sha256: 7eb7bc6935bf6c1d247b2fce62c9e5a49a474fd94359ddc390a4baf0ac1f5293
+      page: 28
+      names: TLV75533PDBVR Active Production SOT-23 (DBV) | 5 3000 | LARGE T&R Yes SN Level-1-260C-UNLIM -40 to 125 1FWF
+      joined_by: 'this stream: a held document found by reading the vendor folders'
     chosen_by: the incumbent (lcsc_fill MAP '^TLV75533PDBV') carries the named part
-    from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
+    from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged; the document bound by stream w5identc
   order_code:
     code: C404027
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:38:21Z'
     jlc_stock: 138916
-    lcsc_read_utc: '2026-09-27T20:38:22Z'
-    lcsc_stock: 137485
     need_5_kits: 7
     status: IN_STOCK
 - id: S-e1dcd70451
@@ -1939,12 +1859,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C7519
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:36:12Z'
     jlc_stock: 46448
-    lcsc_read_utc: '2026-09-27T20:36:12Z'
-    lcsc_stock: 42945
     need_5_kits: 83
     status: IN_STOCK
 - id: S-dfbcfc88f2
@@ -1963,24 +1879,21 @@ selections:
   basis: {}
   findings: []
   identity:
-    status: UNRESOLVED
+    status: RESOLVED
     maker: Winbond Elec
     mpn: W25Q16JVUXIQ
-    reason_class: DOCUMENT_OWED
-    reason: maker and part number named (the incumbent (generator) carries the named part); no document held in this tree
-      prints the part number
-    next_action: file Winbond Elec's document that prints W25Q16JVUXIQ under v2/vendor/ (held back where its terms forbid
-      redistribution, with a sources.txt line and a fetch script), and re-run this builder
+    datasheet:
+      path: v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf
+      sha256: 81af3f69b0bff95fd1097949a1005431dc5b3a6ecb5f1947e695a17298e7cf1b
+      page: 73
+      names: USON-8 16M-bit W25Q16JVUXIQ
+      joined_by: 'this stream: a held document found by reading the vendor folders'
     chosen_by: the incumbent (generator) carries the named part
-    from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
+    from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged; the document bound by stream w5identc
   order_code:
     code: C2843335
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:38:41Z'
     jlc_stock: 6353
-    lcsc_read_utc: '2026-09-27T20:38:41Z'
-    lcsc_stock: 5270
     need_5_kits: 12
     status: IN_STOCK
 - id: S-99c3720b2d
@@ -2011,12 +1924,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C20625731
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:38:42Z'
     jlc_stock: 16472
-    lcsc_read_utc: '2026-09-27T20:38:43Z'
-    lcsc_stock: 16472
     need_5_kits: 12
     status: IN_STOCK
 - id: S-45ad5deffe
@@ -2081,12 +1990,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C14663
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:39:14Z'
     jlc_stock: 51313475
-    lcsc_read_utc: '2026-09-27T20:39:11Z'
-    lcsc_stock: 3530900
     need_5_kits: 1712
     status: IN_STOCK
 - id: S-8b55c1443b
@@ -2135,12 +2040,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C57112
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:39:49Z'
     jlc_stock: 7096854
-    lcsc_read_utc: '2026-09-27T20:39:45Z'
-    lcsc_stock: 0
     need_5_kits: 89
     status: IN_STOCK
 - id: S-6d1de2f8e8
@@ -2185,12 +2086,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C326595
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:39:56Z'
     jlc_stock: 259244
-    lcsc_read_utc: '2026-09-27T20:39:57Z'
-    lcsc_stock: 244025
     need_5_kits: 281
     status: IN_STOCK
 - id: S-8b1dfb7d63
@@ -2233,12 +2130,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C1548
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:40:22Z'
     jlc_stock: 1481123
-    lcsc_read_utc: '2026-09-27T20:40:23Z'
-    lcsc_stock: 962100
     need_5_kits: 12
     status: IN_STOCK
 - id: S-9ae5738976
@@ -2289,12 +2182,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C106858
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:40:51Z'
     jlc_stock: 320883
-    lcsc_read_utc: '2026-09-27T20:40:52Z'
-    lcsc_stock: 258940
     need_5_kits: 7
     status: IN_STOCK
 - id: S-12603c7856
@@ -2345,12 +2234,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C106858
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:40:51Z'
     jlc_stock: 320883
-    lcsc_read_utc: '2026-09-27T20:40:52Z'
-    lcsc_stock: 258940
     need_5_kits: 7
     status: IN_STOCK
 - id: S-c3afdba8a6
@@ -2401,12 +2286,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C106858
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:40:51Z'
     jlc_stock: 320883
-    lcsc_read_utc: '2026-09-27T20:40:52Z'
-    lcsc_stock: 258940
     need_5_kits: 7
     status: IN_STOCK
 - id: S-69d0f41966
@@ -2457,12 +2338,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C106858
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:40:51Z'
     jlc_stock: 320883
-    lcsc_read_utc: '2026-09-27T20:40:52Z'
-    lcsc_stock: 258940
     need_5_kits: 7
     status: IN_STOCK
 - id: S-bd25452813
@@ -2513,12 +2390,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C106858
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:40:51Z'
     jlc_stock: 320883
-    lcsc_read_utc: '2026-09-27T20:40:52Z'
-    lcsc_stock: 258940
     need_5_kits: 7
     status: IN_STOCK
 - id: S-9121e77997
@@ -2570,12 +2443,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C106858
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:40:51Z'
     jlc_stock: 320883
-    lcsc_read_utc: '2026-09-27T20:40:52Z'
-    lcsc_stock: 258940
     need_5_kits: 7
     status: IN_STOCK
 - id: S-a9d5694441
@@ -2627,12 +2496,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C106858
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:40:51Z'
     jlc_stock: 320883
-    lcsc_read_utc: '2026-09-27T20:40:52Z'
-    lcsc_stock: 258940
     need_5_kits: 7
     status: IN_STOCK
 - id: S-5eeee312c8
@@ -2680,12 +2545,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C106248
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:40:53Z'
     jlc_stock: 904962
-    lcsc_read_utc: '2026-09-27T20:40:49Z'
-    lcsc_stock: 873600
     need_5_kits: 259
     status: IN_STOCK
 - id: S-62ab53c6e1
@@ -2743,12 +2604,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C90057
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:42:58Z'
     jlc_stock: 119180
-    lcsc_read_utc: '2026-09-27T20:42:58Z'
-    lcsc_stock: 105810
     need_5_kits: 7
     status: IN_STOCK
 - id: S-5ae2e5c268
@@ -2820,12 +2677,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C1002
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:44:20Z'
     jlc_stock: 765968
-    lcsc_read_utc: '2026-09-27T20:44:21Z'
-    lcsc_stock: null
     need_5_kits: 23
     status: IN_STOCK
 - id: S-23fe50c33a
@@ -2904,12 +2757,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C22775
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:44:42Z'
     jlc_stock: 12300136
-    lcsc_read_utc: '2026-09-27T20:44:42Z'
-    lcsc_stock: 6353600
     need_5_kits: 95
     status: IN_STOCK
 - id: S-a44109c662
@@ -2957,12 +2806,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C25803
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:44:43Z'
     jlc_stock: 22800506
-    lcsc_read_utc: '2026-09-27T20:44:44Z'
-    lcsc_stock: 16266100
     need_5_kits: 375
     status: IN_STOCK
 - id: S-d499541fe0
@@ -3067,12 +2912,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C25804
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:44:52Z'
     jlc_stock: 22820798
-    lcsc_read_utc: '2026-09-27T20:44:52Z'
-    lcsc_stock: 0
     need_5_kits: 986
     status: IN_STOCK
 - id: S-e35e0a5cd2
@@ -3134,12 +2975,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C22828
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:45:12Z'
     jlc_stock: 2453038
-    lcsc_read_utc: '2026-09-27T20:45:12Z'
-    lcsc_stock: 2382900
     need_5_kits: 62
     status: IN_STOCK
 - id: S-0baee211d0
@@ -3193,12 +3030,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C21190
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:45:17Z'
     jlc_stock: 23613048
-    lcsc_read_utc: '2026-09-27T20:45:17Z'
-    lcsc_stock: 5465700
     need_5_kits: 397
     status: IN_STOCK
 - id: S-bf6f910c86
@@ -3285,12 +3118,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C4190
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:45:18Z'
     jlc_stock: 7860795
-    lcsc_read_utc: '2026-09-27T20:45:18Z'
-    lcsc_stock: 6024300
     need_5_kits: 78
     status: IN_STOCK
 - id: S-b3916fa625
@@ -3350,12 +3179,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C25190
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:45:40Z'
     jlc_stock: 116177
-    lcsc_read_utc: '2026-09-27T20:45:40Z'
-    lcsc_stock: 27300
     need_5_kits: 23
     status: IN_STOCK
 - id: S-293aa5edf9
@@ -3407,12 +3232,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C23025
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:45:49Z'
     jlc_stock: 1620511
-    lcsc_read_utc: '2026-09-27T20:45:49Z'
-    lcsc_stock: 1018700
     need_5_kits: 39
     status: IN_STOCK
 - id: S-f8c96deae3
@@ -3496,12 +3317,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C23179
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:46:14Z'
     jlc_stock: 6637323
-    lcsc_read_utc: '2026-09-27T20:46:14Z'
-    lcsc_stock: 4716100
     need_5_kits: 23
     status: IN_STOCK
 - id: S-8fcb029420
@@ -3555,12 +3372,8 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C414503
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: expand
     jlc_read_utc: '2026-09-27T20:46:15Z'
     jlc_stock: 5024
-    lcsc_read_utc: '2026-09-27T20:46:16Z'
-    lcsc_stock: 5024
     need_5_kits: 7
     status: IN_STOCK
 - id: S-6b277c1b9f
@@ -3602,11 +3415,7 @@ selections:
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
     code: C23182
-    distributor: LCSC (the JLCPCB parts library carries the same code)
-    jlc_library: base
     jlc_read_utc: '2026-09-27T20:46:19Z'
     jlc_stock: 1280224
-    lcsc_read_utc: '2026-09-27T20:46:19Z'
-    lcsc_stock: 515000
     need_5_kits: 12
     status: IN_STOCK
