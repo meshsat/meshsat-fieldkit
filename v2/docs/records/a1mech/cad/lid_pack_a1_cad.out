@@ -1,0 +1,18 @@
+Solids check of v2/cad/lid_pack_a1.py (build123d): the module's zones at the WORST room (face top Z 0, ceiling Z 44.39), lowered by their own
+allowances, against the face parts grown 1.06 in plan and standing 1.0 above their height (a TBD part to the ceiling).
+Every intersection must be 0.000 mm3 where lid_pack_a1.out reads 1.0 or more at the worst. Prototype design, AI review.
+
+A    HF kept, 8 inch tablet kept                    zones  10 x face parts  47: intersections none (0.000 mm3)
+B    HF kept, no tablet in the lid                  zones  30 x face parts  47: intersections none (0.000 mm3)
+C    8 inch tablet kept, HF out of the lid          zones  17 x face parts  47: intersections none (0.000 mm3)
+C10  10 inch tablet kept, HF out of the lid         zones  10 x face parts  47: intersections none (0.000 mm3)
+D    HF and tablet both out of the lid              zones  39 x face parts  47: intersections none (0.000 mm3)
+
+CONTROL 1, which must FAIL: arrangement B with the ceiling 2.5 lower: 26 zone and part pairs intersect (must be > 0)
+CONTROL 2, which must FAIL: arrangement B's west edge 3.0 further west, over the SOS guard's cap: 1 intersections (must be > 0)
+
+ARRANGEMENT B solids, case frame, lid closed, ceiling Z 154.44: plate 213.8 x 227.1 x 2.0; 56 cells d 18.55 x 65.25 (the sheet's maxima);
+cell volume outside the module's envelope: 0.000 mm3 (must be 0.000); lowest point of the envelope Z 114.38 (face top 106.52 nominal: 7.86)
+
+RESULT: PASS: no zone meets a face part at the worst, every control fails as it must, every cell inside its envelope
+files: lid-pack-a1-B-module.step/.stl (plate, cells, P2 envelope), lid-pack-a1-B-envelope.step (the zones the face rows are judged on)

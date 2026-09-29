@@ -359,8 +359,8 @@ def sheet5(pdf, arr):
               "VERDICT: stands on level ground to 120 degrees of opening in every",
               "swept case; a light base tips from 135. FIX (SESSION, reversible):",
               "a lid stay stopping the lid at 100 degrees (webbing strap between",
-              "two bonded anchors, lid wall and frame skirt; no hole; about",
-              "EUR 10, ESTIMATE). With it the open case stands on a back slope",
+              "two bonded anchors, lid back wall and plate back band; no hole;",
+              "about EUR 10, ESTIMATE). With it the open case stands on a slope",
               "of about 10 degrees at the worst (lid_pack_a1.out section 4).",
               "The stop angle, the hinge axis and the case's CG are read on the",
               "mock-up (T-A1-3); Peli states no load for its hinges (T-A1-4)."]

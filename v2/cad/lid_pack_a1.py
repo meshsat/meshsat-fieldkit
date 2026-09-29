@@ -203,6 +203,8 @@ def build(name, x_w, x_e, y_n, n_slices, tablet=None, tablet_rect=None, qmx=True
         keep = [c for c in cells0 if not overlap(cell_fp(c) if c["layer"] == 1 else l2_fp(c), r, 2.0)]
         if best is None or len(keep) > len(best[1]):
             best = (r, keep)
+    if best is None:
+        return None                                   # no corner of the module can take P2 with this tablet place
     p2_rect, cells = best
     removed = [c for c in cells0 if c not in cells]
     return dict(name=name, x_w=x_w, x_e=x_e, y_s=min(s[2] for s in south), y_n=y_n, n_slices=n_slices, south=south,
@@ -251,27 +253,46 @@ def check(a, out):
             if f[0] < tr[2] and tr[0] < f[2]:
                 gaps.append(tr[1] - f[3] if f[3] <= tr[1] else f[1] - tr[3])
         plan.append(("tablet bracket to the nearest two-layer zone, in Y", min(gaps) if gaps else 99.0, 0.0))
-        plan.append(("tablet bracket west edge to the guard caps (X -143.0) with the plan allowance", tr[0] - (-143.0 + PLAN_ALLOW), 0.0))
-        plan.append(("tablet bracket south edge to the sounder ring (Y -79.1) with the plan allowance", tr[1] - (-79.1 + PLAN_ALLOW), 0.0))
+        cap = [f[1] for f in FACE if f[0] == "SW_SOS_GUARD"][0]; bz = [f[1] for f in FACE if f[0] == "BZ1"][0]
+        if tr[0] < cap[2] + PLAN_ALLOW + 20.0:
+            plan.append(("tablet bracket west edge to the guard caps (X -143.0) with the plan allowance", tr[0] - (cap[2] + PLAN_ALLOW), 0.0))
+        if tr[0] < bz[2] + PLAN_ALLOW:
+            plan.append(("tablet bracket south edge to the sounder ring (Y -79.1) with the plan allowance", tr[1] - (bz[3] + PLAN_ALLOW), 0.0))
     return rows, plan
 
 
 def best_tablet(name, x_w, x_e, n_slices, t, qmx):
-    """The tablet's bracket placed at every Y (1 mm steps) from the sounder's limit to the ceiling's north edge; the place that keeps
-    the most cells is taken (the tablet under the one-layer zone costs the two-layer places above its band)."""
+    """The tablet's bracket tried landscape and portrait, at every X (1.0 mm steps) and Y (0.5 mm) inside the free plan (west of the QMX tray
+    when it is kept, east of the guard caps, inside the flat ceiling, 0.5 clear of the sounder ring or north of it); the place that
+    keeps the most cells is taken (the tablet under the one-layer zone costs the two-layer places above its band). Every face row of
+    the chosen place is then checked like any other zone."""
     y_n = CEIL_FLAT[1] - 1.0
-    tw, th = t["w"] + 2 * LIP, t["h"] + 2 * LIP
     x_lim = (QMX["rect"][0] - 1.0) if qmx else (CEIL_FLAT[0] - 1.0)
-    if x_w + tw > x_lim:
-        return None
-    y0 = -79.1 + PLAN_ALLOW + 0.50                   # the bracket's south edge 0.5 clear of the sounder ring with the plan allowance
-    best = None
-    while y0 + th <= y_n + 1e-9:
-        tr = (x_w, y0, x_w + tw, y0 + th)
-        a = build(name, x_w, x_e, y_n, n_slices, tablet=t, tablet_rect=tr, qmx=qmx)
-        if best is None or len(a["cells"]) > len(best["cells"]):
-            best = a
-        y0 += 1.0
+    x_min = -143.0 + PLAN_ALLOW                      # east of the guard caps with the plan allowance
+    best, tried = None, 0
+    def steps(lo, hi, d):
+        v, out = lo, []
+        while v <= hi + 1e-9:
+            out.append(v); v += d
+        if out and hi - out[-1] > 1e-6: out.append(hi)          # the far bound itself is always tried
+        return out
+    for tw, th in ((t["w"] + 2 * LIP, t["h"] + 2 * LIP), (t["h"] + 2 * LIP, t["w"] + 2 * LIP)):
+        for x0 in steps(x_min, x_lim - tw, 1.0):
+            for y0 in steps(-y_n, y_n - th, 0.5):
+                tr = (x0, y0, x0 + tw, y0 + th)
+                if any(overlap(tr, f[1], PLAN_ALLOW) and (f[2] is None or margins(tablet_depth(t), f[2], OWN_SUM + TAB_OWN)[1] < MIN_CLEAR) for f in FACE):
+                    continue
+                a = build(name, x_w, x_e, y_n, n_slices, tablet=t, tablet_rect=tr, qmx=qmx)
+                if a is None:
+                    continue
+                under = [sl[2] for sl in a["south"] if sl[0] < tr[2] and tr[0] < sl[1]]
+                if tr[0] < x_w - 10.0 or tr[2] > x_e + 10.0 or tr[1] < max(under) - 10.0:
+                    continue                                  # the bracket overhangs the module's cover by more than 10 (INFERRED limit)
+                tried += 1
+                if best is None or len(a["cells"]) > len(best["cells"]):
+                    best = a
+    if best:
+        best["tablet_places_tried"] = tried
     return best
 
 
@@ -458,6 +479,7 @@ def main(fp):
         w("       " + "; ".join("X %.2f..%.2f from Y %.2f, %d" % sl for sl in a["south"]))
         w("     P2 at X %.2f..%.2f, Y %.2f..%.2f (the corner that costs the fewest cells)" % (a["p2_rect"][0], a["p2_rect"][2], a["p2_rect"][1], a["p2_rect"][3]))
         if a["tablet"]:
+            w("     tablet places tried (landscape and portrait, 1.0 mm in X and 0.5 mm in Y and both bounds, every face row met at the worst): %d; the best kept" % a.get("tablet_places_tried", 0))
             t = a["tablet"]; tr = a["tablet_rect"]
             w("     tablet %s %.0f x %.0f x %.1f in a bracket %.0f x %.0f (lips %.1f), X %.2f..%.2f, Y %.2f..%.2f, depth %.2f from the ceiling" % (
                 t["name"], t["w"], t["h"], t["t"], tr[2] - tr[0], tr[3] - tr[1], LIP, tr[0], tr[2], tr[1], tr[3], tablet_depth(t)))
@@ -592,8 +614,9 @@ def main(fp):
     w("   verdict (B): the open case stands on level ground up to a lid opening of %s degrees in every swept case; beyond it a light base with" % (
         "%d" % max(p for p in (90, 100, 110, 120, 135, 150) if lim[("B", p)] > 0)))
     w("   its CG back and high tips on level ground (first at %s degrees swept). Fix, the session's (authority SESSION, reversible): a lid stay" % tip_phi)
-    w("   that stops the lid at 100 degrees (a webbing strap between two bonded anchors, one on the lid's inner wall, one on the frame's")
-    w("   skirt; no hole in the case; about EUR 10, ESTIMATE), which also carries the lid's added mass off Peli's hinge stop. With it the")
+    w("   that stops the lid at 100 degrees (a webbing strap between two bonded anchors, one on the lid's inner back wall, one on the face")
+    w("   plate's rebated back band; no hole in the case or the plate; about EUR 10, ESTIMATE; it folds into the back channel when the lid")
+    w("   closes), which also carries the lid's added mass off Peli's hinge stop. With it the")
     w("   worst back slope the open case stands on is %.1f deg (B) and %.1f deg (A); the operator's sheet states: open the lid only on ground" % (lim[("B", 100)], lim[("A", 100)]))
     w("   sloping less than %d degrees toward the hinge side. If Peli's own stop is at or under 100 degrees the stay is not needed for" % math.floor(lim[("B", 100)]))
     w("   stability; the stop angle and the hinge axis are read on the mock-up (T-A1-3).")
