@@ -14,8 +14,14 @@ and asks of it what apply_gen_sch_a_s117.py drew, part by part and net by net:
   CDIFF C121 10 nF across CH_ACP_F and CH_ACN_F (10.2.2.2, page 84: 10 nF at 400 kHz)
 Values are compared as numbers read from the value text (the leading figure and its multiplier), never as strings.
 
-Usage: readback_s117.py [<netlist.net>]   (default: board A's committed netlist, v2/ecad/pcb-a-power-a23/out/pcb-a-power.net)
-Exit 0 every check holds, 1 a check fails, 3 the netlist cannot be read."""
+With --against <old.net> it also compares the two parsed netlists and refuses any difference beyond the S-117 change:
+the references added must be exactly R219, R220, C233, C234 and C235, none removed, the parts whose value or land moved
+exactly L2, R25, C26 and C27, and the nets whose members moved exactly IADPT, CH_COMP1, CH_COMP2, CH_COMP2C and GND, each by
+exactly the pins the change draws (the regeneration parity check for this one board).
+
+Usage: readback_s117.py [<netlist.net>] [--against <old.net>]   (default: board A's committed netlist,
+       v2/ecad/pcb-a-power-a23/out/pcb-a-power.net)
+Exit 0 every check holds, 1 a check fails, 3 a netlist cannot be read."""
 import hashlib, os, re, subprocess, sys
 
 sys.dont_write_bytecode = True
@@ -114,14 +120,46 @@ def check(doc):
     return res
 
 
+NEW_REFS = {"R219", "R220", "C233", "C234", "C235"}
+CHANGED_PARTS = {"L2", "R25", "C26", "C27"}
+# (net, reference, pin) added or removed by the change; r() and c() draw pin 1 on their first net and pin 2 on the second
+NET_DELTA = {("IADPT", "R219", "1"), ("GND", "R219", "2"), ("IADPT", "C233", "1"), ("GND", "C233", "2"),
+             ("CH_COMP1", "C234", "1"), ("GND", "C234", "2"), ("CH_COMP2", "R220", "1"), ("CH_COMP2C", "R220", "2"),
+             ("CH_COMP2C", "C235", "1"), ("GND", "C235", "2")}
+
+
+def against(new, old):
+    """[(name, ok, detail)]: the difference between two parsed netlists, held to exactly the S-117 change."""
+    res = []
+    nc, oc = new["components"], old["components"]
+    added, removed = set(nc) - set(oc), set(oc) - set(nc)
+    res.append(("parts added are exactly the five new ones", added == NEW_REFS, "added %s" % sorted(added)))
+    res.append(("no part removed", not removed, "removed %s" % sorted(removed)))
+    moved = {r for r in set(nc) & set(oc) if (nc[r]["value"], nc[r]["footprint"]) != (oc[r]["value"], oc[r]["footprint"])}
+    res.append(("parts changed are exactly L2, R25, C26, C27", moved == CHANGED_PARTS, "changed %s" % sorted(moved)))
+    def triples(doc): return {(n, r, p) for n, ms in doc["nets"].items() for r, p, *_ in ms}
+    tn, to = triples(new), triples(old)
+    delta = (tn - to) | (to - tn)
+    res.append(("net members moved exactly by the change's pins", delta == NET_DELTA,
+                "beyond the change: %s; missing: %s" % (sorted(delta - NET_DELTA)[:12], sorted(NET_DELTA - delta)[:12])))
+    return res
+
+
 def main(argv):
-    path = argv[1] if len(argv) > 1 else DEFAULT
+    args = [a for a in argv[1:]]
+    old_path = None
+    if "--against" in args:
+        k = args.index("--against")
+        if k + 1 >= len(args): print("readback_s117: --against needs the old netlist"); return 3
+        old_path = args[k + 1]; del args[k:k + 2]
+    path = args[0] if args else DEFAULT
     try:
         doc = N.load(path)
+        old = N.load(old_path) if old_path else None
     except Exception as e:  # a netlist that cannot be read decides nothing
-        print("readback_s117: INCONCLUSIVE: %s cannot be read (%s)" % (path, e))
+        print("readback_s117: INCONCLUSIVE: a netlist cannot be read (%s)" % e)
         return 3
-    res = check(doc)
+    res = check(doc) + (against(doc, old) if old is not None else [])
     sha = hashlib.sha256(open(path, "rb").read()).hexdigest()
     print("readback_s117: %s (sha256/16 %s)" % (os.path.relpath(path, TOP) if path.startswith(TOP) else path, sha[:16]))
     for name, ok, detail in res:

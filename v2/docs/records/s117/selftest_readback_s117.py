@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """The read-back's own test (stream s117, MESHSAT-1357, 29 September 2026): readback_s117.check() must FAIL on board A's
 committed netlist, PASS on a synthetic netlist that carries exactly what apply_gen_sch_a_s117.py draws, and FAIL on each
-mutant of that synthetic netlist (one wrong thing at a time). The synthetic netlist is the committed one, parsed, with the
+mutant of that synthetic netlist (one wrong thing at a time); against() must hold the synthetic netlist to exactly the
+change and refuse one more. The synthetic netlist is the committed one, parsed, with the
 drawn change made to the parsed structure; nothing is written to disk. Exit 0 when every case reads as it must."""
 import copy, os, subprocess, sys
 
@@ -94,6 +95,18 @@ def main():
         r = RB.check(d)
         bad = [n for n, ok, _ in r if not ok]
         print("mutant %-40s %s -> %s" % (name + ":", "FAIL (%s)" % "; ".join(bad) if bad else "PASS", "as it must" if bad else "WRONG"))
+        fails += not bad
+    # --against: the synthetic regeneration against the committed netlist holds to exactly the change; one more change fails
+    ra = RB.against(good, base)
+    oka = all(ok for _, ok, _ in ra)
+    print("against, synthetic after vs committed: %s -> %s" % ("PASS" if oka else "FAIL", "as it must" if oka else "WRONG"))
+    fails += not oka
+    for name, fn in (("R24's value moved too", lambda d: put(d, "R24", "22k", R0603, {"1": "PSYS", "2": "GND"})),
+                     ("a sixth new part", lambda d: put(d, "C999", "100n", C0603, {"1": "IADPT", "2": "GND"})),
+                     ("R219 drawn to +3V3 instead of GND", lambda d: put(d, "R219", "191k 1%", R0603, {"1": "IADPT", "2": "+3V3"}))):
+        d = copy.deepcopy(good); fn(d)
+        bad = [n for n, ok, _ in RB.against(d, base) if not ok]
+        print("against, mutant %-34s %s -> %s" % (name + ":", "FAIL (%s)" % "; ".join(bad) if bad else "PASS", "as it must" if bad else "WRONG"))
         fails += not bad
     print("selftest_readback_s117: %s" % ("every case as it must" if not fails else "%d case(s) WRONG" % fails))
     return 0 if not fails else 1

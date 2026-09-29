@@ -17,4 +17,8 @@ mutant C235 at the 800 kHz row's 1200 pF:       FAIL (C235 is 680 pF to GND) -> 
 mutant C27 left at 1 nF:                        FAIL (C27 is 15 pF to GND) -> as it must
 mutant R220 on the wrong net:                   FAIL (CH_COMP1 holds U3, R25 and C234 only; CH_COMP2 holds U3, R220 and C27 only) -> as it must
 mutant C121 removed (the 800 kHz permission):   FAIL (C121 is 10 nF across CH_ACP_F and CH_ACN_F) -> as it must
+against, synthetic after vs committed: PASS -> as it must
+against, mutant R24's value moved too:             FAIL (parts changed are exactly L2, R25, C26, C27) -> as it must
+against, mutant a sixth new part:                  FAIL (parts added are exactly the five new ones; net members moved exactly by the change's pins) -> as it must
+against, mutant R219 drawn to +3V3 instead of GND: FAIL (net members moved exactly by the change's pins) -> as it must
 selftest_readback_s117: every case as it must

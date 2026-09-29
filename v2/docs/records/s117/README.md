@@ -93,6 +93,10 @@ pF or less to GND; CH_COMP1 and CH_COMP1C, CH_COMP2 and CH_COMP2C with their mem
 sense). `selftest_readback.out`: FAIL on the committed netlist, PASS 23 of 23 on a synthetic netlist carrying the change,
 and FAIL on each of 17 mutants (the 3.3 uH part, the XAL60xx land, 169 k, 5 %, no tolerance, to +3V3, 150 pF, either part
 missing, a second resistor, the 800 kHz row's R25, C26 and C235, C27 left at 1 nF, R220 on the wrong net, C121 removed).
+With `--against <old.net>` it also holds the regenerated netlist to exactly this change: the five new references added,
+none removed, only L2, R25, C26 and C27 changed in value or land, and the net members moved by exactly the ten pins the
+change draws (on IADPT, CH_COMP1, CH_COMP2, CH_COMP2C and GND); the self-test passes the synthetic netlist against the
+committed one and refuses three one-more-change mutants.
 
 **Layout, owed (S-115's pass):** the XAL1010 body is 11.3 x 10.0 mm and 10.0 mm tall where `gen_pcb_a3.py`'s fixed CHQ seat
 for L2 at (-101.02, 26.3) was sized for a 7.15 x 7.35 mm courtyard between Q9 and Q8, and R219, R220, C233 to C235 need seats
@@ -155,7 +159,10 @@ On the runner, at the merge, in order: `apply_decision_s117.py`, `decisions_rend
 `build_sch.sh` for ERC, netlist, `sch_prov` write, PDF and BOM, `erc_gate.py --run`, `regen_compare.py pair`). Expected:
 parity DIFFERENT on board A's netlist, exactly L2, R25, C26, C27 changed, R219, R220, C233, C234, C235 and the net CH_COMP2C
 added; no other board's sidecar moves (only `gen_sch_a.py` changed); three BOM lines blank until the parts stream enters
-codes. Back on the runner: `readback_s117.py` on the committed netlist (must read PASS, 23 of 23); the schematic-phase
+codes. On the box, before the pack, in the clone: `python3 v2/docs/records/s117/readback_s117.py
+v2/ecad/pcb-a-power-a23/out/pcb-a-power.net --against /root/<dir>/regen/a/ref/pcb-a-power.net` (27 of 27: the read-back
+and the parity of this board in one run). Back on the runner: `readback_s117.py` on the
+committed netlist (must read PASS, 23 of 23); the schematic-phase
 re-take of board A's readings and the rebind of CON-018, CON-019, CFL-014, CFL-016 and REQ-077 (their citations of
 `gen_sch_a.py` shift: old lines up to 860 unchanged, 862 to 909 by +16, 911 and after by +30); `apply_registry_s117.py
 close <commit>`; `rules_render.py --requirements` and `rules_render.py`. PARTS.md's inventory gains XAL1010-472ME (covered
