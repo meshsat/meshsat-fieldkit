@@ -263,6 +263,26 @@ statements), and S-123.
     the absent rule holds through its 0 UNJUDGED;
   * needs the check committed at HEAD, starting `mergeable: yes`, and naming every document and `verdicts.out`;
   * then closes S-122 and sets CFL-016 to PASS.
+* **Round 4, replayed on a throwaway clone of `e5fdf670` (deleted after):**
+  * the six outputs reproduce byte for byte (`inventory.out` and `verdicts.out`; `-base` with `S122_AT=e57a7365`;
+    `-set14` with `S122_AT=1bafab8c`);
+  * `apply_docs_s122_r4.py` refuses on the tip; with the four files checked out from `1bafab8c` it writes 12 edits
+    after 51 assertions and the tree equals the tip byte for byte; a second run refuses;
+  * the gate refused: a finder rigged to know only check-int15-1's five part numbers (at a part number made up at run
+    time); V2-SPEC.md and OPERATING-ENVELOPE.md put back to `1bafab8c` (line 47 still names the WM8960); the B16 row
+    relabelled "B16 (compute)" with "TMDS351" in place of the TS3DV642 (named, not the generated part); the E6 row with
+    "the LM5176 9 to 36 V front end, all under A22" (the LM5176 in a dock strip sentence other than as A22's); line 47
+    with a WM8731 codec; the B-key row naming a Molex socket (no corrected sentence stands); a TRACO TEN 60 row; the
+    B16 row judged HISTORY (not TRUE); the B16 row TRUE without its U3 and U4 assertions; a check without the marker;
+  * `apply_registry_s122_r4.py` rebound 5 records (CFL-010, CFL-013, CFL-014, CFL-016, REQ-005), wrote CFL-016's entry
+    and note and S-122's sentence, re-pinned the envelope and ENV-001 to `26e98ecfd2e4ec2f`, and refused a second run;
+    `rules_lib.py requirements`: 144 records, 0 errors, 0 warnings; `rules_lib.py`: 59 rules, 0 errors;
+  * `test_envelope_data` with `test_requirements`: 69 passed and 2 failed (the trace page) before
+    `rules_render.py --requirements`, 71 passed after;
+  * the closure refused the fixture while only staged (its provenance), closed S-122 with it committed (not filed; the
+    marker and the six lines; 985 sentences, 0 STALE, 0 UNJUDGED; CFL-016 PASS; S-42, S-123 and S-124 still open) and
+    refused a second run; after it `rules_lib.py requirements` 0 errors, the tests 71 passed, `claims_check` PASS, 91
+    of 91.
 * **Round 3, replayed on a throwaway clone of `89b9ac6b` (deleted after):**
   * the four outputs reproduce byte for byte, the base's with `S122_AT=e57a7365`;
   * `apply_docs_s122_r3.py` refuses on the tip; with PANEL.md, V2-SPEC.md and DEFINITION-STATUS.md checked out from

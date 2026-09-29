@@ -128,3 +128,12 @@ No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py
     fixture with the marker and no lines listing the six lines.
   - `apply_registry_s122_r4.py` written (rebinds against `1bafab8c`, CFL-016's entry and note, S-122's sentence, the
     envelope re-pin); its two new sentences pass claims_check's screen.
+- 21:20 Committed `e5fdf670` behind the pre-commit PASSED line. Replay on a throwaway clone of it: the six outputs byte
+  identical; `apply_docs_s122_r4.py` from `1bafab8c`'s four files gives the tip byte for byte and refuses a second run;
+  the gate refused ten mutants (a rigged finder, the documents at `1bafab8c`, TMDS351 with the row relabelled, the
+  LM5176 back in the E6 row "all under A22", a WM8731 codec, a Molex B-key row, a TRACO TEN 60 row, the B16 row judged
+  HISTORY, the B16 row without its U3 and U4 assertions, a check without the marker);
+  `apply_registry_s122_r4.py` rebound 5 records and refused a second run; `rules_lib.py requirements` 144 records, 0
+  errors, 0 warnings; the tests 69 passed and 2 failed before the trace page's render, 71 passed after; the closure
+  refused the fixture while staged, closed S-122 with it committed (CFL-016 PASS; S-42, S-123, S-124 open) and refused a
+  second run; after it 0 errors, 71 passed, `claims_check` PASS 91 of 91. The clone is deleted.
