@@ -41,3 +41,19 @@
   way from then on; re-pinned to the new reading; applied once and refused once on a scratch copy.
 - The check without the held sheet: 13 UNREAD, 13 problems; with `--unfetched-ok` 0 problems.
 - 19:53 commit `ebe2a084`.
+
+## Round 3 (the independent check of `6b03ef6f`: 5 blocking, 12 minor)
+
+- 20:25 read `_scratch/chk-w5identc/CHECK.md` whole. `scan_vendor.py` run once, niced, over every PDF under v2/vendor
+  (429 read, 11 without text): the part numbers the table leaves UNRESOLVED and a few named in values.
+- B1: `check` derives requirements from the rows; the mutant test. B2: `SCHEMES` in the tool, layouts read from the
+  pages, positional slicing, kind and property coverage; the first positional version still accepted Uniroyal's
+  packaging and special swapped (each row was only asked to be on the page), so each row is now tied to its own
+  position's part of the page; the check's probes as tests; 24 of 24.
+- 20:31 checkpoint `c78c70d1`.
+- B4 and B5 in the builder (`reread`, every fact asserted); J_MAINSW to UNRESOLVED under rule N-1; C31's new reason class.
+- B3: `apply_rebind_decisions_w5identc.py` on the int14 pattern, called by `apply_decision_decoded.py`.
+- Minors: decision text, the disposition, Yageo's sources line, `HOLDS_WITH_UNREAD`, `draft_gen_c_c1_c2.py` (check mode
+  only), order-code notes per selection.
+- 20:39 commit `3f9fe6f6`. Scratch clone of int15 `097d2517`, branch merged clean, the chain run (results in the README), then
+  the same on the tip; the clone removed (disk 7.0 GB free after, 20:42).
