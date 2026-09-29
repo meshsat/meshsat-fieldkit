@@ -1614,7 +1614,7 @@ J.update({
     "75f96bbf14": T("round 4's correction note: no netlist carries a TRACO part; board E's U6 is the LM5069; the generator's "
                     "words; the range TI's 7.3", "A:!~TRACO", "B:!~TRACO", "C:!~TRACO", "D:!~TRACO", "E:!~TRACO", "P:!~TRACO",
                     "E:!~40-2412WIN", "E:U6~LM5069", "DOC:v2/ecad/tools/gen_sch_e.py~the isolated TRACO converter of E4 is gone",
-                    "PDF:v2/vendor/ti/ti-lm5069.pdf~7.3 Recommended Operating Conditions|TJ Junction temperature –40 125 °C",
+                    "PDF:v2/vendor/ti/ti-lm5069.pdf~7.3 Recommended Operating Conditions|Junction temperature|40 125 °C (1) For detailed information",
                     parts_ok={"TEN 40-2412WIN": "asserted: E:!~40-2412WIN"}),
     "3641ee0106": T("round 4's correction note: no netlist carries the MDT420B01001; board B's B-key socket is TE 2199119-3 "
                     "J_M2C2 at -40 to +80 C (TE's brochure, and Amphenol's sheet the same), and the Amphenol M-key "
@@ -1811,4 +1811,77 @@ J.update({
     "fa00f9ca7e": S("check-s122-4 m3: board C carries seventeen 3 mm LEDs, D22 the seventeenth; the heading's date excuses "
                     "no count (corrected in round 5, correction 35)", "C:#fp~LED_D3.0mm=17", "C:D22~EMCON"),
     "3f5e49de5a": S("the TRACO sheet of a converter no netlist carries (the row replaced in round 4)", "E:!~TRACO"),
+})
+
+# ================================================================== ROUND 6 (check-s122-5: B1 the exciter's rating; the figures)
+# every figure-and-unit token on a line of the closing list (close_s122.py's scan: a number with a unit, a range, an
+# 'N x M' size, a 'NxM' header, a spelled count) is bound in `figures_ok` (or an 'asserted:' entry of `counts_ok`) to one
+# of the judgement's own assertions whose stated content carries its numbers: a netlist value, a board file's outline,
+# layers, cutout or zones, a maker's page, or, for a figure about a ruling, the decision's own record
+SA868 = "v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf"
+RA30 = "PDF:v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf~RA30H1317M1 RoHS Compliance, 135-175MHz 30W 12.5V"
+EX2 = "D:U2~NiceRF SA868 VHF 2 W exciter"
+DCIN = "E:J_DCIN~9 to 36 V"
+F81 = {"240 x 160 mm": "PCB:A:outline=240x160", "six layers": "PCB:A:layers=6",
+       "14.4 V node": "PDF:v2/vendor/battery/ti-bq4050.pdf~VCC = 14.4 V", "9 to 36 V input": DCIN,
+       "three 5.1 V slot rails": "A:#val~5.1 V rail to B16=3",
+       "all four AP64500 on 7 September": "CNT@b2709118:v2/ecad/tools/gen_sch_a.py~AP64500 5.1 V + INA226=4",
+       "13.8 V PA": "A:U13~+13V8_PA", "12 V HF": "A:U15~+12V_HF", "54 V PoE": "A:U16~+54V_POE",
+       "45 W USB-C outlet": "A:U18~45 W outlet", "3.3 V logic": "A:U12~3.3 V logic",
+       "eleven SMP-MAX blind-mate sites": "A:#fp~Radiall_SMPMAX=11", "2x13 ribbon": "A:J_AB1~IDC 2x13"}
+F82 = {"330 x 200 mm": "PCB:B:outline=330x200", "six layers": "PCB:B:layers=6", "In4 the 5 V planes": "PCB:B:zone=In4.Cu~+5V",
+       "measured on eight layers first": "DEC:43.outcome~board B is regenerated and routed once on eight layers",
+       "three CM5 slots": "B:#fp~CM5_Conn_A_10164227=3", "two CAN-FD fabrics": "B:U41~two CAN-FD fabrics",
+       "seven 2-of-3 voters": "B:#net~_CA=7", "two E72": "B:#val~E72-2G4M20S1E=2"}
+F83 = {"344 x 228 ring": "PCB:C:outline=344x228", "240 x 176 void": "PCB:C:hole=240x176", "four layers": "PCB:C:layers=4",
+       "six ruled by the owner on 25 Sep 2026, decision 27": "DEC:27.outcome~six layers for board C",
+       "seventeen 3 mm LEDs": "C:#val~3 mm=17", "two PCA9555": "C:#val~PCA9555=2"}
+F84 = {"100 x 80 mm": "PCB:D:outline=100x80", "four layers": "PCB:D:layers=4"}
+F86 = {"267 x 68 mm": "PCB:E:outline=267x68", "four layers": "PCB:E:layers=4", "9 to 36 V input": DCIN,
+       "25 A fuse": "E:F3~25 A mini blade", "eleven float clamps": "PCB:E:zones~no copper under the float clamp=11"}
+
+
+def _figs(d, f, extra=(), **kw):
+    """Bind a judgement's figures: every value of `f` becomes one of its own assertions and its 'asserted:' figure."""
+    _add(d, a=list(f.values()) + list(extra), figures_ok={k: "asserted: " + x for k, x in f.items()}, **kw)
+
+
+_figs("a77bf9d173", F81, extra=["P:U1~4S balancing"], counts={"three 5.1 V slot": "asserted: A:#val~5.1 V rail to B16=3"})
+_figs("4d190b7091", F82, counts={"three CM5 slots": "asserted: B:#fp~CM5_Conn_A_10164227=3",
+                                 "three STM32H743 supervisors": "asserted: B:#val~STM32H743=3",
+                                 "two TS3DV642 display switches": "asserted: B:#val~TS3DV642=2"})
+_figs("3f426d1736", F83, counts={"seventeen 3 mm LEDs": "asserted: C:#val~3 mm=17"})
+_figs("2955447136", F84)
+_figs("ef24592b40", F86)
+_figs("e5f22b220e", {"9 to 36 V input": DCIN})
+J.update({
+    # line 47 as round 6 corrected it (correction 36)
+    "6df916ee4f": T("round 6's correction of line 47 (check-s122-5 B1, correction 36): D8's U2 is the SA868 VHF 2 W exciter, "
+                    "which the maker's sheet v1.3 rates 31 to 33 dBm high and 24 to 26 dBm low; the RA30H1317M1's sheet, "
+                    "held and a row of OPERATING-ENVELOPE.md section 2; the PCM2912A U6", EX2, "D:*~RA30H1317M1",
+                    "D:U6~PCM2912A", "D:!~WM8960", "PDF:%s~31 32.5 33 dBm|24 25 26 dBm" % SA868, RA30,
+                    "DOC:v2/docs/OPERATING-ENVELOPE.md~| Mitsubishi RA30H1317M1 30 W VHF power amplifier |",
+                    figures_ok={"SA868 VHF 2 W exciter": "asserted: " + EX2, "30 W VHF amplifier stage": "asserted: " + RA30}),
+    # line 47 as it stood at edead832 and a6429e66: the 1 W of the device set of 6 September
+    "c60dec6ff0": S("check-s122-5 B1: board D's U2 is the SA868 VHF 2 W exciter (the sheet v1.3: 31 to 33 dBm high), not a "
+                    "1 W part (corrected in round 6, correction 36)", EX2, "PDF:%s~31 32.5 33 dBm|24 25 26 dBm" % SA868),
+    # correction 36's sentences
+    "e2179973eb": T("round 6's correction 36: the device set of 6 September (appendix 32.49) named the SA868 a 1 W module, "
+                    "and line 47 said 1 W at a6429e66", "DOC:v2/docs/MESHSAT-709-geometry-appendix.md~### 32.49 The V2 device set",
+                    "DOC:v2/docs/MESHSAT-709-geometry-appendix.md~**NiceRF SA868 1 W module plus a 30 W VHF amplifier stage**",
+                    "DOC@a6429e66:v2/docs/V2-SPEC.md~NiceRF SA868 1 W with a 30 W VHF amplifier stage"),
+    "1f465555dc": T("round 6's correction 36: D's U2, the generator's rating since bdfc7b3f (not before it), the sheet v1.3",
+                    EX2, "DOC:v2/ecad/tools/gen_sch_d.py~the NiceRF SA868 VHF exciter (bench-fitted, 2 W high / 0.5 W low)",
+                    "DOC@bdfc7b3f:v2/ecad/tools/gen_sch_d.py~2 W high / 0.5 W low",
+                    "DOC@bdfc7b3f^:v2/ecad/tools/gen_sch_d.py!~2 W high", "PDF:%s~31 32.5 33 dBm|24 25 26 dBm" % SA868),
+    # two cells of the closing list's OPERATING-ENVELOPE.md rows that carry a figure and no name, so the inventory does not
+    # take them (s122lib.inventory reads a sentence that names something); close_s122.py's scan reads the listed lines
+    # whole and runs these judgements' assertions itself
+    "056f8a2031": T("board E's U6, the LM5069: its maker's recommended junction range (SNVS452G, 7.3)",
+                    "PDF:v2/vendor/ti/ti-lm5069.pdf~Junction temperature|40 125 °C (1) For detailed information on soldering plastic VSSOP",
+                    figures_ok={"-40 to +125 C": "asserted: PDF:v2/vendor/ti/ti-lm5069.pdf~Junction temperature|40 125 °C (1) "
+                                "For detailed information on soldering plastic VSSOP"}),
+    "21f5924adb": T("board B's J_M2C2, TE 2199119-3: its maker's service temperature",
+                    "PDF:v2/vendor/m2/te-2199119-m2-b-key.pdf~Service Temperature -40 ~ +80",
+                    figures_ok={"-40 to +80 C": "asserted: PDF:v2/vendor/m2/te-2199119-m2-b-key.pdf~Service Temperature -40 ~ +80"}),
 })

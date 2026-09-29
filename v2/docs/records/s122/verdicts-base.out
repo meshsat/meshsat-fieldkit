@@ -2507,7 +2507,7 @@ V2-SPEC.md#Open items (the generators have run; these remain owed):L76:para:s1 [
     judgement: the RockBLOCK 9704's ENABLE is forced low by the EMCON hardware since board B's stream w4b (U536, and U543 since set 12); what stays owed is the module's response when ENABLE falls (check-int13-3, B1)
     FAILS: LIS3MDL is on no netlist's part values
     names looked up: 0 parts, 0 nets
-    part numbers (8): ATECC608B on B (U8); DS3231 on B (BT1,U9); KSZ9897 on B (U1); RJ45 on B (J_ETH,T1,U1,U5); SA868 on D (U13,U2) (the sentence names ABCEP); TE 2199119-3 on B (J_M2C2); U-174/U on C (J_HSJ1,J_HSJ2), D (J_HS1,J_HS2)
+    part numbers (7): ATECC608B on B (U8); DS3231 on B (BT1,U9); KSZ9897 on B (U1); SA868 on D (U13,U2) (the sentence names ABCEP); TE 2199119-3 on B (J_M2C2); U-174/U on C (J_HSJ1,J_HSJ2), D (J_HS1,J_HS2)
     asserted (20): B U503.1 on EMCON_HW (netlist: EMCON_HW); B U503.2 on RB_SW_EN (netlist: RB_SW_EN); B U503.4 on RB_EN (netlist: RB_EN); B U503.5 on +3V3_DEV (netlist: +3V3_DEV); B R530.1 on RB_EN (netlist: RB_EN); B R530.2 on RB_UVLO (netlist: RB_UVLO); B U24 value has 'TPS259631' (netlist: 'TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))'); B U24.3 on RB_UVLO (netlist: RB_UVLO); B U24.4 on +5V_DEV (netlist: +5V_DEV); B U24.5 on +5V_RB (netlist: +5V_RB); B J_RB9704.15 on +5V_RB (netlist: +5V_RB); B U6 IO0_2 on RB_SW_EN (netlist: RB_SW_EN); B U536 value has 'SN74LVC1G08' (netlist: 'SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENA'); B U536.1 on EMCON_HW (netlist: EMCON_HW); B U536.2 on RB_SW_IEN (netlist: RB_SW_IEN); B U536.4 on RB_IEN_DRV (netlist: RB_IEN_DRV); B U536.5 on +3V3_DEV (netlist: +3V3_DEV); B U6 IO1_6 on RB_SW_IEN (netlist: RB_SW_IEN); B R532 value has '2.7k' (netlist: '2.7k 1%'); B R532.1 on RB_IEN_DRV (netlist: RB_IEN_DRV)
 V2-SPEC.md#Open items (the generators have run; these remain owed):L76:para:s2 [181b0ac69c] NOT DERIVABLE
     Closed on 7 Sep 2026: the PCIe switch (Diodes), the hubs, the display switch, the bridges, the controllers, the sensors' stock, the SA868 sheet, the PA sheet and heat path, Xenarc's drawing, the vent (none), the ASM118x question (0 stock).
@@ -2522,10 +2522,10 @@ V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owne
     power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 V node, BQ25731 SMBus charger, the 9 to 36 V input passed up from E6, three 5.1 V slot rails and a device rail (AP64500, INA226 monitored), the 13.8 V PA and 12 V HF rails (LM5176, EMCON gated), the 54 V PoE rail, the 45 W USB-C outlet (TPS25740 and TPS55288), 3.3 V logic, eleven SMP-MAX blind-mate sites, the D8 mezzanine site, the 2x13 ribbon to B16
     judgement: the A22 row names the TPS55288, which had left the design before the 7 September generation (gen_sch_a.py line 267 at c5de605d; check-s122-1 m7)
     FAILS: TPS55288 is on no netlist's part values
-    FAILS: AP64500 is given the slot rail; A:U5 is LM5176PWPR buck-boost controller, +5V_S2 from VBAT
-    FAILS: AP64500 is given the device rail; A:U7 is LM5176PWPR buck-boost controller, +5V_DEV from VBA
+    FAILS: AP64500 is given the slot converter; A:U5 is LM5176PWPR buck-boost controller, +5V_S2 from VBAT
+    FAILS: AP64500 is given the device converter; A:U7 is LM5176PWPR buck-boost controller, +5V_DEV from VBA
     names looked up: 1 parts, 0 nets
-    part numbers (6): AP64500 on A (U4,U6), B (U103,U104,U203,U204); BQ25731 on A (U3); INA226 on A (U10,U11,U14,U17); LM5176 on A (U13,U15,U16,U19); TPS25740 on A (U18); BQ25731 as SMBus charger; INA226 on the slot rail: U10,U8,U9; INA226 on the device rail: U11
+    part numbers (6): AP64500 on A (U4,U6), B (U103,U104,U203,U204); BQ25731 on A (U3); INA226 on A (U10,U11,U14,U17); LM5176 on A (U13,U15,U16,U19); TPS25740 on A (U18); BQ25731 as SMBus charger; INA226 on the slot: U10,U8,U9; INA226 on the device: U11; LM5176 on the PA: U13; LM5176 on the HF: U15
     asserted (2): gen_sch_a.py lines 267 to 267 at c5de605d hold TPS55288; board A: 3 parts whose value holds 'rail monitor +5V_S' (read: 3, U10,U8,U9)
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L82:cell:0:s1 [bc215963d1] TRUE
     B16
@@ -3308,11 +3308,6 @@ TEST-PLAN.md#3:L42:cell:1:s1 [83d8d5a9da] NOT DERIVABLE
     judgement: TEST: a test procedure, a condition or a pass line, not a netlist claim
     names looked up: 0 parts, 0 nets
     part numbers (1): RE102 document: a MIL-STD-461 test method
-TEST-PLAN.md#3:L43:cell:1:s1 [f82bf4c812] NOT DERIVABLE
-    RS103, radiated susceptibility, 2 MHz to 18 GHz at 50 V/m
-    judgement: TEST: a test procedure, a condition or a pass line, not a netlist claim
-    names looked up: 0 parts, 0 nets
-    part numbers (1): RS103 document: a MIL-STD-461 test method
 TEST-PLAN.md#3:L45:cell:3:s1 [0869c14ca5] NOT DERIVABLE
     no receiver damaged, no false trigger of EMCON, ZEROIZE or the sensors, the GNSS keeps its fix or recovers within 10 s
     judgement: TEST: a test procedure, a condition or a pass line, not a netlist claim
@@ -3944,7 +3939,7 @@ ASSEMBLY.md#4:L132:cell:0:s1 [db20368ea7] TRUE
     judgement: the slot rails: AP64500 bucks on slots 1 and 3, an LM5176 stage on slot 2; the citation is dated
     names looked up: 0 parts, 0 nets
     citations: citations judged: dated lines asserted below
-    part numbers (3): AP64500 on A (U4,U6), B (U103,U104,U203,U204); INA226 on A (U10,U11,U14,U17); LM5176 on A (U13,U15,U16,U19); LM5176 as stage
+    part numbers (3): AP64500 on A (U4,U6), B (U103,U104,U203,U204); INA226 on A (U10,U11,U14,U17); LM5176 on A (U13,U15,U16,U19); LM5176 as stage; AP64500 on the slot 1: U4; AP64500 on the slot 3: U6; LM5176 on the slot 2: U5
     asserted (5): A U4 value has 'AP64500' (netlist: 'AP64500SP-13 5 A buck, 5.1 V rail +5V_S1'); A U6 value has 'AP64500' (netlist: 'AP64500SP-13 5 A buck, 5.1 V rail +5V_S3'); A U5 value has 'LM5176' (netlist: 'LM5176PWPR buck-boost controller, +5V_S2 from VBAT'); gen_sch_a.py lines 840 to 841 at 45bde541 hold buck5; gen_sch_a.py lines 873 to 873 at 45bde541 hold lm5176
 ASSEMBLY.md#4:L132:cell:1:s1 [0b99dbc698] TRUE
     A22 `J_5V_S1..3` (VH)
@@ -4117,17 +4112,6 @@ ASSEMBLY.md#4:L148:cell:1:s1 [999fee59d1] TRUE
     B16 `J_ETH` (RJ45)
     judgement: the part named exists on the board named (the names check); a connector's type is its footprint, not asserted
     names looked up: 1 parts, 0 nets
-    part numbers (1): RJ45 on B (J_ETH,T1,U1,U5)
-ASSEMBLY.md#4:L148:cell:2:s1 [654cac0bee] NOT DERIVABLE
-    the sealed RJ45 on the connector plate (PoE out on 1-2 and 3-6)
-    judgement: CASE: a mechanical or case item, not a netlist claim (the sealed RJ45 on the connector plate)
-    names looked up: 0 parts, 0 nets
-    part numbers (1): RJ45 on B (J_ETH,T1,U1,U5)
-ASSEMBLY.md#4:L148:cell:4:s1 [c6b30de010] NOT DERIVABLE
-    RJ45 both ends
-    judgement: CASE: a mechanical or case item, not a netlist claim (a lead's ends)
-    names looked up: 0 parts, 0 nets
-    part numbers (1): RJ45 on B (J_ETH,T1,U1,U5)
 ASSEMBLY.md#4:L149:cell:1:s1 [86c164b77a] STALE
     A22 `J_USBC_OUT` (5-pin: VBUS CC1 CC2 GND GND; the ESD array `U31` on CC1 and CC2, D-17, `gen_sch_a.py:1015-1026`, to be placed at the header in board A's next phase)
     judgement: its citation `gen_sch_a.py:1015-1026` is undated and those lines now hold other code (U31 is at 1317); they held J_USBC_OUT and U31 at 45bde541; the circuit holds
@@ -4309,7 +4293,7 @@ ASSEMBLY.md#4:L167:cell:4:s1 [cda4473e43] NOT DERIVABLE
     carries all six ruled items at the centres of `CASE-MARGINS.md` 3.3: A the sealed RJ45 (-28.5, 36.6; pick OPEN, the PX0833 fails the shell 15 envelope and 54 V), C the D38999/20 shell 13 DC receptacle (+4.2, 34.0), B the sealed USB-C (+33.7, 36.6; the PXP4043/C panel drawing OPEN), E the pod over its M8 receptacle (-30.0, 70.0; sheet not held), D the 233-370 USB feed-through (+4.6, 67.0), F the M6 ground stud (+34.6, 64.5); A, C and D each on a Glenair 930-001 gasket with M3 into threads tapped in the plate.
     judgement: CASE: a mechanical or case item, not a netlist claim (the connector plate's six items)
     names looked up: 0 parts, 0 nets
-    part numbers (4): D38999/20 case: the DC receptacle's shell; PX0833 case: a candidate RJ45 the row rejects; PXP4043/C case: the sealed USB-C's panel part; RJ45 on B (J_ETH,T1,U1,U5)
+    part numbers (3): D38999/20 case: the DC receptacle's shell; PX0833 case: a candidate RJ45 the row rejects; PXP4043/C case: the sealed USB-C's panel part
 ASSEMBLY.md#4:L175:cell:1:s1 [3a53e10db7] NOT DERIVABLE
     Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-352 size 16 socket contacts, key N, electroless nickel), crimped with the M22520/1-01 tool and the M22520/1-04 positioner, seated with M81969/14-03; Glenair M85049/38S13N self-locking straight strain relief on the plug's M18 x 1 thread
     judgement: LEAD: the plug
@@ -4509,9 +4493,9 @@ PANEL.md: 164 sentences, 118 TRUE, 10 STALE, 0 BASELINE, 36 NOT DERIVABLE, 0 UNJ
 CONOPS.md: 289 sentences, 60 TRUE, 31 STALE, 0 BASELINE, 198 NOT DERIVABLE, 0 UNJUDGED, 1106 assertions
 V2-SPEC.md: 138 sentences, 35 TRUE, 11 STALE, 0 BASELINE, 92 NOT DERIVABLE, 0 UNJUDGED, 249 assertions
 OPERATING-ENVELOPE.md: 63 sentences, 14 TRUE, 7 STALE, 0 BASELINE, 42 NOT DERIVABLE, 0 UNJUDGED, 148 assertions
-TEST-PLAN.md: 111 sentences, 16 TRUE, 2 STALE, 0 BASELINE, 93 NOT DERIVABLE, 0 UNJUDGED, 128 assertions
-ASSEMBLY.md: 160 sentences, 78 TRUE, 13 STALE, 0 BASELINE, 69 NOT DERIVABLE, 0 UNJUDGED, 182 assertions
+TEST-PLAN.md: 110 sentences, 16 TRUE, 2 STALE, 0 BASELINE, 92 NOT DERIVABLE, 0 UNJUDGED, 128 assertions
+ASSEMBLY.md: 158 sentences, 78 TRUE, 13 STALE, 0 BASELINE, 67 NOT DERIVABLE, 0 UNJUDGED, 182 assertions
 pcb_decisions.yaml: 9 sentences, 6 TRUE, 0 STALE, 0 BASELINE, 3 NOT DERIVABLE, 0 UNJUDGED, 17 assertions
 EMCON.md: 0 sentences, 0 TRUE, 0 STALE, 0 BASELINE, 0 NOT DERIVABLE, 0 UNJUDGED, 0 assertions
 DEFINITION-STATUS.md: 0 sentences, 0 TRUE, 0 STALE, 0 BASELINE, 0 NOT DERIVABLE, 0 UNJUDGED, 0 assertions
-total: 934 sentences, 327 TRUE, 74 STALE, 0 BASELINE, 533 NOT DERIVABLE, 0 UNJUDGED, 2507 assertions
+total: 931 sentences, 327 TRUE, 74 STALE, 0 BASELINE, 530 NOT DERIVABLE, 0 UNJUDGED, 2507 assertions

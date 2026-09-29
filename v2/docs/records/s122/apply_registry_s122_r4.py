@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Stream s122, round 4 (S-122, MESHSAT-1357, 29 September 2026), for the integrator to run once fnd/s122c is merged on
 set 14's line (`1bafab8c`, where `apply_registry_s122.py` has already run and refuses): the registry follows the
-documents `apply_docs_s122_r4.py` and `apply_docs_s122_r5.py` changed (round 5 re-issued this script for its diff:
-V2-SPEC.md lines 81, 83, 84 and 86 and correction 35, the role rule and the wider finder).
+documents `apply_docs_s122_r4.py`, `apply_docs_s122_r5.py` and `apply_docs_s122_r6.py` changed (round 5 re-issued this
+script for its diff: V2-SPEC.md lines 81, 83, 84 and 86 and correction 35, the role rule and the wider finder; round 6
+re-issued it again for its diff: V2-SPEC.md line 47 and correction 36, the fixtures and the figure scan of the gate).
 
 It writes `v2/ecad/tools/pcb_requirements.yaml`, `v2/ecad/tools/pcb_envelope.yaml` and
 `v2/ecad/tools/pcb_rules_coverage.yaml` and nothing else:
@@ -41,7 +42,7 @@ R1.BASE = BASE             # the helpers' diff base
 REG, ENV, COV = R1.REG, R1.ENV, R1.COV
 DOCS = {"v2/docs/V2-SPEC.md": "1e1547e1462904f7", "v2/docs/OPERATING-ENVELOPE.md": "a8e65995c594546b",
         "v2/docs/handover/DEFINITION-STATUS.md": "2db0ad36da754fa4"}
-REF = "v2/docs/records/s122/apply_docs_s122_r4.py and apply_docs_s122_r5.py"
+REF = "v2/docs/records/s122/apply_docs_s122_r4.py, apply_docs_s122_r5.py and apply_docs_s122_r6.py"
 
 M7_NOTE = (" Recorded on the record at stream s122's round 4 (check-int15-1 m7, the baseline reading, a SESSION reading "
            "under the owner's standing rule of 26 September 2026): for CONOPS.md, a baselined definition, 'describes the "
@@ -69,6 +70,25 @@ S122_ADD4 = (
     "seventeen on board C); no dock strip sentence puts a magnetometer outside the pod; and the check's two sentences as "
     "they stood at edead832 must be refused by the role rule (verdicts.check_roles). The closing check names V2-SPEC.md "
     "lines 47, 81, 82, 83, 84 and 86 and OPERATING-ENVELOPE.md lines 77 and 83. "
+    "Round 6 (the independent check v2/docs/records/s122/checks/check-s122-5.md, B1: V2-SPEC.md line 47 named the SA868 "
+    "a 1 W part while board D's U2 is its VHF 2 W exciter, corrected by apply_docs_s122_r6.py as correction 36) added to "
+    "the gate: 'SA868 <n> W' must name 2 W with the assertion of D U2; fourteen mutants of the A22 and D8 rows as they "
+    "stand (a non-part token in a parenthesis, converters named on rails they do not feed, a one-word and a two-word "
+    "qualifier another part holds, role nouns the netlists never state, a history-excused part put back as current, the "
+    "codec and the amplifier swapped, a part named a codec with no qualifier), each judged with the judgement its row "
+    "carries, must read STALE, and line 47 with the 1 W planted back must be refused; and a scan of the closing list's "
+    "lines, each read whole from its document, refuses any figure-and-unit token (a number with W, V, A, Wh, dBm, mm, C "
+    "and the like, a range or product of two, an 'N x M' size, an 'NxM' header, a spelled count from two to twenty) that "
+    "no assertion of its sentence's TRUE judgement covers with the token's numbers: a netlist value, a board file's "
+    "outline, layers, cutout or zones, a maker's page, or a decision's record. test_close_s122.py turns each test of the "
+    "role rule and the history tie off in turn, and the gate then refuses. Out of scope by design: the scan reads only "
+    "the lines of the closing list and only numbers with a unit or spelled counts, so a form factor (2242), a port (USB "
+    "3), a slot, a date or a decision's number is not judged as a figure; the one-word qualifier test takes only active "
+    "parts (U and Q designators) as the holders of a function; a list item '<part> <noun> on <slot or rail>' is judged "
+    "by the target rule, not the list rule; and the finder still reads an upper-case commit, 'SMBJ15A/BAT54' and a DS "
+    "code of four digits (the shape of Maxim's DS3231) as part numbers, which a judgement must then excuse, and does not "
+    "read 'SMBJ15A-based' or a plural 'SMBJ15As' (of these three SMBJ15A forms, check-s122-5 says the documents hold "
+    "none). "
     "Confirming that each correction is true in substance remains the filed check's job.")
 
 
@@ -164,8 +184,13 @@ def main():
              "v2/docs/records/s122/apply_docs_s122_r5.py corrected V2-SPEC.md line 84 (the TPS22810 called the gate-bias "
              "switch; board D's gate bias is the TLV75801 U15 on PA_KEY and the TPS22810 is U21, the load switch of "
              "+5V_TX) and line 81 (all four rails given to the AP64500; board A's U5 and U7 are LM5176 stages), and in the "
-             "same table line 83 (seventeen LEDs) and line 86 (the magnetometer is in the outside pod). This record stays "
-             "FAIL and waits on S-122; this entry changes no result." % per)
+             "same table line 83 (seventeen LEDs) and line 86 (the magnetometer is in the outside pod). Round 6 (the "
+             "independent check v2/docs/records/s122/checks/check-s122-5.md, B1): "
+             "v2/docs/records/s122/apply_docs_s122_r6.py corrected V2-SPEC.md line 47 (the SA868 named a 1 W part; board "
+             "D's U2 is the SA868 VHF 2 W exciter, and the maker's sheet v1.3 gives 31 to 33 dBm on high power and 24 to "
+             "26 dBm on low), and every figure-and-unit token on the lines of S-122's closing list is bound to one of its "
+             "judgement's own assertions (verdicts.check_figs and close_s122.py's scan). This record stays FAIL and "
+             "waits on S-122; this entry changes no result." % per)
     out = R1.append_entry(out, "CFL-016", entry)
     # CFL-016's notes: m7
     A_ = A

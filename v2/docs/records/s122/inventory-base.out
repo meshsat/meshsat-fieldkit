@@ -1542,7 +1542,7 @@ V2-SPEC.md#Thermal and environment:L73:para:s1 [b89f99d383]
     names: refs=C1,C4; boards=board E; counts=five IP68-rated internal fans,two mixer fans
 V2-SPEC.md#Open items (the generators have run; these remain owed):L76:para:s1 [d9ae91817c]
     the third 5G jack of the key-B socket (TE 2199119-3 since `458b2873`, whose land carries the maker's two locating holes and whose SIM holders carry the TVS arrays since board B's round 8; corrections 9, 22 and 28), which waits on the board E clamp fit (D-07; its case half is laid out, `CASE-MARGINS.md` section 3.4; correction 12); the KSZ9897, ATECC608B (its full datasheet is under NDA), DS3231, LIS3MDL, TE and Amphenol M.2 drawings (laptop list, 32.54); the sealed USB-C and RJ45 wall parts; the U-174/U headset jacks; the SOS and ZEROIZE cover part; the 2 m antenna; the tablet; the IP68 fans (owner question D-18, open and conditional: it arises only if no 40 mm IP68 fan fits the coolers, and the session then settles it under the owner's standing rule); and, of the design changes the owner's rulings of 26 September 2026 leave to the session, the ones still owed: the RockBLOCK 9704's ENABLE forced low by the EMCON hardware with its stored energy bounded, the SA868's PTT threshold (bench E-01), the hardware EMCON lamp's light guide in the face plate (SD-EMC-6; the lamp is drawn on board C since its round 8, correction 30) and the items every row of the EMCON line shares (D-05, `feasibility/EMCON.md` sections 0a and 7; correction 26; the 5G module's supply removal is drawn since board B's round 8, correction 28), the key-down time and state-of-charge floor as pass lines, PROVISIONAL today (D-11), and the VHF band lock (D-04); in the schematics since `faf8c981`, `458b2873` and `d90f30e4`, and neither laid out nor built: the compute modules' radios and the WiFi link cards' supplies on the EMCON line (D-05), the outlet interlock (D-11), the wall USB data path to the Glenair 233-370 (D-12; correction 13), the pack's secondary protection floor on board P (D-15) and the external ESD array at board A's USB-C CC pins (D-17) (correction 19).
-    names: boards=board A,board B,board C,board E,board P; gates=interlock; topic=EMCON; parts=ATECC608B,DS3231,KSZ9897,LIS3MDL,RJ45,SA868,TE 2199119-3,U-174/U
+    names: boards=board A,board B,board C,board E,board P; gates=interlock; topic=EMCON; parts=ATECC608B,DS3231,KSZ9897,LIS3MDL,SA868,TE 2199119-3,U-174/U
 V2-SPEC.md#Open items (the generators have run; these remain owed):L76:para:s2 [181b0ac69c]
     Closed on 7 Sep 2026: the PCIe switch (Diodes), the hubs, the display switch, the bridges, the controllers, the sensors' stock, the SA868 sheet, the PA sheet and heat path, Xenarc's drawing, the vent (none), the ASM118x question (0 stock).
     names: parts=ASM118x,SA868
@@ -2032,9 +2032,6 @@ TEST-PLAN.md#3:L41:cell:1:s1 [27f1725b81]
 TEST-PLAN.md#3:L42:cell:1:s1 [83d8d5a9da]
     RE102, radiated emissions, 10 kHz to 18 GHz, deployed with the radios receiving and then transmitting on each bearer in turn
     names: parts=RE102; row=M4
-TEST-PLAN.md#3:L43:cell:1:s1 [f82bf4c812]
-    RS103, radiated susceptibility, 2 MHz to 18 GHz at 50 V/m
-    names: parts=RS103; row=M5
 TEST-PLAN.md#3:L45:cell:3:s1 [0869c14ca5]
     no receiver damaged, no false trigger of EMCON, ZEROIZE or the sensors, the GNSS keeps its fix or recovers within 10 s
     names: topic=EMCON; row=M6
@@ -2571,13 +2568,7 @@ ASSEMBLY.md#4:L147:cell:1:s1 [69aac94488]
     names: refs=J_CAM; boards=B16; row=Camera
 ASSEMBLY.md#4:L148:cell:1:s1 [999fee59d1]
     B16 `J_ETH` (RJ45)
-    names: refs=J_ETH; boards=B16; parts=RJ45; row=Ethernet
-ASSEMBLY.md#4:L148:cell:2:s1 [654cac0bee]
-    the sealed RJ45 on the connector plate (PoE out on 1-2 and 3-6)
-    names: parts=RJ45; row=Ethernet
-ASSEMBLY.md#4:L148:cell:4:s1 [c6b30de010]
-    RJ45 both ends
-    names: parts=RJ45; row=Ethernet
+    names: refs=J_ETH; boards=B16; row=Ethernet
 ASSEMBLY.md#4:L149:cell:1:s1 [86c164b77a]
     A22 `J_USBC_OUT` (5-pin: VBUS CC1 CC2 GND GND; the ESD array `U31` on CC1 and CC2, D-17, `gen_sch_a.py:1015-1026`, to be placed at the header in board A's next phase)
     names: refs=J_USBC_OUT,U31; boards=A22,board A; rails=VBUS; gens=gen_sch_a.py:1015-1026; row=USB-C outlet, power only (D-12)
@@ -2697,7 +2688,7 @@ ASSEMBLY.md#4:L167:cell:1:s1 [22fe281a54]
     names: refs=C1,C3,C6; boards=C6; row=Connector plate
 ASSEMBLY.md#4:L167:cell:4:s1 [cda4473e43]
     carries all six ruled items at the centres of `CASE-MARGINS.md` 3.3: A the sealed RJ45 (-28.5, 36.6; pick OPEN, the PX0833 fails the shell 15 envelope and 54 V), C the D38999/20 shell 13 DC receptacle (+4.2, 34.0), B the sealed USB-C (+33.7, 36.6; the PXP4043/C panel drawing OPEN), E the pod over its M8 receptacle (-30.0, 70.0; sheet not held), D the 233-370 USB feed-through (+4.6, 67.0), F the M6 ground stud (+34.6, 64.5); A, C and D each on a Glenair 930-001 gasket with M3 into threads tapped in the plate.
-    names: parts=D38999/20,PX0833,PXP4043/C,RJ45; row=Connector plate
+    names: parts=D38999/20,PX0833,PXP4043/C; row=Connector plate
 ASSEMBLY.md#4:L175:cell:1:s1 [3a53e10db7]
     Glenair D38999/26FC4SN plug (shell 13, insert 13-4, four M39029/56-352 size 16 socket contacts, key N, electroless nickel), crimped with the M22520/1-01 tool and the M22520/1-04 positioner, seated with M81969/14-03; Glenair M85049/38S13N self-locking straight strain relief on the plug's M18 x 1 thread
     names: counts=four M39029/56-352 size 16 socket; parts=D38999/26FC4SN,M22520/1-01,M22520/1-04,M39029/56-352,M81969/14-03,M85049/38S13N; row=DC lead
@@ -2812,9 +2803,9 @@ v2/docs/PANEL.md: 164 sentences
 v2/docs/CONOPS.md: 289 sentences
 v2/docs/V2-SPEC.md: 138 sentences
 v2/docs/OPERATING-ENVELOPE.md: 63 sentences
-v2/docs/TEST-PLAN.md: 111 sentences
-v2/docs/ASSEMBLY.md: 160 sentences
+v2/docs/TEST-PLAN.md: 110 sentences
+v2/docs/ASSEMBLY.md: 158 sentences
 v2/ecad/tools/pcb_decisions.yaml: 9 sentences
 v2/docs/feasibility/EMCON.md: 0 sentences
 v2/docs/handover/DEFINITION-STATUS.md: 0 sentences
-total: 934 sentences
+total: 931 sentences

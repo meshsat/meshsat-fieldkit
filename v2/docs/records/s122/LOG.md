@@ -165,3 +165,31 @@ No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py
   errors, 0 warnings; the tests 69 passed and 2 failed before the trace page's render, 71 passed after; the closure
   refused the fixture while staged, closed S-122 with it committed (CFL-016 PASS; S-42, S-123, S-124 open) and refused
   a second run; after it 0 errors, 71 passed, `claims_check` PASS 91 of 91. The clone is deleted.
+
+## Round 6 (the answer to `checks/check-s122-5.md`: 1 blocking, 4 minor)
+
+- Check read whole first (the checker's report, filed byte for byte as `checks/check-s122-5.md`).
+- 22:41 (one label for the round's work, read from `date`):
+  - m4: `s122lib.is_partno` reads L76K (a designator only when a netlist carries it) and all-digit numbers of nine
+    digits or more; `PN_LIT` rejects literature and manual codes, RJ and RS numbers, `NBASE-T` names; the netlists'
+    net names are not parts. Three NOT DERIVABLE sentences left the inventory (ASSEMBLY.md line 148's two RJ45 cells,
+    TEST-PLAN.md line 43's RS103 cell).
+  - m1: `rail_lists` reads every list and each item's part; `target_roles` judges "<part> <noun> on <slot or rail>";
+    the one-word qualifier test on active parts; supply and driver in `ROLE_NOUN`; the history tie of `parts_ok`.
+  - m2: `verdicts.ROLE_TESTS` switches; the gate's condition (e) judges fourteen mutants of the A22 and D8 rows.
+  - B1: `apply_docs_s122_r6.py --check`, then its run: V2-SPEC.md not among the baselines (PRODUCT-BRIEF.md,
+    CONOPS.md); 2 edits, 9 assertions held first.
+  - The figures: `verdicts.figure_tokens`, `figures_uncovered`, `check_figs`; the assertion forms `PCB:`, `#net~`,
+    `CNT@`, `DEC:`; `figures_ok` on every sentence of the eight lines of the closing list (45 tokens); the gate's
+    condition (f) scans those lines; the planted 1 W is refused by (b) and by the scan alone.
+  - m3: the closure's evidence names `apply_docs_s122_r5.py` and `apply_docs_s122_r6.py`.
+  - Outputs regenerated: `inventory.out` and `verdicts.out` (1004 sentences, 422 TRUE, 0 STALE, 40 BASELINE, 542 NOT
+    DERIVABLE, 0 UNJUDGED, 3338 assertions), `-base` (931, 74 STALE), `-set14` (989, 10 STALE), `verdicts-r4.out`
+    (998, 5 STALE), `verdicts-r5.out` (1002, 1 STALE: line 47).
+  - `test_close_s122.py`: ALL PASS (T1 the fixtures and the scan; T2 each of the five switches off makes the gate
+    refuse; T3 `check_figs` off, the planted 1 W still refused; T4 45 tokens, each changed by one, all refused).
+  - `close_s122.py`'s gate on this tree passed (a), (b), (e) and (f) and refused at (c) for want of a check file.
+  - `apply_registry_s122_r4.py` re-issued for the round 6 diff (its REF, CFL-016's entry, S-122's sentence).
+  - In this tree `rules_render.py --requirements --check` refuses and `rules_lib.py requirements` reads 4 errors, the
+    rebinds the integrator's `apply_registry_s122_r4.py` writes (REQ-005, CFL-010, CFL-013 on V2-SPEC.md; CFL-014 on
+    OPERATING-ENVELOPE.md); the replay runs them after it.
