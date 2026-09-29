@@ -159,7 +159,7 @@ power/jscj-2n7002-c8545.pdf   current   # the JSCJ 2N7002 behind C8545, the logi
 power/st-semtech-1n4148w-c81598.pdf   current   # the SEMTECH ELECTRONICS 1N4148W behind C81598, board D's relay flyback D2
 power/littelfuse-smbj-series-tvs.pdf   current   # Littelfuse SMBJ series: SMBJ6.0A (D D1) and SMBJ18A (A D4)
 power/mdd-smbj-series-tvs.pdf   current   # MDD SMBJ series: SMBJ5.0A (A, B, D clamps) and SMBJ20A (P D1)
-power/panjit-ss2020fl-series.pdf   current   # PANJIT SS2040FL, board C's e-paper boost rectifiers D19 to D21
+power/held/panjit-ss2020fl-series.pdf   current, held back (its terms; fetch_held_back.py of records/int16)   # PANJIT SS2040FL, board C's e-paper boost rectifiers D19 to D21
 techpublic/techpublic-74lvc1g08gv-c19829591.pdf   current   # the AND gates of board D's keying chain in the round 6 candidate
 ti/ti-sn74aup1g08.pdf   current   # SN74AUP1G08, board A's PA and HF rails' EMCON gates U35 to U38 in the round 8 candidate (EMCON.md section 4a)
 ti/ti-sn74lvc1g00.pdf   current   # SN74LVC1G00, board A's outlet interlock U30 in the round 6 candidate (D-11)
