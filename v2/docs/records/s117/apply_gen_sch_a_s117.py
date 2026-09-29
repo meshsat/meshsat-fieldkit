@@ -62,10 +62,10 @@ COMP_NEW = '''
 # complexity of various operation modes." Here R25 and C26 are R1 and C11, C234 is C12, R220 and C235 are R2 and C21, and
 # C27 is C22 (TI's names on the right). Until today they were 10k with 10 nF (no C12) and 1 nF alone, the values of neither row (round 4's O-24).
 r("R25", "40.2k 1%", "CH_COMP1", "CH_COMP1C"); c("C26", "4.7n", "CH_COMP1C", "GND"); c("C234", "33p", "CH_COMP1", "GND")
-r("R220", "15k 1%", "CH_COMP2", "CH_COMP2C"); c("C235", "680p", "CH_COMP2C", "GND", lcsc="C30816"); c("C27", "15p NP0", "CH_COMP2", "GND")
+r("R220", "15k 1%", "CH_COMP2", "CH_COMP2C", lcsc="C22809"); c("C235", "680p", "CH_COMP2C", "GND", lcsc="C30816"); c("C27", "15p NP0", "CH_COMP2", "GND")
 # IADPT (pin 8): 9.3.11 and Table 9-4, 191 or 187 kOhm for 4.7 uH, and "A surface mount chip resistor with +/-3% or better
-# tolerance must to be used for an accurate inductance detection": 191k at 1 percent and 100 ppm/C stays inside 3 percent
-# from -40 to +85 C (1 plus 0.65 percent). The pin table (page 6) asks "a 100-pF or less ceramic decoupling capacitor
+# tolerance must to be used for an accurate inductance detection". REQUIRED of the part the parts stream codes: 1 percent,
+# 0603, 100 ppm/C or better, so 1 plus 0.65 percent stays inside 3 percent from -40 to +85 C. The pin table (page 6) asks "a 100-pF or less ceramic decoupling capacitor
 # from IADPT pin to ground" and 8.5 gives CIADPT_MAX 100 pF (page 12): 33 pF C0G, C234's part, stays under it with its 5
 # percent and the land's few picofarads. TP19 stays on the net; nothing on this board reads IADPT as a current monitor.
 r("R219", "191k 1%", "IADPT", "GND"); c("C233", "33p", "IADPT", "GND")

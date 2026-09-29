@@ -19,7 +19,11 @@ the references added must be exactly R219, R220, C233, C234 and C235, none remov
 exactly L2, R25, C26 and C27, and the nets whose members moved exactly IADPT, CH_COMP1, CH_COMP2, CH_COMP2C and GND, each by
 exactly the pins the change draws (the regeneration parity check for this one board).
 
-Usage: readback_s117.py [<netlist.net>] [--against <old.net>]   (default: board A's committed netlist,
+With --fets (stream s117's second issue, S-117's finding F1, apply_gen_sch_a_fets_s117.py) it also asks for the charger's
+four FETs: Q7 CSD17578Q5A, Q8 to Q10 CSD17577Q5A, each on the PowerPAK SO-8 land with its pads on the nets they had (1 to
+3 source, 4 gate, 5 drain; gen_sch_a.py's nfet()), and --against then also allows Q7 to Q10 among the changed parts.
+
+Usage: readback_s117.py [<netlist.net>] [--fets] [--against <old.net>]   (default: board A's committed netlist,
        v2/ecad/pcb-a-power-a23/out/pcb-a-power.net)
 Exit 0 every check holds, 1 a check fails, 3 a netlist cannot be read."""
 import hashlib, os, re, subprocess, sys
@@ -128,15 +132,35 @@ NET_DELTA = {("IADPT", "R219", "1"), ("GND", "R219", "2"), ("IADPT", "C233", "1"
              ("CH_COMP2C", "C235", "1"), ("GND", "C235", "2")}
 
 
-def against(new, old):
-    """[(name, ok, detail)]: the difference between two parsed netlists, held to exactly the S-117 change."""
+FETS = {"Q7": ("CSD17578Q5A", {"1": "CH_SW1", "2": "CH_SW1", "3": "CH_SW1", "4": "CH_HIDRV1", "5": "CH_ACN"}),
+        "Q8": ("CSD17577Q5A", {"1": "GND", "2": "GND", "3": "GND", "4": "CH_LODRV1", "5": "CH_SW1"}),
+        "Q9": ("CSD17577Q5A", {"1": "GND", "2": "GND", "3": "GND", "4": "CH_LODRV2", "5": "CH_SW2"}),
+        "Q10": ("CSD17577Q5A", {"1": "CH_SW2", "2": "CH_SW2", "3": "CH_SW2", "4": "CH_HIDRV2", "5": "VBAT"})}
+
+
+def check_fets(doc):
+    """[(name, ok, detail)]: the charger's four FETs as apply_gen_sch_a_fets_s117.py draws them."""
     res = []
+    for ref, (part, pinmap) in FETS.items():
+        c = doc["components"].get(ref) or {}
+        v, fp = c.get("value", ""), c.get("footprint", "")
+        res.append(("%s is the %s" % (ref, part), v.split()[:1] == [part], "value %r" % v))
+        res.append(("%s on the PowerPAK SO-8 land, pads on their nets" % ref,
+                    fp.endswith("PowerPAK_SO-8_Single") and pins(doc, ref) == pinmap, "footprint %r, pads %s" % (fp, pins(doc, ref))))
+    return res
+
+
+def against(new, old, fets=False):
+    """[(name, ok, detail)]: the difference between two parsed netlists, held to exactly the S-117 change (and, with
+    fets, the F1 change of the four FETs' values)."""
+    res = []
+    changed = CHANGED_PARTS | (set(FETS) if fets else set())
     nc, oc = new["components"], old["components"]
     added, removed = set(nc) - set(oc), set(oc) - set(nc)
     res.append(("parts added are exactly the five new ones", added == NEW_REFS, "added %s" % sorted(added)))
     res.append(("no part removed", not removed, "removed %s" % sorted(removed)))
     moved = {r for r in set(nc) & set(oc) if (nc[r]["value"], nc[r]["footprint"]) != (oc[r]["value"], oc[r]["footprint"])}
-    res.append(("parts changed are exactly L2, R25, C26, C27", moved == CHANGED_PARTS, "changed %s" % sorted(moved)))
+    res.append(("parts changed are exactly %s" % ", ".join(sorted(changed)), moved == changed, "changed %s" % sorted(moved)))
     def triples(doc): return {(n, r, p) for n, ms in doc["nets"].items() for r, p, *_ in ms}
     tn, to = triples(new), triples(old)
     delta = (tn - to) | (to - tn)
@@ -147,6 +171,8 @@ def against(new, old):
 
 def main(argv):
     args = [a for a in argv[1:]]
+    fets = "--fets" in args
+    args = [a for a in args if a != "--fets"]
     old_path = None
     if "--against" in args:
         k = args.index("--against")
@@ -159,7 +185,7 @@ def main(argv):
     except Exception as e:  # a netlist that cannot be read decides nothing
         print("readback_s117: INCONCLUSIVE: a netlist cannot be read (%s)" % e)
         return 3
-    res = check(doc) + (against(doc, old) if old is not None else [])
+    res = check(doc) + (check_fets(doc) if fets else []) + (against(doc, old, fets) if old is not None else [])
     sha = hashlib.sha256(open(path, "rb").read()).hexdigest()
     print("readback_s117: %s (sha256/16 %s)" % (os.path.relpath(path, TOP) if path.startswith(TOP) else path, sha[:16]))
     for name, ok, detail in res:

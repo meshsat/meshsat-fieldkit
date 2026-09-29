@@ -46,6 +46,7 @@ every figure is high by them. Readings: lower = the makers' maxima; TI = Equatio
    drawn   total 7.37 W (IL 8.34 A): Q7 4.77, Q8 0.46, Q10 0.08, gate drive 1.24, L2 copper 0.40, R16 0.38, R17 0.02, Iq 0.02
    chosen  total 2.69 W (IL 8.67 A): Q7 0.98, Q8 0.35, Q10 0.29, gate drive 0.22, L2 copper 0.43, R16 0.38, R17 0.02, Iq 0.02
    the budget for 0.98 at this point: 2.57 W
+   with the chosen FETs the 800 kHz row (XAL1010-332ME, 169 kOhm) against S-117's 400 kHz row: lower 0.961 against 0.972 (1.37 W more); TI 0.971 against 0.979 (0.97 W more); upper 0.978 against 0.983 (0.56 W more)
 
 4. U3B (Option A(i)'s lid charger, records/a1elec/TOPOLOGY.md 3b), VIN = VBAT 14.5 V, the model's 55.3 W at its peak hour,
    lid charge 3.69 A; the lid below VBAT runs buck, above it boost, near it buck-boost (bound)
@@ -107,6 +108,18 @@ every figure is high by them. Readings: lower = the makers' maxima; TI = Equatio
    U3B, drafted (800 kHz, CSD18510Q5B)          0.734     0.802     0.869     0.802 (the worst of buck, buck-boost bound and boost at the peak hour)
    U3B, CSD17578Q5A x 4, 800 kHz                0.947     0.961     0.971     0.961 (the worst of buck, buck-boost bound and boost at the peak hour)
    U3B, 78/77 pairs, 400 kHz row                0.966     0.974     0.980     0.974 (the worst of buck, buck-boost bound and boost at the peak hour)
+
+8. THE SCREEN: the independent check's criteria for the switching pair (Qg at 6 V about 12 nC or less, Qgd + Qgs about
+   7 nC or less, Qrr about 15 nC or less, RDS(on) at 6 V about 5 mOhm or less, 30 V or more) against every FET read,
+   and U3's efficiency at the model's peak with that part as Q7 and Q8 (Q9, Q10 CSD17577Q5A), TI's reading and the lower
+   CSD18510Q5B    2 of 5 (MISSED Qg at 6 V <= 12 nC; MISSED Qgd + Qgs <= 7 nC; MISSED Qrr <= 15 nC); SON 5 x 6 (Q5B), drawn; as Q7 and Q8: 0.941 (lower 0.922)
+   CSD17578Q5A    4 of 5 (MISSED RDS(on) at 6 V <= 5 mOhm); SON 5 x 6 (Q5A), the drawn land; as Q7 and Q8: 0.979 (lower 0.972)
+   CSD17577Q5A    3 of 5 (MISSED Qg at 6 V <= 12 nC; MISSED Qgd + Qgs <= 7 nC); SON 5 x 6 (Q5A), the drawn land; as Q7 and Q8: 0.978 (lower 0.970)
+   CSD17579Q5A    4 of 5 (MISSED RDS(on) at 6 V <= 5 mOhm); SON 5 x 6 (Q5A), the drawn land; as Q7 and Q8: 0.979 (lower 0.972)
+   CSD17581Q5A    3 of 5 (MISSED Qg at 6 V <= 12 nC; MISSED Qgd + Qgs <= 7 nC); SON 5 x 6 (Q5A), the drawn land; as Q7 and Q8: 0.973 (lower 0.963)
+   PSMN4R0-30YLD  5 of 5 (all met); LFPAK56 (SOT669), NOT the drawn land; as Q7 and Q8: 0.979 (lower 0.974)
+   CHOSEN: Q7 CSD17578Q5A with Q8 to Q10 CSD17577Q5A: 0.979 (lower 0.972)
+
    The energy chain's rows today: U3 0.98 (records/energy/energy_inputs.yaml, SLUSE66A Figure 8-4, FETs not named) and U3B
    0.975 (records/a1elec/energy_two_pack.py, Figure 8-3). Figure 8-4 at 4 A and 14.8 V loses about 0.96 W in all, less than
    the drawn FETs' gate drive alone (1.24 W at 400 kHz): the curve describes FETs of a much smaller gate charge.
