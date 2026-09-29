@@ -1,0 +1,21 @@
+# Stream a1mech: running log (MESHSAT-1357, Option A(i) mechanical work package)
+
+Worker: one Claude author, worktree `a1mech`, branch `fnd/a1mech` from `13b5352b`. Brief:
+`_runs/claude/a1mech/20260929T0228/BRIEF.md`. Prototype design, AI review: nothing built, bought or fitted.
+
+- 02:11 CEST: brief and WORKER-RULES read; ENERGY-RECONCILIATION sections 8 and 9, CASE-MARGINS sections 2 and 3 (the M rows),
+  ASSEMBLY steps 10 and 11, the r2 QMX set and its check record, the lid STEP's face list, panel1450's face parts read.
+- 02:20: makers' heights read for the parts that stand into the lid: APEM 5000 series (RS copy) page 13, lever -2V 14.75 over a 9.00
+  bushing; APEM switch guards page 2, 22.00 to 28.00 closed (the held series is for the 12 mm bushings, the CSG for the 5000 is not held:
+  class bound); Floyd Bell MC-09-530-Q page 2 (ring 35.8 x 7.9, thread 11.7, gasket 1.57, +-0.76). The U-174/U jack has no drawing
+  held: its footprint is kept clear (TBD height). The tablet: no maker sheet reachable (Samsung's pages refused or absent from the
+  Wayback index); the 8 and 10 inch rugged classes are carried as INFERRED envelopes.
+- 02:25: first layout by hand: one layer of lying cells in holders (21.9 deep) gave about 33 cells beside the QMX set; the A06 block
+  construction (cells touching at 18.55, 0.5 wrap, 1.0 end joints, the ruled base block's own basis) with a second layer nested in
+  the grooves (16.065 higher) makes a 40.06 module that the worst room (44.39) takes over every face part up to 0.69 high, with the
+  Xenarc window (0.8) at 3.10 worst, OPEN at the sensitivity reading.
+- 02:30 to 02:36: `v2/cad/lid_pack_a1.py` written and run (`lid_pack_a1.out`): per-slice south edges from the face (the headset jacks
+  and the sounder limit only the west slice), layer-2 places refused where a face part is too tall (the XFRAME screws), P2 placed at
+  the corner costing fewest cells, the tablet's band searched in 1 mm steps. Results: A (HF and 8 inch tablet) 35 cells, 4S8P; B (HF,
+  no tablet) 56, 4S14P; C (8 inch tablet, no HF) 54, 4S13P; C10 (10 inch tablet, no HF) 47, 4S11P; D (neither) 77, 4S19P.
+  Stability: the open case stands on level ground to 120 degrees of opening in every swept case and tips from 135 with a light base.
