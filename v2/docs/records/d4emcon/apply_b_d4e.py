@@ -52,7 +52,7 @@ B-4  L4 case (2) on U536 (the RockBLOCK's ENABLE gate). With +3V3_DEV in 0 to 1.
      1%), so in its band it pushes at most 1.65 V / 2.178 k = 0.76 mA into the supervisor, under the 1 mA of its VOL row:
      RB_IEN at most 0.4 V. R527 becomes 15 k 1%. Released (EMCON off, the request high, the supervisor released, IOH 300 nA):
      RB_IEN at least 2.08 V (U536 VOH 2.4 V through 2.222 k, the maker's divider 2.457 V through 166 k at V_IN 4.0 V, into
-     14.85 k, less U537's 5 uA), over the maker's 2.0 V. EMCON asserted: at most 0.13 V. Every rail lost: (10 + 10 + 0.3) uA
+     14.85 k, less U537's 5 uA), over the maker's 2.0 V. EMCON asserted: at most 0.15 V. Every rail lost: (10 + 10 + 0.3) uA
      into 15 k parallel 166 k, 0.28 V. Residual: SBVS050N gives the SENSE-to-RESET delay as 20 us typical with no maximum, so a
      +3V3_DEV that falls from 2.79 V into the band faster than that is a race (bench E-11 with E-04).
 B-5  D4E-F2, the Tpr hold of SD-EMC-1r8 (U221). Quectel RM520N HD v1.1 Table 9: FULL_CARD_POWER_OFF# VIL max 0.2 V, VIH min
@@ -189,7 +189,7 @@ EDITS.append((A_U536, '''# L4 case (2) on U536 (stream d4emcon, D4E-B B-4, 29 Se
 # and a divider cannot meet both the 0.4 V LOW and the 2.0 V HIGH. U543, a TPS3808G30 on +5V_DEV (U25's input, so it outlives
 # +3V3_DEV), watches +3V3_DEV and holds RB_IEN low while it is under VIT (2.79 V +-1.25 percent, SBVS050N); U536 drives RB_IEN
 # through R532 (2.2 k 1%), 0.76 mA at most into the supervisor in U536's band, inside its 1 mA VOL row (0.4 V). R527 is 15 k 1%:
-# released RB_IEN at least 2.08 V, asserted at most 0.13 V, every rail lost 0.28 V (EMCON.md 4d). CT open (td 12 to 28 ms), MR
+# released RB_IEN at least 2.08 V, asserted at most 0.15 V, every rail lost 0.28 V (EMCON.md 4d). CT open (td 12 to 28 ms), MR
 # open (90 k to VDD inside). Residual: no maximum SENSE-to-RESET delay is stated (20 us typical), bench E-11 with E-04. Reverse:
 # U536's output back on RB_IEN, R527 10 k, R532, U543 and C684 out.
 lvc1g08("U536", "EMCON_HW", "RB_SW_IEN", "RB_IEN_DRV", "+3V3_DEV", "C559", "RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), EMCON AND software (EMCON.md 4.4, W4B-D1), through R532 (D4E-B)")

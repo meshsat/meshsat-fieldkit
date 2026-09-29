@@ -84,3 +84,19 @@ E-02); (6) an apply script for FEA-002's evidence line once EMCON.md's new hash 
   supply pins, for B and C); on set 10's committed netlists it reads B 56 checks FAIL and C 4 FAIL
   (`readings/set10/readback/`), as it must before regeneration. `apply_c_d4e_f1.py` re-run on a scratch copy of set 10's
   `gen_sch_c.py` (unchanged since `e28f91a6`): applies once, refuses a second run.
+- 12:22 to 12:30 EMCON.md section 4d written (at sha256/16 `c8f0d1f2e370b294`; three pointer sentences in the head, after
+  section 0a's counts and at the top of section 7): 4d.1 the row table on set 10, every transmitter with its dominant chain,
+  L_max, F1 to F3, F6, F7 and latency terms: **CLOSED AT DESK 0, OPEN 15 (rows 3 to 17), NEEDS HARDWARE 2 (rows 1, 2)**; with
+  the drafts applied and read back (predicted) 0, 2 (row 3 on S-93, row 4 on the Iridium 9704's ENABLE document), 15. 4d.2 the
+  SD-EMC-2 census line by line with its remedy and bound; 4d.3 L1 to L4 and L7 per board (nothing to draft on A or D); 4d.4
+  SD-EMC-1r8 read back on set 10 (both stages at once, U221 with R297 49.9 k: td 180 to 420 ms against Tpr 100 ms; fallback
+  (iii) contained in the at-once removal) and D4E-F2; 4d.5 what the integrator runs and what stays open. Checked: no
+  claims_check word in 4d, no non-ASCII character in the drafts. The seven records bound to EMCON.md (REQ-012, REQ-030,
+  REQ-032, REQ-071, CON-010, CON-021, FEA-002) are FAIL or INCONCLUSIVE, so the moved page warns and does not fail the
+  registry check (rules_lib: an error only on PASS).
+- 12:26 to 12:30 `apply_registry_d4e.py` written: phase `page` (at the merge: an evidence entry per record bound to EMCON.md,
+  rebound to the new sha, S-01's title gains D4E-F1 and D4E-F2 as open scope; nothing closes) and phase `after` (only after the
+  regeneration: runs `readback_d4e.py` on both committed netlists and refuses unless every check holds, then records the
+  read-back in FEA-002, rebinds its board B netlist, restates S-01 with what closed at desk). Tested in the worktree: `page`
+  ran, its diff read (8 records: 7 rebound plus S-01), a second run refused, the registry restored with `git checkout`; `after`
+  refuses on set 10 (read-back 56 FAIL). The registry is NOT changed on this branch.
