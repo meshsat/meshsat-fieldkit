@@ -10,11 +10,18 @@ one phase.
                        or E regenerated since this stream changes nothing the bound depends on, or the closure refuses;
                    (3) S-120 is an open item, REQ-015 waits on it, and neither the switch-node item nor S-111's addition is
                        in the registry yet (a second run refuses).
-                   Then: S-120 moves to closed_items (closed by <commit>; its closing evidence names the files, and every
-                   figure in it is read from vbus20_bound.FIG here, never typed); a new SESSION item (the next free S
-                   number) carries the switch nodes' ringing budget for board A's layout writer and the bench, and takes
-                   S-120's place in REQ-015's waits_on; S-111's title gains S-120's residual (the single faults that blind
-                   or bypass the front end's protection). Nothing else moves; the registry is re-parsed and compared.
+                   Then: S-120 moves to closed_items (closed by <commit> resolved to its full sha; its closing evidence
+                   names the files, states the bound as INFERRED with its sensitivity, and every figure in it is read from
+                   vbus20_bound.FIG here, never typed); a new SESSION item (the next free S number: S-124 on the line that
+                   carries set 13) carries the switch nodes' ringing budget and the bench reading of the front end's OVP
+                   trip, closes only on the prototype, and takes S-120's place in REQ-015's waits_on; S-111's title gains
+                   S-120's residual (the single faults that blind or bypass the front end's protection). Nothing else
+                   moves; the registry is re-parsed and compared.
+
+Second issue (29 September 2026, the check of stream s120: B1 Q7 carries Q8's body diode, B2 the INFERRED label and the
+OVP bench reading reach the registry, B3 the new item closes only on a measurement referred to both bus levels, m1 the
+single-fault order held to the Q2 short, m2 SW2 and BTST1 stated as they are, m3 the full sha, m7 Q7's turn-on and U3's
+VBUS pin, m8 the pages).
 
 No circuit change is drawn by this stream (the answer is (a), the bound holds), so no netlist read-back of a new part is
 owed; check (2) is the netlist gate instead: it re-reads every part and net the bound rests on.
@@ -57,8 +64,12 @@ def git(*args):
 
 
 def evidence_gate(commit):
+    """Refuse unless the records are committed and identical at <commit> and HEAD; return <commit>'s full sha (the
+    check of stream s120, m3: closed_by carries the 40 characters every closed item carries)."""
     if not re.match(r"^[0-9a-f]{8,40}$", commit or ""): refuse("give the commit that carries this stream's records")
     if git("cat-file", "-e", commit + "^{commit}").returncode: refuse("%s is not in this history" % commit)
+    full = git("rev-parse", commit + "^{commit}").stdout.decode().strip()
+    if len(full) != 40: refuse("%s does not resolve to a full sha" % commit)
     for f in EVIDENCE:
         path = "%s/%s" % (REC, f)
         if git("ls-files", "--error-unmatch", path).returncode: refuse("%s is not committed" % path)
@@ -67,6 +78,7 @@ def evidence_gate(commit):
         at_h = git("rev-parse", "HEAD:%s" % path)
         if at_c.returncode: refuse("%s is not carried by %s" % (path, commit[:8]))
         if at_c.stdout != at_h.stdout: refuse("%s at %s differs from HEAD's" % (path, commit[:8]))
+    return full
 
 
 def rerun_bound():
@@ -88,66 +100,87 @@ def next_s(d):
 
 
 def texts(F, commit, ring_id):
+    """The three registry texts, every figure read from vbus20_bound.FIG (second issue: the check of stream s120, B1 to B3,
+    m1, m2 and m7). The bound is written INFERRED wherever it is stated, with its sensitivity."""
     r = F["ring_A2"]
+    s29, s30 = F["sens29"] * 100, F["sens30"] * 100
     ring = (
-        "(stream s120, S-120's switch nodes; the independent re-check of stream s117, minor n1) Board A's charger switch "
-        "nodes against the 30 V FETs of decision 57 (Q7 CSD17578Q5A, Q8 to Q10 CSD17577Q5A; VDS 30 V absolute, TI SLPS526 "
-        "and SLPS516 page 1) and the BQ25731's own SW1 and SW2 (32 V absolute, 26 V recommended, -4 V for 25 ns; SLUSE66A "
-        "8.1 and 8.3, printed page 8). S-120 bounds the bus VBUS20 at %.2f V and holds it at %.2f V in steady service "
-        "(v2/docs/records/s120/vbus20_bound.out); the ringing on top of the bus is not bounded at desk, since no layout "
-        "exists and no TI note giving a layout-independent bound is held. TI prefers 30 V FETs for a 19 to 20 V input "
-        "(SLUSE66A 10.2.2.6, page 86) in the topology board A draws, the input loop running through R16 with only C190 10 nF "
-        "and C191 1 nF after it (page 86; Figure 10-1, page 83); board A's band tops out %.2f V above TI's 20 V. Budget over "
-        "the steady bus: %.2f V to the FETs' 30 V, %.2f V to SW1's recommended 26 V. A model for the layout writer "
-        "(vbus20_bound.out section 10, not a bound): Q7's current falls in about %.1f ns, so at Option A(i)'s bound (L2 peak "
-        "%.2f A) each nH of the loop C190 and C191, Q7, Q8 adds about %.1f V, 1 nH between the VBUS20 bank (C20 to C22), "
-        "R16 and C190 lifts CH_ACN by about %.1f V (growing as the square root of the inductance), and the 30 V budget allows "
-        "about %.2f nH of the first loop. Owner: board A's layout writer "
-        "(S-115's pass) and the bench. Closed when a routed-board reading of both loops' inductance, or a prototype "
-        "measurement of CH_SW1, CH_ACN and CH_SW2 at the charger's largest current, keeps each FET's VDS and U3's SW pins "
-        "inside their absolute ratings, or when a snubber, a gate-drive change or FETs of a higher voltage are drawn and "
-        "read back on the regenerated netlist."
-        % (F["bound"], F["v_hi"], F["v_hi"] - 20.0, 30.0 - F["v_hi"], 26.0 - F["v_hi"], F["t_fi"] * 1e9, r["i"], r["vpn"],
-           r["vacn"], r["l30"]))
+        "(stream s120, S-120's switch nodes; the independent re-check of stream s117, minor n1, and the check of stream "
+        "s120, B1 to B3) Board A's charger switch nodes against the 30 V FETs of decision 57 (Q7 CSD17578Q5A, Q8 to Q10 "
+        "CSD17577Q5A; VDS 30 V absolute, TI SLPS526 and SLPS516 page 1) and the BQ25731's own pins (VBUS, ACP, ACN, SW1 and "
+        "SW2 32 V absolute; SW1 and SW2 26 V recommended and -4 V for 25 ns; SLUSE66A 8.1 and 8.3, printed page 8). S-120 "
+        "holds the bus VBUS20 at %.2f V in steady service and bounds it at %.2f V, a bound INFERRED from the LM5176's output "
+        "over-voltage threshold, which TI gives as a typical 10 percent over VREF only (SNVSAI1D 6.5 page 8): 30 V is reached "
+        "only if the trip sits %.1f percent over VREF for Q7 or %.1f percent for Q8 (v2/docs/records/s120/vbus20_bound.out "
+        "sections 3 and 8). Q7 holds the bus plus Q8's body diode in every dead time (VSD 1.0 V maximum, SLPS516 page 3). "
+        "The ringing on top is not bounded at desk: no layout exists and no TI note giving a layout-independent bound is "
+        "held. TI prefers 30 V FETs for a 19 to 20 V input (SLUSE66A 10.2.2.6, page 86) in the topology board A draws, the "
+        "input loop running through R16 with only C190 10 nF and C191 1 nF after it (page 86, Figure 10-3 page 85); board "
+        "A's band tops out %.2f V above TI's 20 V, and board A does not draw Figure 10-3's CACP and CACN (33 nF to ground), "
+        "so U3's ACN pin sees CH_ACN's ring through R146 and C121 alone. Budget over the steady bus: %.2f V for Q7, %.2f V "
+        "for Q8, %.2f V to SW1's recommended 26 V; over the bound %.2f V for Q7 and %.2f V for Q8. A model for the layout "
+        "writer (vbus20_bound.out section 10, not a bound, typical driver figures): Q7's turn-off current falls in about "
+        "%.1f ns, so at Option A(i)'s bound (L2 peak %.2f A) each nH of the loop C190 and C191, Q7, Q8 adds about %.1f V to "
+        "Q7 and Q7's budget allows about %.2f nH; Q7's turn-on rises in about %.1f ns from the valley current into Q8's "
+        "reverse recovery, whose charge TI states only at 300 A/us. Owner: board A's layout writer (S-115's pass, where a "
+        "routed-board reading of both loops' inductance is recorded as the layout step and does not close this item) and "
+        "the bench. Closed only on the prototype: CH_SW1, CH_ACN, CH_SW2 and U3's VBUS pin read at the charger's largest "
+        "current, each overshoot (the peak less the measured bus) added to %.2f V for steady service and to %.2f V for the "
+        "over-voltage excursion, Q7's VDS also carrying Q8's VSD, and each result inside 30 V for the FETs and 32 V for "
+        "U3's pins; and the front end's OVP trip read on the prototype (FB driven through R6 and R7), which replaces the "
+        "INFERRED %.2f V and with it the %.2f V reference. A snubber, a gate-drive change or FETs of a higher voltage, "
+        "drawn and read back on the regenerated netlist, are measured the same way."
+        % (F["v_hi"], F["bound"], s29, s30, F["v_hi"] - 20.0, F["b_q7"][0], F["b_q8"][0], F["b_sw1r"][0], F["b_q7"][1],
+           F["b_q8"][1], F["t_fi"] * 1e9, r["i"], r["vpn"], r["l30"], F["t_ri"] * 1e9, F["v_hi"], F["bound"], F["ovp_hi"],
+           F["bound"]))
     ev = (
-        "Stream s120 (v2/docs/records/s120/README.md, vbus20_bound.py and its .out, merged at %s): the committed netlists "
-        "of boards A (sha256/16 %s) and E (%s) parsed, %d of %d circuit facts holding, among them no clamp on VBUS20 and "
-        "U3's OTG/VAP/FRS pin on GND, so the charger cannot drive the bus. The front end U2 (LM5176) regulates VBUS20 at "
-        "%.2f to %.2f V (VREF 0.788 to 0.812 V, TI SNVSAI1D 6.5 page 6; R6 240k over R7 10k at 1 percent, 100 ppm/K over "
-        "65 K INFERRED; IBIAS(FB) 25 nA). Its output over-voltage protection turns the gate drives off above VREF plus 10 "
-        "percent, a typical figure only (6.5 page 8; 7.3.11 page 18), read on the same divider: %.2f V at VREF's maximum and "
-        "the worst ratio, and %.2f V with L1's energy at the boost peak limit (140 mV over 5 mOhm, page 7) into the six bulk "
-        "parts at -20 percent. That bound holds whatever the load, the line or the loop does while U2 is inside its ratings: "
-        "a load dump when the charger stops at 8.0 A reads %.2f V on the front end's loop model and a line step to U2's 60 V "
-        "%.2f V (both MODEL); the charger's own inductor returns to VBAT, not to the bus; an idle stage blocks VIN_RAW (Q2's "
-        "body diode); board E delivers 9 to 36 V with the LM5069's lockout at %.1f to %.1f V and SMCJ40A class clamps at "
-        "64.5 V (S-111 owns U2 against them). Margins at the bound: %.2f V to the FETs' 30 V (SLPS526 and SLPS516 page 1), "
-        "%.2f V to the BQ25731's 32 V on VBUS, ACP, ACN, SW1 and SW2 and %.2f V to its recommended 26 V and to ACOV's 26.0 V "
-        "minimum (SLUSE66A 8.1 and 8.3 page 8, 8.5 page 14); BTST1 at the bound plus REGN's 6.3 V sits %.2f V under 32 V. "
-        "The pack side stays at or under %.1f V by SYSOVP (page 14) and %.2f V by D1 (SMCJ18A, INFERRED straight line) if the "
-        "pack opens while charging, %.2f V under 30 V. No clamp or setting is added and the FETs' rating stands (decision "
-        "57). The switch nodes' ringing is not bounded at desk and is carried by %s; the single faults that blind or bypass "
-        "the protection (Q2 short, R6 open, FB short) are outside every requirement (ASM-001, SC-39), take U3 past its own "
-        "32 V before the FETs, and are noted on S-111. AI desk work on the makers' figures, nothing built or measured."
+        "Stream s120 (v2/docs/records/s120/README.md, vbus20_bound.py and its .out, merged at %s; second issue after the "
+        "check of stream s120): the committed netlists of boards A (sha256/16 %s) and E (%s) parsed, %d of %d circuit facts "
+        "holding, among them VBUS20's whole membership (39 pins, no clamp) and U3's OTG/VAP/FRS pin on GND, so the charger "
+        "cannot drive the bus. The front end U2 (LM5176) regulates VBUS20 at %.2f to %.2f V (VREF 0.788 to 0.812 V, TI "
+        "SNVSAI1D 6.5 page 6; R6 240k over R7 10k at 1 percent, 100 ppm/K over 65 K INFERRED; IBIAS(FB) 25 nA). Its output "
+        "over-voltage protection turns the gate drives off above VREF plus 10 percent, a TYPICAL figure with no limits "
+        "(6.5 page 8; 7.3.11 page 18), read on the same divider, so the bound is INFERRED: %.2f V at VREF's maximum and the "
+        "worst ratio, %.2f V with L1's energy at its largest current inside U2's ratings (buck mode at 60 V, %.2f A, page 7) "
+        "into the six bulk parts at -20 percent. 30 V is reached only if the trip sits %.1f percent over VREF for Q7 or %.1f "
+        "percent for Q8, against the typical 10; the bench reading of the trip is carried by %s. The bound holds whatever "
+        "the load, the line or the loop does while U2 is inside its ratings: a load dump when the charger stops at 8.0 A "
+        "reads %.2f V on the front end's loop model and a line step to U2's 60 V %.2f V (both MODEL); the charger's own "
+        "inductor returns to VBAT, not to the bus; an idle stage blocks VIN_RAW (Q2's body diode); board E delivers 9 to 36 "
+        "V with the LM5069's lockout at %.1f to %.1f V and SMCJ40A class clamps at 64.5 V (S-111 owns U2 against them). "
+        "Margins at the bound, before ringing: Q8 %.2f V and Q7 %.2f V to their 30 V (SLPS526 and SLPS516 page 1; Q7 carries "
+        "Q8's body diode, VSD 1.0 V maximum, SLPS516 page 3); %.2f V to the BQ25731's absolute 32 V on VBUS, ACP, ACN and "
+        "SW1, and %.2f V to its recommended 26 V and to ACOV's 26.0 V minimum (SLUSE66A 8.1 and 8.3 page 8, 8.5 page 14); "
+        "BTST1 at the bound plus REGN's 6.3 V sits %.2f V under its recommended 32 V and %.2f V under its absolute 38 V. The "
+        "pack side, SW2 with it, stays at or under %.1f V by SYSOVP (page 14) and %.2f V by D1 (SMCJ18A, INFERRED straight "
+        "line) if the pack opens while charging: Q9 and Q10 %.2f V under 30 V, SW2 %.2f V under 32 V. No clamp or setting is "
+        "added and the FETs' rating stands (decision 57). The switch nodes' ringing is not bounded at desk and is carried "
+        "by %s, which closes only on the prototype. The single faults that blind or bypass the protection are outside "
+        "every requirement (ASM-001, SC-39) and noted on S-111: for a Q2 short U3 passes its own 32 V before Q7 reaches 30 "
+        "V while the pack is above about 1.2 V; for R6 open or FB shorted no order is claimed. AI desk work on the makers' "
+        "figures, nothing built or measured."
         % (commit, F["sha_a"], F["sha_e"], F["facts"] - F["facts_bad"], F["facts"], F["v_lo"], F["v_hi"], F["ovp_hi"],
-           F["bound"], F["dump"], F["line"], F["ov_lo"], F["ov_hi"], 30.0 - F["bound"], 32.0 - F["bound"],
-           26.0 - F["bound"], 32.0 - F["bound"] - 6.3, F["sysovp"], F["d1_a2"], 30.0 - F["d1_a2"], ring_id))
+           F["bound"], F["i_l1_max"], s29, s30, ring_id, F["dump"], F["line"], F["ov_lo"], F["ov_hi"], F["q8_m"][2],
+           F["q7_m"][2], F["vbus_abs_m"][2], F["rec26_m"][2], F["btst_rec_m"][2], F["btst_abs_m"][2], F["sysovp"],
+           F["d1_a2"], F["q9_d1"], F["sw2_abs_d1"], ring_id))
     s111 = (
         " S-120's residual (stream s120, v2/docs/records/s120/vbus20_bound.out section 11): a U2 or Q2 failure, which a "
         "surge past U2's 60 V could cause, passes VIN_RAW onto VBUS20 less a body diode's drop (%.1f V at 36 V in and %.1f V "
-        "at the lockout's maximum, the drop INFERRED) or, with R6 open or FB shorted, lets the stage run the bus up with "
-        "nothing on board A to "
-        "stop it, since the LM5176's over-voltage protection reads the same FB pin; board A has no clamp on VBUS20, and "
-        "U3's VBUS, ACP and ACN (32 V absolute, SLUSE66A page 8) are the first parts past their rating. Options to weigh: an "
-        "independent over-voltage trip on VBUS20 (U34's channel 1 re-armed while the stage runs) for the FB faults, and an "
-        "SMCJ22A on VBUS20 (22 V standoff over the %.2f V band), which holds a Q2 short at about 28 V at board E's 6.15 A "
-        "hot-swap limit (INFERRED) until the LM5069's timer opens."
+        "at the lockout's maximum, the drop INFERRED); U3's VBUS, ACP and ACN (32 V absolute, SLUSE66A page 8) then pass "
+        "their rating first while the pack is above about 1.2 V, since with the charger stopped Q10's body diode holds SW1 "
+        "near VBAT and Q7 sees the bus less VBAT. With R6 open or FB shorted the stage runs the bus up with nothing on board "
+        "A to stop it, since the LM5176's over-voltage protection reads the same FB pin; the charger switches until its "
+        "ACOV trips (up to 27.7 V after 100 us, page 14), with Q7 then at 28.7 V or more before any ringing, so the FETs may "
+        "be first there. Board A has no clamp on VBUS20. Options to weigh: an independent over-voltage trip on VBUS20 (U34's "
+        "channel 1 re-armed while the stage runs) for the FB faults, and an SMCJ22A on VBUS20 (22 V standoff over the %.2f V "
+        "band), which holds a Q2 short at about 28 V at board E's 6.15 A hot-swap limit (INFERRED) until the LM5069's timer "
+        "opens."
         % (36.0 - 0.8, F["ov_hi"] - 0.8, F["v_hi"]))
     return ring, ev, s111
 
 
 def phase_close(commit, check, reg):
-    evidence_gate(commit)
+    commit = evidence_gate(commit)
     F = rerun_bound()
     t = open(reg, encoding="utf-8").read()
     d = yaml.safe_load(t)
@@ -209,9 +242,11 @@ def phase_close(commit, check, reg):
     if ra_["REQ-015"]["waits_on"] != [ring_id if w == "S-120" else w for w in waits]: refuse("REQ-015's waits_on does not read as written")
     for sec in d:
         if sec not in ("open_items", "closed_items", "records") and d[sec] != after[sec]: refuse("section %s changed" % sec)
-    print("apply_registry_s120 close: S-120 closed by commit %s (bus bound %.2f V, %.2f V under 30 V); %s opened (the switch "
-          "nodes' ringing budget, %.2f V over the steady bus), REQ-015 waits on %s; S-111's title carries S-120's residual"
-          % (commit[:8], F["bound"], 30.0 - F["bound"], ring_id, 30.0 - F["v_hi"], ", ".join(ra_["REQ-015"]["waits_on"])))
+    print("apply_registry_s120 close: S-120 closed by commit %s (bus bound %.2f V INFERRED; at it Q8 %.2f V and Q7 %.2f V "
+          "under 30 V); %s opened (the switch nodes, closed only on the prototype; budget over the steady bus %.2f V for Q7, "
+          "%.2f V for Q8), REQ-015 waits on %s; S-111's title carries S-120's residual"
+          % (commit, F["bound"], F["q8_m"][2], F["q7_m"][2], ring_id, F["b_q7"][0], F["b_q8"][0],
+             ", ".join(ra_["REQ-015"]["waits_on"])))
     if check:
         print("CHECK ONLY: %s not written." % os.path.relpath(reg, TOP))
         return 0
