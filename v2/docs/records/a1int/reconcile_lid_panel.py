@@ -95,12 +95,13 @@ def main():
                 out.append("      %s" % ("does not meet M1 even with the lid at +40 C" if t is None else "lowest lid temperature that still meets M1: %+.1f C" % t))
         out.append("")
     TP.NP_L = n0; TP.NP_T = TP.NP_B + n0
-    out += ["NOTES (the independent check's minor items): the model evaluates the charge taper once an hour; a 0.01 h step lowers",
-            "the lowest stores by about 0.8 Wh (B) and 2.4 Wh (C) and moves the lid thresholds by -0.1 to +0.2 K (at 0.1 h the 4S14P C",
-            "threshold at the minimum U3 reads about +4.6 C: it is not stable to better than about 1.5 K). Node power offered to a full",
-            "store is discarded at the clamp after U3B's loss is charged on it (23 to 58 Wh over 72 h); no energy is created and no",
-            "lowest point moves. The lid path's standby drain and board PL's own supply (about 1.5 to 1.8 Wh over 72 h) are outside",
-            "the 42.8 W. The results hold on the 40 degree south plane only.",
+    out += ["NOTES (the independent checks' minor items, measured at this issue's settings, checks/check-a1int-2.md): the model",
+            "evaluates the charge taper once an hour; a 0.01 h step lowers the lowest stores by about 1.2 to 1.9 Wh (B) and 3.3 to",
+            "4.2 Wh (C), and the lid thresholds are not stable to better than about 1.5 K (at 0.1 h the 4S14P C threshold at the",
+            "minimum U3 reads about +4.6 C). U3B at its 0.96 efficiency bracket costs 6.0 and 6.2 Wh at C with U3 at 6.1 A. Node",
+            "power offered to a full store is discarded at the clamp after U3B's loss is charged on it (8.2 to 48.2 Wh over 72 h);",
+            "no energy is created and no lowest point moves. The lid path's standby drain (about 1.5 to 1.8 Wh over 72 h) is outside",
+            "the 42.8 W, and board PL's own supply is not read. The results hold on the 40 degree south plane only.",
             "END. Each line is the model's arithmetic on the September reference day; nothing is measured."]
     sys.stdout.write("\n".join(out) + "\n")
     return 0
