@@ -36,13 +36,19 @@ import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PINS = {
-    "v2/docs/records/energy/energy_budget.py": "cf6c377fa1015a468a61dc83f1c735e54b5f778eb3bb39834495ee2eb24d02c1",
-    "v2/docs/records/energy/energy_inputs.yaml": "64dd014bee56d855023d43caeaf848cfd6dc54f65b58e341d6696851460f7470",
+    # energy_budget.py and energy_inputs.yaml re-pinned by stream s119 (S-119, 29 September 2026) from cf6c377f and 64dd014b:
+    # the inputs' second issue restates board A's charger row (0.98 to 0.979) and chain_eta; the model prints the chain to
+    # three places; nothing this script reads from either file changed in kind
+    "v2/docs/records/energy/energy_budget.py": "6a8ac4642bd2aaf35d5ad6b75c5004c24d3e11ed1ede09a4b7a1041cd103235c",
+    "v2/docs/records/energy/energy_inputs.yaml": "74a6e4ab0074648ed459cc62daf7000798ae6247cd5056e19cae5e4d56f55aed",
     "v2/ecad/tools/gen_sch_p.py": "740817ada5c8e14af8c8e001b775e09cbae94d6a03ad462ee2e1c1755bc935a3",
     "v2/ecad/tools/pcb_pack_protection.yaml": "ab1dbc3f3f69aa4687a4fa9745c0cbdc96d0521146dc5d3f84698656e33c484b",
     # re-pinned 29 September 2026 after sets 8 and 9 changed the file: the three calls this script parses (the VHEAT and
-    # VHEAT_IN rails and the U22 efuse) were compared as parsed trees against the pinned version (c4ad8350) and are identical
-    "v2/ecad/tools/gen_sch_a.py": "eb2e347e4d371e0f94718a97e60188274ed9c89d7cded6e084bfcbb81488da3d",
+    # VHEAT_IN rails and the U22 efuse) were compared as parsed trees against the pinned version (c4ad8350) and are identical;
+    # re-pinned again by stream s119 (S-119, 29 September 2026) after set 12's S-117 edits (decisions 56 and 57) moved the file
+    # from eb2e347e (c74d6129) to 6a136fee (e553e43a): the same three calls compared as ast dumps, identical
+    # (v2/docs/records/s119/cmp_gen_sch_a.py and its .out)
+    "v2/ecad/tools/gen_sch_a.py": "6a136feec6c9cf4e2011ed8c45a1f2e0adc3e263718c355b4b909872ee5d3c4b",
     "v2/ecad/tools/panel1450.py": "3bdb88df9826024484326e8e7d67c74789ae20f610ce3e4ed69988bfc9f0340f",
     "v2/docs/records/adj/A06-pack-geometry/drafts/pack_fit.py": "a2a050dc24c461f207bb0485ef98851f238641f449f30151605042970bccf02c",
 }

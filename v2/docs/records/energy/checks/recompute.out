@@ -1,4 +1,4 @@
-own profile vs EB.profile max abs diff: 5.68e-14 W/m2; Sept mean day 4.014 kWh/m2 (6 years); pr 0.9417 eta 0.8476
+own profile vs EB.profile max abs diff: 5.68e-14 W/m2; Sept mean day 4.014 kWh/m2 (6 years); pr 0.9417 eta 0.8467
 
 1. demand: 24 h 1027.2 Wh, 72 h 3081.6 Wh
    15 Sep: declination +2.22 deg, day 12.56 h, sun down 11.44 h, night demand 489.5 Wh
@@ -7,14 +7,14 @@ own profile vs EB.profile max abs diff: 5.68e-14 W/m2; Sept mean day 4.014 kWh/m
    record's 11.28 h x 42.8 W = 482.8 Wh
 
 2. storage floor (sum over hours with node power under the load)
-   window  100 W,   200 Wp: 16 h below, deficit 606.7 Wh/day, harvest 640.8 Wh/day
-   window  100 W,   400 Wp: 14 h below, deficit 564.3 Wh/day, harvest 834.4 Wh/day
-   window  100 W,   800 Wp: 14 h below, deficit 529.5 Wh/day, harvest 917.3 Wh/day
-   window  100 W, 20000 Wp: 12 h below, deficit 506.8 Wh/day, harvest 1023.9 Wh/day
-   window  200 W,   200 Wp: 16 h below, deficit 606.7 Wh/day, harvest 640.8 Wh/day
-   window  200 W,   400 Wp: 14 h below, deficit 564.3 Wh/day, harvest 1281.6 Wh/day
-   window  200 W,   800 Wp: 14 h below, deficit 529.5 Wh/day, harvest 1668.7 Wh/day
-   window  200 W, 20000 Wp: 12 h below, deficit 506.8 Wh/day, harvest 2041.0 Wh/day
+   window  100 W,   200 Wp: 16 h below, deficit 606.7 Wh/day, harvest 640.2 Wh/day
+   window  100 W,   400 Wp: 14 h below, deficit 564.4 Wh/day, harvest 833.5 Wh/day
+   window  100 W,   800 Wp: 14 h below, deficit 529.5 Wh/day, harvest 916.4 Wh/day
+   window  100 W, 20000 Wp: 12 h below, deficit 506.8 Wh/day, harvest 1022.8 Wh/day
+   window  200 W,   200 Wp: 16 h below, deficit 606.7 Wh/day, harvest 640.2 Wh/day
+   window  200 W,   400 Wp: 14 h below, deficit 564.4 Wh/day, harvest 1280.3 Wh/day
+   window  200 W,   800 Wp: 14 h below, deficit 529.5 Wh/day, harvest 1667.0 Wh/day
+   window  200 W, 20000 Wp: 12 h below, deficit 506.8 Wh/day, harvest 2038.9 Wh/day
 
 3. smallest pack (both starts, +20 C, aged 80 percent, 3.00 V line)
    window  100 W,  400 Wp: 4S27P, usable 983.0 Wh
@@ -24,15 +24,15 @@ own profile vs EB.profile max abs diff: 5.68e-14 W/m2; Sept mean day 4.014 kWh/m
    per string at 15..18P: 36.41, 36.41, 36.41, 36.41
 
 4. 4S18P lowest point, 42.8 W, 200 W window
-    400 Wp, +20.0 C: MEETS, lowest 91.0 Wh, stops [None, None]
+    400 Wp, +20.0 C: MEETS, lowest 90.9 Wh, stops [None, None]
     400 Wp, +15.0 C: MEETS, lowest 26.8 Wh, stops [None, None]
-    650 Wp, +20.0 C: MEETS, lowest 112.8 Wh, stops [None, None]
-    650 Wp, +15.0 C: MEETS, lowest 48.6 Wh, stops [None, None]
+    650 Wp, +20.0 C: MEETS, lowest 112.7 Wh, stops [None, None]
+    650 Wp, +15.0 C: MEETS, lowest 48.5 Wh, stops [None, None]
    4S18P usable 655.3 Wh; nominal 72 x 144.7/12 = 868.2 Wh; cells 3.6 kg
-   peak stored charge 4S18P 400 Wp 200 W: 117.3 W (offered 123.5 W, node peak 166.3 W)
+   peak stored charge 4S18P 400 Wp 200 W: 117.1 W (offered 123.3 W, node peak 166.1 W)
 
 5. inside REQ-016's 100 W window: the pack sizes the case could hold (9f: base 4S6P + lid up to 4S13P)
-   4S18P, 1000 Wp, +20.0 C: NOT MET, lowest 0.0 Wh, stops [69, 58]
+   4S18P, 1000 Wp, +20.0 C: NOT MET, lowest 0.0 Wh, stops [69, 57]
    4S18P, 1000 Wp, +15.0 C: NOT MET, lowest 0.0 Wh, stops [47, 35]
    4S18P, 1300 Wp, +20.0 C: NOT MET, lowest 0.0 Wh, stops [71, 59]
    4S18P, 1300 Wp, +15.0 C: NOT MET, lowest 0.0 Wh, stops [47, 35]
@@ -40,23 +40,23 @@ own profile vs EB.profile max abs diff: 5.68e-14 W/m2; Sept mean day 4.014 kWh/m
    4S18P, 1500 Wp, +15.0 C: NOT MET, lowest 0.0 Wh, stops [70, 58]
    4S19P, 1000 Wp, +20.0 C: NOT MET, lowest 0.0 Wh, stops [70, 58]
    4S19P, 1000 Wp, +15.0 C: NOT MET, lowest 0.0 Wh, stops [47, 35]
-   4S19P, 1300 Wp, +20.0 C: MEETS, lowest 1.3 Wh, stops [None, None]
+   4S19P, 1300 Wp, +20.0 C: NOT MET, lowest 0.0 Wh, stops [71, 59]
    4S19P, 1300 Wp, +15.0 C: NOT MET, lowest 0.0 Wh, stops [70, 58]
-   4S19P, 1500 Wp, +20.0 C: MEETS, lowest 34.5 Wh, stops [None, None]
+   4S19P, 1500 Wp, +20.0 C: MEETS, lowest 32.6 Wh, stops [None, None]
    4S19P, 1500 Wp, +15.0 C: NOT MET, lowest 0.0 Wh, stops [71, 59]
-   largest load 4S18P, 100 W window: 1000 Wp 41.35, 1300 Wp 42.20, 1500 Wp 42.77 W
-   largest load 4S19P, 100 W window, 1300 Wp: 42.82 W
+   largest load 4S18P, 100 W window: 1000 Wp 41.32, 1300 Wp 42.17, 1500 Wp 42.74 W
+   largest load 4S19P, 100 W window, 1300 Wp: 42.79 W
    largest load 4S3P, 200 W window, 400 Wp: 9.11 W; 4S6P: 18.07 W
 
 6. lid footprint arithmetic (18.55 pitch, 66.25 rows, 346.16 x 231.86 ceiling)
    rows along the long side: 60 cells; along the short side: 54 cells
 
 7. inside the 100 W window beyond the sweep's 1500 Wp cap: smallest pack and its lowest point
-    1500 Wp: 4S19P, lowest 34.5 Wh at +20 C, +15 C NOT MET
-    1600 Wp: 4S18P, lowest 14.7 Wh at +20 C, +15 C NOT MET
-    2000 Wp: 4S17P, lowest 31.4 Wh at +20 C, +15 C NOT MET
-    3000 Wp: 4S16P, lowest 1.4 Wh at +20 C, +15 C NOT MET
-   20000 Wp: 4S16P, lowest 18.7 Wh at +20 C, +15 C NOT MET
+    1500 Wp: 4S19P, lowest 32.6 Wh at +20 C, +15 C NOT MET
+    1600 Wp: 4S18P, lowest 12.8 Wh at +20 C, +15 C NOT MET
+    2000 Wp: 4S17P, lowest 29.4 Wh at +20 C, +15 C NOT MET
+    3000 Wp: 4S17P, lowest 35.9 Wh at +20 C, +15 C NOT MET
+   20000 Wp: 4S16P, lowest 16.7 Wh at +20 C, +15 C NOT MET
 
 8. no window, arrays beyond the sweep: smallest pack
     1500 Wp: 4S15P, lowest 33.0 Wh at +20 C
