@@ -97,3 +97,11 @@ a maker's document. AI engineering work, not a qualified review. No agent, no ot
   U3's pins, with its INFERRED size in `.out` section 10 (about 0.08 V through the 200 ns filter); r3: the `.out` header
   reads "fourth issue". Every other clause of the test kept. Checkpoint `2ab673ab`; README's quotation regenerated from the
   applied text.
+- 19:16 to 19:17 Commit `a997d08a` (README, this log). Dry run into `dryrun.out` at `a997d08a`: `--check` writes nothing
+  (the tree's registry sha256/16 1dde1fd1, equal to main `b874b744`'s); scratch copies of the tip's registry and of main
+  `b874b744`'s each take one write (S-120 closed by the full sha, S-124 opened, REQ-015 on S-106, S-107, S-111, S-124,
+  S-111's title extended), each refuses a second run, and the two applied copies are byte identical; the refusals as before
+  (e57a7365, 0004b8a7, afcdb557, no commit, an uncommitted LOG.md change, restored byte for byte); `rules_lib.py
+  requirements` 144 records, 0 errors and 0 warnings on all four copies (this branch changes no file under v2/ecad/tools
+  against b874b744); the six mutants as in the third round. The README's quotation of S-124's closing condition equals the
+  applied text (compared parsed).
