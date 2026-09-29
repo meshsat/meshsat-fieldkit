@@ -260,37 +260,67 @@ def names(s, nets):
 ABSENT = re.compile(r"\b(absent|owed|not drawn|not connected|not gated|has no|have no|does not have|do not have|nothing does|"
                     r"lacks?|no path|no hardware|only through|driven only|in the schematic|until [^.;]{0,80}generators?)\b", re.I)
 
-# ------------------------------------------------------------------ makers' part numbers (round 4)
-# A maker's part number is read by its shape, never from a list of known parts:
-#   * a letter-led token of upper-case letters and digits (with - or / inside) of five characters or more that holds a
-#     run of three digits or more (TMDS341A, LM5069, RA30H1317M1, E22-900M30S, D38999/26FC4SN);
-#   * a digit-led token that holds a capital letter and four digits or more (74LVC1G157GW, 2N7002, 5636ADKB-2V);
-#   * a digit-only token with a dash or slash that holds a run of six digits (2199119-3, 1-2199119-5, 132134-11);
-#   * a series word of two to four capitals, a space, and a digit-led token with a dash and three digits or more
+# ------------------------------------------------------------------ makers' part numbers (round 4, widened in round 5)
+# A maker's part number is read by its shape, never from a list of known parts. Round 5 (check-s122-4 m1) widened the
+# shapes to the families the round 4 finder missed (TI's SN74 single gates, BAT46W, BAT54, USBLC6-2SC6, E72-2G4M20S1E,
+# LIS3MDL, Si2300DS, all-digit numbers), and the closing gate probes the finder with every semiconductor part number the
+# six netlists' values carry. A token (letters, digits, - and /, and a dot between two digits) is a part number when:
+#   * it is letter-led, has no lower-case letter, is five characters or more and holds a run of three digits (round 4's
+#     rule: TMDS341A, LM5069, D38999/20, M39029/56-352);
+#   * it is letter-led, has no lower-case letter, holds two digits or more and two capitals or more, and is five
+#     characters or more (SN74LVC1G08, BAT46W, BAT54, USBLC6-2SC6, E72-2G4M20S1E, SMBJ5.0A, G6K-2F-Y) or four with two
+#     digits (XT60, SS14);
+#   * it is letter-led, has no lower-case letter, holds four capitals or more and a digit that is not its last character,
+#     and is six characters or more (LIS3MDL, B2B-XH-A);
+#   * it is letter-led and mixes cases, with two capitals or more and three digits or more (Si2300DS, nRF52840,
+#     IRLML6344TRPbF);
+#   * it is digit-led, holds a capital and four digits or more and no dot (74LVC1G157GW, 2N7002, 5636ADKB-2V; not the
+#     table 516.8-IX);
+#   * it is digit-only with a dash or slash and a run of six digits (2199119-3, 1-2199119-5, 132134-11), or digit-only of
+#     seven digits or more right after a capitalised maker's word (Molex 5023520600, Wuerth 692122030100);
+#   * it is a series word of two to four capitals, a space, and a digit-led token with a dash and three digits or more
 #     (TEN 40-2412WIN, APEM 5636ADKB-2V; not "FOR 1-CELL");
-#   * the same shapes in the file name of a maker's sheet the sentence cites (`m2/amphenol-mdt420b01001-m2-b-key.pdf`
-#     gives MDT420B01001): a row's source names the part the row relies on.
-# Not part numbers: a token with a lower-case letter (a commit, a unit), a registry or standard identifier (letters,
-# dashes, then one number: CFL-016, MIL-STD-810, AEC-Q100), a token led by a standard body (IEC, EN, ISO, UN, ...), a
-# pure range of two numbers of up to four digits (144-146), a file path, a URL, a commit and a generator citation
-# (removed before the scan).
+#   * it has one of these shapes in the file name of a maker's sheet the sentence cites
+#     (`m2/amphenol-mdt420b01001-m2-b-key.pdf` gives MDT420B01001): a row's source names the part the row relies on.
+# Not part numbers: a token with no capital (a commit, a unit, a value), a registry, finding or standard identifier
+# (CFL-016, MIL-STD-810, AEC-Q100, W3-F01, R8P-02, F-DEC40), a designator (TP10), a pin, an interface, an ingress code,
+# a list of bands (GPIO19, USB3-0, SPI3, IP67, L1/L2/L5/E6), a TI literature number (SLUSE66A), a month code (JUN26), a
+# series and pitch (XH2.5), a token led by a
+# standard body (IEC, EN, ISO, UN, ...), a pure range of two numbers of up to four digits (144-146), a file path, a URL,
+# a commit and a generator citation (removed before the scan).
 STDBODY = {"IEC", "EN", "ISO", "UN", "MIL", "IPC", "ECSS", "ETSI", "SAE", "NATO", "ANSI", "IEEE", "JEDEC", "RTCA", "EIA",
            "UL", "CISPR", "ITU", "IP", "DO"}
 PN_STRIP = re.compile(r"https?://\S+|[\w./-]+\.(?:py|md|yaml|json|out|net|pdf|kicad_\w+|csv|txt|sh|step|stp)(?::\d+(?:-\d+)?)?"
                       r"|\b(?=[0-9a-f]*[a-f])[0-9a-f]{7,40}\b")   # a commit holds a letter a to f; 2199119 is a part
-PN_TOK = re.compile(r"(?<![\w/.+-])([A-Za-z0-9][A-Za-z0-9/-]*[A-Za-z0-9])(?![\w/+-]|\.\w)")
-PN_ID = re.compile(r"^[A-Z]+(?:-[A-Z]+)*-[A-Z]?\d+[a-z]?$")
+PN_TOK = re.compile(r"(?<![\w/.+-])([A-Za-z0-9](?:[A-Za-z0-9/-]|(?<=\d)\.(?=\d))*[A-Za-z0-9])(?![\w/+-]|\.\w)")
+PN_ID = re.compile(r"^(?:[A-Z]+(?:-[A-Z]+)*-[A-Z]?\d+[a-z]?|[A-Z]\d[A-Z]*-[A-Z]?\d+)$")
+PN_PIN = re.compile(r"^(?:GPIO|IO|PIO|AIN|ADC|P[A-K])\d+$|^(?:USB|PCIE|HDMI|UART|SPI|I2C|SDIO|CAN|ANT|USIM|SIM)\d+(?:-\d+)?$"
+                    r"|^IP\d{2}$"                                  # an ingress code
+                    r"|^S[LNBCW][A-Z]{2,4}\d{1,3}[A-Z]$"            # a TI literature number (SLUSE66A, SNVS452G)
+                    r"|^(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\d{2}$"   # a month code in a sheet's name
+                    r"|^[A-Z]{1,3}\d\.\d{1,2}$"                     # a series and its pitch or a thread (XH2.5, M2.5)
+                    r"|^[A-Z]+-[A-Z]{1,4}\d+$"                      # a finding identifier (F-DEC40)
+                    r"|^(?:[A-Z]{1,2}\d{1,2}/)+[A-Z]{1,2}\d{1,2}$")   # a list of bands or pins (L1/L2/L5/E6)
 PN_SERIES = re.compile(r"\b([A-Z]{2,4}) (\d[0-9A-Z]*-[0-9A-Z-]*[0-9A-Z])\b")
+PN_MAKERNUM = re.compile(r"\b([A-Z][a-z]{1,15}) (\d{7,})\b")
+PN_MONTHS = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+             "November", "December"}
 
 
 def is_partno(t):
     """True when the token has a maker's part number's shape (the rules above)."""
-    if re.search(r"[a-z]", t) or not re.search(r"\d", t): return False
+    digits, caps = len(re.findall(r"\d", t)), len(re.findall(r"[A-Z]", t))
+    if not digits or PN_PIN.match(t) or REF.fullmatch(t): return False   # a designator is not a part number
     if t[0].isalpha():
-        return (len(t) >= 5 and bool(re.search(r"\d{3}", t)) and not PN_ID.match(t)
-                and re.split(r"[-/]", t)[0] not in STDBODY)
-    if re.search(r"[A-Z]", t):
-        return len(t) >= 5 and len(re.findall(r"\d", t)) >= 4
+        if PN_ID.match(t) or re.split(r"[-/]", t)[0] in STDBODY: return False
+        if re.search(r"[a-z]", t):
+            return caps >= 2 and digits >= 3
+        if len(t) >= 5 and re.search(r"\d{3}", t): return True         # round 4's rule (M39029/56-352, D38999/20)
+        if digits >= 2 and caps >= 2 and (len(t) >= 5 or (len(t) == 4 and digits == 2)): return True
+        return caps >= 4 and len(t) >= 6 and bool(re.search(r"\d(?=.)", t)) and not t[-1].isdigit()
+    if re.search(r"[a-z]", t) or "." in t: return False     # a digit-led token with a dot is a clause or a table (516.8-IX)
+    if caps:
+        return len(t) >= 5 and digits >= 4
     return bool(re.search(r"\d{6}", t)) and bool(re.search(r"[-/]", t))
 
 
@@ -307,6 +337,8 @@ def partnos(s):
     body = PN_STRIP.sub(" ", s)
     for m in PN_SERIES.finditer(body):
         if m.group(1) not in STDBODY and len(re.findall(r"\d", m.group(2))) >= 3: out.add(m.group(1) + " " + m.group(2))
+    for m in PN_MAKERNUM.finditer(body):
+        if m.group(1) not in PN_MONTHS: out.add(m.group(2))
     for m in PN_TOK.finditer(body):
         tok = m.group(1)
         if is_partno(tok) and not any(tok != x and tok in x.split(" ") for x in out): out.add(tok)

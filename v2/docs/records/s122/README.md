@@ -16,6 +16,48 @@ found five sentences in scope naming parts no generator carries, which the finde
 makers' part numbers; round 4 answers them and check-s122-3's three minors (below). Every statement below about what
 was read is what one of these scripts read, or a filed check's own words quoted with its file.
 
+## Round 5: parts in their roles (check-s122-4)
+
+The independent check of round 4 (`checks/check-s122-4.md`, filed byte for byte from the checker's report) found 1
+blocking and 3 minor items: two parts named in roles the netlists no longer give them read TRUE, because round 4's
+judgement asked only whether a part number is on the board.
+
+* **The role rule** (`verdicts.check_roles`, applied with the part check: a failure makes a TRUE judgement STALE and a
+  NOT DERIVABLE one UNJUDGED). A part named with a role ("the X gate-bias switch", "the X USB codec", "the X buck") is
+  read against the designators whose netlist values carry it:
+  * forward: one of them states the role's noun (`ROLE_SYN` lists the words a value states a noun by: a "SPDT antenna
+    changeover" is a switch, a "buck-boost controller" a stage);
+  * reverse: when the role's qualifier is specific (two words or more, "gate bias"), no designator that does not carry
+    the part states it while none that carries the part does;
+  * rails: a plain list of parts after a phrase naming rails (slot, device, PA, HF, PoE) must be the part of every
+    converter whose value states that rail's net, and a part marked "monitored" of every monitor of it;
+  * `roles_ok` binds a role the netlist states in other words or by a net to one of the judgement's own assertions on a
+    designator that carries the part (the LM5176 as A22's front end, `U2` "VBUS20 from VIN_RAW"; the LT8705A as the
+    solar tracker, `U5` pin 32 on `PV_P`; C7's PCA9555 as the panel expanders, `U1`).
+* **Its tests** are in `close_s122.py`'s gate, condition (e): the check's two sentences as they stood at `edead832`
+  (the D8 row's "TPS22810 gate-bias switch", the A22 row's "(AP64500, INA226 monitored)"), judged TRUE with the check's
+  own reading (`D:U21~TPS22810`, `A:U4~AP64500`), must be refused by the role rule and must not read TRUE; and in (b)
+  the corrected rows must read TRUE with their role assertions.
+* **The corrections** (`apply_docs_s122_r5.py`: 5 edits, 33 assertions held first, refuses a second run), V2-SPEC.md's
+  correction 35:
+
+  | Line (at `edead832`) | What it said | What the netlists carry | Now |
+  |---|---|---|---|
+  | 84, D8 row | "the TPS22810 gate-bias switch" | board D's gate bias is `U15`, TLV75801 "PA gate bias VGG ... while PA_KEY is high", EN (pin 4) on `PA_KEY`, since `faf8c981`; the only TPS22810 is `U21`, "load switch, +5V_TX"; at `b2709118` a TPS22810 switched the bias | "the TLV75801 gate-bias LDO on `PA_KEY` (`U15`; on 7 September a TPS22810 switched the bias, correction 35), the TPS22810 load switch of the exciter's `+5V_TX` (`U21`)" |
+  | 81, A22 row | "three 5.1 V slot rails and a device rail (AP64500, INA226 monitored)" | `U4` and `U6` AP64500 (`+5V_S1`, `+5V_S3`); `U5` and `U7` LM5176 (`+5V_S2`, `+5V_DEV`); all four AP64500 at `b2709118` | "(the AP64500 buck on slots 1 and 3, `U4` and `U6`, and LM5176 stages on slot 2 and the device rail, `U5` and `U7`, all four AP64500 on 7 September, correction 35; INA226 monitored)" |
+  | 86, E6 row (m2) | "the sensor controller with the BME688, BMI270 and magnetometer" | board E carries the BME688 `U14` and the BMI270 `U15` and no magnetometer; `gen_sch_e.py`: "the magnetometer sits in the outside pod (32.57)", reached through `J_POD` (`SDA1`, `SCL1`) | "the sensor controller with the BME688 and BMI270 (`U14`, `U15`; the magnetometer is in the outside pod, reached through `J_POD`, correction 35)" |
+  | 83, C7 row (m3) | "sixteen LEDs under light guides" | seventeen `LED_D3.0mm` on board C, `D22` the EMCON lamp; S-44 open | "seventeen 3 mm LEDs under light guides (`D1` to `D16` and ... `D22`, whose guide in the plate is owed, open item S-44; correction 35)" |
+* **The finder, widened (m1).** New shapes: letter-led with two digits and two capitals (TI's SN74 gates, BAT46W, BAT54,
+  USBLC6-2SC6, E72-2G4M20S1E, SMBJ5.0A, XT60), letter-led with four capitals and an inner digit (LIS3MDL, B2B-XH-A),
+  mixed case with two capitals and three digits (Si2300DS, nRF52840), all-digit numbers after a maker's name (Molex
+  5023520600); round 4's shapes kept. New exclusions by shape: designators (TP10), TI literature numbers (SLUSE66A),
+  month codes (JUN26), a series and pitch (XH2.5), finding identifiers (F-DEC40, W3-F01), band lists (L1/L2/L5/E6), a
+  dotted digit-led table number (516.8-IX). The gate's probe (a) now also takes every part number a semiconductor's,
+  crystal's or relay's value in the six netlists starts with (the maker's name skipped; ratings, values and pins not),
+  so a finder that misses a family the boards carry cannot pass.
+* **What round 5's tools find on the documents at `edead832`** (`verdicts-r4.out`): 4 STALE, V2-SPEC.md lines 81, 83,
+  84 and 86, each corrected above; on set 14's documents (`verdicts-set14.out`) 10.
+
 ## Round 4: makers' part numbers (set 14)
 
 * **The finder** (`s122lib.partnos`, returned by `names()` under `parts`) reads a maker's part number by its shape, not
@@ -97,15 +139,17 @@ a circuit correction updates the status page and the records it names, not the b
 | `verdicts.py` | looks up every named part, reads every cited generator line, evaluates every assertion and every stated count of parts, applies the baseline rule and the absent rule, writes `verdicts.out` |
 | `sweep_absent.py` | counts the CONOPS.md sentences of a `verdicts.out` (the working file, a path, or the file at a revision) that state something absent or owed (the wordings of `s122lib.ABSENT`), by verdict |
 | `inventory-base.out`, `verdicts-base.out` | the base's documents at `e57a7365` (run with `S122_AT=e57a7365`), judged on the committed netlists |
-| `inventory-set14.out`, `verdicts-set14.out` | set 14's documents at `1bafab8c` (run with `S122_AT=1bafab8c`), judged by round 4's tools |
-| `inventory.out`, `verdicts.out` | the documents as they stand: 985 sentences, 0 STALE, 0 UNJUDGED |
+| `inventory-set14.out`, `verdicts-set14.out` | set 14's documents at `1bafab8c` (run with `S122_AT=1bafab8c`), judged by the current tools |
+| `verdicts-r4.out` | round 4's documents at `edead832` (run with `S122_AT=edead832`), judged by round 5's tools |
+| `inventory.out`, `verdicts.out` | the documents as they stand: 1005 sentences, 0 STALE, 0 UNJUDGED |
 | `apply_docs_s122.py` | round 1's 43 passages (on this branch in `51952c0c`; refuses a second run) |
 | `apply_docs_s122_r2.py` | round 2: the CONOPS restore, EMCON.md 0a.1, the status page's section, 16 passages; 497 assertions held first (on this branch in `29acd948`) |
 | `apply_docs_s122_r3.py` | round 3: the status page's rows DC-07 to DC-09, the notes of DC-03 and DC-04 and the section's lead, the baselines table's `c5430071` file, the EMCON citations of PANEL.md and V2-SPEC.md and V2-SPEC.md's correction 33; 144 assertions held first; refuses a second run |
 | `apply_docs_s122_r4.py` | round 4: V2-SPEC.md lines 47, 82, 84 and 86 and correction 34, OPERATING-ENVELOPE.md's two rows and note, row DC-10, the int15 docstring; 51 assertions held first; refuses a second run |
-| `checks/` | the filed independent checks, `check-s122-1.md` to `check-s122-3.md` (rounds 1 to 3) |
+| `apply_docs_s122_r5.py` | round 5: V2-SPEC.md lines 81, 83, 84 and 86 and correction 35; 33 assertions held first; refuses a second run |
+| `checks/` | the filed independent checks, `check-s122-1.md` to `check-s122-4.md` (rounds 1 to 4) |
 | `apply_registry_s122.py` | rounds 1 to 3's registry script (run at set 14, `9eaf406f`; refuses since) |
-| `apply_registry_s122_r4.py` | for the integrator: round 4's rebinds, CFL-016's entry and note, S-122's title sentence, the envelope re-pin |
+| `apply_registry_s122_r4.py` | for the integrator: the rebinds for rounds 4 and 5 (re-issued in round 5 for its diff), CFL-016's entry and note, S-122's title sentence, the envelope re-pin |
 | `close_s122.py` | S-122's closure, for the integrator, last |
 | `LOG.md` | the stream's log |
 
@@ -163,24 +207,24 @@ such sentence of the file, in any section.
 
 ## Counts per document
 
-| Document | Base (`e57a7365`): sentences | STALE | Set 14 (`1bafab8c`): sentences | STALE | After: sentences | TRUE | STALE | BASELINE | NOT DERIVABLE |
-|---|---|---|---|---|---|---|---|---|---|
-| PANEL.md | 164 | 10 | 167 | 0 | 167 | 131 | 0 | 0 | 36 |
-| CONOPS.md | 286 | 31 | 284 | 1 | 284 | 50 | 0 | 40 | 194 |
-| V2-SPEC.md | 137 | 10 | 146 | 4 | 150 | 56 | 0 | 0 | 94 |
-| OPERATING-ENVELOPE.md | 56 | 6 | 56 | 2 | 60 | 20 | 0 | 0 | 40 |
-| TEST-PLAN.md | 109 | 2 | 109 | 0 | 109 | 18 | 0 | 0 | 91 |
-| ASSEMBLY.md | 156 | 13 | 156 | 0 | 156 | 90 | 0 | 0 | 66 |
-| decisions 28 and 40 | 9 | 0 | 9 | 0 | 9 | 6 | 0 | 0 | 3 |
-| EMCON.md 0a.1 | 0 | 0 | 26 | 0 | 26 | 22 | 0 | 0 | 4 |
-| DEFINITION-STATUS.md (the section) | 0 | 0 | 22 | 0 | 24 | 17 | 0 | 0 | 7 |
-| total | 917 | 72 | 975 | 7 | 985 | 410 | 0 | 40 | 535 |
+| Document | Base (`e57a7365`): sentences | STALE | Set 14 (`1bafab8c`): sentences | STALE | Round 4 (`edead832`): STALE | After: sentences | TRUE | STALE | BASELINE | NOT DERIVABLE |
+|---|---|---|---|---|---|---|---|---|---|---|
+| PANEL.md | 164 | 10 | 167 | 0 | 0 | 167 | 131 | 0 | 0 | 36 |
+| CONOPS.md | 289 | 31 | 287 | 1 | 0 | 287 | 51 | 0 | 40 | 196 |
+| V2-SPEC.md | 138 | 11 | 147 | 6 | 4 | 155 | 62 | 0 | 0 | 93 |
+| OPERATING-ENVELOPE.md | 63 | 7 | 63 | 3 | 0 | 66 | 22 | 0 | 0 | 44 |
+| TEST-PLAN.md | 111 | 2 | 111 | 0 | 0 | 111 | 18 | 0 | 0 | 93 |
+| ASSEMBLY.md | 160 | 13 | 160 | 0 | 0 | 160 | 91 | 0 | 0 | 69 |
+| decisions 28 and 40 | 9 | 0 | 9 | 0 | 0 | 9 | 6 | 0 | 0 | 3 |
+| EMCON.md 0a.1 | 0 | 0 | 26 | 0 | 0 | 26 | 22 | 0 | 0 | 4 |
+| DEFINITION-STATUS.md (the section) | 0 | 0 | 22 | 0 | 0 | 24 | 17 | 0 | 0 | 7 |
+| total | 934 | 74 | 992 | 10 | 4 | 1005 | 420 | 0 | 40 | 545 |
 
-All three files are judged by round 4's tools (so the base and set 14 read part numbers too; 0 UNJUDGED in each).
-3219 assertions are evaluated after (2492 at the base, 3148 on set 14's documents); 252 sentences name a part number.
-Before round 4 the committed `verdicts.out` read 862 sentences, 339 TRUE, 0 STALE, 38 BASELINE, 485 NOT DERIVABLE.
-The 40 BASELINE sentences of CONOPS point to DC-01 (11), DC-02 (8), DC-03 (1), DC-04 (1), DC-05 (1), DC-06 (14), DC-07
-and DC-08 (the same 2), DC-09 (1) and DC-10 (1).
+Every file is judged by round 5's tools (0 UNJUDGED in each). 3295 assertions are evaluated after. Before round 5 the
+committed `verdicts.out` read 985 sentences, 410 TRUE, 0 STALE, 40 BASELINE, 535 NOT DERIVABLE; before round 4, 862,
+339 TRUE, 0 STALE, 38 BASELINE, 485 NOT DERIVABLE. The 40 BASELINE sentences of CONOPS point to DC-01 (11), DC-02 (8),
+DC-03 (1), DC-04 (1), DC-05 (1), DC-06 (14), DC-07 and DC-08 (the same 2), DC-09 (1) and DC-10 (1). The absent sweep
+reads 51 CONOPS sentences, 16 TRUE, 18 BASELINE, 17 NOT DERIVABLE.
 
 ## The check's items (check-s122-1)
 
@@ -253,9 +297,16 @@ statements), and S-123.
     correction notes), and needs each to name the generated part, be TRUE and not HISTORY, and assert that part on its
     board; it refuses the TMDS341A, the WM8960, a TRACO part or the MDT420B there, and the LM5176 in a dock strip
     sentence other than as A22's;
+  * since round 5 also the rows round 5 corrected ("<part> gate-bias", "<part> buck on slots 1 and 3", "<part> stages
+    on slot 2 and the device rail", "<n> LEDs under light guides"), no dock strip sentence with a magnetometer outside
+    the pod, and neither of check-s122-4's two role phrasings; the probe of (a) also takes the netlists' semiconductor
+    part numbers;
   * (c) needs the check to carry the heading "## S-122 closing check" and under it each such sentence by its document
-    and line; on this commit those are V2-SPEC.md lines 47, 82, 84 and 86 and OPERATING-ENVELOPE.md lines 77 and 83;
+    and line; on this commit those are V2-SPEC.md lines 47, 81, 82, 83, 84 and 86 and OPERATING-ENVELOPE.md lines 77
+    and 83;
   * (d) needs the check to name check-int15-1 and to have been committed on a line that carries `097d2517`;
+  * (e) the role rule's tests: check-s122-4's two sentences as they stood at `edead832`, judged TRUE with the check's
+    own reading, must be refused by `verdicts.check_roles` and must not read TRUE;
 * and then, as before:
   * checks the rebinds of both registry scripts are in and current;
   * re-runs the inventory and verdicts, and needs 0 STALE and 0 UNJUDGED, identical to the committed outputs;
@@ -314,8 +365,9 @@ statements), and S-123.
 4. An independent check filed under `v2/docs/records/s122/checks/` and committed. It must start `mergeable: yes`, name
    check-int15-1, PANEL.md, CONOPS.md, V2-SPEC.md, OPERATING-ENVELOPE.md, TEST-PLAN.md, ASSEMBLY.md, pcb_decisions.yaml,
    EMCON.md, DEFINITION-STATUS.md and `verdicts.out`, and carry the heading `## S-122 closing check` under which it names
-   V2-SPEC.md line 47, V2-SPEC.md line 82, V2-SPEC.md line 84, V2-SPEC.md line 86, OPERATING-ENVELOPE.md line 77 and
-   OPERATING-ENVELOPE.md line 83 (the gate prints the list if a line moves), in its own words.
+   V2-SPEC.md line 47, V2-SPEC.md line 81, V2-SPEC.md line 82, V2-SPEC.md line 83, V2-SPEC.md line 84, V2-SPEC.md line
+   86, OPERATING-ENVELOPE.md line 77 and OPERATING-ENVELOPE.md line 83 (the gate prints the list if a line moves), in
+   its own words.
 5. `python3 v2/docs/records/s122/close_s122.py v2/docs/records/s122/checks/<the check>`
 6. `rules_render.py --requirements` again.
 

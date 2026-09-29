@@ -249,6 +249,138 @@ def check_parts(s, nm, nls, j):
     return fails, notes
 
 
+# ------------------------------------------------------------------ round 5: a part named in a role (check-s122-4 B1)
+ROLE_NOUN = (r"(?:switch(?:es)?|codecs?|hubs?|bridges?|chargers?|gauges?|bucks?|converters?|stages?|controllers?|"
+             r"regulators?|LDOs?|amplifiers?|clocks?|supervisors?|sockets?|receptacles?|expanders?|monitors?|sensors?|"
+             r"trackers?|hot swaps?|front ends?|exciters?|relays?|transceivers?|buffers?|mux(?:es)?|arrays?)")
+ROLE_STOP = {"and", "or", "with", "of", "the", "a", "an", "to", "on", "in", "for", "from", "at", "by", "as", "is", "its",
+             "their", "each", "per", "two", "three", "four", "+"}
+# the words a netlist value states a role by, for each role noun (a value that says "SPDT antenna changeover" states a
+# switch; one that says "buck-boost controller" states a stage or a converter)
+ROLE_SYN = {"switch": ("switch", "changeover", "spdt", "spst", "mux", "select"), "stage": ("stage", "controller", "converter",
+            "buck", "boost", "regulator", "ldo"), "converter": ("converter", "buck", "boost", "controller", "regulator"),
+            "ldo": ("ldo", "regulator"), "regulator": ("regulator", "ldo", "buck", "boost"), "clock": ("clock", "rtc"),
+            "tracker": ("tracker", "mppt"), "amplifier": ("amplifier",), "buffer": ("buffer", "schmitt"),
+            "mux": ("mux", "select", "switch")}
+CONVERTER = ("buck", "boost", "controller", "ldo", "regulator", "converter")
+# the rails a boards table names, by the word before "rail" and the net a converter's value states it by (kit vocabulary)
+RAIL_WORD = {"slot": r"\+5V_S\d", "device": r"\+5V_DEV", "PA": r"\+13V8_PA", "HF": r"\+12V_HF", "PoE": r"\+54V_POE"}
+
+
+def _norm(x):
+    return " ".join(x.lower().replace("-", " ").replace("_", " ").split())
+
+
+def _sing(w):
+    w = w.lower()
+    for suf in ("es", "s"):
+        if w.endswith(suf) and w[:-len(suf)] in ("switch", "mux") + tuple(n for n in ("codec", "hub", "bridge", "charger",
+                "gauge", "buck", "converter", "stage", "controller", "regulator", "ldo", "amplifier", "clock", "supervisor",
+                "socket", "receptacle", "expander", "monitor", "sensor", "tracker", "hot swap", "front end", "exciter", "relay",
+                "transceiver", "buffer", "array")):
+            return w[:-len(suf)]
+    return w
+
+
+def role_phrases(s, parts):
+    """[(part, qualifier words, noun)] for each part named with a role: '<part> <up to three words> <noun>' (the TPS22810
+    gate-bias switch, the PCM2912A USB codec), the words being no stop word and no other part number."""
+    out = []
+    body = L.PN_STRIP.sub(" ", s).replace("`", "")
+    for p in parts:
+        num = p.split(" ", 1)[-1]
+        for m in re.finditer(re.escape(num) + r"((?:[ ][A-Za-z0-9.+/-]+){0,3}?)[ -](%s)\b" % ROLE_NOUN, body):
+            q = m.group(1).split()
+            if any(w.lower() in ROLE_STOP or L.is_partno(w) or w.startswith("(") for w in q): continue
+            out.append((p, q, _sing(m.group(2))))
+    return out
+
+
+def rail_lists(s, parts):
+    """[(part, trailing word, [rail words])] for a parenthesised plain list of part numbers after a phrase that names rails:
+    'three 5.1 V slot rails and a device rail (AP64500, INA226 monitored)'."""
+    out = []
+    for m in re.finditer(r"([^,;:(]{0,80}\brails?\b)\s*\(([^)]*)\)", s.replace("`", "")):
+        words = [w for w in RAIL_WORD if re.search(r"\b%s\b" % re.escape(w), m.group(1))]
+        items = [x.strip() for x in re.split(r",| and ", m.group(2)) if x.strip()]
+        for it in items:
+            toks = it.split()
+            if not toks or toks[0] not in parts or len(toks) > 2: return out if not words else out
+        for it in items:
+            toks = it.split()
+            out.append((toks[0], toks[1] if len(toks) > 1 else "", words))
+    return out
+
+
+def check_roles(s, nm, nls, j):
+    """Round 5 (check-s122-4 B1: V2-SPEC.md line 84 called the TPS22810 the gate-bias switch; line 81 gave all four rails
+    to the AP64500). A part named in a role must hold that role on its board, read from the netlists' values:
+      * forward: a designator that carries the part states the role's noun in its value (a switch, a codec, a buck);
+      * reverse: when the role's qualifier is specific (two words or more, 'gate bias'), no designator that does NOT carry
+        the part states it while none that carries the part does;
+      * rails: a plain list of parts after a phrase naming rails (slot, device, PA, HF, PoE) must be the part of every
+        converter whose value states that rail's net, and a part marked 'monitored' of every monitor of it.
+    `roles_ok` maps '<part> <noun>' to one of the judgement's own assertions on a designator that carries the part: its
+    value's words ('X:REF~words') or a pin on the net that states the role ('X:REF.pin=NET', 'X:REF@FUNC=NET'), for a
+    role the value states in other words or by its nets (the LM5176 as A22's front end, `U2` 'VBUS20 from VIN_RAW'; the
+    LT8705A as the solar tracker, `U5` on `PV_P`). ROLE_SYN lists the words a value states a noun by. Returns (failures,
+    notes)."""
+    fails, notes = [], []
+    ok = j.get("roles_ok") or {}
+    parts = nm.get("parts") or []
+    boards = [k for rx, k in BOARD_OF if rx.search(s + " " + " ".join(nm.get("row") or []))]
+    def holders(p, bset):
+        keys = [p] + ([p.split(" ", 1)[1]] if " " in p else [])
+        return [(b, r, c["value"]) for b in bset for r, c in sorted(nls[b]["comps"].items()) if any(k in c["value"] for k in keys)]
+    for p, q, noun in role_phrases(s, parts):
+        on = part_boards(p, nls)
+        bset = [b for b in on if not boards or b in boards] or list(on)
+        hold = holders(p, bset)
+        key = "%s %s" % (p, noun)
+        if key in ok:
+            x = ok[key]
+            mm = re.match(r"^([ABCDEP]):([\w#+-]+)(?:~|\.\w+=|@\w+=)(.+)$", x)
+            if x not in j.get("a", ()) or not mm: fails.append("%s: roles_ok names no own assertion (%s)" % (key, x)); continue
+            val = nls[mm.group(1)]["comps"].get(mm.group(2), {}).get("value", "")
+            if p.split(" ", 1)[-1] not in val: fails.append("%s: %s:%s does not carry %s" % (key, mm.group(1), mm.group(2), p))
+            else: notes.append("%s on %s:%s (%s)" % (key, mm.group(1), mm.group(2), mm.group(3)))
+            continue
+        if not hold: continue      # the part check reports a part on no netlist
+        if not any(any(w in _norm(v) for w in ROLE_SYN.get(noun, (noun,))) for _b, _r, v in hold):
+            fails.append("%s is named a %s%s; its designators state another role (%s)" % (
+                p, (" ".join(q) + " ") if q else "", noun, "; ".join("%s:%s %s" % (b, r, v[:60]) for b, r, v in hold[:3])))
+            continue
+        qn = _norm(" ".join(q))
+        if len(qn.split()) >= 2 and not any(qn in _norm(v) for _b, _r, v in hold):
+            other = [(b, r, v) for b in bset for r, c in sorted(nls[b]["comps"].items())
+                     for v in [c["value"]] if qn in _norm(v) and (b, r, v) not in hold]
+            if other:
+                b, r, v = other[0]
+                fails.append("%s is named the %s %s; the %s is %s:%s (%s), and %s is not" % (
+                    p, " ".join(q), noun, " ".join(q), b, r, v[:70], p))
+                continue
+        notes.append("%s as %s%s" % (p, (" ".join(q) + " ") if q else "", noun))
+    for p, trail, words in rail_lists(s, parts):
+        for b in (boards or ["A"]):
+            for w in words:
+                net = RAIL_WORD[w]
+                if trail:   # 'INA226 monitored': the monitors of the rail
+                    des = [(r, c["value"]) for r, c in sorted(nls[b]["comps"].items())
+                           if re.search(net, c["value"]) and "monitor" in c["value"].lower()]
+                else:
+                    des = [(r, c["value"]) for r, c in sorted(nls[b]["comps"].items()) if re.search(net, c["value"])
+                           and "monitor" not in c["value"].lower() and any(k in c["value"].lower() for k in CONVERTER)]
+                wrong = [(r, v) for r, v in des if p.split(" ", 1)[-1] not in v]
+                if wrong:
+                    fails.append("%s is given the %s rail%s; %s" % (p, w, " (%s)" % trail if trail else "", "; ".join(
+                        "%s:%s is %s" % (b, r, v[:50]) for r, v in wrong)))
+                elif des:
+                    notes.append("%s on the %s rail: %s" % (p, w, ",".join(r for r, _v in des)))
+    for k in ok:
+        if k not in ["%s %s" % (p, n) for p, _q, n in role_phrases(s, parts)]: fails.append("roles_ok names %s, which the sentence does not" % k)
+    return fails, notes
+
+
 def check_gens(s, nm, nls, j):
     fails, notes = [], []
     if j.get("cite_ok"): return fails, ["citations judged: %s" % j["cite_ok"]]
@@ -347,6 +479,8 @@ def judge(inv, nls):
             rows.append((sid, d, "UNJUDGED", ["no judgement for this text"], s)); continue
         f1, n1 = check_names(s, nm, nls, j)
         f5, n5 = check_parts(s, nm, nls, j)
+        f6, n6 = check_roles(s, nm, nls, j)
+        f5, n5 = f5 + f6, n5 + n6      # round 5: a part in a role it does not hold counts as a part failure
         f2, n2 = check_gens(s, nm, nls, j)
         f3, n3 = [], []
         for a in j.get("a", ()):

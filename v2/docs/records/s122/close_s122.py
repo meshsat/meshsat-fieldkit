@@ -68,12 +68,21 @@ def gate_set14(chk):
           PCM2912A, LM5069, LM5069, 2199119), each such sentence is TRUE in this commit's verdicts, its judgement is not
           HISTORY, and its own assertions include the generated part on its board (B U3 and U4, D U6, E U6, B J_M2C2);
           at least one such sentence stands in each place; no sentence there names the TMDS341A, the WM8960, a TRACO
-          part or the MDT420B, and a sentence that names the dock strip names the LM5176 only as A22's;
+          part or the MDT420B, and a sentence that names the dock strip names the LM5176 only as A22's; since round 5
+          (check-s122-4 B1, m2, m3) also "<part> gate-bias" (TLV75801, D U15 on PA_KEY), "<part> buck on slots 1 and 3"
+          (AP64500, A U4 and U6), "<part> stages on slot 2 and the device rail" (LM5176, A U5 and U7) and "<n> LEDs
+          under light guides" (seventeen, board C's seventeen LED_D3.0mm), no dock strip sentence with a magnetometer
+          outside the pod, and neither of the check's two role phrasings;
       (c) the filed check carries the closing check's marker, the heading "## S-122 closing check", and under it names
           each sentence of (b) by its document and current line ("V2-SPEC.md line 82"), so only a check written to close
           S-122 on these sentences passes;
       (d) the check names check-int15-1 and was committed on a line that carries 097d2517.
-    The gate reads the verdicts; whether each corrected sentence is true in substance stays the filed check's to say."""
+      (e) the role rule (round 5, check-s122-4 B1): the check's two sentences as they stood at edead832 (the D8 row's
+          "TPS22810 gate-bias switch", the A22 row's "(AP64500, INA226 monitored)"), judged TRUE with the check's own
+          reading of them, are refused by `verdicts.check_roles` and do not read TRUE.
+    Since round 5 the probe of (a) also takes every part number a semiconductor's, crystal's or relay's value in the six
+    netlists starts with (check-s122-4 m1). The gate reads the verdicts; whether each corrected sentence is true in
+    substance stays the filed check's to say."""
     rnd = random.SystemRandom()
     up = "ABCDEFGHJKLMNPQRSTUVWXYZ"
     def word(n): return "".join(rnd.choice(up) for _ in range(n))
@@ -94,6 +103,19 @@ def gate_set14(chk):
             while not re.search(r"\d{3}", p) or re.split(r"[- /]", p)[0] in L.STDBODY: p = shape()
             probes.append((rnd.choice(frames) % p, p))
     nets = L.all_nets(L.netlists())
+    # round 5 (check-s122-4 m1): every part number a semiconductor's, crystal's or relay's value in the six netlists
+    # starts with (its first token with a capital and a digit, the maker's name skipped; a rating, a value or a pin is not
+    # one), so a finder that misses a family the boards carry cannot pass
+    for b, nl in sorted(L.netlists().items()):
+        for ref, c in sorted(nl["comps"].items()):
+            if not re.match(r"^(?:U|Q|D|Y|K)\d", ref): continue
+            for tok in c["value"].split()[:3]:
+                tok = tok.strip(",:;()").rstrip("#")
+                if re.search(r"\d", tok) and re.search(r"[A-Z]", tok) and len(tok) >= 4:
+                    if not re.match(r"^\d+(?:\.\d+)?(?:R|A|V|k|M|mOhm|uH|nH|nF|uF|pF)$", tok) and not L.PN_PIN.match(tok):
+                        probes.append((rnd.choice(frames) % tok, tok))
+                    break
+                if re.search(r"\d", tok): break
     for sent, part in probes:
         if part not in (L.names(sent, nets).get("parts") or []):
             refuse("the finder does not read the part number %s in %r (S-122's set 14 extension)" % (part, sent))
@@ -114,7 +136,15 @@ def gate_set14(chk):
              ("V2-SPEC.md", r"(\S+)(?: USB)? codec", "PCM2912A", ["D U6 value has 'PCM2912A"]),
              ("V2-SPEC.md", r"(\S+) hot swap", "LM5069", ["E U6 value has 'LM5069"]),
              ("OPERATING-ENVELOPE.md", r"(\S+) hot-swap controller", "LM5069", ["E U6 value has 'LM5069"]),
-             ("OPERATING-ENVELOPE.md", r"(\S+) M\.2 B-key socket", "2199119", ["B J_M2C2 value has 'TE 2199119"])]
+             ("OPERATING-ENVELOPE.md", r"(\S+) M\.2 B-key socket", "2199119", ["B J_M2C2 value has 'TE 2199119"]),
+             # round 5 (check-s122-4 B1, m3): the rows whose parts were named in roles they no longer hold
+             ("V2-SPEC.md", r"(\S+) gate-bias", "TLV75801", ["D U15 value has 'TLV75801", "D U15 value has 'PA gate bias",
+                                                               "D U15.4 on PA_KEY"]),
+             ("V2-SPEC.md", r"(\S+) buck on slots 1 and 3", "AP64500", ["A U4 value has 'AP64500", "A U6 value has 'AP64500"]),
+             ("V2-SPEC.md", r"(\S+) stages on slot 2 and the device rail", "LM5176", ["A U5 value has 'LM5176",
+                                                                                     "A U7 value has 'LM5176"]),
+             ("V2-SPEC.md", r"(\w+) (?:3 mm )?LEDs under light guides", "seventeen",
+              ["board C: 17 parts whose footprint holds 'LED_D3.0mm'"])]
     found, lines = {i: 0 for i in range(len(rules))}, []
     for sid, d, verdict, det, s in rows:
         doc = sid.split("#")[0]
@@ -125,11 +155,15 @@ def gate_set14(chk):
             if bad in s: refuse("%s line %d still names %s outside a correction note" % (doc, line, bad))
         if "dock strip" in s and re.search(r"(?<!A22's )LM5176", s):
             refuse("%s line %d names the LM5176 in a dock strip sentence other than as A22's" % (doc, line))
+        if "dock strip" in s and "magnetometer" in s and "outside pod" not in s:
+            refuse("%s line %d puts a magnetometer on the dock strip; board E carries none (check-s122-4 m2)" % (doc, line))
+        if re.search(r"TPS22810 gate-bias|\(AP64500, INA226", s):
+            refuse("%s line %d keeps a part in the role check-s122-4 B1 found it does not hold" % (doc, line))
         for i, (rdoc, rx, part, need) in enumerate(rules):
             if doc != rdoc: continue
             for m in re.finditer(rx, s):
                 w = m.group(1).strip("`,;()")
-                if not L.is_partno(w) and not L.partnos(w): continue
+                if part != "seventeen" and not L.is_partno(w) and not L.partnos(w): continue
                 if part not in w: refuse("%s line %d: %r names %s, not the generated %s" % (doc, line, m.group(0), w, part))
                 judg = " ".join(x for x in det if x.startswith("judgement: "))
                 asrt = " ".join(x for x in det if x.startswith("asserted ("))
@@ -142,6 +176,39 @@ def gate_set14(chk):
                 lines.append("%s line %d" % (doc, line))
     empty = [rules[i][1] for i, n in found.items() if not n]
     if empty: refuse("no corrected sentence stands for %s" % "; ".join(empty))
+    # (e) the role rule's fixtures (check-s122-4 B1): the two sentences the check found, as they stood at edead832, judged
+    # TRUE with the check's own reading of them, must read STALE, the role check naming the part; and the same rows as
+    # they stand must read TRUE (found in (b))
+    keep_at = L.AT
+    try:
+        L.AT = "edead832"
+        fx = {}
+        for key, title, kind, line, text, rk in L.md_blocks("v2/docs/V2-SPEC.md"):
+            if kind == "cell:1" and title.startswith("Boards of this generation") and rk in ("A22", "D8"):
+                for s in L.sentences(text):
+                    fx[rk] = (key, kind, line, s)
+    finally:
+        L.AT = keep_at
+    if set(fx) != {"A22", "D8"}: refuse("the role fixtures (V2-SPEC.md's A22 and D8 rows at edead832) are not readable")
+    for rk, part, fa in (("D8", "TPS22810", ["D:U21~TPS22810"]), ("A22", "AP64500", ["A:U4~AP64500"])):
+        key, kind, line, s = fx[rk]
+        nm = L.names(s, nets)
+        nm["row"] = [rk]
+        f6, _n6 = V.check_roles(s, nm, nls, {"v": "T", "why": "fixture", "a": fa})
+        if not any(part in f for f in f6):
+            refuse("the role rule does not refuse %s in the %s row as it stood at edead832 (check-s122-4 B1)" % (part, rk))
+        d = L.sid_digest(s)
+        had = V.J.J.get(d)
+        V.J.J[d] = {"v": "T", "why": "fixture (check-s122-4 B1)", "a": fa, "counts_ok": {k: "a fixture's count" for k in []}}
+        try:
+            got = V.judge([("fixture#%s" % rk, "v2/docs/V2-SPEC.md", key, kind, line, s, nm)], nls)[0][2]
+        finally:
+            if had is None: del V.J.J[d]
+            else: V.J.J[d] = had
+        if got not in ("STALE", "UNJUDGED"):
+            refuse("the %s row as it stood at edead832, judged TRUE, reads %s, not STALE" % (rk, got))
+        if got != "STALE" and not any(part in f for f in f6):
+            refuse("the %s fixture is not refused for its role" % rk)
     # (c) the closing check's marker, with the sentences by their lines, and (d) its provenance
     path = chk if os.path.isabs(chk) else os.path.join(L.TOP, chk)
     if not os.path.exists(path): refuse("no check at %s" % chk)

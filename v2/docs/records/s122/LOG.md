@@ -137,3 +137,23 @@ No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py
   errors, 0 warnings; the tests 69 passed and 2 failed before the trace page's render, 71 passed after; the closure
   refused the fixture while staged, closed S-122 with it committed (CFL-016 PASS; S-42, S-123, S-124 open) and refused a
   second run; after it 0 errors, 71 passed, `claims_check` PASS 91 of 91. The clone is deleted.
+
+## Round 5 (the answer to `checks/check-s122-4.md`: 1 blocking, 3 minor)
+
+- 21:33 Check read whole (the checker's report, filed byte for byte as `checks/check-s122-4.md`).
+- 21:48 (one label for the round's work, read from `date`):
+  - `verdicts.check_roles`: a part named in a role is read against the designators whose values carry it (forward:
+    the noun, with `ROLE_SYN`; reverse: a specific qualifier stated by another designator; rails: a plain part list
+    after a rail phrase against each converter or monitor of that rail's net); `roles_ok` binds a role to an own
+    assertion on a designator that carries the part. On the documents at `edead832` it reads V2-SPEC.md lines 81 and 84
+    STALE (`verdicts-r4.out`, which also carries lines 83 and 86 as STALE by the check's m2 and m3).
+  - `s122lib.is_partno` widened (the check's m1 list, and all-digit numbers after a maker's name) with exclusions by
+    shape; every semiconductor, crystal and relay part number of the six netlists' values is read.
+  - `apply_docs_s122_r5.py --check`, then its run: 5 edits, 33 assertions held first; a second run refuses.
+  - Judgements for the new and corrected texts: 1005 sentences, 420 TRUE, 0 STALE, 40 BASELINE, 545 NOT DERIVABLE, 0
+    UNJUDGED, 3295 assertions.
+  - `close_s122.py`'s gate: the netlists' part numbers in the probe, the round 5 rows in (b), the role fixtures in
+    (e). On this tree it passed (a), (b) and (e) three times and refused a marker-only fixture at (c), listing
+    V2-SPEC.md lines 47, 81, 82, 83, 84 and 86 and OPERATING-ENVELOPE.md lines 77 and 83.
+  - `apply_registry_s122_r4.py` re-issued for the round 5 diff (its REF, CFL-016's entry, S-122's sentence); the new
+    texts pass claims_check's screen.

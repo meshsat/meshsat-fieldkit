@@ -1710,3 +1710,105 @@ J.update({
 J["9743b00cb6"] = S("the holdover clock is board B's DS3231SN U9 on the kit bus, not the panel controller's (corrected in "
                     "round 1, correction 32); the base's text, inventoried since round 4 by its part number", "B:U9~DS3231SN",
                     "B:U11~LG290P", "C:!~DS3231")
+
+# ================================================================== ROUND 5 (check-s122-4: parts in their roles; m1 to m3)
+# a part named in a role is judged by verdicts.check_roles; `roles_ok` binds a role the netlist states in other words to
+# one of the judgement's own assertions on the designator that carries the part
+A81 = ["A:U3~BQ25731", "A:U3~charger", "A:U4~AP64500", "A:U4~+5V_S1", "A:U6~AP64500", "A:U6~+5V_S3", "A:U5~LM5176",
+       "A:U5~+5V_S2", "A:U7~LM5176", "A:U7~+5V_DEV", "A:U8~INA226 rail monitor +5V_S1", "A:U9~INA226 rail monitor +5V_S2",
+       "A:U10~INA226 rail monitor +5V_S3", "A:U11~INA226 rail monitor +5V_DEV", "A:U13~+13V8_PA", "A:U15~+12V_HF",
+       "A:U13~LM5176", "A:U15~LM5176", "A:U18~TPS25740A", "A:U19~LM5176", "A:U19~PD_VPWR", "A:!~TPS55288",
+       "G@c5de605d:gen_sch_a.py:267~TPS55288", "DOC@b2709118:v2/ecad/tools/gen_sch_a.py~SLOT RAIL S2: AP64500 5.1 V",
+       'DOC@b2709118:v2/ecad/tools/gen_sch_a.py~buck5("D", "U7", "DEV_EN", "+5V_DEV"', "A:#val~rail monitor +5V_S=3"]
+A84 = ["D:*~SA868", "D:*~RA30H1317M1", "D:U6~PCM2912A", "D:U7~TPA6132A2", "D:U4~TUSB2046IBVFR", "D:U3~CP2102N",
+       "D:U15~TLV75801", "D:U15~PA gate bias", "D:U15.4=PA_KEY", "D:U21~TPS22810DRV load switch, +5V_TX", "D:U16~PCA9555",
+       "DOC@b2709118:v2/ecad/tools/gen_sch_d.py~TUSB2046B",
+       "DOC@b2709118:v2/ecad/tools/gen_sch_d.py~PA gate bias switched by a TPS22810 on PA_KEY", "D:#ref~J_HS=2"]
+A86 = ["E:U6~LM5069", "E:!~LM5176", "A:U2~LM5176", "A:U2~VBUS20 from VIN_RAW", "E:U5~LT8705A", "E:U5.32=PV_P",
+       "E:U14~BME688", "E:U15~BMI270", "E:!~magnetometer", "E:J_POD?", "E:SDA1>J_POD,U14,U15",
+       "DOC:v2/ecad/tools/gen_sch_e.py~the magnetometer sits in the outside pod (32.57)", "E:#ref~J_FAN=2"]
+A83 = ["C:#fp~LED_D3.0mm=17", "C:D22~EMCON", "REG:S-44.status=OPEN", "C:U1~PCA9555", "C:U2~PCA9555",
+       "C:U_LIGHT~VEML7700", "C:J_EPD~E2370KS0C1", "C:*~RP2040"]
+FRONT = {"LM5176 front end": "A:U2~VBUS20 from VIN_RAW"}
+TRACK = {"LT8705A tracker": "E:U5.32=PV_P"}
+T7R = ("the boards table's row read part by part and role by role against set 14's netlists (round 5: each part named "
+       "in a role asserted on the designator whose value states it)")
+J.update({
+    "a77bf9d173": T(T7R + "; line 81 corrected in round 5 (correction 35)", *A81,
+                    parts_ok={"TPS55288": "asserted: G@c5de605d:gen_sch_a.py:267~TPS55288"},
+                    counts_ok={"three 5.1 V slot": "asserted: A:#val~rail monitor +5V_S=3"}),
+    "3f426d1736": T(T7R + "; line 83's seventeen LEDs (correction 35)", *A83,
+                    counts_ok={"seventeen 3 mm LEDs": "asserted: C:#fp~LED_D3.0mm=17"}),
+    "2955447136": T(T7R + "; line 84's gate bias and load switch corrected in round 5 (correction 35)", *A84,
+                    parts_ok={"TUSB2046B": "asserted: DOC@b2709118:v2/ecad/tools/gen_sch_d.py~TUSB2046B"},
+                    counts_ok={"two headset jacks": "asserted: D:#ref~J_HS=2"}),
+    "ef24592b40": T(T7R + "; line 86's magnetometer placed in round 5 (correction 35)", *A86,
+                    roles_ok=dict(FRONT, **TRACK), counts_ok={"two mixer fan": "asserted: E:#ref~J_FAN=2"}),
+    "a5dd468127": T("round 5's correction 35: D's U15 TLV75801 on PA_KEY since faf8c981, U21 the TPS22810 load switch of "
+                    "+5V_TX, the TPS22810 bias switch at b2709118", "D:U15~TLV75801", "D:U15~PA gate bias", "D:U15.4=PA_KEY",
+                    "D:U21~TPS22810DRV load switch, +5V_TX", "DOC@faf8c981:v2/ecad/tools/gen_sch_d.py~TLV75801",
+                    "DOC@faf8c981^:v2/ecad/tools/gen_sch_d.py!~TLV75801",
+                    "DOC@b2709118:v2/ecad/tools/gen_sch_d.py~PA gate bias switched by a TPS22810 on PA_KEY"),
+    "cce8eb40b9": T("round 5's correction 35: A's U4 and U6 AP64500 for slots 1 and 3, U5 and U7 LM5176 for slot 2 and "
+                    "the device rail, all four AP64500 at b2709118", "A:U4~AP64500", "A:U4~+5V_S1", "A:U6~AP64500",
+                    "A:U6~+5V_S3", "A:U5~LM5176", "A:U5~+5V_S2", "A:U7~LM5176", "A:U7~+5V_DEV",
+                    "DOC@b2709118:v2/ecad/tools/gen_sch_a.py~SLOT RAIL S2: AP64500 5.1 V",
+                    'DOC@b2709118:v2/ecad/tools/gen_sch_a.py~buck5("D", "U7", "DEV_EN", "+5V_DEV"'),
+    "9426065bb9": T("round 5's correction 35: E carries the BME688 U14 and the BMI270 U15 and no magnetometer; the pod "
+                    "through J_POD", "E:U14~BME688", "E:U15~BMI270", "E:!~magnetometer", "E:J_POD?",
+                    "DOC:v2/ecad/tools/gen_sch_e.py~the magnetometer sits in the outside pod (32.57)"),
+    "2d75300367": T("round 5's correction 35: seventeen 3 mm LEDs on C, D22 among them", "C:#fp~LED_D3.0mm=17", "C:D22~EMCON",
+                    counts_ok={"sixteen LEDs": "the count line 83 read before round 5, not a count of parts today"}),
+    "fda86ae247": N(DOCN + " (D-01's list of what is outside the core)"),
+    "1e4516ad21": N(DOCN + " (what EMCON leaves running, D-05)"),
+    "9d165f761a": T("E6's SGP41 U17; its response to hydrogen is TBD", "E:U17~SGP41"),
+    "70e56e5818": T("the USB devices on the slots' hubs: the bridges U15 to U18 on B, the panel controller on C and the sensor "
+                    "controller on E (RP2040), D8's audio set; the HAL is software", "B:U15~CP2102N", "B:U18~CP2102N",
+                    "C:*~RP2040", "E:U10~RP2040", "D:U6~PCM2912A"),
+    "181b0ac69c": dict(J["181b0ac69c"], parts_ok={"ASM118x": "withdrawn: the PCIe switch candidate the line closes (0 stock)"}),
+    "0fcfa0f90d": dict(J["0fcfa0f90d"], a=J["0fcfa0f90d"]["a"] + ["A:U2~VBUS20 from VIN_RAW"], roles_ok=dict(FRONT)),
+    "c095df105a": T("E6's SGP41 U17", "E:U17~SGP41"),
+    "39d7edd5fb": N(SRC),
+    "0ace90f506": T("B16's two E72-2G4M20S1E", "B:U13~E72-2G4M20S1E", "B:U14~E72-2G4M20S1E"),
+    "c5648bf2c9": N(DOCN + " (the SGP41's maker range, a row of the thermal table)"),
+    "8b5aa200e3": N(DOCN + " (the independent bound, POWER-THERMAL.md)"),
+    "0c1acec366": N(H + " (the table kept as the record)"),
+    "c9db060f24": N(TEST + " (the pass line; the parts' storage ranges are their makers')"),
+    "0db8c79894": N(TEST + " (REQ-052's part ranges)"),
+    "2ef464f93e": N(CASE + " (the face parts' heights, lid-tray-qmx-r2-check.out)"),
+    "b6d8561165": T("the XT60 pair: board P's and board E's XT60 leads", "E:J_BATT~XT60"),
+    "654cac0bee": N(CASE + " (the sealed RJ45 on the connector plate)"),
+    "c6b30de010": N(CASE + " (a lead's ends)"),
+})
+_add("f46acf5130", parts={"DCF77": "elsewhere: board E's J_DCF; board D is named for its transmit gate"})
+_add("3d47dcd92b", a=["C:U1~PCA9555PW 0x22: LED sinks, light mode inputs"],
+     roles_ok={"PCA9555 expander": "C:U1~PCA9555PW 0x22: LED sinks, light mode inputs"})
+J["5f2cf03744"] = dict(J["5f2cf03744"], parts_ok={})
+_add("7827ee0779", a=["E:U5.32=PV_P"], roles_ok=dict(TRACK))
+_add("6b8e35c93d", parts={"DCF77": "elsewhere: board E's J_DCF, as the sentence says; board B is named for the clock"})
+_add("0aa470c049", a=["DOC:v2/ecad/tools/gen_sch_e.py~the magnetometer sits in the outside pod (32.57)", "E:!~LIS3MDL"],
+     parts={"LIS3MDL": "owed: the outside pod's magnetometer, in a pod no netlist carries (gen_sch_e.py)"})
+J["f51d88cef4"] = dict(J["f51d88cef4"], parts_ok={})
+_add("5f30437813", parts={"SGP41": "elsewhere: board E's U17; board A is named for its converters"})
+_add("cd9739a701", parts={"GP60": "bought: Silex's silicone washers, a case item", "SO-M3-10": "case: PEM standoffs"})
+_add("53772fb573", parts={"STM32H753VITx": "asserted: B@68bc9e8f:U41~STM32H753VITx"})
+_add("70e56e5818", parts={"RP2040-class": "module: a class of controller; the RP2040 on boards C and E is asserted"})
+_add("cce8eb40b9", a=["A:#val~rail monitor +5V_S=3"], counts={"three slot": "asserted: A:#val~rail monitor +5V_S=3"})
+_add("2d75300367", counts={"sixteen LEDs": "the LEDs line 83 counted before round 5, not a count of parts today"})
+
+# the texts round 5 corrected, as they stood at edead832 and on set 14: STALE, with what the netlists carry
+J.update({
+    "de16befa62": S("check-s122-4 B1: the AP64500 is the buck of slots 1 and 3 only (A's U4, U6); U5 and U7, slot 2 and "
+                    "the device rail, are LM5176 stages (corrected in round 5, correction 35)", "A:U4~AP64500", "A:U6~AP64500",
+                    "A:U5~LM5176", "A:U5~+5V_S2", "A:U7~LM5176", "A:U7~+5V_DEV"),
+    "ce86a25f41": S("check-s122-4 B1: board D's gate bias is U15, a TLV75801 on PA_KEY; the TPS22810 is U21, the load "
+                    "switch of +5V_TX (corrected in round 5, correction 35)", "D:U15~TLV75801", "D:U15~PA gate bias",
+                    "D:U15.4=PA_KEY", "D:U21~TPS22810DRV load switch, +5V_TX"),
+    "c69d9ba744": S("check-s122-4 m2: board E carries no magnetometer; gen_sch_e.py puts it in the outside pod, reached "
+                    "through J_POD (corrected in round 5, correction 35)", "E:!~magnetometer", "E:J_POD?",
+                    "DOC:v2/ecad/tools/gen_sch_e.py~the magnetometer sits in the outside pod (32.57)",
+                    "A:U2~VBUS20 from VIN_RAW", "E:U5.32=PV_P", roles_ok=dict(FRONT, **TRACK)),
+    "fa00f9ca7e": S("check-s122-4 m3: board C carries seventeen 3 mm LEDs, D22 the seventeenth; the heading's date excuses "
+                    "no count (corrected in round 5, correction 35)", "C:#fp~LED_D3.0mm=17", "C:D22~EMCON"),
+    "3f5e49de5a": S("the TRACO sheet of a converter no netlist carries (the row replaced in round 4)", "E:!~TRACO"),
+})

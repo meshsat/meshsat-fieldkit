@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Stream s122, round 4 (S-122, MESHSAT-1357, 29 September 2026), for the integrator to run once fnd/s122c is merged on
 set 14's line (`1bafab8c`, where `apply_registry_s122.py` has already run and refuses): the registry follows the
-documents `apply_docs_s122_r4.py` changed.
+documents `apply_docs_s122_r4.py` and `apply_docs_s122_r5.py` changed (round 5 re-issued this script for its diff:
+V2-SPEC.md lines 81, 83, 84 and 86 and correction 35, the role rule and the wider finder).
 
 It writes `v2/ecad/tools/pcb_requirements.yaml`, `v2/ecad/tools/pcb_envelope.yaml` and
 `v2/ecad/tools/pcb_rules_coverage.yaml` and nothing else:
@@ -40,7 +41,7 @@ R1.BASE = BASE             # the helpers' diff base
 REG, ENV, COV = R1.REG, R1.ENV, R1.COV
 DOCS = {"v2/docs/V2-SPEC.md": "1e1547e1462904f7", "v2/docs/OPERATING-ENVELOPE.md": "a8e65995c594546b",
         "v2/docs/handover/DEFINITION-STATUS.md": "2db0ad36da754fa4"}
-REF = "v2/docs/records/s122/apply_docs_s122_r4.py"
+REF = "v2/docs/records/s122/apply_docs_s122_r4.py and apply_docs_s122_r5.py"
 
 M7_NOTE = (" Recorded on the record at stream s122's round 4 (check-int15-1 m7, the baseline reading, a SESSION reading "
            "under the owner's standing rule of 26 September 2026): for CONOPS.md, a baselined definition, 'describes the "
@@ -60,6 +61,14 @@ S122_ADD4 = (
     "heading '## S-122 closing check' and name each such sentence there by its document and line. Round 4 also corrected "
     "V2-SPEC.md lines 82 (the DS3231M) and 84 (the TUSB2046B), which its finder found, and answered check-s122-3's "
     "minors (row DC-10, the absent rule's wordings, the README's CON-003 quote) and check-int15-1's m7 (CFL-016's notes). "
+    "Round 5 (the independent check v2/docs/records/s122/checks/check-s122-4.md, B1: two parts named in roles they no "
+    "longer hold read TRUE) added to the gate: the finder is also probed with every part number a semiconductor's, "
+    "crystal's or relay's value in the six netlists starts with; the rows it corrected must stand TRUE with their "
+    "assertions ('<part> gate-bias' the TLV75801 on D U15 and PA_KEY, '<part> buck on slots 1 and 3' the AP64500 on A U4 "
+    "and U6, '<part> stages on slot 2 and the device rail' the LM5176 on A U5 and U7, '<n> LEDs under light guides' "
+    "seventeen on board C); no dock strip sentence puts a magnetometer outside the pod; and the check's two sentences as "
+    "they stood at edead832 must be refused by the role rule (verdicts.check_roles). The closing check names V2-SPEC.md "
+    "lines 47, 81, 82, 83, 84 and 86 and OPERATING-ENVELOPE.md lines 77 and 83. "
     "Confirming that each correction is true in substance remains the filed check's job.")
 
 
@@ -148,8 +157,15 @@ def main():
              "names on set 14's netlists, in the generators at the commits it names and in the held makers' sheets. In "
              "check-int15-2's words (n1) the five named parts on no board, or not on the board the sentence names. The "
              "CONOPS.md sentences read for what is absent or owed were widened to the wordings check-s122-3 swept (m2), "
-             "and CONOPS.md section 7's D-13 row is BASELINE on the status page's row DC-10 (m1). This record stays FAIL "
-             "and waits on S-122; this entry changes no result." % per)
+             "and CONOPS.md section 7's D-13 row is BASELINE on the status page's row DC-10 (m1). Round 5 (the independent "
+             "check v2/docs/records/s122/checks/check-s122-4.md): the finder's shapes are wider (TI's single gates, "
+             "BAT46W, USBLC6-2SC6, E72-2G4M20S1E, LIS3MDL, Si2300DS, all-digit numbers after a maker's name), and a part "
+             "named in a role is judged against the designators whose values state that role (verdicts.check_roles): "
+             "v2/docs/records/s122/apply_docs_s122_r5.py corrected V2-SPEC.md line 84 (the TPS22810 called the gate-bias "
+             "switch; board D's gate bias is the TLV75801 U15 on PA_KEY and the TPS22810 is U21, the load switch of "
+             "+5V_TX) and line 81 (all four rails given to the AP64500; board A's U5 and U7 are LM5176 stages), and in the "
+             "same table line 83 (seventeen LEDs) and line 86 (the magnetometer is in the outside pod). This record stays "
+             "FAIL and waits on S-122; this entry changes no result." % per)
     out = R1.append_entry(out, "CFL-016", entry)
     # CFL-016's notes: m7
     A_ = A
