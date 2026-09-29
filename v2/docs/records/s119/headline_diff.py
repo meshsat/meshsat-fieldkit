@@ -6,7 +6,12 @@ For each output it selects the headline lines by a pattern on the line (parsed p
 in prose is interpreted) and prints the base's line and HEAD's line side by side, marked CHANGED or same; it also prints
 how many lines of each output differ in all, and the charger rows of energy_inputs.yaml and energy_two_pack.py read with
 a YAML reader and an ast reader. Usage (repository root): python3 v2/docs/records/s119/headline_diff.py [--base <rev>]
-AI arithmetic on the record's model; nothing is measured."""
+AI arithmetic on the record's model; nothing is measured.
+
+Second round (item M5 of the stream's check): the first issue named HEAD's commit, which is one commit behind as soon as
+its own output is committed; this issue names each file's sha256 (first 16) at the base and now instead, so the output
+is true at any commit that carries these files, and it adds U3B's input limit and charge loop."""
+import hashlib
 import argparse
 import ast
 import difflib
@@ -34,6 +39,7 @@ OUTS = [
      [r"^\s+energy_architecture 4S18P", r"^\s+energy_two_pack design case", r"^\s+[ABCF]\s+.*\+20 C (MEETS|NOT MET)", r"^\s+slope \d+: both"]),
     ("v2/docs/records/a1int/reconcile_lid.out", [r"^\s+at 13\.23 C:", r"^\s+650 Wp, lid 20\.00 C"]),
     ("v2/docs/records/a1int/reconcile_lid_panel.out", [r"^\s+[BC], U3 (minimum|bracket|nominal)", r"^\s+(lowest lid temperature|does not meet)"]),
+    ("v2/docs/records/s117/efficiency.out", [r"^\s+The energy chain's rows"]),
 ]
 
 
@@ -65,20 +71,22 @@ def main():
     ap.add_argument("--base", default="a1f8ec70")
     a = ap.parse_args()
     base = subprocess.run(["git", "rev-parse", "--short=8", a.base], capture_output=True, text=True, check=True).stdout.strip()
-    head = subprocess.run(["git", "rev-parse", "--short=8", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
-    o = ["HEADLINE FIGURES OF THE ENERGY CHAIN, base %s against HEAD %s (headline_diff.py, stream s119, S-119)" % (base, head), ""]
+    o = ["HEADLINE FIGURES OF THE ENERGY CHAIN, base %s against the committed files (headline_diff.py, stream s119, S-119)" % base,
+         "Each file is named with its sha256 (first 16) at the base and now.", ""]
     y0 = yaml.safe_load(show(a.base, "v2/docs/records/energy/energy_inputs.yaml"))
     y1 = yaml.safe_load(show("HEAD", "v2/docs/records/energy/energy_inputs.yaml"))
     c0, c1 = y0["solar"]["chain"][2], y1["solar"]["chain"][2]
     o.append("energy_inputs.yaml, U3's row (eta, low, high): %s, %s, %s  to  %s, %s, %s" % (c0["eta"], c0["low"], c0["high"], c1["eta"], c1["low"], c1["high"]))
     o.append("energy_inputs.yaml, vehicle_entry chain_eta: %s  to  %s" % (y0["solar"]["vehicle_entry"]["chain_eta"]["value"], y1["solar"]["vehicle_entry"]["chain_eta"]["value"]))
     tp = "v2/docs/records/a1elec/energy_two_pack.py"
-    o.append("energy_two_pack.py, eta_u3b: %s  to  %s" % (par_value(show(a.base, tp), "eta_u3b"), par_value(show("HEAD", tp), "eta_u3b")))
+    for key in ("eta_u3b", "iin_lid_a", "r_lid_chg"):
+        o.append("energy_two_pack.py, %s: %s  to  %s" % (key, par_value(show(a.base, tp), key), par_value(show("HEAD", tp), key)))
     o.append("")
     for path, pats in OUTS:
         t0, t1 = show(a.base, path), show("HEAD", path)
         nd = sum(1 for l in difflib.unified_diff(t0.split("\n"), t1.split("\n"), lineterm="", n=0) if l.startswith("-") and not l.startswith("---"))
-        o.append("== %s: %d of %d lines differ" % (path, nd, len(t0.split("\n"))))
+        h = lambda s: hashlib.sha256(s.encode("utf-8")).hexdigest()[:16]
+        o.append("== %s (%s to %s): %d of %d lines differ" % (path, h(t0), h(t1), nd, len(t0.split("\n"))))
         l0, l1 = pick(t0, pats), pick(t1, pats)
         if len(l0) != len(l1):
             o.append("   headline line counts differ: %d against %d (printed unpaired)" % (len(l0), len(l1)))
