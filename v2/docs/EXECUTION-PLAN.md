@@ -693,3 +693,40 @@ S-122 re-reads every named document by a script that asserts each part it names.
 - S-122 (rebuilt on main, then its check and closure).
 - S-120 (the charge bus bounded at 23.19 V against the new 30 V FETs; ringing waits on a layout), under check.
 - Board C's layout-entry chain: identities, then review D.
+
+### Milestone, 29 September 2026 20:58 CEST: integration set 14 on main (the charge bus bounded, the documents re-read, CONOPS back at its baseline)
+
+**Accepted:** `1bafab8c`. Merged:
+- **Stream s120** (checked four times): board A's charge bus VBUS20 is bounded at 23.40 V, INFERRED from the front
+  end's typical over-voltage trip, against decision 57's 30 V charger FETs. S-120 is closed. S-124 is opened for the
+  switch nodes, closing only on a prototype measurement against both bus levels and U3's positive and negative pin
+  limits.
+- **Stream s122** (checked three times): the documents CFL-016 names are re-read against the netlists by an inventory
+  and verdict script (64 sentences stale at its base; after its three rounds 0 stale, and 38 CONOPS sentences read as
+  baseline values, each on a status-page row). CONOPS is restored byte for byte to its baseline text
+  `c5430071`, withdrawing set 12's circuit edits (the integrator's finding of set 13). Its current circuit values are
+  kept on `handover/DEFINITION-STATUS.md` rows DC-01 to DC-09 and in `feasibility/EMCON.md` section 0a.1.
+
+**Gates:** status and render stable; the evidence page is main's; validators 0 errors 0 warnings; the isolated clone is
+clean; suite 2276 passed, 0 failed, 3 skipped. Four integration checks (AI reviews) are filed under
+`records/int15/checks/`, the last mergeable.
+
+**CFL-016 still reads FAIL, and S-122 stays open.** The first integration check found S-122's closure premature: five
+sentences in CFL-016's scope name parts no generator carries, and the inventory did not read makers' part numbers. The
+closure was withdrawn by a rewind before promotion. S-122's closing script now refuses without a part-number finder,
+verdict assertions naming the generated parts, the five rows corrected, and a check filed after set 14; it leaves the
+substance to the filed check. S-122's fourth round is running.
+
+**Found by the integrator, to be done in set 15:**
+- A PANJIT datasheet (`v2/vendor/power/panjit-ss2020fl-series.pdf`, tracked since `ccf5808e`) says "Reproducing and
+  modifying information of the document is prohibited without permission". It is held back from set 15 on (untracked,
+  with a fetch script). Its copy in git history and on the public mirror stays unless the owner asks for a history
+  rewrite.
+- Board C's part identities (stream w5identc, under its second check): 44 of 87 selections resolved, 21 by a printed
+  part number and 23 decoded from the maker's ordering-code table (decision 59, drafted).
+
+**Next, ready:**
+- S-122's fourth round;
+- the identities stream's check, then set 15;
+- a layout-entry record for exact-part identities (layer 6, every board);
+- board C's C1 and C2 order code (an X5R code where the identity is X7R).
