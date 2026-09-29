@@ -57,3 +57,14 @@
   only), order-code notes per selection.
 - 20:39 commit `3f9fe6f6`. Scratch clone of int15 `097d2517`, branch merged clean, the chain run (results in the README), then
   the same on the tip; the clone removed (disk 7.0 GB free after, 20:42).
+
+## Round 4 (the second check of `633697a7`: 2 blocking, 5 minor)
+
+- 21:05 read `CHECK-2.md` whole. BB1: `row_entries`, the code exactly one entry's; the size rows' inch code (minor 5);
+  the printed part named by the design (minor 1); three tests. BB2: J_PIJ2 UNRESOLVED on ASSEMBLY.md line 127, J_MAINSW
+  on line 126, both lines found and asserted by the builder.
+- `scan_vendor.py` on a fixed list, re-run niced (429 PDFs, 51 part numbers, 19 with a hit), then re-run into a scratch
+  file: byte for byte.
+- Both checks filed under `checks/`; decision 59's evidence and authority_why updated.
+- 21:13 commit `7467e7a9`. Scratch clone of int15 `1bafab8c`, branch merged clean, the chain run (README), clone removed
+  (82 GB free after).
