@@ -34,10 +34,10 @@ Worker: one Claude author, worktree `a1mech`, branch `fnd/a1mech` from `13b5352b
   in: 5.7 degrees at 100 degrees of opening). Hand counts of two other constructions (holders, cells along Y) recorded as ESTIMATE.
 - 02:53: the solids and their check re-run on the box at `91f9f749`: PASS for A, B, C, C10, D, both controls fail as they must.
 - 02:54: `DECISION-A1.md` (274 words) drafted for the integrator; the lid's growth stated from 1.4 kg (shell and QMX set).
-- 02:57: the QMX DC lead's start corrected to the jack's place (X 106.3: the unit spans X 95.6 to 158.6, its knob edge west, the
+- 02:55: the QMX DC lead's start corrected to the jack's place (X 106.3: the unit spans X 95.6 to 158.6, its knob edge west, the
   DC jack 10.2 to 11.2 from it; the first issue used 94.5); the case's centre of mass printed for the central estimate.
-- 02:58: the light toggle's height read from NKK's sheet (M2044SD3A01: S bat 10.5 on a D3 bushing 8.9, 16.40 above the face) in
+- 02:56: the light toggle's height read from NKK's sheet (M2044SD3A01: S bat 10.5 on a D3 bushing 8.9, 16.40 above the face) in
   place of the APEM bound; no arrangement moves (it lies under no lid item). README: REQ-023's margin, the lid pack's temperature
   handed to the thermal and energy streams.
-- 03:00: the solids and their check re-run on the box at `80ab97b1`, where `lid_pack_a1.py` has its final content: PASS for A, B,
+- 02:57: the solids and their check re-run on the box at `80ab97b1`, where `lid_pack_a1.py` has its final content: PASS for A, B,
   C, C10 and D, both controls fail as they must. The box's `/root/a1mech/` keeps only this stream's clone and outputs.
