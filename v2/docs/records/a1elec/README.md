@@ -47,6 +47,7 @@ What TI's documents do not settle is drafted as two questions for TI (not sent) 
 | `CHARGER.md` | board A's charger and entry: the three entry cases, the drafted settings and parts (R16, IADPT, 800 kHz, IIN_HOST, L2, R11, U3B), the losses and the thermal load on board A | drafts |
 | `energy_two_pack.py`, `.out` | the two-pack model (imports `records/energy/energy_budget.py` unchanged, pinned by sha256) | desk result |
 | `gauge_scale.py`, `.out` | the lid gauge's 63 scaled words parsed from SLUUAQ3A Table 14-1 (needs `pdftotext`) | desk result |
+| `checks/recheck_two_pack.py`, `.out` | an independent closed-form re-implementation of the two-pack balance (no function shared with `energy_two_pack.py`): five cases and the join current, every figure agrees | AI check |
 | `inputs/pvgis-leiden-daily-profile-2005-2020.json` | PVGIS DRcalc mean-day profile with hourly T2m, byte-identical to the file `fnd/d4energy` filed at `71be4943` (sha256 `4d974567...`, the value `energy_inputs.yaml` names) | input |
 | `apply_records_readme_row.py` | DRAFT for the integrator: this folder's row in `v2/docs/records/README.md` (tested on a copy: added once, refused a second run) | apply script, not executed |
 | `LOG.md` | the running log | record |
@@ -109,6 +110,7 @@ From the repository root, Python 3.11 with PyYAML, and `pdftotext` (poppler-util
 ```
 python3 v2/docs/records/a1elec/energy_two_pack.py > v2/docs/records/a1elec/energy_two_pack.out
 python3 v2/docs/records/a1elec/gauge_scale.py     > v2/docs/records/a1elec/gauge_scale.out
+python3 v2/docs/records/a1elec/checks/recheck_two_pack.py > v2/docs/records/a1elec/checks/recheck_two_pack.out
 git diff --exit-code v2/docs/records/a1elec/       # both outputs byte-identical to the committed ones
 ```
 
