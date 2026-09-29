@@ -1,0 +1,672 @@
+{
+ "documents": [
+  {
+   "document": "v2/vendor/diodes/diodes-bat46w.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "BAT46W-7-F",
+   "pages": 5,
+   "read_from": "this tree",
+   "selection": "S-479b8ebac6",
+   "sha256": "3bc31f4a5302521c7e298f95aef7e3425ea68ae287bd28a6cfa8d0689fcbe56b"
+  },
+  {
+   "document": "v2/vendor/power/panjit-ss2020fl-series.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "SS2040FL",
+   "pages": 4,
+   "read_from": "this tree",
+   "selection": "S-330f4dd290",
+   "sha256": "92544a833cdaa6e17d9192a05ec84bbc8ec797c4cb5fa51c4250f158f2c534fe"
+  },
+  {
+   "document": "v2/vendor/power/panjit-ss2020fl-series.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "SS2040FL",
+   "pages": 4,
+   "read_from": "this tree",
+   "selection": "S-a95bcbbc1e",
+   "sha256": "92544a833cdaa6e17d9192a05ec84bbc8ec797c4cb5fa51c4250f158f2c534fe"
+  },
+  {
+   "document": "v2/vendor/power/panjit-ss2020fl-series.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "SS2040FL",
+   "pages": 4,
+   "read_from": "this tree",
+   "selection": "S-af1ea25d67",
+   "sha256": "92544a833cdaa6e17d9192a05ec84bbc8ec797c4cb5fa51c4250f158f2c534fe"
+  },
+  {
+   "binding": "PRINTED",
+   "document": "v2/vendor/hirose/hirose-fh34-series-ffc-connectors.pdf",
+   "mpn": "FH34SRJ-24S-0.5SH(50)",
+   "page": 6,
+   "selection": "S-13d7058c0e",
+   "state": "READ",
+   "why": "page 6 prints FH34SRJ-24S-0.5SH(##) and keys (##) to (50)"
+  },
+  {
+   "document": "v2/vendor/power/jscj-2n7002-c8545.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "2N7002",
+   "pages": 5,
+   "read_from": "this tree",
+   "selection": "S-b9d2bcde2e",
+   "sha256": "7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6"
+  },
+  {
+   "document": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "AO3401A",
+   "pages": 5,
+   "read_from": "this tree",
+   "selection": "S-55e88b2fbd",
+   "sha256": "0d8e3261ae280e007b5837fff60c55142f2d92af71edc4d02aee6f7a760a785c"
+  },
+  {
+   "document": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "AO3401A",
+   "pages": 5,
+   "read_from": "this tree",
+   "selection": "S-cae89bf0ce",
+   "sha256": "0d8e3261ae280e007b5837fff60c55142f2d92af71edc4d02aee6f7a760a785c"
+  },
+  {
+   "document": "v2/vendor/vishay/vishay-si2300ds.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "SI2300DS-T1-GE3",
+   "pages": 9,
+   "read_from": "this tree",
+   "selection": "S-7917d94eb1",
+   "sha256": "cffcc3972eeb825d822def9e5d649e76ae74f94de08dab8021ff194b9175f231"
+  },
+  {
+   "document": "v2/vendor/vishay/vishay-si2300ds.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "SI2300DS-T1-GE3",
+   "pages": 9,
+   "read_from": "this tree",
+   "selection": "S-2c230ffa91",
+   "sha256": "cffcc3972eeb825d822def9e5d649e76ae74f94de08dab8021ff194b9175f231"
+  },
+  {
+   "document": "v2/vendor/vishay/veml7700-datasheet.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "VEML7700-TR",
+   "pages": 15,
+   "read_from": "this tree",
+   "selection": "S-8362226c90",
+   "sha256": "f338cf7d5911828a2f2ac8ae8324049380c852e34aa5afa43ac92c98ffe827d1"
+  },
+  {
+   "document": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
+   "first_page_naming_it": 9,
+   "mpn": "74LVC1G17W5-7",
+   "pages": 18,
+   "read_from": "this tree",
+   "selection": "S-3399dc8073",
+   "sha256": "029f345a1e7be917fee46d47c49a61963938e0aab1631b019fe7eddb014fb548"
+  },
+  {
+   "document": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
+   "first_page_naming_it": 9,
+   "mpn": "74LVC1G17W5-7",
+   "pages": 18,
+   "read_from": "this tree",
+   "selection": "S-82a0c53bb2",
+   "sha256": "029f345a1e7be917fee46d47c49a61963938e0aab1631b019fe7eddb014fb548"
+  },
+  {
+   "document": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
+   "first_page_naming_it": 9,
+   "mpn": "74LVC1G17W5-7",
+   "pages": 18,
+   "read_from": "this tree",
+   "selection": "S-ac3ac5929e",
+   "sha256": "029f345a1e7be917fee46d47c49a61963938e0aab1631b019fe7eddb014fb548"
+  },
+  {
+   "document": "v2/vendor/ti/ti-pca9555.pdf",
+   "first_page_naming_it": 31,
+   "mpn": "PCA9555PWR",
+   "pages": 49,
+   "read_from": "this tree",
+   "selection": "S-2005fc2180",
+   "sha256": "9b5cc24c3c9e286a7132e27267f98e8b8b36f02ead2157d66df2676de3a474cb"
+  },
+  {
+   "document": "v2/vendor/ti/ti-pca9555.pdf",
+   "first_page_naming_it": 31,
+   "mpn": "PCA9555PWR",
+   "pages": 49,
+   "read_from": "this tree",
+   "selection": "S-ad00071efd",
+   "sha256": "9b5cc24c3c9e286a7132e27267f98e8b8b36f02ead2157d66df2676de3a474cb"
+  },
+  {
+   "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "first_page_naming_it": 2,
+   "mpn": "RP2040",
+   "pages": 642,
+   "read_from": "this tree",
+   "selection": "S-75a8527525",
+   "sha256": "be56fbb75ba0ae9e26558a73c93ac3e75c2ad4e6878d3b6703de2a76d886ea8c"
+  },
+  {
+   "document": "v2/vendor/ti/ti-sn74lvc1g57.pdf",
+   "first_page_naming_it": 14,
+   "mpn": "SN74LVC1G57DBVR",
+   "pages": 38,
+   "read_from": "this tree",
+   "selection": "S-a3081131d9",
+   "sha256": "078364de617898af0dd4cee99931ab1d36b622824a06e8f9b7fa95087644af24"
+  },
+  {
+   "document": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+   "first_page_naming_it": 28,
+   "mpn": "TLV75533PDBVR",
+   "pages": 51,
+   "read_from": "this tree",
+   "selection": "S-3da103208a",
+   "sha256": "7eb7bc6935bf6c1d247b2fce62c9e5a49a474fd94359ddc390a4baf0ac1f5293"
+  },
+  {
+   "document": "v2/vendor/st/st-usblc6-2-esd-protection.pdf",
+   "first_page_naming_it": 1,
+   "mpn": "USBLC6-2SC6",
+   "pages": 20,
+   "read_from": "this tree",
+   "selection": "S-e1dcd70451",
+   "sha256": "bc30154f310cd631043214ed52571daefe04270587ec55072d49a23bd18b9068"
+  },
+  {
+   "document": "v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf",
+   "first_page_naming_it": 73,
+   "mpn": "W25Q16JVUXIQ",
+   "pages": 75,
+   "read_from": "this tree",
+   "selection": "S-dfbcfc88f2",
+   "sha256": "81af3f69b0bff95fd1097949a1005431dc5b3a6ecb5f1947e695a17298e7cf1b"
+  },
+  {
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "first_page_naming_it": null,
+   "mpn": "CC0603KRX7R9BB104",
+   "pages": 29,
+   "read_from": "this tree",
+   "selection": "S-45ad5deffe",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "mpn": "CC0603KRX7R9BB104",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-45ad5deffe",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
+  },
+  {
+   "document": "v2/vendor/passives/fenghua-series-705023d3.pdf",
+   "first_page_naming_it": null,
+   "mpn": "0603B103K500NT",
+   "pages": 30,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-8b55c1443b",
+   "sha256": "705023d3be0454148a96fc2715d249a32d8ff442e70b64d1116d3490ed1d8136"
+  },
+  {
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "first_page_naming_it": null,
+   "mpn": "CC0805KKX7R7BB106",
+   "pages": 29,
+   "read_from": "this tree",
+   "selection": "S-6d1de2f8e8",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "mpn": "CC0805KKX7R7BB106",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-6d1de2f8e8",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
+  },
+  {
+   "document": "v2/vendor/passives/fenghua-series-705023d3.pdf",
+   "first_page_naming_it": null,
+   "mpn": "0402CG150J500NT",
+   "pages": 30,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-8b1dfb7d63",
+   "sha256": "705023d3be0454148a96fc2715d249a32d8ff442e70b64d1116d3490ed1d8136"
+  },
+  {
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "first_page_naming_it": null,
+   "mpn": "CC0603KRX7R8BB105",
+   "pages": 29,
+   "read_from": "this tree",
+   "selection": "S-9ae5738976",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-9ae5738976",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
+  },
+  {
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "first_page_naming_it": null,
+   "mpn": "CC0603KRX7R8BB105",
+   "pages": 29,
+   "read_from": "this tree",
+   "selection": "S-12603c7856",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-12603c7856",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
+  },
+  {
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "first_page_naming_it": null,
+   "mpn": "CC0603KRX7R8BB105",
+   "pages": 29,
+   "read_from": "this tree",
+   "selection": "S-c3afdba8a6",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-c3afdba8a6",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
+  },
+  {
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "first_page_naming_it": null,
+   "mpn": "CC0603KRX7R8BB105",
+   "pages": 29,
+   "read_from": "this tree",
+   "selection": "S-69d0f41966",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-69d0f41966",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
+  },
+  {
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "first_page_naming_it": null,
+   "mpn": "CC0603KRX7R8BB105",
+   "pages": 29,
+   "read_from": "this tree",
+   "selection": "S-bd25452813",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-bd25452813",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
+  },
+  {
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "first_page_naming_it": null,
+   "mpn": "CC0603KRX7R8BB105",
+   "pages": 29,
+   "read_from": "this tree",
+   "selection": "S-9121e77997",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-9121e77997",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
+  },
+  {
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "first_page_naming_it": null,
+   "mpn": "CC0603KRX7R8BB105",
+   "pages": 29,
+   "read_from": "this tree",
+   "selection": "S-a9d5694441",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "mpn": "CC0603KRX7R8BB105",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-a9d5694441",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
+  },
+  {
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "first_page_naming_it": null,
+   "mpn": "CC0603KRX7R7BB105",
+   "pages": 29,
+   "read_from": "this tree",
+   "selection": "S-5eeee312c8",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/yageo-cc-series.pdf",
+   "mpn": "CC0603KRX7R7BB105",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-5eeee312c8",
+   "sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, voltage, dielectric, construction"
+  },
+  {
+   "document": "v2/vendor/passives/murata-grm188r61e475ke11d.pdf",
+   "first_page_naming_it": null,
+   "mpn": "GRM188R61E475KE11D",
+   "pages": 186,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-62ab53c6e1",
+   "sha256": "f7d46ecff4291a82e843c992a3174cc7c098187400e7c4f4dbe5850dad120ce5"
+  },
+  {
+   "document": "v2/vendor/passives/arlitech-atnr-series-spec.pdf",
+   "first_page_naming_it": null,
+   "mpn": "ATNR4010100MT",
+   "pages": 9,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-23fe50c33a",
+   "sha256": "a310e24af39280e30b895950dee80c128de8fd955f1b3151b1160043083cbc90"
+  },
+  {
+   "document": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+   "first_page_naming_it": null,
+   "mpn": "0603WAF1000T5E",
+   "pages": 9,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-d7aa8a0726",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "mpn": "0603WAF1000T5E",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-d7aa8a0726",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
+  },
+  {
+   "document": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+   "first_page_naming_it": null,
+   "mpn": "0603WAF1003T5E",
+   "pages": 9,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-a44109c662",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "mpn": "0603WAF1003T5E",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-a44109c662",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "mpn": "0603WAF1002T5E",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-d499541fe0",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
+  },
+  {
+   "document": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+   "first_page_naming_it": null,
+   "mpn": "0603WAF1002T5E",
+   "pages": 9,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-50018f6fcc",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "mpn": "0603WAF1002T5E",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-50018f6fcc",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
+  },
+  {
+   "document": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+   "first_page_naming_it": null,
+   "mpn": "0603WAF1800T5E",
+   "pages": 9,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-e35e0a5cd2",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "mpn": "0603WAF1800T5E",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-e35e0a5cd2",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
+  },
+  {
+   "document": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+   "first_page_naming_it": null,
+   "mpn": "0603WAF1001T5E",
+   "pages": 9,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-0baee211d0",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "mpn": "0603WAF1001T5E",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-0baee211d0",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "mpn": "0603WAF2201T5E",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-bf6f910c86",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
+  },
+  {
+   "document": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+   "first_page_naming_it": null,
+   "mpn": "0603WAF2201T5E",
+   "pages": 9,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-099e530a08",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "mpn": "0603WAF2201T5E",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-099e530a08",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
+  },
+  {
+   "document": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+   "first_page_naming_it": null,
+   "mpn": "0603WAF270JT5E",
+   "pages": 9,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-b3916fa625",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "mpn": "0603WAF270JT5E",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-b3916fa625",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
+  },
+  {
+   "document": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+   "first_page_naming_it": null,
+   "mpn": "0603WAF3000T5E",
+   "pages": 9,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-293aa5edf9",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "mpn": "0603WAF3000T5E",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-293aa5edf9",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "mpn": "0603WAF3300T5E",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-f8c96deae3",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
+  },
+  {
+   "document": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+   "first_page_naming_it": null,
+   "mpn": "0603WAF4700T5E",
+   "pages": 9,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-900262aed5",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "mpn": "0603WAF4700T5E",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-900262aed5",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
+  },
+  {
+   "document": "v2/vendor/passives/uniroyal-cs03w5f470lt5e.pdf",
+   "first_page_naming_it": null,
+   "mpn": "CS03W5F470LT5E",
+   "pages": 8,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-8fcb029420",
+   "sha256": "e9f02c2005353fc79ee97c90227ab555447336a2dae7f70db6a658c4cb22cb98"
+  },
+  {
+   "document": "v2/vendor/passives/uniroyal-series-11cd644d.pdf",
+   "first_page_naming_it": null,
+   "mpn": "0603WAF470JT5E",
+   "pages": 9,
+   "read_from": "fnd/w5ident c08f4d5a (not in this tree)",
+   "selection": "S-6b277c1b9f",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef"
+  },
+  {
+   "binding": "DECODED",
+   "document": "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+   "mpn": "0603WAF470JT5E",
+   "not_established": [],
+   "page": 2,
+   "selection": "S-6b277c1b9f",
+   "sha256": "11cd644d5d8a34a6d12775afb80bf58d8fc11f0c3b700dbd0f7a59942ceaa5ef",
+   "state": "DECODED",
+   "why": "page 2 decodes it: value, package, tolerance, power"
+  }
+ ],
+ "what": "rule D-2 as the builder read it: every identity that claimed a document, the pages read and the first page printing the part number"
+}

@@ -1,0 +1,25 @@
+rule V-1 (a') on board C at b874b744, read by part_identities.Board on the committed netlist and intent:
+  nets that are floors and not grounds (declared at most 0.5 V, or marked returns): none
+rule V-1 (g), a connector a source of unknown level: nets whose bound it changes on board C: 21
+    EXP_INT: without (g) (5.0, 0.0); with (g) (None, None)
+    HB1: without (g) (5.0, 0.0); with (g) (None, None)
+    HB2: without (g) (5.0, 0.0); with (g) (None, None)
+    HB3: without (g) (5.0, 0.0); with (g) (None, None)
+    HDMI_SEL1: without (g) (5.0, 0.0); with (g) (None, None)
+    HDMI_SEL2: without (g) (5.0, 0.0); with (g) (None, None)
+    PI_KILL: without (g) (5.0, 0.0); with (g) (None, None)
+    PI_SHDN_REQ: without (g) (5.0, 0.0); with (g) (None, None)
+    Q3_G: without (g) (5.0, 0.0); with (g) (None, None)
+    SCL: without (g) (5.0, 0.0); with (g) (None, None)
+    SDA: without (g) (5.0, 0.0); with (g) (None, None)
+    SHORE_INHIBIT: without (g) (5.0, 0.0); with (g) (None, None)
+    SLOT_EN1: without (g) (5.0, 0.0); with (g) (None, None)
+    SLOT_EN2: without (g) (5.0, 0.0); with (g) (None, None)
+    SLOT_EN3: without (g) (5.0, 0.0); with (g) (None, None)
+    TR_APRS: without (g) (5.0, 0.0); with (g) (None, None)
+    USB_DM_R: without (g) (5.0, 0.0); with (g) (None, None)
+    USB_DP_R: without (g) (5.0, 0.0); with (g) (None, None)
+    USB_PNL_N: without (g) (5.0, 0.0); with (g) (None, None)
+    USB_PNL_P: without (g) (5.0, 0.0); with (g) (None, None)
+    ZEROIZE_HW: without (g) (5.0, 0.0); with (g) (None, None)
+  BOM parts whose selection key it changes: 0 []
