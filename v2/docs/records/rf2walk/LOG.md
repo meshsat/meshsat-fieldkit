@@ -90,3 +90,17 @@ to board B and C's regenerated netlists and `gen_sch_b.py`, render.
   `t_a_follower_off_the_switchs_board_is_a_second_driver` (CX3b): `test_tx_inhibit` 138 passed; both new tests FAIL on the
   previous walk (CX9 on board B reads PASS on both lines there, on board C UNDECIDED and FAIL). `tests/run.py contract inhibit
   requirements evidence rules_status stale`: 388 passed, 0 failed, 8 skipped; the tree unchanged but for the two files.
+- 14:00 to 14:07 The circuit minors of stream d4emcon's remedies drafted as `apply_b_chk12.py` against set 12's
+  `gen_sch_b.py` (not applied; dry run, a scratch copy applied once and refused a second run, the result parses, the new
+  module rail declarations evaluated for slots 1 to 3):
+  M1 (minor 1) R238 49.9 k 1% (C23184, R297's code): held 72 uA (SCES308L 100 uA row), released 2.08 V at the module's
+  nominal 100 k and at or over 1.19 V down to a 30.8 k pull-down, whose tolerance Quectel does not state.
+  M2 (minor 2) R532 2.7 k 1% (C13167) keeps U543's sink at 0.955 mA at most up to its 2.90 V rising threshold, inside the
+  1 mA VOL row; R527 20.0 k 1% (C4184) keeps the released level at 2.10 V (asserted 0.16 V, every rail lost 0.37 V);
+  CT to +5V_DEV through R551 49.9 k 1%: td 180 to 420 ms. The 9704's I_EN-low-to-I_BTD-low time is in no held document:
+  bench E-04 measures it, and CT becomes a capacitor if it can exceed 180 ms.
+  M5 (minor 5) the module rails' loads and notes from set 12's netlist (U{s}12 to U{s}15 on every slot, already missing at
+  round 8, slot 2's U220 and U554, slot 3's U544 to U553, 1 mA a gate) and +3V3_ZB's R536 to R538.
+  Read-back `tools/readback_chk12.py` (parses the netlist and the intent JSON; a module rail's loads are compared with the
+  logic parts the netlist puts on it): 10 FAIL of 11 on set 12's committed board B (only U543's open MR passes), as it must
+  before regeneration; `tools/selftest_readback_chk12.py`: it passes a synthetic after-pair and fails three mutants.
