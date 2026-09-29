@@ -31,7 +31,7 @@
   "unresolved": []
  },
  "counts": {
-  "census_nets": 154,
+  "census_nets": 158,
   "checks": 6,
   "declared_nodes": 25,
   "declared_not_in_netlist": 0,
@@ -45,11 +45,11 @@
   "switches_unresolved": 0,
   "undecided": 0,
   "undeclared": 0,
-  "unmarked": 74
+  "unmarked": 78
  },
  "denominator": 6,
  "evidence": [
-  "census of the 154 nets: 5 counted, 58 declared node, 1 ground, 3 settled, 13 unconnected, 0 undecided, 74 unmarked",
+  "census of the 158 nets: 5 counted, 58 declared node, 1 ground, 3 settled, 13 unconnected, 0 undecided, 78 unmarked",
   "settled, they supply nothing (3): SOS_SW, XIN, XOUT",
   "declared as a node, not a rail: BAT1_A (series conductor: the load R31 of rail LED_RAIL at 0.02 A)",
   "declared as a node, not a rail: BAT2_A (series conductor: the load R32 of rail LED_RAIL at 0.03 A)",
@@ -77,12 +77,12 @@
   },
   "intent": {
    "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
-   "sha256_16": "d321f2979e0c4244"
+   "sha256_16": "6db304b8ce504a09"
   },
   "netlist": {
-   "content16": "424a8b6ee5851775",
+   "content16": "e6d5f09e7a983901",
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "87b69472ac83ca5a"
+   "sha256_16": "c9f7394594201045"
   },
   "threshold_a": 0.0
  },
@@ -104,12 +104,12 @@
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "a46db71be8a1",
-  "tools_tree_sha": "6031704bb86457d7"
+  "git_head": "4f4fd31d15df",
+  "tools_tree_sha": "fd71d03702e5de42"
  },
- "ts": "2026-09-29T13:43:09Z",
+ "ts": "2026-09-29T15:16:47Z",
  "verdict": "PASS",
- "version": "a46db71be8a1",
+ "version": "4f4fd31d15df",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "082b701e7bab36d9"

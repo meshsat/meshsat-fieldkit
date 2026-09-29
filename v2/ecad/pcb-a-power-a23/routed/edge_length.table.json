@@ -1,6 +1,7 @@
 {
  "board": "a",
  "counts": {
+  "allowed_nets": 0,
   "answered_nets": 19,
   "bound_decided_nets": 64,
   "bound_edge_nets": 77,
@@ -103,7 +104,7 @@
   },
   "far_netlist_c": {
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "87b69472ac83ca5a"
+   "sha256_16": "c9f7394594201045"
   },
   "far_netlist_d": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
@@ -445,6 +446,7 @@
     "S1_BOOT",
     "S3_BOOT"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -553,6 +555,7 @@
     "S2_BOOT1",
     "SD_BOOT1"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -726,6 +729,7 @@
     "S2_BOOT2",
     "SD_BOOT2"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -871,6 +875,7 @@
     "D8B_BST",
     "HT_BST"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -954,6 +959,7 @@
     "CH_BTST1",
     "CH_BTST2"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1420,6 +1426,7 @@
     "SD_HDRV1",
     "SD_HDRV2"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1646,6 +1653,7 @@
     "CH_HIDRV1",
     "CH_HIDRV2"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -1843,6 +1851,7 @@
     "SD_LDRV1",
     "SD_LDRV2"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -2069,6 +2078,7 @@
     "CH_LODRV1",
     "CH_LODRV2"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -2433,6 +2443,7 @@
     "D8B_SW",
     "HT_SW"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -2506,6 +2517,7 @@
     "S2_SW1",
     "SD_SW1"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -2579,6 +2591,7 @@
     "S2_SW2",
     "SD_SW2"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -2927,6 +2940,7 @@
    "layout_bound": [
     "EXP_INT"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -3051,6 +3065,7 @@
    "layout_bound": [
     "INA_ALERT"
    ],
+   "length_limits": {},
    "maker_holds": [
     "INA_ALERT"
    ],
@@ -3182,6 +3197,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -3250,6 +3266,7 @@
    "layout_bound": [
     "PD_VTX"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -3326,6 +3343,7 @@
    "layout_bound": [
     "PROCHOT"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -3441,6 +3459,7 @@
    "document": null,
    "drivers": {},
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -3648,6 +3667,7 @@
    "layout_bound": [
     "SCL"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -3734,6 +3754,7 @@
    "layout_bound": [
     "SDA"
    ],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [],
    "may_be_long": true,
@@ -3884,6 +3905,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [
     "USB_D8_N",
@@ -3961,6 +3983,7 @@
     ]
    },
    "layout_bound": [],
+   "length_limits": {},
    "maker_holds": [],
    "maker_nets": [
     "USB_D8_P",
