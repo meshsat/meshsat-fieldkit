@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """S-120: board A's charge bus VBUS20 and the charger's switch nodes against the 30 V FETs of decision 57 (stream s120,
 MESHSAT-1357, 29 September 2026; second issue after the independent check `_scratch/chk-s120/CHECK.md`, B1 to B3 and m1 to
-m11). Desk arithmetic on the makers' figures and the committed netlists: nothing is built, powered or measured, and nothing
-here is a qualified review (AI engineering work).
+m11; third issue after the re-check `CHECK-2.md`, B1 and n1 to n7). Desk arithmetic on the makers' figures and the
+committed netlists: nothing is built, powered or measured, and nothing here is a qualified review (AI engineering work).
 
 WHAT IT DOES. It PARSES board A's and board E's committed netlists (v2/ecad/tools/netlist_sexp.py; nothing is grepped) and
 asserts every circuit fact the bound rests on (section 1): the front end U2's feedback divider, its pins, its sense
 resistors and their filter, its inductor and the direction of its FETs; VBUS20's whole membership (so no new source or
 clamp can join the bus unseen); the charger U3's pins, its cell strap, its input sense filter, its four FETs and their nets;
 the clamps on VIN_RAW and VBAT; board E's over-voltage lockout divider and its clamps. Each detail line prints what the
-netlist holds, not what is expected, and a fact that does not hold is printed FAIL with exit status 1. Then it computes the
+netlist holds, not what is expected, and a fact that does not hold is printed FAIL with exit status 1. The gate holds only
+what the bound rests on; U3's input sense filter, which the bound does not use, is printed as a RECORD line and gates
+nothing (the re-check's n5: a gate on the absence of TI's CACP and CACN would refuse the closure when they are added). Then it computes the
 bus's worst case mechanism by mechanism (sections 2 to 8) from the makers' figures, each quoted with its document, revision
 and printed page, the margins per part (section 9), the switch nodes' budget (section 10), the single faults outside every
 requirement (section 11) and the answer (section 12).
@@ -25,6 +27,7 @@ import argparse
 import hashlib
 import math
 import os
+import re
 import subprocess
 import sys
 
@@ -125,6 +128,22 @@ def members(doc, net):
     return sorted({r for r, *_ in doc["nets"].get(net, [])})
 
 
+def ohms(value):
+    """The resistance a value string states, in Ohm, or None: '13.3k 1% (...)' is 13300, '100R 1%' is 100, '4R7' is 4.7."""
+    m = re.match(r"\s*(\d+(?:\.\d+)?)\s*([kKMR]?)(\d*)", value or "")
+    if not m:
+        return None
+    whole, mult, frac = m.groups()
+    x = float(whole + ("." + frac if frac and "." not in whole else ""))
+    return x * {"k": 1e3, "K": 1e3, "M": 1e6, "R": 1.0, "": 1.0}[mult]
+
+
+def tol(value):
+    """The tolerance a value string states, as a fraction, or None."""
+    m = re.search(r"(\d+(?:\.\d+)?)\s*%", value or "")
+    return float(m.group(1)) / 100 if m else None
+
+
 def pinmap(doc, ref, which):
     p = pins(doc, ref)
     return ", ".join("%s %s" % (k, p.get(k, "(none)")) for k in which)
@@ -150,9 +169,9 @@ def facts(a, e):
     add("front end sense", sorted(pins(a, "R11").values()) == ["FE_OUT", "VBUS20"] and val(a, "R11").startswith("10mOhm 1%")
         and sorted(pins(a, "R12").values()) == ["FE_CS", "GND"] and val(a, "R12").startswith("5mOhm 1%"),
         "R11 %s on %s; R12 %s on %s" % (val(a, "R11"), sorted(pins(a, "R11").values()), val(a, "R12"), sorted(pins(a, "R12").values())))
-    add("CS filter", sorted(pins(a, "R150").values()) == ["FE_CS", "FE_CSF"] and val(a, "R150").startswith("100R 1%")
-        and sorted(pins(a, "R151").values()) == ["FE_CSGF", "GND"] and val(a, "R151").startswith("100R 1%")
-        and u2.get("16") == "FE_CSF" and u2.get("15") == "FE_CSGF",
+    rcf = [ohms(val(a, r)) for r in ("R150", "R151")]
+    add("CS filter", sorted(pins(a, "R150").values()) == ["FE_CS", "FE_CSF"] and sorted(pins(a, "R151").values()) == ["FE_CSGF", "GND"]
+        and None not in rcf and max(rcf) <= 100.0 and u2.get("16") == "FE_CSF" and u2.get("15") == "FE_CSGF",
         "R150 %s on %s; R151 %s on %s; U2 pins %s" % (val(a, "R150").split(" (")[0], sorted(pins(a, "R150").values()),
                                                       val(a, "R151").split(" (")[0], sorted(pins(a, "R151").values()),
                                                       pinmap(a, "U2", ("16", "15"))))
@@ -176,18 +195,21 @@ def facts(a, e):
     add("U3 pins", (pins(a, "U3").get("1"), pins(a, "U3").get("5"), pins(a, "U3").get("22"), pins(a, "U3").get("32"),
                     pins(a, "U3").get("23"), pins(a, "U3").get("30"), pins(a, "U3").get("25"), pins(a, "U3").get("18"))
         == ("VBUS20", "GND", "VBAT", "CH_SW1", "CH_SW2", "CH_BTST1", "CH_BTST2", "CH_CELL"),
-        "U3 pins %s (VBUS, OTG/VAP/FRS, VSYS, SW1, SW2, BTST1, BTST2, CELL_BATPRESZ). OTG needs pin 5 high (9.3.9 p.27, "
-        "EN_OTG p.64), VAP too (IN_VAP p.49), FRS too (pin table p.6), so on GND the charger never drives VBUS20"
-        % pinmap(a, "U3", ("1", "5", "22", "32", "23", "30", "25", "18")))
+        "U3 pins %s (VBUS, OTG/VAP/FRS, VSYS, SW1, SW2, BTST1, BTST2, CELL_BATPRESZ); OTG, VAP and FRS each need pin 5 "
+        "high (9.3.9 p.27, EN_OTG p.64, IN_VAP p.49, pin table p.6): pin 5 is %s"
+        % (pinmap(a, "U3", ("1", "5", "22", "32", "23", "30", "25", "18")),
+           "on GND, so the charger cannot drive VBUS20" if pins(a, "U3").get("5") == "GND" else "NOT on GND"))
     r26, r27 = pins(a, "R26"), pins(a, "R27")
-    lo = 40.2 * (1 - TOL_R) / (40.2 * (1 - TOL_R) + 13.3 * (1 + TOL_R))
-    hi = 40.2 * (1 + TOL_R) / (40.2 * (1 + TOL_R) + 13.3 * (1 - TOL_R))
-    add("U3 cell strap", sorted(r26.values()) == ["CH_CELL", "CH_VDDA"] and val(a, "R26").startswith("13.3k 1%")
-        and sorted(r27.values()) == ["CH_CELL", "GND"] and val(a, "R27").startswith("40.2k 1%")
-        and VCELL_4S[0] <= lo and hi <= VCELL_4S[2],
-        "R26 %s on %s, R27 %s on %s: %.2f to %.2f %% of VDDA, the 4s window being 68.4 to 81.5 %% (SLUSE66A p.18), so "
-        "SYSOVP is the 4S 19.0 to 20.0 V" % (val(a, "R26").split(" (")[0], sorted(r26.values()), val(a, "R27"),
-                                             sorted(r27.values()), lo * 100, hi * 100))
+    rt, rb_, tt, tb = ohms(val(a, "R26")), ohms(val(a, "R27")), tol(val(a, "R26")), tol(val(a, "R27"))
+    ok_vals = None not in (rt, rb_, tt, tb)
+    lo = rb_ * (1 - tb) / (rb_ * (1 - tb) + rt * (1 + tt)) if ok_vals else float("nan")
+    hi = rb_ * (1 + tb) / (rb_ * (1 + tb) + rt * (1 - tt)) if ok_vals else float("nan")
+    inside = ok_vals and VCELL_4S[0] <= lo and hi <= VCELL_4S[2]
+    add("U3 cell strap", sorted(r26.values()) == ["CH_CELL", "CH_VDDA"] and sorted(r27.values()) == ["CH_CELL", "GND"] and inside,
+        "R26 %s on %s, R27 %s on %s: CELL_BATPRESZ at %.2f to %.2f %% of VDDA from those values, against the 4s window 68.4 "
+        "to 81.5 %% (SLUSE66A p.18): %s" % (val(a, "R26").split(" (")[0], sorted(r26.values()), val(a, "R27"),
+                                           sorted(r27.values()), lo * 100, hi * 100,
+                                           "inside, so SYSOVP is the 4S 19.0 to 20.0 V" if inside else "NOT inside"))
     want = {"Q7": ("CSD17578Q5A", "CH_ACN", "CH_SW1"), "Q8": ("CSD17577Q5A", "CH_SW1", "GND"),
             "Q9": ("CSD17577Q5A", "CH_SW2", "GND"), "Q10": ("CSD17577Q5A", "VBAT", "CH_SW2")}
     for q, (part, d, s) in sorted(want.items()):
@@ -198,11 +220,6 @@ def facts(a, e):
     add("R16 and CH_ACN", sorted(pins(a, "R16").values()) == ["CH_ACN", "VBUS20"] and acn_caps == [("C190", "10n"), ("C191", "1n")],
         "R16 %s on %s; capacitors on CH_ACN: %s (SLUSE66A p.86: at most 10 nF + 1 nF after RAC, Figure 10-3 p.85)"
         % (val(a, "R16"), sorted(pins(a, "R16").values()), ", ".join("%s %s" % x for x in acn_caps) or "none"))
-    fn, fp = members(a, "CH_ACN_F"), members(a, "CH_ACP_F")
-    add("U3 input sense filter", fn == ["C121", "R146", "U3"] and fp == ["C121", "R147", "U3"]
-        and sorted(pins(a, "R146").values()) == ["CH_ACN", "CH_ACN_F"] and sorted(pins(a, "R147").values()) == ["CH_ACP_F", "VBUS20"],
-        "CH_ACN_F holds %s, CH_ACP_F holds %s; R146 %s, R147 %s, C121 %s: no capacitor to GND on either (Figure 10-3's CACP "
-        "and CACN, 33 nF, p.85, are not drawn)" % (fn, fp, val(a, "R146"), val(a, "R147"), val(a, "C121")))
     add("D1 on VBAT", pins(a, "D1") == {"1": "VBAT", "2": "GND"} and val(a, "D1").startswith("SMCJ18A"),
         "D1 %s, pins %s" % (val(a, "D1"), pinmap(a, "D1", ("1", "2"))))
     add("D2 on VIN_RAW", pins(a, "D2") == {"1": "VIN_RAW", "2": "GND"} and val(a, "D2").startswith("SMCJ40A"),
@@ -217,6 +234,17 @@ def facts(a, e):
         and val(e, "D2").startswith("SMCJ40A") and pins(e, "D2").get("1") == "VIN_RAW"
         and val(e, "D10").startswith("SMCJ40CA") and pins(e, "D10").get("1") == "DC_F",
         "; ".join("%s %s pin 1 on %s" % (r, val(e, r).split(" (")[0], pins(e, r).get("1")) for r in ("D10", "D1", "D2")))
+    return out
+
+
+def records(a):
+    """What the netlist holds that the text describes but the bound does not rest on: printed, never gated (n5)."""
+    out = []
+    for net in ("CH_ACN_F", "CH_ACP_F"):
+        mem = sorted(a["nets"].get(net, []))
+        to_gnd = sorted(r for r, *_ in mem if r.startswith("C") and "GND" in pins(a, r).values())
+        out.append("%s holds %s; capacitors from it to GND: %s" % (
+            net, ", ".join("%s.%s %s" % (r, pn, val(a, r).split(" (")[0]) for r, pn, *_ in mem), ", ".join(to_gnd) or "none"))
     return out
 
 
@@ -245,6 +273,11 @@ def main(argv=None):
     nbad = sum(1 for _, ok, _ in fs if not ok)
     FIG.update(sha_a=sha16(ar.net_a), sha_e=sha16(ar.net_e), facts=len(fs), facts_bad=nbad)
     P("   facts: %d of %d hold" % (len(fs) - nbad, len(fs)))
+    P("   RECORD, not gated (U3's input sense filter; TI's Figure 10-3, p.85, draws 4.99 Ohm, CDIFF 10 nF and CACP, CACN 33 nF):")
+    rec = records(a)
+    for line in rec:
+        P("     %s" % line)
+    FIG.update(acn_f_caps=rec)
     P("")
 
     # 2. regulation
@@ -278,27 +311,41 @@ def main(argv=None):
     i_l1_max = max([i_boost] + list(i_buck.values()))
     e_l1 = 0.5 * L1_NOM * (1 + L_TOL) * i_l1_max ** 2
     c_min = BULK_N * BULK_C * (1 - BULK_TOL)
-    ovp_res = math.sqrt(ovp_hi ** 2 + 2 * e_l1 / c_min)
-    slew = i_l1_max / c_min
+    v_steady = math.sqrt(ovp_hi ** 2 + 2 * e_l1 / c_min)
+    i_first = i_valley + (LM_ABS["VIN"] - ovp_hi) / (l1_lo * FSW_MIN)
+    e_first = 0.5 * L1_NOM * (1 + L_TOL) * i_first ** 2
+    v_first = math.sqrt(ovp_hi ** 2 + 2 * e_first / c_min)
+    ovp_res = max(v_steady, v_first)
+    e_to_29 = (29.0 ** 2 - ovp_hi ** 2) * c_min / 2
+    slew = i_first / c_min
     P("3. THE FRONT END'S OUTPUT OVER-VOLTAGE PROTECTION (SNVSAI1D 6.5 p.8; 7.3.11 p.18; 7.1 p.13)")
     P("   threshold at FB: VREF + 10 % TYPICAL (no minimum or maximum given), hysteresis 2.5 %; response: 'turns off the gate")
     P("   drives' (7.3.11) or 'the high-side drivers' (7.1); either stops the input's energy (Q2 off blocks VIN_RAW). OVP reads FB,")
     P("   so it scales with the same divider: the bus trips at 1.10 x its own regulation.")
     P("   trip, nominal                                   %6.3f V" % ovp_nom)
     P("   trip, VREF maximum and the divider's worst ratio %6.3f V   (INFERRED: TI's 10 %% is typical only)" % ovp_hi)
-    P("   L1's largest current inside U2's ratings (R12 5 mOhm - 1 %; the CS and CSG pins sit behind R150 and R151, 100 Ohm")
-    P("   each, where IOFFSET(CS/CSG) up to 19 uA, p.7, moves the threshold by up to %.1f mV):" % (voff * 1e3))
+    P("   L1's current in the steady current-limit cycle inside U2's ratings (R12 5 mOhm - 1 %; the CS and CSG pins sit behind")
+    P("   R150 and R151, 100 Ohm each, where IOFFSET(CS/CSG) up to 19 uA, p.7, moves the threshold by up to %.1f mV):"
+      % (voff * 1e3))
     P("     boost mode, peak limit (140 + %.1f) mV:                                    %6.2f A" % (voff * 1e3, i_boost))
     for v in sorted(i_buck):
         P("     buck mode at %4.1f V in: valley limit (94 + %.1f) mV = %.2f A, plus the ripple at the trip (L1 -20 %%, 175 kHz) %6.2f A"
           % (v, voff * 1e3, i_valley, i_buck[v]))
-    P("   so buck mode at U2's 60 V sets it: %.2f A; with L1 at +20 %% (12 uH, which overstates the energy above its 17.5 A Isat)"
-      % i_l1_max)
-    P("   that is %.2f mJ, which into the six bulk parts at -20 %% (%.3f mF, ceramics not counted) lifts the bus to %6.3f V."
-      % (e_l1 * 1e3, c_min * 1e3, ovp_res))
-    P("   THE BUS'S BOUND: %.2f V, INFERRED (it rests on the typical-only 10 %%)." % ovp_res)
+    P("   so buck mode at U2's 60 V sets the steady cycle's peak: %.2f A; with L1 at +20 %% (12 uH) that is %.2f mJ, which into"
+      % (i_l1_max, e_l1 * 1e3))
+    P("   the six bulk parts at -20 %% (%.3f mF, ceramics not counted) lifts the bus to %6.3f V." % (c_min * 1e3, v_steady))
+    P("   THE FIRST ON-TIME (the re-check's n2). In buck mode the LM5176 limits the VALLEY only: the high side 'skips a cycle if")
+    P("   the sensed voltage does not fall below this threshold' (7.3.5 p.16) and, once on, is 'turned off by the oscillator")
+    P("   clock signal' (7.3.1 p.14), so the first on-time after a valley crossing can last up to a period. MODEL, a full period")
+    P("   at U2's 60 V from the valley limit, L1 at -20 %%, 175 kHz: %.2f A; with 12 uH (unsaturated, where L1's Isat is 17.5 A)"
+      % i_first)
+    P("   %.2f mJ, and the bus reaches %6.3f V. The bound takes the larger." % (e_first * 1e3, v_first))
+    P("   THE BUS'S BOUND: %.2f V, INFERRED (the typical-only 10 %%) with a MODEL energy term. That term weighs little: to put"
+      % ovp_res)
+    P("   the bus at 29.0 V (Q7's 30 V less Q8's VSD) from the trip, L1 would have to deliver %.0f mJ, %.0f times this figure."
+      % (e_to_29 * 1e3, e_to_29 / e_first))
     P("   Response time: TI gives none. None is needed at this scale: at %.2f A into %.3f mF the bus rises at most %.1f V per ms,"
-      % (i_l1_max, c_min * 1e3, slew * 1e-3))
+      % (i_first, c_min * 1e3, slew * 1e-3))
     P("   so %.2f ms of full current past the trip would be needed to reach 30 V (%.0f cycles at 175 kHz)."
       % ((FET_VDS - ovp_hi) / slew * 1e3, (FET_VDS - ovp_hi) / slew * FSW_MIN))
     P("   The typical 10 % would have to be wrong by this much before the bus reaches each limit (VREF max, worst ratio, residue):")
@@ -318,8 +365,8 @@ def main(argv=None):
     P("   diode, L2 and Q10 (on, or its body diode) to VBAT. The front end sees a load step and answers with its loop (MODEL:")
     P("   crossover %.2f kHz at its slowest corner, |Zout| %.0f mOhm, gen_sch_a.py lines 722 to 724); its CCM stage can sink"
       % (FC_MIN / 1e3, ZOUT_MAX * 1e3))
-    P("   current (SNVSAI1D 7.3.8 p.17). Step dI into the bulk at -20 %: dV = dI / (2 pi fc C), plus L1's energy at its largest")
-    P("   current (section 3), which overstates what L1 carries at either step:")
+    P("   current (SNVSAI1D 7.3.8 p.17). Step dI into the bulk at -20 %: dV = dI / (2 pi fc C), plus L1's energy in the steady")
+    P("   current-limit cycle (section 3), which overstates what L1 carries at either step (16.2 A at 9 V in, gen_sch_a.py 751):")
     dump = {}
     for di, what in ((I_IN_A2, "Option A(i)'s bound, U3's 6.35 A clamp plus 0.1 A"), (I_IN_DECL, "VBUS20's declared peak")):
         dv_loop = di / (2 * math.pi * FC_MIN * c_min)
@@ -379,13 +426,16 @@ def main(argv=None):
     # 8. the answer for the bus
     FIG.update(v_lo=v_lo, v_hi=v_hi, ovp_hi=ovp_hi, bound=ovp_res, dump=dump[I_IN_DECL], dump_a2=dump[I_IN_A2],
                line=v_hi + dv_line, d1_a2=d1_at(IL2_PK["A2"]), vbat_ovp=vbat_ovp, sysovp=SYSOVP_4S[2], ov_lo=ov_lo, ov_hi=ov_hi,
-               i_l1_max=i_l1_max, sens30=sens[FET_VDS], sens29=sens[FET_VDS - Q8_VSD_MAX], vsd=Q8_VSD_MAX)
+               i_l1_max=i_l1_max, sens30=sens[FET_VDS], sens29=sens[FET_VDS - Q8_VSD_MAX], vsd=Q8_VSD_MAX,
+               v_steady=v_steady, i_first=i_first, v_first=v_first, e_to_29=e_to_29, e_first=e_first)
     P("8. THE BUS'S WORST CASE")
     P("   DC                        %6.3f V   (section 2)" % v_hi)
     P("   load dump, MODEL          %6.3f V   (section 4, the declared 8.0 A)" % dump[I_IN_DECL])
     P("   line step to 60 V, MODEL  %6.3f V   (section 5)" % (v_hi + dv_line))
-    P("   BOUND, INFERRED           %6.3f V   (section 3: the typical-only OVP at VREF max and the worst ratio, plus L1's energy;"
+    P("   BOUND, INFERRED           %6.3f V   (section 3: the typical-only OVP at VREF max and the worst ratio, plus L1's energy"
       % ovp_res)
+    P("                                         at a first on-time of a period, MODEL; %.3f V in the steady current-limit cycle;"
+      % v_steady)
     P("                                         30 V is reached only at an OVP %.1f %% over VREF for Q8, %.1f %% for Q7)"
       % (sens[FET_VDS] * 100, sens[FET_VDS - Q8_VSD_MAX] * 100))
     P("")
@@ -406,6 +456,7 @@ def main(argv=None):
         ("U3 BTST1 recommended (32 V; SW1 + REGN 6.3 V)", BQ_REC["BTST1, BTST2, HIDRV1, HIDRV2"], [x + VREGN[2] for x in bus3]),
     ]
     P("   %-50s %9s %9s %9s" % ("limit", "DC", "dump", "bound"))
+    P("   %-50s %9s %9s %9s" % ("", "", "MODEL", "INFERRED"))
     marg = {}
     for name, lim, figs in rows:
         marg[name] = [lim - f for f in figs]
@@ -439,41 +490,46 @@ def main(argv=None):
     P("   (Figure 10-3: 4.99 Ohm, CDIFF 10 nF, and CACP and CACN 33 nF to ground, p.85); without CACN, U3's ACN pin sees CH_ACN's")
     P("   ring through R146 and C121 alone. U3's VBUS pin 1 sits on VBUS20 itself.")
     b = {"Q7": (FET_VDS - v_hi - Q8_VSD_MAX, FET_VDS - ovp_res - Q8_VSD_MAX), "Q8": (FET_VDS - v_hi, FET_VDS - ovp_res),
+         "SWneg": (-BQ_ABS_SW_NEG[1] - Q8_VSD_MAX, -BQ_ABS_SW_NEG[0] - Q8_VSD_MAX),
          "SW1a": (BQ_ABS["SW1, SW2"] - v_hi, BQ_ABS["SW1, SW2"] - ovp_res), "SW1r": (BQ_REC["SW1, SW2"] - v_hi, BQ_REC["SW1, SW2"] - ovp_res)}
     P("   Budget left for ringing over the steady bus (%.2f V) and over the bound (%.2f V, INFERRED):" % (v_hi, ovp_res))
     for name, key in (("Q7 VDS: the bus, Q8's VSD 1.0 V in every dead time, and SW1's ring below it; 30 V", "Q7"),
                       ("Q8 VDS: SW1's overshoot over the bus; 30 V", "Q8"),
                       ("U3 SW1 absolute 32 V", "SW1a"), ("U3 SW1 recommended 26 V", "SW1r")):
         P("     %-78s %5.2f / %5.2f V" % (name, b[key][0], b[key][1]))
-    P("     U3 SW1 below ground: %.0f V, and %.0f V for 25 ns (p.8)" % BQ_ABS_SW_NEG)
+    P("     U3 SW1 and SW2 below PGND: %.0f V, and %.0f V for at most 25 ns (p.8). In every dead time SW1 sits at minus Q8's VSD"
+      % BQ_ABS_SW_NEG)
+    P("     (1.0 V maximum), inside -2 V; the ring below that has %.1f V to -4 V, for at most 25 ns" % b["SWneg"][0])
     ioff = Q7_VPLT / (RDS_HI_OFF_TYP + Q7["rg"])
     ion = (VREGN[1] - Q7_VPLT) / (RDS_HI_ON_TYP + Q7["rg"])
     t_fi = (Q7["qgs"] - Q7["qgth"]) / ioff
     t_ri = (Q7["qgs"] - Q7["qgth"]) / ion
     P("   MODEL for the layout writer (not a bound; typical driver figures, the plateau INFERRED):")
-    P("   Q7's TURN-OFF (sets Q7's VDS): its current falls in (Qgs - Qg(th)) / (VPLT / (RDS_HI_OFF + RG)) = %.1f nC / (%.1f V /"
-      % ((Q7["qgs"] - Q7["qgth"]) * 1e9, Q7_VPLT))
-    P("   (%.1f + %.1f Ohm)) = %.2f ns (SLPS526 p.3; SLUSE66A p.16); each nH of the loop C190 and C191, Q7, Q8 adds L x di/dt,"
-      % (RDS_HI_OFF_TYP, Q7["rg"], t_fi * 1e9))
-    P("   and the inductance between the VBUS20 bank and C190 / C191 lifts CH_ACN by I x sqrt(L / 11 nF), which grows as the")
-    P("   square root of L (the figure below is at 1 nH):")
-    FIG.update(t_fi=t_fi, t_ri=t_ri, b_q7=b["Q7"], b_q8=b["Q8"], b_sw1r=b["SW1r"])
+    P("   Q7's TURN-OFF (sets Q7's VDS and SW1's undershoot): its current falls in (Qgs - Qg(th)) / (VPLT / (RDS_HI_OFF + RG)) =")
+    P("   %.1f nC / (%.1f V / (%.1f + %.1f Ohm)) = %.2f ns (SLPS526 p.3; SLUSE66A p.16); each nH of the loop C190 and C191, Q7,"
+      % ((Q7["qgs"] - Q7["qgth"]) * 1e9, Q7_VPLT, RDS_HI_OFF_TYP, Q7["rg"], t_fi * 1e9))
+    P("   Q8 adds L x di/dt, each nH between Q8's source and U3's PGND takes SW1 that much further below minus VSD, and the")
+    P("   inductance between the VBUS20 bank and C190 / C191 lifts CH_ACN by I x sqrt(L / 11 nF), which grows as the square root")
+    P("   of L (the figure below is at 1 nH):")
+    FIG.update(t_fi=t_fi, t_ri=t_ri, b_q7=b["Q7"], b_q8=b["Q8"], b_sw1r=b["SW1r"], b_swneg=b["SWneg"])
     for pt in ("A2", "G1", "A1"):
         i = IL2_PK[pt]
         didt = i / t_fi * 1e-9
         FIG["ring_" + pt] = dict(i=i, vpn=didt, vacn=i * math.sqrt(1e-9 / 11e-9), l30=b["Q7"][0] / didt,
-                                 l26=b["SW1r"][0] / didt)
-        P("     %s, L2 peak %5.2f A: %5.2f A/ns, %4.2f V per nH and %4.2f V at 1 nH before C190; Q7's 30 V budget allows %.2f nH,"
+                                 lneg=b["SWneg"][0] / didt)
+        P("     %s, L2 peak %5.2f A: %5.2f A/ns, %4.2f V per nH and %4.2f V at 1 nH before C190; Q7's 30 V budget allows %.2f nH;"
           % (pt, i, didt, didt, i * math.sqrt(1e-9 / 11e-9), b["Q7"][0] / didt))
-        P("         U3 SW1's recommended 26 V %.2f nH" % (b["SW1r"][0] / didt))
+        P("         SW1's undershoot to -4 V (25 ns) allows %.2f nH between Q8's source and U3's PGND" % (b["SWneg"][0] / didt))
     P("   Q7's TURN-ON (sets Q8's VDS): the current rises in %.1f nC / ((%.1f - %.1f) V / (%.1f + %.1f Ohm)) = %.2f ns (the 6 Ohm"
       % ((Q7["qgs"] - Q7["qgth"]) * 1e9, VREGN[1], Q7_VPLT, RDS_HI_ON_TYP, Q7["rg"], t_ri * 1e9))
     P("   turn-on driver, RDS_HI_ON_Q1, p.16), from the valley current; each nH adds L x di/dt:")
     for pt in ("A2", "G1", "A1"):
         iv = IL2_PK[pt] - IL2_DI[pt]
         didt = iv / t_ri * 1e-9
-        P("     %s, valley %5.2f A: %4.2f A/ns, %4.2f V per nH; Q8's 30 V budget allows %.2f nH before the recovery below"
+        FIG["ring_" + pt].update(l26=b["SW1r"][0] / didt, l8=b["Q8"][0] / didt, valley=iv, didt_on=didt)
+        P("     %s, valley %5.2f A: %4.2f A/ns, %4.2f V per nH; Q8's 30 V budget allows %.2f nH and U3 SW1's recommended 26 V"
           % (pt, iv, didt, didt, b["Q8"][0] / didt))
+        P("         %.2f nH, both before the recovery below" % (b["SW1r"][0] / didt))
     P("   and Q8's body diode recovers into that edge: Qrr 8.2 nC is stated at %s (SLPS516 p.3), about ten times"
       % Q8["qrr_test"])
     P("   slower than this edge, and no figure at this di/dt is given: the recovery ring is INCONCLUSIVE, a bench reading.")
@@ -488,16 +544,19 @@ def main(argv=None):
     P("   and SW1 through L2, near VBAT plus a diode: Q7 then holds VBUS20 less VBAT less VSD, Q8 about VBAT plus VSD (INFERRED).")
     P("   Q2 shorted: VBUS20 = VIN_RAW less Q5's body diode (about %.1f V, INFERRED), %.1f V at 36 V in and %.1f V at board E's"
       % (vd, 36.0 - vd, ov_hi - vd))
-    P("   OVLO maximum. U3's ACOV (26.0 to 27.7 V, 100 us) stops the charger; above %.1f V in, U3's VBUS, ACP and ACN pass their"
+    P("   OVLO maximum. On the way the bus passes ACOV's 26.0 to 27.7 V while the charger still switches (the 100 us deglitch,")
+    P("   SLUSE66A p.14), and Q7 then holds the bus plus Q8's VSD, %.1f V or more before any ringing: no order is claimed for"
+      % (ACOV[2] + Q8_VSD_MAX))
+    P("   that phase. Once ACOV has stopped the charger, U3's VBUS, ACP and ACN pass their 32 V absolute rating above %.1f V in,"
       % (BQ_ABS["VBUS, ACP, ACN"] + vd))
-    P("   32 V absolute rating, while Q7 reaches 30 V only at VBUS20 = 30 V + VBAT + VSD (%.1f V with the pack at its %.1f V CUV):"
+    P("   while Q7 reaches 30 V only at VBUS20 = 30 V + VBAT + VSD (%.1f V with the pack at its %.1f V CUV): from then on U3 is"
       % (FET_VDS + VBAT_CUV + vd, VBAT_CUV))
-    P("   for a Q2 short U3 is the first part past its rating while the pack is above about %.1f V." % (32.0 - FET_VDS - vd + 0.0))
+    P("   the first part past its rating while the pack is above about %.1f V." % (32.0 - FET_VDS - vd))
     P("   R6 open or FB shorted: the OVP reads the same pin, so nothing on board A bounds the bus. The charger switches until")
     P("   ACOV trips (up to %.1f V, after its 100 us deglitch), so Q7 holds at least %.1f V (the trip plus Q8's VSD) while it still"
       % (ACOV[2], ACOV[2] + Q8_VSD_MAX))
-    P("   switches, before any rise inside the deglitch and before any ringing: here the FETs may be first, and no order is")
-    P("   claimed. Beyond, the 35 V bulk parts and U3's 32 V are passed.")
+    P("   switches, before any rise inside the deglitch and before any ringing: the FETs may be first, and no order is claimed.")
+    P("   Beyond, the 35 V bulk parts and U3's 32 V are passed.")
     P("   Not taken, for the power review S-111 names: an independent over-voltage trip on VBUS20 (a second divider into U34's")
     ipk_hs = 6.15
     vr22, vbl22, vbh22, vc22, ipp22 = SMCJ["SMCJ22A"]
@@ -514,14 +573,14 @@ def main(argv=None):
       % ovp_res)
     P("   while U2 is inside its ratings: Q8 %.2f V and Q7 %.2f V under their 30 V (Q7 carries Q8's VSD), U3's VBUS %.2f V under"
       % (FET_VDS - ovp_res, FET_VDS - ovp_res - Q8_VSD_MAX, BQ_ABS["VBUS, ACP, ACN"] - ovp_res))
-    P("   its 32 V; U3's ACOV (26.0 V minimum) is never reached. 30 V is reached only if the trip sat %.1f %% over VREF (Q7) or"
+    P("   its 32 V; at the INFERRED bound U3's ACOV (26.0 V minimum) is not reached. 30 V is reached only if the trip sat %.1f %%"
       % (sens[FET_VDS - Q8_VSD_MAX] * 100))
-    P("   %.1f %% (Q8), against TI's typical 10 %%; a bench reading of the trip replaces the INFERRED figure. The pack side stays at"
+    P("   over VREF (Q7) or %.1f %% (Q8), against TI's typical 10 %%; a bench reading of the trip replaces the INFERRED figure."
       % (sens[FET_VDS] * 100))
-    P("   or under %.1f V by SYSOVP and %.2f V by D1 in a pack that opens while charging. The switch nodes are INCONCLUSIVE:"
-      % (SYSOVP_4S[2], d1v))
-    P("   ringing is a bench item with %.2f V (Q7) and %.2f V (Q8) of budget over the steady bus, carried as its own open item."
+    P("   The pack side stays at or under %.1f V by SYSOVP and %.2f V by D1 in a pack that opens while charging." % (SYSOVP_4S[2], d1v))
+    P("   The switch nodes are INCONCLUSIVE: ringing is a bench item with %.2f V (Q7) and %.2f V (Q8) of budget over the steady"
       % (b["Q7"][0], b["Q8"][0]))
+    P("   bus, and SW1's undershoot has %.1f V to U3's -4 V (25 ns), carried as its own open item." % b["SWneg"][0])
     return 1 if nbad else 0
 
 
