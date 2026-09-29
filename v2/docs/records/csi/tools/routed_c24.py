@@ -15,7 +15,7 @@ import signal_class as SC
 
 
 def main(board_path, scratch):
-    L, _V, _Ly, _pads = BL.board(open(board_path, encoding="utf-8").read())
+    L = BL.board(open(board_path, encoding="utf-8").read())[0]
     allow = json.load(open(os.path.join(TOOLS, "boards", "c.json"), encoding="utf-8"))["edge_allow"]
     decls = SC.declarations("c")[0]
     nets = []

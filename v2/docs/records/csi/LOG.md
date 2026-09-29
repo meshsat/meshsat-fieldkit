@@ -39,3 +39,22 @@
   apply and read-back as before).
 - 15:38 `test_requirements`: the same five failures on the base view and on the branch.
 - 15:40 README rewritten whole (section 9 answers the check item by item) and this log.
+
+## Round 3, the re-check of `6605f3f6` (not mergeable: R2-B1, R2-B2, m1 to m4)
+
+- 16:13 The re-check read. R2-B1 is the second failure of round 1's B2 (`max_mm` on any length of any file, for any net),
+  so the method is replaced, not patched. R2-B2: the four e-paper lines were counted decided on a placement nothing holds.
+- Between 16:13 and 16:24, in this order: `allow_limit` rewritten on `reference_nets` (only their length rows and the
+  delay row, one document, a row naming another net or none refused); the evidence prints both lengths to the
+  hundredth (m1); `ALLOW_PENDS_LAYOUT` keeps the schematic reading INCONCLUSIVE while any net is allowed (m3);
+  `measure_minimal.py` also measures the maker's two pin-to-27R stubs (2.56 and 2.81 mm); board C's entries carry
+  `reference_nets` and the new listing's sha; tests (the re-check's counterexamples as fixtures and on the committed
+  entries, the pending guard, m1); `r2_counterexamples.py` shows the round 2 tool holding all four cases and this one
+  refusing them; `board_c_layout.py` reads only held entries (m4), holds the pin-to-resistor stubs to 2.1 mm (the maker's
+  runs scaled; the guide's "placed close to the chip") and reports each U3 pin's nearest escape via (m2); commit
+  `171fb51a` behind the PASSED line; readings re-taken (C 23, 11, 7 layout-bound, the eleven pending; C24's R2 and R3
+  stubs 71.79 and 92.31 mm, thirteen items past; the routed half on C24 FAIL, 11 over; A, B, D, E, P unchanged); on the
+  round 2 tool five edge_length tests fail; on this one nine files, 152 passed.
+- 16:24 `test_requirements`: the same five failures as on the base.
+- 16:26 README rewritten whole: 1 decided, 4 decided in the schematic pending the layout, 11 allowed pending the layout,
+  7 open; section 9 answers both checks item by item.

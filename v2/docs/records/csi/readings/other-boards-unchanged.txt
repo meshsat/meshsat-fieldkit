@@ -1,5 +1,5 @@
 SI-001 on boards A, B, D, E and P, taken in scratch with the base tool and table (e553e43a) and with fnd/csi's
-(edge_length.py and boards/c.json at 69409613), on the committed netlists, models present:
+(edge_length.py and boards/c.json at 171fb51a), on the committed netlists, models present:
   board A: verdict INCONCLUSIVE / INCONCLUSIVE, signal 295, layout-bound 65 / 65; evidence, counts (but the new key allowed_nets: 0), inputs and table rows identical: True
   board B: verdict INCONCLUSIVE / INCONCLUSIVE, signal 908, layout-bound 184 / 184; evidence, counts (but the new key allowed_nets: 0), inputs and table rows identical: True
   board D: verdict INCONCLUSIVE / INCONCLUSIVE, signal 135, layout-bound 13 / 13; evidence, counts (but the new key allowed_nets: 0), inputs and table rows identical: True

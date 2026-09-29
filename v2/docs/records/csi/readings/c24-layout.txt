@@ -1,15 +1,22 @@
-tools/board_c_layout.py on v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb (C24, the only routed board C; last changed by commit 9527a3d2; sha256/16 2a273803757c68fb; four layers, routed from an older schematic), with the max_mm of boards/c.json at fnd/csi 69409613. Exit 1.
-== pcb-c-display.kicad_pcb: board C's edge_allow nets, routed length and placement lower bound against max_mm
-   net         max_mm    routed  ratio  vias  layers      pads_far  the farthest pads
-   QSPI_D0       13.1   55.71 mm    4.3     4  B.Cu,F.Cu,In2.Cu  42.13 mm  U4.5 to U3.53   PAST   PLACEMENT CANNOT MEET IT
-   QSPI_D1       13.1   67.86 mm    5.2     7  B.Cu,F.Cu,In2.Cu  39.93 mm  U4.2 to U3.55   PAST   PLACEMENT CANNOT MEET IT
-   QSPI_D2       13.1   61.22 mm    4.7     7  B.Cu,F.Cu,In2.Cu  39.63 mm  U4.3 to U3.54   PAST   PLACEMENT CANNOT MEET IT
-   QSPI_D3       13.1   58.59 mm    4.5     3  B.Cu,F.Cu,In2.Cu  41.16 mm  U4.7 to U3.51   PAST   PLACEMENT CANNOT MEET IT
-   QSPI_SCLK      8.0   63.82 mm    8.0     6  B.Cu,F.Cu,In2.Cu  41.64 mm  U4.6 to U3.52   PAST   PLACEMENT CANNOT MEET IT
-   QSPI_SS       17.7  103.26 mm    5.8     5  B.Cu,F.Cu,In2.Cu  46.19 mm  R5.1 to U3.56   PAST   PLACEMENT CANNOT MEET IT
-   SWCLK         20.1  159.62 mm    7.9     3  B.Cu,F.Cu,In2.Cu 146.19 mm  U3.24 to TP1.1   PAST   PLACEMENT CANNOT MEET IT
-   SWDIO         18.9  167.59 mm    8.9     3  B.Cu,F.Cu,In2.Cu 147.00 mm  TP2.1 to U3.25   PAST   PLACEMENT CANNOT MEET IT
-   XIN            8.7  167.59 mm   19.3     8  B.Cu,F.Cu,In2.Cu  47.17 mm  C5.1 to Y1.1   PAST   PLACEMENT CANNOT MEET IT
-   XOUT           4.0  112.12 mm   28.0     6  B.Cu,F.Cu,In2.Cu  45.60 mm  C6.1 to Y1.3   PAST   PLACEMENT CANNOT MEET IT
-   XOUT_R         2.1   64.55 mm   30.7     4  B.Cu,F.Cu   33.75 mm  R1.1 to U3.21   PAST   PLACEMENT CANNOT MEET IT
-board_c_layout: 11 net(s) past their limit or with a placement that cannot meet it
+tools/board_c_layout.py on v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb (C24, the only routed board C; last changed by commit 9527a3d2; sha256/16 2a273803757c68fb; four layers, routed from an older schematic), with board C's held entries at fnd/csi 171fb51a. Exit 1.
+== pcb-c-display.kicad_pcb against board C's held edge_allow entries (8 held, 0 refused) and the series stubs' limit
+   net         max_mm    routed  ratio  vias  layers             pads_far  the farthest pads  U3 pin to its nearest via
+   QSPI_D0      13.10   55.71 mm    4.3     4  B.Cu,F.Cu,In2.Cu   42.13 mm  U4.5 to U3.53      1.18 mm   PAST   PLACEMENT CANNOT MEET IT
+   QSPI_D1      13.10   67.86 mm    5.2     7  B.Cu,F.Cu,In2.Cu   39.93 mm  U4.2 to U3.55      0.74 mm   PAST   PLACEMENT CANNOT MEET IT
+   QSPI_D2      13.10   61.22 mm    4.7     7  B.Cu,F.Cu,In2.Cu   39.63 mm  U4.3 to U3.54      1.52 mm   PAST   PLACEMENT CANNOT MEET IT
+   QSPI_D3      13.10   58.59 mm    4.5     3  B.Cu,F.Cu,In2.Cu   41.16 mm  U4.7 to U3.51      0.74 mm   PAST   PLACEMENT CANNOT MEET IT
+   QSPI_SCLK     8.00   63.82 mm    8.0     6  B.Cu,F.Cu,In2.Cu   41.64 mm  U4.6 to U3.52      1.52 mm   PAST   PLACEMENT CANNOT MEET IT
+   QSPI_SS      17.70  103.26 mm    5.8     5  B.Cu,F.Cu,In2.Cu   46.19 mm  R5.1 to U3.56      5.68 mm   PAST   PLACEMENT CANNOT MEET IT
+   SWCLK        20.10  159.62 mm    7.9     3  B.Cu,F.Cu,In2.Cu  146.19 mm  U3.24 to TP1.1     1.52 mm   PAST   PLACEMENT CANNOT MEET IT
+   SWDIO        18.90  167.59 mm    8.9     3  B.Cu,F.Cu,In2.Cu  147.00 mm  TP2.1 to U3.25     0.74 mm   PAST   PLACEMENT CANNOT MEET IT
+   XIN           8.70  167.59 mm   19.3     8  B.Cu,F.Cu,In2.Cu   47.17 mm  C5.1 to Y1.1       1.52 mm   PAST   PLACEMENT CANNOT MEET IT
+   XOUT          4.00  112.12 mm   28.0     6  B.Cu,F.Cu,In2.Cu   45.60 mm  C6.1 to Y1.3       -   PAST   PLACEMENT CANNOT MEET IT
+   XOUT_R        2.10   64.55 mm   30.7     4  B.Cu,F.Cu          33.75 mm  R1.1 to U3.21      0.74 mm   PAST   PLACEMENT CANNOT MEET IT
+   series stubs, limit 2.10 mm: the maker's pin-to-27R stubs Net-(U3-USB_DM) 2.81 mm, Net-(U3-USB_DP) 2.56 mm (v2/docs/records/csi/readings/minimal-layout-lengths.txt, sha256/16 5a71e9d681dc99e7), the longest 2.81 mm, times 5.572 / 7.154 ps/mm = 2.19, rounded down; hardware design guide p. 12, "placed close to the chip"
+   USB_DP_R      2.10   71.79 mm   34.2     4  B.Cu,F.Cu,In2.Cu   31.72 mm  R2.1 to U3.47      0.74 mm   PAST   PLACEMENT CANNOT MEET IT
+   USB_DM_R      2.10   92.31 mm   44.0     7  B.Cu,F.Cu,In2.Cu   34.98 mm  R3.1 to U3.46      1.52 mm   PAST   PLACEMENT CANNOT MEET IT
+   EPD_SCL_R  not on this board (U3 pin 4, R53)
+   EPD_SDA_R  not on this board (U3 pin 5, R54)
+   EPD_DC_R   not on this board (U3 pin 6, R55)
+   EPD_CS_R   not on this board (U3 pin 7, R56)
+board_c_layout: 13 item(s) past their limit, with a placement that cannot meet it, or refused
