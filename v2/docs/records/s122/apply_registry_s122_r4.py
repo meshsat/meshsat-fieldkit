@@ -59,7 +59,7 @@ FOLLOW_TITLE = (
     "gate-bias LDO on PA_KEY (U17', 'the AP64500 buck on slots 1 and 3, U5 and U7'), which needs a rule that pairs a "
     "list of parts with a list of designators in order ('the BME688 and BMI270 (U14, U15'); a number with no unit and "
     "any figure off the closing list ('an NVMe 2280 socket'); and the finder's conservative false hits and misses (an "
-    "upper-case commit, 'SMBJ15A/BAT54' as one token, a DS code of four or five digits, the MIL-STD-461 method names, "
+    "upper-case commit, 'SMBJ15A/BAT54' as one token, a DS code of four or five digits, the EMC test methods' names (CE102, RE102), "
     "'SMBJ15A-based', a plural 'SMBJ15As'). Open until each class is closed by a rule with a fixture that "
     "close_s122.py runs, or carried with its reason.")
 FOLLOW_WHY = (
@@ -120,7 +120,7 @@ S122_ADD4 = (
     "takes only active parts (U and Q designators) as the holders of a function; a list item '<part> <noun> on <slot "
     "or rail>' is judged by the target rule, not the list rule; and the finder's shapes, which still read an upper-case "
     "commit, 'SMBJ15A/BAT54', a DS code of four or five digits (Maxim's DS3231 and DS12887 shapes among them) and the "
-    "MIL-STD-461 method names as part numbers, which a judgement must then excuse, and do not read 'SMBJ15A-based' or "
+    "EMC test methods' names (CE102, RE102) as part numbers, which a judgement must then excuse, and do not read 'SMBJ15A-based' or "
     "a plural 'SMBJ15As'. These classes are carried by {FOLLOW}, which apply_registry_s122_r4.py opens at the next "
     "free S number with disposition PROCESS and in no record's waits_on: the documents do not hang on it. "
     "Confirming that each correction is true in substance remains the filed check's job.")
