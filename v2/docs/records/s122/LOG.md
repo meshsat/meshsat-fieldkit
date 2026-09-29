@@ -226,3 +226,18 @@ No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py
     1009 (1), `verdicts-r6.out` (new, `1c187977`) 1011 (0).
   - `test_close_s122.py`: ALL PASS (T2 seven switches, T4 45 of 45 refused by the comparison, T5 45 of 45 pass
     without it and the gate refuses).
+- 23:34 Committed `c3490c9b` behind the pre-commit PASSED line. Replay on a throwaway clone of it: the nine outputs
+  byte identical; `apply_docs_s122_r7.py` from `1c187977`'s V2-SPEC.md gives the tip and refuses a second run;
+  `test_close_s122.py` ALL PASS. The clone is deleted.
+- 23:36 The integrator sequence on a throwaway clone of `fnd/int16` (`36bb1d12`, int16's ignored files installed,
+  `c3490c9b` merged): `apply_registry_s122_r4.py` refused at its screen, which reads "MIL-STD-461" in the follow-up
+  item's title as a claim word. Committed `43b5a25c` (the texts name the EMC test methods without the standard's number)
+  behind the pre-commit PASSED line.
+- 23:36 to 23:39 The sequence again, the clone reset to `36bb1d12` and `43b5a25c` merged: the registry script rebound 5
+  records, opened S-126 (PROCESS, no record waiting on it) and refused a second run; `rules_lib.py requirements` 0
+  errors, 0 warnings; the trace page rendered; `rules_status.py` NOT_READY (39 FAIL, 104 INCONCLUSIVE, 195 PASS of
+  338) and the full render moved CURRENT-EVIDENCE.md (`c9b98931` to `0f2c59cb`), after which 0 errors and 2 warnings
+  (CON-010, REQ-044); the outputs re-run (header line only) and committed; the fixture check refused while staged,
+  then committed; `test_close_s122.py` ALL PASS; the closure closed S-122 (CFL-016 PASS) and refused a second run;
+  after it 0 errors, 2 warnings, 59 rules 0 errors, the tests 72 passed, `claims_check` PASS 91 of 91. The clone is
+  deleted.
