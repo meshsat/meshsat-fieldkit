@@ -108,7 +108,7 @@ limit does not enforce any temperature limit and is not part of the shutdown.**
 - Pressing START energises K1 and K2; they hold themselves in. If any thermostat opens (or STOP/TEST is pressed, or a wire breaks, or the
   supply is lost: the relays drop out below 0.1 of their rated voltage), the coils drop, the heaters go off and **stay off after the thermostat has cooled and closed again**,
   until someone presses START. The heaters therefore never cycle unattended.
-- The thermostats carry only the two coils' current (0.65 W each at 12 V, about 108 mA together), never the heater current: their maker states AC
+- The thermostats carry only the two coils' current (0.65 W each at 12 V, about 110 mA together: 55 mA each on Finder's 12 V DC coil row), never the heater current: their maker states AC
   ratings only (Honeywell, 2455R contact ratings, Table 4: 10 A resistive at 240 V AC; "additional contact ratings are
   available"), so none is used to switch the heaters' DC directly.
 
@@ -118,12 +118,12 @@ limit does not enforce any temperature limit and is not part of the shutdown.**
 |---|---|---|---|
 | TS1 | Elmwood (Honeywell) 2455R, 90 C, normally closed, automatic reset, with bracket; reichelt "2455R 90 NC" | opens at 90 C, +-6 C on reichelt's page (the sheet's Table 1 gives +-4 to +-6 C in the 83 to 110 C band, by differential): **opens by 96 C at the latest**; 0 to 150 C operating, -18 to 177 C exposure (Table 2) | bolted to H2 with an M3 screw through its bracket, within 10 mm of the middle heater (the hottest), with a thin layer of compound under its cap |
 | TS2 | 2455R, 60 C, normally closed; reichelt "2455R 60 NC" | opens at 60 C +-3 C, closes at 45 C (reichelt's page; Table 1, 27 to 82 C band, differential 8 to 16 K: +-3 C open): **opens by 63 C at the latest** | taped cap-down with Kapton and aluminium tape to the case floor directly under the middle heater, beside CH5 (the polypropylene that sees H2 most) |
-| TS3 | 2455R, 60 C, normally closed, as TS2 | as TS2 | taped cap-up to H1's underside with the body's centre at X 0, Y -99 (the front, away from the patch) and its bracket B203-S's tabs along X: the body, 16.0 mm across and 11.91 mm tall (Honeywell 2455R, Figure 3, page 5), spans Y -107 to -91, and the bracket, whose largest dimension is 31.19 mm (Honeywell, Figure 18, B203S), reaches at most 15.6 mm from the centre, to Y -114.6, 2.3 mm inside the frame window's edge at Y -116.92, so H1 still sits flat on the ring |
+| TS3 | 2455R, 60 C, normally closed, as TS2 | as TS2 | taped cap-up to H1's underside with the body's centre at X 0, Y -99 (the front, away from the patch) and its bracket B203-S's tabs and its two terminals along X: the body, 16.0 mm across and 11.91 mm tall (Honeywell 2455R, Figure 3, page 5), spans Y -107 to -91, and the bracket, whose largest dimension is 31.19 mm (Honeywell, Figure 18, B203S), reaches at most 15.6 mm from the centre, to Y -114.6, 2.3 mm inside the frame window's edge at Y -116.92, so H1 still sits flat on the ring |
 | TS4 | 2455R, 140 C, normally closed; reichelt "2455R 140 NC" | opens at 140 C +-4 C (reichelt's name; Table 1, 111 to 150 C band: +-4 to +-7 C by differential, so read at V1): **opens by 144 C at the latest** at the +-4 C of the name | held cap-down on the middle heater's aluminium body with Kapton and aluminium tape over a thin layer of compound, beside CH7 |
 | K1 | Finder 40.52.9.012.0000, 2 changeover contacts, 12 V DC coil | 8 A rated current; breaking capacity DC1 8 A at 30 V; coil 0.65 W, operates from 0.73 UN, drops out at 0.1 UN (Finder 40 series, XI-2018, pages 1 to 3) | outside the case, on its socket, beside the supply |
 | X1 | Finder 95.05 socket for K1 (screw terminals, DIN rail) | 10 A, 250 V (reichelt's page) | outside the case |
 | S1, S2 | START: any panel pushbutton, normally open; STOP/TEST: any panel pushbutton, normally closed; each rated at least 1 A at 24 V DC | not priced, not held | outside the case, within reach |
-| K2, X2 | a second Finder 40.52.9.012.0000 on its own 95.05 socket, as K1 and X1; its contact in series with K1's in the heater lead, its coil in parallel with K1's | as K1 and X1 | outside the case |
+| K2, X2 | a second Finder 40.52.9.012.0000 on its own 95.05 socket, as K1 and X1; its contact 11-14 in series with K1's in the heater lead and its 21-24 in series with K1's in the hold path, its coil in parallel with K1's | as K1 and X1 | outside the case |
 | D1, D2 | a 1N4007 (or equivalent) across each relay coil, cathode to A1 (the + side), so no thermostat breaks an inductive current | a standard rectifier | at each socket |
 | F1, F2 | in-line blade fuse holders: F1 with a 7.5 A fuse in the heater lead at the supply's +, before K1; F2 with a 1 A fuse at the start of the coil chain | not priced | outside the case |
 
@@ -156,35 +156,60 @@ leads, 0.25 mm2 or more for the coil chain):**
    21-24 and K2 contact 21-24 in series (both normally open)] -> TS1 -> TS2 -> TS3 -> TS4 -> K1 coil A1 -> A2 -> supply -, with K2's coil A1 -> A2 in parallel with K1's (both drop together) and D1, D2 across the coils. The thermostat chain enters and
    leaves the case as one flat pair beside the heater leads.
 3. The ammeter in the heater lead after K2, the voltmeter across the heater leads where they enter the case: the coils'
-   108 mA is not in the heater reading. Power = volts x amps (never the label).
+   110 mA is not in the heater reading. Power = volts x amps (never the label).
 
-**Verification (before the case is heated, and each result recorded in `checks.csv`):**
+**Verification (before the case is heated, each result recorded in `checks.csv`; what it shows and what it does not is
+stated after V4):**
 - **V1, each thermostat alone.** Clamp it cap-down on an aluminium block of about 50 x 50 x 10 mm with one thermocouple
   taped beside it, on a hot plate (or under a hot-air gun held 20 cm off). Multimeter on its terminals (continuity). Warm
   at no more than 2 K per minute over the last 15 K. Record the block temperature when it opens and, cooling, when it
   closes. **Pass:** TS1 opens between 84 and 96 C; TS2 and TS3 between 57 and 63 C; TS4 between 136 and 144 C; each
   closes again on cooling. A part outside its band is rejected, not adjusted.
 - **V2, the latch on the bench.** Wire the arrangement on the bench (not in the case) at 12.0 V, the heaters' link block
-  open so nothing heats, a multimeter on volts at the link block's input (the load side of K2, after both contacts): it reads
-  the supply's volts when both relays are in and 0 when either is out. START: K1 and K2 pull in (audible), the meter
-  reads 12. STOP/TEST: 0, and it stays
-  0 when the button is released. START again: 12. Then warm each thermostat in turn with the air gun until it opens: 0;
-  let it cool until it closes: **the meter stays at 0** until START. Pass: every action behaves so.
-- **V3, in place.** First, with each thermostat fixed at its place, H1 lifted and the link block open (nothing heats),
-  disconnect one lead at each thermostat in turn: the meter at the link block reads 0 and stays 0 when the lead is
-  refitted, until START. Each installed thermostat is so shown to be in the chain without heating anything inside the
-  case (V1 has proved its opening temperature).
-  Then, with H1 screwed on and the leads out under the seal, the link
-  block open: START, 12; STOP/TEST, 0, and it stays 0 on release; START, 12. Pass: as V2.
-- **V4, at the start of every step and after each lid change.** With the supply switched off, a continuity check across
-  each relay's contacts 11-14 and 21-24 reads open on all four (none has welded). Supply on: press STOP/TEST once, the heater
-  current falls to zero. START. Record the time.
+  open so nothing heats, a multimeter on volts at the link block's input (the load side of K2, after both contacts): it
+  reads the supply's volts only while both relays are in.
+  (a) START: K1 and K2 pull in (audible), the meter reads 12. STOP/TEST: 0, and it stays 0 when the button is released.
+  START again: 12.
+  (b) Warm each thermostat in turn with the air gun until it opens: 0; let it cool until it closes: **the meter stays at
+  0** until START.
+  (c) The series wiring. Supply off, K2's A1 lead off its socket terminal; supply on, hold START: K1 pulls in and the
+  meter reads 0 (K2's contact 11-14 is in the heater path); release START: K1 drops (K2's contact 21-24 is in the hold
+  path). Supply off, refit the lead, take K1's A1 lead off and repeat: K2 pulls in, the meter reads 0, K2 drops on
+  release. Supply off, refit the lead.
+  **Pass:** every action behaves so.
+- **V3, in place.**
+  (a) With each thermostat fixed at its place, H1 lifted and the link block open (nothing heats): START, the meter at the
+  link block reads 12. Disconnect one lead at each thermostat in turn: the meter falls to 0 and stays 0 when the lead is
+  refitted, until START, which is pressed before the next thermostat.
+  (b) With H1 screwed on and the leads out under the seal, the link block still open: START, 12; STOP/TEST, 0, and it
+  stays 0 on release; START, 12. Then warm H1's top face over TS3 (X 0, Y -99) with the air gun held 20 cm off, a
+  thermocouple taped to H1's top beside the spot: the meter falls to 0 before that thermocouple reads 70 C (if it does
+  not, stop the gun: V3 has failed). Let H1 cool: the meter stays 0 until START.
+  **Pass:** every action behaves so.
+- **V4, before every step and after each lid change.**
+  (a) With the heaters on (the step just ended; before S1, after a START with the link block set for S1), press
+  STOP/TEST: the heater current falls to zero and stays zero when the button is released.
+  (b) Switch the supply off. A continuity check reads open across each relay's contacts 11-14 and 21-24 (four readings)
+  and across START (S1): no contact has welded and START has not stuck.
+  (c) With the supply still off, set the link block and the lid for the next step. Supply on, START: the heater current
+  returns. Record the time.
+
+**What the verification shows, and what it does not.** V1 shows each thermostat's opening temperature before it is
+mounted. V2 shows the latch, its reset only by START, and both relays' contacts in series in the heater path and in the
+hold path. V3 shows each installed thermostat in the chain, the chain intact with H1 closed (through the flat pair under
+the seal: a short between its two conductors would bypass all four thermostats and the meter would stay at 12), and TS3
+opening on heat in its place. V4 shows, before each step, that STOP/TEST drops both relays, that no relay contact has
+welded and that START has not stuck. **Not shown in place:** that TS1, TS2 and TS4 still open on heat after mounting.
+V1 proved each before it; the M3 through TS1's bracket and the tape on TS2 and TS4 do not load the disc (INFERRED);
+heating them in place would heat the case, which is the test itself. The stop limits of section 8 stay the second line.
 
 **Residual risk with this arrangement:** one relay's contact welding closed no longer leaves the heaters on through a
-trip: the other relay's contact, in series, still opens (a second relay, about EUR 9 with its socket). Likewise one relay's self-hold contact 21-24 welding no longer
-makes the latch reset by itself: the other's, in series in the hold path, opens, so the heaters stay off after a trip.
-Both relays' contacts of either pair welding in the same step would defeat it; V4 reads each contact on its own before every step. A step started without V4, or with any V1 to
-V3 failed, is an attended step.
+trip: the other relay's contact, in series, still opens (a second relay, about EUR 9 with its socket). Likewise one
+relay's self-hold contact 21-24 welding no longer makes the latch reset by itself: the other's, in series in the hold
+path, opens, so the heaters stay off after a trip. START sticking closed during a step would let the heaters cycle on the
+thermostats, which still hold every temperature they sit at; V4 reads START open before every step. Both contacts of one
+pair welding in the same step would defeat the latch; V4 reads each contact on its own before every step. A step started
+without V4, or with any of V1 to V3 failed, is an attended step.
 
 ## 4. Test A set-up
 
@@ -246,12 +271,13 @@ V3 failed, is an attended step.
 | S5 | three | 12.0 | open | off |
 | S6 | three | 12.0 | closed | off |
 
-Each step follows the last without cooling (the next step starts from the last one's steady state). Changing the power:
-STOP/TEST, change the link block outside the case, START (V4 is that STOP/TEST). Changing the lid: STOP/TEST, open or
-close it, check the leads still lie flat on a straight run of the gasket, START. The supply's current limit at 6.5 A.
+Each step follows the last without cooling (the next step starts from the last one's steady state). Between steps V4 (section 3)
+runs in full: its STOP/TEST with the heaters on, the contacts and START read with the supply off, the link block (the
+power) and the lid set for the next step while the supply is off, then START. After a lid change, check before START
+that the leads still lie flat on a straight run of the gasket. The supply's current limit at 6.5 A.
 
 ### 5.2 During a step
-- V4 at the start. Record `start_utc`, the volts at the entry and the amps after K1, every 30 minutes (a photograph of
+- V4 (section 3) at the start. Record `start_utc`, the volts at the entry and the amps after K2, every 30 minutes (a photograph of
   both meters is enough).
 - If any stop limit of section 8 is reached, the step ends there (section 8).
 
@@ -273,8 +299,9 @@ CH8. `P` = the mean of the readings in that window. Uncertainty per section 1.
    lid and lift H1 off the frame (its ten screws) to reach its underside.
 2. The HS100 on H1's underside with the four M3 x 10 A2 and flat washers into the PEM nuts, a thin even layer of compound
    under its foot, tightened evenly by hand with a torque driver at about 0.5 N m (INFERRED; Arcol states no torque). Its
-   leads leave its +Y tag downward and toward -Y (the tag is 2.9 mm from the frame window's edge). Refit H1 on the frame with its
-   ten screws, the leads out under the seal as before, and repeat V3 before any heating.
+   leads leave its +Y tag downward and toward -Y (the tag is 2.9 mm from the frame window's edge). Before H1 is refitted, repeat V3
+   (a) with the HS100 in place; refit H1 on the frame with its ten screws, the leads out under the seal as before, and
+   repeat V3 (b) before any heating.
 3. **Patch channel map** (move four thermocouples; keep CH1, CH2 and CH4):
 
 | Ch | Where | Stop limit |

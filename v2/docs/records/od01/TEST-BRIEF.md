@@ -85,7 +85,8 @@ page): no heater or hot plate touches the polypropylene; H2 stands on stand-offs
   TS1 on H2 (opens by 96 C), TS2 on the floor under H2 (by 63 C), TS3 on H1 (by 63 C), TS4 on the middle heater's body
   (by 144 C). A trip, a pressed STOP, a broken wire or a supply loss turns the heaters off and **keeps them off** until
   START is pressed. Each thermostat's opening temperature is verified on a hot block (V1), the latch on the bench (V2)
-  and in place (V3) before the case is first heated, and at the start of every step each relay contact is read open with the supply off and STOP/TEST is pressed (V4). **Without
+  and in place (V3) before the case is first heated, and before every step STOP/TEST is pressed with the heaters on, then each relay contact and START are read open with
+  the supply off (V4). **Without
   V1 to V4, every hour of heating is attended continuously** by a person at the case who reads the logger at least every
   10 minutes. **The supply's current limit (6.5 A) and the fuses do not enforce any temperature limit.**
 - **The patch runs are always attended**, each pulse timed by hand, and stopped at once at 110 C on the resistor's body.
