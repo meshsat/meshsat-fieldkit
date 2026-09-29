@@ -1,0 +1,197 @@
+S-120: board A's charge bus VBUS20 and the charger's switch nodes against the 30 V FETs of decision 57. MESHSAT-1357,
+stream s120, fourth issue. Desk arithmetic on the makers' figures and the committed netlists; nothing is built, powered
+or measured. INFERRED = a figure the maker does not state; MODEL = an estimate from a simplified circuit, not a bound.
+netlist A v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 6c40250c47195ebb
+netlist E v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net sha256/16 2ed95a0e8069ebf8
+
+1. THE CIRCUIT AS GENERATED (parsed from the netlists; each detail is what the netlist holds)
+   PASS U2 FB divider          R6 240k 1% on ['FE_FB', 'VBUS20']; R7 10k 1% on ['FE_FB', 'GND']
+   PASS U2 pins                U2 pins 11 FE_FB, 12 VBUS20, 24 VBUS20, 2 FE_VINP, 3 FE_VISNS (FB, VOSNS, BIAS, VIN, VISNS)
+   PASS U2 MODE                R119 100k (MODE: CCM) on ['FE_MODE', 'FE_VCC']: to VCC is CCM with hiccup disabled (SNVSAI1D 7.4.2 p.20)
+   PASS front end sense        R11 10mOhm 1% 2512 (ISNS) on ['FE_OUT', 'VBUS20']; R12 5mOhm 1% 2512 (CS) on ['FE_CS', 'GND']
+   PASS CS filter              R150 100R 1% on ['FE_CS', 'FE_CSF']; R151 100R 1% on ['FE_CSGF', 'GND']; U2 pins 16 FE_CSF, 15 FE_CSGF
+   PASS L1                     L1 10uH XAL1010-103ME (Isat 17.5 A) on ['FE_SW1', 'FE_SW2']
+   PASS Q2 and Q5 direction    Q2 drain VIN_RAW, source FE_SW1; Q5 drain FE_OUT, source FE_SW2 (CSD19532Q5B 100 V N-FET): Q2's body diode points from its source to VIN_RAW, so an idle stage blocks VIN_RAW
+   PASS VBUS20 membership      39 members; not in the expected list: none; expected and absent: none; 6 x EEHZK1V331P, 18 x 10 uF 50 V X7R
+   PASS no clamp on VBUS20     diodes on VBUS20: none
+   PASS U3 pins                U3 pins 1 VBUS20, 5 GND, 22 VBAT, 32 CH_SW1, 23 CH_SW2, 30 CH_BTST1, 25 CH_BTST2, 18 CH_CELL (VBUS, OTG/VAP/FRS, VSYS, SW1, SW2, BTST1, BTST2, CELL_BATPRESZ); OTG, VAP and FRS each need pin 5 high (9.3.9 p.27, EN_OTG p.64, IN_VAP p.49, pin table p.6): pin 5 is on GND, so the charger cannot drive VBUS20
+   PASS U3 cell strap          R26 13.3k 1% on ['CH_CELL', 'CH_VDDA'], R27 40.2k 1% on ['CH_CELL', 'GND']: CELL_BATPRESZ at 74.76 to 75.51 % of VDDA from those values, against the 4s window 68.4 to 81.5 % (SLUSE66A p.18): inside, so SYSOVP is the 4S 19.0 to 20.0 V
+   PASS Q10                    CSD17577Q5A 30 V N-FET drain VBAT, source ['CH_SW2']
+   PASS Q7                     CSD17578Q5A 30 V N-FET drain CH_ACN, source ['CH_SW1']
+   PASS Q8                     CSD17577Q5A 30 V N-FET drain CH_SW1, source ['GND']
+   PASS Q9                     CSD17577Q5A 30 V N-FET drain CH_SW2, source ['GND']
+   PASS R16 and CH_ACN         R16 10mOhm 1% 2512 (RAC, input current sense) on ['CH_ACN', 'VBUS20']; capacitors on CH_ACN: C190 10n, C191 1n (SLUSE66A p.86: at most 10 nF + 1 nF after RAC, Figure 10-3 p.85)
+   PASS D1 on VBAT             D1 SMCJ18A (VBAT clamp), pins 1 VBAT, 2 GND
+   PASS D2 on VIN_RAW          D2 SMCJ40A, pins 1 VIN_RAW, 2 GND
+   PASS board E OVLO           U6 LM5069MM-2 hot-swap controller pin 4 on HS_OVLO; R22 100k 1% on ['DC_P', 'HS_OVLO']; R23 6.65k 1% on ['GND_V', 'HS_OVLO']
+   PASS board E clamps         D10 SMCJ40CA pin 1 on DC_F; D1 SMCJ40A pin 1 on DC_P; D2 SMCJ40A pin 1 on VIN_RAW
+   facts: 20 of 20 hold
+   RECORD, not gated (U3's input sense filter; TI's Figure 10-3, p.85, draws 4.99 Ohm, CDIFF 10 nF and CACP, CACN 33 nF):
+     CH_ACN_F holds C121.2 10n, R146.2 10R, U3.2 BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B; capacitors from it to GND: none
+     CH_ACP_F holds C121.1 10n, R147.2 10R, U3.3 BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B; capacitors from it to GND: none
+
+2. THE FRONT END'S REGULATION (VOUT = VREF x (1 + R6 / R7); VREF 0.788 / 0.800 / 0.812 V, SNVSAI1D 6.5 p.6)
+   nominal                                         20.000 V
+   VREF and the printed 1 % only                   19.326 to 20.694 V
+   with 100 ppm/K over 65 K (INFERRED) and IBIAS(FB) 25 nA both ways (p.6, 6.1 mV)   19.080 to 20.960 V   <- the DC band
+
+3. THE FRONT END'S OUTPUT OVER-VOLTAGE PROTECTION (SNVSAI1D 6.5 p.8; 7.3.11 p.18; 7.1 p.13)
+   threshold at FB: VREF + 10 % TYPICAL (no minimum or maximum given), hysteresis 2.5 %; response: 'turns off the gate
+   drives' (7.3.11) or 'the high-side drivers' (7.1); either stops the input's energy (Q2 off blocks VIN_RAW). OVP reads FB,
+   so it scales with the same divider: the bus trips at 1.10 x its own regulation.
+   trip, nominal                                   22.000 V
+   trip, VREF maximum and the divider's worst ratio 23.055 V   (INFERRED: TI's 10 % is typical only)
+   L1's current in the steady current-limit cycle inside U2's ratings (R12 5 mOhm - 1 %; the CS and CSG pins sit behind
+   R150 and R151, 100 Ohm each, where IOFFSET(CS/CSG) up to 19 uA, p.7, moves the threshold by up to 1.9 mV):
+     boost mode, peak limit (140 + 1.9) mV:                                     28.67 A
+     buck mode at 36.0 V in: valley limit (94 + 1.9) mV = 19.37 A, plus the ripple at the trip (L1 -20 %, 175 kHz)  25.30 A
+     buck mode at 55.0 V in: valley limit (94 + 1.9) mV = 19.37 A, plus the ripple at the trip (L1 -20 %, 175 kHz)  28.94 A
+     buck mode at 60.0 V in: valley limit (94 + 1.9) mV = 19.37 A, plus the ripple at the trip (L1 -20 %, 175 kHz)  29.51 A
+   so buck mode at U2's 60 V sets the steady cycle's peak: 29.51 A; with L1 at +20 % (12 uH) that is 5.23 mJ, which into
+   the six bulk parts at -20 % (1.584 mF, ceramics not counted) lifts the bus to 23.198 V.
+   THE FIRST ON-TIME (the re-check's n2). In buck mode the LM5176 limits the VALLEY only: the high side 'skips a cycle if
+   the sensed voltage does not fall below this threshold' (7.3.5 p.16) and, once on, is 'turned off by the oscillator
+   clock signal' (7.3.1 p.14), so the first on-time after a valley crossing can last up to a period. MODEL, a full period
+   at U2's 60 V from the valley limit, L1 at -20 %, 175 kHz: 45.76 A; with 12 uH (unsaturated, where L1's Isat is 17.5 A)
+   12.57 mJ, and the bus reaches 23.397 V. The bound takes the larger.
+   THE BUS'S BOUND: 23.40 V, INFERRED (the typical-only 10 %) with a MODEL energy term. That term weighs little: to put
+   the bus at 29.0 V (Q7's 30 V less Q8's VSD) from the trip, L1 would have to deliver 245 mJ, 20 times this figure.
+   Response time: TI gives none. None is needed at this scale: at 45.76 A into 1.584 mF the bus rises at most 28.9 V per ms,
+   so 0.24 ms of full current past the trip would be needed to reach 30 V (42 cycles at 175 kHz).
+   The typical 10 % would have to be wrong by this much before the bus reaches each limit (VREF max, worst ratio, residue):
+      24.0 V (80 % of the FETs' 30 V): an OVP 12.9 % over VREF
+      26.0 V (the BQ25731's recommended 26 V and ACOV's minimum): an OVP 22.4 % over VREF
+      29.0 V (Q7's 30 V, with Q8's VSD): an OVP 36.7 % over VREF
+      30.0 V (Q8's 30 V): an OVP 41.5 % over VREF
+      32.0 V (the BQ25731's absolute 32 V): an OVP 51.1 % over VREF
+
+4. A LOAD DUMP: THE CHARGER STOPS AT ITS FULL INPUT CURRENT
+   The charger's own inductor L2 does not feed VBUS20 when it stops: with Q7 off its current returns through Q8's body
+   diode, L2 and Q10 (on, or its body diode) to VBAT. The front end sees a load step and answers with its loop (MODEL:
+   crossover 0.71 kHz at its slowest corner, |Zout| 89 mOhm, gen_sch_a.py lines 722 to 724); its CCM stage can sink
+   current (SNVSAI1D 7.3.8 p.17). Step dI into the bulk at -20 %: dV = dI / (2 pi fc C), plus L1's energy in the steady
+   current-limit cycle (section 3), which overstates what L1 carries at either step (16.2 A at 9 V in, gen_sch_a.py 751):
+   6.45 A (Option A(i)'s bound, U3's 6.35 A clamp plus 0.1 A): loop 0.913 V, |Zout| 0.574 V; with 5.23 mJ the peak is 22.023 V
+   8.00 A (VBUS20's declared peak): loop 1.132 V, |Zout| 0.712 V; with 5.23 mJ the peak is 22.241 V
+   (MODEL; below the OVP trip's 23.055 V, so OVP need not act; whatever the model's error, section 3 caps it at 23.397 V)
+   During the dump the charger has stopped: Q8 holds the bus less SW1, Q7 at most the bus plus Q8's body diode
+   (SLPS516 VSD 1.0 V maximum): 23.24 V.
+
+5. THE FRONT END'S INPUT (what board E delivers into VIN_RAW)
+   service 9 to 36 V (REQ-015); board E's LM5069 opens its pass FET at OVLO 37.78 / 40.09 / 42.49 V (OVLOTH 2.4 / 2.5 / 2.6 V,
+   SNVS452G 6.5 p.5, over R22 100k and R23 6.65k at 1 %); the panel tracker's TRK_OUT (15.1 V) joins through an ideal
+   diode; four SMCJ40A class clamps (board E D10 SMCJ40CA, D1 and D2, board A D2): VBR 44.4 to 49.1 V, VC 64.5 V at 23.3 A
+   (Littelfuse, page 2 of 6). U2 regulates VBUS20 for any VIN from 4.2 to 55 V (SNVSAI1D 6.3 p.5); a line step reaches
+   the bus only through the loop. MODEL, valley current mode (7.3.1) at L1 -20 %, fSW 175 kHz: the ripple rises from
+   6.25 A at 36 V to 9.74 A at U2's 60 V, the average by 1.74 A until the loop answers: 0.247 V on the bus (21.207 V).
+   With U2 idle Q2 blocks VIN_RAW (section 1). Above 55 V U2 leaves its recommended range and above 60 V its absolute
+   ratings (VIN, VISNS, VOSNS 60 V, p.5): the clamps' 64.5 V is S-111's item; this bound assumes U2 inside its ratings.
+
+6. CLAMPS
+   on VBUS20: none (section 1, the whole membership read). Upstream: the four SMCJ40A class parts of section 5. On VBAT:
+   D1 SMCJ18A (VR 18 V, VBR 20.00 to 22.10 V, VC 29.2 V at 51.4 A).
+
+7. THE PACK SIDE (Q10's drain and SW2: SW2 sits at VBAT in buck mode, Table 9-3 p.27; Q9's drain is SW2)
+   ChargeVoltage 16.8 V + 0.5 % = 16.884 V (SLUSE66A 8.5 p.9); BATOVP at most 105 % = 17.64 V (p.14); SYSOVP (4S, the strap of
+   section 1) 19.0 / 19.5 / 20.0 V turns the converter off (p.14). A pack that opens while charging at A2's 15.71 A: SYSOVP
+   stops the converter at 20.0 V and L2's 0.70 mJ goes into VBAT's own capacitance (its effective value under bias is not
+   held: INCONCLUSIVE); D1 bounds it: 24.27 V at 15.71 A (INFERRED, the straight line from VBR max at 1 mA to VC at IPP),
+   29.2 V at its IPP.
+
+8. THE BUS'S WORST CASE
+   DC                        20.960 V   (section 2)
+   load dump, MODEL          22.241 V   (section 4, the declared 8.0 A)
+   line step to 60 V, MODEL  21.207 V   (section 5)
+   BOUND, INFERRED           23.397 V   (section 3: the typical-only OVP at VREF max and the worst ratio, plus L1's energy
+                                         at a first on-time of a period, MODEL; 23.198 V in the steady current-limit cycle;
+                                         30 V is reached only at an OVP 41.5 % over VREF for Q8, 36.7 % for Q7)
+
+9. THE MARGINS PER PART (limit minus the figure; the switch nodes' ringing comes on top, section 10)
+   limit                                                     DC      dump     bound
+                                                                    MODEL  INFERRED
+   Q8 VDS = SW1 (30 V, SLPS516 p.1)                       9.04      7.76      6.60
+   Q7 VDS = bus + Q8's VSD 1.0 V (30 V, SLPS526 p.1)      8.04      6.76      5.60
+   U3 VBUS pin 1 (32 V absolute, p.8)                    11.04      9.76      8.60
+   U3 VBUS, ACP, ACN (26 V recommended, p.8)              5.04      3.76      2.60
+   U3 ACOV rising minimum (26.0 V, p.14)                  5.04      3.76      2.60
+   U3 ACP, ACN absolute (32 V), before ringing           11.04      9.76      8.60
+   U3 SW1 absolute (32 V, p.8), before ringing           11.04      9.76      8.60
+   U3 SW1 recommended (26 V, p.8), before ringing         5.04      3.76      2.60
+   U3 BTST1 absolute (38 V; SW1 + REGN 6.3 V)            10.74      9.46      8.30
+   U3 BTST1 recommended (32 V; SW1 + REGN 6.3 V)          4.74      3.46      2.30
+   pack side (VBAT; SW2 at VBAT in buck mode), against the charger's cutoff SYSOVP 20.0 V and D1 at A2's current 24.27 V:
+     Q9 VDS = SW2, Q10 VDS (30 V)                      12.36 V at BATOVP, 10.00 at SYSOVP, 5.73 at D1, 0.80 at D1's IPP
+     U3 SW2 (32 V absolute / 26 V recommended), before ringing   12.00 / 6.00 at SYSOVP, 7.73 / 1.73 at D1
+     U3 VSYS, SRP, SRN (32 V absolute / 23.15 V recommended)     12.00 / 3.15 at SYSOVP, 7.73 / -1.12 at D1
+     U3 BTST2 (SW2 + REGN 6.3 V; 38 V absolute / 32 V recommended) 11.70 / 5.70 at SYSOVP, 7.43 / 1.43 at D1
+   BTST to SW is REGN's own 6.3 V at most against 7.0 V absolute and 6.5 V recommended, whatever the bus does.
+
+10. THE SWITCH NODES: A BUDGET, NOT A BOUND (INCONCLUSIVE at desk)
+   No layout exists (S-115) and no TI application note giving a layout-independent ringing bound is held. What TI does
+   state: '30 V or higher voltage rating MOSFETs are preferred for 19-V to 20-V input voltage' (SLUSE66A 10.2.2.6 p.86),
+   in a topology whose input loop runs through RAC with at most 10 nF + 1 nF after it (p.86, Figure 10-3 p.85), as board A
+   draws it. Board A's DC band tops out 0.96 V above TI's 20 V. Board A draws R146 and R147 at 10 Ohm with C121 10 nF
+   (Figure 10-3: 4.99 Ohm, CDIFF 10 nF, and CACP and CACN 33 nF to ground, p.85); without CACN, U3's ACN pin sees CH_ACN's
+   ring through R146 and C121 alone. U3's VBUS pin 1 sits on VBUS20 itself.
+   Budget left for ringing over the steady bus (20.96 V) and over the bound (23.40 V, INFERRED):
+     Q7 VDS: the bus, Q8's VSD 1.0 V in every dead time, and SW1's ring below it; 30 V  8.04 /  5.60 V
+     Q8 VDS: SW1's overshoot over the bus; 30 V                                      9.04 /  6.60 V
+     U3 SW1 absolute 32 V                                                           11.04 /  8.60 V
+     U3 SW1 recommended 26 V                                                         5.04 /  2.60 V
+     U3 SW1 and SW2 below PGND: -2 V, and -4 V for at most 25 ns (p.8). In every dead time SW1 sits at minus Q8's VSD
+     (1.0 V maximum), inside -2 V; the ring below that has 3.0 V to -4 V, for at most 25 ns
+     SW2 rides VBAT, not the bus (Table 9-3 p.27): it sits at VBAT in buck mode with Q10 on and switches only in
+     buck-boost; its overshoot, and with it Q9's and Q10's VDS, is referred to the charger's cutoff SYSOVP 20.0 V (p.14).
+     ACP less ACN: 0.5 V absolute (p.8). The pins sit behind R146 and R147 (10 Ohm each) with C121 10 nF across, 200 ns;
+     a 4.7 V ring on CH_ACN at 48 MHz (1 nH against 11 nF, the model below) reaches them at about 0.08 V (INFERRED).
+   MODEL for the layout writer (not a bound; typical driver figures, the plateau INFERRED):
+   Q7's TURN-OFF (sets Q7's VDS and SW1's undershoot): its current falls in (Qgs - Qg(th)) / (VPLT / (RDS_HI_OFF + RG)) =
+   1.4 nC / (2.7 V / (1.3 + 1.8 Ohm)) = 1.61 ns (SLPS526 p.3; SLUSE66A p.16); each nH of the loop C190 and C191, Q7,
+   Q8 adds L x di/dt, each nH between Q8's source and U3's PGND takes SW1 that much further below minus VSD, and the
+   inductance between the VBUS20 bank and C190 / C191 lifts CH_ACN by I x sqrt(L / 11 nF), which grows as the square root
+   of L (the figure below is at 1 nH):
+     A2, L2 peak 15.71 A:  9.77 A/ns, 9.77 V per nH and 4.74 V at 1 nH before C190; Q7's 30 V budget allows 0.82 nH;
+         SW1's undershoot to -4 V (25 ns) allows 0.31 nH between Q8's source and U3's PGND
+     G1, L2 peak 14.10 A:  8.77 A/ns, 8.77 V per nH and 4.25 V at 1 nH before C190; Q7's 30 V budget allows 0.92 nH;
+         SW1's undershoot to -4 V (25 ns) allows 0.34 nH between Q8's source and U3's PGND
+     A1, L2 peak 10.70 A:  6.66 A/ns, 6.66 V per nH and 3.23 V at 1 nH before C190; Q7's 30 V budget allows 1.21 nH;
+         SW1's undershoot to -4 V (25 ns) allows 0.45 nH between Q8's source and U3's PGND
+   Q7's TURN-ON (sets Q8's VDS): the current rises in 1.4 nC / ((6.0 - 2.7) V / (6.0 + 1.8 Ohm)) = 3.31 ns (the 6 Ohm
+   turn-on driver, RDS_HI_ON_Q1, p.16), from the valley current; each nH adds L x di/dt:
+     A2, valley 10.99 A: 3.32 A/ns, 3.32 V per nH; Q8's 30 V budget allows 2.72 nH and U3 SW1's recommended 26 V
+         1.52 nH, both before the recovery below
+     G1, valley  9.50 A: 2.87 A/ns, 2.87 V per nH; Q8's 30 V budget allows 3.15 nH and U3 SW1's recommended 26 V
+         1.76 nH, both before the recovery below
+     A1, valley  7.00 A: 2.12 A/ns, 2.12 V per nH; Q8's 30 V budget allows 4.27 nH and U3 SW1's recommended 26 V
+         2.38 nH, both before the recovery below
+   and Q8's body diode recovers into that edge: Qrr 8.2 nC is stated at 15 V, 18 A, 300 A/us (SLPS516 p.3), about ten times
+   slower than this edge, and no figure at this di/dt is given: the recovery ring is INCONCLUSIVE, a bench reading.
+   Avalanche, if a ring does pass 30 V: EAS 23 mJ (CSD17578Q5A) and 39 mJ (CSD17577Q5A), single pulse, p.1; a repetitive
+   rating is not stated, so no margin is taken from it.
+
+11. SINGLE FAULTS OUTSIDE EVERY REQUIREMENT (ASM-001 refuses 'no single point of failure'; SC-39)
+   With the charger stopped Q7 and Q8 are off, L2 carries DC, and Q10's body diode (source CH_SW2, drain VBAT) holds SW2,
+   and SW1 through L2, near VBAT plus a diode: Q7 then holds VBUS20 less VBAT less VSD, Q8 about VBAT plus VSD (INFERRED).
+   Q2 shorted: VBUS20 = VIN_RAW less Q5's body diode (about 0.8 V, INFERRED), 35.2 V at 36 V in and 41.7 V at board E's
+   OVLO maximum. On the way the bus passes ACOV's 26.0 to 27.7 V while the charger still switches (the 100 us deglitch,
+   SLUSE66A p.14), and Q7 then holds the bus plus Q8's VSD, 28.7 V or more before any ringing: no order is claimed for
+   that phase. Once ACOV has stopped the charger, U3's VBUS, ACP and ACN pass their 32 V absolute rating above 32.8 V in,
+   while Q7 reaches 30 V only at VBUS20 = 30 V + VBAT + VSD (40.8 V with the pack at its 10.0 V CUV): from then on U3 is
+   the first part past its rating while the pack is above about 1.2 V.
+   R6 open or FB shorted: the OVP reads the same pin, so nothing on board A bounds the bus. The charger switches until
+   ACOV trips (up to 27.7 V, after its 100 us deglitch), so Q7 holds at least 28.7 V (the trip plus Q8's VSD) while it still
+   switches, before any rise inside the deglitch and before any ringing: the FETs may be first, and no order is claimed.
+   Beyond, the 35 V bulk parts and U3's 32 V are passed.
+   Not taken, for the power review S-111 names: an independent over-voltage trip on VBUS20 (a second divider into U34's
+   channel 1, re-armed while the stage runs) would bound the FB faults; an SMCJ22A on VBUS20 (VR 22 V over the 20.96 V
+   DC band) would hold a Q2 short at about 28.2 V at board E's 6.15 A hot-swap limit (INFERRED straight line) until the
+   LM5069's fault timer opens, and clamps 35.5 V at its own IPP, over 30 V.
+
+12. THE ANSWER: (a), the bound holds in service (INFERRED: it rests on a typical-only threshold)
+   VBUS20 stays at or under 23.40 V by the front end's own protection whatever the load, the line or the loop model does
+   while U2 is inside its ratings: Q8 6.60 V and Q7 5.60 V under their 30 V (Q7 carries Q8's VSD), U3's VBUS 8.60 V under
+   its 32 V; at the INFERRED bound U3's ACOV (26.0 V minimum) is not reached. 30 V is reached only if the trip sat 36.7 %
+   over VREF (Q7) or 41.5 % (Q8), against TI's typical 10 %; a bench reading of the trip replaces the INFERRED figure.
+   The pack side stays at or under 20.0 V by SYSOVP and 24.27 V by D1 in a pack that opens while charging.
+   The switch nodes are INCONCLUSIVE: ringing is a bench item with 8.04 V (Q7) and 9.04 V (Q8) of budget over the steady
+   bus, and SW1's undershoot has 3.0 V to U3's -4 V (25 ns), carried as its own open item.
