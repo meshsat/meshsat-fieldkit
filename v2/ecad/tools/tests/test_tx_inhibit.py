@@ -4056,12 +4056,13 @@ def t_the_toggle_is_its_declared_contact_and_its_board_key_is_required():
             pass
         else:
             raise AssertionError("a call without the board key was not refused")
-    T._TOGGLES_NOW, before = [dict(kit[0], lugs=None)], T._TOGGLES_NOW
-    try:
-        T._is_toggle("C", wired("1", "2"), "SW_EMCON")
-    except ValueError:
-        pass
-    else:
-        raise AssertionError("a declaration without its contact lugs was not refused")
-    finally:
-        T._TOGGLES_NOW = before
+    for bad_lugs in (None, ("1", "1")):
+        T._TOGGLES_NOW, before = [dict(kit[0], lugs=bad_lugs)], T._TOGGLES_NOW
+        try:
+            T._is_toggle("C", wired("1", "2"), "SW_EMCON")
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("a declaration with lugs %r was not refused" % (bad_lugs,))
+        finally:
+            T._TOGGLES_NOW = before
