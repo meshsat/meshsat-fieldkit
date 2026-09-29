@@ -99,7 +99,14 @@ second 2N7002 that pulls the LM5069's UVLO low (3c): **whenever U3B may run, the
 it, U3B's output would lift the lid's end of the harness (the charge current through the lead and the cells, about 0.3 V
 at 8 A over the cells' 11.7 mOhm and the charge loop's 28 mOhm of `.out` section 0) above the node, and the ideal diode would return U3B's current into VBAT, a
 circulating loop that also charges the base outside U3's control. The model never charges and discharges the lid in the
-same hour, which this interlock makes true of the circuit. In daylight the host's
+same hour, which this interlock makes true of the circuit.
+
+**The allocation law (host, a firmware draft).** Once a second, while U3B may run: never let U3's battery-current reading
+(ADCIBAT, 128 mA steps, SLUSE66A Table 9-7) show the base discharging (lower U3B's ChargeCurrent one step if it does);
+otherwise steer U3B's ChargeCurrent, within 0 to 7.936 A and at most 2 x the lid gauge's ChargingCurrent(), so that the
+two gauges' RelativeStateOfCharge() stay within 2 percent of each other (raise it while the lid is lower, lower it while
+the lid is higher). Equal states of charge are what the model's capacity split produces, and the result does not hang on
+the split: charging the base first or the lid first gives the same lowest points (`.out` 4). In daylight the host's
 allocation loop (FW row in section 8) holds U3B's charge so that U3's reading of the base's current (ADCIBAT, 128 mA
 steps) is not a discharge; a passing cloud lets the base feed U3B for the loop's reaction time, bounded by U3B's
 IIN_HOST.
