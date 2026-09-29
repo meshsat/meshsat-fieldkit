@@ -199,8 +199,17 @@ r("R14", "2.2k 1%", "TX_INHIBIT_n", "+3V3", "R", "C4190"); c("C24", "10n", "TX_I
 # DS35124 Rev. 8-2: 1 NC, 2 A, 3 GND, 4 Y, 5 VCC; IOFF partial power down; -40 to +125 C; VT+ 1.50 to 2.00 V at 3.0 V and 2.16 to 2.74 V
 # at 4.5 V; the sheet has no 3.3 V row, and interpolating linearly between those two gives about 2.15 V worst case at 3.3 V, against
 # the 2.57 V this line rests at since EQ-25, 2.37 V at the adverse ends; 2.54 V and 2.11 V with R14 10k). Diodes 74LVC1G17W5-7, LCSC C151394.
-ic("U9", 5, "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)", "SOT235", {"1": "NC", "2": "TX_INHIBIT_n", "3": "GND", "4": "EMCON_HW", "5": "+3V3"}, "C151394")
+ic("U9", 5, "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)", "SOT235", {"1": "NC", "2": "TX_INHIBIT_n", "3": "GND", "4": "EMCON_HW_DRV", "5": "+3V3"}, "C151394")
 c("C25", "100n", "+3V3", "GND")
+# EMCON_HW CANNOT SIT ABOVE TX_INHIBIT_n BY MORE THAN ONE SCHOTTKY DROP (stream d4emcon, finding D4E-F1, 29 September 2026;
+# taken by the session under the owner's standing rule of 26 September 2026). With this board's +3V3 in 0 to 1.65 V and the toggle
+# at EMCON, U9 is outside its specified supply and its output is unspecified up to 1.65 V, which board B's readers (VIL 0.8 V)
+# cannot be shown to read LOW; every board B row reads EMCON_HW alone. R52 (330R 1%) limits what U9 can push, and D23 (BAT46W,
+# anode EMCON_HW, cathode TX_INHIBIT_n) clamps EMCON_HW to the contact: at most 5.1 mA in the band and VF 0.45 V at 10 mA (Diodes
+# DS30044 Rev. 20-2, 25 C). Released, EMCON_HW is at least 2.13 V (U9's VOH 2.4 V at -16 mA into 3.165 k through 333 Ohm), over
+# VIH 2.0 V. A U9 stuck high now asserts EMCON_HW instead of releasing board B. Reverse: delete R52 and D23, U9 pin 4 on EMCON_HW.
+r("R52", "330R 1%", "EMCON_HW_DRV", "EMCON_HW", "R", "C23138")
+part("D23", "Device", "D_Schottky", "BAT46W-7-F Schottky 100V (EMCON_HW clamp to TX_INHIBIT_n, D4E-F1)", "SOD123", {"1": "TX_INHIBIT_n", "2": "EMCON_HW"}, "C83152")
 # NO FIRMWARE PIN SITS ON EMCON_HW (MESHSAT-1357 round 8, EMCON.md section 3 item L1; the second checkpoint review of 26 September 2026,
 # finding C). Until round 8 the controller's GPIO21 (U3 pin 32) was a node of EMCON_HW itself. The RP2040 resets that pad as an input with
 # its pull-down and no function selected (datasheet 2.19.6.1 Table 285, FUNCSEL reset 0x1f "NULL"; 2.19.6.3 Table 341, IE 1, PDE 1), so it
@@ -537,7 +546,7 @@ byref = {p["ref"]: p for p in P}
 def refs_matching(pred): return [p["ref"] for p in P if pred(p["ref"])]
 SECTIONS = [("RIBBON FROM B16, 5 V, 3.3 V LDO, USB AND BUS ESD, FLAGS", ["J_PANEL", "C1", "C2", "U5", "C3", "C4", "U6", "U7", "U8", "#FLG01", "#FLG02", "#FLG03", "#FLG04", "#FLG05"]),
             ("RP2040 PANEL CONTROLLER, FLASH, CRYSTAL, BOOTSEL, BUS PULL-UPS", ["U3", "U4", "Y1", "C5", "C6", "R1", "R2", "R3", "R4", "R5", "JP1"] + ["C%d" % k for k in range(7, 17)] + ["C42", "C43", "C44"] + ["TP1", "TP2", "TP3", "R6", "D18", "R7", "R8"]),
-            ("EXPANDERS 0x22 / 0x23, MODE INPUTS, EMCON AND ZEROIZE BUFFERS, STRAPS", ["U1", "U2", "C17", "C18"] + ["R%d" % k for k in range(9, 17)] + ["C%d" % k for k in range(19, 26)] + ["U9", "U12", "C39", "U13", "C40", "R46", "R50", "R51", "JP2"]),   # U9 is a buffer since 9 Sep 2026, "INVERTER" was stale; U12 and C39 added 26 Sep 2026; U13, C40 and R46 in round 8; R50 (EQ-25) and R51 (W4C-F1) 27 Sep 2026
+            ("EXPANDERS 0x22 / 0x23, MODE INPUTS, EMCON AND ZEROIZE BUFFERS, STRAPS", ["U1", "U2", "C17", "C18"] + ["R%d" % k for k in range(9, 17)] + ["C%d" % k for k in range(19, 26)] + ["U9", "U12", "C39", "U13", "C40", "R46", "R50", "R51", "R52", "D23", "JP2"]),   # U9 is a buffer since 9 Sep 2026, "INVERTER" was stale; U12 and C39 added 26 Sep 2026; U13, C40 and R46 in round 8; R50 (EQ-25) and R51 (W4C-F1) 27 Sep 2026
             ("LED RAIL, INDICATORS, TX LAMP, SWITCHES AND LEADS", ["SW_LIGHT", "Q1", "R17", "R18", "Q2", "R19", "R20", "TP4", "TP5"] + [p["ref"] for p in P if p["ref"].startswith("D") and p["ref"][1:].isdigit() and int(p["ref"][1:]) <= 17] + ["R%d" % k for k in range(21, 43)] + ["Q3", "U14", "C41", "R48", "R49", "Q7", "R47", "D22", "SW_MAIN", "SW_PI", "SW_TEST", "SW_SOS", "SW_EMCON", "SW_ZERO", "FB1", "FB2", "C26", "U10", "J_MAINSW", "FB3", "FB4", "C27", "U11", "J_PIJ2"]),
             ("E-PAPER ZIF AND THE PDi BOOST, SOUNDER, LIGHT SENSOR, CAMERA MOUNT", ["J_EPD", "Q5", "C28", "C29", "L1", "Q6", "D19", "C30", "C31", "D20", "D21", "C32", "C33", "C34", "C35", "C36", "C37", "BZ1", "Q4", "U_LIGHT", "C38", "CAM_H1", "CAM_H2", "J_HSJ1", "J_HSJ2"])]
 placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}
