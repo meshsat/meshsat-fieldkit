@@ -27,7 +27,15 @@ hour (first stop, lowest point and unserved energy) on eight cases; it refuses t
 Scope, as section 9's: the September reference day (PVGIS's monthly-average hourly profile repeated for three days),
 aged to 80 percent, the 3.00 V line with the 5 percent reserve, both start hours (06:00 and 18:00 UTC), PS-IDLE-SPEC
 at 42.8 W at the pack terminals, the stage's input window as stated per run. A reference-day model result, not a
-field-weather reliability claim. Run from the repository root:
+field-weather reliability claim.
+
+Second issue (stream s119, S-119, 29 September 2026): the charger rows restated from the drawn and drafted FETs' losses
+(TI SLUSE66A Equations 6 to 22, v2/docs/records/s117/efficiency.out). U3's row comes in through energy_inputs.yaml (0.98
+to 0.979, decision 57's FETs on board A) with energy_budget.py re-pinned; U3B's eta_u3b moves from 0.975 to 0.961 (the
+drafted 800 kHz row with CSD17578Q5A in all four positions, its worst mode at the peak hour; bracket 0.947 to 0.971).
+Section 4's two U3B bracket rows take that bracket, section 7 prints U3's loss at the chain's figure instead of a typed
+0.98 and U3's L2 as board A now draws it (4.7 uH XAL1010-472ME at 400 kHz, decision 56). Nothing else changed.
+Run from the repository root:
   python3 v2/docs/records/a1elec/energy_two_pack.py > v2/docs/records/a1elec/energy_two_pack.out
 Deterministic: no date, host or absolute path in the output. Exit 2: energy_inputs.yaml is not the pinned file;
 exit 3: energy_budget.py, a pinned input or the daily profile changed; exit 4: the equivalence check failed."""
@@ -44,7 +52,7 @@ sys.path.insert(0, EDIR)
 import yaml  # noqa: E402
 import energy_budget as EB  # noqa: E402
 
-EB_SHA256 = "cf6c377fa1015a468a61dc83f1c735e54b5f778eb3bb39834495ee2eb24d02c1"   # the model section 9 pinned
+EB_SHA256 = "6a8ac4642bd2aaf35d5ad6b75c5004c24d3e11ed1ede09a4b7a1041cd103235c"   # energy_budget.py second issue (s119; was cf6c377f, the model section 9 pinned)
 DRCALC = os.path.join(HERE, "inputs", "pvgis-leiden-daily-profile-2005-2020.json")
 DRCALC_SHA256 = "4d974567cc49315dade4a63736b0d428fce9b5e645362052390c94c56fde1210"  # the value energy_inputs.yaml names
 MONTH = 9
@@ -60,7 +68,7 @@ PAR = {
     "chg_a_base": (3.968, "SESSION (section 8a's 4.0 A for the 4S6P base as a register value): U3 ChargeCurrent code 31 x 128 mA = 3.968 A (SLUSE66A Table 9-7), the nearest at or below 4.0 A; OCC1 5.0 A unchanged"),
     "chg_a_lid": (7.936, "SESSION: U3B ChargeCurrent code 62 x 128 mA = 7.936 A for the 4S12P lid, 0.66 A a cell; the lid gauge's OCC1 at 10.0 A true (GAUGE.md)"),
     "iin_lid_a": (8.0, "SESSION: U3B IIN_HOST 8.0 A nominal from VBAT, code 80 (seven bits of 100 mA with RAC 5 mOhm, RSNS_RAC = 1b, SLUSE66A 9.6.22 Table 9-50, page 80; 8.2 A maximum with the 200 mA the register text adds); 3.3 uH on IADPT's 169 k so that Table 9-1 allows 10 A"),
-    "eta_u3b": (0.975, "MAKER, read from a plot: SLUSE66A Figure 8-3 (VIN 15 V, VOUT 14.8 V, RAC = RSR = 5 mOhm, 4.7 uH, 400 kHz) reads about 98.5 percent from 3 to 6 A and 98 at 8 A (AI reading of the page image); 0.975 carries board A's 3.3 uH and layout; bracket 0.96 to 0.985"),
+    "eta_u3b": (0.961, "INFERRED by TI's method, not a figure TI states for this circuit: SLUSE66A Equations 6 to 22 (printed pages 86 to 88) at the model's peak U3B hour (55.3 W from VBAT, lid charge 3.69 A) on U3B's drafted 800 kHz row (L2B XAL1010-332ME, 169 k on IADPT, R16B and R17B 5 mOhm) with decision 57's CSD17578Q5A in all four positions (records/s117/U3B-NOTE.md way (a)): the worst of buck 0.975, boost 0.976 and the buck-boost bound 0.961, TI's reading; bracket 0.947 (the makers' maxima) to 0.971 (the most favourable reading); records/s117/efficiency.out sections 4 and 7. The inductor's core loss is EXCLUDED (Coilcraft Document 804-1 prints none), so the figure is high by it. With the drafted CSD18510Q5B the same method reads 0.802 (0.734 to 0.869) and REGN is asked 120 to 240 mA against its 50 mA minimum limit. Second issue (stream s119, S-119); the first issue's 0.975 (bracket 0.96 to 0.985) was an AI reading of Figure 8-3 (4.7 uH, 400 kHz, FETs not named), superseded"),
     "r_lid_dsg": (0.030, "ESTIMATE, ohm: the lid's discharge loop: hinge harness 12 AWG 2 x 0.6 m at 5.21 mOhm/m (6.3), two inline blade fuses (2 x 3.0, no maker resistance held), two XT60 pairs (2 x 0.5), board PL's F1, F2, Q1, Q2 and R10 (3.0 + 2.0 + 0.69 + 0.69 + 2.0 at the makers' maxima where held), the LM5069 FET 0.96 and its sense 5.6 mOhm; bracket 0.020 to 0.045"),
     "r_cl": (0.0056, "SESSION: the LM5069's sense resistor, 5.6 mOhm: VCL 48.5 / 55 / 61.5 mV (SNVS452G page 6) gives 8.7 / 9.8 / 11.0 A, so a join can never push more than 11.0 A (1.83 A a base cell, under the 35E's 2.0 A maximum charge, spec 3.7) into the base, and the lid's share of the kit's 10 A continuous (6.7 A) stays under the 8.7 A minimum"),
     "v_ak": (0.020, "MAKER: LM74700-Q1 regulated forward V(AK) 13 / 20 / 29 mV (SNOSD17G 6.5, page 6): the ideal diode holds 20 mV across its FET until the FET is fully on"),
@@ -423,8 +431,8 @@ def main():
                       ("charge lid first, discharge 'ah'", {"cpol": "lid_first"}),
                       ("charge 'ah', discharge lid first", {"dpol": "lid_first"}),
                       ("charge 'ah', discharge base first", {"dpol": "base_first"}),
-                      ("U3B at 0.96, loops at 45 mOhm, V(AK) 29 mV", {"eta_b": 0.96, "r_dsg": 0.045, "r_chg": 0.045, "v_ak": 0.029}),
-                      ("U3B at 0.985, loops at 20 mOhm", {"eta_b": 0.985, "r_dsg": 0.020, "r_chg": 0.020}),
+                      ("U3B at 0.947, loops at 45 mOhm, V(AK) 29 mV", {"eta_b": 0.947, "r_dsg": 0.045, "r_chg": 0.045, "v_ak": 0.029}),
+                      ("U3B at 0.971, loops at 20 mOhm", {"eta_b": 0.971, "r_dsg": 0.020, "r_chg": 0.020}),
                       ("ceilings at the cycle-life 1.02 A a cell (6.12 A, 12.24 A; U3B input 10 A)", {"chg_a_b": 6.12, "chg_a_l": 12.24, "iin_l": 10.0}),
                       ("base ceiling at FW-A02's 3.0 A as filed", {"chg_a_b": 3.0})):
         cfg = base_cfg(); cfg.update(over)
@@ -501,15 +509,15 @@ def main():
         i_l = t_w / r["v_l"]
         P("   %s: hour %d (%02d UTC), the sun offers %.1f W at the node: stage in %.1f W; front end out %.1f W = %.2f A on VBUS20 at %.1f V (as generated it limits at 4.3 / 5.0 / 5.7 A);" % (
             lab, h, hh, p_sun, p_stage_in, p_fe, i_in, V_BUS20))
-        P("       front end loss %.1f W (at 0.93); U3 in %.2f A through R16 (10 mOhm: %.2f W; 5 mOhm: %.2f W), U3 loss %.1f W (at 0.98);" % (
-            p_fe * (1.0 / e_fe - 1.0), i_in, i_in * i_in * 0.010, i_in * i_in * 0.005, p_fe * (1.0 - e_ch)))
+        P("       front end loss %.1f W (at %.2f); U3 in %.2f A through R16 (10 mOhm: %.2f W; 5 mOhm: %.2f W), U3 loss %.1f W (at %.3f);" % (
+            p_fe * (1.0 / e_fe - 1.0), e_fe, i_in, i_in * i_in * 0.010, i_in * i_in * 0.005, p_fe * (1.0 - e_ch), e_ch))
         P("       U3 out %.1f W = %.2f A at the node's %.2f V (load %.1f W, base %.1f W = %.2f A through R17: %.2f W; U3B %.1f W = %.2f A from VBAT);" % (
             p_node, i_out, vb, load, a_b, i_b, i_b * i_b * 0.005, a_l, i_u3b_in))
         P("       U3B loss %.1f W (at %.3f), R16B 5 mOhm %.2f W, lid charge %.2f A (R17B 5 mOhm %.2f W), charge loop I2R %.2f W" % (
             a_l * (1.0 - cfg["eta_b"]), cfg["eta_b"], i_u3b_in * i_u3b_in * 0.005, i_l, i_l * i_l * 0.005, i_l * i_l * cfg["r_chg"]))
-        for fsw in (400e3, 800e3):
-            ripple = (V_BUS20 - vb) * vb / (V_BUS20 * 3.3e-6 * fsw)
-            P("       U3's L2 (3.3 uH; Isat 12.2 A by its value text XAL6030-332ME, on footprint L6060: a generator mismatch) in buck mode at %.0f kHz: average %.2f A, ripple %.2f A p-p, peak %.2f A" % (
+        for fsw in (400e3,):
+            ripple = (V_BUS20 - vb) * vb / (V_BUS20 * 4.7e-6 * fsw)
+            P("       U3's L2 as drawn (4.7 uH XAL1010-472ME, Isat 25.4 A, Coilcraft Document 804-1; decision 56) in buck mode at %.0f kHz: average %.2f A, ripple %.2f A p-p, peak %.2f A" % (
                 fsw / 1e3, i_out, ripple, i_out + ripple / 2.0))
     ld = LOAD * NP_L / NP_T / r["v_l"]
     P("   the lid's discharge path at the night's share (%.2f A): LM74700-Q1 %.3f W (20 mV), LM5069 FET %.3f W (0.96 mOhm max)," % (
