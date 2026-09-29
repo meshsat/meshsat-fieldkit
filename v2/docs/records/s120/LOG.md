@@ -64,4 +64,20 @@ a maker's document. AI engineering work, not a qualified review. No agent, no ot
   refuses a second run; refusals for e57a7365 (records not carried), 0004b8a7 (README differs), no commit, and an
   uncommitted change to LOG.md (appended, refused, restored byte for byte); `rules_lib.py requirements` 144 records, 0
   errors and 0 warnings on both copies; `vbus20_bound.py` exit 1 on four mutants (R6 249k, U3 pin 5 off GND, a diode on
-  VBUS20, a new part on VBUS20), each FAIL line printing what the mutant holds.
+  VBUS20, a new part on VBUS20). (Correction, third round: three of those FAIL lines still carried fixed text, the
+  re-check's n4; see below.)
+
+## 29 September 2026, third round (the re-check `_scratch/chk-s120/CHECK-2.md`: not mergeable, B1 and n1 to n7)
+
+- 19:02 Re-check read in full. Round 1's B1 to B3 closed; every second-issue figure reproduced there.
+- 19:03 to 19:06 `vbus20_bound.py` (third issue, patched and re-parsed each time): B1, SW1 and SW2's -2 V and -4 V (25 ns)
+  in section 10, SW1's undershoot at Q7's turn-off modelled (MODEL: 0.31 / 0.34 / 0.45 nH between Q8's source and U3's PGND,
+  the tightest figure of the model, the re-check's own arithmetic). n2: SNVSAI1D 7.3.1 p.14 and 7.3.5 p.16 read; the first
+  on-time after a valley crossing can last up to a period, 45.76 A and 23.397 V at 60 V: the bound takes the larger and moves
+  from 23.198 to 23.40 V (Q7 5.60 V, Q8 6.60 V at it; sensitivities 36.7 and 41.5 %), with the note that the energy term
+  weighs little (245 mJ, 20 times the figure, would be needed to put the bus at 29.0 V). n3: the 26 V allowance moved to Q7's
+  turn-on edge (1.52 / 1.76 / 2.38 nH). n4: the strap's percentages from the parsed values, conclusions printed only when
+  they hold. n5: U3's input sense filter out of the gate, a record line (20 facts). n1, n6: wording. Checkpoint `723c7412`.
+- 19:06 to 19:07 `apply_registry_s120.py`: the three texts rewritten (B1 rating list and closing test with the negative
+  limits, n1, n2, n7), the docstring names which commit to pass. `--check` at `0a164e97` opens S-124. Checkpoint
+  `0a164e97`. README rewritten whole (third issue).
