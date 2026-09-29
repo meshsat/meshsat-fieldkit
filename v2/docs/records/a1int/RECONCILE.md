@@ -29,6 +29,11 @@ as generated (E1) does not meet M1 at all, the model needs at least 5.56 A (115.
 every figure of the table is unchanged (`reconcile_lid.out`). A 4S14P lid needs its BQ4050 calibrated at k = 3, not k = 2
 (at k = 2 its cWh word would be 33,768, above the 32,767 the gauge holds; a1elec's GAUGE.md).
 
+**The electrical package's independent check** (`records/a1elec/checks/check-a1elec-1.md`, acceptable no; the focused
+re-check `check-a1elec-2.md`, acceptable yes): its minor items N1 to N4 stay open as wording in a1elec's pages (the
+charge-order sentence of TOPOLOGY 3b, the 13 UTC in CHARGER.md, a doubled table header, a heat column's sum), and
+`gauge_scale.py` hard-codes k = 2 and a 4S12P table, so a 4S14P lid needs it edited, not re-run.
+
 **What this does not show.** The circuits are drafts (a second charger, the ideal-diode join, the lid gauge's k = 2
 calibration, board A's entry re-rated with its inductor, board E's 200 W stage); the lid pack's heater, its temperature in
 use and the case's stability with a heavier lid (a stay at 100 degrees) are findings; the panel is not yet selected
