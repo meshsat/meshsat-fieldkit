@@ -100,6 +100,19 @@ LSW = ("TPS22810DRV", "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm", "Power_M
 FET = ("2N7002", "Package_TO_SOT_SMD:SOT-23", "Transistor_FET:2N7002")
 LORA = ("Ebyte E22-900M30S 1 W LoRa", "meshsat:Ebyte_E22-900M30S", "Connector_Generic:E22_900M30S")
 TOGGLE = ("EMCON locking toggle (closed = TX inhibit)", "Connector:X", "Connector_Generic:Conn_01x02")
+# THE FIXTURES' OWN TOGGLES, DECLARED AS THE KIT DECLARES ITS OWN (stream rf2walk3, 29 September 2026). Since the walk takes a
+# line's source only from a declaration (tx_inhibit.EMCON_TOGGLES), a fixture's toggle is its source only when declared: here
+# SW1 on either line and SW2 and SW_EMCON on TX_INHIBIT_n, each to ground, on any board a fixture names, with the kit's own
+# declaration beside them. Any other switch in a fixture (SW_BENCH, SW_X) is an ordinary part, as on the kit's boards.
+FIXTURE_TOGGLES = list(T.EMCON_TOGGLES) + [
+    dict(board=b, ref=r, value=r"EMCON locking toggle", line=l, why="a fixture's toggle")
+    for b in "ABCDEP" for r, l in (("SW1", "EMCON_HW"), ("SW1", "TX_INHIBIT_n"), ("SW2", "TX_INHIBIT_n"), ("SW_EMCON", "TX_INHIBIT_n"))]
+
+
+def _judge(*a, **k):
+    """tx_inhibit.judge with the fixtures' toggles declared (FIXTURE_TOGGLES) unless a test passes its own."""
+    k.setdefault("toggles", FIXTURE_TOGGLES)
+    return T.judge(*a, **k)
 TX_POWER = [dict(name="test LoRa", options=[dict(board="B", ref="U12", kind="power")])]
 PD = ("100k", "R", "Device:R")                  # the line's own pull-down, 100 kOhm as on boards A, B and D
 
@@ -140,7 +153,7 @@ def _power_board(en_drivers, en_pull="10k"):
 
 def t_a_transmitter_whose_supply_switch_only_software_enables_fails():
     """DEFECTIVE: the enable of the LoRa module's load switch is driven by an I2C expander alone."""
-    r = T.judge({"B": _power_board({"expander"})}, table=TX_POWER, accessories=[], receivers=[], owed=[])
+    r = _judge({"B": _power_board({"expander"})}, table=TX_POWER, accessories=[], receivers=[], owed=[])
     tx = _tx(r, "test LoRa")
     assert tx["ok"] is False, tx
     assert "does not force off" in tx["detail"], tx["detail"]
@@ -149,7 +162,7 @@ def t_a_transmitter_whose_supply_switch_only_software_enables_fails():
 def t_a_transmitter_whose_supply_switch_emcon_gates_passes():
     """ACCEPTABLE: EMCON AND software into the enable (the pattern boards A and B use), the expander on the AND's
     other input, and nothing but the toggle on the line."""
-    r = T.judge({"B": _power_board({"and", "expander_sw"})}, table=TX_POWER, accessories=[], receivers=[], owed=[])
+    r = _judge({"B": _power_board({"and", "expander_sw"})}, table=TX_POWER, accessories=[], receivers=[], owed=[])
     tx = _tx(r, "test LoRa")
     assert tx["ok"] is True, tx
     assert "U5 AND 1->4" in tx["detail"], tx["detail"]
@@ -159,7 +172,7 @@ def t_a_transmitter_whose_supply_switch_emcon_gates_passes():
 def t_an_enable_the_expander_can_also_drive_is_not_a_hardware_gate():
     """DEFECTIVE: the AND drives the enable and the expander is wired to the same net, so the two fight and the
     software side can win. A hardware gate has one driver."""
-    r = T.judge({"B": _power_board({"and", "expander"})}, table=TX_POWER, accessories=[], receivers=[], owed=[])
+    r = _judge({"B": _power_board({"and", "expander"})}, table=TX_POWER, accessories=[], receivers=[], owed=[])
     tx = _tx(r, "test LoRa")
     assert tx["ok"] is False and "U6 pin 4" in tx["detail"] and "firmware" in tx["detail"], tx
 
@@ -167,7 +180,7 @@ def t_an_enable_the_expander_can_also_drive_is_not_a_hardware_gate():
 def t_a_gpio_on_the_asserted_line_fails_the_line_and_every_path_from_it():
     """DEFECTIVE (boards B and C as generated at main 82dd1e4d): an MCU pin straight on EMCON_HW. The AND gate
     downstream is exactly right, and the line it reads can still be driven by firmware."""
-    r = T.judge({"B": _power_board({"and", "expander_sw", "gpio_on_line"})}, table=TX_POWER, accessories=[], receivers=[], owed=[])
+    r = _judge({"B": _power_board({"and", "expander_sw", "gpio_on_line"})}, table=TX_POWER, accessories=[], receivers=[], owed=[])
     line = _line(r)
     assert line["ok"] is False and "U41 pin 33" in line["detail"] and "firmware" in line["detail"], line
     tx = _tx(r, "test LoRa")
@@ -184,12 +197,12 @@ def t_an_expander_behind_a_series_resistor_on_an_intermediate_net_fails():
             "+3V3": [("U5", "5", "")],
             "EMCON_HW": [("SW1", "1", ""), ("R9", "1", "")], "X": [("R9", "2", ""), ("U5", "1", ""), ("U6", "4", "IO0_0")],
             "SW_EN": [("U5", "2", "")], "LORA_EN": [("U5", "4", ""), ("U21", "5", "EN/UVLO"), ("R70", "1", "")]}
-    r = T.judge({"B": _nl(comps, nets)}, table=TX_POWER, accessories=[], receivers=[], owed=[])
+    r = _judge({"B": _nl(comps, nets)}, table=TX_POWER, accessories=[], receivers=[], owed=[])
     tx = _tx(r, "test LoRa")
     assert tx["ok"] is False and "U6 pin 4" in tx["detail"], tx
     # ACCEPTABLE: the same shape with the expander moved to the AND's other input
     nets["X"] = [("R9", "2", ""), ("U5", "1", "")]; nets["SW_EN"].append(("U6", "4", "IO0_0"))
-    assert _tx(T.judge({"B": _nl(comps, nets)}, table=TX_POWER, accessories=[], receivers=[], owed=[]), "test LoRa")["ok"] is True
+    assert _tx(_judge({"B": _nl(comps, nets)}, table=TX_POWER, accessories=[], receivers=[], owed=[]), "test LoRa")["ok"] is True
 
 
 def _diode_board(anode_on_enable):
@@ -210,7 +223,7 @@ def _diode_board(anode_on_enable):
 def t_a_diode_that_can_lift_the_enable_brings_its_mcu_in():
     """DEFECTIVE: the reviewer's case, a BAT54 from an MCU pin onto LORA_EN with its cathode on the enable. The
     first version counted every D* part as a reader."""
-    tx = _tx(T.judge({"B": _diode_board(False)}, table=TX_POWER, accessories=[], receivers=[], owed=[]), "test LoRa")
+    tx = _tx(_judge({"B": _diode_board(False)}, table=TX_POWER, accessories=[], receivers=[], owed=[]), "test LoRa")
     assert tx["ok"] is False and "U41 pin 40" in tx["detail"] and "D7 diode" in tx["detail"], tx
 
 
@@ -220,7 +233,7 @@ def t_a_diode_that_can_only_pull_the_enable_low_drives_nothing_and_its_reverse_c
     current from the MCU pin (a BAT54's, stated by no held sheet) is then a current nobody bounds, so the path is
     UNDECIDED, never FAIL, and names it. Renamed in round 6's second pass (review minor 6): it was called
     "..._is_no_threat" and has asserted UNDECIDED since round 6."""
-    tx = _tx(T.judge({"B": _diode_board(True)}, table=TX_POWER, accessories=[], receivers=[], owed=[]), "test LoRa")
+    tx = _tx(_judge({"B": _diode_board(True)}, table=TX_POWER, accessories=[], receivers=[], owed=[]), "test LoRa")
     assert tx["ok"] is None and "D7" in tx["detail"] and "reverse current" in tx["detail"] and "U41 pin 40" not in tx["detail"], tx
 
 
@@ -250,7 +263,7 @@ def t_a_documented_disable_pin_behind_a_level_shifter_is_accepted_and_the_fet_he
     saved = list(T.PIN_READERS)
     try:
         T.PIN_READERS.append(dict(board="B", ref="J_M2", pin="8", why="fixture: the maker's pin table says DI"))
-        r = T.judge({"B": _disable_board()}, table=_rf_table("maker section 4.4.1"), accessories=[], receivers=[], owed=[])
+        r = _judge({"B": _disable_board()}, table=_rf_table("maker section 4.4.1"), accessories=[], receivers=[], owed=[])
     finally:
         T.PIN_READERS[:] = saved
     tx = _tx(r, "test 5G")
@@ -263,28 +276,28 @@ def t_a_documented_disable_pin_behind_a_level_shifter_is_accepted_and_the_fet_he
 def t_a_module_pin_nobody_documents_behind_a_level_shifter_leaves_the_line_undecided():
     """UNDECIDED, not PASS: a level shifter conducts both ways, so the far end of it is on the line's conductor,
     and here the far end is a socket pin no maker document calls an input (board B's AW7915-AED slots)."""
-    r = T.judge({"B": _disable_board()}, table=[], accessories=[], receivers=[], owed=[])
+    r = _judge({"B": _disable_board()}, table=[], accessories=[], receivers=[], owed=[])
     line = _line(r)
     assert line["ok"] is None and "J_M2 pin 8" in line["detail"], line
     import copy
     saved = copy.deepcopy(T.PIN_READERS)
     try:
         T.PIN_READERS.append(dict(board="B", ref="J_M2", pin="8", why="fixture: the maker calls it DI"))
-        assert _line(T.judge({"B": _disable_board()}, table=[], accessories=[], receivers=[], owed=[]))["ok"] is True
+        assert _line(_judge({"B": _disable_board()}, table=[], accessories=[], receivers=[], owed=[]))["ok"] is True
     finally:
         T.PIN_READERS[:] = saved
 
 
 def t_a_disable_pin_no_maker_documents_does_not_count():
     """DEFECTIVE: the AW7915-AED case. EMCON reaches W_DISABLE1#, and nothing says the card acts on it."""
-    r = T.judge({"B": _disable_board()}, table=_rf_table(None), accessories=[], receivers=[], owed=[])
+    r = _judge({"B": _disable_board()}, table=_rf_table(None), accessories=[], receivers=[], owed=[])
     tx = _tx(r, "test 5G")
     assert tx["ok"] is False and "nobody documents it" in tx["detail"], tx
 
 
 def t_a_disable_pin_emcon_does_not_reach_fails_and_names_its_driver():
     """DEFECTIVE: the Compute Module case. The pin is driven by the expander alone."""
-    r = T.judge({"B": _disable_board(through_shifter=False, extra_driver=True)}, table=_rf_table("maker"),
+    r = _judge({"B": _disable_board(through_shifter=False, extra_driver=True)}, table=_rf_table("maker"),
                 accessories=[], receivers=[], owed=[])
     tx = _tx(r, "test 5G")
     assert tx["ok"] is False and "does not reach" in tx["detail"] and "U6" in tx["detail"], tx
@@ -326,20 +339,20 @@ _KEY = [dict(name="test SA868", options=[dict(board="D", ref="U2", kind="key", p
 
 
 def t_a_keying_pin_driven_to_receive_passes():
-    tx = _tx(T.judge({"D": _key_board()}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
+    tx = _tx(_judge({"D": _key_board()}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
     assert tx["ok"] is True and "U13 INV" in tx["detail"], tx
 
 
 def t_a_keying_pin_driven_to_transmit_by_emcon_fails():
     """DEFECTIVE: without the inverter, asserting EMCON pulls an active-low PTT LOW, which KEYS the radio."""
-    tx = _tx(T.judge({"D": _key_board(inverter=False)}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
+    tx = _tx(_judge({"D": _key_board(inverter=False)}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
     assert tx["ok"] is False and "safe level is 1" in tx["detail"], tx
 
 
 def t_an_expander_behind_a_pass_fet_on_an_intermediate_net_fails():
     """DEFECTIVE (board D's KEY at main 82dd1e4d): KEY reaches a PCA9555 pin through a level-shifter FET. With KEY
     held low the FET is on, so an expander driving high fights the AND gate."""
-    tx = _tx(T.judge({"D": _key_board(expander_behind_fet=True)}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
+    tx = _tx(_judge({"D": _key_board(expander_behind_fet=True)}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
     assert tx["ok"] is False and "U16 pin 7" in tx["detail"] and "Q6 N-channel" in tx["detail"], tx
 
 
@@ -390,7 +403,7 @@ _CM5 = [dict(name="test CM5 WiFi", options=[dict(board="B", ref="U30A", kind="rf
 
 
 def _cm5(last, **kw):
-    return _tx(T.judge({"B": _cm5_board(last, **kw)}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
+    return _tx(_judge({"B": _cm5_board(last, **kw)}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
 
 
 def t_the_s01_open_drain_shape_passes():
@@ -456,20 +469,20 @@ _TX_A = [dict(name="test LoRa", options=[dict(board="A", ref="U12", kind="power"
 def t_a_software_pin_on_the_line_on_another_board_fails_this_boards_transmitter():
     """DEFECTIVE: board A's gate is right and board B's STM32 sits on the same conductor two ribbons away."""
     a, b = _two_boards(True)
-    r = T.judge({"A": a, "B": b}, table=_TX_A, accessories=[], receivers=[], owed=[])
+    r = _judge({"A": a, "B": b}, table=_TX_A, accessories=[], receivers=[], owed=[])
     line = _line(r)
     assert line["ok"] is False and "B U41 pin 33" in line["detail"] and "J_AB1 pin 15 = B J_AB1 pin 15" in line["detail"], line
     assert set(line["boards"]) >= {"A", "B"}, line
     assert _tx(r, "test LoRa")["ok"] is False
     a, b = _two_boards(False)
-    assert _tx(T.judge({"A": a, "B": b}, table=_TX_A, accessories=[], receivers=[], owed=[]), "test LoRa")["ok"] is True
+    assert _tx(_judge({"A": a, "B": b}, table=_TX_A, accessories=[], receivers=[], owed=[]), "test LoRa")["ok"] is True
 
 
 def t_a_board_the_line_crosses_and_that_is_absent_is_named_so_the_result_is_not_a_pass():
     """With board B's netlist absent the conductor cannot be followed there; the results name B, which
     check_contracts turns into UNJUDGED on every board they name."""
     a, _b = _two_boards(True)
-    r = T.judge({"A": a, "B": None}, table=_TX_A, accessories=[], receivers=[], owed=[])
+    r = _judge({"A": a, "B": None}, table=_TX_A, accessories=[], receivers=[], owed=[])
     assert "B" in _line(r)["boards"] and "B" in _tx(r, "test LoRa")["boards"], r
 
 
@@ -507,7 +520,7 @@ def _panel(b_comps, b_nets, pull_down="10k", gate="1g", u19_rail="+3V3_DEV"):
 
 
 def _line_of(boards, name="EMCON_HW"):
-    return _line(T.judge(boards, table=[], accessories=[], receivers=[], owed=[]), name)
+    return _line(_judge(boards, table=[], accessories=[], receivers=[], owed=[]), name)
 
 
 def t_the_panel_pair_as_the_kit_has_it_passes_both_lines():
@@ -621,7 +634,7 @@ def t_a_second_source_on_a_gated_rail_fails():
     comps["D9"] = ("SS14", "D_SMA", "Device:D_Schottky")
     nets = {n: list(v) for n, v in nl["nets"].items()}
     nets["+5V_X"].append(("D9", "1", "K")); nets["+5V_DEV"].append(("D9", "2", "A"))
-    tx = _tx(T.judge({"B": _nl(comps, nets)}, table=TX_POWER, accessories=[], receivers=[], owed=[]), "test LoRa")
+    tx = _tx(_judge({"B": _nl(comps, nets)}, table=TX_POWER, accessories=[], receivers=[], owed=[]), "test LoRa")
     assert tx["ok"] is False and "fed from +5V_DEV through D9" in tx["detail"], tx
 
 
@@ -631,16 +644,16 @@ def t_a_part_that_names_a_radio_and_is_in_no_list_fails():
     nl = _nl({"U9": ("NiceRF SA868 second exciter", "meshsat:NiceRF_SA868", "X:Y"),
               "U19": ("SN74LVC08APWR quad AND: LimeSDR and RockBLOCK", "Package_SO:TSSOP-14_4.4x5mm_P0.65mm", "X:Y")},
              {"GND": [("U9", "9", ""), ("U19", "7", "")]})
-    r = T.judge({"D": nl}, table=[], accessories=[], receivers=[], owed=[])
+    r = _judge({"D": nl}, table=[], accessories=[], receivers=[], owed=[])
     cls = [x for x in r if "names a radio" in x["text"]][0]
     assert cls["ok"] is False and "U9" in cls["detail"] and "U19" not in cls["detail"], cls
-    r = T.judge({"D": nl}, table=[], accessories=[dict(board="D", ref="U9", value=r"SA868", why="test")], receivers=[], owed=[])
+    r = _judge({"D": nl}, table=[], accessories=[dict(board="D", ref="U9", value=r"SA868", why="test")], receivers=[], owed=[])
     assert [x for x in r if "names a radio" in x["text"]][0]["ok"] is True, r
 
 
 def t_a_declared_accessory_whose_value_changed_is_asked_again():
     nl = _nl({"J_QMX": ("QMX HF transceiver, now on its own DC lead", "Connector:X", "X:Y")}, {"GND": [("J_QMX", "1", "")]})
-    r = T.judge({"B": nl}, table=[], accessories=[dict(board="B", ref="J_QMX", value=r"QMX USB lead", why="data")], receivers=[], owed=[])
+    r = _judge({"B": nl}, table=[], accessories=[dict(board="B", ref="J_QMX", value=r"QMX USB lead", why="data")], receivers=[], owed=[])
     cls = [x for x in r if "names a radio" in x["text"]][0]
     assert cls["ok"] is False and "now reads" in cls["detail"], cls
 
@@ -652,7 +665,7 @@ def t_a_declaration_resting_on_an_inference_leaves_its_board_undecided():
     # stream w4b: J_QMX left the tree's OWED list (QRP Labs' schematics answer it, EMCON.md 4.3), so the row is passed here
     owed = [dict(board="B", ref="J_QMX", value=r"QMX USB lead", why="the QMX's USB data lead",
                  owed="a QRP Labs statement that USB VBUS does not power the QMX's transmitter")]
-    r = T.judge({"B": nl}, table=[], accessories=[], receivers=[], owed=owed)
+    r = _judge({"B": nl}, table=[], accessories=[], receivers=[], owed=owed)
     cls = [x for x in r if "names a radio" in x["text"]][0]
     assert cls["ok"] is None and "owed" in cls["detail"], cls
 
@@ -754,7 +767,7 @@ BAT54 = ("BAT54 wired-OR", "Package_TO_SOT_SMD:SOT-23", "Device:D_Schottky")
 
 
 def _lora(nl):
-    return _tx(T.judge({"B": nl}, table=TX_POWER, accessories=[], receivers=[], owed=[]), "test LoRa")
+    return _tx(_judge({"B": nl}, table=TX_POWER, accessories=[], receivers=[], owed=[]), "test LoRa")
 
 
 def t_a_diode_from_a_rail_onto_an_enable_emcon_holds_low_fails():
@@ -784,10 +797,10 @@ def t_a_forward_diode_to_ground_on_a_net_emcon_holds_high_fails():
     """DEFECTIVE (the mirror case): SA_PTT_n is held HIGH by the inverter under EMCON, and a diode from it (anode) to
     ground (cathode) pulls it down against that. ACCEPTABLE: the same diode as a clamp, cathode on the net."""
     bad = _edit(_key_board(), {"D8": BAT54}, {"SA_PTT_n": [("D8", "2", "A")], "GND": [("D8", "1", "K")]})
-    tx = _tx(T.judge({"D": bad}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
+    tx = _tx(_judge({"D": bad}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
     assert tx["ok"] is False and "D8" in tx["detail"] and "pulls it down" in tx["detail"], tx
     good = _edit(_key_board(), {"D8": BAT54}, {"SA_PTT_n": [("D8", "1", "K")], "GND": [("D8", "2", "A")]})
-    assert _tx(T.judge({"D": good}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")["ok"] is True
+    assert _tx(_judge({"D": good}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")["ok"] is True
 
 
 def t_a_series_resistor_in_front_of_a_compute_module_pin_passes():
@@ -797,7 +810,7 @@ def t_a_series_resistor_in_front_of_a_compute_module_pin_passes():
     for last, drv in (("nand_fet", ("Q40", "3")), ("od", ("U40", "4"))):
         nl = _edit(_cm5_board(last), {"R41": ("33R", "R", "Device:R")},
                    {"WL_X": [("R41", "1", "")], "WL_nDIS1": [("R41", "2", "")]}, move={drv: "WL_X"})
-        tx = _tx(T.judge({"B": nl}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
+        tx = _tx(_judge({"B": nl}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
         assert tx["ok"] is True and "R41 series" in tx["detail"], (last, tx)
 
 
@@ -806,7 +819,7 @@ def t_a_series_resistor_in_front_of_the_sa868_ptt_passes():
     active pin no document shows to be an input."""
     nl = _edit(_key_board(), {"R9": ("100R", "R", "Device:R")}, {"PTT_X": [("R9", "1", "")], "SA_PTT_n": [("R9", "2", "")]},
                move={("U13", "4"): "PTT_X"})
-    tx = _tx(T.judge({"D": nl}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
+    tx = _tx(_judge({"D": nl}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
     assert tx["ok"] is True and "R9 series" in tx["detail"], tx
 
 
@@ -834,10 +847,10 @@ def t_a_compute_module_pull_up_behind_a_series_resistor_or_on_a_vdd_rail_fails()
     nl = _edit(_cm5_board("nand_fet"), {"R41": ("33R", "R", "Device:R"), "R40": ("10k", "R", "Device:R")},
                {"WL_X": [("R41", "1", ""), ("R40", "1", "")], "WL_nDIS1": [("R41", "2", "")], "+3V3": [("R40", "2", "")]},
                move={("Q40", "3"): "WL_X"})
-    tx = _tx(T.judge({"B": nl}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
+    tx = _tx(_judge({"B": nl}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
     assert tx["ok"] is False and "pulled up on the carrier by R40" in tx["detail"], tx
     nl = _edit(_cm5_board("nand_fet"), {"R40": ("10k", "R", "Device:R")}, {"WL_nDIS1": [("R40", "1", "")], "VDD_3V3": [("R40", "2", "")]})
-    tx = _tx(T.judge({"B": nl}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
+    tx = _tx(_judge({"B": nl}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
     assert tx["ok"] is False and "pulled up on the carrier by R40" in tx["detail"], tx
 
 
@@ -1148,7 +1161,7 @@ def t_board_a_pa_enable_with_its_pull_down():
             comps["R59"] = ("10k", "R", "Device:R"); nets["PA_EN"].append(("R59", "1", "")); nets["GND"].append(("R59", "2", ""))
         return _nl(comps, nets)
     table = [dict(name="test PA", options=[dict(board="A", ref="J_PA", kind="power")])]
-    ok = _tx(T.judge({"A": tree("1g08")}, table=table, accessories=[], receivers=[], owed=[]), "test PA")
+    ok = _tx(_judge({"A": tree("1g08")}, table=table, accessories=[], receivers=[], owed=[]), "test PA")
     assert ok["ok"] is True, ok
     nl = tree("1g08")
     # the reader's own supply is its input VBAT (R4T-D41; its output +13V8_PA is what EMCON switches)
@@ -1158,9 +1171,9 @@ def t_board_a_pa_enable_with_its_pull_down():
     net = T._network({"A": nl}, [("A", "PA_EN")], 0, st)
     v = T._solve_net(net)[0][("A", "PA_EN")]
     assert abs(v - 17.25e-6 * 10.5e3) < 1e-3 and "A U13 enable (LM5176 buck-boost controller) 7.2 uA" in net["leaks"], (v, net["leaks"])
-    und = _tx(T.judge({"A": tree("08a")}, table=table, accessories=[], receivers=[], owed=[]), "test PA")
+    und = _tx(_judge({"A": tree("08a")}, table=table, accessories=[], receivers=[], owed=[]), "test PA")
     assert und["ok"] is None and "states no Ioff" in und["detail"] and "PA_EN sits at" in und["detail"], und
-    bad = _tx(T.judge({"A": tree("1g08", r59=False)}, table=table, accessories=[], receivers=[], owed=[]), "test PA")
+    bad = _tx(_judge({"A": tree("1g08", r59=False)}, table=table, accessories=[], receivers=[], owed=[]), "test PA")
     assert bad["ok"] is False and "PA_EN floats" in bad["detail"], bad
 
 
@@ -1169,24 +1182,24 @@ def t_the_sa868_keying_pin_when_its_logic_loses_its_supply():
     DEFECTIVE with no pull (board D as drawn): SA_PTT_n floats with the exciter powered. DEFECTIVE with a pull-up on
     +3V3_D8: it dies with the driver. UNDECIDED with a pull-up on +5V_SA: the SA868 v1.3 sheet states neither an input
     current nor a '1' level for PTT. ACCEPTABLE when the keying logic runs on the exciter's own rail."""
-    tx = _tx(T.judge({"D": _key_board(logic_rail="+3V3_D8")}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
+    tx = _tx(_judge({"D": _key_board(logic_rail="+3V3_D8")}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
     assert tx["ok"] is False and "SA_PTT_n floats" in tx["detail"] and "U13's supply +3V3_D8 down" in tx["detail"], tx
-    tx = _tx(T.judge({"D": _key_board(logic_rail="+3V3_D8", ptt_pull=("10k", "+3V3_D8"))}, table=_KEY, accessories=[],
+    tx = _tx(_judge({"D": _key_board(logic_rail="+3V3_D8", ptt_pull=("10k", "+3V3_D8"))}, table=_KEY, accessories=[],
                      receivers=[], owed=[]), "test SA868")
     assert tx["ok"] is False and "SA_PTT_n floats" in tx["detail"], tx
-    tx = _tx(T.judge({"D": _key_board(logic_rail="+3V3_D8", ptt_pull=("10k", "+5V_SA"))}, table=_KEY, accessories=[],
+    tx = _tx(_judge({"D": _key_board(logic_rail="+3V3_D8", ptt_pull=("10k", "+5V_SA"))}, table=_KEY, accessories=[],
                      receivers=[], owed=[]), "test SA868")
     assert tx["ok"] is None and "maker states no input" in tx["detail"], tx
-    assert _tx(T.judge({"D": _key_board()}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")["ok"] is True
+    assert _tx(_judge({"D": _key_board()}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")["ok"] is True
 
 
 def t_a_compute_module_pin_whose_element_can_lose_its_supply_fails():
     """DEFECTIVE: the S-01 shapes with the NAND or the open-drain buffer on a carrier rail (+3V3) rather than the
     module's own 3.3 V. With that rail down, the FET's gate floats, or the pin is held only by the module's own
     1.8 kOhm pull-up, which is the pin 'left floating': Wi-Fi on (CM5 datasheet, pin 89)."""
-    tx = _tx(T.judge({"B": _cm5_board("nand_fet", elem_rail="+3V3")}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
+    tx = _tx(_judge({"B": _cm5_board("nand_fet", elem_rail="+3V3")}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
     assert tx["ok"] is False and "WL_GATE floats" in tx["detail"], tx
-    tx = _tx(T.judge({"B": _cm5_board("od", elem_rail="+3V3")}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
+    tx = _tx(_judge({"B": _cm5_board("od", elem_rail="+3V3")}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
     assert tx["ok"] is False and "its maker's own pull" in tx["detail"], tx
 
 
@@ -1195,7 +1208,7 @@ def t_the_report_does_not_print_pass_for_a_result_that_needed_an_absent_board():
     import io, contextlib
     b = _panel({}, {})
     d = tempfile.mkdtemp(prefix="txr-")
-    r = T.judge({"B": b["B"], "C": None}, table=[], accessories=[], receivers=[], owed=[])
+    r = _judge({"B": b["B"], "C": None}, table=[], accessories=[], receivers=[], owed=[])
     line = _line(r)
     assert line.get("absent") == ["C"], line
     buf = io.StringIO()
@@ -1225,7 +1238,7 @@ def t_an_enable_whose_current_at_the_threshold_no_sheet_bounds_is_undecided():
                                                       ("U5", "3", ""), ("R70", "2", "")],
             "+3V3": [("U5", "5", "")], "EMCON_HW": [("SW1", "1", ""), ("U5", "1", "")], "SW_EN": [("U5", "2", ""), ("U6", "4", "IO0_0")],
             "LORA_EN": [("U5", "4", ""), ("U21", "3", "EN"), ("R70", "1", "")]}
-    tx = _tx(T.judge({"B": _nl(comps, nets)}, table=TX_POWER, accessories=[], receivers=[], owed=[]), "test LoRa")
+    tx = _tx(_judge({"B": _nl(comps, nets)}, table=TX_POWER, accessories=[], receivers=[], owed=[]), "test LoRa")
     assert tx["ok"] is None and "U21 enable (AP64500 buck): its sheet bounds no enable current" in tx["detail"], tx
     assert _lora(_power_board({"and", "expander_sw"}))["ok"] is True
 
@@ -1279,15 +1292,15 @@ def t_an_open_drain_output_emcon_releases_is_judged_on_what_holds_its_net():
     states no '1' level for PTT and the LVC1G06 sheet states no off-state output current while powered (only Ioff, at
     VCC 0). DEFECTIVE with nothing pulling the released pin (it is not reached), and with a divider that leaves it
     between VIL and VIH."""
-    tx = _tx(T.judge({"D": _key_board(logic_rail="+3V3_D8", od=True, divider=("1.2k", "2k"))}, table=_KEY, accessories=[],
+    tx = _tx(_judge({"D": _key_board(logic_rail="+3V3_D8", od=True, divider=("1.2k", "2k"))}, table=_KEY, accessories=[],
                      receivers=[], owed=[]), "test SA868")
     assert tx["ok"] is None and "U13 INV_OD 2->4 released, held at 3.12 V by R88 1.2k to +5V_SA, R89 2k to GND" \
         in tx["detail"] and "the open-drain U13 is released" in tx["detail"] and "its maker states no input threshold" \
         in tx["detail"] and "EMCON does not reach it" not in tx["detail"], tx
-    tx = _tx(T.judge({"D": _key_board(logic_rail="+3V3_D8", od=True)}, table=_KEY, accessories=[], receivers=[], owed=[]),
+    tx = _tx(_judge({"D": _key_board(logic_rail="+3V3_D8", od=True)}, table=_KEY, accessories=[], receivers=[], owed=[]),
              "test SA868")
     assert tx["ok"] is False and "EMCON does not reach it" in tx["detail"], tx
-    tx = _tx(T.judge({"D": _key_board(logic_rail="+3V3_D8", od=True, divider=("10k", "3.3k"))}, table=_KEY,
+    tx = _tx(_judge({"D": _key_board(logic_rail="+3V3_D8", od=True, divider=("10k", "3.3k"))}, table=_KEY,
                      accessories=[], receivers=[], owed=[]), "test SA868")
     assert tx["ok"] is False and "EMCON does not reach it" in tx["detail"], tx
 
@@ -1351,10 +1364,10 @@ def t_a_switch_enable_on_the_line_whose_input_has_no_plus_is_judged():
     """DEFECTIVE: the review's probe_e2e, a TPS22810 on VBAT with VOUT LORA_5V and EN/UVLO on EMCON_HW, no pull-down.
     With the panel out the enable floats, which TI forbids (SLVSDH0C 9.3.1), so the line and the LoRa FAIL. ACCEPTABLE
     with R58 10 kOhm: C's U9 at IOFF (10 uA) and the enable's 0.1 uA on 10.5 kOhm, 0.11 V against VENF 1.08 V."""
-    r = T.judge(_vbat_switch(None), table=TX_POWER, accessories=[], receivers=[], owed=[])
+    r = _judge(_vbat_switch(None), table=TX_POWER, accessories=[], receivers=[], owed=[])
     assert _line(r)["ok"] is False and "floats at B U21 enable" in _line(r)["detail"], _line(r)
     assert _tx(r, "test LoRa")["ok"] is False and "its line EMCON_HW fails" in _tx(r, "test LoRa")["detail"], _tx(r, "test LoRa")
-    r = T.judge(_vbat_switch("10k"), table=TX_POWER, accessories=[], receivers=[], owed=[])
+    r = _judge(_vbat_switch("10k"), table=TX_POWER, accessories=[], receivers=[], owed=[])
     assert _line(r)["ok"] is True and _tx(r, "test LoRa")["ok"] is True, (_line(r), _tx(r, "test LoRa"))
 
 
@@ -1440,7 +1453,7 @@ LED1 = ("green LED", "LED_SMD:LED_0603", "Device:LED")
 
 
 def _key(nl):
-    return _tx(T.judge({"D": nl}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
+    return _tx(_judge({"D": nl}, table=_KEY, accessories=[], receivers=[], owed=[]), "test SA868")
 
 
 def _ptt_link(rv, sup, what=None, extra=None):
@@ -1589,10 +1602,10 @@ def t_a_transistor_channel_onto_the_gated_rail_is_a_second_feed():
                                                 "DIS": [("Q9", "1", "G"), ("U77", "10", "GPIO5")]}))["ok"] is True
     assert _lora(_edit(base, comps={"Q9": FET}, nets={"+5V_X": [("Q9", "1", "G")], "X1": [("Q9", "2", "S")],
                                                       "X2": [("Q9", "3", "D")]}))["ok"] is True
-    pa = _tx(T.judge({"A": _lm5176_stage({}, {})}, table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
+    pa = _tx(_judge({"A": _lm5176_stage({}, {})}, table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
     assert pa["ok"] is True, pa
     nq = ("CSD18510Q5B N-channel", "Package_SON:VSON-8", "Transistor_FET:Q_NMOS")
-    pa = _tx(T.judge({"A": _lm5176_stage({"Q4": nq}, {"+13V8_PA": [("Q4", "3", "D")], "PA_SW2": [("Q4", "2", "S")],
+    pa = _tx(_judge({"A": _lm5176_stage({"Q4": nq}, {"+13V8_PA": [("Q4", "3", "D")], "PA_SW2": [("Q4", "2", "S")],
                                                         "PA_HDRV2": [("Q4", "1", "G")]})},
                      table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
     assert pa["ok"] is None and "whose gate PA_HDRV2 is driven by U13, the gated switch itself" in pa["detail"], pa
@@ -1620,9 +1633,9 @@ def t_a_backup_supply_pin_is_not_the_transmitters_own_supply():
     state would be skipped as one where the module is off, and read PASS."""
     nl = _edit(_cm5_board("od", elem_rail="VBAT"), nets={"VBAT": [("U30A", "76", "VBAT")]})
     tab = [dict(_CM5[0], options=[dict(_CM5[0]["options"][0], backup_pins=("76",))])]
-    tx = _tx(T.judge({"B": nl}, table=tab, accessories=[], receivers=[], owed=[]), "test CM5")
+    tx = _tx(_judge({"B": nl}, table=tab, accessories=[], receivers=[], owed=[]), "test CM5")
     assert tx["ok"] is False and "its maker's own pull" in tx["detail"], tx
-    assert _tx(T.judge({"B": nl}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")["ok"] is True
+    assert _tx(_judge({"B": nl}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")["ok"] is True
     cm5 = [o for t in T.TRANSMITTERS for o in t["options"] if o["ref"] in ("U30A", "U31A", "U32A")]
     assert all(o.get("backup_pins") == ("76",) and "RTC battery" in o.get("backup_cite", "") for o in cm5), cm5
 
@@ -1700,7 +1713,7 @@ def t_board_bs_s01_or_gate_and_its_inverter_are_walked():
     """ACCEPTABLE (the OR, R4T-D46): EMCON_ON made by a 74LVC1G04 and the SN74LVC32A OR both on the module's own 3.3 V,
     so neither can lose its supply while the module runs: the walk reaches pin 89 through U111 and Q109, and it PASSES.
     On 5aece264 it read "EMCON does not reach it". The OR's pin map is TI's SCAS286U Table 4-1."""
-    tx = _tx(T.judge({"B": _s01_board(inv="gate")}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
+    tx = _tx(_judge({"B": _s01_board(inv="gate")}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
     assert tx["ok"] is True and "U111 OR 2->3" in tx["detail"] and "Q109 switch to ground" in tx["detail"], tx
 
 
@@ -1716,15 +1729,15 @@ def t_board_bs_s01_fet_inverter_is_walked_and_judged_on_its_pull_up():
     followed (Q11 held off, EMCON_ON released to 3.3 V by R513) and it is UNDECIDED, not PASS, because the fitted 2N7002
     states its off-state channel current at 25 C only (JSCJ, R4T-D28). On 5aece264 all three read "EMCON does not reach
     it"."""
-    tx = _tx(T.judge({"B": _s01_board(pull_rail="+3V3_DEV", or_rail="+3V3_CM1")}, table=_CM5, accessories=[], receivers=[],
+    tx = _tx(_judge({"B": _s01_board(pull_rail="+3V3_DEV", or_rail="+3V3_CM1")}, table=_CM5, accessories=[], receivers=[],
                      owed=[]), "test CM5")
     assert tx["ok"] is False and "with +3V3_DEV down (the rail Q11's released net is pulled up to" in tx["detail"] \
         and "EMCON_ON floats" in tx["detail"] and "U111's supply" not in tx["detail"], tx
-    tx = _tx(T.judge({"B": _s01_board(pull_rail="+3V3_DEV", or_rail="+3V3_DEV")}, table=_CM5, accessories=[], receivers=[],
+    tx = _tx(_judge({"B": _s01_board(pull_rail="+3V3_DEV", or_rail="+3V3_DEV")}, table=_CM5, accessories=[], receivers=[],
                      owed=[]), "test CM5")
     assert tx["ok"] is False and "Q11 switch to ground held off G->D released, held at 3.30 V by R513 10k to +3V3_DEV" in tx["detail"] \
         and "+3V3_DEV down" in tx["detail"], tx
-    tx = _tx(T.judge({"B": _s01_board()}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
+    tx = _tx(_judge({"B": _s01_board()}, table=_CM5, accessories=[], receivers=[], owed=[]), "test CM5")
     assert tx["ok"] is None and "U111 OR 2->3" in tx["detail"] \
         and "a FET EMCON holds off, and its off-state channel current is stated at 25 C only" in tx["detail"], tx
     # DEFECTIVE, and said why: a switch to ground EMCON holds off straight onto a supply switch's enable, pulled up, turns
@@ -1888,27 +1901,27 @@ def t_a_power_stage_behind_its_sense_shunt_is_read_like_the_rail():
     2026): the INA226 is read by its maker's row and stays UNDECIDED, on TI SBOS547C's note 3; and Q14 is read by its maker's
     pinout (TI SLPS632), so it reads what Q4 reads, UNDECIDED on the LM5176's gate drive with the enable low, which TI
     SNVSAI1D does not state.*"""
-    ina = _tx(T.judge({"A": _pa_sensed({}, {})}, table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
+    ina = _tx(_judge({"A": _pa_sensed({}, {})}, table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
     assert ina["ok"] is None and "U14 pin 10 (INA226 PA rail monitor (0x46), 'IN+') sits on the rail's conductor and is pin " \
         "10 ('IN+') of U14 (INA226 monitor), whose supply pin is on +3V3, which stays up with the rail off" in ina["detail"] \
         and "U14 pin 8 (INA226 PA rail monitor (0x46), 'VBUS')" in ina["detail"] \
         and "Negative leakage currents can occur under different input conditions', whose size no page states" in ina["detail"], ina
     base = _pa_sensed({}, {})
-    ok = _tx(T.judge({"A": _edit(base, move={("U14", "10"): "unconnected-(U14-IN+-Pad10)", ("U14", "9"): "unconnected-(U14-IN--Pad9)",
+    ok = _tx(_judge({"A": _edit(base, move={("U14", "10"): "unconnected-(U14-IN+-Pad10)", ("U14", "9"): "unconnected-(U14-IN--Pad9)",
                                              ("U14", "8"): "unconnected-(U14-VBUS-Pad8)"})},
                      table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
     assert ok["ok"] is True, ok
     nq = ("CSD18510Q5B N-channel", "Package_SON:VSON-8", "Transistor_FET:Q_NMOS")
     q4 = {"PA_SW2": [("Q4", "2", "S")], "PA_HDRV2": [("Q4", "1", "G")]}
-    on_rail = _tx(T.judge({"A": _pa_sensed({"Q4": nq}, dict(q4, **{"+13V8_PA": [("Q4", "3", "D")]}))}, table=_PA, accessories=[],
+    on_rail = _tx(_judge({"A": _pa_sensed({"Q4": nq}, dict(q4, **{"+13V8_PA": [("Q4", "3", "D")]}))}, table=_PA, accessories=[],
                           receivers=[], owed=[]), "test PA")
-    behind = _tx(T.judge({"A": _pa_sensed({"Q4": nq}, dict(q4, PA_OUT=[("Q4", "3", "D")]))}, table=_PA, accessories=[],
+    behind = _tx(_judge({"A": _pa_sensed({"Q4": nq}, dict(q4, PA_OUT=[("Q4", "3", "D")]))}, table=_PA, accessories=[],
                          receivers=[], owed=[]), "test PA")
     tail = "fed from PA_SW2 through Q4's channel (N-channel), whose gate PA_HDRV2 is driven by U13, the gated switch itself"
     assert on_rail["ok"] is None and "+13V8_PA: " + tail in on_rail["detail"], on_rail
     assert behind["ok"] is None and "PA_OUT, joined to +13V8_PA through R55 (6mOhm 1% 2512 (I): " + tail in behind["detail"], behind
     q14 = ("CSD18510Q5B 40 V N-FET", "Package_SO:PowerPAK_SO-8_Single", "meshsat_ic:Q14")
-    a = _tx(T.judge({"A": _pa_sensed({"Q14": q14}, {"PA_SW2": [("Q14", p, "PA_SW2") for p in ("1", "2", "3")],
+    a = _tx(_judge({"A": _pa_sensed({"Q14": q14}, {"PA_SW2": [("Q14", p, "PA_SW2") for p in ("1", "2", "3")],
                                                     "PA_HDRV2": [("Q14", "4", "PA_HDRV2")], "PA_OUT": [("Q14", "5", "PA_OUT")]})},
                     table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
     assert a["ok"] is None and "PA_OUT, joined to +13V8_PA through R55" in a["detail"] and "cannot read" not in a["detail"] \
@@ -1916,7 +1929,7 @@ def t_a_power_stage_behind_its_sense_shunt_is_read_like_the_rail():
         "2017), page 1, Top View of the SON 5 mm x 6 mm package)), whose gate PA_HDRV2 is driven by U13, the gated switch " \
         "itself; that its gate drive is off with its enable is not stated by its maker: TI SNVSAI1D 7.4.1 (page 20)" \
         in a["detail"], a
-    p = _tx(T.judge({"A": _pa_sensed({"Q9": PFET, "U77": CPU}, {"PA_OUT": [("Q9", "3", "D")], "VBAT": [("Q9", "2", "S")],
+    p = _tx(_judge({"A": _pa_sensed({"Q9": PFET, "U77": CPU}, {"PA_OUT": [("Q9", "3", "D")], "VBAT": [("Q9", "2", "S")],
                                                                 "BYP_n": [("Q9", "1", "G"), ("U77", "10", "GPIO5")]})},
                     table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
     assert p["ok"] is False and "PA_OUT, joined to +13V8_PA through R55" in p["detail"] \
@@ -2242,7 +2255,7 @@ def t_a_part_that_only_mentions_a_firmware_family_is_named_and_never_passed():
         tx = _on_rail(comps, nets)
         assert tx["ok"] is None and needle in tx["detail"], (sorted(comps), nets, tx)
     # the gate path: census() names the family, and so does the fail-safe network, powered and unpowered
-    r = T.judge({"B": _edit(_power_board({"and", "expander_sw"}), comps={"U41": MCU_DESC},
+    r = _judge({"B": _edit(_power_board({"and", "expander_sw"}), comps={"U41": MCU_DESC},
                             nets={"EMCON_HW": [("U41", "33", "PC5")]})},
                 table=TX_POWER, accessories=[], receivers=[], owed=[])
     ln = _line(r)
@@ -3234,7 +3247,7 @@ def t_a_line_through_an_aup_gate_is_walked_by_its_makers_pin_map():
     nl["comps"]["U5"]["value"] = AUP1[0]
     got, _stopped = T.reach(nl)
     assert "LORA_EN" in got, (sorted(got), _stopped)
-    r = T.judge({"B": nl}, table=TX_POWER, accessories=[], receivers=[], owed=[])
+    r = _judge({"B": nl}, table=TX_POWER, accessories=[], receivers=[], owed=[])
     tx = _tx(r, "test LoRa")
     assert tx["ok"] is True and "U5 AND 1->4" in tx["detail"], tx
     row = [f for f in T.LOGIC if f["name"] == "74AUP1G08 AND"][0]
@@ -3268,14 +3281,14 @@ def t_a_gate_both_lines_force_passes_on_the_line_that_holds():
     while TX_INHIBIT_n, which also forces U5 LOW and holds, was never asked. ACCEPTABLE now: the option passes on the line
     that holds, and the result says it was walked from that line alone. With both lines failing, the transmitter FAILS; with
     neither failing, it PASSes on the combined walk, which names no single line."""
-    r = T.judge({"B": _two_line_gate()}, table=TX_POWER, accessories=[], receivers=[], owed=[])
+    r = _judge({"B": _two_line_gate()}, table=TX_POWER, accessories=[], receivers=[], owed=[])
     assert _line(r, "EMCON_HW")["ok"] is False, _line(r, "EMCON_HW")
     assert _line(r, "TX_INHIBIT_n")["ok"] is True, _line(r, "TX_INHIBIT_n")
     tx = _tx(r, "test LoRa")
     assert tx["ok"] is True and "(walked from TX_INHIBIT_n alone)" in tx["detail"], tx
-    r2 = T.judge({"B": _two_line_gate(inhibit_gpio=True)}, table=TX_POWER, accessories=[], receivers=[], owed=[])
+    r2 = _judge({"B": _two_line_gate(inhibit_gpio=True)}, table=TX_POWER, accessories=[], receivers=[], owed=[])
     assert _tx(r2, "test LoRa")["ok"] is False, _tx(r2, "test LoRa")
-    r3 = T.judge({"B": _two_line_gate(emcon_gpio=False)}, table=TX_POWER, accessories=[], receivers=[], owed=[])
+    r3 = _judge({"B": _two_line_gate(emcon_gpio=False)}, table=TX_POWER, accessories=[], receivers=[], owed=[])
     tx3 = _tx(r3, "test LoRa")
     assert tx3["ok"] is True and "alone)" not in tx3["detail"], tx3
 
@@ -3558,7 +3571,7 @@ def _q14(src="PA_SW2", gate="PA_HDRV2", drain="PA_OUT", extra_c=None, extra_n=No
     nets.setdefault(gate, []).append(("Q14", "4", gate)); nets.setdefault(drain, []).append(("Q14", "5", drain))
     for k_, v_ in (extra_n or {}).items(): nets.setdefault(k_, []).extend(v_)
     nl = _edit(base, comps=dict({"Q14": fet}, **(extra_c or {})), nets=nets)
-    return _tx(T.judge({"A": nl}, table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
+    return _tx(_judge({"A": nl}, table=_PA, accessories=[], receivers=[], owed=[]), "test PA")
 
 
 def t_a_fet_whose_symbol_names_its_pins_after_their_nets_is_read_by_its_makers_pinout():
@@ -3625,7 +3638,7 @@ def _vgg(txsup="divider", on_key=None):
             comps["R92"] = r("100k"); nets["TXSUP_EN"].append(("R92", "2", "")); nets["+5V_D8"].append(("R92", "1", ""))
     if on_key:
         comps["U16"] = on_key; nets["PA_KEY"].append(("U16", "8", "IO0_4"))
-    return _tx(T.judge({"D": _nl(comps, nets)}, table=_VGG, accessories=[], receivers=[], owed=[]), "test PA bias")
+    return _tx(_judge({"D": _nl(comps, nets)}, table=_VGG, accessories=[], receivers=[], owed=[]), "test PA bias")
 
 
 def t_the_pa_gate_bias_behind_its_regulator_is_a_hardware_gate():
@@ -3699,7 +3712,7 @@ def t_a_radios_own_pins_are_read_while_its_supply_is_off():
     assert tx["ok"] is None and "pin 15 ('NRST') on NRST, where R9 pin 1 (10k, ''), a resistor from +3V3, a supply" in tx["detail"], tx
     said = [dict(name="test LoRa", options=[dict(board="B", ref="U12", kind="power", io_words="ITS MAKER: no voltage on any input")])]
     nl = _edit(_power_board({"and", "expander_sw"}), comps=exp, nets={"MOSI": [("U12", "17", "MOSI"), ("U6", "5", "IO0_1")]})
-    tx = _tx(T.judge({"B": nl}, table=said, accessories=[], receivers=[], owed=[]), "test LoRa")
+    tx = _tx(_judge({"B": nl}, table=said, accessories=[], receivers=[], owed=[]), "test LoRa")
     assert tx["ok"] is None and tx["detail"].endswith("ITS MAKER: no voltage on any input"), tx
     # ACCEPTABLE: the buffer on the gated rail
     tx = _on_rail(dict(exp, U7=BUF1), {"MOSI_H": [("U7", "2", ""), ("U6", "5", "IO0_1")], "MOSI": [("U12", "17", "MOSI"), ("U7", "4", "")],
@@ -3741,7 +3754,7 @@ def t_another_radio_on_the_same_gated_rail_is_read_in_its_own_row():
                 "+3V3_ZB": [("U22", "1", "VOUT"), ("U13", "20", "+3V3_ZB"), ("U14", "20", "+3V3_ZB")]}
         if third:
             comps["U99"] = e72("a third one"); nets["+3V3_ZB"].append(("U99", "20", "+3V3_ZB")); nets["GND"].append(("U99", "1", "GND"))
-        return [x for x in T.judge({"B": _nl(comps, nets)}) if x["text"].startswith("E72 CC2652P")]
+        return [x for x in _judge({"B": _nl(comps, nets)}) if x["text"].startswith("E72 CC2652P")]
     rows = board()
     assert len(rows) == 2 and all(x["ok"] is True for x in rows), rows
     rows = board(third=True)
@@ -3849,11 +3862,11 @@ def t_a_supervisor_whose_value_names_the_rockblock_is_classified_only_when_decla
     and no declaration: unclassified. ACCEPTABLE: the tree's own ACCESSORIES entry for it classifies it."""
     nl = _nl({"U543": ("TPS3808G30DBVR supervisor on +5V_DEV watching +3V3_DEV: holds the RockBLOCK's I_EN low below 2.79 V",
                        "Package_TO_SOT_SMD:SOT-23-6", "X:Y")}, {"GND": [("U543", "2", "")]})
-    r = [x for x in T.judge({"B": nl}, table=[], accessories=[], receivers=[], owed=[]) if "names a radio" in x["text"]][0]
+    r = [x for x in _judge({"B": nl}, table=[], accessories=[], receivers=[], owed=[]) if "names a radio" in x["text"]][0]
     assert r["ok"] is False and "U543" in r["detail"], r
     dec = [a for a in T.ACCESSORIES if a["board"] == "B" and a["ref"] == "U543"]
     assert len(dec) == 1 and "SBVS050N" in dec[0]["why"], dec
-    r = [x for x in T.judge({"B": nl}, table=[], accessories=dec, receivers=[], owed=[]) if "names a radio" in x["text"]][0]
+    r = [x for x in _judge({"B": nl}, table=[], accessories=dec, receivers=[], owed=[]) if "names a radio" in x["text"]][0]
     assert r["ok"] is True, r
 
 
@@ -3909,3 +3922,111 @@ def t_a_follower_off_the_switchs_board_is_a_second_driver():
                                "GND": [("U30", "3", "")]})
     assert _line_of(b)["ok"] is False and "second BUF output" in _line_of(b)["detail"], _line_of(b)
     assert _line_of(b, "TX_INHIBIT_n")["ok"] is False
+
+
+# ---------------------------------------------------------------- stream rf2walk3 (29 September 2026, the re-check of set 12)
+# The line's source is now a DECLARATION (tx_inhibit.EMCON_TOGGLES): board C's SW_EMCON, its contact between TX_INHIBIT_n and
+# GND. Every other switch is an ordinary part. The re-check's CX10 (CX9's latch plus a switch on board B from TX_INHIBIT_n to
+# ground, which made board B "the switch's board") and CX14 (a switch on board B from TX_INHIBIT_n to +3V3_DEV) must fail.
+def _bench_switch(far):
+    return {"SW_BENCH": TOGGLE}, {"TX_INHIBIT_n": [("SW_BENCH", "1", "")], far: [("SW_BENCH", "2", "")]}
+
+
+def _merge(*parts):
+    comps, nets = {}, {}
+    for c, n in parts:
+        comps.update(c)
+        for k, v in n.items(): nets.setdefault(k, []).extend(v)
+    return comps, nets
+
+
+def _latch_parts(behind, rail="+3V3_DEV"):
+    comps = {"U30": BUF1, "U32": BUF1}
+    nets = {"EMCON_HW": [("U32", "2", "")], "TX_INHIBIT_n": [("U30", "2", "")], rail: [("U30", "5", ""), ("U32", "5", "")],
+            "GND": [("U30", "3", ""), ("U32", "3", "")]}
+    if behind:
+        comps.update({"R55": ("330R 1%", "R", "Device:R"), "R57": ("330R 1%", "R", "Device:R")})
+        nets.update({"U30_DRV": [("U30", "4", ""), ("R55", "1", "")], "U32_DRV": [("U32", "4", ""), ("R57", "1", "")]})
+        nets["EMCON_HW"].append(("R55", "2", "")); nets["TX_INHIBIT_n"].append(("R57", "2", ""))
+    else:
+        nets["EMCON_HW"].append(("U30", "4", "")); nets["TX_INHIBIT_n"].append(("U32", "4", ""))
+    return comps, nets
+
+
+def t_a_second_switch_makes_no_board_the_toggles_board():
+    """DEFECTIVE, the re-check's CX10: CX9's latch on board B (direct and behind 330R each) with a switch on board B from
+    TX_INHIBIT_n to ground. That switch can only assert the line, but under the previous walk it made board B "the
+    switch's board", so both buffers counted as sources again and both lines read PASS. Only the declared toggle makes a
+    source now: both lines FAIL in both forms, on main's panel shape and on D4E-F1's."""
+    for behind in (True, False):
+        comps, nets = _merge(_latch_parts(behind), _bench_switch("GND"))
+        for shape, b in (("D4E-F1", _panel_clamped(b_comps=comps, b_nets=nets)), ("main", _panel(comps, nets))):
+            assert T._switch_board(b["B"], "B") is False and T._line_sources(b["B"], "EMCON_HW", "B") == [], shape
+            for name in ("EMCON_HW", "TX_INHIBIT_n"):
+                line = _line_of(b, name)
+                assert line["ok"] is False, (shape, behind, name, line)
+
+
+def t_a_switch_that_lifts_the_line_is_a_second_driver():
+    """DEFECTIVE, the re-check's CX14: a switch on board B from TX_INHIBIT_n to +3V3_DEV, read by a gate on board B. Closed,
+    it releases the inhibit on boards A, B and D; every walk before this one skipped it as "the toggle". TX_INHIBIT_n FAILS
+    on main's panel shape and on D4E-F1's (the census: "a switch contact ties the net to +3V3_DEV when closed"; the
+    fail-safe states take the contact closed). EMCON_HW reads PASS on main's shape, where nothing joins it to
+    TX_INHIBIT_n with board C down, and UNDECIDED on D4E-F1's, where only D23's reverse current, taken ideal, could carry
+    the lifted TX_INHIBIT_n onto it."""
+    comps, nets = _merge(_bench_switch("+3V3_DEV"), ({"U20": AND1}, {"TX_INHIBIT_n": [("U20", "1", "")], "+3V3_DEV": [("U20", "5", "")],
+                                                                     "GND": [("U20", "3", "")], "PA_SW_EN": [("U20", "2", "")]}))
+    for shape, b, em in (("main", _panel(comps, nets), True), ("D4E-F1", _panel_clamped(b_comps=comps, b_nets=nets), None)):
+        tx = _line_of(b, "TX_INHIBIT_n")
+        assert tx["ok"] is False and "SW_BENCH" in tx["detail"], (shape, tx)
+        assert _line_of(b)["ok"] is em, (shape, _line_of(b))
+
+
+def t_the_toggles_board_keeps_its_legitimate_shapes():
+    """ACCEPTABLE, the re-check's CX11 and CX12: a second 74LVC1G17 on board C (board C's own +3V3) behind its own 330R,
+    and a latch of two buffers on board C from board C's own +3V3. Both are dead with board C down and pull EMCON's way
+    while the toggle drives: both lines PASS. The same latch on board C from the +5V board C receives over the ribbon
+    FAILS (it stays powered with board C down; the previous round's fixture). And the check's CX13, EMCON_HW made on board
+    B from TX_INHIBIT_n by a buffer on +3V3_DEV, is fail-safe with R59 holding its input low but reads FAIL: a gate off the
+    declared toggle's board is never a source (conservative; the kit makes EMCON_HW on board C)."""
+    c11 = ({"U10": U17, "R53": ("330R 1%", "R", "Device:R")},
+           {"U10_DRV": [("U10", "4", ""), ("R53", "1", "")], "EMCON_HW": [("R53", "2", "")], "TX_INHIBIT_n": [("U10", "2", "")],
+            "+3V3": [("U10", "5", "")], "GND": [("U10", "3", "")]})
+    for c, n in (c11, _latch_parts(True, "+3V3"), _latch_parts(False, "+3V3")):
+        b = _panel_clamped(c_comps=c, c_nets=n)
+        for name in ("EMCON_HW", "TX_INHIBIT_n"):
+            assert _line_of(b, name)["ok"] is True, (name, _line_of(b, name))
+    c, n = _latch_parts(True, "+5V")
+    assert _line_of(_panel_clamped(c_comps=c, c_nets=n))["ok"] is False
+    cc = {"SW_EMCON": TOGGLE, "R14": ("10k", "R", "Device:R"), "U1": ("TLV75733PDBV 3.3 V LDO", "SOT-23-5", "X:Y"),
+          "J_PANEL": ("panel ribbon", "Connector:X", "Connector_Generic:Conn_02x13")}
+    cn = {"TX_INHIBIT_n": [("SW_EMCON", "1", ""), ("R14", "1", ""), ("J_PANEL", "11", "")], "+3V3": [("R14", "2", ""), ("U1", "5", "")],
+          "+5V": [("J_PANEL", "1", ""), ("U1", "1", "")], "GND": [("SW_EMCON", "2", ""), ("U1", "2", "")]}
+    b = {"J_PANEL": ("panel ribbon", "Connector:X", "Connector_Generic:Conn_02x13"), "R59": ("33k", "R", "Device:R"),
+         "U19": AND1, "R58": ("10k", "R", "Device:R"), "U30": BUF1}
+    bn = {"EMCON_HW": [("U30", "4", ""), ("U19", "1", ""), ("R58", "1", "")], "TX_INHIBIT_n": [("J_PANEL", "11", ""), ("R59", "1", ""), ("U30", "2", "")],
+          "+5V": [("J_PANEL", "1", "")], "GND": [("R59", "2", ""), ("U19", "3", ""), ("R58", "2", ""), ("U30", "3", "")], "SW_EN": [("U19", "2", "")],
+          "+3V3_DEV": [("U19", "5", ""), ("U30", "5", "")]}
+    b13 = {"B": _nl(b, bn), "C": _nl(cc, cn)}
+    assert _line_of(b13)["ok"] is False and _line_of(b13, "TX_INHIBIT_n")["ok"] is True
+
+
+def t_only_the_declared_toggle_is_a_source():
+    """The declaration itself, read with the kit's own table (EMCON_TOGGLES): board C's SW_EMCON with its contact between
+    TX_INHIBIT_n and ground is the toggle; the same reference on board B, or on board C wired to +3V3 instead of ground,
+    or with a third lug on a net, is not; and a fixture's SW1 is a toggle only where a fixture declares it."""
+    kit = T.EMCON_TOGGLES
+    assert [d["board"] for d in kit] == ["C"] and kit[0]["ref"] == "SW_EMCON" and kit[0]["line"] == "TX_INHIBIT_n"
+    ok = _panel_clamped()
+    assert T._is_toggle("C", ok["C"], "SW_EMCON") is kit[0] and T._is_toggle("B", ok["C"], "SW_EMCON") is None
+    moved = _nl({"SW_EMCON": TOGGLE}, {"TX_INHIBIT_n": [("SW_EMCON", "1", "")], "+3V3": [("SW_EMCON", "2", "")]})
+    third = _nl({"SW_EMCON": ("EMCON locking toggle", "Connector:X", "Connector_Generic:Conn_01x03")},
+                {"TX_INHIBIT_n": [("SW_EMCON", "1", "")], "GND": [("SW_EMCON", "2", "")], "SPARE": [("SW_EMCON", "3", "")]})
+    assert T._is_toggle("C", moved, "SW_EMCON") is None and T._is_toggle("C", third, "SW_EMCON") is None
+    sw1 = _nl({"SW1": TOGGLE}, {"EMCON_HW": [("SW1", "1", "")], "GND": [("SW1", "2", "")]})
+    assert T._is_toggle("B", sw1, "SW1") is None
+    T._TOGGLES_NOW, before = FIXTURE_TOGGLES, T._TOGGLES_NOW
+    try:
+        assert T._is_toggle("B", sw1, "SW1") is not None
+    finally:
+        T._TOGGLES_NOW = before

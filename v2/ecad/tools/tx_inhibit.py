@@ -1382,14 +1382,14 @@ def census(boards, walks, k0, n0, level, allowed, target=None, fet_forced=None, 
                     ins, kind = outs[0]
                     # the panel's buffer is the line's own source: an output on an asserted line whose input sits on
                     # the other asserted line, forced to the same asserted level
-                    if n in SOURCES and _switch_board(nl) and any(nl["pin"].get((ref, i)) in SOURCES and nl["pin"].get((ref, i)) != n
+                    if n in SOURCES and _switch_board(nl, k) and any(nl["pin"].get((ref, i)) in SOURCES and nl["pin"].get((ref, i)) != n
                                                                   and FORCE[kind].get(0) == 0 for i in ins):
                         continue
                     # the same buffer behind its series resistor, on the line's drive net (drive_net, stream rf2walk):
                     # its inputs are asserted lines, so with EMCON asserted it pulls the way EMCON forces. Reached from
                     # the other asserted line through a one-way element (board C's D23, anode on EMCON_HW, cathode on
                     # TX_INHIBIT_n) it can lift that line only while its own input, that line, is already high.
-                    dn = drive_net(nl, n)
+                    dn = drive_net(nl, n, k)
                     if dn is not None and dn["ref"] == ref and dn["pin"] == pin and level == 0 and FORCE[kind].get(0) == 0:
                         continue
                     if kind in ("BUF_OD", "INV_OD") and level == 0: continue        # can only pull it low
@@ -1500,8 +1500,25 @@ def census(boards, walks, k0, n0, level, allowed, target=None, fet_forced=None, 
                     continue                                                      # a clamp: it only conducts EMCON's way
                 if not (can_raise if level == 0 else can_lower): continue         # it can only pull the net EMCON's way
                 go(k, m2, "%s diode" % ref, ref); continue
-            if re.match(r"^(SW)\w*", ref) and n in SOURCES:
-                continue                                                          # the panel toggle is the line's source
+            if _is_toggle(k, nl, ref) is not None:
+                continue                                                          # the declared toggle: the line's source
+            if re.match(r"^SW\w*", ref):
+                # ANY OTHER SWITCH OR CONTACT IS AN ORDINARY PART (stream rf2walk3): closed, it ties this net to each of its
+                # other pins' nets. To ground it can only assert a net EMCON holds low; to a rail it ties the net there;
+                # to a signal net the conductor goes on through it.
+                for p2 in pins_of(nl, ref):
+                    if p2 == pin: continue
+                    m2 = nl["pin"].get((ref, p2), "")
+                    if _dead(m2) or m2 == n: continue
+                    if is_ground(m2):
+                        if level == 0: continue
+                        bad("a switch contact to %s pulls the net low against the level EMCON forces, when closed" % m2); continue
+                    if is_supply(k, m2):
+                        v_far = rail_volts(m2) if is_supply.kind(k, m2) == "rail" else None
+                        if level == 1 and v_far is not None and v_far >= V_FIRMWARE_HIGH: continue
+                        bad("a switch contact ties the net to %s when closed, against the level EMCON forces" % m2); continue
+                    go(k, m2, "%s switch contact %s->%s" % (ref, pin, p2), ref)
+                continue
             if re.match(r"^(J|P)\w*", ref):
                 mate, _why = _mate(k, ref)
                 if mate:
@@ -1672,27 +1689,59 @@ def fet_family(nl, ref):
     return None
 
 
-def _switch_board(nl):
-    """True when the board carries the asserted pair's switch: a SW part with a pin on an asserted line (board C's
-    SW_EMCON on TX_INHIBIT_n). THE LINE'S OWN BUFFER IS ONLY ON THAT BOARD (stream rf2walk2, 29 September 2026, the
-    independent check of set 12, blocking B1). A gate that follows the other asserted line is the line's own source only
-    where it shares the toggle's board: that board's fail-safe state takes it down with the toggle. On any other board it
-    has its own supply, and a pair of such gates cross-coupled between the two lines (the check's CX9: two buffers on board
-    B, each with its input on one line and its output, directly or behind its own resistor, on the other) is a latch that
-    can hold both lines HIGH with the toggle's board down; classed as sources, their board was taken down with them and the
-    latch was never solved. Off the switch's board a gate on a line is therefore an ordinary push-pull output: a second
-    driver in the census, a source at its supply in the fail-safe states."""
-    for ref, c in nl["comps"].items():
-        if re.match(r"^SW\w*", ref) and any(nl["pin"].get((ref, p)) in SOURCES for p in pins_of(nl, ref)):
-            return True
-    return False
+# THE KIT'S EMCON TOGGLE, DECLARED (stream rf2walk3, 29 September 2026; the re-check of set 12 found B1 open twice, and the
+# owner's rule after two failures on one fault is a change of method, not a third heuristic). The walk used to infer the
+# line's source from the wiring: "a SW part on an asserted line is the toggle" (census, _line_sources, the network) and
+# "a board with such a part is the toggle's board" (_switch_board). Any second switch then became a source: a bench switch
+# on board B from TX_INHIBIT_n to ground made board B "the toggle's board" and brought back the latch of CX9 (the check's
+# CX10), and a switch on board B from TX_INHIBIT_n to +3V3_DEV, which lifts the line when closed, was skipped as "the
+# toggle" on every walk (CX14). Now the one element that asserts the inhibit is DATA, and only that declaration makes a
+# source: every other switch or contact on any net is an ordinary part (_contact below), never a source.
+# Source of the declaration: v2/ecad/tools/gen_sch_c.py, the SW_EMCON part line (lug 1 TX_INHIBIT_n, lug 2 GND, lug 3
+# unconnected; "lug 2 is the common", APEM 5000 series sheet, 5636 row, cited there) and v2/docs/PANEL.md (the Switches row:
+# SW_EMCON, an APEM locking toggle; EMCON is a hardware line: SW_EMCON closes TX_INHIBIT_n to ground, SOURCES above).
+EMCON_TOGGLES = [
+    dict(board="C", ref="SW_EMCON", value=r"EMCON locking toggle", line="TX_INHIBIT_n",
+         why="the panel's EMCON toggle, its contact between TX_INHIBIT_n and GND: the one element that asserts the inhibit "
+             "(gen_sch_c.py, the SW_EMCON part line; PANEL.md, the Switches row)"),
+]
+# The declarations in force: the kit's own, unless judge() is given a fixture's (as it is given ACCESSORIES and the rest).
+_TOGGLES_NOW = EMCON_TOGGLES
 
 
-def _source_output(nl, ref, pin, s):
+def _is_toggle(k, nl, ref):
+    """The declaration (EMCON_TOGGLES, or a fixture's through judge) when `ref` on board `k` is a declared EMCON toggle:
+    its board (when `k` is given; a direct call with k None reads the rest only), its reference, its value, one pin on the
+    declared line, one on ground and every other pin unconnected; else None. A part that matches a reference but is wired
+    otherwise is not the toggle."""
+    if ref not in nl["comps"]: return None
+    for d in _TOGGLES_NOW:
+        if ref != d["ref"] or (k is not None and k != d["board"]): continue
+        if not re.search(d["value"], value(nl, ref), re.I): continue
+        live = [x for x in (nl["pin"].get((ref, p), "") for p in pins_of(nl, ref)) if not _dead(x)]
+        if len(live) == 2 and live.count(d["line"]) == 1 and sum(1 for x in live if is_ground(x)) == 1:
+            return d
+    return None
+
+
+def _switch_board(nl, k=None):
+    """True when this board carries the declared EMCON toggle (EMCON_TOGGLE, _is_toggle); no other switch counts. THE
+    LINE'S OWN BUFFER IS ONLY ON THAT BOARD (stream rf2walk2, the independent check of set 12, blocking B1): a gate that
+    follows the other asserted line is the line's own source only where it shares the toggle's board, whose fail-safe state
+    takes it down with the toggle by its own rails. On any other board it has its own supply, and a pair of such gates
+    cross-coupled between the lines (the check's CX9) is a latch that can hold both lines HIGH with the toggle's board down;
+    off the toggle's board a gate on a line is an ordinary push-pull output, a second driver in the census and a source at
+    its supply in the fail-safe states. This is CONSERVATIVE: an architecture that made EMCON_HW on board B from
+    TX_INHIBIT_n with a buffer (the check's CX13), fail-safe with R59 holding its input low, reads FAIL here; the kit makes
+    EMCON_HW on board C, beside the toggle."""
+    return any(_is_toggle(k, nl, d["ref"]) is not None for d in _TOGGLES_NOW)
+
+
+def _source_output(nl, ref, pin, s, k=None):
     """(fam, gate kind, input nets) when `pin` of `ref` is the output of a mapped logic gate every one of whose inputs
     sits on an asserted line other than `s` (the panel's buffer: its input on TX_INHIBIT_n, its output EMCON_HW), on the
-    board that carries the pair's switch (_switch_board); else None."""
-    if not _switch_board(nl): return None
+    board that carries the declared toggle (_switch_board); else None."""
+    if not _switch_board(nl, k): return None
     fam = logic_of(nl, ref)
     if not fam or _unmapped(fam) or fam.get("wrong_land") or fam.get("unwired"): return None
     for ins, o, kind in fam["gates"]:
@@ -1702,16 +1751,16 @@ def _source_output(nl, ref, pin, s):
     return None
 
 
-def drive_net(nl, n):
+def drive_net(nl, n, k=None):
     """THE LINE'S OWN SOURCE BEHIND ITS SERIES RESISTOR (stream rf2walk, 29 September 2026). Board C's round of stream
     d4emcon (finding D4E-F1, set 12) moved U9's output onto a private net, EMCON_HW_DRV, that reaches EMCON_HW only
     through R52 (330R 1%), so that D23 can clamp the line to TX_INHIBIT_n. Read at net level the source was then "a
     second BUF output" on a net outside SOURCES, and the line had "no source on the line at all". A net is the drive net
     of an asserted line when, test points aside, it carries exactly two pins: the output of a mapped logic gate whose
-    inputs all sit on asserted lines, and one end of a two-pin resistor whose other end sits on an asserted line. Returns
-    dict(line, ref, pin, res, fam, kind, ins) or None. It is a property of the wiring, not of a reference: a second
-    driver, a pull to a rail, a FET or a diode on the net, or a gate whose input is not an asserted line, and the net is
-    an ordinary one again."""
+    inputs all sit on asserted lines, on the board of the declared toggle (_source_output), and one end of a two-pin
+    resistor whose other end sits on an asserted line. Returns dict(line, ref, pin, res, fam, kind, ins) or None. A second
+    driver, a pull to a rail, a FET or a diode on the net, a gate whose input is not an asserted line, or a board without
+    the declared toggle, and the net is an ordinary one again."""
     if not n or n in SOURCES or _dead(n): return None
     nodes = [(r, p) for r, p, _f in nl["nets"].get(n, []) if not re.match(r"^(TP|#)", r)]
     if len(nodes) != 2: return None
@@ -1721,26 +1770,28 @@ def drive_net(nl, n):
     far = nl["pin"].get((r, [q for q in pins_of(nl, r) if q != rp][0]), "")
     if far not in SOURCES: return None
     (g, gp), = [x for x in nodes if x != res[0]]
-    so = _source_output(nl, g, gp, far)
+    so = _source_output(nl, g, gp, far, k)
     if so is None: return None
     fam, kind, ins = so
     return dict(line=far, ref=g, pin=gp, res=r, fam=fam, kind=kind, ins=ins)
 
 
-def _line_sources(nl, s):
-    """[(ref, why)] of the parts that make the asserted line on net s: a switch (the panel toggle) and a logic output
-    whose input sits on the other asserted line (the panel's buffer), on the net itself or behind its series resistor
-    on its drive net (drive_net)."""
+def _line_sources(nl, s, k=None):
+    """[(ref, why)] of the parts that make the asserted line on net s: the declared toggle (EMCON_TOGGLE, on its line
+    only) and, on the toggle's board, a logic output whose input sits on the other asserted line (the panel's buffer), on
+    the net itself or behind its series resistor on its drive net (drive_net). No other switch is a source."""
     out = []
     for ref, pin, _f in nl["nets"].get(s, []):
-        if re.match(r"^SW\w*", ref):
-            out.append((ref, "the toggle")); continue
-        so = _source_output(nl, ref, pin, s)
+        d = _is_toggle(k, nl, ref)
+        if d is not None:
+            if s == d["line"]: out.append((ref, "the toggle"))
+            continue
+        so = _source_output(nl, ref, pin, s, k)
         if so is not None:
             out.append((ref, "the %s from %s" % (so[0]["name"], "/".join(so[2])))); continue
         if re.match(r"^R\d", ref) and len(pins_of(nl, ref)) == 2:
             m = nl["pin"].get((ref, [q for q in pins_of(nl, ref) if q != pin][0]), "")
-            d = drive_net(nl, m)
+            d = drive_net(nl, m, k)
             if d is not None and d["line"] == s:
                 out.append((d["ref"], "the %s from %s, through its series resistor %s on %s" % (
                     d["fam"]["name"], "/".join(d["ins"]), ref, m)))
@@ -2182,7 +2233,27 @@ def _network(boards, start, level, st, anchors=None):
                 else:
                     res.append(((k, n), "GND", 1e-3)); pulls.append("%s %s pin %s, a pin firmware can drive low" % (k, ref, pin))
                 continue
-            if re.match(r"^SW\w*", ref): continue                                 # a switch that is not the source: open
+            if re.match(r"^SW\w*", ref):
+                if _is_toggle(k, nl, ref) is not None: continue                    # the declared toggle: the line's source
+                # ANY OTHER SWITCH OR CONTACT IS AN ORDINARY PART (stream rf2walk3; it was taken open): closed, it joins its
+                # pins, so each other pin's net enters the network as an ideal one-way element the adverse way, as a diode
+                # that can pass current toward the net does (no drop); a contact to ground cannot lift a net held low and is
+                # taken open there, one to a rail ties the net to it.
+                if len(pins_of(nl, ref)) != 2:                                    # a two-pin part is entered once above
+                    if (k, ref) in done: continue
+                    done.add((k, ref))
+                for p2 in pins_of(nl, ref):
+                    if p2 == pin: continue
+                    m2 = nl["pin"].get((ref, p2), "")
+                    if _dead(m2) or m2 == n: continue
+                    far = node_of(k, m2)
+                    if far is None or (level == 0 and far == "GND"): continue
+                    if isinstance(far, tuple) and far and far[0] == "?":
+                        unknown(k, "%s (%s): a switch contact to %s, whose voltage its name does not state" % (ref, v[:24], m2)); continue
+                    a, b = (far, (k, n)) if level == 0 else ((k, n), far)
+                    diodes.append((a, b, "%s %s (%s): a switch contact to %s, taken closed" % (k, ref, v[:30], m2)))
+                    if far not in fixed: todo.append(far)
+                continue
             fm = fw_mention(nl, ref)                                              # R4T-D53: named, never passed
             fmw = ("; " + _mention_why(nl, ref, fm)) if fm else ""
             if state == "off":
@@ -2216,7 +2287,7 @@ def fail_safe(boards, s):
             used.add(mi)
             n2 = boards[k2]["pin"].get((r2, pin), "")
             if not _dead(n2): todo.append((k2, n2))
-    src = {(k, ref): why for k, n in cond for ref, why in _line_sources(boards[k], n)}
+    src = {(k, ref): why for k, n in cond for ref, why in _line_sources(boards[k], n, k)}
     used = sorted(used)
     results = {}
     for mask in range(1 << len(used)):
@@ -2391,7 +2462,7 @@ def _fs_base(boards, line, down, cut, src):
     # only, _switch_board) is unpowered by its own rails, which the toggle's board down removes, and the network counts its
     # Ioff. It is no longer forced off whatever its rails do (stream rf2walk2): a gate on that board that runs from a rail
     # the board receives over a plugged ribbon stays powered, and is solved so.
-    toggles = {x for x in src if re.match(r"^SW", x[1])}
+    toggles = {x for x in src if _is_toggle(x[0], boards[x[0]], x[1]) is not None}
     return dict(rail_up=rail_up, board_up=lambda k: k not in down, cut=cut, sources=toggles, off=set())
 
 
@@ -4640,10 +4711,19 @@ def _judge_option(boards, walks, lines, opt):
     return True, "%s: %s pin %s through %s" % (opt["kind"], ref, p, " > ".join(lv["path"])), named | {k}, absent
 
 
-def judge(boards, table=None, accessories=None, receivers=None, owed=None):
+def judge(boards, table=None, accessories=None, receivers=None, owed=None, toggles=None):
     """boards: {letter: parsed netlist or None}. One result per asserted line, one per transmitter and one per
     board's classification: dict(ok, text, detail, boards), ok True, False or None (undecided). The tables default
-    to this file's own; a fixture passes its own."""
+    to this file's own; a fixture passes its own (`toggles`: the declared EMCON toggles, EMCON_TOGGLES by default)."""
+    global _TOGGLES_NOW
+    before, _TOGGLES_NOW = _TOGGLES_NOW, (EMCON_TOGGLES if toggles is None else toggles)
+    try:
+        return _judge(boards, table, accessories, receivers, owed)
+    finally:
+        _TOGGLES_NOW = before
+
+
+def _judge(boards, table, accessories, receivers, owed):
     table = TRANSMITTERS if table is None else table
     accessories = ACCESSORIES if accessories is None else accessories
     receivers = RECEIVE_ONLY if receivers is None else receivers

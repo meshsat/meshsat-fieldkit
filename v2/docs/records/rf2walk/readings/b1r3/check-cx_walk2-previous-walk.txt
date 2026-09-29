@@ -1,0 +1,11 @@
+CX10 CX9 latch on B + a bench SW on B's TX_INHIBIT_n           EMCON_HW      PASS      
+CX10 CX9 latch on B + a bench SW on B's TX_INHIBIT_n           TX_INHIBIT_n  PASS      
+    _switch_board(B) = True  sources EMCON_HW on B: ['U30']
+CX10b CX9 latch on B + SW on B from TX_INHIBIT_n to +3V3_DEV   EMCON_HW      PASS      
+CX10b CX9 latch on B + SW on B from TX_INHIBIT_n to +3V3_DEV   TX_INHIBIT_n  PASS      
+CX11 legit 2nd buffer on C (+3V3 made on C) behind 330R        EMCON_HW      PASS      
+CX11 legit 2nd buffer on C (+3V3 made on C) behind 330R        TX_INHIBIT_n  PASS      
+CX12 latch on C from C's own +3V3                              EMCON_HW      PASS      
+CX12 latch on C from C's own +3V3                              TX_INHIBIT_n  PASS      
+CX13 EMCON_HW made on B from TX_INHIBIT_n (toggle on C)        EMCON_HW      FAIL      B U30 pin 4 (74LVC1G34 buffer) on EMCON_HW: a second BUF output on the net (74LVC1G34 buffer) | with no source on the line at all, boards B: EMCON_HW rises to 3.46 V (the
+CX13 EMCON_HW made on B from TX_INHIBIT_n (toggle on C)        TX_INHIBIT_n  PASS      

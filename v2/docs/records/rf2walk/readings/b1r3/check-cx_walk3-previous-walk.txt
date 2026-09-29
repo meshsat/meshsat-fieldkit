@@ -1,0 +1,10 @@
+main shape, latch on B direct                                      EMCON_HW FAIL | TX_INHIBIT_n FAIL
+main shape, latch on B direct + SW on B to GND                     EMCON_HW PASS | TX_INHIBIT_n PASS
+main shape, latch on B behind 330R                                 EMCON_HW FAIL | TX_INHIBIT_n FAIL
+main shape, latch on B behind 330R + SW on B to GND                EMCON_HW PASS | TX_INHIBIT_n PASS
+main shape, CX14 SW on B from TX_INHIBIT_n to +3V3_DEV, reader U20 on B EMCON_HW PASS | TX_INHIBIT_n PASS
+D4E-F1 shape, latch on B direct                                    EMCON_HW FAIL | TX_INHIBIT_n FAIL
+D4E-F1 shape, latch on B direct + SW on B to GND                   EMCON_HW PASS | TX_INHIBIT_n PASS
+D4E-F1 shape, latch on B behind 330R                               EMCON_HW FAIL | TX_INHIBIT_n FAIL
+D4E-F1 shape, latch on B behind 330R + SW on B to GND              EMCON_HW PASS | TX_INHIBIT_n PASS
+D4E-F1 shape, CX14 SW on B from TX_INHIBIT_n to +3V3_DEV, reader U20 on B EMCON_HW PASS | TX_INHIBIT_n PASS
