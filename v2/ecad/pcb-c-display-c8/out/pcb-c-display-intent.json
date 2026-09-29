@@ -1,6 +1,6 @@
 {
  "board": "pcb-c-display",
- "written": "2026-09-29 10:41",
+ "written": "2026-09-29 11:42",
  "bypass": [
   {
    "cap": "C7",
@@ -381,6 +381,12 @@
    "v_max": 3.333,
    "v_min": 0.0,
    "basis": "the hardware EMCON line at its source: R14 (2.2k 1 percent) to +3V3 and SW_EMCON to GND, R50 (10k) and the three consumer pull-downs to GND; at most +3V3 at the TLV75533's 1 percent (TI SBVS320D, 'Output accuracy: 1%'), and no part takes its supply from it (U9, U14 and the far gates read it)",
+   "v_work": 3.333
+  },
+  "EMCON_HW": {
+   "v_max": 3.333,
+   "v_min": 0.0,
+   "basis": "the hardware EMCON line as board C drives it: U9 (74LVC1G17, rail-to-rail on +3V3) through R52 (330R 1 percent), clamped by D23 (BAT46W) to TX_INHIBIT_n; at most +3V3 at the TLV75533's 1 percent (TI SBVS320D, 'Output accuracy: 1%'), and no part takes its supply from it (U13, U14 and board B's gates read it)",
    "v_work": 3.333
   },
   "C_DVDD": {
