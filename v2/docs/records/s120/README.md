@@ -7,7 +7,9 @@ regenerated, no box was used.** The only files this stream commits are in this f
 `vbus20_bound.py` (stdlib plus the tree's netlist parser), byte for byte.
 
 **Third issue** (after the re-check `_scratch/chk-s120/CHECK-2.md`: not mergeable, one blocking and seven minor items;
-section 12 answers them with round 1's). What changed in this issue: the new item's closing test and rating list carry U3's
+section 12 answers them with round 1's; the fourth issue answers `CHECK-3.md`, mergeable, r1 to r3: CH_SW2 and with it
+Q9 and Q10 referred to 20.0 V over the measured VBAT, ACP less ACN named in S-124, the `.out` header). What changed in the
+third issue: the new item's closing test and rating list carry U3's
 negative SW limits, -2 V and -4 V for at most 25 ns, and the `.out` models SW1's undershoot (B1); the Q2 short's order is
 claimed only once the charger has stopped (n1); the bound takes a first on-time of a period after a valley crossing and moves
 from 23.20 to **23.40 V** (n2); the 26 V allowance sits on Q7's turn-on edge (n3); the fact gate's lines print what they
@@ -130,7 +132,11 @@ transient spikes" (SNVSAI1D 8.2.2.12 pp.25 and 26). These are the makers' practi
 Budget over the steady bus (20.96 V) and over the INFERRED bound (23.40 V): **Q7 8.04 / 5.60 V** (the bus, Q8's VSD in
 every dead time, and SW1's ring below it), **Q8 9.04 / 6.60 V** (SW1's overshoot), U3's SW1 11.04 / 8.60 V to 32 V and
 5.04 / 2.60 V to its recommended 26 V. **Below PGND**: in every dead time SW1 sits at minus Q8's VSD (1.0 V maximum), inside
-U3's -2 V; the ring below that has **3.0 V to -4 V, for at most 25 ns**.
+U3's -2 V; the ring below that has **3.0 V to -4 V, for at most 25 ns**. **SW2 rides VBAT, not the bus** (Table 9-3
+p.27): it sits at VBAT in buck mode with Q10 on and switches only in buck-boost, so its overshoot, and with it Q9's and Q10's
+VDS, is referred to the charger's cutoff SYSOVP 20.0 V (p.14). **ACP less ACN**, 0.5 V absolute (p.8): the pins sit behind
+R146 and R147 (10 Ohm each) with C121 10 nF across, 200 ns, so a 4.7 V ring on CH_ACN at 48 MHz reaches them at about
+0.08 V (INFERRED); the item reads it anyway.
 
 A MODEL for the layout writer, not a bound (typical driver figures; the plateau INFERRED):
 - **Q7's turn-off** (sets Q7's VDS and SW1's undershoot): its current falls in (Qgs - Qg(th)) / (VPLT / (RDS_HI_OFF + RG))
@@ -154,12 +160,15 @@ line that carries set 13), owned by board A's layout writer (S-115's pass, where
 inductance is the layout step and **does not close the item**) and the bench. Its closing condition, as the script writes it:
 
 > Closed only on the prototype: CH_SW1, CH_ACN, CH_SW2 and U3's VBUS pin read against U3's PGND at the charger's largest
-> current; Q7's VDS taken from CH_ACN to CH_SW1 (CH_ACN's peak less CH_SW1's lowest, which already holds Q8's body diode) and
-> Q8's from CH_SW1's peak; each overshoot over the measured bus added to 20.96 V for steady service and to 23.40 V for the
-> over-voltage excursion; each FET's VDS then inside 30 V, U3's VBUS, ACP, ACN, SW1 and SW2 inside 32 V, and CH_SW1 and
-> CH_SW2 no lower than -2 V, or -4 V for at most 25 ns (SLUSE66A page 8); and the front end's OVP trip read on the prototype
-> (FB driven through R6 and R7), which replaces the INFERRED 23.06 V and with it the 23.40 V reference. A snubber, a
-> gate-drive change or FETs of a higher voltage, drawn and read back on the regenerated netlist, are measured the same way.
+> current; Q7's VDS taken from CH_ACN to CH_SW1 (CH_ACN's peak less CH_SW1's lowest, which already holds Q8's body diode)
+> and Q8's from CH_SW1's peak; each overshoot of CH_SW1, CH_ACN and U3's VBUS pin over the measured bus added to 20.96 V for
+> steady service and to 23.40 V for the over-voltage excursion; CH_SW2's overshoot over the measured VBAT added to 20.0 V
+> (the charger's cutoff SYSOVP, SLUSE66A page 14), with Q9's VDS taken from CH_SW2's peak and Q10's from VBAT less CH_SW2's
+> lowest on that basis; ACP less ACN read across U3's pins; each FET's VDS then inside 30 V, U3's VBUS, ACP, ACN, SW1 and
+> SW2 inside 32 V, ACP less ACN inside 0.5 V, and CH_SW1 and CH_SW2 no lower than -2 V, or -4 V for at most 25 ns (SLUSE66A
+> page 8); and the front end's OVP trip read on the prototype (FB driven through R6 and R7), which replaces the INFERRED
+> 23.06 V and with it the 23.40 V reference. A snubber, a gate-drive change or FETs of a higher voltage, drawn and read back
+> on the regenerated netlist, are measured the same way.
 
 REQ-015 waits on it in S-120's place.
 
@@ -245,6 +254,10 @@ The re-check `CHECK-2.md` (round 2):
 | n6 labels | the dump column MODEL, the bound column INFERRED; "not reached at the INFERRED bound"; the 22 V standoff sentence qualified |
 | n7 wording | Q7's VDS taken from CH_ACN to CH_SW1 (CH_ACN's peak less CH_SW1's lowest, which already holds Q8's body diode) |
 | commit | section 10: the tip, or a merge that carries it |
+
+The check `CHECK-3.md` (round 3, mergeable): r1, S-124's test refers CH_SW2's overshoot over the measured VBAT to 20.0 V and
+takes Q9's and Q10's VDS on that basis; r2, ACP less ACN (0.5 V absolute, p.8) is in the rating list and the test, read across
+U3's pins; r3, the `.out` header reads "fourth issue". Every other clause of the test is as it was.
 
 The check `CHECK.md` (round 1): B1 (Q7 carries Q8's VSD), B2 (the INFERRED label and the trip's bench reading in the
 registry), B3 (the item closes only on a measurement referred to both bus levels), m1 to m11: answered in the second issue
