@@ -1,14 +1,15 @@
-On fnd/csi 69409613 with the thirteen models present (ignored files), from a scratch directory:
+On fnd/csi 171fb51a with the thirteen models present (ignored files), from a scratch directory:
 
 run.py edge_length signal_class netclass netlist_classes rules_registry ibis_models rules_status pinned_models evidence_class:
 tests: 152 passed, 0 failed, 1 skipped
 
-The new and changed tests on the previous tool (a18e90e9's edge_length.py in a scratch view of 69409613):
-tests: test_edge_length.t_si001_an_allowance_answers_only_with_its_basis_held FAIL ('above what its checked rows support', [])
-tests: test_edge_length.t_si001_an_allowance_hands_its_length_to_the_layout_and_the_routed_half_holds_it FAIL module 'edge_length' has no attribute 'allow_limit'
-tests: test_edge_length.t_si001_the_routed_half_holds_every_allowance_net_to_its_declared_length FAIL {'advisory': False, 'applicable': True, 'code_bundle': {'entry': 'tests/run.py', 'files': {'netcla
-tests: 0 passed, 3 failed, 0 skipped; failed: test_edge_length.t_si001_an_allowance_answers_only_with_its_basis_held, test_edge_length.t_si001_an_allowance_hands_its_length_to_the_layout_and_the_route
+The edge_length tests on the round 2 tool (6605f3f6's edge_length.py in a scratch view of this round's tree):
+tests: test_edge_length.t_si001_a_fast_net_with_no_target_or_termination_is_bound_to_its_length_and_a_pull_up_is_not_a_termination FAIL ([], [None, []])
+tests: test_edge_length.t_si001_an_allowance_answers_only_with_its_basis_held FAIL ('no checked row quotes the length', ['edge_allow refused: edge_allow[0] (USB_DN): no checked row quotes the measured
+tests: test_edge_length.t_si001_an_allowance_hands_its_length_to_the_layout_and_the_routed_half_holds_it FAIL declared in edge_allow: routed 9.6 mm, within its 9.7 mm
+tests: test_edge_length.t_si001_the_board_tables_allowances_hold_against_their_documents FAIL ('XOUT_R', None)
+tests: test_edge_length.t_si001_the_routed_half_holds_every_allowance_net_to_its_declared_length FAIL OVER ITS DECLARED LIMIT QSPI_D0: routed 40.0 mm, past the 13.1 mm its edge_allow declaration holds
+tests: 41 passed, 5 failed, 0 skipped; failed: test_edge_length.t_si001_a_fast_net_with_no_target_or_termination_is_bound_to_its_length_and_a_pull_up_is_not_a_termination, test_edge_length.t_si001_an_
 
-The round 1 failing case (the base's bare-sentence allowance, refused since CSI-D1):
-tests: test_edge_length.t_si001_a_fast_net_with_no_target_or_termination_is_bound_to_its_length_and_a_pull_up_is_not_a_termination FAIL [None, ['USB_DN']]
-  (on the previous tool the routed fixture read INCONCLUSIVE with counts {'allowances_refused': 0, 'judged': 0, 'long_and_answered': 0, 'no_declared_edge': 4, 'over_critical_length': 0, 'over_declared_limit': 0}: the allowance nets fell under no declared edge and nothing was held to its length)
+test_requirements, this tree:
+tests: 60 passed, 5 failed, 1 skipped; failed: test_requirem
