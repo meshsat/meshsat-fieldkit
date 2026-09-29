@@ -7,6 +7,8 @@ and the decoupling capacitors C668 to C685 the generator's decoupling library ad
 R42, R238, R527 and U536, none removed; on C exactly R52 and D23 added; no added part is a connector; (2) the reliability
 inventory, run on the new netlists in scratch, gives the same candidate, classed, excluded and refused counts as main's
 reading; (3) the new line is the one `reliability.py --pins` prints. No hold or reviewed port set pins boards B and C.
+A board already pinned at its current netlist is left as it is, so the script moves a pin again after a later
+re-export of the same content (board C after its EMCON_HW node declaration), always proving against main.
 Refuses when a proof fails or on a second run. Run from the repository root: python3 <this file>."""
 import hashlib, json, os, subprocess, sys, tempfile
 
@@ -70,7 +72,8 @@ def main():
         if len(line) != 1 or n16 not in line[0]: refuse("board %s: reliability.py --pins does not print its line at %s" % (L, n16))
         new_wa = line[0].strip().split("   #")[0].strip()
         olds = [l for l in rt.split("\n") if l.strip().startswith("written_against:") and '"%s/out/%s.net"' % (pd, stem) in l]
-        if len(olds) != 1 or o16 not in olds[0]: refuse("board %s: the list does not pin %s once" % (L, o16))
+        if len(olds) != 1: refuse("board %s: the list does not pin its netlist once" % L)
+        if n16 in olds[0]: report.append("board %s already pinned at %s" % (L.upper(), n16)); continue
         indent = olds[0][:len(olds[0]) - len(olds[0].lstrip())]
         rt = rt.replace(olds[0], indent + new_wa)
         report.append("board %s %s -> %s: added %d, changed %s, inventory %s" % (L.upper(), o16, n16, len(added), ", ".join(sorted(chg)) or "none", dict(zip(KEYS, cn))))
