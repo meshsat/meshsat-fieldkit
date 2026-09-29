@@ -12,8 +12,9 @@ Table 14-1 as its text layer prints it; the page is the PDF page, which is the m
 2. THE CALIBRATION WORDS (written by the gauge's own current calibration, not by hand)
    0x4006 CC Gain          type F4, range 0.1 to 4.0, TI default 3.58422 (page 185)
    0x400a Capacity Gain    type F4, range 29800.0 to 1190000.0, TI default 1069035.256 (page 185)
-   Procedure (SLUUBF9 3.3.3, TI's EVM guide): apply a known current, enter its value in Applied Current. For k = 2 the
-   value entered is half the applied true current (apply -4000 mA through the pack path, enter -2000). The firmware
+   Procedure (SLUUBF9 3.3.3, TI's EVM guide; SLUA760 2.3 for the scaled case): apply a known current, enter its value
+   in Applied Current. For k = 2 the value entered is half the applied true current (apply -4000 mA through the pack
+   path, enter -2000; SLUA760's own example). The firmware
    then computes both gains so that its unit is 2 mA; their ratio stays TI's (1069035.256 / 3.58422 = 298261.6).
    The manual does not state how CC Gain relates to the sense resistance, so its value after calibration is READ BACK
    at commissioning and must lie inside the row's range; that read-back is a bench item, not shown here.

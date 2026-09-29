@@ -23,7 +23,7 @@ whose own manual contradicts itself is not a basis, and even if it worked it wou
 
 | option | what it is | against it | verdict |
 |---|---|---|---|
-| **(a) BQ4050 on board PL with a current-scale calibration of k = 2** | the lid's board is board P as generated; its gauge is calibrated so that its internal unit is 2 mA (section 3) and every word in a current, charge, energy or power unit is written in that unit | rests on the firmware having no hidden current constant (section 6, Q-TI-A1); the host must hold k | **TAKEN** (authority SESSION) |
+| **(a) BQ4050 on board PL with a current-scale calibration of k = 2** | the lid's board is board P as generated; its gauge is calibrated so that its internal unit is 2 mA (section 3) and every word in a current, charge, energy or power unit is written in that unit; **TI's own answer for this part** (E2E thread 854878) and TI's method (SLUA760) | rests on the firmware having no hidden current constant (section 6, Q-TI-A1); the host must hold k | **TAKEN** (authority SESSION) |
 | (b) split the lid into two 4S6P modules, each under an unmodified board P | no scaling: each gauge carries the base's own words (20,100 mAh, 28,944 cWh, section 8a of the energy record) | two lid packs in parallel behind one lid path are two separately protected packs in parallel again, the problem TOPOLOGY.md exists to solve; a third board P, a third gauge address, more harness across the hinge | fallback if (a) is refuted |
 | (c) another gauge: TI BQ34Z100-G1 (held, `v2/vendor/power/bq34z100-g1.pdf`, SLUSBZ5D) | TI documents scaled units for it outright (7.3.1.6 and 7.3.1.8, pages 15 and 16: "if PackConfiguration [SCALED] is set then the units have been scaled through the calibration process. The actual scale is not set in the device and SCALED is just an indicator flag") | it is a gauge only: no FET drive, no AFE protection, so board PL would be a new board with a separate primary protector; its Design Capacity is also I2 to 32,767 (its data-flash table, SLUSBZ5D, row "Design Capacity 0 32767 1000 mAh"), so it scales the same way | second fallback |
 | (d) write 32,767 as the design capacity | the gauge would report a pack 18.5 percent smaller than it is, RSOC and FCC wrong | picks the number that fits, not the pack | rejected |
@@ -34,6 +34,17 @@ by taking (b) or (c) if TI's answer to Q-TI-A1 or the bench test of section 7 re
 
 ## 3. The scaling, against TI's documents
 
+0. **TI's answer for this part.** TI E2E thread 854878, "BQ4050: Is there current scaling so that I can use the device
+   with currents above 32760mA?" (fetched 29 September 2026, filed `v2/vendor/ti/ti-e2e-854878-bq4050-current-scaling.html`):
+   the asker had "calibrated the system by specifying a resistor is 2X the real value"; TI's engineer answered "No, that's
+   the only way, ie fooling the gauge via calibration" and "If you are scaling current by reducing by 2x, capacity and all
+   current related parameters will be cut in half as well", citing application report **SLUA760** (filed
+   `v2/vendor/ti/ti-slua760-bq34z100-g1-high-capacity.pdf`). SLUA760, written for the BQ34Z100-G1, states the method:
+   2.2 "All current and capacity parameters in the data flash are divided by 2"; 2.3 "If a 4-A discharge current is used
+   to calibrate the pack, then -2000 mA is entered as the actual current. All current and capacity parameters are
+   reported at half the actual value and the host must to [sic] multiply these parameters by the scale factor"; 3 and 3.1 the
+   same for capacity, the larger of the two scale factors used for both. A forum answer is not a datasheet commitment,
+   which is why Q-TI-A1 (section 6) and the bench list (section 7) stand.
 1. **What sets the gauge's current unit.** SLUUBF9 (bq4050EVM guide) 3.3.3: current is calibrated by applying a known
    current and entering its value in *Applied Current*; the firmware computes CC Gain and Capacity Gain (SLUUAQ3A Table
    14-1 rows 0x4006 and 0x400a, page 185: CC Gain F4, 0.1 to 4.0, default 3.58422; Capacity Gain F4, 29,800 to
@@ -100,7 +111,9 @@ and the host refuses the lid gauge's currents and capacities until it has read `
 
 ## 6. What the documents do not settle (drafted for TI, not sent)
 
-- **Q-TI-A1.** "Does the BQ4050 firmware (SLUUAQ3A, Revised October 2022) apply any fixed current or charge threshold
+- **Q-TI-A1** (TI's forum answer of section 3 item 0 says "all current related parameters" scale, which is this record's
+  reading; the question asks for it in writing for the firmware revision that will be bought). "Does the BQ4050 firmware
+  (SLUUAQ3A, Revised October 2022) apply any fixed current or charge threshold
   that is not a data-flash word of Table 14-1, for example for SLEEP entry, 0-V charging, FET-state detection or
   permanent-fail checks? A pack calibrated so that the gauge's unit is 2 mA would see such a constant act at twice its
   value." If one exists, its effect is judged; if it is safety-relevant and cannot be compensated, option (b) or (c).

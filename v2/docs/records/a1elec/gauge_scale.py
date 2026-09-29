@@ -14,9 +14,12 @@ The approach this script tabulates. The gauge's internal current unit is whateve
 SLUUBF9 3.3.3 (the BQ4050EVM guide) calibrates current by applying a known current and entering its value in mA; the
 firmware then computes CC Gain and Capacity Gain (SLUUAQ3A Table 14-1 rows 0x4006 and 0x400a, page 185). Entering HALF
 the applied current (k = 2) makes every current the firmware measures, integrates or compares read half the true
-value: one internal "mA" is 2 mA and one internal "mAh" 2 mAh, and energy and power words follow. TI documents exactly
-this for a sibling gauge, the BQ34Z100-G1 (SLUSBZ5D 7.3.1.6 and 7.3.1.8, pages 15 and 16: "the units have been scaled
-through the calibration process. The actual scale is not set in the device"). It changes no firmware behaviour, so
+value: one internal "mA" is 2 mA and one internal "mAh" 2 mAh, and energy and power words follow. TI's engineer gave
+this as the only way for the BQ4050 (E2E thread 854878, filed in v2/vendor/ti/: "fooling the gauge via calibration";
+"capacity and all current related parameters will be cut in half as well"), citing TI's application report SLUA760
+(2.2, 2.3, 3.1: calibrate with half the applied current entered, divide every current and capacity parameter), which
+TI wrote for the BQ34Z100-G1 (SLUSBZ5D 7.3.1.6 and 7.3.1.8: "the units have been scaled through the calibration
+process. The actual scale is not set in the device"). It changes no firmware behaviour, so
 EVERY data-flash word whose unit is a current, a charge, an energy or a power must be written in the internal unit,
 or it acts at twice its intended value. This script PARSES Table 14-1 from the pinned manual (pdftotext's layout text),
 finds every such word, requires a stated true value for each (it refuses, exit 5, if a word has none), writes the
@@ -191,8 +194,9 @@ def main():
     for r in rows:
         if r[0] in ("0x4006", "0x400a"):
             P("   %s %-16s type %s, range %s to %s, TI default %s (page %d)" % (r[0], r[2], r[1], r[3], r[4], r[5], r[8]))
-    P("   Procedure (SLUUBF9 3.3.3, TI's EVM guide): apply a known current, enter its value in Applied Current. For k = 2 the")
-    P("   value entered is half the applied true current (apply -4000 mA through the pack path, enter -2000). The firmware")
+    P("   Procedure (SLUUBF9 3.3.3, TI's EVM guide; SLUA760 2.3 for the scaled case): apply a known current, enter its value")
+    P("   in Applied Current. For k = 2 the value entered is half the applied true current (apply -4000 mA through the pack")
+    P("   path, enter -2000; SLUA760's own example). The firmware")
     P("   then computes both gains so that its unit is 2 mA; their ratio stays TI's (1069035.256 / 3.58422 = %.1f)." % (1069035.256 / 3.58422))
     P("   The manual does not state how CC Gain relates to the sense resistance, so its value after calibration is READ BACK")
     P("   at commissioning and must lie inside the row's range; that read-back is a bench item, not shown here.")
