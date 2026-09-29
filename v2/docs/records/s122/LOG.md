@@ -28,3 +28,25 @@
 
 No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py` was run in this tree; the render and
 the tests ran only in the scratch clone, which is removed.
+
+## Round 2 (29 September 2026, CEST from `date`)
+
+- 18:13 The coordinator's message and the independent check of round 1 read (`checks/check-s122-1.md`, filed byte for
+  byte from the checker's `CHECK.md`): not mergeable, B1 to B3 and m1 to m12, all 43 corrections read true.
+- 18:14 `fnd/int14` (`bd1cbb07`) merged at `4d3a9708`, no conflict: board C's netlist moves to `c9f7394594201045`,
+  the registry gains S-122's set 13 addition and S-123.
+- 18:15 to 18:24 `s122lib.py`: CONOPS's section 4 whole with 4a to 4f, ASSEMBLY's section 2 whole, EMCON.md 0a.1 and
+  the status page's section in scope; EMCON and spelled counts of parts in the finder (a first count pattern took
+  "3 V switch" and "16 SO land" as counts, and was narrowed to spelled counts). `verdicts.py`: the BASELINE verdict,
+  the count rule, count, registry and file assertions. `apply_docs_s122_r2.py`: CONOPS restored to `c5430071` (byte
+  for byte, needs table unchanged), EMCON.md 0a.1 and the status page written, 16 passages; three assertion slips of
+  mine (U553's value text, U11's supply pin, the E22's MISO pin) refused by the script and fixed, and the QMX's `F3`
+  added before the text was committed. Commit `c263ddce`.
+- 18:24 to 18:29 Judgements for the 280 new and 82 count sentences; the round 1 judgement of CONOPS 4e's "the TX
+  lamp act without it" (TRUE) withdrawn for BASELINE (B3). Base and after re-run.
+- 18:30 to 18:34 `apply_registry_s122.py` re-issued (20 records, the CONOPS restore's reason, the part overlap per
+  record, the baseline entry); `close_s122.py` (HEAD blob test, scope wording, the baseline checks). Replays on a
+  scratch clone, removed after. Commits `fdf713d4`, `53292087`.
+- 18:35 README, this log, the check filed.
+
+No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py` ran in this tree.
