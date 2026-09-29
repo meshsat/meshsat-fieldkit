@@ -1,0 +1,286 @@
+{
+ "part_numbers": {
+  "0402CG150J500NT": [],
+  "0603B103K500NT": [],
+  "0603WAF1000T5E": [],
+  "0603WAF1001T5E": [],
+  "0603WAF1002T5E": [],
+  "0603WAF1003T5E": [],
+  "0603WAF1800T5E": [],
+  "0603WAF2201T5E": [],
+  "0603WAF270JT5E": [],
+  "0603WAF3000T5E": [],
+  "0603WAF3300T5E": [],
+  "0603WAF4700T5E": [],
+  "0603WAF470JT5E": [],
+  "1282.5004": [
+   {
+    "document": "v2/vendor/mentor/mentor-ll14-14-ip68-front-panel-light-guides.pdf",
+    "pages": [
+     2
+    ],
+    "sha256": "a07164ab7b6d31bfbe890f7ea31c95147bd2c1d55c6753b89dc55d56454c52b0"
+   }
+  ],
+  "19-217/GHC-YR1S2/6T": [],
+  "2N7002": [
+   {
+    "document": "v2/vendor/battery/ti-bq4050.pdf",
+    "pages": [
+     38
+    ],
+    "sha256": "2664e33fe6d6ebed3a0f58153d8ba8ce66cb84f07741f6708ae11a224f443f5e"
+   },
+   {
+    "document": "v2/vendor/power/bq34z100-g1.pdf",
+    "pages": [
+     47,
+     48
+    ],
+    "sha256": "15e3d505a108f484d162706bee0d0998c97e38e8d108f2cb61f5f70239737c44"
+   },
+   {
+    "document": "v2/vendor/power/jscj-2n7002-c8545.pdf",
+    "pages": [
+     1
+    ],
+    "sha256": "7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6"
+   }
+  ],
+  "5636ADKB": [],
+  "5636ADKB-2V": [],
+  "74LVC1G17W5-7": [
+   {
+    "document": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
+    "pages": [
+     9,
+     10
+    ],
+    "sha256": "029f345a1e7be917fee46d47c49a61963938e0aab1631b019fe7eddb014fb548"
+   }
+  ],
+  "ABM8-272": [
+   {
+    "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+    "pages": [
+     217,
+     218
+    ],
+    "sha256": "be56fbb75ba0ae9e26558a73c93ac3e75c2ad4e6878d3b6703de2a76d886ea8c"
+   },
+   {
+    "document": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+    "pages": [
+     11
+    ],
+    "sha256": "51c4f430153fcdbf3209d9b3b41662c8527ff0150bc25777e3fcd6f5221a1c19"
+   }
+  ],
+  "ABM8-272-T3": [
+   {
+    "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+    "pages": [
+     217,
+     218
+    ],
+    "sha256": "be56fbb75ba0ae9e26558a73c93ac3e75c2ad4e6878d3b6703de2a76d886ea8c"
+   },
+   {
+    "document": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+    "pages": [
+     11
+    ],
+    "sha256": "51c4f430153fcdbf3209d9b3b41662c8527ff0150bc25777e3fcd6f5221a1c19"
+   }
+  ],
+  "AO3401A": [
+   {
+    "document": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
+    "pages": [
+     1,
+     2,
+     3
+    ],
+    "sha256": "0d8e3261ae280e007b5837fff60c55142f2d92af71edc4d02aee6f7a760a785c"
+   }
+  ],
+  "ATNR4010100MT": [
+   {
+    "document": "v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf",
+    "pages": [
+     5,
+     11
+    ],
+    "sha256": "1ea68f814afe04ca5ee0aa64b12aaf00eb26a95e9e8d7b9d424ad4f74a278623"
+   }
+  ],
+  "ATP16-SL1-203-M0SA-04G": [],
+  "ATP16-SL1-403-M0SA-04G": [],
+  "ATP19-SL1-603-B0SA-03G": [],
+  "BAT46W-7-F": [
+   {
+    "document": "v2/vendor/diodes/diodes-bat46w.pdf",
+    "pages": [
+     1
+    ],
+    "sha256": "3bc31f4a5302521c7e298f95aef7e3425ea68ae287bd28a6cfa8d0689fcbe56b"
+   }
+  ],
+  "BAT54W": [],
+  "BH254VS-26P": [],
+  "CC0603KRX7R7BB105": [],
+  "CC0603KRX7R8BB105": [],
+  "CC0603KRX7R9BB104": [],
+  "CC0805KKX7R7BB106": [],
+  "CS03W5F470LT5E": [],
+  "FH34SRJ-24S-0.5SH": [
+   {
+    "document": "v2/vendor/hirose/hirose-fh34-series-ffc-connectors.pdf",
+    "pages": [
+     6,
+     9,
+     12
+    ],
+    "sha256": "bcd77fb04a18033d006f584b5f364ae0dcea1bb3ea06037f2e61edcff0c79a05"
+   }
+  ],
+  "FH34SRJ-24S-0.5SH(50)": [],
+  "GRM188R61E475KE11": [],
+  "GRM188R61E475KE11D": [],
+  "GZ1608D601TF": [],
+  "M2044SD3A01": [],
+  "MC-09-530-Q": [
+   {
+    "document": "v2/vendor/seals/floydbell-mc-09-530-q-spec.pdf",
+    "pages": [
+     1
+    ],
+    "sha256": "d2dc7cd7959cdd076ef6941510c204058235744b2a87402f9746fe94daa8afc2"
+   }
+  ],
+  "PCA9555PWR": [
+   {
+    "document": "v2/vendor/ti/ti-pca9555.pdf",
+    "pages": [
+     31,
+     33,
+     34
+    ],
+    "sha256": "9b5cc24c3c9e286a7132e27267f98e8b8b36f02ead2157d66df2676de3a474cb"
+   }
+  ],
+  "RP2040": [
+   {
+    "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+    "pages": [
+     2,
+     3,
+     4
+    ],
+    "sha256": "be56fbb75ba0ae9e26558a73c93ac3e75c2ad4e6878d3b6703de2a76d886ea8c"
+   },
+   {
+    "document": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+    "pages": [
+     1,
+     2,
+     3
+    ],
+    "sha256": "51c4f430153fcdbf3209d9b3b41662c8527ff0150bc25777e3fcd6f5221a1c19"
+   }
+  ],
+  "SI2300DS-T1-GE3": [
+   {
+    "document": "v2/vendor/vishay/vishay-si2300ds.pdf",
+    "pages": [
+     1
+    ],
+    "sha256": "cffcc3972eeb825d822def9e5d649e76ae74f94de08dab8021ff194b9175f231"
+   }
+  ],
+  "SN74LVC1G57DBVR": [
+   {
+    "document": "v2/vendor/ti/ti-sn74lvc1g57.pdf",
+    "pages": [
+     14,
+     16,
+     18
+    ],
+    "sha256": "078364de617898af0dd4cee99931ab1d36b622824a06e8f9b7fa95087644af24"
+   }
+  ],
+  "SS2040FL": [
+   {
+    "document": "v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf",
+    "pages": [
+     5,
+     11
+    ],
+    "sha256": "1ea68f814afe04ca5ee0aa64b12aaf00eb26a95e9e8d7b9d424ad4f74a278623"
+   },
+   {
+    "document": "v2/vendor/power/panjit-ss2020fl-series.pdf",
+    "pages": [
+     1
+    ],
+    "sha256": "92544a833cdaa6e17d9192a05ec84bbc8ec797c4cb5fa51c4250f158f2c534fe"
+   }
+  ],
+  "TLV75533PDBVR": [
+   {
+    "document": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+    "pages": [
+     28,
+     33,
+     36
+    ],
+    "sha256": "7eb7bc6935bf6c1d247b2fce62c9e5a49a474fd94359ddc390a4baf0ac1f5293"
+   }
+  ],
+  "U-174/U": [],
+  "USBLC6-2SC6": [
+   {
+    "document": "v2/vendor/st/st-usblc6-2-esd-protection.pdf",
+    "pages": [
+     1,
+     6,
+     7
+    ],
+    "sha256": "bc30154f310cd631043214ed52571daefe04270587ec55072d49a23bd18b9068"
+   }
+  ],
+  "VEML7700-TR": [
+   {
+    "document": "v2/vendor/vishay/veml7700-datasheet.pdf",
+    "pages": [
+     1
+    ],
+    "sha256": "f338cf7d5911828a2f2ac8ae8324049380c852e34aa5afa43ac92c98ffe827d1"
+   }
+  ],
+  "W25Q16JVUXIQ": [
+   {
+    "document": "v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf",
+    "pages": [
+     73
+    ],
+    "sha256": "81af3f69b0bff95fd1097949a1005431dc5b3a6ecb5f1947e695a17298e7cf1b"
+   }
+  ]
+ },
+ "pdfs_read": 429,
+ "pdfs_without_text": [
+  "v2/vendor/aioc/k1-aioc-schematic-rev1.2.pdf",
+  "v2/vendor/crystals/yxc-ysx321sl-x322525mob4si.pdf",
+  "v2/vendor/dmr858/dmr858m-datasheet.pdf",
+  "v2/vendor/lte/te-2041119-mini-pcie-msata-socket-4mm-customer-drawing-rev-d.pdf",
+  "v2/vendor/m2/amphenol-mdt420m02001-m2-m-key.pdf",
+  "v2/vendor/m2/te-2199119-customer-drawing-revF.pdf",
+  "v2/vendor/m2/te-2199230-m2-e-key.pdf",
+  "v2/vendor/quectel/sparkfun-lg290p-breakout-schematic.pdf",
+  "v2/vendor/rf/amphenol-connex-132170-sma-bulkhead-ff-drawing.pdf",
+  "v2/vendor/techpublic/techpublic-74lvc1g08gv-c19829591.pdf",
+  "v2/vendor/xenarc/xenarc-709gnk-dimensional-drawing-v3.pdf"
+ ],
+ "what": "every PDF under v2/vendor read by its text layer for each part number stream w5ident's board C identities and this stream's DECISIONS name, and a few named in the values (a fixed list, so the reading replays while the vendor tree does not change)"
+}
