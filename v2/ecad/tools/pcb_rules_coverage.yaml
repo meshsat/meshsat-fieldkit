@@ -25,7 +25,7 @@ generated: "2026-09-16"
 # (test_rule_gate_mapping), and it only has to be touched when a rule's DEMANDS change, which is rare and
 # deliberate: writing down a source or a rationale does not move it. Moved on 26 September 2026 (MESHSAT-1357) from
 # ff8151db3576437b, when INT-002 was split into its pre-layout assessment and INT-003's bench test.
-rule_set_fingerprint: "635ff031f210f48c"
+rule_set_fingerprint: "a9b1e7f7412f9c0c"
 
 coverage:
 
