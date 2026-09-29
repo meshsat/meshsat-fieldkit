@@ -58,3 +58,10 @@ a maker's document. AI engineering work, not a qualified review. No agent, no ot
 - 18:50 to 18:53 `apply_registry_s120.py`: the three texts rewritten from the new figures (B1, B2, B3, m1, m2, m7, m8);
   `closed_by` resolved to the full sha (m3); `--check` on the merged tree opens S-124 (m10). This log's escaped backticks
   removed (m11). README rewritten whole.
+- 18:53 Commit `5078ee24` (README rewritten whole, the registry script, this log). Dry run into `dryrun.out` at `5078ee24` on
+  the merged line: `--check` writes nothing (the tree's registry sha256/16 1dde1fd1 before and after); a scratch copy takes one
+  write (S-120 closed by the full sha, S-124 opened, REQ-015 on S-106, S-107, S-111, S-124, S-111's title extended) and
+  refuses a second run; refusals for e57a7365 (records not carried), 0004b8a7 (README differs), no commit, and an
+  uncommitted change to LOG.md (appended, refused, restored byte for byte); `rules_lib.py requirements` 144 records, 0
+  errors and 0 warnings on both copies; `vbus20_bound.py` exit 1 on four mutants (R6 249k, U3 pin 5 off GND, a diode on
+  VBUS20, a new part on VBUS20), each FAIL line printing what the mutant holds.

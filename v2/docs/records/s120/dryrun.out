@@ -1,19 +1,21 @@
-Stream s120, dry run of apply_registry_s120.py and the fact gate of vbus20_bound.py (29 September 2026 17:33 CEST, branch fnd/s120 at 3ca20d5a).
-The registry copies live in the session scratchpad; the tree's registry is never written (its sha256/16 before and after is shown).
-== 1. --check on the tree's registry (writes nothing)
-apply_registry_s120 close: S-120 closed by commit 3ca20d5a (bus bound 23.19 V, 6.81 V under 30 V); S-123 opened (the switch nodes' ringing budget, 9.04 V over the steady bus), REQ-015 waits on S-106, S-107, S-111, S-123; S-111's title carries S-120's residual
+Stream s120, dry run of apply_registry_s120.py and the fact gate of vbus20_bound.py, second issue (29 September 2026 18:53 CEST, branch fnd/s120 at 5078ee24, which carries main b874b744).
+The registry copies live in the session scratchpad; the tree's registry is never written (its sha256/16 is shown).
+== 1. --check on the tree's registry (writes nothing), with the short sha
+apply_registry_s120 close: S-120 closed by commit 5078ee2468edd0716dda17163fd3f91d4d035fb7 (bus bound 23.20 V INFERRED; at it Q8 6.80 V and Q7 5.80 V under 30 V); S-124 opened (the switch nodes, closed only on the prototype; budget over the steady bus 8.04 V for Q7, 9.04 V for Q8), REQ-015 waits on S-106, S-107, S-111, S-124; S-111's title carries S-120's residual
 CHECK ONLY: v2/ecad/tools/pcb_requirements.yaml not written.
 exit 0
-tree registry sha256/16 c88d75284c96a02a, scratch base copy c88d75284c96a02a
+tree registry sha256/16 1dde1fd16f4e260e, scratch base copy 1dde1fd16f4e260e
 == 2. write on a scratch copy of the registry
-apply_registry_s120 close: S-120 closed by commit 3ca20d5a (bus bound 23.19 V, 6.81 V under 30 V); S-123 opened (the switch nodes' ringing budget, 9.04 V over the steady bus), REQ-015 waits on S-106, S-107, S-111, S-123; S-111's title carries S-120's residual
+apply_registry_s120 close: S-120 closed by commit 5078ee2468edd0716dda17163fd3f91d4d035fb7 (bus bound 23.20 V INFERRED; at it Q8 6.80 V and Q7 5.80 V under 30 V); S-124 opened (the switch nodes, closed only on the prototype; budget over the steady bus 8.04 V for Q7, 9.04 V for Q8), REQ-015 waits on S-106, S-107, S-111, S-124; S-111's title carries S-120's residual
 APPLIED. Next: python3 v2/ecad/tools/rules_lib.py requirements, then rules_render.py --requirements
 exit 0
 == 3. second run on the same copy
 apply_registry_s120: REFUSED: S-120 is already closed (a second run)
 exit 2
-== 4. a commit without the evidence (the base e57a7365)
+== 4. a commit without the records (the base e57a7365) and one whose README differs (0004b8a7, the first issue)
 apply_registry_s120: REFUSED: v2/docs/records/s120/README.md is not carried by e57a7365
+exit 2
+apply_registry_s120: REFUSED: v2/docs/records/s120/README.md at 0004b8a7 differs from HEAD's
 exit 2
 == 5. no commit given
 apply_registry_s120: REFUSED: usage: apply_registry_s120.py close <commit> [--check] [--registry PATH]
@@ -22,41 +24,50 @@ exit 2
 base exit 0: rules_lib: 144 requirement record(s), 0 error(s), 0 warning(s)
 copy exit 0: rules_lib: 144 requirement record(s), 0 error(s), 0 warning(s)
 the same errors and warnings on both
-== 7. the fact gate on three netlist mutants of board A (scratch fixtures made from the committed netlist)
+== 7. the fact gate on four netlist mutants of board A (scratch fixtures made from the committed netlist)
+fixtures: m1-R6-249k, m2-U3-pin5-off-GND, m3-diode-on-VBUS20, m4-new-part-on-VBUS20
 -- m1-R6-249k
-   FAIL U2 FB divider        R6 249k 1% VBUS20 to FE_FB, R7 10k 1% FE_FB to GND
-   facts: 17 of 18 hold
+   FAIL U2 FB divider          R6 249k 1% on ['FE_FB', 'VBUS20']; R7 10k 1% on ['FE_FB', 'GND']
+   facts: 20 of 21 hold
 exit 1
 -- m2-U3-pin5-off-GND
-   FAIL U3 pins              VBUS pin 1 on VBUS20; OTG/VAP/FRS pin 5 on GND (OTG, VAP and FRS need it pulled high, SLUSE
-   facts: 17 of 18 hold
+   FAIL U3 pins                U3 pins 1 VBUS20, 5 OTG_EN, 22 VBAT, 32 CH_SW1, 23 CH_SW2, 30 CH_BTST1, 25 CH_BTST2, 18 CH_CELL (VBUS, OTG/VAP/FRS, VSYS, SW1, SW2, BTST1, BTST2, CELL_BATPRESZ). OTG nee
+   facts: 20 of 21 hold
 exit 1
 -- m3-diode-on-VBUS20
-   FAIL no clamp on VBUS20   diodes on VBUS20: D1
-   FAIL D1 on VBAT           D1 SMCJ18A (VBAT clamp), cathode on VBAT
-   facts: 16 of 18 hold
+   FAIL VBUS20 membership      40 members; not in the expected list: D1.1; expected and absent: none; 6 x EEHZK1V331P, 18 x 10 uF 50 V X7R
+   FAIL no clamp on VBUS20     diodes on VBUS20: D1
+   FAIL D1 on VBAT             D1 SMCJ18A (VBAT clamp), pins 1 VBUS20, 2 GND
+   facts: 18 of 21 hold
+exit 1
+-- m4-new-part-on-VBUS20
+   FAIL VBUS20 membership      40 members; not in the expected list: R999.1; expected and absent: none; 6 x EEHZK1V331P, 18 x 10 uF 50 V X7R
+   facts: 20 of 21 hold
 exit 1
 == 8. an uncommitted change to an evidence file (LOG.md with one line appended, then restored byte for byte)
 apply_registry_s120: REFUSED: v2/docs/records/s120/LOG.md has an uncommitted change
 exit 2
 LOG.md restored
 == 9. the registry diff the write made (applied copy against the unmodified copy)
-3432c3432,3439
+3432c3432,3442
 <       6.3.
 ---
 >       6.3. S-120's residual (stream s120, v2/docs/records/s120/vbus20_bound.out section 11): a U2 or Q2 failure, which a
 >       surge past U2's 60 V could cause, passes VIN_RAW onto VBUS20 less a body diode's drop (35.2 V at 36 V in and 41.7
->       V at the lockout's maximum, the drop INFERRED) or, with R6 open or FB shorted, lets the stage run the bus up with
->       nothing on board A to stop it, since the LM5176's over-voltage protection reads the same FB pin; board A has no
->       clamp on VBUS20, and U3's VBUS, ACP and ACN (32 V absolute, SLUSE66A page 8) are the first parts past their
->       rating. Options to weigh: an independent over-voltage trip on VBUS20 (U34's channel 1 re-armed while the stage
->       runs) for the FB faults, and an SMCJ22A on VBUS20 (22 V standoff over the 20.96 V band), which holds a Q2 short at
->       about 28 V at board E's 6.15 A hot-swap limit (INFERRED) until the LM5069's timer opens.
-3554c3561
+>       V at the lockout's maximum, the drop INFERRED); U3's VBUS, ACP and ACN (32 V absolute, SLUSE66A page 8) then pass
+>       their rating first while the pack is above about 1.2 V, since with the charger stopped Q10's body diode holds SW1
+>       near VBAT and Q7 sees the bus less VBAT. With R6 open or FB shorted the stage runs the bus up with nothing on
+>       board A to stop it, since the LM5176's over-voltage protection reads the same FB pin; the charger switches until
+>       its ACOV trips (up to 27.7 V after 100 us, page 14), with Q7 then at 28.7 V or more before any ringing, so the
+>       FETs may be first there. Board A has no clamp on VBUS20. Options to weigh: an independent over-voltage trip on
+>       VBUS20 (U34's channel 1 re-armed while the stage runs) for the FB faults, and an SMCJ22A on VBUS20 (22 V standoff
+>       over the 20.96 V band), which holds a Q2 short at about 28 V at board E's 6.15 A hot-swap limit (INFERRED) until
+>       the LM5069's timer opens.
+3536c3546
 <   - id: S-120
 ---
->   - id: S-123
-3558,3564c3565,3580
+>   - id: S-124
+3540,3546c3550,3575
 <       (the independent re-check of stream s117, minor n1; integration set 12) Decision 57 moves board A's charger switching
 <       FETs Q7 to Q10 from the 40 V CSD18510Q5B to the 30 V CSD17578Q5A (Q7) and CSD17577Q5A (Q8 to Q10). They sit on the
 <       charger's input bus VBUS20, which the front end U2 (LM5176) holds at about 20.7 V, and on the pack side; no open item
@@ -65,47 +76,62 @@ LOG.md restored
 <       bounded from the front end's own protection or a clamp on VBUS20, with its figures and pages, or the FETs' rating is
 <       restated with the reason.
 ---
->       (stream s120, S-120's switch nodes; the independent re-check of stream s117, minor n1) Board A's charger switch
->       nodes against the 30 V FETs of decision 57 (Q7 CSD17578Q5A, Q8 to Q10 CSD17577Q5A; VDS 30 V absolute, TI SLPS526
->       and SLPS516 page 1) and the BQ25731's own SW1 and SW2 (32 V absolute, 26 V recommended, -4 V for 25 ns; SLUSE66A
->       8.1 and 8.3, printed page 8). S-120 bounds the bus VBUS20 at 23.19 V and holds it at 20.96 V in steady service
->       (v2/docs/records/s120/vbus20_bound.out); the ringing on top of the bus is not bounded at desk, since no layout
->       exists and no TI note giving a layout-independent bound is held. TI prefers 30 V FETs for a 19 to 20 V input
->       (SLUSE66A 10.2.2.6, page 86) in the topology board A draws, the input loop running through R16 with only C190 10
->       nF and C191 1 nF after it (page 86; Figure 10-1, page 83); board A's band tops out 0.96 V above TI's 20 V. Budget
->       over the steady bus: 9.04 V to the FETs' 30 V, 5.04 V to SW1's recommended 26 V. A model for the layout writer
->       (vbus20_bound.out section 10, not a bound): Q7's current falls in about 1.6 ns, so at Option A(i)'s bound (L2 peak
->       15.71 A) each nH of the loop C190 and C191, Q7, Q8 adds about 9.8 V, 1 nH between the VBUS20 bank (C20 to C22),
->       R16 and C190 lifts CH_ACN by about 4.7 V (growing as the square root of the inductance), and the 30 V budget
->       allows about 0.92 nH of the first loop. Owner: board A's layout writer (S-115's pass) and the bench. Closed when a
->       routed-board reading of both loops' inductance, or a prototype measurement of CH_SW1, CH_ACN and CH_SW2 at the
->       charger's largest current, keeps each FET's VDS and U3's SW pins inside their absolute ratings, or when a snubber,
->       a gate-drive change or FETs of a higher voltage are drawn and read back on the regenerated netlist.
-4292a4309,4340
+>       (stream s120, S-120's switch nodes; the independent re-check of stream s117, minor n1, and the check of stream
+>       s120, B1 to B3) Board A's charger switch nodes against the 30 V FETs of decision 57 (Q7 CSD17578Q5A, Q8 to Q10
+>       CSD17577Q5A; VDS 30 V absolute, TI SLPS526 and SLPS516 page 1) and the BQ25731's own pins (VBUS, ACP, ACN, SW1 and
+>       SW2 32 V absolute; SW1 and SW2 26 V recommended and -4 V for 25 ns; SLUSE66A 8.1 and 8.3, printed page 8). S-120
+>       holds the bus VBUS20 at 20.96 V in steady service and bounds it at 23.20 V, a bound INFERRED from the LM5176's
+>       output over-voltage threshold, which TI gives as a typical 10 percent over VREF only (SNVSAI1D 6.5 page 8): 30 V
+>       is reached only if the trip sits 37.7 percent over VREF for Q7 or 42.5 percent for Q8
+>       (v2/docs/records/s120/vbus20_bound.out sections 3 and 8). Q7 holds the bus plus Q8's body diode in every dead time
+>       (VSD 1.0 V maximum, SLPS516 page 3). The ringing on top is not bounded at desk: no layout exists and no TI note
+>       giving a layout-independent bound is held. TI prefers 30 V FETs for a 19 to 20 V input (SLUSE66A 10.2.2.6, page
+>       86) in the topology board A draws, the input loop running through R16 with only C190 10 nF and C191 1 nF after it
+>       (page 86, Figure 10-3 page 85); board A's band tops out 0.96 V above TI's 20 V, and board A does not draw Figure
+>       10-3's CACP and CACN (33 nF to ground), so U3's ACN pin sees CH_ACN's ring through R146 and C121 alone. Budget
+>       over the steady bus: 8.04 V for Q7, 9.04 V for Q8, 5.04 V to SW1's recommended 26 V; over the bound 5.80 V for Q7
+>       and 6.80 V for Q8. A model for the layout writer (vbus20_bound.out section 10, not a bound, typical driver
+>       figures): Q7's turn-off current falls in about 1.6 ns, so at Option A(i)'s bound (L2 peak 15.71 A) each nH of the
+>       loop C190 and C191, Q7, Q8 adds about 9.8 V to Q7 and Q7's budget allows about 0.82 nH; Q7's turn-on rises in
+>       about 3.3 ns from the valley current into Q8's reverse recovery, whose charge TI states only at 300 A/us. Owner:
+>       board A's layout writer (S-115's pass, where a routed-board reading of both loops' inductance is recorded as the
+>       layout step and does not close this item) and the bench. Closed only on the prototype: CH_SW1, CH_ACN, CH_SW2 and
+>       U3's VBUS pin read at the charger's largest current, each overshoot (the peak less the measured bus) added to
+>       20.96 V for steady service and to 23.20 V for the over-voltage excursion, Q7's VDS also carrying Q8's VSD, and
+>       each result inside 30 V for the FETs and 32 V for U3's pins; and the front end's OVP trip read on the prototype
+>       (FB driven through R6 and R7), which replaces the INFERRED 23.06 V and with it the 23.20 V reference. A snubber, a
+>       gate-drive change or FETs of a higher voltage, drawn and read back on the regenerated netlist, are measured the
+>       same way.
+4343a4373,4409
 >   - id: S-120
->     closed_by: commit 3ca20d5a9ca9aa02099b42f7194e9d1a0163fa51
+>     closed_by: commit 5078ee2468edd0716dda17163fd3f91d4d035fb7
 >     closing_evidence: >-
 >       Stream s120 (v2/docs/records/s120/README.md, vbus20_bound.py and its .out, merged at
->       3ca20d5a9ca9aa02099b42f7194e9d1a0163fa51): the committed netlists of boards A (sha256/16 6c40250c47195ebb) and E
->       (2ed95a0e8069ebf8) parsed, 18 of 18 circuit facts holding, among them no clamp on VBUS20 and U3's OTG/VAP/FRS pin
->       on GND, so the charger cannot drive the bus. The front end U2 (LM5176) regulates VBUS20 at 19.08 to 20.96 V (VREF
->       0.788 to 0.812 V, TI SNVSAI1D 6.5 page 6; R6 240k over R7 10k at 1 percent, 100 ppm/K over 65 K INFERRED;
->       IBIAS(FB) 25 nA). Its output over-voltage protection turns the gate drives off above VREF plus 10 percent, a
->       typical figure only (6.5 page 8; 7.3.11 page 18), read on the same divider: 23.06 V at VREF's maximum and the
->       worst ratio, and 23.19 V with L1's energy at the boost peak limit (140 mV over 5 mOhm, page 7) into the six bulk
->       parts at -20 percent. That bound holds whatever the load, the line or the loop does while U2 is inside its
->       ratings: a load dump when the charger stops at 8.0 A reads 22.14 V on the front end's loop model and a line step
->       to U2's 60 V 21.21 V (both MODEL); the charger's own inductor returns to VBAT, not to the bus; an idle stage
->       blocks VIN_RAW (Q2's body diode); board E delivers 9 to 36 V with the LM5069's lockout at 37.8 to 42.5 V and
->       SMCJ40A class clamps at 64.5 V (S-111 owns U2 against them). Margins at the bound: 6.81 V to the FETs' 30 V
->       (SLPS526 and SLPS516 page 1), 8.81 V to the BQ25731's 32 V on VBUS, ACP, ACN, SW1 and SW2 and 2.81 V to its
->       recommended 26 V and to ACOV's 26.0 V minimum (SLUSE66A 8.1 and 8.3 page 8, 8.5 page 14); BTST1 at the bound plus
->       REGN's 6.3 V sits 2.51 V under 32 V. The pack side stays at or under 20.0 V by SYSOVP (page 14) and 24.27 V by D1
->       (SMCJ18A, INFERRED straight line) if the pack opens while charging, 5.73 V under 30 V. No clamp or setting is
->       added and the FETs' rating stands (decision 57). The switch nodes' ringing is not bounded at desk and is carried
->       by S-123; the single faults that blind or bypass the protection (Q2 short, R6 open, FB short) are outside every
->       requirement (ASM-001, SC-39), take U3 past its own 32 V before the FETs, and are noted on S-111. AI desk work on
->       the makers' figures, nothing built or measured.
+>       5078ee2468edd0716dda17163fd3f91d4d035fb7; second issue after the check of stream s120): the committed netlists of
+>       boards A (sha256/16 6c40250c47195ebb) and E (2ed95a0e8069ebf8) parsed, 21 of 21 circuit facts holding, among them
+>       VBUS20's whole membership (39 pins, no clamp) and U3's OTG/VAP/FRS pin on GND, so the charger cannot drive the
+>       bus. The front end U2 (LM5176) regulates VBUS20 at 19.08 to 20.96 V (VREF 0.788 to 0.812 V, TI SNVSAI1D 6.5 page
+>       6; R6 240k over R7 10k at 1 percent, 100 ppm/K over 65 K INFERRED; IBIAS(FB) 25 nA). Its output over-voltage
+>       protection turns the gate drives off above VREF plus 10 percent, a TYPICAL figure with no limits (6.5 page 8;
+>       7.3.11 page 18), read on the same divider, so the bound is INFERRED: 23.06 V at VREF's maximum and the worst
+>       ratio, 23.20 V with L1's energy at its largest current inside U2's ratings (buck mode at 60 V, 29.51 A, page 7)
+>       into the six bulk parts at -20 percent. 30 V is reached only if the trip sits 37.7 percent over VREF for Q7 or
+>       42.5 percent for Q8, against the typical 10; the bench reading of the trip is carried by S-124. The bound holds
+>       whatever the load, the line or the loop does while U2 is inside its ratings: a load dump when the charger stops at
+>       8.0 A reads 22.24 V on the front end's loop model and a line step to U2's 60 V 21.21 V (both MODEL); the charger's
+>       own inductor returns to VBAT, not to the bus; an idle stage blocks VIN_RAW (Q2's body diode); board E delivers 9
+>       to 36 V with the LM5069's lockout at 37.8 to 42.5 V and SMCJ40A class clamps at 64.5 V (S-111 owns U2 against
+>       them). Margins at the bound, before ringing: Q8 6.80 V and Q7 5.80 V to their 30 V (SLPS526 and SLPS516 page 1; Q7
+>       carries Q8's body diode, VSD 1.0 V maximum, SLPS516 page 3); 8.80 V to the BQ25731's absolute 32 V on VBUS, ACP,
+>       ACN and SW1, and 2.80 V to its recommended 26 V and to ACOV's 26.0 V minimum (SLUSE66A 8.1 and 8.3 page 8, 8.5
+>       page 14); BTST1 at the bound plus REGN's 6.3 V sits 2.50 V under its recommended 32 V and 8.50 V under its
+>       absolute 38 V. The pack side, SW2 with it, stays at or under 20.0 V by SYSOVP (page 14) and 24.27 V by D1
+>       (SMCJ18A, INFERRED straight line) if the pack opens while charging: Q9 and Q10 5.73 V under 30 V, SW2 7.73 V under
+>       32 V. No clamp or setting is added and the FETs' rating stands (decision 57). The switch nodes' ringing is not
+>       bounded at desk and is carried by S-124, which closes only on the prototype. The single faults that blind or
+>       bypass the protection are outside every requirement (ASM-001, SC-39) and noted on S-111: for a Q2 short U3 passes
+>       its own 32 V before Q7 reaches 30 V while the pack is above about 1.2 V; for R6 open or FB shorted no order is
+>       claimed. AI desk work on the makers' figures, nothing built or measured.
 >     title: >-
 >       (the independent re-check of stream s117, minor n1; integration set 12) Decision 57 moves board A's charger switching
 >       FETs Q7 to Q10 from the 40 V CSD18510Q5B to the 30 V CSD17578Q5A (Q7) and CSD17577Q5A (Q8 to Q10). They sit on the
@@ -114,7 +140,7 @@ LOG.md restored
 >       30 V rating and the BQ25731's own input limit (TI SLUSE66A, absolute maximum ratings). Closed when that worst case is
 >       bounded from the front end's own protection or a clamp on VBUS20, with its figures and pages, or the FETs' rating is
 >       restated with the reason.
-6781c6829
+6838c6904
 <     waits_on: [S-106, S-107, S-111, S-120]
 ---
->     waits_on: [S-106, S-107, S-111, S-123]
+>     waits_on: [S-106, S-107, S-111, S-124]
