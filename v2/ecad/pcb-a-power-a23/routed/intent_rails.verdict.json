@@ -136,11 +136,11 @@
   },
   "document_7": {
    "path": "v2/vendor/ti/held/ti-csd17577q5a-slps516.pdf",
-   "sha256_16": null
+   "sha256_16": "c8595fa806a99074"
   },
   "document_8": {
    "path": "v2/vendor/ti/held/ti-csd17578q5a-slps526.pdf",
-   "sha256_16": null
+   "sha256_16": "f1aad251830260a5"
   },
   "document_9": {
    "path": "v2/vendor/ti/lm5176-datasheet.pdf",
@@ -175,12 +175,12 @@
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "8263b60a25d4",
-  "tools_tree_sha": "d690cc33e4cc6968"
+  "git_head": "a46db71be8a1",
+  "tools_tree_sha": "6031704bb86457d7"
  },
- "ts": "2026-09-29T12:51:21Z",
+ "ts": "2026-09-29T13:42:06Z",
  "verdict": "PASS",
- "version": "8263b60a25d4",
+ "version": "a46db71be8a1",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "082b701e7bab36d9"
