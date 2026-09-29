@@ -192,7 +192,7 @@ open_items:
 boards:
 
  a:
-   written_against: {artefact: netlist, path: "pcb-a-power-a23/out/pcb-a-power.net", sha256_16: "599ee964a9c23d6e", content16: "2efce63fe72079f1"}
+   written_against: {artefact: netlist, path: "pcb-a-power-a23/out/pcb-a-power.net", sha256_16: "30ad87746d1801ca", content16: "2efce63fe72079f1"}
    classes:
     - name: "SMA jacks for the device pigtails"
       refs: ["J_RF*"]
@@ -349,7 +349,7 @@ boards:
       reason: "a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it"
 
  b:
-   written_against: {artefact: netlist, path: "pcb-b-compute-b19/out/pcb-b-compute.net", sha256_16: "21a1f74a3ec1ae28", content16: "b9dbb9c4a430d108"}
+   written_against: {artefact: netlist, path: "pcb-b-compute-b19/out/pcb-b-compute.net", sha256_16: "97823ef1171a61ce", content16: "b9dbb9c4a430d108"}
    classes:
     - name: "CM5 module receptacles"
       refs: ["U30A", "U30B", "U31A", "U31B", "U32A", "U32B"]
@@ -574,7 +574,7 @@ boards:
         names the wall RJ45 port it powers; nothing is mated on it"
 
  c:
-   written_against: {artefact: netlist, path: "pcb-c-display-c8/out/pcb-c-display.net", sha256_16: "3fddbb3edcd4248a", content16: "ebde053efc0a3906"}
+   written_against: {artefact: netlist, path: "pcb-c-display-c8/out/pcb-c-display.net", sha256_16: "fef4df255c00f4db", content16: "ebde053efc0a3906"}
    classes:
     - name: "the panel ribbon header"
       refs: ["J_PANEL"]
@@ -716,7 +716,7 @@ boards:
         is mated"
 
  d:
-   written_against: {artefact: netlist, path: "pcb-d-aprs-d9/out/pcb-d-aprs.net", sha256_16: "7a2c0ac2190b141a", content16: "be4194ed867c8406"}
+   written_against: {artefact: netlist, path: "pcb-d-aprs-d9/out/pcb-d-aprs.net", sha256_16: "a2d48972d171aad1", content16: "be4194ed867c8406"}
    classes:
     - name: "SMA jacks"
       refs: ["J_ANT", "J_PAOUT"]
@@ -825,7 +825,7 @@ boards:
         is mated"
 
  e:
-   written_against: {artefact: netlist, path: "pcb-e1-dock-e7/out/pcb-e1-dock.net", sha256_16: "56adc9746d61c4e0", content16: "dc06b84a39724641"}
+   written_against: {artefact: netlist, path: "pcb-e1-dock-e7/out/pcb-e1-dock.net", sha256_16: "2ed95a0e8069ebf8", content16: "dc06b84a39724641"}
    classes:
     - name: "the pack lead connector"
       refs: ["J_BATT"]
@@ -921,7 +921,7 @@ boards:
         is mated"
 
  p:
-   written_against: {artefact: netlist, path: "pcb-p-pack-p2/out/pcb-p-pack.net", sha256_16: "760ac6f74d62d194", content16: "efe60479293f0004"}
+   written_against: {artefact: netlist, path: "pcb-p-pack-p2/out/pcb-p-pack.net", sha256_16: "20c7b0795593d761", content16: "efe60479293f0004"}
    classes:
     - name: "the pack fuse holder"
       refs: ["F1"]
