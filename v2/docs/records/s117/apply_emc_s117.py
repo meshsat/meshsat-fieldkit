@@ -8,7 +8,7 @@ the 4.7 uH L2 with 191 kOhm on IADPT (SLUSE66A 9.3.11 and Table 9-4, printed pag
 27 and 28) and PWM_FREQ at its power-on 1b (Table 9-8, page 43), with the FSW spread of 8.5 (340 to 460 kHz, page 16) and
 the dithering state (9.3.15, page 28) in its basis.
 
-Guards: the U3 row's two lines are found once each as read on main at 867a18a7 (the row after apply_s117_restate.py);
+Guards: the U3 row's two lines are found once each as read on main at 867a18a7 and fe97c980 (the row after apply_s117_restate.py);
 the result parses (yaml) and only board A's U3 source moves, in f_khz and basis; emc_sheet.judge() (the tool's own
 function, called in memory, no verdict written) reads board A with no failure that names U3, before and after; a second
 run refuses (the new basis is already there). --check writes nothing.
@@ -77,7 +77,7 @@ def main():
     src[0]["f_khz"] = 400
     src[0]["basis"] = [s for s in after["boards"]["a"]["sources"] if s["ref"] == "U3"][0]["basis"]
     if exp != after: refuse("something beyond board A's U3 row moved")
-    if "—" in t2 or "–" in t2: refuse("a dash character")
+    if "\u2014" in t2 or "\u2013" in t2: refuse("a dash character")
     f0, n0, s0 = u3_fails(t)
     f1, n1, s1 = u3_fails(t2)
     if f1: refuse("emc_sheet reads board A's U3 row as failing: %s" % f1)

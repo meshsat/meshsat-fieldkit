@@ -83,7 +83,7 @@ def main():
     new.insert(va4[0] + 1, V_A05)
     new.insert(a16[0] + 1, FW_A17)
     out = "\n".join(new).replace(HEAD_OLD, HEAD_NEW).replace(C01_OLD, C01_NEW)
-    if "—" in out or "–" in out: refuse("a dash character")
+    if "\u2014" in out or "\u2013" in out: refuse("a dash character")
     # nothing else moved: drop the three inserted rows and undo the two replacements, and the old text must return
     back = "\n".join(l for l in out.split("\n") if l not in (FW_A17, V_A05, LOG)).replace(HEAD_NEW, HEAD_OLD).replace(C01_NEW, C01_OLD)
     if back != t: refuse("something beyond the five edits moved")
