@@ -18,8 +18,8 @@ REQ-072 stays FAIL until this is drawn, reviewed and tested. Nothing here is pur
       R17 5 mOhm (U3's RSR)                          LM74700-Q1 + CSD18510Q5B (ideal diode, blocks node->lid)  \
       |                                                                  |                                   R17B 5 mOhm (U3B's RSR)
  ==== VBAT, the system node (U3's VSYS; every converter) ====  <------  LM5069-2 + CSD18510Q5B, 5.6 mOhm     |
-      ^                    |                                             (current limit 8.7 to 11.0 A; OVLO    U3B BQ25731 buck-boost
-      |                    +--- VBUS of U3B (a second BQ25731) --------  and host disable)                    (VBAT in, lid out)
+      ^                    |                                             (current limit 8.7 to 11.0 A; UVLO    U3B BQ25731 buck-boost
+      |                    +--- VBUS of U3B (a second BQ25731) --------  enable, off while U3B runs)          (VBAT in, lid out)
  U3 BQ25731 (from VBUS20, as generated)
 ```
 
@@ -31,7 +31,8 @@ REQ-072 stays FAIL until this is drawn, reviewed and tested. Nothing here is pur
 3. **What stops one pack charging the other** (section 3c): base to lid is blocked in hardware (the ideal diode, and
    U3B's four-switch stage when off); lid to base happens only when the lid's voltage is above the base's, is limited in
    hardware to at most 11.0 A (1.83 A a base cell, under the cell's 2.0 A maximum charge), and is kept under 2.5 A in
-   service by the host's join rule (0.20 V).
+   service by the host's join rule (0.20 V). The lid's discharge path is held off in hardware while U3B charges, so
+   U3B's output can never flow back into the node through it (3b).
 4. **The host sees two gauges on two separate SMBus segments** and **two chargers on the kit bus, U3B behind a
    TCA9543A switch** because both BQ25731 answer only at 0x6B (section 5).
 5. **On the model**, this topology meets M1's September reference day with 400 Wp into a 200 W stage and board A's entry
@@ -88,11 +89,17 @@ input current; U3's filter set (R146 to R149, C121, C122) and input and VSYS cap
 for the maximum, 8.2 A); InputVoltage (VINDPM) at 12.0 V so that U3B backs off before it could pull the node below the
 base's graceful line (a firmware choice, bounded by the charger's own VINDPM loop).
 
-**The interlock: U3B charges only from outside energy.** U3B's ILIM_HIZ pin is pulled below 0.4 V (HiZ, the converter
-off; above 0.8 V it runs; SLUSE66A pin table page 6 and 9.3.8, pages 26 and 27) unless BOTH U3's CHRG_OK (open drain, R22 to
-+3V3: input present and no fault) AND the host's LID_CHG_EN are high: an SN74LVC1G00 NAND (held,
-`v2/vendor/ti/ti-sn74lvc1g00.pdf`) drives a 2N7002 from ILIM_HIZ_B to ground. With the kit on batteries alone U3's
-CHRG_OK is low and U3B cannot run, so **the base can never charge the lid on battery**. In daylight the host's
+**The interlock: U3B charges only from outside energy, and never while the lid discharges.** U3B's ILIM_HIZ pin is
+pulled below 0.4 V (HiZ, the converter off; above 0.8 V it runs; SLUSE66A pin table page 6 and 9.3.8, pages 26 and 27)
+unless BOTH U3's CHRG_OK (open drain, R22 to +3V3: input present and no fault) AND the host's LID_CHG_EN (pulled down,
+so a dead host leaves it low) are high: an SN74LVC1G00 NAND (held, `v2/vendor/ti/ti-sn74lvc1g00.pdf`) drives a 2N7002
+from ILIM_HIZ_B to ground. With the kit on batteries alone U3's CHRG_OK is low and U3B cannot run, so **the base can
+never charge the lid on battery**. The same two inputs into an SN74LVC1G08 AND (held, `ti-sn74lvc1g08.pdf`) drive a
+second 2N7002 that pulls the LM5069's UVLO low (3c): **whenever U3B may run, the lid's discharge path is off.** Without
+it, U3B's output would lift the lid's end of the harness (the charge current through the lead and the cells, about 0.3 V
+at 8 A over the cells' 11.7 mOhm and the charge loop's 28 mOhm of `.out` section 0) above the node, and the ideal diode would return U3B's current into VBAT, a
+circulating loop that also charges the base outside U3's control. The model never charges and discharges the lid in the
+same hour, which this interlock makes true of the circuit. In daylight the host's
 allocation loop (FW row in section 8) holds U3B's charge so that U3's reading of the base's current (ADCIBAT, 128 mA
 steps) is not a discharge; a passing cloud lets the base feed U3B for the loop's reaction time, bounded by U3B's
 IIN_HOST.
@@ -100,7 +107,8 @@ IIN_HOST.
 ### 3c. Discharge: an ideal diode and a current-limited switch in series, and the join rule
 
 **Parts** (drafts for board A): **U_LD LM74700-Q1** driving **Q_LD CSD18510Q5B** (40 V; RDS(on) 0.79 / 0.96 mOhm at
-10 V, TI SLPS632 page 3) as an ideal diode, anode on LID_IN, cathode toward VBAT; then **U_LS LM5069-2** (auto-retry;
+10 V, TI SLPS632 page 3) as an ideal diode, anode on LID_F (behind F_LA, the node U3B's R17B also feeds), cathode
+toward VBAT; then **U_LS LM5069-2** (auto-retry;
 SNVS452G, device table on page 3; operating 9 to 80 V, page 1) driving **Q_LS CSD18510Q5B** with **R_LS 5.6 mOhm** 2512
 as its sense; the LM5069's input on the ideal diode's cathode side, its output on VBAT. The LM5069's 9 V floor is the
 lid at 2.25 V a cell, the second level's under-voltage.
@@ -139,7 +147,8 @@ keeps the two packs' states of charge together, so the gap stays small.
 
 **Without the host** (a crash, or the first power-up): the lid path's enable is the LM5069's UVLO/EN pin (threshold
 2.45 / 2.5 / 2.55 V, SNVS452G page 5) held by a divider from LID_IN at about 11.0 V rising (the lid itself at 2.75 V a
-cell) and pulled low by the host's LID_DSG_OFF through a 2N7002 (default off, so the path defaults ON). A default-off
+cell) and pulled low by the host's LID_DSG_OFF through a 2N7002 (default off, so the path defaults ON) or by the
+interlock's AND while U3B may run (3b). A default-off
 path would leave a full lid unusable when the base is empty and the sensor controller, which runs from the base's node,
 is dead; a default-on path joins at any gap, which the 11.0 A limit keeps inside the base cells' charge rating. The
 base's own OCC1 (5.0 A, 2 s) then opens the base's charge FET for a gap above about 0.4 V, a recoverable trip. **Taken by
@@ -228,7 +237,7 @@ fails outright. So Option A(i) as the energy record states it needs board A's en
 
 - **`gen_sch_a.py`** (board A): the U3B set of 3b; the lid path of 3c (U_LD, Q_LD, U_LS, Q_LS, R_LS, the UVLO divider,
   the LID_DSG_OFF transistor); F_LA 15 A MINI in a Keystone 3568 holder and the lid lead's entry connector J_LID (XT60
-  class, as the base lead's on board E); the TCA9543A at 0x70 with its pull-ups and RESET; the NAND interlock; the entry
+  class, as the base lead's on board E); the TCA9543A at 0x70 with its pull-ups and RESET; the NAND and AND interlock with LID_CHG_EN's pull-down (3b); the entry
   changes of CHARGER.md. New rails LID_IN (lid lead to F_LA, 16.8 V, 11 A), LID_F (behind F_LA), LID_ID (between the
   ideal diode and the switch), VBUS_B (U3B's input, on VBAT), CHB_ACN, LID_CHG (U3B's output to R17B); every one declared
   with its current for the intent checks.
