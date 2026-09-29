@@ -30,7 +30,7 @@ NOTE = PN.HEAD + (
     'U3B with CSD17578Q5A in all four positions on its drafted 800 kHz row (`records/s117/U3B-NOTE.md` way (a); REGN '
     "33.0 mA typical and 49.9 mA at the makers' maxima in buck-boost against its 50 mA minimum limit); TOPOLOGY.md 3b still "
     'names CSD18510Q5B, with which U3B reads 0.802 and ratio C of both lid options is NOT MET (`records/s119/reconcile_s119.out` '
-    "section 3). Open item S-121 carries the draft's FET choice (way (a) or the 400 kHz row, way (b), 0.974)."
+    "section 3). The open item that records/s119/apply_registry_s119.py opens carries the draft's FET choice (way (a) or the 400 kHz row, way (b), 0.974)."
     " Section 4's bench item stands with new words: U3's and U3B's efficiencies at these points are TI's method on the "
     "makers' figures, core loss excluded, not plot readings, and are still to be measured at bring-up."
 )

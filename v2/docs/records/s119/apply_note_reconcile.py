@@ -29,7 +29,7 @@ NOTE = PN.HEAD + (
     'FETs first drawn and drafted (U3 0.939, U3B 0.802) every case reads NOT MET, and with U3 as drawn but U3B as drafted '
     '(CSD18510Q5B, 0.802) ratio C reads NOT MET for both lids (section 3). The result therefore holds for the circuit only '
     "once U3B's draft carries FETs that support 0.961: `records/a1elec/TOPOLOGY.md` 3b still names CSD18510Q5B (open item "
-    'S-121). The notes of `reconcile_lid_panel.out` that the checks measured (the step and threshold stability, the clamp '
+    'that records/s119/apply_registry_s119.py opens). The notes of `reconcile_lid_panel.out` that the checks measured (the step and threshold stability, the clamp '
     "and the standby drain) were measured at the first issue's rows and are not re-measured."
 )
 
