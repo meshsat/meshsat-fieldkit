@@ -7,12 +7,21 @@ itself), changes only its lid parallel count and, with it, the lid's charge curr
 value per string (its lid charge current over its 12 strings, printed below), and runs its own design case (400 Wp, 200 W stage, entry
 E2 re-rated, the base at +20 C, the lid at the September mean day's minimum air and swept) with its own functions. It prints,
 per lid size, the result, each pack's lowest point and the lowest lid temperature that still meets M1. A reference-day model
-result, not a demonstration. Run from the repository root: python3 v2/docs/records/a1int/reconcile_lid.py"""
-import os, sys
+result, not a demonstration.
+
+Second issue (stream s119, S-119, 29 September 2026): the first issue imported energy_two_pack.py without a pin, so its
+.out stayed the record of its run on energy_two_pack.py 81694b2b (U3 at 0.98, U3B at 0.975). This issue pins the model's
+second issue (U3 0.979, U3B 0.961, from the drawn or drafted FETs' losses, records/s117/efficiency.out) and refuses any
+other; the runs are unchanged. The output is superseded for the lid options by reconcile_lid_panel.py (ratio A there).
+Run from the repository root: python3 v2/docs/records/a1int/reconcile_lid.py"""
+import hashlib, os, sys
 
 sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "a1elec"))
+TP_SHA = "2c8e52c8eec8d753c0bdeac43170c8f9f330ea9c4fe1be619e17c5dc360786f3"   # energy_two_pack.py second issue (s119)
+if hashlib.sha256(open(os.path.join(HERE, "..", "a1elec", "energy_two_pack.py"), "rb").read()).hexdigest() != TP_SHA:
+    sys.stderr.write("reconcile_lid: energy_two_pack.py is not the pinned file; refusing\n"); sys.exit(2)
 import energy_two_pack as TP
 
 PER_CELL = TP.v("chg_a_lid") / TP.NP_L          # the model's own allocation, per lid string
