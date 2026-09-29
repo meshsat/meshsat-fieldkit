@@ -1985,18 +1985,15 @@ selections:
     mpn: CC0603KRX7R9BB104
     datasheet:
       binding: DECODED
+      scheme: yageo-cc-x7r-v26-p2
       path: v2/vendor/passives/yageo-cc-series.pdf
       page: 2
       publisher: YAGEO
-      maker_mark: YAGEO
       table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
         V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
       fields:
       - field: series
         code: CC
-        row: CC XXXX X X X7R X BB XXX
-        means: Ceramic Multilayer
-        means_row: Surface-Mount Ceramic Multilayer Capacitors
       - field: size
         code: '0603'
         row: 0603 (1608)
@@ -2010,14 +2007,12 @@ selections:
         means: Paper/PE taping reel
       - field: dielectric
         code: X7R
-        row: CC XXXX X X X7R X BB XXX
       - field: voltage
         code: '9'
         row: 9 = 50 V
         means: 50 V
       - field: process
         code: BB
-        row: CC XXXX X X X7R X BB XXX
       - field: value
         code: '104'
         rule: pf_2sig
@@ -2124,18 +2119,15 @@ selections:
     mpn: CC0805KKX7R7BB106
     datasheet:
       binding: DECODED
+      scheme: yageo-cc-x7r-v26-p2
       path: v2/vendor/passives/yageo-cc-series.pdf
       page: 2
       publisher: YAGEO
-      maker_mark: YAGEO
       table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
         V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
       fields:
       - field: series
         code: CC
-        row: CC XXXX X X X7R X BB XXX
-        means: Ceramic Multilayer
-        means_row: Surface-Mount Ceramic Multilayer Capacitors
       - field: size
         code: 0805
         row: 0805 (2012)
@@ -2149,14 +2141,12 @@ selections:
         means: Blister taping reel
       - field: dielectric
         code: X7R
-        row: CC XXXX X X X7R X BB XXX
       - field: voltage
         code: '7'
         row: 7 = 16 V
         means: 16 V
       - field: process
         code: BB
-        row: CC XXXX X X X7R X BB XXX
       - field: value
         code: '106'
         rule: pf_2sig
@@ -2263,18 +2253,15 @@ selections:
     mpn: CC0603KRX7R8BB105
     datasheet:
       binding: DECODED
+      scheme: yageo-cc-x7r-v26-p2
       path: v2/vendor/passives/yageo-cc-series.pdf
       page: 2
       publisher: YAGEO
-      maker_mark: YAGEO
       table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
         V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
       fields:
       - field: series
         code: CC
-        row: CC XXXX X X X7R X BB XXX
-        means: Ceramic Multilayer
-        means_row: Surface-Mount Ceramic Multilayer Capacitors
       - field: size
         code: '0603'
         row: 0603 (1608)
@@ -2288,14 +2275,12 @@ selections:
         means: Paper/PE taping reel
       - field: dielectric
         code: X7R
-        row: CC XXXX X X X7R X BB XXX
       - field: voltage
         code: '8'
         row: 8 = 25 V
         means: 25 V
       - field: process
         code: BB
-        row: CC XXXX X X X7R X BB XXX
       - field: value
         code: '105'
         rule: pf_2sig
@@ -2358,18 +2343,15 @@ selections:
     mpn: CC0603KRX7R8BB105
     datasheet:
       binding: DECODED
+      scheme: yageo-cc-x7r-v26-p2
       path: v2/vendor/passives/yageo-cc-series.pdf
       page: 2
       publisher: YAGEO
-      maker_mark: YAGEO
       table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
         V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
       fields:
       - field: series
         code: CC
-        row: CC XXXX X X X7R X BB XXX
-        means: Ceramic Multilayer
-        means_row: Surface-Mount Ceramic Multilayer Capacitors
       - field: size
         code: '0603'
         row: 0603 (1608)
@@ -2383,14 +2365,12 @@ selections:
         means: Paper/PE taping reel
       - field: dielectric
         code: X7R
-        row: CC XXXX X X X7R X BB XXX
       - field: voltage
         code: '8'
         row: 8 = 25 V
         means: 25 V
       - field: process
         code: BB
-        row: CC XXXX X X X7R X BB XXX
       - field: value
         code: '105'
         rule: pf_2sig
@@ -2453,18 +2433,15 @@ selections:
     mpn: CC0603KRX7R8BB105
     datasheet:
       binding: DECODED
+      scheme: yageo-cc-x7r-v26-p2
       path: v2/vendor/passives/yageo-cc-series.pdf
       page: 2
       publisher: YAGEO
-      maker_mark: YAGEO
       table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
         V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
       fields:
       - field: series
         code: CC
-        row: CC XXXX X X X7R X BB XXX
-        means: Ceramic Multilayer
-        means_row: Surface-Mount Ceramic Multilayer Capacitors
       - field: size
         code: '0603'
         row: 0603 (1608)
@@ -2478,14 +2455,12 @@ selections:
         means: Paper/PE taping reel
       - field: dielectric
         code: X7R
-        row: CC XXXX X X X7R X BB XXX
       - field: voltage
         code: '8'
         row: 8 = 25 V
         means: 25 V
       - field: process
         code: BB
-        row: CC XXXX X X X7R X BB XXX
       - field: value
         code: '105'
         rule: pf_2sig
@@ -2548,18 +2523,15 @@ selections:
     mpn: CC0603KRX7R8BB105
     datasheet:
       binding: DECODED
+      scheme: yageo-cc-x7r-v26-p2
       path: v2/vendor/passives/yageo-cc-series.pdf
       page: 2
       publisher: YAGEO
-      maker_mark: YAGEO
       table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
         V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
       fields:
       - field: series
         code: CC
-        row: CC XXXX X X X7R X BB XXX
-        means: Ceramic Multilayer
-        means_row: Surface-Mount Ceramic Multilayer Capacitors
       - field: size
         code: '0603'
         row: 0603 (1608)
@@ -2573,14 +2545,12 @@ selections:
         means: Paper/PE taping reel
       - field: dielectric
         code: X7R
-        row: CC XXXX X X X7R X BB XXX
       - field: voltage
         code: '8'
         row: 8 = 25 V
         means: 25 V
       - field: process
         code: BB
-        row: CC XXXX X X X7R X BB XXX
       - field: value
         code: '105'
         rule: pf_2sig
@@ -2643,18 +2613,15 @@ selections:
     mpn: CC0603KRX7R8BB105
     datasheet:
       binding: DECODED
+      scheme: yageo-cc-x7r-v26-p2
       path: v2/vendor/passives/yageo-cc-series.pdf
       page: 2
       publisher: YAGEO
-      maker_mark: YAGEO
       table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
         V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
       fields:
       - field: series
         code: CC
-        row: CC XXXX X X X7R X BB XXX
-        means: Ceramic Multilayer
-        means_row: Surface-Mount Ceramic Multilayer Capacitors
       - field: size
         code: '0603'
         row: 0603 (1608)
@@ -2668,14 +2635,12 @@ selections:
         means: Paper/PE taping reel
       - field: dielectric
         code: X7R
-        row: CC XXXX X X X7R X BB XXX
       - field: voltage
         code: '8'
         row: 8 = 25 V
         means: 25 V
       - field: process
         code: BB
-        row: CC XXXX X X X7R X BB XXX
       - field: value
         code: '105'
         rule: pf_2sig
@@ -2739,18 +2704,15 @@ selections:
     mpn: CC0603KRX7R8BB105
     datasheet:
       binding: DECODED
+      scheme: yageo-cc-x7r-v26-p2
       path: v2/vendor/passives/yageo-cc-series.pdf
       page: 2
       publisher: YAGEO
-      maker_mark: YAGEO
       table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
         V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
       fields:
       - field: series
         code: CC
-        row: CC XXXX X X X7R X BB XXX
-        means: Ceramic Multilayer
-        means_row: Surface-Mount Ceramic Multilayer Capacitors
       - field: size
         code: '0603'
         row: 0603 (1608)
@@ -2764,14 +2726,12 @@ selections:
         means: Paper/PE taping reel
       - field: dielectric
         code: X7R
-        row: CC XXXX X X X7R X BB XXX
       - field: voltage
         code: '8'
         row: 8 = 25 V
         means: 25 V
       - field: process
         code: BB
-        row: CC XXXX X X X7R X BB XXX
       - field: value
         code: '105'
         rule: pf_2sig
@@ -2835,18 +2795,15 @@ selections:
     mpn: CC0603KRX7R8BB105
     datasheet:
       binding: DECODED
+      scheme: yageo-cc-x7r-v26-p2
       path: v2/vendor/passives/yageo-cc-series.pdf
       page: 2
       publisher: YAGEO
-      maker_mark: YAGEO
       table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
         V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
       fields:
       - field: series
         code: CC
-        row: CC XXXX X X X7R X BB XXX
-        means: Ceramic Multilayer
-        means_row: Surface-Mount Ceramic Multilayer Capacitors
       - field: size
         code: '0603'
         row: 0603 (1608)
@@ -2860,14 +2817,12 @@ selections:
         means: Paper/PE taping reel
       - field: dielectric
         code: X7R
-        row: CC XXXX X X X7R X BB XXX
       - field: voltage
         code: '8'
         row: 8 = 25 V
         means: 25 V
       - field: process
         code: BB
-        row: CC XXXX X X X7R X BB XXX
       - field: value
         code: '105'
         rule: pf_2sig
@@ -2927,18 +2882,15 @@ selections:
     mpn: CC0603KRX7R7BB105
     datasheet:
       binding: DECODED
+      scheme: yageo-cc-x7r-v26-p2
       path: v2/vendor/passives/yageo-cc-series.pdf
       page: 2
       publisher: YAGEO
-      maker_mark: YAGEO
       table: 'YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, General Purpose & High Cap., X7R 6.3
         V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, GLOBAL PART NUMBER'
       fields:
       - field: series
         code: CC
-        row: CC XXXX X X X7R X BB XXX
-        means: Ceramic Multilayer
-        means_row: Surface-Mount Ceramic Multilayer Capacitors
       - field: size
         code: '0603'
         row: 0603 (1608)
@@ -2952,14 +2904,12 @@ selections:
         means: Paper/PE taping reel
       - field: dielectric
         code: X7R
-        row: CC XXXX X X X7R X BB XXX
       - field: voltage
         code: '7'
         row: 7 = 16 V
         means: 16 V
       - field: process
         code: BB
-        row: CC XXXX X X X7R X BB XXX
       - field: value
         code: '105'
         rule: pf_2sig
@@ -3182,24 +3132,24 @@ selections:
     mpn: 0603WAF1000T5E
     datasheet:
       binding: DECODED
+      scheme: uniroyal-thick-film-p2
       path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
       page: 2
       publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
-      maker_mark: UNI-ROYAL
       held_back: true
       fetch: v2/docs/records/w5identc/fetch_held_back.py
       table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
       fields:
       - field: size
         code: '0603'
-        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+        row: '1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
       - field: power
         code: WA
         row: 'E.g.: WA=1/10W W4=1/4W'
         means: 1/10W
       - field: tolerance
         code: F
-        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        row: '7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
         means: ±1%
       - field: value
         code: '1000'
@@ -3209,7 +3159,7 @@ selections:
         means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
       - field: packaging
         code: T
-        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        row: '12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
         means: Tape/Reel
       - field: quantity
         code: '5'
@@ -3272,24 +3222,24 @@ selections:
     mpn: 0603WAF1003T5E
     datasheet:
       binding: DECODED
+      scheme: uniroyal-thick-film-p2
       path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
       page: 2
       publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
-      maker_mark: UNI-ROYAL
       held_back: true
       fetch: v2/docs/records/w5identc/fetch_held_back.py
       table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
       fields:
       - field: size
         code: '0603'
-        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+        row: '1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
       - field: power
         code: WA
         row: 'E.g.: WA=1/10W W4=1/4W'
         means: 1/10W
       - field: tolerance
         code: F
-        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        row: '7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
         means: ±1%
       - field: value
         code: '1003'
@@ -3299,7 +3249,7 @@ selections:
         means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
       - field: packaging
         code: T
-        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        row: '12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
         means: Tape/Reel
       - field: quantity
         code: '5'
@@ -3357,24 +3307,24 @@ selections:
     mpn: 0603WAF1002T5E
     datasheet:
       binding: DECODED
+      scheme: uniroyal-thick-film-p2
       path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
       page: 2
       publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
-      maker_mark: UNI-ROYAL
       held_back: true
       fetch: v2/docs/records/w5identc/fetch_held_back.py
       table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
       fields:
       - field: size
         code: '0603'
-        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+        row: '1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
       - field: power
         code: WA
         row: 'E.g.: WA=1/10W W4=1/4W'
         means: 1/10W
       - field: tolerance
         code: F
-        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        row: '7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
         means: ±1%
       - field: value
         code: '1002'
@@ -3384,7 +3334,7 @@ selections:
         means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
       - field: packaging
         code: T
-        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        row: '12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
         means: Tape/Reel
       - field: quantity
         code: '5'
@@ -3459,24 +3409,24 @@ selections:
     mpn: 0603WAF1002T5E
     datasheet:
       binding: DECODED
+      scheme: uniroyal-thick-film-p2
       path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
       page: 2
       publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
-      maker_mark: UNI-ROYAL
       held_back: true
       fetch: v2/docs/records/w5identc/fetch_held_back.py
       table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
       fields:
       - field: size
         code: '0603'
-        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+        row: '1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
       - field: power
         code: WA
         row: 'E.g.: WA=1/10W W4=1/4W'
         means: 1/10W
       - field: tolerance
         code: F
-        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        row: '7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
         means: ±1%
       - field: value
         code: '1002'
@@ -3486,7 +3436,7 @@ selections:
         means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
       - field: packaging
         code: T
-        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        row: '12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
         means: Tape/Reel
       - field: quantity
         code: '5'
@@ -3563,24 +3513,24 @@ selections:
     mpn: 0603WAF1800T5E
     datasheet:
       binding: DECODED
+      scheme: uniroyal-thick-film-p2
       path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
       page: 2
       publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
-      maker_mark: UNI-ROYAL
       held_back: true
       fetch: v2/docs/records/w5identc/fetch_held_back.py
       table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
       fields:
       - field: size
         code: '0603'
-        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+        row: '1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
       - field: power
         code: WA
         row: 'E.g.: WA=1/10W W4=1/4W'
         means: 1/10W
       - field: tolerance
         code: F
-        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        row: '7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
         means: ±1%
       - field: value
         code: '1800'
@@ -3590,7 +3540,7 @@ selections:
         means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
       - field: packaging
         code: T
-        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        row: '12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
         means: Tape/Reel
       - field: quantity
         code: '5'
@@ -3659,24 +3609,24 @@ selections:
     mpn: 0603WAF1001T5E
     datasheet:
       binding: DECODED
+      scheme: uniroyal-thick-film-p2
       path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
       page: 2
       publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
-      maker_mark: UNI-ROYAL
       held_back: true
       fetch: v2/docs/records/w5identc/fetch_held_back.py
       table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
       fields:
       - field: size
         code: '0603'
-        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+        row: '1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
       - field: power
         code: WA
         row: 'E.g.: WA=1/10W W4=1/4W'
         means: 1/10W
       - field: tolerance
         code: F
-        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        row: '7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
         means: ±1%
       - field: value
         code: '1001'
@@ -3686,7 +3636,7 @@ selections:
         means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
       - field: packaging
         code: T
-        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        row: '12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
         means: Tape/Reel
       - field: quantity
         code: '5'
@@ -3743,24 +3693,24 @@ selections:
     mpn: 0603WAF2201T5E
     datasheet:
       binding: DECODED
+      scheme: uniroyal-thick-film-p2
       path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
       page: 2
       publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
-      maker_mark: UNI-ROYAL
       held_back: true
       fetch: v2/docs/records/w5identc/fetch_held_back.py
       table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
       fields:
       - field: size
         code: '0603'
-        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+        row: '1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
       - field: power
         code: WA
         row: 'E.g.: WA=1/10W W4=1/4W'
         means: 1/10W
       - field: tolerance
         code: F
-        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        row: '7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
         means: ±1%
       - field: value
         code: '2201'
@@ -3770,7 +3720,7 @@ selections:
         means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
       - field: packaging
         code: T
-        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        row: '12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
         means: Tape/Reel
       - field: quantity
         code: '5'
@@ -3830,24 +3780,24 @@ selections:
     mpn: 0603WAF2201T5E
     datasheet:
       binding: DECODED
+      scheme: uniroyal-thick-film-p2
       path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
       page: 2
       publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
-      maker_mark: UNI-ROYAL
       held_back: true
       fetch: v2/docs/records/w5identc/fetch_held_back.py
       table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
       fields:
       - field: size
         code: '0603'
-        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+        row: '1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
       - field: power
         code: WA
         row: 'E.g.: WA=1/10W W4=1/4W'
         means: 1/10W
       - field: tolerance
         code: F
-        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        row: '7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
         means: ±1%
       - field: value
         code: '2201'
@@ -3857,7 +3807,7 @@ selections:
         means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
       - field: packaging
         code: T
-        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        row: '12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
         means: Tape/Reel
       - field: quantity
         code: '5'
@@ -3932,24 +3882,24 @@ selections:
     mpn: 0603WAF270JT5E
     datasheet:
       binding: DECODED
+      scheme: uniroyal-thick-film-p2
       path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
       page: 2
       publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
-      maker_mark: UNI-ROYAL
       held_back: true
       fetch: v2/docs/records/w5identc/fetch_held_back.py
       table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
       fields:
       - field: size
         code: '0603'
-        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+        row: '1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
       - field: power
         code: WA
         row: 'E.g.: WA=1/10W W4=1/4W'
         means: 1/10W
       - field: tolerance
         code: F
-        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        row: '7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
         means: ±1%
       - field: value
         code: 270J
@@ -3959,7 +3909,7 @@ selections:
         means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
       - field: packaging
         code: T
-        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        row: '12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
         means: Tape/Reel
       - field: quantity
         code: '5'
@@ -4026,24 +3976,24 @@ selections:
     mpn: 0603WAF3000T5E
     datasheet:
       binding: DECODED
+      scheme: uniroyal-thick-film-p2
       path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
       page: 2
       publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
-      maker_mark: UNI-ROYAL
       held_back: true
       fetch: v2/docs/records/w5identc/fetch_held_back.py
       table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
       fields:
       - field: size
         code: '0603'
-        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+        row: '1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
       - field: power
         code: WA
         row: 'E.g.: WA=1/10W W4=1/4W'
         means: 1/10W
       - field: tolerance
         code: F
-        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        row: '7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
         means: ±1%
       - field: value
         code: '3000'
@@ -4053,7 +4003,7 @@ selections:
         means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
       - field: packaging
         code: T
-        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        row: '12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
         means: Tape/Reel
       - field: quantity
         code: '5'
@@ -4110,24 +4060,24 @@ selections:
     mpn: 0603WAF3300T5E
     datasheet:
       binding: DECODED
+      scheme: uniroyal-thick-film-p2
       path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
       page: 2
       publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
-      maker_mark: UNI-ROYAL
       held_back: true
       fetch: v2/docs/records/w5identc/fetch_held_back.py
       table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
       fields:
       - field: size
         code: '0603'
-        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+        row: '1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
       - field: power
         code: WA
         row: 'E.g.: WA=1/10W W4=1/4W'
         means: 1/10W
       - field: tolerance
         code: F
-        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        row: '7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
         means: ±1%
       - field: value
         code: '3300'
@@ -4137,7 +4087,7 @@ selections:
         means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
       - field: packaging
         code: T
-        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        row: '12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
         means: Tape/Reel
       - field: quantity
         code: '5'
@@ -4194,24 +4144,24 @@ selections:
     mpn: 0603WAF4700T5E
     datasheet:
       binding: DECODED
+      scheme: uniroyal-thick-film-p2
       path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
       page: 2
       publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
-      maker_mark: UNI-ROYAL
       held_back: true
       fetch: v2/docs/records/w5identc/fetch_held_back.py
       table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
       fields:
       - field: size
         code: '0603'
-        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+        row: '1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
       - field: power
         code: WA
         row: 'E.g.: WA=1/10W W4=1/4W'
         means: 1/10W
       - field: tolerance
         code: F
-        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        row: '7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
         means: ±1%
       - field: value
         code: '4700'
@@ -4221,7 +4171,7 @@ selections:
         means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
       - field: packaging
         code: T
-        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        row: '12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
         means: Tape/Reel
       - field: quantity
         code: '5'
@@ -4333,24 +4283,24 @@ selections:
     mpn: 0603WAF470JT5E
     datasheet:
       binding: DECODED
+      scheme: uniroyal-thick-film-p2
       path: v2/vendor/passives/held/uniroyal-series-11cd644d.pdf
       page: 2
       publisher: UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)
-      maker_mark: UNI-ROYAL
       held_back: true
       fetch: v2/docs/records/w5identc/fetch_held_back.py
       table: Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System
       fields:
       - field: size
         code: '0603'
-        row: '2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
+        row: '1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.'
       - field: power
         code: WA
         row: 'E.g.: WA=1/10W W4=1/4W'
         means: 1/10W
       - field: tolerance
         code: F
-        row: '2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
+        row: '7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%'
         means: ±1%
       - field: value
         code: 470J
@@ -4360,7 +4310,7 @@ selections:
         means_row: 0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6
       - field: packaging
         code: T
-        row: '2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
+        row: '12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel'
         means: Tape/Reel
       - field: quantity
         code: '5'

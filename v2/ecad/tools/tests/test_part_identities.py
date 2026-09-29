@@ -345,71 +345,193 @@ def t_the_committed_table_is_whole():
 
 
 YAGEO_PAGE = ["YAGEO Product specification", "Surface-Mount Ceramic Multilayer Capacitors X7R 6.3 V to 250 V",
-              "YAGEO BRAND ordering code", "CC XXXX X X X7R X BB XXX", "0402 (1005)", "0603 (1608)",
-              "K = ± 10%", "M = ± 20%", "R = Paper/PE taping reel; Reel 7 inch", "8 = 25 V", "9 = 50 V",
-              "2 significant digits+number of zeros"]
+              "YAGEO BRAND ordering code", "CC XXXX X X X7R X BB XXX", "(1) (2) (3) (4) (5)",
+              "(1) SIZE, INCH BASED (METRIC)", "0402 (1005)", "0603 (1608)",
+              "(2) TOLERANCE", "K = ± 10%", "M = ± 20%",
+              "(3) PACKING STYLE", "R = Paper/PE taping reel; Reel 7 inch",
+              "(4) RATED VOLTAGE", "5 = 6.3 V", "8 = 25 V", "9 = 50 V",
+              "(5) CAPACITANCE VALUE", "2 significant digits+number of zeros", "NOTE", "K = Blister taping reel"]
 CAP_REQ = {"value": "100nF", "package": "0603", "construction": "MLCC", "dielectric": "X7R", "v_rating_min": 6.3,
            "tolerance_max_pct": 10.0}
+_TOL = {"K": ("K = ± 10%", "± 10%"), "M": ("M = ± 20%", "± 20%")}
+_VOLT = {"5": ("5 = 6.3 V", "6.3 V"), "8": ("8 = 25 V", "25 V"), "9": ("9 = 50 V", "50 V")}
 
 
-def _yageo_fields(tol="K", volt="9", volt_row="9 = 50 V", volt_means="50 V"):
-    return [dict(field="series", code="CC", row="CC XXXX X X X7R X BB XXX", means="Ceramic Multilayer",
-                 means_row="Surface-Mount Ceramic Multilayer Capacitors X7R 6.3 V to 250 V"),
-            dict(field="size", code="0603", row="0603 (1608)"),
-            dict(field="tolerance", code=tol, row="%s = ± %s%%" % (tol, {"K": 10, "M": 20}[tol]), means="± %s%%" % {"K": 10, "M": 20}[tol]),
-            dict(field="packaging", code="R", row="R = Paper/PE taping reel; Reel 7 inch", means="Paper/PE taping reel"),
-            dict(field="dielectric", code="X7R", row="CC XXXX X X X7R X BB XXX"),
-            dict(field="voltage", code=volt, row=volt_row, means=volt_means),
-            dict(field="process", code="BB", row="CC XXXX X X X7R X BB XXX"),
-            dict(field="value", code="104", rule="pf_2sig", row="2 significant digits+number of zeros")]
+def _yageo_fields(mpn="CC0603KRX7R9BB104", volt_means=None):
+    """The fields of a Yageo CC X7R part number, one per position of the printed scheme, in its order."""
+    tol, pack, volt, val = mpn[6], mpn[7], mpn[11], mpn[14:17]
+    return [dict(field="series", code="CC"),
+            dict(field="size", code=mpn[2:6], row="%s (1608)" % mpn[2:6]),
+            dict(field="tolerance", code=tol, row=_TOL.get(tol, ("", ""))[0], means=_TOL.get(tol, ("", ""))[1]),
+            dict(field="packaging", code=pack, row="R = Paper/PE taping reel; Reel 7 inch", means="Paper/PE taping reel"),
+            dict(field="dielectric", code="X7R"),
+            dict(field="voltage", code=volt, row=_VOLT.get(volt, ("", ""))[0], means=volt_means or _VOLT.get(volt, ("", ""))[1]),
+            dict(field="process", code="BB"),
+            dict(field="value", code=val, row="2 significant digits+number of zeros")]
 
 
-def _decoded(page, fields, publisher="YAGEO", mark="YAGEO"):
+class _Scheme:
+    """A fixture scheme registered in the tool's registry for one test (a table cannot register one) and removed after."""
+    def __init__(self, sha, page=1):
+        self.sha, self.page = sha, page
+
+    def __enter__(self):
+        PI.SCHEMES["fixture"] = dict(PI.SCHEMES["yageo-cc-x7r-v26-p2"], sha256=self.sha, page=self.page)
+        return self
+
+    def __exit__(self, *a):
+        PI.SCHEMES.pop("fixture", None)
+
+
+def _decoded(page, fields, publisher="YAGEO"):
     d, p = _fixture_doc([page])
     h = hashlib.sha256(open(p, "rb").read()).hexdigest()
-    return d, dict(path=os.path.basename(p), sha256=h, page=1, binding="DECODED", publisher=publisher, maker_mark=mark, fields=fields)
+    return d, h, dict(path=os.path.basename(p), sha256=h, page=1, binding="DECODED", scheme="fixture", publisher=publisher, fields=fields)
 
 
 def t_a_decoded_binding_that_holds():
-    """The session's DECODED rule (29 September 2026): the maker's ordering-code table on the cited page decodes the
-    part number field by field, each code with its meaning in the table's own row, and the decoded part meets the
-    selection's value, package, tolerance, voltage and dielectric."""
-    d, ds = _decoded(YAGEO_PAGE, _yageo_fields())
-    r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ)
-    assert r["state"] == "DECODED" and r["binding"] == "DECODED", r
-    assert set(r["established"]) >= {"value", "package", "tolerance", "voltage", "dielectric", "construction"}, r
-    ds2 = dict(ds, fields=_yageo_fields()[:-1] + [dict(field="value", code="104", rule="pf_2sig", row="2 significant digits+number of zeros")])
-    r = PI.read_binding(ds2, "CC0603KRX7R9BB105", root=d, maker="YAGEO", req=CAP_REQ)
-    assert r["state"] == "REFUSED" and "spell" in r["why"], "fields that do not spell the part number were accepted: %r" % (r,)
+    """Decision 59 (29 September 2026): the maker's ordering-code table on the cited page decodes the part number
+    position by position as the page lays it out, each code with its meaning in the table's own row, and the decoded
+    part meets every deciding property of its kind."""
+    d, h, ds = _decoded(YAGEO_PAGE, _yageo_fields())
+    with _Scheme(h):
+        r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ, kind="capacitor")
+        assert r["state"] == "DECODED" and r["binding"] == "DECODED", r
+        assert set(r["established"]) == {"value", "package", "tolerance", "voltage", "dielectric", "construction"}, r
+        r = PI.read_binding(ds, "CC0603KRX7R9BB105", root=d, maker="YAGEO", req=CAP_REQ, kind="capacitor")
+        assert r["state"] == "REFUSED", "fields that do not spell the part number were accepted: %r" % (r,)
 
 
 def t_a_decoded_tolerance_that_contradicts_the_selection_is_refused():
-    d, ds = _decoded(YAGEO_PAGE, _yageo_fields(tol="M"))
-    r = PI.read_binding(ds, "CC0603MRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ)
-    assert r["state"] == "REFUSED" and "tolerance" in r["why"], "a 20 percent part met a 10 percent selection: %r" % (r,)
-    r = PI.read_binding(ds, "CC0603MRX7R9BB104", root=d, maker="YAGEO", req=dict(CAP_REQ, tolerance_max_pct=20.0))
-    assert r["state"] == "DECODED", r
+    d, h, ds = _decoded(YAGEO_PAGE, _yageo_fields("CC0603MRX7R9BB104"))
+    with _Scheme(h):
+        r = PI.read_binding(ds, "CC0603MRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ, kind="capacitor")
+        assert r["state"] == "REFUSED" and "tolerance" in r["why"], "a 20 percent part met a 10 percent selection: %r" % (r,)
+        r = PI.read_binding(ds, "CC0603MRX7R9BB104", root=d, maker="YAGEO", req=dict(CAP_REQ, tolerance_max_pct=20.0), kind="capacitor")
+        assert r["state"] == "DECODED", r
 
 
 def t_a_decoded_binding_on_a_page_that_lacks_a_field_is_refused():
-    page = [l for l in YAGEO_PAGE if l != "9 = 50 V"]       # the table page without the voltage code 9
-    d, ds = _decoded(page, _yageo_fields())
-    r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ)
-    assert r["state"] == "REFUSED" and "not on the cited page" in r["why"], r
-    # and a row that is on the page but does not map the code to what the binding claims
-    d, ds = _decoded(YAGEO_PAGE, _yageo_fields(volt_row="8 = 25 V", volt_means="50 V", volt="8"))
-    r = PI.read_binding(ds, "CC0603KRX7R8BB104", root=d, maker="YAGEO", req=CAP_REQ)
-    assert r["state"] == "REFUSED" and "does not map" in r["why"], r
+    d, h, ds = _decoded([l for l in YAGEO_PAGE if l != "9 = 50 V"], _yageo_fields())
+    with _Scheme(h):
+        r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ, kind="capacitor")
+        assert r["state"] == "REFUSED" and "not on the cited page" in r["why"], r
+    d, h, ds = _decoded([l for l in YAGEO_PAGE if l != "(2) TOLERANCE"], _yageo_fields())
+    with _Scheme(h):
+        r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ, kind="capacitor")
+        assert r["state"] == "REFUSED" and "label" in r["why"], "a scheme position the page does not name was decoded: %r" % (r,)
+    d, h, ds = _decoded(YAGEO_PAGE, _yageo_fields("CC0603KRX7R8BB104", volt_means="50 V"))
+    with _Scheme(h):
+        r = PI.read_binding(ds, "CC0603KRX7R8BB104", root=d, maker="YAGEO", req=CAP_REQ, kind="capacitor")
+        assert r["state"] == "REFUSED" and "does not map" in r["why"], r
 
 
 def t_a_decoded_binding_on_a_distributors_page_is_refused():
     page = ["LCSC Electronics product detail"] + YAGEO_PAGE[1:]
-    d, ds = _decoded(page, _yageo_fields(), publisher="LCSC Electronics", mark="LCSC")
-    r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ)
-    assert r["state"] == "REFUSED" and "distributor" in r["why"], r
-    d, ds = _decoded(page + ["YAGEO"], _yageo_fields())   # the maker named, but the page is the distributor's
-    r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ)
-    assert r["state"] == "REFUSED" and "distributor" in r["why"], r
+    d, h, ds = _decoded(page, _yageo_fields(), publisher="LCSC Electronics")
+    with _Scheme(h):
+        r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ, kind="capacitor")
+        assert r["state"] == "REFUSED" and "distributor" in r["why"], r
+    d, h, ds = _decoded(page + ["YAGEO"], _yageo_fields())
+    with _Scheme(h):
+        r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ, kind="capacitor")
+        assert r["state"] == "REFUSED" and "distributor" in r["why"], r
+    d, h, ds = _decoded(YAGEO_PAGE, _yageo_fields())
+    r = PI.read_binding(dict(ds, scheme="yageo-cc-x7r-v26-p2"), "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ, kind="capacitor")
+    assert r["state"] == "REFUSED" and "another document" in r["why"], "a scheme was applied to a document it is not written for: %r" % (r,)
+    r = PI.read_binding(ds, "CC0603KRX7R9BB104", root=d, maker="YAGEO", req=CAP_REQ, kind="capacitor")   # no such scheme now
+    assert r["state"] == "REFUSED" and "not one this tool knows" in r["why"], r
+
+
+YAGEO_DOC = "v2/vendor/passives/yageo-cc-series.pdf"
+
+
+def _real_yageo(mpn, fields=None, kind="capacitor", req=None):
+    need(os.path.join(PI.REPO, YAGEO_DOC), "the Yageo CC X7R sheet")
+    ds = dict(path=YAGEO_DOC, sha256=PI.SCHEMES["yageo-cc-x7r-v26-p2"]["sha256"], page=2, binding="DECODED",
+              scheme="yageo-cc-x7r-v26-p2", publisher="YAGEO", fields=fields if fields is not None else _real_fields(mpn))
+    return PI.read_binding(ds, mpn, maker="YAGEO", req=req or CAP_REQ, kind=kind)
+
+
+def _real_fields(mpn):
+    f = _yageo_fields(mpn[:17]) if len(mpn) >= 17 else _yageo_fields()
+    f[1]["row"] = "0603 (1608)"
+    return f
+
+
+def t_the_checkers_scheme_probes_are_refused_on_the_makers_own_page():
+    """Round 3's check, B2, on YAGEO V.26 page 2 as filed: the true part decodes; tolerance and packing swapped,
+    a padding character, an extra BB, and a capacitor scheme on a pushbutton or a crystal are all refused."""
+    r = _real_yageo("CC0603KRX7R9BB104")
+    assert r["state"] == "DECODED", r
+    swapped = _real_fields("CC0603KRX7R9BB104"); swapped[2], swapped[3] = swapped[3], swapped[2]
+    for f in swapped[2:4]: f["code"] = f["code"]
+    r = _real_yageo("CC0603RKX7R9BB104", fields=swapped)
+    assert r["state"] == "REFUSED", "tolerance and packing swapped decoded: %r" % (r,)
+    r = _real_yageo("CC0603KRX7R9BB104X", fields=_real_fields("CC0603KRX7R9BB104") + [dict(field="literal", code="X")])
+    assert r["state"] == "REFUSED", "a padding character decoded: %r" % (r,)
+    r = _real_yageo("CCBB0603KRX7R9BB104", fields=[dict(field="series", code="CC"), dict(field="process", code="BB")] + _real_fields("CC0603KRX7R9BB104")[1:])
+    assert r["state"] == "REFUSED", "an extra BB decoded: %r" % (r,)
+    btn = {"value": "MAIN PWR 19 mm momentary, green ring", "land": "PanelSwitch_19mm"}
+    r = _real_yageo("CC0603KRX7R9BB104", kind="other", req=btn)
+    assert r["state"] == "REFUSED" and "cannot resolve" in r["why"], "a capacitor scheme resolved a pushbutton: %r" % (r,)
+    r = _real_yageo("CC0603KRX7R9BB104", kind="other", req={"value": "12 MHz ABM8-272-T3 (3225)", "land": "Crystal_SMD_3225-4Pin_3.2x2.5mm"})
+    assert r["state"] == "REFUSED", "a capacitor scheme resolved a crystal: %r" % (r,)
+
+
+def t_uniroyal_positions_refuse_a_permuted_part_number():
+    """B2 probe 4 on Uniroyal's own page 2 (held back; skipped where it is not fetched): packaging and special feature
+    swapped, 0603WAF1002E5T, is refused where 0603WAF1002T5E decodes."""
+    doc = "v2/vendor/passives/held/uniroyal-series-11cd644d.pdf"
+    if not os.path.exists(os.path.join(PI.REPO, doc)): raise Skip("Uniroyal's sheet is held back and not fetched here")
+    U = {"size": "1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.",
+         "power": ("E.g.: WA=1/10W W4=1/4W", "1/10W"),
+         "tol": ("7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%", "±1%"),
+         "val": "2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the resistance, and 11th code is the power of ten.",
+         "pow": "0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6"}
+    def fields(pack, qty, sp):
+        return [dict(field="size", code="0603", row=U["size"]), dict(field="power", code="WA", row=U["power"][0], means=U["power"][1]),
+                dict(field="tolerance", code="F", row=U["tol"][0], means=U["tol"][1]),
+                dict(field="value", code="1002", row=U["val"], means_row=U["pow"]),
+                dict(field="packaging", code=pack[0], row=pack[1], means=pack[2]), dict(field="quantity", code=qty[0], row=qty[1], means=qty[2]),
+                dict(field="special", code=sp[0], row=sp[1], means=sp[2])]
+    T = ("T", "12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel", "Tape/Reel")
+    Q = ("5", "4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs", "5000pcs")
+    E = ("E", "E = Environmental Protection, Lead Free, or Standard type.", "Environmental Protection")
+    req = {"value": "10kOhm", "package": "0603", "resistor_kind": "general", "tolerance_max_pct": 5.0, "power_min_w": 0.1}
+    ds = dict(path=doc, sha256=PI.SCHEMES["uniroyal-thick-film-p2"]["sha256"], page=2, binding="DECODED", scheme="uniroyal-thick-film-p2",
+              publisher="UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)", fields=fields(T, Q, E))
+    r = PI.read_binding(ds, "0603WAF1002T5E", maker="UNI-ROYAL (Uniroyal Electronics)", req=req, kind="resistor")
+    assert r["state"] == "DECODED" and set(r["established"]) == {"value", "package", "tolerance", "power"}, r
+    r = PI.read_binding(dict(ds, fields=fields(E, Q, T)), "0603WAF1002E5T", maker="UNI-ROYAL (Uniroyal Electronics)", req=req, kind="resistor")
+    assert r["state"] == "REFUSED", "packaging and special swapped decoded: %r" % (r,)
+    r = PI.read_binding(ds, "0603WAF1002T5E", maker="UNI-ROYAL (Uniroyal Electronics)", req=dict(req, resistor_kind="current sense", tcr_max_ppm=200), kind="resistor")
+    assert r["state"] == "REFUSED", "a general thick film scheme resolved a shunt: %r" % (r,)
+
+
+def t_the_check_judges_on_requirements_derived_from_the_netlist():
+    """Round 3's check, B1: in a copy of the committed table, C37's selection (stated 25 V) is given v_rating_min 6.3 and
+    the 6.3 V part CC0603KRX7R5BB105, its key untouched. The check must refuse it: the requirement it judges on is the
+    one the netlist, the intent and the generator's value derive, not the table's."""
+    import yaml
+    t = yaml.safe_load(open(need(PI.TABLE, "the identity table")))
+    need(os.path.join(PI.REPO, YAGEO_DOC), "the Yageo CC X7R sheet")
+    s = next(x for x in t["selections"] if "c:C37" in x["rows"])
+    assert s["identity"]["status"] == "RESOLVED" and s["requirements"]["v_rating_min"] == 25.0, s["identity"]
+    s["requirements"]["v_rating_min"] = 6.3
+    ds = s["identity"]["datasheet"]
+    s["identity"]["mpn"] = "CC0603KRX7R5BB105"
+    for f in ds["fields"]:
+        if f["field"] == "voltage": f.update(code="5", row="5 = 6.3 V", means="6.3 V")
+    d = tempfile.mkdtemp(prefix="pi-mut-")
+    p = os.path.join(d, "table.yaml")
+    yaml.safe_dump(t, open(p, "w"), sort_keys=False, allow_unicode=True)
+    import io, contextlib
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        rc = PI.check([p, "--unfetched-ok"])
+    out = buf.getvalue()
+    assert rc == 1 and "not the ones the netlist" in out and "rated 6.3 V where the selection needs 25 V" in out, out[-1500:]
 
 
 def t_resistor_values_decode_by_the_makers_power_row():

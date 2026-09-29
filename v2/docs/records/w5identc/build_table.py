@@ -113,13 +113,13 @@ YAGEO_ROWS = {
                 "8": ("8 = 25 V", "25 V"), "9": ("9 = 50 V", "50 V")},
 }
 UNIROYAL_ROWS = {
-    "size": "2.1 1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.",
+    "size": "1st~4th codes: Part name. E.g.: 01005, 0201, 0402, 0603, 0805, 1206 ,1210, 2010,1812, 2512.",
     "power": ("E.g.: WA=1/10W W4=1/4W", "1/10W"),
-    "tolerance": ("2.3 7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%", "±1%"),
+    "tolerance": ("7th code: Tolerance. E.g.: D=±0.5% F=±1% G=±2% J=±5%", "±1%"),
     "value": "2.4.2 If value belongs to standard value of ≤2% series, 8th~10th codes are significant figures of the "
              "resistance, and 11th code is the power of ten.",
     "power_of_ten": "0=100 1=101 2=102 3=103 4=104 5=105 6=106 J=10-1 K=10-2 L=10-3 M=10-4 N=10-5 P=10-6",
-    "packaging": ("2.5.1 12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel", "Tape/Reel"),
+    "packaging": ("12th code: Packaging Type. E.g.: C=Bulk T=Tape/Reel", "Tape/Reel"),
     "quantity": ("4=4000pcs 5=5000pcs C=10000pcs D=20000pcs E=15000pcs", "5000pcs"),
     "special": ("E = Environmental Protection, Lead Free, or Standard type.", "Environmental Protection"),
 }
@@ -132,25 +132,24 @@ def decode_spec(mpn):
     if m:
         size, tol, pack, diel, volt, proc, val = m.groups()
         if size not in YAGEO_ROWS["size"]: return None
-        return dict(binding="DECODED", path="v2/vendor/passives/yageo-cc-series.pdf", page=2, publisher="YAGEO",
-                    maker_mark="YAGEO", table="YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, "
+        return dict(binding="DECODED", scheme="yageo-cc-x7r-v26-p2", path="v2/vendor/passives/yageo-cc-series.pdf", page=2,
+                    publisher="YAGEO", table="YAGEO product specification, Surface-Mount Ceramic Multilayer Capacitors, "
                     "General Purpose & High Cap., X7R 6.3 V to 250 V, V.26 of 19 November 2024: ORDERING INFORMATION, "
                     "GLOBAL PART NUMBER",
-                    fields=[dict(field="series", code="CC", row=YAGEO_SCHEME, means="Ceramic Multilayer",
-                                 means_row="Surface-Mount Ceramic Multilayer Capacitors"),
+                    fields=[dict(field="series", code="CC"),
                             dict(field="size", code=size, row=YAGEO_ROWS["size"][size]),
                             dict(field="tolerance", code=tol, row=YAGEO_ROWS["tolerance"][tol][0], means=YAGEO_ROWS["tolerance"][tol][1]),
                             dict(field="packaging", code=pack, row=YAGEO_ROWS["packaging"][pack][0], means=YAGEO_ROWS["packaging"][pack][1]),
-                            dict(field="dielectric", code=diel, row=YAGEO_SCHEME),
+                            dict(field="dielectric", code=diel),
                             dict(field="voltage", code=volt, row=YAGEO_ROWS["voltage"][volt][0], means=YAGEO_ROWS["voltage"][volt][1]),
-                            dict(field="process", code=proc, row=YAGEO_SCHEME),
+                            dict(field="process", code=proc),
                             dict(field="value", code=val, rule="pf_2sig", row="2 significant digits+number of zeros")])
     m = re.match(r"^(0603)(WA)(F)(\d{3}[0-9J])(T)(5)(E)$", mpn)
     if m:
         size, pw, tol, val, pack, qty, sp = m.groups()
         U = UNIROYAL_ROWS
-        return dict(binding="DECODED", path="v2/vendor/passives/held/uniroyal-series-11cd644d.pdf", page=2,
-                    publisher="UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)", maker_mark="UNI-ROYAL", held_back=True,
+        return dict(binding="DECODED", scheme="uniroyal-thick-film-p2", path="v2/vendor/passives/held/uniroyal-series-11cd644d.pdf",
+                    page=2, publisher="UNI-ROYAL (Uniroyal Electronics Global Co., Ltd.)", held_back=True,
                     fetch="v2/docs/records/w5identc/fetch_held_back.py",
                     table="Uniroyal Thick Film Chip Resistors data sheet, section 2, Explanation of Part No. System",
                     fields=[dict(field="size", code=size, row=U["size"]),
@@ -163,7 +162,7 @@ def decode_spec(mpn):
     return None
 
 
-def try_decode(ident, req, sid, log):
+def try_decode(ident, req, sid, log, kind=None):
     """(datasheet, None) when the maker's table decodes the part for this selection, else (None, why)."""
     ds = decode_spec(ident.get("mpn") or "")
     if ds is None: return None, None
@@ -171,7 +170,7 @@ def try_decode(ident, req, sid, log):
     if not os.path.exists(full):
         raise SystemExit("build_table: %s is held back and not fetched: run %s first" % (ds["path"], ds.get("fetch")))
     ds["sha256"] = sha(full)
-    r = PI.read_binding(ds, ident["mpn"], maker=ident.get("maker"), req=req)
+    r = PI.read_binding(ds, ident["mpn"], maker=ident.get("maker"), req=req, kind=kind)
     log.append(dict(selection=sid, mpn=ident["mpn"], document=ds["path"], binding="DECODED", page=ds["page"],
                     sha256=ds["sha256"], state=r["state"], why=r["why"], not_established=r.get("not_established")))
     if r["state"] == "DECODED":
@@ -310,7 +309,7 @@ def main(argv):
         else:
             raise SystemExit("build_table: %s has the status %r" % (sid, st))
         if ident["status"] == "UNRESOLVED" and ident.get("mpn") and ident.get("reason_class") in ("DOCUMENT_DOES_NOT_NAME_THE_PART", "DOCUMENT_OWED"):
-            dec, why = try_decode(ident, s["requirements"], sid, log)
+            dec, why = try_decode(ident, s["requirements"], sid, log, kind=s["kind"])
             if dec:
                 was = ident.pop("reason_class"); ident.pop("reason", None); ident.pop("next_action", None)
                 ident["status"] = "RESOLVED"; ident["datasheet"] = dec

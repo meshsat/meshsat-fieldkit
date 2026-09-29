@@ -1,0 +1,109 @@
+{
+ "part_numbers": {
+  "0402CG150J500NT": [],
+  "0603B103K500NT": [],
+  "1282.5004": [
+   {
+    "document": "v2/vendor/mentor/mentor-ll14-14-ip68-front-panel-light-guides.pdf",
+    "pages": [
+     2
+    ],
+    "sha256": "a07164ab7b6d31bfbe890f7ea31c95147bd2c1d55c6753b89dc55d56454c52b0"
+   }
+  ],
+  "19-217/GHC-YR1S2/6T": [],
+  "5636ADKB": [],
+  "5636ADKB-2V": [],
+  "ABM8-272": [
+   {
+    "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+    "pages": [
+     217,
+     218
+    ],
+    "sha256": "be56fbb75ba0ae9e26558a73c93ac3e75c2ad4e6878d3b6703de2a76d886ea8c"
+   },
+   {
+    "document": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+    "pages": [
+     11
+    ],
+    "sha256": "51c4f430153fcdbf3209d9b3b41662c8527ff0150bc25777e3fcd6f5221a1c19"
+   }
+  ],
+  "ABM8-272-T3": [
+   {
+    "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+    "pages": [
+     217,
+     218
+    ],
+    "sha256": "be56fbb75ba0ae9e26558a73c93ac3e75c2ad4e6878d3b6703de2a76d886ea8c"
+   },
+   {
+    "document": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+    "pages": [
+     11
+    ],
+    "sha256": "51c4f430153fcdbf3209d9b3b41662c8527ff0150bc25777e3fcd6f5221a1c19"
+   }
+  ],
+  "ATNR4010100MT": [
+   {
+    "document": "v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf",
+    "pages": [
+     5,
+     11
+    ],
+    "sha256": "1ea68f814afe04ca5ee0aa64b12aaf00eb26a95e9e8d7b9d424ad4f74a278623"
+   }
+  ],
+  "ATP16-SL1-203-M0SA-04G": [],
+  "ATP16-SL1-403-M0SA-04G": [],
+  "ATP19-SL1-603-B0SA-03G": [],
+  "BAT54W": [],
+  "BH254VS-26P": [],
+  "CS03W5F470LT5E": [],
+  "FH34SRJ-24S-0.5SH": [
+   {
+    "document": "v2/vendor/hirose/hirose-fh34-series-ffc-connectors.pdf",
+    "pages": [
+     6,
+     9,
+     12
+    ],
+    "sha256": "bcd77fb04a18033d006f584b5f364ae0dcea1bb3ea06037f2e61edcff0c79a05"
+   }
+  ],
+  "FH34SRJ-24S-0.5SH(50)": [],
+  "GRM188R61E475KE11": [],
+  "GRM188R61E475KE11D": [],
+  "GZ1608D601TF": [],
+  "M2044SD3A01": [],
+  "MC-09-530-Q": [
+   {
+    "document": "v2/vendor/seals/floydbell-mc-09-530-q-spec.pdf",
+    "pages": [
+     1
+    ],
+    "sha256": "d2dc7cd7959cdd076ef6941510c204058235744b2a87402f9746fe94daa8afc2"
+   }
+  ],
+  "U-174/U": []
+ },
+ "pdfs_read": 429,
+ "pdfs_without_text": [
+  "v2/vendor/aioc/k1-aioc-schematic-rev1.2.pdf",
+  "v2/vendor/crystals/yxc-ysx321sl-x322525mob4si.pdf",
+  "v2/vendor/dmr858/dmr858m-datasheet.pdf",
+  "v2/vendor/lte/te-2041119-mini-pcie-msata-socket-4mm-customer-drawing-rev-d.pdf",
+  "v2/vendor/m2/amphenol-mdt420m02001-m2-m-key.pdf",
+  "v2/vendor/m2/te-2199119-customer-drawing-revF.pdf",
+  "v2/vendor/m2/te-2199230-m2-e-key.pdf",
+  "v2/vendor/quectel/sparkfun-lg290p-breakout-schematic.pdf",
+  "v2/vendor/rf/amphenol-connex-132170-sma-bulkhead-ff-drawing.pdf",
+  "v2/vendor/techpublic/techpublic-74lvc1g08gv-c19829591.pdf",
+  "v2/vendor/xenarc/xenarc-709gnk-dimensional-drawing-v3.pdf"
+ ],
+ "what": "every PDF under v2/vendor read by its text layer for each part number board C's table leaves UNRESOLVED, and a few named in the values"
+}
