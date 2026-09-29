@@ -25,6 +25,7 @@ The checks under `checks/` are AI reviews, not a qualified engineering review.
 |---|---|---|
 | `checks/check-int14-1.md` (the integration check at `a906b932`) | not mergeable: B1, the hand reason for CFL-016 claimed no named document describes the e-paper driver side, where PANEL.md section 3 does; eight minors | `apply_check14_fixes.py` (B1: the clause withdrawn with the rows read, the rows added to S-122; m2 as S-123; m4, m5, m8), this README (m1, m3, m6, m7) |
 | `checks/check-int14-2.md` (the re-check of the first answer) | not mergeable: S-122's added sentence did not make the rows part of its closing condition; S-123 said via_audit reads signal classes and that nothing flags the readings | the same script, corrected (S-122's closing clause; S-123 reworded from the code; the rules from the coverage map; S-123 names return_stitch; csi's README line) and re-run once on `a906b932` |
+| `checks/check-int14-3.md` (the re-check at `32f26b41`, the promoted commit) | mergeable: 0 blocking, 1 minor (S-123 says CONFIG_UNDECLARED where TOOL_CHANGED shows first today) | carried to S-123's next edit |
 
 ## Carried from check-int14-1
 
