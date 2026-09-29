@@ -180,6 +180,10 @@ TABLES = {
     "v2/vendor/battery/ti-csd17570q5b.pdf": {"drawing": "a MOSFET pin-out drawing, and the row carries every pin"},
     "v2/vendor/battery/ti-csd18510q5b.pdf": {"drawing": "a MOSFET pin-out drawing, and the row carries every pin"},
     "v2/vendor/power/ti-csd19532q5b-n-fet.pdf": {"drawing": "a MOSFET pin-out drawing, and the row carries every pin"},
+    # S-117's charger FETs (29 September 2026), held back by TI's terms and fetched by records/s117/fetch_held_back.py;
+    # page 1 of each draws S 1 8 D, S 2 7 D, S 3 6 D, G 4 5 D (read at set 12's integration).
+    "v2/vendor/ti/held/ti-csd17577q5a-slps516.pdf": {"drawing": "a MOSFET pin-out drawing, and the row carries every pin"},
+    "v2/vendor/ti/held/ti-csd17578q5a-slps526.pdf": {"drawing": "a MOSFET pin-out drawing, and the row carries every pin"},
     "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf": {"regions": [("Table 621. Power", "5.5.3. Pin Specifications")],
                                                   "lists": [("Table 621. Power", "5.5.3. Pin Specifications")]},
     "v2/vendor/ti/ti-pcm2912a.pdf": {"regions": [("Pin Functions", "7 Specifications")],
