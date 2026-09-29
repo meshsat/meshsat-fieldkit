@@ -51,8 +51,7 @@ still gives if it is adopted:
 | Test B: T1, T2, T11 | yes | case, frame, legs, the arrestor on the east plate |
 | Test B: T5 | partly | the end wall east and the back wall unchanged; the west wall's holes wait on the west RF re-plan |
 | Test B: T4 | partly | it has no lid-pack stand-in and no stand-in for the west block |
-| Test B: T6 | yes, as a bound (INFERRED) | the lid pack is inside the lid and leaves its outer skin unchanged; the stay stops the lid at 100 degrees, short of Peli's stop, so T6's open-lid reading at Peli's stop bounds Option A(i) unless T-A1-3 finds otherwise; T6's offer of the west
-entry plate's footprint waits on the west RF re-plan |
+| Test B: T6 | partly | unchanged: the connector plate's and the east entry plate's footprints and Peli's four frame screws against the outside features; waits on the west RF re-plan: the west entry plate's footprint; INFERRED and not credited: the open lid clear of the mated plugs with the lid pack in the lid, until T-A1-3 measures the lid's stop and hinge axis or a geometric argument is recorded (the lid pack is inside the lid and leaves its outer skin unchanged, and the proposed stay would stop the lid at 100 degrees, short of Peli's stop; neither is a measured clearance) |
 | New for Option A(i) (not in OD-01) | none yet | `records/a1mech/README.md` section 7: T-A1-1 (the lid's depth to the ceiling), T-A1-2 (the U-174/U jack), T-A1-3 (the stop, the hinge axis, the open case on a slope), T-A1-4 (200 lid cycles with a dummy module and the harness); T9 with a dummy module; T8's pull test at the module's load; E1 and E2 with an accelerometer on the lid; T10 and T5 at the west wall after the west RF re-plan; the sealed lid-lead crossing (S-95) |
 
 **Its uncertainty (the session's budget, INFERRED until the operator's own instruments' stated accuracies replace the
