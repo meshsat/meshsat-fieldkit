@@ -69,6 +69,61 @@ all narrower on set 12 (the remedies B-1 to B-3 at work): the RockBLOCK's host-d
 row, leaving U7's two inputs and U18's RXD on its outputs; the E22's nine host lines are gone, leaving its antenna pad's U.FL;
 both E72's CP2102N TXD, RTS and DTR paths are gone, leaving the bench cJTAG headers and U16 and U17's RXD.
 
+## Second round: the independent check of set 12 (29 September 2026, branch `fnd/rf2walk2` from `fnd/int13` at `eafb324d`)
+
+The check (an AI review, `_scratch/chk-set12/CHECK.md`): mergeable no, 1 blocking, 7 minor; the remedies B-1 to B-5 and
+D4E-F1 hold at their stated worst case, the regenerated netlists differ from main's by exactly the drafted parts, and every
+reading of the first round reproduces byte for byte.
+
+**B1 (blocking), the walk.** The first round's source rule (a logic output on, or behind its own series resistor onto, one
+asserted line with its inputs on the other is "the line's own source") together with `fail_safe` taking the board of any
+counted source down hid the check's CX9: two 74LVC1G34 on board B cross-coupled between the lines, a latch that can hold both
+lines HIGH with board C down, read PASS on both lines; the same pair wired directly on the lines had read PASS under every walk
+since the on-net rule. The fix (`tx_inhibit.py`, commit `149b15f7`):
+- `_switch_board(nl)`: a board carrying a SW part with a pin on an asserted line (board C's SW_EMCON). A gate counts as a line's
+  own source (the census's on-net clause, `_source_output`, hence `drive_net` and `_line_sources`) only on that board: its
+  fail-safe state takes the gate down with the toggle. Anywhere else it is a second driver in the census and a source at its
+  supply in the fail-safe states.
+- `_fs_base` no longer forces a counted source off whatever its rails do: the toggle's board down removes the rails it makes,
+  and a gate on a rail that board receives over a plugged ribbon stays powered and is solved (the same latch on board C, run
+  from the +5V it receives from board B, now FAILS both lines; under the previous walk EMCON_HW read UNDECIDED there).
+- Fixtures, both failing on the previous walk (`readings/b1/tests-new-fixtures-on-the-previous-walk.txt`):
+  `t_a_latch_of_two_buffers_across_the_lines_fails_both_lines` (CX9 behind resistors and direct on board B, and on board C
+  from its received +5V; D4E-F1's shape still passes) and `t_a_follower_off_the_switchs_board_is_a_second_driver` (the check's
+  CX3b). `test_tx_inhibit`: 138 passed. `tests/run.py contract inhibit requirements evidence rules_status stale`: 388 passed,
+  0 failed, 8 skipped.
+- The check's own `cx_walk.py` (`readings/b1/check-cx-walk-before.txt`, `-after.txt`): CX9 behind and direct, CX3, CX3b and CX3c
+  move from PASS to FAIL on EMCON_HW (CX9 also on TX_INHIBIT_n); every other counterexample reads as before.
+
+| Tree | Walk | RF-002 rows | inhibit_chain A / B / C / D / E / P |
+|---|---|---|---|
+| set 12 `eafb324d` | previous (`readings/b1/contracts-set12-eafb324d-before.txt`) | 0 FAIL, 11 UNDECIDED, 15 PASS | INCONCLUSIVE (7, 2) / INCONCLUSIVE (12, 8) / PASS / INCONCLUSIVE (8, 1) / PASS / PASS |
+| set 12 | fixed (`-after.txt`) | byte-identical to the line above | as above |
+| main `2c7730a4` | previous (`contracts-main-2c7730a4-before.txt`) | 0 FAIL, 11 UNDECIDED, 15 PASS | as set 12 |
+| main | fixed (`contracts-main-2c7730a4-after.txt`) | byte-identical to the line above | as set 12 |
+| main | main's own (`contracts-main-2c7730a4-maintool.txt`) | 0 FAIL, 7 UNDECIDED, 18 PASS | the `7dc74508` rows, as in the first round |
+
+**The minors that are this stream's remedies**, corrected in place in `v2/docs/feasibility/EMCON.md` section 4d.6 and bench
+E-04, and drafted for board B as `apply_b_chk12.py` (not applied; the integrator applies it, regenerates board B once and runs
+`tools/readback_chk12.py`, which parses the netlist and the intent file; on set 12's committed board B it reads 10 FAIL of 11,
+as it must before regeneration, and `tools/selftest_readback_chk12.py` shows it passing a synthetic after-pair and failing
+three mutants). No RF-002 row moves with it: its parts sit on RB_IEN, 5G_PWROFF_n and rail notes, off every path the walk
+judges.
+
+| Minor | What | Draft or statement |
+|---|---|---|
+| 1 | B-5's release rests on the module's 100 k pull-down, tolerance unstated | M1: R238 49.9 k 1% (C23184): held 72 uA (0.1 V row), released 2.08 V, at or over 1.19 V down to 30.8 k |
+| 2 | B-4: U543 sank up to 1.17 mA above 1.65 V (VOL row 1 mA); its 12 to 28 ms pulse can re-assert I_EN before the 9704 ends its shutdown | M2: R532 2.7 k 1% (0.955 mA at most up to 2.90 V), R527 20.0 k 1% (released 2.10 V, asserted 0.16 V, every rail lost 0.37 V), CT to +5V_DEV through R551 49.9 k 1% (td 180 to 420 ms); bench E-04 measures the 9704's I_EN-low-to-I_BTD-low time, no held document states it |
+| 3 | B-3: LORA_GO follows E22_EN, not +5V_LORA's level; J_SPI3's IO23 and IO24 are driven too | stated in 4d.6: a turn-on exposure, smaller than before B-3, not under EMCON and not claimed closed; the breakout cost widened to three pins |
+| 4 | B-1: 80 mV release margin; P_EN after boot follows U6 pin 20 (pull-up, charger off) | the margin is 2.10 V with M2; P_EN is a firmware item for PANEL.md, not a regression |
+| 5 | board B's intent: +3V3_CM2 and +3V3_CM3 notes stale, +3V3_CM{s} missing their EMCON gates since round 8, +3V3_ZB missing R536 to R538 | M5: loads and notes read from set 12's netlist |
+| 6 | REVERSE_IDEAL narrowed to the other asserted line for a wording reason | kept: toward a rail or any other node the state stays UNDECIDED either way, and the narrow rule leaves every earlier fixture's wording as it was |
+| 7 | D4E-F1's docstring gives 0.32 V where the walk reads 0.354 V | stated in 4d.6: cite the walk's 0.354 V |
+
+**For the integrator.** Merge `fnd/rf2walk2`; run `apply_rebind_page_rf2walk2.py` (rebinds the seven records bound to
+EMCON.md, whose sections 4d.6 and E-04 changed; tried and restored on this branch) and render; re-take RF-002 with the changed
+walk; apply `apply_b_chk12.py`, regenerate board B, run `tools/readback_chk12.py`, and rebind board B's records as after set 12.
+
 ## What remains open
 
 - The 11 UNDECIDED rows, the same rows as main's under the same walk: the LimeSDR (the USBLC6-2's VBUS with its I/O on the
@@ -84,3 +139,6 @@ both E72's CP2102N TXD, RTS and DTR paths are gone, leaving the bench cJTAG head
   the tools author can teach the walk from its pin table, with the pin's weak pull-up (IPU 10 to 30 uA) as its current.
 - The walk's class for the TPS3808 on a line it reads (U543 on `RB_IEN`) is not needed by any row today: `RB_IEN` is not on a
   path the table walks.
+- After the check of set 12: the 9704's time from I_EN low to I_BTD low (bench E-04, sets U543's td); B-3's turn-on exposure
+  (LORA_GO follows the enable, not the rail); B-5's module pull-down tolerance (unstated; the draft tolerates down to 30.8 k);
+  the drafts of `apply_b_chk12.py` until board B is regenerated and read back.

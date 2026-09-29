@@ -104,3 +104,9 @@ to board B and C's regenerated netlists and `gen_sch_b.py`, render.
   Read-back `tools/readback_chk12.py` (parses the netlist and the intent JSON; a module rail's loads are compared with the
   logic parts the netlist puts on it): 10 FAIL of 11 on set 12's committed board B (only U543's open MR passes), as it must
   before regeneration; `tools/selftest_readback_chk12.py`: it passes a synthetic after-pair and fails three mutants.
+- 14:07 to 14:12 EMCON.md section 4d.6 written (the check's minors on this stream's remedies corrected in place, the drafts
+  named, the walk's change) and bench E-04 extended with the 9704's I_EN-low-to-I_BTD-low time; no claim word, no non-ASCII
+  character; `test_requirements` 65 passed with the page changed (the seven records bound to it are FAIL or INCONCLUSIVE, so
+  the moved page warns). `apply_rebind_page_rf2walk2.py` written for the integrator (the d4emcon page phase refuses a second
+  run): tried in the worktree, 7 records rebound 173bc6357996d467 to the page's new sha, a second run refused, the registry
+  restored. README.md gains the second round.
