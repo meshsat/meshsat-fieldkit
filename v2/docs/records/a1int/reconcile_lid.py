@@ -50,6 +50,16 @@ def main():
                 else: lo = mid
             out.append("   lowest lid temperature that still meets M1: %+.1f C" % hi)
         out.append("")
+    out.append("4S9P lid: both functions kept with P2 allowed under the tablet (the independent check of a1mech found 39 places),")
+    out.append("4S15P in all, at the arrays beyond A(i)'s 400 Wp too, with the lid at its basis and at the base's +20 C:")
+    for wp in (400.0, 650.0, 1000.0):
+        for tl in (tmin, 20.0):
+            TP.NP_L = 9; TP.NP_T = TP.NP_B + 9
+            d, pack, res4, _ = TP.load_model(); prof = res4["months"][TP.MONTH]["profile"]
+            cfg = TP.base_cfg(); cfg["chg_a_l"] = PER_CELL * 9
+            rs = TP.both(d, pack, res4, prof, wp, 200.0, TP.v("t_base_c"), tl, cfg)
+            out.append("   %4d Wp, lid %.2f C: %s" % (wp, tl, TP.fmt_run(rs)))
+    out.append("")
     TP.NP_L = n0; TP.NP_T = TP.NP_B + n0
     out.append("END. Each line is the model's arithmetic on the September reference day; nothing is measured.")
     sys.stdout.write("\n".join(out) + "\n")
