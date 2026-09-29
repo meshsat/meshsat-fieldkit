@@ -19,6 +19,9 @@ B-1  SD-EMC-2, the RockBLOCK 9704 (J_RB9704). Ground Control, hardware page (v2/
      (pin 13) against the CP2102N's weak pull-up (10 to 30 uA, CP2102N data sheet Rev 1.5, IPU): 0.30 V. EMCON asserted:
      RB_IEN low (U536) gives RB_GO low, and every input of the module sits at the gates' VOL, 0.1 V at 100 uA (SCES217AA 5.5).
      Released: the lines follow their sources only while the module says it is booted, the maker's own startup order.
+     One stated departure from the maker's shutdown order: the inputs fall with I_EN, before I_BTD falls, rather than after
+     it (RB_GO reads RB_IEN, so EMCON_HW gains no reader); firmware ceases serial traffic first, the maker's step 1, and
+     under EMCON the supply goes at the same instant.
 B-2  SD-EMC-2, the two E72 CC2652P (U13, U14). As drawn, each CP2102N (U16, U17, on +5V_DEV, not gated) drives the module's RX,
      RESET_N and BSL push-pull (TXD, RTS, DTR), and RESET_N and BSL also reach +3V3_ZB through R28 to R31: with U22 off, a
      3.3 V source with no series resistance feeds the dead rail, whose only sink is U22's RPD (stated at VIN 5, 12 and 18 V, not
