@@ -773,6 +773,12 @@ PIN_ROLES = (
      "pins": {p: (n, r, q, None) for p, (n, r, q) in _SON5X6.items()}},
     {"part": r"CSD18510Q5B\b", "document": "v2/vendor/battery/ti-csd18510q5b.pdf", "package": "SON 5x6",
      "pins": {p: (n, r, q, None) for p, (n, r, q) in _SON5X6.items()}},
+    # stream s117 (S-117 F1, 29 September 2026): board A's charger FETs; TI's Q5A package with the Q5B's pin order.
+    # The datasheets are held back by TI's terms (v2/vendor/sources.txt), fetched by records/s117/fetch_held_back.py.
+    {"part": r"CSD17578Q5A\b", "document": "v2/vendor/ti/held/ti-csd17578q5a-slps526.pdf", "package": "SON 5x6",
+     "pins": {p: (n, r, q, None) for p, (n, r, q) in _SON5X6.items()}},
+    {"part": r"CSD17577Q5A\b", "document": "v2/vendor/ti/held/ti-csd17577q5a-slps516.pdf", "package": "SON 5x6",
+     "pins": {p: (n, r, q, None) for p, (n, r, q) in _SON5X6.items()}},
     {"part": r"CSD19532Q5B\b", "document": "v2/vendor/power/ti-csd19532q5b-n-fet.pdf", "package": "SON 5x6",
      "pins": {p: (n, r, q, None) for p, (n, r, q) in _SON5X6.items()}},
     {"part": r"RP2040\b", "document": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf", "package": "QFN-56",
