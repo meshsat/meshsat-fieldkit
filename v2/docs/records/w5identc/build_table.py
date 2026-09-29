@@ -79,6 +79,25 @@ DECISIONS = {
 }
 
 
+# Documents the tree already held for a part number w5ident left without one (its SOURCES join did not reach them):
+# found by this stream by reading every PDF of 21 vendor folders for each owed part number (LOG.md, 29 September
+# 2026). Each is bound only if the builder's own page-by-page reading finds the part number (rule D-2). The Raspberry
+# Pi RP2040 documents also print ABM8-272-T3, as their recommended crystal; they are not Abracon's and are not bound.
+HELD = {
+    "S-55e88b2fbd": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
+    "S-cae89bf0ce": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
+    "S-8362226c90": "v2/vendor/vishay/veml7700-datasheet.pdf",
+    "S-3da103208a": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+    "S-dfbcfc88f2": "v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf",
+}
+
+
+# A maker's name as its own sheet prints it, where w5ident's catalogue reading spelt it otherwise (w5ident's second check,
+# identity lens, minor: page 1 of v2/vendor/power/jscj-2n7002-c8545.pdf reads "JIANGSU CHANGJIANG ELECTRONICS
+# TECHNOLOGY CO.", read by this stream with pdftotext on 29 September 2026).
+MAKER_AS_PRINTED = {"S-b9d2bcde2e": "Jiangsu Changjiang Electronics Technology Co., Ltd."}
+
+
 def rules(w5):
     """w5ident's rules, carried, with V-1 amended and D-2 added by this stream; the resolver's own rules (D-1, M-1, I-1,
     I-2, F-2) are carried as the rules the carried identities were chosen under, and this stream ran no resolver."""
@@ -170,6 +189,11 @@ def main(argv):
         elif sid in old:
             d = dict(old[sid]["identity"]); src = "stream w5ident's table (fnd/w5ident %s), key unchanged" % carried["source_commit"][:8]
             oc = old[sid].get("order_code") or {}
+            if sid in MAKER_AS_PRINTED:
+                d["maker"] = MAKER_AS_PRINTED[sid]
+            if sid in HELD:
+                d["datasheet"] = dict(path=HELD[sid], joined_by="this stream: a held document found by reading the vendor folders")
+                src += "; the document bound by stream w5identc"
         else:
             uncovered.append(sid); continue
         ident = collections.OrderedDict(status=d.get("status"))
