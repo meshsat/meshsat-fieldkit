@@ -43,7 +43,7 @@ def main():
     idx = [i for i, l in enumerate(lines) if l.startswith(ANCHOR)]
     if len(idx) != 1:
         refuse("the anchor row (a1solar/) is found %d times, not once" % len(idx))
-    if "—" in NEW_ROW or "–" in NEW_ROW:
+    if "\u2014" in NEW_ROW or "\u2013" in NEW_ROW:
         refuse("the row carries an em or en dash")
     before_rows = sum(1 for l in lines if l.startswith("| `") and l.endswith("|"))
     new_lines = lines[: idx[0] + 1] + [NEW_ROW] + lines[idx[0] + 1:]
