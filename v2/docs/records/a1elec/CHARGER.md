@@ -98,6 +98,7 @@ board A at 19 W at the charging peak. No part's rating is claimed against a temp
 ## 4. What remains a bench item
 
 U3's and U3B's efficiencies at these points (the 0.98 and 0.975 are plot readings at other conditions: 5 mOhm sense,
-4.7 uH, 400 kHz); the IADPT detection at 169 k; the 800 kHz compensation; U3B's input loop holding the node while the
+4.7 uH, 400 kHz); the front end's 0.93 at 8.2 A (the chain's declared figure, not re-derived at the new current); the
+IADPT detection at 169 k; the 800 kHz compensation; U3B's input loop holding the node while the
 base supplies the load (the allocation loop's reaction time); the LM5069's fault timer at the kit's 18 A peak; the
 ideal diode's reverse response on a harness short.
