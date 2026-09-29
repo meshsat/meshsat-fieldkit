@@ -1,0 +1,228 @@
+HEADLINE FIGURES OF THE ENERGY CHAIN, base a1f8ec70 against HEAD 1c0c88e1 (headline_diff.py, stream s119, S-119)
+
+energy_inputs.yaml, U3's row (eta, low, high): 0.98, 0.965, 0.984  to  0.979, 0.972, 0.983
+energy_inputs.yaml, vehicle_entry chain_eta: 0.9114  to  0.9105
+energy_two_pack.py, eta_u3b: 0.975  to  0.961
+
+== v2/docs/records/energy/energy_budget.out: 154 of 657 lines differ
+   CHANGED  was: Chain into the node: 0.93 x 0.93 x 0.98 = 0.8476 (bracket 0.782 to 0.926); the panel's 5.68 A at 17.6 V sits
+            now: Chain into the node: 0.930 x 0.930 x 0.979 = 0.8467 (bracket 0.787 to 0.925); the panel's 5.68 A at 17.6 V sits
+   CHANGED  was: September  4.01          1.008          100       378.0         49.0          0              320.4                            320.4      251.0        350.0
+            now: September  4.01          1.008          100       378.0         49.0          0              320.1                            320.1      252.8        349.6
+   CHANGED  was: September  4.01          1.008          200       756.0         98.1          0              640.8                            640.8      502.0        700.0
+            now: September  4.01          1.008          200       756.0         98.1          0              640.2                            640.2      505.7        699.3
+   CHANGED  was: September  4.01          1.008          400       1512.1        196.1         8              834.4                            1281.6     653.7        911.4
+            now: September  4.01          1.008          400       1512.1        196.1         8              833.5                            1280.3     658.4        910.5
+   CHANGED  was: node in September and 90 in December (the low brackets 251 and 70). A larger panel is clipped here at 100 W
+            now: node in September and 90 in December (the low brackets 253 and 71). A larger panel is clipped here at 100 W
+   CHANGED  was: The window's own ceiling, a panel large enough to be clipped in every lit hour (20 kWp), is 1356 Wh a day at the
+            now: The window's own ceiling, a panel large enough to be clipped in every lit hour (20 kWp), is 1355 Wh a day at the
+   CHANGED  was: node in June, 1024 in September and 624 in December, against the 1027 Wh a day PS-IDLE-SPEC asks: above it in
+            now: node in June, 1023 in September and 623 in December, against the 1027 Wh a day PS-IDLE-SPEC asks: above it in
+   CHANGED  was: First stop at hour 8; ran 23 of 72 hours; load unserved over the 72 h 1870 Wh of 3082 asked; the pack's draw
+            now: First stop at hour 8; ran 23 of 72 hours; load unserved over the 72 h 1871 Wh of 3082 asked; the pack's draw
+   CHANGED  was: in each period of sun below the load: 107.9, 61.7, 81.2 Wh.
+            now: in each period of sun below the load: 107.9, 61.6, 81.1 Wh.
+   CHANGED  was: PS-IDLE-SPEC    42.8  September  06:00  107.9      11.3        24            1027.2                   8             23           1869.7       NOT MET
+            now: PS-IDLE-SPEC    42.8  September  06:00  107.9      11.3        24            1027.2                   8             23           1870.8       NOT MET
+   CHANGED  was: PS-IDLE-SPEC    42.8  September  18:00  107.9      11.3        24            1027.2                   2             23           1780.7       NOT MET
+            now: PS-IDLE-SPEC    42.8  September  18:00  107.9      11.3        24            1027.2                   2             23           1781.9       NOT MET
+   CHANGED  was: 42.8 W at the node only above about 536 W/m2.
+            now: 42.8 W at the node only above about 537 W/m2.
+   CHANGED  was: usable pack energy Wh (108 aged now)     2120.4                                        19.7 packs of the ruled size, aged; 15.7 new (2120 Wh)
+            now: usable pack energy Wh (108 aged now)     2121.4                                        19.7 packs of the ruled size, aged; 15.7 new (2121 Wh)
+   CHANGED  was: front end, chain 0.911 to the node. At 12 V the guaranteed 4.85 A is 58 W at the source and 53 W at the node,
+            now: front end, chain 0.910 to the node. At 12 V the guaranteed 4.85 A is 58 W at the source and 53 W at the node,
+
+== v2/docs/records/energy/energy_architecture.out: 843 of 1736 lines differ
+   CHANGED  was: chain 0.8476, performance ratio 0.9417, cells at +20 C aged to 80 percent, the 3.00 V line with the 5 percent reserve),
+            now: chain 0.8467, performance ratio 0.9417, cells at +20 C aged to 80 percent, the 3.00 V line with the 5 percent reserve),
+   CHANGED  was: 42.8     100 W (REQ-016)       2100    16        582.5             39.9
+            now: 42.8     100 W (REQ-016)       1750    17        618.9             39.8
+   CHANGED  was: 42.8     200 W                  650    15        546.1            120.4
+            now: 42.8     200 W                  650    15        546.1            120.2
+   CHANGED  was: chain 0.7817 (low bracket), panel  400 Wp: smallest n_p 16
+            now: chain 0.7873 (low bracket), panel  400 Wp: smallest n_p 16
+   CHANGED  was: chain 0.7817 (low bracket), panel  600 Wp: smallest n_p 16
+            now: chain 0.7873 (low bracket), panel  600 Wp: smallest n_p 16
+   CHANGED  was: chain 0.9258 (high bracket), panel  400 Wp: smallest n_p 16
+            now: chain 0.9249 (high bracket), panel  400 Wp: smallest n_p 16
+   CHANGED  was: chain 0.9258 (high bracket), panel  600 Wp: smallest n_p 15
+            now: chain 0.9249 (high bracket), panel  600 Wp: smallest n_p 15
+   same     4S18P, window 200 W ,  400 Wp, cells +15.0 C: MEETS, lowest    26.8 Wh, first stop [None, None]
+   CHANGED  was: 4S18P, window 200 W ,  400 Wp, cells +20.0 C: MEETS, lowest    91.0 Wh, first stop [None, None]
+            now: 4S18P, window 200 W ,  400 Wp, cells +20.0 C: MEETS, lowest    90.9 Wh, first stop [None, None]
+   CHANGED  was: 4S19P, 1300 Wp in the 100 W window: +20 C MEETS 1.3 Wh; +15 C NOT MET 0.0 Wh
+            now: 4S19P, 1300 Wp in the 100 W window: +20 C NOT MET 0.0 Wh; +15 C NOT MET 0.0 Wh
+   CHANGED  was: 4S19P, 1500 Wp in the 100 W window: +20 C MEETS 34.5 Wh; +15 C NOT MET 0.0 Wh
+            now: 4S19P, 1500 Wp in the 100 W window: +20 C MEETS 32.6 Wh; +15 C NOT MET 0.0 Wh
+   CHANGED  was: 4S18P, 1600 Wp in the 100 W window: +20 C MEETS 14.7 Wh; +15 C NOT MET 0.0 Wh
+            now: 4S18P, 1600 Wp in the 100 W window: +20 C MEETS 12.8 Wh; +15 C NOT MET 0.0 Wh
+   CHANGED  was: 4S17P, 2000 Wp in the 100 W window: +20 C MEETS 31.4 Wh; +15 C NOT MET 0.0 Wh
+            now: 4S17P, 2000 Wp in the 100 W window: +20 C MEETS 29.4 Wh; +15 C NOT MET 0.0 Wh
+   CHANGED  was: 4S16P, 3000 Wp in the 100 W window: +20 C MEETS 1.4 Wh; +15 C NOT MET 0.0 Wh
+            now: 4S16P, 3000 Wp in the 100 W window: +20 C NOT MET 0.0 Wh; +15 C NOT MET 0.0 Wh
+   CHANGED  was: 4S18P, 1000 Wp in the 100 W window: largest load meeting M1 41.35 W
+            now: 4S18P, 1000 Wp in the 100 W window: largest load meeting M1 41.32 W
+   CHANGED  was: 4S18P, 1300 Wp in the 100 W window: largest load meeting M1 42.20 W
+            now: 4S18P, 1300 Wp in the 100 W window: largest load meeting M1 42.17 W
+   CHANGED  was: 4S18P, 1500 Wp in the 100 W window: largest load meeting M1 42.77 W
+            now: 4S18P, 1500 Wp in the 100 W window: largest load meeting M1 42.74 W
+   CHANGED  was: 4S19P, 1300 Wp, window 100 W: meets M1 with the cells at or above about +19.9 C
+            now: 4S19P, 1300 Wp, window 100 W: does not meet M1 even at +40 C
+   CHANGED  was: 4S18P, 1600 Wp, window 100 W: meets M1 with the cells at or above about +18.9 C
+            now: 4S18P, 1600 Wp, window 100 W: meets M1 with the cells at or above about +19.0 C
+
+== v2/docs/records/energy/energy_4s6p.out: 47 of 267 lines differ
+   CHANGED  was: September  +20      100 Wp, 100 W window                        NOT MET, stop h 12, ran 26 h, unserved 1668 of 3082 Wh  NOT MET, stop h 5, ran 26 h, unserved 1567 of 3082 Wh
+            now: September  +20      100 Wp, 100 W window                        NOT MET, stop h 12, ran 26 h, unserved 1669 of 3082 Wh  NOT MET, stop h 5, ran 26 h, unserved 1568 of 3082 Wh
+   CHANGED  was: September  +20      200 Wp, 100 W (route B)                     NOT MET, stop h 16, ran 44 h, unserved 1110 of 3082 Wh  NOT MET, stop h 5, ran 43 h, unserved 1108 of 3082 Wh
+            now: September  +20      200 Wp, 100 W (route B)                     NOT MET, stop h 16, ran 44 h, unserved 1110 of 3082 Wh  NOT MET, stop h 5, ran 43 h, unserved 1109 of 3082 Wh
+   CHANGED  was: September  +20      100 Wp, 100 W window     0                            NOT MET, stop h 44, ran 63 h, unserved 119 of 1166 Wh
+            now: September  +20      100 Wp, 100 W window     0                            NOT MET, stop h 44, ran 63 h, unserved 120 of 1166 Wh
+   same     September  +20      200 Wp, 100 W (route B)  8                            MET, lowest 12.1 Wh
+
+== v2/docs/records/energy/checks/recompute.out: 23 of 69 lines differ
+   CHANGED  was: own profile vs EB.profile max abs diff: 5.68e-14 W/m2; Sept mean day 4.014 kWh/m2 (6 years); pr 0.9417 eta 0.8476
+            now: own profile vs EB.profile max abs diff: 5.68e-14 W/m2; Sept mean day 4.014 kWh/m2 (6 years); pr 0.9417 eta 0.8467
+   CHANGED  was: 400 Wp, +20.0 C: MEETS, lowest 91.0 Wh, stops [None, None]
+            now: 400 Wp, +20.0 C: MEETS, lowest 90.9 Wh, stops [None, None]
+   same     400 Wp, +15.0 C: MEETS, lowest 26.8 Wh, stops [None, None]
+   CHANGED  was: 650 Wp, +20.0 C: MEETS, lowest 112.8 Wh, stops [None, None]
+            now: 650 Wp, +20.0 C: MEETS, lowest 112.7 Wh, stops [None, None]
+   CHANGED  was: 650 Wp, +15.0 C: MEETS, lowest 48.6 Wh, stops [None, None]
+            now: 650 Wp, +15.0 C: MEETS, lowest 48.5 Wh, stops [None, None]
+   CHANGED  was: 4S19P, 1300 Wp, +20.0 C: MEETS, lowest 1.3 Wh, stops [None, None]
+            now: 4S19P, 1300 Wp, +20.0 C: NOT MET, lowest 0.0 Wh, stops [71, 59]
+   same     4S19P, 1300 Wp, +15.0 C: NOT MET, lowest 0.0 Wh, stops [70, 58]
+
+== v2/docs/records/a1elec/energy_two_pack.out: 51 of 158 lines differ
+   CHANGED  was: lid +13.23 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.1 Wh; unserved    0.0 Wh
+            now: lid +13.23 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.0 Wh; unserved    0.0 Wh
+   CHANGED  was: start 06 UTC: MEETS, usable full base 218.4 Wh, lid 378.9 Wh; lowest base 30.3, lid 0.7 Wh; U3B loss 22.3 Wh, charge loop 5.7 Wh, lid discharge path 6.0 Wh over 72 h; peak node 125.8 W, to base 27.7 W, to U3B 55.3 W
+            now: start 06 UTC: MEETS, usable full base 218.4 Wh, lid 378.9 Wh; lowest base 30.3, lid 0.7 Wh; U3B loss 34.9 Wh, charge loop 5.6 Wh, lid discharge path 6.0 Wh over 72 h; peak node 125.6 W, to base 27.6 W, to U3B 55.2 W
+   CHANGED  was: start 18 UTC: MEETS, usable full base 218.4 Wh, lid 378.9 Wh; lowest base 30.3, lid 0.7 Wh; U3B loss 31.7 Wh, charge loop 8.2 Wh, lid discharge path 6.0 Wh over 72 h; peak node 125.8 W, to base 27.7 W, to U3B 55.3 W
+            now: start 18 UTC: MEETS, usable full base 218.4 Wh, lid 378.9 Wh; lowest base 30.3, lid 0.7 Wh; U3B loss 50.0 Wh, charge loop 8.1 Wh, lid discharge path 6.0 Wh over 72 h; peak node 125.6 W, to base 27.6 W, to U3B 55.2 W
+   CHANGED  was: 3d. the aggregate 4S18P of section 9 on the same day, for comparison: MEETS, lowest 91.0 Wh
+            now: 3d. the aggregate 4S18P of section 9 on the same day, for comparison: MEETS, lowest 90.9 Wh
+   CHANGED  was: 3f. the base at +15 C as well (section 9's second temperature), lid at the basis: MEETS    stops [None, None] lowest base    8.9 Wh (  4.5 %), lid    0.7 Wh (  0.2 %), both    9.7 Wh; unserved    0.0 Wh
+            now: 3f. the base at +15 C as well (section 9's second temperature), lid at the basis: MEETS    stops [None, None] lowest base    8.9 Wh (  4.5 %), lid    0.7 Wh (  0.2 %), both    9.6 Wh; unserved    0.0 Wh
+   CHANGED  was: U3B at 0.96, loops at 45 mOhm, V(AK) 29 mV:                              MEETS    stops [None, None] lowest base   30.1 Wh ( 13.8 %), lid    0.0 Wh (  0.0 %), both   30.1 Wh; unserved    0.0 Wh
+            now: U3B at 0.947, loops at 45 mOhm, V(AK) 29 mV:                             MEETS    stops [None, None] lowest base   30.0 Wh ( 13.8 %), lid    0.0 Wh (  0.0 %), both   30.0 Wh; unserved    0.0 Wh
+   CHANGED  was: U3B at 0.985, loops at 20 mOhm:                                          MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    1.2 Wh (  0.3 %), both   31.5 Wh; unserved    0.0 Wh
+            now: U3B at 0.971, loops at 20 mOhm:                                          MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    1.2 Wh (  0.3 %), both   31.5 Wh; unserved    0.0 Wh
+   CHANGED  was: 4.3 A (minimum): NOT MET  stops [44, 33]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  329.4 Wh
+            now: 4.3 A (minimum): NOT MET  stops [44, 33]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  338.0 Wh
+   CHANGED  was: 5.0 A (typical): NOT MET  stops [47, 35]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  119.1 Wh
+            now: 5.0 A (typical): NOT MET  stops [46, 35]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  130.0 Wh
+   CHANGED  was: 5.7 A (maximum): MEETS    stops [None, None] lowest base   18.6 Wh (  8.5 %), lid    0.0 Wh (  0.0 %), both   18.6 Wh; unserved    0.0 Wh
+            now: 5.7 A (maximum): MEETS    stops [None, None] lowest base   12.7 Wh (  5.8 %), lid    0.0 Wh (  0.0 %), both   12.7 Wh; unserved    0.0 Wh
+   CHANGED  was: at its minimum: 5.56 A (115.1 W) to meet M1 at all; 5.81 A (120.3 W) to keep the unconstrained lowest point, 31.1 Wh.
+            now: at its minimum: 5.61 A (116.2 W) to meet M1 at all; 5.88 A (121.7 W) to keep the unconstrained lowest point, 31.0 Wh.
+   CHANGED  was: front end loss 9.7 W (at 0.93); U3 in 6.20 A through R16 (10 mOhm: 0.38 W; 5 mOhm: 0.19 W), U3 loss 2.6 W (at 0.98);
+            now: front end loss 9.7 W (at 0.93); U3 in 6.20 A through R16 (10 mOhm: 0.38 W; 5 mOhm: 0.19 W), U3 loss 2.7 W (at 0.979);
+   CHANGED  was: U3B loss 1.4 W (at 0.975), R16B 5 mOhm 0.07 W, lid charge 3.69 A (R17B 5 mOhm 0.07 W), charge loop I2R 0.38 W
+            now: U3B loss 2.2 W (at 0.961), R16B 5 mOhm 0.07 W, lid charge 3.64 A (R17B 5 mOhm 0.07 W), charge loop I2R 0.37 W
+   CHANGED  was: front end loss 9.7 W (at 0.93); U3 in 6.20 A through R16 (10 mOhm: 0.38 W; 5 mOhm: 0.19 W), U3 loss 2.6 W (at 0.98);
+            now: front end loss 9.7 W (at 0.93); U3 in 6.20 A through R16 (10 mOhm: 0.38 W; 5 mOhm: 0.19 W), U3 loss 2.7 W (at 0.979);
+   CHANGED  was: U3B loss 1.4 W (at 0.975), R16B 5 mOhm 0.07 W, lid charge 3.69 A (R17B 5 mOhm 0.07 W), charge loop I2R 0.38 W
+            now: U3B loss 2.2 W (at 0.961), R16B 5 mOhm 0.07 W, lid charge 3.64 A (R17B 5 mOhm 0.07 W), charge loop I2R 0.37 W
+
+== v2/docs/records/a1elec/checks/recheck_two_pack.out: 6 of 11 lines differ
+   same     RESULT: every figure agrees
+
+== v2/docs/records/a1solar/energy_runs.out: 53 of 126 lines differ
+   CHANGED  was: energy_architecture 4S18P 400 Wp 200 W +20 C MEETS 91.0 Wh                     reproduced
+            now: energy_architecture 4S18P 400 Wp 200 W +20 C MEETS 90.9 Wh                     reproduced
+   CHANGED  was: energy_two_pack design case MEETS, both 31.1 Wh                                reproduced
+            now: energy_two_pack design case MEETS, both 31.0 Wh                                reproduced
+   CHANGED  was: A  energy_inputs.yaml as pinned (MPPT assumed)             +20 C MEETS    lowest   91.0 Wh; +15 C MEETS    lowest   26.8 Wh (unserved   0.0); meets down to +12.9 C
+            now: A  energy_inputs.yaml as pinned (MPPT assumed)             +20 C MEETS    lowest   90.9 Wh; +15 C MEETS    lowest   26.8 Wh (unserved   0.0); meets down to +12.9 C
+   CHANGED  was: B  2S2P at the drafted point, typical                      +20 C MEETS    lowest   90.6 Wh; +15 C MEETS    lowest   26.5 Wh (unserved   0.0); meets down to +12.9 C
+            now: B  2S2P at the drafted point, typical                      +20 C MEETS    lowest   90.6 Wh; +15 C MEETS    lowest   26.4 Wh (unserved   0.0); meets down to +12.9 C
+   CHANGED  was: C  2S2P, adverse, all at once                              +20 C MEETS    lowest   87.8 Wh; +15 C MEETS    lowest   23.7 Wh (unserved   0.0); meets down to +13.2 C
+            now: C  2S2P, adverse, all at once                              +20 C MEETS    lowest   87.8 Wh; +15 C MEETS    lowest   23.6 Wh (unserved   0.0); meets down to +13.2 C
+   CHANGED  was: F  1S4P at its best fixed point                            +20 C MEETS    lowest   90.1 Wh; +15 C MEETS    lowest   25.9 Wh (unserved   0.0); meets down to +13.0 C
+            now: F  1S4P at its best fixed point                            +20 C MEETS    lowest   90.0 Wh; +15 C MEETS    lowest   25.9 Wh (unserved   0.0); meets down to +13.0 C
+   CHANGED  was: slope 10: both none                             typical only -30, -15, +0, +15, +30, +45
+            now: slope 10: both none                             typical only -30, -15, +0, +15, +30
+   CHANGED  was: slope 20: both -15, +0, +15                     typical only -45, -30, +30, +45
+            now: slope 20: both +0                               typical only -30, -15, +15, +30, +45
+   CHANGED  was: slope 30: both -15, +0, +15, +30                typical only -45, -30, +45
+            now: slope 30: both -15, +0, +15, +30                typical only -30, +45
+   same     slope 40: both -15, +0, +15, +30                typical only -30, +45
+   CHANGED  was: slope 50: both -15, +0, +15                     typical only -30, +30, +45
+            now: slope 50: both -15, +0, +15                     typical only -30, +30
+   same     slope 60: both +0, +15                          typical only -15, +30
+   same     slope 70: both none                             typical only +0, +15
+
+== v2/docs/records/a1int/reconcile_lid.out: 8 of 31 lines differ
+   CHANGED  was: at 13.23 C: NOT MET  stops [22, 10]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  258.9 Wh
+            now: at 13.23 C: NOT MET  stops [22, 10]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  259.0 Wh
+   CHANGED  was: at 13.23 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.1 Wh; unserved    0.0 Wh
+            now: at 13.23 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.0 Wh; unserved    0.0 Wh
+   CHANGED  was: at 13.23 C: MEETS    stops [None, None] lowest base   49.1 Wh ( 22.5 %), lid   44.9 Wh ( 10.2 %), both   94.0 Wh; unserved    0.0 Wh
+            now: at 13.23 C: MEETS    stops [None, None] lowest base   49.1 Wh ( 22.5 %), lid   44.9 Wh ( 10.1 %), both   94.0 Wh; unserved    0.0 Wh
+   same     at 13.23 C: MEETS    stops [None, None] lowest base   57.2 Wh ( 26.2 %), lid   68.3 Wh ( 14.4 %), both  125.5 Wh; unserved    0.0 Wh
+   CHANGED  was: 650 Wp, lid 20.00 C: MEETS    stops [None, None] lowest base    1.4 Wh (  0.7 %), lid    0.5 Wh (  0.2 %), both    2.0 Wh; unserved    0.0 Wh
+            now: 650 Wp, lid 20.00 C: MEETS    stops [None, None] lowest base    1.4 Wh (  0.6 %), lid    0.5 Wh (  0.2 %), both    1.9 Wh; unserved    0.0 Wh
+
+== v2/docs/records/a1int/reconcile_lid_panel.out: 30 of 67 lines differ
+   same     does not meet M1 even with the lid at +40 C
+   CHANGED  was: B, U3 nominal 6.2 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  165.6 Wh
+            now: B, U3 nominal 6.2 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  165.7 Wh
+   same     does not meet M1 even with the lid at +40 C
+   CHANGED  was: B, U3 minimum 6.1 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  165.6 Wh
+            now: B, U3 minimum 6.1 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  165.7 Wh
+   same     does not meet M1 even with the lid at +40 C
+   CHANGED  was: B, U3 bracket 6.0 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  165.6 Wh
+            now: B, U3 bracket 6.0 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  165.7 Wh
+   same     does not meet M1 even with the lid at +40 C
+   CHANGED  was: C, U3 nominal 6.2 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  172.5 Wh
+            now: C, U3 nominal 6.2 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  172.6 Wh
+   same     does not meet M1 even with the lid at +40 C
+   CHANGED  was: C, U3 minimum 6.1 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  172.5 Wh
+            now: C, U3 minimum 6.1 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  172.6 Wh
+   same     does not meet M1 even with the lid at +40 C
+   CHANGED  was: C, U3 bracket 6.0 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  172.5 Wh
+            now: C, U3 bracket 6.0 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  172.6 Wh
+   same     does not meet M1 even with the lid at +40 C
+   same     lowest lid temperature that still meets M1: +3.8 C
+   CHANGED  was: B, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   49.0 Wh ( 22.4 %), lid   44.7 Wh ( 10.1 %), both   93.7 Wh; unserved    0.0 Wh
+            now: B, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   49.0 Wh ( 22.4 %), lid   44.6 Wh ( 10.1 %), both   93.7 Wh; unserved    0.0 Wh
+   same     lowest lid temperature that still meets M1: +3.8 C
+   CHANGED  was: B, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   49.0 Wh ( 22.4 %), lid   44.7 Wh ( 10.1 %), both   93.7 Wh; unserved    0.0 Wh
+            now: B, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   49.0 Wh ( 22.4 %), lid   44.6 Wh ( 10.1 %), both   93.7 Wh; unserved    0.0 Wh
+   same     lowest lid temperature that still meets M1: +3.8 C
+   CHANGED  was: B, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   49.0 Wh ( 22.4 %), lid   44.7 Wh ( 10.1 %), both   93.7 Wh; unserved    0.0 Wh
+            now: B, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   49.0 Wh ( 22.4 %), lid   44.6 Wh ( 10.1 %), both   93.7 Wh; unserved    0.0 Wh
+   same     lowest lid temperature that still meets M1: +3.8 C
+   CHANGED  was: C, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   42.7 Wh (  9.7 %), both   90.9 Wh; unserved    0.0 Wh
+            now: C, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   39.2 Wh (  8.9 %), both   87.4 Wh; unserved    0.0 Wh
+   same     lowest lid temperature that still meets M1: +4.1 C
+   CHANGED  was: C, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   39.2 Wh (  8.9 %), both   87.4 Wh; unserved    0.0 Wh
+            now: C, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   32.4 Wh (  7.3 %), both   80.6 Wh; unserved    0.0 Wh
+   CHANGED  was: lowest lid temperature that still meets M1: +5.9 C
+            now: lowest lid temperature that still meets M1: +6.0 C
+   CHANGED  was: C, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   29.4 Wh (  6.6 %), both   77.6 Wh; unserved    0.0 Wh
+            now: C, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   22.0 Wh (  5.0 %), both   71.4 Wh; unserved    0.0 Wh
+   same     lowest lid temperature that still meets M1: +6.1 C
+   same     lowest lid temperature that still meets M1: +1.5 C
+   same     B, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   57.1 Wh ( 26.1 %), lid   68.1 Wh ( 14.4 %), both  125.2 Wh; unserved    0.0 Wh
+   same     lowest lid temperature that still meets M1: +1.5 C
+   same     B, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   57.1 Wh ( 26.1 %), lid   68.1 Wh ( 14.4 %), both  125.2 Wh; unserved    0.0 Wh
+   same     lowest lid temperature that still meets M1: +1.5 C
+   same     B, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   57.1 Wh ( 26.1 %), lid   68.1 Wh ( 14.4 %), both  125.2 Wh; unserved    0.0 Wh
+   same     lowest lid temperature that still meets M1: +1.5 C
+   CHANGED  was: C, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   66.1 Wh ( 14.0 %), both  122.4 Wh; unserved    0.0 Wh
+            now: C, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   62.2 Wh ( 13.1 %), both  118.5 Wh; unserved    0.0 Wh
+   same     lowest lid temperature that still meets M1: +2.1 C
+   CHANGED  was: C, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   62.2 Wh ( 13.1 %), both  118.5 Wh; unserved    0.0 Wh
+            now: C, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   55.3 Wh ( 11.7 %), both  111.6 Wh; unserved    0.0 Wh
+   CHANGED  was: lowest lid temperature that still meets M1: +2.2 C
+            now: lowest lid temperature that still meets M1: +3.9 C
+   CHANGED  was: C, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   52.4 Wh ( 11.1 %), both  108.7 Wh; unserved    0.0 Wh
+            now: C, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   44.8 Wh (  9.5 %), both  102.4 Wh; unserved    0.0 Wh
+   same     lowest lid temperature that still meets M1: +4.0 C
+
+END.
