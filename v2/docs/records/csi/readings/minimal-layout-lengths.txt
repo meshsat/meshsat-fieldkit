@@ -1,0 +1,14 @@
+== Raspberry Pi RP2040 minimal design example, https://pip.raspberrypi.com/documents/RP-008296-DS (sha256 8fdae5c1d3d8e58f43a45cd604ce9836b1ad4649f11eca4a9bea97eec6c2093a), board file RPI-RP2040-MINIMAL_R3-S1_public/RPI-RP2040-MINIMAL_R3-S1.kicad_pcb (sha256 f6c8e633a567ca884b269dc7ec934bebbce28534d0fdb84623a007840a01a471)
+   the routed length of each net (every track segment and arc on it, summed), its vias and its layers
+   QSPI_SCLK    10.38 mm  vias 0  layers F.Cu
+   QSPI_SS      22.73 mm  vias 0  layers F.Cu
+   QSPI_SD0      8.20 mm  vias 0  layers F.Cu
+   QSPI_SD1     16.85 mm  vias 0  layers F.Cu
+   QSPI_SD2     12.91 mm  vias 0  layers F.Cu
+   QSPI_SD3     11.82 mm  vias 0  layers F.Cu
+   XIN          11.23 mm  vias 0  layers F.Cu
+   XOUT          2.76 mm  vias 0  layers F.Cu
+   Net-(C3-Pad1)   5.26 mm  vias 0  layers F.Cu
+   SWCLK        25.92 mm  vias 0  layers F.Cu
+   SWD          24.34 mm  vias 0  layers F.Cu
+   QSPI: longest 22.73 mm, shortest 8.20 mm
