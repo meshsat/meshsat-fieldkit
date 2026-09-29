@@ -425,16 +425,19 @@
    "checked": [
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line of the net QSPI_SCLK",
      "quote": "QSPI_SCLK 10.38 mm"
     },
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line that states the reference layout's delay",
      "quote": "reference t_pd 5.572 ps/mm"
     }
+   ],
+   "reference_nets": [
+    "QSPI_SCLK"
    ],
    "max_mm": 8.0,
    "max_mm_basis": "the maker's minimal design (RP-008296-DS, MIT) routes its QSPI clock at, 10.38 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 8.0 mm",
@@ -456,34 +459,40 @@
    "checked": [
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line of the net QSPI_SD0",
      "quote": "QSPI_SD0 8.20 mm"
     },
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line of the net QSPI_SD1",
      "quote": "QSPI_SD1 16.85 mm"
     },
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line of the net QSPI_SD2",
      "quote": "QSPI_SD2 12.91 mm"
     },
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line of the net QSPI_SD3",
      "quote": "QSPI_SD3 11.82 mm"
     },
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line that states the reference layout's delay",
      "quote": "reference t_pd 5.572 ps/mm"
     }
+   ],
+   "reference_nets": [
+    "QSPI_SD0",
+    "QSPI_SD1",
+    "QSPI_SD2",
+    "QSPI_SD3"
    ],
    "max_mm": 13.1,
    "max_mm_basis": "the maker's minimal design routes its QSPI data lines at 8.20 to 16.85 mm, the longest, 16.85 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 13.1 mm",
@@ -505,16 +514,19 @@
    "checked": [
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line of the net QSPI_SS",
      "quote": "QSPI_SS 22.73 mm"
     },
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line that states the reference layout's delay",
      "quote": "reference t_pd 5.572 ps/mm"
     }
+   ],
+   "reference_nets": [
+    "QSPI_SS"
    ],
    "max_mm": 17.7,
    "max_mm_basis": "the maker's minimal design routes QSPI_SS, with its BOOTSEL resistor, at, 22.73 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 17.7 mm",
@@ -536,16 +548,19 @@
    "checked": [
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line of the net XIN",
      "quote": "XIN 11.23 mm"
     },
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line that states the reference layout's delay",
      "quote": "reference t_pd 5.572 ps/mm"
     }
+   ],
+   "reference_nets": [
+    "XIN"
    ],
    "max_mm": 8.7,
    "max_mm_basis": "the maker's minimal design routes XIN (RP2040 pin 20, the crystal and its load capacitor) at, 11.23 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 8.7 mm",
@@ -567,16 +582,19 @@
    "checked": [
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line of the net XOUT",
      "quote": "XOUT 2.76 mm"
     },
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line that states the reference layout's delay",
      "quote": "reference t_pd 5.572 ps/mm"
     }
+   ],
+   "reference_nets": [
+    "XOUT"
    ],
    "max_mm": 2.1,
    "max_mm_basis": "the maker's minimal design routes XOUT (RP2040 pin 21 to its 1 k series resistor) at, 2.76 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 2.1 mm",
@@ -598,16 +616,19 @@
    "checked": [
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line of the net Net-(C3-Pad1)",
      "quote": "Net-(C3-Pad1) 5.26 mm"
     },
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line that states the reference layout's delay",
      "quote": "reference t_pd 5.572 ps/mm"
     }
+   ],
+   "reference_nets": [
+    "Net-(C3-Pad1)"
    ],
    "max_mm": 4.0,
    "max_mm_basis": "the maker's minimal design routes the node from its 1 k resistor to the crystal and its load capacitor (Net-(C3-Pad1)) at, 5.26 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 4.0 mm",
@@ -629,16 +650,19 @@
    "checked": [
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line of the net SWCLK",
      "quote": "SWCLK 25.92 mm"
     },
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line that states the reference layout's delay",
      "quote": "reference t_pd 5.572 ps/mm"
     }
+   ],
+   "reference_nets": [
+    "SWCLK"
    ],
    "max_mm": 20.1,
    "max_mm_basis": "the maker's minimal design routes SWCLK from the RP2040 to its debug header at, 25.92 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 20.1 mm",
@@ -660,16 +684,19 @@
    "checked": [
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line of the net SWD",
      "quote": "SWD 24.34 mm"
     },
     {
      "document": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
-     "sha256_16": "5ebc2bdea342d20f",
+     "sha256_16": "5a71e9d681dc99e7",
      "where": "the line that states the reference layout's delay",
      "quote": "reference t_pd 5.572 ps/mm"
     }
+   ],
+   "reference_nets": [
+    "SWD"
    ],
    "max_mm": 18.9,
    "max_mm_basis": "the maker's minimal design routes SWD (SWDIO) from the RP2040 to its debug header at, 24.34 mm; scaled to board C's slowest layer: the maker's nets run on F.Cu of a 1.0 mm two-layer board with no via, a microstrip at 5.572 ps/mm, and board C's SI-001 takes 7.154 ps/mm (JLC04161H-7628 In2.Cu), so the same delay is 0.779 of the length: at most 18.9 mm",

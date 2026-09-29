@@ -21,7 +21,8 @@ ZIP_SHA256 = "8fdae5c1d3d8e58f43a45cd604ce9836b1ad4649f11eca4a9bea97eec6c2093a"
 PCB_NAME = "RPI-RP2040-MINIMAL_R3-S1_public/RPI-RP2040-MINIMAL_R3-S1.kicad_pcb"
 PCB_SHA256 = "f6c8e633a567ca884b269dc7ec934bebbce28534d0fdb84623a007840a01a471"
 NETS = ("/QSPI_SCLK", "/QSPI_SS", "/QSPI_SD0", "/QSPI_SD1", "/QSPI_SD2", "/QSPI_SD3", "/XIN", "/XOUT",
-        "Net-(C3-Pad1)", "/SWCLK", "/SWD")      # Net-(C3-Pad1): the crystal side of the 1 k XOUT resistor R5
+        "Net-(C3-Pad1)", "/SWCLK", "/SWD",      # Net-(C3-Pad1): the crystal side of the 1 k XOUT resistor R5
+        "Net-(U3-USB_DP)", "Net-(U3-USB_DM)")   # U3 pins 47 and 46 to their 27R series resistors R3 and R4 (the pin-to-resistor stubs)
 
 
 def tokens(text):

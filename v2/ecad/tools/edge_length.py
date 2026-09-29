@@ -831,41 +831,71 @@ def edge_source(letter, pattern, rise_ns, repo=None):
 #           words, it cites a PDF with no page, or it cites a file outside the repository (_quotes_hold, for every
 #           record). Reverse: accept an entry with `why` alone in allow_refusal.
 #   CSI-D2  an entry states `max_mm`, the longest the layout may route a net it answers, with `max_mm_basis`; an entry
-#           with none is refused (the check's B2). The number is tied to what the entry cites (allow_limit): its
-#           `checked` rows quote the lengths measured on a reference layout ("<net> <x> mm") and that layout's delay
-#           ("t_pd <x> ps/mm", stated as `reference_ps_per_mm`), and max_mm may be at most the longest quoted length
-#           times that delay over this board's slowest (worst_delay), so the limit holds the delay the reference runs
-#           at on whichever stack the layout is drawn on. The schematic table hands max_mm to the layout (row
+#           with none is refused (the check's B2). The number is tied to what the entry cites (allow_limit; its method
+#           replaced on the re-check's R2-B1): the entry names the reference layout's nets it rests on
+#           (`reference_nets`), its `checked` rows are only those nets' length rows ("<net> <x> mm") and the reference
+#           layout's delay row ("reference t_pd <x> ps/mm", stated as `reference_ps_per_mm`), all from ONE document, and
+#           max_mm may be at most the longest of those lengths times that delay over this board's slowest (worst_delay),
+#           so the limit holds the delay the reference runs at on whichever stack the layout is drawn on. While
+#           ALLOW_PENDS_LAYOUT is set, a net an allowance answers keeps the schematic reading INCONCLUSIVE (the re-check's
+#           m3). The schematic table hands max_mm to the layout (row
 #           ["length_limits"]; the net reads "pending the layout"), and the routed half holds EVERY net a held entry
 #           names to it first, whatever its class, its rise time, its critical length or any series resistor on it (the
 #           check's B1 and m10): past it the net is named OVER ITS DECLARED LIMIT and the routed verdict fails.
 #           edge_length_routed decides no rule yet, so the limit binds a rule only once one names that reading.
 #           Reverse: drop the length test in allow_answers and allow_limit.
 # ------------------------------------------------------------------------------------------------------------------
-LENGTH_QUOTE = re.compile(r"(?<!\S)(\S+)\s+(\d+(?:\.\d+)?)\s*mm(?![\w/])")
-TPD_QUOTE = re.compile(r"t_pd\s+(\d+(?:\.\d+)?)\s*ps/mm")
+LENGTH_ROW = re.compile(r"^\s*(\S+)\s+(\d+(?:\.\d+)?)\s*mm\s*$")          # a length row's whole quote: "<net> <x> mm"
+TPD_ROW = re.compile(r"^\s*reference t_pd\s+(\d+(?:\.\d+)?)\s*ps/mm\s*$")   # the delay row's whole quote
 ALLOW_QUOTE_WORDS = 5        # the entry's own quote: a sentence of its document, not a word (the check's m7)
 ALLOW_PATTERN_LITERALS = 3   # a pattern names nets: at least three characters that are no wildcard (m7)
+# WHILE NO RULE DECIDES ON THE ROUTED READING, A NET AN ALLOWANCE ANSWERS IS PENDING THE LAYOUT, and the schematic reading
+# stays INCONCLUSIVE naming it (the re-check of 29 September 2026, its m3): an allowance is a layout constraint, and the
+# only reading that holds it (edge_length_routed) decides nothing yet. Reverse: False, once a rule names that reading.
+ALLOW_PENDS_LAYOUT = True
 
 
 def allow_limit(entry, tpd):
-    """(limit_mm, how) or (None, why not): the longest a net may be routed on THIS board by what the entry cites. The
-    lengths its `checked` rows quote ("<net> <x> mm", measured on a reference layout) are scaled by the delay: the
-    reference layout's own t_pd, which a checked row quotes ("t_pd <x> ps/mm") and the entry states as
-    `reference_ps_per_mm`, over this board's slowest t_pd, so the limit holds the same delay the reference runs at."""
-    lens = [float(m.group(2)) for c in entry.get("checked") or [] if isinstance(c, dict)
-            for m in LENGTH_QUOTE.finditer(str(c.get("quote") or ""))]
-    if not lens: return None, "no checked row quotes the measured length its max_mm rests on (\"<net> <x> mm\")"
+    """(limit_mm, how) or (None, why not): the longest a net may be routed on THIS board by what the entry cites. THE
+    METHOD (the re-check of 29 September 2026, R2-B1, which found the first method taking the longest length any row of
+    any file quoted, for any net): the entry names the reference layout's nets it rests on (`reference_nets`); every
+    `checked` row is either a length row whose whole quote is "<net> <x> mm" for one of those nets, or the delay row
+    "reference t_pd <x> ps/mm"; every reference net has its length row; and all of them cite ONE document. A row that
+    names another net, or no net, is refused. The limit is the longest of the reference nets' lengths times the
+    reference layout's delay (`reference_ps_per_mm`, which the delay row quotes) over this board's slowest delay, so it
+    holds the delay the maker's layout runs these nets at."""
+    refs = entry.get("reference_nets")
+    if not (isinstance(refs, list) and refs and all(isinstance(x, str) and x.strip() for x in refs)):
+        return None, "no reference_nets: the reference layout's nets the length rests on, named"
+    rows = [c for c in entry.get("checked") or [] if isinstance(c, dict)]
+    lens, tpds, docs = {}, [], set()
+    for j, c in enumerate(rows):
+        q = str(c.get("quote") or "")
+        m, d = LENGTH_ROW.match(q), TPD_ROW.match(q)
+        if m:
+            if m.group(1) not in refs:
+                return None, "checked[%d] quotes %r, a length of %s, which is none of its reference_nets (%s)" % (
+                    j, q, m.group(1), ", ".join(refs))
+            lens[m.group(1)] = float(m.group(2))
+        elif d:
+            tpds.append(float(d.group(1)))
+        else:
+            return None, "checked[%d] quotes %r, which names no reference net (\"<net> <x> mm\") and is no delay row" % (j, q)
+        docs.add(c.get("document"))
+    missing = [x for x in refs if x not in lens]
+    if missing: return None, "no checked row quotes the length of its reference net(s) %s" % ", ".join(missing)
+    if len(docs) != 1:
+        return None, "its length and delay rows cite %d documents (%s): they come from one" % (len(docs), ", ".join(sorted(map(str, docs))))
     ref = entry.get("reference_ps_per_mm")
     if isinstance(ref, bool) or not isinstance(ref, (int, float)) or ref <= 0:
         return None, "no reference_ps_per_mm: the delay per millimetre of the layout the length was measured on"
-    quoted = [float(m.group(1)) for c in entry.get("checked") or [] if isinstance(c, dict)
-              for m in TPD_QUOTE.finditer(str(c.get("quote") or ""))]
-    if not any(abs(q - float(ref)) < 0.0005 for q in quoted):
-        return None, "reference_ps_per_mm %s is quoted by no checked row (\"t_pd <x> ps/mm\")" % ref
+    if not any(abs(q - float(ref)) < 0.0005 for q in tpds):
+        return None, "reference_ps_per_mm %s is quoted by no delay row (\"reference t_pd <x> ps/mm\")" % ref
     if not tpd: return None, "no declared stack to scale the reference length to"
-    lim = max(lens) * float(ref) / float(tpd)
-    return lim, "%.2f mm measured, times %.3f / %.3f ps/mm = %.2f mm" % (max(lens), float(ref), float(tpd), lim)
+    top = max(lens.values())
+    lim = top * float(ref) / float(tpd)
+    return lim, "%.2f mm measured (%s), times %.3f / %.3f ps/mm = %.2f mm" % (
+        top, ", ".join("%s %.2f" % kv for kv in sorted(lens.items())), float(ref), float(tpd), lim)
 
 
 def allow_refusal(entry, tpd=None):
@@ -924,10 +954,10 @@ def allow_answers(entry, length_mm=None):
     mm = entry.get("max_mm")
     if mm is None: return False, "an edge_allow entry with no max_mm holds no length and answers nothing"
     if length_mm is not None and float(length_mm) > float(mm):
-        return False, "routed %.1f mm, past the %.1f mm its edge_allow declaration holds it to (%s)" % (
+        return False, "routed %.2f mm, past the %.2f mm its edge_allow declaration holds it to (%s)" % (
             float(length_mm), float(mm), str(entry.get("max_mm_basis", ""))[:80])
     if length_mm is not None:
-        return True, "declared in edge_allow: routed %.1f mm, within its %.1f mm" % (float(length_mm), float(mm))
+        return True, "declared in edge_allow: routed %.2f mm, within its %.2f mm" % (float(length_mm), float(mm))
     return True, "declared in edge_allow, pending the layout: at most %.1f mm (%s)" % (float(mm), str(entry.get("why", ""))[:60])
 
 
@@ -1561,6 +1591,8 @@ def schematic_result(res):
     if not c.get("signal_nets") or c.get("undecided_nets"): return _v.INCONCLUSIVE
     if c.get("layout_bound_nets") or any(r.get("layout_bound") for r in res.get("rows") or []):
         return _v.INCONCLUSIVE
+    if ALLOW_PENDS_LAYOUT and c.get("allowed_nets"):
+        return _v.INCONCLUSIVE        # nets answered by an allowance wait on a routed check no rule decides (m3)
     return _v.PASS
 
 
@@ -1625,8 +1657,10 @@ def write_schematic_verdict(res, out_dir=None, quiet=False, table_file=True):
     if al:
         ev.append("ALLOWED %d net(s), pending the layout: answered at this phase by an edge_allow declaration whose basis "
                   "holds (CSI-D1), each held to the length it declares (CSI-D2) by the routed half, edge_length_routed, which "
-                  "decides no rule yet: %s" % (
-                      len(al), ", ".join("%s%s" % (n, " <= %.1f mm" % mm if mm is not None else "") for n, _p, mm in al[:16])))
+                  "decides no rule yet, so %s: %s" % (
+                      len(al), "they keep this reading INCONCLUSIVE (ALLOW_PENDS_LAYOUT)" if ALLOW_PENDS_LAYOUT else
+                      "they are counted answered",
+                      ", ".join("%s%s" % (n, " <= %.1f mm" % mm if mm is not None else "") for n, _p, mm in al[:16])))
     for r in res.get("rows") or []:
         for who, edge, basis, source, crit, nets in _layout_bound_groups(r):
             ev.append("LAYOUT_BOUND %s (%s, %.3f ns %s %s, critical %.1f mm, decided by %s): %s%s" % (
