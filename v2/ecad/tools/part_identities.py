@@ -889,7 +889,8 @@ def load_table(path=TABLE):
 
 # ------------------------------------------------------------------------------------------------ rule D-2
 STATUSES = ("RESOLVED", "UNRESOLVED", "NOT_A_PART")
-REASONS = ("DOCUMENT_OWED", "DOCUMENT_DOES_NOT_NAME_THE_PART", "REQUIREMENT_OPEN", "CHOICE_OWED", "PART_NUMBER_INFERRED")
+REASONS = ("DOCUMENT_OWED", "DOCUMENT_DOES_NOT_NAME_THE_PART", "REQUIREMENT_OPEN", "CHOICE_OWED", "PART_NUMBER_INFERRED",
+           "PART_DOES_NOT_MEET_THE_REQUIREMENT")
 
 
 class _Text(html.parser.HTMLParser):
@@ -1339,7 +1340,8 @@ def check(argv):
                    table=os.path.relpath(os.path.abspath(table), REPO), table_sha256=sha256(table), scope=scope, inputs=meta,
                    rows=len(rs), selections=len(t["selections"]), identity_status=by_status, unresolved_by_reason=by_reason,
                    resolved_by_binding=by_binding,
-                   resolved_bindings=states, problems=bad, verdict="HOLDS" if not bad else "REFUSED", readings=reading,
+                   resolved_bindings=states, problems=bad, unfetched_ok=unfetched_ok,
+                   verdict="REFUSED" if bad else ("HOLDS_WITH_UNREAD" if states.get("UNREAD") else "HOLDS"), readings=reading,
                    tool_sha256=sha256(os.path.abspath(__file__)))
         with open(out_path, "w", encoding="utf-8") as fh:
             json.dump(doc, fh, indent=1, sort_keys=True); fh.write("\n")

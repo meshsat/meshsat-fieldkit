@@ -37,6 +37,15 @@
    "sha256": "92544a833cdaa6e17d9192a05ec84bbc8ec797c4cb5fa51c4250f158f2c534fe"
   },
   {
+   "binding": "PRINTED",
+   "document": "v2/vendor/hirose/hirose-fh34-series-ffc-connectors.pdf",
+   "mpn": "FH34SRJ-24S-0.5SH(50)",
+   "page": 6,
+   "selection": "S-13d7058c0e",
+   "state": "READ",
+   "why": "page 6 prints FH34SRJ-24S-0.5SH(##) and keys (##) to (50)"
+  },
+  {
    "document": "v2/vendor/power/jscj-2n7002-c8545.pdf",
    "first_page_naming_it": 1,
    "mpn": "2N7002",

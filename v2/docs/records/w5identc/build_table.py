@@ -198,17 +198,25 @@ def rules(w5):
         out.append(r)
     out.append(dict(
         id="D-2",
-        rule=("A RESOLVED selection names a maker, a manufacturer part number and a held document with a page, and that page's "
-              "text layer PRINTS the part number, letter case aside and nothing else (the characters on either side are not "
-              "letters or digits). The builder finds the first such page by reading the document page by page; "
-              "part_identities.py check reads the cited page again, checks the document's sha256, and refuses the binding "
-              "otherwise. A series sheet that prints an ordering scheme and not the part number does not name the part: the "
-              "selection is UNRESOLVED (DOCUMENT_DOES_NOT_NAME_THE_PART) until a document that prints it is held. A document "
-              "held back from the public tree is cited by address and sha256 and read where it is fetched"),
-        why=("w5ident's second check, ID-B1 to ID-B3: nine passive selections and five others were RESOLVED on documents that "
-             "do not name the part, and nothing in the check read a document"),
-        reversal=("a predicate that also accepts a decoded ordering scheme with the value listed at the rating in the maker's "
-                  "range table (ID-B3's alternative) is a change of this rule, taken by the integrator, not a reading of it"),
+        rule=("A RESOLVED selection names a maker, a manufacturer part number and a held maker's document with a page, "
+              "bound one of two ways (decision 59, the session's, 29 September 2026). PRINTED: the page's text layer prints "
+              "the part number, letter case aside (the characters on either side are not letters or digits); where the "
+              "part number carries the maker's packing code, the page may print it as the maker's placeholder (Hirose's "
+              "FH34SRJ-24S-0.5SH(##)) if the same page keys the placeholder to that code (\"(##) : (50)\"); a part number "
+              "that carries no packing code (SS2040FL) is printed as it is, the reel being the order code's business. "
+              "DECODED: the page is the maker's own ordering-code table for a scheme written in part_identities.SCHEMES "
+              "(the document pinned by sha256), the tool reads the layout from the page, slices the whole part number by "
+              "it, reads each code's meaning in its own part of the page and requires every deciding property of the kind "
+              "(capacitor: value, package, tolerance, rated voltage, dielectric, construction; resistor: value, package, "
+              "tolerance, power) to meet the selection's requirements as the check derives them from the netlist. A "
+              "DECODED binding is counted apart and never as PRINTED. LIMIT: it shows what the part number means in the "
+              "maker's scheme, not that the maker makes that value at that rating (the range table). A document held back "
+              "from the public tree is cited by address and sha256 and read where it is fetched"),
+        why=("w5ident's second check, ID-B1 to ID-B3: selections were RESOLVED on documents that do not name the part; "
+             "round 3's check of this stream, B1 and B2: the check judged on the table's own requirements, and the first "
+             "DECODED reader accepted permutations and padding"),
+        reversal=("decision 59's reversed_by (pcb_decisions.yaml); a range-table citation added as a second requirement of a "
+                  "DECODED binding would narrow it"),
         authority=SESSION))
     return out
 
@@ -252,6 +260,202 @@ def resolve_document(ident, sel_id, log):
     return dict(path=path, sha256=got, page=pages[0], names=line, joined_by=ds.get("joined_by") or "this stream"), None
 
 
+# ------------------------------------------------------------------------------------------------ round 3: re-read
+# Every UNRESOLVED reason re-read against the tree (round 3's check, B5). A reason names only facts this builder reads:
+# the netlist's own value (`value_has`), a held document's page (`on_page`), the vendor scan (`scan_vendor.py`'s reading),
+# a line of a tree file (`file_has`). Each fact is ASSERTED here; a fact that stops holding stops the build.
+SCAN = os.path.join(HERE, "readings", "vendor-scan-unresolved.json")
+LCSC_READING = os.path.join(REPO, "v2", "docs", "parts", "readings", "lcsc-2026-09-27.json")
+
+
+def on_page(path, page, phrase):
+    """Assert a held document prints `phrase` on `page` (text layer, whitespace collapsed); return the page."""
+    txt = PI._flat(PI.page_text(os.path.join(REPO, path), page))
+    if PI._flat(phrase) not in txt:
+        raise SystemExit("build_table: %s page %d does not print %r" % (path, page, phrase))
+    return page
+
+
+def page_with(path, phrase):
+    for pg in range(1, PI.page_count(os.path.join(REPO, path)) + 1):
+        if PI._flat(phrase) in PI._flat(PI.page_text(os.path.join(REPO, path), pg)): return pg
+    raise SystemExit("build_table: %s prints %r on no page" % (path, phrase))
+
+
+def file_has(path, phrase):
+    if phrase not in open(os.path.join(REPO, path), encoding="utf-8").read():
+        raise SystemExit("build_table: %s does not carry %r" % (path, phrase))
+    return path
+
+
+def value_has(s, *phrases):
+    for v in s["values"]:
+        for ph in phrases:
+            if ph not in v: raise SystemExit("build_table: a value of %s does not say %r" % (sorted(s["rows"])[0], ph))
+    return True
+
+
+def scan_hits(scan, mpn):
+    return scan["part_numbers"].get(mpn)
+
+
+def scanned(scan, mpn):
+    h = scan_hits(scan, mpn)
+    if h is None: raise SystemExit("build_table: the vendor scan did not search %s; re-run scan_vendor.py" % mpn)
+    return h
+
+
+def scan_words(scan):
+    return "scan_vendor.py read %d PDFs under v2/vendor by their text layer (%d have none)" % (scan["pdfs_read"], len(scan["pdfs_without_text"]))
+
+
+def reread(sid, s, ident, scan):
+    """The re-read identity of one selection (a dict of the fields to set), or None where the carried one stands."""
+    rows = sorted(s["rows"])
+    land = sorted(s["lands"])[0]
+    if land == "LED_D3.0mm":                       # the seventeen panel lamps
+        value_has(s, "3 mm", "sunlight viewable")
+        file_has("v2/docs/ASSEMBLY.md", "Light guides, 17 x | Mentor 1282.5004")
+        return dict(status="UNRESOLVED", reason_class="CHOICE_OWED",
+                    reason="the netlist's value names a 3 mm lamp by its colour and 'sunlight viewable' and no part number, "
+                           "luminous intensity or viewing angle (%r); each lamp shines through one of the 17 Mentor 1282.5004 "
+                           "light guides ASSEMBLY.md names, so the intensity needed at the face is a requirement nobody has "
+                           "stated" % sorted(s["values"])[0],
+                    next_action="the board C author states each lamp's minimum intensity and viewing angle through the light "
+                                "guide (or names the part); a part is then chosen and its maker's document filed")
+    if sid == "S-a5c3762a4c":                       # BZ1
+        value_has(s, "two flying leads", "Floyd Bell MC-09-530-Q class")
+        doc = "v2/vendor/seals/floydbell-mc-09-530-q-spec.pdf"
+        on_page(doc, 1, "MC-09-530-Q"); on_page(doc, 1, "Quick Connect Blades")
+        return dict(status="UNRESOLVED", reason_class="CHOICE_OWED", maker="Floyd Bell", mpn="MC-09-530-Q",
+                    reason="the netlist's value names Floyd Bell MC-09-530-Q as a class and asks two flying leads; Floyd Bell's "
+                           "own sheet is held (%s, page 1 prints MC-09-530-Q) and gives its termination as Quick Connect "
+                           "Blades (page 1), not flying leads, so the named part does not meet the value as written" % doc,
+                    next_action="the board C author either accepts the blades (a lead with receptacles to the board's two "
+                                "lands) and names MC-09-530-Q in the value, which then resolves PRINTED on page 1, or names a "
+                                "flying-lead part and files its sheet")
+    if sid == "S-13d7058c0e":                       # J_EPD
+        doc = "v2/vendor/hirose/hirose-fh34-series-ffc-connectors.pdf"
+        on_page(doc, 6, "FH34SRJ-24S-0.5SH(##)"); on_page(doc, 6, "(##) : (50)"); on_page(doc, 5, "(50): Standard")
+        return dict(status="RESOLVED", maker="Hirose Electric", mpn="FH34SRJ-24S-0.5SH(50)",
+                    datasheet=dict(path=doc, page=6, packing=dict(placeholder="(##)", code="(50)", key_row="(##) : (50)",
+                                                                 means_page=5, means_row="(50): Standard"),
+                                   joined_by="this stream: Hirose's FH34 catalogue, held (round 3's check, B5 item 1)"))
+    if sid == "S-62ab53c6e1":                       # C31
+        file_has("v2/ecad/tools/gen_sch_c.py", "# GRM188R61E475KE11D (0603, X5R, 4.7 uF, DC 25 V")
+        if s["requirements"].get("dielectric") != "X7R": raise SystemExit("build_table: C31's requirement is no longer X7R")
+        return dict(status="UNRESOLVED", reason_class="PART_DOES_NOT_MEET_THE_REQUIREMENT", maker="Murata", mpn="GRM188R61E475KE11D",
+                    reason="the generator names GRM188R61E475KE11D in its comment (gen_sch_c.py: '0603, X5R, 4.7 uF, DC 25 V'); "
+                           "the value '4.7u 25V' states no dielectric, so rule C-D3 asks X7R and an X5R part does not meet "
+                           "it; and no PDF under v2/vendor prints the part number (%s)" % scan_words(scan),
+                    next_action="either state X5R in the value with the hot-spot reasoning rule C-D3b asks (the part sits on "
+                                "the e-paper pump), or choose an X7R 4.7 uF 25 V 0603 whose maker's document prints or "
+                                "decodes it")
+    sheets = {"S-0a37bce91a": ("v2/vendor/switches/ck-atp19-series-datasheet.pdf", "ATP19 - x - xx - x - xx - xx - x - x - xx - x"),
+              "S-ff16699f19": ("v2/vendor/switches/ck-atp16-series-datasheet.pdf", "To order, simply select desired option from each category"),
+              "S-b2e775c075": ("v2/vendor/switches/ck-atp16-series-datasheet.pdf", "To order, simply select desired option from each category"),
+              "S-722b702520": ("v2/vendor/switches/nkk-m-series-toggles-datasheet.pdf", "ORDERING EXAMPLE")}
+    if sid in sheets:
+        doc, anchor = sheets[sid]
+        pg = page_with(doc, anchor)
+        value_has(s, ident["mpn"])
+        if scanned(scan, ident["mpn"]): raise SystemExit("build_table: %s is printed somewhere now; bind it" % ident["mpn"])
+        return dict(status="UNRESOLVED", reason_class="DOCUMENT_DOES_NOT_NAME_THE_PART",
+                    reason="the netlist's value names %s; the maker's series sheet is held (%s, its ordering scheme on page "
+                           "%d: %r) and prints no complete part number, and no PDF under v2/vendor prints %s (%s). Decision "
+                           "59's DECODED schemes are written for capacitors and resistors only, so a switch's ordering scheme "
+                           "is not decoded" % (ident["mpn"], doc, pg, anchor, ident["mpn"], scan_words(scan)),
+                    next_action="a DECODED scheme for this switch series (each category of page %d aligned to the value's "
+                                "words: size, function, ring colour), which widens decision 59 beyond capacitors and "
+                                "resistors, or a %s document that prints %s" % (pg, ident.get("maker"), ident["mpn"]))
+    if land == "PanelJack_17mm":                   # the two U-174/U headset jacks
+        value_has(s, "U-174/U headset jack", "Amphenol Nexus class, drawing owed")
+        file_has("v2/ecad/tools/jlc-handfit.txt", "U-174/U headset jack 1 (Amphenol Nexus class, drawing owed)")
+        if scanned(scan, "U-174/U"): raise SystemExit("build_table: U-174/U is printed somewhere now")
+        return dict(status="UNRESOLVED", reason_class="CHOICE_OWED",
+                    reason="the netlist's value names a U-174/U jack as a class ('Amphenol Nexus class, drawing owed') and no "
+                           "part number; jlc-handfit.txt declares a hand-fit route for it; no PDF under v2/vendor prints "
+                           "U-174/U (%s)" % scan_words(scan),
+                    next_action="the board C author names the jack (maker's part number) and files its drawing; the 17 mm "
+                                "hole and the five leads to board D8 are then checked against it")
+    if land == "LeadLands_1x02":                   # J_MAINSW and J_PIJ
+        if "XH2.5 at the A22 end" in sorted(s["values"])[0]:
+            value_has(s, "MAIN button lead to A22 J_MAINSW", "two solder lands on the underside")
+            return dict(status="UNRESOLVED", reason_class="CHOICE_OWED",
+                        reason="the netlist's value names a lead soldered to two lands on the underside and plugged into "
+                               "A22's J_MAINSW with an XH2.5 housing at that end: the lead's wire and the XH2.5 housing are "
+                               "bought, and neither is named (rule N-1: what is bought is never NOT_A_PART; w5ident's table "
+                               "called this row NOT_A_PART)",
+                        next_action="the board C author names the wire (gauge, insulation, length) and the XH2.5 housing and "
+                                    "crimp contacts at A22's end")
+        value_has(s, "PI button lead: two solder lands on the underside")
+        return dict(status="NOT_A_PART",
+                    reason="two solder lands on the board's underside (land LeadLands_1x02); the netlist's value names no "
+                           "wire, plug or housing to buy for this row")
+    if land == "BackerScrew_M3_GND":               # H1 to H8
+        value_has(s, "M3 x 6", "GND bond to the plate")
+        return dict(status="UNRESOLVED", reason_class="CHOICE_OWED",
+                    reason="the netlist's value names an M3 x 6 screw into the face plate's self-clinching standoff as the "
+                           "plate's ground bond, and no standard, head, material or plating; the screw carries the bond, so "
+                           "its plating is a requirement nobody has stated",
+                    next_action="the mechanical owner names the screw (standard, head, material, plating) against the "
+                                "standoff's maker's document")
+    if sid == "S-5ae2e5c268":                       # C28
+        r = s["requirements"]
+        if (r.get("v_rating_min"), r.get("dielectric"), r.get("package"), r.get("value")) != (6.3, "X7R", "0805", "4.7uF"):
+            raise SystemExit("build_table: C28's requirement moved: %s" % r)
+        return dict(status="UNRESOLVED", reason_class="CHOICE_OWED",
+                    reason="the netlist's value is '4.7u' on an 0805 land with no order code; with EPD_VCC declared in board "
+                           "C's intent the requirement derives as 4.7 uF, 0805, X7R (rule C-D3), at least 6.3 V (the 20 "
+                           "percent margin), 10 percent; no part has been chosen for it",
+                    next_action="choose a 4.7 uF X7R 0805 of at least 6.3 V whose maker's document prints or decodes it (a "
+                                "Yageo CC0805 part would decode on the Yageo scheme if its range table lists it), and give "
+                                "the generator its order code")
+    far = {"S-8b55c1443b": ("v2/vendor/passives/fenghua-series-705023d3.pdf", "its How To Order table on page 4 is a column "
+                            "layout this stream did not write a scheme for"),
+           "S-8b1dfb7d63": ("v2/vendor/passives/fenghua-series-705023d3.pdf", "its How To Order table on page 4 is a column "
+                            "layout this stream did not write a scheme for"),
+           "S-23fe50c33a": ("v2/vendor/passives/arlitech-atnr-series-spec.pdf", "its page 4 prints the part as ATNR4010100[]T "
+                            "with a tolerance placeholder, which neither binding reads"),
+           "S-8fcb029420": ("v2/vendor/passives/uniroyal-cs03w5f470lt5e.pdf", "its part number page names the size code CS03 "
+                            "and not the 0603 land, and the selection's temperature coefficient (200 ppm/K) is not a field "
+                            "of the part number")}
+    if sid in far:
+        doc, why = far[sid]
+        if os.path.exists(os.path.join(REPO, doc)): raise SystemExit("build_table: %s is in the tree now; bind it" % doc)
+        other = scanned(scan, ident["mpn"])
+        tail = ("; the only PDFs under v2/vendor that print %s are other makers' (%s)" % (ident["mpn"], "; ".join(
+            "%s p. %s" % (h["document"], ",".join(str(x) for x in h["pages"])) for h in other))) if other else \
+            "; no PDF under v2/vendor prints %s (%s)" % (ident["mpn"], scan_words(scan))
+        return dict(status="UNRESOLVED", reason_class="DOCUMENT_DOES_NOT_NAME_THE_PART",
+                    reason="w5ident's table names %s %s on %s, which is not in this tree (read from fnd/w5ident %s: it prints "
+                           "no complete part number; %s)%s" % (ident.get("maker"), ident["mpn"], doc, W5IDENT[:8], why, tail),
+                    next_action="file the maker's sheet (w5ident's copy, sources.txt of fnd/w5ident) and write its DECODED "
+                                "scheme where its layout allows, or file a maker's document that prints %s" % ident["mpn"])
+    if ident.get("mpn") in ("5636ADKB-2V",):
+        if scanned(scan, "5636ADKB-2V") or scanned(scan, "5636ADKB"): raise SystemExit("build_table: 5636ADKB is printed somewhere now")
+        return dict(status="UNRESOLVED", reason_class="DOCUMENT_OWED",
+                    reason="the netlist's value names APEM 5636ADKB-2V; no PDF under v2/vendor prints 5636ADKB (%s); the "
+                           "APEM document held (v2/vendor/switches/apem-switch-guards-series.pdf) is its guards series" % scan_words(scan),
+                    next_action="file APEM's 5600 series document that prints or decodes 5636ADKB-2V")
+    return None
+
+
+def owed_reason(ident, oc, netlist_codes, s, scan):
+    """The reason of an identity whose maker and part number are named and whose document is owed, on read facts."""
+    mpn, code = ident.get("mpn"), (oc or {}).get("code")
+    if any(mpn in v for v in s["values"]): src = "the part number the netlist's value names"
+    elif code and code in netlist_codes: src = "stream w5ident's catalogue reading of %s, the order code the netlist carries" % code
+    elif code: src = "stream w5ident's catalogue reading of %s (the netlist carries %s)" % (code, ", ".join(sorted(netlist_codes)) or "no code")
+    else: src = "stream w5ident's choice"
+    hits = scanned(scan, mpn)
+    if hits:
+        where = "; ".join("%s p. %s" % (h["document"], ",".join(str(x) for x in h["pages"])) for h in hits)
+        return ("maker and part number: %s; the maker's own document is not held: the only PDFs under v2/vendor that print %s "
+                "are other makers' (%s)" % (src, mpn, where))
+    return "maker and part number: %s; no PDF under v2/vendor prints %s (%s)" % (src, mpn, scan_words(scan))
+
+
 def main(argv):
     out = opt(argv, "--out") or PI.TABLE
     carried = json.load(open(CARRIED))
@@ -262,6 +466,9 @@ def main(argv):
     stray = sorted(set(DECISIONS) - ids)
     if stray: raise SystemExit("build_table: decisions name ids that are not selections now: %s" % stray)
     log, table_sel, uncovered = [], [], []
+    scan = json.load(open(SCAN))
+    lcsc = {r["code"]: r for r in json.load(open(LCSC_READING))["rows"]}
+    rowp = {"%s:%s" % (p["board"], p["ref"]): p for p in rs}
     for key, s in sel.items():
         sid = PI.selection_id(key)
         if sid in DECISIONS:
@@ -316,7 +523,39 @@ def main(argv):
                 ident["decoded_after"] = "%s under PRINTED" % was
             elif why:
                 ident["reason"] += "; " + why
-        if d.get("chosen_by"): ident["chosen_by"] = d["chosen_by"]
+        netlist_codes = {rowp[r]["generator_lcsc"] for r in s["rows"] if rowp[r].get("generator_lcsc")}
+        rr = reread(sid, s, ident, scan)
+        if rr is not None:
+            for k in ("reason_class", "reason", "next_action", "datasheet"): ident.pop(k, None)
+            if rr.get("datasheet"):
+                full = os.path.join(REPO, rr["datasheet"]["path"]); rr["datasheet"]["sha256"] = sha(full)
+                r = PI.read_binding(rr["datasheet"], rr["mpn"], maker=rr.get("maker"), req=s["requirements"], kind=s["kind"])
+                if r["state"] != "READ": raise SystemExit("build_table: %s: its re-read binding reads %s: %s" % (sid, r["state"], r["why"]))
+                log.append(dict(selection=sid, mpn=rr["mpn"], document=rr["datasheet"]["path"], binding="PRINTED", page=rr["datasheet"]["page"], state=r["state"], why=r["why"]))
+            ident.update(rr)
+            src += "; re-read by stream w5identc round 3"
+        elif ident["status"] == "UNRESOLVED" and ident.get("reason_class") == "DOCUMENT_OWED" and ident.get("mpn"):
+            ident["reason"] = owed_reason(ident, oc, netlist_codes, s, scan)
+            ident["next_action"] = ("a DECODED binding on the maker's ordering-code table where one is held and decision 59 "
+                                    "has a scheme for it, else file %s's document that prints %s (held back where its terms "
+                                    "forbid redistribution)" % (ident.get("maker"), ident["mpn"]))
+        elif ident["status"] == "UNRESOLVED" and ident.get("reason_class") == "DOCUMENT_DOES_NOT_NAME_THE_PART":
+            ident["next_action"] = ("a DECODED binding on the maker's ordering-code table (decision 59) where it decodes, else a "
+                                    "maker's document that prints %s" % ident.get("mpn"))
+        if d.get("chosen_by") and ident["status"] != "UNRESOLVED": ident["chosen_by"] = d["chosen_by"]
+        # the order code: what the netlist carries, and whether this tree's own catalogue reading knows it (round 3, minors 9, 10)
+        if oc or netlist_codes:
+            oc = dict(oc)
+            oc["netlist_codes"] = sorted(netlist_codes)
+            if oc.get("code"):
+                oc["netlist_agrees"] = (not netlist_codes) or netlist_codes == {oc["code"]}
+                lr = lcsc.get(oc["code"])
+                oc["in_this_trees_reading"] = bool(lr and lr.get("model"))
+                oc["read_by"] = ("v2/docs/parts/readings/lcsc-2026-09-27.json: %s %s" % (lr.get("brand"), lr.get("model"))
+                                 if lr and lr.get("model") else "stream w5ident's catalogue reading of 27 September 2026 (fnd/w5ident, not in this tree)")
+            for c in sorted(netlist_codes - {oc.get("code")}):
+                lr = lcsc.get(c)
+                oc.setdefault("netlist_code_reads", {})[c] = ("%s %s" % (lr.get("brand"), lr.get("model"))) if lr and lr.get("model") else "not in this tree's catalogue reading"
         ident["from"] = src
         table_sel.append(collections.OrderedDict(
             id=sid, key=key, kind=s["kind"], n_rows=len(s["rows"]), rows=s["rows"], values=sorted(s["values"]),
@@ -335,8 +574,10 @@ def main(argv):
         what=("The identity of every distinct part selection on the boards in `scope` (layer 6's exact-part requirement: "
               "LAYER-STATUS item 6.1, EXECUTION-PLAN review D, EQ-21): the BOM parts of the committed netlist grouped by "
               "every property that decides the part, each selection RESOLVED to a maker, a manufacturer part number and a "
-              "held document whose cited page prints that part number (rule D-2, read by part_identities.py check), or "
-              "UNRESOLVED with its reason class, reason and next action. Written by v2/docs/records/w5identc/build_table.py; "
+              "held maker's document whose cited page prints that part number (PRINTED) or is the maker's ordering-code "
+              "table that decodes it against the selection (DECODED, decision 59, counted apart; it does not show the value "
+              "is made at that rating), both read by part_identities.py check (rule D-2), or UNRESOLVED with its reason "
+              "class, reason and next action. Written by v2/docs/records/w5identc/build_table.py; "
               "a prototype record: nothing is ordered by it."),
         taken_by=TAKEN, authority=SESSION, scope=["c"],
         inputs=[dict(board=m["board"], phase=m["phase"], netlist=m["netlist"], netlist_sha256=m["netlist_sha256"],
