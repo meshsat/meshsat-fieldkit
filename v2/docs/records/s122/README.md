@@ -7,7 +7,9 @@ generator, netlist or registry file is edited on this branch (the registry chang
 
 Round 1 corrected 43 passages. The independent check of round 1 (`checks/check-s122-1.md`, filed byte for byte from the
 checker's `<scratch>/chk-s122/CHECK.md`) read all 43 true and found 3 blocking and 12 minor items. Round 2 answers them under the coordinator's ruling on CONOPS.md's
-baseline. Every statement below about what was read is what one of these scripts read, or a filed check's own words
+baseline. The independent check of round 2 (`checks/check-s122-2.md`, filed byte for byte from the checker's
+`<scratch>/chk-s122/CHECK-2.md`) found 1 blocking and 8 minor items; round 3 answers them and changes the method so the
+blocking item's class cannot recur (below). Every statement below about what was read is what one of these scripts read, or a filed check's own words
 quoted with its file.
 
 ## The baseline rule, and what it changed
@@ -29,7 +31,8 @@ a circuit correction updates the status page and the records it names, not the b
     DC-02 HOT-R1 (board E `Q11`, `HOT_R1_G` on `U10` pin 30, `R58`, `BLK_SPARE` at `J_BLK` pin 12; board A `J_DOCK`
     pin 12, `R216`, `U27` pin 18; REQ-077 INCONCLUSIVE, waiting on S-58), DC-03 the TX lamp (it needs the panel
     controller: `D3` from `LED_RAIL`, `Q1`'s drain, which only `Q2` turns on from `PANEL_PWM`), DC-04 the device rails
-    (`U7` on A, `U25` on B), DC-05 a loss of `+3V3_DEV`, DC-06 generator line numbers.
+    (`U7` on A, `U25` on B), DC-05 a loss of `+3V3_DEV`, DC-06 generator line numbers; since round 3 DC-07 the
+    supervisors' I2C status path, DC-08 the fabric's break-before-make and back-power gating, DC-09 board A's CC array.
 * **reads CONOPS through the status page**: a CONOPS sentence whose value differs from the netlists, or that cites a
   generator line, is **BASELINE** when a DC row keeps its current value, and **STALE** when none does. The status
   page's section and EMCON.md 0a.1 are judged directly.
@@ -41,11 +44,14 @@ a circuit correction updates the status page and the records it names, not the b
 | `s122lib.py` | the parser, the name finder and `SCOPE`; reads the six netlists with `tx_inhibit.parse_netlist`; `S122_AT=<commit>` reads the documents (not the netlists) at a commit |
 | `inventory.py` | writes `inventory.out` |
 | `judgements.py` | the stream's judgement of each sentence, keyed by its digest, with its assertions |
-| `verdicts.py` | looks up every named part, reads every cited generator line, evaluates every assertion and every stated count of parts, applies the baseline rule, writes `verdicts.out` |
+| `verdicts.py` | looks up every named part, reads every cited generator line, evaluates every assertion and every stated count of parts, applies the baseline rule and the absent rule, writes `verdicts.out` |
+| `sweep_absent.py` | counts the CONOPS.md sentences of a `verdicts.out` (the working file, a path, or the file at a revision) that state something absent, owed, not drawn or not connected, by verdict |
 | `inventory-base.out`, `verdicts-base.out` | the base's documents at `e57a7365` (run with `S122_AT=e57a7365`), judged on set 13's netlists |
-| `inventory.out`, `verdicts.out` | the documents as they stand: 849 sentences, 0 STALE, 0 UNJUDGED |
-| `apply_docs_s122.py` | round 1's 43 passages (committed in `cb446b03`; refuses a second run) |
-| `apply_docs_s122_r2.py` | round 2: the CONOPS restore, EMCON.md 0a.1, the status page's section, 16 passages; 495 assertions held first (committed in `c263ddce`) |
+| `inventory.out`, `verdicts.out` | the documents as they stand: 862 sentences, 0 STALE, 0 UNJUDGED |
+| `apply_docs_s122.py` | round 1's 43 passages (on this branch in `51952c0c`; refuses a second run) |
+| `apply_docs_s122_r2.py` | round 2: the CONOPS restore, EMCON.md 0a.1, the status page's section, 16 passages; 497 assertions held first (on this branch in `29acd948`) |
+| `apply_docs_s122_r3.py` | round 3: the status page's rows DC-07 to DC-09, the notes of DC-03 and DC-04 and the section's lead, the baselines table's `c5430071` file, the EMCON citations of PANEL.md and V2-SPEC.md and V2-SPEC.md's correction 33; 144 assertions held first; refuses a second run |
+| `checks/` | the filed independent checks, `check-s122-1.md` (round 1) and `check-s122-2.md` (round 2) |
 | `apply_registry_s122.py` | for the integrator: rebinds, CFL-016's three entries, S-122's title correction, the envelope re-pin |
 | `close_s122.py` | S-122's closure, for the integrator, last |
 | `LOG.md` | the stream's log |
@@ -55,13 +61,40 @@ a circuit correction updates the status page and the records it names, not the b
 PANEL.md sections 1, 2, 3, 5, 6, 7, 9 and 10; CONOPS.md sections 2a, M2, M4, **4 with 4a to 4f** (round 2: every row of
 section 4, and 4c and 4d, which the check showed are subsections of section 4), and 5; V2-SPEC.md and TEST-PLAN.md
 whole; OPERATING-ENVELOPE.md sections 2 to 4; ASSEMBLY.md **sections 2** (every step since round 2), 4, 8 and 9;
-decisions 28 and 40; EMCON.md section 0a.1 and the status page's new section. Not read: PANEL.md's head and sections
-4, 8 and 11; CONOPS.md's other sections; OPERATING-ENVELOPE.md sections 1 and 5 to 8; ASSEMBLY.md's other sections.
+decisions 28 and 40; EMCON.md section 0a.1 and the status page's new section; and, since round 3, every sentence of
+CONOPS.md in any section that states something absent, owed, not drawn or not connected (18 sentences). Not read:
+PANEL.md's head and sections 4, 8 and 11; CONOPS.md's other sections but for those sentences; OPERATING-ENVELOPE.md
+sections 1 and 5 to 8; ASSEMBLY.md's other sections.
 
 A sentence is inventoried when it names a part designator, a net, a board, a rail, a gate function, a generator line,
-**EMCON**, or a **spelled count of parts** (round 2). Round 2's count rule: a sentence that states a count of parts
-(two to twenty LEDs, pins, sockets, cards and the like) is UNJUDGED until its judgement asserts the count on a netlist
-(by footprint, value or designator) or says why the count is not a netlist's.
+**EMCON**, or a **spelled count of parts** (round 2). The count rule: a sentence that states a count of parts (two to
+twenty LEDs, pins, sockets, cards and the like) is UNJUDGED until each count is covered. Round 3 (check-s122-2 m8: two
+excuses named the wrong count, and the script did not read them) makes the cover checkable: with one count, a count
+assertion of the same number or a reason; with several, `counts_ok` maps each count phrase to a reason that names what
+the phrase counts (its noun), or to `asserted: <assertion>`, one of the judgement's own count assertions whose number
+is the phrase's. V2-SPEC.md line 41's two SIM holders are now `asserted: B:#ref~J_SIM=2`, ASSEMBLY.md line 92's two
+headset jacks `asserted: C:#ref~J_HSJ=2`.
+
+The parser (round 3, check-s122-2 m7) keeps a wrapped list item's indented continuation lines with the item, so a
+sentence across them is judged whole; the merged items were judged again (CONOPS.md section 4d's four steps, V2-SPEC.md's
+corrections, OPERATING-ENVELOPE.md section 4's two items).
+
+**The absent rule (round 3, check-s122-2 B1).** A CONOPS.md statement that the supervisors' I2C status path is "absent
+as generated" was judged NOT DERIVABLE and had no row, while the netlists carry the path since `458b2873`. Now every
+sentence of CONOPS.md that states something absent, owed, not drawn or not connected is inventoried, in any section, and
+judged against the netlists, TRUE or BASELINE. A NOT DERIVABLE judgement of such a sentence must bind each of those words
+to a phrase quoted from the sentence that is not about the generated circuit (`absent_ok`); otherwise the sentence is
+UNJUDGED and the closure refuses. `sweep_absent.py` counts them:
+
+| `verdicts.out` | CONOPS.md sentences with the words | TRUE | STALE | BASELINE | NOT DERIVABLE | UNJUDGED |
+|---|---|---|---|---|---|---|
+| before the re-sweep (`83cb0640`) | 14 | 1 | 0 | 7 | 6 | 0 |
+| after (this commit) | 18 | 3 | 0 | 11 | 4 | 0 |
+
+The four added are outside round 2's scope (section 2's need, section 7's D-17 row, section 7a's BANK-R1 and HOT-R1
+rows). The four NOT DERIVABLE bind "absent" in section 2's need (the setting the kit serves), "owed" in section 2a (a
+case measurement), in section 4's charger cell (a bench confirmation) and in section 4e's reading date. The inventory takes every
+such sentence of the file, in any section.
 
 ## What the verdicts mean
 
@@ -69,27 +102,32 @@ A sentence is inventoried when it names a part designator, a net, a board, a rai
   every cited generator line holds a named part at the commit it is dated to, every assertion and every stated count).
   What a TRUE sentence says beyond the netlists is named in its judgement and not judged.
 * **STALE**: the netlists or generators no longer carry it.
-* **BASELINE**: a CONOPS passage whose value is the baseline's, its current value kept in a DC row of the status page.
+* **BASELINE**: a CONOPS passage whose value is the baseline's, its current value kept in a DC row of the status page;
+  its assertions, which state the current value, must hold, or it is STALE (round 3).
 * **NOT DERIVABLE**: HISTORY (a dated record), FIRMWARE, HELD DOCUMENT, TEST, CASE or LEAD; left as it stands.
-* **UNJUDGED**: no judgement, or a count not asserted; the closure refuses on any.
+* **UNJUDGED**: no judgement, a count not covered, or an absent statement judged NOT DERIVABLE without its phrase
+  bound; the closure refuses on any.
 
 ## Counts per document
 
 | Document | Base (`e57a7365` on set 13): sentences | STALE | After: sentences | TRUE | STALE | BASELINE | NOT DERIVABLE |
 |---|---|---|---|---|---|---|---|
 | PANEL.md | 158 | 10 | 161 | 126 | 0 | 0 | 35 |
-| CONOPS.md | 249 | 25 | 247 | 27 | 0 | 34 | 186 |
-| V2-SPEC.md | 111 | 6 | 119 | 34 | 0 | 0 | 85 |
+| CONOPS.md | 252 | 29 | 250 | 30 | 0 | 38 | 182 |
+| V2-SPEC.md | 111 | 6 | 121 | 35 | 0 | 0 | 86 |
 | OPERATING-ENVELOPE.md | 32 | 4 | 32 | 8 | 0 | 0 | 24 |
 | TEST-PLAN.md | 99 | 2 | 99 | 17 | 0 | 0 | 82 |
 | ASSEMBLY.md | 147 | 13 | 147 | 85 | 0 | 0 | 62 |
 | decisions 28 and 40 | 9 | 0 | 9 | 6 | 0 | 0 | 3 |
 | EMCON.md 0a.1 | 0 | 0 | 21 | 17 | 0 | 0 | 4 |
-| DEFINITION-STATUS.md (the new section) | 0 | 0 | 14 | 7 | 0 | 0 | 7 |
-| total | 805 | 60 | 849 | 327 | 0 | 34 | 488 |
+| DEFINITION-STATUS.md (the section) | 0 | 0 | 22 | 15 | 0 | 0 | 7 |
+| total | 808 | 64 | 862 | 339 | 0 | 38 | 485 |
 
-2431 assertions are evaluated after (1937 at the base). The 34 BASELINE sentences of CONOPS point to DC-01 (11), DC-02
-(6), DC-03 (1), DC-04 (1), DC-05 (1) and DC-06 (14).
+2803 assertions are evaluated after (2159 at the base). The 38 BASELINE sentences of CONOPS point to DC-01 (11), DC-02
+(7), DC-03 (1), DC-04 (1), DC-05 (1), DC-06 (14), DC-07 and DC-08 (the same 2) and DC-09 (1). The base moved from
+round 2's 805 sentences and 60 STALE because round 3's rules read more of it: in CONOPS.md the absent sweep adds four
+base sentences and the parser's merge of section 4d's wrapped items takes one away, and the four sentences round 3
+judged BASELINE are STALE at the base, which has no status page rows.
 
 ## The check's items (check-s122-1)
 
@@ -111,6 +149,20 @@ A sentence is inventoried when it names a part designator, a net, a board, a rai
 | m11 (the closure's 605 are SCOPE's) | the closure's entries say "in the scope s122lib.SCOPE sets" and name what is outside it |
 | m12 (the finder leaves in-scope sentences out) | EMCON and counts of parts added; the sentence CFL-016 names in TEST-PLAN.md (line 54) is inventoried now. Not added: transmitter, radio, lamp and supply as keywords; the check says of the 155 sentences with those words that it "found no further stale statement" |
 
+## The check's items (check-s122-2)
+
+| Item | Answer |
+|---|---|
+| B1 (the supervisors' I2C status path "absent as generated", CONOPS lines 310 and 490 to 492, NOT DERIVABLE with no row) | row DC-07: `U41`, `U51`, `U61` pin 93 (PB7) on `SDA` and pin 92 (PB6) on `SCL` since `458b2873` (both unconnected at its parent `1f614233`), at `45bde541`, at `95e078a1` where the passages were written, and at `c5430071`; the TCA9517A segment of SC-HF-02 is what is owed. Row DC-08 for the clauses beside it: the break-before-make of FAB-03 and the back-power gating of FAB-02 (b) and (c) (`U513` to `U520`, `U530` to `U535`) are drawn since board B's round 8, present at `95e078a1` and `c5430071`, absent at `45bde541`; S-42 OPEN, CON-003 and CON-022 INCONCLUSIVE waiting on it. Both sentences BASELINE on DC-07 and DC-08. The absent rule, and the sweep above, which added DC-09 (D-17's CC array, `U31`, drawn since `458b2873`) and section 7a's HOT-R1 row to DC-02 |
+| m1 (PANEL.md line 156 cites CONOPS 4b) | cites `feasibility/EMCON.md` section 0a.1, which the script asserts names `U540`, `R536` and `R537` |
+| m2 (V2-SPEC.md line 24 cites CONOPS 4b) | cites EMCON.md section 0a.1; V2-SPEC.md's correction 33 records it |
+| m3 (DC-03 and DC-04 were wrong at the baseline's reading) | both rows say so, asserted at `45bde541` and `a9f212c7`; the section's lead says what such a note means |
+| m4 (the baselines table lacks `c5430071`'s file) | `6cb7b241cb84d729` at `c5430071` added to CONOPS's row |
+| m5 (495, not 497) | the judgement and this README say 497 |
+| m6 (the README cited commits of `fnd/s122`) | this branch's `51952c0c` and `29acd948` |
+| m7 (wrapped list items split) | the parser keeps continuation lines; the merged items judged again |
+| m8 (two count excuses name the wrong count; `counts_ok` not checked) | the count rule above checks each cover |
+
 ## Set 13 (main `32f26b41`, milestone `b874b744`)
 
 Board C's netlist is `c9f7394594201045`: `R53` to `R56` (27R) put `U3`'s GPIO 2 to 5 on `EPD_SCL_R`, `EPD_SDA_R`,
@@ -126,7 +178,8 @@ statements), and S-123.
   * gives each rebind a reason read from the diff, from the sentence sets and the two verdict files, and from the
     record's own text;
   * moves the needs pin to `c5430071`'s full sha after asserting the diff starts after the needs table;
-  * appends three CFL-016 entries: the inventory, the baseline rule, and check-int13-4's n1 and n2;
+  * appends three CFL-016 entries: the inventory (rounds 2 and 3, with the absent sweep in its scope), the baseline
+    rule with round 3's absent rule, and check-int13-4's n1 and n2;
   * appends n3 and n4 to S-122's title;
   * re-pins the envelope and ENV-001 after asserting no envelope number left OPERATING-ENVELOPE.md;
   * asserts every other record and item unchanged, re-parses, and refuses a second run.
@@ -134,8 +187,22 @@ statements), and S-123.
   * checks the rebinds are in and current;
   * re-runs the inventory and verdicts, and needs 0 STALE and 0 UNJUDGED, identical to the committed outputs;
   * needs CFL-016's baseline entry, the status page's rows, and sentences judged in EMCON.md and DEFINITION-STATUS.md;
+    the absent rule holds through its 0 UNJUDGED;
   * needs the check committed at HEAD, starting `mergeable: yes`, and naming every document and `verdicts.out`;
   * then closes S-122 and sets CFL-016 to PASS.
+* **Round 3, replayed on a throwaway clone of `89b9ac6b` (deleted after):**
+  * the four outputs reproduce byte for byte, the base's with `S122_AT=e57a7365`;
+  * `apply_docs_s122_r3.py` refuses on the tip; with PANEL.md, V2-SPEC.md and DEFINITION-STATUS.md checked out from
+    `83cb0640` it writes 10 edits after 144 assertions and the tree equals the tip byte for byte; a second run refuses;
+  * `apply_docs_s122_r2.py --check` with round 1's documents (`1594090e`): 16 edits, 497 assertions;
+  * the registry script rebinds 20 records, writes CFL-016's entries with rows DC-01 to DC-09 and the absent rule, and
+    refuses a second run; `rules_lib.py requirements`: 144 records, 0 errors, 0 warnings; `rules_lib.py`: 59 rules,
+    0 errors;
+  * `test_envelope_data` with `test_requirements`: 69 passed and 2 failed (the trace page) before
+    `rules_render.py --requirements`, 71 passed after;
+  * the closure refused the fixture while only staged, closed S-122 with it committed (not filed; 862 sentences,
+    0 STALE, 0 UNJUDGED; CFL-016 PASS; S-123 and S-42 still open) and refused a second run; after it
+    `rules_lib.py requirements` 0 errors, the tests 71 passed, `claims_check` PASS, 91 of 91.
 * **Replayed on a scratch clone of `53292087` (round 2), and again of `ede23557` on the promoted set 13 with the same results:**
   * the four outputs reproduce byte for byte;
   * `apply_docs_s122_r2.py` refuses a second run;
@@ -163,8 +230,14 @@ in `judgements.py`, and commit the outputs, or the closure refuses.
 ## What stays open
 
 * S-122 and CFL-016, until the check of step 4 and the closure of step 5.
-* CONOPS.md's 34 BASELINE passages stay as baselined. Their current values live on the status page until a reopening of
+* CONOPS.md's 38 BASELINE passages stay as baselined. Their current values live on the status page until a reopening of
   the definition decides otherwise. `feasibility/ZEROIZE.md`'s citation `CONOPS.md:404` (the check's observation) is
+  outside the scope.
+* Observed, not changed by this stream (the registry's text, for the integrator): CON-003's evidence says "R480 and
+  R500 still 100k" and CON-022's says FAB-02's "remedy (b) and (c) is not drawn", both bound to board B's netlist
+  `3ef9b8c49a01b728`, where `R480` and `R500` read 10k and `U513` to `U520` are drawn (asserted in the judgement of row
+  DC-08's cell). S-42 stays open; its title's terms are the gate's assertion and its mutation for each fix.
+* check-s122-2's observations: EXECUTION-PLAN.md line 629 and `feasibility/ZEROIZE.md`'s CONOPS line citations are
   outside the scope.
 * The finder is a token finder. A circuit sentence that names none of its tokens is outside the inventory; V2-SPEC.md
   line 35 was found that way in round 1.
