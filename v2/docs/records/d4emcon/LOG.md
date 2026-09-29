@@ -65,3 +65,22 @@ E-02); (6) an apply script for FEA-002's evidence line once EMCON.md's new hash 
   difference on any of the six boards against set 9 (only the `source` and `date` header lines moved); the path walk,
   RF-002's walk, the fault levels and the lamp check are byte-identical to set 9 but for the six hashes
   (`readings/set10/WHAT-MOVED.md`). So D4E-F1's anchors in `gen_sch_c.py` and every set 9 reading stand.
+- 12:05 to 12:19 The back-feed census of SD-EMC-2 on set 10's board B (`tools/netq.py`, every node of every signal pin of
+  J_RB9704, U12, U13, U14 and of the pull-ups on them) and the makers' figures: Ground Control's hardware page (inputs
+  "tristate (high-Z) or logic low" with I_BTD low; Logic In LOW 0.4 V max; Logic Out HIGH 2.9 to 3.4 V at 2 mA; P_EN
+  "Leaving open or driving LOW enables the charge circuit"); CP2102N Rev 1.5 (IPU 10 to 30 uA; VOH VIO - 0.7 V at 7 mA);
+  TPS22810 SLVSDH0C (RPD stated at VIN 5, 12, 18 V only, not at U22's 3.3 V); E72 manual (1.9 to 3.8 V); E22 manual v1.20
+  (2.5 to 5.5 V, SPI 0 to 10 Mbps, 3.3 V logic); PCA9555 SCPS131J (IIL -100 uA); SN74LVC2G07 SCES308L; TPS3808 SBVS050N
+  (VOL 0.4 V at 1 mA; VIT 2.79 V +-1.25 percent; td 180 to 420 ms with CT to VDD, 12 to 28 ms open; SENSE-to-RESET 20 us
+  typical, no maximum); RM520N HD v1.1 Table 9 (FULL_CARD_POWER_OFF# VIL max 0.2 V, VIH min 1.19 V, 100 k pull-down inside).
+  Findings: series resistance cannot close the E22 (at the SPI's edge budget, 680 Ohm at most, nine lines hold +5V_LORA at
+  about 2.8 V against U21's 400 Ohm RPD, over the module's 2.5 V minimum); the E72 rail's only sink, U22's RPD, is unstated
+  at 3.3 V; four RockBLOCK pins carry a live 3.3 V with the module off, against its maker's rule. New finding D4E-F2: U221's
+  Tpr hold is not shown under Quectel's 0.2 V VIL (U221 sinks R238's 0.31 mA or more, and SBVS050N states VOL only at 1 mA).
+- 12:19 to 12:22 `apply_b_d4e.py` drafted for board B's author (B-1 RockBLOCK gates and pull-downs, B-2 E72 open drains and
+  the rail's bleeder, B-3 E22 gates and buffers on slot 3's own 3.3 V, B-4 U543 TPS3808G30 on +5V_DEV holding RB_IEN in
+  U536's band, B-5 D4E-F2: U554 SN74LVC2G07 repeats U221, R238 100 k); dry run and a scratch copy: every anchor once, the
+  result parses, a second run refused. `tools/readback_d4e.py` written (net by net MUST and MUST NOT nodes, values and
+  supply pins, for B and C); on set 10's committed netlists it reads B 56 checks FAIL and C 4 FAIL
+  (`readings/set10/readback/`), as it must before regeneration. `apply_c_d4e_f1.py` re-run on a scratch copy of set 10's
+  `gen_sch_c.py` (unchanged since `e28f91a6`): applies once, refuses a second run.
