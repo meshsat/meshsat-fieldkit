@@ -157,3 +157,11 @@ No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py
     V2-SPEC.md lines 47, 81, 82, 83, 84 and 86 and OPERATING-ENVELOPE.md lines 77 and 83.
   - `apply_registry_s122_r4.py` re-issued for the round 5 diff (its REF, CFL-016's entry, S-122's sentence); the new
     texts pass claims_check's screen.
+- 21:51 Committed `8d7874f5` behind the pre-commit PASSED line. Replay on a throwaway clone of it: the seven outputs
+  byte identical; `apply_docs_s122_r5.py` from `edead832`'s V2-SPEC.md gives the tip byte for byte and refuses a second
+  run; the gate refused eight mutants (round 4's finder, the role rule off, V2-SPEC.md as at `edead832`, the TPS22810
+  gate-bias switch, the AP64500 list, the magnetometer, sixteen LEDs, a check without line 81);
+  `apply_registry_s122_r4.py` rebound 5 records and refused a second run; `rules_lib.py requirements` 144 records, 0
+  errors, 0 warnings; the tests 69 passed and 2 failed before the trace page's render, 71 passed after; the closure
+  refused the fixture while staged, closed S-122 with it committed (CFL-016 PASS; S-42, S-123, S-124 open) and refused
+  a second run; after it 0 errors, 71 passed, `claims_check` PASS 91 of 91. The clone is deleted.
