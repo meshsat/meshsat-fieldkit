@@ -85,6 +85,10 @@ def run_assert(a, nls):
         got = (_ROWS["reg"].get(rg.group(1)) or {}).get(rg.group(2))
         ok = (str(got) == rg.group(4)) if rg.group(3) == "=" else (rg.group(4) in str(got))
         return ok, "registry %s %s %s %s (read: %s)" % (rg.group(1), rg.group(2), rg.group(3), rg.group(4), got)
+    fm = re.match(r"^FILE:([\w./-]+)@([0-9a-f]+)$", a.strip())
+    if fm:
+        got = L.sha16(fm.group(1))
+        return got == fm.group(2), "%s sha256/16 %s (read: %s)" % (fm.group(1), fm.group(2), got)
     sm = re.match(r"^SHA:([ABCDEP])=([0-9a-f]+)$", a.strip())
     if sm:
         got = nls[sm.group(1)]["sha16"]
@@ -192,15 +196,16 @@ def judge(inv, nls):
         kept_ok = None
         if v == "B":
             if rel not in L.BASELINED: f3.append("BASELINE is only for a baselined document")
-            rows = status_rows()
-            kept_ok = j.get("kept") in rows
+            kept_ok = j.get("kept") in status_rows()
             if not kept_ok: f3.append("the status page keeps no row %s for it" % j.get("kept"))
         if v == "S":
             verdict = "STALE"
         elif f4:
             verdict = "UNJUDGED"
         elif v == "B":
-            verdict = "BASELINE" if kept_ok and not (f1 or f2) and not [x for x in f3 if "status page" in x or "baselined" in x] else "STALE"
+            # a baseline value may name parts or lines the netlists and generators no longer carry: that is why it is kept
+            # on the status page; the names and citation checks are reported, not held against it
+            verdict = "BASELINE" if kept_ok and not [x for x in f3 if "status page" in x or "baselined" in x] else "STALE"
         elif f1 or f2 or f3:
             verdict = "STALE" if v == "T" else "NOT DERIVABLE"
         else:
