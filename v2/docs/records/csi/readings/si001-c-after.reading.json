@@ -1,0 +1,266 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "edge_length.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "bypass_search.py": "f6197f4be2ce6859",
+   "decoupling_rules.py": "f4d06f6789c6ec48",
+   "edge_length.py": "8b6e41131623e14b",
+   "fan_select.py": "39fff82524253c05",
+   "hardset.py": "be29a44c4a592876",
+   "ibis_manifest.py": "ff27099a74e5efe9",
+   "ibis_read.py": "1d48c256b6ceca65",
+   "impedance_check.py": "e2495a04e16fc600",
+   "intent.py": "0071fe553548eb5d",
+   "intent_checks.py": "082b701e7bab36d9",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "netlist_sexp.py": "d1e3cf416e4f028d",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "a6e2421096c1473f",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "stackup_read.py": "65184b960e6f0c6e",
+   "stackup_write.py": "b55a3c0f58c805c2",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "32dd315e6c35386c",
+  "unresolved": []
+ },
+ "counts": {
+  "allowed_nets": 11,
+  "answered_nets": 29,
+  "bound_decided_nets": 7,
+  "bound_edge_nets": 32,
+  "classes": 53,
+  "contradicted_nets": 0,
+  "decided_nets": 36,
+  "layout_bound_nets": 7,
+  "low_speed_nets": 103,
+  "maker_edge_nets": 4,
+  "maker_held_nets": 0,
+  "may_be_long_nets": 36,
+  "models_absent": 0,
+  "models_asked": 5,
+  "signal_nets": 139,
+  "unasked_part_nets": 0,
+  "undecided_model_absent_nets": 0,
+  "undecided_nets": 0,
+  "undecided_no_declaration_nets": 0,
+  "undecided_other_nets": 0
+ },
+ "denominator": 139,
+ "evidence": [
+  "BOUND_DECIDES 7 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): EPD_SW, EXP_INT, HB1, HB2, HB3, SCL, SDA",
+  "ALLOWED 11 net(s) answered by an edge_allow declaration whose basis holds (CSI-D1), each with the length the layout holds it to where it declares one (CSI-D2): QSPI_D0 <= 16.8 mm, QSPI_D1 <= 16.8 mm, QSPI_D2 <= 16.8 mm, QSPI_D3 <= 16.8 mm, QSPI_SCLK <= 16.8 mm, QSPI_SS <= 22.7 mm, SWCLK <= 25.9 mm, SWDIO <= 24.3 mm, XIN <= 11.2 mm, XOUT <= 5.2 mm, XOUT_R <= 2.7 mm",
+  "LAYOUT_BOUND EPD_SW (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): EPD_SW",
+  "LAYOUT_BOUND EXP_INT (CLOCKED_DIGITAL, 0.000 ns BOUND TI-PCA9555, critical 0.0 mm, decided by a bound): EXP_INT",
+  "LAYOUT_BOUND HB? (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): HB1, HB2, HB3",
+  "LAYOUT_BOUND SCL (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): SCL",
+  "LAYOUT_BOUND SDA (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): SDA"
+ ],
+ "inputs": {
+  "board": "c",
+  "board_facts": {
+   "path": "tools/pcb_board_facts.yaml",
+   "sha256_16": "07af4d0f2b166694"
+  },
+  "board_table": {
+   "path": "tools/boards/c.json",
+   "sha256_16": "0671bb5195f37cd8"
+  },
+  "critical_k": 6,
+  "document_1": {
+   "path": "v2/docs/records/csi/readings/minimal-layout-lengths.txt",
+   "sha256_16": "d3289bd7df6531c2"
+  },
+  "document_10": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e"
+  },
+  "document_11": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+   "sha256_16": "51c4f430153fcdbf"
+  },
+  "document_12": {
+   "path": "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf",
+   "sha256_16": "f6e620179006c8c4"
+  },
+  "document_13": {
+   "path": "v2/vendor/standards/nxp-um10204-rev6-i2c-bus-specification.pdf",
+   "sha256_16": "b7619700e8bb9dd4"
+  },
+  "document_14": {
+   "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "sha256_16": "2ecb40606d4b84fe"
+  },
+  "document_15": {
+   "path": "v2/vendor/ti/bq25731-datasheet.pdf",
+   "sha256_16": "3e5e927fdf63cf6a"
+  },
+  "document_16": {
+   "path": "v2/vendor/ti/lm5176-datasheet.pdf",
+   "sha256_16": "98191bec36d43771"
+  },
+  "document_17": {
+   "path": "v2/vendor/ti/tps23861-datasheet.pdf",
+   "sha256_16": "65262ce4766a5f8e"
+  },
+  "document_18": {
+   "path": "v2/vendor/vishay/veml7700-datasheet.pdf",
+   "sha256_16": "f338cf7d5911828a"
+  },
+  "document_19": {
+   "path": "v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf",
+   "sha256_16": "81af3f69b0bff95f"
+  },
+  "document_2": {
+   "path": "v2/docs/records/hc5/kit_i2c_budget.round8-d.out.txt",
+   "sha256_16": "7967404c281d4e12"
+  },
+  "document_3": {
+   "path": "v2/vendor/adi/adi-ds3231sn.pdf",
+   "sha256_16": "dc81cd89bee82d0c"
+  },
+  "document_4": {
+   "path": "v2/vendor/cm5/cm5-datasheet.pdf",
+   "sha256_16": "80070fefd8db6e8a"
+  },
+  "document_5": {
+   "path": "v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf",
+   "sha256_16": "1b21d7b0d5c6265f"
+  },
+  "document_6": {
+   "path": "v2/vendor/microchip/microchip-ksz9897-datasheet.pdf",
+   "sha256_16": "72b89179ed6a42a7"
+  },
+  "document_7": {
+   "path": "v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf",
+   "sha256_16": "1ea68f814afe04ca"
+  },
+  "document_8": {
+   "path": "v2/vendor/power/aos-ao3401a-p-mosfet.pdf",
+   "sha256_16": "0d8e3261ae280e00"
+  },
+  "document_9": {
+   "path": "v2/vendor/power/jscj-2n7002-c8545.pdf",
+   "sha256_16": "7941fb423af7c6c6"
+  },
+  "edge_rates": {
+   "path": "tools/pcb_edge_rates.yaml",
+   "sha256_16": "0689086680f7a4a4"
+  },
+  "extent_mm": 572.0,
+  "far_netlist_a": {
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "d68ce269daa23080"
+  },
+  "far_netlist_b": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "1aec97f435080163"
+  },
+  "far_netlist_d": {
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
+   "sha256_16": "a2d48972d171aad1"
+  },
+  "ibis_manifest": {
+   "path": "v2/vendor/ibis-manifest.yaml",
+   "sha256_16": "47952602c17f0dfd"
+  },
+  "intent": {
+   "path": "out/pcb-c-display-intent.json",
+   "sha256_16": "d321f2979e0c4244"
+  },
+  "model_1": {
+   "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
+   "pinned_sha256_16": "0fb7767c1ee034db",
+   "sha256_16": "0fb7767c1ee034db"
+  },
+  "model_2": {
+   "path": "v2/vendor/ti/ibis/ads1x1x.ibs",
+   "pinned_sha256_16": "c9975d3cb6ad0161",
+   "sha256_16": "c9975d3cb6ad0161"
+  },
+  "model_3": {
+   "path": "v2/vendor/ti/ibis/ina226.ibs",
+   "pinned_sha256_16": "fb4ebf43bde617c2",
+   "sha256_16": "fb4ebf43bde617c2"
+  },
+  "model_4": {
+   "path": "v2/vendor/ti/ibis/pca9555.ibs",
+   "pinned_sha256_16": "56c19a4da921e38c",
+   "sha256_16": "56c19a4da921e38c"
+  },
+  "model_5": {
+   "path": "v2/vendor/ti/ibis/tmp117.ibs",
+   "pinned_sha256_16": "5c71fbcce9e13803",
+   "sha256_16": "5c71fbcce9e13803"
+  },
+  "model_state": {
+   "absent": 0,
+   "absent_files": [],
+   "asked": 5,
+   "how_to_fetch": "python3 v2/ecad/tools/ibis_fetch.py --fetch",
+   "manifest": "v2/vendor/ibis-manifest.yaml",
+   "present": 5,
+   "state": "PRESENT"
+  },
+  "netlist": {
+   "content16": "442e6b0866e0cc14",
+   "path": "out/pcb-c-display.net",
+   "sha256_16": "f842191bda1f071e"
+  },
+  "project": {
+   "path": "pcb-c-display-c8/pcb-c-display.kicad_pro",
+   "sha256_16": "36ff707561384db0"
+  },
+  "search_listing": {
+   "path": "v2/docs/records/w5si/readings/edge-search.txt",
+   "sha256_16": "d08bc489782c976b"
+  },
+  "slowest_layer": "JLC04161H-7628 In2.Cu",
+  "stack_table": {
+   "path": "tools/stackup_write.py",
+   "sha256_16": "b55a3c0f58c805c2"
+  },
+  "stacks": [
+   "JLC04161H-7628",
+   "JLC06161H-3313"
+  ],
+  "t_pd_ps_per_mm": 7.154
+ },
+ "missing_input": null,
+ "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default. Since 27 September 2026 every edge is a record of tools/pcb_edge_rates.yaml (a configuration input, by sha in inputs.edge_rates): a class entry's interface record, or per net the fastest of its drivers' families (a maker's IBIS model read per pin, a published minimum, a model or a bound), its far ends and one series resistor away; a net whose driver has no record is UNDECIDED. The governing edge of a net is the fastest any driver on it can produce, so one driver with no published minimum makes the net decided by a bound whatever the others publish (ER-D13); a layout-bound net a bound decides is named under BOUND_DECIDES and holds the reading INCONCLUSIVE. counts: decided = maker_edge + bound_edge; layout_bound = maker_held + bound_decided. Since 28 September 2026 the makers' IBIS models are pinned by v2/vendor/ibis-manifest.yaml (inputs.ibis_manifest) and are not in the repository: a pinned model the checkout does not hold decides nothing, its nets read UNDECIDED naming it, and inputs.model_state says which state the reading was taken in (ER-D17); undecided = undecided_no_declaration + undecided_model_absent + undecided_other; a pin whose [Ramp] cell the model's own V-t table contradicts takes the instantaneous bound (ER-D16). Since 29 September 2026 an edge_allow declaration answers a net only with its basis held, a refused one FAILS the reading, and the length it declares is handed to the layout (length_limits; CSI-D1, CSI-D2)",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SI-001": "e67c393563c5d8ce"
+  },
+  "rule_set_fingerprint": "a9b1e7f7412f9c0c"
+ },
+ "rules": [
+  "SI-001"
+ ],
+ "runtime": {
+  "python": "3.11.2"
+ },
+ "tool": "edge_length",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "6e250c1c5972a56b"
+ },
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "edge_length.py",
+  "sha16": "8b6e41131623e14b"
+ }
+}
