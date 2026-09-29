@@ -136,7 +136,7 @@ statements), and S-123.
   * needs CFL-016's baseline entry, the status page's rows, and sentences judged in EMCON.md and DEFINITION-STATUS.md;
   * needs the check committed at HEAD, starting `mergeable: yes`, and naming every document and `verdicts.out`;
   * then closes S-122 and sets CFL-016 to PASS.
-* **Replayed on a scratch clone of `53292087`:**
+* **Replayed on a scratch clone of `53292087` (round 2), and again of `ede23557` on the promoted set 13 with the same results:**
   * the four outputs reproduce byte for byte;
   * `apply_docs_s122_r2.py` refuses a second run;
   * the registry script rebinds 20 records and refuses a second run;
