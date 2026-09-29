@@ -486,3 +486,48 @@ REQ-016 as a trade, D-01; independent AI check and re-check acceptable; the self
 
 **Next critical action:** set 10: d6dec, energy2, diag and od01b (after its check), then T7 and T8, one re-take and the
 suite. **Owner decisions required:** OD-02 option A's three items (D-06, REQ-016 way i or ii, D-01), or B or C.
+
+### Milestone, 29 September 2026 03:53 CEST: integration set 10 on main
+
+**Accepted:** `f3d30ceb`. Merged: stream d6dec (decision 42's decoupling rules as one library, `intent.bypass` with a
+class and a basis; DEC-001's text, sources and coverage row, T7 and T8), stream energy2 (section 9 of the energy
+reconciliation, M1 derived from the requirement side), the eleven rebuilt diagrams, and set 9's carried minors M2, M10
+and M11. Every schematic was regenerated on the KiCad box because the decoupling tools entered every generator's import
+closure (netlists identical apart from their export date and source lines; check_contracts PASS of 99). Pins, 25 records
+and the six layout sheets re-bound on a parsed proof. S-117 opened and restated from TI's SLUSE66A (section 9.3.11,
+Table 9-4, printed page 27): board A has no IADPT resistor or its 100 pF or smaller capacitor, and its compensation
+networks match neither row of Table 9-5 (pages 27 and 28); the EMC sheet's 800 kHz for U3 is provisional until S-117 is
+closed by board A's writer (the re-check's N1 and N2, carried). Gates: re-take 73 steps, 0 errors; 34 layout-entry
+reasons, as on main; isolated clone byte-identical; suite 2248 passed, 0 failed, 3 skipped at `f3d30ceb`; a fresh AI
+check (blocking B1, the IADPT reading, answered) and its focused re-check, mergeable. No layer closed. DEC-001 reads
+INCONCLUSIVE on the six boards until each board's next placement under its new text.
+
+**The owner's instruction of 29 September, in his words:** "The updated calculations reproduce successfully. Preserve
+this reference analysis and move to engineering Option A(i), within existing authorizations." Section 9 of
+`records/energy/ENERGY-RECONCILIATION.md` with `energy_architecture.py` is therefore kept as the reference energy
+analysis; "Keep M1/REQ-072 unchanged" and "No purchases or requirement changes are authorized by this instruction"
+stand.
+
+**Option A(i) (400 Wp array into a 200 W stage), on side branches, not integrated:** `fnd/a1elec` (the two-pack
+topology: a second BQ25731, U3B, for the lid pack, an LM74700-Q1 ideal diode and an LM5069-2 hot-swap limiter on each
+pack path, a TCA9543A for the two gauges, a fail-safe enable; the BQ4050 gauge's current scale k=2 for a 4S12P lid; the
+200 W stage's entry at 5.56 A or more (115.1 W); the two-pack energy model `energy_two_pack.py` with each store's own
+temperature, charge ceiling and path losses; an independent AI check and re-check acceptable), `fnd/a1mech` (the lid
+pack's CAD and drawings: with the HF module of approval 16a and the tablet of 16d both kept the lid holds 39 cells,
+4S9P; with the tablet out 4S14P; with the QMX out 61 places, 4S15P; open-lid stability, the stay and the hinge harness;
+checked and re-checked) and `fnd/a1int` (the reconciliation on the two-pack model at 400 Wp into 200 W: both functions
+kept does not meet the reference day at the September lid basis of 13.23 C; tablet out, 4S20P in all, meets with a
+lowest store of 94.0 Wh and a lid down to +3.8 C; QMX out, 4S21P, meets with 125.5 Wh down to +1.5 C). These are
+analytical results on a model: nothing is built, bought or physically verified, and none is fabrication ready. The panel
+selection (`fnd/a1solar`) is running: real panel specifications come before the array wiring and the input ratings.
+
+**OD-01:** `fnd/od01b` `d0a8d0eb`: H1 as its own part (sheet H1-1, DXF, STEP, STL, check record, manifest), H2's finish
+settled (both faces matt black), the receipt checks R1 to R8 gating every fit-dependent part, what the heat test can and
+cannot prove with its uncertainty, an automatic latching over-temperature shutdown (two relays in series held by four
+thermostats) with its verification V1 to V4, and the package listed by sha256 (72 files). Four independent AI checks;
+check 4's two blocking items (a stale total, a stale hole size) answered; check 5 running. Not purchase authorization.
+
+**Next critical action:** check 5 of OD-01, then the corrected package exported to the laptop; the panel selection, then
+the owner's report on Option A(i). **Owner decisions required:** which approved lid function yields its space to the lid
+pack (the tablet, 16d, or the QMX, 16a; with both kept M1 is not met on the model), together with OD-02 option A's D-06
+(pack growth) and REQ-016 way i (the 200 W stage). OD-01 purchasing and the operator stay his.
