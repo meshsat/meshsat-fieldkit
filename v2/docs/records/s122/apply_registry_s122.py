@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """Step 4 of stream s122 (S-122, MESHSAT-1357, 29 September 2026), for the integrator to run once the branch fnd/s122 is
-merged: the registry follows the documents `apply_docs_s122.py` (round 1) and `apply_docs_s122_r2.py` (round 2) changed.
+merged: the registry follows the documents `apply_docs_s122.py` (round 1), `apply_docs_s122_r2.py` (round 2) and
+`apply_docs_s122_r3.py` (round 3) changed.
 Round 2 (the answer to `checks/check-s122-1.md` and the coordinator's ruling): CONOPS.md is restored to its baseline text
 at `c5430071` and read through `handover/DEFINITION-STATUS.md`; the current circuit is kept in `feasibility/EMCON.md`
 section 0a.1 and on the status page; the registry is set 13's as promoted on main (`32f26b41`, milestone `b874b744`), which fnd/s122b starts from.
+Round 3 (the answer to `checks/check-s122-2.md`): the status page gains rows DC-07 to DC-09 and CONOPS.md's statements
+of what is absent, owed, not drawn or not connected are judged against the netlists (the baseline entry says how).
 
 It writes `v2/ecad/tools/pcb_requirements.yaml`, `v2/ecad/tools/pcb_envelope.yaml` and `v2/ecad/tools/pcb_rules_coverage.yaml`
 and nothing else:
@@ -44,7 +47,7 @@ DOCS = {"v2/docs/PANEL.md": "4647782f5aca7c13", "v2/docs/CONOPS.md": "3c5d49078b
         "v2/docs/V2-SPEC.md": "e1fdcebe8638e471", "v2/docs/OPERATING-ENVELOPE.md": "43361b02743cf3af",
         "v2/docs/TEST-PLAN.md": "ae57da0b57e214f7", "v2/docs/ASSEMBLY.md": "ee4eff52fc5df307",
         "v2/docs/feasibility/EMCON.md": "e919e9b2c633deef"}
-REF = "v2/docs/records/s122/apply_docs_s122.py and apply_docs_s122_r2.py"
+REF = "v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and apply_docs_s122_r3.py"
 CONOPS_BASELINE = "6cb7b241cb84d729"     # CONOPS.md at c5430071, the owner's rulings of 28 September
 DASHES = ("\u2014", "\u2013")
 
@@ -67,11 +70,16 @@ BASELINE_ENTRY = (
     "the needs table unchanged. So this record reads CONOPS.md's circuit statements through its status page and the "
     "records it names: a CONOPS passage whose value differs from the committed netlists, or that cites a generator line, "
     "is a baseline value (BASELINE in v2/docs/records/s122/verdicts.out) when the status page's section of CONOPS's "
-    "current circuit values keeps its current value (rows DC-01 to DC-06), and STALE when it does not; the places those "
+    "current circuit values keeps its current value (rows DC-01 to DC-09), and STALE when it does not; the places those "
     "rows name, v2/docs/feasibility/EMCON.md section 0a.1 and the status page's own rows, are judged directly against the "
     "netlists and must describe the circuit as generated. The five other documents (PANEL.md, V2-SPEC.md, "
-    "OPERATING-ENVELOPE.md, TEST-PLAN.md, ASSEMBLY.md) and decisions 28 and 40 are judged directly. This entry changes no "
-    "result.")
+    "OPERATING-ENVELOPE.md, TEST-PLAN.md, ASSEMBLY.md) and decisions 28 and 40 are judged directly. Round 3 (the "
+    "independent check v2/docs/records/s122/checks/check-s122-2.md, blocking B1: a CONOPS.md statement that the "
+    "supervisors' I2C status path is absent as generated was judged NOT DERIVABLE and had no row): a statement of "
+    "CONOPS.md that something is absent, owed, not drawn or not connected as generated is judged against the netlists, "
+    "TRUE or BASELINE, never NOT DERIVABLE; every sentence of CONOPS.md with those words is inventoried, in any section, "
+    "and a NOT DERIVABLE judgement of one must bind each such word to a phrase of the sentence that is not about the "
+    "generated circuit (verdicts.py, absent_rule; sweep_absent.py counts them). This entry changes no result.")
 
 S122_ADD = (
     " Correction (v2/docs/records/int13/checks/check-int13-4.md, minors n3 and n4; appended by stream s122): in the words "
@@ -278,19 +286,20 @@ def main():
     if not va or sum(v[2] for v in va.values()) or sum(v[5] for v in va.values()): refuse("verdicts.out holds STALE or UNJUDGED sentences")
     per = "; ".join("%s %d sentences, %d STALE at the base, %d TRUE, %d BASELINE and %d NOT DERIVABLE after" % (
         d, va[d][0], vb.get(d, (0, 0, 0))[2], va[d][1], va[d][3], va[d][4]) for d in va)
-    entry = ("v2/docs/records/s122/inventory.out and v2/docs/records/s122/verdicts.out (stream s122, S-122, round 2; "
+    entry = ("v2/docs/records/s122/inventory.out and v2/docs/records/s122/verdicts.out (stream s122, S-122, rounds 2 and 3; "
              "written by inventory.py and verdicts.py in that folder, with the base's documents at e57a7365 in "
              "inventory-base.out and verdicts-base.out): every sentence in the scope s122lib.SCOPE sets from this record's "
-             "statement and notes, the brief of S-122 and the check check-s122-1 (PANEL.md sections 1, 2, 3, 5, 6, 7, 9 and "
+             "statement and notes, the brief of S-122 and the checks check-s122-1 and check-s122-2 (PANEL.md sections 1, 2, 3, 5, 6, 7, 9 and "
              "10; CONOPS.md sections 2a, M2, M4 and 4 with 4a to 4f, and 5; V2-SPEC.md and TEST-PLAN.md whole; "
              "OPERATING-ENVELOPE.md sections 2 to 4; ASSEMBLY.md sections 2, 4, 8 and 9; decisions 28 and 40; "
-             "EMCON.md section 0a.1 and the status page's section of CONOPS's current circuit values) that names a part, a "
+             "EMCON.md section 0a.1 and the status page's section of CONOPS's current circuit values), and every sentence of "
+             "CONOPS.md in any section that states something is absent, owed, not drawn or not connected, that names a part, a "
              "net, a board, a rail, a gate function, a generator line, EMCON or a count of parts, judged against the "
              "committed netlists of boards A, B, C, D, E and P of set 13 and the generators, each judgement's assertions and "
              "every stated count of parts evaluated by the script: %s. Outside that scope the scripts read nothing: PANEL.md's "
-             "head and sections 4, 8 and 11, CONOPS.md's other sections, OPERATING-ENVELOPE.md sections 1 and 5 to 8, "
+             "head and sections 4, 8 and 11, CONOPS.md's other sections but for those sentences, OPERATING-ENVELOPE.md sections 1 and 5 to 8, "
              "ASSEMBLY.md's other sections. The stale sentences of the five correctable documents were corrected by "
-             "v2/docs/records/s122/apply_docs_s122.py and apply_docs_s122_r2.py, which asserted every part, pin, net, count "
+             "v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and apply_docs_s122_r3.py, which asserted every part, pin, net, count "
              "and generator line their new text names before they wrote; CONOPS.md is read under the baseline rule of the "
              "next entry. What TRUE, STALE, BASELINE and NOT DERIVABLE mean is set out in v2/docs/records/s122/README.md. "
              "This record stays FAIL and waits on S-122, whose closure (v2/docs/records/s122/close_s122.py) re-runs the "

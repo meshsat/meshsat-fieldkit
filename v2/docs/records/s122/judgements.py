@@ -1022,7 +1022,7 @@ J.update({
     # EMCON.md section 0a.1
     "44fef7001d": T("the four netlists read", "SHA:A=6c40250c47195ebb", "SHA:B=3ef9b8c49a01b728", "SHA:C=c9f7394594201045",
                     "SHA:D=a2d48972d171aad1"),
-    "892ede8107": T("what the round 2 script asserted before writing (its list EMCON_A, 495 assertions in its run with the "
+    "892ede8107": T("what the round 2 script asserted before writing (its list EMCON_A, 497 assertions in its run with the "
                     "edits' own); the parts it names", *CCLAMP, "B:U214.6=WL_nDIS2", "B:U314.6=WL_nDIS3", "B:U22.5=E72_EN",
                     "B:U23.3=LIME_UVLO", "B:U24.3=RB_UVLO", "B:U102@PWRCTL1=LIME_HW_EN", "B:U540.1=ZBA_RXD_H",
                     "B:U547.1=SPI3_IO26", "B:F3.2=VBUS_QMX"),
@@ -1141,3 +1141,211 @@ J.update({
     "3fa744781d": S("board B carries two WiFi link card sockets, J_M2C1 and J_M2C3 (check-s122-1 B2)", "B:#val~M.2 E-key=2"),
     "dcfe5ddc9a": S("board C carries seventeen 3 mm LEDs, D22 the seventeenth (check-s122-1 B2)", "C:#fp~LED_D3.0mm=17"),
 })
+
+# ================================================================== ROUND 3 (check-s122-2: B1, m7, m8, the absent sweep)
+# the supervisors' I2C status path (DC-07): targets on the kit bus since 458b2873, before the text was written (95e078a1)
+# and at the baseline (c5430071); unconnected at 458b2873's parent 1f614233; the TCA9517A segment of SC-HF-02 not drawn
+SUPI2C = ["B:U41@PB7=SDA", "B:U41@PB6=SCL", "B:U51@PB7=SDA", "B:U51@PB6=SCL", "B:U61@PB7=SDA", "B:U61@PB6=SCL",
+          "B:U41.93=SDA", "B:U41.92=SCL", "B:SDA>J_PANEL,U41,U51,U61", "B:SCL>J_PANEL,U41,U51,U61", "B:J_PANEL.4=SDA",
+          "B@458b2873:U41@PB7=SDA", "B@1f614233:U41@PB7=unconnected-(U41-PB7-Pad93)", "B@95e078a1:U51@PB6=SCL",
+          "B@c5430071:U61@PB7=SDA", "B@45bde541:U41@PB6=SCL", "B@a9f212c7:U51@PB7=SDA", "B:!~TCA9517",
+          "DOC:v2/docs/ARCH-PCB-B-IOHA.md~CORRECTED at `458b2873`",
+          "DOC:v2/docs/ARCH-PCB-B-IOHA.md~move behind a TCA9517A that the panel controller enables from U7 only for its own transactions to them (owed on the generator)"]
+# the fabric's back-power gating, FAB-02 (b) and (c), and the break-before-make of FAB-03 (DC-08): drawn in board B's round 8,
+# present at 95e078a1 and at c5430071, absent at 45bde541; S-42 open, CON-003 and CON-022 INCONCLUSIVE waiting on it
+FABRIC = ["B:R191.1=+3V3_CM1", "B:R191.2=PG1", "B:R191~1k", "B:R192.1=PG1", "B:R192.2=GND", "B:R192~100k",
+          "B:U530~74LVC1G17", "B:U530.2=PG1", "B:U530.4=PG1_S", "B:U533~SN74LVC1G04", "B:U533.2=PG1_S", "B:U533.4=PG1_n",
+          "B:U513~74LVC1G157", "B:U513.3=PG1_n", "B:U513.1=PG2_n", "B:U513.6=BSEL1_D2", "B:U513.4=PGSEL1_n",
+          "B:U516~BBM ? 1", "B:U516.3=PGSEL1_n", "B:U516.6=BBM1", "B:U516.4=BOE1_n", "B:BOE1_n>U109,U110",
+          "B:U109~TMUXHS4212", "B:U110~TS3USB221A", "B:BBM1>=U516,U85", "B:BBM1_MOV>U527,U80,U85", "B:BBM1_ARM>U521,U524,U84",
+          "B:U507~FAB-03", "B:U510~FAB-03", "B:U521~FAB-03", "B:BSEL1_S>U109,U110,U507",
+          "B:U519~74LVC1G157", "B:U519.3=PG1_S", "B:U519.1=PG2_S", "B:U519.6=HDMI_SEL1", "B:U519.4=HDMI_EN1", "B:U3.2=HDMI_EN1",
+          "B:U520~74LVC1G157", "B:U520.1=PG3_S", "B:U520.6=HDMI_SEL2", "B:U520.4=HDMI_EN2", "B:U4.2=HDMI_EN2",
+          "B@95e078a1:U519~74LVC1G157", "B@95e078a1:U516~BBM ? 1", "B@c5430071:U520~74LVC1G157", "B@c5430071:U513~74LVC1G157",
+          "B@45bde541:!U519", "B@45bde541:!U516",
+          "G@b874b744:check_pcb_b.py:353-353~U519|U520", "G@b874b744:check_pcb_b.py:412-412~FAB-02 (b)",
+          "REG:S-42.status=OPEN", "REG:S-42.title~the back-power gating of FAB-02 (b) and (c)",
+          "REG:S-42.title~a true break-before-make sequence", "REG:CON-022.evidence_result=INCONCLUSIVE",
+          "REG:CON-022.waits_on~S-42", "REG:CON-003.evidence_result=INCONCLUSIVE", "REG:CON-003.waits_on~S-42"]
+# board A's CC array of D-17 (DC-09): drawn since 458b2873
+CCARR = ["A:U31~TPD2E2U06", "A:U31.1=PD_CC1", "A:U31.2=PD_CC2", "A:U31.3=GND", "A:J_USBC_OUT.2=PD_CC1",
+         "A:J_USBC_OUT.3=PD_CC2", "A@458b2873:U31~TPD2E2U06", "A@c5430071:U31~TPD2E2U06"]
+# BANK-R1 not drawn: the generated hub allocation, unchanged since 45bde541; REQ-052 FAIL
+BANKR1 = ["B:U102@USB_DP_DN4=RB_DP", "B:RB_DP>=U102,U18", "B:U18~CP2102N", "B:U202@USB_DP_DN4=QMX_DP", "B:QMX_DP>J_QMX,U202",
+          "B:U102@USB_DP_DN2=USB_PNL_P", "B:USB_PNL_P>J_PANEL,U102", "B:U302@USB_DP_DN3=USB_WALL_P",
+          "B@45bde541:U102@USB_DP_DN4=RB_DP", "B@45bde541:U202@USB_DP_DN4=QMX_DP", "B@45bde541:U102@USB_DP_DN2=USB_PNL_P",
+          "B@45bde541:U302@USB_DP_DN3=USB_WALL_P", "REG:REQ-052.evidence_result=FAIL"]
+# SLOT_EN as generated: the panel controller's GPIO, the ribbons, test points, the converters' enables and 100 k pull-downs
+SLOTEN = ["A:SLOT_EN1>=J_AB1,R30,U4", "A:SLOT_EN2>=J_AB1,R34,U5", "A:SLOT_EN3>=J_AB1,R38,U6", "A:R30~100k", "A:R30.2=GND",
+          "A:R34.2=GND", "A:R38.2=GND", "B:SLOT_EN1>=J_AB1,J_PANEL", "B:SLOT_EN2>=J_AB1,J_PANEL", "B:SLOT_EN3>=J_AB1,J_PANEL",
+          "C:SLOT_EN1>=J_PANEL,TP31,U3", "C:SLOT_EN2>=J_PANEL,TP32,U3", "C:SLOT_EN3>=J_PANEL,TP33,U3"]
+PRE3 = "check-s122-2 B1: "
+J.update({
+    "8e2b2ea5c9": B(["DC-07", "DC-08"], PRE3 + "all three preconditions are drawn, and were at the text's writing (95e078a1) and at "
+                    "the baseline (c5430071): the supervisors are kit bus targets on PB7 and PB6 since 458b2873 (DC-07; the "
+                    "TCA9517A segment of SC-HF-02 is what is owed), and board B's round 8 drew the break-before-make of FAB-03 "
+                    "and the back-power gating of FAB-02 (b) and (c), the display switches' enables U519 and U520 among it "
+                    "(DC-08); S-42 stays open over them (the gate's assertion and its mutation are its terms)",
+                    *(SUPI2C + FABRIC)),
+    "186a997856": B(["DC-07", "DC-08"], PRE3 + "the three items it calls owed as generated are drawn (DC-07, DC-08)",
+                    *(SUPI2C + FABRIC)),
+    "a4c8583ce6": B("DC-09", "D-17's CC array is drawn on board A since 458b2873 (U31, TPD2E2U06, on PD_CC1 and PD_CC2 at "
+                    "J_USBC_OUT); the row was written at 68bc9e8f, before 458b2873 drew it", *CCARR),
+    "41d1053ffe": B("DC-02", "HOT-R1 called owed before layout entry; drawn since stream w4ae; REQ-077 reads INCONCLUSIVE, not FAIL",
+                    *HOTR1),
+    "000d312aa9": T("BANK-R1 is not in the generator: bank 1 carries the RockBLOCK's bridge U18 on port 4 and the panel "
+                    "controller on port 2, bank 2 the QMX on port 4, bank 3 the wall port on port 3, as at 45bde541, and "
+                    "REQ-052 reads FAIL; the owner's example and the hand-off are the record's", *BANKR1),
+    "0f2685fa36": T("nothing holds SLOT_EN across a controller restart as generated: each line is the panel controller's GPIO "
+                    "(U3 pins 16 to 18 on board C), the ribbons, a test point, and on board A the slot converter's enable with "
+                    "its 100 k pull-down; the watchdog restart and the boot order are firmware", *SLOTEN,
+                    "C:U3.16=SLOT_EN1", "C:U3.17=SLOT_EN2", "C:U3.18=SLOT_EN3"),
+    "c530f82b50": N(DOCN + " (a need of section 2)",
+                    absent_ok={"cellular infrastructure are absent or down": "the setting the kit serves, not the circuit"}),
+    "aa962fffd3": N(FW + " (the build checks; the PA's flange figure is POWER-THERMAL.md PWR-F15's)"),
+    "2ec2a400f8": T("board P's arming jumper JP1 and chemical fuse F2 with the second level U2; the commissioning is D-15's "
+                    "procedure", "P:JP1.1=FUSE_G", "P:JP1.2=FUSE_GQ", "P:F2~SCF9550", "P:F2.3=SCP_HTR", "P:U2~BQ7720700"),
+    "61013cde57": N(FW, "B:#val~STM32H743=3"),
+    "f83ed5d19a": N(TEST),
+    "488d983a0f": N(H + " (the case choices C1 to C6, CASE-MARGINS.md section 4)",
+                    counts_ok={"two WIFI P2P jacks": "the case's WIFI P2P antenna jacks, case items"}),
+    "1e990ac1c7": N(H), "edd3aa4d2f": N(H), "c12a46ae87": N(H), "60fc961b25": N(H),
+    "d242bb413f": N(FW + " (control C1's thresholds; which module remains is the control's, BANK-R1 not drawn)", *BANKR1),
+    "9ba46bddfe": N(FW + " (the cold warm-up)", *CARDS2,
+                    counts_ok={"two AW7915-AED WiFi link cards": "asserted: B:#val~M.2 E-key=2"}),
+})
+# the absent sweep's bound phrases on existing NOT DERIVABLE judgements (each a phrase quoted from its sentence)
+R3ABS = {
+    "ad42c9eb94": {"no case measurement is owed": "a case measurement the owner's reversal of D-08 removed, not the circuit"},
+    "f17b893792": {"bench confirmation owed": "a bench confirmation of TI's charger behaviour, not the circuit"},
+    "02d81ab6f6": {"unless a row says a fix is owed": "the section's reading date; each row that says a fix is owed is "
+                                                     "inventoried and judged on its own"},
+}
+# m8: each count bound to its own reason or to one of the judgement's own count assertions of the same number
+R3CNT = {
+    "05ad0e2bee": ({"three card": "the three card supplies, whose enables U116, U216 and U316 are asserted above",
+                    "three reaching their switches": "not a count of parts: the first three of U501 to U505 reaching their "
+                                                     "switches U23, U24 and U21, asserted above",
+                    "three supervisors": "asserted: B:#val~STM32H743=3"}, ["B:#val~STM32H743=3"]),
+    "94bef6640e": ({"three supervisors": "asserted: B:#val~STM32H743=3", "two expanders": "asserted: A:#val~PCA9555=2"}, []),
+    "72057ed854": ({"three modules in any slot": "the number of modules fitted in any slot, not a count of parts"}, []),
+    "6ea98bdfa1": ({"three antenna jacks": "the 5G antenna jacks are case items under D-07, not a netlist's",
+                    "two nano-SIM holders": "asserted: B:#ref~J_SIM=2"}, []),
+    "884cd4a8b5": ({"sixteen LEDs": "the LEDs D1 to D16 under the light guides; the sentence names D22 as the seventeenth, and "
+                                    "the seventeen LED_D3.0mm footprints are asserted"}, []),
+    "286e14a698": ({"five IP68-rated internal fans": "the five fans: J_FAN1 to J_FAN3 on board B and J_FAN1, J_FAN2 on board E, "
+                                                     "both counts asserted",
+                    "two mixer fans": "asserted: E:#ref~J_FAN=2"}, []),
+    "b1e7494b6d": ({"three CM5 slots": "the three slots are the receptacles U30A, U31A and U32A, asserted",
+                    "three STM32H743 supervisors": "asserted: B:#val~STM32H743=3"}, ["B:U30A?", "B:U31A?", "B:U32A?"]),
+    "ac1bd47d91": ({"Two NVMe drives": "the cost estimate's drives of 6 September 2026, bought items",
+                    "two PCIe switches": "the cost estimate's PCIe switches of 6 September 2026; board B carries three, one per "
+                                         "slot"}, ["B:#val~PI7C9X2G404=3"]),
+    "36abc030f1": ({"Two headset jacks": "the cost estimate's headset jacks of 6 September 2026"}, []),
+    "287efa15f6": ({"five IP68 fans": "the cost estimate's fans of 6 September 2026"}, []),
+    "27245f25a2": ({"five fans": "the five fans: J_FAN1 to J_FAN3 on board B and J_FAN1, J_FAN2 on board E, both counts asserted",
+                    "two mixer fans": "asserted: E:#ref~J_FAN=2"}, []),
+    "5e98fc1920": ({"three slots": "a row label naming the three slots, not a count of parts"}, []),
+    "ab5d01673b": ({"five fans": "the five fans' temperature documents, which the tree does not hold"}, []),
+    "8a93588273": ({"five fans": "appendix 32.53's five fans: J_FAN1 to J_FAN3 on board B and J_FAN1, J_FAN2 on board E, both "
+                                 "counts asserted"}, ["B:#ref~J_FAN=3", "E:#ref~J_FAN=2"]),
+    "6374505c78": ({"three fuse": "asserted: E:#val~Keystone=3", "two mixer fans": "asserted: E:#ref~J_FAN=2"}, []),
+    "cc0ec17c8e": ({"eleven Radiall receptacles": "asserted: A:#ref~J_BM=11",
+                    "seventeen Mill-Max 0858 class power pins": "asserted: A:#fp~Mill-Max_0858=17"}, []),
+    "00e44f7f0e": ({"two WiFi link cards": "asserted: B:#val~M.2 E-key=2",
+                    "two headers": "the two J_AB1 headers, A22's and B16's, each asserted present"}, ["A:J_AB1?", "B:J_AB1?"]),
+    "8b1e16653a": ({"two headset jacks": "asserted: C:#ref~J_HSJ=2"}, ["C:#ref~J_HSJ=2"]),
+    "3fbdea5ae9": ({"twelve lands": "J_BLK's twelve lands, its pins 1 to 12 (pins 1 and 12 asserted)"}, []),
+    "3a53e10db7": ({"four M39029/56-352 size 16 socket": "the Glenair plug's socket contacts, not a netlist part"}, []),
+    "c8263105e0": ({"Twelve Preci-Dip 813 contacts": "J_DOCK's twelve contacts, pins 1, 4, 7 and 8 to 12 asserted",
+                    "four 9 A spring pins": "asserted: A:#ref~J_VR=4"}, []),
+    "e050e55b92": ({"nine Mill-Max 0858 class pins": "the pack's nine pins: J_CP1 to J_CP4, J_CN1 to J_CN4 and J_PRE1, "
+                                                     "asserted as four, four and one"},
+                   ["A:#ref~J_CP=4", "A:#ref~J_CN=4", "A:J_PRE1?"]),
+    "f6186bbdf0": ({"eleven Radiall R222M00720 blind-mate receptacles": "asserted: A:#ref~J_BM=11",
+                    "seventeen Mill-Max 0858 class power pins": "asserted: A:#fp~Mill-Max_0858=17"}, []),
+    "a039b91bf4": ({"three NVMe drives": "asserted: B:#val~M.2 M-key=3", "three coolers": "asserted: B:#ref~J_FAN=3",
+                    "two WiFi link cards": "asserted: B:#val~M.2 E-key=2"}, []),
+    "73ff7b42ab": ({"seventeen 3 mm LEDs": "asserted: C:#fp~LED_D3.0mm=17", "three APEM toggles": "asserted: C:#val~APEM=3",
+                    "three C&K switches": "asserted: C:#val~C&K=3", "two U-174/U jacks": "asserted: C:#ref~J_HSJ=2"}, []),
+    "7211912728": ({"three Keystone holders": "asserted: E:#val~Keystone=3", "two mixer fans": "asserted: E:#ref~J_FAN=2",
+                    "two tie slots": "the clamp bar's tie slots, a case item"}, []),
+}
+for _d, _x in R3ABS.items():
+    if _d not in J: raise SystemExit("judgements: R3ABS names %s, which has no judgement" % _d)
+    J[_d] = dict(J[_d]); J[_d]["absent_ok"] = _x
+for _d, (_c, _a) in R3CNT.items():
+    if _d not in J: raise SystemExit("judgements: R3CNT names %s, which has no judgement" % _d)
+    J[_d] = dict(J[_d]); J[_d]["a"] = list(J[_d].get("a", [])) + [x for x in _a if x not in J[_d].get("a", [])]
+    J[_d]["counts_ok"] = _c
+# the dated citation of ASSEMBLY line 90's correction (gen_sch_e.py:193 at 45bde541)
+J["ef9f31ab35"] = dict(J["ef9f31ab35"], a=list(J["ef9f31ab35"].get("a", [])) + ["G@45bde541:gen_sch_e.py:193~J_BATT|BTA-70762-2"],
+                       cite_ok="the citation asserted at 45bde541 below")
+
+# ------------------------------------------------------------------ round 3: the texts round 3 wrote (apply_docs_s122_r3.py)
+WRIT = ["DOC@95e078a1:v2/docs/CONOPS.md~the supervisors' I2C status path, absent as generated",
+        "DOC@95e078a1^:v2/docs/CONOPS.md!~the supervisors' I2C status path, absent as generated",
+        "DOC@95e078a1:v2/docs/CONOPS.md~and the supervisors' I2C status path (`ARCH-PCB-B-IOHA.md` section 6); they are preconditions",
+        "DOC@95e078a1^:v2/docs/CONOPS.md!~and the supervisors' I2C status path (`ARCH-PCB-B-IOHA.md` section 6); they are preconditions"]
+PAR1F = ["B@1f614233:U%s@PB%s=unconnected-(U%s-PB%s-Pad%s)" % (u, pb, u, pb, pad)
+         for u in ("41", "51", "61") for pb, pad in (("6", "92"), ("7", "93"))]
+ROW3N = ["C@45bde541:R36.1=LED_RAIL", "C@45bde541:R36.2=TX_A", "C@45bde541:D3.2=TX_A", "C@45bde541:Q1.3=LED_RAIL",
+         "C@a9f212c7:R36.1=LED_RAIL", "C@a9f212c7:Q1.3=LED_RAIL", "C:R36.1=LED_RAIL", "C:D3.2=TX_A"]
+ROW4N = ["B@45bde541:U25~AP63203", "B@45bde541:U25.1=+3V3_DEV", "B@45bde541:U25.2=+5V_DEV", "B@a9f212c7:U25.1=+3V3_DEV",
+         "B@a9f212c7:U25.2=+5V_DEV", "A@45bde541:U7~LM5176", "A@a9f212c7:U7~LM5176"]
+SEC01 = ["DOC:v2/docs/feasibility/EMCON.md~### 0a.1|`U540`|`R536`|`R537`|`U536`|`RB_IEN`|`U543`"]
+J.update({
+    "5bfe6a8bde": dict(J["31b8c509a8"], why=J["31b8c509a8"]["why"] + "; the citation is EMCON.md section 0a.1 since round 3 "
+                       "(check-s122-2 m1), which names the E72 gates and pull-ups", a=J["31b8c509a8"]["a"] + SEC01),
+    "90d51e8ca0": dict(J["c3dc5405b5"], why=J["c3dc5405b5"]["why"] + "; the per-radio citation is EMCON.md section 0a.1 since "
+                       "round 3 (check-s122-2 m2)", a=J["c3dc5405b5"]["a"] + SEC01),
+    "479d562a75": N(H + " (correction 33's heading)"),
+    "8c1edc6932": T("CONOPS.md is c5430071's file; EMCON.md 0a.1 carries the circuit; the status page's DC-01 names it",
+                    "FILE:v2/docs/CONOPS.md@6cb7b241cb84d729", *SEC01,
+                    "DOC:v2/docs/handover/DEFINITION-STATUS.md~| DC-01 | section 4's EMCON row; section 4b's preamble and table |"),
+    "73f2e6ddc9": dict(J["53707a7315"], why=J["53707a7315"]["why"] + "; the baseline's value at 45bde541 and a9f212c7 (m3)",
+                       a=J["53707a7315"]["a"] + ROW3N),
+    "f908d15512": dict(J["5f1751dbcc"], why=J["5f1751dbcc"]["why"] + "; the baseline's value at 45bde541 and a9f212c7 (m3)",
+                       a=J["5f1751dbcc"]["a"] + ROW4N),
+    "b69a3a82b2": T("the passages DC-07 keeps: CONOPS section 4's Reduced row and section 4c's SLOT_EN1 passage",
+                    "DOC:v2/docs/CONOPS.md~and the supervisors' I2C status path, absent as generated",
+                    "DOC:v2/docs/CONOPS.md~and the supervisors' I2C status path (`ARCH-PCB-B-IOHA.md` section 6)"),
+    "ad17cbd96a": T("the status path on set 13, at 458b2873's parent, at the commits named, and where the passages were written",
+                    *(SUPI2C + PAR1F + WRIT), "DOC:v2/docs/HW-FW-CONTRACT.md~### 6.5 The session's choice: three segments (SC-HF-02"),
+    "0c80bfc694": T("the places named", "DOC:v2/docs/ARCH-PCB-B-IOHA.md~## 6. The control plane",
+                    "DOC:v2/docs/HW-FW-CONTRACT.md~| FW-B08 | supervisors' I2C1: SCL PB6 pin 92, SDA PB7 pin 93 on the kit bus"),
+    "3c62f9bf01": T("the passages DC-08 keeps", "DOC:v2/docs/CONOPS.md~the break-before-make order, which the generated circuit "
+                    "does not have (FAB-03, CON-003); a bank detached from a host that has lost its power, which nothing does "
+                    "as generated (FAB-02, CON-022)", "DOC:v2/docs/CONOPS.md~the break-before-make order (FAB-03, CON-003), a bank "
+                    "detached from a host that has lost its power (FAB-02, CON-022)"),
+    "0a5b716f9c": T("the fabric on set 13, at 95e078a1 and c5430071, and absent at 45bde541; S-42 and the two records",
+                    *(FABRIC + WRIT[:1]), "B:U514~74LVC1G157", "B:U515~74LVC1G157", "B:U517~BBM ? 1", "B:U518~BBM ? 1",
+                    "B:U531~74LVC1G17", "B:U532~74LVC1G17", "B:U534~SN74LVC1G04", "B:U535~SN74LVC1G04", "B:U531.4=PG2_S",
+                    "B:U532.4=PG3_S", "B:U517.4=BOE2_n", "B:U518.4=BOE3_n", "B:U517.6=BBM2", "B:U518.6=BBM3"),
+    "d23056fff8": T("the places named", "DOC:v2/docs/ARCH-PCB-B-IOHA.md~## 5. How the hardware prevents split brain|"
+                    "**Drawn in board B's round 8 (27 September 2026):** each slot's power-good",
+                    "DOC:v2/docs/feasibility/FAILOVER-FABRIC.md~## 9. Findings of this review|## 9a. Round 8 (27 September 2026",
+                    "REG:S-42.status=OPEN", "REG:CON-003.waits_on~S-42", "REG:CON-022.waits_on~S-42"),
+    "840195c22c": T("the passage DC-09 keeps", "DOC:v2/docs/CONOPS.md~| D-17 | Board A's USB-C CC pins (decision 31) | RULED "
+                    "26 Sep | an external low-capacitance ESD array at the CC pins by the connector, riding on the board A update "
+                    "already owed |"),
+    "8238c2f0de": T("the array on set 13, at 458b2873, 45bde541 and c5430071, and where the row was written (68bc9e8f, the "
+                    "file's first commit, without it)", *CCARR, "A@45bde541:U31~TPD2E2U06", "A@68bc9e8f:!U31",
+                    "DOC@68bc9e8f:v2/docs/CONOPS.md~riding on the board A update already owed"),
+})
+J["ad17cbd96a"]["a"] = J["ad17cbd96a"]["a"] + ["B:#val~STM32H743=3"]
+J["ad17cbd96a"]["counts_ok"] = {"three supervisors": "asserted: B:#val~STM32H743=3"}
+# the absent sweep on the base's texts (e57a7365's CONOPS.md, which set 12 had edited; verdicts-base.out)
+J["7778cb996e"] = T("the owed list is open items and bench tests, not parts the netlists lack: S-01, S-92, S-93 and S-44 open "
+                    "in the registry; U536 and the lamp D22 drawn", "B:U536?", "B:U112?", "B:U115?", "B:U536~SN74LVC1G08",
+                    "C:D22~EMCON", "REG:S-01.status=OPEN", "REG:S-92.status=OPEN", "REG:S-93.status=OPEN",
+                    "REG:S-44.status=OPEN")
+J["b73681b892"] = dict(J["b73681b892"], absent_ok={"with each state, fault and proof owed": "the record's proofs, bench and "
+                                                                                          "document items, not the circuit"})
+# what the registry's CON-003 and CON-022 evidence says against set 13's board B (an observation for the integrator,
+# README "What stays open"; S-122 does not change those records)
+J["0a5b716f9c"]["a"] = J["0a5b716f9c"]["a"] + [
+    "B:R480~10k", "B:R500~10k", "REG:CON-003.evidence~R480 and R500 still 100k",
+    "REG:CON-022.evidence~its remedy (b) and (c) is not drawn",
+    "REG:CON-003.evidence_bound_to~pcb-b-compute.net@3ef9b8c49a01b728",
+    "REG:CON-022.evidence_bound_to~pcb-b-compute.net@3ef9b8c49a01b728"]
