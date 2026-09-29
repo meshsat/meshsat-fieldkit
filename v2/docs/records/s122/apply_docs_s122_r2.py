@@ -32,7 +32,7 @@ sys.path.insert(0, os.path.join(L.TOP, "v2/docs/records/int13"))
 import apply_conops_4b_set12 as C12  # noqa: E402
 
 TAG = "apply_docs_s122_r2"
-BASE = "4d3a9708"          # fnd/s122 with set 13's candidate merged
+BASE = "1594090e"          # round 1's tip on fnd/s122b (its CONOPS.md equals the dropped merge 4d3a9708's, ae7f41700480f617)
 CON = "v2/docs/CONOPS.md"
 EMC = "v2/docs/feasibility/EMCON.md"
 DST = "v2/docs/handover/DEFINITION-STATUS.md"

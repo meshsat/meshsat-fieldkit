@@ -3,7 +3,7 @@
 merged: the registry follows the documents `apply_docs_s122.py` (round 1) and `apply_docs_s122_r2.py` (round 2) changed.
 Round 2 (the answer to `checks/check-s122-1.md` and the coordinator's ruling): CONOPS.md is restored to its baseline text
 at `c5430071` and read through `handover/DEFINITION-STATUS.md`; the current circuit is kept in `feasibility/EMCON.md`
-section 0a.1 and on the status page; the registry is on set 13's candidate (`fnd/int14` merged at `4d3a9708`).
+section 0a.1 and on the status page; the registry is set 13's as promoted on main (`32f26b41`, milestone `b874b744`), which fnd/s122b starts from.
 
 It writes `v2/ecad/tools/pcb_requirements.yaml`, `v2/ecad/tools/pcb_envelope.yaml` and `v2/ecad/tools/pcb_rules_coverage.yaml`
 and nothing else:

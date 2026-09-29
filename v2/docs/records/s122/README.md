@@ -1,7 +1,7 @@
 # Stream s122: the documents CFL-016 names, re-read against the netlists (S-122, MESHSAT-1357)
 
-Prototype design: nothing here is built, bought or measured. Branch `fnd/s122` from `main` at `e57a7365`, with set 13's
-candidate `fnd/int14` (`bd1cbb07`) merged at `4d3a9708`, 29 September 2026. The stream changes documents only; no
+Prototype design: nothing here is built, bought or measured. Branch `fnd/s122b` from `main` at `b874b744` (set 13 promoted as `32f26b41`, its
+milestone `b874b744`), carrying this stream's seven commits of `fnd/s122` by cherry-pick, 29 September 2026. The stream changes documents only; no
 generator, netlist or registry file is edited on this branch (the registry changes are `apply_registry_s122.py` and
 `close_s122.py`, for the integrator).
 
@@ -111,11 +111,12 @@ A sentence is inventoried when it names a part designator, a net, a board, a rai
 | m11 (the closure's 605 are SCOPE's) | the closure's entries say "in the scope s122lib.SCOPE sets" and name what is outside it |
 | m12 (the finder leaves in-scope sentences out) | EMCON and counts of parts added; the sentence CFL-016 names in TEST-PLAN.md (line 54) is inventoried now. Not added: transmitter, radio, lamp and supply as keywords; the check says of the 155 sentences with those words that it "found no further stale statement" |
 
-## Set 13 (`fnd/int14` at `bd1cbb07`, merged)
+## Set 13 (main `32f26b41`, milestone `b874b744`)
 
 Board C's netlist is `c9f7394594201045`: `R53` to `R56` (27R) put `U3`'s GPIO 2 to 5 on `EPD_SCL_R`, `EPD_SDA_R`,
 `EPD_DC_R` and `EPD_CS_R`. PANEL.md section 3's two rows are corrected, and line 180's provenance names set 13's
-netlists. The registry at the merge carries S-122's set 13 addition and S-123.
+netlists. The promoted registry carries S-122's set 13 addition, with its closing clause (the rows re-derived like the EMCON
+statements), and S-123.
 
 ## The scripts for the integrator, and what they assert
 
@@ -147,7 +148,7 @@ netlists. The registry at the merge carries S-122's set 13 addition and S-123.
 
 ## Integrator's run order
 
-1. Merge `fnd/s122` (it carries `fnd/int14` at `bd1cbb07`).
+1. Merge `fnd/s122b` (from main `b874b744`).
 2. `python3 v2/docs/records/s122/apply_registry_s122.py`
 3. `rules_render.py --requirements`; `rules_status.py` and `rules_render.py` for the envelope pin (ENV-001's `verified_sha`, the PCB-RULE-STATUS pages, LAYER-STATUS).
 4. An independent check filed under `v2/docs/records/s122/checks/` and committed. It must name PANEL.md, CONOPS.md,
