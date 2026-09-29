@@ -55,3 +55,13 @@ VGG falls through R82 plus R83 (81.5 k, 1 percent) with C62 2.2 uF (+20 percent 
 0.48 s, and K1 releases in 3 ms maximum (Omron G6K, stated without saying whether a coil diode is fitted, D2 is), so
 the row's bound under 1 s rests on U15's unstated disable delay and on K1 with D2 (both INFERRED milliseconds; bench
 E-02); (6) an apply script for FEA-002's evidence line once EMCON.md's new hash is known.
+
+## Resumed 29 September 2026, second time (the integrator's brief of set 10)
+
+- 12:02 Brief read; branch `fnd/d4emcon` at `89815e4f`. Read this log, EMCON.md (sections 0, 0a, 2, 3, 4, 4.4, 4.5,
+  4b, 4c, 5a, 6, 7), `apply_c_d4e_f1.py`, FEA-002 (its LAYOUT_ENTRY stage) and S-01, S-02, S-44, S-65, S-87, S-92, S-93.
+- 12:03 Main (`7b2caadd`, set 10) merged with `--no-ff` under the owner's identity: merge commit `da31586e`, no conflict.
+- 12:03 to 12:04 Re-run on set 10's committed netlists (`readings/set10/`): `netdiff.py` finds no part or net
+  difference on any of the six boards against set 9 (only the `source` and `date` header lines moved); the path walk,
+  RF-002's walk, the fault levels and the lamp check are byte-identical to set 9 but for the six hashes
+  (`readings/set10/WHAT-MOVED.md`). So D4E-F1's anchors in `gen_sch_c.py` and every set 9 reading stand.
