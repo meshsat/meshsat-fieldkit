@@ -145,7 +145,7 @@ hotter than the middle one (INFERRED).
   air the linear derating gives 41 W on the standard heatsink; 21.2 W is about half of that (INFERRED).
 - HS100: 100 W on its standard heatsink (995 cm2 of 3 mm aluminium), 30 W with none, at 25 C, derating to zero at 200 C.
   H1 (992 cm2 of 3 mm) is practically that heatsink: 85.7 W at a 50 C plate, 80.0 W at 60 C (linear). **So the 83 W
-  pulses start only from a plate at or under 50 C, last at most 60 s, and stop at the patch stop of 110 C, whichever comes
+  pulses start only from a plate at or under 50 C, last at most 60 s, and stop at the patch stops (110 C at CH7, 70 C at CH4), whichever comes
   first.** 45 W is inside the rating at any plate temperature under 121 C.
 
 **Wiring (all outside the case except the four thermostats; crimped terminals, 0.75 mm2 silicone wire for the heater
@@ -325,7 +325,7 @@ CH8. `P` = the mean of the readings in that window. Uncertainty per section 1.
    run so that their junctions are outside once H1 is on; route these wires and the HS100's leads out with the others.
    Refit H1 on the frame with its ten screws, the leads out under the seal as before. The shutdown switches nothing in
    the patch runs (the heaters stay off and the supply feeds the HS100 alone), so V3 is not repeated: the patch runs are
-   attended, and section 8's 110 C limit on the HS100 is the operator's.
+   attended, and section 8's limits for the patch runs (110 C at CH7, 70 C at CH4) are the operator's.
 3. **Patch channel map** (CH5, CH6, CH7 and CH8 were freed in step 2; tape CH3, CH5, CH6 and CH8 on H1's top face now; move CH4 to the band nearest the resistor; keep CH1 and CH2):
 
 | Ch | Where | Stop limit |
@@ -372,9 +372,9 @@ empty. Time: T1 15 min; drilling 2 to 3 h; T2 1 h after the legs' tape has cured
 
 | Reading | Limit | Enforced automatically by |
 |---|---|---|
-| Case floor or wall (CH5) | 70 C | TS2 (opens by 63 C) |
+| Case floor or wall (CH5, steady-state steps) | 70 C | TS2 (opens by 63 C) |
 | H1's edge over the o-ring (CH4) | 70 C | TS3 on H1 (opens by 63 C) in the steady-state steps; in the patch runs the attending operator (CH4 on the band nearest the resistor) |
-| H2 (CH6) | 100 C | TS1 (opens by 96 C) |
+| H2 (CH6, steady-state steps) | 100 C | TS1 (opens by 96 C) |
 | A heater body (CH7, test A) | 150 C | TS4 on the middle heater (opens by 144 C) |
 | The patch resistor's body (CH7, patch runs) | 110 C | the attending operator |
 | Any smell or smoke | - | the operator: supply off, lid open, nothing touched bare-handed |
@@ -396,7 +396,8 @@ One folder `od01-results/`, handed over as files (copied to the runner or the la
   V1 to V4, T1 to T11 run; a reading not taken gets a line with its reason);
 - `heat-steps.csv`: `step, lid, fans, heaters, volts, amps, start_utc, steady_utc, logger_file, stopped_at_limit_utc,
   tripped_by` (the last two empty for a step that reached steady state), and for the patch
-  `pulse, watts, seconds, plate_start_C, peak_C, time_to_110C_s`;
+  `pulse, watts, seconds, plate_start_C, peak_C, time_to_stop_s, stopped_by` (CH7 or CH4; empty
+  when the pulse ran its full time);
 - the logger's CSV exports and the channel maps above with a photograph per thermocouple;
 - photographs named by check and row: T1's date wheel and markings, the lead exit, each thermostat's place, H2 on its
   stand-offs;
