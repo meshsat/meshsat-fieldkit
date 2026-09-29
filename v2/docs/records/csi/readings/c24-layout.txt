@@ -1,0 +1,15 @@
+tools/board_c_layout.py on v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb (C24, the only routed board C; last changed by commit 9527a3d2; sha256/16 2a273803757c68fb; four layers, routed from an older schematic), with the max_mm of boards/c.json at fnd/csi 69409613. Exit 1.
+== pcb-c-display.kicad_pcb: board C's edge_allow nets, routed length and placement lower bound against max_mm
+   net         max_mm    routed  ratio  vias  layers      pads_far  the farthest pads
+   QSPI_D0       13.1   55.71 mm    4.3     4  B.Cu,F.Cu,In2.Cu  42.13 mm  U4.5 to U3.53   PAST   PLACEMENT CANNOT MEET IT
+   QSPI_D1       13.1   67.86 mm    5.2     7  B.Cu,F.Cu,In2.Cu  39.93 mm  U4.2 to U3.55   PAST   PLACEMENT CANNOT MEET IT
+   QSPI_D2       13.1   61.22 mm    4.7     7  B.Cu,F.Cu,In2.Cu  39.63 mm  U4.3 to U3.54   PAST   PLACEMENT CANNOT MEET IT
+   QSPI_D3       13.1   58.59 mm    4.5     3  B.Cu,F.Cu,In2.Cu  41.16 mm  U4.7 to U3.51   PAST   PLACEMENT CANNOT MEET IT
+   QSPI_SCLK      8.0   63.82 mm    8.0     6  B.Cu,F.Cu,In2.Cu  41.64 mm  U4.6 to U3.52   PAST   PLACEMENT CANNOT MEET IT
+   QSPI_SS       17.7  103.26 mm    5.8     5  B.Cu,F.Cu,In2.Cu  46.19 mm  R5.1 to U3.56   PAST   PLACEMENT CANNOT MEET IT
+   SWCLK         20.1  159.62 mm    7.9     3  B.Cu,F.Cu,In2.Cu 146.19 mm  U3.24 to TP1.1   PAST   PLACEMENT CANNOT MEET IT
+   SWDIO         18.9  167.59 mm    8.9     3  B.Cu,F.Cu,In2.Cu 147.00 mm  TP2.1 to U3.25   PAST   PLACEMENT CANNOT MEET IT
+   XIN            8.7  167.59 mm   19.3     8  B.Cu,F.Cu,In2.Cu  47.17 mm  C5.1 to Y1.1   PAST   PLACEMENT CANNOT MEET IT
+   XOUT           4.0  112.12 mm   28.0     6  B.Cu,F.Cu,In2.Cu  45.60 mm  C6.1 to Y1.3   PAST   PLACEMENT CANNOT MEET IT
+   XOUT_R         2.1   64.55 mm   30.7     4  B.Cu,F.Cu   33.75 mm  R1.1 to U3.21   PAST   PLACEMENT CANNOT MEET IT
+board_c_layout: 11 net(s) past their limit or with a placement that cannot meet it
