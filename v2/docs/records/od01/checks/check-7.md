@@ -121,7 +121,7 @@ Peli's 88 C, and the shield keeps the jet off the rim. This holds with CH4 place
 - **r13.** Line 57 (D5) still names only "the heater leads". Every lead group now crosses both seals. The bias figure
   stands.
 - **r14.** `patch_od01f.py` line 199 keeps check-1's old user path as a search literal. The file is in the folder that the
-  README lists, though not in PACKAGE.sha256. `checks/check-5.md` line 96 quotes the box path `/root/od01b`. Build the
+  README lists, though not in PACKAGE.sha256. `checks/check-5.md` line 96 quotes the box path (generalised on filing). Build the
   literal from parts, and add a filing note to check-5.
 
 ## Verified

@@ -89,7 +89,8 @@ page): no heater or hot plate touches the polypropylene; H2 stands on stand-offs
   the supply off (V4). **Without
   V1 to V4, every hour of heating is attended continuously** by a person at the case who reads the logger at least every
   10 minutes. **The supply's current limit (6.5 A) and the fuses do not enforce any temperature limit.**
-- **The patch runs are always attended**, each pulse timed by hand, and stopped at once at 110 C on the resistor's body.
+- **The patch runs are always attended**, each pulse timed by hand, and stopped at once at 110 C on the resistor's body or 70 C on
+  H1's edge over the o-ring nearest it (CH4).
 - **The Arcol ratings depend on their heatsink and derate with temperature** (Arcol 12/14.08): HS50 50 W on 535 cm2 of
   1 mm aluminium, 14 W with none; HS100 100 W on 995 cm2 of 3 mm, 30 W with none; both at 25 C, falling linearly to zero
   at 200 C. H1 is practically the HS100's standard heatsink: 85.7 W at a 50 C plate, 80 W at 60 C, so 83 W only from a

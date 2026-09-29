@@ -1,9 +1,9 @@
 # OD-01: the package an engineer needs, by path and sha256
 
 MESHSAT-1357, stream od01b, 29 September 2026. Written by `make_package.py` beside this file (stdlib; it refuses to run if a
-listed file is missing) at tree `28f7a990` plus the working files it hashed; the same list in `sha256sum` form is `PACKAGE.sha256`.
+listed file is missing) at tree `71407a46` plus the working files it hashed; the same list in `sha256sum` form is `PACKAGE.sha256`.
 Prototype: nothing in the package has been made, bought, sent or run. **Export:** copy every path below keeping the
-repository paths, then from the repository root `sha256sum -c v2/docs/records/od01/PACKAGE.sha256` reads OK for all 75 files
+repository paths, then from the repository root `sha256sum -c v2/docs/records/od01/PACKAGE.sha256` reads OK for all 76 files
 (14.9 MB in all). Groups A to G are what a shop needs for the quotes (each part's drawing PDF governs its DXF and STEP); A, H, I and J
 what the operator needs for the tests; K regenerates H1; L holds the later independent checks and the records the documents cite. This file, `PACKAGE.sha256` and `LOG-od01b.md` are not in the list.
 
@@ -12,9 +12,9 @@ what the operator needs for the tests; K regenerates H1; L holds the later indep
 
 | Path | Bytes | sha256 | For |
 |---|---|---|---|
-| `v2/docs/records/od01/README.md` | 6056 | `4c31f98d991c41eef8ab3bed944f7c1381cd521e6d51818c97a9ccf98918229b` | the package's index and what remains |
-| `v2/docs/records/od01/TEST-BRIEF.md` | 9663 | `81ffdb45977af14c452032c5108d6cabc07792e993cdfa6794180aa7adc44af2` | the operator's two-page brief |
-| `v2/docs/records/od01/TEST-PROCEDURE.md` | 40372 | `f84e7b2a1493659d1be7b9a1c7873fe2fdfcf8aaa09e84eba525a7157e2ddbdf` | the complete procedure: what the heat test proves, the shutdown and its verification, set-up, steps, patch runs, test B, stop limits, records |
+| `v2/docs/records/od01/README.md` | 6074 | `4f21bf2135c609b7300721bafaa8319eff2e527de6a1b13a6c8c93e05d9999c7` | the package's index and what remains |
+| `v2/docs/records/od01/TEST-BRIEF.md` | 9719 | `5ecf0d776b5b10efda1f0f21d8bdf06d7343767c8947144404be5331d4f82959` | the operator's two-page brief |
+| `v2/docs/records/od01/TEST-PROCEDURE.md` | 40993 | `08846f0e245b3b9471202a6b47775759a5d2ef6e92c2af13b58cc39df9cbad23` | the complete procedure: what the heat test proves, the shutdown and its verification, set-up, steps, patch runs, test B, stop limits, records |
 | `v2/docs/records/od01/MACHINING-RFQ.md` | 20773 | `f12c13949b0c6b284a57bc1cfefe48b55bf522e486a8071e2cde3e67c7275c78` | the request for quote (NOT SENT) and section 6, the receipt checks R1 to R8 that gate cutting |
 | `v2/docs/records/od01/CHECKOUT-LIST.md` | 31055 | `f4a879f4346d27f271e3de54c329b8311d7d191e6a281b453a32000b5fbaac48` | what to buy, priced, with sources; lines 10 to 15 the shutdown |
 | `v2/docs/records/od01/checks/check-1.md` | 5919 | `c0fe6fbabb7ac861e37a1ff7172b4496d71014fbd0bde5b26153ccd39efd1be7` | independent AI check 1 of the package (28 Sep) |
@@ -129,7 +129,7 @@ what the operator needs for the tests; K regenerates H1; L holds the later indep
 | `v2/cad/case_manifest.py` | 1860 | `5433e025c0bcadb4b3607fd80bf551b491c5e1df1ef7b1481d248d571e1e50ed` | writes a release folder's manifest |
 | `v2/cad/requirements-cad.lock` | 1374 | `32f887be3a68bb56b9ad9a1978c0c43ae9fdc27e40611d318c3fb054b504c5d9` | the pinned CAD venv |
 
-### L. Independent checks 3 to 7, and the records the documents cite
+### L. Independent checks 3 to 8, and the records the documents cite
 
 | Path | Bytes | sha256 | For |
 |---|---|---|---|
@@ -137,7 +137,8 @@ what the operator needs for the tests; K regenerates H1; L holds the later indep
 | `v2/docs/records/od01/checks/check-4.md` | 9601 | `0cbfcf7701c5d8d81bef1e6eca232e9e72277a146858a614ad104bd750840140` | independent AI check 4 (29 Sep): N1 and N2 and the minor items answered by patch_od01d.py, n6 carried |
 | `v2/docs/records/od01/checks/check-5.md` | 10595 | `a3a8ee59bf6e8305595521dbd382eeb78dcb1555c679aedc4d97973e085c2e01` | independent AI check 5 (29 Sep): B1 (V4) and the minor items answered by patch_od01e.py |
 | `v2/docs/records/od01/checks/check-6.md` | 12396 | `45860065af4409b81bba5b446cc046bce0de2285ce3f481e3b19ab8a4e5f22f4` | independent AI check 6 (29 Sep), the first end-to-end: B1 to B3 and q1 to q16 answered by patch_od01f.py |
-| `v2/docs/records/od01/checks/check-7.md` | 13611 | `1e5383b7ff4f71bfd175a771b500e4b164f6394a3095c18affe31b9e91c510b4` | independent AI check 7 (29 Sep), the second end-to-end: B1, B2 and r1 to r14 answered by patch_od01g.py |
+| `v2/docs/records/od01/checks/check-7.md` | 13621 | `cf8f454c29484d9b51d2c95e033b41a7f954d637746df86851819eebc4326465` | independent AI check 7 (29 Sep), the second end-to-end: B1, B2 and r1 to r14 answered by patch_od01g.py |
+| `v2/docs/records/od01/checks/check-8.md` | 8282 | `0b02da49465686e6f20895cde9e1a5192756e39fbcbfe1ce860ccfaa6d9209ce` | independent AI check 8 (29 Sep), check 7's re-check: C1, s1 and s2 answered by patch_od01h.py |
 | `v2/docs/reviews/READY-TO-ACT.md` | 73938 | `bdaf61a4991afb8ca1c45d0c1f71330dd8954e493af357503e01e350b8ed8fff` | the ready-to-act review the checkout list and RFQ cite |
 | `v2/docs/ASSEMBLY.md` | 66445 | `ee4eff52fc5df3070f0871021380c3e9a75b12c83314ec16b78916d3399658dc` | the assembly steps the RFQ and the procedure cite |
 | `v2/release/case-2026-09-27/lid-tray-qmx-r2/README.md` | 20290 | `3d3bbcfe240596398783956c15d850e36d9dc31495e8a86b49f9bcc386d2e558` | the lid tray r2 the RFQ names as printed, not machined |
