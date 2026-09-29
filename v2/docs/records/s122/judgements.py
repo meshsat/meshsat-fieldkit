@@ -1614,7 +1614,7 @@ J.update({
     "75f96bbf14": T("round 4's correction note: no netlist carries a TRACO part; board E's U6 is the LM5069; the generator's "
                     "words; the range TI's 7.3", "A:!~TRACO", "B:!~TRACO", "C:!~TRACO", "D:!~TRACO", "E:!~TRACO", "P:!~TRACO",
                     "E:!~40-2412WIN", "E:U6~LM5069", "DOC:v2/ecad/tools/gen_sch_e.py~the isolated TRACO converter of E4 is gone",
-                    "PDF:v2/vendor/ti/ti-lm5069.pdf~7.3 Recommended Operating Conditions|Junction temperature|40 125 °C (1) For detailed information",
+                    "PDF:v2/vendor/ti/ti-lm5069.pdf~7.3 Recommended Operating Conditions|TJ Junction temperature -40 125 °C",
                     parts_ok={"TEN 40-2412WIN": "asserted: E:!~40-2412WIN"}),
     "3641ee0106": T("round 4's correction note: no netlist carries the MDT420B01001; board B's B-key socket is TE 2199119-3 "
                     "J_M2C2 at -40 to +80 C (TE's brochure, and Amphenol's sheet the same), and the Amphenol M-key "
@@ -1884,4 +1884,40 @@ J.update({
     "21f5924adb": T("board B's J_M2C2, TE 2199119-3: its maker's service temperature",
                     "PDF:v2/vendor/m2/te-2199119-m2-b-key.pdf~Service Temperature -40 ~ +80",
                     figures_ok={"-40 to +80 C": "asserted: PDF:v2/vendor/m2/te-2199119-m2-b-key.pdf~Service Temperature -40 ~ +80"}),
+})
+
+# ================================================================== ROUND 7 (check-s122-6: B1 the 14.4 V node, m1 signed values, m4 the finder)
+# B1: line 81's "14.4 V node" is bound to the generator's declaration of board P's cell node (gen_sch_p.py's rail intent
+# CELL4 at 14.4 V nominal, 10.0 to 18.0 V), beside board P's 4S block (J_CELL) and the cell maker's 3.60 V nominal; the
+# BQ4050 sheet's test condition (VCC = 14.4 V) is dropped, since it holds whatever pack board P carries
+CELL4 = 'DOC:v2/ecad/tools/gen_sch_p.py~_intent.rail("CELL4", 14.4, 10.0, 18.0, "W_BP"'
+AH35E = "PDF:v2/vendor/battery/samsung-35e-orbtronic.pdf~3.3 Nominal Voltage 3.60V"
+_j = dict(J["a77bf9d173"])
+_j["a"] = [x for x in _j["a"] if "ti-bq4050" not in x and x != "P:U1~4S balancing"] + [
+    CELL4, "P:J_CELL~4S block", "DOC:v2/ecad/tools/gen_sch_p.py~one 4S3P block of Samsung INR18650-35E", AH35E]
+_j["figures_ok"] = dict(_j["figures_ok"], **{"14.4 V node": "asserted: " + CELL4})
+J["a77bf9d173"] = _j
+F81["14.4 V node"] = CELL4
+# m1: the LM5069's junction range asserted with its sign (the PDF reader reads the sheet's U+2013 minus as '-')
+LM69 = "PDF:v2/vendor/ti/ti-lm5069.pdf~TJ Junction temperature -40 125 °C|(1) For detailed information on soldering plastic VSSOP"
+J["056f8a2031"] = T("board E's U6, the LM5069: its maker's recommended junction range, -40 to 125 C (SNVS452G, 7.3)", LM69,
+                    figures_ok={"-40 to +125 C": "asserted: " + LM69})
+# m4: the part numbers the finder reads since this round, each excused by what it is
+XEN = "bought: the Xenarc monitor, a bought unit wired by its leads, on no board"
+CPL = "case: Amphenol's SMA couplers of the case templates, which the case set of 27 September 2026 retired"
+_add("d757d209e1", parts={"709GNK": XEN})
+_add("facb104de6", parts={"132170": CPL})
+_add("26424f2f31", parts={"ANN-MB2": "bought: u-blox's GNSS antenna, the puck's alternative, on no board"})
+_add("488d983a0f", parts={"132170": CPL})
+_add("cd9739a701", parts={"132170": CPL, "422B": "bought: MG Chemicals' conformal coating, a material"})
+_add("1f1b7f0b3f", parts={"S-8261": "withdrawn: ABLIC's single-cell protector, which decision 40 set aside",
+                          "bq2970": "withdrawn: TI's single-cell protector, which decision 40 set aside"})
+J.update({
+    "05b3d33f08": N(DOCN + " (the monitor's maker figure, its product manual)", parts_ok={"709GNK": XEN}),
+    "158db4d812": N(CASE + " (the monitor set into the plate, its maker data and appendix 32.85)", parts_ok={"709GNK": XEN}),
+    "c64a44b1c1": N(CASE + " (the monitor's name as a row's subject)", parts_ok={"709GNK": XEN}),
+    "7fa81a144e": N(H + " (the couplers until 27 September 2026)", parts_ok={"132170": CPL},
+                    counts_ok={"eleven Amphenol 132170 couplers": "the couplers of the case until 27 September 2026, "
+                               "case items on no netlist"}),
+    "9a3c85265f": N(CASE + " (a lead's cable)", parts_ok={"0021917": "bought: Lapp's cable, its article number, a lead"}),
 })

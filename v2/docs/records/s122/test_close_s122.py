@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
-"""Stream s122, round 6 (S-122, MESHSAT-1357, 29 September 2026): the closing gate's fixture and mutation tests, the
-answer to check-s122-5 B1, m1 and m2 (`checks/check-s122-5.md`).
+"""Stream s122, rounds 6 and 7 (S-122, MESHSAT-1357, 29 September 2026): the closing gate's fixture and mutation tests,
+the answer to check-s122-5 B1, m1 and m2 (`checks/check-s122-5.md`) and to check-s122-6 m1 and m2 (`checks/check-s122-6.md`).
 
   T1 at this commit, with every test of verdicts.py on: close_s122.gate_fixtures refuses nothing (every mutant of
      close_s122.MUTANTS reads STALE, line 47 with the 1 W planted back is refused by (b) and by (f)'s scan alone), the
      closing list reads the eight lines, and close_s122.figure_scan covers every figure-and-unit token on them;
-  T2 the mutation tests: each test of verdicts.ROLE_TESTS (forward, reverse1, reverse2, rails, history) turned off in
-     turn; the mutants that then read TRUE are listed, at least one does for each test, and gate_fixtures REFUSES
-     (check-s122-5 m2: with the forward test off the gate refuses);
+  T2 the mutation tests: each test of verdicts.ROLE_TESTS (forward, reverse1, reverse2, rails, history, wordmatch,
+     load) turned off in turn; the mutants that then read TRUE are listed, at least one does for each test, and
+     gate_fixtures REFUSES (check-s122-5 m2: with the forward test off the gate refuses);
   T3 verdicts.check_figs turned off (the judgement's own figure check): line 47 with the 1 W planted back is still
      refused by (b) and by the scan, which do not rest on it;
-  T4 the scan on a copy of each closing-list sentence with one of its figures changed (the number plus one): every
-     changed sentence is refused by figure_uncovered.
+  T4 the scan on a copy of each closing-list sentence with one of its figures changed (the number plus one, a spelled
+     count the next word) and the judgement's keys that span it rewritten to the new text, its assertions kept: every
+     change is refused by the comparison of values (round 7, check-s122-6 m1), and so are the check's four plants and
+     the 1 W with their keys rewritten (close_s122.KEYED);
+  T5 the mutation of that comparison: verdicts._fig_match replaced by one that accepts everything; T4 must then fail
+     and gate_fixtures refuse.
 Reads the committed documents and netlists; writes nothing. Exit 0 when all hold, 1 otherwise.
 Run: python3 test_close_s122.py"""
 import contextlib, io, os, re, sys
@@ -40,6 +44,48 @@ def refused(fn, *a):
 def check(ok, what):
     print("%s %s" % ("PASS" if ok else "FAIL", what))
     if not ok: FAILS.append(what)
+
+
+def t4(lines, nls):
+    """T4: each figure token of the closing list's sentences changed by one (its first number plus one, a spelled count
+    the next word), the judgement's figures_ok and counts_ok keys that span it rewritten to the new text and its
+    assertions kept, so only the comparison of values can refuse it. Returns (tokens, the changes the scan passed)."""
+    n, through = 0, []
+    for x in lines:
+        doc, line = x.split(" line ")
+        for s in C.line_sentences(doc, int(line)):
+            j = V.J.J.get(L.sid_digest(s))
+            for a, b, txt, _vals in V.figure_tokens(s):
+                m = re.search(r"\d+", txt)
+                if m:
+                    changed = txt[:m.start()] + str(int(m.group(0)) + 1) + txt[m.end():]
+                else:
+                    w = V.NUMWORD[txt.lower()]
+                    changed = [k for k, i in V.NUMWORD.items() if i == (w + 1 if w < 20 else 19)][0]
+                sp = s[:a] + changed + s[b:]
+                j2 = dict(j)
+                for f in ("figures_ok", "counts_ok"):
+                    if not isinstance(j.get(f), dict): continue
+                    keys = {}
+                    for k, v in j[f].items():
+                        nk = k
+                        for km in re.finditer(re.escape(k), s):
+                            if km.start() <= a and b <= km.end():
+                                nk = s[km.start():a] + changed + s[b:km.end()]
+                        keys[nk] = v
+                    j2[f] = keys
+                d = L.sid_digest(sp)
+                had = V.J.J.get(d)
+                V.J.J[d] = j2
+                try:
+                    bad = C.figure_uncovered(sp, {d: "TRUE"}, nls)
+                    un = V.figures_uncovered(sp, j2)
+                finally:
+                    if had is None: del V.J.J[d]
+                    else: V.J.J[d] = had
+                n += 1
+                if not bad or changed not in un: through.append("%s: %r to %r" % (x, txt, changed))
+    return n, through
 
 
 def main():
@@ -77,31 +123,21 @@ def main():
         V.check_figs = keep
     check(not r, "T3 with verdicts.check_figs off, the planted 1 W is still refused by (b) and the scan (the fixtures pass)%s"
           % ((": " + msg) if msg else ""))
-    by = {d: v for _sid, d, v, _det, _s in rows}
-    n = 0
-    for x in lines:
-        doc, line = x.split(" line ")
-        for s in C.line_sentences(doc, int(line)):
-            for a, b, txt, nums in V.figure_tokens(s):
-                m = re.search(r"\d+", txt)
-                if m:
-                    changed = txt[:m.start()] + str(int(m.group(0)) + 1) + txt[m.end():]
-                else:
-                    w = txt.lower()
-                    changed = [k for k, i in V.NUMWORD.items() if i == V.NUMWORD[w] + 1 or (V.NUMWORD[w] == 20 and i == 19)][0]
-                sp = s[:a] + changed + s[b:]
-                j = V.J.J.get(L.sid_digest(s))
-                d = L.sid_digest(sp)
-                had = V.J.J.get(d)
-                V.J.J[d] = j
-                try:
-                    bad = C.figure_uncovered(sp, {d: "TRUE"}, nls)
-                finally:
-                    if had is None: del V.J.J[d]
-                    else: V.J.J[d] = had
-                n += 1
-                if not bad: check(False, "T4 %s: %r changed to %r is not refused by the scan" % (x, txt, changed))
-    check(n > 0, "T4 %d figure tokens on the closing list, each changed by one: every change refused by the scan" % n)
+    n, through = t4(lines, nls)
+    check(n > 0 and not through, "T4 %d figure tokens on the closing list, each changed by one with its keys rewritten and "
+          "its assertions kept: every change refused by the scan's comparison%s" % (n, (": NOT " + "; ".join(through[:4])) if through else ""))
+    kr = C.keyed_refused(nls)
+    check(all(bad for _new, bad in kr), "T4 the check's plants with their keys rewritten (%s) refused by the scan"
+          % ", ".join(new for new, _bad in kr))
+    keep = V._fig_match
+    V._fig_match = lambda tv, x: True
+    try:
+        n5, through5 = t4(lines, nls)
+        r5, msg5 = refused(C.gate_fixtures, nls, nets)
+    finally:
+        V._fig_match = keep
+    check(bool(through5) and r5, "T5 with the scan's comparison removed (verdicts._fig_match accepting everything), T4 "
+          "fails (%d of %d changes pass) and the gate refuses: %s" % (len(through5), n5, msg5 or "it does NOT refuse"))
     print("test_close_s122: %s" % ("ALL PASS" if not FAILS else "%d FAIL" % len(FAILS)))
     return 1 if FAILS else 0
 

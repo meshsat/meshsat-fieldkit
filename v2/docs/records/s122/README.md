@@ -15,8 +15,147 @@ blocking item's class cannot recur (below). Set 14's integration checks
 found five sentences in scope naming parts no generator carries, which the finder could not see because it did not read
 makers' part numbers; round 4 answers them and check-s122-3's three minors (below). The independent checks of rounds 4
 and 5 (`checks/check-s122-4.md`, `checks/check-s122-5.md`) found a part in a role it does not hold and a rating the
-closing list carried unjudged; rounds 5 and 6 answer them (below). Every statement below about what was read is what one
+closing list carried unjudged; rounds 5 and 6 answer them (below). The independent check of round 6
+(`checks/check-s122-6.md`) found a figure bound to a source that did not state it and six minors; round 7 answers them
+under the coordinator's change of diagnosis (below). Every statement below about what was read is what one
 of these scripts read, or a filed check's own words quoted with its file.
+
+## Round 7: the instrument's scope, and one follow-up item (check-s122-6)
+
+The independent check of round 6 (`checks/check-s122-6.md`, filed byte for byte from the checker's report) found 1
+blocking and 6 minor items. **The coordinator's change of diagnosis for this round:** S-122 is about the documents. The
+check lists the 45 figures of the closing lines with the source it read for each, says of the rest of each line "I also
+read the rest of each line against the netlists", and of its role mutants "None of these stands in the committed
+documents." What remains are escapes of the regression instrument under planted mutants, not stale text. So round 7 fixes the blocking binding and the cheap, sound minors, writes the instrument's known escape
+classes into its scope statement (the registry sentence `apply_registry_s122_r4.py` adds to S-122's title, and the list
+below), and opens ONE follow-up item for instrument hardening.
+
+* **B1, line 81's 14.4 V node.** Round 6 bound it to the BQ4050 sheet's "VCC = 14.4 V", TI's characterisation
+  condition, which holds whatever pack board P carries. It is now bound to `gen_sch_p.py`'s declaration of board P's
+  cell node, `_intent.rail("CELL4", 14.4, 10.0, 18.0, "W_BP"`, with board P's `J_CELL` ("4S block"), the generator's
+  "one 4S3P block of Samsung INR18650-35E" and the 35E sheet's "3.3 Nominal Voltage 3.60V" beside it as the
+  judgement's assertions; the BQ4050 binding is dropped. Every figure of the closing list, one row each:
+
+  | Line | Figure | Bound to | What the source states (as `verdicts.run_assert` reads it) | Why it is the figure's claim |
+  |---|---|---|---|---|
+  | V2-SPEC 47 | 2 W | `D:U2~NiceRF SA868 VHF 2 W exciter` | D U2 value has 'NiceRF SA868 VHF 2 W exciter' (netlist: 'NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBA') | the line names board D's U2 by its rating; U2's value is that rating (the sheet v1.3's high row tops out at 33 dBm, 2.0 W) |
+  | V2-SPEC 47 | 30 W | `PDF:v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf~RA30H1317M1 RoHS Compliance, 135-175MHz 30W 12.5V` | v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf's text holds 'RA30H1317M1 RoHS Compliance, 135-175MHz 30W 12.5V' | the line names the RA30H1317M1 by its power; the maker's sheet states it in its page heading |
+  | V2-SPEC 81 | 240 x 160 mm | `PCB:A:outline=240x160` | board A's outline is 240x160 mm (asserted 240x160) | the row gives board A's size; the board file's Edge.Cuts outline is that size |
+  | V2-SPEC 81 | six | `PCB:A:layers=6` | board A has 6 copper layers (asserted 6) | the row gives the board's copper layer count; the board file's layer table has that count |
+  | V2-SPEC 81 | 14.4 V | `DOC:v2/ecad/tools/gen_sch_p.py~_intent.rail("CELL4", 14.4, 10.0, 18.0, "W_BP"` | v2/ecad/tools/gen_sch_p.py says '_intent.rail("CELL4", 14.4, 10.0, 18.0, "W_BP"' | the row gives the kit's node; board P's generator declares its cell node CELL4 at 14.4 V nominal (10.0 to 18.0 V), the 4S block of J_CELL; the generator names the cells Samsung INR18650-35E, whose sheet gives 3.60 V nominal, four times which is the same figure |
+  | V2-SPEC 81 | 9 to 36 V | `E:J_DCIN~9 to 36 V` | E J_DCIN value has '9 to 36 V' (netlist: 'JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead') | the row gives the input's range; the input connector's value states it |
+  | V2-SPEC 81 | three | `A:#val~5.1 V rail to B16=3` | board A: 3 parts whose value holds '5.1 V rail to B16' (read: 3, J_5V_S1,J_5V_S2,J_5V_S3) | the row counts the slot rails and gives their voltage; three connectors each carry a 5.1 V slot rail to B16 |
+  | V2-SPEC 81 | 5.1 V | `A:#val~5.1 V rail to B16=3` | board A: 3 parts whose value holds '5.1 V rail to B16' (read: 3, J_5V_S1,J_5V_S2,J_5V_S3) | the row counts the slot rails and gives their voltage; three connectors each carry a 5.1 V slot rail to B16 |
+  | V2-SPEC 81 | four | `CNT@b2709118:v2/ecad/tools/gen_sch_a.py~AP64500 5.1 V + INA226=4` | v2/ecad/tools/gen_sch_a.py at b2709118 holds 'AP64500 5.1 V + INA226' 4 times (read: 4) | the row's history counts the AP64500 rails of 7 September; the generator at b2709118 (7 September) has four AP64500 rail groups |
+  | V2-SPEC 81 | 13.8 V | `A:U13~+13V8_PA` | A U13 value has '+13V8_PA' (netlist: 'LM5176PWPR buck-boost controller, +13V8_PA from VBAT') | the row gives the PA rail's voltage; U13's value names its output net +13V8_PA |
+  | V2-SPEC 81 | 12 V | `A:U15~+12V_HF` | A U15 value has '+12V_HF' (netlist: 'LM5176PWPR buck-boost controller, +12V_HF from VBAT') | the row gives the HF rail's voltage; U15's value names its output net +12V_HF |
+  | V2-SPEC 81 | 54 V | `A:U16~+54V_POE` | A U16 value has '+54V_POE' (netlist: 'LM5176PWPR buck-boost controller, +54V_POE from VBAT') | the row gives the PoE rail's voltage; U16's value names its output net +54V_POE |
+  | V2-SPEC 81 | 45 W | `A:U18~45 W outlet` | A U18 value has '45 W outlet' (netlist: 'TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9,') | the row gives the outlet's power; U18's value states a 45 W outlet |
+  | V2-SPEC 81 | 3.3 V | `A:U12~3.3 V logic` | A U12 value has '3.3 V logic' (netlist: 'TPS62933DRLR 3 A buck, 3.3 V logic') | the row gives the logic rail's voltage; U12's value states 3.3 V logic |
+  | V2-SPEC 81 | eleven | `A:#fp~Radiall_SMPMAX=11` | board A: 11 parts whose footprint holds 'Radiall_SMPMAX' (read: 11, J_BM1,J_BM10,J_BM11,J_BM2,J_BM3,J_BM4,J_BM5,J_BM6,J_BM7,J_BM8,J_BM9) | the row counts the blind-mate sites; board A carries eleven SMP-MAX receptacle footprints |
+  | V2-SPEC 81 | 2x13 | `A:J_AB1~IDC 2x13` | A J_AB1 value has 'IDC 2x13' (netlist: "A-B interconnect (IDC 2x13, top side) to B16's underside hea") | the row gives the ribbon's header; J_AB1's value states an IDC 2x13 |
+  | V2-SPEC 82 | 330 x 200 mm | `PCB:B:outline=330x200` | board B's outline is 330x200 mm (asserted 330x200) | the row gives board B's size; the board file's outline is that size |
+  | V2-SPEC 82 | six | `PCB:B:layers=6` | board B has 6 copper layers (asserted 6) | the row gives the board's copper layer count; the board file's layer table has that count |
+  | V2-SPEC 82 | 5 V | `PCB:B:zone=In4.Cu~+5V` | board B has a zone on In4.Cu whose net holds '+5V' (/+5V_DEV,/+5V_S1,/+5V_S2,/+5V_S3) | the row says In4 carries the 5 V planes; the board file's In4 zones are on the +5V nets |
+  | V2-SPEC 82 | eight | `DEC:43.outcome~board B is regenerated and routed once on eight layers` | decision 43's outcome says 'board B is regenerated and routed once on eight layers' | the row cites decision 43's layer measure; the decision's outcome says it |
+  | V2-SPEC 82 | three | `B:#fp~CM5_Conn_A_10164227=3` | board B: 3 parts whose footprint holds 'CM5_Conn_A_10164227' (read: 3, U30A,U31A,U32A) | the row counts the compute slots; board B carries three CM5 receptacle A footprints, one per slot |
+  | V2-SPEC 82 | three | `B:#val~STM32H743=3` | board B: 3 parts whose value holds 'STM32H743' (read: 3, U41,U51,U61) | the row counts the supervisors; three values name the STM32H743 |
+  | V2-SPEC 82 | two | `B:U41~two CAN-FD fabrics` | B U41 value has 'two CAN-FD fabrics' (netlist: 'STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD ') | the row counts the fabrics; U41's value states two CAN-FD fabrics |
+  | V2-SPEC 82 | seven | `B:#net~_CA=7` | board B: 7 nets whose name ends in '_CA' (read: 7, HUBRST1_CA,HUBRST2_CA,HUBRST3_CA,SEL1_CA,SEL2_CA,SEL3_CA,WSEC_CA) | the row counts the voters; each voter drives one CA product net (out = AB + BC + CA, gen_sch_b.py) and board B has seven |
+  | V2-SPEC 82 | two | `B:#val~TS3DV642=2` | board B: 2 parts whose value holds 'TS3DV642' (read: 2, U3,U4) | the row counts the display switches; two values name the TS3DV642 |
+  | V2-SPEC 82 | two | `B:#val~E72-2G4M20S1E=2` | board B: 2 parts whose value holds 'E72-2G4M20S1E' (read: 2, U13,U14) | the row counts the E72 modules; two values name the E72-2G4M20S1E |
+  | V2-SPEC 83 | 344 x 228 | `PCB:C:outline=344x228` | board C's outline is 344x228 mm (asserted 344x228) | the row gives board C's size; the board file's outline is that size |
+  | V2-SPEC 83 | 240 x 176 | `PCB:C:hole=240x176` | board C has an inner cutout 240x176 mm: yes | the row gives the ring's void; the board file has an inner cutout of that size |
+  | V2-SPEC 83 | four | `PCB:C:layers=4` | board C has 4 copper layers (asserted 4) | the row gives the board's copper layer count; the board file's layer table has that count |
+  | V2-SPEC 83 | six | `DEC:27.outcome~six layers for board C` | decision 27's outcome says 'six layers for board C' | the row cites decision 27's six layers; the decision's outcome says it |
+  | V2-SPEC 83 | seventeen | `C:#val~3 mm=17` | board C: 17 parts whose value holds '3 mm' (read: 17, D1,D10,D11,D12,D13,D14,D15,D16,D2,D22,D3,D4,D5,D6,D7,D8,D9) | the row counts the LEDs and gives their size; seventeen values on board C state 3 mm |
+  | V2-SPEC 83 | 3 mm | `C:#val~3 mm=17` | board C: 17 parts whose value holds '3 mm' (read: 17, D1,D10,D11,D12,D13,D14,D15,D16,D2,D22,D3,D4,D5,D6,D7,D8,D9) | the row counts the LEDs and gives their size; seventeen values on board C state 3 mm |
+  | V2-SPEC 83 | two | `C:#val~PCA9555=2` | board C: 2 parts whose value holds 'PCA9555' (read: 2, U1,U2) | the row counts the expanders; two values name the PCA9555 |
+  | V2-SPEC 84 | 100 x 80 mm | `PCB:D:outline=100x80` | board D's outline is 100x80 mm (asserted 100x80) | the row gives board D's size; the board file's outline is that size |
+  | V2-SPEC 84 | four | `PCB:D:layers=4` | board D has 4 copper layers (asserted 4) | the row gives the board's copper layer count; the board file's layer table has that count |
+  | V2-SPEC 84 | two | `D:#ref~J_HS=2` | board D: 2 parts whose designator holds 'J_HS' (read: 2, J_HS1,J_HS2) | the row counts the headset jacks; board D carries two J_HS designators |
+  | V2-SPEC 86 | 267 x 68 mm | `PCB:E:outline=267x68` | board E's outline is 267x68 mm (asserted 267x68) | the row gives board E's size; the board file's outline is that size |
+  | V2-SPEC 86 | four | `PCB:E:layers=4` | board E has 4 copper layers (asserted 4) | the row gives the board's copper layer count; the board file's layer table has that count |
+  | V2-SPEC 86 | 9 to 36 V | `E:J_DCIN~9 to 36 V` | E J_DCIN value has '9 to 36 V' (netlist: 'JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead') | the row gives the input's range; the input connector's value states it |
+  | V2-SPEC 86 | 25 A | `E:F3~25 A mini blade` | E F3 value has '25 A mini blade' (netlist: '25 A mini blade (Keystone 3568 holder): pack to the block') | the row gives the pack fuse's rating; F3's value states it |
+  | V2-SPEC 86 | eleven | `PCB:E:zones~no copper under the float clamp=11` | board E's board file: 11 zones whose name holds 'no copper under the float clamp' (read: 11) | the row counts the float clamps; board E's file carries one named keep-out per clamp, eleven |
+  | V2-SPEC 86 | two | `E:#ref~J_FAN=2` | board E: 2 parts whose designator holds 'J_FAN' (read: 2, J_FAN1,J_FAN2) | the row counts the mixer fan headers; board E carries two J_FAN designators |
+  | OPERATING-ENVELOPE 77 | 9 to 36 V | `E:J_DCIN~9 to 36 V` | E J_DCIN value has '9 to 36 V' (netlist: 'JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead') | the row names the input the LM5069 sits on; the input connector's value states its range |
+  | OPERATING-ENVELOPE 77 | -40 to +125 C | `PDF:v2/vendor/ti/ti-lm5069.pdf~TJ Junction temperature -40 125 °C\|(1) For detailed information on soldering plastic VSSOP` | v2/vendor/ti/ti-lm5069.pdf's text holds 'TJ Junction temperature -40 125 °C\|(1) For detailed information on soldering pla' | the row gives the LM5069's range; the maker's recommended junction row gives it, with its sign |
+  | OPERATING-ENVELOPE 83 | -40 to +80 C | `PDF:v2/vendor/m2/te-2199119-m2-b-key.pdf~Service Temperature -40 ~ +80` | v2/vendor/m2/te-2199119-m2-b-key.pdf's text holds 'Service Temperature -40 ~ +80' | the row gives the socket's range; the maker's service temperature gives it, with its sign |
+
+* **m1, figures compared as values.** `verdicts._fig_match` needs the token's values in the same order, one after the
+  other, in the assertion's content, each the same signed number, with the token's unit wherever the source states one
+  (a count or an "NxM" matches only numbers with none). `verdicts._values` reads 13V8 as 13.8 V and 240x160 as 240 and
+  160, a spelled count as its number, a minus or plus as a sign only after a space or bracket (135-175MHz is 135 and
+  175), and no number inside a name (In4, CELL4, the digits of a part number). The PDF reader reads a sheet's minus
+  printed as U+2013 or U+2212 as "-", so the LM5069's range is asserted "TJ Junction temperature -40 125 °C" (the round 4
+  TRACO judgement's assertion too). The check's plants with their keys rewritten and the assertions kept, "160 x 240
+  mm", "2x2 ribbon", "+40 to +80 C" and "+40 to +125 C", with line 47's 1 W, are refused (`close_s122.KEYED`, in the
+  gate's condition (e)). `test_close_s122.py`'s T4 now rewrites the keys that span the changed figure and keeps the
+  assertions, so each of its 45 refusals comes from the comparison; T5 replaces `_fig_match` with one that accepts
+  everything, and then T4 fails (45 of 45 changes pass) and the gate refuses.
+* **m2, the role rule.** Two one-line fixes, each pinned by a mutant and a switch of `verdicts.ROLE_TESTS`:
+  * "wordmatch": a qualifier is read in a value as a word, so VBUS is not found in "VBUS20" ("the CSD19532Q5B VBUS
+    switch" reads STALE);
+  * "load": the forward test drops a value's "to the <load>" phrase, so D `U6`'s "stereo output to the headphone
+    amplifier" does not make the PCM2912A an amplifier ("the PCM2912A headphone amplifier" and the check's swap with
+    "USB interface" read STALE).
+  The other classes are named, not chased (the escape classes below).
+* **m3.** Correction 36 now says the closing check "asserts every figure with a unit, and every spelled count, on the
+  lines it closes (a number with no unit is outside it ...)" (`apply_docs_s122_r7.py`, 1 edit, after reading that
+  V2-SPEC.md is not a baseline; refuses a second run). The sources are named in full in the registry sentence and in the
+  closure's evidence: a netlist value, a board file's outline, layers, cutout or zones, a maker's page, a generator's
+  text (gen_sch_p.py's cell node; gen_sch_a.py at `b2709118` for "all four AP64500 on 7 September", `CNT@b2709118`), or
+  a decision's record.
+* **m4, the finder.** A token right after a maker's name or "article" is that maker's number when it holds a digit:
+  ABLIC S-8261, TI bq2970, u-blox ANN-MB2, Xenarc 709GNK, Amphenol 132170, Lapp's article 0021917 and MG Chemicals 422B
+  now read as parts, and the twelve sentences they stand in are judged (seven newly inventoried, 1004 sentences became 1011: the Xenarc
+  monitor bought, Amphenol's couplers case items the case set of 27 September 2026 retired, the u-blox antenna and the
+  Lapp cable bought, the coating a material, decision 40's two single-cell protectors set aside). The literature filter
+  keeps ST's shapes only: RM, ES and PM with a leading 0 and TN with 0 or 1, so RM3100 and TN2106 read as parts; ST's
+  DS with five digits keeps the shape of Dallas's DS12887, which the filter still drops (a stated limit). The dead date
+  guard inside the nine-digit rule is gone. Conservative false hits stay, each needing a judgement's excuse: an
+  upper-case commit, "SMBJ15A/BAT54" as one token, a DS code of four digits, the MIL-STD-461 methods CE102, CS101,
+  CS114 and RE102, DCF77, TE's product specifications and JLC04162H-7628.
+* **m5, set 15.** The run order below has a section for `fnd/int16` (`36bb1d12`).
+* **m6.** `figures_uncovered` reads a `counts_ok` that is a string as covering nothing (no crash), and a hex address
+  (0x22) is not an "NxM" figure.
+
+**The instrument's known escape classes** (what the gate does not catch; carried by the follow-up item):
+* a number with no unit (a form factor such as 2242, a port such as USB 3) and any figure off the closing list (the
+  check's "an NVMe 2280 socket" on line 82, "`Y1` 16 MHz" on PANEL.md line 55);
+* a role noun outside `ROLE_NOUN` (the check's FET, source, generator, interface: "the TPS22810 bias FET", "the TPS22810
+  bias source", "the TLV75801 gate-bias generator");
+* a stale part placed in a clause that states a date or a history word (the check's "the TUSB2046B hub fitted since
+  26 September 2026", "the grade that was bought", "named on the BOM"): the tie should be to a past-tense verb on the
+  part itself;
+* a designator written beside a part it does not carry (the check's "the TLV75801 gate-bias LDO on `PA_KEY` (`U17`",
+  "the TPS22810 load switch of the exciter's `+5V_TX` (`U15`)", "the AP64500 buck on slots 1 and 3, `U5` and `U7`"): not
+  a one-line fix, since lists pair in order ("the BME688 and BMI270 (`U14`, `U15`" is TRUE and a nearest-part rule
+  would refuse it);
+* the one-word qualifier test takes only active parts (U and Q) as holders of a function, and a value that names
+  "<qualifier> <noun>" as its load is set aside there (so "the CSD19532Q5B VBUS switch" is refused through `U32`'s
+  "VBUS_WALL", not through `Q27`);
+* a part named after its load in words other than "to the" (the "load" switch reads only that phrase);
+* the finder's shapes: the conservative false hits above, and "SMBJ15A-based" and a plural "SMBJ15As" not read.
+
+**The follow-up item.** `apply_registry_s122_r4.py` opens it at the next free S number of the registry it runs on (the
+highest S number of the open and closed items, plus one; never hard-coded: on set 15, S-125 is taken and review D takes
+S-126 to S-134 if it is applied first), class SESSION, status OPEN, disposition PROCESS, in no record's waits_on and not
+in CFL-016's, with this text (the script screens it for claim words and dashes):
+
+  > **title:** (stream s122, the regression instrument's known escape classes; the independent checks v2/docs/records/s122/checks/check-s122-5.md and check-s122-6.md, m2 and m4) Harden S-122's regression instrument (v2/docs/records/s122: s122lib.py's part-number finder, verdicts.py's role rule and figure scan, close_s122.py's gate) against the escape classes its scope statement names: a role noun outside ROLE_NOUN read as no role (check-s122-6's 'the TPS22810 bias FET', 'the TPS22810 bias source', 'the TLV75801 gate-bias generator'); a stale part in a clause that states a date or a history word ('the TUSB2046B hub fitted since 26 September 2026', 'the grade that was bought', 'named on the BOM'), for which a history excuse should tie to a past-tense verb on the part itself; a designator written beside a part it does not carry ('the TLV75801 gate-bias LDO on PA_KEY (U17', 'the AP64500 buck on slots 1 and 3, U5 and U7'), which needs a rule that pairs a list of parts with a list of designators in order ('the BME688 and BMI270 (U14, U15'); a number with no unit and any figure off the closing list ('an NVMe 2280 socket'); and the finder's conservative false hits and misses (an upper-case commit, 'SMBJ15A/BAT54' as one token, a DS code of four or five digits, the MIL-STD-461 method names, 'SMBJ15A-based', a plural 'SMBJ15As'). Open until each class is closed by a rule with a fixture that close_s122.py runs, or carried with its reason.
+  >
+  > **disposition_why:** The documents S-122 names are the subject of S-122 and CFL-016; this item is about detecting a
+  > regression in them. The classes are escapes of the instrument under planted mutants, not stale text: of its role
+  > mutants check-s122-6 says 'None of these stands in the committed documents.' So no record's verdict waits on this
+  > item, and CFL-016 does not.
+
+  `close_s122.py` refuses unless that item is open once with disposition PROCESS and no record waits on it, and names it
+  in S-122's closing evidence.
+* **What round 7's tools find:** on the documents at `1c187977` (`verdicts-r6.out`, new) 0 STALE; at `a6429e66` 1 (line
+  47); at `edead832` 5; on set 14's 10; the base's 74.
 
 ## Round 6: figures on the closing list (check-s122-5)
 
@@ -37,7 +176,8 @@ blocking and 4 minor items.
   "N x M" size, an "NxM" header, and a spelled count from two to twenty. A judgement's `figures_ok` maps a phrase of its
   sentence that holds a token to `asserted: <one of its own assertions>`, and `verdicts.figures_uncovered` needs the
   assertion's stated content (after its subject) to carry the token's numbers (13.8 is read in `+13V8_PA`; a spelled
-  count in its numeral or its word); an `asserted:` entry of `counts_ok` covers the same way. `verdicts.check_figs`
+  count in its numeral or its word; since round 7 as ordered, signed values with their units, above); an `asserted:`
+  entry of `counts_ok` covers the same way. `verdicts.check_figs`
   holds a judgement that declares `figures_ok` to it; `close_s122.py`'s condition (f) scans every sentence of every line
   of the closing list, read whole from its document (the two OPERATING-ENVELOPE.md range cells the inventory does not
   take among them, their judgements' assertions run by the gate), and refuses a token no assertion covers. A figure
@@ -47,7 +187,7 @@ blocking and 4 minor items.
   | Line | Figures | Bound to |
   |---|---|---|
   | V2-SPEC.md 47 | 2 W, 30 W | `D:U2~NiceRF SA868 VHF 2 W exciter`; the RA30H1317M1 sheet's "135-175MHz 30W 12.5V" |
-  | V2-SPEC.md 81 | 240 x 160 mm, six layers, 14.4 V, 9 to 36 V, three 5.1 V slot rails, all four AP64500 on 7 September, 13.8 V, 12 V, 54 V, 45 W, 3.3 V, eleven sites, 2x13 | board A's file (outline, 6 copper layers); the BQ4050 sheet's "VCC = 14.4 V" (board P's `U1`, "4S balancing"); `E:J_DCIN`; `A:#val~5.1 V rail to B16=3`; `gen_sch_a.py` at `b2709118` holding "AP64500 5.1 V + INA226" 4 times; the values of `U13`, `U15`, `U16`, `U18`, `U12`; eleven `Radiall_SMPMAX` footprints; `J_AB1` "IDC 2x13" |
+  | V2-SPEC.md 81 | 240 x 160 mm, six layers, 14.4 V, 9 to 36 V, three 5.1 V slot rails, all four AP64500 on 7 September, 13.8 V, 12 V, 54 V, 45 W, 3.3 V, eleven sites, 2x13 | board A's file (outline, 6 copper layers); for 14.4 V, since round 7, `gen_sch_p.py`'s cell node CELL4 (round 6 bound it to the BQ4050 sheet's test condition, check-s122-6 B1); `E:J_DCIN`; `A:#val~5.1 V rail to B16=3`; `gen_sch_a.py` at `b2709118` holding "AP64500 5.1 V + INA226" 4 times; the values of `U13`, `U15`, `U16`, `U18`, `U12`; eleven `Radiall_SMPMAX` footprints; `J_AB1` "IDC 2x13" |
   | V2-SPEC.md 82 | 330 x 200 mm, six layers, 5 V planes, eight layers, three slots, three supervisors, two fabrics, seven voters, two display switches, two E72 | board B's file (outline, 6 layers, In4 zones on the `+5V` nets); decision 43's outcome; three `CM5_Conn_A_10164227` footprints; `#val~STM32H743=3`; `U41` "two CAN-FD fabrics"; seven nets ending `_CA`, one per voter (`out = AB + BC + CA`, `gen_sch_b.py`); `#val~TS3DV642=2`; `#val~E72-2G4M20S1E=2` |
   | V2-SPEC.md 83 | 344 x 228, 240 x 176, four layers, six (decision 27), seventeen 3 mm LEDs, two PCA9555 | board C's file (outline, inner cutout, 4 layers); decision 27's outcome; seventeen values holding "3 mm"; `#val~PCA9555=2` |
   | V2-SPEC.md 84 | 100 x 80 mm, four layers, two jacks | board D's file; `#ref~J_HS=2` |
@@ -217,17 +357,19 @@ a circuit correction updates the status page and the records it names, not the b
 | `inventory-set14.out`, `verdicts-set14.out` | set 14's documents at `1bafab8c` (run with `S122_AT=1bafab8c`), judged by the current tools |
 | `verdicts-r4.out` | round 4's documents at `edead832` (run with `S122_AT=edead832`), judged by the current tools |
 | `verdicts-r5.out` | round 5's documents at `a6429e66` (run with `S122_AT=a6429e66`), judged by the current tools |
-| `inventory.out`, `verdicts.out` | the documents as they stand: 1004 sentences, 0 STALE, 0 UNJUDGED |
+| `verdicts-r6.out` | round 6's documents at `1c187977` (run with `S122_AT=1c187977`), judged by the current tools |
+| `inventory.out`, `verdicts.out` | the documents as they stand: 1011 sentences, 0 STALE, 0 UNJUDGED |
 | `apply_docs_s122.py` | round 1's 43 passages (on this branch in `51952c0c`; refuses a second run) |
 | `apply_docs_s122_r2.py` | round 2: the CONOPS restore, EMCON.md 0a.1, the status page's section, 16 passages; 497 assertions held first (on this branch in `29acd948`) |
 | `apply_docs_s122_r3.py` | round 3: the status page's rows DC-07 to DC-09, the notes of DC-03 and DC-04 and the section's lead, the baselines table's `c5430071` file, the EMCON citations of PANEL.md and V2-SPEC.md and V2-SPEC.md's correction 33; 144 assertions held first; refuses a second run |
 | `apply_docs_s122_r4.py` | round 4: V2-SPEC.md lines 47, 82, 84 and 86 and correction 34, OPERATING-ENVELOPE.md's two rows and note, row DC-10, the int15 docstring; 51 assertions held first; refuses a second run |
 | `apply_docs_s122_r5.py` | round 5: V2-SPEC.md lines 81, 83, 84 and 86 and correction 35; 33 assertions held first; refuses a second run |
 | `apply_docs_s122_r6.py` | round 6: V2-SPEC.md line 47 and correction 36, after reading that V2-SPEC.md is not a baseline; 9 assertions held first; refuses a second run |
-| `test_close_s122.py` | round 6: the gate's fixture and mutation tests (T1 to T4); writes nothing |
-| `checks/` | the filed independent checks, `check-s122-1.md` to `check-s122-5.md` (rounds 1 to 5) |
+| `apply_docs_s122_r7.py` | round 7: correction 36's wording (figures with a unit and spelled counts), after reading that V2-SPEC.md is not a baseline; refuses a second run |
+| `test_close_s122.py` | rounds 6 and 7: the gate's fixture and mutation tests (T1 to T5); writes nothing |
+| `checks/` | the filed independent checks, `check-s122-1.md` to `check-s122-6.md` (rounds 1 to 6) |
 | `apply_registry_s122.py` | rounds 1 to 3's registry script (run at set 14, `9eaf406f`; refuses since) |
-| `apply_registry_s122_r4.py` | for the integrator: the rebinds for rounds 4 to 6 (re-issued in rounds 5 and 6 for their diffs), CFL-016's entry and note, S-122's title sentence, the envelope re-pin |
+| `apply_registry_s122_r4.py` | for the integrator: the rebinds for rounds 4 to 7 (re-issued in rounds 5 to 7 for their diffs), CFL-016's entry and note, S-122's title sentence, the envelope re-pin, and the follow-up item (round 7) |
 | `close_s122.py` | S-122's closure, for the integrator, last |
 | `LOG.md` | the stream's log |
 
@@ -285,26 +427,26 @@ such sentence of the file, in any section.
 
 ## Counts per document
 
-| Document | Base (`e57a7365`): sentences | STALE | Set 14 (`1bafab8c`): sentences | STALE | Round 4 (`edead832`): STALE | Round 5 (`a6429e66`): STALE | After: sentences | TRUE | STALE | BASELINE | NOT DERIVABLE |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| PANEL.md | 164 | 10 | 167 | 0 | 0 | 0 | 167 | 131 | 0 | 0 | 36 |
-| CONOPS.md | 289 | 31 | 287 | 1 | 0 | 0 | 287 | 51 | 0 | 40 | 196 |
-| V2-SPEC.md | 138 | 11 | 147 | 6 | 5 | 1 | 157 | 64 | 0 | 0 | 93 |
-| OPERATING-ENVELOPE.md | 63 | 7 | 63 | 3 | 0 | 0 | 66 | 22 | 0 | 0 | 44 |
-| TEST-PLAN.md | 110 | 2 | 110 | 0 | 0 | 0 | 110 | 18 | 0 | 0 | 92 |
-| ASSEMBLY.md | 158 | 13 | 158 | 0 | 0 | 0 | 158 | 91 | 0 | 0 | 67 |
-| decisions 28 and 40 | 9 | 0 | 9 | 0 | 0 | 0 | 9 | 6 | 0 | 0 | 3 |
-| EMCON.md 0a.1 | 0 | 0 | 26 | 0 | 0 | 0 | 26 | 22 | 0 | 0 | 4 |
-| DEFINITION-STATUS.md (the section) | 0 | 0 | 22 | 0 | 0 | 0 | 24 | 17 | 0 | 0 | 7 |
-| total | 931 | 74 | 989 | 10 | 5 | 1 | 1004 | 422 | 0 | 40 | 542 |
+| Document | Base (`e57a7365`): sentences | STALE | Set 14 (`1bafab8c`): sentences | STALE | Round 4 (`edead832`): STALE | Round 5 (`a6429e66`): STALE | Round 6 (`1c187977`): STALE | After: sentences | TRUE | STALE | BASELINE | NOT DERIVABLE |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| PANEL.md | 164 | 10 | 167 | 0 | 0 | 0 | 0 | 167 | 131 | 0 | 0 | 36 |
+| CONOPS.md | 290 | 31 | 288 | 1 | 0 | 0 | 0 | 288 | 51 | 0 | 40 | 197 |
+| V2-SPEC.md | 140 | 11 | 149 | 6 | 5 | 1 | 0 | 159 | 64 | 0 | 0 | 95 |
+| OPERATING-ENVELOPE.md | 64 | 7 | 64 | 3 | 0 | 0 | 0 | 67 | 22 | 0 | 0 | 45 |
+| TEST-PLAN.md | 110 | 2 | 110 | 0 | 0 | 0 | 0 | 110 | 18 | 0 | 0 | 92 |
+| ASSEMBLY.md | 160 | 13 | 160 | 0 | 0 | 0 | 0 | 160 | 91 | 0 | 0 | 69 |
+| decisions 28 and 40 | 10 | 0 | 10 | 0 | 0 | 0 | 0 | 10 | 6 | 0 | 0 | 4 |
+| EMCON.md 0a.1 | 0 | 0 | 26 | 0 | 0 | 0 | 0 | 26 | 22 | 0 | 0 | 4 |
+| DEFINITION-STATUS.md (the section) | 0 | 0 | 22 | 0 | 0 | 0 | 0 | 24 | 17 | 0 | 0 | 7 |
+| total | 938 | 74 | 996 | 10 | 5 | 1 | 0 | 1011 | 422 | 0 | 40 | 549 |
 
-Every file is judged by round 6's tools (0 UNJUDGED in each). 3338 assertions are evaluated after. Before round 6 the
-committed `verdicts.out` read 1005 sentences, 420 TRUE, 0 STALE, 40 BASELINE, 545 NOT DERIVABLE, 3295 assertions; the
-three sentences fewer are the RJ45 and RS103 cells the finder no longer reads (round 6, m4). Before round 5, 985
-sentences, 410 TRUE, 0 STALE, 40 BASELINE, 535 NOT DERIVABLE; before round 4, 862, 339 TRUE, 0 STALE, 38 BASELINE, 485
-NOT DERIVABLE. The 40 BASELINE sentences of CONOPS point to DC-01 (11), DC-02 (8), DC-03 (1), DC-04 (1), DC-05 (1),
-DC-06 (14), DC-07 and DC-08 (the same 2), DC-09 (1) and DC-10 (1). The absent sweep reads 51 CONOPS sentences, 16
-TRUE, 18 BASELINE, 17 NOT DERIVABLE.
+Every file is judged by round 7's tools (0 UNJUDGED in each). 3340 assertions are evaluated after. Before round 7 the
+committed `verdicts.out` read 1004 sentences, 422 TRUE, 0 STALE, 40 BASELINE, 542 NOT DERIVABLE, 3338 assertions; the
+seven sentences more are those the finder's maker rule now reads (round 7, m4). Before round 6, 1005 sentences, 420
+TRUE, 545 NOT DERIVABLE; before round 5, 985 sentences, 410 TRUE, 0 STALE, 40 BASELINE, 535 NOT DERIVABLE; before round
+4, 862, 339 TRUE, 0 STALE, 38 BASELINE, 485 NOT DERIVABLE. The 40 BASELINE sentences of CONOPS point to DC-01 (11),
+DC-02 (8), DC-03 (1), DC-04 (1), DC-05 (1), DC-06 (14), DC-07 and DC-08 (the same 2), DC-09 (1) and DC-10 (1). The
+absent sweep reads 51 CONOPS sentences, 16 TRUE, 18 BASELINE, 17 NOT DERIVABLE.
 
 ## The check's items (check-s122-1)
 
@@ -496,9 +638,24 @@ statements), and S-123.
 If a document of the scope changes on main before step 5, re-run `inventory.py` and `verdicts.py`, judge the new text
 in `judgements.py`, and commit the outputs, or the closure refuses.
 
+**On set 15 (`fnd/int16`, tip `36bb1d12`), round 7 (check-s122-6 m5):**
+1. Merge `fnd/s122c`, then `python3 v2/docs/records/s122/apply_registry_s122_r4.py`: it rebinds the records bound to
+   V2-SPEC.md, OPERATING-ENVELOPE.md and DEFINITION-STATUS.md, re-pins the envelope and ENV-001, and opens the follow-up
+   item at the next free S number (it prints the number).
+2. `rules_render.py --requirements`; then `rules_status.py` and the full `rules_render.py`. The full render moves
+   `v2/docs/CURRENT-EVIDENCE.md` (in check-s122-6's reading, SGN-001's seven readings leave CURRENT_CANDIDATE after the
+   registry and ENV-001 change), and `rules_lib.py requirements` then reads 0 errors and 2 warnings, CON-010 and
+   REQ-044, which the integrator rebinds as usual.
+3. Re-run `python3 v2/docs/records/s122/inventory.py` and `python3 v2/docs/records/s122/verdicts.py` and commit both:
+   `pcb_decisions.yaml` is `823a6b32`'s file on set 15 (decision 59), so the outputs' header line moves; their bodies
+   do not.
+4. The filed check (step 4 above), then `test_close_s122.py` (ALL PASS) and `close_s122.py`.
+
 ## What stays open
 
 * S-122 and CFL-016, until the check of step 4 and the closure of step 5.
+* The follow-up item of the instrument's escape classes (round 7), disposition PROCESS, at the number the registry
+  script allocates; no record waits on it.
 * CONOPS.md's 38 BASELINE passages stay as baselined. Their current values live on the status page until a reopening of
   the definition decides otherwise. `feasibility/ZEROIZE.md`'s citation `CONOPS.md:404` (the check's observation) is
   outside the scope.

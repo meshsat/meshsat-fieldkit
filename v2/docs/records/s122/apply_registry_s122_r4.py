@@ -3,7 +3,8 @@
 set 14's line (`1bafab8c`, where `apply_registry_s122.py` has already run and refuses): the registry follows the
 documents `apply_docs_s122_r4.py`, `apply_docs_s122_r5.py` and `apply_docs_s122_r6.py` changed (round 5 re-issued this
 script for its diff: V2-SPEC.md lines 81, 83, 84 and 86 and correction 35, the role rule and the wider finder; round 6
-re-issued it again for its diff: V2-SPEC.md line 47 and correction 36, the fixtures and the figure scan of the gate).
+re-issued it again for its diff: V2-SPEC.md line 47 and correction 36, the fixtures and the figure scan of the gate;
+round 7 for correction 36's wording, the figure comparison, and the follow-up item of step 5).
 
 It writes `v2/ecad/tools/pcb_requirements.yaml`, `v2/ecad/tools/pcb_envelope.yaml` and
 `v2/ecad/tools/pcb_rules_coverage.yaml` and nothing else:
@@ -22,6 +23,9 @@ It writes `v2/ecad/tools/pcb_requirements.yaml`, `v2/ecad/tools/pcb_envelope.yam
   4. OPERATING-ENVELOPE.md changed two rows of section 2 and no number of section 4: the envelope's pin
      (`pcb_envelope.yaml` document_sha256) and ENV-001's `verified_sha` move to the new file, after the script asserts
      that every number the envelope carries is still in the document.
+  5. Round 7 (check-s122-6, the coordinator's ruling): one open item for the regression instrument's known escape
+     classes, at the next free S number of the registry it runs on (the highest S number of the open and closed items,
+     plus one; never hard-coded), class SESSION, disposition PROCESS with its reason, and in no record's waits_on.
 Each new sentence is screened (claims_check's CLAIM words, dashes). Every other record, open item and closed item is
 asserted unchanged, older evidence is kept as a prefix, and each file re-parses. Refuses a second run.
 Run from anywhere: python3 <this file>."""
@@ -42,7 +46,27 @@ R1.BASE = BASE             # the helpers' diff base
 REG, ENV, COV = R1.REG, R1.ENV, R1.COV
 DOCS = {"v2/docs/V2-SPEC.md": "1e1547e1462904f7", "v2/docs/OPERATING-ENVELOPE.md": "a8e65995c594546b",
         "v2/docs/handover/DEFINITION-STATUS.md": "2db0ad36da754fa4"}
-REF = "v2/docs/records/s122/apply_docs_s122_r4.py, apply_docs_s122_r5.py and apply_docs_s122_r6.py"
+REF = "v2/docs/records/s122/apply_docs_s122_r4.py, apply_docs_s122_r5.py, apply_docs_s122_r6.py and apply_docs_s122_r7.py"
+FOLLOW_MARK = "(stream s122, the regression instrument's known escape classes"
+FOLLOW_TITLE = (
+    FOLLOW_MARK + "; the independent checks v2/docs/records/s122/checks/check-s122-5.md and check-s122-6.md, m2 and m4) "
+    "Harden S-122's regression instrument (v2/docs/records/s122: s122lib.py's part-number finder, verdicts.py's role "
+    "rule and figure scan, close_s122.py's gate) against the escape classes its scope statement names: a role noun "
+    "outside ROLE_NOUN read as no role (check-s122-6's 'the TPS22810 bias FET', 'the TPS22810 bias source', 'the "
+    "TLV75801 gate-bias generator'); a stale part in a clause that states a date or a history word ('the TUSB2046B hub "
+    "fitted since 26 September 2026', 'the grade that was bought', 'named on the BOM'), for which a history excuse should "
+    "tie to a past-tense verb on the part itself; a designator written beside a part it does not carry ('the TLV75801 "
+    "gate-bias LDO on PA_KEY (U17', 'the AP64500 buck on slots 1 and 3, U5 and U7'), which needs a rule that pairs a "
+    "list of parts with a list of designators in order ('the BME688 and BMI270 (U14, U15'); a number with no unit and "
+    "any figure off the closing list ('an NVMe 2280 socket'); and the finder's conservative false hits and misses (an "
+    "upper-case commit, 'SMBJ15A/BAT54' as one token, a DS code of four or five digits, the MIL-STD-461 method names, "
+    "'SMBJ15A-based', a plural 'SMBJ15As'). Open until each class is closed by a rule with a fixture that "
+    "close_s122.py runs, or carried with its reason.")
+FOLLOW_WHY = (
+    "The documents S-122 names are the subject of S-122 and CFL-016; this item is about detecting a regression in them. "
+    "The classes are escapes of the instrument under planted mutants, not stale text: of its role mutants "
+    "check-s122-6 says 'None of these stands in the committed documents.' So no record's verdict waits on this item, "
+    "and CFL-016 does not.")
 
 M7_NOTE = (" Recorded on the record at stream s122's round 4 (check-int15-1 m7, the baseline reading, a SESSION reading "
            "under the owner's standing rule of 26 September 2026): for CONOPS.md, a baselined definition, 'describes the "
@@ -71,24 +95,34 @@ S122_ADD4 = (
     "they stood at edead832 must be refused by the role rule (verdicts.check_roles). The closing check names V2-SPEC.md "
     "lines 47, 81, 82, 83, 84 and 86 and OPERATING-ENVELOPE.md lines 77 and 83. "
     "Round 6 (the independent check v2/docs/records/s122/checks/check-s122-5.md, B1: V2-SPEC.md line 47 named the SA868 "
-    "a 1 W part while board D's U2 is its VHF 2 W exciter, corrected by apply_docs_s122_r6.py as correction 36) added to "
-    "the gate: 'SA868 <n> W' must name 2 W with the assertion of D U2; fourteen mutants of the A22 and D8 rows as they "
-    "stand (a non-part token in a parenthesis, converters named on rails they do not feed, a one-word and a two-word "
-    "qualifier another part holds, role nouns the netlists never state, a history-excused part put back as current, the "
-    "codec and the amplifier swapped, a part named a codec with no qualifier), each judged with the judgement its row "
-    "carries, must read STALE, and line 47 with the 1 W planted back must be refused; and a scan of the closing list's "
-    "lines, each read whole from its document, refuses any figure-and-unit token (a number with W, V, A, Wh, dBm, mm, C "
-    "and the like, a range or product of two, an 'N x M' size, an 'NxM' header, a spelled count from two to twenty) that "
-    "no assertion of its sentence's TRUE judgement covers with the token's numbers: a netlist value, a board file's "
-    "outline, layers, cutout or zones, a maker's page, or a decision's record. test_close_s122.py turns each test of the "
-    "role rule and the history tie off in turn, and the gate then refuses. Out of scope by design: the scan reads only "
-    "the lines of the closing list and only numbers with a unit or spelled counts, so a form factor (2242), a port (USB "
-    "3), a slot, a date or a decision's number is not judged as a figure; the one-word qualifier test takes only active "
-    "parts (U and Q designators) as the holders of a function; a list item '<part> <noun> on <slot or rail>' is judged "
-    "by the target rule, not the list rule; and the finder still reads an upper-case commit, 'SMBJ15A/BAT54' and a DS "
-    "code of four digits (the shape of Maxim's DS3231) as part numbers, which a judgement must then excuse, and does not "
-    "read 'SMBJ15A-based' or a plural 'SMBJ15As' (of these three SMBJ15A forms, check-s122-5 says the documents hold "
-    "none). "
+    "a 1 W part while board D's U2 is its VHF 2 W exciter, corrected by apply_docs_s122_r6.py as correction 36) and "
+    "round 7 (the independent check v2/docs/records/s122/checks/check-s122-6.md, B1 and m1 to m6) added to the gate: "
+    "'SA868 <n> W' must name 2 W with the assertion of D U2; seventeen mutants of the A22 and D8 rows as they stand (a "
+    "non-part token in a parenthesis, converters named on rails they do not feed, a one-word and a two-word qualifier "
+    "another part holds, role nouns the netlists never state, a history-excused part put back as current, the codec and "
+    "the amplifier swapped, a part named a codec with no qualifier, a part named after its value's load, a qualifier "
+    "read inside another word), each judged with the judgement its row carries, must read STALE; line 47 with the 1 W "
+    "planted back must be refused; and a scan of the closing list's lines, each read whole from its document, refuses "
+    "any figure with a unit (W, V, A, Wh, dBm, mm, C and the like, a range or product of two, an 'N x M' size, an 'NxM' "
+    "header that is not a hex address) or spelled count from two to twenty that no assertion of its sentence's TRUE "
+    "judgement states with the same values in the same order, their signs, and the unit where the source gives one: a "
+    "netlist value, a board file's outline, layers, cutout or zones, a maker's page, a generator's text (gen_sch_p.py's "
+    "declared cell node CELL4 at 14.4 V for line 81's node, gen_sch_a.py at b2709118 for its four AP64500 of 7 "
+    "September) or a decision's record; the plants 160 x 240 mm, 2x2, +40 to +80 C, +40 to +125 C and the 1 W, with "
+    "their keys rewritten and the assertions kept, must be refused by that comparison. test_close_s122.py turns each "
+    "test of the role rule (forward, the one-word and two-word qualifiers, rails, word matching, the load phrase) and "
+    "the history tie off in turn, and removes the comparison, and the gate then refuses. The instrument's known escape "
+    "classes, which the gate does not catch: a number with no unit (a form factor such as 2242, a port such as USB 3) "
+    "and any figure off the closing list; a role noun outside the rule's list (FET, source, generator, interface); a "
+    "stale part in a clause that states a date or a history word ('the TUSB2046B hub fitted since 26 September 2026'); "
+    "a designator written beside a part it does not carry ('the TLV75801 gate-bias LDO on PA_KEY (U17'), which needs "
+    "lists of parts and designators paired in order ('the BME688 and BMI270 (U14, U15'); the one-word qualifier test "
+    "takes only active parts (U and Q designators) as the holders of a function; a list item '<part> <noun> on <slot "
+    "or rail>' is judged by the target rule, not the list rule; and the finder's shapes, which still read an upper-case "
+    "commit, 'SMBJ15A/BAT54', a DS code of four or five digits (Maxim's DS3231 and DS12887 shapes among them) and the "
+    "MIL-STD-461 method names as part numbers, which a judgement must then excuse, and do not read 'SMBJ15A-based' or "
+    "a plural 'SMBJ15As'. These classes are carried by {FOLLOW}, which apply_registry_s122_r4.py opens at the next "
+    "free S number with disposition PROCESS and in no record's waits_on: the documents do not hang on it. "
     "Confirming that each correction is true in substance remains the filed check's job.")
 
 
@@ -189,8 +223,11 @@ def main():
              "v2/docs/records/s122/apply_docs_s122_r6.py corrected V2-SPEC.md line 47 (the SA868 named a 1 W part; board "
              "D's U2 is the SA868 VHF 2 W exciter, and the maker's sheet v1.3 gives 31 to 33 dBm on high power and 24 to "
              "26 dBm on low), and every figure-and-unit token on the lines of S-122's closing list is bound to one of its "
-             "judgement's own assertions (verdicts.check_figs and close_s122.py's scan). This record stays FAIL and "
-             "waits on S-122; this entry changes no result." % per)
+             "judgement's own assertions (verdicts.check_figs and close_s122.py's scan). Round 7 (the independent check "
+             "v2/docs/records/s122/checks/check-s122-6.md): line 81's 14.4 V node is bound to gen_sch_p.py's declared cell "
+             "node CELL4 (the BQ4050 sheet's test condition dropped), a figure is compared by its values in order with "
+             "their signs and units, and V2-SPEC.md's correction 36 says the scan reads figures with a unit and spelled "
+             "counts (apply_docs_s122_r7.py). This record stays FAIL and waits on S-122; this entry changes no result." % per)
     out = R1.append_entry(out, "CFL-016", entry)
     # CFL-016's notes: m7
     A_ = A
@@ -208,13 +245,24 @@ def main():
     if "check-int15-1 m7" in note_old: refuse("CFL-016's notes already carry the m7 sentence")
     blk = head + "    notes: >-\n" + A_.fold(note_old + M7_NOTE, 6, 120) + "\n".join(rest[k:])
     out = out[:i] + blk + out[j:]
+    # round 7: the follow-up item of the instrument's escape classes, at the next free S number of THIS registry (never
+    # hard-coded: the number is read from the open and closed items the script runs on)
+    nums = [int(x["id"][2:]) for x in before["open_items"] + before["closed_items"] if re.fullmatch(r"S-\d+", str(x.get("id")))]
+    follow = "S-%d" % (max(nums) + 1)
+    if any(str(x.get("title", "")).startswith(FOLLOW_MARK) for x in before["open_items"] + before["closed_items"]):
+        refuse("the follow-up item of the instrument's escape classes is already in the registry")
+    add = S122_ADD4.replace("{FOLLOW}", follow)
+    for txt in (add, FOLLOW_TITLE, FOLLOW_WHY): R1.screen(txt, follow)
+    ci = out.index("\nclosed_items:\n") + 1
+    out = out[:ci] + ("  - id: %s\n    class: SESSION\n    status: OPEN\n    disposition: PROCESS\n    disposition_why: >-\n%s"
+                      "    title: >-\n%s" % (follow, A.fold(FOLLOW_WHY, 6, 120), A.fold(FOLLOW_TITLE, 6, 120))) + out[ci:]
     # S-122's title
-    R1.screen(S122_ADD4, "S-122")
+    R1.screen(add, "S-122")
     i, j = A_.span(out, "S-122")
     blk = out[i:j]
     if "    title: >-\n" not in blk or "Correction at stream s122's round 4" in blk: refuse("S-122's block")
     title = " ".join(l.strip() for l in blk.split("    title: >-\n", 1)[1].split("\n") if l.strip())
-    blk = blk.split("    title: >-\n", 1)[0] + "    title: >-\n" + A_.fold(title + S122_ADD4, 6, 120)
+    blk = blk.split("    title: >-\n", 1)[0] + "    title: >-\n" + A_.fold(title + add, 6, 120)
     out = out[:i] + blk + out[j:]
     after = yaml.safe_load(out)
     ob, ab = {r["id"]: r for r in before["records"]}, {r["id"]: r for r in after["records"]}
@@ -227,8 +275,15 @@ def main():
         if oe_ != ae_[:len(oe_)]: refuse("%s: older entries not kept as a prefix" % rid)
     if " ".join(ab["CFL-016"]["notes"].split()) != " ".join((ob["CFL-016"]["notes"] + M7_NOTE).split()): refuse("CFL-016's notes")
     oi, ai = {x["id"]: x for x in before["open_items"]}, {x["id"]: x for x in after["open_items"]}
-    if set(oi) != set(ai) or any(oi[x] != ai[x] for x in oi if x != "S-122"): refuse("open items other than S-122 moved")
-    if " ".join(ai["S-122"]["title"].split()) != " ".join((" ".join(oi["S-122"]["title"].split()) + S122_ADD4).split()):
+    if set(ai) - set(oi) != {follow} or set(oi) - set(ai) or any(oi[x] != ai[x] for x in oi if x != "S-122"):
+        refuse("open items other than S-122 and the new %s moved" % follow)
+    fu = ai[follow]
+    if (fu.get("disposition") != "PROCESS" or fu.get("class") != "SESSION" or fu.get("status") != "OPEN"
+            or " ".join(fu["title"].split()) != " ".join(FOLLOW_TITLE.split())
+            or " ".join(fu["disposition_why"].split()) != " ".join(FOLLOW_WHY.split())):
+        refuse("%s does not read back" % follow)
+    if any(follow in (r.get("waits_on") or []) for r in after["records"]): refuse("a record waits on %s" % follow)
+    if " ".join(ai["S-122"]["title"].split()) != " ".join((" ".join(oi["S-122"]["title"].split()) + add).split()):
         refuse("S-122's title")
     if {k: v for k, v in oi["S-122"].items() if k != "title"} != {k: v for k, v in ai["S-122"].items() if k != "title"}:
         refuse("S-122's other fields")
@@ -266,8 +321,9 @@ def main():
     open(ENV, "w", encoding="utf-8").write(env2)
     open(COV, "w", encoding="utf-8").write(cov2)
     print("%s: %d records rebound (%s); CFL-016 gained the round 4 inventory entry and the m7 sentence in its notes; "
-          "S-122's title gained the round 4 correction; the envelope and ENV-001 re-pinned to %s" % (
-              TAG, len(touched), ", ".join("%s (%s)" % (k, "+".join(v)) for k, v in sorted(touched.items())), newfull[:16]))
+          "S-122's title gained the round 4 correction; %s opened (the instrument's escape classes, PROCESS); the "
+          "envelope and ENV-001 re-pinned to %s" % (
+              TAG, len(touched), ", ".join("%s (%s)" % (k, "+".join(v)) for k, v in sorted(touched.items())), follow, newfull[:16]))
     return 0
 
 

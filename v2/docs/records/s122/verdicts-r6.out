@@ -1,7 +1,7 @@
 # Stream s122 verdicts: every inventoried sentence judged against the committed netlists and the generators.
 # Written by v2/docs/records/s122/verdicts.py (checks: names, citations, assertions; see its docstring).
 # Netlists: A v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb, B v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728, C v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@c9f7394594201045, D v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1, E v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8, P v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761
-# Documents: v2/docs/PANEL.md@b396d028b41e880d, v2/docs/CONOPS.md@6cb7b241cb84d729, v2/docs/V2-SPEC.md@9615190d8881790d, v2/docs/OPERATING-ENVELOPE.md@26e98ecfd2e4ec2f, v2/docs/TEST-PLAN.md@42a3dff33442c860, v2/docs/ASSEMBLY.md@942d562edd128759, v2/ecad/tools/pcb_decisions.yaml@a41df5d12ff95995, v2/docs/feasibility/EMCON.md@c8eb306265110076, v2/docs/handover/DEFINITION-STATUS.md@f7f0d7324b94dbc8
+# Documents: v2/docs/PANEL.md@b396d028b41e880d, v2/docs/CONOPS.md@6cb7b241cb84d729, v2/docs/V2-SPEC.md@c480bac24e8c048c, v2/docs/OPERATING-ENVELOPE.md@26e98ecfd2e4ec2f, v2/docs/TEST-PLAN.md@42a3dff33442c860, v2/docs/ASSEMBLY.md@942d562edd128759, v2/ecad/tools/pcb_decisions.yaml@a41df5d12ff95995, v2/docs/feasibility/EMCON.md@c8eb306265110076, v2/docs/handover/DEFINITION-STATUS.md@f7f0d7324b94dbc8
 
 PANEL.md#1:L55:cell:1:s1 [d2e1df041f] TRUE
     `U3` RP2040, `U4` W25Q16 QSPI flash, `Y1` 12 MHz, `R5`/`JP1` BOOTSEL strap, `TP1`..`TP3` SWD
@@ -2415,12 +2415,13 @@ V2-SPEC.md#Bearers and radios:L46:cell:2:s1 [bd1020ac37] TRUE
     judgement: the two E72 on B16
     names looked up: 0 parts, 0 nets
     asserted (2): B U13 value has 'E72' (netlist: 'Ebyte E72-2G4M20S1E CC2652P (Zigbee coordinator): 7 DIO_12 R'); B U14 value has 'E72' (netlist: 'Ebyte E72-2G4M20S1E CC2652P (OpenThread RCP for Matter): 7 D')
-V2-SPEC.md#Bearers and radios:L47:cell:1:s1 [c60dec6ff0] STALE
-    NiceRF SA868 1 W with a 30 W VHF amplifier stage (the Mitsubishi RA30H1317M1, T/R relay, low-pass filter; the amplifier's sheet held since 27 September 2026, `OPERATING-ENVELOPE.md` section 2), Direwolf on D8's PCM2912A USB codec (`U6`), hardware PTT inhibit (correction 34)
-    judgement: check-s122-5 B1: board D's U2 is the SA868 VHF 2 W exciter (the sheet v1.3: 31 to 33 dBm high), not a 1 W part (corrected in round 6, correction 36)
-    names looked up: 2 parts, 0 nets; D8 on ACE (sentence names D)
-    part numbers (3): PCM2912A on D (U6); RA30H1317M1 on D (J_PAIN,J_PAOUT,J_VGG); SA868 on D (U13,U2); PCM2912A as USB codec
-    asserted (2): D U2 value has 'NiceRF SA868 VHF 2 W exciter' (netlist: 'NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBA'); v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf's text holds '31 32.5 33 dBm|24 25 26 dBm'
+V2-SPEC.md#Bearers and radios:L47:cell:1:s1 [6df916ee4f] TRUE
+    NiceRF SA868 VHF 2 W exciter (`U2`, correction 36) with a 30 W VHF amplifier stage (the Mitsubishi RA30H1317M1, T/R relay, low-pass filter; the amplifier's sheet held since 27 September 2026, `OPERATING-ENVELOPE.md` section 2), Direwolf on D8's PCM2912A USB codec (`U6`), hardware PTT inhibit (correction 34)
+    judgement: round 6's correction of line 47 (check-s122-5 B1, correction 36): D8's U2 is the SA868 VHF 2 W exciter, which the maker's sheet v1.3 rates 31 to 33 dBm high and 24 to 26 dBm low; the RA30H1317M1's sheet, held and a row of OPERATING-ENVELOPE.md section 2; the PCM2912A U6
+    names looked up: 3 parts, 0 nets; D8 on ACE (sentence names D)
+    part numbers (3): PCM2912A on D (U6); RA30H1317M1 on D (J_PAIN,J_PAOUT,J_VGG); SA868 on D (U13,U2); PCM2912A as USB codec; SA868 as VHF 2 W exciter
+    asserted (7): D U2 value has 'NiceRF SA868 VHF 2 W exciter' (netlist: 'NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBA'); board D has a part whose value holds 'RA30H1317M1' (J_PAIN,J_PAOUT,J_VGG); D U6 value has 'PCM2912A' (netlist: 'TI PCM2912A USB audio codec (TQFP-32): mono input from the e'); board D has no part whose value holds 'WM8960' (found: none); v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf's text holds '31 32.5 33 dBm|24 25 26 dBm'; v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf's text holds 'RA30H1317M1 RoHS Compliance, 135-175MHz 30W 12.5V'; v2/docs/OPERATING-ENVELOPE.md says '| Mitsubishi RA30H1317M1 30 W VHF power amplifier |'
+    figures (2): SA868 VHF 2 W exciter by D:U2~NiceRF SA868 VHF 2 W exciter; 30 W VHF amplifier stage by PDF:v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf~RA30H1317M1 RoHS Compliance, 135-175MHz 30W 12.5V
 V2-SPEC.md#Bearers and radios:L47:cell:2:s1 [00075b673b] TRUE
     D8, west jack
     judgement: the SA868 on D8
@@ -2973,6 +2974,18 @@ V2-SPEC.md#Corrections, 29 September 2026:L310:item:s4 [2d75300367] TRUE
     judgement: round 5's correction 35: seventeen 3 mm LEDs on C, D22 among them
     names looked up: 1 parts, 0 nets
     asserted (2): board C: 17 parts whose footprint holds 'LED_D3.0mm' (read: 17, D1,D10,D11,D12,D13,D14,D15,D16,D2,D22,D3,D4,D5,D6,D7,D8,D9); C D22 value has 'EMCON' (netlist: '3 mm EMCON amber (hardware, no processor), sunlight viewable')
+V2-SPEC.md#Corrections, 29 September 2026:L322:item:s1 [e2179973eb] TRUE
+    Line 47 named the NiceRF SA868 a 1 W part, the figure of the device set of 6 September (appendix 32.49).
+    judgement: round 6's correction 36: the device set of 6 September (appendix 32.49) named the SA868 a 1 W module, and line 47 said 1 W at a6429e66
+    names looked up: 0 parts, 0 nets
+    part numbers (1): SA868 on D (U13,U2)
+    asserted (3): v2/docs/MESHSAT-709-geometry-appendix.md says '### 32.49 The V2 device set'; v2/docs/MESHSAT-709-geometry-appendix.md says '**NiceRF SA868 1 W module plus a 30 W VHF amplifier stage**'; v2/docs/V2-SPEC.md at a6429e66 says 'NiceRF SA868 1 W with a 30 W VHF amplifier stage'
+V2-SPEC.md#Corrections, 29 September 2026:L322:item:s2 [1f465555dc] TRUE
+    Board D's `U2` is the SA868 VHF 2 W exciter; `gen_sch_d.py` has said 2 W high and 0.5 W low since `bdfc7b3f` (7 September), and the maker's sheet v1.3 (`v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf`) gives 31 to 33 dBm on high power and 24 to 26 dBm on low.
+    judgement: round 6's correction 36: D's U2, the generator's rating since bdfc7b3f (not before it), the sheet v1.3
+    names looked up: 1 parts, 0 nets
+    part numbers (1): SA868 on D (U13,U2); SA868 as VHF 2 W exciter
+    asserted (5): D U2 value has 'NiceRF SA868 VHF 2 W exciter' (netlist: 'NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBA'); v2/ecad/tools/gen_sch_d.py says 'the NiceRF SA868 VHF exciter (bench-fitted, 2 W high / 0.5 W low)'; v2/ecad/tools/gen_sch_d.py at bdfc7b3f says '2 W high / 0.5 W low'; v2/ecad/tools/gen_sch_d.py at bdfc7b3f^ does not say '2 W high'; v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf's text holds '31 32.5 33 dBm|24 25 26 dBm'
 OPERATING-ENVELOPE.md#2:L72:cell:0:s1 [0fea03e077] TRUE
     Pervasive Displays E2370KS0C1 e-paper
     judgement: C7's e-paper ZIF for the E2370KS0C1
@@ -4854,11 +4867,11 @@ DEFINITION-STATUS.md#Current values of CONOPS's circuit passages (stream s122, 2
 # counts per document (sentences, TRUE, STALE, BASELINE, NOT DERIVABLE, UNJUDGED, assertions evaluated)
 PANEL.md: 167 sentences, 131 TRUE, 0 STALE, 0 BASELINE, 36 NOT DERIVABLE, 0 UNJUDGED, 787 assertions
 CONOPS.md: 288 sentences, 51 TRUE, 0 STALE, 40 BASELINE, 197 NOT DERIVABLE, 0 UNJUDGED, 784 assertions
-V2-SPEC.md: 157 sentences, 61 TRUE, 1 STALE, 0 BASELINE, 95 NOT DERIVABLE, 0 UNJUDGED, 473 assertions
+V2-SPEC.md: 159 sentences, 64 TRUE, 0 STALE, 0 BASELINE, 95 NOT DERIVABLE, 0 UNJUDGED, 486 assertions
 OPERATING-ENVELOPE.md: 67 sentences, 22 TRUE, 0 STALE, 0 BASELINE, 45 NOT DERIVABLE, 0 UNJUDGED, 165 assertions
 TEST-PLAN.md: 110 sentences, 18 TRUE, 0 STALE, 0 BASELINE, 92 NOT DERIVABLE, 0 UNJUDGED, 128 assertions
 ASSEMBLY.md: 160 sentences, 91 TRUE, 0 STALE, 0 BASELINE, 69 NOT DERIVABLE, 0 UNJUDGED, 242 assertions
 pcb_decisions.yaml: 10 sentences, 6 TRUE, 0 STALE, 0 BASELINE, 4 NOT DERIVABLE, 0 UNJUDGED, 17 assertions
 EMCON.md: 26 sentences, 22 TRUE, 0 STALE, 0 BASELINE, 4 NOT DERIVABLE, 0 UNJUDGED, 455 assertions
 DEFINITION-STATUS.md: 24 sentences, 17 TRUE, 0 STALE, 0 BASELINE, 7 NOT DERIVABLE, 0 UNJUDGED, 276 assertions
-total: 1009 sentences, 419 TRUE, 1 STALE, 40 BASELINE, 549 NOT DERIVABLE, 0 UNJUDGED, 3327 assertions
+total: 1011 sentences, 422 TRUE, 0 STALE, 40 BASELINE, 549 NOT DERIVABLE, 0 UNJUDGED, 3340 assertions

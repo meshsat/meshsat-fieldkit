@@ -308,9 +308,17 @@ PN_MONTHS = {"January", "February", "March", "April", "May", "June", "July", "Au
 
 
 # round 6 (check-s122-5 m4): literature codes (TI's SNVA559, SLVA505; ST's AN2606, RM0433, ES0392, PM0253, UM2179,
-# TN1204, DS12110), connector and bus standards (RJ45, RS485, 1000BASE-T) are not part numbers
-PN_LIT = re.compile(r"^S[LNBCW][A-Z]{1,4}\d{1,3}[A-Z]?$|^(?:AN|RM|ES|PM|UM|TN)\d{4}$|^DS\d{5}$|^(?:RJ|RS)\d{2,3}$"
-                    r"|^\d+BASE-[A-Z0-9]+$")
+# TN1204, DS12110), connector and bus standards (RJ45, RS485, 1000BASE-T) are not part numbers. Round 7 (check-s122-6
+# m4): ST numbers its reference manuals, errata and programming manuals from 0 (RM0433, ES0392, PM0253) and its
+# technical notes from 0 and 1 (TN1204), so RM3100 (PNI's magnetometer) and TN2106 (Microchip's FET) read as parts; ST's
+# datasheet codes (DS and five digits) keep the shape of Dallas's DS12887, which this filter still drops (a stated limit)
+PN_LIT = re.compile(r"^S[LNBCW][A-Z]{1,4}\d{1,3}[A-Z]?$|^(?:AN|UM)\d{4}$|^(?:RM|ES|PM)0\d{3}$|^TN[01]\d{3}$|^DS\d{5}$"
+                    r"|^(?:RJ|RS)\d{2,3}$|^\d+BASE-[A-Z0-9]+$")
+# round 7 (check-s122-6 m4): a token right after a maker's name, or after 'article', is that maker's number when it
+# holds a digit (ABLIC S-8261, TI bq2970, u-blox ANN-MB2, Xenarc 709GNK, Amphenol 132170, Lapp's article 0021917,
+# MG Chemicals 422B), unless it is a literature code, a pin or a designator
+PN_MAKER = re.compile(r"\b(?:ABLIC|TI|u-blox|Xenarc|Amphenol|Molex|Lapp|Chemicals|article) "
+                      r"([A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9]))*[A-Za-z0-9])(?![\w/+-]|\.\w)")
 _DESIG = []        # the designators of the six netlists, read once (a token that names one is a designator)
 
 
@@ -331,7 +339,7 @@ def is_partno(t, nets=None):
     if not digits or PN_PIN.match(t) or PN_LIT.match(t): return False
     if REF.fullmatch(t) and t in designators(): return False   # a designator is not a part number
     if nets is not None and t in nets: return False
-    if re.fullmatch(r"\d{9,}", t): return not re.fullmatch(r"20\d{6}", t)
+    if re.fullmatch(r"\d{9,}", t): return True       # round 7: an eight-digit date never reaches here (the dead guard is gone)
     if t[0].isalpha():
         lead = re.match(r"^[A-Z]+", t)
         if PN_ID.match(t) or re.split(r"[-/]", t)[0] in STDBODY or (lead and lead.group(0) in STDBODY): return False
@@ -361,6 +369,12 @@ def partnos(s, nets=None):
         if m.group(1) not in STDBODY and len(re.findall(r"\d", m.group(2))) >= 3: out.add(m.group(1) + " " + m.group(2))
     for m in PN_MAKERNUM.finditer(body):
         if m.group(1) not in PN_MONTHS: out.add(m.group(2))
+    for m in PN_MAKER.finditer(body):
+        tok = m.group(1)
+        fid = bool(re.fullmatch(r"[A-Z]+-[A-Z]+\d+", tok))    # after a maker's name, ANN-MB2 is not a finding identifier
+        if (re.search(r"\d", tok) and len(tok) >= 4 and (fid or not PN_PIN.match(tok)) and not PN_LIT.match(tok)
+                and not (REF.fullmatch(tok) and tok in designators()) and not (nets is not None and tok in nets)):
+            out.add(tok)
     for m in PN_TOK.finditer(body):
         tok = m.group(1)
         if is_partno(tok, nets) and not any(tok != x and tok in x.split(" ") for x in out): out.add(tok)
