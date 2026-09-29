@@ -4,7 +4,7 @@ Every intersection must be 0.000 mm3 where lid_pack_a1.out reads 1.0 or more at 
 
 A    HF kept, 8 inch tablet kept                    zones  10 x face parts  47: intersections none (0.000 mm3)
 B    HF kept, no tablet in the lid                  zones  30 x face parts  47: intersections none (0.000 mm3)
-C    8 inch tablet kept, HF out of the lid          zones  17 x face parts  47: intersections none (0.000 mm3)
+C    8 inch tablet kept, HF out of the lid          zones  21 x face parts  47: intersections none (0.000 mm3)
 C10  10 inch tablet kept, HF out of the lid         zones  10 x face parts  47: intersections none (0.000 mm3)
 D    HF and tablet both out of the lid              zones  39 x face parts  47: intersections none (0.000 mm3)
 

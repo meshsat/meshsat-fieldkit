@@ -312,7 +312,7 @@ def arrangements():
 # ---------------------------------------------------------------- the hinge harness
 HINGE = dict(y=155.0, z=111.0, dy=8.0, dz=5.0)   # ESTIMATE: inside the fairings (bases |X| 58.93..181.58, outer faces at about Y 164), near the parting plane Z 108.97
 T_LID = (128.0, 111.5)     # the lid-side tie: a bonded tie mount on the lid's inner back wall, 2.5 above the parting plane (cavity wall at Y 130.9)
-T_PLATE = (128.0, 104.52)  # the plate-side tie: on the face plate's rebated back band (|Y| 126.5..131.5, top 106.52 - 2.0), over the frame's ring
+T_PLATE = (122.0, 106.52)  # the plate-side tie: on the face plate's full-thickness face near its back edge (126.5), clear of the 6-32 heads at X 0, +-139.45 (the 5.0 rebated band beyond it cannot take a 4.4 lead under the lid wall at 130.9)
 HARNESS = dict(current_cont=10.0, current_peak=18.0, peak_s=60.0, charge=8.6, awg=12, ohm_per_m=5.21e-3, od=4.4, run_lid=0.45, run_base=0.35,
                span_x=150.0)
 # ASSUMPTION (for the electrical stream): the lid pack carries the kit's whole 10 A continuous and 18 A for 60 s with the base pack
@@ -422,6 +422,17 @@ def L_BAYS_AREA(a):
     """The two end bays' plan area (they carry the plate too)."""
     ys = min(s[2] for s in a["south"])
     return BAY * (a["y_n"] - ys)
+
+
+def harness_numbers():
+    """The harness figures section 3 prints (for the drawing set)."""
+    H = HARNESS
+    offs = [math.hypot(rot(T_LID, p)[0] - T_PLATE[0], rot(T_LID, p)[1] - T_PLATE[1]) for p in (0, 30, 60, 90, 100, 110, 120, 135, 150, 180)]
+    c0, c1 = math.hypot(min(offs), H["span_x"]), math.hypot(max(offs), H["span_x"])
+    lead = 1.05 * c1
+    sag = math.sqrt(3.0 * c0 * (lead - c0) / 8.0)
+    return dict(rad=math.hypot(T_LID[0] - HINGE["y"], T_LID[1] - HINGE["z"]), c0=c0, c1=c1, lead=lead, sag=sag,
+                r_bow=c0 ** 2 / (8 * sag) + sag / 2, off=max(offs), r_s=H["span_x"] ** 2 / (4 * max(offs)))
 
 
 def main(fp):
@@ -566,7 +577,7 @@ def main(fp):
         p2[0], p2[2], p2[1], p2[3], aB["x_w"], aB["x_w"] + BAY, aB["y_n"]))
     w("   back wall, about %.1f at the parting plane), east along it on bonded tie mounts to T_L at X %.0f, then the free lead to T_P at X %.0f on" % (
         LID_WALL_AT_PART[1], aB["x_w"] + 20.0, aB["x_w"] + 20.0 + H["span_x"]))
-    w("   the plate's rebated band, then to the crossing. About %.2f m in the lid, as assumed above." % H["run_lid"])
+    w("   the plate's full-thickness face near its back edge (Y 122), then to the crossing. About %.2f m in the lid, as assumed above." % H["run_lid"])
     w("   strain relief: a bonded tie mount at T_L and at T_P and every 60 mm or less along both runs (the r2 set's tie-mount rule), and a")
     w("   printed guide on the lid's back wall that keeps the free lead inboard of the cavity wall (Y < %.1f) so that closing folds it toward" % LID_WALL_AT_PART[1])
     w("   the face and never over the rim or the seal.")
@@ -610,6 +621,11 @@ def main(fp):
                 HINGE["y"] = h0
             lim[(a["name"][0], phi)] = worst[0]
             w("   %-12s %5.0f deg   %8.2f     %-12s   %5.1f deg" % (a["name"].split(":")[0], phi, worst[1], "stands" if worst[1] < Y_TIP else "TIPS", worst[0]))
+    for ty in (100.0,):
+        wst = min(critical_slope(mass_items(aB, bm, (0.0, by, bz)), 100, tip_y=ty)[0] for bm in (7.0, 9.0, 14.0) for by in (-20.0, 0.0, 20.0) for bz in (45.0, 65.0))
+        lvl = [p for p in (90, 100, 110, 120, 135) if min(critical_slope(mass_items(aB, bm, (0.0, by, bz)), p, tip_y=ty)[0] for bm in (7.0, 9.0, 14.0) for by in (-20.0, 0.0, 20.0) for bz in (45.0, 65.0)) <= 0]
+        w("   sensitivity: the feet's place is not in Peli's files; with the tipping line at Y %.0f (feet inboard, INFERRED bound) B at 100 degrees" % ty)
+        w("   stands on a back slope of %.1f deg at the worst, and tips on level ground from %s degrees (hinge axis Y 155)" % (wst, lvl[0] if lvl else "beyond 135"))
     tip_phi = min([p for p in (90, 100, 110, 120, 135, 150, 180) if lim[("B", p)] <= 0] or [999])
     w("   verdict (B): the open case stands on level ground up to a lid opening of %s degrees in every swept case; beyond it a light base with" % (
         "%d" % max(p for p in (90, 100, 110, 120, 135, 150) if lim[("B", p)] > 0)))

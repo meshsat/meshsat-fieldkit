@@ -227,26 +227,26 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    current (ASSUMPTION for fnd/a1elec): 10 A continuous, 18 A for 60 s with the base pack isolated, 8.6 A of charge
    conductor: 12 AWG fine-strand silicone, 5.21 mOhm/m (annealed copper), OD 4.4 (INFERRED class); run 0.45 m in the lid + 0.35 m in the base;
    loop 8.34 mOhm: at 10 A 83 mV and 0.83 W; at 18 A 150 mV and 2.70 W; adiabatic rise over 60 s at 18 A: 8.9 K (copper 3.31 mm2, 385 J/kgK)
-   hinge axis (ESTIMATE, no Peli figure): Y 155.0 +-8.0, Z 111.0 +-5.0; lid tie T_L (128.0, 111.5) on the lid's inner back wall; plate tie T_P (128.0, 104.52)
+   hinge axis (ESTIMATE, no Peli figure): Y 155.0 +-8.0, Z 111.0 +-5.0; lid tie T_L (128.0, 111.5) on the lid's inner back wall; plate tie T_P (122.0, 106.52)
    T_L and T_P are 150 apart in X, so the lead between them runs along the back channel and the lid's travel moves one end sideways
    opening   T_L (Y, Z)            Y-Z offset T_L..T_P   chord T_L..T_P
-       0 deg  ( 128.00,  111.50)      6.98                150.16
-      30 deg  ( 131.87,  124.93)     20.78                151.43
-      60 deg  ( 141.93,  134.63)     33.18                153.63
-      90 deg  ( 155.50,  138.00)     43.33                156.13
-     100 deg  ( 160.18,  137.50)     46.08                156.92
-     110 deg  ( 164.70,  136.20)     48.49                157.64
-     120 deg  ( 168.93,  134.13)     50.52                158.28
-     135 deg  ( 174.45,  129.74)     52.85                159.04
-     150 deg  ( 178.63,  124.07)     54.27                159.52
-     180 deg  ( 182.00,  110.50)     54.33                159.54
-   T_L turns at R 27.0 about the axis. Lead between the ties: 167.5 (the longest chord, 159.5 at 180 degrees, plus 5 percent).
-   Closed, the lead bows 31.3 (in the X-Z plane of the back channel, which is about 14 wide in Y and 40 tall), radius about 106; fully
-   open it is an S across an offset of 54.3 over 150, radius about 104. Requirement on the pick (INFERRED class): a flexing radius of
+       0 deg  ( 128.00,  111.50)      7.80                150.20
+      30 deg  ( 131.87,  124.93)     20.89                151.45
+      60 deg  ( 141.93,  134.63)     34.46                153.91
+      90 deg  ( 155.50,  138.00)     45.97                156.89
+     100 deg  ( 160.18,  137.50)     49.17                157.85
+     110 deg  ( 164.70,  136.20)     52.01                158.76
+     120 deg  ( 168.93,  134.13)     54.45                159.58
+     135 deg  ( 174.45,  129.74)     57.36                160.59
+     150 deg  ( 178.63,  124.07)     59.29                161.29
+     180 deg  ( 182.00,  110.50)     60.13                161.60
+   T_L turns at R 27.0 about the axis. Lead between the ties: 169.7 (the longest chord, 161.6 at 180 degrees, plus 5 percent).
+   Closed, the lead bows 33.1 (in the X-Z plane of the back channel, which is about 14 wide in Y and 40 tall), radius about 102; fully
+   open it is an S across an offset of 60.1 over 150, radius about 94. Requirement on the pick (INFERRED class): a flexing radius of
    10 x OD = 44 or less, met by both figures above: yes.
    route (B): from P2 (X -134..-90, Y -73..-3) through the module's west bay (X -141..-134) north to the back channel (Y 114.93 to the lid's
    back wall, about 130.9 at the parting plane), east along it on bonded tie mounts to T_L at X -121, then the free lead to T_P at X 29 on
-   the plate's rebated band, then to the crossing. About 0.45 m in the lid, as assumed above.
+   the plate's full-thickness face near its back edge (Y 122), then to the crossing. About 0.45 m in the lid, as assumed above.
    strain relief: a bonded tie mount at T_L and at T_P and every 60 mm or less along both runs (the r2 set's tie-mount rule), and a
    printed guide on the lid's back wall that keeps the free lead inboard of the cavity wall (Y < 130.9) so that closing folds it toward
    the face and never over the rim or the seal.
@@ -304,6 +304,8 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    A              135 deg     109.38     stands           2.5 deg
    A              150 deg     115.58     TIPS            -0.7 deg
    A              180 deg     117.62     TIPS            -2.7 deg
+   sensitivity: the feet's place is not in Peli's files; with the tipping line at Y 100 (feet inboard, INFERRED bound) B at 100 degrees
+   stands on a back slope of 5.7 deg at the worst, and tips on level ground from 120 degrees (hinge axis Y 155)
    verdict (B): the open case stands on level ground up to a lid opening of 120 degrees in every swept case; beyond it a light base with
    its CG back and high tips on level ground (first at 135 degrees swept). Fix, the session's (authority SESSION, reversible): a lid stay
    that stops the lid at 100 degrees (a webbing strap between two bonded anchors, one on the lid's inner back wall, one on the face

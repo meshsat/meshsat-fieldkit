@@ -284,32 +284,36 @@ def sheet4(pdf, arr):
         ax.plot([p[0]], [p[1]], "o", color="#aa3300", ms=2)
         ax.text(p[0] + 1, p[1] + 1, "%d" % phi, fontsize=4.5, color="#aa3300")
     ax.add_patch(Arc((hy, hz), 2 * math.hypot(L.T_LID[0] - hy, L.T_LID[1] - hz), 2 * math.hypot(L.T_LID[0] - hy, L.T_LID[1] - hz), theta1=-20, theta2=190, lw=0.4, color="#aa3300", ls="--"))
-    ax.plot([L.T_PLATE[0]], [L.T_PLATE[1]], "s", color="#1a6a9a", ms=3); ax.text(L.T_PLATE[0] - 30, L.T_PLATE[1] - 4, "T_P on the plate's rebated band", fontsize=5, color="#1a6a9a")
+    ax.plot([L.T_PLATE[0]], [L.T_PLATE[1]], "s", color="#1a6a9a", ms=3); ax.text(L.T_PLATE[0] - 30, L.T_PLATE[1] - 4, "T_P on the plate's face near its back edge", fontsize=5, color="#1a6a9a")
     ax.text(L.T_LID[0] - 34, L.T_LID[1] + 2, "T_L on the lid's back wall (closed)", fontsize=5, color="#aa3300")
     # lid closed outline near the back
     ax.plot([100, 130.9, 130.9], [L.CEIL_Z_NOM, L.CEIL_Z_NOM - 14, L.P.PELI["rim_z"]], color=GREY, lw=0.5)
-    ax.plot([100, 131.5], [L.FACE_Z_NOM - 2.0] * 2, color=INK, lw=0.6); ax.text(100, L.FACE_Z_NOM - 5, "plate's rebated band (top 104.52)", fontsize=4.6)
+    ax.text(101, L.CEIL_Z_NOM - 4, "lid inner surface (schematic)", fontsize=4.6, color=GREY)
+    ax.plot([100, 126.5, 126.5, 131.5], [L.FACE_Z_NOM, L.FACE_Z_NOM, L.FACE_Z_NOM - 2.0, L.FACE_Z_NOM - 2.0], color=INK, lw=0.6)
+    ax.text(100, L.FACE_Z_NOM - 5, "face plate: full face to Y 126.5 (top 106.52), rebated band to 131.5 (104.52)", fontsize=4.6)
     ax.plot([100, 140], [L.P.PELI["rim_z"]] * 2, color=GREY, lw=0.4, ls="--")
     ax.set_title("Y-Z at the back wall: the lid tie's path about the hinge axis, 0 to 180 degrees", fontsize=6)
     ax.tick_params(labelsize=4.5)
     bx = plan_ax(fig, (0.50, 0.40, 0.48, 0.50))
     lid_outline(bx); qmx(bx); cells(bx, a, lw=0.1)
     p2 = a["p2_rect"]
-    route = [((p2[0] + p2[2]) / 2, p2[3]), (a["x_w"] + 3.5, p2[3]), (a["x_w"] + 3.5, 122.0), (a["x_w"] + 20.0, 122.0)]
+    ym = (p2[1] + p2[3]) / 2
+    route = [(p2[0], ym), (a["x_w"] + 3.5, ym), (a["x_w"] + 3.5, 122.0), (a["x_w"] + 20.0, 122.0)]
     bx.plot([q[0] for q in route], [q[1] for q in route], color="#aa3300", lw=1.2)
     bx.plot([a["x_w"] + 20.0, a["x_w"] + 20.0 + L.HARNESS["span_x"]], [122.0, 128.0], color="#aa3300", lw=1.2, ls="--")
-    bx.text(a["x_w"] + 25, 131, "free lead T_L to T_P, 150 apart in X (bows %.0f closed)" % 31.3, fontsize=4.8, color="#aa3300")
+    bx.text(a["x_w"] + 25, 131, "free lead T_L to T_P, 150 apart in X (bows %.1f closed)" % L.harness_numbers()["sag"], fontsize=4.8, color="#aa3300")
     bx.plot([q[0] for q in L.DC_ROUTE], [q[1] for q in L.DC_ROUTE], color="#aa5500", lw=1.0)
     bx.text(150, -120, "QMX DC lead re-routed east, R 20", fontsize=4.8, color="#aa5500", ha="center")
     bx.set_title("Plan: the pack harness from P2 through the west bay to the back channel; the QMX DC lead", fontsize=6)
     tx = fig.add_axes((0.50, 0.08, 0.48, 0.28)); tx.axis("off")
     H = L.HARNESS
+    hn = L.harness_numbers()
     lines = ["CURRENT (ASSUMPTION for fnd/a1elec): 10 A continuous, 18 A for 60 s, 8.6 A charge",
              "CONDUCTOR 12 AWG fine-strand silicone, OD 4.4 (class); 2 x 0.80 m loop 8.34 mOhm:",
              "  150 mV and 2.7 W at 18 A; adiabatic rise 8.9 K over 60 s",
-             "TRAVEL the lid tie turns at R 27.0 about the axis; the chord T_L..T_P runs",
-             "  150.2 closed to 159.5 at 180 degrees; lead 167.5 between the ties",
-             "BEND closed bow 31.3 (radius about 106), open S radius about 104,",
+             "TRAVEL the lid tie turns at R %.1f about the axis; the chord T_L..T_P runs" % hn["rad"],
+             "  %.1f closed to %.1f at 180 degrees; lead %.1f between the ties" % (hn["c0"], hn["c1"], hn["lead"]),
+             "BEND closed bow %.1f (radius about %.0f), open S radius about %.0f," % (hn["sag"], hn["r_bow"], hn["r_s"]),
              "  against 10 x OD = 44 (the requirement on the pick)",
              "STRAIN RELIEF bonded tie mounts at T_L, T_P and every 60 mm or less;",
              "  a printed guide keeps the lead inboard of the lid wall (Y < 130.9)",
