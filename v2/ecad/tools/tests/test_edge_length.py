@@ -232,13 +232,30 @@ def t_si001_a_fast_net_with_no_target_or_termination_is_bound_to_its_length_and_
     # the schematic answers it: a declaration in edge_allow that carries its basis, and the reading passes
     with _board({"critical_k": 6, "signal_classes": [HS, EN], "edge_allow": [_allow(repo)]}, _src(doc)):
         r3 = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
-    assert E.schematic_result(r3) == "PASS", (r3["fails"], [x.get("layout_bound") for x in r3["rows"]])
-    assert r3["counts"]["allowed_nets"] == 1, r3["counts"]
+    # it is answered, and pending the layout while no rule decides on the routed reading (ALLOW_PENDS_LAYOUT, the
+    # re-check's m3): INCONCLUSIVE with nothing layout-bound; PASS once the guard is lifted
+    assert E.schematic_result(r3) == "INCONCLUSIVE", (r3["fails"], [x.get("layout_bound") for x in r3["rows"]])
+    assert r3["counts"]["allowed_nets"] == 1 and r3["counts"]["layout_bound_nets"] == 0, r3["counts"]
+    E.ALLOW_PENDS_LAYOUT = False
+    try: assert E.schematic_result(r3) == "PASS", r3["counts"]
+    finally: E.ALLOW_PENDS_LAYOUT = True
 
 
 ALLOW_MD = "> The data lines are wired directly, using short connections to maintain the signal integrity.\n"
-ALLOW_LST = "   USB_DN     12.50 mm  vias 0  layers F.Cu\n   reference t_pd 5.572 ps/mm: the fixture's microstrip\n"
+ALLOW_LST = ("   USB_DN     12.50 mm  vias 0  layers F.Cu\n   USB_DP     30.00 mm  vias 0  layers F.Cu\n"
+             "   reference t_pd 5.572 ps/mm: the fixture's microstrip\n")
+OTHER_LST = "   extent 572.0 mm\n   USB_DN     12.50 mm\n"
 ALLOW_TPD = 7.1541528   # the fixture stack's slowest layer (JLC06161H-3313), as worst_delay reads it
+
+
+def _row_other(good, quote):
+    """A checked row of the entry's own listing quoting another line of it."""
+    return dict(good["checked"][0], quote=quote)
+
+
+def _row_doc2(quote):
+    """A checked row of a second fixture document (other.txt), which _allow writes beside the listing."""
+    return {"document": "v2/vendor/fix/other.txt", "sha256_16": _s16(OTHER_LST), "where": "the fixture's line", "quote": quote}
 
 
 def _allow(repo, text=ALLOW_MD, **more):
@@ -249,11 +266,13 @@ def _allow(repo, text=ALLOW_MD, **more):
     os.makedirs(os.path.dirname(p), exist_ok=True)
     open(p, "w").write(text)
     open(os.path.join(repo, "v2", "vendor", "fix", "lengths.txt"), "w").write(ALLOW_LST)
+    open(os.path.join(repo, "v2", "vendor", "fix", "other.txt"), "w").write(OTHER_LST)
     row = lambda q: {"document": "v2/vendor/fix/lengths.txt", "sha256_16": _s16(ALLOW_LST), "where": "the fixture's line", "quote": q}
     e = {"pattern": "USB_DN", "why": "fixture: the maker asks for a short direct run and the layout holds it",
          "ruled_by": "SESSION (fixture)", "document": "v2/vendor/fix/layout-guide.md", "sha256_16": _s16(ALLOW_MD),
          "where": "the fixture's one line", "quote": "wired directly, using short connections to maintain",
-         "checked": [row("USB_DN 12.50 mm"), row("reference t_pd 5.572 ps/mm")], "reference_ps_per_mm": 5.572,
+         "checked": [row("USB_DN 12.50 mm"), row("reference t_pd 5.572 ps/mm")], "reference_nets": ["USB_DN"],
+         "reference_ps_per_mm": 5.572,
          "max_mm": 9.7, "max_mm_basis": "the fixture maker's reference layout runs it at 12.50 mm, scaled to this stack"}
     e.update(more)
     return e
@@ -279,8 +298,14 @@ def t_si001_an_allowance_answers_only_with_its_basis_held():
              # B2: the length is tied to what the entry cites, and an entry holds a length or answers nothing
              "above what its checked rows support": dict(good, max_mm=500.0),
              "no max_mm": {k: v for k, v in good.items() if k != "max_mm"},
-             "no checked row quotes the measured length": dict(good, checked=[good["checked"][1]]),
-             "quoted by no checked row": dict(good, reference_ps_per_mm=7.0),
+             "no checked row quotes the length": dict(good, checked=[good["checked"][1]]),
+             "quoted by no delay row": dict(good, reference_ps_per_mm=7.0),
+             "no reference_nets": {k: v for k, v in good.items() if k != "reference_nets"},
+             # R2-B1 (the re-check): a row that names another net, a row that names no net, a row of a second
+             # document; each of these the round 2 tool held
+             "none of its reference_nets": dict(good, max_mm=23.3, checked=good["checked"] + [_row_other(good, "USB_DP 30.00 mm")]),
+             "names no reference net": dict(good, checked=good["checked"] + [dict(good["checked"][0], quote="vias 0 layers F.Cu")]),
+             "cite 2 documents": dict(good, checked=[_row_doc2("USB_DN 12.50 mm"), good["checked"][1]]),
              "no reference_ps_per_mm": {k: v for k, v in good.items() if k != "reference_ps_per_mm"},
              # m7: a pattern names nets, a quote is a sentence, a PDF is cited by its page, a document is of this tree
              "names no nets": dict(good, pattern="*"),
@@ -294,10 +319,14 @@ def t_si001_an_allowance_answers_only_with_its_basis_held():
         assert any(want in f for f in r["fails"] if f.startswith("edge_allow refused")), (want, r["fails"])
         row = next(x for x in r["rows"] if x["pattern"] == "USB_*")
         assert "USB_DN" in row["layout_bound"] and r["counts"]["allowed_nets"] == 0, (want, row)
+    # the check's second counterexample: a row quoting an unrelated quantity of another document, max_mm raised to it
+    extent = dict(good, max_mm=445.0, checked=good["checked"] + [_row_doc2("extent 572.0 mm")])
+    assert "none of its reference_nets" in (E.allow_refusal(extent, ALLOW_TPD) or ""), E.allow_refusal(extent, ALLOW_TPD)
     with _board({"critical_k": 6, "signal_classes": [HS, EN],
                  "edge_allow": [good, dict(good, pattern="USB_DP")]}, _src(doc)):
         r = E.schematic_table(p, "zz", facts=FACTS, repo=repo)
-    assert E.schematic_result(r) == "PASS", (r["fails"], r["counts"])
+    assert E.schematic_result(r) == "INCONCLUSIVE" and not r["fails"], (r["fails"], r["counts"])   # pending the layout
+    assert r["counts"]["layout_bound_nets"] == 0, r["counts"]
     assert r["counts"]["allowed_nets"] == 2 and r["counts"]["answered_nets"] == 2, r["counts"]
     assert {"path": "v2/vendor/fix/layout-guide.md", "sha256_16": _s16(ALLOW_MD)} in r["inputs"].values(), r["inputs"]
     assert {"path": "v2/vendor/fix/lengths.txt", "sha256_16": _s16(ALLOW_LST)} in r["inputs"].values(), r["inputs"]
@@ -325,9 +354,11 @@ def t_si001_an_allowance_hands_its_length_to_the_layout_and_the_routed_half_hold
     v = json.load(open(os.path.join(out, "edge_length.verdict.json")))
     assert any(e.startswith("ALLOWED 1 net(s), pending the layout") and "USB_DN <= 9.7 mm" in e for e in v["evidence"]), v["evidence"]
     ok, words = E.allow_answers(held, 9.6)
-    assert ok and "within its 9.7 mm" in words, words
+    assert ok and "within its 9.70 mm" in words, words
     ok, words = E.allow_answers(held, 9.8)
-    assert not ok and "routed 9.8 mm, past the 9.7 mm" in words, words
+    assert not ok and "routed 9.80 mm, past the 9.70 mm" in words, words
+    ok, words = E.allow_answers(dict(held, max_mm=2.1), 2.15)     # the re-check's m1: both numbers to the hundredth
+    assert not ok and "routed 2.15 mm, past the 2.10 mm" in words, words
     assert not E.allow_answers({k: v for k, v in held.items() if k != "max_mm"}, 1.0)[0], "an entry with no max_mm answered"
     for bad, want in ((dict(held, max_mm_basis=""), "no max_mm_basis"), (dict(held, max_mm=0), "not a length"),
                       (dict(held, max_mm=True), "not a length")):
@@ -398,7 +429,7 @@ def t_si001_the_routed_half_holds_every_allowance_net_to_its_declared_length():
     assert v["verdict"] == "FAIL", v
     assert v["counts"]["over_declared_limit"] == 2 and v["counts"]["held_within_declared_limit"] == 1, v["counts"]
     ev = " ".join(v["evidence"])
-    assert "OVER ITS DECLARED LIMIT QSPI_SCLK: routed 63.8 mm, past the 8.0 mm" in ev and "QSPI_D0: routed 40.0 mm" in ev, ev
+    assert "OVER ITS DECLARED LIMIT QSPI_SCLK: routed 63.82 mm, past the 8.00 mm" in ev and "QSPI_D0: routed 40.00 mm" in ev, ev
     v2 = _routed([("QSPI_SCLK", 7.9, "HIGH_SPEED_DIGITAL"), ("XIN", 5.0, "HIGH_SPEED_DIGITAL")])
     assert v2["verdict"] == "PASS" and v2["counts"]["over_declared_limit"] == 0, v2
 
@@ -407,6 +438,15 @@ def t_si001_the_board_tables_allowances_hold_against_their_documents():
     """Every edge_allow entry the committed board tables carry holds (CSI-D1) and names the length it holds a net to
     with its basis wherever it states one: a refused entry would FAIL the board's reading."""
     import boardtable
+    held_c = {e["pattern"]: e for e in E.load_allow("c")[0]}
+    tpd = E.worst_delay("c")[0]
+    xr, sc = held_c["XOUT_R"], held_c["QSPI_SCLK"]
+    swclk = dict(xr["checked"][0], quote="SWCLK 25.92 mm", where="the line of the net SWCLK")
+    sd1 = dict(sc["checked"][0], quote="QSPI_SD1 16.85 mm", where="the line of the net QSPI_SD1")
+    for bad in (dict(xr, max_mm=20.1, checked=xr["checked"] + [swclk]), dict(sc, max_mm=13.1, checked=[sd1, sc["checked"][-1]])):
+        why = E.allow_refusal(bad, tpd)
+        assert why and "none of its reference_nets" in why, (bad["pattern"], why)
+        assert E._quotes_hold(bad, E.REPO) is None, "the counterexample's citations must hold, so only the method refuses it"
     n = 0
     for letter in ("a", "b", "c", "d", "e", "p"):
         held, refused = E.load_allow(letter)
