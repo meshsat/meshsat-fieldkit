@@ -29,8 +29,9 @@ whose own manual contradicts itself is not a basis, and even if it worked it wou
 | (d) write 32,767 as the design capacity | the gauge would report a pack 18.5 percent smaller than it is, RSOC and FCC wrong | picks the number that fits, not the pack | rejected |
 
 **Decision (authority SESSION, 29 September 2026; reason: (a) keeps one board design and one protection circuit for
-both packs and needs no new part, and the scaling it uses is the calibration TI's own EVM procedure performs; reverse
-by taking (b) or (c) if TI's answer to Q-TI-A1 or the bench test of section 7 refutes it).**
+both packs and needs no new part, and the scaling it uses is the calibration TI's engineer named as the only way on
+this part (E2E 854878), done by TI's own procedure (SLUUBF9 3.3.3) with TI's method (SLUA760); reverse by taking (b) or
+(c) if TI's answer to Q-TI-A1 or the bench test of section 7 refutes it).**
 
 ## 3. The scaling, against TI's documents
 
@@ -113,8 +114,8 @@ and the host refuses the lid gauge's currents and capacities until it has read `
 
 - **Q-TI-A1** (TI's forum answer of section 3 item 0 says "all current related parameters" scale, which is this record's
   reading; the question asks for it in writing for the firmware revision that will be bought). "Does the BQ4050 firmware
-  (SLUUAQ3A, Revised October 2022) apply any fixed current or charge threshold
-  that is not a data-flash word of Table 14-1, for example for SLEEP entry, 0-V charging, FET-state detection or
+  (SLUUAQ3A, Revised October 2022) apply any fixed current or charge threshold that is not a data-flash word of Table
+  14-1, for example for SLEEP entry, 0-V charging, FET-state detection or
   permanent-fail checks? A pack calibrated so that the gauge's unit is 2 mA would see such a constant act at twice its
   value." If one exists, its effect is judged; if it is safety-relevant and cannot be compensated, option (b) or (c).
 - **Q-TI-A2.** "Which of 13.27 and 14.14.1.5 describes IPScale correctly for the BQ4050?" (Informative only: the design
@@ -137,7 +138,7 @@ and the host refuses the lid gauge's currents and capacities until it has read `
 ## 8. Balancing and sensing on a 12P block (unchanged hardware, stated consequences)
 
 Board PL's balancing is the gauge's internal 9.75 mA path (SLUSC67B 6.10, the value section 8a of the energy record
-uses): moving 1 percent of a 12P group (402 mAh) takes about 41 h, four times the base's 3P figure. The block must be
+uses): moving 1 percent of a 12P group (402 mAh) takes about 41 h, twice the base 4S6P's 20.6 h (section 8a). The block must be
 built from matched cells at one voltage (the pack-build step of section 8a). Four thermistors on TS1 to TS4, one per
 series group, and U2's own NTC, all on the lid block: the error term "sensed cell to hottest cell" is judged on a
 block of 48 cells with five sensors, a bench item (`THERMAL-COORDINATION.md` section 3, TEST-PLAN P14).
