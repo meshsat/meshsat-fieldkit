@@ -58,7 +58,10 @@ def main():
     reg = open(REG, encoding="utf-8").read()
     if "apply_rebind_after_circuit %s %s" % (letter, n16) in reg: refuse("already applied")
     before = yaml.safe_load(reg)
-    key = "%s@%s" % (rel, o16)
+    import re as _re
+    shas = sorted(set(_re.findall(_re.escape(rel) + r"@([0-9a-f]{16})", reg)) - {n16})
+    if len(shas) != 1: refuse("records carry %d distinct older bindings of %s: %s" % (len(shas), rel, shas))
+    key = "%s@%s" % (rel, shas[0])   # the binding to move (main's, or an earlier set 12 export); every change is computed against main
     bound = [r for r in before["records"] if key in (r.get("evidence_bound_to") or [])]
     out, done, manual = reg, [], []
     for r in bound:
