@@ -119,3 +119,28 @@ E-02); (6) an apply script for FEA-002's evidence line once EMCON.md's new hash 
   this branch; `test_tx_inhibit` 133 pass. With `apply_registry_d4e.py page` applied in the worktree, `test_requirements`
   reads 63 pass and 2 fail, both trace-page tests, because REQUIREMENTS-TRACE.md is generated from the registry and was not
   re-rendered (the integrator renders after the page phase; the script's docstring and 4d.5 now say so); registry restored.
+- 12:34 to 12:35 VGG's figures in 4d.1 rounded upward (0.49 s to 0.5 V, 0.84 s to 0.1 V); B-1's one departure from Ground
+  Control's shutdown order stated (the module's inputs fall with I_EN rather than after I_BTD, so `EMCON_HW` gains no reader).
+
+## Where the stream stands at this stop (29 September 2026, 12:35)
+
+EMCON.md at sha256/16 `173bc6357996d467` (section 4d; pointers in the head, after 0a's counts and in section 7; E-01, E-11, E-12
+extended). Row table on set 10: CLOSED AT DESK 0, OPEN 15 (rows 3 to 17), NEEDS HARDWARE 2 (rows 1, 2); predicted with the
+drafts applied and read back: 0, 2 (row 3 on S-93, row 4 on the Iridium 9704's ENABLE document), 15.
+
+Drafts for the integrator, none applied: `apply_c_d4e_f1.py` (board C, D4E-F1), `apply_b_d4e.py` (board B, B-1 RockBLOCK
+back-feed, B-2 E72 back-feed, B-3 E22 back-feed, B-4 U536's band, B-5 D4E-F2's Tpr level), `apply_registry_d4e.py` (phase
+`page` at the merge, then the page render; phase `after` only once both read-backs hold). Read-back: `tools/readback_d4e.py`
+(B 59 checks, C 4, all FAIL on set 10 as they must), with `tools/selftest_readback_c.py` showing it passes a synthetic after
+netlist and fails its mutants.
+
+What the integrator runs on the box, in order: apply_c_d4e_f1.py, board C's chain; apply_b_d4e.py, board B's chain; the two
+read-backs on the regenerated netlists (every check must PASS); RF-002's walk and the suite (the TPS3808 and SN74LVC2G07
+classes are the tools author's); apply_registry_d4e.py page, rules_render; after the regenerated netlists are committed,
+apply_registry_d4e.py after, rules_render.
+
+Still open, each with its dependency: row 3, S-93 (board A's author: a gate hold on Q24 and Q14 in the LM5176's shutdown, or
+TI's figure); row 4, the Iridium 9704 module's ENABLE behaviour (a maker's document, or bench E-04); U536's residual race and
+the band of U{s}12 to U{s}15 (E-11); every row's radio-side latency term (E-01 to E-10, E-12); the walk's classes for the new
+parts, the USBLC6-2's VBUS and the declared bench headers (tools author); the plate's light guide (S-44, fabrication release).
+No box was used and no process is left running.
