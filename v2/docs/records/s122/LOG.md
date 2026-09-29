@@ -241,3 +241,16 @@ No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py
   then committed; `test_close_s122.py` ALL PASS; the closure closed S-122 (CFL-016 PASS) and refused a second run;
   after it 0 errors, 2 warnings, 59 rules 0 errors, the tests 72 passed, `claims_check` PASS 91 of 91. The clone is
   deleted.
+
+## Round 8 (the answer to `checks/check-s122-7.md`: 1 blocking, 5 minor), 29 and 30 September 2026
+
+- 23:58 Check read whole (the checker's report, filed byte for byte as `checks/check-s122-7.md`).
+- 00:01 (one label for the round's work, read from `date`):
+  - B1: the finder's clause of the scope statement in the check's wording (a five-digit DS code is dropped, not read).
+  - m4: `apply_registry_s122_r4.ESCAPES`, one list read by S-122's title sentence and the follow-up item's title, with
+    m3's two role mutants (each read TRUE here with its row's judgement), m5's "Lapp article" miss and the two figure
+    forms the scan does not read.
+  - m1: `apply_docs_s122_r8.py --check`, then its run: 1 edit; a second run refuses.
+  - m2: the closure's evidence names `apply_docs_s122_r7.py` and `apply_docs_s122_r8.py`.
+  - Outputs regenerated: only the header lines of `inventory.out` and `verdicts.out` moved; `test_close_s122.py` ALL
+    PASS; the texts pass the registry script's screen.

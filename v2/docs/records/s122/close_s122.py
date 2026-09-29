@@ -371,10 +371,11 @@ def gate_set14(chk):
           (`verdicts.figures_uncovered`, `verdicts._fig_match`). A figure with no source to assert against takes its
           line off the closing list, NOT DERIVABLE; none does at round 7.
     What the gate does NOT catch (its known escape classes, carried by the follow-up item the registry script opens, with
-    disposition PROCESS; the documents do not hang on them): a number with no unit (2242, USB 3) and any figure off
-    the closing list; a role noun outside ROLE_NOUN (FET, source, generator, interface); a stale part placed in a clause
-    that states a date or a history word ('fitted since 26 September 2026'); a designator written beside a part it
-    does not carry ('the TLV75801 gate-bias LDO on PA_KEY (U17'); and a part number of a shape the finder does not read.
+    disposition PROCESS; the documents do not hang on them) are listed once, in apply_registry_s122_r4.ESCAPES, which
+    both S-122's title sentence and the follow-up item's title read (round 8, check-s122-7 m4): among them a number
+    with no unit and any figure off the closing list, a role noun outside ROLE_NOUN, a second role noun with no part of
+    its own, a qualifier holding a digit, a stale part in a dated clause, a designator beside a part it does not carry,
+    and the finder's shapes.
     Since round 5 the probe of (a) also takes every part number a semiconductor's, crystal's or relay's value in the six
     netlists starts with (check-s122-4 m1). The gate reads the verdicts; whether each corrected sentence is true in
     substance stays the filed check's to say."""
@@ -496,12 +497,14 @@ def main():
                "s122lib.SCOPE sets (outside it the scripts read nothing: %s), were inventoried (inventory.py) and judged "
                "against the committed netlists of boards A, B, C, D, E and P and the generators (verdicts.py and "
                "judgements.py), makers' part numbers among what the finder reads since round 4; verdicts-base.out read %s STALE sentences of %s in the base's documents at e57a7365, and "
-               "apply_docs_s122.py, apply_docs_s122_r2.py, apply_docs_s122_r3.py, apply_docs_s122_r4.py, apply_docs_s122_r5.py and "
-               "apply_docs_s122_r6.py corrected the five correctable documents and the status page, asserting every part, "
+               "apply_docs_s122.py, apply_docs_s122_r2.py, apply_docs_s122_r3.py, apply_docs_s122_r4.py, apply_docs_s122_r5.py, "
+               "apply_docs_s122_r6.py, apply_docs_s122_r7.py and apply_docs_s122_r8.py corrected the five correctable "
+               "documents and the status page, asserting every part, "
                "pin, net, count, figure and generator line their new text names before they wrote; on the lines of the "
                "closing list every figure with a unit and every spelled count is bound to an assertion of the netlists, "
                "the board files, a maker's page, a generator's text (at a commit) or a decision's record that states its "
-               "values in order with their signs (close_s122.py's scan, rounds 6 and 7); the instrument's known escape "
+               "values in order with their signs, and its unit where the source states one (close_s122.py's scan, rounds 6 "
+               "and 7); the instrument's known escape "
                "classes are carried by %s (disposition PROCESS). CONOPS.md, a baselined "
                "definition, is restored to its text at c5430071 and read through handover/DEFINITION-STATUS.md: each of its "
                "passages whose value differs from the netlists is BASELINE with its current value kept on the status page "
