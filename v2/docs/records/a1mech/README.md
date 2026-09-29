@@ -200,6 +200,12 @@ with 400 Wp in a 200 W window), not this stream's.
   is in no Peli file; with the tipping line 14.5 further in (Y 100, feet inboard) the case stands at 100 degrees on 5.7 degrees
   at the worst and tips on level ground from 120 degrees, so the slope limit is set after T-A1-3 measures the feet and the stop.
 
+- **REQ-023** (under 45.4 kg closed): the central estimate is 15.41 kg with the lid pack; the pack adds about 4.3 kg (3.54 in
+  the lid, 0.75 in the base), far inside the limit; the kit's total stays TBD (ARCHITECTURE.md 11).
+- **The lid pack's temperature** (section 9h) is not a mechanical result: the cells lie 2.2 (plate and bond) under the lid's
+  skin, which faces the sky when the lid is closed and the operator's side when it is open; the lid in the sun (D-02e's shade
+  rule) and the cells' +20 C basis are the thermal and energy streams' items.
+
 ## 6. The base pockets (`lid_pack_a1.out` section 5; sheet A1-6)
 
 | Row | Worst | x2 | Verdict |
