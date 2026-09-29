@@ -1,7 +1,7 @@
 (export (version "E")
   (design
-    (source "/root/int13ab/rtk/v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch")
-    (date "2026-09-29T12:21:00+0000")
+    (source "/root/int13ab2/rtk/v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch")
+    (date "2026-09-29T12:34:05+0000")
     (tool "Eeschema 9.0.9-9.0.9~ubuntu24.04.1")
     (sheet (number "1") (name "/") (tstamps "/")
       (title_block

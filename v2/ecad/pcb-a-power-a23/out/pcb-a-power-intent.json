@@ -1,6 +1,6 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-29 12:20",
+ "written": "2026-09-29 12:33",
  "bypass": [
   {
    "cap": "C8",
@@ -1111,6 +1111,16 @@
    "v_max": 20.7,
    "v_min": 0.0,
    "basis": "restart guard (fourth fix-up, R4A-N15): Q38's drain, VBUS20 through the four 510 Ohm bleed resistors (VBUS20's 20.7 V while Q38 is off)"
+  },
+  "IADPT": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "U3's adapter current monitor and inductance-programming pin: recommended 0 to 3.3 V and the output clamp at most 3.3 V (TI SLUSE66A PDF pages 8 and 12); no part takes its supply from it"
+  },
+  "CH_COMP1": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "U3's buck-boost compensation pin 1: recommended 0 to 3.3 V, absolute maximum 3.6 V (TI SLUSE66A PDF page 8); no part takes its supply from it"
   },
   "CH_SW1": {
    "v_max": 20.0,

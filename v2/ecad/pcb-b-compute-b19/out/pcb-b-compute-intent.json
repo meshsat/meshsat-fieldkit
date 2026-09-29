@@ -1,6 +1,6 @@
 {
  "board": "pcb-b-compute",
- "written": "2026-09-29 12:20",
+ "written": "2026-09-29 12:33",
  "bypass": [
   {
    "cap": "C112",
@@ -2711,9 +2711,11 @@
     "U112": 0.001,
     "U113": 0.001,
     "U114": 0.001,
-    "U115": 0.001
+    "U115": 0.001,
+    "Q101": 0.0033,
+    "R148": 0.0033
    },
-   "note": "slot 1's module-supplied 3.3 V. This board decouples it, level-shifts against it (Q101 to Q105 and their pull-ups) and runs from it the slot's EMCON gates U112 to U115 (round 8, EMCON L3); 1 mA a gate",
+   "note": "slot 1's module-supplied 3.3 V. This board decouples it, level-shifts against it (Q102 to Q105 and their pull-ups), runs the power LED from it through the BC857 buffer Q101 and R150 (1 k) and the ACT LED through R148 (1 k), at most 3.3 mA each, and runs from it the slot's EMCON gates U112 to U115 (round 8, EMCON L3); 1 mA a gate",
    "always_on": true,
    "always_on_why": "the module's OWN 3.3 V output on its receptacle: this board consumes it and cannot switch it",
    "converted": false
@@ -2813,9 +2815,11 @@
     "U214": 0.001,
     "U215": 0.001,
     "U220": 0.001,
-    "U554": 0.001
+    "U554": 0.001,
+    "Q201": 0.0033,
+    "R248": 0.0033
    },
-   "note": "slot 2's module-supplied 3.3 V. This board decouples it, level-shifts against it (Q201 to Q205 and their pull-ups) and runs from it the slot's EMCON gates U212 to U215 (round 8, EMCON L3), U220 (SD-EMC-1r8) and U554 (D4E-B B-5); 1 mA a gate",
+   "note": "slot 2's module-supplied 3.3 V. This board decouples it, level-shifts against it (Q202 to Q205 and their pull-ups), runs the power LED from it through the BC857 buffer Q201 and R250 (1 k) and the ACT LED through R248 (1 k), at most 3.3 mA each, and runs from it the slot's EMCON gates U212 to U215 (round 8, EMCON L3), U220 (SD-EMC-1r8) and U554 (D4E-B B-5); 1 mA a gate",
    "always_on": true,
    "always_on_why": "the module's OWN 3.3 V output on its receptacle: this board consumes it and cannot switch it",
    "converted": false
@@ -2923,9 +2927,11 @@
     "U550": 0.001,
     "U551": 0.001,
     "U552": 0.001,
-    "U553": 0.001
+    "U553": 0.001,
+    "Q301": 0.0033,
+    "R348": 0.0033
    },
-   "note": "slot 3's module-supplied 3.3 V. This board decouples it, level-shifts against it (Q301 to Q305 and their pull-ups) and runs from it the slot's EMCON gates U312 to U315 (round 8, EMCON L3) and the E22's gates and buffers U544 to U553 (D4E-B B-3); 1 mA a gate",
+   "note": "slot 3's module-supplied 3.3 V. This board decouples it, level-shifts against it (Q302 to Q305 and their pull-ups), runs the power LED from it through the BC857 buffer Q301 and R350 (1 k) and the ACT LED through R348 (1 k), at most 3.3 mA each, and runs from it the slot's EMCON gates U312 to U315 (round 8, EMCON L3) and the E22's gates and buffers U544 to U553 (D4E-B B-3); 1 mA a gate",
    "always_on": true,
    "always_on_why": "the module's OWN 3.3 V output on its receptacle: this board consumes it and cannot switch it",
    "converted": false
@@ -4167,6 +4173,16 @@
    "v_max": 3.6,
    "v_min": 0.0,
    "basis": "the U17's internal regulator output on VDD (pin 6): 3.1 to 3.6 V (VREGOUT, CP2102N data sheet Rev 1.5 p.12, '3.3 V (out)' in the p.5 figure), feeding only the part itself, its RSTb pull-up and its two bypass capacitors"
+  },
+  "ZBA_RXD": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "ZBA's RX line: U540's open-drain output pulled up to the gated +3V3_ZB through R536 (SD-EMC-2, D4E-B); at most the rail; no part takes its supply from it"
+  },
+  "ZBB_RXD": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "ZBB's RX line: U542's open-drain output pulled up to the gated +3V3_ZB through R537 (SD-EMC-2, D4E-B); at most the rail; no part takes its supply from it"
   },
   "RB_3V3": {
    "v_max": 3.6,

@@ -2,7 +2,7 @@
  "what": "the generator that wrote this netlist, by content",
  "letter": "b",
  "netlist": "pcb-b-compute.net",
- "generator_sha": "f4f4b9af548617b4",
+ "generator_sha": "93fd487810b919db",
  "identity_since": "2026-09-26",
  "generator_files": [
   "boards/b.json#gen_env",
@@ -84,7 +84,7 @@
   "gen_footprints_e.py": "1c1fab411acfa1d5",
   "gen_footprints_idc.py": "17716f42fc0824a5",
   "gen_footprints_panel.py": "8291174d7f0a2993",
-  "gen_sch_b.py": "fc1f574308fd47ed",
+  "gen_sch_b.py": "22c52ad28af71340",
   "idc_pads.py": "359895768625712d",
   "intent.py": "0071fe553548eb5d",
   "kisch.py": "3e28374d15be25e0",
@@ -151,5 +151,5 @@
   "schlayout.py": "a9eee3d6b0b38bae"
  },
  "schematic_sha256": "e85e29a824e40dab54996b20ac93474f",
- "taken": "2026-09-29T12:21:01+00:00"
+ "taken": "2026-09-29T12:34:06+00:00"
 }
