@@ -34,3 +34,5 @@ Worker: one Claude author, worktree `a1mech`, branch `fnd/a1mech` from `13b5352b
   in: 5.7 degrees at 100 degrees of opening). Hand counts of two other constructions (holders, cells along Y) recorded as ESTIMATE.
 - 02:53: the solids and their check re-run on the box at `91f9f749`: PASS for A, B, C, C10, D, both controls fail as they must.
 - 02:54: `DECISION-A1.md` (274 words) drafted for the integrator; the lid's growth stated from 1.4 kg (shell and QMX set).
+- 02:57: the QMX DC lead's start corrected to the jack's place (X 106.3: the unit spans X 95.6 to 158.6, its knob edge west, the
+  DC jack 10.2 to 11.2 from it; the first issue used 94.5); the case's centre of mass printed for the central estimate.

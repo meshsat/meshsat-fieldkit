@@ -257,7 +257,7 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    power poles of 25 A or more and four signal contacts, sealed mated and unmated, on the plate's back band or at a site outside every
    lid item's plan; on the plate it must clear the frame's ring, the backer's top strip and B16's tall parts. Until it is designed, the
    lid pack cannot be connected with the lid closed and sealed.
-   the QMX's DC lead (r2: looped back at R 20 WEST of the tray) is re-routed EAST because the pack now lies west of the tray: (94.5, -37.5) -> (94.5, -92.9) -> (114.5, -112.9) -> (158.0, -112.9) -> (178.0, -92.9) -> (178.0, 100.0)
+   the QMX's DC lead (r2: looped back at R 20 WEST of the tray) is re-routed EAST because the pack now lies west of the tray: (106.3, -37.5) -> (106.3, -92.9) -> (126.3, -112.9) -> (158.0, -112.9) -> (178.0, -92.9) -> (178.0, 100.0)
 
 4. MASS AND STABILITY (arrangement B, which holds 48 cells or more with HF; A for comparison)
    B: HF kept, no tablet in the lid: lid 4.90 kg in all
@@ -288,6 +288,9 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    tipping line: Y 114.49 (the outer flat bottom's edge, INFERRED), feet at Z -8.38; hinge axis Y 155.0, Z 111.0 (ESTIMATE); the lid's stop angle
    is stated by no held Peli file (TBD): swept 90 to 180 degrees; each row is the worst over base 7 to 14 kg, CG Y -20..+20, Z 45..65
    and the hinge axis Y 147..163
+   B, central estimate (base 9 kg at (0, 0, 55)), lid at   0 deg: case 15.41 kg, centre of mass (-2.2, 3.0, 80.1); lid alone (-6.8, 9.4, 138.5)
+   B, central estimate (base 9 kg at (0, 0, 55)), lid at  90 deg: case 15.41 kg, centre of mass (-2.2, 58.1, 117.7); lid alone (-6.8, 182.5, 256.6)
+   B, central estimate (base 9 kg at (0, 0, 55)), lid at 100 deg: case 15.41 kg, centre of mass (-2.2, 66.0, 115.4); lid alone (-6.8, 207.4, 249.6)
    arrangement  lid open   worst CG Y   level ground   worst critical back slope (tips beyond)
    B                0 deg      13.87     stands          45.9 deg
    B               90 deg      80.08     stands          13.5 deg

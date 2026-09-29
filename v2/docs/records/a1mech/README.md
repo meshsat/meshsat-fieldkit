@@ -187,6 +187,8 @@ with 400 Wp in a 200 W window), not this stream's.
 - **Base:** shell 1.51 kg; contents swept 7 to 14 kg at Z 45 to 65 and Y -20 to +20 (ARCHITECTURE.md 11 sources a floor of
   about 7.0 kg; much of the kit has no sourced mass). Tipping line Y 114.49 (the outer flat bottom's edge, INFERRED), feet at
   Z -8.38.
+- **Centre of mass (B, central estimate: base contents 9 kg at (0, 0, 55)):** the case 15.41 kg; lid closed (-2.2, 3.0, 80.1),
+  lid at 90 degrees (-2.2, 58.1, 117.7), at 100 degrees (-2.2, 66.0, 115.4); the lid alone closed (-6.8, 9.4, 138.5).
 - **Result (worst over the sweep, the hinge axis Y 147 to 163 included):** stands on level ground at 90 to 120 degrees of
   opening; tips on level ground from 135 degrees (worst centre of mass Y 116.83 against 114.49). Critical back slope at the
   worst: 13.5 degrees at 90, 10.0 at 100, 6.6 at 110, 3.4 at 120.
