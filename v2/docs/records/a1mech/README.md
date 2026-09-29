@@ -199,11 +199,10 @@ with 400 Wp in a 200 W window), not this stream's.
   Peli's own stop proves to be at 100 degrees or less, the stay is not needed for stability. **Sensitivity:** the feet's place
   is in no Peli file; with the tipping line 14.5 further in (Y 100, feet inboard) the case stands at 100 degrees on 5.7 degrees
   at the worst and tips on level ground from 120 degrees, so the slope limit is set after T-A1-3 measures the feet and the stop.
-
 - **REQ-023** (under 45.4 kg closed): the central estimate is 15.41 kg with the lid pack; the pack adds about 4.3 kg (3.54 in
   the lid, 0.75 in the base), far inside the limit; the kit's total stays TBD (ARCHITECTURE.md 11).
 - **The lid pack's temperature** (section 9h) is not a mechanical result: the cells lie 2.2 (plate and bond) under the lid's
-  skin, which faces the sky when the lid is closed and the operator's side when it is open; the lid in the sun (D-02e's shade
+  skin, which faces the sky when the lid is closed and faces backward, away from the operator, when it is open; the lid in the sun (D-02e's shade
   rule) and the cells' +20 C basis are the thermal and energy streams' items.
 
 ## 6. The base pockets (`lid_pack_a1.out` section 5; sheet A1-6)
@@ -291,8 +290,7 @@ ARCHITECTURE.md section 11. No new maker document was filed: Samsung's tablet pa
 (one refused, none in the Wayback index).
 
 Generated on the rented CAD box (Ubuntu 24.04.5 LTS, Python 3.12.3, the d7fit CAD venv whose `pip freeze` equals
-`v2/cad/requirements-cad.lock` line for line apart from its comment line; build123d 0.13.0) from commit `91f9f749` of
-`fnd/a1mech` (the solids and `cad/lid_pack_a1_cad.out`); the later changes to `lid_pack_a1.py` (printed lines, the QMX DC
-lead's route, the centre-of-mass rows) are not read by the solids. `lid_pack_a1.out` and the drawing set are regenerated on the runner at the
+`v2/cad/requirements-cad.lock` line for line apart from its comment line; build123d 0.13.0) from commit `80ab97b1` of
+`fnd/a1mech` (the solids and `cad/lid_pack_a1_cad.out`), where `v2/cad/lid_pack_a1.py` has its final content. `lid_pack_a1.out` and the drawing set are regenerated on the runner at the
 branch's last commit (plain Python 3; matplotlib 3.10.9 for the sheets). AI review only; no qualified mechanical or battery engineer has reviewed this work (D-09's qualified battery
 review applies to both packs).
