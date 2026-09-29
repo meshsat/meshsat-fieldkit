@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """CON-010 and REQ-044 rebound to the FINAL v2/docs/CURRENT-EVIDENCE.md of integration set 13 (MESHSAT-1357, 29 September
 2026; a copy of v2/docs/records/int13/apply_rebind_page_set12.py with the entry's wording for this set). Both records are bound to the
-page by sha256/16 and the integration re-rendered it (the set 6 line merged with the H3 line, the renderer's derived
+page by sha256/16 and the integration re-rendered it (set 13: board C's regenerated netlist on its rows; set 6's wording follows: the set 6 line merged with the H3 line, the renderer's derived
 head sentence and limit notices, CON-010's own re-decision, the dispositions). This script re-reads the rows each record
 rests on in the NEW page and in the readings behind them, writes one evidence entry per record that starts with the
 file's path and names the sections that differ and the rows re-read, and rebinds each record to the new page. It

@@ -135,7 +135,8 @@ code until re-taken.
 On board C, Q3_G's class takes `models_asked` from 6 to 5, and `ti-sn74lvc1g34.pdf`, `diodes-74lvc1g34.pdf` and the
 model `sn74lvc1g00.ibs` leave the reading; the two documents the allowances cite join it. `return_via.py` and
 `ref_change.py` skip LOW_SPEED_OR_DC, so Q3_G and EMCON_HW_DRV are no longer judged by them, and any tool reading
-`signal_class`'s class of those nets (via_audit, per the check) reads the new class: those readings owe a re-take.
+`signal_class`'s class of those nets reads the new class: those readings owe a re-take (via_audit reads no signal class, only
+the board table's two ring minimums; the integration check of set 13, check-int14-2 n3).
 
 ## 6. For the integrator, in order
 

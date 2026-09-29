@@ -3559,6 +3559,24 @@ open_items:
       and the parts it gates is re-derived from the committed netlists of the set that carries them by a script that
       asserts each part it names, and a filed independent check states in its own words which documents and lines it
       read; CFL-016 is then re-read.
+      Added at integration set 13 (v2/docs/records/int14/checks/check-int14-1.md, blocking B1): PANEL.md section 3's pin
+      map rows for GPIO 2 to 5 name EPD_SCL, EPD_SDA, EPD_DC and EPD_CS, where board C's netlist since set 13 puts U3's
+      pins on EPD_SCL_R, EPD_SDA_R, EPD_DC_R and EPD_CS_R through R53 to R56. S-122 closes only when these rows, like
+      the EMCON statements, are re-derived from the committed netlists of the set that carries it.
+  - id: S-123
+    class: SESSION
+    status: OPEN
+    title: >-
+      (the integration checks of set 13, v2/docs/records/int14/checks/check-int14-1.md minor 2 and check-int14-2.md
+      R2-B2) tools/return_via.py and tools/ref_change.py read a board's signal classes from tools/boards/<letter>.json,
+      and tools/via_audit.py reads its annular_min_mm and via_ring_min_mm from the same file; none of the three records
+      that file in its readings. None of the three is in rules_status.CONFIG_INPUTS today, so their readings read
+      CONFIG_UNDECLARED and never count as current; the gap is that when they are declared, the board table must be
+      among their inputs. Set 13 reclassed board C's Q3_G and EMCON_HW_DRV and added the EPD_*_R classes, which
+      return_via and ref_change read; board C's return_via and ref_change (return_stitch) readings are dated 21
+      September 2026 and were not re-taken (via_audit reads neither class, and its two values did not change on board
+      C). Owner: the tools author. Closed when the three tools record the board table in their readings, rules_status
+      declares it for them, and board C's return_via and return_stitch readings are re-taken on the box.
 closed_items:
   - id: S-89
     closed_by: commit aaed6daa4434f2ae94331cdafb3134056fb1eb97
@@ -13087,6 +13105,8 @@ records:
       Created on 27 September 2026 by the layer-3 closer so that every BLOCKER or MUST_JUSTIFY rule of pcb_rules.yaml
       has a parent record and a change of requirement can be traced to the rules it affects (the layer audit found 27
       rules named by no record). The rules' own readings are rules_status's and are never copied here.
+    waits_on:
+      - S-123
 
   - id: REQ-070
     kind: requirement
@@ -13866,6 +13886,17 @@ records:
           new series resistor; none of the documents it names describes the driver side of board C's e-paper lines, and
           its reading (FAIL, waiting on S-122) is not moved by the four resistors; rebound to c9f7394594201045. No
           result changes.
+      - >-
+          v2/docs/records/int14/checks/check-int14-1.md (the integration check of set 13, blocking B1; answered by
+          v2/docs/records/int14/apply_check14_fixes.py): the entry written by apply_rebind_after_circuit_set13 on board
+          C's netlist said that none of the documents this record names describes the driver side of board C's e-paper
+          lines. That clause is withdrawn. Read by that script at this commit: PANEL.md section 3's pin map gives GPIO 2
+          and 3 to EPD_SCL and EPD_SDA and GPIO 4 to 7 to EPD_DC, EPD_CS, EPD_RST and EPD_BUSY, and on board C's netlist
+          c9f7394594201045 U3's pins 4 to 7 (GPIO 2 to 5) sit on EPD_SCL_R, EPD_SDA_R, EPD_DC_R and EPD_CS_R, each
+          joined to its line by a 27R resistor (R53 to R56). So set 13 makes those rows describe a replaced circuit. The
+          rest of that entry stands: the R53 this record's earlier evidence names is board E's. This record reads FAIL
+          and waits on S-122, whose closure re-reads the named documents against the netlists of the set that carries
+          it; the rows are added to S-122. The result stays FAIL.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
@@ -15341,6 +15372,8 @@ records:
       analogue rules no record named. The failover fabric's own links are also held by FEA-003 (core), which names
       IMP-001, IMP-002, PAIR-001 and STK-001; the rules stay BLOCKERs on their boards whatever this record's scope,
       because a rule's release effect is its own.
+    waits_on:
+      - S-123
 
   - id: REQ-064
     kind: requirement

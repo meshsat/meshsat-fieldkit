@@ -2,8 +2,9 @@
 
 The independent check of stream rf2walk, round 3 (set 12's CHECK-3, filed as `records/int13/checks/check-set12-3.md`),
 accepted the walk with minors on `v2/ecad/tools/tx_inhibit.py`; this record answers its items 1 and 3. Its item 2 (the
-SW-prefix contact rule) stays open and is not answered here. `apply_walk_minors.py` answers them. It asserts each
-old text once and refuses a second run.
+SW-prefix contact rule) stays open and is not answered here. `apply_walk_minors.py` answers items 1 and 3 (it asserts
+each old text once and refuses a second run); the two minors of this record's own check (`checks/check-walkmin-1.md`,
+items 1 and 2) were answered afterwards by direct edits in `f9bc2f6f`, and its items 3 to 6 are carried.
 
 - **m1.** The toggle declaration named no lugs. A toggle wired across two throws that never close together (lugs 1 and 3
   of the APEM 5636ADKB-2V), or across the other lever position's contact (2 and 3), read as the line's source.
