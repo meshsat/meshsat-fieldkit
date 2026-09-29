@@ -64,10 +64,27 @@ def run_assert(a, nls):
     if av:
         hits = sorted(r for r in nls[av.group(1)]["comps"] if av.group(2) in L.TX.value(nls[av.group(1)], r))
         return bool(hits), "board %s has a part whose value holds %r (%s)" % (av.group(1), av.group(2), ",".join(hits[:6]) or "none")
+    cm = re.match(r"^([ABCDEP]):#(fp|val|ref)~(.+)=(\d+)$", a.strip())
+    if cm:
+        nl, how, pat, want = nls[cm.group(1)], cm.group(2), cm.group(3), int(cm.group(4))
+        if how == "fp": hits = [r for r in nl["comps"] if pat in nl["comps"][r]["fp"]]
+        elif how == "val": hits = [r for r in nl["comps"] if pat in L.TX.value(nl, r)]
+        else: hits = [r for r in nl["comps"] if r.startswith(pat)]
+        return len(hits) == want, "board %s: %d parts whose %s holds %r (read: %d, %s)" % (
+            cm.group(1), want, {"fp": "footprint", "val": "value", "ref": "designator"}[how], pat, len(hits),
+            ",".join(sorted(hits)[:20]))
     nv = re.match(r"^([ABCDEP]):!~(.+)$", a.strip())
     if nv:
         hits = sorted(r for r in nls[nv.group(1)]["comps"] if nv.group(2) in L.TX.value(nls[nv.group(1)], r))
         return not hits, "board %s has no part whose value holds %r (found: %s)" % (nv.group(1), nv.group(2), ",".join(hits) or "none")
+    rg = re.match(r"^REG:([A-Z]+-\d+)\.(\w+)(=|~)(.+)$", a.strip())
+    if rg:
+        import yaml
+        if "reg" not in _ROWS:
+            _ROWS["reg"] = {r["id"]: r for r in yaml.safe_load(L.read("v2/ecad/tools/pcb_requirements.yaml"))["records"]}
+        got = (_ROWS["reg"].get(rg.group(1)) or {}).get(rg.group(2))
+        ok = (str(got) == rg.group(4)) if rg.group(3) == "=" else (rg.group(4) in str(got))
+        return ok, "registry %s %s %s %s (read: %s)" % (rg.group(1), rg.group(2), rg.group(3), rg.group(4), got)
     sm = re.match(r"^SHA:([ABCDEP])=([0-9a-f]+)$", a.strip())
     if sm:
         got = nls[sm.group(1)]["sha16"]
@@ -142,6 +159,17 @@ def check_gens(s, nm, nls, j):
     return fails, notes
 
 
+_ROWS = {}
+
+
+def status_rows():
+    """The row keys (DC-nn) of the status page's table of CONOPS's current circuit values."""
+    if "rows" not in _ROWS:
+        txt = L.read("v2/docs/handover/DEFINITION-STATUS.md")
+        _ROWS["rows"] = set(re.findall(r"(?m)^\| (DC-\d+) \|", txt))
+    return _ROWS["rows"]
+
+
 def judge(inv, nls):
     rows = []
     for sid, rel, key, kind, line, s, nm in inv:
@@ -157,15 +185,31 @@ def judge(inv, nls):
             (n3 if ok else f3).append(msg)
         v = j["v"]
         why = j.get("why", "")
+        f4 = []
+        if nm.get("counts") and not j.get("counts_ok") and not any(re.match(r"^[ABCDEP]:#", a) for a in j.get("a", ())):
+            f4.append("a count the sentence states (%s) is neither asserted nor said to be outside the netlists"
+                      % "; ".join(nm["counts"]))
+        kept_ok = None
+        if v == "B":
+            if rel not in L.BASELINED: f3.append("BASELINE is only for a baselined document")
+            rows = status_rows()
+            kept_ok = j.get("kept") in rows
+            if not kept_ok: f3.append("the status page keeps no row %s for it" % j.get("kept"))
         if v == "S":
             verdict = "STALE"
+        elif f4:
+            verdict = "UNJUDGED"
+        elif v == "B":
+            verdict = "BASELINE" if kept_ok and not (f1 or f2) and not [x for x in f3 if "status page" in x or "baselined" in x] else "STALE"
         elif f1 or f2 or f3:
             verdict = "STALE" if v == "T" else "NOT DERIVABLE"
         else:
             verdict = {"T": "TRUE", "N": "NOT DERIVABLE"}[v]
         det = []
         if why: det.append("judgement: " + why)
-        if f1 or f2 or f3: det += ["FAILS: " + x for x in f1 + f2 + f3]
+        if v == "B": det.append("baseline value (CONOPS.md's head and handover/DEFINITION-STATUS.md): its current value is "
+                                "kept on the status page, row %s, which this script judges directly" % j.get("kept"))
+        if f1 or f2 or f3 or f4: det += ["FAILS: " + x for x in f1 + f2 + f3 + f4]
         det.append("names looked up: %d parts, %d nets%s" % (len(nm["refs"]), len(nm["nets"]), ("; " + "; ".join(n1)) if n1 else ""))
         if n2: det.append("citations: " + "; ".join(n2))
         if n3: det.append("asserted (%d): " % len(n3) + "; ".join(n3))
@@ -181,23 +225,24 @@ def render(rows, nls):
     counts = {}
     for sid, d, v, det, s in rows:
         doc = sid.split("#")[0]
-        c = counts.setdefault(doc, {"sentences": 0, "TRUE": 0, "STALE": 0, "NOT DERIVABLE": 0, "UNJUDGED": 0, "asserted": 0})
+        c = counts.setdefault(doc, {"sentences": 0, "TRUE": 0, "STALE": 0, "BASELINE": 0, "NOT DERIVABLE": 0, "UNJUDGED": 0,
+                                    "asserted": 0})
         c["sentences"] += 1; c[v] += 1
         c["asserted"] += sum(int(re.match(r"asserted \((\d+)\)", x).group(1)) for x in det if x.startswith("asserted ("))
         out.append("%s [%s] %s" % (sid, d, v))
         out.append("    " + s)
         for x in det: out.append("    " + x)
     out.append("")
-    out.append("# counts per document (sentences, TRUE, STALE, NOT DERIVABLE, UNJUDGED, assertions evaluated)")
-    tot = {"sentences": 0, "TRUE": 0, "STALE": 0, "NOT DERIVABLE": 0, "UNJUDGED": 0, "asserted": 0}
+    out.append("# counts per document (sentences, TRUE, STALE, BASELINE, NOT DERIVABLE, UNJUDGED, assertions evaluated)")
+    tot = {"sentences": 0, "TRUE": 0, "STALE": 0, "BASELINE": 0, "NOT DERIVABLE": 0, "UNJUDGED": 0, "asserted": 0}
     for rel, _s in L.SCOPE:
         doc = os.path.basename(rel)
         c = counts.get(doc, {k: 0 for k in tot})
         for k in tot: tot[k] += c[k]
-        out.append("%s: %d sentences, %d TRUE, %d STALE, %d NOT DERIVABLE, %d UNJUDGED, %d assertions" % (
-            doc, c["sentences"], c["TRUE"], c["STALE"], c["NOT DERIVABLE"], c["UNJUDGED"], c["asserted"]))
-    out.append("total: %d sentences, %d TRUE, %d STALE, %d NOT DERIVABLE, %d UNJUDGED, %d assertions" % (
-        tot["sentences"], tot["TRUE"], tot["STALE"], tot["NOT DERIVABLE"], tot["UNJUDGED"], tot["asserted"]))
+        out.append("%s: %d sentences, %d TRUE, %d STALE, %d BASELINE, %d NOT DERIVABLE, %d UNJUDGED, %d assertions" % (
+            doc, c["sentences"], c["TRUE"], c["STALE"], c["BASELINE"], c["NOT DERIVABLE"], c["UNJUDGED"], c["asserted"]))
+    out.append("total: %d sentences, %d TRUE, %d STALE, %d BASELINE, %d NOT DERIVABLE, %d UNJUDGED, %d assertions" % (
+        tot["sentences"], tot["TRUE"], tot["STALE"], tot["BASELINE"], tot["NOT DERIVABLE"], tot["UNJUDGED"], tot["asserted"]))
     return "\n".join(out) + "\n", tot
 
 
@@ -210,8 +255,8 @@ def main():
         sys.stdout.write(text)
     else:
         open(os.path.join(HERE, "verdicts.out"), "w", encoding="utf-8").write(text)
-        print("verdicts.py: %d sentences: %d TRUE, %d STALE, %d NOT DERIVABLE, %d UNJUDGED" % (
-            tot["sentences"], tot["TRUE"], tot["STALE"], tot["NOT DERIVABLE"], tot["UNJUDGED"]))
+        print("verdicts.py: %d sentences: %d TRUE, %d STALE, %d BASELINE, %d NOT DERIVABLE, %d UNJUDGED" % (
+            tot["sentences"], tot["TRUE"], tot["STALE"], tot["BASELINE"], tot["NOT DERIVABLE"], tot["UNJUDGED"]))
     return 0
 
 

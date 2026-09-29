@@ -28,20 +28,27 @@ NETLISTS = {"A": "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net",
 GENERATORS = {"A": "v2/ecad/tools/gen_sch_a.py", "B": "v2/ecad/tools/gen_sch_b.py", "C": "v2/ecad/tools/gen_sch_c.py",
               "D": "v2/ecad/tools/gen_sch_d.py", "E": "v2/ecad/tools/gen_sch_e.py", "P": "v2/ecad/tools/gen_sch_p.py"}
 
+STATUS_KEY = "Current values of CONOPS's circuit passages (stream s122, 29 September 2026)"
 # The scope: (document, the sections read). A section is named by the leading number or identifier of its heading
 # ("1", "4b", "M4"); ALL means every section. `rows` narrows a section to the table rows whose first cell starts with
 # one of the given words. Sources: CFL-016's statement and notes (pcb_requirements.yaml) and the brief of stream s122.
 SCOPE = [
     ("v2/docs/PANEL.md", {"1": None, "2": None, "3": None, "5": None, "6": None, "7": None, "9": None, "10": None}),
-    ("v2/docs/CONOPS.md", {"2a": None, "M2": None, "M4": None,
-                           "4": ("Startup", "Charging", "EMCON", "ZEROIZE", "Service"),
-                           "4a": ("PS-EMCON",), "4b": None, "4b.1": None, "4e": None, "4f": None, "5": None}),
+    ("v2/docs/CONOPS.md", {"2a": None, "M2": None, "M4": None, "4": None, "4a": None, "4b": None, "4b.1": None, "4c": None,
+                           "4d": None, "4e": None, "4f": None, "5": None}),
     ("v2/docs/V2-SPEC.md", "ALL"),
     ("v2/docs/OPERATING-ENVELOPE.md", {"2": None, "3": None, "4": None}),
     ("v2/docs/TEST-PLAN.md", "ALL"),
-    ("v2/docs/ASSEMBLY.md", {"2": ("1", "6"), "4": None, "8": None, "9": None}),
+    ("v2/docs/ASSEMBLY.md", {"2": None, "4": None, "8": None, "9": None}),
     ("v2/ecad/tools/pcb_decisions.yaml", {"28": None, "40": None}),
+    # round 2 (the baseline rule): where CONOPS's current circuit values are kept, judged directly
+    ("v2/docs/feasibility/EMCON.md", {"0a.1": None}),
+    ("v2/docs/handover/DEFINITION-STATUS.md", {STATUS_KEY: None}),
 ]
+# CONOPS.md is a baselined definition (its head; handover/DEFINITION-STATUS.md): its circuit statements are read through
+# the status page, so a CONOPS sentence whose value differs from the netlists is BASELINE when the status page keeps its
+# current value (a row of STATUS_KEY's table), and STALE when it does not.
+BASELINED = ("v2/docs/CONOPS.md",)
 DASHES = ("\u2014", "\u2013")
 
 
@@ -192,6 +199,13 @@ GATE = re.compile(r"\b(AND|NOR|NAND|OR gate|inverter|inverts?|buffer|Schmitt|ope
                   r"gate[sd]?|pull[- ]?(?:up|down)s?|pulled (?:low|high|up|down)|interlock|comparator|enable[sd]?|load switch(?:es)?|back-feed)\b")
 
 
+TOPIC = re.compile(r"\bEMCON\b")
+NUMW = "two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty"
+COUNT = re.compile(r"\b(%s)\s+(?:\w[\w&/.-]*\s+){0,4}?(LEDs?|pins?|sockets?|cards?|receptacles?|holders?|fuses?|"
+                   r"resistors?|switch(?:es)?|toggles?|jacks?|headers?|connectors?|contacts?|gates?|supervisors?|monitors?|"
+                   r"expanders?|drives?|coolers?|fans?|lands?|arrestors?|buffers?|converters?|slots?)\b" % NUMW, re.I)
+
+
 def expand(tok):
     if "{s}" in tok: return [tok.replace("{s}", str(s)) for s in (1, 2, 3)]
     return [tok]
@@ -226,7 +240,10 @@ def names(s, nets):
     boards = sorted({m.group(0) for m in BOARD.finditer(body)})
     rails = sorted({m.group(1) for m in RAIL.finditer(body)})
     gates = sorted({m.group(1).lower() for m in GATE.finditer(body)})
-    return {"refs": refs, "nets": sorted(nn), "boards": boards, "rails": rails, "gates": gates, "gens": gens}
+    topic = ["EMCON"] if TOPIC.search(body) else []
+    counts = sorted({m.group(0) for m in COUNT.finditer(body)})
+    return {"refs": refs, "nets": sorted(nn), "boards": boards, "rails": rails, "gates": gates, "gens": gens,
+            "topic": topic, "counts": counts}
 
 
 def inventory(nls=None):
