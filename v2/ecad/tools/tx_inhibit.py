@@ -1385,6 +1385,13 @@ def census(boards, walks, k0, n0, level, allowed, target=None, fet_forced=None, 
                     if n in SOURCES and any(nl["pin"].get((ref, i)) in SOURCES and nl["pin"].get((ref, i)) != n
                                             and FORCE[kind].get(0) == 0 for i in ins):
                         continue
+                    # the same buffer behind its series resistor, on the line's drive net (drive_net, stream rf2walk):
+                    # its inputs are asserted lines, so with EMCON asserted it pulls the way EMCON forces. Reached from
+                    # the other asserted line through a one-way element (board C's D23, anode on EMCON_HW, cathode on
+                    # TX_INHIBIT_n) it can lift that line only while its own input, that line, is already high.
+                    dn = drive_net(nl, n)
+                    if dn is not None and dn["ref"] == ref and dn["pin"] == pin and level == 0 and FORCE[kind].get(0) == 0:
+                        continue
                     if kind in ("BUF_OD", "INV_OD") and level == 0: continue        # can only pull it low
                     bad("a second %s output on the net (%s)" % (kind, fam["name"])); continue
                 continue                                                           # NC, VCC or GND pin
@@ -1665,18 +1672,61 @@ def fet_family(nl, ref):
     return None
 
 
+def _source_output(nl, ref, pin, s):
+    """(fam, gate kind, input nets) when `pin` of `ref` is the output of a mapped logic gate every one of whose inputs
+    sits on an asserted line other than `s` (the panel's buffer: its input on TX_INHIBIT_n, its output EMCON_HW); else
+    None."""
+    fam = logic_of(nl, ref)
+    if not fam or _unmapped(fam) or fam.get("wrong_land") or fam.get("unwired"): return None
+    for ins, o, kind in fam["gates"]:
+        nets = [nl["pin"].get((ref, i)) for i in ins]
+        if o == pin and nets and all(x in SOURCES and x != s for x in nets):
+            return fam, kind, nets
+    return None
+
+
+def drive_net(nl, n):
+    """THE LINE'S OWN SOURCE BEHIND ITS SERIES RESISTOR (stream rf2walk, 29 September 2026). Board C's round of stream
+    d4emcon (finding D4E-F1, set 12) moved U9's output onto a private net, EMCON_HW_DRV, that reaches EMCON_HW only
+    through R52 (330R 1%), so that D23 can clamp the line to TX_INHIBIT_n. Read at net level the source was then "a
+    second BUF output" on a net outside SOURCES, and the line had "no source on the line at all". A net is the drive net
+    of an asserted line when, test points aside, it carries exactly two pins: the output of a mapped logic gate whose
+    inputs all sit on asserted lines, and one end of a two-pin resistor whose other end sits on an asserted line. Returns
+    dict(line, ref, pin, res, fam, kind, ins) or None. It is a property of the wiring, not of a reference: a second
+    driver, a pull to a rail, a FET or a diode on the net, or a gate whose input is not an asserted line, and the net is
+    an ordinary one again."""
+    if not n or n in SOURCES or _dead(n): return None
+    nodes = [(r, p) for r, p, _f in nl["nets"].get(n, []) if not re.match(r"^(TP|#)", r)]
+    if len(nodes) != 2: return None
+    res = [(r, p) for r, p in nodes if re.match(r"^R\d", r) and len(pins_of(nl, r)) == 2]
+    if len(res) != 1: return None
+    r, rp = res[0]
+    far = nl["pin"].get((r, [q for q in pins_of(nl, r) if q != rp][0]), "")
+    if far not in SOURCES: return None
+    (g, gp), = [x for x in nodes if x != res[0]]
+    so = _source_output(nl, g, gp, far)
+    if so is None: return None
+    fam, kind, ins = so
+    return dict(line=far, ref=g, pin=gp, res=r, fam=fam, kind=kind, ins=ins)
+
+
 def _line_sources(nl, s):
-    """[(ref, why)] of the parts on net s that make the asserted line: a switch (the panel toggle) and a logic output
-    whose input sits on the other asserted line (the panel's buffer)."""
+    """[(ref, why)] of the parts that make the asserted line on net s: a switch (the panel toggle) and a logic output
+    whose input sits on the other asserted line (the panel's buffer), on the net itself or behind its series resistor
+    on its drive net (drive_net)."""
     out = []
     for ref, pin, _f in nl["nets"].get(s, []):
         if re.match(r"^SW\w*", ref):
             out.append((ref, "the toggle")); continue
-        fam = logic_of(nl, ref)
-        if fam and not _unmapped(fam):
-            for ins, o, kind in fam["gates"]:
-                if o == pin and any(nl["pin"].get((ref, i)) in SOURCES and nl["pin"].get((ref, i)) != s for i in ins):
-                    out.append((ref, "the %s from %s" % (fam["name"], "/".join(nl["pin"].get((ref, i)) for i in ins))))
+        so = _source_output(nl, ref, pin, s)
+        if so is not None:
+            out.append((ref, "the %s from %s" % (so[0]["name"], "/".join(so[2])))); continue
+        if re.match(r"^R\d", ref) and len(pins_of(nl, ref)) == 2:
+            m = nl["pin"].get((ref, [q for q in pins_of(nl, ref) if q != pin][0]), "")
+            d = drive_net(nl, m)
+            if d is not None and d["line"] == s:
+                out.append((d["ref"], "the %s from %s, through its series resistor %s on %s" % (
+                    d["fam"]["name"], "/".join(d["ins"]), ref, m)))
     return out
 
 
@@ -1735,6 +1785,20 @@ def _solve(nodes, fixed, res, diodes, inj=None):
 
 
 ASSUMED = "orientation not drawn"
+# A DIODE'S REVERSE CURRENT TOWARD A NODE THE NETWORK SOLVES (stream rf2walk, 29 September 2026). Board C's D23 (Diodes
+# BAT46W, DS30044 Rev. 20-2) joins EMCON_HW (anode) to TX_INHIBIT_n (cathode) since stream d4emcon's D4E-F1 (set 12). Seen
+# from EMCON_HW, a net held LOW, its anode is there, so its forward current can only drain the net; what could lift it is
+# the diode's reverse current, and the sheet states IR only at +25 C and TJ +60 C (0.3 uA and 5.0 uA at VR 1.5 V), not over
+# the -40 to +85 C column this walk reads (LEAK_COLUMN), so the state read UNDECIDED. A diode is a passive part: whatever
+# its reverse current, it flows only from the higher of its two nodes to the lower, so it cannot carry the net above the far
+# node's own level. Where the far node is the OTHER ASSERTED LINE (SOURCES), a signal node whose own fail-safe level this walk
+# judges on the same states, the diode's reverse direction is therefore entered as an IDEAL one-way element from it, which
+# bounds any reverse current from above,
+# exactly as an adverse diode is entered (no forward drop), and the far node's network is solved with the net's. A state that
+# fails only with such an element is UNDECIDED, not FAIL (_solve_net's second solve, as for ASSUMED): the ideal element
+# overstates a leakage no sheet bounds. Toward a rail, or any node that is not an asserted line (a firmware pin, a module
+# pin), the reverse current stays unbounded and the state UNDECIDED, as before.
+REVERSE_IDEAL = "its reverse current, which no held sheet bounds over the column read, taken as an ideal one-way element"
 
 
 def _solve_net(net):
@@ -1743,9 +1807,10 @@ def _solve_net(net):
     such element conducts. A failure that holds only with them is undecided, not a failure: it rests on which way a
     part points, which nobody has drawn."""
     got, on = _solve(net["nodes"], net["fixed"], net["res"], net["diodes"], net["inj"])
-    if got is None or not any(ASSUMED in x for x in on):
+    if got is None or not any(ASSUMED in x or REVERSE_IDEAL in x for x in on):
         return got, on, None
-    g2, _o2 = _solve(net["nodes"], net["fixed"], net["res"], [d for d in net["diodes"] if ASSUMED not in d[2]], net["inj"])
+    g2, _o2 = _solve(net["nodes"], net["fixed"], net["res"],
+                     [d for d in net["diodes"] if ASSUMED not in d[2] and REVERSE_IDEAL not in d[2]], net["inj"])
     return got, on, g2
 
 
@@ -1990,6 +2055,14 @@ def _network(boards, start, level, st, anchors=None):
                     a, b = (far, (k, n)) if level == 0 else ((k, n), far)
                     diodes.append((a, b, "%s %s (%s) %s %s%s" % (k, ref, v[:30], "from" if level == 0 else "to", m2,
                                                                   "" if known else ", " + ASSUMED + ", taken the adverse way")))
+                    if far not in fixed: todo.append(far)
+                    continue
+                if m2 in SOURCES and m2 != n and isinstance(far, tuple) and len(far) == 2 and far[0] != "?":
+                    # its reverse current from the OTHER asserted line, whose own level this walk judges: bounded by that
+                    # line's level (REVERSE_IDEAL). Toward any other node the reverse current stays unbounded, as before.
+                    a, b = (far, (k, n)) if level == 0 else ((k, n), far)
+                    diodes.append((a, b, "%s %s (%s) %s %s: %s" % (k, ref, v[:30], "from" if level == 0 else "to", m2,
+                                                                   REVERSE_IDEAL)))
                     if far not in fixed: todo.append(far)
                     continue
                 if level == 1 or not (is_ground(m2)):
@@ -2241,8 +2314,12 @@ def _judge_fs(net, judged, s, frag, how, exact=False):
             "resistors and a maker's own pull nominal" % ("the whole-board state" if exact else "the bound", how,
                                                           LEAK_COLUMN, TOL_DEFAULT * 100, RAIL_TOL * 100)
     if vmax >= VIL_LOW and got2 is not None and all((got2.get(x) is not None and got2.get(x) < VIL_LOW) for x in judged):
-        return dict(ok=None, text="%s rises to %.2f V only if a part whose orientation is not drawn points the way that "
-                    "lifts it (%s); %s" % (s, vmax, "; ".join(x for x in on if ASSUMED in x), detail)[:1400],
+        if any(ASSUMED in x for x in on):
+            return dict(ok=None, text="%s rises to %.2f V only if a part whose orientation is not drawn points the way that "
+                        "lifts it (%s); %s" % (s, vmax, "; ".join(x for x in on if ASSUMED in x), detail)[:1400],
+                        boards=named | set(frag), v=vmax)
+        return dict(ok=None, text="%s rises to %.2f V only if a diode's reverse current, which no held sheet bounds, were as "
+                    "large as an ideal conductor's (%s); %s" % (s, vmax, "; ".join(x for x in on if REVERSE_IDEAL in x), detail)[:1400],
                     boards=named | set(frag), v=vmax)
     in_range = [x for x in judged if all(ok for _l, (ok, _v) in net["vcc"].get(x, []))]
 
@@ -2640,8 +2717,11 @@ def own_supply(boards, walks, k, opt, lv, anchor_pin, anchor_dead_rails):
             fv, pv = th["fail_v"], th["pass_v"]
             bad_at = lambda x: x is not None and fv is not None and ((lvl == 0 and x >= fv) or (lvl == 1 and x < fv))
             if bad_at(vv) and got2 is not None and not bad_at(got2.get((k, n_read))):
-                und.append("%s: %s sits at %.2f V only if a part whose orientation is not drawn points the adverse way (%s)"
-                           % (where, n_read, vv, "; ".join(x for x in on if ASSUMED in x))); break
+                why2 = ("a part whose orientation is not drawn points the adverse way (%s)" % "; ".join(x for x in on if ASSUMED in x)
+                        if any(ASSUMED in x for x in on) else
+                        "a diode's reverse current, which no held sheet bounds, were as large as an ideal conductor's (%s)"
+                        % "; ".join(x for x in on if REVERSE_IDEAL in x))
+                und.append("%s: %s sits at %.2f V only if %s" % (where, n_read, vv, why2)); break
             if bad_at(vv):
                 fail.append("%s: %s sits at %.2f V, %s %.2f V, %s; %s" % (
                     where, n_read, vv, "at or above" if lvl == 0 else "under", fv, th["why"], detail)); break
@@ -2740,6 +2820,12 @@ ACCESSORIES = [
     dict(board="B", ref="U221", value=r"TPS3808", why="the TPS3808G30 supervisor on +3V3_S2A that holds the 5G module's "
          "FULL_CARD_POWER_OFF# low for 180 to 420 ms after the rail (SD-EMC-1r8, Quectel's Tpr); its value names the RM520N, "
          "and it is neither the radio nor its supply or keying point"),
+    # stream rf2walk, 29 September 2026 (set 12 carries stream d4emcon's D4E-B B-4):
+    dict(board="B", ref="U543", value=r"TPS3808", why="the TPS3808G30 supervisor on +5V_DEV that watches +3V3_DEV and holds "
+         "the RockBLOCK's I_EN (RB_IEN, J_RB9704 pin 3) low while +3V3_DEV is under its threshold (L4 on U536, EMCON.md 4d); "
+         "TI SBVS050N page 1: the TPS3808 family are 'microprocessor supervisory circuits' that monitor a voltage, 'asserting "
+         "an open-drain RESET signal when the SENSE voltage drops below a preset threshold'. Its value names the RockBLOCK, and "
+         "it is neither the radio nor its supply or keying point: its one output is an open drain that can only pull I_EN low"),
     dict(board="B", ref="J_QMX", value=r"QMX USB lead", why="the QMX's USB data lead: QRP Labs' schematics for PCB Rev 1, "
          "Rev 2, Rev 3/4 and Rev 5 (v2/vendor/qrp-labs/qrplabs-qmx-schematics-rev1-a.pdf, -rev2.pdf, -rev3.pdf, -rev5.pdf, "
          "page 2) draw the USB-C connector J201's VBUS pin with no connection, and Rev 5's page 1 makes the unit's supplies "
