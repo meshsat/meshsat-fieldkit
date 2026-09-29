@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Step 4 of stream s122 (S-122, MESHSAT-1357, 29 September 2026), for the integrator to run once the branch fnd/s122 is
-merged: the registry follows the documents `apply_docs_s122.py` corrected.
+merged: the registry follows the documents `apply_docs_s122.py` (round 1) and `apply_docs_s122_r2.py` (round 2) changed.
+Round 2 (the answer to `checks/check-s122-1.md` and the coordinator's ruling): CONOPS.md is restored to its baseline text
+at `c5430071` and read through `handover/DEFINITION-STATUS.md`; the current circuit is kept in `feasibility/EMCON.md`
+section 0a.1 and on the status page; the registry is on set 13's candidate (`fnd/int14` merged at `4d3a9708`).
 
 It writes `v2/ecad/tools/pcb_requirements.yaml`, `v2/ecad/tools/pcb_envelope.yaml` and `v2/ecad/tools/pcb_rules_coverage.yaml`
 and nothing else:
@@ -31,7 +34,6 @@ import s122lib as L  # noqa: E402
 
 sys.path.insert(0, os.path.join(L.TOP, "v2/docs/records/int7"))
 import apply_check1_answers as A  # noqa: E402
-import apply_docs_s122 as D  # noqa: E402
 
 TAG = "apply_registry_s122"
 BASE = "e57a7365"
@@ -40,8 +42,10 @@ ENV = os.path.join(L.TOP, "v2/ecad/tools/pcb_envelope.yaml")
 COV = os.path.join(L.TOP, "v2/ecad/tools/pcb_rules_coverage.yaml")
 DOCS = {"v2/docs/PANEL.md": "4647782f5aca7c13", "v2/docs/CONOPS.md": "3c5d49078ba6dbfd",
         "v2/docs/V2-SPEC.md": "e1fdcebe8638e471", "v2/docs/OPERATING-ENVELOPE.md": "43361b02743cf3af",
-        "v2/docs/TEST-PLAN.md": "ae57da0b57e214f7", "v2/docs/ASSEMBLY.md": "ee4eff52fc5df307"}
-REF = "v2/docs/records/s122/apply_docs_s122.py"
+        "v2/docs/TEST-PLAN.md": "ae57da0b57e214f7", "v2/docs/ASSEMBLY.md": "ee4eff52fc5df307",
+        "v2/docs/feasibility/EMCON.md": "e919e9b2c633deef"}
+REF = "v2/docs/records/s122/apply_docs_s122.py and apply_docs_s122_r2.py"
+CONOPS_BASELINE = "6cb7b241cb84d729"     # CONOPS.md at c5430071, the owner's rulings of 28 September
 DASHES = ("\u2014", "\u2013")
 
 N_ENTRY = (
@@ -52,6 +56,22 @@ N_ENTRY = (
     "still name U26 and board A's round 8 candidate at gen_sch_a.py:1240-1243' is corrected to: PANEL.md line 156 names "
     "U26 (gen_sch_a.py:1102), and lines 155 and 156 cite board A's round 8 candidate at gen_sch_a.py:1240-1243. The "
     "entry's other sentences and its result are not changed by this correction.")
+
+BASELINE_ENTRY = (
+    "The baseline rule (stream s122, round 2; the coordinator's ruling on the independent check "
+    "v2/docs/records/s122/checks/check-s122-1.md, blocking B1): CONOPS.md is a baselined layer 2 definition, and by the "
+    "reopening rule its head states and v2/docs/handover/DEFINITION-STATUS.md keeps, a changed count or a circuit "
+    "correction updates the status page and the records it names, not the baseline. Set 12's circuit edits to it "
+    "(a46db71b, 7a9f7b5b) and stream s122's round 1 were made against that rule and are withdrawn: CONOPS.md is restored to "
+    "its text at c5430071 (6cb7b241cb84d729), asserted byte for byte by v2/docs/records/s122/apply_docs_s122_r2.py with "
+    "the needs table unchanged. So this record reads CONOPS.md's circuit statements through its status page and the "
+    "records it names: a CONOPS passage whose value differs from the committed netlists, or that cites a generator line, "
+    "is a baseline value (BASELINE in v2/docs/records/s122/verdicts.out) when the status page's section of CONOPS's "
+    "current circuit values keeps its current value (rows DC-01 to DC-06), and STALE when it does not; the places those "
+    "rows name, v2/docs/feasibility/EMCON.md section 0a.1 and the status page's own rows, are judged directly against the "
+    "netlists and must describe the circuit as generated. The five other documents (PANEL.md, V2-SPEC.md, "
+    "OPERATING-ENVELOPE.md, TEST-PLAN.md, ASSEMBLY.md) and decisions 28 and 40 are judged directly. This entry changes no "
+    "result.")
 
 S122_ADD = (
     " Correction (v2/docs/records/int13/checks/check-int13-4.md, minors n3 and n4; appended by stream s122): in the words "
@@ -140,7 +160,7 @@ def verdict_map(path):
     """{digest: verdict} from a verdicts file."""
     out = {}
     for l in open(path, encoding="utf-8"):
-        m = re.match(r"^\S.* \[([0-9a-f]+)\] (TRUE|STALE|NOT DERIVABLE|UNJUDGED)$", l.rstrip("\n"))
+        m = re.match(r"^\S.* \[([0-9a-f]+)\] (TRUE|STALE|BASELINE|NOT DERIVABLE|UNJUDGED)$", l.rstrip("\n"))
         if m: out[m.group(1)] = m.group(2)
     return out
 
@@ -150,7 +170,7 @@ def tally(digests, vm):
     for d in digests:
         v = vm.get(d, "outside the inventory")
         c[v] = c.get(v, 0) + 1
-    order = ("STALE", "TRUE", "NOT DERIVABLE", "UNJUDGED", "outside the inventory")
+    order = ("STALE", "TRUE", "BASELINE", "NOT DERIVABLE", "UNJUDGED", "outside the inventory")
     return ", ".join("%d %s" % (c[k], k) for k in order if k in c) or "none"
 
 
@@ -173,7 +193,7 @@ def append_entry(out, rid, entry, rebind=None):
 def counts(path):
     c = {}
     for l in open(path, encoding="utf-8"):
-        m = re.match(r"^([\w.-]+): (\d+) sentences, (\d+) TRUE, (\d+) STALE, (\d+) NOT DERIVABLE, (\d+) UNJUDGED, (\d+) assertions", l)
+        m = re.match(r"^([\w.-]+): (\d+) sentences, (\d+) TRUE, (\d+) STALE, (\d+) BASELINE, (\d+) NOT DERIVABLE, (\d+) UNJUDGED, (\d+) assertions", l)
         if m and m.group(1) != "total": c[m.group(1)] = tuple(int(x) for x in m.groups()[1:])
     return c
 
@@ -186,7 +206,8 @@ def main():
     for rel, s in DOCS.items():
         if new[rel] == s: refuse("%s is unchanged: merge fnd/s122 first" % rel)
     rec = {r["id"]: r for r in before["records"]}
-    global VB, VA
+    global VB, VA, NLS
+    NLS = L.netlists()
     VB, VA = verdict_map(os.path.join(HERE, "verdicts-base.out")), verdict_map(os.path.join(HERE, "verdicts.out"))
     out = reg
     touched = {}
@@ -203,7 +224,24 @@ def main():
                       "holds %s" % (len(gone), tally(gone, VB), len(added), tally(added, VA)))
         changed = sorted({sec_at(secs, n) for n in nl}, key=lambda x: (len(x), x))
         lines_txt = ", ".join(str(x) for x in sorted(set(nl)))
+        nets = L.all_nets(NLS)
+        partset = set()
+        for s in [sb[d] for d in gone] + [sa[d] for d in added]:
+            nm = L.names(s, nets)
+            partset |= set(nm["refs"]) | set(nm["nets"])
+        why_doc = ""
+        if rel == "v2/docs/CONOPS.md":
+            if new[rel] != CONOPS_BASELINE: refuse("CONOPS.md is not c5430071's text")
+            why_doc = (" The file is restored to its baseline text at c5430071 under the reopening rule (the baseline entry "
+                       "of CFL-016 that this script appends), so the diff withdraws set 12's circuit edits a46db71b and "
+                       "7a9f7b5b; their text is kept in v2/docs/feasibility/EMCON.md section 0a.1.")
         for rid in bound:
+            r = rec[rid]
+            own = " ".join(str(r.get(f) or "") for f in ("title", "statement", "acceptance", "notes")) + " " + \
+                  " ".join(str(e) for e in r.get("evidence") or [])
+            hitp = sorted(x for x in partset if re.search(r"(?<![\w+])%s(?![\w])" % re.escape(x), own))
+            part_txt = ("the changed sentences name %d parts and nets, and this record's own text names %s" % (
+                len(partset), ("none of them" if not hitp else "%s of them (%s)" % (len(hitp), ", ".join(hitp[:15])))))
             named = named_sections(rec[rid].get("evidence") or [], base)
             hit = sorted({x for x in named if not x.startswith("line ")} & set(changed))
             hitl = sorted({x for x in named if x.startswith("line ")} & {"line %d" % n for n in nl})
@@ -218,10 +256,12 @@ def main():
                                               [x for x in named if x.startswith("line ")])))
             entry = ("%s re-read at stream s122 (%s, %s to %s; MESHSAT-1357, open item S-122): the diff, read by "
                      "v2/docs/records/s122/apply_registry_s122.py, changes lines %s (sections %s); %s (the verdicts of "
-                     "v2/docs/records/s122 on the committed netlists of set 12; the correcting script asserted every part "
-                     "its new text names before it wrote); %s. This entry does not re-read the rest of this record's "
-                     "argument; rebound to %s. This entry changes no result."
-                     % (rel, REF, old16, new[rel], lines_txt, "; ".join(changed), change_txt, rel_txt, new[rel]))
+                     "v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on "
+                     "the committed netlists of set 13; the correcting scripts asserted every part their new text names "
+                     "before they wrote); %s; %s.%s This entry does not re-read the rest of this record's argument; rebound "
+                     "to %s. This entry changes no result."
+                     % (rel, REF, old16, new[rel], lines_txt, "; ".join(changed), change_txt, rel_txt, part_txt, why_doc,
+                        new[rel]))
             out = append_entry(out, rid, entry, ('"%s"' % oldb, '"%s"' % newb))
             touched.setdefault(rid, []).append(base)
     # the needs pin
@@ -234,25 +274,28 @@ def main():
     # CFL-016: the inventory and the verdicts, then the n1 and n2 correction
     vb = counts(os.path.join(HERE, "verdicts-base.out"))
     va = counts(os.path.join(HERE, "verdicts.out"))
-    if not va or sum(v[2] for v in va.values()) or sum(v[4] for v in va.values()): refuse("verdicts.out holds STALE or UNJUDGED sentences")
-    per = "; ".join("%s %d sentences, %d STALE at the base and corrected, %d TRUE and %d NOT DERIVABLE after" % (
-        d, va[d][0], vb.get(d, (0, 0, 0))[2], va[d][1], va[d][3]) for d in va)
-    entry = ("v2/docs/records/s122/inventory.out and v2/docs/records/s122/verdicts.out (stream s122, S-122; written by "
-             "inventory.py and verdicts.py in that folder, with the base's in inventory-base.out and verdicts-base.out): "
-             "every sentence of the documents this record names, in the scope s122lib.SCOPE sets from this record's "
-             "statement and notes and the brief of S-122, that names a part, a net, a board, a rail, a gate function or a "
-             "generator line, judged against the committed netlists of boards A, B, C, D, E and P at set 12 and the "
-             "generators, each judgement's assertions evaluated by the script: %s. The %d STALE sentences were corrected by "
-             "v2/docs/records/s122/apply_docs_s122.py in %d of its %d passages, the script asserting every part, pin, net and "
-             "generator line its new text names before it wrote; its other three passages change text the base verdicts do "
-             "not call STALE: V2-SPEC.md "
-             "line 35 (the holdover clock put on the panel controller; it names no part the finder looks for and was found "
-             "by reading), CONOPS.md section 4e's header (dated to the rows it corrected) and V2-SPEC.md's correction 32 "
-             "(the record of the V2-SPEC.md changes). What TRUE, STALE and NOT DERIVABLE mean is set out in "
-             "v2/docs/records/s122/README.md. This record stays FAIL and waits on S-122, whose closure "
-             "(v2/docs/records/s122/close_s122.py) re-runs the inventory and the verdicts and needs a filed independent "
-             "check; this entry changes no result." % (per, sum(v[2] for v in vb.values()), len(D.EDITS) - 3, len(D.EDITS)))
+    if not va or sum(v[2] for v in va.values()) or sum(v[5] for v in va.values()): refuse("verdicts.out holds STALE or UNJUDGED sentences")
+    per = "; ".join("%s %d sentences, %d STALE at the base, %d TRUE, %d BASELINE and %d NOT DERIVABLE after" % (
+        d, va[d][0], vb.get(d, (0, 0, 0))[2], va[d][1], va[d][3], va[d][4]) for d in va)
+    entry = ("v2/docs/records/s122/inventory.out and v2/docs/records/s122/verdicts.out (stream s122, S-122, round 2; "
+             "written by inventory.py and verdicts.py in that folder, with the base's documents at e57a7365 in "
+             "inventory-base.out and verdicts-base.out): every sentence in the scope s122lib.SCOPE sets from this record's "
+             "statement and notes, the brief of S-122 and the check check-s122-1 (PANEL.md sections 1, 2, 3, 5, 6, 7, 9 and "
+             "10; CONOPS.md sections 2a, M2, M4 and 4 with 4a to 4f, and 5; V2-SPEC.md and TEST-PLAN.md whole; "
+             "OPERATING-ENVELOPE.md sections 2 to 4; ASSEMBLY.md sections 2, 4, 8 and 9; decisions 28 and 40; "
+             "EMCON.md section 0a.1 and the status page's section of CONOPS's current circuit values) that names a part, a "
+             "net, a board, a rail, a gate function, a generator line, EMCON or a count of parts, judged against the "
+             "committed netlists of boards A, B, C, D, E and P of set 13 and the generators, each judgement's assertions and "
+             "every stated count of parts evaluated by the script: %s. Outside that scope the scripts read nothing: PANEL.md's "
+             "head and sections 4, 8 and 11, CONOPS.md's other sections, OPERATING-ENVELOPE.md sections 1 and 5 to 8, "
+             "ASSEMBLY.md's other sections. The stale sentences of the five correctable documents were corrected by "
+             "v2/docs/records/s122/apply_docs_s122.py and apply_docs_s122_r2.py, which asserted every part, pin, net, count "
+             "and generator line their new text names before they wrote; CONOPS.md is read under the baseline rule of the "
+             "next entry. What TRUE, STALE, BASELINE and NOT DERIVABLE mean is set out in v2/docs/records/s122/README.md. "
+             "This record stays FAIL and waits on S-122, whose closure (v2/docs/records/s122/close_s122.py) re-runs the "
+             "inventory and the verdicts and needs a filed independent check; this entry changes no result." % per)
     out = append_entry(out, "CFL-016", entry)
+    out = append_entry(out, "CFL-016", BASELINE_ENTRY)
     out = append_entry(out, "CFL-016", N_ENTRY)
     # S-122's title: an appended correction
     screen(S122_ADD, "S-122")
@@ -292,8 +335,8 @@ def main():
     if lost: refuse("numbers of the envelope no longer in the document: %s" % lost)
     old_line = next(l for l in env.split("\n") if l.startswith("document_sha256:"))
     new_line = ('document_sha256: "%s"   # re-read and re-pinned 29 September 2026 by stream s122 (S-122: section 4\'s HOT-R1 '
-                'sentence, the USB-C row\'s citation dated, the EMCON mode and the RockBLOCK item corrected to set 12; no '
-                'number changed), before it %s' % (newfull, old_line.split("# ", 1)[1] if "# " in old_line else ""))
+                'sentence, the USB-C row\'s citation dated, the EMCON mode with the PA bias and the RockBLOCK item corrected '
+                'to the netlists of sets 12 and 13; no number changed), before it %s' % (newfull, old_line.split("# ", 1)[1] if "# " in old_line else ""))
     env2 = env.replace(old_line, new_line, 1)
     if yaml.safe_load(env2).get("document_sha256") != newfull: refuse("the envelope pin does not read back")
     cov = open(COV, encoding="utf-8").read()
