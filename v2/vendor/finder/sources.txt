@@ -1,0 +1,2 @@
+# Finder documents held for stream od01b (MESHSAT-1357): file, URL, fetched (UTC), sha256
+finder-40-series-en.pdf  https://cdn-reichelt.de/documents/datenblatt/C300/FIN_40_DB_EN.pdf  2026-09-28T23:33:25Z  c4c8a69d0497c9c3e32be9998edbea1a3356ff80819f189864fca9361f311226  (Finder "40 Series PCB/Plug-in relays 8 - 10 - 12 - 16 A", issue XI-2018, 22 pages; a distributor's copy of the maker's sheet, linked from reichelt's product page for FIN 40.52.9 12V)
