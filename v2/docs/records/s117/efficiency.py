@@ -92,6 +92,8 @@ CRITERIA = (("Qg at 6 V <= 12 nC", "qg", 12e-9), ("Qgd + Qgs <= 7 nC", "qsw14", 
 INDUCTORS = {
     "XAL1010-472ME": dict(L=4.7e-6, dcr=(5.20e-3, 5.70e-3), curve=[(0, 4.75), (5, 4.58), (10, 4.3), (15, 3.95), (20, 3.6), (25, 3.3)]),
     "XAL1010-332ME": dict(L=3.3e-6, dcr=(3.70e-3, 4.10e-3), curve=[(0, 3.35), (5, 3.25), (10, 3.07), (15, 2.85), (20, 2.52), (25, 2.28)]),
+    # Coilcraft 887-1 and 887-2 (XAL60xx): the part board A draws on main today
+    "XAL6030-332ME": dict(L=3.3e-6, dcr=(19.92e-3, 20.81e-3), curve=[(0, 3.0), (4, 2.87), (8, 2.72), (12, 2.48), (16, 2.2), (20, 1.72)]),
 }
 
 
@@ -228,7 +230,7 @@ def profile():
     return out, caps, e_ch
 
 
-def daily(fets, entry, prof, reading):
+def daily(fets, entry, prof, reading, ind=None):
     """The day's energy-weighted efficiency: sum of the hours' outputs over the sum of their inputs."""
     pin = pout = 0.0
     for h, w in prof:
@@ -237,7 +239,7 @@ def daily(fets, entry, prof, reading):
             continue
         iin = p / 20.7
         ichg = min(3.968, p * 0.95 / 14.5)
-        e = eta("buck", 20.7, iin, 14.5, ichg, fets, U3["ind"], U3["f"], U3["r_in"], U3["r_chg"], reading)
+        e = eta("buck", 20.7, iin, 14.5, ichg, fets, ind or U3["ind"], U3["f"], U3["r_in"], U3["r_chg"], reading)
         pin += p
         pout += p * e
     return pout / pin, pin
@@ -327,6 +329,9 @@ def main():
     P("")
     P("7. WHAT THE ENERGY MODEL SHOULD CARRY FOR THE CHARGERS (a table for the energy record's writer; core loss excluded)")
     P("   %-44s %-9s %-9s %-9s %s" % ("", "lower", "TI", "upper", "carry (TI's reading, the day's weighted)"))
+    for entry in ("E2", "E1"):
+        v = [daily(DRAWN, entry, prof, r, ind="XAL6030-332ME")[0] for r in ("lower", "TI", "upper")]
+        P("   %-44s %-9.3f %-9.3f %-9.3f %.3f" % ("U3 as on main (XAL6030-332ME, 400 kHz), %s" % entry, v[0], v[1], v[2], v[1]))
     for lab, fets in (("U3, drawn FETs (S-117's row)", DRAWN), ("U3, chosen FETs", CHOSEN_U3)):
         for entry in ("E2", "E1"):
             v = [daily(fets, entry, prof, r)[0] for r in ("lower", "TI", "upper")]

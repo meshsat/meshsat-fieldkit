@@ -101,6 +101,8 @@ every figure is high by them. Readings: lower = the makers' maxima; TI = Equatio
 
 7. WHAT THE ENERGY MODEL SHOULD CARRY FOR THE CHARGERS (a table for the energy record's writer; core loss excluded)
                                                 lower     TI        upper     carry (TI's reading, the day's weighted)
+   U3 as on main (XAL6030-332ME, 400 kHz), E2   0.912     0.934     0.954     0.934
+   U3 as on main (XAL6030-332ME, 400 kHz), E1   0.910     0.933     0.952     0.933
    U3, drawn FETs (S-117's row), day at E2      0.919     0.939     0.960     0.939
    U3, drawn FETs (S-117's row), day at E1      0.915     0.936     0.957     0.936
    U3, chosen FETs, day at E2                   0.972     0.979     0.983     0.979

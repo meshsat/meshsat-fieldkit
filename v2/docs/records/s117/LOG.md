@@ -39,8 +39,28 @@ a maker's document. No agent, no other model, no box, no purchase, no contact.
   (the front end's limit cited to SNVSAI1D 6.5, the nominal-pack figure stated with its condition, the XAL1010 order codes,
   Table 9-1's rows, the buck-boost expectation marked INFERRED).
 
+## 29 September 2026, second issue (the coordinator's brief after the independent check, mergeable no on B1 and B2)
+
+- 13:44 Brief read; the check's CHECK.md, `_chk/recompute.py` and `.out` read (not edited). Its drawn-FET figures are the
+  ones efficiency.py reproduces.
+- 13:45 to 13:50 FETs screened from the makers' own sites by curl (no other tool, no model): TI's CSD17578Q5A,
+  CSD17577Q5A, CSD17579Q5A, CSD17581Q5A, CSD17575Q3 and CSD16570Q5B; onsemi refused the runner (403); Nexperia's
+  PSMN4R0-30YLD and PSMN5R0-30YL fetched. Tables and the curves of Figures 4, 5 and 7 (p.5) and the PCB patterns (p.9)
+  rendered and read. TI's terms forbid redistribution and Nexperia's reserve all rights: five files pinned by sha256 in
+  `v2/vendor/sources.txt`, held in ignored folders, fetched by `fetch_held_back.py` (11:47Z and 12:00Z).
+- 13:51 to 13:54 `efficiency.py`: the check's method (IL solved, R16 and R17, four readings) reproduced to the third decimal
+  on the drawn FETs; the energy model's reference day read through `energy_two_pack.py` unchanged. Checkpoint `fe745dc0`.
+- 13:55 to 14:00 The choice: Q7 CSD17578Q5A (fast), Q8 to Q10 CSD17577Q5A (low resistance), 0.979 at the peak by TI's
+  method; REGN 10.5 mA; Q9 and Q10 replaced too because TI does not bound the buck-boost region. Drafts: the FET generator
+  script, PWR-001's pin roles, the read-back's `--fets`, the FET decision, the registry's F1 restated, F2 opened for the
+  energy writer and linked from REQ-072, and a `close-fets` phase. The check's m1 to m7 answered. Checkpoint `7cd95bf9`.
+- 14:03 Second dry run in a disposable worktree (`dryrun2.out`), removed; stray bytecode from 12:44 removed from the tools
+  folder.
+- 14:05 to 14:08 `U3B-NOTE.md`, the energy table, README sections 6 to 12.
+
 ## Where the stream stands (resume from here)
 
-Done: the choice and its figures; every apply script with its check output; the read-back and its self-test; the dry run.
-Not done by design: nothing applied to the tree outside this folder, nothing regenerated. The integrator's order is in
-README section 8; what stays open is README section 9.
+Done: the choice and its figures; the efficiency by point and the energy rows; the FET remedy; every apply script with its
+check output; the read-back and its self-test; both dry runs. Not done by design: nothing applied to the tree outside this
+folder except the held-back pins (`.gitignore`, `v2/vendor/sources.txt`), nothing regenerated, no energy or a1elec record
+edited. The integrator's order is README section 8; what stays open is README section 9.
