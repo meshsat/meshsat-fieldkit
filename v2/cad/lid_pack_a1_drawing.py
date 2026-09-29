@@ -223,7 +223,7 @@ def sheet2(pdf, arr):
 def sheet3(pdf, arr):
     fig = plt.figure(figsize=A3)
     frame(fig, "A1-3", "the arrangements that fit, and the owner decision",
-          "Each arrangement is the generator's best: the tablet's band searched in 1 mm steps, P2 at the corner costing fewest cells. "
+          "Each arrangement is the generator's best: the tablet tried both ways at 1.0 mm in X and 0.5 mm in Y, P2 at the corner costing fewest cells (over the tablet allowed). "
           "4SnP counts whole groups of four; the totals add the base pockets' 4S6P of section 8.")
     boxes = [(0.03, 0.52, 0.30, 0.38), (0.35, 0.52, 0.30, 0.38), (0.67, 0.52, 0.30, 0.38), (0.03, 0.09, 0.30, 0.38), (0.35, 0.09, 0.30, 0.38)]
     for key, box in zip(("A", "B", "C", "C10", "D"), boxes):

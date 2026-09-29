@@ -50,3 +50,4 @@ Worker: one Claude author, worktree `a1mech`, branch `fnd/a1mech` from `13b5352b
   C 61, C10 48. M1 P2 on 2.5 standoffs; M2 the plate per slice; M3 1.0 beside the guard caps; M4 hinge Z swept; M5 the stay
   sized; M6 operator pushes; M7 C's mass and angles; M8 to M11 in the README. DECISION-A1.md option 3 restated from the
   coordinator's two-pack run for a 4S9P lid.
+- 03:25: the solids and their check (the lid plate per slice, judged as zones) re-run on the box at `9c9afa40`: PASS for A, B, C, C10 and D, both controls fail; `lid_pack_a1.out` reproduced byte for byte on the runner; sheet A1-3 footer corrected.
