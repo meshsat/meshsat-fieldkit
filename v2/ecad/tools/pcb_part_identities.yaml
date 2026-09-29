@@ -777,6 +777,8 @@ selections:
       page: 1
       names: PARAMETER SYMBOL SS2020FL SS2030FL SS2040FL SS2060FL SS20100FL UNITS
       joined_by: code
+      held_back: true
+      fetch: v2/docs/records/int16/fetch_held_back.py
     chosen_by: the incumbent (generator) carries the named part
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -815,6 +817,8 @@ selections:
       page: 1
       names: PARAMETER SYMBOL SS2020FL SS2030FL SS2040FL SS2060FL SS20100FL UNITS
       joined_by: code
+      held_back: true
+      fetch: v2/docs/records/int16/fetch_held_back.py
     chosen_by: the incumbent (generator) carries the named part
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:
@@ -853,6 +857,8 @@ selections:
       page: 1
       names: PARAMETER SYMBOL SS2020FL SS2030FL SS2040FL SS2060FL SS20100FL UNITS
       joined_by: code
+      held_back: true
+      fetch: v2/docs/records/int16/fetch_held_back.py
     chosen_by: the incumbent (generator) carries the named part
     from: stream w5ident's table (fnd/w5ident c08f4d5a), key unchanged
   order_code:

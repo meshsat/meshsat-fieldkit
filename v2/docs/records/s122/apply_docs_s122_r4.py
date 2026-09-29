@@ -66,7 +66,7 @@ ASSERT = {
                      "DOC:v2/docs/OPERATING-ENVELOPE.md~| Mitsubishi RA30H1317M1 30 W VHF power amplifier |"],
     "the TRACO row": ["A:!~TRACO", "B:!~TRACO", "C:!~TRACO", "D:!~TRACO", "E:!~TRACO", "P:!~TRACO", "E:U6~LM5069MM-2",
                       "DOC:v2/ecad/tools/gen_sch_e.py~the isolated TRACO converter of E4 is gone",
-                      "PDF:v2/vendor/ti/ti-lm5069.pdf~7.3 Recommended Operating Conditions|TJ Junction temperature –40 125 °C|SNVS452G"],
+                      "PDF:v2/vendor/ti/ti-lm5069.pdf~7.3 Recommended Operating Conditions|TJ Junction temperature \u201340 125 °C|SNVS452G"],
     "the B-key row": ["B:J_M2C2~TE 2199119-3", "B:!~MDT420B", "B:J_M2N1~Amphenol MDT420M02001",
                       "PDF:v2/vendor/m2/te-2199119-m2-b-key.pdf~Service Temperature -40 ~ +80|Product Specifications: 108-115042/ 108-115049",
                       "PDF:v2/vendor/m2/amphenol-mdt420b01001-m2-b-key.pdf~Operating Temperature: -40°C to +80°C"],

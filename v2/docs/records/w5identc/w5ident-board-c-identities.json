@@ -207,6 +207,8 @@
 "catalogue_line": "-50\u2103~+150\u2103 1 Independent 100uA@40V 2A 40V 500mV@2A 50A SOD-123FL Schottky Diodes ROHS",
 "chosen_by": "the incumbent (generator) carries the named part",
 "datasheet": {
+"fetch": "v2/docs/records/int16/fetch_held_back.py",
+"held_back": true,
 "joined_by": "code",
 "path": "v2/vendor/power/held/panjit-ss2020fl-series.pdf"
 },
@@ -229,6 +231,8 @@
 "catalogue_line": "-50\u2103~+150\u2103 1 Independent 100uA@40V 2A 40V 500mV@2A 50A SOD-123FL Schottky Diodes ROHS",
 "chosen_by": "the incumbent (generator) carries the named part",
 "datasheet": {
+"fetch": "v2/docs/records/int16/fetch_held_back.py",
+"held_back": true,
 "joined_by": "code",
 "path": "v2/vendor/power/held/panjit-ss2020fl-series.pdf"
 },
@@ -251,6 +255,8 @@
 "catalogue_line": "-50\u2103~+150\u2103 1 Independent 100uA@40V 2A 40V 500mV@2A 50A SOD-123FL Schottky Diodes ROHS",
 "chosen_by": "the incumbent (generator) carries the named part",
 "datasheet": {
+"fetch": "v2/docs/records/int16/fetch_held_back.py",
+"held_back": true,
 "joined_by": "code",
 "path": "v2/vendor/power/held/panjit-ss2020fl-series.pdf"
 },
