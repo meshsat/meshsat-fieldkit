@@ -4,12 +4,17 @@
 It PARSES the netlist with tx_inhibit.parse_netlist (the RF-002 walk's own reader) and the intent file with json, and asserts
 each change the draft makes, printing PASS or FAIL with what it read: the four resistor values, R551 between +5V_DEV and U543
 pin 4 on its own net, U543 pin 3 left open, and in the intent file each module 3.3 V rail's loads naming every logic part the
-netlist puts on that rail and +3V3_ZB's naming R536 to R538. The loads are compared with the NETLIST, not with a list typed
+netlist puts on that rail, and its LED feeds (a BC857 on it, a resistor from it to an LED's net: CHK12-LED, stream rf2walk3),
+and +3V3_ZB's naming R536 to R538. The loads are compared with the NETLIST, not with a list typed
 here: a logic part (a U part other than the module's receptacle) on +3V3_CM{s} whose ref the rail's loads omit fails. On set
 12's committed files every change FAILS, which is the reading filed beside it.
 
 usage: readback_chk12.py --tools <v2/ecad/tools> --board-dir <v2/ecad/pcb-b-compute-b19/out> [--out <file.txt>]"""
 import hashlib, json, os, sys
+
+
+def _pins(nl, ref):
+    return sorted(p for (r, p) in nl["pin"] if r == ref)
 
 
 def main(argv):
@@ -53,6 +58,14 @@ def main(argv):
         loads = (rails.get(rail) or {}).get("loads", {})
         miss = [r for r in logic if r not in loads]
         check(not miss, "%s loads name every logic part on it (%d on the netlist; missing %s)" % (rail, len(logic), ", ".join(miss) or "none"))
+        # CHK12-LED (stream rf2walk3): the LED feeds on the rail, read from the netlist: a BC857 with a pin on it (the PWR LED's
+        # buffer) and a resistor from it to a net that carries an LED (the ACT LED's)
+        led_feed = sorted({r for r, _p, _f in nl["nets"].get(rail, [])
+                           if (r.startswith("Q") and "BC857" in (nl["comps"].get(r) or {}).get("value", ""))
+                           or (r.startswith("R") and any(x.startswith("LED") for q in _pins(nl, r)
+                                                         for x, _pp, _ff in nl["nets"].get(nl["pin"].get((r, q), ""), [])))})
+        miss2 = [r for r in led_feed if r not in loads]
+        check(led_feed and not miss2, "%s loads name its LED feeds %s (missing %s)" % (rail, ", ".join(led_feed) or "none found", ", ".join(miss2) or "none"))
     zb = (rails.get("+3V3_ZB") or {}).get("loads", {})
     check(all(r in zb for r in ("R536", "R537", "R538")), "+3V3_ZB loads name R536, R537, R538 (%s)" % ", ".join(sorted(zb)))
     out += ["", "RESULT: %s" % ("every check holds" if not fails else "%d check(s) fail" % fails)]

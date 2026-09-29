@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Stream rf2walk2 (MESHSAT-1357): a self-test of readback_chk12.py's positive path. From board B's committed netlist and
 intent file it writes, in a directory the caller names (never under v2/ecad), a SYNTHETIC pair carrying exactly what
-apply_b_chk12.py asks the generator for (R238 49.9k 1%, R532 2.7k 1%, R527 20.0k 1%, R551 49.9k 1% from +5V_DEV to a new net
+apply_b_chk12.py and its follow-up apply_b_chk12_led.py ask the generator for (R238 49.9k 1%, R532 2.7k 1%, R527 20.0k 1%, R551 49.9k 1% from +5V_DEV to a new net
 RB_TD_CT that also takes U543 pin 4, the module rails' and +3V3_ZB's loads), runs the read-back on it (every check must PASS),
 and on three mutants (R551 missing, R532 left at 2.2k, one gate left out of +3V3_CM3's loads), each of which must FAIL. It
 tests the read-back, not the circuit: the synthetic files are edited text and no substitute for the regenerated ones.
@@ -42,6 +42,8 @@ def synth(net_text, intent, r551=True, r532="2.7k 1%", drop_load=None):
     for s, g in gates.items():
         for u in g:
             if u != drop_load: j["rails"]["+3V3_CM%d" % s]["loads"][u] = 0.001
+    for s in (1, 2, 3):                                   # CHK12-LED (apply_b_chk12_led.py): the LED feeds
+        j["rails"]["+3V3_CM%d" % s]["loads"]["Q%d01" % s] = 0.0033; j["rails"]["+3V3_CM%d" % s]["loads"]["R%d48" % s] = 0.0033
     for r in ("R536", "R537", "R538"): j["rails"]["+3V3_ZB"]["loads"][r] = 0.00071
     return t, j
 
