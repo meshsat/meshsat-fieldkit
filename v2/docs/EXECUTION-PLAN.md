@@ -575,3 +575,13 @@ box; the netlist read-back holds on both. RF-002's walk reads 21 FAIL on it wher
 the rows that follow them): whether the walk lacks the new parts' classes or the circuit has a real path is the next
 worker task; set 12 is not promoted until that is decided and independently checked. FEA-002 itself cannot close at
 desk (0 of 17 rows; 2 need bench tests).
+
+### Closure, 29 September 2026 13:34 CEST: OD-01's document-correction item closed by the owner
+
+The owner's review of the export at `4c6c3cfa` (`fnd/od01b`, on main through `64865df1`): "closes the document-correction
+item. T6 is corrected, all 79 package hashes and six H1 hashes verify, and the document copies match." The accepted package
+is preserved as it stands (`v2/docs/records/od01/`, the laptop's `MESHSAT-OD01-case-package` and its zip, sha256
+`243300351289cb98...`). **Further OD-01 review requires a material design change or a specific failure.** Still open, and
+not closed by this: every physical test (the receipt checks R1 to R8, the shutdown's V1 to V4 on the built rig, tests A and
+B), and the two-pack mission validation of Option A(i) (a model result; board A's charger efficiency, which S-117's stream
+reads as 0.92 to 0.95 where the energy model uses 0.98, is under independent check and may move the accepted margins).
