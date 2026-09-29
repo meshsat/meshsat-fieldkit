@@ -53,8 +53,8 @@ the lid basis of 13.23 C (model results; the check's independent balance reprodu
 
 The model needs at least 5.57 A (4S14P) and 5.43 A (4S15P) into U3 at ratio C to meet M1 at the basis (the check). The
 lid thresholds are not stable to better than about 1.5 K with the model's hourly taper (at 0.1 h the 4S14P C threshold at
-6.1 A reads about +4.6 C); a 0.01 h step lowers the lowest stores by about 0.8 Wh (B) and 2.4 Wh (C). U3B at its 0.96
-efficiency bracket costs 3.2 and 3.5 Wh at C. **Both 4S14P and 4S15P need the lid gauge calibrated at k = 3** (at k = 2
+6.1 A reads about +4.6 C); a 0.01 h step lowers the lowest stores by about 1.2 to 1.9 Wh (B) and 3.3 to 4.2 Wh (C). U3B at its 0.96
+efficiency bracket costs 6.0 and 6.2 Wh at C with U3 at 6.1 A (`checks/check-a1int-2.md`). **Both 4S14P and 4S15P need the lid gauge calibrated at k = 3** (at k = 2
 their cWh words would be 33,768 and 36,180, above the gauge's 32,767; GAUGE.md), and `gauge_scale.py` is written for 4S12P.
 **The planes:** `records/a1solar/ARRAY.md` 7's rule (20 to 50 degrees within 15 degrees of south) was computed for a 4S12P
 lid; for these lids it is sufficient, and the check's own runs found both meet over a wider range and the 4S15P lid meeting
