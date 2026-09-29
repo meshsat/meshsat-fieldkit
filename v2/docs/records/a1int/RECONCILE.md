@@ -35,7 +35,17 @@ re-check `check-a1elec-2.md`, acceptable yes): its minor items N1 to N4 stay ope
 charge-order sentence of TOPOLOGY 3b, the 13 UTC in CHARGER.md, a doubled table header, a heat column's sum), and
 `gauge_scale.py` hard-codes k = 2 and a 4S12P table, so a 4S14P lid needs it edited, not re-run.
 
+**With the chosen panel (stream a1solar, integrated 29 September 2026).** `reconcile_lid_panel.py` (output
+`reconcile_lid_panel.out`) re-runs the three lid options with the performance ratios of four Renogy RNG-100DB-H in 2S2P at
+the drafted fixed input point, read from `records/a1solar/energy_runs.out` section 2: A 0.9417 (the pinned MPPT ratio,
+which reproduces the table above), B 0.9326 typical, C 0.8573 with everything adverse at once. On the 40 degree south
+plane at the lid basis of 13.23 C: both functions kept (4S9P) does not meet M1 under any of the three, even with the lid
+at +40 C; tablet out (4S14P) meets with 93.7 Wh typical and 90.9 Wh adverse at its lowest, down to a lid at +3.8 and
++4.1 C; QMX out (4S15P) meets with 125.2 and 122.4 Wh, down to +1.5 and +2.1 C. The panels must stand at 20 to 50
+degrees facing within 15 degrees of south (`records/a1solar/ARRAY.md` 7, a model result): laid flat, the two-pack case
+does not meet M1. Model results on the reference day; nothing is measured.
+
 **What this does not show.** The circuits are drafts (a second charger, the ideal-diode join, the lid gauge's k = 2
 calibration, board A's entry re-rated with its inductor, board E's 200 W stage); the lid pack's heater, its temperature in
-use and the case's stability with a heavier lid (a stay at 100 degrees) are findings; the panel is not yet selected
-(`records/a1solar/`). Nothing here is physical verification or fabrication readiness.
+use and the case's stability with a heavier lid (a stay at 100 degrees) are findings; the panel is selected on its maker's figures and a model (`records/a1solar/`), not measured, and board E's
+entry is not yet re-rated for it (REQ-016 is the owner's). Nothing here is physical verification or fabrication readiness.
