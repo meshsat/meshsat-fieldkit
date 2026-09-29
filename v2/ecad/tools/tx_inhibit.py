@@ -1723,7 +1723,7 @@ def _is_toggle(k, nl, ref):
     if k is None: raise ValueError("_is_toggle: the board key is required")
     if ref not in nl["comps"]: return None
     for d in _TOGGLES_NOW:
-        if len(d.get("lugs") or ()) != 2: raise ValueError("EMCON toggle declaration %s/%s names no contact lug pair" % (d.get("board"), d.get("ref")))
+        if len(set(str(x) for x in (d.get("lugs") or ()))) != 2 or len(d.get("lugs") or ()) != 2: raise ValueError("EMCON toggle declaration %s/%s names no contact lug pair of two distinct lugs" % (d.get("board"), d.get("ref")))
         if ref != d["ref"] or k != d["board"]: continue
         if not re.search(d["value"], value(nl, ref), re.I): continue
         live = {p: x for p, x in ((p, nl["pin"].get((ref, p), "")) for p in pins_of(nl, ref)) if not _dead(x)}
