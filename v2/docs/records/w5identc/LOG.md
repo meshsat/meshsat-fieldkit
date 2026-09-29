@@ -21,3 +21,23 @@
 - Lint tests run once each on this tree: test_rule_windows 6/0, test_import_before_use 3/0, test_documented_options
   6/0, test_swallowed 6/0, test_shipped_strings 5/0, test_driver_hygiene 78/0, test_public_tables 2/0. The full suite
   was not run (the integrator's, on the box).
+
+## Round 2 (the coordinator's message after round 1)
+
+- 19:43 read the two asks: the DECODED rule, taken by the session, drafted for pcb_decisions.yaml; the stale BOM
+  export's facts.
+- BOM export: `git log` on the file (one commit, `6dc4e708`); its writer read in `handover_exports.py` (`exports`,
+  line 138) and ruled out in `build_sch.sh` (line 34, `out/<stem>-bom.csv`) and `finish_board.sh` (`out/jlc/`); parsed
+  against the netlist at nine commits (`readings/bom-export-history.txt`): agrees until `e28f91a6`.
+- `read_decoded` added to the tool; four fixture tests; 21 of 21.
+- Terms screen of w5ident's series sheets: Yageo, Fenghua and Arlitech carry no reproduction or rights wording in their
+  text; Uniroyal's two read "all rights reserved"; Murata's catalogue prints the word "Prohibited" once (line 20849 of its text, a column heading beside "Correct"; not read further).
+- 17:49Z (UTC) `fetch_held_back.py` fetched Uniroyal's thick film sheet from LCSC's datasheet server, sha256 matched.
+- Builder: decode specs for Yageo CC X7R (page 2) and Uniroyal 0603WAF (page 2); 23 selections DECODED, every one read
+  by `read_binding`. Fenghua, Murata, Arlitech and the CS03 shunt not decoded.
+- `apply_decision_decoded.py`: the first draft's second-run guard searched the raw text, where the folded title splits
+  the marker, and a scratch copy took the decision twice (59 and 60); the guard now reads the parsed titles, and the
+  scratch copy took it once and refused the second run. `apply_identities_c.py`'s guard read the parsed items the same
+  way from then on; re-pinned to the new reading; applied once and refused once on a scratch copy.
+- The check without the held sheet: 13 UNREAD, 13 problems; with `--unfetched-ok` 0 problems.
+- 19:53 commit `ebe2a084`.
