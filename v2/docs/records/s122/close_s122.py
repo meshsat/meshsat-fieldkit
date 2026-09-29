@@ -54,27 +54,40 @@ def refuse(m):
 
 
 def gate_set14(chk):
-    """Set 14's gate (v2/docs/records/int15/apply_check15b_fixes.py, answering check-int15-2 B1): S-122 closes only on a
-    part-number inventory, with the five sentences check-int15-1 found corrected, and on a check filed after 097d2517."""
-    head = open(os.path.join(L.TOP, "v2/docs/records/s122/inventory.out"), encoding="utf-8").read().split("\n")[:12]
-    if "# Part numbers read: yes" not in head:
-        refuse("the inventory does not declare that it reads makers' part numbers (S-122's set 14 extension)")
-    spec = open(os.path.join(L.TOP, "v2/docs/V2-SPEC.md"), encoding="utf-8").read()
-    env = open(os.path.join(L.TOP, "v2/docs/OPERATING-ENVELOPE.md"), encoding="utf-8").read()
-    left = [n for n, hit in (("V2-SPEC.md names the TMDS341A", "TMDS341A" in spec),
-                             ("V2-SPEC.md names the WM8960", "WM8960" in spec),
-                             ("V2-SPEC.md's E6 row names the LM5176",
-                              any(l.startswith("| E6 |") and "LM5176" in l for l in spec.split("\n"))),
-                             ("OPERATING-ENVELOPE.md names a TEN 40", "TEN 40" in env),
-                             ("OPERATING-ENVELOPE.md names an Amphenol M.2 B-key socket", "Amphenol M.2 B-key" in env)) if hit]
+    """Set 14's gate (v2/docs/records/int15/apply_check15c_fixes.py, answering check-int15-3 B1): S-122 closes only when
+    the finder reads makers' part numbers (probed), the verdicts assert the generated parts the corrected sentences name,
+    the five rows no longer name the parts check-int15-1 found, and the check is filed after 097d2517."""
+    probes = (("the WM8960 codec", "WM8960"), ("a TRACO TEN 40-2412WIN converter", "TEN 40-2412WIN"),
+              ("an Amphenol M.2 B-key socket, MDT420B01001", "MDT420B01001"), ("the TMDS341A display switch", "TMDS341A"),
+              ("two TS3DV642 switches", "TS3DV642"))
+    nets = L.all_nets(L.netlists())
+    for sent, part in probes:
+        got = L.names(sent, nets)
+        if part not in " ".join(str(x) for x in (got.get("parts") or [])):
+            refuse("the finder does not read the part number %s in %r (S-122's set 14 extension)" % (part, sent))
+    ver = open(os.path.join(L.TOP, "v2/docs/records/s122/verdicts.out"), encoding="utf-8").read()
+    for label, pat in (("board B's U3 or U4 as TS3DV642", r"\bB U[34] value has '[^']*TS3DV642"),
+                       ("board E's U6 as LM5069", r"\bE U6 value has '[^']*LM5069"),
+                       ("board D's U6 as PCM2912A", r"\bD U6 value has '[^']*PCM2912A"),
+                       ("board B's J_M2C2 as TE 2199119", r"\bB J_M2C2 value has '[^']*2199119")):
+        if not re.search(pat, ver): refuse("verdicts.out asserts no %s" % label)
+    spec = open(os.path.join(L.TOP, "v2/docs/V2-SPEC.md"), encoding="utf-8").read().split("\n")
+    env = open(os.path.join(L.TOP, "v2/docs/OPERATING-ENVELOPE.md"), encoding="utf-8").read().split("\n")
+    def row(lines, head): return [l for l in lines if l.startswith(head)]
+    left = []
+    if any("TMDS341A" in l for l in row(spec, "| B16 |")): left.append("V2-SPEC.md's B16 row names the TMDS341A")
+    if any("WM8960" in l for l in row(spec, "| APRS and VHF voice |")): left.append("V2-SPEC.md's APRS row names the WM8960")
+    if any("LM5176" in l and "A22" not in l for l in row(spec, "| E6 |")): left.append("V2-SPEC.md's E6 row puts the LM5176 on E6")
+    if row(env, "| TRACO TEN 40"): left.append("OPERATING-ENVELOPE.md keeps its TRACO TEN 40 row")
+    if row(env, "| Amphenol M.2 B-key socket |"): left.append("OPERATING-ENVELOPE.md keeps its Amphenol M.2 B-key row")
     if left: refuse("check-int15-1's sentences still stand: %s" % "; ".join(left))
-    body = open(chk, encoding="utf-8").read()
-    if "check-int15-1" not in body: refuse("the check does not name check-int15-1")
-    added = subprocess.run(["git", "-C", L.TOP, "log", "--diff-filter=A", "--format=%H", "--", os.path.relpath(os.path.abspath(chk), L.TOP)],
+    path = chk if os.path.isabs(chk) else os.path.join(L.TOP, chk)
+    if not os.path.exists(path): refuse("no check at %s" % chk)
+    if "check-int15-1" not in open(path, encoding="utf-8").read(): refuse("the check does not name check-int15-1")
+    added = subprocess.run(["git", "-C", L.TOP, "log", "--diff-filter=A", "--format=%H", "--", os.path.relpath(path, L.TOP)],
                            capture_output=True, text=True).stdout.split()
     if not added or subprocess.run(["git", "-C", L.TOP, "merge-base", "--is-ancestor", "097d2517", added[-1]]).returncode:
         refuse("the check was not committed on a line that carries 097d2517 (set 14's extension of S-122)")
-
 
 def main():
     if len(sys.argv) != 2: refuse("usage: close_s122.py <the filed independent check>")
@@ -152,7 +165,7 @@ def main():
     i, j = A.span(out, "S-122")
     title = yaml.safe_load(out[i:j])[0]["title"]
     out = out[:i] + out[j:]
-    ci = out.index("\nclosed_items:\n") + len("\nclosed_items:\n")
+    ci = out.index("\nrecords:\n") + 1   # the end of closed_items (check-int15-3 p4)
     item = ("  - id: S-122\n    closed_by: commit %s\n    closing_evidence: >-\n%s    title: >-\n%s"
             % (head, A.fold(closing, 6, 120), A.fold(title, 6, 120)))
     out = out[:ci] + item + out[ci:]
