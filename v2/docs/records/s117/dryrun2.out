@@ -1,0 +1,76 @@
+dry run of stream s117's drafts (second issue) on a disposable worktree of fnd/s117 at 7cd95bf9, 2026-09-29 14:03 CEST; paths relative to that tree
+$ python3 v2/docs/records/s117/apply_decision_s117.py
+apply_decision_s117: decision 56 appended (board A: the charger U3 takes TI's 400 kHz row, 4.7 uH on th...); 33 decisions -> 34; nothing else moved
+APPLIED: decision 56 in v2/ecad/tools/pcb_decisions.yaml. Next: python3 v2/ecad/tools/decisions_render.py
+exit 0
+$ python3 v2/docs/records/s117/apply_decision_fets_s117.py
+apply_decision_fets_s117: decision 57 appended (board A: the charger U3's power FETs chosen for its own 6 V ...); 34 decisions -> 35; nothing else moved
+APPLIED: decision 57 in v2/ecad/tools/pcb_decisions.yaml. Next: python3 v2/ecad/tools/decisions_render.py
+exit 0
+$ python3 v2/docs/records/s117/apply_gen_sch_a_s117.py
+apply_gen_sch_a_s117: gen_sch_a.py sha256/16 eb2e347e4d371e0f -> 0e2a4fd6a3769280; 3 changes; L2, R25, C26, C27 changed; R219, R220, C233, C234, C235 new; every expected call read back from the parsed source
+APPLIED: v2/ecad/tools/gen_sch_a.py written once; marker apply_gen_sch_a_s117.applied. Next: regenerate board A (schematic phase) on the box and run readback_s117.py on its netlist.
+exit 0
+$ python3 v2/docs/records/s117/apply_gen_sch_a_fets_s117.py
+apply_gen_sch_a_fets_s117: gen_sch_a.py sha256/16 0e2a4fd6a3769280 -> 7867ac3e6442dc75; Q7 CSD17578Q5A 30 V N-FET, Q8 to Q10 CSD17577Q5A 30 V N-FET; nets, land and pin map unchanged; the loop read back from the parsed source
+APPLIED: v2/ecad/tools/gen_sch_a.py written once; marker apply_gen_sch_a_fets_s117.applied. Next: apply_intent_checks_s117.py, then regenerate board A (schematic phase) and run readback_s117.py --fets.
+exit 0
+$ python3 v2/docs/records/s117/apply_intent_checks_s117.py
+apply_intent_checks_s117: intent_checks.py sha256/16 68afac7a314ccf3b -> 082b701e7bab36d9; two PIN_ROLES rows after CSD18510Q5B's; Q7 (CSD17578Q5A), Q8 (CSD17577Q5A) and Q27 (CSD18510Q5B) read S S S G D on pins 1 to 5 from the modified module
+APPLIED: v2/ecad/tools/intent_checks.py written once. A writer changed: re-take PWR-001 on every board.
+exit 0
+$ python3 v2/docs/records/s117/apply_emc_s117.py
+apply_emc_s117: board A's U3 row f_khz 800 -> 400, basis restated; emc_sheet.judge on board A: 13 source(s), 0 failure(s) before, 0 after, none naming U3
+APPLIED: v2/ecad/tools/pcb_emc.yaml written once.
+exit 0
+$ python3 v2/docs/records/s117/apply_hwfw_s117.py
+apply_hwfw_s117: FW-A17 after FW-A16, V-A05 after V-A04, section 3.1's heading, FW-C01's step 5, one change-record row; 418 lines -> 421
+APPLIED: v2/docs/HW-FW-CONTRACT.md written once.
+exit 0
+$ python3 v2/docs/records/s117/apply_registry_s117.py open
+apply_registry_s117 open: S-118 opened (F1, decisions 56 and 57), REQ-015 waits on it; S-119 opened (F2, the energy chain's charger rows), REQ-072 waits on it; S-115's title carries S-117's layout consequence; S-117 stays open
+APPLIED. Next: python3 v2/ecad/tools/rules_lib.py requirements, then rules_render.py --requirements
+exit 0
+$ python3 v2/ecad/tools/decisions_render.py; decisions_render.py --check
+exit 0
+$ python3 v2/ecad/tools/rules_lib.py validate
+rules_lib: 59 rule(s), 0 error(s), 0 warning(s), fingerprint a9b1e7f7412f9c0c
+$ python3 v2/ecad/tools/rules_lib.py requirements
+warn  out/rule-audit is not in this tree: a PASS is not checked against its rules' classes
+warn  REQ-077: its reading is bound to v2/ecad/tools/gen_sch_a.py at eb2e347e4d371e0f and the tree holds 7867ac3e6442dc75: re-read it before it decides
+ERROR CON-019: its reading is bound to v2/ecad/tools/gen_sch_a.py at eb2e347e4d371e0f and the tree holds 7867ac3e6442dc75: re-read it before it decides
+ERROR CON-018: its reading is bound to v2/ecad/tools/gen_sch_a.py at eb2e347e4d371e0f and the tree holds 7867ac3e6442dc75: re-read it before it decides
+ERROR CFL-016: its reading is bound to v2/ecad/tools/pcb_decisions.yaml at ad64649584227d29 and the tree holds b6d4617eb976c9d6: re-read it before it decides
+ERROR CFL-014: its reading is bound to v2/ecad/tools/gen_sch_a.py at eb2e347e4d371e0f and the tree holds 7867ac3e6442dc75: re-read it before it decides
+rules_lib: 144 requirement record(s), 4 error(s), 1 warning(s)
+$ python3 v2/ecad/tools/tests/run.py test_decision_register test_emc_sheet test_pair_gate test_certify_mismatch test_review_packet test_handover_pack test_intent
+tests: test_decision_register.t_a_decision_the_register_calls_open_is_not_one_the_rule_already_passes_everywhere SKIP no rule audit in this tree
+tests: test_decision_register.t_the_page_is_generated_and_not_hand_maintained SKIP this tree carries no assembly_set or final_gate, so the page's 'what it holds' half is computed from less evidence than the committed page was
+tests: 79 passed, 0 failed, 2 skipped
+$ git status --short (outside this folder)
+ M v2/docs/HW-FW-CONTRACT.md
+ M v2/docs/OWNER-DECISIONS-OPEN.md
+ M v2/ecad/tools/gen_sch_a.py
+ M v2/ecad/tools/intent_checks.py
+ M v2/ecad/tools/pcb_decisions.yaml
+ M v2/ecad/tools/pcb_emc.yaml
+ M v2/ecad/tools/pcb_requirements.yaml
+$ python3 v2/docs/records/s117/apply_registry_s117.py close 7cd95bf9bd01559a52b5cfb707a7407e6545609b --check   (the netlist is not regenerated here, so it must refuse)
+apply_registry_s117: REFUSED: board A's netlist is not this tree's generator's: pcb-a-power.net was written by generator 261c1e11b15874c1 and this tree's generator is 032494a48cb8b26e: the two describe different designs (changed inputs: gen_sch_a.py)
+exit 2
+$ python3 v2/docs/records/s117/apply_registry_s117.py close-fets 7cd95bf9bd01559a52b5cfb707a7407e6545609b --check   (the netlist is not regenerated here, so it must refuse)
+apply_registry_s117: REFUSED: board A's netlist is not this tree's generator's: pcb-a-power.net was written by generator 261c1e11b15874c1 and this tree's generator is 032494a48cb8b26e: the two describe different designs (changed inputs: gen_sch_a.py)
+exit 2
+$ the close and close-fets phases on the synthetic regenerated netlist (selftest_readback_s117.after() with the four FETs), sch_prov stubbed (a harness, not a command the integrator runs): each written, then each a second time
+apply_registry_s117 close-fets: S-118 closed by commit 7cd95bf9; REQ-015 waits on S-106, S-107, S-111, S-117
+APPLIED. Next: python3 v2/ecad/tools/rules_lib.py requirements, then rules_render.py --requirements
+apply_registry_s117 close: S-117 closed by commit 7cd95bf9; REQ-015 waits on S-106, S-107, S-111
+APPLIED. Next: python3 v2/ecad/tools/rules_lib.py requirements, then rules_render.py --requirements
+apply_registry_s117: REFUSED: F1 is already closed (a second run)
+exit 2
+apply_registry_s117: REFUSED: S-117 is already closed (a second run)
+exit 2
+$ python3 v2/ecad/tools/rules_lib.py requirements (after both closes)
+warn  out/rule-audit is not in this tree: a PASS is not checked against its rules' classes
+rules_lib: 144 requirement record(s), 4 error(s), 1 warning(s)
+REQ-015 waits_on ['S-106', 'S-107', 'S-111']; REQ-072 waits_on ['S-53', 'M-02', 'S-114', 'S-119']; open S items added: ['S-119']
