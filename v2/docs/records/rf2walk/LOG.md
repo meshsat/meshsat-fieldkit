@@ -126,7 +126,7 @@ the regeneration and read-back of `apply_b_chk12.py`, and the 11 UNDECIDED rows 
   switch on either line as the toggle's board, so a switch on board B from TX_INHIBIT_n to ground brought CX9's latch back
   (CX10, both lines PASS direct and behind 330R), and every walk skipped a switch from TX_INHIBIT_n to +3V3_DEV as "the
   toggle" (CX14). The owner's rule after two failures on one fault: change the method. Worktree `rf2walk3` created.
-- 14:19 to 14:33 The method: the toggle is DATA. `EMCON_TOGGLES` in `tx_inhibit.py` (beside SOURCES, where the walk's other
+- 14:19 to 14:24 The method: the toggle is DATA. `EMCON_TOGGLES` in `tx_inhibit.py` (beside SOURCES, where the walk's other
   declarations of the lines live): board C, SW_EMCON, value "EMCON locking toggle", its contact between TX_INHIBIT_n and GND,
   source cited (gen_sch_c.py's SW_EMCON part line: lug 1 TX_INHIBIT_n, lug 2 GND, lug 3 unconnected, lug 2 the common per the
   APEM sheet; PANEL.md's Switches row). `_is_toggle(k, nl, ref)` matches a declaration by board, reference, value and wiring
@@ -138,7 +138,7 @@ the regeneration and read-back of `apply_b_chk12.py`, and the 11 UNDECIDED rows 
   TX_INHIBIT_n, to ground, on any board a fixture names) and routes its 75 judge calls through them. One bug found and
   fixed on the way: a two-pin contact was skipped by its own entry-once check in the network (CX14 on D4E-F1's shape read
   PASS on EMCON_HW until then).
-- 14:33 to 14:40 Fixtures: `t_a_second_switch_makes_no_board_the_toggles_board` (CX10, direct and behind 330R, main's and
+- 14:24 to 14:26 Fixtures: `t_a_second_switch_makes_no_board_the_toggles_board` (CX10, direct and behind 330R, main's and
   D4E-F1's shape, both lines FAIL), `t_a_switch_that_lifts_the_line_is_a_second_driver` (CX14 on both shapes: TX_INHIBIT_n
   FAIL; EMCON_HW PASS on main's shape, UNDECIDED on D4E-F1's through D23's reverse current), `t_the_toggles_board_keeps_its_
   legitimate_shapes` (CX11 and CX12 PASS, the latch on board C's received +5V FAILS, CX13 FAILS as a stated conservative
@@ -146,12 +146,12 @@ the regeneration and read-back of `apply_b_chk12.py`, and the 11 UNDECIDED rows 
   06eb61ef's `tx_inhibit.py`) the CX10 and CX14 fixtures FAIL. The checker's `cx_walk.py`, `cx_walk2.py`, `cx_walk3.py` on
   both walks: `readings/b1r3/check-*.txt`. CX13 does not move (FAIL on this walk and the previous; PASS on main's and the
   first rf2walk walk).
-- 14:40 Readings into scratch (`readings/b1r3/`): set 12 at `dd7230a7` reads board B MISSING on both walks (UNKNOWN
+- 14:26 Readings into scratch (`readings/b1r3/`): set 12 at `dd7230a7` reads board B MISSING on both walks (UNKNOWN
   GENERATOR: `gen_sch_b.py` carries CHK12-B and board B is not regenerated yet), 20 RF-002 rows UNJUDGED, identical bytes; set
   12's netlists under their own generator (`eafb324d`'s tree): 0 FAIL, 11 UNDECIDED, 15 PASS on both walks, identical bytes;
   main `2c7730a4`: 0 FAIL, 11 UNDECIDED on both walks, identical bytes (7 UNDECIDED with its own walk). Test groups contract,
   inhibit, requirements, evidence: 346 passed, 0 failed, 5 skipped.
-- 14:40 to 14:44 The two minors. R527's margin at every rail lost stays as drafted and is stated: 0.37 V against the maker's
+- 14:26 to 14:28 The two minors. R527's margin at every rail lost stays as drafted and is stated: 0.37 V against the maker's
   0.4 V (30 mV), on the stated Ioff sum (U536 10 uA, U537 10 uA, U543 0.3 uA) into 20.2 k parallel 165.9 k; 16.5 k 1% would give
   92 mV there and leave 51 mV on the released level (2.05 V against 2.0 V) instead of 100 mV, so no value moves and no
   follow-up script is owed for it. The Q{s}01 note: `apply_b_chk12_led.py` (a follow-up to CHK12-B on `dd7230a7`'s
