@@ -27,7 +27,7 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    SW_EMCON_PLATE   X  -158.5.. -141.5 Y    -6.5..   42.5  h   2.00  guard support plate 17.00 wide, 2.00 high (INFERRED)
    SW_ZERO_GUARD    X  -157.0.. -143.0 Y   -48.5..    0.5  h  28.00  APEM guard class p2: 28.00 closed (20PN), cap 14.00 x 49.00 arc (INFERRED for the CSG)
    SW_ZERO_PLATE    X  -158.5.. -141.5 Y   -48.5..    0.5  h   2.00  guard support plate 17.00 wide, 2.00 high (INFERRED)
-   SW_LIGHT         X  -154.0.. -146.0 Y   -76.0..  -56.0  h  20.75  NKK M2044 lever not read: bounded by the APEM figure (INFERRED)
+   SW_LIGHT         X  -154.0.. -146.0 Y   -76.0..  -56.0  h  16.40  NKK Series M sheet, PDF page 3 ordering table: M2044SD3A01 = S bat .413 in (10.5) on D3 bushing .350 in (8.9); less the 3.0 plate
    BZ1              X  -166.9.. -131.1 Y  -114.9..  -79.1  h  10.23  Floyd Bell MC-09-530-Q p2: ring d 35.8; max(11.7-3.0, 7.9+1.57)+0.76
    J_HSJ1           X  -133.0.. -103.0 Y  -119.0..  -89.0  h    TBD  U-174/U panel jack: drawing owed (panel1450); 30 x 30 plan INFERRED, height TBD: nothing may stand over it
    J_HSJ2           X  -107.0..  -77.0 Y  -119.0..  -89.0  h    TBD  U-174/U panel jack: drawing owed (panel1450); 30 x 30 plan INFERRED, height TBD: nothing may stand over it

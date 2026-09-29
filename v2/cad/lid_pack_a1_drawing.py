@@ -54,7 +54,7 @@ def face_parts(ax, label=True):
     for ref, r, h, src in L.FACE:
         if ref.startswith("PLATE_SCREW"):
             ax.add_patch(Circle(((r[0] + r[2]) / 2, (r[1] + r[3]) / 2), 3.43, fill=False, lw=0.3, ec=GREY)); continue
-        col = "#cc3333" if (h is None or h > 17.0) else GREY
+        col = "#cc3333" if L.one_layer_fails(h) else GREY
         rect(ax, r, fill=False, lw=0.35, ec=col, ls=":" if h is not None and h < 1.0 else "-")
         if label and not ref.startswith("D") or ref in ("D1", "D12"):
             t = ref.replace("_GUARD", " guard").replace("_PLATE", "")
@@ -100,7 +100,7 @@ def sheet1(pdf, arr):
     a = arr["B"]
     fig = plt.figure(figsize=A3)
     frame(fig, "A1-1", "arrangement B in plan: the lid module, the QMX set and every face part under the lid",
-          "Face parts in red stand taller than a one-layer module allows (guards 28.00, NKK lever bound 20.75) or have no height (U-174/U jacks, TBD); "
+          "Face parts in red stand taller than a one-layer module allows (the toggle guards, 28.00) or have no height (U-174/U jacks, TBD); "
           "dotted: 1.0 or less. Pale cells layer 1; hatched cells layer 2, nested in the grooves 16.065 further from the ceiling (toward the face). Every clearance is a row of lid_pack_a1.out section 2.")
     ax = plan_ax(fig, (0.03, 0.09, 0.66, 0.83))
     lid_outline(ax); face_parts(ax); qmx(ax); cells(ax, a)
