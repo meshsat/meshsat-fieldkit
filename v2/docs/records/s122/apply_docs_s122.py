@@ -47,6 +47,8 @@ A_BACKFEED = ["B:U537.1=RB_IEN", "B:U537.2=RB_STATUS", "B:U537.4=RB_GO", "B:U538
               "B:U546.2=LORA_GO", "B:U547.2=LORA_GO", "B:U548.2=LORA_GO", "B:U549.2=LORA_GO", "B:U550.2=LORA_GO",
               "B:U540~SN74LVC2G07", "B:U541~SN74LVC2G07", "B:U542~SN74LVC2G07", "B:U540.6=ZBA_RXD", "B:U542.6=ZBB_RXD",
               "B:R536?", "B:R537?", "B:+3V3_ZB>R536,R537,U22"]
+A_DEVRAIL = ["A:U7~LM5176", "A:U7.12=+5V_DEV", "B:U25~AP63203", "B:U25.2=+5V_DEV", "B:U25.5=DEV_SW", "B:L1.1=DEV_SW",
+             "B:L1.2=+3V3_DEV", "A:!~AP63203", "B:+5V_DEV>U25,J_5V_DEV", "A:+5V_DEV>J_5V_DEV"]
 A_HOTR1 = ["E:Q11.1=HOT_R1_G", "E:Q11.3=BLK_SPARE", "E:J_BLK.12=BLK_SPARE", "A:J_DOCK.12=DOCK_SPARE",
            "A:U27@IO1_5=DOCK_SPARE", "A:R216.1=DOCK_SPARE", "A:R216.2=+3V3"]
 
@@ -166,6 +168,14 @@ EDITS = [
            "B:U312.4=EMCON_ON3", "B:U312.5=+3V3_CM3", "B:U113.5=+3V3_CM1", "B:U213.5=+3V3_CM2", "B:U313.5=+3V3_CM3",
            "B:!U111", "B:!U211", "B:!U311", "B:U543.1=RB_IEN", "B:U543.5=+3V3_DEV", "B:U543.6=+5V_DEV",
            "DOC:v2/docs/feasibility/EMCON.md~CLOSED at desk on board B's round 8 (section 4b)"]},
+    {"doc": "v2/docs/CONOPS.md", "why": "section 4e's header dates every row to 45bde541, while stream s122's corrections make two rows describe board B's round 8 and set 12",
+     "old": "As generated at `45bde541` unless a row says a fix is owed.",
+     "new": "As generated at `45bde541` unless a row says a fix is owed or names the later set it describes (stream s122 corrected two rows to set 12's netlists).",
+     "a": ["SHA:B=3ef9b8c49a01b728", "B:U25~AP63203", "B:U543~TPS3808G30"]},
+    {"doc": "v2/docs/CONOPS.md", "why": "section 4e: both device-rail converters put on board A; +3V3_DEV is made on board B",
+     "old": "(`+5V_DEV` or `+3V3_DEV`, one converter each on board A)",
+     "new": "(`+5V_DEV` or `+3V3_DEV`, one converter each: `U7` on board A makes `+5V_DEV`, and `U25` on board B makes `+3V3_DEV` from it)",
+     "a": A_DEVRAIL},
     {"doc": "v2/docs/CONOPS.md", "why": "section 4e: an undated citation of a gen_sch_e.py line that now holds other text",
      "old": "(`gen_sch_e.py` line 503)",
      "new": "(`gen_sch_e.py` line 503 at `45bde541`)",
@@ -188,14 +198,28 @@ EDITS = [
     {"doc": "v2/docs/V2-SPEC.md", "why": "the corrections list gains the record of lines 35 and 76",
      "old": "slot's own 5 V (`U116`, `U216`, `U316`). The counts do not change: 15 of 17 close locally at desk and 0 of 17 end to\n    end. Nothing is built.\n",
      "new": "slot's own 5 V (`U116`, `U216`, `U316`). The counts do not change: 15 of 17 close locally at desk and 0 of 17 end to\n    end. Nothing is built.\n"
-            "32. **Set 12 (lines 35 and 76).** Session reading of stream s122 (29 September 2026, MESHSAT-1357, open item S-122)\n"
-            "    against the committed netlists of integration set 12 (`v2/docs/records/s122/verdicts.out`). Line 76 listed the\n"
+            "32. **Set 12 (lines 35, 73 and 76, correction 29).** Session reading of stream s122 (29 September 2026,\n"
+            "    MESHSAT-1357, open item S-122) against the committed netlists of integration set 12\n"
+            "    (`v2/docs/records/s122/verdicts.out`). Line 76 listed the\n"
             "    RockBLOCK 9704's ENABLE forced low by the EMCON hardware as owed; it is drawn since board B's stream w4b (`U536`,\n"
             "    correction 31), and since set 12 `U543` also holds it low while `+3V3_DEV` is below 2.79 V; what stays owed is\n"
             "    the module's response when ENABLE falls (a maker's document or bench E-04). Line 35 put the holdover clock on the\n"
-            "    panel controller; it is board B's DS3231SN `U9` on the kit I2C bus, which the panel controller masters. Nothing\n"
-            "    is built.\n",
-     "a": A_RB + ["B:U9~DS3231SN", "B:U9.15=SDA"]},
+            "    panel controller; it is board B's DS3231SN `U9` on the kit I2C bus, which the panel controller masters.\n"
+            "    Correction 29 put both device-rail converters on board A; board A's `U7` makes `+5V_DEV` and board B's `U25`\n"
+            "    makes `+3V3_DEV` from it. Line 73 had all five fans driven by the sensor controller; each cooler fan is driven\n"
+            "    by its own module (`J_FAN1..3` on board B), and the sensor controller drives the two mixer fans on board E.\n"
+            "    Nothing is built.",
+     "a": A_RB + A_DEVRAIL + ["B:U9~DS3231SN", "B:U9.15=SDA", "B:J_FAN1.4=FAN_PWM1", "B:U30A@Fan_PWM=FAN_PWM1",
+                              "B:J_FAN2?", "B:J_FAN3?", "E:J_FAN1.3=FAN1_TACH", "E:J_FAN2?"]},
+    {"doc": "v2/docs/V2-SPEC.md", "why": "correction 29: both device-rail converters put on board A; +3V3_DEV is made on board B",
+     "old": "the `+5V_DEV` and `+3V3_DEV` converters on board A (one each),",
+     "new": "the `+5V_DEV` converter on board A and the `+3V3_DEV` converter on board B (one each; correction 32),",
+     "a": A_DEVRAIL},
+    {"doc": "v2/docs/V2-SPEC.md", "why": "line 73: all five fans said to be driven by the sensor controller; the three cooler fans are driven by their modules",
+     "old": "five IP68-rated internal fans (one per CM5 cooler, two mixer fans under the plate) driven by the sensor controller couple the inside air to the skin;",
+     "new": "five IP68-rated internal fans (one per CM5 cooler, driven by its module, and two mixer fans under the plate, driven by the sensor controller; correction 32) couple the inside air to the skin;",
+     "a": ["B:J_FAN1.4=FAN_PWM1", "B:U30A@Fan_PWM=FAN_PWM1", "B:J_FAN1.3=FAN_TACHO1", "B:U30A@Fan_Tacho=FAN_TACHO1",
+           "E:J_FAN1.3=FAN1_TACH", "E:U10.13=FAN1_TACH", "E:U10~RP2040", "E:Q9.3=FAN1_SW", "E:J_FAN1.2=FAN1_SW"]},
     # ---------------------------------------------------------------- OPERATING-ENVELOPE.md
     {"doc": "v2/docs/OPERATING-ENVELOPE.md", "why": "section 4: HOT-R1 called absent from the generators of boards A and E, drawn there since stream w4ae",
      "old": "do that once HOT-R1 is in the generators of boards A and E (the requirement reads FAIL on the generated boards until then) and on",
@@ -251,11 +275,20 @@ EDITS = [
      "old": "under the voted changeover, `gen_sch_b.py:1253-1272`)",
      "new": "under the voted changeover, `gen_sch_b.py:1253-1272` at `45bde541`)",
      "a": ["G@45bde541:gen_sch_b.py:1253-1272~SKY13351|WIFI_SEC", "B:J_WOA?", "B:J_WOB?"]},
-    {"doc": "v2/docs/ASSEMBLY.md", "why": "section 4, the dock contacts: undated citations",
-     "old": "(`gen_sch_a.py:225`, `gen_sch_e.py:488`;",
-     "new": "(`gen_sch_a.py:225` and `gen_sch_e.py:488` at `45bde541`;",
-     "a": ["G@45bde541:gen_sch_a.py:225~J_DOCK", "G@45bde541:gen_sch_e.py:488~J_BLK", "A:J_DOCK.8=SHORE_INHIBIT",
-           "A:J_DOCK.9=USB_E6_P", "A:J_DOCK.10=USB_E6_N", "A:J_DOCK.12=DOCK_SPARE"]},
+    {"doc": "v2/docs/ASSEMBLY.md", "why": "section 4, the dock contacts: VIN_RAW on pins 1 to 4 and pin 12 a spare, where EQ-16 moved VIN_RAW to J_VR1 to J_VR4 and w4ae put HOT-R1 on pin 12; undated citations",
+     "old": "pins 1 to 4 carry `VIN_RAW` (the 9 to 36 V input and the solar tracker's output, passed up to A22's front end), 5 to 7 "
+            "ground, 8 `SHORE_INHIBIT`, 9 and 10 the USB pair of E6's sensor controller, 11 ground and 12 a spare (`gen_sch_a.py:225`, "
+            "`gen_sch_e.py:488`;",
+     "new": "pins 1 to 7 ground, 8 `SHORE_INHIBIT`, 9 and 10 the USB pair of E6's sensor controller, 11 ground and 12 the hot stop "
+            "line HOT-R1 (`DOCK_SPARE`, since stream w4ae), with `VIN_RAW` (the 9 to 36 V input and the solar tracker's output, "
+            "passed up to A22's front end) on four 9 A spring pins of its own, `J_VR1` to `J_VR4`, since EQ-16 (`gen_sch_a.py:294` "
+            "and `gen_sch_e.py:660` at `e57a7365`; at `45bde541`, `gen_sch_a.py:225` and `gen_sch_e.py:488`, pins 1 to 4 carried "
+            "`VIN_RAW`;",
+     "a": ["G@e57a7365:gen_sch_a.py:294~J_DOCK", "G@e57a7365:gen_sch_e.py:660~J_BLK", "G@45bde541:gen_sch_a.py:225~J_DOCK",
+           "G@45bde541:gen_sch_e.py:488~J_BLK", "A:J_DOCK~Preci-Dip 813", "A:J_DOCK.1=GND", "A:J_DOCK.4=GND", "A:J_DOCK.7=GND",
+           "A:J_DOCK.8=SHORE_INHIBIT", "A:J_DOCK.9=USB_E6_P", "A:J_DOCK.10=USB_E6_N", "A:J_DOCK.11=GND",
+           "A:J_DOCK.12=DOCK_SPARE", "E:J_BLK.12=BLK_SPARE", "E:J_BLK.8=SHORE_INHIBIT", "A:J_VR1~9 A", "A:J_VR1.1=VIN_RAW",
+           "A:J_VR2.1=VIN_RAW", "A:J_VR3.1=VIN_RAW", "A:J_VR4.1=VIN_RAW", "E:Q11.3=BLK_SPARE"]},
     {"doc": "v2/docs/ASSEMBLY.md", "why": "section 8 step 3: PA_EN = EMCON_HW AND PA_SW_EN at lines that now hold other code; board A's round 8 made it TX_INHIBIT_n AND EMCON_HW AND PA_HOLD",
      "old": "the line is active low, `PA_EN = EMCON_HW AND PA_SW_EN` in `gen_sch_a.py:535-536`, and `R102` pulls it low (`:537`) "
             "with the ribbon out, so on a bare A22 the two rails stay off until the line is driven high).",

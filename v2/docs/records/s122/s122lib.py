@@ -45,8 +45,22 @@ SCOPE = [
 DASHES = ("—", "–")
 
 
+AT = os.environ.get("S122_AT") or None   # read the documents at this commit (the netlists are always this tree's)
+
+
+def read_bytes(rel):
+    if AT and not rel.endswith(".net"):
+        r = subprocess.run(["git", "-C", TOP, "show", "%s:%s" % (AT, rel)], capture_output=True, check=True)
+        return r.stdout
+    return open(os.path.join(TOP, rel), "rb").read()
+
+
+def read(rel):
+    return read_bytes(rel).decode("utf-8")
+
+
 def sha16(rel):
-    return hashlib.sha256(open(os.path.join(TOP, rel), "rb").read()).hexdigest()[:16]
+    return hashlib.sha256(read_bytes(rel)).hexdigest()[:16]
 
 
 def netlists():
@@ -76,7 +90,7 @@ def sec_key(title):
 def md_blocks(rel):
     """[(section key, section title, block kind, first line number, text, row key)] for a Markdown file. Table rows
     are one block per cell (kind 'cell:<n>'), list items and paragraphs one block each."""
-    lines = open(os.path.join(TOP, rel), encoding="utf-8").read().split("\n")
+    lines = read(rel).split("\n")
     out, key, title, para, pstart = [], "head", "head", [], 0
     stack = []
 
@@ -123,8 +137,8 @@ def md_blocks(rel):
 
 def yaml_blocks(rel, numbers):
     import yaml
-    d = yaml.safe_load(open(os.path.join(TOP, rel), encoding="utf-8"))
-    raw = open(os.path.join(TOP, rel), encoding="utf-8").read().split("\n")
+    d = yaml.safe_load(read(rel))
+    raw = read(rel).split("\n")
     out = []
     for x in d["decisions"]:
         if str(x["n"]) not in numbers: continue
@@ -172,10 +186,10 @@ REF = re.compile(r"(?<![\w{/.-])((?:U|R|C|D|Q|J|L|F|FB|TP|SW|BZ|Y|JP|K|X|LED)\d{
                  r"|(?:U|Q|R|C)\{s\}\d\d|PIJ2_[AB])(?![\w-])")
 GEN = re.compile(r"(gen_sch_[a-z]\d*\.py|gen_pcb_[a-z]\d*\.py|stackup_write\.py|panel1450\.py)`?(?::(\d+(?:-\d+)?(?:(?:,|,? and) `?:\d+(?:-\d+)?`?)*))?")
 BOARD = re.compile(r"\b(?:board [ABCDEP]\b|boards? [A-E](?: and [A-E])+|A2[0-9]\b|B1[0-9]\b|C[5-8]\b|D[6-9]\b|E[4-7]\b|P[2-9]\b|"
-                   r"PCB-[A-E]\b|[ABCDEP]'s\b|the dock strip|the pack board|the backer)")
-RAIL = re.compile(r"(?<![\w])(\+\d+V\d*(?:_[A-Z0-9]+)*|\+\d+V\d+|VBAT|VSYS|VBUS\d*|SHORE_12V|VIN_RAW)(?![\w])")
+                   r"PCB-[A-E]\b|[ABCDEP]'s\b|the dock strip|the pack board|the backer|the generated boards?|(?i:as generated))")
+RAIL = re.compile(r"(?<![\w])(\+\d+V\d*(?:_[A-Z0-9]+)*|\+\d+V\d+|VBAT|VSYS|VBUS\d*|SHORE_12V|VIN_RAW|rails?)(?![\w])")
 GATE = re.compile(r"\b(AND|NOR|NAND|OR gate|inverter|inverts?|buffer|Schmitt|open[- ]drains?|load switch|eFuse|supervisor|"
-                  r"gate[sd]?|pull[- ]?(?:up|down)s?|pulled (?:low|high|up|down)|interlock|comparator|enable[sd]?)\b")
+                  r"gate[sd]?|pull[- ]?(?:up|down)s?|pulled (?:low|high|up|down)|interlock|comparator|enable[sd]?|load switch(?:es)?|back-feed)\b")
 
 
 def expand(tok):

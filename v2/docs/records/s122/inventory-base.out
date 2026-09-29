@@ -13,6 +13,9 @@ PANEL.md#1:L56:cell:1:s1 [dc87e613e5]
 PANEL.md#1:L56:cell:2:s1 [c27be131c3]
     controller; `D22` hardware
     names: refs=D22
+PANEL.md#1:L57:cell:0:s1 [713ef78200]
+    LED rail
+    names: rails=rail
 PANEL.md#1:L57:cell:1:s1 [598cdf8892]
     `+5V` through the LIGHTING toggle `SW_LIGHT` (pole 1) to `LED_RAIL_SW`, `Q1` P-FET high side switched by `Q2` from `PANEL_PWM`, `RAIL_SENSE` divider
     names: refs=Q1,Q2,SW_LIGHT; nets=+5V,LED_RAIL_SW,PANEL_PWM,RAIL_SENSE; rails=+5V
@@ -49,6 +52,9 @@ PANEL.md#1:L64:cell:1:s1 [d757d209e1]
 PANEL.md#2:L70:cell:1:s1 [436512e5ba]
     +5V
     names: nets=+5V; rails=+5V
+PANEL.md#2:L70:cell:2:s1 [827a5f9bfe]
+    in (rail)
+    names: rails=rail
 PANEL.md#2:L71:cell:1:s1 [436512e5ba]
     +5V
     names: nets=+5V; rails=+5V
@@ -78,7 +84,7 @@ PANEL.md#2:L77:cell:4:s1 [0a41efb05f]
     names: nets=SLOT_EN1
 PANEL.md#2:L77:cell:5:s1 [3d8f3fd4e8]
     out: slot 1 rail enable
-    names: gates=enable
+    names: rails=rail; gates=enable
 PANEL.md#2:L78:cell:3:s1 [a064a6324b]
     SLOT_EN2
     names: nets=SLOT_EN2
@@ -129,7 +135,7 @@ PANEL.md#3:L91:cell:1:s1 [024798389d]
     names: nets=PANEL_PWM
 PANEL.md#3:L91:cell:2:s1 [0474d6812f]
     LED rail dimmer through `Q2`/`Q1`, 2 kHz, 10 bit; boots low (rail dark until the firmware is up)
-    names: refs=Q1,Q2
+    names: refs=Q1,Q2; rails=rail
 PANEL.md#3:L92:cell:2:s1 [eb71f5bfaa]
     sounder through `Q4`; high = sound, PWM for patterns
     names: refs=Q4
@@ -141,7 +147,7 @@ PANEL.md#3:L94:cell:1:s1 [dac738f926]
     names: nets=SLOT_EN1
 PANEL.md#3:L94:cell:2:s1 [7d19d484c9]
     slot rail enables (high = on), section 5
-    names: gates=enables
+    names: rails=rail; gates=enables
 PANEL.md#3:L95:cell:1:s1 [9366a20224]
     HDMI_SEL1, HDMI_SEL2
     names: nets=HDMI_SEL1,HDMI_SEL2
@@ -201,7 +207,7 @@ PANEL.md#3:L104:cell:1:s1 [704baed09c]
     names: nets=RAIL_SENSE
 PANEL.md#3:L104:cell:2:s1 [6eccc5366d]
     `LED_RAIL_SW` through the `R15`/`R51` 10k/10k divider (W4C-F1, 27 September 2026: through `R15` alone the pin sat above IOVDD, RP2040 datasheet 2.9.5): about 2.5 V (2.65 V at most) while the LED rail is present, 0 V at BLACKOUT; the pin is an ADC input (IE low, OD high); the rail is present above 1.25 V
-    names: refs=R15,R51; nets=LED_RAIL_SW
+    names: refs=R15,R51; nets=LED_RAIL_SW; rails=rail
 PANEL.md#3:L105:cell:1:s1 [ab5c153f31]
     TEST_SW
     names: nets=TEST_SW
@@ -223,6 +229,9 @@ PANEL.md#3:L107:cell:2:s1 [0608cdb612]
 PANEL.md#5:L147:item:s1 [27d3074deb]
     Boot, in this order: `PI_KILL` driven low (push-pull, and never released while any slot is powered: on the netlist a powered slot's level stage can lift it and switch the kit off, a mechanism not yet measured); `PI_SHDN_REQ` released; the ZEROIZE toggle read (`ZEROIZE_SW`, GPIO 22), and if it is closed, or the flash holds a wipe-pending record, the erase of section 6 is completed before any slot powers; every expander's output register written before its configuration register (the default output register is all ones, so configuration first would switch on the PoE and USB-C stages), keeping `DEV_EN` at 1, which is written 0 only as the last act of a shutdown; the charger's registers written; then the three `SLOT_EN` high, one at a time.
     names: nets=DEV_EN,PI_KILL,PI_SHDN_REQ,ZEROIZE_SW
+PANEL.md#5:L147:item:s2 [dff88584fc]
+    A slot whose heartbeat stays flat for 60 s after its rail came up is shown as a slot fault (MASTER CAUT, the e-paper names the slot); the controller power-cycles it once (rail off 5 s) and then leaves it off until the operator acts.
+    names: rails=rail
 PANEL.md#5:L148:item:s1 [55d8f49ec8]
     Since board B's round 8 the display switches pass a slot only while that module's own 3.3 V is up (`U519`, `U520` qualify each switch's enable with the slot's power-good, FAB-02), so selecting a dark slot shows no picture rather than feeding the dark module's HDMI pins; with the panel absent B's `R15`/`R16` (10 k) hold both selects low, slot 1.
     names: refs=R15,R16,U519,U520; boards=B's,board B; gates=enable
@@ -240,7 +249,7 @@ PANEL.md#6:L155:cell:1:s1 [d306ab46ea]
     names: refs=C24,C7,D8,R14,R50,SW_EMCON; boards=A22,B16,C7,D8; gates=pull-up
 PANEL.md#6:L155:cell:2:s1 [a7e84f7a68]
     D8's KEY gate cannot key the SA868 and the PA (`KEY = PTT_ANY AND TX_INHIBIT_n`); since board A's round 8 candidate (26 September 2026) A22 also reads it, ANDed with `EMCON_HW` into the enables of the PA and HF converters (`U35`, `U37`, SN74AUP1G08, `gen_sch_a.py:1240-1243`), so those two rails do not depend on the firmware pins that reach `EMCON_HW` (`feasibility/EMCON.md` section 4a); the bridge additionally holds every bearer; on C7, with `EMCON_HW`, it lights the EMCON lamp `D22` through `U14` (since round 8)
-    names: refs=C7,D22,D8,U14,U35,U37; nets=EMCON_HW,KEY,PTT_ANY,TX_INHIBIT_n; boards=A22,C7,D8,board A; gates=and,enables,gate; gens=gen_sch_a.py:1240-1243
+    names: refs=C7,D22,D8,U14,U35,U37; nets=EMCON_HW,KEY,PTT_ANY,TX_INHIBIT_n; boards=A22,C7,D8,board A; rails=rails; gates=and,enables,gate; gens=gen_sch_a.py:1240-1243
 PANEL.md#6:L156:cell:0:s1 [428ab166dc]
     EMCON_HW
     names: nets=EMCON_HW
@@ -249,11 +258,14 @@ PANEL.md#6:L156:cell:1:s1 [a3ff8a619c]
     names: refs=R102,R58,U9; nets=TX_INHIBIT_n; boards=A22,B16,board A,board B; gates=buffer
 PANEL.md#6:L156:cell:2:s1 [faa935d288]
     as generated at `45bde541` on A22 it is ANDed into the enables of the PA and HF converters (`U26`, `gen_sch_a.py:1102`), and in board A's round 8 candidate it is the second input of `U35` and `U37`, beside `TX_INHIBIT_n` (`gen_sch_a.py:1240-1243`); as generated in board B's round 8 (27 September 2026, MESHSAT-1357), on B16 each single gate `U501` to `U505` (SN74LVC1G08, which state Ioff) ANDs it into the supply enables of the LimeSDR, the RockBLOCK, the LoRa module and both E72, the first three reaching their switches at 0.6 of the gate's output so a gate in its unspecified supply band cannot turn one on (stream w4b), and `U536` ANDs it into the RockBLOCK's own ENABLE (`RB_IEN`, its J3 pin 3), so no firmware holds the module enabled on its capacitors (stream w4b); each slot inverts it into its own `EMCON_ON1..3` in `U112`, `U212`, `U312`, run from that module's own 3.3 V, so a lost `+3V3_DEV` no longer releases a module radio; from there SN74LVC2G06 open-drain outputs pull the module's `WL_nDisable` and `BT_nDisable` low (`U113`, `U213`, `U313`, with the panel's off requests on `U114`, `U214`, `U314`), and `U115`, `U215`, `U315` pull each card's `W_DISABLE1#` low, while each card's supply enable is driven by `U116`, `U216`, `U316` (SN74LV1T08, `EMCON_HW` AND the module's `PCIE_PWR_EN`) from that slot's own 5 V, so all three card supplies go, the 5G module's included, whether or not the module's own 3.3 V is up (stream w4b); the 5G module's `FULL_CARD_POWER_OFF#` falls at once (`U220`) and its socket rail is discharged through 15 Ohm (`Q212`, an AO3400A whose sheet states its threshold and channel resistance at 25 C only, and `R295`), a bound of about 1.2 ms from EMCON to the module's 3.135 V power-off floor plus 1.8 ms per mF of the module's own input capacitance, which no held document states (`feasibility/EMCON.md` section 4b, SD-EMC-1 as re-decided in round 8); the three supervisors read it through the buffer `U506` (`EMCON_SUP`), so no firmware pin sits on the line (`U506` drives `EMCON_SUP` push-pull, so a supervisor its bench jumper leaves unpowered is fed through its PC5 pin, as board C's `U9` fed it before the round); D8's KEY gate makes VHF/APRS the one transmit-only case.
-    names: refs=D8,J3,Q212,R295,U112,U113,U114,U115,U116,U212,U213,U214,U215,U216,U220,U26,U312,U313,U314,U315,U316,U35,U37,U501,U505,U506,U536,U9; nets=+3V3_DEV,EMCON_HW,EMCON_ON1,EMCON_ON2,EMCON_ON3,EMCON_SUP,RB_IEN,TX_INHIBIT_n; boards=A22,B16,D8,board A,board B,board C; rails=+3V3_DEV; gates=and,buffer,enable,enabled,enables,gate,inverts,open-drain,supervisor; gens=gen_sch_a.py:1102,gen_sch_a.py:1240-1243
+    names: refs=D8,J3,Q212,R295,U112,U113,U114,U115,U116,U212,U213,U214,U215,U216,U220,U26,U312,U313,U314,U315,U316,U35,U37,U501,U505,U506,U536,U9; nets=+3V3_DEV,EMCON_HW,EMCON_ON1,EMCON_ON2,EMCON_ON3,EMCON_SUP,RB_IEN,TX_INHIBIT_n; boards=A22,B16,D8,as generated,board A,board B,board C; rails=+3V3_DEV,rail; gates=and,buffer,enable,enabled,enables,gate,inverts,open-drain,supervisor; gens=gen_sch_a.py:1102,gen_sch_a.py:1240-1243
 PANEL.md#6:L156:cell:2:s2 [f46acf5130]
     Ruled 32.50 item 3 ("every transmitter") and, on 26 September 2026, by the owner's D-05: **under EMCON the radios go DARK.** Every radio with an emission path is powered off or RF-disabled in hardware; the VHF path keeps listening (D8's gate is on transmit only, as ruled); GNSS, DCF77 and the lightning detector continue.
     names: refs=D8; boards=D8; gates=gate
-PANEL.md#6:L156:cell:2:s3 [3f55eed50c]
+PANEL.md#6:L156:cell:2:s3 [3ab575f161]
+    Open: the back-feed of SD-EMC-2 into the RockBLOCK, the E22 and the E72 (the load switches now discharge their outputs; the lines' series resistance is not drawn).
+    names: gates=back-feed,load switches
+PANEL.md#6:L156:cell:2:s4 [3f55eed50c]
     **Corrected 27 September 2026 (round 8):** it described `EMCON_ON` from `Q11` and `R513` on `+3V3_DEV`, 2N7002 open drains, `U19`/`U20` and the supervisors' PC5 on the line, and the 5G module's disable pin as its only path
     names: refs=Q11,R513,U19,U20; nets=+3V3_DEV; rails=+3V3_DEV; gates=open drains
 PANEL.md#6:L157:cell:0:s1 [737d427bad]
@@ -285,13 +297,13 @@ PANEL.md#7:L165:cell:2:s1 [f167717fb2]
     names: refs=C7; boards=C7
 PANEL.md#7:L166:cell:1:s1 [90da98adce]
     PCA9555 `U6` (outputs: switch reset, rail enables, the module radio off requests into the open drains `U{s}14`, 5G control) and `U7` (inputs: faults, RockBLOCK status)
-    names: refs=U114,U214,U314,U6,U7; gates=enables,open drains
+    names: refs=U114,U214,U314,U6,U7; rails=rail; gates=enables,open drains
 PANEL.md#7:L166:cell:2:s1 [bc215963d1]
     B16
     names: boards=B16
 PANEL.md#7:L167:cell:1:s1 [0348bf9879]
     PCA9555 `U27` (outputs: the charge inhibit, the monitor, heater, D8 and device-rail enables, the PoE, PA and HF software enables; inputs: faults and status, and on P1.5 the hot stop line HOT-R1 from board E, pulled up by `R216`) and `U28` (power-good lines, the USB-C outlet's software enable, the Glenair host port's VBUS switch and its fault, the EMCON gates' supply fault `EMCON_EF_FLT` on P1.2, low when U39 has cut it on a +3V3 overvoltage, spares)
-    names: refs=D8,R216,U27,U28,U39; nets=+3V3,EMCON_EF_FLT; boards=D8,board E; rails=+3V3,VBUS; gates=enable,enables,gates,pulled up
+    names: refs=D8,R216,U27,U28,U39; nets=+3V3,EMCON_EF_FLT; boards=D8,board E; rails=+3V3,VBUS,rail; gates=enable,enables,gates,pulled up
 PANEL.md#7:L167:cell:2:s1 [0536e7eccf]
     A22
     names: boards=A22
@@ -313,6 +325,9 @@ PANEL.md#7:L171:cell:1:s1 [406b1d5e9e]
 PANEL.md#7:L171:cell:2:s1 [bc215963d1]
     B16
     names: boards=B16
+PANEL.md#7:L172:cell:1:s1 [977cb01ecc]
+    INA226 rail monitors: the three slot rails (5.1 V), the device rail, the PA rail (13.8 V), the PoE rail (54 V)
+    names: rails=rail,rails
 PANEL.md#7:L172:cell:2:s1 [0536e7eccf]
     A22
     names: boards=A22
@@ -393,7 +408,7 @@ PANEL.md#7:L184:para:s4 [73da5fc77a]
     names: boards=board E
 PANEL.md#9:L201:para:s1 [ba3a95b6c7]
     Controls: TEST / ACK short press = acknowledge (flashers to steady, sounder muted, MSG cleared, battery bar 5 s); hold 2 s = lamp test (all seventeen controller-lit indicators for 3 s, a chirp, the battery bar after: the sixteen panel LEDs `D1` to `D16`, the TX lamp `D3` among them through its tie `D17`, and the PI button's ring; the MAIN and TEST rings are lit whenever the LED rail is present and are not the controller's to test, and the controller's status LED `D18` sits on the board, not in the face; reconciled 27 September 2026, S-39: the "17" was right; section 1 counts the face's LEDs, `D1` to `D16` and, since round 8, the hardware EMCON lamp `D22`, which is not among these seventeen: as drawn no expander and no test tie reaches it, so the lamp test cannot light it and setting EMCON is its test, section 4); hold 5 s within 60 s of a "show QR" request from the touch UI = the e-paper shows the enrolment QR while held.
-    names: refs=D1,D16,D17,D18,D22,D3
+    names: refs=D1,D16,D17,D18,D22,D3; rails=rail
 PANEL.md#9:L203:para:s1 [b7ee9bd83e]
     E-paper (PDi E2370KS0C1, 416 x 240, iTC controller, PDi's driving note rev 02): idle page with callsign, battery and shore state, GPS fix, UTC time, last inbound message, bearer chips and the slot health; refresh at most once a minute, full refresh once an hour and after ZEROIZE; the QR carries an enrolment URL plus a one-time code, never key material; the controller powers the display down through `EPD_PWR_n` between refreshes (the boost stage runs only while `BUSY` is high) and polls `BUSY` before every command.
     names: nets=EPD_PWR_n
@@ -420,7 +435,7 @@ PANEL.md#10:L213:para:s1 [9e86900b5a]
     names: nets=SHORE_INHIBIT; boards=A22,B16,E6,the dock strip
 PANEL.md#10:L213:para:s2 [eb466c8d5a]
     As generated since `458b2873` the charger's cell-count strap is `R26` 13.3k over `R27` 40.2k, 75.1 % of VDDA, inside the BQ25731's 4S window of 68.4 to 81.5 % (ChargeVoltage 16.8 V, SYSOVP and VSYS_MIN at their 4S defaults; TI SLUSE66A 8.5 and Table 9-2; `gen_sch_a.py:764-771` at `45bde541`), and the kit's loads sit on the charger's system node VSYS (the net `VBAT`), with the pack beyond the charge shunt `R17` and the 25 A blade `F1`, TI's own topology (SLUSE66A Figure 10-1; `gen_sch_a.py:18-48`).
-    names: refs=F1,R17,R26,R27; nets=VBAT; rails=VBAT,VSYS; gens=gen_sch_a.py:764-771,gen_sch_a.py:18-48
+    names: refs=F1,R17,R26,R27; nets=VBAT; boards=As generated; rails=VBAT,VSYS; gens=gen_sch_a.py:764-771,gen_sch_a.py:18-48
 PANEL.md#10:L213:para:s3 [b91071c95b]
     That trickle goes to the pack alone, less board E's always-on draw, which sits on the pack side: a kit with a crashed panel is carried by shore at idle and its pack is held rather than charged (`review-packets/battery/CHARGER-STATE-SEQUENCE.md` sections 2 and 4 to 6).
     names: boards=board E
@@ -435,7 +450,7 @@ PANEL.md#10:L213:para:s6 [bc41670bc5]
     names: boards=E6
 PANEL.md#10:L213:para:s7 [f1f111b885]
     As generated since `faf8c981` that path exists: both ends of the pack's SMBus lead are the same JST-XH 1x4 in the pack board's order (1 SMBC, 2 SMBD, 3 the pack's own negative lead, 4 PRES), so a straight four-way lead mates them, and `check_contracts.py` checks the lead as a cross-board contract (ASSEMBLY.md section 4).
-    names: boards=the pack board
+    names: boards=As generated,the pack board
 PANEL.md#10:L213:para:s8 [d1a6b91d38]
     **Corrected 26 September 2026:** this paragraph said E6's end was a 2.54 mm 1x6 header that no lead mated, which was true before `faf8c981`.
     names: boards=E6
@@ -445,6 +460,9 @@ CONOPS.md#2a:L107:para:s1 [ad42c9eb94]
 CONOPS.md#2a:L116:cell:2:s1 [82d7099fad]
     `ARCH-PCB-B-IOHA.md` acceptance tests A1 to A14
     names: boards=PCB-B
+CONOPS.md#2a:L124:para:s1 [86755cb169]
+    A requirement under a named need is deferred when it serves a function the ruling leaves out, such as the accessory outlets under NEED-05 or the HF rail.
+    names: rails=rail
 CONOPS.md#2a:L135:para:s1 [534549e3cc]
     **Which peripherals NEED-03 protects.** Every USB peripheral that `ARCH-PCB-B-IOHA.md` section 15 traces, each designed to move with its bank, and the kit-to-kit WiFi link, whose antennas move to the standby card (IOHA A11).
     names: boards=PCB-B
@@ -471,7 +489,7 @@ CONOPS.md#4:L308:cell:1:s1 [66dbfeded9]
     names: boards=board A
 CONOPS.md#4:L308:cell:3:s1 [42a39f0c30]
     board A's 3.3 V and the shared device rail come up; the panel controller boots, reads the ZEROIZE toggle (`ZEROIZE_SW`) and completes any pending wipe (D-03), then raises `SLOT_EN1..3`; LED rail dark until firmware is up; `SHORE_INHIBIT` low
-    names: nets=SHORE_INHIBIT,SLOT_EN1,SLOT_EN2,SLOT_EN3,ZEROIZE_SW; boards=board A
+    names: nets=SHORE_INHIBIT,SLOT_EN1,SLOT_EN2,SLOT_EN3,ZEROIZE_SW; boards=board A; rails=rail
 CONOPS.md#4:L308:cell:4:s1 [1a6b46e4c8]
     every slot stays off until the panel controller raises its enable (pull-downs on board A); a slot with a flat heartbeat after 60 s is marked faulty, cycled once, then left off
     names: boards=board A; gates=enable,pull-downs
@@ -480,7 +498,7 @@ CONOPS.md#4:L308:cell:5:s1 [fe0dc4bdbe]
     names: gates=enable
 CONOPS.md#4:L308:cell:8:s1 [078d294b3f]
     cold start from a pack below about -10 C at the cells is out of scope (D-02d); the fixes this cell used to name are in board A's schematic since `458b2873`: the device rail's enable is pulled up to board A's 3.3 V (`R42`, `gen_sch_a.py` line 887), the power controller's KILL input is pulled to 3.3 V (`R4`) and the 3.3 V buck's EN sits on a divider from the pack that reaches at most 4.7 V at 16.8 V (`R2` over `R184`, lines 260 and 261), the software enables are held off, and the charge inhibit released, by 4.7 k pull-downs until the firmware writes the expanders (lines 763, 1009, 1112 and 1125), and the monitor and heater eFuses trip at about 17.6 to 19.0 V (143 k over 10 k, lines 1041 to 1064); the power-up calculation of every enable at requirement level is owed (CON-014 of the registry); rail sequencing, inrush and hot-plug bounds (rule PWR-002): **TBD**; a kit whose pack is in the gauge's shutdown starts only once an input has woken the gauge (Transport and Storage rows); the panel controller cannot know the lid's state at start-up (the reed lands on the sensor controller alone, `gen_sch_e.py` lines 524 to 542, and the sensor controller reaches a module only as a USB device on bank 3), so it raises all three slots at every start-up, and a kit started with its lid closed enters the reduced mode by the normal route once the bridge has read the lid (section 4c).
-    names: refs=R184,R2,R4,R42; boards=board A; gates=enable,enables,pull-downs,pulled up; gens=gen_sch_a.py,gen_sch_e.py
+    names: refs=R184,R2,R4,R42; boards=board A; rails=rail; gates=enable,enables,pull-downs,pulled up; gens=gen_sch_a.py,gen_sch_e.py
 CONOPS.md#4:L313:cell:3:s1 [98554054a3]
     the BQ25731 (its cell-count strap at 4S since `458b2873`, `gen_sch_a.py` lines 764 to 771) regulates the charge into the 4S pack beyond its sense resistor `R17`, and the kit's loads sit on the charger's system node (VSYS, the net `VBAT`, lines 18 to 48), so shore carries the loads up to the charger's input limit and the pack supplies above it; board E's always-on domain (the sensor controller and the fans) sits on the pack side and shares the charge current
     names: refs=R17; nets=VBAT; boards=board E; rails=VBAT,VSYS; gens=gen_sch_a.py
@@ -495,16 +513,19 @@ CONOPS.md#4:L315:cell:1:s1 [835e712c2f]
     names: refs=SW_EMCON
 CONOPS.md#4:L315:cell:4:s1 [7f1fe39d10]
     radios dark (owner ruling D-05), as section 4b: power removed from the SDR, the RockBLOCK (its ENABLE forced low as well), the LoRa module, both E72, the HF unit and the two WiFi link cards; the compute modules' own WiFi and Bluetooth disabled through open drains; the 5G module's supply removed by hardware with its disable pins pulled low at the same moment (since board B's round 8, section 4b); the PA rail and keying off; software holds every send, an SOS included
-    names: boards=board B; gates=open drains,pulled low
+    names: boards=board B; rails=rail; gates=open drains,pulled low
 CONOPS.md#4:L315:cell:5:s1 [da066b5a32]
     HW for the gated rails, the module radio disables, the RockBLOCK's ENABLE and the VHF keying; the RockBLOCK stays powered on its own stored energy after its supply gate opens, and what it does when its ENABLE falls is in no held document (`feasibility/EMCON.md` sections 4.4 and 4c); SW hold on top
-    names: gates=gate,gated
+    names: rails=rails; gates=gate,gated
+CONOPS.md#4:L315:cell:6:s1 [cd6953b363]
+    PS-EMCON 47.1 W (37.3 to 80.6) as generated since `458b2873`, PROVISIONAL (section 4a)
+    names: boards=as generated
 CONOPS.md#4:L315:cell:8:s1 [7778cb996e]
     session work owed under D-05 (S-01), each with its dependency in `feasibility/EMCON.md` section 4d.5: the Iridium 9704's response to its ENABLE (a maker's document, or bench E-04); `U536`'s residual race and the band of `U{s}12` to `U{s}15` (E-11); the SA868's PTT threshold (bench E-01, S-92); row 3's ground on board A in the LM5176's shutdown (S-93); RF-002's walk classes for set 12's new parts (a tools item); the hardware EMCON lamp's plate light guide (S-44; the lamp is drawn on board C since its round 8); every row's radio-side latency (E-01 to E-10, E-12); twelve bench tests, none of them with the kit's own SDR (EMCON.md section 6).
     names: refs=U112,U115,U212,U215,U312,U315,U536; boards=board A,board C
 CONOPS.md#4:L315:cell:8:s2 [1902260ba4]
     Drawn and closed at desk: the 5G module's staged supply removal since board B's round 8 (SD-EMC-1r8), the RockBLOCK's ENABLE in hardware and the enable dividers of `U501` to `U504` since stream w4b, and the back-feed paths into the RockBLOCK, the E22 and the E72 since set 12 (EMCON.md sections 4c and 4d).
-    names: refs=U501,U504; boards=board B; gates=enable
+    names: refs=U501,U504; boards=board B; gates=back-feed,enable
 CONOPS.md#4:L319:cell:1:s1 [cdb29268ee]
     `SW_ZERO` held closed 5 s (covered locking toggle), the only trigger (owner ruling D-03: the case-open or lid switch logs only; a remote wipe is deferred)
     names: refs=SW_ZERO
@@ -528,7 +549,7 @@ CONOPS.md#4:L322:cell:8:s1 [6b2997fde7]
     names: refs=J_USBW; boards=board A; rails=VBUS; gates=efuse,interlock; gens=gen_sch_a.py
 CONOPS.md#4a:L359:cell:1:s1 [5e56d89e4a]
     EMCON as generated since `458b2873` (section 4b): PS-TYP with the gated radios dark and both WiFi link cards unpowered (all three runtimes printed by `records/hc2/pwr_red2.py`, the 60 % one since pass 2)
-    names: gates=gated
+    names: boards=as generated; gates=gated
 CONOPS.md#4b:L399:para:s1 [262d501aa1]
     Read from the committed netlists of integration set 12 (29 September 2026, MESHSAT-1357): board A `6c40250c47195ebb`, board B `3ef9b8c49a01b728`, board C `87b69472ac83ca5a`, board D `a2d48972d171aad1`.
     names: boards=board A,board B,board C,board D
@@ -540,7 +561,7 @@ CONOPS.md#4b:L399:para:s3 [b73681b892]
     names: boards=board B
 CONOPS.md#4b:L399:para:s4 [726eb1c25e]
     "Asserted" means `SW_EMCON` closed: `TX_INHIBIT_n` goes low; on board C `U9` buffers it onto `EMCON_HW` through `R52` (330 Ohm) and `D23` clamps `EMCON_HW` to `TX_INHIBIT_n` (finding D4E-F1); board B inverts `EMCON_HW` once per slot into `EMCON_ON1..3` (high = asserted), each from that module's own 3.3 V (`U112`, `U212`, `U312`); board A gates its PA and HF rails on both lines.
-    names: refs=D23,R52,SW_EMCON,U112,U212,U312,U9; nets=EMCON_HW,EMCON_ON1,EMCON_ON2,EMCON_ON3,TX_INHIBIT_n; boards=board A,board B,board C; gates=gates,inverts
+    names: refs=D23,R52,SW_EMCON,U112,U212,U312,U9; nets=EMCON_HW,EMCON_ON1,EMCON_ON2,EMCON_ON3,TX_INHIBIT_n; boards=board A,board B,board C; rails=rails; gates=gates,inverts
 CONOPS.md#4b:L410:cell:1:s1 [3abf66595f]
     the enable of the eFuse that feeds its USB VBUS, its only supply: `EMCON_HW` AND the hub's port power AND the software enable (`U501`, `U502`)
     names: refs=U501,U502; nets=EMCON_HW; rails=VBUS; gates=and,efuse,enable
@@ -555,16 +576,16 @@ CONOPS.md#4b:L412:cell:1:s1 [30107ef297]
     names: refs=R542,R543,U504,U544,U545,U546,U547,U550; nets=E22_EN,EMCON_HW,LORA_GO,LORA_ON,LORA_RXEN,LORA_TXEN; gates=and,enable,gates,load switch
 CONOPS.md#4b:L413:cell:1:s1 [690c3d3e10]
     the enable of the load switch that feeds both (`E72_EN` = `EMCON_HW` AND `ZB_ON`, `U505`, into `U22`); since set 12 the host's receive, reset and boot-select lines reach them only through open-drain buffers (`U540` to `U542`), the receive lines pulled up to the modules' own switched rail `+3V3_ZB` (`R536`, `R537`; `feasibility/EMCON.md` section 4d)
-    names: refs=R536,R537,U22,U505,U540,U542; nets=+3V3_ZB,E72_EN,EMCON_HW,ZB_ON; rails=+3V3_ZB; gates=and,enable,load switch,open-drain,pulled up
+    names: refs=R536,R537,U22,U505,U540,U542; nets=+3V3_ZB,E72_EN,EMCON_HW,ZB_ON; rails=+3V3_ZB,rail; gates=and,enable,load switch,open-drain,pulled up
 CONOPS.md#4b:L414:cell:1:s1 [0cad4d90e9]
     the enable of its 3.3 V buck (`U203`): `S2A_EN` = `EMCON_HW` AND `PCIE_PWR_EN2`, driven by `U216` from slot 2's own 5 V since stream w4b; its FULL_CARD_POWER_OFF# pulled low by `U220` from `EMCON_ON2`, and held low by `U221`, a TPS3808G30 on the buck's output, through `U554` while that rail comes up (finding D4E-F2, set 12); its W_DISABLE1# pulled low by `U215` from `EMCON_ON2`; its socket rail discharged through 15 Ohm (`Q212`, `R295`)
-    names: refs=Q212,R295,U203,U215,U216,U220,U221,U554; nets=EMCON_HW,EMCON_ON2,PCIE_PWR_EN2,S2A_EN; gates=and,enable,pulled low
+    names: refs=Q212,R295,U203,U215,U216,U220,U221,U554; nets=EMCON_HW,EMCON_ON2,PCIE_PWR_EN2,S2A_EN; rails=rail; gates=and,enable,pulled low
 CONOPS.md#4b:L415:cell:1:s1 [4f988b639f]
     the enable of each card's 3.3 V buck: `S1A_EN` and `S3A_EN` = `EMCON_HW` AND the slot's `PCIE_PWR_EN`, driven by `U116` and `U316` from the slot's own 5 V since stream w4b; each card's W_DISABLE1#, pulled low by `U115` and `U315` from `EMCON_ON1` and `EMCON_ON3`
     names: refs=U115,U116,U315,U316; nets=EMCON_HW,EMCON_ON1,EMCON_ON3,S1A_EN,S3A_EN; gates=and,enable,pulled low
 CONOPS.md#4b:L416:cell:1:s1 [0a33265e16]
     the KEY gate on board D (`KEY` = `PTT_ANY` AND `TX_INHIBIT_n`, `U12`) and, through it, the PA's keying (`PA_KEY` = `KEY` AND `PA_EN`, `U14`); the PA rail on board A (`PA_EN` = `TX_INHIBIT_n` AND `EMCON_HW` AND the software hold `PA_HOLD`, `U35` and `U36` on their own supply `+3V3_EMCON`; `feasibility/EMCON.md` section 4a); the exciter's supply is not gated and the resting relay joins antenna to exciter
-    names: refs=U12,U14,U35,U36; nets=+3V3_EMCON,EMCON_HW,KEY,PA_EN,PA_HOLD,PA_KEY,PTT_ANY,TX_INHIBIT_n; boards=board A,board D; rails=+3V3_EMCON; gates=and,gate,gated
+    names: refs=U12,U14,U35,U36; nets=+3V3_EMCON,EMCON_HW,KEY,PA_EN,PA_HOLD,PA_KEY,PTT_ANY,TX_INHIBIT_n; boards=board A,board D; rails=+3V3_EMCON,rail; gates=and,gate,gated
 CONOPS.md#4b:L417:cell:1:s1 [58a2b95587]
     the enable of the converter that feeds its DC input (`HF_EN` = `TX_INHIBIT_n` AND `EMCON_HW` AND the software hold `HF_HOLD`, `U37` and `U38` on `+3V3_EMCON`); its USB supply is not gated
     names: refs=U37,U38; nets=+3V3_EMCON,EMCON_HW,HF_EN,HF_HOLD,TX_INHIBIT_n; rails=+3V3_EMCON; gates=and,enable,gated
@@ -573,7 +594,7 @@ CONOPS.md#4b:L418:cell:1:s1 [674fed0ea8]
     names: refs=U113,U114,U213,U214,U313,U314; gates=open-drain,pulled low
 CONOPS.md#4b:L421:para:s1 [6688b32a1a]
     **Owner ruling D-05 (26 September 2026): EMCON means radios dark, as generated and completed.** Every radio with an emission path is powered off or RF-disabled in hardware; the VHF path keeps listening because its gate is on the transmit side only; GNSS, DCF77 and the lightning sensor continue.
-    names: gates=gate
+    names: boards=as generated; gates=gate
 CONOPS.md#4b:L421:para:s2 [98a110f4dd]
     The 5G module's own GNSS receiver is not counted in the last row: the kit's position source is the LG290P, the module's GNSS ports (L5 on ANT1, L1 on ANT3, Quectel hardware design v1.1 Table 32) are fitted only in part under D-07, and whether W_DISABLE1# stops it is not established.
     names: refs=L1,L5
@@ -586,27 +607,33 @@ CONOPS.md#4b.1:L432:para:s1 [d174af17a0]
 CONOPS.md#4b.1:L432:para:s2 [26b3f934c1]
     From the instant the EMCON toggle's contact closes (`TX_INHIBIT_n` below 0.8 V at board C's TP10) to the instant a transmitter's conducted output at its antenna port falls below the pass line of `feasibility/EMCON.md` section 6, the time is at most that row's **L_max**, and the output stays below the line for as long as EMCON is asserted, by a path in which every element that bounds the time is hardware:
     names: refs=TP10; nets=TX_INHIBIT_n; boards=board C
-CONOPS.md#4b.1:L442:cell:1:s1 [4f38a2cd34]
+CONOPS.md#4b.1:L442:cell:1:s1 [5eb590e0b3]
+    **20 s** for a module that has been turned on (REQ-071); **0** at power-up under EMCON (its rail never rises).
+    names: rails=rail
+CONOPS.md#4b.1:L442:cell:1:s2 [4f38a2cd34]
     Since board B's round 8 the design removes its supply by hardware at once, RF off within about 1.2 ms plus 1.8 ms per mF of the module's own input capacitance, which no held document states (bench E-12), the maker's flash warning accepted (SD-EMC-1r8, `feasibility/EMCON.md` section 4b); its W_DISABLE1# is pulled low at the same moment by `U215`, an airplane mode the module's firmware carries out, not counted
     names: refs=U215; boards=board B; gates=pulled low
 CONOPS.md#4b.1:L444:para:s1 [f5b087cd8e]
     **The fault conditions it must hold in** (EMCON.md section 5a, F1 to F9): every processor that can reach the row held in reset; each of them unpowered; each running a wrong image; the radio's own firmware booting, hung or configured otherwise; the panel ribbon, `J_AB1` or `J_MEZZ1` unplugged; a logic rail lost or in its unspecified band; back-feed from every live signal; every store of energy on the radio's side of its gate full; and EMCON asserted at power-up, during a transmission, during a boot or restart, and through the contact's bounce.
-    names: refs=F1,F9,J_AB1,J_MEZZ1; gates=gate
+    names: refs=F1,F9,J_AB1,J_MEZZ1; rails=rail; gates=back-feed,gate
 CONOPS.md#4b.1:L444:para:s2 [07ffe0084f]
     **Excluded:** a fault of the one element every row shares (the toggle's contact, the `TX_INHIBIT_n` conductor), which the hardware EMCON lamp `D22` shows without firmware; the lamp is drawn on board C since its round 8, and its light guide in the face plate is owed (CON-021, S-44).
     names: refs=D22; nets=TX_INHIBIT_n; boards=board C
-CONOPS.md#4e:L872:para:s1 [05689078be]
+CONOPS.md#4e:L872:para:s1 [02d81ab6f6]
+    As generated at `45bde541` unless a row says a fix is owed.
+    names: boards=As generated
+CONOPS.md#4e:L872:para:s2 [05689078be]
     The four whole-kit common modes (ASM-002: the device rails, the `J_PANEL` ribbon, the Ethernet switch, the kit I2C bus) are here with their behaviour; whether each is mitigated or kept as a named exception is decided at Review C (S-36), not here.
-    names: refs=J_PANEL
+    names: refs=J_PANEL; rails=rails
 CONOPS.md#4e:L879:cell:1:s1 [c20f2e4cda]
     one bank has no host (`ARCH-PCB-B-IOHA.md` section 4); as generated, with slots 1 and 2 both lost, bank 1 and with it Iridium, the panel's USB link and so SOS have no host, and slot 3 cannot unlock a drive at its next boot (`feasibility/ZEROIZE.md` section 3.3); after BANK-R1 (section 4c) the pair that leaves SOS without a host is slots 3 and 1, and Iridium then stays on slot 2
-    names: boards=PCB-B
+    names: boards=PCB-B,as generated
 CONOPS.md#4e:L880:cell:0:s1 [48f03d5cb4]
     a supervisor lost
     names: gates=supervisor
 CONOPS.md#4e:L881:cell:1:s1 [7d60fee70d]
     as generated, `SLOT_EN1..3` fall to their pull-downs and every module stops (`ARCH-PCB-B-IOHA.md` section 10); EMCON, MAIN PWR and the TX lamp act without it; the charger loses its host and falls to 256 mA after its watchdog (`PANEL.md` section 10); no SOS, no ZEROIZE until it runs again
-    names: nets=SLOT_EN1,SLOT_EN2,SLOT_EN3; boards=PCB-B; gates=pull-downs
+    names: nets=SLOT_EN1,SLOT_EN2,SLOT_EN3; boards=PCB-B,as generated; gates=pull-downs
 CONOPS.md#4e:L881:cell:3:s1 [0f2685fa36]
     its watchdog restarts it, and it runs the boot order again and powers the slots (every module cold-boots); the hold of `SLOT_EN` across a controller restart is a layer-5 design item still owed (board C or A)
     names: boards=board C
@@ -615,7 +642,7 @@ CONOPS.md#4e:L882:cell:1:s1 [2872504a3c]
     names: gates=gate
 CONOPS.md#4e:L883:cell:0:s1 [b9f6eebae8]
     a device rail lost (`+5V_DEV` or `+3V3_DEV`, one converter each on board A)
-    names: nets=+3V3_DEV,+5V_DEV; boards=board A; rails=+3V3_DEV,+5V_DEV
+    names: nets=+3V3_DEV,+5V_DEV; boards=board A; rails=+3V3_DEV,+5V_DEV,rail
 CONOPS.md#4e:L883:cell:1:s1 [a8a12c6168]
     every bank's hub and peripheral is lost; a loss of `+3V3_DEV` releases every EMCON gate hung on `EMCON_ON` or on a slot's `U{s}11` (EMCON.md L3, open under S-01)
     names: refs=L3,U111,U211,U311; nets=+3V3_DEV; rails=+3V3_DEV; gates=gate
@@ -640,6 +667,9 @@ CONOPS.md#4e:L890:cell:1:s1 [cee55e9271]
 CONOPS.md#4e:L891:cell:1:s1 [b0cc968749]
     the panel controller applies the hot stop's two steps to board B's `TMP117` (+55.0 and +56.0 C) and falls back to the reduced mode with the outlets off; a line shorted to ground reads as H2 and stops the kit
     names: boards=board B
+CONOPS.md#4e:L892:cell:1:s1 [caa82ce9b2]
+    the mast-down alarm (the requirements registry's REQ-041, a session choice, section 7a): the sensor controller detects it and the bridge raises it (in the heat stage as generated, where bank 3 has no host, it waits for one, as the water and gas responses do); it moves no switch and removes no power
+    names: boards=as generated
 CONOPS.md#4e:L893:cell:0:s1 [67da32c859]
     a permanent pack protection (the second level or the gauge blows F2; the PTC trips)
     names: refs=F2
@@ -651,13 +681,28 @@ CONOPS.md#4e:L895:cell:1:s1 [a519c88ba6]
     names: refs=C4,K1,K2; boards=board D
 CONOPS.md#4f:L901:para:s1 [66725c9ccc]
     The heat stage has two columns: its required set, which board B carries once BANK-R1 is in its generator (slot 3), and what board B as generated gives (slot 2), with its shortfall marked (section 4c).
-    names: boards=board B
+    names: boards=as generated,board B
+CONOPS.md#4f:L904:cell:4:s1 [2468b4e4f8]
+    Heat stage as generated (slot 2)
+    names: boards=as generated
+CONOPS.md#4f:L906:cell:2:s1 [94a798bc5f]
+    yes (as generated bank 1 on slot 2; after BANK-R1 bank 2 on its own slot 2)
+    names: boards=as generated
 CONOPS.md#4f:L907:cell:5:s1 [af87eaaf24]
     held (dark: its supply removed by hardware at once since board B's round 8, section 4b)
     names: boards=board B
+CONOPS.md#4f:L908:cell:4:s1 [32a58b1f55]
+    **no: the finding against the generated board**
+    names: boards=the generated board
+CONOPS.md#4f:L909:cell:4:s1 [32a58b1f55]
+    **no: the finding against the generated board**
+    names: boards=the generated board
 CONOPS.md#4f:L914:cell:1:s1 [4fcc861597]
     the gauge and board P's second level in every mode, PS-SHUT included (the second level destructively, above the cells' limit); past the heat stage, the hot stop on the cells' measured temperature in every mode and on every input state (firmware; HOT-R1 owed on boards A and E, section 4c)
     names: boards=board P,boards A and E
+CONOPS.md#4f:L916:cell:6:s1 [a3abafe64f]
+    yes; a further loss of the other host of the panel's bank removes it (slots 1 and 2 as generated, slots 3 and 1 after BANK-R1)
+    names: boards=as generated
 CONOPS.md#5:L920:para:s1 [6fb0e1ba5d]
     **The rule the hardware is designed to:** no transmit serialisation is required; every transmitter may key at once (owner ruling of 4 September 2026, appendix line 2337, restated at line 2465), **bounded since 26 September 2026 by owner ruling D-11**: all at once for a declared key-down time above a declared state of charge, with the outlets at their minimum contract, which is **0 W, the outlets off** (the session's reading of D-11, section 7a; it is what the hardware interlock below does and what `feasibility/POWER-THERMAL.md` assumes).
     names: gates=interlock
@@ -679,6 +724,9 @@ CONOPS.md#5:L955:cell:2:s1 [1007cd40f1]
 CONOPS.md#5:L973:cell:1:s1 [85c9b8a37f]
     a position beacon every 10 minutes at a fixed site; on the move at most one a minute; each about 1 s, never over K1's 60 s
     names: refs=K1
+CONOPS.md#5:L973:cell:2:s1 [2db0811bda]
+    PS-IDLE-SPEC's 0.9 W average on the PA rail, about 1.2 % of a 75 W key-down.
+    names: rails=rail
 CONOPS.md#5:L977:cell:1:s1 [73a88e2ff9]
     receive; a transfer transmits in bursts, never with the PA keyed on the pack alone (K4)
     names: refs=K4
@@ -697,6 +745,9 @@ CONOPS.md#5:L987:cell:2:s1 [51400cfd73]
 CONOPS.md#5:L988:cell:2:s1 [526de24db6]
     PS-BUSY, a **bounded mode**: its sustained bound 92.0 W reaches C1's +55 C cell trigger at +20 C on every conductance in the record, so C1 ends it (how long it runs first is **TBD** until the heat capacities are measured)
     names: refs=C1
+CONOPS.md#5:L992:cell:2:s1 [ad58e8c6bc]
+    PS-RED2 31.4 W; the heat stage PS-SURV-R 23.3 W after BANK-R1, PS-SURV 21.7 W as generated
+    names: boards=as generated
 V2-SPEC.md#MeshSat field kit V2, approved specification (state of 7 Sep 2026, design record sections 32.40 to 32.61):L3:para:s1 [8ca89fa881]
     The 7 September text records the owner's rulings in `MESHSAT-709-geometry-appendix.md` together with proposals the session made under them (the 200 Wh pack of 32.62 was one), and the board generation that implements it is MESHSAT-830 (A22, B16, C7, D8, E6, face plate and case template).
     names: refs=C7,D8; boards=A22,B16,C7,D8,E6
@@ -718,6 +769,9 @@ V2-SPEC.md#Case and construction:L10:cell:1:s3 [5151a2ab87]
 V2-SPEC.md#Case and construction:L11:cell:1:s1 [e6fa17db79]
     one 114 x 68.3 x 5 mm aluminium connector plate between the hinge fairings, outside the back wall on a closed-cell gasket (the session's case choice C3, `CASE-MARGINS.md` section 4, in place of the 54 x 82 plate between the ribs at X -95 and -18; correction 20): MIL-DTL-38999 shore and USB receptacles (the USB one the Glenair 233-370), sealed Gigabit Ethernet with PoE out, sealed USB-C 45 W outlet (32.57), the M8 receptacle of the outside sensor pod and a ground stud, the stud also taking the two RF entry plates' ground leads.
     names: refs=C3
+V2-SPEC.md#Case and construction:L11:cell:1:s2 [529db80853]
+    The Glenair 233-370 carries the wall USB data path and is the console and key-fill port, and the USB-C outlet carries power only (owner ruling D-12, 26 Sep 2026; as generated since `458b2873`, corrections 13 and 19)
+    names: boards=as generated
 V2-SPEC.md#Case and construction:L12:cell:1:s1 [c73b56fb81]
     the A22 + D8 + B16 rod stack over the dock strip E6 and block; the 4S pack, built for the kit rather than bought, in the east pocket beside A22 (32.62; one 4S3P block of about 145 Wh by owner ruling D-06, correction 1; the BB-2590/U did not fit and the case stays the 1450); on the lid's inner face the printed tray of the QMX HF unit over the right strip (32.60 item 5) and, over the left strip, a bracket for an 8 to 10 inch rugged tablet (not drawn)
     names: refs=D8; boards=A22,B16,D8,E6,the dock strip
@@ -726,19 +780,19 @@ V2-SPEC.md#Case and construction:L13:cell:1:s1 [38a91feb23]
     names: refs=C1; boards=E5; gates=interlock
 V2-SPEC.md#Power:L17:para:s1 [f6633e61d3]
     The node, the inputs, every rail with its part and its EMCON gate: appendix 32.55 (7 Sep 2026).
-    names: gates=gate
+    names: rails=rail; gates=gate
 V2-SPEC.md#Power:L20:cell:1:s1 [306d6f0471]
     one 4S3P block of Samsung INR18650-35E cells, 14.4 V, about 145 Wh (144.7 Wh at the cell's 3,350 mAh minimum), shrink-wrapped in the east pocket under board B with no rigid enclosure, its fit designed against Peli's own figures (owner ruling D-06, 26 Sep 2026, with the D-08 reversal of the same day; `CASE-MARGINS.md`; correction 1).
     names: boards=board B
 V2-SPEC.md#Power:L22:cell:1:s1 [cea8161b55]
     14.4 V node; SMBus charger; bucks for 5 V and 3.3 V; 13.8 V rail for the PA stage; the monitor on its own eFuse from the 14.4 V node, the pack heater on its own eFuse and a regulated 12 V buck (corrections 2 and 19); PoE out; USB-C PD out
-    names: gates=efuse
+    names: rails=rail; gates=efuse
 V2-SPEC.md#Power:L24:cell:1:s1 [5d18d3f4e9]
     a hardware line from the panel toggle plus a software hold, meant to silence every transmitter (32.50 item 3); on 26 September 2026 the owner ruled that EMCON means radios dark, with the VHF receiver listening behind its transmit-only gate and GNSS, DCF77 and the lightning sensor continuing (D-05).
     names: gates=gate
 V2-SPEC.md#Power:L24:cell:1:s2 [c3dc5405b5]
     As generated since `458b2873` the line removes the supply of the SDR, the RockBLOCK, the LoRa module, both E72, the HF unit and the two WiFi link cards, turns off the PA rail, bias and keying while the VHF exciter keeps receiving, pulls the compute modules' own WiFi and Bluetooth disables low through open drains, and puts the 5G module in airplane mode through its disable pin, a mode the module's firmware carries out; since board B's round 8 (27 September 2026) it also removes the 5G module's supply by hardware at once (SD-EMC-1r8, `feasibility/EMCON.md` section 4b; correction 28); read transmitter by transmitter (`feasibility/EMCON.md` section 0a), the radio's own chain closes at desk for 15 of the kit's 17 transmitters and is open for two, the SA868 (its maker publishes no receive threshold for the PTT pin the design holds at 2.677 V or more; bench E-01) and the RockBLOCK 9704 (with its supply cut it runs on its own supercapacitors, about 16 J; its ENABLE is held low by the EMCON hardware since board B's stream w4b, and what the Iridium module does when ENABLE falls is stated in no held document, sections 4.4 and 4c; correction 31), the 5G module's chain closing at desk since board B's round 8; end to end, from the toggle to silence at each antenna port within the latency the session set (1 s, and 20 s for a running 5G module; SD-EMC-7, requirement REQ-071), 0 of 17 rows is closed, every row also waiting on the items the rows share (the toggle and its conductor, accepted by SD-EMC-6 only with a hardware EMCON lamp on board C, drawn since board C's round 8 (`D22`, no processor in its path) with its light guide in the face plate owed (open item S-44), and the line's open items, `feasibility/EMCON.md` sections 3 and 7), and no row has been shown on a bench: feasibility blocker FEA-002 (`CONOPS.md` section 4b; corrections 4, 19, 26, 28 and 30); blackout and NVG panel modes beside it
-    names: refs=D22; boards=board B,board C; gates=open drains
+    names: refs=D22; boards=As generated,board B,board C; rails=rail; gates=open drains
 V2-SPEC.md#Compute, storage, expansion (B16, about 330 x 200 mm; the distributed fabric of 32.52):L32:cell:1:s1 [bd895a6727]
     **The physical owner is a hardware fabric choice, not a cabling one:** each of the three hub banks is switched between a home module and one neighbour by a 2-of-3 voted selection driven by three I/O supervisors (`ARCH-PCB-B-IOHA.md`), so the loss of one module is meant to move its bank rather than remove it.
     names: boards=PCB-B
@@ -759,7 +813,7 @@ V2-SPEC.md#Bearers and radios:L41:cell:2:s1 [5197d59831]
     names: boards=B16
 V2-SPEC.md#Bearers and radios:L42:cell:2:s1 [93fc305d0b]
     B16 PCIe, two jacks, on the west wall by case choice C2 (on the east wall as generated; correction 20)
-    names: refs=C2; boards=B16
+    names: refs=C2; boards=B16,as generated
 V2-SPEC.md#Bearers and radios:L43:cell:1:s1 [ef6e21d8f1]
     the CM5's own radio with Raspberry Pi's certified antenna kit; on the EMCON line since `458b2873` through open drains that only pull its disable pins low (corrections 4 and 19)
     names: gates=open drains
@@ -777,7 +831,7 @@ V2-SPEC.md#Bearers and radios:L47:cell:2:s1 [00075b673b]
     names: refs=D8; boards=D8
 V2-SPEC.md#Bearers and radios:L48:cell:2:s1 [0163325df3]
     B16 USB (`J_QMX`), A22's 12 V HF rail, the HF jack
-    names: refs=J_QMX; boards=A22,B16
+    names: refs=J_QMX; boards=A22,B16; rails=rail
 V2-SPEC.md#Bearers and radios:L49:cell:2:s1 [7047eb808a]
     B16 USB 3, west jack
     names: boards=B16
@@ -807,7 +861,7 @@ V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owne
     names: boards=A22
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L81:cell:1:s1 [e85072845e]
     power and I/O, 240 x 160 mm, six layers (In1 and In4 solid ground): 14.4 V node, BQ25731 SMBus charger, the 9 to 36 V input passed up from E6, three 5.1 V slot rails and a device rail (AP64500, INA226 monitored), the 13.8 V PA and 12 V HF rails (LM5176, EMCON gated), the 54 V PoE rail, the 45 W USB-C outlet (TPS25740 and TPS55288), 3.3 V logic, eleven SMP-MAX blind-mate sites, the D8 mezzanine site, the 2x13 ribbon to B16
-    names: refs=D8; boards=B16,D8,E6; gates=gated
+    names: refs=D8; boards=B16,D8,E6; rails=rail,rails; gates=gated
 V2-SPEC.md#Boards of this generation (as generated on 7 September 2026; the owner's layer rulings of 25 September 2026 are noted in the rows, correction 11):L82:cell:0:s1 [bc215963d1]
     B16
     names: boards=B16
@@ -837,14 +891,17 @@ V2-SPEC.md#Corrections, 26 September 2026:L122:item:s2 [32e463a311]
     names: boards=board B; gens=panel1450.py
 V2-SPEC.md#Corrections, 26 September 2026:L123:item:s1 [bfceed26aa]
     The monitor is not on the 13.8 V rail: appendix 32.55 (line 2926) and `gen_sch_a.py` feed it and the pack heater through TPS259631 eFuses from the node.
-    names: gens=gen_sch_a.py
+    names: rails=rail; gens=gen_sch_a.py
 V2-SPEC.md#Corrections, 26 September 2026:L123:item:s2 [79125fde3c]
     Since then 143 k over 10 k trips at about 17.6 to 19.0 V, above the 16.8 V 4S termination, and the heater mat, a 12 V and 7.5 W part, is fed a regulated 12.0 V by a TPS62933 buck behind its eFuse (`gen_sch_a.py` lines 1041 to 1076 at `45bde541`; correction 19).
     names: gates=efuse; gens=gen_sch_a.py
-V2-SPEC.md#Corrections, 26 September 2026:L125:item:s1 [69f00e42b6]
+V2-SPEC.md#Corrections, 26 September 2026:L125:item:s1 [dac478047f]
+    **EMCON (lines 24 and 43).** Owner ruling D-05 (26 September 2026): radios dark, as generated and completed.
+    names: boards=as generated
+V2-SPEC.md#Corrections, 26 September 2026:L125:item:s2 [69f00e42b6]
     Session reading of what is generated at `45bde541` (`gen_sch_b.py` lines 478, 716 to 741, 974 to 977 and 1029, `gen_sch_a.py` line 1102, `gen_sch_d.py` lines 532 to 534, and the committed netlists of A, B and D): radios whose supply is cut stop receiving too (for the HF unit INFERRED from its manual, which names the DC input as its supply); the WiFi link cards' supplies are removed, because their maker does not describe W_DISABLE1#; the compute modules' own radios are pulled off through open drains that only ever pull their disable pins low; the 5G module's airplane mode also stops receive (Quectel RM520N series hardware design v1.1, section 4.4.1), and it is a mode the module's firmware carries out, so the session's staged removal of its supply (SD-EMC-1) is owed, with the items every row of the line shares (`feasibility/EMCON.md` sections 5 and 7).
     names: gates=open drains; gens=gen_sch_b.py,gen_sch_a.py,gen_sch_d.py
-V2-SPEC.md#Corrections, 26 September 2026:L125:item:s2 [98d61fdac2]
+V2-SPEC.md#Corrections, 26 September 2026:L125:item:s3 [98d61fdac2]
     Appendix 32.55 (line 2930) lists a 5G supply switch and a WiFi buck enable under EMCON: the WiFi buck enables are drawn since `458b2873` and the 5G supply switch is owed.
     names: gates=enable,enables
 V2-SPEC.md#Corrections, 26 September 2026:L126:item:s1 [f24449212b]
@@ -874,7 +931,10 @@ V2-SPEC.md#Corrections, 26 September 2026:L130:item:s1 [7aba6fc4cb]
 V2-SPEC.md#Corrections, 26 September 2026:L130:item:s2 [3d282911cb]
     Until `458b2873` SIM 2 sat on pins 40, 42, 44 and 46 as CLK, IO, RST and VCC where the module has USIM2_DET, DATA, CLK and RST, and USIM2_VDD on pin 48 was unconnected (hardware design v1.1, Table 6); since then it is on the module's own pins, DATA on 42, CLK on 44, RST on 46 and VDD on 48, with DET on 40 left open (`gen_sch_b.py` lines 628 to 634).
     names: gens=gen_sch_b.py
-V2-SPEC.md#Corrections, 26 September 2026:L130:item:s3 [a4bc9c4c53]
+V2-SPEC.md#Corrections, 26 September 2026:L130:item:s3 [4c1d0b24ec]
+    As generated the kit fits two nano-SIM holders with an eSIM build option (four 0 ohm links at the module), where line 41 and appendix 32.50 item 12 say eSIM plus nano-SIM: a description conflict, CFL-010 of the registry, not settled here.
+    names: boards=As generated
+V2-SPEC.md#Corrections, 26 September 2026:L130:item:s4 [a4bc9c4c53]
     The module's own GNSS (L5 on ANT1, L1 on ANT3) is not a kit function; the LG290P is the kit's receiver.
     names: refs=L1,L5
 V2-SPEC.md#Corrections, 26 September 2026:L132:item:s1 [159493d2c6]
@@ -925,7 +985,10 @@ V2-SPEC.md#Corrections, 27 September 2026:L189:para:s1 [83b0b3fdc8]
 V2-SPEC.md#Corrections, 27 September 2026:L213:para:s1 [32e44f2efa]
     The sixth revision reports local and end-to-end conclusions apart: the radio's own chain closes at desk for 14 of the 17 transmitters and is open for three, the SA868 (its PTT pin's receive threshold is unpublished, bench E-01), the RockBLOCK 9704 (read on Ground Control's schematic rev 2B: after `+5V_RB` is cut the module runs from two 10 F supercapacitors of its own, about 16 J, with its ENABLE driven only by the firmware expander U6, so ENABLE forced low by the EMCON hardware is owed, and what the Iridium module does when ENABLE falls is in no held document) and the 5G module (SD-EMC-1 not drawn); end to end 0 of 17 rows is closed, because every row also waits on the shared items and on the latency of section 5a (REQ-071), which no row is shown to meet.
     names: refs=U6; nets=+5V_RB; rails=+5V_RB
-V2-SPEC.md#Corrections, 27 September 2026:L213:para:s2 [7e2122c8fa]
+V2-SPEC.md#Corrections, 27 September 2026:L213:para:s2 [6d8b58cd7d]
+    The circuit line 24 describes as generated is unchanged; what it says is owed now follows section 0a.
+    names: boards=as generated
+V2-SPEC.md#Corrections, 27 September 2026:L213:para:s3 [7e2122c8fa]
     As drawn, no panel indication of EMCON is independent of firmware: the TX lamp's supply exists only while the panel controller drives `PANEL_PWM` (`feasibility/EMCON.md` section 0, `PANEL.md` section 3).
     names: nets=PANEL_PWM
 V2-SPEC.md#Corrections, 27 September 2026:L226:para:s1 [1a8e99596c]
@@ -936,16 +999,16 @@ V2-SPEC.md#Corrections, 27 September 2026:L231:item:s1 [ba724f447c]
     names: boards=B's,board B
 V2-SPEC.md#Corrections, 27 September 2026:L232:para:s1 [f76be55b28]
     Board B's EMCON stages are single gates and open-drain logic outputs run per slot from each module's own 3.3 V (Q212, the 5G socket rail's discharge FET, aside).
-    names: refs=Q212; boards=B's; gates=gates,open-drain
+    names: refs=Q212; boards=B's; rails=rail; gates=gates,open-drain
 V2-SPEC.md#Corrections, 27 September 2026:L232:para:s2 [c3cfb2621c]
     The key-B socket's land carries the two locating holes of TE drawing C-2199119 rev F sheet 3 (S-12), and each SIM holder carries a TI TPD4E001 (1.5 pF, board B's SIM TVS constraint of correction 22).
     names: boards=board B
 V2-SPEC.md#Corrections, 27 September 2026:L241:para:s1 [045032dec5]
     rule of 26 September 2026 (requirements registry, the session choice on NEED-03's failure set; record ASM-002): the requirement covers the loss of one compute module or one I/O supervisor in every way it can fail (dead, unpowered while its neighbours run, held in reset, wedged, or shorted on its own rails), and a failed module or supervisor must not take a shared element down with it (REQ-073).
-    names: gates=supervisor
+    names: rails=rails; gates=supervisor
 V2-SPEC.md#Corrections, 27 September 2026:L241:para:s2 [8a7c2cc868]
     Four shared elements are outside that set and are single points of failure of the kit as generated: the `+5V_DEV` and `+3V3_DEV` converters on board A (one each), the `J_PANEL` ribbon, the KSZ9897R Ethernet switch, and the kit I2C bus with the panel controller as its one master.
-    names: refs=J_PANEL; nets=+3V3_DEV,+5V_DEV; boards=board A; rails=+3V3_DEV,+5V_DEV
+    names: refs=J_PANEL; nets=+3V3_DEV,+5V_DEV; boards=as generated,board A; rails=+3V3_DEV,+5V_DEV
 V2-SPEC.md#Corrections, 27 September 2026:L250:para:s1 [6b5ffb2144]
     Since `c351115d` the case generators carry the case choices C1 to C6: `panel1450.py` (the plate 377.2 x 263.0 x 3.0 on ten 6-32 UNC; the twelve PolyPhaser GTH-SFF-AL at Z 59), `case_wall_cutouts.py` and `v2/cad/face_plate.py`, and the current case set (CAD, dimensioned drawings, 1:1 templates and the QMX lid tray) is `release/case-2026-09-27/`; `release/revA/case/` is marked historical and is not to be made from.
     names: refs=C1,C6; boards=C6; gens=panel1450.py
@@ -973,9 +1036,21 @@ OPERATING-ENVELOPE.md#2:L85:cell:2:s1 [916256cba8]
 OPERATING-ENVELOPE.md#2:L104:para:s1 [8f59ec89ff]
     The pack's protection is board P; its narrowest part is the chemical fuse F2 at -20 to +60 C, whose top is the cells' own +60 C discharge limit and whose bottom is the envelope's -20 C, so no bound moves.
     names: refs=F2; boards=board P
+OPERATING-ENVELOPE.md#3:L143:cell:0:s1 [3a41b60ff9]
+    the heat stage as generated (PS-SURV, slot 2), lid closed, fans
+    names: boards=as generated
+OPERATING-ENVELOPE.md#3:L144:cell:0:s1 [33087d52ba]
+    the heat stage as generated (PS-SURV, slot 2), lid open, fans
+    names: boards=as generated
+OPERATING-ENVELOPE.md#3:L155:cell:0:s1 [af35e56cae]
+    the heat stage as generated, lid closed
+    names: boards=as generated
+OPERATING-ENVELOPE.md#3:L156:cell:0:s1 [b2237301f8]
+    the heat stage as generated, lid open
+    names: boards=as generated
 OPERATING-ENVELOPE.md#3:L158:para:s1 [fc58cb90ed]
     **The worst inside air in use**, at the envelope's +40 C with the kit shed to its heat stage (the last stage that keeps a module running; past it the hot stop of section 4 removes every module): in the required stage after BANK-R1, +59.2 C lid open and +62.1 C lid closed on the independent bound's lowest conductance, and +47.8 C and +55.6 C on 32.53's; in the stage board B gives as generated, +57.9 C and +60.6 C, and +47.3 C and +54.6 C (INFERRED: 40 C plus the stage's rise above, rounded down to one decimal).
-    names: boards=board B
+    names: boards=as generated,board B
 OPERATING-ENVELOPE.md#3:L186:para:s1 [e20bc8f1b4]
     The hold-off is the pack gauge's own: the BQ4050 on board P opens its charge FET outside 0 to 45 C read at the cell surface (`pcb_pack_protection.yaml`, CHARGE_TEMPERATURE_WINDOW), a threshold held in the gauge's data flash rather than fixed in hardware, with the panel's cold-charge inhibit below 0 C on top (`PANEL.md` section 10).
     names: boards=board P
@@ -984,34 +1059,40 @@ OPERATING-ENVELOPE.md#3:L186:para:s2 [31985580ef]
     names: refs=F2; boards=board P; gates=enabled; gens=gen_sch_p.py
 OPERATING-ENVELOPE.md#4:L215:para:s1 [78311d8113]
     2 and 3, monitor off) when its inside air reaches +50 C or any cell +55 C, and, if those are reached again, to one module (the heat stage: slot 3 once board B carries BANK-R1, slot 2 as generated, `CONOPS.md` section 4c); it restores 5 K below (control C1, `feasibility/POWER-THERMAL.md` section 9.3, `CONOPS.md` section 4c).
-    names: refs=C1; boards=board B
+    names: refs=C1; boards=as generated,board B
 OPERATING-ENVELOPE.md#4:L215:para:s2 [69c53126c9]
     Until 27 September 2026 this line read "above +35 C: the kit runs the reduced mode (one module) so the inside air stays under the +55 C that the battery-bay sensor and the pack need", the figure the owner's D-02b consequence was argued at (section 8), which is not where the current analysis puts it: on 32.53's conductance three typical modules reach C1 at +28.6 to +30.5 C.
     names: refs=C1
 OPERATING-ENVELOPE.md#4:L215:para:s3 [0a6d39484c]
     What it is for: REQ-077 requires the kit to act before any cell passes +60 C, idle cells on an input included, where the enclosure alone cannot keep them under it, and the design intends the stop to do that once HOT-R1 is in the generators of boards A and E (the requirement reads FAIL on the generated boards until then) and on the provisional error budget (`TEST-PLAN.md` P14); the kit runs no module while it acts.
-    names: boards=boards A and E
+    names: boards=boards A and E,the generated boards
 OPERATING-ENVELOPE.md#4:L237:para:s1 [c836951a27]
     At the envelope's -20 C the warm-up holds only while the conductance, lid open with the fans, is at most about 3.6 W/K, which no measurement has shown (T-H1): above it the link cards stay off, the kit-to-kit link is lost at the cold end and `TEST-PLAN.md` E4-O fails on it.
     names: boards=E4
 OPERATING-ENVELOPE.md#4:L237:para:s2 [84c26222a6]
     That bound stays open, with an extended-grade card and SDR (layer 6, decided before board B's layout entry if a socket or supply changes) as the route that removes it.
     names: boards=board B
+OPERATING-ENVELOPE.md#4:L263:para:s1 [22912384cc]
+    **Altitude: 0 to 3000 m in use, 0 to 4500 m in transport, ruled by the owner on 26 September 2026 (D-02c, section 8).** It was proposed here without a source, and it is not free: IEC 60664-1 derates clearance above 2000 m, so the PoE 54 V rail and the isolated converter's barrier both depend on it, which is why ISO-001 cannot close without it.
+    names: rails=rail
 OPERATING-ENVELOPE.md#4:L280:cell:2:s1 [ffc36a06e2]
     the tracker's own window, board E
     names: boards=board E
 OPERATING-ENVELOPE.md#4:L281:cell:2:s1 [9bab90eb18]
     Corrected 26 September 2026: the 4S4P 18650 and 4S3P 21700 packs this row named are not expected to fit beside board P under board B, and the 4S3P 18650 fits only without a rigid enclosure (adjudication A06 of 25 September 2026, whose working files are filed at `v2/docs/records/adj/A06-pack-geometry/`; the same finding is carried by `ASSEMBLY.md` section 3; INFERRED from the committed board heights; the case side at the worst of Peli's figures, `CASE-MARGINS.md`)
     names: boards=board B,board P
+OPERATING-ENVELOPE.md#4:L282:cell:2:s1 [d84bfb5308]
+    the rail that makes ISO-001 and the altitude question real
+    names: rails=rail
 OPERATING-ENVELOPE.md#4:L283:cell:2:s1 [532e78f2df]
     TPS25740A with an LM5176 stage, 5, 9 and 15 V at 3 A (`gen_sch_a.py` line 1003); corrected 26 September 2026: the TPS55288 this row named left the design on 7 September
     names: gens=gen_sch_a.py
 OPERATING-ENVELOPE.md#4:L285:para:s1 [28447175d0]
     **Operating modes**, each already in the design: full (three modules, lid open), reduced (slots 2 and 3; lid closed, or the measured-temperature and current triggers of `CONOPS.md` section 4c) with its heat stage (one module) and, past it, the hot stop (no module), blackout (LEDs and sounder muted), NVG (panel lighting), EMCON (a hardware line gates every transmitter rail and the PA bias), and charge (mains, vehicle or solar, gated by the pack thermistor and by the cold-charge inhibit).
-    names: gates=gated,gates
+    names: rails=rail; gates=gated,gates
 OPERATING-ENVELOPE.md#4:L285:para:s2 [b719e651bd]
     **Corrected 26 September 2026, as generated at `45bde541`:** EMCON removes the supply of the SDR, the Iridium modem, the LoRa, Zigbee and Thread radios, the HF unit, the two WiFi link cards and the PA rail, so those stop receiving too; it pulls the compute modules' own WiFi and Bluetooth disables low in hardware; and it puts the 5G module in airplane mode through its disable pin, a mode the module's firmware carries out; since board B's round 8 (27 September 2026) it also removes the 5G module's supply by hardware at once (SD-EMC-1r8, `feasibility/EMCON.md` section 4b) (`PANEL.md` section 6, `CONOPS.md` section 4b).
-    names: boards=board B
+    names: boards=as generated,board B; rails=rail
 OPERATING-ENVELOPE.md#4:L285:para:s3 [d23664c78f]
     **D-05, owner ruling of 26 September 2026: under EMCON the radios go DARK.** Every radio with an emission path is powered off or RF-disabled in hardware; the VHF path keeps listening, because its gate is on transmit only; GNSS, DCF77 and the lightning detector continue.
     names: gates=gate
@@ -1023,22 +1104,22 @@ OPERATING-ENVELOPE.md#4:L285:para:s5 [c98651fe06]
     names: gates=gate
 OPERATING-ENVELOPE.md#4:L302:para:s1 [8f3480949a]
     **Single-fault conditions the design is expected to survive**, written as the design's own protections so that PWR-003 and BAT-002 have something to be judged against: a short on any downstream rail (eFuses), a reversed or over-voltage input (the ideal diode and the 9 to 36 V front end), a shorted pack lead (the 25 A blade and the pack's own protector), a failed module (the voted I/O fabric and the per-bank USB ring), a cell driven past its limits with the gauge's firmware wrong or dead (board P's second level and chemical fuse, decision 40), loss of the panel controller (the hardware EMCON line is independent of any module), and water on the floor of the case (the floor water sensor with pack shutdown).
-    names: boards=board P
+    names: boards=board P; rails=rail
 OPERATING-ENVELOPE.md#4:L302:para:s2 [4acb82ab42]
     **Corrected 26 September 2026:** the loss of the panel controller leaves the transmitters safe but, as generated, no compute module powers without it (`ARCH-PCB-B-IOHA.md` section 10), so it is survived for EMCON and not for compute.
-    names: boards=PCB-B
+    names: boards=PCB-B,as generated
 TEST-PLAN.md#MeshSat field kit V2, qualification test plan (MIL-STD-810 and MIL-STD-461 methods; approved 6 Sep 2026, appendix 32.50 item 16e):L3:para:s1 [f1c2c8d45e]
     **Revised 27 September 2026 (MESHSAT-1357, the layer-2 and layer-3 closing actions of the handover audit):** every row now states its **purpose** and the **requirement records it verifies** (identifiers of `v2/ecad/tools/pcb_requirements.yaml`); the stored state keeps the pack fitted (section 1); E5 is written for the sealed case and E8 names Peli's pressure valve; the closed-lid state and its test are defined against the ConOps's reduced mode; D-02a's two pass lines are on every margin; the MIL-STD-461 rows are characterisation (D-04); M7 is at decision 34's ruled level; the thermal characterisation tests the hot end depends on are section 8 and the mechanical fit checks section 9.
     names: boards=E5
 TEST-PLAN.md#MeshSat field kit V2, qualification test plan (MIL-STD-810 and MIL-STD-461 methods; approved 6 Sep 2026, appendix 32.50 item 16e):L3:para:s2 [5f30437813]
     **Pass 2, later on 27 September 2026, answering the first pass of Review A (`reviews/REVIEW-A-LAYER-2-2026-09-27-pass1.md`):** E3-L carries E3-A's whole pass line with the lid closed, requires the owner's D-02b example set with the SOS path at every level (the generated board's shortfall is not waived), and fails on an SGP41 above +55 C (findings B4 and B5); E4-O restores round 8's +1.0 C charge floor and -9.0 C discharge stop and requires the kit-to-kit link after the cold warm-up (B7, m10); T-H3 replaces `ASSEMBLY.md`'s ten-minute key-down (B6); the transport and stored states have every input unplugged (m5).
-    names: boards=A's,E4
+    names: boards=A's,E4,the generated board
 TEST-PLAN.md#MeshSat field kit V2, qualification test plan (MIL-STD-810 and MIL-STD-461 methods; approved 6 Sep 2026, appendix 32.50 item 16e):L3:para:s3 [b9f3eb411b]
     **The second release attempt of layers 1 to 3, later on 27 September 2026 (the release checks' layer 2 B2 and layer 3 R4):** P15 (section 7) forces the hot stop at room temperature on the pack and on shore, so REQ-077 is verifiable whatever a chamber reaches; E3-H gains a stepped run beyond the envelope and the rule that a step that acted in no run reads NOT_VERIFIED; E3-L's pass line is unchanged.
     names: refs=R4
 TEST-PLAN.md#1:L15:item:s1 [93f1cf837d]
     **Article:** one complete kit as specified in `V2-SPEC.md`: Peli 1450 of the current moulding (D-08a) with the 1450PF frame and the face plate, the board set A, B, C, D, E1, E5 and P as generated at the commit the build is ordered from (each board's phase is on `v2/docs/CURRENT-EVIDENCE.md`; corrected 27 September 2026: this line named the A22 to E6 set of 7 September), the built 4S3P pack (fitted or out as each test's state says), the Xenarc monitor, all radios and antennas fitted as for deployment, the lid tablet bracket loaded with a dummy mass.
-    names: boards=A22,E5,E6
+    names: boards=A22,E5,E6,as generated
 TEST-PLAN.md#1:L16:item:s1 [18891567a1]
     Each test runs the kit in the state its row names, and a row that cannot says so as a **deviation**: E3-S, E3-O, E4-S and E5 keep the cells out of the exposure, because the cell maker rates them to +60 C at most in storage and in discharge and to -20 C at the lowest in storage (Samsung INR18650-35E Ver. 1.1 3.12 and 3.13), and the product-level result they cannot give is finding BAT-F19 (section 6).
     names: boards=E4,E5
@@ -1146,7 +1227,7 @@ TEST-PLAN.md#5:L88:para:s2 [ed742e38eb]
     names: gates=gate
 TEST-PLAN.md#5:L88:para:s3 [ae832a28a0]
     **Corrected 26 September 2026 (S-07), as generated at `45bde541`:** owner decision 40 (D-15) is ruled and board P's schematic carries its floor since `faf8c981`: a BQ7720700 second level on its own tap filters (cell over-voltage 4.325 V and under-voltage 2.25 V, open wire, and a fixed 70 C over-temperature on its own thermistor since `d90f30e4`), whose fault output and the gauge's FUSE output both blow the Eaton SCF9550-30-05 chemical fuse F2 once the arming jumper JP1 is closed, whose under-voltage output holds the discharge FET off, and the gauge's PTC input enabled with its own PTC element (`gen_sch_p.py` lines 243, 288 and 414 to 502).
-    names: refs=F2,JP1; boards=board P; gates=enabled; gens=gen_sch_p.py
+    names: refs=F2,JP1; boards=as generated,board P; gates=enabled; gens=gen_sch_p.py
 TEST-PLAN.md#5:L88:para:s4 [09181bc249]
     Until `faf8c981` this paragraph said board P carried no second protector, no chemical fuse and a PTC input tied off, which was then true.
     names: boards=board P
@@ -1197,7 +1278,7 @@ TEST-PLAN.md#6:L145:cell:4:s2 [77b3aec47b]
     names: refs=C1
 TEST-PLAN.md#6:L145:cell:4:s3 [23e452be7d]
     On board B as generated the stage criteria fail at any level where the heat stage is entered, because its one-module stage lacks the LoRa mesh and APRS (`CONOPS.md` section 4c): that failure is expected until BANK-R1 is in board B's generator, and it is not waived
-    names: boards=board B
+    names: boards=as generated,board B
 TEST-PLAN.md#6:L146:cell:1:s1 [8e69253a79]
     the hot stop (`CONOPS.md` section 4c), read during E3-A's and E3-L's runs and, beyond the envelope, in a stepped run of its own: pack fitted, the heat stage running, first on the pack and then on shore; with HOT-R1 on boards A and E (without it the run records the generated path, and the requirement reads FAIL at desk)
     names: boards=A's,boards A and E
@@ -1323,7 +1404,7 @@ ASSEMBLY.md#2:L84:item:s1 [6374505c78]
     names: refs=J_BATT,J_DCF,J_DCIN,J_FAN1,J_FAN2,J_GEIGER,J_LTG,J_POD,J_SMB,J_SOLAR,J_TAMP; boards=E6
 ASSEMBLY.md#2:L89:item:s1 [00e44f7f0e]
     The bay spacers (about 31.3 mm, section 1; corrected 26 September 2026 from 38 mm), B16: the three Compute Modules pressed onto their receptacle pairs and screwed to the standoffs, the coolers clipped on with their fan leads in `J_FAN1..3`, the NVMe drives in `J_M2N1..3`, the two WiFi link cards in `J_M2C1` (slot 1) and `J_M2C3` (slot 3), each with its two MHF4 pigtails to B16's antenna changeover (`J_W1A`, `J_W1B` and `J_W3A`, `J_W3B`), the changeover's two outputs (`J_WOA`, `J_WOB`) by pigtail to A22's P2P A and P2P B jacks, the 5G module in `J_M2C2` (slot 2) with its SIMs in `J_SIM1`/`J_SIM2` and its pigtails from its ANT0 and ANT2 receptacles to the 5G MAIN and 5G DIV jacks (ANT3, the third jack of D-07, waits on A22's site; corrected 26 September 2026, S-07: this step named one card and pigtails straight to the wall), the LimeSDR into `J_LIME` with its pigtail to SDR, the RockBLOCK on its bracket into `J_RB9704` with its pigtail to IRIDIUM, the GNSS pigtail from `J_GNSS1` to A22 `J_RF4`, the LoRa pigtail from `J_LORA1` to `J_RF11`, one module's antenna-kit lead to `J_RF3`, the CR2032, the four rail leads from A22 into `J_5V_S1..3` and `J_5V_DEV`, the PoE lead into `J_54V`, the 26-way ribbon between A22's and B16's `J_AB1` (the two headers sit at the same case XY, one on A22's top and one on B16's underside), the HDMI cable in `J_HDMI` and the camera and QMX leads in `J_CAM` and `J_QMX` left for the face and the lid, the panel ribbon in `J_PANEL`.
-    names: refs=J_54V,J_5V_DEV,J_5V_S1,J_AB1,J_CAM,J_FAN1,J_GNSS1,J_HDMI,J_LIME,J_LORA1,J_M2C1,J_M2C2,J_M2C3,J_M2N1,J_PANEL,J_QMX,J_RB9704,J_RF11,J_RF3,J_RF4,J_SIM1,J_SIM2,J_W1A,J_W1B,J_W3A,J_W3B,J_WOA,J_WOB; boards=A22,B16
+    names: refs=J_54V,J_5V_DEV,J_5V_S1,J_AB1,J_CAM,J_FAN1,J_GNSS1,J_HDMI,J_LIME,J_LORA1,J_M2C1,J_M2C2,J_M2C3,J_M2N1,J_PANEL,J_QMX,J_RB9704,J_RF11,J_RF3,J_RF4,J_SIM1,J_SIM2,J_W1A,J_W1B,J_W3A,J_W3B,J_WOA,J_WOB; boards=A22,B16; rails=rail
 ASSEMBLY.md#4:L120:cell:0:s1 [88e82bc9f0]
     Pack power (fused at the pack: the 25 A blade `F1` and, behind it, the chemical fuse `F2` of D-15)
     names: refs=F1,F2
@@ -1344,7 +1425,7 @@ ASSEMBLY.md#4:L121:cell:4:s1 [20f3ba1ddd]
     names: boards=E6
 ASSEMBLY.md#4:L121:cell:4:s2 [4a38904e7a]
     As generated since `faf8c981` both ends are the same JST-XH 1x4 in P1's order; P1's pin 3 is `PACK_N`, the pack's own negative lead, so the lead's return does not bypass the shunt; E6's sensor controller is the gauge's only SMBus host (the charger on A22 has no conductor to P1).
-    names: nets=PACK_N; boards=A22,E6
+    names: nets=PACK_N; boards=A22,As generated,E6
 ASSEMBLY.md#4:L122:cell:2:s1 [e87677183b]
     E6 `J_DCIN` (JST-VH), the lead tied along the back wall, the west end wall and the front wall
     names: refs=J_DCIN; boards=E6
@@ -1384,6 +1465,9 @@ ASSEMBLY.md#4:L129:cell:1:s1 [1df73a9266]
 ASSEMBLY.md#4:L129:cell:2:s1 [b01b1874b5]
     B16 `J_AB1` (underside, the same case XY)
     names: refs=J_AB1; boards=B16
+ASSEMBLY.md#4:L130:cell:0:s1 [7c692c7420]
+    Mezzanine harness (USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V)
+    names: rails=rail
 ASSEMBLY.md#4:L130:cell:1:s1 [7e0af4aa94]
     A22 `J_MEZZ1`
     names: refs=J_MEZZ1; boards=A22
@@ -1401,7 +1485,7 @@ ASSEMBLY.md#4:L131:cell:2:s1 [ceb537b912]
     names: refs=D8,J_PWR1; boards=D8
 ASSEMBLY.md#4:L132:cell:0:s1 [db20368ea7]
     Slot rails, 3 x (5.1 V: AP64500 5 A bucks on slots 1 and 3, an LM5176 stage on slot 2, each INA226 monitored; `gen_sch_a.py:840-841` and `:873` at `45bde541`, corrected 26 September 2026 from "6 A converters")
-    names: gens=gen_sch_a.py:840-841
+    names: rails=rails; gens=gen_sch_a.py:840-841
 ASSEMBLY.md#4:L132:cell:1:s1 [0b99dbc698]
     A22 `J_5V_S1..3` (VH)
     names: refs=J_5V_S1; boards=A22
@@ -1410,7 +1494,7 @@ ASSEMBLY.md#4:L132:cell:2:s1 [a07ddb5431]
     names: refs=J_5V_S1; boards=B16
 ASSEMBLY.md#4:L133:cell:0:s1 [d93d8c24ef]
     Device rail (5.1 V, an LM5176 stage with a 7.2 A minimum limit, `gen_sch_a.py:881`)
-    names: gens=gen_sch_a.py:881
+    names: rails=rail; gens=gen_sch_a.py:881
 ASSEMBLY.md#4:L133:cell:1:s1 [c2347385d2]
     A22 `J_5V_DEV` (VH)
     names: refs=J_5V_DEV; boards=A22
@@ -1425,7 +1509,7 @@ ASSEMBLY.md#4:L134:cell:2:s1 [edfc9fd60e]
     names: refs=J_54V; boards=B16
 ASSEMBLY.md#4:L135:cell:0:s1 [6a24287f90]
     PA rail (13.8 V, EMCON gated)
-    names: gates=gated
+    names: rails=rail; gates=gated
 ASSEMBLY.md#4:L135:cell:1:s1 [454842f9d8]
     A22 `J_PA` (VH)
     names: refs=J_PA; boards=A22
@@ -1467,7 +1551,7 @@ ASSEMBLY.md#4:L140:cell:4:s1 [f6703b4b72]
     names: refs=D8; boards=D8
 ASSEMBLY.md#4:L141:cell:0:s1 [cded810b26]
     HF rail (12.0 V, EMCON gated)
-    names: gates=gated
+    names: rails=rail; gates=gated
 ASSEMBLY.md#4:L141:cell:1:s1 [51a31a4272]
     A22 `J_HF` (VH)
     names: refs=J_HF; boards=A22
@@ -1627,15 +1711,27 @@ ASSEMBLY.md#4:L180:para:s1 [ea68c64a4d]
 ASSEMBLY.md#8:L204:item:s1 [f2fbb5a56a]
     A22 alone, pack not connected: a bench supply at 14.4 V on the node contacts through a 5 A limit.
     names: boards=A22
-ASSEMBLY.md#8:L204:item:s2 [ebf7b76ff6]
+ASSEMBLY.md#8:L204:item:s2 [6a693c8a7f]
+    Each rail comes up at its own converter (the three slot rails and the device rail at 5.1 V within 0.1 V, the PA rail at 13.8 V, the HF rail at 12.0 V, the PoE rail at 54 V, the 3.3 V logic); 3 A drawn from a slot rail holds it above 5.0 V.
+    names: rails=rail,rails
+ASSEMBLY.md#8:L204:item:s3 [8b28be5c56]
+    The charger enumerates on the bus, the monitors read, and the main power control turns the rails off and on from the MAIN button.
+    names: rails=rails
+ASSEMBLY.md#8:L204:item:s4 [ebf7b76ff6]
     With `EMCON_HW` low the PA and HF rails stay off (corrected 26 September 2026: this read "high"; the line is active low, `PA_EN = EMCON_HW AND PA_SW_EN` in `gen_sch_a.py:535-536`, and `R102` pulls it low (`:537`) with the ribbon out, so on a bare A22 the two rails stay off until the line is driven high).
-    names: refs=R102; nets=EMCON_HW,PA_EN,PA_SW_EN; boards=A22; gates=and; gens=gen_sch_a.py:535-536
+    names: refs=R102; nets=EMCON_HW,PA_EN,PA_SW_EN; boards=A22; rails=rails; gates=and; gens=gen_sch_a.py:535-536
 ASSEMBLY.md#8:L206:item:s1 [dc6e921095]
     The stack with B16: each module boots from its rail with the other two slots disabled, then all three together; every USB device enumerates on its hub; the Ethernet switch links all three and the wall port.
-    names: boards=B16
+    names: boards=B16; rails=rail
+ASSEMBLY.md#8:L206:item:s2 [6f2a8e2a80]
+    Record each rail's current at idle and with the display on.
+    names: rails=rail
+ASSEMBLY.md#8:L207:item:s1 [9548d33e50]
+    Bursts: 5G registration, one Iridium session, one LoRa transmission and one VHF key-down in turn, each rail watched at its connector, then all within the same second: what is being recorded is the margin.
+    names: rails=rail
 ASSEMBLY.md#8:L208:item:s1 [b023a2e379]
     Panel: the panel controller enumerates; lamp test lights all seventeen controller-lit indicators (the sixteen panel LEDs `D1` to `D16`, the TX lamp `D3` among them through its tie `D17`, and the PI button's ring; `PANEL.md` section 9); BLACKOUT kills the rail; the EMCON toggle locked closed keeps the SA868 and the PA in receive while the bridge asserts PTT and opens every transmitter rail gate, and every other radio goes dark (D-05, `PANEL.md` section 6), measured with an external receiver; ZEROIZE armed shows on the e-paper and, held 5 s, performs the erase of `PANEL.md` section 6 (decision 30: the secure element's wrapping key destroyed, the running modules' RAM keys dropped, the slots cut), after which no drive unlocks; SOS closed 2 s under EMCON queues its message and tells the operator (D-10, `PANEL.md` section 9).
-    names: refs=D1,D16,D17,D3; gates=gate
+    names: refs=D1,D16,D17,D3; rails=rail; gates=gate
 ASSEMBLY.md#8:L210:item:s1 [7857aaa69d]
     Shore inhibit: `SHORE_INHIBIT` high holds the front end off within a second, low restores it.
     names: nets=SHORE_INHIBIT
@@ -1656,10 +1752,10 @@ ASSEMBLY.md#8:L213:item:s2 [42ab04ebc5]
     names: refs=JP1; boards=P's; gens=gen_sch_p.py
 ASSEMBLY.md#9:L217:item:s1 [c54e91925e]
     A22: the Preci-Dip 813-S1-012-10-016101 spring connector and the nine Mill-Max 0858 class power pins on the underside (tails soldered on the top face), the eleven Radiall R222M00720 blind-mate receptacles, the Keystone 3568 holder with its 25 A mini blade, the inductors that have no assembler equivalent (read the ORDER-NOTES), the rail leads, the PA, HF, monitor and heater leads, the MAIN button lead, the wall USB-C leads.
-    names: boards=A22
+    names: boards=A22; rails=rail
 ASSEMBLY.md#9:L218:item:s1 [3fa744781d]
     B16: the three Compute Modules (CM5108064) on their receptacles and standoffs, the three coolers with their fan leads, the WiFi link card, the 5G module with its two SIMs, the three NVMe drives, the LimeSDR, the RockBLOCK on its bracket, the CR2032, the rail and PoE leads from A22, the antenna pigtails, the HDMI cable, the camera and QMX leads, the panel and A-B ribbons; the LG290P, the E22 and the two E72 are assembled where JLCPCB stocks them, else hand-soldered.
-    names: boards=A22,B16
+    names: boards=A22,B16; rails=rail
 ASSEMBLY.md#9:L219:item:s1 [dcfe5ddc9a]
     C7 (the backer under the plate; the switches, the jacks, the camera and the sounder mount in the plate and only their leads reach the board): the sixteen 3 mm LEDs standing on the top face under the light guides (beaded to 5.3 mm), the Floyd Bell sounder with its gasket, the three C&K switches, the NKK toggle, the three APEM toggles with their covers, the two U-174/U jacks, the camera module, the PDi e-paper on its ZIF, the RP2040 and its flash if JLCPCB has no stock, the two XH leads.
     names: refs=C7; boards=C7,the backer
@@ -1701,17 +1797,17 @@ pcb_decisions.yaml#40:L896:field:outcome:s3 [4f6b62b753]
     names: refs=F2,JP1; gates=enabled; gens=gen_sch_p.py:243, :288 and :414-502
 pcb_decisions.yaml#40:L896:field:outcome:s4 [c1269c680b]
     It is not laid out: the committed board P layout (P4) predates the schematic and is re-placed and re-routed at board P's next phase, and BAT-001 on board P stays open until that copper exists and pack_protection judges board P as generated (S-45).
-    names: boards=P4,board P
+    names: boards=P4,as generated,board P
 pcb_decisions.yaml#40:L896:field:reversed_by:s1 [b7bc3415b2]
     reopen this decision and take the second level, the chemical fuse and the PTC element out of board P's schematic (gen_sch_p.py), which carries them since faf8c981; no board P layout carries them yet
     names: boards=board P; gens=gen_sch_p.py
 
 # counts per document
-v2/docs/PANEL.md: 145 sentences
-v2/docs/CONOPS.md: 86 sentences
-v2/docs/V2-SPEC.md: 89 sentences
-v2/docs/OPERATING-ENVELOPE.md: 21 sentences
+v2/docs/PANEL.md: 150 sentences
+v2/docs/CONOPS.md: 98 sentences
+v2/docs/V2-SPEC.md: 93 sentences
+v2/docs/OPERATING-ENVELOPE.md: 27 sentences
 v2/docs/TEST-PLAN.md: 97 sentences
-v2/docs/ASSEMBLY.md: 120 sentences
+v2/docs/ASSEMBLY.md: 125 sentences
 v2/ecad/tools/pcb_decisions.yaml: 9 sentences
-total: 567 sentences
+total: 599 sentences
