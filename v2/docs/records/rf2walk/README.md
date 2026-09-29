@@ -124,6 +124,78 @@ judges.
 EMCON.md, whose sections 4d.6 and E-04 changed; tried and restored on this branch) and render; re-take RF-002 with the changed
 walk; apply `apply_b_chk12.py`, regenerate board B, run `tools/readback_chk12.py`, and rebind board B's records as after set 12.
 
+## Third round: the re-check of set 12 (29 September 2026, branch `fnd/rf2walk3` from `fnd/rf2walk2` at `06eb61ef`)
+
+The re-check (an AI review, `_scratch/chk-set12/CHECK-2.md`): B1 not closed. The second round's `_switch_board` counted any
+board with a switch on either asserted line as the toggle's board: a switch on board B from TX_INHIBIT_n to ground brought
+CX9's latch back (CX10), and a switch on board B from TX_INHIBIT_n to +3V3_DEV was skipped as "the toggle" on every walk
+(CX14). Two failures on one fault, so the method changed (the owner's rule): no inference of the source from the wiring.
+
+**The declaration.** `EMCON_TOGGLES` in `v2/ecad/tools/tx_inhibit.py`, beside `SOURCES`, the walk's declaration of the two
+lines: one entry, board C, `SW_EMCON`, value "EMCON locking toggle", its contact between `TX_INHIBIT_n` and GND, the one element
+that asserts the inhibit; source `gen_sch_c.py` (the SW_EMCON part line: lug 1 TX_INHIBIT_n, lug 2 GND, lug 3 unconnected; lug 2
+the common per the APEM sheet cited there) and `v2/docs/PANEL.md` (the Switches row). `_is_toggle(k, nl, ref)` returns the
+declaration when the part on board `k` matches its board, reference, value and wiring (one pin on the line, one on ground,
+every other pin unconnected). `_switch_board`, `_line_sources` (with `_source_output` and `drive_net`), the census and
+`fail_safe` use only it. Every other switch or contact is an ordinary part: in the census a contact to ground can only
+assert, to a rail FAILS ("a switch contact ties the net to ... when closed"), to a signal net is followed; in the fail-safe
+network it is taken closed, an ideal one-way element the adverse way (it used to be taken open). `judge()` takes `toggles`
+like its other tables; `tests/test_tx_inhibit.py` declares its fixtures' own toggles (`FIXTURE_TOGGLES`) and passes them.
+
+**Every counterexample, previous walk (`06eb61ef`) against this walk** (`readings/b1r3/check-cx_walk*-previous-walk.txt` and
+`-new-walk.txt`, the checker's own scripts run from scratch):
+
+| Case | Previous: EMCON_HW / TX_INHIBIT_n | This walk |
+|---|---|---|
+| CX0, CX0' D4E-F1 shape | PASS / PASS | PASS / PASS |
+| CX1 expander pin behind its own 330R (C) | FAIL | FAIL |
+| CX2 second buffer on B, firmware input, behind 330R | FAIL | FAIL |
+| CX3 second buffer on B from TX_INHIBIT_n behind 330R | FAIL / FAIL | FAIL / FAIL |
+| CX3b, CX3c the same with a live pull-up on TX_INHIBIT_n | FAIL / FAIL | FAIL / FAIL |
+| CX4a BAT46 from +3V3_DEV onto EMCON_HW | FAIL | FAIL |
+| CX4b BAT46 from EMCON_HW to +3V3_DEV | UNDECIDED | UNDECIDED |
+| CX5 pull-up on EMCON_HW (B) | FAIL / PASS | FAIL / PASS |
+| CX6 clamp on EMCON_HW_DRV | FAIL | FAIL |
+| CX7 inverter behind 330R (C) | FAIL | FAIL |
+| CX8 D23 reversed | PASS / PASS | PASS / PASS |
+| CX9, CX9c latch on B, behind 330R and direct | FAIL / FAIL | FAIL / FAIL |
+| CX10 latch on B plus a switch on B to GND (behind 330R) | PASS / PASS | FAIL / FAIL |
+| CX10b latch on B plus a switch on B to +3V3_DEV | PASS / PASS | FAIL / FAIL |
+| CX11 second 74LVC1G17 on C behind 330R | PASS / PASS | PASS / PASS |
+| CX12 latch on C from C's own +3V3 | PASS / PASS | PASS / PASS |
+| CX13 EMCON_HW made on B from TX_INHIBIT_n | FAIL / PASS | FAIL / PASS (does not move: conservative, stated in `_switch_board`) |
+| cx_walk3: latch on B, direct and behind 330R, main's and D4E-F1's shape | FAIL / FAIL | FAIL / FAIL |
+| cx_walk3: the same plus a switch on B to GND, both forms and shapes | PASS / PASS | FAIL / FAIL |
+| cx_walk3: CX14, main's shape | PASS / PASS | PASS / FAIL |
+| cx_walk3: CX14, D4E-F1 shape | PASS / PASS | UNDECIDED / FAIL (only D23's reverse current, taken ideal, joins a lifted TX_INHIBIT_n to EMCON_HW) |
+
+**Fixtures** (each FAILs on the previous walk where it asserts a FAIL): `t_a_second_switch_makes_no_board_the_toggles_board`
+(CX10, both forms, both shapes), `t_a_switch_that_lifts_the_line_is_a_second_driver` (CX14, both shapes),
+`t_the_toggles_board_keeps_its_legitimate_shapes` (CX11, CX12 PASS; the latch on C from its received +5V FAILS; CX13 FAIL),
+`t_only_the_declared_toggle_is_a_source`. `test_tx_inhibit`: 142 passed, 0 failed. Groups contract, inhibit, requirements,
+evidence: 346 passed, 0 failed, 5 skipped.
+
+**Readings** (`readings/b1r3/`, `check_contracts.py` into scratch on a `git archive` of the whole `v2/ecad`):
+- set 12 at `dd7230a7`: board B is refused as UNKNOWN GENERATOR on both walks (its `gen_sch_b.py` carries CHK12-B and board B is
+  not regenerated), so the 20 RF-002 rows that need board B are UNJUDGED; identical bytes on both walks;
+- set 12's netlists under the generator that wrote them (`eafb324d`'s tree): 0 FAIL, 11 UNDECIDED, 15 PASS on both walks,
+  identical bytes;
+- main `2c7730a4`: 0 FAIL, 11 UNDECIDED, 15 PASS on both walks, identical bytes; 7 UNDECIDED with main's own walk (`7dc74508`).
+
+**The two minors.** R527's margin with every rail lost is 30 mV (0.37 V against 0.4 V, on the stated Ioff sum); 16.5 k would
+raise it to 92 mV but cut the released level's margin to 51 mV, so the drafted 20.0 k stands and no follow-up is owed for it.
+The Q{s}01 note: `apply_b_chk12_led.py`, a follow-up to CHK12-B for `dd7230a7`'s `gen_sch_b.py` (the same regeneration), puts
+Q{s}01 (the BC857 buffering LED_nPWR, emitter on the rail) and R{s}48 (the ACT LED's 1 k) in the module rails' loads at 3.3 mA
+each and corrects the note; `tools/readback_chk12.py` now finds each rail's LED feeds in the netlist and checks them (13 FAIL
+on set 12's committed board B, as it must before regeneration; its self-test passes the synthetic after-pair and fails its
+mutants). EMCON.md 4d.6 gains the declared toggle, B-4's margin and its start-up case (a dip while the supercapacitors charge
+drives I_EN low before I_BTD rises, the other half of Ground Control's order), and the LED loads; bench E-04 gains the start-up
+dip. `apply_rebind_page_rf2walk3.py` rebinds the seven records bound to EMCON.md (dry-run on this branch and on a scratch
+clone of `dd7230a7`).
+
+**For the integrator.** Merge `fnd/rf2walk3`; run `apply_rebind_page_rf2walk3.py` and render; re-take RF-002; apply
+`apply_b_chk12_led.py` with CHK12-B's regeneration of board B, run `tools/readback_chk12.py`, rebind board B's records.
+
 ## What remains open
 
 - The 11 UNDECIDED rows, the same rows as main's under the same walk: the LimeSDR (the USBLC6-2's VBUS with its I/O on the
@@ -139,6 +211,8 @@ walk; apply `apply_b_chk12.py`, regenerate board B, run `tools/readback_chk12.py
   the tools author can teach the walk from its pin table, with the pin's weak pull-up (IPU 10 to 30 uA) as its current.
 - The walk's class for the TPS3808 on a line it reads (U543 on `RB_IEN`) is not needed by any row today: `RB_IEN` is not on a
   path the table walks.
+- After the re-check: EMCON_HW made off the toggle's board from TX_INHIBIT_n reads FAIL (conservative; not the kit's
+  design); a start-up dip against Ground Control's order (bench E-04); board B's regeneration with CHK12-B and CHK12-LED.
 - After the check of set 12: the 9704's time from I_EN low to I_BTD low (bench E-04, sets U543's td); B-3's turn-on exposure
   (LORA_GO follows the enable, not the rail); B-5's module pull-down tolerance (unstated; the draft tolerates down to 30.8 k);
   the drafts of `apply_b_chk12.py` until board B is regenerated and read back.

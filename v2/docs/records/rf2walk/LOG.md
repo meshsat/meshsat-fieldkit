@@ -160,3 +160,15 @@ the regeneration and read-back of `apply_b_chk12.py`, and the 11 UNDECIDED rows 
   1 k), the note corrected. `tools/readback_chk12.py` now finds each rail's LED feeds in the netlist (a BC857 on the rail, a
   resistor from the rail to an LED's net: Q{s}01 and R{s}48 on set 12) and checks them; 13 FAIL on set 12's committed board
   B; the self-test's synthetic after-pair includes them and passes, its mutants fail.
+- 14:28 to 14:30 EMCON.md section 4d.6 gains the re-check's items (the declared toggle; B-4's 30 mV margin with every rail lost
+  and its start-up case; the LED feed loads) and bench E-04 the start-up dip; no claim word, no non-ASCII character;
+  `test_requirements` 65 passed. `apply_rebind_page_rf2walk3.py` (the second round's script, its marker and note changed,
+  accepting section 4d.6 added or changed): dry run on this branch (173bc6357996d467 to the new page) and on a scratch shared
+  clone of `dd7230a7` (096ed6822d6517a3 to the new page), 7 records each. README.md gains the third round.
+
+## Where the stream stands (29 September 2026, 14:30)
+
+B1's method changed: the line's source comes only from the declared toggle (`EMCON_TOGGLES`); CX10 and CX14 fail as fixtures
+and fail the previous walk; CX9, CX3b keep failing; CX11 and CX12 pass; CX13 stays a conservative FAIL. Set 12's netlists and
+main read byte for byte as under the previous walk. Follow-up `apply_b_chk12_led.py` for board B's regeneration; R527 stated,
+unchanged. Open: board B's regeneration with CHK12-B and CHK12-LED and its read-back, bench E-04, and the 11 UNDECIDED rows.
