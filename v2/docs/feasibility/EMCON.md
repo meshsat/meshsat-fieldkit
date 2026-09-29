@@ -1361,7 +1361,8 @@ decoupling classifier gains the SN74LVC2G07's clause with the draft; if the gene
 PWR-001 entry for the new nets (`RB_IEN_DRV`, `LORA_GO`, `5G_TPR_n`, `EMCON_HW_DRV`) or for the +3V3_CM3 gates, that is the
 integrator's settling, not a circuit change.
 Registry: `v2/docs/records/d4emcon/apply_registry_d4e.py page` at the merge (it rebinds the seven records bound to this page,
-adds D4E-F1 and D4E-F2 to S-01's open scope and E-01's new measurement to S-92; it closes nothing), and
+adds D4E-F1 and D4E-F2 to S-01's open scope and E-01's new measurement to S-92; it closes nothing; the generated pages are
+rendered after it, since the trace page prints the entries), and
 `apply_registry_d4e.py after` only once both read-backs hold on the committed regenerated netlists (it runs them itself and
 refuses otherwise). `tools/selftest_readback_c.py` shows the read-back passing a synthetic board C netlist that carries
 D4E-F1's draft and failing three mutants of it.
