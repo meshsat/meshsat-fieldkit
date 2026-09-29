@@ -100,12 +100,18 @@ E-02); (6) an apply script for FEA-002's evidence line once EMCON.md's new hash 
   read-back in FEA-002, rebinds its board B netlist, restates S-01 with what closed at desk). Tested in the worktree: `page`
   ran, its diff read (8 records: 7 rebound plus S-01), a second run refused, the registry restored with `git checkout`; `after`
   refuses on set 10 (read-back 56 FAIL). The registry is NOT changed on this branch.
-- 12:31 to 12:36 Self-review of `apply_b_d4e.py`: slot 3's GPIO bank is powered from `+3V3_CM3` (U32A pin 78 GPIO_VREF on
+- 12:29 to 12:31 Self-review of `apply_b_d4e.py`: slot 3's GPIO bank is powered from `+3V3_CM3` (U32A pin 78 GPIO_VREF on
   `+3V3_CM3`, read on set 10), so B-3's gates share the host pins' supply as intended. Found: the new gates' host-side inputs
   would float while slot 3's firmware has not configured its pins (SCES217AA: inputs must be held); added R546 to R550
   (100 k 1%) on RXEN, TXEN, IO26 (NRST), MOSI and SCK to GND (the PA off and the module in reset until the host drives them;
   NSS keeps R25); the read-back gains those nodes (B now 59 checks, all FAIL on set 10). Corrected B-4's asserted level to
   at most 0.15 V (the maker's divider at V_IN 5.3 V through R532), in the script and in 4d.3.
-- 12:36 `tools/selftest_readback_c.py`: from board C's committed netlist it writes a synthetic netlist carrying exactly
+- 12:31 `tools/selftest_readback_c.py`: from board C's committed netlist it writes a synthetic netlist carrying exactly
   D4E-F1's draft and three mutants; the read-back PASSES the synthetic one and FAILS each mutant
   (`readings/set10/readback/selftest-readback-c.txt`), so its FAIL on set 10 is not the only thing it can print.
+- 12:32 to 12:34 Section 6 of EMCON.md: E-01 gains U13 pin 4's off-state current while powered and released (S-92 ground (3),
+  which names this stream as the writer), E-11 gains board C's +3V3 stepped through its band with `EMCON_HW` recorded (D4E-F1)
+  and +3V3_DEV stepped down with +5V_DEV up with `RB_IEN` and U543's RESET recorded (B-4), E-12 (f) gains the pin's level
+  through Tpr (D4E-F2). `apply_registry_d4e.py page` now also restates S-92 (advanced, not closed) and refuses unless E-01
+  carries the addition; re-tested (9 items change: the 7 rebound records, S-01, S-92; a second run refused; registry
+  restored). Section 4d.5 names the registry phases and the self-test.

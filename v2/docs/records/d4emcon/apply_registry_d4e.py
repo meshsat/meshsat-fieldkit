@@ -6,8 +6,8 @@ PHASE page (run at the merge of fnd/d4emcon, before rules_status; it does not wa
 4d and three pointer sentences on this branch, so every record bound to EMCON.md by sha256/16 is re-read: one evidence entry per
 record, starting with the page's path, naming the sections added and the sections that differ, and saying that no result moves;
 each record is rebound from the old sha to the new one. S-01's title gains one restating sentence that ADDS the two findings of
-this stream (D4E-F1, D4E-F2) to its open scope and names the drafts, which are not applied. No evidence_result, status or stage
-changes: nothing here closes.
+this stream (D4E-F1, D4E-F2) to its open scope and names the drafts, which are not applied; S-92's title gains one sentence
+saying that bench E-01 now carries its ground (3). No evidence_result, status or stage changes: nothing here closes.
 
 PHASE after (run only after the integrator has applied apply_c_d4e_f1.py and apply_b_d4e.py, regenerated boards C and B on the
 KiCad box with their chains, and committed the regenerated netlists). It runs tools/readback_d4e.py itself on both committed
@@ -148,7 +148,13 @@ def phase_page(dry):
            "Quectel's 0.2 V (draft B-5 of apply_b_d4e.py); the back-feed of SD-EMC-2 into the RockBLOCK, the E22 and both E72 and "
            "L4 on U536 are drafted as B-1 to B-4 of the same script; none is applied, regenerated or read back.")
     out = restate_title(out, "S-01", s01)
-    check_and_write(t, out, rids + ["S-01"], dry)
+    if "d4emcon" not in open(PAGE, encoding="utf-8").read().split("| E-01 |", 1)[1].split("\n", 1)[0]:
+        refuse("bench E-01 on the page does not carry stream d4emcon's addition (U13's off-state current)")
+    s92 = ("Advanced by stream d4emcon (29 September 2026): bench E-01 of v2/docs/feasibility/EMCON.md section 6 now records "
+           "U13 pin 4's off-state current while powered and released, ground (3) of this item, beside pin 5's threshold and input "
+           "current, grounds (1) and (2); the item stays open until RF-002, re-taken on board D, reads the row decided.")
+    out = restate_title(out, "S-92", s92)
+    check_and_write(t, out, rids + ["S-01", "S-92"], dry)
     print("apply_registry_d4e: page %s -> %s; %d records rebound: %s" % (OLD, NEW, len(rids), ", ".join(rids)))
 
 
