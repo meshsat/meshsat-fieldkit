@@ -15,13 +15,14 @@ model, unchanged but for the lid's parallel count and its charge current per str
 | 4S8P, both functions kept (4S14P) | NOT MET: stops at hours 22 and 10, 258.9 Wh unserved | 0.0 and 0.0 Wh | none, not even at +40 C |
 | 4S9P, both kept with P2 under the tablet (the mechanical check's 39 places; 4S15P) | NOT MET at 400, 650 and 1000 Wp (164.8, 110.9 and 41.7 Wh unserved) | 0.0 and 0.0 Wh | meets only with the lid at +20 C AND 650 Wp or more (2.0 Wh left at 650 Wp, 29.4 at 1000 Wp); fails at 400 Wp even at +20 C |
 | 4S12P, a1elec's assumption (4S18P) | MEETS | 30.3 and 0.7 Wh | +9.6 C |
-| 4S14P, the tablet or the QMX out (4S20P) | MEETS | 49.1 and 44.9 Wh (94.0 together) | +3.8 C |
+| 4S14P, the tablet out (B, 56 places; 4S20P) | MEETS | 49.1 and 44.9 Wh (94.0 together) | +3.8 C |
+| 4S15P, the QMX out (C, 61 places after the mechanical check; 4S21P) | MEETS | 57.2 and 68.3 Wh (125.5 together) | +1.5 C |
 
 **The conflict, stated for the owner.** With both approved lid functions kept, the lid holds at most 39 cells (4S9P, the mechanical check's
 arrangement), and that carries M1 on this model only with the lid's cells as warm as the base's (+20 C) and an array of
 650 Wp or more; at the lid's basis temperature, or at A(i)'s 400 Wp, it does not. With one of them out of the lid, a 4S14P lid carries it with margin (94 Wh at the
 lowest point, down to a +3.8 C lid). The choice of which function leaves the lid, and where it goes, is the owner's:
-`records/a1mech/DECISION-A1.md` (B, the tablet out, is the engineering recommendation there).
+`records/a1mech/DECISION-A1.md` (B, the tablet out, is the engineering recommendation there; the corrected counts are A 39, B 56, C 61).
 
 **After the electrical check's corrections (29 September 2026 03:17).** a1elec now takes every limit at its minimum: board A
 as generated (E1) does not meet M1 at all, the model needs at least 5.56 A (115.1 W) into U3, and the drafted entry E2 (R11
