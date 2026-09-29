@@ -1,7 +1,7 @@
 # OD-01: the package an engineer needs, by path and sha256
 
 MESHSAT-1357, stream od01b, 29 September 2026. Written by `make_package.py` beside this file (stdlib; it refuses to run if a
-listed file is missing) at tree `e5425cd5` plus the working files it hashed; the same list in `sha256sum` form is `PACKAGE.sha256`.
+listed file is missing) at tree `5c01fa6a` plus the working files it hashed; the same list in `sha256sum` form is `PACKAGE.sha256`.
 Prototype: nothing in the package has been made, bought, sent or run. **Export:** copy every path below keeping the
 repository paths, then from the repository root `sha256sum -c v2/docs/records/od01/PACKAGE.sha256` reads OK for all 77 files
 (14.9 MB in all). Groups A to G are what a shop needs for the quotes (each part's drawing PDF governs its DXF and STEP); A, H, I and J
@@ -12,9 +12,9 @@ what the operator needs for the tests; K regenerates H1; L holds the later indep
 
 | Path | Bytes | sha256 | For |
 |---|---|---|---|
-| `v2/docs/records/od01/README.md` | 6092 | `132bb50ba61147222ec18f93d6f8db27bc7230cc0db41689206d7169c7fd8f0f` | the package's index and what remains |
-| `v2/docs/records/od01/TEST-BRIEF.md` | 9719 | `5ecf0d776b5b10efda1f0f21d8bdf06d7343767c8947144404be5331d4f82959` | the operator's two-page brief |
-| `v2/docs/records/od01/TEST-PROCEDURE.md` | 41150 | `cb8dccc149e1a005f82854f007b6903908b720df89ea72ae10c8ad11876da5b2` | the complete procedure: what the heat test proves, the shutdown and its verification, set-up, steps, patch runs, test B, stop limits, records |
+| `v2/docs/records/od01/README.md` | 6604 | `35b80fe85176f484f059ebbe12264511ac619b095af55957cf15231a9c92d2d4` | the package's index and what remains |
+| `v2/docs/records/od01/TEST-BRIEF.md` | 9833 | `f62917abbaf2c14f3e227477da784f5f923bd806a390011657f2be960a079912` | the operator's two-page brief |
+| `v2/docs/records/od01/TEST-PROCEDURE.md` | 44219 | `abe7af163f8bf8ae7a892096a0a4da262c48904760b19569ac9dba565ddcd499` | the complete procedure: what the heat test proves, the shutdown and its verification, set-up, steps, patch runs, test B, stop limits, records |
 | `v2/docs/records/od01/MACHINING-RFQ.md` | 20773 | `f12c13949b0c6b284a57bc1cfefe48b55bf522e486a8071e2cde3e67c7275c78` | the request for quote (NOT SENT) and section 6, the receipt checks R1 to R8 that gate cutting |
 | `v2/docs/records/od01/CHECKOUT-LIST.md` | 31055 | `f4a879f4346d27f271e3de54c329b8311d7d191e6a281b453a32000b5fbaac48` | what to buy, priced, with sources; lines 10 to 15 the shutdown |
 | `v2/docs/records/od01/checks/check-1.md` | 5919 | `c0fe6fbabb7ac861e37a1ff7172b4496d71014fbd0bde5b26153ccd39efd1be7` | independent AI check 1 of the package (28 Sep) |

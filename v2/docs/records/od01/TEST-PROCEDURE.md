@@ -26,10 +26,29 @@ definition `v2/release/case-2026-09-27/h1-heat-test-plate/`, the independent che
 ## 1. What the heat test can prove, and what it cannot
 
 **What it measures.** The empty case, sealed by H1 on the 1450PF frame and its o-ring, lid open and lid closed, with 21,
-42 and 64 W released into the base volume from a black dummy plate (H2) at the stack's place, fans off. At steady state
-each step gives one number: the enclosure's conductance for heat released into the inside air,
+42 and 64 W released into the base volume from a black dummy plate (H2) at the stack's place, fans off. At steady state each step gives one number (a step
+stopped at a limit before steady state gives none, section 8): the enclosure's conductance for heat released into the inside air,
 `G = P / (T_air,in - T_room)` in W/K, with `T_air,in` read at the named point CH2 (section 4, item 6). The patch runs give the
 rise of H1 under a 45 to 83 W block (an Arcol HS100 on its 35.0 x 37.0 fixing) for 20, 30 and 60 s, and its cooling.
+
+**Applicability to Option A(i)'s proposed lid pack (29 September 2026).** Option A(i) (a 400 Wp array into a 200 W stage,
+`v2/docs/records/a1solar/`, `a1elec/`, `a1mech/` and `a1int/` on branch `fnd/a1int`, not yet on main) proposes a second
+pack of 56 or 60 cells in the lid over the face, a harness across the hinge and a stay; it waits on the owner's decisions
+(which lid function leaves, REQ-016, D-06, the deployment rule: `v2/docs/EXECUTION-PLAN.md`, the standing rule of 29
+September). Nothing below adopts it. What each OD-01 test still gives if it is adopted:
+
+| Test | Applies unchanged? | Why, and what the lid pack would add |
+|---|---|---|
+| Receipt checks R1 to R8 | yes | the case, the frame and the walls are the same |
+| H1, C6 and the gates of RFQ section 6 | yes | the heat-test plate and the legs do not meet the lid |
+| C1 (face plate) for the mock-up | yes for T2 and T4 | as drawn it has no sealed crossing for the lid's lead (not designed, S-95): it is a mock-up plate, not the kit's final face under Option A(i) |
+| Shutdown V1 to V4, stop limits, records | yes | the test rig, not the kit |
+| Test A, lid-open steps S1, S4, S5 | yes | the open lid stands away from the base volume the test measures (INFERRED; the lid pack's own heat when charging is not in the test) |
+| Test A, lid-closed steps S2, S3, S6 | no, as a measure of Option A(i) | with the lid pack the closed lid's space over the face is mostly cells; the conductance with the lid closed would need a lid-pack thermal dummy in the lid (a new step) |
+| Patch runs | yes | the plate's spreading under the PA flange site does not depend on the lid |
+| Test B: T1, T2, T5, T11 | yes | case, frame, legs, walls, arrestor |
+| Test B: T4 and T6 | partly | T4 has no lid-pack stand-in; T6's open-lid clearance to the mated plugs would change with a lid pack |
+| New for the lid pack (not in OD-01) | none yet | `records/a1mech/README.md` names T-A1-1 (the lid's depth to the ceiling), T-A1-2 (the U-174/U jack), T-A1-3 (the stop, the hinge axis, the open case on a slope) and T-A1-4 (200 lid cycles with a dummy module and the harness), plus the sealed lid-lead crossing (S-95) |
 
 **Its uncertainty (the session's budget, INFERRED until the operator's own instruments' stated accuracies replace the
 typical figures used here):**
@@ -311,7 +330,8 @@ If the room drifts more, extend the step until the criterion holds or the room s
 
 ### 5.4 The result per step (the session computes it; the operator only records)
 `G = P / (T_CH2 - T_CH1)`, both the means of the last 30 minutes after the soak offsets; also reported against CH3 and
-CH8. `P` = the mean of the readings in that window. Uncertainty per section 1.
+CH8. `P` = the mean of the readings in that window. Uncertainty per section 1. Only a step with `steady_utc` yields `G`;
+a step stopped at a limit yields none (section 8).
 
 ## 6. Test A patch runs (attended; the operator present at the switch throughout)
 
@@ -384,10 +404,15 @@ TS1 to TS4 act only in the steady-state steps: in the patch runs the heaters are
 
 At a limit or a trip: supply off; do not press START; note the time and every channel; let the case cool with the lid
 open; photograph what tripped. To resume: when every channel reads within 5 K of the room, V4 in full, then the next step
-of the sequence, recorded as starting cold. A trip in S3 to S6 is a result, not a fault: the step is recorded as "stopped at the
-limit" with its readings up to the trip, which bound the conductance from below. **No limit is raised to let a step
-finish.** On the check-2 estimate H2 may reach about 93 C at 64 W lid closed with a 30 K inside rise, so TS1 may open in
-S6: that is the arrangement doing its job.
+of the sequence, recorded as starting cold. A trip in S3 to S6 is recorded, not treated as a fault: the step is recorded as "stopped at the
+limit" with every reading up to the trip, the time and what tripped. Those readings are kept as transient data and are **not** a
+steady-state result. While the case still warms, part of the input goes into storage (`P = G (T - T_room) + C dT/dt`),
+so `P / (T - T_room)` before steady state can exceed the true conductance (64 W, a 20 K rise and 24 W still stored is
+2 W/K, not 3.2), and with several temperature nodes and a local trip no general bound holds in either direction. A
+stopped step therefore yields no `G`; any conductance the session infers from it needs a stated transient model with
+its uncertainty, is labelled so, and closes no row of section 1 until that model is itself checked. **No limit is raised to let a step
+finish.** On the check-2 estimate H2 may reach about 93 C at 64 W lid closed with a 30 K inside rise, so TS1 may open in S6: that is the arrangement doing its job, and
+then S6 gives no `G`: the 64 W lid-closed point stays open until the session plans a replacement step at desk.
 
 ## 9. What is recorded
 
