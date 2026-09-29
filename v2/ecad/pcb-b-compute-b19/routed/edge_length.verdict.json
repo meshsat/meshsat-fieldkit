@@ -37,29 +37,32 @@
  },
  "counts": {
   "answered_nets": 361,
-  "bound_decided_nets": 153,
-  "bound_edge_nets": 451,
+  "bound_decided_nets": 144,
+  "bound_edge_nets": 442,
   "classes": 154,
   "contradicted_nets": 0,
-  "decided_nets": 554,
-  "layout_bound_nets": 193,
+  "decided_nets": 545,
+  "layout_bound_nets": 184,
   "low_speed_nets": 324,
   "maker_edge_nets": 103,
   "maker_held_nets": 40,
-  "may_be_long_nets": 554,
+  "may_be_long_nets": 545,
   "models_absent": 0,
   "models_asked": 10,
-  "signal_nets": 886,
+  "signal_nets": 907,
   "unasked_part_nets": 8,
   "undecided_model_absent_nets": 0,
-  "undecided_nets": 8,
-  "undecided_no_declaration_nets": 8,
-  "undecided_other_nets": 0
+  "undecided_nets": 38,
+  "undecided_no_declaration_nets": 29,
+  "undecided_other_nets": 9
  },
- "denominator": 886,
+ "denominator": 907,
  "evidence": [
-  "UNDECIDED (no declaration) (UNKNOWN, 8 of 8 net(s)): no signal-class declaration (x8); ICs on them: SN74LVC1G04DBVR inverter U112, SN74LVC1G04DBVR inverter U212, SN74LVC1G04DBVR inverter U312, SN74LVC2G06DBVR dual U220",
-  "BOUND_DECIDES 153 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): LORA_ANT, S1A_BOOT, S1B_BOOT, S2A_BOOT, S2B_BOOT, S3A_BOOT, S3B_BOOT, DEV_BST, KSZC_BST, S1C_BST, S1D_BST, S2C_BST ...",
+  "UNDECIDED (no declaration) (UNKNOWN, 29 of 29 net(s)): no signal-class declaration (x29); ICs on them: 74LVC1G34 buffer U544, 74LVC1G34 buffer U552, 74LVC1G34 buffer U551, 74LVC1G34 buffer U553",
+  "UNDECIDED *_RST_n (CLOCKED_DIGITAL, 2 of 11 net(s)): U540 SN74LVC2G07DBVR dual open-drain: no family in pcb_edge_rates.yaml; U542 SN74LVC2G07DBVR dual open-drain: no family in pcb_edge_rates.ya; ICs on them: Ebyte E72-2G4M20S1E U14, Ebyte E72-2G4M20S1E U13, Microchip KSZ9897RTXI U1, Quectel LG290P03AAMD U11",
+  "UNDECIDED *_RXD (CLOCKED_DIGITAL, 3 of 4 net(s)): U538 SN74LVC1G08DBVR AND (1: no family in pcb_edge_rates.yaml; U540 SN74LVC2G07DBVR dual open-drain: no family in pcb_edge_rates.yaml; U542 ; ICs on them: CP2102N-A02-GQFN28 USB-UART U15, Ebyte E72-2G4M20S1E U14, Ebyte E72-2G4M20S1E U13, Quectel LG290P03AAMD U11",
+  "UNDECIDED SPI*_* (CLOCKED_DIGITAL, 4 of 8 net(s)): U550 SN74LVC1G08DBVR AND (1: no family in pcb_edge_rates.yaml; U547 SN74LVC1G08DBVR AND (1: no family in pcb_edge_rates.yaml; U548 SN74LVC1G; ICs on them: 74LVC1G34 buffer U552, 74LVC1G34 buffer U551, 74LVC1G34 buffer U553, Amphenol 10164227-1004A1RLF U32A",
+  "BOUND_DECIDES 144 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): LORA_ANT, S1A_BOOT, S1B_BOOT, S2A_BOOT, S2B_BOOT, S3A_BOOT, S3B_BOOT, DEV_BST, KSZC_BST, S1C_BST, S1D_BST, S2C_BST ...",
   "MAKER_HELD 40 layout-bound net(s) on which every driver has a published minimum: KSZ_RST, BBM1_RA, BBM2_RA, BBM3_RA, IOCA_CAN1_RX, IOCA_CAN1_TX, IOCA_CAN2_RX, IOCA_CAN2_TX, IOCB_CAN1_RX, IOCB_CAN1_TX, IOCB_CAN2_RX, IOCB_CAN2_TX ...",
   "LAYOUT_BOUND *_ANT (HIGH_SPEED_DIGITAL, 0.000 ns BOUND RF-LINES, critical 0.0 mm, decided by a bound): LORA_ANT",
   "LAYOUT_BOUND *_BOOT (HIGH_SPEED_DIGITAL, 0.000 ns BOUND POWER-STAGE-NODES, critical 0.0 mm, decided by a bound): S1A_BOOT, S1B_BOOT, S2A_BOOT, S2B_BOOT, S3A_BOOT, S3B_BOOT",
@@ -69,12 +72,9 @@
   "LAYOUT_BOUND *_RST (CLOCKED_DIGITAL, 0.000 ns BOUND SILABS-CP2102N, critical 0.0 mm, decided by a bound): GNSS_RST, RB_RST, ZBA_RST, ZBB_RST",
   "LAYOUT_BOUND *_RST (CLOCKED_DIGITAL, 5.890 ns IBIS TI-PCA9555, critical 137.2 mm, decided by a published figure on every driver): KSZ_RST",
   "LAYOUT_BOUND *_RST_n (CLOCKED_DIGITAL, 0.000 ns BOUND DISCRETE-MOSFET, critical 0.0 mm, decided by a bound): 5G_RST_n, KSZ_RST_n",
-  "LAYOUT_BOUND *_RST_n (CLOCKED_DIGITAL, 0.000 ns BOUND EBYTE-E72-CC2652P, critical 0.0 mm, decided by a bound): ZBA_RST_n, ZBB_RST_n",
   "LAYOUT_BOUND *_RST_n (CLOCKED_DIGITAL, 0.000 ns BOUND FAR-BENCH-PROBE, critical 0.0 mm, decided by a bound): IOCA_RST_n, IOCB_RST_n, IOCC_RST_n",
   "LAYOUT_BOUND *_RST_n (CLOCKED_DIGITAL, 0.000 ns BOUND QUECTEL-LG290P, critical 0.0 mm, decided by a bound): GNSS_RST_n",
-  "LAYOUT_BOUND *_RXD (CLOCKED_DIGITAL, 0.000 ns BOUND EBYTE-E72-CC2652P, critical 0.0 mm, decided by a bound): ZBA_RXD, ZBB_RXD",
   "LAYOUT_BOUND *_RXD (CLOCKED_DIGITAL, 0.000 ns BOUND QUECTEL-LG290P, critical 0.0 mm, decided by a bound): GNSS_RXD",
-  "LAYOUT_BOUND *_RXD (CLOCKED_DIGITAL, 0.000 ns BOUND SILABS-CP2102N, critical 0.0 mm, decided by a bound): RB_RXD",
   "LAYOUT_BOUND *_RXD? (CLOCKED_DIGITAL, 0.000 ns BOUND QUECTEL-LG290P, critical 0.0 mm, decided by a bound): GNSS_RXD2",
   "LAYOUT_BOUND *_SMBCLK (CLOCKED_DIGITAL, 0.000 ns BOUND DIODES-PI7C9X2G404SL, critical 0.0 mm, decided by a bound): S1_SMBCLK, S2_SMBCLK, S3_SMBCLK",
   "LAYOUT_BOUND *_SMBDAT (CLOCKED_DIGITAL, 0.000 ns BOUND DIODES-PI7C9X2G404SL, critical 0.0 mm, decided by a bound): S1_SMBDAT, S2_SMBDAT, S3_SMBDAT",
@@ -189,28 +189,32 @@
    "sha256_16": "98191bec36d43771"
   },
   "document_25": {
+   "path": "v2/vendor/ti/ti-sn74lvc1g34.pdf",
+   "sha256_16": "04384d3a3cf65b2b"
+  },
+  "document_26": {
    "path": "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf",
    "sha256_16": "bb89f067e6a79028"
   },
-  "document_26": {
+  "document_27": {
    "path": "v2/vendor/ti/tps23861-datasheet.pdf",
    "sha256_16": "65262ce4766a5f8e"
   },
-  "document_27": {
+  "document_28": {
    "path": "v2/vendor/vishay/veml7700-datasheet.pdf",
    "sha256_16": "f338cf7d5911828a"
   },
-  "document_28": {
+  "document_29": {
    "path": "v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf",
    "sha256_16": "ba3b1474406fdaf5"
-  },
-  "document_29": {
-   "path": "v2/vendor/zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf",
-   "sha256_16": "4bae5b3e67483b0b"
   },
   "document_3": {
    "path": "v2/vendor/cluster/ksz989x-hw-design-checklist.pdf",
    "sha256_16": "2a9d80931a0bed4b"
+  },
+  "document_30": {
+   "path": "v2/vendor/zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf",
+   "sha256_16": "4bae5b3e67483b0b"
   },
   "document_4": {
    "path": "v2/vendor/cm5/cm5-datasheet.pdf",
@@ -221,16 +225,16 @@
    "sha256_16": "029f345a1e7be917"
   },
   "document_6": {
+   "path": "v2/vendor/diodes/diodes-74lvc1g34.pdf",
+   "sha256_16": "efd2d7978bb880b7"
+  },
+  "document_7": {
    "path": "v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf",
    "sha256_16": "675fa7ee40c91ad6"
   },
-  "document_7": {
+  "document_8": {
    "path": "v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf",
    "sha256_16": "fae7e21365939be5"
-  },
-  "document_8": {
-   "path": "v2/vendor/lora/ebyte-e22-900m30s-user-manual-en-v1.20.pdf",
-   "sha256_16": "d864e9ca390f15c9"
   },
   "document_9": {
    "path": "v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf",
@@ -247,7 +251,7 @@
   },
   "far_netlist_c": {
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "fef4df255c00f4db"
+   "sha256_16": "87b69472ac83ca5a"
   },
   "far_netlist_d": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
@@ -259,7 +263,7 @@
   },
   "intent": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
-   "sha256_16": "9fd37fd39026c102"
+   "sha256_16": "84d2e641a3db261a"
   },
   "model_1": {
    "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
@@ -321,9 +325,9 @@
    "state": "PRESENT"
   },
   "netlist": {
-   "content16": "b9dbb9c4a430d108",
+   "content16": "31190f043dc21cfa",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "97823ef1171a61ce"
+   "sha256_16": "5b89d5ef6fe0299a"
   },
   "project": {
    "path": "pcb-b-compute-b19/pcb-b-compute.kicad_pro",
@@ -361,12 +365,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "958a7de7a15f",
-  "tools_tree_sha": "7a55e9ef29ec7734"
+  "git_head": "d75384201515",
+  "tools_tree_sha": "254a65b96010ac03"
  },
- "ts": "2026-09-29T00:16:05Z",
+ "ts": "2026-09-29T11:46:43Z",
  "verdict": "INCONCLUSIVE",
- "version": "958a7de7a15f",
+ "version": "d75384201515",
  "writer": {
   "file": "edge_length.py",
   "sha16": "21d61d18e18e56a8"

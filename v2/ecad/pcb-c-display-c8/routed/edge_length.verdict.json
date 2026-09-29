@@ -39,7 +39,7 @@
   "answered_nets": 10,
   "bound_decided_nets": 23,
   "bound_edge_nets": 29,
-  "classes": 47,
+  "classes": 48,
   "contradicted_nets": 0,
   "decided_nets": 33,
   "layout_bound_nets": 23,
@@ -49,15 +49,16 @@
   "may_be_long_nets": 33,
   "models_absent": 0,
   "models_asked": 6,
-  "signal_nets": 134,
+  "signal_nets": 135,
   "unasked_part_nets": 0,
   "undecided_model_absent_nets": 0,
-  "undecided_nets": 0,
-  "undecided_no_declaration_nets": 0,
+  "undecided_nets": 1,
+  "undecided_no_declaration_nets": 1,
   "undecided_other_nets": 0
  },
- "denominator": 134,
+ "denominator": 135,
  "evidence": [
+  "UNDECIDED (no declaration) (UNKNOWN, 1 of 1 net(s)): no signal-class declaration; ICs on them: 74LVC1G17 Schmitt-trigger U9",
   "BOUND_DECIDES 23 layout-bound net(s) whose governing edge is a bound or a model: at least one driver on each has no published minimum, whatever the other drivers' makers publish (ER-D13): EPD_CS, EPD_DC, EPD_SCL, EPD_SDA, EPD_SW, EXP_INT, HB1, HB2, HB3, Q3_G, QSPI_D0, QSPI_D1 ...",
   "LAYOUT_BOUND EPD_CS (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): EPD_CS",
   "LAYOUT_BOUND EPD_DC (CLOCKED_DIGITAL, 0.000 ns BOUND RPI-RP2040, critical 0.0 mm, decided by a bound): EPD_DC",
@@ -173,7 +174,7 @@
   },
   "far_netlist_b": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "97823ef1171a61ce"
+   "sha256_16": "5b89d5ef6fe0299a"
   },
   "far_netlist_d": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
@@ -185,7 +186,7 @@
   },
   "intent": {
    "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
-   "sha256_16": "03af8453948d391c"
+   "sha256_16": "d321f2979e0c4244"
   },
   "model_1": {
    "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
@@ -227,9 +228,9 @@
    "state": "PRESENT"
   },
   "netlist": {
-   "content16": "ebde053efc0a3906",
+   "content16": "424a8b6ee5851775",
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "fef4df255c00f4db"
+   "sha256_16": "87b69472ac83ca5a"
   },
   "project": {
    "path": "pcb-c-display-c8/pcb-c-display.kicad_pro",
@@ -267,12 +268,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "958a7de7a15f",
-  "tools_tree_sha": "7a55e9ef29ec7734"
+  "git_head": "d75384201515",
+  "tools_tree_sha": "254a65b96010ac03"
  },
- "ts": "2026-09-29T00:16:28Z",
+ "ts": "2026-09-29T11:47:07Z",
  "verdict": "INCONCLUSIVE",
- "version": "958a7de7a15f",
+ "version": "d75384201515",
  "writer": {
   "file": "edge_length.py",
   "sha16": "21d61d18e18e56a8"
