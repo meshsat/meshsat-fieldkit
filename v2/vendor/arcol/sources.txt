@@ -1,0 +1,2 @@
+# Arcol (Ohmite group) documents held for stream od01b (MESHSAT-1357): URL, fetched (UTC), sha256
+arcol-hs-datasheet-12-14-08.pdf  https://docs.rs-online.com/8b3e/0900766b815a22a3.pdf  2026-09-28T23:24Z  ec17870c5a92d11e72bcee363471313909a5c1a6cd13401018684198b75ab1f0  (Arcol "HS Aluminium Housed Resistors", issue 12/14.08, 2 pages; a distributor's copy of the maker's sheet; the same bytes the independent check of fnd/od01 read on 28 Sep 2026 21:04 UTC)

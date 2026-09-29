@@ -1,0 +1,2 @@
+# Elmwood Sensors (Honeywell Sensing and Control) documents held for stream od01b (MESHSAT-1357): file, URL, fetched (UTC), sha256
+honeywell-commercial-thermostats-2455r.pdf  https://cdn-reichelt.de/documents/datenblatt/C300/2455R_DB_EN.pdf  2026-09-28T23:31:57Z  4d6ea7a29117349d28f52f86ec234c68d980d39265d3938a87b8a24b0acfdf1a  (Honeywell "Commercial Thermostats", 24 pages, PDF created 25 Sep 2009; the 2455R series on pages 4 and 5; a distributor's copy of the maker's sheet, linked from reichelt's product pages for its 2455R lines)

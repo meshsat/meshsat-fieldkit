@@ -1,8 +1,8 @@
 # RESULT: check of fnd/od01 at 78dd3e29 (AI review, independent checker; not a qualified review)
 
 **checkout-ready: no.** Three blocking items, all fixable in text or in H1's drawing. All eight part numbers exist at the
-prices, VAT status and stock the author read (re-read 21:00 to 21:07 UTC, 28 Sep 2026, none moved). Full record:
-`/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-od01/CHECK.md`. Pages fetched are in `_scratch/chk-od01/pages/`.
+prices, VAT status and stock the author read (re-read 21:00 to 21:07 UTC, 28 Sep 2026, none moved). Full record: the checker's scratch clone (not filed; its paths generalised on filing, 29 September 2026). Pages
+fetched were kept there.
 
 ## Blocking
 - **B1, incompatibility (line 6 against H1).** Arcol HS sheet 12/14.08, page 2: the HS100 fixes by four holes (Ø 3.2 max)
@@ -82,4 +82,4 @@ ECB reference rates, 28 Sep 2026 (the same file the author read): USD 1.1378, GB
 - Multi-Cases.nl's VAT basis.
 - vonkbv.com: HTTP 429.
 
-I edited or committed nothing in any worktree. I wrote only under `_scratch/chk-od01/`.
+I edited or committed nothing in any worktree. I wrote only in the checker's scratch clone.

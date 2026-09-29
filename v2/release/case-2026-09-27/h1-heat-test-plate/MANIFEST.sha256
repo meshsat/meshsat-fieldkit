@@ -1,0 +1,7 @@
+# MeshSat V2 case release h1-heat-test-plate: sha256 of every file (sha256sum -c MANIFEST.sha256). Written 2026-09-29 by v2/cad/case_manifest.py from tree e0cd5ec1.
+3ebea915030020441c74b697aadf8a0a005722c81b3728e22a966427f2475907  README.md
+b2a51e79375580cac389a14f7e7286056af7ba28797663244c655b2514863511  h1-heat-test-plate-check.out
+f737c08588fabdf5e14706c530f12c8c0361a3d568947a8b3303681942e78406  h1-heat-test-plate-drawing.pdf
+c499bd35844f6c560abb88e9f7cdd2dd5dbd93c64e43e9b1d8af2251f5de5ca4  h1-heat-test-plate.dxf
+e5b3ca495dcfc2389c7951da4a8edf5438960d42afd02500602897dbf9105d22  h1-heat-test-plate.step
+7697959db5cf696fa22d0f268fdaa4403238c348effdc330f2993d7833080b6e  h1-heat-test-plate.stl
