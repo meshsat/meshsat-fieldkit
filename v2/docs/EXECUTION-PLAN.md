@@ -558,3 +558,20 @@ its minimum, the tablet-out lid's lowest store is 93.7 Wh typical and 87.4 Wh ad
 entry on boards A to D (stream d4emcon); board E's 200 W entry as a reversible candidate (analysed and drafted, not
 adopted); OD-01's section 8 correction and its applicability to the lid pack; board A's charger item S-117; board C's
 layout-entry items.
+
+### Milestone, 29 September 2026 12:54 CEST: integration set 11 on main (OD-01 and Option A(i)'s records)
+
+**Accepted:** `2c7730a4`. Merged: the corrected OD-01 case package (`fnd/od01b`: H1 as its own part, the receipt checks gating
+every fit-dependent part, the latching over-temperature shutdown with its verification, the heat test's limits and what
+an interrupted step does not prove, each test's applicability to Option A(i)'s proposal; eleven independent AI checks,
+the last acceptable; exported to the owner's laptop) and Option A(i)'s engineering records (`fnd/a1int`: a1elec's two-pack
+topology and model, a1mech's lid pack, a1solar's panel selection squashed, the lid reconciliation independently checked with
+U3's input at its minimum). Gates: the merge adds only the two streams' files and the union of two indexes (proved file
+by file); status and render unchanged; isolated clone byte-identical; suite 2254 passed, 0 failed, 3 skipped. Nothing is
+adopted by it: the four decisions of the standing rule above still hold their tasks. No layer closed.
+
+**Set 12 (`fnd/int13`, not on main):** stream d4emcon's FEA-002 remedies applied to boards B and C and regenerated on the
+box; the netlist read-back holds on both. RF-002's walk reads 21 FAIL on it where main reads 0 (the EMCON line rows and
+the rows that follow them): whether the walk lacks the new parts' classes or the circuit has a real path is the next
+worker task; set 12 is not promoted until that is decided and independently checked. FEA-002 itself cannot close at
+desk (0 of 17 rows; 2 need bench tests).
