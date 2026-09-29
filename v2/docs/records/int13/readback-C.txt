@@ -1,0 +1,9 @@
+The read-back of stream d4emcon's circuit drafts (tools/readback_d4e.py)
+  board C  v2/ecad/pcb-c-display-c8/out/pcb-c-display.net  sha256/16 f442354f60f4214f
+
+PASS  net EMCON_HW_DRV   2 nodes; missing none; must not be on it none
+PASS  net EMCON_HW       6 nodes; missing none; must not be on it none
+PASS  net TX_INHIBIT_n   9 nodes; missing none; must not be on it none
+PASS  value R52   '330R 1%' (expected to start with '330R 1%')
+
+RESULT: every check holds

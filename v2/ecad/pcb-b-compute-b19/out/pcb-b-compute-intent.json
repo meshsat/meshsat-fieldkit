@@ -1,6 +1,6 @@
 {
  "board": "pcb-b-compute",
- "written": "2026-09-29 00:09",
+ "written": "2026-09-29 10:39",
  "bypass": [
   {
    "cap": "C112",
@@ -697,6 +697,14 @@
    "net": "+3V3_S2A",
    "class": "D",
    "basis": "TI TPS3808 SBVS050N (v2/vendor/ti/ti-tps3808.pdf) layout: \"Place a 0.1-uF ceramic capacitor near the VDD pin\" (p.15)"
+  },
+  {
+   "cap": "C685",
+   "part": "U554",
+   "pin": "5",
+   "net": "+3V3_CM2",
+   "class": "D",
+   "basis": "TI SN74LVC2G07 SCES308L (v2/vendor/ti/ti-sn74lvc2g07.pdf) 10 p.10: \"For devices with a single supply a 0.1-uF capacitor is recommended\""
   },
   {
    "cap": "C266",
@@ -1527,6 +1535,86 @@
    "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
+   "cap": "C674",
+   "part": "U544",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "Diodes 74LVC1G34 DS36108 Rev. 10-2 (v2/vendor/diodes/diodes-74lvc1g34.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
+  },
+  {
+   "cap": "C675",
+   "part": "U545",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
+  },
+  {
+   "cap": "C676",
+   "part": "U546",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
+  },
+  {
+   "cap": "C677",
+   "part": "U547",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
+  },
+  {
+   "cap": "C678",
+   "part": "U548",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
+  },
+  {
+   "cap": "C679",
+   "part": "U549",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
+  },
+  {
+   "cap": "C680",
+   "part": "U550",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
+  },
+  {
+   "cap": "C681",
+   "part": "U551",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "Diodes 74LVC1G34 DS36108 Rev. 10-2 (v2/vendor/diodes/diodes-74lvc1g34.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
+  },
+  {
+   "cap": "C682",
+   "part": "U552",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "Diodes 74LVC1G34 DS36108 Rev. 10-2 (v2/vendor/diodes/diodes-74lvc1g34.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
+  },
+  {
+   "cap": "C683",
+   "part": "U553",
+   "pin": "5",
+   "net": "+3V3_CM3",
+   "class": "D",
+   "basis": "Diodes 74LVC1G34 DS36108 Rev. 10-2 (v2/vendor/diodes/diodes-74lvc1g34.pdf) states no supply capacitor in its text; the 100 nF is this generator's own, class D by role (DECOUPLING.md rule D1: where the maker states none, the generator's count stands, said as such)"
+  },
+  {
    "cap": "C48",
    "part": "U16",
    "pin": "6",
@@ -1595,6 +1683,30 @@
    "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
   },
   {
+   "cap": "C671",
+   "part": "U540",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC2G07 SCES308L (v2/vendor/ti/ti-sn74lvc2g07.pdf) 10 p.10: \"For devices with a single supply a 0.1-uF capacitor is recommended\""
+  },
+  {
+   "cap": "C672",
+   "part": "U541",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC2G07 SCES308L (v2/vendor/ti/ti-sn74lvc2g07.pdf) 10 p.10: \"For devices with a single supply a 0.1-uF capacitor is recommended\""
+  },
+  {
+   "cap": "C673",
+   "part": "U542",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC2G07 SCES308L (v2/vendor/ti/ti-sn74lvc2g07.pdf) 10 p.10: \"For devices with a single supply a 0.1-uF capacitor is recommended\""
+  },
+  {
    "cap": "C59",
    "part": "U18",
    "pin": "6",
@@ -1627,6 +1739,30 @@
    "net": "+5V_DEV",
    "class": "D",
    "basis": "Silicon Labs CP2102N data sheet Rev 1.5 (v2/vendor/silabs/silabs-cp2102n.pdf), the bus-powered figure (p.5): \"4.7 uF and 0.1 uF bypass capacitors required for each power pin placed as close to the pins as possible\""
+  },
+  {
+   "cap": "C668",
+   "part": "U537",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
+  },
+  {
+   "cap": "C669",
+   "part": "U538",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
+  },
+  {
+   "cap": "C670",
+   "part": "U539",
+   "pin": "5",
+   "net": "+3V3_DEV",
+   "class": "D",
+   "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
   },
   {
    "cap": "C65",
@@ -1675,6 +1811,14 @@
    "net": "+3V3_DEV",
    "class": "D",
    "basis": "TI SN74LVC1G08 SCES217AA (v2/vendor/ti/ti-sn74lvc1g08.pdf): \"For the SN74LVC1G08, a 0.1uF bypass capacitor is recommended\" (Power Supply Recommendations, p.14)"
+  },
+  {
+   "cap": "C684",
+   "part": "U543",
+   "pin": "6",
+   "net": "+5V_DEV",
+   "class": "D",
+   "basis": "TI TPS3808 SBVS050N (v2/vendor/ti/ti-tps3808.pdf) layout: \"Place a 0.1-uF ceramic capacitor near the VDD pin\" (p.15)"
   },
   {
    "cap": "C511",
@@ -2454,6 +2598,12 @@
     "U534": 0.002,
     "U535": 0.002,
     "U536": 0.002,
+    "U537": 0.002,
+    "U538": 0.002,
+    "U539": 0.002,
+    "U540": 0.002,
+    "U541": 0.002,
+    "U542": 0.002,
     "U102": 0.1,
     "U109": 0.05,
     "U110": 0.01,
