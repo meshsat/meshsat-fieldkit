@@ -1382,8 +1382,8 @@ def census(boards, walks, k0, n0, level, allowed, target=None, fet_forced=None, 
                     ins, kind = outs[0]
                     # the panel's buffer is the line's own source: an output on an asserted line whose input sits on
                     # the other asserted line, forced to the same asserted level
-                    if n in SOURCES and any(nl["pin"].get((ref, i)) in SOURCES and nl["pin"].get((ref, i)) != n
-                                            and FORCE[kind].get(0) == 0 for i in ins):
+                    if n in SOURCES and _switch_board(nl) and any(nl["pin"].get((ref, i)) in SOURCES and nl["pin"].get((ref, i)) != n
+                                                                  and FORCE[kind].get(0) == 0 for i in ins):
                         continue
                     # the same buffer behind its series resistor, on the line's drive net (drive_net, stream rf2walk):
                     # its inputs are asserted lines, so with EMCON asserted it pulls the way EMCON forces. Reached from
@@ -1672,10 +1672,27 @@ def fet_family(nl, ref):
     return None
 
 
+def _switch_board(nl):
+    """True when the board carries the asserted pair's switch: a SW part with a pin on an asserted line (board C's
+    SW_EMCON on TX_INHIBIT_n). THE LINE'S OWN BUFFER IS ONLY ON THAT BOARD (stream rf2walk2, 29 September 2026, the
+    independent check of set 12, blocking B1). A gate that follows the other asserted line is the line's own source only
+    where it shares the toggle's board: that board's fail-safe state takes it down with the toggle. On any other board it
+    has its own supply, and a pair of such gates cross-coupled between the two lines (the check's CX9: two buffers on board
+    B, each with its input on one line and its output, directly or behind its own resistor, on the other) is a latch that
+    can hold both lines HIGH with the toggle's board down; classed as sources, their board was taken down with them and the
+    latch was never solved. Off the switch's board a gate on a line is therefore an ordinary push-pull output: a second
+    driver in the census, a source at its supply in the fail-safe states."""
+    for ref, c in nl["comps"].items():
+        if re.match(r"^SW\w*", ref) and any(nl["pin"].get((ref, p)) in SOURCES for p in pins_of(nl, ref)):
+            return True
+    return False
+
+
 def _source_output(nl, ref, pin, s):
     """(fam, gate kind, input nets) when `pin` of `ref` is the output of a mapped logic gate every one of whose inputs
-    sits on an asserted line other than `s` (the panel's buffer: its input on TX_INHIBIT_n, its output EMCON_HW); else
-    None."""
+    sits on an asserted line other than `s` (the panel's buffer: its input on TX_INHIBIT_n, its output EMCON_HW), on the
+    board that carries the pair's switch (_switch_board); else None."""
+    if not _switch_board(nl): return None
     fam = logic_of(nl, ref)
     if not fam or _unmapped(fam) or fam.get("wrong_land") or fam.get("unwired"): return None
     for ins, o, kind in fam["gates"]:
@@ -2370,10 +2387,12 @@ def _fs_base(boards, line, down, cut, src):
             n2 = boards[k2]["pin"].get((r2, pin), "")
             if n2 and rail_up(k2, n2): live_rail[(k, n)] = True; break
         return live_rail[(k, n)]
-    # the line's own source is off in these states: an open toggle is absent, and a logic source is an unpowered part
-    # whose Ioff the network counts
+    # the line's own source is off in these states: an open toggle is absent, and a logic source (on the toggle's board
+    # only, _switch_board) is unpowered by its own rails, which the toggle's board down removes, and the network counts its
+    # Ioff. It is no longer forced off whatever its rails do (stream rf2walk2): a gate on that board that runs from a rail
+    # the board receives over a plugged ribbon stays powered, and is solved so.
     toggles = {x for x in src if re.match(r"^SW", x[1])}
-    return dict(rail_up=rail_up, board_up=lambda k: k not in down, cut=cut, sources=toggles, off=set(src) - toggles)
+    return dict(rail_up=rail_up, board_up=lambda k: k not in down, cut=cut, sources=toggles, off=set())
 
 
 def _fs_state(boards, s, line, down, cut, src):

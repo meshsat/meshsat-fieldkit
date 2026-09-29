@@ -3773,7 +3773,7 @@ def t_the_table_carries_the_pa_gate_bias_and_the_rockblocks_makers_words():
 BAT46 = ("BAT46W-7-F Schottky 100V (EMCON_HW clamp to TX_INHIBIT_n, D4E-F1)", "Diode_SMD:D_SOD-123", "Device:D_Schottky")
 
 
-def _panel_clamped(variant=None, b_comps=None, b_nets=None):
+def _panel_clamped(variant=None, b_comps=None, b_nets=None, c_comps=None, c_nets=None):
     """_panel's two boards with board C in stream d4emcon's D4E-F1 shape: U9 pin 4 on EMCON_HW_DRV, R52 330R 1% from
     there to EMCON_HW, D23 anode on EMCON_HW and cathode on TX_INHIBIT_n. `variant`: "second_driver" (an expander pin
     on EMCON_HW_DRV too), "input_elsewhere" (U9's input on a net that is not an asserted line), "pull_up" (EMCON_HW_DRV
@@ -3792,6 +3792,8 @@ def _panel_clamped(variant=None, b_comps=None, b_nets=None):
         cn["TX_INHIBIT_n"].remove(("U9", "2", "")); cn["PANEL_REQ"] = [("U9", "2", "")]
     elif variant == "pull_up":
         c["R53"] = ("10k", "R", "Device:R"); cn["EMCON_HW_DRV"].append(("R53", "1", "")); cn["+3V3"].append(("R53", "2", ""))
+    c.update(c_comps or {})
+    for n, nodes in (c_nets or {}).items(): cn.setdefault(n, []).extend(nodes)
     b = {"J_PANEL": ("panel ribbon", "Connector:X", "Connector_Generic:Conn_02x13"), "R59": ("33k", "R", "Device:R"),
          "U19": AND1, "R58": ("10k", "R", "Device:R")}
     bn = {"EMCON_HW": [("J_PANEL", "8", ""), ("U19", "1", ""), ("R58", "1", "")], "TX_INHIBIT_n": [("J_PANEL", "11", ""), ("R59", "1", "")],
@@ -3853,3 +3855,57 @@ def t_a_supervisor_whose_value_names_the_rockblock_is_classified_only_when_decla
     assert len(dec) == 1 and "SBVS050N" in dec[0]["why"], dec
     r = [x for x in T.judge({"B": nl}, table=[], accessories=dec, receivers=[], owed=[]) if "names a radio" in x["text"]][0]
     assert r["ok"] is True, r
+
+
+# ---------------------------------------------------------------- stream rf2walk2 (29 September 2026, the check of set 12, B1)
+def _latch(board, behind, rail):
+    """The check's CX9: two 74LVC1G34 on `board`, run from `rail`, cross-coupled between the two asserted lines, U30 with
+    its input on TX_INHIBIT_n driving EMCON_HW and U32 with its input on EMCON_HW driving TX_INHIBIT_n, each `behind` its own
+    330R series resistor or directly on the line. With the toggle's board down and `rail` up the pair can hold both lines
+    HIGH, every transmitter released."""
+    comps = {"U30": BUF1, "U32": BUF1}
+    nets = {"EMCON_HW": [("U32", "2", "")], "TX_INHIBIT_n": [("U30", "2", "")], rail: [("U30", "5", ""), ("U32", "5", "")],
+            "GND": [("U30", "3", ""), ("U32", "3", "")]}
+    if behind:
+        comps.update({"R55": ("330R 1%", "R", "Device:R"), "R57": ("330R 1%", "R", "Device:R")})
+        nets.update({"U30_DRV": [("U30", "4", ""), ("R55", "1", "")], "U32_DRV": [("U32", "4", ""), ("R57", "1", "")]})
+        nets["EMCON_HW"].append(("R55", "2", "")); nets["TX_INHIBIT_n"].append(("R57", "2", ""))
+    else:
+        nets["EMCON_HW"].append(("U30", "4", "")); nets["TX_INHIBIT_n"].append(("U32", "4", ""))
+    if board == "B":
+        return _panel_clamped(b_comps=comps, b_nets=nets)
+    return _panel_clamped(c_comps=comps, c_nets=nets)
+
+
+def t_a_latch_of_two_buffers_across_the_lines_fails_both_lines():
+    """DEFECTIVE, the check's CX9 in both of its forms: on board B, on +3V3_DEV, the pair behind its own 330R each, and the
+    same pair wired directly on the lines. The walk before this stream classed each buffer as a line's own source (an
+    output on, or behind a series resistor onto, one asserted line with its input on the other) and took board B down
+    with it in every fail-safe state, so the latch was never solved and both lines read PASS; the direct form had read PASS
+    on every walk since the on-net rule. Off the switch's board (_switch_board) each is a second driver, and powered from
+    +3V3_DEV with board C down each is a source at its supply: both lines FAIL. The same pair on board C, run from the +5V
+    board C receives over the ribbon (up while board B is), FAILS too: a source on the toggle's board is no longer taken
+    unpowered whatever its rails do."""
+    for board, behind, rail in (("B", True, "+3V3_DEV"), ("B", False, "+3V3_DEV"), ("C", True, "+5V"), ("C", False, "+5V")):
+        b = _latch(board, behind, rail)
+        for name in ("EMCON_HW", "TX_INHIBIT_n"):
+            line = _line_of(b, name)
+            assert line["ok"] is False, (board, behind, name, line)
+    b = _latch("B", True, "+3V3_DEV")
+    assert T.drive_net(b["B"], "U30_DRV") is None and T._line_sources(b["B"], "EMCON_HW") == [], T._line_sources(b["B"], "EMCON_HW")
+    assert "second BUF output" in _line_of(b)["detail"], _line_of(b)
+    # the switch's own board keeps its buffer: D4E-F1's shape still passes both lines
+    ok = _panel_clamped()
+    assert _line_of(ok)["ok"] is True and _line_of(ok, "TX_INHIBIT_n")["ok"] is True
+
+
+def t_a_follower_off_the_switchs_board_is_a_second_driver():
+    """DEFECTIVE, the check's CX3b: one 74LVC1G34 on board B with its input on TX_INHIBIT_n driving EMCON_HW behind its own
+    330R, and a live pull-up on TX_INHIBIT_n. It follows the other line, but it is not the line's source: EMCON_HW FAILS on
+    board B's own row, not only through TX_INHIBIT_n's. ACCEPTABLE contrast: board C's U9 in the same place passes."""
+    b = _panel_clamped(b_comps={"U30": BUF1, "R55": ("330R 1%", "R", "Device:R"), "R60": ("10k", "R", "Device:R")},
+                       b_nets={"U30_DRV": [("U30", "4", ""), ("R55", "1", "")], "EMCON_HW": [("R55", "2", "")],
+                               "TX_INHIBIT_n": [("U30", "2", ""), ("R60", "1", "")], "+3V3_DEV": [("U30", "5", ""), ("R60", "2", "")],
+                               "GND": [("U30", "3", "")]})
+    assert _line_of(b)["ok"] is False and "second BUF output" in _line_of(b)["detail"], _line_of(b)
+    assert _line_of(b, "TX_INHIBIT_n")["ok"] is False
