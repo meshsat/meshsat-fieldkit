@@ -89,3 +89,11 @@ a maker's document. AI engineering work, not a qualified review. No agent, no ot
   `vbus20_bound.py` exit 1 on five gated mutants (R6 249k, U3 pin 5 off GND, a diode on VBUS20, a new part on VBUS20, R27
   20.0k), each FAIL line printing the values the mutant holds, and exit 0 on TI's 33 nF CACN added, which the record line
   shows. S-124's closing condition in the applied copy equals the README's quotation word for word (compared parsed).
+
+## 29 September 2026, fourth round (the check `_scratch/chk-s120/CHECK-3.md`: mergeable, 0 blocking; r1 to r3 asked)
+
+- 19:15 Check read. r1: S-124's test now refers CH_SW2's overshoot over the measured VBAT to 20.0 V (SYSOVP, p.14) and takes
+  Q9's and Q10's VDS on that basis; r2: ACP less ACN (0.5 V absolute, p.8) in the rating list and the test, read across
+  U3's pins, with its INFERRED size in `.out` section 10 (about 0.08 V through the 200 ns filter); r3: the `.out` header
+  reads "fourth issue". Every other clause of the test kept. Checkpoint `2ab673ab`; README's quotation regenerated from the
+  applied text.
