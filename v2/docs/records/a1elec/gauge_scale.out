@@ -87,7 +87,7 @@ Table 14-1 as its text layer prints it; the page is the PDF page, which is the m
    every scaled word has a stated true value and its written value lies inside its row's range; addresses in the
    true-value table that Table 14-1 does not list with a scaled unit: none
 
-4. NOT SCALED (the other 322 rows by unit): % 27, 0.01% 1, 0.10% 1, 0.1°C 20, 0.1°K 7, 116 nV 1, 2h 12, cycles 13, date 1, events 14, mV 77, min 3, s 71, steps 2, °C 13, µs 3, — 56
+4. NOT SCALED (the other 322 rows by unit): % 27, 0.01% 1, 0.10% 1, 0.1°C 20, 0.1°K 7, 116 nV 1, 2h 12, cycles 13, date 1, events 14, mV 77, min 3, s 71, steps 2, °C 13, µs 3, (no unit) 56
    Voltages (COV, CUV, the charge voltages, Design Voltage 14400 mV), temperatures, times and bit fields are written as
    the base's image writes them. The AFE words (AOLD, ASCC, ASCD thresholds in AFE Protection Control and their codes)
    are voltages across the real shunt: set on R10's true 2 mOhm, as board P's, because board PL's path limits are board P's.

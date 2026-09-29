@@ -38,7 +38,7 @@ TRM = os.path.join(ROOT, "v2", "vendor", "battery", "ti-sluuaq3a-bq4050-trm.pdf"
 TRM_SHA256 = "525d16b2bdee44e5b587ccf6800b9967bc524772d0b5a20937957ea2e738b7ad"   # the value PRIMARY-CONFIGURATION.md names
 K = 2
 SCALED_UNITS = {"mA", "mAh", "cWh", "cW", "mW", "mWh", "3 \u00b5A"}   # "3 uA" is a current in steps of 3 uA (CEDV Electronics Load)
-MINUS = "–"        # the manual's minus sign in its text layer
+MINUS = "\u2013"        # the manual's minus sign in its text layer
 
 # THE LID PACK'S TRUE VALUES, per Table 14-1 address. kind: P protection threshold; A absolute signal level (TI's
 # default kept as the true value); S the pack's size; C the charge algorithm; R a record (read, never written by the
@@ -230,7 +230,7 @@ def main():
     units = {}
     for r in rows:
         units[r[6]] = units.get(r[6], 0) + 1
-    P("4. NOT SCALED (the other %d rows by unit): %s" % (len(rows) - len(scaled), ", ".join("%s %d" % (u, n) for u, n in sorted(units.items()) if u not in SCALED_UNITS)))
+    P("4. NOT SCALED (the other %d rows by unit): %s" % (len(rows) - len(scaled), ", ".join("%s %d" % (u if u != "\u2014" else "(no unit)", n) for u, n in sorted(units.items()) if u not in SCALED_UNITS)))
     P("   Voltages (COV, CUV, the charge voltages, Design Voltage 14400 mV), temperatures, times and bit fields are written as")
     P("   the base's image writes them. The AFE words (AOLD, ASCC, ASCD thresholds in AFE Protection Control and their codes)")
     P("   are voltages across the real shunt: set on R10's true 2 mOhm, as board P's, because board PL's path limits are board P's.")
