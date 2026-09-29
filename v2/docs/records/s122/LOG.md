@@ -64,3 +64,10 @@ No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py
   whatever title the registry holds and checks it reads back; `close_s122.py` reads the title as it is. Changed: the
   round 2 document script's base commit (`4d3a9708`, not an ancestor here, to `1594090e`, whose CONOPS.md is the same
   file), and the dropped merge named in the registry script's docstring and in the README.
+- 18:39 to 18:40 Replay on a throwaway clone of `ede23557`: the four outputs byte identical; `apply_docs_s122_r2.py`
+  refuses a second run; `apply_registry_s122.py` rebinds 20 records, keeps S-122's promoted text with its closing
+  clause and appends the n3 and n4 correction after it, and refuses a second run; `rules_lib.py requirements` 144
+  records, 0 errors, 0 warnings; `test_envelope_data` 6 passed; `test_requirements` 65 passed after the trace page's
+  render; `close_s122.py` refused the fixture while only staged, closed S-122 with it committed (not filed), CFL-016
+  PASS, S-123 still open, and refused a second run; after it `rules_lib.py requirements` 0 errors and
+  `test_requirements` with `test_envelope_data` 71 passed. The clone is deleted.
