@@ -3615,6 +3615,11 @@ open_items:
       feasibility/EMCON.md and ASSEMBLY.md among its bound files; and the closure answers check-s122-3's three minors
       (CONOPS.md line 1056's D-13 row, the absent rule's four key words, the README's CON-003 quote) and check-int15-1's
       m7 (CFL-016's acceptance read literally against the baseline rule). S-122 closes only then.
+      Added at set 14's re-check (v2/docs/records/int15/checks/check-int15-2.md, blocking B1): a sentence closes as
+      dated only if the parts it names are shown in the generators at the date it states; the re-check found the five
+      sentences above false at their own dates, so they close only corrected. v2/docs/records/s122/close_s122.py refuses
+      unless the inventory declares that it reads part numbers, the five sentences are corrected, and the filed check
+      names check-int15-1 and was committed on a line that carries 097d2517.
   - id: S-123
     class: SESSION
     status: OPEN
