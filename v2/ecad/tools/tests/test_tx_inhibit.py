@@ -3763,3 +3763,93 @@ def t_the_table_carries_the_pa_gate_bias_and_the_rockblocks_makers_words():
     sw = [x for x in T.SWITCHES if x["name"].startswith("TLV758P")][0]
     assert (sw["en"], sw["out"], sw["vin"], sw["en_off"], sw["en_leak"]) == ("4", ["1"], ["6"], 0.3, None), sw
     assert len(T.TRANSMITTERS) == 18
+
+
+# ---------------------------------------------------------------- stream rf2walk (29 September 2026, set 12)
+# Board C's round of stream d4emcon (finding D4E-F1) put U9's output on a private net EMCON_HW_DRV behind R52 (330R 1%) and
+# D23 (BAT46W, anode EMCON_HW, cathode TX_INHIBIT_n). The walk read that as "a second BUF output" on both lines and as
+# "no source on the line at all" (EMCON_HW at 3.18 V), and, once the source was recognised, left EMCON_HW UNDECIDED on
+# D23's reverse current, which DS30044 states only at +25 C and TJ +60 C. These fixtures state the properties.
+BAT46 = ("BAT46W-7-F Schottky 100V (EMCON_HW clamp to TX_INHIBIT_n, D4E-F1)", "Diode_SMD:D_SOD-123", "Device:D_Schottky")
+
+
+def _panel_clamped(variant=None, b_comps=None, b_nets=None):
+    """_panel's two boards with board C in stream d4emcon's D4E-F1 shape: U9 pin 4 on EMCON_HW_DRV, R52 330R 1% from
+    there to EMCON_HW, D23 anode on EMCON_HW and cathode on TX_INHIBIT_n. `variant`: "second_driver" (an expander pin
+    on EMCON_HW_DRV too), "input_elsewhere" (U9's input on a net that is not an asserted line), "pull_up" (EMCON_HW_DRV
+    also pulled up to +3V3)."""
+    c = {"SW_EMCON": TOGGLE, "R14": ("10k", "R", "Device:R"), "U9": U17, "U1": ("TLV75733PDBV 3.3 V LDO", "SOT-23-5", "X:Y"),
+         "J_PANEL": ("panel ribbon", "Connector:X", "Connector_Generic:Conn_02x13"), "R52": ("330R 1%", "R", "Device:R"),
+         "D23": BAT46}
+    cn = {"TX_INHIBIT_n": [("SW_EMCON", "1", ""), ("R14", "1", ""), ("U9", "2", ""), ("J_PANEL", "11", ""), ("D23", "1", "K")],
+          "EMCON_HW_DRV": [("U9", "4", ""), ("R52", "1", "")],
+          "EMCON_HW": [("R52", "2", ""), ("J_PANEL", "8", ""), ("D23", "2", "A")],
+          "+3V3": [("R14", "2", ""), ("U9", "5", ""), ("U1", "5", "")],
+          "+5V": [("J_PANEL", "1", ""), ("U1", "1", "")], "GND": [("SW_EMCON", "2", ""), ("U9", "3", ""), ("U1", "2", "")]}
+    if variant == "second_driver":
+        c["U3"] = EXP; cn["EMCON_HW_DRV"].append(("U3", "4", "IO0_0")); cn["+3V3"].append(("U3", "24", "VCC")); cn["GND"].append(("U3", "12", "GND"))
+    elif variant == "input_elsewhere":
+        cn["TX_INHIBIT_n"].remove(("U9", "2", "")); cn["PANEL_REQ"] = [("U9", "2", "")]
+    elif variant == "pull_up":
+        c["R53"] = ("10k", "R", "Device:R"); cn["EMCON_HW_DRV"].append(("R53", "1", "")); cn["+3V3"].append(("R53", "2", ""))
+    b = {"J_PANEL": ("panel ribbon", "Connector:X", "Connector_Generic:Conn_02x13"), "R59": ("33k", "R", "Device:R"),
+         "U19": AND1, "R58": ("10k", "R", "Device:R")}
+    bn = {"EMCON_HW": [("J_PANEL", "8", ""), ("U19", "1", ""), ("R58", "1", "")], "TX_INHIBIT_n": [("J_PANEL", "11", ""), ("R59", "1", "")],
+          "+5V": [("J_PANEL", "1", "")], "GND": [("R59", "2", ""), ("U19", "3", ""), ("R58", "2", "")], "SW_EN": [("U19", "2", "")],
+          "+3V3_DEV": [("U19", "5", "")]}
+    b.update(b_comps or {})
+    for n, nodes in (b_nets or {}).items(): bn.setdefault(n, []).extend(nodes)
+    return {"B": _nl(b, bn), "C": _nl(c, cn)}
+
+
+def t_the_panels_buffer_behind_its_series_resistor_is_the_lines_own_source():
+    """ACCEPTABLE: D4E-F1's shape. U9's output reaches EMCON_HW only through R52 on a net that carries nothing else, and
+    its input is TX_INHIBIT_n, so it is EMCON_HW's own source (drive_net, _line_sources): both lines PASS, the census
+    finds no second driver on either (the path from TX_INHIBIT_n through D23 and R52 ends on the buffer, whose input is
+    the line itself), and with board C unpowered the fail-safe states hold. DEFECTIVE, each alone: a second driver on the
+    private net (an expander pin), the buffer's input on a net that is not an asserted line, or a pull-up on the private
+    net; the net is then an ordinary one and EMCON_HW FAILS, as it did before the source was recognised."""
+    b = _panel_clamped()
+    assert T.drive_net(b["C"], "EMCON_HW_DRV")["ref"] == "U9" and T.drive_net(b["C"], "EMCON_HW_DRV")["res"] == "R52"
+    assert [r for r, _w in T._line_sources(b["C"], "EMCON_HW")] == ["U9"], T._line_sources(b["C"], "EMCON_HW")
+    for name in ("EMCON_HW", "TX_INHIBIT_n"):
+        line = _line_of(b, name)
+        assert line["ok"] is True and "second BUF output" not in line["detail"], (name, line)
+    for v in ("second_driver", "input_elsewhere", "pull_up"):
+        bv = _panel_clamped(v)
+        assert T.drive_net(bv["C"], "EMCON_HW_DRV") is None, v
+        line = _line_of(bv)
+        assert line["ok"] is False, (v, line)
+    assert "second BUF output" in _line_of(_panel_clamped("input_elsewhere"))["detail"]
+    assert "firmware sets" in _line_of(_panel_clamped("second_driver"))["detail"]
+
+
+def t_a_diodes_reverse_current_toward_a_line_is_bounded_by_that_lines_own_level():
+    """ACCEPTABLE: D23 seen from EMCON_HW (its anode) can lift it only by its reverse current, which DS30044 does not state
+    over -40 to +85 C; a passive part cannot carry EMCON_HW above TX_INHIBIT_n's own level, and TX_INHIBIT_n is itself held
+    low, so the state is decided (PASS) with the reverse direction taken as an ideal one-way element. DEFECTIVE far side: a
+    pull-up that keeps TX_INHIBIT_n high with the panel's rail down (B's 10 kOhm to +3V3_DEV, read by B's U20): TX_INHIBIT_n
+    FAILS, and
+    EMCON_HW would rise only if the reverse current were as large as an ideal conductor's, which is UNDECIDED, never FAIL.
+    A diode whose far side is a RAIL is still UNDECIDED on its unstated reverse current (the BAT54 fixture above)."""
+    line = _line_of(_panel_clamped())
+    assert line["ok"] is True and "reverse current" not in line["detail"], line
+    bad = _panel_clamped(b_comps={"R60": ("10k", "R", "Device:R"), "U20": AND1},
+                         b_nets={"TX_INHIBIT_n": [("R60", "1", ""), ("U20", "1", "")], "+3V3_DEV": [("R60", "2", ""), ("U20", "5", "")],
+                                 "GND": [("U20", "3", "")], "PA_SW_EN": [("U20", "2", "")]})
+    assert _line_of(bad, "TX_INHIBIT_n")["ok"] is False, _line_of(bad, "TX_INHIBIT_n")
+    em = _line_of(bad)
+    assert em["ok"] is None and "reverse current" in em["detail"] and "ideal conductor" in em["detail"], em
+
+
+def t_a_supervisor_whose_value_names_the_rockblock_is_classified_only_when_declared():
+    """DEFECTIVE: a TPS3808 whose value names the radio whose enable it holds (board B's U543 since stream d4emcon's B-4)
+    and no declaration: unclassified. ACCEPTABLE: the tree's own ACCESSORIES entry for it classifies it."""
+    nl = _nl({"U543": ("TPS3808G30DBVR supervisor on +5V_DEV watching +3V3_DEV: holds the RockBLOCK's I_EN low below 2.79 V",
+                       "Package_TO_SOT_SMD:SOT-23-6", "X:Y")}, {"GND": [("U543", "2", "")]})
+    r = [x for x in T.judge({"B": nl}, table=[], accessories=[], receivers=[], owed=[]) if "names a radio" in x["text"]][0]
+    assert r["ok"] is False and "U543" in r["detail"], r
+    dec = [a for a in T.ACCESSORIES if a["board"] == "B" and a["ref"] == "U543"]
+    assert len(dec) == 1 and "SBVS050N" in dec[0]["why"], dec
+    r = [x for x in T.judge({"B": nl}, table=[], accessories=dec, receivers=[], owed=[]) if "names a radio" in x["text"]][0]
+    assert r["ok"] is True, r
