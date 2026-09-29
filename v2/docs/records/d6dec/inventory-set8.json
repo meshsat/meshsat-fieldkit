@@ -1,0 +1,445 @@
+{
+ "what": "FEA-006 inventory, read on the set 6 netlists",
+ "tree": "ed6f15da",
+ "inputs": {
+  "a": {
+   "netlist": "pcb-a-power-a23/out/pcb-a-power.net",
+   "netlist_sha256_16": "2dfe1c546cb39ccb",
+   "intent_sha256_16": "35e430a791ab2b44",
+   "netlist_date": "2026-09-28T21:10:33+0000"
+  },
+  "b": {
+   "netlist": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "netlist_sha256_16": "21a1f74a3ec1ae28",
+   "intent_sha256_16": "a7bf625c8b878dd5",
+   "netlist_date": "2026-09-28T21:11:23+0000"
+  },
+  "c": {
+   "netlist": "pcb-c-display-c8/out/pcb-c-display.net",
+   "netlist_sha256_16": "3fddbb3edcd4248a",
+   "intent_sha256_16": "270ebb4ccf1d0e8e",
+   "netlist_date": "2026-09-27T15:35:32+0000"
+  },
+  "d": {
+   "netlist": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
+   "netlist_sha256_16": "7a2c0ac2190b141a",
+   "intent_sha256_16": "8d9f3b2256521b0d",
+   "netlist_date": "2026-09-27T14:28:03+0000"
+  },
+  "e": {
+   "netlist": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "netlist_sha256_16": "56adc9746d61c4e0",
+   "intent_sha256_16": "dad1163afd720b5e",
+   "netlist_date": "2026-09-27T14:51:44+0000"
+  },
+  "p": {
+   "netlist": "pcb-p-pack-p2/out/pcb-p-pack.net",
+   "netlist_sha256_16": "760ac6f74d62d194",
+   "intent_sha256_16": "12f92bd3ce7a8264",
+   "netlist_date": "2026-09-27T15:23:47+0000"
+  }
+ },
+ "generator_items": [
+  {
+   "item": "G1",
+   "board": "A",
+   "asks": "LM5176: no VISNS declaration, a VIN-pin capacitor on every stage, CIN against the power loop, VCC class L",
+   "status": "DONE",
+   "evidence": [
+    "7 LM5176 stages on the netlist: U2, U5, U7, U13, U15, U16, U19",
+    "declared against VISNS (pin 3): none",
+    "U2: VIN pin 2 ['C207 (1u 100V 1210) at U2.2 net FE_VINP class D']; BIAS pin 24 ['C192 (100n) at U2.24 net VBUS20 class D']; VCC pin 23 ['C8 (4.7u) at U2.23 net FE_VCC class L {\"esr_bound\": null, \"value_ceiling\": \"4.7u\", \"value_floor\": \"1u\"}']; input loop ['C11', 'C12', 'Q2', 'Q3', 'R12']; output loop 24 capacitor(s); a CIN above 1 uF declared at the VIN pin: none",
+    "U5: VIN pin 2 ['C219 (100n) at U5.2 net VBAT class D']; BIAS pin 24 ['C193 (100n) at U5.24 net VBAT class D']; VCC pin 23 ['C136 (4.7u) at U5.23 net S2_VCC class L {\"esr_bound\": null, \"value_ceiling\": \"4.7u\", \"value_floor\": \"1u\"}']; input loop ['C35', 'C36', 'Q28', 'Q29', 'R170']; output loop 6 capacitor(s); a CIN above 1 uF declared at the VIN pin: none",
+    "U7: VIN pin 2 ['C220 (100n) at U7.2 net VBAT class D']; BIAS pin 24 ['C194 (100n) at U7.24 net VBAT class D']; VCC pin 23 ['C143 (4.7u) at U7.23 net SD_VCC class L {\"esr_bound\": null, \"value_ceiling\": \"4.7u\", \"value_floor\": \"1u\"}']; input loop ['C47', 'C48', 'Q32', 'Q33', 'R177']; output loop 6 capacitor(s); a CIN above 1 uF declared at the VIN pin: none",
+    "U13: VIN pin 2 ['C208 (1u) at U13.2 net PA_VINP class D']; BIAS pin 24 ['C195 (100n) at U13.24 net +13V8_PA class D']; VCC pin 23 ['C60 (4.7u) at U13.23 net PA_VCC class L {\"esr_bound\": null, \"value_ceiling\": \"4.7u\", \"value_floor\": \"1u\"}']; input loop ['C63', 'C64', 'Q11', 'Q12', 'R56']; output loop 5 capacitor(s); a CIN above 1 uF declared at the VIN pin: none",
+    "U15: VIN pin 2 ['C209 (1u) at U15.2 net HF_VINP class D']; BIAS pin 24 ['C196 (100n) at U15.24 net +12V_HF class D']; VCC pin 23 ['C71 (4.7u) at U15.23 net HF_VCC class L {\"esr_bound\": null, \"value_ceiling\": \"4.7u\", \"value_floor\": \"1u\"}']; input loop ['C74', 'C108', 'Q15', 'Q16', 'R122']; output loop 5 capacitor(s); a CIN above 1 uF declared at the VIN pin: none",
+    "U16: VIN pin 2 ['C221 (100n) at U16.2 net VBAT class D']; BIAS pin 24 ['C197 (100n) at U16.24 net VBAT class D']; VCC pin 23 ['C78 (4.7u) at U16.23 net POE_VCC class L {\"esr_bound\": null, \"value_ceiling\": \"4.7u\", \"value_floor\": \"1u\"}']; input loop ['C81', 'C82', 'Q17', 'Q18', 'R72']; output loop 5 capacitor(s); a CIN above 1 uF declared at the VIN pin: none",
+    "U19: VIN pin 2 ['C222 (100n) at U19.2 net VBAT class D']; BIAS pin 24 ['C198 (100n) at U19.24 net VBAT class D']; VCC pin 23 ['C89 (4.7u) at U19.23 net PD_VCC class L {\"esr_bound\": null, \"value_ceiling\": \"4.7u\", \"value_floor\": \"1u\"}']; input loop ['C92', 'C116', 'Q21', 'Q22', 'R127']; output loop 5 capacitor(s); a CIN above 1 uF declared at the VIN pin: none"
+   ]
+  },
+  {
+   "item": "G2",
+   "board": "A",
+   "asks": "TPS62933: 0.1 uF at VIN and GND, class R, on U12 and U33",
+   "status": "DONE",
+   "evidence": [
+    "U12 (TPS62933DRLR 3 A buck, 3.3 V logic): 0.1 uF at VIN pin 3 ['C223 (100n) at U12.3 net VBAT class R']; input capacitor ['C54 (10u 25V 1210) at U12.3 net VBAT class R']",
+    "U33 (TPS62933DRLR 3 A buck, 12.0 V heater rai): 0.1 uF at VIN pin 3 ['C160 (100n) at U33.3 net VHEAT_IN class R']; input capacitor ['C159 (10u 25V 1210) at U33.3 net VHEAT_IN class R']"
+   ]
+  },
+  {
+   "item": "G3",
+   "board": "A",
+   "asks": "BQ25731: C190 and C191 declared class R against the input loop",
+   "status": "DONE",
+   "evidence": [
+    "U3 input loop: caps ['C20', 'C21', 'C22', 'C190', 'C191'] (C20 10u 50V X7R 1210, C21 10u 50V X7R 1210, C22 10u 50V X7R 1210, C190 10n, C191 1n), parts ['R16', 'Q7', 'Q8'], class R, same_side True"
+   ]
+  },
+  {
+   "item": "G4",
+   "board": "B",
+   "asks": "TPS62933: 0.1 uF at VIN and GND on all seven, class R (circuit gap 1)",
+   "status": "DONE",
+   "evidence": [
+    "7 TPS62933 on the netlist (the page counts seven)",
+    "U26: 0.1 uF at VIN pin 3 ['C571 (100n) at U26.3 net +5V_DEV class R {\"same_side\": true}']",
+    "U105: 0.1 uF at VIN pin 3 ['C605 (100n) at U105.3 net +5V_S1 class R {\"same_side\": true}']",
+    "U106: 0.1 uF at VIN pin 3 ['C606 (100n) at U106.3 net +5V_DEV class R {\"same_side\": true}']",
+    "U205: 0.1 uF at VIN pin 3 ['C635 (100n) at U205.3 net +5V_S2 class R {\"same_side\": true}']",
+    "U206: 0.1 uF at VIN pin 3 ['C636 (100n) at U206.3 net +5V_DEV class R {\"same_side\": true}']",
+    "U305: 0.1 uF at VIN pin 3 ['C665 (100n) at U305.3 net +5V_S3 class R {\"same_side\": true}']",
+    "U306: 0.1 uF at VIN pin 3 ['C666 (100n) at U306.3 net +5V_DEV class R {\"same_side\": true}']"
+   ]
+  },
+  {
+   "item": "G5",
+   "board": "B",
+   "asks": "C37 and C38 declared at the TS3DV642s' VCC, not at the PoE controller",
+   "status": "DONE",
+   "evidence": [
+    "U3 VCC pin 1: ['C37 (100n) at U3.1 net +3V3_DEV class D']",
+    "U4 VCC pin 1: ['C38 (100n) at U4.1 net +3V3_DEV class D']",
+    "declared at the PoE controller's pin 1: ['C36 (100n) at U5.1 net +3V3_DEV class D']"
+   ]
+  },
+  {
+   "item": "G6",
+   "board": "B",
+   "asks": "the capacitors of the seven fine-pitch families declared with their classes",
+   "status": "DONE",
+   "evidence": [
+    "STM32H743: 3 part(s) U41,U51,U61, 30 declaration(s), without class or basis: none",
+    "PI7C9X2G404SL: 3 part(s) U101,U201,U301, 42 declaration(s), without class or basis: none",
+    "TUSB8041: 3 part(s) U102,U202,U302, 36 declaration(s), without class or basis: none",
+    "KSZ9897: 1 part(s) U1, 32 declaration(s), without class or basis: none",
+    "TMUXHS4212: 3 part(s) U109,U209,U309, 6 declaration(s), without class or basis: none",
+    "TS3USB221A: 3 part(s) U110,U210,U310, 3 declaration(s), without class or basis: none",
+    "CP2102N: 4 part(s) U15,U16,U17,U18, 16 declaration(s), without class or basis: none"
+   ]
+  },
+  {
+   "item": "G7",
+   "board": "B",
+   "asks": "STM32H743 VDDA 100 nF + 1 uF; TUSB8041 eight 0.1 uF on the core; KSZ9897R per its maker's figure; CP2102N VREGIN 4.7 uF + 0.1 uF (circuit gaps 2 to 5)",
+   "status": "DONE",
+   "evidence": [
+    "U41 VDDA pin 21: ['C412 (100n) at U41.21 net +3V3_IOCA class D']; ['C413 (1u) at U41.21 net +3V3_IOCA class D']",
+    "U51 VDDA pin 21: ['C432 (100n) at U51.21 net +3V3_IOCB class D']; ['C433 (1u) at U51.21 net +3V3_IOCB class D']",
+    "U61 VDDA pin 21: ['C452 (100n) at U61.21 net +3V3_IOCC class D']; ['C453 (1u) at U61.21 net +3V3_IOCC class D']",
+    "U102: 8 pins the netlist names VDD, without a 0.1 uF of their own: none",
+    "U202: 8 pins the netlist names VDD, without a 0.1 uF of their own: none",
+    "U302: 8 pins the netlist names VDD, without a 0.1 uF of their own: none",
+    "U1: supply pins by the netlist's pin names {'DVDDL': 8, 'AVDDL': 9, 'AVDDH': 7, 'VDDIO': 3}; with a 0.1 uF of their own 27 (the maker's figure draws 27); bulk {'DVDDL': ['C27 (22u 6.3V)'], 'AVDDL': ['C549 (22u 6.3V)'], 'AVDDH': ['C28 (22u 6.3V)'], 'VDDIO': ['C550 (10u)']}",
+    "U15 VREGIN pin 7: ['C551 (4.7u) at U15.7 net +5V_DEV class D']; ['C552 (100n) at U15.7 net +5V_DEV class D']",
+    "U16 VREGIN pin 7: ['C553 (4.7u) at U16.7 net +5V_DEV class D']; ['C554 (100n) at U16.7 net +5V_DEV class D']",
+    "U17 VREGIN pin 7: ['C555 (4.7u) at U17.7 net +5V_DEV class D']; ['C556 (100n) at U17.7 net +5V_DEV class D']",
+    "U18 VREGIN pin 7: ['C557 (4.7u) at U18.7 net +5V_DEV class D']; ['C558 (100n) at U18.7 net +5V_DEV class D']"
+   ]
+  },
+  {
+   "item": "G8",
+   "board": "P",
+   "asks": "C1, C6, C8 and C14 class A with their clauses, provisional",
+   "status": "DONE",
+   "evidence": [
+    "C1 (2.2u) at U1.1 net PBI class A provisional: True",
+    "C6 (100n) at U1.32 net BAT_F class A provisional: True",
+    "C8 (100n) at U1.26 net VCC_F class A provisional: True",
+    "C14 (100n) at U2.1 net SEC_VDD class A provisional: True"
+   ]
+  },
+  {
+   "item": "G9",
+   "board": "C",
+   "asks": "RP2040 ADC_AVDD and USB_VDD 100 nF each, class D",
+   "status": "DONE",
+   "evidence": [
+    "U3 ADC_AVDD pin 43: ['C42 (100n) at U3.43 net +3V3 class D']",
+    "U3 USB_VDD pin 48: ['C43 (100n) at U3.48 net +3V3 class D']"
+   ]
+  },
+  {
+   "item": "G10",
+   "board": "B",
+   "asks": "AP63203: C4 at VIN, C5 and C6 against the output loop; AP2112K: C12 class L, C13 class D",
+   "status": "DONE",
+   "evidence": [
+    "U25: at VIN pin 3 ['C4 (10u) at U25.3 net +5V_DEV class R {\"same_side\": true}']; at EN pin 2 none; at FB pin 1 none",
+    "the output capacitors: ['C5 (22u 6.3V) at L1.2 net +3V3_DEV class R {\"same_side\": true}', 'C6 (22u 6.3V) at L1.2 net +3V3_DEV class R {\"same_side\": true}']",
+    "U27: ['C12 (1u) at U27.5 net +2V5_KSZ class L {\"esr_max\": \"not stated by the maker\", \"value_floor\": \"1.0u\"}', 'C13 (1u) at U27.1 net +3V3_DEV class D']"
+   ]
+  },
+  {
+   "item": "G11",
+   "board": "E",
+   "asks": "AP63205: C31 at VIN pin 3",
+   "status": "DONE",
+   "evidence": [
+    "U12: at VIN pin 3 ['C31 (10u 25V 1210) at U12.3 net CELL_F class R {\"same_side\": true}']; at EN pin 2 none"
+   ]
+  },
+  {
+   "item": "G12",
+   "board": "D",
+   "asks": "TPA6132A2: 2.2 uF at HPVDD and VDD, the maker's 5 mm carried, C33 class B2, the citation",
+   "status": "DONE",
+   "evidence": [
+    "U7 HPVDD pin 12: ['C31 (2.2u 16V X5R 0402) at U7.12 net AMP_HPVDD class L {\"floor_uF\": 2.2, \"maker_mm\": 5.0}']",
+    "U7 VDD pin 14: ['C32 (2.2u 16V X5R 0402) at U7.14 net +5V_D8 class D {\"maker_mm\": 5.0}']; optional bulk ['C33 (10u) at U7.14 net +5V_D8 class B2']",
+    "maker_mm on C31, C32: [5.0, 5.0]",
+    "gen_sch_d.py lines naming SLOS553: [(186, '# NiceRF SA868 (V1.x manual, 18 castellations); TI PCM2912A (SLES230A, TQFP-32); TI TPA6132A2 (SLOS597B, QFN-16, pin 17 the pad; G12 of the decoupling')] (a line that records the correction is not a citation)",
+    "dielectric and land read back on the netlist: ['C31 2.2u 16V X5R 0402 Capacitor_SMD:C_0402_1005Metric', 'C32 2.2u 16V X5R 0402 Capacitor_SMD:C_0402_1005Metric']"
+   ]
+  },
+  {
+   "item": "G13",
+   "board": "C, E",
+   "asks": "RP2040: 1 uF at VREG_VOUT class L, 100 nF at each DVDD pin, the VREG_VIN 1 uF class D",
+   "status": "DONE",
+   "evidence": [
+    "board C U3: VREG_VOUT pin 45 ['C14 (1u) at U3.45 net C_DVDD class L {\"esr\": \"no number: the design guide 2.1.3 says physically small ceramic chip capacitors \\'will almost certainly\\' meet the regulator\\'s ESR restriction\", \"floor\": \"1u\"}']; DVDD pin 23 ['C44 (100n) at U3.23 net C_DVDD class D']; DVDD pin 50 ['C15 (100n) at U3.50 net C_DVDD class D']; VREG_VIN pin 44 ['C16 (1u) at U3.44 net +3V3 class D']; capacitors on net C_DVDD: [('C14', '1u'), ('C15', '100n'), ('C44', '100n')]",
+    "board E U10: VREG_VOUT pin 45 ['C45 (1u) at U10.45 net E6_DVDD class L {\"esr_max\": \"not stated by the maker (TBD)\", \"value_floor\": \"1u\"}']; DVDD pin 23 ['C59 (100n) at U10.23 net E6_DVDD class D']; DVDD pin 50 ['C46 (100n) at U10.50 net E6_DVDD class D']; VREG_VIN pin 44 ['C47 (1u) at U10.44 net +3V3_E6 class D']; capacitors on net E6_DVDD: [('C45', '1u'), ('C46', '100n'), ('C59', '100n')]"
+   ]
+  },
+  {
+   "item": "G14",
+   "board": "C, D, E",
+   "asks": "a class on every entry; D: C8 and C9 class L, C17 class B1",
+   "status": "DONE",
+   "evidence": [
+    "board C: 24 declarations, without a ruled class or a basis: none",
+    "board D: 31 declarations, without a ruled class or a basis: none",
+    "board E: 29 declarations, without a ruled class or a basis: none",
+    "board D C8 (1u) at U1.5 net +3V3_D8 class L {\"floor_uF\": 0.47}",
+    "board D C9 (10u) at U1.5 net +3V3_D8 class L {\"floor_uF\": 0.47}",
+    "board D C17 (10u) at U17.5 net +3V4_HUB class B1",
+    "C17's declared part is TLV75801PDBVR adjustable LDO, +3V4_HUB 3.44 V for the hub (1"
+   ]
+  }
+ ],
+ "tool_items": [
+  {
+   "item": "T1",
+   "asks": "one selection function for the escape pass and both placers",
+   "status": "DONE",
+   "evidence": [
+    "escape.py defines its own []; bypass_slots.py defines its own []; bypass_place.py takes the fan from []; tools-local modules all three import: ['fan_select']"
+   ]
+  },
+  {
+   "item": "T2",
+   "asks": "one limit function keyed by the class, rail pad to pin in all three tools",
+   "status": "DONE",
+   "evidence": [
+    "module constants LIMIT: {'bypass_place.py': None, 'bypass_slots.py': None}; intent_checks.py decides 6.0 or 3.0 from the value string at line none"
+   ]
+  },
+  {
+   "item": "T3",
+   "asks": "the placers try the four rotations",
+   "status": "DONE",
+   "evidence": [
+    "bypass_search.py walks rotations(): True, turns the footprint: True; placers that call it: {'bypass_slots.py': True, 'bypass_place.py': True}; bypass_slots' first drop: ['bypass_slots.py:97 place(..., rotation 0.0, ...)']"
+   ]
+  },
+  {
+   "item": "T4",
+   "asks": "the fan opened for a class R entry's own converter and a class D or L entry's own-pin window; escapes lost printed per cause",
+   "status": "DONE",
+   "evidence": [
+    "bypass_search.py calls fan_blocks with ['own_converter', 'own_window']; escape_cost.py's causes window, stage and far_side: True; escape.py imports escape_cost: True; the placers read the class: {'bypass_slots.py': True, 'bypass_place.py': True, 'escape.py': False}"
+   ]
+  },
+  {
+   "item": "T5",
+   "asks": "intent.bypass takes a class and a basis and intent.write refuses an entry without one",
+   "status": "DONE",
+   "evidence": [
+    "intent.py:41 def bypass(cap_ref, part_ref, pin, net, cls, basis)"
+   ]
+  },
+  {
+   "item": "T6",
+   "asks": "an allow line names its capacitor; allowed entries counted as justified, never as pass; the blanket lines deleted",
+   "status": "DONE",
+   "evidence": [
+    "intent_checks.py quotes the file's first line for every far capacitor at line none; live allow files: {'a': {'lines': 0, 'naming_a_capacitor': 0}, 'b': {'lines': 0, 'naming_a_capacitor': 0}, 'c': {'lines': 0, 'naming_a_capacitor': 0}, 'd': {'lines': 0, 'naming_a_capacitor': 0}, 'e': {'lines': 0, 'naming_a_capacitor': 0}, 'p': {'lines': 0, 'naming_a_capacitor': 0}}"
+   ]
+  },
+  {
+   "item": "T7",
+   "asks": "DEC-001's registry text: sources, status, acceptance and rationale",
+   "status": "NOT DONE",
+   "evidence": [
+    "pcb_rules.yaml DEC-001: source_status SOURCE_UNVERIFIED, 0 source(s); coverage gap_category HEURISTIC_AS_LAW"
+   ]
+  },
+  {
+   "item": "T8",
+   "asks": "PCB-OPEN-PAIRS.md re-rendered in the commit that merges the ruling",
+   "status": "NOT APPLICABLE YET",
+   "evidence": [
+    "a step of the merge commit, the integrator's: it has nothing to render until T7's text is in the registry"
+   ]
+  },
+  {
+   "item": "T9",
+   "asks": "the other side: which boards, where refused, the via allowance, the maker's same side",
+   "status": "DONE",
+   "evidence": [
+    "which tool names a via allowance or a far side: {'bypass_slots.py': True, 'bypass_place.py': True, 'intent_checks.py decoupling block': True}"
+   ]
+  },
+  {
+   "item": "T10",
+   "asks": "the ground pad's own via named, its copper length printed",
+   "status": "DONE",
+   "evidence": [
+    "intent_checks.py's reach test `closes()` accepts any via of the net within NEAR_VIA or a pour; a test of the via's other landings: True"
+   ]
+  }
+ ],
+ "schema": [
+  {
+   "board": "a",
+   "entries": 56,
+   "classes": {
+    "L": 8,
+    "D": 39,
+    "R": 8,
+    "A": 1
+   },
+   "extra_keys": {
+    "value_floor": 8,
+    "value_ceiling": 8,
+    "esr_bound": 8
+   },
+   "not_canonical": [
+    "esr_bound"
+   ],
+   "class_L_without_a_floor": [],
+   "class_L_without_an_esr_statement": [],
+   "class_R_without_same_side": [
+    "C29",
+    "C30",
+    "C41",
+    "C42",
+    "C159",
+    "C160",
+    "C54",
+    "C223"
+   ]
+  },
+  {
+   "board": "b",
+   "entries": 281,
+   "classes": {
+    "R": 29,
+    "D": 228,
+    "B2": 10,
+    "B1": 3,
+    "L": 11
+   },
+   "extra_keys": {
+    "same_side": 29,
+    "value_floor": 11,
+    "esr_max": 11
+   },
+   "not_canonical": [],
+   "class_L_without_a_floor": [],
+   "class_L_without_an_esr_statement": [],
+   "class_R_without_same_side": []
+  },
+  {
+   "board": "c",
+   "entries": 24,
+   "classes": {
+    "D": 21,
+    "L": 2,
+    "B2": 1
+   },
+   "extra_keys": {
+    "floor": 2,
+    "esr": 2
+   },
+   "not_canonical": [
+    "esr",
+    "floor"
+   ],
+   "class_L_without_a_floor": [],
+   "class_L_without_an_esr_statement": [],
+   "class_R_without_same_side": []
+  },
+  {
+   "board": "d",
+   "entries": 31,
+   "classes": {
+    "D": 19,
+    "L": 10,
+    "B1": 1,
+    "B2": 1
+   },
+   "extra_keys": {
+    "floor_uF": 5,
+    "maker_mm": 2
+   },
+   "not_canonical": [
+    "floor_uF"
+   ],
+   "class_L_without_a_floor": [
+    "C19",
+    "C20",
+    "C21",
+    "C22",
+    "C23"
+   ],
+   "class_L_without_an_esr_statement": [
+    "C8",
+    "C9",
+    "C65",
+    "C62",
+    "C19",
+    "C20",
+    "C21",
+    "C22",
+    "C23",
+    "C31"
+   ],
+   "class_R_without_same_side": []
+  },
+  {
+   "board": "e",
+   "entries": 29,
+   "classes": {
+    "A": 2,
+    "D": 21,
+    "L": 4,
+    "R": 2
+   },
+   "extra_keys": {
+    "value_floor": 4,
+    "esr_max": 4,
+    "same_side": 2
+   },
+   "not_canonical": [],
+   "class_L_without_a_floor": [],
+   "class_L_without_an_esr_statement": [],
+   "class_R_without_same_side": []
+  },
+  {
+   "board": "p",
+   "entries": 4,
+   "classes": {
+    "A": 4
+   },
+   "extra_keys": {
+    "provisional": 4
+   },
+   "not_canonical": [],
+   "class_L_without_a_floor": [],
+   "class_L_without_an_esr_statement": [],
+   "class_R_without_same_side": []
+  }
+ ]
+}

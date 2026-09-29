@@ -3,7 +3,7 @@ nothing built, ordered or measured; AI review. Inputs pinned (sha256, first 16):
   a2a050dc24c461f2  v2/docs/records/adj/A06-pack-geometry/drafts/pack_fit.py
   cf6c377fa1015a46  v2/docs/records/energy/energy_budget.py
   64dd014bee56d855  v2/docs/records/energy/energy_inputs.yaml
-  9684e7a9606aede6  v2/ecad/tools/gen_sch_a.py
+  eb2e347e4d371e0f  v2/ecad/tools/gen_sch_a.py
   740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
   3bdb88df98260244  v2/ecad/tools/panel1450.py
   ab1dbc3f3f69aa46  v2/ecad/tools/pcb_pack_protection.yaml
@@ -22,7 +22,7 @@ Typed figures (not parsed; each with its source):
   r_cell_ohm         (0.035, 0.06)          POWER-THERMAL.md section 7.2: R_cell 0.035 to 0.06 Ohm (the cell sheet's 35 mOhm AC, Ver. 1.1 7.4, is the low end)
   r_tap_ohm          100.0                  gen_sch_p.py, the cell sense filters R1 to R4: 100R each
   rho_cu             1.724e-08              annealed copper at 20 C, IACS (a physical constant; no wire standard such as IEC 60228 is held in the tree)
-  tps2596_rilm       (903.0, 0.0112)        gen_sch_a.py at efuse(): TPS2596 equation 7, RILM = 903 / (ILIM + 0.0112) ohm
+  tps2596_rilm       (903.0, 0.0112)        TPS2596 equation 7 (SLVSET8A printed page 28): RILM = 903 / (ILIM - 0.0112) ohm, so ILIM = 903 / RILM + 0.0112 A; corrected 29 September 2026 (S-99 found the sign reversed in gen_sch_a.py and this constant had copied it)
 
 Self-check: the scheduled run reproduces energy_budget.simulate on 4 cases (constant load, the record's charge rule): PASS
 
@@ -242,14 +242,14 @@ Self-check: the scheduled run reproduces energy_budget.simulate on 4 cases (cons
   4S6P, the east block at its share  3.17      0.38 to 0.91  331 to 780                   
 
 4c. The heater branch on board A (gen_sch_a.py, parsed): VHEAT declared 0.63 A at 12 V (efficiency 0.90), VHEAT_IN 0.58 A at 14.4 V,
-   U22's ILM resistor 909R 1% gives 0.98 A (TPS2596 equation 7; the generator's note rounds it to 1.0 A). Two mats (one under each block, 7.5 W each at 12 V):
+   U22's ILM resistor 909R 1% gives 1.00 A (TPS2596 equation 7; the generator's note rounds it to 1.0 A). Two mats (one under each block, 7.5 W each at 12 V):
   mats  W at 12 V  VHEAT A  pack V  VHEAT_IN A  under U22's limit
   ----  ---------  -------  ------  ----------  -----------------
   1     7.5        0.62     14.4    0.58        yes              
   1     7.5        0.62     12.0    0.69        yes              
   2     15.0       1.25     14.4    1.16        NO               
   2     15.0       1.25     12.0    1.39        NO               
-   A 2.0 A limit needs RILM 449 ohm (the 453R the same comment lists). At full duty (the mats' rating, an upper bound; the
+   A 2.0 A limit needs RILM 454 ohm (the 453R the same comment lists). At full duty (the mats' rating, an upper bound; the
    duty is set by the loss, which no held figure gives) the heater at the pack is 8.3 W with one mat and 16.7 W with two:
   month      sun-down h  one mat Wh a night  two mats Wh a night  second block adds, aged, +5 C, Wh  at -10 C, Wh
   ---------  ----------  ------------------  -------------------  ---------------------------------  ------------

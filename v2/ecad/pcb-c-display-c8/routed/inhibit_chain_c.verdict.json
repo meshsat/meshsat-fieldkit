@@ -6,7 +6,8 @@
   "files": {
    "boardtable.py": "41bd92e61f12c374",
    "check_contracts.py": "5e14f456a0791c35",
-   "intent.py": "f1ac033e0f3c10f1",
+   "decoupling_rules.py": "f4d06f6789c6ec48",
+   "intent.py": "0071fe553548eb5d",
    "kisch.py": "3e28374d15be25e0",
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
@@ -17,7 +18,7 @@
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "fdea734a59239131",
+  "sha16": "3d0f8abc5a5faa53",
   "unresolved": []
  },
  "counts": {
@@ -32,39 +33,39 @@
   "boards": "A,B,C,D,E,P",
   "intent_a": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "070b4c5e41e023e5"
+   "sha256_16": "f9e4827ba2f6d2bd"
   },
   "intent_b": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
-   "sha256_16": "a7bf625c8b878dd5"
+   "sha256_16": "9fd37fd39026c102"
   },
   "intent_c": {
    "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
-   "sha256_16": "270ebb4ccf1d0e8e"
+   "sha256_16": "03af8453948d391c"
   },
   "intent_d": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
-   "sha256_16": "8d9f3b2256521b0d"
+   "sha256_16": "19fa94a2bce5dd52"
   },
   "netlist_a": {
    "content16": "2efce63fe72079f1",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "599ee964a9c23d6e"
+   "sha256_16": "30ad87746d1801ca"
   },
   "netlist_b": {
    "content16": "b9dbb9c4a430d108",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "21a1f74a3ec1ae28"
+   "sha256_16": "97823ef1171a61ce"
   },
   "netlist_c": {
    "content16": "ebde053efc0a3906",
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "3fddbb3edcd4248a"
+   "sha256_16": "fef4df255c00f4db"
   },
   "netlist_d": {
    "content16": "be4194ed867c8406",
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "sha256_16": "7a2c0ac2190b141a"
+   "sha256_16": "a2d48972d171aad1"
   }
  },
  "missing_input": null,
@@ -74,7 +75,7 @@
   "rule_fingerprints": {
    "RF-002": "2394810b0afd0d73"
   },
-  "rule_set_fingerprint": "635ff031f210f48c"
+  "rule_set_fingerprint": "a9b1e7f7412f9c0c"
  },
  "rules": [
   "RF-002"
@@ -84,12 +85,12 @@
  },
  "tool": "inhibit_chain_c",
  "tools": {
-  "git_head": "cef7cb77c420",
-  "tools_tree_sha": "8639c5ed4c65deea"
+  "git_head": "958a7de7a15f",
+  "tools_tree_sha": "7a55e9ef29ec7734"
  },
- "ts": "2026-09-28T22:45:49Z",
+ "ts": "2026-09-29T00:16:35Z",
  "verdict": "PASS",
- "version": "cef7cb77c420",
+ "version": "958a7de7a15f",
  "writer": {
   "file": "check_contracts.py",
   "sha16": "5e14f456a0791c35"

@@ -3,7 +3,7 @@
 
 # Rule status: board A
 
-Manifest **2026-09-16.1**, rule set **635ff031f210f48c**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **a9b1e7f7412f9c0c**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
 **Readiness: NOT_READY**
 
@@ -26,8 +26,8 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
 | PASS | 29 | 52.7 |
-| FAIL | 13 | 23.6 |
-| INCONCLUSIVE | 13 | 23.6 |
+| FAIL | 12 | 21.8 |
+| INCONCLUSIVE | 14 | 25.5 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **55** | 100.0 |
 
@@ -46,7 +46,7 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 36 |
 | PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 35 |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_a PASS of 4 |
-| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | intent_decoupling FAIL: {'fail': 10, 'pass': 30} |
+| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | taken under a different version of DEC-001 (c4c7b77158f31d92, current is 12ed33adeb80860d) |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **FAIL** | dc_density FAIL: {'met': 14, 'missed': 13, 'undeclared': 0} |
 | PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **FAIL** | dc_drop FAIL: {'density_missed': 13, 'met': 24, 'missed': 3, 'undeclared': 0} |
 | PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | via_current FAIL: {'measured_rails': 27, 'no_layer_change': 0, 'no_via': 0, 'over': 8, 'over_barrels': 37, 'rails': 27} |

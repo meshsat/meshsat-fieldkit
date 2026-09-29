@@ -391,7 +391,7 @@ board_to_board:
         - {rail: "+5V_DEV", a_declares: "4.1 A typical, 6.9142 A peak at the converter, of which 3.8 A apportioned to
              J_5V_DEV and 0.3 A to the wall port's eFuse U32; the peak is B's 6.0 A plus U32's 0.9142 A nominal limit (TPS2596
              equation 7, SLVSET8A p.28). The D8 mezzanine is on its own rail +5V_D8IN from the buck U41 since decision 55
-             (gen_sch_a.py, the S-99 lines)",
+             (gen_sch_a.py:140, the +5V_DEV rail call, with S-99's comment block above it)",
            b_declares: "3.8 A typical, 6.0 A peak arriving (gen_sch_b.py:111)",
            status: "AGREE at the lead since S-98 (28 September 2026), INTERIM: A apportions 3.8 A to J_5V_DEV and B declares
              3.8 A typical arriving; the PS-ALLTX mode current is INCONCLUSIVE at both ends (v2/docs/records/cx1/CORRECTION.md

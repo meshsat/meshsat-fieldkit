@@ -1,0 +1,48 @@
+# Integration set 10: closure record (MESHSAT-1357, 29 September 2026)
+
+Branch `fnd/int11` onto main `c5f93464`; the final candidate is the commit that carries this file. Prototype design:
+nothing here has been built, ordered or measured. The checks named below are AI reviews, not qualified reviews.
+
+## What the set changes, by class
+
+| Class | Change | Commits |
+|---|---|---|
+| Tools | stream d6dec: decision 42's decoupling rules as one library, the fan selection, the escape cost that shuts an opening while its costed part stays, far-side seats priced at their via pair's pitch, `intent.bypass` taking a class and a basis and `intent.write` refusing an entry without them (DECOUPLING.md 8.1 T1 to T6, T9, T10); the EMC sheet tool knows the BQ25731 | `32adc424`, `36ac4bef` |
+| Registry | DEC-001's text, sources and coverage row from DECOUPLING.md 8.2 (T7) with the pages (T8); S-117 opened (board A's charger frequency against its 3.3 uH inductor) | `682c68ac`, `36ac4bef` |
+| Declarations and sheets | set 9's carried M2 (IF-AB-POWER's +5V_DEV row cites `gen_sch_a.py:140`), M10 (U3 in board A's EMC sheet) and M11 (U41's row, the sheet's paths no longer count converters) | `36ac4bef` |
+| Regeneration | the decoupling tools sit inside every generator's import closure, so every netlist's provenance named a generator the tree no longer had and check_contracts refused all six ("UNKNOWN GENERATOR"). All six schematics regenerated on the KiCad box (`box_regen_all.sh`): schematic, netlist and intent identical apart from their export date, BOMs identical, the provenance naming the new generator; check_contracts PASS of 99 on the regenerated set | `13b5352b`, `d41f85ec` |
+| Pins and bindings | every board's netlist pins in the holds, the reliability list and the port reviews, 25 registry records and the six layout constraint sheets re-bound, each after a proof that only the export's date and source lines differ; CON-010 and REQ-044 to the final page | `958a7de7`, `559a072d` |
+| Evidence | two re-takes (the first found the netlists refused; the second at `958a7de7`: 73 steps, 0 errors, no verdict moved); 34 layout-entry reasons, as on main; DEC-001 reads INCONCLUSIVE on the six boards ("taken under a different version of DEC-001") until each board's next placement under its new text, which moves the open-pairs table from 200 to 195 PASS and 40 to 39 FAIL (board A's DEC-001 FAIL was a reading under the old rule version, and it awaits the same re-read as the others) | `8cb89eaf`, `559a072d` |
+| Records | stream energy's section 9 (kept as the reference energy analysis by the owner's instruction of 29 September, recorded in `v2/docs/EXECUTION-PLAN.md` with this set's milestone) and the rebuilt diagrams; the records index | `5329ad2e`, `532807f0` |
+
+## Gates
+
+| Gate | Result |
+|---|---|
+| Validators on the candidate | rules_lib 59 rules and 144 records, 0 errors; every `--check` exit 0; constraints_bound PASS |
+| Isolated clone at `559a072d` with only its archive (935 files) | status 0 lines after status x3 and render x2; every check exit 0 |
+| Full suite on the box | at `559a072d`: 2247 passed, 1 failed (test_rule_gate_mapping: the coverage map's rule-set stamp still named the fingerprint before DEC-001's new text; T7's apply script had not moved it), 3 skipped; the stamp moved in `c65ee303` and committed before status ran, the evidence page then unchanged; at `538e14e1`: **2248 passed, 0 failed, 3 skipped** |
+| Fresh AI check (`CHECK.md`, at `2cbbef38`) | mergeable: no, on one blocking item: B1, the U3 EMC row and S-117 read the charger's start-up frequency from its PWM_FREQ default, where TI's datasheet (SLUSE66A 9.3.11, Table 9-4) reads it from a resistor on IADPT that board A does not carry (round 4's O-24). Answered by `apply_s117_restate.py`: S-117 restated as the schematic item, REQ-015 waiting on it, the U3 row at the design's 800 kHz with the omission named; M9 answered with it. A focused re-check of that answer follows |
+
+## The check's minor items carried
+
+- M1 to M4, stream d6dec's tools: the decoupling verdict reads PASS when every entry is justified or recorded and none passes
+  (a recorded decision is owed); the placer's far-side test and two-sidedness count differ from the gate's (the gate still refuses);
+  escape_cost tries one cause at a time; DEC-001's coverage text still names the flat 3.0 mm. For d6dec's follow-up.
+- M5: stream d6dec's own read of DEC-001 under the new text, taken outside the tree and not evidence, is FAIL on all six placed
+  boards (`records/d6dec/README.md`); the tree's readings await each board's next placement.
+- M6: `build.py --check` reads 9 of 11 diagrams current; the control lines and the power tree differ from the regenerated
+  netlists and `pcb_interfaces.yaml` only in their sha and commit labels: the next diagrams rebuild.
+- M8: `apply_repin_netlists_int11.py` neither refuses an old sha that no file carries nor re-reads what it wrote, as its
+  docstring says; its result was checked correct by the check.
+
+## What it does not claim
+
+DEC-001 is not passed anywhere: its readings await each board's next placement. No layer closes.
+
+## Carried
+
+The sheet script `apply_sheets_int11.py` writes the sheets before its final binding check, so its first run wrote them and then
+refused on `calc/rail_widths.out`; the second run regenerated that file and found nothing more to move. The result is the
+committed state; the order is to be fixed in its successor. Board E's regeneration reports 18 pins on a pad its land does not
+carry, as the committed board did (parity PARITY_AFTER_NOISE, BOM identical).

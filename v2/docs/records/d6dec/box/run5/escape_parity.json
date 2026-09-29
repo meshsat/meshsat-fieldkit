@@ -1,0 +1,256 @@
+{
+ "what": "escape.py before and after, on the six committed boards stripped of their copper",
+ "rows": [
+  {
+   "board": "a",
+   "phase": "pcb-a-power-a23",
+   "escape_env": {},
+   "bare_board_sha256_16": "2aaf2b5a33192377",
+   "same_copper": true,
+   "before": {
+    "exit": 0,
+    "vias": 467,
+    "tracks": 452,
+    "copper_sha": "7f2d16d9ceb37eec",
+    "summary": [
+     "escape: 467 escapes added, 0 pads skipped, 0 thermal via(s) refused for what is on the other side"
+    ],
+    "cost": [],
+    "no_escape": 0
+   },
+   "after": {
+    "exit": 0,
+    "vias": 467,
+    "tracks": 452,
+    "copper_sha": "7f2d16d9ceb37eec",
+    "summary": [
+     "escape: 467 escapes added, 0 pads skipped, 0 thermal via(s) refused for what is on the other side"
+    ],
+    "cost": [
+     "escape: decoupling cost: 0 refused pad(s) would have been escaped without a declared seat (56 declaration(s) read); 0 refused for another reason",
+     "escape: decoupling cost written to out/pcb-a-power-escape-cost.json"
+    ],
+    "no_escape": 0
+   }
+  },
+  {
+   "board": "b",
+   "phase": "pcb-b-compute-b19",
+   "escape_env": {
+    "ESCAPE_SKIP": "U3,U4,J_HDMI"
+   },
+   "bare_board_sha256_16": "75e4d07bd4fcf19b",
+   "same_copper": true,
+   "before": {
+    "exit": 0,
+    "vias": 1477,
+    "tracks": 1631,
+    "copper_sha": "804f28488ee91487",
+    "summary": [
+     "escape: 1477 escapes added, 288 pads skipped, 20 thermal via(s) refused for what is on the other side"
+    ],
+    "cost": [],
+    "no_escape": 288
+   },
+   "after": {
+    "exit": 0,
+    "vias": 1477,
+    "tracks": 1631,
+    "copper_sha": "804f28488ee91487",
+    "summary": [
+     "escape: 1477 escapes added, 288 pads skipped, 20 thermal via(s) refused for what is on the other side"
+    ],
+    "cost": [
+     "escape: decoupling cost: 62 refused pad(s) would have been escaped without a declared seat (281 declaration(s) read); 226 refused for another reason",
+     "escape: C111 is left to the router, and far-side declared capacitors refuse 4 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C130 is left to the router, and far-side declared capacitors refuse 2 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: C131 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C132 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C149 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C157 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C158 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: C176 is left to the router, and far-side declared capacitors refuse 2 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C177 is left to the router, and far-side declared capacitors refuse 2 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C240 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: C241 is left to the router, and far-side declared capacitors refuse 4 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C242 is left to the router, and far-side declared capacitors refuse 4 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C243 is left to the router, and far-side declared capacitors refuse 2 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: C250 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: C252 is left to the router, and far-side declared capacitors refuse 6 of the via site(s) at 2 of its pins (D5); pins with every site refused: 1, 2",
+     "escape: C311 is left to the router, and far-side declared capacitors refuse 4 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C330 is left to the router, and far-side declared capacitors refuse 2 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: C331 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C332 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C349 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C357 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C358 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: C375 is left to the router, and far-side declared capacitors refuse 2 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C377 is left to the router, and far-side declared capacitors refuse 2 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: C41 is left to the router, and far-side declared capacitors refuse 2 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: C429 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: C445 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: C446 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: LED14 is left to the router, and far-side declared capacitors refuse 4 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: LED34 is left to the router, and far-side declared capacitors refuse 4 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: Q106 is left to the router, and far-side declared capacitors refuse 4 of the via site(s) at 2 of its pins (D5); pins with every site refused: 1",
+     "escape: Q206 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: Q207 is left to the router, and far-side declared capacitors refuse 2 of the via site(s) at 2 of its pins (D5); pins with every site refused: none",
+     "escape: Q306 is left to the router, and far-side declared capacitors refuse 4 of the via site(s) at 2 of its pins (D5); pins with every site refused: 1",
+     "escape: R123 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: R130 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: R209 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: R21 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 1 of its pins (D5); pins with every site refused: 2",
+     "escape: R22 is left to the router, and far-side declared capacitors refuse 5 of the via site(s) at 2 of its pins (D5); pins with every site refused: 2",
+     "escape: R323 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: R330 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: R75 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: U101 lost 8 escape(s) to declared capacitors on the side opposite it (D5): pad(s) 128, 127, 126, 125, 100, 99, 98, 97; the parts that cost them: C135, C136, C137, C138, C139, C140, C141, C142, C143, C144, C145, C146, C147, C148, C166, C167, C168, C169, C170, C171, C172, C173, C174, C192, C193, C194, C235",
+     "escape: U102 lost 13 escape(s) to declared capacitors on the side opposite it (D5): pad(s) 64, 63, 62, 61, 58, 57, 56, 55, 54, 53, 52, 50 ...; the parts that cost them: C135, C136, C137, C138, C139, C140, C141, C142, C143, C144, C145, C146, C147, C148, C166, C167, C168, C169, C170, C171, C172, C173, C174, C192, C193, C194, C235",
+     "escape: U201 lost 7 escape(s) to declared capacitors on the side opposite it (D5): pad(s) 128, 127, 126, 125, 99, 98, 97; the parts that cost them: C135, C136, C137, C138, C139, C140, C141, C142, C143, C144, C145, C146, C147, C148, C166, C167, C168, C169, C170, C171, C172, C173, C174, C192, C193, C194, C235",
+     "escape: U202 lost 12 escape(s) to declared capacitors on the side opposite it (D5): pad(s) 64, 63, 62, 61, 58, 57, 56, 55, 54, 53, 52, 49; the parts that cost them: C135, C136, C137, C138, C139, C140, C141, C142, C143, C144, C145, C146, C147, C148, C166, C167, C168, C169, C170, C171, C172, C173, C174, C192, C193, C194, C235",
+     "escape: U209 lost 2 escape(s) to declared capacitors on the side opposite it (D5): pad(s) 1, 20; the parts that cost them: C135, C136, C137, C138, C139, C140, C141, C142, C143, C144, C145, C146, C147, C148, C166, C167, C168, C169, C170, C171, C172, C173, C174, C192, C193, C194, C235",
+     "escape: U210 lost 1 escape(s) to declared capacitors on the side opposite it (D5): pad(s) 5; the parts that cost them: C135, C136, C137, C138, C139, C140, C141, C142, C143, C144, C145, C146, C147, C148, C166, C167, C168, C169, C170, C171, C172, C173, C174, C192, C193, C194, C235",
+     "escape: U301 lost 8 escape(s) to declared capacitors on the side opposite it (D5): pad(s) 128, 127, 102, 101, 100, 99, 98, 97; the parts that cost them: C135, C136, C137, C138, C139, C140, C141, C142, C143, C144, C145, C146, C147, C148, C166, C167, C168, C169, C170, C171, C172, C173, C174, C192, C193, C194, C235",
+     "escape: U302 lost 11 escape(s) to declared capacitors on the side opposite it (D5): pad(s) 64, 63, 59, 58, 57, 56, 55, 54, 51, 50, 49; the parts that cost them: C135, C136, C137, C138, C139, C140, C141, C142, C143, C144, C145, C146, C147, C148, C166, C167, C168, C169, C170, C171, C172, C173, C174, C192, C193, C194, C235",
+     "escape: U9 is left to the router, and far-side declared capacitors refuse 4 of the via site(s) at 2 of its pins (D5); pins with every site refused: 6",
+     "escape: Y201 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 1 of its pins (D5); pins with every site refused: 4",
+     "escape: decoupling cost written to out/pcb-b-compute-escape-cost.json"
+    ],
+    "no_escape": 288
+   }
+  },
+  {
+   "board": "c",
+   "phase": "pcb-c-display-c8",
+   "escape_env": {},
+   "bare_board_sha256_16": "0b6d919dd194eb28",
+   "same_copper": true,
+   "before": {
+    "exit": 0,
+    "vias": 165,
+    "tracks": 188,
+    "copper_sha": "a66f7239f043e637",
+    "summary": [
+     "escape: 165 escapes added, 3 pads skipped, 0 thermal via(s) refused for what is on the other side"
+    ],
+    "cost": [],
+    "no_escape": 3
+   },
+   "after": {
+    "exit": 0,
+    "vias": 165,
+    "tracks": 188,
+    "copper_sha": "a66f7239f043e637",
+    "summary": [
+     "escape: 165 escapes added, 3 pads skipped, 0 thermal via(s) refused for what is on the other side"
+    ],
+    "cost": [
+     "escape: decoupling cost: 0 refused pad(s) would have been escaped without a declared seat (24 declaration(s) read); 3 refused for another reason",
+     "escape: decoupling cost written to out/pcb-c-display-escape-cost.json"
+    ],
+    "no_escape": 3
+   }
+  },
+  {
+   "board": "d",
+   "phase": "pcb-d-aprs-d9",
+   "escape_env": {},
+   "bare_board_sha256_16": "d64c632ba0a2c55d",
+   "same_copper": true,
+   "before": {
+    "exit": 0,
+    "vias": 68,
+    "tracks": 92,
+    "copper_sha": "705f0ad54a6c0025",
+    "summary": [
+     "escape: 68 escapes added, 7 pads skipped, 0 thermal via(s) refused for what is on the other side"
+    ],
+    "cost": [],
+    "no_escape": 7
+   },
+   "after": {
+    "exit": 0,
+    "vias": 68,
+    "tracks": 92,
+    "copper_sha": "705f0ad54a6c0025",
+    "summary": [
+     "escape: 68 escapes added, 7 pads skipped, 0 thermal via(s) refused for what is on the other side"
+    ],
+    "cost": [
+     "escape: decoupling cost: 4 refused pad(s) would have been escaped without a declared seat (31 declaration(s) read); 3 refused for another reason",
+     "escape: C44 is left to the router, and far-side declared capacitors refuse 6 of the via site(s) at 2 of its pins (D5); pins with every site refused: 1, 2",
+     "escape: U11 is left to the router, and far-side declared capacitors refuse 4 of the via site(s) at 2 of its pins (D5); pins with every site refused: 5",
+     "escape: U5 lost 1 escape(s) to declared capacitors on the side opposite it (D5): pad(s) 3; the parts that cost them: C15, C16, C17, C18, C51, C52, C53, C54, C55, C8, C9",
+     "escape: U7 lost 3 escape(s) to declared capacitors on the side opposite it (D5): pad(s) 4, 3, 2; the parts that cost them: C15, C16, C17, C18, C51, C52, C53, C54, C55, C8, C9",
+     "escape: U9 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none",
+     "escape: decoupling cost written to out/pcb-d-aprs-escape-cost.json"
+    ],
+    "no_escape": 7
+   }
+  },
+  {
+   "board": "e",
+   "phase": "pcb-e1-dock-e7",
+   "escape_env": {},
+   "bare_board_sha256_16": "4e85bf10ae2806dd",
+   "same_copper": true,
+   "before": {
+    "exit": 0,
+    "vias": 179,
+    "tracks": 171,
+    "copper_sha": "6d5c8288a80db750",
+    "summary": [
+     "escape: 179 escapes added, 4 pads skipped, 0 thermal via(s) refused for what is on the other side"
+    ],
+    "cost": [],
+    "no_escape": 4
+   },
+   "after": {
+    "exit": 0,
+    "vias": 179,
+    "tracks": 171,
+    "copper_sha": "6d5c8288a80db750",
+    "summary": [
+     "escape: 179 escapes added, 4 pads skipped, 0 thermal via(s) refused for what is on the other side"
+    ],
+    "cost": [
+     "escape: decoupling cost: 0 refused pad(s) would have been escaped without a declared seat (29 declaration(s) read); 4 refused for another reason",
+     "escape: decoupling cost written to out/pcb-e1-dock-escape-cost.json"
+    ],
+    "no_escape": 4
+   }
+  },
+  {
+   "board": "p",
+   "phase": "pcb-p-pack-p2",
+   "escape_env": {},
+   "bare_board_sha256_16": "257075df3b381382",
+   "same_copper": true,
+   "before": {
+    "exit": 0,
+    "vias": 46,
+    "tracks": 62,
+    "copper_sha": "db55751f4684ff7d",
+    "summary": [
+     "escape: 46 escapes added, 0 pads skipped, 0 thermal via(s) refused for what is on the other side"
+    ],
+    "cost": [],
+    "no_escape": 0
+   },
+   "after": {
+    "exit": 0,
+    "vias": 46,
+    "tracks": 62,
+    "copper_sha": "db55751f4684ff7d",
+    "summary": [
+     "escape: 46 escapes added, 0 pads skipped, 0 thermal via(s) refused for what is on the other side"
+    ],
+    "cost": [
+     "escape: decoupling cost: 0 refused pad(s) would have been escaped without a declared seat (4 declaration(s) read); 0 refused for another reason",
+     "escape: decoupling cost written to out/pcb-p-pack-escape-cost.json"
+    ],
+    "no_escape": 0
+   }
+  }
+ ]
+}

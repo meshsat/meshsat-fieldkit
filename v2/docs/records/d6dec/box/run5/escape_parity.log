@@ -1,0 +1,33 @@
+a pcb-a-power-a23      same copper True | before 467 vias 452 tracks 7f2d16d9ceb37eec | after 467 vias 452 tracks 7f2d16d9ceb37eec
+     escape: decoupling cost: 0 refused pad(s) would have been escaped without a declared seat (56 declaration(s) read); 0 refused for another reason
+     escape: decoupling cost written to out/pcb-a-power-escape-cost.json
+b pcb-b-compute-b19    same copper True | before 1477 vias 1631 tracks 804f28488ee91487 | after 1477 vias 1631 tracks 804f28488ee91487
+     escape: decoupling cost: 62 refused pad(s) would have been escaped without a declared seat (281 declaration(s) read); 226 refused for another reason
+     escape: C111 is left to the router, and far-side declared capacitors refuse 4 of the via site(s) at 2 of its pins (D5); pins with every site refused: none
+     escape: C130 is left to the router, and far-side declared capacitors refuse 2 of the via site(s) at 1 of its pins (D5); pins with every site refused: none
+     escape: C131 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 2 of its pins (D5); pins with every site refused: none
+     escape: C132 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 2 of its pins (D5); pins with every site refused: none
+     escape: C149 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 2 of its pins (D5); pins with every site refused: none
+     escape: C157 is left to the router, and far-side declared capacitors refuse 3 of the via site(s) at 2 of its pins (D5); pins with every site refused: none
+     escape: C158 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none
+     escape: C176 is left to the router, and far-side declared capacitors refuse 2 of the via site(s) at 2 of its pins (D5); pins with every site refused: none
+     escape: C177 is left to the router, and far-side declared capacitors refuse 2 of the via site(s) at 2 of its pins (D5); pins with every site refused: none
+     escape: C240 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none
+     escape: C241 is left to the router, and far-side declared capacitors refuse 4 of the via site(s) at 2 of its pins (D5); pins with every site refused: none
+c pcb-c-display-c8     same copper True | before 165 vias 188 tracks a66f7239f043e637 | after 165 vias 188 tracks a66f7239f043e637
+     escape: decoupling cost: 0 refused pad(s) would have been escaped without a declared seat (24 declaration(s) read); 3 refused for another reason
+     escape: decoupling cost written to out/pcb-c-display-escape-cost.json
+d pcb-d-aprs-d9        same copper True | before 68 vias 92 tracks 705f0ad54a6c0025 | after 68 vias 92 tracks 705f0ad54a6c0025
+     escape: decoupling cost: 4 refused pad(s) would have been escaped without a declared seat (31 declaration(s) read); 3 refused for another reason
+     escape: C44 is left to the router, and far-side declared capacitors refuse 6 of the via site(s) at 2 of its pins (D5); pins with every site refused: 1, 2
+     escape: U11 is left to the router, and far-side declared capacitors refuse 4 of the via site(s) at 2 of its pins (D5); pins with every site refused: 5
+     escape: U5 lost 1 escape(s) to declared capacitors on the side opposite it (D5): pad(s) 3; the parts that cost them: C15, C16, C17, C18, C51, C52, C53, C54, C55, C8, C9
+     escape: U7 lost 3 escape(s) to declared capacitors on the side opposite it (D5): pad(s) 4, 3, 2; the parts that cost them: C15, C16, C17, C18, C51, C52, C53, C54, C55, C8, C9
+     escape: U9 is left to the router, and far-side declared capacitors refuse 1 of the via site(s) at 1 of its pins (D5); pins with every site refused: none
+     escape: decoupling cost written to out/pcb-d-aprs-escape-cost.json
+e pcb-e1-dock-e7       same copper True | before 179 vias 171 tracks 6d5c8288a80db750 | after 179 vias 171 tracks 6d5c8288a80db750
+     escape: decoupling cost: 0 refused pad(s) would have been escaped without a declared seat (29 declaration(s) read); 4 refused for another reason
+     escape: decoupling cost written to out/pcb-e1-dock-escape-cost.json
+p pcb-p-pack-p2        same copper True | before 46 vias 62 tracks db55751f4684ff7d | after 46 vias 62 tracks db55751f4684ff7d
+     escape: decoupling cost: 0 refused pad(s) would have been escaped without a declared seat (4 declaration(s) read); 0 refused for another reason
+     escape: decoupling cost written to out/pcb-p-pack-escape-cost.json

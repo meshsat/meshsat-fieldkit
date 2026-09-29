@@ -27,12 +27,12 @@ that owns it.
 
 | board | declared phase | netlist, sha256/16 | board file of the phase, sha256/16 | layout carries the netlist | ready for layout |
 |---|---|---|---|---|---|
-| A | A32 | `pcb-a-power-a23/out/pcb-a-power.net` 599ee964a9c23d6e | 58e26c67987b1daa | no: SCH-002 (netlist against board) reads FAIL on it | no: 6 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
-| B | B21 | `pcb-b-compute-b19/out/pcb-b-compute.net` 21a1f74a3ec1ae28 | 2e64b5bf2d9cd3bc | no: SCH-002 (netlist against board) reads FAIL on it | no: 8 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
-| C | C24 | `pcb-c-display-c8/out/pcb-c-display.net` 3fddbb3edcd4248a | 2a273803757c68fb | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 4 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
-| D | D12 | `pcb-d-aprs-d9/out/pcb-d-aprs.net` 7a2c0ac2190b141a | 929bf82d2bf6eed4 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 6 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
-| E | E17 | `pcb-e1-dock-e7/out/pcb-e1-dock.net` 56adc9746d61c4e0 | a462ac2620b9b8d3 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 3 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
-| P | P4 | `pcb-p-pack-p2/out/pcb-p-pack.net` 760ac6f74d62d194 | d79865e7b1aceb95 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 5 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
+| A | A32 | `pcb-a-power-a23/out/pcb-a-power.net` 30ad87746d1801ca | 58e26c67987b1daa | no: SCH-002 (netlist against board) reads FAIL on it | no: 6 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
+| B | B21 | `pcb-b-compute-b19/out/pcb-b-compute.net` 97823ef1171a61ce | 2e64b5bf2d9cd3bc | no: SCH-002 (netlist against board) reads FAIL on it | no: 8 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
+| C | C24 | `pcb-c-display-c8/out/pcb-c-display.net` fef4df255c00f4db | 2a273803757c68fb | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 4 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
+| D | D12 | `pcb-d-aprs-d9/out/pcb-d-aprs.net` a2d48972d171aad1 | 929bf82d2bf6eed4 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 6 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
+| E | E17 | `pcb-e1-dock-e7/out/pcb-e1-dock.net` 2ed95a0e8069ebf8 | a462ac2620b9b8d3 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 3 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
+| P | P4 | `pcb-p-pack-p2/out/pcb-p-pack.net` 20c7b0795593d761 | d79865e7b1aceb95 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 5 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
 | E5 | E5 | none (no schematic) | 686b29a734c55b9a | yes: a bare contact board with no schematic (manifest no_chain): its board file is its design | no: 2 reason(s), first INT-001 FAIL on CURRENT_CANDIDATE evidence (BOUND) |
 
 ## Layout entry, per board: the exact remaining blockers
@@ -102,9 +102,9 @@ September 2026, finding A). What each hold needs AT layout entry is its `layout_
 
 | board | hold | stage | lifts when | its layout-entry requirements, each evaluated now |
 |---|---|---|---|---|
-| A | decision 31 | FABRICATION_RELEASE | the layout of the declared phase implements the reviewed schematic: SCH-002 PASS on it on current-candidate evidence, TRN-001 PASS on that layout's netlist, each part of layout_entry_requires on its land at its conductor with the placement and return path the review states, the release's physical checks of the board (hardset, the release DRC) clean, and this entry deleted with that evidence nam... | met: decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the part it meets first, the clamp's rating against decision 34's level, and the placement and return-path constraints the layout must keep (the clamp at the entry, its ground return short and on the plane) (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md pinned 094817023210d1b0, read on netlist 599ee964a9c23d6e); met: the exact fitted parts decision 31's executed record lists for board A, at their conductors (1 of 1 fitted part(s) as listed, at their conductors, in pcb-a-power-a23/out/pcb-a-power.net); met: TRN-001 PASS on the current netlist (TRN-001 reads PASS on CURRENT_CANDIDATE evidence (BOUND)) |
-| D | decision 31 | FABRICATION_RELEASE | the layout of the declared phase implements the reviewed schematic: SCH-002 PASS on it on current-candidate evidence, TRN-001 PASS on that layout's netlist, each part of layout_entry_requires on its land at its conductor with the placement and return path the review states, the release's physical checks of the board (hardset, the release DRC) clean, and this entry deleted with that evidence nam... | met: decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the part it meets first, the clamp's rating against decision 34's level, and the placement and return-path constraints the layout must keep (the clamp at the entry, its ground return short and on the plane) (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md pinned 094817023210d1b0, read on netlist 7a2c0ac2190b141a); met: the exact fitted parts decision 31's executed record lists for board D, at their conductors (6 of 6 fitted part(s) as listed, at their conductors, in pcb-d-aprs-d9/out/pcb-d-aprs.net); met: TRN-001 PASS on the current netlist (TRN-001 reads PASS on CURRENT_CANDIDATE evidence (BOUND)) |
-| E | decision 31 | FABRICATION_RELEASE | the layout of the declared phase implements the reviewed schematic: SCH-002 PASS on it on current-candidate evidence, TRN-001 PASS on that layout's netlist, each part of layout_entry_requires on its land at its conductor with the placement and return path the review states, the release's physical checks of the board (hardset, the release DRC) clean, and this entry deleted with that evidence nam... | met: decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the part it meets first, the clamp's rating against decision 34's level, and the placement and return-path constraints the layout must keep (the clamp at the entry, its ground return short and on the plane) (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md pinned 094817023210d1b0, read on netlist 56adc9746d61c4e0); met: the exact fitted parts decision 31's executed record lists for board E, at their conductors (2 of 2 fitted part(s) as listed, at their conductors, in pcb-e1-dock-e7/out/pcb-e1-dock.net); met: TRN-001 PASS on the current netlist (TRN-001 reads PASS on CURRENT_CANDIDATE evidence (BOUND)) |
+| A | decision 31 | FABRICATION_RELEASE | the layout of the declared phase implements the reviewed schematic: SCH-002 PASS on it on current-candidate evidence, TRN-001 PASS on that layout's netlist, each part of layout_entry_requires on its land at its conductor with the placement and return path the review states, the release's physical checks of the board (hardset, the release DRC) clean, and this entry deleted with that evidence nam... | met: decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the part it meets first, the clamp's rating against decision 34's level, and the placement and return-path constraints the layout must keep (the clamp at the entry, its ground return short and on the plane) (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md pinned 094817023210d1b0, read on netlist 30ad87746d1801ca); met: the exact fitted parts decision 31's executed record lists for board A, at their conductors (1 of 1 fitted part(s) as listed, at their conductors, in pcb-a-power-a23/out/pcb-a-power.net); met: TRN-001 PASS on the current netlist (TRN-001 reads PASS on CURRENT_CANDIDATE evidence (BOUND)) |
+| D | decision 31 | FABRICATION_RELEASE | the layout of the declared phase implements the reviewed schematic: SCH-002 PASS on it on current-candidate evidence, TRN-001 PASS on that layout's netlist, each part of layout_entry_requires on its land at its conductor with the placement and return path the review states, the release's physical checks of the board (hardset, the release DRC) clean, and this entry deleted with that evidence nam... | met: decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the part it meets first, the clamp's rating against decision 34's level, and the placement and return-path constraints the layout must keep (the clamp at the entry, its ground return short and on the plane) (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md pinned 094817023210d1b0, read on netlist a2d48972d171aad1); met: the exact fitted parts decision 31's executed record lists for board D, at their conductors (6 of 6 fitted part(s) as listed, at their conductors, in pcb-d-aprs-d9/out/pcb-d-aprs.net); met: TRN-001 PASS on the current netlist (TRN-001 reads PASS on CURRENT_CANDIDATE evidence (BOUND)) |
+| E | decision 31 | FABRICATION_RELEASE | the layout of the declared phase implements the reviewed schematic: SCH-002 PASS on it on current-candidate evidence, TRN-001 PASS on that layout's netlist, each part of layout_entry_requires on its land at its conductor with the placement and return path the review states, the release's physical checks of the board (hardset, the release DRC) clean, and this entry deleted with that evidence nam... | met: decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the part it meets first, the clamp's rating against decision 34's level, and the placement and return-path constraints the layout must keep (the clamp at the entry, its ground return short and on the plane) (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md pinned 094817023210d1b0, read on netlist 2ed95a0e8069ebf8); met: the exact fitted parts decision 31's executed record lists for board E, at their conductors (2 of 2 fitted part(s) as listed, at their conductors, in pcb-e1-dock-e7/out/pcb-e1-dock.net); met: TRN-001 PASS on the current netlist (TRN-001 reads PASS on CURRENT_CANDIDATE evidence (BOUND)) |
 
 ### Feasibility blockers
 
@@ -139,7 +139,7 @@ whose evidence class differs from what the entry-script instrument of 20 Septemb
 evidence; a row whose class stayed the same and whose first failing cause moved (most often to TOOL_CHANGED
 from a cause checked after it) is counted but not listed.
 
-**2 of 338 required rows changed class; 108 more changed only their first failing cause.**
+**2 of 338 required rows changed class; 102 more changed only their first failing cause.**
 
 | board | rule | result | entry script alone | code bundle | files that moved |
 |---|---|---|---|---|---|
@@ -172,68 +172,68 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 
 | board | rule | phase | the reading and what binds it |
 |---|---|---|---|
-| A | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 599ee964a9c23d6e is the current candidate's |
-| A | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_a: netlist 599ee964a9c23d6e is the current candidate's |
-| A | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_a: netlist 599ee964a9c23d6e is the current candidate's |
-| A | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 599ee964a9c23d6e is the current candidate's |
-| A | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist 599ee964a9c23d6e is the current candidate's |
-| A | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist 599ee964a9c23d6e is the current candidate's |
-| A | PWR-003 protection coordination | SCHEMATIC | energy_chain_a: netlist 599ee964a9c23d6e is the current candidate's |
-| A | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_a: netlist 599ee964a9c23d6e is the current candidate's |
-| A | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_a: netlist 599ee964a9c23d6e is the current candidate's |
-| A | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist 599ee964a9c23d6e is the current candidate's |
+| A | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 30ad87746d1801ca is the current candidate's |
+| A | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_a: netlist 30ad87746d1801ca is the current candidate's |
+| A | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_a: netlist 30ad87746d1801ca is the current candidate's |
+| A | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 30ad87746d1801ca is the current candidate's |
+| A | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist 30ad87746d1801ca is the current candidate's |
+| A | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist 30ad87746d1801ca is the current candidate's |
+| A | PWR-003 protection coordination | SCHEMATIC | energy_chain_a: netlist 30ad87746d1801ca is the current candidate's |
+| A | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_a: netlist 30ad87746d1801ca is the current candidate's |
+| A | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_a: netlist 30ad87746d1801ca is the current candidate's |
+| A | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist 30ad87746d1801ca is the current candidate's |
 | A | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
-| B | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 21a1f74a3ec1ae28 is the current candidate's |
-| B | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_b: netlist 21a1f74a3ec1ae28 is the current candidate's |
-| B | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_b: netlist 21a1f74a3ec1ae28 is the current candidate's |
-| B | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 21a1f74a3ec1ae28 is the current candidate's |
-| B | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist 21a1f74a3ec1ae28 is the current candidate's |
-| B | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist 21a1f74a3ec1ae28 is the current candidate's |
-| B | PWR-003 protection coordination | SCHEMATIC | energy_chain_b: netlist 21a1f74a3ec1ae28 is the current candidate's |
-| B | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist 21a1f74a3ec1ae28 is the current candidate's |
-| B | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_b: netlist 21a1f74a3ec1ae28 is the current candidate's |
+| B | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 97823ef1171a61ce is the current candidate's |
+| B | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_b: netlist 97823ef1171a61ce is the current candidate's |
+| B | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_b: netlist 97823ef1171a61ce is the current candidate's |
+| B | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 97823ef1171a61ce is the current candidate's |
+| B | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist 97823ef1171a61ce is the current candidate's |
+| B | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist 97823ef1171a61ce is the current candidate's |
+| B | PWR-003 protection coordination | SCHEMATIC | energy_chain_b: netlist 97823ef1171a61ce is the current candidate's |
+| B | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist 97823ef1171a61ce is the current candidate's |
+| B | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_b: netlist 97823ef1171a61ce is the current candidate's |
 | B | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
-| C | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 3fddbb3edcd4248a is the current candidate's |
-| C | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_c: netlist 3fddbb3edcd4248a is the current candidate's |
-| C | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 3fddbb3edcd4248a is the current candidate's |
-| C | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist 3fddbb3edcd4248a is the current candidate's |
-| C | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist 3fddbb3edcd4248a is the current candidate's |
-| C | RF-002 transmit inhibit is hardware | SCHEMATIC | inhibit_chain_c: netlist 3fddbb3edcd4248a is the current candidate's |
-| C | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_c: netlist 3fddbb3edcd4248a is the current candidate's |
+| C | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist fef4df255c00f4db is the current candidate's |
+| C | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_c: netlist fef4df255c00f4db is the current candidate's |
+| C | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist fef4df255c00f4db is the current candidate's |
+| C | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist fef4df255c00f4db is the current candidate's |
+| C | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist fef4df255c00f4db is the current candidate's |
+| C | RF-002 transmit inhibit is hardware | SCHEMATIC | inhibit_chain_c: netlist fef4df255c00f4db is the current candidate's |
+| C | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_c: netlist fef4df255c00f4db is the current candidate's |
 | C | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
-| D | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 7a2c0ac2190b141a is the current candidate's |
-| D | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_d: netlist 7a2c0ac2190b141a is the current candidate's |
-| D | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_d: netlist 7a2c0ac2190b141a is the current candidate's |
-| D | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 7a2c0ac2190b141a is the current candidate's |
-| D | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist 7a2c0ac2190b141a is the current candidate's |
-| D | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist 7a2c0ac2190b141a is the current candidate's |
-| D | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_d: netlist 7a2c0ac2190b141a is the current candidate's |
-| D | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_d: netlist 7a2c0ac2190b141a is the current candidate's |
+| D | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist a2d48972d171aad1 is the current candidate's |
+| D | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_d: netlist a2d48972d171aad1 is the current candidate's |
+| D | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_d: netlist a2d48972d171aad1 is the current candidate's |
+| D | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist a2d48972d171aad1 is the current candidate's |
+| D | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist a2d48972d171aad1 is the current candidate's |
+| D | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist a2d48972d171aad1 is the current candidate's |
+| D | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_d: netlist a2d48972d171aad1 is the current candidate's |
+| D | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_d: netlist a2d48972d171aad1 is the current candidate's |
 | D | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
-| E | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 56adc9746d61c4e0 is the current candidate's |
-| E | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_e: netlist 56adc9746d61c4e0 is the current candidate's |
-| E | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_e: netlist 56adc9746d61c4e0 is the current candidate's |
-| E | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 56adc9746d61c4e0 is the current candidate's |
-| E | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist 56adc9746d61c4e0 is the current candidate's |
-| E | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist 56adc9746d61c4e0 is the current candidate's |
-| E | PWR-003 protection coordination | SCHEMATIC | energy_chain_e: netlist 56adc9746d61c4e0 is the current candidate's |
-| E | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist 56adc9746d61c4e0 is the current candidate's |
-| E | RF-002 transmit inhibit is hardware | SCHEMATIC | inhibit_chain_e: netlist 56adc9746d61c4e0 is the current candidate's |
-| E | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_e: netlist 56adc9746d61c4e0 is the current candidate's |
-| E | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_e: netlist 56adc9746d61c4e0 is the current candidate's |
-| E | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist 56adc9746d61c4e0 is the current candidate's |
+| E | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 2ed95a0e8069ebf8 is the current candidate's |
+| E | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_e: netlist 2ed95a0e8069ebf8 is the current candidate's |
+| E | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_e: netlist 2ed95a0e8069ebf8 is the current candidate's |
+| E | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 2ed95a0e8069ebf8 is the current candidate's |
+| E | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist 2ed95a0e8069ebf8 is the current candidate's |
+| E | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist 2ed95a0e8069ebf8 is the current candidate's |
+| E | PWR-003 protection coordination | SCHEMATIC | energy_chain_e: netlist 2ed95a0e8069ebf8 is the current candidate's |
+| E | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist 2ed95a0e8069ebf8 is the current candidate's |
+| E | RF-002 transmit inhibit is hardware | SCHEMATIC | inhibit_chain_e: netlist 2ed95a0e8069ebf8 is the current candidate's |
+| E | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_e: netlist 2ed95a0e8069ebf8 is the current candidate's |
+| E | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_e: netlist 2ed95a0e8069ebf8 is the current candidate's |
+| E | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist 2ed95a0e8069ebf8 is the current candidate's |
 | E | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
-| P | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 760ac6f74d62d194 is the current candidate's |
-| P | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_p: netlist 760ac6f74d62d194 is the current candidate's |
-| P | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_p: netlist 760ac6f74d62d194 is the current candidate's |
-| P | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 760ac6f74d62d194 is the current candidate's |
-| P | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist 760ac6f74d62d194 is the current candidate's |
-| P | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist 760ac6f74d62d194 is the current candidate's |
-| P | PWR-003 protection coordination | SCHEMATIC | energy_chain_p: netlist 760ac6f74d62d194 is the current candidate's |
-| P | RF-002 transmit inhibit is hardware | SCHEMATIC | inhibit_chain_p: netlist 760ac6f74d62d194 is the current candidate's |
-| P | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_p: netlist 760ac6f74d62d194 is the current candidate's |
-| P | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_p: netlist 760ac6f74d62d194 is the current candidate's |
-| P | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist 760ac6f74d62d194 is the current candidate's |
+| P | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 20c7b0795593d761 is the current candidate's |
+| P | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_p: netlist 20c7b0795593d761 is the current candidate's |
+| P | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_p: netlist 20c7b0795593d761 is the current candidate's |
+| P | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 20c7b0795593d761 is the current candidate's |
+| P | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist 20c7b0795593d761 is the current candidate's |
+| P | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist 20c7b0795593d761 is the current candidate's |
+| P | PWR-003 protection coordination | SCHEMATIC | energy_chain_p: netlist 20c7b0795593d761 is the current candidate's |
+| P | RF-002 transmit inhibit is hardware | SCHEMATIC | inhibit_chain_p: netlist 20c7b0795593d761 is the current candidate's |
+| P | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_p: netlist 20c7b0795593d761 is the current candidate's |
+| P | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_p: netlist 20c7b0795593d761 is the current candidate's |
+| P | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist 20c7b0795593d761 is the current candidate's |
 | P | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | E5 | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_e5: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | CMP-001 absolute maximum never reached | SCHEMATIC | derate: board 686b29a734c55b9a is the current design (no schematic) |
@@ -256,8 +256,8 @@ tool.
 | cause | what it means | what re-validates it | A | B | C | D | E | P | E5 | set | of which a re-take alone makes current |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | UNBOUND | it records no artefact by content (a release-package reading: no file of the declared phase's folder by sha), so it cannot be tied to the candidate | the gate taught to record the netlist, board or package file sha it read, then re-taken | 2 | 2 | 2 | 2 | 2 | 2 | 1 | 13 | 0 |
-| TOOL_CHANGED | the code that wrote it has changed since: its entry script or a local module it imports (exact by the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 30 | 29 | 26 | 29 | 30 | 23 | 9 | 176 | 9 |
-| NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 14 | 0 |
+| TOOL_CHANGED | the code that wrote it has changed since: its entry script or a local module it imports (exact by the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 29 | 28 | 25 | 28 | 29 | 22 | 9 | 170 | 9 |
+| NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 3 | 3 | 3 | 3 | 3 | 3 | 2 | 20 | 0 |
 | TEMP_INPUT | it judged files in a temporary directory, not this tree | re-taken in this tree | 0 | 0 | 1 | 0 | 0 | 1 | 1 | 3 | 0 |
 
 ## Writers whose configuration is not declared yet
@@ -305,28 +305,28 @@ stream, which audits each writer by reading it, file and line.
 |---|---|---|---|
 | A | ENV-001 operating envelope declared | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: OPERATI |
 | A | TST-001 the board can be brought up safely | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: PCB-BRI |
-| A | REL-001 the build survives its service life | INCONCLUSIVE | nothing is built, so a reading of a PROTOTYPE-phase rule is a desk check and never a physical test: reliability: netlist 599ee964a9c23d6e is the curre |
+| A | REL-001 the build survives its service life | INCONCLUSIVE | nothing is built, so a reading of a PROTOTYPE-phase rule is a desk check and never a physical test: reliability: netlist 30ad87746d1801ca is the curre |
 | A | SGN-002 a prototype-only unknown is named | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: PCB-PRO |
 | B | ENV-001 operating envelope declared | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: OPERATI |
 | B | INT-002 a transformerless Ethernet link has a pre-layout assessment on its current nets | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: INT-002 |
 | B | TST-001 the board can be brought up safely | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: PCB-BRI |
-| B | REL-001 the build survives its service life | INCONCLUSIVE | nothing is built, so a reading of a PROTOTYPE-phase rule is a desk check and never a physical test: reliability: netlist 21a1f74a3ec1ae28 is the curre |
+| B | REL-001 the build survives its service life | INCONCLUSIVE | nothing is built, so a reading of a PROTOTYPE-phase rule is a desk check and never a physical test: reliability: netlist 97823ef1171a61ce is the curre |
 | B | SGN-002 a prototype-only unknown is named | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: PCB-PRO |
 | C | ENV-001 operating envelope declared | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: OPERATI |
 | C | TST-001 the board can be brought up safely | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: PCB-BRI |
-| C | REL-001 the build survives its service life | INCONCLUSIVE | nothing is built, so a reading of a PROTOTYPE-phase rule is a desk check and never a physical test: reliability: netlist 3fddbb3edcd4248a is the curre |
+| C | REL-001 the build survives its service life | INCONCLUSIVE | nothing is built, so a reading of a PROTOTYPE-phase rule is a desk check and never a physical test: reliability: netlist fef4df255c00f4db is the curre |
 | C | SGN-002 a prototype-only unknown is named | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: PCB-PRO |
 | D | ENV-001 operating envelope declared | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: OPERATI |
 | D | TST-001 the board can be brought up safely | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: PCB-BRI |
-| D | REL-001 the build survives its service life | INCONCLUSIVE | nothing is built, so a reading of a PROTOTYPE-phase rule is a desk check and never a physical test: reliability: netlist 7a2c0ac2190b141a is the curre |
+| D | REL-001 the build survives its service life | INCONCLUSIVE | nothing is built, so a reading of a PROTOTYPE-phase rule is a desk check and never a physical test: reliability: netlist a2d48972d171aad1 is the curre |
 | D | SGN-002 a prototype-only unknown is named | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: PCB-PRO |
 | E | ENV-001 operating envelope declared | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: OPERATI |
 | E | TST-001 the board can be brought up safely | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: PCB-BRI |
-| E | REL-001 the build survives its service life | INCONCLUSIVE | nothing is built, so a reading of a PROTOTYPE-phase rule is a desk check and never a physical test: reliability: netlist 56adc9746d61c4e0 is the curre |
+| E | REL-001 the build survives its service life | INCONCLUSIVE | nothing is built, so a reading of a PROTOTYPE-phase rule is a desk check and never a physical test: reliability: netlist 2ed95a0e8069ebf8 is the curre |
 | E | SGN-002 a prototype-only unknown is named | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: PCB-PRO |
 | P | ENV-001 operating envelope declared | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: OPERATI |
 | P | TST-001 the board can be brought up safely | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: PCB-BRI |
-| P | REL-001 the build survives its service life | INCONCLUSIVE | nothing is built, so a reading of a PROTOTYPE-phase rule is a desk check and never a physical test: reliability: netlist 760ac6f74d62d194 is the curre |
+| P | REL-001 the build survives its service life | INCONCLUSIVE | nothing is built, so a reading of a PROTOTYPE-phase rule is a desk check and never a physical test: reliability: netlist 20c7b0795593d761 is the curre |
 | P | SGN-002 a prototype-only unknown is named | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: PCB-PRO |
 | E5 | ENV-001 operating envelope declared | PASS | a manual (not a tool) check of a document pinned by content, which on this project is the session's own review and not a qualified engineer's: OPERATI |
 | E5 | REL-001 the build survives its service life | INCONCLUSIVE | nothing is built, so a reading of a PROTOTYPE-phase rule is a desk check and never a physical test: reliability: board 686b29a734c55b9a is the current |
@@ -340,7 +340,7 @@ tools that have changed since, across every board's revisions.
 
 | historical aggregate, mixed revisions | PASS | FAIL | INCONCLUSIVE | WAIVED | pairs |
 |---|---:|---:|---:|---:|---:|
-| rule-board pairs | 200 (59.2 percent, mixed revisions) | 40 | 98 | 0 | 338 |
+| rule-board pairs | 195 (57.7 percent, mixed revisions) | 39 | 104 | 0 | 338 |
 
 ## How this page is computed
 

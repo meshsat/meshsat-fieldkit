@@ -3,7 +3,7 @@
 
 # Rule status: board E5
 
-Manifest **2026-09-16.1**, rule set **635ff031f210f48c**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **a9b1e7f7412f9c0c**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
 **Readiness: NOT_READY**
 

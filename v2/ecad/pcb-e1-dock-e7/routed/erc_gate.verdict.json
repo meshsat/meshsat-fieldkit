@@ -4,8 +4,9 @@
  "code_bundle": {
   "entry": "erc_gate.py",
   "files": {
+   "decoupling_rules.py": "f4d06f6789c6ec48",
    "erc_gate.py": "bb4bf868c515f37a",
-   "intent.py": "f1ac033e0f3c10f1",
+   "intent.py": "0071fe553548eb5d",
    "kisch.py": "3e28374d15be25e0",
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
@@ -15,7 +16,7 @@
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "0d2dedd042c32274",
+  "sha16": "b91c6841eb9657c2",
   "unresolved": []
  },
  "counts": {
@@ -29,16 +30,16 @@
   "board": "e",
   "erc_report": {
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock-erc.json",
-   "sha256_16": "1a529ea553fad0f2"
+   "sha256_16": "77560143bb57dc49"
   },
   "netlist": {
    "content16": "dc06b84a39724641",
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "56adc9746d61c4e0"
+   "sha256_16": "2ed95a0e8069ebf8"
   },
   "netlist_tie": {
    "proved": true,
-   "why": "the report, the schematic and the netlist's own provenance agree on schematic b2948384e5ea"
+   "why": "the report, the schematic and the netlist's own provenance agree on schematic a74b1f647085"
   },
   "project": {
    "path": ".",
@@ -46,7 +47,7 @@
   },
   "schematic": {
    "path": "pcb-e1-dock-e7/pcb-e1-dock.kicad_sch",
-   "sha256_16": "b2948384e5ea78b4"
+   "sha256_16": "a74b1f64708567c7"
   }
  },
  "missing_input": null,
@@ -56,7 +57,7 @@
   "rule_fingerprints": {
    "SCH-001": "64784cfeedc67195"
   },
-  "rule_set_fingerprint": "635ff031f210f48c"
+  "rule_set_fingerprint": "a9b1e7f7412f9c0c"
  },
  "rules": [
   "SCH-001"
@@ -66,12 +67,12 @@
  },
  "tool": "erc_gate",
  "tools": {
-  "git_head": "cef7cb77c420",
-  "tools_tree_sha": "8639c5ed4c65deea"
+  "git_head": "958a7de7a15f",
+  "tools_tree_sha": "7a55e9ef29ec7734"
  },
- "ts": "2026-09-28T22:46:16Z",
+ "ts": "2026-09-29T00:17:03Z",
  "verdict": "PASS",
- "version": "cef7cb77c420",
+ "version": "958a7de7a15f",
  "writer": {
   "file": "erc_gate.py",
   "sha16": "bb4bf868c515f37a"

@@ -44,6 +44,8 @@ GATES = {
                         "top view (1 1A, 3 2A, 4 2Y, 6 1Y; open-drain outputs)"),
     "SN74LVC1G57DBVR": ([((1, 3, 6), 4)], "v2/vendor/ti/ti-sn74lvc1g57.pdf (SCES414P), Pin Functions (DBV: 1 In1, 3 In0, "
                         "6 In2, 4 Y; a configurable gate, so the map says only which inputs reach Y)"),
+    # sets 6 to 8 (28 September 2026): board B's per-slot EMCON_HW gates U116, U216, U316
+    "SN74LV1T08DBVR": ([((1, 2), 4)], "v2/vendor/ti/ti-sn74lv1t08.pdf (SCLS739F), Table 5-1 Pin Functions (DBV: 1 A, 2 B, 4 Y)"),
 }
 # Logic families whose part must have a map above before a line is followed through it: a value starting with one of
 # these and matching no GATES key is refused by control_lines.py rather than drawn as a plain IC (review of 27 Sep 2026).

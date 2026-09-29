@@ -37,7 +37,7 @@
    "c": {
     "artefact": {
      "kind": "netlist",
-     "sha256_16": "3fddbb3edcd4248a"
+     "sha256_16": "fef4df255c00f4db"
     },
     "bound": true,
     "candidates": 74,
@@ -70,15 +70,15 @@
   "board": "c",
   "list": {
    "path": "tools/pcb_reliability.yaml",
-   "sha256": "9225abf62cf39f86cf23a5750963c55d0a07030362cd54a8d8f21b9b4fb644d7",
-   "sha256_16": "9225abf62cf39f86"
+   "sha256": "d07967f84ce1c3849419adec9e0ca0ce9d3b07869e079e673ed579423bb96965",
+   "sha256_16": "d07967f84ce1c384"
   },
   "netlist": {
    "content16": "ebde053efc0a3906",
    "parts": 219,
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256": "3fddbb3edcd4248a2a6c969b19809323ae59bf6525b2cfd1e8ea9c24eb351e15",
-   "sha256_16": "3fddbb3edcd4248a"
+   "sha256": "fef4df255c00f4dbe03c53498e33476f8091eef51a543ae0ae2ae2c18ce36388",
+   "sha256_16": "fef4df255c00f4db"
   }
  },
  "missing_input": null,
@@ -88,7 +88,7 @@
   "rule_fingerprints": {
    "REL-001": "d94df1c6a3ff6010"
   },
-  "rule_set_fingerprint": "635ff031f210f48c"
+  "rule_set_fingerprint": "a9b1e7f7412f9c0c"
  },
  "rules": [
   "REL-001"
@@ -98,12 +98,12 @@
  },
  "tool": "reliability",
  "tools": {
-  "git_head": "cef7cb77c420",
-  "tools_tree_sha": "8639c5ed4c65deea"
+  "git_head": "958a7de7a15f",
+  "tools_tree_sha": "7a55e9ef29ec7734"
  },
- "ts": "2026-09-28T22:47:09Z",
+ "ts": "2026-09-29T00:17:57Z",
  "verdict": "INCONCLUSIVE",
- "version": "cef7cb77c420",
+ "version": "958a7de7a15f",
  "writer": {
   "file": "reliability.py",
   "sha16": "c50f2b8b35d1d57b"

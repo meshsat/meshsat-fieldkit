@@ -1,0 +1,23 @@
+arch-2-context                     drawing   1533 x 449     raster  2401 x 703    readback/arch-2-context.png
+arch-3-2-board-interconnect        drawing   1587 x 999     raster  2401 x 1511   readback/arch-3-2-board-interconnect.png
+arch-4-1-power-tree                drawing   4933 x 774     raster  2401 x 377    readback/arch-4-1-power-tree.png
+arch-4-3-power-up                  drawing   2032 x 630     raster  2401 x 745    readback/arch-4-3-power-up.png
+arch-5-5-lanes-and-fabric          drawing   1769 x 849     raster  2401 x 1153   readback/arch-5-5-lanes-and-fabric.png
+battery-charger-states             drawing   2151 x 841     raster  2401 x 939    readback/battery-charger-states.png
+battery-protection-states          drawing   1616 x 925     raster  2401 x 1375   readback/battery-protection-states.png
+case-plan                          drawing   1188 x 900     raster  2401 x 1819   readback/case-plan.png
+case-zstack                        drawing   1188 x 1080    raster  2401 x 2182   readback/case-zstack.png
+control-lines                      drawing   6646 x 1848    raster  2401 x 668    readback/control-lines.png
+power-tree                         drawing   8391 x 1947    raster  2400 x 557    readback/power-tree.png
+arch-2-context                     pdf   1162.1 x 349.0   pt, 1 page(s); drawing   1149.7 x 336.8   pt natural; scale 1.01
+arch-3-2-board-interconnect        pdf   1203.1 x 762.0   pt, 1 page(s); drawing   1190.0 x 749.2   pt natural; scale 1.01
+arch-4-1-power-tree                pdf   3712.1 x 593.0   pt, 1 page(s); drawing   3699.5 x 580.3   pt natural; scale 1.00
+arch-4-3-power-up                  pdf   1536.0 x 486.0   pt, 1 page(s); drawing   1523.8 x 472.8   pt natural; scale 1.01
+arch-5-5-lanes-and-fabric          pdf   1339.0 x 649.9   pt, 1 page(s); drawing   1326.4 x 637.1   pt natural; scale 1.01
+battery-charger-states             pdf   1626.0 x 643.0   pt, 1 page(s); drawing   1613.6 x 630.8   pt natural; scale 1.01
+battery-protection-states          pdf   1224.0 x 707.0   pt, 1 page(s); drawing   1212.0 x 694.0   pt natural; scale 1.01
+case-plan                          pdf   1188.0 x 900.0   pt, 1 page(s); drawing   1188.0 x 900.0   pt natural; scale 1.00
+case-zstack                        pdf   1188.0 x 1080.0  pt, 1 page(s); drawing   1188.0 x 1080.0  pt natural; scale 1.00
+control-lines                      pdf   4997.0 x 1399.0  pt, 1 page(s); drawing   4984.4 x 1386.1  pt natural; scale 1.00
+power-tree                         pdf   6306.0 x 1473.1  pt, 1 page(s); drawing   6292.9 x 1460.1  pt natural; scale 1.00
+problems: none

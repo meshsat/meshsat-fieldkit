@@ -5,7 +5,7 @@
    "review": "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md",
    "reviewed_on": "2026-09-28",
    "netlist": "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net",
-   "netlist_sha256_16": "599ee964a9c23d6e",
+   "netlist_sha256_16": "30ad87746d1801ca",
    "why": "the review of decision 31 (an AI review, stream d8dec31) enumerated every connector pin of this board's netlist that carries a supply or a signal and classed each as external or internal; the external pins are these, and the declaration is corrected to them by v2/docs/records/d8dec31/apply_port_declarations.py",
    "external": {
     "J_VR1": {
@@ -73,7 +73,7 @@
    "review": "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md",
    "reviewed_on": "2026-09-28",
    "netlist": "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "netlist_sha256_16": "7a2c0ac2190b141a",
+   "netlist_sha256_16": "a2d48972d171aad1",
    "why": "the review of decision 31 (an AI review, stream d8dec31) enumerated every connector pin of this board's netlist that carries a supply or a signal and classed each as external or internal; the external pins are these, and the declaration is corrected to them by v2/docs/records/d8dec31/apply_port_declarations.py",
    "external": {
     "J_ANT": {
@@ -99,7 +99,7 @@
    "review": "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md",
    "reviewed_on": "2026-09-28",
    "netlist": "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "netlist_sha256_16": "56adc9746d61c4e0",
+   "netlist_sha256_16": "2ed95a0e8069ebf8",
    "why": "the review of decision 31 (an AI review, stream d8dec31) enumerated every connector pin of this board's netlist that carries a supply or a signal and classed each as external or internal; the external pins are these, and the declaration is corrected to them by v2/docs/records/d8dec31/apply_port_declarations.py",
    "external": {
     "J_DCIN": {

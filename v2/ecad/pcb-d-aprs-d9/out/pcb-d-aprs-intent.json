@@ -1,6 +1,6 @@
 {
  "board": "pcb-d-aprs",
- "written": "2026-09-27 14:28",
+ "written": "2026-09-29 00:11",
  "bypass": [
   {
    "cap": "C51",

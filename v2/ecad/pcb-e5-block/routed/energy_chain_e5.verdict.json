@@ -43,7 +43,7 @@
   "rule_fingerprints": {
    "PWR-003": "797d38a9e68a76ac"
   },
-  "rule_set_fingerprint": "635ff031f210f48c"
+  "rule_set_fingerprint": "a9b1e7f7412f9c0c"
  },
  "rules": [
   "PWR-003"
@@ -53,12 +53,12 @@
  },
  "tool": "energy_chain_e5",
  "tools": {
-  "git_head": "cef7cb77c420",
-  "tools_tree_sha": "8639c5ed4c65deea"
+  "git_head": "958a7de7a15f",
+  "tools_tree_sha": "7a55e9ef29ec7734"
  },
- "ts": "2026-09-28T22:46:42Z",
+ "ts": "2026-09-29T00:17:29Z",
  "verdict": "PASS",
- "version": "cef7cb77c420",
+ "version": "958a7de7a15f",
  "writer": {
   "file": "energy_chain.py",
   "sha16": "2eb665d0e50ee781"
