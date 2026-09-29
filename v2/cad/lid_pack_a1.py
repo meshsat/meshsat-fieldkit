@@ -437,6 +437,32 @@ def harness_numbers():
                 r_bow=c0 ** 2 / (8 * sag) + sag / 2, off=max(offs), r_s=H["span_x"] ** 2 / (4 * max(offs)))
 
 
+def sensitivity():
+    """The arrangements' counts with every INFERRED allowance of the module set to its most favourable and to its least favourable
+    value (a sensitivity reading, not a bound): does the finding (A under 48, B and C at 48 or more) hinge on the numbers assumed?"""
+    g = globals()
+    keys = ("PLAN_ALLOW", "BAY", "END_GAP", "WRAP", "LIP", "OWN_SUM", "DEPTH1", "DEPTH2", "P2_DEPTH")
+    saved = {k: g[k] for k in keys}
+    cases = [("most favourable: plan 0.76, bays 5.0, joints 1.0, wrap 0.5, lips 2.0, own allowances halved",
+              dict(PLAN_ALLOW=0.76, BAY=5.0, END_GAP=1.0, WRAP=0.5, LIP=2.0, OWN_SUM=saved["OWN_SUM"] / 2)),
+             ("least favourable: plan 1.50, bays 9.0, joints 1.5, wrap 0.6, lips 4.0, own allowances doubled",
+              dict(PLAN_ALLOW=1.50, BAY=9.0, END_GAP=1.5, WRAP=0.6, LIP=4.0, OWN_SUM=saved["OWN_SUM"] * 2))]
+    out = []
+    try:
+        for label, kw in cases:
+            g.update(kw)
+            g["DEPTH1"] = BOND + PLATE + (CELL_D + 2 * g["WRAP"]) + PAD + COVER
+            g["DEPTH2"] = BOND + PLATE + (CELL_D + NEST_DZ + 2 * g["WRAP"]) + PAD + COVER
+            res = {}
+            for a in arrangements():
+                res[a["name"].split(":")[0]] = len(a["cells"])
+            out.append((label, res))
+            g.update(saved)
+    finally:
+        g.update(saved)
+    return out
+
+
 def main(fp):
     w = lambda s="": fp.write(s + "\n")
     w("Option A(i) lid pack, hinge harness, mass and stability, base pockets: v2/cad/lid_pack_a1.py (MESHSAT-1357, stream a1mech, 29 Sep 2026)")
@@ -523,6 +549,11 @@ def main(fp):
     w("   With HF in the lid, the 10 inch class (%.0f x %.0f + lips) needs %.0f in X between the guard caps (%.2f) and the QMX tray (%.2f less 1.0), %.2f available:" % (
         t10["w"], t10["h"], t10["w"] + 2 * LIP, -143.0 + PLAN_ALLOW, QMX["rect"][0], QMX["rect"][0] - 1.0 - (-143.0 + PLAN_ALLOW)))
     w("   it does not fit beside the QMX set in any arrangement, pack or no pack; the 8 inch class is the one that fits with HF.")
+    w("   SENSITIVITY of the counts to the module's INFERRED allowances (a sensitivity reading, not a bound; every face row re-judged):")
+    for label, res in sensitivity():
+        w("     %s:" % label)
+        w("       " + ", ".join("%s %d (4S%dP)" % (k, v, v // 4) for k, v in sorted(res.items())))
+    w("   (the finding holds at both ends if A stays under 48 and B and C stay at 48 or more)")
     w()
     # ---------------------------------------------------------------- retention
     items = mass_items(aB, 9.0, (0.0, 0.0, 55.0))

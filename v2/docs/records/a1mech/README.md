@@ -126,7 +126,10 @@ owner decision required.
 deep, hold about 33 cells beside the QMX set with no tablet; the cells' axis along Y (three rows of 66.25 across the lid's
 depth) gives arrangement A about 30, because the headset jacks cost the south row in four columns and an 8 inch tablet's band
 (133) spans two of the three rows. Neither beats the generator's layout, so the finding is stated for this construction
-family: **no arrangement found holds more than 35 with both functions kept.**
+family: **no arrangement found holds more than 35 with both functions kept.** The counts do not hinge on the module's
+INFERRED allowances: with every one set to its most favourable value (plan 0.76, bays 5.0, lips 2.0, own allowances halved)
+and to its least favourable (plan 1.50, bays 9.0, joints 1.5, wrap 0.6, lips 4.0, own allowances doubled) A reads 35, B 56
+and C 58 at both ends (`lid_pack_a1.out` section 2, SENSITIVITY; a sensitivity reading, not a bound).
 
 The tablet, where kept, hangs under the module's one-layer part in a bracket (3.0 lips, 1.0 back, 1.5 below the screen),
 36.60 below the ceiling; it costs the two-layer places above its band. The design envelopes are the rugged classes (8 inch
