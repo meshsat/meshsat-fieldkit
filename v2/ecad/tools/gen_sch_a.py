@@ -950,6 +950,12 @@ r("R22", "10k", "CHRG_OK", "+3V3"); r("R23", "10k", "PROCHOT", "+3V3"); r("R24",
 # complexity of various operation modes." Here R25 and C26 are R1 and C11, C234 is C12, R220 and C235 are R2 and C21, and
 # C27 is C22 (TI's names on the right). Until today they were 10k with 10 nF (no C12) and 1 nF alone, the values of neither row (round 4's O-24).
 r("R25", "40.2k 1%", "CH_COMP1", "CH_COMP1C"); c("C26", "4.7n", "CH_COMP1C", "GND"); c("C234", "33p", "CH_COMP1", "GND")
+# IADPT AND CH_COMP1 DECLARED AS NODES (set 12, records/int13/apply_census_nodes_set12.py): C233 and C234 to ground are the
+# census's mark of a supply; both are U3's analog pins.
+_intent.node("IADPT", 3.3, "U3's adapter current monitor and inductance-programming pin: recommended 0 to 3.3 V and the "
+             "output clamp at most 3.3 V (TI SLUSE66A PDF pages 8 and 12); no part takes its supply from it")
+_intent.node("CH_COMP1", 3.3, "U3's buck-boost compensation pin 1: recommended 0 to 3.3 V, absolute maximum 3.6 V (TI "
+             "SLUSE66A PDF page 8); no part takes its supply from it")
 r("R220", "15k 1%", "CH_COMP2", "CH_COMP2C", lcsc="C22809"); c("C235", "680p", "CH_COMP2C", "GND", lcsc="C30816"); c("C27", "15p NP0", "CH_COMP2", "GND")
 # IADPT (pin 8): 9.3.11 and Table 9-4, 191 or 187 kOhm for 4.7 uH, and "A surface mount chip resistor with +/-3% or better
 # tolerance must to be used for an accurate inductance detection". REQUIRED of the part the parts stream codes: 1 percent,

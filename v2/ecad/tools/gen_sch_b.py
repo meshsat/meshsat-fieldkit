@@ -217,11 +217,17 @@ for _s in (1, 2, 3):
     _intent.rail("+3V3_CM%d" % _s, 3.3, 0.10, 0.20, "U3%dA" % (_s - 1), always_on=True, converted=False,
                  always_on_why="the module's OWN 3.3 V output on its receptacle: this board consumes it and cannot switch it",
                  source_ic="the module GENERATES this rail and hands it out on its receptacle: the pin IS the source",
-                 loads=dict([("U3%dA" % (_s - 1), 0.10)] + [(_u, 0.001) for _u in _cm_gates]),
-                 note="slot %d's module-supplied 3.3 V. This board decouples it, level-shifts against it (Q%d01 to Q%d05 and "
-                      "their pull-ups) and runs from it the slot's EMCON gates U%d12 to U%d15 (round 8, EMCON L3)%s; 1 mA a "
-                      "gate" % (_s, _s, _s, _s, _s, {2: ", U220 (SD-EMC-1r8) and U554 (D4E-B B-5)",
-                                                     3: " and the E22's gates and buffers U544 to U553 (D4E-B B-3)"}.get(_s, "")))
+                 # CHK12-LED (stream rf2walk3, the re-check of set 12, minor 2): Q{s}01 is the BC857 buffering LED_nPWR into the
+                 # red power LED through R{s}50 (1 k), its emitter on this rail, and R{s}48 (1 k) feeds the green ACT LED from it;
+                 # each at most 3.3 mA (the rail over 1 k, no LED drop taken).
+                 loads=dict([("U3%dA" % (_s - 1), 0.10)] + [(_u, 0.001) for _u in _cm_gates]
+                            + [("Q%d01" % _s, 0.0033), ("R%d48" % _s, 0.0033)]),
+                 note="slot %d's module-supplied 3.3 V. This board decouples it, level-shifts against it (Q%d02 to Q%d05 and "
+                      "their pull-ups), runs the power LED from it through the BC857 buffer Q%d01 and R%d50 (1 k) and the ACT "
+                      "LED through R%d48 (1 k), at most 3.3 mA each, and runs from it the slot's EMCON gates U%d12 to U%d15 "
+                      "(round 8, EMCON L3)%s; 1 mA a gate" % (_s, _s, _s, _s, _s, _s, _s, _s,
+                                                              {2: ", U220 (SD-EMC-1r8) and U554 (D4E-B B-5)",
+                                                               3: " and the E22's gates and buffers U544 to U553 (D4E-B B-3)"}.get(_s, "")))
     _intent.rail("+1V8_CM%d" % _s, 1.8, 0.02, 0.05, "U3%dA" % (_s - 1), always_on=True, converted=False,
                  always_on_why="the module's OWN 1.8 V output on its receptacle",
                  source_ic="the module GENERATES this rail and hands it out on its receptacle",
@@ -1453,6 +1459,12 @@ lvc2g07("U540", "ZBA_RXD_H", "ZBA_RXD", "ZBA_RST_H", "ZBA_RST_n", "+3V3_DEV", "C
 lvc2g07("U541", "ZBA_BSL_H", "ZBA_BSL", "ZBB_BSL_H", "ZBB_BSL", "+3V3_DEV", "C672", "both E72's BSL, pulled up only to the gated +3V3_ZB (SD-EMC-2, D4E-B)")
 lvc2g07("U542", "ZBB_RXD_H", "ZBB_RXD", "ZBB_RST_H", "ZBB_RST_n", "+3V3_DEV", "C673", "ZBB's RX and RESET_N, pulled up only to the gated +3V3_ZB (SD-EMC-2, D4E-B)")
 r("R536", "4.7k 1%", "ZBA_RXD", "+3V3_ZB", lcsc="C23162"); r("R537", "4.7k 1%", "ZBB_RXD", "+3V3_ZB", lcsc="C23162")
+# ZBA_RXD AND ZBB_RXD DECLARED AS NODES (set 12, records/int13/apply_census_nodes_set12.py): R536 and R537 are loads of
+# +3V3_ZB, so the census followed the rail's current into the E72s' RX lines; each is a signal line at most the rail.
+_intent.node("ZBA_RXD", _intent.net_volts("+3V3_ZB"), "ZBA's RX line: U540's open-drain output pulled up to the gated "
+             "+3V3_ZB through R536 (SD-EMC-2, D4E-B); at most the rail; no part takes its supply from it")
+_intent.node("ZBB_RXD", _intent.net_volts("+3V3_ZB"), "ZBB's RX line: U542's open-drain output pulled up to the gated "
+             "+3V3_ZB through R537 (SD-EMC-2, D4E-B); at most the rail; no part takes its supply from it")
 r("R538", "4.7k 1%", "+3V3_ZB", "GND", lcsc="C23162")   # the rail's bleeder (SD-EMC-2, D4E-B): 0.56 V worst with U22 off, 0.71 mA while on
 # ================================================================= LimeSDR Mini receptacle (bank 1 hub, port 1, USB 3) and the RockBLOCK 9704 header (bank 1 hub, port 4, through a CP2102N), both behind TPS259631 eFuses
 _SEC_MARKS.append(('LIMESDR MINI RECEPTACLE (BANK 1 HUB, PORT 1, USB 3) AND THE ROCKBLOCK 9704 HEADER (BANK..', len(P)))
