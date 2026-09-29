@@ -93,7 +93,7 @@ A1, reverse-biased).
 - **p9.** The K2 row (line 126) does not mention its 21-24 in the hold path. od01 `README.md` lines 22 to 24 do not list
   checks 3 and 4 or `patch_od01c.py` and `patch_od01d.py`.
 - **p10.** Two strings sit outside the corrections themselves:
-  - LOG lines 13 and 32 carry the box path `/root/od01b`. This is older text, not a changed line.
+  - LOG lines 13 and 32 carry the box path (generalised on filing). This is older text, not a changed line.
   - `patch_od01d.py` line 14 holds the two dash characters as literals in its detector, by design; `"\u2014", "\u2013"`
     would keep the file free of dashes.
   - No host name, user path or address appears in any added line.

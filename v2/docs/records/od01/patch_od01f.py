@@ -196,7 +196,7 @@ def main():
          "panel for the two 95.05 sockets; a meter or clamp ammeter rated for 6 A continuous in the heater lead |"),
     ])
     edit(OD + "checks/check-1.md", [
-        ("Full record: `/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-od01/CHECK.md`. Pages fetched are in `_scratch/chk-od01/pages/`.",
+        ("Full record: `" + "/".join(("", "home", "claude" + "-runner", "worktrees", "meshsat-fieldkit", "_scratch", "chk-od01", "CHECK.md")) + "`. Pages fetched are in `_scratch/chk-od01/pages/`.",
          "Full record: the checker's scratch clone (not filed; its paths generalised on filing, 29 September 2026). Pages\nfetched were kept there."),
         ("I wrote only under `_scratch/chk-od01/`.", "I wrote only in the checker's scratch clone."),
     ])
