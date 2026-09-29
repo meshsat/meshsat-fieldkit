@@ -14,13 +14,15 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_output=True, check=True).stdout.decode().strip()
 MARK = "**Second issue of the charger rows (stream s119, S-119, 29 September 2026).**"
 HEAD = (MARK + " The energy chain now carries board A's charger U3 at 0.979 (bracket 0.972 to 0.983; was 0.98, read from "
-        "SLUSE66A Figure 8-4) and Option A(i)'s lid charger U3B at 0.961 (bracket 0.947 to 0.971; was 0.975, read from "
-        "Figure 8-3), both by TI's loss equations (SLUSE66A Equations 6 to 22, printed pages 86 to 88) with the FETs of "
-        "decision 57 (U3B: CSD17578Q5A in all four positions on its drafted 800 kHz row), R16 and R17 counted and the "
-        "inductor's core loss excluded, so each figure is high by it (`records/s117/efficiency.out` section 7). The "
-        "energy chain's scripts were re-issued with their pins moved and every output regenerated (`records/s119/README.md`, "
-        "`records/s119/headline_diff.out`). Where this page quotes a figure listed here, the page's figure is the first "
-        "issue's and is superseded by the one given here. Model results on the September reference day; nothing is measured.")
+        "SLUSE66A Figure 8-4), with the FETs of decision 57, and Option A(i)'s lid charger U3B at 0.972 (bracket 0.963 to "
+        "0.978; was 0.975, read from Figure 8-3) on U3's 400 kHz row, which a session decision draws for it (the FET pair "
+        "of decision 57, XAL1010-472ME, R16B 10 mOhm, IIN_HOST 6.2 A; `records/s119/apply_decision_s119.py`), weighted by "
+        "energy over the model's own hours. Both are TI's loss equations (SLUSE66A Equations 6 to 22, printed pages 86 to "
+        "88) with the sense resistors inside each figure and the inductors' core loss excluded, so each is high by it "
+        "(`records/s117/efficiency.out` section 7, `records/s119/u3b_hourly.out`). The chain's scripts were re-issued with "
+        "their pins moved and every output regenerated (`records/s119/README.md`, `records/s119/headline_diff.out`). Where "
+        "this page quotes a figure listed here, the page's figure is the first issue's and is superseded by the one given "
+        "here. Model results on the September reference day; nothing is measured.")
 
 
 def refuse(msg):

@@ -17,13 +17,14 @@ NOTE = PN.HEAD + (
     " **In this page (`energy_runs.out`, third issue):** section 9's 4S18P at 40 degrees facing south MEETS with 90.6 Wh "
     'at +20 C and 26.4 Wh at +15 C in the typical case (was 90.6 and 26.5) and 87.8 and 23.6 Wh in the adverse case (was '
     "87.8 and 23.7), down to +12.9 and +13.2 C as before; a1elec's two-pack case (4S12P lid) MEETS with 30.7 Wh in the "
-    'typical case (lid 0.5 Wh, down to +9.6 C, unchanged) and **26.7 Wh** in the adverse case (was 27.9; lid 0.0 Wh, down '
-    'to +10.8 C, unchanged). **The planes (section 6, the 4S12P lid):** at 20 degrees only the south-facing plane now meets '
-    'in both cases (was 15 degrees either side of south); at 30, 40 and 50 degrees the planes 15 degrees either side of '
-    'south still meet in both, so the rule of section 7 (20 to 50 degrees within 15 degrees of south) no longer holds for '
-    'the 4S12P lid at 20 degrees off south. For the two lid options the owner chooses between, 4S14P and 4S15P, every '
-    'grid plane of the rule meets in both cases with U3 at its 6.1 A minimum (`records/s119/reconcile_s119.out` section 6); '
-    'laid flat the 4S14P lid does not meet and the 4S15P lid meets in the typical case only.'
+    'typical case and 27.9 Wh in the adverse case, both unchanged (lid 0.5 and 0.0 Wh, down to +9.6 and +10.8 C). **The '
+    'planes (section 6, the 4S12P lid):** at 20 degrees the planes facing south and 15 degrees west meet in both cases and '
+    'the one 15 degrees east now meets in the typical case only (was all three); at 30, 40 and 50 degrees the planes 15 '
+    'degrees either side of south still meet in both, so the rule of section 7 (20 to 50 degrees within 15 degrees of '
+    'south) no longer holds for the 4S12P lid at 20 degrees 15 degrees east. For the two lid options the owner chooses '
+    'between, 4S14P and 4S15P, every grid plane of the rule meets in both cases with U3 at its 6.1 A minimum and U3B hour '
+    'by hour (`records/s119/reconcile_s119.out` section 7); laid flat the 4S14P lid does not meet and the 4S15P lid meets '
+    'in the typical case only.'
 )
 
 if __name__ == "__main__":
