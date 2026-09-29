@@ -19,3 +19,13 @@ Worker: one Claude author, worktree `a1mech`, branch `fnd/a1mech` from `13b5352b
   the corner costing fewest cells, the tablet's band searched in 1 mm steps. Results: A (HF and 8 inch tablet) 35 cells, 4S8P; B (HF,
   no tablet) 56, 4S14P; C (8 inch tablet, no HF) 54, 4S13P; C10 (10 inch tablet, no HF) 47, 4S11P; D (neither) 77, 4S19P.
   Stability: the open case stands on level ground to 120 degrees of opening in every swept case and tips from 135 with a light base.
+- 02:38 to 02:45: drawing set A1-1 to A1-6 (`lid_pack_a1_drawing.py`, matplotlib) rendered and read back as images; fixes after the
+  read-back: layer-2 cells hatched so both layers show; board P and the east block at their ruled place (group 205.5 centred, P
+  south); the M5 and M6w rows. Retention rows added (3.46 kg module, 0.073 MPa mean on the bond, no held strength on PP: OPEN).
+- 02:43: `lid_pack_a1_cad.py` run on the rented box under /root/a1mech (build123d 0.13.0, the d7fit venv, `pip freeze` equal to
+  the lock): the boolean check agrees with the arithmetic for A, B, C, C10, D, both controls fail as they must; B's STEP and STL.
+- 02:46: README written. The lid stay's second anchor moved from the frame's skirt (under the sealed plate, out of reach) to the
+  plate's rebated back band.
+- 02:50: the tablet search widened (landscape and portrait, every place 1.0 mm in X and 0.5 mm in Y, both bounds; the bracket may
+  overhang the cover by 10 at most): A stays 35 (4S8P), C rises to 58 (4S14P, the tablet in the south-east), C10 47 (a 2 mm grid
+  had missed its 0.47 mm window). The tablet's sounder and guard plan rows now print only where the tablet lies beside them.

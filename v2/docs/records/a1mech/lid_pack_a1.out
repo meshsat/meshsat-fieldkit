@@ -74,7 +74,8 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
      module X -141.00..72.75, north edge Y 114.93; 3 slices of 65.25 along X (block 199.75 + two 7.0 bays); per slice (X, south edge, cells across):
        X -134.00..-66.75 from Y -75.07, 10; X -67.75..-0.50 from Y -112.17, 12; X -1.50..65.75 from Y -112.17, 12
      P2 at X 21.75..65.75, Y -110.42..-40.42 (the corner that costs the fewest cells)
-     tablet 8 inch rugged class 214 x 127 x 10.1 in a bracket 220 x 133 (lips 3.0), X -141.00..79.00, Y -24.54..108.46, depth 36.60 from the ceiling
+     tablet places tried (landscape and portrait, 1.0 mm in X and 0.5 mm in Y and both bounds, every face row met at the worst): 1083; the best kept
+     tablet 8 inch rugged class 214 x 127 x 10.1 in a bracket 220 x 133 (lips 3.0), X -141.94..78.06, Y -24.43..108.57, depth 36.60 from the ceiling
      cells: 35 (layer 1 30, layer 2 5); layer-2 places refused by the face: 1 (XFRAME_3); cells under P2 removed: 8
      => 4S8P (32 cells used, 385.9 Wh nominal at 3.35 Ah min); with the base 4S6P: 4S14P
      face rows (lid zone over face part): 32 rows, 0 NOT MET, 10 OPEN; plan rows 7, 0 below their minimum
@@ -97,27 +98,28 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
        plan: module inside the flat ceiling, X                                                                      32.08 (min 1.0) ok
        plan: module inside the flat ceiling, Y                                                                       1.00 (min 1.0) ok
        plan: module east edge to the QMX tray's west edge (both on the ceiling)                                     10.45 (min 1.0) ok
-       plan: tablet bracket east edge to the QMX tray (the tray reaches 29.30 deep, the tablet from 24.00)           4.20 (min 1.0) ok
-       plan: tablet bracket to the nearest two-layer zone, in Y                                                      0.16 (min 0.0) ok
-       plan: tablet bracket west edge to the guard caps (X -143.0) with the plan allowance                           0.94 (min 0.0) ok
-       plan: tablet bracket south edge to the sounder ring (Y -79.1) with the plan allowance                        53.50 (min 0.0) ok
+       plan: tablet bracket east edge to the QMX tray (the tray reaches 29.30 deep, the tablet from 24.00)           5.14 (min 1.0) ok
+       plan: tablet bracket to the nearest two-layer zone, in Y                                                      0.26 (min 0.0) ok
+       plan: tablet bracket west edge to the guard caps (X -143.0) with the plan allowance                           0.00 (min 0.0) ok
+       plan: tablet bracket south edge to the sounder ring (Y -79.1) with the plan allowance                        53.61 (min 0.0) ok
 
    ARRANGEMENT C: 8 inch tablet kept, HF out of the lid
      module X -141.00..172.08, north edge Y 114.93; 4 slices of 65.25 along X (block 266.00 + two 7.0 bays); per slice (X, south edge, cells across):
        X -134.00..-66.75 from Y -75.07, 10; X -67.75..-0.50 from Y -112.17, 12; X -1.50..65.75 from Y -112.17, 12; X 64.75..132.00 from Y -112.17, 12
      P2 at X 95.08..165.08, Y 69.18..113.18 (the corner that costs the fewest cells)
-     tablet 8 inch rugged class 214 x 127 x 10.1 in a bracket 220 x 133 (lips 3.0), X -141.00..79.00, Y -24.54..108.46, depth 36.60 from the ceiling
-     cells: 54 (layer 1 43, layer 2 11); layer-2 places refused by the face: 3 (XFRAME_3, XFRAME_4); cells under P2 removed: 3
-     => 4S13P (52 cells used, 627.1 Wh nominal at 3.35 Ah min); with the base 4S6P: 4S19P
-     face rows (lid zone over face part): 63 rows, 0 NOT MET, 21 OPEN; plan rows 5, 0 below their minimum
+     tablet places tried (landscape and portrait, 1.0 mm in X and 0.5 mm in Y and both bounds, every face row met at the worst): 16239; the best kept
+     tablet 8 inch rugged class 214 x 127 x 10.1 in a bracket 220 x 133 (lips 3.0), X -65.94..154.06, Y -114.93..18.07, depth 36.60 from the ceiling
+     cells: 58 (layer 1 43, layer 2 15); layer-2 places refused by the face: 3 (XFRAME_1, XFRAME_3); cells under P2 removed: 6
+     => 4S14P (56 cells used, 675.4 Wh nominal at 3.35 Ah min); with the base 4S6P: 4S20P
+     face rows (lid zone over face part): 75 rows, 0 NOT MET, 14 OPEN; plan rows 3, 0 below their minimum
        module, two layers           over D              h  1.50  nominal   6.36  worst   2.40  x2  -0.31  OPEN
        tablet 8 inch rugged class   over XFRAME         h  4.00  nominal   7.32  worst   2.96  x2  -0.15  OPEN
        module, two layers           over XENARC_WINDOW  h  0.80  nominal   7.06  worst   3.10  x2   0.39  OPEN
-       tablet 8 inch rugged class   over SW_SOS_PLATE   h  2.00  nominal   9.32  worst   4.96  x2   1.85  MET
-       tablet 8 inch rugged class   over SW_EMCON_PLATE h  2.00  nominal   9.32  worst   4.96  x2   1.85  MET
-       tablet 8 inch rugged class   over SW_ZERO_PLATE  h  2.00  nominal   9.32  worst   4.96  x2   1.85  MET
+       module, two layers           over EPAPER_LENS    h  0.05  nominal   7.81  worst   3.85  x2   1.14  MET
+       tablet 8 inch rugged class   over SW_PI          h  2.50  nominal   8.82  worst   4.46  x2   1.35  MET
+       tablet 8 inch rugged class   over SW_TEST        h  2.50  nominal   8.82  worst   4.46  x2   1.35  MET
+       tablet 8 inch rugged class   over D              h  1.50  nominal   9.82  worst   5.46  x2   2.35  MET
        tablet 8 inch rugged class   over XENARC_WINDOW  h  0.80  nominal  10.52  worst   6.16  x2   3.05  MET
-       tablet 8 inch rugged class   over EPAPER_LENS    h  0.05  nominal  11.27  worst   6.91  x2   3.80  MET
        module, one layer            over XFRAME         h  4.00  nominal  19.92  worst  15.96  x2  13.25  MET
        module, one layer            over SW_MAIN        h  3.50  nominal  20.42  worst  16.46  x2  13.75  MET
        module, one layer            over SW_PI          h  2.50  nominal  21.42  worst  17.46  x2  14.75  MET
@@ -134,15 +136,14 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
        P2 board                     over CAM1_WINDOW    h  0.05  nominal  24.90  worst  20.94  x2  18.23  MET
        plan: module inside the flat ceiling, X                                                                       1.00 (min 1.0) ok
        plan: module inside the flat ceiling, Y                                                                       1.00 (min 1.0) ok
-       plan: tablet bracket to the nearest two-layer zone, in Y                                                      0.16 (min 0.0) ok
-       plan: tablet bracket west edge to the guard caps (X -143.0) with the plan allowance                           0.94 (min 0.0) ok
-       plan: tablet bracket south edge to the sounder ring (Y -79.1) with the plan allowance                        53.50 (min 0.0) ok
+       plan: tablet bracket to the nearest two-layer zone, in Y                                                      9.38 (min 0.0) ok
 
    ARRANGEMENT C10: 10 inch tablet kept, HF out of the lid
      module X -141.00..172.08, north edge Y 114.93; 4 slices of 65.25 along X (block 266.00 + two 7.0 bays); per slice (X, south edge, cells across):
        X -134.00..-66.75 from Y -75.07, 10; X -67.75..-0.50 from Y -112.17, 12; X -1.50..65.75 from Y -112.17, 12; X 64.75..132.00 from Y -112.17, 12
      P2 at X 95.08..165.08, Y -110.42..-66.42 (the corner that costs the fewest cells)
-     tablet 10 inch rugged class 243 x 170 x 10.2 in a bracket 249 x 176 (lips 3.0), X -141.00..108.00, Y -61.54..114.46, depth 36.70 from the ceiling
+     tablet places tried (landscape and portrait, 1.0 mm in X and 0.5 mm in Y and both bounds, every face row met at the worst): 1555; the best kept
+     tablet 10 inch rugged class 243 x 170 x 10.2 in a bracket 249 x 176 (lips 3.0), X -141.94..107.06, Y -61.43..114.57, depth 36.70 from the ceiling
      cells: 47 (layer 1 43, layer 2 4); layer-2 places refused by the face: 1 (XFRAME_4); cells under P2 removed: 4
      => 4S11P (44 cells used, 530.6 Wh nominal at 3.35 Ah min); with the base 4S6P: 4S17P
      face rows (lid zone over face part): 56 rows, 0 NOT MET, 14 OPEN; plan rows 5, 0 below their minimum
@@ -170,9 +171,9 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
        P2 board                     over XENARC_WINDOW  h  0.80  nominal  24.15  worst  20.19  x2  17.48  MET
        plan: module inside the flat ceiling, X                                                                       1.00 (min 1.0) ok
        plan: module inside the flat ceiling, Y                                                                       1.00 (min 1.0) ok
-       plan: tablet bracket to the nearest two-layer zone, in Y                                                      0.26 (min 0.0) ok
-       plan: tablet bracket west edge to the guard caps (X -143.0) with the plan allowance                           0.94 (min 0.0) ok
-       plan: tablet bracket south edge to the sounder ring (Y -79.1) with the plan allowance                        16.50 (min 0.0) ok
+       plan: tablet bracket to the nearest two-layer zone, in Y                                                      0.37 (min 0.0) ok
+       plan: tablet bracket west edge to the guard caps (X -143.0) with the plan allowance                           0.00 (min 0.0) ok
+       plan: tablet bracket south edge to the sounder ring (Y -79.1) with the plan allowance                        16.61 (min 0.0) ok
 
    ARRANGEMENT D: HF and tablet both out of the lid
      module X -141.00..172.08, north edge Y 114.93; 4 slices of 65.25 along X (block 266.00 + two 7.0 bays); per slice (X, south edge, cells across):
@@ -204,7 +205,7 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
 
    RESULT: 48 cells (4S12P) with HF and the tablet bracket both preserved: DOES NOT FIT. Arrangement A holds 35 cells (4S8P) at its best tablet
    place (13 short of 48; 16 short in whole groups of four). B (HF kept, no tablet in the lid) holds 56 (4S14P); C (8 inch tablet kept, HF out of the
-   lid) 54 (4S13P); C10 (10 inch tablet kept, HF out) 47 (4S11P); D (both out) 77 (4S19P).
+   lid) 58 (4S14P); C10 (10 inch tablet kept, HF out) 47 (4S11P); D (both out) 77 (4S19P).
    With HF in the lid, the 10 inch class (243 x 170 + lips) needs 249 in X between the guard caps (-141.94) and the QMX tray (83.20 less 1.0), 224.14 available:
    it does not fit beside the QMX set in any arrangement, pack or no pack; the 8 inch class is the one that fits with HF.
 
@@ -278,7 +279,7 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
      P2 protection board (ASSUMPTION, board P class)                                         0.080 kg at (   43.8,   -75.4,  142.4)
      lid harness to the hinge: 2 x 12 AWG 0.45 m, sense leads, connector (ESTIMATE)          0.080 kg at (  -34.1,   110.0,  134.4)
      QMX set r2: unit and plugs 0.240, tray, frame, plate (r2 record D)                      0.372 kg at (  127.1,    10.0,  139.4)
-     tablet, 8 inch rugged class (INFERRED) and bracket 0.10 (ESTIMATE)                      0.540 kg at (  -31.0,    42.0,  124.4)
+     tablet, 8 inch rugged class (INFERRED) and bracket 0.10 (ESTIMATE)                      0.540 kg at (  -31.9,    42.1,  124.4)
      lid shell, 39.7 percent of 2.5 kg (ESTIMATE)                                            0.993 kg at (    0.0,     0.0,  146.0)
      added to the lid by the pack (cells, plate, cover, strip, wrap, P2, harness, tablet): 2.97 kg
    base: shell 1.51 kg; contents swept 7 to 14 kg (ARCHITECTURE.md 11: sourced floor about 7.0 with 12 cells; +0.75 for section 8's 4S6P;
@@ -295,18 +296,19 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    B              135 deg     116.83     TIPS            -1.2 deg
    B              150 deg     123.67     TIPS            -5.4 deg
    B              180 deg     126.16     TIPS            -9.9 deg
-   A                0 deg      14.20     stands          46.3 deg
+   A                0 deg      14.21     stands          46.3 deg
    A               90 deg      75.68     stands          15.7 deg
    A              100 deg      84.51     stands          12.5 deg
    A              110 deg      92.78     stands           9.4 deg
    A              120 deg     100.23     stands           6.5 deg
-   A              135 deg     109.39     stands           2.5 deg
+   A              135 deg     109.38     stands           2.5 deg
    A              150 deg     115.58     TIPS            -0.7 deg
-   A              180 deg     117.63     TIPS            -2.8 deg
+   A              180 deg     117.62     TIPS            -2.7 deg
    verdict (B): the open case stands on level ground up to a lid opening of 120 degrees in every swept case; beyond it a light base with
    its CG back and high tips on level ground (first at 135 degrees swept). Fix, the session's (authority SESSION, reversible): a lid stay
-   that stops the lid at 100 degrees (a webbing strap between two bonded anchors, one on the lid's inner wall, one on the frame's
-   skirt; no hole in the case; about EUR 10, ESTIMATE), which also carries the lid's added mass off Peli's hinge stop. With it the
+   that stops the lid at 100 degrees (a webbing strap between two bonded anchors, one on the lid's inner back wall, one on the face
+   plate's rebated back band; no hole in the case or the plate; about EUR 10, ESTIMATE; it folds into the back channel when the lid
+   closes), which also carries the lid's added mass off Peli's hinge stop. With it the
    worst back slope the open case stands on is 10.0 deg (B) and 12.5 deg (A); the operator's sheet states: open the lid only on ground
    sloping less than 9 degrees toward the hinge side. If Peli's own stop is at or under 100 degrees the stay is not needed for
    stability; the stop angle and the hinge axis are read on the mock-up (T-A1-3).
