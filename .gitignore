@@ -42,3 +42,8 @@ v2/vendor/*/ibis/*.ibs
 # Makers' documents held back from the public tree by their terms (stream a1solar, 29 September 2026): fetched by
 # v2/docs/records/a1solar/fetch_held_back.py and checked by sha256, never committed.
 v2/vendor/solar/held/
+# TI's datasheets of the charger FETs chosen by stream s117 (29 September 2026), held back by their IMPORTANT NOTICE:
+# fetched by v2/docs/records/s117/fetch_held_back.py and checked by sha256, never committed.
+v2/vendor/ti/held/
+# The write-path marker of v2/docs/records/s117/apply_gen_sch_a_s117.py (and its FET sibling): never committed.
+v2/docs/records/s117/*.applied
