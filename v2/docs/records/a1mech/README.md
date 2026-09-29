@@ -24,8 +24,8 @@ owner decision required.
    meets 1.0 at the worst; the tightest are the nested layer over the Xenarc window (3.10) and over the battery bar LEDs
    (2.40), OPEN at the sensitivity reading, as the r2 set's knob rows are. A boolean check on the solids agrees with the
    arithmetic for all five arrangements and fails on both controls (`cad/lid_pack_a1_cad.out`).
-4. The hinge harness: 12 AWG, assumed 10 A continuous and 18 A for 60 s, a free lead of 167.5 between two ties 150 apart
-   along the back channel, bending at about R 104 to R 106 over the lid's travel; disconnect (XT60 and XH) beside P2 in the
+4. The hinge harness: 12 AWG, assumed 10 A continuous and 18 A for 60 s, a free lead of 169.7 between two ties 150 apart
+   along the back channel, bending at about R 94 to R 102 over the lid's travel; disconnect (XT60 and XH) beside P2 in the
    lid. **The crossing of the sealed face plate is not designed** (S-95, EQ-31, which the QMX leads already need).
 5. Stability: the lid grows from about 1.0 kg to 4.9 kg. The open case stands on level ground up to 120 degrees of opening
    in every swept case and **tips from 135 degrees with a light base** (7 kg, its centre of mass back and high). Peli's stop
@@ -119,6 +119,12 @@ owner decision required.
 | C10 | a 10 inch tablet; the QMX set out of the lid | 47 | 4S11P | 4S17P | 0 NOT MET, 14 OPEN |
 | D | neither | 77 | 4S19P | 4S25P | 0 NOT MET, 44 OPEN |
 
+**Other constructions, counted by hand (ESTIMATE, not in the generator):** holder brackets at a 20 mm pitch, one layer 21.9
+deep, hold about 33 cells beside the QMX set with no tablet; the cells' axis along Y (three rows of 66.25 across the lid's
+depth) gives arrangement A about 30, because the headset jacks cost the south row in four columns and an 8 inch tablet's band
+(133) spans two of the three rows. Neither beats the generator's layout, so the finding is stated for this construction
+family: **no arrangement found holds more than 35 with both functions kept.**
+
 The tablet, where kept, hangs under the module's one-layer part in a bracket (3.0 lips, 1.0 back, 1.5 below the screen),
 36.60 below the ceiling; it costs the two-layer places above its band. The design envelopes are the rugged classes (8 inch
 214 x 127 x 10.1, 10 inch 243 x 170 x 10.2; INFERRED, no maker sheet held; the model is a pick, SC-45). **With the QMX set in
@@ -150,12 +156,12 @@ with 400 Wp in a 200 W window), not this stream's.
   2.7 W at 18 A, an adiabatic rise of 8.9 K over 60 s.
 - **Route (B):** from P2 through the module's west bay north to the back channel (between the module's north edge Y 114.93
   and the lid's back wall), east along it on bonded tie mounts to the lid tie T_L at X -121 on the lid's inner back wall
-  (Y 128.0, Z 111.5), then a free lead to the plate tie T_P at X 29 on the face plate's rebated back band (Y 128.0, Z 104.52),
-  then to the crossing. About 0.45 m in the lid.
+  (Y 128.0, Z 111.5), then a free lead to the plate tie T_P at X 29 on the face plate's full-thickness face near its back edge
+  (Y 122.0, Z 106.52; the 5.0 rebated band beyond it cannot take a 4.4 lead under the lid wall at Y 130.9), then to the crossing. About 0.45 m in the lid.
 - **Travel:** the hinge axis is not in any Peli file: ESTIMATE Y 155 +-8, Z 111 +-5, inside the fairings. T_L turns at R 27.0
-  about it; the chord T_L to T_P runs from 150.2 (closed) to 159.5 (180 degrees). The lead between the ties is 167.5: closed
-  it bows 31.3 in the back channel's X-Z plane (about 14 wide in Y, 40 tall), radius about 106; open it forms an S across 54.3
-  over 150, radius about 104. **Requirement on the pick:** a flexing radius of 10 x OD (44) or less.
+  about it; the chord T_L to T_P runs from 150.2 (closed) to 161.6 (180 degrees). The lead between the ties is 169.7: closed
+  it bows 33.1 in the back channel's X-Z plane (about 16 wide in Y, 40 tall), radius about 102; open it forms an S across 60.1
+  over 150, radius about 94. **Requirement on the pick:** a flexing radius of 10 x OD (44) or less.
 - **Strain relief:** a bonded tie mount at T_L, at T_P and every 60 mm or less on both runs (the r2 set's rule); a printed
   guide on the lid's back wall keeps the free lead inboard of the lid wall (Y under 130.9) so that closing folds it toward the
   face, never over the rim or the seal.
@@ -184,7 +190,9 @@ with 400 Wp in a 200 W window), not this stream's.
   and one on the face plate's rebated back band; no hole in the case or the plate; about EUR 10, ESTIMATE; it folds into
   the back channel when the lid closes). It also takes the added mass off Peli's own
   stop. With it the operator's sheet states: open the lid only on ground sloping less than 9 degrees toward the hinge side. If
-  Peli's own stop proves to be at 100 degrees or less, the stay is not needed for stability.
+  Peli's own stop proves to be at 100 degrees or less, the stay is not needed for stability. **Sensitivity:** the feet's place
+  is in no Peli file; with the tipping line 14.5 further in (Y 100, feet inboard) the case stands at 100 degrees on 5.7 degrees
+  at the worst and tips on level ground from 120 degrees, so the slope limit is set after T-A1-3 measures the feet and the stop.
 
 ## 6. The base pockets (`lid_pack_a1.out` section 5; sheet A1-6)
 
