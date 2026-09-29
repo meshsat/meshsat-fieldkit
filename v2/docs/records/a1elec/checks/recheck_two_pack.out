@@ -3,8 +3,8 @@ RE-CHECK OF energy_two_pack.py (independent closed-form implementation; 400 Wp, 
   E2, lid 20.00 C                              recomputed stops [None, None] base   30.3 lid   58.6 both   88.9 unserved    0.0   .out ([None, None], 30.3, 58.6, 88.9, 0.0)   AGREES
   E2, lid 7.50 C                               recomputed stops [24, 36]     base    0.0 lid    0.0 both    0.0 unserved   35.5   .out ([24, 36], 0.0, 0.0, 0.0, 35.5)   AGREES
   E2, base 15 C, lid 13.23 C                   recomputed stops [None, None] base    8.9 lid    0.7 both    9.6 unserved    0.0   .out ([None, None], 8.9, 0.7, 9.6, 0.0)   AGREES
-  E1 (U3 in at 4.15 A x 20.7 V), lid 13.23 C   recomputed stops [43, 32]     base    0.0 lid    0.0 both    0.0 unserved  382.7   .out ([43, 32], 0.0, 0.0, 0.0, 382.7)   AGREES
-  front end at its 4.3 A minimum               recomputed stops [44, 33]     base    0.0 lid    0.0 both    0.0 unserved  338.0   .out ([44, 33], 0.0, 0.0, 0.0, 338.0)   AGREES
-  front end at its 5.7 A maximum               recomputed stops [None, None] base   12.7 lid    0.0 both   12.7 unserved    0.0   .out ([None, None], 12.7, 0.0, 12.7, 0.0)   AGREES
+  E1 (U3 in at 4.15 A x 20.7 V), lid 13.23 C   recomputed stops [44, 32]     base    0.0 lid    0.0 both    0.0 unserved  377.2   .out ([44, 32], 0.0, 0.0, 0.0, 377.2)   AGREES
+  front end at its 4.3 A minimum               recomputed stops [44, 33]     base    0.0 lid    0.0 both    0.0 unserved  332.2   .out ([44, 33], 0.0, 0.0, 0.0, 332.2)   AGREES
+  front end at its 5.7 A maximum               recomputed stops [None, None] base   17.1 lid    0.0 both   17.1 unserved    0.0   .out ([None, None], 17.1, 0.0, 17.1, 0.0)   AGREES
   join current at 0.20 V: 2.47 A (.out 8: 2.47 A)   AGREES
 RESULT: every figure agrees

@@ -14,7 +14,9 @@ AI arithmetic; a check of the model's arithmetic, not of its assumptions.
 Second issue (stream s119, S-119, 29 September 2026): energy_two_pack.py's second issue carries U3B at 0.961 (was 0.975)
 and reads U3 at 0.979 through energy_inputs.yaml's second issue (was 0.98), so this check types U3B's 0.961 and the
 figures of the regenerated energy_two_pack.out; the implementation is unchanged. The first issue's .out (every figure
-agreeing with the first issue's model) is in git history."""
+agreeing with the first issue's model) is in git history. The same issue's second round (after its check, items M3 and
+M4): U3B on the 400 kHz row at 0.972 with its 6.2 A input limit, the charge loop at 23 mOhm (U3B's RSR is inside its
+efficiency), and pins on energy_budget.py and energy_inputs.yaml, which this check imports and reads."""
 import json
 import math
 import os
@@ -26,6 +28,13 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", ".."))
 sys.path.insert(0, os.path.join(ROOT, "v2", "docs", "records", "energy"))
 import yaml  # noqa: E402
 import energy_budget as EB  # noqa: E402
+
+PINS = {"energy_budget.py": "6a8ac4642bd2aaf35d5ad6b75c5004c24d3e11ed1ede09a4b7a1041cd103235c",
+        "energy_inputs.yaml": "74a6e4ab0074648ed459cc62daf7000798ae6247cd5056e19cae5e4d56f55aed"}
+for _n, _want in PINS.items():
+    if EB.sha256_of(os.path.join(ROOT, "v2", "docs", "records", "energy", _n)) != _want:
+        sys.stderr.write("recheck_two_pack: %s is not the pinned file; refusing\n" % _n)
+        sys.exit(2)
 
 LOAD = 42.8
 
@@ -120,7 +129,7 @@ def main():
     d = yaml.safe_load(open(os.path.join(ROOT, "v2", "docs", "records", "energy", "energy_inputs.yaml"), encoding="utf-8"))
     monthly = json.load(open(os.path.join(ROOT, d["pinned"][0]["path"]), encoding="utf-8"))
     prof = EB.profile(d, monthly, 9)[0]
-    cfg = {"ib": 3.968, "il": 7.936, "iin": 8.0, "eta": 0.961, "rc": 0.028, "rd": 0.030, "vak": 0.020}   # U3B 0.961 (s119; was 0.975)
+    cfg = {"ib": 3.968, "il": 7.936, "iin": 6.2, "eta": 0.972, "rc": 0.023, "rd": 0.030, "vak": 0.020}   # U3B 0.972 at 400 kHz, 6.2 A, loop 23 mOhm (s119)
     e2 = 6.2 * 20.7          # the drafted entry: U3's IIN_HOST 6.2 A under the re-rated front end's 6.94 A minimum
     # (case, node cap in W at the front end's output or None, lid temperature, the .out's figures: stops, lowest base,
     #  lowest lid, lowest both, unserved), read from energy_two_pack.out sections 3a, 3f and 5
@@ -129,9 +138,9 @@ def main():
         ("E2, lid 20.00 C", e2, 20.0, 20.0, [None, None], 30.3, 58.6, 88.9, 0.0),
         ("E2, lid 7.50 C", e2, 7.5, 20.0, [24, 36], 0.0, 0.0, 0.0, 35.5),
         ("E2, base 15 C, lid 13.23 C", e2, 13.23, 15.0, [None, None], 8.9, 0.7, 9.6, 0.0),
-        ("E1 (U3 in at 4.15 A x 20.7 V), lid 13.23 C", 4.15 * 20.7, 13.23, 20.0, [43, 32], 0.0, 0.0, 0.0, 382.7),
-        ("front end at its 4.3 A minimum", 4.3 * 20.7, 13.23, 20.0, [44, 33], 0.0, 0.0, 0.0, 338.0),
-        ("front end at its 5.7 A maximum", 5.7 * 20.7, 13.23, 20.0, [None, None], 12.7, 0.0, 12.7, 0.0),
+        ("E1 (U3 in at 4.15 A x 20.7 V), lid 13.23 C", 4.15 * 20.7, 13.23, 20.0, [44, 32], 0.0, 0.0, 0.0, 377.2),
+        ("front end at its 4.3 A minimum", 4.3 * 20.7, 13.23, 20.0, [44, 33], 0.0, 0.0, 0.0, 332.2),
+        ("front end at its 5.7 A maximum", 5.7 * 20.7, 13.23, 20.0, [None, None], 17.1, 0.0, 17.1, 0.0),
     ]
     bad = 0
     print("RE-CHECK OF energy_two_pack.py (independent closed-form implementation; 400 Wp, 200 W window, both starts)")

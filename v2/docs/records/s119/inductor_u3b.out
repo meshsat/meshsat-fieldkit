@@ -1,0 +1,47 @@
+U3B'S INDUCTOR ON THE 400 kHz ROW (inductor_u3b.py, stream s119, S-119). XAL1010-472ME against Coilcraft 804-1 p.1 and SLUSE66A;
+AI arithmetic on the makers' figures; nothing built or measured.
+
+   mode                  VIN   VOUT  IL avg     fS L case       L (uH)    ripple  ripple%     peak       RMS
+   buck                 16.8   12.0    7.94    340 nominal L      4.30    2.34 A      30%   9.11 A    7.96 A
+   buck                 16.8   12.0    7.94    340 L -20 %        3.43    2.94 A      37%   9.41 A    7.98 A
+   buck                 16.8   12.0    7.94    400 nominal L      4.31    1.99 A      25%   8.93 A    7.96 A
+   buck                 16.8   12.0    7.94    400 L -20 %        3.44    2.49 A      31%   9.18 A    7.97 A
+   buck                 16.8   14.4    7.94    340 nominal L      4.33    1.40 A      18%   8.63 A    7.95 A
+   buck                 16.8   14.4    7.94    340 L -20 %        3.46    1.75 A      22%   8.81 A    7.95 A
+   buck                 16.8   14.4    7.94    400 nominal L      4.34    1.19 A      15%   8.53 A    7.94 A
+   buck                 16.8   14.4    7.94    400 L -20 %        3.46    1.49 A      19%   8.68 A    7.95 A
+   boost                12.0   16.8    6.30    340 nominal L      4.40    2.29 A      29%   7.45 A    6.33 A
+   boost                12.0   16.8    6.30    340 L -20 %        3.50    2.88 A      36%   7.74 A    6.35 A
+   boost                12.0   16.8    6.30    400 nominal L      4.41    1.95 A      25%   7.27 A    6.32 A
+   boost                12.0   16.8    6.30    400 L -20 %        3.51    2.44 A      31%   7.52 A    6.34 A
+   boost                14.4   16.8    6.30    340 nominal L      4.42    1.37 A      17%   6.98 A    6.31 A
+   boost                14.4   16.8    6.30    340 L -20 %        3.53    1.71 A      22%   7.16 A    6.32 A
+   boost                14.4   16.8    6.30    400 nominal L      4.43    1.16 A      15%   6.88 A    6.31 A
+   boost                14.4   16.8    6.30    400 L -20 %        3.54    1.45 A      18%   7.03 A    6.31 A
+   buck-boost bound     16.8   16.8    7.94    340 nominal L      4.29    2.88 A      36%   9.38 A    7.98 A
+   buck-boost bound     16.8   16.8    7.94    340 L -20 %        3.42    3.62 A      46%   9.74 A    8.00 A
+   buck-boost bound     16.8   16.8    7.94    400 nominal L      4.30    2.44 A      31%   9.16 A    7.97 A
+   buck-boost bound     16.8   16.8    7.94    400 L -20 %        3.43    3.06 A      39%   9.47 A    7.99 A
+   buck-boost bound     12.0   12.0    7.94    340 nominal L      4.31    2.05 A      26%   8.96 A    7.96 A
+   buck-boost bound     12.0   12.0    7.94    340 L -20 %        3.44    2.57 A      32%   9.22 A    7.97 A
+   buck-boost bound     12.0   12.0    7.94    400 nominal L      4.32    1.74 A      22%   8.80 A    7.95 A
+   buck-boost bound     12.0   12.0    7.94    400 L -20 %        3.45    2.18 A      27%   9.02 A    7.96 A
+
+1. SATURATION (SLUSE66A Equation 2, printed page 85: Isat at least ICHG plus half the ripple): the worst peak above is
+   9.74 A against Isat 25.4 A (804-1 p.1, typical, the 30 percent drop): 38 percent of it. At that current the
+   inductance has fallen to about 91 percent of its zero-current value on 804-2's curve (INFERRED).
+2. RMS (804-1 p.1 note 6): the worst RMS above is 8.00 A against 17.5 A (20 C rise) and 24.0 A (40 C rise), 46 percent
+   of the first; the copper loss there is at most 0.37 W (DCR 5.70 mOhm maximum). The rating is Coilcraft's reference
+   figure on its own board; the rise on board A is a layout item.
+3. RIPPLE (Equation 3 and the boost ripple, page 85; TI's guidance 20 to 40 percent of the maximum charge current): at
+   400 kHz and the nominal inductance the ripple reads 1.16 to 2.44 A over the envelope, 15 to 31 percent of 7.936 A;
+   at 340 kHz with the inductance 20 percent low it reads up to 3.62 A. TI pairs 4.7 uH with 400 kHz (Table 9-4, page 27).
+4. A FAULT BOUND: the converter's input over-current comparator trips at 150 mV across R16B, 15.0 A of input current
+   (8.5, VOCP_lim_ACX, page 15); in boost mode the inductor carries the input current, so at most 15.0 A; in buck mode
+   the inductor's average current is the input current times VIN over VOUT, at most 21.0 A at 16.8 V into 12.0 V. Both are
+   under the typical Isat; Coilcraft prints no minimum Isat and calls the saturation soft (804-1 p.1), so this is not a
+   bound on a part at its worst. The buck leg's low-side OCP (VOCP_lim_Q2, 150 mV across Q8B) depends on the FET's
+   RDS(on) and is not used here.
+CORE LOSS: not in any of the above. 804-1 p.1 prints none ("Core and winding loss: See www.coilcraft.com/coreloss"),
+and no held Coilcraft document gives a figure or a loss model; see records/s119/README.md for the public search.
+END.
