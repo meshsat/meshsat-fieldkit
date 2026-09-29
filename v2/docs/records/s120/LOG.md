@@ -81,3 +81,11 @@ a maker's document. AI engineering work, not a qualified review. No agent, no ot
 - 19:06 to 19:07 `apply_registry_s120.py`: the three texts rewritten (B1 rating list and closing test with the negative
   limits, n1, n2, n7), the docstring names which commit to pass. `--check` at `0a164e97` opens S-124. Checkpoint
   `0a164e97`. README rewritten whole (third issue).
+- 19:09 to 19:11 Commit `a774acac` (README, this log). Dry run into `dryrun.out` at `a774acac`: `--check` writes nothing
+  (the tree's registry sha256/16 1dde1fd1); a scratch copy takes one write (S-120 closed by the full sha, S-124 opened,
+  REQ-015 on S-106, S-107, S-111, S-124, S-111's title extended) and refuses a second run; refusals for e57a7365 (records
+  not carried), 0004b8a7 and afcdb557 (README differs from HEAD's), no commit, and an uncommitted change to LOG.md (appended,
+  refused, restored byte for byte); `rules_lib.py requirements` 144 records, 0 errors and 0 warnings on both copies;
+  `vbus20_bound.py` exit 1 on five gated mutants (R6 249k, U3 pin 5 off GND, a diode on VBUS20, a new part on VBUS20, R27
+  20.0k), each FAIL line printing the values the mutant holds, and exit 0 on TI's 33 nF CACN added, which the record line
+  shows. S-124's closing condition in the applied copy equals the README's quotation word for word (compared parsed).
