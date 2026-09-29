@@ -9,7 +9,12 @@ arithmetic. It then compares its lowest points, stop hours and unserved energy w
 prints for the same cases, and exits 1 on any difference above 0.05 Wh or any differing stop hour.
 
 Run from the repository root: python3 v2/docs/records/a1elec/checks/recheck_two_pack.py > v2/docs/records/a1elec/checks/recheck_two_pack.out
-AI arithmetic; a check of the model's arithmetic, not of its assumptions."""
+AI arithmetic; a check of the model's arithmetic, not of its assumptions.
+
+Second issue (stream s119, S-119, 29 September 2026): energy_two_pack.py's second issue carries U3B at 0.961 (was 0.975)
+and reads U3 at 0.979 through energy_inputs.yaml's second issue (was 0.98), so this check types U3B's 0.961 and the
+figures of the regenerated energy_two_pack.out; the implementation is unchanged. The first issue's .out (every figure
+agreeing with the first issue's model) is in git history."""
 import json
 import math
 import os
@@ -115,18 +120,18 @@ def main():
     d = yaml.safe_load(open(os.path.join(ROOT, "v2", "docs", "records", "energy", "energy_inputs.yaml"), encoding="utf-8"))
     monthly = json.load(open(os.path.join(ROOT, d["pinned"][0]["path"]), encoding="utf-8"))
     prof = EB.profile(d, monthly, 9)[0]
-    cfg = {"ib": 3.968, "il": 7.936, "iin": 8.0, "eta": 0.975, "rc": 0.028, "rd": 0.030, "vak": 0.020}
+    cfg = {"ib": 3.968, "il": 7.936, "iin": 8.0, "eta": 0.961, "rc": 0.028, "rd": 0.030, "vak": 0.020}   # U3B 0.961 (s119; was 0.975)
     e2 = 6.2 * 20.7          # the drafted entry: U3's IIN_HOST 6.2 A under the re-rated front end's 6.94 A minimum
     # (case, node cap in W at the front end's output or None, lid temperature, the .out's figures: stops, lowest base,
     #  lowest lid, lowest both, unserved), read from energy_two_pack.out sections 3a, 3f and 5
     cases = [
-        ("E2, lid 13.23 C", e2, 13.23, 20.0, [None, None], 30.3, 0.7, 31.1, 0.0),
-        ("E2, lid 20.00 C", e2, 20.0, 20.0, [None, None], 30.3, 58.7, 89.0, 0.0),
+        ("E2, lid 13.23 C", e2, 13.23, 20.0, [None, None], 30.3, 0.7, 31.0, 0.0),
+        ("E2, lid 20.00 C", e2, 20.0, 20.0, [None, None], 30.3, 58.6, 88.9, 0.0),
         ("E2, lid 7.50 C", e2, 7.5, 20.0, [24, 36], 0.0, 0.0, 0.0, 35.5),
-        ("E2, base 15 C, lid 13.23 C", e2, 13.23, 15.0, [None, None], 8.9, 0.7, 9.7, 0.0),
-        ("E1 (U3 in at 4.15 A x 20.7 V), lid 13.23 C", 4.15 * 20.7, 13.23, 20.0, [44, 32], 0.0, 0.0, 0.0, 374.5),
-        ("front end at its 4.3 A minimum", 4.3 * 20.7, 13.23, 20.0, [44, 33], 0.0, 0.0, 0.0, 329.4),
-        ("front end at its 5.7 A maximum", 5.7 * 20.7, 13.23, 20.0, [None, None], 18.6, 0.0, 18.6, 0.0),
+        ("E2, base 15 C, lid 13.23 C", e2, 13.23, 15.0, [None, None], 8.9, 0.7, 9.6, 0.0),
+        ("E1 (U3 in at 4.15 A x 20.7 V), lid 13.23 C", 4.15 * 20.7, 13.23, 20.0, [43, 32], 0.0, 0.0, 0.0, 382.7),
+        ("front end at its 4.3 A minimum", 4.3 * 20.7, 13.23, 20.0, [44, 33], 0.0, 0.0, 0.0, 338.0),
+        ("front end at its 5.7 A maximum", 5.7 * 20.7, 13.23, 20.0, [None, None], 12.7, 0.0, 12.7, 0.0),
     ]
     bad = 0
     print("RE-CHECK OF energy_two_pack.py (independent closed-form implementation; 400 Wp, 200 W window, both starts)")

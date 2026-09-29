@@ -1,11 +1,11 @@
 THE ENERGY MODEL'S DESIGN CASES WITH THE CHOSEN ARRAY'S PERFORMANCE RATIO, AND THE PLANES (energy_runs.py, stream a1solar,
-MESHSAT-1357, second issue). PROTOTYPE DESIGN: nothing built, ordered or measured. Reference-day MODEL results (September at
+MESHSAT-1357, third issue). PROTOTYPE DESIGN: nothing built, ordered or measured. Reference-day MODEL results (September at
 Leiden, PVGIS mean days), AI arithmetic, not a qualified review. Both scripts imported unchanged (sha256 pinned).
 
 0. REPRODUCTION OF THE PUBLISHED FIGURES WITH THE PINNED RATIO 0.9417
-   energy_architecture 4S18P 400 Wp 200 W +20 C MEETS 91.0 Wh                     reproduced
+   energy_architecture 4S18P 400 Wp 200 W +20 C MEETS 90.9 Wh                     reproduced
    energy_architecture +15 C MEETS 26.8 Wh                                        reproduced
-   energy_two_pack design case MEETS, both 31.1 Wh                                reproduced
+   energy_two_pack design case MEETS, both 31.0 Wh                                reproduced
    the 40/0 anchor scaled by 1.007820 reproduces the model's September profile    reproduced
 
 1. THE RATIO FOR THE DESIGN ARRAY (REN100, 2S2P, 400 Wp) ON THE 40/0 PLANE (array_calc.py's model)
@@ -25,27 +25,27 @@ Leiden, PVGIS mean days), AI arithmetic, not a qualified review. Both scripts im
    F  1S4P at its best fixed point                            0.9175
 
 3. energy_architecture.py's DESIGN CASE: 4S18P, 400 Wp, 200 W window, 42.8 W, both starts (single aggregate pack)
-   A  energy_inputs.yaml as pinned (MPPT assumed)             +20 C MEETS    lowest   91.0 Wh; +15 C MEETS    lowest   26.8 Wh (unserved   0.0); meets down to +12.9 C
-   B  2S2P at the drafted point, typical                      +20 C MEETS    lowest   90.6 Wh; +15 C MEETS    lowest   26.5 Wh (unserved   0.0); meets down to +12.9 C
-   C  2S2P, adverse, all at once                              +20 C MEETS    lowest   87.8 Wh; +15 C MEETS    lowest   23.7 Wh (unserved   0.0); meets down to +13.2 C
+   A  energy_inputs.yaml as pinned (MPPT assumed)             +20 C MEETS    lowest   90.9 Wh; +15 C MEETS    lowest   26.8 Wh (unserved   0.0); meets down to +12.9 C
+   B  2S2P at the drafted point, typical                      +20 C MEETS    lowest   90.6 Wh; +15 C MEETS    lowest   26.4 Wh (unserved   0.0); meets down to +12.9 C
+   C  2S2P, adverse, all at once                              +20 C MEETS    lowest   87.8 Wh; +15 C MEETS    lowest   23.6 Wh (unserved   0.0); meets down to +13.2 C
    E  1S4P at board E's generated 17.6 V point                +20 C MEETS    lowest   89.3 Wh; +15 C MEETS    lowest   25.1 Wh (unserved   0.0); meets down to +13.0 C
-   F  1S4P at its best fixed point                            +20 C MEETS    lowest   90.1 Wh; +15 C MEETS    lowest   25.9 Wh (unserved   0.0); meets down to +13.0 C
+   F  1S4P at its best fixed point                            +20 C MEETS    lowest   90.0 Wh; +15 C MEETS    lowest   25.9 Wh (unserved   0.0); meets down to +13.0 C
 
 4. energy_two_pack.py's DESIGN CASE: base 4S6P +20 C, lid 4S12P at 13.23 C, entry E2, 400 Wp, 200 W
    A  energy_inputs.yaml as pinned (MPPT assumed)
-      MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.1 Wh; unserved    0.0 Wh
+      MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.0 Wh; unserved    0.0 Wh
       lowest lid temperature meeting M1: +9.6 C
    B  2S2P at the drafted point, typical
       MEETS    stops [None, None] lowest base   30.2 Wh ( 13.8 %), lid    0.5 Wh (  0.1 %), both   30.7 Wh; unserved    0.0 Wh
       lowest lid temperature meeting M1: +9.6 C
    C  2S2P, adverse, all at once
-      MEETS    stops [None, None] lowest base   27.9 Wh ( 12.8 %), lid    0.0 Wh (  0.0 %), both   27.9 Wh; unserved    0.0 Wh
+      MEETS    stops [None, None] lowest base   26.7 Wh ( 12.2 %), lid    0.0 Wh (  0.0 %), both   26.7 Wh; unserved    0.0 Wh
       lowest lid temperature meeting M1: +10.8 C
    E  1S4P at board E's generated 17.6 V point
-      MEETS    stops [None, None] lowest base   29.4 Wh ( 13.4 %), lid    0.0 Wh (  0.0 %), both   29.4 Wh; unserved    0.0 Wh
+      MEETS    stops [None, None] lowest base   29.3 Wh ( 13.4 %), lid    0.0 Wh (  0.0 %), both   29.3 Wh; unserved    0.0 Wh
       lowest lid temperature meeting M1: +9.8 C
    F  1S4P at its best fixed point
-      MEETS    stops [None, None] lowest base   30.0 Wh ( 13.7 %), lid    0.1 Wh (  0.0 %), both   30.2 Wh; unserved    0.0 Wh
+      MEETS    stops [None, None] lowest base   30.0 Wh ( 13.7 %), lid    0.1 Wh (  0.0 %), both   30.1 Wh; unserved    0.0 Wh
       lowest lid temperature meeting M1: +9.7 C
 
 5. THE ARRAY AND THE TWO-PACK CASE'S LID TEMPERATURE THRESHOLD (E2, 200 W, ratio of case B)
@@ -63,62 +63,62 @@ Leiden, PVGIS mean days), AI arithmetic, not a qualified review. Both scripts im
    slope   azim   kWh/m2/d B ratio C ratio B: verdict, both / lid Wh  C: verdict, both / lid Wh 
        0     +0      3.203  0.9900  0.9159 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
       10    -45      3.409  0.9897  0.9148 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
-      10    -30      3.465  0.9899  0.9148 MEETS     14.0 /   0.0     NOT MET    0.0 /   0.0    
-      10    -15      3.502  0.9902  0.9148 MEETS     19.0 /   0.0     NOT MET    0.0 /   0.0    
-      10     +0      3.518  0.9904  0.9148 MEETS     21.2 /   0.0     NOT MET    0.0 /   0.0    
-      10    +15      3.510  0.9905  0.9148 MEETS     21.0 /   0.0     NOT MET    0.0 /   0.0    
-      10    +30      3.480  0.9905  0.9148 MEETS     18.5 /   0.0     NOT MET    0.0 /   0.0    
-      10    +45      3.430  0.9904  0.9148 MEETS      9.7 /   0.0     NOT MET    0.0 /   0.0    
-      20    -45      3.566  0.9894  0.9134 MEETS      3.8 /   0.0     NOT MET    0.0 /   0.0    
-      20    -30      3.666  0.9897  0.9131 MEETS     25.1 /   0.0     NOT MET    0.0 /   0.0    
-      20    -15      3.733  0.9901  0.9130 MEETS     31.6 /   1.1     MEETS      3.3 /   0.0    
-      20     +0      3.764  0.9905  0.9131 MEETS     32.1 /   1.4     MEETS     10.4 /   0.0    
-      20    +15      3.749  0.9906  0.9130 MEETS     32.6 /   1.8     MEETS      9.5 /   0.0    
-      20    +30      3.694  0.9906  0.9130 MEETS     34.3 /   2.9     NOT MET    0.0 /   0.0    
-      20    +45      3.605  0.9906  0.9132 MEETS     29.7 /   0.0     NOT MET    0.0 /   0.0    
-      30    -45      3.661  0.9890  0.9118 MEETS      3.9 /   0.0     NOT MET    0.0 /   0.0    
-      30    -30      3.799  0.9895  0.9116 MEETS     27.9 /   0.0     NOT MET    0.0 /   0.0    
-      30    -15      3.888  0.9899  0.9113 MEETS     31.6 /   1.1     MEETS     17.0 /   0.0    
-      30     +0      3.931  0.9904  0.9114 MEETS     31.7 /   1.2     MEETS     28.9 /   0.0    
-      30    +15      3.910  0.9905  0.9112 MEETS     32.4 /   1.6     MEETS     26.0 /   0.0    
-      30    +30      3.838  0.9906  0.9113 MEETS     32.6 /   1.8     MEETS     16.9 /   0.0    
-      30    +45      3.708  0.9905  0.9112 MEETS     27.5 /   0.0     NOT MET    0.0 /   0.0    
+      10    -30      3.465  0.9899  0.9148 MEETS      4.4 /   0.0     NOT MET    0.0 /   0.0    
+      10    -15      3.502  0.9902  0.9148 MEETS     13.2 /   0.0     NOT MET    0.0 /   0.0    
+      10     +0      3.518  0.9904  0.9148 MEETS     15.2 /   0.0     NOT MET    0.0 /   0.0    
+      10    +15      3.510  0.9905  0.9148 MEETS     15.1 /   0.0     NOT MET    0.0 /   0.0    
+      10    +30      3.480  0.9905  0.9148 MEETS     12.3 /   0.0     NOT MET    0.0 /   0.0    
+      10    +45      3.430  0.9904  0.9148 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
+      20    -45      3.566  0.9894  0.9134 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
+      20    -30      3.666  0.9897  0.9131 MEETS     19.0 /   0.0     NOT MET    0.0 /   0.0    
+      20    -15      3.733  0.9901  0.9130 MEETS     30.3 /   0.0     NOT MET    0.0 /   0.0    
+      20     +0      3.764  0.9905  0.9131 MEETS     32.1 /   1.4     MEETS      2.4 /   0.0    
+      20    +15      3.749  0.9906  0.9130 MEETS     32.6 /   1.7     NOT MET    0.0 /   0.0    
+      20    +30      3.694  0.9906  0.9130 MEETS     34.2 /   2.8     NOT MET    0.0 /   0.0    
+      20    +45      3.605  0.9906  0.9132 MEETS     23.1 /   0.0     NOT MET    0.0 /   0.0    
+      30    -45      3.661  0.9890  0.9118 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
+      30    -30      3.799  0.9895  0.9116 MEETS     25.9 /   0.0     NOT MET    0.0 /   0.0    
+      30    -15      3.888  0.9899  0.9113 MEETS     31.6 /   1.1     MEETS     10.7 /   0.0    
+      30     +0      3.931  0.9904  0.9114 MEETS     31.7 /   1.2     MEETS     22.8 /   0.0    
+      30    +15      3.910  0.9905  0.9112 MEETS     32.4 /   1.6     MEETS     19.4 /   0.0    
+      30    +30      3.838  0.9906  0.9113 MEETS     32.5 /   1.7     MEETS      7.1 /   0.0    
+      30    +45      3.708  0.9905  0.9112 MEETS     24.2 /   0.0     NOT MET    0.0 /   0.0    
       40    -45      3.696  0.9886  0.9107 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
-      40    -30      3.849  0.9891  0.9102 MEETS     23.5 /   0.0     NOT MET    0.0 /   0.0    
-      40    -15      3.963  0.9897  0.9102 MEETS     31.9 /   1.3     MEETS     17.4 /   0.0    
-      40     +0      4.014  0.9903  0.9103 MEETS     30.7 /   0.5     MEETS     27.9 /   0.0    
-      40    +15      3.988  0.9904  0.9099 MEETS     32.2 /   1.5     MEETS     28.8 /   0.0    
-      40    +30      3.900  0.9905  0.9098 MEETS     29.3 /   0.0     MEETS     15.5 /   0.0    
-      40    +45      3.755  0.9904  0.9098 MEETS     27.5 /   0.0     NOT MET    0.0 /   0.0    
+      40    -30      3.849  0.9891  0.9102 MEETS     20.7 /   0.0     NOT MET    0.0 /   0.0    
+      40    -15      3.963  0.9897  0.9102 MEETS     31.8 /   1.3     MEETS     11.1 /   0.0    
+      40     +0      4.014  0.9903  0.9103 MEETS     30.7 /   0.5     MEETS     26.7 /   0.0    
+      40    +15      3.988  0.9904  0.9099 MEETS     32.2 /   1.5     MEETS     25.5 /   0.0    
+      40    +30      3.900  0.9905  0.9098 MEETS     29.2 /   0.0     MEETS      3.0 /   0.0    
+      40    +45      3.755  0.9904  0.9098 MEETS     19.9 /   0.0     NOT MET    0.0 /   0.0    
       50    -45      3.650  0.9880  0.9097 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
-      50    -30      3.820  0.9886  0.9093 MEETS     13.8 /   0.0     NOT MET    0.0 /   0.0    
-      50    -15      3.951  0.9895  0.9098 MEETS     28.7 /   0.0     MEETS      8.9 /   0.0    
-      50     +0      4.008  0.9902  0.9100 MEETS     29.1 /   0.0     MEETS     26.4 /   0.0    
-      50    +15      3.981  0.9903  0.9095 MEETS     32.0 /   1.4     MEETS     24.6 /   0.0    
-      50    +30      3.875  0.9902  0.9088 MEETS     24.6 /   0.0     NOT MET    0.0 /   0.0    
-      50    +45      3.720  0.9900  0.9086 MEETS      3.3 /   0.0     NOT MET    0.0 /   0.0    
+      50    -30      3.820  0.9886  0.9093 MEETS      2.5 /   0.0     NOT MET    0.0 /   0.0    
+      50    -15      3.951  0.9895  0.9098 MEETS     28.6 /   0.0     MEETS      0.7 /   0.0    
+      50     +0      4.008  0.9902  0.9100 MEETS     29.0 /   0.0     MEETS     23.5 /   0.0    
+      50    +15      3.981  0.9903  0.9095 MEETS     31.9 /   1.3     MEETS     18.5 /   0.0    
+      50    +30      3.875  0.9902  0.9088 MEETS     24.5 /   0.0     NOT MET    0.0 /   0.0    
+      50    +45      3.720  0.9900  0.9086 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
       60    -45      3.525  0.9870  0.9088 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
       60    -30      3.717  0.9881  0.9093 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
-      60    -15      3.850  0.9892  0.9101 MEETS     23.5 /   0.0     NOT MET    0.0 /   0.0    
-      60     +0      3.911  0.9900  0.9104 MEETS     26.9 /   0.0     MEETS     16.2 /   0.0    
-      60    +15      3.884  0.9902  0.9098 MEETS     27.1 /   0.0     MEETS      9.5 /   0.0    
-      60    +30      3.770  0.9898  0.9085 MEETS     18.6 /   0.0     NOT MET    0.0 /   0.0    
+      60    -15      3.850  0.9892  0.9101 MEETS     21.3 /   0.0     NOT MET    0.0 /   0.0    
+      60     +0      3.911  0.9900  0.9104 MEETS     26.8 /   0.0     MEETS      9.9 /   0.0    
+      60    +15      3.884  0.9902  0.9098 MEETS     27.0 /   0.0     MEETS      1.9 /   0.0    
+      60    +30      3.770  0.9898  0.9085 MEETS      8.5 /   0.0     NOT MET    0.0 /   0.0    
       60    +45      3.601  0.9895  0.9076 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
       70    -45      3.346  0.9861  0.9094 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
       70    -30      3.531  0.9874  0.9104 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
       70    -15      3.663  0.9888  0.9116 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
-      70     +0      3.725  0.9897  0.9114 MEETS     24.2 /   0.0     NOT MET    0.0 /   0.0    
-      70    +15      3.699  0.9899  0.9106 MEETS     19.6 /   0.0     NOT MET    0.0 /   0.0    
+      70     +0      3.725  0.9897  0.9114 MEETS     21.0 /   0.0     NOT MET    0.0 /   0.0    
+      70    +15      3.699  0.9899  0.9106 MEETS     14.6 /   0.0     NOT MET    0.0 /   0.0    
       70    +30      3.588  0.9894  0.9088 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
       70    +45      3.414  0.9887  0.9069 NOT MET    0.0 /   0.0     NOT MET    0.0 /   0.0    
 
    THE PLANES THAT MEET IN BOTH CASES, by slope (azimuth in degrees, negative east of south):
    slope  0: both none                             typical only none
-   slope 10: both none                             typical only -30, -15, +0, +15, +30, +45
-   slope 20: both -15, +0, +15                     typical only -45, -30, +30, +45
-   slope 30: both -15, +0, +15, +30                typical only -45, -30, +45
+   slope 10: both none                             typical only -30, -15, +0, +15, +30
+   slope 20: both +0                               typical only -30, -15, +15, +30, +45
+   slope 30: both -15, +0, +15, +30                typical only -30, +45
    slope 40: both -15, +0, +15, +30                typical only -30, +45
-   slope 50: both -15, +0, +15                     typical only -30, +30, +45
+   slope 50: both -15, +0, +15                     typical only -30, +30
    slope 60: both +0, +15                          typical only -15, +30
    slope 70: both none                             typical only +0, +15
    flat (slope 0): typical NOT MET, adverse NOT MET
