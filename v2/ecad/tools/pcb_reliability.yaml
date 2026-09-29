@@ -349,7 +349,7 @@ boards:
       reason: "a test point: a bare pad touched by a probe at the bench, nothing is mated and nothing hangs on it"
 
  b:
-   written_against: {artefact: netlist, path: "pcb-b-compute-b19/out/pcb-b-compute.net", sha256_16: "97823ef1171a61ce", content16: "b9dbb9c4a430d108"}
+   written_against: {artefact: netlist, path: "pcb-b-compute-b19/out/pcb-b-compute.net", sha256_16: "5b89d5ef6fe0299a", content16: "31190f043dc21cfa"}
    classes:
     - name: "CM5 module receptacles"
       refs: ["U30A", "U30B", "U31A", "U31B", "U32A", "U32B"]
@@ -574,7 +574,7 @@ boards:
         names the wall RJ45 port it powers; nothing is mated on it"
 
  c:
-   written_against: {artefact: netlist, path: "pcb-c-display-c8/out/pcb-c-display.net", sha256_16: "fef4df255c00f4db", content16: "ebde053efc0a3906"}
+   written_against: {artefact: netlist, path: "pcb-c-display-c8/out/pcb-c-display.net", sha256_16: "f442354f60f4214f", content16: "424a8b6ee5851775"}
    classes:
     - name: "the panel ribbon header"
       refs: ["J_PANEL"]

@@ -52,13 +52,13 @@ Intent written 2026-09-29 00:08. Stack: six layers, measured (LAYER-DECISIONS-20
 
 ```bound
 board      b
-netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 97823ef1171a61ce
-intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 9fd37fd39026c102
+netlist    v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net sha256/16 5b89d5ef6fe0299a
+intent     v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json sha256/16 84d2e641a3db261a
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
 ```
 
-Intent written 2026-09-29 00:09. Stack: six layers as built; eight (JLC08161H-2116, the same copper) under decision 43's measurement.
+Intent written 2026-09-29 10:39. Stack: six layers as built; eight (JLC08161H-2116, the same copper) under decision 43's measurement.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
@@ -139,13 +139,13 @@ Sized at a maker's figure above the declaration (SIZED_TO; POWER-THERMAL.md sect
 
 ```bound
 board      c
-netlist    v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256/16 fef4df255c00f4db
-intent     v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json sha256/16 03af8453948d391c
+netlist    v2/ecad/pcb-c-display-c8/out/pcb-c-display.net sha256/16 f442354f60f4214f
+intent     v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json sha256/16 3246ebd877ed460a
 model      track_current.width_for_current decision 35 rise 10 K plating 18 um
 stack      JLC06161H-3313 outer 0.0350 mm inner 0.0152 mm
 ```
 
-Intent written 2026-09-29 00:11. Stack: six layers, owner decision 27 (board file still four, JLC04161H-7628, the same copper).
+Intent written 2026-09-29 10:41. Stack: six layers, owner decision 27 (board file still four, JLC04161H-7628, the same copper).
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
