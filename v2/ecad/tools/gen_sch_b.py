@@ -1099,6 +1099,10 @@ def slot(s):
     r(R(91), "1k", cm33, "PG%d" % s); r(R(92), "100k", "PG%d" % s, "GND")
     # --- module support: LEDs, fan, flashing port, bench headers, the SPI breakout, the domain-boundary stages
     r(R(48), "1k", cm33, "LED_ACT_A%d" % s); led("LED%d6" % s, "green ACT (LED_nACT sinks)", "LED_ACT_A%d" % s, "LED_nACT%d" % s)
+    # LED_ACT_A{s} DECLARED AS A NODE (set 12, records/int13/apply_census_nodes2_set12.py): the feed resistor is a declared load of
+    # the module rail, so the census followed its current into the anode; the anode is a signal net at most the rail.
+    _intent.node("LED_ACT_A%d" % s, _intent.net_volts(cm33), "slot %d's ACT LED anode between its 1k feed from %s and the LED; "
+                 "at most the module rail; no part takes its supply from it" % (s, cm33))
     part(Q(1), "Transistor_BJT", "BC857", "BC857: LED_nPWR must be buffered (datasheet Table 4)", "SOT23", {"1": "Q%dB" % s, "2": cm33, "3": "Q%dC" % s})
     r(R(49), "10k", "LED_nPWR%d" % s, "Q%dB" % s); r(R(50), "1k", "Q%dC" % s, "LED_PWR_A%d" % s); led("LED%d7" % s, "red PWR", "LED_PWR_A%d" % s, "GND")
     # PWR-001 (w3b, 27 September 2026): Q{s}C is the PNP buffer's collector feeding the power LED through its 1 k, a NODE like
