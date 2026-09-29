@@ -99,15 +99,15 @@
   "extent_mm": 400.0,
   "far_netlist_b": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "21a1f74a3ec1ae28"
+   "sha256_16": "97823ef1171a61ce"
   },
   "far_netlist_c": {
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "3fddbb3edcd4248a"
+   "sha256_16": "fef4df255c00f4db"
   },
   "far_netlist_d": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "sha256_16": "7a2c0ac2190b141a"
+   "sha256_16": "a2d48972d171aad1"
   },
   "ibis_manifest": {
    "path": "v2/vendor/ibis-manifest.yaml",
@@ -115,7 +115,7 @@
   },
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "070b4c5e41e023e5"
+   "sha256_16": "f9e4827ba2f6d2bd"
   },
   "model_1": {
    "path": "v2/vendor/st/ibis/stm32h742_743_750_753_lqfp100.ibs",
@@ -154,7 +154,7 @@
   "netlist": {
    "content16": "2efce63fe72079f1",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "599ee964a9c23d6e"
+   "sha256_16": "30ad87746d1801ca"
   },
   "project": {
    "path": "pcb-a-power-a23/pcb-a-power.kicad_pro",

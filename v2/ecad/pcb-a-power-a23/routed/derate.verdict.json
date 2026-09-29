@@ -26,7 +26,7 @@
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "599ee964a9c23d6e"
+   "sha256_16": "30ad87746d1801ca"
   }
  },
  "missing_input": null,
@@ -46,12 +46,12 @@
  },
  "tool": "derate",
  "tools": {
-  "git_head": "36ac4bef1ade",
-  "tools_tree_sha": "fedf14205ed9e57d"
+  "git_head": "958a7de7a15f",
+  "tools_tree_sha": "7a55e9ef29ec7734"
  },
- "ts": "2026-09-29T00:01:36Z",
+ "ts": "2026-09-29T00:15:18Z",
  "verdict": "PASS",
- "version": "36ac4bef1ade",
+ "version": "958a7de7a15f",
  "writer": {
   "file": "derate.py",
   "sha16": "6c29d1b9a523d385"

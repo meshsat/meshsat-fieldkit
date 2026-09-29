@@ -30,16 +30,16 @@
   "board": "d",
   "erc_report": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs-erc.json",
-   "sha256_16": "c0bd302c40027cd4"
+   "sha256_16": "4f1ac5497cd916e3"
   },
   "netlist": {
    "content16": "be4194ed867c8406",
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "sha256_16": "7a2c0ac2190b141a"
+   "sha256_16": "a2d48972d171aad1"
   },
   "netlist_tie": {
    "proved": true,
-   "why": "the report, the schematic and the netlist's own provenance agree on schematic 823b03952b37"
+   "why": "the report, the schematic and the netlist's own provenance agree on schematic c0a25072cfb4"
   },
   "project": {
    "path": ".",
@@ -47,7 +47,7 @@
   },
   "schematic": {
    "path": "pcb-d-aprs-d9/pcb-d-aprs.kicad_sch",
-   "sha256_16": "823b03952b3723ea"
+   "sha256_16": "c0a25072cfb40d67"
   }
  },
  "missing_input": null,
@@ -67,12 +67,12 @@
  },
  "tool": "erc_gate",
  "tools": {
-  "git_head": "36ac4bef1ade",
-  "tools_tree_sha": "fedf14205ed9e57d"
+  "git_head": "958a7de7a15f",
+  "tools_tree_sha": "7a55e9ef29ec7734"
  },
- "ts": "2026-09-29T00:02:45Z",
+ "ts": "2026-09-29T00:16:40Z",
  "verdict": "PASS",
- "version": "36ac4bef1ade",
+ "version": "958a7de7a15f",
  "writer": {
   "file": "erc_gate.py",
   "sha16": "bb4bf868c515f37a"
