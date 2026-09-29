@@ -71,3 +71,35 @@ No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py
   render; `close_s122.py` refused the fixture while only staged, closed S-122 with it committed (not filed), CFL-016
   PASS, S-123 still open, and refused a second run; after it `rules_lib.py requirements` 0 errors and
   `test_requirements` with `test_envelope_data` 71 passed. The clone is deleted.
+
+## Round 3 (the answer to `checks/check-s122-2.md`: 1 blocking, 8 minor)
+
+- 19:20 (one label for the round's work, read from `date` when this entry was written; the round began after the
+  check's reading of 18:41 to 18:55) Check read whole and filed byte for byte as `checks/check-s122-2.md`.
+  - B1: read on the netlists by `verdicts.py`'s new at-commit assertions: `U41`, `U51`, `U61` PB7 on `SDA` and PB6 on
+    `SCL` on set 13 and at `458b2873`, `45bde541`, `95e078a1`, `a9f212c7` and `c5430071`, unconnected at `1f614233`;
+    board B's `U513` to `U520` and `U530` to `U535` at `95e078a1` and `c5430071`, none at `45bde541`; `U519` and `U520`
+    the display switches' enables; S-42 OPEN, CON-003 and CON-022 INCONCLUSIVE waiting on it. Rows DC-07 and DC-08
+    written; both sentences BASELINE on them.
+  - The method: every CONOPS.md sentence with absent, owed, not drawn or not connected is inventoried in any section
+    and judged TRUE or BASELINE, or binds each such word to a phrase not about the circuit. Before (the committed
+    `verdicts.out` at `83cb0640`): 14 such sentences, 1 TRUE, 7 BASELINE, 6 NOT DERIVABLE. After: 18, 3 TRUE, 11
+    BASELINE, 4 NOT DERIVABLE (phrases bound), 0 STALE, 0 UNJUDGED. New from the sweep: section 7's D-17 row (board A's
+    `U31` drawn since `458b2873`, row DC-09; the row written at `68bc9e8f`, CONOPS.md's first commit), section 7a's
+    HOT-R1 row (added to DC-02), section 7a's BANK-R1 row (TRUE: the hub ports are as at `45bde541` and REQ-052 reads
+    FAIL), section 2's need. Section 4e's `SLOT_EN` hold turned TRUE on the three boards' exact net members.
+  - m7: the parser keeps wrapped items' continuation lines; the 11 merged texts judged again. m8: the count rule
+    checks each count's cover; 29 judgements given a cover per count.
+  - `apply_docs_s122_r3.py --check` and then its run on `83cb0640`'s three documents: 10 edits, 144 assertions held
+    first; a second run refuses. Outputs regenerated: 862 sentences, 339 TRUE, 0 STALE, 38 BASELINE, 485 NOT
+    DERIVABLE, 0 UNJUDGED, 2803 assertions; the base 808 sentences, 64 STALE.
+  - Read and recorded as an observation, not changed: CON-003's and CON-022's evidence text against `R480`, `R500` at
+    10k and `U513` to `U520` drawn on the netlist they are bound to.
+- 19:23 Committed `89b9ac6b` behind the pre-commit PASSED line. Replay on a throwaway clone of it: the four outputs
+  byte identical; `apply_docs_s122_r3.py` from `83cb0640`'s three documents gives the tip byte for byte and refuses a
+  second run; `apply_docs_s122_r2.py --check` on `1594090e`'s documents reads 497 assertions (check-s122-2 m5);
+  `apply_registry_s122.py` rebinds 20 records with round 3's entries and refuses a second run; `rules_lib.py
+  requirements` 144 records, 0 errors, 0 warnings; the requirement and envelope tests 69 passed and 2 failed before the
+  trace page's render, 71 passed after; `close_s122.py` refused the fixture while staged, closed S-122 with it
+  committed (862 sentences, 0 STALE, 0 UNJUDGED; CFL-016 PASS; S-123 and S-42 open) and refused a second run; after it
+  0 errors, 71 passed, `claims_check` PASS 91 of 91. The clone is deleted.
