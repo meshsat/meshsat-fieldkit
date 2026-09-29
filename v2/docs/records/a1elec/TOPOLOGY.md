@@ -119,8 +119,16 @@ lid at 2.25 V a cell, the second level's under-voltage.
 charges the base through this path. At the limit's maximum, 11.0 A into the base is 1.83 A a cell, **under the 35E's
 2.0 A maximum charge current** (spec 3.7), whatever the voltage difference (`.out` 8). The lid's share of the kit's
 10 A continuous (6.7 A at the capacity split) stays under the 8.7 A minimum. At the kit's 18 A peak the lid path limits
-and the hard-wired base takes the rest (3 A a base cell, under the 8 A discharge rating); if the peak lasts past the
-LM5069's fault timer the lid path retries and the base carries the peak.
+and the hard-wired base takes the rest; if the peak lasts past the LM5069's fault timer the lid path turns off and
+retries, and the base carries all 18 A meanwhile (3 A a base cell, under the 8 A discharge rating, spec 3.8). The
+LM5069's power limit and timer are sized by board A's owner with SNVS452G's design procedure for the start into VBAT's
+capacitance with the base absent, the one case in which the lid path, not the base, charges the node.
+
+**Each pack's graceful line.** CONOPS 4c's line (RSOC 5 percent, or the lowest cell at 3.00 V under load) applies per
+pack: the host turns the lid path off when the lid reaches it, and shuts the kit down when the base reaches it with the
+lid already out. The model's stores end there. With the capacity split the colder lid reaches its line first at the
+basis; if the base reached its line first while the lid still held energy, the kit could keep running on both until the
+base's own CUV (2.50 V) opens its discharge FET, energy the model does not credit.
 
 **The join rule** (host, a firmware draft): the lid path is enabled while the lid's gauge voltage is at most 0.20 V
 above the base's (50 mV a cell); a lid fuller than that waits, disabled, while the base carries the load (the gap closes)

@@ -87,6 +87,11 @@ BQ4050 at a k = 2 calibration, IPScale unused (GAUGE 2). 7. Re-rate board A's en
 - **POWER-THERMAL** re-run with board A at 19 W at the charging peak (CHARGER 3).
 - **A three-GPIO check on board E's U10** for the lid SMBus segment, or the fallback address (TOPOLOGY 5).
 - **Chronological weather**: every result is the mean day; a colder or duller spell than the mean is not examined here.
+- **The lid's cold capacity**: the model's temperature factor is a lower bound at the lid's 0.16 A a cell (one cold
+  point of the cell sheet at 3.4 A); a low-rate cold discharge curve of the 35E, from the maker or the bench, would
+  replace it.
+- **Transport**: the lid module is a second battery of 578.9 Wh nominal; its classification is REQ-069's and is not
+  examined here (the energy record withdrew its own transport sentence).
 
 ## Reproducing
 

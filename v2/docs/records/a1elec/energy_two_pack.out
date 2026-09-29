@@ -43,12 +43,15 @@ the 3.00 V line with the 5 percent reserve, both start hours (06 and 18 UTC), PS
    M1 runs PS-IDLE-SPEC, the full mode; the lid is open in it (lid closed = reduced mode, ruling of 7 September 2026),
    so the lid module sits in the open lid, outside the closed base and the kit's own heat, in the shade the plate's
    shade rule (D-02e) gives. Its cells then follow the air: their own heating is 0.9 mW a cell discharging at the
-   lid's share and 15.6 mW a cell charging at 8.0 A (the maker's 35 mOhm class resistance, spec 3.6 order), negligible.
+   lid's share and 15.6 mW a cell charging at 8.0 A (35 mOhm a cell, the class of the 34.5 mOhm DC figure energy_inputs.yaml carries), negligible.
    PVGIS's September mean day at the site (DRcalc T2m, 2005 to 2020, the file in inputs/): 13.23 C at 05 UTC to 18.33 C at
    14 UTC, mean 15.55 C. The model holds one temperature per pack for the 72 hours, so the lid is run at the mean day's
    MINIMUM, 13.23 C (the basis; its cells' thermal lag of about an hour, ESTIMATE, only raises the night's temperature),
    and across 5 to 20 C, with the lowest lid temperature at which each case still meets M1. A real September night
    is colder than the mean day's; the threshold says how much colder the case tolerates. The base stays at +20 C.
+   The temperature factor is energy_budget's line through the cell sheet's one cold point (spec 7.5: 40 percent at -10 C
+   at 3,400 mA); energy_inputs.yaml names it a LOWER bound at the kit's 0.3 to 1.0 A a cell, and the lid runs at about
+   0.16 A a cell, so every lid-temperature threshold below is conservative in that respect (it errs toward NOT MET).
 
 3. THE DESIGN CASE: 400 Wp into a 200 W stage (Option A(i)), entry re-rated (E2), the ceilings and losses of section 0
    3a. lid temperature swept (base +20 C):
