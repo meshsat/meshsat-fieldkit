@@ -1,6 +1,6 @@
 {
  "board": "pcb-b-compute",
- "written": "2026-09-29 12:33",
+ "written": "2026-09-29 12:45",
  "bypass": [
   {
    "cap": "C112",
@@ -3639,6 +3639,11 @@
    "v_min": 0.0,
    "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
   },
+  "LED_ACT_A1": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "slot 1's ACT LED anode between its 1k feed from +3V3_CM1 and the LED; at most the module rail; no part takes its supply from it"
+  },
   "Q1C": {
    "v_max": 3.3,
    "v_min": 0.0,
@@ -3882,6 +3887,11 @@
    "v_min": 0.0,
    "basis": "a SIM card line at the holder, swinging to USIM2_VDD, which the module sets to 1.8 or 3.0 V (HD v1.1 pin table: 1.8/3.0 V, Class B and C cards); declared at 3.3 V for the 50 V capacitor on it"
   },
+  "LED_ACT_A2": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "slot 2's ACT LED anode between its 1k feed from +3V3_CM2 and the LED; at most the module rail; no part takes its supply from it"
+  },
   "Q2C": {
    "v_max": 3.3,
    "v_min": 0.0,
@@ -4074,6 +4084,11 @@
    "v_max": 3.6,
    "v_min": 0.0,
    "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "LED_ACT_A3": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "slot 3's ACT LED anode between its 1k feed from +3V3_CM3 and the LED; at most the module rail; no part takes its supply from it"
   },
   "Q3C": {
    "v_max": 3.3,
