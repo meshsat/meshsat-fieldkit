@@ -207,6 +207,12 @@ def main():
             verdict = ("inside both" if hi <= 50 else "OVER the 50 mA minimum limit" if lo > 50 else
                        "straddles the 50 mA minimum limit")
             print("   %-10s %9.1f mA %9.1f mA   %s" % ("%s %s kHz" % (k, fk) if k != "typ" else "%s kHz" % fk, lo, hi, verdict))
+    print("   In BUCK-BOOST mode all four FETs switch (Table 9-3) and the demand doubles; the maker states the three modes by")
+    print("   the VBUS and VBAT combination and gives no threshold for the transition (9.3.10, p.27), so whether U3 enters it")
+    print("   near a full pack (16.8 V against 20 V in) is not stated. Four CSD18510Q5B switching:")
+    for fk in ("400", "800"):
+        f = FSW[fk][1]
+        print("   %s kHz typical: %.1f to %.1f mA against the 50 mA minimum limit" % (fk, 4 * QG_45 * f * 1e3, 4 * QG_6V * f * 1e3))
     print("   The same current is drawn from VBUS20 through REGN's linear regulator: at 20.7 V and the typical fS the gate")
     for fk in ("400", "800"):
         f = FSW[fk][1]

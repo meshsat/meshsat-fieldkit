@@ -1,0 +1,2 @@
+apply_hwfw_s117: FW-A17 after FW-A16, V-A05 after V-A04, section 3.1's heading, FW-C01's step 5, one change-record row; 418 lines -> 421
+CHECK ONLY: HW-FW-CONTRACT.md not written.

@@ -162,6 +162,11 @@ S1   20.70   5.70   9.00    13.11  sensitivity only: the secondary protector's 9
    min 800 kHz      78.9 mA     102.0 mA   OVER the 50 mA minimum limit
    800 kHz         92.8 mA     120.0 mA   OVER the 50 mA minimum limit
    max 800 kHz     106.7 mA     138.0 mA   OVER the 50 mA minimum limit
+   In BUCK-BOOST mode all four FETs switch (Table 9-3) and the demand doubles; the maker states the three modes by
+   the VBUS and VBAT combination and gives no threshold for the transition (9.3.10, p.27), so whether U3 enters it
+   near a full pack (16.8 V against 20 V in) is not stated. Four CSD18510Q5B switching:
+   400 kHz typical: 92.8 to 120.0 mA against the 50 mA minimum limit
+   800 kHz typical: 185.6 to 240.0 mA against the 50 mA minimum limit
    The same current is drawn from VBUS20 through REGN's linear regulator: at 20.7 V and the typical fS the gate
    drive takes 1.24 W at 400 kHz, of which the regulator's own drop, 0.88 W, is dissipated inside U3; with the
    JEDEC RthJA of 37.2 C/W (8.4, p.9) that drop alone is a 33 K rise of U3's junction over its surroundings.
