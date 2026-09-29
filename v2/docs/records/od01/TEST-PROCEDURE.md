@@ -33,8 +33,7 @@ rise of H1 under a 45 to 83 W block (an Arcol HS100 on its 35.0 x 37.0 fixing) f
 
 **Applicability to Option A(i)'s proposal (29 September 2026, second issue after check 10).** Option A(i) (a 400 Wp
 array into a 200 W stage; `v2/docs/records/a1solar/`, `a1elec/`, `a1mech/` and `a1int/` on branch `fnd/a1int`, not yet on
-main) proposes two changes inside the case: the base pockets' 4S6P, a second 4S3P block in the west pocket beside the
-east one, and a lid pack of 4S14P or 4S15P (`a1int/RECONCILE.md`) over the face, with a harness across the hinge and a lid
+main) proposes two changes inside the case: the base pockets' 4S6P, a second 4S3P block in the west pocket in addition to the east one (the pockets are about 240 mm apart), and a lid pack of 4S14P or 4S15P (`a1int/RECONCILE.md`) over the face, with a harness across the hinge and a lid
 stay. It waits on the owner's decisions (which lid function leaves, REQ-016, D-06, the deployment rule: the standing rule
 of 29 September in `v2/docs/EXECUTION-PLAN.md` on main, commit `bf68ad9e`). Nothing below adopts it. What each OD-01 test
 still gives if it is adopted:
@@ -44,7 +43,7 @@ still gives if it is adopted:
 | Receipt checks R1 to R8 | yes | the case, the frame and the walls are the same |
 | H1, C6 and the gates of RFQ section 6 | yes | the heat-test plate and the legs meet neither the lid nor the west block |
 | C1 (face plate) for the mock-up | yes for T2 and T4 | as drawn it has no sealed crossing for the lid's lead nor for the QMX leads (S-95, which predates Option A(i)): a mock-up plate, not the kit's final face |
-| C4-W (west entry plate) for the mock-up | no, as the kit's plate | the west block takes the room the west RF jumpers were planned in; the west RF entry is re-planned before the west block is taken (`a1mech/README.md` item 6): C4-W as drawn is a mock-up plate; C4-E is unchanged |
+| C4-W (west entry plate) | no, as drawn | the west block takes the room the west RF jumpers were planned in; the west RF entry is re-planned before the west block is taken (`a1mech/README.md` item 6): C4-W as drawn waits on that re-plan (the RFQ cuts it only at the build); C4-E is unchanged |
 | Shutdown V1 to V4, stop limits, records | yes | the test rig, not the kit |
 | Test A, lid-open steps S1, S4, S5 | yes, for the base as set up | the open lid stands away from the base volume the test measures (INFERRED; the lid pack's own heat when charging is not in the test); the west block is not in the set-up (H3 stands for the east block only), so the steps measure the base without it |
 | Test A, lid-closed steps S2, S3, S6 | no, as a measure of Option A(i) | with the lid pack the closed lid's space over the face is mostly cells; the conductance with the lid closed would need a lid-pack thermal dummy in the lid and the west block's twin of H3 (new steps) |
@@ -52,7 +51,8 @@ still gives if it is adopted:
 | Test B: T1, T2, T11 | yes | case, frame, legs, the arrestor on the east plate |
 | Test B: T5 | partly | the end wall east and the back wall unchanged; the west wall's holes wait on the west RF re-plan |
 | Test B: T4 | partly | it has no lid-pack stand-in and no stand-in for the west block |
-| Test B: T6 | yes, as a bound (INFERRED) | the lid pack is inside the lid and leaves its outer skin unchanged; the stay stops the lid at 100 degrees, short of Peli's stop, so T6's open-lid reading at Peli's stop bounds Option A(i) unless T-A1-3 finds otherwise |
+| Test B: T6 | yes, as a bound (INFERRED) | the lid pack is inside the lid and leaves its outer skin unchanged; the stay stops the lid at 100 degrees, short of Peli's stop, so T6's open-lid reading at Peli's stop bounds Option A(i) unless T-A1-3 finds otherwise; T6's offer of the west
+entry plate's footprint waits on the west RF re-plan |
 | New for Option A(i) (not in OD-01) | none yet | `records/a1mech/README.md` section 7: T-A1-1 (the lid's depth to the ceiling), T-A1-2 (the U-174/U jack), T-A1-3 (the stop, the hinge axis, the open case on a slope), T-A1-4 (200 lid cycles with a dummy module and the harness); T9 with a dummy module; T8's pull test at the module's load; E1 and E2 with an accelerometer on the lid; T10 and T5 at the west wall after the west RF re-plan; the sealed lid-lead crossing (S-95) |
 
 **Its uncertainty (the session's budget, INFERRED until the operator's own instruments' stated accuracies replace the
