@@ -98,7 +98,7 @@ OWN = dict(bond=0.10, plate=0.13, standoff=0.10, cover=0.10)             # the m
 OWN_SUM = sum(OWN.values())
 # the lid pack's protection board: ASSUMPTION, board P's own outline and tallest part until the electrical stream (fnd/a1elec) reports
 P2 = dict(w=70.0, h=44.0, parts=16.17, standoff=2.5, board=1.6, mass=0.080)   # 2.5 standoffs: 22.47 deep, 0.28 inside the cover's inner face (22.75)
-P2_DEPTH = BOND + PLATE + P2["standoff"] + P2["board"] + P2["parts"]    # 22.97
+P2_DEPTH = BOND + PLATE + P2["standoff"] + P2["board"] + P2["parts"]    # 22.47
 
 # ---------------------------------------------------------------- the tablet (appendix 32.50 16d; REQ-011; SC-45: the model is a pick)
 TABLET_8 = dict(name="8 inch rugged class", w=214.0, h=127.0, t=10.1, mass=0.44)   # INFERRED class envelope, no maker sheet held
@@ -629,7 +629,8 @@ def main(fp):
     w("   strain relief: a bonded tie mount at T_L and at T_P and every 60 mm or less along both runs (the r2 set's tie-mount rule), and a")
     w("   printed guide on the lid's back wall that keeps the free lead inboard of the cavity wall (Y < %.1f) so that closing folds it toward" % LID_WALL_AT_PART[1])
     w("   the face and never over the rim or the seal.")
-    w("   disconnect: an XT60 pair and a JST XH 1x4 for SMBus in the back channel at X -135..-100, lying along X, so that the lid comes off its")
+    w("   disconnect: an XT60 pair and a JST XH 1x4 for SMBus in the back channel at X -168..-134, Y 118..126, Z 126..136 closed (18 to 28")
+    w("   below the ceiling; 13 west of the lid tie T_L at X -121, Z 111.5, and west of the free lead's bow), lying along X, so that the lid comes off its")
     w("   hinge as ASSEMBLY.md section 7 has it; fused at P2 (the string fuse of 8a's class). Amass XT60-F sheet V1.2 (v2/vendor/battery/")
     w("   amass-xt60-spec-tme.pdf): 30 A rated, 60 A instantaneous, 12 AWG recommended, 1000 mating cycles, -20 to 120 C, 0.55 mOhm.")
     w("   the two 4.4 leads from P2 lie one above the other in the 7.0 west bay (8.8 of its depth). No conductor sheet is held: the 10 x OD")
@@ -697,12 +698,15 @@ def main(fp):
     w("   its CG back and high tips on level ground (first at %s degrees swept). Fix, the session's (authority SESSION, reversible): a lid stay" % tip_phi)
     w("   that stops the lid at 100 degrees. With it the worst back slope the open case stands on is %.1f deg (B), %.1f deg (A), %.1f deg (C)" % (
         lim[("B", 100)], lim[("A", 100)], lim[("C", 100)]))
-    w("   at the flat-bottom tipping line, and %.1f deg (B) with the feet inboard. The operator's sheet: open the lid only on ground sloping" % worst_over(aB, 100, 100.0)[0])
-    w("   less than %d degrees toward the hinge side until T-A1-3 has measured the feet, the stop and the hinge axis." % math.floor(min(lim[("B", 100)], lim[("C", 100)])))
+    fin = {k: worst_over(a, 100, 100.0)[0] for k, a in (("B", aB), ("A", aA), ("C", aC))}
+    w("   at the flat-bottom tipping line (Y 114.49), and %.1f deg (B), %.1f deg (A), %.1f deg (C) with the feet 14.5 inboard (Y 100, the" % (fin["B"], fin["A"], fin["C"]))
+    w("   INFERRED bound). The operator's sheet, until T-A1-3 has measured the feet, the stop and the hinge axis, takes the bound: option 1")
+    w("   (B) under about %d degrees toward the hinge side, option 2 (C) level ground only (%.1f deg); after it, the measured tipping line." % (
+        math.floor(fin["B"]), fin["C"]))
     # M5: the stay sized
     LA, BA = (60.0, 140.0), (75.95, 106.52 + 2.4)
-    w("   THE STAY (check M5): a polyester webbing strap at X -179 (the lid's west end zone, outside the flat ceiling and clear of the guard")
-    w("   caps at X -157..-143 and the back channel), from a tab bonded (DP8005) to the lid's inner west end wall at (Y %.0f, Z %.0f) closed, to a" % LA)
+    w("   THE STAY (check M5): a 12 mm polyester webbing strap centred at X -176 (X -182..-170: 3.3 inside the lid's end wall at X -185.3,")
+    w("   13 clear of the guard caps at X -157), from a tab bonded (DP8005) to the lid's inner west end wall at (Y %.0f, Z %.0f) closed, to a" % LA)
     w("   stainless tab under the face plate's 6-32 pan head at (X -179.07, Y %.2f), which pulls Peli's brass insert against the ring's" % BA[0])
     w("   underside, its strong direction (CASE-MARGINS 2.5).")
     for key, a in (("B", aB), ("A", aA), ("C", aC)):
@@ -721,10 +725,12 @@ def main(fp):
         HINGE["y"], HINGE["z"] = HY, HZ
     w("     the bonded tab on Peli's polypropylene has no held strength (DP8005's sheet gives none on PP) and Peli states none for its inserts:")
     w("     both OPEN at T8 (a pull test of the tab at 3 times the largest tension above) and T-A1-3 (the stay on the mock-up, the lid dropped")
-    w("     open onto it). Stay parts: 25 mm polyester webbing, two stainless tabs; about EUR 10 (ESTIMATE).")
+    w("     open onto it). Closed, its slack lies folded against the lid's ceiling and fillet at X -185..-150, Y 55..80, 6 deep or less, held by")
+    w("     a bonded elastic keeper (room over the guard caps below it: 44.39 - 28.00 - 6 = 10.4). Stay parts: 12 mm polyester webbing, two")
+    w("     stainless tabs; about EUR 10 (ESTIMATE).")
     # M6: operator loads
-    w("   OPERATOR LOADS (check M6): a horizontal backward push on the open lid at the QMX set's height (B, A) or the tablet's (C) tips the")
-    w("   worst swept case on level ground when it exceeds:")
+    w("   OPERATOR LOADS (check M6): a horizontal backward push on the open lid at the QMX set's point (B, A; for C the same point on the")
+    w("   lid), and a push normal to the tablet's screen at its centre and far edge (A, C), tip the worst swept case on level ground above:")
     for key, a in (("B", aB), ("A", aA), ("C", aC)):
         wsl, wy, (hy, hz, bm, bc, items) = worst_over(a, 100)
         HINGE["y"], HINGE["z"] = hy, hz
@@ -733,7 +739,25 @@ def main(fp):
         F = m * 9.81 * (Y_TIP - y) / (push[1] - FOOT_Z)
         HINGE["y"], HINGE["z"] = HY, HZ
         w("     %s at 100 deg: %.2f kg, CG Y %.2f, restoring %.2f N m; push at Z %.0f: %.1f N (%.1f kgf)" % (key, m, y, m * 9.81 * (Y_TIP - y) / 1000.0, push[1], F, F / 9.81))
-    w("     so pressing the QMX's controls, plugging its jacks or tapping a tablet in the lid must be done with a hand on the case, or the")
+        if a["tablet"]:
+            fr = math.radians(100)
+            ny, nz = math.sin(fr), math.cos(fr)                       # the direction (0, +1) of the lid frame (into the lid), turned open
+            tr = a["tablet_rect"]; zs = CEIL_Z_NOM - tablet_depth(a["tablet"])
+            for label, yc in (("centre", (tr[1] + tr[3]) / 2), ("far edge", tr[1])):
+                best = None
+                for hy2, hz2 in hinges:
+                    HINGE["y"], HINGE["z"] = hy2, hz2
+                    for bm2, bc2 in bases:
+                        it2 = mass_items(a, bm2, bc2)
+                        m2, x2, y2, z2 = cg(it2, phi=100)
+                        restore = m2 * 9.81 * (Y_TIP - y2) / 1000.0
+                        py, pz = rot((yc, zs), 100)
+                        arm = (ny * (pz - FOOT_Z) - nz * (py - Y_TIP)) / 1000.0
+                        Fs = restore / arm if restore > 0 else 0.0
+                        if best is None or Fs < best[0]: best = (Fs, py, pz)
+                HINGE["y"], HINGE["z"] = HY, HZ
+                w("       %s, a push normal to the tablet's screen at its %s (open at Y %.0f, Z %.0f): %.1f N" % (key, label, best[1], best[2], best[0]))
+    w("     so pressing the QMX's controls, plugging its jacks or tapping the lid's tablet (about 6 N at its far edge in C) must be done with a hand on the case, or the")
     w("     case stood with its back against something: a use limit on the operator's sheet; with the base's real mass and CG (T-A1-3) it may rise.")
     w()
     w("5. THE BASE POCKETS: section 8's 4S6P (east block as ruled, west block mirrored) at the same worst figures")

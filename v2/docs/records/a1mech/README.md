@@ -16,7 +16,7 @@ to M11 are answered in place; section 11 lists each.**
 1. **48 cells do not fit in the lid with both the QMX set and a tablet bracket.** At the worst of Peli's figures (44.39 from
    the face top to the lid's ceiling) the lid holds **39 cell places with both kept: 4S9P, 4S15P with the base**. (The first
    issue read 35: an unstated rule kept P2 off the tablet's plan; it is dropped, B1.) On a1elec's two-pack model, run by the
-   coordinator for a 4S9P lid (September reference day, 200 W stage, the lid's charge current scaled per string): **with the
+   coordinator for a 4S9P lid (fnd/a1int's `v2/docs/records/a1int/reconcile_lid.out` (commit `b6e5ee70`, lines 21 to 28)) (September reference day, 200 W stage, the lid's charge current scaled per string): **with the
    lid at its 13.23 C basis M1 is NOT met at 400, 650 or 1000 Wp** (164.8, 110.9 and 41.7 Wh unserved); with the lid at +20 C
    it is not met at 400 Wp (39.7 Wh unserved) and is met at 650 Wp (2.0 Wh left) and 1000 Wp (29.4 Wh left). So both kept
    carries M1 neither at the lid's temperature basis nor at A(i)'s 400 Wp. Nothing found reaches 48 with both kept.
@@ -30,16 +30,19 @@ to M11 are answered in place; section 11 lists each.**
    layer nested in the grooves** (a module 40.06 deep) wherever the worst margin over the face part under it stays 1.0 or more
    (parts up to 2.90 high: over the LEDs it reads 2.40); one layer (24.00 deep) elsewhere. Every face row meets 1.0 at the
    worst; the tightest are the nested layer over the Xenarc window (3.10) and over the LEDs (2.40), OPEN at the sensitivity
-   reading. The counts hold at both ends of a sensitivity reading of the module's inferred allowances. A boolean check on the
+   reading. The counts hold at both ends of a sensitivity reading of the module's inferred allowances, except C10: its 48 is
+   exactly 4S12P with no spare place and reads 46 (4S11P) at the least favourable end (m6). A boolean check on the
    solids agrees with the arithmetic for all five arrangements and fails on both controls (`cad/lid_pack_a1_cad.out`).
 4. The hinge harness: 12 AWG, assumed 10 A continuous and 18 A for 60 s, a free lead of 169.7 between two ties 150 apart
    along the back channel, bending at about R 94 to R 102 over the lid's travel; disconnect (XT60 and XH) in the back channel
-   beside the module. **The crossing of the sealed face plate is not designed** (S-95, EQ-31, which the QMX leads need too).
+   at X -168 to -134, Z 126 to 136 closed, west of the lid tie. **The crossing of the sealed face plate is not designed** (S-95, EQ-31, which the QMX leads need too).
 5. Stability: the lid grows from about 1.4 kg (shell and QMX set) to 4.9 kg in B and 5.5 kg in C (every place filled). The
    open case stands on level ground up to 120 degrees of opening in B's every swept case (110 in C) and tips beyond it with a
-   light base. Peli's stop angle is in no held file. **Fix (the session's): a lid stay at 100 degrees**, sized at 56 to 63 N
-   static. With it the open case stands on a back slope of 9.5 degrees (B) or 7.0 (C) at the worst of the full sweep, 3.6
-   (B) if Peli's feet stand 14.5 inboard; a backward push of 9 to 13 N at the QMX's height tips the lightest swept case.
+   light base. Peli's stop angle is in no held file. **Fix (the session's): a lid stay at 100 degrees**, sized at 53 to 63 N
+   static. With it the open case stands on a back slope of 9.5 degrees (B) or 7.0 (C) if it tips on its flat bottom's edge, and
+   of only **3.6 (B) or 1.2 (C) if Peli's feet stand 14.5 inboard**, the bound the interim limit takes (B2): option 1 under
+   about 3 degrees, option 2 level ground only, until T-A1-3 measures the feet. A backward push of 9 to 13 N at the QMX's point,
+   or 6.1 N normal to C's tablet screen at its far edge (7.3 at its centre), tips the lightest swept case.
 6. The base pockets: section 8's 4S6P keeps every east row (M4a 1.85 OPEN, M4b, M4c, M6 MET, M5 1.77 OPEN) and mirrors them
    at the west; the west block's top clears board B's C33 by 3.99 at the worst (OPEN). **The west RF jumpers fail as
    assumed:** five of seven cables fall onto the west block, and the only drop past it is its 2.0 gap to board A, under one
@@ -146,7 +149,8 @@ at both ends, C 61 and 60, C10 48 and 46 (`lid_pack_a1.out` section 2, SENSITIVI
 The tablet, where kept, hangs under the module's one-layer part in a bracket (3.0 lips, 1.0 back, 1.5 below the screen),
 36.60 below the ceiling; it costs the two-layer places above its band. The design envelopes are the rugged classes (8 inch
 214 x 127 x 10.1, 10 inch 243 x 170 x 10.2; INFERRED, no maker sheet held; the model is a pick, SC-45). **With the QMX set in
-the lid a 10 inch tablet does not fit at all** (it needs 249 in X, 224.14 is free between the guard caps and the tray).
+the lid a 10 inch tablet does not fit at all** (it needs 249 in X, 223.14 is free between the guard caps, with 1.0 beside them, and
+the tray).
 
 ## 3. The owner decision, stated precisely
 
@@ -155,14 +159,16 @@ approved on 6 September 2026 leaves the lid. Which one?
 
 1. **Keep HF (16a, the QMX r2 set as released); the tablet bracket (16d) leaves the lid** (arrangement B, 56 places, 48
    used): the tablet is carried outside the case and still works on the kit's WiFi and the USB-C outlet; REQ-011's bracket is
-   not met. Lid 4.9 kg with every place filled; the stay holds the open case on a back slope under 9.5 degrees.
+   not met. Lid 4.9 kg with every place filled; with the stay the open case stands on a back slope under 3.6 degrees if
+   Peli's feet stand 14.5 inboard (the interim basis, B2), 9.5 if it tips on its flat bottom's edge.
 2. **Keep the tablet bracket (8 inch class); the QMX set leaves the lid** (arrangement C, 61 places, 48 used): HF inside
    (16a) is lost, because the base has no volume for it (appendix 32.60: no bay on B16 cleared the unit, the reason it went to
    the lid; the west pocket now takes the second block); outside the case it would need a lead through the back wall, which
-   the ruled connector plate does not carry. Lid 5.48 kg with every place filled, 4.83 kg with 48 fitted; the stay holds the
-   open case on a back slope under 7.0 degrees at the worst.
+   the ruled connector plate does not carry. Lid 5.48 kg with every place filled, 4.83 kg with 48 fitted; with the stay the
+   open case stands only on about level ground (1.2 degrees) if the feet stand 14.5 inboard (the interim basis, B2), on 7.0
+   degrees if it tips on its flat bottom's edge.
 3. **Keep both and a 4S9P lid pack** (arrangement A, 39 places, 36 used; 4S15P in all): not Option A(i). On a1elec's two-pack
-   model (the coordinator's run, September reference day, 200 W stage) M1 is not met with the lid at its 13.23 C basis at
+   model (the coordinator's run, fnd/a1int's `v2/docs/records/a1int/reconcile_lid.out` (commit `b6e5ee70`, lines 21 to 28); September reference day, 200 W stage) M1 is not met with the lid at its 13.23 C basis at
    400, 650 or 1000 Wp, and with the lid at +20 C only from 650 Wp (2.0 Wh left). It does not carry M1 at the lid's
    temperature basis or at A(i)'s 400 Wp.
 
@@ -188,8 +194,9 @@ with 400 Wp in a 200 W window), not this stream's.
 - **Strain relief:** a bonded tie mount at T_L, at T_P and every 60 mm or less on both runs (the r2 set's rule); a printed
   guide on the lid's back wall keeps the free lead inboard of the lid wall (Y under 130.9) so that closing folds it toward the
   face, never over the rim or the seal.
-- **Disconnect** (M9): an XT60 pair and a JST XH 1x4 for SMBus in the back channel (Y 114.93 to about 130.9, 16 wide, about 40
-  tall) at X -135 to -100, lying along X, so the lid comes off its hinge as ASSEMBLY.md section 7 has it; the lead is fused at
+- **Disconnect** (M9, m5): an XT60 pair and a JST XH 1x4 for SMBus in the back channel (Y 114.93 to about 130.9, 16 wide, about
+  40 tall) at X -168 to -134, Y 118 to 126, Z 126 to 136 closed (18 to 28 below the ceiling), 13 west of the lid tie T_L (X -121,
+  Z 111.5) and west of the free lead's bow, lying along X, so the lid comes off its hinge as ASSEMBLY.md section 7 has it; the lead is fused at
   P2. The held sheet (Amass XT60-F, V1.2, `v2/vendor/battery/amass-xt60-spec-tme.pdf`): 30 A rated, 60 A instantaneous, 12 AWG
   recommended, 1000 mating cycles, -20 to 120 C, 0.55 mOhm: it carries the assumed 10 A and 18 A. From P2 the two 4.4 leads run
   one above the other in the 7.0 west bay (8.8 of its 22.5 depth under the plate), beside the cover's standoffs at the bay's
@@ -216,19 +223,22 @@ with 400 Wp in a 200 W window), not this stream's.
   lid at 90 degrees (-2.2, 58.1, 117.7), at 100 degrees (-2.2, 66.0, 115.4); the lid alone closed (-6.8, 9.4, 138.5).
 - **Result (worst over the full sweep):** B stands on level ground at 90 to 120 degrees of opening and tips from 135; A from
   135; C from 120. Critical back slope at 100 degrees: 9.5 (B), 10.7 (A), 7.0 (C). With the feet 14.5 inboard (Y 100, an
-  INFERRED bound) B stands on 3.6 degrees at 100 and tips on level ground from 110.
-- **Fix, the session's: a lid stay at 100 degrees** (check M5): 25 mm polyester webbing at X -179 in the lid's west end zone
-  (outside the flat ceiling, clear of the guard caps and of the back channel), from a tab bonded with DP8005 to the lid's
+  INFERRED bound) B stands on 3.6 degrees at 100 and tips on level ground from 110; A on 4.8; **C on 1.2** (B2).
+- **Fix, the session's: a lid stay at 100 degrees** (check M5): 12 mm polyester webbing centred at X -176 (X -182 to -170, 3.3
+  inside the lid's end wall at X -185.3 and 13 clear of the guard caps; m2), its slack folded closed against the lid's ceiling
+  and fillet at X -185 to -150, Y 55 to 80, 6 deep or less under a bonded elastic keeper (10.4 over the guard caps), from a tab bonded with DP8005 to the lid's
   inner west end wall at (Y 60, Z 140) closed, to a stainless tab under the face plate's 6-32 pan head at (X -179.07, Y
   75.95), which loads Peli's brass insert toward its shoulder (its strong direction, CASE-MARGINS 2.5). The lid's moment about
   the hinge at 100 degrees is 2.1 to 3.2 N m over the hinge sweep; the strap's lever is 39 to 51 mm, so its tension is 53 to
   63 N static and 159 to 190 N at an arrest (a factor of 3, ESTIMATE). Neither anchor has a held strength (DP8005 gives none
   on polypropylene; Peli gives none for its inserts): OPEN at T8 (the tab pulled at 3 times the largest tension) and T-A1-3.
-  About EUR 10 (ESTIMATE). **Slope condition:** with the stay the operator's sheet says: open the lid only on ground sloping
-  less than 6 degrees toward the hinge side until T-A1-3 has measured the feet, the stop and the hinge axis (3.6 degrees if
-  the feet prove inboard).
-- **Operator loads** (check M6): a horizontal backward push at the QMX set's height (Z about 251) tips the lightest swept case
-  on level ground above 11.7 N (B), 12.8 N (A) or 9.3 N (C): the QMX's controls, its jacks or a lid tablet are worked with a
+  About EUR 10 (ESTIMATE). **Slope condition (B2):** the feet's place is in no Peli file, so until T-A1-3 has measured the feet,
+  the stop and the hinge axis the operator's sheet takes the feet-inboard bound: option 1 open only on ground sloping under about
+  3 degrees toward the hinge side (3.6 at the worst), option 2 on level ground only (1.2); with the case tipping on its flat
+  bottom's edge the limits would be 9.5 and 7.0.
+- **Operator loads** (check M6, m1): a horizontal backward push at the QMX set's point (Z about 251) tips the lightest swept case
+  on level ground above 11.7 N (B), 12.8 N (A) or 9.3 N (C, the same point); a push normal to the tablet's screen tips it above
+  7.3 N at the screen's centre and 6.1 N at its far edge in C (13.7 and 10.8 N in A): the QMX's controls, its jacks or a lid tablet are worked with a
   hand on the case or with the case's back against something; a use limit on the operator's sheet.
 - **REQ-023** (under 45.4 kg closed): the central estimate is 15.41 kg with the lid pack; the pack adds about 4.3 kg (3.54 in
   the lid, 0.75 in the base), far inside the limit; the kit's total stays TBD (ARCHITECTURE.md 11).
@@ -238,8 +248,9 @@ with 400 Wp in a 200 W window), not this stream's.
 
 **The tamper magnet** (M10): ASSEMBLY.md's lead table puts the Littelfuse 57140 magnet in the lid for the 59140 reed under the
 frame. With the 57140 the 59140's normally open option S pulls in at 9 to 16 mm (Littelfuse sheet 2022-03-25, table 5). The
-reed's place is not fixed in the tree; the lid keeps two places no lid item covers, the west end zone beside the stay (X -186
-to -173) and the east end zone beside the QMX DC lead (X 172 to 185), each near the parting plane (Z about 110). A reed under
+reed's place is not fixed in the tree; the lid keeps two places no lid item covers, the west end zone south of the stay (X -186
+to -173, Y -110 to 40; the stay and its folded slack take Y 55 to 80) and the east end zone beside the QMX DC lead (X 172 to
+185, Y 100 to 115, north of the lead's turn), each near the parting plane (Z about 110). A reed under
 the frame's ring (Z 94 or lower) is 16 mm or more below them, at or past the far end of that range: the reed's place, on the
 plate's underside near an end (Z about 103.5, 6.5 below the magnet), is an item for the face's next issue. OPEN.
 
@@ -294,12 +305,12 @@ the harness geometry over the lid's travel; the mass and tipping sweep; the base
 | SC-A1-05 | The tablet's design envelopes are the 8 and 10 inch rugged classes | no maker sheet held; the model is a pick (SC-45) | the pick's sheet |
 | SC-A1-06 | The QMX DC lead re-routed east of the tray | the pack lies west of it | an arrangement without the pack west of the tray |
 | SC-A1-07 | Harness: 12 AWG, two ties 150 apart along the back channel, disconnect beside P2 | the lid's travel becomes a gentle bend of a long run instead of a tight loop at the hinge | the electrical stream's conductor and a mock-up (T-A1-4) |
-| SC-A1-08 | A lid stay at 100 degrees, webbing at X -179 between a bonded tab and a tab under a plate screw | the open case tips from 120 (C) and 135 degrees (B) in the sweep; Peli's stop is not stated | Peli's stop measured at 100 or less (T-A1-3) |
+| SC-A1-08 | A lid stay at 100 degrees, 12 mm webbing at X -176 between a bonded tab and a tab under a plate screw | the open case tips from 120 (C) and 135 degrees (B) in the sweep; Peli's stop is not stated | Peli's stop measured at 100 or less (T-A1-3) |
 | SC-A1-09 | Plan allowance 1.06 between lid items and face parts | the lid's place (0.76, the case class) and a bonded plate's (0.30) | a measured place (T3, T9) |
 
 ## 9. For the coordinator: electrical assumptions to reconcile with `fnd/a1elec`
 
-- P2: board P's outline 44 x 70 and tallest part 16.17, 80 g, on 3.0 standoffs (22.97 deep); any board up to that envelope
+- P2: board P's outline 44 x 70 and tallest part 16.17, 80 g, on 2.5 standoffs (22.47 deep, 0.28 inside the cover); any board up to that envelope
   drops in at the chosen corner; a larger one is re-placed by the generator (its `P2` constant).
 - Harness current: 10 A continuous, 18 A for 60 s (the lid pack alone), 8.6 A charge; 12 AWG; a fuse at P2 (8a's string fuse
   class); the crossing: two power poles of 25 A or more and four signal contacts.
@@ -332,6 +343,18 @@ the harness geometry over the lid's travel; the mass and tipping sweep; the base
 | M10 | The magnet's two free places and the reed's distance; OPEN on the reed's place |
 | M11 | The back channel is 16 wide everywhere; the sheet's word count method stated |
 
+## 12. The focused re-check's items, answered (`_scratch/chk-a1mech/CHECK-2.md`)
+
+| Item | Answer |
+|---|---|
+| B2 | The interim slope limit takes the feet-inboard bound: option 1 under about 3 degrees (3.6), option 2 level ground only (1.2), both readings with their condition in section 5, the output and the sheet |
+| m1 | C's push computed normal to its tablet's screen: 7.3 N at the centre, 6.1 N at the far edge (A: 13.7 and 10.8) |
+| m2 | 12 mm webbing centred at X -176, 3.3 inside the end wall; the slack's fold and the magnet's west place (south of the stay) stated |
+| m3 | The two-pack figures cite fnd/a1int's `reconcile_lid.out` at `b6e5ee70`, lines 21 to 28 |
+| m4 | 223.14, 2.5 standoffs and 22.47 everywhere, the generator's comment included |
+| m5 | The disconnect at X -168 to -134, Z 126 to 136 closed, west of T_L |
+| m6 | C10's 48 has no spare and reads 46 at the least favourable end |
+
 ## Sources
 
 Peli 1451-931 top and bottom STEP, 1450PF STEP and sheet, drawing 1451-931 (`v2/vendor/peli/1450/`); the Pelican 1450 product
@@ -346,7 +369,7 @@ ARCHITECTURE.md section 11. No new maker document was filed: Samsung's tablet pa
 
 Generated on the rented CAD box (Ubuntu 24.04.5 LTS, Python 3.12.3, the d7fit CAD venv whose `pip freeze` equals
 `v2/cad/requirements-cad.lock` line for line apart from its comment line; build123d 0.13.0) from the branch's correction commits
-(the solids and `cad/lid_pack_a1_cad.out`; the commit is named in the log's last line), where `v2/cad/lid_pack_a1.py` and
-`lid_pack_a1_cad.py` have their final content. `lid_pack_a1.out` and the drawing set are regenerated on the runner at the
+(the solids and `cad/lid_pack_a1_cad.out`; the commit is named in the log's last line), where `lid_pack_a1_cad.py` and the geometry of
+`v2/cad/lid_pack_a1.py` have their final content (its later changes, for the focused re-check, are printed lines only). `lid_pack_a1.out` and the drawing set are regenerated on the runner at the
 branch's last commit (plain Python 3; matplotlib 3.10.9 for the sheets). AI review only; no qualified mechanical or battery engineer has reviewed this work (D-09's qualified battery
 review applies to both packs).
