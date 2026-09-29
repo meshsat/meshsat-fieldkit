@@ -115,15 +115,18 @@ def main():
     d = yaml.safe_load(open(os.path.join(ROOT, "v2", "docs", "records", "energy", "energy_inputs.yaml"), encoding="utf-8"))
     monthly = json.load(open(os.path.join(ROOT, d["pinned"][0]["path"]), encoding="utf-8"))
     prof = EB.profile(d, monthly, 9)[0]
-    cfg = {"ib": 4.0, "il": 8.0, "iin": 8.0, "eta": 0.975, "rc": 0.028, "rd": 0.030, "vak": 0.020}
+    cfg = {"ib": 3.968, "il": 7.936, "iin": 8.0, "eta": 0.975, "rc": 0.028, "rd": 0.030, "vak": 0.020}
+    e2 = 6.2 * 20.7          # the drafted entry: U3's IIN_HOST 6.2 A under the re-rated front end's 6.94 A minimum
     # (case, node cap in W at the front end's output or None, lid temperature, the .out's figures: stops, lowest base,
     #  lowest lid, lowest both, unserved), read from energy_two_pack.out sections 3a, 3f and 5
     cases = [
-        ("E2, lid 13.23 C", None, 13.23, 20.0, [None, None], 30.3, 0.7, 31.1, 0.0),
-        ("E2, lid 20.00 C", None, 20.0, 20.0, [None, None], 30.3, 58.7, 89.0, 0.0),
-        ("E2, lid 7.50 C", None, 7.5, 20.0, [24, 36], 0.0, 0.0, 0.0, 35.5),
-        ("E2, base 15 C, lid 13.23 C", None, 13.23, 15.0, [None, None], 8.9, 0.7, 9.7, 0.0),
-        ("E1 (U3 in at 5.40 A x 20.7 V), lid 13.23 C", 5.40 * 20.7, 13.23, 20.0, [48, 59], 0.0, 0.0, 0.0, 35.8),
+        ("E2, lid 13.23 C", e2, 13.23, 20.0, [None, None], 30.3, 0.7, 31.1, 0.0),
+        ("E2, lid 20.00 C", e2, 20.0, 20.0, [None, None], 30.3, 58.7, 89.0, 0.0),
+        ("E2, lid 7.50 C", e2, 7.5, 20.0, [24, 36], 0.0, 0.0, 0.0, 35.5),
+        ("E2, base 15 C, lid 13.23 C", e2, 13.23, 15.0, [None, None], 8.9, 0.7, 9.7, 0.0),
+        ("E1 (U3 in at 4.15 A x 20.7 V), lid 13.23 C", 4.15 * 20.7, 13.23, 20.0, [44, 32], 0.0, 0.0, 0.0, 374.5),
+        ("front end at its 4.3 A minimum", 4.3 * 20.7, 13.23, 20.0, [44, 33], 0.0, 0.0, 0.0, 329.4),
+        ("front end at its 5.7 A maximum", 5.7 * 20.7, 13.23, 20.0, [None, None], 18.6, 0.0, 18.6, 0.0),
     ]
     bad = 0
     print("RE-CHECK OF energy_two_pack.py (independent closed-form implementation; 400 Wp, 200 W window, both starts)")

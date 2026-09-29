@@ -57,17 +57,19 @@ NP_T = NP_B + NP_L
 # stream's setting (authority SESSION, reversible); ESTIMATE = arithmetic on assumptions stated beside it.
 PAR = {
     "t_base_c": (20.0, "REQ-014's +20 C, the basis of sections 8 and 9: the base pack in the closed base with the kit's own heat"),
-    "chg_a_base": (4.0, "SESSION (section 8a): U3 ChargeCurrent at most 4.0 A for the 4S6P base, OCC1 5.0 A unchanged; register code 31 x 128 mA = 3.968 A (SLUSE66A Table 9-7) is the nearest at or below"),
-    "chg_a_lid": (8.0, "SESSION: U3B ChargeCurrent 8.0 A for the 4S12P lid, the same 0.67 A a cell as the base; code 62 x 128 mA = 7.936 A; the lid gauge's OCC1 at 10.0 A true (GAUGE.md)"),
+    "chg_a_base": (3.968, "SESSION (section 8a's 4.0 A for the 4S6P base as a register value): U3 ChargeCurrent code 31 x 128 mA = 3.968 A (SLUSE66A Table 9-7), the nearest at or below 4.0 A; OCC1 5.0 A unchanged"),
+    "chg_a_lid": (7.936, "SESSION: U3B ChargeCurrent code 62 x 128 mA = 7.936 A for the 4S12P lid, 0.66 A a cell; the lid gauge's OCC1 at 10.0 A true (GAUGE.md)"),
     "iin_lid_a": (8.0, "SESSION: U3B IIN_HOST 8.0 A nominal from VBAT, code 80 (seven bits of 100 mA with RAC 5 mOhm, RSNS_RAC = 1b, SLUSE66A 9.6.22 Table 9-50, page 80; 8.2 A maximum with the 200 mA the register text adds); 3.3 uH on IADPT's 169 k so that Table 9-1 allows 10 A"),
     "eta_u3b": (0.975, "MAKER, read from a plot: SLUSE66A Figure 8-3 (VIN 15 V, VOUT 14.8 V, RAC = RSR = 5 mOhm, 4.7 uH, 400 kHz) reads about 98.5 percent from 3 to 6 A and 98 at 8 A (AI reading of the page image); 0.975 carries board A's 3.3 uH and layout; bracket 0.96 to 0.985"),
     "r_lid_dsg": (0.030, "ESTIMATE, ohm: the lid's discharge loop: hinge harness 12 AWG 2 x 0.6 m at 5.21 mOhm/m (6.3), two inline blade fuses (2 x 3.0, no maker resistance held), two XT60 pairs (2 x 0.5), board PL's F1, F2, Q1, Q2 and R10 (3.0 + 2.0 + 0.69 + 0.69 + 2.0 at the makers' maxima where held), the LM5069 FET 0.96 and its sense 5.6 mOhm; bracket 0.020 to 0.045"),
     "r_cl": (0.0056, "SESSION: the LM5069's sense resistor, 5.6 mOhm: VCL 48.5 / 55 / 61.5 mV (SNVS452G page 6) gives 8.7 / 9.8 / 11.0 A, so a join can never push more than 11.0 A (1.83 A a base cell, under the 35E's 2.0 A maximum charge, spec 3.7) into the base, and the lid's share of the kit's 10 A continuous (6.7 A) stays under the 8.7 A minimum"),
     "v_ak": (0.020, "MAKER: LM74700-Q1 regulated forward V(AK) 13 / 20 / 29 mV (SNOSD17G 6.5, page 6): the ideal diode holds 20 mV across its FET until the FET is fully on"),
     "r_lid_chg": (0.028, "ESTIMATE, ohm: the lid's charge loop: U3B's RSR 5 mOhm, the same harness, fuses and connectors (14.3), board PL's F1, F2, Q1, Q2, R10 (8.4); bracket 0.020 to 0.045"),
-    "fe_out_w": (5.7 * 20.7, "GEN: board A's front end U2 limits at VSNS 57 mV over R11 10 mOhm, 5.7 A at 20.7 V (gen_sch_e.py:104-107 as energy_inputs.yaml front_end_draw_w reads it)"),
+    "fe_out_w": (4.3 * 20.7, "MAKER: board A's front end U2 (LM5176) regulates its output current at VSNS 43 / 50 / 57 mV min / typ / max (TI SNVSAI1D 6.5, PDF page 7, the constant current loop) over R11 10 mOhm: 4.3 / 5.0 / 5.7 A at 20.7 V; a limit that must hold a load is taken at its MINIMUM, 4.3 A (gen_sch_e.py:104-107 quotes the triple and uses 57 mV only to size copper)"),
+    "fe_r11_draft_mohm": (6.2, "SESSION (draft): R11 6.2 mOhm, so the re-rated front end limits at 43 / 50 / 57 mV / 6.2 mOhm = 6.94 / 8.06 / 9.19 A; the stage and its copper are checked at 9.19 A by the generator owner"),
+    "u3_iin_draft_a": (6.2, "SESSION (draft): U3 IIN_HOST 6.2 A nominal with R16 as generated (10 mOhm, RSNS_RAC = 0b, 50 mA steps, code 124; SLUSE66A 9.6.22 page 80 adds 100 mA for the maximum, 6.3 A, under the 6.35 A clamp of 9.3.5 and under the re-rated front end's 6.94 A minimum), so U3's input loop, not the front end's current limit, holds the bus"),
     "u3_iin_max_a": (6.35, "MAKER: with RAC 10 mOhm (R16 as generated, RSNS_RAC = 0b) IIN_HOST is clamped at 6.35 A (SLUSE66A 9.3.5 and Table 9-1, pages 25 and 26)"),
-    "u3_iin_e1_a": (5.40, "SESSION: U3 IIN_HOST 5.40 A with R16 as generated (10 mOhm, 50 mA steps), about 5 percent under the front end's 5.7 A so that U3's input loop, not the front end's current limit, holds the bus (the LM5176's VSNS tolerance is not read here: a desk item)"),
+    "u3_iin_e1_a": (4.15, "SESSION: U3 IIN_HOST 4.15 A nominal with R16 as generated (code 83; 4.25 A maximum with the register text's 100 mA), under the as-generated front end's 4.3 A minimum, so U3's input loop holds the bus: 85.9 W into U3"),
     "fw_a16_in_w": (0.80 * 4.80 * 0.93 * 15.1, "FW-A16 (a) as written: charger input at most 0.80 x 4.80 A x 0.93 x VIN_RAW / 20.7 V at 20.7 V; with the panel's tracker on VIN_RAW at 15.1 V (TRK_OUT) that is 53.9 W into U3 (HW-FW-CONTRACT.md FW-A16, O-33)"),
 }
 V_BUS20 = 20.7
@@ -132,10 +134,12 @@ ENTRIES = {
     "E0": {"fe_out_w": v("fe_out_w"), "u3_in_w": v("fw_a16_in_w"),
            "what": "FW-A16 as written, the panel's tracker on VIN_RAW (U3's input held at 53.9 W)"},
     "E1": {"fe_out_w": v("fe_out_w"), "u3_in_w": v("u3_iin_e1_a") * V_BUS20,
-           "what": "board A as generated, FW-A16 revised for the panel: U3's IIN_HOST at 5.40 A under the front end's 5.7 A (111.8 W into U3)"},
-    "E2": None,
+           "what": "board A as generated, FW-A16 revised for the panel: U3's IIN_HOST at 4.15 A under the front end's 4.3 A minimum (85.9 W into U3)"},
+    "E2": {"fe_out_w": 0.043 / (v("fe_r11_draft_mohm") / 1000.0) * V_BUS20, "u3_in_w": v("u3_iin_draft_a") * V_BUS20,
+           "what": "the entry re-rated as drafted: R11 6.2 mOhm (front end 6.94 A minimum) and U3's IIN_HOST 6.2 A (128.3 W into U3)"},
+    "E3": None,
 }
-ENTRY_WHAT_E2 = "the entry re-rated (TOPOLOGY.md / CHARGER.md drafts): nothing under the stage's window caps the node"
+ENTRY_WHAT_E3 = "no cap under the stage's window (the unconstrained reference; 8.20 A at the busiest hour)"
 
 
 # ------------------------------------------------------------------------------------------- the two stores
@@ -301,7 +305,7 @@ def fmt_run(rs):
 def equivalence(d, pack, res4, prof):
     cfg = base_cfg()
     cfg.update({"chg_a_b": pack.chg_a * NP_B / pack.n_p, "chg_a_l": pack.chg_a * NP_L / pack.n_p, "iin_l": 1e9,
-                "eta_b": 1.0, "r_dsg": 0.0, "v_ak": 0.0, "r_chg": 0.0, "entry": "E2"})
+                "eta_b": 1.0, "r_dsg": 0.0, "v_ak": 0.0, "r_chg": 0.0, "entry": "E3"})
     rows, worst = [], 0.0
     for wp, window in ((400, 200.0), (650, 200.0), (400, 100.0), (1600, 100.0)):
         for st in (6, 18):
@@ -329,10 +333,10 @@ def main():
     P("0. THE PARAMETERS (value; kind and source)")
     for k in sorted(PAR):
         P("   %-14s %10.4f  %s" % (k, PAR[k][0], PAR[k][1]))
-    for k in ("E0", "E1"):
+    for k in ("E0", "E1", "E2"):
         e = ENTRIES[k]
         P("   entry %s: front end out at most %.1f W, U3 input at most %.1f W: %s" % (k, e["fe_out_w"], e["u3_in_w"], e["what"]))
-    P("   entry E2: %s" % ENTRY_WHAT_E2)
+    P("   entry E3: %s" % ENTRY_WHAT_E3)
     P("   base 4S%dP and lid 4S%dP of the ruled Samsung INR18650-35E; each pack's share of the load at an equal cell current," % (NP_B, NP_L))
     P("   %.2f W and %.2f W; charge allocation 'ah' (the node's surplus split %d:%d by capacity, each capped, the rest to the" % (LOAD * NP_B / NP_T, LOAD * NP_L / NP_T, NP_B, NP_L))
     P("   other); discharge 'ah' (the deficit split %d:%d while both hold energy, then the other alone)." % (NP_B, NP_L))
@@ -427,10 +431,10 @@ def main():
         P("   %-72s %s" % (lab + ":", fmt_run(both(d, pack, res4, prof, 400, 200.0, v("t_base_c"), t_basis, cfg))))
     P("")
     P("5. THE ENTRY INTO BOARD A (the node's cap), 400 Wp, 200 W, lid at the basis")
-    for ek in ("E0", "E1", "E2"):
+    for ek in ("E0", "E1", "E2", "E3"):
         cfg = base_cfg(); cfg["entry"] = ek
         rs = both(d, pack, res4, prof, 400, 200.0, v("t_base_c"), t_basis, cfg)
-        what = ENTRIES[ek]["what"] if ENTRIES[ek] else ENTRY_WHAT_E2
+        what = ENTRIES[ek]["what"] if ENTRIES[ek] else ENTRY_WHAT_E3
         P("   %s (%s):" % (ek, what))
         P("       %s; peak node %.1f W" % (fmt_run(rs), max(r["peak"]["node"] for r in rs)))
         l2 = lowest_tl(400, 200.0, {"entry": ek})
@@ -439,6 +443,31 @@ def main():
         cfg = base_cfg(); cfg["entry"] = "E1"
         rs = both(d, pack, res4, prof, wp, 200.0, v("t_base_c"), t_basis, cfg)
         P("   E1 with %d Wp: %s" % (wp, fmt_run(rs)))
+    P("   The as-generated front end at its three limits, with U3 set just under each (a node cap only; FW-A16 revised):")
+    for ia, lab in ((4.3, "minimum"), (5.0, "typical"), (5.7, "maximum")):
+        ENTRIES["_cap"] = {"fe_out_w": ia * V_BUS20, "u3_in_w": ia * V_BUS20, "what": ""}
+        cfg = base_cfg(); cfg["entry"] = "_cap"
+        P("       %.1f A (%s): %s" % (ia, lab, fmt_run(both(d, pack, res4, prof, 400, 200.0, v("t_base_c"), t_basis, cfg))))
+
+    def meets_cap(ia, need_low=None):
+        ENTRIES["_cap"] = {"fe_out_w": ia * V_BUS20, "u3_in_w": ia * V_BUS20, "what": ""}
+        cfg = base_cfg(); cfg["entry"] = "_cap"
+        rs = both(d, pack, res4, prof, 400, 200.0, v("t_base_c"), t_basis, cfg)
+        return verdict(rs) and (need_low is None or min(r["low_t"] for r in rs) >= need_low)
+    cfg = base_cfg(); cfg["entry"] = "E3"
+    low3 = min(r["low_t"] for r in both(d, pack, res4, prof, 400, 200.0, v("t_base_c"), t_basis, cfg))
+    req = []
+    for need in (None, low3 - 0.05):
+        lo, hi = 3.0, 9.0
+        for _ in range(40):
+            mid = 0.5 * (lo + hi)
+            if meets_cap(mid, need): hi = mid
+            else: lo = mid
+        req.append(hi)
+    del ENTRIES["_cap"]
+    P("   THE ENTRY REQUIREMENT on this model (lid at the basis): the current into U3 at VBUS20's 20.7 V that a limit must hold")
+    P("   at its minimum: %.2f A (%.1f W) to meet M1 at all; %.2f A (%.1f W) to keep the unconstrained lowest point, %.1f Wh." % (
+        req[0], req[0] * V_BUS20, req[1], req[1] * V_BUS20, low3))
     P("")
     P("6. THE FAULT CASES (400 Wp, 200 W, E2; base +20 C; lid at the basis unless stated)")
     faults = (("lid pack empty at the start (its protection had been open; base full)", {"lid_start": 0.0}, t_basis),
@@ -470,7 +499,7 @@ def main():
         i_u3b_in = a_l / vb
         t_w = lid_terminal_from_node(a_l, r["v_l"], cfg["eta_b"], cfg["r_chg"]) if a_l > 0 else 0.0
         i_l = t_w / r["v_l"]
-        P("   %s: hour %d (%02d UTC), the sun offers %.1f W at the node: stage in %.1f W; front end out %.1f W = %.2f A on VBUS20 at %.1f V (its as-generated limit 5.7 A);" % (
+        P("   %s: hour %d (%02d UTC), the sun offers %.1f W at the node: stage in %.1f W; front end out %.1f W = %.2f A on VBUS20 at %.1f V (as generated it limits at 4.3 / 5.0 / 5.7 A);" % (
             lab, h, hh, p_sun, p_stage_in, p_fe, i_in, V_BUS20))
         P("       front end loss %.1f W (at 0.93); U3 in %.2f A through R16 (10 mOhm: %.2f W; 5 mOhm: %.2f W), U3 loss %.1f W (at 0.98);" % (
             p_fe * (1.0 / e_fe - 1.0), i_in, i_in * i_in * 0.010, i_in * i_in * 0.005, p_fe * (1.0 - e_ch)))
@@ -480,14 +509,14 @@ def main():
             a_l * (1.0 - cfg["eta_b"]), cfg["eta_b"], i_u3b_in * i_u3b_in * 0.005, i_l, i_l * i_l * 0.005, i_l * i_l * cfg["r_chg"]))
         for fsw in (400e3, 800e3):
             ripple = (V_BUS20 - vb) * vb / (V_BUS20 * 3.3e-6 * fsw)
-            P("       U3's L2 (3.3 uH, Isat 12.2 A by its value text) in buck mode at %.0f kHz: average %.2f A, ripple %.2f A p-p, peak %.2f A" % (
+            P("       U3's L2 (3.3 uH; Isat 12.2 A by its value text XAL6030-332ME, on footprint L6060: a generator mismatch) in buck mode at %.0f kHz: average %.2f A, ripple %.2f A p-p, peak %.2f A" % (
                 fsw / 1e3, i_out, ripple, i_out + ripple / 2.0))
     ld = LOAD * NP_L / NP_T / r["v_l"]
     P("   the lid's discharge path at the night's share (%.2f A): LM74700-Q1 %.3f W (20 mV), LM5069 FET %.3f W (0.96 mOhm max)," % (
         ld, ld * v("v_ak"), ld * ld * 0.00096))
     icl = 0.0615 / v("r_cl")
-    P("       its %.1f mOhm sense %.3f W; at the lid path's largest current, its limit's maximum %.1f A: %.2f W, %.2f W, %.2f W" % (
-        1e3 * v("r_cl"), ld * ld * v("r_cl"), icl, icl * v("v_ak"), icl * icl * 0.00096, icl * icl * v("r_cl")))
+    P("       its %.1f mOhm sense %.3f W; in current limit the LM5069 holds its FET linear: see section 8 for its dissipation" % (
+        1e3 * v("r_cl"), ld * ld * v("r_cl")))
     P("")
     P("8. THE JOIN CURRENT: the lid path conducting while the lid's open-circuit voltage is above the base's by dV (TOPOLOGY.md 3c)")
     r_cell = 0.035      # ohm, the cell's class figure pcb_energy_chain.yaml uses for the prospective fault (AC impedance; the DC
@@ -498,10 +527,16 @@ def main():
     P("   F2 2.0 ESTIMATE, Q1 and Q2 0.69 each, R10 2.0, lead and XT60 3.0 ESTIMATE, R17 5.0); no load on the node (the worst case);")
     P("   the LM5069's limit over r_cl is %.1f to %.1f A (VCL 48.5 to 61.5 mV, SNVS452G page 6); the table takes the maximum" % (0.0485 / v("r_cl"), 0.0615 / v("r_cl")))
     P("   %8s %10s %14s %22s %22s" % ("dV (V)", "I (A)", "A a base cell", "base OCC1 5.0 A, 2 s", "cell max charge 2.0 A"))
+    P("   %8s %10s %14s %22s %22s %24s" % ("dV (V)", "I (A)", "A a base cell", "base OCC1 5.0 A, 2 s", "cell max charge 2.0 A", "LM5069 FET in limit (W)"))
     for dv in (0.05, 0.10, 0.20, 0.30, 0.50, 1.00, 2.00, 4.80):
-        i = min(dv / (r_l + r_b), 0.0615 / v("r_cl"))
-        P("   %8.2f %10.2f %14.2f %22s %22s" % (dv, i, i / NP_B, "trips" if i > 5.0 else "holds", "EXCEEDED" if i / NP_B > 2.0 else "within"))
-    P("   A lid pack fuller than the base by 0.20 V (50 mV a cell) pushes at most %.1f A into the base: under U3's 4.0 A setting." % (0.20 / (r_l + r_b)))
+        i_free = dv / (r_l + r_b)
+        i = min(i_free, 0.0615 / v("r_cl"))
+        p_fet = max(0.0, dv - i * (r_l + r_b) - v("v_ak")) * i if i < i_free else 0.0
+        P("   %8.2f %10.2f %14.2f %22s %22s %24s" % (dv, i, i / NP_B, "trips" if i > 5.0 else "holds", "EXCEEDED" if i / NP_B > 2.0 else "within",
+                                               "%.1f (linear)" % p_fet if i < i_free else "not limiting"))
+    P("   In current limit the FET takes the gap less the loops' drop: up to the last row's figure until the LM5069's power limit")
+    P("   and fault timer (PWR and TIMER, sized by board A's owner with SNVS452G's procedure) turn it off; the -2 variant retries.")
+    P("   A lid pack fuller than the base by 0.20 V (50 mV a cell) pushes at most %.1f A into the base: under U3's 3.968 A setting." % (0.20 / (r_l + r_b)))
     P("")
     P("END. Every row is the record's model on the reference day with the stated departures; none is a demonstration.")
     sys.stdout.write("\n".join(o) + "\n")

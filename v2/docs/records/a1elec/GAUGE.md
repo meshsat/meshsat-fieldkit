@@ -55,7 +55,8 @@ this part (E2E 854878), done by TI's own procedure (SLUUBF9 3.3.3) with TI's met
    enter -2,000). The firmware's unit is then 2 mA, its "mAh" 2 mAh, and its cWh and cW follow because energy is its
    voltage (unscaled) times its current. The two gains keep TI's ratio (298,261.6, `gauge_scale.out` section 2).
 3. **Why it fits.** At k = 2 the design capacity is written **20,100** and **28,944** (61.3 and 88.3 percent of 32,767);
-   at the typical 3.45 Ah, 20,700 and 29,808. k = 2 is the smallest integer that fits both. The I2 current range then
+   at the typical 3.45 Ah, 20,700 and 29,808. k = 2 is the smallest integer that fits both. (A 4S8P lid also needs k = 2
+   for its 38,592 cWh; a 4S14P lid needs k = 3 for its 67,536 cWh: README, second issue.) The I2 current range then
    spans -65.5 to +65.5 A true, above board PL's 25 A blade, so no current the path can carry is clipped.
 4. **The consequence TI's sibling manual states and this record enforces.** Scaling by calibration changes no firmware
    behaviour (SLUSBZ5D's "the actual scale is not set in the device"), so **every data-flash word whose unit is a current,
