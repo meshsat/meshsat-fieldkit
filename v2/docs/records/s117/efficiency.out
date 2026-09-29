@@ -122,6 +122,8 @@ every figure is high by them. Readings: lower = the makers' maxima; TI = Equatio
    PSMN4R0-30YLD  5 of 5 (all met); LFPAK56 (SOT669), NOT the drawn land; as Q7 and Q8: 0.979 (lower 0.974)
    CHOSEN: Q7 CSD17578Q5A with Q8 to Q10 CSD17577Q5A: 0.979 (lower 0.972)
 
-   The energy chain's rows today: U3 0.98 (records/energy/energy_inputs.yaml, SLUSE66A Figure 8-4, FETs not named) and U3B
-   0.975 (records/a1elec/energy_two_pack.py, Figure 8-3). Figure 8-4 at 4 A and 14.8 V loses about 0.96 W in all, less than
-   the drawn FETs' gate drive alone (1.24 W at 400 kHz): the curve describes FETs of a much smaller gate charge.
+   The energy chain's rows before stream s119: U3 0.98 (records/energy/energy_inputs.yaml, SLUSE66A Figure 8-4, FETs not
+   named) and U3B 0.975 (records/a1elec/energy_two_pack.py, Figure 8-3); since S-119, U3 0.979 (section 7) and U3B 0.972 (the
+   400 kHz row weighted over the model's hours, records/s119/u3b_hourly.out). Figure 8-4 at 4 A and 14.8 V loses about
+   0.96 W in all, less than the drawn FETs' gate drive alone (1.24 W at 400 kHz): the curve describes FETs of a much
+   smaller gate charge.
