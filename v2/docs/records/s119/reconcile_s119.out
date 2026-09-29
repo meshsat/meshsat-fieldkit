@@ -124,6 +124,8 @@ both start hours, 42.8 W, aged 80 percent, the 40 degree south plane unless sect
    4S14P, C: U3 down to 0.9309 (margin 0.0481, about 6.1 W at 126.3 W in); U3B down to 0.8446 (margin 0.1164, about 6.6 W at 56.6 W in)
    4S15P, B: U3 down to 0.8866 (margin 0.0924, about 11.7 W at 126.3 W in); U3B down to 0.80 or lower (the search's floor; margin at least 0.1610, about 9.3 W at 57.7 W in)
    4S15P, C: U3 down to 0.9157 (margin 0.0633, about 8.0 W at 126.3 W in); U3B down to 0.8096 (margin 0.1514, about 8.7 W at 57.7 W in)
+   4S14P: the least current into U3 at VBUS20's 20.7 V (a limit held at its minimum) that still meets M1: B 5.37 A (111.2 W), C 5.62 A (116.3 W)
+   4S15P: the least current into U3 at VBUS20's 20.7 V (a limit held at its minimum) that still meets M1: B 5.23 A (108.3 W), C 5.48 A (113.5 W)
 
 6. THE DEPLOYMENT RULE'S PLANES (records/a1solar/energy_runs.py's plane files and fixed-point ratios, imported unchanged;
    each plane's own September mean day scaled by 1.007820; U3 at 6.1 A; lid at 13.23 C). Lowest both / lid in Wh or NOT MET
