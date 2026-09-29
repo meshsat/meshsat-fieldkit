@@ -19,7 +19,7 @@ It reads the netlists through tx_inhibit.parse_netlist and takes the logic and s
 currents from the instrument's LOGIC and SWITCHES tables (each row cites its sheet); the module pins are in PINS below.
 It writes only the files named by --out (never under v2/ecad).
 
-usage: fault_levels.py --tools <v2/ecad/tools> --ecad <v2/ecad> --out <dir>"""
+usage: fault_levels.py --tools <v2/ecad/tools> --ecad <v2/ecad> --out <dir> [--tag <name>, default set6]"""
 import hashlib, json, os, re, sys
 
 NETLISTS = {"A": "pcb-a-power-a23/out/pcb-a-power.net", "B": "pcb-b-compute-b19/out/pcb-b-compute.net",
@@ -246,7 +246,10 @@ def network(B, k0, n0, want, down=(), cut=(), drive=None, absent=(), reader=None
             fq = tx.fet_of(nl, ref)
             if fq is not None:
                 if pin == fq[1]["G"]:
-                    g = next(((a, c) for rx, a, c in IGSS if re.search(rx, v, re.I)), (100e-9, "no held sheet's row is read "
+                    # the part's identity is the value's leading token, never a word of its description (a
+                    # Si2300DS whose value says "like the 2N7002 symbol" was read with the 2N7002's row before)
+                    ident = re.split(r"[\s(,;]", v.strip(), 1)[0]
+                    g = next(((a, c) for rx, a, c in IGSS if re.match(rx, ident, re.I)), (100e-9, "no held sheet's row is read "
                              "here for this FET's gate current; 100 nA is a stand-in"))
                     leak(k, n, g[0], "%s gate (a 25 C figure)" % ref, g[1])
                     unbounded.append("%s %s gate (%s): %s" % (k, ref, v[:24], g[1]))
@@ -290,10 +293,12 @@ def network(B, k0, n0, want, down=(), cut=(), drive=None, absent=(), reader=None
 
 def main(argv):
     tools = ecad = outd = None
+    tag = "set6"
     while argv:
         if argv[0] == "--tools": tools = argv[1]
         elif argv[0] == "--ecad": ecad = argv[1]
         elif argv[0] == "--out": outd = argv[1]
+        elif argv[0] == "--tag": tag = argv[1]
         else: print(__doc__); return 2
         argv = argv[2:]
     if not (tools and ecad and outd): print(__doc__); return 2
@@ -454,8 +459,8 @@ def main(argv):
     for r in rows:
         L.append("  %-12s %-13s %-38s %s" % (r["id"], r["node"], ("floats" if r["floating"] else "%.3f V (other polarity %.3f V)" % (
             r["v_adverse"], r["v_other"])), r["verdict"] + ("" if r["limit"] is None else " against %.2f V" % r["limit"])))
-    open(os.path.join(outd, "fault-levels-set6.txt"), "w").write("\n".join(L) + "\n")
-    json.dump(dict(netlists=B.sha, rows=rows), open(os.path.join(outd, "fault-levels-set6.json"), "w"), indent=1, sort_keys=True, default=str)
+    open(os.path.join(outd, "fault-levels-%s.txt" % tag), "w").write("\n".join(L) + "\n")
+    json.dump(dict(netlists=B.sha, rows=rows), open(os.path.join(outd, "fault-levels-%s.json" % tag), "w"), indent=1, sort_keys=True, default=str)
     print("\n".join(L[-(len(rows) + 1):]))
     return 0
 

@@ -488,12 +488,12 @@ L-EH-5  EMCON_HW at board B's U116, U216, U316 (SN74LV1T08 on the slot's 5 V), b
 ======================================================================================================================
 lamp (b)  the EMCON lamp's gate: EMCLAMP_G at board C's Q7 with U14 unpowered (board C's +3V3 lost, its +5V up): the lamp is dark
    node C EMCLAMP_G must stay LOW; limit 0.60 V: VGS(th) 0.6 V minimum (Vishay Si2300DS, as board C's part value quotes it; the sheet's own row is a 25 C figure)
-   RESULT: 0.106 V adverse, -0.106 V with the pin currents the other way, 10.08 uA of stated pin current: UNDECIDED (a pin current is unbounded)
+   RESULT: 0.106 V adverse, -0.106 V with the pin currents the other way, 10.1 uA of stated pin current: UNDECIDED (a pin current is unbounded)
      leg   C R48 100R (nominal) from EMCLAMP_G to EMCLAMP_Y
      leg   C R49 10k (EMCLAMP_G, taken 1.05e+04) to GND
-     pin   C EMCLAMP_G    Q7 gate (a 25 C figure)                         0.080 uA   JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope
+     pin   C EMCLAMP_G    Q7 gate (a 25 C figure)                         0.100 uA   Vishay Si2300DS, document 65701 (S10-0111-Rev. A, 18-Jan-10), page 2: IGSS +-100 nA at VGS +-12 V, under 'TJ = 25 C, unl
      pin   C EMCLAMP_Y    U14 pin 4, unpowered (Ioff)                    10.000 uA   SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II 
-     UNBOUNDED  C Q7 gate (Si2300DS-T1-GE3 N-FET (V): JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked
+     UNBOUNDED  C Q7 gate (Si2300DS-T1-GE3 N-FET (V): Vishay Si2300DS, document 65701 (S10-0111-Rev. A, 18-Jan-10), page 2: IGSS +-100 nA at VGS +-12 V, under 'TJ = 25 C, unless otherwise noted', so a 25 C figure; VGS(th) 0.6 V to 1.5 V
      nodes (adverse): C EMCLAMP_G 0.106 V, C EMCLAMP_Y 0.107 V
 
 SUMMARY

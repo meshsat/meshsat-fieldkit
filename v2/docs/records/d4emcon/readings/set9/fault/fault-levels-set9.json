@@ -2153,10 +2153,10 @@
    "id": "lamp (b)",
    "leaks": [
     {
-     "cite": "JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked",
+     "cite": "Vishay Si2300DS, document 65701 (S10-0111-Rev. A, 18-Jan-10), page 2: IGSS +-100 nA at VGS +-12 V, under 'TJ = 25 C, unless otherwise noted', so a 25 C figure; VGS(th) 0.6 V to 1.5 V",
      "node": "C EMCLAMP_G",
      "pin": "Q7 gate (a 25 C figure)",
-     "uA": 0.08
+     "uA": 0.1
     },
     {
      "cite": "SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II +-1 uA (VCC 0 V to 5.5 V, VI 5.5 V or GND), Ioff +-10 uA (VCC 0 V, VI or VO 5.5 V; page 1: 'The Ioff circuitry disables the outputs, preventing damaging current backflow through the device when it is powered down'); 6.1 (page 4): input clamp current IIK -50 mA for VI < 0 only, and the input voltage rated to 6.5 V with no condition on VCC ('Inputs are over-voltage tolerant up to 5.5 V', 8.3.2); Schmitt inputs, VT- 0.84 V minimum and VT+ 1.87 V maximum at VCC 3 V",
@@ -2173,19 +2173,19 @@
    "limit_cite": "VGS(th) 0.6 V minimum (Vishay Si2300DS, as board C's part value quotes it; the sheet's own row is a 25 C figure)",
    "node": "C EMCLAMP_G",
    "sink_A": null,
-   "sum_uA": 10.08,
+   "sum_uA": 10.1,
    "unbounded": [
-    "C Q7 gate (Si2300DS-T1-GE3 N-FET (V): JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked"
+    "C Q7 gate (Si2300DS-T1-GE3 N-FET (V): Vishay Si2300DS, document 65701 (S10-0111-Rev. A, 18-Jan-10), page 2: IGSS +-100 nA at VGS +-12 V, under 'TJ = 25 C, unless otherwise noted', so a 25 C figure; VGS(th) 0.6 V to 1.5 V"
    ],
-   "v_adverse": 0.1058400000000012,
+   "v_adverse": 0.10605000000000123,
    "v_adverse_nodes": {
-    "C EMCLAMP_G": 0.1058,
-    "C EMCLAMP_Y": 0.1068
+    "C EMCLAMP_G": 0.1061,
+    "C EMCLAMP_Y": 0.1071
    },
-   "v_other": -0.1058400000000012,
+   "v_other": -0.10605000000000123,
    "v_other_nodes": {
-    "C EMCLAMP_G": -0.1058,
-    "C EMCLAMP_Y": -0.1068
+    "C EMCLAMP_G": -0.1061,
+    "C EMCLAMP_Y": -0.1071
    },
    "verdict": "UNDECIDED (a pin current is unbounded)",
    "want": "LOW",
