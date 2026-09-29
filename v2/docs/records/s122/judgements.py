@@ -432,7 +432,8 @@ J.update({
     "5d18d3f4e9": N(DOCN + " (ruling D-05)"),
     "c3dc5405b5": T("the line's effects as generated since 458b2873 and board B's round 8; the counts are feasibility/EMCON.md "
                     "section 0a's, not netlist claims", *LIME[:5], *RB[:10], *E22[:6], *E72[:6], *WIFI[:6], *CM5[:5], *G5[:8],
-                    *AGATES[:10], *DKEY, "C:D22~amber", "C:U14.3=TX_INHIBIT_n"),
+                    *AGATES[:10], *DKEY, "C:D22~amber", "C:U14.3=TX_INHIBIT_n", "D:U15~PA gate bias", "D:U15.4=PA_KEY",
+                    "D:U15.1=VGG_SW", "D:J_VGG.1=VGG_SW"),
     "bd895a6727": N(DOCN + " (the IOHA fabric)"),
     "13651ca141": N(DOCN + " (IOHA sections 15 and 15a)"),
     "63d017d3ba": T("the toggle sensed on C7 with U12 onto the ribbon line; the precondition is ZEROIZE.md's", *ZER),
@@ -503,7 +504,9 @@ J.update({
     "28447175d0": S("EMCON does not gate every transmitter's rail: the SA868's supply +5V_SA is not on the EMCON lines (only its "
                     "KEY is) and the modules' own radios are disabled through their pins, not rail-gated", "D:U2.8=+5V_SA",
                     "D:FB1.1=+5V_TX", "D:U21.5=TXSUP_EN", "B:U113.6=WL_nDIS1"),
-    "b719e651bd": T("the dated reading's effects hold, and board B's round 8 removes the 5G supply", *LIME[:5], *RB[:10],
+    "b719e651bd": T("the dated reading's supply removals hold, and board B's round 8 removes the 5G supply; that the "
+                    "radios stop receiving is the modules' behaviour (the RockBLOCK only once its own stored energy is spent, "
+                    "CONOPS 4b), not a netlist claim", *LIME[:5], *RB[:10],
                     *E22[:6], *E72[:6], *WIFI[:6], *CM5[:5], *G5[:8], *AGATES[:10]),
     "d23664c78f": N(DOCN + " (ruling D-05)"),
     "e4ba0483d0": S("the RockBLOCK 9704's ENABLE is forced low in hardware since board B's stream w4b; what is left is its "
