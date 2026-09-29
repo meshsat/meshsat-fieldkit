@@ -54,7 +54,7 @@ CH2 only), and the room's air movement (a draught raises `G`; the room is still 
 | D2 | All heat comes from three HS50 on H2 at the stack's place, about 50 mm above the floor | Heat comes from boards A, B, D, E and P, the pack in its pocket, the PA on the plate's underside and the monitor in the plate | Heat put directly into the plate (the PA, the monitor) bypasses the inside air, so `G` measured for air-coupled heat is not the kit's for plate-coupled heat. The measured `G` applies to the fraction of the kit's heat that enters the air. |
 | D3 | Local temperatures: H2, the heater bodies, the pack block | Each part's own temperature: CM5, converters, cells, radios | Not measured and not inferable from this test: each part adds its own resistance to the air, which the empty case does not have. |
 | D4 | Fans off | Five fans (three coolers, two mixers; picks open) | Fans-on `G` stays open (no fans are picked or bought). Fans off is the record's conservative case (2.1 W/K still, `POWER-THERMAL.md` section 10). |
-| D5 | The heater leads pass flat under H1's edge over the frame's o-ring and, lid closed, under the lid gasket | The kit's leads pass sealed connectors in the back wall | Under 1 % high on `G` (check-2). The seal is locally opened by the leads: the test says nothing about sealing. |
+| D5 | Every lead (the heater leads, the thermostat chain's two wires, the thermocouples) passes flat under H1's edge over the frame's o-ring and, lid closed, under the lid gasket | The kit's leads pass sealed connectors in the back wall | Under 1 % high on `G` (check-2). The seal is locally opened by the leads: the test says nothing about sealing. |
 | D6 | Empty case: 2.5 kg (the seller's figure), time constant about 50 min (INFERRED) | Loaded kit: several kilograms more | Steady-state `G` does not depend on mass; every transient of this test (warm-up, the patch's cooling of the plate) is the empty case's, not the kit's. |
 | D7 | Indoors, still air, no sun, the case on a bench | Outdoors: sun on the black face, wind, ground or snow under the case | The hot end in the field adds solar load and changes the outside film; not tested here. |
 | D8 | The HS100's aluminium foot, about 47.5 x 88 mm, on compound | The RA30H1317M1's copper flange, 67.0 x 19.4 mm (`panel1450.PA_MOUNT`), on its own interface | A larger footprint spreads the same heat over more plate: INFERRED, the patch rise here is LOWER than the PA's would be at the same power. It becomes a PA figure only through a spreading model the session runs at desk. |
@@ -117,14 +117,14 @@ limit does not enforce any temperature limit and is not part of the shutdown.**
 | Ref | Part | Maker's figures (held sheet) | Placed |
 |---|---|---|---|
 | TS1 | Elmwood (Honeywell) 2455R, 90 C, normally closed, automatic reset, with bracket; reichelt "2455R 90 NC" | opens at 90 C, +-6 C on reichelt's page (the sheet's Table 1 gives +-4 to +-6 C in the 83 to 110 C band, by differential): **opens by 96 C at the latest**; 0 to 150 C operating, -18 to 177 C exposure (Table 2) | bolted to H2 with an M3 screw through its bracket, within 10 mm of the middle heater (the hottest), with a thin layer of compound under its cap |
-| TS2 | 2455R, 60 C, normally closed; reichelt "2455R 60 NC" | opens at 60 C +-3 C, closes at 45 C (reichelt's page; Table 1, 27 to 82 C band, differential 8 to 16 K: +-3 C open): **opens by 63 C at the latest** | taped cap-down with Kapton and aluminium tape to the case floor directly under the middle heater, beside CH5 (the polypropylene that sees H2 most) |
+| TS2 | 2455R, 60 C, normally closed; reichelt "2455R 60 NC" | opens at 60 C +-3 C, closes at 45 C (reichelt's page; Table 1, 27 to 82 C band, differential 8 to 16 K: +-3 C open): **opens by 63 C at the latest** | taped cap-down with Kapton and aluminium tape (the aluminium tape over the cap flange or the bracket only, at least 3 mm clear of both tabs) to the case floor directly under the middle heater, beside CH5 (the polypropylene that sees H2 most) |
 | TS3 | 2455R, 60 C, normally closed, as TS2 | as TS2 | taped cap-up to H1's underside with the body's centre at X 0, Y -99 (the front, away from the patch) and its bracket B203-S's tabs and its two terminals along X: the body, 16.0 mm across and 11.91 mm tall (Honeywell 2455R, Figure 3, page 5), spans Y -107 to -91, and the bracket, whose largest dimension is 31.19 mm (Honeywell, Figure 18, B203S), reaches at most 15.6 mm from the centre, to Y -114.6, 2.3 mm inside the frame window's edge at Y -116.92, so H1 still sits flat on the ring |
-| TS4 | 2455R, 140 C, normally closed; reichelt "2455R 140 NC" | opens at 140 C +-4 C (reichelt's name; Table 1, 111 to 150 C band: +-4 to +-7 C by differential, so read at V1): **opens by 144 C at the latest** at the +-4 C of the name | held cap-down on the middle heater's aluminium body with Kapton and aluminium tape over a thin layer of compound, beside CH7 |
+| TS4 | 2455R, 140 C, normally closed; reichelt "2455R 140 NC" | opens at 140 C +-4 C (reichelt's name; Table 1, 111 to 150 C band: +-4 to +-7 C by differential, so read at V1): **opens by 144 C at the latest** at the +-4 C of the name | held cap-down on the middle heater's aluminium body with Kapton and aluminium tape (the aluminium tape over the cap flange only, at least 3 mm clear of both tabs) over a thin layer of compound, beside CH7 |
 | K1 | Finder 40.52.9.012.0000, 2 changeover contacts, 12 V DC coil | 8 A rated current; breaking capacity DC1 8 A at 30 V; coil 0.65 W, operates from 0.73 UN, drops out at 0.1 UN (Finder 40 series, XI-2018, pages 1 to 3) | outside the case, on its socket, beside the supply |
 | X1 | Finder 95.05 socket for K1 (screw terminals, DIN rail) | 10 A, 250 V (reichelt's page) | outside the case |
 | PB1, PB2 | START (PB1): any panel pushbutton, normally open; STOP/TEST (PB2): any panel pushbutton, normally closed; each rated at least 1 A at 24 V DC | not priced, not held | outside the case, within reach |
 | K2, X2 | a second Finder 40.52.9.012.0000 on its own 95.05 socket, as K1 and X1; its contact 11-14 in series with K1's in the heater lead and its 21-24 in series with K1's in the hold path, its coil in parallel with K1's | as K1 and X1 | outside the case |
-| D1, D2 | a 1N4007 (or equivalent) across each relay coil, cathode to A1 (the + side), so no thermostat breaks an inductive current | a standard rectifier | at each socket |
+| VD1, VD2 | a 1N4007 (or equivalent) across each relay coil, cathode to A1 (the + side), so no thermostat breaks an inductive current | a standard rectifier | at each socket |
 | F1, F2 | in-line blade fuse holders: F1 with a 7.5 A fuse in the heater lead at the supply's +, before K1; F2 with a 1 A fuse at the start of the coil chain | not priced | outside the case |
 
 **What each trip enforces:** TS1 holds H2 at or under 96 C (its stop limit is 100 C); TS2 holds the polypropylene nearest
@@ -148,12 +148,12 @@ hotter than the middle one (INFERRED).
   first.** 45 W is inside the rating at any plate temperature under 121 C.
 
 **Wiring (all outside the case except the four thermostats; crimped terminals, 0.75 mm2 silicone wire for the heater
-leads, 0.25 mm2 or more for the coil chain):**
+leads, 0.25 mm2 or more silicone wire for the coil chain):**
 1. Supply + -> F1 (7.5 A) -> K1 contact 11-14 (normally open) -> K2 contact 11-14 (normally open) -> a three-way link block outside the case -> one + lead
    per heater into the case (three leads) -> each HS50 on H2 -> one common - lead out of the case -> supply -. The link
    block chooses one, two or three heaters without opening the lid.
 2. Supply + -> F2 (1 A) -> PB2 STOP/TEST (normally closed) -> [PB1 START (normally open) in parallel with K1 contact
-   21-24 and K2 contact 21-24 in series (both normally open)] -> TS1 -> TS2 -> TS3 -> TS4 -> K1 coil A1 -> A2 -> supply -, with K2's coil A1 -> A2 in parallel with K1's (both drop together) and D1, D2 across the coils. The thermostat chain enters the case
+   21-24 and K2 contact 21-24 in series (both normally open)] -> TS1 -> TS2 -> TS3 -> TS4 -> K1 coil A1 -> A2 -> supply -, with K2's coil A1 -> A2 in parallel with K1's (both drop together) and VD1, VD2 across the coils. The thermostat chain enters the case
    on one single wire (to TS1) and leaves it on another (from TS4 to the coils), each on its own straight run of the
    seals (H1's band and, lid closed, the lid gasket), at least 50 mm from the other and from every heater lead, so that no
    single pinch at a seal can join the chain's two ends or feed the coils from a heater lead (section 4 item 7).
@@ -182,18 +182,20 @@ what it shows and what it does not is stated after V4):**
   **Pass:** every action behaves so.
 - **V3, in place.** Heat-resistant gloves near H2 and the heaters whenever they are warm.
   (a) With the thermostats fitted and wired (section 4 item 4) and the leads laid (item 7), H1 lifted and the link block
-  open (nothing heats): START, the meter at the link block reads 12. Disconnect one lead at each thermostat in turn: the
+  open (nothing heats): START, the meter at the link block reads 12. Disconnect one lead at each thermostat in turn (lift H2 on its stand-offs as far as its leads allow to reach TS2): the
   meter falls to 0 and stays 0 when the lead is refitted, until START, which is pressed before the next thermostat.
   (b) With H1 screwed on and the leads out under its seal (section 4 item 8), the lid open and the link block still open:
-  START, 12; STOP/TEST, 0, and it stays 0 on release; START, 12. Then move CH4 for this check to H1's rebated band at
-  X 0, Y -121 (over the o-ring nearest TS3) and CH3 to H1's top face at X 20, Y -99 (beside TS3's place, outside the
+  START, 12; STOP/TEST, 0, and it stays 0 on release; START, 12. Then move CH4 for this check to H1's rebated band at X 0, Y -129 (the band's middle, over the o-ring,
+  beside the face screw at X 0, Y -121.16) and CH3 to H1's top face at X 20, Y -99 (beside TS3's place, outside the
   jet), and stand a card shield on the case's front rim between the jet and the rim. Warm H1's top face over TS3 (X 0,
-  Y -99) with the air gun at its lowest heat setting held 20 cm off: the meter falls to 0 before CH3 or CH4 reads 65 C
+  Y -99) with the air gun held 20 cm off at the lowest setting that raises CH3 by 1 to 2 K per minute, aimed so that
+  CH3 is outside the jet's spot: the meter falls to 0 before CH3 or CH4 reads 65 C
   (if it does not, stop the gun: V3 has failed). Let H1 cool until CH3 reads 5 K under TS3's V1 closing temperature: the
   meter stays 0 until START. Put CH3 and CH4 back on the channel map in use.
   **Pass:** every action behaves so.
 - **V4, before every step (the lid and the link block are set in (c)).**
-  (a) With the heaters on (the step just ended; before step S1, after a START with the link block set for S1), press
+  (a) With the heaters on (the step just ended; before step S1, or after a trip, after a START with the link block set for the
+  step to come), press
   STOP/TEST: both relays are heard to drop, the heater current falls to zero and stays zero when the button is
   released.
   (b) Switch the supply off and pull F2. A continuity check reads open across each relay's contacts 11-14 and 21-24
@@ -204,9 +206,9 @@ what it shows and what it does not is stated after V4):**
 
 **What the verification shows, and what it does not.** V1 shows each thermostat's opening temperature before it is
 mounted. V2 shows the latch, its reset only by START, and both relays' contacts in series in the heater path and in the
-hold path. V3 shows each installed thermostat in the chain, the chain intact with H1 closed (a short at H1's seal between
-the chain's two wires, or from a heater lead to the wire that returns to the coils, would bypass the thermostats and the
-meter would stay at 12), and TS3 opening on heat in its place. V4 shows, before each step, that STOP/TEST stops the
+hold path. V3 shows each installed thermostat in the chain, the chain intact with H1 closed (a short at H1's seal between the chain's two wires would
+bypass the thermostats and keep the meter at 12; a heater lead touching the return wire shows, with the link block
+open, as F2 blowing or the meter falling to 0 unprompted: either is a fail), and TS3 opening on heat in its place. V4 shows, before each step, that STOP/TEST stops the
 heating with both relays heard to drop, that no relay contact has welded and that START has not stuck. **Not shown in
 place:** (1) that TS1, TS2 and TS4 still open on heat after mounting: V1 proved each before it; the M3 through TS1's
 bracket and the tape on TS2 and TS4 do not load the disc (INFERRED); heating them in place would heat the case, which is
@@ -235,7 +237,7 @@ without V4, or with any of V1 to V3 failed, is an attended step.
    starting them). The o-ring into the channel between the frame and the case wall (step 4).
 3. **H2 at the stack's place:** H2 (330 x 200 x 3.0 aluminium, both faces matt black, `MACHINING-RFQ.md` line H2)
    centred on the case centre, long side along X, top face at about Z 48 (board B's top at Z 50.6), on four M4 PA66
-   (nylon) stand-offs of 45 mm standing on the floor at X +-110, Y +-90 (its holes, 10 mm from the long edges), not bonded:
+   (nylon) stand-offs of 45 mm (fixed to H2 with four M4 x 10 A2 screws and washers) standing on the floor at X +-110, Y +-90 (its holes, 10 mm from the long edges), not bonded:
    they stand 12 mm west of the pack pocket's edge at X 122.0, and H2 overhangs them by 55 mm at each end. H2 then clears
    the legs' columns (X +-175.4 to +-180.2) by about 10 mm and the pack block's top (Z 39.9) by about 5 mm, as board B
    stands over the pack in the kit.
@@ -243,7 +245,7 @@ without V4, or with any of V1 to V3 failed, is an attended step.
    holes from the part itself, drill 2.5 and tap M3 through H2, bolt with M3 x 8 A2 and flat washers, a thin even layer of
    the Amasan compound under each (wipe the excess: squeeze-out should be a thin line). Solder or crimp the leads to the
    tags (someone who solders, if the tags need it): one + lead per heater, the three - tags joined on H2 to one common
-   lead; fix the four leads to H2 with a P-clip so no tug reaches a tag. V2 has been done on the bench before this item. TS1 and
+   lead; fix the four leads to H2 with a P-clip so no tug reaches a tag. V1 and V2 have been done on the bench before this item. TS1 and
    TS4 at the middle heater (section 3; TS1's bracket on an M3 hole drilled 2.5 and tapped in H2 like the heaters'), TS2 on
    the floor under it and TS3 on H1's underside, joined into the chain inside the case with the 6.3 mm receptacles of
    `CHECKOUT-LIST.md` line 15 (heat-rated at TS4).
@@ -270,7 +272,7 @@ without V4, or with any of V1 to V3 failed, is an attended step.
    every heater lead (section 3, wiring item 2). Photograph it. Do not replace Peli's purge valve with a gland. Then V3
    (a), H1 still lifted.
 8. **H1 on:** the ten 6-32 x 1/2 in A2 pan heads into Peli's inserts **by hand, no pressure** (Peli step 4: excess pressure
-   pushes the inserts out). Check H1 seats evenly on the frame all round (feeler 0.05 at the edge, no gap) and that the
+   pushes the inserts out). Check H1 seats evenly on the frame all round (feeler 0.05 at the edge, no gap except over the leads; every lead at least 10 mm from the ten screws) and that the
    lid latches without force over the leads. Then V3 (b); V4 before step S1.
 9. **The logger:** eight type K channels with cold-junction compensation, 0.1 K resolution or better, CSV export. Soak:
    all thermocouples together in one place in the room (bundled, junctions touching a small aluminium block) for 15 min before they are fitted (before item 6); record each channel's reading; the offsets are subtracted from every later reading. Sampling:
@@ -312,16 +314,18 @@ CH8. `P` = the mean of the readings in that window. Uncertainty per section 1.
 
 ## 6. Test A patch runs (attended; the operator present at the switch throughout)
 
-1. After S6 is steady, **switch the heaters off for good**: STOP/TEST, supply off, link block open. Wait until CH6 and
+1. After S6 is steady, or stopped at a limit and cooled as in section 8, **switch the heaters off for good**: STOP/TEST, supply off, link block open. Wait until CH6 and
    CH7 read under 60 C, or wear heat-resistant gloves, before hands go near TS1 and TS4. Open the lid and lift H1 off the
    frame (its ten screws) to reach its underside, turning it over on TS3's leads (leave them slack enough for that).
 2. The HS100 on H1's underside with the four M3 x 10 A2 and flat washers into the PEM nuts, a thin even layer of compound
    under its foot, tightened evenly by hand with a torque driver at about 0.5 N m (INFERRED; Arcol states no torque). Its
    leads leave its +Y tag downward and toward -Y (the tag is 2.9 mm from the frame window's edge). Tape CH7 on the HS100's body now (the patch map
-   below) and route its wire and the HS100's leads out with the others. Before H1 is refitted, repeat V3 (a) with the
-   HS100 in place; refit H1 on the frame with its ten screws, the leads out under the seal as before, and
-   repeat V3 (b) before the first pulse (the heaters stay off: the patch runs heat H1 only).
-3. **Patch channel map** (move five: CH3, CH5, CH6, CH7 and CH8; keep CH1, CH2 and CH4):
+   below), and free CH5, CH6 and CH8 from the floor, H2 and the pack block, laying their wires out on the thermocouple
+   run so that their junctions are outside once H1 is on; route these wires and the HS100's leads out with the others.
+   Refit H1 on the frame with its ten screws, the leads out under the seal as before. The shutdown switches nothing in
+   the patch runs (the heaters stay off and the supply feeds the HS100 alone), so V3 is not repeated: the patch runs are
+   attended, and section 8's 110 C limit on the HS100 is the operator's.
+3. **Patch channel map** (CH5, CH6, CH7 and CH8 were freed in step 2; tape CH3, CH5, CH6 and CH8 on H1's top face now; keep CH1, CH2 and CH4):
 
 | Ch | Where | Stop limit |
 |---|---|---|
