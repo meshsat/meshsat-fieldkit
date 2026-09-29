@@ -7,7 +7,7 @@ committed netlists: nothing is built, powered or measured, and nothing here is a
 WHAT IT DOES. It PARSES board A's and board E's committed netlists (v2/ecad/tools/netlist_sexp.py; nothing is grepped) and
 asserts every circuit fact the bound rests on (section 1): the front end U2's feedback divider, its pins, its sense
 resistors and their filter, its inductor and the direction of its FETs; VBUS20's whole membership (so no new source or
-clamp can join the bus unseen); the charger U3's pins, its cell strap, its input sense filter, its four FETs and their nets;
+clamp can join the bus unseen); the charger U3's pins, its cell strap, its four FETs and their nets;
 the clamps on VIN_RAW and VBAT; board E's over-voltage lockout divider and its clamps. Each detail line prints what the
 netlist holds, not what is expected, and a fact that does not hold is printed FAIL with exit status 1. The gate holds only
 what the bound rests on; U3's input sense filter, which the bound does not use, is printed as a RECORD line and gates
