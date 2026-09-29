@@ -97,7 +97,7 @@ integrator's files: only described, no apply script written for them).
 **Bench-only:** the k = 2 calibration's CC Gain read-back and the gauge's thresholds at their true currents; the CEDV
 fit on the lid's own logs; U3 and U3B efficiencies at these points; the 800 kHz compensation; the allocation loop's
 reaction; the LM5069's timer at the kit's peak; the ideal diode's reverse response on a harness short; the lid's cell
-temperatures in the open lid; board A's temperatures at 19 W.
+temperatures in the open lid; board A's temperatures at 14.2 W.
 
 ## Decisions taken (authority SESSION, 29 September 2026; each reversible as stated in its page)
 
