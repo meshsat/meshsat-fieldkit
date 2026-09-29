@@ -648,3 +648,48 @@ S-122 re-reads every named document by a script that asserts each part it names.
 - S-122 (the documents);
 - S-120 (the charge bus against the 30 V FETs);
 - board C's layout-entry chain (C-SI under check, then identities and review D).
+
+### Milestone, 29 September 2026 18:37 CEST: integration set 13 on main (the two-pack figures, board C's SI-001, the walk's toggle lugs)
+
+**Accepted:** `32f26b41`. Merged:
+- **Stream s119: the energy chain's charger rows.**
+  - U3 is restated to 0.979 with decision 57's FETs.
+  - U3B is drawn on U3's 400 kHz row (decision 58; REGN 32.6 mA against 50 mA), at 0.972 over the model's hours.
+  - S-119 closed and S-121 filed. REQ-072 still reads FAIL, waiting on S-53, M-02 and S-114.
+- **Stream csi: board C's SI-001 nets.**
+  - The allowance method is tied to its reference nets.
+  - The four e-paper lines take 27R series resistors (R53 to R56). Board C was regenerated on the box and read back 0
+    failing.
+  - Layout-bound nets fall from 23 to 7, and 11 are allowed pending the layout.
+- **The walk minors:** the EMCON toggle is judged on its declared contact lugs, and the board key is required.
+
+**Gates:**
+- One re-take with the held makers' files and the IBIS models installed: 0 of 615 routed verdicts moved against main,
+  with every count change explained.
+- Status and render stable; validators 0 errors 0 warnings; the isolated clone clean.
+- Suite 2276 passed, 0 failed, 3 skipped at the promoted commit.
+- Three integration checks (AI reviews) under `records/int14/checks/`; the last reads mergeable.
+- S-123 is opened: return_via and ref_change read board tables their readings do not record, and board C's readings of
+  21 September are not re-taken.
+
+**The two-pack figures, now on main** (model results; nothing is measured; Q1 to Q4 are not taken):
+- U3's input limit at its 6.1 A minimum.
+- Tablet-out lid: 93.7 Wh typical, 85.8 Wh adverse.
+- QMX-out lid: 125.2 Wh typical, 116.9 Wh adverse.
+- Both lid functions kept: M1 not met.
+- These replace 87.4 and 118.5 Wh in the decision table above. The unmodelled inductor core loss is the largest open
+  term: the tablet-out lid still meets with about 2.5 W of it in each charger.
+
+**A process finding (the integrator's own).**
+- CONOPS.md is a BASELINED layer 2 definition. Its reopening rule (the independent review of handover H2) sends a
+  circuit correction to `handover/DEFINITION-STATUS.md` and the records it names, never into the baseline.
+- Set 12's integrator nevertheless edited CONOPS section 4b and its EMCON row for circuit corrections (`a46db71b`,
+  `7a9f7b5b`, now on main). The set 12 checks did not flag it; S-122's check did.
+- Stream s122's second round restores CONOPS to `c5430071` byte for byte and moves the asserted current state to
+  `feasibility/EMCON.md` section 0a.1 and the status page. It is being rebuilt on this promoted commit for its
+  independent check; CFL-016 stays FAIL until S-122 closes.
+
+**Next, ready:**
+- S-122 (rebuilt on main, then its check and closure).
+- S-120 (the charge bus bounded at 23.19 V against the new 30 V FETs; ringing waits on a layout), under check.
+- Board C's layout-entry chain: identities, then review D.
