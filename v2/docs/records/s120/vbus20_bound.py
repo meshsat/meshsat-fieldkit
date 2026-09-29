@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """S-120: board A's charge bus VBUS20 and the charger's switch nodes against the 30 V FETs of decision 57 (stream s120,
 MESHSAT-1357, 29 September 2026; second issue after the independent check `_scratch/chk-s120/CHECK.md`, B1 to B3 and m1 to
-m11; third issue after the re-check `CHECK-2.md`, B1 and n1 to n7). Desk arithmetic on the makers' figures and the
+m11; third issue after the re-check `CHECK-2.md`, B1 and n1 to n7; fourth issue after `CHECK-3.md`, r1 to r3). Desk
+arithmetic on the makers' figures and the
 committed netlists: nothing is built, powered or measured, and nothing here is a qualified review (AI engineering work).
 
 WHAT IT DOES. It PARSES board A's and board E's committed netlists (v2/ecad/tools/netlist_sexp.py; nothing is grepped) and
@@ -261,7 +262,7 @@ def main(argv=None):
     FIG.clear()
     P = print
     P("S-120: board A's charge bus VBUS20 and the charger's switch nodes against the 30 V FETs of decision 57. MESHSAT-1357,")
-    P("stream s120, second issue. Desk arithmetic on the makers' figures and the committed netlists; nothing is built, powered")
+    P("stream s120, fourth issue. Desk arithmetic on the makers' figures and the committed netlists; nothing is built, powered")
     P("or measured. INFERRED = a figure the maker does not state; MODEL = an estimate from a simplified circuit, not a bound.")
     P("netlist A %s sha256/16 %s" % (NET_A, sha16(ar.net_a)))
     P("netlist E %s sha256/16 %s" % (NET_E, sha16(ar.net_e)))
@@ -500,6 +501,16 @@ def main(argv=None):
     P("     U3 SW1 and SW2 below PGND: %.0f V, and %.0f V for at most 25 ns (p.8). In every dead time SW1 sits at minus Q8's VSD"
       % BQ_ABS_SW_NEG)
     P("     (1.0 V maximum), inside -2 V; the ring below that has %.1f V to -4 V, for at most 25 ns" % b["SWneg"][0])
+    P("     SW2 rides VBAT, not the bus (Table 9-3 p.27): it sits at VBAT in buck mode with Q10 on and switches only in")
+    P("     buck-boost; its overshoot, and with it Q9's and Q10's VDS, is referred to the charger's cutoff SYSOVP %.1f V (p.14)."
+      % SYSOVP_4S[2])
+    tau = 20.0 * 10e-9
+    f_ring = 1 / (2 * math.pi * math.sqrt(1e-9 * 11e-9))
+    P("     ACP less ACN: 0.5 V absolute (p.8). The pins sit behind R146 and R147 (10 Ohm each) with C121 10 nF across, %.0f ns;"
+      % (tau * 1e9))
+    v_acn = IL2_PK["A2"] * math.sqrt(1e-9 / 11e-9)
+    P("     a %.1f V ring on CH_ACN at %.0f MHz (1 nH against 11 nF, the model below) reaches them at about %.2f V (INFERRED)."
+      % (v_acn, f_ring * 1e-6, v_acn / (2 * math.pi * f_ring * tau)))
     ioff = Q7_VPLT / (RDS_HI_OFF_TYP + Q7["rg"])
     ion = (VREGN[1] - Q7_VPLT) / (RDS_HI_ON_TYP + Q7["rg"])
     t_fi = (Q7["qgs"] - Q7["qgth"]) / ioff

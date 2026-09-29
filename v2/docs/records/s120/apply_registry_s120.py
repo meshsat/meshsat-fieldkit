@@ -23,7 +23,8 @@ OVP bench reading reach the registry, B3 the new item closes only on a measureme
 single-fault order held to the Q2 short, m2 SW2 and BTST1 stated as they are, m3 the full sha, m7 Q7's turn-on and U3's
 VBUS pin, m8 the pages). Third issue (the re-check CHECK-2.md): B1 the new item's closing test and rating list carry SW1 and
 SW2's -2 V and -4 V (25 ns) limits; n1 the Q2 short's order claimed only once ACOV has stopped the charger; n2 the bound
-takes a first on-time of a period (23.40 V); n7 Q7's VDS read from CH_ACN to CH_SW1.
+takes a first on-time of a period (23.40 V); n7 Q7's VDS read from CH_ACN to CH_SW1. Fourth issue (CHECK-3.md r1 and
+r2): CH_SW2 and with it Q9 and Q10 are referred to 20.0 V over the measured VBAT, and ACP less ACN (0.5 V) is named.
 
 WHICH COMMIT: pass the tip of fnd/s120 or a merge that carries it. An earlier commit of this branch is refused, because the
 evidence gate asks that README.md, LOG.md, vbus20_bound.py and vbus20_bound.out be byte for byte the same at <commit> and at
@@ -115,7 +116,8 @@ def texts(F, commit, ring_id):
         "(stream s120, S-120's switch nodes; the independent re-check of stream s117, minor n1, and the checks of stream "
         "s120) Board A's charger switch nodes against the 30 V FETs of decision 57 (Q7 CSD17578Q5A, Q8 to Q10 CSD17577Q5A; "
         "VDS 30 V absolute, TI SLPS526 and SLPS516 page 1) and the BQ25731's own pins (VBUS, ACP, ACN, SW1 and SW2 32 V "
-        "absolute; SW1 and SW2 26 V recommended, and no lower than -2 V, or -4 V for at most 25 ns, below PGND; SLUSE66A "
+        "absolute; ACP less ACN 0.5 V absolute; SW1 and SW2 26 V recommended, and no lower than -2 V, or -4 V for at most "
+        "25 ns, below PGND; SLUSE66A "
         "8.1 and 8.3, printed page 8). S-120 holds the bus VBUS20 at %.2f V in steady service and bounds it at %.2f V, a "
         "bound INFERRED from the LM5176's output over-voltage threshold, which TI gives as a typical 10 percent over VREF "
         "only (SNVSAI1D 6.5 page 8), with L1's energy for a first on-time of a period as a MODEL term (%.2f V in the steady "
@@ -137,15 +139,18 @@ def texts(F, commit, ring_id):
         "routed-board reading of the loops' inductance is recorded as the layout step and does not close this item) and "
         "the bench. Closed only on the prototype: CH_SW1, CH_ACN, CH_SW2 and U3's VBUS pin read against U3's PGND at the "
         "charger's largest current; Q7's VDS taken from CH_ACN to CH_SW1 (CH_ACN's peak less CH_SW1's lowest, which already "
-        "holds Q8's body diode) and Q8's from CH_SW1's peak; each overshoot over the measured bus added to %.2f V for "
-        "steady service and to %.2f V for the over-voltage excursion; each FET's VDS then inside 30 V, U3's VBUS, ACP, ACN, "
-        "SW1 and SW2 inside 32 V, and CH_SW1 and CH_SW2 no lower than -2 V, or -4 V for at most 25 ns (SLUSE66A page 8); "
+        "holds Q8's body diode) and Q8's from CH_SW1's peak; each overshoot of CH_SW1, CH_ACN and U3's VBUS pin over the "
+        "measured bus added to %.2f V for steady service and to %.2f V for the over-voltage excursion; CH_SW2's overshoot "
+        "over the measured VBAT added to %.1f V (the charger's cutoff SYSOVP, SLUSE66A page 14), with Q9's VDS taken from "
+        "CH_SW2's peak and Q10's from VBAT less CH_SW2's lowest on that basis; ACP less ACN read across U3's pins; each "
+        "FET's VDS then inside 30 V, U3's VBUS, ACP, ACN, SW1 and SW2 inside 32 V, ACP less ACN inside 0.5 V, and CH_SW1 "
+        "and CH_SW2 no lower than -2 V, or -4 V for at most 25 ns (SLUSE66A page 8); "
         "and the front end's OVP trip read on the prototype (FB driven through R6 and R7), which replaces the INFERRED "
         "%.2f V and with it the %.2f V reference. A snubber, a gate-drive change or FETs of a higher voltage, drawn and "
         "read back on the regenerated netlist, are measured the same way."
         % (F["v_hi"], F["bound"], F["v_steady"], s29, s30, F["v_hi"] - 20.0, F["b_q7"][0], F["b_q8"][0], F["b_sw1r"][0],
            F["b_swneg"][0], F["b_q7"][1], F["b_q8"][1], F["t_fi"] * 1e9, r["i"], r["vpn"], r["l30"], r["lneg"],
-           F["t_ri"] * 1e9, F["v_hi"], F["bound"], F["ovp_hi"], F["bound"]))
+           F["t_ri"] * 1e9, F["v_hi"], F["bound"], F["sysovp"], F["ovp_hi"], F["bound"]))
     ev = (
         "Stream s120 (v2/docs/records/s120/README.md, vbus20_bound.py and its .out, merged at %s; third issue after the "
         "checks of stream s120): the committed netlists of boards A (sha256/16 %s) and E (%s) parsed, %d of %d circuit "
