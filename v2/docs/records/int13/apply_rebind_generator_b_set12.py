@@ -6,7 +6,7 @@ carry) and the tree's that is a part reference or a net of either board B netlis
 differ between main's netlist and the tree's by parsed components and net node sets (tx_inhibit.parse_netlist). A record
 whose statement, acceptance and evidence name none of them is rebound with an entry saying so; a record naming any of them
 is rebound only with the integrator's reason read by hand (rebind_reasons_set12.GEN), written into the entry. No result,
-status or stage changes. Refuses a second run. Run from the repository root: python3 <this file>."""
+status or stage changes. Refuses a second run. Run from the repository root: python3 <this file> [a|b] (board B by default)."""
 import difflib, hashlib, os, re, subprocess, sys, tempfile
 
 import yaml
@@ -21,8 +21,9 @@ import apply_check1_answers as A
 import tx_inhibit as TX
 import rebind_reasons_set12 as R
 REG = os.path.join(TOP, "v2/ecad/tools/pcb_requirements.yaml")
-GEN = "v2/ecad/tools/gen_sch_b.py"
-NET = "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net"
+BOARD = sys.argv[1] if len(sys.argv) > 1 else "b"
+GEN = "v2/ecad/tools/gen_sch_%s.py" % BOARD
+NET = {"a": "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net", "b": "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net"}[BOARD]
 WORD = re.compile(r"[A-Za-z0-9_+./#-]+")
 
 
@@ -39,8 +40,10 @@ def main():
     new_g = open(os.path.join(TOP, GEN), "rb").read()
     o16, n16 = sha16(old_g), sha16(new_g)
     reg = open(REG, encoding="utf-8").read()
-    key = "%s@%s" % (GEN, o16)
-    if key not in reg: refuse("no record is bound to %s" % key)
+    import re as _re
+    shas = sorted(set(_re.findall(_re.escape(GEN) + r"@([0-9a-f]{16})", reg)) - {n16})
+    if len(shas) != 1: refuse("records carry %d distinct older bindings of %s" % (len(shas), GEN))
+    key = "%s@%s" % (GEN, shas[0])
     old_n = subprocess.run(["git", "-C", TOP, "show", "main:" + NET], capture_output=True, check=True).stdout
     with tempfile.TemporaryDirectory() as td:
         op = os.path.join(td, "old.net"); open(op, "wb").write(old_n)
@@ -61,12 +64,12 @@ def main():
     for r in bound:
         text = " ".join(str(x) for x in (r.get("evidence") or [])) + " " + str(r.get("statement", "")) + " " + str(r.get("acceptance", ""))
         hit = sorted(changed & set(WORD.findall(text)))
-        if hit and r["id"] not in R.GEN:
+        if hit and r["id"] not in R.GEN_BY[BOARD]:
             manual.append((r["id"], hit)); continue
-        why = R.GEN.get(r["id"]) or "none of the parts or nets this record names is touched"
-        entry = ("%s re-read at integration set 12 (apply_rebind_generator_b_set12, %s to %s): stream d4emcon's FEA-002 remedies "
-                 "written by apply_b_d4e.py; the identifiers the change touches were computed from the generator's changed lines and "
-                 "both netlists (%d parts and nets). %s; rebound. No result changes." % (GEN, o16, n16, len(changed), why[0].upper() + why[1:]))
+        why = R.GEN_BY[BOARD].get(r["id"]) or "none of the parts or nets this record names is touched"
+        entry = ("%s re-read at integration set 12 (apply_rebind_generator_b_set12, %s to %s): set 12's changes to this generator "
+                 "(board B: stream d4emcon's FEA-002 remedies, the check's minors, the census nodes; board A: S-117 and the FET remedy, the census nodes); the identifiers the change touches were computed from the generator's changed lines and "
+                 "both netlists (%d parts and nets). %s; rebound. No result changes." % (GEN, key.split("@")[1], n16, len(changed), why[0].upper() + why[1:]))
         A.screen(entry, r["id"])
         i, j = A.span(out, r["id"])
         t = out[i:j]

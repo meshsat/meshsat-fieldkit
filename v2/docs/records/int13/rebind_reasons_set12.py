@@ -31,3 +31,18 @@ GEN = {
  "REQ-052": "the lid sense and the reduced mode's slot assignment are untouched; the change gates the RockBLOCK, E22 and E72 lines against back-feed without changing which module carries which radio",
  "CON-025": "the 5G module's SIM TVS arrays and their placement are untouched; U554 repeats U221 on FULL_CARD_POWER_OFF# only",
 }
+# Second pass (after S-117 on board A, the check's minors and the census nodes): board A's reasons, board B's FEA-002.
+B["FEA-002"] = ("the change is the FEA-002 remedy set with the check's minors; FEA-002 stays FEASIBILITY_OPEN with its layout-entry "
+                "stage open (0 of 17 rows closed at desk); d4emcon's read-back differs only on the three values the minors changed "
+                "on purpose and readback_chk12 holds on the regenerated board")
+A = {
+ "CON-019": "the PoE and USB-C outlets' interlock and the PA key path are untouched; set 12 changes only the charger U3's power stage, compensation and the census declarations of IADPT and CH_COMP1",
+ "CON-018": "the USB-C CC ESD array by the connector is untouched; set 12 changes only the charger U3's power stage and compensation",
+ "CFL-005": "EMCON_HW's pull-down R102 and the slot enables are untouched; set 12 changes only the charger U3's power stage and compensation",
+ "CON-010": "the PA's VGG gate and board D's KEY path are untouched; the L2 this record's evidence names is board D's, not board A's charger inductor that set 12 replaced",
+ "REQ-077": "the charger's power stage, frequency row and compensation change (S-117, decisions 56 and 57), not its thermistor input, the gauge's thresholds or the shedding path this reading rests on",
+ "CFL-016": "the published contracts this conflict resolved name no charger FET; the Q7 this record names is on another board or unchanged in role, and PANEL.md's rows stay true",
+ "CFL-014": "the charger's cell-count strap stays 4S and the loads stay on VSYS; set 12 changes its inductor, FETs and compensation (S-117), which HW-FW-CONTRACT.md's FW-A17 and V-A05 now record",
+ "CON-016": "no one-way surge clamp or rectifier changes on board A; Q7 to Q10 are the charger's switching FETs, and the pin-direction reading did not move at the re-take",
+}
+GEN_BY = {"b": GEN, "a": {k: A[k] for k in ("CON-018", "CON-019", "CFL-014", "REQ-077")}}

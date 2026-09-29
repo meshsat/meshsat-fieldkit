@@ -4481,9 +4481,34 @@ records:
           adds glue logic on the radio lines and moves the values of R41, R42, R238, R527 and U536; no device of the
           ruled set is added, removed or substituted, so the device-set reading is unchanged; rebound. No result
           changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 12 (apply_rebind_after_circuit b
+          3ef9b8c49a01b728): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          97823ef1171a61ce by parsed components and net node sets; changed parts C668, C669, C670, C671, C672, C673,
+          C674, C675, C676, C677, C678, C679, C680, C681, C682, C683, C684, C685, R532, R533, R534, R535, R536, R537,
+          R538, R539, R540, R541, R542, R543, R544, R545, R546, R547, R548, R549, R550, R551, U537, U538, U539, U540,
+          U541, U542, U543, U544, U545, U546, U547, U548, U549, U550, U551, U552, U553, U554, R238, R41, R42, R527,
+          U536; changed nets +3V3_CM2, +3V3_CM3, +3V3_DEV, +3V3_S2A, +3V3_ZB, +5V_DEV, 5G_PWROFF_n, 5G_TPR_n, E22_EN,
+          GND, LORA_BUSY, LORA_DIO1, LORA_GO, LORA_MISO, LORA_MOSI, LORA_NRST, LORA_NSS, LORA_RXEN, LORA_RXEN_G,
+          LORA_SCLK, LORA_TXEN, LORA_TXEN_G, RB_CTRL, RB_CTRL_H, RB_GO, RB_IEN, RB_IEN_DRV, RB_RXD, RB_RXD_H, RB_STATUS,
+          RB_TD_CT, RB_TXD, SPI3_CE1, SPI3_IO23, SPI3_IO24, SPI3_IO26, SPI3_MISO, SPI3_MOSI, SPI3_SCLK, ZBA_BSL,
+          ZBA_BSL_H, ZBA_RST_H, ZBA_RST_n, ZBA_RXD, ZBA_RXD_H, ZBB_BSL, ZBB_BSL_H, ZBB_RST_H, ZBB_RST_n, ZBB_RXD,
+          ZBB_RXD_H, unconnected-(U543-NC-Pad3), unconnected-(U544-NC-Pad1), unconnected-(U551-NC-Pad1),
+          unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). The change adds glue logic
+          on the radio lines and moves the values of R41, R42, R238, R527 and U536; no device of the ruled set is added,
+          removed or substituted, so the device-set reading is unchanged; rebound to 3ef9b8c49a01b728. No result
+          changes.
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 12 (apply_rebind_generator_b_set12, 9767423874f2ea97 to
+          3698cc04d8eaf75b): set 12's changes to this generator (board B: stream d4emcon's FEA-002 remedies, the check's
+          minors, the census nodes; board A: S-117 and the FET remedy, the census nodes); the identifiers the change
+          touches were computed from the generator's changed lines and both netlists (159 parts and nets). The change
+          adds glue logic on the radio lines and moves the values of R41, R42, R238, R527 and U536; no device of the
+          ruled set is added, removed or substituted, so the device-set reading is unchanged; rebound. No result
+          changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@9767423874f2ea97"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
+      - "v2/ecad/tools/gen_sch_b.py@3698cc04d8eaf75b"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
       - "v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md@97b1f63aa6ea11f1"
     release_effect: MUST_JUSTIFY
     source:
@@ -5039,9 +5064,25 @@ records:
           unconnected-(U554-NC-Pad4). The changed parts sit on the RockBLOCK, E72, E22 and 5G power-off lines, none on
           the voted fabric's selects, output enables or hub resets; GND gains only the new parts' returns; rebound to
           5b89d5ef6fe0299a. No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 12 (apply_rebind_after_circuit b
+          3ef9b8c49a01b728): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          97823ef1171a61ce by parsed components and net node sets; changed parts C668, C669, C670, C671, C672, C673,
+          C674, C675, C676, C677, C678, C679, C680, C681, C682, C683, C684, C685, R532, R533, R534, R535, R536, R537,
+          R538, R539, R540, R541, R542, R543, R544, R545, R546, R547, R548, R549, R550, R551, U537, U538, U539, U540,
+          U541, U542, U543, U544, U545, U546, U547, U548, U549, U550, U551, U552, U553, U554, R238, R41, R42, R527,
+          U536; changed nets +3V3_CM2, +3V3_CM3, +3V3_DEV, +3V3_S2A, +3V3_ZB, +5V_DEV, 5G_PWROFF_n, 5G_TPR_n, E22_EN,
+          GND, LORA_BUSY, LORA_DIO1, LORA_GO, LORA_MISO, LORA_MOSI, LORA_NRST, LORA_NSS, LORA_RXEN, LORA_RXEN_G,
+          LORA_SCLK, LORA_TXEN, LORA_TXEN_G, RB_CTRL, RB_CTRL_H, RB_GO, RB_IEN, RB_IEN_DRV, RB_RXD, RB_RXD_H, RB_STATUS,
+          RB_TD_CT, RB_TXD, SPI3_CE1, SPI3_IO23, SPI3_IO24, SPI3_IO26, SPI3_MISO, SPI3_MOSI, SPI3_SCLK, ZBA_BSL,
+          ZBA_BSL_H, ZBA_RST_H, ZBA_RST_n, ZBA_RXD, ZBA_RXD_H, ZBB_BSL, ZBB_BSL_H, ZBB_RST_H, ZBB_RST_n, ZBB_RXD,
+          ZBB_RXD_H, unconnected-(U543-NC-Pad3), unconnected-(U544-NC-Pad1), unconnected-(U551-NC-Pad1),
+          unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). The changed parts sit on
+          the RockBLOCK, E72, E22 and 5G power-off lines, none on the voted fabric's selects, output enables or hub
+          resets; GND gains only the new parts' returns; rebound to 3ef9b8c49a01b728. No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
     release_effect: BLOCKER
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md:87-93"
@@ -5176,9 +5217,26 @@ records:
           unconnected-(U554-NC-Pad4). No new part drives a compute module pin from an always-on rail: the E22 gates and
           buffers that meet slot 3's pins run from slot 3's own 3.3 V (SN74LVC Ioff with the module unpowered), the
           other new parts drive radio modules, not compute modules; rebound to 5b89d5ef6fe0299a. No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 12 (apply_rebind_after_circuit b
+          3ef9b8c49a01b728): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          97823ef1171a61ce by parsed components and net node sets; changed parts C668, C669, C670, C671, C672, C673,
+          C674, C675, C676, C677, C678, C679, C680, C681, C682, C683, C684, C685, R532, R533, R534, R535, R536, R537,
+          R538, R539, R540, R541, R542, R543, R544, R545, R546, R547, R548, R549, R550, R551, U537, U538, U539, U540,
+          U541, U542, U543, U544, U545, U546, U547, U548, U549, U550, U551, U552, U553, U554, R238, R41, R42, R527,
+          U536; changed nets +3V3_CM2, +3V3_CM3, +3V3_DEV, +3V3_S2A, +3V3_ZB, +5V_DEV, 5G_PWROFF_n, 5G_TPR_n, E22_EN,
+          GND, LORA_BUSY, LORA_DIO1, LORA_GO, LORA_MISO, LORA_MOSI, LORA_NRST, LORA_NSS, LORA_RXEN, LORA_RXEN_G,
+          LORA_SCLK, LORA_TXEN, LORA_TXEN_G, RB_CTRL, RB_CTRL_H, RB_GO, RB_IEN, RB_IEN_DRV, RB_RXD, RB_RXD_H, RB_STATUS,
+          RB_TD_CT, RB_TXD, SPI3_CE1, SPI3_IO23, SPI3_IO24, SPI3_IO26, SPI3_MISO, SPI3_MOSI, SPI3_SCLK, ZBA_BSL,
+          ZBA_BSL_H, ZBA_RST_H, ZBA_RST_n, ZBA_RXD, ZBA_RXD_H, ZBB_BSL, ZBB_BSL_H, ZBB_RST_H, ZBB_RST_n, ZBB_RXD,
+          ZBB_RXD_H, unconnected-(U543-NC-Pad3), unconnected-(U544-NC-Pad1), unconnected-(U551-NC-Pad1),
+          unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). No new part drives a
+          compute module pin from an always-on rail: the E22 gates and buffers that meet slot 3's pins run from slot 3's
+          own 3.3 V (SN74LVC Ioff with the module unpowered), the other new parts drive radio modules, not compute
+          modules; rebound to 3ef9b8c49a01b728. No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 5.2", "v2/docs/feasibility/FAILOVER-FABRIC.md section 10"]
     source_check: VERIFIED
@@ -5659,9 +5717,32 @@ records:
           touches were computed from the generator's changed lines and both netlists (152 parts and nets). The three I/O
           supervisors, their symbol values and BOM lines are untouched by the change; the regenerated netlist differs
           from the committed one only by the drafted FEA-002 parts; rebound. No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 12 (apply_rebind_after_circuit b
+          3ef9b8c49a01b728): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          97823ef1171a61ce by parsed components and net node sets; changed parts C668, C669, C670, C671, C672, C673,
+          C674, C675, C676, C677, C678, C679, C680, C681, C682, C683, C684, C685, R532, R533, R534, R535, R536, R537,
+          R538, R539, R540, R541, R542, R543, R544, R545, R546, R547, R548, R549, R550, R551, U537, U538, U539, U540,
+          U541, U542, U543, U544, U545, U546, U547, U548, U549, U550, U551, U552, U553, U554, R238, R41, R42, R527,
+          U536; changed nets +3V3_CM2, +3V3_CM3, +3V3_DEV, +3V3_S2A, +3V3_ZB, +5V_DEV, 5G_PWROFF_n, 5G_TPR_n, E22_EN,
+          GND, LORA_BUSY, LORA_DIO1, LORA_GO, LORA_MISO, LORA_MOSI, LORA_NRST, LORA_NSS, LORA_RXEN, LORA_RXEN_G,
+          LORA_SCLK, LORA_TXEN, LORA_TXEN_G, RB_CTRL, RB_CTRL_H, RB_GO, RB_IEN, RB_IEN_DRV, RB_RXD, RB_RXD_H, RB_STATUS,
+          RB_TD_CT, RB_TXD, SPI3_CE1, SPI3_IO23, SPI3_IO24, SPI3_IO26, SPI3_MISO, SPI3_MOSI, SPI3_SCLK, ZBA_BSL,
+          ZBA_BSL_H, ZBA_RST_H, ZBA_RST_n, ZBA_RXD, ZBA_RXD_H, ZBB_BSL, ZBB_BSL_H, ZBB_RST_H, ZBB_RST_n, ZBB_RXD,
+          ZBB_RXD_H, unconnected-(U543-NC-Pad3), unconnected-(U544-NC-Pad1), unconnected-(U551-NC-Pad1),
+          unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). The three I/O supervisors,
+          their symbol values and BOM lines are untouched by the change; the regenerated netlist differs from the
+          committed one only by the drafted FEA-002 parts; rebound to 3ef9b8c49a01b728. No result changes.
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 12 (apply_rebind_generator_b_set12, 9767423874f2ea97 to
+          3698cc04d8eaf75b): set 12's changes to this generator (board B: stream d4emcon's FEA-002 remedies, the check's
+          minors, the census nodes; board A: S-117 and the FET remedy, the census nodes); the identifiers the change
+          touches were computed from the generator's changed lines and both netlists (159 parts and nets). The three I/O
+          supervisors, their symbol values and BOM lines are untouched by the change; the regenerated netlist differs
+          from the committed one only by the drafted FEA-002 parts; rebound. No result changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@9767423874f2ea97"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
+      - "v2/ecad/tools/gen_sch_b.py@3698cc04d8eaf75b"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
       - "v2/docs/parts/STM32H743-COMPATIBILITY.md@67335ea42747e22f"
       - "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf@f6e620179006c8c4"
       - "v2/vendor/st/st-rm0433-rev8.pdf@9ba54135736a47a3"
@@ -6023,10 +6104,17 @@ records:
           touches were computed from the generator's changed lines and both netlists (152 parts and nets). The change
           touches no bank adoption line, voted select or output enable of the I/O high-availability fabric; which
           neighbour adopts each bank is as it was; rebound. No result changes.
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 12 (apply_rebind_generator_b_set12, 9767423874f2ea97 to
+          3698cc04d8eaf75b): set 12's changes to this generator (board B: stream d4emcon's FEA-002 remedies, the check's
+          minors, the census nodes; board A: S-117 and the FET remedy, the census nodes); the identifiers the change
+          touches were computed from the generator's changed lines and both netlists (159 parts and nets). The change
+          touches no bank adoption line, voted select or output enable of the I/O high-availability fabric; which
+          neighbour adopts each bank is as it was; rebound. No result changes.
     evidence_bound_to:
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
       - "v2/docs/PANEL.md@4647782f5aca7c13"
-      - "v2/ecad/tools/gen_sch_b.py@9767423874f2ea97"
+      - "v2/ecad/tools/gen_sch_b.py@3698cc04d8eaf75b"
     release_effect: ADVISORY
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md section 4"
@@ -7201,9 +7289,23 @@ records:
           7a2c0ac2190b141a and the tree's at a2d48972d171aad1 were compared with only their 4 date and source line(s)
           dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
           on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 12 (apply_rebind_after_circuit a
+          6c40250c47195ebb): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          30ad87746d1801ca by parsed components and net node sets; changed parts C233, C234, C235, R219, R220, C26, C27,
+          L2, Q10, Q7, Q8, Q9, R25; changed nets CH_COMP1, CH_COMP2, CH_COMP2C, GND, IADPT. The PoE and USB-C outlets'
+          interlock and the PA key path are untouched; set 12 changes only the charger U3's power stage, compensation
+          and the census declarations of IADPT and CH_COMP1; rebound to 6c40250c47195ebb. No result changes.
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at integration set 12 (apply_rebind_generator_b_set12, eb2e347e4d371e0f to
+          6a136feec6c9cf4e): set 12's changes to this generator (board B: stream d4emcon's FEA-002 remedies, the check's
+          minors, the census nodes; board A: S-117 and the FET remedy, the census nodes); the identifiers the change
+          touches were computed from the generator's changed lines and both netlists (67 parts and nets). The PoE and
+          USB-C outlets' interlock and the PA key path are untouched; set 12 changes only the charger U3's power stage,
+          compensation and the census declarations of IADPT and CH_COMP1; rebound. No result changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_a.py@eb2e347e4d371e0f"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
+      - "v2/ecad/tools/gen_sch_a.py@6a136feec6c9cf4e"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
     release_effect: BLOCKER
     source: ["owner ruling D-11", "v2/docs/MESHSAT-709-geometry-appendix.md:2932", "v2/ecad/tools/gen_sch_a.py:1177-1190, 1237-1245"]
@@ -8044,9 +8146,23 @@ records:
           599ee964a9c23d6e and the tree's at 30ad87746d1801ca were compared with only their 4 date and source line(s)
           dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
           on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 12 (apply_rebind_after_circuit a
+          6c40250c47195ebb): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          30ad87746d1801ca by parsed components and net node sets; changed parts C233, C234, C235, R219, R220, C26, C27,
+          L2, Q10, Q7, Q8, Q9, R25; changed nets CH_COMP1, CH_COMP2, CH_COMP2C, GND, IADPT. The USB-C CC ESD array by
+          the connector is untouched; set 12 changes only the charger U3's power stage and compensation; rebound to
+          6c40250c47195ebb. No result changes.
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at integration set 12 (apply_rebind_generator_b_set12, eb2e347e4d371e0f to
+          6a136feec6c9cf4e): set 12's changes to this generator (board B: stream d4emcon's FEA-002 remedies, the check's
+          minors, the census nodes; board A: S-117 and the FET remedy, the census nodes); the identifiers the change
+          touches were computed from the generator's changed lines and both netlists (67 parts and nets). The USB-C CC
+          ESD array by the connector is untouched; set 12 changes only the charger U3's power stage and compensation;
+          rebound. No result changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_a.py@eb2e347e4d371e0f"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
+      - "v2/ecad/tools/gen_sch_a.py@6a136feec6c9cf4e"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
       - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
     release_effect: MUST_JUSTIFY
     source: ["owner ruling D-17", "v2/ecad/tools/gen_sch_a.py:1104-1114", "v2/ecad/tools/pcb_decisions.yaml:256-429 (decision 31)"]
@@ -8563,9 +8679,26 @@ records:
           SW_EMCON), B-4's margin with every rail lost stated (30 mV) and its start-up case, and the LED feed loads
           drafted as a follow-up; bench E-04 gains the start-up dip. No row closes and no reading this record rests on
           moves, so its result is unchanged, bound to the file at e919e9b2c633deef.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 12 (apply_rebind_after_circuit b
+          3ef9b8c49a01b728): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          97823ef1171a61ce by parsed components and net node sets; changed parts C668, C669, C670, C671, C672, C673,
+          C674, C675, C676, C677, C678, C679, C680, C681, C682, C683, C684, C685, R532, R533, R534, R535, R536, R537,
+          R538, R539, R540, R541, R542, R543, R544, R545, R546, R547, R548, R549, R550, R551, U537, U538, U539, U540,
+          U541, U542, U543, U544, U545, U546, U547, U548, U549, U550, U551, U552, U553, U554, R238, R41, R42, R527,
+          U536; changed nets +3V3_CM2, +3V3_CM3, +3V3_DEV, +3V3_S2A, +3V3_ZB, +5V_DEV, 5G_PWROFF_n, 5G_TPR_n, E22_EN,
+          GND, LORA_BUSY, LORA_DIO1, LORA_GO, LORA_MISO, LORA_MOSI, LORA_NRST, LORA_NSS, LORA_RXEN, LORA_RXEN_G,
+          LORA_SCLK, LORA_TXEN, LORA_TXEN_G, RB_CTRL, RB_CTRL_H, RB_GO, RB_IEN, RB_IEN_DRV, RB_RXD, RB_RXD_H, RB_STATUS,
+          RB_TD_CT, RB_TXD, SPI3_CE1, SPI3_IO23, SPI3_IO24, SPI3_IO26, SPI3_MISO, SPI3_MOSI, SPI3_SCLK, ZBA_BSL,
+          ZBA_BSL_H, ZBA_RST_H, ZBA_RST_n, ZBA_RXD, ZBA_RXD_H, ZBB_BSL, ZBB_BSL_H, ZBB_RST_H, ZBB_RST_n, ZBB_RXD,
+          ZBB_RXD_H, unconnected-(U543-NC-Pad3), unconnected-(U544-NC-Pad1), unconnected-(U551-NC-Pad1),
+          unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). The change is the FEA-002
+          remedy set this requirement's reading waits on; FEA-002's layout-entry stage stays open (EMCON.md 4d: rows 3
+          and 4 open on desk items, every other row needs hardware), so the reading stays as it was; rebound to
+          3ef9b8c49a01b728. No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
     release_effect: BLOCKER
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)"
@@ -8825,9 +8958,25 @@ records:
           SW_EMCON), B-4's margin with every rail lost stated (30 mV) and its start-up case, and the LED feed loads
           drafted as a follow-up; bench E-04 gains the start-up dip. No row closes and no reading this record rests on
           moves, so its result is unchanged, bound to the file at e919e9b2c633deef.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 12 (apply_rebind_after_circuit b
+          3ef9b8c49a01b728): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          97823ef1171a61ce by parsed components and net node sets; changed parts C668, C669, C670, C671, C672, C673,
+          C674, C675, C676, C677, C678, C679, C680, C681, C682, C683, C684, C685, R532, R533, R534, R535, R536, R537,
+          R538, R539, R540, R541, R542, R543, R544, R545, R546, R547, R548, R549, R550, R551, U537, U538, U539, U540,
+          U541, U542, U543, U544, U545, U546, U547, U548, U549, U550, U551, U552, U553, U554, R238, R41, R42, R527,
+          U536; changed nets +3V3_CM2, +3V3_CM3, +3V3_DEV, +3V3_S2A, +3V3_ZB, +5V_DEV, 5G_PWROFF_n, 5G_TPR_n, E22_EN,
+          GND, LORA_BUSY, LORA_DIO1, LORA_GO, LORA_MISO, LORA_MOSI, LORA_NRST, LORA_NSS, LORA_RXEN, LORA_RXEN_G,
+          LORA_SCLK, LORA_TXEN, LORA_TXEN_G, RB_CTRL, RB_CTRL_H, RB_GO, RB_IEN, RB_IEN_DRV, RB_RXD, RB_RXD_H, RB_STATUS,
+          RB_TD_CT, RB_TXD, SPI3_CE1, SPI3_IO23, SPI3_IO24, SPI3_IO26, SPI3_MISO, SPI3_MOSI, SPI3_SCLK, ZBA_BSL,
+          ZBA_BSL_H, ZBA_RST_H, ZBA_RST_n, ZBA_RXD, ZBA_RXD_H, ZBB_BSL, ZBB_BSL_H, ZBB_RST_H, ZBB_RST_n, ZBB_RXD,
+          ZBB_RXD_H, unconnected-(U543-NC-Pad3), unconnected-(U544-NC-Pad1), unconnected-(U551-NC-Pad1),
+          unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). The change is the FEA-002
+          remedy set this requirement's reading waits on; every row's radio-side timing term still needs a bench test
+          (EMCON.md 4d), so the reading stays as it was; rebound to 3ef9b8c49a01b728. No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
     release_effect: BLOCKER
     source:
@@ -8995,9 +9144,32 @@ records:
           touches were computed from the generator's changed lines and both netlists (152 parts and nets). The compute
           modules' radio-disable lines (WL_nDIS and BT_nDIS on U30A to U32A) are untouched: RF-002's walk reads their
           rows as on main; rebound. No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 12 (apply_rebind_after_circuit b
+          3ef9b8c49a01b728): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          97823ef1171a61ce by parsed components and net node sets; changed parts C668, C669, C670, C671, C672, C673,
+          C674, C675, C676, C677, C678, C679, C680, C681, C682, C683, C684, C685, R532, R533, R534, R535, R536, R537,
+          R538, R539, R540, R541, R542, R543, R544, R545, R546, R547, R548, R549, R550, R551, U537, U538, U539, U540,
+          U541, U542, U543, U544, U545, U546, U547, U548, U549, U550, U551, U552, U553, U554, R238, R41, R42, R527,
+          U536; changed nets +3V3_CM2, +3V3_CM3, +3V3_DEV, +3V3_S2A, +3V3_ZB, +5V_DEV, 5G_PWROFF_n, 5G_TPR_n, E22_EN,
+          GND, LORA_BUSY, LORA_DIO1, LORA_GO, LORA_MISO, LORA_MOSI, LORA_NRST, LORA_NSS, LORA_RXEN, LORA_RXEN_G,
+          LORA_SCLK, LORA_TXEN, LORA_TXEN_G, RB_CTRL, RB_CTRL_H, RB_GO, RB_IEN, RB_IEN_DRV, RB_RXD, RB_RXD_H, RB_STATUS,
+          RB_TD_CT, RB_TXD, SPI3_CE1, SPI3_IO23, SPI3_IO24, SPI3_IO26, SPI3_MISO, SPI3_MOSI, SPI3_SCLK, ZBA_BSL,
+          ZBA_BSL_H, ZBA_RST_H, ZBA_RST_n, ZBA_RXD, ZBA_RXD_H, ZBB_BSL, ZBB_BSL_H, ZBB_RST_H, ZBB_RST_n, ZBB_RXD,
+          ZBB_RXD_H, unconnected-(U543-NC-Pad3), unconnected-(U544-NC-Pad1), unconnected-(U551-NC-Pad1),
+          unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). The compute modules'
+          radio-disable lines (WL_nDIS and BT_nDIS on U30A to U32A) are untouched: RF-002's walk reads their rows as on
+          main; rebound to 3ef9b8c49a01b728. No result changes.
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 12 (apply_rebind_generator_b_set12, 9767423874f2ea97 to
+          3698cc04d8eaf75b): set 12's changes to this generator (board B: stream d4emcon's FEA-002 remedies, the check's
+          minors, the census nodes; board A: S-117 and the FET remedy, the census nodes); the identifiers the change
+          touches were computed from the generator's changed lines and both netlists (159 parts and nets). The compute
+          modules' radio-disable lines (WL_nDIS and BT_nDIS on U30A to U32A) are untouched: RF-002's walk reads their
+          rows as on main; rebound. No result changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@9767423874f2ea97"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
+      - "v2/ecad/tools/gen_sch_b.py@3698cc04d8eaf75b"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
     release_effect: ADVISORY
     source:
       - "v2/ecad/tools/gen_sch_b.py:820-866"
@@ -9282,9 +9454,26 @@ records:
           SW_EMCON), B-4's margin with every rail lost stated (30 mV) and its start-up case, and the LED feed loads
           drafted as a follow-up; bench E-04 gains the start-up dip. No row closes and no reading this record rests on
           moves, so its result is unchanged, bound to the file at e919e9b2c633deef.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 12 (apply_rebind_after_circuit b
+          3ef9b8c49a01b728): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          97823ef1171a61ce by parsed components and net node sets; changed parts C668, C669, C670, C671, C672, C673,
+          C674, C675, C676, C677, C678, C679, C680, C681, C682, C683, C684, C685, R532, R533, R534, R535, R536, R537,
+          R538, R539, R540, R541, R542, R543, R544, R545, R546, R547, R548, R549, R550, R551, U537, U538, U539, U540,
+          U541, U542, U543, U544, U545, U546, U547, U548, U549, U550, U551, U552, U553, U554, R238, R41, R42, R527,
+          U536; changed nets +3V3_CM2, +3V3_CM3, +3V3_DEV, +3V3_S2A, +3V3_ZB, +5V_DEV, 5G_PWROFF_n, 5G_TPR_n, E22_EN,
+          GND, LORA_BUSY, LORA_DIO1, LORA_GO, LORA_MISO, LORA_MOSI, LORA_NRST, LORA_NSS, LORA_RXEN, LORA_RXEN_G,
+          LORA_SCLK, LORA_TXEN, LORA_TXEN_G, RB_CTRL, RB_CTRL_H, RB_GO, RB_IEN, RB_IEN_DRV, RB_RXD, RB_RXD_H, RB_STATUS,
+          RB_TD_CT, RB_TXD, SPI3_CE1, SPI3_IO23, SPI3_IO24, SPI3_IO26, SPI3_MISO, SPI3_MOSI, SPI3_SCLK, ZBA_BSL,
+          ZBA_BSL_H, ZBA_RST_H, ZBA_RST_n, ZBA_RXD, ZBA_RXD_H, ZBB_BSL, ZBB_BSL_H, ZBB_RST_H, ZBB_RST_n, ZBB_RXD,
+          ZBB_RXD_H, unconnected-(U543-NC-Pad3), unconnected-(U544-NC-Pad1), unconnected-(U551-NC-Pad1),
+          unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). The change gates the
+          back-feed into the RockBLOCK, the E22 and both E72 and repeats the 5G card's power-off line; whether each
+          radio is off in hardware under EMCON still waits on FEA-002's open rows, so the reading stays as it was;
+          rebound to 3ef9b8c49a01b728. No result changes.
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
     release_effect: BLOCKER
     source:
       - "v2/ecad/tools/gen_sch_b.py:813-880"
@@ -9492,9 +9681,16 @@ records:
           599ee964a9c23d6e and the tree's at 30ad87746d1801ca were compared with only their 4 date and source line(s)
           dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
           on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 12 (apply_rebind_after_circuit a
+          6c40250c47195ebb): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          30ad87746d1801ca by parsed components and net node sets; changed parts C233, C234, C235, R219, R220, C26, C27,
+          L2, Q10, Q7, Q8, Q9, R25; changed nets CH_COMP1, CH_COMP2, CH_COMP2C, GND, IADPT. EMCON_HW's pull-down R102
+          and the slot enables are untouched; set 12 changes only the charger U3's power stage and compensation; rebound
+          to 6c40250c47195ebb. No result changes.
     evidence_bound_to:
       - "v2/docs/PANEL.md@4647782f5aca7c13"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
     release_effect: ADVISORY
     source:
       - "v2/docs/PANEL.md section 7"
@@ -10110,9 +10306,16 @@ records:
           SW_EMCON), B-4's margin with every rail lost stated (30 mV) and its start-up case, and the LED feed loads
           drafted as a follow-up; bench E-04 gains the start-up dip. No row closes and no reading this record rests on
           moves, so its result is unchanged, bound to the file at e919e9b2c633deef.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 12 (apply_rebind_after_circuit a
+          6c40250c47195ebb): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          30ad87746d1801ca by parsed components and net node sets; changed parts C233, C234, C235, R219, R220, C26, C27,
+          L2, Q10, Q7, Q8, Q9, R25; changed nets CH_COMP1, CH_COMP2, CH_COMP2C, GND, IADPT. The PA's VGG gate and board
+          D's KEY path are untouched; the L2 this record's evidence names is board D's, not board A's charger inductor
+          that set 12 replaced; rebound to 6c40250c47195ebb. No result changes.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
       - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
       - "v2/docs/CURRENT-EVIDENCE.md@ad6dd5e28a94b674"
     release_effect: BLOCKER
@@ -10630,9 +10833,26 @@ records:
           SW_EMCON), B-4's margin with every rail lost stated (30 mV) and its start-up case, and the LED feed loads
           drafted as a follow-up; bench E-04 gains the start-up dip. No row closes and no reading this record rests on
           moves, so its result is unchanged, bound to the file at e919e9b2c633deef.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 12 (apply_rebind_after_circuit b
+          3ef9b8c49a01b728): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          97823ef1171a61ce by parsed components and net node sets; changed parts C668, C669, C670, C671, C672, C673,
+          C674, C675, C676, C677, C678, C679, C680, C681, C682, C683, C684, C685, R532, R533, R534, R535, R536, R537,
+          R538, R539, R540, R541, R542, R543, R544, R545, R546, R547, R548, R549, R550, R551, U537, U538, U539, U540,
+          U541, U542, U543, U544, U545, U546, U547, U548, U549, U550, U551, U552, U553, U554, R238, R41, R42, R527,
+          U536; changed nets +3V3_CM2, +3V3_CM3, +3V3_DEV, +3V3_S2A, +3V3_ZB, +5V_DEV, 5G_PWROFF_n, 5G_TPR_n, E22_EN,
+          GND, LORA_BUSY, LORA_DIO1, LORA_GO, LORA_MISO, LORA_MOSI, LORA_NRST, LORA_NSS, LORA_RXEN, LORA_RXEN_G,
+          LORA_SCLK, LORA_TXEN, LORA_TXEN_G, RB_CTRL, RB_CTRL_H, RB_GO, RB_IEN, RB_IEN_DRV, RB_RXD, RB_RXD_H, RB_STATUS,
+          RB_TD_CT, RB_TXD, SPI3_CE1, SPI3_IO23, SPI3_IO24, SPI3_IO26, SPI3_MISO, SPI3_MOSI, SPI3_SCLK, ZBA_BSL,
+          ZBA_BSL_H, ZBA_RST_H, ZBA_RST_n, ZBA_RXD, ZBA_RXD_H, ZBB_BSL, ZBB_BSL_H, ZBB_RST_H, ZBB_RST_n, ZBB_RXD,
+          ZBB_RXD_H, unconnected-(U543-NC-Pad3), unconnected-(U544-NC-Pad1), unconnected-(U551-NC-Pad1),
+          unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). The change is the FEA-002
+          remedy set with the check's minors; FEA-002 stays FEASIBILITY_OPEN with its layout-entry stage open (0 of 17
+          rows closed at desk); d4emcon's read-back differs only on the three values the minors changed on purpose and
+          readback_chk12 holds on the regenerated board; rebound to 3ef9b8c49a01b728. No result changes.
     evidence_bound_to:
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
       - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
@@ -12247,11 +12467,25 @@ records:
           56adc9746d61c4e0 and the tree's at 2ed95a0e8069ebf8 were compared with only their 4 date and source line(s)
           dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
           on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 12 (apply_rebind_after_circuit a
+          6c40250c47195ebb): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          30ad87746d1801ca by parsed components and net node sets; changed parts C233, C234, C235, R219, R220, C26, C27,
+          L2, Q10, Q7, Q8, Q9, R25; changed nets CH_COMP1, CH_COMP2, CH_COMP2C, GND, IADPT. The charger's power stage,
+          frequency row and compensation change (S-117, decisions 56 and 57), not its thermistor input, the gauge's
+          thresholds or the shedding path this reading rests on; rebound to 6c40250c47195ebb. No result changes.
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at integration set 12 (apply_rebind_generator_b_set12, eb2e347e4d371e0f to
+          6a136feec6c9cf4e): set 12's changes to this generator (board B: stream d4emcon's FEA-002 remedies, the check's
+          minors, the census nodes; board A: S-117 and the FET remedy, the census nodes); the identifiers the change
+          touches were computed from the generator's changed lines and both netlists (67 parts and nets). The charger's
+          power stage, frequency row and compensation change (S-117, decisions 56 and 57), not its thermistor input, the
+          gauge's thresholds or the shedding path this reading rests on; rebound. No result changes.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
-      - "v2/ecad/tools/gen_sch_a.py@eb2e347e4d371e0f"
+      - "v2/ecad/tools/gen_sch_a.py@6a136feec6c9cf4e"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
       - "v2/docs/records/w4ae/hot_r1_trace.py@2350c321fa744293"
     release_effect: BLOCKER
     source:
@@ -13281,6 +13515,36 @@ records:
           EMCON_HW_DRV, TX_INHIBIT_n. The published contracts this conflict resolved still describe the circuit:
           PANEL.md's EMCON_HW row (U9 buffers TX_INHIBIT_n, low while it is low) stays true with U9 now driving through
           R52 and D23 clamping the line to TX_INHIBIT_n; rebound to 87b69472ac83ca5a. No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 12 (apply_rebind_after_circuit a
+          6c40250c47195ebb): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          30ad87746d1801ca by parsed components and net node sets; changed parts C233, C234, C235, R219, R220, C26, C27,
+          L2, Q10, Q7, Q8, Q9, R25; changed nets CH_COMP1, CH_COMP2, CH_COMP2C, GND, IADPT. The published contracts this
+          conflict resolved name no charger FET; the Q7 this record names is on another board or unchanged in role, and
+          PANEL.md's rows stay true; rebound to 6c40250c47195ebb. No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 12 (apply_rebind_after_circuit b
+          3ef9b8c49a01b728): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          97823ef1171a61ce by parsed components and net node sets; changed parts C668, C669, C670, C671, C672, C673,
+          C674, C675, C676, C677, C678, C679, C680, C681, C682, C683, C684, C685, R532, R533, R534, R535, R536, R537,
+          R538, R539, R540, R541, R542, R543, R544, R545, R546, R547, R548, R549, R550, R551, U537, U538, U539, U540,
+          U541, U542, U543, U544, U545, U546, U547, U548, U549, U550, U551, U552, U553, U554, R238, R41, R42, R527,
+          U536; changed nets +3V3_CM2, +3V3_CM3, +3V3_DEV, +3V3_S2A, +3V3_ZB, +5V_DEV, 5G_PWROFF_n, 5G_TPR_n, E22_EN,
+          GND, LORA_BUSY, LORA_DIO1, LORA_GO, LORA_MISO, LORA_MOSI, LORA_NRST, LORA_NSS, LORA_RXEN, LORA_RXEN_G,
+          LORA_SCLK, LORA_TXEN, LORA_TXEN_G, RB_CTRL, RB_CTRL_H, RB_GO, RB_IEN, RB_IEN_DRV, RB_RXD, RB_RXD_H, RB_STATUS,
+          RB_TD_CT, RB_TXD, SPI3_CE1, SPI3_IO23, SPI3_IO24, SPI3_IO26, SPI3_MISO, SPI3_MOSI, SPI3_SCLK, ZBA_BSL,
+          ZBA_BSL_H, ZBA_RST_H, ZBA_RST_n, ZBA_RXD, ZBA_RXD_H, ZBB_BSL, ZBB_BSL_H, ZBB_RST_H, ZBB_RST_n, ZBB_RXD,
+          ZBB_RXD_H, unconnected-(U543-NC-Pad3), unconnected-(U544-NC-Pad1), unconnected-(U551-NC-Pad1),
+          unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). The published contracts
+          this conflict resolved still describe the circuit: PANEL.md's EMCON_HW row (U9 buffers TX_INHIBIT_n, low while
+          it is low) stays true with U9 now driving through R52 and D23 clamping the line to TX_INHIBIT_n; the R41 and
+          R42 change is the RockBLOCK pull-downs of B-1, which no published contract names; rebound to 3ef9b8c49a01b728.
+          No result changes.
+      - >-
+          v2/ecad/tools/pcb_decisions.yaml re-read at integration set 12 (apply_rebind_decisions_set12, ad64649584227d29
+          to 44107103b49d036c): parsed against main's file, every decision it holds is present and identical, and
+          exactly two are added (56, 57: stream s117's charger frequency row and FETs, board A); no decision this record
+          reads changed; rebound. No result changes.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
@@ -13289,9 +13553,9 @@ records:
       - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
-      - "v2/ecad/tools/pcb_decisions.yaml@ad64649584227d29"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
+      - "v2/ecad/tools/pcb_decisions.yaml@44107103b49d036c"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@87b69472ac83ca5a"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761"
     release_effect: BLOCKER
@@ -13716,7 +13980,14 @@ records:
           touches were computed from the generator's changed lines and both netlists (152 parts and nets). The lid sense
           and the reduced mode's slot assignment are untouched; the change gates the RockBLOCK, E22 and E72 lines
           against back-feed without changing which module carries which radio; rebound. No result changes.
-    evidence_bound_to: ["v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8", "v2/ecad/tools/gen_sch_b.py@9767423874f2ea97"]
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 12 (apply_rebind_generator_b_set12, 9767423874f2ea97 to
+          3698cc04d8eaf75b): set 12's changes to this generator (board B: stream d4emcon's FEA-002 remedies, the check's
+          minors, the census nodes; board A: S-117 and the FET remedy, the census nodes); the identifiers the change
+          touches were computed from the generator's changed lines and both netlists (159 parts and nets). The lid sense
+          and the reduced mode's slot assignment are untouched; the change gates the RockBLOCK, E22 and E72 lines
+          against back-feed without changing which module carries which radio; rebound. No result changes.
+    evidence_bound_to: ["v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8", "v2/ecad/tools/gen_sch_b.py@3698cc04d8eaf75b"]
     release_effect: MUST_JUSTIFY
     source:
       - "owner ruling D-02b"
@@ -14176,8 +14447,15 @@ records:
           touches were computed from the generator's changed lines and both netlists (152 parts and nets). The 5G
           module's SIM TVS arrays and their placement are untouched; U554 repeats U221 on FULL_CARD_POWER_OFF# only;
           rebound. No result changes.
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 12 (apply_rebind_generator_b_set12, 9767423874f2ea97 to
+          3698cc04d8eaf75b): set 12's changes to this generator (board B: stream d4emcon's FEA-002 remedies, the check's
+          minors, the census nodes; board A: S-117 and the FET remedy, the census nodes); the identifiers the change
+          touches were computed from the generator's changed lines and both netlists (159 parts and nets). The 5G
+          module's SIM TVS arrays and their placement are untouched; U554 repeats U221 on FULL_CARD_POWER_OFF# only;
+          rebound. No result changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@9767423874f2ea97"
+      - "v2/ecad/tools/gen_sch_b.py@3698cc04d8eaf75b"
     release_effect: BLOCKER
     source:
       - "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf section 4.1.7"
@@ -15298,12 +15576,26 @@ records:
           599ee964a9c23d6e and the tree's at 30ad87746d1801ca were compared with only their 4 date and source line(s)
           dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
           on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 12 (apply_rebind_after_circuit a
+          6c40250c47195ebb): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          30ad87746d1801ca by parsed components and net node sets; changed parts C233, C234, C235, R219, R220, C26, C27,
+          L2, Q10, Q7, Q8, Q9, R25; changed nets CH_COMP1, CH_COMP2, CH_COMP2C, GND, IADPT. The charger's cell-count
+          strap stays 4S and the loads stay on VSYS; set 12 changes its inductor, FETs and compensation (S-117), which
+          HW-FW-CONTRACT.md's FW-A17 and V-A05 now record; rebound to 6c40250c47195ebb. No result changes.
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at integration set 12 (apply_rebind_generator_b_set12, eb2e347e4d371e0f to
+          6a136feec6c9cf4e): set 12's changes to this generator (board B: stream d4emcon's FEA-002 remedies, the check's
+          minors, the census nodes; board A: S-117 and the FET remedy, the census nodes); the identifiers the change
+          touches were computed from the generator's changed lines and both netlists (67 parts and nets). The charger's
+          cell-count strap stays 4S and the loads stay on VSYS; set 12 changes its inductor, FETs and compensation
+          (S-117), which HW-FW-CONTRACT.md's FW-A17 and V-A05 now record; rebound. No result changes.
     evidence_bound_to:
       - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/docs/CONOPS.md@6cb7b241cb84d729"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
-      - "v2/ecad/tools/gen_sch_a.py@eb2e347e4d371e0f"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
+      - "v2/ecad/tools/gen_sch_a.py@6a136feec6c9cf4e"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
       - "v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337"
     release_effect: BLOCKER
     source:
@@ -15790,9 +16082,32 @@ records:
           touches were computed from the generator's changed lines and both netlists (152 parts and nets). The 5G
           socket, its key and its three antenna jacks are untouched; U554 repeats U221 on FULL_CARD_POWER_OFF# only;
           rebound. No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 12 (apply_rebind_after_circuit b
+          3ef9b8c49a01b728): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          97823ef1171a61ce by parsed components and net node sets; changed parts C668, C669, C670, C671, C672, C673,
+          C674, C675, C676, C677, C678, C679, C680, C681, C682, C683, C684, C685, R532, R533, R534, R535, R536, R537,
+          R538, R539, R540, R541, R542, R543, R544, R545, R546, R547, R548, R549, R550, R551, U537, U538, U539, U540,
+          U541, U542, U543, U544, U545, U546, U547, U548, U549, U550, U551, U552, U553, U554, R238, R41, R42, R527,
+          U536; changed nets +3V3_CM2, +3V3_CM3, +3V3_DEV, +3V3_S2A, +3V3_ZB, +5V_DEV, 5G_PWROFF_n, 5G_TPR_n, E22_EN,
+          GND, LORA_BUSY, LORA_DIO1, LORA_GO, LORA_MISO, LORA_MOSI, LORA_NRST, LORA_NSS, LORA_RXEN, LORA_RXEN_G,
+          LORA_SCLK, LORA_TXEN, LORA_TXEN_G, RB_CTRL, RB_CTRL_H, RB_GO, RB_IEN, RB_IEN_DRV, RB_RXD, RB_RXD_H, RB_STATUS,
+          RB_TD_CT, RB_TXD, SPI3_CE1, SPI3_IO23, SPI3_IO24, SPI3_IO26, SPI3_MISO, SPI3_MOSI, SPI3_SCLK, ZBA_BSL,
+          ZBA_BSL_H, ZBA_RST_H, ZBA_RST_n, ZBA_RXD, ZBA_RXD_H, ZBB_BSL, ZBB_BSL_H, ZBB_RST_H, ZBB_RST_n, ZBB_RXD,
+          ZBB_RXD_H, unconnected-(U543-NC-Pad3), unconnected-(U544-NC-Pad1), unconnected-(U551-NC-Pad1),
+          unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). The 5G socket, its key and
+          its three antenna jacks are untouched; U554 repeats U221 on FULL_CARD_POWER_OFF# only; rebound to
+          3ef9b8c49a01b728. No result changes.
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at integration set 12 (apply_rebind_generator_b_set12, 9767423874f2ea97 to
+          3698cc04d8eaf75b): set 12's changes to this generator (board B: stream d4emcon's FEA-002 remedies, the check's
+          minors, the census nodes; board A: S-117 and the FET remedy, the census nodes); the identifiers the change
+          touches were computed from the generator's changed lines and both netlists (159 parts and nets). The 5G
+          socket, its key and its three antenna jacks are untouched; U554 repeats U221 on FULL_CARD_POWER_OFF# only;
+          rebound. No result changes.
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@9767423874f2ea97"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
+      - "v2/ecad/tools/gen_sch_b.py@3698cc04d8eaf75b"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
     release_effect: BLOCKER
     source:
       - "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf (key B p.15 and p.20; Table 32)"
@@ -16106,9 +16421,32 @@ records:
           EMCON_HW_DRV, TX_INHIBIT_n. D23 (BAT46W) is a signal clamp, anode EMCON_HW and cathode TX_INHIBIT_n, drawn on
           a symbol with a cathode pin, not a surge clamp or a rectifier on a rail; the pin-direction reading of this
           record's tool did not move at the re-take; rebound to 87b69472ac83ca5a. No result changes.
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net re-read at integration set 12 (apply_rebind_after_circuit a
+          6c40250c47195ebb): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          30ad87746d1801ca by parsed components and net node sets; changed parts C233, C234, C235, R219, R220, C26, C27,
+          L2, Q10, Q7, Q8, Q9, R25; changed nets CH_COMP1, CH_COMP2, CH_COMP2C, GND, IADPT. No one-way surge clamp or
+          rectifier changes on board A; Q7 to Q10 are the charger's switching FETs, and the pin-direction reading did
+          not move at the re-take; rebound to 6c40250c47195ebb. No result changes.
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net re-read at integration set 12 (apply_rebind_after_circuit b
+          3ef9b8c49a01b728): the circuit change of stream d4emcon's FEA-002 remedies was compared with main's netlist
+          97823ef1171a61ce by parsed components and net node sets; changed parts C668, C669, C670, C671, C672, C673,
+          C674, C675, C676, C677, C678, C679, C680, C681, C682, C683, C684, C685, R532, R533, R534, R535, R536, R537,
+          R538, R539, R540, R541, R542, R543, R544, R545, R546, R547, R548, R549, R550, R551, U537, U538, U539, U540,
+          U541, U542, U543, U544, U545, U546, U547, U548, U549, U550, U551, U552, U553, U554, R238, R41, R42, R527,
+          U536; changed nets +3V3_CM2, +3V3_CM3, +3V3_DEV, +3V3_S2A, +3V3_ZB, +5V_DEV, 5G_PWROFF_n, 5G_TPR_n, E22_EN,
+          GND, LORA_BUSY, LORA_DIO1, LORA_GO, LORA_MISO, LORA_MOSI, LORA_NRST, LORA_NSS, LORA_RXEN, LORA_RXEN_G,
+          LORA_SCLK, LORA_TXEN, LORA_TXEN_G, RB_CTRL, RB_CTRL_H, RB_GO, RB_IEN, RB_IEN_DRV, RB_RXD, RB_RXD_H, RB_STATUS,
+          RB_TD_CT, RB_TXD, SPI3_CE1, SPI3_IO23, SPI3_IO24, SPI3_IO26, SPI3_MISO, SPI3_MOSI, SPI3_SCLK, ZBA_BSL,
+          ZBA_BSL_H, ZBA_RST_H, ZBA_RST_n, ZBA_RXD, ZBA_RXD_H, ZBB_BSL, ZBB_BSL_H, ZBB_RST_H, ZBB_RST_n, ZBB_RXD,
+          ZBB_RXD_H, unconnected-(U543-NC-Pad3), unconnected-(U544-NC-Pad1), unconnected-(U551-NC-Pad1),
+          unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). No new part is a one-way
+          surge clamp or a rectifier on board B; the pin-direction reading of this record's tool did not move at the
+          re-take; rebound to 3ef9b8c49a01b728. No result changes.
     evidence_bound_to:
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@30ad87746d1801ca"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@5b89d5ef6fe0299a"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@87b69472ac83ca5a"
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
