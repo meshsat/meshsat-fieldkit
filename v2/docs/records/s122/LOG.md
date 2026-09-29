@@ -50,3 +50,17 @@ the tests ran only in the scratch clone, which is removed.
 - 18:35 README, this log, the check filed.
 
 No box, no agent, no other model. No gate, `rules_status.py` or `rules_render.py` ran in this tree.
+
+## Rebuild on the promoted set 13 (29 September 2026, CEST from `date`)
+
+- 18:37 The coordinator's message: `fnd/int14` was rewound (`bd1cbb07` dropped) and set 13 promoted as main `32f26b41`,
+  milestone `b874b744`; the registry's S-122 set 13 sentence gains its closing clause and S-123 is reworded; board C's
+  netlist and every document are the same. `fnd/s122b` created from `b874b744` in its own worktree; the seven stream
+  commits cherry-picked in order with the owner's flags (the merge `4d3a9708` left out), no conflict, each commit's
+  diff reading PASSED on the pre-commit check.
+- 18:38 `inventory.py` and `verdicts.py` re-run on `b874b744`'s tree, and with `S122_AT=e57a7365`: all four outputs
+  byte identical to the committed ones (849 sentences, 0 STALE, 0 UNJUDGED; the base 60 STALE), so no output is
+  regenerated. No script asserts S-122's or S-123's wording: `apply_registry_s122.py` appends its correction to
+  whatever title the registry holds and checks it reads back; `close_s122.py` reads the title as it is. Changed: the
+  round 2 document script's base commit (`4d3a9708`, not an ancestor here, to `1594090e`, whose CONOPS.md is the same
+  file), and the dropped merge named in the registry script's docstring and in the README.
