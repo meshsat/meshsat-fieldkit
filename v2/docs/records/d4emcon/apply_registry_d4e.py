@@ -8,6 +8,8 @@ record, starting with the page's path, naming the sections added and the section
 each record is rebound from the old sha to the new one. S-01's title gains one restating sentence that ADDS the two findings of
 this stream (D4E-F1, D4E-F2) to its open scope and names the drafts, which are not applied; S-92's title gains one sentence
 saying that bench E-01 now carries its ground (3). No evidence_result, status or stage changes: nothing here closes.
+After it, render the generated pages (rules_render): tests/run.py test_requirements fails its two trace-page tests until
+REQUIREMENTS-TRACE.md carries the new entries (tried on this branch: 63 pass, those 2 fail before the render).
 
 PHASE after (run only after the integrator has applied apply_c_d4e_f1.py and apply_b_d4e.py, regenerated boards C and B on the
 KiCad box with their chains, and committed the regenerated netlists). It runs tools/readback_d4e.py itself on both committed

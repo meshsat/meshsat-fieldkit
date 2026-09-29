@@ -115,3 +115,7 @@ E-02); (6) an apply script for FEA-002's evidence line once EMCON.md's new hash 
   through Tpr (D4E-F2). `apply_registry_d4e.py page` now also restates S-92 (advanced, not closed) and refuses unless E-01
   carries the addition; re-tested (9 items change: the 7 rebound records, S-01, S-92; a second run refused; registry
   restored). Section 4d.5 names the registry phases and the self-test.
+- 12:33 to 12:34 Tests with the tree's runner (`tests/run.py`, pure Python): `test_requirements` 65 pass, 0 fail, 1 skip on
+  this branch; `test_tx_inhibit` 133 pass. With `apply_registry_d4e.py page` applied in the worktree, `test_requirements`
+  reads 63 pass and 2 fail, both trace-page tests, because REQUIREMENTS-TRACE.md is generated from the registry and was not
+  re-rendered (the integrator renders after the page phase; the script's docstring and 4d.5 now say so); registry restored.
