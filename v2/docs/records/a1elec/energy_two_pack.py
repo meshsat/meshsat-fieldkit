@@ -59,9 +59,10 @@ PAR = {
     "t_base_c": (20.0, "REQ-014's +20 C, the basis of sections 8 and 9: the base pack in the closed base with the kit's own heat"),
     "chg_a_base": (4.0, "SESSION (section 8a): U3 ChargeCurrent at most 4.0 A for the 4S6P base, OCC1 5.0 A unchanged; register code 31 x 128 mA = 3.968 A (SLUSE66A Table 9-7) is the nearest at or below"),
     "chg_a_lid": (8.0, "SESSION: U3B ChargeCurrent 8.0 A for the 4S12P lid, the same 0.67 A a cell as the base; code 62 x 128 mA = 7.936 A; the lid gauge's OCC1 at 10.0 A true (GAUGE.md)"),
-    "iin_lid_a": (8.0, "SESSION: U3B IIN_HOST 8.0 A from VBAT (RAC 5 mOhm, RSNS_RAC = 1b, 3.3 uH on IADPT's 169 k: 10 A allowed, SLUSE66A Table 9-1); code (8000 - 100) / 100 = 79"),
+    "iin_lid_a": (8.0, "SESSION: U3B IIN_HOST 8.0 A nominal from VBAT, code 80 (seven bits of 100 mA with RAC 5 mOhm, RSNS_RAC = 1b, SLUSE66A 9.6.22 Table 9-50, page 80; 8.2 A maximum with the 200 mA the register text adds); 3.3 uH on IADPT's 169 k so that Table 9-1 allows 10 A"),
     "eta_u3b": (0.975, "MAKER, read from a plot: SLUSE66A Figure 8-3 (VIN 15 V, VOUT 14.8 V, RAC = RSR = 5 mOhm, 4.7 uH, 400 kHz) reads about 98.5 percent from 3 to 6 A and 98 at 8 A (AI reading of the page image); 0.975 carries board A's 3.3 uH and layout; bracket 0.96 to 0.985"),
-    "r_lid_dsg": (0.027, "ESTIMATE, ohm: the lid's discharge loop: hinge harness 12 AWG 2 x 0.6 m at 5.21 mOhm/m (6.3), two inline blade fuses (2 x 3.0, no maker resistance held), two XT60 pairs (2 x 0.5), board PL's F1, F2, Q1, Q2 and R10 (3.0 + 2.0 + 0.69 + 0.69 + 2.0 at the makers' maxima where held), U3B-side nothing, the LM5069 FET 0.96 and its sense 3.0 mOhm; bracket 0.020 to 0.045"),
+    "r_lid_dsg": (0.030, "ESTIMATE, ohm: the lid's discharge loop: hinge harness 12 AWG 2 x 0.6 m at 5.21 mOhm/m (6.3), two inline blade fuses (2 x 3.0, no maker resistance held), two XT60 pairs (2 x 0.5), board PL's F1, F2, Q1, Q2 and R10 (3.0 + 2.0 + 0.69 + 0.69 + 2.0 at the makers' maxima where held), the LM5069 FET 0.96 and its sense 5.6 mOhm; bracket 0.020 to 0.045"),
+    "r_cl": (0.0056, "SESSION: the LM5069's sense resistor, 5.6 mOhm: VCL 48.5 / 55 / 61.5 mV (SNVS452G page 6) gives 8.7 / 9.8 / 11.0 A, so a join can never push more than 11.0 A (1.83 A a base cell, under the 35E's 2.0 A maximum charge, spec 3.7) into the base, and the lid's share of the kit's 10 A continuous (6.7 A) stays under the 8.7 A minimum"),
     "v_ak": (0.020, "MAKER: LM74700-Q1 regulated forward V(AK) 13 / 20 / 29 mV (SNOSD17G 6.5, page 6): the ideal diode holds 20 mV across its FET until the FET is fully on"),
     "r_lid_chg": (0.028, "ESTIMATE, ohm: the lid's charge loop: U3B's RSR 5 mOhm, the same harness, fuses and connectors (14.3), board PL's F1, F2, Q1, Q2, R10 (8.4); bracket 0.020 to 0.045"),
     "fe_out_w": (5.7 * 20.7, "GEN: board A's front end U2 limits at VSNS 57 mV over R11 10 mOhm, 5.7 A at 20.7 V (gen_sch_e.py:104-107 as energy_inputs.yaml front_end_draw_w reads it)"),
@@ -481,8 +482,23 @@ def main():
     ld = LOAD * NP_L / NP_T / r["v_l"]
     P("   the lid's discharge path at the night's share (%.2f A): LM74700-Q1 %.3f W (20 mV), LM5069 FET %.3f W (0.96 mOhm max)," % (
         ld, ld * v("v_ak"), ld * ld * 0.00096))
-    P("       its 3 mOhm sense %.3f W; at the kit's 18 A peak carried 12:6 (12.0 A): %.2f W, %.2f W, %.2f W" % (
-        ld * ld * 0.003, 12.0 * v("v_ak"), 144.0 * 0.00096, 144.0 * 0.003))
+    icl = 0.0615 / v("r_cl")
+    P("       its %.1f mOhm sense %.3f W; at the lid path's largest current, its limit's maximum %.1f A: %.2f W, %.2f W, %.2f W" % (
+        1e3 * v("r_cl"), ld * ld * v("r_cl"), icl, icl * v("v_ak"), icl * icl * 0.00096, icl * icl * v("r_cl")))
+    P("")
+    P("8. THE JOIN CURRENT: the lid path conducting while the lid's open-circuit voltage is above the base's by dV (TOPOLOGY.md 3c)")
+    r_cell = 0.035      # ohm, the cell's class figure pcb_energy_chain.yaml uses for the prospective fault (AC impedance; the DC
+    #                     resistance is higher, so these currents are UPPER bounds)
+    r_l = 4 * r_cell / NP_L + v("r_lid_dsg")
+    r_b = 4 * r_cell / NP_B + 0.0025 + 0.002 + 2 * 0.00069 + 0.002 + 0.003 + 0.005
+    P("   lid loop %.1f mOhm (cells 4 x 35 / 12 plus the discharge loop of section 0); base loop %.1f mOhm (cells 4 x 35 / 6, F1 2.52," % (1e3 * r_l, 1e3 * r_b))
+    P("   F2 2.0 ESTIMATE, Q1 and Q2 0.69 each, R10 2.0, lead and XT60 3.0 ESTIMATE, R17 5.0); no load on the node (the worst case);")
+    P("   the LM5069's limit over r_cl is %.1f to %.1f A (VCL 48.5 to 61.5 mV, SNVS452G page 6); the table takes the maximum" % (0.0485 / v("r_cl"), 0.0615 / v("r_cl")))
+    P("   %8s %10s %14s %22s %22s" % ("dV (V)", "I (A)", "A a base cell", "base OCC1 5.0 A, 2 s", "cell max charge 2.0 A"))
+    for dv in (0.05, 0.10, 0.20, 0.30, 0.50, 1.00, 2.00, 4.80):
+        i = min(dv / (r_l + r_b), 0.0615 / v("r_cl"))
+        P("   %8.2f %10.2f %14.2f %22s %22s" % (dv, i, i / NP_B, "trips" if i > 5.0 else "holds", "EXCEEDED" if i / NP_B > 2.0 else "within"))
+    P("   A lid pack fuller than the base by 0.20 V (50 mV a cell) pushes at most %.1f A into the base: under U3's 4.0 A setting." % (0.20 / (r_l + r_b)))
     P("")
     P("END. Every row is the record's model on the reference day with the stated departures; none is a demonstration.")
     sys.stdout.write("\n".join(o) + "\n")

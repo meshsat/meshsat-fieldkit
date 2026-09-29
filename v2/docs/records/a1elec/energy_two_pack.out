@@ -9,9 +9,10 @@ the 3.00 V line with the 5 percent reserve, both start hours (06 and 18 UTC), PS
    eta_u3b            0.9750  MAKER, read from a plot: SLUSE66A Figure 8-3 (VIN 15 V, VOUT 14.8 V, RAC = RSR = 5 mOhm, 4.7 uH, 400 kHz) reads about 98.5 percent from 3 to 6 A and 98 at 8 A (AI reading of the page image); 0.975 carries board A's 3.3 uH and layout; bracket 0.96 to 0.985
    fe_out_w         117.9900  GEN: board A's front end U2 limits at VSNS 57 mV over R11 10 mOhm, 5.7 A at 20.7 V (gen_sch_e.py:104-107 as energy_inputs.yaml front_end_draw_w reads it)
    fw_a16_in_w       53.9251  FW-A16 (a) as written: charger input at most 0.80 x 4.80 A x 0.93 x VIN_RAW / 20.7 V at 20.7 V; with the panel's tracker on VIN_RAW at 15.1 V (TRK_OUT) that is 53.9 W into U3 (HW-FW-CONTRACT.md FW-A16, O-33)
-   iin_lid_a          8.0000  SESSION: U3B IIN_HOST 8.0 A from VBAT (RAC 5 mOhm, RSNS_RAC = 1b, 3.3 uH on IADPT's 169 k: 10 A allowed, SLUSE66A Table 9-1); code (8000 - 100) / 100 = 79
+   iin_lid_a          8.0000  SESSION: U3B IIN_HOST 8.0 A nominal from VBAT, code 80 (seven bits of 100 mA with RAC 5 mOhm, RSNS_RAC = 1b, SLUSE66A 9.6.22 Table 9-50, page 80; 8.2 A maximum with the 200 mA the register text adds); 3.3 uH on IADPT's 169 k so that Table 9-1 allows 10 A
+   r_cl               0.0056  SESSION: the LM5069's sense resistor, 5.6 mOhm: VCL 48.5 / 55 / 61.5 mV (SNVS452G page 6) gives 8.7 / 9.8 / 11.0 A, so a join can never push more than 11.0 A (1.83 A a base cell, under the 35E's 2.0 A maximum charge, spec 3.7) into the base, and the lid's share of the kit's 10 A continuous (6.7 A) stays under the 8.7 A minimum
    r_lid_chg          0.0280  ESTIMATE, ohm: the lid's charge loop: U3B's RSR 5 mOhm, the same harness, fuses and connectors (14.3), board PL's F1, F2, Q1, Q2, R10 (8.4); bracket 0.020 to 0.045
-   r_lid_dsg          0.0270  ESTIMATE, ohm: the lid's discharge loop: hinge harness 12 AWG 2 x 0.6 m at 5.21 mOhm/m (6.3), two inline blade fuses (2 x 3.0, no maker resistance held), two XT60 pairs (2 x 0.5), board PL's F1, F2, Q1, Q2 and R10 (3.0 + 2.0 + 0.69 + 0.69 + 2.0 at the makers' maxima where held), U3B-side nothing, the LM5069 FET 0.96 and its sense 3.0 mOhm; bracket 0.020 to 0.045
+   r_lid_dsg          0.0300  ESTIMATE, ohm: the lid's discharge loop: hinge harness 12 AWG 2 x 0.6 m at 5.21 mOhm/m (6.3), two inline blade fuses (2 x 3.0, no maker resistance held), two XT60 pairs (2 x 0.5), board PL's F1, F2, Q1, Q2 and R10 (3.0 + 2.0 + 0.69 + 0.69 + 2.0 at the makers' maxima where held), the LM5069 FET 0.96 and its sense 5.6 mOhm; bracket 0.020 to 0.045
    t_base_c          20.0000  REQ-014's +20 C, the basis of sections 8 and 9: the base pack in the closed base with the kit's own heat
    u3_iin_e1_a        5.4000  SESSION: U3 IIN_HOST 5.40 A with R16 as generated (10 mOhm, 50 mA steps), about 5 percent under the front end's 5.7 A so that U3's input loop, not the front end's current limit, holds the bus (the LM5176's VSNS tolerance is not read here: a desk item)
    u3_iin_max_a       6.3500  MAKER: with RAC 10 mOhm (R16 as generated, RSNS_RAC = 0b) IIN_HOST is clamped at 6.35 A (SLUSE66A 9.3.5 and Table 9-1, pages 25 and 26)
@@ -51,58 +52,58 @@ the 3.00 V line with the 5 percent reserve, both start hours (06 and 18 UTC), PS
 
 3. THE DESIGN CASE: 400 Wp into a 200 W stage (Option A(i)), entry re-rated (E2), the ceilings and losses of section 0
    3a. lid temperature swept (base +20 C):
-   lid +20.00 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid   58.8 Wh ( 13.5 %), both   89.1 Wh; unserved    0.0 Wh
-   lid +17.00 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid   33.1 Wh (  8.1 %), both   63.5 Wh; unserved    0.0 Wh
-   lid +15.55 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid   20.7 Wh (  5.2 %), both   51.0 Wh; unserved    0.0 Wh
-   lid +13.23 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.9 Wh (  0.2 %), both   31.2 Wh; unserved    0.0 Wh
-   lid +10.00 C: MEETS    stops [None, None] lowest base    3.7 Wh (  1.7 %), lid    0.0 Wh (  0.0 %), both    3.7 Wh; unserved    0.0 Wh
-   lid  +7.50 C: NOT MET  stops [24, 36]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   35.2 Wh
-   lid  +5.00 C: NOT MET  stops [23, 12]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   92.2 Wh
+   lid +20.00 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid   58.7 Wh ( 13.4 %), both   89.0 Wh; unserved    0.0 Wh
+   lid +17.00 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid   33.0 Wh (  8.0 %), both   63.3 Wh; unserved    0.0 Wh
+   lid +15.55 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid   20.6 Wh (  5.2 %), both   50.9 Wh; unserved    0.0 Wh
+   lid +13.23 C: MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.1 Wh; unserved    0.0 Wh
+   lid +10.00 C: MEETS    stops [None, None] lowest base    3.6 Wh (  1.6 %), lid    0.0 Wh (  0.0 %), both    3.6 Wh; unserved    0.0 Wh
+   lid  +7.50 C: NOT MET  stops [24, 36]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   35.5 Wh
+   lid  +5.00 C: NOT MET  stops [23, 12]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   92.6 Wh
    3b. lowest lid temperature meeting M1: +9.6 C
    3c. at the basis (lid +13.23 C) per start: 
-       start 06 UTC: MEETS, usable full base 218.4 Wh, lid 378.9 Wh; lowest base 30.3, lid 0.9 Wh; U3B loss 22.7 Wh, charge loop 8.1 Wh, lid discharge path 5.5 Wh over 72 h; peak node 166.3 W, to base 41.2 W, to U3B 82.3 W
-       start 18 UTC: MEETS, usable full base 218.4 Wh, lid 378.9 Wh; lowest base 30.3, lid 0.9 Wh; U3B loss 32.7 Wh, charge loop 11.7 Wh, lid discharge path 5.5 Wh over 72 h; peak node 166.3 W, to base 41.2 W, to U3B 82.3 W
+       start 06 UTC: MEETS, usable full base 218.4 Wh, lid 378.9 Wh; lowest base 30.3, lid 0.7 Wh; U3B loss 22.7 Wh, charge loop 8.1 Wh, lid discharge path 6.0 Wh over 72 h; peak node 166.3 W, to base 41.2 W, to U3B 82.3 W
+       start 18 UTC: MEETS, usable full base 218.4 Wh, lid 378.9 Wh; lowest base 30.3, lid 0.7 Wh; U3B loss 32.7 Wh, charge loop 11.7 Wh, lid discharge path 6.0 Wh over 72 h; peak node 166.3 W, to base 41.2 W, to U3B 82.3 W
    3d. the aggregate 4S18P of section 9 on the same day, for comparison: MEETS, lowest 91.0 Wh
-   3e. 650 Wp, 200 W, E2, lid at the basis: MEETS    stops [None, None] lowest base   37.6 Wh ( 17.2 %), lid   15.5 Wh (  4.1 %), both   53.1 Wh; unserved    0.0 Wh; lowest lid temperature meeting M1: +7.0 C
-   3e. 800 Wp, 200 W, E2, lid at the basis: MEETS    stops [None, None] lowest base   41.9 Wh ( 19.2 %), lid   24.2 Wh (  6.4 %), both   66.2 Wh; unserved    0.0 Wh; lowest lid temperature meeting M1: +5.5 C
-   3f. the base at +15 C as well (section 9's second temperature), lid at the basis: MEETS    stops [None, None] lowest base    8.9 Wh (  4.5 %), lid    0.9 Wh (  0.2 %), both    9.8 Wh; unserved    0.0 Wh
+   3e. 650 Wp, 200 W, E2, lid at the basis: MEETS    stops [None, None] lowest base   37.6 Wh ( 17.2 %), lid   15.3 Wh (  4.0 %), both   52.9 Wh; unserved    0.0 Wh; lowest lid temperature meeting M1: +7.0 C
+   3e. 800 Wp, 200 W, E2, lid at the basis: MEETS    stops [None, None] lowest base   41.9 Wh ( 19.2 %), lid   24.1 Wh (  6.4 %), both   66.0 Wh; unserved    0.0 Wh; lowest lid temperature meeting M1: +5.5 C
+   3f. the base at +15 C as well (section 9's second temperature), lid at the basis: MEETS    stops [None, None] lowest base    8.9 Wh (  4.5 %), lid    0.7 Wh (  0.2 %), both    9.7 Wh; unserved    0.0 Wh
 
 4. THE ALLOCATION POLICIES AND THE BRACKETS at the basis (lid +13.23 C), 400 Wp, 200 W, E2
-   charge base first, discharge 'ah':                                       MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.9 Wh (  0.2 %), both   31.2 Wh; unserved    0.0 Wh
-   charge lid first, discharge 'ah':                                        MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.9 Wh (  0.2 %), both   31.2 Wh; unserved    0.0 Wh
-   charge 'ah', discharge lid first:                                        MEETS    stops [None, None] lowest base   30.5 Wh ( 14.0 %), lid    0.0 Wh (  0.0 %), both   30.5 Wh; unserved    0.0 Wh
-   charge 'ah', discharge base first:                                       MEETS    stops [None, None] lowest base    0.0 Wh (  0.0 %), lid   30.8 Wh (  8.1 %), both   30.8 Wh; unserved    0.0 Wh
+   charge base first, discharge 'ah':                                       MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.1 Wh; unserved    0.0 Wh
+   charge lid first, discharge 'ah':                                        MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.1 Wh; unserved    0.0 Wh
+   charge 'ah', discharge lid first:                                        MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.0 Wh (  0.0 %), both   30.3 Wh; unserved    0.0 Wh
+   charge 'ah', discharge base first:                                       MEETS    stops [None, None] lowest base    0.0 Wh (  0.0 %), lid   30.6 Wh (  8.1 %), both   30.6 Wh; unserved    0.0 Wh
    U3B at 0.96, loops at 45 mOhm, V(AK) 29 mV:                              MEETS    stops [None, None] lowest base   30.1 Wh ( 13.8 %), lid    0.0 Wh (  0.0 %), both   30.1 Wh; unserved    0.0 Wh
    U3B at 0.985, loops at 20 mOhm:                                          MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    1.2 Wh (  0.3 %), both   31.5 Wh; unserved    0.0 Wh
-   ceilings at the cycle-life 1.02 A a cell (6.12 A, 12.24 A; U3B input 10 A): MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.9 Wh (  0.2 %), both   31.2 Wh; unserved    0.0 Wh
-   base ceiling at FW-A02's 3.0 A as filed:                                 MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.9 Wh (  0.2 %), both   31.2 Wh; unserved    0.0 Wh
+   ceilings at the cycle-life 1.02 A a cell (6.12 A, 12.24 A; U3B input 10 A): MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.1 Wh; unserved    0.0 Wh
+   base ceiling at FW-A02's 3.0 A as filed:                                 MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.1 Wh; unserved    0.0 Wh
 
 5. THE ENTRY INTO BOARD A (the node's cap), 400 Wp, 200 W, lid at the basis
    E0 (FW-A16 as written, the panel's tracker on VIN_RAW (U3's input held at 53.9 W)):
-       NOT MET  stops [38, 26]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  868.9 Wh; peak node 52.8 W
+       NOT MET  stops [38, 26]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  869.1 Wh; peak node 52.8 W
        lowest lid temperature meeting M1: none up to +40 C
    E1 (board A as generated, FW-A16 revised for the panel: U3's IIN_HOST at 5.40 A under the front end's 5.7 A (111.8 W into U3)):
-       NOT MET  stops [48, 59]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   35.4 Wh; peak node 109.5 W
+       NOT MET  stops [48, 59]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   35.8 Wh; peak node 109.5 W
        lowest lid temperature meeting M1: +17.4 C
    E2 (the entry re-rated (TOPOLOGY.md / CHARGER.md drafts): nothing under the stage's window caps the node):
-       MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.9 Wh (  0.2 %), both   31.2 Wh; unserved    0.0 Wh; peak node 166.3 W
+       MEETS    stops [None, None] lowest base   30.3 Wh ( 13.9 %), lid    0.7 Wh (  0.2 %), both   31.1 Wh; unserved    0.0 Wh; peak node 166.3 W
        lowest lid temperature meeting M1: +9.6 C
-   E1 with 650 Wp: MEETS    stops [None, None] lowest base   37.6 Wh ( 17.2 %), lid   15.5 Wh (  4.1 %), both   53.1 Wh; unserved    0.0 Wh
-   E1 with 800 Wp: MEETS    stops [None, None] lowest base   41.9 Wh ( 19.2 %), lid   24.2 Wh (  6.4 %), both   66.2 Wh; unserved    0.0 Wh
+   E1 with 650 Wp: MEETS    stops [None, None] lowest base   37.6 Wh ( 17.2 %), lid   15.3 Wh (  4.0 %), both   52.9 Wh; unserved    0.0 Wh
+   E1 with 800 Wp: MEETS    stops [None, None] lowest base   41.9 Wh ( 19.2 %), lid   24.1 Wh (  6.4 %), both   66.0 Wh; unserved    0.0 Wh
 
 6. THE FAULT CASES (400 Wp, 200 W, E2; base +20 C; lid at the basis unless stated)
    lid pack empty at the start (its protection had been open; base full):
        NOT MET  stops [None, 5]    lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  319.5 Wh
    base pack empty at the start (lid full):
-       NOT MET  stops [None, 8]    lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  161.5 Wh
+       NOT MET  stops [None, 8]    lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  161.7 Wh
    lid cold, -5 C (below the charge window: no lid charge; discharge on the model's line):
-       NOT MET  stops [21, 10]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  807.6 Wh
+       NOT MET  stops [21, 10]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  807.7 Wh
    lid's protection open or the hinge harness fused open: the base 4S6P alone:
        NOT MET  stops [16, 5]      lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved 1013.2 Wh
    base's protection open: the lid 4S12P alone:
-       NOT MET  stops [20, 8]      lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  539.2 Wh
+       NOT MET  stops [20, 8]      lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  539.9 Wh
    U3B off (a lid charger fault): the lid discharges, never recharges:
-       NOT MET  stops [40, 28]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  673.3 Wh
+       NOT MET  stops [40, 28]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  673.5 Wh
 
 7. THE CHARGER AND ENTRY FIGURES at the design case's peak hour (E2, 400 Wp, 200 W, lid at the basis, start 06 UTC)
    the hour U3 delivers most (load plus both charges): hour 30 (12 UTC), the sun offers 166.3 W at the node: stage in 196.1 W; front end out 169.6 W = 8.20 A on VBUS20 at 20.7 V (its as-generated limit 5.7 A);
@@ -118,6 +119,21 @@ the 3.00 V line with the 5 percent reserve, both start hours (06 and 18 UTC), PS
        U3's L2 (3.3 uH, Isat 12.2 A by its value text) in buck mode at 400 kHz: average 10.65 A, ripple 3.29 A p-p, peak 12.29 A
        U3's L2 (3.3 uH, Isat 12.2 A by its value text) in buck mode at 800 kHz: average 10.65 A, ripple 1.65 A p-p, peak 11.47 A
    the lid's discharge path at the night's share (1.97 A): LM74700-Q1 0.039 W (20 mV), LM5069 FET 0.004 W (0.96 mOhm max),
-       its 3 mOhm sense 0.012 W; at the kit's 18 A peak carried 12:6 (12.0 A): 0.24 W, 0.14 W, 0.43 W
+       its 5.6 mOhm sense 0.022 W; at the lid path's largest current, its limit's maximum 11.0 A: 0.22 W, 0.12 W, 0.68 W
+
+8. THE JOIN CURRENT: the lid path conducting while the lid's open-circuit voltage is above the base's by dV (TOPOLOGY.md 3c)
+   lid loop 41.7 mOhm (cells 4 x 35 / 12 plus the discharge loop of section 0); base loop 39.2 mOhm (cells 4 x 35 / 6, F1 2.52,
+   F2 2.0 ESTIMATE, Q1 and Q2 0.69 each, R10 2.0, lead and XT60 3.0 ESTIMATE, R17 5.0); no load on the node (the worst case);
+   the LM5069's limit over r_cl is 8.7 to 11.0 A (VCL 48.5 to 61.5 mV, SNVS452G page 6); the table takes the maximum
+     dV (V)      I (A)  A a base cell   base OCC1 5.0 A, 2 s  cell max charge 2.0 A
+       0.05       0.62           0.10                  holds                 within
+       0.10       1.24           0.21                  holds                 within
+       0.20       2.47           0.41                  holds                 within
+       0.30       3.71           0.62                  holds                 within
+       0.50       6.18           1.03                  trips                 within
+       1.00      10.98           1.83                  trips                 within
+       2.00      10.98           1.83                  trips                 within
+       4.80      10.98           1.83                  trips                 within
+   A lid pack fuller than the base by 0.20 V (50 mV a cell) pushes at most 2.5 A into the base: under U3's 4.0 A setting.
 
 END. Every row is the record's model on the reference day with the stated departures; none is a demonstration.
