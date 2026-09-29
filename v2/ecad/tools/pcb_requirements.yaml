@@ -3513,6 +3513,19 @@ open_items:
       the exciter keys. Figures: v2/docs/records/s99a/codec_floor.out (codec_floor.py). Closed by the owners'
       declarations and those readings giving the codec at least 4.35 V at the declared peak, or by a document or a board
       D declaration that bounds the peak the codec must operate through.
+  - id: S-117
+    class: SESSION
+    status: OPEN
+    title: >-
+      (set 9's AI check, minor item M10) Board A's charger U3 (BQ25731) switches at the frequency its PWM_FREQ bit
+      selects: 400 kHz at power-on, 800 kHz when firmware clears it (SLUSE66A, ChargeOption0). The maker recommends
+      4.7 uH at 400 kHz and 2.2 uH at 800 kHz; board A fits 3.3 uH (L2, XAL6030-332ME) and no firmware setting is
+      declared in HW-FW-CONTRACT.md. The inductor ripple current and the EMC sheet's frequency follow from the
+      choice. Closes when the setting is declared in the firmware contract and L2 is shown against the maker's
+      ripple guidance at that frequency (or changed by board A's writer), with the EMC row updated to match.
+    disposition: LAYOUT_STAGE
+    disposition_why: board A's charger design choice, decided with its firmware contract before board A's layout; no
+      schematic-phase record rests on the frequency.
 closed_items:
   - id: S-89
     closed_by: commit aaed6daa4434f2ae94331cdafb3134056fb1eb97

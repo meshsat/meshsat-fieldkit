@@ -45,15 +45,17 @@ boards:
        basis: "the RT pin is left open, which the part's own table gives as 500 kHz"}
     - {ref: U33, part: TPS62933, what: "3 A buck, the 12.0 V heater rail behind the eFuse U22 (F-PR-06, 26 September 2026)", f_khz: 500, edge_ns: null,
        basis: "v2/vendor/ti/ti-tps62933.pdf; the RT pin is left open, which the part's own table gives as 500 kHz"}
+    - {ref: U3, part: BQ25731, what: "4S buck-boost charger, VBUS20 to the system node VBAT and the pack", f_khz: 400, edge_ns: null,
+       basis: "v2/vendor/ti/bq25731-datasheet.pdf (SLUSE66A), ChargeOption0 PWM_FREQ: 1b 400 kHz is the default at power-on, 0b 800 kHz; the maker recommends 4.7 uH at 400 kHz and 2.2 uH at 800 kHz, and board A fits 3.3 uH (L2, gen_sch_a.py); no firmware setting is declared (open item S-117); frequency dithering is available and register-enabled, not declared"}
     - {ref: U41, part: TPS62933, what: "3 A buck, board D's feed +5V_D8IN from VBAT behind RAIL_EN (S-99, decision 55, integration set 9, 29 September 2026)", f_khz: 500, edge_ns: null,
-       basis: "v2/vendor/ti/ti-tps62933.pdf Table 7-1: RT (pin 1) floating gives 500 kHz; board A's netlist leaves U41 pin 1 unconnected. Its switch node D8B_SW is on board A; its output leaves through the mezzanine harness, which the second path below covers"}
+       basis: "v2/vendor/ti/ti-tps62933.pdf Table 7-1: RT (pin 1) floating gives 500 kHz; board A's netlist leaves U41 pin 1 unconnected; the maker gives the frequency's tolerance and spread in sections 8.5 and 9.3.10 (not a declared figure here). Its output leaves board A on J_MEZZ_PWR1 to board D. Its switch node D8B_SW is on board A; its output leaves through the mezzanine harness, which the second path below covers"}
    victims:
     - {what: "the five INA226 rail monitors", refs: [U8, U9, U10, U11, U14],
        why: "they measure millivolts across 5 mOhm shunts sitting between the converters they monitor"}
     - {what: "the charger's current-sense inputs", refs: [U3],
        why: "the BQ25731 regulates on a sense voltage of the same order as the ripple on the node it senses"}
    paths:
-    - {from: "the five LM5176 switch nodes", to: "the sense pairs of the INA226s and the charger",
+    - {from: "the LM5176 switch nodes", to: "the sense pairs of the INA226s and the charger",
        mechanism: "capacitive and inductive coupling from the switch node into a high-impedance sense pair",
        measure: "each sense pair is a Kelvin pair routed together from the shunt's own pads, and the rail's
          current travels in pours and bands rather than in tracks beside the sense pair (power_copper.py)",
@@ -65,7 +67,7 @@ boards:
        evidence: "the connector pin maps in gen_sch_a.py; GND-002 is where the chassis bond is decided and is
          still open"}
    pre_compliance:
-    - "radiated emissions with all five converters loaded and the PA rail at 6 A, which is the worst case this
+    - "radiated emissions with every converter above loaded and the PA rail at 6 A, which is the worst case this
        board can present and cannot be predicted from a datasheet with no edge rate in it"
     - "conducted emissions on the vehicle input with the kit running from shore power"
     - "the INA226 readings with and without the PA transmitting, which is the coupling this sheet cares about
