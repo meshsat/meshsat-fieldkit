@@ -1,0 +1,264 @@
+{
+ "netlists": {
+  "A": "599ee964a9c23d6e",
+  "B": "21a1f74a3ec1ae28",
+  "C": "3fddbb3edcd4248a",
+  "D": "7a2c0ac2190b141a",
+  "E": "56adc9746d61c4e0",
+  "P": "760ac6f74d62d194"
+ },
+ "per_board": {
+  "A": {
+   "FAIL": 0,
+   "PASS": 3,
+   "UNDECIDED": 2,
+   "UNJUDGED": 0
+  },
+  "B": {
+   "FAIL": 0,
+   "PASS": 9,
+   "UNDECIDED": 8,
+   "UNJUDGED": 0
+  },
+  "C": {
+   "FAIL": 0,
+   "PASS": 3,
+   "UNDECIDED": 0,
+   "UNJUDGED": 0
+  },
+  "D": {
+   "FAIL": 0,
+   "PASS": 3,
+   "UNDECIDED": 1,
+   "UNJUDGED": 0
+  },
+  "E": {
+   "FAIL": 0,
+   "PASS": 1,
+   "UNDECIDED": 0,
+   "UNJUDGED": 0
+  },
+  "P": {
+   "FAIL": 0,
+   "PASS": 1,
+   "UNDECIDED": 0,
+   "UNJUDGED": 0
+  }
+ },
+ "results": [
+  {
+   "boards": [
+    "A",
+    "B",
+    "C"
+   ],
+   "detail": "",
+   "label": "PASS",
+   "text": "the asserted line EMCON_HW: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not"
+  },
+  {
+   "boards": [
+    "A",
+    "B",
+    "C",
+    "D"
+   ],
+   "detail": "",
+   "label": "PASS",
+   "text": "the asserted line TX_INHIBIT_n: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, power: +5V_LIME off: U23 enable pin 3 through EMCON_HW (asserted LOW) > U501 AND 1->4 > U502 AND 1->4 > R529 series; UNDECIDED: +5V_LIME: +5V_LIME: U33 pin 5 (USBLC6-2SC6, 'VBUS') sits on the rail's conductor and is the VBUS of U33 (USBLC6-2 ESD protection), and its I/O pin 1 is on LIME_DP, where J_LIME pin 3 (USB 3.0 type A receptacle (Wue, 'D+'), which leaves the board; U102 pin 1 (TI TUSB8041IRGCR four-port USB, 'USB_DP_DN1'), a pin of a part whose pins firmware sets are not shown to be unable to hold it up; its I/O pin 3 is on LIME_DM, where J_LIME pin 2 (USB 3.0 type A receptacle (Wue, 'D-'), which leaves the board; U102 pin 2 (TI TUSB8041IRGCR four-port USB, 'USB_DM_DN1'), a pin of a part whose pins firmware sets are not shown to be unable to hold it up; its I/O pin 4 is on LIME_DM, where J_LIME pin 2 (USB 3.0 type A receptacle (Wue, 'D-'), which leaves the board; U102 pin 2 (TI TUSB8041IRGCR four-port USB, 'USB_DM_DN1'), a pin of a part whose pins firmware sets are not shown to be unable to hold it up; its I/O pin 6 is on LIME_DP, where J_LIME pin 3 (USB 3.0 type A receptacle (Wue, 'D+'), which leaves the board; U102 pin 1 (TI TUSB8041IRGCR four-port USB, 'USB_DP_DN1'), a pin of a part whose pins firmware sets are not shown to be unable to hold it up; and ST DS4260 Rev 7 (v2/vendor/st/st-usblc6-2-esd-protection.pdf), page 1 pinout: I/O1 1 and 6, GND 2, I/O2 3 and 4, VBUS 5; 2.1 Surge protection (page 10): 'optimized to perform surge protection based on the rail to rail topology', 'VCL+ = VTRANSIL + VF for positive surges'; 2.6 PSpice model, Figure 15 (page 10): each I/O joined to VBUS by a diode (Dhigh) and to GND by another (Dlow), and a Zener (Dzener) between GND and VBUS, which is all the model draws at VBUS, so whatever holds an I/O up once EMCON has opened the rail's switch feeds the net through the diode to VBUS; J_LIME's own pins can be held up with its supply off, past the switch EMCON opens: pin 2 ('D-') on LIME_DM, where U102 pin 2 (TI TUSB8041IRGCR four-port USB, 'USB_DM_DN1'), a pin of a part whose pins firmware sets; U33 pin 3 (USBLC6-2SC6, 'I/O2'), which is pin 3 ('I/O2') of U33 (USBLC6-2 ESD protection), whose row here clears only its VBUS, and only with its I/O pins held by nothing: ST DS4260 Rev 7 (v2/vendor/st/st-usblc6-2-esd-protection.pdf), page 1 pinout: I/O1 1 and 6, GND 2, I/O2 3 and 4, VBUS 5; 2.1 Surge protection (page 10): 'optimized to perform surge protection based on the rail to rail topology', 'VCL+ = VTRANSIL + VF for positive surges'; 2.6 PSpice model, Figure 15 (page 10): each I/O joined to VBUS by a diode (Dhigh) and to GND by another (Dlow), and a Zener (Dzener) between GND and VBUS, which is all the model draws at VBUS; U33 pin 4 (USBLC6-2SC6, 'I/O2'), which is pin 4 ('I/O2') of U33 (USBLC6-2 ESD protection), whose row here clears only its VBUS, and only with its I/O pins held by nothing: ST DS4260 Rev 7 (v2/vendor/st/st-usblc6-2-esd-protection.pdf), page 1 pinout: I/O1 1 and 6, GND 2, I/O2 3 and 4, VBUS 5; 2.1 Surge protection (page 10): 'optimized to perform surge protection based on the rail to rail topology', 'VCL+ = VTRANSIL + VF for positive surges'; 2.6 PSpice model, Figure 15 (page 10): each I/O joined to VBUS by a diode (Dhigh) and to GND by another (Dlow), and a Zener (Dzener) between GND and VBUS, which is all the model draws at VBUS; pin 3 ('D+') on LIME_DP, where U102 pin 1 (TI TUSB8041IRGCR four-port USB, 'USB_DP_DN1'), a pin of a part whose pins firmware sets; U33 pin 1 (USBLC6-2SC6, 'I/O1'), which is pin 1 ('I/O1') of U33 (USBLC6-2 ESD protection), whose row here clears only its VBUS, and only with its I/O pins held by nothing: ST DS4260 Rev 7 (v2/vendor/st/st-usblc6-2-esd-protection.pdf), page 1 pinout: I/O1 1 and 6, GND 2, I/O2 3 and 4, VBUS 5; 2.1 Surge protection (page 10): 'optimized to perform surge protection based on the rail to rail topology', 'VCL+ = VTRANSIL + VF for positive surges'; 2.6 PSpice model, Figure 15 (page 10): each I/O joined to VBUS by a diode (Dhigh) and to GND by another (Dlow), and a Zener (Dzener) between GND and VBUS, which is all the model draws at VBUS; U33 pin 6 (USBLC6-2SC6, 'I/O1'), which is pin 6 ('I/O1') of U33 (USBLC6-2 ESD protection), whose row here clears only its VBUS, and only with its I/O pins held by nothing: ST DS4260 Rev 7 (v2/vendor/st/st-usblc6-2-esd-protection.pdf), page 1 pinout: I/O1 1 and 6, GND 2, I/O2 3 and 4, VBUS 5; 2.1 Surge protection (page 10): 'optimized to perform surge protection based on the rail to rail topology', 'VCL+ = VTRANSIL + VF for positive surges'; 2.6 PSpice model, Figure 15 (page 10): each I/O joined to VBUS by a diode (Dhigh) and to GND by another (Dlow), and a Zener (Dzener) between GND and VBUS, which is all the model draws at VBUS; pin 5 ('SSRX-') on LIME_SSRX_N, where U102 pin 7 (TI TUSB8041IRGCR four-port USB, 'USB_SSRXM_DN1'), a pin of a part whose pins firmware sets; pin 6 ('SSRX+') on LIME_SSRX_P, where U102 pin 6 (TI TUSB8041IRGCR four-port USB, 'USB_SSRXP_DN1'), a pin of a part whose pins firmware sets; no held document of the radio's maker states what the unpowered radio passes from such a pin into its supply (the back-feed of EMCON.md SD-EMC-2)",
+   "label": "UNDECIDED",
+   "text": "LimeSDR Mini 2.4 in its USB 3 bay: EMCON reaches it in hardware (B power on J_LIME)"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, power: +5V_RB off: U24 enable pin 3 through EMCON_HW (asserted LOW) > U503 AND 1->4 > R530 series; UNDECIDED: J_RB9704's own pins can be held up with its supply off, past the switch EMCON opens: pin 6 ('Pin_6') on RB_CTRL, where U6 pin 20 (PCA9555PW 0x20: outputs (switc, 'IO1_7'), a pin of a part whose pins firmware sets; pin 7 ('Pin_7') on RB_STATUS, where R41 pin 1 (10k, ''), a resistor from +3V3_DEV, a supply; U7 pin 7 (PCA9555PW 0x25: inputs (faults, 'IO0_3'), a pin of a part whose pins firmware sets; pin 8 ('Pin_8') on RB_XMTG, where R42 pin 1 (10k, ''), a resistor from +3V3_DEV, a supply; U7 pin 8 (PCA9555PW 0x25: inputs (faults, 'IO0_4'), a pin of a part whose pins firmware sets; pin 13 ('Pin_13') on RB_TXD, where U18 pin 25 (CP2102N-A02-GQFN28 USB-UART br, 'RXD'), a pin of a part whose pins firmware sets; pin 14 ('Pin_14') on RB_RXD, where U18 pin 26 (CP2102N-A02-GQFN28 USB-UART br, 'TXD'), a pin of a part whose pins firmware sets; Ground Control, RockBLOCK 9704 hardware page (v2/vendor/rockblock/groundcontrol-docs-rockblock-9704-hardware-20260927.txt, fetched 27 September 2026), pin 7 I_BTD: 'When this pin is LOW there should be no voltage applied to any input pins, other than I_EN which will cause the 9704 to boot if driven high', and 'When not booted, the output states of the RockBLOCK 9704, with the exception of I_BTD, are to be considered undefined'",
+   "label": "UNDECIDED",
+   "text": "RockBLOCK 9704 (Iridium): EMCON reaches it in hardware (B power on J_RB9704)"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, power: +5V_LORA off: U21 enable pin 5 through EMCON_HW (asserted LOW) > U504 AND 1->4 > R531 series; UNDECIDED: U12's own pins can be held up with its supply off, past the switch EMCON opens: pin 6 ('RXEN') on LORA_RXEN, where U32A pin 34 (Amphenol 10164227-1004A1RLF re, 'GPIO5'), a pin of a part whose pins firmware sets; pin 7 ('TXEN') on LORA_TXEN, where U32A pin 54 (Amphenol 10164227-1004A1RLF re, 'GPIO4'), a pin of a part whose pins firmware sets; pin 13 ('DIO1') on SPI3_IO24, where J_SPI3 pin 9 (SPI0 breakout of S3 (2x5): 3V3, 'Pin_9'), which leaves the board; U32A pin 45 (Amphenol 10164227-1004A1RLF re, 'GPIO24'), a pin of a part whose pins firmware sets; pin 14 ('BUSY') on SPI3_IO23, where J_SPI3 pin 8 (SPI0 breakout of S3 (2x5): 3V3, 'Pin_8'), which leaves the board; U32A pin 47 (Amphenol 10164227-1004A1RLF re, 'GPIO23'), a pin of a part whose pins firmware sets; pin 15 ('NRST') on SPI3_IO26, where J_SPI3 pin 10 (SPI0 breakout of S3 (2x5): 3V3, 'Pin_10'), which leaves the board; U32A pin 24 (Amphenol 10164227-1004A1RLF re, 'GPIO26'), a pin of a part whose pins firmware sets; pin 16 ('MISO') on SPI3_MISO, where J_SPI3 pin 3 (SPI0 breakout of S3 (2x5): 3V3, 'Pin_3'), which leaves the board; U32A pin 40 (Amphenol 10164227-1004A1RLF re, 'GPIO9'), a pin of a part whose pins firmware sets; and 4 more pins; no held document of the radio's maker states what the unpowered radio passes from such a pin into its supply (the back-feed of EMCON.md SD-EMC-2)",
+   "label": "UNDECIDED",
+   "text": "E22-900M30S LoRa: EMCON reaches it in hardware (B power on U12)"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, power: +3V3_ZB off: U22 enable pin 5 through EMCON_HW (asserted LOW) > U505 AND 1->4; UNDECIDED: +3V3_ZB: +3V3_ZB: leaves the board through J_ZBDBG1 pin 1, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB: leaves the board through J_ZBDBG2 pin 1, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB through R28 (10k) to ZBA_RST_n: leaves the board through J_ZBDBG1 pin 5, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB through R28 (10k) to ZBA_RST_n: U16 pin 24 (CP2102N-A02-GQFN28 USB-UART br, 'RTS') is a pin of a part whose pins firmware sets; driven high it feeds the rail through the resistor, and nothing here judges what that current can do; +3V3_ZB through R29 (10k) to ZBB_RST_n: leaves the board through J_ZBDBG2 pin 5, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB through R29 (10k) to ZBB_RST_n: U17 pin 24 (CP2102N-A02-GQFN28 USB-UART br, 'RTS') is a pin of a part whose pins firmware sets; driven high it feeds the rail through the resistor, and nothing here judges what that current can do; +3V3_ZB through R30 (10k) to ZBA_BSL: U16 pin 28 (CP2102N-A02-GQFN28 USB-UART br, 'DTR') is a pin of a part whose pins firmware sets; driven high it feeds the rail through the resistor, and nothing here judges what that current can do; +3V3_ZB through R31 (10k) to ZBB_BSL: U17 pin 28 (CP2102N-A02-GQFN28 USB-UART br, 'DTR') is a pin of a part whose pins firmware sets; driven high it feeds the rail through the resistor, and nothing here judges what that current can do; U13's own pins can be held up with its supply off, past the switch EMCON opens: pin 7 ('ZBA_RXD') on ZBA_RXD, where U16 pin 26 (CP2102N-A02-GQFN28 USB-UART br, 'TXD'), a pin of a part whose pins firmware sets; pin 8 ('ZBA_TXD') on ZBA_TXD, where U16 pin 25 (CP2102N-A02-GQFN28 USB-UART br, 'RXD'), a pin of a part whose pins firmware sets; pin 10 ('ZBA_BSL') on ZBA_BSL, where U16 pin 28 (CP2102N-A02-GQFN28 USB-UART br, 'DTR'), a pin of a part whose pins firmware sets; pin 13 ('ZBA_TMSC') on ZBA_TMSC, where J_ZBDBG1 pin 3 (CC2652P cJTAG ZBA (bench): 3V3, 'Pin_3'), which leaves the board; pin 14 ('ZBA_TCKC') on ZBA_TCKC, where J_ZBDBG1 pin 4 (CC2652P cJTAG ZBA (bench): 3V3, 'Pin_4'), which leaves the board; pin 24 ('ZBA_RST_n') on ZBA_RST_n, where J_ZBDBG1 pin 5 (CC2652P cJTAG ZBA (bench): 3V3, 'Pin_5'), which leaves the board; U16 pin 24 (CP2102N-A02-GQFN28 USB-UART br, 'RTS'), a pin of a part whose pins firmware sets; no held document of the radio's maker states what the unpowered radio passes from such a pin into its supply (the back-feed of EMCON.md SD-EMC-2)",
+   "label": "UNDECIDED",
+   "text": "E72 CC2652P Zigbee coordinator: EMCON reaches it in hardware (B power on U13)"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, power: +3V3_ZB off: U22 enable pin 5 through EMCON_HW (asserted LOW) > U505 AND 1->4; UNDECIDED: +3V3_ZB: +3V3_ZB: leaves the board through J_ZBDBG1 pin 1, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB: leaves the board through J_ZBDBG2 pin 1, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB through R28 (10k) to ZBA_RST_n: leaves the board through J_ZBDBG1 pin 5, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB through R28 (10k) to ZBA_RST_n: U16 pin 24 (CP2102N-A02-GQFN28 USB-UART br, 'RTS') is a pin of a part whose pins firmware sets; driven high it feeds the rail through the resistor, and nothing here judges what that current can do; +3V3_ZB through R29 (10k) to ZBB_RST_n: leaves the board through J_ZBDBG2 pin 5, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB through R29 (10k) to ZBB_RST_n: U17 pin 24 (CP2102N-A02-GQFN28 USB-UART br, 'RTS') is a pin of a part whose pins firmware sets; driven high it feeds the rail through the resistor, and nothing here judges what that current can do; +3V3_ZB through R30 (10k) to ZBA_BSL: U16 pin 28 (CP2102N-A02-GQFN28 USB-UART br, 'DTR') is a pin of a part whose pins firmware sets; driven high it feeds the rail through the resistor, and nothing here judges what that current can do; +3V3_ZB through R31 (10k) to ZBB_BSL: U17 pin 28 (CP2102N-A02-GQFN28 USB-UART br, 'DTR') is a pin of a part whose pins firmware sets; driven high it feeds the rail through the resistor, and nothing here judges what that current can do; U14's own pins can be held up with its supply off, past the switch EMCON opens: pin 7 ('ZBB_RXD') on ZBB_RXD, where U17 pin 26 (CP2102N-A02-GQFN28 USB-UART br, 'TXD'), a pin of a part whose pins firmware sets; pin 8 ('ZBB_TXD') on ZBB_TXD, where U17 pin 25 (CP2102N-A02-GQFN28 USB-UART br, 'RXD'), a pin of a part whose pins firmware sets; pin 10 ('ZBB_BSL') on ZBB_BSL, where U17 pin 28 (CP2102N-A02-GQFN28 USB-UART br, 'DTR'), a pin of a part whose pins firmware sets; pin 13 ('ZBB_TMSC') on ZBB_TMSC, where J_ZBDBG2 pin 3 (CC2652P cJTAG ZBB (bench): 3V3, 'Pin_3'), which leaves the board; pin 14 ('ZBB_TCKC') on ZBB_TCKC, where J_ZBDBG2 pin 4 (CC2652P cJTAG ZBB (bench): 3V3, 'Pin_4'), which leaves the board; pin 24 ('ZBB_RST_n') on ZBB_RST_n, where J_ZBDBG2 pin 5 (CC2652P cJTAG ZBB (bench): 3V3, 'Pin_5'), which leaves the board; U17 pin 24 (CP2102N-A02-GQFN28 USB-UART br, 'RTS'), a pin of a part whose pins firmware sets; no held document of the radio's maker states what the unpowered radio passes from such a pin into its supply (the back-feed of EMCON.md SD-EMC-2)",
+   "label": "UNDECIDED",
+   "text": "E72 CC2652P OpenThread RCP: EMCON reaches it in hardware (B power on U14)"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, rf_disable: J_M2C2 pin 8 through EMCON_HW (asserted LOW) > U212 INV 2->4 > U215 INV_OD 1->6; UNDECIDED: with U215's supply +3V3_CM2 down (and every rail it feeds through a bead or a link), U215 no longer drives 5G_W_DIS_n: 5G_W_DIS_n sits at 3.41 V from the currents that are known, and its maker states no input threshold for this pin | board B, power: +3V3_M2C2 off: U203 enable pin 3 through EMCON_HW (asserted LOW) > U216 AND 1->4 (U203 pin 8 switches it through L201, then through the shunt R265 (5mOhm 1% 2512 (K)); taken on its maker's words: U215 pin 6 (SN74LVC2G06DBVR dual open-drai, '5G_W_DIS_n') is the open-drain output of U215 (74LVC2G06 dual open-drain inverter), which only pulls low: SCES307J, page 1: 'SN74LVC2G06 Dual Inverter Buffer and Driver With Open-Drain Outputs' and 'The output of the SN74LVC2G06 device is an open-drain which can be connected to other open-drain outputs'; SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V); 6.3: VIL 0.8 V at VCC 3 V to 3.6 V, 0.3 x VCC at 4.5 V to 5.5 V; U220 pin 6 (SN74LVC2G06DBVR dual open-drai, '5G_PWROFF_n') is the open-drain output of U220 (74LVC2G06 dual open-drain inverter), which only pulls low: SCES307J, page 1: 'SN74LVC2G06 Dual Inverter Buffer and Driver With Open-Drain Outputs' and 'The output of the SN74LVC2G06 device is an open-drain which can be connected to other open-drain outputs'; SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V); 6.3: VIL 0.8 V at VCC 3 V to 3.6 V, 0.3 x VCC at 4.5 V to 5.5 V; U221 pin 5 (TPS3808G30DBVR supervisor on +, '+3V3_S2A') is an input of U221 (TPS3808 supervisor), whose maker rates it whatever its supply is and states its current at the pin: SBVS050N Table 5-1 (page 4): SENSE 'is connected to the voltage to be monitored' (I); 6.1 (page 5) rates VSENSE to 7 V with no condition on VDD, and 6.5 (page 6) states ISENSE at the pin, 1.7 uA typical at VSENSE 6.5 V for the fixed versions; U221 pin 6 (TPS3808G30DBVR supervisor on +, '+3V3_S2A') is the supply pin of U221 (TPS3808 supervisor) by its maker's pin table (TI TPS3808, SBVS050N (August 2026), Table 5-1 Pin Functions, SOT-23), and no pin its maker ties or rates to that supply is held up by anything on its net: SBVS050N Table 5-1 (page 4): VDD 'Supply voltage' (I), and 6.5 (page 6): IDD 'Supply current (current into VDD pin)'; U221 pin 1 (TPS3808G30DBVR supervisor on +, '5G_PWROFF_n') is an open-drain pin of U221 (TPS3808 supervisor), which only pulls low: SBVS050N Table 5-1 (page 4): 'RESET is an open-drain output', whose pull-up 'allows the reset pin to attain voltages higher than VDD'; 6.5 (page 6): IOH 'RESET leakage current' 300 nA maximum; U221 pin 4 (TPS3808G30DBVR supervisor on +, '5G_TPR_CT') is pin 4 ('5G_TPR_CT') of U221 (TPS3808 supervisor), whose own supply falls with the net or is on no live net, so the part has nothing to source it from: SBVS050N 6.1 (page 5): VCT at most 'VDD + 0.3' V, and Table 5-1 (page 4): CT is connected 'to VDD through a 40kOhm to 200kOhm resistor', left open, or to a capacitor to ground; UNDECIDED: J_M2C2's own pins can be held up with its supply off, past the switch EMCON opens: pin 7 ('USB_D+') on USB_5G_P, where U302 pin 24 (TI TUSB8041IRGCR four-port USB, 'USB_DP_DN4'), a pin of a part whose pins firmware sets; pin 9 ('USB_D-') on USB_5G_N, where U302 pin 25 (TI TUSB8041IRGCR four-port USB, 'USB_DM_DN4'), a pin of a part whose pins firmware sets; pin 10 ('GPIO_9/DAS/~{DSS}/~{LED1}') on 5G_nLED, where LED25 pin 1 (amber 5G network, 'K'), a diode from LED_5G_A; pin 30 ('UIM-RESET') on SIM1_RST, where R266 pin 1 (22R, ''), a pull to SIMC1_RST, behind which J_SIM1 pin 2 (nano-SIM push-push GCT SIM8060, 'RST'), which leaves the board; U222 pin 1 (TPD4E001DBVR SIM 1 ESD array (, 'SIMC1_RST'), a part no class here reads; pin 32 ('UIM-CLK') on SIM1_CLK, where R267 pin 1 (22R, ''), a pull to SIMC1_CLK, behind which J_SIM1 pin 3 (nano-SIM push-push GCT SIM8060, 'CLK'), which leaves the board; U222 pin 3 (TPD4E001DBVR SIM 1 ESD array (, 'SIMC1_CLK'), a part no class here reads; pin 34 ('UIM-DATA') on SIM1_IO, where R268 pin 1 (22R, ''), a pull to SIMC1_IO, behind which J_SIM1 pin 7 (nano-SIM push-push GCT SIM8060, 'I/O'), which leaves the board; U222 pin 4 (TPD4E001DBVR SIM 1 ESD array (, 'SIMC1_IO'), a part no class here reads; and 11 more pins; no held document of the radio's maker states what the unpowered radio passes from such a pin into its supply (the back-feed of EMCON.md SD-EMC-2)",
+   "label": "UNDECIDED",
+   "text": "RM520N-GL 5G module: EMCON reaches it in hardware (B rf_disable on J_M2C2 or B power on J_M2C2)"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, J_M2C1 pin 56 (WIFI_W_DIS_n): no maker document states what W_DISABLE1# does on this card: AsiaRF's AW7915-AED datasheet (v2/vendor/wifi/asiarf-AW7915-AED-datasheet.pdf) does not mention the pin, and the mainline mt7915 driver has no code for it (adjudication A11). It counts once the card's supply is gated or the pin is proved on the bench (owner ruling D-05, 26 September 2026) | board B, power: +3V3_M2C1 off: U103 enable pin 3 through EMCON_HW (asserted LOW) > U116 AND 1->4 (U103 pin 8 switches it through L101, then through the shunt R165 (5mOhm 1% 2512 (K)); taken on its maker's words: U115 pin 6 (SN74LVC2G06DBVR dual open-drai, 'WIFI_W_DIS_n') is the open-drain output of U115 (74LVC2G06 dual open-drain inverter), which only pulls low: SCES307J, page 1: 'SN74LVC2G06 Dual Inverter Buffer and Driver With Open-Drain Outputs' and 'The output of the SN74LVC2G06 device is an open-drain which can be connected to other open-drain outputs'; SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V); 6.3: VIL 0.8 V at VCC 3 V to 3.6 V, 0.3 x VCC at 4.5 V to 5.5 V; UNDECIDED: J_M2C1's own pins can be held up with its supply off, past the switch EMCON opens: pin 6 ('~{LED_1}') on WIFI_nLED, where LED15 pin 1 (blue WiFi link, 'K'), a diode from LED_WIFI_A; pin 41 ('PERp0') on CARD1_TX_P, where U101 pin 102 (Diodes PI7C9X2G404SL PCIe 2.0 , 'PERP2'), a pin of a part whose pins firmware sets; pin 43 ('PERn0') on CARD1_TX_N, where U101 pin 103 (Diodes PI7C9X2G404SL PCIe 2.0 , 'PERN2'), a pin of a part whose pins firmware sets; pin 47 ('REFCLKp0') on CARD1_CLK_P, where R183 pin 2 (33.2R 1% (HCSL series Rs, DS40, ''), a pull to CARD1_CLK_SRC_P, behind which U101 pin 78 (Diodes PI7C9X2G404SL PCIe 2.0 , 'REFCLKO_P2'), a pin of a part whose pins firmware sets; pin 49 ('REFCLKn0') on CARD1_CLK_N, where R184 pin 2 (33.2R 1% (HCSL series Rs, DS40, ''), a pull to CARD1_CLK_SRC_N, behind which U101 pin 77 (Diodes PI7C9X2G404SL PCIe 2.0 , 'REFCLKO_N2'), a pin of a part whose pins firmware sets; pin 52 ('~{PERST0}') on CARD1_PERST_n, where R194 pin 2 (100R, ''), a pull to PCIE1_RST2_n, behind which U101 pin 6 (Diodes PI7C9X2G404SL PCIe 2.0 , 'DWNRST_L2'), a pin of a part whose pins firmware sets; and 1 more pins; no held document of the radio's maker states what the unpowered radio passes from such a pin into its supply (the back-feed of EMCON.md SD-EMC-2)",
+   "label": "UNDECIDED",
+   "text": "AW7915-AED WiFi link card, slot 1: EMCON reaches it in hardware (B rf_disable on J_M2C1 or B power on J_M2C1)"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, J_M2C3 pin 56 (WIFI2_W_DIS_n): no maker document states what W_DISABLE1# does on this card: AsiaRF's AW7915-AED datasheet (v2/vendor/wifi/asiarf-AW7915-AED-datasheet.pdf) does not mention the pin, and the mainline mt7915 driver has no code for it (adjudication A11). It counts once the card's supply is gated or the pin is proved on the bench (owner ruling D-05, 26 September 2026) | board B, power: +3V3_M2C3 off: U303 enable pin 3 through EMCON_HW (asserted LOW) > U316 AND 1->4 (U303 pin 8 switches it through L301, then through the shunt R365 (5mOhm 1% 2512 (K)); taken on its maker's words: U315 pin 6 (SN74LVC2G06DBVR dual open-drai, 'WIFI2_W_DIS_n') is the open-drain output of U315 (74LVC2G06 dual open-drain inverter), which only pulls low: SCES307J, page 1: 'SN74LVC2G06 Dual Inverter Buffer and Driver With Open-Drain Outputs' and 'The output of the SN74LVC2G06 device is an open-drain which can be connected to other open-drain outputs'; SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V); 6.3: VIL 0.8 V at VCC 3 V to 3.6 V, 0.3 x VCC at 4.5 V to 5.5 V; UNDECIDED: J_M2C3's own pins can be held up with its supply off, past the switch EMCON opens: pin 6 ('~{LED_1}') on WIFI2_nLED, where LED35 pin 1 (blue WiFi link, card 2, 'K'), a diode from LED_WIFI2_A; pin 41 ('PERp0') on CARD3_TX_P, where U301 pin 102 (Diodes PI7C9X2G404SL PCIe 2.0 , 'PERP2'), a pin of a part whose pins firmware sets; pin 43 ('PERn0') on CARD3_TX_N, where U301 pin 103 (Diodes PI7C9X2G404SL PCIe 2.0 , 'PERN2'), a pin of a part whose pins firmware sets; pin 47 ('REFCLKp0') on CARD3_CLK_P, where R383 pin 2 (33.2R 1% (HCSL series Rs, DS40, ''), a pull to CARD3_CLK_SRC_P, behind which U301 pin 78 (Diodes PI7C9X2G404SL PCIe 2.0 , 'REFCLKO_P2'), a pin of a part whose pins firmware sets; pin 49 ('REFCLKn0') on CARD3_CLK_N, where R384 pin 2 (33.2R 1% (HCSL series Rs, DS40, ''), a pull to CARD3_CLK_SRC_N, behind which U301 pin 77 (Diodes PI7C9X2G404SL PCIe 2.0 , 'REFCLKO_N2'), a pin of a part whose pins firmware sets; pin 52 ('~{PERST0}') on CARD3_PERST_n, where R394 pin 2 (100R, ''), a pull to PCIE3_RST2_n, behind which U301 pin 6 (Diodes PI7C9X2G404SL PCIe 2.0 , 'DWNRST_L2'), a pin of a part whose pins firmware sets; and 1 more pins; no held document of the radio's maker states what the unpowered radio passes from such a pin into its supply (the back-feed of EMCON.md SD-EMC-2)",
+   "label": "UNDECIDED",
+   "text": "AW7915-AED WiFi link card, slot 3: EMCON reaches it in hardware (B rf_disable on J_M2C3 or B power on J_M2C3)"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, rf_disable: U30A pin 89 through EMCON_HW (asserted LOW) > U112 INV 2->4 > U113 INV_OD 1->6",
+   "label": "PASS",
+   "text": "Compute Module 5 slot S1 on-module WiFi: EMCON reaches it in hardware (B rf_disable on U30A)"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, rf_disable: U30A pin 91 through EMCON_HW (asserted LOW) > U112 INV 2->4 > U113 INV_OD 3->4",
+   "label": "PASS",
+   "text": "Compute Module 5 slot S1 on-module Bluetooth: EMCON reaches it in hardware (B rf_disable on U30A)"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, rf_disable: U31A pin 89 through EMCON_HW (asserted LOW) > U212 INV 2->4 > U213 INV_OD 1->6",
+   "label": "PASS",
+   "text": "Compute Module 5 slot S2 on-module WiFi: EMCON reaches it in hardware (B rf_disable on U31A)"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, rf_disable: U31A pin 91 through EMCON_HW (asserted LOW) > U212 INV 2->4 > U213 INV_OD 3->4",
+   "label": "PASS",
+   "text": "Compute Module 5 slot S2 on-module Bluetooth: EMCON reaches it in hardware (B rf_disable on U31A)"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, rf_disable: U32A pin 89 through EMCON_HW (asserted LOW) > U312 INV 2->4 > U313 INV_OD 1->6",
+   "label": "PASS",
+   "text": "Compute Module 5 slot S3 on-module WiFi: EMCON reaches it in hardware (B rf_disable on U32A)"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "board B, rf_disable: U32A pin 91 through EMCON_HW (asserted LOW) > U312 INV 2->4 > U313 INV_OD 3->4",
+   "label": "PASS",
+   "text": "Compute Module 5 slot S3 on-module Bluetooth: EMCON reaches it in hardware (B rf_disable on U32A)"
+  },
+  {
+   "boards": [
+    "D"
+   ],
+   "detail": "board D, key: U2 pin 5 through TX_INHIBIT_n (asserted LOW) > U12 AND 2->4 > U13 INV_OD 2->4 released, held at 3.12 V by R88 1.2k to +5V_SA, R89 2k to GND; UNDECIDED: with EMCON on, the open-drain U13 is released and SA_PTT_n is held only by what else is on it: SA_PTT_n sits at 2.86 V from the currents that are known, and its maker states no input threshold for this pin; D U13 pin 4: an open-drain output EMCON releases, whose off-state current while powered its sheet does not state; D U2 pin 5 (NiceRF SA868 VHF 2 W exciter, ): its maker states no input current for it",
+   "label": "UNDECIDED",
+   "text": "SA868 VHF exciter: EMCON reaches it in hardware (D key on U2)"
+  },
+  {
+   "boards": [
+    "A"
+   ],
+   "detail": "board A, power: +13V8_PA off: U13 enable pin 1 through EMCON_HW (asserted LOW) > U35 AND 2->4 > U36 AND 1->4 > R58 series; UNDECIDED: +13V8_PA: +13V8_PA: U14 pin 8 (INA226 PA rail monitor (0x46), '+13V8_PA') sits on the rail's conductor and is pin 8 ('+13V8_PA') of U14 (INA226 monitor), whose supply pin is on +3V3, which stays up with the rail off, and its maker's words for the pin are: SBOS547C 6.2 (page 10): 'the common-mode input range and power-supply voltage are independent of each other; therefore, the bus voltage can be present with the supply voltage off, and reciprocally'; 5.5 (page 5) bounds 'Input leakage' at 0.5 uA maximum for '(IN+ pin) + (IN- pin), Power-down mode', and its note 3 (page 6) adds: 'Input leakage is positive (current flowing into the pin) for the conditions shown at the top of this table. Negative leakage currents can occur under different input conditions', whose size no page states; +13V8_PA: U14 pin 9 (INA226 PA rail monitor (0x46), '+13V8_PA') sits on the rail's conductor and is pin 9 ('+13V8_PA') of U14 (INA226 monitor), whose supply pin is on +3V3, which stays up with the rail off, and its maker's words for the pin are: SBOS547C 6.2 (page 10): 'the common-mode input range and power-supply voltage are independent of each other; therefore, the bus voltage can be present with the supply voltage off, and reciprocally'; 5.5 (page 5) bounds 'Input leakage' at 0.5 uA maximum for '(IN+ pin) + (IN- pin), Power-down mode', and its note 3 (page 6) adds: 'Input leakage is positive (current flowing into the pin) for the conditions shown at the top of this table. Negative leakage currents can occur under different input conditions', whose size no page states; PA_OUT, joined to +13V8_PA through R55 (6mOhm 1% 2512 (I): fed from PA_SW2 through Q14's channel (N-channel, read by its maker's pinout (TI CSD18510Q5B, SLPS632 (March 2017), page 1, Top View of the SON 5 mm x 6 mm package)), whose gate PA_HDRV2 is driven by U13, the gated switch itself; that its gate drive is off with its enable is not stated by its maker: TI SNVSAI1D 7.4.1 (page 20) gives the mode as 'Shutdown: VCC off, No switching', 6.5 (page 8) states VUV(BOOT1,2) 'HDRV1,2 shut off' and the drivers' pulldown resistance with VBOOT - VSW = 7 V, and no page states the level of HDRV1, HDRV2, LDRV1 or LDRV2 once VCC is off; PA_OUT, joined to +13V8_PA through R55 (6mOhm 1% 2512 (I): U14 pin 10 (INA226 PA rail monitor (0x46), 'PA_OUT') sits on the rail's conductor and is pin 10 ('PA_OUT') of U14 (INA226 monitor), whose supply pin is on +3V3, which stays up with the rail off, and its maker's words for the pin are: SBOS547C 6.2 (page 10): 'the common-mode input range and power-supply voltage are independent of each other; therefore, the bus voltage can be present with the supply voltage off, and reciprocally'; 5.5 (page 5) bounds 'Input leakage' at 0.5 uA maximum for '(IN+ pin) + (IN- pin), Power-down mode', and its note 3 (page 6) adds: 'Input leakage is positive (current flowing into the pin) for the conditions shown at the top of this table. Negative leakage currents can occur under different input conditions', whose size no page states; with U36's supply +3V3_EMCON down (and every rail it feeds through a bead or a link), U36 no longer drives PA_EN: PA_UVLO sits at 0.35 V from the currents that are known, and D Q1 gate (2N7002 PA_EN -> ): its sheet states IGSS at 25 C only",
+   "label": "UNDECIDED",
+   "text": "30 W VHF power amplifier (RA30H1317M1 on the plate): EMCON reaches it in hardware (A power on J_PA)"
+  },
+  {
+   "boards": [
+    "D"
+   ],
+   "detail": "board D, power: VGG_SW off: U15 enable pin 4 through TX_INHIBIT_n (asserted LOW) > U12 AND 2->4 > U14 AND 1->4; what the radio does with this pin at 0 V is its maker's: Mitsubishi RA30H1317M1 datasheet (v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf, publication date Oct. 2011), page 1: pin 2 'Gate Voltage (VGG), Power Control'; 'Enhancement-Mode MOSFET Transistors (IDD~0 @ VDD=12.5V, VGG=0V)'; 'With a gate voltage around 3.5V (minimum), output power and drain current increases substantially'",
+   "label": "PASS",
+   "text": "30 W VHF power amplifier, its gate bias (RA30H1317M1 pin 2, VGG): EMCON reaches it in hardware (D power on J_VGG)"
+  },
+  {
+   "boards": [
+    "A"
+   ],
+   "detail": "board A, power: +12V_HF off: U15 enable pin 1 through EMCON_HW (asserted LOW) > U37 AND 2->4 > U38 AND 1->4 > R124 series; UNDECIDED: +12V_HF: HF_OUT, joined to +12V_HF through R65 (10mOhm 1% 2512 (): fed from HF_SW2 through Q24's channel (N-channel, read by its maker's pinout (TI CSD18510Q5B, SLPS632 (March 2017), page 1, Top View of the SON 5 mm x 6 mm package)), whose gate HF_HDRV2 is driven by U15, the gated switch itself; that its gate drive is off with its enable is not stated by its maker: TI SNVSAI1D 7.4.1 (page 20) gives the mode as 'Shutdown: VCC off, No switching', 6.5 (page 8) states VUV(BOOT1,2) 'HDRV1,2 shut off' and the drivers' pulldown resistance with VBOOT - VSW = 7 V, and no page states the level of HDRV1, HDRV2, LDRV1 or LDRV2 once VCC is off",
+   "label": "UNDECIDED",
+   "text": "QMX HF transceiver: EMCON reaches it in hardware (A power on J_HF)"
+  },
+  {
+   "boards": [
+    "A"
+   ],
+   "detail": "",
+   "label": "PASS",
+   "text": "A: every part that names a radio is a listed transmitter, an accessory or a receiver"
+  },
+  {
+   "boards": [
+    "B"
+   ],
+   "detail": "",
+   "label": "PASS",
+   "text": "B: every part that names a radio is a listed transmitter, an accessory or a receiver"
+  },
+  {
+   "boards": [
+    "C"
+   ],
+   "detail": "",
+   "label": "PASS",
+   "text": "C: every part that names a radio is a listed transmitter, an accessory or a receiver"
+  },
+  {
+   "boards": [
+    "D"
+   ],
+   "detail": "",
+   "label": "PASS",
+   "text": "D: every part that names a radio is a listed transmitter, an accessory or a receiver"
+  },
+  {
+   "boards": [
+    "E"
+   ],
+   "detail": "",
+   "label": "PASS",
+   "text": "E: every part that names a radio is a listed transmitter, an accessory or a receiver"
+  },
+  {
+   "boards": [
+    "P"
+   ],
+   "detail": "",
+   "label": "PASS",
+   "text": "P: every part that names a radio is a listed transmitter, an accessory or a receiver"
+  }
+ ],
+ "tool": "326d0a4832273004"
+}

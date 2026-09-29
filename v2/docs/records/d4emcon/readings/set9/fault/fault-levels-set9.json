@@ -1,0 +1,2195 @@
+{
+ "netlists": {
+  "A": "599ee964a9c23d6e",
+  "B": "21a1f74a3ec1ae28",
+  "C": "3fddbb3edcd4248a",
+  "D": "7a2c0ac2190b141a"
+ },
+ "rows": [
+  {
+   "floating": false,
+   "id": "L-TXI-1",
+   "leaks": [
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D TX_INHIBIT_n",
+     "pin": "U12 pin 2, an input (II, the reader, powered)",
+     "uA": 5.0
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U35 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 0.6
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U37 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 0.6
+    },
+    {
+     "cite": "SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II +-1 uA (VCC 0 V to 5.5 V, VI 5.5 V or GND), Ioff +-10 uA (VCC 0 V, VI or VO 5.5 V; page 1: 'The Ioff circuitry disables the outputs, preventing damaging current backflow through the device when it is powered down'); 6.1 (page 4): input clamp current IIK -50 mA for VI < 0 only, and the input voltage rated to 6.5 V with no condition on VCC ('Inputs are over-voltage tolerant up to 5.5 V', 8.3.2); Schmitt inputs, VT- 0.84 V minimum and VT+ 1.87 V maximum at VCC 3 V",
+     "node": "C TX_INHIBIT_n",
+     "pin": "U14 pin 3, unpowered (Ioff)",
+     "uA": 10.0
+    },
+    {
+     "cite": "DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 2.00 V maximum at VCC 3 V",
+     "node": "C TX_INHIBIT_n",
+     "pin": "U9 pin 2, unpowered (Ioff)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "D R2 100k (TX_INHIBIT_n, taken 1.05e+05) to GND",
+    "A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND",
+    "B R59 100k (TX_INHIBIT_n, taken 1.05e+05) to GND",
+    "C R14 2.2k 1% to +3V3, which is down: taken absent",
+    "C R50 10k 1% (TX_INHIBIT_n, taken 1.01e+04) to GND"
+   ],
+   "limit": 0.8,
+   "limit_cite": "VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)",
+   "node": "D TX_INHIBIT_n",
+   "sink_A": null,
+   "sum_uA": 26.2,
+   "unbounded": [],
+   "v_adverse": 0.20535920707938016,
+   "v_adverse_nodes": {
+    "A TX_INHIBIT_n": 0.2054,
+    "B TX_INHIBIT_n": 0.2054,
+    "C TX_INHIBIT_n": 0.2054,
+    "D TX_INHIBIT_n": 0.2054
+   },
+   "v_other": -0.20535920707938016,
+   "v_other_nodes": {
+    "A TX_INHIBIT_n": -0.2054,
+    "B TX_INHIBIT_n": -0.2054,
+    "C TX_INHIBIT_n": -0.2054,
+    "D TX_INHIBIT_n": -0.2054
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "TX_INHIBIT_n at board D's U12, board C unpowered, every ribbon in"
+  },
+  {
+   "floating": false,
+   "id": "L-TXI-2",
+   "leaks": [
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U35 pin 1, an input (II, the reader, powered)",
+     "uA": 0.5
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U37 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 0.6
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D TX_INHIBIT_n",
+     "pin": "U12 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II +-1 uA (VCC 0 V to 5.5 V, VI 5.5 V or GND), Ioff +-10 uA (VCC 0 V, VI or VO 5.5 V; page 1: 'The Ioff circuitry disables the outputs, preventing damaging current backflow through the device when it is powered down'); 6.1 (page 4): input clamp current IIK -50 mA for VI < 0 only, and the input voltage rated to 6.5 V with no condition on VCC ('Inputs are over-voltage tolerant up to 5.5 V', 8.3.2); Schmitt inputs, VT- 0.84 V minimum and VT+ 1.87 V maximum at VCC 3 V",
+     "node": "C TX_INHIBIT_n",
+     "pin": "U14 pin 3, unpowered (Ioff)",
+     "uA": 10.0
+    },
+    {
+     "cite": "DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 2.00 V maximum at VCC 3 V",
+     "node": "C TX_INHIBIT_n",
+     "pin": "U9 pin 2, unpowered (Ioff)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND",
+    "B R59 100k (TX_INHIBIT_n, taken 1.05e+05) to GND",
+    "D R2 100k (TX_INHIBIT_n, taken 1.05e+05) to GND",
+    "C R14 2.2k 1% to +3V3, which is down: taken absent",
+    "C R50 10k 1% (TX_INHIBIT_n, taken 1.01e+04) to GND"
+   ],
+   "limit": 0.9,
+   "limit_cite": "VIL 0.9 V at VCC 3 V to 3.6 V (TI SCES502Q 5.3)",
+   "node": "A TX_INHIBIT_n",
+   "sink_A": null,
+   "sum_uA": 31.1,
+   "unbounded": [],
+   "v_adverse": 0.2437660837450577,
+   "v_adverse_nodes": {
+    "A TX_INHIBIT_n": 0.2438,
+    "B TX_INHIBIT_n": 0.2438,
+    "C TX_INHIBIT_n": 0.2438,
+    "D TX_INHIBIT_n": 0.2438
+   },
+   "v_other": -0.2437660837450577,
+   "v_other_nodes": {
+    "A TX_INHIBIT_n": -0.2438,
+    "B TX_INHIBIT_n": -0.2438,
+    "C TX_INHIBIT_n": -0.2438,
+    "D TX_INHIBIT_n": -0.2438
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "TX_INHIBIT_n at board A's U35 and U37, board C unpowered, every ribbon in"
+  },
+  {
+   "floating": false,
+   "id": "L-TXI-3",
+   "leaks": [
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D TX_INHIBIT_n",
+     "pin": "U12 pin 2, an input (II, the reader, powered)",
+     "uA": 5.0
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U35 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 0.6
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U37 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 0.6
+    }
+   ],
+   "legs": [
+    "D R2 100k (TX_INHIBIT_n, taken 1.05e+05) to GND",
+    "A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND",
+    "B R59 100k (TX_INHIBIT_n, taken 1.05e+05) to GND"
+   ],
+   "limit": 0.8,
+   "limit_cite": "VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)",
+   "node": "D TX_INHIBIT_n",
+   "sink_A": null,
+   "sum_uA": 6.2,
+   "unbounded": [],
+   "v_adverse": 0.21700000394177987,
+   "v_adverse_nodes": {
+    "A TX_INHIBIT_n": 0.217,
+    "B TX_INHIBIT_n": 0.217,
+    "D TX_INHIBIT_n": 0.217
+   },
+   "v_other": -0.21700000394177987,
+   "v_other_nodes": {
+    "A TX_INHIBIT_n": -0.217,
+    "B TX_INHIBIT_n": -0.217,
+    "D TX_INHIBIT_n": -0.217
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "TX_INHIBIT_n at board D's U12, the panel ribbon unplugged"
+  },
+  {
+   "floating": false,
+   "id": "L-TXI-4",
+   "leaks": [
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U35 pin 1, an input (II, the reader, powered)",
+     "uA": 0.5
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U37 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 0.6
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D TX_INHIBIT_n",
+     "pin": "U12 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND",
+    "B R59 100k (TX_INHIBIT_n, taken 1.05e+05) to GND",
+    "D R2 100k (TX_INHIBIT_n, taken 1.05e+05) to GND"
+   ],
+   "limit": 0.9,
+   "limit_cite": "VIL 0.9 V at VCC 3 V to 3.6 V (TI SCES502Q 5.3)",
+   "node": "A TX_INHIBIT_n",
+   "sink_A": null,
+   "sum_uA": 11.1,
+   "unbounded": [],
+   "v_adverse": 0.38850000145598235,
+   "v_adverse_nodes": {
+    "A TX_INHIBIT_n": 0.3885,
+    "B TX_INHIBIT_n": 0.3885,
+    "D TX_INHIBIT_n": 0.3885
+   },
+   "v_other": -0.38850000145598235,
+   "v_other_nodes": {
+    "A TX_INHIBIT_n": -0.3885,
+    "B TX_INHIBIT_n": -0.3885,
+    "D TX_INHIBIT_n": -0.3885
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "TX_INHIBIT_n at board A's U35 and U37, the panel ribbon unplugged"
+  },
+  {
+   "floating": false,
+   "id": "L-TXI-5",
+   "leaks": [
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D TX_INHIBIT_n",
+     "pin": "U12 pin 2, an input (II, the reader, powered)",
+     "uA": 5.0
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U35 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 0.6
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U37 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 0.6
+    }
+   ],
+   "legs": [
+    "D R2 100k (TX_INHIBIT_n, taken 1.05e+05) to GND",
+    "A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND"
+   ],
+   "limit": 0.8,
+   "limit_cite": "VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)",
+   "node": "D TX_INHIBIT_n",
+   "sink_A": null,
+   "sum_uA": 6.2,
+   "unbounded": [],
+   "v_adverse": 0.3255000032747264,
+   "v_adverse_nodes": {
+    "A TX_INHIBIT_n": 0.3255,
+    "D TX_INHIBIT_n": 0.3255
+   },
+   "v_other": -0.3255000032747264,
+   "v_other_nodes": {
+    "A TX_INHIBIT_n": -0.3255,
+    "D TX_INHIBIT_n": -0.3255
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "TX_INHIBIT_n at board D's U12, the A-B ribbon unplugged"
+  },
+  {
+   "floating": false,
+   "id": "L-TXI-6",
+   "leaks": [
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U35 pin 1, an input (II, the reader, powered)",
+     "uA": 0.5
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U37 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 0.6
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D TX_INHIBIT_n",
+     "pin": "U12 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND",
+    "D R2 100k (TX_INHIBIT_n, taken 1.05e+05) to GND"
+   ],
+   "limit": 0.9,
+   "limit_cite": "VIL 0.9 V at VCC 3 V to 3.6 V (TI SCES502Q 5.3)",
+   "node": "A TX_INHIBIT_n",
+   "sink_A": null,
+   "sum_uA": 11.1,
+   "unbounded": [],
+   "v_adverse": 0.5827500019370103,
+   "v_adverse_nodes": {
+    "A TX_INHIBIT_n": 0.5828,
+    "D TX_INHIBIT_n": 0.5828
+   },
+   "v_other": -0.5827500019370103,
+   "v_other_nodes": {
+    "A TX_INHIBIT_n": -0.5828,
+    "D TX_INHIBIT_n": -0.5828
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "TX_INHIBIT_n at board A's U35 and U37, the A-B ribbon unplugged"
+  },
+  {
+   "floating": false,
+   "id": "L-TXI-7",
+   "leaks": [
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U35 pin 1, an input (II, the reader, powered)",
+     "uA": 0.5
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A TX_INHIBIT_n",
+     "pin": "U37 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 0.6
+    }
+   ],
+   "legs": [
+    "A R145 100k (TX_INHIBIT_n, taken 1.05e+05) to GND"
+   ],
+   "limit": 0.9,
+   "limit_cite": "VIL 0.9 V at VCC 3 V to 3.6 V (TI SCES502Q 5.3)",
+   "node": "A TX_INHIBIT_n",
+   "sink_A": null,
+   "sum_uA": 1.1,
+   "unbounded": [],
+   "v_adverse": 0.11550000000000002,
+   "v_adverse_nodes": {
+    "A TX_INHIBIT_n": 0.1155
+   },
+   "v_other": -0.11550000000000002,
+   "v_other_nodes": {
+    "A TX_INHIBIT_n": -0.1155
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "TX_INHIBIT_n at board A's U35 and U37, the mezzanine harness unplugged as well as the A-B ribbon"
+  },
+  {
+   "floating": false,
+   "id": "L-TXI-8",
+   "leaks": [
+    {
+     "cite": "SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II +-1 uA (VCC 0 V to 5.5 V, VI 5.5 V or GND), Ioff +-10 uA (VCC 0 V, VI or VO 5.5 V; page 1: 'The Ioff circuitry disables the outputs, preventing damaging current backflow through the device when it is powered down'); 6.1 (page 4): input clamp current IIK -50 mA for VI < 0 only, and the input voltage rated to 6.5 V with no condition on VCC ('Inputs are over-voltage tolerant up to 5.5 V', 8.3.2); Schmitt inputs, VT- 0.84 V minimum and VT+ 1.87 V maximum at VCC 3 V",
+     "node": "C TX_INHIBIT_n",
+     "pin": "U14 pin 3, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 2.00 V maximum at VCC 3 V",
+     "node": "C TX_INHIBIT_n",
+     "pin": "U9 pin 2, an input (II, the reader, powered)",
+     "uA": 5.0
+    }
+   ],
+   "legs": [
+    "C R14 2.2k 1% (taken 2222) to +3V3 at 3.135 V",
+    "C R50 10k 1% (TX_INHIBIT_n, taken 9900) to GND"
+   ],
+   "limit": 2.0,
+   "limit_cite": "VT+ 2.00 V maximum at VCC 3 V (Diodes DS35124 Rev. 8-2; no row between 3 V and 4.5 V): the released level must be above it for the line to RELEASE, which is the function and not the inhibit",
+   "node": "C TX_INHIBIT_n",
+   "sink_A": null,
+   "sum_uA": 15.0,
+   "unbounded": [],
+   "v_adverse": 2.533124319419238,
+   "v_adverse_nodes": {
+    "C TX_INHIBIT_n": 2.5331
+   },
+   "v_other": 2.5875653357531765,
+   "v_other_nodes": {
+    "C TX_INHIBIT_n": 2.5876
+   },
+   "verdict": "PASS",
+   "want": "HIGH",
+   "what": "TX_INHIBIT_n at board C's U9 and U14 (the lamp), board C powered, the panel ribbon unplugged and the toggle released: the released level"
+  },
+  {
+   "floating": false,
+   "id": "L-EH-1",
+   "leaks": [
+    {
+     "cite": "SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U112 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VCC 4.5 V to 5.5 V, 0.65 V at 3 V to 3.6 V; no Ioff row for the output (6.1: 4.6 V in the power-off state)",
+     "node": "B EMCON_HW",
+     "pin": "U116 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U212 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VCC 4.5 V to 5.5 V, 0.65 V at 3 V to 3.6 V; no Ioff row for the output (6.1: 4.6 V in the power-off state)",
+     "node": "B EMCON_HW",
+     "pin": "U216 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U312 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VCC 4.5 V to 5.5 V, 0.65 V at 3 V to 3.6 V; no Ioff row for the output (6.1: 4.6 V in the power-off state)",
+     "node": "B EMCON_HW",
+     "pin": "U316 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U501 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U503 pin 1, an input (II, the reader, powered)",
+     "uA": 5.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U504 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U505 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U506 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U536 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A EMCON_HW",
+     "pin": "U35 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 0.6
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A EMCON_HW",
+     "pin": "U37 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 0.6
+    },
+    {
+     "cite": "DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 2.00 V maximum at VCC 3 V",
+     "node": "C EMCON_HW",
+     "pin": "U13 pin 2, unpowered (Ioff)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II +-1 uA (VCC 0 V to 5.5 V, VI 5.5 V or GND), Ioff +-10 uA (VCC 0 V, VI or VO 5.5 V; page 1: 'The Ioff circuitry disables the outputs, preventing damaging current backflow through the device when it is powered down'); 6.1 (page 4): input clamp current IIK -50 mA for VI < 0 only, and the input voltage rated to 6.5 V with no condition on VCC ('Inputs are over-voltage tolerant up to 5.5 V', 8.3.2); Schmitt inputs, VT- 0.84 V minimum and VT+ 1.87 V maximum at VCC 3 V",
+     "node": "C EMCON_HW",
+     "pin": "U14 pin 6, unpowered (Ioff)",
+     "uA": 10.0
+    },
+    {
+     "cite": "DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 2.00 V maximum at VCC 3 V",
+     "node": "C EMCON_HW",
+     "pin": "U9 pin 4, unpowered (Ioff)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B R58 4.7k 1% (EMCON_HW, taken 4747) to GND",
+    "A R102 10k 1% (EMCON_HW, taken 1.01e+04) to GND"
+   ],
+   "limit": 0.8,
+   "limit_cite": "VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)",
+   "node": "B EMCON_HW",
+   "sink_A": null,
+   "sum_uA": 119.2,
+   "unbounded": [],
+   "v_adverse": 0.3849268146725311,
+   "v_adverse_nodes": {
+    "A EMCON_HW": 0.3849,
+    "B EMCON_HW": 0.3849,
+    "C EMCON_HW": 0.3849
+   },
+   "v_other": -0.3849268146725311,
+   "v_other_nodes": {
+    "A EMCON_HW": -0.3849,
+    "B EMCON_HW": -0.3849,
+    "C EMCON_HW": -0.3849
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "EMCON_HW at board B's gates, board C unpowered, every ribbon in"
+  },
+  {
+   "floating": false,
+   "id": "L-EH-2",
+   "leaks": [
+    {
+     "cite": "SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U112 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VCC 4.5 V to 5.5 V, 0.65 V at 3 V to 3.6 V; no Ioff row for the output (6.1: 4.6 V in the power-off state)",
+     "node": "B EMCON_HW",
+     "pin": "U116 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U212 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VCC 4.5 V to 5.5 V, 0.65 V at 3 V to 3.6 V; no Ioff row for the output (6.1: 4.6 V in the power-off state)",
+     "node": "B EMCON_HW",
+     "pin": "U216 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U312 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VCC 4.5 V to 5.5 V, 0.65 V at 3 V to 3.6 V; no Ioff row for the output (6.1: 4.6 V in the power-off state)",
+     "node": "B EMCON_HW",
+     "pin": "U316 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U501 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U503 pin 1, an input (II, the reader, powered)",
+     "uA": 5.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U504 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U505 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U506 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U536 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 2.00 V maximum at VCC 3 V",
+     "node": "C EMCON_HW",
+     "pin": "U13 pin 2, unpowered (Ioff)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II +-1 uA (VCC 0 V to 5.5 V, VI 5.5 V or GND), Ioff +-10 uA (VCC 0 V, VI or VO 5.5 V; page 1: 'The Ioff circuitry disables the outputs, preventing damaging current backflow through the device when it is powered down'); 6.1 (page 4): input clamp current IIK -50 mA for VI < 0 only, and the input voltage rated to 6.5 V with no condition on VCC ('Inputs are over-voltage tolerant up to 5.5 V', 8.3.2); Schmitt inputs, VT- 0.84 V minimum and VT+ 1.87 V maximum at VCC 3 V",
+     "node": "C EMCON_HW",
+     "pin": "U14 pin 6, unpowered (Ioff)",
+     "uA": 10.0
+    },
+    {
+     "cite": "DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 2.00 V maximum at VCC 3 V",
+     "node": "C EMCON_HW",
+     "pin": "U9 pin 4, unpowered (Ioff)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B R58 4.7k 1% (EMCON_HW, taken 4747) to GND"
+   ],
+   "limit": 0.8,
+   "limit_cite": "VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)",
+   "node": "B EMCON_HW",
+   "sink_A": null,
+   "sum_uA": 118.0,
+   "unbounded": [],
+   "v_adverse": 0.5601459999133319,
+   "v_adverse_nodes": {
+    "B EMCON_HW": 0.5601,
+    "C EMCON_HW": 0.5601
+   },
+   "v_other": -0.5601459999133319,
+   "v_other_nodes": {
+    "B EMCON_HW": -0.5601,
+    "C EMCON_HW": -0.5601
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "EMCON_HW at board B's gates, board C unpowered and the A-B ribbon unplugged"
+  },
+  {
+   "floating": false,
+   "id": "L-EH-3",
+   "leaks": [
+    {
+     "cite": "SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U112 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VCC 4.5 V to 5.5 V, 0.65 V at 3 V to 3.6 V; no Ioff row for the output (6.1: 4.6 V in the power-off state)",
+     "node": "B EMCON_HW",
+     "pin": "U116 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U212 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VCC 4.5 V to 5.5 V, 0.65 V at 3 V to 3.6 V; no Ioff row for the output (6.1: 4.6 V in the power-off state)",
+     "node": "B EMCON_HW",
+     "pin": "U216 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U312 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VCC 4.5 V to 5.5 V, 0.65 V at 3 V to 3.6 V; no Ioff row for the output (6.1: 4.6 V in the power-off state)",
+     "node": "B EMCON_HW",
+     "pin": "U316 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U501 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U503 pin 1, an input (II, the reader, powered)",
+     "uA": 5.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U504 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U505 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U506 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U536 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B R58 4.7k 1% (EMCON_HW, taken 4747) to GND"
+   ],
+   "limit": 0.8,
+   "limit_cite": "VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)",
+   "node": "B EMCON_HW",
+   "sink_A": null,
+   "sum_uA": 88.0,
+   "unbounded": [],
+   "v_adverse": 0.417736,
+   "v_adverse_nodes": {
+    "B EMCON_HW": 0.4177
+   },
+   "v_other": -0.417736,
+   "v_other_nodes": {
+    "B EMCON_HW": -0.4177
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "EMCON_HW at board B's gates, the panel ribbon unplugged and the A-B ribbon unplugged"
+  },
+  {
+   "floating": false,
+   "id": "L-EH-4",
+   "leaks": [
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A EMCON_HW",
+     "pin": "U35 pin 2, an input (II, the reader, powered)",
+     "uA": 0.5
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A EMCON_HW",
+     "pin": "U37 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 0.6
+    }
+   ],
+   "legs": [
+    "A R102 10k 1% (EMCON_HW, taken 1.01e+04) to GND"
+   ],
+   "limit": 0.9,
+   "limit_cite": "VIL 0.9 V at VCC 3 V to 3.6 V (TI SCES502Q 5.3)",
+   "node": "A EMCON_HW",
+   "sink_A": null,
+   "sum_uA": 1.1,
+   "unbounded": [],
+   "v_adverse": 0.01111,
+   "v_adverse_nodes": {
+    "A EMCON_HW": 0.0111
+   },
+   "v_other": -0.01111,
+   "v_other_nodes": {
+    "A EMCON_HW": -0.0111
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "EMCON_HW at board A's U35 and U37, the A-B ribbon unplugged"
+  },
+  {
+   "floating": false,
+   "id": "L-EH-5",
+   "leaks": [
+    {
+     "cite": "SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U112 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VCC 4.5 V to 5.5 V, 0.65 V at 3 V to 3.6 V; no Ioff row for the output (6.1: 4.6 V in the power-off state)",
+     "node": "B EMCON_HW",
+     "pin": "U116 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U212 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VCC 4.5 V to 5.5 V, 0.65 V at 3 V to 3.6 V; no Ioff row for the output (6.1: 4.6 V in the power-off state)",
+     "node": "B EMCON_HW",
+     "pin": "U216 pin 1, an input (II, the reader, powered)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES214AF 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U312 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCLS739F 6.5, -40 to +125 C: II +-1 uA (A input, VI 0 V or VCC, VCC 0 V, 1.8 V, 2.5 V, 3.3 V and 5.5 V); VIL 0.8 V at VCC 4.5 V to 5.5 V, 0.65 V at 3 V to 3.6 V; no Ioff row for the output (6.1: 4.6 V in the power-off state)",
+     "node": "B EMCON_HW",
+     "pin": "U316 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U501 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U503 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U504 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U505 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U506 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B EMCON_HW",
+     "pin": "U536 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 2.00 V maximum at VCC 3 V",
+     "node": "C EMCON_HW",
+     "pin": "U13 pin 2, unpowered (Ioff)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II +-1 uA (VCC 0 V to 5.5 V, VI 5.5 V or GND), Ioff +-10 uA (VCC 0 V, VI or VO 5.5 V; page 1: 'The Ioff circuitry disables the outputs, preventing damaging current backflow through the device when it is powered down'); 6.1 (page 4): input clamp current IIK -50 mA for VI < 0 only, and the input voltage rated to 6.5 V with no condition on VCC ('Inputs are over-voltage tolerant up to 5.5 V', 8.3.2); Schmitt inputs, VT- 0.84 V minimum and VT+ 1.87 V maximum at VCC 3 V",
+     "node": "C EMCON_HW",
+     "pin": "U14 pin 6, unpowered (Ioff)",
+     "uA": 10.0
+    },
+    {
+     "cite": "DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA (VCC 0); VT- 0.80 V minimum and VT+ 2.00 V maximum at VCC 3 V",
+     "node": "C EMCON_HW",
+     "pin": "U9 pin 4, unpowered (Ioff)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B R58 4.7k 1% (EMCON_HW, taken 4747) to GND"
+   ],
+   "limit": 0.8,
+   "limit_cite": "VIL 0.8 V at VCC 4.5 V to 5.5 V (TI SCLS739F 6.5); 0.65 V at VCC 3 V to 3.6 V",
+   "node": "B EMCON_HW",
+   "sink_A": null,
+   "sum_uA": 123.0,
+   "unbounded": [],
+   "v_adverse": 0.5838809999096595,
+   "v_adverse_nodes": {
+    "B EMCON_HW": 0.5839,
+    "C EMCON_HW": 0.5839
+   },
+   "v_other": -0.5838809999096595,
+   "v_other_nodes": {
+    "B EMCON_HW": -0.5839,
+    "C EMCON_HW": -0.5839
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "EMCON_HW at board B's U116, U216, U316 (SN74LV1T08 on the slot's 5 V), board C unpowered and the A-B ribbon unplugged"
+  },
+  {
+   "driver": "A U36 pin 4, VOL 0.10 V at IOL 0.02 mA: TI SN74AUP1G08, SCES502Q 5.5 (page 7), -40 to +85 C: VOL 0.1 V at IOL 20 uA (VCC 0.8 V to 3.6 V), 0.33 V at 2.7 mA and 0.45 V at 4 mA (VCC 3 V); the node asks it to sink 19.5 uA of stated current, so the pins no sheet bounds would have to pass 0.000481 mA more to leave this row",
+   "floating": false,
+   "id": "2a (a)",
+   "leaks": [
+    {
+     "cite": "SNVSAI1D 6.5 and 7.3.3: VEN(OP) 1.17 V minimum, below which 'the PWM controller is disabled'; out of the pin, IEN(STBY) 3 uA maximum in standby (VEN/UVLO 1.1 V) plus dIHYS(OP) 4.25 uA maximum once EN/UVLO exceeds the operating threshold (VEN/UVLO 1.5 V), 7.25 uA at the threshold from above, -40 to +125 C junction",
+     "node": "A PA_UVLO",
+     "pin": "U13 enable (LM5176 buck-boost controller)",
+     "uA": 7.25
+    },
+    {
+     "cite": "SCES212AC, Electrical Characteristics, -40 to +85 C: II +-5 uA, Ioff +-10 uA",
+     "node": "A PA_EN",
+     "pin": "U30 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked",
+     "node": "D PA_EN",
+     "pin": "Q1 gate (a 25 C figure)",
+     "uA": 0.08
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D PA_EN",
+     "pin": "U14 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "A R58 10k 1% (nominal) from PA_UVLO to PA_EN",
+    "A R59 15k 1% (PA_UVLO, taken 1.515e+04) to GND",
+    "A U36 pin 4 drives the node at 0.100 V",
+    "D R3 100k (PA_EN, taken 1.05e+05) to GND"
+   ],
+   "limit": 0.55,
+   "limit_cite": "VEN(STBY) 0.55 V minimum: below it 'the converter is held in a low power shutdown mode' (TI SNVSAI1D 6.5, 7.3.3); VEN(OP) 1.17 V minimum, below which the PWM controller is disabled",
+   "node": "A PA_UVLO",
+   "sink_A": 1.951877107733691e-05,
+   "sum_uA": 27.33,
+   "unbounded": [
+    "D Q1 gate (2N7002 PA_EN -> H/L low ): JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked"
+   ],
+   "v_adverse": 0.10391154257293767,
+   "v_adverse_nodes": {
+    "A PA_EN": 0.1,
+    "A PA_UVLO": 0.1039,
+    "D PA_EN": 0.1
+   },
+   "v_other": 0.016565588666256292,
+   "v_other_nodes": {
+    "A PA_EN": 0.1,
+    "A PA_UVLO": 0.0166,
+    "D PA_EN": 0.1
+   },
+   "verdict": "PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum)",
+   "want": "LOW",
+   "what": "PA drain supply: PA_UVLO at board A's U13 (LM5176), EMCON asserted and its gate powered: the gate drives LOW"
+  },
+  {
+   "floating": false,
+   "id": "2a (b)",
+   "leaks": [
+    {
+     "cite": "SNVSAI1D 6.5 and 7.3.3: VEN(OP) 1.17 V minimum, below which 'the PWM controller is disabled'; out of the pin, IEN(STBY) 3 uA maximum in standby (VEN/UVLO 1.1 V) plus dIHYS(OP) 4.25 uA maximum once EN/UVLO exceeds the operating threshold (VEN/UVLO 1.5 V), 7.25 uA at the threshold from above, -40 to +125 C junction",
+     "node": "A PA_UVLO",
+     "pin": "U13 enable (LM5176 buck-boost controller)",
+     "uA": 7.25
+    },
+    {
+     "cite": "SCES212AC, Electrical Characteristics, -40 to +85 C: II +-5 uA, Ioff +-10 uA",
+     "node": "A PA_EN",
+     "pin": "U30 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A PA_EN",
+     "pin": "U36 pin 4, unpowered (Ioff)",
+     "uA": 0.6
+    },
+    {
+     "cite": "JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked",
+     "node": "D PA_EN",
+     "pin": "Q1 gate (a 25 C figure)",
+     "uA": 0.08
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D PA_EN",
+     "pin": "U14 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "A R58 10k 1% (nominal) from PA_UVLO to PA_EN",
+    "A R59 15k 1% (PA_UVLO, taken 1.515e+04) to GND",
+    "D R3 100k (PA_EN, taken 1.05e+05) to GND"
+   ],
+   "limit": 0.55,
+   "limit_cite": "VEN(STBY) 0.55 V minimum: below it 'the converter is held in a low power shutdown mode' (TI SNVSAI1D 6.5, 7.3.3); VEN(OP) 1.17 V minimum, below which the PWM controller is disabled",
+   "node": "A PA_UVLO",
+   "sink_A": null,
+   "sum_uA": 27.93,
+   "unbounded": [
+    "D Q1 gate (2N7002 PA_EN -> H/L low ): JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked"
+   ],
+   "v_adverse": 0.3498119286280814,
+   "v_adverse_nodes": {
+    "A PA_EN": 0.5082,
+    "A PA_UVLO": 0.3498,
+    "D PA_EN": 0.5082
+   },
+   "v_other": -0.3498119286280814,
+   "v_other_nodes": {
+    "A PA_EN": -0.5082,
+    "A PA_UVLO": -0.3498,
+    "D PA_EN": -0.5082
+   },
+   "verdict": "UNDECIDED (a pin current is unbounded)",
+   "want": "LOW",
+   "what": "PA drain supply: PA_UVLO at board A's U13 (LM5176), its gate's own supply +3V3_EMCON lost (0 V) with everything else up"
+  },
+  {
+   "driver": "A U38 pin 4, VOL 0.10 V at IOL 0.02 mA: TI SN74AUP1G08, SCES502Q 5.5 (page 7), -40 to +85 C: VOL 0.1 V at IOL 20 uA (VCC 0.8 V to 3.6 V), 0.33 V at 2.7 mA and 0.45 V at 4 mA (VCC 3 V); the node asks it to sink 0.4 uA of stated current, so the pins no sheet bounds would have to pass 0.0196 mA more to leave this row",
+   "floating": false,
+   "id": "3 (a)",
+   "leaks": [
+    {
+     "cite": "SNVSAI1D 6.5 and 7.3.3: VEN(OP) 1.17 V minimum, below which 'the PWM controller is disabled'; out of the pin, IEN(STBY) 3 uA maximum in standby (VEN/UVLO 1.1 V) plus dIHYS(OP) 4.25 uA maximum once EN/UVLO exceeds the operating threshold (VEN/UVLO 1.5 V), 7.25 uA at the threshold from above, -40 to +125 C junction",
+     "node": "A HF_UVLO",
+     "pin": "U15 enable (LM5176 buck-boost controller)",
+     "uA": 7.25
+    }
+   ],
+   "legs": [
+    "A R124 10k 1% (nominal) from HF_UVLO to HF_EN",
+    "A R125 15k 1% (HF_UVLO, taken 1.515e+04) to GND",
+    "A U38 pin 4 drives the node at 0.100 V"
+   ],
+   "limit": 0.55,
+   "limit_cite": "VEN(STBY) 0.55 V minimum: below it 'the converter is held in a low power shutdown mode' (TI SNVSAI1D 6.5, 7.3.3); VEN(OP) 1.17 V minimum, below which the PWM controller is disabled",
+   "node": "A HF_UVLO",
+   "sink_A": 3.911530659581289e-07,
+   "sum_uA": 7.25,
+   "unbounded": [],
+   "v_adverse": 0.10391153105073436,
+   "v_adverse_nodes": {
+    "A HF_EN": 0.1,
+    "A HF_UVLO": 0.1039
+   },
+   "v_other": 0.01656560133586078,
+   "v_other_nodes": {
+    "A HF_EN": 0.1,
+    "A HF_UVLO": 0.0166
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "QMX: HF_UVLO at board A's U15 (LM5176), EMCON asserted and its gate powered: the gate drives LOW"
+  },
+  {
+   "floating": false,
+   "id": "3 (b)",
+   "leaks": [
+    {
+     "cite": "SNVSAI1D 6.5 and 7.3.3: VEN(OP) 1.17 V minimum, below which 'the PWM controller is disabled'; out of the pin, IEN(STBY) 3 uA maximum in standby (VEN/UVLO 1.1 V) plus dIHYS(OP) 4.25 uA maximum once EN/UVLO exceeds the operating threshold (VEN/UVLO 1.5 V), 7.25 uA at the threshold from above, -40 to +125 C junction",
+     "node": "A HF_UVLO",
+     "pin": "U15 enable (LM5176 buck-boost controller)",
+     "uA": 7.25
+    },
+    {
+     "cite": "SCES502Q 5.5, -40 to +85 C: II +-0.5 uA (VCC 0 to 3.6 V), Ioff +-0.6 uA (VCC 0); 5.3: VIL 0.9 V at VCC 3 V to 3.6 V, 0.7 V at 2.3 V to 2.7 V, 0.35 x VCC at 1.1 V to 1.95 V",
+     "node": "A HF_EN",
+     "pin": "U38 pin 4, unpowered (Ioff)",
+     "uA": 0.6
+    }
+   ],
+   "legs": [
+    "A R124 10k 1% (nominal) from HF_UVLO to HF_EN",
+    "A R125 15k 1% (HF_UVLO, taken 1.515e+04) to GND"
+   ],
+   "limit": 0.55,
+   "limit_cite": "VEN(STBY) 0.55 V minimum: below it 'the converter is held in a low power shutdown mode' (TI SNVSAI1D 6.5, 7.3.3); VEN(OP) 1.17 V minimum, below which the PWM controller is disabled",
+   "node": "A HF_UVLO",
+   "sink_A": null,
+   "sum_uA": 7.85,
+   "unbounded": [],
+   "v_adverse": 0.11892749999999996,
+   "v_adverse_nodes": {
+    "A HF_EN": 0.1249,
+    "A HF_UVLO": 0.1189
+   },
+   "v_other": -0.11892749999999996,
+   "v_other_nodes": {
+    "A HF_EN": -0.1249,
+    "A HF_UVLO": -0.1189
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "QMX: HF_UVLO at board A's U15 (LM5176), its gate's own supply +3V3_EMCON lost (0 V) with everything else up"
+  },
+  {
+   "driver": "B U503 pin 4, VOL 0.10 V at IOL 0.1 mA: TI SN74LVC1G08, SCES217AA 5.5: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink -3.9 uA of stated current, so the pins no sheet bounds would have to pass 0.104 mA more to leave this row",
+   "floating": false,
+   "id": "4 (a)",
+   "leaks": [
+    {
+     "cite": "SLVSET8A 7.5: VUVLO(F) 1.08 V minimum, 'Whenever the voltage at the EN/UVLO pin falls below a threshold VUVLO(F), the device turns OFF the FET'; IENLKG +-0.1 uA, -40 to +125 C junction",
+     "node": "B RB_UVLO",
+     "pin": "U24 enable (TPS25963x eFuse)",
+     "uA": 0.1
+    }
+   ],
+   "legs": [
+    "B R515 15k 1% (RB_UVLO, taken 1.515e+04) to GND",
+    "B R530 10k 1% (nominal) from RB_UVLO to RB_EN",
+    "B U503 pin 4 drives the node at 0.100 V"
+   ],
+   "limit": 1.08,
+   "limit_cite": "VUVLO(F) 1.08 V minimum: 'the device turns OFF the FET' (TI SLVSET8A 7.5 and 8.3.x); VSD 0.53 V minimum for the lowest shutdown current",
+   "node": "B RB_UVLO",
+   "sink_A": -3.915904416862649e-06,
+   "sum_uA": 0.1,
+   "unbounded": [],
+   "v_adverse": 0.0608409519154691,
+   "v_adverse_nodes": {
+    "B RB_EN": 0.1,
+    "B RB_UVLO": 0.0608
+   },
+   "v_other": 0.05963618047112602,
+   "v_other_nodes": {
+    "B RB_EN": 0.1,
+    "B RB_UVLO": 0.0596
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "RockBLOCK supply: RB_UVLO at board B's U24 (TPS259631), EMCON asserted and its gate powered: the gate drives LOW"
+  },
+  {
+   "floating": false,
+   "id": "4 (b)",
+   "leaks": [
+    {
+     "cite": "SLVSET8A 7.5: VUVLO(F) 1.08 V minimum, 'Whenever the voltage at the EN/UVLO pin falls below a threshold VUVLO(F), the device turns OFF the FET'; IENLKG +-0.1 uA, -40 to +125 C junction",
+     "node": "B RB_UVLO",
+     "pin": "U24 enable (TPS25963x eFuse)",
+     "uA": 0.1
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B RB_EN",
+     "pin": "U503 pin 4, unpowered (Ioff)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B R515 15k 1% (RB_UVLO, taken 1.515e+04) to GND",
+    "B R530 10k 1% (nominal) from RB_UVLO to RB_EN"
+   ],
+   "limit": 1.08,
+   "limit_cite": "VUVLO(F) 1.08 V minimum: 'the device turns OFF the FET' (TI SLVSET8A 7.5 and 8.3.x); VSD 0.53 V minimum for the lowest shutdown current",
+   "node": "B RB_UVLO",
+   "sink_A": null,
+   "sum_uA": 10.1,
+   "unbounded": [],
+   "v_adverse": 0.15301499999999998,
+   "v_adverse_nodes": {
+    "B RB_EN": 0.253,
+    "B RB_UVLO": 0.153
+   },
+   "v_other": -0.15301499999999998,
+   "v_other_nodes": {
+    "B RB_EN": -0.253,
+    "B RB_UVLO": -0.153
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "RockBLOCK supply: RB_UVLO at board B's U24 (TPS259631), its gate's own supply +3V3_DEV lost (0 V) with everything else up"
+  },
+  {
+   "driver": "B U536 pin 4, VOL 0.10 V at IOL 0.1 mA: TI SN74LVC1G08, SCES217AA 5.5: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 8.4 uA of stated current, so the pins no sheet bounds would have to pass 0.0916 mA more to leave this row",
+   "floating": false,
+   "id": "4-en (a)",
+   "leaks": [],
+   "legs": [
+    "B J_RB9704 pin 3: the module's divider 270 k / 430 k behind 10 k (Ground Control, RockBLOCK 9704 hardware page (fetc)",
+    "B R527 10k (RB_IEN, taken 1.05e+04) to GND",
+    "B U536 pin 4 drives the node at 0.100 V"
+   ],
+   "limit": 0.4,
+   "limit_cite": "Logic In LOW 0.4 V maximum (Ground Control, RockBLOCK 9704 hardware page, Signal Thresholds)",
+   "node": "B RB_IEN",
+   "sink_A": 8.420949983743045e-06,
+   "sum_uA": 0.0,
+   "unbounded": [],
+   "v_adverse": 0.10000000842095,
+   "v_adverse_nodes": {
+    "B #inside J_RB9704.3": 0.2794,
+    "B RB_IEN": 0.1
+   },
+   "v_other": 0.10000000842095,
+   "v_other_nodes": {
+    "B #inside J_RB9704.3": 0.2794,
+    "B RB_IEN": 0.1
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "RockBLOCK ENABLE: RB_IEN at J_RB9704 pin 3, EMCON asserted and its gate powered: the gate drives LOW"
+  },
+  {
+   "floating": false,
+   "id": "4-en (b)",
+   "leaks": [
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B RB_IEN",
+     "pin": "U536 pin 4, unpowered (Ioff)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B J_RB9704 pin 3: the module's divider 270 k / 430 k behind 10 k (Ground Control, RockBLOCK 9704 hardware page (fetc)",
+    "B R527 10k (RB_IEN, taken 1.05e+04) to GND"
+   ],
+   "limit": 0.4,
+   "limit_cite": "Logic In LOW 0.4 V maximum (Ground Control, RockBLOCK 9704 hardware page, Signal Thresholds)",
+   "node": "B RB_IEN",
+   "sink_A": null,
+   "sum_uA": 10.0,
+   "unbounded": [],
+   "v_adverse": 0.2825220390954389,
+   "v_adverse_nodes": {
+    "B #inside J_RB9704.3": 0.4516,
+    "B RB_IEN": 0.2825
+   },
+   "v_other": 0.08435415868148717,
+   "v_other_nodes": {
+    "B #inside J_RB9704.3": 0.2647,
+    "B RB_IEN": 0.0844
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "RockBLOCK ENABLE: RB_IEN at J_RB9704 pin 3, its gate's own supply +3V3_DEV lost (0 V) with everything else up"
+  },
+  {
+   "driver": "B U216 pin 4, VOL 0.10 V at IOL 0.02 mA: TI SN74LV1T08, SCLS739F 6.5, -40 to +125 C: VOL 0.1 V at IOL 20 uA (VCC 1.65 V to 5.5 V), 0.2 V at 4 mA and 0.35 V at 8 mA (VCC 4.5 V; the 8 mA row as stream w4b read it); the node asks it to sink 0.0 uA of stated current, so the pins no sheet bounds would have to pass 0.02 mA more to leave this row",
+   "floating": false,
+   "id": "5 (a)",
+   "leaks": [],
+   "legs": [
+    "B U216 pin 4 drives the node at 0.100 V"
+   ],
+   "limit": 1.03,
+   "limit_cite": "VEN_L 1.03 V minimum (Diodes DS41979 Rev. 5-2, Electrical Characteristics)",
+   "node": "B S2A_EN",
+   "sink_A": 0.0,
+   "sum_uA": 0.0,
+   "unbounded": [
+    "B U203 enable: DS41979 Rev. 5-2, Electrical Characteristics, -40 to +85 C: VEN_L 1.03 V minimum; IEN 1 to 2 uA at VEN 1 V and 5.5 uA typical with no maximum at VEN 1"
+   ],
+   "v_adverse": 0.1,
+   "v_adverse_nodes": {
+    "B S2A_EN": 0.1
+   },
+   "v_other": 0.1,
+   "v_other_nodes": {
+    "B S2A_EN": 0.1
+   },
+   "verdict": "PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum)",
+   "want": "LOW",
+   "what": "RM520N-GL supply: S2A_EN at board B's U203 (AP64500), EMCON asserted and its gate powered: the gate drives LOW"
+  },
+  {
+   "driver": "B U116 pin 4, VOL 0.10 V at IOL 0.02 mA: TI SN74LV1T08, SCLS739F 6.5, -40 to +125 C: VOL 0.1 V at IOL 20 uA (VCC 1.65 V to 5.5 V), 0.2 V at 4 mA and 0.35 V at 8 mA (VCC 4.5 V; the 8 mA row as stream w4b read it); the node asks it to sink 0.0 uA of stated current, so the pins no sheet bounds would have to pass 0.02 mA more to leave this row",
+   "floating": false,
+   "id": "6 (a)",
+   "leaks": [],
+   "legs": [
+    "B U116 pin 4 drives the node at 0.100 V"
+   ],
+   "limit": 1.03,
+   "limit_cite": "VEN_L 1.03 V minimum (Diodes DS41979 Rev. 5-2, Electrical Characteristics)",
+   "node": "B S1A_EN",
+   "sink_A": 0.0,
+   "sum_uA": 0.0,
+   "unbounded": [
+    "B U103 enable: DS41979 Rev. 5-2, Electrical Characteristics, -40 to +85 C: VEN_L 1.03 V minimum; IEN 1 to 2 uA at VEN 1 V and 5.5 uA typical with no maximum at VEN 1"
+   ],
+   "v_adverse": 0.1,
+   "v_adverse_nodes": {
+    "B S1A_EN": 0.1
+   },
+   "v_other": 0.1,
+   "v_other_nodes": {
+    "B S1A_EN": 0.1
+   },
+   "verdict": "PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum)",
+   "want": "LOW",
+   "what": "AW7915-AED slot 1 supply: S1A_EN at board B's U103 (AP64500), EMCON asserted and its gate powered: the gate drives LOW"
+  },
+  {
+   "driver": "B U316 pin 4, VOL 0.10 V at IOL 0.02 mA: TI SN74LV1T08, SCLS739F 6.5, -40 to +125 C: VOL 0.1 V at IOL 20 uA (VCC 1.65 V to 5.5 V), 0.2 V at 4 mA and 0.35 V at 8 mA (VCC 4.5 V; the 8 mA row as stream w4b read it); the node asks it to sink 0.0 uA of stated current, so the pins no sheet bounds would have to pass 0.02 mA more to leave this row",
+   "floating": false,
+   "id": "7 (a)",
+   "leaks": [],
+   "legs": [
+    "B U316 pin 4 drives the node at 0.100 V"
+   ],
+   "limit": 1.03,
+   "limit_cite": "VEN_L 1.03 V minimum (Diodes DS41979 Rev. 5-2, Electrical Characteristics)",
+   "node": "B S3A_EN",
+   "sink_A": 0.0,
+   "sum_uA": 0.0,
+   "unbounded": [
+    "B U303 enable: DS41979 Rev. 5-2, Electrical Characteristics, -40 to +85 C: VEN_L 1.03 V minimum; IEN 1 to 2 uA at VEN 1 V and 5.5 uA typical with no maximum at VEN 1"
+   ],
+   "v_adverse": 0.1,
+   "v_adverse_nodes": {
+    "B S3A_EN": 0.1
+   },
+   "v_other": 0.1,
+   "v_other_nodes": {
+    "B S3A_EN": 0.1
+   },
+   "verdict": "PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum)",
+   "want": "LOW",
+   "what": "AW7915-AED slot 3 supply: S3A_EN at board B's U303 (AP64500), EMCON asserted and its gate powered: the gate drives LOW"
+  },
+  {
+   "driver": "B U504 pin 4, VOL 0.10 V at IOL 0.1 mA: TI SN74LVC1G08, SCES217AA 5.5: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink -3.9 uA of stated current, so the pins no sheet bounds would have to pass 0.104 mA more to leave this row",
+   "floating": false,
+   "id": "14 (a)",
+   "leaks": [
+    {
+     "cite": "SLVSDH0C 7.5: VENF 1.08 V minimum, 'A voltage V(EN/UVLO) < V(ENF) on this pin turns off the internal FET' (8.3); IEN/UVLO 0.1 uA maximum, -40 to +105 C",
+     "node": "B E22_UVLO",
+     "pin": "U21 enable (TPS22810 load switch (WSON))",
+     "uA": 0.1
+    }
+   ],
+   "legs": [
+    "B R516 15k 1% (E22_UVLO, taken 1.515e+04) to GND",
+    "B R531 10k 1% (nominal) from E22_UVLO to E22_EN",
+    "B U504 pin 4 drives the node at 0.100 V"
+   ],
+   "limit": 1.08,
+   "limit_cite": "VENF 1.08 V minimum (TI SLVSDH0C 7.5); VSHUTF 0.5 V minimum for low IQ",
+   "node": "B E22_UVLO",
+   "sink_A": -3.915904416862649e-06,
+   "sum_uA": 0.1,
+   "unbounded": [],
+   "v_adverse": 0.0608409519154691,
+   "v_adverse_nodes": {
+    "B E22_EN": 0.1,
+    "B E22_UVLO": 0.0608
+   },
+   "v_other": 0.05963618047112602,
+   "v_other_nodes": {
+    "B E22_EN": 0.1,
+    "B E22_UVLO": 0.0596
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "E22-900M30S supply: E22_UVLO at board B's U21 (TPS22810), EMCON asserted and its gate powered: the gate drives LOW"
+  },
+  {
+   "floating": false,
+   "id": "14 (b)",
+   "leaks": [
+    {
+     "cite": "SLVSDH0C 7.5: VENF 1.08 V minimum, 'A voltage V(EN/UVLO) < V(ENF) on this pin turns off the internal FET' (8.3); IEN/UVLO 0.1 uA maximum, -40 to +105 C",
+     "node": "B E22_UVLO",
+     "pin": "U21 enable (TPS22810 load switch (WSON))",
+     "uA": 0.1
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B E22_EN",
+     "pin": "U504 pin 4, unpowered (Ioff)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B R516 15k 1% (E22_UVLO, taken 1.515e+04) to GND",
+    "B R531 10k 1% (nominal) from E22_UVLO to E22_EN"
+   ],
+   "limit": 1.08,
+   "limit_cite": "VENF 1.08 V minimum (TI SLVSDH0C 7.5); VSHUTF 0.5 V minimum for low IQ",
+   "node": "B E22_UVLO",
+   "sink_A": null,
+   "sum_uA": 10.1,
+   "unbounded": [],
+   "v_adverse": 0.15301499999999998,
+   "v_adverse_nodes": {
+    "B E22_EN": 0.253,
+    "B E22_UVLO": 0.153
+   },
+   "v_other": -0.15301499999999998,
+   "v_other_nodes": {
+    "B E22_EN": -0.253,
+    "B E22_UVLO": -0.153
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "E22-900M30S supply: E22_UVLO at board B's U21 (TPS22810), its gate's own supply +3V3_DEV lost (0 V) with everything else up"
+  },
+  {
+   "driver": "B U505 pin 4, VOL 0.10 V at IOL 0.1 mA: TI SN74LVC1G08, SCES217AA 5.5: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink -9.4 uA of stated current, so the pins no sheet bounds would have to pass 0.109 mA more to leave this row",
+   "floating": false,
+   "id": "15-16 (a)",
+   "leaks": [
+    {
+     "cite": "SLVSDH0C 7.5: VENF 1.08 V minimum, 'A voltage V(EN/UVLO) < V(ENF) on this pin turns off the internal FET' (8.3); IEN/UVLO 0.1 uA maximum, -40 to +105 C",
+     "node": "B E72_EN",
+     "pin": "U22 enable (TPS22810 load switch (WSON))",
+     "uA": 0.1
+    }
+   ],
+   "legs": [
+    "B R517 10k (E72_EN, taken 1.05e+04) to GND",
+    "B U505 pin 4 drives the node at 0.100 V"
+   ],
+   "limit": 1.08,
+   "limit_cite": "VENF 1.08 V minimum (TI SLVSDH0C 7.5); VSHUTF 0.5 V minimum for low IQ",
+   "node": "B E72_EN",
+   "sink_A": -9.42380862630394e-06,
+   "sum_uA": 0.1,
+   "unbounded": [],
+   "v_adverse": 0.09999999057619137,
+   "v_adverse_nodes": {
+    "B E72_EN": 0.1
+   },
+   "v_other": 0.0999999903761914,
+   "v_other_nodes": {
+    "B E72_EN": 0.1
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "both E72 supply: E72_EN at board B's U22 (TPS22810), EMCON asserted and its gate powered: the gate drives LOW"
+  },
+  {
+   "floating": false,
+   "id": "15-16 (b)",
+   "leaks": [
+    {
+     "cite": "SLVSDH0C 7.5: VENF 1.08 V minimum, 'A voltage V(EN/UVLO) < V(ENF) on this pin turns off the internal FET' (8.3); IEN/UVLO 0.1 uA maximum, -40 to +105 C",
+     "node": "B E72_EN",
+     "pin": "U22 enable (TPS22810 load switch (WSON))",
+     "uA": 0.1
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B E72_EN",
+     "pin": "U505 pin 4, unpowered (Ioff)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B R517 10k (E72_EN, taken 1.05e+04) to GND"
+   ],
+   "limit": 1.08,
+   "limit_cite": "VENF 1.08 V minimum (TI SLVSDH0C 7.5); VSHUTF 0.5 V minimum for low IQ",
+   "node": "B E72_EN",
+   "sink_A": null,
+   "sum_uA": 10.1,
+   "unbounded": [],
+   "v_adverse": 0.10605000000000002,
+   "v_adverse_nodes": {
+    "B E72_EN": 0.1061
+   },
+   "v_other": -0.10605000000000002,
+   "v_other_nodes": {
+    "B E72_EN": -0.1061
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "both E72 supply: E72_EN at board B's U22 (TPS22810), its gate's own supply +3V3_DEV lost (0 V) with everything else up"
+  },
+  {
+   "driver": "B U502 pin 4, VOL 0.10 V at IOL 0.1 mA: TI SN74LVC1G08, SCES217AA 5.5: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink -3.9 uA of stated current, so the pins no sheet bounds would have to pass 0.104 mA more to leave this row",
+   "floating": false,
+   "id": "17 (a)",
+   "leaks": [
+    {
+     "cite": "SLVSET8A 7.5: VUVLO(F) 1.08 V minimum, 'Whenever the voltage at the EN/UVLO pin falls below a threshold VUVLO(F), the device turns OFF the FET'; IENLKG +-0.1 uA, -40 to +125 C junction",
+     "node": "B LIME_UVLO",
+     "pin": "U23 enable (TPS25963x eFuse)",
+     "uA": 0.1
+    }
+   ],
+   "legs": [
+    "B R514 15k 1% (LIME_UVLO, taken 1.515e+04) to GND",
+    "B R529 10k 1% (nominal) from LIME_UVLO to LIME_EN",
+    "B U502 pin 4 drives the node at 0.100 V"
+   ],
+   "limit": 1.08,
+   "limit_cite": "VUVLO(F) 1.08 V minimum: 'the device turns OFF the FET' (TI SLVSET8A 7.5 and 8.3.x); VSD 0.53 V minimum for the lowest shutdown current",
+   "node": "B LIME_UVLO",
+   "sink_A": -3.915904416862649e-06,
+   "sum_uA": 0.1,
+   "unbounded": [],
+   "v_adverse": 0.0608409519154691,
+   "v_adverse_nodes": {
+    "B LIME_EN": 0.1,
+    "B LIME_UVLO": 0.0608
+   },
+   "v_other": 0.05963618047112602,
+   "v_other_nodes": {
+    "B LIME_EN": 0.1,
+    "B LIME_UVLO": 0.0596
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "LimeSDR supply: LIME_UVLO at board B's U23 (TPS259631), EMCON asserted and its gate powered: the gate drives LOW"
+  },
+  {
+   "floating": false,
+   "id": "17 (b)",
+   "leaks": [
+    {
+     "cite": "SLVSET8A 7.5: VUVLO(F) 1.08 V minimum, 'Whenever the voltage at the EN/UVLO pin falls below a threshold VUVLO(F), the device turns OFF the FET'; IENLKG +-0.1 uA, -40 to +125 C junction",
+     "node": "B LIME_UVLO",
+     "pin": "U23 enable (TPS25963x eFuse)",
+     "uA": 0.1
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "B LIME_EN",
+     "pin": "U502 pin 4, unpowered (Ioff)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B R514 15k 1% (LIME_UVLO, taken 1.515e+04) to GND",
+    "B R529 10k 1% (nominal) from LIME_UVLO to LIME_EN"
+   ],
+   "limit": 1.08,
+   "limit_cite": "VUVLO(F) 1.08 V minimum: 'the device turns OFF the FET' (TI SLVSET8A 7.5 and 8.3.x); VSD 0.53 V minimum for the lowest shutdown current",
+   "node": "B LIME_UVLO",
+   "sink_A": null,
+   "sum_uA": 10.1,
+   "unbounded": [],
+   "v_adverse": 0.15301499999999998,
+   "v_adverse_nodes": {
+    "B LIME_EN": 0.253,
+    "B LIME_UVLO": 0.153
+   },
+   "v_other": -0.15301499999999998,
+   "v_other_nodes": {
+    "B LIME_EN": -0.253,
+    "B LIME_UVLO": -0.153
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "LimeSDR supply: LIME_UVLO at board B's U23 (TPS259631), its gate's own supply +3V3_DEV lost (0 V) with everything else up"
+  },
+  {
+   "driver": "D U14 pin 4, VOL 0.10 V at IOL 0.1 mA: TECH PUBLIC 74LVC1G08 (LCSC C19829591), page 3, -40 to +125 C: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.6 V at 16 mA and 0.8 V at 24 mA (VCC 3.0 V); the node asks it to sink -0.4 uA of stated current, so the pins no sheet bounds would have to pass 0.1 mA more to leave this row",
+   "floating": false,
+   "id": "2b (a)",
+   "leaks": [
+    {
+     "cite": "SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D PA_KEY",
+     "pin": "U20 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked",
+     "node": "D RLY_DRV",
+     "pin": "Q2 gate (a 25 C figure)",
+     "uA": 0.08
+    }
+   ],
+   "legs": [
+    "D R50 1k (nominal) from PA_KEY to LED_PA_A",
+    "D R52 1k (nominal) from PA_KEY to RLY_DRV",
+    "D R85 10k (PA_KEY, taken 1.05e+04) to GND",
+    "D U14 pin 4 drives the node at 0.100 V",
+    "D R53 100k (RLY_DRV, taken 1.05e+05) to GND"
+   ],
+   "limit": 0.3,
+   "limit_cite": "VEN(LO) 0.3 V maximum (TI SBVS351D 5.5)",
+   "node": "D PA_KEY",
+   "sink_A": -3.8796042659712493e-07,
+   "sum_uA": 10.08,
+   "unbounded": [
+    "D U15 enable: SBVS351D 5.5 Electrical Characteristics (page 6), TJ -40 to +125 C: VEN(LO) 0.3 V maximum, VEN(HI) 1.0 V minimum; IEN 'Enable pin current' 10 nA typic",
+    "D Q2 gate (2N7002 relay coil): JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked"
+   ],
+   "v_adverse": 0.09999999961203958,
+   "v_adverse_nodes": {
+    "D LED_PA_A": 0.1,
+    "D PA_KEY": 0.1,
+    "D RLY_DRV": 0.0991
+   },
+   "v_other": 0.09999997945355112,
+   "v_other_nodes": {
+    "D LED_PA_A": 0.1,
+    "D PA_KEY": 0.1,
+    "D RLY_DRV": 0.099
+   },
+   "verdict": "PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum)",
+   "want": "LOW",
+   "what": "PA gate bias: PA_KEY at board D's U15 (TLV75801P), EMCON asserted and its gate powered: the gate drives LOW"
+  },
+  {
+   "floating": false,
+   "id": "2b (b)",
+   "leaks": [
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D PA_KEY",
+     "pin": "U14 pin 4, unpowered (Ioff)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D PA_KEY",
+     "pin": "U20 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked",
+     "node": "D RLY_DRV",
+     "pin": "Q2 gate (a 25 C figure)",
+     "uA": 0.08
+    }
+   ],
+   "legs": [
+    "D R50 1k (nominal) from PA_KEY to LED_PA_A",
+    "D R52 1k (nominal) from PA_KEY to RLY_DRV",
+    "D R85 10k (PA_KEY, taken 1.05e+04) to GND",
+    "D R53 100k (RLY_DRV, taken 1.05e+05) to GND"
+   ],
+   "limit": 0.3,
+   "limit_cite": "VEN(LO) 0.3 V maximum (TI SBVS351D 5.5)",
+   "node": "D PA_KEY",
+   "sink_A": null,
+   "sum_uA": 20.08,
+   "unbounded": [
+    "D U15 enable: SBVS351D 5.5 Electrical Characteristics (page 6), TJ -40 to +125 C: VEN(LO) 0.3 V maximum, VEN(HI) 1.0 V minimum; IEN 'Enable pin current' 10 nA typic",
+    "D Q2 gate (2N7002 relay coil): JSCJ 2N7002 (LCSC C8545), sheet J,Sep,2016, page 2: IGSS +-80 nA at Ta 25 C only, so it bounds nothing over the envelope; taken here as a 25 C figure and the state marked"
+   ],
+   "v_adverse": 0.1918300429184545,
+   "v_adverse_nodes": {
+    "D LED_PA_A": 0.1918,
+    "D PA_KEY": 0.1918,
+    "D RLY_DRV": 0.1901
+   },
+   "v_other": -0.1918300429184545,
+   "v_other_nodes": {
+    "D LED_PA_A": -0.1918,
+    "D PA_KEY": -0.1918,
+    "D RLY_DRV": -0.1901
+   },
+   "verdict": "UNDECIDED (a pin current is unbounded)",
+   "want": "LOW",
+   "what": "PA gate bias: PA_KEY at board D's U15 (TLV75801P), its gate's own supply +3V3_D8 lost (0 V) with everything else up"
+  },
+  {
+   "driver": "D U12 pin 4, VOL 0.10 V at IOL 0.1 mA: TECH PUBLIC 74LVC1G08 (LCSC C19829591), page 3, -40 to +125 C: VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.6 V at 16 mA and 0.8 V at 24 mA (VCC 3.0 V); the node asks it to sink 21.5 uA of stated current, so the pins no sheet bounds would have to pass 0.0785 mA more to leave this row",
+   "floating": false,
+   "id": "1-key (a)",
+   "leaks": [
+    {
+     "cite": "SCES295AB 5.5: II +-1 uA, Ioff +-10 uA",
+     "node": "D KEY",
+     "pin": "U13 pin 2, an input (II, the reader, powered)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D KEY",
+     "pin": "U14 pin 1, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D KEY",
+     "pin": "U18 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D KEY",
+     "pin": "U19 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "D R49 1k (nominal) from KEY to LED_TX_A",
+    "D R84 10k (KEY, taken 1.05e+04) to GND",
+    "D U12 pin 4 drives the node at 0.100 V"
+   ],
+   "limit": 0.8,
+   "limit_cite": "VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)",
+   "node": "D KEY",
+   "sink_A": 2.14761884308392e-05,
+   "sum_uA": 31.0,
+   "unbounded": [],
+   "v_adverse": 0.10000002147618844,
+   "v_adverse_nodes": {
+    "D KEY": 0.1,
+    "D LED_TX_A": 0.1
+   },
+   "v_other": 0.09999995947619433,
+   "v_other_nodes": {
+    "D KEY": 0.1,
+    "D LED_TX_A": 0.1
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "SA868 keying: KEY at board D's U13 and U14, EMCON asserted and its gate powered: the gate drives LOW"
+  },
+  {
+   "floating": false,
+   "id": "1-key (b)",
+   "leaks": [
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D KEY",
+     "pin": "U12 pin 4, unpowered (Ioff)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES295AB 5.5: II +-1 uA, Ioff +-10 uA",
+     "node": "D KEY",
+     "pin": "U13 pin 2, an input (II, the reader, powered)",
+     "uA": 1.0
+    },
+    {
+     "cite": "SCES217AA 5.5, -40 to +85 C: II +-5 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D KEY",
+     "pin": "U14 pin 1, unpowered (Ioff)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D KEY",
+     "pin": "U18 pin 2, unpowered (Ioff)",
+     "uA": 10.0
+    },
+    {
+     "cite": "SCES519O 5.5, -40 to +85 C: II +-1 uA, Ioff +-10 uA (VCC 0)",
+     "node": "D KEY",
+     "pin": "U19 pin 2, an input (the larger of II and Ioff, powered or not)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "D R49 1k (nominal) from KEY to LED_TX_A",
+    "D R84 10k (KEY, taken 1.05e+04) to GND"
+   ],
+   "limit": 0.8,
+   "limit_cite": "VIL 0.8 V at VCC 3 V to 3.6 V (TI SCES217AA 5.3; TECH PUBLIC 74LVC1G08 page 3 for board D)",
+   "node": "D KEY",
+   "sink_A": null,
+   "sum_uA": 41.0,
+   "unbounded": [],
+   "v_adverse": 0.43049999999999955,
+   "v_adverse_nodes": {
+    "D KEY": 0.4305,
+    "D LED_TX_A": 0.4305
+   },
+   "v_other": -0.43049999999999955,
+   "v_other_nodes": {
+    "D KEY": -0.4305,
+    "D LED_TX_A": -0.4305
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "SA868 keying: KEY at board D's U13 and U14, its gate's own supply +3V3_D8 lost (0 V) with everything else up"
+  },
+  {
+   "floating": false,
+   "id": "1-sup (b)",
+   "leaks": [
+    {
+     "cite": "SLVSDH0C 7.5: VENF 1.08 V minimum, 'A voltage V(EN/UVLO) < V(ENF) on this pin turns off the internal FET' (8.3); IEN/UVLO 0.1 uA maximum, -40 to +105 C",
+     "node": "D TXSUP_EN",
+     "pin": "U21 enable (TPS22810 load switch (WSON))",
+     "uA": 0.1
+    }
+   ],
+   "legs": [
+    "D R90 11k 1% to +3V3_D8, which is down: taken absent",
+    "D R91 10k 1% (TXSUP_EN, taken 1.01e+04) to GND"
+   ],
+   "limit": 1.08,
+   "limit_cite": "VENF 1.08 V minimum (TI SLVSDH0C 7.5); VSHUTF 0.5 V minimum for low IQ",
+   "node": "D TXSUP_EN",
+   "sink_A": null,
+   "sum_uA": 0.1,
+   "unbounded": [],
+   "v_adverse": 0.0010099999999999998,
+   "v_adverse_nodes": {
+    "D TXSUP_EN": 0.001
+   },
+   "v_other": -0.0010099999999999998,
+   "v_other_nodes": {
+    "D TXSUP_EN": -0.001
+   },
+   "verdict": "PASS",
+   "want": "LOW",
+   "what": "board D's +5V_TX switch: TXSUP_EN at U21 (TPS22810) with +3V3_D8 at 0 V: the exciter, the VGG regulator and the relay coil lose their supply with the keying gates"
+  },
+  {
+   "floating": false,
+   "id": "1 (a)",
+   "leaks": [
+    {
+     "cite": "SCES295AB 5.5: II +-1 uA, Ioff +-10 uA",
+     "node": "D SA_PTT_n",
+     "pin": "U13 pin 4, a released open drain (its Ioff row as a stand-in, not a bound)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "D R88 1.2k (taken 1260) to +5V_SA at 4.750 V",
+    "D R89 2k (SA_PTT_n, taken 1900) to GND"
+   ],
+   "limit": null,
+   "limit_cite": "NiceRF states no '1' level for PTT (SA868 Rev 1.3, page 9)",
+   "node": "D SA_PTT_n",
+   "sink_A": null,
+   "sum_uA": 10.0,
+   "unbounded": [
+    "D U13 pin 4: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES295AB 5.5: II +-1 uA, Ioff +-10 uA)",
+    "D U2 pin 5: NiceRF SA868 datasheet Rev 1.3 (2022-8), section 8 Pin definition (page 9): pin 5 PTT 'Module Input, Transmitting/receiving control, \"0\" force the module to enter TX state; and \"1\" to Rx state'; no level, input current or internal pull is stated"
+   ],
+   "v_adverse": 2.8484367088607594,
+   "v_adverse_nodes": {
+    "D SA_PTT_n": 2.8484
+   },
+   "v_other": 2.8635886075949366,
+   "v_other_nodes": {
+    "D SA_PTT_n": 2.8636
+   },
+   "verdict": "UNDECIDED (no stated threshold)",
+   "want": "HIGH",
+   "what": "SA868 PTT: SA_PTT_n at U2 pin 5, EMCON asserted: U13 released, the pin held by R88 and R89 from +5V_SA"
+  },
+  {
+   "driver": "B U113 pin 6, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 1712.8 uA of stated current, so the pins no sheet bounds would have to pass 14.3 mA more to leave this row",
+   "floating": false,
+   "id": "8 (a)",
+   "leaks": [
+    {
+     "cite": "SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V); 6.3: VIL 0.8 V at VCC 3 V to 3.6 V, 0.3 x VCC at 4.5 V to 5.5 V",
+     "node": "B WL_nDIS1",
+     "pin": "U114 pin 6, a released open drain (its Ioff row as a stand-in, not a bound)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B U113 pin 6 drives the node at 0.400 V",
+    "B U30A pin 89: the module's own pull, 3.3 V through 1800 Ohm (Raspberry Pi Compute Module 5 datasheet, release 3, pin tabl)"
+   ],
+   "limit": null,
+   "limit_cite": "the CM5 datasheet states no input-low level for pins 89 and 91 ('if driven low, the ... interface will be disabled', release 3, page 20)",
+   "node": "B WL_nDIS1",
+   "sink_A": 0.0017127768262350967,
+   "sum_uA": 10.0,
+   "unbounded": [
+    "B U114 pin 6: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A i)"
+   ],
+   "v_adverse": 0.4000017127768262,
+   "v_adverse_nodes": {
+    "B WL_nDIS1": 0.4
+   },
+   "v_other": 0.4000016927768374,
+   "v_other_nodes": {
+    "B WL_nDIS1": 0.4
+   },
+   "verdict": "UNDECIDED (no stated threshold)",
+   "want": "LOW",
+   "what": "CM5 slot 1 WL_nDIS at U30A pin 89, EMCON asserted: U113 sinks the module's 1.8 kOhm pull-up"
+  },
+  {
+   "driver": "B U113 pin 4, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 1712.8 uA of stated current, so the pins no sheet bounds would have to pass 14.3 mA more to leave this row",
+   "floating": false,
+   "id": "11 (a)",
+   "leaks": [
+    {
+     "cite": "SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V); 6.3: VIL 0.8 V at VCC 3 V to 3.6 V, 0.3 x VCC at 4.5 V to 5.5 V",
+     "node": "B BT_nDIS1",
+     "pin": "U114 pin 4, a released open drain (its Ioff row as a stand-in, not a bound)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B U113 pin 4 drives the node at 0.400 V",
+    "B U30A pin 91: the module's own pull, 3.3 V through 1800 Ohm (Raspberry Pi Compute Module 5 datasheet, release 3, pin tabl)"
+   ],
+   "limit": null,
+   "limit_cite": "the CM5 datasheet states no input-low level for pins 89 and 91 ('if driven low, the ... interface will be disabled', release 3, page 20)",
+   "node": "B BT_nDIS1",
+   "sink_A": 0.0017127768262350967,
+   "sum_uA": 10.0,
+   "unbounded": [
+    "B U114 pin 4: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A i)"
+   ],
+   "v_adverse": 0.4000017127768262,
+   "v_adverse_nodes": {
+    "B BT_nDIS1": 0.4
+   },
+   "v_other": 0.4000016927768374,
+   "v_other_nodes": {
+    "B BT_nDIS1": 0.4
+   },
+   "verdict": "UNDECIDED (no stated threshold)",
+   "want": "LOW",
+   "what": "CM5 slot 1 BT_nDIS at U30A pin 91, EMCON asserted: U113 sinks the module's 1.8 kOhm pull-up"
+  },
+  {
+   "driver": "B U213 pin 6, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 1712.8 uA of stated current, so the pins no sheet bounds would have to pass 14.3 mA more to leave this row",
+   "floating": false,
+   "id": "9 (a)",
+   "leaks": [
+    {
+     "cite": "SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V); 6.3: VIL 0.8 V at VCC 3 V to 3.6 V, 0.3 x VCC at 4.5 V to 5.5 V",
+     "node": "B WL_nDIS2",
+     "pin": "U214 pin 6, a released open drain (its Ioff row as a stand-in, not a bound)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B U213 pin 6 drives the node at 0.400 V",
+    "B U31A pin 89: the module's own pull, 3.3 V through 1800 Ohm (Raspberry Pi Compute Module 5 datasheet, release 3, pin tabl)"
+   ],
+   "limit": null,
+   "limit_cite": "the CM5 datasheet states no input-low level for pins 89 and 91 ('if driven low, the ... interface will be disabled', release 3, page 20)",
+   "node": "B WL_nDIS2",
+   "sink_A": 0.0017127768262350967,
+   "sum_uA": 10.0,
+   "unbounded": [
+    "B U214 pin 6: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A i)"
+   ],
+   "v_adverse": 0.4000017127768262,
+   "v_adverse_nodes": {
+    "B WL_nDIS2": 0.4
+   },
+   "v_other": 0.4000016927768374,
+   "v_other_nodes": {
+    "B WL_nDIS2": 0.4
+   },
+   "verdict": "UNDECIDED (no stated threshold)",
+   "want": "LOW",
+   "what": "CM5 slot 2 WL_nDIS at U31A pin 89, EMCON asserted: U213 sinks the module's 1.8 kOhm pull-up"
+  },
+  {
+   "driver": "B U213 pin 4, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 1712.8 uA of stated current, so the pins no sheet bounds would have to pass 14.3 mA more to leave this row",
+   "floating": false,
+   "id": "12 (a)",
+   "leaks": [
+    {
+     "cite": "SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V); 6.3: VIL 0.8 V at VCC 3 V to 3.6 V, 0.3 x VCC at 4.5 V to 5.5 V",
+     "node": "B BT_nDIS2",
+     "pin": "U214 pin 4, a released open drain (its Ioff row as a stand-in, not a bound)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B U213 pin 4 drives the node at 0.400 V",
+    "B U31A pin 91: the module's own pull, 3.3 V through 1800 Ohm (Raspberry Pi Compute Module 5 datasheet, release 3, pin tabl)"
+   ],
+   "limit": null,
+   "limit_cite": "the CM5 datasheet states no input-low level for pins 89 and 91 ('if driven low, the ... interface will be disabled', release 3, page 20)",
+   "node": "B BT_nDIS2",
+   "sink_A": 0.0017127768262350967,
+   "sum_uA": 10.0,
+   "unbounded": [
+    "B U214 pin 4: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A i)"
+   ],
+   "v_adverse": 0.4000017127768262,
+   "v_adverse_nodes": {
+    "B BT_nDIS2": 0.4
+   },
+   "v_other": 0.4000016927768374,
+   "v_other_nodes": {
+    "B BT_nDIS2": 0.4
+   },
+   "verdict": "UNDECIDED (no stated threshold)",
+   "want": "LOW",
+   "what": "CM5 slot 2 BT_nDIS at U31A pin 91, EMCON asserted: U213 sinks the module's 1.8 kOhm pull-up"
+  },
+  {
+   "driver": "B U313 pin 6, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 1712.8 uA of stated current, so the pins no sheet bounds would have to pass 14.3 mA more to leave this row",
+   "floating": false,
+   "id": "10 (a)",
+   "leaks": [
+    {
+     "cite": "SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V); 6.3: VIL 0.8 V at VCC 3 V to 3.6 V, 0.3 x VCC at 4.5 V to 5.5 V",
+     "node": "B WL_nDIS3",
+     "pin": "U314 pin 6, a released open drain (its Ioff row as a stand-in, not a bound)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B U313 pin 6 drives the node at 0.400 V",
+    "B U32A pin 89: the module's own pull, 3.3 V through 1800 Ohm (Raspberry Pi Compute Module 5 datasheet, release 3, pin tabl)"
+   ],
+   "limit": null,
+   "limit_cite": "the CM5 datasheet states no input-low level for pins 89 and 91 ('if driven low, the ... interface will be disabled', release 3, page 20)",
+   "node": "B WL_nDIS3",
+   "sink_A": 0.0017127768262350967,
+   "sum_uA": 10.0,
+   "unbounded": [
+    "B U314 pin 6: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A i)"
+   ],
+   "v_adverse": 0.4000017127768262,
+   "v_adverse_nodes": {
+    "B WL_nDIS3": 0.4
+   },
+   "v_other": 0.4000016927768374,
+   "v_other_nodes": {
+    "B WL_nDIS3": 0.4
+   },
+   "verdict": "UNDECIDED (no stated threshold)",
+   "want": "LOW",
+   "what": "CM5 slot 3 WL_nDIS at U32A pin 89, EMCON asserted: U313 sinks the module's 1.8 kOhm pull-up"
+  },
+  {
+   "driver": "B U313 pin 4, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 1712.8 uA of stated current, so the pins no sheet bounds would have to pass 14.3 mA more to leave this row",
+   "floating": false,
+   "id": "13 (a)",
+   "leaks": [
+    {
+     "cite": "SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A inputs, VCC 0 to 5.5 V), Ioff +-10 uA (VCC 0, VI or VO 5.5 V); 6.3: VIL 0.8 V at VCC 3 V to 3.6 V, 0.3 x VCC at 4.5 V to 5.5 V",
+     "node": "B BT_nDIS3",
+     "pin": "U314 pin 4, a released open drain (its Ioff row as a stand-in, not a bound)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "B U313 pin 4 drives the node at 0.400 V",
+    "B U32A pin 91: the module's own pull, 3.3 V through 1800 Ohm (Raspberry Pi Compute Module 5 datasheet, release 3, pin tabl)"
+   ],
+   "limit": null,
+   "limit_cite": "the CM5 datasheet states no input-low level for pins 89 and 91 ('if driven low, the ... interface will be disabled', release 3, page 20)",
+   "node": "B BT_nDIS3",
+   "sink_A": 0.0017127768262350967,
+   "sum_uA": 10.0,
+   "unbounded": [
+    "B U314 pin 4: a powered open-drain output that is released, whose off-state current its sheet states only for VCC 0 V (Ioff 10 uA, SCES307J 6.5, -40 to +85 C and -40 to +125 C: II +-5 uA (A i)"
+   ],
+   "v_adverse": 0.4000017127768262,
+   "v_adverse_nodes": {
+    "B BT_nDIS3": 0.4
+   },
+   "v_other": 0.4000016927768374,
+   "v_other_nodes": {
+    "B BT_nDIS3": 0.4
+   },
+   "verdict": "UNDECIDED (no stated threshold)",
+   "want": "LOW",
+   "what": "CM5 slot 3 BT_nDIS at U32A pin 91, EMCON asserted: U313 sinks the module's 1.8 kOhm pull-up"
+  },
+  {
+   "driver": "B U220 pin 6, VOL 0.40 V at IOL 16 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink 318.9 uA of stated current, so the pins no sheet bounds would have to pass 15.7 mA more to leave this row",
+   "floating": false,
+   "id": "5-off (a1)",
+   "leaks": [
+    {
+     "cite": "TI TPS3808, SBVS050N 6.5 (page 6): IOH 'RESET leakage current' 300 nA maximum at VRESET 6.5 V, RESET not asserted; with its VDD down the pin is rated to 7 V (6.1) and no current is stated",
+     "node": "B 5G_PWROFF_n",
+     "pin": "U221 pin 1",
+     "uA": 0.3
+    }
+   ],
+   "legs": [
+    "B J_M2C2 pin 6: the module's own pull, 0 V through 100000 Ohm (Quectel RM520N series Hardware Design v1.1, 3.5 (FULL_CARD_P)",
+    "B R238 10k (taken 9500) to +3V3_S2A at 3.465 V",
+    "B U220 pin 6 drives the node at 0.400 V"
+   ],
+   "limit": 0.2,
+   "limit_cite": "'driving FULL_CARD_POWER_OFF# pin LOW (<= 0.2 V) or tri-stating the pin will turn off the module' (Quectel RM520N series Hardware Design v1.1, 3.5)",
+   "node": "B 5G_PWROFF_n",
+   "sink_A": 0.0003189315421863117,
+   "sum_uA": 0.3,
+   "unbounded": [
+    "B Q207 drain (2N7002 expander -> FULL_), a switch to ground held off: its off-state current is stated at 25 C only, and it flows out of the node"
+   ],
+   "v_adverse": 0.40000031893154214,
+   "v_adverse_nodes": {
+    "B 5G_PWROFF_n": 0.4
+   },
+   "v_other": 0.40000031833154226,
+   "v_other_nodes": {
+    "B 5G_PWROFF_n": 0.4
+   },
+   "verdict": "FAIL of the bound (the sheet's rows bound the level at 0.40 V; what the part does is not stated)",
+   "want": "LOW",
+   "what": "RM520N-GL FULL_CARD_POWER_OFF# at J_M2C2 pin 6 at the instant EMCON asserts, the socket rail still up: U220 sinks R238"
+  },
+  {
+   "driver": "B U220 pin 6, VOL 0.10 V at IOL 0.1 mA: TI SN74LVC2G06, SCES307J 6.5 (page 6): VOL 0.1 V at IOL 100 uA (VCC 1.65 V to 5.5 V), 0.4 V at 16 mA and 0.55 V at 24 mA (VCC 3 V); the node asks it to sink -0.7 uA of stated current, so the pins no sheet bounds would have to pass 0.101 mA more to leave this row",
+   "floating": false,
+   "id": "5-off (a2)",
+   "leaks": [
+    {
+     "cite": "TI TPS3808, SBVS050N 6.5 (page 6): IOH 'RESET leakage current' 300 nA maximum at VRESET 6.5 V, RESET not asserted; with its VDD down the pin is rated to 7 V (6.1) and no current is stated",
+     "node": "B 5G_PWROFF_n",
+     "pin": "U221 pin 1",
+     "uA": 0.3
+    }
+   ],
+   "legs": [
+    "B J_M2C2 pin 6: the module's own pull, 0 V through 100000 Ohm (Quectel RM520N series Hardware Design v1.1, 3.5 (FULL_CARD_P)",
+    "B R238 10k to +3V3_S2A, which is down: taken absent",
+    "B U220 pin 6 drives the node at 0.100 V"
+   ],
+   "limit": 0.2,
+   "limit_cite": "'driving FULL_CARD_POWER_OFF# pin LOW (<= 0.2 V) or tri-stating the pin will turn off the module' (Quectel RM520N series Hardware Design v1.1, 3.5)",
+   "node": "B 5G_PWROFF_n",
+   "sink_A": -6.99999993e-07,
+   "sum_uA": 0.3,
+   "unbounded": [
+    "B Q207 drain (2N7002 expander -> FULL_), a switch to ground held off: its off-state current is stated at 25 C only, and it flows out of the node"
+   ],
+   "v_adverse": 0.0999999993,
+   "v_adverse_nodes": {
+    "B 5G_PWROFF_n": 0.1
+   },
+   "v_other": 0.09999999870000002,
+   "v_other_nodes": {
+    "B 5G_PWROFF_n": 0.1
+   },
+   "verdict": "PASS on the stated currents; UNDECIDED by the rule (a pin's current has no stated maximum)",
+   "want": "LOW",
+   "what": "RM520N-GL FULL_CARD_POWER_OFF# at J_M2C2 pin 6 with EMCON held, the socket rail removed"
+  },
+  {
+   "floating": false,
+   "id": "lamp (b)",
+   "leaks": [
+    {
+     "cite": "Vishay Si2300DS, document 65701 (S10-0111-Rev. A, 18-Jan-10), page 2: IGSS +-100 nA at VGS +-12 V, under 'TJ = 25 C, unless otherwise noted', so a 25 C figure; VGS(th) 0.6 V to 1.5 V",
+     "node": "C EMCLAMP_G",
+     "pin": "Q7 gate (a 25 C figure)",
+     "uA": 0.1
+    },
+    {
+     "cite": "SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every package but BGA): II +-1 uA (VCC 0 V to 5.5 V, VI 5.5 V or GND), Ioff +-10 uA (VCC 0 V, VI or VO 5.5 V; page 1: 'The Ioff circuitry disables the outputs, preventing damaging current backflow through the device when it is powered down'); 6.1 (page 4): input clamp current IIK -50 mA for VI < 0 only, and the input voltage rated to 6.5 V with no condition on VCC ('Inputs are over-voltage tolerant up to 5.5 V', 8.3.2); Schmitt inputs, VT- 0.84 V minimum and VT+ 1.87 V maximum at VCC 3 V",
+     "node": "C EMCLAMP_Y",
+     "pin": "U14 pin 4, unpowered (Ioff)",
+     "uA": 10.0
+    }
+   ],
+   "legs": [
+    "C R48 100R (nominal) from EMCLAMP_G to EMCLAMP_Y",
+    "C R49 10k (EMCLAMP_G, taken 1.05e+04) to GND"
+   ],
+   "limit": 0.6,
+   "limit_cite": "VGS(th) 0.6 V minimum (Vishay Si2300DS, as board C's part value quotes it; the sheet's own row is a 25 C figure)",
+   "node": "C EMCLAMP_G",
+   "sink_A": null,
+   "sum_uA": 10.1,
+   "unbounded": [
+    "C Q7 gate (Si2300DS-T1-GE3 N-FET (V): Vishay Si2300DS, document 65701 (S10-0111-Rev. A, 18-Jan-10), page 2: IGSS +-100 nA at VGS +-12 V, under 'TJ = 25 C, unless otherwise noted', so a 25 C figure; VGS(th) 0.6 V to 1.5 V"
+   ],
+   "v_adverse": 0.10605000000000123,
+   "v_adverse_nodes": {
+    "C EMCLAMP_G": 0.1061,
+    "C EMCLAMP_Y": 0.1071
+   },
+   "v_other": -0.10605000000000123,
+   "v_other_nodes": {
+    "C EMCLAMP_G": -0.1061,
+    "C EMCLAMP_Y": -0.1071
+   },
+   "verdict": "UNDECIDED (a pin current is unbounded)",
+   "want": "LOW",
+   "what": "the EMCON lamp's gate: EMCLAMP_G at board C's Q7 with U14 unpowered (board C's +3V3 lost, its +5V up): the lamp is dark"
+  }
+ ]
+}
