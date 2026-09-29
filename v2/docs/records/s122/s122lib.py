@@ -1,0 +1,243 @@
+#!/usr/bin/env python3
+"""Stream s122 (S-122, MESHSAT-1357): the parser and the name finder shared by `inventory.py`, `verdicts.py`, the
+document corrections and the closure script.
+
+It reads, and writes nothing:
+  * the committed netlists of the six netlisted boards at the commit it runs in (`tx_inhibit.parse_netlist`), each by
+    its sha256/16;
+  * the documents CFL-016 names, parsed by headings into sections, then into table rows and cells, list items,
+    quotes and paragraphs, then into sentences;
+  * the scope: which sections of each document are CFL-016's (its statement, its notes and the brief of stream s122).
+
+A sentence is inventoried when it names a part reference, a net, a board, a rail, a gate function or a generator
+line (`names()`); the finder is a parser of tokens, never a judge of the sentence."""
+import hashlib, os, re, subprocess, sys
+
+sys.dont_write_bytecode = True
+HERE = os.path.dirname(os.path.abspath(__file__))
+TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_output=True, check=True).stdout.decode().strip()
+sys.path.insert(0, os.path.join(TOP, "v2/ecad/tools"))
+import tx_inhibit as TX  # noqa: E402
+
+NETLISTS = {"A": "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net",
+            "B": "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net",
+            "C": "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net",
+            "D": "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net",
+            "E": "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net",
+            "P": "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net"}
+GENERATORS = {"A": "v2/ecad/tools/gen_sch_a.py", "B": "v2/ecad/tools/gen_sch_b.py", "C": "v2/ecad/tools/gen_sch_c.py",
+              "D": "v2/ecad/tools/gen_sch_d.py", "E": "v2/ecad/tools/gen_sch_e.py", "P": "v2/ecad/tools/gen_sch_p.py"}
+
+# The scope: (document, the sections read). A section is named by the leading number or identifier of its heading
+# ("1", "4b", "M4"); ALL means every section. `rows` narrows a section to the table rows whose first cell starts with
+# one of the given words. Sources: CFL-016's statement and notes (pcb_requirements.yaml) and the brief of stream s122.
+SCOPE = [
+    ("v2/docs/PANEL.md", {"1": None, "2": None, "3": None, "5": None, "6": None, "7": None, "9": None, "10": None}),
+    ("v2/docs/CONOPS.md", {"2a": None, "M2": None, "M4": None,
+                           "4": ("Startup", "Charging", "EMCON", "ZEROIZE", "Service"),
+                           "4a": ("PS-EMCON",), "4b": None, "4b.1": None, "4e": None, "4f": None, "5": None}),
+    ("v2/docs/V2-SPEC.md", "ALL"),
+    ("v2/docs/OPERATING-ENVELOPE.md", {"2": None, "3": None, "4": None}),
+    ("v2/docs/TEST-PLAN.md", "ALL"),
+    ("v2/docs/ASSEMBLY.md", {"2": ("1", "6"), "4": None, "8": None, "9": None}),
+    ("v2/ecad/tools/pcb_decisions.yaml", {"28": None, "40": None}),
+]
+DASHES = ("—", "–")
+
+
+def sha16(rel):
+    return hashlib.sha256(open(os.path.join(TOP, rel), "rb").read()).hexdigest()[:16]
+
+
+def netlists():
+    out = {}
+    for k, rel in NETLISTS.items():
+        nl = TX.parse_netlist(os.path.join(TOP, rel))
+        if nl is None: raise SystemExit("s122lib: no netlist %s" % rel)
+        nl["sha16"] = sha16(rel)
+        nl["path"] = rel
+        out[k] = nl
+    return out
+
+
+# ------------------------------------------------------------------ parsing
+HEAD = re.compile(r"^(#{1,4})\s+(.*)$")
+
+
+def sec_key(title):
+    t = title.strip()
+    m = re.match(r"^(\d+[a-z]?(?:\.\d+)?)[.\s]", t + " ")
+    if m: return m.group(1)
+    m = re.match(r"^(M\d|A\d+)[.\s]", t + " ")
+    if m: return m.group(1)
+    return t
+
+
+def md_blocks(rel):
+    """[(section key, section title, block kind, first line number, text, row key)] for a Markdown file. Table rows
+    are one block per cell (kind 'cell:<n>'), list items and paragraphs one block each."""
+    lines = open(os.path.join(TOP, rel), encoding="utf-8").read().split("\n")
+    out, key, title, para, pstart = [], "head", "head", [], 0
+    stack = []
+
+    def flush():
+        nonlocal para
+        if para:
+            out.append((key, title, "para", pstart, " ".join(x.strip() for x in para), None))
+        para = []
+    for n, l in enumerate(lines, 1):
+        m = HEAD.match(l)
+        if m:
+            flush()
+            lvl, t = len(m.group(1)), m.group(2)
+            k = sec_key(t)
+            stack = [s for s in stack if s[0] < lvl] + [(lvl, k)]
+            key, title = k, t
+            out.append((key, title, "heading", n, t, None))
+            continue
+        s = l.strip()
+        if not s:
+            flush(); continue
+        if s.startswith("|"):
+            flush()
+            if re.match(r"^\|[\s:|-]+\|$", s): continue
+            cells = [c.strip() for c in s.strip("|").split(" | ")]
+            rk = re.sub(r"[`*]", "", cells[0])[:40]
+            for i, c in enumerate(cells):
+                out.append((key, title, "cell:%d" % i, n, c, rk))
+            continue
+        m2 = re.match(r"^([-*]|(\d+)\.)\s+", s)
+        if m2:
+            flush()
+            out.append((key, title, "item", n, s[m2.end():], m2.group(2)))
+            continue
+        if s.startswith(">"):
+            s = s.lstrip("> ").strip()
+            if not para: pstart = n
+            para.append(s); continue
+        if not para: pstart = n
+        para.append(s)
+    flush()
+    return out
+
+
+def yaml_blocks(rel, numbers):
+    import yaml
+    d = yaml.safe_load(open(os.path.join(TOP, rel), encoding="utf-8"))
+    raw = open(os.path.join(TOP, rel), encoding="utf-8").read().split("\n")
+    out = []
+    for x in d["decisions"]:
+        if str(x["n"]) not in numbers: continue
+        ln = next(i for i, l in enumerate(raw, 1) if l.strip() == "- n: %d" % x["n"])
+        for f in ("outcome", "reversed_by"):
+            out.append((str(x["n"]), x.get("title", ""), "field:" + f, ln, str(x.get(f, "")), f))
+    return out
+
+
+ABBR = r"(?<!\be\.g)(?<!\bi\.e)(?<!\bvs)(?<!\bno)(?<!\bNo)(?<!\bFig)(?<!\bpp)(?<!\bapprox)(?<!\bSt)(?<!\bet al)"
+SPLIT = re.compile(ABBR + r"(?<=[.!?:;])\s+(?=(?:\*\*)?[A-Z`\"(\[])")
+
+
+def sentences(text):
+    """Split a block into sentences on '.', '!', '?' and on ';' or ':' before a capital (the documents run clauses
+    together with semicolons); never inside a backtick span."""
+    spans = [(m.start(), m.end()) for m in re.finditer(r"`[^`]*`", text)]
+    out, last = [], 0
+    for m in SPLIT.finditer(text):
+        if any(a < m.start() < b for a, b in spans): continue
+        if text[m.start() - 1] in ";:" : continue           # keep a clause with its sentence
+        if re.search(r"\b\d+\.$", text[last:m.start()]) and re.match(r"\d", text[m.end():m.end() + 1] or ""): continue
+        s = text[last:m.start()].strip()
+        if s: out.append(s)
+        last = m.end()
+    s = text[last:].strip()
+    if s: out.append(s)
+    return out
+
+
+def in_scope(rel, spec, key, kind, rowkey):
+    if spec == "ALL": return True
+    if key not in spec: return False
+    rows = spec[key]
+    if rows is None: return True
+    if kind.startswith("cell:") and rowkey is not None:
+        return any(rowkey.startswith(r) for r in rows)
+    if kind == "item" and rowkey is not None:
+        return rowkey in rows
+    return False
+
+
+# ------------------------------------------------------------------ names
+REF = re.compile(r"(?<![\w{/.-])((?:U|R|C|D|Q|J|L|F|FB|TP|SW|BZ|Y|JP|K|X|LED)\d{1,3}[A-Z]?|J_[A-Z0-9_]+|SW_[A-Z]+|U_LIGHT"
+                 r"|(?:U|Q|R|C)\{s\}\d\d|PIJ2_[AB])(?![\w-])")
+GEN = re.compile(r"(gen_sch_[a-z]\d*\.py|gen_pcb_[a-z]\d*\.py|stackup_write\.py|panel1450\.py)`?(?::(\d+(?:-\d+)?(?:(?:,|,? and) `?:\d+(?:-\d+)?`?)*))?")
+BOARD = re.compile(r"\b(?:board [ABCDEP]\b|boards? [A-E](?: and [A-E])+|A2[0-9]\b|B1[0-9]\b|C[5-8]\b|D[6-9]\b|E[4-7]\b|P[2-9]\b|"
+                   r"PCB-[A-E]\b|[ABCDEP]'s\b|the dock strip|the pack board|the backer)")
+RAIL = re.compile(r"(?<![\w])(\+\d+V\d*(?:_[A-Z0-9]+)*|\+\d+V\d+|VBAT|VSYS|VBUS\d*|SHORE_12V|VIN_RAW)(?![\w])")
+GATE = re.compile(r"\b(AND|NOR|NAND|OR gate|inverter|inverts?|buffer|Schmitt|open[- ]drains?|load switch|eFuse|supervisor|"
+                  r"gate[sd]?|pull[- ]?(?:up|down)s?|pulled (?:low|high|up|down)|interlock|comparator|enable[sd]?)\b")
+
+
+def expand(tok):
+    if "{s}" in tok: return [tok.replace("{s}", str(s)) for s in (1, 2, 3)]
+    return [tok]
+
+
+def all_nets(nls):
+    s = set()
+    for nl in nls.values(): s |= set(nl["nets"])
+    return s
+
+
+NETLIKE = re.compile(r"(?<![\w+/.-])(\+?[A-Z][A-Z0-9]*(?:_[A-Za-z0-9#]+)+|[A-Z][A-Z0-9]{1,}_?[nN]|\+\d+V\d*(?:_[A-Z0-9]+)*)(?![\w])")
+
+
+def names(s, nets):
+    """What a sentence names: refs, nets, boards, rails, gate words and generator citations."""
+    body = s
+    refs = sorted({r for m in REF.finditer(body) for r in expand(m.group(1))})
+    nn = set()
+    for m in re.finditer(r"`([^`]+)`", body):
+        t = m.group(1)
+        for tok in re.split(r"[\s/,()]+", t):
+            tok = tok.strip(".;:")
+            if tok in nets: nn.add(tok)
+            mm = re.match(r"^(.*?)(\d)\.\.(\d)$", tok)
+            if mm:
+                for i in range(int(mm.group(2)), int(mm.group(3)) + 1):
+                    if mm.group(1) + str(i) in nets: nn.add(mm.group(1) + str(i))
+    for m in NETLIKE.finditer(body):
+        if m.group(1) in nets: nn.add(m.group(1))
+    gens = [(m.group(1), m.group(2)) for m in GEN.finditer(body)]
+    boards = sorted({m.group(0) for m in BOARD.finditer(body)})
+    rails = sorted({m.group(1) for m in RAIL.finditer(body)})
+    gates = sorted({m.group(1).lower() for m in GATE.finditer(body)})
+    return {"refs": refs, "nets": sorted(nn), "boards": boards, "rails": rails, "gates": gates, "gens": gens}
+
+
+def inventory(nls=None):
+    """[(id, doc, section, kind, line, sentence, names)] for every in-scope sentence that names something."""
+    nls = nls or netlists()
+    nets = all_nets(nls)
+    inv = []
+    for rel, spec in SCOPE:
+        if rel.endswith(".yaml"):
+            blocks = yaml_blocks(rel, spec)
+            spec2 = "ALL"
+        else:
+            blocks, spec2 = md_blocks(rel), spec
+        cnt = {}
+        for key, title, kind, line, text, rowkey in blocks:
+            if kind == "heading": continue
+            if not in_scope(rel, spec2, key, kind, rowkey): continue
+            for s in sentences(text):
+                nm = names(s, nets)
+                if not any(nm.values()): continue
+                base = "%s#%s:L%d:%s" % (os.path.basename(rel), key, line, kind)
+                cnt[base] = cnt.get(base, 0) + 1
+                inv.append(("%s:s%d" % (base, cnt[base]), rel, key, kind, line, s, nm))
+    return inv
+
+
+def sid_digest(s):
+    return hashlib.sha256(" ".join(s.split()).encode()).hexdigest()[:10]
