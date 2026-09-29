@@ -6,28 +6,33 @@
   "files": {
    "boardorder.py": "298e46edcc028954",
    "boardtable.py": "41bd92e61f12c374",
+   "bypass_search.py": "f6197f4be2ce6859",
+   "decoupling_rules.py": "f4d06f6789c6ec48",
    "edge_length.py": "21d61d18e18e56a8",
+   "fan_select.py": "39fff82524253c05",
    "hardset.py": "be29a44c4a592876",
    "ibis_manifest.py": "ff27099a74e5efe9",
    "ibis_read.py": "1d48c256b6ceca65",
    "impedance_check.py": "e2495a04e16fc600",
-   "intent.py": "f1ac033e0f3c10f1",
-   "intent_checks.py": "1ad7af0c718ba940",
+   "intent.py": "0071fe553548eb5d",
+   "intent_checks.py": "68afac7a314ccf3b",
    "kicad_compat.py": "6b8f77490466e939",
    "netclass.py": "4cc1adf0ddae0390",
    "netlist_board.py": "655bc402d36b0fa5",
    "netlist_parts.py": "41cf192223d822c2",
+   "netlist_sexp.py": "d1e3cf416e4f028d",
    "phase_artefacts.py": "96642ce767188c73",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
    "rules_lib.py": "a6e2421096c1473f",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
+   "stackup_read.py": "65184b960e6f0c6e",
    "stackup_write.py": "b55a3c0f58c805c2",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "4011f598a4f49255",
+  "sha16": "42e90afa9033a241",
   "unresolved": []
  },
  "counts": {
@@ -252,7 +257,7 @@
   "rule_fingerprints": {
    "SI-001": "e67c393563c5d8ce"
   },
-  "rule_set_fingerprint": "635ff031f210f48c"
+  "rule_set_fingerprint": "a9b1e7f7412f9c0c"
  },
  "rules": [
   "SI-001"
@@ -262,12 +267,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "cef7cb77c420",
-  "tools_tree_sha": "8639c5ed4c65deea"
+  "git_head": "36ac4bef1ade",
+  "tools_tree_sha": "fedf14205ed9e57d"
  },
- "ts": "2026-09-28T22:45:42Z",
+ "ts": "2026-09-29T00:02:38Z",
  "verdict": "INCONCLUSIVE",
- "version": "cef7cb77c420",
+ "version": "36ac4bef1ade",
  "writer": {
   "file": "edge_length.py",
   "sha16": "21d61d18e18e56a8"
