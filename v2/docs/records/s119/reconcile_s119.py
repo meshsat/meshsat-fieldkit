@@ -323,6 +323,21 @@ def main():
                     return "0.80 or lower (the search's floor; margin at least %.4f, about %.1f W at %.1f W in)" % (carried - x, (carried - x) * p_in, p_in)
                 return "%.4f (margin %.4f, about %.1f W at %.1f W in)" % (x, carried - x, (carried - x) * p_in, p_in)
             P("   4S%dP, %s: U3 down to %s; U3B down to %s" % (n, k, lab(lims[0], u3_row["eta"], 126.3), lab(lims[1], TP.v("eta_u3b"), pk_b)))
+    for n in (14, 15):
+        need = []
+        for k in "BC":
+            lo, hi = 3.0, 6.35
+            if not TP.verdict(run(n, rat[k][1], hi)):
+                need.append("not met even at 6.35 A")
+                continue
+            for _ in range(40):
+                mid = 0.5 * (lo + hi)
+                if TP.verdict(run(n, rat[k][1], mid)):
+                    hi = mid
+                else:
+                    lo = mid
+            need.append("%.2f A (%.1f W)" % (hi, hi * TP.V_BUS20))
+        P("   4S%dP: the least current into U3 at VBUS20's 20.7 V (a limit held at its minimum) that still meets M1: B %s, C %s" % (n, need[0], need[1]))
     P("")
 
     # 6. the planes of the deployment rule
