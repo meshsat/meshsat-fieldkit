@@ -276,7 +276,7 @@ baseline_reviews:
   - "v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md@7831358b96b6f5ca"
 sources_read_at: 08f3665a
 needs_document: "v2/docs/CONOPS.md"
-needs_document_sha256: 3c5d49078ba6dbfd36e914375e8c6d66305d552009462a935c4449f6adb69bf5
+needs_document_sha256: 6cb7b241cb84d7290caffa74df2622c64222dd66a2de66693e480e3a18e44281
 companion_documents: []
 
 # The needs of CONOPS section 2, quoted. The validator compares each statement with the needs table of the
@@ -3429,7 +3429,18 @@ open_items:
       to within 0.5 V; no surge level is ruled (D-16), so nothing fails, and the coordination of board E's hot swap
       (stops above 40 V) with the four SMCJ40 parts between the receptacle and U2 is the qualified power review's to
       compute. Notes A-N1 and E-N2 of the review of decision 31 (stream d8dec31, 28 September 2026), sections 4.3 and
-      6.3.
+      6.3. S-120's residual (stream s120, v2/docs/records/s120/vbus20_bound.out section 11): a U2 or Q2 failure, which a
+      surge past U2's 60 V could cause, passes VIN_RAW onto VBUS20 less a body diode's drop (35.2 V at 36 V in and 41.7
+      V at the lockout's maximum, the drop INFERRED). On the way the bus passes the charger's ACOV (26.0 to 27.7 V, 100
+      us deglitch, SLUSE66A page 14) while the charger still switches, and Q7 then holds the bus plus Q8's body diode,
+      28.7 V or more before any ringing, so no order is claimed for that phase; once ACOV has stopped the charger, U3's
+      VBUS, ACP and ACN (32 V absolute, page 8) pass their rating before Q7 reaches 30 V while the pack is above about
+      1.2 V, since Q10's body diode then holds SW1 near VBAT. With R6 open or FB shorted the stage runs the bus up with
+      nothing on board A to stop it, since the LM5176's over-voltage protection reads the same FB pin, and the same
+      switching phase leaves the FETs possibly first. Board A has no clamp on VBUS20. Options to weigh: an independent
+      over-voltage trip on VBUS20 (U34's channel 1 re-armed while the stage runs) for the FB faults, and an SMCJ22A on
+      VBUS20 (22 V standoff over the 20.96 V band), which holds a Q2 short at about 28 V at board E's 6.15 A hot-swap
+      limit (INFERRED) until the LM5069's timer opens.
   - id: S-112
     class: SESSION
     status: OPEN
@@ -3533,17 +3544,44 @@ open_items:
       the exciter keys. Figures: v2/docs/records/s99a/codec_floor.out (codec_floor.py). Closed by the owners'
       declarations and those readings giving the codec at least 4.35 V at the declared peak, or by a document or a board
       D declaration that bounds the peak the codec must operate through.
-  - id: S-120
+  - id: S-124
     class: SESSION
     status: OPEN
     title: >-
-      (the independent re-check of stream s117, minor n1; integration set 12) Decision 57 moves board A's charger switching
-      FETs Q7 to Q10 from the 40 V CSD18510Q5B to the 30 V CSD17578Q5A (Q7) and CSD17577Q5A (Q8 to Q10). They sit on the
-      charger's input bus VBUS20, which the front end U2 (LM5176) holds at about 20.7 V, and on the pack side; no open item
-      bounds the bus's worst case (a front-end fault, a load dump through the front end, a transient) against the FETs' new
-      30 V rating and the BQ25731's own input limit (TI SLUSE66A, absolute maximum ratings). Closed when that worst case is
-      bounded from the front end's own protection or a clamp on VBUS20, with its figures and pages, or the FETs' rating is
-      restated with the reason.
+      (stream s120, S-120's switch nodes; the independent re-check of stream s117, minor n1, and the checks of stream
+      s120) Board A's charger switch nodes against the 30 V FETs of decision 57 (Q7 CSD17578Q5A, Q8 to Q10 CSD17577Q5A;
+      VDS 30 V absolute, TI SLPS526 and SLPS516 page 1) and the BQ25731's own pins (VBUS, ACP, ACN, SW1 and SW2 32 V
+      absolute; ACP less ACN 0.5 V absolute; SW1 and SW2 26 V recommended, and no lower than -2 V, or -4 V for at most
+      25 ns, below PGND; SLUSE66A 8.1 and 8.3, printed page 8). S-120 holds the bus VBUS20 at 20.96 V in steady service
+      and bounds it at 23.40 V, a bound INFERRED from the LM5176's output over-voltage threshold, which TI gives as a
+      typical 10 percent over VREF only (SNVSAI1D 6.5 page 8), with L1's energy for a first on-time of a period as a
+      MODEL term (23.20 V in the steady current-limit cycle): 30 V is reached only if the trip sits 36.7 percent over
+      VREF for Q7 or 41.5 percent for Q8 (v2/docs/records/s120/vbus20_bound.out sections 3 and 8). Q7 holds the bus plus
+      Q8's body diode in every dead time (VSD 1.0 V maximum, SLPS516 page 3), and SW1 then sits at minus that VSD. The
+      ringing on top is not bounded at desk: no layout exists and no TI note giving a layout-independent bound is held.
+      TI prefers 30 V FETs for a 19 to 20 V input (SLUSE66A 10.2.2.6, page 86) in the topology board A draws, the input
+      loop running through R16 with only C190 10 nF and C191 1 nF after it (page 86, Figure 10-3 page 85); board A's
+      band tops out 0.96 V above TI's 20 V, and board A as generated draws no capacitor from CH_ACN_F or CH_ACP_F to GND
+      (Figure 10-3's CACP and CACN, 33 nF), so U3's ACN pin sees CH_ACN's ring through R146 and C121 alone. Budget over
+      the steady bus: 8.04 V for Q7, 9.04 V for Q8, 5.04 V to SW1's recommended 26 V, and 3.0 V from SW1's minus VSD to
+      U3's -4 V; over the bound 5.60 V for Q7 and 6.60 V for Q8. A model for the layout writer (vbus20_bound.out section
+      10, not a bound, typical driver figures): Q7's turn-off current falls in about 1.6 ns, so at Option A(i)'s bound
+      (L2 peak 15.71 A) each nH of the loop C190 and C191, Q7, Q8 adds about 9.8 V to Q7, whose budget allows about 0.82
+      nH, and each nH between Q8's source and U3's PGND takes SW1 as much further below minus VSD, which the -4 V limit
+      allows for about 0.31 nH, the tightest figure of the model; Q7's turn-on rises in about 3.3 ns from the valley
+      current into Q8's reverse recovery, whose charge TI states only at 300 A/us. Owner: board A's layout writer
+      (S-115's pass, where a routed-board reading of the loops' inductance is recorded as the layout step and does not
+      close this item) and the bench. Closed only on the prototype: CH_SW1, CH_ACN, CH_SW2 and U3's VBUS pin read
+      against U3's PGND at the charger's largest current; Q7's VDS taken from CH_ACN to CH_SW1 (CH_ACN's peak less
+      CH_SW1's lowest, which already holds Q8's body diode) and Q8's from CH_SW1's peak; each overshoot of CH_SW1,
+      CH_ACN and U3's VBUS pin over the measured bus added to 20.96 V for steady service and to 23.40 V for the
+      over-voltage excursion; CH_SW2's overshoot over the measured VBAT added to 20.0 V (the charger's cutoff SYSOVP,
+      SLUSE66A page 14), with Q9's VDS taken from CH_SW2's peak and Q10's from VBAT less CH_SW2's lowest on that basis;
+      ACP less ACN read across U3's pins; each FET's VDS then inside 30 V, U3's VBUS, ACP, ACN, SW1 and SW2 inside 32 V,
+      ACP less ACN inside 0.5 V, and CH_SW1 and CH_SW2 no lower than -2 V, or -4 V for at most 25 ns (SLUSE66A page 8);
+      and the front end's OVP trip read on the prototype (FB driven through R6 and R7), which replaces the INFERRED
+      23.06 V and with it the 23.40 V reference. A snubber, a gate-drive change or FETs of a higher voltage, drawn and
+      read back on the regenerated netlist, are measured the same way.
   - id: S-122
     class: SESSION
     status: OPEN
@@ -3558,11 +3596,18 @@ open_items:
       of LIME_HW_EN). Owner: the document writer. Closed when every statement of those documents about the EMCON line
       and the parts it gates is re-derived from the committed netlists of the set that carries them by a script that
       asserts each part it names, and a filed independent check states in its own words which documents and lines it
-      read; CFL-016 is then re-read.
-      Added at integration set 13 (v2/docs/records/int14/checks/check-int14-1.md, blocking B1): PANEL.md section 3's pin
-      map rows for GPIO 2 to 5 name EPD_SCL, EPD_SDA, EPD_DC and EPD_CS, where board C's netlist since set 13 puts U3's
-      pins on EPD_SCL_R, EPD_SDA_R, EPD_DC_R and EPD_CS_R through R53 to R56. S-122 closes only when these rows, like
-      the EMCON statements, are re-derived from the committed netlists of the set that carries it.
+      read; CFL-016 is then re-read. Added at integration set 13 (v2/docs/records/int14/checks/check-int14-1.md,
+      blocking B1): PANEL.md section 3's pin map rows for GPIO 2 to 5 name EPD_SCL, EPD_SDA, EPD_DC and EPD_CS, where
+      board C's netlist since set 13 puts U3's pins on EPD_SCL_R, EPD_SDA_R, EPD_DC_R and EPD_CS_R through R53 to R56.
+      S-122 closes only when these rows, like the EMCON statements, are re-derived from the committed netlists of the
+      set that carries it. Correction (v2/docs/records/int13/checks/check-int13-4.md, minors n3 and n4; appended by
+      stream s122): in the words of check-int13-3, PANEL.md line 63 stays true with an incomplete parts list (R52 and
+      D23 not named) and line 155 describes the generated circuit under a stale candidate citation, so of the passages
+      above those two are incomplete or carry a stale citation, while PANEL.md line 156, V2-SPEC.md line 76 and
+      CONOPS.md line 883 describe replaced circuits; and the re-derivation this item asks for covers every subject of
+      CFL-016's statement and notes, not only the EMCON line and the parts it gates: the startup enables, ZEROIZE, the
+      Charging and Service rows, the outlets' tie to the PA, PANEL.md section 7's bus table and the outcomes of
+      decisions 28 and 40.
   - id: S-123
     class: SESSION
     status: OPEN
@@ -4341,6 +4386,46 @@ closed_items:
       11) and with which it reads 0.802 by TI's method; with that figure the adverse case of both lid options reads NOT
       MET even with U3 as drawn (v2/docs/records/s119/reconcile_s119.out section 4). Owner: Option A(i)'s electrical
       writer. Closed when U3B's draft carries FETs its REGN can drive and the energy chain carries their figure.
+  - id: S-120
+    closed_by: commit 853beff637b0cd87d30ddab8dfead3e6057d4f23
+    closing_evidence: >-
+      Stream s120 (v2/docs/records/s120/README.md, vbus20_bound.py and its .out, merged at
+      853beff637b0cd87d30ddab8dfead3e6057d4f23; third issue after the checks of stream s120): the committed netlists of
+      boards A (sha256/16 6c40250c47195ebb) and E (2ed95a0e8069ebf8) parsed, 20 of 20 circuit facts holding, among them
+      VBUS20's whole membership (39 pins, no clamp) and U3's OTG/VAP/FRS pin on GND, so the charger cannot drive the
+      bus. The front end U2 (LM5176) regulates VBUS20 at 19.08 to 20.96 V (VREF 0.788 to 0.812 V, TI SNVSAI1D 6.5 page
+      6; R6 240k over R7 10k at 1 percent, 100 ppm/K over 65 K INFERRED; IBIAS(FB) 25 nA). Its output over-voltage
+      protection turns the gate drives off above VREF plus 10 percent, a TYPICAL figure with no limits (6.5 page 8;
+      7.3.11 page 18), read on the same divider, so the bound is INFERRED: 23.06 V at VREF's maximum and the worst
+      ratio; 23.20 V with L1's energy in the steady current-limit cycle (buck mode at 60 V, 29.51 A, page 7); 23.40 V
+      with the energy of a first on-time of a period after a valley crossing, the buck high side being turned off only
+      by the clock (7.3.1 page 14, 7.3.5 page 16; 45.76 A, a MODEL term), which is the bound. 30 V is reached only if
+      the trip sits 36.7 percent over VREF for Q7 or 41.5 percent for Q8, against the typical 10; the bench reading of
+      the trip is carried by S-124. The bound holds whatever the load, the line or the loop does while U2 is inside its
+      ratings: a load dump when the charger stops at 8.0 A reads 22.24 V on the front end's loop model and a line step
+      to U2's 60 V 21.21 V (both MODEL); the charger's own inductor returns to VBAT, not to the bus; an idle stage
+      blocks VIN_RAW (Q2's body diode); board E delivers 9 to 36 V with the LM5069's lockout at 37.8 to 42.5 V and
+      SMCJ40A class clamps at 64.5 V (S-111 owns U2 against them). Margins at the INFERRED bound, before ringing: Q8
+      6.60 V and Q7 5.60 V to their 30 V (SLPS526 and SLPS516 page 1; Q7 carries Q8's body diode, VSD 1.0 V maximum,
+      SLPS516 page 3); 8.60 V to the BQ25731's absolute 32 V on VBUS, ACP, ACN and SW1, and 2.60 V to its recommended 26
+      V and to ACOV's 26.0 V minimum (SLUSE66A 8.1 and 8.3 page 8, 8.5 page 14); BTST1 at the bound plus REGN's 6.3 V
+      sits 2.30 V under its recommended 32 V and 8.30 V under its absolute 38 V. The pack side, SW2 with it, stays at or
+      under 20.0 V by SYSOVP (page 14) and 24.27 V by D1 (SMCJ18A, INFERRED straight line) if the pack opens while
+      charging: Q9 and Q10 5.73 V under 30 V, SW2 7.73 V under 32 V. No clamp or setting is added and the FETs' rating
+      stands (decision 57). The switch nodes' ringing and SW1's undershoot against U3's -2 V and -4 V (25 ns) are not
+      bounded at desk and are carried by S-124, which closes only on the prototype. The single faults that blind or
+      bypass the protection are outside every requirement (ASM-001, SC-39) and noted on S-111: for a Q2 short no order
+      is claimed while the charger still switches through ACOV's deglitch (Q7 at 28.7 V or more before ringing), and
+      once ACOV has stopped it U3 passes its own 32 V before Q7 reaches 30 V while the pack is above about 1.2 V; for R6
+      open or FB shorted no order is claimed. AI desk work on the makers' figures, nothing built or measured.
+    title: >-
+      (the independent re-check of stream s117, minor n1; integration set 12) Decision 57 moves board A's charger switching
+      FETs Q7 to Q10 from the 40 V CSD18510Q5B to the 30 V CSD17578Q5A (Q7) and CSD17577Q5A (Q8 to Q10). They sit on the
+      charger's input bus VBUS20, which the front end U2 (LM5176) holds at about 20.7 V, and on the pack side; no open item
+      bounds the bus's worst case (a front-end fault, a load dump through the front end, a transient) against the FETs' new
+      30 V rating and the BQ25731's own input limit (TI SLUSE66A, absolute maximum ratings). Closed when that worst case is
+      bounded from the front end's own protection or a clamp on VBUS20, with its figures and pages, or the FETs' rating is
+      restated with the reason.
 records:
   - id: REQ-001
     kind: requirement
@@ -4986,10 +5071,42 @@ records:
           before the text was written; the diff touches only old lines 315 to 315; 399 to 406; 410 to 411; 413 to 418,
           all after the needs table. This record reads section 2a's list of critical peripherals, which the diff does
           not touch; rebound to 3c5d49078ba6dbfd. No result changes.
+      - >-
+          v2/docs/CONOPS.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, 3c5d49078ba6dbfd to 6cb7b241cb84d729; MESHSAT-1357, open item S-122): the diff, read by
+          v2/docs/records/s122/apply_registry_s122.py, changes lines 315, 399, 400, 401, 402, 403, 404, 405, 406, 410,
+          411, 412, 413, 414, 415, 416, 417, 418 (sections 4; 4b); of the 21 sentences the diff removes,
+          verdicts-base.out holds 2 STALE, 14 TRUE, 4 NOT DERIVABLE, 1 outside the inventory; of the 18 it adds,
+          verdicts.out holds 5 TRUE, 11 BASELINE, 2 NOT DERIVABLE (the verdicts of v2/docs/records/s122,
+          verdicts-base.out on the base's documents and verdicts.out on these, both on the committed netlists of set 13;
+          the restoring script asserted the file equal to c5430071's byte for byte); of the places this record's
+          evidence names in this document, section 4, section 4b, line 411, line 412 are among the changed ones; the
+          changed sentences name 100 parts and nets, and this record's own text names 2 of them (U35, U38). The file is
+          restored to its baseline text at c5430071 under the reopening rule (the baseline entry of CFL-016 that this
+          script appends), so the diff withdraws set 12's circuit edits a46db71b and 7a9f7b5b; their text is kept in
+          v2/docs/feasibility/EMCON.md section 0a.1. This entry does not re-read the rest of this record's argument;
+          rebound to 6cb7b241cb84d729. This entry changes no result.
+      - >-
+          v2/docs/V2-SPEC.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, e1fdcebe8638e471 to 1e1547e1462904f7; MESHSAT-1357, open item S-122): the diff, read by
+          v2/docs/records/s122/apply_registry_s122.py, changes lines 3, 24, 30, 35, 73, 76, 81, 82, 245, 268, 269, 270,
+          271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292,
+          293, 294 (sections Power; Thermal and environment; Corrections, 27 September 2026; Corrections, 29 September
+          2026; Open items (the generators have run; these remain owed); Compute, storage, expansion (B16, about 330 x
+          200 mm; the distributed fabric of 32.52); MeshSat field kit V2, approved specification (state of 7 Sep 2026,
+          design record sections 32.40 to 32.61); Boards of this generation (as generated on 7 September 2026; the
+          owner's layer rulings of 25 September 2026 are noted in the rows, correction 11)); of the 9 sentences the diff
+          removes, verdicts-base.out holds 6 STALE, 1 TRUE, 2 outside the inventory; of the 21 it adds, verdicts.out
+          holds 14 TRUE, 3 NOT DERIVABLE, 4 outside the inventory (the verdicts of v2/docs/records/s122,
+          verdicts-base.out on the base's documents and verdicts.out on these, both on the committed netlists of set 13;
+          the correcting scripts asserted every part their new text names before they wrote); of the places this
+          record's evidence names in this document, line 24, line 3, line 73, line 76 are among the changed ones; the
+          changed sentences name 17 parts and nets, and this record's own text names 1 of them (D22). This entry does
+          not re-read the rest of this record's argument; rebound to 1e1547e1462904f7. This entry changes no result.
     evidence_bound_to:
-      - "v2/docs/CONOPS.md@3c5d49078ba6dbfd"
+      - "v2/docs/CONOPS.md@6cb7b241cb84d729"
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
-      - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
+      - "v2/docs/V2-SPEC.md@1e1547e1462904f7"
     release_effect: BLOCKER
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md:17"
@@ -6227,9 +6344,21 @@ records:
           touches were computed from the generator's changed lines and both netlists (159 parts and nets). The change
           touches no bank adoption line, voted select or output enable of the I/O high-availability fabric; which
           neighbour adopts each bank is as it was; rebound. No result changes.
+      - >-
+          v2/docs/PANEL.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, 4647782f5aca7c13 to b396d028b41e880d; MESHSAT-1357, open item S-122): the diff, read by
+          v2/docs/records/s122/apply_registry_s122.py, changes lines 63, 89, 90, 98, 155, 156, 166, 180 (sections 1; 3;
+          6; 7); of the 12 sentences the diff removes, verdicts-base.out holds 10 STALE, 2 outside the inventory; of the
+          13 it adds, verdicts.out holds 13 TRUE (the verdicts of v2/docs/records/s122, verdicts-base.out on the base's
+          documents and verdicts.out on these, both on the committed netlists of set 13; the correcting scripts asserted
+          every part their new text names before they wrote); of the places this record's evidence names in this
+          document, section 1, section 3, section 6, section 7 are among the changed ones; the changed sentences name 85
+          parts and nets, and this record's own text names 21 of them (+3V3_DEV, C7, D22, D8, EMCON_HW, R102, RB_IEN,
+          RB_SW_IEN, TX_INHIBIT_n, U115, U116, U215, U216, U22, U315). This entry does not re-read the rest of this
+          record's argument; rebound to b396d028b41e880d. This entry changes no result.
     evidence_bound_to:
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
-      - "v2/docs/PANEL.md@4647782f5aca7c13"
+      - "v2/docs/PANEL.md@b396d028b41e880d"
       - "v2/ecad/tools/gen_sch_b.py@3698cc04d8eaf75b"
     release_effect: ADVISORY
     source:
@@ -6598,8 +6727,23 @@ records:
           lines) was compared with main's netlist 87b69472ac83ca5a by parsed components and net node sets; changed parts
           R53, R54, R55, R56; changed nets EPD_CS, EPD_CS_R, EPD_DC, EPD_DC_R, EPD_SCL, EPD_SCL_R, EPD_SDA, EPD_SDA_R.
           None of the parts or nets this record names changed; rebound to c9f7394594201045. No result changes.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py,
+          apply_docs_s122_r2.py and apply_docs_s122_r3.py, e919e9b2c633deef to c8eb306265110076; MESHSAT-1357, open item
+          S-122): the diff, read by v2/docs/records/s122/apply_registry_s122.py, changes lines 212, 213, 214, 215, 216,
+          217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238,
+          239, 240, 241, 242, 243, 244, 245, 246 (sections 0a.1); of the 0 sentences the diff removes, verdicts-base.out
+          holds none; of the 40 it adds, verdicts.out holds 17 TRUE, 4 NOT DERIVABLE, 19 outside the inventory (the
+          verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on
+          the committed netlists of set 13; the correcting scripts asserted every part their new text names before they
+          wrote); none of the places this record's evidence names in this document (section 0, section 0a, section 2,
+          section 3, section 4.4, section 4a, section 4b, section 4c, section 4d.6, section 5a, section 7, section 8) is
+          among the changed ones; the changed sentences name 88 parts and nets, and this record's own text names 16 of
+          them (+3V3_EMCON, D23, EMCON_HW, KEY, PA_EN, R52, RB_IEN, RB_SW_IEN, SW_EMCON, TX_INHIBIT_n, U14, U35, U38,
+          U501, U504). This entry does not re-read the rest of this record's argument; rebound to c8eb306265110076. This
+          entry changes no result.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
+      - "v2/docs/feasibility/EMCON.md@c8eb306265110076"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@c9f7394594201045"
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/PANEL.md:135", "v2/docs/PANEL.md:189"]
@@ -6835,7 +6979,7 @@ records:
       decisions: [31, 34]
     rule_coverage: PARTIAL
     rulings: [D-16]
-    waits_on: [S-106, S-107, S-111, S-120]
+    waits_on: [S-106, S-107, S-111, S-124]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
@@ -8305,10 +8449,21 @@ records:
           board A's change at set 12 is stream s117's (decisions 56 and 57: R219, C233 to C235 and R220 added on IADPT
           and the compensation networks; C26, C27, L2, Q7 to Q10 and R25 changed). The parsed comparison and the reason
           in that entry stand (v2/docs/records/int13/apply_check13_fixes.py).
+      - >-
+          v2/docs/TEST-PLAN.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py
+          and apply_docs_s122_r3.py, ae57da0b57e214f7 to 42a3dff33442c860; MESHSAT-1357, open item S-122): the diff,
+          read by v2/docs/records/s122/apply_registry_s122.py, changes lines 146, 173 (sections 6; 7); of the 2
+          sentences the diff removes, verdicts-base.out holds 2 STALE; of the 2 it adds, verdicts.out holds 2 TRUE (the
+          verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on
+          the committed netlists of set 13; the correcting scripts asserted every part their new text names before they
+          wrote); of the places this record's evidence names in this document, section 6, section 7 are among the
+          changed ones; the changed sentences name 0 parts and nets, and this record's own text names none of them. This
+          entry does not re-read the rest of this record's argument; rebound to 42a3dff33442c860. This entry changes no
+          result.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_a.py@6a136feec6c9cf4e"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
-      - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
+      - "v2/docs/TEST-PLAN.md@42a3dff33442c860"
     release_effect: MUST_JUSTIFY
     source: ["owner ruling D-17", "v2/ecad/tools/gen_sch_a.py:1104-1114", "v2/ecad/tools/pcb_decisions.yaml:256-429 (decision 31)"]
     source_check: VERIFIED
@@ -8841,8 +8996,23 @@ records:
           remedy set this requirement's reading waits on; FEA-002's layout-entry stage stays open (EMCON.md 4d: rows 3
           and 4 open on desk items, every other row needs hardware), so the reading stays as it was; rebound to
           3ef9b8c49a01b728. No result changes.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py,
+          apply_docs_s122_r2.py and apply_docs_s122_r3.py, e919e9b2c633deef to c8eb306265110076; MESHSAT-1357, open item
+          S-122): the diff, read by v2/docs/records/s122/apply_registry_s122.py, changes lines 212, 213, 214, 215, 216,
+          217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238,
+          239, 240, 241, 242, 243, 244, 245, 246 (sections 0a.1); of the 0 sentences the diff removes, verdicts-base.out
+          holds none; of the 40 it adds, verdicts.out holds 17 TRUE, 4 NOT DERIVABLE, 19 outside the inventory (the
+          verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on
+          the committed netlists of set 13; the correcting scripts asserted every part their new text names before they
+          wrote); none of the places this record's evidence names in this document (section 0, section 0a, section 2,
+          section 3, section 4.4, section 4.5, section 4a, section 4b, section 4c, section 4d.6, section 5a, section 7,
+          section 8) is among the changed ones; the changed sentences name 88 parts and nets, and this record's own text
+          names 45 of them (+3V3_DEV, +3V3_EMCON, +3V3_ZB, +5V_DEV, E22_EN, EMCON_HW, LORA_GO, LORA_RXEN, LORA_TXEN,
+          PA_EN, R532, R536, R537, R542, R543). This entry does not re-read the rest of this record's argument; rebound
+          to c8eb306265110076. This entry changes no result.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
+      - "v2/docs/feasibility/EMCON.md@c8eb306265110076"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
     release_effect: BLOCKER
     source:
@@ -9119,8 +9289,23 @@ records:
           unconnected-(U552-NC-Pad1), unconnected-(U553-NC-Pad1), unconnected-(U554-NC-Pad4). The change is the FEA-002
           remedy set this requirement's reading waits on; every row's radio-side timing term still needs a bench test
           (EMCON.md 4d), so the reading stays as it was; rebound to 3ef9b8c49a01b728. No result changes.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py,
+          apply_docs_s122_r2.py and apply_docs_s122_r3.py, e919e9b2c633deef to c8eb306265110076; MESHSAT-1357, open item
+          S-122): the diff, read by v2/docs/records/s122/apply_registry_s122.py, changes lines 212, 213, 214, 215, 216,
+          217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238,
+          239, 240, 241, 242, 243, 244, 245, 246 (sections 0a.1); of the 0 sentences the diff removes, verdicts-base.out
+          holds none; of the 40 it adds, verdicts.out holds 17 TRUE, 4 NOT DERIVABLE, 19 outside the inventory (the
+          verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on
+          the committed netlists of set 13; the correcting scripts asserted every part their new text names before they
+          wrote); none of the places this record's evidence names in this document (section 0a, section 2, section 3,
+          section 4.4, section 4a, section 4b, section 4c, section 4d.6, section 5a, section 7, section 8) is among the
+          changed ones; the changed sentences name 88 parts and nets, and this record's own text names 45 of them
+          (+3V3_DEV, +3V3_EMCON, +3V3_ZB, +5V_DEV, E22_EN, EMCON_HW, LORA_GO, LORA_RXEN, LORA_TXEN, PA_EN, R532, R536,
+          R537, R542, R543). This entry does not re-read the rest of this record's argument; rebound to
+          c8eb306265110076. This entry changes no result.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
+      - "v2/docs/feasibility/EMCON.md@c8eb306265110076"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
     release_effect: BLOCKER
@@ -9616,8 +9801,23 @@ records:
           back-feed into the RockBLOCK, the E22 and both E72 and repeats the 5G card's power-off line; whether each
           radio is off in hardware under EMCON still waits on FEA-002's open rows, so the reading stays as it was;
           rebound to 3ef9b8c49a01b728. No result changes.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py,
+          apply_docs_s122_r2.py and apply_docs_s122_r3.py, e919e9b2c633deef to c8eb306265110076; MESHSAT-1357, open item
+          S-122): the diff, read by v2/docs/records/s122/apply_registry_s122.py, changes lines 212, 213, 214, 215, 216,
+          217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238,
+          239, 240, 241, 242, 243, 244, 245, 246 (sections 0a.1); of the 0 sentences the diff removes, verdicts-base.out
+          holds none; of the 40 it adds, verdicts.out holds 17 TRUE, 4 NOT DERIVABLE, 19 outside the inventory (the
+          verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on
+          the committed netlists of set 13; the correcting scripts asserted every part their new text names before they
+          wrote); none of the places this record's evidence names in this document (section 0, section 0a, section 2,
+          section 3, section 4.4, section 4.5, section 4a, section 4b, section 4c, section 4d.6, section 5a, section 7,
+          section 8) is among the changed ones; the changed sentences name 88 parts and nets, and this record's own text
+          names 47 of them (+3V3_DEV, +3V3_EMCON, +3V3_ZB, +5V_DEV, E22_EN, EMCON_HW, KEY, LORA_GO, LORA_RXEN,
+          LORA_TXEN, PA_EN, R532, R536, R537, R542). This entry does not re-read the rest of this record's argument;
+          rebound to c8eb306265110076. This entry changes no result.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
+      - "v2/docs/feasibility/EMCON.md@c8eb306265110076"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
     release_effect: BLOCKER
     source:
@@ -9839,8 +10039,20 @@ records:
           board A's change at set 12 is stream s117's (decisions 56 and 57: R219, C233 to C235 and R220 added on IADPT
           and the compensation networks; C26, C27, L2, Q7 to Q10 and R25 changed). The parsed comparison and the reason
           in that entry stand (v2/docs/records/int13/apply_check13_fixes.py).
+      - >-
+          v2/docs/PANEL.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, 4647782f5aca7c13 to b396d028b41e880d; MESHSAT-1357, open item S-122): the diff, read by
+          v2/docs/records/s122/apply_registry_s122.py, changes lines 63, 89, 90, 98, 155, 156, 166, 180 (sections 1; 3;
+          6; 7); of the 12 sentences the diff removes, verdicts-base.out holds 10 STALE, 2 outside the inventory; of the
+          13 it adds, verdicts.out holds 13 TRUE (the verdicts of v2/docs/records/s122, verdicts-base.out on the base's
+          documents and verdicts.out on these, both on the committed netlists of set 13; the correcting scripts asserted
+          every part their new text names before they wrote); of the places this record's evidence names in this
+          document, section 1, section 3, section 6, section 7 are among the changed ones; the changed sentences name 85
+          parts and nets, and this record's own text names 24 of them (+3V3_EMCON, C7, D22, D8, EMCON_HW, HF_HOLD,
+          PA_HOLD, R102, R58, TX_INHIBIT_n, U115, U116, U215, U216, U22). This entry does not re-read the rest of this
+          record's argument; rebound to b396d028b41e880d. This entry changes no result.
     evidence_bound_to:
-      - "v2/docs/PANEL.md@4647782f5aca7c13"
+      - "v2/docs/PANEL.md@b396d028b41e880d"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
     release_effect: ADVISORY
     source:
@@ -10523,10 +10735,25 @@ records:
           (safe_lines_d on a2d48972d171aad1, safe_lines_a on 6c40250c47195ebb); board C's inhibit_chain_c reads PASS of
           6 on netlist c9f7394594201045. This entry rebinds the page and re-decides nothing: the result stands as the
           predicate of this integration's entry set it, bound to the file at c9b98931fd7cb960.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py,
+          apply_docs_s122_r2.py and apply_docs_s122_r3.py, e919e9b2c633deef to c8eb306265110076; MESHSAT-1357, open item
+          S-122): the diff, read by v2/docs/records/s122/apply_registry_s122.py, changes lines 212, 213, 214, 215, 216,
+          217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238,
+          239, 240, 241, 242, 243, 244, 245, 246 (sections 0a.1); of the 0 sentences the diff removes, verdicts-base.out
+          holds none; of the 40 it adds, verdicts.out holds 17 TRUE, 4 NOT DERIVABLE, 19 outside the inventory (the
+          verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on
+          the committed netlists of set 13; the correcting scripts asserted every part their new text names before they
+          wrote); none of the places this record's evidence names in this document (section 0a, section 2, section 3,
+          section 4, section 4.4, section 4a, section 4b, section 4c, section 4d.6, section 5a, section 7, section 8) is
+          among the changed ones; the changed sentences name 88 parts and nets, and this record's own text names 23 of
+          them (+3V3_EMCON, +5V_DEV, EMCON_HW, HF_HOLD, KEY, PA_EN, PA_HOLD, PA_KEY, PTT_ANY, RB_IEN, RB_SW_IEN,
+          SW_EMCON, TX_INHIBIT_n, U12, U14). This entry does not re-read the rest of this record's argument; rebound to
+          c8eb306265110076. This entry changes no result.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
-      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
+      - "v2/docs/feasibility/EMCON.md@c8eb306265110076"
       - "v2/docs/CURRENT-EVIDENCE.md@c9b98931fd7cb960"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
@@ -10747,8 +10974,23 @@ records:
           lines) was compared with main's netlist 87b69472ac83ca5a by parsed components and net node sets; changed parts
           R53, R54, R55, R56; changed nets EPD_CS, EPD_CS_R, EPD_DC, EPD_DC_R, EPD_SCL, EPD_SCL_R, EPD_SDA, EPD_SDA_R.
           None of the parts or nets this record names changed; rebound to c9f7394594201045. No result changes.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py,
+          apply_docs_s122_r2.py and apply_docs_s122_r3.py, e919e9b2c633deef to c8eb306265110076; MESHSAT-1357, open item
+          S-122): the diff, read by v2/docs/records/s122/apply_registry_s122.py, changes lines 212, 213, 214, 215, 216,
+          217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238,
+          239, 240, 241, 242, 243, 244, 245, 246 (sections 0a.1); of the 0 sentences the diff removes, verdicts-base.out
+          holds none; of the 40 it adds, verdicts.out holds 17 TRUE, 4 NOT DERIVABLE, 19 outside the inventory (the
+          verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on
+          the committed netlists of set 13; the correcting scripts asserted every part their new text names before they
+          wrote); none of the places this record's evidence names in this document (section 0, section 0a, section 2,
+          section 3, section 4.4, section 4a, section 4b, section 4c, section 4d.6, section 5a, section 7, section 8) is
+          among the changed ones; the changed sentences name 88 parts and nets, and this record's own text names 15 of
+          them (+3V3_EMCON, D23, EMCON_HW, PA_EN, R52, RB_IEN, RB_SW_IEN, SW_EMCON, TX_INHIBIT_n, U14, U35, U38, U501,
+          U504, U9). This entry does not re-read the rest of this record's argument; rebound to c8eb306265110076. This
+          entry changes no result.
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
+      - "v2/docs/feasibility/EMCON.md@c8eb306265110076"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@c9f7394594201045"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7 (the common element)", "session choice SC-11"]
@@ -11066,10 +11308,25 @@ records:
           remedy set with the check's minors; FEA-002 stays FEASIBILITY_OPEN with its layout-entry stage open (0 of 17
           rows closed at desk); d4emcon's read-back differs only on the three values the minors changed on purpose and
           readback_chk12 holds on the regenerated board; rebound to 3ef9b8c49a01b728. No result changes.
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py,
+          apply_docs_s122_r2.py and apply_docs_s122_r3.py, e919e9b2c633deef to c8eb306265110076; MESHSAT-1357, open item
+          S-122): the diff, read by v2/docs/records/s122/apply_registry_s122.py, changes lines 212, 213, 214, 215, 216,
+          217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238,
+          239, 240, 241, 242, 243, 244, 245, 246 (sections 0a.1); of the 0 sentences the diff removes, verdicts-base.out
+          holds none; of the 40 it adds, verdicts.out holds 17 TRUE, 4 NOT DERIVABLE, 19 outside the inventory (the
+          verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on
+          the committed netlists of set 13; the correcting scripts asserted every part their new text names before they
+          wrote); none of the places this record's evidence names in this document (section 0, section 0a, section 2,
+          section 3, section 4.4, section 4a, section 4b, section 4c, section 4d.6, section 5a, section 7, section 8) is
+          among the changed ones; the changed sentences name 88 parts and nets, and this record's own text names 48 of
+          them (+3V3_DEV, +3V3_EMCON, +3V3_ZB, +5V_DEV, D23, E22_EN, EMCON_HW, LORA_GO, LORA_RXEN, LORA_TXEN, PA_EN,
+          R52, R532, R536, R537). This entry does not re-read the rest of this record's argument; rebound to
+          c8eb306265110076. This entry changes no result.
     evidence_bound_to:
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
-      - "v2/docs/feasibility/EMCON.md@e919e9b2c633deef"
+      - "v2/docs/feasibility/EMCON.md@c8eb306265110076"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
     source_check: VERIFIED
@@ -13063,8 +13320,19 @@ records:
           the rows and sections this record cites (sections 1 to 4, rows E3 to E8, M7) are among the
           unchanged text, and every added row states its Purpose and the requirement it Verifies, so this
           reading stands on v2/docs/TEST-PLAN.md@ae57da0b57e214f7
+      - >-
+          v2/docs/TEST-PLAN.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py
+          and apply_docs_s122_r3.py, ae57da0b57e214f7 to 42a3dff33442c860; MESHSAT-1357, open item S-122): the diff,
+          read by v2/docs/records/s122/apply_registry_s122.py, changes lines 146, 173 (sections 6; 7); of the 2
+          sentences the diff removes, verdicts-base.out holds 2 STALE; of the 2 it adds, verdicts.out holds 2 TRUE (the
+          verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on
+          the committed netlists of set 13; the correcting scripts asserted every part their new text names before they
+          wrote); of the places this record's evidence names in this document, section 6, section 7 are among the
+          changed ones; the changed sentences name 0 parts and nets, and this record's own text names none of them. This
+          entry does not re-read the rest of this record's argument; rebound to 42a3dff33442c860. This entry changes no
+          result.
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
+      - "v2/docs/TEST-PLAN.md@42a3dff33442c860"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2804 (16e)", "v2/docs/TEST-PLAN.md:1-3"]
     source_check: VERIFIED
@@ -13897,14 +14165,142 @@ records:
           rest of that entry stands: the R53 this record's earlier evidence names is board E's. This record reads FAIL
           and waits on S-122, whose closure re-reads the named documents against the netlists of the set that carries
           it; the rows are added to S-122. The result stays FAIL.
+      - >-
+          v2/docs/PANEL.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, 4647782f5aca7c13 to b396d028b41e880d; MESHSAT-1357, open item S-122): the diff, read by
+          v2/docs/records/s122/apply_registry_s122.py, changes lines 63, 89, 90, 98, 155, 156, 166, 180 (sections 1; 3;
+          6; 7); of the 12 sentences the diff removes, verdicts-base.out holds 10 STALE, 2 outside the inventory; of the
+          13 it adds, verdicts.out holds 13 TRUE (the verdicts of v2/docs/records/s122, verdicts-base.out on the base's
+          documents and verdicts.out on these, both on the committed netlists of set 13; the correcting scripts asserted
+          every part their new text names before they wrote); of the places this record's evidence names in this
+          document, section 1, section 3, section 6, section 7, line 155, line 156, line 63 are among the changed ones;
+          the changed sentences name 85 parts and nets, and this record's own text names 72 of them (+3V3_DEV,
+          +3V3_EMCON, +3V3_ZB, C1, C7, D22, D23, D8, EMCON_HW, EMCON_ON1, EMCON_SUP, EPD_BUSY, EPD_CS, EPD_CS_R,
+          EPD_DC). This entry does not re-read the rest of this record's argument; rebound to b396d028b41e880d. This
+          entry changes no result.
+      - >-
+          v2/docs/CONOPS.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, 3c5d49078ba6dbfd to 6cb7b241cb84d729; MESHSAT-1357, open item S-122): the diff, read by
+          v2/docs/records/s122/apply_registry_s122.py, changes lines 315, 399, 400, 401, 402, 403, 404, 405, 406, 410,
+          411, 412, 413, 414, 415, 416, 417, 418 (sections 4; 4b); of the 21 sentences the diff removes,
+          verdicts-base.out holds 2 STALE, 14 TRUE, 4 NOT DERIVABLE, 1 outside the inventory; of the 18 it adds,
+          verdicts.out holds 5 TRUE, 11 BASELINE, 2 NOT DERIVABLE (the verdicts of v2/docs/records/s122,
+          verdicts-base.out on the base's documents and verdicts.out on these, both on the committed netlists of set 13;
+          the restoring script asserted the file equal to c5430071's byte for byte); of the places this record's
+          evidence names in this document, section 4, section 4b, line 411, line 412 are among the changed ones; the
+          changed sentences name 100 parts and nets, and this record's own text names 67 of them (+3V3_DEV, +3V3_EMCON,
+          +3V3_ZB, +5V_DEV, D23, E22_EN, EMCON_HW, EMCON_ON1, HF_HOLD, HF_SW_EN, LORA_GO, LORA_ON, LORA_RXEN, LORA_TXEN,
+          PA_HOLD). The file is restored to its baseline text at c5430071 under the reopening rule (the baseline entry
+          of CFL-016 that this script appends), so the diff withdraws set 12's circuit edits a46db71b and 7a9f7b5b;
+          their text is kept in v2/docs/feasibility/EMCON.md section 0a.1. This entry does not re-read the rest of this
+          record's argument; rebound to 6cb7b241cb84d729. This entry changes no result.
+      - >-
+          v2/docs/V2-SPEC.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, e1fdcebe8638e471 to 1e1547e1462904f7; MESHSAT-1357, open item S-122): the diff, read by
+          v2/docs/records/s122/apply_registry_s122.py, changes lines 3, 24, 30, 35, 73, 76, 81, 82, 245, 268, 269, 270,
+          271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292,
+          293, 294 (sections Power; Thermal and environment; Corrections, 27 September 2026; Corrections, 29 September
+          2026; Open items (the generators have run; these remain owed); Compute, storage, expansion (B16, about 330 x
+          200 mm; the distributed fabric of 32.52); MeshSat field kit V2, approved specification (state of 7 Sep 2026,
+          design record sections 32.40 to 32.61); Boards of this generation (as generated on 7 September 2026; the
+          owner's layer rulings of 25 September 2026 are noted in the rows, correction 11)); of the 9 sentences the diff
+          removes, verdicts-base.out holds 6 STALE, 1 TRUE, 2 outside the inventory; of the 21 it adds, verdicts.out
+          holds 14 TRUE, 3 NOT DERIVABLE, 4 outside the inventory (the verdicts of v2/docs/records/s122,
+          verdicts-base.out on the base's documents and verdicts.out on these, both on the committed netlists of set 13;
+          the correcting scripts asserted every part their new text names before they wrote); of the places this
+          record's evidence names in this document, line 24, line 3, line 73, line 76 are among the changed ones; the
+          changed sentences name 17 parts and nets, and this record's own text names 10 of them (+3V3_DEV, +5V_DEV, C1,
+          D22, D8, U1, U41, U536, U543, U9). This entry does not re-read the rest of this record's argument; rebound to
+          1e1547e1462904f7. This entry changes no result.
+      - >-
+          v2/docs/OPERATING-ENVELOPE.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py,
+          apply_docs_s122_r2.py and apply_docs_s122_r3.py, 43361b02743cf3af to a8e65995c594546b; MESHSAT-1357, open item
+          S-122): the diff, read by v2/docs/records/s122/apply_registry_s122.py, changes lines 232, 282, 286, 294
+          (sections 4); of the 4 sentences the diff removes, verdicts-base.out holds 4 STALE; of the 4 it adds,
+          verdicts.out holds 4 TRUE (the verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and
+          verdicts.out on these, both on the committed netlists of set 13; the correcting scripts asserted every part
+          their new text names before they wrote); of the places this record's evidence names in this document, section
+          4 is among the changed ones; the changed sentences name 2 parts and nets, and this record's own text names 2
+          of them (Q11, U27). This entry does not re-read the rest of this record's argument; rebound to
+          a8e65995c594546b. This entry changes no result.
+      - >-
+          v2/docs/TEST-PLAN.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py
+          and apply_docs_s122_r3.py, ae57da0b57e214f7 to 42a3dff33442c860; MESHSAT-1357, open item S-122): the diff,
+          read by v2/docs/records/s122/apply_registry_s122.py, changes lines 146, 173 (sections 6; 7); of the 2
+          sentences the diff removes, verdicts-base.out holds 2 STALE; of the 2 it adds, verdicts.out holds 2 TRUE (the
+          verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on
+          the committed netlists of set 13; the correcting scripts asserted every part their new text names before they
+          wrote); of the places this record's evidence names in this document, section 6, section 7 are among the
+          changed ones; the changed sentences name 0 parts and nets, and this record's own text names none of them. This
+          entry does not re-read the rest of this record's argument; rebound to 42a3dff33442c860. This entry changes no
+          result.
+      - >-
+          v2/docs/records/s122/inventory.out and v2/docs/records/s122/verdicts.out (stream s122, S-122, rounds 2 and 3;
+          written by inventory.py and verdicts.py in that folder, with the base's documents at e57a7365 in
+          inventory-base.out and verdicts-base.out): every sentence in the scope s122lib.SCOPE sets from this record's
+          statement and notes, the brief of S-122 and the checks check-s122-1 and check-s122-2 (PANEL.md sections 1, 2,
+          3, 5, 6, 7, 9 and 10; CONOPS.md sections 2a, M2, M4 and 4 with 4a to 4f, and 5; V2-SPEC.md and TEST-PLAN.md
+          whole; OPERATING-ENVELOPE.md sections 2 to 4; ASSEMBLY.md sections 2, 4, 8 and 9; decisions 28 and 40;
+          EMCON.md section 0a.1 and the status page's section of CONOPS's current circuit values), and every sentence of
+          CONOPS.md in any section that states something is absent, owed, not drawn or not connected, that names a part,
+          a net, a board, a rail, a gate function, a generator line, EMCON or a count of parts, judged against the
+          committed netlists of boards A, B, C, D, E and P of set 13 and the generators, each judgement's assertions and
+          every stated count of parts evaluated by the script: PANEL.md 161 sentences, 10 STALE at the base, 126 TRUE, 0
+          BASELINE and 35 NOT DERIVABLE after; CONOPS.md 250 sentences, 29 STALE at the base, 30 TRUE, 38 BASELINE and
+          182 NOT DERIVABLE after; V2-SPEC.md 121 sentences, 6 STALE at the base, 35 TRUE, 0 BASELINE and 86 NOT
+          DERIVABLE after; OPERATING-ENVELOPE.md 32 sentences, 4 STALE at the base, 8 TRUE, 0 BASELINE and 24 NOT
+          DERIVABLE after; TEST-PLAN.md 99 sentences, 2 STALE at the base, 17 TRUE, 0 BASELINE and 82 NOT DERIVABLE
+          after; ASSEMBLY.md 147 sentences, 13 STALE at the base, 85 TRUE, 0 BASELINE and 62 NOT DERIVABLE after;
+          pcb_decisions.yaml 9 sentences, 0 STALE at the base, 6 TRUE, 0 BASELINE and 3 NOT DERIVABLE after; EMCON.md 21
+          sentences, 0 STALE at the base, 17 TRUE, 0 BASELINE and 4 NOT DERIVABLE after; DEFINITION-STATUS.md 22
+          sentences, 0 STALE at the base, 15 TRUE, 0 BASELINE and 7 NOT DERIVABLE after. Outside that scope the scripts
+          read nothing: PANEL.md's head and sections 4, 8 and 11, CONOPS.md's other sections but for those sentences,
+          OPERATING-ENVELOPE.md sections 1 and 5 to 8, ASSEMBLY.md's other sections. The stale sentences of the five
+          correctable documents were corrected by v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, which asserted every part, pin, net, count and generator line their new text names
+          before they wrote; CONOPS.md is read under the baseline rule of the next entry. What TRUE, STALE, BASELINE and
+          NOT DERIVABLE mean is set out in v2/docs/records/s122/README.md. This record stays FAIL and waits on S-122,
+          whose closure (v2/docs/records/s122/close_s122.py) re-runs the inventory and the verdicts and needs a filed
+          independent check; this entry changes no result.
+      - >-
+          The baseline rule (stream s122, round 2; the coordinator's ruling on the independent check
+          v2/docs/records/s122/checks/check-s122-1.md, blocking B1): CONOPS.md is a baselined layer 2 definition, and by
+          the reopening rule its head states and v2/docs/handover/DEFINITION-STATUS.md keeps, a changed count or a
+          circuit correction updates the status page and the records it names, not the baseline. Set 12's circuit edits
+          to it (a46db71b, 7a9f7b5b) and stream s122's round 1 were made against that rule and are withdrawn: CONOPS.md
+          is restored to its text at c5430071 (6cb7b241cb84d729), asserted byte for byte by
+          v2/docs/records/s122/apply_docs_s122_r2.py with the needs table unchanged. So this record reads CONOPS.md's
+          circuit statements through its status page and the records it names: a CONOPS passage whose value differs from
+          the committed netlists, or that cites a generator line, is a baseline value (BASELINE in
+          v2/docs/records/s122/verdicts.out) when the status page's section of CONOPS's current circuit values keeps its
+          current value (rows DC-01 to DC-09), and STALE when it does not; the places those rows name,
+          v2/docs/feasibility/EMCON.md section 0a.1 and the status page's own rows, are judged directly against the
+          netlists and must describe the circuit as generated. The five other documents (PANEL.md, V2-SPEC.md,
+          OPERATING-ENVELOPE.md, TEST-PLAN.md, ASSEMBLY.md) and decisions 28 and 40 are judged directly. Round 3 (the
+          independent check v2/docs/records/s122/checks/check-s122-2.md, blocking B1: a CONOPS.md statement that the
+          supervisors' I2C status path is absent as generated was judged NOT DERIVABLE and had no row): a statement of
+          CONOPS.md that something is absent, owed, not drawn or not connected as generated is judged against the
+          netlists, TRUE or BASELINE, never NOT DERIVABLE; every sentence of CONOPS.md with those words is inventoried,
+          in any section, and a NOT DERIVABLE judgement of one must bind each such word to a phrase of the sentence that
+          is not about the generated circuit (verdicts.py, absent_rule; sweep_absent.py counts them). This entry changes
+          no result.
+      - >-
+          Correction (v2/docs/records/int13/checks/check-int13-4.md, minors n1 and n2; appended by stream s122,
+          v2/docs/records/s122/apply_registry_s122.py) of the entry filed by apply_cfl016_set12: its sentence
+          'check-int13-2 read CONOPS.md only, and says so' is corrected to: check-int13-3 records that check-int13-2
+          names, of these documents, CONOPS.md only (check-int13-2 itself does not say what it did not read); and its
+          sentence 'PANEL.md lines 155 and 156 still name U26 and board A's round 8 candidate at gen_sch_a.py:1240-1243'
+          is corrected to: PANEL.md line 156 names U26 (gen_sch_a.py:1102), and lines 155 and 156 cite board A's round 8
+          candidate at gen_sch_a.py:1240-1243. The entry's other sentences and its result are not changed by this
+          correction.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
-      - "v2/docs/PANEL.md@4647782f5aca7c13"
-      - "v2/docs/CONOPS.md@3c5d49078ba6dbfd"
-      - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
-      - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
-      - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
+      - "v2/docs/PANEL.md@b396d028b41e880d"
+      - "v2/docs/CONOPS.md@6cb7b241cb84d729"
+      - "v2/docs/V2-SPEC.md@1e1547e1462904f7"
+      - "v2/docs/OPERATING-ENVELOPE.md@a8e65995c594546b"
+      - "v2/docs/TEST-PLAN.md@42a3dff33442c860"
       - "v2/ecad/tools/pcb_decisions.yaml@a41df5d12ff95995"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
@@ -13993,8 +14389,19 @@ records:
           the rows and sections this record cites (sections 1 to 4, rows E3 to E8, M7) are among the
           unchanged text, and every added row states its Purpose and the requirement it Verifies, so this
           reading stands on v2/docs/TEST-PLAN.md@ae57da0b57e214f7
+      - >-
+          v2/docs/TEST-PLAN.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py
+          and apply_docs_s122_r3.py, ae57da0b57e214f7 to 42a3dff33442c860; MESHSAT-1357, open item S-122): the diff,
+          read by v2/docs/records/s122/apply_registry_s122.py, changes lines 146, 173 (sections 6; 7); of the 2
+          sentences the diff removes, verdicts-base.out holds 2 STALE; of the 2 it adds, verdicts.out holds 2 TRUE (the
+          verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on
+          the committed netlists of set 13; the correcting scripts asserted every part their new text names before they
+          wrote); of the places this record's evidence names in this document, section 6, section 7 are among the
+          changed ones; the changed sentences name 0 parts and nets, and this record's own text names none of them. This
+          entry does not re-read the rest of this record's argument; rebound to 42a3dff33442c860. This entry changes no
+          result.
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
+      - "v2/docs/TEST-PLAN.md@42a3dff33442c860"
     release_effect: ADVISORY
     source: ["v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571)", "v2/docs/OPERATING-ENVELOPE.md:205", "v2/docs/OPERATING-ENVELOPE.md:249"]
     source_check: VERIFIED
@@ -14155,8 +14562,19 @@ records:
           the rows and sections this record cites (sections 1 to 4, rows E3 to E8, M7) are among the
           unchanged text, and every added row states its Purpose and the requirement it Verifies, so this
           reading stands on v2/docs/TEST-PLAN.md@ae57da0b57e214f7
+      - >-
+          v2/docs/TEST-PLAN.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py
+          and apply_docs_s122_r3.py, ae57da0b57e214f7 to 42a3dff33442c860; MESHSAT-1357, open item S-122): the diff,
+          read by v2/docs/records/s122/apply_registry_s122.py, changes lines 146, 173 (sections 6; 7); of the 2
+          sentences the diff removes, verdicts-base.out holds 2 STALE; of the 2 it adds, verdicts.out holds 2 TRUE (the
+          verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on
+          the committed netlists of set 13; the correcting scripts asserted every part their new text names before they
+          wrote); of the places this record's evidence names in this document, section 6, section 7 are among the
+          changed ones; the changed sentences name 0 parts and nets, and this record's own text names none of them. This
+          entry does not re-read the rest of this record's argument; rebound to 42a3dff33442c860. This entry changes no
+          result.
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
+      - "v2/docs/TEST-PLAN.md@42a3dff33442c860"
     release_effect: ADVISORY
     source: ["v2/docs/TEST-PLAN.md:20 (as read at eadbe571)", "v2/docs/TEST-PLAN.md:23 (as read at eadbe571)", "v2/docs/MESHSAT-709-geometry-appendix.md:2864"]
     source_check: VERIFIED
@@ -14228,8 +14646,19 @@ records:
           the rows and sections this record cites (sections 1 to 4, rows E3 to E8, M7) are among the
           unchanged text, and every added row states its Purpose and the requirement it Verifies, so this
           reading stands on v2/docs/TEST-PLAN.md@ae57da0b57e214f7
+      - >-
+          v2/docs/TEST-PLAN.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py
+          and apply_docs_s122_r3.py, ae57da0b57e214f7 to 42a3dff33442c860; MESHSAT-1357, open item S-122): the diff,
+          read by v2/docs/records/s122/apply_registry_s122.py, changes lines 146, 173 (sections 6; 7); of the 2
+          sentences the diff removes, verdicts-base.out holds 2 STALE; of the 2 it adds, verdicts.out holds 2 TRUE (the
+          verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and verdicts.out on these, both on
+          the committed netlists of set 13; the correcting scripts asserted every part their new text names before they
+          wrote); of the places this record's evidence names in this document, section 6, section 7 are among the
+          changed ones; the changed sentences name 0 parts and nets, and this record's own text names none of them. This
+          entry does not re-read the rest of this record's argument; rebound to 42a3dff33442c860. This entry changes no
+          result.
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
+      - "v2/docs/TEST-PLAN.md@42a3dff33442c860"
     release_effect: ADVISORY
     source:
       - "v2/docs/TEST-PLAN.md:8 (as read at eadbe571)"
@@ -14697,8 +15126,25 @@ records:
           the hardware ENABLE was owed) and correction 31 added at the end; every other line is byte-identical to the
           file at a92ea2ef3793a3c9; line 41 and the corrections it cites are byte-identical, so it stands PASS on the
           file at e1fdcebe8638e471
+      - >-
+          v2/docs/V2-SPEC.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, e1fdcebe8638e471 to 1e1547e1462904f7; MESHSAT-1357, open item S-122): the diff, read by
+          v2/docs/records/s122/apply_registry_s122.py, changes lines 3, 24, 30, 35, 73, 76, 81, 82, 245, 268, 269, 270,
+          271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292,
+          293, 294 (sections Power; Thermal and environment; Corrections, 27 September 2026; Corrections, 29 September
+          2026; Open items (the generators have run; these remain owed); Compute, storage, expansion (B16, about 330 x
+          200 mm; the distributed fabric of 32.52); MeshSat field kit V2, approved specification (state of 7 Sep 2026,
+          design record sections 32.40 to 32.61); Boards of this generation (as generated on 7 September 2026; the
+          owner's layer rulings of 25 September 2026 are noted in the rows, correction 11)); of the 9 sentences the diff
+          removes, verdicts-base.out holds 6 STALE, 1 TRUE, 2 outside the inventory; of the 21 it adds, verdicts.out
+          holds 14 TRUE, 3 NOT DERIVABLE, 4 outside the inventory (the verdicts of v2/docs/records/s122,
+          verdicts-base.out on the base's documents and verdicts.out on these, both on the committed netlists of set 13;
+          the correcting scripts asserted every part their new text names before they wrote); of the places this
+          record's evidence names in this document, line 24, line 76 are among the changed ones; the changed sentences
+          name 17 parts and nets, and this record's own text names 1 of them (U9). This entry does not re-read the rest
+          of this record's argument; rebound to 1e1547e1462904f7. This entry changes no result.
     evidence_bound_to:
-      - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
+      - "v2/docs/V2-SPEC.md@1e1547e1462904f7"
     release_effect: ADVISORY
     source:
       - "v2/docs/V2-SPEC.md:41 (as read at eadbe571)"
@@ -15577,8 +16023,26 @@ records:
           56adc9746d61c4e0 and the tree's at 2ed95a0e8069ebf8 were compared with only their 4 date and source line(s)
           dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
           on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/docs/V2-SPEC.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, e1fdcebe8638e471 to 1e1547e1462904f7; MESHSAT-1357, open item S-122): the diff, read by
+          v2/docs/records/s122/apply_registry_s122.py, changes lines 3, 24, 30, 35, 73, 76, 81, 82, 245, 268, 269, 270,
+          271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292,
+          293, 294 (sections Power; Thermal and environment; Corrections, 27 September 2026; Corrections, 29 September
+          2026; Open items (the generators have run; these remain owed); Compute, storage, expansion (B16, about 330 x
+          200 mm; the distributed fabric of 32.52); MeshSat field kit V2, approved specification (state of 7 Sep 2026,
+          design record sections 32.40 to 32.61); Boards of this generation (as generated on 7 September 2026; the
+          owner's layer rulings of 25 September 2026 are noted in the rows, correction 11)); of the 9 sentences the diff
+          removes, verdicts-base.out holds 6 STALE, 1 TRUE, 2 outside the inventory; of the 21 it adds, verdicts.out
+          holds 14 TRUE, 3 NOT DERIVABLE, 4 outside the inventory (the verdicts of v2/docs/records/s122,
+          verdicts-base.out on the base's documents and verdicts.out on these, both on the committed netlists of set 13;
+          the correcting scripts asserted every part their new text names before they wrote); of the places this
+          record's evidence names in this document, line 24, line 3, line 35, line 73, line 76 are among the changed
+          ones; the changed sentences name 17 parts and nets, and this record's own text names 1 of them (D8). This
+          entry does not re-read the rest of this record's argument; rebound to 1e1547e1462904f7. This entry changes no
+          result.
     evidence_bound_to:
-      - "v2/docs/V2-SPEC.md@e1fdcebe8638e471"
+      - "v2/docs/V2-SPEC.md@1e1547e1462904f7"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
     release_effect: ADVISORY
     source: ["v2/docs/V2-SPEC.md:35", "v2/ecad/tools/gen_sch_e.py:678"]
@@ -15963,10 +16427,49 @@ records:
           before the text was written; the diff touches only old lines 315 to 315; 399 to 406; 410 to 411; 413 to 418,
           all after the needs table. This record reads section 4's Charging row, which the diff does not touch; rebound
           to 3c5d49078ba6dbfd. No result changes.
+      - >-
+          v2/docs/PANEL.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, 4647782f5aca7c13 to b396d028b41e880d; MESHSAT-1357, open item S-122): the diff, read by
+          v2/docs/records/s122/apply_registry_s122.py, changes lines 63, 89, 90, 98, 155, 156, 166, 180 (sections 1; 3;
+          6; 7); of the 12 sentences the diff removes, verdicts-base.out holds 10 STALE, 2 outside the inventory; of the
+          13 it adds, verdicts.out holds 13 TRUE (the verdicts of v2/docs/records/s122, verdicts-base.out on the base's
+          documents and verdicts.out on these, both on the committed netlists of set 13; the correcting scripts asserted
+          every part their new text names before they wrote); of the places this record's evidence names in this
+          document, section 1, section 3, section 6, section 7 are among the changed ones; the changed sentences name 85
+          parts and nets, and this record's own text names 24 of them (+3V3_EMCON, C7, D22, D8, EMCON_HW, HF_HOLD,
+          PA_HOLD, R102, R58, TX_INHIBIT_n, U115, U116, U215, U216, U22). This entry does not re-read the rest of this
+          record's argument; rebound to b396d028b41e880d. This entry changes no result.
+      - >-
+          v2/docs/CONOPS.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, 3c5d49078ba6dbfd to 6cb7b241cb84d729; MESHSAT-1357, open item S-122): the diff, read by
+          v2/docs/records/s122/apply_registry_s122.py, changes lines 315, 399, 400, 401, 402, 403, 404, 405, 406, 410,
+          411, 412, 413, 414, 415, 416, 417, 418 (sections 4; 4b); of the 21 sentences the diff removes,
+          verdicts-base.out holds 2 STALE, 14 TRUE, 4 NOT DERIVABLE, 1 outside the inventory; of the 18 it adds,
+          verdicts.out holds 5 TRUE, 11 BASELINE, 2 NOT DERIVABLE (the verdicts of v2/docs/records/s122,
+          verdicts-base.out on the base's documents and verdicts.out on these, both on the committed netlists of set 13;
+          the restoring script asserted the file equal to c5430071's byte for byte); of the places this record's
+          evidence names in this document, section 4, section 4b, line 411, line 412 are among the changed ones; the
+          changed sentences name 100 parts and nets, and this record's own text names 24 of them (+3V3_EMCON, +5V_DEV,
+          EMCON_HW, HF_HOLD, HF_SW_EN, PA_HOLD, PA_SW_EN, TX_INHIBIT_n, U115, U116, U12, U19, U215, U216, U22). The file
+          is restored to its baseline text at c5430071 under the reopening rule (the baseline entry of CFL-016 that this
+          script appends), so the diff withdraws set 12's circuit edits a46db71b and 7a9f7b5b; their text is kept in
+          v2/docs/feasibility/EMCON.md section 0a.1. This entry does not re-read the rest of this record's argument;
+          rebound to 6cb7b241cb84d729. This entry changes no result.
+      - >-
+          v2/docs/OPERATING-ENVELOPE.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py,
+          apply_docs_s122_r2.py and apply_docs_s122_r3.py, 43361b02743cf3af to a8e65995c594546b; MESHSAT-1357, open item
+          S-122): the diff, read by v2/docs/records/s122/apply_registry_s122.py, changes lines 232, 282, 286, 294
+          (sections 4); of the 4 sentences the diff removes, verdicts-base.out holds 4 STALE; of the 4 it adds,
+          verdicts.out holds 4 TRUE (the verdicts of v2/docs/records/s122, verdicts-base.out on the base's documents and
+          verdicts.out on these, both on the committed netlists of set 13; the correcting scripts asserted every part
+          their new text names before they wrote); of the places this record's evidence names in this document, section
+          4 is among the changed ones; the changed sentences name 2 parts and nets, and this record's own text names 1
+          of them (U27). This entry does not re-read the rest of this record's argument; rebound to a8e65995c594546b.
+          This entry changes no result.
     evidence_bound_to:
-      - "v2/docs/PANEL.md@4647782f5aca7c13"
-      - "v2/docs/CONOPS.md@3c5d49078ba6dbfd"
-      - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
+      - "v2/docs/PANEL.md@b396d028b41e880d"
+      - "v2/docs/CONOPS.md@6cb7b241cb84d729"
+      - "v2/docs/OPERATING-ENVELOPE.md@a8e65995c594546b"
       - "v2/ecad/tools/gen_sch_a.py@6a136feec6c9cf4e"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@6c40250c47195ebb"
       - "v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337"
@@ -16215,11 +16718,35 @@ records:
           760ac6f74d62d194 and the tree's at 20c7b0795593d761 were compared with only their 4 date and source line(s)
           dropped and are byte-identical, so every component, value, footprint, pin and net this record's reading rests
           on is unchanged; rebound (apply_rebind_netlists_int11.py). No result changes.
+      - >-
+          v2/docs/PANEL.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, 4647782f5aca7c13 to b396d028b41e880d; MESHSAT-1357, open item S-122): the diff, read by
+          v2/docs/records/s122/apply_registry_s122.py, changes lines 63, 89, 90, 98, 155, 156, 166, 180 (sections 1; 3;
+          6; 7); of the 12 sentences the diff removes, verdicts-base.out holds 10 STALE, 2 outside the inventory; of the
+          13 it adds, verdicts.out holds 13 TRUE (the verdicts of v2/docs/records/s122, verdicts-base.out on the base's
+          documents and verdicts.out on these, both on the committed netlists of set 13; the correcting scripts asserted
+          every part their new text names before they wrote); of the places this record's evidence names in this
+          document, section 1, section 3, section 6, section 7 are among the changed ones; the changed sentences name 85
+          parts and nets, and this record's own text names 19 of them (C1, C7, D22, D8, EMCON_HW, R102, R58,
+          TX_INHIBIT_n, U115, U116, U215, U216, U22, U315, U316). This entry does not re-read the rest of this record's
+          argument; rebound to b396d028b41e880d. This entry changes no result.
+      - >-
+          v2/docs/ASSEMBLY.md re-read at stream s122 (v2/docs/records/s122/apply_docs_s122.py, apply_docs_s122_r2.py and
+          apply_docs_s122_r3.py, ee4eff52fc5df307 to 942d562edd128759; MESHSAT-1357, open item S-122): the diff, read by
+          v2/docs/records/s122/apply_registry_s122.py, changes lines 87, 121, 133, 149, 151, 154, 157, 161, 180, 204,
+          217, 218, 219 (sections 2; 4; 8; 9); of the 13 sentences the diff removes, verdicts-base.out holds 13 STALE;
+          of the 13 it adds, verdicts.out holds 13 TRUE (the verdicts of v2/docs/records/s122, verdicts-base.out on the
+          base's documents and verdicts.out on these, both on the committed netlists of set 13; the correcting scripts
+          asserted every part their new text names before they wrote); of the places this record's evidence names in
+          this document, section 2, section 4, section 8, section 9 are among the changed ones; the changed sentences
+          name 42 parts and nets, and this record's own text names 12 of them (C7, D1, D22, EMCON_HW, J_SMB, R102,
+          TX_INHIBIT_n, U22, U32, U35, U37, VIN_RAW). This entry does not re-read the rest of this record's argument;
+          rebound to 942d562edd128759. This entry changes no result.
     evidence_bound_to:
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761"
-      - "v2/docs/ASSEMBLY.md@ee4eff52fc5df307"
-      - "v2/docs/PANEL.md@4647782f5aca7c13"
+      - "v2/docs/ASSEMBLY.md@942d562edd128759"
+      - "v2/docs/PANEL.md@b396d028b41e880d"
       - "v2/ecad/tools/check_contracts.py@5e14f456a0791c35"
     release_effect: BLOCKER
     source: ["v2/ecad/tools/gen_sch_e.py:264", "v2/docs/ASSEMBLY.md section 4", "v2/docs/PANEL.md section 10"]
