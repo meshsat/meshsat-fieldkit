@@ -73,7 +73,7 @@ Fix:
   - `patch_od01g.py`, line 102, carries it as a search literal, the pattern r14 named.
 
   In addition, `patch_od01e.py` line 150 holds the path in a regex, and `patch_od01f.py` line 205 holds the account name
-  "claude-runner" as a detector literal. Fix: generalise check-7's quote in its filing note, as was done for check 5, and
+  the runner's account name as a detector literal. Fix: generalise check-7's quote in its filing note, as was done for check 5, and
   build the literals from parts.
 
 ## Verified
