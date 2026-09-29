@@ -201,6 +201,7 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^68k", "R_0603"): "C23231",             # UNI-ROYAL 0603WAF6802T5E, 1%, BASIC, stock 1,386,930 (the 500 kHz RT)
  (r"^31\.6k 1%", "R_0603"): "C25967",       # UNI-ROYAL 0603WAF3162T5E, 1%, stock 162,847
  (r"^162k 1%", "R_0603"): "C22815",         # UNI-ROYAL 0603WAF1623T5E, 1%, stock 62,348
+ (r"^191k 1%", "R_0603"): "C22932",         # UNI-ROYAL 0603WAF1913T5E, 1%, stock 69,150 (JLCPCB parts search 2026-09-29; S-117's IADPT resistor R219 on board A)
  (r"^140k 1%", "R_0603"): "C185372",        # YAGEO RC0603FR-07140KL, 1%, stock 379,677
  (r"^665k 1%", "R_0603"): "C2930125",       # FOJAN FRC0603F6653TS, 1%, stock 24,772
  (r"^100k \(", "R_0603"): "C25803",         # UNI-ROYAL 0603WAF1003T5E, 1%, BASIC, stock 23,883,568 (100k with a note: MODE CCM)
