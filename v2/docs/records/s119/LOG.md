@@ -78,7 +78,10 @@ Decisions taken (authority SESSION, each reversible by restoring the first issue
   naming file hashes (M5); `apply_registry_s119.py` closing S-119, filing U3B's finding closed and leaving REQ-072 on S-53,
   M-02 and S-114. Commit `c8b148a2`. On scratch copies: the decision applied as 58 and refused a second run; the registry
   closure `--check` re-ran all sixteen scripts to the byte (104 s), applied, and refused a second run.
-- **16:45** README rewritten whole for the second round; this log.
+- **16:45** README rewritten whole for the second round; this log. The integrator's note of that hour (S-121 reserved
+  for the U3B item, S-122 opened on set 12's line): the registry script now files exactly S-121, refuses if S-121 is in
+  the registry, and assumes nothing about the highest S number; tried on a scratch registry holding S-122 (S-121 filed)
+  and on one holding S-121 (refused).
 
 Decisions taken in the second round (authority SESSION):
 4. U3B on U3's 400 kHz row with the FET pair of decision 57 (drafted for the register by `apply_decision_s119.py`): REGN's

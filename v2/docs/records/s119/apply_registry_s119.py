@@ -16,8 +16,9 @@ stream's independent check). DRAFT for the integrator, run AFTER apply_decision_
                   (7) records/a1elec/TOPOLOGY.md 3b's parts table (parsed as a table, by its first cell) draws U3B on the
                       400 kHz row: Q7B and Q9B CSD17578Q5A, Q8B and Q10B CSD17577Q5A, L2B XAL1010-472ME, 191 k, R16B 10 mOhm.
                   Then: S-119 moves to closed_items (closed by <commit>, its closing evidence with every figure read here
-                  from the outputs); U3B's FET finding is filed as a closed SESSION item with the next free S number
-                  (closed by the same commit, the decision's number read from the register); REQ-072 leaves S-119 in its
+                  from the outputs); U3B's FET finding is filed as the closed SESSION item S-121 (the number the
+                  integrator reserved for it; the script refuses if S-121 is already in the registry), closed by the same
+                  commit, the decision's number read from the register; REQ-072 leaves S-119 in its
                   waits_on and gains one evidence entry; its statement, acceptance and evidence_result (FAIL) do not move.
 
 Every new text passes int7's screen (no claim word, no dash); the registry is re-parsed and only what is named may move;
@@ -61,6 +62,7 @@ CHAIN = [(R + "energy/energy_budget.py", R + "energy/energy_budget.out"),
          (R + "s119/reconcile_s119.py", R + "s119/reconcile_s119.out")]
 FILES = [R + "energy/energy_inputs.yaml", R + "a1elec/TOPOLOGY.md", R + "a1elec/CHARGER.md"] + [f for pair in CHAIN for f in pair]
 MARK_U3B = "(stream s119, S-119's U3B finding)"
+U3B_ID = "S-121"   # reserved by the integrator for this item (29 September 2026); S-122 is another stream's
 EV_MARK = "v2/docs/records/s119/README.md (stream s119"
 DRAWN = {"Q7B": "CSD17578Q5A", "Q8B": "CSD17577Q5A", "Q9B": "CSD17578Q5A", "Q10B": "CSD17577Q5A",
          "L2B": "XAL1010-472ME", "R_IADPT_B": "191 k", "R16B": "10 mOhm"}
@@ -259,7 +261,9 @@ def main(argv):
     if any(v[0] != "MEETS" for v in (b14, c14, b15, c15)) or any(v != "NOT MET" for v in n9) or any(hr.get(k) is None for k in ((14, "B"), (14, "C"), (15, "B"), (15, "C"))):
         refuse("the reconciliation outputs do not read as this closure states")
     ids = [x["id"] for sec in ("open_items", "closed_items") for x in d.get(sec) or []]
-    new_id = "S-%d" % (max(int(m.group(1)) for i in ids for m in [re.match(r"^S-(\d+)$", str(i))] if m) + 1)
+    if U3B_ID in ids or re.search(r"(?m)^  - id: %s\s*$" % re.escape(U3B_ID), t):
+        refuse("%s, reserved for U3B's FET item, is already in the registry" % U3B_ID)
+    new_id = U3B_ID
     ev = ("The charger rows restated from the FETs' losses by TI's SLUSE66A Equations 6 to 22 (printed pages 86 to 88), each "
           "with its sense resistors inside and the inductors' core loss excluded (Coilcraft Document 804-1 prints none; every "
           "figure is high by it): U3 in v2/docs/records/energy/energy_inputs.yaml at %.3f (%.3f to %.3f, the reference day "
