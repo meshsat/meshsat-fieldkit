@@ -1,0 +1,149 @@
+OPTION A(i)'S LID RECONCILIATION ON THE RESTATED CHARGER ROWS (reconcile_s119.py, stream s119, S-119, MESHSAT-1357).
+PROTOTYPE DESIGN: nothing built, ordered or measured; AI arithmetic on the record's model, not a qualified review.
+Model: records/a1elec/energy_two_pack.py second issue (sha256 2c8e52c8eec8d753...), as reconcile_lid_panel.py third issue runs
+it: 400 Wp, 200 W stage, entry E2 (R11 6.2 mOhm), base +20 C, lid at 13.23 C (the September mean day's minimum air),
+both start hours, 42.8 W, aged 80 percent, the 40 degree south plane unless section 6 says otherwise.
+
+0. THE CHARGER ROWS (parsed from v2/docs/records/s117/efficiency.out section 7: lower / TI's reading / upper; core loss EXCLUDED, so each
+   figure is high by it; Coilcraft Document 804-1 prints no core loss and refers to an online calculator not held)
+   U3 as drawn (decision 57: Q7 CSD17578Q5A, Q8 to Q10 CSD17577Q5A), day at E2:   0.972 / 0.979 / 0.983  carried 0.979
+   U3B, CSD17578Q5A x 4 on the drafted 800 kHz row, worst mode at the peak hour:  0.947 / 0.961 / 0.971  carried 0.961
+   U3B on the 400 kHz row (U3's row), worst mode (sensitivity only):              0.966 / 0.974 / 0.980
+   the failing case, the FETs first drawn and drafted (CSD18510Q5B): U3 0.939, U3B 0.802 (TI's readings)
+   ratios (v2/docs/records/a1solar/energy_runs.out section 2): A 0.9417; B 0.9326; C 0.8573
+
+1. PER LID OPTION (each line reproduced byte for byte from v2/docs/records/a1int/reconcile_lid_panel.out, checked)
+4S9P lid: both owner-approved lid functions kept (39 places), 4S15P in all
+   A, U3 nominal 6.2 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  164.9 Wh
+      does not meet M1 even with the lid at +40 C
+   B, U3 nominal 6.2 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  165.7 Wh
+      does not meet M1 even with the lid at +40 C
+   B, U3 minimum 6.1 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  165.7 Wh
+      does not meet M1 even with the lid at +40 C
+   B, U3 bracket 6.0 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  165.7 Wh
+      does not meet M1 even with the lid at +40 C
+   C, U3 nominal 6.2 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  172.6 Wh
+      does not meet M1 even with the lid at +40 C
+   C, U3 minimum 6.1 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  172.6 Wh
+      does not meet M1 even with the lid at +40 C
+   C, U3 bracket 6.0 A, at 13.23 C: NOT MET  stops [23, 11]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  172.6 Wh
+      does not meet M1 even with the lid at +40 C
+
+4S14P lid: the tablet out of the lid (B), 4S20P in all
+   A, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   49.1 Wh ( 22.5 %), lid   44.9 Wh ( 10.1 %), both   94.0 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +3.8 C
+   B, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   49.0 Wh ( 22.4 %), lid   44.6 Wh ( 10.1 %), both   93.7 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +3.8 C
+   B, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   49.0 Wh ( 22.4 %), lid   44.6 Wh ( 10.1 %), both   93.7 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +3.8 C
+   B, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   49.0 Wh ( 22.4 %), lid   44.6 Wh ( 10.1 %), both   93.7 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +3.8 C
+   C, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   39.2 Wh (  8.9 %), both   87.4 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +4.1 C
+   C, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   32.4 Wh (  7.3 %), both   80.6 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +6.0 C
+   C, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   48.2 Wh ( 22.1 %), lid   22.0 Wh (  5.0 %), both   71.4 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +6.1 C
+
+4S15P lid: the QMX out of the lid (C), 4S21P in all
+   A, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   57.2 Wh ( 26.2 %), lid   68.3 Wh ( 14.4 %), both  125.5 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +1.5 C
+   B, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   57.1 Wh ( 26.1 %), lid   68.1 Wh ( 14.4 %), both  125.2 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +1.5 C
+   B, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   57.1 Wh ( 26.1 %), lid   68.1 Wh ( 14.4 %), both  125.2 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +1.5 C
+   B, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   57.1 Wh ( 26.1 %), lid   68.1 Wh ( 14.4 %), both  125.2 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +1.5 C
+   C, U3 nominal 6.2 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   62.2 Wh ( 13.1 %), both  118.5 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +2.1 C
+   C, U3 minimum 6.1 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   55.3 Wh ( 11.7 %), both  111.6 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +3.9 C
+   C, U3 bracket 6.0 A, at 13.23 C: MEETS    stops [None, None] lowest base   56.3 Wh ( 25.8 %), lid   44.8 Wh (  9.5 %), both  102.4 Wh; unserved    0.0 Wh
+      lowest lid temperature that still meets M1: +4.0 C
+
+2. THE CHANGE FROM THE ACCEPTED FIGURES (v2/docs/records/a1int/reconcile_lid_panel.out at 6a007879, the second issue: U3 0.98, U3B 0.975), U3 at its
+   6.1 A minimum; lowest store of both packs in Wh and the lowest lid temperature that still meets M1
+   lid option                                   B typical, accepted      B typical, now           C adverse, accepted      C adverse, now          
+   4S9P lid, both kept                          NOT MET                  NOT MET                  NOT MET                  NOT MET                 
+   4S14P lid, tablet out                        MEETS   93.7, +3.8 C     MEETS   93.7, +3.8 C     MEETS   87.4, +5.9 C     MEETS   80.6, +6.0 C    
+   4S15P lid, QMX out                           MEETS  125.2, +1.5 C     MEETS  125.2, +1.5 C     MEETS  118.5, +2.2 C     MEETS  111.6, +3.9 C    
+   4S14P B: lowest both 93.7 to 93.7 Wh (-0.0); base 49.0 to 49.0; lid 44.7 to 44.6; threshold +3.8 to +3.8 C
+   4S14P C: lowest both 87.4 to 80.6 Wh (-6.8); base 48.2 to 48.2; lid 39.2 to 32.4; threshold +5.9 to +6.0 C
+   4S15P B: lowest both 125.2 to 125.2 Wh (-0.0); base 57.1 to 57.1; lid 68.1 to 68.1; threshold +1.5 to +1.5 C
+   4S15P C: lowest both 118.5 to 111.6 Wh (-6.9); base 56.3 to 56.3; lid 62.2 to 55.3; threshold +2.2 to +3.9 C
+   the 6.0 A bracket: 4S14P C 77.6 to 71.4 Wh, 4S15P C 108.7 to 102.4 Wh; the nominal 6.2 A: 4S14P C 90.9 to 87.4, 4S15P C 122.4 to 118.5
+
+3. THE FAILING CASE: the chargers at the FETs first drawn and drafted (U3 0.939, U3B 0.802), U3 at 6.1 A; it must read
+   NOT MET for both lid options in both ratio cases, or the instrument would not tell the circuits apart
+   4S14P, B: NOT MET  stops [70, 59]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   48.7 Wh
+   4S14P, C: NOT MET  stops [48, 58]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved  101.3 Wh
+   4S15P, B: NOT MET  stops [71, 60]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   20.6 Wh
+   4S15P, C: NOT MET  stops [70, 58]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   73.2 Wh
+   every case NOT MET: the instrument discriminates
+   The two halves apart (U3 at 6.1 A):
+   U3 as drawn 0.979, U3B as drafted with CSD18510Q5B 0.802           4S14P B: MEETS    stops [None, None] lowest base   18.6 Wh (  8.5 %), lid    0.0 Wh (  0.0 %), both   18.6 Wh; unserved    0.0 Wh
+   U3 as drawn 0.979, U3B as drafted with CSD18510Q5B 0.802           4S14P C: NOT MET  stops [71, 59]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved   33.6 Wh
+   U3 as drawn 0.979, U3B as drafted with CSD18510Q5B 0.802           4S15P B: MEETS    stops [None, None] lowest base   42.5 Wh ( 19.5 %), lid    0.0 Wh (  0.0 %), both   42.5 Wh; unserved    0.0 Wh
+   U3 as drawn 0.979, U3B as drafted with CSD18510Q5B 0.802           4S15P C: NOT MET  stops [71, 60]     lowest base    0.0 Wh (  0.0 %), lid    0.0 Wh (  0.0 %), both    0.0 Wh; unserved    6.2 Wh
+   U3 with the first-drawn FETs 0.939, U3B carried 0.961              4S14P B: MEETS    stops [None, None] lowest base   48.6 Wh ( 22.2 %), lid   22.2 Wh (  5.0 %), both   72.6 Wh; unserved    0.0 Wh
+   U3 with the first-drawn FETs 0.939, U3B carried 0.961              4S14P C: MEETS    stops [None, None] lowest base   16.4 Wh (  7.5 %), lid    0.0 Wh (  0.0 %), both   16.4 Wh; unserved    0.0 Wh
+   U3 with the first-drawn FETs 0.939, U3B carried 0.961              4S15P B: MEETS    stops [None, None] lowest base   56.7 Wh ( 26.0 %), lid   45.0 Wh (  9.5 %), both  103.6 Wh; unserved    0.0 Wh
+   U3 with the first-drawn FETs 0.939, U3B carried 0.961              4S15P C: MEETS    stops [None, None] lowest base   45.8 Wh ( 21.0 %), lid    1.0 Wh (  0.2 %), both   46.8 Wh; unserved    0.0 Wh
+
+4. SENSITIVITY (U3 at 6.1 A): lowest store of both packs in Wh, or NOT MET, over U3 0.972 / 0.979 / 0.983 and U3B 0.947 / 0.961 / 0.971 / 0.974
+   (U3: the makers' maxima, TI's reading, the most favourable; U3B: the same on the 800 kHz row, then the 400 kHz row)
+   4S14P, ratio B
+      U3 \ U3B          0.947       0.961       0.971       0.974
+      0.972              93.4        93.4        93.4        93.4
+      0.979              93.7        93.7        93.7        93.7
+      0.983              93.8        93.8        93.8        93.8
+   4S14P, ratio C
+      U3 \ U3B          0.947       0.961       0.971       0.974
+      0.972              67.0        72.7        76.6        77.8
+      0.979              75.0        80.6        84.6        85.8
+      0.983              78.3        84.0        88.0        89.3
+   4S15P, ratio B
+      U3 \ U3B          0.947       0.961       0.971       0.974
+      0.972             124.9       124.9       124.9       124.9
+      0.979             125.2       125.2       125.2       125.2
+      0.983             125.3       125.3       125.3       125.3
+   4S15P, ratio C
+      U3 \ U3B          0.947       0.961       0.971       0.974
+      0.972              97.6       103.7       107.8       109.0
+      0.979             105.9       111.6       115.7       116.9
+      0.983             109.2       115.0       119.2       120.4
+   The brief's four points, 4S14P / 4S15P at C: U3B 0.961 to 80.6 / 111.6 Wh; U3B 0.974 to 85.8 / 116.9 Wh; U3 0.972 to 72.7 / 103.7 Wh; U3 0.983 to 84.0 / 115.0 Wh
+
+5. THE LOWEST EFFICIENCY, EACH CHARGER ALONE, AT WHICH THE LID OPTION STILL MEETS M1 (U3 at 6.1 A, lid at 13.23 C;
+   the other charger at its carried row). The inductor's core loss is excluded from every row; a core loss that
+   lowered the efficiency at every hour by less than the margin below leaves the verdict as printed. Indicative watts
+   at the peak hour: U3's input is at most 6.1 A x 20.7 V = 126.3 W; U3B's is the model's peak node draw into it.
+   A core loss is closer to constant in watts than in percent, so it weighs more in the day's weak hours: the watts
+   below are an indication at the peak, NOT a bound on a constant core loss; that needs the hour-by-hour run.
+   4S14P, B: U3 down to 0.9012 (margin 0.0778, about 9.8 W at 126.3 W in); U3B down to 0.80 or lower (the search's floor; margin at least 0.1610, about 9.1 W at 56.6 W in)
+   4S14P, C: U3 down to 0.9309 (margin 0.0481, about 6.1 W at 126.3 W in); U3B down to 0.8446 (margin 0.1164, about 6.6 W at 56.6 W in)
+   4S15P, B: U3 down to 0.8866 (margin 0.0924, about 11.7 W at 126.3 W in); U3B down to 0.80 or lower (the search's floor; margin at least 0.1610, about 9.3 W at 57.7 W in)
+   4S15P, C: U3 down to 0.9157 (margin 0.0633, about 8.0 W at 126.3 W in); U3B down to 0.8096 (margin 0.1514, about 8.7 W at 57.7 W in)
+
+6. THE DEPLOYMENT RULE'S PLANES (records/a1solar/energy_runs.py's plane files and fixed-point ratios, imported unchanged;
+   each plane's own September mean day scaled by 1.007820; U3 at 6.1 A; lid at 13.23 C). Lowest both / lid in Wh or NOT MET
+   slope  azim  B ratio  C ratio   4S14P B                4S14P C                4S15P B                4S15P C               
+       0    +0   0.9900   0.9159   NOT MET                NOT MET                MEETS    6.9 /   0.0   NOT MET               
+      20   -15   0.9901   0.9130   MEETS   85.6 /  36.3   MEETS   35.5 /   0.0   MEETS  116.7 /  59.3   MEETS   66.0 /  14.4  
+      20    +0   0.9905   0.9131   MEETS   95.1 /  45.6   MEETS   50.5 /   2.7   MEETS  126.6 /  69.1   MEETS   81.1 /  25.1  
+      20   +15   0.9906   0.9130   MEETS   95.5 /  46.0   MEETS   43.6 /   0.0   MEETS  127.0 /  69.4   MEETS   74.2 /  21.8  
+      30   -15   0.9899   0.9113   MEETS   94.6 /  45.3   MEETS   54.7 /   5.5   MEETS  126.1 /  68.7   MEETS   85.2 /  27.9  
+      30    +0   0.9904   0.9114   MEETS   94.7 /  45.3   MEETS   74.9 /  26.4   MEETS  126.2 /  68.8   MEETS  106.0 /  49.4  
+      30   +15   0.9905   0.9112   MEETS   95.4 /  45.8   MEETS   75.0 /  26.3   MEETS  126.9 /  69.3   MEETS  106.1 /  49.3  
+      40   -15   0.9897   0.9102   MEETS   94.8 /  45.4   MEETS   56.9 /   6.9   MEETS  126.3 /  68.9   MEETS   87.4 /  29.4  
+      40    +0   0.9903   0.9103   MEETS   93.7 /  44.6   MEETS   80.6 /  32.4   MEETS  125.2 /  68.1   MEETS  111.6 /  55.3  
+      40   +15   0.9904   0.9099   MEETS   95.2 /  45.7   MEETS   77.4 /  29.0   MEETS  126.7 /  69.1   MEETS  108.6 /  52.0  
+      50   -15   0.9895   0.9098   MEETS   91.6 /  43.2   MEETS   42.7 /   0.0   MEETS  123.1 /  66.6   MEETS   73.2 /  19.2  
+      50    +0   0.9902   0.9100   MEETS   92.0 /  43.5   MEETS   75.6 /  27.8   MEETS  123.5 /  66.9   MEETS  106.6 /  50.8  
+      50   +15   0.9903   0.9095   MEETS   94.9 /  45.5   MEETS   71.4 /  23.9   MEETS  126.4 /  69.0   MEETS  102.4 /  46.8  
+   inside the rule (20 to 50 degrees, azimuth -15 to +15 on the grid), both cases: 4S14P every plane MEETS; 4S15P every plane MEETS
+
+7. U3B'S LARGEST INPUT CURRENT over every run above: 4.08 A from VBAT (4S15P, A, U3 nominal); the drafted 800 kHz row allows 8.0 A
+   (IIN_HOST code 80 at 5 mOhm); the 400 kHz row with a 10 mOhm sense would clamp at 6.35 A (SLUSE66A 9.3.5, page 25).
+
+END. Each line is the model's arithmetic on the September reference day; nothing is measured.
