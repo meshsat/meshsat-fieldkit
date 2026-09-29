@@ -267,3 +267,7 @@ and carried here with the third issue's figures (the bound 23.40 V; Q7 5.60 V an
 
 `vbus20_bound.py` and `.out` (the figures), `apply_registry_s120.py` (the registry draft), `dryrun.out` (its dry run),
 `LOG.md` (the running log), this README.
+
+## The checks, filed
+
+The four independent checks of this stream are filed as `checks/check-s120-1.md` to `check-s120-4.md` by `records/int15/apply_check15_fixes.py`; they differ from the reports the checker wrote only where a local path became `<scratch>/`. Where this README or LOG.md cites a check at its scratch path, the filed copy is the record.

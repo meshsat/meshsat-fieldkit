@@ -221,7 +221,9 @@ statements), and S-123.
 4. An independent check filed under `v2/docs/records/s122/checks/` and committed. It must name PANEL.md, CONOPS.md,
    V2-SPEC.md, OPERATING-ENVELOPE.md, TEST-PLAN.md, ASSEMBLY.md, pcb_decisions.yaml, EMCON.md, DEFINITION-STATUS.md and
    `verdicts.out`, in its own words.
-5. `python3 v2/docs/records/s122/close_s122.py v2/docs/records/s122/checks/<the check>`
+5. `python3 v2/docs/records/s122/close_s122.py v2/docs/records/s122/checks/<the check>` (since set 14 it refuses unless the
+   inventory declares that it reads part numbers, check-int15-1's five sentences are corrected, and the check names
+   check-int15-1 and was committed on a line that carries 097d2517: `records/int15/apply_check15b_fixes.py`)
 6. `rules_render.py --requirements` again.
 
 If a document of the scope changes on main before step 5, re-run `inventory.py` and `verdicts.py`, judge the new text

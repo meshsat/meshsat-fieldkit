@@ -24,7 +24,7 @@ TAG = "apply_check15_fixes"
 REG = os.path.join(TOP, "v2/ecad/tools/pcb_requirements.yaml")
 BIND = ("v2/docs/handover/DEFINITION-STATUS.md", "v2/docs/feasibility/EMCON.md", "v2/docs/ASSEMBLY.md")
 SCRATCH = os.path.join(os.path.expanduser("~"), "worktrees", "meshsat-fieldkit", "_scratch")
-DASHES = ("—", "–")
+DASHES = ("\u2014", "\u2013")
 
 
 def refuse(m):

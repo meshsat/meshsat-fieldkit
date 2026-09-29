@@ -53,9 +53,33 @@ def refuse(m):
     sys.exit(2)
 
 
+def gate_set14(chk):
+    """Set 14's gate (v2/docs/records/int15/apply_check15b_fixes.py, answering check-int15-2 B1): S-122 closes only on a
+    part-number inventory, with the five sentences check-int15-1 found corrected, and on a check filed after 097d2517."""
+    head = open(os.path.join(L.TOP, "v2/docs/records/s122/inventory.out"), encoding="utf-8").read().split("\n")[:12]
+    if "# Part numbers read: yes" not in head:
+        refuse("the inventory does not declare that it reads makers' part numbers (S-122's set 14 extension)")
+    spec = open(os.path.join(L.TOP, "v2/docs/V2-SPEC.md"), encoding="utf-8").read()
+    env = open(os.path.join(L.TOP, "v2/docs/OPERATING-ENVELOPE.md"), encoding="utf-8").read()
+    left = [n for n, hit in (("V2-SPEC.md names the TMDS341A", "TMDS341A" in spec),
+                             ("V2-SPEC.md names the WM8960", "WM8960" in spec),
+                             ("V2-SPEC.md's E6 row names the LM5176",
+                              any(l.startswith("| E6 |") and "LM5176" in l for l in spec.split("\n"))),
+                             ("OPERATING-ENVELOPE.md names a TEN 40", "TEN 40" in env),
+                             ("OPERATING-ENVELOPE.md names an Amphenol M.2 B-key socket", "Amphenol M.2 B-key" in env)) if hit]
+    if left: refuse("check-int15-1's sentences still stand: %s" % "; ".join(left))
+    body = open(chk, encoding="utf-8").read()
+    if "check-int15-1" not in body: refuse("the check does not name check-int15-1")
+    added = subprocess.run(["git", "-C", L.TOP, "log", "--diff-filter=A", "--format=%H", "--", os.path.relpath(os.path.abspath(chk), L.TOP)],
+                           capture_output=True, text=True).stdout.split()
+    if not added or subprocess.run(["git", "-C", L.TOP, "merge-base", "--is-ancestor", "097d2517", added[-1]]).returncode:
+        refuse("the check was not committed on a line that carries 097d2517 (set 14's extension of S-122)")
+
+
 def main():
     if len(sys.argv) != 2: refuse("usage: close_s122.py <the filed independent check>")
     chk = sys.argv[1]
+    gate_set14(chk)
     reg = open(REG, encoding="utf-8").read()
     before = yaml.safe_load(reg)
     if not any(x["id"] == "S-122" for x in before["open_items"]): refuse("S-122 is not open")
