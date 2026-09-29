@@ -318,7 +318,8 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    strain relief: a bonded tie mount at T_L and at T_P and every 60 mm or less along both runs (the r2 set's tie-mount rule), and a
    printed guide on the lid's back wall that keeps the free lead inboard of the cavity wall (Y < 130.9) so that closing folds it toward
    the face and never over the rim or the seal.
-   disconnect: an XT60 pair and a JST XH 1x4 for SMBus in the back channel at X -135..-100, lying along X, so that the lid comes off its
+   disconnect: an XT60 pair and a JST XH 1x4 for SMBus in the back channel at X -168..-134, Y 118..126, Z 126..136 closed (18 to 28
+   below the ceiling; 13 west of the lid tie T_L at X -121, Z 111.5, and west of the free lead's bow), lying along X, so that the lid comes off its
    hinge as ASSEMBLY.md section 7 has it; fused at P2 (the string fuse of 8a's class). Amass XT60-F sheet V1.2 (v2/vendor/battery/
    amass-xt60-spec-tme.pdf): 30 A rated, 60 A instantaneous, 12 AWG recommended, 1000 mating cycles, -20 to 120 C, 0.55 mOhm.
    the two 4.4 leads from P2 lie one above the other in the 7.0 west bay (8.8 of its depth). No conductor sheet is held: the 10 x OD
@@ -394,10 +395,11 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
    verdict (B): the open case stands on level ground up to a lid opening of 120 degrees in every swept case; beyond it a light base with
    its CG back and high tips on level ground (first at 135 degrees swept). Fix, the session's (authority SESSION, reversible): a lid stay
    that stops the lid at 100 degrees. With it the worst back slope the open case stands on is 9.5 deg (B), 10.7 deg (A), 7.0 deg (C)
-   at the flat-bottom tipping line, and 3.6 deg (B) with the feet inboard. The operator's sheet: open the lid only on ground sloping
-   less than 6 degrees toward the hinge side until T-A1-3 has measured the feet, the stop and the hinge axis.
-   THE STAY (check M5): a polyester webbing strap at X -179 (the lid's west end zone, outside the flat ceiling and clear of the guard
-   caps at X -157..-143 and the back channel), from a tab bonded (DP8005) to the lid's inner west end wall at (Y 60, Z 140) closed, to a
+   at the flat-bottom tipping line (Y 114.49), and 3.6 deg (B), 4.8 deg (A), 1.2 deg (C) with the feet 14.5 inboard (Y 100, the
+   INFERRED bound). The operator's sheet, until T-A1-3 has measured the feet, the stop and the hinge axis, takes the bound: option 1
+   (B) under about 3 degrees toward the hinge side, option 2 (C) level ground only (1.2 deg); after it, the measured tipping line.
+   THE STAY (check M5): a 12 mm polyester webbing strap centred at X -176 (X -182..-170: 3.3 inside the lid's end wall at X -185.3,
+   13 clear of the guard caps at X -157), from a tab bonded (DP8005) to the lid's inner west end wall at (Y 60, Z 140) closed, to a
    stainless tab under the face plate's 6-32 pan head at (X -179.07, Y 75.95), which pulls Peli's brass insert against the ring's
    underside, its strong direction (CASE-MARGINS 2.5).
      B, hinge (155, 111): lid 4.89 kg, moment at 100 deg 2.51 N m, strap lever 44.9 mm, tension 56 N static, 168 N at an arrest
@@ -420,13 +422,19 @@ Prototype design, AI review: nothing built, bought or fitted. Analytical success
         factor of 3 (ESTIMATE); strap 141.1 long open, 34.9 between the anchors closed (the slack folds in the west end zone)
      the bonded tab on Peli's polypropylene has no held strength (DP8005's sheet gives none on PP) and Peli states none for its inserts:
      both OPEN at T8 (a pull test of the tab at 3 times the largest tension above) and T-A1-3 (the stay on the mock-up, the lid dropped
-     open onto it). Stay parts: 25 mm polyester webbing, two stainless tabs; about EUR 10 (ESTIMATE).
-   OPERATOR LOADS (check M6): a horizontal backward push on the open lid at the QMX set's height (B, A) or the tablet's (C) tips the
-   worst swept case on level ground when it exceeds:
+     open onto it). Closed, its slack lies folded against the lid's ceiling and fillet at X -185..-150, Y 55..80, 6 deep or less, held by
+     a bonded elastic keeper (room over the guard caps below it: 44.39 - 28.00 - 6 = 10.4). Stay parts: 12 mm polyester webbing, two
+     stainless tabs; about EUR 10 (ESTIMATE).
+   OPERATOR LOADS (check M6): a horizontal backward push on the open lid at the QMX set's point (B, A; for C the same point on the
+   lid), and a push normal to the tablet's screen at its centre and far edge (A, C), tip the worst swept case on level ground above:
      B at 100 deg: 13.40 kg, CG Y 91.34, restoring 3.04 N m; push at Z 251: 11.7 N (1.2 kgf)
      A at 100 deg: 13.04 kg, CG Y 88.50, restoring 3.32 N m; push at Z 251: 12.8 N (1.3 kgf)
+       A, a push normal to the tablet's screen at its centre (open at Y 196, Z 223): 13.7 N
+       A, a push normal to the tablet's screen at its far edge (open at Y 207, Z 289): 10.8 N
      C at 100 deg: 13.99 kg, CG Y 96.89, restoring 2.41 N m; push at Z 251: 9.3 N (0.9 kgf)
-     so pressing the QMX's controls, plugging its jacks or tapping a tablet in the lid must be done with a hand on the case, or the
+       C, a push normal to the tablet's screen at its centre (open at Y 211, Z 312): 7.3 N
+       C, a push normal to the tablet's screen at its far edge (open at Y 223, Z 378): 6.1 N
+     so pressing the QMX's controls, plugging its jacks or tapping the lid's tablet (about 6 N at its far edge in C) must be done with a hand on the case, or the
      case stood with its back against something: a use limit on the operator's sheet; with the base's real mass and CG (T-A1-3) it may rise.
 
 5. THE BASE POCKETS: section 8's 4S6P (east block as ruled, west block mirrored) at the same worst figures
