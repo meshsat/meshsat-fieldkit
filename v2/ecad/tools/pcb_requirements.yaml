@@ -3608,6 +3608,13 @@ open_items:
       CFL-016's statement and notes, not only the EMCON line and the parts it gates: the startup enables, ZEROIZE, the
       Charging and Service rows, the outlets' tie to the PA, PANEL.md section 7's bus table and the outcomes of
       decisions 28 and 40.
+      Extended at integration set 14 (v2/docs/records/int15/checks/check-int15-1.md): the inventory reads makers' part
+      numbers as well as designators, nets and board names; the five sentences named in CFL-016's set 14 entry
+      (V2-SPEC.md lines 47, 82 and 86, OPERATING-ENVELOPE.md lines 77 and 83) are judged against the netlists and
+      corrected, or dated where the document states their date; CFL-016 is re-read with handover/DEFINITION-STATUS.md,
+      feasibility/EMCON.md and ASSEMBLY.md among its bound files; and the closure answers check-s122-3's three minors
+      (CONOPS.md line 1056's D-13 row, the absent rule's four key words, the README's CON-003 quote) and check-int15-1's
+      m7 (CFL-016's acceptance read literally against the baseline rule). S-122 closes only then.
   - id: S-123
     class: SESSION
     status: OPEN
@@ -14293,6 +14300,19 @@ records:
           is corrected to: PANEL.md line 156 names U26 (gen_sch_a.py:1102), and lines 155 and 156 cite board A's round 8
           candidate at gen_sch_a.py:1240-1243. The entry's other sentences and its result are not changed by this
           correction.
+      - >-
+          v2/docs/records/int15/checks/check-int15-1.md (the integration check of set 14, blocking B1 and B2; answered
+          by v2/docs/records/int15/apply_check15_fixes.py): stream s122's inventory entry above describes the inventory
+          as reading every sentence that names a part; in the check's words the finder reads designators, nets and board
+          names, not makers' part numbers, so that entry overstates it. The check names five sentences in this record's
+          scope that name parts no generator carries: V2-SPEC.md line 82 (the TMDS341A display switch, where board B
+          carries two TS3DV642, U3 and U4), line 86 (the LM5176 front end on the E6 dock strip, which is board A's U2,
+          board E carrying the LM5069 U6) and line 47 (the WM8960 codec, where board D's codec is the PCM2912A U6), and
+          OPERATING-ENVELOPE.md line 77 (a TRACO TEN 40 converter, on no netlist) and line 83 (an Amphenol M.2 B-key
+          socket, where the socket is TE 2199119-3). S-122's closure at 1f3dd306 was therefore premature and is not on
+          this line; this record reads FAIL and waits on S-122, extended with these sentences. Its reading also rests on
+          v2/docs/handover/DEFINITION-STATUS.md (rows DC-01 to DC-09), v2/docs/feasibility/EMCON.md section 0a.1 and
+          v2/docs/ASSEMBLY.md, which it is bound to here (2db0ad36da754fa4, c8eb306265110076, 942d562edd128759).
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
@@ -14306,6 +14326,9 @@ records:
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@c9f7394594201045"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761"
+      - "v2/docs/handover/DEFINITION-STATUS.md@2db0ad36da754fa4"
+      - "v2/docs/feasibility/EMCON.md@c8eb306265110076"
+      - "v2/docs/ASSEMBLY.md@942d562edd128759"
     release_effect: BLOCKER
     source:
       - "v2/docs/PANEL.md section 6"
