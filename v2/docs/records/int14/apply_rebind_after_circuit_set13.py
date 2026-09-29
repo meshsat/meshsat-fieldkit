@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Records bound to a board's committed netlist by sha, after a CIRCUIT change (MESHSAT-1357, integration set 13: stream
-d4emcon's FEA-002 remedies on boards B and C; a copy of records/int10's set 9 script with its entry text generalised).
+csi's four 27R series resistors on board C; a copy of records/int13/apply_rebind_after_circuit.py with its text for set 13).
 Unlike a re-export, the new netlist differs in content, so identity cannot be proved. This script parses main's netlist and the
 tree's (tx_inhibit.parse_netlist: components with value and footprint, nets with their nodes) and computes what changed: the
 parts added, removed or changed (value or footprint), and the nets whose node set changed. For every record bound to the old
