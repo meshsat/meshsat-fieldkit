@@ -1,0 +1,170 @@
+S-117: board A's charger U3 (BQ25731), inductor and frequency. MESHSAT-1357, stream s117. Desk arithmetic on the
+makers' figures; nothing is built or measured. INFERRED: curve readings (inductance under current; the FET's gate
+charge at 6 V, plateau and RDS(on) at 6 V). Currents at eta = 1 (an upper bound).
+
+1. THE CHARGER'S CURRENTS (buck mode; IL = VIN x IIN / VSYS)
+pt     VIN    IIN   VSYS   IL (A)  what
+G1   20.70   5.70  10.00    11.80  as generated: the front end's 5.7 A maximum into a pack at its 10.0 V CUV (the bound)
+G2   20.70   5.70  10.60    11.13  as generated: the same input, the pack at its 2.65 V a cell cut-off
+G3   20.70   5.70  14.40     8.19  as generated: the same input, the pack at its 14.4 V nominal
+G4   20.00   5.00  14.40     6.94  as generated: the front end's 5.0 A typical limit, 20.0 V, nominal pack
+G5   20.70   4.15  14.50     5.92  as generated with FW-A16 revised (a1elec E1): IIN_HOST 4.15 A
+A1   20.70   6.20  14.50     8.85  Option A(i) drafted (a1elec E2): IIN_HOST 6.2 A at the model's 14.5 V node
+A2   20.70   6.45  10.00    13.35  Option A(i) bound: U3's 6.35 A clamp plus 0.1 A, pack at 10.0 V
+S1   20.70   5.70   9.00    13.11  sensitivity only: the secondary protector's 9.0 V UV (the primary has failed)
+
+2. THE INDUCTOR AT EACH POINT: ripple (Equation 3), peak, RMS (Equation 8), against the maker's Isat and Irms
+   nominal = L nominal x its DC-bias fall, fS typical; worst = L at -20 % x its fall, fS at the table minimum.
+   Equation 2 (p.85): ISAT >= ICHG + IRIPPLE / 2, read at the worst ripple. Irms: the maker's 40 C rise figure.
+
+   XAL6030-332ME at 800 kHz: L 3.3 uH +-20 %, DCR 19.92 / 20.81 mOhm, Isat 12.2 A, Irms 6.0 / 8.0 A (20 / 40 C rise); land XAL60xx (drawn today)
+   pt       IL     L nom   L worst   dI nom   dI wst   Ipk wst      Irms       Eq.2  Irms/40C
+   G1    11.80     2.74u     2.19u     2.36     3.47     13.53     11.84       FAIL      148%
+   G2    11.13     2.79u     2.23u     2.32     3.41     12.84     11.17       FAIL      140%
+   G3     8.19     2.98u     2.38u     1.84     2.70      9.55      8.23       PASS      103%
+   G4     6.94     3.04u     2.43u     1.66     2.44      8.17      6.98       PASS       87%
+   G5     5.92     3.08u     2.46u     1.76     2.59      7.22      5.97       PASS       75%
+   A1     8.85     2.94u     2.35u     1.85     2.72     10.21      8.89       PASS      111%
+   A2    13.35     2.62u     2.10u     2.46     3.62     15.16     13.39       FAIL      167%
+   S1    13.11     2.64u     2.11u     2.41     3.54     14.88     13.15       FAIL      164%
+
+   XAL6030-332ME at 400 kHz: L 3.3 uH +-20 %, DCR 19.92 / 20.81 mOhm, Isat 12.2 A, Irms 6.0 / 8.0 A (20 / 40 C rise); land XAL60xx (drawn today)
+   pt       IL     L nom   L worst   dI nom   dI wst   Ipk wst      Irms       Eq.2  Irms/40C
+   G1    11.80     2.74u     2.19u     4.71     6.93     15.27     11.97       FAIL      150%
+   G2    11.13     2.79u     2.23u     4.64     6.83     14.54     11.30       FAIL      141%
+   G3     8.19     2.98u     2.38u     3.68     5.41     10.90      8.34       PASS      104%
+   G4     6.94     3.04u     2.43u     3.32     4.88      9.39      7.09       PASS       89%
+   G5     5.92     3.08u     2.46u     3.53     5.19      8.52      6.11       PASS       76%
+   A1     8.85     2.94u     2.35u     3.70     5.44     11.57      8.99       PASS      112%
+   A2    13.35     2.62u     2.10u     4.92     7.24     16.97     13.51       FAIL      169%
+   S1    13.11     2.64u     2.11u     4.81     7.08     16.65     13.27       FAIL      166%
+
+   XAL6060-472ME at 400 kHz: L 4.7 uH +-20 %, DCR 13.10 / 14.40 mOhm, Isat 10.5 A, Irms 8.0 / 11.0 A (20 / 40 C rise); land XAL60xx (same land)
+   pt       IL     L nom   L worst   dI nom   dI wst   Ipk wst      Irms       Eq.2  Irms/40C
+   G1    11.80     3.04u     2.43u     4.25     6.26     14.93     11.94       FAIL      109%
+   G2    11.13     3.22u     2.58u     4.01     5.90     14.08     11.26       FAIL      102%
+   G3     8.19     3.81u     3.05u     2.87     4.23     10.31      8.28       PASS       75%
+   G4     6.94     4.00u     3.20u     2.52     3.71      8.80      7.03       PASS       64%
+   G5     5.92     4.15u     3.32u     2.61     3.84      7.85      6.03       PASS       55%
+   A1     8.85     3.71u     2.97u     2.93     4.30     11.00      8.94       FAIL       81%
+   A2    13.35     2.98u     2.39u     4.33     6.37     16.54     13.48       FAIL      123%
+   S1    13.11     2.98u     2.39u     4.27     6.27     16.25     13.23       FAIL      120%
+
+   XAL1010-332ME at 800 kHz: L 3.3 uH +-20 %, DCR 3.70 / 4.10 mOhm, Isat 27.4 A, Irms 18.2 / 25.0 A (20 / 40 C rise); land XAL1010 (L1 and L8's land)
+   pt       IL     L nom   L worst   dI nom   dI wst   Ipk wst      Irms       Eq.2  Irms/40C
+   G1    11.80     2.95u     2.36u     2.19     3.23     13.41     11.84       PASS       47%
+   G2    11.13     2.98u     2.38u     2.17     3.20     12.73     11.17       PASS       45%
+   G3     8.19     3.09u     2.47u     1.77     2.61      9.50      8.23       PASS       33%
+   G4     6.94     3.13u     2.51u     1.61     2.37      8.13      6.98       PASS       28%
+   G5     5.92     3.17u     2.53u     1.71     2.52      7.18      5.97       PASS       24%
+   A1     8.85     3.06u     2.45u     1.77     2.60     10.15      8.88       PASS       36%
+   A2    13.35     2.88u     2.30u     2.24     3.30     15.00     13.39       PASS       54%
+   S1    13.11     2.89u     2.31u     2.20     3.24     14.73     13.14       PASS       53%
+
+   XAL1010-472ME at 400 kHz: L 4.7 uH +-20 %, DCR 5.20 / 5.70 mOhm, Isat 25.4 A, Irms 17.5 / 24.0 A (20 / 40 C rise); land XAL1010 (L1 and L8's land)
+   pt       IL     L nom   L worst   dI nom   dI wst   Ipk wst      Irms       Eq.2  Irms/40C
+   G1    11.80     4.13u     3.30u     3.13     4.60     14.10     11.87       PASS       49%
+   G2    11.13     4.18u     3.34u     3.10     4.55     13.41     11.21       PASS       47%
+   G3     8.19     4.35u     3.48u     2.52     3.70     10.04      8.26       PASS       34%
+   G4     6.94     4.42u     3.54u     2.28     3.35      8.62      7.01       PASS       29%
+   G5     5.92     4.48u     3.58u     2.42     3.56      7.71      6.01       PASS       25%
+   A1     8.85     4.32u     3.45u     2.51     3.70     10.70      8.92       PASS       37%
+   A2    13.35     4.02u     3.22u     3.21     4.72     15.71     13.42       PASS       56%
+   S1    13.11     4.04u     3.23u     3.15     4.63     15.42     13.18       PASS       55%
+
+3. THE LOSSES EACH FREQUENCY IMPLIES WITH THE DRAWN FETS (Q7 to Q10 CSD18510Q5B), SLUSE66A Equations 6 to 22
+   Qsw two ways: TI's Equation 14, Qgd + Qgs = 49 nC (the maker's method when no Qsw is given), and Qgd + Qgs -
+   Qg(th) = 34 nC (the charge past the threshold only; INFERRED as the lower bound). Ion = (REGN - Vplt) / (6.0 + 0.9),
+   Ioff = Vplt / (1.3 + 0.9): Ion 0.493 A, Ioff 1.182 A. Inductor copper at DCR max, 25 C. Core loss: NOT COMPUTED (Coilcraft
+   publishes it through its web calculator only, which is not held): INCONCLUSIVE, and it too rises with frequency.
+
+   XAL1010-472ME at 400 kHz (typical fS, nominal L with its fall)
+   pt     Pin W    Q7 sw   Q7 all   Q8 all      Q10    L2 Cu     stage   sw part      eta
+   G1     118.0     7.27     7.35     1.22     0.15     0.80      9.52      8.41    0.919  Eq14 (ton 99 ns, toff 41 ns)
+   G1     118.0     5.28     5.36     1.22     0.15     0.80      7.52      6.42    0.936  Qgs2 (ton 69 ns, toff 29 ns)
+   G2     118.0     6.89     6.96     1.19     0.14     0.71      8.99      8.01    0.924  Eq14 (ton 99 ns, toff 41 ns)
+   G2     118.0     5.01     5.08     1.19     0.14     0.71      7.12      6.14    0.940  Qgs2 (ton 69 ns, toff 29 ns)
+   G3     118.0     5.24     5.30     1.08     0.07     0.39      6.84      6.30    0.942  Eq14 (ton 99 ns, toff 41 ns)
+   G3     118.0     3.87     3.92     1.08     0.07     0.39      5.46      4.93    0.954  Qgs2 (ton 69 ns, toff 29 ns)
+   G4     100.0     4.39     4.43     1.01     0.05     0.28      5.77      5.39    0.942  Eq14 (ton 99 ns, toff 41 ns)
+   G4     100.0     3.27     3.31     1.01     0.05     0.28      4.66      4.27    0.953  Qgs2 (ton 69 ns, toff 29 ns)
+   G5      85.9     3.93     3.96     1.02     0.04     0.20      5.22      4.94    0.939  Eq14 (ton 99 ns, toff 41 ns)
+   G5      85.9     2.96     2.99     1.02     0.04     0.20      4.25      3.97    0.951  Qgs2 (ton 69 ns, toff 29 ns)
+   A1     128.3     5.63     5.69     1.10     0.09     0.45      7.32      6.70    0.943  Eq14 (ton 99 ns, toff 41 ns)
+   A1     128.3     4.14     4.20     1.10     0.09     0.45      5.83      5.21    0.955  Qgs2 (ton 69 ns, toff 29 ns)
+   A2     133.5     8.17     8.26     1.27     0.20     1.02     10.76      9.34    0.919  Eq14 (ton 99 ns, toff 41 ns)
+   A2     133.5     5.90     6.00     1.27     0.20     1.02      8.49      7.07    0.936  Qgs2 (ton 69 ns, toff 29 ns)
+   S1     118.0     8.04     8.12     1.27     0.19     0.98     10.57      9.20    0.910  Eq14 (ton 99 ns, toff 41 ns)
+   S1     118.0     5.81     5.89     1.27     0.19     0.98      8.34      6.98    0.929  Qgs2 (ton 69 ns, toff 29 ns)
+
+   XAL1010-332ME at 800 kHz (typical fS, nominal L with its fall)
+   pt     Pin W    Q7 sw   Q7 all   Q8 all      Q10    L2 Cu     stage   sw part      eta
+   G1     118.0    14.77    14.85     2.36     0.15     0.57     17.93     17.05    0.848  Eq14 (ton 99 ns, toff 41 ns)
+   G1     118.0    10.72    10.79     2.36     0.15     0.57     13.87     13.00    0.882  Qgs2 (ton 69 ns, toff 29 ns)
+   G2     118.0    14.00    14.07     2.31     0.14     0.51     17.03     16.24    0.856  Eq14 (ton 99 ns, toff 41 ns)
+   G2     118.0    10.18    10.25     2.31     0.14     0.51     13.21     12.43    0.888  Qgs2 (ton 69 ns, toff 29 ns)
+   G3     118.0    10.67    10.72     2.14     0.07     0.28     13.21     12.78    0.888  Eq14 (ton 99 ns, toff 41 ns)
+   G3     118.0     7.87     7.92     2.14     0.07     0.28     10.41      9.99    0.912  Qgs2 (ton 69 ns, toff 29 ns)
+   G4     100.0     8.93     8.97     2.02     0.05     0.20     11.24     10.94    0.888  Eq14 (ton 99 ns, toff 41 ns)
+   G4     100.0     6.65     6.69     2.02     0.05     0.20      8.96      8.65    0.910  Qgs2 (ton 69 ns, toff 29 ns)
+   G5      85.9     8.03     8.06     2.03     0.04     0.14     10.27     10.05    0.880  Eq14 (ton 99 ns, toff 41 ns)
+   G5      85.9     6.04     6.07     2.03     0.04     0.14      8.28      8.06    0.904  Qgs2 (ton 69 ns, toff 29 ns)
+   A1     128.3    11.43    11.49     2.17     0.09     0.32     14.07     13.58    0.890  Eq14 (ton 99 ns, toff 41 ns)
+   A1     128.3     8.40     8.46     2.17     0.09     0.32     11.04     10.55    0.914  Qgs2 (ton 69 ns, toff 29 ns)
+   A2     133.5    16.57    16.66     2.45     0.20     0.73     20.04     18.92    0.850  Eq14 (ton 99 ns, toff 41 ns)
+   A2     133.5    11.97    12.06     2.45     0.20     0.73     15.44     14.31    0.884  Qgs2 (ton 69 ns, toff 29 ns)
+   S1     118.0    16.30    16.38     2.44     0.19     0.71     19.72     18.63    0.833  Eq14 (ton 99 ns, toff 41 ns)
+   S1     118.0    11.78    11.86     2.44     0.19     0.71     15.20     14.11    0.871  Qgs2 (ton 69 ns, toff 29 ns)
+
+   XAL6030-332ME at 800 kHz (typical fS, nominal L with its fall)
+   pt     Pin W    Q7 sw   Q7 all   Q8 all      Q10    L2 Cu     stage   sw part      eta
+   G1     118.0    14.73    14.81     2.36     0.15     2.91     20.22     17.01    0.829  Eq14 (ton 99 ns, toff 41 ns)
+   G1     118.0    10.69    10.77     2.36     0.15     2.91     16.18     12.97    0.863  Qgs2 (ton 69 ns, toff 29 ns)
+   G2     118.0    13.96    14.03     2.31     0.14     2.59     19.07     16.21    0.838  Eq14 (ton 99 ns, toff 41 ns)
+   G2     118.0    10.16    10.23     2.31     0.14     2.59     15.26     12.40    0.871  Qgs2 (ton 69 ns, toff 29 ns)
+   G3     118.0    10.65    10.70     2.14     0.07     1.40     14.32     12.77    0.879  Eq14 (ton 99 ns, toff 41 ns)
+   G3     118.0     7.86     7.91     2.14     0.07     1.40     11.53      9.98    0.902  Qgs2 (ton 69 ns, toff 29 ns)
+   G4     100.0     8.92     8.96     2.02     0.05     1.01     12.04     10.92    0.880  Eq14 (ton 99 ns, toff 41 ns)
+   G4     100.0     6.64     6.68     2.02     0.05     1.01      9.76      8.65    0.902  Qgs2 (ton 69 ns, toff 29 ns)
+   G5      85.9     8.02     8.05     2.03     0.04     0.74     10.85     10.04    0.874  Eq14 (ton 99 ns, toff 41 ns)
+   G5      85.9     6.03     6.06     2.03     0.04     0.74      8.86      8.05    0.897  Qgs2 (ton 69 ns, toff 29 ns)
+   A1     128.3    11.41    11.47     2.17     0.09     1.64     15.37     13.56    0.880  Eq14 (ton 99 ns, toff 41 ns)
+   A1     128.3     8.39     8.45     2.17     0.09     1.64     12.34     10.53    0.904  Qgs2 (ton 69 ns, toff 29 ns)
+   A2     133.5    16.52    16.61     2.45     0.20     3.72     22.98     18.86    0.828  Eq14 (ton 99 ns, toff 41 ns)
+   A2     133.5    11.93    12.03     2.45     0.20     3.72     18.39     14.28    0.862  Qgs2 (ton 69 ns, toff 29 ns)
+   S1     118.0    16.25    16.33     2.44     0.19     3.59     22.55     18.58    0.809  Eq14 (ton 99 ns, toff 41 ns)
+   S1     118.0    11.74    11.83     2.44     0.19     3.59     18.04     14.08    0.847  Qgs2 (ton 69 ns, toff 29 ns)
+
+   'stage' is Q7 + Q8 + Q10 + L2's copper; 'sw part' is every term that scales with fS. Not in 'stage': the core
+   loss (not held), R16 and R17, the controller's own quiescent draw, and the FETs' rise in RDS(on) with temperature
+   (Figure 2 is 25 C). eta here is therefore an upper figure for the stage, not the charger's efficiency.
+
+4. THE 400 kHz ROW AGAINST THE 800 kHz ROW ON THE SAME LAND (XAL1010), switching terms only, both Qsw readings
+   pt      400k 4.7uH     800k 3.3uH     800k extra
+   G1    6.42 to 8.41  13.00 to 17.05   6.58 to 8.64 W
+   G2    6.14 to 8.01  12.43 to 16.24   6.29 to 8.23 W
+   G3    4.93 to 6.30   9.99 to 12.78   5.06 to 6.48 W
+   G4    4.27 to 5.39   8.65 to 10.94   4.38 to 5.55 W
+   G5    3.97 to 4.94   8.06 to 10.05   4.09 to 5.11 W
+   A1    5.21 to 6.70  10.55 to 13.58   5.34 to 6.88 W
+   A2    7.07 to 9.34  14.31 to 18.92   7.24 to 9.58 W
+   S1    6.98 to 9.20  14.11 to 18.63   7.14 to 9.43 W
+
+5. THE GATE DRIVE THE CHARGER'S OWN 6 V REGULATOR MUST SUPPLY (REGN feeds both low-side drivers and, through the
+   bootstrap capacitors, both high-side drivers). In buck mode Q1 and Q2 (board A's Q7 and Q8) switch every cycle and
+   Q4 is held on (Table 9-3, p.27), so IREGN = (Qg(Q7) + Qg(Q8)) x fS. SLUSE66A 8.5, p.11: VREGN_REG 5.7 / 6.0 / 6.3 V
+   is specified for 0 to 60 mA; IREGN_LIM, the current limit with the converter enabled, is 50 min / 65 typ mA.
+   Qg at 6 V: 75 nC INFERRED (Figure 4); the table's 58 nC at 4.5 V is a floor for a 6 V drive.
+   fS             Qg 58 nC     Qg 75 nC   against 60 mA spec / 50 mA minimum limit
+   min 400 kHz      39.4 mA      51.0 mA   straddles the 50 mA minimum limit
+   400 kHz         46.4 mA      60.0 mA   straddles the 50 mA minimum limit
+   max 400 kHz      53.4 mA      69.0 mA   OVER the 50 mA minimum limit
+   min 800 kHz      78.9 mA     102.0 mA   OVER the 50 mA minimum limit
+   800 kHz         92.8 mA     120.0 mA   OVER the 50 mA minimum limit
+   max 800 kHz     106.7 mA     138.0 mA   OVER the 50 mA minimum limit
+   The same current is drawn from VBUS20 through REGN's linear regulator: at 20.7 V and the typical fS the gate
+   drive takes 1.24 W at 400 kHz, of which the regulator's own drop, 0.88 W, is dissipated inside U3; with the
+   JEDEC RthJA of 37.2 C/W (8.4, p.9) that drop alone is a 33 K rise of U3's junction over its surroundings.
+   drive takes 2.48 W at 800 kHz, of which the regulator's own drop, 1.76 W, is dissipated inside U3; with the
+   JEDEC RthJA of 37.2 C/W (8.4, p.9) that drop alone is a 66 K rise of U3's junction over its surroundings.
+   (JEDEC's board is not board A; the figure orders the two rows, it does not predict U3's temperature.)

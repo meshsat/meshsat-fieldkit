@@ -1,0 +1,2 @@
+apply_gen_sch_a_s117: gen_sch_a.py sha256/16 eb2e347e4d371e0f -> dfa79e7c2822984b; 3 changes; L2, R25, C26, C27 changed; R219, R220, C233, C234, C235 new; every expected call read back from the parsed source
+CHECK ONLY: 3 anchors, 9 calls read back, 1 generator; no writes, no marker.
