@@ -162,7 +162,7 @@
   {
    "binding": "PRINTED",
    "design_part": "the value names SS2040FL",
-   "document": "v2/vendor/power/panjit-ss2020fl-series.pdf",
+   "document": "v2/vendor/power/held/panjit-ss2020fl-series.pdf",
    "id": "S-330f4dd290",
    "line": "PARAMETER SYMBOL SS2020FL SS2030FL SS2040FL SS2060FL SS20100FL UNITS",
    "mpn": "SS2040FL",
@@ -175,7 +175,7 @@
   {
    "binding": "PRINTED",
    "design_part": "the value names SS2040FL",
-   "document": "v2/vendor/power/panjit-ss2020fl-series.pdf",
+   "document": "v2/vendor/power/held/panjit-ss2020fl-series.pdf",
    "id": "S-a95bcbbc1e",
    "line": "PARAMETER SYMBOL SS2020FL SS2030FL SS2040FL SS2060FL SS20100FL UNITS",
    "mpn": "SS2040FL",
@@ -188,7 +188,7 @@
   {
    "binding": "PRINTED",
    "design_part": "the value names SS2040FL",
-   "document": "v2/vendor/power/panjit-ss2020fl-series.pdf",
+   "document": "v2/vendor/power/held/panjit-ss2020fl-series.pdf",
    "id": "S-af1ea25d67",
    "line": "PARAMETER SYMBOL SS2020FL SS2030FL SS2040FL SS2060FL SS20100FL UNITS",
    "mpn": "SS2040FL",
@@ -1012,7 +1012,7 @@
  ],
  "selections": 87,
  "table": "v2/ecad/tools/pcb_part_identities.yaml",
- "table_sha256": "bea90e3c496f324a622a68a92df8d241b28d72f47eb25f38116c1d9273f38600",
+ "table_sha256": "7e427ab4d562db4e1f0c424d7afbbab93da02931d2fb8149e7203aa36b3bde0a",
  "tool_sha256": "26c7862e2dd212d41bf650261d1507bba472c28695947a245e027f0e2bfc7e6f",
  "unfetched_ok": false,
  "unresolved_by_reason": {
