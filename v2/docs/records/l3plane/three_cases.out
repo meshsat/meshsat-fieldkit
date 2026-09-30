@@ -1,0 +1,74 @@
+M1 ON THREE POWER-PATH CASES AND ONE DERATED VARIANT, KEPT APART (three_cases.py, stream l3plane with r11dep, MESHSAT-1357).
+PROTOTYPE DESIGN: nothing built, powered or measured. MODELED on a1elec's energy_two_pack.py through energy_basis.py's set-up
+(pinned); the electrical limits from r11dep's r11_dep.out; every coverage figure is a MODELLED HISTORICAL COVERAGE, not a
+success probability. The author's analysis, AI arithmetic; not a qualified review and not the independent check.
+
+0. REPRODUCTION: the mean-day runs reproduce energy_basis.out section 5's NOM, WE and GEN rows (18 cells with their pass
+   lines), and the window runs reproduce weather_basis.out A's NOM TYP and WE TYP rows of the 4S14P and 4S15P lids: yes
+
+1. THE ELECTRICAL LIMITS FED IN (r11dep's r11_dep.out 3, stacked; checked by CHECK-3)
+   the front end's average limit, held R11 10 mOhm: 4.212 / 5.000 / 5.810 A; proposed R11 6.2 mOhm: 6.793 / 8.065 / 9.370 A
+   VBUS20's other loads through R11 besides U3: 0.060 A; so U3 can draw at most 4.152 A (held) and 6.733 A (proposed) at the
+   front end's stacked minimum. U3's settings: E1 4.15 A (board A as generated), E2 6.20 A (drafted), the derated variant 4.05 A;
+   U3's minimum at a setting taken 0.1 A under it (INFERRED, as WE's 6.1 A)
+
+2. THE REFERENCE DAY AT 40/0 (SC-37's mean September day; each cell: both packs' lowest store (base, lid) in Wh, or the
+   unserved energy; COMB/EACH as energy_basis.out 1d; start 06 and 18 UTC)
+   AS DRAWN, NOM inputs: U3 as set, 4.15 A, under the front end's 4.152 A (the model's min(available, cap) kept: an UPPER bound)
+     4S9P both kept     TYP NOT MET, 494.7 unserved                  N/N   WAB NOT MET, 522.4 unserved                  N/N
+     4S14P tablet out   TYP NOT MET, 357.5 unserved                  N/N   WAB NOT MET, 383.8 unserved                  N/N
+     4S15P QMX out      TYP NOT MET, 326.6 unserved                  N/N   WAB NOT MET, 352.8 unserved                  N/N
+   AS DRAWN, WE inputs: U3 at its INFERRED minimum 4.05 A (upper bound as above)
+     4S9P both kept     TYP NOT MET, 589.3 unserved                  N/N   WAB NOT MET, 616.7 unserved                  N/N
+     4S14P tablet out   TYP NOT MET, 452.9 unserved                  N/N   WAB NOT MET, 478.9 unserved                  N/N
+     4S15P QMX out      TYP NOT MET, 422.1 unserved                  N/N   WAB NOT MET, 448.0 unserved                  N/N
+   DERATED VARIANT of AS DRAWN, NOM inputs: U3 at 4.05 A (coordination only)
+     4S9P both kept     TYP NOT MET, 523.7 unserved                  N/N   WAB NOT MET, 551.5 unserved                  N/N
+     4S14P tablet out   TYP NOT MET, 386.5 unserved                  N/N   WAB NOT MET, 412.7 unserved                  N/N
+     4S15P QMX out      TYP NOT MET, 355.5 unserved                  N/N   WAB NOT MET, 381.7 unserved                  N/N
+   DERATED VARIANT, WE inputs: U3 at its INFERRED minimum 3.95 A
+     4S9P both kept     TYP NOT MET, 616.7 unserved                  N/N   WAB NOT MET, 644.1 unserved                  N/N
+     4S14P tablet out   TYP NOT MET, 480.1 unserved                  N/N   WAB NOT MET, 506.1 unserved                  N/N
+     4S15P QMX out      TYP NOT MET, 449.3 unserved                  N/N   WAB NOT MET, 475.3 unserved                  N/N
+   RESISTOR-ONLY, lower bound under B-5's inferred collapse, NOM inputs (INCONCLUSIVE between this and CORRECTED NOM)
+     4S9P both kept     TYP NOT MET, 805.5 unserved                  N/N   WAB NOT MET, 1079.9 unserved                 N/N
+     4S14P tablet out   TYP NOT MET, 652.9 unserved                  N/N   WAB NOT MET, 926.5 unserved                  N/N
+     4S15P QMX out      TYP NOT MET, 622.1 unserved                  N/N   WAB NOT MET, 895.7 unserved                  N/N
+   RESISTOR-ONLY, lower bound under B-5's inferred collapse, WE inputs (INCONCLUSIVE between this and CORRECTED WE)
+     4S9P both kept     TYP NOT MET, 900.9 unserved                  N/N   WAB NOT MET, 900.9 unserved                  N/N
+     4S14P tablet out   TYP NOT MET, 749.9 unserved                  N/N   WAB NOT MET, 749.9 unserved                  N/N
+     4S15P QMX out      TYP NOT MET, 719.4 unserved                  N/N   WAB NOT MET, 719.4 unserved                  N/N
+   CORRECTED PATH, HYPOTHETICAL, NOM inputs (energy_basis.out NOM)
+     4S9P both kept     TYP NOT MET, 165.7 unserved                  N/N   WAB NOT MET, 172.6 unserved                  N/N
+     4S14P tablet out   TYP   93.7 (base  49.0, lid  44.6)           Y/Y   WAB   75.7 (base  48.2, lid  27.5)           Y/Y
+     4S15P QMX out      TYP  125.2 (base  57.1, lid  68.1)           Y/Y   WAB  106.8 (base  56.3, lid  50.5)           Y/Y
+   CORRECTED PATH, HYPOTHETICAL, WE inputs, CONDITIONAL on three undocumented efficiencies (energy_basis.out WE)
+     4S9P both kept     TYP NOT MET, 169.2 unserved                  N/N   WAB NOT MET, 176.1 unserved                  N/N
+     4S14P tablet out   TYP   44.0 (base  44.0, lid   0.0)           Y/N   WAB NOT MET,  10.8 unserved                  N/N
+     4S15P QMX out      TYP   74.3 (base  52.4, lid  19.4)           Y/Y   WAB   19.5 (base  19.5, lid   0.0)           Y/N
+   the proposed front end's stacked minimum (6.733 A to U3) fed as the corrected path's cap moves no cell: yes
+   the as-drawn rows at NOM equal energy_basis.out's GEN (the printed 4.30 A minimum): yes (U3's 4.15 A binds in both)
+
+3. THE MODELLED HISTORICAL COVERAGE, 864 September 72 h windows of 2005 to 2020 at 40/0 (weather_basis.out A's windows, loads,
+   ageing and temperatures), TYP build: windows kept (no STOP) / COMB above the floor / EACH above the floor
+   AS DRAWN, NOM (upper bound)        4S9P both kept       0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   AS DRAWN, NOM (upper bound)        4S14P tablet out     0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   AS DRAWN, NOM (upper bound)        4S15P QMX out        0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   DERATED VARIANT, NOM               4S9P both kept       0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   DERATED VARIANT, NOM               4S14P tablet out     0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   DERATED VARIANT, NOM               4S15P QMX out        0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   RESISTOR-ONLY lower bound, NOM     4S9P both kept       0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   RESISTOR-ONLY lower bound, NOM     4S14P tablet out     2 ( 0.2 %) /   2 ( 0.2 %) /   0 ( 0.0 %)
+   RESISTOR-ONLY lower bound, NOM     4S15P QMX out        2 ( 0.2 %) /   2 ( 0.2 %) /   2 ( 0.2 %)
+   RESISTOR-ONLY lower bound, WE      4S9P both kept       0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   RESISTOR-ONLY lower bound, WE      4S14P tablet out     0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   RESISTOR-ONLY lower bound, WE      4S15P QMX out        0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   CORRECTED PATH, HYPOTHETICAL, NOM  4S14P tablet out   207 (24.0 %) / 200 (23.1 %) / 145 (16.8 %)   (weather_basis.out A, reproduced)
+   CORRECTED PATH, HYPOTHETICAL, WE   4S14P tablet out   166 (19.2 %) / 164 (19.0 %) / 115 (13.3 %)   (weather_basis.out A, reproduced)
+   CORRECTED PATH, HYPOTHETICAL, NOM  4S15P QMX out      235 (27.2 %) / 232 (26.9 %) / 177 (20.5 %)   (weather_basis.out A, reproduced)
+   CORRECTED PATH, HYPOTHETICAL, WE   4S15P QMX out      190 (22.0 %) / 186 (21.5 %) / 141 (16.3 %)   (weather_basis.out A, reproduced)
+   CORRECTED PATH, 4S9P: 0 in every case (weather_basis.out A)
+
+END. Each line is the model's arithmetic; nothing is measured. No figure here is demonstrated capability: AS DRAWN and the
+DERATED VARIANT fail M1; RESISTOR-ONLY is INCONCLUSIVE; CORRECTED PATH is HYPOTHETICAL until every correction of
+R11-DEPENDENCY.md is closed.

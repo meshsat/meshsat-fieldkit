@@ -7,6 +7,12 @@ modelled historical coverage of all three lids on the corrected inputs (section 
 (section 8a), and a bounded table of credible improvements (section 8b). **Third issue, 30 September 2026:** the
 independent check `CHECK-2` of `ec415c09` accepted the second issue with seven minors; this issue answers them (section 11),
 and three change figures the owner sees: the cell counts and multiples of section 8a, and one coverage row of section 8.
+**Fourth issue, 30 September 2026:** it carries the owner's amendments of that day and CHECK-3 of `4e9fa869` (stream r11dep).
+- **Three power-path cases are kept apart:** AS DRAWN, RESISTOR-ONLY and the CORRECTED PATH, with the DERATED VARIANT beside
+  AS DRAWN (section 0).
+- **Every Option A(i) figure of the earlier issues is the CORRECTED PATH's, and HYPOTHETICAL.** Its required corrections are
+  listed prominently in section 0, and its tables are labelled so.
+- **New figures:** `three_cases.py` gives M1 and the coverage for the other cases. No other output of this folder moves.
 
 **What this page is.** It is the stream's own analysis for the owner's decisions, AI arithmetic, not a qualified review and
 not the independent check. It is not a decision:
@@ -25,13 +31,49 @@ not the independent check. It is not a decision:
 - `vbus20_range.py` into `vbus20_range.out`;
 - `curve_readings.py` into `curve_readings.out`;
 - `energy_basis.py` into `energy_basis.out` (section numbers below are that file's unless another is named);
-- `weather_basis.py` into `weather_basis.out` (sections 8, 8a and 8b).
+- `weather_basis.py` into `weather_basis.out` (sections 8, 8a and 8b);
+- `three_cases.py` into `three_cases.out` (section 0: the power-path cases, fourth issue).
+
+## 0. The three power-path cases (the owner's amendments of 30 September 2026; r11dep's R11-DEPENDENCY.md)
+
+**What is kept apart.** The owner asked to distinguish "the circuit as drawn; the resistor-only proposal; any hypothetical
+corrected power path used for feasibility calculations", and not to count "energy available only through an inadequate power
+path as demonstrated capability". The electrical findings behind the cases are r11dep's. They are provisional until
+independently checked.
+
+| Case | What it is | M1 on the reference day at 40/0, TYP / WAB (MODELED, `three_cases.out` 2) | Coverage of 864 past September windows, TYP, no STOP (`three_cases.out` 3) |
+|---|---|---|---|
+| **(i) AS DRAWN** | R11 10 mOhm, U3 at 4.15 A (entry E1): the front end limits at 4.212 to 5.810 A | every lid NOT MET: 4S9P 494.7 / 522.4, 4S14P 357.5 / 383.8, 4S15P 326.6 / 352.8 Wh unserved (NOM inputs; at WE 422.1 to 616.7) | 0 for every lid |
+| **(i') DERATED VARIANT** of (i) | U3 at 4.05 A: fixes the current-limit coordination ONLY; resolves nothing else | every lid NOT MET: 4S9P 523.7 / 551.5, 4S14P 386.5 / 412.7, 4S15P 355.5 / 381.7 Wh unserved (NOM; at WE 449.3 to 644.1) | 0 for every lid |
+| **(ii) RESISTOR-ONLY** | R11 6.2 mOhm and U3 6.2 A, nothing else changed | **INCONCLUSIVE:** the path is not shown to carry the current. The result lies between a lower bound that takes r11dep B-5's inferred bus collapse (every lid NOT MET, 622.1 to 1079.9 Wh unserved at NOM) and case (iii) | between 0 to 2 windows and case (iii)'s figures |
+| **(iii) CORRECTED PATH, HYPOTHETICAL** | the path the NOM and WE cases assume: `min(available, cap)` at U3's 6.2 A, with every correction below closed | the table of section 1: 4S14P and 4S15P meet at NOM; at WE conditionally | 4S14P 19.2 to 24.0 %, 4S15P 22.0 to 27.2 % (WE to NOM); 4S9P 0 |
+
+**The corrections case (iii) assumes, none of them closed** (r11dep R11-DEPENDENCY.md section 2):
+- Kelvin taps on R11 with at most 0.29 mOhm of shared copper at 25 C (C-1), and the 6.2 mOhm part's order code (C-2);
+- a VIN_RAW-dependent IIN_HOST rule for every source, so the charge path takes what the source gives (A-2, B-5);
+- L1 at the 9 V floor: a part rated for the peak, or the charge limit scheduled on VIN_RAW (B-1, C-5);
+- the FETs' thermal path at the highest permitted current (B-2, C-3);
+- VBUS20's bulk capacitors, over their rating at the highest permitted current (B-4);
+- the copper declarations re-declared and the board regenerated (B-3);
+- C11 and C12's ripple rating (C-4);
+- board E's 200 W stage, not designed (C-6);
+- the three undocumented efficiencies of section 3 (C-8): WE is conditional on them.
+
+**So no result on this page is demonstrated capability.**
+- Cases (i) and (i') fail M1.
+- Case (ii) is inconclusive.
+- Every table from section 1 on is case (iii) unless it names case (i).
 
 ## 1. What the owner is told, and the corrected comparison table
 
-**In one paragraph.** On the energy model, Option A(i) as drafted needs board A's entry re-rated. As generated, no lid
-option meets M1. With the charge bus, U3's limit and both chargers' efficiencies taken at their established worst, M1
-rests on three efficiencies that no maker document establishes for this circuit:
+**In one paragraph.**
+- **As drawn, no lid option meets M1**, and neither does the derated variant. Neither carries any past September window.
+- **The resistor-only proposal is inconclusive** (section 0).
+- **Everything that follows is the CORRECTED PATH, HYPOTHETICAL.** It holds only once r11dep's corrections listed in section
+  0 are closed.
+
+On that hypothetical path, with the charge bus, U3's limit and both chargers' efficiencies taken at their established worst,
+M1 rests on three efficiencies that no maker document establishes for this circuit:
 - board E's tracker stage and board A's front end, both DECLARED at 0.93 and "NOT PLOTTED" at these ratios;
 - the pack's charge efficiency, INFERRED at 0.95 with "no held document".
 
@@ -49,11 +91,12 @@ Held at those values:
 
 The makers' own curves for similar circuits read higher than the declared figures (stage about 0.965, front end about
 0.978, INFERRED). The cell sheet bounds the charge efficiency's resistive part at about 0.99 from above. But none of these
-is a figure for this kit. **So M1 on the drafted Option A(i) depends on efficiencies no maker document establishes. A band
-built on them is conditional, not a basis for a requirement.** It becomes one only when those efficiencies are established
+is a figure for this kit. **So M1 on Option A(i), even on the corrected path, depends on efficiencies no maker
+document establishes. A band built on them is conditional, not a basis for a requirement.** It becomes one only when those efficiencies are established
 on the prototype or by the makers' figures for these circuits. All of this is on one mean September day at Leiden.
 
-**On the weather.** Every past September 72 hour window of 2005 to 2020 was run on the corrected inputs. At WE:
+**On the weather** (case (iii), the corrected path, HYPOTHETICAL). Every past September 72 hour window of 2005 to 2020 was
+run on the corrected inputs. At WE:
 - the 4S15P lid carries 22.0 percent of them (TYP) and 17.5 percent (WAB);
 - the 4S14P lid carries 19.2 and 14.0 percent;
 - the 4S9P lid carries none.
@@ -65,8 +108,8 @@ against at most 84 in any established arrangement. **So none of those targets fi
 **"Several times more energy" is withdrawn and replaced by these figures.** The one credible input that moves coverage most
 is the load: the link-off variant of PS-IDLE-SPEC more than doubles it, but it reduces the approved service (section 8b).
 
-**The table.** All energy figures are MODELED on SC-37's reference day (section 6a), on the 40 degree south plane unless a
-band is named.
+**The table.** Every row is case (iii), the CORRECTED PATH, HYPOTHETICAL, except GEN, which is case (i), AS DRAWN. All energy
+figures are MODELED on SC-37's reference day (section 6a), on the 40 degree south plane unless a band is named.
 - Each cell gives the lowest store of both packs in Wh, with the base's and the lid's own lowest in brackets; "NOT MET"
   gives the energy left unserved.
 - TYP and WAB are the two array builds on the same mean day (section 6b).
@@ -82,7 +125,9 @@ band is named.
 | WE60, U3's limit at the 6.0 A bracket: TYP / WAB | NOT MET | 23.9 (23.9, 0.0) / NOT MET, 30.9 | 54.1 (48.9, 5.2) / NOT MET, 0.6 |
 | WEL, the bus at its endurance bracket 18.782 V: TYP / WAB | NOT MET | 20.8 (20.8, 0.0) / NOT MET, 34.0 | 51.0 (48.0, 3.1) / NOT MET, 3.7 |
 | WA, the three undocumented efficiencies at 0.90 as well | NOT MET | NOT MET, 71.8 / 122.0 | NOT MET, 41.5 / 93.2 |
-| GEN, board A **as generated** (R11 10 mOhm) | NOT MET, 494.7 / 522.4 | NOT MET, 357.5 / 383.8 | NOT MET, 326.6 / 352.8 |
+| GEN, board A **as generated** (R11 10 mOhm): **case (i), AS DRAWN** | NOT MET, 494.7 / 522.4 | NOT MET, 357.5 / 383.8 | NOT MET, 326.6 / 352.8 |
+| **Case (i'), the DERATED VARIANT** (U3 at 4.05 A; `three_cases.out`) | NOT MET, 523.7 / 551.5 | NOT MET, 386.5 / 412.7 | NOT MET, 355.5 / 381.7 |
+| **Case (ii), RESISTOR-ONLY: INCONCLUSIVE**, its lower bound under the inferred collapse, NOM (`three_cases.out`) | NOT MET, 805.5 / 1079.9 | NOT MET, 652.9 / 926.5 | NOT MET, 622.1 / 895.7 |
 | **Band at WE, pass line COMB** (both builds pass; `energy_basis.out` 6) | none | **none** | **slope 30 to 50, south to 15 W, CONDITIONAL**; least combined 5.3 Wh at 50/+15 WAB; the lid empties at 30/0 WAB |
 | Band at WE, pass line EACH | none | none | **none** |
 | Band at WE60 (either line) | none | none | none |
@@ -90,7 +135,7 @@ band is named.
 | Thresholds at WE, pass line EACH | not applicable | none reach it at 1.00 (the bus 20.220 to 20.417 V) | 0.981 to 0.995; 0.980 to 0.995, or none; 19.663 to 20.034 V; 6.265 to 6.344 A, or none |
 | WE's own values of those inputs | | 0.95; 0.93; 19.146 V; 6.1 A | 0.95; 0.93; 19.146 V; 6.1 A |
 | Band at NOM, for reference: COMB; EACH | none | 20 to 50, 15 E to 30 W (least combined 18.3 Wh); 30 to 50, S to 15 W (least lid 17.1 Wh) | 20 to 60, 15 E to 30 W (least combined 6.6 Wh); 20 to 50, 15 E to 30 W (least lid 4.8 Wh) |
-| MODELLED HISTORICAL COVERAGE, 864 September 72 h windows at 40/0 (section 8): WE TYP / WE WAB, the kit never stops; the same on COMB; on EACH | 0 in every case | 19.2 / 14.0 %; 19.0 / 13.2 %; 13.3 / 9.8 % | 22.0 / 17.5 %; 21.5 / 16.9 %; 16.3 / 12.5 % |
+| MODELLED HISTORICAL COVERAGE, case (iii), 864 September 72 h windows at 40/0 (section 8): WE TYP / WE WAB, the kit never stops; the same on COMB; on EACH | 0 in every case | 19.2 / 14.0 %; 19.0 / 13.2 %; 13.3 / 9.8 % | 22.0 / 17.5 %; 21.5 / 16.9 %; 16.3 / 12.5 % |
 
 ### 1a. PROPOSED for the owner's approval (nothing accepted, nothing applied)
 
@@ -113,7 +158,8 @@ band is named.
 4. **The displaced function.** Either Option A(i) lid removes an approved function from the kit unless a location is
    found (section 9). Keeping both does not carry M1. The owner's authorisation is needed for whichever function leaves.
 5. **The weather basis (L3-OD6).** Section 8a sets out the options: SC-37's mean day against illustrative coverage
-   targets, with the store each would need. Only the mean day fits an established arrangement with today's array, loads
+   targets, with the store each would need. **Every store size there rests on case (iii), the CORRECTED PATH,
+   HYPOTHETICAL**; the sizing is not run on case (i). Only the mean day fits an established arrangement with today's array, loads
    and inputs. Section 8b lists the inputs that would move coverage, and marks which reduce the approved service. The
    choice is the owner's, and nothing here adopts a target.
 
@@ -162,8 +208,11 @@ band is named.
 **As generated (GEN).** R11 is 10 mOhm, so the front end's constant-current loop holds 4.30 / 5.00 / 5.70 A (VSNS
 43 / 50 / 57 mV, p.7). That is below U3's 6.1 A, and the bus leaves regulation. Entry E1 sets U3 at 4.15 A. Its 4.25 A
 maximum is only 50 mA under the front end's 4.30 A minimum, and R11 also carries VBUS20 currents that do not pass R16
-(U2's BIAS, R197, the divider): not quantified, and they can only make GEN worse. Every Option A(i) figure uses the drafted
-R11 6.2 mOhm (6.94 / 8.06 / 9.19 A).
+(U2's BIAS, R197, the divider). r11dep (fourth issue) quantifies them at 0.060 A, and stacks R11's tolerance, TCR and the
+ISNS bias: the front end then limits at 4.212 A, and GEN's U3 exceeds that by 0.098 A (r11dep A-1). Every Option A(i)
+figure uses the drafted R11 6.2 mOhm (6.94 / 8.06 / 9.19 A printed, 6.793 A stacked minimum), **with Kelvin taps on R11
+(r11dep)**. Without them the stacked margin of 0.378 A over U3 does not hold: the copper shared with the taps may be at most
+0.29 mOhm at 25 C. That figure, and every other correction of section 0, make these results case (iii), HYPOTHETICAL.
 
 ## 3. The three undocumented efficiencies: what the makers' documents give (`energy_basis.out` 2; `curve_readings.out`)
 
@@ -173,7 +222,7 @@ R11 6.2 mOhm (6.94 / 8.06 / 9.19 A).
 | board A's front end (LM5176) | 0.93 DECLARED, bracket 0.90 to 0.97, "NOT PLOTTED at 20 V out" | SNVSAI1D p.9 Figure 6-2: the 9 V curve, a boost of ratio 1.33 (board A 1.32), VOUT 12 V, 300 kHz, 4.7 uH | 97.8 to 97.9 % at 5.5 to 6 A (TYPICAL, 25 C, INFERRED) | **No**: 12 V out, not 20 V; other frequency, inductor and FETs. The plot's load current is its output current: at 6 A out its 9 V curve draws about 8.2 A in, close to board A's 8.7 A in at 6.1 A out, so the currents are alike and the voltages and circuit are not |
 | the pack's charge efficiency | 0.95 INFERRED, bracket 0.90 to 0.98, "no held document gives it" | Samsung SDI INR18650-35E (`v2/vendor/battery/samsung-35e-conrad.pdf`, pinned by `energy_inputs.yaml`): p.3 0.2C discharge 3.482 Ah, 12.62 Wh (mean 3.624 V); p.7 one storage sample's initial DC-IR 34.5 mOhm (AC-IR 19.8) | the resistive part alone, (OCV - I_dis R) / (OCV + I_chg R): 0.9924 and 0.9925 (base, 0.661 A a cell, discharging at the 4S20P and 4S21P kits' 0.148 and 0.141 A a cell), 0.9933 (4S14P lid), 0.9937 (4S15P lid); INFERRED | **No**: the sheet gives no charged energy, charge curve, coulombic efficiency or hysteresis; the resistive part is an UPPER bound |
 
-## 4. Sensitivity, corrected: one input at a time from WE and from NOM WAB (`energy_basis.out` 4)
+## 4. Sensitivity, corrected: one input at a time from WE and from NOM WAB (`energy_basis.out` 4; case (iii), HYPOTHETICAL)
 
 The first issue moved each input from NOM with the TYP build. There both packs fill before dusk, so every charge-side loss
 was hidden (CHECK-1 B1). That table is withdrawn.
@@ -272,7 +321,7 @@ maxima 0.9733 and 0.9722. The bus acts almost wholly through the power U3 may ta
 
 **Common to every case:**
 - a 200 W stage window;
-- the drafted entry R11 6.2 mOhm (GEN excepted);
+- the drafted entry R11 6.2 mOhm, as case (iii) with its corrections (GEN, case (i), excepted);
 - U3B at code 62 (7.936 A);
 - PS-IDLE-SPEC 42.8 W at the pack terminals;
 - cells aged to 80 percent, with the 3.00 V line and the 5 percent reserve;
@@ -292,7 +341,7 @@ A pack at 0.0 Wh has reached its own 3.00 V line with the reserve, and the kit r
 plane at WE, the lid pack empties with the WAB build for the 4S15P lid and with the TYP build for the 4S14P lid (the table's
 bold zeros); the 4S14P lid with the WAB build does not meet at all. **Which line REQ-072 needs is the owner's reading** (section 1a item 2). Every table on this page gives both.
 
-## 7. What each undocumented figure must reach (`energy_basis.out` 7)
+## 7. What each undocumented figure must reach (`energy_basis.out` 7; case (iii), HYPOTHETICAL)
 
 Each input is moved alone from WE, the rest held as WE. The table gives the least value at which both builds still pass the
 line. "none" means the input fails even at the search's best end (1.00, 22 V, 6.35 A).
@@ -322,7 +371,7 @@ line. "none" means the input fails even at the search's best end (1.00, 22 V, 6.
   cell's resistive bound (0.99) above the charge thresholds. That makes the conditions plausible; it does not establish
   them.
 
-## 8. The modelled historical coverage of the three lids (`weather_basis.out` A)
+## 8. The modelled historical coverage of the three lids (`weather_basis.out` A; case (iii), HYPOTHETICAL)
 
 **Not a success probability, and not a requirement proposal.** It is the share of past September windows the model
 carries. Whether M1 must hold in worse weather than SC-37's mean day is the owner's call (L3-OD6, section 8a).
@@ -356,6 +405,11 @@ carries. Whether M1 must hold in worse weather than SC-37's mean day is the owne
 | | WE-MKR TYP | 255 (29.5 %) | 252 (29.2 %) | 188 (21.8 %) |
 | | NOM TYP | 235 (27.2 %) | 232 (26.9 %) | 177 (20.5 %) |
 
+**The other cases** (`three_cases.out` 3, TYP, the same windows):
+- case (i) AS DRAWN and case (i') the DERATED VARIANT carry 0 of 864 windows for every lid, on every line;
+- case (ii) RESISTOR-ONLY's lower bound carries 2 windows (0.2 %) for the 4S14P and 4S15P lids at NOM, and 0 at WE. Its
+  upper bound is the table above.
+
 **What the coverage shows:**
 - The corrected inputs move the first round's figures only a little: 4S15P WE WAB went from 18.2 to 17.5 percent. CHECK-2
   counts 152 windows there against 151, one window at the margin.
@@ -373,7 +427,10 @@ carries. Whether M1 must hold in worse weather than SC-37's mean day is the owne
 - a full pack at each window's start;
 - overlapping windows, which are not independent trials.
 
-## 8a. L3-OD6, the weather basis, as a quantified choice (`weather_basis.out` B)
+## 8a. L3-OD6, the weather basis, as a quantified choice (`weather_basis.out` B; case (iii), HYPOTHETICAL)
+
+**Every store size in this section rests on case (iii), the CORRECTED PATH, HYPOTHETICAL.** It needs every correction of
+section 0. The sizing is not run on case (i), the circuit as drawn.
 
 The targets below are ILLUSTRATIVE, not proposals. For each window, `weather_basis.py` finds by bisection the least lid pack
 that carries the window on the COMB line at WE, with the base held at 4S6P and U3B's charge current unchanged. The lid's
@@ -429,7 +486,7 @@ every coverage target above the mean day exceeds every established arrangement o
 Assumptions: WE's inputs (conditional on the three undocumented efficiencies); 400 Wp; the load as in section 8; the store
 grown on the lid's side; a full store at each window's start; percentiles over overlapping windows, not independent trials.
 
-## 8b. Credible improvements, each alone from WE (`weather_basis.out` C)
+## 8b. Credible improvements, each alone from WE (`weather_basis.out` C; case (iii), HYPOTHETICAL)
 
 Nothing here is designed or adopted: these are inputs for the owner's choice. Coverage is taken on the COMB line at WE TYP.
 The mean-day margin is the lowest combined store on 40/0, TYP / WAB.
@@ -481,7 +538,8 @@ The source is a1mech's README section 3 and `DECISION-A1.md`, with CASE-MARGINS 
   - board PL's own supply is not read.
 - **The bus:** the copper and the ground offset are not established. The divider's rise and the endurance drift are
   brackets. TI's amplifier gain is typical only.
-- **The entry:** every Option A(i) figure needs board A's R11 re-rated as drafted.
+- **The entry:** every Option A(i) figure is case (iii), HYPOTHETICAL. It needs R11 re-rated with Kelvin taps and every
+  other correction of section 0 (r11dep R11-DEPENDENCY.md).
 - **The coverage and the sizing** (sections 8 and 8a): one plane, a full store at each window's start, overlapping windows,
   PVGIS's average loss on single days, the store grown on the lid's side, and cells only in the mass and volume.
 
@@ -511,6 +569,9 @@ The source is a1mech's README section 3 and `DECISION-A1.md`, with CASE-MARGINS 
 | CHECK-2 minor 5, U3's bracket in the dominance list | section 4, item 5: 12.2 to 12.6 Wh |
 | CHECK-2 minor 6, the LM5176 currents | section 3 and `curve_readings.out` 1: output against output current |
 | CHECK-2 minor 7, WE as a case definition | section 1a, item 1 |
+| Owner's amendments of 30 Sep 2026: three power-path cases, corrections stated prominently, inadequate-path energy not counted | section 0, and every table labelled by case |
+| CHECK-3 minor 6, the Kelvin taps in the drafted-R11 sentence | section 2: "with Kelvin taps on R11 (r11dep)" |
+| CHECK-3 B1, B2 and minors 1 to 5, 7 (the electrical record) | r11dep's R11-DEPENDENCY.md, second issue |
 
 ## 12. Tools, outputs and commands
 
@@ -524,6 +585,9 @@ The source is a1mech's README section 3 and `DECISION-A1.md`, with CASE-MARGINS 
 - `weather_basis.py` and `weather_basis.out` (second issue): sections 8, 8a and 8b; regenerated for CHECK-2 minors 1 to 3. It imports `energy_basis.py` (pinned) and
   refuses unless it reproduces `energy_basis.out` sections 5 and 8.
 - `plane_grid.out` and PLANES.md: the figures are unchanged; PLANES.md's conditions are marked superseded.
+- `three_cases.py` and `three_cases.out` (fourth issue): the cases of section 0. It imports `energy_basis.py` (pinned) and
+  reads r11dep's `r11_dep.out` for the bands. It refuses unless it reproduces `energy_basis.out` section 5's NOM, WE and GEN
+  rows, and `weather_basis.out`'s NOM and WE coverage of the 4S14P and 4S15P lids.
 
 **Commands, from the repository root.** The held UNI-ROYAL and SunPower sheets must be present (ignored, never committed).
 
@@ -532,6 +596,7 @@ python3 v2/docs/records/l3plane/vbus20_range.py > v2/docs/records/l3plane/vbus20
 python3 v2/docs/records/l3plane/curve_readings.py > v2/docs/records/l3plane/curve_readings.out
 python3 v2/docs/records/l3plane/energy_basis.py > v2/docs/records/l3plane/energy_basis.out
 python3 v2/docs/records/l3plane/weather_basis.py > v2/docs/records/l3plane/weather_basis.out
+python3 v2/docs/records/l3plane/three_cases.py > v2/docs/records/l3plane/three_cases.out
 python3 v2/docs/records/l3plane/plane_grid.py | cmp - v2/docs/records/l3plane/plane_grid.out
 python3 v2/docs/records/a1int/reconcile_lid_panel.py | cmp - v2/docs/records/a1int/reconcile_lid_panel.out
 python3 v2/docs/records/a1solar/energy_runs.py | cmp - v2/docs/records/a1solar/energy_runs.out
@@ -539,4 +604,4 @@ python3 v2/docs/records/a1solar/energy_runs.py | cmp - v2/docs/records/a1solar/e
 
 **No committed output of another stream moved.** `plane_grid.out`, `reconcile_lid_panel.out` and `energy_runs.out` rerun
 byte identical. `vbus20_range.out`, `curve_readings.out`, `energy_basis.out` and `weather_basis.out` rerun byte identical
-to their committed second issues.
+to their committed issues; the fourth issue changes none of them.
