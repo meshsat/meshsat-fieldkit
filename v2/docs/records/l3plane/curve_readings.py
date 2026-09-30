@@ -128,7 +128,13 @@ def main():
     P("   " + "; ".join("%.1f A %.1f %%" % (x, v) for x, v in pts if v is not None))
     fe = [v for x, v in pts if x >= 5.5 and v is not None]
     P("   READING at 5.5 to 6 A (board A's front end carries U3's 6.1 A): %.1f to %.1f %% (INFERRED). Board A differs: 20 V out," % (min(fe), max(fe)))
-    P("   about 200 kHz, 10 uH, CSD19532Q5B; at its 122 W the input current is about 8 A, above the plot's 6 A x 9 V.")
+    e6 = [v for x, v in pts if x == 5.9 and v is not None][0] / 100.0      # the reading nearest 6 A
+    i_plot = 12.0 * 6.0 / e6 / 9.0
+    i_board = 6.1 * 20.0 / 0.93 / 15.1
+    P("   about 200 kHz, 10 uH, CSD19532Q5B. The plot's load current is its OUTPUT current: at 6 A out its 9 V curve draws about")
+    P("   %.1f A in (12 V x 6 A / %.3f / 9 V), close to board A's %.1f A in at 6.1 A out (6.1 A x 20 V / 0.93 / 15.1 V): the" % (
+        i_plot, e6, i_board))
+    P("   currents are alike, the voltages and the circuit are not (second issue: CHECK-2 minor 6 corrected this sentence).")
     P("")
     # LT8705A, 8705af p.41: 12 V 15 A converter from 7.5 V to 55 V; y 80 to 100 %, x 0 to 15 A
     im = render(*LT8705A)
