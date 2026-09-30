@@ -27,7 +27,7 @@ Layer 3 reaches completion only when every condition below holds: the four of th
 
 **Status of L3-R2: COMPLETE.**
 
-**Status level (the owner's reviewer's three, D-26):** **requirements drafted / decisions recorded** holds (the intended product and its acceptance criteria are explicit); **requirements baseline validated and accepted** does not yet: the completion gate's five conditions MET, the definition re-issue approved (L3-C26), the owner's conditional closure authorisation recorded (D-39, a ruling deciding layer3_baseline, not itself evidence that any gate passed) and the baseline's acceptance filed against the verified revision after the gates pass (l3r2.yaml baseline_acceptance, apply_l3r5_accept.py). The fifth condition joins the gate with D-26: a recorded target may have a FAIL or INCONCLUSIVE candidate, but not an owed disposition.
+**Status level (the owner's reviewer's three, D-26):** **requirements baseline validated and accepted** holds: the chosen constraints have a credible feasibility basis, the identified gaps are resolved to the agreed review scope, and the owner has accepted the baseline. The fifth condition joins the gate with D-26: a recorded target may have a FAIL or INCONCLUSIVE candidate, but not an owed disposition.
 
 ### 2.1 The owner's closure (D-28, D-29, D-30)
 

@@ -899,3 +899,50 @@ Applied to the ongoing work; no completed task is restarted and no running assig
 - **Milestones are reported as:** accepted deliverable, evidence, remaining material risk, next executable action,
   elapsed time and usage; requirements maturity, design compliance and physical verification kept separate. At the
   first credible Layer 4 candidate a concise power-architecture packet is prepared for an electronics engineer.
+
+### Milestone, 30 September 2026 23:11 CEST: Layer 3 requirements baseline COMPLETE (integration set 18 on main)
+
+**Layer 3 requirements baseline: COMPLETE.** Accepted at `b4b199d0` under the owner's conditional authorisation D-39,
+filed as its own record (`handover/layer3/l3r2.yaml` `baseline_acceptance`) after the gates passed. Requirements
+maturity only: the circuit, the PCB, the thermal design, the runtime and the product are not verified (D-28, D-29).
+
+**Accepted deliverable:** the Layer 3 handover (`v2/docs/handover/layer3/`: REQUIREMENTS-L3-R2.md, L3-RECONCILIATION.md,
+OWNER-DECISIONS-L3.md, the decision register OWNER-INSTRUCTION-2026-09-30.md with the current owner brief) on the
+registry of `b4b199d0`. REQ-072 (48 to 72 hours under a stated operating profile) is the one design objective, every
+other record mandatory; storage inside the Peli 1450, no external battery, battery and solar required, HF and the tablet
+kept, optional tablet charging reducing endurance (D-28); CFL-017 resolved against the selected cell, FEA-008 carrying
+the cell and thermal design to Layer 4 mode by mode (D-29, D-36); rows L3-OD2 to L3-OD7 answered by D-32 to D-37, row
+L3-OD1 closed as Layer 4 architecture (Option A(i) is proposal P-01); D-22's supply-range rule carried into REQ-072's
+acceptance; the CONOPS and PRODUCT-BRIEF re-issue authorised (D-38), its re-stamp open (L3-C63, the change record
+governing until then).
+
+**Evidence:** the engineering collaborator's closure check (`astra-check-l3r5-1`, not accepted) and targeted recheck
+(`astra-check-l3r5-2`, not accepted; B1, B3 and M1 accepted); Claude's check 3 (`check-l3r5-3`, accepted: B2's final
+correction and D-22's trace at `a66c4e5b`, by its own check and the targeted tests; not a model review and not an Astra
+check); the merge verified mechanically; a clone of the candidate branch alone reproducing every page (132 passed, 0
+failed); the box suite at `b4b199d0` 2369 passed, 0 failed, 3 skipped, 200 of 200 modules, judged by the promotion gate
+on its log; the acceptance guards checked against the closure criteria (11 of 11) after the acceptance script was
+hardened to refuse while any gate condition is unmet. Details: `records/int19/README.md`, `records/l3r5/`.
+
+**Remaining material risk (assigned, not hidden):** DR-01 the objective missed by the present candidates even without
+tablet charging (D-06's 4S3P battery-only 2.52 h at +20 C against 42.8 W); DR-02 board A's power path as drawn fails,
+its correction hypothetical; DR-03 the USB-C outlet's R138 trips at 1.92 to 2.26 A below its 3 A contracts; DR-04 the
+solar interface (the stage's input power, the panel revision); DR-05 three undocumented efficiencies; DR-06 the cell and
+thermal design with the pack fitted (FEA-008); DR-07 the lid pack's consequences with P-01. The re-stamp of CONOPS and
+PRODUCT-BRIEF (L3-C63). `run.py`'s name filter reports success when a named module is absent (recorded; the promotion
+suite runs unfiltered and is judged on its log).
+
+**Next executable action:** Layer 4, task L4-E1 (brief `_runs/claude/brief-l4-energy.md`): the engineering
+collaborator names the dominant constraints of the energy objective and at most four architectures to compare under one
+assumption set (D-06's 4S3P and the two-pack base 4S6P plus lid 4S9P among them); then L4-E2, one comparison page with
+the power-path corrections as architecture decisions; one check; the power-architecture packet for an electronics
+engineer. No layout.
+
+**Elapsed and usage:** the closure cycle ran from 14:42 to 23:11 CEST (about 8.5 h, two author runs lost to a server
+overload and restarted). The collaborator: two runs, 8 min 6 s and about 6 min, about 2.0 M input tokens each (1.8 M
+cached) and 14 k and 9.5 k output, list-price estimates 4.29 and 4.07 USD drawn on the ChatGPT plan, not billed. The
+box: the suite 34 min 48 s (about 0.08 USD at 0.142 USD/h); the box (vast.ai 52646493) destroyed at 23:13 after its
+suite logs and the paused stream rdc24's outputs were preserved on the runner (the 4.5 GB re-take clone, rebuildable,
+left); credit 110.45 USD, about 17.55 USD of the foundation cap of 20 used. The bookkeeping after promotion (the
+acceptance guards, the acceptance, the pages, this entry) checked by the targeted modules (133 passed, 0 failed, the
+hygiene module among them) and the acceptance-guard check.

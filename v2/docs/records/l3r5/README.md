@@ -196,6 +196,8 @@ and punctuation (CHECK-4 of round 4d: CONOPS lines 233 to 234 exempted, 322, 323
 | `checks/check-l3r5-3.md` | check 3: Claude's (the coordinator's) verification of B2's final correction against check 2's own criterion as the owner clarified it, and of D-22's trace, at `a66c4e5b` (accepted: yes); not a model review and not an Astra check |
 | `checks/verify_b2.py` | the coordinator's own check behind check 3, written independently of the author's tests; reads the files, writes nothing; `--fixture` runs its three fixture cases |
 | `apply_l3r5_check3.py` | files check 3 in `independent_check` as ACCEPTED after the two NOT_ACCEPTED Astra checks; the record's first line is verified; a second run is refused |
+| `checks/verify_acceptance.py` | the coordinator's acceptance-guard check: the status level and the acceptance script against the closure criteria, each scenario's expected outcome written as a literal; reads, writes nothing |
+| `apply_layer_status_l3_accept.py` | `LAYER-STATUS.md`'s layer 3 once `baseline_acceptance` is filed: COMPLETE at the accepted revision (read from the record), the fourth gate row MET, the status level validated and accepted; a second run is refused |
 
 Changed elsewhere: `v2/docs/handover/layer3/l3r2.yaml` and `render_l3r2.py` (the semantics, items, definitions, levels,
 the gate, the closure's sections and the three pages), `OWNER-INSTRUCTION-2026-09-30.md` (the current owner brief at

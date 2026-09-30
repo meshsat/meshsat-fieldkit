@@ -8,7 +8,8 @@ never before; applied once: a second run refuses.
 
   apply_l3r5_accept.py --revision <40-hex sha> --evidence <path> [<path> ...] [--date YYYY-MM-DD] [--check] [--data PATH]
 
-Refuses: a second run (baseline_acceptance already filed); no ruling deciding `layer3_baseline`; a revision that is not
+Refuses: a second run (baseline_acceptance already filed); no ruling deciding `layer3_baseline`; any of the gate's
+five conditions NOT MET on the data given; a revision that is not
 a full 40-hex commit of this repository; an evidence path this tree does not hold; evidence that does not list the newest
 independent check of l3r2.yaml, or a newest check that is not ACCEPTED. It writes one line of l3r2.yaml and nothing
 else; the pages are re-rendered after it (render_l3r2.py), and the layer status follows through its own script.
@@ -62,6 +63,17 @@ def build(raw, revision, evidence, date):
         E.refuse("the newest independent check in l3r2.yaml is not ACCEPTED")
     if str(chks[-1]["record"]) not in evidence: E.refuse("--evidence does not list the newest independent check %s" % chks[-1]["record"])
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date): E.refuse("--date %r is not YYYY-MM-DD" % date)
+    # every closure criterion, not only the independent check: the gate's five conditions read on the data given (the
+    # coordinator's acceptance-guard check of 30 September 2026 found the record could be filed with the definition
+    # re-issue unfiled, the third condition NOT MET; the status level stayed DRAFTED, but no acceptance record may exist
+    # while a criterion is unmet)
+    sys.path.insert(0, os.path.join(E.TOP, "v2", "docs", "handover", "layer3"))
+    sys.path.insert(0, os.path.join(E.TOP, "v2", "ecad", "tools"))
+    import render_l3r2 as RL  # noqa: E402
+    import rules_lib as R  # noqa: E402
+    full = R.load_requirements()
+    unmet = [x[0] for x in RL.gate(full, RL.decided(full, d), d, RL.load_h3()) if not x[1]]
+    if unmet: E.refuse("the gate reads NOT MET on %s: %s" % ("; ".join(unmet), "no acceptance while a closure criterion is unmet"))
     line = "baseline_acceptance: {revision: %s, authorised_by: %s, evidence: [%s], accepted_on: \"%s\"}\n" % (
         revision, rid[0], ", ".join(evidence), date)
     new = raw.replace(NULL, line)

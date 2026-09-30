@@ -754,6 +754,13 @@ def t_l3r2_a_check_verdict_is_read_from_its_record():
     # pending once every other condition, the independent check's included (check 3), reads MET
     if not all(RL.settled(d["id"], dec, data) for d in data["decisions"]):
         assert not all(x[1] for x in g), "the gate reads MET with rows pending"
+    # the property on a fixture too, so it is exercised when every row on the tree is settled (the coordinator's
+    # acceptance-guard check of 30 September 2026): a row unsettled, its ruling removed from a copy of the registry,
+    # leaves the gate NOT MET
+    req_u = copy.deepcopy(req); req_u["owner_rulings"] = [r for r in req_u["owner_rulings"] if r["id"] != "D-35"]
+    dec_u = RL.decided(req_u, data)
+    assert "L3-OD4" not in dec_u and not RL.settled("L3-OD4", dec_u, data), "row L3-OD4 reads settled without D-35"
+    assert not all(x[1] for x in RL.gate(req_u, dec_u, data, RL.load_h3())), "the gate reads MET with row L3-OD4 unsettled"
     flip = lambda v: "NOT_ACCEPTED" if str(v).upper() == "ACCEPTED" else "ACCEPTED"
     for i, v in ((len(chks) - 1, flip(chks[-1]["verdict"])), (acc[-1], "NOT_ACCEPTED"), (0, flip(chks[0]["verdict"])),
                  (len(chks) - 1, "PENDING")):
