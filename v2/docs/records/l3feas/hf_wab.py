@@ -13,14 +13,20 @@ r11_dep.out (read, pinned to HEAD). Nothing here designs a correction or picks a
 energy record already names, reports each pack hour by hour at the kit loads, and finds the evidence each route needs.
 
 The routes (weather_basis.out C, the record's own rows):
-  R1  U3's input limit at its 6.35 A clamp (SLUSE66A 9.3.5, energy_two_pack.py u3_iin_max_a): a register setting inside
-      the drafted entry; its minimum INFERRED 100 mA under the setting as WE's 6.1 A is, and also at the front page's
+  R1  U3's input limit at its 6.35 A clamp: a register setting inside the drafted entry. It stands on SLUSE66A 9.6.22
+      (p.80: with a 10 mOhm sense, "50 mA to 6350 mA", "implemented through DAC clamp", no inductance condition) and on the
+      6.35 A of every RSNS_RAC = 0b row of Table 9-1 (p.26). 9.3.5 (p.25) assumes both sense resistors at 10 mOhm where
+      board A's R17 is 5 mOhm, and Table 9-1 has no row for board A's 4.7 uH, so neither is cited as its basis; its minimum INFERRED 100 mA under the setting as WE's 6.1 A is, and also at the front page's
       2.5 % (6.191 A), since SLUSE66A prints no minimum (r11dep C-7).
   R2  board E's stage at its maker curve's reading, 0.965 (curve_readings.out 2, INFERRED from another circuit): not a
       correction but a figure to establish (r11dep C-8).
 
 Before any result it proves (exit 4 otherwise) that its runs reproduce energy_basis.out section 5's WE rows of the 4S14P
 lid and weather_basis.out C's two rows for it.
+
+Second issue (CHECK-1 of 24942a5f, B1 and minors 4 and 5): section 4 prints the Kelvin criterion each setting's current
+through R11 needs, shows that the drafted criterion does not admit R1, gives the stage's input at each setting, cites the
+6.35 A setting on SLUSE66A 9.6.22 and Table 9-1, and shows that ILIM_HIZ does not bind.
 
 Run from the repository root:  python3 v2/docs/records/l3feas/hf_wab.py > v2/docs/records/l3feas/hf_wab.out
 Deterministic. Exit 2: a pinned file is not the pinned file; 3: an input cannot be parsed; 4: a reproduction failed."""
@@ -40,6 +46,8 @@ if hashlib.sha256(open(os.path.join(L3, "energy_basis.py"), "rb").read()).hexdig
     sys.exit(2)
 sys.path.insert(0, L3)
 import energy_basis as EB  # noqa: E402
+sys.path.insert(0, os.path.join(TOP, "v2", "ecad", "tools"))
+import netlist_sexp as N  # noqa: E402
 TP, ER = EB.TP, EB.ER
 
 EB_OUT = "v2/docs/records/l3plane/energy_basis.out"
@@ -246,6 +254,19 @@ def main():
     i_can0, i_can2 = float(mk.group(1)), float(mk.group(2))
     acc = 0.025
     u3_set = [clamp, TP.v("u3_iin_draft_a")]
+    # the Kelvin budget's own terms, as r11_dep.out 3 states them
+    vs_min = float(need(r11, r"VSNS (\d+) / \d+ / \d+ mV", "r11_dep.out VSNS").group(1)) * 1e-3
+    offs = float(need(r11, r"the ISNS bias over the 100 Ohm filter \+-([\d.]+) mV", "r11_dep.out the bias offset").group(1)) * 1e-3
+    tol = float(need(r11, r"R11 at \+-(\d+) %, its TCR over\s+(\d+) K", "r11_dep.out R11's tolerance").group(1)) / 100.0
+    dt_r = float(need(r11, r"R11 at \+-\d+ %, its TCR over\s+(\d+) K", "r11_dep.out R11's temperature span").group(1))
+    tcr = float(need(r11, r"TCR \+-(\d+) ppm/K for 2 to 500 mOhm", "r11_dep.out R11's TCR").group(1)) * 1e-6
+    cu = float(need(r11, r"\(copper ([\d.]+) /K", "r11_dep.out copper's coefficient").group(1))
+    t_hot = float(need(r11, r"an ASSUMED (\d+) C", "r11_dep.out R11's assumed temperature").group(1))
+    t_air = float(need(r11, r"the worst inside air in use ([\d.]+) C", "r11_dep.out the worst inside air").group(1))
+    crit25 = float(need(r11, r"the criterion is ([\d.]+) mOhm at 25 C", "r11_dep.out the drafted criterion").group(1)) * 1e-3
+    r11_max = 0.0062 * (1 + tol) * (1 + tcr * dt_r)
+    v_bus = float(need(r11, r"at VBUS20's ([\d.]+) V maximum, efficiency ([\d.]+) DECLARED", "r11_dep.out the bus").group(1))
+    eta = float(need(r11, r"at VBUS20's [\d.]+ V maximum, efficiency ([\d.]+) DECLARED", "r11_dep.out the efficiency").group(1))
     P("4. R1 AGAINST THE ELECTRICAL RECORD (r11dep's r11_dep.out; INFERRED arithmetic)")
     for s_ in u3_set:
         mx = max(s_ + U3_TOL, s_ * (1 + acc))
@@ -255,6 +276,42 @@ def main():
         P("     taps, r11dep C-1); VBUS20's bank reaches 2.8 A a can at %.2f A matched and %.2f A at a 2:1 spread: in service %s" % (
             i_can0, i_can2, "WITHIN" if mx + other <= i_can2 else ("OVER at a 2:1 spread (%.1f %% of 2.8 A), WITHIN matched" % (100.0 * (mx + other) / i_can2)
                                                                    if mx + other <= i_can0 else "OVER")))
+        kel = [(vs_min - offs) / i_ - r11_max for i_ in (mx + other, mx + loads4)]
+        P("     THE KELVIN CRITERION this current needs (the shared copper between R11's pads and its taps, both together, for the")
+        P("     margin above to hold): %.3f mOhm working, %.3f mOhm at 25 C with the copper at %.0f C, %.3f mOhm at %.1f C (%.2f mV at 6.0 A);" % (
+            kel[0] * 1e3, kel[0] / (1 + cu * (t_hot - 25.0)) * 1e3, t_hot, kel[0] / (1 + cu * (t_air - 25.0)) * 1e3, t_air,
+            kel[0] / (1 + cu * (t_hot - 25.0)) * 6.0 * 1e3))
+        P("     with four FETs' loads %.3f, %.3f and %.3f mOhm (%.2f mV at 6.0 A); the stage's input in service %.1f W (%.3f A at %.3f V" % (
+            kel[1] * 1e3, kel[1] / (1 + cu * (t_hot - 25.0)) * 1e3, kel[1] / (1 + cu * (t_air - 25.0)) * 1e3,
+            kel[1] / (1 + cu * (t_hot - 25.0)) * 6.0 * 1e3, (mx + other) * v_bus / eta / eta, mx + other, v_bus))
+        P("     over %.2f twice)" % eta)
+    i_r1 = max(clamp + U3_TOL, clamp * (1 + acc)) + other
+    v_sensed = i_r1 * (r11_max + crit25 * (1 + cu * (t_hot - 25.0)))
+    P("   THE DRAFTED CRITERION DOES NOT ADMIT R1: a layout that closes C-1 at its %.2f mOhm (25 C) senses %.2f mV at %.3f A with the" % (
+        crit25 * 1e3, v_sensed * 1e3, i_r1))
+    P("     copper at %.0f C, over the %.1f mV minimum (VSNS %.0f mV less the %.1f mV bias offset): the front end can limit first" % (
+        t_hot, (vs_min - offs) * 1e3, vs_min * 1e3, offs * 1e3))
+    # ILIM_HIZ does not bind
+    bq = os.path.join(TOP, "v2", "vendor", "ti", "bq25731-datasheet.pdf")
+    pg = {n: " ".join(subprocess.run(["pdftotext", "-layout", "-f", str(n), "-l", str(n), bq, "-"], capture_output=True, text=True,
+                                     check=True).stdout.split()) for n in (6, 11, 26, 80)}
+    need(pg[6], r"V\(ILIM_HIZ\) = 1 V \+ 40 × IDPM ×", "SLUSE66A p.6 the ILIM_HIZ formula")
+    regn = tuple(float(x) for x in need(pg[11], r"VREGN_REG .*?VVBUS = 10 V ([\d.]+) (\d+) ([\d.]+) V", "SLUSE66A p.11 REGN").groups())
+    need(pg[26], r"The actual input current limit being adopted by the device is the lower setting of IIN_DPM and ILIM_HIZ pin", "SLUSE66A p.26 9.3.6")
+    need(pg[80], r"50 mA to 6350 mA, with 50-mA resolution\. The upper boundary is implemented through DAC clamp", "SLUSE66A p.80 the clamp")
+    need(pg[80], r"pull ILIM_HIZ pin above 4\.0 V", "SLUSE66A p.80 the pin disabled above 4.0 V")
+    na = N.load(os.path.join(TOP, "v2", "ecad", "pcb-a-power-a23", "out", "pcb-a-power.net"))
+    ra = {r_: (na["components"][r_]["value"], {q: v_["net"] for q, v_ in na["pins"][r_].items()}) for r_ in ("R19", "R20", "R16")}
+    if not (ra["R19"][1] == {"1": "REGN", "2": "CHG_ILIM"} and ra["R20"][1] == {"1": "CHG_ILIM", "2": "GND"} and ra["R16"][0].startswith("10mOhm")):
+        refuse(3, "board A's ILIM_HIZ divider or RAC is not as read")
+    r19 = float(ra["R19"][0].split("k")[0]) * 1e3
+    r20 = float(ra["R20"][0].split("k")[0]) * 1e3
+    v_lo, v_ty = regn[0] * r20 / (r19 + r20), regn[1] * r20 / (r19 + r20)
+    P("   ILIM_HIZ does not bind (SLUSE66A 9.3.6, p.26: the lower of IIN_DPM and the pin): R19 %s from REGN over R20 %s (NETLIST) put the" % (
+        ra["R19"][0].split(" ")[0], ra["R20"][0].split(" ")[0]))
+    P("     pin at %.2f V at REGN's %.1f V minimum (p.11): %.2f A by V = 1 V + 40 x IDPM x RAC (p.6, RAC 10 mOhm), above R1's %.3f A;" % (
+        v_lo, regn[0], (v_lo - 1.0) / 40.0 / 0.010, i_r1 - other))
+    P("     at REGN's %.1f V typical %.2f V, above the 4.0 V that disables the pin (p.80)" % (regn[1], v_ty))
     P("   R1 raises U3's input by %.2f A over the drafted 6.2 A setting: the front end's output, the stage's and the copper's in-service" % (clamp - 6.2))
     pmax = {b: max(TP.EB.panel_w(g, 400.0, pr0 * rat40[b]) for g in prof0) for b in ("TYP", "WAB")}
     P("   currents rise by the same %.1f %% (INFERRED). The array's largest hour on the mean day is %.1f W (TYP) and %.1f W (WAB) into" % (

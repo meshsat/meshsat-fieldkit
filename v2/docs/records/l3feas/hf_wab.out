@@ -57,9 +57,22 @@ not a qualified review and not the independent check. Nothing is designed and no
    U3 set at 6.35 A: its maximum 6.509 A (the larger of +100 mA, p.80, and +2.5 %, p.1); through R11 6.569 A with the carried
      0.060 A, 6.588 A with four FETs' 0.079 A; the front end's stacked minimum 6.793 A leaves +0.224 A and +0.205 A (with Kelvin
      taps, r11dep C-1); VBUS20's bank reaches 2.8 A a can at 7.57 A matched and 6.54 A at a 2:1 spread: in service OVER at a 2:1 spread (100.4 % of 2.8 A), WITHIN matched
+     THE KELVIN CRITERION this current needs (the shared copper between R11's pads and its taps, both together, for the
+     margin above to hold): 0.215 mOhm working, 0.166 mOhm at 25 C with the copper at 100 C, 0.188 mOhm at 62.1 C (1.00 mV at 6.0 A);
+     with four FETs' loads 0.196, 0.152 and 0.171 mOhm (0.91 mV at 6.0 A); the stage's input in service 158.6 W (6.569 A at 20.887 V
+     over 0.93 twice)
    U3 set at 6.20 A: its maximum 6.355 A (the larger of +100 mA, p.80, and +2.5 %, p.1); through R11 6.415 A with the carried
      0.060 A, 6.434 A with four FETs' 0.079 A; the front end's stacked minimum 6.793 A leaves +0.378 A and +0.359 A (with Kelvin
      taps, r11dep C-1); VBUS20's bank reaches 2.8 A a can at 7.57 A matched and 6.54 A at a 2:1 spread: in service WITHIN
+     THE KELVIN CRITERION this current needs (the shared copper between R11's pads and its taps, both together, for the
+     margin above to hold): 0.371 mOhm working, 0.286 mOhm at 25 C with the copper at 100 C, 0.324 mOhm at 62.1 C (1.72 mV at 6.0 A);
+     with four FETs' loads 0.351, 0.271 and 0.306 mOhm (1.63 mV at 6.0 A); the stage's input in service 154.9 W (6.415 A at 20.887 V
+     over 0.93 twice)
+   THE DRAFTED CRITERION DOES NOT ADMIT R1: a layout that closes C-1 at its 0.29 mOhm (25 C) senses 43.75 mV at 6.569 A with the
+     copper at 100 C, over the 42.7 mV minimum (VSNS 43 mV less the 0.3 mV bias offset): the front end can limit first
+   ILIM_HIZ does not bind (SLUSE66A 9.3.6, p.26: the lower of IIN_DPM and the pin): R19 16.5k from REGN over R20 34.8k (NETLIST) put the
+     pin at 3.87 V at REGN's 5.7 V minimum (p.11): 7.17 A by V = 1 V + 40 x IDPM x RAC (p.6, RAC 10 mOhm), above R1's 6.509 A;
+     at REGN's 6.0 V typical 4.07 V, above the 4.0 V that disables the pin (p.80)
    R1 raises U3's input by 0.15 A over the drafted 6.2 A setting: the front end's output, the stage's and the copper's in-service
    currents rise by the same 2.4 % (INFERRED). The array's largest hour on the mean day is 194.3 W (TYP) and 178.6 W (WAB) into
      the stage, under the model's 200 W window, which board E does not implement (a1solar ARRAY.md 3): the window never binds
