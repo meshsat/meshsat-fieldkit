@@ -1,0 +1,184 @@
+BOARD A'S FRONT-END CURRENT-LIMIT RESISTOR R11: THE HELD CIRCUIT AND THE PROPOSED CHANGE (r11_dep.py, stream r11dep,
+MESHSAT-1357). PROTOTYPE DESIGN: nothing built, powered or measured; no generator edited; no requirement changed.
+Basis per figure: MAKER (page), NETLIST, MODELED, INFERRED (method stated), ASSUMPTION (a figure no document gives).
+
+1. THE CIRCUIT (NETLIST v2/ecad/pcb-a-power-a23/out/pcb-a-power.net, sha256/16 6c40250c47195ebb; board E v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net, sha256/16 2ed95a0e8069ebf8)
+   R11 10mOhm 1% 2512 (ISNS) from FE_OUT to VBUS20: the LM5176 U2's AVERAGE (ISNS) current sense, in series with its OUTPUT
+   ISNS filter R160, R161 100R 1% and C128 1n into U2 pins 14 and 13; R12 5mOhm 1% 2512 is the cycle-by-cycle CS resistor
+   L1 10uH XAL1010-103ME (Isat 17.5 A); Q2 to Q5 CSD19532Q5B 100 V N-FET
+   VIN_RAW: C11, C12 10u 100V X7R 1210; J_VR1 to J_VR4 '9 A spring pin, VIN_RAW'; no fuse on board A's VIN_RAW
+   VBUS20: 6 x EEHZK1V331P bulk (C163, C178, C179, C180, C199, C200); U2's BIAS (pin 24) on VBUS20, so its supply current passes R11
+   MODE: R119 to VCC (no hiccup, SNVSAI1D p.20); SLOPE C147 680p; SS C7 4.7u; RT R8 40.2k (206 kHz)
+   board E's VIN_RAW sources: the vehicle entry (F1 '10 A mini blade (Keystone 3568 holder)', LM5069 U6) and the panel tracker (LT8705A, R5 '5 mOhm 1% 3 W 2512 RSENSE', L1 '10uH Coilcraft XAL1510-103MED'),
+   ORed through the ideal diode U4 with Q2 'BSC039N06NS 60 V 3.9 mOhm N-FET'; the panel input F2 '10 A mini blade (Keystone 3568 holder)'
+   facts: 13 of 13 hold
+
+2. THE PARTS AND THE MAKERS' FIGURES
+   R11 held: C2903468 (lcsc_fill.py); LCSC's answer (v2/docs/records/r11dep/inputs/lcsc-C2903468-2026-09-30.json): Milliohm HoJLR2512-3W-10mR-1%, 3W, ±1% (read 2026-09-30T01:19Z)
+   HoJLR2512 series (MAKER, v2/vendor/passives/milliohm-hojlr2512-series.pdf, sha256/16 3224518dbc8bdc85): 2512, 3 W for 0.5 to 500 mOhm (p.1); TCR +-50 ppm/K for 2 to 500 mOhm;
+     -50 to +170 C, derated linearly from 70 C (100 %) to 170 C (0 %) (p.2); rated current sqrt(P/R) (p.3); short-time
+     overload 5 x rated power for 5 s, load life 1000 h at rated power and 70 C, each within +-1 % (p.4)
+   R11 proposed: 6.2 mOhm (energy_two_pack.py fe_r11_draft_mohm; a1elec CHARGER.md 2), rated here as the same series,
+     HoJLR2512-3W-6.2mR-1% by the maker's own part-number scheme (p.1): the value lies in its 3 W range; ORDER CODE NOT
+     ESTABLISHED (no catalogue answer read for it)
+   LM5176 (MAKER, v2/vendor/ti/lm5176-datasheet.pdf): VSNS 43 / 50 / 57 mV over TJ -40 to 125 C (p.7), ICL(AVG) = 50 mV / RSNS (Equation 4, p.17),
+     ISNS pin bias 3 uA TYPICAL (p.7, no limit printed), ISNS common mode 0 to 55 V (p.5), CC loop gm 1 mS into SS (p.7),
+     boost peak 100 / 120 / 140 mV and buck valley 66 / 80 / 94 mV on CS (p.7), fSW 175 / 200 / 225 kHz at RT 40 k (p.6)
+   U3 BQ25731 (MAKER, v2/vendor/ti/bq25731-datasheet.pdf): IIN_HOST 6.2 A set; its maximum 6.355 A, the larger of the 100 mA of p.80 and the +-2.5 % of p.1
+   L1 XAL1010-103ME (MAKER, v2/vendor/power/coilcraft-xal1010.pdf p.1): 10 uH +-20 %, DCR 13.40 / 14.75 mOhm, Isat 17.5 A (30 % drop, typical, 25 C),
+     Irms 11.5 A (20 K rise) and 15.5 A (40 K rise); ambient -40 to +125 C with the 40 K Irms; part at most 165 C
+   Q2 to Q5 CSD19532Q5B (MAKER, v2/vendor/power/ti-csd19532q5b-n-fet.pdf): RDS(on) 5.7 mOhm maximum at VGS 6 V, 25 C (p.3); RthetaJA 50 C/W maximum on a
+     1 in2 2 oz pad (p.3); TJ -55 to 150 C (p.1); Qgd 8.7 nC, Qoss 128 nC at 50 V (p.3); Figure 8 (p.6), the higher of its
+     VGS 6 V and 10 V curves, read by pixel
+     (INFERRED): 25 C 1.00, 50 C 1.18, 75 C 1.36, 100 C 1.56, 125 C 1.76, 150 C 2.01
+   VBUS20 bulk EEHZK1V331P (MAKER, v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf p.2): 2.8 A rms at 100 kHz, 125 C; the correction factor is 1.00 from 100 to 500 kHz
+   J_VR spring pins (MAKER, v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf): 9 A continuous at a 10 C rise (the 085X series)
+   board E's tracker LT8705A (MAKER, v2/vendor/power/lt8705a.pdf p.3, E and I grades): buck current sense 69 / 86 / 102 mV over R5 5 mOhm
+   the kit: the worst inside air in use 62.1 C, the in-use minimum -20 C (v2/ecad/tools/pcb_envelope.yaml)
+
+3. THE FRONT END'S AVERAGE CURRENT LIMIT (min / typical / max), every tolerance stacked (R11 at +-1 %, its TCR over
+   75 K from +25 C with R11 between -20 C and an ASSUMED 100 C, the ISNS bias over the 100 Ohm filter +-0.3 mV INFERRED)
+   held, R11 10.0 mOhm:     4.212 / 5.000 / 5.810 A
+   proposed, R11 6.2 mOhm: 6.793 / 8.065 / 9.370 A
+   the printed band alone (VSNS over R11): held 4.30 / 5.00 / 5.70 A; proposed 6.94 / 8.06 / 9.19 A
+   what passes R11 in service: U3 at its 6.355 A maximum plus 0.060 A of VBUS20's other loads (U2's BIAS: its 4 mA
+     operating current and four FETs' 62 nC maximum gate charge at 225 kHz; R197; the divider; INFERRED) = 6.415 A
+   MARGIN, the front end's minimum over what passes in service: held -2.203 A (THE FRONT END LIMITS FIRST); proposed +0.378 A
+   (the energy model's entry E2 carries the printed 6.94 A minimum; the stacked 6.79 A is still above U3, so no energy result
+   moves)
+   THE TAPS, a condition of every band above: VSNS over R11 alone holds only for a Kelvin connection. The tree's last reading,
+     v2/ecad/pcb-a-power-a23/routed/kelvin_check.verdict.json (2026-09-20, ADVISORY, board sha256/16 58e26c67987b1daa, the routed board in the tree today (the same file), laid
+     before the ISNS filter R160, R161 entered the netlist): FE_ISNS_P between R11.1 and U2.14 carries 26.62 mV, FE_ISNS_N between R11.2 and U2.13 2.16 mV
+     of copper drop. Both ADD to the sensed voltage (INFERRED: on FE_OUT R11.1 is the only sink, on VBUS20 R11.2 the only source),
+     so the front end limits lower. At dc_drop's solved current (FE_OUT's declared 6.0 A typical today; pcb_sensitive.yaml's
+     text names 3.80 A) the two are 4.8 to 7.6 mOhm together, as large as R11 itself: on that board the held front end would
+     limit at about 2.8 to 3.4 A typical, the proposed at about 3.6 to 4.5 A, BOTH under U3 (INFERRED)
+     The proposed margin tolerates at most 0.37 mOhm between R11's pads and its two taps together (2.4 mV at 6.415 A, 4.8 % of
+     the 50 mV scale): Kelvin taps on R11 (the maker's p.3 pad drawing shows separate sensing traces) are a condition of the change
+   M1 with the held circuit (MODELED, v2/docs/records/l3plane/energy_basis.out case GEN, board A as generated, the reference day at 40/0): 4S9P NOT MET, 494.7 / 522.4 Wh unserved (TYP / WAB); 4S14P NOT MET, 357.5 / 383.8 Wh unserved (TYP / WAB); 4S15P NOT MET, 326.6 / 352.8 Wh unserved (TYP / WAB)
+   GEN's own setting against the stacked band: U3 at 4.15 A, its maximum 4.25 A, plus 0.060 A of the other loads = 4.310 A through R11,
+     against the stacked minimum 4.212 A: -0.098 A (energy_basis names 50 mA between U3's maximum and
+     the printed 4.30 A minimum; with the other loads and the stacked band the held circuit's front end can limit first even at GEN)
+   M1 conditional on the change (MODELED, the same file; every case but GEN presumes it; COMB/EACH as in its 1d):
+     NOM (the declared efficiencies, TI's U3 reading):
+       4S14P TYP 93.7 (base  49.0, lid  44.6) (Y/Y); WAB 75.7 (base  48.2, lid  27.5) (Y/Y)
+       4S15P TYP 125.2 (base  57.1, lid  68.1) (Y/Y); WAB 106.8 (base  56.3, lid  50.5) (Y/Y)
+     WE (itself conditional on three undocumented efficiencies):
+       4S14P TYP 44.0 (base  44.0, lid   0.0) (Y/N); WAB NOT MET,  10.8 unserved (N/N)
+       4S15P TYP 74.3 (base  52.4, lid  19.4) (Y/Y); WAB 19.5 (base  19.5, lid   0.0) (Y/N)
+     4S9P: NOT MET in every case of that file, with or without the change
+
+4. THE POWER PATH AT EACH CASE'S CURRENT (the front end's output at VBUS20's 20.887 V maximum, efficiency 0.93 DECLARED;
+   VIN_RAW at the tracker's 15.1 V (the lowest bus a source holds at full power), at 9.0 V (REQ-015's service floor and the
+   tree's declaration basis for VIN_RAW, board E's _FE_A; above the stage's UVLO, 7.86 to 8.31 V falling by gen_sch_a.py; at
+   these currents only with the tracker in its limit and the vehicle together, see the sources below) and at 36 V (buck)
+   The worst inside air 62.1 C throughout. INFERRED relations; every rating MAKER.
+   held, at its limit's maximum: 5.810 A out
+     VIN 15.1 V (boost, D 0.28): in 8.64 A; L1 average 8.64 A, ripple 2.99 A p-p, peak 10.14 A against Isat 17.5 A; rms 8.68 A
+       L1: rise about 13 K (the maker's 40 K at 15.5 A scaled by the square, INFERRED; core loss excluded), part 75 C;
+         DCR loss 1.33 W; WITHIN the maker's figures
+       FETs (RDS(on) max x Figure 8 at TJ, RthetaJA 50 C/W): Q2 (on) 0.65 W, TJ 95 C; Q4 (boost switch) 0.66 W, TJ 95 C; Q5 (rectifier) 0.45 W, TJ 84 C
+       input caps C11, C12: 0.86 A rms together (INFERRED), no maker ripple rating held for FS32X106K101EGG: NOT ESTABLISHED;
+       output: 3.60 A rms against 6 x 2.8 A = 16.8 A of EEHZK1V331P (C13 to C15 on FE_OUT share it): WITHIN
+       J_VR1 to J_VR4: 2.16 A a pin if shared evenly (INFERRED) against 9 A at a 10 K rise: WITHIN
+     VIN  9.0 V (boost, D 0.57): in 14.50 A; L1 average 14.50 A, ripple 3.66 A p-p, peak 16.33 A against Isat 17.5 A; rms 14.54 A
+       L1: rise about 35 K (the maker's 40 K at 15.5 A scaled by the square, INFERRED; core loss excluded), part 97 C;
+         DCR loss 4.00 W; WITHIN the maker's figures
+       FETs (RDS(on) max x Figure 8 at TJ, RthetaJA 50 C/W): Q2 (on) past 150 C (2.42 W at 150 C; needs RthetaJA <= 36 C/W); Q4 (boost switch) past 150 C (1.98 W at 150 C; needs RthetaJA <= 44 C/W); Q5 (rectifier) 0.82 W, TJ 103 C
+       input caps C11, C12: 1.06 A rms together (INFERRED), no maker ripple rating held for FS32X106K101EGG: NOT ESTABLISHED;
+       output: 6.68 A rms against 6 x 2.8 A = 16.8 A of EEHZK1V331P (C13 to C15 on FE_OUT share it): WITHIN
+       J_VR1 to J_VR4: 3.62 A a pin if shared evenly (INFERRED) against 9 A at a 10 K rise: WITHIN
+     VIN 36.0 V (buck, D 0.58): in 3.62 A; L1 average 5.81 A, ripple 6.26 A p-p, peak 8.94 A against Isat 17.5 A; rms 6.08 A
+       L1: rise about 6 K (the maker's 40 K at 15.5 A scaled by the square, INFERRED; core loss excluded), part 68 C;
+         DCR loss 0.64 W; WITHIN the maker's figures
+       FETs (RDS(on) max x Figure 8 at TJ, RthetaJA 50 C/W): Q2 (buck switch) 0.92 W, TJ 108 C; Q3 (rectifier) 0.12 W, TJ 68 C; Q5 (on) 0.29 W, TJ 77 C
+       input caps C11, C12: 3.39 A rms together (INFERRED), no maker ripple rating held for FS32X106K101EGG: NOT ESTABLISHED;
+       output: 1.81 A rms against 6 x 2.8 A = 16.8 A of EEHZK1V331P (C13 to C15 on FE_OUT share it): WITHIN
+       J_VR1 to J_VR4: 0.91 A a pin if shared evenly (INFERRED) against 9 A at a 10 K rise: WITHIN
+     R11: 0.34 W (I2R at +1 %) against 3 W derated to 3.00 W at 62 C and 2.10 W at 100 C; the 5 s overload 5 x 3 W is 39 A: WITHIN
+     copper (track_current.width_for_current, decision 35's conservative model, external, 10 K rise): FE_OUT and VBUS20 5.81 A: 3.4 mm at 1 oz, 1.7 mm at 2 oz; VIN_RAW at 15.1 V 8.64 A: 6.2 mm at 1 oz, 3.1 mm at 2 oz; VIN_RAW at 9.0 V 14.50 A: 16.1 mm at 1 oz, 8.0 mm at 2 oz
+   proposed, in service (U3 at its maximum): 6.415 A out
+     VIN 15.1 V (boost, D 0.28): in 9.54 A; L1 average 9.54 A, ripple 2.99 A p-p, peak 11.04 A against Isat 17.5 A; rms 9.58 A
+       L1: rise about 15 K (the maker's 40 K at 15.5 A scaled by the square, INFERRED; core loss excluded), part 77 C;
+         DCR loss 1.63 W; WITHIN the maker's figures
+       FETs (RDS(on) max x Figure 8 at TJ, RthetaJA 50 C/W): Q2 (on) 0.83 W, TJ 104 C; Q4 (boost switch) 0.72 W, TJ 98 C; Q5 (rectifier) 0.56 W, TJ 90 C
+       input caps C11, C12: 0.86 A rms together (INFERRED), no maker ripple rating held for FS32X106K101EGG: NOT ESTABLISHED;
+       output: 3.97 A rms against 6 x 2.8 A = 16.8 A of EEHZK1V331P (C13 to C15 on FE_OUT share it): WITHIN
+       J_VR1 to J_VR4: 2.39 A a pin if shared evenly (INFERRED) against 9 A at a 10 K rise: WITHIN
+     VIN  9.0 V (boost, D 0.57): in 16.01 A; L1 average 16.01 A, ripple 3.66 A p-p, peak 17.84 A against Isat 17.5 A; rms 16.04 A
+       L1: rise about 43 K (the maker's 40 K at 15.5 A scaled by the square, INFERRED; core loss excluded), part 105 C;
+         DCR loss 4.98 W; NOT WITHIN: peak over Isat, rms over the 40 K Irms
+       FETs (RDS(on) max x Figure 8 at TJ, RthetaJA 50 C/W): Q2 (on) past 150 C (2.95 W at 150 C; needs RthetaJA <= 30 C/W); Q4 (boost switch) past 150 C (2.31 W at 150 C; needs RthetaJA <= 38 C/W); Q5 (rectifier) 1.07 W, TJ 115 C
+       input caps C11, C12: 1.06 A rms together (INFERRED), no maker ripple rating held for FS32X106K101EGG: NOT ESTABLISHED;
+       output: 7.37 A rms against 6 x 2.8 A = 16.8 A of EEHZK1V331P (C13 to C15 on FE_OUT share it): WITHIN
+       J_VR1 to J_VR4: 4.00 A a pin if shared evenly (INFERRED) against 9 A at a 10 K rise: WITHIN
+     VIN 36.0 V (buck, D 0.58): in 4.00 A; L1 average 6.42 A, ripple 6.26 A p-p, peak 9.55 A against Isat 17.5 A; rms 6.67 A
+       L1: rise about 7 K (the maker's 40 K at 15.5 A scaled by the square, INFERRED; core loss excluded), part 69 C;
+         DCR loss 0.77 W; WITHIN the maker's figures
+       FETs (RDS(on) max x Figure 8 at TJ, RthetaJA 50 C/W): Q2 (buck switch) 0.99 W, TJ 112 C; Q3 (rectifier) 0.14 W, TJ 69 C; Q5 (on) 0.35 W, TJ 80 C
+       input caps C11, C12: 3.65 A rms together (INFERRED), no maker ripple rating held for FS32X106K101EGG: NOT ESTABLISHED;
+       output: 1.81 A rms against 6 x 2.8 A = 16.8 A of EEHZK1V331P (C13 to C15 on FE_OUT share it): WITHIN
+       J_VR1 to J_VR4: 1.00 A a pin if shared evenly (INFERRED) against 9 A at a 10 K rise: WITHIN
+     R11: 0.26 W (I2R at +1 %) against 3 W derated to 3.00 W at 62 C and 2.10 W at 100 C; the 5 s overload 5 x 3 W is 49 A: WITHIN
+     copper (track_current.width_for_current, decision 35's conservative model, external, 10 K rise): FE_OUT and VBUS20 6.42 A: 3.9 mm at 1 oz, 1.9 mm at 2 oz; VIN_RAW at 15.1 V 9.54 A: 7.5 mm at 1 oz, 3.7 mm at 2 oz; VIN_RAW at 9.0 V 16.01 A: 19.3 mm at 1 oz, 9.6 mm at 2 oz
+   proposed, at its limit's maximum: 9.370 A out
+     VIN 15.1 V (boost, D 0.28): in 13.94 A; L1 average 13.94 A, ripple 2.99 A p-p, peak 15.43 A against Isat 17.5 A; rms 13.96 A
+       L1: rise about 32 K (the maker's 40 K at 15.5 A scaled by the square, INFERRED; core loss excluded), part 95 C;
+         DCR loss 3.66 W; WITHIN the maker's figures
+       FETs (RDS(on) max x Figure 8 at TJ, RthetaJA 50 C/W): Q2 (on) past 150 C (2.23 W at 150 C; needs RthetaJA <= 39 C/W); Q4 (boost switch) 1.11 W, TJ 118 C; Q5 (rectifier) 1.52 W, TJ 138 C
+       input caps C11, C12: 0.86 A rms together (INFERRED), no maker ripple rating held for FS32X106K101EGG: NOT ESTABLISHED;
+       output: 5.80 A rms against 6 x 2.8 A = 16.8 A of EEHZK1V331P (C13 to C15 on FE_OUT share it): WITHIN
+       J_VR1 to J_VR4: 3.48 A a pin if shared evenly (INFERRED) against 9 A at a 10 K rise: WITHIN
+     VIN  9.0 V (boost, D 0.57): in 23.38 A; L1 average 23.38 A, ripple 3.66 A p-p, peak 25.21 A against Isat 17.5 A; rms 23.41 A
+       L1: rise about 91 K (the maker's 40 K at 15.5 A scaled by the square, INFERRED; core loss excluded), part 153 C;
+         DCR loss 12.13 W; NOT WITHIN: peak over Isat, rms over the 40 K Irms
+         the cycle-by-cycle boost limit (20 / 24 / 28 A peak over R12, p.7) may end the cycle first: L1's average at most
+         18.2 / 22.2 / 26.2 A, the output 7.28 / 8.88 / 10.49 A (INFERRED); even at its minimum L1's peak passes Isat 17.5 A
+       FETs (RDS(on) max x Figure 8 at TJ, RthetaJA 50 C/W): Q2 (on) past 150 C (6.28 W at 150 C; needs RthetaJA <= 14 C/W); Q4 (boost switch) past 150 C (4.36 W at 150 C; needs RthetaJA <= 20 C/W); Q5 (rectifier) past 150 C (2.70 W at 150 C; needs RthetaJA <= 33 C/W)
+       input caps C11, C12: 1.06 A rms together (INFERRED), no maker ripple rating held for FS32X106K101EGG: NOT ESTABLISHED;
+       output: 10.77 A rms against 6 x 2.8 A = 16.8 A of EEHZK1V331P (C13 to C15 on FE_OUT share it): WITHIN
+       J_VR1 to J_VR4: 5.85 A a pin if shared evenly (INFERRED) against 9 A at a 10 K rise: WITHIN
+     VIN 36.0 V (buck, D 0.58): in 5.85 A; L1 average 9.37 A, ripple 6.26 A p-p, peak 12.50 A against Isat 17.5 A; rms 9.54 A
+       L1: rise about 15 K (the maker's 40 K at 15.5 A scaled by the square, INFERRED; core loss excluded), part 77 C;
+         DCR loss 1.62 W; WITHIN the maker's figures
+       FETs (RDS(on) max x Figure 8 at TJ, RthetaJA 50 C/W): Q2 (buck switch) 1.41 W, TJ 132 C; Q3 (rectifier) 0.30 W, TJ 77 C; Q5 (on) 0.83 W, TJ 103 C
+       input caps C11, C12: 4.97 A rms together (INFERRED), no maker ripple rating held for FS32X106K101EGG: NOT ESTABLISHED;
+       output: 1.81 A rms against 6 x 2.8 A = 16.8 A of EEHZK1V331P (C13 to C15 on FE_OUT share it): WITHIN
+       J_VR1 to J_VR4: 1.46 A a pin if shared evenly (INFERRED) against 9 A at a 10 K rise: WITHIN
+     R11: 0.55 W (I2R at +1 %) against 3 W derated to 3.00 W at 62 C and 2.10 W at 100 C; the 5 s overload 5 x 3 W is 49 A: WITHIN
+     copper (track_current.width_for_current, decision 35's conservative model, external, 10 K rise): FE_OUT and VBUS20 9.37 A: 7.2 mm at 1 oz, 3.6 mm at 2 oz; VIN_RAW at 15.1 V 13.94 A: 15.0 mm at 1 oz, 7.5 mm at 2 oz; VIN_RAW at 9.0 V 23.38 A: 38.6 mm at 1 oz, 19.3 mm at 2 oz
+   the declarations the generators lay copper and rate parts to: VBUS20 6.0 A typical, 8.0 A peak (gen_sch_a.py);
+     VIN_RAW 14.10 A (gen_sch_a.py _VIN_RAW_A, board E's _FE_A: 5.7 A at 20.7 V over 0.93 from 9.0 V); TRK_OUT 10.33 A (gen_sch_e.py)
+   against them (INFERRED): VBUS20: held maximum 5.810 A under both; proposed in service 6.415 A PASSES the 6.0 A typical, proposed
+     maximum 9.370 A PASSES the 8.0 A peak. VIN_RAW 14.10 A: held at 9.0 V 14.50 A (the stacked band over _FE_A's printed 5.7 A and 20.7 V);
+     proposed in service at 9.0 V 16.01 A, at the maximum 23.38 A; _FE_A's own formula at the proposed printed maximum 9.19 A gives
+     22.74 A. TRK_OUT 10.33 A: at 15.1 V the proposed in service carries 9.54 A, the maximum 13.94 A
+   board E's 200 W stage (Option A(i)'s, NOT DESIGNED: a1elec CHARGER.md 2, 'its owner's'): the front end asks 144.1 W in service
+     (6.415 A at 20.887 V over 0.93), WITHIN 200 W; held at its maximum 130.5 W; proposed at its maximum 210.5 W, OVER 200 W, so where
+     U3 does not limit (a fault) the stage or the array bounds the draw, not R11 (INFERRED)
+   the vehicle entry alone: its LM5069 passes at most 6.15 A (gen_sch_e.py _VEH_T), so below 23.4 V a vehicle alone cannot carry
+     the proposed in-service 144.1 W (below 21.2 V the held maximum 130.5 W either): the front end's draw on the vehicle is bounded by
+     that entry whatever R11 is; the host's IIN_HOST per source is a downstream item (INFERRED)
+   VIN_RAW's sources at the proposed maximum: the front end asks 210.5 W; the tracker at 15.1 V would carry 13.94 A against its
+     buck current limit 13.8 / 17.2 / 20.4 A (VCS over R5, INFERRED as the average it can pass) and TRK_OUT's declared 10.33 A;
+     the vehicle entry passes at most its LM5069's 6.15 A (gen_sch_e.py), under its fuse F1's 8 A at 65 C (gen_sch_e.py, the
+     10 A blade derated by pcb_fuse_derating.yaml), whatever R11 is; board E's panel fuse F2 sees the tracker's input,
+     210.5 W over its efficiency at the array's 34.3 V set point, about 6.6 A (0.93 DECLARED): under '10 A mini blade'
+
+5. THE LM5176'S OTHER SETTINGS AND R11 (the maker's equations)
+   average current limit: ICL(AVG) = 50 mV / RSNS (Eq. 4, p.17): the ONE setting R11 sets; bands in section 3
+   the CC loop: its gm amplifier (1 mS, p.7) discharges SS (C7 4.7u) when VSNS passes 50 mV (7.3.6, p.17): the loop's gain
+     per ampere scales with R11, so the proposed loop acts at 0.62 of the held loop's gain (INFERRED); its response is a bench item
+   the ISNS filter: 100 Ohm is the maker's ceiling (p.24) and R160, R161 are at it; unchanged. The bias offset is 0.3 mV either
+     way, 48 mA at the proposed R11 against 30 mA at the held (in section 3's band)
+   the current-sense amplifier's range: ISNS common mode 0 to 55 V (p.5) against VBUS20 at most 23.40 V (s120's bound): unchanged;
+     ISNS(+) to ISNS(-) is rated +-0.3 V (p.5): at the proposed R11 that is 48 A, far past any current the path can carry
+   slope compensation: Eq. 26 (p.24) uses RSENSE, the CS resistor R12, and L1, not R11: CSLOPE = gmSLOPE x L1 / (RSENSE x ACS)
+     = 800 pF with 2 uS, 10 uH, 5 mOhm and 5 (the p.24 example's gm and gain), against C147 680p: unchanged by R11. If L1 runs
+     near its Isat (section 4) its inductance falls and the dead-beat value falls with it (INFERRED)
+   the cycle-by-cycle limits: boost peak 20 / 24 / 28 A and buck valley 13.2 / 16.0 / 18.8 A (VCS over R12 5 mOhm, p.7):
+     unchanged; with the average limit raised they, not the average loop, bound L1 at a low VIN_RAW in an overload
+   hiccup: MODE to VCC selects no hiccup (p.20), so a sustained overload stays in the average or the cycle-by-cycle limit
+     indefinitely: at the proposed R11 it does so at the higher currents of section 4 (the held circuit sat there in service)
+
+END. Desk figures on the makers' pages and the committed netlists; nothing is measured, nothing implemented.
