@@ -28,7 +28,7 @@ import runtime_reader as RR  # noqa: E402
 CASES = ("NOM", "WE", "NOM90")
 PLACE = "    runtime_table: null\n"
 NOTE = ("Filled by v2/docs/records/l3r5/fill_l3r7_from_comparison.py from runtime.out of the checked comparison (stream "
-        "l3batt, fnd/l3batt 83577a13, CHECK-2) by exact keys and read back; od_l3_7.py reads the filed output again before "
+        "l3batt, fnd/l3batt 63897fc3, CHECK-3; runtime.out unchanged since 83577a13) by exact keys and read back; od_l3_7.py reads the filed output again before "
         "it writes an answer. HF and the tablet kept (a1mech arrangement A). The additions are over the both-kept lid "
         "(4S9P), in usable Wh at the lid's 13.23 C on the COMB line with the kit never stopping; every figure with the sun "
         "rests on the corrected path (HYPOTHETICAL, CONDITIONAL on three efficiencies), the circuit as drawn failing.")

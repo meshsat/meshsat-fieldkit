@@ -86,12 +86,12 @@ def _chain(steps):
     """A copy of the registry with the steps applied by the prepared scripts, as dryrun.py applies them; each chain
     is built once per run and handed out as a fresh copy."""
     need(COND, "the conditional scripts of L3-R2 are not in this tree")
-    _tree_undecided()
+    import l3pre
     key = tuple(tuple(s) for s in steps)
     if key not in _CHAINS:
         d = tempfile.mkdtemp(prefix="l3r4-reg-")
         reg = os.path.join(d, "pcb_requirements.yaml")
-        shutil.copy(os.path.join(TOOLS, "pcb_requirements.yaml"), reg)
+        shutil.copy(l3pre.base_registry(), reg)
         ev = os.path.join(d, "basis-fixture.md")
         open(ev, "w", encoding="utf-8").write("FIXTURE, not the energy basis: array 1100 Wp, entry 80 A.\n")
         for s in steps:
@@ -272,7 +272,7 @@ def t_l3r4_removing_a_group_passage_is_caught():
     body = open(RI.MAP, encoding="utf-8").read()
     heads = re.findall(r"^### (\w+)\. (\S+), lines? (\d+)(?: to (\d+))? \((DEFINITION|CURRENT)(?:, (\w+))?\)$", body, re.M)
     pinned = [(h[0], h[1], int(h[2]), int(h[3] or h[2]), h[4], h[5] or None) for h in heads]
-    have = [(p.pid, os.path.basename(RI.DOCS[p.doc]), p.a, p.b, p.kind, p.group) for p in RI.PASSAGES]
+    have = [(p.pid, os.path.basename(RI.DOCS[p.doc]), p.a, p.b, p.kind, p.group) for p in RI.PASSAGES + RI.PASSAGES_SETTLED]
     assert pinned == have, "the passage list differs from the committed map: run reissue.py --map and review the diff"
 
 
@@ -395,9 +395,10 @@ def t_l3r4_the_approval_leaves_the_reissue_current_and_unwritten():
 # ------------------------------------------------------------------------------------------------ the refusals
 def t_l3r4_refuses_while_a_row_is_undecided():
     _mod()
-    _tree_undecided()
-    r = _run([GEN, "--out-dir", tempfile.mkdtemp(prefix="l3r4-out-")])
-    assert r.returncode == 2 and "undecided" in r.stdout, "the tree's undecided rows were not refused:\n%s" % r.stdout
+    import l3pre
+    if not l3pre.tree_decided():
+        r = _run([GEN, "--out-dir", tempfile.mkdtemp(prefix="l3r4-out-")])
+        assert r.returncode == 2 and "undecided" in r.stdout, "the tree's undecided rows were not refused:\n%s" % r.stdout
     d, reg = _chain(RECOMMENDED[:4])
     out, msg = _generate(reg, expect=2)
     assert "L3-OD3, L3-OD4 and L3-OD5 are undecided" in msg, "the refusal does not name the undecided rows: %s" % msg
@@ -513,7 +514,13 @@ def t_l3r4_layer_status_row_brought_current_on_a_copy():
     t = open(page, encoding="utf-8").read()
     sys.path.insert(0, REC)
     import apply_layer_status_l3_r4 as A
-    if A.MARK in t:
+    if A.MARK not in t and A.OLD not in t:
+        # round 5's closure restated the gate table again (apply_layer_status_l3_r5b.py): the script is exercised on the
+        # page as it stood when it was written, main at 8fec0733
+        r = subprocess.run(["git", "-C", ROOT, "show", "8fec0733:v2/docs/handover/LAYER-STATUS.md"], capture_output=True)
+        if r.returncode != 0: raise Skip("the page this script was written for is not in this repository")
+        t = r.stdout.decode("utf-8")
+    elif A.MARK in t:
         assert A.OLD not in t and A.CHECKER not in t, "the page carries an old text beside the new one"
         r = _run([LSTAT, "--check"])
         assert r.returncode == 2 and "has run" in r.stdout, "a second run was not refused:\n%s" % r.stdout

@@ -90,7 +90,7 @@ def require(d, row, reqs):
 # profile, so after 48 hours or HF listening it refuses until it is restated from the comparison (closure item L3-C56).
 RUNTIME_ROWS = ("L3-OD1", "L3-OD2", "L3-OD4", "L3-OD6")
 RUNTIME_SUB = {"hf": ("available", "listening"), "external": ("authorise-vbat", "authorise-dc-entry", "no"),
-               "tablet-charging": ("no", "yes")}
+               "tablet-charging": ("no", "yes", "optional")}
 RUNTIME_FIELDS = {"hf": "m1_hf", "external": "m1_external", "tablet-charging": "m1_tablet_charging"}
 
 
@@ -100,7 +100,7 @@ def runtime(d):
         s = str(r.get("decides") or "")
         if s.startswith("L3-OD7:"):
             opt = s.split(":", 1)[1]
-            return {"rid": r["id"], "option": opt, "hours": "48" if opt.startswith("48") else "72",
+            return {"rid": r["id"], "option": opt, "hours": "48" if opt == "48-required-72-desired" else "72",
                     "hf": str(r.get("m1_hf")), "external": str(r.get("m1_external")),
                     "tablet": str(r.get("m1_tablet_charging"))}
     return None

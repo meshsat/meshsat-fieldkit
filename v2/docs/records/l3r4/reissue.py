@@ -97,7 +97,8 @@ class Ctx:
     def text(self, row):
         """The ruling's decided text, as the registry holds it, without its 'Row ... decided:' head."""
         t = " ".join(str(self.rul[self.R(row)]["ruling"]).split())
-        m = re.match(r"^Row %s of \S+ (decided|approved|not approved)[:,] " % re.escape(row), t)
+        m = re.match(r"^Row %s of \S+ (decided|approved|not approved)(?: by the owner's clarification D-\d+)?[:,] "
+                     % re.escape(row), t)
         if not m: E.refuse("ruling %s does not open with 'Row %s of ... decided:'" % (self.R(row), row))
         t = t[m.end():]
         return t[0].upper() + t[1:]
@@ -191,7 +192,8 @@ class Ctx:
         s = "Requirement REQ-072%s %s" % (", part of prototype 1's core," if m["prototype_1"] == "core" else "",
                                          self.m1_reads()[len("REQ-072 "):])
         if flag and m["evidence_result"] == "FAIL":
-            s += ": the design as it stands does not meet mission M1"
+            s += (": the design as it stands does not meet M1's runtime objective (design risk DR-01, layer 4)"
+                  if self.rec["REQ-072"].get("obligation") == "OBJECTIVE" else ": the design as it stands does not meet mission M1")
         return s + "; its current reading is kept in the requirements registry and `handover/DEFINITION-STATUS.md`."
 
     def digest(self):
@@ -282,13 +284,15 @@ def status_line(layer):
 def head_note(doc):
     def f(c, old):
         base = "handover/layer3/"
-        s = ("**Re-issue on the owner's rulings on layer 3 (%s).** The owner decided rows L3-OD1 to L3-OD7 of `%s"
-             "OWNER-DECISIONS-L3.md` (owner rulings %s). They restate requirements this %s traces to, which reopens it "
+        s = ("**Re-issue on the owner's rulings on layer 3 (%s).** %s of `%s"
+             "OWNER-DECISIONS-L3.md` (owner rulings %s)%s. They restate requirements this %s traces to, which reopens it "
              "by the rule above: each passage they change is restated in place and names its row and ruling, the "
              "change record `%s%s` lists every passage, and its draft `%s%s` keeps each one's baselined text. The "
              "owner's approval of that record is named in `%sl3r2.yaml` (`definition_reissue`)." % (
-                 dates(c), base, rulings_list(c), "document" if doc == "CONOPS" else "brief", base, RECORD, base, DRAFT,
-                 base))
+                 dates(c), "The owner's clarifications D-28 and D-29 answer rows L3-OD2 to L3-OD7" if settled_mode(c) else
+                 "The owner decided rows L3-OD1 to L3-OD7", base, rulings_list(c),
+                 "; row L3-OD1's store is layer 4 architecture" if settled_mode(c) else "",
+                 "document" if doc == "CONOPS" else "brief", base, RECORD, base, DRAFT, base))
         if c.O("L3-OD1") == "approve": s += (" Where a passage this re-issue does not restate states a requirement, an intention or a condition about "
               "\"the pack\", it reads as each of the two packs of %s, as that ruling reads the requirements. Where it "
               "states the circuit as generated for one pack (one charger, one gauge, one pack node, one protection "
@@ -385,14 +389,21 @@ def od5_quote(c):
 
 def new_rows(c, old):
     rows = []
+    if settled_mode(c):
+        for rid, what in (("D-28", "the energy and runtime requirement"), ("D-29", "CFL-017, the requirements apart from the current cell")):
+            r = c.rul[rid]
+            rows.append("| %s | The owner's clarification of %s | RULED %s | quoted word for word in "
+                        "`handover/layer3/OWNER-INSTRUCTION-2026-09-30.md` and applied by the rulings that follow |" % (
+                            rid, what, short_date(r["ruled_on"])))
     for row in answered(c):
         r = c.rul[c.R(row)]
         rows.append("| %s | %s | RULED %s | %s |" % (r["id"], " ".join(str(r["title"]).split()), short_date(c.dec[row][2]),
                                                      c.text(row)))
-    words = {6: "six", 7: "seven"}
+    words = {6: "six", 7: "seven", 8: "eight"}
+    why = ("" if len(rows) == len(ROWS) else " (row L3-OD1's store is layer 4 architecture)" if settled_mode(c) else
+           " (row L3-OD2 does not apply after row L3-OD1's reject)")
     return (old[:-2] + "; the owner decided those changes on layer 3, in the %s rulings that follow%s |\n" % (
-        words.get(len(rows), str(len(rows))), "" if len(rows) == len(ROWS) else " (row L3-OD2 does not apply after row "
-        "L3-OD1's reject)") + "\n".join(rows))
+        words.get(len(rows), str(len(rows))), why) + "\n".join(rows))
 
 
 def brief_night(c, old):
@@ -429,7 +440,7 @@ def brief_bearers(c, old):
 
 
 QMX_OUT, QMX_ANY, LID_ITEM = ("qmx-out",), ("qmx-out", "qmx-outside"), ("qmx-out", "qmx-outside", "tablet-out")
-OD3_ANY, OD5_ANY = ("2s2p", "1s4p", "keep"), ("reading-c", "measure", "cells")
+OD3_ANY, OD5_ANY = ("2s2p", "1s4p", "keep"), ("reading-c", "measure", "cells", "layer4-obligation")
 APPROVE = {"L3-OD1": ("approve",)}
 LID_ANY = ("qmx-out", "qmx-outside", "tablet-out", "both-kept")
 # A passage naming the store names the lid block row L3-OD2 sets and the cell row L3-OD5 `cells` reopens.
@@ -698,6 +709,116 @@ PASSAGES = [
       "the open items table: L-02, M1's duration"),
 ]
 
+# ------------------------------------------------------------------------------------------------ the settled answers
+# The closure of layer 3 (the owner's clarifications D-28 and D-29, rulings D-32 to D-37): row L3-OD7 answered
+# objective-48-72, row L3-OD2 both-kept, row L3-OD3 unchanged, row L3-OD4 reject, row L3-OD5 layer4-obligation, row L3-OD6
+# mean-day, row L3-OD1 closed as layer 4 architecture. The re-issue then restates these passages, with the heads, section
+# 7's rulings table and the CFL-017 passages of PASSAGES; nothing else, since no circuit, store or solar answer is taken.
+SETTLED_OPTION = "objective-48-72"
+R7S = {"L3-OD7": (SETTLED_OPTION,)}
+SETTLED_FROM_PASSAGES = ("C01", "C02", "C31", "B01", "B02", "C29", "B18")
+
+
+def settled_mode(c):
+    return c.O("L3-OD7") == SETTLED_OPTION
+
+
+def sub_ws(old, a, b):
+    """sub() with the passage's line breaks and indents read as single spaces."""
+    import re as _re
+    rx = _re.compile(r"\s+".join(_re.escape(w) for w in a.split()))
+    m = list(rx.finditer(old))
+    if len(m) != 1: E.refuse("the passage does not carry %r once" % a[:60])
+    return old[:m[0].start()] + b + old[m[0].end():]
+
+
+def energy_settled(c, old):
+    r = c.rec["REQ-072"]
+    s = ("**What M1 asks of the kit's energy, as the owner ruled it on layer 3** (the owner's clarification D-28, %s; this "
+         "replaces the layer-4 finding of 27 September 2026, whose text the re-issue's draft `handover/layer3/%s` keeps). "
+         "M1's runtime is requirement REQ-072, a design objective: \"%s\" Its stated operating profile: %s Battery and "
+         "solar are required, the store stays inside the Peli 1450, and no external battery is part of the kit (D-28). "
+         "**The modelled baseline misses the objective even without tablet charging.** %s No figure of it is demonstrated "
+         "capability, and nothing has been built." % (c.cite("L3-OD7"), DRAFT, c.stmt("REQ-072"),
+                                                     " ".join(str(r.get("objective_profile")).split()),
+                                                     " ".join(str(c.data["baseline_statement"]).split())))
+    return wrap(s)
+
+
+PASSAGES_SETTLED = [
+    P("S01", "CONOPS", 152, "### M1. Remote site relay on pack and solar (72 hours)", 152, "(72 hours)", R7S,
+      lambda c, o: "### M1. Remote site relay on pack and solar (48 to 72 hours, a design objective)",
+      "section 3, M1's title"),
+    P("S02", "CONOPS", 163, "**The", 165, "whenever he gives one.**", R7S,
+      lambda c, o: wrap("**The duration is a design objective of 48 to 72 hours under the stated operating profile, not a "
+                        "mandatory minimum (%s, applying the owner's clarification D-28), in place of the session's SC-21 "
+                        "(section 7a).**" % c.cite("L3-OD7")),
+      "section 3, M1's duration and who set it"),
+    P("S03", "CONOPS", 167, "**What that asks of the kit's energy, and what the", 198, "whatever the solar rating.",
+      dict(R7S, **{"L3-OD6": ("mean-day",)}), energy_settled,
+      "section 3, M1's energy: the objective, its profile and the modelled baseline"),
+    P("S04", "CONOPS", 215, "Until then REQ-072 reads FAIL and this section is not", 216, "restated.", R7S,
+      lambda c, o: ("The owner answered it on layer 3 (the clarification D-28, %s): M1's runtime is a design objective of "
+                    "48 to 72 hours under the stated profile, and %s." % (c.cite("L3-OD7"), (c.m1_plain()[0].lower() +
+                                                                                 c.m1_plain()[1:])[:-1])),
+      "section 3, M1: the owner's instruction D-20"),
+    P("S05", "CONOPS", 1019, "Missions longer than the pack rely on vehicle or solar input: M1 is set at 72 hours (section 3,",
+      1024, "session's 72 hours, not asked.", R7S,
+      lambda c, o: sub_ws(sub_ws(o, "M1 is set at 72 hours (section 3, taken by the session under the owner's standing rule "
+                                    "in place of the later setting D-06 reserved for the owner, whose own setting replaces it)",
+                                 "M1's runtime is a design objective of 48 to 72 hours (section 3, %s applying the owner's "
+                                 "clarification D-28)" % c.cite("L3-OD7")),
+                          "with the session's 72 hours, not asked.",
+                          "and of the studied in-case store, against the objective of D-28: design risk DR-01, assigned "
+                          "to layer 4."),
+      "section 6, missions longer than the pack and M1's night"),
+    P("S06", "CONOPS", 1101, "Reversed by the owner's own setting |", 1101, "Reversed by the owner's own setting |", R7S,
+      lambda c, o: "Replaced by the owner's clarification D-28 (%s): 48 to 72 hours, a design objective |" % c.cite("L3-OD7"),
+      "section 7a, M1's mission duration row: its reversal"),
+    P("S07", "CONOPS", 67, "the lid tablet (ATAK class, fed by the USB-C outlet and the kit's WiFi, 32.50 item 16d)", 67,
+      "32.50 item 16d)", {"L3-OD2": ("both-kept",)},
+      lambda c, o: ("the lid tablet (ATAK class, fed by the USB-C outlet and the kit's WiFi, 32.50 item 16d; kept by %s, its "
+                    "charging optional and reducing endurance, D-28)" % c.cite("L3-OD2")),
+      "section 1, the local end users: the lid tablet"),
+    P("S08", "BRIEF", 60, "and a rugged tablet (ATAK class) in the lid |", 60, "in the lid |", {"L3-OD2": ("both-kept",)},
+      lambda c, o: ("and a rugged tablet (ATAK class) in the lid, kept by %s, its charging from the kit optional and "
+                    "reducing endurance (D-28) |" % c.cite("L3-OD2")),
+      "who it is for, the local end users: the tablet in the lid"),
+    P("S09", "BRIEF", 171, "- Not able to run through a night on its own pack and solar input.", 179,
+      "a night needs that overnight input.", R7S,
+      lambda c, o: sub_ws(o, "The routes that carry the night are an overnight input on the 9 to 36 V vehicle and shore "
+                             "entry, D-01's deferred second pack, or a larger pack, which reopens D-06; until the owner rules "
+                             "on the last two, running through a night needs that overnight input.",
+                          wrap("Since the owner's clarification D-28 (%s), M1's runtime is a design objective of 48 to 72 "
+                               "hours under a stated operating profile, the store stays inside the Peli 1450 with no "
+                               "external battery, and the modelled baseline, the studied in-case candidate included, misses "
+                               "the objective even without tablet charging: design risk DR-01, assigned to layer 4, where "
+                               "the store's arrangement is settled." % c.cite("L3-OD7"), "", "  ")),
+      "what it is not today: the night on the pack and solar input"),
+    P("S11", "CONOPS", 321, "D-02a's storage margins (+71 C, -33 C) are beyond the cells' ratings, so they run on the kit less "
+      "its pack and on the pack at its cells' own limits", 321, "at its cells' own limits", {"L3-OD5": ("layer4-obligation",)},
+      lambda c, o: ("D-02a's storage margins (+71 C, -33 C) are beyond the current cells' ratings (the Samsung 35E, the "
+                    "current engineering selection): the margins stand unchanged, and with the pack fitted the current cell "
+                    "falls short of them, a layer 4 component-selection and thermal-design obligation (FEA-008, %s applying "
+                    "D-29); the runs on the kit less its pack and on the pack at its cells' own limits measure the rest of "
+                    "the kit and close nothing" % c.cite("L3-OD5")),
+      "section 4, the Storage row: D-02a's storage margins against the current cell"),
+    P("S10", "BRIEF", 309, "for which the session took 72 hours as a planning value", 309,
+      "`handover/ENGINEERING-QUESTIONS.md` EQ-13)", R7S,
+      lambda c, o: ("for which the owner set 48 to 72 hours as a design objective under a stated operating profile (the "
+                    "clarification D-28, %s), replacing the session's planning value SC-21 "
+                    "(`handover/ENGINEERING-QUESTIONS.md` EQ-13)" % c.cite("L3-OD7")),
+      "the open items table: L-02, M1's duration"),
+]
+
+
+def passages_for(c):
+    """The passages a decided set restates: the settled answers' own list with the heads, section 7's rulings table and
+    the CFL-017 passages, or PASSAGES for the prepared options."""
+    if settled_mode(c): return [q for q in PASSAGES if q.pid in SETTLED_FROM_PASSAGES] + PASSAGES_SETTLED
+    return PASSAGES
+
+
 # Passages that restate the two-pack store: they apply only where row L3-OD1 is approved. Six carry a variant for a
 # reject (D-06's one pack kept, FI-01), so a reject restates them too (D-26: a reject leaves an open engineering problem,
 # it does not block the other rows).
@@ -942,7 +1063,7 @@ def apply_all(docs, c):
     out, cur = {}, []
     for k, text in docs.items():
         edits = []
-        for p in PASSAGES:
+        for p in passages_for(c):
             if p.doc != k or not p.fires(c): continue
             off, end, old = locate(text, p)
             if p.kind == "CURRENT":
@@ -971,14 +1092,16 @@ def answers(req, data):
         c = Ctx(req, data)
     except RL.RenderError as e:
         E.refuse("the registry's rulings do not read: %s" % e)
-    missing = [r for r in ROWS if not RL.settled(r, c.dec)]
+    missing = [r for r in ROWS if not RL.settled(r, c.dec, data)]
     if missing:
         E.refuse("rows %s are undecided: the re-issue follows the owner's answers to every row" % and_list(missing))
     why, ok = RL.coherent(c.dec, data)
     if not ok: E.refuse("the answers set requirements that cannot both hold (contradictory): %s" % "; ".join(why))
     r7 = c.rul[c.R("L3-OD7")]
     subs = {k: str(r7.get(k)) for k in RUNTIME_SUB_MAPPED}
-    if c.O("L3-OD7") not in RUNTIME_MAPPED or subs != RUNTIME_SUB_MAPPED:
+    if settled_mode(c):
+        pass
+    elif c.O("L3-OD7") not in RUNTIME_MAPPED or subs != RUNTIME_SUB_MAPPED:
         E.refuse("row L3-OD7 is answered %s with %s (%s): the passages its runtime, load or store changes are mapped with "
                  "the runtime comparison's figures (l3r2.yaml runtime_comparison, closure item L3-C56), and the re-issue is "
                  "written after that (D-27)" % (c.O("L3-OD7"), ", ".join("%s %s" % (k[3:], v) for k, v in subs.items()),
@@ -1006,6 +1129,9 @@ def render(c, docs, applied, cur, base):
          "powered, and no kit has been field deployed." % (dg, base[DOCS["CONOPS"]], base[DOCS["BRIEF"]], RECORD), "",
          "## The answers", "", "| Row | Option | Owner ruling | Ruled on | Title |", "|---|---|---|---|---|"]
     for row in ROWS:
+        if RL.closed_row(row, c.dec, c.data):
+            d.append("| %s | closed as layer 4 architecture | none | none | %s |" % (row, " ".join(RL.closed_as(row, c.data)["text"].split())))
+            continue
         if row not in c.dec:
             d.append("| %s | not applicable | none | none | row L3-OD1 rejected: every option of this row sets a lid pack |" % row)
             continue
@@ -1078,9 +1204,11 @@ def change_record(c, applied, cur, draft_sha, dg, base):
                   % (names[g], where, g), ""]
     d += ["M1's reading: `handover/DEFINITION-STATUS.md`'s current values gain the row DC-L3-M1, carrying REQ-072's "
           "reading as the draft proposes it.", "",
-          "Where a passage the re-issue does not restate states a requirement, an intention or a condition about \"the "
-          "pack\", it reads as each of the two packs of %s; where it states the circuit as generated for one pack, it "
-          "states the design before that ruling (the head note of both documents)." % c.cite("L3-OD1"),
+          ("Row L3-OD1's store is layer 4 architecture (the closure, D-21 and D-28): D-06's one pack stands, and the "
+           "passages that state it stay as baselined." if settled_mode(c) else
+           "Where a passage the re-issue does not restate states a requirement, an intention or a condition about \"the "
+           "pack\", it reads as each of the two packs of %s; where it states the circuit as generated for one pack, it "
+           "states the design before that ruling (the head note of both documents)." % c.cite("L3-OD1")),
           "", "## The documents", "", "| Document | Baselined sha256/16 | Proposed sha256/16 |", "|---|---|---|"]
     for k in ("CONOPS", "BRIEF"):
         d.append("| `%s` | `%s` | `%s` |" % (DOCS[k], base[DOCS[k]], RL.sha16_bytes(applied[k][0].encode("utf-8"))))
@@ -1110,6 +1238,9 @@ def passage_map(docs):
     for row in ROWS:
         for o in opts[row]:
             ps = [p for p in PASSAGES if p.when != ALL and o in p.when.get(row, ())]
+            if row == "L3-OD7" and o == SETTLED_OPTION:
+                m.append("| %s | `%s` (the closure, D-28) | the settled answers' passages, listed below |" % (row, o))
+                continue
             if row == "L3-OD7":
                 if o in RUNTIME_MAPPED:
                     m.append("| %s | `%s` with HF available, no external store and the tablet not charged | %s |" % (
@@ -1120,8 +1251,14 @@ def passage_map(docs):
                 continue
             m.append("| %s | `%s` | %s |" % (row, o, ", ".join("%s (%s %d)" % (p.pid, p.doc, p.a) for p in ps) or
                                               "none beyond every answer's"))
-    m += ["", "## The passages", ""]
-    for p in PASSAGES:
+    m += ["", "## The settled answers (the closure of layer 3, D-28 and D-29)", "",
+          "Rows answered by the owner's clarifications (rulings D-32 to D-37: row L3-OD7 `%s`, row L3-OD2 `both-kept`, row "
+          "L3-OD3 `unchanged`, row L3-OD4 `reject`, row L3-OD5 `layer4-obligation`, row L3-OD6 `mean-day`) and row L3-OD1 "
+          "closed as layer 4 architecture: the re-issue restates %s." % (
+              SETTLED_OPTION, ", ".join("%s (%s %d)" % (q.pid, q.doc, q.a) for q in
+                                       [q for q in PASSAGES if q.pid in SETTLED_FROM_PASSAGES] + PASSAGES_SETTLED)),
+          "", "## The passages", ""]
+    for p in PASSAGES + PASSAGES_SETTLED:
         off, end, old = locate(docs[p.doc], p)
         trig = ALL if p.when == ALL else "; ".join("%s: %s" % (r, ", ".join("`%s`" % x for x in p.when[r])) for r in p.rows())
         m += ["### %s. %s, %s (%s%s)" % (p.pid, os.path.basename(DOCS[p.doc]),
@@ -1185,7 +1322,7 @@ def main(argv):
                 print("reissue: PASSAGE-MAP.md %s" % ("is current" if same else "is OUT OF DATE: run reissue.py --map"))
                 return 0 if same else 1
             open(MAP, "w", encoding="utf-8").write(body)
-            print("reissue: wrote %s (%d passages)" % (os.path.relpath(MAP, E.TOP), len(PASSAGES)))
+            print("reissue: wrote %s (%d passages)" % (os.path.relpath(MAP, E.TOP), len(PASSAGES) + len(PASSAGES_SETTLED)))
             return 0
         reg = opt("--registry", E.REGISTRY)
         req = yaml.safe_load(open(reg, encoding="utf-8"))

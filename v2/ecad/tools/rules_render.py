@@ -426,6 +426,12 @@ def _para(s):
     return " ".join(str(s if s is not None else "").split())
 
 
+def _kind(r):
+    """A record's kind, a requirement marked mandatory or a design objective (D-28)."""
+    if r["kind"] != "requirement": return r["kind"]
+    return "requirement, design objective" if r.get("obligation") == "OBJECTIVE" else "requirement, mandatory"
+
+
 def requirements_doc(req=None, reg=None, dec=None, needs_doc=None, root=None, interfaces=None):
     """v2/docs/REQUIREMENTS-TRACE.md: needs -> requirements -> rules -> verification, prototype 1 core and
     deferred, the TBD list, the open conflicts and what every open question holds (MESHSAT-1357).
@@ -520,6 +526,12 @@ def requirements_doc(req=None, reg=None, dec=None, needs_doc=None, root=None, in
     L += ["", _para("No record reads PASS on evidence awaiting revalidation (the validator refuses it). %s"
                     % " ".join("%s: %s." % (k, v) for k, v in _CLASS_MEANING.items()
                                if any(r.get("evidence_class") == k for r in recs)))]
+    reqs = [r for r in recs if r["kind"] == "requirement"]
+    objs = [r["id"] for r in reqs if r.get("obligation") == "OBJECTIVE"]
+    L += ["", _para("**Mandatory requirements and design objectives** (the owner's clarification D-28): of %d requirements, "
+                    "%d are mandatory and %d %s a design objective (%s), judged under its stated operating profile and "
+                    "reported, never a release gate." % (len(reqs), len(reqs) - len(objs), len(objs),
+                                                         "is" if len(objs) == 1 else "are", ", ".join(objs) or "none"))]
     L += ["", "| release effect | records |", "|---|---:|"]
     L += ["| %s | %d |" % kv for kv in count("release_effect", R.REQ_EFFECTS, recs) if kv[1]]
     L += ["", _para("A release effect says what an unmet or unresolved record does to a release: BLOCKER stops it, "
@@ -627,12 +639,13 @@ def requirements_doc(req=None, reg=None, dec=None, needs_doc=None, root=None, in
         for r in rs:
             ph = r["verification_phase"] + ((", " + r["final_phase"]) if r.get("final_phase") else "")
             L.append("| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |" % (
-                r["id"], r["kind"], r.get("prototype_1", "-"), r["status"], ", ".join(r["verification_method"]), ph,
+                r["id"], _kind(r), r.get("prototype_1", "-"), r["status"], ", ".join(r["verification_method"]), ph,
                 ", ".join(rset(r)) or "none", ", ".join(str(x) for x in dset(r)) or "-",
                 _result(r) + ((", " + r["evidence_class"]) if r.get("evidence_class") else ""), r["release_effect"]))
         L.append("")
         for r in rs:
-            L += [_para("**%s** (%s). %s" % (r["id"], r["kind"], r["statement"])), ""]
+            L += [_para("**%s** (%s). %s" % (r["id"], _kind(r), r["statement"])), ""]
+            if r.get("objective_profile"): L += [_para("*Judged under (the objective's stated profile):* " + r["objective_profile"]), ""]
             L += [_para("*Accept when:* " + r["acceptance"]), ""]
             for key, label in (("tbd_effect", "Effect of the TBD"), ("provisional", "Provisional, not a pass line"),
                                ("superseded_by", "Superseded by"), ("resolved_by", "Resolved by"),

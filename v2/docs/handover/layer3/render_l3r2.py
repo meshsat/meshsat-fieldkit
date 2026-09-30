@@ -247,7 +247,7 @@ def runtime_wait(row, dec):
     if row not in RUNTIME_ROWS or row in dec: return ""
     if "L3-OD7" not in dec: return "not asked until row L3-OD7, M1's runtime, is answered"
     f = dec["L3-OD7"][4] if len(dec["L3-OD7"]) > 4 else {}
-    if row == "L3-OD6" and (dec["L3-OD7"][0] != "72-required" or f.get("hf") == "listening"):
+    if row == "L3-OD6" and (dec["L3-OD7"][0] == "48-required-72-desired" or f.get("hf") == "listening"):
         return ("row L3-OD7 answered `%s` with HF %s (%s): its table is restated from the runtime comparison before it is "
                 "asked (L3-C56)" % (dec["L3-OD7"][0], f.get("hf"), dec["L3-OD7"][1]))
     return ""
@@ -272,7 +272,7 @@ def coherent(dec, data=None):
     why = []
     opt = lambda r: dec.get(r, ("",))[0]
     f7 = dec["L3-OD7"][4] if "L3-OD7" in dec and len(dec["L3-OD7"]) > 4 else {}
-    if "L3-OD6" in dec and "L3-OD7" in dec and (opt("L3-OD7") != "72-required" or f7.get("hf") == "listening"):
+    if "L3-OD6" in dec and "L3-OD7" in dec and (opt("L3-OD7") == "48-required-72-desired" or f7.get("hf") == "listening"):
         why.append("row L3-OD6 decided on its table for 72-hour windows at the approved profile while row L3-OD7 sets %s "
                    "with HF %s (D-27)" % (opt("L3-OD7"), f7.get("hf")))
     if opt("L3-OD2") == "qmx-out" and f7.get("hf") == "listening":
@@ -288,8 +288,22 @@ def not_applicable(row, dec):
     return row == "L3-OD2" and dec.get("L3-OD1", ("",))[0] == "reject"
 
 
-def settled(row, dec):
-    return row in dec or not_applicable(row, dec)
+def closed_as(row, data=None):
+    """A row closed without an owner ruling because its question is a later layer's (D-21, D-28): l3r2.yaml's closed_as."""
+    d = next((x for x in (data or load_data())["decisions"] if x["id"] == row), {})
+    return d.get("closed_as") or None
+
+
+def closed_row(row, dec, data=None):
+    """Row `row` closed as a later layer's by the closure (not decided, and the closure's answer to row L3-OD7 recorded)."""
+    return row not in dec and dec.get("L3-OD7", ("",))[0] == "objective-48-72" and bool(closed_as(row, data))
+
+
+def settled(row, dec, data=None):
+    """A row is settled when it is decided, does not apply after a reject, or is closed as a later layer's by the closure
+    (l3r2.yaml closed_as), which holds only where the registry carries the closure's answer to row L3-OD7."""
+    closure = dec.get("L3-OD7", ("",))[0] == "objective-48-72"
+    return row in dec or not_applicable(row, dec) or (closure and bool(closed_as(row, data)))
 
 
 def feasibility(req, dec, data):
@@ -319,7 +333,7 @@ def status_level(req, dec, data, h3, g=None):
     lv = {x["id"]: x for x in data.get("status_levels") or []}
     g = g or gate(req, dec, data, h3)
     rows = [d["id"] for d in data["decisions"]]
-    drafted = all(settled(r, dec) for r in rows) and basis_ok(data, "feasibility_basis")[0]
+    drafted = all(settled(r, dec, data) for r in rows) and basis_ok(data, "feasibility_basis")[0]
     accepted = any(str(r.get("decides")) == "layer3_baseline" for r in req["owner_rulings"])
     if drafted and all(x[1] for x in g) and accepted:
         return "VALIDATED", "**%s** holds: %s." % (lv["VALIDATED"]["name"], lv["VALIDATED"]["means"])
@@ -332,6 +346,9 @@ def status_level(req, dec, data, h3, g=None):
 
 
 def row_state(row, dec, data):
+    ca = closed_as(row, data) if dec.get("L3-OD7", ("",))[0] == "objective-48-72" else None
+    if ca and row not in dec:
+        return "CLOSED AT LAYER 3 AS LAYER 4 ARCHITECTURE (%s)" % p(ca["by"]).split(" (")[0]
     if not_applicable(row, dec) and row not in dec:
         return "NOT APPLICABLE: row L3-OD1 rejected (every option sets a lid pack; a contradiction rule)"
     if row in dec:
@@ -366,7 +383,7 @@ def closure_state(item, req, dec, data):
     iid, st = item["id"], item["state"]
     rows = [d["id"] for d in data["decisions"]]
     if iid == "L3-C01":
-        return "CLOSED" if all(settled(r, dec) for r in TARGET) and coherent(dec, data)[1] and basis_ok(data)[0] and \
+        return "CLOSED" if all(settled(r, dec, data) for r in TARGET) and coherent(dec, data)[1] and basis_ok(data)[0] and \
             basis_ok(data, "power_path_check")[0] else st
     if iid == "L3-C45": return "CLOSED" if basis_ok(data, "power_path_check")[0] else st
     if iid == "L3-C09": return "CLOSED" if (recs.get("CFL-017") or {}).get("status") == "CONFLICT_RESOLVED" else st
@@ -387,20 +404,21 @@ def closure_state(item, req, dec, data):
         chks = handover_checks(data)
         stale = bool(dec) and bool(chks) and "decisions pending" in str(chks[-1].get("scope") or "")
         return ("OPEN (the decided issue is checked again)" if stale else "CLOSED") if handover_accepted(data) else st
-    if iid == "L3-C28": return "CLOSED" if {"D-21", "D-23", "D-24", "D-25", "D-26", "D-27"} <= rulings else st
+    if iid == "L3-C28": return "CLOSED" if {"D-21", "D-23", "D-24", "D-25", "D-26", "D-27", "D-28", "D-29", "D-30", "D-31"} <= rulings else st
     if iid == "L3-C56":
         if "L3-OD7" not in dec: return st
         if not basis_ok(data, "runtime_comparison")[0]: return "OPEN (row L3-OD7 decided; the runtime comparison is not filed)"
-        return "CLOSED (decided)" if dec["L3-OD7"][0] == "72-required" else "OPEN (the four rows restated from the comparison next)"
+        return "CLOSED (decided)" if dec["L3-OD7"][0] in ("72-required", "objective-48-72") else "OPEN (the four rows restated from the comparison next)"
     if iid == "L3-C57":
         rp = (data.get("runtime_provenance") or {}).get("record")
-        return "CLOSED" if rp and basis_ok(data, "runtime_comparison")[0] else st
+        pb = data.get("runtime_provenance_basis") or {}
+        return "CLOSED" if rp and rp == pb.get("record") and basis_ok(data, "runtime_provenance_basis")[0] else st
     if iid == "L3-C55": return "CLOSED" if basis_ok(data, "feasibility_basis")[0] else st
     if iid == "L3-C54":
         rows = [d["id"] for d in data["decisions"]]
         disp = dispositions(req, dec, data)
         fis = feasibility(req, dec, data)
-        ok = all(settled(r, dec) for r in rows) and not [1 for x in disp if not x[2] or x[2] == "OWED"] and \
+        ok = all(settled(r, dec, data) for r in rows) and not [1 for x in disp if not x[2] or x[2] == "OWED"] and \
             not [1 for x in fis if x[2] == "OWED"]
         return "CLOSED" if ok else st
     if iid == "L3-C30": return "CLOSED" if basis_ok(data)[0] else "OPEN (the checked basis is not filed)"
@@ -420,8 +438,8 @@ def gate(req, dec, data, h3):
     why, ok = coherent(dec, data)
     basis, basis_why = basis_ok(data)
     power, power_why = basis_ok(data, "power_path_check")
-    g1 = all(settled(r, dec) for r in TARGET) and ok and bool(basis) and bool(power)
-    g2 = all(settled(r, dec) for r in rows)
+    g1 = all(settled(r, dec, data) for r in TARGET) and ok and bool(basis) and bool(power)
+    g2 = all(settled(r, dec, data) for r in rows)
     down = data.get("resolved_fail_downstream") or {}
     open_cfl = [r["id"] for r in recs.values() if r.get("status") == "CONFLICT_OPEN"]
     fail_cfl = [r["id"] for r in recs.values() if r.get("kind") == "conflict" and r.get("status") == "CONFLICT_RESOLVED"
@@ -430,7 +448,7 @@ def gate(req, dec, data, h3):
     cls = data.get("tbd_mentions") or {}
     unc = sorted({m[0] for m in tbd_mentions(req) if m[0] not in cls})
     reissued, reissue_why = reissue_ok(req, data, dec)
-    ran = {"D-21", "D-23", "D-24", "D-25", "D-26", "D-27"} <= rulings
+    ran = {"D-21", "D-23", "D-24", "D-25", "D-26", "D-27", "D-28", "D-29", "D-30", "D-31"} <= rulings
     g3 = not open_cfl and not fail_cfl and not tbd and not unc and reissued and ran
     chks = handover_checks(data)
     # An acceptance of the handover as prepared, with the decisions pending, does not cover the decided issue (D-26:
@@ -446,11 +464,12 @@ def gate(req, dec, data, h3):
         ("Target unambiguous", g1, "rows L3-OD7, L3-OD1 to L3-OD4 and L3-OD6 decided on a combination whose requirements do not "
          "contradict (row L3-OD2 not applicable after a reject), the energy basis filed: decided %s; contradictions %s; "
          "energy basis %s" % (
-             ", ".join("%s %s (%s)" % (r, dec[r][0], dec[r][1]) for r in rows if r in dec) or "none",
+             (", ".join("%s %s (%s)" % (r, dec[r][0], dec[r][1]) for r in rows if r in dec) or "none") +
+             "".join("; %s closed as layer 4 architecture" % r for r in rows if closed_row(r, dec, data)),
              "none" if ok else "FOUND (%s)" % "; ".join(why), "filed with an accepted check" if basis else basis_why) +
          "; the power path at Option A(i)'s currents (D-24): %s" % ("filed with an accepted check" if power else power_why)),
         ("Requirement-changing owner decisions resolved", g2, "%d of %d rows decided%s; rows held (D-22 to D-24, D-27): %s" % (
-            sum(1 for r in rows if r in dec), len(rows),
+            sum(1 for r in rows if r in dec), len(rows) - sum(1 for r in rows if closed_row(r, dec, data)),
             "" if not any(not_applicable(r, dec) for r in rows) else ", row L3-OD2 not applicable after the reject",
             ", ".join(r for r in rows if held(r, dec, data)) or "none")),
         ("Contradictions and requirement-level TBDs closed", g3,
@@ -485,6 +504,7 @@ def target_lines(req, data, dec, g1, heading):
              "rows set it:", ""]
         for row in [d["id"] for d in data["decisions"]]:
             if row in dec: L.append("- %s, `%s` (%s): %s" % (row, dec[row][0], dec[row][1], p(rulings[dec[row][1]]["ruling"])))
+            elif closed_row(row, dec, data): L.append("- %s, closed as layer 4 architecture: %s" % (row, p(closed_as(row, data)["text"])))
         return L + [""]
     L = ["**Approved today.** " + p(data["target"]["approved"]), "",
          "**Why it is not yet unambiguous.** " + p(data["target"]["contradiction"]), "",
@@ -648,6 +668,78 @@ def option_cell(d, dec):
     return cell(" ; ".join(out)).replace(" ; ", "<br>")
 
 
+def closure_lines(req, data, dec):
+    """The closure (D-28, D-29): the owner decision left, mandatory requirements and the design objective, the modelled
+    baseline, the design risks, CFL-017 by mode with the cell's provenance, and the completion statuses kept apart."""
+    cc = data.get("closure_cycle")
+    if not cc: return []
+    recs = [r for r in req["records"] if r["kind"] == "requirement"]
+    obj = [r["id"] for r in recs if r.get("obligation") == "OBJECTIVE"]
+    byid = {r["id"]: r for r in req["records"]}
+    L = ["### 2.1 The owner's closure (%s)" % ", ".join(cc["rulings"]), "",
+         p("The owner's clarifications of 30 September 2026 close layer 3: D-28 on the energy and runtime requirement, D-29 "
+           "on CFL-017, D-30 on the decision register (`OWNER-INSTRUCTION-2026-09-30.md` quotes each word for word), applied "
+           "by `%s`. **The owner decision left:** %s" % (cc["applied_by"], p(cc["owner_decision_left"]))), "",
+         "### 2.2 Mandatory requirements and the design objective (D-28)", "",
+         p("The registry marks every record's obligation: of its %d requirements, %s %s the design objective (`obligation: "
+           "OBJECTIVE`, judged under its stated profile, never a release gate) and the rest are mandatory. Each carries its "
+           "acceptance and verification method in section 5; a design objective's shortfall is reported as a design risk "
+           "with its layer." % (len(recs), ", ".join(obj) or "none", "is" if len(obj) == 1 else "are")), "",
+         "| Obligation | What | Records (verification) | Source |", "|---|---|---|---|"]
+    for kind, items in (("mandatory", data["obligations"]["mandatory"]), ("design objective", data["obligations"]["objectives"])):
+        for it in items:
+            rs = "; ".join("%s (%s)" % (x, ", ".join(byid[x].get("verification_method") or [])) for x in it["records"] if x in byid)
+            L.append("| %s | %s | %s | %s |" % (kind, cell(it["item"]), rs or "every other record of section 5", cell(it["source"])))
+    L += ["", "### 2.3 The modelled baseline, reported as the owner asked (D-28)", "", p("**%s**" % data["baseline_statement"]), "",
+          "### 2.4 Design risks, assigned", "", "| Id | Risk | Layer | Evidence | Detail |", "|---|---|---|---|---|"]
+    for dr in data["design_risks"]:
+        L.append("| %s | %s | %s | %s | %s |" % (dr["id"], cell(dr["title"]), cell(dr["layer"]),
+                                                 "; ".join("`%s`" % e for e in dr["evidence"]), cell(dr["text"])))
+    cp = data["cell_provenance"]
+    L += ["", "### 2.5 CFL-017 by mode: the layer 4 obligation (D-29)", "",
+          p("**Who chose the Samsung 35E.** %s %s" % (p(cp["finding"]), p(cp["binds"]))), ""]
+    for q in cp["quotes"]:
+        L.append("- `%s`, %s: \"%s\"" % (q["source"], p(q["where"]), p(q["text"])))
+    L += ["", p("Mode by mode against the project's maker sheets as filed, Samsung INR18650-35E Ver. 1.1 "
+                "(`v2/vendor/battery/samsung-35e-orbtronic.pdf`, clauses 3.12 and 3.13, at the cell surface) and Version "
+                "1.0 (`v2/vendor/battery/samsung-35e-akkuzentrum.pdf`, clauses 3.15 and 3.16, ambient), storage at the "
+                "ex-factory 30 percent charge, with `OPERATING-ENVELOPE.md` section 3's inside-air rise. No temperature "
+                "requirement is reduced, read as the kit's without its cells or reclassified (D-29); each collision is a "
+                "layer 4 obligation of FEA-008, and no alternative cell or thermal solution is shown."), "",
+          "| Id | Mode | Requirement | Temperature basis | Batteries fitted | Duration | Cell limit (maker's sheet) | "
+          "Cell temperature | Collision (gap) | Feasibility uncertainty | Closure criterion |",
+          "|---|---|---|---|---|---|---|---|---|---|---|"]
+    for m in data["cell_modes"]:
+        L.append("| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |" % tuple(
+            [m["id"]] + [cell(m[k]) for k in ("mode", "requirement", "basis", "fitted", "duration", "limit", "cell", "gap",
+                                              "uncertainty", "closure")]))
+    L += ["", "### 2.6 Completion statuses, kept apart (D-28, D-29)", "", "| What | Status |", "|---|---|"]
+    for c in data["completion_statuses"]:
+        L.append("| %s | %s |" % (c["what"], cell(c["status"])))
+    return L + [""]
+
+
+def decision_closure_lines(req, data, dec):
+    """The decision page's head after the closure: the owner decision left, the modelled baseline and the consolidated
+    message reconciled."""
+    cc = data.get("closure_cycle")
+    if not cc: return []
+    return (["## The closure (%s): the owner decision left" % ", ".join(cc["rulings"][:2]), "", p(cc["owner_decision_left"]), "",
+             p("**The modelled baseline (D-28).** " + data["baseline_statement"]), ""]
+            + consolidated_lines(data) + ["", "## The rows, answered or closed", ""])
+
+
+def consolidated_lines(data):
+    """The consolidated owner message's questions Q1 to Q10 reconciled against D-28 and D-29."""
+    qs = data.get("consolidated_questions")
+    if not qs: return []
+    L = ["", "## The consolidated owner message (Q1 to Q10), reconciled against D-28 and D-29", "",
+         "| Q | Question | The answer | Where it is recorded |", "|---|---|---|---|"]
+    for q in qs:
+        L.append("| %s | %s | %s | %s |" % (q["q"], cell(q["question"]), cell(q["answer"]), cell(q["where"])))
+    return L + ["", p(data["consolidated_note"])]
+
+
 def runtime_lines(data):
     """Row L3-OD7's table (D-27), filled from stream l3batt's checked runtime.out by exact keys
     (fill_l3r7_from_comparison.py); HELD while it is not filled."""
@@ -683,7 +775,15 @@ def runtime_lines(data):
 
 def recommendation(d, dec):
     """A row's recommendation; while it waits on row L3-OD7 (D-27) it is stated as conditional on that answer and asks
-    nothing: no function removed and no deployment condition accepted before row L3-OD7 is answered."""
+    nothing: no function removed and no deployment condition accepted before row L3-OD7 is answered. Once the row is
+    answered (D-28, D-29) or closed as a later layer's, the answer comes first and the recommendation made before it is
+    kept as the session's, not adopted where it differs."""
+    if closed_row(d["id"], dec):
+        return ("**Closed as layer 4 architecture:** %s *Before the closure the session recommended (not adopted):* %s"
+                % (p(d["closed_as"]["text"]), d["recommendation"]))
+    if d["id"] in dec and d.get("answered"):
+        return ("**Answered (%s):** %s *Before the answer the session recommended (not adopted where it differs):* %s"
+                % (dec[d["id"]][1], p(d["answered"]), d["recommendation"]))
     w = runtime_wait(d["id"], dec)
     if not w: return d["recommendation"]
     return ("**HELD (D-27): %s.** Stated for the case row L3-OD7 is answered `72-required`, as prepared: %s"
@@ -745,7 +845,7 @@ def page_decisions(req, data, dec):
                ("bound to the tip `%s` its accepted check names (`%s`)" % (str(data["runtime_comparison"]["tip"])[:12],
                                                                            data["runtime_comparison"]["check"]))
                if basis_ok(data, "runtime_comparison")[0] else "which is NOT BOUND: row L3-OD7 is HELD (D-27)")), "",
-         p(data.get("proposal_only") or ""), "",
+         p(data.get("proposal_only") or ""), ""] + decision_closure_lines(req, data, dec) + [
          "| Row | Question | Why it is the owner's: the requirement it changes, quantified (D-25) | Options | Recommendation | "
          "Quantified consequences | Dependencies | Affected | State |",
          "|---|---|---|---|---|---|---|---|---|"]
@@ -925,6 +1025,9 @@ def page_recon(req, data, dec, h3, root):
         st = pr["status"]
         row = pr.get("decision")
         if row and row in dec: st = "%s (now DECIDED: %s, %s)" % (st, dec[row][0], dec[row][1])
+        elif row and closed_row(row, dec, data): st = "%s (now CLOSED: row %s is layer 4 architecture)" % (st, row)
+        if pr.get("closure_note") and dec.get("L3-OD7", ("",))[0] == "objective-48-72":
+            st += "; " + pr["closure_note"]
         L.append("| %s | %s | %s | %s | %s | %s | %s | %s |" % (
             pr["id"], cell(pr["title"]), cell("; ".join(pr["source"])), cell(pr["changes"]), st, cell(pr["basis"]),
             ", ".join(pr.get("affects") or []) or "none", row or ""))
@@ -1030,8 +1133,9 @@ def page_spec(req, data, dec, h3, root):
     # status and gate
     g = gate(req, dec, data, h3)
     L += ["## 2. Status of this issue and the completion gate", "",
-          p("Layer 3 reaches completion only when all four conditions of the owner's instruction of 30 September 2026 (D-21) "
-            "hold. Completed circuits and physical tests belong to later verification stages and are not conditions here."), "",
+          p("Layer 3 reaches completion only when every condition below holds: the four of the owner's instruction of 30 "
+            "September 2026 (D-21) and the fifth of D-26. Completed circuits and physical tests belong to later verification "
+            "stages and are not conditions here (D-28, D-29)."), "",
           "| Condition | Met | State |", "|---|---|---|"]
     for name, ok, st in g:
         L.append("| %s | %s | %s |" % (name, "MET" if ok else "NOT MET", cell(st)))
@@ -1039,9 +1143,10 @@ def page_spec(req, data, dec, h3, root):
                                                "IN_PROGRESS (the conditions above that read NOT MET)")), "",
           p("**Status level (the owner's reviewer's three, D-26):** " + status_level(req, dec, data, h3, g)[1] +
             " The fifth condition joins the gate with D-26: a recorded target may have a FAIL or INCONCLUSIVE "
-            "candidate, but not an owed disposition."), ""]
+            "candidate, but not an owed disposition."), ""] + closure_lines(req, data, dec)
     # target
-    L += ["## 3. The target configuration and the pending owner decisions", "",
+    L += ["## 3. The target configuration and %s" % ("the owner's answers" if all(settled(d["id"], dec, data) for d in data["decisions"])
+                                                     else "the pending owner decisions"), "",
           ] + target_lines(req, data, dec, g[0][1], rows_heading(data)) + facts_lines(data, req) + [
           "| Row | Question | Options | Recommendation | State |", "|---|---|---|---|---|"]
     for d in data["decisions"]:
@@ -1057,13 +1162,24 @@ def page_spec(req, data, dec, h3, root):
           "| Ambient in use | %s to %s C | `pcb_envelope.yaml` (ENV-001), `v2/docs/OPERATING-ENVELOPE.md` section 4 |" % (amb["in_use"]["min"], amb["in_use"]["max"]),
           "| Storage, up to three months | %s to %s C | the same |" % (amb["storage_3_months"]["min"], amb["storage_3_months"]["max"]),
           "| Storage, up to a year | %s to %s C | the same |" % (amb["storage_1_year"]["min"], amb["storage_1_year"]["max"])]
-    for rid in ("D-02a", "D-02b", "D-02c", "D-02d", "D-02e", "D-04", "D-16", "D-20", "D-21", "D-22"):
+    for rid in ("D-02a", "D-02b", "D-02c", "D-02d", "D-02e", "D-04", "D-16", "D-20", "D-21", "D-22", "D-28", "D-29"):
         r = rulings.get(rid)
         if r: L.append("| %s (owner, %s) | %s | owner ruling %s |" % (cell(r["title"]), r["ruled_on"], cell(r["ruling"]), rid))
     for cid in ("SC-21", "SC-37"):
         c = choices.get(cid)
         if c: L.append("| %s (session, %s) | %s | session choice %s |" % (cell(c["question"]), c["taken_on"], cell(c["taken"]), cid))
-    L += ["", p("**Mission M1's conditions, in one place.** 72 hours (SC-21, preserved by D-20, approved by D-21) in "
+    r72 = next((r for r in req["records"] if r["id"] == "REQ-072"), {})
+    if r72.get("obligation") == "OBJECTIVE":
+        L += ["", p("**Mission M1's conditions, in one place (D-28).** A design objective of 48 to 72 hours under the stated "
+                    "operating profile of REQ-072 (%s), not a mandatory minimum; battery and solar mandatory, the store inside "
+                    "the Peli 1450 and no external battery (D-28), an external DC source optional and never M1's basis (D-20, "
+                    "D-21, D-22); the lid open and the kit shaded (D-02e). The profile's solar conditions are the objective's "
+                    "judging conditions, modelling assumptions and not operating restrictions: M1 carries no season (CONOPS "
+                    "section 3), and no deployment condition is stated (row L3-OD4). Optional tablet charging and additional "
+                    "use reduce endurance, which the owner accepts. The modelled baseline misses the objective's lower end "
+                    "(section 2.3, design risk DR-01)." % p(r72.get("objective_profile"))), ""]
+    else:
+      L += ["", p("**Mission M1's conditions, in one place.** 72 hours (SC-21, preserved by D-20, approved by D-21) in "
                 "PS-IDLE-SPEC (42.8 W at the pack terminals, `feasibility/POWER-THERMAL.md` section 4) on the kit's own "
                 "store and its solar input, battery and solar mandatory and an external DC source never the basis (D-20, "
                 "D-21, D-22), from a full aged store, lid open and the kit shaded (D-02e), judged on the reference day of "
@@ -1143,8 +1259,13 @@ def spec_record(r, byid, rulings, choices, lay, tp, pend, changed, dec, data):
     reading = "%s%s%s" % (r.get("evidence_result"), (" at " + r["evidence_phase"]) if r.get("evidence_phase") else "",
                           (", " + r["evidence_class"]) if r.get("evidence_class") else "")
     waits = ["%s (layer %s)" % (w, (lay.get(w) or {}).get("layer", "?")) for w in (r.get("waits_on") or [])]
-    L = ["#### %s (%s, %s, %s)" % (rid, r["kind"], r.get("status"), r.get("release_effect")), "",
-         "- **Statement:** " + p(r["statement"]),
+    ob = (["- **Obligation:** DESIGN OBJECTIVE (D-28), judged under: " + p(r.get("objective_profile"))]
+          if r.get("obligation") == "OBJECTIVE" else
+          ["- **Obligation:** mandatory requirement"] if r["kind"] == "requirement" else [])
+    L = ["#### %s (%s%s, %s, %s)" % (rid, r["kind"], ", design objective" if r.get("obligation") == "OBJECTIVE" else
+                                      (", mandatory" if r["kind"] == "requirement" else ""), r.get("status"),
+                                      r.get("release_effect")), "",
+         "- **Statement:** " + p(r["statement"])] + ob + [
          "- **Applicability:** " + appl,
          "- **Acceptance:** " + p(r["acceptance"]),
          "- **Verification:** " + ver + "; allocated to " + ", ".join(r.get("allocated_to") or []),
@@ -1159,7 +1280,10 @@ def spec_record(r, byid, rulings, choices, lay, tp, pend, changed, dec, data):
     if r.get("tbd_effect"): L.append("- **TBD effect:** " + p(r["tbd_effect"]))
     for row in pend.get(rid, []):
         st = row_state(row, dec, data)
-        L.append("- **Pending owner decision %s:** %s; the restatement it applies is prepared, not applied." % (row, st))
+        if row in dec or closed_row(row, dec, data):
+            L.append("- **Owner decision %s:** %s." % (row, st))
+        else:
+            L.append("- **Pending owner decision %s:** %s; the restatement it applies is prepared, not applied." % (row, st))
     if rid in changed: L.append("- **Changed since H3:** %s (section 6)." % ", ".join(changed[rid]))
     L.append("")
     return L
