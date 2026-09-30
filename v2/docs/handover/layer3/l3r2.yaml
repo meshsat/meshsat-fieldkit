@@ -430,6 +430,7 @@ classification:
 #   r11             board A's current-limit resistor (D-23): the result on the held circuit (R11 10 mOhm, as generated)
 #                   and the result conditional on the drafted 6.2 mOhm, as two columns of their own table
 #   held_until      the l3r2.yaml files the whole row waits on before its recommendation and its figures are stated
+#   held_by         the owner ruling that holds the row (D-22 unless named)
 #   quantified      row L3-OD6's options table: every figure null (HELD) until the checked energy basis fills it
 decisions:
   - id: L3-OD1
@@ -518,6 +519,7 @@ decisions:
         - {id: cov-90, option: coverage, share: 90, asks: "M1 in at least 90 percent of the 864 windows", limits: "illustrative; one site, one month and one plane; the record's 16 Septembers", usable_wh: null, nominal_wh: null, mass_kg: null, volume_l: null, fits: null, evidence: null}
         - {id: cov-100, option: coverage, share: 100, asks: "M1 in every one of the 864 windows", limits: "illustrative; the darkest window of 16 Septembers, not of every September to come", usable_wh: null, nominal_wh: null, mass_kg: null, volume_l: null, fits: null, evidence: null}
     held_until: [energy_basis]
+    held_by: D-23
     script: od_l3_6.py
     requires: []
 
