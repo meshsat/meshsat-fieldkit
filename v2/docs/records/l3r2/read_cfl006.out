@@ -1,0 +1,11 @@
+file protection v2/ecad/tools/pcb_pack_protection.yaml sha256/16 ab1dbc3f3f69aa46
+file chain      v2/ecad/tools/pcb_energy_chain.yaml sha256/16 a09ca0293afd1f7c
+file facts      v2/ecad/tools/pcb_board_facts.yaml sha256/16 07af4d0f2b166694
+file enclosure  v2/cad/pack_4s.py sha256/16 fab2cc216f7ba460
+P1 HOLDS   the protection table's pack block: topology 4S3P Samsung INR18650-35E, about 145 Wh; parallel_min 3, parallel_max 3
+E1 HOLDS   the energy chain's pack source: the 4S3P block (Samsung INR18650-35E, about 145 Wh; owner ruling D-06)
+F1 HOLDS   the board facts: board P is the battery board of one 4S3P block of Samsung INR18650-35E, about 145 Wh (D-06)
+C1 HOLDS   the enclosure script's docstring opens SUPERSEDED, names D-06's shrink-wrapped 4S3P block and session item S-27
+C2 HOLDS   the enclosure script still draws the wrapped 4S4P 18650 block (its CELLS constant)
+C3 HOLDS   the enclosure script says the 4S3P block's hold-down is not designed yet
+reading: the cell and the parallel count agree in the protection table, the energy chain and the board facts (D-06); the enclosure script is superseded and still draws the 4S4P box, and no 4S3P enclosure or hold-down is drawn: CFL-006 stays FAIL on the enclosure alone (S-27)
