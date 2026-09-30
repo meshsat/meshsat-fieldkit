@@ -22,6 +22,11 @@ Isat's 30 % drop, R11's power with the ripple and its own temperature, the parts
 stays as CHECK-3 closed it), the ISNS filter read against pp.17 and 30 rather than p.24, the spring pins' basis named, and a
 section of figures for the corrections' closure criteria. The classification itself is R11-DEPENDENCY.md's.
 
+Third issue (CHECK-4 of 06b8ecea, accepted: yes, minors 1 and 2): the derated variant's setting is 4.00 A, which clears the
+front end's stacked minimum whatever the other loads are; 4.05 A is kept only as the reason it was not chosen. L1's schedule
+at 9 V is written as its register setting, 5.05 A, with its maximum and the peak it allows, to be recomputed once L1's
+temperature derating is held.
+
 Run from the repository root:  python3 v2/docs/records/r11dep/r11_dep.py > v2/docs/records/r11dep/r11_dep.out
 Needs pdftotext, pdftoppm and Pillow. Deterministic for the pinned files. Exit 3: an input is missing or not as expected."""
 import ast
@@ -73,7 +78,8 @@ VIN_TREE = 9.0                        # the tree's own convention for VIN_RAW's 
 VIN_MAX = 36.0                        # REQ-015: 9 to 36 V in service (vbus20_range and s120 read it the same way)
 A32 = ("v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb", "b7e0d28f")   # revision A32, routed, its last commit
 CU_TCR = 0.00393                      # INFERRED: annealed copper's temperature coefficient (IEC 60028), for the Kelvin budget at 25 C
-U3_DERATED = 4.05                     # the derated variant: U3's IIN_HOST at 4.05 A nominal (CHECK-3 A-1)
+U3_DERATED = 4.00                     # the derated variant: U3's IIN_HOST at 4.00 A (CHECK-4 minor 1; 4.05 A, CHECK-3's, not chosen)
+U3_STEP = 0.05                        # INFERRED: IIN_HOST's register step, from CHARGER.md's code 124 for 6.2 A
 R12_CS = 0.005                        # NETLIST: R12 5mOhm, U2's CS resistor (section 1's facts check its value and net)
 ETA_FE = 0.93                         # DECLARED (gen_sch_a.py VBUS20 intent): the low end, the conservative one for current
 
@@ -454,12 +460,14 @@ def main():
     P("     %.3f A through R11, against the stacked minimum %.3f A: %+.3f A (energy_basis names 50 mA between U3's maximum and the printed" % (
         float(gen_u3[2]) + other_i, held[0], held[0] - float(gen_u3[2]) - other_i))
     P("     %s A minimum; with the other loads and the stacked band the front end can limit first)" % gen_u3[0])
-    P("   THE DERATED VARIANT, U3 at %.2f A: its maximum %.3f A plus %.3f A = %.3f A against %.3f A: %+.3f A. It fixes the coordination" % (
-        U3_DERATED, der_max, other_i, der_max + other_i, held[0], held[0] - der_max - other_i))
-    P("     only; it resolves no other item and it does not meet M1 (l3plane three_cases.out). With the other loads at four FETs'")
-    P("     %.3f A it would read %+.3f A; the next setting down, 4.00 A (the register's 50 mA steps, INFERRED from CHARGER.md's code" % (
-        parts_boost + 2 * gq, held[0] - der_max - (parts_boost + 2 * gq)))
-    P("     124 for 6.2 A), holds %+.3f A and %+.3f A" % (held[0] - max(4.10, 4.0 * (1 + acc)) - other_i, held[0] - max(4.10, 4.0 * (1 + acc)) - (parts_boost + 2 * gq)))
+    loads4 = parts_boost + 2 * gq
+    x405 = max(4.05 + 0.1, 4.05 * (1 + acc))
+    P("   THE DERATED VARIANT, U3 at %.2f A: its maximum %.3f A plus %.3f A = %.3f A against %.3f A: %+.3f A; with four FETs' %.3f A" % (
+        U3_DERATED, der_max, other_i, der_max + other_i, held[0], held[0] - der_max - other_i, loads4))
+    P("     of other loads %+.3f A. It clears whatever C-9 finds. It fixes the coordination only; it resolves no other item and it does" % (
+        held[0] - der_max - loads4))
+    P("     not meet M1 (l3plane three_cases.out). Not chosen: 4.05 A (CHECK-3's figure), %+.3f A on %.3f A and %+.3f A on %.3f A" % (
+        held[0] - x405 - other_i, other_i, held[0] - x405 - loads4, loads4))
     P("   M1 for each case (as drawn, the derated variant, the resistor-only proposal, the hypothetical corrected path): l3plane")
     P("     three_cases.out, which reads this file's bands")
     P("")
@@ -683,6 +691,13 @@ def main():
         i9 - other_i, other_i, stage(i9, VIN_TREE)["i_in"]))
     P("     above the vehicle entry's %.2f A; the tracker holds %.1f V at U3's full demand, so in service no source gives more at 9 V:" % (6.15, VIN_TRACKER))
     P("     such a limit charges below no source's available power there)")
+    i9_set = math.floor((i9 - other_i) / (1 + acc) / U3_STEP + 1e-9) * U3_STEP
+    i9_max = max(i9_set + 0.1, i9_set * (1 + acc))
+    P("     the REGISTER SETTING at 9 V is %.2f A (the %.0f mA step at or under %.2f / %.3f = %.3f A), whose maximum %.2f A puts the" % (
+        i9_set, U3_STEP * 1e3, i9 - other_i, 1 + acc, (i9 - other_i) / (1 + acc), i9_max))
+    P("     peak at %.2f A, %.1f %% of the typical Isat; it rests on Isat at 25 C and is recomputed once L1's temperature derating" % (
+        peak_b(i9_max + other_i, VIN_TREE), 100 * peak_b(i9_max + other_i, VIN_TREE) / isat))
+    P("     is held (C-5)")
     can_k2 = max(can57[2] / 5.7, can50[2] / 5.0)
     can_k0 = max(can57[0] / 5.7, can50[0] / 5.0)
     P("   VBUS20's bank: the worst can reaches %.1f A at a front end current of %.2f A matched and %.2f A at a 2:1 ESR spread; at the" % (
@@ -691,7 +706,8 @@ def main():
         prop[2], can_k0 * prop[2] / ripple_bulk, can_k2 * prop[2] / ripple_bulk, ripple_bulk))
     P("   the FETs: the RthetaJA each case needs for TJ 150 C in %.1f C air is printed in section 4 beside each FET" % t_air)
     P("   R11's taps: at most %.2f mOhm at 25 C for the two together (section 3)" % (r_par_25[1] * 1e3))
-    P("   the derated variant: U3 at %.2f A clears the stacked minimum by %+.3f A on the carried %.3f A (section 3)" % (U3_DERATED, held[0] - der_max - other_i, other_i))
+    P("   the derated variant: U3 at %.2f A clears the stacked minimum by %+.3f A on the carried %.3f A and %+.3f A on %.3f A (section 3)" % (
+        U3_DERATED, held[0] - der_max - other_i, other_i, held[0] - der_max - loads4, loads4))
     P("")
     P("END. Desk figures on the makers' pages and the committed netlists; nothing is measured, nothing implemented.")
     return 0
