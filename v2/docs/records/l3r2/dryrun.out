@@ -2,19 +2,28 @@ L3-R2 DRY RUNS of the prepared owner-decision scripts, each chain on a fresh cop
 Placeholder words 'dry run', date 2026-10-01. Nothing in the tree is written. The checked basis (fnd/l3plane cd8720a1,
 CHECK-5) is filed, so the tree's rows are no longer held; the chains run on copies. Row L3-OD3's keep figures and
 row L3-OD6's table come from FIXTURE files, except in the chain that reads the tree's filled table; row L3-OD4's band
-is the basis's (none at U3's 6.0 A bracket); the push is a placeholder of 20 N standing in for the owner's number.
+is the basis's (none at U3's 6.0 A bracket); the push is a STAND-IN of 10 N for the owner's number, the pass line
+kit-loads a stand-in for his sub-choice 1b, and 2 degrees the stand-in slope for a lid with no mechanical figure.
+D-26: a target the studied candidate does not meet is recorded with its feasibility item; only requirements that
+cannot both hold are refused. D-27: row L3-OD7 (M1's runtime) comes first; a chain reaching rows 1, 2, 4 or 6
+starts with it answered 72-required, a STAND-IN for the owner's runtime answer.
 The chains are examples, not recommendations.
 
-== chain: an example chain, not a recommendation (rows 1, 2, 4 and 6 held): the mean day in TYP, then the QMX out and adopt
+== chain: an example chain, not a recommendation: the mean day in TYP, then approve at the kit loads, the QMX out, 2S2P, adopt at a 10 N stand-in, reading-c
+-- od_l3_7.py --option 72-required (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed history,notes,rulings,statement
+   od_l3_7: option 72-required, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
 -- od_l3_6.py --option mean-day:TYP (exit 0)
-   owner_rulings  D-26     added 
+   owner_rulings  D-29     added 
    records        REQ-072  changed notes,rulings
    session_choices SC-37    changed source
    od_l3_6: option mean-day, 3 entries, validator 0 errors, 0 warnings
    od_l3_6: written <copy>
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-27     added 
+   owner_rulings  D-30     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -26,7 +35,7 @@ The chains are examples, not recommendations.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option qmx-out (exit 0)
-   owner_rulings  D-28     added 
+   owner_rulings  D-31     added 
    records        CFL-006  changed resolved_by,rulings
    records        CON-007  changed notes
    records        REQ-002  changed acceptance,history,rulings,statement
@@ -40,36 +49,43 @@ The chains are examples, not recommendations.
    od_l3_2: option qmx-out, 11 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 -- od_l3_3.py --option 2s2p (exit 0)
-   owner_rulings  D-29     added 
+   owner_rulings  D-32     added 
+   records        FEA-008  added 
    records        REQ-016  changed acceptance,history,notes,rulings,statement
    records        REQ-072  changed acceptance,rulings
-   od_l3_3: option 2s2p, 3 entries, validator 0 errors, 0 warnings
+   od_l3_3: option 2s2p, 4 entries, validator 0 errors, 0 warnings
    od_l3_3: written <copy>
 -- od_l3_4.py --option adopt (exit 0)
    closed_items   M-02     added 
    open_items     M-02     removed 
-   owner_rulings  D-30     added 
+   owner_rulings  D-33     added 
+   records        FEA-009  added 
    records        REQ-072  changed notes,rulings,waits_on
    records        REQ-078  added 
-   od_l3_4: option adopt, 5 entries, validator 0 errors, 0 warnings
+   od_l3_4: option adopt, 6 entries, validator 0 errors, 0 warnings
    od_l3_4: written <copy>
 -- od_l3_5.py --option reading-c (exit 0)
-   owner_rulings  D-31     added 
+   owner_rulings  D-34     added 
    records        CFL-017  changed evidence_phase,evidence_result,notes,resolved_by,rulings,status
-   records        REQ-051  changed history,rulings,statement
+   records        REQ-051  changed history,notes,rulings,statement
    od_l3_5: option reading-c, 3 entries, validator 0 errors, 0 warnings
    od_l3_5: written <copy>
 
 == chain: the QMX outside the case
+-- od_l3_7.py --option 72-required (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed history,notes,rulings,statement
+   od_l3_7: option 72-required, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
 -- od_l3_6.py --option mean-day:TYP (exit 0)
-   owner_rulings  D-26     added 
+   owner_rulings  D-29     added 
    records        REQ-072  changed notes,rulings
    session_choices SC-37    changed source
    od_l3_6: option mean-day, 3 entries, validator 0 errors, 0 warnings
    od_l3_6: written <copy>
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-27     added 
+   owner_rulings  D-30     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -81,7 +97,7 @@ The chains are examples, not recommendations.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option qmx-outside (exit 0)
-   owner_rulings  D-28     added 
+   owner_rulings  D-31     added 
    records        CFL-006  changed resolved_by,rulings
    records        REQ-002  changed notes,rulings
    records        REQ-011  changed history,rulings,statement
@@ -90,30 +106,37 @@ The chains are examples, not recommendations.
    od_l3_2: option qmx-outside, 6 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 -- od_l3_3.py --option 2s2p (exit 0)
-   owner_rulings  D-29     added 
+   owner_rulings  D-32     added 
+   records        FEA-008  added 
    records        REQ-016  changed acceptance,history,notes,rulings,statement
    records        REQ-072  changed acceptance,rulings
-   od_l3_3: option 2s2p, 3 entries, validator 0 errors, 0 warnings
+   od_l3_3: option 2s2p, 4 entries, validator 0 errors, 0 warnings
    od_l3_3: written <copy>
 -- od_l3_4.py --option adopt (exit 0)
    closed_items   M-02     added 
    open_items     M-02     removed 
-   owner_rulings  D-30     added 
+   owner_rulings  D-33     added 
+   records        FEA-009  added 
    records        REQ-072  changed notes,rulings,waits_on
    records        REQ-078  added 
-   od_l3_4: option adopt, 5 entries, validator 0 errors, 0 warnings
+   od_l3_4: option adopt, 6 entries, validator 0 errors, 0 warnings
    od_l3_4: written <copy>
 
 == chain: the tablet out, the mean day in TYP
+-- od_l3_7.py --option 72-required (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed history,notes,rulings,statement
+   od_l3_7: option 72-required, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
 -- od_l3_6.py --option mean-day:TYP (exit 0)
-   owner_rulings  D-26     added 
+   owner_rulings  D-29     added 
    records        REQ-072  changed notes,rulings
    session_choices SC-37    changed source
    od_l3_6: option mean-day, 3 entries, validator 0 errors, 0 warnings
    od_l3_6: written <copy>
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-27     added 
+   owner_rulings  D-30     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -125,7 +148,7 @@ The chains are examples, not recommendations.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option tablet-out (exit 0)
-   owner_rulings  D-28     added 
+   owner_rulings  D-31     added 
    records        CFL-006  changed resolved_by,rulings
    records        REQ-011  changed acceptance,history,rulings,statement
    records        REQ-014  changed acceptance,rulings
@@ -134,24 +157,31 @@ The chains are examples, not recommendations.
    od_l3_2: option tablet-out, 6 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 -- od_l3_3.py --option 2s2p (exit 0)
-   owner_rulings  D-29     added 
+   owner_rulings  D-32     added 
+   records        FEA-008  added 
    records        REQ-016  changed acceptance,history,notes,rulings,statement
    records        REQ-072  changed acceptance,rulings
-   od_l3_3: option 2s2p, 3 entries, validator 0 errors, 0 warnings
+   od_l3_3: option 2s2p, 4 entries, validator 0 errors, 0 warnings
    od_l3_3: written <copy>
 -- od_l3_4.py --option adopt (exit 0)
    closed_items   M-02     added 
    open_items     M-02     removed 
-   owner_rulings  D-30     added 
+   owner_rulings  D-33     added 
+   records        FEA-009  added 
    records        REQ-072  changed notes,rulings,waits_on
    records        REQ-078  added 
-   od_l3_4: option adopt, 5 entries, validator 0 errors, 0 warnings
+   od_l3_4: option adopt, 6 entries, validator 0 errors, 0 warnings
    od_l3_4: written <copy>
 
-== chain: CHECK-2's path A: row 4 before row 6, adopt refused
+== chain: row 4 before row 6: adopt is valid now (no band exists, D-26)
+-- od_l3_7.py --option 72-required (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed history,notes,rulings,statement
+   od_l3_7: option 72-required, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-26     added 
+   owner_rulings  D-29     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -163,7 +193,7 @@ The chains are examples, not recommendations.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option qmx-out (exit 0)
-   owner_rulings  D-27     added 
+   owner_rulings  D-30     added 
    records        CFL-006  changed resolved_by,rulings
    records        CON-007  changed notes
    records        REQ-002  changed acceptance,history,rulings,statement
@@ -177,24 +207,37 @@ The chains are examples, not recommendations.
    od_l3_2: option qmx-out, 11 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 -- od_l3_3.py --option 2s2p (exit 0)
-   owner_rulings  D-28     added 
+   owner_rulings  D-31     added 
+   records        FEA-008  added 
    records        REQ-016  changed acceptance,history,notes,rulings,statement
    records        REQ-072  changed acceptance,rulings
-   od_l3_3: option 2s2p, 3 entries, validator 0 errors, 0 warnings
+   od_l3_3: option 2s2p, 4 entries, validator 0 errors, 0 warnings
    od_l3_3: written <copy>
--- od_l3_4.py --option adopt (exit 2)
-   od_l3_4: REFUSED: L3-OD4 needs L3-OD6 decided first
+-- od_l3_4.py --option adopt (exit 0)
+   closed_items   M-02     added 
+   open_items     M-02     removed 
+   owner_rulings  D-32     added 
+   records        FEA-009  added 
+   records        REQ-072  changed notes,rulings,waits_on
+   records        REQ-078  added 
+   od_l3_4: option adopt, 6 entries, validator 0 errors, 0 warnings
+   od_l3_4: written <copy>
 
-== chain: CHECK-2's path B: the mean day in WAB with the tablet-out lid, an open conflict
+== chain: HF kept with WAB: the mean day in WAB with the tablet-out lid, a valid target with feasibility item FI-02 (D-26)
+-- od_l3_7.py --option 72-required (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed history,notes,rulings,statement
+   od_l3_7: option 72-required, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
 -- od_l3_6.py --option mean-day:WAB (exit 0)
-   owner_rulings  D-26     added 
+   owner_rulings  D-29     added 
    records        REQ-072  changed notes,rulings
    session_choices SC-37    changed source
    od_l3_6: option mean-day, 3 entries, validator 0 errors, 0 warnings
    od_l3_6: written <copy>
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-27     added 
+   owner_rulings  D-30     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -206,9 +249,9 @@ The chains are examples, not recommendations.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option tablet-out (exit 0)
-   owner_rulings  D-28     added 
+   owner_rulings  D-31     added 
    records        CFL-006  changed resolved_by,rulings
-   records        CFL-019  added 
+   records        FEA-008  added 
    records        REQ-011  changed acceptance,history,rulings,statement
    records        REQ-014  changed acceptance,rulings
    records        REQ-075  changed rulings,statement
@@ -216,16 +259,21 @@ The chains are examples, not recommendations.
    od_l3_2: option tablet-out, 7 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 
-== chain: 1S4P: a band refused (no grid), no deployment condition accepted
+== chain: 1S4P with adopt and a second answer to row 4 refused
+-- od_l3_7.py --option 72-required (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed history,notes,rulings,statement
+   od_l3_7: option 72-required, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
 -- od_l3_6.py --option mean-day:TYP (exit 0)
-   owner_rulings  D-26     added 
+   owner_rulings  D-29     added 
    records        REQ-072  changed notes,rulings
    session_choices SC-37    changed source
    od_l3_6: option mean-day, 3 entries, validator 0 errors, 0 warnings
    od_l3_6: written <copy>
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-27     added 
+   owner_rulings  D-30     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -237,7 +285,7 @@ The chains are examples, not recommendations.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option qmx-out (exit 0)
-   owner_rulings  D-28     added 
+   owner_rulings  D-31     added 
    records        CFL-006  changed resolved_by,rulings
    records        CON-007  changed notes
    records        REQ-002  changed acceptance,history,rulings,statement
@@ -251,31 +299,39 @@ The chains are examples, not recommendations.
    od_l3_2: option qmx-out, 11 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 -- od_l3_3.py --option 1s4p (exit 0)
-   owner_rulings  D-29     added 
+   owner_rulings  D-32     added 
+   records        FEA-008  added 
    records        REQ-016  changed acceptance,history,notes,rulings,statement
    records        REQ-072  changed acceptance,rulings
-   od_l3_3: option 1s4p, 3 entries, validator 0 errors, 0 warnings
+   od_l3_3: option 1s4p, 4 entries, validator 0 errors, 0 warnings
    od_l3_3: written <copy>
--- od_l3_4.py --option adopt (exit 2)
-   od_l3_4: REFUSED: L3-OD4 needs L3-OD3 answered 2s2p; it was answered 1s4p
--- od_l3_4.py --option reject (exit 0)
+-- od_l3_4.py --option adopt (exit 0)
    closed_items   M-02     added 
    open_items     M-02     removed 
-   owner_rulings  D-30     added 
+   owner_rulings  D-33     added 
+   records        FEA-009  added 
    records        REQ-072  changed notes,rulings,waits_on
-   od_l3_4: option reject, 4 entries, validator 0 errors, 0 warnings
+   records        REQ-078  added 
+   od_l3_4: option adopt, 6 entries, validator 0 errors, 0 warnings
    od_l3_4: written <copy>
+-- od_l3_4.py --option reject (exit 2)
+   od_l3_4: REFUSED: L3-OD4 is already decided (adopt, D-33)
 
-== chain: CHECK-1's incoherent path: REQ-016 kept, then adopt refused
+== chain: REQ-016 kept, then adopt (valid, D-26)
+-- od_l3_7.py --option 72-required (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed history,notes,rulings,statement
+   od_l3_7: option 72-required, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
 -- od_l3_6.py --option mean-day:TYP (exit 0)
-   owner_rulings  D-26     added 
+   owner_rulings  D-29     added 
    records        REQ-072  changed notes,rulings
    session_choices SC-37    changed source
    od_l3_6: option mean-day, 3 entries, validator 0 errors, 0 warnings
    od_l3_6: written <copy>
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-27     added 
+   owner_rulings  D-30     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -287,7 +343,7 @@ The chains are examples, not recommendations.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option qmx-out (exit 0)
-   owner_rulings  D-28     added 
+   owner_rulings  D-31     added 
    records        CFL-006  changed resolved_by,rulings
    records        CON-007  changed notes
    records        REQ-002  changed acceptance,history,rulings,statement
@@ -301,40 +357,86 @@ The chains are examples, not recommendations.
    od_l3_2: option qmx-out, 11 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 -- od_l3_3.py --option keep (exit 0)
-   owner_rulings  D-29     added 
+   owner_rulings  D-32     added 
+   records        FEA-008  added 
    records        REQ-016  changed acceptance,history,rulings
    records        REQ-072  changed acceptance,rulings
-   od_l3_3: option keep, 3 entries, validator 0 errors, 0 warnings
+   od_l3_3: option keep, 4 entries, validator 0 errors, 0 warnings
    od_l3_3: written <copy>
--- od_l3_4.py --option adopt (exit 2)
-   od_l3_4: REFUSED: L3-OD4 needs L3-OD3 answered 2s2p; it was answered keep
+-- od_l3_4.py --option adopt (exit 0)
+   closed_items   M-02     added 
+   open_items     M-02     removed 
+   owner_rulings  D-33     added 
+   records        FEA-009  added 
+   records        REQ-072  changed notes,rulings,waits_on
+   records        REQ-078  added 
+   od_l3_4: option adopt, 6 entries, validator 0 errors, 0 warnings
+   od_l3_4: written <copy>
 -- od_l3_5.py --option reading-c (exit 0)
-   owner_rulings  D-30     added 
+   owner_rulings  D-34     added 
    records        CFL-017  changed evidence_phase,evidence_result,notes,resolved_by,rulings,status
-   records        REQ-051  changed history,rulings,statement
+   records        REQ-051  changed history,notes,rulings,statement
    od_l3_5: option reading-c, 3 entries, validator 0 errors, 0 warnings
    od_l3_5: written <copy>
 
-== chain: Option A(i) rejected: row 2 refused
+== chain: Option A(i) rejected: feasibility item FI-01; row 2 refused as a contradiction; rows 3 to 6 answered
+-- od_l3_7.py --option 72-required (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed history,notes,rulings,statement
+   od_l3_7: option 72-required, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
 -- od_l3_1.py --option reject (exit 0)
    open_items     M-02     changed title
-   owner_rulings  D-26     added 
-   records        CFL-019  added 
+   owner_rulings  D-29     added 
+   records        FEA-008  added 
    od_l3_1: option reject, 3 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option qmx-out (exit 2)
-   od_l3_2: REFUSED: L3-OD2 needs L3-OD1 answered approve; it was answered reject
-
-== chain: both lid items kept: an open conflict, then a band refused and no deployment condition accepted
+   od_l3_2: REFUSED: row L3-OD2 does not apply: row L3-OD1 is rejected (D-29), which keeps D-06's one pack, and every option of this row sets a lid pack; the two requirements cannot both hold (l3r2.yaml's contradiction rules, D-26)
+-- od_l3_3.py --option 2s2p (exit 0)
+   owner_rulings  D-30     added 
+   records        FEA-009  added 
+   records        REQ-016  changed acceptance,history,notes,rulings,statement
+   records        REQ-072  changed notes,rulings
+   od_l3_3: option 2s2p, 4 entries, validator 0 errors, 0 warnings
+   od_l3_3: written <copy>
+-- od_l3_4.py --option adopt:slope (exit 0)
+   closed_items   M-02     added 
+   open_items     M-02     removed 
+   owner_rulings  D-31     added 
+   records        FEA-010  added 
+   records        REQ-072  changed notes,rulings,waits_on
+   records        REQ-078  added 
+   od_l3_4: option adopt, 6 entries, validator 0 errors, 0 warnings
+   od_l3_4: written <copy>
+-- od_l3_5.py --option reading-c (exit 0)
+   owner_rulings  D-32     added 
+   records        CFL-017  changed evidence_phase,evidence_result,notes,resolved_by,rulings,status
+   records        REQ-051  changed history,notes,rulings,statement
+   od_l3_5: option reading-c, 3 entries, validator 0 errors, 0 warnings
+   od_l3_5: written <copy>
 -- od_l3_6.py --option mean-day:TYP (exit 0)
-   owner_rulings  D-26     added 
+   owner_rulings  D-33     added 
+   records        REQ-072  changed notes,rulings
+   session_choices SC-37    changed source
+   od_l3_6: option mean-day, 3 entries, validator 0 errors, 0 warnings
+   od_l3_6: written <copy>
+
+== chain: both lid items kept: feasibility item FI-04, then adopt at the both-kept lid's figures
+-- od_l3_7.py --option 72-required (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed history,notes,rulings,statement
+   od_l3_7: option 72-required, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
+-- od_l3_6.py --option mean-day:TYP (exit 0)
+   owner_rulings  D-29     added 
    records        REQ-072  changed notes,rulings
    session_choices SC-37    changed source
    od_l3_6: option mean-day, 3 entries, validator 0 errors, 0 warnings
    od_l3_6: written <copy>
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-27     added 
+   owner_rulings  D-30     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -346,48 +448,59 @@ The chains are examples, not recommendations.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option both-kept (exit 0)
-   owner_rulings  D-28     added 
+   owner_rulings  D-31     added 
    records        CFL-006  changed resolved_by,rulings
-   records        CFL-019  added 
+   records        FEA-008  added 
    records        REQ-014  changed acceptance,rulings
    records        REQ-075  changed rulings,statement
    od_l3_2: option both-kept, 5 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 -- od_l3_3.py --option 2s2p (exit 0)
-   owner_rulings  D-29     added 
+   owner_rulings  D-32     added 
+   records        FEA-009  added 
    records        REQ-016  changed acceptance,history,notes,rulings,statement
    records        REQ-072  changed acceptance,rulings
-   od_l3_3: option 2s2p, 3 entries, validator 0 errors, 0 warnings
+   od_l3_3: option 2s2p, 4 entries, validator 0 errors, 0 warnings
    od_l3_3: written <copy>
--- od_l3_4.py --option adopt (exit 2)
-   od_l3_4: REFUSED: row L3-OD2 is answered both-kept: M1 is not met with a 4S9P lid, so no deployment band is adopted for it
--- od_l3_4.py --option reject (exit 0)
+-- od_l3_4.py --option adopt (exit 0)
    closed_items   M-02     added 
    open_items     M-02     removed 
-   owner_rulings  D-30     added 
+   owner_rulings  D-33     added 
+   records        FEA-010  added 
    records        REQ-072  changed notes,rulings,waits_on
-   od_l3_4: option reject, 4 entries, validator 0 errors, 0 warnings
+   records        REQ-078  added 
+   od_l3_4: option adopt, 6 entries, validator 0 errors, 0 warnings
    od_l3_4: written <copy>
 
 == chain: an answer read from row L3-OD6's own table, filled from the checked basis and read again from it
+-- od_l3_7.py --option 72-required (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed history,notes,rulings,statement
+   od_l3_7: option 72-required, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
 -- od_l3_6.py --option mean-day:TYP:tree (exit 0)
-   owner_rulings  D-26     added 
+   owner_rulings  D-29     added 
    records        REQ-072  changed notes,rulings
    session_choices SC-37    changed source
    od_l3_6: option mean-day, 3 entries, validator 0 errors, 0 warnings
    od_l3_6: written <copy>
 
-== chain: a coverage target of 95 percent in WAB that no lid carries (fixture): an open conflict; row L3-OD1 keeps the target; a band refused
+== chain: a coverage target of 95 percent in WAB that no lid carries (fixture): feasibility item FI-03; row L3-OD1 keeps the target
+-- od_l3_7.py --option 72-required (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed history,notes,rulings,statement
+   od_l3_7: option 72-required, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
 -- od_l3_6.py --option coverage:WAB:95 (exit 0)
-   owner_rulings  D-26     added 
-   records        CFL-019  added 
+   owner_rulings  D-29     added 
+   records        FEA-008  added 
    records        REQ-072  changed acceptance,history,notes,rulings,statement
    session_choices SC-37    changed source
    od_l3_6: option coverage, 4 entries, validator 0 errors, 0 warnings
    od_l3_6: written <copy>
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-27     added 
+   owner_rulings  D-30     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -399,7 +512,7 @@ The chains are examples, not recommendations.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option tablet-out (exit 0)
-   owner_rulings  D-28     added 
+   owner_rulings  D-31     added 
    records        CFL-006  changed resolved_by,rulings
    records        REQ-011  changed acceptance,history,rulings,statement
    records        REQ-014  changed acceptance,rulings
@@ -408,31 +521,80 @@ The chains are examples, not recommendations.
    od_l3_2: option tablet-out, 6 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 -- od_l3_3.py --option 2s2p (exit 0)
-   owner_rulings  D-29     added 
+   owner_rulings  D-32     added 
+   records        FEA-009  added 
    records        REQ-016  changed acceptance,history,notes,rulings,statement
    records        REQ-072  changed acceptance,rulings
-   od_l3_3: option 2s2p, 3 entries, validator 0 errors, 0 warnings
+   od_l3_3: option 2s2p, 4 entries, validator 0 errors, 0 warnings
    od_l3_3: written <copy>
--- od_l3_4.py --option adopt (exit 2)
-   od_l3_4: REFUSED: L3-OD4 needs L3-OD6 answered mean-day; it was answered coverage
--- od_l3_4.py --option reject (exit 0)
+-- od_l3_4.py --option adopt (exit 0)
    closed_items   M-02     added 
    open_items     M-02     removed 
-   owner_rulings  D-30     added 
+   owner_rulings  D-33     added 
+   records        FEA-010  added 
    records        REQ-072  changed notes,rulings,waits_on
-   od_l3_4: option reject, 4 entries, validator 0 errors, 0 warnings
+   records        REQ-078  added 
+   od_l3_4: option adopt, 6 entries, validator 0 errors, 0 warnings
    od_l3_4: written <copy>
+
+== chain: row 1 before row 7: refused (D-27), then answered after it
+-- od_l3_1.py --option approve (exit 2)
+   od_l3_1: REFUSED: L3-OD1 presupposes row L3-OD7, M1's runtime, which is not answered: no row asks the owner to remove a function or accept a deployment condition before it is (D-27)
+-- od_l3_7.py --option 72-required (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed history,notes,rulings,statement
+   od_l3_7: option 72-required, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
+-- od_l3_1.py --option approve (exit 0)
+   owner_rulings  D-06     changed reversed_by
+   owner_rulings  D-29     added 
+   records        CFL-006  changed acceptance,history,resolved_by,rulings
+   records        CFL-012  changed rulings
+   records        CFL-018  changed rulings
+   records        CON-006  changed rulings
+   records        FEA-004  changed rulings
+   records        REQ-014  changed acceptance,history,provisional,rulings,statement
+   records        REQ-072  changed acceptance,history,notes,rulings,statement
+   records        REQ-075  changed acceptance,history,rulings,statement
+   od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
+   od_l3_1: written <copy>
+
+== chain: 48 hours required, 72 desired: rows 1 and 6 refused until restated from the runtime comparison; row 5 answered
+-- od_l3_7.py --option 48-required-72-desired (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed acceptance,history,notes,rulings,statement
+   od_l3_7: option 48-required-72-desired, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
+-- od_l3_1.py --option approve (exit 2)
+   od_l3_1: REFUSED: L3-OD1's prepared restatement is written for M1's 72 hours on the studied store and lids; row L3-OD7 was answered 48-required-72-desired (D-28), so this row is restated from the runtime comparison before it is applied (l3r2.yaml runtime_comparison, closure item L3-C56, D-27)
+-- od_l3_6.py --option mean-day:TYP (exit 2)
+   od_l3_6: REFUSED: L3-OD6's prepared restatement is written for M1's 72 hours on the studied store and lids; row L3-OD7 was answered 48-required-72-desired (D-28), so this row is restated from the runtime comparison before it is applied (l3r2.yaml runtime_comparison, closure item L3-C56, D-27)
+-- od_l3_5.py --option reading-c (exit 0)
+   owner_rulings  D-29     added 
+   records        CFL-017  changed evidence_phase,evidence_result,notes,resolved_by,rulings,status
+   records        REQ-051  changed history,notes,rulings,statement
+   od_l3_5: option reading-c, 3 entries, validator 0 errors, 0 warnings
+   od_l3_5: written <copy>
+
+== chain: 72 hours with an upgraded battery arrangement: row 1 refused until restated from the runtime comparison
+-- od_l3_7.py --option 72-required-battery-upgrade (exit 0)
+   owner_rulings  D-28     added 
+   records        REQ-072  changed history,notes,rulings,statement
+   od_l3_7: option 72-required-battery-upgrade, 2 entries, validator 0 errors, 0 warnings
+   od_l3_7: written <copy>
+-- od_l3_1.py --option reject (exit 2)
+   od_l3_1: REFUSED: L3-OD1's prepared restatement is written for M1's 72 hours on the studied store and lids; row L3-OD7 was answered 72-required-battery-upgrade (D-28), so this row is restated from the runtime comparison before it is applied (l3r2.yaml runtime_comparison, closure item L3-C56, D-27)
 
 == chain: CFL-017 kept open
 -- od_l3_5.py --option measure (exit 0)
-   owner_rulings  D-26     added 
+   owner_rulings  D-28     added 
    records        CFL-017  changed notes,rulings
    od_l3_5: option measure, 2 entries, validator 0 errors, 0 warnings
    od_l3_5: written <copy>
 
 == chain: cells above +60 C
 -- od_l3_5.py --option cells (exit 0)
-   owner_rulings  D-26     added 
+   owner_rulings  D-28     added 
    records        CFL-017  changed notes,rulings
    od_l3_5: option cells, 2 entries, validator 0 errors, 0 warnings
    od_l3_5: written <copy>

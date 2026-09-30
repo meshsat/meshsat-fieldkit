@@ -14,3 +14,4 @@ v2/docs/PANEL.md:MIL-STD-1472               # the human-factors reference the sw
 v1/BUILD.md:has run since                   # the V1 kits are built and running; this is V1's history, not a V2 claim
 v1/README.md:until those boards are proven  # says the opposite of a claim: the V1 kits stay until V2 is proven
 v2/docs/V2-SPEC.md:the IP68 fans       # a list of vendor DOCUMENTS still owed, not a rating of anything we built
+v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md:Design and hardware compliant   # the owner's reviewer's third status level, quoted (D-26): later layers' evidence, not a claim

@@ -4,6 +4,10 @@ its function stays in the kit. PREPARED, NOT APPLIED. Requires row L3-OD1 approv
 September 2026 (D-22) until the checked energy comparison is filed; the option that carries the QMX outside the case also
 waits on the relocation facts. A held answer is never written into the tree's registry (a copy is not held).
 
+Row L3-OD7 (M1's runtime) is answered first (D-27, cond.runtime_first): this script refuses while it is unanswered,
+and after an answer other than 72-required, because its restatement states M1's 72 hours; it is then restated from
+the runtime comparison before it is applied.
+
 The owner's words of D-22: "moving equipment out of the lid must not silently remove its function from the kit". Each
 option says where the displaced item goes and what happens to its function, in its ruling and in the records it restates.
 
@@ -20,13 +24,14 @@ option says where the displaced item goes and what happens to its function, in i
                         REQ-017, which D-01 defers from prototype 1's acceptance); REQ-011 is restated (its old statement
                         kept as an SPD record); the QMX stays in its lid tray beside a 4S14P lid pack.
   --option both-kept    both approved lid items stay (the QMX in its lid tray, the tablet bracket), and the lid carries a
-                        4S9P pack (a1mech DECISION-A1.md option 3); no function leaves the kit, and M1 cannot be met: the
-                        records find the 4S9P lid NOT MET on the reference day, as every case of the energy basis's first
-                        issue does (reproduced by its check), so an open conflict (the next free CFL id, a core BLOCKER)
-                        records REQ-072 against it.
+                        4S9P pack (a1mech DECISION-A1.md option 3); no function leaves the kit. The target is valid;
+                        the records find the studied 4S9P lid NOT MET on the reference day, as every case of the energy
+                        basis's first issue does (reproduced by its check), so feasibility item FI-04 records it (a
+                        feasibility record, a core BLOCKER reading FAIL, D-26).
 Every option writes the lid's count into REQ-014, REQ-075 and CFL-006. With row L3-OD6 decided, the lid must carry its
-answer's store in its build case by row L3-OD6's filled table; otherwise an open conflict records REQ-072 against it
-(both-kept has its own). --table PATH reads that table from a fixture on a copy of the registry.
+answer's store in its build case by row L3-OD6's filled table; otherwise feasibility item FI-02 records the valid target
+the studied candidate does not meet (both-kept has FI-04). Row L3-OD1 rejected: this row does not apply (every option sets
+a lid pack, which contradicts the kept one-pack store), and the script refuses. --table PATH reads that table from a fixture on a copy of the registry.
 
 Where each option leaves a function (the relocation facts, fact CF-04 of l3r2.yaml): no location in the kit is
 established for either displaced item, so qmx-out removes HF from the kit and tablet-out removes the bracket's function
@@ -76,14 +81,20 @@ RULINGS = {
                    "The tablet bracket leaves the lid, the tablet's use kept; the lid pack is 4S14P (row L3-OD2)"),
     "both-kept": ("Row L3-OD2 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided: both approved lid items stay, the "
                   "QMX HF set in its lid tray (appendix 32.50 item 16a) and the tablet bracket (item 16d), beside a lid pack "
-                  "of 4S9P (4S15P in all with the base pack). No function leaves the kit; on the records M1 cannot be met "
-                  "with this lid, and REQ-072's conflict with it is recorded as an open conflict.",
-                  "Both lid items kept; the lid pack is 4S9P and M1 cannot be met (row L3-OD2)"),
+                  "of 4S9P (4S15P in all with the base pack). No function leaves the kit. The target is valid; the studied "
+                  "4S9P lid does not meet M1 on the records, and feasibility item FI-04 records that (D-26).",
+                  "Both lid items kept; the lid pack is 4S9P, feasibility item FI-04 (row L3-OD2)"),
 }
 
 
 def build(a, raw, d):
     for rel, n in ASSERT.items(): E.assert_in(rel, n)
+    C.runtime_first(d, ROW)
+    dec0 = C.decided(d)
+    if dec0.get("L3-OD1", ("",))[0] == "reject":
+        E.refuse("row L3-OD2 does not apply: row L3-OD1 is rejected (%s), which keeps D-06's one pack, and every option of "
+                 "this row sets a lid pack; the two requirements cannot both hold (l3r2.yaml's contradiction rules, D-26)"
+                 % dec0["L3-OD1"][1])
     C.require(d, ROW, ["L3-OD1:approve"])
     op = a["option"]
     if op == "both-kept":
@@ -146,24 +157,8 @@ def build(a, raw, d):
             "wall (l3r2.yaml's relocation facts); the HF bearer stays in the kit." % stamp, after="source_check"), rid), "records")
         exp |= {("records", "REQ-002", "changed")}
     elif op == "both-kept":
-        cid = E.next_id(E.parse(raw), "CFL", ("records",))
-        st = ("REQ-072 (M1: 72 hours in PS-IDLE-SPEC on the kit's store and solar, preserved by D-20 and approved by D-21) "
-              "cannot be met with both approved lid items kept (%s): the lid then holds a 4S9P pack (v2/docs/records/a1mech/"
-              "DECISION-A1.md option 3), which the records find NOT MET on SC-37's reference day at 400, 650 and 1000 Wp "
-              "with the lid at the day's air (v2/docs/records/a1int/RECONCILE.md), as in every case of the energy basis's "
-              "first issue, nominal inputs included (reproduced by the energy basis check, %s)." % (rid, CHECK))
-        acc = ("One of: an owner ruling that changes the lid's items, the store, or M1's duration or operating state, after "
-               "which REQ-072 is judged again; until then REQ-072 reads FAIL and layer 3 is not complete.")
-        for x in (st, acc): E.screen(x, cid)
-        entry = ("  - id: %s\n    kind: conflict\n    parent: NEED-05\n    statement: >-\n%s    acceptance: >-\n%s"
-                 "    allocated_to: [kit, procedure]\n    verification_method: [MANUAL_REVIEW]\n    verification_phase: SCHEMATIC\n"
-                 "    prototype_1: core\n    prototype_1_basis: NEED_DEFAULT\n    satisfied_by:\n      rules: []\n      decisions: []\n"
-                 "    rule_coverage: NONE\n    rulings: [%s, D-20, D-21, D-22]\n    status: CONFLICT_OPEN\n    evidence_result: FAIL\n"
-                 "    evidence_phase: SCHEMATIC\n    release_effect: BLOCKER\n"
-                 "    source: [\"owner ruling %s\", \"v2/docs/records/a1int/RECONCILE.md\", \"%s\"]\n"
-                 "    source_check: VERIFIED\n" % (cid, E.fold(st, 6), E.fold(acc, 6), rid, rid, CHECK))
-        raw = E.insert_after_entry(raw, "REQ-072", entry, "records")
-        exp |= {("records", cid, "added")}
+        raw, fid = C.feasibility_item(raw, "FI-04", [rid, "D-20", "D-21", "D-26"])
+        exp |= {("records", fid, "added")}
     else:
         old011 = recs["REQ-011"]
         raw = C.restate(raw, "REQ-011", stamp,
@@ -175,19 +170,18 @@ def build(a, raw, d):
         raw = E.insert_after_entry(raw, "REQ-011", C.superseded_entry(spd, old011,
             "REQ-011 restated by %s (row L3-OD2, the tablet out): the tablet is carried outside the case." % rid, rid), "records")
         exp |= {("records", "REQ-011", "changed"), ("records", spd, "added")}
-    # row L3-OD6's weather basis against this lid (CHECK-2 of L3-R2, B2): an open conflict when the table does not mark
-    # the lid as carrying the answer's store, unless one already records the answer against REQ-072
+    # row L3-OD6's weather basis against this lid (CHECK-2 of L3-R2, B2; D-26): a valid target the studied candidate
+    # does not meet records feasibility item FI-02, unless a feasibility record already carries the weather answer
     ans = C.od6_answer(E.parse(raw))
     if ans and op != "both-kept":
         o6, share6, build6, rid6 = ans
         rows, fixture = C.od6_rows(a)
         t6 = C.od6_row(rows, o6, share6, build6)
         if not fixture: C.od6_verify(t6)
-        if C.LID[op] not in t6["fits"] and not any(r.get("status") == "CONFLICT_OPEN" and rid6 in (r.get("rulings") or [])
-                                                   for r in E.parse(raw)["records"]):
+        if C.LID[op] not in t6["fits"] and not C.fea_citing(E.parse(raw), rid6):
             n_text = "SC-37's mean day" if o6 == "mean-day" else "at least %s percent of September's 72-hour windows" % share6
-            raw, cid = C.weather_conflict(raw, rid6, op, t6, n_text, extra_rulings=(rid,))
-            exp |= {("records", cid, "added")}
+            raw, fid = C.weather_feasibility(raw, rid6, op, t6, n_text, extra_rulings=(rid,))
+            exp |= {("records", fid, "added")}
     raw, _ = C.close_m02_if_done(raw, rid)
     return raw, exp
 

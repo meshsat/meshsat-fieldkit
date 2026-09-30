@@ -120,6 +120,54 @@ ruling D-25.
 > charging time, functionality, enclosure constraint or approved resources. Each such question must name the affected
 > requirement and quantify the consequence. Component selection and sensing implementation remain engineering tasks."
 
+## The owner's reviewer's review of the decision brief (30 September 2026), as quoted
+
+The owner's reviewer reviewed the decision brief `MESHSAT-L3-OWNER-DECISIONS-2026-09-30.md` (sha256/16
+`ca4a9dcfa2e076ff`, a laptop file, not in this tree), and the review is relayed as the owner's by the coordinating
+session. Its verdict, as relayed: "CONDITIONAL for individual owner choices; BLOCKED for blanket approval or a claim
+that the revised Layer 3 baseline is fully validated". No owner answer to the six rows has been given. The six
+paragraphs below are as quoted there, word for word. The registry records them as owner ruling D-26.
+
+> "Separate owner-selected requirements from candidate compliance. A combination can be a valid target and have a FAIL
+> or INCONCLUSIVE implementation. Retain rejection of genuinely contradictory requirements and all release gates. Verify
+> that recording HF retention plus WAB does not fabricate a PASS or silently change the requirement."
+
+> "Define the criterion at the kit loads: the specified service continues for 72 hours within voltage, power and pack
+> limits. Combined stored Wh alone is insufficient. Reference exact initial state, load profile, panel orientation,
+> installation, cutoff and power-path case. State whether a single exact orientation is the benchmark when no deployment
+> band is established."
+
+> "Supply the selected cell/pack limits and a mode-specific environment table. Distinguish battery-fitted operation from
+> cell-free qualification/storage. Owner acceptance must cover the operational consequence. 'No cost' should not conceal
+> reduced claimed capability."
+
+> "A 10 N requirement can be proposed as a chosen design target. Specify application point, force direction/duration,
+> slope, support surface, lid angle and load configuration. Cite the matching mechanical result before calling the
+> candidate a modelled PASS."
+
+> "Approve topology separately from electrical compliance. Pin the panel revision and datasheet; distinguish available
+> array power, controlled converter input power, cold open-circuit exposure, short-circuit/fault currents and string
+> versus combined-feed protection. Provide the rating derivation or an explicit engineering obligation rather than
+> treating owner approval as verification."
+
+> "Requirements drafted / decisions recorded: the intended product and its acceptance criteria are explicit.
+> Requirements baseline validated and accepted: the chosen constraints have a credible feasibility basis, the identified
+> gaps are resolved to the agreed review scope, and the owner has accepted the baseline. Design and hardware compliant:
+> later circuit, layout and physical evidence demonstrate those requirements."
+
+## The owner's addendum to round 5 (30 September 2026), as quoted
+
+Relayed by the coordinating session during layer 3's round 5, after the review above and before any owner answer to
+the rows. The three paragraphs below are as quoted there, word for word; the first and the third are the coordinating
+session's own words relaying the owner, the second is the owner's, quoted by it. The registry records them as owner
+ruling D-27.
+
+> "Round 5 addendum from the owner (30 Sep 2026). The owner is questioning the 72-hour requirement:"
+
+> "Evaluate alternatives before asking me to sacrifice functions or accept restrictive deployment conditions."
+
+> "He also said to preserve HF and the tablet functionality."
+
 ## How this work reads it (the session's reading, not the owner's words)
 
 - **"Battery and solar remain mandatory"**: mission M1 is carried by the kit's own store and its solar input. An
@@ -168,3 +216,20 @@ ruling D-25.
   hypothetical corrected power path. The independently checked 0.378 A comparison stays closed unless its inputs change.
   Each owner row names the requirement it changes and quantifies the consequence; charging below a source's available
   power, component selection and sensing implementation are engineering tasks while the approved requirements hold.
+- **The review (D-26)**: a row's answer records the owner's REQUIREMENT TARGET; the studied candidate's COMPLIANCE is
+  shown beside it (PASS on a named case, FAIL by how much, INCONCLUSIVE with what is missing, CONDITIONAL on which
+  corrections), and a target the candidate does not meet records an open feasibility item instead of being refused. Only
+  requirements that cannot both hold are refused. Mission M1's pass line is at the kit loads, with the reference case
+  stated exactly; the push and the slope of the open kit are design targets with their test conditions; the solar
+  topology is approved apart from its electrical compliance, which carries its derivations or obligations; and the pages
+  say which of the reviewer's three status levels holds.
+- **The addendum (D-27)**: M1's runtime is itself a row the owner answers, L3-OD7, before rows L3-OD1 (the store),
+  L3-OD2 (the lid item), L3-OD4 (the deployment condition) and L3-OD6 (the weather basis), which depend on it: 72
+  hours required as REQ-072 states it today, 48 hours required with 72 desired, or 72 hours required with an
+  upgraded battery arrangement, the last two keeping HF and the tablet. No row asks him to remove a function or to
+  accept a deployment condition before row L3-OD7 is answered, and the scripts of those four rows refuse until it
+  is. Its figures are held for the bounded runtime and battery comparison of stream l3batt, which comes with its
+  check. The 72 hours are the session's SC-21 (27 September 2026, under the standing rule), which D-20 preserved
+  with M1's specified duration without setting the figure, and which the reading of "the approved 72-hour
+  mission" above took as approved; the owner now questions it. The comparison's own provenance record is cited
+  once it is filed.

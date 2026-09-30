@@ -802,6 +802,47 @@ owner_rulings:
       must name the affected requirement and quantify the consequence. Component selection and sensing implementation
       remain engineering tasks."
     source: ["owner ruling D-25", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
+  - id: D-26
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's reviewer's review of the layer 3 decision brief (30 September 2026)"
+    ruling: >-
+      The review of the layer 3 decision brief MESHSAT-L3-OWNER-DECISIONS-2026-09-30.md (sha256/16 ca4a9dcfa2e076ff) by
+      the owner's reviewer, relayed as the owner's and quoted in
+      v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md; its verdict CONDITIONAL for individual owner choices and
+      BLOCKED for blanket approval or a claim that the revised layer 3 baseline is fully validated. In the review's
+      words: "Separate owner-selected requirements from candidate compliance. A combination can be a valid target and
+      have a FAIL or INCONCLUSIVE implementation. Retain rejection of genuinely contradictory requirements and all
+      release gates. Verify that recording HF retention plus WAB does not fabricate a PASS or silently change the
+      requirement." "Define the criterion at the kit loads: the specified service continues for 72 hours within voltage,
+      power and pack limits. Combined stored Wh alone is insufficient. Reference exact initial state, load profile,
+      panel orientation, installation, cutoff and power-path case. State whether a single exact orientation is the
+      benchmark when no deployment band is established." "Supply the selected cell/pack limits and a mode-specific
+      environment table. Distinguish battery-fitted operation from cell-free qualification/storage. Owner acceptance
+      must cover the operational consequence. 'No cost' should not conceal reduced claimed capability." "A 10 N
+      requirement can be proposed as a chosen design target. Specify application point, force direction/duration, slope,
+      support surface, lid angle and load configuration. Cite the matching mechanical result before calling the
+      candidate a modelled PASS." "Approve topology separately from electrical compliance. Pin the panel revision and
+      datasheet; distinguish available array power, controlled converter input power, cold open-circuit exposure,
+      short-circuit/fault currents and string versus combined-feed protection. Provide the rating derivation or an
+      explicit engineering obligation rather than treating owner approval as verification." Its sixth passage defines
+      the three status levels, quoted in the same file (requirements drafted and decisions recorded; the requirements
+      baseline validated and accepted; the design and hardware shown by later layers' evidence).
+    source: ["owner ruling D-26", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
+  - id: D-27
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's addendum to layer 3's round 5: M1's runtime questioned, alternatives before any sacrifice (30 September 2026)"
+    ruling: >-
+      The owner's addendum of 30 September 2026, relayed by the coordinating session and quoted in
+      v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md: the owner is questioning the 72-hour requirement. In his
+      words: "Evaluate alternatives before asking me to sacrifice functions or accept restrictive deployment
+      conditions." As relayed: "He also said to preserve HF and the tablet functionality." M1's runtime is a row he
+      answers, L3-OD7, before rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6, which depend on it; no row asks him to remove a
+      function or to accept a deployment condition before it is answered, and its figures come from a bounded runtime
+      and battery comparison with its check. The 72 hours are the session's SC-21, which D-20 preserved with M1's
+      specified duration.
+    source: ["owner ruling D-27", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
 # Choices the session took under the owner's standing rule of 26 September 2026: each is the session's, never
 # the owner's, names the ruling that lets the session take it, says why, and can be reversed. `closes` names the
 # open items it answered; `adds_core_needs` a need it added to prototype 1's core. A choice later withdrawn keeps

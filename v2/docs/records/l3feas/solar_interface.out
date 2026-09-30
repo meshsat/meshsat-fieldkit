@@ -1,0 +1,79 @@
+OPTION A(i)'S SOLAR INTERFACE, RATING BY RATING (solar_interface.py, stream l3feas, MESHSAT-1357). PROTOTYPE DESIGN:
+nothing bought, built or measured. MAKER = the held sheet's text layer; NETLIST = board E's committed netlist; MODELED
+= the energy records; INFERRED = a method stated. The author's analysis, AI arithmetic; not a qualified review.
+
+0. REPRODUCTION: the derivations below reproduce a1solar's array_calc.out section 2 row REN100 2x2 and section 13's
+   -40 C figure: yes
+
+1. THE PANEL THE TREE HOLDS (MAKER, v2/vendor/solar/renogy-rng-100db-h-flexible-100w-datasheet-2018.pdf)
+   sha256 8891821cf70f4124fdb1f02e2fbc7a4a0f4102c51f33ad39c2bfa32e6b60a29f, 2 pages, title 'RNG-100DB-H spec'
+   PDF metadata: created 2018-08-17T10:58:21-07, modified 2020-08-06T18:13:05-07; a retailer's copy (v2/vendor/sources.txt; the maker's download page did not
+   render to this host). Revision identifier printed on the sheet: NONE (no 'Rev', 'Revision' or 'Version' mark on either page)
+   p.2: Pmax 100 W, Vmp 18.9 V, Imp 5.29 A, Voc 22.5 V, Isc 5.75 A; 36 cells (4 x 9); maximum system voltage 600 V DC;
+     maximum series fuse rating 15 A; 1219 x 549 x 2 mm, 1.9 kg; Pmax -0.42 %/K, Voc -0.31 %/K, Isc +0.05 %/K; NOCT 45 +-2 C;
+     operating -40 to +85 C; connectors 30 A, 1000 V DC; output cables 12 AWG
+   THE REVISION IS NOT SETTLED BY THE HELD SHEET: it carries no revision mark. The owner's review reports Renogy's current US
+   page for the family: Voc 24.4 V, maximum series fuse 15 A, 1093 x 582 mm (not held; compared, not substituted).
+   If the kit's panels were that revision, 2S2P's open circuit would read 55.61 V at -20 C cells, 58.63 V at -40 C and 61.00 V
+   by the 1.25 clause (INFERRED with the HELD sheet's -0.31 %/K: the current page's coefficient is not read here): OVER the
+   coordinator's 60 V safety extra-low-voltage ceiling (array_calc.out 2: 'the standard behind it is not held'), where the
+   held sheet gives 56.25 V. Its Vmp, Imp and Isc are not in the review; the stage's fixed input point
+   (R8, R9: 34.29 V, a1solar ARRAY.md 3) and its 0.990 ratio are derived from the held sheet's Vmp and would move with them
+
+2. AVAILABLE ARRAY POWER (2S2P, 4 panels)
+   at STC: 400 W (MAKER, 4 x 100 W, no tolerance published)
+   at 1000 W/m2 and +70 C cells: 329.9 W (MODELED, array_calc.out 5, the single-diode fit)
+   at 1000 W/m2 and -20 C cells: 475.6 W (INFERRED, the sheet's Pmax coefficient applied linearly over 45 K); with the
+     edge-of-cloud factor 1.25 on the irradiance, a bound of 594.5 W for a transient (INFERRED)
+   on SC-37's mean day at 40/0, the largest hour into the stage: 194.3 W (TYP) and 178.6 W (WAB) (MODELED, hf_wab.out 4)
+
+3. THE CONVERTER'S INPUT POWER: NOT A CONTROLLED LIMIT AS DRAWN
+   the 200 W is the energy model's window on the stage's input (energy_two_pack.py node_power: min(panel, window))
+   NETLIST: U5 LT8705A pins 30, 31 (CSNOUT, CSPOUT) on TRK_OUT and 32, 33 (CSNIN, CSPIN) on PV_P, with no resistor between: the input and output current regulation is NOT used
+     (MAKER, 8705af pp.11 and 12: CSNOUT 'Connect this pin to VOUT when not in use', p.11; CSPIN 'Connect this pin to VIN
+     when not in use', p.12). So the stage takes what its load asks, up to its own
+     inductor current limit, from what the array gives
+   what the load asks (r11dep, the front end's input is the stage's output): 144.1 W out in service, 154.9 W into the stage at
+     0.93 DECLARED; 210.5 W out at the front end's highest permitted current (226.3 W in)
+   the stage's own ceiling: its buck valley limit at the maximum, 20.4 A at TRK_OUT's 15.1 V: 308.0 W out, 331.2 W in (INFERRED:
+     the valley threshold taken as the average it passes; the maker notes it rises at higher duty, 8705af p.22)
+   the stage's input is therefore min(the array's available power, the load's demand over the efficiency, its own ceiling):
+   up to 226.3 W with a load at the front end's maximum, against the model's 200 W (INFERRED)
+
+4. COLD OPEN-CIRCUIT EXPOSURE (the string is two panels in series; the strings in parallel add no voltage)
+   Voc 22.5 V a panel: 51.28 V at -20 C cells (the envelope's in-use minimum), 54.07 V at -40 C (the panel's own limit),
+     56.25 V by the 1.25 clause on STC (SunPower 524958 Rev F 3.0, held back): the voltage basis 56.25 V (INFERRED)
+   against: the panel's 600 V system voltage; the LT8705A's 80 V (8705af pp.2, 3); the coordinator's 60 V ceiling (its standard
+     not held); board E's PV_P parts as
+     generated (60 V FETs, 35 V and 50 V capacitors, a 28 V TVS, gen_sch_e.py; a1solar ARRAY.md 6, gated on REQ-016)
+
+5. SHORT-CIRCUIT AND FAULT CURRENTS (hot cells +70 C at 1000 W/m2; the edge-of-cloud factor 1.25)
+   a string: Isc 5.75 A at STC, 5.88 A hot, 7.35 A with the factor; the array: 11.50 A, 11.76 A, 14.70 A
+   (a) a short at the array's output, in the lead or at the entry: the array is a current source and delivers at most
+       14.70 A; F2 never opens on it; every conductor from the array to the stage carries it continuously (INFERRED)
+   (b) a fault inside one string: the other string back-feeds it with at most 7.35 A (INFERRED)
+   (c) a back-feed from the kit into the array (NETLIST topology): VIN_RAW -> Q2 (VIN_RAW to TRK_OUT, the ideal diode U4 LM74700-Q1,
+       blocking) -> TRK_OUT -> Q6 M4 (TRK_OUT to TRK_SW2) -> L1 -> Q3 M1's body diode (TRK_SW1 to PV_P) -> PV_P -> F2 -> the array. It
+       needs Q2 or U4 failed (a single fault) while M4 conducts with VIN_RAW above the panel, and its sustained source is the
+       vehicle entry, limited by its LM5069 at 6.15 A unless that entry has failed too (INFERRED; the fault tree is owed)
+
+6. STRING VERSUS COMBINED-FEED PROTECTION
+   the maker's maximum series fuse rating 15 A (p.2), read as the current a module may carry in reverse (INFERRED: the usual
+     meaning; the applicable standard is not held)
+   (b)'s 7.35 A is under 15 A: NO STRING FUSE is needed for faults inside the array (INFERRED; a1solar ARRAY.md 1 and 4)
+   F2 sits in the COMBINED feed (NETLIST: F2 between PV_IN and PV_P). At 20 A it exceeds one string's 15 A, so F2 does not protect a
+     single string: with one string disconnected, a back-feed of (c) reaches the remaining string unfused up to F2's rating.
+     (c) is bounded at 6.15 A by the vehicle entry, under 15 A, while that entry holds: the string's protection rests on (c)'s
+     fault tree, not on F2 (INFERRED)
+   the current page's 15 A equals the held sheet's: the review's figures do not move this row
+
+7. THE COMBINED-FEED FUSE, LEAD AND CONNECTOR
+   current: 1.25 x 14.70 A = 18.37 A, the standard step at or above it 20 A (INFERRED; a1solar ARRAY.md 4)
+   voltage: at least 56.25 V DC (section 4)
+   interrupting rating: at or above the prospective fault from the kit side at that voltage; NOT DERIVED (the source is the
+     vehicle through a failed entry, a figure no record holds)
+   as generated (NETLIST): F2 '10 A mini blade (Keystone 3568 holder): panel input'; J_SOLAR 'JST-VH socket, 10 A: bare panel in (lead from the D38999 spa'
+   the lead, J_SOLAR, the wall's solar pair and F2's holder: at or above 20 A at 56.25 V (the conductor at or above the fuse that
+     protects it)
+
+END. Derivations on the held sheet; nothing is measured, bought or chosen.

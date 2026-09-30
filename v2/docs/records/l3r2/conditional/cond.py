@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Shared machinery of the conditional restatements of layer 3's second issue (L3-R2, MESHSAT-1357, 30 September 2026).
 
-PREPARED, NOT APPLIED. Each script beside this module (od_l3_1.py to od_l3_6.py) is the exact registry change one answer
+PREPARED, NOT APPLIED. Each script beside this module (od_l3_1.py to od_l3_7.py) is the exact registry change one answer
 of the owner to one row of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md makes. It is run only once the owner has
 answered that row, with his own words:
 
@@ -83,12 +83,31 @@ def require(d, row, reqs):
     return dec
 
 
+# D-27 (the owner): "Evaluate alternatives before asking me to sacrifice functions or accept restrictive deployment
+# conditions." Row L3-OD7 (M1's runtime) is answered first. The rows below state M1's 72 hours in their prepared
+# restatements (REQ-072, the store, the lid, the deployment condition, the weather basis): each refuses while row L3-OD7 is
+# unanswered, and after an answer other than 72-required, until it is restated from the runtime comparison.
+RUNTIME_ROWS = ("L3-OD1", "L3-OD2", "L3-OD4", "L3-OD6")
+
+
+def runtime_first(d, row):
+    """Refuse `row` (one of RUNTIME_ROWS) unless row L3-OD7 is answered 72-required (D-27)."""
+    dec = decided(d)
+    if "L3-OD7" not in dec:
+        E.refuse("%s presupposes row L3-OD7, M1's runtime, which is not answered: no row asks the owner to remove a "
+                 "function or accept a deployment condition before it is (D-27)" % row)
+    if dec["L3-OD7"][0] != "72-required":
+        E.refuse("%s's prepared restatement is written for M1's 72 hours on the studied store and lids; row L3-OD7 was "
+                 "answered %s (%s), so this row is restated from the runtime comparison before it is applied (l3r2.yaml "
+                 "runtime_comparison, closure item L3-C56, D-27)" % (row, dec["L3-OD7"][0], dec["L3-OD7"][1]))
+
+
 def l3data():
     import yaml
     return yaml.safe_load(open(L3DATA, encoding="utf-8"))
 
 
-CHECKED = ("energy_basis", "power_path_check")   # files that count only with an accepted independent check
+CHECKED = ("energy_basis", "power_path_check", "runtime_comparison")   # files that count only with an accepted check
 
 
 def basis_state(data, root=None, key="energy_basis"):
@@ -222,29 +241,84 @@ def od6_answer(d):
     return None
 
 
-def weather_conflict(raw, rid_basis, lid, t, n_text, extra_rulings=()):
-    """An open conflict: REQ-072's weather basis (its answer's store) is not carried by the lid, or by any lid."""
-    cid = E.next_id(E.parse(raw), "CFL", ("records",))
+# ------------------------------------------------------------------------------------------------ feasibility items
+# D-26 (the owner's reviewer): "Separate owner-selected requirements from candidate compliance. A combination can be a
+# valid target and have a FAIL or INCONCLUSIVE implementation. Retain rejection of genuinely contradictory requirements
+# and all release gates." An answer whose target the studied candidate does not meet is recorded, and a feasibility
+# record (kind feasibility, FEASIBILITY_OPEN, a BLOCKER on the core, reading FAIL or INCONCLUSIVE, never PASS) holds the
+# requirements it blocks until the item's disposition is filed. Its page is the owner decision table, which lists the
+# item's id (l3r2.yaml `feasibility_items`).
+FI_PAGE = "v2/docs/handover/layer3/OWNER-DECISIONS-L3.md"
+
+
+def fi(fid, data=None):
+    x = next((i for i in (data or l3data()).get("feasibility_items") or [] if i["id"] == fid), None)
+    if x is None: E.refuse("l3r2.yaml names no feasibility item %s" % fid)
+    return x
+
+
+def feasibility_item(raw, fid, rulings, candidate=None, after=None, blocks=None):
+    """(raw, record id): the feasibility record of item `fid` for the answer ruled by rulings[0], the owner's target
+    standing and the studied candidate's status beside it; inserted after the first record it blocks."""
+    x = fi(fid)
+    d = E.parse(raw)
+    nid = E.next_id(d, "FEA", ("records",))
+    blocks = list(blocks or x["blocks"])
+    recs = {r["id"]: r for r in d["records"]}
+    parent = recs[blocks[0]]["parent"]
+    cand = " ".join(str(candidate or x["candidate"]).split())
+    res = "FAIL" if cand.startswith("FAIL") else "INCONCLUSIVE"
+    st = ("%s (%s): the owner's target stands as recorded by owner ruling %s: %s. The studied candidate: %s. The target is "
+          "valid; its candidate's compliance is open (D-26), and nothing here marks it met." % (
+              x["title"][0].upper() + x["title"][1:], fid, rulings[0], x["target"], cand))
+    acc = ("The item's disposition filed with its evidence, and answered by the owner where it returns a quantified "
+           "trade-off to him; until then every requirement it blocks keeps its reading, never PASS on this item's "
+           "account, and the owner's target is unchanged.")
+    notes = "The disposition at recording (D-26): %s: %s." % (x["disposition"]["kind"], x["disposition"]["text"])
+    closing = ("the bounded feasibility assessment filed with its disposition: a credible route, inconclusive with the "
+               "evidence named, or no route with a quantified trade-off the owner has answered (item %s of %s)" % (fid, FI_PAGE))
+    owner = ("the session: the bounded feasibility assessment (D-26); the owner: the quantified trade-off, where no "
+             "credible route exists")
+    ev = ("The studied candidate's status as the records give it, read for owner ruling %s (%s): %s." % (
+        rulings[0], FI_PAGE, cand))
+    why = ("The item holds %s, a requirement of prototype 1's core, until its disposition is filed (D-26)." % ", ".join(blocks))
+    for t in (st, acc, closing, owner, ev, why, notes): E.screen(t, nid)
+    entry = ("  - id: %s\n    kind: feasibility\n    parent: %s\n    statement: >-\n%s    acceptance: >-\n%s"
+             "    allocated_to: [kit, procedure]\n    verification_method: [CALCULATION]\n    verification_phase: SCHEMATIC\n"
+             "    prototype_1: core\n    prototype_1_basis: NAMED\n    prototype_1_why: >-\n%s"
+             "    satisfied_by:\n      rules: []\n      decisions: []\n"
+             "    rule_coverage: NONE\n    rulings: [%s]\n    status: FEASIBILITY_OPEN\n    evidence_result: %s\n"
+             "    evidence_phase: SCHEMATIC\n    evidence_class: DESK_REVIEW\n    evidence:\n      - >-\n%s"
+             "    evidence_bound_to: [%s]\n"
+             "    release_effect: BLOCKER\n    feasibility_page: %s\n    blocker_ids: [%s]\n"
+             "    blocks: [%s]\n    closing_evidence: >-\n%s    owner: >-\n%s"
+             "    source: [%s]\n    source_check: VERIFIED\n    notes: >-\n%s" % (
+                 nid, parent, E.fold(st, 6), E.fold(acc, 6), E.fold(why, 6), ", ".join(rulings), res, E.fold(ev, 8),
+                 ", ".join("%s@%s" % (p_, E.sha16(os.path.join(E.TOP, p_))) for p_ in x["bound"]), FI_PAGE, fid,
+                 ", ".join(blocks),
+                 E.fold(closing, 6), E.fold(owner, 6), ", ".join(['"owner ruling %s"' % r for r in rulings] + ['"%s"' % FI_PAGE]),
+                 E.fold(notes, 6)))
+    return E.insert_after_entry(raw, after or blocks[0], entry, "records"), nid
+
+
+def fea_citing(d, rid):
+    """The open feasibility records that cite ruling `rid`."""
+    return [r["id"] for r in d["records"] if r.get("kind") == "feasibility" and r.get("status") == "FEASIBILITY_OPEN"
+            and rid in (r.get("rulings") or [])]
+
+
+def weather_feasibility(raw, rid_basis, lid, t, n_text, extra_rulings=()):
+    """Feasibility item FI-02 (the lid does not carry the weather basis's store in its build) or FI-03 (a coverage target
+    no lid carries), with the table row's figures as the candidate's status (D-26: a valid target, never a conflict)."""
     carriers = ", ".join(t["fits"]) or "no lid of the table"
-    st = ("REQ-072's weather basis (%s: %s in the %s build) is not carried by %s: on the checked energy basis it asks "
-          "%s Wh usable, a lid block of %s, %s cells, %s Wh nominal, %s kg and %s / %s litres of cells (%s), which %s "
-          "carries." % (rid_basis, n_text, t["build"], ("the lid of row L3-OD2 (%s)" % lid) if lid else "any lid of the case",
-                        t["usable_wh"], t["lid_block"], t["cells"], t["nominal_wh"], t["mass_kg"], t["volume_cyl_l"],
-                        t["volume_box_l"], t["evidence"], carriers))
-    acc = ("One of: an owner ruling that changes the weather basis, the lid's items, the store, or M1's duration or "
-           "operating state, after which REQ-072 is judged again; until then REQ-072 reads FAIL and layer 3 is not complete.")
-    for x in (st, acc): E.screen(x, cid)
-    ev = str(t["evidence"]).split(" ")[0]
-    src = ['"owner ruling %s"' % rid_basis] + list('"owner ruling %s"' % x for x in extra_rulings) + \
-          (['"%s"' % ev] if not os.path.isabs(ev) and os.path.isfile(os.path.join(E.TOP, ev)) else [])   # a fixture is named in the text only
-    entry = ("  - id: %s\n    kind: conflict\n    parent: NEED-05\n    statement: >-\n%s    acceptance: >-\n%s"
-             "    allocated_to: [kit, procedure]\n    verification_method: [MANUAL_REVIEW]\n    verification_phase: SCHEMATIC\n"
-             "    prototype_1: core\n    prototype_1_basis: NEED_DEFAULT\n    satisfied_by:\n      rules: []\n      decisions: []\n"
-             "    rule_coverage: NONE\n    rulings: [%s]\n    status: CONFLICT_OPEN\n    evidence_result: FAIL\n"
-             "    evidence_phase: SCHEMATIC\n    release_effect: BLOCKER\n    source: [%s]\n    source_check: VERIFIED\n"
-             % (cid, E.fold(st, 6), E.fold(acc, 6), ", ".join([rid_basis] + list(extra_rulings) + ["D-20", "D-21", "D-22", "D-23"]),
-                ", ".join(src)))
-    return E.insert_after_entry(raw, "REQ-072", entry, "records"), cid
+    fid = "FI-03" if t.get("option") == "coverage" else "FI-02"
+    cand = ("FAIL on the studied candidate's table (%s): the %s in the %s build asks %s Wh usable, a lid block of %s, %s "
+            "cells, %s Wh nominal, %s kg and %s / %s litres of cells, which %s carries%s" % (
+                t["evidence"], n_text, t["build"], t["usable_wh"], t["lid_block"], t["cells"], t["nominal_wh"],
+                t["mass_kg"], t["volume_cyl_l"], t["volume_box_l"], carriers,
+                (", not the lid of row L3-OD2 (%s)" % lid) if lid else ""))
+    rul = list(extra_rulings) + [rid_basis] if extra_rulings else [rid_basis]
+    return feasibility_item(raw, fid, rul + ["D-26"], candidate=cand, after="REQ-072")
 
 
 def words_clean(w):
@@ -362,14 +436,18 @@ def superseded_entry(sid, rec, by, ruling):
 def close_m02_if_done(raw, rid_last):
     d = E.parse(raw)
     dec = decided(d)
-    if not all(r in dec for r in ROWS[:4]) or dec["L3-OD1"][0] != "approve": return raw, False
+    if "L3-OD1" not in dec: return raw, False
+    need = ROWS[:4] if dec["L3-OD1"][0] == "approve" else ("L3-OD1", "L3-OD3", "L3-OD4")   # row L3-OD2 does not apply after a reject
+    if not all(r in dec for r in need): return raw, False
     if not any(x["id"] == "M-02" for x in d["open_items"]): return raw, False
     it = next(x for x in d["open_items"] if x["id"] == "M-02")
     raw, _ = E.remove_entry(raw, "M-02")
     closed = ("  - id: M-02\n    closed_by: %s\n    closing_evidence: >-\n%s    title: >-\n%s"
-              % (rid_last, E.fold("Rows L3-OD1 to L3-OD4 of " + DECISIONS_PAGE + " are decided by the owner (" +
-                                  ", ".join("%s %s by %s" % (r, dec[r][0], dec[r][1]) for r in ROWS[:4]) +
-                                  "); REQ-072 keeps reading FAIL until the design is drawn, reviewed and tested.", 6),
+              % (rid_last, E.fold("Rows " + ", ".join(need) + " of " + DECISIONS_PAGE + " are decided by the owner (" +
+                                  ", ".join("%s %s by %s" % (r, dec[r][0], dec[r][1]) for r in need) +
+                                  ("" if len(need) == 4 else "; row L3-OD2 does not apply after the reject") +
+                                  "); REQ-072 keeps reading FAIL until the design is drawn, reviewed and tested, and any "
+                                  "feasibility item the answers recorded holds it (D-26).", 6),
                  E.fold(it["title"], 6)))
     raw = E.insert_at_section_end(raw, "closed_items", closed)
     def f(b):

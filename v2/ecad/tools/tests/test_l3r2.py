@@ -171,7 +171,10 @@ def _rows():
     return out
 
 
-def _copy_registry():
+def _copy_registry(runtime="72-required"):
+    """A copy of the registry with its fixtures. D-27: row L3-OD7 (M1's runtime) is answered first on the copy, with
+    72-required as a STAND-IN for the owner's answer, so that each test's refusals are its own rows'; runtime=None leaves
+    it unanswered."""
     d = tempfile.mkdtemp(prefix="l3r2-reg-")
     p = os.path.join(d, "pcb_requirements.yaml")
     shutil.copy(os.path.join(TOOLS, "pcb_requirements.yaml"), p)
@@ -180,6 +183,7 @@ def _copy_registry():
                                           'entry 80 A.\n' % BAND)
     import yaml
     open(os.path.join(d, "table.yaml"), "w", encoding="utf-8").write(yaml.safe_dump({"rows": _rows()}))
+    if runtime and "L3-OD7" not in _decided(p): _step("od_l3_7.py", runtime, p)
     return d, p, ev
 
 
@@ -200,7 +204,8 @@ def _step(script, option, reg, *extra, expect=0):
 
 def _extra(script, option, ev, share="50", build="TYP"):
     table = os.path.join(os.path.dirname(ev), "table.yaml")
-    if script == "od_l3_4.py" and option == "adopt": return ["--push-n", "20"]
+    if script == "od_l3_4.py" and option == "adopt": return ["--push-n", "10"]      # a STAND-IN for the owner's push
+    if script == "od_l3_1.py" and option == "approve": return ["--pass-line", "kit-loads"]   # a stand-in for sub-choice 1b
     if script == "od_l3_3.py" and option == "keep": return ["--array-wp", "1100", "--entry-a", "80", "--evidence", ev]
     if script == "od_l3_6.py":
         return ["--build", build] + (["--share", share] if option == "coverage" else []) + ["--table", table]
@@ -220,6 +225,13 @@ def _chain(steps, reg, ev):
         kw = {"build": s[3]} if len(s) > 3 else {}
         if len(s) > 4: kw["share"] = s[4]
         _step(script, option, reg, *_extra(script, option, ev, **kw))
+
+
+def _feas(reg, fid):
+    """The feasibility records a copy of the registry carries for item `fid` (D-26)."""
+    import yaml
+    y = yaml.safe_load(open(reg, encoding="utf-8"))
+    return [r for r in y["records"] if r.get("kind") == "feasibility" and fid in (r.get("blocker_ids") or [])]
 
 
 def _conflicts(reg, words):
@@ -244,7 +256,9 @@ def t_l3r2_an_example_chain_applies_on_a_copy_and_renders():
     r072 = next(r for r in y["records"] if r["id"] == "REQ-072")
     acc = " ".join(r072["acceptance"].split())
     assert "400 Wp at STC" in acc and "(row L3-OD3)" not in acc, "REQ-072 does not name the one array row L3-OD3 decided"
-    assert not _conflicts(reg, "weather basis"), "the QMX-out lid carries the mean day in TYP, yet a conflict was recorded"
+    assert not _conflicts(reg, "weather basis") and not _feas(reg, "FI-02"), \
+        "the QMX-out lid carries the mean day in TYP, yet a conflict or a feasibility item FI-02 was recorded"
+    assert len(_feas(reg, "FI-05")) == 1 and len(_feas(reg, "FI-06")) == 1, "adopt and 2S2P record no feasibility item"
     RL = _render_mod()
     pages = RL.render_all(registry=reg)
     assert "DECIDED" in pages["OWNER-DECISIONS-L3.md"], "the decided rows do not render as decided"
@@ -255,61 +269,76 @@ def t_l3r2_an_example_chain_applies_on_a_copy_and_renders():
     assert "Status of L3-R2: IN_PROGRESS" in pages["REQUIREMENTS-L3-R2.md"], "the issue reads complete on an example chain"
 
 
-def t_l3r2_the_band_never_precedes_the_weather_answer():
-    """CHECK-2 of L3-R2, B1 (path A): rows 1 to 3 decided and row L3-OD6 undecided, adopt is refused, so the band cannot
-    select the average-day benchmark without the owner; a coverage answer then still applies."""
+def t_l3r2_adopt_before_the_weather_answer_is_valid():
+    """D-26 (the owner's reviewer): with no plane band, adopt carries only the open kit's stability, which binds no
+    weather basis, so rows 1 to 3 decided and row L3-OD6 undecided, adopt applies and records FI-05; a coverage answer
+    then still applies and records FI-03. (CHECK-2 of L3-R2's path A refused adopt here while a band could follow.)"""
     need(os.path.join(COND, "od_l3_4.py"), "the conditional scripts are not in this tree")
     d, reg, ev = _copy_registry()
     if "L3-OD6" in _decided(reg): raise Skip("row L3-OD6 is decided in this tree")
     _chain([("L3-OD1", "od_l3_1.py", "approve"), ("L3-OD2", "od_l3_2.py", "qmx-out"), ("L3-OD3", "od_l3_3.py", "2s2p")], reg, ev)
-    out = _step("od_l3_4.py", "adopt", reg, *_extra("od_l3_4.py", "adopt", ev), expect=2)
-    assert "L3-OD6" in out, out
+    _step("od_l3_4.py", "adopt", reg, *_extra("od_l3_4.py", "adopt", ev))
+    assert len(_feas(reg, "FI-05")) == 1, "adopt records no feasibility item FI-05"
     _step("od_l3_6.py", "coverage", reg, *_extra("od_l3_6.py", "coverage", ev, share="80"))
-    _step("od_l3_4.py", "adopt", reg, *_extra("od_l3_4.py", "adopt", ev), expect=2)
+    assert len(_feas(reg, "FI-03")) == 1, "a coverage target no lid carries records no FI-03"
 
 
-def t_l3r2_a_lid_that_does_not_carry_the_weather_basis_never_reads_coherent():
-    """CHECK-2 of L3-R2, B2 (path B): the mean day in the WAB build is carried by the QMX-out lid only (fixture). With the
-    tablet-out lid an open conflict is recorded whichever row is answered first, and coherent() reads the set
-    incoherent; the QMX-out lid reads coherent."""
+def t_l3r2_hf_kept_with_wab_is_a_valid_target_with_no_fabricated_pass():
+    """D-26: "Verify that recording HF retention plus WAB does not fabricate a PASS or silently change the requirement."
+    The mean day in the WAB build is carried by the QMX-out lid only (fixture); with the tablet-out lid, HF kept, the
+    answer is valid in either order and records exactly one feasibility item FI-02, a FEASIBILITY_OPEN BLOCKER reading
+    FAIL; no record's reading turns PASS, REQ-072's statement and acceptance are the ones the rows themselves restate, and
+    REQ-002 keeps its HF bearer; coherent() reads no contradiction."""
     need(os.path.join(COND, "od_l3_6.py"), "the conditional scripts are not in this tree")
+    import yaml
     d, reg, ev = _copy_registry()
     if any(r in _decided(reg) for r in ("L3-OD1", "L3-OD2", "L3-OD6")): raise Skip("rows 1, 2 or 6 are decided in this tree")
-    _chain([("L3-OD6", "od_l3_6.py", "mean-day", "WAB"), ("L3-OD1", "od_l3_1.py", "approve"),
-            ("L3-OD2", "od_l3_2.py", "tablet-out")], reg, ev)
-    assert len(_conflicts(reg, "weather basis")) == 1, "the tablet-out lid under the WAB mean day records no conflict"
+    base = yaml.safe_load(open(reg, encoding="utf-8"))
+    _chain([("L3-OD6", "od_l3_6.py", "mean-day", "WAB"), ("L3-OD1", "od_l3_1.py", "approve")], reg, ev)
+    before = yaml.safe_load(open(reg, encoding="utf-8"))
+    _chain([("L3-OD2", "od_l3_2.py", "tablet-out")], reg, ev)
+    after = yaml.safe_load(open(reg, encoding="utf-8"))
+    items = _feas(reg, "FI-02")
+    assert len(items) == 1 and items[0]["status"] == "FEASIBILITY_OPEN" and items[0]["evidence_result"] == "FAIL" and \
+        items[0]["release_effect"] == "BLOCKER" and items[0]["blocks"] == ["REQ-072"], "FI-02 is not an open blocker reading FAIL"
+    old = {r["id"]: r for r in base["records"]}
+    for r in after["records"]:
+        if r.get("evidence_result") == "PASS":
+            assert old.get(r["id"], {}).get("evidence_result") == "PASS", "%s reads PASS after the answers" % r["id"]
+    b72 = next(r for r in before["records"] if r["id"] == "REQ-072")
+    a72 = next(r for r in after["records"] if r["id"] == "REQ-072")
+    assert (b72["statement"], b72["acceptance"], b72["evidence_result"]) == (a72["statement"], a72["acceptance"], "FAIL"), \
+        "recording HF with WAB changed REQ-072's requirement or its reading"
+    assert "HF" in " ".join(next(r for r in after["records"] if r["id"] == "REQ-002")["statement"].split()), "HF left REQ-002"
     d2, reg2, ev2 = _copy_registry()
     _chain([("L3-OD1", "od_l3_1.py", "approve"), ("L3-OD2", "od_l3_2.py", "tablet-out"),
             ("L3-OD6", "od_l3_6.py", "mean-day", "WAB")], reg2, ev2)
-    assert len(_conflicts(reg2, "weather basis")) == 1, "row L3-OD6 answered after the lid records no conflict"
+    assert len(_feas(reg2, "FI-02")) == 1, "row L3-OD6 answered after the lid records no FI-02"
     RL = _render_mod()
     data = RL.load_data()
     next(x for x in data["decisions"] if x["id"] == "L3-OD6")["quantified"]["rows"] = _rows()
     x = lambda o, **f: (o, "D-99", "2026-10-01", "", f)
-    base = {"L3-OD1": x("approve"), "L3-OD3": x("2s2p"), "L3-OD4": x("reject"), "L3-OD5": x("reading-c"),
-            "L3-OD6": x("mean-day", build="WAB", share=None)}
-    assert not RL.coherent(dict(base, **{"L3-OD2": x("tablet-out")}), data)[1], "path B reads coherent"
-    assert RL.coherent(dict(base, **{"L3-OD2": x("qmx-out")}), data)[1], "the QMX-out lid reads incoherent"
-    unfilled = RL.load_data()
-    for r in next(x for x in unfilled["decisions"] if x["id"] == "L3-OD6")["quantified"]["rows"]: r["fits"] = None
-    assert not RL.coherent(dict(base, **{"L3-OD2": x("qmx-out")}), unfilled)[1], "an unfilled fit reads coherent"
+    base_set = {"L3-OD1": x("approve"), "L3-OD3": x("2s2p"), "L3-OD4": x("reject"), "L3-OD5": x("reading-c"),
+                "L3-OD6": x("mean-day", build="WAB", share=None)}
+    for lid in ("tablet-out", "qmx-out", "both-kept"):
+        assert RL.coherent(dict(base_set, **{"L3-OD2": x(lid)}), data)[1], "HF kept with WAB (%s) reads contradictory" % lid
 
 
-def t_l3r2_a_coverage_target_no_lid_carries_is_a_conflict():
-    """A coverage target no lid of the table carries records an open conflict; row L3-OD1 applied after it keeps the
-    target in REQ-072; row L3-OD4's band is refused beside it."""
+def t_l3r2_a_coverage_target_no_lid_carries_records_a_feasibility_item():
+    """D-26: a coverage target no lid of the table carries is a valid target: it records feasibility item FI-03 once;
+    row L3-OD1 applied after it keeps the target in REQ-072; row L3-OD4's adopt is valid beside it (no band exists)."""
     need(os.path.join(COND, "od_l3_6.py"), "the conditional scripts are not in this tree")
     import yaml
     d, reg, ev = _copy_registry()
     if any(r in _decided(reg) for r in ("L3-OD1", "L3-OD6")): raise Skip("rows L3-OD1 or L3-OD6 are decided in this tree")
     _chain([("L3-OD6", "od_l3_6.py", "coverage", "WAB", "95")], reg, ev)
-    assert len(_conflicts(reg, "weather basis")) == 1, "no open conflict for a target no lid carries"
+    assert len(_feas(reg, "FI-03")) == 1 and not _conflicts(reg, "weather basis"), "no FI-03 for a target no lid carries"
     _chain([("L3-OD1", "od_l3_1.py", "approve"), ("L3-OD2", "od_l3_2.py", "qmx-out"), ("L3-OD3", "od_l3_3.py", "2s2p")], reg, ev)
-    assert len(_conflicts(reg, "weather basis")) == 1, "row L3-OD2 recorded a second conflict for the same answer"
+    assert len(_feas(reg, "FI-03")) == 1 and not _feas(reg, "FI-02"), "row L3-OD2 recorded a second item for the same answer"
     r072 = next(r for r in yaml.safe_load(open(reg, encoding="utf-8"))["records"] if r["id"] == "REQ-072")
     for f in ("statement", "acceptance"):
         assert "at least 95 percent" in " ".join(str(r072[f]).split()), "row L3-OD1 dropped the target from REQ-072's %s" % f
-    _step("od_l3_4.py", "adopt", reg, *_extra("od_l3_4.py", "adopt", ev), expect=2)
+    _step("od_l3_4.py", "adopt", reg, *_extra("od_l3_4.py", "adopt", ev))
 
 
 def t_l3r2_row6_figures_are_held_until_filled():
@@ -565,50 +594,63 @@ def t_l3r2_the_fill_reads_the_basis_by_exact_keys():
     assert "DERATED VARIANT" in RL.four_cell(y["four_cases"], "a'") and "HYPOTHETICAL" in RL.four_cell(y["four_cases"], "c")
 
 
-def t_l3r2_the_incoherent_combinations_are_refused():
-    """CHECK-1, B1: keep needs the basis's figures; adopt needs 2S2P (1S4P or REQ-016 kept refused); row 2 needs row 1
-    approved; both lid items kept records its conflict and adopts no band."""
+def t_l3r2_only_contradictory_requirements_are_refused():
+    """D-26: keep still needs the basis's figures (a missing input, refused); adopt is valid on 1S4P and on REQ-016 kept
+    (no band exists); row 2 is refused after a reject, the one contradiction between rows, while rows 3 to 6 still apply
+    and the reject records FI-01; both lid items kept records FI-04 and adopt then applies on that lid's figures. The gate
+    reads a set holding the contradiction as not unambiguous, and every formerly refused candidate shortfall as valid."""
     need(os.path.join(COND, "od_l3_1.py"), "the conditional scripts are not in this tree")
     d, reg, ev = _copy_registry()
     _chain([("L3-OD1", "od_l3_1.py", "approve"), ("L3-OD2", "od_l3_2.py", "qmx-out")], reg, ev)
     if "L3-OD3" in _decided(reg): raise Skip("row L3-OD3 is decided in this tree")
     _step("od_l3_3.py", "keep", reg, expect=2)                                   # no basis figures: refused
     _chain([("L3-OD3", "od_l3_3.py", "keep"), ("L3-OD6", "od_l3_6.py", "mean-day", "TYP")], reg, ev)
-    out = _step("od_l3_4.py", "adopt", reg, *_extra("od_l3_4.py", "adopt", ev), expect=2)
-    assert "2s2p" in out, out
+    _step("od_l3_4.py", "adopt", reg, *_extra("od_l3_4.py", "adopt", ev))
     d2, reg2, ev2 = _copy_registry()
     _chain([("L3-OD6", "od_l3_6.py", "mean-day", "TYP"), ("L3-OD1", "od_l3_1.py", "approve"),
             ("L3-OD2", "od_l3_2.py", "qmx-out"), ("L3-OD3", "od_l3_3.py", "1s4p")], reg2, ev2)
-    _step("od_l3_4.py", "adopt", reg2, *_extra("od_l3_4.py", "adopt", ev2), expect=2)
+    _step("od_l3_4.py", "adopt", reg2, *_extra("od_l3_4.py", "adopt", ev2))
     d3, reg3, ev3 = _copy_registry()
     if "L3-OD1" not in _decided(reg3):
         _chain([("L3-OD1", "od_l3_1.py", "reject")], reg3, ev3)
-        _step("od_l3_2.py", "tablet-out", reg3, expect=2)
+        assert len(_feas(reg3, "FI-01")) == 1 and not _conflicts(reg3, "D-06"), "a reject records no FI-01"
+        out = _step("od_l3_2.py", "tablet-out", reg3, expect=2)
+        assert "cannot both hold" in out, out
+        _chain([("L3-OD3", "od_l3_3.py", "2s2p"), ("L3-OD5", "od_l3_5.py", "reading-c"),
+                ("L3-OD6", "od_l3_6.py", "mean-day", "TYP")], reg3, ev3)
+        _step("od_l3_4.py", "adopt", reg3, "--push-n", "10", expect=2)           # no figure for the lid without a pack
+        _step("od_l3_4.py", "adopt", reg3, "--push-n", "10", "--slope-deg", "2")
+        import yaml
+        y = yaml.safe_load(open(reg3, encoding="utf-8"))
+        assert any(c["id"] == "M-02" for c in y["closed_items"]), "M-02 stays open after the reject and rows 3 and 4"
     d4, reg4, ev4 = _copy_registry()
     _chain([("L3-OD6", "od_l3_6.py", "mean-day", "TYP"), ("L3-OD1", "od_l3_1.py", "approve"),
             ("L3-OD2", "od_l3_2.py", "both-kept"), ("L3-OD3", "od_l3_3.py", "2s2p")], reg4, ev4)
-    assert _conflicts(reg4, "both approved lid items kept"), "both lid items kept records no conflict"
-    _step("od_l3_4.py", "adopt", reg4, *_extra("od_l3_4.py", "adopt", ev4), expect=2)
-    if "L3-OD4" not in _decided(reg4): _step("od_l3_4.py", "reject", reg4)
+    assert len(_feas(reg4, "FI-04")) == 1 and not _conflicts(reg4, "both approved lid items kept"), "both kept records no FI-04"
+    _step("od_l3_4.py", "adopt", reg4, *_extra("od_l3_4.py", "adopt", ev4))
 
 
-def t_l3r2_the_gate_reads_an_incoherent_set_as_not_unambiguous():
-    """Sets the scripts refuse, written as rulings here, keep the gate's first condition NOT MET."""
+def t_l3r2_the_gate_reads_a_contradiction_as_not_unambiguous():
+    """Every set CHECK-1 and CHECK-2 of L3-R2 read incoherent is a valid target now (D-26); the one contradiction left
+    between rows, row L3-OD2 answered while row L3-OD1 stands rejected, keeps the gate's first condition NOT MET."""
     RL = _render_mod()
     data = RL.load_data()
     next(x for x in data["decisions"] if x["id"] == "L3-OD6")["quantified"]["rows"] = _rows()
     x = lambda o, **f: (o, "D-99", "2026-10-01", "", f)
     base = {"L3-OD1": x("approve"), "L3-OD2": x("qmx-out"), "L3-OD3": x("2s2p"), "L3-OD4": x("adopt"),
             "L3-OD6": x("mean-day", build="TYP", share=None)}
-    assert RL.coherent(base, data)[1], "the example set reads incoherent"
-    for bad in ({"L3-OD6": x("coverage", build="TYP", share=50)}, {"L3-OD2": x("both-kept")}, {"L3-OD3": x("keep")},
-                {"L3-OD1": x("reject")}):
-        assert not RL.coherent(dict(base, **bad), data)[1], "a set with %s reads coherent" % bad
+    assert RL.coherent(base, data)[1], "the example set reads contradictory"
+    for valid in ({"L3-OD6": x("coverage", build="TYP", share=50)}, {"L3-OD2": x("both-kept")}, {"L3-OD3": x("keep")}):
+        assert RL.coherent(dict(base, **valid), data)[1], "a candidate shortfall %s reads as a contradiction" % valid
+    bad = dict(base, **{"L3-OD1": x("reject")})
+    assert not RL.coherent(bad, data)[1], "row L3-OD2 answered after a reject reads coherent"
+    ok = {k: v for k, v in bad.items() if k != "L3-OD2"}
+    assert RL.coherent(ok, data)[1] and RL.settled("L3-OD2", ok), "a reject with row L3-OD2 unanswered is not settled"
     import rules_lib as R
     req = R.load_requirements()
-    data["energy_basis"] = None
-    g = RL.gate(req, dict(base, **{"L3-OD3": x("keep")}), data, RL.load_h3())
-    assert g[0][1] is False, "the gate reads the target unambiguous on an incoherent set"
+    g = RL.gate(req, bad, data, RL.load_h3())
+    assert g[0][1] is False, "the gate reads the target unambiguous on a contradictory set"
+    assert len(g) == 5 and "feasibility disposition" in g[4][0], "the gate has no fifth condition (D-26)"
 
 
 def t_l3r2_the_other_answers_apply_on_a_copy():
@@ -621,7 +663,7 @@ def t_l3r2_the_other_answers_apply_on_a_copy():
             ("L3-OD5", "od_l3_5.py", "cells"), ("L3-OD6", "od_l3_6.py", "coverage", "TYP", "50")], reg2, ev2)
 
 
-def t_l3r2_the_table_has_six_rows_each_with_its_parts():
+def t_l3r2_the_table_has_its_seven_rows_each_with_its_parts():
     """D-23 and D-24: the six-row table gives each row its options, the recommendation, quantified consequences and
     dependencies, and names the requirement it changes with the consequence (D-25); every row that rests on board A's
     front end carries its four cases (the circuit as drawn, a derated variant, the
@@ -630,7 +672,8 @@ def t_l3r2_the_table_has_six_rows_each_with_its_parts():
     RL = _render_mod()
     data = RL.load_data()
     rows = data["decisions"]
-    assert [d["id"] for d in rows] == ["L3-OD%d" % i for i in range(1, 7)], "the table is not the six rows"
+    assert [d["id"] for d in rows] == ["L3-OD7"] + ["L3-OD%d" % i for i in range(1, 7)], \
+        "the table is not row L3-OD7 (D-27) followed by the six rows"
     for d in rows:
         for k in ("question", "owner_test", "recommendation", "consequences", "dependencies", "affected"):
             assert str(d.get(k) or "").strip(), "%s has no %s" % (d["id"], k)
@@ -651,39 +694,38 @@ def t_l3r2_the_table_has_six_rows_each_with_its_parts():
     assert "implementation requirement" in pp2["item"] and "not a defect" in pp2["item"], "Kelvin sensing reads as a defect (D-25)"
     page = open(os.path.join(L3, "OWNER-DECISIONS-L3.md"), encoding="utf-8").read()
     for rid in ("L3-OD1", "L3-OD2"):
-        assert "CANNOT MEET M1" in [l for l in page.split("\n") if l.startswith("| %s |" % rid)][0], \
-            "%s's options do not flag the option that cannot meet M1" % rid
+        line = [l for l in page.split("\n") if l.startswith("| %s |" % rid)][0]
+        assert "The studied candidate: FAIL" in line and "Feasibility disposition" in line, \
+            "%s's options do not show the studied candidate's status beside the target (D-26)" % rid
+        assert "CANNOT MEET" not in line, "%s still states a candidate's shortfall as a proof about every architecture" % rid
     for name in RL.PAGES.values():
         RL.check_links(name, open(os.path.join(L3, name), encoding="utf-8").read())
 
 
-def t_l3r2_the_wab_build_with_the_tablet_out_is_never_coherent_on_the_checked_table():
-    """CHECK-4 of L3-R2, B1: on the tree's own table, filled from the checked basis, the mean day in the WAB build is
-    carried by the QMX-out lid only. So the WAB answer with the tablet out reads incoherent and records an open conflict,
-    while the TYP answer keeps both lids open; the pairing is the owner's, and it is never silent."""
+def t_l3r2_the_wab_build_with_the_tablet_out_records_fi02_on_the_checked_table():
+    """CHECK-4 of L3-R2, B1, restated by D-26: on the tree's own table, filled from the checked basis, the mean day in
+    the WAB build is carried by the QMX-out lid only. The WAB answer with the tablet out is a valid target, never refused
+    and never a contradiction, and records feasibility item FI-02; the TYP answer keeps both lids clear of it."""
     RL = _render_mod()
     data = RL.load_data()
     if not (RL.basis_ok(data)[0] and RL.basis_ok(data, "power_path_check")[0]): raise Skip("the checked basis is not filed")
     x = lambda o, **f: (o, "D-99", "2026-10-01", "", f)
     base = {"L3-OD1": x("approve"), "L3-OD3": x("2s2p"), "L3-OD4": x("reject"), "L3-OD5": x("reading-c")}
-    for build, lid, want in (("WAB", "tablet-out", False), ("WAB", "qmx-out", True), ("WAB", "qmx-outside", True),
-                             ("TYP", "tablet-out", True), ("TYP", "qmx-out", True), ("TYP", "both-kept", False)):
+    for build, lid in (("WAB", "tablet-out"), ("WAB", "qmx-out"), ("TYP", "tablet-out"), ("TYP", "both-kept")):
         got = RL.coherent(dict(base, **{"L3-OD2": x(lid), "L3-OD6": x("mean-day", build=build, share=None)}), data)[1]
-        assert got is want, "the mean day in %s with %s reads %s" % (build, lid, "coherent" if got else "incoherent")
+        assert got, "the mean day in %s with %s reads as a contradiction" % (build, lid)
     need(os.path.join(COND, "od_l3_6.py"), "the conditional scripts are not in this tree")
     d, reg, ev = _copy_registry()
     if any(r in _decided(reg) for r in ("L3-OD1", "L3-OD2", "L3-OD6")): raise Skip("rows 1, 2 or 6 are decided in this tree")
     _step("od_l3_6.py", "mean-day", reg, "--build", "WAB")                        # the tree's filled table, verified
-    _step("od_l3_1.py", "approve", reg)
+    _step("od_l3_1.py", "approve", reg, "--pass-line", "kit-loads")
     _step("od_l3_2.py", "tablet-out", reg)                                        # the tree's filled table
-    assert len(_conflicts(reg, "weather basis")) == 1, "the WAB mean day with the tablet out records no conflict"
+    assert len(_feas(reg, "FI-02")) == 1, "the WAB mean day with the tablet out records no FI-02"
     d2, reg2, ev2 = _copy_registry()
     _step("od_l3_6.py", "mean-day", reg2, "--build", "TYP")
-    _step("od_l3_1.py", "approve", reg2)
+    _step("od_l3_1.py", "approve", reg2, "--pass-line", "kit-loads")
     _step("od_l3_2.py", "tablet-out", reg2)
-    assert not _conflicts(reg2, "weather basis"), "the TYP mean day with the tablet out records a conflict"
-
-
+    assert not _feas(reg2, "FI-02"), "the TYP mean day with the tablet out records FI-02"
 
 def t_l3r2_a_check_verdict_is_read_from_its_record():
     """CHECK-5 of L3-R2, minor 4: the checks of the handover are filed byte for byte and each verdict is verified against
