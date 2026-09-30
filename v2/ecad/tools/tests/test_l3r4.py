@@ -219,6 +219,25 @@ def t_l3r4_every_line_of_the_one_pack_chain_is_a_current_passage():
     assert not PACK_DESIGNATORS.search(brief), "the brief names the pack's chain by a designator the map does not hold"
 
 
+def t_l3r4_every_line_naming_the_chain_or_the_cell_in_words_is_mapped():
+    """CHECK-2 of round 4, minors 1 and 4: the phrases each group's own passages carry (VOCAB_RX over the PACK and CELL
+    passages, so the list grows with them) are found in no line of either document, before its appendix, outside the
+    group's passages, section 7's rulings table and the reasoned EXEMPT list; and every EXEMPT line carries one."""
+    RI = _mod()
+    docs = RI.baselined()
+    for g in ("PACK", "CELL"):
+        vocab = RI.vocabulary(g, docs)
+        assert vocab, "the %s passages carry none of their vocabulary" % g
+        left = RI.uncovered(g, docs)
+        assert not left, "lines naming the %s group in words are in none of its passages: %s" % (g, left[:5])
+        for (k, n), why in RI.EXEMPT[g].items():
+            line = docs[k].split("\n")[n - 1]
+            assert why and any(re.search(r"(?<![\w-])%s(?![\w])" % re.escape(v), line) for v in vocab), \
+                "the %s exemption of %s line %d carries none of the vocabulary: a stale exemption" % (g, k, n)
+    assert any(v.startswith("the charger") for v in RI.vocabulary("PACK", docs)) and \
+        any(v.startswith("the gauge") for v in RI.vocabulary("PACK", docs)), "the PACK vocabulary lost the chain's parts"
+
+
 def t_l3r4_the_baselines_are_the_files_l3r2_names():
     RI = _mod()
     data = RI.RL.load_data()
@@ -253,6 +272,9 @@ def t_l3r4_the_recommended_answers_give_the_reissue():
     assert "4S15P lid pack" in draft, "the QMX out of the lid does not give the 4S15P lid pack"
     assert "an %s tablet in the lid bracket" % c.tablet_size() in flat and c.tablet_size() in c.stmt("REQ-011")
     assert c.array_phrase() in flat and "2S2P" in c.text("L3-OD3"), "the array is not the ruling's"
+    cell, base = c.d27()
+    assert cell in c.text("L3-OD1") and base in c.text("L3-OD1") and c.store() in flat, "the store is not D-27's"
+    assert "reopens" not in c.store(), "the store calls the cell reopened without row L3-OD5 answered cells"
     assert "HF has left the kit (owner ruling %s on row L3-OD2)" % rids["L3-OD2"] in draft
     assert "(CFL-017 resolved)" in flat, "reading-c resolves CFL-017 and the D-02a row does not say so"
 
@@ -282,8 +304,13 @@ def t_l3r4_another_coherent_combination_gives_its_own_reissue():
     g3 = _groups(cur3)
     assert {"C04", "B04", "C08", "B12"} <= got3 and set(g3) == {"PACK", "CELL"}, "the tablet out and cells read %s" % sorted(g3)
     assert "4S14P lid pack" in draft3 and "the tablet bracket has left the kit" in draft3
-    assert "| DC-L3-CELL |" in draft3 and "reopens; CFL-017 stays open until the cell is chosen" in _flat(draft3)
+    assert "| DC-L3-CELL |" in draft3 and "reopens; CFL-017 is kept open in the requirements registry" in _flat(draft3)
     assert c3.array_phrase() in _flat(draft3) and "1100 Wp" in c3.text("L3-OD3")
+    for pid in ("C07", "C23", "B06", "B15"):
+        sec = _flat(_section(draft3, pid)).split("Proposed text:")[-1]
+        assert "as held, the cell of D-06 that owner ruling %s on row L3-OD5 reopens (CFL-017 kept open)" % rids3["L3-OD5"] \
+            in sec, "%s names the cell as settled under cells" % pid
+    assert "CFL-017 is kept open in the requirements registry" in _flat(draft3), "the cell sentence types CFL-017's state"
 
 
 def t_l3r4_the_approval_leaves_the_reissue_current_and_unwritten():
@@ -316,6 +343,14 @@ def t_l3r4_the_approval_leaves_the_reissue_current_and_unwritten():
     dec = RI.RL.decided(req, data)
     ok, why = RI.RL.reissue_ok(req, data, dec)
     assert ok, "the renderer refuses the approved re-issue: %s" % why
+    r72 = next(r for r in req["records"] if r["id"] == "REQ-072")
+    r72["notes"] = str(r72.get("notes") or "") + " A note added after the approval (a test fixture)."
+    open(reg2, "w", encoding="utf-8").write(yaml.safe_dump(req, allow_unicode=True, sort_keys=False))
+    r = _run([GEN, "--registry", reg2, "--data", data2, "--out-dir", out, "--check"])
+    assert r.returncode == 0, "a change to a cited record after the approval made the approved files out of date:\n%s" % r.stdout
+    open(os.path.join(out, RI.DRAFT), "a", encoding="utf-8").write("\n")
+    r = _run([GEN, "--registry", reg2, "--data", data2, "--out-dir", out, "--check"])
+    assert r.returncode == 1, "an approved draft changed on disk still reads current:\n%s" % r.stdout
 
 
 # ------------------------------------------------------------------------------------------------ the refusals
@@ -364,6 +399,14 @@ def t_l3r4_never_writes_a_baselined_file():
     o, msg = _generate(reg, expect=2, out=out)
     assert "link" in msg, "a draft path linked to the brief was not refused before writing: %s" % msg
     assert not os.path.exists(os.path.join(out, RI.RECORD)), "a refused run wrote the change record"
+    out2 = tempfile.mkdtemp(prefix="l3r4-out-")
+    try:
+        os.link(os.path.join(ROOT, "v2", "docs", "PRODUCT-BRIEF.md"), os.path.join(out2, RI.DRAFT))
+    except OSError as e:
+        raise Skip("no hard link across these file systems (%s)" % e)
+    o, msg = _generate(reg, expect=2, out=out2)
+    assert "hard link" in msg, "a draft path hard linked to the brief was not refused before writing: %s" % msg
+    os.unlink(os.path.join(out2, RI.DRAFT))
 
 
 # ------------------------------------------------------------------------------------------------ LAYER-STATUS
