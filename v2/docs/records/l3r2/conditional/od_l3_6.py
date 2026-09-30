@@ -4,6 +4,10 @@ owner's instruction of 30 September 2026 (D-23: the row's recommendation and fig
 "An average-day benchmark may be an option; do not select it automatically because the current design passes it"): the
 script refuses to write the tree's registry while l3r2.yaml's energy_basis is not filed with an accepted check.
 
+Row L3-OD7 (M1's runtime) is answered first (D-27, cond.runtime_first): this script refuses while it is unanswered,
+and after an answer other than 72-required, because its restatement states M1's 72 hours; it is then restated from
+the runtime comparison before it is applied.
+
 The owner's words of D-22: "Define 'adverse.' A model based on a September average day does not establish performance
 across unspecified adverse weather." REQ-072 states M1 on SC-37's reference mean day today. The owner's answer names the
 option and the array build case (TYP or WAB, l3r2.yaml's quantified.builds):
@@ -19,8 +23,10 @@ option and the array build case (TYP or WAB, l3r2.yaml's quantified.builds):
 Either way the answer's table row must be filled (a HELD row is refused), and for l3r2.yaml's own table every figure is
 read again from the filed weather_basis.out by exact keys and compared (cond.od6_verify). The store must be carried by a
 lid (CHECK-2 of L3-R2, B2): with row L3-OD2 decided, by its lid; without it, by at least one lid of the table. Otherwise
-an open conflict (the next free CFL id, a core BLOCKER) records REQ-072 against it; with row L3-OD2 answered both-kept, its
-own conflict already records the lid against REQ-072 and no second one is written. SC-37 cites the ruling. The ruling
+the answer is still a valid target (D-26) and a feasibility record holds REQ-072: FI-02 (the lid does not carry the mean
+day's store in the build) or FI-03 (a coverage target no lid carries), a core BLOCKER reading FAIL; with row L3-OD2
+answered both-kept, its own item FI-04 already holds REQ-072 and no second one is written. No answer here is refused for
+the candidate's shortfall. SC-37 cites the ruling. The ruling
 records `weather_share` and `weather_build`, which od_l3_2.py and the gate read.
 
 Usage: python3 od_l3_6.py --option mean-day|coverage --build TYP|WAB [--share 50|80|95] --words "<the owner's words>"
@@ -45,6 +51,7 @@ WINDOWS = ("the 72-hour windows of September's actual weather at SC-37's site an
 
 def build(a, raw, d):
     op = a["option"]
+    C.runtime_first(d, ROW)
     dec = C.require(d, ROW, [])
     C.hold(a, ROW)
     b = a["extra"].get("build")
@@ -53,9 +60,6 @@ def build(a, raw, d):
     if "4.0 kWh/m2 a day" not in " ".join(str(sc["taken"]).split()): E.refuse("SC-37 does not state 4.0 kWh/m2 a day")
     n = None
     if op == "coverage":
-        if dec.get("L3-OD4", ("",))[0] == "adopt":
-            E.refuse("row L3-OD4 stands answered adopt: its band comes from mean-day grids and no band exists for a "
-                     "coverage target")
         s = str(a["extra"].get("share") or "")
         if not s.isdigit() or not 1 <= int(s) <= 100:
             E.refuse("coverage needs --share N, one of the table's targets as a whole percent")
@@ -108,8 +112,8 @@ def build(a, raw, d):
     lid_opt = dec.get("L3-OD2", (None,))[0]
     lid = C.LID.get(lid_opt) if lid_opt else None
     if lid_opt != "both-kept" and ((lid and lid not in t["fits"]) or (not lid and not t["fits"])):
-        raw, cid = C.weather_conflict(raw, rid, lid_opt, t, n_text)
-        exp |= {("records", cid, "added")}
+        raw, fid = C.weather_feasibility(raw, rid, lid_opt, t, n_text)
+        exp |= {("records", fid, "added")}
     raw = E.replace_entry(raw, "SC-37", lambda blk: E.set_flow(blk, "source", E.flow_items(blk, "source") +
                                                               ['"owner ruling %s"' % rid]), "session_choices")
     exp |= {("session_choices", "SC-37", "changed")}

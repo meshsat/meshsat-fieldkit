@@ -1,0 +1,31 @@
+1. BATTERY ONLY (the checker's usable, no path loss on the lid share)
+   4S3P alone               +20 C: 107.9 Wh, 2.52 h at 42.8 W
+   4S3P alone               -10 C: 44.5 Wh, 1.04 h at 42.8 W
+   base 4S6P + lid 4S9P     +20 C: 546.1 Wh, 12.76 h at 42.8 W
+   base 4S6P + lid 4S9P     -10 C: 225.2 Wh, 5.26 h at 42.8 W
+2. THE DUSK STORE: base 218.4 Wh (+20 C) + lid 284.2 Wh (13.23 C) = 502.6 Wh
+   hours at or under 60 W/m2: [0, 1, 2, 3, 4, 5, 6, 17, 18, 19, 20, 21, 22, 23] (14); the night's deficit at the node, TYP NOM: 564.7 Wh (599.2 Wh at 42.8 W flat)
+3. BATTERY PLUS SOLAR, 4S9P lid
+   48 h DRAWN  TYP NOT MET 266.8, stops h 23/11 (UTC 05/05); WAB NOT MET 281.3, stops h 23/11 (UTC 05/05)
+   48 h NOM    TYP NOT MET 102.2, stops h 23/11 (UTC 05/05); WAB NOT MET 106.3, stops h 23/11 (UTC 05/05)
+   48 h NOM90  TYP NOT MET 105.5, stops h 23/11 (UTC 05/05); WAB NOT MET 109.3, stops h 23/11 (UTC 05/05)
+   48 h WE     TYP NOT MET 104.6, stops h 23/11 (UTC 05/05); WAB NOT MET 108.6, stops h 23/11 (UTC 05/05)
+   48 h WE90   TYP NOT MET 112.5, stops h 23/11 (UTC 05/05); WAB NOT MET 136.5, stops h 23/11 (UTC 05/05)
+   72 h DRAWN  TYP NOT MET 494.8, stops h 23/11 (UTC 05/05); WAB NOT MET 522.5, stops h 23/11 (UTC 05/05)
+   72 h NOM    TYP NOT MET 165.7, stops h 23/11 (UTC 05/05); WAB NOT MET 172.6, stops h 23/11 (UTC 05/05)
+   72 h NOM90  TYP NOT MET 171.1, stops h 23/11 (UTC 05/05); WAB NOT MET 177.6, stops h 23/11 (UTC 05/05)
+   72 h WE     TYP NOT MET 169.2, stops h 23/11 (UTC 05/05); WAB NOT MET 176.1, stops h 23/11 (UTC 05/05)
+   72 h WE90   TYP NOT MET 184.1, stops h 23/11 (UTC 05/05); WAB NOT MET 230.7, stops h 23/11 (UTC 05/05)
+4. THE LEAST LID (base 4S6P), COMB and no stop, both starts
+   48 h NOM TYP    lid 4S11.16P: +8.6 cells, +68.1 Wh usable at the lid (at 4S9P's share: +68.1 Wh)
+   72 h NOM TYP    lid 4S11.16P: +8.6 cells, +68.1 Wh usable at the lid (at 4S9P's share: +68.1 Wh)
+   48 h WE TYP     lid 4S11.52P: +10.1 cells, +79.5 Wh usable at the lid (at 4S9P's share: +79.5 Wh)
+   72 h WE TYP     lid 4S12.68P: +14.7 cells, +116.1 Wh usable at the lid (at 4S9P's share: +116.1 Wh)
+   72 h NOM90 TYP  lid 4S12.70P: +14.8 cells, +117.0 Wh usable at the lid (at 4S9P's share: +117.0 Wh)
+   72 h WE WAB     lid 4S14.49P: +22.0 cells, +173.5 Wh usable at the lid (at 4S9P's share: +173.5 Wh)
+   48 h WE WAB     lid 4S12.44P: +13.7 cells, +108.5 Wh usable at the lid (at 4S9P's share: +108.5 Wh)
+5. COVERAGE, 4S9P lid, TYP, NOM (864 windows; 48 h = the first 48 h of each)
+   48 h: kept 0 of 864
+   72 h: kept 0 of 864
+6. HF RECEIVING (+1.14 W), 72 h WE TYP, the least lid
+   lid 4S14.92P (+23.7 cells over 4S9P; +187.0 Wh usable at the lid)

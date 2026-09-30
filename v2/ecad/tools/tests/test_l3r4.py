@@ -33,14 +33,23 @@ sys.path.insert(0, TOOLS)
 from harness import need, Skip  # noqa: E402
 import claims_check as CC  # noqa: E402
 
-# The session's recommended answers (OWNER-DECISIONS-L3.md): approve, 2s2p, adopt, reading-c and the mean day. Rows
-# L3-OD2 (which lid item leaves), L3-OD6's build and row L3-OD4's operator push are the owner's with no recommendation;
-# the fixture takes the QMX out, TYP and a push of 20 N as STAND-INS (dryrun.py's placeholders), not as recommendations.
-RECOMMENDED = [("od_l3_6.py", "mean-day", "--build", "TYP"), ("od_l3_1.py", "approve"), ("od_l3_2.py", "qmx-out"),
-               ("od_l3_3.py", "2s2p"), ("od_l3_4.py", "adopt", "--push-n", "20"), ("od_l3_5.py", "reading-c")]
-OTHER = [("od_l3_6.py", "mean-day", "--build", "WAB"), ("od_l3_1.py", "approve"), ("od_l3_2.py", "qmx-outside"),
+# The session's recommended answers (OWNER-DECISIONS-L3.md): approve at the kit loads (sub-choice 1b), 2s2p, adopt,
+# reading-c and the mean day. Rows L3-OD2 (which lid item leaves), L3-OD6's build and row L3-OD4's operator push are the
+# owner's with no recommendation; the fixture takes the QMX out, TYP and a push of 10 N as STAND-INS (dryrun.py's), not
+# as recommendations.
+# D-27: row L3-OD7 (M1's runtime and its store) is answered first; 72-required with HF available, no external store and the
+# tablet not charged, the one answer whose passages are mapped, is a STAND-IN for the owner's answer in every chain.
+R7 = ("od_l3_7.py", "72-required", "--hf", "available", "--external", "no", "--tablet-charging", "no")
+RECOMMENDED = [R7, ("od_l3_6.py", "mean-day", "--build", "TYP"), ("od_l3_1.py", "approve", "--pass-line", "kit-loads"),
+               ("od_l3_2.py", "qmx-out"), ("od_l3_3.py", "2s2p"), ("od_l3_4.py", "adopt", "--push-n", "10"),
+               ("od_l3_5.py", "reading-c")]
+# D-26: row L3-OD1 rejected is a valid answer; row L3-OD2 then does not apply, and a 2 degree slope stands in for the
+# owner's own figure for the lid with no lid pack.
+REJECTED = [R7, ("od_l3_1.py", "reject"), ("od_l3_3.py", "2s2p"), ("od_l3_4.py", "adopt", "--push-n", "10", "--slope-deg", "2"),
+            ("od_l3_5.py", "reading-c"), ("od_l3_6.py", "mean-day", "--build", "TYP")]
+OTHER = [R7, ("od_l3_6.py", "mean-day", "--build", "WAB"), ("od_l3_1.py", "approve", "--pass-line", "kit-loads"), ("od_l3_2.py", "qmx-outside"),
          ("od_l3_3.py", "1s4p"), ("od_l3_4.py", "reject"), ("od_l3_5.py", "measure")]
-THIRD = [("od_l3_6.py", "mean-day", "--build", "TYP"), ("od_l3_1.py", "approve"), ("od_l3_2.py", "tablet-out"),
+THIRD = [R7, ("od_l3_6.py", "mean-day", "--build", "TYP"), ("od_l3_1.py", "approve", "--pass-line", "kit-loads"), ("od_l3_2.py", "tablet-out"),
          ("od_l3_3.py", "keep", "--array-wp", "1100", "--entry-a", "80", "--evidence", "EV"), ("od_l3_4.py", "reject"),
          ("od_l3_5.py", "cells")]
 # The one pack's generated chain by its designators: every baselined line naming one lies in a PACK passage (B1).
@@ -77,12 +86,12 @@ def _chain(steps):
     """A copy of the registry with the steps applied by the prepared scripts, as dryrun.py applies them; each chain
     is built once per run and handed out as a fresh copy."""
     need(COND, "the conditional scripts of L3-R2 are not in this tree")
-    _tree_undecided()
+    import l3pre
     key = tuple(tuple(s) for s in steps)
     if key not in _CHAINS:
         d = tempfile.mkdtemp(prefix="l3r4-reg-")
         reg = os.path.join(d, "pcb_requirements.yaml")
-        shutil.copy(os.path.join(TOOLS, "pcb_requirements.yaml"), reg)
+        shutil.copy(l3pre.base_registry(), reg)
         ev = os.path.join(d, "basis-fixture.md")
         open(ev, "w", encoding="utf-8").write("FIXTURE, not the energy basis: array 1100 Wp, entry 80 A.\n")
         for s in steps:
@@ -121,7 +130,7 @@ def _section(draft, pid):
     return m.group(0) if m else ""
 
 
-def _common(reg, out):
+def _common(reg, out, rows=None):
     """What holds for every generated re-issue: each passage names its rows and rulings, every ruling of the answers is
     cited, the change record binds the draft by its sha, M1's reading is stated plainly with its status row, and the
     texts carry no dash and no unqualified claim."""
@@ -130,7 +139,7 @@ def _common(reg, out):
     draft, rec = _read(out)
     d = yaml.safe_load(open(reg, encoding="utf-8"))
     rids = {str(r["decides"]).split(":")[0]: r["id"] for r in d["owner_rulings"] if str(r.get("decides") or "").startswith("L3-OD")}
-    assert sorted(rids) == list(RI.ROWS), "the fixture does not decide the six rows: %s" % sorted(rids)
+    assert sorted(rids) == sorted(rows or RI.ROWS), "the fixture does not decide its rows: %s" % sorted(rids)
     heads = re.findall(r"^### ([CB]\d\d)\. .*$", draft, re.M)
     cites = re.findall(r"^Rows and rulings: (.*)\.$", draft, re.M)
     assert heads and len(heads) == len(cites), "a restated passage has no 'Rows and rulings' line"
@@ -201,7 +210,7 @@ def t_l3r4_every_passage_is_found_once_where_the_map_says():
         assert line == p.a, "%s starts on line %d, not %d" % (p.pid, line, p.a)
         assert (p.new is None) == (p.kind == "CURRENT"), "%s: a CURRENT passage has no proposed text, a DEFINITION one does" % p.pid
         assert (p.group is None) == (p.kind == "DEFINITION"), "%s: only a CURRENT passage has a group" % p.pid
-        assert p.when == RI.ALL or set(p.when) <= set(RI.ROWS), "%s names a row that is not L3-OD1 to L3-OD6" % p.pid
+        assert p.when == RI.ALL or set(p.when) <= set(RI.ROWS), "%s names a row that is not L3-OD1 to L3-OD7" % p.pid
 
 
 def t_l3r4_every_line_of_the_one_pack_chain_is_a_current_passage():
@@ -232,7 +241,8 @@ def t_l3r4_every_line_naming_the_chain_or_the_cell_in_words_is_mapped():
         left = RI.uncovered(g, docs)
         assert not left, "lines the %s pattern matches are in none of its passages: %s" % (g, left[:5])
         for (k, n), why in RI.EXEMPT[g].items():
-            assert why and rx.search(docs[k].split("\n")[n - 1]), \
+            ls = docs[k].split("\n")
+            assert why and any(m.start() <= len(ls[n - 1]) for m in rx.finditer("\n".join(ls[n - 1:n + 1]))), \
                 "the %s exemption of %s line %d matches nothing: a stale exemption" % (g, k, n)
     pv = RI.vocabulary("PACK", docs)
     assert any(v.startswith("the charger") for v in pv) and any(v.startswith("the gauge") for v in pv), \
@@ -262,7 +272,7 @@ def t_l3r4_removing_a_group_passage_is_caught():
     body = open(RI.MAP, encoding="utf-8").read()
     heads = re.findall(r"^### (\w+)\. (\S+), lines? (\d+)(?: to (\d+))? \((DEFINITION|CURRENT)(?:, (\w+))?\)$", body, re.M)
     pinned = [(h[0], h[1], int(h[2]), int(h[3] or h[2]), h[4], h[5] or None) for h in heads]
-    have = [(p.pid, os.path.basename(RI.DOCS[p.doc]), p.a, p.b, p.kind, p.group) for p in RI.PASSAGES]
+    have = [(p.pid, os.path.basename(RI.DOCS[p.doc]), p.a, p.b, p.kind, p.group) for p in RI.PASSAGES + RI.PASSAGES_SETTLED]
     assert pinned == have, "the passage list differs from the committed map: run reissue.py --map and review the diff"
 
 
@@ -300,8 +310,8 @@ def t_l3r4_the_recommended_answers_give_the_reissue():
     assert "4S15P lid pack" in draft, "the QMX out of the lid does not give the 4S15P lid pack"
     assert "an %s tablet in the lid bracket" % c.tablet_size() in flat and c.tablet_size() in c.stmt("REQ-011")
     assert c.array_phrase() in flat and "2S2P" in c.text("L3-OD3"), "the array is not the ruling's"
-    cell, base = c.d27()
-    assert cell in c.text("L3-OD1") and base in c.text("L3-OD1") and c.store() in flat, "the store is not D-27's"
+    cell, base = c.od1_store()
+    assert cell in c.text("L3-OD1") and base in c.text("L3-OD1") and c.store() in flat, "the store is not row L3-OD1's ruling's"
     assert "reopens" not in c.store(), "the store calls the cell reopened without row L3-OD5 answered cells"
     assert "of the %s cells: a base %s" % (cell, base) in _flat(_section(draft, "B06")), "B06 lost its cells"
     assert "HF has left the kit (owner ruling %s on row L3-OD2)" % rids["L3-OD2"] in draft
@@ -385,29 +395,70 @@ def t_l3r4_the_approval_leaves_the_reissue_current_and_unwritten():
 # ------------------------------------------------------------------------------------------------ the refusals
 def t_l3r4_refuses_while_a_row_is_undecided():
     _mod()
-    _tree_undecided()
-    r = _run([GEN, "--out-dir", tempfile.mkdtemp(prefix="l3r4-out-")])
-    assert r.returncode == 2 and "undecided" in r.stdout, "the tree's undecided rows were not refused:\n%s" % r.stdout
-    d, reg = _chain(RECOMMENDED[:3])
+    import l3pre
+    if not l3pre.tree_decided():
+        r = _run([GEN, "--out-dir", tempfile.mkdtemp(prefix="l3r4-out-")])
+        assert r.returncode == 2 and "undecided" in r.stdout, "the tree's undecided rows were not refused:\n%s" % r.stdout
+    d, reg = _chain(RECOMMENDED[:4])
     out, msg = _generate(reg, expect=2)
     assert "L3-OD3, L3-OD4 and L3-OD5 are undecided" in msg, "the refusal does not name the undecided rows: %s" % msg
     assert not os.listdir(out), "a refused run wrote a file"
 
 
-def t_l3r4_refuses_an_incoherent_set():
-    """Rulings written into a decided copy as a set the scripts would refuse: a band adopted on 1S4P, and row L3-OD1
-    rejected; the generator refuses both, naming why."""
+def t_l3r4_refuses_only_a_contradictory_set():
+    """D-26: rulings written into a decided copy. Row L3-OD2 standing with row L3-OD1 rejected sets requirements that
+    cannot both hold, and the generator refuses it, naming why; a band-less adopt on 1S4P, which the scripts once refused,
+    is a valid target and generates."""
     _mod()
     d, reg = _chain(RECOMMENDED)
     raw = open(reg, encoding="utf-8").read()
-    for a, b, why in (('decides: "L3-OD3:2s2p"', 'decides: "L3-OD3:1s4p"', "without row L3-OD3 answered 2s2p"),
-                      ('decides: "L3-OD1:approve"', 'decides: "L3-OD1:reject"', "row L3-OD1 answered reject")):
-        assert raw.count(a) == 1, "the fixture does not carry %s once" % a
-        bad = os.path.join(d, "incoherent.yaml")
-        open(bad, "w", encoding="utf-8").write(raw.replace(a, b))
-        out, msg = _generate(bad, expect=2)
-        assert "not coherent" in msg and why in msg, "the incoherent set was not refused for its reason: %s" % msg
-        assert not os.listdir(out), "a refused run wrote a file"
+    a, b = 'decides: "L3-OD1:approve"', 'decides: "L3-OD1:reject"'
+    assert raw.count(a) == 1, "the fixture does not carry %s once" % a
+    bad = os.path.join(d, "contradictory.yaml")
+    open(bad, "w", encoding="utf-8").write(raw.replace(a, b))
+    out, msg = _generate(bad, expect=2)
+    assert "cannot both hold" in msg and "row L3-OD2 answered" in msg, "the contradiction was not refused for its reason: %s" % msg
+    assert not os.listdir(out), "a refused run wrote a file"
+    d2, reg2 = _chain([s_ if s_[0] != "od_l3_3.py" else ("od_l3_3.py", "1s4p") for s_ in RECOMMENDED])
+    _generate(reg2)
+
+
+def t_l3r4_a_runtime_answer_other_than_72_hours_is_refused():
+    """D-27: row L3-OD7's answers other than 72-required change M1's runtime or its store, whose passages are mapped with
+    the runtime comparison's figures; a decided copy whose row L3-OD7 ruling is rewritten to 48 hours, with the rows
+    prepared for 72 hours standing, is refused as requirements that cannot both hold, and nothing is written. The map
+    names both answers as not mapped yet."""
+    RI = _mod()
+    d, reg = _chain(RECOMMENDED)
+    raw = open(reg, encoding="utf-8").read()
+    a = 'decides: "L3-OD7:72-required"'
+    assert raw.count(a) == 1, "the fixture does not carry %s once" % a
+    bad = os.path.join(d, "runtime48.yaml")
+    open(bad, "w", encoding="utf-8").write(raw.replace(a, 'decides: "L3-OD7:48-required-72-desired"'))
+    out, msg = _generate(bad, expect=2)
+    assert "L3-OD7" in msg and "cannot both hold" in msg, "a 48 hour runtime beside rows prepared for 72 was not refused: %s" % msg
+    assert not os.listdir(out), "a refused run wrote a file"
+    m = open(os.path.join(os.path.dirname(GEN), "PASSAGE-MAP.md"), encoding="utf-8").read()
+    for o in ("`48-required-72-desired`", "`72-required` with HF listening, an external store or the tablet charged"):
+        assert "| L3-OD7 | %s | not mapped yet" % o in m, "the map does not name %s as not mapped" % o
+    assert RI.RUNTIME_MAPPED == ("72-required",)
+
+
+def t_l3r4_a_rejected_store_gives_its_own_reissue():
+    """D-26: row L3-OD1 rejected is valid: the generator writes the re-issue with row L3-OD2 not applicable, D-06's one
+    pack named as kept with its feasibility item FI-01, no two-pack passage restated and no one-pack circuit statement
+    read as the design before a ruling that was not given."""
+    RI = _mod()
+    d, reg = _chain(REJECTED)
+    out, msg = _generate(reg)
+    draft, rec, rids = _common(reg, out, rows=[r for r in RI.ROWS if r != "L3-OD2"])
+    c, applied, cur = _proposed(RI, reg)
+    got = {p.pid for k in applied for p, o, n in applied[k][1]}
+    assert {"C07", "C17", "C18", "B08", "B15"} <= got, "the reject variants are not restated: %s" % sorted(got)
+    assert not (got & RI.APPROVE_ONLY), "a two-pack passage is restated on a reject: %s" % sorted(got & RI.APPROVE_ONLY)
+    assert not [p for p in cur if p.group in ("PACK", "HF")], "a group that needs row L3-OD1 approved or row L3-OD2 fired"
+    flat = _flat(draft)
+    assert "| L3-OD2 | not applicable |" in draft and "feasibility item FI-01" in flat and "kept by owner ruling" in flat
 
 
 def _docs_copy():
@@ -463,7 +514,13 @@ def t_l3r4_layer_status_row_brought_current_on_a_copy():
     t = open(page, encoding="utf-8").read()
     sys.path.insert(0, REC)
     import apply_layer_status_l3_r4 as A
-    if A.MARK in t:
+    if A.MARK not in t and A.OLD not in t:
+        # round 5's closure restated the gate table again (apply_layer_status_l3_r5b.py): the script is exercised on the
+        # page as it stood when it was written, main at 8fec0733
+        r = subprocess.run(["git", "-C", ROOT, "show", "8fec0733:v2/docs/handover/LAYER-STATUS.md"], capture_output=True)
+        if r.returncode != 0: raise Skip("the page this script was written for is not in this repository")
+        t = r.stdout.decode("utf-8")
+    elif A.MARK in t:
         assert A.OLD not in t and A.CHECKER not in t, "the page carries an old text beside the new one"
         r = _run([LSTAT, "--check"])
         assert r.returncode == 2 and "has run" in r.stdout, "a second run was not refused:\n%s" % r.stdout

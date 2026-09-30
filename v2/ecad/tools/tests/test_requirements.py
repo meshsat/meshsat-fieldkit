@@ -699,17 +699,28 @@ def t_an_open_blocker_and_what_it_holds_never_read_pass():
 
 def t_the_real_blockers_cover_the_core_functions_the_review_names():
     """ZEROIZE, EMCON, the failover fabric, power and thermal, battery protection and decoupling: each open core
-    function the review of 26 September 2026 names has an open blocker on its own page."""
+    function the review of 26 September 2026 names has an open core blocker on its own page. Every feasibility record
+    is open (never PASS), and one that blocks a core record is itself core and a BLOCKER; one that blocks only records
+    deferred from prototype 1 (FEA-008, the cell and thermal obligation of layer 3's closure, D-29) may be deferred."""
     need(R.REQUIREMENTS, "no requirements registry in this tree")
     req = R.load_requirements()
+    by = {r["id"]: r for r in req["records"]}
     fea = [r for r in req["records"] if r["kind"] == "feasibility"]
-    pages = {r["feasibility_page"] for r in fea}
-    for want in ("v2/docs/feasibility/ZEROIZE.md", "v2/docs/feasibility/EMCON.md",
-                 "v2/docs/feasibility/FAILOVER-FABRIC.md", "v2/docs/feasibility/POWER-THERMAL.md",
-                 "v2/docs/feasibility/DECOUPLING.md", "v2/docs/review-packets/battery/REVIEW-REQUEST.md"):
-        assert want in pages, "no feasibility blocker on %s" % want
+    review = ("v2/docs/feasibility/ZEROIZE.md", "v2/docs/feasibility/EMCON.md",
+              "v2/docs/feasibility/FAILOVER-FABRIC.md", "v2/docs/feasibility/POWER-THERMAL.md",
+              "v2/docs/feasibility/DECOUPLING.md", "v2/docs/review-packets/battery/REVIEW-REQUEST.md")
+    for want in review:
+        on = [r for r in fea if r["feasibility_page"] == want]
+        assert on, "no feasibility blocker on %s" % want
+        for r in on:
+            assert r["prototype_1"] == "core" and r["release_effect"] == "BLOCKER", r["id"]
     for r in fea:
-        assert r["prototype_1"] == "core" and r["release_effect"] == "BLOCKER" and r["evidence_result"] != "PASS", r["id"]
+        assert r["evidence_result"] != "PASS", r["id"]
+        blocked_core = [b for b in r.get("blocks") or [] if (by.get(b) or {}).get("prototype_1") == "core"]
+        if r["prototype_1"] == "core" or blocked_core:
+            assert r["prototype_1"] == "core" and r["release_effect"] == "BLOCKER", (r["id"], blocked_core)
+        else:
+            assert r["release_effect"] in ("BLOCKER", "MUST_JUSTIFY") and r.get("blocks"), r["id"]
 
 
 def t_no_real_record_reads_pass_on_evidence_that_does_not_count():

@@ -482,6 +482,12 @@ REQ_STATUS = ("DEFINED", "TBD", "SUPERSEDED", "CONFLICT_OPEN", "CONFLICT_RESOLVE
               "FEASIBILITY_CLOSED")
 REQ_RESULTS = ("PASS", "FAIL", "INCONCLUSIVE", "NOT_JUDGED", "NOT_YET_TESTED", "NOT_APPLICABLE")
 REQ_EFFECTS = EFFECTS + ("NONE",)
+# MANDATORY REQUIREMENTS AND DESIGN OBJECTIVES (the owner's clarification D-28, 30 September 2026: "Every mandatory
+# requirement and design objective must be distinguishable and have acceptance conditions and a verification method").
+# A record is MANDATORY unless it carries `obligation: OBJECTIVE`. An objective is a requirement record whose shortfall is
+# reported and carried as a design risk, never a release gate: it is not a BLOCKER, and it states the operating profile
+# it is judged under (`objective_profile`), so its modelling assumptions stay apart from owner-approved restrictions.
+OBLIGATION = ("MANDATORY", "OBJECTIVE")
 PROTOTYPE_1 = ("core", "deferred")
 # NEED_DEFAULT: the record follows its need's place in the core; NAMED: an owner ruling names the function; SESSION:
 # taken by the session under the owner's standing rule of 26 September 2026 (a `session_choices` entry says which).
@@ -902,7 +908,15 @@ def validate_requirements(req=None, path=None, root=None, rules=None, decisions=
         vocab("verification_method", METHODS, many=True); vocab("verification_phase", PHASES)
         vocab("final_phase", PHASES); vocab("status", REQ_STATUS); vocab("evidence_result", REQ_RESULTS)
         vocab("release_effect", REQ_EFFECTS); vocab("source_check", SOURCE_CHECK); vocab("rule_coverage", RULE_COVERAGE)
-        vocab("prototype_1_basis", P1_BASIS); vocab("evidence_phase", PHASES)
+        vocab("prototype_1_basis", P1_BASIS); vocab("evidence_phase", PHASES); vocab("obligation", OBLIGATION)
+        if r.get("obligation") == "OBJECTIVE":
+            if kind != "requirement": errs.append("%s: only a requirement is a design objective, not a %s" % (rid, kind))
+            if r.get("release_effect") == "BLOCKER":
+                errs.append("%s: a design objective is reported and carried as a design risk, never a BLOCKER (D-28)" % rid)
+            if len(str(r.get("objective_profile") or "").strip()) < 20:
+                errs.append("%s: a design objective states the operating profile it is judged under (objective_profile)" % rid)
+        elif r.get("objective_profile") is not None:
+            errs.append("%s: an objective_profile on a record that is not a design objective" % rid)
         if not r.get("verification_method"): errs.append("%s: no verification method" % rid)
         if r.get("final_phase") in PHASES and r.get("verification_phase") in PHASES \
            and PHASES.index(r["final_phase"]) < PHASES.index(r["verification_phase"]):
