@@ -1,0 +1,78 @@
+# The files an electronics engineer needs for the power-architecture review (MESHSAT-1357, layer 4, 1 October 2026).
+# One repository-relative path a line: TRACKED (committed) or IGNORED (present in the working tree, kept out of git:
+# a build output, or a maker's sheet held back by its terms), then the reason. Start with PACKET-POWER-ARCHITECTURE.md.
+# An IGNORED schematic PDF is regenerated from its committed schematic source; a held-back sheet is fetched by
+# v2/docs/records/l3batt/fetch_held_back.py, which checks its sha256.
+
+
+# THIS RECORD SET (v2/docs/records/l4e/)
+v2/docs/records/l4e/PACKET-POWER-ARCHITECTURE.md                     TRACKED  this packet, the entry point: the review questions, the power path as drawn, the decisions
+v2/docs/records/l4e/PACKET-FILES.txt                                 TRACKED  this list
+v2/docs/records/l4e/L4-ENERGY-ARCHITECTURE.md                        TRACKED  the comparison of A1 and A2 in one table, the power-path decisions with remedy, reason and closure
+v2/docs/records/l4e/l4e_replay.py                                    TRACKED  the replay: reproduces the checked records, the service ledger, O-2's enumerated bound with its refusal
+v2/docs/records/l4e/l4e_replay.out                                   TRACKED  its output, cited as 'out N' (section 11: O-2's rows, setting, corners and consequence)
+v2/docs/records/l4e/README.md                                        TRACKED  files, run order and the checks the replay makes
+v2/docs/records/l4e/ASTRA-L4E1.md                                    TRACKED  the collaborator's L4-E1 assessment that directed this work (an AI assessment)
+v2/docs/records/l4e/checks/astra-check-l4e2-1.md                     TRACKED  the first check: the stopped-hour double count (B1), O-2's power bound (B2)
+v2/docs/records/l4e/checks/astra-check-l4e2-2.md                     TRACKED  the recheck: the omitted line-regulation row (B2 again)
+v2/docs/records/l4e/checks/check-l4e2-3.md                           TRACKED  the coordinator's verification of O-2's final bound; the acceptance
+
+# REGISTRY
+v2/ecad/tools/pcb_requirements.yaml                                  TRACKED  requirements and owner rulings: REQ-014, REQ-015, REQ-016, REQ-017, REQ-046, REQ-072, FEA-008; D-06, D-28, D-29, D-32, D-33, D-34
+v2/ecad/tools/pcb_rules.yaml                                         TRACKED  the rules: TRN-001 (every exposed port protected), PWR-001
+
+# LAYER 3 (the accepted requirements baseline)
+v2/docs/handover/layer3/REQUIREMENTS-L3-R2.md                        TRACKED  the requirements page: design risks DR-01 to DR-07, CFL-017's cell modes LO-01a to LO-01h
+v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md              TRACKED  the owner's Current brief at its top: the fixed constraints
+
+# ENERGY BASIS, FEASIBILITY AND POWER PATH
+v2/docs/records/l3plane/ENERGY-BASIS.md                              TRACKED  the three power-path cases, the WE inputs, VBUS20's range, the three undocumented efficiencies
+v2/docs/records/l3feas/L3-FEASIBILITY.md                             TRACKED  the solar interface: O-1 to O-7 with their closures
+v2/docs/records/r11dep/R11-DEPENDENCY.md                             TRACKED  board A's charge path: findings A-1, A-2, B-1 to B-5, C-1 to C-9, bench rows 7b
+v2/docs/records/r11dep/r11_dep.out                                   TRACKED  its electrical figures: limit bands, L1 peaks, FET and bulk-can figures
+v2/docs/records/l3r5/checks/l3batt-check-3/CHECK-3.md                TRACKED  R138's finding (minor 1): the trip at 1.92 to 2.26 A
+v2/docs/records/l3batt/runtime.out                                   TRACKED  the Layer 3 runtime figures (the legacy model metric), reproduced by the replay
+v2/docs/records/l3batt/SHORTLIST.md                                  TRACKED  the cells against in-case fit; no in-case upgrade found
+v2/docs/records/a1elec/TOPOLOGY.md                                   TRACKED  A2's drafted lid path: U3B, LM74700-Q1, LM5069 (hypothetical, on no board)
+v2/docs/records/a1mech/README.md                                     TRACKED  the lid pack's places, mass, stability and the base pockets
+v2/docs/records/a1solar/ARRAY.md                                     TRACKED  panel wirings, cold open-circuit voltages, the panels REQ-016 admits
+v2/docs/records/energy/energy_inputs.yaml                            TRACKED  the energy model's inputs: the chain, the pack, the window, with sources
+v2/docs/records/rv-pwr/pwr_budget.out                                TRACKED  the load states: PS-IDLE-SPEC, key-down and all-transmit peaks
+v2/docs/HW-FW-CONTRACT.md                                            TRACKED  FW-A16, the IIN_HOST rule that scales with VIN_RAW (A-2's remedy)
+v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md                   TRACKED  the ports' protection chains; PV_IN: D4 SMCJ28A against the 35 V bulk (question 7)
+v2/docs/review-packets/battery/README.md                             TRACKED  the separate battery and protection review packet (board P, the gauge)
+v2/docs/review-packets/battery/THERMAL-COORDINATION.md               TRACKED  the pack's temperature ladder: charge and discharge windows as enforced
+
+# BOARDS A (power, the charge path, the outlet), E (the dock, the solar stage and vehicle entry), P (the pack)
+v2/ecad/tools/gen_sch_a.py                                           TRACKED  board A's generator: every part, value and declared rail with its reasoning
+v2/ecad/tools/gen_sch_e.py                                           TRACKED  board E's generator
+v2/ecad/pcb-a-power-a23/out/pcb-a-power.net                          TRACKED  board A's committed netlist, the one the records read (sha256/16 6c40250c47195ebb)
+v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_sch                        TRACKED  board A's schematic source
+v2/ecad/pcb-a-power-a23/out/pcb-a-power-schematic.pdf                IGNORED  board A's schematic PDF, a build output: regenerate with build_sch.sh if absent
+v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net                           TRACKED  board E's committed netlist (sha256/16 2ed95a0e8069ebf8)
+v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_sch                         TRACKED  board E's schematic source
+v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-schematic.pdf                 IGNORED  board E's schematic PDF, a build output
+v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net                             TRACKED  board P's netlist: the pack's protection and gauge
+
+# MAKERS' DATASHEETS (provenance of each in v2/vendor/sources.txt)
+v2/vendor/sources.txt                                                TRACKED  where each sheet came from, with its sha256 and publication note
+v2/vendor/power/lt8705a.pdf                                          TRACKED  LT8705A (board E, U5), 8705af: EC pp.3 to 6, FBIN p.29, current limiting pp.30 and 31
+v2/vendor/ti/lm5176-datasheet.pdf                                    TRACKED  LM5176 (board A, U2 front end and U19 outlet stage), SNVSAI1D: VSNS p.7, limit p.17, MODE p.20, application p.21
+v2/vendor/ti/bq25731-datasheet.pdf                                   TRACKED  BQ25731 (board A, U3; U3B in A2), SLUSE66A: 9.3.5 pp.25 and 26, IIN_HOST p.80, Figure 10-1 p.83
+v2/vendor/ti/ti-tps25740.pdf                                         TRACKED  TPS25740A (board A, U18, the outlet's PD controller; R138 is its ISNS shunt), SLVSDG8B: 8.3.8.2 p.31
+v2/vendor/ti/ti-lm5069.pdf                                           TRACKED  LM5069 (board E's vehicle entry U6; A2's lid join), SNVS452G p.6
+v2/vendor/ti/ti-lm74700-q1.pdf                                       TRACKED  LM74700-Q1 (the vehicle entry; A2's lid join), SNOSD17G p.6
+v2/vendor/power/littelfuse-smcj-series-tvs.pdf                       TRACKED  SMCJ series (board E, D4 SMCJ28A on the solar entry)
+v2/vendor/power/coilcraft-xal1010.pdf                                TRACKED  XAL1010 (board A: L1 XAL1010-103ME, L2 XAL1010-472ME)
+v2/vendor/power/ti-csd19532q5b-n-fet.pdf                             TRACKED  CSD19532Q5B (board A, Q2 to Q5, the front end's FETs)
+v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf                      TRACKED  Panasonic EEHZK hybrid polymer (VBUS20's bulk, B-4)
+v2/vendor/passives/milliohm-hojlr2512-series.pdf                     TRACKED  HoJLR2512 (board A, R11, the front end's average-current sense)
+v2/vendor/solar/renogy-rng-100db-h-flexible-100w-datasheet-2018.pdf  TRACKED  the held panel (not REQ-016-compliant at -20 C; O-1)
+v2/vendor/battery/samsung-35e-orbtronic.pdf                          TRACKED  Samsung INR18650-35E Ver. 1.1: the cell's windows (3.12) and ratings
+v2/vendor/battery/samsung-35e-akkuzentrum.pdf                        TRACKED  Samsung INR18650-35E Version 1.0: the older revision FEA-008 compares
+v2/vendor/battery/samsung-35e-conrad.pdf                             TRACKED  Samsung INR18650-35E technical report: the energy model's cell data
+v2/vendor/battery/molicel-inr21700-p45b-v1.2.pdf                     TRACKED  Molicel P45B, a shortlisted 21700 cell
+v2/vendor/battery/held/samsung-inr21700-50e-v1.0.pdf                 IGNORED  Samsung 50E, a shortlisted 21700 cell; held back by its terms (fetch_held_back.py)
+v2/vendor/battery/held/lg-inr21700-m50lt-2020-08-27.pdf              IGNORED  LG M50LT, a shortlisted 21700 cell; held back by its terms (fetch_held_back.py)
+
+# 58 paths: 54 TRACKED, 4 IGNORED.
