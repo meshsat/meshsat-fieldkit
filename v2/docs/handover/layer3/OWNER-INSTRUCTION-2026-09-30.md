@@ -33,9 +33,11 @@ claim), its clamp part an engineering pick; CHO-002, the duplicated WiFi link ca
 engineering selection. D-06's one 4S3P pack stands; Option A(i)'s two packs and the 2S2P solar stage are layer 4
 proposals (row L3-OD1 closed as layer 4 architecture under D-21 and D-28).
 
-**The honest state (D-28, D-31).** The present candidates miss the 48 to 72 hour objective even without tablet
-charging: the studied in-case store stops the kit at 05 UTC of the first night (11 to 23 hours), as drawn and on the
-hypothetical corrected path, and D-06's pack alone runs 2.52 h on battery; REQ-072 reads FAIL, design risk DR-01, layer
+**The honest state (D-28, D-31).** The present candidates miss the 48 to 72 hour objective even without tablet charging:
+the studied in-case store stops the kit at 05 UTC of the first night (11 to 23 hours), as drawn and on the hypothetical
+corrected path (historical results of proposal P-03's array, 400 Wp in 2S2P into a 200 W stage, which REQ-016 does not
+admit, the unserved energy understated; the retained window's result is layer 4 task L4-E2's; L3-R01), and D-06's pack
+alone runs 2.52 h on battery; REQ-072 reads FAIL, design risk DR-01, layer
 4. Open design obligations, all layer 4's: board A's power path as drawn fails, its corrections hypothetical and not
 implemented (DR-02); the outlet's R138 trips below its 3 A contracts (DR-03); the solar interface (DR-04); three
 undocumented efficiencies (DR-05); the cell and thermal design against the temperature requirements with the pack
