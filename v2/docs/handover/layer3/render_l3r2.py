@@ -179,6 +179,27 @@ def filed(data, key):
     return v
 
 
+def handover_checks(data):
+    """The filed checks of L3-R2 (l3r2.yaml `independent_check`), each verdict verified against its record's first line:
+    ACCEPTED only over 'accepted: yes' and NOT_ACCEPTED only over a first line that says no ('accepted: no', or CHECK-2's
+    'accepted-so-far: no'); any other pairing is refused (CHECK-3 of L3-R2, B1: a check is verified, never trusted)."""
+    chks = filed(data, "independent_check") or []
+    for c in chks:
+        first = open(os.path.join(ROOT, str(c["record"])), encoding="utf-8").readline().strip().lower()
+        v = str(c.get("verdict")).upper()
+        ok = first == "accepted: yes" if v == "ACCEPTED" else (
+            v == "NOT_ACCEPTED" and first in ("accepted: no", "accepted-so-far: no"))
+        if not ok:
+            raise RenderError("l3r2.yaml's independent_check reads %s for %s, whose first line is %r" %
+                              (c.get("verdict"), c["record"], first))
+    return chks
+
+
+def handover_accepted(data):
+    chks = handover_checks(data)
+    return bool(chks) and str(chks[-1].get("verdict")).upper() == "ACCEPTED"
+
+
 def basis_ok(data, key="energy_basis", root=None):
     """(True, '') when `key` (energy_basis, or power_path_check of D-24) names its record, outputs and check, every file
     held at its sha256/16 and byte identical to the file of that path at the tip its accepted check checked, and the check
@@ -298,8 +319,7 @@ def closure_state(item, req, dec, data):
         if reissue_ok(req, data, dec)[0]: return "CLOSED"
         return "OPEN (the session prepares the re-issue for the owner's approval)" if all(r in dec for r in rows) else st
     if iid == "L3-C27":
-        chks = filed(data, "independent_check") or []
-        return "CLOSED" if chks and str(chks[-1].get("verdict")).upper() == "ACCEPTED" else st
+        return "CLOSED" if handover_accepted(data) else st
     if iid == "L3-C28": return "CLOSED" if {"D-21", "D-23", "D-24", "D-25"} <= rulings else st
     if iid == "L3-C30": return "CLOSED" if basis_ok(data)[0] else "OPEN (the checked basis is not filed)"
     if iid == "L3-C31":
@@ -330,8 +350,8 @@ def gate(req, dec, data, h3):
     reissued, reissue_why = reissue_ok(req, data, dec)
     ran = {"D-21", "D-23", "D-24", "D-25"} <= rulings
     g3 = not open_cfl and not fail_cfl and not tbd and not unc and reissued and ran
-    chks = filed(data, "independent_check") or []
-    g4 = bool(chks) and str(chks[-1].get("verdict")).upper() == "ACCEPTED"
+    chks = handover_checks(data)
+    g4 = handover_accepted(data)
     return [
         ("Target unambiguous", g1, "rows L3-OD1 to L3-OD4 and L3-OD6 decided on a combination the evidence covers, the "
          "energy basis filed: decided %s; coherence %s; energy basis %s" % (
@@ -348,7 +368,8 @@ def gate(req, dec, data, h3):
              ", ".join(tbd) or "none", ", ".join(unc) or "none", "yes" if reissued else "no (%s)" % reissue_why,
              "yes" if ran else "no")),
         ("An independent check accepts the handover", g4,
-         "; ".join("%s (%s)" % (c.get("record"), c.get("verdict")) for c in chks) if chks else "not held yet (closure item L3-C27)"),
+         "; ".join("%s (%s%s)" % (c.get("record"), c.get("verdict"), ", " + p(c["scope"]) if c.get("scope") else "")
+                   for c in chks) if chks else "not held yet (closure item L3-C27)"),
     ]
 
 
@@ -368,15 +389,53 @@ def target_lines(req, data, dec, g1, heading):
     return L + findings_lines(data)
 
 
-def facts_lines(data):
+def item_state(req, iid):
+    """('closed', commit) when the registry's closed_items holds `iid`, ('open', '') when its open_items does, else
+    ('absent', '')."""
+    for x in req.get("closed_items") or []:
+        if x["id"] == iid: return "closed", str(x.get("closed_by", "")).replace("commit ", "")[:8]
+    if any(x["id"] == iid for x in req.get("open_items") or []): return "open", ""
+    return "absent", ""
+
+
+def m1_figures_clause(req, data):
+    """The M1 figures' state, rendered from the files and the registry (CHECK-5 of L3-R2, minor 1): HELD for S-127 while
+    the basis or its check is not filed and bound, else the checked basis's, bound to its tip, with S-127's closure."""
+    st, by = item_state(req, "S-127")
+    if basis_ok(data)[0] and basis_ok(data, "power_path_check")[0]:
+        v = data["energy_basis"]
+        return ("every M1 energy figure on these pages is the checked basis's, bound to the tip `%s` its accepted check "
+                "names (`%s`)%s" % (str(v["tip"])[:12], v["check"],
+                                    "; S-127 is closed (commit %s)" % by if st == "closed" else "; S-127 reads %s" % st.upper()))
+    return "every M1 energy figure stays HELD for the checked second round (S-127)"
+
+
+def l3_open_clause(req, lay):
+    """Which open items belong to layer 3, from open_items_layer and the registry's open_items."""
+    ids = [("the owner's " if it.get("class") == "OWNER_ACTION" else "") + it["id"] for it in req["open_items"]
+           if str((lay.get(it["id"]) or {}).get("layer")) == "3"]
+    return "Layer 3 holds %s" % (("only " + ", ".join(ids)) if ids else "no open item")
+
+
+def s127_clause(req, data):
+    """The energy basis's item stated from the registry and the files (CHECK-5 of L3-R2, minor 1)."""
+    st, by = item_state(req, "S-127")
+    if st == "closed":
+        return ("the energy basis S-127 is closed (commit %s)%s" %
+                (by, " and no row is held for it" if not any(held(d["id"], {}, data) for d in data["decisions"])
+                 else ", yet a row still reads HELD"))
+    return "the energy basis S-127 is layer 4's engineering input that rows L3-OD1, L3-OD2 and L3-OD4 wait on (D-22)"
+
+
+def facts_lines(data, req):
     """The facts the first check of the energy basis confirmed (l3r2.yaml `facts`), with the checks filed."""
     chks = filed(data, "energy_basis_checks") or []
     if not data.get("facts"): return []
     L = [p("**Facts confirmed by the check of the energy basis** (%s). Used now; none is a figure of the cases the "
-           "check did not accept, and every M1 energy figure stays HELD for the checked second round (S-127)." %
-           "; ".join("[%s](%s), of %s, %s" % (os.path.basename(os.path.dirname(c["record"])) + "/" + os.path.basename(c["record"]),
+           "check did not accept, and %s." %
+           ("; ".join("[%s](%s), of %s, %s" % (os.path.basename(os.path.dirname(c["record"])) + "/" + os.path.basename(c["record"]),
                                              os.path.relpath(os.path.join(ROOT, c["record"]), HERE).replace(os.sep, "/"),
-                                             c.get("of"), c.get("verdict")) for c in chks)), ""]
+                                             c.get("of"), c.get("verdict")) for c in chks), m1_figures_clause(req, data))), ""]
     for f in data["facts"]:
         L += ["- **%s, %s.** %s (%s)" % (f["id"], p(f["title"]), p(f["text"]), "; ".join(p(s) for s in f.get("source") or []))]
     return L + [""]
@@ -625,7 +684,7 @@ def page_recon(req, data, dec, h3, root):
          "## (a) The current target configuration", ""]
     g1 = gate(req, dec, data, h3)[0][1]
     L += target_lines(req, data, dec, g1, rows_heading(data))
-    L += facts_lines(data)
+    L += facts_lines(data, req)
     L += basis_figures_lines(data)
     L += four_cases_lines(data)
     L += ["**Under the other answers of each row:**", ""]
@@ -686,9 +745,8 @@ def page_recon(req, data, dec, h3, root):
     for r in req["records"]:
         for w in r.get("waits_on") or []: waited.setdefault(w, []).append(r["id"])
     L += ["", "### Open items, by the layer each belongs to", "",
-          p("%d open items. Layer 3 holds only the owner's M-02; the energy basis S-127 is layer 4's engineering input that "
-            "rows L3-OD1, L3-OD2 and L3-OD4 wait on (D-22); everything else is downstream work, an outside step or tooling, "
-            "and holds no requirement's statement." % len(req["open_items"])), "",
+          p("%d open items. %s; %s; everything else is downstream work, an outside step or tooling, and holds no "
+            "requirement's statement." % (len(req["open_items"]), l3_open_clause(req, lay), s127_clause(req, data))), "",
           "| Item | Class | Layer | Why | Records waiting on it | Disposition |", "|---|---|---|---|---|---|"]
     for it in sorted(req["open_items"], key=lambda x: (str((lay.get(x["id"]) or {}).get("layer", "?")), x["id"])):
         e = lay.get(it["id"]) or {}
@@ -759,7 +817,7 @@ def page_spec(req, data, dec, h3, root):
                                                "IN_PROGRESS (the conditions above that read NOT MET)")), ""]
     # target
     L += ["## 3. The target configuration and the pending owner decisions", "",
-          ] + target_lines(req, data, dec, g[0][1], rows_heading(data)) + facts_lines(data) + [
+          ] + target_lines(req, data, dec, g[0][1], rows_heading(data)) + facts_lines(data, req) + [
           "| Row | Question | Options | Recommendation | State |", "|---|---|---|---|---|"]
     for d in data["decisions"]:
         L.append("| %s | %s | %s | %s | %s |" % (d["id"], cell(d["question"]), option_cell(d, dec), cell(d["recommendation"]),
