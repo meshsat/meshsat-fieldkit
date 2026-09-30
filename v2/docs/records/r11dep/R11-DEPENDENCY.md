@@ -1,276 +1,388 @@
-# Board A's R11: the held circuit and the change Option A(i) depends on (stream r11dep, MESHSAT-1357)
+# Board A's charge path: the circuit as drawn, the resistor-only proposal, and the corrected path (stream r11dep, MESHSAT-1357)
 
-The owner's instruction of 30 September 2026: "Keep the current-limit resistor dependency explicit. Check the proposed
-setting, tolerances and consequences for the affected power path, component ratings and thermal margins using manufacturer
-sources. Distinguish performance of the held circuit from performance conditional on the proposed change. Track
-implementation and physical verification separately."
+**Second issue, 30 September 2026.** It answers the independent check CHECK-3 of `4e9fa869`, which read "accepted: no" on
+two blocking items and seven minors (section 9 maps each to its answer). It also carries the owner's amendments of the same
+day. They are quoted here because they set what this page is:
 
-**Prototype design, desk arithmetic.** Nothing here is built, powered or measured. No generator is edited, no requirement
-changes, nothing is implemented. Every number comes from `r11_dep.py` and its output `r11_dep.out` (section numbers below
-are the output's), and carries its basis:
-- **MAKER (page)**: a maker's document in `v2/vendor/`, read from its text layer, or by pixel for a plotted curve;
+> "The reported findings make this a power-path correction, potentially involving components, sensing, layout and thermal
+> design. Stop presenting the 6.2 mOhm substitution as a sufficient solution. Keep findings provisional until independently
+> checked, and distinguish: the circuit as drawn; the resistor-only proposal; any hypothetical corrected power path used for
+> feasibility calculations."
+
+> "Classify findings accurately. Separate confirmed existing defects, defects introduced by the proposal, and missing
+> evidence. [...] Record necessary engineering corrections with measurable closure criteria. Component selection and Kelvin
+> routing are engineering tasks."
+
+**Every finding here is PROVISIONAL until the next independent check.** This page is the author's record, AI arithmetic, not
+a qualified review. It is **prototype design**: nothing is built, powered or measured. No generator is edited, no requirement
+is changed, and nothing is implemented.
+
+**Labels.** Every figure carries its basis:
+- **MAKER (page)**: a maker's document in `v2/vendor/`;
 - **NETLIST**: board A's or board E's committed netlist;
-- **MODELED**: the energy model's records;
+- **MODELED**: the energy model;
 - **INFERRED**: a stated method applied to the above;
 - **ASSUMPTION**: a figure no document gives.
 
-This page is the author's record. It is **not** the independent check, which follows it.
+**Sources.**
+- `r11_dep.py` prints `r11_dep.out`: the electrical figures. Section numbers `.out N` below are that file's.
+- `../l3plane/three_cases.py` prints `three_cases.out`: the energy of each case. It reads this stream's bands.
 
-Run from the repository root: `python3 v2/docs/records/r11dep/r11_dep.py > v2/docs/records/r11dep/r11_dep.out`.
-It is deterministic, and it refuses with exit 3 if any pinned input differs.
+## 0. In short
 
-## 1. What R11 is (NETLIST, `.out` 1)
+- **The circuit as drawn cannot deliver what its own charge design asks, and it fails M1.** R11 is 10 mOhm and the charger
+  U3 is set to 4.15 A. The front end's current limit then sits at 4.21 to 5.81 A. M1 fails on every lid option by 326.6 to
+  522.4 Wh on the reference day, and the model carries none of 864 past September windows.
+- **The derated variant fixes one thing.** It sets U3 at 4.05 A so that the two current limits agree. It fixes nothing else,
+  and M1 still fails on every lid, by 355.5 to 551.5 Wh.
+- **The resistor-only proposal (R11 6.2 mOhm, U3 6.2 A, nothing else changed) is not a solution.** It clears the front end's
+  limit above U3 by 0.378 A, as CHECK-3 closed it. But it introduces five defects in the power path (section 2b), and several
+  pieces of evidence are missing (section 2c).
+  - **Its energy is INCONCLUSIVE.** It lies somewhere between two bounds:
+    - **failing by 622 to 1080 Wh**, if the input bus collapses whenever the sun gives less than U3 asks;
+    - **the corrected path's figures.**
+- **The corrected path is HYPOTHETICAL.** With every correction of section 2 closed, the model passes the tablet-out and
+  QMX-out lids on the mean day at nominal inputs, and at the worst inputs only conditionally. It carries 19 to 27 percent of
+  past Septembers. **None of this is demonstrated capability.**
+- **No owner decision is needed now.** Every correction is engineering work. Three remedies would change a requirement if an
+  engineer chose them; they are named with their consequences in section 6.
 
-- **R11** is 10 mOhm, 1 %, 2512, between FE_OUT and VBUS20. It is the LM5176 U2's **average** current sense (ISNS), in
-  series with the front end's output.
-- **The ISNS filter:** R160 and R161 (100 Ohm) and C128 (1 nF) take it to U2 pins 14 and 13.
-- **R12** (5 mOhm) is a different resistor: the cycle-by-cycle CS sense.
-- **The switching parts:** L1 is an XAL1010-103ME. Q2 to Q5 are CSD19532Q5B.
-- **VIN_RAW's parts:** C11 and C12 (10 uF 100 V X7R 1210) and the spring pins J_VR1 to J_VR4. Board A's VIN_RAW has **no fuse**.
-- **Other R11 facts:**
-  - U2's BIAS pin is on VBUS20, so its supply current also passes R11.
-  - MODE is strapped to VCC, which gives no hiccup.
-- **Board E's sources:**
-  - the vehicle entry: F1 and the LM5069 U6;
-  - the LT8705A tracker: R5 5 mOhm, its F2 on the panel input.
-  - They are ORed through U4 and Q2.
-- 13 of 13 netlist facts hold.
+## 1. The three cases, and the derated variant
 
-**The part (MAKER).** The held R11 is bought as C2903468. LCSC's answer (`inputs/lcsc-C2903468-2026-09-30.json`) names it
-Milliohm **HoJLR2512-3W-10mR-1%**. The maker's sheet (`v2/vendor/passives/milliohm-hojlr2512-series.pdf`, filed with this
-record) gives:
-- 3 W from 0.5 to 500 mOhm (p.1);
-- TCR +-50 ppm/K from 2 to 500 mOhm (p.2);
-- a range of -50 to +170 C, derated linearly from 70 C (100 %) to 170 C (0 %) (p.2);
-- rated current sqrt(P/R) (p.3);
-- a short-time overload of 5 x rated power for 5 s, and a load life of 1000 h at rated power and 70 C, each within +-1 % (p.4);
-- a pad drawing that shows separate sensing traces (p.3).
+| Case | What it is | Its standing |
+|---|---|---|
+| **AS DRAWN** | R11 10 mOhm (NETLIST), U3 IIN_HOST 4.15 A (entry E1, board A as generated) | the circuit of record; its defects are 2a |
+| **DERATED VARIANT** | AS DRAWN with U3 at 4.05 A | fixes the current-limit coordination (2a A-1) ONLY; M1 fails |
+| **RESISTOR-ONLY** | R11 6.2 mOhm and U3 6.2 A, nothing else changed | the proposal as drafted in a1elec's E2; INCONCLUSIVE; its own defects are 2b |
+| **CORRECTED PATH** | R11 6.2 mOhm with Kelvin taps, U3 6.2 A under a VIN_RAW-dependent rule, and every 2a, 2b and 2c item closed | HYPOTHETICAL: the path the energy model's NOM and WE cases assume; used for feasibility only |
 
-The proposed 6.2 mOhm is rated here as the same series (HoJLR2512-3W-6.2mR-1% by the maker's part-number scheme).
-**Its order code is not established.**
+## 2. The findings, classified
 
-## 2. The limit bands (`.out` 3)
+Each defect carries its correction and a measurable closure criterion. All corrections are engineering tasks. Section 6
+names the few remedies that would change a requirement.
 
-The limit is ICL(AVG) = VSNS / R11: LM5176 Equation 4 (p.17), with VSNS **43 / 50 / 57 mV** over TJ -40 to 125 C (p.7).
+### 2a. Confirmed existing defects of the circuit as drawn
 
-The stack adds four tolerances:
-- R11's own +-1 % (MAKER);
-- its TCR of 50 ppm/K over 75 K. R11 sits between the in-use minimum of -20 C and an **ASSUMED** 100 C: the worst inside
-  air of 62.1 C plus its own heating, 0.26 to 0.55 W in a 3 W part;
-- the ISNS pin bias of 3 uA (typical; **no limit is printed**) over the 100 Ohm filter: +-0.3 mV, INFERRED;
-- what else passes R11 besides U3: 0.060 A (INFERRED; U2's BIAS current and gate charge, R197 and the divider).
+**A-1. The front end limits below what the charge design asks.**
+- **Finding.** The stacked limit is **4.212 / 5.000 / 5.810 A** (`.out` 3).
+  - The generator declares VBUS20 at 6.0 A typical ("BQ25731 up to 8 A").
+  - M1's design needs 6.1 to 6.355 A into U3.
+  - At the drawn setting, U3's maximum of 4.25 A plus 0.060 A of the other loads is 4.310 A through R11: **0.098 A over the
+    stacked minimum**, so even there the front end can limit first. The record's 50 mA margin was taken against the printed
+    4.30 A.
+- **Evidence.** LM5176 p.7 (VSNS 43 / 50 / 57 mV); HoJLR2512 pp.1 to 2 (the part, 1 %, 50 ppm/K); BQ25731 p.1 and p.80
+  (U3's maximum). These are MAKER figures; the stack is INFERRED.
+- **Correction, for the drawn circuit: the DERATED VARIANT, U3 at 4.05 A.**
+  - U3's maximum is then 4.151 A. With the carried 0.060 A that is 4.211 A, against 4.212 A: **+0.001 A**.
+  - If all four FETs switch, the other loads reach 0.079 A (see 2c C-9) and the margin would be minus 0.018 A. The next
+    register step, 4.00 A, holds +0.052 A and +0.033 A (INFERRED from CHARGER.md's code 124 for 6.2 A, 50 mA a step).
+  - This fixes the coordination only. It does not resolve A-3, and it does not meet M1 (section 4).
+- **Closure.**
+  - The stacked minimum of the fitted R11 is at least U3's maximum plus the other loads.
+  - On the bench, the front end's constant-current onset, measured with an electronic load past U3 at -20, 25 and 62 C, lies
+    above U3's maximum plus 0.06 A (7b.1).
 
-| | printed band (VSNS / R11) | stacked band, min / typ / max | through R11 in service | margin, stacked minimum over service |
+**A-2. The input bus has no hardware input-power limit, so it collapses on a short source** (INFERRED).
+- **The mechanism.**
+  - The front end is a constant-power load: U3 draws a fixed current from VBUS20, and the LM5176 holds VBUS20 at 20 V.
+  - When a source gives less than U3 asks, VIN_RAW sags. The vehicle entry's LM5069 limits, or the panel tracker's input loop
+    cuts its current.
+  - VIN_RAW then walks down to the stage's latch, 7.86 to 8.31 V falling (gen_sch_a.py U34).
+  - U3's own VINDPM watches VBUS20, which stays regulated, so it does not act.
+- **What bounds it today.** FW-A16 as written (HW-FW-CONTRACT.md) scales IIN_HOST with VIN_RAW against the vehicle entry and
+  names this failure ("a limiting constant-power front end collapses the bus").
+  - With the panel alone it caps charge at about 54 W (the recorded reduction O-33).
+  - E1's fixed 4.15 A has no such scaling, so on the panel the drawn circuit collapses whenever the array gives less than
+    U3 asks, about 83 W at VBUS20 (89 W at the front end's input).
+- **Correction.** A VIN_RAW-dependent IIN_HOST rule for every source: firmware that lowers U3's input limit as VIN_RAW falls,
+  so the charge path takes what the source gives. This is an engineering choice while REQ-072 is met (the owner's amendment).
+- **Closure.** On the bench, with the panel source (or a simulator) stepped below U3's demand, VIN_RAW settles above 12 V and
+  FE_PGOOD never drops (7b.7).
+
+**Not an existing defect: the ISNS taps.** CHECK-3's A-2 read revision A32's taps. Per the owner's amendment, that reading is
+historical evidence, tied to A32 (section 2d). The current netlist shows no tap error (`.out` 1):
+- R160 runs from FE_OUT and R161 from VBUS20 into U2 pins 14 and 13.
+- Their values carry the intent: "Kelvin from the shunt's output pad" and "Kelvin from the shunt's rail pad".
+- R150 and R151 bring CS and CSG the same way.
+
+A netlist names the net a tap lands on, not the point on that net. The Kelvin connection is therefore a layout property, and
+it is an implementation requirement: C-1.
+
+### 2b. Defects the resistor-only proposal introduces (R11 6.2 mOhm, U3 6.2 A, nothing else changed)
+
+**B-1. L1 runs past its TYPICAL saturation current at the 9 V floor, in service.**
+- **Finding** (`.out` 4). With U3 at its maximum and VIN_RAW at 9 V:
+  - L1's peak is 17.84 A, or 18.62 A with Isat's own 30 % inductance drop on top of the minus 20 % tolerance;
+  - the typical Isat is 17.5 A, at 25 C (Coilcraft p.1, note 5);
+  - the rms is 16.04 A, against the 15.5 A Irms at a 40 K rise.
+- **How serious.** It is not a demonstrated failure: saturation is soft, and the part runs at about 105 C against its 165 C
+  maximum. But the design runs past its saturation point, and the held circuit did not (16.33 A, or 17.11 A with the drop).
+- **At the highest permitted current** (9.370 A out, 9 V), the peak is 25.21 A (26.00 A with the drop), with the part at
+  153 C. The cycle-by-cycle limit (20 / 24 / 28 A, LM5176 p.7) sits above Isat even at its minimum, so it does not keep L1
+  out of saturation.
+- **Correction, either of:**
+  - an inductor whose Isat at its operating temperature exceeds the peak at the highest permitted current at 9 V, with margin;
+  - IIN_HOST scheduled on VIN_RAW. At 9 V, U3's input at **5.20 A** keeps the peak at 90 % of Isat (`.out` 6). The front end
+    then draws 13.1 A at 9 V, above the vehicle entry's 6.15 A. In service no source gives more at 9 V (the tracker holds
+    15.1 V at U3's full demand), so this charges below no source's available power: an engineering choice.
+- **Closure.**
+  - Analysis: the peak at the highest permitted current is at most 90 % of Isat at the part's temperature, using the maker's
+    derating (C-5).
+  - Bench: L1's current waveform at 9 V with U3 at full draw shows no saturation knee (7b.5).
+
+**B-2. The FETs at the highest permitted current at 9 V.**
+- **Finding.** Q2 dissipates 6.28 W, Q4 4.36 W and Q5 2.70 W at 150 C. Holding 150 C in 62.1 C air needs an RthetaJA of 14,
+  20 and 33 C/W. For a 5 x 6 mm SON that is beyond what board copper alone gives (INFERRED).
+  - At a part at the minimum cycle-by-cycle limit, the output at 9 V is bounded at 7.28 A (`.out` 4).
+  - In service at 9 V (Q2 30, Q4 38 C/W) and at 15.1 V at the maximum (Q2 39 C/W), the figures are within reach of copper.
+    Those cases are MISSING EVIDENCE (C-3), not defects.
+- **Correction, one or more of:**
+  - bound the fault state with an input-side limit at low VIN_RAW;
+  - hiccup (MODE to AGND through 93.1 kOhm, p.20), which shuts down after 128 consecutive cycle-by-cycle limit cycles
+    (p.17). It catches only parts whose peak limit sits under the fault's peak;
+  - FETs and cooling rated for the fault.
+- **Closure.** TJ at most 150 C, or the tree's derating where one applies, at the highest permitted current at 9, 15.1 and
+  36 V in 62.1 C air. The figure comes from board A's own thermal resistance or from a measurement (7b.4).
+
+**B-3. The copper declarations are passed.**
+- **Finding.**
+  - VBUS20 and FE_OUT reach 6.415 A in service and 9.370 A at the maximum, against the declared 6.0 / 8.0 A.
+  - VIN_RAW reaches 16.01 A in service and 23.38 A at the maximum at 9 V, against the declared 14.10 A. _FE_A's own formula
+    at the proposed printed maximum gives 22.74 A.
+- **What the conservative model asks** (decision 35, external layer, 10 K rise):
+  - VBUS20 at 9.37 A: 7.2 mm at 1 oz or 3.6 mm at 2 oz;
+  - VIN_RAW at 9 V: 19.3 mm at 1 oz or 9.6 mm at 2 oz in service; 38.6 mm or 19.3 mm at the maximum.
+- **Correction.** Re-declare VBUS20, FE_OUT, VIN_RAW, _FE_A, _VIN_T and TRK_OUT (7a.4), and regenerate.
+- **Closure.** dc_drop, derate and the track-width gates read PASS on the regenerated board at the new declarations.
+
+**B-4. VBUS20's bulk capacitors at the highest permitted current** (CHECK-3 B1, recomputed).
+- **The method.** The generator's own node analysis (gen_sch_a.py, the third fix-up of 26 September 2026) counts the front
+  end's output ripple and U3's pulsed input current together, over dense bands. Its worst can is:
+  - at 5.7 A: 2.10 A matched, 2.11 A at a 1.5:1 ESR spread, 2.43 A at 2:1;
+  - at 5.0 A: 1.85 / 1.86 / 2.14 A.
+
+  These are scaled here in proportion to the front end's current, taking the larger of the two points (INFERRED, `.out` 4).
+- **The worst can:**
+
+| Current | Matched | 1.5:1 | 2:1 | Against 2.8 A a can (Panasonic p.2) |
 |---|---|---|---|---|
-| **held**, R11 10.0 mOhm | 4.30 / 5.00 / 5.70 A | **4.212 / 5.000 / 5.810 A** | U3's 6.355 A maximum + 0.060 = 6.415 A asked | **-2.203 A: the front end limits first** |
-| **proposed**, R11 6.2 mOhm | 6.94 / 8.06 / 9.19 A | **6.793 / 8.065 / 9.370 A** | 6.415 A | **+0.378 A** |
+| held maximum 5.810 A | 2.15 A | 2.16 A | 2.49 A | 77 / 77 / 89 %: within |
+| proposed in service 6.415 A | 2.37 A | 2.39 A | 2.75 A | 85 / 85 / 98 %: within, at the edge |
+| **proposed maximum 9.370 A** | **3.47 A** | **3.49 A** | **4.01 A** | **124 / 124 / 143 %: OVER** |
 
-**U3's maximum is 6.355 A.** It is the larger of two errors on the 6.2 A setting: 100 mA (BQ25731 p.80) and +-2.5 % (p.1).
-The energy model's entry E2 carries the printed minimum, 6.94 A. The stacked 6.79 A is still above U3, so **no energy
-result moves**.
+  CHECK-3's figures are 2.36 to 2.73 A and 3.45 to 3.99 A, scaled from the 5.7 A point alone; the 5.0 A point is slightly
+  steeper. The first issue's pooled 16.8 A figure is withdrawn.
+- **Correction.** Re-run the generator's node analysis at 9.37 A and 9 V, and enlarge or rebalance the bank. The worst can
+  must fall by 1.24 to 1.43 times, matched to 2:1 (`.out` 6). Or bound the fault current (B-2).
+- **Closure.** Every can at most 2.8 A (the maker's figure at 125 C) over the ESR bands at the highest permitted current. On
+  the bench, the worst can's ripple and temperature agree with it (7b.8).
 
-**The held circuit at its own generated setting.** GEN sets U3 to 4.15 A, maximum 4.25 A. With the other loads, 4.310 A
-passes R11, against the stacked minimum of 4.212 A: **-0.098 A**. The record's 50 mA margin was taken against the printed
-4.30 A. With the other loads and the stacked band it is gone, so even at GEN the held front end can limit first.
+**B-5. A fixed IIN_HOST of 6.2 A drops FW-A16's VIN_RAW scaling** (INFERRED; the proposal's form of A-2).
+- **Finding.** Whenever the array gives less than U3 asks (124 W at VBUS20 at 6.2 A and 20 V; up to 144 W at the front end's
+  input at U3's maximum and the bus's maximum), the bus collapses to the latch instead of settling at the available power. The energy model's `min(available, cap)` presumes the opposite.
+- **Its cost as a bound** (MODELED, `three_cases.out`). If a collapsed hour delivers nothing, every lid fails by 622 to 1080
+  Wh on the mean day, and the model carries 0 to 2 of 864 past windows. The bound is pessimistic in hours where the packs are
+  full, when U3 asks less than its cap.
+- **Correction and closure.** As A-2, for the proposal's setting.
 
-**The taps, a condition of every band above.** VSNS over R11 alone holds only for a Kelvin connection.
-- **The last reading.** kelvin_check read the routed board in the tree (sha256/16 58e26c67, ADVISORY, 20 Sep 2026). That
-  board was laid before the ISNS filter entered the netlist. It found:
-  - 26.62 mV of copper drop between R11.1 and U2.14;
+### 2c. Missing evidence (not a demonstrated failure)
+
+| Item | What is missing | What closes it |
+|---|---|---|
+| **C-1** | A layout of the current netlist, and so a Kelvin reading of R11's taps. **IMPLEMENTATION REQUIREMENT:** the copper R11's current shares with the two taps, both sides together, at most 0.371 mOhm at its working temperature: 2.38 mV at 6.415 A, 4.8 % of 50 mV. That is **0.29 mOhm at 25 C** with the copper at 100 C, or 0.32 mOhm at 62.1 C (copper 0.00393 /K, INFERRED). The round's brief labels 0.371 mOhm a 25 C figure. It is the working-temperature figure (CHECK-3 minor 6: 0.29 to 0.32 mOhm at 25 C), so the 25 C criterion is 0.29 mOhm | (1) Layout extraction: dc_drop's mesh with kelvin_check on FE_ISNS_P and FE_ISNS_N (declared in pcb_sensitive.yaml) reads at most 0.29 mOhm for the two together. kelvin_check's own 1 % per tap is stricter and closes it too. (2) Bench at 25 C: the DC voltage across U2 pins 14 and 13 exceeds I x R11, with R11 measured four-wire at its pads, by at most 0.29 mOhm x I (1.7 mV at 6.0 A) (7b.3) |
+| **C-2** | The 6.2 mOhm part's order code. The HoJLR2512-3W-6.2mR-1% is named by the maker's scheme, not by a catalogue answer | A catalogue answer for a 2512 part: 1 %, 50 ppm/K or better, 3 W, with its sheet filed |
+| **C-3** | Board A's own RthetaJA for Q2 to Q5. The maker's 50 C/W is for a 1 in2 2 oz pad. On that figure the held circuit's Q2 and Q4 already pass 150 C at 9 V at its limit's maximum (they need 36 and 44 C/W) | A figure from the laid copper: at most 30 C/W for Q2 and 38 C/W for Q4 (in service, 9 V), and 39 C/W for Q2 at 15.1 V at the maximum; or a measurement |
+| **C-4** | C11 and C12's ripple rating and DC-bias derating at 36 V (FS32X106K101EGG): 3.65 A rms in service and 4.97 A at the maximum for the two, in buck | The maker's figure, at least 2.5 A a part, or a part that has one (7b.8) |
+| **C-5** | L1's Isat against temperature. Coilcraft's derating page is not held, and the 17.5 A is typical at 25 C | The maker's derating read at the part's temperature (feeds B-1's closure) |
+| **C-6** | Board E's 200 W stage: not designed. The front end's input is the stage's OUTPUT: 144.1 W in service, 210.5 W at the proposed maximum. Into the stage at the declared 0.93 that is 154.9 and 226.3 W. The model's 200 W is a window on the stage's INPUT | A stage design that takes 226.3 W in at the maximum, or a bound on the front end's demand in a fault |
+| **C-7** | U3's input-current minimum at 10 mOhm. SLUSE66A prints only the maximum, 100 mA above the setting (p.80); the 6.1 A minimum is INFERRED | The maker's figure, or a bench reading |
+| **C-8** | The three undocumented efficiencies: board E's stage, board A's front end and the pack's charge efficiency (ENERGY-BASIS section 3) | The makers' figures for these circuits, or measurement |
+| **C-9** | The VBUS20 loads besides U3. By parts they are 0.051 A with two FETs switching (CHECK-3) and 0.079 A with four; the sheet does not say which switch in its transition region. U3's own VBUS pin, about 0.019 A by CHECK-3, rests on held FET sheets not in this tree. 0.060 A is carried | A bench reading of R11's current minus R16's at U3's full draw |
+
+### 2d. Historical evidence, revision A32 only
+
+- **The board.** `v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb` is revision A32: last commit `b7e0d28f` of 15 September
+  2026, routed, sha256/16 `58e26c67987b1daa`. On it, U2 pins 13 to 16 sit on VBUS20, FE_OUT, GND and FE_CS, the power nets
+  themselves, with no R160, R161, R150 or R151 (`.out` 3, read from the board file).
+- **The reading.** kelvin_check (ADVISORY, 20 September 2026) read two copper drops at dc_drop's solved current:
+  - 26.62 mV between R11.1 and U2.14;
   - 2.16 mV between R11.2 and U2.13.
-- **Both drops add to the sensed voltage** (INFERRED): R11.1 is FE_OUT's only sink and R11.2 is VBUS20's only source.
-- **Their size.** At dc_drop's solved current they are 4.8 to 7.6 mOhm together, as large as R11 itself. The solved
-  current is FE_OUT's declared 6.0 A; pcb_sensitive.yaml's text names 3.80 A.
-- **The limits on that board** would be about 2.8 to 3.4 A (held) and 3.6 to 4.5 A (proposed), typical. **Both are under U3.**
-- **The proposed margin tolerates at most 0.37 mOhm** between R11's pads and its two taps together: 2.4 mV at 6.415 A,
-  4.8 % of the 50 mV scale.
 
-**Kelvin taps on R11 are therefore a condition of the change, not a refinement.**
+  Together that is 4.8 to 7.6 mOhm, as large as R11 itself.
+- **What it shows.** How large a tap error has been on this board. It is not a finding about the current netlist, which has
+  no layout, and it is not an existing defect of the circuit as drawn.
 
-## 3. M1, the held circuit against the change (MODELED, `v2/docs/records/l3plane/energy_basis.out` section 5, 40/0)
+## 3. The electrical figures behind the classes
 
-| lid | held (GEN), TYP / WAB | conditional, NOM TYP / WAB (COMB/EACH) | conditional, WE TYP / WAB (COMB/EACH) |
+**The limit bands** (`.out` 3). VSNS 43 / 50 / 57 mV (LM5176 p.7) over R11, with the stack:
+- ±1 % (HoJLR2512 p.1);
+- 50 ppm/K over 75 K, with R11 between -20 C and an ASSUMED 100 C;
+- ±0.3 mV of ISNS bias over the 100 Ohm filter (INFERRED).
+
+| | Printed | Stacked min / typ / max | Through R11 in service | Margin |
+|---|---|---|---|---|
+| held, 10 mOhm | 4.30 / 5.00 / 5.70 A | 4.212 / 5.000 / 5.810 A | U3's 6.355 A maximum plus 0.060 A = 6.415 A asked | minus 2.203 A |
+| proposed, 6.2 mOhm | 6.94 / 8.06 / 9.19 A | 6.793 / 8.065 / 9.370 A | 6.415 A | **+0.378 A, as CHECK-3 closed it**; it holds only with C-1 closed |
+
+**R11 itself** (HoJLR2512, MAKER): 3 W, derated linearly from 70 C to zero at 170 C (p.2); 5 x P for 5 s (p.4).
+- **Power at the proposed maximum,** with all the output ripple taken through R11 as an upper bound (minor 2): 0.76 W at
+  15.1 V, 1.28 W at 9 V and 0.57 W at 36 V. In service it is 0.36 / 0.60 / 0.28 W. Both are within 3 W (2.10 W at 100 C).
+- **R11's own temperature** by the derating line's 33.3 K/W (INFERRED):
+  - at most 84 C where the band's minimum is set, which supports the ASSUMED 100 C;
+  - up to 105 C at the maximum, which only lowers that end of the band.
+
+**The power path at the three currents** (`.out` 4; worst inside air 62.1 C):
+
+| Part | Held maximum 5.810 A | Proposed in service 6.415 A | Proposed maximum 9.370 A | Class |
+|---|---|---|---|---|
+| L1 peak (with the 30 % drop), 15.1 / 9 / 36 V | 10.14 (10.78) / 16.33 (17.11) / 8.94 A | 11.04 (11.68) / **17.84 (18.62)** / 9.55 A | 15.43 (16.07) / **25.21 (26.00)** / 12.50 A | B-1 |
+| L1 part temperature, worst | 97 C | 105 C | 153 C | against 165 C |
+| FETs' RthetaJA needed at 9 V (Q2, Q4) | 36, 44 C/W | 30, 38 C/W | 14, 20 (Q5 33) C/W | C-3; B-2 at the maximum |
+| Bulk, worst can at 2:1 | 2.49 A | 2.75 A | **4.01 A** | B-4 |
+| C11, C12 at 36 V, together | 3.39 A | 3.65 A | 4.97 A | C-4 |
+| J_VR1 to J_VR4, a pin, at 9 V | 3.62 A | 4.00 A | 5.85 A | within the sibling's 9 A (minor 5) |
+| VIN_RAW at 9 V (declared 14.10 A) | 14.50 A | 16.01 A | 23.38 A | B-3 |
+| Board E's stage output / input | 130.5 / 140.3 W | 144.1 / 154.9 W | 210.5 / 226.3 W | C-6 |
+
+**The spring pins' basis** (minor 5). J_VR1 to J_VR4 are "Mill-Max 0858 class" (NETLIST).
+- The cited page rates the 0850 to 0853 at 9 A at a 10 C rise and does not list the 0858, so the 9 A is a sibling's figure.
+- The 0858's own page is not held here. CHECK-3 read it: "Inner Spring Dependent", spring 82 "12 Amp", no rise stated.
+- 5.85 A is under both.
+
+## 4. The energy of each case (MODELED, `../l3plane/three_cases.out`)
+
+**The conditions.** SC-37's mean September day at Leiden on the 40 degree south plane. Each cell gives both packs' lowest
+store in Wh, or the energy left unserved. TYP / WAB are the two array builds. NOM and WE are ENERGY-BASIS's input sets.
+
+| Case | 4S9P, both lid functions kept | 4S14P, tablet out | 4S15P, QMX out |
 |---|---|---|---|
-| 4S9P | NOT MET, 494.7 / 522.4 Wh unserved | NOT MET, 165.7 / 172.6 Wh unserved | NOT MET, 169.2 / 176.1 Wh unserved |
-| 4S14P | NOT MET, 357.5 / 383.8 Wh unserved | 93.7 (Y/Y) / 75.7 (Y/Y) Wh | 44.0 (Y/N) / NOT MET, 10.8 unserved |
-| 4S15P | NOT MET, 326.6 / 352.8 Wh unserved | 125.2 (Y/Y) / 106.8 (Y/Y) Wh | 74.3 (Y/Y) / 19.5 (Y/N) Wh |
+| **AS DRAWN**, NOM (the model's min(available, cap) kept: an upper bound, A-2) | NOT MET, 494.7 / 522.4 unserved | NOT MET, 357.5 / 383.8 | NOT MET, 326.6 / 352.8 |
+| AS DRAWN, WE (U3 at its INFERRED 4.05 A minimum) | NOT MET, 589.3 / 616.7 | NOT MET, 452.9 / 478.9 | NOT MET, 422.1 / 448.0 |
+| **DERATED VARIANT** (U3 4.05 A), NOM | NOT MET, 523.7 / 551.5 | NOT MET, 386.5 / 412.7 | NOT MET, 355.5 / 381.7 |
+| DERATED VARIANT, WE (3.95 A) | NOT MET, 616.7 / 644.1 | NOT MET, 480.1 / 506.1 | NOT MET, 449.3 / 475.3 |
+| **RESISTOR-ONLY: INCONCLUSIVE**, between its lower bound under B-5's collapse (NOM) and the corrected path | NOT MET, 805.5 / 1079.9, up to NOT MET, 165.7 / 172.6 | NOT MET, 652.9 / 926.5, up to 93.7 / 75.7 | NOT MET, 622.1 / 895.7, up to 125.2 / 106.8 |
+| RESISTOR-ONLY, WE: the same bounds | NOT MET, 900.9 / 900.9, up to NOT MET, 169.2 / 176.1 | NOT MET, 749.9 / 749.9, up to 44.0 / NOT MET, 10.8 | NOT MET, 719.4 / 719.4, up to 74.3 / 19.5 |
+| **CORRECTED PATH, HYPOTHETICAL**, NOM | NOT MET, 165.7 / 172.6 | 93.7 (49.0, 44.6) / 75.7 (48.2, 27.5) | 125.2 (57.1, 68.1) / 106.8 (56.3, 50.5) |
+| CORRECTED PATH, HYPOTHETICAL, WE (CONDITIONAL on C-8) | NOT MET, 169.2 / 176.1 | 44.0 (44.0, 0.0) / NOT MET, 10.8 | 74.3 (52.4, 19.4) / 19.5 (19.5, 0.0) |
 
-**Every case of that file except GEN presumes the change.** WE is itself conditional on three undocumented efficiencies
-(ENERGY-BASIS 1a).
+**Reading the table:**
+- The AS DRAWN rows at NOM equal ENERGY-BASIS's GEN: U3's 4.15 A binds either way.
+- The proposed front end's stacked minimum, fed as the corrected path's cap, moves no cell. That is checked in
+  `three_cases.out`.
+- The resistor-only lower bound's TYP and WAB agree at WE because both builds reach U3's cap in the same six hours of the
+  mean day.
 
-## 4. The power path at the new currents (`.out` 4)
+**The modelled historical coverage** (864 September windows of 2005 to 2020, TYP; kept / COMB / EACH):
 
-**The three currents:**
-- the held limit's maximum, 5.810 A;
-- the proposed in service, 6.415 A;
-- the proposed limit's maximum, 9.370 A.
-
-**The conditions:**
-- The front end's output is taken at VBUS20's 20.887 V maximum, efficiency 0.93 DECLARED.
-- VIN_RAW is taken at three points:
-  - 15.1 V, the tracker's output, the lowest bus a source holds at full power;
-  - 9.0 V, REQ-015's service floor and the basis of board E's _FE_A. It is above the stage's UVLO (7.86 to 8.31 V
-    falling). At these currents it is reached only with the tracker in its limit and the vehicle together;
-  - 36 V (buck).
-- The air is the worst inside air in use, 62.1 C (pcb_envelope.yaml).
-
-**The methods (INFERRED):**
-- L1's rise is the maker's 40 K at 15.5 A scaled by the square of the rms current; core loss is excluded.
-- The FETs use RDS(on) at its maximum times Figure 8's rise, iterated to TJ on RthetaJA 50 C/W.
-- The ripple is taken at L -20 % and fSW 175 kHz.
-
-**The makers' ratings:**
-
-| Part | Rating |
-|---|---|
-| L1 | Isat 17.5 A (typical, 25 C, 30 % drop); Irms 15.5 A at a 40 K rise; at most 165 C (Coilcraft p.1) |
-| FETs | RDS(on) 5.7 mOhm maximum at VGS 6 V; RthetaJA 50 C/W on a 1 in2 2 oz pad; TJ at most 150 C (TI p.1, p.3) |
-| Figure 8 (p.6) by pixel | the higher of the VGS 6 V and 10 V curves: 1.18 / 1.36 / 1.56 / 1.76 / 2.01 at 50 / 75 / 100 / 125 / 150 C |
-| Bulk | 6 x EEHZK1V331P, 2.8 A rms each at 100 kHz, 125 C (Panasonic p.2) |
-| Spring pins | 9 A at a 10 K rise (Mill-Max p.28) |
-
-| Part | held, 5.810 A | proposed in service, 6.415 A | proposed maximum, 9.370 A |
+| Case | 4S9P | 4S14P | 4S15P |
 |---|---|---|---|
-| **L1 at 15.1 V** (peak / rms / part) | 10.14 / 8.68 A / 75 C: within | 11.04 / 9.58 A / 77 C: within | 15.43 / 13.96 A / 95 C: within |
-| **L1 at 9 V** | 16.33 / 14.54 A / 97 C: within | **17.84 / 16.04 A: NOT within** (peak over Isat, rms over 15.5 A) | **25.21 / 23.41 A / 153 C: NOT within** |
-| **L1 at 36 V** (buck) | 8.94 / 6.08 A: within | 9.55 / 6.67 A: within | 12.50 / 9.54 A: within |
-| **FETs at 15.1 V** (TJ) | Q2 95, Q4 95, Q5 84 C | Q2 104, Q4 98, Q5 90 C | **Q2 past 150 C** (needs RthetaJA <= 39 C/W); Q4 118, Q5 138 C |
-| **FETs at 9 V** | **Q2, Q4 past 150 C** (need <= 36, 44 C/W); Q5 103 C | **Q2, Q4 past 150 C** (need <= 30, 38 C/W); Q5 115 C | **Q2, Q4, Q5 past 150 C** (need <= 14, 20, 33 C/W) |
-| **FETs at 36 V** (buck) | Q2 108, Q3 68, Q5 77 C | Q2 112, Q3 69, Q5 80 C | Q2 132, Q3 77, Q5 103 C |
-| **R11** (I2R at +1 %) | 0.34 W | 0.26 W | 0.55 W |
-| **input caps C11, C12** (rms, 15.1 / 9 / 36 V) | 0.86 / 1.06 / 3.39 A | 0.86 / 1.06 / 3.65 A | 0.86 / 1.06 / 4.97 A |
-| **bulk on VBUS20** (worst, at 9 V) | 6.68 A | 7.37 A | 10.77 A |
-| **J_VR1 to J_VR4** (a pin, even share, worst at 9 V) | 3.62 A | 4.00 A | 5.85 A |
-| **front end's input power** | 130.5 W | 144.1 W | 210.5 W |
+| AS DRAWN, NOM (upper bound) | 0 | 0 | 0 |
+| DERATED VARIANT, NOM | 0 | 0 | 0 |
+| RESISTOR-ONLY lower bound, NOM; WE | 0; 0 | 2 / 2 / 0 (0.2 %); 0 | 2 / 2 / 2 (0.2 %); 0 |
+| CORRECTED PATH, HYPOTHETICAL, NOM | 0 | 207 / 200 / 145 (24.0 / 23.1 / 16.8 %) | 235 / 232 / 177 (27.2 / 26.9 / 20.5 %) |
+| CORRECTED PATH, HYPOTHETICAL, WE | 0 | 166 / 164 / 115 (19.2 / 19.0 / 13.3 %) | 190 / 186 / 141 (22.0 / 21.5 / 16.3 %) |
 
-**How to read the table:**
-- **R11.** Its 3 W is not derated at 62.1 C (2.10 W at an assumed 100 C). The 5 s overload is 49 A at 6.2 mOhm. It is
-  WITHIN in every case.
-- **The input capacitors (C11, C12).** No maker ripple rating is held for FS32X106K101EGG, so every figure for them is
-  **NOT ESTABLISHED**.
-- **The bulk on VBUS20:** WITHIN in every case. The six parts' 16.8 A is shared with C13 to C15 on FE_OUT.
-- **The spring pins:** WITHIN in every case.
-- **The FETs.** At the 9 V floor they are past 150 C on the maker's 50 C/W pad figure **already in the held circuit at its
-  limit's maximum**, so this is not new with the change. What the change adds: at 9 V the in-service current (U3 at its
-  maximum) puts Q2 and Q4 past it, and at the new maximum Q2 is past it at 15.1 V too. The maker's RthetaJA is for a
-  1 in2 2 oz pad, not board A's copper. The board's own figure is **not established**.
-- **L1.** At the 9 V floor the change puts L1 **past its typical Isat in service**, and past its 40 K Irms. The held
-  circuit's own limit kept L1 at 16.33 A peak there. At the new maximum and 9 V, the cycle-by-cycle boost limit (20 / 24 /
-  28 A peak over R12, LM5176 p.7) may end the cycle first:
-  - L1's average is then at most 18.2 / 22.2 / 26.2 A;
-  - the output is then 7.28 / 8.88 / 10.49 A (INFERRED);
-  - **even at its minimum the peak passes Isat**, so the peak limit does not protect L1 from saturation.
-
-**The copper** (decision 35's conservative model, `track_current.width_for_current`, external, 10 K rise):
-
-| Conductor | held | proposed in service | proposed maximum |
-|---|---|---|---|
-| FE_OUT and VBUS20 | 3.4 mm at 1 oz / 1.7 mm at 2 oz | 3.9 / 1.9 mm | 7.2 / 3.6 mm |
-| VIN_RAW at 15.1 V | 6.2 / 3.1 mm | 7.5 / 3.7 mm | 15.0 / 7.5 mm |
-| VIN_RAW at 9 V | 16.1 / 8.0 mm | 19.3 / 9.6 mm | 38.6 / 19.3 mm |
-
-The generators lay copper and rate parts to these declarations (INFERRED comparison):
-- **VBUS20 (6.0 A typical, 8.0 A peak).** The held maximum, 5.810 A, is under both. The proposed in-service current,
-  6.415 A, **passes the typical**. The proposed maximum, 9.370 A, **passes the peak**.
-- **VIN_RAW (14.10 A,** board E's _FE_A = 5.7 A x 20.7 V / 0.93 / 9 V):
-  - the held circuit, stacked, reaches 14.50 A at 9 V;
-  - the proposed reaches 16.01 A in service and 23.38 A at the maximum;
-  - _FE_A's own formula at the proposed printed maximum, 9.19 A, gives 22.74 A.
-- **TRK_OUT (10.33 A).** At 15.1 V the proposed draws 9.54 A in service and 13.94 A at the maximum.
-
-**VIN_RAW's sources:**
-- **Board E's 200 W stage** belongs to Option A(i). It is **not designed** (a1elec CHARGER.md 2: its owner's). In service
-  the front end asks 144.1 W: **within 200 W**. At the proposed maximum it asks 210.5 W, **over 200 W**. So in a fault where
-  U3 does not limit, the stage or the array bounds the draw, not R11.
-- **The tracker's own buck limit** (VCS over R5, LT8705A p.3) is 13.8 / 17.2 / 20.4 A, against 13.94 A at 15.1 V.
-- **The panel fuse F2** sees about 6.6 A at the array's 34.3 V: under its 10 A.
-- **The vehicle entry alone** passes at most its LM5069's 6.15 A, under F1's 8 A at 65 C (gen_sch_e.py). Below 23.4 V a
-  vehicle alone cannot carry the proposed in-service 144.1 W; below 21.2 V it cannot carry the held maximum's 130.5 W
-  either. On the vehicle alone, the front end's draw is bounded by the entry **whatever R11 is**.
+**The corrections the CORRECTED PATH rows assume.** None is closed:
+- Kelvin taps on R11 (C-1) and the 6.2 mOhm part (C-2);
+- a VIN_RAW-dependent IIN_HOST rule, so the charge path takes `min(available, cap)` (A-2, B-5);
+- L1 at 9 V (B-1, C-5);
+- the FETs' thermal path (B-2, C-3);
+- the bulk bank (B-4);
+- the copper declarations (B-3);
+- C11 and C12 (C-4);
+- board E's 200 W stage (C-6);
+- the three efficiencies (C-8; WE is conditional on them).
 
 ## 5. The LM5176's other settings and R11 (`.out` 5, the maker's equations)
 
 | Setting | Tied to R11? | Consequence of 6.2 mOhm |
 |---|---|---|
-| Average current limit, ICL(AVG) = 50 mV / RSNS (Eq. 4, p.17) | **yes, the one setting R11 sets** | the bands of section 2 |
+| Average current limit, ICL(AVG) = 50 mV / RSNS (Eq. 4, p.17) | **yes, the one setting R11 sets** | the bands of section 3 |
 | The CC loop: gm 1 mS (p.7) discharging SS (C7 4.7 uF) above 50 mV (7.3.6, p.17) | its gain per ampere scales with R11 | 0.62 of the held loop's gain (INFERRED); its response is a bench row |
-| The ISNS filter: at most 100 Ohm (p.24); R160, R161 sit at it | no | unchanged; the bias offset of 0.3 mV is 48 mA at 6.2 mOhm, against 30 mA at 10 mOhm |
-| The sense amplifier's range: common mode 0 to 55 V; differential +-0.3 V (p.5) | differential only | VBUS20 at most 23.40 V (s120's bound): unchanged; 0.3 V is 48 A, far beyond the path |
-| Slope compensation, Eq. 26 (p.24): CSLOPE = gmSLOPE x L1 / (RSENSE x ACS) | **no**: RSENSE is R12, the CS resistor | 800 pF with p.24's example gm and gain, against C147's 680 pF: unchanged. If L1 runs near Isat its inductance falls, and so does the dead-beat value (INFERRED) |
-| Cycle-by-cycle limits over R12: boost peak 20 / 24 / 28 A, buck valley 13.2 / 16.0 / 18.8 A (p.7) | no | unchanged; with the average limit raised, they bound L1 in an overload at a low VIN_RAW, and they sit above Isat |
-| Hiccup: MODE to VCC selects none (p.20) | no | a sustained overload stays in the average or the peak limit indefinitely, now at section 4's higher currents |
+| The ISNS filter: R160, R161 100 Ohm, C128 1 nF across. This is Figure 8-1's network (p.17), and the sheet asks for the capacitor close to the IC between the pins (p.30) | no | unchanged. **p.24's 100 Ohm ceiling is for CS and CSG** (R150, R151 sit at it), not ISNS (minor 4). The bias offset of 0.3 mV is 48 mA at 6.2 mOhm, against 30 mA at 10 mOhm |
+| The sense amplifier's range: common mode 0 to 55 V; differential ±0.3 V (p.5) | differential only | VBUS20 is at most 23.40 V (s120's bound): unchanged. 0.3 V is 48 A |
+| Slope compensation, Eq. 26 (p.24): CSLOPE = gmSLOPE x L1 / (RSENSE x ACS) | **no**: RSENSE is R12 | 800 pF against C147's 680 pF: unchanged. If L1 runs near Isat, its inductance and the dead-beat value fall (INFERRED) |
+| Cycle-by-cycle limits over R12: boost peak 20 / 24 / 28 A, buck valley 13.2 / 16.0 / 18.8 A (p.7) | no | unchanged; above Isat (B-1) |
+| Hiccup: MODE to VCC selects none (p.20); when enabled it acts on 128 consecutive cycle-by-cycle limits (p.17) | no | a sustained overload stays in a limit indefinitely, now at the higher currents of section 3 |
 
-s120's bus bound (23.40 V) rests on the peak limit and L1's energy, not on R11. It does not move.
+## 6. Owner questions: only remedies that change a requirement
 
-## 6. Held against conditional, in one table
+By the owner's amendment, a remedy that charges below a source's available power is an engineering choice while the approved
+requirements stay met. Component selection and Kelvin routing are engineering tasks. **Every correction in section 2 has an
+engineering form that changes no requirement, so no question is asked now.** Three remedies would change one if an engineer
+chose them:
 
-| | Held circuit (R11 10 mOhm, board A as generated) | Conditional on the change (R11 6.2 mOhm, U3 IIN_HOST 6.2 A) |
+| Remedy, if chosen instead of the engineering form | Requirement it changes | Consequence |
 |---|---|---|
-| Front end's limit (stacked) | 4.212 / 5.000 / 5.810 A | 6.793 / 8.065 / 9.370 A |
-| Who limits the charge current | **the front end** (margin -2.203 A; -0.098 A even at GEN's own setting) | U3 (margin +0.378 A), **only with Kelvin taps on R11 of at most 0.37 mOhm** |
-| M1, 4S14P / 4S15P, TYP | NOT MET, 357.5 / 326.6 Wh unserved | NOM 93.7 / 125.2 Wh; WE 44.0 / 74.3 Wh |
-| M1, 4S14P / 4S15P, WAB | NOT MET, 383.8 / 352.8 Wh unserved | NOM 75.7 / 106.8 Wh; WE NOT MET 10.8 unserved / 19.5 Wh |
-| M1, 4S9P | NOT MET | NOT MET |
-| L1 at the 9 V floor | within (16.33 A peak) | **past typical Isat in service** (17.84 A); 25.21 A at the maximum |
-| FETs on the maker's 50 C/W | past 150 C at 9 V (Q2, Q4) at the limit's maximum | past 150 C at 9 V in service; Q2 at 15.1 V at the maximum |
-| R11's own power | 0.34 W of 3 W | 0.26 W in service, 0.55 W at the maximum, of 3 W |
-| Input capacitors' ripple | not established | not established (up to 4.97 A at 36 V) |
-| VBUS20 declaration (6.0 / 8.0 A) | inside | **passed** in service and at the maximum |
-| VIN_RAW declaration (14.10 A) | passed at 9 V by the stacked band (14.50 A) | **passed** at 9 V (16.01 A in service) |
-| Board E's 200 W stage | 130.5 W at most | 144.1 W in service; 210.5 W at the maximum |
+| Raise the input floor so L1 needs no new part or schedule (B-1) | **REQ-015**: "A 9 to 36 V vehicle and shore input runs the kit and charges the pack" | Full charge current needs VIN_RAW of **11.0 V** or more (`.out` 6). Inputs from 9.0 to 11.0 V (a 12 V system's low end) would leave REQ-015. No energy is lost on the reference day, where the tracker holds 15.1 V |
+| Cap U3 below 6.2 A permanently for B-1 to B-4 | **REQ-072** (M1) | About 20 Wh of lowest store per 0.1 A at WE (ENERGY-BASIS section 4). At the derated 4.05 A every lid fails by 355.5 to 551.5 Wh (section 4) |
+| A part or bank that does not fit board A's place (B-1, B-2, B-4) | **CON-006** (the pack pocket bounded by board A's east edge at X +120), or **REQ-019** (the case never changes) if it went further | Not quantified: no part is selected. The question arises only if no fitting part exists |
 
-## 7. Downstream obligations (named here, done by none of this)
+**Already the owner's, not new here.** Option A(i)'s 200 W stage exceeds **REQ-016**, which allows at most 100 W into the
+stage and 25 V open circuit (a1elec CHARGER.md section 2: "a requirement the owner rules on (9i of the energy record)"). The front end's demand puts 154.9 W into the stage in
+service and 226.3 W at the maximum.
 
-### 7a. Implementation: the generator edit and the regeneration
+## 7. Downstream obligations (named, not done)
 
-1. **R11 in gen_sch_a.py and lcsc_fill.py.** R11 becomes 6.2 mOhm, a 3 W 2512 of +-1 % and 50 ppm/K or better, with an
-   **order code established** from a catalogue answer.
-2. **U3's IIN_HOST at 6.2 A** (entry E2, CHARGER.md) with the change, never without it. The held circuit keeps GEN's
-   setting, and even that is 0.098 A over the stacked minimum.
-3. **R11's taps as Kelvin connections**, at most 0.37 mOhm of copper between its pads and the ISNS filter, as the maker's
-   p.3 pad drawing shows. kelvin_check must read PASS on the regenerated board.
-4. **The re-declarations the new currents pass:**
-   - VBUS20 and FE_OUT (6.415 A typical, 9.370 A peak);
-   - VIN_RAW's _VIN_RAW_A with board E's _FE_A and _VIN_T (the printed maximum gives 22.74 A at 9 V);
-   - TRK_OUT (13.94 A at the maximum; 12.3 A at the 200 W stage by CHARGER.md);
-   - pcb_sensitive.yaml's FE_ISNS text (3.80 A).
-5. **L1 at the 9 V floor.** L1 needs a decision:
-   - an inductor with a higher Isat and Irms;
-   - U3's input limit scheduled on VIN_RAW by the host;
-   - or a service floor above 9 V for full charge current.
+### 7a. Implementation: engineering tasks, each closing a class item
 
-   The peak limit over R12 does not protect it (20 A minimum, above 17.5 A).
-6. **The FETs' thermal path.** Board A needs its own RthetaJA for Q2 to Q5, from its laid copper. The maker's 1 in2 figure
-   puts Q2 and Q4 past 150 C at 9 V even in the held circuit.
-7. **The input capacitors' ripple rating.** The maker's figure is needed for FS32X106K101EGG, or a part that has one:
-   3.65 A in service and 4.97 A at the maximum, for two parts at 36 V. Its DC-bias derating at 36 V is needed too.
-8. **Board E's 200 W stage** (not designed) must be designed against the front end's 210.5 W maximum demand.
-9. **The host's IIN_HOST per source.** On the vehicle alone below about 23 V, the entry, not R11, bounds the power.
-10. **Regeneration of board A** (and of board E where re-declared), the gates and the evidence re-take. The energy model's
-    E2 may carry the stacked 6.79 A minimum; no result moves.
+1. **R11 at 6.2 mOhm** in gen_sch_a.py and lcsc_fill.py, with an order code (C-2).
+2. **U3's IIN_HOST.**
+   - For the drawn circuit: the derated 4.05 A, or 4.00 A (A-1).
+   - With the change: 6.2 A, only with item 3 and the VIN_RAW rule (A-2, B-5).
+3. **Kelvin taps on R11 in the layout,** with kelvin_check PASS at 0.29 mOhm or less at 25 C (C-1).
+4. **Re-declarations:** VBUS20 and FE_OUT (6.415 A typical, 9.370 A peak); VIN_RAW's _VIN_RAW_A with board E's _FE_A and
+   _VIN_T (22.74 A at 9 V by the printed maximum); TRK_OUT; and pcb_sensitive.yaml's FE_ISNS text, which still names 3.80 A
+   (B-3).
+5. **L1:** a part rated for the highest permitted current at 9 V, or the 5.20 A schedule at 9 V (B-1, C-5).
+6. **The FETs:** a bound on the fault state, or parts and cooling for it, and board A's own RthetaJA (B-2, C-3).
+7. **VBUS20's bank,** re-sized by the generator's node analysis at 9.37 A (B-4).
+8. **C11 and C12:** a part with a maker's ripple rating (C-4).
+9. **Board E's stage,** designed for 226.3 W in at the maximum or with the demand bounded (C-6).
+10. **Regeneration of board A** (and of board E where re-declared), the gates and the evidence re-take.
 
-### 7b. Physical verification: the bench rows, on a built board
+### 7b. Physical verification: bench rows on a built board
 
-1. **The front end's CC limit.** Measure it with VBUS20 loaded past U3, at -20 C, at 25 C and at the worst inside air.
-   Expected: the stacked band, 6.79 to 9.37 A, and above 6.415 A.
-2. **In service,** with U3 at 6.2 A and VIN_RAW at 9, 15.1, 24 and 36 V: confirm the front end is not in CC (VSNS under
-   43 mV; SS not pulled). Record the current through R11.
-3. **R11's Kelvin error.** Compare the voltage across R11's pads with the voltage at U2 pins 14 and 13, at a known current.
-4. **Temperatures at a forced limit** (the proposed maximum) at 15.1 V and at 9 V: L1, Q2 to Q5, R11, the spring pins and
-   C11 and C12, at or corrected to the worst inside air.
-5. **L1's current waveform at 9 V** with U3 at full draw: the peak against Isat, and any saturation.
+1. **The front end's CC onset** with an electronic load past U3, at -20, 25 and 62 C. It must lie above U3's maximum plus
+   0.06 A (A-1). Expected: the stacked band.
+2. **In service,** with U3 at its setting and VIN_RAW at 9, 15.1, 24 and 36 V: the front end is not in CC (VSNS under
+   43 mV; SS not pulled).
+3. **R11's Kelvin error:** the voltage at U2 pins 14 and 13 against I x R11 four-wire, at most 0.29 mOhm x I (C-1).
+4. **Temperatures at a forced limit** at 15.1 and 9 V: L1, Q2 to Q5, R11, the spring pins, C11 and C12, at or corrected to
+   62.1 C air (B-2, C-3).
+5. **L1's current waveform at 9 V** with U3 at full draw: no saturation knee, peak at most 90 % of Isat (B-1).
 6. **The CC loop's step response** into the limit at 0.62 of the held gain: VBUS20 and the current, with no oscillation.
-7. **The vehicle entry's interplay** at 9 to 24 V with U3 at 6.2 A: the LM5069's limit, its retry, and the stage's UVLO
-   latch.
-8. **The input capacitors at 36 V:** ripple current and temperature rise.
-9. **Board E's tracker** at the front end's demand, once the 200 W stage exists.
+7. **A source stepped below U3's demand,** the panel or a simulator: VIN_RAW settles above 12 V and FE_PGOOD never drops
+   (A-2, B-5).
+8. **The bulk bank's worst can,** and C11 and C12 at 36 V: ripple current and temperature (B-4, C-4).
+9. **Board E's tracker** at the front end's demand, once the stage exists (C-6).
 
-## 8. What this rests on, and what it is not
+## 8. What this rests on
 
-- **ASSUMPTION:** R11's own temperature at most 100 C.
-- **ISNS bias:** its 3 uA is TI's typical figure; no limit is printed.
-- **Isat:** 17.5 A is Coilcraft's typical figure at 25 C.
-- **Figure 8:** its rise is a pixel reading. It takes the higher of the two gate-drive curves.
-- **The Kelvin reading** is on a routed board that predates the current netlist's ISNS filter. It shows how large a tap
-  error has been on this board. It is not a reading of the next layout.
-- **This is the author's record, not its check.** The independent check follows.
+- **ASSUMPTION:** R11's own temperature at most 100 C. The derating line supports it where the band's minimum is set (84 C).
+- **The ISNS bias,** 3 uA, is TI's typical; no limit is printed.
+- **Isat,** 17.5 A, is Coilcraft's typical figure at 25 C.
+- **Figure 8's rise** is a pixel reading, taking the higher of the two gate-drive curves.
+- **The bank's per-can figures** are the generator's, scaled in proportion to the current: INFERRED.
+- **B-5's collapse** is INFERRED from the circuit and FW-A16's own words. Its energy bound takes a collapsed hour as zero.
+
+## 9. CHECK-3's items and the owner's amendments, and where each is answered
+
+| Item | Answer |
+|---|---|
+| B1, the bulk capacitors | 2b B-4: per can from the generator's analysis, U3's pulses included; 2.37 to 2.75 A in service, 3.47 to 4.01 A at the maximum (over). The pooled figure is withdrawn |
+| B2, classification and closure | section 2: existing defects, proposal defects and missing evidence, each with its correction and closure; section 7 maps the implementation and the bench |
+| 1, L1's bias drop | section 3 and `.out` 4: the peak with the 30 % drop on top of the minus 20 % tolerance, 17.11 / 18.62 / 26.00 A at 9 V |
+| 2, R11's power with the ripple | section 3: 0.76 W at 15.1 V and 1.28 W at 9 V at the maximum, as an upper bound; within |
+| 3, the parts of the 0.060 A | 2c C-9 and `.out` 3: U2's BIAS and gate charge, U3's own VBUS pin, R197 and the divider; the margin stays as closed |
+| 4, p.24's filter limit | section 5: it is for CS and CSG; ISNS follows Figure 8-1 (p.17) and p.30 |
+| 5, the spring pins' basis | section 3: the 0850 to 0853 sibling figure, and the 0858 page read by CHECK-3 |
+| 6, the Kelvin budget at 25 C, and ENERGY-BASIS section 2 | 2c C-1: 0.29 mOhm at 25 C. ENERGY-BASIS section 2's drafted-R11 sentence now reads "with Kelvin taps on R11 (r11dep)" |
+| 7, the layout statement's revision | 2d: revision A32, `b7e0d28f`, its pins read from the board file |
+| Owner: three cases kept apart | sections 1 and 4 |
+| Owner: the Kelvin classification | 2a (not an existing defect), 2c C-1 (implementation requirement and verification), 2d (A32 historical) |
+| Owner: the 4.05 A setting | 2a A-1: coordination only, shown as the DERATED VARIANT beside the actual AS DRAWN case |
+| Owner: questions only for requirement changes | section 6 |
+| Owner: energy only through an adequate path counts | section 4: nothing is demonstrated capability; each row names its case |
+
+**This is not the independent check.** The next check follows it.

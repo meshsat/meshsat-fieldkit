@@ -14,6 +14,14 @@ The held circuit: R11 10 mOhm (NETLIST), bought as C2903468 (lcsc_fill.py; LCSC'
 The proposed change: R11 6.2 mOhm (a1elec CHARGER.md section 2 and energy_two_pack.py's entry E2), rated here as the same
 maker's series at 6.2 mOhm (HoJLR2512, 3 W).
 
+Second issue (CHECK-3 of 4e9fa869, accepted: no; the owner's amendments of 30 September 2026): VBUS20's bank per can from the
+generator's own node analysis, scaled with the current (B1); the ISNS and CS taps read from the netlist, which shows no tap
+error, and Kelvin sensing stated as an implementation requirement with its 25 C criterion; revision A32's pins and reading kept
+as historical evidence tied to that revision; the derated variant (U3 at 4.05 A) checked for coordination only; L1's peak with
+Isat's 30 % drop, R11's power with the ripple and its own temperature, the parts of the 0.060 A named (the 0.378 A margin
+stays as CHECK-3 closed it), the ISNS filter read against pp.17 and 30 rather than p.24, the spring pins' basis named, and a
+section of figures for the corrections' closure criteria. The classification itself is R11-DEPENDENCY.md's.
+
 Run from the repository root:  python3 v2/docs/records/r11dep/r11_dep.py > v2/docs/records/r11dep/r11_dep.out
 Needs pdftotext, pdftoppm and Pillow. Deterministic for the pinned files. Exit 3: an input is missing or not as expected."""
 import ast
@@ -63,6 +71,9 @@ R11_TEMP_MAX = 100.0                  # ASSUMPTION: R11's own temperature at mos
 VIN_TRACKER = 15.1                    # NETLIST/record: board E's tracker output TRK_OUT, FBOUT set at 15.1 V (gen_sch_e.py)
 VIN_TREE = 9.0                        # the tree's own convention for VIN_RAW's declaration (board E _FE_A, R8E-N01)
 VIN_MAX = 36.0                        # REQ-015: 9 to 36 V in service (vbus20_range and s120 read it the same way)
+A32 = ("v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb", "b7e0d28f")   # revision A32, routed, its last commit
+CU_TCR = 0.00393                      # INFERRED: annealed copper's temperature coefficient (IEC 60028), for the Kelvin budget at 25 C
+U3_DERATED = 4.05                     # the derated variant: U3's IIN_HOST at 4.05 A nominal (CHECK-3 A-1)
 R12_CS = 0.005                        # NETLIST: R12 5mOhm, U2's CS resistor (section 1's facts check its value and net)
 ETA_FE = 0.93                         # DECLARED (gen_sch_a.py VBUS20 intent): the low end, the conservative one for current
 
@@ -155,6 +166,10 @@ def main():
         ("ISNS filter", ca["R160"]["value"].startswith("100R") and ca["R161"]["value"].startswith("100R") and ca["C128"]["value"] == "1n"
          and nets("U2")["14"] == "FE_ISNS_P" and nets("U2")["13"] == "FE_ISNS_N"),
         ("CS sense R12", ca["R12"]["value"].startswith("5mOhm") and nets("R12")["1"] == "FE_CS"),
+        ("the ISNS and CS taps", nets("R160") == {"1": "FE_OUT", "2": "FE_ISNS_P"} and nets("R161") == {"1": "VBUS20", "2": "FE_ISNS_N"}
+         and nets("R150") == {"1": "FE_CS", "2": "FE_CSF"} and nets("R151") == {"1": "GND", "2": "FE_CSGF"}
+         and [nets("U2")[k] for k in ("13", "14", "15", "16")] == ["FE_ISNS_N", "FE_ISNS_P", "FE_CSGF", "FE_CSF"]
+         and "Kelvin from the shunt's output pad" in ca["R160"]["value"] and "Kelvin from the shunt's rail pad" in ca["R161"]["value"]),
         ("L1", "XAL1010-103ME" in ca["L1"]["value"]),
         ("Q2 to Q5", all("CSD19532Q5B" in ca[q]["value"] for q in ("Q2", "Q3", "Q4", "Q5"))),
         ("input caps C11 C12", all(ca[c]["value"] == "10u 100V X7R 1210" and nets(c)["1"] == "VIN_RAW" for c in ("C11", "C12"))),
@@ -206,7 +221,11 @@ def main():
     need(t17, r"ICL\(AVG\)", "p.17 Equation 4")
     need(t17, r"internal 50-mV\s*\n?\s*reference", "p.17 the 50 mV reference")
     need(t20, r"MODE to VCC", "p.20 MODE to VCC: no hiccup")
-    need(t24, r"The filter resistance should not exceed 100 Ω|The filter resistance should not exceed 100 Ω", "p.24 ISNS filter limit")
+    need(t24, r"filter network to attenuate noise in the CS and CSG\s*\n?\s*sense lines\. See Figure 8-1 for typical values\. The filter resistance should not exceed 100 [\u03a9\u2126]",
+         "p.24 the CS and CSG filter limit")
+    need(t17, r"A filter network as shown in Figure 8-1 is often used across the ISNS\(\+\) and ISNS\(-\) pins", "p.17 the ISNS filter")
+    need(page(LM5176, 30), r"Place the average current loop filter capacitor close to\s*\n?\s*the IC between the ISNS\(\+\) and ISNS\(\u2013\) pins",
+         "p.30 the ISNS filter capacitor")
     need(t24, r"RSENSE u ACS", "p.24 Equation 26 on RSENSE")
     drv = [float(x) for x in re.findall(r"Driver peak (?:source|sink) current\s+(?:VBOOT - VSW = 7 V\s+)?([\d.]+)\s+A", page(LM5176, 8))]
     if len(drv) < 2:
@@ -217,6 +236,9 @@ def main():
     acc = float(need(b1, r"±([\d.]+)% Input current regulation", "SLUSE66A p.1 accuracy").group(1)) / 100.0
     need(b80, r"Additional 100-mA \(10-m\S+ sense", "SLUSE66A p.80 the 100 mA")
     u3_max = max(iin_set + 0.1, iin_set * (1 + acc))
+    b11 = page(BQ25731, 11)
+    regn_lim = float(need(b11, r"IREGN_LIM\s+when converter is\s+VVBUS = 10 V, force VREGN =4 V\s+\d+\s+(\d+)", "SLUSE66A p.11 REGN limit").group(1)) * 1e-3
+    u3_light = float(need(" ".join((b11 + page(BQ25731, 12)).split()), r"IAC_SW_LIGHT_buck ([\d.]+) mA", "SLUSE66A the buck light-load current").group(1)) * 1e-3
     # XAL1010-103ME
     x1 = page(XAL1010, 1)
     mx = need(x1, r"XAL1010-103ME_\s+(\d+)\s+([\d.]+)\s+([\d.]+)\s+(\d+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)", "XAL1010 p.1 the 103ME row")
@@ -243,10 +265,36 @@ def main():
     # Mill-Max
     mm_ = " ".join(page(MILLMAX, 1).split())
     pin_a = float(need(mm_, r"capable of carrying (\d+) amps continuous cur- rent at a low 10° C temperature rise", "Mill-Max 9 A at 10 C").group(1))
+    need(mm_, r"The Mill-Max 0850, 0851, 0852 and 0853 spring pins", "Mill-Max the 0850 to 0853")
+    if "0858" in mm_ or "Mill-Max 0858 class" not in ca["J_VR1"]["value"]:
+        refuse("the spring pins' basis changed")
+    # the generator's own per-can analysis of the VBUS20 bank (gen_sch_a.py, the third fix-up of 26 September 2026)
+    gtxt = " ".join(l.strip().lstrip("#").strip() for l in open(os.path.join(TOP, GEN_A), encoding="utf-8").read().splitlines())
+    mb = need(gtxt, r"Worst can over the whole bands at 5\.7 A: ([\d.]+) A, (\d+) percent of 2\.8 A matched; ([\d.]+) A \((\d+) percent\) at a 1\.5:1"
+                    r" spread and ([\d.]+) A \((\d+) percent\) at 2:1; at the declared 5 A ([\d.]+) / ([\d.]+) / ([\d.]+) A", "gen_sch_a.py the worst can")
+    can57 = (float(mb.group(1)), float(mb.group(3)), float(mb.group(5)))
+    can50 = (float(mb.group(7)), float(mb.group(8)), float(mb.group(9)))
+    need(gtxt, r"the BQ25731 draws its own input current from this node in pulses", "gen_sch_a.py U3's pulses in the node analysis")
     # LT8705A (board E's tracker), E and I grades
     l3 = page(LT8705A, 3)
     vcs_trk = tuple(float(x) / 1000.0 for x in need(l3, r"Buck Mode, Minimum M2 Switch Duty Cycle\s*\n\s*\(LT8705AE, LT8705AI\)\s+l\s+(\d+)\s+(\d+)\s+(\d+)\s+mV", "8705af p.3 buck sense").groups())
     r5 = 0.005 if e_r5.startswith("5 mOhm") else refuse("board E R5 not 5 mOhm")
+    # revision A32 (historical): U2's ISNS and CS pins on that board
+    bt = open(os.path.join(TOP, A32[0]), encoding="utf-8").read()
+    i_u2 = bt.find('(property "Reference" "U2"')
+    blk = bt[bt.rfind('(footprint "', 0, i_u2):bt.find('(footprint "', i_u2)]
+    a32_pins = {}
+    for ch in blk.split('(pad "')[1:]:
+        mp_ = re.match(r'(\d+)"', ch)
+        mn_ = re.search(r'\(net \d+ "([^"]*)"\)', ch)
+        if mp_ and mn_:
+            a32_pins.setdefault(mp_.group(1), mn_.group(1))
+    a32_isns = [a32_pins.get(k) for k in ("13", "14", "15", "16")]
+    if a32_isns != ["/VBUS20", "/FE_OUT", "GND", "/FE_CS"] or '"R160"' in bt:
+        refuse("revision A32's U2 pins 13 to 16 are not as recorded")
+    a32_log = subprocess.run(["git", "-C", TOP, "log", "-1", "--format=%h %ad", "--date=short", "--", A32[0]], capture_output=True, text=True).stdout.split()
+    if a32_log[0] != A32[1]:
+        refuse("revision A32's last commit is not %s" % A32[1])
     # envelope, declarations, the energy records
     env = yaml.safe_load(open(os.path.join(TOP, ENVELOPE), encoding="utf-8"))
     t_air = max(env["worst_inside_air_c"]["lid_open"], env["worst_inside_air_c"]["lid_closed"])
@@ -291,6 +339,10 @@ def main():
     P("   VIN_RAW: C11, C12 %s; J_VR1 to J_VR4 '%s'; no fuse on board A's VIN_RAW" % (ca["C11"]["value"], ca["J_VR1"]["value"].split(" (")[0]))
     P("   VBUS20: %d x EEHZK1V331P bulk (%s); U2's BIAS (pin 24) on VBUS20, so its supply current passes R11" % (len(bulk), ", ".join(sorted(bulk))))
     P("   MODE: R119 to VCC (no hiccup, SNVSAI1D p.20); SLOPE C147 %s; SS C7 %s; RT R8 %s" % (ca["C147"]["value"], ca["C7"]["value"], ca["R8"]["value"]))
+    P("   the taps: ISNS(+) U2.14 on FE_ISNS_P through R160 from FE_OUT ('%s'); ISNS(-) U2.13 on FE_ISNS_N through R161 from" % ca["R160"]["value"].split("(")[1].split(", ", 1)[1].rstrip(")"))
+    P("     VBUS20 ('%s'); CS U2.16 through R150 from FE_CS, CSG U2.15 through R151 from GND. A netlist names the net a tap" % ca["R161"]["value"].split("(")[1].split(", ", 1)[1].rstrip(")"))
+    P("     lands on, not the point on it: it states the Kelvin intent and can neither establish nor refute the connection. The")
+    P("     current netlist shows NO tap error; the Kelvin connection is a LAYOUT property of a board this netlist does not yet have")
     P("   board E's VIN_RAW sources: the vehicle entry (F1 '%s', LM5069 U6) and the panel tracker (LT8705A, R5 '%s', L1 '%s')," % (
         e_f1.split(":")[0], e_r5.split(" (")[0], e_l1.split(" (")[0]))
     P("   ORed through the ideal diode U4 with Q2 '%s'; the panel input F2 '%s'" % (e_q2.split(" (")[0], e_f2.split(":")[0]))
@@ -322,7 +374,13 @@ def main():
     P("     VGS 6 V and 10 V curves, read by pixel")
     P("     (INFERRED): " + ", ".join("%.0f C %.2f" % (k, v) for k, v in sorted(k_rds.items())))
     P("   VBUS20 bulk EEHZK1V331P (MAKER, %s p.2): %.1f A rms at 100 kHz, 125 C; the correction factor is 1.00 from 100 to 500 kHz" % (EEHZK, ripple_bulk))
-    P("   J_VR spring pins (MAKER, %s): %.0f A continuous at a 10 C rise (the 085X series)" % (MILLMAX, pin_a))
+    P("   J_VR spring pins: '%s' (NETLIST). The cited page (%s) rates the 0850, 0851, 0852 and 0853 at %.0f A" % (
+        ca["J_VR1"]["value"].split("(")[1].split(",")[0], MILLMAX, pin_a))
+    P("     continuous at a 10 C rise and does not list the 0858: a SIBLING's figure. The 0858's own product page is not held in this")
+    P("     tree (CHECK-3 read it: 'Inner Spring Dependent', spring 82 '12 Amp', no rise stated). The %.0f A is used as the basis" % pin_a)
+    P("   VBUS20's bank, per can (gen_sch_a.py, the third fix-up of 26 Sep 2026, over its dense bands of ESL, capacitance, both")
+    P("     switching frequencies and VBAT, the front end's output ripple AND U3's pulsed input current): the worst can %.2f A at" % can57[0])
+    P("     5.7 A matched, %.2f A at a 1.5:1 ESR spread, %.2f A at 2:1; %.2f / %.2f / %.2f A at 5.0 A; the rating %.1f A a can" % (can57[1], can57[2], can50[0], can50[1], can50[2], ripple_bulk))
     P("   board E's tracker LT8705A (MAKER, %s p.3, E and I grades): buck current sense %.0f / %.0f / %.0f mV over R5 5 mOhm" % (
         LT8705A, vcs_trk[0] * 1e3, vcs_trk[1] * 1e3, vcs_trk[2] * 1e3))
     P("   the kit: the worst inside air in use %.1f C, the in-use minimum %.0f C (%s)" % (t_air, t_cold, ENVELOPE))
@@ -336,10 +394,21 @@ def main():
     P("   proposed, R11 %.1f mOhm: %.3f / %.3f / %.3f A" % ((r11_prop * 1e3,) + prop))
     P("   the printed band alone (VSNS over R11): held %.2f / %.2f / %.2f A; proposed %.2f / %.2f / %.2f A" % (
         vsns[0] / R11_HELD, vsns[1] / R11_HELD, vsns[2] / R11_HELD, vsns[0] / r11_prop, vsns[1] / r11_prop, vsns[2] / r11_prop))
-    P("   what passes R11 in service: U3 at its %.3f A maximum plus %.3f A of VBUS20's other loads (U2's BIAS: its %.0f mA" % (u3_max, other_i, iq_vin * 1e3))
-    P("     operating current and four FETs' 62 nC maximum gate charge at %.0f kHz; R197; the divider; INFERRED) = %.3f A" % (fsw[2] / 1e3, serv))
+    P("   what passes R11 in service: U3 at its %.3f A maximum plus %.3f A of VBUS20's other loads (INFERRED) = %.3f A" % (u3_max, other_i, serv))
+    gq = 62e-9 * fsw[2]
+    parts_boost = iq_vin + 2 * gq + 0.019 + 21.0 / 100e3 + 21.0 / 250e3
+    P("     the parts of the %.3f A (CHECK-3 minor 3): U2's BIAS, its %.0f mA operating current (p.6) and the gate charge, %.0f nC a FET" % (other_i, iq_vin * 1e3, 62))
+    P("     (CSD p.3, the maximum at 10 V, above its value at VCC's 7.35 V) at %.0f kHz: %.3f A for the two FETs that switch in boost or" % (fsw[2] / 1e3, 2 * gq))
+    P("     buck, %.3f A if all four switch (the sheet does not say which switch in its transition region); U3's own VBUS pin, which R16" % (4 * gq))
+    P("     does not see: its %.1f mA light-load current (SLUSE66A p.12, typical) and REGN's gate drive of U3's FETs, about 0.019 A in all" % (u3_light * 1e3))
+    P("     by CHECK-3 (the CSD1757x sheets it read are held back, not in this tree; REGN's current limit, %.0f mA maximum, p.11, bounds" % (regn_lim * 1e3))
+    P("     it); R197 0.21 mA; R6 and R7 0.08 mA. By parts: %.3f A with two FETs switching (CHECK-3: 0.051 A), %.3f A with four;" % (
+        parts_boost, parts_boost + 2 * gq))
+    P("     %.3f A is carried, as CHECK-3 closed the margin on it" % other_i)
     P("   MARGIN, the front end's minimum over what passes in service: held %+.3f A (THE FRONT END LIMITS FIRST); proposed %+.3f A" % (
         held[0] - serv, prop[0] - serv))
+    P("     (CLOSED by CHECK-3 on these inputs; with four FETs switching and U3's pin at CHECK-3's 0.019 A it would read %+.3f A)" % (
+        prop[0] - u3_max - (parts_boost + 2 * gq)))
     P("   (the energy model's entry E2 carries the printed %.2f A minimum; the stacked %.2f A is still above U3, so no energy result" % (
         vsns[0] / r11_prop, prop[0]))
     P("   moves)")
@@ -357,34 +426,42 @@ def main():
     fe_amps = (kin["rails"]["FE_OUT"]["amps_typ"], 3.80)
     err_mv = tap["FE_ISNS_P"][2] + tap["FE_ISNS_N"][2]
     r_par_max = (vsns[0] - offs) / serv - r11_prop * 1.01 * (1 + tcr_r * dt_r)
-    P("   THE TAPS, a condition of every band above: VSNS over R11 alone holds only for a Kelvin connection. The tree's last reading,")
-    P("     %s (%s, ADVISORY, board sha256/16 %s, the routed board in the tree today (%s), laid" % (
-        KELVIN, kv["ts"][:10], kv["inputs"]["board"]["sha256_16"], "the same file" if b_sha == kv["inputs"]["board"]["sha256_16"] else "NOT the same file"))
-    P("     before the ISNS filter R160, R161 entered the netlist): %s between %s and %s carries %.2f mV, %s between %s and %s %.2f mV" % (
-        "FE_ISNS_P", tap["FE_ISNS_P"][0], tap["FE_ISNS_P"][1], tap["FE_ISNS_P"][2], "FE_ISNS_N", tap["FE_ISNS_N"][0], tap["FE_ISNS_N"][1], tap["FE_ISNS_N"][2]))
-    P("     of copper drop. Both ADD to the sensed voltage (INFERRED: on FE_OUT R11.1 is the only sink, on VBUS20 R11.2 the only source),")
-    P("     so the front end limits lower. At dc_drop's solved current (FE_OUT's declared %.1f A typical today; pcb_sensitive.yaml's" % fe_amps[0])
-    P("     text names %.2f A) the two are %.1f to %.1f mOhm together, as large as R11 itself: on that board the held front end would" % (
-        fe_amps[1], err_mv / fe_amps[0], err_mv / fe_amps[1]))
-    P("     limit at about %.1f to %.1f A typical, the proposed at about %.1f to %.1f A, BOTH under U3 (INFERRED)" % (
-        vsns[1] / (R11_HELD + err_mv * 1e-3 / fe_amps[1]), vsns[1] / (R11_HELD + err_mv * 1e-3 / fe_amps[0]),
-        vsns[1] / (r11_prop + err_mv * 1e-3 / fe_amps[1]), vsns[1] / (r11_prop + err_mv * 1e-3 / fe_amps[0])))
-    P("     The proposed margin tolerates at most %.2f mOhm between R11's pads and its two taps together (%.1f mV at %.3f A, %.1f %% of" % (
+    r_par_25 = tuple(r_par_max / (1 + CU_TCR * (tc - 25.0)) for tc in (t_air, R11_TEMP_MAX))
+    P("   THE TAPS, a condition of every band above: VSNS over R11 alone holds only where R160 and R161 meet R11 at its own pads.")
+    P("     IMPLEMENTATION REQUIREMENT (not a defect of the current netlist, which has no layout): the copper R11's current shares with")
+    P("     the two taps, both sides together, at most %.3f mOhm at its working temperature: %.2f mV at %.3f A, %.1f %% of the 50 mV scale." % (
         r_par_max * 1e3, r_par_max * serv * 1e3, serv, r_par_max * serv * 1e3 / 50.0 * 100))
-    P("     the 50 mV scale): Kelvin taps on R11 (the maker's p.3 pad drawing shows separate sensing traces) are a condition of the change")
-    P("   M1 with the held circuit (MODELED, %s case GEN, board A as generated, the reference day at 40/0): %s" % (
-        EB_OUT, "; ".join("%s NOT MET, %s / %s Wh unserved (TYP / WAB)" % r_ for r_ in gen_rows)))
-    P("   GEN's own setting against the stacked band: U3 at %s A, its maximum %s A, plus %.3f A of the other loads = %.3f A through R11," % (
-        gen_u3[1], gen_u3[2], other_i, float(gen_u3[2]) + other_i))
-    P("     against the stacked minimum %.3f A: %+.3f A (energy_basis names 50 mA between U3's maximum and" % (
-        held[0], held[0] - float(gen_u3[2]) - other_i))
-    P("     the printed %s A minimum; with the other loads and the stacked band the held circuit's front end can limit first even at GEN)" % gen_u3[0])
-    P("   M1 conditional on the change (MODELED, the same file; every case but GEN presumes it; COMB/EACH as in its 1d):")
-    for lab_, rows_ in (("NOM (the declared efficiencies, TI's U3 reading)", nom_rows), ("WE (itself conditional on three undocumented efficiencies)", we_rows)):
-        P("     %s:" % lab_)
-        for r_ in rows_:
-            P("       %s TYP %s (%s); WAB %s (%s)" % (r_[0], r_[1].strip(), r_[2], r_[3].strip(), r_[4]))
-    P("     4S9P: NOT MET in every case of that file, with or without the change")
+    P("     At 25 C (layout extraction, the bench) that is %.3f mOhm with the copper at %.0f C and %.3f mOhm at %.0f C (copper %.5f /K," % (
+        r_par_25[1] * 1e3, R11_TEMP_MAX, r_par_25[0] * 1e3, t_air, CU_TCR))
+    P("     INFERRED): the criterion is %.2f mOhm at 25 C. Verification: (1) the laid board's extraction (dc_drop's mesh, kelvin_check" % (r_par_25[1] * 1e3))
+    P("     on FE_ISNS_P and FE_ISNS_N, declared in pcb_sensitive.yaml) reads at most %.2f mOhm for the two taps together; kelvin_check's" % (r_par_25[1] * 1e3))
+    P("     own 1 % per tap (0.5 mV of 50 mV at the solved current) is stricter and closes it too; (2) on the bench at 25 C with a")
+    P("     known current I, the DC voltage across U2 pins 14 and 13 exceeds I x R11 (R11 measured four-wire at its pads) by at most")
+    P("     %.2f mOhm x I (1.7 mV at 6.0 A)" % (r_par_25[1] * 1e3))
+    P("     HISTORICAL EVIDENCE, revision A32 only (%s, last commit %s of %s, routed): U2 pins 13 to 16 sit on %s," % (
+        A32[0], A32[1], a32_log[1], ", ".join(x.lstrip("/") for x in a32_isns)))
+    P("     the power nets themselves, with no R160, R161, R150 or R151. %s (%s, ADVISORY, board sha256/16 %s, %s)" % (
+        KELVIN, kv["ts"][:10], kv["inputs"]["board"]["sha256_16"], "this file" if b_sha == kv["inputs"]["board"]["sha256_16"] else "NOT this file"))
+    P("     read %.2f mV of copper drop between %s and %s and %.2f mV between %s and %s at dc_drop's solved current" % (
+        tap["FE_ISNS_P"][2], tap["FE_ISNS_P"][0], tap["FE_ISNS_P"][1], tap["FE_ISNS_N"][2], tap["FE_ISNS_N"][0], tap["FE_ISNS_N"][1]))
+    P("     (FE_OUT's declared %.1f A typical today; pcb_sensitive.yaml's text names %.2f A): %.1f to %.1f mOhm together, both adding to" % (
+        fe_amps[0], fe_amps[1], err_mv / fe_amps[0], err_mv / fe_amps[1]))
+    P("     the sensed voltage (INFERRED: R11.1 is FE_OUT's only sink, R11.2 VBUS20's only source). It shows how large a tap error has")
+    P("     been on this board; it is not a reading of the current netlist's board, which does not exist")
+    der_max = max(U3_DERATED + 0.1, U3_DERATED * (1 + acc))
+    P("   CURRENT-LIMIT COORDINATION of the circuit as drawn (entry E1): U3 at %s A, its maximum %s A, plus %.3f A of the other loads =" % (
+        gen_u3[1], gen_u3[2], other_i))
+    P("     %.3f A through R11, against the stacked minimum %.3f A: %+.3f A (energy_basis names 50 mA between U3's maximum and the printed" % (
+        float(gen_u3[2]) + other_i, held[0], held[0] - float(gen_u3[2]) - other_i))
+    P("     %s A minimum; with the other loads and the stacked band the front end can limit first)" % gen_u3[0])
+    P("   THE DERATED VARIANT, U3 at %.2f A: its maximum %.3f A plus %.3f A = %.3f A against %.3f A: %+.3f A. It fixes the coordination" % (
+        U3_DERATED, der_max, other_i, der_max + other_i, held[0], held[0] - der_max - other_i))
+    P("     only; it resolves no other item and it does not meet M1 (l3plane three_cases.out). With the other loads at four FETs'")
+    P("     %.3f A it would read %+.3f A; the next setting down, 4.00 A (the register's 50 mA steps, INFERRED from CHARGER.md's code" % (
+        parts_boost + 2 * gq, held[0] - der_max - (parts_boost + 2 * gq)))
+    P("     124 for 6.2 A), holds %+.3f A and %+.3f A" % (held[0] - max(4.10, 4.0 * (1 + acc)) - other_i, held[0] - max(4.10, 4.0 * (1 + acc)) - (parts_boost + 2 * gq)))
+    P("   M1 for each case (as drawn, the derated variant, the resistor-only proposal, the hypothetical corrected path): l3plane")
+    P("     three_cases.out, which reads this file's bands")
     P("")
 
     # ---------------------------------------------------------------- 4. the power path
@@ -447,13 +524,16 @@ def main():
             rise = 40.0 * (s["rms"] / irms40) ** 2
             p_dcr = s["rms"] ** 2 * dcr_max * (1 + 0.0039 * (t_air + rise - 25.0))
             l1_ok = s["peak"] <= isat and s["rms"] <= irms40 and t_air + rise <= 165.0
-            P("     VIN %4.1f V (%s, D %.2f): in %.2f A; L1 average %.2f A, ripple %.2f A p-p, peak %.2f A against Isat %.1f A; rms %.2f A" % (
-                vin, s["mode"], s["d"], s["i_in"], s["i_l"], s["ripple"], s["peak"], isat, s["rms"]))
+            pk_b = s["i_l"] + s["ripple"] / 0.7 / 2.0
+            s["peak_b"] = pk_b
+            P("     VIN %4.1f V (%s, D %.2f): in %.2f A; L1 average %.2f A, ripple %.2f A p-p, peak %.2f A (%.2f A with Isat's 30 %% drop on" % (
+                vin, s["mode"], s["d"], s["i_in"], s["i_l"], s["ripple"], s["peak"], pk_b))
+            P("       top of the -20 %% tolerance, note 5) against the TYPICAL Isat %.1f A at 25 C; rms %.2f A" % (isat, s["rms"]))
             P("       L1: rise about %.0f K (the maker's 40 K at %.1f A scaled by the square, INFERRED; core loss excluded), part %.0f C;" % (
                 rise, irms40, t_air + rise))
-            bads = [x for x, bad in (("peak over Isat", s["peak"] > isat), ("rms over the 40 K Irms", s["rms"] > irms40),
+            bads = [x for x, bad in (("peak past the TYPICAL Isat (a soft saturation)", s["peak"] > isat), ("rms over the 40 K Irms", s["rms"] > irms40),
                                      ("part over 165 C", t_air + rise > 165.0)) if bad]
-            P("         DCR loss %.2f W; %s" % (p_dcr, "WITHIN the maker's figures" if l1_ok else "NOT WITHIN: " + ", ".join(bads)))
+            P("         DCR loss %.2f W; %s" % (p_dcr, "WITHIN the maker's figures" if l1_ok else "PAST: " + ", ".join(bads) + "; part %.0f C against 165 C" % (t_air + rise)))
             if s["mode"] == "boost" and s["peak"] > vcs_boost[0] / R12_CS:
                 caps = [(v / R12_CS - s["ripple"] / 2.0) for v in vcs_boost]
                 P("         the cycle-by-cycle boost limit (%s A peak over R12, p.7) may end the cycle first: L1's average at most" % " / ".join("%.0f" % (v / R12_CS) for v in vcs_boost))
@@ -479,7 +559,7 @@ def main():
                     parts.append("%s past 150 C (%.2f W at 150 C; needs RthetaJA <= %.0f C/W)" % (name, p150, need_rth))
                 else:
                     parts.append("%s %.2f W, TJ %.0f C" % (name, f(k_at(tj)), tj))
-            P("       FETs (RDS(on) max x Figure 8 at TJ, RthetaJA %.0f C/W): %s" % (rtja, "; ".join(parts)))
+            P("       FETs (RDS(on) max x Figure 8 at TJ, the maker's RthetaJA %.0f C/W on its 1 in2 pad, not board A's): %s" % (rtja, "; ".join(parts)))
             # capacitors
             if s["mode"] == "buck":
                 ic_in = math.sqrt((i_out ** 2) * s["d"] * (1 - s["d"]) + s["ripple"] ** 2 / 12.0)
@@ -488,16 +568,32 @@ def main():
                 ic_in = s["ripple"] / math.sqrt(12.0)
                 ic_out = i_out * math.sqrt(s["d"] / (1 - s["d"]))
             P("       input caps C11, C12: %.2f A rms together (INFERRED), no maker ripple rating held for FS32X106K101EGG: NOT ESTABLISHED;" % ic_in)
-            P("       output: %.2f A rms against %d x %.1f A = %.1f A of EEHZK1V331P (C13 to C15 on FE_OUT share it): %s" % (
-                ic_out, len(bulk), ripple_bulk, len(bulk) * ripple_bulk, "WITHIN" if ic_out <= len(bulk) * ripple_bulk else "NOT WITHIN"))
-            P("       J_VR1 to J_VR4: %.2f A a pin if shared evenly (INFERRED) against %.0f A at a 10 K rise: %s" % (
+            s["ic_out"] = ic_out
+            P("       J_VR1 to J_VR4: %.2f A a pin if shared evenly (INFERRED) against the sibling's %.0f A at a 10 K rise: %s" % (
                 s["i_in"] / 4.0, pin_a, "WITHIN" if s["i_in"] / 4.0 <= pin_a else "NOT WITHIN"))
         # R11
-        p_r11 = i_out ** 2 * (r11_prop if lab.startswith("proposed") else R11_HELD) * 1.01
+        r_this = (r11_prop if lab.startswith("proposed") else R11_HELD) * 1.01
+        p_r11 = i_out ** 2 * r_this
+        p_rip = {vin: (i_out ** 2 + res[(lab, vin)]["ic_out"] ** 2) * r_this for vin in (VIN_TRACKER, VIN_TREE, VIN_MAX)}
         allow = [(tc, p_rated * max(0.0, min(1.0, (t_derate1 - tc) / (t_derate1 - t_derate0)))) for tc in (t_air, R11_TEMP_MAX)]
-        P("     R11: %.2f W (I2R at +1 %%) against 3 W derated to %s; the 5 s overload 5 x 3 W is %.0f A: WITHIN" % (
-            p_r11, " and ".join("%.2f W at %.0f C" % (w, tc) for tc, w in allow),
-            math.sqrt(15.0 / (r11_prop if lab.startswith("proposed") else R11_HELD))))
+        k_r11 = (t_derate1 - t_derate0) / p_rated
+        P("     R11: %.2f W DC (I2R at +1 %%); with the output ripple, all of it taken through R11 (an upper bound: C13 to C15 on FE_OUT" % p_r11)
+        P("       take some): %s; against 3 W derated to %s; the 5 s overload" % (
+            ", ".join("%.2f W at %.1f V" % (p_rip[v], v) for v in (VIN_TRACKER, VIN_TREE, VIN_MAX)), " and ".join("%.2f W at %.0f C" % (w, tc) for tc, w in allow)))
+        P("       5 x 3 W is %.0f A: WITHIN. Its own temperature by the derating line's %.1f K/W (INFERRED): at most %.0f C" % (
+            math.sqrt(15.0 / (r_this / 1.01)), k_r11, t_air + max(p_rip.values()) * k_r11))
+        if lab.startswith("proposed, in"):
+            s_m = stage(prop[0], VIN_TREE)
+            ic_m = prop[0] * math.sqrt(s_m["d"] / (1 - s_m["d"]))
+            p_m = (prop[0] ** 2 + ic_m ** 2) * r_this
+            P("       where the band's MINIMUM is set (the proposed front end at %.3f A, at 9.0 V, with the ripple): %.2f W, R11 at most %.0f C," % (
+                prop[0], p_m, t_air + p_m * k_r11))
+            P("       under the ASSUMED %.0f C of section 3; hotter R11 at the band's maximum lowers that end" % R11_TEMP_MAX)
+        can_k = tuple(max(a57 / 5.7, a50 / 5.0) for a57, a50 in zip(can57, can50))
+        P("     VBUS20's bank, the worst can, scaled in proportion to the front end's current from the generator's figures (INFERRED;")
+        P("       the larger of its 5.7 A and 5.0 A points): %.2f A matched, %.2f A at 1.5:1, %.2f A at 2:1 (%.0f / %.0f / %.0f %% of %.1f A): %s" % (
+            can_k[0] * i_out, can_k[1] * i_out, can_k[2] * i_out, 100 * can_k[0] * i_out / ripple_bulk, 100 * can_k[1] * i_out / ripple_bulk,
+            100 * can_k[2] * i_out / ripple_bulk, ripple_bulk, "WITHIN" if can_k[2] * i_out <= ripple_bulk else ("OVER at 2:1" if can_k[0] * i_out <= ripple_bulk else "OVER")))
         # copper
         w = []
         for what, amps in (("FE_OUT and VBUS20", i_out), ("VIN_RAW at %.1f V" % VIN_TRACKER, res[(lab, VIN_TRACKER)]["i_in"]),
@@ -517,10 +613,13 @@ def main():
     P("     %.2f A. TRK_OUT %.2f A: at %.1f V the proposed in service carries %.2f A, the maximum %.2f A" % (
         fe_a_prop, trk_decl, VIN_TRACKER, res[(lab_s, VIN_TRACKER)]["i_in"], res[(lab_p, VIN_TRACKER)]["i_in"]))
     w_h, w_s, w_p = (res[(l_, VIN_TRACKER)]["p_out"] / ETA_FE for l_ in (lab_h, lab_s, lab_p))
-    P("   board E's 200 W stage (Option A(i)'s, NOT DESIGNED: a1elec CHARGER.md 2, 'its owner's'): the front end asks %.1f W in service" % w_s)
-    P("     (%.3f A at %.3f V over %.2f), WITHIN 200 W; held at its maximum %.1f W; proposed at its maximum %.1f W, OVER 200 W, so where" % (
-        serv, v_bus_max, ETA_FE, w_h, w_p))
-    P("     U3 does not limit (a fault) the stage or the array bounds the draw, not R11 (INFERRED)")
+    P("   board E's 200 W stage (Option A(i)'s, NOT DESIGNED: a1elec CHARGER.md 2, 'its owner's'). The front end's input is the stage's")
+    P("     OUTPUT: %.1f W in service (%.3f A at %.3f V over %.2f), %.1f W at the held maximum, %.1f W at the proposed maximum. Into" % (
+        w_s, serv, v_bus_max, ETA_FE, w_h, w_p))
+    P("     the stage at its DECLARED %.2f: %.1f, %.1f and %.1f W. The model's 200 W is a window on the stage's INPUT (energy_two_pack.py" % (
+        ETA_FE, w_s / ETA_FE, w_h / ETA_FE, w_p / ETA_FE))
+    P("     node_power: min(panel, window)); the stage has no design, so neither its input nor its output rating is established:")
+    P("     MISSING EVIDENCE. Where U3 does not limit (a fault) the stage or the array bounds the draw, not R11 (INFERRED)")
     P("   the vehicle entry alone: its LM5069 passes at most 6.15 A (gen_sch_e.py _VEH_T), so below %.1f V a vehicle alone cannot carry" % (w_s / 6.15))
     P("     the proposed in-service %.1f W (below %.1f V the held maximum %.1f W either): the front end's draw on the vehicle is bounded by" % (
         w_s, w_h / 6.15, w_h))
@@ -543,8 +642,10 @@ def main():
     P("   the CC loop: its gm amplifier (%.0f mS, p.7) discharges SS (C7 %s) when VSNS passes 50 mV (7.3.6, p.17): the loop's gain" % (
         gm_ss * 1e3, ca["C7"]["value"]))
     P("     per ampere scales with R11, so the proposed loop acts at %.2f of the held loop's gain (INFERRED); its response is a bench item" % (r11_prop / R11_HELD))
-    P("   the ISNS filter: 100 Ohm is the maker's ceiling (p.24) and R160, R161 are at it; unchanged. The bias offset is %.1f mV either" % (offs * 1e3))
-    P("     way, %.0f mA at the proposed R11 against %.0f mA at the held (in section 3's band)" % (offs / r11_prop * 1e3, offs / R11_HELD * 1e3))
+    P("   the ISNS filter: R160, R161 100 Ohm with C128 1 nF across, Figure 8-1's network ('often used across the ISNS(+) and ISNS(-)")
+    P("     pins', p.17); the sheet asks for the filter capacitor close to the IC between the pins (p.30). The 100 Ohm ceiling of p.24")
+    P("     is for the CS and CSG lines (R150, R151 sit at it), not for ISNS (CHECK-3 minor 4). Unchanged by R11. The bias offset is")
+    P("     %.1f mV either way, %.0f mA at the proposed R11 against %.0f mA at the held (in section 3's band)" % (offs * 1e3, offs / r11_prop * 1e3, offs / R11_HELD * 1e3))
     P("   the current-sense amplifier's range: ISNS common mode 0 to 55 V (p.5) against VBUS20 at most 23.40 V (s120's bound): unchanged;")
     P("     ISNS(+) to ISNS(-) is rated +-0.3 V (p.5): at the proposed R11 that is %.0f A, far past any current the path can carry" % (0.3 / r11_prop))
     P("   slope compensation: Eq. 26 (p.24) uses RSENSE, the CS resistor R12, and L1, not R11: CSLOPE = gmSLOPE x L1 / (RSENSE x ACS)")
@@ -556,6 +657,41 @@ def main():
     P("     unchanged; with the average limit raised they, not the average loop, bound L1 at a low VIN_RAW in an overload")
     P("   hiccup: MODE to VCC selects no hiccup (p.20), so a sustained overload stays in the average or the cycle-by-cycle limit")
     P("     indefinitely: at the proposed R11 it does so at the higher currents of section 4 (the held circuit sat there in service)")
+    P("")
+    # ---------------------------------------------------------------- 6. figures for the corrections' closure criteria
+    P("6. FIGURES FOR THE CORRECTIONS' CLOSURE CRITERIA (INFERRED from the relations above; none is a design)")
+
+    def peak_b(i_out, vin):
+        s_ = stage(i_out, vin)
+        return s_["i_l"] + s_["ripple"] / 0.7 / 2.0
+
+    def solve(f, lo, hi):
+        for _ in range(60):
+            mid = 0.5 * (lo + hi)
+            if f(mid) > 0:
+                hi = mid
+            else:
+                lo = mid
+        return 0.5 * (lo + hi)
+    tgt = 0.9 * isat
+    v_floor = solve(lambda v: tgt - peak_b(serv, v), VIN_TREE, VIN_TRACKER)
+    i9 = solve(lambda i: peak_b(i, VIN_TREE) - tgt, 1.0, serv)
+    P("   L1 at 90 %% of its typical Isat (%.2f A), the peak taken with Isat's 30 %% drop on top of the -20 %% tolerance:" % tgt)
+    P("     with U3 at its maximum (%.3f A through R11) the peak reaches it at VIN_RAW %.2f V; at 9.0 V it is reached at %.2f A through R11," % (
+        serv, v_floor, i9))
+    P("     that is U3's input at %.2f A (less the %.3f A of other loads): a VIN_RAW-scheduled limit at 9 V (a front end input of %.1f A," % (
+        i9 - other_i, other_i, stage(i9, VIN_TREE)["i_in"]))
+    P("     above the vehicle entry's %.2f A; the tracker holds %.1f V at U3's full demand, so in service no source gives more at 9 V:" % (6.15, VIN_TRACKER))
+    P("     such a limit charges below no source's available power there)")
+    can_k2 = max(can57[2] / 5.7, can50[2] / 5.0)
+    can_k0 = max(can57[0] / 5.7, can50[0] / 5.0)
+    P("   VBUS20's bank: the worst can reaches %.1f A at a front end current of %.2f A matched and %.2f A at a 2:1 ESR spread; at the" % (
+        ripple_bulk, ripple_bulk / can_k0, ripple_bulk / can_k2))
+    P("     proposed maximum %.3f A the bank's worst can must fall by %.2f to %.2f times (matched to 2:1) to meet %.1f A" % (
+        prop[2], can_k0 * prop[2] / ripple_bulk, can_k2 * prop[2] / ripple_bulk, ripple_bulk))
+    P("   the FETs: the RthetaJA each case needs for TJ 150 C in %.1f C air is printed in section 4 beside each FET" % t_air)
+    P("   R11's taps: at most %.2f mOhm at 25 C for the two together (section 3)" % (r_par_25[1] * 1e3))
+    P("   the derated variant: U3 at %.2f A clears the stacked minimum by %+.3f A on the carried %.3f A (section 3)" % (U3_DERATED, held[0] - der_max - other_i, other_i))
     P("")
     P("END. Desk figures on the makers' pages and the committed netlists; nothing is measured, nothing implemented.")
     return 0
