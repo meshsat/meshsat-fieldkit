@@ -66,6 +66,12 @@ L3-OD2 states the same dependency; the pairing is tested on the tree's own check
 unshown options are flagged NOT SHOWN and both-kept reads "at least 165.7 Wh"; the hold test runs on an unfilled copy;
 the binding refuses a relied-on file a check's sha list leaves out.
 
+**Round 3e** (on CHECK-5 of L3-R2, accepted: yes, of `028531e4`, the handover as prepared with the six decisions
+pending): the facts heading and the open-items sentence are rendered from the state (the checked basis and S-127's entry
+in the registry) and no longer say the figures are held; row L3-OD6's limitation is stated for each lid from
+`weather_basis.out` A; CHECK-4 and CHECK-5 are filed and named in `l3r2.yaml`'s `independent_check`, each verdict
+verified against its record's first line, so the gate's fourth condition reads MET while L3-R2 stays IN_PROGRESS.
+
 ## Files
 
 | File | What it is |
@@ -92,6 +98,7 @@ the binding refuses a relied-on file a check's sha list leaves out.
 | `conditional/cond.py`, `od_l3_1.py` to `od_l3_6.py` (round 3b: `od_l3_6.py` takes `--build TYP|WAB` and `--share 50|80|95`; rows 2 and 6 take `--table` on a copy) | PREPARED, NOT APPLIED: the exact registry change each answer of the owner to rows L3-OD1 to L3-OD6 makes. Each takes `--option`, the owner's own `--words` and `--date`, records an owner ruling carrying `decides: <row>:<option>`, applies its edits by id and asserted text, closes M-02 once rows 1 to 4 are decided with row 1 approved, and validates; `--check` writes nothing. Coherent by construction: row L3-OD1 fixes the store only, row L3-OD3 alone fixes the array, row L3-OD4 adopts a band only on 2S2P, and a row whose prerequisites fail is refused. Rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 refuse to write the tree's registry while `l3r2.yaml`'s `energy_basis` is not filed (D-22, D-23); `qmx-outside` also waits on `relocation_facts`. Row L3-OD4 adopts no band for `both-kept` nor beside a coverage target; row L3-OD6's `coverage` reads its figures only from the row's filled table and records an open conflict where the store does not fit; `both-kept` records one against REQ-072; `od_l3_1.py` carries a coverage target over when it restates REQ-072 |
 | `dryrun.py`, `dryrun.out` | every chain of the prepared scripts run on copies of the registry, the incoherent ones refused; the band, the keep figures and the coverage figures come from fixtures standing in for the energy basis |
 | `checks/check-l3r2-1.md` | the first independent check of L3-R2 (an AI check, accepted: no), filed byte for byte; its items are answered in round 2 |
+| `checks/check-l3r2-2.md` to `checks/check-l3r2-5.md` | the second to fifth checks of L3-R2 (AI checks), filed byte for byte: CHECK-2 to CHECK-4 not accepted, answered in rounds 3b, 3c and 3d; CHECK-5 accepted the handover as prepared at `028531e4`, its minors answered in round 3e |
 | `checks/energy-basis-check-2/` | the second independent check of the energy basis (`fnd/l3plane` at `ec415c09`; an AI check, accepted: yes), its report `CHECK-2.md`, its tools and outputs and the two modules of the first check they import, filed byte for byte |
 | `checks/energy-basis-check-1/` | the first independent check of stream l3plane's energy basis (branch `fnd/l3plane` at `6a283b25`; an AI check, accepted: no), its report `CHECK-1.md` and its own tools and outputs, filed byte for byte so that the facts CF-01 to CF-04 cite a file in the tree; its blocking items are the stream's to answer in its second round. Its tools read a checkout of that branch with its held files; they are not run here |
 

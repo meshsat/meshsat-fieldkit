@@ -683,3 +683,51 @@ def t_l3r2_the_wab_build_with_the_tablet_out_is_never_coherent_on_the_checked_ta
     _step("od_l3_2.py", "tablet-out", reg2)
     assert not _conflicts(reg2, "weather basis"), "the TYP mean day with the tablet out records a conflict"
 
+
+
+def t_l3r2_a_check_verdict_is_read_from_its_record():
+    """CHECK-5 of L3-R2, minor 4: the checks of the handover are filed byte for byte and each verdict is verified against
+    its record's first line, never trusted. The accepted CHECK-5 makes the gate's fourth condition MET while the others,
+    and so L3-R2 as a whole, stay NOT MET with the six decisions pending; a verdict its record does not state is refused."""
+    RL = _render_mod()
+    import copy
+    import rules_lib as R
+    data = RL.load_data()
+    chks = RL.handover_checks(data)
+    if not chks or str(chks[-1].get("verdict")).upper() != "ACCEPTED": raise Skip("no accepted check of L3-R2 is filed")
+    req = R.load_requirements()
+    dec = RL.decided(req, data)
+    g = RL.gate(req, dec, data, RL.load_h3())
+    assert g[3][1] is True, "the fourth condition reads NOT MET over an accepted check"
+    if not all(d["id"] in dec for d in data["decisions"]):
+        assert not all(x[1] for x in g), "the gate reads MET with rows pending"
+    for i, v in ((len(chks) - 1, "NOT_ACCEPTED"), (0, "ACCEPTED"), (len(chks) - 1, "PENDING")):
+        d2 = copy.deepcopy(data)
+        d2["independent_check"][i]["verdict"] = v
+        try:
+            RL.handover_checks(d2)
+        except RL.RenderError:
+            continue
+        raise AssertionError("a verdict %s its record %s does not state was accepted" % (v, d2["independent_check"][i]["record"]))
+
+
+def t_l3r2_the_held_sentences_follow_the_state():
+    """CHECK-5 of L3-R2, minor 1: the facts heading and the open-items sentence say the figures are HELD for S-127 only
+    while the checked basis is not filed or S-127 is open; on the tree, where both hold, neither sentence is rendered."""
+    RL = _render_mod()
+    import copy
+    import rules_lib as R
+    req, data = R.load_requirements(), RL.load_data()
+    held_facts, held_open = "stays HELD for the checked second round", "is layer 4's engineering input"
+    ok = RL.basis_ok(data)[0] and RL.basis_ok(data, "power_path_check")[0] and RL.item_state(req, "S-127")[0] == "closed"
+    if ok:
+        for name, body in RL.render_all().items():
+            assert held_facts not in body and held_open not in body, \
+                "%s states the figures HELD with the basis checked and S-127 closed" % name
+    d2 = copy.deepcopy(data)
+    d2["energy_basis"] = None
+    assert held_facts in RL.m1_figures_clause(req, d2), "an unfiled basis does not hold the figures"
+    req2 = copy.deepcopy(req)
+    req2["closed_items"] = [x for x in req2["closed_items"] if x["id"] != "S-127"]
+    req2["open_items"] = list(req2["open_items"]) + [{"id": "S-127", "class": "SESSION"}]
+    assert held_open in RL.s127_clause(req2, d2), "an open S-127 is not named as the rows' input"
