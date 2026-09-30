@@ -370,7 +370,10 @@ def t_l3r5_the_closure_rulings_and_the_current_owner_brief():
     assert heads[0].startswith("Current owner brief"), "the file does not open with the current owner brief"
     i = text.index("## Current owner brief"); j = text.index("\n## ", i + 5)
     brief = text[i:j]
-    assert len(brief.strip().split("\n")) <= 45, "the brief runs to %d lines" % len(brief.strip().split("\n"))
+    # 55 since round 5's fix round (the collaborator's closure check astra-check-l3r5-1, B1: the brief names the ASM and CHO
+    # records one by one instead of two blanket lines, and B3: the line that the approved change record governs until the
+    # documents' re-stamp); the brief stays one screen of 120-character lines.
+    assert len(brief.strip().split("\n")) <= 55, "the brief runs to %d lines" % len(brief.strip().split("\n"))
     for rid in sorted(set(re.findall(r"\bD-\d\d\b", brief))):
         assert rid in have, "the brief names %s, which no ruling carries" % rid
     for w in ("NO external battery", "48 to 72 hours is a baseline design objective", "Owner decisions open:** none",

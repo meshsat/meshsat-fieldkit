@@ -17,12 +17,21 @@ conditions stays an owner decision (D-31).
 
 **Mandatory requirements:** every requirement record but REQ-072, the constraints above and CFL-017's temperature
 requirements among them, unchanged (D-28, D-29; row L3-OD5, D-36). **Design objectives:** REQ-072 (D-28).
-**Modelling assumptions, not operating restrictions:** PS-IDLE-SPEC, 42.8 W over 39 loads; HF available, not receiving;
-the tablet not charged; a full store aged to 80 percent; SC-37's September mean day at Leiden on one plane, 40 degrees
-facing south, TYP, WAB a sensitivity (D-28; row L3-OD6, D-37); no deployment condition (row L3-OD4, D-35); the
-registry's ASM records. **Component selections, not owner requirements:** the Samsung INR18650-35E that D-06's pack
-carries (D-29; D-36); the registry's CHO records. D-06's one 4S3P pack stands; Option A(i)'s two packs and the 2S2P
-solar stage are layer 4 proposals (row L3-OD1 closed as layer 4 architecture under D-21 and D-28).
+**Modelling assumptions, not operating restrictions:** those of REQ-072's stated profile, and only those: PS-IDLE-SPEC,
+42.8 W over 39 loads; HF available, not receiving; the tablet not charged; a full store aged to 80 percent; SC-37's
+September mean day at Leiden on one plane, 40 degrees facing south, TYP, WAB a sensitivity (D-28; row L3-OD6, D-37); no
+deployment condition, the single plane a benchmark (row L3-OD4, D-35). The registry's ASM records are not covered by
+this line, each judged on its own record: ASM-006 carries owner ruling D-02e's operating condition "operate shaded",
+which binds; ASM-002 carries D-03's accepted residual risk (the drive unlock's common modes); ASM-005 is a technical
+assumption about the secure element written from D-03; ASM-007 is the session's reading (SC-04) of the owner's "MIL-STD
+if possible" for the pack; ASM-001 (SC-02), ASM-003 and ASM-004 are the session's or the model's; none of these four is
+an owner-approved operating restriction. **Component selections, not owner requirements:** the Samsung INR18650-35E cell
+that D-06's pack carries (D-29; D-36), the one replaceable selection these rulings establish. The registry's CHO records
+are not covered by this line: CHO-001, the device set, is the owner's ruling of 6 September 2026 and binds ("Owner
+rulings bind the picks; changing one is an owner decision"); CHO-003 rests on owner ruling D-16 (no vehicle surge
+claim), its clamp part an engineering pick; CHO-002, the duplicated WiFi link card, cites no owner ruling, an
+engineering selection. D-06's one 4S3P pack stands; Option A(i)'s two packs and the 2S2P solar stage are layer 4
+proposals (row L3-OD1 closed as layer 4 architecture under D-21 and D-28).
 
 **The honest state (D-28, D-31).** The present candidates miss the 48 to 72 hour objective even without tablet
 charging: the studied in-case store stops the kit at 05 UTC of the first night (11 to 23 hours), as drawn and on the
@@ -39,6 +48,8 @@ of the baseline, after the independent check.
 options), external battery options and the comparison's Options A and B, the ten-row recommendation string, rows
 L3-OD1, L3-OD2 and L3-OD4 held (D-22 to D-24), and removing HF or the tablet bracket from the lid: by D-28. The
 `reading-c` default for CFL-017: by D-29.
+
+## This file
 
 MESHSAT-1357. Filed on 30 September 2026 by the author of layer 3's second requirements issue (L3-R2, branch
 `fnd/l3r2`), so that the registry's owner rulings D-21 and D-22 and the pages of this folder cite a file rather than
