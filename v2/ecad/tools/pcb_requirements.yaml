@@ -1881,7 +1881,18 @@ session_choices:
       own; it is recorded so, it closes L-02, and the owner's own setting replaces it whenever he gives one. It decides
       nothing about the routes that would carry the failing balance by reopening an owner ruling or by accepting a
       residual, which are the owner's (M-02); the session's part is S-53. ENGINEERING-QUESTIONS EQ-13 states the same.
+      Superseded on 30 September 2026 by the owner's clarification D-28, applied as D-32: M1's runtime is a design
+      objective of 48 to 72 hours under REQ-072's stated operating profile, not a mandatory minimum; this choice no
+      longer governs M1's duration and is kept as history (L-02 stays closed, its value now the owner's).
     closes: [L-02]
+    superseded_on: "2026-09-30"
+    superseded_by: "D-28 (applied as D-32)"
+    superseded_why: >-
+      The owner's clarification D-28 of 30 September 2026, applied to row L3-OD7 as D-32: M1's runtime is a design
+      objective of 48 to 72 hours under REQ-072's stated operating profile (obligation OBJECTIVE), not a mandatory
+      minimum, and 72 hours is not elevated into one. The owner's own setting replaces this choice, as its reverse
+      clause says; the 72 hours it took no longer govern M1's duration. The row is kept as history: L-02 stays closed,
+      its value now the owner's.
     source: ["v2/docs/CONOPS.md section 3", "owner ruling D-06"]
   - id: SC-22
     authority: SESSION

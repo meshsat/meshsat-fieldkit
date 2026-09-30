@@ -519,3 +519,38 @@ def t_l3r5_the_closure_pages_and_the_reissue():
     obj = {"L3-OD7": x("objective-48-72", hf="available", external="no")}
     assert RL.coherent(dict(obj, **{"L3-OD6": x("mean-day", build="TYP"), "L3-OD2": x("both-kept")}), data)[1]
     assert RL.settled("L3-OD1", obj, data) and not RL.settled("L3-OD1", a48, data), "row L3-OD1's closure is not the closure's"
+
+
+def t_l3r5_fix_round_superseded_conditions_are_marked_where_they_stand():
+    """The collaborator's closure check astra-check-l3r5-1, B2: the 72 hours of SC-21 and the deployment conditions are no
+    longer classified as requirements in the current views. SC-21 is marked superseded in the registry by D-28 (applied as
+    D-32), its taken value and L-02 kept, and the mark is printed on the trace page and in the operating conditions; the
+    two classification rows keep their place marked SUPERSEDED with what holds now; D-21's quoted instruction carries its
+    mark; acceptance definitions 1b and 4b are marked; the supersession script refuses a second run. No current view
+    classifies 72 hours or a deployment condition as a REQUIREMENT."""
+    import rules_lib as R
+    RL = _rl()
+    req, data = R.load_requirements(), RL.load_data()
+    sc = next(c for c in req["session_choices"] if c["id"] == "SC-21")
+    assert sc.get("superseded_on") == "2026-09-30" and "D-32" in str(sc.get("superseded_by")) and sc.get("closes") == ["L-02"]
+    assert "72 hours on the PS-IDLE-SPEC energy basis (42.8 W)" in " ".join(sc["taken"].split())
+    spec = open(os.path.join(L3, "REQUIREMENTS-L3-R2.md"), encoding="utf-8").read()
+    rec = open(os.path.join(L3, "L3-RECONCILIATION.md"), encoding="utf-8").read()
+    dec_page = open(os.path.join(L3, "OWNER-DECISIONS-L3.md"), encoding="utf-8").read()
+    trace = open(os.path.join(ROOT, "v2", "docs", "REQUIREMENTS-TRACE.md"), encoding="utf-8").read()
+    assert "**SUPERSEDED on 2026-09-30 by D-28 (applied as D-32):** 72 hours on the PS-IDLE-SPEC energy basis" in spec
+    assert "SUPERSEDED 2026-09-30 by D-28 (applied as D-32): 72 hours on the PS-IDLE-SPEC" in trace
+    assert "**Superseded in part by D-28 (applied as D-32):" in spec, "D-21's quoted instruction carries no mark"
+    for c in data["classification"]:
+        text = " ".join(c["item"].split())
+        if ("72 hours" in text and "48 to 72" not in text) or "deployment conditions" in text:
+            assert c.get("superseded_by") and c.get("now"), "%r is still classified %s" % (text[:60], c["level"])
+    assert "| SUPERSEDED by D-28, applied as D-32 (30 September 2026) (was REQUIREMENT (layer 3)):" in rec
+    assert "| SUPERSEDED by D-28, applied as D-35 (30 September 2026) (was REQUIREMENT (layer 3)):" in rec
+    assert "| DESIGN OBJECTIVE (layer 3) |" in rec
+    for label in ("1b", "4b"):
+        a = next(x for x in data["acceptance_definitions"] if x["label"] == label)
+        assert a.get("superseded_by") and "**Superseded by %s:**" % a["superseded_by"] in dec_page
+    assert "72 hours today" not in dec_page and "(REQ-072 today)" not in dec_page
+    r = _run([os.path.join(REC5, "apply_l3r5_supersede_sc21.py"), "--check"])
+    assert r.returncode == 2 and "has run" in r.stdout, "a second run of the SC-21 script was not refused:\n%s" % r.stdout
