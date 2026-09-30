@@ -13,12 +13,16 @@ The cases (board A's front end U2 LM5176 with its average-current sense R11, boa
   AS DRAWN    R11 10 mOhm and U3 as set (entry E1, IIN_HOST 4.15 A): the lower of U3's setting and the front end's stacked
               minimum less the other VBUS20 loads reaches U3 (r11_dep.out 3). The model's min(available, cap) is kept, which
               the as-drawn charge path does not guarantee either (r11dep A-2): these figures are its upper bound.
-  DERATED     a variant of AS DRAWN, U3's IIN_HOST at 4.05 A: it fixes the current-limit coordination only (U3's maximum plus
-              the other loads under the front end's stacked minimum); it resolves nothing else.
+  DERATED     a variant of AS DRAWN, U3's IIN_HOST at 4.00 A: it fixes the current-limit coordination only (U3's maximum plus
+              the other loads under the front end's stacked minimum, whatever those loads are); it resolves nothing else.
   RESISTOR    R11 6.2 mOhm and U3 IIN_HOST 6.2 A, nothing else changed: INCONCLUSIVE. Its upper bound is the corrected path's
               figure; its lower bound here takes r11dep B-5's inferred collapse (a fixed IIN_HOST with a source that gives less
               than U3 asks walks VIN_RAW down to the stage's latch): an hour whose power at VBUS20 is under U3's cap delivers
-              nothing. That bound is pessimistic in hours where the packs are full or tapering, when U3 asks less than its cap.
+              nothing. That bound is pessimistic in hours where the packs are full or tapering, when U3 asks less than its cap;
+              pessimistic too because the restart latch brings the front end back within about 1 to 2.5 s (gen_sch_a.py) and
+              U3 resets its input limit to 3.25 A at every bus drop (SLUSE66A pp.26 and 80), asking 65 W until the host
+              rewrites it; and on real weather a dip inside an hour whose mean clears the cap can also collapse the bus, so
+              it is a bound on hourly means only.
   CORRECTED   HYPOTHETICAL: the figures energy_basis.py's NOM and WE assume (min(available, cap) at U3's 6.2 A), valid only
               with every correction r11dep's R11-DEPENDENCY.md lists; the stacked minimum of the proposed front end fed as
               its cap moves no result (checked here).
@@ -50,7 +54,9 @@ EB_OUT = "v2/docs/records/l3plane/energy_basis.out"
 WB_OUT = "v2/docs/records/l3plane/weather_basis.out"
 R11_OUT = "v2/docs/records/r11dep/r11_dep.out"
 LIDS = ((9, "4S9P both kept"), (14, "4S14P tablet out"), (15, "4S15P QMX out"))
-U3_DERATED = 4.05          # r11dep A-1, the derated variant: IIN_HOST at 4.05 A nominal or less (4.05 x 1.025 + 0.060 = 4.211 A, under 4.212 A)
+U3_DERATED = 4.00          # r11dep A-1, the derated variant: IIN_HOST at 4.00 A, which clears the front end's 4.212 A stacked minimum
+                           # whatever the other loads are (+0.052 A on 0.060 A, +0.033 A on 0.079 A); 4.05 A cleared by 1 mA and
+                           # failed on 0.079 A, so it was not chosen (CHECK-4 minor 1)
 U3_TOL = 0.1               # SLUSE66A 9.6.22 p.80: the maximum 100 mA above the setting; the minimum mirrored (INFERRED), as WE's 6.1 A
 
 
