@@ -853,3 +853,22 @@ restrictive deployment condition accepted. Added to Layer 3, bounded, reusing th
 5. One compact comparison table, independently checked, with a recommendation and the exact owner choice. Neither
    option is adopted until the owner selects it. The owner's selection then enters the decision package (a runtime
    row), and Layer 3's acceptance work continues. Layer 4 and later stays paused.
+
+### Plan update, 30 September 2026 15:10 CEST: Layer 3 closes in one bounded closure cycle (the owner's instruction)
+
+No new tooling, document polishing or broad review rounds. Battery and solar mandatory; HF and the tablet preserved;
+Layer 4 and later paused until Layer 3 is accepted. The cycle, in order:
+1. A proposed USB-C tablet service budget (energy delivered per day, peak output, converter losses, schedule and
+   starting charge), labelled a proposal, not verified tablet endurance, checked against the 42.8 W profile for double
+   counting, and carried into the runtime comparison (Option A: 48 hours required, 72 desired; Option B: 72 hours
+   required with the necessary battery upgrade), battery-only apart from solar-assisted, corrected hardware
+   conditional. Neither the 72 hours (the session's SC-21, preserved by D-20) nor the worst array build is treated as
+   an owner ruling without its recorded authority. One independent check of the decisive figures.
+2. Every remaining owner choice in ONE message, reconciled against his explicit answers, each with a recommendation,
+   its quantified consequence and the exact short answer.
+3. While the answers are pending: the target-and-candidate semantics (round 5) finished, checked and integrated.
+4. After the answers: applied, the revised requirements and the affected CONOPS and PRODUCT-BRIEF passages generated,
+   one targeted acceptance review, actual blocking findings fixed and verified, the rest backlogged.
+5. Closure reported honestly: complete only when the chosen requirements are clear, traceable, testable, feasible on a
+   credible assessment and accepted; a surviving feasibility blocker is delivered with the handover as the exact
+   failing condition, its quantified gap and the result needed.
