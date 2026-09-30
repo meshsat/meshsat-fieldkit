@@ -1,0 +1,82 @@
+RUNTIME AND BATTERY: BATTERY-ONLY ENDURANCE AND BATTERY PLUS SOLAR, 48 AND 72 HOURS (runtime.py, stream l3batt, MESHSAT-1357).
+PROTOTYPE DESIGN: nothing built, bought, powered or measured. MODELED on a1elec's energy_two_pack.py through energy_basis.py's
+set-up (pinned); other cells INFERRED from their makers' figures. HF and the tablet kept in every arrangement (a1mech
+arrangement A). The author's analysis, AI arithmetic; not a qualified review and not the independent check.
+
+0. REPRODUCTION: the 72 h mean-day runs of the both-kept lid (4S9P) reproduce energy_basis.out section 5's NOM and WE rows:
+   yes
+
+1. BATTERY-ONLY ENDURANCE to the kit's shutdown (each pack to its own 3.00 V line with the 5 % reserve), PS-IDLE-SPEC
+   42.8 W at the pack terminals plus the lid path's standby drain 0.025 W where a lid pack exists; aged to 80 % (REQ-014);
+   both packs at +20 C, then both at -10 C (REQ-046's discharge floor). The 35E: the model's chain (C_min 3.35 Ah, rate,
+   mean voltage, the 3.00 V fraction, the cold factor 0.4124 at 1C, a lower bound at the kit's 0.2 A a cell). The lid's
+   discharge path loss (V(AK) and the loop) is charged on the lid's share. No solar.
+   D06: D-06's 4S3P of 35E (12 cells), no lid pack            usable  107.9 Wh /   44.5 Wh:  2.52 h at +20 C,  1.04 h at -10 C
+   A35: A(i) base 4S6P + lid 4S9P of 35E (60 cells)           usable  544.4 Wh /  224.5 Wh: 12.71 h at +20 C,  5.24 h at -10 C
+   A21-P45B: base 4S6P 35E + lid 4S6P INR-21700-P45B          usable  496.0 Wh /  342.7 Wh: 11.58 h at +20 C,  8.00 h at -10 C
+   A21-50E: base 4S6P 35E + lid 4S6P SDI INR21700-50E         usable  537.0 Wh /  320.0 Wh: 12.54 h at +20 C,  7.47 h at -10 C
+   A21-M50LT: base 4S6P 35E + lid 4S6P INR21700M50LT          usable  533.6 Wh /  310.7 Wh: 12.46 h at +20 C,  7.26 h at -10 C
+   X-NH1: A35 + 1 NH2054HD34 outside the case (PROPOSAL)      usable  611.6 Wh /  252.2 Wh: 14.28 h at +20 C,  5.89 h at -10 C
+   X-NH2: A35 + 2 NH2054HD34 outside the case (PROPOSAL)      usable  678.7 Wh /  279.9 Wh: 15.85 h at +20 C,  6.54 h at -10 C
+   the 21700 lids: each maker's minimum energy x the 35E model's end-of-discharge fraction 0.937 at the lid's current x 0.80
+   aged (INFERRED); the cold factor from each sheet: P45B 0.910 (read by eye from the Discharge Temperature Characteristics at 4.5 A: about 4.2 Ah at -20 C against about 4.6 Ah at 23 C to 2.5 V (INFERRED; no -10 C curve)); 50E 0.722 (7.5: -10 C 70 %, 23 C 97 % at 1C (4,900 mA): 0.722); M50LT 0.700 (4.2: -10 C at least 70 % of Whmin (0 C 80 %))
+   the NH2054HD34: its rated 6.136 Ah x 14.4 V to 11.0 V (3.1.2) x 0.80 aged x 0.95 reserve = 67.2 Wh; its cold factor not
+   printed as text, the 35E's 0.4124 taken (INFERRED, a lower bound); its discharge over-current trips at 8.25 A (the kit's
+   PS-IDLE-SPEC draws about 3 A; a PA key-down draws about 10 A: a smart pack alone cannot carry a key-down)
+
+2. BATTERY PLUS SOLAR, SC-37's mean September day at Leiden on the 40 degree south plane, TYP (the case) and WAB (a
+   sensitivity), 400 Wp in 2S2P into the model's 200 W stage window, the lid pack at 13.23 C and the base at +20 C, both
+   full and aged at the start, starts 06 and 18 UTC. HF and the tablet kept: base 4S6P + lid 4S9P of 35E. Each cell: the
+   lowest store (base, lid) and COMB/EACH, or where the kit stops (hours from the 06 / 18 UTC starts: hour 23 of the 06 UTC
+   start and hour 11 of the 18 UTC start are both 05 UTC, the first night's end) and the energy unserved
+   the store at the start (usable, aged): base 218.4 Wh at +20 C and lid 284.2 Wh at 13.23 C, 502.6 Wh together; the mean
+   day's hours at or under 60 W/m2 on the plane (UTC): 00, 01, 02, 03, 04, 05, 06, 17, 18, 19, 20, 21, 22, 23, 14 of 24 (the profile: 0, 0, 0, 0, 0, 0, 57, 191, 329, 441, 503, 517, 521, 484, 407, 324, 189, 51, 0, 0, 0, 0, 0, 0)
+   48 HOURS
+     DRAWN    TYP NOT MET, stops at h 23/11, 266.7 unserved            WAB NOT MET, stops at h 23/11, 281.3 unserved
+     NOM      TYP NOT MET, stops at h 23/11, 102.2 unserved            WAB NOT MET, stops at h 23/11, 106.3 unserved
+     NOM90    TYP NOT MET, stops at h 23/11, 105.5 unserved            WAB NOT MET, stops at h 23/11, 109.3 unserved
+     WE       TYP NOT MET, stops at h 23/11, 104.6 unserved            WAB NOT MET, stops at h 23/11, 108.6 unserved
+     WE90     TYP NOT MET, stops at h 23/11, 112.5 unserved            WAB NOT MET, stops at h 23/11, 136.5 unserved
+   72 HOURS
+     DRAWN    TYP NOT MET, stops at h 23/11, 494.7 unserved            WAB NOT MET, stops at h 23/11, 522.4 unserved
+     NOM      TYP NOT MET, stops at h 23/11, 165.7 unserved            WAB NOT MET, stops at h 23/11, 172.6 unserved
+     NOM90    TYP NOT MET, stops at h 23/11, 171.1 unserved            WAB NOT MET, stops at h 23/11, 177.6 unserved
+     WE       TYP NOT MET, stops at h 23/11, 169.2 unserved            WAB NOT MET, stops at h 23/11, 176.1 unserved
+     WE90     TYP NOT MET, stops at h 23/11, 184.1 unserved            WAB NOT MET, stops at h 23/11, 230.8 unserved
+   the cases: DRAWN = AS DRAWN (R11 10 mOhm, U3 4.15 A), NOM inputs; min(available, cap) kept: an upper bound; NOM = CORRECTED PATH, HYPOTHETICAL, NOM: CONDITIONAL on the three declared efficiencies; NOM90 = the same with the three efficiencies at their 0.90 bracket; WE = CORRECTED PATH, HYPOTHETICAL, WE: CONDITIONAL on the three declared efficiencies; WE90 = the same with the three efficiencies at their 0.90 bracket
+
+3. THE STORE THAT CARRIES THE MEAN DAY (the least lid parallel count, continuous, the base held at 4S6P; its excess over the
+   both-kept lid's 4S9P is the upgrade a 72 h requirement asks, in 35E-equivalent cells and usable Wh at the lid's 13.23 C)
+     48 h NOM    TYP: lid 4S11.16P, against the both-kept 4S9P: +8.6 35E cells, +68.1 Wh usable
+     48 h NOM    WAB: lid 4S11.25P, against the both-kept 4S9P: +9.0 35E cells, +70.9 Wh usable
+     48 h WE     TYP: lid 4S11.52P, against the both-kept 4S9P: +10.1 35E cells, +79.6 Wh usable
+     48 h WE     WAB: lid 4S12.44P, against the both-kept 4S9P: +13.8 35E cells, +108.6 Wh usable
+     48 h NOM90  TYP: lid 4S11.54P, against the both-kept 4S9P: +10.1 35E cells, +80.1 Wh usable
+     48 h NOM90  WAB: lid 4S12.68P, against the both-kept 4S9P: +14.7 35E cells, +116.3 Wh usable
+     72 h NOM    TYP: lid 4S11.16P, against the both-kept 4S9P: +8.6 35E cells, +68.1 Wh usable
+     72 h NOM    WAB: lid 4S11.69P, against the both-kept 4S9P: +10.8 35E cells, +85.0 Wh usable
+     72 h WE     TYP: lid 4S12.68P, against the both-kept 4S9P: +14.7 35E cells, +116.2 Wh usable
+     72 h WE     WAB: lid 4S14.50P, against the both-kept 4S9P: +22.0 35E cells, +173.6 Wh usable
+     72 h NOM90  TYP: lid 4S12.71P, against the both-kept 4S9P: +14.8 35E cells, +117.0 Wh usable
+     72 h NOM90  WAB: lid 4S14.97P, against the both-kept 4S9P: +23.9 35E cells, +188.7 Wh usable
+   (a negative excess: the both-kept store already carries it; COMB line, the kit never stopping as well)
+   SENSITIVITY, the QMX receiving all the time (PS-TYP's QMX HF row, 1.14 W at the battery, pwr_budget.out; PS-IDLE-SPEC
+   carries the QMX's USB and HDMI 5 V only): 48 h NOM TYP lid 4S11.67P (+10.7 cells, +84.2 Wh usable over 4S9P); 48 h WE TYP lid 4S12.87P (+15.5 cells, +122.2 Wh usable over 4S9P); 72 h NOM TYP lid 4S12.01P (+12.0 cells, +94.9 Wh usable over 4S9P); 72 h WE TYP lid 4S14.92P (+23.7 cells, +187.1 Wh usable over 4S9P)
+
+4. THE MODELLED HISTORICAL COVERAGE, 864 September windows of 2005 to 2020 at 40/0, TYP (weather_basis.out A's windows, the
+   first 48 h of each for 48 h; the lid at each window's own minimum air over its hours): kept (no STOP) / COMB / EACH.
+   Reproduction: 72 h, the 4S14P lid at WE reads 166/164/115 against weather_basis.out's 166/164/115: yes
+   48 h DRAWN  both kept (4S9P lid):   0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   48 h NOM    both kept (4S9P lid):   0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   48 h NOM90  both kept (4S9P lid):   0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   48 h WE     both kept (4S9P lid):   0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   48 h WE90   both kept (4S9P lid):   0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   72 h DRAWN  both kept (4S9P lid):   0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   72 h NOM    both kept (4S9P lid):   0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   72 h NOM90  both kept (4S9P lid):   0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   72 h WE     both kept (4S9P lid):   0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   72 h WE90   both kept (4S9P lid):   0 ( 0.0 %) /   0 ( 0.0 %) /   0 ( 0.0 %)
+   MODELLED HISTORICAL COVERAGE: the share of past September windows the model carries, not a probability of success.
+
+END. Each line is the model's arithmetic; nothing is measured. No result here is demonstrated capability: the circuit as
+drawn fails; the corrected path is HYPOTHETICAL and CONDITIONAL on three undocumented efficiencies.

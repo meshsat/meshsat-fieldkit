@@ -1,0 +1,58 @@
+PS-IDLE-SPEC TRACED TO ITS LOADS (load_trace.py, stream l3batt, MESHSAT-1357), from v2/docs/records/rv-pwr/pwr_budget.out
+
+1. THE STATE: 'PS-IDLE as V2-SPEC.md line 23 words it: monitor on, APRS beacons; the idle state of the D-06 runtime
+   requirement, with the kit-to-kit link card up and idle' (CONOPS 4a). At the loads 36.5 W; at the pack terminals LOW 33.1 /
+   PLAN 42.8 / HIGH 82.8 W (HIGH puts every load at its maximum at once: an upper bound, not a scenario); PLAN by tier, W:
+   S 16.8, R 11.3, D 6.3, T 8.4
+
+2. THE 39 LOADS, battery-side W at PLAN, largest first (tier; the budget's stated source, pwr_budget.py)
+     6.03  T  Xenarc 709GNK                                xenarc-709gnk-product-manual-v2.pdf and xenarc.com/709GNK.html: 'Power Consumption: <= 10W'; no typical figure
+     4.80  R  WiFi link card 1 (live)                      AsiaRF AW7915-AED product page (fetched 26 Sep 2026): 'maximum is 9W, average is 4 - 8W', supply 3.3 V 3 A (2.5 A minimum); AW7915-AED_V1.pdf (v1.0, 2023-08-17)
+     2.22  S  CM5 slot 2                                   cm5-datasheet.pdf 4.3.3 Table 9 (Release 3): idle 400 mA, operation 900 mA typical at 5 V, no maximum; 8 W = board B's declared 1.6 A (gen_sch_b.py:43)
+     2.20  S  CM5 slot 3                                   cm5-datasheet.pdf 4.3.3 Table 9 (Release 3): idle 400 mA, operation 900 mA typical at 5 V, no maximum; 8 W = board B's declared 1.6 A (gen_sch_b.py:43)
+     2.17  S  CM5 slot 1                                   cm5-datasheet.pdf 4.3.3 Table 9 (Release 3): idle 400 mA, operation 900 mA typical at 5 V, no maximum; 8 W = board B's declared 1.6 A (gen_sch_b.py:43)
+     2.16  R  three STM32H743 supervisors and their parts  ST STM32H743 DS12110 Rev 10 Table 30: Run from ITCM, 200 MHz VOS3 peripherals off 33 mA typ; 400 MHz VOS1 peripherals off 71 mA typ; 400 MHz all peripherals on 
+     1.84  S  KSZ9897R AVDDL+DVDDL 1.2 V                   Microchip KSZ9897R DS00002330D Table 6-1 (TA 25 C, typ): full 1000 Mbps all ports 100 %: AVDDH 330 mA, VDDIO 80 mA, AVDDL 460 mA, DVDDL 750 mA; energy detect 20
+     1.62  D  panel board C                                declared PANEL_5V 0.6 A typical, 1.0 A peak (gen_sch_b.py:82; board C intent)
+     1.54  D  other +3V3_DEV logic                         declared: PoE controller, expanders, muxes, voters, secure element, clock, TMP117 (gen_sch_b.py:95-108), 0.395 A
+     1.45  R  two mixer fans                               Sunon catalogue 240-A p. 38 (60x60x15 IP68, 12 V): GF60151B9 0.39 W to GF60151B6 1.50 W; declared 0.1 A each on CELL_F (gen_sch_e.py:34); PWM duty TBD
+     1.30  T  WiFi link card 2 (standby)                   AsiaRF AW7915-AED product page (fetched 26 Sep 2026): 'maximum is 9W, average is 4 - 8W', supply 3.3 V 3 A (2.5 A minimum); AW7915-AED_V1.pdf (v1.0, 2023-08-17)
+     1.29  S  KSZ9897R AVDDH 2.5 V                         Microchip KSZ9897R DS00002330D Table 6-1 (TA 25 C, typ): full 1000 Mbps all ports 100 %: AVDDH 330 mA, VDDIO 80 mA, AVDDL 460 mA, DVDDL 750 mA; energy detect 20
+     1.16  S  NVMe slot 2                                  Advantech SQFlash 720-D DS v1.9 section 9: idle 900 mW, read 2.0 to 3.6 W; Cervoz T405 DS Rev 2.0 2.1: idle < 1050 mW, active < 2600 mW (both 3.3 V, Gen3 x4)
+     1.15  S  NVMe slot 3                                  Advantech SQFlash 720-D DS v1.9 section 9: idle 900 mW, read 2.0 to 3.6 W; Cervoz T405 DS Rev 2.0 2.1: idle < 1050 mW, active < 2600 mW (both 3.3 V, Gen3 x4)
+     1.14  S  NVMe slot 1                                  Advantech SQFlash 720-D DS v1.9 section 9: idle 900 mW, read 2.0 to 3.6 W; Cervoz T405 DS Rev 2.0 2.1: idle < 1050 mW, active < 2600 mW (both 3.3 V, Gen3 x4)
+     1.07  T  VHF PA 30 W                                  RA30H1317M1 datasheet: Pout > 30 W at total efficiency > 40 % (VDD 12.5 V), so <= 75 W at 30 W out; at 13.8 V the drain current is 5.4 to 8.2 A (W2 F-PR-02, INF
+     0.89  R  three TUSB8041 hubs VDD33                    TI TUSB8041 SLLSEE4E 7.7 (TA 25 C, typ): disconnected 2.3/28 mA; 2.0 host 4 HS 76/86 mA; 1 SS U0 + 1 HS 85/395 mA; 4 SS U0 49/778 mA (VDD33/VDD1.1)
+     0.83  D  board E controller and sensors               declared +5V_E6 0.30 A (gen_sch_e.py:34, 89); W2 0.8 W
+     0.65  D  board D (SA868 and logic)                    nicerf-sa868-datasheet-v1.3.pdf: RX 60 mA, TX low 450 to 550 mA at 5 V; rest declared (W2)
+     0.57  D  board A logic                                declared +3V3 0.3 / 0.6 A (gen_sch_a.py:118)
+     0.57  R  cooler fan slot 2                            Sunon catalogue 240-A p. 16 (30x30x6, 5 V): MF30060V2 0.36 W, MF30060V1 0.56 W, representative (not IP68, not the pick, D-18); declared 0.1 A (gen_sch_b.py:46)
+     0.56  R  cooler fan slot 3                            Sunon catalogue 240-A p. 16 (30x30x6, 5 V): MF30060V2 0.36 W, MF30060V1 0.56 W, representative (not IP68, not the pick, D-18); declared 0.1 A (gen_sch_b.py:46)
+     0.55  R  cooler fan slot 1                            Sunon catalogue 240-A p. 16 (30x30x6, 5 V): MF30060V2 0.36 W, MF30060V1 0.56 W, representative (not IP68, not the pick, D-18); declared 0.1 A (gen_sch_b.py:46)
+     0.46  S  PCIe switch 3.3 V slot 2                     Diodes DS40068 Rev 5-2 Table 12-8: 3.3 V rails 354.8 mW typ, 390.2 mW max
+     0.46  S  PCIe switch 3.3 V slot 3                     Diodes DS40068 Rev 5-2 Table 12-8: 3.3 V rails 354.8 mW typ, 390.2 mW max
+     0.45  S  PCIe switch 3.3 V slot 1                     Diodes DS40068 Rev 5-2 Table 12-8: 3.3 V rails 354.8 mW typ, 390.2 mW max
+     0.43  D  four CP2102N bridges                         declared 0.02 A each (gen_sch_b.py:90)
+     0.39  S  LG290P GNSS                                  lg290p03-hardware-design-v1.1.pdf: 99 mA, 326.7 mW
+     0.36  R  three TUSB8041 hubs VDD 1.1 V                TI TUSB8041 SLLSEE4E 7.7 (TA 25 C, typ): disconnected 2.3/28 mA; 2.0 host 4 HS 76/86 mA; 1 SS U0 + 1 HS 85/395 mA; 4 SS U0 49/778 mA (VDD33/VDD1.1)
+     0.35  S  PCIe switch 1.0 V slot 2                     Diodes DS40068 Rev 5-2 Table 12-8: 1.0 V rails 269.5 mW typ, 676.4 mW max
+     0.35  S  PCIe switch 1.0 V slot 3                     Diodes DS40068 Rev 5-2 Table 12-8: 1.0 V rails 269.5 mW typ, 676.4 mW max
+     0.34  S  PCIe switch 1.0 V slot 1                     Diodes DS40068 Rev 5-2 Table 12-8: 1.0 V rails 269.5 mW typ, 676.4 mW max
+     0.33  D  Geiger module                                declared +5V_GEIGER 0.10 A (gen_sch_e.py:142); RadiationD-v1.1 class (open-picks.txt:22), no sheet
+     0.32  D  QMX USB and HDMI 5 V                         declared F3 0.3 A and F2 0.2 A peaks (gen_sch_b.py:83,87); W2 0.3 W
+     0.31  S  KSZ9897R VDDIO 3.3 V                         Microchip KSZ9897R DS00002330D Table 6-1 (TA 25 C, typ): full 1000 Mbps all ports 100 %: AVDDH 330 mA, VDDIO 80 mA, AVDDL 460 mA, DVDDL 750 mA; energy detect 20
+     0.30  S  5G RM520N-GL                                 Quectel RM520N series HD v1.1 Table 43 (RM520N-GL, typ, at VCC 3.7 V, Table 42): idle 60 mA, RF disabled 4.7 mA, LTE CA 1512 mA; watts taken at 3.7 V
+     0.08  S  LoRa E22-900M30S                             ebyte-e22-900m30s-user-manual-en-v1.20.pdf 2.2: TX 650 mA, RX 14 mA at 5 V
+     0.07  S  RockBLOCK 9704                               rb9704-datasheet-RB9704-001-JUN26.pdf: '60mW Idle, 1.4W Max'
+     0.06  S  E72 x2 (Zigbee, Thread)                      ebyte-e72-2g4m20s1e-user-manual.pdf 2.2: RX 7.3 mA, TX 106 mA at 20 dBm, 3.3 V
+   sum 42.82 W (the stated 42.8 W)
+
+3. HF AND THE TABLET IN THIS STATE
+   HF: QMX USB and HDMI 5 V, 0.32 W at the battery (D); the QMX's own 12 V receiver is NOT powered in PS-IDLE-SPEC
+   HF receiving is a PS-TYP load: 'QMX HF' 0.96 W at the load, 1.14 W at the battery (S: qmx-operating-manual-1_04_004.pdf: receive 'as low as 80mA' at 12 V; transmit 0.7 to 1.1 A (appendix 32.51 line 2816))
+   The tablet: no row. It runs on its own battery; the kit's USB-C PD outlet, the one path that could charge it, is off
+   in every state (pwr_budget.py: 'The outlets are off in every state and switched on only by the section 7.1 variants';
+   contract 15 V at 3 A, 45 W). The profile keeps both functions in the kit at these duties; it does not power HF reception
+   or charge the tablet
+
+END. The budget's own figures, summed; nothing is measured.
