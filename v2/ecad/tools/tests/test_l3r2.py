@@ -71,8 +71,8 @@ def t_l3r2_pages_state_requirements_not_claims():
 
 def t_l3r2_carries_no_dash_character():
     paths = [os.path.join(L3, f) for f in os.listdir(L3)] if os.path.isdir(L3) else []
-    for base in (REC, COND):
-        if os.path.isdir(base): paths += [os.path.join(base, f) for f in os.listdir(base) if f.endswith((".py", ".md", ".out"))]
+    for base in (REC, COND, os.path.join(REC, "prepared")):
+        if os.path.isdir(base): paths += [os.path.join(base, f) for f in os.listdir(base) if f.endswith((".py", ".md", ".out", ".yaml"))]
     if not paths: raise Skip("no L3-R2 files in this tree")
     for p in paths:
         if os.path.isfile(p):
@@ -116,7 +116,8 @@ def t_l3r2_every_named_decision_script_and_record_exists():
 
 
 def t_l3r2_session_scripts_refuse_a_second_run():
-    for s in ("apply_l3r2_session.py", "apply_l3r2_d23.py", "apply_l3r2_d24.py", "apply_l3r2_r3b.py", "apply_layer_status_l3.py",
+    for s in ("apply_l3r2_session.py", "apply_l3r2_d23.py", "apply_l3r2_d24.py", "apply_l3r2_d25.py", "apply_l3r2_r3b.py",
+              "apply_layer_status_l3_r3c.py", "apply_layer_status_l3.py",
               "apply_layer_status_l3_r3.py", "apply_layer_status_l3_r3b.py"):
         p = os.path.join(REC, s)
         need(p, "%s is not in this tree" % s)
@@ -331,19 +332,21 @@ def t_l3r2_the_gate_verifies_the_basis_check_and_the_reissue_ruling():
     import cond as C
     d = tempfile.mkdtemp(prefix="l3r2-gate-")
     files = {}
-    for n, body in (("EB.md", "basis\n"), ("w.out", "w\n"), ("no.md", "accepted: no\n"), ("yes.md", "accepted: yes\n"),
-                    ("reissue.md", "a change record\n")):
+    for n, body in (("reissue.md", "a change record\n"),):
         files[n] = os.path.join(d, n)
         open(files[n], "w", encoding="utf-8").write(body)
     sha = lambda n: RL.sha16_bytes(open(files[n], "rb").read())
     data = RL.load_data()
-    for chk, want in (("no.md", False), ("yes.md", True)):
-        data["energy_basis"] = {"record": files["EB.md"], "sha16": sha("EB.md"), "check": files[chk], "check_sha16": sha(chk),
-                                "outputs": [{"path": files["w.out"], "sha16": sha("w.out")}]}
-        assert RL.basis_ok(data)[0] is want, "the gate reads a check that says %s as %s" % (chk, not want)
-        assert C.basis_state(data)[0] is want, "the hold reads a check that says %s as %s" % (chk, not want)
+    root = _tip_tree(TIP4, ("v2/docs/records/l3plane/ENERGY-BASIS.md", "v2/docs/records/l3plane/weather_basis.out"))
+    for body, want in (("accepted: no\n\ntip `%s`\n" % TIP4, False), ("accepted: yes\n\ntip `%s`\n" % TIP4, True),
+                       ("accepted: yes\n\ntip `ec415c09`\n", False)):
+        open(os.path.join(root, "CHECK.md"), "w", encoding="utf-8").write(body)
+        data["energy_basis"] = _entry(root, TIP4, "v2/docs/records/l3plane/ENERGY-BASIS.md",
+                                      ["v2/docs/records/l3plane/weather_basis.out"], "CHECK.md")
+        assert RL.basis_ok(data, root=root)[0] is want, "the gate reads the check %r as %s" % (body[:40], not want)
+        assert C.basis_state(data, root)[0] is want, "the hold reads the check %r as %s" % (body[:40], not want)
     data["energy_basis"]["sha16"] = "0" * 16
-    assert C.basis_state(data)[0] is False, "the hold accepts a record not at its sha"
+    assert C.basis_state(data, root)[0] is False, "the hold accepts a record not at its sha"
     import rules_lib as R
     req = R.load_requirements()
     dec = {"L3-OD1": ("approve", "D-98", "2026-10-01", "", {})}
@@ -359,6 +362,122 @@ def t_l3r2_the_gate_verifies_the_basis_check_and_the_reissue_ruling():
     assert RL.reissue_ok(req2, data, dec)[0] is True, "a re-issue approved by a ruling that decides it is refused"
     req2["owner_rulings"][-1]["ruled_on"] = "2026-09-30"
     assert RL.reissue_ok(req2, data, dec)[0] is False, "a ruling dated before the rows approves the re-issue"
+
+
+TIP3, TIP4, TIP2 = "868c321f", "06b8ecea", "ec415c09"
+
+
+def _has(*tips):
+    for tip in tips:
+        if subprocess.run(["git", "-C", ROOT, "cat-file", "-e", tip], capture_output=True).returncode:
+            raise Skip("the tip %s is not in this repository" % tip)
+
+
+def _tip_tree(tip, paths, d=None):
+    """A scratch tree holding `paths` as they are at `tip` (read with git show)."""
+    _has(tip)
+    d = d or tempfile.mkdtemp(prefix="l3r2-tip-")
+    for pth in paths:
+        os.makedirs(os.path.dirname(os.path.join(d, pth)), exist_ok=True)
+        open(os.path.join(d, pth), "wb").write(subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (tip, pth)],
+                                                               capture_output=True).stdout)
+    return d
+
+
+def _entry(root, tip, record, outputs, check):
+    sys.path.insert(0, REC)
+    import basis_binding as BB
+    s = lambda pth: BB.sha16_bytes(open(os.path.join(root, pth), "rb").read())
+    return {"record": record, "sha16": s(record), "tip": tip, "outputs": [{"path": o, "sha16": s(o)} for o in outputs],
+            "check": check, "check_sha16": s(check)}
+
+
+def t_l3r2_an_accepted_check_is_bound_to_the_files_of_its_tip():
+    """CHECK-3 of L3-R2, B1: the third issue's files (868c321f) with the check of the second (ec415c09) are refused
+    whichever tip is named; files that are the checked tip's are accepted; a file changed afterwards, or a check that does
+    not name the tip, lifts no hold and no gate; the same holds for the power path's check."""
+    _has(TIP2, TIP3, TIP4)
+    RL = _render_mod()
+    sys.path.insert(0, COND)
+    import cond as C
+    L3P = "v2/docs/records/l3plane/"
+    root = _tip_tree(TIP3, [L3P + f for f in ("ENERGY-BASIS.md", "weather_basis.out", "energy_basis.out")])
+    shutil.copy(os.path.join(REC, "checks/energy-basis-check-2/CHECK-2.md"), os.path.join(root, "CHECK-2.md"))
+    data = os.path.join(root, "l3r2.yaml")
+    shutil.copy(os.path.join(L3, "l3r2.yaml"), data)
+    import yaml
+    if yaml.safe_load(open(data, encoding="utf-8")).get("energy_basis"): raise Skip("the tree's energy basis is named")
+    base = ["--record", L3P + "ENERGY-BASIS.md", "--outputs", L3P + "weather_basis.out," + L3P + "energy_basis.out",
+            "--check", "CHECK-2.md", "--data", data, "--root", root]
+    r = _run([os.path.join(REC, "set_energy_basis.py")] + base + ["--tip", TIP2])
+    assert r.returncode == 2 and "not byte identical" in r.stdout, "868c321f's files were bound to ec415c09's check:\n" + r.stdout
+    r = _run([os.path.join(REC, "set_energy_basis.py")] + base + ["--tip", TIP3])
+    assert r.returncode == 2 and "does not name tip" in r.stdout, "a check was bound to a tip it did not check:\n" + r.stdout
+    root4 = _tip_tree(TIP4, [L3P + f for f in ("ENERGY-BASIS.md", "weather_basis.out", "energy_basis.out", "three_cases.out")]
+                      + ["v2/docs/records/r11dep/R11-DEPENDENCY.md", "v2/docs/records/r11dep/r11_dep.out"])
+    open(os.path.join(root4, "CHECK.md"), "w", encoding="utf-8").write("accepted: yes\n\nFIXTURE, tip `%s` (confirmed).\n" % TIP4)
+    d = RL.load_data()
+    d["energy_basis"] = _entry(root4, TIP4, L3P + "ENERGY-BASIS.md", [L3P + "weather_basis.out"], "CHECK.md")
+    d["power_path_check"] = _entry(root4, TIP4, "v2/docs/records/r11dep/R11-DEPENDENCY.md",
+                                   ["v2/docs/records/r11dep/r11_dep.out", L3P + "three_cases.out"], "CHECK.md")
+    for key in ("energy_basis", "power_path_check"):
+        assert RL.basis_ok(d, key, root4)[0] and C.basis_state(d, root4, key)[0], "%s at its tip is refused" % key
+    open(os.path.join(root4, L3P + "weather_basis.out"), "a", encoding="utf-8").write("changed after the check\n")
+    d["energy_basis"]["outputs"][0]["sha16"] = RL.sha16_bytes(open(os.path.join(root4, L3P + "weather_basis.out"), "rb").read())
+    assert not RL.basis_ok(d, "energy_basis", root4)[0], "the gate accepts an output that differs from the checked tip"
+    assert not C.basis_state(d, root4, "energy_basis")[0], "the hold accepts an output that differs from the checked tip"
+    d["power_path_check"]["tip"] = TIP3
+    assert not C.basis_state(d, root4, "power_path_check")[0], "the hold accepts a check that does not name the recorded tip"
+
+
+def t_l3r2_the_reader_reads_the_fourth_issue_whole():
+    """basis_reader.py reads the three outputs of the basis's fourth issue (06b8ecea) by exact keys, every table whole
+    (CHECK-3 of L3-R2, minor 5): a table with a row missing is refused."""
+    _has(TIP4)
+    sys.path.insert(0, REC)
+    import basis_reader as BR
+    L3P = "v2/docs/records/l3plane/"
+    root = _tip_tree(TIP4, [L3P + f for f in ("weather_basis.out", "energy_basis.out", "three_cases.out")])
+    w, e, c = (open(os.path.join(root, L3P + f), encoding="utf-8").read() for f in ("weather_basis.out", "energy_basis.out", "three_cases.out"))
+    assert len(BR.sizing(w)) == 8 and len(BR.coverage(w)) == 15 and len(BR.stores(w)) == 3 and len(BR.allowances(w)) == 2
+    assert len(BR.reference_plane(e)) == 27 and len(BR.four_cases(c)) == 24 and len(BR.four_coverage(c)) == 16
+    assert BR.derated_setting(c).replace(".", "", 1).isdigit()
+    for fn, text, line in ((BR.coverage, w, "4S14P tablet out   WE WAB"), (BR.four_cases, c, "4S15P QMX out      TYP   74.3"),
+                           (BR.four_coverage, c, "RESISTOR-ONLY lower bound, WE      4S15P")):
+        cut = "\n".join(l for l in text.split("\n") if line not in l)
+        assert cut != text, "the fixture line %r is not in the output" % line
+        try:
+            fn(cut)
+        except BR.BasisError:
+            pass
+        else:
+            raise AssertionError("%s read a table with a row missing" % fn.__name__)
+
+
+def t_l3r2_the_power_path_list_is_restated_only_from_its_checked_record():
+    """restate_power_path.py refuses until power_path_check is filed and verified; on a copy with the fourth issue's record
+    and a fixture check of that tip it restates the list from the sixteen classes, anchors asserted, closure items
+    restated and added, and refuses a second run."""
+    _has(TIP4)
+    import yaml
+    L3P = "v2/docs/records/l3plane/"
+    root = _tip_tree(TIP4, ["v2/docs/records/r11dep/R11-DEPENDENCY.md", "v2/docs/records/r11dep/r11_dep.out", L3P + "three_cases.out"])
+    open(os.path.join(root, "CHECK.md"), "w", encoding="utf-8").write("accepted: yes\n\nFIXTURE, tip `%s` (confirmed).\n" % TIP4)
+    data = os.path.join(root, "l3r2.yaml")
+    shutil.copy(os.path.join(L3, "l3r2.yaml"), data)
+    if yaml.safe_load(open(data, encoding="utf-8")).get("power_path_check"): raise Skip("the tree's power path check is named")
+    rs = [os.path.join(REC, "restate_power_path.py"), "--data", data, "--root", root]
+    assert _run(rs).returncode == 2, "the list was restated with no power path check named"
+    s = _run([os.path.join(REC, "set_energy_basis.py"), "--key", "power_path_check", "--record",
+              "v2/docs/records/r11dep/R11-DEPENDENCY.md", "--outputs", "v2/docs/records/r11dep/r11_dep.out," + L3P + "three_cases.out",
+              "--check", "CHECK.md", "--tip", TIP4, "--data", data, "--root", root])
+    assert s.returncode == 0, s.stdout + s.stderr
+    r = _run(rs)
+    assert r.returncode == 0, r.stdout + r.stderr
+    y = yaml.safe_load(open(data, encoding="utf-8"))
+    assert [c["id"] for c in y["power_path_corrections"]][:3] == ["A-1", "A-2", "B-1"] and len(y["power_path_corrections"]) == 16
+    assert {"L3-C46", "L3-C53"} <= {c["id"] for c in y["closure"]}
+    assert _run(rs).returncode == 2, "restate_power_path.py ran twice"
 
 
 def t_l3r2_figures_bind_exactly():
@@ -381,24 +500,20 @@ def t_l3r2_figures_bind_exactly():
 
 
 def t_l3r2_the_fill_reads_the_basis_by_exact_keys():
-    """set_energy_basis.py and fill_l3r2_from_basis.py on a copy of l3r2.yaml and a scratch tree holding the basis's
-    third issue (fnd/l3plane 868c321f, the format basis_reader.py is written for) and a fixture check: every row of row
-    L3-OD6 is filled from weather_basis.out B and reads back equal; a second run of either is refused."""
+    """set_energy_basis.py and fill_l3r2_from_basis.py on a copy of l3r2.yaml and a scratch tree holding the basis's fourth
+    issue (06b8ecea) and a fixture check naming that tip: row L3-OD6's rows and the four-case cells are filled from
+    weather_basis.out B and three_cases.out 2 and read back equal; a second run of either is refused."""
+    _has(TIP4)
     import yaml
-    g = subprocess.run(["git", "-C", ROOT, "cat-file", "-e", "868c321f"], capture_output=True)
-    if g.returncode: raise Skip("the basis's third issue (868c321f) is not in this repository")
-    d = tempfile.mkdtemp(prefix="l3r2-fill-")
-    os.makedirs(os.path.join(d, "v2/docs/records/l3plane"))
-    for f in ("ENERGY-BASIS.md", "weather_basis.out", "energy_basis.out"):
-        body = subprocess.run(["git", "-C", ROOT, "show", "868c321f:v2/docs/records/l3plane/" + f], capture_output=True).stdout
-        open(os.path.join(d, "v2/docs/records/l3plane", f), "wb").write(body)
-    open(os.path.join(d, "CHECK.md"), "w", encoding="utf-8").write("accepted: yes\n\nFIXTURE, tip `868c321f` (confirmed).\n")
+    L3P = "v2/docs/records/l3plane/"
+    outs = [L3P + f for f in ("weather_basis.out", "energy_basis.out", "three_cases.out")]
+    d = _tip_tree(TIP4, [L3P + "ENERGY-BASIS.md"] + outs)
+    open(os.path.join(d, "CHECK.md"), "w", encoding="utf-8").write("accepted: yes\n\nFIXTURE, tip `%s` (confirmed).\n" % TIP4)
     data = os.path.join(d, "l3r2.yaml")
     shutil.copy(os.path.join(L3, "l3r2.yaml"), data)
     if yaml.safe_load(open(data, encoding="utf-8")).get("energy_basis"): raise Skip("the tree's energy basis is named")
-    args = ["--record", "v2/docs/records/l3plane/ENERGY-BASIS.md", "--outputs",
-            "v2/docs/records/l3plane/weather_basis.out,v2/docs/records/l3plane/energy_basis.out", "--check", "CHECK.md",
-            "--tip", "868c321f", "--data", data, "--root", d]
+    args = ["--record", L3P + "ENERGY-BASIS.md", "--outputs", ",".join(outs), "--check", "CHECK.md", "--tip", TIP4,
+            "--data", data, "--root", d]
     s1 = _run([os.path.join(REC, "set_energy_basis.py")] + args)
     assert s1.returncode == 0, s1.stdout + s1.stderr
     assert _run([os.path.join(REC, "set_energy_basis.py")] + args).returncode == 2, "set_energy_basis.py ran twice"
@@ -407,21 +522,16 @@ def t_l3r2_the_fill_reads_the_basis_by_exact_keys():
     assert _run([os.path.join(REC, "fill_l3r2_from_basis.py"), "--data", data, "--root", d]).returncode == 2
     sys.path.insert(0, REC)
     import basis_reader as BR
-    siz = BR.sizing(open(os.path.join(d, "v2/docs/records/l3plane/weather_basis.out"), encoding="utf-8").read())
+    siz = BR.sizing(open(os.path.join(d, L3P + "weather_basis.out"), encoding="utf-8").read())
+    four = BR.four_cases(open(os.path.join(d, L3P + "three_cases.out"), encoding="utf-8").read())
     y = yaml.safe_load(open(data, encoding="utf-8"))
     for r in next(x for x in y["decisions"] if x["id"] == "L3-OD6")["quantified"]["rows"]:
         key = ("mean-day" if r["option"] == "mean-day" else str(r["share"]), r["build"])
         assert all(r[k] == v for k, v in siz[key].items()), "row %s does not read back as the basis prints it" % r["id"]
-    assert y["basis_figures"]["reference_plane"], "basis_figures is empty"
-    bad = os.path.join(d, "bad.out")
-    open(bad, "w", encoding="utf-8").write(open(os.path.join(d, "v2/docs/records/l3plane/weather_basis.out"), encoding="utf-8")
-                                           .read().replace("(ii) 95 % of the windows", "(ii) 96 % of the windows"))
-    try:
-        BR.sizing(open(bad, encoding="utf-8").read())
-    except BR.BasisError:
-        pass
-    else:
-        raise AssertionError("a target the table does not name was read")
+    for k, v in four.items():
+        assert y["four_cases"]["reference_day"]["%s|%s|%s" % k] == v, "four-case cell %s does not read back" % (k,)
+    RL = _render_mod()
+    assert "DERATED VARIANT" in RL.four_cell(y["four_cases"], "a'") and "HYPOTHETICAL" in RL.four_cell(y["four_cases"], "c")
 
 
 def t_l3r2_the_incoherent_combinations_are_refused():

@@ -179,21 +179,16 @@ def filed(data, key):
     return v
 
 
-def basis_ok(data, key="energy_basis"):
-    """(True, '') when `key` (energy_basis, or power_path_check of D-24) names its record and its check (the energy basis
-    also its outputs), each held at its sha256/16, and the check's first line reads 'accepted: yes' (CHECK-2 of L3-R2,
-    B3: a check is verified, never trusted)."""
+def basis_ok(data, key="energy_basis", root=None):
+    """(True, '') when `key` (energy_basis, or power_path_check of D-24) names its record, outputs and check, every file
+    held at its sha256/16 and byte identical to the file of that path at the tip its accepted check checked, and the check
+    reads 'accepted: yes' and names that tip (v2/docs/records/l3r2/basis_binding.py; CHECK-2 of L3-R2 B3, CHECK-3 B1: a
+    check is verified, never trusted, and bound to what it checked)."""
     v = data.get(key)
     if not v: return False, "not filed (S-127)" if key == "energy_basis" else "not filed"
-    if not v.get("check") or (key == "energy_basis" and not v.get("outputs")): return False, "it names no check or no outputs"
-    filed(data, key)                                # record and check at their shas, or a refusal
-    for o in v.get("outputs") or []:
-        fp = os.path.join(ROOT, str(o["path"]))
-        if not os.path.isfile(fp) or sha16_bytes(open(fp, "rb").read()) != str(o["sha16"]):
-            raise RenderError("l3r2.yaml's energy_basis names the output %s at %s, which this tree does not hold" % (o["path"], o["sha16"]))
-    first = open(os.path.join(ROOT, str(v["check"])), encoding="utf-8").readline().strip()
-    if first != "accepted: yes": return False, "its check reads %r, not 'accepted: yes'" % first
-    return True, ""
+    sys.path.insert(0, os.path.join(ROOT, "v2", "docs", "records", "l3r2"))
+    import basis_binding as BB
+    return BB.verify(v, root or ROOT, ROOT, need_outputs=(key == "energy_basis"))
 
 
 def reissue_ok(req, data, dec):
@@ -416,6 +411,49 @@ def basis_figures_lines(data):
     return L + [""]
 
 
+CASE_LABEL = {"a": "AS DRAWN", "a'": "DERATED VARIANT (U3 at {s} A): current-limit coordination only",
+              "b": "RESISTOR-ONLY, lower bound: INCONCLUSIVE between this and (c)",
+              "c": "HYPOTHETICAL corrected path, not demonstrated (WE also CONDITIONAL on three undocumented efficiencies)"}
+LID_SHORT = {"4S9P both kept": "4S9P", "4S14P tablet out": "4S14P", "4S15P QMX out": "4S15P"}
+
+
+def four_cell(F, case):
+    """Row L3-OD1's cell for one front-end case from four_cases (three_cases.out 2), by exact key."""
+    out = [CASE_LABEL[case].format(s=F["derated_setting"]) + "."]
+    for inp in ("NOM", "WE"):
+        parts = []
+        for lid in ("4S14P tablet out", "4S15P QMX out", "4S9P both kept"):
+            v = F["reference_day"]["%s|%s|%s" % (case, inp, lid)]
+            parts.append("%s TYP %s (%s), WAB %s (%s)" % (LID_SHORT[lid], v["TYP"], v["TYP_lines"], v["WAB"], v["WAB_lines"]))
+        out.append("%s: %s." % (inp, "; ".join(parts)))
+    return " ".join(out)
+
+
+def four_cases_lines(data):
+    F = data.get("four_cases")
+    if not F:
+        return [p("**Board A's front end in four cases, the figures:** HELD. `fill_l3r2_from_basis.py` has not read "
+                  "`three_cases.out`, which it does only from a basis filed with an accepted check of its tip."), ""]
+    src = F["source"]
+    L = [p("**Board A's front end in four cases** (D-24, D-25), read by exact keys from [%s](%s) (sha256/16 `%s`, tip "
+           "`%s`). SC-37's reference day at 40/0, both starts: the lowest store of both packs in Wh (the base's, the lid's), or "
+           "the energy unserved. No figure here is demonstrated capability." % (
+               os.path.basename(src["path"]), os.path.relpath(os.path.join(ROOT, src["path"]), HERE).replace(os.sep, "/"),
+               src["sha16"], src.get("tip"))), "",
+         "| Case | Inputs | Lid | TYP | COMB/EACH | WAB | COMB/EACH |", "|---|---|---|---|---|---|---|"]
+    for k, v in F["reference_day"].items():
+        case, inp, lid = k.split("|")
+        L.append("| %s | %s | %s | %s | %s | %s | %s |" % (cell(CASE_LABEL[case].format(s=F["derated_setting"])), inp, lid,
+                                                         v["TYP"], v["TYP_lines"], v["WAB"], v["WAB_lines"]))
+    L += ["", "Modelled historical coverage of the 864 September windows in the TYP build, not a probability of success "
+          "(three_cases.out 3):", "", "| Case | Inputs | Lid | No STOP | COMB | EACH |", "|---|---|---|---|---|---|"]
+    for k, v in F["coverage"].items():
+        case, inp, lid = k.split("|")
+        L.append("| %s | %s | %s | %s | %s | %s |" % (cell(CASE_LABEL[case].format(s=F["derated_setting"])), inp, lid,
+                                                    v["STOP"], v["COMB"], v["EACH"]))
+    return L + [""]
+
+
 def option_cell(d, dec):
     out = []
     for o in d["options"]:
@@ -469,18 +507,32 @@ def page_decisions(req, data, dec):
             "figures, never demonstrated capability, and rest on the requirements and corrections listed after this table."), "",
           "| Row | (a) The circuit as drawn: R11 10 mOhm | (a') Derated variant: U3 at 4.05 A or less | (b) The resistor-only proposal: R11 6.2 mOhm | (c) A hypothetical corrected power path |",
           "|---|---|---|---|---|"]
+    F = data.get("four_cases")
     for d in data["decisions"]:
-        if d.get("r11"): L.append("| %s | %s | %s | %s | %s |" % (d["id"], cell(d["r11"]["held"]), cell(d["r11"]["derated"]),
-                                                                 cell(d["r11"]["resistor"]), cell(d["r11"]["corrected"])))
+        if not d.get("r11"): continue
+        if F and d["id"] == "L3-OD1":                   # filled by exact keys from three_cases.out 2 (CHECK-3 of L3-R2)
+            L.append("| %s | %s | %s | %s | %s |" % (d["id"], cell(four_cell(F, "a")), cell(four_cell(F, "a'")),
+                                                     cell(four_cell(F, "b")), cell(four_cell(F, "c"))))
+        else:
+            L.append("| %s | %s | %s | %s | %s |" % (d["id"], cell(d["r11"]["held"]), cell(d["r11"]["derated"]),
+                                                     cell(d["r11"]["resistor"]), cell(d["r11"]["corrected"])))
     L += ["", "**The implementation requirements and corrections case (c) assumes.** Engineering tasks with measurable "
           "criteria, tracked downstream as closure items, not owner decisions and not layer 3 prerequisites (D-24, D-25); a "
           "row reaches the owner only where a remedy would change a mission condition, charging time, a function, a "
           "deployment condition, an enclosure constraint or an approved resource, naming the requirement and the "
-          "consequence. PROVISIONAL: from the author's record of stream r11dep, not yet checked; the final list comes from "
-          "the electrical check.", "",
+          "consequence. PROVISIONAL: stream r11dep's first issue was checked once and not accepted; its second issue "
+          "answers that check with the findings classified (A-1 and A-2, B-1 to B-5, C-1 to C-9), and a check of it is "
+          "reported accepted; the list below is restated from the second issue once l3r2.yaml's power_path_check is filed "
+          "and verified (restate_power_path.py).", "",
           "| Id | Correction | Measurable criterion | Layer | Closure item | Source |", "|---|---|---|---|---|---|"]
     for c in data.get("power_path_corrections") or []:
         L.append("| %s | %s | %s | %s | %s | %s |" % (c["id"], cell(c["item"]), cell(c["criterion"]), c["layer"], c["closure"], cell(c["source"])))
+    if data.get("conditional_owner_cases"):
+        L += ["", "**Remedies that would change a requirement, if an engineer chose them instead of the engineering form.** None "
+              "is asked now (D-25): each correction above has an engineering form that changes no requirement. Each case names "
+              "the requirement and its consequence.", "", "| Remedy | Requirement it changes | Consequence |", "|---|---|---|"]
+        for c in data["conditional_owner_cases"]:
+            L.append("| %s | %s | %s |" % (cell(c["remedy"]), cell(c["requirement"]), cell(c["consequence"])))
     q = next((d for d in data["decisions"] if d.get("quantified")), None)
     if q:
         Q = q["quantified"]
@@ -540,6 +592,7 @@ def page_recon(req, data, dec, h3, root):
     L += target_lines(req, data, dec, g1, "What the rows propose (AWAITING the owner; rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 HELD, D-22, D-23 and D-24).")
     L += facts_lines(data)
     L += basis_figures_lines(data)
+    L += four_cases_lines(data)
     L += ["**Under the other answers of each row:**", ""]
     for a in data["target"]["alternatives"]:
         L.append("- %s, option `%s`: %s" % (a["row"], a["option"], p(a["text"])))
