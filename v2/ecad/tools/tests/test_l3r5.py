@@ -509,7 +509,10 @@ def t_l3r5_the_closure_pages_and_the_reissue():
     assert "| Target unambiguous | MET |" in spec and "| Requirement-changing owner decisions resolved | MET |" in spec
     lvl = RL.status_level(__import__("rules_lib").load_requirements(), RL.decided(__import__("rules_lib").load_requirements(), data),
                           data, RL.load_h3())[0]
-    assert lvl == "DRAFTED", "the closure does not read requirements drafted and decisions recorded"
+    # DRAFTED until the acceptance is filed as its own record (D-39 conditional), VALIDATED once it is and holds
+    filed = data.get("baseline_acceptance")
+    assert lvl == ("VALIDATED" if filed and RL.acceptance_ok(__import__("rules_lib").load_requirements(), data)[0] else "DRAFTED"), \
+        "the closure's status level does not follow the acceptance record (%s)" % lvl
     for s in ([os.path.join(ROOT, "v2/docs/records/l3r4/reissue.py"), "--check"],
               [os.path.join(ROOT, "v2/docs/records/l3r4/reissue.py"), "--map", "--check"]):
         r = _run(s, cwd=ROOT)
@@ -893,10 +896,16 @@ def t_l3r5_d39_is_conditional_and_acceptance_is_its_own_record():
     r = _run([os.path.join(REC5, "apply_l3r5_d39.py"), "--check"])
     assert r.returncode == 2 and "has run" in r.stdout, "a second run of the D-39 script was not refused:\n%s" % r.stdout
     dec, h3 = RL.decided(req, data), RL.load_h3()
-    assert data.get("baseline_acceptance") is None and RL.status_level(req, dec, data, h3)[0] == "DRAFTED"
+    # the tree reads VALIDATED only with the acceptance record filed and holding; D-39 alone (a copy without the record)
+    # reads DRAFTED, on the tree's checks and on a fixture whose newest check is accepted
+    filed = data.get("baseline_acceptance")
+    assert RL.status_level(req, dec, data, h3)[0] == ("VALIDATED" if filed else "DRAFTED")
+    if filed: assert RL.acceptance_ok(req, data)[0] and filed["authorised_by"] == "D-39", RL.acceptance_ok(req, data)
+    data0 = copy.deepcopy(data); data0["baseline_acceptance"] = None
+    assert RL.status_level(req, dec, data0, h3)[0] == "DRAFTED", "D-39 alone reads beyond DRAFTED"
     fixture_check = {"record": "v2/docs/records/l3r2/checks/check-l3r2-5.md", "sha16": "c1c9db881ededfe2",
                      "verdict": "ACCEPTED", "scope": "a fixture: an accepted newest check"}
-    d1 = copy.deepcopy(data)
+    d1 = copy.deepcopy(data0)
     d1["independent_check"].append(fixture_check)
     assert all(x[1] for x in RL.gate(req, dec, d1, h3)), "the fixture's gate is not all MET"
     assert RL.status_level(req, dec, d1, h3)[0] == "DRAFTED", "D-39 without the acceptance record reads beyond DRAFTED"
@@ -912,11 +921,13 @@ def t_l3r5_d39_is_conditional_and_acceptance_is_its_own_record():
     r = _run([acc, "--revision", head, "--evidence", fixture_check["record"], "--check"])
     # on the tree it refuses with the fixture's evidence: before check 3 because the newest check was not accepted, after
     # it because the evidence does not list the newest check
-    assert r.returncode == 2 and ("not ACCEPTED" in r.stdout or "does not list the newest independent check" in r.stdout), \
-        "the acceptance script ran on the tree:\n%s" % r.stdout
+    assert r.returncode == 2 and ("not ACCEPTED" in r.stdout or "does not list the newest independent check" in r.stdout
+                                  or (filed and "has run" in r.stdout)), "the acceptance script ran on the tree:\n%s" % r.stdout
     d = tempfile.mkdtemp(prefix="l3r5-accept-")
     copy_path = os.path.join(d, "l3r2.yaml")
     raw = open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read()
+    before = yaml.safe_load(raw).get("baseline_acceptance")
+    raw = "\n".join("baseline_acceptance: null" if l.startswith("baseline_acceptance:") else l for l in raw.split("\n"))
     add = "  - {record: %s, sha16: %s, verdict: ACCEPTED, scope: fixture}\nbaseline_acceptance: null\n" % (
         fixture_check["record"], fixture_check["sha16"])
     assert raw.count("\nbaseline_acceptance: null\n") == 1
@@ -932,4 +943,40 @@ def t_l3r5_d39_is_conditional_and_acceptance_is_its_own_record():
     assert got == {"revision": head, "authorised_by": "D-39", "evidence": [fixture_check["record"]], "accepted_on": "2026-10-01"}
     r = _run([acc, "--revision", head, "--evidence", fixture_check["record"], "--data", copy_path])
     assert r.returncode == 2 and "has run" in r.stdout, "a second acceptance was not refused:\n%s" % r.stdout
-    assert yaml.safe_load(open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8")).get("baseline_acceptance") is None
+    assert yaml.safe_load(open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8")).get("baseline_acceptance") == before, \
+        "the test changed the tree's acceptance record"
+
+
+def t_l3r5_acceptance_refused_while_a_criterion_is_unmet():
+    """The coordinator's acceptance-guard check (30 September 2026, before the acceptance was filed): the acceptance script
+    files its record only when every closure criterion holds. Expected outcomes are the criteria's, written as literals:
+    on a copy whose newest independent check does not accept (the list cut at the collaborator's recheck) it refuses; on
+    a copy with the definition re-issue unfiled (the gate's third condition NOT MET) it refuses; on a copy of the tree
+    with every criterion holding and the newest accepted check listed, --check passes."""
+    import tempfile
+    acc = os.path.join(REC5, "apply_l3r5_accept.py")
+    raw = open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read()
+    raw = "\n".join("baseline_acceptance: null" if l.startswith("baseline_acceptance:") else l for l in raw.split("\n"))
+    head = subprocess.run(["git", "-C", ROOT, "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    lines = raw.split("\n")
+    k = [i for i, l in enumerate(lines) if l.lstrip().startswith("- {record: v2/docs/records/l3r5/checks/astra-check-l3r5-2.md")]
+    assert len(k) == 1, "the collaborator's recheck is not filed once"
+    # the checks filed after the recheck: the contiguous entries of the independent_check block that follow it
+    j = k[0] + 1
+    while j < len(lines) and lines[j].startswith("  - {record:"): j += 1
+    newest = lines[k[0] + 1:j]
+    def run(text, ev):
+        p = os.path.join(tempfile.mkdtemp(prefix="l3r5-gate-"), "l3r2.yaml"); open(p, "w", encoding="utf-8").write(text)
+        return _run([acc, "--data", p, "--revision", head, "--evidence"] + ev + ["--check"])
+    cut = "\n".join(lines[:k[0] + 1] + lines[j:])
+    r = run(cut, ["v2/docs/records/l3r5/checks/astra-check-l3r5-2.md"])
+    assert r.returncode == 2 and "not ACCEPTED" in r.stdout, "filed with the newest check not accepted:\n%s" % r.stdout
+    if True:
+        assert newest, "no accepted check is filed after the recheck"
+        rec = newest[-1].split("record: ", 1)[1].split(",", 1)[0]
+        dr = [l for l in lines if l.startswith("definition_reissue:")]
+        assert len(dr) == 1
+        r = run(raw.replace(dr[0], "definition_reissue: null", 1), [rec])
+        assert r.returncode == 2 and "the gate reads NOT MET" in r.stdout, "filed with a gate condition unmet:\n%s" % r.stdout
+        r = run(raw, [rec])
+        assert r.returncode == 0, "refused with every criterion holding:\n%s" % r.stdout
