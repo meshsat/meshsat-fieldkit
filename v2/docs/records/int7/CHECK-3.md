@@ -6,7 +6,7 @@
 
 This is an AI review by a checker that wrote none of the candidate and neither of the two earlier checks. It is not a qualified engineering review and replaces none. Prototype design: no V2 board has been built, ordered or measured; everything below is a reading of files.
 
-Checked 28 September 2026, 18:26 to 18:42 CEST, in `/home/claude-runner/worktrees/meshsat-fieldkit/int7`, read only. HEAD is `f2b8f98d5c8475e526f2c3a1318f082be395b4a6`; `git status` was empty before and after, and no file in the worktree is newer than my first scratch file. Scratch is `/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-int7-3/` (`dump.py`, `walk-run.txt`, two empty markers); the other scripts ran on standard input. For part of the run the session's harness allowed read-only commands only; the two test files ran after that lifted.
+Checked 28 September 2026, 18:26 to 18:42 CEST, in `<worktrees>/int7`, read only. HEAD is `f2b8f98d5c8475e526f2c3a1318f082be395b4a6`; `git status` was empty before and after, and no file in the worktree is newer than my first scratch file. Scratch is `<worktrees>/_scratch/chk-int7-3/` (`dump.py`, `walk-run.txt`, two empty markers); the other scripts ran on standard input. For part of the run the session's harness allowed read-only commands only; the two test files ran after that lifted.
 
 ```
 mergeable: yes
@@ -85,3 +85,6 @@ None.
 - **The grounds of U14, Q14, Q24 and Q1:** named and compared, not judged as circuit matters. The INA226's sheet was not read.
 - **The suite at `85ad1193`:** the local log's last lines only.
 - **The streams' checks:** their findings were counted and compared, not re-verified.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

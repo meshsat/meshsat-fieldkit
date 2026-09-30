@@ -2,7 +2,7 @@
 
 Nothing further is needed; every item on my list has evidence. Here is the result.
 
-**This is an AI review (a fresh check by an agent session), not a qualified mechanical engineering review.** Branch `fnd/w5tray` at `0ad773ab`, base `c23c5e76`, worktree `/home/claude-runner/worktrees/meshsat-fieldkit/w5tray` (clean before and after my runs; nothing there was modified, no `__pycache__` written). Scratch: `/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-w5tray-2/`. Time used: about 15 minutes of the 45.
+**This is an AI review (a fresh check by an agent session), not a qualified mechanical engineering review.** Branch `fnd/w5tray` at `0ad773ab`, base `c23c5e76`, worktree `<worktrees>/w5tray` (clean before and after my runs; nothing there was modified, no `__pycache__` written). Scratch: `<worktrees>/_scratch/chk-w5tray-2/`. Time used: about 15 minutes of the 45.
 
 `mergeable: yes`
 
@@ -29,6 +29,9 @@ Nothing further is needed; every item on my list has evidence. Here is the resul
 9. Also checked: both manifests hold (`sha256sum -c`: 9 OK in the r2 folder, 50 OK in the case release, whose README and MANIFEST are byte-identical to `c23c5e76`); `git diff --stat b92a678b HEAD` shows no generator source changed after the build commit the README names, only the rebuilt outputs and records; the check script writes nothing but stdout or its argument file.
 
 `not_done:`
-- The `--solids` part of the record (lines 223-286: boolean intersections, the 31-position sweeps, the deepest-point booleans) was not reproduced: `/home/claude-runner/.venv-cad` does not exist on the runner and I did not rent box time for a second CAD run; I verified only what the STL and DXF files themselves show (volumes, sizes, hole pattern) and that the manifest digests equal the ones the author's journal names for that build.
+- The `--solids` part of the record (lines 223-286: boolean intersections, the 31-position sweeps, the deepest-point booleans) was not reproduced: `<runner home>/.venv-cad` does not exist on the runner and I did not rent box time for a second CAD run; I verified only what the STL and DXF files themselves show (volumes, sizes, hole pattern) and that the manifest digests equal the ones the author's journal names for that build.
 - The claim that `lid_tray_qmx_r2_check.py` prints byte-identically before and after `apply_frame_seat_r2.py` was checked arithmetically (15.62+32.30 = 47.92 etc.), not by applying the draft on a copy.
 - The transcripts' internal consistency (which command produced which digest) was checked only by the presence of the digest strings in `_recovered/`, not by re-running `recovery/replay.py`.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 3 paths in this check are written as neutral tokens (`<runner home>`, `<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

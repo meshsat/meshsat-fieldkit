@@ -11,8 +11,8 @@ rail() invariant, loads sum <= 1.02 x peak (intent.py:170-172), on the projected
   B +5V_S3    typ  2.50 peak  5.00 loads sum  4.751  OK
   B +5V_DEV   typ  3.80 peak  6.00 loads sum  5.490  OK
   B +54V_POE  typ  0.30 peak  0.60 loads sum  0.600  OK
-lead_ends: A intent /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/90a77d46-57cf-4758-b702-e06537d0a6cc/scratchpad/s98-projection/pcb-a-power-intent.projected.json sha256/16 fd9cf5d424856131
-lead_ends: B intent /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/90a77d46-57cf-4758-b702-e06537d0a6cc/scratchpad/s98-projection/pcb-b-compute-intent.projected.json sha256/16 10c56b02759dcc8e
+lead_ends: A intent /tmp/<scratchpad>/s98-projection/pcb-a-power-intent.projected.json sha256/16 fd9cf5d424856131
+lead_ends: B intent /tmp/<scratchpad>/s98-projection/pcb-b-compute-intent.projected.json sha256/16 10c56b02759dcc8e
 lead_ends: +5V_S1    AGREE    A 2.50 / 5.00 A (load J_5V_S1 5.0), B 2.50 / 5.00 A
 lead_ends: +5V_S2    AGREE    A 4.20 / 5.63 A (load J_5V_S2 5.63), B 4.20 / 5.63 A
 lead_ends: +5V_S3    AGREE    A 2.50 / 5.00 A (load J_5V_S3 5.0), B 2.50 / 5.00 A

@@ -3,7 +3,7 @@
 recovery can be repeated and checked; it is not a tool of the pipeline.
 
 Pass 1 of the stream wrote in a worktree under /tmp, committed nothing, and a reboot deleted the worktree. What
-survived is under /home/claude-runner/worktrees/meshsat-fieldkit/_recovered/w5si-author-1/: the files the author wrote
+survived is under <worktrees>/_recovered/w5si-author-1/: the files the author wrote
 with the Write tool (tree/), the Edit tool calls whose base file was not held (EDITS-NOT-APPLIED.txt, six of them),
 and bash.log, every shell command with its output. The author changed edge_length.py, pcb_edge_rates.yaml, the test
 file and three drafts mostly through Python patch scripts run from the shell, each asserting its old text; those
@@ -26,10 +26,9 @@ The order, and how each step's place in it is known:
 """
 import sys, os, re, json, subprocess, hashlib
 
-REC = "/home/claude-runner/worktrees/meshsat-fieldkit/_recovered/w5si-author-1"
-OLDSP = ("/tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/"
-         "3744628d-5552-4a03-8300-e043b6cdc9c8/scratchpad")
-OLDWT = OLDSP + "/wt/w5si"
+REC = os.environ.get("W5SI_RECOVERED", os.path.join(os.environ.get("WORKTREES", os.path.expanduser("~/worktrees/meshsat-fieldkit")), "_recovered", "w5si-author-1"))
+OLDSP = None  # the lost session's scratchpad, read by main() from the transcript itself (never typed in here)
+OLDWT = None  # OLDSP + "/wt/w5si", set with it
 T, D = "v2/ecad/tools", "drafts/w5si"
 AT_158 = {T + "/pcb_edge_rates.yaml": "26ef827a1d9ff277", T + "/edge_length.py": "ea1b2211c8ff4f7a",
           T + "/ibis_read.py": "8fd2e9d1f6cb1f4c"}
@@ -76,6 +75,10 @@ def edits():
 
 
 def main(stg, wt):
+    global OLDSP, OLDWT
+    m = re.search(r"(/tmp/[^\s'\"]+/scratchpad)/wt/w5si\b", open(os.path.join(REC, "bash.log"), encoding="utf-8", errors="replace").read())
+    assert m, "the transcript names no w5si worktree under a scratchpad"
+    OLDSP, OLDWT = m.group(1), m.group(1) + "/wt/w5si"
     C = commands(os.path.join(REC, "bash.log"))
     assert len(C) == 168, len(C)
     E = edits()

@@ -2,10 +2,10 @@
 # int7: bring the box re-take's pack back and install it in the int7 worktree (tracked readings by patch, ignored
 # readings by tar), then report. Run on the runner. Usage: int7_install_pack.sh
 set -eu
-W=/home/claude-runner/worktrees/meshsat-fieldkit/int7
-SP=/tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/90a77d46-57cf-4758-b702-e06537d0a6cc/scratchpad/box
+W=${WORKTREES:-$HOME/worktrees/meshsat-fieldkit}/int7
+SP=${SCRATCH:-${TMPDIR:-/tmp}/int7-install}/box
 L=$SP/pack; rm -rf $L; mkdir -p $L
-/home/claude-runner/worktrees/meshsat-fieldkit/_bin/bxs.sh "tar cf /root/int7/pack.tar -C /root/int7 pack" && /home/claude-runner/worktrees/meshsat-fieldkit/_bin/bxcp.sh from /root/int7/pack.tar $SP/ && tar xf $SP/pack.tar -C $SP/
+B=${BOX_BIN:-${WORKTREES:-$HOME/worktrees/meshsat-fieldkit}/_bin}; $B/bxs.sh "tar cf /root/int7/pack.tar -C /root/int7 pack" && $B/bxcp.sh from /root/int7/pack.tar $SP/ && tar xf $SP/pack.tar -C $SP/
 test -d $L || { echo "pack not fetched"; exit 2; }
 ( env -C $L sha256sum -c SHA256SUMS )
 test "$(git -C $W rev-parse --short HEAD)" = "a4b157f0" || { echo "int7 is not at a4b157f0"; exit 3; }
