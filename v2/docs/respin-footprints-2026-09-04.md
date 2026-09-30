@@ -1,6 +1,6 @@
 # Respin footprints (KiCad 9, format 20241229, generator "meshsat")
 
-Files in this directory: five `.kicad_mod` footprints. Three of the eight requested parts are covered by KiCad's own library (9.0.9 on ankh, `/usr/share/kicad/footprints/`) and got no file; the reasoning is in sections 3, 7 and 8.
+Files in this directory: five `.kicad_mod` footprints. Three of the eight requested parts are covered by KiCad's own library (9.0.9 on the laptop, `/usr/share/kicad/footprints/`) and got no file; the reasoning is in sections 3, 7 and 8.
 
 Conventions used: origin at the package centre, KiCad frame (x right, y down), pad numbers as the data sheet numbers them, SMD pads on F.Cu + F.Paste + F.Mask, through-hole pads as `thru_hole circle` with a ring of at least 0.25 mm, courtyard 0.25 mm outside the body on F.CrtYd, silk outline with a pin 1 mark on F.SilkS, fab outline on F.Fab, `descr` and `tags` on every file. Non-rectangular pads (the corner pads of the two TI VQFN-HR packages) are `custom` pads: one pad per pin, polygon primitive, `anchor rect` lying inside the polygon, `clearance outline`. Rectangular pads are `roundrect` with a 0.05 mm corner radius (TI's R0.05 TYP).
 

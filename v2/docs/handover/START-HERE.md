@@ -1,5 +1,28 @@
 # MeshSat field kit V2: start here
 
+> **This is H1.1-R1, a redaction reissue of handover snapshot H1.1 (30 September 2026, MESHSAT-1357). It changes no engineering content, and it supersedes H1.1** (`v2/release/handover/H1.1.zip`, sha256 `fc563395439db348d070e5ae710014d354b907dc886287f6734f742e4e6ff6ca`), which stays published byte for byte beside it.
+>
+> **Why.** The owner's rule is that public files carry no internal host names, user paths or addresses, and H1.1 carried the runner's path, a session scratch path or a host name in 8 of its files. The owner asked for a reissue with a new version record and new hashes rather than an edit of an accepted release, and did not authorize rewriting the repository's history, where H1.1's files stay as they were.
+>
+> **How.** The commit this snapshot is built from (named in `SOURCE.txt`) has H1.1's source commit `98ce9f83` as its only parent and changes the files below and this page, nothing else. The same packer built it (`v2/ecad/tools/handover_pack.py`, the one that built H3). Each replacement is a neutral token (`<worktrees>`, `<repo>`, `<runner home>`, `/tmp/<scratchpad>`, "the runner", "the laptop"); `v2/docs/records/scrub/MAP.md` on the public repository lists every one by file, line and token class, and `v2/docs/handover/RELEASE-H1.1-R1.md` there is this version's record.
+>
+> | File | sha256/16 in H1.1 | sha256/16 here | What changed |
+> |---|---|---|---|
+> | `v2/docs/MESHSAT-709-geometry-appendix.md` | `5e942dd41e9e4ed0` | `852736b661a805e3` | 3 replacements (runner path prefix) |
+> | `v2/docs/diagrams/README.md` | `c0ade5c7889b3786` | `f6e344fd96cf89ae` | 1 replacement (host name) |
+> | `v2/docs/respin-footprints-2026-09-04.md` | `469a42d3360979dd` | `9b1a295133300fe2` | 1 replacement (laptop host name) |
+> | `v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json` | `c2b8c4d55fd78f87` | `9787f6767d5428d7` | 1 replacement (session temp path) |
+> | `v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json` | `9691276029e09fab` | `8ef5495682e031a8` | 1 replacement (runner path prefix) |
+>
+> A hash that a page of this snapshot cites for one of these files names H1.1's bytes, which H1.1 and the public repository at `98ce9f83` hold.
+>
+> **Left as H1.1 carried them**, so that every hash cited for them still holds:
+> - `v2/docs/feasibility/fab/out/pulldowns.txt`: a reading FAILOVER-FABRIC.md cites by sha256; the requirements registry binds that page by sha, so a re-pin would change the baselined registry.
+> - `v2/docs/handover/candidates/hc3.patch`: the H1.1 candidate patch as it was reviewed; candidates/README.md pins its sha256.
+> - `v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md`: a filed review record of layer 1 whose sha256/16 the release records of H2 and H3, the H2 and H3 handover counts, the H3 coherence check, two later reviews and a candidate patch cite.
+>
+> Every other file is byte for byte H1.1's: this snapshot's `MANIFEST.tsv` equals `H1.1.MANIFEST.tsv` in every row but the files above, this page (at the root and under `v2/docs/handover/`) and `SOURCE.txt`.
+
 **Engineering handover, first and partial edition.** Written 27 September 2026 from the repository at commit
 `e3aedb25` (`e3aedb25c849dbda931888b27093ac6c444621cb`, 27 September 2026 01:17 CEST), under tracker issue
 MESHSAT-1357. Every path below is a path in this repository at that commit, written from the repository root. When
