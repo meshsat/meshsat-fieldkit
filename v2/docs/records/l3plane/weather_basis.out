@@ -23,7 +23,7 @@ A. THE MODELLED HISTORICAL COVERAGE, EXACTLY
      COMB, the two packs' combined lowest store at or under 4.2 Wh; EACH, either pack's own lowest store at or under 4.2 Wh
    the cases: WE, energy_basis.out 1c's restated WE (conditional on the stage 0.93, front end 0.93 and charge 0.95 declared);
      WE-LO, the same three at their brackets' lower ends (0.90, 0.90, 0.90); WE-MKR, the same three at the makers' readings
-     (stage 0.965 and front end 0.978, curve_readings.out; charge 0.9915, the cell sheet's resistive bound, energy_basis.out 2):
+     (stage 0.965 and front end 0.978, curve_readings.out; charge 0.9924, the cell sheet's resistive bound, energy_basis.out 2):
      INFERRED readings of other circuits and an upper bound, not established; NOM, energy_basis.out 1c's nominal inputs
 
    lid                case       windows kept: no STOP      COMB above the floor       EACH above the floor      
@@ -35,7 +35,7 @@ A. THE MODELLED HISTORICAL COVERAGE, EXACTLY
    4S14P tablet out   WE TYP      166 of 864 ( 19.2 %)         164 of 864 ( 19.0 %)         115 of 864 ( 13.3 %)       
    4S14P tablet out   WE WAB      121 of 864 ( 14.0 %)         114 of 864 ( 13.2 %)          85 of 864 (  9.8 %)       
    4S14P tablet out   WE-LO TYP   118 of 864 ( 13.7 %)         114 of 864 ( 13.2 %)          79 of 864 (  9.1 %)       
-   4S14P tablet out   WE-MKR TYP  215 of 864 ( 24.9 %)         212 of 864 ( 24.5 %)         147 of 864 ( 17.0 %)       
+   4S14P tablet out   WE-MKR TYP  216 of 864 ( 25.0 %)         213 of 864 ( 24.7 %)         147 of 864 ( 17.0 %)       
    4S14P tablet out   NOM TYP     207 of 864 ( 24.0 %)         200 of 864 ( 23.1 %)         145 of 864 ( 16.8 %)       
    4S15P QMX out      WE TYP      190 of 864 ( 22.0 %)         186 of 864 ( 21.5 %)         141 of 864 ( 16.3 %)       
    4S15P QMX out      WE WAB      151 of 864 ( 17.5 %)         146 of 864 ( 16.9 %)         108 of 864 ( 12.5 %)       
@@ -69,17 +69,21 @@ B. THE STORE EACH WEATHER BASIS WOULD NEED (the owner's decision L3-OD6; ILLUSTR
    cell limits: charge at most 1.020 A a cell for cycle life (REQ-075; the sheet's 3.5), against U3's 3.968 A over 6 cells and
      U3B's 7.936 A over the lid's cells (0.529 A a cell at 4S15P, less for a larger lid); discharge far under the sheet's 8 A (3.8)
 
-   basis                          build  usable, Wh     lid, 4SnP    cells (4S)     nominal, Wh  mass, kg     volume, l (cyl / box)      x the 4S21P's usable; fits?
-   (i) SC-37's mean day, 40/0     TYP    619.0          4S13P        76             916.6        3.80         1.3 / 1.7                  0.89; fits 4S14P tablet out, 4S15P QMX out
-   (ii) 50 % of the windows       TYP    981.8          4S27P        132            1591.9       6.60         2.3 / 3.0                  1.42; fits no established arrangement
-   (ii) 80 % of the windows       TYP    1331.0         4S36P        168            2026.1       8.40         3.0 / 3.8                  1.92; fits no established arrangement
-   (ii) 95 % of the windows       TYP    1688.9         4S51P        228            2749.7       11.40        4.0 / 5.1                  2.44; fits no established arrangement
-   (i) SC-37's mean day, 40/0     WAB    676.2          4S15P        84             1013.0       4.20         1.5 / 1.9                  0.98; fits 4S15P QMX out
-   (ii) 50 % of the windows       WAB    1055.5         4S28P        136            1640.2       6.80         2.4 / 3.1                  1.53; fits no established arrangement
-   (ii) 80 % of the windows       WAB    1420.6         4S42P        192            2315.5       9.60         3.4 / 4.3                  2.05; fits no established arrangement
-   (ii) 95 % of the windows       WAB    1760.5         4S52P        232            2797.9       11.60        4.1 / 5.2                  2.54; fits no established arrangement
+   Third issue (CHECK-2 minors 2 and 3): the cells are the percentile of each window's own cell count (the least 4S
+   group that carries it), not the count of the window at the store's percentile; the multiples are given both in usable
+   Wh (against the 4S21P kit at the reference lid temperature) and in cells (against its 84 cells, the physical quantity).
+   basis                          build  usable, Wh     lid, 4SnP    cells (4S)   nominal, Wh  mass, kg     volume, l (cyl / box)  x the 4S21P: Wh; cells fits?
+   (i) SC-37's mean day, 40/0     TYP    619.0          4S13P        76           916.6        3.80         1.3 / 1.7              0.89; 0.90             fits 4S14P tablet out, 4S15P QMX out
+   (ii) 50 % of the windows       TYP    981.8          4S26P        128          1543.7       6.40         2.3 / 2.9              1.42; 1.52             fits no established arrangement
+   (ii) 80 % of the windows       TYP    1331.0         4S37P        172          2074.3       8.60         3.0 / 3.9              1.92; 2.05             fits no established arrangement
+   (ii) 95 % of the windows       TYP    1688.9         4S49P        220          2653.2       11.00        3.9 / 4.9              2.44; 2.62             fits no established arrangement
+   (i) SC-37's mean day, 40/0     WAB    676.2          4S15P        84           1013.0       4.20         1.5 / 1.9              0.98; 1.00             fits 4S15P QMX out
+   (ii) 50 % of the windows       WAB    1055.5         4S28P        136          1640.2       6.80         2.4 / 3.1              1.53; 1.62             fits no established arrangement
+   (ii) 80 % of the windows       WAB    1420.6         4S40P        184          2219.0       9.20         3.2 / 4.1              2.05; 2.19             fits no established arrangement
+   (ii) 95 % of the windows       WAB    1760.5         4S51P        228          2749.7       11.40        4.0 / 5.1              2.54; 2.71             fits no established arrangement
    The store needed per window (TYP): median 982.4 Wh, the largest 2174.5 Wh; the model's store of the 4S21P kit 692.1 Wh.
-   'Several times more energy': the 95 % target needs 2.44 (TYP) and 2.54 (WAB) times the 4S21P kit's usable store.
+   'Several times more energy': the illustrative targets need 1.42 to 2.54 times the 4S21P kit's usable store, and 1.52 to
+   2.71 times its 84 cells.
    Assumptions: WE's inputs (conditional on the three undocumented efficiencies); 400 Wp; the load as in A; the store grown on
    the lid's side with U3B's code 62 charge current unchanged; a full store at each window's start; the percentile is over
    overlapping windows of 16 Septembers, not independent trials.

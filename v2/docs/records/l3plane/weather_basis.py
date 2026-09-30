@@ -21,6 +21,9 @@ What it runs:
 Before any result it proves (exit 4 otherwise) that its window runs reproduce energy_basis.out section 8's six rows and its
 mean-day runs energy_basis.out section 5's WE rows.
 
+Second issue (CHECK-2 of ec415c09, minors 1 to 3): WE-MKR's charge figure follows energy_basis.out's corrected base bound;
+the sizing takes the percentile of each window's own cell count; the multiples are given in usable Wh and in cells.
+
 Run from the repository root:  python3 v2/docs/records/l3plane/weather_basis.py > v2/docs/records/l3plane/weather_basis.out
 Deterministic. Exit 2: a pinned script is not the pinned file; 3: an input cannot be parsed; 4: a reproduction failed."""
 import hashlib
@@ -35,7 +38,7 @@ sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOP = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_output=True, check=True).stdout.decode().strip()
 RECS = os.path.join(TOP, "v2", "docs", "records")
-PIN_EB = "d3a2c586f710b80adfc8411d56de7b9c39e898ae972ba9d12adf662c32b0fd0b"
+PIN_EB = "7e2f19bff6b63ba5bfdb7ce430dc32e143613f2339cd1bc88e15f71dd022fb47"
 if hashlib.sha256(open(os.path.join(HERE, "energy_basis.py"), "rb").read()).hexdigest() != PIN_EB:
     sys.stderr.write("weather_basis: energy_basis.py is not the pinned file; refusing\n")
     sys.exit(2)
@@ -106,7 +109,7 @@ def main():
     rd_st = re.search(r"READING at 6 to 12 A on the 35 V curve \(board E's stage delivers up to about 12 A at 15\.1 V\): ([\d.]+) to", curves)
     rd_fe = re.search(r"READING at 5\.5 to 6 A \(board A's front end carries U3's 6\.1 A\): ([\d.]+) to", curves)
     rd_cb = re.findall(r"A discharging: (0\.\d{4})", eb_out)
-    if not (rd_st and rd_fe and len(rd_cb) == 3):
+    if not (rd_st and rd_fe and len(rd_cb) >= 3):
         refuse(3, "the makers' readings not parsed")
     st_mkr, fe_mkr, cb_mkr = float(rd_st.group(1)) / 100.0, float(rd_fe.group(1)) / 100.0, min(float(x) for x in rd_cb)
     ptxt = " ".join(open(os.path.join(TOP, POWER), encoding="utf-8").read().split())
@@ -338,29 +341,38 @@ def main():
     P("     U3B's %.3f A over the lid's cells (%.3f A a cell at 4S15P, less for a larger lid); discharge far under the sheet's 8 A (3.8)" % (
         TP.v("chg_a_lid"), TP.v("chg_a_lid") / 15))
     P("")
-    P("   %-30s %-6s %-14s %-12s %-14s %-12s %-12s %-26s %s" % ("basis", "build", "usable, Wh", "lid, 4SnP", "cells (4S)",
-                                                              "nominal, Wh", "mass, kg", "volume, l (cyl / box)", "x the 4S21P's usable; fits?"))
+    P("   Third issue (CHECK-2 minors 2 and 3): the cells are the percentile of each window's own cell count (the least 4S")
+    P("   group that carries it), not the count of the window at the store's percentile; the multiples are given both in usable")
+    P("   Wh (against the 4S21P kit at the reference lid temperature) and in cells (against its 84 cells, the physical quantity).")
+    P("   %-30s %-6s %-14s %-12s %-12s %-12s %-12s %-22s %-22s %s" % ("basis", "build", "usable, Wh", "lid, 4SnP", "cells (4S)",
+                                                                  "nominal, Wh", "mass, kg", "volume, l (cyl / box)",
+                                                                  "x the 4S21P: Wh; cells", "fits?"))
+    usable21 = cur[15]["eb"] + cur[15]["el"]
+    cells21 = base_cells + 4 * 15
     opt_rows = []
     for b in ("TYP", "WAB"):
         u, x = md_need[b]
-        opt_rows.append(("(i) SC-37's mean day, 40/0", b, u, x))
+        opt_rows.append(("(i) SC-37's mean day, 40/0", b, u, int(math.ceil(x - 1e-9))))
+        counts = sorted(int(math.ceil(z[1] - 1e-9)) for z in need[b])
         for tgt in TARGETS:
             k = max(0, int(math.ceil(tgt / 100.0 * len(wins))) - 1)
-            u_, x_, _w = need[b][k]
-            opt_rows.append(("(ii) %d %% of the windows" % tgt, b, u_, x_))
-    usable21 = cur[15]["eb"] + cur[15]["el"]
-    for lab, b, u, x in opt_rows:
-        n_l = int(math.ceil(x - 1e-9))
+            opt_rows.append(("(ii) %d %% of the windows" % tgt, b, need[b][k][0], counts[k]))
+    mult = {"wh": [], "cells": []}
+    for lab, b, u, n_l in opt_rows:
         cells = base_cells + 4 * n_l
         fits = [w for n, w in LIDS if cells <= base_cells + 4 * (places[n] // 4)]
-        P("   %-30s %-6s %-14.1f %-12s %-14d %-12.1f %-12.2f %-26s %.2f; %s" % (
+        if lab.startswith("(ii)"):
+            mult["wh"].append(u / usable21)
+            mult["cells"].append(cells / float(cells21))
+        P("   %-30s %-6s %-14.1f %-12s %-12d %-12.1f %-12.2f %-22s %-22s %s" % (
             lab, b, u, "4S%dP" % n_l, cells, cells * wh_cell, cells * g_cell / 1000.0,
-            "%.1f / %.1f" % (cells * vol_cyl / 1000.0, cells * vol_box / 1000.0), u / usable21,
+            "%.1f / %.1f" % (cells * vol_cyl / 1000.0, cells * vol_box / 1000.0), "%.2f; %.2f" % (u / usable21, cells / float(cells21)),
             ("fits " + ", ".join(fits)) if fits else "fits no established arrangement"))
     P("   The store needed per window (TYP): median %.1f Wh, the largest %.1f Wh; the model's store of the 4S21P kit %.1f Wh." % (
         need["TYP"][len(wins) // 2][0], need["TYP"][-1][0], usable21))
-    P("   'Several times more energy': the 95 %% target needs %.2f (TYP) and %.2f (WAB) times the 4S21P kit's usable store." % (
-        need["TYP"][int(math.ceil(0.95 * len(wins))) - 1][0] / usable21, need["WAB"][int(math.ceil(0.95 * len(wins))) - 1][0] / usable21))
+    P("   'Several times more energy': the illustrative targets need %.2f to %.2f times the 4S21P kit's usable store, and %.2f to" % (
+        min(mult["wh"]), max(mult["wh"]), min(mult["cells"])))
+    P("   %.2f times its %d cells." % (max(mult["cells"]), cells21))
     P("   Assumptions: WE's inputs (conditional on the three undocumented efficiencies); 400 Wp; the load as in A; the store grown on")
     P("   the lid's side with U3B's code 62 charge current unchanged; a full store at each window's start; the percentile is over")
     P("   overlapping windows of 16 Septembers, not independent trials.")
