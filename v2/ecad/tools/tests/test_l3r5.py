@@ -69,7 +69,7 @@ def t_l3r5_every_option_shows_its_candidate_and_disposition():
             assert (o.get("disposition") or {}).get("kind") in kinds, "%s %s has no feasibility disposition" % (d["id"], o["id"])
             assert "CANNOT MEET" not in str(o.get("flag")), "%s %s states a candidate's shortfall as a proof" % (d["id"], o["id"])
     ids = [x["id"] for x in data["feasibility_items"]]
-    assert ids == ["FI-%02d" % n for n in range(1, 7)], "the feasibility items are not FI-01 to FI-06: %s" % ids
+    assert ids == ["FI-%02d" % n for n in range(1, 10)], "the feasibility items are not FI-01 to FI-09: %s" % ids
     for x in data["feasibility_items"]:
         assert x["disposition"]["kind"] in kinds - {"NONE"} and x.get("candidate") and x.get("target"), x["id"]
         for b in x["bound"]:
@@ -111,7 +111,8 @@ def t_l3r5_the_acceptance_definitions_are_in_the_restatements():
     d = tempfile.mkdtemp(prefix="l3r5-reg-")
     reg = os.path.join(d, "pcb_requirements.yaml")
     shutil.copy(reg0, reg)
-    for s in (("od_l3_7.py", "72-required"), ("od_l3_6.py", "mean-day", "--build", "TYP"),
+    for s in (("od_l3_7.py", "72-required", "--hf", "available", "--external", "no", "--tablet-charging", "no"),
+              ("od_l3_6.py", "mean-day", "--build", "TYP"),
               ("od_l3_1.py", "approve", "--pass-line", "kit-loads"),
               ("od_l3_2.py", "qmx-out"), ("od_l3_3.py", "2s2p"), ("od_l3_4.py", "adopt", "--push-n", "10"),
               ("od_l3_5.py", "reading-c")):
@@ -134,7 +135,7 @@ def t_l3r5_the_acceptance_definitions_are_in_the_restatements():
     fea = [r for r in y["records"] if r.get("kind") == "feasibility" and r["id"] not in
            {x["id"] for x in yaml.safe_load(open(reg0, encoding="utf-8"))["records"]}]
     by = {r["blocker_ids"][0]: r for r in fea}
-    assert set(by) == {"FI-05", "FI-06"}, "the recommended set records %s" % sorted(by)
+    assert set(by) == {"FI-05", "FI-06", "FI-08"}, "the recommended set records %s" % sorted(by)
     assert by["FI-05"]["evidence_result"] == "FAIL" and "6.1 N" in " ".join(by["FI-05"]["statement"].split()), \
         "a 10 N push on the QMX-out lid does not read FAIL against its 6.1 N"
     assert all(r["evidence_result"] != "PASS" for r in fea) and R["REQ-072"]["evidence_result"] == "FAIL"
@@ -149,7 +150,7 @@ def t_l3r5_the_status_level_follows_the_answers():
     lvl, s = RL.status_level(req, {}, data, h3)
     assert lvl is None and "None of the three levels holds yet" in s
     x = lambda o, **f: (o, "D-99", "2026-10-01", "", f)
-    dec = {"L3-OD7": x("72-required"), "L3-OD1": x("reject"), "L3-OD3": x("2s2p"), "L3-OD4": x("reject"),
+    dec = {"L3-OD7": x("72-required", hf="available", external="no"), "L3-OD1": x("reject"), "L3-OD3": x("2s2p"), "L3-OD4": x("reject"),
            "L3-OD5": x("reading-c"), "L3-OD6": x("mean-day", build="TYP", share=None)}
     lvl, s = RL.status_level(req, {k: v for k, v in dec.items() if k != "L3-OD7"}, data, h3)
     assert lvl is None, "decisions read recorded with row L3-OD7, M1's runtime, unanswered (D-27)"
@@ -202,9 +203,10 @@ def t_l3r5_d27_is_recorded_once_with_the_addendum_quoted():
 
 
 def t_l3r5_the_72_hours_are_the_sessions_sc21_preserved_by_d20():
-    """D-27: the provenance l3r2.yaml states is the registry's: SC-21 is the session's choice of 27 September 2026 under
-    the standing rule and takes the 72 hours; D-20 preserves M1 and REQ-072 with their specified duration and states no
-    figure; D-21's words carry "the approved 72-hour mission"; D-27 questions it."""
+    """D-27: the provenance l3r2.yaml states is the registry's and the filed comparison's: SC-21 is the session's choice of
+    27 September 2026 under the standing rule and takes the 72 hours; D-20 preserves M1 and REQ-072 with their specified
+    duration and states no figure; D-21's words carry "the approved 72-hour mission"; PROVENANCE.md, bound by its check,
+    finds the figure first as SC-L2-05 at de59686e and its provenance as the owner's UNVERIFIED."""
     import rules_lib as R
     req = R.load_requirements()
     sc = next(c for c in req["session_choices"] if c["id"] == "SC-21")
@@ -214,18 +216,54 @@ def t_l3r5_the_72_hours_are_the_sessions_sc21_preserved_by_d20():
     assert "with their specified duration and operating conditions, are preserved" in rul["D-20"]
     assert not re.search(r"\b72\b", rul["D-20"]), "D-20 states a figure for M1's duration"
     assert "the approved 72-hour mission" in rul["D-21"] and "questioning the 72-hour requirement" in rul["D-27"]
-    data = _rl().load_data()
-    assert data["runtime_provenance"] == {"choice": "SC-21", "preserved_by": "D-20", "read_as_approved_under": "D-21",
-                                          "questioned_by": "D-27", "record": None}, "the provenance is not the one read here"
-    assert "SC-21" in " ".join(str(next(r for r in req["records"] if r["id"] == "REQ-072")["statement"]).split())
+    RL = _rl()
+    data = RL.load_data()
+    pv = data["runtime_provenance"]
+    assert (pv["choice"], pv["preserved_by"], pv["read_as_approved_under"], pv["questioned_by"]) == ("SC-21", "D-20", "D-21", "D-27")
+    assert RL.basis_ok(data, "runtime_comparison")[0], "the comparison is not bound to its checked tip"
+    rp = os.path.join(ROOT, pv["record"])
+    assert pv["record"] in [o["path"] for o in data["runtime_comparison"]["outputs"]], "PROVENANCE.md is not bound by the check"
+    prov = " ".join(open(rp, encoding="utf-8").read().split())
+    for w in ("**Provenance of 72 hours as the owner's: UNVERIFIED.**", "SC-L2-05", "`de59686e`"):
+        assert w in prov, "PROVENANCE.md does not read %r" % w
+    assert pv["as_the_owners"] == "UNVERIFIED" and pv["first_appearance"] == "SC-L2-05 at de59686e"
+    import rules_lib  # noqa: F401
+    assert RL.closure_state(next(c for c in data["closure"] if c["id"] == "L3-C57"), req, {}, data) == "CLOSED"
 
 
-def t_l3r5_rows_1_2_4_and_6_wait_on_row_7():
-    """D-27: no row asks the owner to remove a function or accept a deployment condition before row L3-OD7 is answered.
-    On a copy: rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 refuse while it is unanswered; row L3-OD5 does not wait; after
-    48-required-72-desired or 72-required-battery-upgrade the four refuse until restated from the runtime comparison;
-    after 72-required they apply, and REQ-072 names row L3-OD7's ruling in place of SC-21. Row L3-OD7 itself is held on
-    the tree's registry until the runtime comparison is filed."""
+def t_l3r5_row_7_is_filled_from_the_checked_comparison_by_exact_keys():
+    """Row L3-OD7's table reads back equal to the filed runtime.out (runtime_reader.py), a second fill is refused, the
+    comparison is bound to its checked tip, both checks are filed, and every figure row L3-OD7's prose states is printed
+    as a whole token by the comparison's own files."""
+    sys.path.insert(0, REC5)
+    import fill_l3r7_from_comparison as FL
+    RL = _rl()
+    data = RL.load_data()
+    row = next(d for d in data["decisions"] if d["id"] == "L3-OD7")
+    out = next(o for o in data["runtime_comparison"]["outputs"] if o["path"].endswith("runtime.out"))
+    tbl = FL.table(open(os.path.join(ROOT, out["path"]), encoding="utf-8").read())
+    assert row["runtime_table"]["store"] == tbl["store"] and row["runtime_table"]["rows"] == tbl["rows"]
+    r = _run([os.path.join(REC5, "fill_l3r7_from_comparison.py"), "--check"])
+    assert r.returncode == 2 and "has run" in r.stdout, r.stdout
+    assert [c["verdict"] for c in RL.filed(data, "runtime_checks")] == ["ACCEPTED", "ACCEPTED"]
+    src = " ".join(" ".join(open(os.path.join(ROOT, "v2/docs/records/l3batt", f), encoding="utf-8").read().split())
+                   for f in ("runtime.out", "COMPARISON.md", "SHORTLIST.md", "PROVENANCE.md"))
+    prose = " ".join([row["owner_test"], row["recommendation"], row["consequences"]] +
+                     [o["flag"] for o in row["options"]] + [o["text"] for s in row["subchoices"] for o in s["options"]])
+    for num in sorted(set(re.findall(r"(?<![\w.])\+?(\d+\.\d+)(?= (?:Wh|h|W|kg|A|V)\b)", prose))):
+        assert re.search(r"(?<![\d.])%s\b" % re.escape(num), src), "row L3-OD7 states %s, which the comparison does not print" % num
+    sys.path.insert(0, COND)
+    import cond as C
+    assert C.runtime_figures() == tbl
+
+
+def t_l3r5_row_7_comes_first_and_carries_its_answer():
+    """D-27: rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 refuse while row L3-OD7 is unanswered; row L3-OD5 does not wait. After
+    48 hours with HF listening, the tablet charged and an external store at VBAT: REQ-072 states 48 hours, the receiver's
+    load, the tablet's allowance and the external store; FI-07 and FI-09 are recorded; row L3-OD1 carries the answer; row
+    L3-OD6 refuses until its table is restated; the QMX out is refused as a contradiction with HF listening; both lid items
+    kept is recorded on FI-07, not refused. After 72 hours with no external store: FI-08 and M-02 carry it, and both kept
+    records FI-04. Row L3-OD7 is held on the tree's registry only while the comparison is not bound (it is)."""
     need(COND, "the conditional scripts are not in this tree")
     import yaml
     reg0 = os.path.join(TOOLS, "pcb_requirements.yaml")
@@ -238,47 +276,65 @@ def t_l3r5_rows_1_2_4_and_6_wait_on_row_7():
     def step(reg, d, script, opt, *extra):
         return _run([os.path.join(COND, script), "--option", opt, "--words", "test words", "--date", "2026-10-01",
                      "--registry", reg] + list(extra), cwd=d)
+    def r7(reg, d, opt, hf, ext, tab):
+        r = step(reg, d, "od_l3_7.py", opt, "--hf", hf, "--external", ext, "--tablet-charging", tab)
+        assert r.returncode == 0, r.stdout[-400:]
+    def fea(reg):
+        return {x["blocker_ids"][0]: x for x in yaml.safe_load(open(reg, encoding="utf-8"))["records"] if x.get("kind") == "feasibility"
+                and x["id"] >= "FEA-008"}
     d, reg = copy()
-    for s in (("od_l3_1.py", "approve", "--pass-line", "kit-loads"), ("od_l3_1.py", "reject"), ("od_l3_2.py", "qmx-out"),
+    for s in (("od_l3_1.py", "approve", "--pass-line", "kit-loads"), ("od_l3_1.py", "reject"), ("od_l3_2.py", "both-kept"),
               ("od_l3_4.py", "reject"), ("od_l3_6.py", "mean-day", "--build", "TYP")):
         r = step(reg, d, *s)
         assert r.returncode == 2 and "presupposes row L3-OD7" in r.stdout, "%s answered before row L3-OD7:\n%s" % (s[0], r.stdout)
     assert step(reg, d, "od_l3_5.py", "reading-c").returncode == 0, "row L3-OD5 waits on row L3-OD7"
-    for o in ("48-required-72-desired", "72-required-battery-upgrade"):
-        d, reg = copy()
-        assert step(reg, d, "od_l3_7.py", o).returncode == 0
-        for s in (("od_l3_1.py", "reject"), ("od_l3_6.py", "mean-day", "--build", "TYP")):
-            r = step(reg, d, *s)
-            assert r.returncode == 2 and "restated from the runtime comparison" in r.stdout, "%s applied after %s" % (s[0], o)
-        rec = {x["id"]: x for x in yaml.safe_load(open(reg, encoding="utf-8"))["records"]}["REQ-072"]
-        st, acc = " ".join(rec["statement"].split()), " ".join(rec["acceptance"].split())
-        if o.startswith("48"):
-            assert "for 48 hours, M1's required duration" in st and "72 hours desired" in st and "for 48 hours" in acc
-            assert "72 hours" not in acc, "REQ-072's acceptance keeps a 72 hour pass line under 48 hours required"
-        else:
-            assert "for M1's 72 hours (owner ruling" in st and "upgraded battery arrangement" in " ".join(rec["notes"].split())
-        assert rec["evidence_result"] == "FAIL", "the runtime answer changed REQ-072's reading"
+    r = step(reg, d, "od_l3_7.py", "72-required", "--hf", "available", "--external", "maybe", "--tablet-charging", "no")
+    assert r.returncode == 2 and "--external must be one of" in r.stdout, "an unknown sub-choice was taken"
     d, reg = copy()
-    assert step(reg, d, "od_l3_7.py", "72-required").returncode == 0
+    r7(reg, d, "48-required-72-desired", "listening", "authorise-vbat", "yes")
+    f = fea(reg)
+    assert set(f) == {"FI-07", "FI-09"} and f["FI-07"]["evidence_result"] == "INCONCLUSIVE"
+    assert "+84.2 Wh usable at NOM and +122.2 at WE" in " ".join(f["FI-07"]["statement"].split())
+    rec = {x["id"]: x for x in yaml.safe_load(open(reg, encoding="utf-8"))["records"]}["REQ-072"]
+    st, acc = " ".join(rec["statement"].split()), " ".join(rec["acceptance"].split())
+    for w in ("for 48 hours, M1's required duration", "72 hours desired", "the QMX receiver on through M1 (1.14 W more",
+              "the tablet charged from the USB-C outlet", "external battery arrangement", "joined at VBAT"):
+        assert w in st, "REQ-072's statement does not carry %r" % w
+    assert "ends the 48 hours above" in acc and "72 hours" not in acc and rec["evidence_result"] == "FAIL"
     assert step(reg, d, "od_l3_1.py", "approve", "--pass-line", "kit-loads").returncode == 0
+    rec = {x["id"]: x for x in yaml.safe_load(open(reg, encoding="utf-8"))["records"]}["REQ-072"]
+    st, acc = " ".join(rec["statement"].split()), " ".join(rec["acceptance"].split())
+    assert "the kit's two packs" in st and "for 48 hours, M1's required duration" in st and "SC-21" not in st
+    assert "every hour of the 48 serves the load" in acc and "QMX receiver on" in acc and "external battery arrangement" in acc
+    r = step(reg, d, "od_l3_6.py", "mean-day", "--build", "TYP")
+    assert r.returncode == 2 and "restated from the runtime comparison" in r.stdout
+    r = step(reg, d, "od_l3_2.py", "qmx-out")
+    assert r.returncode == 2 and "cannot both hold" in r.stdout, "the QMX out was taken with HF listening"
+    r = step(reg, d, "od_l3_2.py", "both-kept")
+    assert r.returncode == 0, "both lid items kept, the owner's stated wish, was refused:\n%s" % r.stdout
+    assert "FI-04" not in fea(reg), "both kept with an external store records FI-04 in place of FI-07"
+    d, reg = copy()
+    r7(reg, d, "72-required", "available", "no", "no")
+    f = fea(reg)
+    assert set(f) == {"FI-08"} and f["FI-08"]["evidence_result"] == "FAIL"
     y = yaml.safe_load(open(reg, encoding="utf-8"))
-    r7 = next(x["id"] for x in y["owner_rulings"] if str(x.get("decides")) == "L3-OD7:72-required")
+    assert "no external battery arrangement" in " ".join(next(x for x in y["open_items"] if x["id"] == "M-02")["title"].split())
+    rid = next(x["id"] for x in y["owner_rulings"] if str(x.get("decides")).startswith("L3-OD7:"))
     st = " ".join({x["id"]: x for x in y["records"]}["REQ-072"]["statement"].split())
-    assert "72 hours (owner ruling %s on row L3-OD7)" % r7 in st and "SC-21" not in st, "row L3-OD1 restated the 72 hours as SC-21's"
+    assert "for M1's 72 hours (owner ruling %s on row L3-OD7)" % rid in st and "SC-21" not in st
+    for s in (("od_l3_1.py", "approve", "--pass-line", "kit-loads"), ("od_l3_2.py", "both-kept")):
+        assert step(reg, d, *s).returncode == 0
+    assert "FI-04" in fea(reg), "both lid items kept without an external store records no FI-04"
     sys.path.insert(0, COND)
     import cond as C
-    try:
-        C.hold({"check": False, "registry": C.E.REGISTRY}, "L3-OD7")
-    except C.E.Refused as e:
-        assert "held (D-27)" in str(e) and "runtime_comparison" in str(e), str(e)
-    else:
-        raise AssertionError("row L3-OD7 would be written into the tree's registry before the runtime comparison is filed")
+    C.hold({"check": False, "registry": C.E.REGISTRY}, "L3-OD7")        # bound: not held
 
 
 def t_l3r5_the_pages_ask_nothing_before_row_7():
-    """The decision page lists row L3-OD7 first; rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 read HELD (D-27) and their
-    recommendations ask nothing until it is answered; a row L3-OD7 answer other than 72-required beside a decided row
-    prepared for 72 hours reads as a contradiction, and 72-required clears the wait."""
+    """The decision page lists row L3-OD7 first with its sub-choices and its table; rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6
+    read HELD (D-27) and their recommendations ask nothing until it is answered; after it, only row L3-OD6 waits, and only
+    after 48 hours or HF listening; the contradictions are row L3-OD6 beside those answers and the QMX out beside HF
+    listening, while both lid items kept with or without an external store reads coherent."""
     RL = _rl()
     data = RL.load_data()
     page = open(os.path.join(L3, "OWNER-DECISIONS-L3.md"), encoding="utf-8").read()
@@ -288,9 +344,19 @@ def t_l3r5_the_pages_ask_nothing_before_row_7():
         line = next(l for l in page.split("\n") if l.startswith("| %s |" % rid))
         cells = [c.strip() for c in line.split("|")]
         assert cells[5].startswith("**HELD (D-27)") and cells[9].startswith("HELD (D-27)"), "%s asks before row L3-OD7" % rid
-    x = lambda o: (o, "D-99", "2026-10-01", "", {})
-    assert RL.runtime_wait("L3-OD1", {"L3-OD7": x("72-required")}) == ""
-    assert "restated from the runtime comparison" in RL.runtime_wait("L3-OD4", {"L3-OD7": x("48-required-72-desired")})
-    why, ok = RL.coherent({"L3-OD7": x("48-required-72-desired"), "L3-OD1": x("approve")}, data)
-    assert not ok and "L3-OD7" in why[0], "a 48 hour runtime beside a row prepared for 72 hours reads coherent"
-    assert RL.coherent({"L3-OD7": x("48-required-72-desired"), "L3-OD5": x("reading-c")}, data)[1]
+    line7 = next(l for l in page.split("\n") if l.startswith("| L3-OD7 |"))
+    for w in ("`--hf`", "`--external`", "`--tablet-charging`", "`authorise-vbat`", "`authorise-dc-entry`"):
+        assert w in line7, "row L3-OD7 does not show %s" % w
+    assert "## Row L3-OD7's options, quantified" in page and "| 72 hours | WE |" in page
+    x = lambda o, **f: (o, "D-99", "2026-10-01", "", f)
+    b72 = {"L3-OD7": x("72-required", hf="available", external="no")}
+    assert all(RL.runtime_wait(r, b72) == "" for r in RL.RUNTIME_ROWS)
+    a48 = {"L3-OD7": x("48-required-72-desired", hf="available", external="authorise-vbat")}
+    assert RL.runtime_wait("L3-OD4", a48) == "" and "restated from the runtime comparison" in RL.runtime_wait("L3-OD6", a48)
+    lis = {"L3-OD7": x("72-required", hf="listening", external="no")}
+    assert "restated" in RL.runtime_wait("L3-OD6", lis)
+    assert not RL.coherent(dict(a48, **{"L3-OD6": x("mean-day", build="TYP")}), data)[1]
+    assert not RL.coherent(dict(lis, **{"L3-OD1": x("approve"), "L3-OD2": x("qmx-out")}), data)[1]
+    for ext in ("no", "authorise-vbat"):
+        s = {"L3-OD7": x("72-required", hf="available", external=ext), "L3-OD1": x("approve"), "L3-OD2": x("both-kept")}
+        assert RL.coherent(s, data)[1], "both lid items kept reads as a contradiction (external %s)" % ext

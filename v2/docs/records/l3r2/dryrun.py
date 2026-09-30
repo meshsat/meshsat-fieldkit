@@ -11,9 +11,10 @@ only, and no coverage target carried by any lid. The chains are EXAMPLES, not re
 5) a target the studied candidate does not meet is recorded with its feasibility item (FI-01 to FI-06), and only
 requirements that cannot both hold are refused (row L3-OD2 after a reject; a second answer to a decided row); those
 refusals are part of the record. The owner's own numbers (the push, the slope for a lid with no figure, the pass line of
-sub-choice 1b) take STAND-INS here. Since D-27 row L3-OD7 (M1's runtime) is answered first: every chain that reaches rows
-L3-OD1, L3-OD2, L3-OD4 or L3-OD6 starts with it answered 72-required, a STAND-IN for the owner's runtime answer, and three
-chains show the rows refused before it and after its other answers.
+sub-choice 1b) take STAND-INS here. Since D-27 row L3-OD7 (M1's runtime and its store, filled from stream l3batt's
+checked comparison) is answered first: every chain that reaches rows L3-OD1, L3-OD2, L3-OD4 or L3-OD6 starts with it
+answered 72-required, HF available, no external store and the tablet not charged (the approved profile), a STAND-IN for
+the owner's answer, and four chains show the rows refused before it, its other answers and what they record.
 
 Usage: python3 dryrun.py > dryrun.out
 """
@@ -60,11 +61,15 @@ CHAINS = [
       ("od_l3_4.py", "adopt")]),
     ("row 1 before row 7: refused (D-27), then answered after it", [("od_l3_1.py", "approve"), ("od_l3_7.py", "72-required"),
                                                                      ("od_l3_1.py", "approve")]),
-    ("48 hours required, 72 desired: rows 1 and 6 refused until restated from the runtime comparison; row 5 answered",
-     [("od_l3_7.py", "48-required-72-desired"), ("od_l3_1.py", "approve"), ("od_l3_6.py", "mean-day:TYP"),
-      ("od_l3_5.py", "reading-c")]),
-    ("72 hours with an upgraded battery arrangement: row 1 refused until restated from the runtime comparison",
-     [("od_l3_7.py", "72-required-battery-upgrade"), ("od_l3_1.py", "reject")]),
+    ("48 hours required, 72 desired, HF listening, the tablet charged, an external store at VBAT: row 1 carries the answer; "
+     "row 6's table refused until restated; both lid items kept on FI-07; the QMX out refused with HF listening",
+     [("od_l3_7.py", "48-required-72-desired:listening:authorise-vbat:yes"), ("od_l3_1.py", "approve"),
+      ("od_l3_6.py", "mean-day:TYP"), ("od_l3_2.py", "qmx-out"), ("od_l3_2.py", "both-kept"), ("od_l3_5.py", "reading-c")]),
+    ("72 hours through the DC entry, HF available: both lid items kept, the owner's stated wish, on FI-07; then row 6 and row 4",
+     [("od_l3_7.py", "72-required:available:authorise-dc-entry:no"), ("od_l3_1.py", "approve"), ("od_l3_2.py", "both-kept"),
+      ("od_l3_3.py", "2s2p"), ("od_l3_6.py", "mean-day:TYP"), ("od_l3_4.py", "adopt")]),
+    ("72 hours, no external store: M1 recorded as not met with HF and the tablet kept (FI-08), both lid items kept (FI-04)",
+     [("od_l3_7.py", "72-required:available:no:no"), ("od_l3_1.py", "approve"), ("od_l3_2.py", "both-kept")]),
     ("CFL-017 kept open", [("od_l3_5.py", "measure")]),
     ("cells above +60 C", [("od_l3_5.py", "cells")]),
 ]
@@ -88,7 +93,7 @@ def main(argv):
     print("kit-loads a stand-in for his sub-choice 1b, and 2 degrees the stand-in slope for a lid with no mechanical figure.")
     print("D-26: a target the studied candidate does not meet is recorded with its feasibility item; only requirements that")
     print("cannot both hold are refused. D-27: row L3-OD7 (M1's runtime) comes first; a chain reaching rows 1, 2, 4 or 6")
-    print("starts with it answered 72-required, a STAND-IN for the owner's runtime answer.")
+    print("starts with it answered 72-required, HF available, no external store, the tablet not charged: a STAND-IN.")
     print("The chains are examples, not recommendations.")
     for name, steps in CHAINS:
         if not any(s == "od_l3_7.py" for s, _ in steps) and any(s in RUNTIME_SCRIPTS for s, _ in steps):
@@ -108,6 +113,9 @@ def main(argv):
                     "--registry", reg]
             if script == "od_l3_4.py" and opt == "adopt": args += ["--push-n", "10"] + (["--slope-deg", "2"] if "slope" in parts else [])
             if script == "od_l3_1.py" and opt == "approve": args += ["--pass-line", "kit-loads"]
+            if script == "od_l3_7.py":
+                s7 = (parts[1:] + ["available", "no", "no"])[:3] if len(parts) > 1 else ["available", "no", "no"]
+                args += ["--hf", s7[0], "--external", s7[1], "--tablet-charging", s7[2]]
             if script == "od_l3_3.py" and opt == "keep": args += ["--array-wp", "1100", "--entry-a", "80", "--evidence", ev]
             if script == "od_l3_6.py":
                 args += ["--build", parts[1]] + (["--share", parts[2]] if opt == "coverage" else [])

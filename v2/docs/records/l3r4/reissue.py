@@ -65,9 +65,11 @@ import yaml  # noqa: E402
 
 DOCS = {"CONOPS": "v2/docs/CONOPS.md", "BRIEF": "v2/docs/PRODUCT-BRIEF.md"}
 ROWS = ("L3-OD7", "L3-OD1", "L3-OD2", "L3-OD3", "L3-OD4", "L3-OD5", "L3-OD6")   # row L3-OD7 first (D-27)
-# D-27: the passages row L3-OD7 changes are mapped for 72-required (the figure becomes the owner's); its other two answers
-# change M1's runtime or its store, whose passages are mapped with the runtime comparison's figures (closure item L3-C56).
+# D-27: the passages row L3-OD7 changes are mapped for 72-required with HF available, no external store and the tablet not
+# charged (the figure becomes the owner's, the profile and the store unchanged); its other answers change M1's runtime,
+# load or store, whose passages are mapped with the runtime comparison's figures (closure item L3-C56).
 RUNTIME_MAPPED = ("72-required",)
+RUNTIME_SUB_MAPPED = {"m1_hf": "available", "m1_external": "no", "m1_tablet_charging": "no"}
 DRAFT = "DEFINITION-REISSUE-DRAFT.md"
 RECORD = "DEFINITION-CHANGE-RECORD-L3.md"
 MAP = os.path.join(HERE, "PASSAGE-MAP.md")
@@ -974,10 +976,13 @@ def answers(req, data):
         E.refuse("rows %s are undecided: the re-issue follows the owner's answers to every row" % and_list(missing))
     why, ok = RL.coherent(c.dec, data)
     if not ok: E.refuse("the answers set requirements that cannot both hold (contradictory): %s" % "; ".join(why))
-    if c.O("L3-OD7") not in RUNTIME_MAPPED:
-        E.refuse("row L3-OD7 is answered %s (%s): the passages its runtime or its store changes are mapped with the runtime "
-                 "comparison's figures (l3r2.yaml runtime_comparison, closure item L3-C56), and the re-issue is written "
-                 "after that (D-27)" % (c.O("L3-OD7"), c.R("L3-OD7")))
+    r7 = c.rul[c.R("L3-OD7")]
+    subs = {k: str(r7.get(k)) for k in RUNTIME_SUB_MAPPED}
+    if c.O("L3-OD7") not in RUNTIME_MAPPED or subs != RUNTIME_SUB_MAPPED:
+        E.refuse("row L3-OD7 is answered %s with %s (%s): the passages its runtime, load or store changes are mapped with "
+                 "the runtime comparison's figures (l3r2.yaml runtime_comparison, closure item L3-C56), and the re-issue is "
+                 "written after that (D-27)" % (c.O("L3-OD7"), ", ".join("%s %s" % (k[3:], v) for k, v in subs.items()),
+                                                 c.R("L3-OD7")))
     rids = {c.R(r) for r in answered(c)}
     bad = [r["id"] for r in req["records"] if r.get("status") == "CONFLICT_OPEN" and r["id"] != "CFL-017"
            and rids & set(r.get("rulings") or [])]
@@ -1105,9 +1110,13 @@ def passage_map(docs):
     for row in ROWS:
         for o in opts[row]:
             ps = [p for p in PASSAGES if p.when != ALL and o in p.when.get(row, ())]
-            if row == "L3-OD7" and o not in RUNTIME_MAPPED:
-                m.append("| %s | `%s` | not mapped yet: its passages are mapped with the runtime comparison's figures "
-                         "(closure item L3-C56), and the generator refuses the answer until then (D-27) |" % (row, o))
+            if row == "L3-OD7":
+                if o in RUNTIME_MAPPED:
+                    m.append("| %s | `%s` with HF available, no external store and the tablet not charged | %s |" % (
+                        row, o, ", ".join("%s (%s %d)" % (p.pid, p.doc, p.a) for p in ps)))
+                label = ("`%s` with HF listening, an external store or the tablet charged" % o) if o in RUNTIME_MAPPED else "`%s`" % o
+                m.append("| %s | %s | not mapped yet: its passages are mapped with the runtime comparison's figures "
+                         "(closure item L3-C56), and the generator refuses the answer until then (D-27) |" % (row, label))
                 continue
             m.append("| %s | `%s` | %s |" % (row, o, ", ".join("%s (%s %d)" % (p.pid, p.doc, p.a) for p in ps) or
                                               "none beyond every answer's"))

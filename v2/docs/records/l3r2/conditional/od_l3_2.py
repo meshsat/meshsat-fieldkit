@@ -89,7 +89,7 @@ RULINGS = {
 
 def build(a, raw, d):
     for rel, n in ASSERT.items(): E.assert_in(rel, n)
-    C.runtime_first(d, ROW)
+    rt = C.runtime_first(d, ROW)
     dec0 = C.decided(d)
     if dec0.get("L3-OD1", ("",))[0] == "reject":
         E.refuse("row L3-OD2 does not apply: row L3-OD1 is rejected (%s), which keeps D-06's one pack, and every option of "
@@ -97,12 +97,23 @@ def build(a, raw, d):
                  % dec0["L3-OD1"][1])
     C.require(d, ROW, ["L3-OD1:approve"])
     op = a["option"]
+    if op == "qmx-out" and rt["hf"] == "listening":
+        E.refuse("row L3-OD2's qmx-out takes the HF set out of the kit, and row L3-OD7 (%s) sets its receiver listening "
+                 "through M1: the two requirements cannot both hold (l3r2.yaml's contradiction rules, D-27)" % rt["rid"])
     if op == "both-kept":
         for rel, n in ASSERT_BOTH.items(): E.assert_in(rel, n)
     C.hold(a, ROW, C.row_holds(ROW) + (["relocation_facts"] if op == "qmx-outside" else []))
     recs = {r["id"]: r for r in d["records"]}
     n = COUNT[op]
     ruling, title = RULINGS[op]
+    external = op == "both-kept" and rt["external"] != "no"
+    if external:     # D-27: both kept is the owner's stated wish; with the external store its candidate is FI-07's
+        ruling = ruling.replace("the studied 4S9P lid does not meet M1 on the records, and feasibility item FI-04 records that (D-26).",
+                                "the studied 4S9P lid alone does not meet M1 on the records; with the external battery "
+                                "arrangement %s authorises on row L3-OD7 the candidate is feasibility item FI-07's, "
+                                "CONDITIONAL on its size (D-26, D-27)." % rt["rid"])
+        title = title.replace("feasibility item FI-04", "the external store of row L3-OD7 (FI-07)")
+        if "FI-07" not in ruling or "FI-07" not in title: E.refuse("the both-kept ruling does not name FI-07")
     raw, rid = C.add_ruling(raw, d, ROW, op, title, ruling, a["words"], a["date"])
     stamp = "%s (row L3-OD2, %s)" % (rid, a["date"])
     exp = {("owner_rulings", rid, "added")}
@@ -156,9 +167,14 @@ def build(a, raw, d):
             "Under %s the QMX HF set is carried outside the case and reaches the kit through a sealed lead across the case "
             "wall (l3r2.yaml's relocation facts); the HF bearer stays in the kit." % stamp, after="source_check"), rid), "records")
         exp |= {("records", "REQ-002", "changed")}
-    elif op == "both-kept":
+    elif op == "both-kept" and not external:
         raw, fid = C.feasibility_item(raw, "FI-04", [rid, "D-20", "D-21", "D-26"])
         exp |= {("records", fid, "added")}
+    elif op == "both-kept":
+        raw = E.replace_entry(raw, "REQ-072", lambda b: C.add_ruling_ref(E.append_folded(b, "notes",
+            "Row L3-OD2 (%s): both lid items kept on a 4S9P lid, the owner's stated wish (D-27); with the external battery "
+            "arrangement of row L3-OD7 (%s) the candidate is feasibility item FI-07's." % (stamp, rt["rid"])), rid), "records")
+        exp |= {("records", "REQ-072", "changed")}
     else:
         old011 = recs["REQ-011"]
         raw = C.restate(raw, "REQ-011", stamp,

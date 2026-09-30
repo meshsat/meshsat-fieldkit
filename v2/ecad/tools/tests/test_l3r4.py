@@ -37,9 +37,9 @@ import claims_check as CC  # noqa: E402
 # reading-c and the mean day. Rows L3-OD2 (which lid item leaves), L3-OD6's build and row L3-OD4's operator push are the
 # owner's with no recommendation; the fixture takes the QMX out, TYP and a push of 10 N as STAND-INS (dryrun.py's), not
 # as recommendations.
-# D-27: row L3-OD7 (M1's runtime) is answered first; 72-required, the one answer whose passages are mapped, is a STAND-IN
-# for the owner's runtime answer in every chain.
-R7 = ("od_l3_7.py", "72-required")
+# D-27: row L3-OD7 (M1's runtime and its store) is answered first; 72-required with HF available, no external store and the
+# tablet not charged, the one answer whose passages are mapped, is a STAND-IN for the owner's answer in every chain.
+R7 = ("od_l3_7.py", "72-required", "--hf", "available", "--external", "no", "--tablet-charging", "no")
 RECOMMENDED = [R7, ("od_l3_6.py", "mean-day", "--build", "TYP"), ("od_l3_1.py", "approve", "--pass-line", "kit-loads"),
                ("od_l3_2.py", "qmx-out"), ("od_l3_3.py", "2s2p"), ("od_l3_4.py", "adopt", "--push-n", "10"),
                ("od_l3_5.py", "reading-c")]
@@ -438,8 +438,8 @@ def t_l3r4_a_runtime_answer_other_than_72_hours_is_refused():
     assert "L3-OD7" in msg and "cannot both hold" in msg, "a 48 hour runtime beside rows prepared for 72 was not refused: %s" % msg
     assert not os.listdir(out), "a refused run wrote a file"
     m = open(os.path.join(os.path.dirname(GEN), "PASSAGE-MAP.md"), encoding="utf-8").read()
-    for o in ("48-required-72-desired", "72-required-battery-upgrade"):
-        assert "| L3-OD7 | `%s` | not mapped yet" % o in m, "the map does not name %s as not mapped" % o
+    for o in ("`48-required-72-desired`", "`72-required` with HF listening, an external store or the tablet charged"):
+        assert "| L3-OD7 | %s | not mapped yet" % o in m, "the map does not name %s as not mapped" % o
     assert RI.RUNTIME_MAPPED == ("72-required",)
 
 

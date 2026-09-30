@@ -108,7 +108,8 @@ def decided(req, data):
         if ":" in d:
             row, opt = d.split(":", 1)
             out[row] = (opt, r["id"], str(r.get("ruled_on")), p(r.get("words") or ""),
-                        {"share": r.get("weather_share"), "build": r.get("weather_build")})
+                        {"share": r.get("weather_share"), "build": r.get("weather_build"), "hf": r.get("m1_hf"),
+                         "external": r.get("m1_external"), "tablet charging": r.get("m1_tablet_charging")})
     rows = {d["id"]: d for d in data["decisions"]}
     for row, v in out.items():
         opt, rid = v[0], v[1]
@@ -245,9 +246,10 @@ def runtime_wait(row, dec):
     other than 72-required its prepared restatement (72 hours) is restated from the runtime comparison first."""
     if row not in RUNTIME_ROWS or row in dec: return ""
     if "L3-OD7" not in dec: return "not asked until row L3-OD7, M1's runtime, is answered"
-    if dec["L3-OD7"][0] != "72-required":
-        return ("row L3-OD7 answered `%s` (%s): restated from the runtime comparison before it is asked (L3-C56)"
-                % (dec["L3-OD7"][0], dec["L3-OD7"][1]))
+    f = dec["L3-OD7"][4] if len(dec["L3-OD7"]) > 4 else {}
+    if row == "L3-OD6" and (dec["L3-OD7"][0] != "72-required" or f.get("hf") == "listening"):
+        return ("row L3-OD7 answered `%s` with HF %s (%s): its table is restated from the runtime comparison before it is "
+                "asked (L3-C56)" % (dec["L3-OD7"][0], f.get("hf"), dec["L3-OD7"][1]))
     return ""
 
 
@@ -269,9 +271,12 @@ def coherent(dec, data=None):
     data = data or load_data()
     why = []
     opt = lambda r: dec.get(r, ("",))[0]
-    if "L3-OD7" in dec and opt("L3-OD7") != "72-required" and [r for r in RUNTIME_ROWS if r in dec]:
-        why.append("row L3-OD7 answered %s while rows %s stand on prepared restatements for 72 hours (D-27)" % (
-            opt("L3-OD7"), ", ".join(r for r in RUNTIME_ROWS if r in dec)))
+    f7 = dec["L3-OD7"][4] if "L3-OD7" in dec and len(dec["L3-OD7"]) > 4 else {}
+    if "L3-OD6" in dec and "L3-OD7" in dec and (opt("L3-OD7") != "72-required" or f7.get("hf") == "listening"):
+        why.append("row L3-OD6 decided on its table for 72-hour windows at the approved profile while row L3-OD7 sets %s "
+                   "with HF %s (D-27)" % (opt("L3-OD7"), f7.get("hf")))
+    if opt("L3-OD2") == "qmx-out" and f7.get("hf") == "listening":
+        why.append("row L3-OD2 answered qmx-out while row L3-OD7 sets the HF receiver listening through M1 (D-27)")
     if opt("L3-OD1") == "reject" and "L3-OD2" in dec:
         why.append("row L3-OD2 answered %s while row L3-OD1 stands rejected: every option of row L3-OD2 sets a lid pack, "
                    "and a reject keeps D-06's one pack" % opt("L3-OD2"))
@@ -331,7 +336,8 @@ def row_state(row, dec, data):
         return "NOT APPLICABLE: row L3-OD1 rejected (every option sets a lid pack; a contradiction rule)"
     if row in dec:
         f = dec[row][4] if len(dec[row]) > 4 else {}
-        extra = ", ".join("%s %s" % (k, v) for k, v in (("build", f.get("build")), ("share", f.get("share"))) if v is not None)
+        extra = ", ".join("%s %s" % (k, v) for k, v in ((k, f.get(k)) for k in ("build", "share", "hf", "external",
+                                                                                   "tablet charging")) if v is not None)
         return "DECIDED: `%s`%s (%s, %s)" % (dec[row][0], (" " + extra) if extra else "", dec[row][1], dec[row][2])
     d = next(x for x in data["decisions"] if x["id"] == row)
     if runtime_wait(row, dec): return "HELD (D-27): %s" % runtime_wait(row, dec)
@@ -637,7 +643,42 @@ def option_cell(d, dec):
         if o.get("disposition"): s += ". *Feasibility disposition: %s.* %s" % (o["disposition"]["kind"], p(o["disposition"]["text"]))
         if o.get("held_until"): s += " (also held until l3r2.yaml %s filed)" % ", ".join("`%s`" % k for k in o["held_until"])
         out.append(s)
+    for sc in d.get("subchoices") or []:
+        out.append("**%s** (`%s`): %s" % (sc["label"], sc["arg"], "; ".join("`%s`: %s" % (o["id"], p(o["text"])) for o in sc["options"])))
     return cell(" ; ".join(out)).replace(" ; ", "<br>")
+
+
+def runtime_lines(data):
+    """Row L3-OD7's table (D-27), filled from stream l3batt's checked runtime.out by exact keys
+    (fill_l3r7_from_comparison.py); HELD while it is not filled."""
+    d = next((x for x in data["decisions"] if x["id"] == "L3-OD7"), None)
+    if d is None: return []
+    T = d.get("runtime_table")
+    L = ["", "## Row L3-OD7's options, quantified", ""]
+    if not T:
+        return L + [p("HELD: the runtime comparison of stream l3batt is not filled into this table yet (D-27)."), ""]
+    s = T["store"]
+    L += [p(T["note"]), "",
+          p("**The studied store with HF and the tablet kept** (Option A(i)'s base 4S6P and lid 4S9P of the 35E, itself row "
+            "L3-OD1's): %s Wh usable aged at +20 C (%s Wh at -10 C), %s h on battery alone (%s h at -10 C); D-06's 4S3P alone "
+            "%s h, and with one or two external smart packs %s or %s h. With the sun the store at the start holds %s Wh (base "
+            "%s, lid %s). As drawn it fails by %s Wh at 48 hours and %s Wh at 72 hours (TYP / WAB) ([runtime.out]"
+            "(../../records/l3batt/runtime.out) 1 and 2)." % (s["usable_20"], s["usable_m10"], s["hours_20"], s["hours_m10"],
+                                                            s["d06_hours_20"], s["nh1_hours_20"], s["nh2_hours_20"],
+                                                            s["start_total"], s["start_base"], s["start_lid"], s["drawn_48"],
+                                                            s["drawn_72"])), "",
+          "| Runtime | Case (corrected path) | Where the kit stops | Unserved, TYP / WAB (Wh) | Addition needed, TYP: Wh "
+          "(35E cells) | Addition needed, WAB: Wh (35E cells) | With the HF receiver on, TYP (Wh) | Past September windows "
+          "carried |", "|---|---|---|---|---|---|---|---|"]
+    names = {"NOM": "NOM", "WE": "WE", "NOM90": "NOM at the 0.90 bracket"}
+    for r in T["rows"]:
+        h = r["stops"].split("/")
+        L.append("| %s hours | %s | 05 UTC of the first night (hour %s from 06 UTC, %s from 18 UTC) | %s / %s | +%s (%s) | "
+                 "+%s (%s) | %s | %s of 864 |" % (r["hours"], names[r["case"]], h[0], h[1], r["typ_unserved"], r["wab_unserved"],
+                                                   r["typ_wh"], r["typ_cells"], r["wab_wh"], r["wab_cells"],
+                                                   ("+" + r["listening_wh"]) if r.get("listening_wh") else "not computed",
+                                                   r["coverage"]))
+    return L
 
 
 def recommendation(d, dec):
@@ -698,9 +739,12 @@ def page_decisions(req, data, dec):
            "meet is valid and records a feasibility item; only requirements that cannot both hold are refused (D-26, the "
            "owner's reviewer). Row L3-OD7, M1's runtime, comes first (D-27, the owner: \"Evaluate alternatives before "
            "asking me to sacrifice functions or accept restrictive deployment conditions.\"): rows %s are not asked "
-           "before it is answered, their scripts refuse until it is, and its figures are held for the bounded runtime and "
-           "battery comparison of stream l3batt, which comes with its check." % (
-               data["written_text"], held_sentence(data), ", ".join(RUNTIME_ROWS[:-1]) + " and " + RUNTIME_ROWS[-1])), "",
+           "before it is answered, their scripts refuse until it is, and its figures are the bounded runtime and battery "
+           "comparison of stream l3batt, %s." % (
+               data["written_text"], held_sentence(data), ", ".join(RUNTIME_ROWS[:-1]) + " and " + RUNTIME_ROWS[-1],
+               ("bound to the tip `%s` its accepted check names (`%s`)" % (str(data["runtime_comparison"]["tip"])[:12],
+                                                                           data["runtime_comparison"]["check"]))
+               if basis_ok(data, "runtime_comparison")[0] else "which is NOT BOUND: row L3-OD7 is HELD (D-27)")), "",
          p(data.get("proposal_only") or ""), "",
          "| Row | Question | Why it is the owner's: the requirement it changes, quantified (D-25) | Options | Recommendation | "
          "Quantified consequences | Dependencies | Affected | State |",
@@ -743,6 +787,7 @@ def page_decisions(req, data, dec):
               "the requirement and its consequence.", "", "| Remedy | Requirement it changes | Consequence |", "|---|---|---|"]
         for c in data["conditional_owner_cases"]:
             L.append("| %s | %s | %s |" % (cell(c["remedy"]), cell(c["requirement"]), cell(c["consequence"])))
+    L += runtime_lines(data)
     q = next((d for d in data["decisions"] if d.get("quantified")), None)
     if q:
         Q = q["quantified"]
@@ -777,7 +822,7 @@ def page_decisions(req, data, dec):
             "--requirements` and this renderer." % data["scripts"]["conditional_dir"]), "",
           "| Row | Script | Options | Requires | Held until |", "|---|---|---|---|---|"]
     for d in data["decisions"]:
-        L.append("| %s | `%s` | %s | %s | %s |" % (d["id"], d["script"], "; ".join("`%s`%s" % (o["id"], (" (also held until `%s`)" % ", ".join(o["held_until"])) if o.get("held_until") else "") for o in d["options"]),
+        L.append("| %s | `%s` | %s | %s | %s |" % (d["id"], d["script"], "; ".join("`%s`%s" % (o["id"], (" (also held until `%s`)" % ", ".join(o["held_until"])) if o.get("held_until") else "") for o in d["options"]) + "".join("; with `%s` %s" % (sc["arg"], " or ".join("`%s`" % o["id"] for o in sc["options"])) for sc in d.get("subchoices") or []),
                                                   ", ".join(d.get("requires") or []) or "none",
                                                   ", ".join("l3r2.yaml `%s` filed" % k for k in (d.get("held_until") or [])) or "nothing"))
     L += ["", "## Requirements that cannot both hold: the only answers refused (D-26)", "",

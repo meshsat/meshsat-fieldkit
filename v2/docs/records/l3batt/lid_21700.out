@@ -1,0 +1,19 @@
+THE LID WITH HF AND THE TABLET KEPT, COUNTED FOR 21700 CELLS BY a1mech's GENERATOR (lid_21700.py, stream l3batt, MESHSAT-1357).
+PROTOTYPE DESIGN: nothing built or fitted. A count, INFERRED: only the cell's maximum diameter, length and mass changed.
+
+0. REPRODUCTION: the unedited generator reproduces v2/docs/records/a1mech/lid_pack_a1.out byte for byte: yes
+
+1. ARRANGEMENT A (HF, the QMX set r2, and the 8 inch tablet bracket kept in the lid) and, for reference, B (HF kept, no tablet)
+   cell                         its maximum figures                      A: places (layers), used   B: places, used            A's lid in all; module depth 1 / 2 layers
+   Samsung SDI INR18650-35E     18.55 x 65.25 mm, 50 g (a1mech)          39 (30 + 9), 4S9P          56, 4S14P                  4.53 kg; 24.00 / 40.06 mm
+   Molicel INR-21700-P45B       21.55 x 70.15 mm, 70.0 g                 27 (25 + 2), 4S6P          27, 4S6P                   4.46 kg; 27.00 / 45.66 mm
+     source: Version 1.2 p.1: 21.55 mm (Max), 70.15 mm (Max), 70 g (Max)
+   Samsung SDI INR21700-50E     21.25 x 70.80 mm, 69.5 g                 27 (25 + 2), 4S6P          27, 4S6P                   4.44 kg; 26.70 / 45.10 mm
+     source: V1.0 3.14 and 3.15: 69.5 g max, height max 70.80, top diameter max 21.25 (held back)
+   LG INR21700M50LT             21.44 x 70.60 mm, 69.2 g                 27 (25 + 2), 4S6P          27, 4S6P                   4.44 kg; 26.89 / 45.46 mm
+     source: 2.12 and 3.2: 68.2 +- 1.0 g (TBD), diameter <= 21.44, height <= 70.60 (held back)
+   The lid's room is 44.39 mm at Peli's worst figures (a1mech 1): a second layer of 21700 cells needs the module's two-layer
+   depth, so most second-layer places are refused by the face rows; the count falls to the one-layer places, fewer per
+   area than for 18650 cells (INFERRED from the generator's own output, printed above)
+
+END. A count by the tree's generator with the cell's size changed; the allowances are the 18650 module's.

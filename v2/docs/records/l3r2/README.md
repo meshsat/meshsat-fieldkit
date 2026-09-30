@@ -79,9 +79,10 @@ does not carry the store, `both-kept`, a coverage target) and row L3-OD1's `reje
 recording its feasibility item (FI-01 to FI-06) as a feasibility record; row L3-OD4's adopt no longer waits on row
 L3-OD6 (no band exists, so the band rule binds nothing); the acceptance definitions are written into the restatements
 (REQ-072's pass line with `od_l3_1.py --pass-line`, REQ-078's full test conditions, REQ-051's environment table,
-REQ-016 apart from its compliance). The owner's addendum D-27 adds row L3-OD7, M1's runtime (`conditional/od_l3_7.py`,
-held until the runtime comparison of stream l3batt is filed), answered before rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6,
-whose scripts refuse until it is answered 72-required. The round 3b paragraphs above state the scripts as they were then.
+REQ-016 apart from its compliance). The owner's addendum D-27 adds row L3-OD7, M1's runtime and its store
+(`conditional/od_l3_7.py`, with `--hf`, `--external` and `--tablet-charging`, filled from stream l3batt's checked
+comparison), answered before rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6, whose scripts refuse until it is; row L3-OD1
+carries its answer into REQ-072, and row L3-OD6 refuses after 48 hours or HF listening until its table is restated. The round 3b paragraphs above state the scripts as they were then.
 
 ## Files
 

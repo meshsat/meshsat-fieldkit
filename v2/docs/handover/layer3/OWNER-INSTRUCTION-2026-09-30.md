@@ -223,13 +223,14 @@ ruling D-27.
   stated exactly; the push and the slope of the open kit are design targets with their test conditions; the solar
   topology is approved apart from its electrical compliance, which carries its derivations or obligations; and the pages
   say which of the reviewer's three status levels holds.
-- **The addendum (D-27)**: M1's runtime is itself a row the owner answers, L3-OD7, before rows L3-OD1 (the store),
-  L3-OD2 (the lid item), L3-OD4 (the deployment condition) and L3-OD6 (the weather basis), which depend on it: 72
-  hours required as REQ-072 states it today, 48 hours required with 72 desired, or 72 hours required with an
-  upgraded battery arrangement, the last two keeping HF and the tablet. No row asks him to remove a function or to
-  accept a deployment condition before row L3-OD7 is answered, and the scripts of those four rows refuse until it
-  is. Its figures are held for the bounded runtime and battery comparison of stream l3batt, which comes with its
-  check. The 72 hours are the session's SC-21 (27 September 2026, under the standing rule), which D-20 preserved
-  with M1's specified duration without setting the figure, and which the reading of "the approved 72-hour
-  mission" above took as approved; the owner now questions it. The comparison's own provenance record is cited
-  once it is filed.
+- **The addendum (D-27)**: M1's runtime and its store are themselves a row the owner answers, L3-OD7, before rows
+  L3-OD1 (the store), L3-OD2 (the lid item), L3-OD4 (the deployment condition) and L3-OD6 (the weather basis), which
+  depend on it, with HF and the tablet kept: 72 hours required (Option B) or 48 hours required with 72 desired (Option
+  A); HF available or listening; an external battery arrangement joined at VBAT (reopening D-06) or through the DC entry
+  (revisiting D-20), or none, M1 then recorded as not met; the tablet charged or not. No row asks him to remove a
+  function or to accept a deployment condition before row L3-OD7 is answered, and the scripts of those four rows refuse
+  until it is. Its figures are the bounded runtime and battery comparison of stream l3batt, filed with its accepted
+  check. The 72 hours are the session's SC-21 (27 September 2026, under the standing rule), first appearing as SC-L2-05,
+  which D-20 preserved with M1's specified duration without setting the figure, and which the reading of "the approved
+  72-hour mission" above took as approved; the comparison's provenance record (`v2/docs/records/l3batt/PROVENANCE.md`)
+  finds their provenance as the owner's UNVERIFIED, and the owner now questions them.

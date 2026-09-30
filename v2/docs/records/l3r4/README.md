@@ -5,8 +5,9 @@ answers CHECK-1 of round 4 (B1 and minors 1 to 9), round 4c CHECK-2's five minor
 (branch `fnd/l3r5`, `../l3r5/README.md`) adjusts the generator to owner ruling D-26: it refuses only requirements that
 cannot both hold, writes the re-issue for row L3-OD1 rejected (D-06's one pack kept, feasibility item FI-01, row L3-OD2
 not applicable), and its PACK and CELL patterns read across line breaks and punctuation (CHECK-4 of round 4d); with the
-owner's addendum D-27 it takes row L3-OD7 (M1's runtime) first, maps its `72-required` answer and refuses its other two
-until their passages are mapped with the runtime comparison's figures. Preparation only: the owner's six answers to
+owner's addendum D-27 it takes row L3-OD7 (M1's runtime and its store) first, maps its `72-required` answer with HF
+available, no external store and the tablet not charged, and refuses every other answer of that row until its passages
+are mapped with the runtime comparison's figures. Preparation only: the owner's six answers to
 `v2/docs/handover/layer3/OWNER-DECISIONS-L3.md` are pending, and nothing here changes a requirement, a ruling or a
 baselined document. Prototype design: no V2 board has been fabricated, ordered or powered, and no kit has been field
 deployed.
@@ -26,7 +27,8 @@ and CELL passage, taken out, leaving a line no other passage holds; the passage 
 the generator on copies of
 the registry decided by the prepared scripts, and its refusals. The decided copies: the session's recommended answers
 (approve, 2s2p, adopt, reading-c and the mean day), where the owner's own choices, which the table does not recommend,
-take STAND-INS (row L3-OD7 answered 72-required, the QMX out, TYP and an operator push of 10 N, the stand-ins of
+take STAND-INS (row L3-OD7 answered 72-required with HF available, no external store and the tablet not charged, the
+QMX out, TYP and an operator push of 10 N, the stand-ins of
 `../l3r2/dryrun.py`); the QMX
 outside with 1S4P, no deployment condition and CFL-017 kept open; the tablet out with REQ-016 kept and cells above +60 C;
 row L3-OD1 rejected (D-26), with 2S2P, adopt at a 10 N push and a 2 degree stand-in slope, reading-c and the mean day,
@@ -52,8 +54,8 @@ for one pack states the design before owner ruling D-27's answer.
 | Row | Option | Passages (see `PASSAGE-MAP.md` for the lines and texts) |
 |---|---|---|
 | every answer | | the heads of both documents (status line, re-issue note) and section 7's table of rulings (C01, C02, C31, B01, B02) |
-| L3-OD7 | `72-required` | the 72 hours named as the owner's in place of the session's SC-21: section 3's duration sentence (C34), section 6's missions paragraph (C28, also restated by row L3-OD1), section 7a's M1 duration row's reversal (C35), the brief's L-02 row (B19) |
-| L3-OD7 | `48-required-72-desired`, `72-required-battery-upgrade` | not mapped yet: mapped with the runtime comparison's figures (closure item L3-C56); the generator refuses these answers until then |
+| L3-OD7 | `72-required` with HF available, no external store and the tablet not charged | the 72 hours named as the owner's in place of the session's SC-21: section 3's duration sentence (C34), section 6's missions paragraph (C28, also restated by row L3-OD1), section 7a's M1 duration row's reversal (C35), the brief's L-02 row (B19) |
+| L3-OD7 | `72-required` with HF listening, an external store or the tablet charged; `48-required-72-desired` | not mapped yet: mapped with the runtime comparison's figures (closure item L3-C56); the generator refuses these answers until then |
 | L3-OD1 | `approve` | the store (its cell, base block and words read from D-27's ruling): section 1's power sources, section 2a's deferred list, second pack, charging and pack safety rows, M1's sequence, energy paragraph and D-20 paragraph, section 4's Charging row, section 4a's table and pack paragraph, section 6, the D-06 row and section 7a's M1 duration row; in the brief the pack, power, closed case, deferred functions, runtime, night and transport bullets and the core. CURRENT (PACK, 43 passages): the one pack's charge, measurement and protection chain as generated, by designator or in words (the BQ25731 and `R17`, its ADCs, bus address and readings, `CHRG_INHIBIT` and `CHG_INHIBIT`, the charger's host and host-free fallback, the gauge's host `J_SMB`, its readings' bank and the pack node `CELL_F`, the gauge's thermistors C1 and the hot stop read, its 336 uA, its datasheet commands, board P's second level, JP1 and F2, the protection table, the pack chain's ratings, and the pack-current limits K3, C2 and C3, whose per pack or total reading is set downstream; since CHECK-4 of round 4d also
 the pack's XT60 and arming jumper, its FETs, the gauge's OTD and the secure element, the charger and the supervisors'
 status) |
