@@ -43,6 +43,21 @@ corrections D-25 (both recorded by their own scripts, quoted in `OWNER-INSTRUCTI
   consequence quantified; Kelvin sensing is an implementation requirement.
 - Prepared for the fill, not run: `basis_reader.py`, `set_energy_basis.py`, `fill_l3r2_from_basis.py` (below).
 
+**Round 3c** (30 September 2026), on the narrow check CHECK-3 of L3-R2 (accepted so far: no; it closes CHECK-2 and
+confirms D-24 and D-25):
+- B1: an accepted check is bound to the files filed. `basis_binding.py` compares every named file with `git show
+  <tip>:<path>` of the tip the check names; `set_energy_basis.py` refuses a file that differs, and the hold and the gate
+  verify it again every time, for `energy_basis` and `power_path_check` alike. The check's failing path (the third
+  issue's files with the second issue's check) is a test.
+- The reader covers `three_cases.out` (the four front-end cases and their coverage, and the derated setting) at the
+  fourth issue's format (`06b8ecea`), every table checked whole; `fill_l3r2_from_basis.py` fills `four_cases` from it and
+  row L3-OD1's four-case cells are rendered from that by exact keys.
+- The minors: the history of stream r11dep's record stated as it is; REQ-072's prepared acceptance names the steady-state
+  range with the brackets beside the result; PP-02's bench threshold (0.29 mOhm x I at 25 C); LAYER-STATUS's integrator
+  line and the impacts table (`apply_layer_status_l3_r3c.py`); the REQ-015 owner case in figures (`conditional_owner_cases`).
+- Prepared, not run: `prepared/power_path_classes.yaml` and `restate_power_path.py` restate the power-path list from the
+  second issue's classes (A-1 and A-2, B-1 to B-5, C-1 to C-9) once `power_path_check` is filed and verified.
+
 ## Files
 
 | File | What it is |
@@ -56,6 +71,9 @@ corrections D-25 (both recorded by their own scripts, quoted in `OWNER-INSTRUCTI
 | `apply_layer_status_l3.py` | `v2/docs/handover/LAYER-STATUS.md`: the head sentence, layer 3's section restated with its H2 and H3 text kept word for word, the L3-R2 step of appendix A.3's integrator line; it refuses unless S-122 is closed and D-22 is in the registry |
 | `apply_layer_status_l3_r3.py` | round 3: the same page's layer 3 sentences brought to D-23, row L3-OD6 and the confirmed facts, each sentence replaced by its own text; it refuses unless `apply_layer_status_l3.py` has run and D-23 is recorded, and a second run is refused |
 | `apply_layer_status_l3_r3b.py` | round 3b: the page's coherence sentence says what is enforced, F-01 carries the bus's brackets and board A's front end in four cases, and the rows wait on the power path's check too; refuses unless round 3 ran and D-24 and D-25 are recorded |
+| `basis_binding.py` | binds a filed record, its outputs and its accepted check to the tip the check checked (`git show <tip>:<path>`, byte identical), for the hold, the gate and `set_energy_basis.py` |
+| `restate_power_path.py`, `prepared/power_path_classes.yaml` | PREPARED, NOT RUN: the power-path list restated from the checked classes of stream r11dep's second issue, every anchor asserted in the filed record; refuses until `power_path_check` is verified, and a second run |
+| `apply_layer_status_l3_r3c.py` | round 3c: the integrator line says what the scripts enforce, and F-01 states the history of stream r11dep's record |
 | `basis_reader.py` | reads the filed energy basis's outputs by exact keys (weather_basis.out A and B, energy_basis.out 5), each figure as the text the output prints; refuses any other format (written for the basis's third issue, `868c321f`) |
 | `set_energy_basis.py` | PREPARED, NOT RUN: names the basis, its outputs and its check in `l3r2.yaml`'s `energy_basis`; refuses unless each file is in the tree, the check reads "accepted: yes" and names the tip it checked |
 | `fill_l3r2_from_basis.py` | PREPARED, NOT RUN: fills row L3-OD6's table and `basis_figures` from the filed outputs by exact keys, reads them back, and refuses a second run; writes no prose |
@@ -93,6 +111,7 @@ python3 v2/docs/records/l3r2/apply_l3r2_r3b.py --check && python3 v2/docs/record
 python3 v2/docs/records/l3r2/apply_layer_status_l3.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3.py
 python3 v2/docs/records/l3r2/apply_layer_status_l3_r3.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3_r3.py
 python3 v2/docs/records/l3r2/apply_layer_status_l3_r3b.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3_r3b.py
+python3 v2/docs/records/l3r2/apply_layer_status_l3_r3c.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3_r3c.py
 python3 v2/docs/records/l3r2/apply_records_readme_row.py
 env -C v2/ecad/tools python3 rules_lib.py requirements
 env -C v2/ecad/tools python3 rules_render.py --requirements
@@ -104,38 +123,52 @@ env -C v2/ecad/tools/tests python3 run.py test_requirements test_l3r2
 The renderer lists any open item the set adds as UNCLASSIFIED (closure item L3-C23 then reads OPEN) until `l3r2.yaml`'s
 `open_items_layer` gives it a layer.
 
-## The fill procedure (ready; run only on the coordinator's word, after the checked basis and the checked power path)
+## The fill procedure (ready; run only on the coordinator's word, with the final tip)
 
-Nothing below has been run in the branch: `energy_basis` and `power_path_check` are null, and every HELD cell stays HELD.
+Nothing below has been run in the branch: `energy_basis`, `power_path_check`, `basis_figures` and `four_cases` are null,
+and every HELD cell stays HELD. `<TIP>` is the final tip of `fnd/l3plane` the coordinator sends, and CHECK-N its accepted
+check (it must name `<TIP>` in its head).
 
-1. **Bring the basis into the tree** at the confirmed tip `<TIP>` (the final basis, its outputs, and stream r11dep's
-   record), file its accepting check byte for byte beside the others, and read it:
+1. **Bring the checked files into the tree and read them:**
    ```
    git checkout <TIP> -- v2/docs/records/l3plane v2/docs/records/r11dep
-   python3 v2/docs/records/l3r2/basis_reader.py v2/docs/records/l3plane/weather_basis.out v2/docs/records/l3plane/energy_basis.out
+   python3 v2/docs/records/l3r2/basis_reader.py v2/docs/records/l3plane/weather_basis.out \
+     v2/docs/records/l3plane/energy_basis.out v2/docs/records/l3plane/three_cases.out
    ```
-   `basis_reader.py` must read every table (exit 0); a format it refuses is reported, never guessed around.
-2. **Name the basis** (it verifies the files, the check's "accepted: yes" and the tip it names):
+   It must read every table whole (exit 0). A header the reader refuses is reported, never guessed around; the reader is
+   written for the fourth issue's format (`06b8ecea`).
+2. **File the accepting check byte for byte** under `v2/docs/records/l3r2/checks/energy-basis-check-N/`, with its tools
+   and outputs.
+3. **Name the energy basis**, first with `--check-only`. It refuses unless every file is byte identical to `<TIP>`'s, the
+   check reads "accepted: yes" and it names `<TIP>`:
    ```
    python3 v2/docs/records/l3r2/set_energy_basis.py --record v2/docs/records/l3plane/ENERGY-BASIS.md \
-     --outputs v2/docs/records/l3plane/weather_basis.out,v2/docs/records/l3plane/energy_basis.out \
-     --check v2/docs/records/l3r2/checks/energy-basis-check-N/CHECK-N.md --tip <TIP> --check-only
+     --outputs v2/docs/records/l3plane/weather_basis.out,v2/docs/records/l3plane/energy_basis.out,v2/docs/records/l3plane/three_cases.out \
+     --check v2/docs/records/l3r2/checks/energy-basis-check-N/CHECK-N.md --tip <TIP>
    ```
-   then the same without `--check-only`.
-3. **Name the power path's check** in `l3r2.yaml`'s `power_path_check` ({record: v2/docs/records/r11dep/R11-DEPENDENCY.md,
-   sha16, check, check_sha16}; the check filed under `checks/`, first line "accepted: yes"), and restate
-   `power_path_corrections` (PP-01 to PP-08) from the checked list.
-4. **Fill the figures by exact keys:**
+4. **Name the power path's check**, the same way:
    ```
+   python3 v2/docs/records/l3r2/set_energy_basis.py --key power_path_check \
+     --record v2/docs/records/r11dep/R11-DEPENDENCY.md \
+     --outputs v2/docs/records/r11dep/r11_dep.out,v2/docs/records/l3plane/three_cases.out \
+     --check v2/docs/records/l3r2/checks/energy-basis-check-N/CHECK-N.md --tip <TIP>
+   ```
+5. **Restate the power-path list** from the checked classes, and **fill the figures by exact keys**:
+   ```
+   python3 v2/docs/records/l3r2/restate_power_path.py --check && python3 v2/docs/records/l3r2/restate_power_path.py
    python3 v2/docs/records/l3r2/fill_l3r2_from_basis.py --check && python3 v2/docs/records/l3r2/fill_l3r2_from_basis.py
    ```
-5. **The session restates the prose from the filled figures**, each cited to its section: rows L3-OD1, L3-OD2, L3-OD4 and
-   L3-OD6 (consequences, the four front-end cases, the recommendations, stated without taking any option as feasible on
-   its idealised balance), finding F-01, CF-01 to CF-04 cited to the checked issue, and `od_l3_4.py`'s `BAND` table from
-   the basis at the supply range's low end with U3's 6.0 A bracket.
-6. **Re-render and re-check:** `rules_lib.py requirements` (0 errors), `rules_render.py --requirements`, `render_l3r2.py`
-   and `--check`, `dryrun.py > dryrun.out`, the tests; then a further independent check of L3-R2 (L3-C27), named in
-   `independent_check`.
+   The fill writes row L3-OD6's table, `basis_figures` and `four_cases` (row L3-OD1's four-case cells render from it), and
+   reads everything back.
+6. **The session restates the prose from the filled figures**, each cited to its line:
+   - rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6: their consequences, and the recommendations, with no option taken as
+     feasible on its idealised balance;
+   - finding F-01, and CF-01 to CF-04 cited to the checked issue;
+   - `od_l3_4.py`'s `BAND` table from the basis at the supply range's low end with U3's 6.0 A bracket.
+7. **Re-render and re-check:**
+   - `rules_lib.py requirements` at 0 errors, `rules_render.py --requirements`, `render_l3r2.py` and its `--check`;
+   - `dryrun.py > dryrun.out` and the tests;
+   - then a further independent check of L3-R2 (L3-C27), named in `independent_check`.
 
 ## Applying an owner's answer (only once he has answered, and only rows the hold no longer holds)
 

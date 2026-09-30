@@ -91,8 +91,10 @@ def approve(a, raw, d):
         acceptance=("Desk: a calculation from the PS-IDLE-SPEC load of POWER-THERMAL.md section 4, the aged packs of "
                     "REQ-014, each at its own cell temperature, and the energy the input path delivers into the kit from "
                     + ARRAY + " on the reference day (4.0 kWh/m2 on the optimally inclined plane, SC-37), with the charge "
-                    "bus anywhere in its supply range and every limit that must hold a load at its minimum (" + BASIS +
-                    ", D-22), serves the load at every hour of the 72 without the kit reaching its graceful shutdown, the "
+                    "bus anywhere in its steady-state supply range as the energy basis gives it (" + BASIS + " section 2) "
+                    "and every limit that must hold a load at its minimum (D-22), serves the load at every hour of the 72 "
+                    "without the kit reaching its graceful shutdown, the basis's brackets below that range (the divider's "
+                    "rise, the resistors' endurance limits and both together) stated beside the result, the "
                     "graceful shutdown set at a cell voltage of 3.00 V or more; repeated with the loads and the stages' "
                     "efficiencies measured at bring-up. Prototype: the kit runs PS-IDLE-SPEC for 72 hours from full packs "
                     "on its solar input, fed by an array emulator following the reference day's profile, without "

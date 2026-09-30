@@ -5,8 +5,8 @@ Stream l3plane's energy basis prints its figures in two outputs, `weather_basis.
 (v2/docs/records/l3plane/ once filed). This module reads the tables layer 3's rows need, each row by an exact key and each
 column by an exact pattern, and refuses (BasisError) when a section, a header or a key is not where the format puts it: a
 figure is never found by searching for its digits. Figures are kept as the text the output prints them ("3.80", not 3.8), so a figure on
-the pages is the basis's own. Written against the format of the basis's third issue (fnd/l3plane 868c321f); any other
-format is refused, never guessed. Nothing here writes; fill_l3r2_from_basis.py writes what it returns,
+the pages is the basis's own. Written against the format of the basis's fourth issue (fnd/l3plane 06b8ecea, whose
+weather_basis.out and energy_basis.out equal the third issue's, 868c321f); any other format is refused, never guessed. Nothing here writes; fill_l3r2_from_basis.py writes what it returns,
 and od_l3_6.py re-reads the filed outputs through it and compares with l3r2.yaml before any answer is written.
 
   sizing(text)          weather_basis.out B: {(basis, build): row}, basis 'mean-day', '50', '80' or '95', build TYP or WAB
@@ -14,8 +14,15 @@ and od_l3_6.py re-reads the filed outputs through it and compares with l3r2.yaml
   stores(text)          weather_basis.out B: the lids' current stores at WE on the mean day
   allowances(text)      weather_basis.out B: the allowances between nominal and usable, per pack of the 4S21P kit
   reference_plane(text) energy_basis.out 5: {(lid, case): {TYP, TYP_lines, WAB, WAB_lines}}
+  four_cases(text)      three_cases.out 2: {(case, inputs, lid): {TYP, TYP_lines, WAB, WAB_lines}}, case a (as drawn), a'
+                        (the derated variant), b (resistor-only, its lower bound: INCONCLUSIVE), c (the corrected path:
+                        HYPOTHETICAL); inputs NOM or WE
+  four_coverage(text)   three_cases.out 3: {(case, inputs, lid): {STOP, COMB, EACH}}
+  derated_setting(text) three_cases.out 1: U3's setting in the derated variant, e.g. '4.05'
+Every table is read whole: its row count is checked (CHECK-3 of L3-R2, minor 5).
 
-Usage: python3 basis_reader.py WEATHER_OUT ENERGY_OUT   (prints what it reads, for a look at a basis before filing)
+Usage: python3 basis_reader.py WEATHER_OUT ENERGY_OUT [THREE_CASES_OUT]   (prints what it reads, for a look at a basis
+       before filing)
 """
 import re
 import sys
@@ -96,7 +103,9 @@ def coverage(text):
             raise BasisError("the line after the coverage header is not a coverage row: %r" % l[:80])
         if m.group(1) not in LIDS: raise BasisError("coverage names the lid %r" % m.group(1))
         out[(m.group(1), m.group(2))] = {k: " ".join(m.group(i).split()) for k, i in (("STOP", 3), ("COMB", 4), ("EACH", 5))}
-    if not out: raise BasisError("no coverage row")
+    want = {(lid, c) for lid in LIDS for c in ("WE TYP", "WE WAB", "WE-LO TYP", "WE-MKR TYP", "NOM TYP")}
+    if set(out) != want: raise BasisError("weather_basis.out A reads %d coverage rows, not the %d of three lids by five cases: %s"
+                                          % (len(out), len(want), sorted(set(want) ^ set(out))[:4]))
     return out
 
 
@@ -150,18 +159,95 @@ def reference_plane(text):
         if key in out: raise BasisError("case row %s occurs twice" % (key,))
         out[key] = {"TYP": " ".join(m.group(3).split()), "TYP_lines": m.group(4),
                     "WAB": " ".join(m.group(5).split()), "WAB_lines": m.group(6)}
-    if not out: raise BasisError("no case row in energy_basis.out 5")
+    cases = ("NOM", "WE", "WE60", "WEL", "WA", "WE1", "GEN", "M207", "SC76")
+    want = {(lid, c) for lid in ("4S9P", "4S14P", "4S15P") for c in cases}
+    if set(out) != want: raise BasisError("energy_basis.out 5 reads %d case rows, not the %d of three lids by nine cases"
+                                          % (len(out), len(want)))
     return out
+
+
+# three_cases.out (the fourth issue): the four power-path cases, kept apart (D-24, D-25)
+FOUR_HEADS = [
+    ("AS DRAWN, NOM inputs:", ("a", "NOM")),
+    ("AS DRAWN, WE inputs:", ("a", "WE")),
+    ("DERATED VARIANT of AS DRAWN, NOM inputs:", ("a'", "NOM")),
+    ("DERATED VARIANT, WE inputs:", ("a'", "WE")),
+    ("RESISTOR-ONLY, lower bound under B-5's inferred collapse, NOM inputs (INCONCLUSIVE", ("b", "NOM")),
+    ("RESISTOR-ONLY, lower bound under B-5's inferred collapse, WE inputs (INCONCLUSIVE", ("b", "WE")),
+    ("CORRECTED PATH, HYPOTHETICAL, NOM inputs (", ("c", "NOM")),
+    ("CORRECTED PATH, HYPOTHETICAL, WE inputs, CONDITIONAL", ("c", "WE")),
+]
+FOUR_ROW = re.compile(r"^\s{5}(4S\d+P [A-Za-z ]+?)\s{2,}TYP\s+" + VAL + r"\s+([YN]/[YN])\s+WAB\s+" + VAL + r"\s+([YN]/[YN])\s*$")
+
+
+def four_cases(text):
+    sec = section(text, "2. THE REFERENCE DAY AT 40/0", "3. ")
+    out, key = {}, None
+    for l in sec[1:]:
+        s = l.strip()
+        if not s: continue
+        head = [k for p, k in FOUR_HEADS if s.startswith(p)]
+        if head:
+            key = head[0]
+            if any(k[:2] == key for k in out): raise BasisError("three_cases.out 2 repeats the block %s" % (key,))
+            continue
+        m = FOUR_ROW.match(l)
+        if m and key:
+            if m.group(1) not in LIDS: raise BasisError("three_cases.out 2 names the lid %r" % m.group(1))
+            out[key + (m.group(1),)] = {"TYP": " ".join(m.group(2).split()), "TYP_lines": m.group(3),
+                                        "WAB": " ".join(m.group(4).split()), "WAB_lines": m.group(5)}
+        elif l.startswith("     ") and not s.startswith(("the proposed", "the as-drawn")):
+            raise BasisError("three_cases.out 2 carries a line that is neither a block head nor a row: %r" % l[:80])
+    want = {k + (lid,) for _, k in FOUR_HEADS for lid in LIDS}
+    if set(out) != want: raise BasisError("three_cases.out 2 reads %d rows, not the %d of eight blocks by three lids"
+                                          % (len(out), len(want)))
+    return out
+
+
+FOUR_COV_LABELS = {"AS DRAWN, NOM (upper bound)": ("a", "NOM"), "DERATED VARIANT, NOM": ("a'", "NOM"),
+                   "RESISTOR-ONLY lower bound, NOM": ("b", "NOM"), "RESISTOR-ONLY lower bound, WE": ("b", "WE"),
+                   "CORRECTED PATH, HYPOTHETICAL, NOM": ("c", "NOM"), "CORRECTED PATH, HYPOTHETICAL, WE": ("c", "WE")}
+COUNT = r"(\d+ \(\s*\d+\.\d %\))"
+FOUR_COV = re.compile(r"^\s{3}(%s)\s{2,}(4S\d+P [A-Za-z ]+?)\s{2,}%s\s+/\s+%s\s+/\s+%s(?:\s+\(weather_basis\.out A, reproduced\))?\s*$"
+                      % ("|".join(re.escape(k) for k in FOUR_COV_LABELS), COUNT, COUNT, COUNT))
+
+
+def four_coverage(text):
+    sec = section(text, "3. THE MODELLED HISTORICAL COVERAGE", "END.")
+    out = {}
+    for l in sec[1:]:
+        m = FOUR_COV.match(l)
+        if not m: continue
+        if m.group(2) not in LIDS: raise BasisError("three_cases.out 3 names the lid %r" % m.group(2))
+        key = FOUR_COV_LABELS[m.group(1)] + (m.group(2),)
+        if key in out: raise BasisError("three_cases.out 3 repeats %s" % (key,))
+        out[key] = {k: " ".join(m.group(i).split()) for k, i in (("STOP", 3), ("COMB", 4), ("EACH", 5))}
+    want = {k + (lid,) for k in list(FOUR_COV_LABELS.values())[:4] for lid in LIDS} | \
+           {k + (lid,) for k in list(FOUR_COV_LABELS.values())[4:] for lid in ("4S14P tablet out", "4S15P QMX out")}
+    if set(out) != want: raise BasisError("three_cases.out 3 reads %d coverage rows, not %d" % (len(out), len(want)))
+    return out
+
+
+def derated_setting(text):
+    sec = section(text, "1. THE ELECTRICAL LIMITS FED IN", "2. ")
+    found = re.findall(r"the derated variant (\d+\.\d+) A", " ".join(" ".join(sec).split()))
+    if len(found) != 1: raise BasisError("three_cases.out 1 names the derated setting %d times" % len(found))
+    return found[0]
 
 
 def main(argv):
     w, e = open(argv[0], encoding="utf-8").read(), open(argv[1], encoding="utf-8").read()
+    c = open(argv[2], encoding="utf-8").read() if len(argv) > 2 else None
     try:
         for k, v in sorted(sizing(w).items()): print("sizing", k, v)
         for k, v in sorted(coverage(w).items()): print("coverage", k, v)
         for k, v in sorted(stores(w).items()): print("store", k, v)
         for v in allowances(w): print("allowance", v)
         for k, v in sorted(reference_plane(e).items()): print("reference", k, v)
+        if c is not None:
+            print("derated setting", derated_setting(c))
+            for k, v in sorted(four_cases(c).items()): print("four-case", k, v)
+            for k, v in sorted(four_coverage(c).items()): print("four-case coverage", k, v)
     except BasisError as x:
         print("basis_reader: REFUSED: %s" % x); return 2
     return 0

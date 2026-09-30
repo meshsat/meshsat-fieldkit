@@ -92,23 +92,14 @@ CHECKED = ("energy_basis", "power_path_check")   # files that count only with an
 
 
 def basis_state(data, root=None, key="energy_basis"):
-    """(True, '') when l3r2.yaml's `key` (energy_basis, or power_path_check of D-24) names its record and its check (and,
-    for the energy basis, its outputs), each held in this tree at its sha256/16, and the check's first line reads
-    'accepted: yes' (CHECK-2 of L3-R2, B3); else (False, why)."""
-    root = root or E.TOP
-    v = data.get(key)
-    if not v: return False, "l3r2.yaml's %s is not filed yet" % key
-    files = [(v.get("record"), v.get("sha16")), (v.get("check"), v.get("check_sha16"))]
-    files += [(o.get("path"), o.get("sha16")) for o in (v.get("outputs") or [])]
-    if not v.get("check") or (key == "energy_basis" and not v.get("outputs")):
-        return False, "l3r2.yaml's %s names no check%s" % (key, " or no outputs" if key == "energy_basis" else "")
-    for path, sha in files:
-        p = os.path.join(root, str(path))
-        if not os.path.isfile(p) or E.sha16(p) != str(sha):
-            return False, "l3r2.yaml's %s names %s at %s, which this tree does not hold" % (key, path, sha)
-    first = open(os.path.join(root, str(v["check"])), encoding="utf-8").readline().strip()
-    if first != "accepted: yes": return False, "%s's check %s reads %r, not 'accepted: yes'" % (key, v["check"], first)
-    return True, ""
+    """(True, '') when l3r2.yaml's `key` (energy_basis, or power_path_check of D-24) names its record, its outputs and its
+    check, every file held in this tree at its sha256/16 and byte identical to the file of that path at the tip the check
+    checked, and the check reads 'accepted: yes' and names that tip (basis_binding.py; CHECK-2 of L3-R2 B3, CHECK-3 B1);
+    else (False, why). Verified every time, never trusted."""
+    sys.path.insert(0, os.path.dirname(HERE))
+    import basis_binding as BB
+    ok, why = BB.verify(data.get(key), root or E.TOP, E.TOP, need_outputs=(key == "energy_basis"))
+    return ok, ("" if ok else "l3r2.yaml's %s: %s" % (key, why))
 
 
 def held_by(row, data=None):
