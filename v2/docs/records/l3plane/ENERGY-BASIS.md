@@ -4,7 +4,9 @@
 check `CHECK-1` of the first issue (`6a283b25`, accepted: no), which found two blocking items (B1, B2) and ten minors
 (section 11 maps each to its answer). It also answers the owner's instruction of the same day on the weather basis: the
 modelled historical coverage of all three lids on the corrected inputs (section 8), decision L3-OD6 as a quantified choice
-(section 8a), and a bounded table of credible improvements (section 8b).
+(section 8a), and a bounded table of credible improvements (section 8b). **Third issue, 30 September 2026:** the
+independent check `CHECK-2` of `ec415c09` accepted the second issue with seven minors; this issue answers them (section 11),
+and three change figures the owner sees: the cell counts and multiples of section 8a, and one coverage row of section 8.
 
 **What this page is.** It is the stream's own analysis for the owner's decisions, AI arithmetic, not a qualified review and
 not the independent check. It is not a decision:
@@ -58,8 +60,8 @@ on the prototype or by the makers' figures for these circuits. All of this is on
 
 That is the MODELLED HISTORICAL COVERAGE, not a probability of success, with the kit counted as failing when it stops. On
 the stricter lines the figures fall (section 8). Covering 50, 80 or 95 percent of those windows with today's array, loads
-and inputs would need 1.4 to 2.5 times the 4S21P kit's usable store: 132 to 232 cells against at most 84 in any established
-arrangement. **So none of those targets fits the Peli 1450 as the mechanical records establish it** (section 8a).
+and inputs would need 1.4 to 2.5 times the 4S21P kit's usable store, and 1.5 to 2.7 times its cells: 128 to 228 cells
+against at most 84 in any established arrangement. **So none of those targets fits the Peli 1450 as the mechanical records establish it** (section 8a).
 **"Several times more energy" is withdrawn and replaced by these figures.** The one credible input that moves coverage most
 is the load: the link-off variant of PS-IDLE-SPEC more than doubles it, but it reduces the approved service (section 8b).
 
@@ -92,7 +94,8 @@ band is named.
 
 ### 1a. PROPOSED for the owner's approval (nothing accepted, nothing applied)
 
-1. **The basis of M1's energy claim.** WE as restated: every term with a maker's document at its worst.
+1. **The case M1's energy claim is judged on.** WE as restated: every term with a maker's document at its worst. This is a
+   case DEFINITION, not an established basis: every result on it is conditional (items 3 and 5, section 7).
    - WE holds the three undocumented efficiencies at their declared values and names them as conditions.
    - It replaces SC-76's 19.08 V session choice with the established steady-state minimum, 19.146 V.
    - The endurance bracket, 18.782 V, is a bound at test stress. It is shown (WEL) and not taken.
@@ -167,8 +170,8 @@ R11 6.2 mOhm (6.94 / 8.06 / 9.19 A).
 | Efficiency | Carried | The maker's document | Reading | Established? |
 |---|---|---|---|---|
 | board E's stage (LT8705A) | 0.93 DECLARED, bracket 0.90 to 0.97, "NOT PLOTTED at this ratio" | 8705af p.41: the "12V, 15A Output Converter", whose M1 BSC028N06NS and M2 BSC039N06NS **are board E's Q3 and Q4 as generated** (NETLIST); the 35 V curve | 96.5 to 96.8 % at 6 to 12 A; 92.0 % at 1 A, 96.0 % at 3 A (TYPICAL, 25 C, a pixel reading: INFERRED) | **No**: another circuit (35 to 12 V, not 34.3 to 15.1 V), typical, not weighted over the day. ARRAY.md's draft also moves Q3 and Q4 to 80 or 100 V parts for 2S2P |
-| board A's front end (LM5176) | 0.93 DECLARED, bracket 0.90 to 0.97, "NOT PLOTTED at 20 V out" | SNVSAI1D p.9 Figure 6-2: the 9 V curve, a boost of ratio 1.33 (board A 1.32), VOUT 12 V, 300 kHz, 4.7 uH | 97.8 to 97.9 % at 5.5 to 6 A (TYPICAL, 25 C, INFERRED) | **No**: 12 V out, not 20 V; other frequency, inductor and FETs; board A's input current at 122 W is about 8 A |
-| the pack's charge efficiency | 0.95 INFERRED, bracket 0.90 to 0.98, "no held document gives it" | Samsung SDI INR18650-35E (`v2/vendor/battery/samsung-35e-conrad.pdf`, pinned by `energy_inputs.yaml`): p.3 0.2C discharge 3.482 Ah, 12.62 Wh (mean 3.624 V); p.7 one storage sample's initial DC-IR 34.5 mOhm (AC-IR 19.8) | the resistive part alone, (OCV - I_dis R) / (OCV + I_chg R): 0.9915 (base, 0.661 A a cell), 0.9933 (4S14P lid), 0.9937 (4S15P lid); INFERRED | **No**: the sheet gives no charged energy, charge curve, coulombic efficiency or hysteresis; the resistive part is an UPPER bound |
+| board A's front end (LM5176) | 0.93 DECLARED, bracket 0.90 to 0.97, "NOT PLOTTED at 20 V out" | SNVSAI1D p.9 Figure 6-2: the 9 V curve, a boost of ratio 1.33 (board A 1.32), VOUT 12 V, 300 kHz, 4.7 uH | 97.8 to 97.9 % at 5.5 to 6 A (TYPICAL, 25 C, INFERRED) | **No**: 12 V out, not 20 V; other frequency, inductor and FETs. The plot's load current is its output current: at 6 A out its 9 V curve draws about 8.2 A in, close to board A's 8.7 A in at 6.1 A out, so the currents are alike and the voltages and circuit are not |
+| the pack's charge efficiency | 0.95 INFERRED, bracket 0.90 to 0.98, "no held document gives it" | Samsung SDI INR18650-35E (`v2/vendor/battery/samsung-35e-conrad.pdf`, pinned by `energy_inputs.yaml`): p.3 0.2C discharge 3.482 Ah, 12.62 Wh (mean 3.624 V); p.7 one storage sample's initial DC-IR 34.5 mOhm (AC-IR 19.8) | the resistive part alone, (OCV - I_dis R) / (OCV + I_chg R): 0.9924 and 0.9925 (base, 0.661 A a cell, discharging at the 4S20P and 4S21P kits' 0.148 and 0.141 A a cell), 0.9933 (4S14P lid), 0.9937 (4S15P lid); INFERRED | **No**: the sheet gives no charged energy, charge curve, coulombic efficiency or hysteresis; the resistive part is an UPPER bound |
 
 ## 4. Sensitivity, corrected: one input at a time from WE and from NOM WAB (`energy_basis.out` 4)
 
@@ -215,7 +218,8 @@ From NOM with the WAB build, the unfavourable ends:
 3. The power into U3, through the bus and U3's limit together: about 20 Wh for 0.1 A, and about 23 Wh from the endurance
    bracket.
 4. The stage's and the front end's efficiencies: about 20 to 22 Wh each for three points, both undocumented.
-5. U3B, the lid loops, the drain and V(AK): together under about 15 Wh.
+5. U3's own efficiency bracket: 12.2 to 12.6 Wh between the makers' maxima (in WE) and TI's reading.
+6. U3B, the lid loops, the drain and V(AK): each 7 Wh or less, together about 14 Wh.
 
 Two of the three largest inputs are the undocumented efficiencies. Beyond the mean day, the weather dominates every one of
 them (section 8).
@@ -336,7 +340,7 @@ carries. Whether M1 must hold in worse weather than SC-37's mean day is the owne
 | Load | PS-IDLE-SPEC 42.8 W at the pack terminals (POWER-THERMAL.md section 4). In every WE case the lid path's standby drain, 1.8 Wh over 72 h, is added. Both are split between the packs by capacity |
 | Array and orientation | 400 Wp, four Renogy RNG-100DB-H in 2S2P, into a 200 W stage window; slope 40 degrees, facing south, at Leiden (52.160, 4.497); each calendar day's own TYP or WAB ratio |
 | Failure criteria (all reported) | **STOP**: the kit stops, both packs at their 3.00 V line (the model's M1 verdict). **COMB**: the combined lowest store at or under 4.2 Wh. **EACH**: either pack's own lowest store at or under 4.2 Wh |
-| Cases | **WE** as restated, conditional on the stage 0.93, the front end 0.93 and the charge efficiency 0.95. **WE-LO**: those three at their brackets' lower ends, 0.90 each. **WE-MKR**: those three at the makers' readings, stage 0.965, front end 0.978 and charge 0.9915 (INFERRED readings of other circuits and an upper bound, not established). **NOM**: nominal inputs |
+| Cases | **WE** as restated, conditional on the stage 0.93, the front end 0.93 and the charge efficiency 0.95. **WE-LO**: those three at their brackets' lower ends, 0.90 each. **WE-MKR**: those three at the makers' readings, stage 0.965, front end 0.978 and charge 0.9924 (INFERRED readings of other circuits and an upper bound, not established). **NOM**: nominal inputs |
 
 | Lid | Case | Kept, no STOP | COMB | EACH |
 |---|---|---|---|---|
@@ -344,7 +348,7 @@ carries. Whether M1 must hold in worse weather than SC-37's mean day is the owne
 | 4S14P tablet out | WE TYP | 166 (19.2 %) | 164 (19.0 %) | 115 (13.3 %) |
 | | WE WAB | 121 (14.0 %) | 114 (13.2 %) | 85 (9.8 %) |
 | | WE-LO TYP | 118 (13.7 %) | 114 (13.2 %) | 79 (9.1 %) |
-| | WE-MKR TYP | 215 (24.9 %) | 212 (24.5 %) | 147 (17.0 %) |
+| | WE-MKR TYP | 216 (25.0 %) | 213 (24.7 %) | 147 (17.0 %) |
 | | NOM TYP | 207 (24.0 %) | 200 (23.1 %) | 145 (16.8 %) |
 | 4S15P QMX out | WE TYP | 190 (22.0 %) | 186 (21.5 %) | 141 (16.3 %) |
 | | WE WAB | 151 (17.5 %) | 146 (16.9 %) | 108 (12.5 %) |
@@ -353,7 +357,8 @@ carries. Whether M1 must hold in worse weather than SC-37's mean day is the owne
 | | NOM TYP | 235 (27.2 %) | 232 (26.9 %) | 177 (20.5 %) |
 
 **What the coverage shows:**
-- The corrected inputs move the first round's figures only a little: 4S15P WE WAB went from 18.2 to 17.5 percent.
+- The corrected inputs move the first round's figures only a little: 4S15P WE WAB went from 18.2 to 17.5 percent. CHECK-2
+  counts 152 windows there against 151, one window at the margin.
 - The three undocumented efficiencies alone span 16.1 to 29.5 percent for the 4S15P lid.
 - The per-pack line takes off a quarter to a third of the windows the kit carries.
 - The 72 hour irradiation over the windows is 3.17 kWh/m2 at the lowest, 7.36 at the 10th percentile and 11.45 at the
@@ -392,26 +397,33 @@ table: base 4S6P (24 cells), plus a lid of 39, 56 or 61 places. That is at most 
 - **Cell limits:** the charge per cell stays under REQ-075's 1.02 A (U3 3.968 A over 6 cells; U3B 7.936 A over 15 or more
   cells). The discharge is far under the sheet's 8 A.
 
-| Basis | Build | Usable needed | Lid | Cells | Nominal | Cells' mass | Cells' volume (cylinders / footprint) | Times the 4S21P's usable | Fits an established arrangement? |
+The cells are the percentile of each window's own cell count, the least 4S group that carries it (CHECK-2 minor 2). The
+multiples are given in usable Wh, against the 4S21P kit at the reference lid temperature, and in cells, against its 84
+cells, which is the physical quantity (minor 3).
+
+| Basis | Build | Usable needed | Lid | Cells | Nominal | Cells' mass | Cells' volume (cylinders / footprint) | Times the 4S21P: Wh; cells | Fits an established arrangement? |
 |---|---|---|---|---|---|---|---|---|---|
-| (i) SC-37's mean day, 40/0 | TYP | 619.0 Wh | 4S13P | 76 | 916.6 Wh | 3.80 kg | 1.3 / 1.7 l | 0.89 | yes: tablet out, QMX out |
-| (ii) 50 % of the windows | TYP | 981.8 Wh | 4S27P | 132 | 1591.9 Wh | 6.60 kg | 2.3 / 3.0 l | 1.42 | no |
-| (ii) 80 % | TYP | 1331.0 Wh | 4S36P | 168 | 2026.1 Wh | 8.40 kg | 3.0 / 3.8 l | 1.92 | no |
-| (ii) 95 % | TYP | 1688.9 Wh | 4S51P | 228 | 2749.7 Wh | 11.40 kg | 4.0 / 5.1 l | 2.44 | no |
-| (i) SC-37's mean day, 40/0 | WAB | 676.2 Wh | 4S15P | 84 | 1013.0 Wh | 4.20 kg | 1.5 / 1.9 l | 0.98 | yes: QMX out only |
-| (ii) 50 % | WAB | 1055.5 Wh | 4S28P | 136 | 1640.2 Wh | 6.80 kg | 2.4 / 3.1 l | 1.53 | no |
-| (ii) 80 % | WAB | 1420.6 Wh | 4S42P | 192 | 2315.5 Wh | 9.60 kg | 3.4 / 4.3 l | 2.05 | no |
-| (ii) 95 % | WAB | 1760.5 Wh | 4S52P | 232 | 2797.9 Wh | 11.60 kg | 4.1 / 5.2 l | 2.54 | no |
+| (i) SC-37's mean day, 40/0 | TYP | 619.0 Wh | 4S13P | 76 | 916.6 Wh | 3.80 kg | 1.3 / 1.7 l | 0.89; 0.90 | yes: tablet out, QMX out |
+| (ii) 50 % of the windows | TYP | 981.8 Wh | 4S26P | 128 | 1543.7 Wh | 6.40 kg | 2.3 / 2.9 l | 1.42; 1.52 | no |
+| (ii) 80 % | TYP | 1331.0 Wh | 4S37P | 172 | 2074.3 Wh | 8.60 kg | 3.0 / 3.9 l | 1.92; 2.05 | no |
+| (ii) 95 % | TYP | 1688.9 Wh | 4S49P | 220 | 2653.2 Wh | 11.00 kg | 3.9 / 4.9 l | 2.44; 2.62 | no |
+| (i) SC-37's mean day, 40/0 | WAB | 676.2 Wh | 4S15P | 84 | 1013.0 Wh | 4.20 kg | 1.5 / 1.9 l | 0.98; 1.00 | yes: QMX out only |
+| (ii) 50 % | WAB | 1055.5 Wh | 4S28P | 136 | 1640.2 Wh | 6.80 kg | 2.4 / 3.1 l | 1.53; 1.62 | no |
+| (ii) 80 % | WAB | 1420.6 Wh | 4S40P | 184 | 2219.0 Wh | 9.20 kg | 3.2 / 4.1 l | 2.05; 2.19 | no |
+| (ii) 95 % | WAB | 1760.5 Wh | 4S51P | 228 | 2749.7 Wh | 11.40 kg | 4.0 / 5.1 l | 2.54; 2.71 | no |
 
 **Option (i)'s actual limitations.** It is one mean September day repeated for three days, not a weather case:
-- it carries 17.5 to 22.0 percent of the past windows at WE (section 8);
+- at WE, the two Option A(i) lids carry 14.0 to 22.0 percent of the past windows on STOP, and 13.2 to 21.5 percent on COMB,
+  the line the sizing uses (section 8). Option (i)'s own TYP store, 4S13P, is smaller than either lid and carries fewer still;
 - its store is set by the day's night, not by dark days;
 - it holds only at the reference site and plane.
 
 The store needed per window has a median of 982.4 Wh and a largest of 2174.5 Wh (TYP), against the 4S21P kit's 692.1 Wh.
 
-**"Several times more energy" is withdrawn.** The numbers give 1.4 to 1.5 times the 4S21P kit's usable store for 50 percent
-of the windows, 1.9 to 2.1 times for 80 percent and 2.4 to 2.5 times for 95 percent. With today's array, loads and inputs,
+**"Several times more energy" is withdrawn.** In usable Wh the numbers give 1.4 to 1.5 times the 4S21P kit's store for 50
+percent of the windows, 1.9 to 2.1 times for 80 percent and 2.4 to 2.5 times for 95 percent. In cells, against its 84, they
+give 1.5 to 1.6, 2.0 to 2.2 and 2.6 to 2.7 times. The cell multiple is the larger because the added cells sit in the colder
+lid (0.655 of nominal against the kit's 0.683). With today's array, loads and inputs,
 every coverage target above the mean day exceeds every established arrangement of the Peli 1450.
 
 Assumptions: WE's inputs (conditional on the three undocumented efficiencies); 400 Wp; the load as in section 8; the store
@@ -492,16 +504,24 @@ The source is a1mech's README section 3 and `DECISION-A1.md`, with CASE-MARGINS 
 | Owner's addendum A, coverage on the corrected inputs | section 8: all three lids, the dataset, windows, charge, ageing, temperatures, load, orientation and three failure criteria stated |
 | Owner's addendum B, L3-OD6 | section 8a: the mean day against 50, 80 and 95 % targets, with store, cells, mass, volume and fit; "several times" withdrawn |
 | Owner's addendum C, improvements | section 8b: one table, each row's service effect named |
+| CHECK-2 minor 1, the base's resistive bound | section 3: 0.9924 and 0.9925 at the kit's own discharge current; WE-MKR moves by one window (section 8) |
+| CHECK-2 minor 2, cells by the count's percentile | section 8a: 128 / 172 / 220 cells (TYP), 136 / 184 / 228 (WAB) |
+| CHECK-2 minor 3, the multiples in cells | section 8a and section 1: 1.5 to 2.7 times the 84 cells beside 1.4 to 2.5 times the usable Wh |
+| CHECK-2 minor 4, option (i) for both lids | section 8a: 14.0 to 22.0 % on STOP, 13.2 to 21.5 % on COMB |
+| CHECK-2 minor 5, U3's bracket in the dominance list | section 4, item 5: 12.2 to 12.6 Wh |
+| CHECK-2 minor 6, the LM5176 currents | section 3 and `curve_readings.out` 1: output against output current |
+| CHECK-2 minor 7, WE as a case definition | section 1a, item 1 |
 
 ## 12. Tools, outputs and commands
 
 **Files in this folder:**
 - `vbus20_range.py` and `vbus20_range.out` (second issue): regenerated for the brackets, the names and the labels; the
   range's figures are unchanged.
-- `curve_readings.py` and `curve_readings.out` (new): the makers' curves read by pixel; they need pdftoppm and Pillow.
-- `energy_basis.py` and `energy_basis.out` (second issue): regenerated because WE is restated and the sensitivity, pass
-  lines and thresholds are new. It pins its imports by sha256 and refuses (exit 4) unless checks 0a to 0e hold.
-- `weather_basis.py` and `weather_basis.out` (new): sections 8, 8a and 8b. It imports `energy_basis.py` (pinned) and
+- `curve_readings.py` and `curve_readings.out` (second issue): the makers' curves read by pixel; they need pdftoppm and
+  Pillow. Regenerated for CHECK-2 minor 6: one sentence changed, every reading unchanged.
+- `energy_basis.py` and `energy_basis.out` (third issue): regenerated in the second issue because WE is restated and the
+  sensitivity, pass lines and thresholds are new, and in the third for CHECK-2 minor 1 (the base's resistive bound only). It pins its imports by sha256 and refuses (exit 4) unless checks 0a to 0e hold.
+- `weather_basis.py` and `weather_basis.out` (second issue): sections 8, 8a and 8b; regenerated for CHECK-2 minors 1 to 3. It imports `energy_basis.py` (pinned) and
   refuses unless it reproduces `energy_basis.out` sections 5 and 8.
 - `plane_grid.out` and PLANES.md: the figures are unchanged; PLANES.md's conditions are marked superseded.
 
