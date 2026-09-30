@@ -8,6 +8,7 @@ record and nothing under `v2/docs/handover/` is changed by this folder.
 
 | File | What it is |
 |---|---|
+| `PACKET-POWER-ARCHITECTURE.md`, `PACKET-FILES.txt` | the electronics engineer's review packet (the entry point: questions, the power path as drawn, the decisions, one line each) and the exact files it needs, tracked or ignored; they point into the records and repeat none |
 | `L4-ENERGY-ARCHITECTURE.md` | the page: one table comparing A1 (D-06's single 4S3P) and A2 (base 4S6P plus a separately protected lid 4S9P, both lid functions kept) under one assumption set; the power-path corrections (A-1, A-2, B-1 to B-5, C-1 to C-9, R138, O-1, O-2) as architecture decisions; the next discriminating calculation and experiment; the Layer 3 finding restated |
 | `l4e_replay.py` | the replay: reproduces the checked records first, then moves one input, the solar stage's input clip, from P-03's 200 W to REQ-016's 100 W, and prints both architectures on the drawn and the hypothetical corrected power paths |
 | `l4e_replay.out` | its output; the page cites it as "out N" (its section numbers) |
