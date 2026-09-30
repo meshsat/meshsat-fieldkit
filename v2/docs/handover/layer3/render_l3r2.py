@@ -254,6 +254,7 @@ def runtime_wait(row, dec):
 
 
 LID = {"qmx-out": "qmx-out", "qmx-outside": "qmx-out", "tablet-out": "tablet-out", "both-kept": "both-kept"}
+LEVEL_NAMES = {"OBJECTIVE": "DESIGN OBJECTIVE"}   # classification levels beside REQUIREMENT and IMPLEMENTATION
 
 
 def od6_row(data, option, share, build):
@@ -969,6 +970,7 @@ def review_lines(req, data, dec):
                                                         " PENDING: its feasibility record is not bound" if a["row"] in ("L3-OD1", "L3-OD3") and
                                                         not fok else ""),
               "", p(a["text"])]
+        if a.get("superseded_by"): L += ["", p("**Superseded by %s:** %s" % (a["superseded_by"], a["superseded_note"]))]
         if a.get("table"):
             L += ["", "| Mode | Environment | Functions available | Source |", "|---|---|---|---|"]
             for t in a["table"]:
@@ -1041,7 +1043,9 @@ def page_recon(req, data, dec, h3, root):
     L += ["", "## (c) Requirement or implementation", "",
           "| Item | Level | Where it lives |", "|---|---|---|"]
     for c in data["classification"]:
-        lvl = c["level"] + ((" (layer %s)" % c["layer"]) if c.get("layer") else " (layer 3)")
+        lvl = LEVEL_NAMES.get(c["level"], c["level"]) + ((" (layer %s)" % c["layer"]) if c.get("layer") else " (layer 3)")
+        if c.get("superseded_by"):   # a row superseded by a ruling keeps its place with the mark and what holds now
+            lvl = "SUPERSEDED by %s (was %s): %s" % (cell(c["superseded_by"]), lvl, cell(c["now"]))
         L.append("| %s | %s | %s |" % (cell(c["item"]), lvl, cell(c["where"])))
     L += ["", "## (d) The layer 3 closure list", "",
           p("Each item with whose it is, what closes it and its state, the state read live from the registry where the "
@@ -1165,12 +1169,17 @@ def page_spec(req, data, dec, h3, root):
           "| Ambient in use | %s to %s C | `pcb_envelope.yaml` (ENV-001), `v2/docs/OPERATING-ENVELOPE.md` section 4 |" % (amb["in_use"]["min"], amb["in_use"]["max"]),
           "| Storage, up to three months | %s to %s C | the same |" % (amb["storage_3_months"]["min"], amb["storage_3_months"]["max"]),
           "| Storage, up to a year | %s to %s C | the same |" % (amb["storage_1_year"]["min"], amb["storage_1_year"]["max"])]
+    marks = {m["id"]: m["mark"] for m in data.get("superseded_marks") or []}
     for rid in ("D-02a", "D-02b", "D-02c", "D-02d", "D-02e", "D-04", "D-16", "D-20", "D-21", "D-22", "D-28", "D-29"):
         r = rulings.get(rid)
-        if r: L.append("| %s (owner, %s) | %s | owner ruling %s |" % (cell(r["title"]), r["ruled_on"], cell(r["ruling"]), rid))
+        if r: L.append("| %s (owner, %s) | %s%s | owner ruling %s |" % (
+            cell(r["title"]), r["ruled_on"], ("**%s** " % cell(marks[rid])) if rid in marks else "", cell(r["ruling"]), rid))
     for cid in ("SC-21", "SC-37"):
         c = choices.get(cid)
-        if c: L.append("| %s (session, %s) | %s | session choice %s |" % (cell(c["question"]), c["taken_on"], cell(c["taken"]), cid))
+        if c: L.append("| %s (session, %s) | %s%s | session choice %s |" % (
+            cell(c["question"]), c["taken_on"],
+            ("**SUPERSEDED on %s by %s:** " % (c["superseded_on"], cell(c["superseded_by"]))) if c.get("superseded_by") else "",
+            cell(c["taken"]), cid))
     r72 = next((r for r in req["records"] if r["id"] == "REQ-072"), {})
     if r72.get("obligation") == "OBJECTIVE":
         L += ["", p("**Mission M1's conditions, in one place (D-28).** A design objective of 48 to 72 hours under the stated "
