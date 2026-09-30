@@ -764,3 +764,39 @@ efficiencies were held at nominal without a maker's document.
 
 **Next, ready:** the energy basis's round 2 check; the Layer 3 rows restated from it; the Layer 3 delta check; the
 owner's answers; then the definition documents' re-issue (L3-C26) and the Layer 3 gate.
+
+### Milestone, 30 September 2026 07:17 CEST: integration set 16 on main (the Layer 3 handover L3-R2, prepared; the checked energy basis and power-path record)
+
+**Accepted:** `3f69af66`. Merged:
+- **Stream l3plane** (checked five times; the last check accepts exactly `cd8720a1` and lists its files by sha256):
+  the energy basis for M1 (`records/l3plane/ENERGY-BASIS.md`) and board A's power-path record
+  (`records/r11dep/R11-DEPENDENCY.md`). VBUS20 at U3's input is 19.146 / 20.000 / 20.887 V steady state, with brackets
+  of 19.101, 18.782 and 18.738 V. Board A's front end in four cases: as drawn, M1 is not met on any lid (326.6 to
+  522.4 Wh unserved on the reference day); the derated variant (U3 at 4.00 A) fixes current-limit coordination only and
+  M1 is not met; the resistor-only proposal (R11 6.2 mOhm) is INCONCLUSIVE; only a hypothetical corrected power path
+  meets M1, with the QMX-out or tablet-out lid, and its figures are not demonstrated capability. The power-path
+  findings are classified: existing defects A-1 and A-2, proposal defects B-1 to B-5, missing evidence C-1 to C-9,
+  each with a correction and a measurable closure criterion (engineering tasks, downstream). Past September weather
+  (PVGIS 2005 to 2020, 864 windows of 72 hours) is carried in 14.0 to 22.0 percent of windows on that hypothetical
+  path; no coverage target fits the case.
+- **The Layer 3 handover L3-R2** (branch `fnd/l3r2`, checked five times, the last accepting the handover as prepared
+  at `028531e4` with the six owner decisions pending), applied by its scripts: the reconciliation, the six-row owner
+  decision table `handover/layer3/OWNER-DECISIONS-L3.md`, the consolidated `REQUIREMENTS-L3-R2.md`, rulings D-21 to
+  D-25 (the owner's instructions of 30 September, quoted word for word), S-114 and S-127 closed, LAYER-STATUS layer 3.
+  The branch's history is recorded by a merge that keeps the tree (so the commit that closed S-127 is on main).
+
+**Gates:** validators 0 errors 0 warnings; the full render order reaches the same evidence page twice; a clone
+holding only the candidate branch reproduces every page and passes the tests (202 passed, 0 failed, 2 skipped); the
+box suite on `3f69af66` 2330 passed, 0 failed, 3 skipped. The set's integration check (an AI check) is filed under
+`records/int17/checks/`, mergeable, with three minors (the LAYER-STATUS row of the independent check is dated before
+check 5 and is brought current with the next LAYER-STATUS change; path history of the layer 3 files follows the
+set's commits; one historical commit of the branch holds a literal dash that later commits removed).
+
+**Layer 3 is IN_PROGRESS, not complete.** Its gate reads NOT MET on three conditions: the six owner decisions
+(L3-OD1 to L3-OD6), CFL-017 (L3-OD5), and the re-issue of the changed CONOPS and PRODUCT-BRIEF passages approved by an
+owner ruling (L3-C26). The independent check of the prepared handover is MET. H3 is unchanged. Layer 4 and later work
+stays paused (`fnd/rdc24`, `fnd/reviewdc`), and the circuit corrections, layout and bench verification are downstream
+obligations.
+
+**Next:** the owner's six answers, applied by their scripts; the definition re-issue (L3-C26) for his approval; a
+narrow independent check; then the Layer 3 gate.
