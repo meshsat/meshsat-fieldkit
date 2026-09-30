@@ -67,6 +67,8 @@ def verify(v, root, repo, need_outputs=False):
     listed = listed_sha256(text)
     for path in [v.get("record")] + [o.get("path") for o in v.get("outputs") or []]:
         full = hashlib.sha256(open(os.path.join(root, str(path)), "rb").read()).hexdigest()
+        if listed and str(path) not in listed:
+            return False, "its check lists files by sha256 but not %s, which this entry relies on" % path
         if str(path) in listed and listed[str(path)] != full:
             return False, "its check lists %s at another sha256" % path
     return True, ""

@@ -58,6 +58,7 @@ def main(argv):
         if not BB.names_tip(head, tip): E.refuse("%s does not name tip `%s` as the one it checked" % (chk, tip))
         listed = BB.listed_sha256("\n".join(head))
         for f in [rec] + outl:
+            if listed and f not in listed: E.refuse("%s lists files by sha256 but not %s, which this entry relies on" % (chk, f))
             if f in listed and listed[f] != __import__("hashlib").sha256(open(os.path.join(root, f), "rb").read()).hexdigest():
                 E.refuse("%s lists %s at another sha256" % (chk, f))
         block = ("%s:\n  record: %s\n  sha16: %s\n  tip: %s\n  outputs:\n%s  check: %s\n  check_sha16: %s\n"

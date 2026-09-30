@@ -3757,20 +3757,6 @@ open_items:
       history excuse tied to a past-tense verb on the part itself, and a rule that pairs a list of parts with a list of
       designators in order. Open until each class is closed by a rule with a fixture that close_s122.py runs, or carried
       with its reason.
-  - id: S-127
-    class: SESSION
-    status: OPEN
-    title: >-
-      (L3-R2; the owner's review of 30 September 2026, D-22) The energy basis of every M1 figure: board A's charge bus
-      VBUS20 at U3's input across its supply range under load and temperature, from makers' pages (the regulated node,
-      the loop's load regulation and the drop to U3's input), U3's input current limit with its bracket, the chargers'
-      efficiencies with their brackets and the inductors' core loss, and each case the energy model runs named by its
-      exact weather and operating assumptions in place of 'typical' and 'adverse'; then an independent check of how
-      voltage, current limits and losses move the energy calculation. Stream l3plane writes it
-      (v2/docs/records/l3plane/ENERGY-BASIS.md, on branch fnd/l3plane). Until it is filed and checked, rows L3-OD1,
-      L3-OD2 and L3-OD4 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md are held (D-22), the L3 pages state no M1
-      energy figure as the design's, and REQ-072 reads FAIL as before. Closed when the basis and its check are filed and
-      REQ-072 is re-read on them.
 closed_items:
   - id: S-89
     closed_by: commit aaed6daa4434f2ae94331cdafb3134056fb1eb97
@@ -4737,6 +4723,26 @@ closed_items:
       optional only) with their numbers; and, if M1 as written is not met, the smallest justified changes for the
       owner's decision. Record: v2/docs/records/energy/. Open until the study is filed and REQ-072 re-read on it;
       REQ-072's statement and acceptance are not rewritten.
+  - id: S-127
+    closed_by: commit 9493847ce78c2ef688d81b9e38e7585738d4c0d1
+    closing_evidence: >-
+      The energy basis is filed and checked: v2/docs/records/l3plane/ENERGY-BASIS.md (sha256/16 7bbca138a02bd32f) with
+      its outputs, among them v2/docs/records/l3plane/three_cases.out (8119987a20fad08c), at fnd/l3plane cd8720a1, and
+      its accepted check v2/docs/records/l3r2/checks/energy-basis-check-5/CHECK-5.md (bf3aace0457d19ee, 'accepted: yes',
+      naming that tip), named and bound in v2/docs/handover/layer3/l3r2.yaml's energy_basis and power_path_check by
+      commit 9493847c, every file byte identical to the tip (basis_binding.py). REQ-072 was re-read on it in the
+      evidence entry this closure adds and reads FAIL: on the circuit as drawn no lid meets M1.
+    title: >-
+      (L3-R2; the owner's review of 30 September 2026, D-22) The energy basis of every M1 figure: board A's charge bus
+      VBUS20 at U3's input across its supply range under load and temperature, from makers' pages (the regulated node,
+      the loop's load regulation and the drop to U3's input), U3's input current limit with its bracket, the chargers'
+      efficiencies with their brackets and the inductors' core loss, and each case the energy model runs named by its
+      exact weather and operating assumptions in place of 'typical' and 'adverse'; then an independent check of how
+      voltage, current limits and losses move the energy calculation. Stream l3plane writes it
+      (v2/docs/records/l3plane/ENERGY-BASIS.md, on branch fnd/l3plane). Until it is filed and checked, rows L3-OD1,
+      L3-OD2 and L3-OD4 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md are held (D-22), the L3 pages state no M1
+      energy figure as the design's, and REQ-072 reads FAIL as before. Closed when the basis and its check are filed and
+      REQ-072 is re-read on them.
 records:
   - id: REQ-001
     kind: requirement
@@ -7418,7 +7424,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-06, D-20]
     choices: [SC-36, SC-21, SC-37]
-    waits_on: [S-53, M-02, S-127]
+    waits_on: [S-53, M-02]
     status: DEFINED
     evidence_result: FAIL
     evidence_phase: SCHEMATIC
@@ -7500,6 +7506,17 @@ records:
           (v2/docs/records/l3r2/checks/energy-basis-check-1/CHECK-1.md, its 'explained rename'). No weather worse than
           SC-37's mean day is modelled in that entry, and its figures stay the model's on the 20.7 V bus (the entry
           after it). This entry changes no result, statement or acceptance: the verdict stays FAIL.
+      - >-
+          v2/docs/records/l3plane/ENERGY-BASIS.md, v2/docs/records/l3plane/three_cases.out and
+          v2/docs/records/l3r2/checks/energy-basis-check-5/CHECK-5.md read on 30 September 2026 (L3-R2, the energy basis
+          S-127 asked for; bound in v2/docs/handover/layer3/l3r2.yaml to fnd/l3plane cd8720a1 and filed by commit
+          9493847c): on SC-37's reference day, with the circuit as drawn every lid fails M1 (326.6 to 522.4 Wh unserved
+          at nominal inputs, 422.1 to 616.7 Wh at the worst established inputs), and so does the derated variant with U3
+          at 4.00 A (369.9 to 566.0 Wh at nominal inputs); the resistor-only proposal is INCONCLUSIVE, its lower bound
+          failing by 622.1 to 1079.9 Wh; only on the hypothetical corrected power path, with every finding of
+          R11-DEPENDENCY.md closed, do the 4S14P and 4S15P lids meet at nominal inputs (93.7 and 125.2 Wh, TYP), and at
+          the worst established inputs only conditionally on three undocumented efficiencies. No figure is demonstrated
+          capability. This entry changes no statement or acceptance: the verdict stays FAIL.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
       - "v2/docs/feasibility/POWER-THERMAL.md@ad3ba27cef9e0f68"
@@ -7507,6 +7524,9 @@ records:
       - "v2/docs/records/a1elec/energy_two_pack.py@a3426880bf607d38"
       - "v2/docs/records/l3r2/checks/energy-basis-check-1/CHECK-1.md@845858d6c3059f77"
       - "v2/docs/records/a1int/RECONCILE.md@4bba0c9eac9c4be1"
+      - "v2/docs/records/l3plane/ENERGY-BASIS.md@7bbca138a02bd32f"
+      - "v2/docs/records/l3plane/three_cases.out@8119987a20fad08c"
+      - "v2/docs/records/l3r2/checks/energy-basis-check-5/CHECK-5.md@bf3aace0457d19ee"
     release_effect: BLOCKER
     source:
       - "owner ruling D-06"

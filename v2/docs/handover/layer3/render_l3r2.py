@@ -419,6 +419,17 @@ CASE_LABEL = {"a": "AS DRAWN", "a'": "DERATED VARIANT (U3 at {s} A): current-lim
 LID_SHORT = {"4S9P both kept": "4S9P", "4S14P tablet out": "4S14P", "4S15P QMX out": "4S15P"}
 
 
+def pp_state(data):
+    """Where the findings list stands: restated from the checked record once power_path_check is filed, provisional before."""
+    if basis_ok(data, "power_path_check")[0] and any(str(c.get("id")) == "A-1" for c in data.get("power_path_corrections") or []):
+        v = data["power_path_check"]
+        return ("The list is restated from stream r11dep's record at the tip `%s` its accepted check names (`%s`): A-1 and "
+                "A-2, existing defects of the circuit as drawn; B-1 to B-5, defects the resistor-only proposal introduces; "
+                "C-1 to C-9, missing evidence, not failures." % (str(v["tip"])[:12], v["check"]))
+    return ("PROVISIONAL: the list is stream r11dep's first issue; it is restated from the checked classes once "
+            "l3r2.yaml's power_path_check is filed and verified (restate_power_path.py).")
+
+
 def derated_text(data):
     F = data.get("four_cases")
     return ("%s A (three_cases.out 1)" % F["derated_setting"]) if F else "4.05 A or less"
@@ -544,14 +555,10 @@ def page_decisions(req, data, dec):
         else:
             L.append("| %s | %s | %s | %s | %s |" % (d["id"], cell(d["r11"]["held"]), cell(d["r11"]["derated"]),
                                                      cell(d["r11"]["resistor"]), cell(d["r11"]["corrected"])))
-    L += ["", "**The implementation requirements and corrections case (c) assumes.** Engineering tasks with measurable "
-          "criteria, tracked downstream as closure items, not owner decisions and not layer 3 prerequisites (D-24, D-25); a "
-          "row reaches the owner only where a remedy would change a mission condition, charging time, a function, a "
-          "deployment condition, an enclosure constraint or an approved resource, naming the requirement and the "
-          "consequence. PROVISIONAL: stream r11dep's first issue was checked once and not accepted; its second issue "
-          "answers that check with the findings classified (A-1 and A-2, B-1 to B-5, C-1 to C-9), and a check of it is "
-          "reported accepted; the list below is restated from the second issue once l3r2.yaml's power_path_check is filed "
-          "and verified (restate_power_path.py).", "",
+    L += ["", "**The findings case (c) assumes closed.** Engineering tasks with measurable criteria, tracked downstream as "
+          "closure items, not owner decisions and not layer 3 prerequisites (D-24, D-25); a row reaches the owner only where "
+          "a remedy would change a mission condition, charging time, a function, a deployment condition, an enclosure "
+          "constraint or an approved resource, naming the requirement and the consequence. %s" % pp_state(data), "",
           "| Id | Correction | Measurable criterion | Layer | Closure item | Source |", "|---|---|---|---|---|---|"]
     for c in data.get("power_path_corrections") or []:
         L.append("| %s | %s | %s | %s | %s | %s |" % (c["id"], cell(c["item"]), cell(c["criterion"]), c["layer"], c["closure"], cell(c["source"])))
