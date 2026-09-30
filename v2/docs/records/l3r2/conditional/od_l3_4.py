@@ -5,11 +5,14 @@ comparison is filed (a copy is not held).
 
   --option adopt   requires row L3-OD1 approved, row L3-OD2 decided and row L3-OD3 answered 2s2p: the only array a plane
                    grid has been run for (v2/docs/records/l3plane/plane_grid.out ran 400 Wp in 2S2P into 200 W; a band for
-                   1S4P or for REQ-016 kept needs its own grid, so the script refuses those answers). REQ-072's acceptance
+                   1S4P or for REQ-016 kept needs its own grid, so the script refuses those answers). It is refused while
+                   row L3-OD6 stands answered coverage: the grid runs SC-37's mean day on each plane, and no band
+                   exists for a coverage target. REQ-072's acceptance
                    gains the array's plane band, and a new requirement (the next free REQ id, parent NEED-06, prototype 1
                    core by the ruling) states the open kit's stability: the ground slope toward the hinge a1mech gives for
                    the chosen lid, and the operator push the owner sets.
   --option reject  requires rows L3-OD1 to L3-OD3 decided: no deployment condition; REQ-072 gains a note.
+Row L3-OD2 answered both-kept (a 4S9P lid, M1 not met): adopt is refused, reject stands.
 
 THE BAND COMES FROM THE CHECKED ENERGY BASIS (CHECK-1, B2): it is given with --band "<text>" and --band-evidence PATH, and
 the text is asserted in that file, until the basis is filed and this script's BAND table is written from it. The operator
@@ -43,12 +46,17 @@ def build(a, raw, d):
     op = a["option"]
     if op == "adopt":
         dec = C.require(d, ROW, ["L3-OD1:approve", "L3-OD2:*", "L3-OD3:2s2p"])
+        if dec.get("L3-OD6", ("",))[0] == "coverage":
+            E.refuse("row L3-OD6 is answered coverage: the plane grid runs SC-37's mean day on each plane, and no band "
+                     "exists for a coverage target")
     else:
         dec = C.require(d, ROW, ["L3-OD1:approve", "L3-OD2:*", "L3-OD3:*"])
     C.hold(a, ROW)
     lid = dec["L3-OD2"][0]
-    M = MECH[lid]
-    E.assert_in("v2/docs/records/a1mech/README.md", ["a lid stay at 100 degrees", M["mech"], M["push"]])
+    if lid == "both-kept" and op == "adopt":
+        E.refuse("row L3-OD2 is answered both-kept: M1 is not met with a 4S9P lid, so no deployment band is adopted for it")
+    M = MECH.get(lid)
+    if M: E.assert_in("v2/docs/records/a1mech/README.md", ["a lid stay at 100 degrees", M["mech"], M["push"]])
     if op == "adopt":
         band = BAND.get(lid) or a["extra"].get("band")
         bev = a["extra"].get("band-evidence")

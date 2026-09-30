@@ -19,9 +19,18 @@ option says where the displaced item goes and what happens to its function, in i
                         use with the kit stays (carried outside the case, served by the kit's WiFi and the USB-C outlet of
                         REQ-017, which D-01 defers from prototype 1's acceptance); REQ-011 is restated (its old statement
                         kept as an SPD record); the QMX stays in its lid tray beside a 4S14P lid pack.
+  --option both-kept    both approved lid items stay (the QMX in its lid tray, the tablet bracket), and the lid carries a
+                        4S9P pack (a1mech DECISION-A1.md option 3); no function leaves the kit, and M1 cannot be met: the
+                        records find the 4S9P lid NOT MET on the reference day, as every case of the energy basis's first
+                        issue does (reproduced by its check), so an open conflict (the next free CFL id, a core BLOCKER)
+                        records REQ-072 against it.
 Every option writes the lid's count into REQ-014, REQ-075 and CFL-006.
 
-Usage: python3 od_l3_2.py --option qmx-out|qmx-outside|tablet-out --words "<the owner's words>" --date YYYY-MM-DD
+Where each option leaves a function (the relocation facts, fact CF-04 of l3r2.yaml): no location in the kit is
+established for either displaced item, so qmx-out removes HF from the kit and tablet-out removes the bracket's function
+(a tablet held in the lid); qmx-outside stays held until a record establishes the QMX's place and its sealed lead.
+
+Usage: python3 od_l3_2.py --option qmx-out|qmx-outside|tablet-out|both-kept --words "<the owner's words>" --date YYYY-MM-DD
        [--check] [--registry PATH]
 """
 import os
@@ -34,11 +43,17 @@ import od_l3_1 as O1  # noqa: E402
 
 E = C.E
 ROW = "L3-OD2"
-COUNT = {"qmx-out": 15, "qmx-outside": 15, "tablet-out": 14}
+COUNT = {"qmx-out": 15, "qmx-outside": 15, "tablet-out": 14, "both-kept": 9}
+CHECK = "v2/docs/records/l3r2/checks/energy-basis-check-1/CHECK-1.md"
 ASSERT = {
     "v2/docs/records/a1int/RECONCILE.md": ["4S14P, the tablet out (B, 56 places; 4S20P)", "4S15P, the QMX out (C, 61 places after the mechanical check; 4S21P)"],
     "v2/docs/records/a1mech/DECISION-A1.md": ["Keep an 8 inch tablet bracket; HF leaves the lid.", "Keep HF; the tablet bracket leaves the lid."],
     "v2/docs/records/a1mech/README.md": ["outside the case it would need a lead through the back wall, which\n   the ruled connector plate does not carry"],
+}
+ASSERT_BOTH = {
+    "v2/docs/records/a1mech/DECISION-A1.md": ["Keep both; 4S9P in the lid, 4S15P in all."],
+    "v2/docs/records/a1int/RECONCILE.md": ["NOT MET at 400, 650 and 1000 Wp", "4S9P, both lid functions kept | NOT MET"],
+    CHECK: ["4S9P NOM; WE; WA; GEN | NOT MET"],
 }
 RULINGS = {
     "qmx-out": ("Row L3-OD2 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided: the QMX HF set (appendix 32.50 item 16a) "
@@ -57,6 +72,11 @@ RULINGS = {
                    "D-01 defers from prototype 1's acceptance. The lid carries the QMX HF set in its lid tray (item 16a) "
                    "beside a lid pack of 4S14P.",
                    "The tablet bracket leaves the lid, the tablet's use kept; the lid pack is 4S14P (row L3-OD2)"),
+    "both-kept": ("Row L3-OD2 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided: both approved lid items stay, the "
+                  "QMX HF set in its lid tray (appendix 32.50 item 16a) and the tablet bracket (item 16d), beside a lid pack "
+                  "of 4S9P (4S15P in all with the base pack). No function leaves the kit; on the records M1 cannot be met "
+                  "with this lid, and REQ-072's conflict with it is recorded as an open conflict.",
+                  "Both lid items kept; the lid pack is 4S9P and M1 cannot be met (row L3-OD2)"),
 }
 
 
@@ -64,6 +84,8 @@ def build(a, raw, d):
     for rel, n in ASSERT.items(): E.assert_in(rel, n)
     C.require(d, ROW, ["L3-OD1:approve"])
     op = a["option"]
+    if op == "both-kept":
+        for rel, n in ASSERT_BOTH.items(): E.assert_in(rel, n)
     C.hold(a, ROW, ("energy_basis", "relocation_facts") if op == "qmx-outside" else ("energy_basis",))
     recs = {r["id"]: r for r in d["records"]}
     n = COUNT[op]
@@ -121,6 +143,25 @@ def build(a, raw, d):
             "Under %s the QMX HF set is carried outside the case and reaches the kit through a sealed lead across the case "
             "wall (l3r2.yaml's relocation facts); the HF bearer stays in the kit." % stamp, after="source_check"), rid), "records")
         exp |= {("records", "REQ-002", "changed")}
+    elif op == "both-kept":
+        cid = E.next_id(E.parse(raw), "CFL", ("records",))
+        st = ("REQ-072 (M1: 72 hours in PS-IDLE-SPEC on the kit's store and solar, preserved by D-20 and approved by D-21) "
+              "cannot be met with both approved lid items kept (%s): the lid then holds a 4S9P pack (v2/docs/records/a1mech/"
+              "DECISION-A1.md option 3), which the records find NOT MET on SC-37's reference day at 400, 650 and 1000 Wp "
+              "with the lid at the day's air (v2/docs/records/a1int/RECONCILE.md), as in every case of the energy basis's "
+              "first issue, nominal inputs included (reproduced by the energy basis check, %s)." % (rid, CHECK))
+        acc = ("One of: an owner ruling that changes the lid's items, the store, or M1's duration or operating state, after "
+               "which REQ-072 is judged again; until then REQ-072 reads FAIL and layer 3 is not complete.")
+        for x in (st, acc): E.screen(x, cid)
+        entry = ("  - id: %s\n    kind: conflict\n    parent: NEED-05\n    statement: >-\n%s    acceptance: >-\n%s"
+                 "    allocated_to: [kit, procedure]\n    verification_method: [MANUAL_REVIEW]\n    verification_phase: SCHEMATIC\n"
+                 "    prototype_1: core\n    prototype_1_basis: NEED_DEFAULT\n    satisfied_by:\n      rules: []\n      decisions: []\n"
+                 "    rule_coverage: NONE\n    rulings: [%s, D-20, D-21, D-22]\n    status: CONFLICT_OPEN\n    evidence_result: FAIL\n"
+                 "    evidence_phase: SCHEMATIC\n    release_effect: BLOCKER\n"
+                 "    source: [\"owner ruling %s\", \"v2/docs/records/a1int/RECONCILE.md\", \"%s\"]\n"
+                 "    source_check: VERIFIED\n" % (cid, E.fold(st, 6), E.fold(acc, 6), rid, rid, CHECK))
+        raw = E.insert_after_entry(raw, "REQ-072", entry, "records")
+        exp |= {("records", cid, "added")}
     else:
         old011 = recs["REQ-011"]
         raw = C.restate(raw, "REQ-011", stamp,
@@ -137,4 +178,4 @@ def build(a, raw, d):
 
 
 if __name__ == "__main__":
-    sys.exit(C.run("od_l3_2", build, ("qmx-out", "qmx-outside", "tablet-out"), sys.argv[1:]))
+    sys.exit(C.run("od_l3_2", build, ("qmx-out", "qmx-outside", "tablet-out", "both-kept"), sys.argv[1:]))
