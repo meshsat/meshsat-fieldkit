@@ -872,3 +872,30 @@ Layer 4 and later paused until Layer 3 is accepted. The cycle, in order:
 5. Closure reported honestly: complete only when the chosen requirements are clear, traceable, testable, feasible on a
    credible assessment and accepted; a surviving feasibility blocker is delivered with the handover as the exact
    failing condition, its quantified gap and the result needed.
+
+### Operating change, 30 September 2026 16:12 CEST (the owner's instruction): accepted results, short loops, usable deliverables
+
+Applied to the ongoing work; no completed task is restarted and no running assignment duplicated.
+- **One interpretation of the product.** The Current owner brief at the top of
+  `handover/layer3/OWNER-INSTRUCTION-2026-09-30.md` (with the registry's owner rulings, the one decision register)
+  states the constraints both agents use: storage inside the Peli 1450 and no external battery; battery and solar
+  required; HF and the tablet retained; 48 to 72 hours a baseline design objective under a stated operating profile;
+  optional tablet charging reduces endurance, including below that target; every other approved requirement unchanged.
+  Mandatory requirements, objectives, assumptions and component selections are kept apart; a recommendation or an
+  earlier model statement is not owner approval; superseded instructions are marked in place, history kept.
+- **Layer 3 closes** with the current author's pass and ONE independent check (the collaborator, `CODEX-WORKER.md`
+  section 7), no parallel review. Closure means a coherent, traceable, measurable baseline with verification methods
+  and an honest feasibility assessment, the energy shortfall and the open design obligations recorded prominently.
+- **Layer 4 starts at once** after closure, with the internal energy architecture: the dominant constraints first, a
+  small number of credible architectures compared under the same assumptions, established reference circuits or
+  modules preferred, predicted performance with margins and uncertainties, the next discriminating calculation or
+  experiment; no service silently reduced; architecture and interface evidence before detailed circuitry or layout.
+- **Every substantial task is finishable:** the exact question and input revision, one deliverable, acceptance
+  criteria for its layer, permitted changes and bounds. One review, blocking discrepancies fixed, the affected
+  criteria rechecked; a repeated failure changes the diagnosis or the evidence method; editorial points go to a
+  backlog.
+- **Blockers are classified** (engineering correction, missing evidence, downstream design task, owner decision) with
+  the task each blocks; only a change to approved requirements, accepted risk, budget or authority goes to the owner.
+- **Milestones are reported as:** accepted deliverable, evidence, remaining material risk, next executable action,
+  elapsed time and usage; requirements maturity, design compliance and physical verification kept separate. At the
+  first credible Layer 4 candidate a concise power-architecture packet is prepared for an electronics engineer.
