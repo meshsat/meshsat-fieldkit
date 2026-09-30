@@ -157,7 +157,12 @@ def t_l3r5_the_status_level_follows_the_answers():
     assert lvl == "DRAFTED", "all rows settled (row L3-OD2 not applicable) do not read decisions recorded"
     g = RL.gate(req, dec, data, h3)
     assert not g[4][1] and "OWED" in g[4][2], "an owed disposition reads MET in the fifth condition"
-    assert not g[3][1], "an acceptance of the handover with the decisions pending covers the decided issue"
+    # the property is CHECK-5's scope ("decisions pending"): judged with CHECK-5 the newest filed check, since later checks
+    # of the closure (check 3 of round 5, accepted) are filed after it and the fourth condition follows the newest
+    d5 = copy.deepcopy(data)
+    d5["independent_check"] = [c for c in data["independent_check"] if "/l3r2/checks/" in c["record"]]
+    assert d5["independent_check"][-1]["record"].endswith("check-l3r2-5.md")
+    assert not RL.gate(req, dec, d5, h3)[3][1], "an acceptance of the handover with the decisions pending covers the decided issue"
     d2 = copy.deepcopy(data)
     d2["feasibility_basis"]["sha16"] = "0" * 16
     assert RL.status_level(req, dec, d2, h3)[0] is None, "decisions read recorded with the feasibility record unbound"
@@ -598,7 +603,10 @@ def t_l3r5_fix_round_the_brief_the_reissue_and_the_gate():
     assert RL.closure_state(items["L3-C26"], req, dec, data) == "CLOSED"
     assert items["L3-C63"]["whose"] == "INTEGRATOR" and RL.closure_state(items["L3-C63"], req, dec, data) == "OPEN"
     g = RL.gate(req, dec, data, RL.load_h3())
-    assert g[2][1] and not g[3][1], "the third condition should read MET and the fourth NOT MET: %s" % [(x[0], x[1]) for x in g]
+    # the fourth condition follows the newest filed check: NOT MET while the fix round's recheck (not accepted) was the
+    # newest, MET once check 3 (accepted) is filed after it
+    newest_ok = str(data["independent_check"][-1]["verdict"]).upper() == "ACCEPTED"
+    assert g[2][1] and g[3][1] is newest_ok, "the third condition should read MET and the fourth follow the newest check: %s" % [(x[0], x[1]) for x in g]
     record = open(os.path.join(ROOT, dr["record"]), encoding="utf-8").read()
     assert "AUTHORISED by owner ruling D-38" in record and "**Acceptance:** the targeted independent review" in record
     assert "PROPOSED" not in record, "the approved record still reads PROPOSED"
@@ -793,7 +801,11 @@ def t_l3r5_recheck_decided_rows_carry_no_option_they_did_not_take():
     src = os.path.join(ROOT, chk[-1]["record"])
     assert open(src, encoding="utf-8").readline().strip() == "accepted: no"
     assert RL.sha16_bytes(open(src, "rb").read()) == chk[-1]["sha16"]
-    g = RL.gate(req, dec, data, RL.load_h3())
+    # judged with the recheck the newest filed check (check 3, accepted, is filed after it at the closure)
+    dr2 = copy.deepcopy(data)
+    k = [i for i, c in enumerate(data["independent_check"]) if c["record"].endswith("astra-check-l3r5-2.md")][0]
+    dr2["independent_check"] = data["independent_check"][:k + 1]
+    g = RL.gate(req, dec, dr2, RL.load_h3())
     assert not g[3][1], "the fourth condition reads MET with the recheck not accepted"
 
 
@@ -898,7 +910,10 @@ def t_l3r5_d39_is_conditional_and_acceptance_is_its_own_record():
     assert RL.status_level(req, dec, d3, h3)[0] == "DRAFTED", "an acceptance not listing the newest check validates"
     acc = os.path.join(REC5, "apply_l3r5_accept.py")
     r = _run([acc, "--revision", head, "--evidence", fixture_check["record"], "--check"])
-    assert r.returncode == 2 and "not ACCEPTED" in r.stdout, "the acceptance script ran on the tree:\n%s" % r.stdout
+    # on the tree it refuses with the fixture's evidence: before check 3 because the newest check was not accepted, after
+    # it because the evidence does not list the newest check
+    assert r.returncode == 2 and ("not ACCEPTED" in r.stdout or "does not list the newest independent check" in r.stdout), \
+        "the acceptance script ran on the tree:\n%s" % r.stdout
     d = tempfile.mkdtemp(prefix="l3r5-accept-")
     copy_path = os.path.join(d, "l3r2.yaml")
     raw = open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read()
