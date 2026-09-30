@@ -13,6 +13,7 @@ record and nothing under `v2/docs/handover/` is changed by this folder.
 | `l4e_replay.out` | its output; the page cites it as "out N" (its section numbers) |
 | `checks/astra-check-l4e2-1.md` | the collaborator's focused check of the first issue (run `20260930T221538Z-809994` on `0e641bd3`, accepted: no; B1 the stopped-hour double count, B2 O-2's power bound, M1 a label), filed byte for byte; answered by the second issue |
 | `checks/astra-check-l4e2-2.md` | the collaborator's recheck of the second issue (run `20260930T224030Z-833954` on `21a9a6fe`, accepted: no; B1, M1 and the Layer 3 recount pass; B2 fails again on the omitted IMON_IN line regulation, and the sweep's lower end), filed byte for byte; answered by the third issue |
+| `checks/check-l4e2-3.md` | check 3: Claude's (the coordinator's) verification of B2 at `197350a7` against the recheck's own criterion, computed from the maker's table independently of the replay (accepted: yes); not a model review and not an Astra check |
 | `ASTRA-L4E1.md` | the engineering collaborator's L4-E1 assessment (job `cx7-l4e1-dominant-constraints`), filed byte for byte; sha256 `36af43f1769c32c64b95528a69ca6972ee14723eae1d7dd21cf98442b3c6f83b`. It directs this task and accepts nothing |
 
 ## Run order
