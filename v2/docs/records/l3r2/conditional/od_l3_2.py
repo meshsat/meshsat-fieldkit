@@ -24,14 +24,16 @@ option says where the displaced item goes and what happens to its function, in i
                         records find the 4S9P lid NOT MET on the reference day, as every case of the energy basis's first
                         issue does (reproduced by its check), so an open conflict (the next free CFL id, a core BLOCKER)
                         records REQ-072 against it.
-Every option writes the lid's count into REQ-014, REQ-075 and CFL-006.
+Every option writes the lid's count into REQ-014, REQ-075 and CFL-006. With row L3-OD6 decided, the lid must carry its
+answer's store in its build case by row L3-OD6's filled table; otherwise an open conflict records REQ-072 against it
+(both-kept has its own). --table PATH reads that table from a fixture on a copy of the registry.
 
 Where each option leaves a function (the relocation facts, fact CF-04 of l3r2.yaml): no location in the kit is
 established for either displaced item, so qmx-out removes HF from the kit and tablet-out removes the bracket's function
 (a tablet held in the lid); qmx-outside stays held until a record establishes the QMX's place and its sealed lead.
 
 Usage: python3 od_l3_2.py --option qmx-out|qmx-outside|tablet-out|both-kept --words "<the owner's words>" --date YYYY-MM-DD
-       [--check] [--registry PATH]
+       [--table PATH] [--check] [--registry PATH]
 """
 import os
 import sys
@@ -86,7 +88,7 @@ def build(a, raw, d):
     op = a["option"]
     if op == "both-kept":
         for rel, n in ASSERT_BOTH.items(): E.assert_in(rel, n)
-    C.hold(a, ROW, ("energy_basis", "relocation_facts") if op == "qmx-outside" else ("energy_basis",))
+    C.hold(a, ROW, C.row_holds(ROW) + (["relocation_facts"] if op == "qmx-outside" else []))
     recs = {r["id"]: r for r in d["records"]}
     n = COUNT[op]
     ruling, title = RULINGS[op]
@@ -173,6 +175,19 @@ def build(a, raw, d):
         raw = E.insert_after_entry(raw, "REQ-011", C.superseded_entry(spd, old011,
             "REQ-011 restated by %s (row L3-OD2, the tablet out): the tablet is carried outside the case." % rid, rid), "records")
         exp |= {("records", "REQ-011", "changed"), ("records", spd, "added")}
+    # row L3-OD6's weather basis against this lid (CHECK-2 of L3-R2, B2): an open conflict when the table does not mark
+    # the lid as carrying the answer's store, unless one already records the answer against REQ-072
+    ans = C.od6_answer(E.parse(raw))
+    if ans and op != "both-kept":
+        o6, share6, build6, rid6 = ans
+        rows, fixture = C.od6_rows(a)
+        t6 = C.od6_row(rows, o6, share6, build6)
+        if not fixture: C.od6_verify(t6)
+        if C.LID[op] not in t6["fits"] and not any(r.get("status") == "CONFLICT_OPEN" and rid6 in (r.get("rulings") or [])
+                                                   for r in E.parse(raw)["records"]):
+            n_text = "SC-37's mean day" if o6 == "mean-day" else "at least %s percent of September's 72-hour windows" % share6
+            raw, cid = C.weather_conflict(raw, rid6, op, t6, n_text, extra_rulings=(rid,))
+            exp |= {("records", cid, "added")}
     raw, _ = C.close_m02_if_done(raw, rid)
     return raw, exp
 

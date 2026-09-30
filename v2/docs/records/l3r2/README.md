@@ -22,6 +22,27 @@ flagged plainly; row L3-OD2 gains `both-kept`), recommendation, quantified conse
 dependencies; board A's R11 is carried as two results (the held circuit and the drafted 6.2 mOhm), its implementation
 and physical verification tracked as two downstream closure items.
 
+**Round 3b** (30 September 2026), on the scoped check CHECK-2 of L3-R2 (accepted so far: no), the energy basis's second
+check (`checks/energy-basis-check-2/`, accepted: yes, of `fnd/l3plane` `ec415c09`) and the owner's addendum D-24 and
+corrections D-25 (both recorded by their own scripts, quoted in `OWNER-INSTRUCTION-2026-09-30.md`):
+- B1: row L3-OD4's adopt requires row L3-OD6 answered mean-day first; an undecided row L3-OD6 refuses it.
+- B2: row L3-OD6's table carries the basis's figures per build case (TYP, WAB) and which lids carry each; the lid of row
+  L3-OD2 must carry the answer's store (od_l3_6.py and od_l3_2.py record an open conflict otherwise, and the gate reads
+  the set incoherent; an unfilled fit is incoherent too). L3-C32 and LAYER-STATUS say exactly what is enforced.
+- B3: the hold and the gate verify the energy basis's check (its file at its sha, first line "accepted: yes") and a
+  definition re-issue's own approving ruling (`decides: definition_reissue`, dated after the rows; D-21 does not qualify;
+  the baselined text does not count).
+- B4: fact CF-01, F-01 and LAYER-STATUS state the bus's steady-state range with its brackets (19.101, 18.782, 18.738 V).
+- The minors: the QMX-outside lead named as an enclosure constraint; row L3-OD6's hold cites D-23; no "recommended" chain;
+  REQ-072's older wording qualified by a new evidence entry and REQ-054's gain named in dBd (`apply_l3r2_r3b.py`); the
+  pass line change named in row L3-OD1; figures and bands bind exactly, and on the tree only to the filed basis.
+- D-24 and D-25: board A's front end in four cases (as drawn; a derated variant, coordination only; the resistor-only
+  proposal, conditional; a hypothetical corrected power path, with its implementation requirements and corrections
+  PP-01 to PP-08 as downstream closure items L3-C37 to L3-C44); rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 also wait on the
+  power path's independent check (`power_path_check`, L3-C45); every row names the requirement it changes with the
+  consequence quantified; Kelvin sensing is an implementation requirement.
+- Prepared for the fill, not run: `basis_reader.py`, `set_energy_basis.py`, `fill_l3r2_from_basis.py` (below).
+
 ## Files
 
 | File | What it is |
@@ -30,12 +51,19 @@ and physical verification tracked as two downstream closure items.
 | `apply_l3r2_session.py` | the session's closures, applied once (a second run refuses): D-21 and D-22 recorded; S-114 closed by commit `1b9f543c`, its evidence qualified by the model's 20.7 V bus; the energy basis opened as the next free S item (S-127 on set 15), which REQ-072 waits on, and REQ-072 given a qualifying evidence entry; M-02 and S-53 restated; CFL-006 re-read; CFL-002 corrected; seven acceptances made measurable (REQ-008, REQ-012, REQ-029, REQ-054 with its 27 dBm allowance kept, REQ-057, REQ-068, CHO-003); a header paragraph. Every document sentence it writes is asserted in the document first |
 | `read_cfl006.py`, `read_cfl006.out` | the re-read of CFL-006's four bound files, fact by fact (exit 0 only if every fact holds) |
 | `apply_l3r2_d23.py` | the owner's instruction on the six-row table recorded as owner ruling D-23, applied once (a second run refuses); every quote asserted in `OWNER-INSTRUCTION-2026-09-30.md` first; no record changes |
+| `apply_l3r2_d24.py`, `apply_l3r2_d25.py` | the owner's addendum on the power path (D-24) and his corrections to round 3b (D-25), each recorded once as the pattern of `apply_l3r2_d23.py`, every quote asserted in `OWNER-INSTRUCTION-2026-09-30.md`; no record changes |
+| `apply_l3r2_r3b.py` | round 3b's session closures, applied once: REQ-072 gains a qualifying evidence entry for the s119 entry's 'typical' and 'adverse' (history not edited), and REQ-054's acceptance names the antenna's gain in dBd (the limits are ERP) |
 | `apply_layer_status_l3.py` | `v2/docs/handover/LAYER-STATUS.md`: the head sentence, layer 3's section restated with its H2 and H3 text kept word for word, the L3-R2 step of appendix A.3's integrator line; it refuses unless S-122 is closed and D-22 is in the registry |
 | `apply_layer_status_l3_r3.py` | round 3: the same page's layer 3 sentences brought to D-23, row L3-OD6 and the confirmed facts, each sentence replaced by its own text; it refuses unless `apply_layer_status_l3.py` has run and D-23 is recorded, and a second run is refused |
+| `apply_layer_status_l3_r3b.py` | round 3b: the page's coherence sentence says what is enforced, F-01 carries the bus's brackets and board A's front end in four cases, and the rows wait on the power path's check too; refuses unless round 3 ran and D-24 and D-25 are recorded |
+| `basis_reader.py` | reads the filed energy basis's outputs by exact keys (weather_basis.out A and B, energy_basis.out 5), each figure as the text the output prints; refuses any other format (written for the basis's third issue, `868c321f`) |
+| `set_energy_basis.py` | PREPARED, NOT RUN: names the basis, its outputs and its check in `l3r2.yaml`'s `energy_basis`; refuses unless each file is in the tree, the check reads "accepted: yes" and names the tip it checked |
+| `fill_l3r2_from_basis.py` | PREPARED, NOT RUN: fills row L3-OD6's table and `basis_figures` from the filed outputs by exact keys, reads them back, and refuses a second run; writes no prose |
 | `apply_records_readme_row.py` | DRAFT for the integrator: this folder's row in `v2/docs/records/README.md`, after the `s119/` row; not run in the branch |
-| `conditional/cond.py`, `od_l3_1.py` to `od_l3_6.py` | PREPARED, NOT APPLIED: the exact registry change each answer of the owner to rows L3-OD1 to L3-OD6 makes. Each takes `--option`, the owner's own `--words` and `--date`, records an owner ruling carrying `decides: <row>:<option>`, applies its edits by id and asserted text, closes M-02 once rows 1 to 4 are decided with row 1 approved, and validates; `--check` writes nothing. Coherent by construction: row L3-OD1 fixes the store only, row L3-OD3 alone fixes the array, row L3-OD4 adopts a band only on 2S2P, and a row whose prerequisites fail is refused. Rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 refuse to write the tree's registry while `l3r2.yaml`'s `energy_basis` is not filed (D-22, D-23); `qmx-outside` also waits on `relocation_facts`. Row L3-OD4 adopts no band for `both-kept` nor beside a coverage target; row L3-OD6's `coverage` reads its figures only from the row's filled table and records an open conflict where the store does not fit; `both-kept` records one against REQ-072; `od_l3_1.py` carries a coverage target over when it restates REQ-072 |
+| `conditional/cond.py`, `od_l3_1.py` to `od_l3_6.py` (round 3b: `od_l3_6.py` takes `--build TYP|WAB` and `--share 50|80|95`; rows 2 and 6 take `--table` on a copy) | PREPARED, NOT APPLIED: the exact registry change each answer of the owner to rows L3-OD1 to L3-OD6 makes. Each takes `--option`, the owner's own `--words` and `--date`, records an owner ruling carrying `decides: <row>:<option>`, applies its edits by id and asserted text, closes M-02 once rows 1 to 4 are decided with row 1 approved, and validates; `--check` writes nothing. Coherent by construction: row L3-OD1 fixes the store only, row L3-OD3 alone fixes the array, row L3-OD4 adopts a band only on 2S2P, and a row whose prerequisites fail is refused. Rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 refuse to write the tree's registry while `l3r2.yaml`'s `energy_basis` is not filed (D-22, D-23); `qmx-outside` also waits on `relocation_facts`. Row L3-OD4 adopts no band for `both-kept` nor beside a coverage target; row L3-OD6's `coverage` reads its figures only from the row's filled table and records an open conflict where the store does not fit; `both-kept` records one against REQ-072; `od_l3_1.py` carries a coverage target over when it restates REQ-072 |
 | `dryrun.py`, `dryrun.out` | every chain of the prepared scripts run on copies of the registry, the incoherent ones refused; the band, the keep figures and the coverage figures come from fixtures standing in for the energy basis |
 | `checks/check-l3r2-1.md` | the first independent check of L3-R2 (an AI check, accepted: no), filed byte for byte; its items are answered in round 2 |
+| `checks/energy-basis-check-2/` | the second independent check of the energy basis (`fnd/l3plane` at `ec415c09`; an AI check, accepted: yes), its report `CHECK-2.md`, its tools and outputs and the two modules of the first check they import, filed byte for byte |
 | `checks/energy-basis-check-1/` | the first independent check of stream l3plane's energy basis (branch `fnd/l3plane` at `6a283b25`; an AI check, accepted: no), its report `CHECK-1.md` and its own tools and outputs, filed byte for byte so that the facts CF-01 to CF-04 cite a file in the tree; its blocking items are the stream's to answer in its second round. Its tools read a checkout of that branch with its held files; they are not run here |
 
 The renderer is `v2/docs/handover/layer3/render_l3r2.py` (with `l3r2.yaml` and `h3_registry_digest.json` beside it); its
@@ -59,8 +87,12 @@ git checkout fnd/l3r2 -- v2/docs/handover/layer3 v2/docs/records/l3r2 v2/ecad/to
 python3 v2/docs/records/l3r2/read_cfl006.py > v2/docs/records/l3r2/read_cfl006.out
 python3 v2/docs/records/l3r2/apply_l3r2_session.py --check && python3 v2/docs/records/l3r2/apply_l3r2_session.py
 python3 v2/docs/records/l3r2/apply_l3r2_d23.py --check && python3 v2/docs/records/l3r2/apply_l3r2_d23.py
+python3 v2/docs/records/l3r2/apply_l3r2_d24.py --check && python3 v2/docs/records/l3r2/apply_l3r2_d24.py
+python3 v2/docs/records/l3r2/apply_l3r2_d25.py --check && python3 v2/docs/records/l3r2/apply_l3r2_d25.py
+python3 v2/docs/records/l3r2/apply_l3r2_r3b.py --check && python3 v2/docs/records/l3r2/apply_l3r2_r3b.py
 python3 v2/docs/records/l3r2/apply_layer_status_l3.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3.py
 python3 v2/docs/records/l3r2/apply_layer_status_l3_r3.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3_r3.py
+python3 v2/docs/records/l3r2/apply_layer_status_l3_r3b.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3_r3b.py
 python3 v2/docs/records/l3r2/apply_records_readme_row.py
 env -C v2/ecad/tools python3 rules_lib.py requirements
 env -C v2/ecad/tools python3 rules_render.py --requirements
@@ -72,16 +104,38 @@ env -C v2/ecad/tools/tests python3 run.py test_requirements test_l3r2
 The renderer lists any open item the set adds as UNCLASSIFIED (closure item L3-C23 then reads OPEN) until `l3r2.yaml`'s
 `open_items_layer` gives it a layer.
 
-## When the energy basis arrives
+## The fill procedure (ready; run only on the coordinator's word, after the checked basis and the checked power path)
 
-1. File stream l3plane's `ENERGY-BASIS.md` and its independent check; name both in `l3r2.yaml`'s `energy_basis` (record,
-   sha16, check, check_sha16). Close S-127 by commit with REQ-072 re-read on the basis.
-2. Restate rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 in `l3r2.yaml` from it (their consequences, the R11 table's
-   conditional column, the case names in place of the first draft's words, the recommendations), and finding F-01.
-3. Write `od_l3_4.py`'s `BAND` table from the basis (with U3's bracket at the supply range's low end); fill row
-   L3-OD6's `quantified.rows` (usable Wh, nominal Wh, mass, volume, fits, evidence with its section) from the basis; and
-   file in `relocation_facts` a record that establishes the QMX's place outside the case, if one is ever written.
-4. Re-render; hold a further independent check; present the table to the owner.
+Nothing below has been run in the branch: `energy_basis` and `power_path_check` are null, and every HELD cell stays HELD.
+
+1. **Bring the basis into the tree** at the confirmed tip `<TIP>` (the final basis, its outputs, and stream r11dep's
+   record), file its accepting check byte for byte beside the others, and read it:
+   ```
+   git checkout <TIP> -- v2/docs/records/l3plane v2/docs/records/r11dep
+   python3 v2/docs/records/l3r2/basis_reader.py v2/docs/records/l3plane/weather_basis.out v2/docs/records/l3plane/energy_basis.out
+   ```
+   `basis_reader.py` must read every table (exit 0); a format it refuses is reported, never guessed around.
+2. **Name the basis** (it verifies the files, the check's "accepted: yes" and the tip it names):
+   ```
+   python3 v2/docs/records/l3r2/set_energy_basis.py --record v2/docs/records/l3plane/ENERGY-BASIS.md \
+     --outputs v2/docs/records/l3plane/weather_basis.out,v2/docs/records/l3plane/energy_basis.out \
+     --check v2/docs/records/l3r2/checks/energy-basis-check-N/CHECK-N.md --tip <TIP> --check-only
+   ```
+   then the same without `--check-only`.
+3. **Name the power path's check** in `l3r2.yaml`'s `power_path_check` ({record: v2/docs/records/r11dep/R11-DEPENDENCY.md,
+   sha16, check, check_sha16}; the check filed under `checks/`, first line "accepted: yes"), and restate
+   `power_path_corrections` (PP-01 to PP-08) from the checked list.
+4. **Fill the figures by exact keys:**
+   ```
+   python3 v2/docs/records/l3r2/fill_l3r2_from_basis.py --check && python3 v2/docs/records/l3r2/fill_l3r2_from_basis.py
+   ```
+5. **The session restates the prose from the filled figures**, each cited to its section: rows L3-OD1, L3-OD2, L3-OD4 and
+   L3-OD6 (consequences, the four front-end cases, the recommendations, stated without taking any option as feasible on
+   its idealised balance), finding F-01, CF-01 to CF-04 cited to the checked issue, and `od_l3_4.py`'s `BAND` table from
+   the basis at the supply range's low end with U3's 6.0 A bracket.
+6. **Re-render and re-check:** `rules_lib.py requirements` (0 errors), `rules_render.py --requirements`, `render_l3r2.py`
+   and `--check`, `dryrun.py > dryrun.out`, the tests; then a further independent check of L3-R2 (L3-C27), named in
+   `independent_check`.
 
 ## Applying an owner's answer (only once he has answered, and only rows the hold no longer holds)
 
@@ -92,10 +146,11 @@ env -C v2/ecad/tools python3 rules_render.py --requirements
 python3 v2/docs/handover/layer3/render_l3r2.py
 ```
 
-Row extras: row L3-OD3 `keep` takes `--array-wp`, `--entry-a` and `--evidence` from the checked basis; row L3-OD4 `adopt`
-takes `--push-n` (the owner's number) and, until the `BAND` table is written, `--band` and `--band-evidence`; row L3-OD6
-`coverage` takes `--share N`, one of the row's filled targets, and `mean-day` optionally `--stat` and `--stat-evidence`.
+Row extras: row L3-OD3 `keep` takes `--array-wp`, `--entry-a` and `--evidence` from the checked basis (the filed basis
+only, figures as whole tokens); row L3-OD4 `adopt` takes `--push-n` (the owner's number) and, until the `BAND` table is
+written, `--band` and `--band-evidence` (the filed basis only, the band as a whole line, cell or quoted phrase); row L3-OD6
+takes `--build TYP|WAB` and, for `coverage`, `--share 50|80|95`, reading only the row's filled table.
 Row L3-OD2 needs row L3-OD1 approved; row L3-OD3 needs row L3-OD1 approved; row L3-OD4 needs rows L3-OD1 to L3-OD3
-(adopt: L3-OD3 answered 2s2p, L3-OD2 not both-kept, L3-OD6 not coverage); rows L3-OD5 and L3-OD6 need nothing. After the rows are decided, the CONOPS and product brief passages
+(adopt: L3-OD3 answered 2s2p, L3-OD2 not both-kept, L3-OD6 answered mean-day); rows L3-OD5 and L3-OD6 need nothing. After the rows are decided, the CONOPS and product brief passages
 `L3-RECONCILIATION.md` lists are prepared for the owner's approval and named in `l3r2.yaml`'s `definition_reissue`
 (closure item L3-C26), and a further independent check of L3-R2 is held and named in `independent_check` (L3-C27).

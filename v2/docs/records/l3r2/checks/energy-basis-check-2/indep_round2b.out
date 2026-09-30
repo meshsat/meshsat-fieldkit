@@ -1,0 +1,15 @@
+OCV 3.6484 V
+   base 4S6P in 4S20P             charge 0.661 A, discharge 0.148 A: 0.9924
+   base 4S6P in 4S21P             charge 0.661 A, discharge 0.141 A: 0.9925
+   base, the page's 12 parallel   charge 0.661 A, discharge 0.246 A: 0.9915
+   lid 4S14P                      charge 0.567 A, discharge 0.148 A: 0.9933
+   lid 4S15P                      charge 0.529 A, discharge 0.141 A: 0.9937
+   4S14P WE-MKR TYP, charge 0.9915: STOP 215 (24.9 %)
+   4S14P WE-MKR TYP, charge 0.9925: STOP 216 (25.0 %)
+   4S15P WE-MKR TYP, charge 0.9915: STOP 255 (29.5 %)
+   4S15P WE-MKR TYP, charge 0.9925: STOP 255 (29.5 %)
+step error at WE restated (1 h against 0.01 h), lowest combined / lid:
+   4S15P 40/+0 WAB: ok 19.6 / 0.0  ->  ok 19.5 / 0.0
+   4S15P 50/+15 WAB: ok 5.4 / 0.0  ->  ok 5.4 / 0.0
+   4S15P 40/+0 TYP: ok 74.4 / 19.5  ->  ok 74.4 / 19.5
+   4S14P 40/+0 TYP: ok 44.0 / 0.0  ->  ok 44.0 / 0.0

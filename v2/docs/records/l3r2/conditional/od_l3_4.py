@@ -3,7 +3,9 @@
 in row L3-OD3. PREPARED, NOT APPLIED. HELD by the owner's review of 30 September 2026 (D-22) until the checked energy
 comparison is filed (a copy is not held).
 
-  --option adopt   requires row L3-OD1 approved, row L3-OD2 decided and row L3-OD3 answered 2s2p: the only array a plane
+  --option adopt   requires row L3-OD6 answered mean-day first (the band is a mean-day grid's, so it follows the owner's
+                   weather answer and never precedes it, D-23), row L3-OD1 approved, row L3-OD2 decided and row L3-OD3
+                   answered 2s2p: the only array a plane
                    grid has been run for (v2/docs/records/l3plane/plane_grid.out ran 400 Wp in 2S2P into 200 W; a band for
                    1S4P or for REQ-016 kept needs its own grid, so the script refuses those answers). It is refused while
                    row L3-OD6 stands answered coverage: the grid runs SC-37's mean day on each plane, and no band
@@ -15,7 +17,8 @@ comparison is filed (a copy is not held).
 Row L3-OD2 answered both-kept (a 4S9P lid, M1 not met): adopt is refused, reject stands.
 
 THE BAND COMES FROM THE CHECKED ENERGY BASIS (CHECK-1, B2): it is given with --band "<text>" and --band-evidence PATH, and
-the text is asserted in that file, until the basis is filed and this script's BAND table is written from it. The operator
+the text must stand in that file as a whole line, table cell or quoted phrase, and on the tree's registry that file must
+be the filed basis or one of its outputs, until the basis is filed and this script's BAND table is written from it. The operator
 push is the owner's: --push-n N, from his answer. Every other figure is asserted in v2/docs/records/a1mech/README.md.
 
 Usage: python3 od_l3_4.py --option adopt|reject --words "<the owner's words>" --date YYYY-MM-DD [--check] [--registry PATH]
@@ -45,10 +48,9 @@ def deg(n):
 def build(a, raw, d):
     op = a["option"]
     if op == "adopt":
-        dec = C.require(d, ROW, ["L3-OD1:approve", "L3-OD2:*", "L3-OD3:2s2p"])
-        if dec.get("L3-OD6", ("",))[0] == "coverage":
-            E.refuse("row L3-OD6 is answered coverage: the plane grid runs SC-37's mean day on each plane, and no band "
-                     "exists for a coverage target")
+        # the band is a mean-day grid's, so it follows the owner's weather answer and never precedes it: an undecided
+        # row L3-OD6 refuses adopt (CHECK-2 of L3-R2, B1; D-23)
+        dec = C.require(d, ROW, ["L3-OD1:approve", "L3-OD2:*", "L3-OD3:2s2p", "L3-OD6:mean-day"])
     else:
         dec = C.require(d, ROW, ["L3-OD1:approve", "L3-OD2:*", "L3-OD3:*"])
     C.hold(a, ROW)
@@ -66,9 +68,9 @@ def build(a, raw, d):
         if not push or not push.replace(".", "", 1).isdigit():
             E.refuse("adopt needs --push-n, the operator push the open kit must stand, from the owner's answer")
         if bev:
-            evp = bev if os.path.isabs(bev) else os.path.join(E.TOP, bev)
-            if " ".join(band.split()) not in " ".join(open(evp, encoding="utf-8").read().split()):
-                E.refuse("%s does not carry the band %r" % (bev, band))
+            et = C.evidence_path(a, bev)     # on the tree: the filed basis only (CHECK-2 of L3-R2, minor 6)
+            if not C.exact_phrase(et, band):
+                E.refuse("%s does not carry the band %r as a whole line, cell or quoted phrase" % (bev, band))
         ruling = ("Row L3-OD4 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided: M1's deployment conditions for the "
                   "%s lid and the 2S2P array are the array at %s, and the open kit, its lid pack and lid items fitted, on "
                   "ground sloping at most %s toward the hinge and standing an operator push of %s N; both are proposed "

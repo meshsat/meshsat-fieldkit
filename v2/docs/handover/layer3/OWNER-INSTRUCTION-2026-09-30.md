@@ -2,8 +2,9 @@
 
 MESHSAT-1357. Filed on 30 September 2026 by the author of layer 3's second requirements issue (L3-R2, branch
 `fnd/l3r2`), so that the registry's owner rulings D-21 and D-22 and the pages of this folder cite a file rather than
-a conversation, and owner ruling D-23 (the owner's newest instruction of the same day, the third section below). Prototype
-design: no V2 board has been fabricated, ordered, assembled or powered, and no kit has been field deployed.
+a conversation, and owner rulings D-23, D-24 and D-25 (the owner's instructions later the same day, the third to fifth
+sections below).
+Prototype design: no V2 board has been fabricated, ordered, assembled or powered, and no kit has been field deployed.
 
 ## Provenance
 
@@ -72,6 +73,53 @@ word; the two elisions (`...`) are the coordinator's. The registry records them 
 > "Keep the current-limit resistor dependency explicit ... Distinguish performance of the held circuit from performance
 > conditional on the proposed change. Track implementation and physical verification separately."
 
+## The owner's addendum on the power path and the decision package (30 September 2026), as quoted
+
+Relayed by the coordinating session during round 3b of L3-R2, introduced as "An addendum to round 3b, from the owner (30
+Sep 2026). It is binding". The paragraphs below are as quoted there, word for word; the one elision (`...`) is the
+coordinator's, and the fourth paragraph is three quotations as the coordinator gave them. The registry records them as
+owner ruling D-24.
+
+> "Update decision 1's premise. The reported findings make this a power-path correction, potentially involving
+> components, sensing, layout and thermal design. Stop presenting the 6.2 mOhm substitution as a sufficient solution. Keep
+> findings provisional until independently checked, and distinguish: the circuit as drawn; the resistor-only proposal; any
+> hypothetical corrected power path used for feasibility calculations."
+
+> "Correct the energy claims ... Where a supportable power envelope is not established, label the result conditional or
+> inconclusive. Preserve useful hypothetical calculations, but state the required circuit corrections prominently. Do not
+> count energy available only through an inadequate power path as demonstrated capability."
+
+> "Finish the concise decision package. Keep the existing six-row owner table. Show each option's checked figures,
+> limitations, required changes and remaining uncertainties, with links to evidence. Retain the weather-coverage choices
+> and quantified capacity/fit comparisons. Do not recommend an option as feasible solely because its idealised energy
+> balance passes."
+
+> "Close requirements without confusing them with implementation. Complete only the bounded feasibility work necessary for
+> informed requirements decisions. Full circuit correction, layout and bench testing belong to subsequent layers." "Bring
+> me decisions only when the proposed remedy changes mission requirements, functions, deployment conditions, enclosure
+> constraints or approved resources." "Component selection and Kelvin routing are engineering tasks."
+
+## The owner's corrections to round 3b (30 September 2026), as quoted
+
+Relayed by the coordinating session during round 3b of L3-R2, introduced as "Three owner corrections for round 3b (30 Sep
+2026). They are binding." The three paragraphs below are as quoted there, word for word. The registry records them as owner
+ruling D-25.
+
+> "Correct the Kelvin classification. The inspected A32 layout is historical evidence. It cannot establish a routing defect
+> in the current board, which has no layout yet. Keep the A32 finding tied to that revision. Unless current
+> schematic/netlist evidence independently establishes an error, record Kelvin sensing and the permitted shared resistance
+> as implementation requirements with measurable verification criteria."
+
+> "Describe the 4.05 A proposal accurately. Reducing the charger's input-current limit addresses current-limit
+> coordination. It does not establish that the other electrical defects are resolved or that the mission succeeds. Show its
+> energy consequence as a clearly labelled derated variant; preserve the actual as-drawn case. Keep the independently
+> checked 0.378 A comparison closed unless relevant inputs change."
+
+> "Restrict owner decisions to actual requirement changes. Charging below a source's available power is an engineering
+> choice when approved requirements remain satisfied. Ask me only when the remedy changes an agreed mission condition,
+> charging time, functionality, enclosure constraint or approved resources. Each such question must name the affected
+> requirement and quantify the consequence. Component selection and sensing implementation remain engineering tasks."
+
 ## How this work reads it (the session's reading, not the owner's words)
 
 - **"Battery and solar remain mandatory"**: mission M1 is carried by the kit's own store and its solar input. An
@@ -102,3 +150,21 @@ word; the two elisions (`...`) are the coordinator's. The registry records them 
   resistor R11 is carried as two results: the circuit as generated (R11 10 mOhm) and the result conditional on the
   drafted 6.2 mOhm; the change's implementation (layer 8) and its physical verification (prototype) are tracked as two
   downstream items, neither a layer 3 prerequisite.
+- **The addendum on the power path (D-24)**: every result that depends on board A's front end is stated in three cases,
+  never merged: (a) the circuit as drawn (R11 10 mOhm), where no lid meets M1; (b) the resistor-only proposal (R11 6.2
+  mOhm), which is not presented as a sufficient solution and whose result reads CONDITIONAL or INCONCLUSIVE until the
+  electrical check says otherwise; (c) a hypothetical corrected power path used for the feasibility figures, with the
+  corrections it assumes listed beside every figure that rests on it. Energy available only through (c) is hypothetical,
+  never demonstrated capability. The corrections (component selection, Kelvin routing, the inductor, the thermal path, the
+  200 W stage, the input limit per source) are engineering tasks, tracked as downstream closure items with measurable
+  criteria; a row goes to the owner only where a remedy would change a mission requirement, a function, a deployment
+  condition, an enclosure constraint or an approved resource. No option is recommended as feasible because its idealised
+  energy balance passes.
+- **The corrections to round 3b (D-25)**: Kelvin sensing at R11 and the permitted shared resistance are implementation
+  requirements with measurable verification criteria; the A32 layout reading stays tied to that revision and establishes
+  no defect of the current board, which has no layout, and the current netlist shows none. Board A's front end is stated in
+  four cases: (a) as drawn; (a') a derated variant with U3's input limit at 4.05 A or less, labelled as fixing current-limit
+  coordination only, never as resolving the other findings or meeting M1; (b) the resistor-only proposal, conditional; (c) a
+  hypothetical corrected power path. The independently checked 0.378 A comparison stays closed unless its inputs change.
+  Each owner row names the requirement it changes and quantifies the consequence; charging below a source's available
+  power, component selection and sensing implementation are engineering tasks while the approved requirements hold.
