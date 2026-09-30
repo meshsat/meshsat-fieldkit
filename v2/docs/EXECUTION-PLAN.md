@@ -832,3 +832,24 @@ remain open.
 
 **Next:** round 5 and its check; the owner's choices; then the answers applied, the re-issue generated for his
 approval, a narrow check, and the Layer 3 gate. Layer 4 and later work stays paused.
+
+### Plan update, 30 September 2026 13:45 CEST: a bounded runtime-and-battery comparison (the owner's instruction)
+
+The owner questions the 72 hour requirement and asks for alternatives before any function is sacrificed or a
+restrictive deployment condition accepted. Added to Layer 3, bounded, reusing the checked energy basis:
+1. The provenance of 72 hours (M1, REQ-072, D-20): the exact wording, date and source, the owner's statements apart
+   from the session's (the registry records SC-21 of 27 September 2026, the session's choice under the standing rule,
+   and D-20 of 28 September preserving "the original mission M1 and REQ-072, with their specified duration").
+2. Two requirement options on the same approved functions and operating profile, HF and the tablet both kept: Option A,
+   48 hours required and 72 desired; Option B, 72 hours required with an upgraded battery arrangement where necessary.
+   Battery-only endurance apart from battery-plus-solar, with the solar and weather assumptions stated; the circuit as
+   drawn apart from the corrected power path; the worst array build as a sensitivity case only.
+3. A short battery shortlist from makers' data: the present candidate and higher-capacity or higher-energy-density
+   cells and complete packs, each with usable Wh at the load, temperature and ageing, pack dimensions and mass,
+   placement in the Peli 1450, electrical compatibility, charger and protection changes, cost and availability.
+   Anything needing an enclosure, mounting or external-battery change is a proposal.
+4. The 42.8 W load profile traced to its loads. No undocumented efficiency makes a pass; a battery upgrade closes no
+   electrical defect.
+5. One compact comparison table, independently checked, with a recommendation and the exact owner choice. Neither
+   option is adopted until the owner selects it. The owner's selection then enters the decision package (a runtime
+   row), and Layer 3's acceptance work continues. Layer 4 and later stays paused.
