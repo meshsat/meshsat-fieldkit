@@ -1,0 +1,68 @@
+THE HF-PLUS-WAB FEASIBILITY ASSESSMENT (hf_wab.py, stream l3feas, MESHSAT-1357). PROTOTYPE DESIGN: nothing built, powered
+or measured. MODELED on a1elec's energy_two_pack.py through energy_basis.py's set-up (pinned), on the CORRECTED PATH (case
+(iii), HYPOTHETICAL: every correction of r11dep's R11-DEPENDENCY.md assumed closed). The author's analysis, AI arithmetic;
+not a qualified review and not the independent check. Nothing is designed and no target is picked.
+
+0. REPRODUCTION: energy_basis.out section 5's 4S14P WE row (TYP, WAB) and weather_basis.out C's clamp and stage rows for
+   the 4S14P lid (TYP, WAB): yes
+
+1. EACH ROUTE AT THE KIT LOADS (the mean day at 40/0, the lid at 13.23 C, the base at +20 C; PS-IDLE-SPEC 42.8 W plus the
+   lid path's standby drain 0.025 W at the pack terminals; both packs full and aged at the start; each pack's store ends at
+   its own 3.00 V line with the 5 % reserve, where the model stops drawing it and the kit runs on the other pack). Cells:
+   both packs' lowest store (the base's, the lid's own lowest) in Wh, or the energy left unserved; the three lines: STOP
+   (the kit never stops), COMB (both together above 4.2 Wh), EACH (each pack above 4.2 Wh)
+   WE as restated, the combination's reference
+     TYP: 44.0 (base 44.0, lid 0.0)                STOP kept, COMB Y, EACH N
+     WAB: NOT MET, 10.8 unserved                   STOP FAILS, COMB N, EACH N
+   R1: U3 at its 6.35 A clamp, minimum 6.25 A (INFERRED, 100 mA under, as WE's 6.1 A)
+     TYP: 70.7 (base 48.8, lid 18.1)               STOP kept, COMB Y, EACH Y
+     WAB: 19.4 (base 19.4, lid 0.0)                STOP kept, COMB Y, EACH N
+   R1 at the front page's 2.5 %: minimum 6.191 A (INFERRED)
+     TYP: 62.3 (base 46.9, lid 9.9)                STOP kept, COMB Y, EACH Y
+     WAB: 7.5 (base 7.5, lid 0.0)                  STOP kept, COMB Y, EACH N
+   R2: board E's stage at its maker curve's reading 0.965 (INFERRED, another circuit)
+     TYP: 69.3 (base 48.3, lid 14.9)               STOP kept, COMB Y, EACH Y
+     WAB: 12.7 (base 12.7, lid 0.0)                STOP kept, COMB Y, EACH N
+
+2. HOUR BY HOUR, THE WAB BUILD (each start; UTC hours of the mean day; the node's power is U3's output):
+   WE, start 06 UTC: U3's input cap 116.8 W, 113.7 W at the node; hours at the cap: 18 of 72 (UTC 09, 10, 11, 12, 13, 14)
+     base: full 218.4 Wh, lowest 0.0 Wh at hour 71 (UTC 05); lid: full 442.1 Wh, lowest 0.0 Wh; at its line for 3 hours (first at hour 48, UTC 06; the base alone carries 42.8 W then)
+     the kit STOPS at hour 71, 10.8 Wh unserved
+   WE, start 18 UTC: U3's input cap 116.8 W, 113.7 W at the node; hours at the cap: 18 of 72 (UTC 09, 10, 11, 12, 13, 14)
+     base: full 218.4 Wh, lowest 0.0 Wh at hour 60 (UTC 06); lid: full 442.1 Wh, lowest 0.0 Wh; at its line for 2 hours (first at hour 59, UTC 05; the base alone carries 42.8 W then)
+     the kit STOPS at hour 60, 9.0 Wh unserved
+   R1, start 06 UTC: U3's input cap 119.7 W, 116.4 W at the node; hours at the cap: 18 of 72 (UTC 09, 10, 11, 12, 13, 14)
+     base: full 218.4 Wh, lowest 19.4 Wh at hour 71 (UTC 05); lid: full 442.1 Wh, lowest 0.0 Wh; at its line for 1 hours (first at hour 71, UTC 05; the base alone carries 42.8 W then)
+     the kit never stops
+   R1, start 18 UTC: U3's input cap 119.7 W, 116.4 W at the node; hours at the cap: 18 of 72 (UTC 09, 10, 11, 12, 13, 14)
+     base: full 218.4 Wh, lowest 21.0 Wh at hour 60 (UTC 06); lid: full 442.1 Wh, lowest 0.0 Wh; at its line for 2 hours (first at hour 59, UTC 05; the base alone carries 42.8 W then)
+     the kit never stops
+   R2, start 06 UTC: U3's input cap 116.8 W, 113.7 W at the node; hours at the cap: 18 of 72 (UTC 09, 10, 11, 12, 13, 14)
+     base: full 218.4 Wh, lowest 12.7 Wh at hour 71 (UTC 05); lid: full 442.1 Wh, lowest 0.0 Wh; at its line for 2 hours (first at hour 48, UTC 06; the base alone carries 42.8 W then)
+     the kit never stops
+   R2, start 18 UTC: U3's input cap 116.8 W, 113.7 W at the node; hours at the cap: 18 of 72 (UTC 09, 10, 11, 12, 13, 14)
+     base: full 218.4 Wh, lowest 14.5 Wh at hour 60 (UTC 06); lid: full 442.1 Wh, lowest 0.0 Wh; at its line for 2 hours (first at hour 59, UTC 05; the base alone carries 42.8 W then)
+     the kit never stops
+
+3. WHAT EACH ROUTE NEEDS OF THE MISSING EVIDENCE: the least value of each undocumented input, alone, at which the WAB
+   build still passes (search 0.80 to 1.00; the rest at the route's values)
+   WE    charge efficiency STOP 0.960; charge efficiency COMB 0.964; stage STOP 0.946; stage COMB 0.952; front end STOP 0.946; front end COMB 0.952
+   R1    charge efficiency STOP 0.932; charge efficiency COMB 0.936; stage STOP 0.906; stage COMB 0.911; front end STOP 0.906; front end COMB 0.911
+   R1lo  charge efficiency STOP 0.943; charge efficiency COMB 0.947; stage STOP 0.919; stage COMB 0.925; front end STOP 0.919; front end COMB 0.925
+   R2    charge efficiency STOP 0.938; charge efficiency COMB 0.942; stage STOP 0.946; stage COMB 0.952; front end STOP 0.912; front end COMB 0.918
+   the values WE carries: charge 0.95 (INFERRED, no document), stage 0.93 and front end 0.93 (DECLARED); the makers' readings
+   of other circuits: stage 0.965 (curve_readings.out 2), front end 97.8 % (curve_readings.out 1)
+
+4. R1 AGAINST THE ELECTRICAL RECORD (r11dep's r11_dep.out; INFERRED arithmetic)
+   U3 set at 6.35 A: its maximum 6.509 A (the larger of +100 mA, p.80, and +2.5 %, p.1); through R11 6.569 A with the carried
+     0.060 A, 6.588 A with four FETs' 0.079 A; the front end's stacked minimum 6.793 A leaves +0.224 A and +0.205 A (with Kelvin
+     taps, r11dep C-1); VBUS20's bank reaches 2.8 A a can at 7.57 A matched and 6.54 A at a 2:1 spread: in service OVER at a 2:1 spread (100.4 % of 2.8 A), WITHIN matched
+   U3 set at 6.20 A: its maximum 6.355 A (the larger of +100 mA, p.80, and +2.5 %, p.1); through R11 6.415 A with the carried
+     0.060 A, 6.434 A with four FETs' 0.079 A; the front end's stacked minimum 6.793 A leaves +0.378 A and +0.359 A (with Kelvin
+     taps, r11dep C-1); VBUS20's bank reaches 2.8 A a can at 7.57 A matched and 6.54 A at a 2:1 spread: in service WITHIN
+   R1 raises U3's input by 0.15 A over the drafted 6.2 A setting: the front end's output, the stage's and the copper's in-service
+   currents rise by the same 2.4 % (INFERRED). The array's largest hour on the mean day is 194.3 W (TYP) and 178.6 W (WAB) into
+     the stage, under the model's 200 W window, which board E does not implement (a1solar ARRAY.md 3): the window never binds
+     on this day; U3's input cap does, in the hours section 2 lists
+
+END. Each line is the model's arithmetic on the corrected path; nothing is measured, designed or chosen.
