@@ -3140,10 +3140,12 @@ open_items:
     class: SESSION
     status: OPEN
     title: >-
-      A battery-bay hydrogen sensing part: the SGP41's datasheet specifies its VOC and NOx responses and names hydrogen
-      only as a background gas, so the hydrogen half of the battery-bay sensing approved in appendix 32.54 has no
-      specified part (REQ-042). Pick a hydrogen-rated sensor from its maker's documents for board E's battery-bay
-      header, or hold Sensirion's written statement of the SGP41's hydrogen response.
+      A battery-bay hydrogen sensing part, its selection only: the SGP41's datasheet specifies its VOC and NOx responses
+      and names hydrogen only as a background gas, so the hydrogen half of the battery-bay sensing approved in appendix
+      32.54 has no specified part (REQ-042). Pick a hydrogen-rated sensor from its maker's documents for board E's
+      battery-bay header, or hold Sensirion's written statement of the SGP41's hydrogen response. Closing this item
+      closes the part's selection and nothing of REQ-042's acceptance, which is the channel's end-to-end detection and
+      shutdown test (corrected on 1 October 2026, finding L3-R02 of the independent review).
   - id: S-50
     class: SESSION
     status: OPEN
@@ -4035,6 +4037,17 @@ open_items:
       history excuse tied to a past-tense verb on the part itself, and a rule that pairs a list of parts with a list of
       designators in order. Open until each class is closed by a rule with a fixture that close_s122.py runs, or carried
       with its reason.
+  - id: S-128
+    class: SESSION
+    status: OPEN
+    title: >-
+      REQ-042's alarm levels and test stimuli, derived with their sources before its test is written: the VOC channel's
+      alarm level from the SGP41's clean-air baseline and VOC index, the hydrogen channel's from the pack's venting
+      hazard and the documents of the part S-49 picks, each gas channel's test gas with its concentration at the level
+      and the lower concentration that must raise nothing, the water stimulus at the case-floor electrodes, and the
+      states of the in-use envelope each channel covers (a state outside a part's published range reported as not
+      covered). Allocated to layer 4 by the layer 3 amendment of 1 October 2026 (finding L3-R02); the procedure then
+      goes into TEST-PLAN.md at layer 9.
 closed_items:
   - id: S-89
     closed_by: commit aaed6daa4434f2ae94331cdafb3134056fb1eb97
@@ -7682,11 +7695,23 @@ records:
       stage's input regulation, and at most 100 W into the stage.
     acceptance: >-
       Netlist (board E): the panel entry (PV_IN and PV_P) is declared at 25 V in the generator's intent (v_max) and
-      every part on it is rated above that; the panel input's clamp D4 is an SMCJ28A (28 V standoff, above the window,
-      conducting from 31.1 V, under the 35 V bulk capacitors); the FBIN divider R8 and R9 sets the 17.6 V operating
-      point; and the input fuse F2 and connector J_SOLAR are rated 10 A, above the 5.68 A the window's 100 W draws at
-      17.6 V. Prototype: a bench supply set to a 100 W panel's curve with its maximum-power point at 17.6 V and its
-      open-circuit voltage at 25 V charges the pack with the stage holding its input at 17.6 V (SC-36).
+      every part on it is rated above that; the panel input's clamp D4, an SMCJ28A, stands off 28 V (at most 1 uA there,
+      the maker's SMCJ28A row), above the window; the FBIN divider R8 and R9 sets the 17.6 V operating point; and the
+      input fuse F2 and connector J_SOLAR are rated 10 A, above the 5.68 A the window's 100 W draws at 17.6 V.
+      Prototype: a bench supply set to a 100 W panel's curve with its maximum-power point at 17.6 V and its open-circuit
+      voltage at 25 V charges the pack with the stage holding its input at 17.6 V (SC-36). Protection is judged apart
+      from the window, under rule TRN-001 (its port table), and never by a part number or a breakdown figure: the
+      SMCJ28A breaks down between 31.1 and 34.4 V at 1 mA and clamps at up to 45.4 V at its 33.1 A pulse (Littelfuse
+      SMCJ series sheet, p.2), so its breakdown onset below the 35 V bulk capacitors C11 and C12 does not show that PV_P
+      stays under 35 V in a disturbance. It passes for a disturbance only when D4's clamping voltage at that
+      disturbance's current (from its source impedance, waveform and duration, with the part's tolerance) is at or below
+      the lowest limit on PV_P, the capacitors' 35 V. Electrostatic discharge (IEC 61000-4-2 level 4, 8 kV contact and
+      15 kV air, the session's decision 34, a design level): bounded by DECISION-31-PROTECTION-TOPOLOGY.md section 6.3,
+      the network's whole charge moving the 225 uF on PV_P by 0.005 and 0.010 V, protected with a constraint. Surge and
+      sustained over-voltage on the panel lead: no level is ruled (DECISION-31 section 3; D-16 for the vehicle entry),
+      so the disturbance, its source impedance or current, its duration and the limit are derived at layer 4 and judged
+      at layer 8 under TRN-001, and this record claims no surge or over-voltage protection on PV_P until then; a
+      reversed panel conducts through D4 (DECISION-31, note E-N1).
     allocated_to: [e]
     verification_method: [CALCULATION, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -7694,7 +7719,7 @@ records:
     prototype_1: core
     prototype_1_basis: NEED_DEFAULT
     satisfied_by:
-      rules: [PWR-001]
+      rules: [PWR-001, TRN-001]
       decisions: []
     rule_coverage: PARTIAL
     rulings: [D-28]
@@ -7708,11 +7733,20 @@ records:
       - "v2/docs/OPERATING-ENVELOPE.md section 4 (input voltage ranges)"
       - "v2/ecad/tools/gen_sch_e.py (J_SOLAR, F2, D4, R8, R9)"
       - "session choice SC-36"
+      - "v2/vendor/power/littelfuse-smcj-series-tvs.pdf (p.2, the SMCJ28A row; p.1, the 10/1000 us rating)"
+      - "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md sections 3 and 6.3 (PV_IN)"
     source_check: VERIFIED
     history: >-
       Read FAIL at d468613e: the solar clamp D4 put its cathode on GND. Corrected in faf8c981: D4 (SMCJ28A) has its
       cathode on PV_P on the committed netlist v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
-      (v2/ecad/tools/gen_sch_e.py:421 at eadbe571).
+      (v2/ecad/tools/gen_sch_e.py:421 at eadbe571). Corrected on 1 October 2026 under the owner's relayed instruction on
+      the independent review's finding L3-R05 (v2/docs/records/l3am/REVIEW-AS-RECEIVED.md,
+      v2/docs/records/l3am/apply_l3am_r05.py): the acceptance read D4's breakdown onset, 31.1 V, under the 35 V bulk
+      capacitors as protection; the maker gives 31.1 to 34.4 V at 1 mA and up to 45.4 V at 33.1 A, and breakdown onset
+      is not the protected node's maximum. The protection sentence stays in the acceptance, rewritten to trace
+      protection to TRN-001 and to keep the operating window, the bounded ESD result and the unresolved surge and
+      over-voltage obligations apart. The statement, the window D-34 retained, is unchanged, and so are the window's own
+      pass lines but D4's, which now states its standoff.
     notes: >-
       Split on 27 September 2026 (SC-36): the window, which has a hardware effect, is stated here from board E's
       generator; M1's energy balance is REQ-072. That balance needs a panel of about 270 W on the reference day where
@@ -7928,7 +7962,16 @@ records:
       stated cannot both hold (REQ-016's notes). The FAIL at desk is carried as it stands. Restated by D-28 applied by
       D-32 (layer 3's closure, 2026-09-30) as the design objective the owner's clarification sets (D-28), replacing the
       session's SC-21 (72 hours) and the mandatory reading of D-20 and D-21 the session had taken; its shortfall is
-      design risk DR-01 (layer 4), no longer the owner's part M-02, which D-28 closes.
+      design risk DR-01 (layer 4), no longer the owner's part M-02, which D-28 closes. Amended on 1 October 2026
+      (finding L3-R01 of the independent review the owner relayed, v2/docs/records/l3am/DISPOSITIONS.md): the
+      solar-assisted figures of this record's latest evidence entry (the stop at 05 UTC of the first night, 266.7 /
+      494.7 Wh unserved as drawn, 102.2 / 165.7 Wh on the hypothetical corrected path at 48 / 72 hours, 0 of 864
+      windows) are historical results of proposal P-03's array (400 Wp in 2S2P into the model's 200 W stage window),
+      which retained REQ-016 (D-34) does not admit, their unserved energy understated:
+      v2/docs/records/a1elec/energy_two_pack.py lines 257 to 280 credit the sun twice in an hour the kit is stopped (the
+      engineering collaborator's layer 4 check of 30 September 2026). The entry is kept as written; the result on the
+      retained window awaits layer 4 task L4-E2 (v2/docs/records/l4e/L4-ENERGY-ARCHITECTURE.md, pending). REQ-072 reads
+      FAIL at desk either way (DR-01).
 
   - id: REQ-017
     kind: requirement
@@ -12904,12 +12947,26 @@ records:
     statement: >-
       Water on the case floor, and hydrogen or VOC in the battery bay, raise an alarm and shut the pack down.
     acceptance: >-
-      Water bridging the case-floor electrodes, or the battery-bay VOC reading crossing the alarm level set at bring-up
-      from the SGP41's own clean-air baseline, raises MASTER WARN and makes the sensor controller command the pack gauge
-      over J_SMB to open both protection FETs within 10 s, whether or not an input is present (the gauge's SHUTDOWN with
-      no input, its EMERGENCY SHUTDOWN through the Manual FET Control sequence with one, SLUUAQ3A 5.4.2 and 5.4.4.2),
-      the pack staying open until service, with the compute modules and the panel controller off or in reset
-      (SC-41); the hydrogen half of the battery-bay sensing is met once S-49 names its part.
+      End to end, channel by channel: water on the case floor, hydrogen in the battery bay and VOC in the battery bay
+      each pass only on their own test. Naming or fitting a sensing part closes that part's selection (S-49 for
+      hydrogen), never this acceptance, and a sensor that is fitted but does not drive the shutdown fails. Stimulus and
+      threshold basis: water on the case floor until it bridges the case-floor electrodes; for VOC and for hydrogen, a
+      test gas of stated concentration, traceable to a reference instrument or a calibration gas mixture, delivered into
+      the closed battery bay, once at the channel's alarm level and once at a concentration below it that must raise
+      nothing. The VOC channel's alarm level is set at bring-up from the SGP41's own clean-air baseline as its datasheet
+      defines the VOC index; the hydrogen channel's comes from the pack's venting hazard and the chosen part's
+      documents. Each level, each test gas and concentration and the states each channel covers are derived with their
+      sources at layer 4 (S-128), the hydrogen part is picked at layer 6 (S-49) and the procedure is written into
+      TEST-PLAN.md at layer 9; a level no held document supports is not used. States: the pack alone and with an input
+      present, with the compute modules and the panel controller running and with them off or in reset (SC-41), across
+      the in-use envelope of OPERATING-ENVELOPE.md section 4; a state outside a sensing part's published range is
+      reported as not covered by that channel, never assumed. Timing and response: from the moment the stimulus reaches
+      the alarm level at the sensor (the reference reading, or the electrodes bridged), MASTER WARN is raised and the
+      sensor controller commands the pack gauge over J_SMB to open both protection FETs within 10 s, whether or not an
+      input is present (the gauge's SHUTDOWN with no input, its EMERGENCY SHUTDOWN through the Manual FET Control
+      sequence with one, SLUUAQ3A 5.4.2 and 5.4.4.2), and both FETs read open at the pack. Persistence: the pack staying
+      open until service, with the stimulus removed and any input applied or removed, restored only by the service
+      procedure (CONOPS section 4d).
     allocated_to: [e, p, fw_sensor]
     verification_method: [SCRIPT, VENDOR_CONFIRMATION, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -12922,7 +12979,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-15]
     choices: [SC-41, SC-31]
-    waits_on: [S-49, S-56]
+    waits_on: [S-49, S-56, S-128]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -12941,6 +12998,14 @@ records:
       and the gauge's firmware is a stated property of this deferred function, not an owner-accepted residual. What the
       kit then does (the modules shut down, SHORE_INHIBIT asserted, the pack in its gauge's shutdown, MASTER WARN and an
       e-paper message first; gas also holds the charge) is SC-31's, stated in CONOPS section 4e.
+    history: >-
+      Corrected on 1 October 2026 under the owner's relayed instruction on the independent review's finding L3-R02
+      (v2/docs/records/l3am/REVIEW-AS-RECEIVED.md, v2/docs/records/l3am/apply_l3am_r02.py): the acceptance read "the
+      hydrogen half of the battery-bay sensing is met once S-49 names its part", a component selection standing in for
+      the detection and shutdown, and gave its VOC half no repeatable stimulus or bounded way to set its level. The
+      statement, its scope and its verification method and phases are unchanged; S-49 now closes the part's selection
+      only, the levels, stimuli and covered states are allocated to layer 4 (S-128), and the physical test stays
+      downstream (PROTOTYPE).
 
   - id: SPD-005
     kind: superseded
@@ -15353,6 +15418,14 @@ records:
           byte-identical, its DC rows unchanged; none of the places this record's evidence names in this document is
           among the changed ones. This entry does not re-read the rest of this record's argument; rebound to
           1b881dc0d897bea6. This entry changes no result.
+      - >-
+          v2/docs/handover/DEFINITION-STATUS.md re-read at the layer 3 amendment (MESHSAT-1357, 1 October 2026;
+          v2/docs/records/l3am/apply_l3am_r01.py, 1b881dc0d897bea6 to e8f9b415e39f855b): the change inserts 2 lines and
+          removes none, one paragraph after the rows the draft proposes, labelling the solar-assisted figures of row
+          DC-L3-M1 and of the draft's passage S03 (finding L3-R01); the section of CONOPS's current circuit values, the
+          only section of this page the s122 verdicts read, is byte-identical, its DC rows unchanged; none of the places
+          this record's evidence names in this document is among the changed ones. This entry does not re-read the rest
+          of this record's argument; rebound to e8f9b415e39f855b. This entry changes no result.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
@@ -15366,7 +15439,7 @@ records:
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@c9f7394594201045"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761"
-      - "v2/docs/handover/DEFINITION-STATUS.md@1b881dc0d897bea6"
+      - "v2/docs/handover/DEFINITION-STATUS.md@e8f9b415e39f855b"
       - "v2/docs/feasibility/EMCON.md@c8eb306265110076"
       - "v2/docs/ASSEMBLY.md@942d562edd128759"
     release_effect: BLOCKER

@@ -35,6 +35,7 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 import sys
 import zipfile
 
@@ -381,26 +382,144 @@ def dispositions(req, dec, data):
     return out
 
 
-def acceptance_ok(req, data):
+# ------------------------------------------------------------------------------------------------ the acceptance's binding
+# L3-R04 of the independent review the owner relayed on 1 October 2026 (v2/docs/records/l3am/REVIEW-AS-RECEIVED.md): the
+# acceptance was checked as metadata (a 40-hex revision, its authority, its evidence held), so a revision that is no
+# commit, or a registry changed after the acceptance, kept it valid. An acceptance now carries a content manifest and
+# holds only while the revision it names is a commit of this repository that holds exactly that content and the tree
+# still holds it. What the manifest hashes, and what it leaves out on purpose:
+#   requirements       the requirements baseline of pcb_requirements.yaml: the needs and every record's baseline fields
+#                      (BASE_FIELDS, the fields whose change section 6 lists as a change to the baseline, with
+#                      obligation and objective_profile), in canonical JSON. Readings, evidence, bindings, notes, history,
+#                      rulings and open items are left out: they move without a review of the baseline, and later layers
+#                      add readings to the same records.
+#   owner_brief        OWNER-INSTRUCTION-2026-09-30.md, the file's bytes (the current owner brief and the rulings quoted).
+#   change_record      DEFINITION-CHANGE-RECORD-L3.md, the file's bytes (the governing definition changes, D-38).
+#   acceptance_policy  l3r2.yaml as parsed (the gate's inputs, the status levels and their definitions), in canonical
+#                      JSON WITHOUT baseline_acceptance and baseline_acceptance_history, so that the record never hashes
+#                      itself, and without the renderer's own in-memory keys (a leading underscore).
+# Anything else (other records, boards, layer 4 files) is not in the manifest and leaves the acceptance valid.
+REGISTRY_REL = "v2/ecad/tools/pcb_requirements.yaml"
+BRIEF_REL = "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"
+RECORD_REL = "v2/docs/handover/layer3/DEFINITION-CHANGE-RECORD-L3.md"
+DATA_REL = "v2/docs/handover/layer3/l3r2.yaml"
+POLICY_EXCLUDE = ("baseline_acceptance", "baseline_acceptance_history")
+BASELINE_KEYS = BASE_FIELDS + ("obligation", "objective_profile")
+MANIFEST = (("requirements", REGISTRY_REL, "baseline"), ("owner_brief", BRIEF_REL, "file"),
+            ("change_record", RECORD_REL, "file"), ("acceptance_policy", DATA_REL, "policy"))
+_AT = {}
+
+
+def _canon(obj):
+    return hashlib.sha256(json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(",", ":"),
+                                     default=str).encode("utf-8")).hexdigest()
+
+
+def requirements_digest(req):
+    """sha256 of the requirements baseline (the needs and every record's baseline fields), canonical JSON."""
+    return _canon({"needs": [{"id": n.get("id"), "statement": p(n.get("statement"))} for n in req.get("needs") or []],
+                   "records": {str(r.get("id")): {k: r.get(k) for k in BASELINE_KEYS} for r in req.get("records") or []}})
+
+
+def policy_digest(data):
+    """sha256 of l3r2.yaml as parsed, without the acceptance record, its history and in-memory keys, canonical JSON."""
+    return _canon({k: v for k, v in data.items() if k not in POLICY_EXCLUDE and not str(k).startswith("_")})
+
+
+def _manifest_of(req, data, blob):
+    out = {}
+    for key, path, scope in MANIFEST:
+        if scope == "baseline": d = requirements_digest(req)
+        elif scope == "policy": d = policy_digest(data)
+        else: d = hashlib.sha256(blob(path)).hexdigest()
+        out[key] = {"path": path, "scope": scope, "sha256": d}
+    return out
+
+
+def content_manifest(req, data, root=None):
+    """The manifest of the content as it stands: `req` and `data` as given (parsed), the two files read under `root`."""
+    return _manifest_of(req, data, lambda path: open(os.path.join(root or ROOT, path), "rb").read())
+
+
+def _yaml_load(b):
+    return yaml.load(b, Loader=getattr(yaml, "CSafeLoader", yaml.SafeLoader))
+
+
+def git_commit(rev):
+    """True when `rev` is a commit of this repository, False when git answers no, None when git cannot answer."""
+    try:
+        r = subprocess.run(["git", "-C", ROOT, "cat-file", "-e", "%s^{commit}" % rev], capture_output=True, timeout=30)
+        if r.returncode == 0: return True
+        q = subprocess.run(["git", "-C", ROOT, "rev-parse", "--git-dir"], capture_output=True, timeout=30)
+    except Exception:
+        return None
+    return False if q.returncode == 0 else None
+
+
+def manifest_at(rev):
+    """(manifest, '') of the content the commit `rev` holds, or (None, why). A commit's content never changes, so the
+    answer is kept for the process."""
+    if rev in _AT: return _AT[rev]
+    blobs = {}
+    for _k, path, _s in MANIFEST:
+        r = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (rev, path)], capture_output=True, timeout=60)
+        if r.returncode != 0:
+            _AT[rev] = (None, "the commit %s holds no %s" % (rev[:12], path)); return _AT[rev]
+        blobs[path] = r.stdout
+    try:
+        req, data = _yaml_load(blobs[REGISTRY_REL]), _yaml_load(blobs[DATA_REL])
+        _AT[rev] = (_manifest_of(req, data, lambda path: blobs[path]), "")
+    except Exception as e:
+        _AT[rev] = (None, "the commit %s's files do not parse (%s)" % (rev[:12], str(e)[:80]))
+    return _AT[rev]
+
+
+def manifest_differs(a, b):
+    """The manifest keys whose entries differ between two manifests (a missing entry differs)."""
+    return [k for k, _p, _s in MANIFEST if (a or {}).get(k) != (b or {}).get(k)]
+
+
+def acceptance_ok(req, data, root=None):
     """(True, '') when the layer 3 baseline's acceptance is filed as its own record (the owner's clarification quoted in
     D-39: "Record final baseline acceptance against the verified revision after those gates pass; the ruling itself is
-    not evidence that they passed"): a ruling decides `layer3_baseline`, and l3r2.yaml's `baseline_acceptance` is
-    {revision: a 40-hex commit, authorised_by: that ruling, evidence: [paths], accepted_on}, every evidence path held in
-    this tree, the newest independent_check ACCEPTED and listed in its evidence. The ruling alone is not acceptance."""
+    not evidence that they passed") and binds the content it accepted (L3-R04): a ruling decides `layer3_baseline`, and
+    l3r2.yaml's `baseline_acceptance` is {revision, authorised_by: that ruling, evidence: [paths], accepted_on, manifest}
+    with the revision a commit of this repository, every evidence path held in this tree, the newest independent_check
+    ACCEPTED and listed in its evidence, and a manifest (content_manifest) equal to the content that commit holds and to
+    the content as it stands (`req` and `data` as given, the files under `root`). A record without a manifest (filed
+    before 1 October 2026) binds no content: it is kept as history and does not validate. The ruling alone is not
+    acceptance."""
     rid = [r["id"] for r in req["owner_rulings"] if str(r.get("decides")) == "layer3_baseline"]
     if not rid: return False, "no ruling decides the layer 3 baseline"
     ba = data.get("baseline_acceptance")
     if not ba: return False, "%s authorises it conditionally; l3r2.yaml's baseline_acceptance is not filed" % rid[0]
-    if not re.fullmatch(r"[0-9a-f]{40}", str(ba.get("revision") or "")): return False, "its revision is not a 40-hex commit"
+    rev = str(ba.get("revision") or "")
+    if not re.fullmatch(r"[0-9a-f]{40}", rev): return False, "its revision is not a 40-hex commit"
     if str(ba.get("authorised_by")) not in rid: return False, "it is not authorised by %s" % rid[0]
     if not ba.get("accepted_on"): return False, "it carries no date"
     ev = [str(x) for x in ba.get("evidence") or []]
     if not ev: return False, "it names no evidence"
-    miss = [x for x in ev if not os.path.exists(os.path.join(ROOT, x))]
+    miss = [x for x in ev if not os.path.exists(os.path.join(root or ROOT, x))]
     if miss: return False, "its evidence %s is not in this tree" % ", ".join(miss)
     chks = handover_checks(data)
     if not chks or str(chks[-1].get("verdict")).upper() != "ACCEPTED": return False, "the newest independent check is not ACCEPTED"
     if str(chks[-1]["record"]) not in ev: return False, "its evidence does not list the newest independent check"
+    man = ba.get("manifest")
+    if not man:
+        return False, ("it carries no content manifest (filed before the binding of 1 October 2026, L3-R04), so it binds "
+                       "no content: it is history, not an acceptance of what the tree now holds")
+    wrong = [k for k, path, scope in MANIFEST if not isinstance(man.get(k), dict) or man[k].get("path") != path
+             or man[k].get("scope") != scope or not re.fullmatch(r"[0-9a-f]{64}", str(man[k].get("sha256")))]
+    if wrong: return False, "its manifest does not name %s as the binding defines them" % ", ".join(wrong)
+    c = git_commit(rev)
+    if c is None: return False, "its revision `%s` cannot be verified here: git cannot answer in this tree" % rev[:8]
+    if not c: return False, "its revision `%s` is not a commit of this repository" % rev[:8]
+    at, why = manifest_at(rev)
+    if at is None: return False, "its revision `%s` does not hold the reviewed content: %s" % (rev[:8], why)
+    d = manifest_differs(man, at)
+    if d: return False, "its revision `%s` does not hold the content its manifest names (%s)" % (rev[:8], ", ".join(d))
+    d = manifest_differs(man, content_manifest(req, data, root))
+    if d: return False, "the reviewed content changed since the acceptance at `%s` (%s)" % (rev[:8], ", ".join(d))
     return True, ""
 
 
@@ -421,6 +540,33 @@ def status_level(req, dec, data, h3, g=None):
     return None, ("None of the three levels holds yet. **%s** needs %s; **%s** needs %s; **%s** is %s." % (
         lv["DRAFTED"]["name"], lv["DRAFTED"]["holds_when"], lv["VALIDATED"]["name"], lv["VALIDATED"]["holds_when"],
         lv["COMPLIANT"]["name"], lv["COMPLIANT"]["holds_when"]))
+
+
+def acceptance_lines(req, data):
+    """The acceptance record's state (acceptance_ok, with its reason) and the independent review's findings as l3r2.yaml's
+    review_findings states them (L3-R01 to L3-R05; the status wording kept apart from design compliance and fab-ready)."""
+    L = []
+    rf = data.get("review_findings")
+    if rf:
+        fp = os.path.join(ROOT, str(rf["review"]))
+        if not os.path.isfile(fp) or sha16_bytes(open(fp, "rb").read()) != str(rf["sha16"]):
+            raise RenderError("l3r2.yaml's review_findings names %s at %s, which this tree does not hold" % (rf["review"], rf["sha16"]))
+        L += [p("**The independent review the owner relayed on %s** (`%s`, sha256/16 `%s`; findings %s): **%s.** It is kept "
+                "apart from \"design compliance verified\" and \"fab-ready\", neither of which holds. The findings' "
+                "dispositions: `%s` (state %s)." % (rf["relayed_on_text"], rf["review"], rf["sha16"], ", ".join(rf["findings"]),
+                                                    rf["status"], rf["dispositions"], rf["state"])), ""]
+    ba = data.get("baseline_acceptance")
+    if ba:
+        ok, why = acceptance_ok(req, data)
+        hist = data.get("baseline_acceptance_history") or []
+        L += [p("**The acceptance record** (`baseline_acceptance`, bound to the reviewed content since L3-R04): filed at "
+                "`%s` (%s, %s); %s.%s" % (str(ba.get("revision"))[:8], ba.get("authorised_by"), ba.get("accepted_on"),
+                                          "it holds: its revision is a commit of this repository holding the content its "
+                                          "manifest names, and the tree still holds it" if ok else "it does not validate: " + why,
+                                          (" Earlier records kept as history (`baseline_acceptance_history`): %s." % ", ".join(
+                                              "`%s` (%s)" % (str(h.get("revision"))[:8], h.get("accepted_on")) for h in hist))
+                                          if hist else "")), ""]
+    return L
 
 
 def row_state(row, dec, data):
@@ -645,6 +791,121 @@ def facts_lines(data, req):
     return L + [""]
 
 
+# ------------------------------------------------------------------------------------------------ the solar-assisted case
+# L3-R01 of the independent review the owner relayed on 1 October 2026, with the finding carried from the engineering
+# collaborator's layer 4 check of 30 September 2026 (v2/docs/records/l3am/DISPOSITIONS.md): every solar-assisted figure
+# of layer 3 (where the kit stops, the energy unserved, the September windows of 864) was computed with proposal P-03's
+# array, which retained REQ-016 (D-34) does not admit, and the unserved energy is understated. l3r2.yaml's solar_case is
+# the machine-readable case; it is verified here against the files it names and against runtime.out by exact keys, and
+# every section of a page that states such a figure carries its label (solar_guard refuses a page that does not).
+SOLAR_MARKS = re.compile(r"05 UTC|\bof 864\b|\bunserved\b")
+SOLAR_KEY = "proposal P-03's array"
+
+
+def _quote_in(rec, quote, lines=None):
+    fp = os.path.join(ROOT, str(rec["record"]))
+    if not os.path.isfile(fp) or sha16_bytes(open(fp, "rb").read()) != str(rec["sha16"]):
+        raise RenderError("l3r2.yaml's solar_case names %s at %s, which this tree does not hold" % (rec["record"], rec["sha16"]))
+    text = open(fp, encoding="utf-8").read()
+    if lines:
+        a, b = [int(x) for x in str(lines).split(" to ")]
+        text = "\n".join(text.split("\n")[a - 1:b])
+    if p(quote) not in p(text):
+        raise RenderError("l3r2.yaml's solar_case quotes %r, which %s does not read%s" % (
+            quote[:60], rec["record"], (" at lines %s" % lines) if lines else ""))
+
+
+def solar_case(data, req=None):
+    """l3r2.yaml's solar_case, verified: the array and stage quote at its lines of runtime.out and the voltage window's in
+    ARRAY.md, each file at its sha256/16; the figures equal to runtime.out's by exact keys (runtime_reader.py: the stop hour
+    of the drawn and corrected cases at 48 and 72 hours, their TYP unserved energy and their windows); and, with a
+    registry that carries the case's ruling (D-34 deciding row L3-OD3 unchanged, the retained configuration), the retained
+    window quoted from REQ-016's
+    statement. A dry run on a registry without that ruling (a prepared chain on the pre-closure registry, which may restate
+    REQ-016) is not the retained configuration, and its REQ-016 is not read against the case. None when not filed."""
+    sc = data.get("solar_case")
+    if not sc: return None
+    src = sc["source"]
+    _quote_in(src, sc["short"], src.get("lines"))
+    _quote_in(sc["window_source"], sc["window_source"]["quote"])
+    sys.path.insert(0, os.path.join(ROOT, "v2", "docs", "records", "l3r5"))
+    import runtime_reader as RR
+    txt = open(os.path.join(ROOT, str(src["record"])), encoding="utf-8").read()
+    sol, cov = RR.solar(txt), RR.coverage(txt)
+    F = sc["figures"]
+    got = {"drawn_unserved_48_72": " / ".join(sol[(h, "DRAWN", "TYP")]["unserved"] for h in ("48", "72")),
+           "corrected_unserved_48_72": " / ".join(sol[(h, "NOM", "TYP")]["unserved"] for h in ("48", "72")),
+           "windows": "%s of 864" % "/".join(sorted({x for h in ("48", "72") for c in ("DRAWN", "NOM") for x in cov[(h, c)]}))}
+    stops = {sol[(h, c, "TYP")]["stops"] for h in ("48", "72") for c in ("DRAWN", "NOM")}
+    if stops != {"23/11"} or "are both 05 UTC, the first night's end" not in p(txt):
+        raise RenderError("runtime.out does not stop the kit at 05 UTC in every drawn and corrected case")
+    got["stops"] = "05 UTC of the first night"
+    bad = [k for k in ("stops", "drawn_unserved_48_72", "corrected_unserved_48_72", "windows") if str(F.get(k)) != got[k]]
+    if bad: raise RenderError("l3r2.yaml's solar_case figures %s differ from runtime.out's (%s)" % (
+        ", ".join(bad), "; ".join("%s %s" % (k, got[k]) for k in bad)))
+    if req is not None and any(r["id"] == sc["retained"]["ruling"] and str(r.get("decides")) == str(sc["retained"]["decides"])
+                               for r in req.get("owner_rulings") or []):
+        r16 = next((r for r in req["records"] if r["id"] == sc["retained"]["record"]), None)
+        miss = [q for q in sc["retained"]["quotes"] if r16 is None or p(q) not in p(r16.get("statement"))]
+        if miss: raise RenderError("REQ-016's statement does not read %s" % "; ".join(repr(q) for q in miss))
+    return sc
+
+
+def solar_label(sc):
+    """The short label every solar-assisted figure carries where it is stated."""
+    return ("historical results of %s (%s), which retained %s (%s) does not admit, their unserved energy understated; "
+            "the retained window's result awaits layer 4 task %s, its record `%s` pending" % (
+                SOLAR_KEY, sc["short"], sc["retained"]["record"], sc["retained"]["ruling"], sc["pending"]["task"],
+                sc["pending"]["record"]))
+
+
+def solar_caption(data, what="in this section"):
+    """One line under a heading whose section states solar-assisted figures; nothing when solar_case is not filed."""
+    sc = solar_case(data)
+    if not sc: return []
+    return [p("*The solar-assisted figures %s (where the kit stops, the energy unserved, the September windows of 864) "
+              "are %s; the case is `REQUIREMENTS-L3-R2.md` section 2.3.*" % (what, solar_label(sc))), ""]
+
+
+def solar_case_lines(data, req):
+    """Section 2.3's case: what the figures were computed with, the case as l3r2.yaml holds it, and what is pending."""
+    sc = solar_case(data, req)
+    if not sc: return []
+    src = sc["source"]
+    L = [p("**What the solar-assisted figures above were computed with (%s of the independent review the owner relayed "
+           "on %s, `%s`).** %s: %s, not of the retained configuration. Retained %s (%s) does not admit that array: %s. "
+           "The energy unserved is understated as well: %s The result on the retained window awaits layer 4 task %s, its "
+           "record `%s` (pending, not read here). %s" % (
+               sc["finding"], sc["relayed_on_text"], sc["record"],
+               "The stop at %s, %s Wh unserved as drawn and %s Wh on the hypothetical corrected path at 48 / 72 hours, "
+               "and %s past September windows are historical results of %s" % (
+                   sc["figures"]["stops"], sc["figures"]["drawn_unserved_48_72"], sc["figures"]["corrected_unserved_48_72"],
+                   sc["figures"]["windows"], SOLAR_KEY),
+               "%s, read from [%s](%s) lines %s (sha256/16 `%s`): \"%s\"" % (
+                   sc["id"], os.path.basename(src["record"]),
+                   os.path.relpath(os.path.join(ROOT, src["record"]), HERE).replace(os.sep, "/"), src["lines"],
+                   src["sha16"], sc["short"]),
+               sc["retained"]["record"], sc["retained"]["ruling"], "; ".join(sc["retained"]["quotes"]),
+               p(sc["understated"]), sc["pending"]["task"], sc["pending"]["record"], p(sc["conclusion"]))), "",
+         "| The case %s (%s) | As computed |" % (sc["id"], sc["state"]), "|---|---|"]
+    for k, name in (("pack", "Pack"), ("load_profile", "Load profile"), ("array", "Array"),
+                    ("voltage_window", "Voltage window"), ("stage_limit", "Stage limit")):
+        L.append("| %s | %s |" % (name, cell(sc[k])))
+    L.append("| The retained configuration, %s (%s) | %s |" % (sc["retained"]["record"], sc["retained"]["ruling"],
+                                                              cell("; ".join(sc["retained"]["quotes"]))))
+    return L + [""]
+
+
+def solar_guard(name, body, data):
+    """Refuse a page on which a section (heading to heading) states a solar-assisted figure without the label."""
+    if not data.get("solar_case"): return
+    parts = re.split(r"(?m)^(?=#{1,6} )", body)
+    for s in parts:
+        if SOLAR_MARKS.search(s) and SOLAR_KEY not in s:
+            raise RenderError("%s: the section %r states solar-assisted figures without the label of l3r2.yaml's "
+                              "solar_case" % (name, s.split("\n", 1)[0][:80]))
+
+
 def basis_figures_lines(data):
     """The figures fill_l3r2_from_basis.py read from the filed basis by exact keys; HELD while it has not run."""
     B = data.get("basis_figures")
@@ -656,7 +917,7 @@ def basis_figures_lines(data):
     L = [p("**The checked energy basis's figures**, read by exact keys from %s (sha256/16 `%s`) and %s (`%s`) of the "
            "basis at `%s`. Model results; nothing is measured." % (lk(src["energy_basis"]), src["energy_basis"]["sha16"],
                                                                    lk(src["weather_basis"]), src["weather_basis"]["sha16"],
-                                                                   src.get("tip"))), "",
+                                                                   src.get("tip"))), ""] + solar_caption(data, "of these tables") + [
          "SC-37's reference plane (40/0), both starts: the lowest store of both packs in Wh (the base's, the lid's), or the "
          "energy unserved; COMB/EACH as the basis defines them (energy_basis.out 5):", "",
          "| Lid | Case | TYP | COMB/EACH | WAB | COMB/EACH |", "|---|---|---|---|---|---|"]
@@ -720,7 +981,7 @@ def four_cases_lines(data):
            "`%s`). SC-37's reference day at 40/0, both starts: the lowest store of both packs in Wh (the base's, the lid's), or "
            "the energy unserved. No figure here is demonstrated capability." % (
                os.path.basename(src["path"]), os.path.relpath(os.path.join(ROOT, src["path"]), HERE).replace(os.sep, "/"),
-               src["sha16"], src.get("tip"))), "",
+               src["sha16"], src.get("tip"))), ""] + solar_caption(data, "of these tables") + [
          "| Case | Inputs | Lid | TYP | COMB/EACH | WAB | COMB/EACH |", "|---|---|---|---|---|---|---|"]
     for k, v in F["reference_day"].items():
         case, inp, lid = k.split("|")
@@ -772,11 +1033,15 @@ def closure_lines(req, data, dec):
         for it in items:
             rs = "; ".join("%s (%s)" % (x, ", ".join(byid[x].get("verification_method") or [])) for x in it["records"] if x in byid)
             L.append("| %s | %s | %s | %s |" % (kind, cell(it["item"]), rs or "every other record of section 5", cell(it["source"])))
-    L += ["", "### 2.3 The modelled baseline, reported as the owner asked (D-28)", "", p("**%s**" % data["baseline_statement"]), "",
-          "### 2.4 Design risks, assigned", "", "| Id | Risk | Layer | Evidence | Detail |", "|---|---|---|---|---|"]
+    sc = solar_case(data, req)
+    lab = (" *Its solar-assisted figures are %s; the case follows.*" % solar_label(sc)) if sc else ""
+    L += ["", "### 2.3 The modelled baseline, reported as the owner asked (D-28)", "", p("**%s**%s" % (data["baseline_statement"], lab)), ""]
+    L += solar_case_lines(data, req)
+    L += ["### 2.4 Design risks, assigned", "", "| Id | Risk | Layer | Evidence | Detail |", "|---|---|---|---|---|"]
     for dr in data["design_risks"]:
+        extra = (" The solar-assisted figures are %s (section 2.3)." % solar_label(sc)) if sc and dr["id"] in sc["design_risks"] else ""
         L.append("| %s | %s | %s | %s | %s |" % (dr["id"], cell(dr["title"]), cell(dr["layer"]),
-                                                 "; ".join("`%s`" % e for e in dr["evidence"]), cell(dr["text"])))
+                                                 "; ".join("`%s`" % e for e in dr["evidence"]), cell(dr["text"] + extra)))
     cp = data["cell_provenance"]
     L += ["", "### 2.5 CFL-017 by mode: the layer 4 obligation (D-29)", "",
           p("**Who chose the Samsung 35E.** %s %s" % (p(cp["finding"]), p(cp["binds"]))), ""]
@@ -827,8 +1092,10 @@ def decision_closure_lines(req, data, dec):
     cc = data.get("closure_cycle")
     if not cc: return []
     return (["## The closure (%s): the owner decision left" % ", ".join(cc["rulings"][:2]), "", p(cc["owner_decision_left"]), "",
-             p("**The modelled baseline (D-28).** " + data["baseline_statement"]), ""]
-            + consolidated_lines(data) + ["", "## The rows, answered or closed", ""])
+             p("**The modelled baseline (D-28).** " + data["baseline_statement"] + (
+                 (" *Its solar-assisted figures are %s; the case is `REQUIREMENTS-L3-R2.md` section 2.3.*" %
+                  solar_label(solar_case(data))) if solar_case(data) else "")), ""]
+            + consolidated_lines(data) + ["", "## The rows, answered or closed", ""] + solar_caption(data, "of the rows below"))
 
 
 def consolidated_lines(data):
@@ -852,7 +1119,7 @@ def runtime_lines(data):
     if not T:
         return L + [p("HELD: the runtime comparison of stream l3batt is not filled into this table yet (D-27)."), ""]
     s = T["store"]
-    L += [p(T["note"]), "",
+    L += [p(T["note"]), ""] + solar_caption(data, "of this row") + [
           p("**The studied store with HF and the tablet kept** (Option A(i)'s base 4S6P and lid 4S9P of the 35E, itself row "
             "L3-OD1's): %s Wh usable aged at +20 C (%s Wh at -10 C), %s h on battery alone (%s h at -10 C); D-06's 4S3P alone "
             "%s h, and with one or two external smart packs %s or %s h. With the sun the store at the start holds %s Wh (base "
@@ -964,7 +1231,7 @@ def page_decisions(req, data, dec):
             "sufficient solution and reads CONDITIONAL or INCONCLUSIVE until the electrical check (l3r2.yaml's "
             "power_path_check) says otherwise; (c) a HYPOTHETICAL corrected power path, whose figures are feasibility "
             "figures, never demonstrated capability, and rest on the requirements and corrections listed after this table."
-            % derated_text(data)), "",
+            % derated_text(data)), ""] + solar_caption(data, "of this table") + [
           "| Row | (a) The circuit as drawn: R11 10 mOhm | (a') Derated variant: U3 at %s | (b) The resistor-only proposal: R11 6.2 mOhm | (c) A hypothetical corrected power path |" % derated_text(data),
           "|---|---|---|---|---|"]
     F = data.get("four_cases")
@@ -1054,7 +1321,7 @@ def review_lines(req, data, dec):
     fb = data.get("feasibility_basis") or {}
     fok, fwhy = basis_ok(data, "feasibility_basis")
     chk = filed(data, "feasibility_checks") or []
-    L += ["", p(sentence), "", "## The acceptance definitions (D-26)", "",
+    L += ["", p(sentence), ""] + acceptance_lines(req, data) + ["## The acceptance definitions (D-26)", "",
           p("Each is written into the prepared restatement named, so that the requirement an answer records states its "
             "own pass line. Definitions 1b and 3, and feasibility items FI-02 and FI-06, rest on the bounded feasibility "
             "record [%s](%s) of stream l3feas at `%s`: %s. Its checks, filed byte for byte: %s." % (
@@ -1089,6 +1356,7 @@ def review_lines(req, data, dec):
                     "none" if dec else "none, since no row is decided"),
                 (" " + p(data["feasibility_closure_note"])) if data.get("feasibility_closure_note") and
                 all(settled(d["id"], dec, data) for d in data["decisions"]) else "")), "",
+          ] + solar_caption(data, "of the items below") + [
           "| Item | Recorded when | What | The owner's target | The studied candidate | Disposition | Blocks | Now |",
           "|---|---|---|---|---|---|---|---|"]
     rec_fi = {i: rid for i, rid, k in feasibility(req, dec, data)}
@@ -1271,15 +1539,17 @@ def page_spec(req, data, dec, h3, root):
           "| Condition | Met | State |", "|---|---|---|"]
     for name, ok, st in g:
         L.append("| %s | %s | %s |" % (name, "MET" if ok else "NOT MET", cell(st)))
-    L += ["", p("**Status of L3-R2: %s.**" % ("COMPLETE" if all(x[1] for x in g) else
+    rf = data.get("review_findings") or {}
+    L += ["", p("**Status of L3-R2: %s.**" % ((("COMPLETE on the conditions above; %s" % rf["status"]) if
+                                                str(rf.get("state")) == "OPEN" else "COMPLETE") if all(x[1] for x in g) else
                                                "IN_PROGRESS (the conditions above that read NOT MET)")), "",
           p("**Status level (the owner's reviewer's three, D-26):** " + status_level(req, dec, data, h3, g)[1] +
             " The fifth condition joins the gate with D-26: a recorded target may have a FAIL or INCONCLUSIVE "
-            "candidate, but not an owed disposition."), ""] + closure_lines(req, data, dec)
+            "candidate, but not an owed disposition."), ""] + acceptance_lines(req, data) + closure_lines(req, data, dec)
     # target
     L += ["## 3. The target configuration and %s" % ("the owner's answers" if all(settled(d["id"], dec, data) for d in data["decisions"])
                                                      else "the pending owner decisions"), "",
-          ] + target_lines(req, data, dec, g[0][1], rows_heading(data)) + facts_lines(data, req) + [
+          ] + solar_caption(data, "in this section") + target_lines(req, data, dec, g[0][1], rows_heading(data)) + facts_lines(data, req) + [
           "| Row | Question | Options | Recommendation | State |", "|---|---|---|---|---|"]
     for d in data["decisions"]:
         L.append("| %s | %s | %s | %s | %s |" % (d["id"], cell(d["question"]), option_cell(d, dec), cell(recommendation(d, dec)),
@@ -1436,6 +1706,10 @@ def spec_record(r, byid, rulings, choices, lay, tp, pend, changed, dec, data):
         else:
             L.append("- **Pending owner decision %s:** %s; the restatement it applies is prepared, not applied." % (row, st))
     if rid in changed: L.append("- **Changed since H3:** %s (section 6)." % ", ".join(changed[rid]))
+    # a record whose text states a solar-assisted figure (a feasibility record a prepared answer writes, say) carries the
+    # case it was computed with, as every section of a current view does (L3-R01)
+    if data.get("solar_case") and SOLAR_MARKS.search("\n".join(L)):
+        L.append("- **Solar-assisted figures:** %s; the case is section 2.3." % solar_label(solar_case(data)))
     L.append("")
     return L
 
@@ -1487,6 +1761,7 @@ def render_all(root=ROOT, registry=None):
         for d in DASHES:
             if d in body: raise RenderError("%s would carry a dash character" % name)
         check_links(name, body)
+        solar_guard(name, body, data)
     return out
 
 
