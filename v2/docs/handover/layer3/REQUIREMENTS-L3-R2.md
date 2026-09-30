@@ -3,7 +3,7 @@
 
 # MeshSat field kit V2: requirements, second issue of layer 3 (L3-R2)
 
-MESHSAT-1357, issue L3-R2 of 30 September 2026, generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml` (sha256/16 `bd30f8b5fa50b1ab`, registry state `BASELINED at a54b793b`) and `v2/docs/handover/layer3/l3r2.yaml`. **Prototype design: no V2 board has been fabricated, ordered, assembled or powered, and no kit has been field deployed.** Every statement below is a requirement, what the kit is to do, and every acceptance is how success will be judged; a planned test is never marked passed, and a reading is a desk reading of named files unless it says otherwise. The original H3 release (`v2/release/handover/H3.zip`, registry BASELINED at a54b793b) is preserved and unchanged.
+MESHSAT-1357, issue L3-R2 of 30 September 2026, generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml` (sha256/16 `3b4be2361a8f1acb`, registry state `BASELINED at a54b793b`) and `v2/docs/handover/layer3/l3r2.yaml`. **Prototype design: no V2 board has been fabricated, ordered, assembled or powered, and no kit has been field deployed.** Every statement below is a requirement, what the kit is to do, and every acceptance is how success will be judged; a planned test is never marked passed, and a reading is a desk reading of named files unless it says otherwise. The original H3 release (`v2/release/handover/H3.zip`, registry BASELINED at a54b793b) is preserved and unchanged.
 
 ## 1. How to read this document
 
@@ -15,26 +15,99 @@ MESHSAT-1357, issue L3-R2 of 30 September 2026, generated from the requirements 
 
 ## 2. Status of this issue and the completion gate
 
-Layer 3 reaches completion only when all four conditions of the owner's instruction of 30 September 2026 (D-21) hold. Completed circuits and physical tests belong to later verification stages and are not conditions here.
+Layer 3 reaches completion only when every condition below holds: the four of the owner's instruction of 30 September 2026 (D-21) and the fifth of D-26. Completed circuits and physical tests belong to later verification stages and are not conditions here (D-28, D-29).
 
 | Condition | Met | State |
 |---|---|---|
-| Target unambiguous | NOT MET | rows L3-OD1 to L3-OD4 and L3-OD6 decided on a combination the evidence covers, the energy basis filed: decided none; coherence holds; energy basis filed with an accepted check; the power path at Option A(i)'s currents (D-24): filed with an accepted check |
-| Requirement-changing owner decisions resolved | NOT MET | 0 of 6 rows decided; rows held (D-22, D-23): none |
-| Contradictions and requirement-level TBDs closed | NOT MET | open conflicts: CFL-017; resolved conflicts reading FAIL on a requirement-level source: none (downstream, listed in l3r2.yaml: CFL-006); records reading TBD: none; unclassified TBD mentions: none; the definition documents re-issued and approved by a ruling that decides it (L3-C26): no (not filed); the session's scripts run on the set (L3-C28): yes |
-| An independent check accepts the handover | MET | v2/docs/records/l3r2/checks/check-l3r2-1.md (NOT_ACCEPTED); v2/docs/records/l3r2/checks/check-l3r2-2.md (NOT_ACCEPTED); v2/docs/records/l3r2/checks/check-l3r2-3.md (NOT_ACCEPTED); v2/docs/records/l3r2/checks/check-l3r2-4.md (NOT_ACCEPTED); v2/docs/records/l3r2/checks/check-l3r2-5.md (ACCEPTED, the handover as prepared at commit 028531e4, the six owner decisions pending) |
+| Target unambiguous | MET | rows L3-OD7, L3-OD1 to L3-OD4 and L3-OD6 settled (decided, row L3-OD2 not applicable after a reject, or a row closed as layer 4 architecture by the closure) on a combination whose requirements do not contradict, the energy basis filed: decided L3-OD7 objective-48-72 (D-32), L3-OD2 both-kept (D-33), L3-OD3 unchanged (D-34), L3-OD4 reject (D-35), L3-OD5 layer4-obligation (D-36), L3-OD6 mean-day (D-37); L3-OD1 closed as layer 4 architecture; contradictions none; energy basis filed with an accepted check; the power path at Option A(i)'s currents (D-24): filed with an accepted check |
+| Requirement-changing owner decisions resolved | MET | 6 of 6 rows decided (row L3-OD1 closed as layer 4 architecture, not an owner decision at layer 3); rows held (D-22 to D-24, D-27): none |
+| Contradictions and requirement-level TBDs closed | NOT MET | open conflicts: none; resolved conflicts reading FAIL on a requirement-level source: none (downstream, listed in l3r2.yaml: CFL-006); records reading TBD: none; unclassified TBD mentions: none; the definition documents re-issued and approved by a ruling that decides it (L3-C26): no (not filed); the session's scripts run on the set (L3-C28): yes |
+| An independent check accepts the handover | NOT MET | v2/docs/records/l3r2/checks/check-l3r2-1.md (NOT_ACCEPTED); v2/docs/records/l3r2/checks/check-l3r2-2.md (NOT_ACCEPTED); v2/docs/records/l3r2/checks/check-l3r2-3.md (NOT_ACCEPTED); v2/docs/records/l3r2/checks/check-l3r2-4.md (NOT_ACCEPTED); v2/docs/records/l3r2/checks/check-l3r2-5.md (ACCEPTED, the handover as prepared at commit 028531e4, the six owner decisions pending); the last acceptance covers the handover with the decisions pending, and rows are now decided: the decided issue is checked again |
+| Every recorded target has a feasibility disposition (D-26) | MET | a credible route, inconclusive with the evidence named, or no route with a quantified trade-off returned to the owner, for each decided row's option and each feasibility item its answer records (L3-C54): L3-OD7 `objective-48-72` NO_ROUTE; L3-OD2 `both-kept` NO_ROUTE; L3-OD3 `unchanged` INCONCLUSIVE; L3-OD4 `reject` NONE; L3-OD5 `layer4-obligation` INCONCLUSIVE; L3-OD6 `mean-day` CONDITIONAL; feasibility items recorded: none; owed: none; the feasibility record they rest on: bound to its checked tip |
 
 **Status of L3-R2: IN_PROGRESS (the conditions above that read NOT MET).**
 
-## 3. The target configuration and the pending owner decisions
+**Status level (the owner's reviewer's three, D-26):** **requirements drafted / decisions recorded** holds (the intended product and its acceptance criteria are explicit); **requirements baseline validated and accepted** does not yet: the completion gate's five conditions MET, the definition re-issue approved (L3-C26) and the owner's acceptance of the baseline recorded. The fifth condition joins the gate with D-26: a recorded target may have a FAIL or INCONCLUSIVE candidate, but not an owed disposition.
 
-**Approved today.** What the owner has approved to date (handover H3's accepted requirements, then D-19 and D-20 of 28 September and D-21, D-22, D-23 and D-24 of 30 September 2026): the V2 kit in the Peli 1450 of the current moulding (the case never changes, ruling of 7 September 2026), with the device set of V2-SPEC.md; prototype 1 accepted on D-01's named core (messaging over Iridium, 5G, LoRa and APRS; the three-slot failover fabric; pack, vehicle and solar charging; hardware EMCON; ZEROIZE; pack safety; service and programming access), everything else designed, fitted where copper exists and reported NOT_YET_TESTED; one 4S3P pack of the Samsung INR18650-35E, about 145 Wh, in the east pocket (D-06); a solar input window of at most 25 V open circuit at the panel's coldest, held at 17.6 V, at most 100 W into board E's stage (REQ-016); mission M1, 72 hours in PS-IDLE-SPEC (42.8 W at the pack terminals) on the kit's own store and its solar input, from a full aged store, lid open and the kit shaded, judged on SC-37's reference day (the September mean day at Leiden on the optimally inclined plane, 40 degrees facing south), M1 carrying no season (CONOPS section 3); the 72 hours preserved by D-20 and approved by D-21. Battery and solar are mandatory for M1; an external DC source is optional and never M1's basis (D-20, D-21, D-22). The approved functions include the lid's QMX HF set (appendix 32.50 item 16a) and its tablet bracket (item 16d), both deferred from prototype 1's acceptance by D-01, not withdrawn.
+### 2.1 The owner's closure (D-28, D-29, D-30)
 
-**Why it is not yet unambiguous.** The approved target is not self-consistent, and that is why layer 3 is not complete: on D-06's one pack M1 fails at desk (REQ-072 FAIL; the pack allows at most 9.1 W for M1 against 42.8 W, energy record section 9d, a limit no bus voltage raises), and REQ-016's 100 W window and REQ-072 cannot both hold. D-20 excludes accepting the shortfall and D-21 preserves the mission, so only owner decisions that change the store (D-06), move an approved lid item (D-01's deferrals) and set the solar input (REQ-016) make the target unambiguous: rows L3-OD1 to L3-OD4. Row L3-OD5 closes the one other open contradiction, CFL-017, and row L3-OD6 sets the weather M1 is judged in, which D-22 asks to be stated exactly. Rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 were held by the owner (D-22, D-23, D-24) until the corrected, independently checked energy comparison and power path were filed; both are, at fnd/l3plane cd8720a1 with the accepted check CHECK-5, and the rows now show the checked figures.
+The owner's clarifications of 30 September 2026 close layer 3: D-28 on the energy and runtime requirement, D-29 on CFL-017, D-30 on the decision register (`OWNER-INSTRUCTION-2026-09-30.md` quotes each word for word), applied by `v2/docs/records/l3r5/apply_l3r5_closure.py`. **The owner decision left:** None. CFL-017 was the only candidate for a contradiction between mandatory owner requirements; on D-29 it is a collision between the requirements and the current cell, an engineering selection (cell_provenance), so the requirements are coherent and FEA-008 carries the obligation to layer 4. What remains the owner's is an approval, not a decision: the definition re-issue's change record (L3-C26) and his acceptance of the baseline, after the independent check of this closure (L3-C27).
 
-**What the rows propose (AWAITING the owner; their figures are the checked basis's).** What the rows propose, as far as the session recommends before the energy basis: Option A(i)'s store (row L3-OD1), a base pack of 4S6P across both base pockets under board P and a lid pack under its own protection board, 4S20P or 4S21P in all as the lid is 4S14P or 4S15P (964.8 or 1013.0 Wh nominal: strings of 48.24 Wh at the cell's 3,350 mAh minimum and 14.4 V, the arithmetic of D-06's own 144.7 Wh for 3 strings); the solar input of row L3-OD3, four 100 W panels in two series pairs (400 Wp at STC) into a 200 W stage, the panels and their folding stand carried outside the case; and D-02a's margins read as the kit's without its cells (row L3-OD5). Where the displaced lid item goes and whether its function stays in the kit (row L3-OD2), and M1's deployment conditions (row L3-OD4), are recommended only from the checked energy basis and the relocation facts. On the circuit as drawn, and in its derated variant, no lid meets M1; the resistor-only proposal is inconclusive; every Option A(i) figure that meets M1 is hypothetical, on a corrected power path whose findings are open engineering tasks (fact CF-02, finding F-01). M1's weather basis (row L3-OD6) is a quantified choice between the average-day benchmark and historical-coverage targets, its figures held for the checked basis. REQ-072 stays FAIL until the design is drawn, reviewed and tested: a model result is never a pass.
+### 2.2 Mandatory requirements and the design objective (D-28)
 
-**Feasibility finding F-01 for the owner: On the power path as drawn no lid meets M1; M1 is met only on a hypothetical corrected power path, and there at the worst established inputs only conditionally.** The checked basis (fnd/l3plane cd8720a1, CHECK-5) states board A's front end in four cases on SC-37's reference day ([three_cases.out 2](../../records/l3plane/three_cases.out)): as drawn, every lid fails M1 by 326.6 to 522.4 Wh at nominal inputs; the derated variant (U3 at 4.00 A) fixes current-limit coordination only and every lid fails by 369.9 to 566.0 Wh; the resistor-only proposal is inconclusive, between a lower bound where every lid fails by 622.1 to 1079.9 Wh and the corrected path; on the corrected path, HYPOTHETICAL until its findings A-1 to C-9 are closed, the 4S14P and 4S15P lids meet at nominal inputs. At the worst established inputs (WE: the charge bus at its steady-state minimum of 19.146 V, U3 at 6.1 A, CONDITIONAL on three efficiencies no maker document gives for this circuit) the 4S15P lid meets in both array builds on the combined line and fails in WAB at U3's 6.0 A bracket and at the bus's 18.782 V endurance bracket (0.6 and 3.7 Wh unserved); the 4S14P lid fails in WAB (10.8 Wh); the 4S9P lid fails in every case ([energy_basis.out 5](../../records/l3plane/energy_basis.out)). In September's actual weather of 2005 to 2020 the corrected path carries at most 22.0 percent of 864 past windows at WE; every coverage target of 50 percent or more needs more cells than any established arrangement holds ([weather_basis.out A and B](../../records/l3plane/weather_basis.out)). No figure is demonstrated capability; everything is modelled and nothing is built.
+The registry marks every record's obligation: of its 77 requirements, REQ-072 is the design objective (`obligation: OBJECTIVE`, judged under its stated profile, never a release gate) and the rest are mandatory. Each carries its acceptance and verification method in section 5; a design objective's shortfall is reported as a design risk with its layer.
+
+| Obligation | What | Records (verification) | Source |
+|---|---|---|---|
+| mandatory | Battery and solar both present and working | REQ-014 (CALCULATION, PROTOTYPE_MEASUREMENT); REQ-016 (CALCULATION, PROTOTYPE_MEASUREMENT); REQ-046 (SCRIPT, PROTOTYPE_MEASUREMENT); REQ-075 (MANUAL_REVIEW, PROTOTYPE_MEASUREMENT) | D-20, D-21, D-28 ('Battery and solar remain required') |
+| mandatory | The energy store inside the Peli 1450; no external battery | REQ-014 (CALCULATION, PROTOTYPE_MEASUREMENT) | D-28 ('NO external battery. Battery storage stays inside the Peli 1450.') |
+| mandatory | HF and the tablet functions kept: the QMX HF set in its lid tray and the tablet bracket, both in the lid | REQ-002 (MANUAL_REVIEW, PROTOTYPE_MEASUREMENT); REQ-011 (MANUAL_REVIEW, PROTOTYPE_MEASUREMENT) | D-28 ('Keep both HF and tablet functions'); appendix 32.50 items 16a and 16d; D-01 defers them from prototype 1's acceptance, not from the kit |
+| mandatory | The tablet's charging, a capability within the outlet's electrical and protection limits: optional, reducing endurance, no daily schedule required | REQ-011 (MANUAL_REVIEW, PROTOTYPE_MEASUREMENT); REQ-017 (SCRIPT, PROTOTYPE_MEASUREMENT) | D-28; D-12 (the outlet's 45 W contract) |
+| mandatory | Every other approved requirement unchanged, REQ-016's approved solar window among them | REQ-016 (CALCULATION, PROTOTYPE_MEASUREMENT) | D-28 ('Preserve other approved requirements') |
+| design objective | Mission M1's runtime: 48 to 72 hours under the stated operating profile, not a mandatory minimum | REQ-072 (CALCULATION, PROTOTYPE_MEASUREMENT) | D-28 ('Treat 48-72 hours as the baseline design target under an explicitly stated operating profile') |
+
+### 2.3 The modelled baseline, reported as the owner asked (D-28)
+
+**The present candidates miss the 48 to 72 hour objective even without tablet charging. With HF and the tablet kept, battery-only from full: D-06's ruled 4S3P pack runs 2.52 h at +20 C (1.04 h at -10 C); the studied in-case candidate, Option A(i)'s base 4S6P and a 4S9P lid (544.4 Wh usable aged at +20 C), runs 12.71 h (5.24 h at -10 C). Solar-assisted on SC-37's mean day, one plane 40 degrees facing south, TYP: D-06's pack does not carry a night (it allows at most 9.1 W for M1 against 42.8 W); the studied candidate stops at 05 UTC of the first night, hour 23 from a 06 UTC start and hour 11 from an 18 UTC start, as drawn (266.7 Wh unserved at 48 h, 494.7 Wh at 72 h) and on the hypothetical corrected path alike (102.2 Wh at 48 h, 165.7 Wh at 72 h, NOM), in 0 of 864 past September windows. The corrected path is not implemented. Optional tablet charging and HF listening reduce endurance further, which the owner accepts (D-28). This is design risk DR-01, assigned to layer 4; REQ-072 reads FAIL at desk.**
+
+### 2.4 Design risks, assigned
+
+| Id | Risk | Layer | Evidence | Detail |
+|---|---|---|---|---|
+| DR-01 | The 48 to 72 hour objective missed by the present candidates, even without tablet charging | 4: the internal energy architecture inside the Peli 1450 with both lid functions kept (the store's arrangement, Option A(i) and D-06 as proposals P-01 and P-03) | `v2/docs/records/l3batt/runtime.out`; `v2/docs/records/energy/ENERGY-RECONCILIATION.md` | See the baseline statement: stops at 05 UTC of the first night, 0 of 864 windows; no in-case upgrade found (SHORTLIST.md 3); no external battery (D-28). |
+| DR-02 | Board A's power path as drawn fails; the corrected path is hypothetical, not implemented | 4 (the architecture decisions), then 8 (the circuit) and 9 (verification) | `v2/docs/records/r11dep/R11-DEPENDENCY.md`; `v2/docs/records/l3plane/ENERGY-BASIS.md` | Existing defects A-1 and A-2, the resistor-only proposal's B-1 to B-5, the missing evidence C-1 to C-9; closure items L3-C34, L3-C35 and L3-C37 to L3-C53. |
+| DR-03 | The USB-C outlet's current-sense shunt R138 (10 mOhm, twice the maker's recommended 5 mOhm) trips at 1.92 to 2.26 A, below the 3 A contracts | 4 (board A's outlet), then 8 | `v2/docs/records/l3r5/checks/l3batt-check-3/CHECK-3.md` | CHECK-3 of stream l3batt, minor 1, a board A finding: REQ-017's 45 W is not deliverable as drawn on the 5 and 9 V contracts; TI's 5 mOhm puts the trip at 3.8 to 4.5 A. The tablet's charging capability (REQ-011) is judged at the outlet within this protection limit. |
+| DR-04 | The solar interface's obligations as drawn: the stage's input power not controlled (O-2) and the panel's revision not pinned (O-1) | 4, 6 and 8 | `v2/docs/records/l3feas/L3-FEASIBILITY.md` | L3-FEASIBILITY.md section 3b (checked by CHECK-2 of stream l3feas); O-3 to O-7 as they apply to the array REQ-016's window takes. |
+| DR-05 | Three undocumented efficiencies (C-8) and U3's input-current minimum (C-7) | 6 (the makers' figures) and 9 (measured at bring-up) | `v2/docs/records/l3feas/L3-FEASIBILITY.md` | Every solar-assisted figure on the corrected path is CONDITIONAL on them. |
+| DR-06 | The current cell and thermal design against the temperature requirements with the pack fitted (CFL-017's modes) | 4: component selection and thermal design | `v2/vendor/battery/samsung-35e-orbtronic.pdf`; `v2/vendor/battery/samsung-35e-akkuzentrum.pdf`; `v2/docs/OPERATING-ENVELOPE.md` | FEA-008, obligations LO-01a to LO-01h below. |
+| DR-07 | Option A(i)'s lid pack consequences: the open kit's stability on its stay, the 100 degree stay and the sealed lid crossing | 4 with P-01 and P-05 | `v2/docs/records/a1mech/README.md` | REQ-078 as prepared goes with the lid pack; with both lid items kept the model stands on 4.8 degrees and tips above 10.8 N at the tablet's far edge on level ground (a1mech README section 5). |
+
+### 2.5 CFL-017 by mode: the layer 4 obligation (D-29)
+
+**Who chose the Samsung 35E.** The Samsung 35E is named in the owner's pack rulings as the pack's content, and D-06 was ruled at the session's recommendation; no ruling states the cell model as a product requirement, and D-06's subject is the pack's size and runtime. The session reads the model as the current engineering selection that D-06's pack carries, as D-29 itself words it ('the currently selected Samsung 35E cells'), so CFL-017 is a collision between the requirements and the current component, and the requirements are coherent. D-06 binds the pack's size and place (one 4S3P of about 145 Wh in the east pocket); the model it names is the design's current selection. A layer 4 change of cell within that size is a component selection, which restates D-06's parenthesis and needs the owner's approval of the spend. Were the owner to hold that D-06 mandates the 35E itself, CFL-017 would be a conflict between D-06 and D-02a (with REQ-074), and the one decision would be which of the two yields.
+
+- `v2/ecad/tools/pcb_requirements.yaml`, owner ruling D-06, titled 'pack size and runtime', ruled 26 September 2026: "One 4S3P 18650 pack (Samsung INR18650-35E) of about 145 Wh, shrink-wrapped in the east pocket, subject to the case measurement (D-08)."
+- `v2/docs/MESHSAT-709-geometry-appendix.md`, the owner's rulings of 25 and 26 September 2026 (the foundation batch): "Each question was asked one at a time with its options, the reasoning behind each and a recommendation, and each was ruled at the recommendation."
+- `v2/docs/MESHSAT-709-geometry-appendix.md`, the same table, D-06: "one 4S3P 18650 pack (Samsung 35E) of about 145 Wh, shrink-wrapped in the east pocket, subject to the case measurement"
+- `v2/docs/MESHSAT-709-geometry-appendix.md`, section 32.18, 4 September 2026, an earlier architecture: "Ruling on the pack (owner, 4 Sep night): the welded pack becomes twelve cells, 1S12P, 42 Ah (12 x Samsung 35E)"
+- `v2/docs/MESHSAT-709-geometry-appendix.md`, section 32.27, 4 September 2026, the battery module research: "Cell, Samsung INR18650-35E (specification Ver. 1.1)"
+- `v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md`, D-29: "the currently selected Samsung 35E cells"
+
+Mode by mode against the project's maker sheets as filed, Samsung INR18650-35E Ver. 1.1 (`v2/vendor/battery/samsung-35e-orbtronic.pdf`, clauses 3.12 and 3.13, at the cell surface) and Version 1.0 (`v2/vendor/battery/samsung-35e-akkuzentrum.pdf`, clauses 3.15 and 3.16, ambient), storage at the ex-factory 30 percent charge, with `OPERATING-ENVELOPE.md` section 3's inside-air rise. No temperature requirement is reduced, read as the kit's without its cells or reclassified (D-29); each collision is a layer 4 obligation of FEA-008, and no alternative cell or thermal solution is shown.
+
+| Id | Mode | Requirement | Temperature basis | Batteries fitted | Duration | Cell limit (maker's sheet) | Cell temperature | Collision (gap) | Feasibility uncertainty | Closure criterion |
+|---|---|---|---|---|---|---|---|---|---|---|
+| LO-01a | Battery-powered operation at the envelope's hot end | use at -20 to +40 C ambient, operating to specification (D-02, OPERATING-ENVELOPE.md section 4) | ambient | yes | a mission | discharge -10 to +60 C at the cell surface (Ver. 1.1); ambient (Version 1.0) | the inside air in the heat stage after BANK-R1: +59.2 C lid open and +62.1 C lid closed on the independent bound's lowest conductance, +47.8 C and +55.6 C on 32.53's | up to 2.1 K lid closed on the independent bound; none on 32.53's conductance | the enclosure's conductance is bounded, not measured (FEA-004 carries the hot stop inside the envelope) | E3-A and E3-L run with the pack fitted at +40 C ambient: every cell surface at or below the governing sheet's discharge limit and the +59 C abort, thermocouples on every cell |
+| LO-01b | Battery-powered operation at the envelope's cold end | use down to -20 C ambient once warm (D-02d: a cold start from the pack is out of scope below about -10 C cell temperature) | ambient | yes | a mission | discharge floor -10 C at the cell surface | -20 C plus the running rise, at least 13.16 K at PS-IDLE-SPEC | none: the rise of the running states keeps the cells above -10 C; the cold start is out of scope by D-02d | the rise is bounded, not measured | E4's operation at -20 C with the pack fitted, every cell surface at or above -10 C once warm |
+| LO-01c | Charging in use | charging only inside the cells' window (REQ-046), held off outside it; D-02b's accepted consequence: with three loaded modules charging holds off above about +25 C ambient | cell surface | yes | a mission | charge 0 to +45 C at the cell surface (Ver. 1.1); ambient (Version 1.0) | the charge window is reached at ambients of -17.8 to +34.6 C, by state, on the independent bound | none: no requirement asks the kit to charge outside the window; its reach lowers the objective's solar-assisted endurance on hot days (DR-01) | the reach moves with the measured conductance | the charge-start threshold T3 in E3-A's pass line, read on the gauge's cell temperatures |
+| LO-01d | The +55 C operating margin | D-02a: +55 C operation, a qualification margin, survive and recover (TEST-PLAN E3-O, 4 hours) | ambient | yes: D-02a sets no cell exemption, and the deployed kit carries its pack | 4 hours | discharge +60 C at the cell surface | the inside air +61.6 to +74.2 C in the heat stage lid open (OPERATING-ENVELOPE.md section 8) | 1.6 to 14.2 K | no held maker's sheet rates discharge above +60 C (SHORTLIST.md: the P45B and the 50E to +60 C, the M50LT to +55 C), and the rise is unmeasured | E3-O run with the pack fitted: every cell surface at or below its governing sheet's discharge limit for the 4 hours and the kit recovering to specification, by a cell rated above the measured cell temperature or a thermal design holding the cells below the limit; neither is shown |
+| LO-01e | TEST-PLAN E5's humid dwell | 10 cycles of 24 hours at 95 percent relative humidity, 30 to 60 C, deployed and logging on shore or vehicle input, a qualification margin (SC-03) | ambient | yes: E5-A, the acceptance at +40 C, runs with the pack fitted, and the margin is the same kit | 10 cycles of 24 hours | +60 C at the cell surface (discharge) and +60 C in storage for one month | the chamber air at +60 C plus the running rise, at least 6.63 K (the heat stage lid open on 32.53's conductance); on an input the pack carries no current and sits at the inside air | at least 6.63 K | as LO-01d; the humid exposure's effect on the cells is not in the sheet | E5 run with the pack fitted: every cell surface at or below its governing sheet's limit through the dwells and the pack recovering its capacity |
+| LO-01f | The +71 C storage margin | D-02a: +71 C storage, survive and recover (TEST-PLAN E3-S, 24 hours) | ambient, equal to the cells' (no self-heating) | yes: the stored kit keeps its pack (SC-19); D-02a sets no cell exemption | 24 hours | storage -20 to +60 C for one month (Ver. 1.1), 0 to +60 C (Version 1.0), at 30 percent charge | +71 C | 11 K | no held maker's sheet rates storage above +60 C, and a passive stored kit cannot hold its cells below the ambient | a cell whose maker's sheet rates storage at +71 C or above for at least 24 hours at the stored charge, shown by E3-S with the pack fitted and the pack recovering its capacity |
+| LO-01g | The -33 C storage margin | D-02a: -33 C storage, survive and recover (TEST-PLAN E4-S, 24 hours) | ambient, equal to the cells' | yes (SC-19) | 24 hours | storage floor -20 C (Ver. 1.1), 0 C (Version 1.0) | -33 C | 13 K (Ver. 1.1); 33 K (Version 1.0) | no held maker's sheet rates storage at -33 C | a cell whose maker's sheet rates storage at -33 C or below for at least 24 hours, shown by E4-S with the pack fitted and the pack recovering its capacity |
+| LO-01h | Storage inside the envelope | storage at -20 to +45 C for up to three months and -20 to +25 C for up to a year, pack fitted (D-02, REQ-025) | ambient, equal to the cells' | yes (REQ-025) | three months; one year | 3 months -20 to +45 C and 1 year -20 to +25 C (Ver. 1.1); 3 months 0 to 45 C and 1 year 0 to 23 C (Version 1.0), at 30 percent charge | -20 to +45 C | none on Ver. 1.1; on Version 1.0, 20 K at the cold end and 2 K at the one-year upper limit | which revision the bought cells follow | the maker's sheet of the revision bought rates storage at -20 C for three months and at +25 C for a year (Ver. 1.1 does), checked at procurement |
+
+### 2.6 Completion statuses, kept apart (D-28, D-29)
+
+| What | Status |
+|---|---|
+| The requirements baseline (layer 3) | DRAFTED, decisions recorded: every row settled (row L3-OD1 as layer 4 architecture), mandatory requirements and the design objective distinguishable, the design risks assigned. Not yet validated and accepted: the independent check of this closure (L3-C27), the owner's approval of the definition re-issue (L3-C26) and his acceptance of the baseline. |
+| The circuit | NOT VERIFIED: board A's power path as drawn fails (DR-02) and the outlet's trip sits below its contracts (DR-03); the corrections are hypothetical, not implemented. |
+| The PCB | NOT VERIFIED: the layouts are held until layers 4 to 8 settle the energy architecture and its corrections; no V2 board has been fabricated. |
+| The thermal design | NOT VERIFIED: the inside air's rise is bounded, not measured (FEA-004); the cells against the temperature requirements are layer 4 obligations (FEA-008). |
+| The runtime | NOT MET at desk against the 48 to 72 hour objective (DR-01); nothing measured. |
+| The product | NOT BUILT: prototype design; nothing is bought, built, powered or measured. |
+
+## 3. The target configuration and the owner's answers
+
+**The decided target.** What the owner has approved to date (handover H3's accepted requirements, then D-19 and D-20 of 28 September and D-21, D-22, D-23 and D-24 of 30 September 2026): the V2 kit in the Peli 1450 of the current moulding (the case never changes, ruling of 7 September 2026), with the device set of V2-SPEC.md, as the owner's rulings on the rows set it:
+
+- L3-OD7, `objective-48-72` (D-32): Row L3-OD7 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided by the owner's clarification D-28: M1's runtime is 48 to 72 hours, the baseline design target under the explicitly stated operating profile of REQ-072, not a mandatory minimum; no external battery; HF and the tablet functions kept, HF available and not receiving in the profile, listening an additional use; the tablet's charging optional, consuming the kit's energy and reducing endurance, which the owner accepts. Neither Option A nor Option B of the runtime comparison is adopted, and no external store is recommended (D-28).
+- L3-OD1, closed as layer 4 architecture: At layer 3 the requirement is the store inside the Peli 1450, battery and solar required and no external battery (D-28; REQ-014). The store's size and arrangement is layer 4 architecture: D-06's one 4S3P pack stands as ruled, and Option A(i) (a base 4S6P and a lid pack) is carried to layer 4 as an architecture proposal (P-01), which changes D-06 and needs the owner's ruling there. It is not a layer 3 blocker.
+- L3-OD2, `both-kept` (D-33): Row L3-OD2 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided by the owner's clarification D-28: both approved lid items stay, the QMX HF set in its lid tray (appendix 32.50 item 16a) and the tablet bracket (item 16d); no function leaves the kit. The lid pack Option A(i) would add is layer 4 architecture (row L3-OD1).
+- L3-OD3, `unchanged` (D-34): Row L3-OD3 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided by the owner's clarification D-28: REQ-016's approved solar window stays unchanged; the 2S2P array into a 200 W stage is a layer 4 architecture proposal with Option A(i), which would need the owner's ruling to change REQ-016.
+- L3-OD4, `reject` (D-35): Row L3-OD4 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided by the owner's clarification D-28: no deployment condition is stated at layer 3; the single benchmark plane is a modelling assumption of REQ-072's profile, not an operating restriction, and the open kit's stability goes with Option A(i)'s lid pack to layer 4.
+- L3-OD5, `layer4-obligation` (D-36): Row L3-OD5 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided by the owner's clarification D-29: judged mode by mode against the project's maker sheets, CFL-017's collisions are between the requirements (D-02, D-02a, TEST-PLAN E5, with the pack fitted) and the current cell, the Samsung 35E, an engineering selection D-06's pack carries, with the current thermal design; the requirements are coherent. CFL-017 closes as a requirements conflict, FEA-008 carries the component-selection and thermal-design obligation to layer 4 mode by mode, and no temperature requirement is reduced, read as the kit's without its cells or reclassified.
+- L3-OD6, `mean-day` (D-37): Row L3-OD6 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided by the owner's clarification D-28: REQ-072 is judged under SC-37's reference mean day at Leiden on one plane, 40 degrees facing south, in the typical array build (TYP), the worst array build (WAB) a sensitivity; a benchmark, not a promise under every combination of loads and weather; no coverage target.
 
 **Facts confirmed by the check of the energy basis** ([energy-basis-check-1/CHECK-1.md](../../records/l3r2/checks/energy-basis-check-1/CHECK-1.md), of stream l3plane's ENERGY-BASIS.md, branch fnd/l3plane at 6a283b25, NOT_ACCEPTED; [energy-basis-check-2/CHECK-2.md](../../records/l3r2/checks/energy-basis-check-2/CHECK-2.md), of stream l3plane's ENERGY-BASIS.md second issue, branch fnd/l3plane at ec415c09, ACCEPTED; [energy-basis-check-3/CHECK-3.md](../../records/l3r2/checks/energy-basis-check-3/CHECK-3.md), of stream r11dep's first issue and CHECK-2's minors, branch fnd/l3plane at 4e9fa869, NOT_ACCEPTED; [energy-basis-check-4/CHECK-4.md](../../records/l3r2/checks/energy-basis-check-4/CHECK-4.md), of the energy basis's fourth issue and r11dep's second issue, branch fnd/l3plane at 06b8ecea, ACCEPTED; [energy-basis-check-5/CHECK-5.md](../../records/l3r2/checks/energy-basis-check-5/CHECK-5.md), of stream l3plane's ENERGY-BASIS.md, branch fnd/l3plane at cd8720a1ab6eed891b1afd8b5df3b8ceedf36c0f, ACCEPTED). Used now; none is a figure of the cases the check did not accept, and every M1 energy figure on these pages is the checked basis's, bound to the tip `cd8720a1ab6e` its accepted check names (`v2/docs/records/l3r2/checks/energy-basis-check-5/CHECK-5.md`); S-127 is closed (commit 9493847c).
 
@@ -45,12 +118,13 @@ Layer 3 reaches completion only when all four conditions of the owner's instruct
 
 | Row | Question | Options | Recommendation | State |
 |---|---|---|---|---|
-| L3-OD1 | Adopt Option A(i)'s store for mission M1: two separately protected packs of the ruled cell, a base 4S6P across both base pockets (replacing D-06's one 4S3P in the east pocket) and a lid pack with its own protection board, charger and gauge? The solar input is row L3-OD3's. | `approve`: Approve Option A(i)'s store (a base 4S6P and a lid pack). **CANNOT MEET M1 on the circuit as drawn, nor in its derated variant, with any lid; INCONCLUSIVE on the resistor-only proposal; M1 is met only on the HYPOTHETICAL corrected power path, at nominal inputs with the 4S14P or 4S15P lid, and at the worst established inputs only conditionally (the four front-end cases ([three_cases.out 2](../../records/l3plane/three_cases.out), [ENERGY-BASIS.md section 0](../../records/l3plane/ENERGY-BASIS.md)))**<br>`reject`: Keep D-06's one 4S3P pack; REQ-072 stays FAIL and an open conflict is recorded. **CANNOT MEET M1: the one pack allows at most 9.1 W for M1 against PS-IDLE-SPEC's 42.8 W, at any bus voltage ([ENERGY-RECONCILIATION.md section 9d](../../records/energy/ENERGY-RECONCILIATION.md))** | Approve, as the only store inside the fixed case under which M1 is not already shown to fail; not as a feasible design. On the power path as drawn, and in its derated variant, M1 fails on every lid; on the resistor-only proposal it is inconclusive; it is met only on a hypothetical corrected power path whose sixteen findings (A-1 to C-9) are open engineering tasks, and there, at the worst established inputs, only conditionally on three efficiencies no maker document gives for this circuit. The reasons beyond the energy balance: D-20 excludes accepting the shortfall and D-21 preserves M1, so keeping D-06's one pack leaves a conflict no engineering work can close, while approving the store leaves one that engineering work can close or refute; and the approval buys, builds or authorises nothing. REQ-072 stays FAIL until the corrected path is built and tested. | AWAITING |
-| L3-OD2 | Which approved lid item leaves the lid for the lid pack, where does it go, and does its function stay in the kit: the QMX HF set out of the kit, the QMX carried outside the case with HF kept, the tablet bracket out with the tablet's use kept, or both kept on a smaller lid pack? | `qmx-out`: The QMX HF set leaves the kit and HF with it, the owner's explicit removal of an approved function; an 8 inch tablet bracket stays; the lid pack is 4S15P. **MEETS M1 ONLY on the hypothetical corrected path: at the worst established inputs (WE, CONDITIONAL) on the combined line in both builds (74.3 / 19.5 Wh), NOT at U3's 6.0 A bracket or the 18.782 V endurance bracket in the WAB build (0.6 and 3.7 Wh unserved; [energy_basis.out 5](../../records/l3plane/energy_basis.out))**<br>`qmx-outside`: The QMX HF set is carried outside the case, HF kept by a sealed lead through the case's back wall, which changes the ruled connector plate (it carries no such lead today) and the sealed case, an enclosure constraint the owner decides (D-23); an 8 inch tablet bracket stays; the lid pack is 4S15P. **NO LOCATION ESTABLISHED: outside the case the QMX needs a lead through the back wall, which the ruled connector plate does not carry (fact CF-04); HF leaves the kit unless a place is found; its energy is qmx-out's** (also held until l3r2.yaml `relocation_facts` filed)<br>`tablet-out`: The tablet bracket leaves the lid and its function (a tablet held in the lid) leaves the kit; the tablet's use stays outside the case over the kit's WiFi and the USB-C outlet; the QMX stays; the lid pack is 4S14P. **CANNOT MEET M1 at the worst established inputs in the WAB build, even on the hypothetical corrected path (NOT MET, 10.8 Wh unserved); in TYP it meets with the lid pack empty (44.0 Wh, each-pack line fails); it meets at nominal inputs ([energy_basis.out 5](../../records/l3plane/energy_basis.out))**<br>`both-kept`: Both approved lid items stay; the lid pack is 4S9P. **CANNOT MEET M1 in any case, the hypothetical corrected path included (NOT MET by at least 165.7 Wh; 0 of 864 past windows; [ENERGY-BASIS.md section 1 and energy_basis.out 5](../../records/l3plane/ENERGY-BASIS.md))** | No option is recommended as feasible, and which approved function leaves is the owner's (D-21, D-22). The session recommends against `both-kept` (it cannot meet M1 in any case) and `qmx-outside` (no place for the QMX exists). Between `qmx-out` and `tablet-out` the figures pull both ways: energy on the hypothetical path favours the QMX out (the one lid carrying the worst established inputs in both builds; the tablet-out lid fails in WAB by 10.8 Wh), while the function and the deployment favour the tablet out (it keeps HF, the kit's only HF bearer, keeps the tablet's use outside the case, and lets the open kit stand on 3 degrees and an 11.7 N push instead of 1 degree and a 6.1 N press). The choice is coupled with row L3-OD6's build: with the WAB build only the QMX out (or outside, with a place) carries M1's benchmark, so the tablet out is then an open conflict; with the TYP build both lids carry it. Neither is shown feasible on the power path as drawn. | AWAITING |
-| L3-OD3 | Set the solar input for Option A(i): a 200 W stage fed by four 100 W panels in two series pairs (2S2P, 400 Wp), with REQ-016 restated to that array? | `2s2p`: A 200 W stage and 400 Wp in 2S2P; REQ-016 restated (recommended)<br>`1s4p`: A 200 W stage and 400 Wp in 1S4P; REQ-016 restated. **NOT SHOWN: no M1 figure is computed for it (no plane grid is run for 1S4P); on the circuit as drawn it inherits row L3-OD1's CANNOT MEET**<br>`keep`: REQ-016's 100 W window kept, with the array the checked energy basis gives. **NOT SHOWN: no M1 figure is computed for it (the basis runs no array through a 100 W stage); on the circuit as drawn it inherits row L3-OD1's CANNOT MEET** | Approve 2S2P: at most 200 W into the stage; the array's open circuit at most 51.3 V at -20 C cells (54.1 V at -40 C); every part on the panel entry rated above 56.3 V; the array held at 34.3 V (33.0 to 35.6 V); F2 20 A at 56.3 V DC or more with an interrupting rating at or above the kit-side fault current; J_SOLAR, the wall pair and the lead 20 A or more; the panels and their folding stand carried outside the case, beside it ([a1solar ARRAY.md sections 2 to 5](../../records/a1solar/ARRAY.md)). | AWAITING |
-| L3-OD4 | Adopt M1's deployment conditions, as proposed narrower operating conditions: the array's plane band for the 2S2P array and the lid chosen, and the open kit's ground slope toward the hinge and an operator push it must stand (a new core requirement)? | `adopt`: Adopt the open kit's stability for the chosen lid, with the push the owner sets; no plane band. **NO PLANE BAND EXISTS at the supply range's low end with U3's 6.0 A bracket, for any lid on either line ([ENERGY-BASIS.md section 1](../../records/l3plane/ENERGY-BASIS.md)); adopt states only the open kit's stability**<br>`reject`: State no deployment condition | Adopt the open kit's stability (a new core requirement, REQ-078 when applied): at most 1 degree toward the hinge with the QMX out of the lid or 3 degrees with the tablet out, restated when the feet are measured (T-A1-3), and the operator push the owner sets. The reason is not energy: a lid pack of 4.8 to 5.5 kg on a 100 degree stay tips the open kit under a 6.1 N press (QMX out) or an 11.7 N push (tablet out), a condition of use whatever the energy. No plane band is proposed: none exists at the supply range's low end with U3's 6.0 A bracket, and the band of 30 to 50 degrees facing south to 15 degrees west holds only at U3's 6.1 A, on the combined line, conditionally on three undocumented efficiencies. M1 stays judged on SC-37's reference plane. | AWAITING |
-| L3-OD5 | CFL-017: do D-02a's +55 C operating, +71 C and -33 C storage and E5's +60 C humid margins apply to the kit without its cells, with the cells held inside their maker's limits? | `reading-c`: The margins apply to the kit without its cells (recommended)<br>`measure`: Keep CFL-017 open until the heat experiment<br>`cells`: Select cells rated above +60 C | Yes (route (c)). | AWAITING |
-| L3-OD6 | M1's weather basis, a quantified choice: is mission M1 judged on the average-day benchmark (SC-37's reference mean day, as REQ-072 states it today), or must it also meet a historical-coverage target, a stated share of the real 72-hour September windows at SC-37's site and plane; and in which array build case, TYP or WAB (defined below the table)? | `mean-day`: The average-day benchmark, its limitations stated in REQ-072, in the build case the owner names. **In the WAB build its store (4S15P lid, 84 cells) is carried by the QMX-out lid only, and in the TYP build (4S13P, 76 cells) by the tablet-out and QMX-out lids; the 4S9P lid CANNOT MEET it in either ([weather_basis.out B](../../records/l3plane/weather_basis.out))**<br>`coverage`: A historical-coverage target: M1 met in at least the owner's share of the 864 September windows of 2005 to 2020 (the basis's illustrative 50, 80 and 95 percent), in the build case the owner names. **CANNOT MEET M1 inside the Peli 1450: every target needs 128 to 228 cells, against at most 84 in any established arrangement ([weather_basis.out B](../../records/l3plane/weather_basis.out))** | The weather basis: the average-day benchmark, stated as a design benchmark and not a weather promise, with its limitation beside it, stated for each lid a build admits, on the corrected path (case (c), HYPOTHETICAL) at the worst established inputs (input set WE, the line 'windows kept: no STOP' of [weather_basis.out A](../../records/l3plane/weather_basis.out)): the 4S15P lid (QMX out), which both builds admit, carries 190 of the 864 past September windows (22.0 percent) in TYP and 151 (17.5 percent) in WAB; the 4S14P lid (tablet out), which the TYP build also admits, carries 166 (19.2 percent) in TYP and 121 (14.0 percent) in WAB; so 14.0 to 22.0 percent across the two lids, and 13.2 to 21.5 percent on the COMB line the sizing uses (the same table). The benchmark's own TYP store, 4S13P, is smaller than either lid and carries fewer still ([ENERGY-BASIS.md section 8a](../../records/l3plane/ENERGY-BASIS.md)). The reason is capacity and fit, not the energy balance: the case is fixed (ruling of 7 September 2026) and every coverage target needs 128 to 228 cells, 1.52 to 2.71 times the 84 of the largest established store, which no established arrangement holds. The array build is not recommended; it is the owner's, coupled with row L3-OD2: the WAB build (the worst conforming array build) is carried by the QMX-out lid only (84 cells), so with row L3-OD1 approved it removes HF from the kit (REQ-002, REQ-067, REQ-068: the kit's only HF bearer and transmitter), unless `qmx-outside` finds a place; the TYP build is carried by both the 4S14P and the 4S15P lids (76 cells), so it leaves row L3-OD2 open between the tablet out and the QMX out. | AWAITING |
+| L3-OD7 | M1's runtime and its store, answered before rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 (D-27), with HF and the tablet kept: (1) is 72 hours required (Option B) or 48 hours required with 72 desired (Option A)? (2) During M1, is HF available (powered, not receiving: the approved profile) or listening (the receiver on, 1.14 W)? (3) Is an external battery arrangement authorised, joined at VBAT (reopens D-06) or through the DC entry (revisits D-20), or not (M1 recorded as not met with HF and the tablet kept, M-02)? (4) Is the tablet charged during M1 (unquantified until a tablet model is named, SC-45)? | `objective-48-72`: 48 to 72 hours, the baseline design target under the stated operating profile, not a mandatory minimum; no external battery; HF and the tablet kept; optional tablet charging and additional use reduce endurance (the owner's clarification D-28). **The studied candidate: FAIL at desk: the present candidates miss the target's lower end even without tablet charging (design risk DR-01).** With HF and the tablet kept and no tablet charging, the studied in-case store (544.4 Wh usable aged at +20 C) stops the kit at 05 UTC of the first night, after 11 to 23 hours, as drawn (266.7 Wh unserved at 48 h TYP) and on the hypothetical corrected path (102.2 Wh at 48 h NOM TYP) alike, in 0 of 864 past September windows; D-06's ruled pack alone runs 2.52 h on battery ([runtime.out 1 to 4](../../records/l3batt/runtime.out)). *Feasibility disposition: NO_ROUTE.* No in-case route is found (SHORTLIST.md 3) and no external battery is part of the kit (D-28): the shortfall is design risk DR-01, assigned to layer 4 (the internal energy architecture and the power-path corrections); the owner accepted the runtime trade-off (D-28).<br>`72-required`: Option B: 72 hours required, as REQ-072 states it; the figure becomes the owner's in place of the session's SC-21. **The studied candidate: FAIL without an external store (NOT MET: the kit stops at 05 UTC of the first night); CONDITIONAL with one.** With HF and the tablet kept, the studied store (Option A(i)'s base 4S6P and lid 4S9P, 544.4 Wh usable aged at +20 C; itself row L3-OD1's) stops the kit at 05 UTC of the first night, hour 23 from a 06 UTC start and hour 11 from an 18 UTC start, NOT MET in every case, the corrected path included (169.2 Wh unserved at WE TYP), and carries 0 of 864 past September windows. It needs +68.1 Wh usable more at NOM TYP, +116.2 at WE TYP, +117.0 at NOM TYP at the 0.90 bracket and +85.0 to +188.7 with WAB; with the HF receiver on, +94.9 (NOM) and +187.1 (WE) Wh ([runtime.out 2 to 4](../../records/l3batt/runtime.out), [COMPARISON.md 2](../../records/l3batt/COMPARISON.md)). *Feasibility disposition: NO_ROUTE.* No in-case upgrade is found (SHORTLIST.md 3: a 21700 lid holds 24 cells against the 35E's 36, and a 21700 base block does not fit the base pockets); with an authorised external store the route is CONDITIONAL (FI-07), without one M1 is recorded as not met (FI-08).<br>`48-required-72-desired`: Option A: 48 hours required, 72 hours desired. **The studied candidate: FAIL without an external store (NOT MET: the same stop at 05 UTC of the first night); CONDITIONAL with one.** The first night decides: NOT MET at 48 h in every case (104.6 Wh unserved at WE TYP), 0 of 864 windows. It needs +68.1 Wh usable more at NOM TYP, +79.6 at WE TYP, +80.1 at NOM TYP at the 0.90 bracket and +70.9 to +116.3 with WAB; with the HF receiver on, +84.2 (NOM) and +122.2 (WE) Wh. 48 hours saves about 36 Wh only at WE or at the 0.90 bracket, and nothing at NOM TYP ([runtime.out 3](../../records/l3batt/runtime.out), [COMPARISON.md 4](../../records/l3batt/COMPARISON.md)). *Feasibility disposition: NO_ROUTE.* No in-case upgrade is found (SHORTLIST.md 3); with an authorised external store the route is CONDITIONAL (FI-07), without one M1 is recorded as not met (FI-08).<br>**HF during M1** (`--hf`): `available`: powered, not receiving: the approved profile, PS-IDLE-SPEC's 42.8 W with the QMX's USB and HDMI 5 V (0.32 W); `listening`: the receiver on through M1, 1.14 W more (PS-TYP's QMX HF row): the store needed rises to +84.2 / +122.2 Wh at 48 h and +94.9 / +187.1 Wh at 72 h (NOM / WE, TYP)<br>**An external battery arrangement** (`--external`): `authorise-vbat`: a separately protected external pack joined at VBAT through a new wall connector, limited under its 8.25 A trip, with a charge path and the host's SMBus (a PROPOSAL of stream l3batt): it reopens D-06 (EQ-13 route (d)); feasibility item FI-07; `authorise-dc-entry`: the external pack through the 9 to 36 V DC entry: D-20's 'external DC source' (EQ-13 route (b)), which revisits D-20's 'requiring it overnight is not an acceptable substitute'; feasibility item FI-07; `no`: none: the owner's clarification D-28, 'NO external battery'; with the objective (D-28) the shortfall is design risk DR-01, and REQ-072 reads FAIL at desk, visible (D-20)<br>**The tablet charged during M1** (`--tablet-charging`): `no`: the tablet runs on its own battery and the USB-C outlet is off: the approved profile; `yes`: the tablet charged from the USB-C outlet: unquantified until a tablet model is named (SC-45); the outlet's 45 W contract is about 48 W at VBAT (INFERRED), above the whole 42.8 W profile; feasibility item FI-09; `optional`: the owner's clarification D-28: charging is an optional capability within the outlet's electrical and protection limits (REQ-011, REQ-017), which consumes the kit's energy and reduces endurance, accepted; no daily schedule is required, and the 36 Wh a day of stream l3batt's TABLET-BUDGET.md stays an illustrative calculation | Option A is no relief: the first September night fails at either length, and 48 hours saves about 36 Wh only at WE or at the 0.90 bracket, nothing at NOM TYP. Option B only with an authorised external battery arrangement of about 120 Wh usable at its operating temperature (the WE and 0.90 cases at TYP), about 190 Wh if the HF receiver is to listen through M1 or WAB becomes the acceptance condition, and with the corrected power path; otherwise record M1 as not met (M-02) rather than shorten it ([COMPARISON.md 4](../../records/l3batt/COMPARISON.md)). HF available and the tablet not charged are the approved profile. How the store joins is the owner's: at VBAT it reopens D-06, through the DC entry it revisits D-20. The session's recommendation, not an approval. | DECIDED: `objective-48-72` hf available, external no, tablet charging optional (D-32, 2026-09-30) |
+| L3-OD1 | Adopt Option A(i)'s store for mission M1: two separately protected packs of the ruled cell, a base 4S6P across both base pockets (replacing D-06's one 4S3P in the east pocket) and a lid pack with its own protection board, charger and gauge? The solar input is row L3-OD3's. | `approve`: Approve Option A(i)'s store (a base 4S6P and a lid pack). **The studied candidate: CONDITIONAL.** The studied candidate (Option A(i)'s two packs) does not meet M1 on the circuit as drawn, nor in its derated variant, with any lid; it is INCONCLUSIVE on the resistor-only proposal; it meets M1 only on the HYPOTHETICAL corrected power path, at nominal inputs with the 4S14P or 4S15P lid, and at the worst established inputs only conditionally (the four front-end cases ([three_cases.out 2](../../records/l3plane/three_cases.out), [ENERGY-BASIS.md section 0](../../records/l3plane/ENERGY-BASIS.md))). *Feasibility disposition: CONDITIONAL.* A route exists only through the corrected power path, conditional on its findings A-1 to C-9 closed and the three efficiencies established (C-8); not demonstrated.<br>`reject`: Keep D-06's one 4S3P pack; battery and solar stay mandatory, REQ-072 stays FAIL and feasibility item FI-01 records the open store problem. **The studied candidate: FAIL.** The studied candidate, D-06's one pack, does not meet M1: it allows at most 9.1 W for M1 against PS-IDLE-SPEC's 42.8 W, at any bus voltage ([ENERGY-RECONCILIATION.md section 9d](../../records/energy/ENERGY-RECONCILIATION.md)). Battery and solar stay mandatory; the answer records feasibility item FI-01 and blocks no other row. *Feasibility disposition: OWED.* FI-01: the bounded assessment of a store inside the fixed case other than Option A(i) is owed; if no credible route exists, a quantified trade-off returns to the owner. | Approve, as the only store inside the fixed case under which M1 is not already shown to fail; not as a feasible design. On the power path as drawn, and in its derated variant, M1 fails on every lid; on the resistor-only proposal it is inconclusive; it is met only on a hypothetical corrected power path whose sixteen findings (A-1 to C-9) are open engineering tasks, and there, at the worst established inputs, only conditionally on three efficiencies no maker document gives for this circuit. The reasons beyond the energy balance: D-20 excludes accepting the shortfall and D-21 preserves M1, so keeping D-06's one pack leaves a conflict no engineering work can close, while approving the store leaves one that engineering work can close or refute; and the approval buys, builds or authorises nothing. REQ-072 stays FAIL until the corrected path is built and tested. | CLOSED AT LAYER 3 AS LAYER 4 ARCHITECTURE (the session, under D-21) |
+| L3-OD2 | Which approved lid item leaves the lid for the lid pack, where does it go, and does its function stay in the kit: the QMX HF set out of the kit, the QMX carried outside the case with HF kept, the tablet bracket out with the tablet's use kept, or both kept on a smaller lid pack? | `qmx-out`: The QMX HF set leaves the kit and HF with it, the owner's explicit removal of an approved function; an 8 inch tablet bracket stays; the lid pack is 4S15P. **The studied candidate: CONDITIONAL.** The studied candidate meets M1 only on the hypothetical corrected path: at the worst established inputs (WE, CONDITIONAL) on the combined line in both builds (74.3 / 19.5 Wh), not at U3's 6.0 A bracket or the 18.782 V endurance bracket in the WAB build (0.6 and 3.7 Wh unserved; [energy_basis.out 5](../../records/l3plane/energy_basis.out)). *Feasibility disposition: CONDITIONAL.* The corrected path's route, conditional as for row L3-OD1; HF leaves the kit by the owner's explicit choice.<br>`qmx-outside`: The QMX HF set is carried outside the case, HF kept by a sealed lead through the case's back wall, which changes the ruled connector plate (it carries no such lead today) and the sealed case, an enclosure constraint the owner decides (D-23); an 8 inch tablet bracket stays; the lid pack is 4S15P. **The studied candidate: INCONCLUSIVE.** No location is established for the studied candidate: outside the case the QMX needs a lead through the back wall, which the ruled connector plate does not carry (fact CF-04); its energy is qmx-out's. *Feasibility disposition: INCONCLUSIVE.* The relocation facts (l3r2.yaml relocation_facts) are owed: the QMX's place and its sealed lead; until they are filed the answer is held. (also held until l3r2.yaml `relocation_facts` filed)<br>`tablet-out`: The tablet bracket leaves the lid and its function (a tablet held in the lid) leaves the kit; the tablet's use stays outside the case over the kit's WiFi and the USB-C outlet; the QMX stays; the lid pack is 4S14P. **The studied candidate: CONDITIONAL in TYP; INCONCLUSIVE in WAB.** The studied candidate does not meet M1 at the worst established inputs in the WAB build on the corrected path as restated (NOT MET, 10.8 Wh unserved); in TYP it meets with the lid pack empty (44.0 Wh, each-pack line fails); it meets at nominal inputs ([energy_basis.out 5](../../records/l3plane/energy_basis.out)). HF kept with WAB is a valid target: the bounded assessment reads it INCONCLUSIVE ([L3-FEASIBILITY.md section 1](../../records/l3feas/L3-FEASIBILITY.md), checked by CHECK-2 of stream l3feas): U3 at its 6.35 A clamp (R1) meets with 19.4 or 7.5 Wh as U3's unprinted minimum reads (C-7), within 0.3 to 0.5 points of the three efficiencies (C-8), with its own Kelvin criterion at R11 (0.166 mOhm at 25 C); the stage at 0.965 (R2) meets with 12.7 Wh; of the kit-level line, conditions 1 and 2 are met on the model, condition 3 INFERRED, condition 4 not established. *Feasibility disposition: INCONCLUSIVE.* With WAB: FI-02, INCONCLUSIVE with the evidence named (U3's minimum input current C-7, the three efficiencies C-8, the corrections with B-4's in-service case); with TYP the corrected path's route, conditional as for row L3-OD1.<br>`both-kept`: Both approved lid items stay; the lid pack is 4S9P. **The studied candidate: FAIL.** The studied candidate, a 4S9P lid, does not meet M1 in any case, the hypothetical corrected path included (NOT MET by at least 165.7 Wh; 0 of 864 past windows; [ENERGY-BASIS.md section 1 and energy_basis.out 5](../../records/l3plane/ENERGY-BASIS.md)); the answer records feasibility item FI-04. *Feasibility disposition: NO_ROUTE.* FI-04: no route in the studied lid; the quantified trade-off is this row's other options, each of which removes one approved lid function. | Since D-27 `both-kept` is the owner's stated wish ("He also said to preserve HF and the tablet functionality", as relayed): a valid target, never refused, whose studied candidate, the 4S9P lid, does not meet M1 without an external store (feasibility item FI-04) and is CONDITIONAL with the external store row L3-OD7 authorises (FI-07: +68.1 to +188.7 Wh usable by runtime, load and case, stream l3batt runtime.out 3). No option is recommended as feasible. The other options each move an approved lid item: `qmx-outside` needs a place for the QMX (none is established), and `qmx-out` and `tablet-out` remove a function D-27 asks to preserve. Between `qmx-out` and `tablet-out` the figures pull both ways: energy on the hypothetical path favours the QMX out (the one lid carrying the worst established inputs in both builds; the tablet-out lid fails in WAB by 10.8 Wh), while the function and the deployment favour the tablet out (it keeps HF, the kit's only HF bearer, keeps the tablet's use outside the case, and lets the open kit stand on 3 degrees and an 11.7 N push instead of 1 degree and a 6.1 N press). The choice is coupled with row L3-OD6's build: with the WAB build only the QMX out (or outside, with a place) carries M1's benchmark on the studied candidate, so HF kept with WAB is a valid target whose candidate the bounded assessment reads INCONCLUSIVE (feasibility item FI-02, stream l3feas, checked by CHECK-2 of stream l3feas); with the TYP build both lids carry it. Neither is shown feasible on the power path as drawn. | DECIDED: `both-kept` (D-33, 2026-09-30) |
+| L3-OD3 | Set the solar input for Option A(i): a 200 W stage fed by four 100 W panels in two series pairs (2S2P, 400 Wp), with REQ-016 restated to that array? | `unchanged`: REQ-016's approved solar window unchanged (the owner's clarification D-28: 'Preserve other approved requirements'); the 2S2P array and the 200 W stage are a layer 4 architecture proposal (P-03), which would need the owner's ruling to change REQ-016. **The studied candidate: INCONCLUSIVE (the interface's obligations apply as drawn, O-2 among them).** No figure changes: the window stays at most 100 W from a panel of at most 25 V open circuit at its coldest, held at 17.6 V (REQ-016); with REQ-072 a design objective its shortfall under this window is design risk DR-01, not a conflict between mandatory requirements. *Feasibility disposition: INCONCLUSIVE.* Design risk DR-04: the solar interface's obligations as they apply to the present window, O-2 (the stage's input power not controlled as drawn) and the panel's revision (O-1), at layer 4.<br>`2s2p`: A 200 W stage and 400 Wp in 2S2P; REQ-016 restated (recommended). **The studied candidate: INCONCLUSIVE (electrical compliance).** The topology is the owner's target, approved apart from its electrical compliance. The studied interface ([L3-FEASIBILITY.md section 3](../../records/l3feas/L3-FEASIBILITY.md), checked by CHECK-2 of stream l3feas): the panel revision is not pinned (O-1: the held sheet reads 22.5 V, 5.75 A and 1219 x 549 mm with no revision mark; the maker's current page, as the review reports it, gives 24.4 V, which puts the voltage basis at 61.0 V, over the 60 V safety extra-low-voltage ceiling, whose standard is not held); the converter input power is not controlled as drawn (O-2: the LT8705A's current-sense pins are tied off); the ratings O-3 to O-7 are engineering obligations. *Feasibility disposition: INCONCLUSIVE.* FI-06: the obligations O-1 to O-7 with their closure criteria; approving the topology is not verifying it.<br>`1s4p`: A 200 W stage and 400 Wp in 1S4P; REQ-016 restated. **The studied candidate: INCONCLUSIVE.** No M1 figure is computed for the studied candidate (no plane grid is run for 1S4P); its interface derivations are owed (the feasibility record derives 2S2P only); on the circuit as drawn it inherits row L3-OD1's result. *Feasibility disposition: INCONCLUSIVE.* FI-06: the interface derivations for 1S4P and the obligations O-1 to O-7 as they apply to it.<br>`keep`: REQ-016's 100 W window kept, with the array the checked energy basis gives. **The studied candidate: INCONCLUSIVE.** No M1 figure is computed for the studied candidate (the basis runs no array through a 100 W stage); on the circuit as drawn it inherits row L3-OD1's result. *Feasibility disposition: INCONCLUSIVE.* FI-06: the entry's ratings for the array the answer names, with their derivations or obligations. | Approve 2S2P: at most 200 W into the stage; the array's open circuit at most 51.3 V at -20 C cells (54.1 V at -40 C); every part on the panel entry rated above 56.3 V; the array held at 34.3 V (33.0 to 35.6 V); F2 20 A at 56.3 V DC or more with an interrupting rating at or above the kit-side fault current; J_SOLAR, the wall pair and the lead 20 A or more; the panels and their folding stand carried outside the case, beside it ([a1solar ARRAY.md sections 2 to 5](../../records/a1solar/ARRAY.md)). | DECIDED: `unchanged` (D-34, 2026-09-30) |
+| L3-OD4 | Adopt M1's deployment conditions, as proposed narrower operating conditions: the array's plane band for the 2S2P array and the lid chosen, and the open kit's ground slope toward the hinge and an operator push it must stand (a new core requirement)? | `adopt`: Adopt the open kit's stability for the chosen lid, with the push the owner sets; no plane band. **The studied candidate: FAIL or INCONCLUSIVE, by the push the owner sets.** No plane band exists at the supply range's low end with U3's 6.0 A bracket, for any lid on either line ([ENERGY-BASIS.md section 1](../../records/l3plane/ENERGY-BASIS.md)); adopt states only the open kit's stability. The studied candidates' static results at the 100 degree lid stay, feet-inboard bound, on level ground ([a1mech README.md section 5](../../records/a1mech/README.md)): the QMX-out lid tips above 6.1 N at the tablet's far edge, the tablet-out lid above 11.7 N at the QMX set's controls, the both-kept lid above 10.8 N at the tablet's far edge; no result is filed for a push on the slope, so a push at or above a lid's figure reads FAIL for that lid and one below it INCONCLUSIVE. *Feasibility disposition: INCONCLUSIVE.* FI-05: the targeted check T-A1-3 (the feet, the stop and the hinge axis measured) and v2/cad/lid_pack_a1.py run at the slope with the push; until then no modelled PASS is stated.<br>`reject`: State no deployment condition. **The studied candidate: none: no target.** No deployment condition is recorded. *Feasibility disposition: NONE.* No target is recorded. | Adopt the open kit's stability (a new core requirement, REQ-078 when applied): at most 1 degree toward the hinge with the QMX out of the lid or 3 degrees with the tablet out, restated when the feet are measured (T-A1-3), and the operator push the owner sets. The reason is not energy: a lid pack of 4.8 to 5.5 kg on a 100 degree stay tips the open kit under a 6.1 N press (QMX out) or an 11.7 N push (tablet out), a condition of use whatever the energy. No plane band is proposed: none exists at the supply range's low end with U3's 6.0 A bracket, and the band of 30 to 50 degrees facing south to 15 degrees west holds only at U3's 6.1 A, on the combined line, conditionally on three undocumented efficiencies. M1 stays judged on SC-37's reference plane. | DECIDED: `reject` (D-35, 2026-09-30) |
+| L3-OD5 | CFL-017: do D-02a's +55 C operating, +71 C and -33 C storage and E5's +60 C humid margins apply to the kit without its cells, with the cells held inside their maker's limits? | `layer4-obligation`: D-02a's margins, the envelope and TEST-PLAN's levels stand unchanged; CFL-017 closes as a requirements conflict, since the collision is between the requirements and the current cell, an engineering selection, with the current thermal design; a layer 4 component-selection and thermal-design obligation carries it mode by mode (FEA-008) (the owner's clarification D-29). **The studied candidate: INCONCLUSIVE per mode (FEA-008: collisions of 1.6 to 33 K in five modes; none in charging, whose window the kit keeps by holding charge off).** Neither the margins nor the envelope are reduced, read as the kit's without its cells or reclassified (D-29); no alternative cell or thermal solution is shown. *Feasibility disposition: INCONCLUSIVE.* FEA-008's closure criteria per mode at layer 4 (LO-01a to LO-01g); no held maker's sheet rates a cell across the required storage and discharge ranges, and the inside air's rise is bounded, not measured.<br>`reading-c`: The margins apply to the kit without its cells (recommended). **The studied candidate: NOT TESTED: a reading that needs no new part; the claimed capability is reduced.** The reading needs no new part. Its operational consequence, which the owner's acceptance covers: with its pack fitted the kit is claimed only inside the cells' limits, so it is not claimed at D-02a's +55 C operation, E5's +60 C humid dwell or the +71 C and -33 C storage with its own pack; those margins are the kit's without its cells (the environment table of the acceptance definitions). *Feasibility disposition: CREDIBLE.* The margins' tests run cell-free, as TEST-PLAN's stated deviations already do; no cost in parts or money, a reduction in claimed capability.<br>`measure`: Keep CFL-017 open until the heat experiment. **The studied candidate: FAIL until measured.** CFL-017 stays open, a release gate, until the bounded enclosure heat experiment runs on hardware. *Feasibility disposition: INCONCLUSIVE.* The heat experiment of POWER-THERMAL.md section 10 on hardware.<br>`cells`: Select cells rated above +60 C. **The studied candidate: INCONCLUSIVE.** A cell rated above +60 C is to be chosen and its sheet held; CFL-017 stays open until then; D-06's cell reopens and money is spent. *Feasibility disposition: INCONCLUSIVE.* The cell's choice and its sheet in v2/vendor/battery/. | Yes (route (c)), with its operational consequence stated so that the owner's acceptance covers it: with its pack fitted the kit is claimed only inside the cells' limits (the environment table of the acceptance definitions). | DECIDED: `layer4-obligation` (D-36, 2026-09-30) |
+| L3-OD6 | M1's weather basis, a quantified choice: is mission M1 judged on the average-day benchmark (SC-37's reference mean day, as REQ-072 states it today), or must it also meet a historical-coverage target, a stated share of the real 72-hour September windows at SC-37's site and plane; and in which array build case, TYP or WAB (defined below the table)? | `mean-day`: The average-day benchmark, its limitations stated in REQ-072, in the build case the owner names. **The studied candidate: CONDITIONAL.** In the WAB build the benchmark's store (4S15P lid, 84 cells) is carried by the QMX-out lid only, and in the TYP build (4S13P, 76 cells) by the tablet-out and QMX-out lids, on the studied candidate's corrected path; the studied 4S9P lid does not carry it in either ([weather_basis.out B](../../records/l3plane/weather_basis.out)); a lid that does not carry it records feasibility item FI-02. *Feasibility disposition: CONDITIONAL.* The corrected path's route, conditional as for row L3-OD1; FI-02 where row L3-OD2's lid does not carry the store.<br>`coverage`: A historical-coverage target: M1 met in at least the owner's share of the 864 September windows of 2005 to 2020 (the basis's illustrative 50, 80 and 95 percent), in the build case the owner names. **The studied candidate: FAIL.** The studied candidate does not meet any coverage target inside the Peli 1450: every target needs 128 to 228 cells, against at most 84 in any established arrangement ([weather_basis.out B](../../records/l3plane/weather_basis.out)); the answer records feasibility item FI-03. *Feasibility disposition: NO_ROUTE.* FI-03: no route in the established arrangements; the quantified trade-off is this row's table (cells, mass and volume per target). | The weather basis: the average-day benchmark, stated as a design benchmark and not a weather promise, with its limitation beside it, stated for each lid a build admits, on the corrected path (case (c), HYPOTHETICAL) at the worst established inputs (input set WE, the line 'windows kept: no STOP' of [weather_basis.out A](../../records/l3plane/weather_basis.out)): the 4S15P lid (QMX out), which both builds admit, carries 190 of the 864 past September windows (22.0 percent) in TYP and 151 (17.5 percent) in WAB; the 4S14P lid (tablet out), which the TYP build also admits, carries 166 (19.2 percent) in TYP and 121 (14.0 percent) in WAB; so 14.0 to 22.0 percent across the two lids, and 13.2 to 21.5 percent on the COMB line the sizing uses (the same table). The benchmark's own TYP store, 4S13P, is smaller than either lid and carries fewer still ([ENERGY-BASIS.md section 8a](../../records/l3plane/ENERGY-BASIS.md)). The reason is capacity and fit, not the energy balance: the case is fixed (ruling of 7 September 2026) and every coverage target needs 128 to 228 cells, 1.52 to 2.71 times the 84 of the largest established store, which no established arrangement holds. The array build is not recommended; it is the owner's, coupled with row L3-OD2: the WAB build (the worst conforming array build) is carried on the studied candidate by the QMX-out lid only (84 cells), so with row L3-OD1 approved, keeping HF (REQ-002, REQ-067, REQ-068: the kit's only HF bearer and transmitter) with WAB is a valid target whose candidate the bounded assessment reads INCONCLUSIVE (feasibility item FI-02), and `qmx-outside` needs a place; the TYP build is carried by both the 4S14P and the 4S15P lids (76 cells), so it leaves row L3-OD2 open between the tablet out and the QMX out. | DECIDED: `mean-day` build TYP (D-37, 2026-09-30) |
 
 The quantified consequences, the dependencies, board A's front end in four cases with the corrections, row L3-OD6's options table and the scripts that apply each answer: `OWNER-DECISIONS-L3.md`. The proposals behind them, with their status and sources: `L3-RECONCILIATION.md` (b). Changes to weather coverage, deployment restrictions, functionality, operating conditions, enclosure constraints, mission requirements, charging time or approved resources are proposals for the owner's explicit decision (D-22 to D-25): each appears only as a row or an option he answers, naming the requirement it changes with the consequence quantified (each row's owner test), never as a closure, and none is taken because the current design passes it. Component selection, sensing implementation (Kelvin sensing among it), charging below a source's available power while the approved requirements hold, and the other power-path corrections are engineering tasks, tracked downstream (D-24, D-25). No option is recommended as feasible because its idealised energy balance passes.
 
@@ -71,10 +145,12 @@ The quantified consequences, the dependencies, board A's front end in four cases
 | mission M1's energy: the requirements preserved, the budget reconciled (owner, 2026-09-28) | OD-02 of the decision sheet of 28 September 2026, as corrected by the owner the same evening: the original mission M1 and requirement REQ-072, with their specified duration and operating conditions, are preserved; an external DC source may remain optional, but requiring it overnight is not an acceptable substitute. The session reconciles the energy budget against verified loads, usable battery energy, night duration and solar contribution, develops feasible options within the approved constraints (the case that never changes, the pack of D-06, the required mission), presents any change to battery capacity, placement or operating modes explicitly, and, if the fixed case, the pack and the mission are incompatible, demonstrates the conflict and presents the smallest justified changes for the owner's decision. Unmet criteria stay visible: REQ-072 reads FAIL until the reconciliation decides otherwise. The routes (c) to (e) of EQ-13 are not taken by this ruling; (c) and (d) return only as options the reconciliation presents explicitly, and (e) is excluded because unmet criteria stay visible. | owner ruling D-20 |
 | finish layer 3 for the current target configuration (the owner's instruction of 30 September 2026) (owner, 2026-09-30) | The owner's instruction of 30 September 2026, quoted in part in v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md (its omissions are the quoting session's and this entry's, marked). In his words: "finish Layer 3, Requirements for the current target configuration before advancing Layer 4 [...] For every requirement-changing proposal, record whether it is approved, rejected or awaiting a decision. [...] Distinguish requirements from implementation choices that properly belong in later layers. Battery and solar remain mandatory. Preserve the approved 72-hour mission and approved functions unless I explicitly authorize a change. Recommendations are not approvals [...] Layer 3 reaches 100% only when the target is unambiguous, requirement-changing owner decisions are resolved, contradictions and requirement-level TBDs are closed, and an independent check accepts the handover. Completed circuits and physical test results belong to later verification stages; do not make them prerequisites for completing the requirements document or mark planned tests as passed." | owner ruling D-21 |
 | the owner's review of the draft layer 3 decision table (30 September 2026) (owner, 2026-09-30) | The owner's review of the draft decision table of layer 3's second issue, 30 September 2026, as quoted in v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md. In his words: "The voltage is an engineering input, not an author's preference. Establish the applicable supply range under load and temperature. If 19.08 V is permitted, mission claims must account for it. Independently check how voltage, current limits and losses affect the energy calculation." "Preserve your mission requirements. Narrower deployment angles, reduced functionality or different operating conditions must be proposed explicitly for your approval. They cannot become accepted requirements simply because they make this candidate pass." "Define 'adverse.' A model based on a September average day does not establish performance across unspecified adverse weather. The corrected table must identify the exact weather and operating assumptions." "Hold decisions 1, 2 and 4 until the corrected, independently checked comparison arrives. Battery and solar remain mandatory; moving equipment out of the lid must not silently remove its function from the kit." "The next useful result is one consistent decision table and an updated requirements package." | owner ruling D-22 |
+| the owner's clarification of the energy and runtime requirement, which closes layer 3 (30 September 2026) (owner, 2026-09-30) | The owner's clarification of 30 September 2026, relayed by the coordinating session as binding and superseding earlier interpretations of the energy and runtime requirement, quoted in v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md. In his words: "NO external battery. Battery storage stays inside the Peli 1450. Battery and solar remain required. Keep both HF and tablet functions. Optional tablet charging consumes the kit's available energy and reduces remaining runtime. That reduction is acceptable, including runtime falling below the baseline target. I am NOT requiring unchanged runtime while charging the tablet, a full tablet recharge every day, or an additional battery to compensate. The previous 36 Wh/day charging case can remain an illustrative calculation. It is not an approved mandatory daily charging schedule. Do not reopen external storage or removal of either function as the recommended solution." Its second paragraph sets 48 to 72 hours as the baseline design target under an explicitly stated operating profile, not as a promise under every combination of loads and weather, and continues: "Do not elevate 72 hours into a mandatory minimum. Identify the essential loads, radio duty cycles, starting charge, battery assumptions and solar conditions used. Separate battery-only and solar-assisted results. Keep modelling assumptions distinct from owner-approved operating restrictions. State plainly that optional charging and additional use reduce endurance. Define charging capability within electrical and protection limits; a particular tablet model is not required merely to specify that capability. Report the actual modelled baseline runtime honestly. If the present candidate misses the target even without tablet charging, record that shortfall prominently. Do not hide it, invent a passing configuration, or describe hypothetical circuit corrections as implemented." "Layer 3 is complete when the requirements package is coherent, traceable, measurable, internally consistent and ready for an engineer to use. Every mandatory requirement and design objective must be distinguishable and have acceptance conditions and a verification method. Include the available feasibility evidence and clearly assigned unresolved design risks. A failed current implementation is not automatically a defective requirement. Conversely, do not conceal a demonstrated incompatibility between mandatory requirements by calling it downstream work. Layer 3 completion does not mean the circuit, PCB, thermal performance, runtime or physical product has passed verification. Keep those statuses separate." "Use the existing analysis and records. Have the author reconcile the affected requirements, decision register, acceptance criteria and handover package. Preserve other approved requirements; do not silently adopt the earlier ten-row recommendation string. ... Do not restart broad reviews or commission another battery comparison merely because optional charging reduces runtime." "If a genuine unresolved owner decision prevents closure, finish everything else and identify only the exact conflicting requirement and decision needed. Do not manufacture 100% completion, but do not keep us in review loops over an ordinary, explicitly accepted runtime trade-off." | owner ruling D-28 |
+| the owner's clarification of CFL-017: product requirements apart from the current cell (30 September 2026) (owner, 2026-09-30) | The owner's clarification of 30 September 2026 on CFL-017, relayed by the coordinating session into the same closure pass and quoted in v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md. In his words: "For CFL-017, distinguish mandatory product requirements from the limitations of the currently selected Samsung 35E cells. 1. Establish whether that exact cell model is an owner-mandated constraint or an engineering selection. A mismatch with a replaceable component does not, by itself, prove that the product requirements contradict each other. 2. Separate charging, battery-powered operation and storage. Use the project's exact manufacturer specification and distinguish ambient temperature, cell temperature, storage duration and whether batteries are fitted. Do not treat one temperature limit as applying to every mode. 3. Do not automatically adopt 'the extremes apply without cells,' reduce an approved temperature requirement, or reclassify it as an objective. Those would change the product requirements and need my explicit decision. 4. Where the requirements are coherent but the current component cannot meet them, record a Layer 4 component-selection/thermal-design obligation with its feasibility uncertainty and measurable closure criterion." It closes by forbidding a claim that an alternative component or thermal solution has already been shown. "If a genuine contradiction between mandatory owner requirements remains, name the exact conflicting requirements and ask only the decision needed to resolve it. Otherwise, close the Layer 3 requirements baseline, preserve all unresolved engineering obligations explicitly ... Requirements completion must remain separate from demonstrated hardware compliance." | owner ruling D-29 |
 | M1's mission duration for the pack-plus-solar balance (L-02). (session, 2026-09-27) | 72 hours on the PS-IDLE-SPEC energy basis (42.8 W). | session choice SC-21 |
 | The solar resource M1's energy balance is judged against: which site, design month and day. (session, 2026-09-27) | The reference day, the design day of M1's energy balance, is the mean day of September at Leiden (52.160 N, 4.497 E) on a panel inclined at the optimum angle (40 degrees, facing south): 4.0 kWh/m2 a day, the lowest monthly mean of April to September in the European Commission's PVGIS-SARAH2 record for 2015 to 2020. It is the month the input path is judged against, not a season M1 is limited to: M1 carries no season (CONOPS section 3), and a month with less sun asks more of the panel (December's mean on the same plane is 1.1 kWh/m2 a day), which the layer-4 judgement records beside the design month (S-53). | session choice SC-37 |
 
-**Mission M1's conditions, in one place.** 72 hours (SC-21, preserved by D-20, approved by D-21) in PS-IDLE-SPEC (42.8 W at the pack terminals, `feasibility/POWER-THERMAL.md` section 4) on the kit's own store and its solar input, battery and solar mandatory and an external DC source never the basis (D-20, D-21, D-22), from a full aged store, lid open and the kit shaded (D-02e), judged on the reference day of SC-37 (September at Leiden, 4.0 kWh/m2 a day on the optimally inclined plane, 40 degrees facing south). M1 carries no season (CONOPS section 3): the reference day is the verification condition of REQ-072's desk acceptance, not a restriction on where or when the kit is used, and a month with less sun asks more of the array (SC-37). Any M1 energy claim holds across the kit's supply range, with every limit that must hold a load at its minimum (D-22: 'If 19.08 V is permitted, mission claims must account for it'); the range and its effect on the calculation are the energy basis (fact CF-01). **Pending (L3-OD4):** the open kit's ground slope and operator push, as narrower operating conditions for the owner's approval; no plane band exists at the supply range's low end with U3's 6.0 A bracket, so none is proposed. **Pending (L3-OD6):** M1's weather basis, a quantified choice between the average-day benchmark (SC-37's reference day as REQ-072 states it today; one site and one month's mean day repeated, a mean day is not a cloudy day, and it states no share of real weather in which M1 holds) and historical-coverage targets on the September record of fact CF-03, each with the store it needs and whether that fits the case (no coverage target fits it). Every M1 figure that meets rests on the hypothetical corrected power path (finding F-01).
+**Mission M1's conditions, in one place (D-28).** A design objective of 48 to 72 hours under the stated operating profile of REQ-072 (The essential loads of PS-IDLE-SPEC, 42.8 W at the pack terminals over its 39 loads (POWER-THERMAL.md section 4); the radio duty cycles of that state, HF available and not receiving (the QMX's USB and HDMI 5 V, 0.32 W), HF listening (1.14 W more) an additional use; the tablet not charged, the USB-C outlet off; a full store at the start, aged to 80 percent of the cells' specification minimum (REQ-014), each pack to its graceful line (5 percent relative state of charge, or its lowest cell at 3.00 V under load); battery-only at +20 C and -10 C; solar-assisted on SC-37's reference mean day at Leiden on one plane, 40 degrees facing south, in the typical array build (TYP), the worst array build (WAB) a sensitivity, from starts at 06 and 18 UTC. These are modelling assumptions, not owner-approved operating restrictions (D-28).), not a mandatory minimum; battery and solar mandatory, the store inside the Peli 1450 and no external battery (D-28), an external DC source optional and never M1's basis (D-20, D-21, D-22); the lid open and the kit shaded (D-02e). The profile's solar conditions are the objective's judging conditions, modelling assumptions and not operating restrictions: M1 carries no season (CONOPS section 3), and no deployment condition is stated (row L3-OD4). Optional tablet charging and additional use reduce endurance, which the owner accepts. The modelled baseline misses the objective's lower end (section 2.3, design risk DR-01).
 
 ## 5. The requirements, by need
 
@@ -84,9 +160,10 @@ Every live record, grouped by the need it serves. For each: statement; applicabi
 
 Prototype 1 core need: yes.
 
-#### REQ-003 (requirement, DEFINED, BLOCKER)
+#### REQ-003 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** A message from a handheld on the kit's LoRa mesh reaches a remote correspondent over each long-range bearer in turn, and a message in the other direction reaches the handheld.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** In the functional check, a message each way between a handheld on the kit's LoRa mesh and a remote correspondent over each core long-range bearer in turn (Iridium, 5G and APRS), with the bearer's own service available: each delivered, the kit's own hand-off of the message to the bearer within 10 s, and the end-to-end time per bearer recorded as characterisation, since networks outside the kit set it (SC-25).
 - **Verification:** PROTOTYPE_MEASUREMENT at PROTOTYPE; allocated to kit, sw
@@ -148,9 +225,10 @@ Prototype 1 core need: yes.
 - **Current reading:** INCONCLUSIVE at SCHEMATIC, DESK_REVIEW (16 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** S-12 (layer 7)
 
-#### REQ-001 (requirement, DEFINED, BLOCKER)
+#### REQ-001 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** Prototype 1's core bearers pass traffic: Iridium satellite messaging, 5G cellular data, the LoRa mesh and VHF APRS.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NAMED: D-01 names messaging over Iridium, 5G, LoRa and APRS as core. The kit-to-kit WiFi link is not a core messaging bearer: D-01 exercises it through the fabric's changeover test (IOHA A11, CHO-002), and its use as a bearer is REQ-002 (CONOPS section 2a).)
 - **Acceptance:** In the functional check on the built prototype (TEST-PLAN section 4): an Iridium message is sent and received, 5G data passes, a LoRa mesh packet passes, and an APRS beacon is heard by an external receiver.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to kit, b, d, a
@@ -160,22 +238,24 @@ Prototype 1 core need: yes.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-002 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-002 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The kit also carries an HF bearer (the QMX, with CAT control and audio), VHF voice, and the kit-to-kit WiFi link as a messaging bearer that needs no access point.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (SESSION: D-01 names HF among the deferred functions and names neither VHF voice nor the WiFi link as a messaging bearer; the WiFi link's changeover is accepted in the core through IOHA A11 (CHO-002).)
 - **Acceptance:** In the functional check: HF CAT control and audio pass, a VHF voice exchange over a headset is heard by an external receiver, and messages pass over the WiFi link to a second kit with no access point.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to kit, a, b, d
-- **Sources:** need NEED-02; D-01 (owner, 2026-09-25); files: v2/docs/V2-SPEC.md:37-51; v2/docs/TEST-PLAN.md:54; v2/docs/CONOPS.md section 2a
+- **Sources:** need NEED-02; D-01 (owner, 2026-09-25); D-28 (owner, 2026-09-30); files: v2/docs/V2-SPEC.md:37-51; v2/docs/TEST-PLAN.md:54; v2/docs/CONOPS.md section 2a
 - **Judged or settled by:** rules none (coverage NONE); decisions none
 - **TEST-PLAN:** section 4
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-116 (layer 8)
-- **Pending owner decision L3-OD2:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD2:** DECIDED: `both-kept` (D-33, 2026-09-30).
 
-#### REQ-076 (requirement, DEFINED, BLOCKER)
+#### REQ-076 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** When the long-range bearer a message is queued for goes down, the kit hands the queue to another core long-range bearer that is up, without operator action.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** In the functional check, for each core long-range bearer (Iridium, 5G and APRS) in turn, with messages queued for a correspondent another core long-range bearer reaches, the bearer disabled at the kit: it is declared down when its device is lost, or when it has accepted no hand-off for 60 s while one is pending; its queue is handed to the next long-range bearer that is up within 10 s of that; every queued message is delivered, the delivery times recorded as characterisation (SC-25).
 - **Verification:** PROTOTYPE_MEASUREMENT at PROTOTYPE; allocated to kit, sw
@@ -346,9 +426,10 @@ Prototype 1 core need: yes.
 - **Current reading:** INCONCLUSIVE at SCHEMATIC, DESK_REVIEW (9 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** S-73 (layer 8)
 
-#### REQ-004 (requirement, DEFINED, BLOCKER)
+#### REQ-004 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The loss of any one CM5, or of any one I/O supervisor, does not make a peripheral on the voted fabric permanently unreachable; ownership moves to a surviving module without a fourth central arbiter; hardware, not firmware, prevents two hosts owning one peripheral.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** ARCH-PCB-B-IOHA acceptance tests A1 to A6, A8 and A12 pass on the prototype, and A13's USB throughput under failover is measured and recorded (characterisation, no pass line); every device of the moved bank is back in service (IOHA section 7 step 12, application access resumed, by a bridge instance already running on the adopting module) within 30 s of its home module's loss, plus the device's own start-up where its maker states a longer one, and the bridge's own service is back on a surviving module within 60 s of the loss; each time is recorded (SC-25).
 - **Verification:** SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to b, fw_ioctrl, sw
@@ -358,9 +439,10 @@ Prototype 1 core need: yes.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-84 (layer 8)
 
-#### REQ-005 (requirement, DEFINED, BLOCKER)
+#### REQ-005 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The set of critical peripherals that NEED-03 protects is named.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** Every USB peripheral ARCH-PCB-B-IOHA section 15 traces, and the kit-to-kit WiFi link, is critical, and the LoRa module and cellular data are the named exceptions (SC-02); CONOPS section 2a, ARCH-PCB-B-IOHA section 15a and V2-SPEC line 32 name the same set.
 - **Verification:** MANUAL_REVIEW at SCHEMATIC; allocated to kit, b
@@ -370,9 +452,10 @@ Prototype 1 core need: yes.
 - **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (28 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** nothing
 
-#### REQ-006 (requirement, DEFINED, BLOCKER)
+#### REQ-006 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The board is agnostic to how many compute modules are fitted (one, two or three) and in which slots.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** The kit boots, brings up every bank it can host and serves its bearers with each of the seven non-empty slot combinations on the prototype.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to b, c, fw_panel, sw
@@ -382,9 +465,10 @@ Prototype 1 core need: yes.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-062 (requirement, DEFINED, BLOCKER)
+#### REQ-062 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The panel controller supervises each slot: a slot whose heartbeat stays flat for 60 s after its rail came up is shown as a slot fault, power-cycled once (rail off 5 s), then left off until the operator acts.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** In the functional check, a slot with its heartbeat forced flat is flagged (MASTER CAUT, the e-paper names the slot), cycled once and left off; the other slots keep running.
 - **Verification:** PROTOTYPE_MEASUREMENT at PROTOTYPE; allocated to fw_panel, a, b, c
@@ -394,9 +478,10 @@ Prototype 1 core need: yes.
 - **Current reading:** NOT_YET_TESTED
 - **Waits on:** nothing
 
-#### REQ-073 (requirement, DEFINED, BLOCKER)
+#### REQ-073 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** A failed compute module or I/O supervisor, in any way it can fail (dead, unpowered while its neighbours run, held in reset, wedged with its outputs at any level, or shorted on its own rails), does not take down a shared element: the kit I2C bus, the +5V_DEV and +3V3_DEV rails, the J_PANEL ribbon's signals, the KSZ9897R's other ports, or either CAN fabric.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** Schematic (desk): for each shared element and each way a module or supervisor can fail, the committed netlists of boards A, B and C show what contains it (a series element, an isolating switch or buffer with its maker's partial-power-down rating, a current limit, an open-drain output that can only release, the CAN transceiver's own bus-fault protection), or the pair is recorded as FAIL with its remedy owed; prototype: IOHA A2 and A5 run with the kit I2C bus, both CAN fabrics and +3V3_DEV monitored, and with one supervisor's I2C pins driven low the panel controller still reaches the secure element.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to a, b, c, fw_ioctrl
@@ -410,9 +495,10 @@ Prototype 1 core need: yes.
 
 Prototype 1 core need: no.
 
-#### REQ-007 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-007 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The face plate carries the operator controls and indicators of PANEL.md: MAIN, PI and TEST buttons, locking SOS, EMCON and ZEROIZE toggles (covers on SOS and ZEROIZE), the LIGHTING toggle, sixteen indicator LEDs (D1 to D16, the TX lamp D3 among them), a sounder, the e-paper and an ambient light sensor, with the semantics of PANEL.md sections 5, 8 and 9.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** Every control and indicator behaves as PANEL.md sections 5, 8 and 9 state in the functional check, and the lamp test lights every panel indicator. The lamp test lights seventeen indicators, D1 to D16 and the PI ring (PANEL.md section 9, SC-30).
 - **Verification:** SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to c, fw_panel, sw
@@ -422,9 +508,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-100 (layer 8), S-101 (layer 8)
 
-#### REQ-008 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-008 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The e-paper shows identity, battery and shore state, GPS fix, UTC, last message, bearer and slot health, and holds them with the power off; it refreshes at most once a minute; the enrolment QR is shown only while TEST is held after a UI request and never carries key material.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** Inspection with the kit unpowered: the e-paper page shows the kit's identity, battery and shore state, GPS fix, UTC, the last message, and bearer and slot health. Firmware review: the page is refreshed at most once in any 60 s, the enrolment QR is drawn only while TEST is held after a UI request, and the QR's payload holds no key material. Prototype: after power is removed the page still shows every listed field.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to c, fw_panel
@@ -435,9 +522,10 @@ Prototype 1 core need: no.
 - **Waits on:** nothing
 - **Changed since H3:** acceptance (section 6).
 
-#### REQ-009 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-009 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** Two sealed headset jacks, each with its own push-to-talk on its own codec channel, and net audio recording to the drives.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NAMED: D-01 names net recording among the deferred functions; the headset jacks follow NEED-04, which D-01 does not name in the core.)
 - **Acceptance:** Both jacks key the VHF path and carry receive audio in the functional check; a recording of net audio exists on a drive afterwards.
 - **Verification:** SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to d, c, sw
@@ -447,9 +535,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-102 (layer 8), S-103 (layer 8), S-105 (layer 8), S-116 (layer 8)
 
-#### REQ-010 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-010 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** A camera (sealed on the face, or USB on the wall port) captures images for image messages over Iridium and the mesh.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NAMED: D-01 names the camera among the deferred functions.)
 - **Acceptance:** An image is captured and sent in the functional check, over Iridium as one message of at most 100,000 bytes (the RockBLOCK 9704's largest packet, its datasheet) and over the mesh (SC-45).
 - **Verification:** PROTOTYPE_MEASUREMENT at PROTOTYPE; allocated to b, c, sw
@@ -459,23 +548,26 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_YET_TESTED
 - **Waits on:** nothing
 
-#### REQ-011 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-011 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** A bracket in the lid holds an 8 to 10 inch rugged tablet, fed by the USB-C outlet and the kit's WiFi.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NAMED: D-01 names the tablet bracket among the deferred functions.)
-- **Acceptance:** A tablet model is named, the bracket is drawn and fitted, and the closed lid leaves no mark on the tablet or its bracket at CASE-MARGINS.md test T9; the tablet charges from the USB-C outlet and joins the kit's WiFi (SC-45).
+- **Acceptance:** The charging capability is specified at the USB-C outlet, not by a tablet model (D-28): in the functional check a USB PD sink draws each of REQ-017's contracts within the outlet's protection limits, measured with an inline USB-C meter, the converter switched by software on its existing enable line; charging is optional and reduces endurance (REQ-072), and no daily schedule is required. The bracket is drawn and fitted, and the closed lid leaves no mark on the tablet or its bracket. A tablet model, when one is named (SC-45), is checked against this capability.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at RELEASE_PACKAGE, final PROTOTYPE; allocated to case, a
-- **Sources:** need NEED-04; SC-45 (session, 2026-09-27); files: v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16d); v2/docs/V2-SPEC.md:12; v2/docs/CASE-MARGINS.md
+- **Sources:** need NEED-04; D-28 (owner, 2026-09-30); SC-45 (session, 2026-09-27); files: v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16d); v2/docs/V2-SPEC.md:12; v2/docs/CASE-MARGINS.md
 - **Judged or settled by:** rules MEC-001 (coverage PARTIAL); decisions none
 - **TEST-PLAN:** not named by id
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
-- **Pending owner decision L3-OD2:** AWAITING; the restatement it applies is prepared, not applied.
-- **Pending owner decision L3-OD2:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD2:** DECIDED: `both-kept` (D-33, 2026-09-30).
+- **Owner decision L3-OD2:** DECIDED: `both-kept` (D-33, 2026-09-30).
+- **Changed since H3:** acceptance (section 6).
 
-#### REQ-012 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-012 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The TX lamp follows the VHF path's real KEY line in hardware, is never dimmed below 10 % duty except in blackout, and a lamp test lights it through its own tie.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** Netlist: a trace from board D's KEY line to the TX lamp's driver with no processor in the path, and the lamp test's own tie to the lamp. Bench, with the panel controller held in reset: the lamp is lit while KEY is asserted and dark when KEY is released. Bench, with the panel controller running: outside blackout the lamp's drive duty is never below 10 %, and the lamp test lights it.
 - **Verification:** SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to c, d
@@ -486,9 +578,10 @@ Prototype 1 core need: no.
 - **Waits on:** nothing
 - **Changed since H3:** acceptance (section 6).
 
-#### REQ-013 (requirement, DEFINED, ADVISORY)
+#### REQ-013 (requirement, mandatory, DEFINED, ADVISORY)
 
 - **Statement:** A flasher that fails fails to steady on: the panel controller holds the last written indicator state when the USB link drops.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** Unplug the panel's USB host path (fail its bank) while MASTER WARN flashes: the lamp goes steady, not dark.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to fw_panel
@@ -551,7 +644,7 @@ Prototype 1 core need: yes.
 - **TEST-PLAN:** not named by id
 - **Current reading:** INCONCLUSIVE at PLACED_BOARD, DESK_REVIEW (4 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** S-27 (layer 7), L-07 (layer EXTERNAL)
-- **Pending owner decision L3-OD1:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD1:** CLOSED AT LAYER 3 AS LAYER 4 ARCHITECTURE (the session, under D-21).
 
 #### CON-007 (constraint, DEFINED, MUST_JUSTIFY)
 
@@ -589,23 +682,26 @@ Prototype 1 core need: yes.
 - **Current reading:** INCONCLUSIVE at SCHEMATIC, DESK_REVIEW (4 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** L-04 (layer EXTERNAL), S-69 (layer 4), S-86 (layer PROCESS)
 
-#### REQ-014 (requirement, DEFINED, BLOCKER)
+#### REQ-014 (requirement, mandatory, DEFINED, BLOCKER)
 
-- **Statement:** The kit runs from its internal pack, and its battery-only runtime is stated in hours in an idle and a typical mode (PS-IDLE-SPEC and PS-TYP) at +20 C for an aged pack; missions longer than the pack rely on vehicle or solar input (D-06).
+- **Statement:** The kit runs from its internal pack, and its battery-only runtime is stated in hours in an idle and a typical mode (PS-IDLE-SPEC and PS-TYP) at +20 C for an aged pack; missions longer than the pack rely on vehicle or solar input (D-06). The store is inside the Peli 1450 and no external battery is part of the kit; battery and solar are both required (D-20, D-21, D-28).
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** The stated hours for PS-IDLE-SPEC and PS-TYP at +20 C are computed for an aged pack, 80 percent of the cells' specification minimum capacity (8.04 Ah for the 3P block, SC-23), then measured on the prototype and scaled to that capacity; no published runtime exceeds the scaled measurement, and the pack is replaced once its gauge's learned full-charge capacity falls below that capacity.
 - **Verification:** CALCULATION, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to p, a, e, kit
-- **Sources:** need NEED-05; D-06 (owner, 2026-09-26); SC-05 (session, 2026-09-26); SC-23 (session, 2026-09-27); files: v2/docs/MESHSAT-709-geometry-appendix.md:3056 (research gate: 4S, about 100 to 150 Wh); v2/docs/MESHSAT-709-geometry-appendix.md:3062; v2/docs/MESHSAT-709-geometry-appendix.md:2846; v2/docs/CONOPS.md section 4a; v2/docs/feasibility/POWER-THERMAL.md section 6; v2/vendor/battery/samsung-35e-orbtronic.pdf
+- **Sources:** need NEED-05; D-06 (owner, 2026-09-26); D-28 (owner, 2026-09-30); SC-05 (session, 2026-09-26); SC-23 (session, 2026-09-27); files: v2/docs/MESHSAT-709-geometry-appendix.md:3056 (research gate: 4S, about 100 to 150 Wh); v2/docs/MESHSAT-709-geometry-appendix.md:3062; v2/docs/MESHSAT-709-geometry-appendix.md:2846; v2/docs/CONOPS.md section 4a; v2/docs/feasibility/POWER-THERMAL.md section 6; v2/vendor/battery/samsung-35e-orbtronic.pdf
 - **Judged or settled by:** rules none (coverage NONE); decisions none
 - **TEST-PLAN:** section 8 row T-H2
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
-- **Pending owner decision L3-OD1:** AWAITING; the restatement it applies is prepared, not applied.
-- **Pending owner decision L3-OD2:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD1:** CLOSED AT LAYER 3 AS LAYER 4 ARCHITECTURE (the session, under D-21).
+- **Owner decision L3-OD2:** DECIDED: `both-kept` (D-33, 2026-09-30).
+- **Changed since H3:** statement (section 6).
 
-#### REQ-015 (requirement, DEFINED, BLOCKER)
+#### REQ-015 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** A 9 to 36 V vehicle and shore input runs the kit and charges the pack, with reverse-polarity protection, under- and over-voltage limits, a line filter designed to MIL-STD-461 limits, a NATO 2-pin plug cable and the MIL-DTL-38999 receptacle. The input is not qualified against any vehicle surge standard and is not intended for 24 V military vehicle buses (D-16).
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** Operates and charges across 9 to 36 V, and takes a reversed input and an over-voltage to the front end's limit (40 V, 32.55) without damage, on the prototype; CE102 under its limit line (TEST-PLAN M1).
 - **Verification:** SCRIPT, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to e, a, case
@@ -615,34 +711,37 @@ Prototype 1 core need: yes.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-106 (layer 8), S-107 (layer 8), S-111 (layer 8), S-124 (layer 8)
 
-#### REQ-016 (requirement, DEFINED, BLOCKER)
+#### REQ-016 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The solar input charges the pack through board E's LT8705A stage from a panel inside its declared window: an open-circuit voltage of at most 25 V at the panel's coldest operating temperature, the panel held at 17.6 V by the stage's input regulation, and at most 100 W into the stage.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** Netlist (board E): the panel entry (PV_IN and PV_P) is declared at 25 V in the generator's intent (v_max) and every part on it is rated above that; the panel input's clamp D4 is an SMCJ28A (28 V standoff, above the window, conducting from 31.1 V, under the 35 V bulk capacitors); the FBIN divider R8 and R9 sets the 17.6 V operating point; and the input fuse F2 and connector J_SOLAR are rated 10 A, above the 5.68 A the window's 100 W draws at 17.6 V. Prototype: a bench supply set to a 100 W panel's curve with its maximum-power point at 17.6 V and its open-circuit voltage at 25 V charges the pack with the stage holding its input at 17.6 V (SC-36).
 - **Verification:** CALCULATION, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to e
-- **Sources:** need NEED-05; SC-36 (session, 2026-09-27); files: v2/docs/V2-SPEC.md:21; v2/docs/OPERATING-ENVELOPE.md section 4 (input voltage ranges); v2/ecad/tools/gen_sch_e.py (J_SOLAR, F2, D4, R8, R9)
+- **Sources:** need NEED-05; D-28 (owner, 2026-09-30); SC-36 (session, 2026-09-27); files: v2/docs/V2-SPEC.md:21; v2/docs/OPERATING-ENVELOPE.md section 4 (input voltage ranges); v2/ecad/tools/gen_sch_e.py (J_SOLAR, F2, D4, R8, R9)
 - **Judged or settled by:** rules PWR-001 (coverage PARTIAL); decisions none
 - **TEST-PLAN:** section 4
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-53 (layer 4), S-47 (layer 8)
-- **Pending owner decision L3-OD3:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD3:** DECIDED: `unchanged` (D-34, 2026-09-30).
 
-#### REQ-017 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-017 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The kit powers accessories: PoE out on the sealed Gigabit Ethernet port (54 V rail, 0.6 A) and a power-only USB-C PD outlet (5, 9 and 15 V, 45 W; D-12), both dropped to their minimum contract in hardware while the PA keys (D-11, CON-019).
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (SESSION: D-01 names pack, vehicle and solar charging under NEED-05, not the accessory outlets (CONOPS section 2a).)
 - **Acceptance:** Each outlet delivers its rated contract into a load in the functional check; with the PA keyed both outlets are off (their minimum contract, 0 W, SC-24) with no processor in the path; the USB-C outlet carries no data.
 - **Verification:** SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to a, b, case
-- **Sources:** need NEED-05; D-11 (owner, 2026-09-26); D-12 (owner, 2026-09-26); SC-24 (session, 2026-09-27); files: v2/docs/MESHSAT-709-geometry-appendix.md:2927-2928; v2/docs/MESHSAT-709-geometry-appendix.md:2932; v2/docs/MESHSAT-709-geometry-appendix.md:2980; v2/docs/MESHSAT-709-geometry-appendix.md:2785 (item 1)
+- **Sources:** need NEED-05; D-11 (owner, 2026-09-26); D-12 (owner, 2026-09-26); D-28 (owner, 2026-09-30); SC-24 (session, 2026-09-27); files: v2/docs/MESHSAT-709-geometry-appendix.md:2927-2928; v2/docs/MESHSAT-709-geometry-appendix.md:2932; v2/docs/MESHSAT-709-geometry-appendix.md:2980; v2/docs/MESHSAT-709-geometry-appendix.md:2785 (item 1)
 - **Judged or settled by:** rules PWR-001, ISO-001, TRN-001 (coverage PARTIAL); decisions none
 - **TEST-PLAN:** section 4
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-60 (layer 8)
 
-#### REQ-018 (requirement, DEFINED, BLOCKER)
+#### REQ-018 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** Every transmitter may key at the same time, for a declared key-down time above a declared state of charge, with the accessory outlets at their minimum contract (D-11); no other transmit serialisation is required of the hardware (the bridge may keep one as a receiver-protection preference).
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** PS-ALLTX (every transmitter keyed, the accessory outlets off at their minimum contract of 0 W, the pack heater and the standby WiFi card off) is supplied with every rail in regulation through a 60 s key-down begun at a pack rest voltage of 15.5 V or more with every cell at most +55 C, and the PA keyed alone likewise from a rest voltage of 12.4 V or more; no key-down lasts longer than 60 s (D-11's declared values, SC-35, from SC-10).
 - **Verification:** CALCULATION, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to a, p, e, e5
@@ -652,23 +751,26 @@ Prototype 1 core need: yes.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-74 (layer 5), S-75 (layer 5), S-99 (layer 4), S-116 (layer 8)
 
-#### REQ-072 (requirement, DEFINED, BLOCKER)
+#### REQ-072 (requirement, design objective, DEFINED, MUST_JUSTIFY)
 
-- **Statement:** For mission M1 (CONOPS section 3), the pack plus the solar input keep the kit running in PS-IDLE-SPEC for M1's 72 hours (SC-21) on the reference day of SC-37, starting from a full, aged pack (REQ-014).
+- **Statement:** Design objective (the owner's clarification D-28, not a mandatory minimum): under the operating profile stated in objective_profile, the kit's own store inside the Peli 1450 plus its solar input keep the kit serving its loads for 48 to 72 hours of mission M1 (CONOPS section 3), 48 hours the lower end and 72 hours the upper end of the baseline design target, from a full, aged store (REQ-014). Battery-only and solar-assisted endurance are reported apart. Optional tablet charging and additional use, HF listening among it, reduce endurance, which the owner accepts (D-28).
+- **Obligation:** DESIGN OBJECTIVE (D-28), judged under: The essential loads of PS-IDLE-SPEC, 42.8 W at the pack terminals over its 39 loads (POWER-THERMAL.md section 4); the radio duty cycles of that state, HF available and not receiving (the QMX's USB and HDMI 5 V, 0.32 W), HF listening (1.14 W more) an additional use; the tablet not charged, the USB-C outlet off; a full store at the start, aged to 80 percent of the cells' specification minimum (REQ-014), each pack to its graceful line (5 percent relative state of charge, or its lowest cell at 3.00 V under load); battery-only at +20 C and -10 C; solar-assisted on SC-37's reference mean day at Leiden on one plane, 40 degrees facing south, in the typical array build (TYP), the worst array build (WAB) a sensitivity, from starts at 06 and 18 UTC. These are modelling assumptions, not owner-approved operating restrictions (D-28).
 - **Applicability:** core (NEED_DEFAULT)
-- **Acceptance:** Desk: a calculation from the PS-IDLE-SPEC load of POWER-THERMAL.md section 4, the aged pack of REQ-014 and the energy the input path delivers into the kit on the reference day (4.0 kWh/m2 on the optimally inclined plane, SC-37) ends the 72 hours above the graceful shutdown threshold; repeated with the loads and the stage's efficiency measured at bring-up. Prototype: the kit runs PS-IDLE-SPEC for 72 hours from a full pack on its solar input, fed by a panel emulator following the reference day's profile, and ends above that threshold.
+- **Acceptance:** Desk: the modelled endurance under the stated profile, reported at the kit loads (the service continues within voltage, power and pack limits, and after a permitted pack cutoff the remaining supply carries the loads, D-26): battery-only in hours from full at +20 C and -10 C, and solar-assisted in hours on the mean day from full at 06 and 18 UTC, on the power path as drawn and on any corrected path named beside it as hypothetical. The objective reads met when the solar-assisted run serves the load for 48 hours or more, 72 hours reported beside it; a shortfall is reported as a design risk with its layer (D-28). Repeated with the loads and the efficiencies measured at bring-up. Prototype: the kit runs the stated profile from a full store on its solar input, fed by an array emulator following the reference day's profile, and the hours served are reported.
 - **Verification:** CALCULATION, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to kit, e, a, procedure
-- **Sources:** need NEED-05; D-06 (owner, 2026-09-26); D-20 (owner, 2026-09-28); SC-36 (session, 2026-09-27); SC-21 (session, 2026-09-27); SC-37 (session, 2026-09-27); files: v2/docs/CONOPS.md section 3; v2/vendor/solar/pvgis-leiden-monthly-2015-2020.json
+- **Sources:** need NEED-05; D-06 (owner, 2026-09-26); D-20 (owner, 2026-09-28); D-28 (owner, 2026-09-30); D-32 (owner, 2026-09-30); SC-36 (session, 2026-09-27); SC-37 (session, 2026-09-27); files: v2/docs/CONOPS.md section 3; v2/vendor/solar/pvgis-leiden-monthly-2015-2020.json
 - **Judged or settled by:** rules PWR-001 (coverage PARTIAL); decisions none
 - **TEST-PLAN:** not named by id
-- **Current reading:** FAIL at SCHEMATIC, DESK_REVIEW (12 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
-- **Waits on:** S-53 (layer 4), M-02 (layer 3)
-- **Pending owner decision L3-OD1:** AWAITING; the restatement it applies is prepared, not applied.
-- **Pending owner decision L3-OD2:** AWAITING; the restatement it applies is prepared, not applied.
-- **Pending owner decision L3-OD3:** AWAITING; the restatement it applies is prepared, not applied.
-- **Pending owner decision L3-OD4:** AWAITING; the restatement it applies is prepared, not applied.
-- **Pending owner decision L3-OD6:** AWAITING; the restatement it applies is prepared, not applied.
-- **Pending owner decision L3-OD6:** AWAITING; the restatement it applies is prepared, not applied.
+- **Current reading:** FAIL at SCHEMATIC, DESK_REVIEW (13 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
+- **Waits on:** S-53 (layer 4)
+- **Owner decision L3-OD7:** DECIDED: `objective-48-72` hf available, external no, tablet charging optional (D-32, 2026-09-30).
+- **Owner decision L3-OD1:** CLOSED AT LAYER 3 AS LAYER 4 ARCHITECTURE (the session, under D-21).
+- **Owner decision L3-OD2:** DECIDED: `both-kept` (D-33, 2026-09-30).
+- **Owner decision L3-OD3:** DECIDED: `unchanged` (D-34, 2026-09-30).
+- **Owner decision L3-OD4:** DECIDED: `reject` (D-35, 2026-09-30).
+- **Owner decision L3-OD6:** DECIDED: `mean-day` build TYP (D-37, 2026-09-30).
+- **Owner decision L3-OD6:** DECIDED: `mean-day` build TYP (D-37, 2026-09-30).
+- **Changed since H3:** statement, acceptance, release_effect (section 6).
 
 ### NEED-06: Survive carriage and field placement in a sealed case: transit drop, vehicle vibration, driven rain and blowing dust when deployed, immersion when closed, with no vent opening.
 
@@ -698,9 +800,10 @@ Prototype 1 core need: no.
 - **Current reading:** INCONCLUSIVE at PLACED_BOARD, DESK_REVIEW (2 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** S-27 (layer 7), L-07 (layer EXTERNAL), S-95 (layer 7), S-96 (layer 7)
 
-#### REQ-019 (requirement, DEFINED, BLOCKER)
+#### REQ-019 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The case is the Peli 1450 of the current moulding (Peli 1451-931, 15 January 2025, D-08a) with the 1450PF panel frame, and it never changes; the design is held against the worst of Peli's own figures (D-08-reversal).
+- **Obligation:** mandatory requirement
 - **Applicability:** core (SESSION: Fitting the boards, the plate and the pack into the 1450 is a condition of every core function (CONOPS section 2a).)
 - **Acceptance:** Every board outline, the plate and the pack are held against the worst of Peli's own figures for the current moulding with a stated minimum, every case-dependent margin MET and none OPEN or NOT MET in CASE-MARGINS.md, and the OPEN rows shown on hardware in a new case of that moulding: the targeted checks of CASE-MARGINS.md section 7 of the rows that can move a board before the layout entry of boards A, B, E and P, which is held on them (FEA-007, v2/docs/CASE-FIT-UNCERTAINTIES.md sections 1, 2 and 7), the rest at the build. Restated 27 September 2026 at the r8int4 integration (verify c7): the earlier clause carried the targeted checks to the affected boards' fabrication release if they had not run before the outlines froze; CASE-MARGINS.md section 7 withdrew that fallback, so it is withdrawn here too.
 - **Verification:** CALCULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at PLACED_BOARD, final ASSEMBLY; allocated to case, kit
@@ -710,9 +813,10 @@ Prototype 1 core need: no.
 - **Current reading:** INCONCLUSIVE at PLACED_BOARD, DESK_REVIEW (4 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** nothing
 
-#### REQ-020 (requirement, DEFINED, BLOCKER)
+#### REQ-020 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** There is no vent opening anywhere in the case skin, the plate or the connector plate; Peli's own pressure equalisation valve stays; sealed connectors are not vents.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (SESSION: Every core function is built into the sealed case the owner ruled (32.53), so the construction without vents is a condition of building the core, judged by inspection rather than by a staged test.)
 - **Acceptance:** Inspection of the case template and the built kit: every penetration is a sealed connector, a sealed switch or the Peli valve.
 - **Verification:** MANUAL_REVIEW at RELEASE_PACKAGE, final ASSEMBLY; allocated to case, c
@@ -722,9 +826,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-021 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-021 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The face is built to an IP67-class construction and the closed kit keeps water out.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** TEST-PLAN E6 (closed, 1 m, 30 min: no water inside), E7 (deployed, 15 min of driven rain at 40 mm/h on every face: no water inside) and the seal check pass.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at RELEASE_PACKAGE, final PROTOTYPE; allocated to case, c, kit
@@ -734,9 +839,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-95 (layer 7)
 
-#### REQ-022 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-022 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The closed, latched kit with its pack fitted is designed to survive transit drops and vehicle vibration at the severities of D-02c.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** TEST-PLAN E1 (26 drops from 1.22 m onto plywood over concrete, closed and latched, pack fitted) and E2 (composite wheeled vehicle profile, 1 h per axis, closed, pack fitted) pass on their own criteria. These severities are the owner's ruling D-02c.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at PROTOTYPE; allocated to kit, case
@@ -746,9 +852,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_YET_TESTED
 - **Waits on:** nothing
 
-#### REQ-023 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-023 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The kit, closed and latched with the pack and the lid's carried items fitted, weighs under 45.4 kg (100 lb) and its largest dimension is under 91 cm (36 in): the man-packed or man-portable category of MIL-STD-810H Method 516.8 Table 516.8-IX, which the ruled transit drop E1 (26 drops from 1.22 m, owner ruling D-02c) presumes.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** At desk, the mass budget of ARCHITECTURE.md section 11 and the case outline stay inside both limits; at assembly, the kit as the statement defines it is weighed under 45.4 kg and its largest outside dimension measured under 91 cm.
 - **Verification:** CALCULATION, PROTOTYPE_MEASUREMENT at PLACED_BOARD, final ASSEMBLY; allocated to kit
@@ -758,9 +865,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-064 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-064 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** Deployed, the kit is designed to keep dust out through 6 hours of blowing dust, with its latches, pressure valve and connectors operating afterwards.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** TEST-PLAN E8 (MIL-STD-810 method 510) at a laboratory; the functional check and the seal check pass afterwards.
 - **Verification:** PROTOTYPE_MEASUREMENT at PROTOTYPE; allocated to case, kit
@@ -862,9 +970,10 @@ Prototype 1 core need: no.
 - **Current reading:** FAIL at SCHEMATIC, DESK_REVIEW (7 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** nothing
 
-#### REQ-024 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-024 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The kit operates at -20 to +40 C ambient, with its declared carve-outs: below -10 C the pack is warmed before charge; below -15 C the e-paper is degraded; on measured inside-air (+50 C) and cell (+55 C) temperatures the kit sheds to its reduced mode and then its heat stage (C1), the ambient at which it does being a bound until measured (the hot stop past the heat stage is not a carve-out: REQ-077 requires the kit to act before any cell passes +60 C, and the design intends the stop to do so once HOT-R1 is drawn on boards A and E, S-57, REQ-077 reading FAIL on the generated boards until then, on the provisional error budget of TEST-PLAN P14; whether it acts inside the envelope is FEA-004's, open until the heat-balance test, and where it does this record reads FAIL there); below 0 C inside air the WiFi link cards and the SDR are powered only once the kit's cold warm-up has brought the air to 0 C (CONOPS section 4c; the bound above about 3.6 W/K is open); a pack cold-soaked below about -10 C at the cells is not started from (shore or vehicle power, or warming, first; D-02d); and the kit is operated shaded (D-02e).
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** TEST-PLAN E3 and E4 functional checks at the envelope's limits; THM-001 junction estimates at +40 C ambient with the inside-air rise; part_temps.py finds no part outside its range.
 - **Verification:** CALCULATION, SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to kit, a, b, c, d, e, p
@@ -874,9 +983,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-55 (layer 4)
 
-#### REQ-025 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-025 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The kit, pack fitted, is stored at -20 to +45 C for up to three months and at -20 to +25 C for up to a year.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** CONOPS section 4's Storage row, TEST-PLAN's stored configuration and the operating instructions state it: the pack stays fitted, every input unplugged, in its gauge's shutdown at the cells' ex-factory state, every cell at 3.49 to 3.69 V (Samsung INR18650-35E Ver. 1.1, clause 7.11 and 3.13 note 1; SC-19), and the stored kit is never left where the temperature may exceed +60 C (REQ-074).
 - **Verification:** MANUAL_REVIEW at SCHEMATIC; allocated to p, procedure
@@ -886,9 +996,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-026 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-026 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** Humidity: non-condensing in use.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** Non-condensing in use: no condensation inside the sealed compartment. TEST-PLAN E5-A (10 cycles of 24 h at 95 % RH up to the use envelope's +40 C, pack fitted) is the acceptance inside the envelope. E5 (the same cycle, 30 to 60 C) is a qualification margin under SC-03, run as a stated deviation with the pack outside the chamber (CFL-017) and judged on D-02a's two pass lines: at the margin no damage and no lost data or keys, and full function once the kit is back inside the envelope.
 - **Verification:** PROTOTYPE_MEASUREMENT at PROTOTYPE; allocated to kit
@@ -898,9 +1009,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_YET_TESTED
 - **Waits on:** nothing
 
-#### REQ-027 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-027 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The kit operates from 0 to 3000 m altitude and is transported from 0 to 4500 m.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** 0 to 3000 m in use and 0 to 4500 m in transport (owner ruling D-02c); TEST-PLAN E9 at those levels.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to kit
@@ -910,9 +1022,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-028 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-028 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** Expected service life and duty cycle of the kit.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NAMED: D-02c leaves service life TBD for prototype 1.)
 - **Acceptance:** No public or shipped document states or claims a service life, a duty-cycle rating, a connector mating-cycle count, a fan life or a pack cycle life for prototype 1 (D-02c leaves service life undefined for prototype 1, which this record reads as no life requirement; SC-45); REL-001's duty cycle is CONOPS section 5's planning profile (SC-29).
 - **Verification:** MANUAL_REVIEW at SCHEMATIC; allocated to kit
@@ -922,9 +1035,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-029 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-029 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** Every surface and conductor a person can touch is designed to withstand IEC 61000-4-2 level 4 (8 kV contact, 15 kV air) with no upset, reset, lost bearer, lost secure-element key or damage.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** TEST-PLAN M7 on the powered kit, every bearer up, at IEC 61000-4-2 level 4 (8 kV contact, 15 kV air), applied at the plate, the toggles, the display bezel, every bulkhead shell, both headset jacks, the USB-C outlet, the Ethernet port and the pod lead: after every discharge no upset, no reset, no bearer lost, no secure-element key lost and no damage, and the functional check (TEST-PLAN section 4) passes at the end.
 - **Verification:** MANUAL_REVIEW, SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to a, b, c, d, e, p, case
@@ -935,22 +1049,24 @@ Prototype 1 core need: no.
 - **Waits on:** S-100 (layer 8), S-101 (layer 8), S-102 (layer 8), S-103 (layer 8), S-104 (layer 8), S-106 (layer 8), S-108 (layer 8), S-109 (layer 8), S-112 (layer TOOLING), S-113 (layer TOOLING)
 - **Changed since H3:** acceptance (section 6).
 
-#### REQ-051 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-051 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** TEST-PLAN's +55 C operation and +71 C storage (E3) and -33 C storage (E4) are qualification margins over the adopted envelope (-20 to +40 C in use, -20 to +45 C storage), each judged on two pass lines: inside the envelope the kit is to operate to specification; at the margin it is to show no damage and recover. E5's humidity cycle is judged the same way (SC-03, REQ-026). The margins are the kit's: E3-S and E4-S run on the kit less its pack and E3-O and E5 with the cells kept out of the heat, each a stated test deviation, since the stored kit keeps its pack (SC-19); the exposures with the pack fitted run at the cells' own limits; and the kit with its own pack does not meet the +55 C, the +60 C humid and the storage levels (CFL-017, finding BAT-F19).
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** Inside the envelope, the functional check (TEST-PLAN section 4) passes at the envelope's limits, the hot and humid limits with the pack fitted (TEST-PLAN E3-A, E5-A). At each margin level, in the state the row names (E3-S and E4-S stored with the pack out; E3-O and E5 as stated deviations, the pack outside the chamber): no damage, no lost data or keys, and full function resumed once the kit is back inside the envelope, with its logs intact. The exposures with the pack fitted (E3-T, E4-T) and the pack's own soaks (E3-P, E4-P) run at its cells' limits (TEST-PLAN section 6). TEST-PLAN states both pass lines, never reports a margin result as an envelope claim, and never reports a deviation's pass as the kit's margin with its pack.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to kit, procedure
-- **Sources:** need NEED-07; D-02a (owner, 2026-09-25); SC-03 (session, 2026-09-26); SC-12 (session, 2026-09-26); SC-19 (session, 2026-09-27); files: v2/docs/TEST-PLAN.md:26-27; v2/docs/OPERATING-ENVELOPE.md section 8; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5; v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a; v2/docs/TEST-PLAN.md section 6
+- **Sources:** need NEED-07; D-02a (owner, 2026-09-25); D-29 (owner, 2026-09-30); D-36 (owner, 2026-09-30); SC-03 (session, 2026-09-26); SC-12 (session, 2026-09-26); SC-19 (session, 2026-09-27); files: v2/docs/TEST-PLAN.md:26-27; v2/docs/OPERATING-ENVELOPE.md section 8; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5; v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a; v2/docs/TEST-PLAN.md section 6
 - **Judged or settled by:** rules ENV-001, ENV-002 (coverage PARTIAL); decisions 34
 - **TEST-PLAN:** section 2 row E3; section 2 row E4; section 2 row E5; section 6 row E3-S; section 6 row E3-O; section 6 row E4-S
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
-- **Pending owner decision L3-OD5:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD5:** DECIDED: `layer4-obligation` (D-36, 2026-09-30).
 
-#### REQ-052 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-052 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** With the lid closed the kit operates in a defined reduced mode (slots 2 and 3, CONOPS section 4c), entered when the lid is sensed closed; when C1's triggers recur there it runs one module that carries the owner's example (GNSS, the LoRa mesh, Iridium and APRS beacons) with the SOS path (SC-17, SC-18).
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** TEST-PLAN E3-L: E3-A's pass line with the lid closed; at every level up to the envelope's +40 C at least the owner's example set with the SOS path passes traffic, and the reduced mode's set up to the ambient at which C1 acts, which is recorded; every part inside its published range (an SGP41 above +55 C fails).
 - **Verification:** CALCULATION, PROTOTYPE_MEASUREMENT at PLACED_BOARD, final PROTOTYPE; allocated to kit, e, fw_panel, fw_sensor, sw, procedure
@@ -960,9 +1076,10 @@ Prototype 1 core need: no.
 - **Current reading:** FAIL at SCHEMATIC, DESK_REVIEW (9 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** S-54 (layer 8), S-56 (layer 6)
 
-#### REQ-059 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-059 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The 30 W PA's heat (about 45 W at key-down) goes through a stated path to the face plate, and the PA junction stays inside its rating for the APRS duty at +40 C ambient.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** THM-001 estimate for the PA at +40 C ambient over the declared key-down (SC-35): at most 60 s, begun only with the PA's flange at most +75 C and ended at +85 C on the flange (POWER-THERMAL.md section 7.2, K2 and C4), with the PA junction inside its maker's rating throughout; E3 measurement.
 - **Verification:** CALCULATION, PROTOTYPE_MEASUREMENT at PLACED_BOARD, final PROTOTYPE; allocated to d, c, case
@@ -972,9 +1089,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-074 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-074 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** With its pack fitted, in transport or anywhere else, the kit is never left where its cells may pass their own storage limits: above +60 C, or below the lowest storage temperature of the governing cell specification (-20 C in Samsung INR18650-35E Ver. 1.1); for such exposure the pack comes out and is stored apart (REQ-025).
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** CONOPS section 4's Transport row and the operating instructions carry the restriction with the cell maker's own instruction; TEST-PLAN's transport soaks with the pack fitted run at those limits and pass their own criteria.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to procedure, p, kit
@@ -983,7 +1101,7 @@ Prototype 1 core need: no.
 - **TEST-PLAN:** not named by id
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
-- **Pending owner decision L3-OD5:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD5:** DECIDED: `layer4-obligation` (D-36, 2026-09-30).
 
 ### NEED-08: Silence every transmitter with one operator action that does not depend on software.
 
@@ -1051,9 +1169,10 @@ Prototype 1 core need: yes.
 - **Current reading:** INCONCLUSIVE at SCHEMATIC, DESK_REVIEW (24 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** S-01 (layer 4), S-02 (layer TOOLING), S-44 (layer 7), S-87 (layer 4), S-65 (layer 8), S-92 (layer 8), S-93 (layer 8)
 
-#### REQ-030 (requirement, DEFINED, BLOCKER)
+#### REQ-030 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** One operator action (the EMCON locking toggle) silences every transmitter in the kit through a hardware line that needs no processor, and the line reads 'inhibited' when the panel ribbon is disconnected or a board is unpowered.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** (1) Netlist: every transmitter in the CONOPS section 4b table has a supply, enable or disable pin driven by EMCON_HW or TX_INHIBIT_n, and the rule instrument enumerates them (RF-002 fails on any radio without one). (2) Bench: with EMCON closed and every processor held in reset, the power at each antenna port, measured with an external spectrum analyser in ERC Recommendation 74-01's reference bandwidths over its Table 1 range for the port's band, at or below -67 dBm from 9 kHz to 1 GHz and -57 dBm above (10 dB under its Table 2 line for receivers and idle transmitters); the VHF and GNSS ports, whose receivers D-05 keeps listening, at or below that Table 2 line itself (-57 dBm and -47 dBm) (SC-38); the same with the ribbon unplugged and with each board's logic supply lost.
 - **Verification:** SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to a, b, c, d, kit
@@ -1063,9 +1182,10 @@ Prototype 1 core need: yes.
 - **Current reading:** FAIL at SCHEMATIC, DESK_REVIEW (25 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** S-01 (layer 4), S-02 (layer TOOLING), S-65 (layer 8), S-94 (layer 4)
 
-#### REQ-031 (requirement, DEFINED, BLOCKER)
+#### REQ-031 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** Under EMCON the software also holds and queues every send, shows EMCON on the e-paper and keeps MASTER CAUT steady; EMCON holds through a bank failover.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** Functional check; ARCH-PCB-B-IOHA A14 (EMCON asserted while a bank is failed over silences that bank's transmitters).
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to sw, fw_panel, b
@@ -1075,9 +1195,10 @@ Prototype 1 core need: yes.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-032 (requirement, DEFINED, BLOCKER)
+#### REQ-032 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** While EMCON is closed every radio with an emission path is powered off or RF-disabled in hardware; the VHF path keeps listening because its gate is on the transmit side only; GNSS, DCF77 and the lightning sensor continue (D-05).
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** Netlist: each radio of the CONOPS section 4b table loses its supply or has its RF disabled through EMCON_HW by a path that does not depend on the radio's firmware, except the VHF exciter, whose KEY gate is transmit-only, and the receive-only radios, in every state of the gates' own supplies. On the prototype with EMCON closed, the VHF receiver still decodes an external APRS beacon and no other radio emits.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to a, b
@@ -1087,9 +1208,10 @@ Prototype 1 core need: yes.
 - **Current reading:** FAIL at SCHEMATIC, DESK_REVIEW (25 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** S-01 (layer 4), S-94 (layer 4), S-65 (layer 8)
 
-#### REQ-071 (requirement, DEFINED, BLOCKER)
+#### REQ-071 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** Every transmitter's EMCON inhibit silences it within a stated maximum time of the EMCON toggle's contact closing, through a path in which every element that bounds the time is hardware, and keeps it silent while EMCON is asserted, in each fault condition of v2/docs/feasibility/EMCON.md section 5a: every processor in reset, every processor unpowered, a firmware error on any pin, the radio's own firmware booting, hung, restarting or reconfigured, a ribbon unplugged, a logic rail lost or in its unspecified band, back-feed from the lines that stay live, the energy stored on the radio's side of its gate, and EMCON asserted at power-up, during a transmission, during a boot and through the contact's bounce.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NAMED: D-01 names hardware EMCON as core and D-05 rules what it means; this record is its time bound.)
 - **Acceptance:** (1) Desk: for every row of EMCON.md section 4 the committed netlist shows a hardware path in each fault condition, and every time term of the row in section 5a is bounded from a held document within the row's maximum: 1 s for every transmitter but the RM520N-GL; for the RM520N-GL 20 s from EMCON on a module that has been turned on, with T_off, T_cut and the rail's decay taken at their parts' worst tolerance, 0 s at a power-up under EMCON (the rail never rises), and W_DISABLE1# low within 1 s. (2) Bench: EMCON.md section 6's rows E-01 to E-12 record, with an external receiver, the time from the contact's closing (TX_INHIBIT_n below 0.8 V at board C's TP10) to no emission above REQ-030's silence line at each antenna port (SC-38), each within its maximum, in the fault conditions each row names, and no emission after it for as long as EMCON is held.
 - **Verification:** CALCULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to a, b, c, d, kit
@@ -1103,9 +1225,10 @@ Prototype 1 core need: yes.
 
 Prototype 1 core need: no.
 
-#### REQ-033 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-033 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** Blackout darkens and silences the kit: the LED rail is opened in hardware, the monitor backlight and touch UI go dark, the monitor speaker and the sounder are muted, the TX lamp is dark.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** The netlist opens the LED rail in hardware; in a dark room with LIGHTING at BLACKOUT an observer dark-adapted for 10 minutes sees no light from any part of the kit at 1 m, and no sound is heard during a bearer event (SC-45).
 - **Verification:** SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to c, fw_panel, sw, a
@@ -1115,9 +1238,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-034 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-034 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** NVG mode sets the panel to its lowest PWM step (2 %), the backlight to 5 % and shows red and amber indicators only.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NAMED: D-01 names the NVG claim among the deferred functions.)
 - **Acceptance:** Functional check of the mode's settings (the panel at its 2 % step, the backlight at 5 %, red and amber indicators only; SC-45). Compatibility target (SC-48): MIL-STD-3009's lighting system NVIS compatible examination (5.7.2) for a Type I, Class B NVIS, with the panel, its light guides and the monitor at their NVG levels: the NVIS, focused on the 50 % square-wave NVG resolution chart at 20 ft (5.7.2.2) irradiated to 1.6 x 10^-10 NRB, resolves the same Snellen line as with every light of the kit off, and no light leak is seen through it; each indicator's and the monitor's spectral radiance is recorded against TABLE III as characterisation. No document claims night-vision compatibility until that examination has passed on the built prototype (D-01 defers the claim).
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to c, fw_panel, sw
@@ -1179,9 +1303,10 @@ Prototype 1 core need: yes.
 - **Current reading:** INCONCLUSIVE at SCHEMATIC, DESK_REVIEW (3 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** S-35 (layer 4), L-06 (layer EXTERNAL)
 
-#### REQ-035 (requirement, DEFINED, BLOCKER)
+#### REQ-035 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** ZEROIZE crypto-erases the kit's stored data: every drive and eMMC key is wrapped by keys only the secure element holds, and ZEROIZE destroys them, then running modules drop their RAM keys, then the slots are cut. The only trigger is the covered ZEROIZE toggle held closed for 5 s; the tamper and lid switch logs and never triggers it; remote wipe is deferred. ZEROIZE is level-sensitive across a power loss: the toggle is read at boot before any slot powers, a wipe-pending record resumes the wipe, and the kit re-arms only when the toggle returns.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NAMED: D-01 names ZEROIZE of the secure element as core; D-03 defines what it is.)
 - **Acceptance:** On the built prototype: (1) after the toggle is held closed for 5 s, a key operation with either key-encryption key fails; (2) no NVMe drive or eMMC unlocks or mounts on any module afterwards, including a module that was powered off during the wipe; (3) a toggle released before 5 s wipes nothing; (4) no other input starts a wipe: opening and closing the lid wipes nothing; (5) with power removed during the hold or the wipe, the wipe completes at the next power-up before any slot powers, and the kit re-arms only after the toggle is returned; (6) both key-encryption keys are destroyed and verified within 1.5 s of the end of the 5 s hold; (7) the slot rails are cut within 3.0 s of the end of the hold by a hardware timer that does not wait on the secure element, the kit bus or any module (SC-08); (8) the panel shows ZEROIZE complete and ZEROIZE incomplete as PANEL.md section 9 sets them (SC-30).
 - **Verification:** MANUAL_REVIEW, SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to c, b, fw_panel, sw
@@ -1191,9 +1316,10 @@ Prototype 1 core need: yes.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-35 (layer 4)
 
-#### REQ-036 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-036 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** A sealed case-open (tamper) switch under the frame logs lid events and senses the lid for the reduced mode; it never triggers ZEROIZE.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (SESSION: D-01 names only ZEROIZE of the secure element under NEED-10 (CONOPS section 2a: the case-open record is not named); the lid sense serves closed-lid operation (D-02b), an envelope item outside the core.)
 - **Acceptance:** The switch appears in a board netlist on an always-powered input (the approved floor plan sites it on E6), and the log records a lid event in the functional check with the kit on and off; opening the lid wipes nothing.
 - **Verification:** SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to e, case, fw_sensor
@@ -1203,9 +1329,10 @@ Prototype 1 core need: yes.
 - **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (7 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** nothing
 
-#### REQ-037 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-037 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** Key fill is a signed procedure to the secure element over the console on the sealed Glenair 233-370 port (D-12), with scheduled rotation and an audit log; there is no separate fill port.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (SESSION: D-01 names only ZEROIZE of the secure element under NEED-10 (CONOPS section 2a: key fill is not named).)
 - **Acceptance:** Procedure document reviewed; a fill and a rotation run on the prototype and appear in the audit log.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to procedure, sw, b
@@ -1215,9 +1342,10 @@ Prototype 1 core need: yes.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-34 (layer EXTERNAL)
 
-#### REQ-038 (requirement, DEFINED, BLOCKER)
+#### REQ-038 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** Every NVMe drive and each module's eMMC is encrypted with a key wrapped by the secure element's keys, so ZEROIZE makes them unreadable.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NAMED: D-01 names ZEROIZE of the secure element as core, and D-03 defines it as crypto-erase of the drive and eMMC keys, so their encryption under the secure element's key is part of ZEROIZE's acceptance.)
 - **Acceptance:** Encryption is configured on every NVMe drive and on each module's eMMC, each key wrapped by the secure element's keys; after ZEROIZE none of them unlocks or mounts.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to sw, b
@@ -1227,9 +1355,10 @@ Prototype 1 core need: yes.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-065 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-065 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** Firmware integrity (D-13): the prototype's floor is software-verified boot on the three STM32H743 I/O supervisors, and on the compute modules if Raspberry Pi documents it; a hardware root of trust is required at a production trigger.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (SESSION: D-01 names only ZEROIZE of the secure element under NEED-10; D-13 sets the design floor, which is built into prototype 1 and reported NOT_YET_TESTED until it runs.)
 - **Acceptance:** Design review of the supervisors' boot chain, then on the prototype an image not signed with the kit's key does not run on a supervisor; whether the compute modules have a documented verified-boot option is recorded from Raspberry Pi's own documentation.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to b, sw, fw_ioctrl, fw_panel, fw_sensor
@@ -1256,9 +1385,10 @@ Prototype 1 core need: no.
 - **Waits on:** nothing
 - **Resolved by:** Commit 68bc9e8f: V2-SPEC line 35 says the DCF77 pulse reaches only the sensor controller on E (correction 8).
 
-#### REQ-039 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-039 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** Multi-constellation GNSS (LG290P, L1/L2/L5/E6) gives position and a time pulse fanned out to every slot; chrony runs on each module.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** Fix and time pulse at every slot in the functional check; during self-compatibility (M6) GNSS keeps its fix or recovers within 10 s.
 - **Verification:** SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to b, sw
@@ -1268,9 +1398,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-71 (layer 8), S-72 (layer 8)
 
-#### REQ-040 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-040 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** A second time source (DCF77, 77.5 kHz) and a holdover clock keep time when GNSS is lost.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NAMED: D-01 names DCF77 among the deferred functions.)
 - **Acceptance:** With GNSS and DCF77 both absent, the kit's time stays within 1 s of UTC for 24 h after the last valid time (SC-44); the DCF77 time reaches every running module through the sensor controller, which alone takes the pulse (V2-SPEC line 35, correction 8; CFL-013 resolved).
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to b, e, sw
@@ -1284,9 +1415,10 @@ Prototype 1 core need: no.
 
 Prototype 1 core need: no.
 
-#### REQ-041 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-041 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The kit senses inside temperature, humidity and pressure (with the outside pressure as a seal check), floor water, battery-bay gas, shock, tilt and heading, ambient light, lightning, gamma dose rate, and outside temperature, humidity, pressure and UV in a sealed pod; the IMU logs shock and tilt and wakes the kit on motion, the ambient light drives the monitor's and the panel's brightness, the dose rate is logged and shared over the mesh, and the lightning detector raises a mast-down alarm (appendix 32.50, the sensor walk-through).
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NAMED: D-01 names the Geiger counter, the lightning sensor and the outside pod among the deferred functions; the other sensors follow NEED-12, which D-01 does not name in the core.)
 - **Acceptance:** Each sensor reports in the functional check and agrees with a calibrated reference within the accuracy its maker publishes for it; the kit sets no accuracy target of its own (SC-45); the motion wake-up, the brightness control and the dose rate's log and mesh share work in the functional check. Its alarms are REQ-042's (water and battery-bay gas) and the lightning mast-down alarm: when the AS3935 reports a lightning event with a storm-distance estimate of 10 km or less the kit raises MASTER WARN with the cause shown to the operator, and it clears once 30 minutes have passed with no event at 10 km or less (SC-47), checked by injecting the sensor's interrupt and a 10 km estimate at the sensor controller.
 - **Verification:** SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to e, c, fw_sensor, sw
@@ -1296,9 +1428,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-62 (layer 8), S-108 (layer 8), S-109 (layer 8)
 
-#### REQ-042 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-042 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** Water on the case floor, and hydrogen or VOC in the battery bay, raise an alarm and shut the pack down.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** Water bridging the case-floor electrodes, or the battery-bay VOC reading crossing the alarm level set at bring-up from the SGP41's own clean-air baseline, raises MASTER WARN and makes the sensor controller command the pack gauge over J_SMB to open both protection FETs within 10 s, whether or not an input is present (the gauge's SHUTDOWN with no input, its EMERGENCY SHUTDOWN through the Manual FET Control sequence with one, SLUUAQ3A 5.4.2 and 5.4.4.2), the pack staying open until service, with the compute modules and the panel controller off or in reset (SC-41); the hydrogen half of the battery-bay sensing is met once S-49 names its part.
 - **Verification:** SCRIPT, VENDOR_CONFIRMATION, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to e, p, fw_sensor
@@ -1308,9 +1441,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-49 (layer 6), S-56 (layer 6)
 
-#### REQ-043 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-043 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** Five internal fans, each rated IP68 by its maker (one per CM5 cooler, two mixer fans), are designed to couple the inside air to the skin, with their speed set from the inside climate reading.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** Each of the five fans is one its maker rates IP68 in the maker's own datasheet, filed under v2/vendor/fans/ with the pick, with a published operating range covering -20 C to the inside-air bar part_temps.py computes from pcb_envelope.yaml; the part is D-18's (a 40 mm IP68 fan that fits the coolers); a fan without that rating is a change of this statement, recorded as such; fans run in the functional check (SC-45).
 - **Verification:** VENDOR_CONFIRMATION, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to b, e, fw_sensor
@@ -1348,8 +1482,8 @@ Prototype 1 core need: yes.
 - **Current reading:** FAIL at SCHEMATIC, DESK_REVIEW (7 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** S-27 (layer 7), S-86 (layer PROCESS)
 - **Resolved by:** D-06: one 4S3P block of the Samsung INR18650-35E, about 145 Wh, whose sheet is held in v2/vendor/battery/.
-- **Pending owner decision L3-OD1:** AWAITING; the restatement it applies is prepared, not applied.
-- **Pending owner decision L3-OD2:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD1:** CLOSED AT LAYER 3 AS LAYER 4 ARCHITECTURE (the session, under D-21).
+- **Owner decision L3-OD2:** DECIDED: `both-kept` (D-33, 2026-09-30).
 
 #### CFL-015 (conflict, CONFLICT_RESOLVED, BLOCKER)
 
@@ -1400,9 +1534,10 @@ Prototype 1 core need: yes.
 - **Current reading:** INCONCLUSIVE at SCHEMATIC, DESK_REVIEW (4 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** L-03 (layer EXTERNAL), S-34 (layer EXTERNAL), S-46 (layer 8), S-85 (layer 8), S-86 (layer PROCESS)
 
-#### REQ-044 (requirement, DEFINED, BLOCKER)
+#### REQ-044 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The cell block's protection does not rest on software alone: over-voltage, over-current, short-circuit and over-temperature in the BQ4050 with trip points from the cell maker's own limits, and, as D-15's floor, a 4S secondary over-voltage protector driving a chemical fuse, the BQ4050's FUSE output on that fuse and its PTC input enabled. Cell under-voltage is in hardware if a 4S secondary that covers it is sourced near the over-voltage-only part's cost; otherwise it is the gauge's firmware, with its data flash verified at commissioning.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** TEST-PLAN section 5 rows 1 to 9 on a replaceable block; board P's netlist carries the secondary protector, the chemical fuse and the FUSE and PTC connections; where no hardware under-voltage protector is fitted, the commissioning procedure reads the gauge's under-voltage settings back from data flash; the qualified battery-and-protection review of D-09 has examined the actual schematic and BOM and its findings are answered before the pack PCB is released.
 - **Verification:** SCRIPT, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT, VENDOR_CONFIRMATION at SCHEMATIC, final PROTOTYPE; allocated to p
@@ -1411,11 +1546,12 @@ Prototype 1 core need: yes.
 - **TEST-PLAN:** section 5 row 1; section 5 row 2; section 5 row 3; section 5 row 4; section 5 row 5; section 5 row 6; section 5 row 7; section 5 row 8; section 5 row 9; section 5 row 10; section 5 row 11; section 5 row 12; section 5 row 13; section 5 row 14; section 6 row E3-P; section 6 row E4-P; section 7 row P10; section 7 row P11; section 7 row P12
 - **Current reading:** INCONCLUSIVE at SCHEMATIC, DESK_REVIEW (34 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** S-85 (layer 8), L-03 (layer EXTERNAL)
-- **Pending owner decision L3-OD1:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD1:** CLOSED AT LAYER 3 AS LAYER 4 ARCHITECTURE (the session, under D-21).
 
-#### REQ-045 (requirement, DEFINED, BLOCKER)
+#### REQ-045 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** From the cells to every load, the maximum fault current is bounded at each stage by a protective element sized for that stage's conductors and connectors, coordinated with what it protects.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** energy_chain.py passes with every stage's prospective fault current, protection and conductor rating sourced; no coordination study exists yet (OPERATING-ENVELOPE section 4).
 - **Verification:** CALCULATION, MANUAL_REVIEW at SCHEMATIC; allocated to p, e, e5, a
@@ -1424,11 +1560,12 @@ Prototype 1 core need: yes.
 - **TEST-PLAN:** section 5 row 3; section 5 row 4; section 5 row 5; section 5 row 13; section 5 row 14; section 7 row P13
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-66 (layer 8), S-74 (layer 5), S-86 (layer PROCESS)
-- **Pending owner decision L3-OD1:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD1:** CLOSED AT LAYER 3 AS LAYER 4 ARCHITECTURE (the session, under D-21).
 
-#### REQ-046 (requirement, DEFINED, BLOCKER)
+#### REQ-046 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The cells are charged only between 0 and +45 C and discharged only between -10 and +60 C at the cell surface; below 0 C the pack is warmed by its heater mat before charge.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** TEST-PLAN section 5 rows 7 and 8 (chamber at -5 and +48 C with the charger live, and a block read at 42.5 to 43.0 C taking no charge when the charger is connected; -15 C, then +59 to +60 C at most, under a 2 A load; a thermocouple on every cell): the pack gauge's charge and discharge FETs open before any cell surface passes the windows, at the thresholds set inside them by the gauge's own error budget, and no charge starts above the charge inhibit's T3 (THERMAL-COORDINATION.md sections 3 to 5); the bridge's own hold clears above 3 C (PANEL.md section 10).
 - **Verification:** SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to p, a, e, fw_panel
@@ -1437,12 +1574,13 @@ Prototype 1 core need: yes.
 - **TEST-PLAN:** section 2 row E4; section 4; section 5 row 7; section 5 row 8; section 6 row E3-A; section 6 row E3-L; section 6 row E5-A; section 6 row E3-T; section 6 row E3-P; section 6 row E4-O; section 7 row P12; section 7 row P14
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
-- **Pending owner decision L3-OD1:** AWAITING; the restatement it applies is prepared, not applied.
-- **Pending owner decision L3-OD5:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD1:** CLOSED AT LAYER 3 AS LAYER 4 ARCHITECTURE (the session, under D-21).
+- **Owner decision L3-OD5:** DECIDED: `layer4-obligation` (D-36, 2026-09-30).
 
-#### REQ-069 (requirement, DEFINED, BLOCKER)
+#### REQ-069 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The pack's transport route is claimed only once the pack's dangerous-goods classification, the conditions that apply to it, or an exception that applies is established: an unknown UN 38.3 status permits no route by itself, since road carriage has its own rules (the ADR) as air and parcel carriage have theirs (D-04).
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** No document claims a transport route for the kit with its pack, or for the pack alone, until CONOPS and the operating instructions state for that route the pack's classification and the conditions or exception it travels under, each with the clause of the regulation as its source (S-52).
 - **Verification:** MANUAL_REVIEW at SCHEMATIC; allocated to procedure, p
@@ -1451,11 +1589,12 @@ Prototype 1 core need: yes.
 - **TEST-PLAN:** section 6 row E3-T
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-52 (layer 4)
-- **Pending owner decision L3-OD1:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD1:** CLOSED AT LAYER 3 AS LAYER 4 ARCHITECTURE (the session, under D-21).
 
-#### REQ-075 (requirement, DEFINED, BLOCKER)
+#### REQ-075 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The pack is charged at no more than 3.06 A, 1,020 mA per cell of its 3P block, the cell maker's charge current for cycle life.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** Desk: the charger's ChargeCurrent setting and the gauge's charging current in the golden image are at most 3.06 A (Samsung INR18650-35E Ver. 1.1, clause 3.5; SC-40); prototype: the charge current measured at the pack in constant-current charge from shore is at most 3.06 A.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to a, p, procedure
@@ -1464,12 +1603,13 @@ Prototype 1 core need: yes.
 - **TEST-PLAN:** not named by id
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
-- **Pending owner decision L3-OD1:** AWAITING; the restatement it applies is prepared, not applied.
-- **Pending owner decision L3-OD2:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD1:** CLOSED AT LAYER 3 AS LAYER 4 ARCHITECTURE (the session, under D-21).
+- **Owner decision L3-OD2:** DECIDED: `both-kept` (D-33, 2026-09-30).
 
-#### REQ-077 (requirement, DEFINED, BLOCKER)
+#### REQ-077 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** In every mode and on every input state (on the pack, or on shore, vehicle or solar input, charging or not), the kit acts on the pack's measured cell temperature before any cell passes the cell maker's +60 C, idle cells on an input included: it sheds to its minimum load and then shuts itself down in a controlled way with the charge held, before the pack gauge's discharge over-temperature or any permanent pack protection acts, and it restarts only once the cells have cooled (the hot stop, SC-49).
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** Desk (schematic): the committed netlists carry a path from the pack gauge's cell temperatures to the control that removes the kit's load which needs no compute module (HOT-R1, SC-50: board E's sensor controller to board A's expander input on the dock's spare contact, and on to the panel controller that owns the slot enables, the switched loads and PI_KILL), and the two thresholds sit, in the gauge's own reading, under its discharge over-temperature of 57.5 C and inside +60 C by the published terms of the battery packet's error budget (THERMAL-COORDINATION.md section 3; CONOPS section 4c); a configuration in which the cells' temperature reaches no controller that can remove load reads FAIL. Prototype, on the pack and then on shore, in two parts. (1) Whatever a chamber reaches, the forced trigger at room temperature (TEST-PLAN P15): the gauge's hottest cell reading is driven past +56.5 C and then +57.0 C, and never to its discharge over-temperature of +57.5 C, by substituting one cell thermistor input, each setting read back in the gauge's DAStatus2(); at the second reading at or above +56.5 C the kit sheds to its minimum load within 60 s (every running module shut down on PI_SHDN_REQ and SLOT_EN1 to SLOT_EN3 dropped, the switched loads off, the charge held by the charger's CHRG_INHIBIT with the charger still carrying the kit on shore) with MASTER WARN and the e-paper naming the step and the reading, and the heat stage's module returns only once the reading is at or below +46.5 C and 30 minutes have passed since the stop; at the second reading at or above +57.0 C with H1 acting the kit shuts itself down through PI_KILL and stays off, on shore as well, until MAIN is pressed, and then raises no slot while the reading is above +46.5 C; HOT-R1 carries its four states (1 Hz below H1, 5 Hz in H1, held low in H2, held high with the sensor controller held in reset), a line held low stops the kit, and with the line held high the same two steps act on board B's TMP117 at +55.0 C and +56.0 C, released at +45.0 C; after each run the gauge's SafetyStatus() and PFStatus() show no discharge over-temperature and no permanent failure. (2) TEST-PLAN E3-H, during E3-A and E3-L at +40 C and in its stepped run beyond the envelope to at most +55 C: where the hottest cell as the gauge reads it reaches the first threshold the kit sheds to its minimum load within 60 s, and where it reaches the second the kit shuts itself down, both before any cell surface reaches +59 C on the reference thermocouples and with no permanent protection action (the second level's over-temperature, the gauge's SOT, the chemical fuse F2); a run in which a cell surface reaches +59 C is ended at once and reads FAIL. A step that acted in neither part reads NOT_VERIFIED, never PASS; a thermal run in which no threshold was reached is recorded with its peak readings and does not stand in for (1).
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to kit, a, e, p, fw_panel, fw_sensor
@@ -1483,9 +1623,10 @@ Prototype 1 core need: yes.
 
 Prototype 1 core need: yes.
 
-#### REQ-047 (requirement, DEFINED, BLOCKER)
+#### REQ-047 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The face plate comes off (ten 6-32 UNC screws from above into Peli's inserts, C1 of SC-07), the rod stack lifts straight up off the blind-mate joint without unscrewing a cable, and the pack comes out of its cradle.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** Demonstrated on the assembled prototype; the dock and blind-mate float tolerance stack (the SMP-MAX paths, the Preci-Dip 813 contacts and the Mill-Max power pins with the rods, spacers, VHB pads and laminates) closes on paper as its own analysis, which is owed (v2/docs/CASE-FIT-UNCERTAINTIES.md section 3, row DOCK; CASE-MARGINS.md judges no blind-mate row), and the case margins it rests on are held against Peli's own figures (CASE-MARGINS.md), with any OPEN margin shown on hardware at the build.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at PLACED_BOARD, final ASSEMBLY; allocated to case, a, e, e5, kit
@@ -1495,9 +1636,10 @@ Prototype 1 core need: yes.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-048 (requirement, DEFINED, BLOCKER)
+#### REQ-048 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** Every rail can be brought up current-limited and measured before its loads are enabled, every programmable device (three CM5 over rpiboot, two RP2040, three I/O supervisors, the pack gauge) can be programmed in circuit, and the signals a bring-up needs are reachable.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** Schematic: on each board's committed netlist every rail has a point where it can be current-limited and measured before its loads are enabled, and every programmable device its programming header or port (W5's per-board test access list, read against the netlist); placed board: every listed point is reachable on the placed board.
 - **Verification:** MANUAL_REVIEW at SCHEMATIC, final PLACED_BOARD; allocated to a, b, c, d, e, p
@@ -1507,9 +1649,10 @@ Prototype 1 core need: yes.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-049 (requirement, DEFINED, BLOCKER)
+#### REQ-049 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The sealed Glenair 233-370 USB receptacle on the connector plate is the maintenance console and key-fill port; the USB-C outlet carries power only (D-12).
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** A console session over the Glenair port on the prototype reaches the module that hosts bank 3, and still does after a bank failover; the USB-C outlet enumerates no data device.
 - **Verification:** SCRIPT, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to a, b, sw
@@ -1519,9 +1662,10 @@ Prototype 1 core need: yes.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-066 (requirement, DEFINED, BLOCKER)
+#### REQ-066 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** Lifting the stack for service is done with the kit off, the pack's XT60 unplugged and shore removed, and an insulating cap covers the dock block E5 while the stack is out (D-14).
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** ASSEMBLY section 7 states the procedure in that order and the cap is a listed kit part, fitted in the service demonstration on the prototype; a hardware stack-present interlock is studied at Review D.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final ASSEMBLY; allocated to procedure, e, e5, a
@@ -1587,18 +1731,20 @@ Prototype 1 core need: no.
 - **Waits on:** nothing
 - **Resolved by:** The S-07 document correction of 26 September 2026 (stream s07, against 45bde541): every document and outcome named in the statement describes the circuit as generated, the envelope is re-pinned (ENV-001), and TEST-PLAN.md:46 measures EMCON with a receiver outside the kit.
 
-#### CFL-017 (conflict, CONFLICT_OPEN, ADVISORY)
+#### CFL-017 (conflict, CONFLICT_RESOLVED, ADVISORY)
 
 - **Statement:** With its own pack fitted the kit cannot meet D-02a's +55 C operating margin, TEST-PLAN E5's +60 C humidity dwell, nor the +71 C and -33 C storage margins, since the stored kit keeps its pack (SC-19): both Samsung revisions rate the cells to +60 C in storage and discharge and the maker forbids use above it, and the storage floor is -20 C (Ver. 1.1) or 0 C (Version 1.0), while OPERATING-ENVELOPE section 8's arithmetic puts the inside air at +65 to +71 C at +55 C ambient (finding BAT-F19). TEST-PLAN runs those levels as stated deviations without the cells in the chamber, which measures the rest of the kit and does not resolve this.
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** A result for the kit with its pack: a measured pack arrangement that keeps every cell inside its limits at the margins (the bounded enclosure heat experiment, POWER-THERMAL section 10), cells rated beyond them (which reopens owner ruling D-06), or an owner reading of D-02a that its margins apply to the kit without its cells. Until then TEST-PLAN writes E3-S, E3-O, E4-S and E5 as deviations and never reports their pass as the kit's margin with its pack.
 - **Verification:** MANUAL_REVIEW at SCHEMATIC; allocated to procedure, p
-- **Sources:** need NEED-15; SC-12 (session, 2026-09-26); SC-19 (session, 2026-09-27); files: v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571); v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 2; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5; v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a; v2/docs/OPERATING-ENVELOPE.md section 8
+- **Sources:** need NEED-15; D-29 (owner, 2026-09-30); D-36 (owner, 2026-09-30); SC-12 (session, 2026-09-26); SC-19 (session, 2026-09-27); files: v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571); v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 2; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5; v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a; v2/docs/OPERATING-ENVELOPE.md section 8
 - **Judged or settled by:** rules none (coverage NONE); decisions none
 - **TEST-PLAN:** section 2 row E3; section 2 row E4; section 6; section 6 row E3-S; section 6 row E3-O; section 6 row E4-S
-- **Current reading:** FAIL at SCHEMATIC
+- **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
-- **Pending owner decision L3-OD5:** AWAITING; the restatement it applies is prepared, not applied.
+- **Resolved by:** D-29 applied by D-36 (layer 3's closure, 2026-09-30): judged mode by mode against the project's maker sheets (Samsung INR18650-35E Ver. 1.1 and Version 1.0), the collisions are between the requirements (D-02, D-02a and TEST-PLAN E5, with the pack fitted) and the current cell, an engineering selection D-06's pack carries, with the current thermal design; the requirements are coherent, and FEA-008 carries the component-selection and thermal-design obligation to layer 4.
+- **Owner decision L3-OD5:** DECIDED: `layer4-obligation` (D-36, 2026-09-30).
+- **Changed since H3:** status (section 6).
 
 #### CON-023 (constraint, DEFINED, BLOCKER)
 
@@ -1612,9 +1758,23 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-123 (layer TOOLING)
 
-#### REQ-050 (requirement, DEFINED, BLOCKER)
+#### FEA-008 (feasibility, FEASIBILITY_OPEN, MUST_JUSTIFY)
+
+- **Statement:** The owner's clarification D-29 judged CFL-017 mode by mode against the project's maker sheets (Samsung INR18650-35E Ver. 1.1, at the cell surface; Version 1.0, ambient): the requirements are coherent, and with the pack fitted the current cell and thermal design fall short of them in use at the envelope's +40 C by up to 2.1 K lid closed on the independent bound; none on 32.53's conductance (LO-01a), at D-02a's +55 C operating margin by 1.6 to 14.2 K (LO-01d), in TEST-PLAN E5's humid dwell by at least 6.63 K (LO-01e), at the +71 C storage margin by 11 K (LO-01f) and at the -33 C storage margin by 13 K (Ver. 1.1); 33 K (Version 1.0) (LO-01g); storage inside the envelope collides only on Version 1.0 (LO-01h). A layer 4 component selection and thermal design owes each closure; no alternative cell or thermal solution is shown.
+- **Applicability:** deferred (NEED_DEFAULT)
+- **Acceptance:** Each of LO-01a, LO-01d, LO-01e, LO-01f, LO-01g, LO-01h closed by its criterion in the cell modes table of v2/docs/handover/layer3/REQUIREMENTS-L3-R2.md: a cell whose maker's sheet rates the mode's range, or a thermal design holding every cell inside its governing limits, shown by the named TEST-PLAN run with the pack fitted and a thermocouple on every cell.
+- **Verification:** CALCULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to kit, procedure
+- **Sources:** need NEED-15; D-02a (owner, 2026-09-25); D-06 (owner, 2026-09-26); D-29 (owner, 2026-09-30); D-36 (owner, 2026-09-30); SC-19 (session, 2026-09-27); files: v2/vendor/battery/samsung-35e-orbtronic.pdf; v2/vendor/battery/samsung-35e-akkuzentrum.pdf; v2/docs/OPERATING-ENVELOPE.md
+- **Judged or settled by:** rules none (coverage NONE); decisions none
+- **TEST-PLAN:** not named by id
+- **Current reading:** INCONCLUSIVE at SCHEMATIC, DESK_REVIEW (1 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
+- **Waits on:** nothing
+- **Changed since H3:** kind, parent, statement, acceptance, allocated_to, verification_method, verification_phase, final_phase, prototype_1, prototype_1_basis, release_effect, status (section 6).
+
+#### REQ-050 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** A whole-kit test plan is written before the build, using MIL-STD-810 and MIL-STD-461 methods where it can, and run on the built prototype, in-house where possible and at a laboratory where not, with pass criteria per test and fixes fed back into the record; no rating is claimed before it runs.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (SESSION: The core records are accepted through TEST-PLAN, so its tracing and purpose rules apply to prototype 1 (CONOPS section 2a).)
 - **Acceptance:** TEST-PLAN.md traces every test to a requirement, states each test's purpose (acceptance, qualification margin or characterisation) and keeps operating, storage and qualification limits distinct (W5).
 - **Verification:** MANUAL_REVIEW at SCHEMATIC, final PROTOTYPE; allocated to kit, procedure
@@ -1624,9 +1784,10 @@ Prototype 1 core need: no.
 - **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (6 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** nothing
 
-#### REQ-070 (requirement, DEFINED, BLOCKER)
+#### REQ-070 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** Two reviews by people outside the agents that wrote the design are planned before the parts they cover are built: a ZEROIZE and key-fill security review on the SIDN voucher, and a battery-and-protection review by a qualified electronics engineer before the pack is built (D-09).
+- **Obligation:** mandatory requirement
 - **Applicability:** core (SESSION: The battery review gates building the core pack and the security review covers core ZEROIZE; agreement between agents is review, never evidence (plan section 3).)
 - **Acceptance:** Each review's packet is prepared and its findings are recorded against the requirement ids they touch; the pack is not built before the battery review's findings are answered; any spend beyond the voucher has a quote and the owner's approval.
 - **Verification:** MANUAL_REVIEW at SCHEMATIC, final ASSEMBLY; allocated to procedure, p, kit
@@ -1665,9 +1826,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-48 (layer EXTERNAL)
 
-#### REQ-053 (requirement, DEFINED, BLOCKER)
+#### REQ-053 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The markets and obligations are stated: a non-commercial prototype in the Netherlands and the EU, operated by a licensed radio amateur, with no CE or RED conformity marking and no EMC claim, and the design keeps an EU route open (D-04).
+- **Obligation:** mandatory requirement
 - **Applicability:** core (SESSION: Where and by whom the core transmitters may operate is the premise of accepting them (CONOPS section 2a: a core transmitter kept inside the operator's licence and the EU limits).)
 - **Acceptance:** PRODUCT-BRIEF.md and CONOPS.md state the D-04 scope and its obligations (every transmitter to the operator's licence and the EU limits, the VHF band lock, the pack's transport route), and no public document claims CE, RED or EMC conformity (claims_check.py, rule ENV-002).
 - **Verification:** MANUAL_REVIEW at SCHEMATIC; allocated to kit
@@ -1677,9 +1839,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
 
-#### REQ-054 (requirement, DEFINED, BLOCKER)
+#### REQ-054 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The LoRa transmitter is capped in software to the EU limits: 14 dBm ERP generally, 27 dBm ERP on 869.4 to 869.65 MHz at 10 % duty.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (SESSION: A core transmitter kept inside the EU limits (CONOPS section 2a): a mesh message sent above them is not an accepted core message.)
 - **Acceptance:** Configuration review: meshtasticd's region, channel, transmit power and duty-cycle settings, with the antenna's gain in dBd applied (the limits are ERP, referenced to a half-wave dipole: a gain in dBi less 2.15 dB), give at most 14 dBm ERP on every configured channel outside 869.4 to 869.65 MHz, and at most 27 dBm ERP at a duty cycle of at most 10 % on a channel inside 869.4 to 869.65 MHz. Prototype: the conducted output measured at each configured channel, plus the antenna's gain in dBd, is at or under the limit of the band the channel is in, and the duty cycle measured on 869.4 to 869.65 MHz is at most 10 %.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to b, sw
@@ -1690,9 +1853,10 @@ Prototype 1 core need: no.
 - **Waits on:** S-28 (layer 5)
 - **Changed since H3:** acceptance (section 6).
 
-#### REQ-055 (requirement, DEFINED, BLOCKER)
+#### REQ-055 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** The VHF transmitter operates only on the amateur band of the operator's licence: the SA868 can transmit 134 to 174 MHz and the PA covers 135 to 175 MHz, so the VHF path carries a band lock (D-04).
+- **Obligation:** mandatory requirement
 - **Applicability:** core (SESSION: APRS is a core bearer, and a 30 W transmitter outside the operator's licensed band is not an accepted core message (CONOPS section 2a).)
 - **Acceptance:** The band lock refuses a transmit frequency outside the operator's licensed VHF band, shown on the prototype at both band edges; the configuration review names the lock's mechanism (firmware or configuration).
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to d, sw
@@ -1702,9 +1866,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-28 (layer 5)
 
-#### REQ-056 (requirement, DEFINED, ADVISORY)
+#### REQ-056 (requirement, mandatory, DEFINED, ADVISORY)
 
 - **Statement:** The SDR's transmit path is used only where the operator is permitted.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** Configuration review: the SDR's transmit path is disabled unless a configuration names a band the operator's licence permits, at the EU limits (D-04).
 - **Verification:** MANUAL_REVIEW at SCHEMATIC; allocated to sw
@@ -1714,9 +1879,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-28 (layer 5)
 
-#### REQ-067 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-067 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The HF transmitter operates only on the amateur bands of the operator's licence (appendix 32.50 item 16a, D-04).
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NAMED: D-01 names HF among the deferred functions.)
 - **Acceptance:** Configuration review of the QMX's band settings against the operator's licence; on the prototype a transmit outside those bands is refused.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to sw, kit
@@ -1725,15 +1891,16 @@ Prototype 1 core need: no.
 - **TEST-PLAN:** not named by id
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-28 (layer 5)
-- **Pending owner decision L3-OD2:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD2:** DECIDED: `both-kept` (D-33, 2026-09-30).
 
 ### NEED-17: Keep the kit's own transmitters from damaging or blinding its own receivers.
 
 Prototype 1 core need: no.
 
-#### REQ-057 (requirement, DEFINED, BLOCKER)
+#### REQ-057 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** Every core transmitter (the RockBLOCK 9704, the RM520N-GL, the E22 LoRa module, the SA868 with its 30 W PA, and the live WiFi link card) keyed in turn at full power, with every receiver listening, damages no receiver, falsely triggers no EMCON, ZEROIZE or sensor, and leaves GNSS with its fix or recovering it within 10 s.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (SESSION: A core transmitter that damages or blinds a core receiver fails the core (CONOPS section 2a); the transmitters D-01 defers are REQ-068.)
 - **Acceptance:** TEST-PLAN M6 on the prototype: each core transmitter (the RockBLOCK 9704, the RM520N-GL, the E22 LoRa module, the SA868 with its 30 W PA and the live WiFi link card) keyed in turn at full power with every receiver listening. It passes when, for every key-down, no receiver is damaged (each passes its part of the functional check afterwards), no EMCON, ZEROIZE or sensor is falsely triggered, and GNSS keeps its fix or regains it within 10 s of the key-up.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at ROUTED_BOARD, final PROTOTYPE; allocated to kit, b, d
@@ -1744,9 +1911,10 @@ Prototype 1 core need: no.
 - **Waits on:** nothing
 - **Changed since H3:** acceptance (section 6).
 
-#### REQ-058 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-058 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** RF protection: gas-discharge arrestors at the antenna bulkheads, a receive limiter or relay on the SDR path during PA key-down, and a shielded compartment for the PA.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** Each element present in the design; during every PA key-down the SDR's receive input stays at or below +7 dBm, 3 dB under the maker's absolute maximum safe receive input power of +10 dBm for the LimeSDR Mini 2.0 family (the product page as filed), with the limiter or relay sized to hold it there, and the SDR receives again within 1 s of each key-down's end (NEED-17's blinding) (SC-45).
 - **Verification:** SCRIPT, VENDOR_CONFIRMATION, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to case, b, d
@@ -1756,9 +1924,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-110 (layer 6), S-113 (layer TOOLING)
 
-#### REQ-068 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-068 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** The transmitters outside prototype 1's core (the QMX HF unit, the LimeSDR's transmit path, the two E72 radios and the three compute modules' own WiFi and Bluetooth) keyed in turn at full power, with every receiver listening, damage no receiver, falsely trigger no EMCON, ZEROIZE or sensor, and leave GNSS with its fix or recovering it within 10 s.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (SESSION: D-01 defers HF and does not name the SDR, Zigbee, Thread or the modules' own radios; M6 for them is reported NOT_YET_TESTED until it runs.)
 - **Acceptance:** TEST-PLAN M6 on the prototype: each transmitter outside prototype 1's core (the QMX HF unit, the LimeSDR's transmit path, the two E72 radios and the three compute modules' own WiFi and Bluetooth) keyed in turn at full power with every receiver listening. It passes when, for every key-down, no receiver is damaged (each passes its part of the functional check afterwards), no EMCON, ZEROIZE or sensor is falsely triggered, and GNSS keeps its fix or regains it within 10 s of the key-up.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at ROUTED_BOARD, final PROTOTYPE; allocated to kit, a, b
@@ -1767,7 +1936,7 @@ Prototype 1 core need: no.
 - **TEST-PLAN:** section 3 row M6
 - **Current reading:** NOT_JUDGED
 - **Waits on:** nothing
-- **Pending owner decision L3-OD2:** AWAITING; the restatement it applies is prepared, not applied.
+- **Owner decision L3-OD2:** DECIDED: `both-kept` (D-33, 2026-09-30).
 - **Changed since H3:** acceptance (section 6).
 
 ### NEED-18: Work in its electromagnetic surroundings: bounded conducted and radiated emissions outside the intentional transmissions, and no upset from conducted, radiated or electrostatic disturbance.
@@ -1823,9 +1992,10 @@ Prototype 1 core need: no.
 - **Current reading:** PASS at SCHEMATIC, DESK_REVIEW (7 evidence entries; `REQUIREMENTS-TRACE.md` lists them)
 - **Waits on:** nothing
 
-#### REQ-061 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-061 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** A ground stud on the case wall gives the kit one bonding point, and the RF arrestors and cable shields bond to it by a stated conductor.
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** The stud appears in the case CAD and the connector plate; every arrestor body and every cable shield that crosses the case wall has a named conductor to it, and the bond resistance from each to the stud is measured and recorded at assembly; which board net, if any, meets the stud is decided once, by GND-002's strategy ruled as a decision (S-50).
 - **Verification:** MANUAL_REVIEW, SCRIPT at SCHEMATIC, final ASSEMBLY; allocated to case, a, e
@@ -1835,9 +2005,10 @@ Prototype 1 core need: no.
 - **Current reading:** NOT_JUDGED
 - **Waits on:** S-50 (layer 4)
 
-#### REQ-063 (requirement, DEFINED, MUST_JUSTIFY)
+#### REQ-063 (requirement, mandatory, DEFINED, MUST_JUSTIFY)
 
 - **Statement:** Conducted emissions and susceptibility on the power leads, bulk cable injection, radiated emissions and radiated susceptibility are to be tested to MIL-STD-461 methods (TEST-PLAN M1 to M5) against the limit curves of a stated edition, at an EMC pre-compliance session once the prototype exists (D-09).
+- **Obligation:** mandatory requirement
 - **Applicability:** deferred (NEED_DEFAULT)
 - **Acceptance:** Each of TEST-PLAN M1 to M5 is run against the limit MIL-STD-461G (11 December 2015) gives for the 'Ground, Army' installation of its Table V (SC-43), at an EMC pre-compliance session once the prototype exists (D-09). D-04 makes no EMC claim for the prototype, so every run is characterisation and supports no claim (ENV-002).
 - **Verification:** PROTOTYPE_MEASUREMENT at PROTOTYPE; allocated to kit
@@ -1851,9 +2022,10 @@ Prototype 1 core need: no.
 
 Prototype 1 core need: yes.
 
-#### REQ-060 (requirement, DEFINED, BLOCKER)
+#### REQ-060 (requirement, mandatory, DEFINED, BLOCKER)
 
 - **Statement:** One deliberate, covered action (SOS closed 2 s) sends a distress message with the kit's position over the available bearers, Iridium first when nothing else is up, to a configured recipient list; it never transmits through EMCON: while EMCON is closed the message is queued and the operator is told (D-10). MASTER WARN flashes, the sounder sounds its pattern (muted in blackout), and flipping the toggle back cancels, with the e-paper confirming both.
+- **Obligation:** mandatory requirement
 - **Applicability:** core (NEED_DEFAULT)
 - **Acceptance:** In the functional check: SOS closed 2 s delivers the message with the kit's position (from the LG290P) to each configured recipient over the first available bearer, and over Iridium with every other bearer down; with EMCON closed nothing is transmitted, the message is queued, the operator is told, and it is sent when EMCON opens; flipping back cancels, with the e-paper confirming both.
 - **Verification:** MANUAL_REVIEW, PROTOTYPE_MEASUREMENT at SCHEMATIC, final PROTOTYPE; allocated to c, fw_panel, sw
@@ -1881,21 +2053,26 @@ Computed from H3's registry as released (`v2/release/handover/H3.zip!H3/v2/ecad/
 | Record | Change | Fields | Why | Layers affected |
 |---|---|---|---|---|
 | REQ-008 | changed | acceptance | acceptance made measurable (L3-R2) | 5 |
+| REQ-011 | changed | acceptance | L3-OD2: the tablet bracket leaves the lid (tablet out) or narrows to 8 inch (QMX out) | 7 |
 | REQ-012 | changed | acceptance | acceptance made measurable (L3-R2) | 5, 8 |
+| REQ-014 | changed | statement | L3-OD1 and L3-OD2: aged capacity and runtime stated per pack | 4, 6, 8 |
+| REQ-072 | changed | statement, acceptance, release_effect | L3-OD1, L3-OD3, L3-OD4 and L3-OD6: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, the deployment band, the weather basis (the benchmark's limitations in its notes, or a coverage target) | 4, 6, 7, 8, 9 |
 | REQ-029 | changed | acceptance | acceptance made measurable (L3-R2) | 8, 9 |
 | CHO-003 | changed | acceptance | acceptance made measurable (L3-R2) | 8 |
+| CFL-017 | changed | status | L3-OD5: resolved by the owner's reading of D-02a | none |
 | REQ-054 | changed | acceptance | acceptance made measurable (L3-R2) | 5 |
 | REQ-057 | changed | acceptance | acceptance made measurable (L3-R2) | 4 |
 | REQ-068 | changed | acceptance | acceptance made measurable (L3-R2); under L3-OD2 qmx-out its QMX clause is removed | 4 |
+| FEA-008 | added | kind, parent, statement, acceptance, allocated_to, verification_method, verification_phase, final_phase, prototype_1, prototype_1_basis, release_effect, status | a feasibility item recorded by an owner answer whose target the studied candidate does not meet (D-26): the first of FI-01 (row L3-OD1 reject), FI-02 (row L3-OD2's lid not carrying row L3-OD6's store), FI-03 (a coverage target), FI-04 (both lid items kept), FI-05 (the open kit's push) and FI-06 (the solar interface's compliance) | 4 |
 
 ### 6.2 Rulings, choices, items and readings
 
-- **Owner rulings added:** D-19 (2026-09-28, the case test package: the buy route, staged), D-20 (2026-09-28, mission M1's energy: the requirements preserved, the budget reconciled), D-21 (2026-09-30, finish layer 3 for the current target configuration (the owner's instruction of 30 September 2026)), D-22 (2026-09-30, the owner's review of the draft layer 3 decision table (30 September 2026)), D-23 (2026-09-30, the owner's instruction on the six-row layer 3 decision table (30 September 2026)), D-24 (2026-09-30, the owner's addendum on the power path and the decision package of layer 3 (30 September 2026)), D-25 (2026-09-30, the owner's corrections to round 3b of layer 3 (30 September 2026))
+- **Owner rulings added:** D-19 (2026-09-28, the case test package: the buy route, staged), D-20 (2026-09-28, mission M1's energy: the requirements preserved, the budget reconciled), D-21 (2026-09-30, finish layer 3 for the current target configuration (the owner's instruction of 30 September 2026)), D-22 (2026-09-30, the owner's review of the draft layer 3 decision table (30 September 2026)), D-23 (2026-09-30, the owner's instruction on the six-row layer 3 decision table (30 September 2026)), D-24 (2026-09-30, the owner's addendum on the power path and the decision package of layer 3 (30 September 2026)), D-25 (2026-09-30, the owner's corrections to round 3b of layer 3 (30 September 2026)), D-26 (2026-09-30, the owner's reviewer's review of the layer 3 decision brief (30 September 2026)), D-27 (2026-09-30, the owner's addendum to layer 3's round 5: M1's runtime questioned, alternatives before any sacrifice (30 September 2026)), D-28 (2026-09-30, the owner's clarification of the energy and runtime requirement, which closes layer 3 (30 September 2026)), D-29 (2026-09-30, the owner's clarification of CFL-017: product requirements apart from the current cell (30 September 2026)), D-30 (2026-09-30, the owner's instruction on the Codex worker as a standing collaborator and on one decision register (30 September 2026)), D-31 (2026-09-30, the owner's operating instruction: one authoritative interpretation and a current owner brief in the decision register (30 September 2026)), D-32 (2026-09-30, M1's runtime: 48 to 72 hours, a design objective under the stated profile (row L3-OD7)), D-33 (2026-09-30, Both lid items kept, the QMX HF set and the tablet bracket (row L3-OD2)), D-34 (2026-09-30, REQ-016's approved solar window unchanged (row L3-OD3)), D-35 (2026-09-30, No deployment condition at layer 3 (row L3-OD4)), D-36 (2026-09-30, CFL-017 closed as a requirements conflict; the cell and thermal design a layer 4 obligation (row L3-OD5)), D-37 (2026-09-30, M1's solar conditions: SC-37's mean day, one plane, TYP (row L3-OD6))
 - **Session choices added:** SC-64, SC-65, SC-66, SC-67, SC-68, SC-69, SC-70, SC-71, SC-72, SC-73, SC-74, SC-75
 - **Open items added:** S-82, S-83, S-84, S-85, S-86, S-87, S-90, S-91, S-92, S-93, S-94, S-95, S-96, S-97, S-99, S-100, S-101, S-102, S-103, S-104, S-105, S-106, S-107, S-108, S-109, S-110, S-111, S-112, S-113, S-115, S-116, S-123, S-124, S-125, S-126
-- **Open items closed:** S-45, S-57, S-63, S-64, S-76, S-79, S-81, S-88, S-89, S-98, S-114, S-117, S-118, S-119, S-120, S-121, S-122, S-127
-- **Readings that changed result:** CON-010 FAIL to INCONCLUSIVE, REQ-077 FAIL to INCONCLUSIVE
-- **Records whose evidence list changed:** 40
+- **Open items closed:** M-02, S-45, S-57, S-63, S-64, S-76, S-79, S-81, S-88, S-89, S-98, S-114, S-117, S-118, S-119, S-120, S-121, S-122, S-127
+- **Readings that changed result:** CFL-017 FAIL to NOT_JUDGED, CON-010 FAIL to INCONCLUSIVE, REQ-077 FAIL to INCONCLUSIVE
+- **Records whose evidence list changed:** 41
 - **The needs document's pin:** re-taken, `6ebe6760c4312bca` to `6cb7b241cb84d729` (CONOPS re-stamped and restored; its needs table unchanged, which the validator checks)
 
 ## 7. Downstream impacts by layer
@@ -1904,41 +2081,45 @@ For each record changed since H3, and for each change a pending decision would m
 
 | Layer | Record | Why | Impact |
 |---|---|---|---|
-| 4 | CFL-019 (if decided) | an open conflict against REQ-072, recorded by the first of: row L3-OD1 reject (D-06's one pack), row L3-OD2 both-kept (a 4S9P lid), row L3-OD6's weather basis not carried by the lid of row L3-OD2 or by any lid of the table | S-53 judged on the store decided |
-| 4 | CFL-020 (if decided) | a second such conflict, where two of those answers are given | S-53 judged on the store decided |
-| 4 | CFL-021 (if decided) | a third such conflict (row L3-OD2's lid not carrying row L3-OD6's weather basis is one of them) | S-53 judged on the store decided |
-| 4 | REQ-014 (if decided) | L3-OD1 and L3-OD2: aged capacity and runtime stated per pack | POWER-THERMAL.md's runtime table recomputed for the base pack and for both packs |
+| 4 | FEA-008 (applied) | a feasibility item recorded by an owner answer whose target the studied candidate does not meet (D-26): the first of FI-01 (row L3-OD1 reject), FI-02 (row L3-OD2's lid not carrying row L3-OD6's store), FI-03 (a coverage target), FI-04 (both lid items kept), FI-05 (the open kit's push) and FI-06 (the solar interface's compliance) | the bounded feasibility assessment or its evidence (S-53) |
+| 4 | FEA-009 (if decided) | a second such feasibility item | the bounded feasibility assessment or its evidence (S-53) |
+| 4 | FEA-010 (if decided) | a third such feasibility item | the bounded feasibility assessment or its evidence |
+| 4 | FEA-011 (if decided) | a fourth such feasibility item | the bounded feasibility assessment or its evidence |
+| 4 | FEA-012 (if decided) | a fifth such feasibility item | the bounded feasibility assessment or its evidence |
+| 4 | REQ-014 (applied) | L3-OD1 and L3-OD2: aged capacity and runtime stated per pack | POWER-THERMAL.md's runtime table recomputed for the base pack and for both packs |
 | 4 | REQ-051 (if decided) | L3-OD5: D-02a's margins read as the kit's without its cells | TEST-PLAN E3, E4 and E5 keep their deviations as the kit's result |
 | 4 | REQ-057 (applied) | acceptance made measurable (L3-R2) | the co-site plan of TEST-PLAN M6 has its pass line |
 | 4 | REQ-068 (applied) | acceptance made measurable (L3-R2); under L3-OD2 qmx-out its QMX clause is removed | TEST-PLAN M6 for the non-core transmitters |
-| 4 | REQ-072 (if decided) | L3-OD1, L3-OD3, L3-OD4 and L3-OD6: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, the deployment band, the weather basis (the benchmark's limitations in its notes, or a coverage target) | the energy model re-run on the drawn circuit across the supply range (S-53, S-127), and over the hourly September record under a coverage target |
+| 4 | REQ-072 (applied) | L3-OD1, L3-OD3, L3-OD4 and L3-OD6: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, the deployment band, the weather basis (the benchmark's limitations in its notes, or a coverage target) | the energy model re-run on the drawn circuit across the supply range (S-53, S-127), and over the hourly September record under a coverage target |
 | 5 | REQ-002 (if decided) | L3-OD2 qmx-out: no HF bearer in the kit (qmx-outside: a note only, the HF bearer kept) | the QMX's CAT and audio leads dropped (qmx-out) or carried through a sealed case-wall lead (qmx-outside) |
 | 5 | REQ-008 (applied) | acceptance made measurable (L3-R2) | the panel firmware's refresh and QR rules are named pass lines |
 | 5 | REQ-012 (applied) | acceptance made measurable (L3-R2) | the lamp test's tie |
 | 5 | REQ-016 (if decided) | L3-OD3: the solar input (200 W in 2S2P or 1S4P, or the 100 W window kept with the basis's array) | the panel entry's interface (PV_IN, PV_P) at 56.3 V, 28.1 V or 25 V |
 | 5 | REQ-054 (applied) | acceptance made measurable (L3-R2) | meshtasticd's configuration review has numeric pass lines |
 | 5 | REQ-075 (if decided) | L3-OD1 and L3-OD2: charge current per pack | the chargers' ChargeCurrent and the gauges' charging current per pack |
-| 6 | REQ-014 (if decided) | L3-OD1 and L3-OD2: aged capacity and runtime stated per pack | the gauges' learned capacity thresholds per pack |
+| 6 | REQ-014 (applied) | L3-OD1 and L3-OD2: aged capacity and runtime stated per pack | the gauges' learned capacity thresholds per pack |
 | 6 | REQ-016 (if decided) | L3-OD3: the solar input (200 W in 2S2P or 1S4P, or the 100 W window kept with the basis's array) | board E's entry parts, F2, J_SOLAR, the wall pair and the lead at the array's current |
-| 6 | REQ-072 (if decided) | L3-OD1, L3-OD3, L3-OD4 and L3-OD6: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, the deployment band, the weather basis (the benchmark's limitations in its notes, or a coverage target) | the gauges' graceful shutdown settings at 3.00 V a cell or more |
+| 6 | REQ-072 (applied) | L3-OD1, L3-OD3, L3-OD4 and L3-OD6: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, the deployment band, the weather basis (the benchmark's limitations in its notes, or a coverage target) | the gauges' graceful shutdown settings at 3.00 V a cell or more |
 | 7 | CFL-006 (if decided) | L3-OD1 and L3-OD2: one cell and one count per pack | pack_4s.py redesigned for the base 4S6P and the lid module (S-27) |
+| 7 | FEA-010 (if decided) | a third such feasibility item | the open kit's feet and stay (FI-05) |
 | 7 | REQ-002 (if decided) | L3-OD2 qmx-out: no HF bearer in the kit (qmx-outside: a note only, the HF bearer kept) | the lid tray r2 and S-95's QMX leads; a sealed case-wall lead (qmx-outside) |
-| 7 | REQ-011 (if decided) | L3-OD2: the tablet bracket leaves the lid (tablet out) or narrows to 8 inch (QMX out) | the lid layout, the bracket drawn or dropped |
+| 7 | REQ-011 (applied) | L3-OD2: the tablet bracket leaves the lid (tablet out) or narrows to 8 inch (QMX out) | the lid layout, the bracket drawn or dropped |
 | 7 | REQ-016 (if decided) | L3-OD3: the solar input (200 W in 2S2P or 1S4P, or the 100 W window kept with the basis's array) | the panels and their stand, carried beside the case |
-| 7 | REQ-072 (if decided) | L3-OD1, L3-OD3, L3-OD4 and L3-OD6: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, the deployment band, the weather basis (the benchmark's limitations in its notes, or a coverage target) | the lid pack, the stay, the harness crossing (S-95), the west RF re-plan |
+| 7 | REQ-072 (applied) | L3-OD1, L3-OD3, L3-OD4 and L3-OD6: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, the deployment band, the weather basis (the benchmark's limitations in its notes, or a coverage target) | the lid pack, the stay, the harness crossing (S-95), the west RF re-plan |
 | 7 | REQ-078 (if decided) | L3-OD4: the open kit's stability with the lid pack, its slope and the owner's operator push (core) | the stay, the feet measured (T-A1-3), a wider foot or an outrigger if the push needs one, the lid's mass budget |
 | 8 | CFL-006 (if decided) | L3-OD1 and L3-OD2: one cell and one count per pack | pcb_pack_protection.yaml, pcb_energy_chain.yaml and pcb_board_facts.yaml per pack |
 | 8 | CHO-003 (applied) | acceptance made measurable (L3-R2) | the long-lead clamps named by part and pulse figure |
+| 8 | FEA-011 (if decided) | a fourth such feasibility item | board E's interface ratings (FI-06) |
 | 8 | REQ-002 (if decided) | L3-OD2 qmx-out: no HF bearer in the kit (qmx-outside: a note only, the HF bearer kept) | board A's HF rail and board B's J_QMX lose their load (qmx-out) |
 | 8 | REQ-012 (applied) | acceptance made measurable (L3-R2) | board C and D's TX lamp path is judged on a bench line with the panel controller in reset (DC-03 of DEFINITION-STATUS.md: the lamp's feed depends on PANEL_PWM today) |
-| 8 | REQ-014 (if decided) | L3-OD1 and L3-OD2: aged capacity and runtime stated per pack | board P and board PL golden images |
+| 8 | REQ-014 (applied) | L3-OD1 and L3-OD2: aged capacity and runtime stated per pack | board P and board PL golden images |
 | 8 | REQ-016 (if decided) | L3-OD3: the solar input (200 W in 2S2P or 1S4P, or the 100 W window kept with the basis's array) | gen_sch_e.py's stage (the e200 candidates) and its current regulation |
 | 8 | REQ-029 (applied) | acceptance made measurable (L3-R2) | every touchable port's clamp (S-100 to S-109) is judged against the stated criteria |
-| 8 | REQ-072 (if decided) | L3-OD1, L3-OD3, L3-OD4 and L3-OD6: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, the deployment band, the weather basis (the benchmark's limitations in its notes, or a coverage target) | board A's power path, the whole of it (L3-C34, the findings A-1 to C-9, not the resistor alone, D-24), U3B, board PL, board E's stage |
+| 8 | REQ-072 (applied) | L3-OD1, L3-OD3, L3-OD4 and L3-OD6: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, the deployment band, the weather basis (the benchmark's limitations in its notes, or a coverage target) | board A's power path, the whole of it (L3-C34, the findings A-1 to C-9, not the resistor alone, D-24), U3B, board PL, board E's stage |
 | 8 | REQ-075 (if decided) | L3-OD1 and L3-OD2: charge current per pack | U3 and U3B settings; board PL's image |
 | 9 | REQ-016 (if decided) | L3-OD3: the solar input (200 W in 2S2P or 1S4P, or the 100 W window kept with the basis's array) | the stage's switching loop and entry copper at the new current |
 | 9 | REQ-029 (applied) | acceptance made measurable (L3-R2) | TEST-PLAN M7's pass line is the statement's |
-| 9 | REQ-072 (if decided) | L3-OD1, L3-OD3, L3-OD4 and L3-OD6: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, the deployment band, the weather basis (the benchmark's limitations in its notes, or a coverage target) | REQ-072's prototype run with an array emulator on the band's least-energy plane, and a TEST-PLAN row for it (the benchmark day, and the target's window under a coverage target) |
+| 9 | REQ-072 (applied) | L3-OD1, L3-OD3, L3-OD4 and L3-OD6: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, the deployment band, the weather basis (the benchmark's limitations in its notes, or a coverage target) | REQ-072's prototype run with an array emulator on the band's least-energy plane, and a TEST-PLAN row for it (the benchmark day, and the target's window under a coverage target) |
 
 ## 8. Traceability summary
 
@@ -1958,11 +2139,11 @@ For each record changed since H3, and for each change a pending decision would m
 | NEED-12 | no | REQ-041, REQ-042, REQ-043 | BAT-001, CMP-001, SCH-003, SCH-004, THM-001 | section 4 |
 | NEED-13 | yes | ASM-007, CFL-006, CFL-015, CON-016, CON-019, FEA-005, REQ-044, REQ-045, REQ-046, REQ-069, REQ-075, REQ-077 | BAT-001, BAT-002, ENV-001, ENV-002, INT-001, PI-001, PI-003, PWR-003, SCH-003 | head; section 2 row E4; section 4; section 5 row 1; section 5 row 10; section 5 row 11; section 5 row 12; section 5 row 13; section 5 row 14; section 5 row 2; section 5 row 3; section 5 row 4; section 5 row 5; section 5 row 6; section 5 row 7; section 5 row 8; section 5 row 9; section 6 row E3-A; section 6 row E3-H; section 6 row E3-L; section 6 row E3-P; section 6 row E3-T; section 6 row E4-O; section 6 row E4-P; section 6 row E5-A; section 7 row P10; section 7 row P11; section 7 row P12; section 7 row P13; section 7 row P14; section 7 row P15 |
 | NEED-14 | yes | REQ-047, REQ-048, REQ-049, REQ-066 | MEC-001, SCH-003, TST-001 | section 9 |
-| NEED-15 | no | CFL-007, CFL-008, CFL-009, CFL-016, CFL-017, CON-023, REQ-050, REQ-070 | DFA-001, DFM-001, DOC-001, DOC-002, ENV-001, ENV-002, OUT-001, PLC-002, PLN-001, RTE-001, RTE-002, SCH-001, SCH-002, SCH-005, SGN-001, SGN-002, STK-001, STK-002, VIA-001, VIA-002 | section 2 row E3; section 2 row E4; section 2 row E5; section 2 row E8; section 6; section 6 row E3-O; section 6 row E3-S; section 6 row E4-S |
+| NEED-15 | no | CFL-007, CFL-008, CFL-009, CFL-016, CFL-017, CON-023, FEA-008, REQ-050, REQ-070 | DFA-001, DFM-001, DOC-001, DOC-002, ENV-001, ENV-002, OUT-001, PLC-002, PLN-001, RTE-001, RTE-002, SCH-001, SCH-002, SCH-005, SGN-001, SGN-002, STK-001, STK-002, VIA-001, VIA-002 | section 2 row E3; section 2 row E4; section 2 row E5; section 2 row E8; section 6; section 6 row E3-O; section 6 row E3-S; section 6 row E4-S |
 | NEED-16 | no | CFL-010, CON-011, REQ-053, REQ-054, REQ-055, REQ-056, REQ-067 | DOC-002, RF-001 | none |
 | NEED-17 | no | REQ-057, REQ-058, REQ-068 | EMC-001, RF-001, TRN-001 | section 3 row M6 |
 | NEED-18 | no | CFL-018, CON-018, CON-024, CON-025, REQ-061, REQ-063 | ANA-001, EMC-001, ENV-002, GND-001, GND-002, IMP-001, IMP-002, PAIR-001, RET-001, RET-002, RET-003, RET-004, TRN-001 | section 3 row M1; section 3 row M2; section 3 row M3; section 3 row M4; section 3 row M5; section 3 row M7 |
 | NEED-19 | yes | REQ-060 | none | section 4 |
 
-Records whose final phase is PROTOTYPE and that no TEST-PLAN line names by id: 39 (ASM-001, REQ-006, CON-002, CON-003, CON-022, FEA-003, CON-004, CON-017, CON-005, CHO-002, REQ-073, REQ-011, REQ-072, ASM-003, REQ-074, ASM-004, CON-021, FEA-002, REQ-034, ASM-005, CON-020, CON-026, REQ-037, FEA-001, REQ-039, REQ-040, REQ-042, REQ-043, REQ-075, REQ-049, REQ-050, REQ-054, REQ-055, REQ-067, REQ-058, CON-024, ASM-007, REQ-065, CFL-014). Each is verified by the method its entry states; a TEST-PLAN row for it is a layer 9 and test-plan item, not a requirement change.
+Records whose final phase is PROTOTYPE and that no TEST-PLAN line names by id: 40 (ASM-001, REQ-006, CON-002, CON-003, CON-022, FEA-003, CON-004, CON-017, CON-005, CHO-002, REQ-073, REQ-011, REQ-072, ASM-003, REQ-074, ASM-004, CON-021, FEA-002, REQ-034, ASM-005, CON-020, CON-026, REQ-037, FEA-001, REQ-039, REQ-040, REQ-042, REQ-043, REQ-075, REQ-049, REQ-050, REQ-054, REQ-055, REQ-067, REQ-058, CON-024, ASM-007, REQ-065, CFL-014, FEA-008). Each is verified by the method its entry states; a TEST-PLAN row for it is a layer 9 and test-plan item, not a requirement change.
 

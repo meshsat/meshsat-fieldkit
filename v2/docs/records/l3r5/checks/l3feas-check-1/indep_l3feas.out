@@ -1,0 +1,39 @@
+1. 4S14P, mean day 40/0, WE restated (drain, loops worse end, V(AK) 29 mV)
+   WE                         TYP: 44.0 (base 44.0, lid 0.0)          STOP kept, COMB Y, EACH N
+   WE                         WAB: NOT MET 10.7                       STOP FAILS, COMB N, EACH N
+   R1 6.25 A (U3 0.9730)      TYP: 70.6 (base 48.8, lid 17.9)         STOP kept, COMB Y, EACH Y
+   R1 6.25 A (U3 0.9730)      WAB: 19.2 (base 19.2, lid 0.0)          STOP kept, COMB Y, EACH N
+   R1 6.25 A (U3 0.9733)      TYP: 70.9 (base 48.9, lid 18.4)         STOP kept, COMB Y, EACH Y
+   R1 6.25 A (U3 0.9733)      WAB: 19.8 (base 19.8, lid 0.0)          STOP kept, COMB Y, EACH N
+   R1lo 6.191 A (U3 0.9731)   TYP: 62.2 (base 46.9, lid 9.8)          STOP kept, COMB Y, EACH Y
+   R1lo 6.191 A (U3 0.9731)   WAB: 7.4 (base 7.4, lid 0.0)            STOP kept, COMB Y, EACH N
+   R2 stage 0.965             TYP: 69.4 (base 48.3, lid 15.0)         STOP kept, COMB Y, EACH Y
+   R2 stage 0.965             WAB: 12.7 (base 12.7, lid 0.0)          STOP kept, COMB Y, EACH N
+   R1 gain over WE at WAB: +29.9 Wh
+2. HOUR BY HOUR, WAB
+   WE                       start 06: cap 116.8 W at VBUS20 (113.7 at the node), cap hours UTC [9, 10, 11, 12, 13, 14]; lid at its line [(48, 6), (70, 4), (71, 5)]; base lowest 0.0 Wh at hour 71 (UTC 05); stop (71, 5)
+   WE                       start 18: cap 116.8 W at VBUS20 (113.7 at the node), cap hours UTC [9, 10, 11, 12, 13, 14]; lid at its line [(59, 5), (60, 6)]; base lowest 0.0 Wh at hour 60 (UTC 06); stop (60, 6)
+   R1 6.25 A (U3 0.9730)    start 06: cap 119.7 W at VBUS20 (116.4 at the node), cap hours UTC [9, 10, 11, 12, 13, 14]; lid at its line [(71, 5)]; base lowest 19.2 Wh at hour 71 (UTC 05); stop None
+   R1 6.25 A (U3 0.9730)    start 18: cap 119.7 W at VBUS20 (116.4 at the node), cap hours UTC [9, 10, 11, 12, 13, 14]; lid at its line [(59, 5), (60, 6)]; base lowest 20.9 Wh at hour 60 (UTC 06); stop None
+   largest hour into the stage: TYP 194.2 W, WAB 178.6 W
+3. THRESHOLDS at WAB, each alone (search 0.80 to 1.00)
+   R1 6.25 A (U3 0.9730)      charge STOP 0.932 COMB 0.936; stage STOP 0.906 COMB 0.911; front end COMB 0.911
+   R1lo 6.191 A (U3 0.9731)   charge STOP 0.943 COMB 0.947; stage STOP 0.919 COMB 0.925; front end COMB 0.925
+   WE                         charge STOP 0.960 COMB 0.964; stage STOP 0.946 COMB 0.952; front end COMB 0.952
+   U3's least input limit (U3 held at 0.9733): STOP 6.153 A, COMB 6.173 A
+4. R1 AGAINST THE ELECTRICAL RECORD
+   U3 at 6.35 A: max 6.509 A; through R11 6.569 A; margin to 6.793 A +0.224 A
+   U3 at 6.35 A: max 6.509 A; through R11 6.588 A; margin to 6.793 A +0.205 A
+   bank worst can at 6.569 A: matched 2.43 A (86.8 %), 2:1 2.81 A (100.4 %)
+   stage input in service at R1: 158.6 W (at 6.415 A: 154.9 W)
+   ILIM_HIZ: pin at REGN 5.7 V 3.867 V -> 7.17 A nominal at 10 mOhm
+5. SOLAR
+   held: 2S Voc -20 C 51.28, -40 C 54.07, 1.25 clause 56.25 V
+   current page: 2S Voc -20 C 55.61, -40 C 58.63, 1.25 clause 61.00 V
+   Isc string 5.75 / 5.88 / 7.35 A; array 11.50 / 11.76 / 14.70 A; F2 1.25 x 14.70 = 18.37 A
+   power: -20 C 475.6 W, x1.25 594.5 W; stage ceiling 308.0 W out, 331.2 W in
+6. THE KELVIN BUDGET UNDER R1 (R11 at its stacked maximum 6.2855 mOhm, VSNS 43 mV less 0.3 mV)
+   drafted 6.2 A, 0.060 A   6.415 A through R11: copper 0.371 mOhm working; at 25 C 0.286 (copper at 100 C) to 0.324 (62.1 C)
+   R1, 0.060 A              6.569 A through R11: copper 0.215 mOhm working; at 25 C 0.166 (copper at 100 C) to 0.188 (62.1 C)
+   R1, 0.079 A              6.588 A through R11: copper 0.196 mOhm working; at 25 C 0.152 (copper at 100 C) to 0.171 (62.1 C)
+   R1 at 6.569 A with C-1's 0.29 mOhm at 25 C (copper at 100 C): sensed 43.76 mV against 42.7 mV

@@ -1,7 +1,13 @@
 # Layer 3, round 4: the definition re-issue prepared (L3-C26)
 
 MESHSAT-1357, 30 September 2026, branch `fnd/l3r4` from main `8fec0733` (integration set 16 and its milestone); round 4b
-answers CHECK-1 of round 4 (B1 and minors 1 to 9), round 4c CHECK-2's five minors, round 4d CHECK-3's four. Preparation only: the owner's six answers to
+answers CHECK-1 of round 4 (B1 and minors 1 to 9), round 4c CHECK-2's five minors, round 4d CHECK-3's four. Round 5
+(branch `fnd/l3r5`, `../l3r5/README.md`) adjusts the generator to owner ruling D-26: it refuses only requirements that
+cannot both hold, writes the re-issue for row L3-OD1 rejected (D-06's one pack kept, feasibility item FI-01, row L3-OD2
+not applicable), and its PACK and CELL patterns read across line breaks and punctuation (CHECK-4 of round 4d); with the
+owner's addendum D-27 it takes row L3-OD7 (M1's runtime and its store) first, maps its `72-required` answer with HF
+available, no external store and the tablet not charged, and refuses every other answer of that row until its passages
+are mapped with the runtime comparison's figures. Preparation only: the owner's six answers to
 `v2/docs/handover/layer3/OWNER-DECISIONS-L3.md` are pending, and nothing here changes a requirement, a ruling or a
 baselined document. Prototype design: no V2 board has been fabricated, ordered or powered, and no kit has been field
 deployed.
@@ -10,7 +16,7 @@ deployed.
 
 | File | What it is |
 |---|---|
-| `reissue.py` | The re-issue generator of closure item L3-C26. Its passage list maps every passage of the baselined `v2/docs/CONOPS.md` and `v2/docs/PRODUCT-BRIEF.md` that an answer to rows L3-OD1 to L3-OD6 makes inconsistent with the requirements, each located by its lines and its own text in the file `l3r2.yaml`'s `baseline_definition` names. Once the registry records the answers (the prepared scripts of `../l3r2/conditional/`), it writes `v2/docs/handover/layer3/DEFINITION-REISSUE-DRAFT.md` (each passage's baselined and proposed text, naming its row and ruling, and the rows proposed for `DEFINITION-STATUS.md`'s current values) and `v2/docs/handover/layer3/DEFINITION-CHANGE-RECORD-L3.md` (the change record the owner approves). Every proposed text is built from the registry and `l3r2.yaml`: the rulings' own text, the statements of the records they restated (the array, the stage and the tablet size among them) and the option each row was answered with. Both files are bound to the answers digest (the six rulings and every record citing them), so the ruling that approves the re-issue leaves them current; once `definition_reissue` is filed the generator refuses to write, and `--check` compares the approved record to the sha256/16 `definition_reissue` files and the draft to the sha the record names, so later changes to the registry (REQ-072 at layer 4) leave them current. It refuses while any row is undecided, on an incoherent set, when a baselined file is not the baselined text, and when an output resolves to a baselined file, is the same file as one (a hard link), is a link or has more than one link, before anything is written. |
+| `reissue.py` | The re-issue generator of closure item L3-C26. Its passage list maps every passage of the baselined `v2/docs/CONOPS.md` and `v2/docs/PRODUCT-BRIEF.md` that an answer to rows L3-OD1 to L3-OD6 makes inconsistent with the requirements, each located by its lines and its own text in the file `l3r2.yaml`'s `baseline_definition` names. Once the registry records the answers (the prepared scripts of `../l3r2/conditional/`), it writes `v2/docs/handover/layer3/DEFINITION-REISSUE-DRAFT.md` (each passage's baselined and proposed text, naming its row and ruling, and the rows proposed for `DEFINITION-STATUS.md`'s current values) and `v2/docs/handover/layer3/DEFINITION-CHANGE-RECORD-L3.md` (the change record the owner approves). Every proposed text is built from the registry and `l3r2.yaml`: the rulings' own text, the statements of the records they restated (the array, the stage and the tablet size among them) and the option each row was answered with. Both files are bound to the answers digest (the rulings of the answered rows and every record citing them), so the ruling that approves the re-issue leaves them current; once `definition_reissue` is filed the generator refuses to write, and `--check` compares the approved record to the sha256/16 `definition_reissue` files and the draft to the sha the record names, so later changes to the registry (REQ-072 at layer 4) leave them current. It refuses while any row is undecided (row L3-OD2 not applicable after a reject), on a set whose requirements cannot both hold (`l3r2.yaml`'s `contradictions`, D-26; a target the studied candidate does not meet is not refused), when a baselined file is not the baselined text, and when an output resolves to a baselined file, is the same file as one (a hard link), is a link or has more than one link, before anything is written. |
 | `PASSAGE-MAP.md` | Generated by `reissue.py --map`: row by option, the passages each answer changes, and every passage quoted whole. |
 | `apply_layer_status_l3_r4.py` | Set 16's integration check, minor 1, and CHECK-1 of round 4, minor 4: `LAYER-STATUS.md`'s layer 3 row "An independent check accepts the handover" read NOT MET and cited CHECK-1 to CHECK-3; it now reads MET for the handover as prepared, the six owner decisions pending, on CHECK-5 of L3-R2 as `l3r2.yaml`'s `independent_check` names and the renderer verifies it, and the paragraph "Whose each remaining item is" no longer lists the check. Run on this branch from main's page; a second run is refused. |
 
@@ -21,9 +27,15 @@ and CELL passage, taken out, leaving a line no other passage holds; the passage 
 the generator on copies of
 the registry decided by the prepared scripts, and its refusals. The decided copies: the session's recommended answers
 (approve, 2s2p, adopt, reading-c and the mean day), where the owner's own choices, which the table does not recommend,
-take STAND-INS (the QMX out, TYP and an operator push of 20 N, the placeholders of `../l3r2/dryrun.py`); the QMX
-outside with 1S4P, no deployment condition and CFL-017 kept open; the tablet out with REQ-016 kept and cells above +60 C.
-The refusals: rows undecided, two incoherent sets, a draft path linked by a symbolic or a hard link to a temporary copy
+take STAND-INS (row L3-OD7 answered 72-required with HF available, no external store and the tablet not charged, the
+QMX out, TYP and an operator push of 10 N, the stand-ins of
+`../l3r2/dryrun.py`); the QMX
+outside with 1S4P, no deployment condition and CFL-017 kept open; the tablet out with REQ-016 kept and cells above +60 C;
+row L3-OD1 rejected (D-26), with 2S2P, adopt at a 10 N push and a 2 degree stand-in slope, reading-c and the mean day,
+whose re-issue restates the five passages with a reject variant (C07, C17, C18, B08, B15) and no two-pack passage.
+The refusals: rows undecided, the one contradiction a decided set can carry (row L3-OD2 standing with row L3-OD1
+rejected; a band-less adopt on 1S4P, once refused, now generates; row L3-OD7's ruling rewritten to 48 hours beside rows
+prepared for 72), a draft path linked by a symbolic or a hard link to a temporary copy
 of the brief (the generator reads that copy as its baseline through `--docs-root`, so no test links the tree's own
 files), and a
 rewrite after the approval (decided, generated, approved: the draft and the record read current, the write is refused,
@@ -42,17 +54,22 @@ for one pack states the design before owner ruling D-27's answer.
 | Row | Option | Passages (see `PASSAGE-MAP.md` for the lines and texts) |
 |---|---|---|
 | every answer | | the heads of both documents (status line, re-issue note) and section 7's table of rulings (C01, C02, C31, B01, B02) |
-| L3-OD1 | `approve` | the store (its cell, base block and words read from D-27's ruling): section 1's power sources, section 2a's deferred list, second pack, charging and pack safety rows, M1's sequence, energy paragraph and D-20 paragraph, section 4's Charging row, section 4a's table and pack paragraph, section 6, the D-06 row and section 7a's M1 duration row; in the brief the pack, power, closed case, deferred functions, runtime, night and transport bullets and the core. CURRENT (PACK, 37 passages): the one pack's charge, measurement and protection chain as generated, by designator or in words (the BQ25731 and `R17`, its ADCs, bus address and readings, `CHRG_INHIBIT` and `CHG_INHIBIT`, the charger's host and host-free fallback, the gauge's host `J_SMB`, its readings' bank and the pack node `CELL_F`, the gauge's thermistors C1 and the hot stop read, its 336 uA, its datasheet commands, board P's second level, JP1 and F2, the protection table, the pack chain's ratings, and the pack-current limits K3, C2 and C3, whose per pack or total reading is set downstream) |
-| L3-OD1 | `reject` | none: an incoherent set, refused |
+| L3-OD7 | `72-required` with HF available, no external store and the tablet not charged | the 72 hours named as the owner's in place of the session's SC-21: section 3's duration sentence (C34), section 6's missions paragraph (C28, also restated by row L3-OD1), section 7a's M1 duration row's reversal (C35), the brief's L-02 row (B19) |
+| L3-OD7 | `72-required` with HF listening, an external store or the tablet charged; `48-required-72-desired` | not mapped yet: mapped with the runtime comparison's figures (closure item L3-C56); the generator refuses these answers until then |
+| L3-OD7 | `objective-48-72` (the closure, D-28 and D-32; rows L3-OD2 to L3-OD6 answered by D-33 to D-37, row L3-OD1 closed as layer 4 architecture) | the settled mode: the heads and section 7's rulings table (C01, C02, C31, B01, B02), the D-02a passages (C29, B18) and the eleven settled passages S01 to S11 (`PASSAGES_SETTLED`): M1's title, duration, energy with its profile and modelled baseline, and D-20 paragraph, the Storage row against the current cell, section 6's night, section 7a's duration row, the lid tablet in both documents, the brief's night and its open item L-02. The draft `v2/docs/handover/layer3/DEFINITION-REISSUE-DRAFT.md` and its change record are this mode's output (18 passages); `PASSAGE-MAP.md` quotes the settled passages beside the prepared ones |
+| L3-OD1 | `approve` | the store (its cell, base block and words read from D-27's ruling): section 1's power sources, section 2a's deferred list, second pack, charging and pack safety rows, M1's sequence, energy paragraph and D-20 paragraph, section 4's Charging row, section 4a's table and pack paragraph, section 6, the D-06 row and section 7a's M1 duration row; in the brief the pack, power, closed case, deferred functions, runtime, night and transport bullets and the core. CURRENT (PACK, 43 passages): the one pack's charge, measurement and protection chain as generated, by designator or in words (the BQ25731 and `R17`, its ADCs, bus address and readings, `CHRG_INHIBIT` and `CHG_INHIBIT`, the charger's host and host-free fallback, the gauge's host `J_SMB`, its readings' bank and the pack node `CELL_F`, the gauge's thermistors C1 and the hot stop read, its 336 uA, its datasheet commands, board P's second level, JP1 and F2, the protection table, the pack chain's ratings, and the pack-current limits K3, C2 and C3, whose per pack or total reading is set downstream; since CHECK-4 of round 4d also
+the pack's XT60 and arming jumper, its FETs, the gauge's OTD and the secure element, the charger and the supervisors'
+status) |
+| L3-OD1 | `reject` | valid (D-26): D-06's one pack kept, feasibility item FI-01. It changes section 3's D-20 paragraph (C18) and section 6's missions paragraph (C28); the passages rows L3-OD3 and L3-OD6 change that state the store (C07, C17, B08, B15) name the one pack kept and FI-01 in its place; row L3-OD2 does not apply; no PACK or HF passage |
 | L3-OD2 | `qmx-out` | HF out of the kit: section 1's operator, remote correspondents and second kit rows, section 2a's messaging row and HF rail, the brief's operator, correspondents and bearers; the tablet size REQ-011 states; the 4S15P lid; CURRENT (HF, 19 passages): the QMX's rail, EMCON enable, bank and port, load row and lid tray |
 | L3-OD2 | `qmx-outside` | the HF transmitter carried outside on a sealed lead, the brief's connector plate, the tablet size, the 4S15P lid; CURRENT (HF): the QMX's lid tray |
 | L3-OD2 | `tablet-out` | the lid tablet and the deferred list in both documents; the 4S14P lid |
-| L3-OD2 | `both-kept` | the 4S9P lid in the store passages; incoherent with the mean day on the checked table, refused |
+| L3-OD2 | `both-kept` | the 4S9P lid in the store passages; valid (D-26), with feasibility item FI-04 |
 | L3-OD3 | any | M1's setting, section 1's solar panel, the Deploy row, M1's energy paragraph, section 7a's solar window row, the brief's power bullet, closed case and night bullet; `2s2p` and `1s4p` also CURRENT (SOLAR): board A's front end at its generated 100 W |
 | L3-OD4 | `adopt` | M1's setting and the Deploy row (the open kit's deployment condition, quoted from its requirement), the brief's deployment sentence |
 | L3-OD4 | `reject` | none |
-| L3-OD5 | any | the Storage row, the D-02a row, the brief's qualification margins, each saying whether CFL-017 is resolved or kept open, as the registry reads it; `cells` also restates the store passages with the held cell named as reopened by D-31, and CURRENT (CELL, 20 passages, one in the brief): the held cell, its limits and its sheet's ageing figures |
-| L3-OD6 | `mean-day` or `coverage` | M1's energy paragraph, section 7a's design month row, the brief's night bullet; on the checked table no lid carries a coverage target, so `coverage` is refused as incoherent |
+| L3-OD5 | any | the Storage row, the D-02a row, the brief's qualification margins, each saying whether CFL-017 is resolved or kept open, as the registry reads it; `cells` also restates the store passages with the held cell named as reopened by D-31, and CURRENT (CELL, 21 passages, one in the brief): the held cell, its limits and its sheet's ageing figures |
+| L3-OD6 | `mean-day` or `coverage` | M1's energy paragraph, section 7a's design month row, the brief's night bullet; `coverage` is valid (D-26), with feasibility item FI-03 |
 
 ## After the owner has answered (the session or the integrator)
 
@@ -65,7 +82,7 @@ python3 v2/docs/records/l3r4/reissue.py
 python3 v2/docs/handover/layer3/render_l3r2.py
 ```
 
-`reissue.py` is run once the six answers are recorded, before the approval. The owner then approves the change record by
+`reissue.py` is run once the seven answers (six after a reject) are recorded, before the approval. The owner then approves the change record by
 a ruling whose `decides` is `definition_reissue`, dated on or after every row's ruling, and `l3r2.yaml`'s
 `definition_reissue` names `v2/docs/handover/layer3/DEFINITION-CHANGE-RECORD-L3.md` with its sha256/16 and that ruling
 (`{record, sha16, approved_by}`); the renderer then reads L3-C26 CLOSED. **After the approval the generator is never run

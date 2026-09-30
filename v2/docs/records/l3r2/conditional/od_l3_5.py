@@ -25,7 +25,10 @@ RULING = {
     "reading-c": ("Row L3-OD5 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided, the owner's reading of D-02a: its "
                   "+55 C operating, +71 C and -33 C storage margins and TEST-PLAN E5's +60 C humid dwell are qualification "
                   "margins of the kit without its cells; the cells are held inside their maker's limits (REQ-046, REQ-074), "
-                  "and no margin result is reported as the kit's with its pack."),
+                  "and no margin result is reported as the kit's with its pack. The operational consequence, which this "
+                  "acceptance covers (D-26): with its own pack fitted the kit is not claimed at +55 C operation, at E5's "
+                  "+60 C humid dwell, or at +71 C or -33 C storage; it costs no parts or money and reduces the claimed "
+                  "capability (the mode-specific environment table in REQ-051's notes)."),
     "measure": ("Row L3-OD5 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided: CFL-017 stays open until the bounded "
                 "enclosure heat experiment (POWER-THERMAL.md section 10) is run on hardware."),
     "cells": ("Row L3-OD5 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided: cells rated above +60 C are to be "
@@ -46,7 +49,13 @@ def build(a, raw, d):
         raw = C.restate(raw, "REQ-051", stamp, statement=" ".join(recs["REQ-051"]["statement"].split()).replace(
             OLD_051, "and by %s the margins are the kit's without its cells, the cells held inside their maker's limits "
                      "(REQ-046, REQ-074)." % rid))
-        raw = E.replace_entry(raw, "REQ-051", lambda b: C.add_ruling_ref(b, rid))
+        A = next(x for x in C.l3data()["acceptance_definitions"] if x["row"] == ROW)
+        table = ("The mode-specific environment table of the owner's reading (%s, D-26; l3r2.yaml's acceptance definition "
+                 "5): %s; " % (rid, " ".join(A["text"].split())) +
+                 "; ".join("%s: %s; functions: %s (%s)" % (t["mode"], t["environment"], t["functions"], t["source"])
+                           for t in A["table"]) + ". " + " ".join(A["consequence"].split()))
+        E.screen(table, "REQ-051's environment table")
+        raw = E.replace_entry(raw, "REQ-051", lambda b: C.add_ruling_ref(E.append_folded(b, "notes", table), rid))
         def f(b):
             b = C.set_line(b, "status", "CONFLICT_RESOLVED", after="choices")
             b = C.set_line(b, "evidence_result", "NOT_JUDGED", after="status")

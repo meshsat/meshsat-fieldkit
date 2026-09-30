@@ -802,6 +802,232 @@ owner_rulings:
       must name the affected requirement and quantify the consequence. Component selection and sensing implementation
       remain engineering tasks."
     source: ["owner ruling D-25", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
+  - id: D-26
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's reviewer's review of the layer 3 decision brief (30 September 2026)"
+    ruling: >-
+      The review of the layer 3 decision brief MESHSAT-L3-OWNER-DECISIONS-2026-09-30.md (sha256/16 ca4a9dcfa2e076ff) by
+      the owner's reviewer, relayed as the owner's and quoted in
+      v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md; its verdict CONDITIONAL for individual owner choices and
+      BLOCKED for blanket approval or a claim that the revised layer 3 baseline is fully validated. In the review's
+      words: "Separate owner-selected requirements from candidate compliance. A combination can be a valid target and
+      have a FAIL or INCONCLUSIVE implementation. Retain rejection of genuinely contradictory requirements and all
+      release gates. Verify that recording HF retention plus WAB does not fabricate a PASS or silently change the
+      requirement." "Define the criterion at the kit loads: the specified service continues for 72 hours within voltage,
+      power and pack limits. Combined stored Wh alone is insufficient. Reference exact initial state, load profile,
+      panel orientation, installation, cutoff and power-path case. State whether a single exact orientation is the
+      benchmark when no deployment band is established." "Supply the selected cell/pack limits and a mode-specific
+      environment table. Distinguish battery-fitted operation from cell-free qualification/storage. Owner acceptance
+      must cover the operational consequence. 'No cost' should not conceal reduced claimed capability." "A 10 N
+      requirement can be proposed as a chosen design target. Specify application point, force direction/duration, slope,
+      support surface, lid angle and load configuration. Cite the matching mechanical result before calling the
+      candidate a modelled PASS." "Approve topology separately from electrical compliance. Pin the panel revision and
+      datasheet; distinguish available array power, controlled converter input power, cold open-circuit exposure,
+      short-circuit/fault currents and string versus combined-feed protection. Provide the rating derivation or an
+      explicit engineering obligation rather than treating owner approval as verification." Its sixth passage defines
+      the three status levels, quoted in the same file (requirements drafted and decisions recorded; the requirements
+      baseline validated and accepted; the design and hardware shown by later layers' evidence).
+    source: ["owner ruling D-26", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
+  - id: D-27
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's addendum to layer 3's round 5: M1's runtime questioned, alternatives before any sacrifice (30 September 2026)"
+    ruling: >-
+      The owner's addendum of 30 September 2026, relayed by the coordinating session and quoted in
+      v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md: the owner is questioning the 72-hour requirement. In his
+      words: "Evaluate alternatives before asking me to sacrifice functions or accept restrictive deployment
+      conditions." As relayed: "He also said to preserve HF and the tablet functionality." M1's runtime is a row he
+      answers, L3-OD7, before rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6, which depend on it; no row asks him to remove a
+      function or to accept a deployment condition before it is answered, and its figures come from a bounded runtime
+      and battery comparison with its check. The 72 hours are the session's SC-21, which D-20 preserved with M1's
+      specified duration.
+    source: ["owner ruling D-27", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
+  - id: D-28
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's clarification of the energy and runtime requirement, which closes layer 3 (30 September 2026)"
+    ruling: >-
+      The owner's clarification of 30 September 2026, relayed by the coordinating session as binding and superseding
+      earlier interpretations of the energy and runtime requirement, quoted in
+      v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md. In his words: "NO external battery. Battery storage stays
+      inside the Peli 1450. Battery and solar remain required. Keep both HF and tablet functions. Optional tablet
+      charging consumes the kit's available energy and reduces remaining runtime. That reduction is acceptable,
+      including runtime falling below the baseline target. I am NOT requiring unchanged runtime while charging the
+      tablet, a full tablet recharge every day, or an additional battery to compensate. The previous 36 Wh/day charging
+      case can remain an illustrative calculation. It is not an approved mandatory daily charging schedule. Do not
+      reopen external storage or removal of either function as the recommended solution." Its second paragraph sets 48
+      to 72 hours as the baseline design target under an explicitly stated operating profile, not as a promise under
+      every combination of loads and weather, and continues: "Do not elevate 72 hours into a mandatory minimum. Identify
+      the essential loads, radio duty cycles, starting charge, battery assumptions and solar conditions used. Separate
+      battery-only and solar-assisted results. Keep modelling assumptions distinct from owner-approved operating
+      restrictions. State plainly that optional charging and additional use reduce endurance. Define charging capability
+      within electrical and protection limits; a particular tablet model is not required merely to specify that
+      capability. Report the actual modelled baseline runtime honestly. If the present candidate misses the target even
+      without tablet charging, record that shortfall prominently. Do not hide it, invent a passing configuration, or
+      describe hypothetical circuit corrections as implemented." "Layer 3 is complete when the requirements package is
+      coherent, traceable, measurable, internally consistent and ready for an engineer to use. Every mandatory
+      requirement and design objective must be distinguishable and have acceptance conditions and a verification method.
+      Include the available feasibility evidence and clearly assigned unresolved design risks. A failed current
+      implementation is not automatically a defective requirement. Conversely, do not conceal a demonstrated
+      incompatibility between mandatory requirements by calling it downstream work. Layer 3 completion does not mean the
+      circuit, PCB, thermal performance, runtime or physical product has passed verification. Keep those statuses
+      separate." "Use the existing analysis and records. Have the author reconcile the affected requirements, decision
+      register, acceptance criteria and handover package. Preserve other approved requirements; do not silently adopt
+      the earlier ten-row recommendation string. ... Do not restart broad reviews or commission another battery
+      comparison merely because optional charging reduces runtime." "If a genuine unresolved owner decision prevents
+      closure, finish everything else and identify only the exact conflicting requirement and decision needed. Do not
+      manufacture 100% completion, but do not keep us in review loops over an ordinary, explicitly accepted runtime
+      trade-off."
+    source: ["owner ruling D-28", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
+  - id: D-29
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's clarification of CFL-017: product requirements apart from the current cell (30 September 2026)"
+    ruling: >-
+      The owner's clarification of 30 September 2026 on CFL-017, relayed by the coordinating session into the same
+      closure pass and quoted in v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md. In his words: "For CFL-017,
+      distinguish mandatory product requirements from the limitations of the currently selected Samsung 35E cells. 1.
+      Establish whether that exact cell model is an owner-mandated constraint or an engineering selection. A mismatch
+      with a replaceable component does not, by itself, prove that the product requirements contradict each other. 2.
+      Separate charging, battery-powered operation and storage. Use the project's exact manufacturer specification and
+      distinguish ambient temperature, cell temperature, storage duration and whether batteries are fitted. Do not treat
+      one temperature limit as applying to every mode. 3. Do not automatically adopt 'the extremes apply without cells,'
+      reduce an approved temperature requirement, or reclassify it as an objective. Those would change the product
+      requirements and need my explicit decision. 4. Where the requirements are coherent but the current component
+      cannot meet them, record a Layer 4 component-selection/thermal-design obligation with its feasibility uncertainty
+      and measurable closure criterion." It closes by forbidding a claim that an alternative component or thermal
+      solution has already been shown. "If a genuine contradiction between mandatory owner requirements remains, name
+      the exact conflicting requirements and ask only the decision needed to resolve it. Otherwise, close the Layer 3
+      requirements baseline, preserve all unresolved engineering obligations explicitly ... Requirements completion must
+      remain separate from demonstrated hardware compliance."
+    source: ["owner ruling D-29", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
+  - id: D-30
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's instruction on the Codex worker as a standing collaborator and on one decision register (30 September 2026)"
+    ruling: >-
+      The owner's instruction of 30 September 2026, relayed by the coordinating session and quoted in
+      v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md, recorded in the decision register; it changes no
+      requirement. In his words: "Upgrade the existing Codex/GPT-6-Astra integration from a limited pilot to a standing
+      engineering collaborator. ... This authorises further bounded Astra assignments through the existing ChatGPT
+      authentication and available subscription allowance. It replaces the exhausted pilot-call count. Preserve existing
+      spending, sandbox and publication limits; no automatic paid-API fallback. Claude remains the coordinator and
+      integrator. ... Both agents must consult the same authoritative decision register. Record my latest instructions
+      there so I do not have to relay them repeatedly. ... Astra cannot change my requirements or approve its own
+      authored work. Agreement between agents is not a substitute for calculations, sources or tests. Keep at most two
+      active workers across Claude and Codex, with one author per worktree." The decision register both agents consult
+      is that file together with this registry's owner_rulings.
+    source: ["owner ruling D-30", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md", "v2/docs/CODEX-WORKER.md section 7"]
+  - id: D-31
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's operating instruction: one authoritative interpretation and a current owner brief in the decision register (30 September 2026)"
+    ruling: >-
+      The owner's operating instruction of 30 September 2026, relayed by the coordinating session as binding and quoted
+      in v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md; it restates the constraints of D-28 and changes no
+      requirement. In his words: "Maintain one authoritative interpretation of the product. Keep a concise current owner
+      brief in the existing decision register, with links to the original decisions. Both Claude and Astra must use it.
+      The current constraints are: Battery storage inside the Peli 1450; NO external battery. Battery and solar
+      required; HF and tablet retained. 48-72 hours is a baseline design objective under a stated operating profile.
+      Optional tablet charging consumes available energy and reduces endurance, including below that target. All other
+      explicitly approved requirements remain unchanged. Separate mandatory requirements, objectives, assumptions and
+      component selections. Recommendations and previous model statements are not owner approval. Resolve superseded
+      operational instructions in place while preserving decision history." "Requirements closure means a coherent,
+      traceable, measurable baseline with verification methods and an honest feasibility assessment. Record the current
+      energy shortfall and other unresolved design obligations prominently. Do not describe hypothetical corrections as
+      implemented or verified. For CFL-017, distinguish selected-cell limitations from mandatory product constraints,
+      and charging from operation and storage. Any proposed change to approved operating conditions remains an owner
+      decision." The current owner brief is the first section of that file.
+    source: ["owner ruling D-31", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
+  - id: D-32
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "M1's runtime: 48 to 72 hours, a design objective under the stated profile (row L3-OD7)"
+    decides: "L3-OD7:objective-48-72"
+    m1_hf: available
+    m1_external: "no"
+    m1_tablet_charging: optional
+    words: >-
+      Treat 48-72 hours as the baseline design target under an explicitly stated operating profile [...] Do not elevate
+      72 hours into a mandatory minimum. [...] NO external battery. [...] Keep both HF and tablet functions. Optional
+      tablet charging consumes the kit's available energy and reduces remaining runtime. That reduction is acceptable,
+      including runtime falling below the baseline target.
+    ruling: >-
+      Row L3-OD7 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided by the owner's clarification D-28: M1's
+      runtime is 48 to 72 hours, the baseline design target under the explicitly stated operating profile of REQ-072,
+      not a mandatory minimum; no external battery; HF and the tablet functions kept, HF available and not receiving in
+      the profile, listening an additional use; the tablet's charging optional, consuming the kit's energy and reducing
+      endurance, which the owner accepts. Neither Option A nor Option B of the runtime comparison is adopted, and no
+      external store is recommended (D-28).
+    source: ["owner ruling D-28", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md", "v2/docs/handover/layer3/OWNER-DECISIONS-L3.md"]
+  - id: D-33
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "Both lid items kept, the QMX HF set and the tablet bracket (row L3-OD2)"
+    decides: "L3-OD2:both-kept"
+    words: >-
+      Keep both HF and tablet functions.
+    ruling: >-
+      Row L3-OD2 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided by the owner's clarification D-28: both
+      approved lid items stay, the QMX HF set in its lid tray (appendix 32.50 item 16a) and the tablet bracket (item
+      16d); no function leaves the kit. The lid pack Option A(i) would add is layer 4 architecture (row L3-OD1).
+    source: ["owner ruling D-28", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md", "v2/docs/handover/layer3/OWNER-DECISIONS-L3.md"]
+  - id: D-34
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "REQ-016's approved solar window unchanged (row L3-OD3)"
+    decides: "L3-OD3:unchanged"
+    words: >-
+      Preserve other approved requirements; do not silently adopt the earlier ten-row recommendation string.
+    ruling: >-
+      Row L3-OD3 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided by the owner's clarification D-28: REQ-016's
+      approved solar window stays unchanged; the 2S2P array into a 200 W stage is a layer 4 architecture proposal with
+      Option A(i), which would need the owner's ruling to change REQ-016.
+    source: ["owner ruling D-28", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md", "v2/docs/handover/layer3/OWNER-DECISIONS-L3.md"]
+  - id: D-35
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "No deployment condition at layer 3 (row L3-OD4)"
+    decides: "L3-OD4:reject"
+    words: >-
+      Keep modelling assumptions distinct from owner-approved operating restrictions.
+    ruling: >-
+      Row L3-OD4 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided by the owner's clarification D-28: no
+      deployment condition is stated at layer 3; the single benchmark plane is a modelling assumption of REQ-072's
+      profile, not an operating restriction, and the open kit's stability goes with Option A(i)'s lid pack to layer 4.
+    source: ["owner ruling D-28", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md", "v2/docs/handover/layer3/OWNER-DECISIONS-L3.md"]
+  - id: D-36
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "CFL-017 closed as a requirements conflict; the cell and thermal design a layer 4 obligation (row L3-OD5)"
+    decides: "L3-OD5:layer4-obligation"
+    words: >-
+      Where the requirements are coherent but the current component cannot meet them, record a Layer 4
+      component-selection/thermal-design obligation with its feasibility uncertainty and measurable closure criterion.
+    ruling: >-
+      Row L3-OD5 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided by the owner's clarification D-29: judged mode
+      by mode against the project's maker sheets, CFL-017's collisions are between the requirements (D-02, D-02a,
+      TEST-PLAN E5, with the pack fitted) and the current cell, the Samsung 35E, an engineering selection D-06's pack
+      carries, with the current thermal design; the requirements are coherent. CFL-017 closes as a requirements
+      conflict, FEA-008 carries the component-selection and thermal-design obligation to layer 4 mode by mode, and no
+      temperature requirement is reduced, read as the kit's without its cells or reclassified.
+    source: ["owner ruling D-29", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md", "v2/docs/handover/layer3/OWNER-DECISIONS-L3.md"]
+  - id: D-37
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "M1's solar conditions: SC-37's mean day, one plane, TYP (row L3-OD6)"
+    decides: "L3-OD6:mean-day"
+    weather_build: TYP
+    weather_share: null
+    words: >-
+      Identify the essential loads, radio duty cycles, starting charge, battery assumptions and solar conditions used.
+    ruling: >-
+      Row L3-OD6 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided by the owner's clarification D-28: REQ-072 is
+      judged under SC-37's reference mean day at Leiden on one plane, 40 degrees facing south, in the typical array
+      build (TYP), the worst array build (WAB) a sensitivity; a benchmark, not a promise under every combination of
+      loads and weather; no coverage target.
+    source: ["owner ruling D-28", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md", "v2/docs/handover/layer3/OWNER-DECISIONS-L3.md"]
 # Choices the session took under the owner's standing rule of 26 September 2026: each is the session's, never
 # the owner's, names the ruling that lets the session take it, says why, and can be reversed. `closes` names the
 # open items it answered; `adds_core_needs` a need it added to prototype 1's core. A choice later withdrawn keeps
@@ -3111,31 +3337,6 @@ open_items:
       among the eight 813 ground contacts (the independent check) the lowest carries 2.44 A, 2.58 A with one
       open, 80.3 and 83.6 C at the 51 C inside air and 94 to 98 C at the +55 C margin. Owed to TEST-PLAN.md:
       each contact group's resistance and one 813 ground contact's temperature at the declared currents.
-  - id: M-02
-    class: OWNER_ACTION
-    status: OPEN
-    title: >-
-      M1's failing energy balance, the owner's part (27 September 2026, the second release attempt of layers 1 to 3;
-      layer 3's release check, R2; reported to the owner, not asked, under his standing rule of 26 September 2026). On
-      D-06's one 4S3P pack the kit does not run M1 through a single night on pack and solar alone, whatever the panel's
-      rating, and REQ-072 reads FAIL at desk (S-53 is the session's part: the input path's rating). Only the owner can
-      take the routes that carry the night by reopening his own rulings, a larger pack (D-06) or the second pack D-01
-      defers, which has no location found; or accept, as a residual risk, that prototype 1 does not meet M1 on pack and
-      solar alone. The session's recommendation and the arithmetic are ENGINEERING-QUESTIONS EQ-13. Decided before
-      boards A, E and P enter layout, because the answer can move the pack pocket, board E's solar stage (D4, F2,
-      J_SOLAR) and board A's front end. Until then REQ-072 stays FAIL, CONOPS M1 states that a night needs an overnight
-      input on the 9 to 36 V entry, and nothing is lowered: neither REQ-016 nor REQ-072 is restated to fit. Owner's
-      instruction of 28 September 2026 (D-20): the routes (c), (d) and (e) are not chosen by the ruling, (c) and (d)
-      returning only as options the reconciliation presents explicitly; the energy budget is reconciled first (S-114)
-      and the smallest justified changes come back to the owner; M1 and REQ-072 stay as written. Since the owner's
-      instruction of 29 September 2026 (v2/docs/EXECUTION-PLAN.md, set 10's milestone: engineer Option A(i) within
-      existing authorisations, with M1 and REQ-072 unchanged and no purchase or requirement change authorised), D-21 and
-      D-22 of 30 September 2026, the decision this item carries is rows L3-OD1 to L3-OD4 of
-      v2/docs/handover/layer3/OWNER-DECISIONS-L3.md: Option A(i)'s two packs (routes (c) and (d) of EQ-13 together),
-      where each approved lid function goes and whether it stays in the kit, the solar input's stage and array, and M1's
-      deployment conditions. Rows L3-OD1, L3-OD2 and L3-OD4 are held by D-22 until the corrected, independently checked
-      energy comparison is filed. Route (e), accepting that prototype 1 does not meet M1, is excluded by D-20 (layer 3's
-      second issue, L3-R2, v2/docs/records/l3r2/apply_l3r2_session.py).
 
   - id: S-82
     class: SESSION
@@ -4743,6 +4944,34 @@ closed_items:
       L3-OD2 and L3-OD4 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md are held (D-22), the L3 pages state no M1
       energy figure as the design's, and REQ-072 reads FAIL as before. Closed when the basis and its check are filed and
       REQ-072 is re-read on them.
+  - id: M-02
+    closed_by: D-28
+    closing_evidence: >-
+      The owner's clarification D-28 answers the owner's part of M1's balance: M1's runtime is a design objective of 48
+      to 72 hours under the stated profile (REQ-072, D-32), with no external battery and both lid functions kept; the
+      shortfall is design risk DR-01, assigned to layer 4, and REQ-072 reads FAIL at desk, visible (D-20).
+    title: >-
+      M1's failing energy balance, the owner's part (27 September 2026, the second release attempt of layers 1 to 3;
+      layer 3's release check, R2; reported to the owner, not asked, under his standing rule of 26 September 2026). On
+      D-06's one 4S3P pack the kit does not run M1 through a single night on pack and solar alone, whatever the panel's
+      rating, and REQ-072 reads FAIL at desk (S-53 is the session's part: the input path's rating). Only the owner can
+      take the routes that carry the night by reopening his own rulings, a larger pack (D-06) or the second pack D-01
+      defers, which has no location found; or accept, as a residual risk, that prototype 1 does not meet M1 on pack and
+      solar alone. The session's recommendation and the arithmetic are ENGINEERING-QUESTIONS EQ-13. Decided before
+      boards A, E and P enter layout, because the answer can move the pack pocket, board E's solar stage (D4, F2,
+      J_SOLAR) and board A's front end. Until then REQ-072 stays FAIL, CONOPS M1 states that a night needs an overnight
+      input on the 9 to 36 V entry, and nothing is lowered: neither REQ-016 nor REQ-072 is restated to fit. Owner's
+      instruction of 28 September 2026 (D-20): the routes (c), (d) and (e) are not chosen by the ruling, (c) and (d)
+      returning only as options the reconciliation presents explicitly; the energy budget is reconciled first (S-114)
+      and the smallest justified changes come back to the owner; M1 and REQ-072 stay as written. Since the owner's
+      instruction of 29 September 2026 (v2/docs/EXECUTION-PLAN.md, set 10's milestone: engineer Option A(i) within
+      existing authorisations, with M1 and REQ-072 unchanged and no purchase or requirement change authorised), D-21 and
+      D-22 of 30 September 2026, the decision this item carries is rows L3-OD1 to L3-OD4 of
+      v2/docs/handover/layer3/OWNER-DECISIONS-L3.md: Option A(i)'s two packs (routes (c) and (d) of EQ-13 together),
+      where each approved lid function goes and whether it stays in the kit, the solar input's stage and array, and M1's
+      deployment conditions. Rows L3-OD1, L3-OD2 and L3-OD4 are held by D-22 until the corrected, independently checked
+      energy comparison is filed. Route (e), accepting that prototype 1 does not meet M1, is excluded by D-20 (layer 3's
+      second issue, L3-R2, v2/docs/records/l3r2/apply_l3r2_session.py).
 records:
   - id: REQ-001
     kind: requirement
@@ -4808,7 +5037,7 @@ records:
       rules: []
       decisions: []
     rule_coverage: NONE
-    rulings: [D-01]
+    rulings: [D-01, D-28]
     waits_on: [S-116]
     status: DEFINED
     evidence_result: NOT_JUDGED
@@ -4819,7 +5048,9 @@ records:
       - "owner ruling D-01"
       - "v2/docs/CONOPS.md section 2a"
     source_check: VERIFIED
-    notes: "Split from W1's CAND-001 by D-01."
+    notes: >-
+      "Split from W1's CAND-001 by D-01." D-28 applied by D-32 (layer 3's closure, 2026-09-30): HF is kept; the QMX HF
+      set stays in its lid tray (appendix 32.50 item 16a), and its removal is not reopened as a solution.
 
   - id: CHO-001
     kind: choice
@@ -6845,9 +7076,11 @@ records:
     parent: NEED-04
     statement: "A bracket in the lid holds an 8 to 10 inch rugged tablet, fed by the USB-C outlet and the kit's WiFi."
     acceptance: >-
-      A tablet model is named, the bracket is drawn and fitted, and the closed lid leaves no mark on the tablet or its
-      bracket at CASE-MARGINS.md test T9; the tablet charges from the USB-C outlet and joins the kit's WiFi
-      (SC-45).
+      The charging capability is specified at the USB-C outlet, not by a tablet model (D-28): in the functional check a
+      USB PD sink draws each of REQ-017's contracts within the outlet's protection limits, measured with an inline USB-C
+      meter, the converter switched by software on its existing enable line; charging is optional and reduces endurance
+      (REQ-072), and no daily schedule is required. The bracket is drawn and fitted, and the closed lid leaves no mark
+      on the tablet or its bracket. A tablet model, when one is named (SC-45), is checked against this capability.
     allocated_to: [case, a]
     verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
     verification_phase: RELEASE_PACKAGE
@@ -6859,15 +7092,25 @@ records:
       rules: [MEC-001]
       decisions: []
     rule_coverage: PARTIAL
+    rulings: [D-28]
     choices: [SC-45]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16d)", "v2/docs/V2-SPEC.md:12", "v2/docs/CASE-MARGINS.md"]
     source_check: VERIFIED
+    history: >-
+      Restated by D-28 applied by D-32 (layer 3's closure, 2026-09-30): it read acceptance 'A tablet model is named, the
+      bracket is drawn and fitted, and the closed lid leaves no mark on the tablet or its bracket at CASE-MARGINS.md
+      test T9; the tablet charges from the USB-C outlet and joins the kit's WiFi (SC-45).'.
     notes: >-
       V2-SPEC line 12 says the bracket is not drawn. The tablet model is a part pick (layer 6), not a requirement limit
-      (SC-45, 27 September 2026).
+      (SC-45, 27 September 2026). D-28 applied by D-32 (layer 3's closure, 2026-09-30): charging the tablet is an
+      optional capability within the outlet's electrical and protection limits; it consumes the kit's energy and reduces
+      endurance, which the owner accepts, and neither a daily recharge nor a schedule is required; stream l3batt's 36 Wh
+      a day (TABLET-BUDGET.md) stays an illustrative calculation. As drawn the outlet's current-sense shunt R138 puts
+      its trip at 1.92 to 2.26 A, below the 3 A contracts (CHECK-3 of stream l3batt, minor 1): design risk DR-03, layer
+      4.
 
   - id: REQ-012
     kind: requirement
@@ -7125,9 +7368,10 @@ records:
     candidate: CAND-024
     parent: NEED-05
     statement: >-
-      The kit runs from its internal pack, and its battery-only runtime is stated in hours in an idle and a typical
-      mode (PS-IDLE-SPEC and PS-TYP) at +20 C for an aged pack; missions longer than the pack rely on vehicle or solar
-      input (D-06).
+      The kit runs from its internal pack, and its battery-only runtime is stated in hours in an idle and a typical mode
+      (PS-IDLE-SPEC and PS-TYP) at +20 C for an aged pack; missions longer than the pack rely on vehicle or solar input
+      (D-06). The store is inside the Peli 1450 and no external battery is part of the kit; battery and solar are both
+      required (D-20, D-21, D-28).
     acceptance: >-
       The stated hours for PS-IDLE-SPEC and PS-TYP at +20 C are computed for an aged pack, 80 percent of the cells'
       specification minimum capacity (8.04 Ah for the 3P block, SC-23), then measured on the prototype and scaled
@@ -7149,7 +7393,7 @@ records:
       rules: []
       decisions: []
     rule_coverage: NONE
-    rulings: [D-06]
+    rulings: [D-06, D-28]
     choices: [SC-05, SC-23]
     status: DEFINED
     evidence_result: NOT_JUDGED
@@ -7164,6 +7408,10 @@ records:
       - "v2/vendor/battery/samsung-35e-orbtronic.pdf"
       - "session choice SC-23"
     source_check: VERIFIED
+    history: >-
+      Restated by D-28 applied by D-32 (layer 3's closure, 2026-09-30): it read statement 'The kit runs from its
+      internal pack, and its battery-only runtime is stated in hours in an idle and a typical mode (PS-IDLE-SPEC and
+      PS-TYP) at +20 C for an aged pack; missions longer than the pack rely on vehicle or solar input (D-06).'.
     notes: >-
       Round 2 of W1 withdrew the round-1 '200 Wh / 50 W = about 4 h'. D-06 (26 September 2026) makes the runtime a
       stated figure rather than a target; SC-05 names the two modes. FEA-004 holds this record while the power and
@@ -7372,6 +7620,7 @@ records:
       rules: [PWR-001]
       decisions: []
     rule_coverage: PARTIAL
+    rulings: [D-28]
     choices: [SC-36]
     waits_on: [S-53, S-47]
     status: DEFINED
@@ -7389,29 +7638,49 @@ records:
       (v2/ecad/tools/gen_sch_e.py:421 at eadbe571).
     notes: >-
       Split on 27 September 2026 (SC-36): the window, which has a hardware effect, is stated here from board E's
-      generator; M1's energy balance is REQ-072. That balance needs a panel of about 270 W on the reference day
-      where the window takes 100 W, so layer 4 judges the input path against it (S-53) and a re-rating would
-      restate this record. Since the second pass of the same day (Review B, finding B4) the window's voltage is the 25 V
-      the generator declares for the panel entry (gen_sch_e.py, the PV_P and PV_IN rails), not the clamp's 28 V
-      standoff. Recorded on 27 September 2026 (the second release attempt of layers 1 to 3; layer 3's release check,
-      R2): on D-06's architecture (one 4S3P pack and this 100 W window) this record as stated and REQ-072 cannot both
-      hold. REQ-072 fails the night whatever the panel, and its day asks about 266 W of panel where this window takes
-      100 W. Which one gives way is decided by the input path's judgement (S-53, the session's, layer 4) and the
-      owner's part (M-02: a larger or second pack, or the residual), before boards A, E and P enter layout; until then
-      neither record is restated and nothing is lowered.
+      generator; M1's energy balance is REQ-072. That balance needs a panel of about 270 W on the reference day where
+      the window takes 100 W, so layer 4 judges the input path against it (S-53) and a re-rating would restate this
+      record. Since the second pass of the same day (Review B, finding B4) the window's voltage is the 25 V the
+      generator declares for the panel entry (gen_sch_e.py, the PV_P and PV_IN rails), not the clamp's 28 V standoff.
+      Recorded on 27 September 2026 (the second release attempt of layers 1 to 3; layer 3's release check, R2): on
+      D-06's architecture (one 4S3P pack and this 100 W window) this record as stated and REQ-072 cannot both hold.
+      REQ-072 fails the night whatever the panel, and its day asks about 266 W of panel where this window takes 100 W.
+      Which one gives way is decided by the input path's judgement (S-53, the session's, layer 4) and the owner's part
+      (M-02: a larger or second pack, or the residual), before boards A, E and P enter layout; until then neither record
+      is restated and nothing is lowered. D-28 applied by D-32 (layer 3's closure, 2026-09-30) ('Preserve other approved
+      requirements'): the window stands unchanged. With REQ-072 a design objective, its shortfall under this window is
+      design risk DR-01, not a conflict between mandatory requirements; the 2S2P array into a 200 W stage is a layer 4
+      proposal (P-03) that would need the owner's ruling. The interface's obligations as drawn are design risk DR-04.
 
   - id: REQ-072
     kind: requirement
+    obligation: OBJECTIVE
     parent: NEED-05
     statement: >-
-      For mission M1 (CONOPS section 3), the pack plus the solar input keep the kit running in PS-IDLE-SPEC for M1's 72
-      hours (SC-21) on the reference day of SC-37, starting from a full, aged pack (REQ-014).
+      Design objective (the owner's clarification D-28, not a mandatory minimum): under the operating profile stated in
+      objective_profile, the kit's own store inside the Peli 1450 plus its solar input keep the kit serving its loads
+      for 48 to 72 hours of mission M1 (CONOPS section 3), 48 hours the lower end and 72 hours the upper end of the
+      baseline design target, from a full, aged store (REQ-014). Battery-only and solar-assisted endurance are reported
+      apart. Optional tablet charging and additional use, HF listening among it, reduce endurance, which the owner
+      accepts (D-28).
+    objective_profile: >-
+      The essential loads of PS-IDLE-SPEC, 42.8 W at the pack terminals over its 39 loads (POWER-THERMAL.md section 4);
+      the radio duty cycles of that state, HF available and not receiving (the QMX's USB and HDMI 5 V, 0.32 W), HF
+      listening (1.14 W more) an additional use; the tablet not charged, the USB-C outlet off; a full store at the
+      start, aged to 80 percent of the cells' specification minimum (REQ-014), each pack to its graceful line (5 percent
+      relative state of charge, or its lowest cell at 3.00 V under load); battery-only at +20 C and -10 C;
+      solar-assisted on SC-37's reference mean day at Leiden on one plane, 40 degrees facing south, in the typical array
+      build (TYP), the worst array build (WAB) a sensitivity, from starts at 06 and 18 UTC. These are modelling
+      assumptions, not owner-approved operating restrictions (D-28).
     acceptance: >-
-      Desk: a calculation from the PS-IDLE-SPEC load of POWER-THERMAL.md section 4, the aged pack of REQ-014 and the
-      energy the input path delivers into the kit on the reference day (4.0 kWh/m2 on the optimally inclined plane,
-      SC-37) ends the 72 hours above the graceful shutdown threshold; repeated with the loads and the stage's
-      efficiency measured at bring-up. Prototype: the kit runs PS-IDLE-SPEC for 72 hours from a full pack on its solar
-      input, fed by a panel emulator following the reference day's profile, and ends above that threshold.
+      Desk: the modelled endurance under the stated profile, reported at the kit loads (the service continues within
+      voltage, power and pack limits, and after a permitted pack cutoff the remaining supply carries the loads, D-26):
+      battery-only in hours from full at +20 C and -10 C, and solar-assisted in hours on the mean day from full at 06
+      and 18 UTC, on the power path as drawn and on any corrected path named beside it as hypothetical. The objective
+      reads met when the solar-assisted run serves the load for 48 hours or more, 72 hours reported beside it; a
+      shortfall is reported as a design risk with its layer (D-28). Repeated with the loads and the efficiencies
+      measured at bring-up. Prototype: the kit runs the stated profile from a full store on its solar input, fed by an
+      array emulator following the reference day's profile, and the hours served are reported.
     allocated_to: [kit, e, a, procedure]
     verification_method: [CALCULATION, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -7422,9 +7691,9 @@ records:
       rules: [PWR-001]
       decisions: []
     rule_coverage: PARTIAL
-    rulings: [D-06, D-20]
-    choices: [SC-36, SC-21, SC-37]
-    waits_on: [S-53, M-02]
+    rulings: [D-06, D-20, D-28, D-32]
+    choices: [SC-36, SC-37]
+    waits_on: [S-53]
     status: DEFINED
     evidence_result: FAIL
     evidence_phase: SCHEMATIC
@@ -7517,6 +7786,17 @@ records:
           R11-DEPENDENCY.md closed, do the 4S14P and 4S15P lids meet at nominal inputs (93.7 and 125.2 Wh, TYP), and at
           the worst established inputs only conditionally on three undocumented efficiencies. No figure is demonstrated
           capability. This entry changes no statement or acceptance: the verdict stays FAIL.
+      - >-
+          The modelled baseline (the owner's clarification D-28: reported honestly, the shortfall recorded prominently),
+          read from v2/docs/records/l3batt/runtime.out, the output of v2/docs/records/l3batt/runtime.py (stream l3batt,
+          checked), by v2/docs/records/l3r5/runtime_reader.py for D-32: with HF and the tablet kept and no tablet
+          charging, battery-only from full, D-06's 4S3P pack runs 2.52 h at +20 C (1.04 h at -10 C) and the studied
+          in-case candidate, Option A(i)'s base 4S6P and a 4S9P lid (544.4 Wh usable aged at +20 C), 12.71 h (5.24 h at
+          -10 C); solar-assisted on the mean day in TYP the candidate stops at 05 UTC of the first night, hour 23 from a
+          06 UTC start and hour 11 from an 18 UTC start, as drawn (266.7 Wh unserved at 48 h, 494.7 Wh at 72 h) and on
+          the hypothetical corrected path (102.2 Wh at 48 h, 165.7 Wh at 72 h, NOM) alike, in 0 of 864 past September
+          windows at 48 h and 0 at 72 h. The objective's lower end is missed even without tablet charging: design risk
+          DR-01, assigned to layer 4. The corrected path is not implemented. Reads FAIL.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
       - "v2/docs/feasibility/POWER-THERMAL.md@ad3ba27cef9e0f68"
@@ -7527,22 +7807,35 @@ records:
       - "v2/docs/records/l3plane/ENERGY-BASIS.md@7bbca138a02bd32f"
       - "v2/docs/records/l3plane/three_cases.out@8119987a20fad08c"
       - "v2/docs/records/l3r2/checks/energy-basis-check-5/CHECK-5.md@bf3aace0457d19ee"
-    release_effect: BLOCKER
+      - "v2/docs/records/l3batt/runtime.out@87d9c1ee59059763"
+    release_effect: MUST_JUSTIFY
     source:
       - "owner ruling D-06"
       - "v2/docs/CONOPS.md section 3"
       - "v2/vendor/solar/pvgis-leiden-monthly-2015-2020.json"
       - "session choice SC-37"
     source_check: VERIFIED
+    history: >-
+      Restated by D-28 applied by D-32 (layer 3's closure, 2026-09-30): it read statement 'For mission M1 (CONOPS
+      section 3), the pack plus the solar input keep the kit running in PS-IDLE-SPEC for M1's 72 hours (SC-21) on the
+      reference day of SC-37, starting from a full, aged pack (REQ-014).'; acceptance 'Desk: a calculation from the
+      PS-IDLE-SPEC load of POWER-THERMAL.md section 4, the aged pack of REQ-014 and the energy the input path delivers
+      into the kit on the reference day (4.0 kWh/m2 on the optimally inclined plane, SC-37) ends the 72 hours above the
+      graceful shutdown threshold; repeated with the loads and the stage's efficiency measured at bring-up. Prototype:
+      the kit runs PS-IDLE-SPEC for 72 hours from a full pack on its solar input, fed by a panel emulator following the
+      reference day's profile, and ends above that threshold.'.
     notes: >-
-      Split from REQ-016 on 27 September 2026 by the layer-3 closer (SC-36). The mission duration was the owner's
-      to set (D-06); the layer-2 closer set 72 hours under the standing rule (SC-21), which the owner's own setting
-      replaces. The failing balance is a layer-4 finding (S-53) held open, not a shorter mission. The reference day
-      is the design month's (September); M1 carries no season, and a month with less sun asks more of the input path,
-      which layer 4 records beside it (SC-37, second pass after Review B finding B5). Since 27 September 2026 (the
-      second release attempt of layers 1 to 3; layer 3's release check, R2): SC-21 governs the duration, the record
-      waits on the session's input-path judgement (S-53) and on the owner's part (M-02), and on D-06's architecture it
-      and REQ-016 as stated cannot both hold (REQ-016's notes). The FAIL at desk is carried as it stands.
+      Split from REQ-016 on 27 September 2026 by the layer-3 closer (SC-36). The mission duration was the owner's to set
+      (D-06); the layer-2 closer set 72 hours under the standing rule (SC-21), which the owner's own setting replaces.
+      The failing balance is a layer-4 finding (S-53) held open, not a shorter mission. The reference day is the design
+      month's (September); M1 carries no season, and a month with less sun asks more of the input path, which layer 4
+      records beside it (SC-37, second pass after Review B finding B5). Since 27 September 2026 (the second release
+      attempt of layers 1 to 3; layer 3's release check, R2): SC-21 governs the duration, the record waits on the
+      session's input-path judgement (S-53) and on the owner's part (M-02), and on D-06's architecture it and REQ-016 as
+      stated cannot both hold (REQ-016's notes). The FAIL at desk is carried as it stands. Restated by D-28 applied by
+      D-32 (layer 3's closure, 2026-09-30) as the design objective the owner's clarification sets (D-28), replacing the
+      session's SC-21 (72 hours) and the mandatory reading of D-20 and D-21 the session had taken; its shortfall is
+      design risk DR-01 (layer 4), no longer the owner's part M-02, which D-28 closes.
 
   - id: REQ-017
     kind: requirement
@@ -7569,7 +7862,7 @@ records:
       rules: [PWR-001, ISO-001, TRN-001]
       decisions: []
     rule_coverage: PARTIAL
-    rulings: [D-11, D-12]
+    rulings: [D-11, D-12, D-28]
     waits_on: [S-60]
     status: DEFINED
     evidence_result: NOT_JUDGED
@@ -7584,7 +7877,11 @@ records:
       The outlet interlock is in hardware since 458b2873 (CON-019) and the wall data path left the USB-C (S-21, closed).
       D-11's thresholds are REQ-018's pass lines since 27 September 2026 (SC-35); the minimum contract of 0 W means a
       device on the PoE port loses power for each PA key-down and a device on the USB-C outlet runs from its own battery
-      meanwhile, which the operating instructions state (SC-24).
+      meanwhile, which the operating instructions state (SC-24). D-28 applied by D-32 (layer 3's closure, 2026-09-30):
+      as drawn, board A's outlet shunt R138 is 10 mOhm, twice the maker's recommended 5 mOhm, so the TPS25740A's trip
+      sits at 1.92 to 2.26 A and the 3.0 A contracts at 5, 9 and 15 V lie above it: this record's 45 W is not
+      deliverable as drawn (CHECK-3 of stream l3batt, minor 1, a board A finding; the maker's 5 mOhm puts the trip at
+      3.8 to 4.5 A). Design risk DR-03, layer 4; the requirement is unchanged.
     choices: [SC-24]
 
   - id: SPD-002
@@ -15059,7 +15356,7 @@ records:
       rules: [ENV-001, ENV-002]
       decisions: [34]
     rule_coverage: PARTIAL
-    rulings: [D-02a]
+    rulings: [D-02a, D-29, D-36]
     choices: [SC-03, SC-12, SC-19]
     status: DEFINED
     evidence_result: NOT_JUDGED
@@ -15074,7 +15371,11 @@ records:
     source_check: VERIFIED
     notes: >-
       Created by the integrator from D-02a; E5 joined by SC-03; the pack's margins by SC-09, withdrawn in round 8 for
-      SC-12; the levels the kit cannot take with its pack are CFL-017.
+      SC-12; the levels the kit cannot take with its pack are CFL-017. D-29 applied by D-36 (layer 3's closure,
+      2026-09-30): CFL-017 closes as a requirements conflict. The margins stand unchanged, neither reduced, read as the
+      kit's without its cells nor reclassified; with the current cell (the Samsung 35E) and the current thermal design
+      the kit with its pack fitted does not meet them, which FEA-008 carries to layer 4 mode by mode (LO-01d to LO-01g).
+      The test deviations measure the rest of the kit and close nothing.
 
   - id: CFL-017
     kind: conflict
@@ -15101,10 +15402,16 @@ records:
       rules: []
       decisions: []
     rule_coverage: NONE
+    rulings: [D-29, D-36]
     choices: [SC-12, SC-19]
-    status: CONFLICT_OPEN
-    evidence_result: FAIL
-    evidence_phase: SCHEMATIC
+    status: CONFLICT_RESOLVED
+    resolved_by: >-
+      D-29 applied by D-36 (layer 3's closure, 2026-09-30): judged mode by mode against the project's maker sheets
+      (Samsung INR18650-35E Ver. 1.1 and Version 1.0), the collisions are between the requirements (D-02, D-02a and
+      TEST-PLAN E5, with the pack fitted) and the current cell, an engineering selection D-06's pack carries, with the
+      current thermal design; the requirements are coherent, and FEA-008 carries the component-selection and
+      thermal-design obligation to layer 4.
+    evidence_result: NOT_JUDGED
     release_effect: ADVISORY
     source:
       - "v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571)"
@@ -15122,7 +15429,8 @@ records:
       board or an interface; and none of its three exits is the session's at desk: a measured pack arrangement needs
       hardware, cells rated beyond +60 C reopen D-06, and D-02a's scope is the owner's to read. Its three routes, the
       session's recommendation and their cost are ENGINEERING-QUESTIONS EQ-26 (27 September 2026, the second release
-      attempt of layers 1 to 3; layer 2's release check, B4 (e)).
+      attempt of layers 1 to 3; layer 2's release check, B4 (e)). Resolved by D-29 applied by D-36 (layer 3's closure,
+      2026-09-30); it reads NOT_JUDGED: the obligation's reading is FEA-008's.
 
   - id: CFL-008
     kind: conflict
@@ -18208,3 +18516,60 @@ records:
       as assumed. The compact engineering question of the BLOCKED purchase is CASE-FIT-UNCERTAINTIES.md section 7.
       The review behind the case analysis is AI review; no qualified mechanical route exists yet
       (CASE-FIT-UNCERTAINTIES.md section 5).
+  - id: FEA-008
+    kind: feasibility
+    parent: NEED-15
+    title: "the current cell and thermal design against the temperature requirements with the pack fitted (CFL-017's modes, layer 4)"
+    statement: >-
+      The owner's clarification D-29 judged CFL-017 mode by mode against the project's maker sheets (Samsung
+      INR18650-35E Ver. 1.1, at the cell surface; Version 1.0, ambient): the requirements are coherent, and with the
+      pack fitted the current cell and thermal design fall short of them in use at the envelope's +40 C by up to 2.1 K
+      lid closed on the independent bound; none on 32.53's conductance (LO-01a), at D-02a's +55 C operating margin by
+      1.6 to 14.2 K (LO-01d), in TEST-PLAN E5's humid dwell by at least 6.63 K (LO-01e), at the +71 C storage margin by
+      11 K (LO-01f) and at the -33 C storage margin by 13 K (Ver. 1.1); 33 K (Version 1.0) (LO-01g); storage inside the
+      envelope collides only on Version 1.0 (LO-01h). A layer 4 component selection and thermal design owes each
+      closure; no alternative cell or thermal solution is shown.
+    acceptance: >-
+      Each of LO-01a, LO-01d, LO-01e, LO-01f, LO-01g, LO-01h closed by its criterion in the cell modes table of
+      v2/docs/handover/layer3/REQUIREMENTS-L3-R2.md: a cell whose maker's sheet rates the mode's range, or a thermal
+      design holding every cell inside its governing limits, shown by the named TEST-PLAN run with the pack fitted and a
+      thermocouple on every cell.
+    feasibility_page: v2/docs/handover/layer3/REQUIREMENTS-L3-R2.md
+    blocker_ids: [LO-01a, LO-01d, LO-01e, LO-01f, LO-01g, LO-01h]
+    closing_evidence: >-
+      The chosen cell's maker's sheet filed in v2/vendor/battery/ with its ratings against each mode, or the thermal
+      design's model, and the TEST-PLAN runs E3-A, E3-L, E3-O, E3-S, E4-S and E5 with the pack fitted.
+    owner: >-
+      The session at layer 4 (the cell's selection and the thermal design); the owner for the spend on another cell
+      (D-09) and D-06's parenthesis restated.
+    blocks: [REQ-051, REQ-025, REQ-074]
+    allocated_to: [kit, procedure]
+    verification_method: [CALCULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+    verification_phase: SCHEMATIC
+    final_phase: PROTOTYPE
+    prototype_1: deferred
+    prototype_1_basis: NEED_DEFAULT
+    satisfied_by:
+      rules: []
+      decisions: []
+    rule_coverage: NONE
+    rulings: [D-02a, D-06, D-29, D-36]
+    choices: [SC-19]
+    status: FEASIBILITY_OPEN
+    evidence_result: INCONCLUSIVE
+    evidence_phase: SCHEMATIC
+    evidence_class: DESK_REVIEW
+    evidence:
+      - >-
+          The maker's sheets v2/vendor/battery/samsung-35e-orbtronic.pdf (Ver. 1.1, clauses 3.12 and 3.13) and
+          samsung-35e-akkuzentrum.pdf (Version 1.0, clauses 3.15 and 3.16), v2/docs/OPERATING-ENVELOPE.md sections 3 and
+          8 and v2/docs/TEST-PLAN.md's E3 to E5 rows, read for D-29 in layer 3's closure (round 5): the cell modes table
+          of l3r2.yaml, each gap recomputed by test_l3r5.py from the figures beside it.
+    evidence_bound_to: [v2/vendor/battery/samsung-35e-orbtronic.pdf@5ec577b952b9dc51, v2/vendor/battery/samsung-35e-akkuzentrum.pdf@d2a7c686941c1f42, v2/docs/OPERATING-ENVELOPE.md@26e98ecfd2e4ec2f, v2/docs/TEST-PLAN.md@42a3dff33442c860]
+    release_effect: MUST_JUSTIFY
+    source: ["owner ruling D-29", "v2/vendor/battery/samsung-35e-orbtronic.pdf", "v2/vendor/battery/samsung-35e-akkuzentrum.pdf", "v2/docs/OPERATING-ENVELOPE.md"]
+    source_check: VERIFIED
+    notes: >-
+      Created by layer 3's closure (round 5) on D-29 (D-36, row L3-OD5). The cell's provenance is l3r2.yaml's
+      cell_provenance: the Samsung 35E is named in the owner's pack rulings as the pack's content, D-06 was ruled at the
+      session's recommendation, and no ruling states the model as a product requirement.
