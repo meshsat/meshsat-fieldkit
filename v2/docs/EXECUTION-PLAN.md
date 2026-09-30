@@ -800,3 +800,35 @@ obligations.
 
 **Next:** the owner's six answers, applied by their scripts; the definition re-issue (L3-C26) for his approval; a
 narrow independent check; then the Layer 3 gate.
+
+### Milestone, 30 September 2026 13:32 CEST: integration set 17 on main (the public-file cleanup; the definition re-issue prepared)
+
+**Accepted:** `1f34bf92`. Merged:
+- **The public-file cleanup** (`records/scrub/`, checked twice): tracked files carrying the runner's paths, session
+  temporary paths or internal host names went from 171 instances in 71 files to 22 in 14; each remaining one is a file
+  cited by its sha, a registry-bound page, a binary, or a pattern a script refuses, and is listed with its reason.
+  Handover snapshots H1, H1.1, H2 and H3 are reissued as H1-R1, H1.1-R1, H2-R1 and H3-R1, each with its own version
+  record, manifest and hashes, from redaction commits recorded by a merge that changes no file; the originals are
+  untouched. A guard test fails on a new leak. Git history is not rewritten: the old values remain in history (a
+  rewrite is the owner's decision).
+- **The definition re-issue prepared** (`records/l3r4/`, checked four times): the passage map of CONOPS and
+  PRODUCT-BRIEF per owner row and option (128 passages: 51 to re-issue, the rest statements of the design as generated
+  carried on DEFINITION-STATUS), and the generator that writes the proposed re-issue and its change record only from
+  decided rows, refuses contradictory answers, and never writes a baselined file. LAYER-STATUS layer 3's independent
+  check row reads MET for the handover as prepared.
+
+**Gates:** validators 0 errors 0 warnings; the full render order reaches the same evidence page twice; a clone holding
+only the candidate branch reproduces every page (235 passed, 0 failed, 2 skipped); the box suite on `1f34bf92` 2347
+passed, 0 failed, 3 skipped. The integration check is filed under `records/int18/checks/`, mergeable.
+
+**Layer 3 is IN_PROGRESS.** The owner's reviewer found the decision logic confused a candidate's failure with an
+invalid requirement (review of 30 September on the decision brief); round 5 (`fnd/l3r5`) separates the owner-selected
+target from the candidate's compliance, completes the acceptance definitions (the mission criterion at the kit loads,
+the thermal mode table, the stability test conditions, the solar topology apart from its electrical compliance), and
+adds the three status levels. The feasibility record behind it (`fnd/l3feas`, `c11b99d3`, accepted by its second check)
+finds keeping HF at the worst array build INCONCLUSIVE (one route, conditional on unprinted and undocumented figures),
+the panel revision not pinned, and the solar stage's input power not controlled as drawn. The six owner decisions
+remain open.
+
+**Next:** round 5 and its check; the owner's choices; then the answers applied, the re-issue generated for his
+approval, a narrow check, and the Layer 3 gate. Layer 4 and later work stays paused.
