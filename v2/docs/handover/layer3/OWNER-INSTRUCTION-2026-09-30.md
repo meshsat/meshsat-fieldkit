@@ -46,6 +46,8 @@ Requirements completion stays apart from circuit, PCB, thermal, runtime and prod
 reported COMPLETE without a further review from him (D-38). **Until `CONOPS.md` and `PRODUCT-BRIEF.md` are re-stamped**
 with the approved texts (layers 1 and 2, the integrator's, L3-C63), where either differs from
 `DEFINITION-CHANGE-RECORD-L3.md`, the change record governs (D-38).
+**Closure is authorised conditionally (D-39):** final baseline acceptance is recorded against the verified revision
+after the gates pass (`l3r2.yaml` `baseline_acceptance`); the ruling itself is not evidence that they passed.
 
 **Superseded, kept in place below and marked there.** 72 hours as a mandatory minimum (SC-21, D-21's reading, D-27's
 options), external battery options and the comparison's Options A and B, the ten-row recommendation string, rows
@@ -351,6 +353,17 @@ the ruling that decides the definition re-issue (`decides: definition_reissue`, 
 
 > "When the closure criteria pass, integrate the baseline, update EXECUTION-PLAN.md and start Layer 4 immediately."
 
+## The owner's clarification of his closure instructions: closure authorised once the criteria pass, acceptance recorded against the verified revision (30 September 2026), as quoted
+
+Relayed by the coordinating session on the evening of 30 September 2026, after the targeted recheck of layer 3's closure.
+The paragraph below is as quoted there, word for word. It clarifies the closure instructions quoted above (the second
+and third of D-38's paragraphs, and the last paragraph of D-28's clarification). The registry records it, with those
+three sentences, as owner ruling D-39, the ruling that decides the layer 3 baseline's closure (`decides:
+layer3_baseline`): a CONDITIONAL authorisation.
+
+> "My instruction authorizes closure once the agreed criteria pass. Record final baseline acceptance against the
+> verified revision after those gates pass; the ruling itself is not evidence that they passed."
+
 ## How this work reads it (the session's reading, not the owner's words)
 
 - **"Battery and solar remain mandatory"**: mission M1 is carried by the kit's own store and its solar input. An
@@ -451,3 +464,9 @@ the ruling that decides the definition re-issue (`decides: definition_reissue`, 
   proposed texts reach `CONOPS.md` and `PRODUCT-BRIEF.md` by their re-stamp through layers 1 and 2, an open obligation
   of the integrator (L3-C63); until then, where either document differs from the change record, the change record
   governs, and `handover/DEFINITION-STATUS.md` says so.
+- **The conditional closure authorisation (D-39)**, the session's reading and not his words: D-39 authorises reporting
+  "Layer 3 requirements baseline: COMPLETE" and starting layer 4 once the agreed closure criteria pass; it is not
+  evidence that any gate passed. The final baseline acceptance is a separate record, `l3r2.yaml`'s
+  `baseline_acceptance`, filed against the verified revision after the gates pass
+  (`v2/docs/records/l3r5/apply_l3r5_accept.py`); until it is filed the requirements baseline reads DRAFTED, not
+  VALIDATED.

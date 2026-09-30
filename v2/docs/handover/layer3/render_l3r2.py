@@ -16,6 +16,18 @@ changes; none is edited). A decision's state is read from the registry: the cond
 answer records a ruling with `decides: <row>:<option>`. Every page is generated; a hand edit is refused by --check,
 which the suite runs (v2/ecad/tools/tests/test_l3r2.py).
 
+Decided rows in the current views (the recheck astra-check-l3r5-2, B2, 30 September 2026): what a row's state changes
+is derived here from the registry's rulings and l3r2.yaml's closed_as, never written per row. A settled row is named
+with its mark wherever a current view names it (row_tag: `L3-OD4, reject (D-35)`; `L3-OD1, closed as layer 4
+architecture (P-01)`). The downstream-impact table labels each l3r2.yaml `impacts` entry by impact_state: applied when
+the record differs from H3's; pending ('if decided') while a row the entry names in `rows` is open; a layer 4 proposal,
+not applied, when one of its rows is closed as a later layer's architecture; and, when every row it names is decided
+and the record is as H3 has it (or absent), left out of the table and named in one line below it with the rulings
+('not changed (D-34)', 'not added (D-35)'). The other answers of a settled row are not listed as current on the
+reconciliation (they stay on the decision page beside the answer); a superseded acceptance definition's consequence and
+choice are labelled as prepared, not taken; the feasibility items and the contradiction rules carry each named row's
+state. test_l3r5.py holds the criterion on the rendered views.
+
 Style: one Markdown paragraph per line (claims_check.py screens sentence by sentence within a line), no dash character.
 Python 3.11 with PyYAML, as rules_render.py.
 """
@@ -307,6 +319,46 @@ def settled(row, dec, data=None):
     return row in dec or not_applicable(row, dec) or (closure and bool(closed_as(row, data)))
 
 
+ROW_RX = re.compile(r"\bL3-OD\d\b")
+
+
+def row_mark(row, dec, data=None):
+    """The id that marks a settled row in place: its ruling once decided (D-35), the layer's proposal it was closed into
+    once closed as a later layer's architecture (l3r2.yaml closed_as.proposal, P-01); None while it is open."""
+    if row in dec: return dec[row][1]
+    if closed_row(row, dec, data): return (closed_as(row, data) or {}).get("proposal") or "layer 4"
+    return None
+
+
+def row_tag(row, dec, data=None):
+    """A row named with its state wherever a current view names it (the recheck of 30 September 2026, astra-check-l3r5-2,
+    B2): `L3-OD4, reject (D-35)` once decided, `L3-OD1, closed as layer 4 architecture (P-01)` once closed, the bare id
+    while open. Derived from the registry's rulings and l3r2.yaml's closed_as, never written per row."""
+    if row in dec: return "%s, `%s` (%s)" % (row, dec[row][0], dec[row][1])
+    if closed_row(row, dec, data): return "%s, closed as layer 4 architecture (%s)" % (row, row_mark(row, dec, data))
+    return row
+
+
+def impact_state(rid, entry, changed, present, dec, data=None):
+    """How an l3r2.yaml `impacts` entry renders in the downstream-impact table (section 7), derived from the registry and
+    the state of the rows the entry names in `rows`, never written per row. The rule, in order:
+      ('applied', '')          the record differs from H3's registry (it is in section 6.1);
+      ('pending', '')          a row it names is still open (a dry run on an earlier registry): '(if decided)';
+      ('proposal', 'P-01')     a row it names is closed as a later layer's architecture: the entry is what that layer's
+                               proposal would move if ruled there, rendered '(layer 4 proposal P-01, not applied)';
+      ('omit', 'not changed (D-33)' or 'not added (D-35)')
+                               every row it names is decided and the record is unchanged (or absent): the rulings leave
+                               it as H3 has it, so it is left out of the table and named in one line below it.
+    An entry with no `rows` and no change is pending, as before the closure."""
+    if rid in changed: return "applied", ""
+    rows = list(entry.get("rows") or [])
+    if not rows or any(not settled(r, dec, data) for r in rows): return "pending", ""
+    closed = [row_mark(r, dec, data) for r in rows if closed_row(r, dec, data)]
+    if closed: return "proposal", closed[0]
+    marks = sorted({row_mark(r, dec, data) for r in rows} - {None}, key=lambda m: (len(m), m))
+    return "omit", "%s (%s)" % ("not changed" if rid in present else "not added", ", ".join(marks))
+
+
 def feasibility(req, dec, data):
     """[(FI id, the feasibility record's id or None, disposition kind)]: the items the registry records for the decided
     answers (feasibility records whose blocker id is an FI id of l3r2.yaml), each with the disposition l3r2.yaml gives."""
@@ -329,13 +381,38 @@ def dispositions(req, dec, data):
     return out
 
 
+def acceptance_ok(req, data):
+    """(True, '') when the layer 3 baseline's acceptance is filed as its own record (the owner's clarification quoted in
+    D-39: "Record final baseline acceptance against the verified revision after those gates pass; the ruling itself is
+    not evidence that they passed"): a ruling decides `layer3_baseline`, and l3r2.yaml's `baseline_acceptance` is
+    {revision: a 40-hex commit, authorised_by: that ruling, evidence: [paths], accepted_on}, every evidence path held in
+    this tree, the newest independent_check ACCEPTED and listed in its evidence. The ruling alone is not acceptance."""
+    rid = [r["id"] for r in req["owner_rulings"] if str(r.get("decides")) == "layer3_baseline"]
+    if not rid: return False, "no ruling decides the layer 3 baseline"
+    ba = data.get("baseline_acceptance")
+    if not ba: return False, "%s authorises it conditionally; l3r2.yaml's baseline_acceptance is not filed" % rid[0]
+    if not re.fullmatch(r"[0-9a-f]{40}", str(ba.get("revision") or "")): return False, "its revision is not a 40-hex commit"
+    if str(ba.get("authorised_by")) not in rid: return False, "it is not authorised by %s" % rid[0]
+    if not ba.get("accepted_on"): return False, "it carries no date"
+    ev = [str(x) for x in ba.get("evidence") or []]
+    if not ev: return False, "it names no evidence"
+    miss = [x for x in ev if not os.path.exists(os.path.join(ROOT, x))]
+    if miss: return False, "its evidence %s is not in this tree" % ", ".join(miss)
+    chks = handover_checks(data)
+    if not chks or str(chks[-1].get("verdict")).upper() != "ACCEPTED": return False, "the newest independent check is not ACCEPTED"
+    if str(chks[-1]["record"]) not in ev: return False, "its evidence does not list the newest independent check"
+    return True, ""
+
+
 def status_level(req, dec, data, h3, g=None):
-    """The reviewer's status level that holds (D-26), read from the gate and the rulings: (id or None, sentence)."""
+    """The reviewer's status level that holds (D-26), read from the gate, the rulings and the acceptance record:
+    VALIDATED only with the gate's conditions MET, a ruling deciding `layer3_baseline` and the baseline's acceptance
+    filed against the verified revision (acceptance_ok); D-39 alone leaves DRAFTED. (id or None, sentence)."""
     lv = {x["id"]: x for x in data.get("status_levels") or []}
     g = g or gate(req, dec, data, h3)
     rows = [d["id"] for d in data["decisions"]]
     drafted = all(settled(r, dec, data) for r in rows) and basis_ok(data, "feasibility_basis")[0]
-    accepted = any(str(r.get("decides")) == "layer3_baseline" for r in req["owner_rulings"])
+    accepted = acceptance_ok(req, data)[0]
     if drafted and all(x[1] for x in g) and accepted:
         return "VALIDATED", "**%s** holds: %s." % (lv["VALIDATED"]["name"], lv["VALIDATED"]["means"])
     if drafted:
@@ -954,9 +1031,12 @@ def page_decisions(req, data, dec):
           p("The prepared scripts refuse an answer only where two rulings would set requirements that cannot both hold, "
             "and the completion gate reads the target unambiguous only when none does. A combination whose studied "
             "candidate fails is not among them: it records a feasibility item (the owner's reviewer: \"A combination can "
-            "be a valid target and have a FAIL or INCONCLUSIVE implementation\")."), "", "| Rule | Why |", "|---|---|"]
+            "be a valid target and have a FAIL or INCONCLUSIVE implementation\")."), "", "| Rule | Why | Now |", "|---|---|---|"]
     for c in data.get("contradictions") or []:
-        L.append("| %s | %s |" % (cell(c["rule"]), cell(c["why"])))
+        named = sorted(set(ROW_RX.findall(str(c["rule"]) + " " + str(c["why"]))))
+        now = "; ".join(row_tag(r, dec, data) for r in named) or "no row named"
+        if named and all(settled(r, dec, data) for r in named): now += ": every row it names is settled, and it refuses nothing now"
+        L.append("| %s | %s | %s |" % (cell(c["rule"]), cell(c["why"]), cell(now)))
     return "\n".join(L) + "\n"
 
 
@@ -996,21 +1076,31 @@ def review_lines(req, data, dec):
             L += ["", "| Mode | Environment | Functions available | Source |", "|---|---|---|---|"]
             for t in a["table"]:
                 L.append("| %s | %s | %s | %s |" % (cell(t["mode"]), cell(t["environment"]), cell(t["functions"]), cell(t["source"])))
-        if a.get("consequence"): L += ["", p("**The operational consequence, which the owner's acceptance covers:** " + a["consequence"])]
-        if a.get("choice"): L += ["", p("**The owner's choice:** " + a["choice"])]
+        sup = (" as prepared, not taken (superseded by %s)" % a["superseded_by"]) if a.get("superseded_by") else ""
+        if a.get("consequence"):
+            L += ["", p("**The operational consequence%s:** " % (sup or ", which the owner's acceptance covers") + a["consequence"])]
+        if a.get("choice"): L += ["", p("**The owner's choice%s:** " % sup + a["choice"])]
     L += ["", "## The feasibility items an answer records (D-26)", "",
           p("A target the studied candidate does not meet is recorded with its feasibility item, a feasibility record in "
             "the requirements registry whose page is this one (FEASIBILITY_OPEN, a BLOCKER on the core, reading FAIL or "
             "INCONCLUSIVE, never PASS). The candidate statements are scoped to the studied architecture and its "
-            "established arrangements, never a proof about every architecture. Recorded now: %s." % (
-                ", ".join("%s as %s" % (i, rid) for i, rid, k in feasibility(req, dec, data)) or "none, since no row is "
-                "decided")), "",
-          "| Item | Recorded when | What | The owner's target | The studied candidate | Disposition | Blocks |",
-          "|---|---|---|---|---|---|---|"]
+            "established arrangements, never a proof about every architecture. Recorded now: %s.%s" % (
+                ", ".join("%s as %s" % (i, rid) for i, rid, k in feasibility(req, dec, data)) or (
+                    "none" if dec else "none, since no row is decided"),
+                (" " + p(data["feasibility_closure_note"])) if data.get("feasibility_closure_note") and
+                all(settled(d["id"], dec, data) for d in data["decisions"]) else "")), "",
+          "| Item | Recorded when | What | The owner's target | The studied candidate | Disposition | Blocks | Now |",
+          "|---|---|---|---|---|---|---|---|"]
+    rec_fi = {i: rid for i, rid, k in feasibility(req, dec, data)}
     for x in data.get("feasibility_items") or []:
-        L.append("| %s | %s | %s | %s | %s | %s: %s | %s |" % (x["id"], cell(x["trigger"]), cell(x["title"]), cell(x["target"]),
-                                                             cell(x["candidate"]), x["disposition"]["kind"],
-                                                             cell(x["disposition"]["text"]), ", ".join(x["blocks"])))
+        trig = sorted(set(ROW_RX.findall(str(x["trigger"]))))
+        now = ("recorded as %s" % rec_fi[x["id"]]) if x["id"] in rec_fi else (
+            "not recorded; %s" % "; ".join(row_tag(r, dec, data) for r in trig) if trig and
+            all(settled(r, dec, data) for r in trig) else "not recorded")
+        L.append("| %s | %s | %s | %s | %s | %s: %s | %s | %s |" % (x["id"], cell(x["trigger"]), cell(x["title"]),
+                                                                  cell(x["target"]), cell(x["candidate"]),
+                                                                  x["disposition"]["kind"], cell(x["disposition"]["text"]),
+                                                                  ", ".join(x["blocks"]), cell(now)))
     L += ["", "## The owner's reviewer's directions (D-26), recorded as the reviewer's, not as approvals", "",
           p("Each direction is one of the review's passages quoted word for word in `OWNER-INSTRUCTION-2026-09-30.md` and "
             "recorded as owner ruling D-26; it binds how the rows are presented and applied, and it answers no row."), "",
@@ -1035,9 +1125,20 @@ def page_recon(req, data, dec, h3, root):
     L += facts_lines(data, req)
     L += basis_figures_lines(data)
     L += four_cases_lines(data)
-    L += ["**Under the other answers of each row:**", ""]
-    for a in data["target"]["alternatives"]:
-        L.append("- %s, option `%s`: %s" % (a["row"], a["option"], p(a["text"])))
+    # The other answers a row offered are current only while the row is open; once it is settled they are the question
+    # as it was asked, kept on OWNER-DECISIONS-L3.md beside the ruling, and here the row is named with its ruling instead
+    # (astra-check-l3r5-2, B2: no option a ruling did not take reads as current).
+    rows_d = [d["id"] for d in data["decisions"]]
+    done = [r for r in rows_d if settled(r, dec, data)]
+    alts = [a for a in data["target"]["alternatives"] if a["row"] not in done]
+    if done:
+        L += [p("**The other answers of the settled rows** are the questions as they were asked, kept on "
+                "`OWNER-DECISIONS-L3.md` beside each row's answer, none of them current: %s." % "; ".join(
+                    row_tag(r, dec, data) for r in done)), ""]
+    if alts:
+        L += ["**Under the other answers of each open row:**", ""]
+        for a in alts:
+            L.append("- %s, option `%s`: %s" % (a["row"], a["option"], p(a["text"])))
     if dec:
         L += ["", "**Decided so far:** " + "; ".join("%s `%s` by %s (%s)" % (r, v[0], v[1], v[2]) for r, v in sorted(dec.items())) + "."]
     else:
@@ -1060,7 +1161,7 @@ def page_recon(req, data, dec, h3, root):
     L += ["", "The owner questions of `v2/docs/EXECUTION-PLAN.md` (29 September 2026), which the rows replace:", "",
           "| Question | Row | What changed |", "|---|---|---|"]
     for q in data.get("execution_plan_questions") or []:
-        L.append("| %s | %s | %s |" % (q["q"], q["row"], cell(q["note"])))
+        L.append("| %s | %s | %s |" % (q["q"], row_tag(q["row"], dec, data), cell(q["note"])))
     L += ["", "## (c) Requirement or implementation", "",
           "| Item | Level | Where it lives |", "|---|---|---|"]
     for c in data["classification"]:
@@ -1113,7 +1214,8 @@ def page_recon(req, data, dec, h3, root):
     L += ["", "### Baselined passages a decided row changes (re-issued through layers 1 and 2, never edited here)", "",
           "| Row | File | Lines matching today | Why |", "|---|---|---|---|"]
     for ps, hits in passages(data, root):
-        L.append("| %s | `%s` | %s | %s |" % (ps["row"], ps["file"], ", ".join(map(str, hits)) or "none", cell(ps["why"])))
+        L.append("| %s | `%s` | %s | %s |" % (row_tag(ps["row"], dec, data), ps["file"], ", ".join(map(str, hits)) or "none",
+                                            cell(ps["why"])))
     return "\n".join(L) + "\n"
 
 
@@ -1156,7 +1258,9 @@ def page_spec(req, data, dec, h3, root):
          "- **Sources.** Each record names the need it serves (quoted from `v2/docs/CONOPS.md` section 2, pinned by sha256), the owner rulings and session choices that set it, and its source files. Only an owner ruling is an approval; a session choice is recorded as the session's under the owner's standing rule of 26 September 2026 and can be reversed.",
          "- **Applicability.** `core` records are what prototype 1 is accepted on (owner ruling D-01); `deferred` records are designed and fitted where copper exists and reported NOT_YET_TESTED, never as a pass.",
          "- **Acceptance and verification.** The acceptance is the pass line; the method and the earliest phase at which it can be judged, and the final phase where a later measurement is owed. A record's current reading is its own desk reading; rule verdicts live on `v2/docs/REQUIREMENTS-TRACE.md` and the board status pages.",
-         "- **Pending owner decisions** are shown inline where they apply (section 3 lists them). Until one is decided, the record reads as the registry states it today.",
+         ("- **The owner's answers** are shown inline where they apply (section 3 lists them, each with its ruling); a row closed as a later layer's architecture is named with the proposal it was closed into."
+          if all(settled(d["id"], dec, data) for d in data["decisions"]) else
+          "- **Pending owner decisions** are shown inline where they apply (section 3 lists them). Until one is decided, the record reads as the registry states it today."),
          ""]
     # status and gate
     g = gate(req, dec, data, h3)
@@ -1178,7 +1282,7 @@ def page_spec(req, data, dec, h3, root):
           ] + target_lines(req, data, dec, g[0][1], rows_heading(data)) + facts_lines(data, req) + [
           "| Row | Question | Options | Recommendation | State |", "|---|---|---|---|---|"]
     for d in data["decisions"]:
-        L.append("| %s | %s | %s | %s | %s |" % (d["id"], cell(d["question"]), option_cell(d, dec), cell(d["recommendation"]),
+        L.append("| %s | %s | %s | %s | %s |" % (d["id"], cell(d["question"]), option_cell(d, dec), cell(recommendation(d, dec)),
                                                row_state(d["id"], dec, data)))
     L += ["", p("The quantified consequences, the dependencies, board A's front end in four cases with the corrections, row L3-OD6's options table "
                 "and the scripts that apply each answer: `OWNER-DECISIONS-L3.md`. The proposals behind them, with their "
@@ -1250,17 +1354,31 @@ def page_spec(req, data, dec, h3, root):
     # change record
     L += change_record(req, h3, data, changes)
     # impacts by layer
-    L += ["## 7. Downstream impacts by layer", "",
-          p("For each record changed since H3, and for each change a pending decision would make, what it moves in layers 4 "
-            "to 9 (from `l3r2.yaml` impacts; a changed record with no entry is refused by the renderer)."), "",
-          "| Layer | Record | Why | Impact |", "|---|---|---|---|"]
     imp = data.get("impacts") or {}
+    present = set(byid)
+    states = {rid: impact_state(rid, imp[rid], changed, present, dec, data) for rid in imp}
+    pending = any(k == "pending" for k, _ in states.values())
+    L += ["## 7. Downstream impacts by layer", "",
+          p("For each record changed since H3, %s, what it moves in layers 4 to 9 (from `l3r2.yaml` impacts; a changed "
+            "record with no entry is refused by the renderer). The label beside each record is derived from the registry "
+            "and the rows the entry names (render_l3r2.impact_state): applied, a layer 4 proposal not applied, or pending "
+            "while a row is open; a record the decided rows leave unchanged is named below the table with their rulings." % (
+                "and for each change a pending decision would make" if pending else
+                "and for each change a layer 4 proposal would make if the owner rules it there")), "",
+          "| Layer | Record | Why | Impact |", "|---|---|---|---|"]
+    label = {"applied": lambda x: "applied", "pending": lambda x: "if decided",
+             "proposal": lambda x: "layer 4 proposal %s, not applied" % x}
     for layer in LAYERS:
         for rid in sorted(imp):
             v = (imp[rid].get("layers") or {}).get(int(layer)) or (imp[rid].get("layers") or {}).get(layer)
-            if v and p(v) != "none":
-                applied = "applied" if rid in changed else "if decided"
-                L.append("| %s | %s (%s) | %s | %s |" % (layer, rid, applied, cell(imp[rid]["why"]), cell(v)))
+            kind, x = states[rid]
+            if v and p(v) != "none" and kind != "omit":
+                L.append("| %s | %s (%s) | %s | %s |" % (layer, rid, label[kind](x), cell(imp[rid]["why"]), cell(v)))
+    left = ["%s %s" % (rid, states[rid][1]) for rid in sorted(imp) if states[rid][0] == "omit" and
+            any(p(v) != "none" for v in (imp[rid].get("layers") or {}).values())]
+    if left:
+        L += ["", p("Not in the table, since the decided rows leave the record as H3 has it or never add it (their "
+                    "prepared restatements not taken): %s." % "; ".join(left))]
     L += ["", "## 8. Traceability summary", "",
           "| Need | Core | Records | Rules named | TEST-PLAN places |", "|---|---|---|---|---|"]
     for nid in sorted(needs):

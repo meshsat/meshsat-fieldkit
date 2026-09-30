@@ -157,7 +157,12 @@ def t_l3r5_the_status_level_follows_the_answers():
     assert lvl == "DRAFTED", "all rows settled (row L3-OD2 not applicable) do not read decisions recorded"
     g = RL.gate(req, dec, data, h3)
     assert not g[4][1] and "OWED" in g[4][2], "an owed disposition reads MET in the fifth condition"
-    assert not g[3][1], "an acceptance of the handover with the decisions pending covers the decided issue"
+    # the property is CHECK-5's scope ("decisions pending"): judged with CHECK-5 the newest filed check, since later checks
+    # of the closure (check 3 of round 5, accepted) are filed after it and the fourth condition follows the newest
+    d5 = copy.deepcopy(data)
+    d5["independent_check"] = [c for c in data["independent_check"] if "/l3r2/checks/" in c["record"]]
+    assert d5["independent_check"][-1]["record"].endswith("check-l3r2-5.md")
+    assert not RL.gate(req, dec, d5, h3)[3][1], "an acceptance of the handover with the decisions pending covers the decided issue"
     d2 = copy.deepcopy(data)
     d2["feasibility_basis"]["sha16"] = "0" * 16
     assert RL.status_level(req, dec, d2, h3)[0] is None, "decisions read recorded with the feasibility record unbound"
@@ -568,8 +573,11 @@ def t_l3r5_fix_round_the_brief_the_reissue_and_the_gate():
     import rules_lib as R
     RL = _rl()
     req, data = R.load_requirements(), RL.load_data()
-    chk = data["independent_check"][-1]
-    assert chk["record"].endswith("astra-check-l3r5-1.md") and chk["verdict"] == "NOT_ACCEPTED"
+    # The first check is no longer the last filed: its targeted recheck astra-check-l3r5-2 (accepted: no) is filed after
+    # it (the second fix round, t_l3r5_recheck_decided_rows_carry_no_option_they_did_not_take), so the first is found by
+    # its record rather than by its place.
+    chk = next(c for c in data["independent_check"] if c["record"].endswith("astra-check-l3r5-1.md"))
+    assert chk["verdict"] == "NOT_ACCEPTED"
     assert open(os.path.join(ROOT, chk["record"]), encoding="utf-8").readline().strip() == "accepted: no"
     flat = " ".join(_instr().split("## Current owner brief", 1)[1].split("\n## ", 1)[0].split())
     for w in ("ASM-006 carries owner ruling D-02e's operating condition \"operate shaded\"", "CHO-001, the device set, is the owner's ruling",
@@ -595,7 +603,10 @@ def t_l3r5_fix_round_the_brief_the_reissue_and_the_gate():
     assert RL.closure_state(items["L3-C26"], req, dec, data) == "CLOSED"
     assert items["L3-C63"]["whose"] == "INTEGRATOR" and RL.closure_state(items["L3-C63"], req, dec, data) == "OPEN"
     g = RL.gate(req, dec, data, RL.load_h3())
-    assert g[2][1] and not g[3][1], "the third condition should read MET and the fourth NOT MET: %s" % [(x[0], x[1]) for x in g]
+    # the fourth condition follows the newest filed check: NOT MET while the fix round's recheck (not accepted) was the
+    # newest, MET once check 3 (accepted) is filed after it
+    newest_ok = str(data["independent_check"][-1]["verdict"]).upper() == "ACCEPTED"
+    assert g[2][1] and g[3][1] is newest_ok, "the third condition should read MET and the fourth follow the newest check: %s" % [(x[0], x[1]) for x in g]
     record = open(os.path.join(ROOT, dr["record"]), encoding="utf-8").read()
     assert "AUTHORISED by owner ruling D-38" in record and "**Acceptance:** the targeted independent review" in record
     assert "PROPOSED" not in record, "the approved record still reads PROPOSED"
@@ -613,3 +624,312 @@ def t_l3r5_fix_round_the_brief_the_reissue_and_the_gate():
         assert r.returncode == 2 and "has run" in r.stdout, "a second run of %s was not refused:\n%s" % (s, r.stdout)
     r = _run([os.path.join(ROOT, "v2/docs/records/l3r4/reissue.py"), "--check"], cwd=ROOT)
     assert r.returncode == 0 and "current" in r.stdout, "the approved re-issue does not read current:\n%s" % r.stdout
+
+
+# The recheck's closure criterion (astra-check-l3r5-2, B2), held on the structures and not on the strings the earlier
+# fixes searched for. For each option a decided row did NOT take: its id where it names the option (an id with a hyphen
+# or a digit anywhere, case-sensitive; a common word only backticked on a line that names the row) and the words by
+# which its prepared restatement stated a requirement change. The words are the collaborator's (a deployment band, a
+# ground slope, a push) and the stale entries' own; an option's text is allowed only where the same entry names the
+# ruling that did not take it.
+UNTAKEN_WORDS = {
+    ("L3-OD7", "72-required"): ("72 hours required",),
+    ("L3-OD7", "48-required-72-desired"): ("48 hours required",),
+    ("L3-OD2", "qmx-out"): ("QMX clause is removed", "no HF bearer in the kit", "HF leaves the kit", "8 inch tablet",
+                            "narrows to 8 inch"),
+    ("L3-OD2", "qmx-outside"): ("sealed case-wall lead", "QMX carried outside"),
+    ("L3-OD2", "tablet-out"): ("tablet bracket leaves the lid", "the bracket drawn or dropped"),
+    ("L3-OD3", "2s2p"): ("REQ-016 restated", "200 W in 2S2P"),
+    ("L3-OD3", "1s4p"): ("REQ-016 restated",),
+    ("L3-OD4", "adopt"): ("deployment band", "plane band", "band's least-energy plane", "ground slope", "operator push",
+                          "slope and push", "REQ-078"),
+    ("L3-OD5", "reading-c"): ("reading of D-02a", "without its cells"),
+    ("L3-OD5", "measure"): ("open until the heat experiment",),
+    ("L3-OD5", "cells"): ("cells rated above +60 C",),
+    ("L3-OD6", "coverage"): ("coverage target", "coverage window"),
+}
+
+
+def _untaken_hits(text, row, taken, options):
+    """The words of the options of `row` other than `taken` that `text` carries."""
+    hits = []
+    for o in options:
+        if o == taken: continue
+        if re.search(r"[-\d]", o):
+            if re.search(r"(?<![\w-])%s(?![\w-])" % re.escape(o), text): hits.append(o)
+        elif "`%s`" % o in text and re.search(r"\b%s\b" % re.escape(row), text):
+            hits.append(o)
+        for w in UNTAKEN_WORDS.get((row, o), ()):
+            if w.lower() in text.lower(): hits.append(w)
+    return hits
+
+
+def _section(body, start, end):
+    a = body.index(start)
+    b = body.index(end, a + len(start)) if end else len(body)
+    return body[a:b].split("\n")
+
+
+def _current_view_cells(pages):
+    """[(where, text)] of the current views the criterion names, each unit being what must carry its own mark: in the
+    change table (6.1) the Why cell; in the downstream table (7) the Why cell and the Impact cell apart, and the note on
+    what is left out; in the execution questions the note cell; in the reconciliation (L3-RECONCILIATION.md) the decided
+    target's lines, the settled rows' line, and every table row and line of (b) to (d). The evidence blocks of (a) (the
+    facts, the basis's figures and the four cases, bound to their checked tips) are the checked basis's, not a target."""
+    spec, rec = pages["REQUIREMENTS-L3-R2.md"], pages["L3-RECONCILIATION.md"]
+    out = []
+    for l in _section(spec, "### 6.1 Baseline changes", "### 6.2"):
+        if l.startswith("| ") and not l.startswith("| Record") and not l.startswith("|---"):
+            c = [x.strip() for x in l.split("|")]
+            out.append(("6.1 %s why" % c[1], c[4]))
+    for l in _section(spec, "## 7. Downstream impacts by layer", "## 8."):
+        if l.startswith("| ") and not l.startswith("| Layer") and not l.startswith("|---"):
+            c = [x.strip() for x in l.split("|")]
+            out += [("7 %s %s why" % (c[1], c[2]), c[3]), ("7 %s %s impact" % (c[1], c[2]), c[4])]
+        elif l.startswith("Not in the table"):
+            out.append(("7 left out", l))
+    lines = rec.split("\n")
+    a0, b0 = lines.index("## (a) The current target configuration"), lines.index("## (b) Every requirement-changing proposal since H3")
+    for l in lines[a0:b0]:
+        if l.startswith("- L3-OD") or l.startswith("**The other answers") or l.startswith("**Under the other answers") or \
+                l.startswith("**Decided so far"):
+            out.append(("recon (a)", l))
+    exq = False
+    for l in lines[b0:]:
+        if l.startswith("| Question | Row | What changed |"): exq = True; continue
+        if exq and l.startswith("| Q"):
+            c = [x.strip() for x in l.split("|")]
+            out.append(("execution %s note" % c[1], c[3])); continue
+        if exq and not l.startswith("|"): exq = False
+        if l.strip() and not l.startswith("|---"): out.append(("recon", l))
+    return out
+
+
+def _stale(req, data, pages):
+    """Every place the criterion fails, as text; [] when it holds."""
+    RL = _rl()
+    dec = RL.decided(req, data)
+    rows = {d["id"]: [o["id"] for o in d["options"]] for d in data["decisions"]}
+    bad = []
+    # 1. every impacts entry names in `rows` each row its why names, and names the ruling of each decided row (the
+    #    proposal of each row closed as a later layer's)
+    for rid, e in (data.get("impacts") or {}).items():
+        why = " ".join(str(e.get("why")).split())
+        named = set(RL.ROW_RX.findall(why))
+        if not named <= set(e.get("rows") or []):
+            bad.append("impacts %s names %s in its why but not in rows" % (rid, sorted(named - set(e.get("rows") or []))))
+        for r in sorted(named | set(e.get("rows") or [])):
+            m = RL.row_mark(r, dec, data)
+            if m and m not in why: bad.append("impacts %s names row %s without %s" % (rid, r, m))
+    # 2. every execution question whose row is settled names the row's mark in its own note
+    for q in data.get("execution_plan_questions") or []:
+        m = RL.row_mark(q["row"], dec, data)
+        if m and m not in q["note"]: bad.append("execution question %s (row %s) does not name %s" % (q["q"], q["row"], m))
+    # 3. no current view carries an option a decided row did not take, unless the same unit names that row's ruling
+    for where, text in _current_view_cells(pages):
+        for r, v in dec.items():
+            hits = _untaken_hits(text, r, v[0], rows[r])
+            if hits and v[1] not in text:
+                bad.append("%s carries %s of row %s without %s: %s" % (where, hits, r, v[1], text[:120]))
+    # 4. the downstream table shows no record of a settled row as pending, and a row closed as layer 4 as its proposal
+    spec = pages["REQUIREMENTS-L3-R2.md"]
+    for rid, e in (data.get("impacts") or {}).items():
+        rs = e.get("rows") or []
+        if rs and all(RL.settled(r, dec, data) for r in rs) and "| %s (if decided) |" % rid in spec:
+            bad.append("%s renders (if decided) with every row it names settled" % rid)
+        closed = [r for r in rs if RL.closed_row(r, dec, data)]
+        if closed and "| %s (applied) |" % rid not in spec and \
+                "| %s (layer 4 proposal %s, not applied) |" % (rid, RL.row_mark(closed[0], dec, data)) not in spec:
+            bad.append("%s is tied to %s but does not render as its layer 4 proposal" % (rid, closed[0]))
+    return bad
+
+
+def t_l3r5_recheck_decided_rows_carry_no_option_they_did_not_take():
+    """The recheck astra-check-l3r5-2 (accepted: no) failed B2 a second time: the stale text sat in l3r2.yaml structures
+    written option-neutral before the owner answered, not in the literals the earlier fixes searched for. Its closure
+    criterion, held structurally: for every decided row, the rendered current views (the change table, the downstream
+    table, the execution questions and the reconciliation) carry no text of an option the ruling did not take unless
+    the same entry names that ruling; every impacts entry that names a decided row names its ruling (row L3-OD1, closed
+    as layer 4 architecture, its proposal P-01); the downstream table shows no settled row's record as pending. A
+    fixture copy with one stale entry, the REQ-072 entry as it read before this fix, fails; so does a stale execution
+    question. The recheck is filed byte for byte and named NOT_ACCEPTED next to the first check."""
+    import copy
+    import rules_lib as R
+    RL = _rl()
+    req, data = R.load_requirements(), RL.load_data()
+    pages = {n: open(os.path.join(L3, n), encoding="utf-8").read() for n in RL.PAGES.values()}
+    bad = _stale(req, data, pages)
+    assert not bad, "the current views carry options their rulings did not take:\n  %s" % "\n  ".join(bad[:12])
+    dec = RL.decided(req, data)
+    assert RL.row_tag("L3-OD1", dec, data) == "L3-OD1, closed as layer 4 architecture (P-01)"
+    assert "| REQ-075 (layer 4 proposal P-01, not applied) |" in pages["REQUIREMENTS-L3-R2.md"]
+    assert "REQ-016 not changed (D-34)" in pages["REQUIREMENTS-L3-R2.md"] and "REQ-078 not added (D-35)" in pages["REQUIREMENTS-L3-R2.md"]
+    # D-22's supply-range rule is carried by a record (the gap the author raised on this fix): its classification row
+    # names REQ-072, and REQ-072's desk acceptance carries the clause, written once by its apply script
+    row = next(c for c in data["classification"] if c["item"].startswith("The rule that an M1 energy claim holds across"))
+    assert row["level"] == "REQUIREMENT" and "REQ-072" in row["where"] and "D-22" in row["where"], row["where"]
+    r72 = next(r for r in req["records"] if r["id"] == "REQ-072")
+    a72 = " ".join(r72["acceptance"].split())
+    assert "with the charge bus at U3's input (VBUS20) at its lowest established steady-state voltage" in a72 and \
+        "every load-holding limit at its minimum" in a72 and "(D-22: " in a72 and "D-22" in r72["rulings"], \
+        "REQ-072's acceptance does not carry D-22's clause"
+    r = _run([os.path.join(REC5, "apply_l3r5_d22_req072.py"), "--check"])
+    assert r.returncode == 2 and "has run" in r.stdout, "a second run of the D-22 script was not refused:\n%s" % r.stdout
+    # the fixtures: one stale entry each, rendered in memory from a copy of l3r2.yaml; the tree is not written
+    stale72 = ("L3-OD1, L3-OD3, L3-OD4 and L3-OD6: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, "
+               "the deployment band, the weather basis (the benchmark's limitations in its notes, or a coverage target)")
+    for name, edit in (
+            ("REQ-072's why as it read before", lambda d: d["impacts"]["REQ-072"].update(why=stale72)),
+            ("REQ-072's layer 9 on the band", lambda d: d["impacts"]["REQ-072"]["layers"].update(
+                {9: "REQ-072's prototype run with an array emulator on the band's least-energy plane"})),
+            ("Q4's note as it read before", lambda d: next(q for q in d["execution_plan_questions"] if q["q"] == "Q4").update(
+                note="the deployment rule: the plan's '20 to 50 degrees' is superseded; the band comes from the checked "
+                     "energy basis, and the open kit's slope and push are added")),
+            ("REQ-016 without its rows", lambda d: d["impacts"]["REQ-016"].pop("rows"))):
+        d2 = copy.deepcopy(data)
+        edit(d2)
+        keep = RL.load_data
+        RL.load_data = lambda: copy.deepcopy(d2)
+        try:
+            p2 = RL.render_all()
+        finally:
+            RL.load_data = keep
+        assert _stale(req, d2, p2), "a fixture with %s passes the check" % name
+    chk = [c for c in data["independent_check"] if "astra-check-l3r5" in c["record"]]
+    assert [os.path.basename(c["record"]) for c in chk] == ["astra-check-l3r5-1.md", "astra-check-l3r5-2.md"]
+    assert [c["verdict"] for c in chk] == ["NOT_ACCEPTED", "NOT_ACCEPTED"]
+    src = os.path.join(ROOT, chk[-1]["record"])
+    assert open(src, encoding="utf-8").readline().strip() == "accepted: no"
+    assert RL.sha16_bytes(open(src, "rb").read()) == chk[-1]["sha16"]
+    # judged with the recheck the newest filed check (check 3, accepted, is filed after it at the closure)
+    dr2 = copy.deepcopy(data)
+    k = [i for i, c in enumerate(data["independent_check"]) if c["record"].endswith("astra-check-l3r5-2.md")][0]
+    dr2["independent_check"] = data["independent_check"][:k + 1]
+    g = RL.gate(req, dec, dr2, RL.load_h3())
+    assert not g[3][1], "the fourth condition reads MET with the recheck not accepted"
+
+
+# The owner's clarification on B2, relayed by the coordinator on 30 September 2026: "Historical descriptions of rejected
+# lid options may remain. An entry passes only when its current status accurately reflects the applicable ruling. Merely
+# mentioning D-33 must not excuse contradictory current text or an option still presented as awaiting a decision."
+HISTORY_MARK = re.compile(r"\b(?:was|were) not (?:taken|adopted)\b|\bnot added\b|\bnot applied\b|\bsuperseded\b", re.I)
+ANSWERED = re.compile(r"\brow (L3-OD\d) answered ([\w-]+) \((D-\d+)\)")
+
+
+def _status_units(data, pages):
+    """The units whose current status is judged: every impacts entry's why, the 6.1 why cells, the section 7 why and
+    impact cells (and its left-out line), and the execution questions' notes, as l3r2.yaml holds them and as rendered.
+    The reconciliation's proposal table is history by design and is not among them."""
+    out = [(w, t) for w, t in _current_view_cells(pages) if w.startswith(("6.1", "7 ", "execution"))]
+    out += [("impacts %s" % rid, " ".join(str(e.get("why")).split())) for rid, e in (data.get("impacts") or {}).items()]
+    out += [("question %s" % q["q"], " ".join(str(q["note"]).split())) for q in data.get("execution_plan_questions") or []]
+    return out
+
+
+def _status_wrong(req, data, pages):
+    """(a) wherever a unit says 'row L3-ODn answered X (D-nn)', X is the row's decided option and D-nn its ruling; (b)
+    each unit split into clauses at ';': a clause carrying words of an option its row's ruling did not take passes only
+    if that same clause carries a history marker (was or were not taken or adopted, not added, not applied,
+    superseded). Naming the ruling does not excuse a clause."""
+    RL = _rl()
+    dec = RL.decided(req, data)
+    rows = {d["id"]: [o["id"] for o in d["options"]] for d in data["decisions"]}
+    bad = []
+    for where, text in _status_units(data, pages):
+        for m in ANSWERED.finditer(text):
+            r, opt, rid = m.groups()
+            if r in dec and (opt, rid) != (dec[r][0], dec[r][1]):
+                bad.append("%s: row %s answered %s (%s), decided %s (%s)" % (where, r, opt, rid, dec[r][0], dec[r][1]))
+        for clause in re.split(r";\s*", text):
+            if HISTORY_MARK.search(clause): continue
+            for r, v in dec.items():
+                hits = _untaken_hits(clause, r, v[0], rows[r])
+                if hits: bad.append("%s: a current clause carries %s of row %s: %s" % (where, hits, r, clause[:120]))
+    return bad
+
+
+def t_l3r5_current_status_follows_the_ruling():
+    """An entry passes only when its current status is the ruling's (the owner's clarification on B2): the tree passes,
+    history kept in clauses marked as such; an entry citing D-33 with contradictory current text fails, and so does one
+    naming an option the row did not take as its answer. The stale case (REQ-072's why as it read before the fix) is
+    t_l3r5_recheck_decided_rows_carry_no_option_they_did_not_take's fixture."""
+    import copy
+    import rules_lib as R
+    RL = _rl()
+    req, data = R.load_requirements(), RL.load_data()
+    pages = {n: open(os.path.join(L3, n), encoding="utf-8").read() for n in RL.PAGES.values()}
+    bad = _status_wrong(req, data, pages)
+    assert not bad, "a current status does not follow its ruling:\n  %s" % "\n  ".join(bad[:12])
+    for name, why in (
+            ("contradictory current text citing D-33",
+             "row L3-OD2 answered both-kept (D-33): no HF bearer in the kit, REQ-002 restated; qmx-outside's note was not taken"),
+            ("the wrong answered option citing D-33",
+             "row L3-OD2 answered qmx-out (D-33): the HF bearer removed; qmx-outside's note was not taken")):
+        d2 = copy.deepcopy(data)
+        d2["impacts"]["REQ-002"]["why"] = why
+        assert _status_wrong(req, d2, pages), "a fixture with %s passes" % name
+
+
+def t_l3r5_d39_is_conditional_and_acceptance_is_its_own_record():
+    """D-39 (decides layer3_baseline) records the owner's conditional closure authorisation, its four quotes filed word
+    for word, and a second run refuses. The ruling is not acceptance: with D-39 alone the status level reads DRAFTED, on
+    the tree and on a fixture whose newest independent check is accepted; only with l3r2.yaml's baseline_acceptance filed
+    (the verified revision, D-39, the evidence held, the newest check among it) does it read VALIDATED. The acceptance
+    script refuses on the tree (its newest check is not accepted), a revision that is no commit and a path the tree does
+    not hold, files one line on a copy, and refuses a second run; it is never run on the tree here."""
+    import copy
+    import yaml
+    import rules_lib as R
+    RL = _rl()
+    req, data = R.load_requirements(), RL.load_data()
+    sys.path.insert(0, REC5)
+    import apply_l3r5_d39 as A
+    r39 = [r for r in req["owner_rulings"] if str(r.get("decides")) == "layer3_baseline"]
+    assert [r["id"] for r in r39] == ["D-39"] and r39[0]["authority"] == "OWNER" and str(r39[0]["ruled_on"]) == "2026-09-30"
+    flat = " ".join(" ".join(l.lstrip("> ") for l in _instr().split("\n")).split())
+    for q in A.QUOTES:
+        assert q in flat and q in " ".join(r39[0]["ruling"].split()), "a quote is not word for word: %r" % q[:50]
+    assert "D-39 is a CONDITIONAL authorisation" in " ".join(r39[0]["ruling"].split())
+    r = _run([os.path.join(REC5, "apply_l3r5_d39.py"), "--check"])
+    assert r.returncode == 2 and "has run" in r.stdout, "a second run of the D-39 script was not refused:\n%s" % r.stdout
+    dec, h3 = RL.decided(req, data), RL.load_h3()
+    assert data.get("baseline_acceptance") is None and RL.status_level(req, dec, data, h3)[0] == "DRAFTED"
+    fixture_check = {"record": "v2/docs/records/l3r2/checks/check-l3r2-5.md", "sha16": "c1c9db881ededfe2",
+                     "verdict": "ACCEPTED", "scope": "a fixture: an accepted newest check"}
+    d1 = copy.deepcopy(data)
+    d1["independent_check"].append(fixture_check)
+    assert all(x[1] for x in RL.gate(req, dec, d1, h3)), "the fixture's gate is not all MET"
+    assert RL.status_level(req, dec, d1, h3)[0] == "DRAFTED", "D-39 without the acceptance record reads beyond DRAFTED"
+    head = subprocess.run(["git", "-C", ROOT, "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    d2 = copy.deepcopy(d1)
+    d2["baseline_acceptance"] = {"revision": head, "authorised_by": "D-39", "evidence": [fixture_check["record"]],
+                                 "accepted_on": "2026-10-01"}
+    assert RL.status_level(req, dec, d2, h3)[0] == "VALIDATED", RL.acceptance_ok(req, d2)
+    d3 = copy.deepcopy(d2)
+    d3["baseline_acceptance"]["evidence"] = ["v2/docs/handover/layer3/l3r2.yaml"]
+    assert RL.status_level(req, dec, d3, h3)[0] == "DRAFTED", "an acceptance not listing the newest check validates"
+    acc = os.path.join(REC5, "apply_l3r5_accept.py")
+    r = _run([acc, "--revision", head, "--evidence", fixture_check["record"], "--check"])
+    # on the tree it refuses with the fixture's evidence: before check 3 because the newest check was not accepted, after
+    # it because the evidence does not list the newest check
+    assert r.returncode == 2 and ("not ACCEPTED" in r.stdout or "does not list the newest independent check" in r.stdout), \
+        "the acceptance script ran on the tree:\n%s" % r.stdout
+    d = tempfile.mkdtemp(prefix="l3r5-accept-")
+    copy_path = os.path.join(d, "l3r2.yaml")
+    raw = open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read()
+    add = "  - {record: %s, sha16: %s, verdict: ACCEPTED, scope: fixture}\nbaseline_acceptance: null\n" % (
+        fixture_check["record"], fixture_check["sha16"])
+    assert raw.count("\nbaseline_acceptance: null\n") == 1
+    open(copy_path, "w", encoding="utf-8").write(raw.replace("\nbaseline_acceptance: null\n", "\n" + add))
+    for args, why in (([ "--revision", "0" * 40, "--evidence", fixture_check["record"]], "not a commit"),
+                      (["--revision", head, "--evidence", "v2/docs/records/l3r5/checks/no-such-check.md"], "not a file"),
+                      (["--revision", head, "--evidence", "v2/docs/handover/layer3/l3r2.yaml"], "does not list the newest")):
+        r = _run([acc] + args + ["--data", copy_path])
+        assert r.returncode == 2 and why in r.stdout, "%s was not refused:\n%s" % (why, r.stdout)
+    r = _run([acc, "--revision", head, "--evidence", fixture_check["record"], "--date", "2026-10-01", "--data", copy_path])
+    assert r.returncode == 0, r.stdout
+    got = yaml.safe_load(open(copy_path, encoding="utf-8"))["baseline_acceptance"]
+    assert got == {"revision": head, "authorised_by": "D-39", "evidence": [fixture_check["record"]], "accepted_on": "2026-10-01"}
+    r = _run([acc, "--revision", head, "--evidence", fixture_check["record"], "--data", copy_path])
+    assert r.returncode == 2 and "has run" in r.stdout, "a second acceptance was not refused:\n%s" % r.stdout
+    assert yaml.safe_load(open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8")).get("baseline_acceptance") is None
