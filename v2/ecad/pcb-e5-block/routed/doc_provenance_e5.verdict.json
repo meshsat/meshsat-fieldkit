@@ -10,7 +10,7 @@
  "inputs": {
   "declares": "E5",
   "release": {
-   "path": "/tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/3744628d-5552-4a03-8300-e043b6cdc9c8/scratchpad/wt/d41/v2/release/revA",
+   "path": "/tmp/<scratchpad>/wt/d41/v2/release/revA",
    "sha256_16": null
   }
  },
