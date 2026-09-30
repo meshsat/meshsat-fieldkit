@@ -1,8 +1,9 @@
 """Inspect the document hierarchy after loading the STEP."""
+import os
 import FreeCAD as App
 import Import
 
-Import.open("/home/kyriakosp/Downloads/field_kit/field_kit.step")
+Import.open(os.environ.get("FIELD_KIT_STEP", os.path.expanduser("~/Downloads/field_kit/field_kit.step")))
 doc = App.ActiveDocument
 
 # Find anything labeled Case_Base and print its children structure

@@ -1,0 +1,70 @@
+count_hits: the working tree
+tracked files with a pattern: 14; instances: 22
+  runner path prefix     10 instance(s) in   8 file(s)
+  session temp path       5 instance(s) in   5 file(s)
+  host name               5 instance(s) in   3 file(s)
+  laptop host name        1 instance(s) in   1 file(s)
+  laptop user path        1 instance(s) in   1 file(s)
+files:
+  v2/cad/render/meshsat-v2-concept.blend  laptop user path 1
+  v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+  v2/docs/handover/candidates/hc3.patch  session temp path 1
+  v2/docs/records/handover/H2-USABILITY-CHECK.md  session temp path 1
+  v2/docs/records/handover/H3-COHERENCE-CHECK.md  runner path prefix 1
+  v2/docs/records/handover/H3-USABILITY-CHECK.md  runner path prefix 1
+  v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+  v2/release/handover/H1/v2/docs/MESHSAT-709-geometry-appendix.md  runner path prefix 3
+  v2/release/handover/H1/v2/docs/diagrams/README.md  host name 1
+  v2/release/handover/H1/v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+  v2/release/handover/H1/v2/docs/respin-footprints-2026-09-04.md  laptop host name 1
+  v2/release/handover/H1/v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+  v2/release/handover/H1/v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json  session temp path 1
+  v2/release/handover/H1/v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json  runner path prefix 1
+handover ZIPs:
+  v2/release/handover/H1-R1.zip: 2 entries with a pattern
+    v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+    v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+  v2/release/handover/H1.1-R1.zip: 3 entries with a pattern
+    v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+    v2/docs/handover/candidates/hc3.patch  session temp path 1
+    v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+  v2/release/handover/H1.1.zip: 8 entries with a pattern
+    v2/docs/MESHSAT-709-geometry-appendix.md  runner path prefix 3
+    v2/docs/diagrams/README.md  host name 1
+    v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+    v2/docs/handover/candidates/hc3.patch  session temp path 1
+    v2/docs/respin-footprints-2026-09-04.md  laptop host name 1
+    v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+    v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json  session temp path 1
+    v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json  runner path prefix 1
+  v2/release/handover/H1.zip: 7 entries with a pattern
+    v2/docs/MESHSAT-709-geometry-appendix.md  runner path prefix 3
+    v2/docs/diagrams/README.md  host name 1
+    v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+    v2/docs/respin-footprints-2026-09-04.md  laptop host name 1
+    v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+    v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json  session temp path 1
+    v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json  runner path prefix 1
+  v2/release/handover/H2-R1.zip: 2 entries with a pattern
+    v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+    v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+  v2/release/handover/H2.zip: 6 entries with a pattern
+    v2/docs/MESHSAT-709-geometry-appendix.md  runner path prefix 3
+    v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+    v2/docs/respin-footprints-2026-09-04.md  laptop host name 1
+    v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+    v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json  session temp path 1
+    v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json  runner path prefix 1
+  v2/release/handover/H3-R1.zip: 3 entries with a pattern
+    v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+    v2/docs/records/handover/H2-USABILITY-CHECK.md  session temp path 1
+    v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+  v2/release/handover/H3.zip: 8 entries with a pattern
+    v2/docs/EXECUTION-PLAN.md  runner path prefix 1
+    v2/docs/MESHSAT-709-geometry-appendix.md  runner path prefix 3
+    v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+    v2/docs/records/handover/H2-USABILITY-CHECK.md  session temp path 1
+    v2/docs/respin-footprints-2026-09-04.md  laptop host name 1
+    v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+    v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json  session temp path 1
+    v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json  runner path prefix 1

@@ -1,0 +1,113 @@
+count_hits: commit 8fec073383e2
+tracked files with a pattern: 71; instances: 171
+  runner path prefix     70 instance(s) in  46 file(s)
+  session temp path      84 instance(s) in  21 file(s)
+  host name               7 instance(s) in   5 file(s)
+  laptop host name        4 instance(s) in   3 file(s)
+  laptop user path        6 instance(s) in   5 file(s)
+files:
+  v1/cad/FIXES.md  laptop user path 1
+  v1/cad/inspect_doc.py  laptop user path 1
+  v1/cad/render.py  laptop user path 2
+  v2/cad/render/meshsat-v2-concept.blend  laptop user path 1
+  v2/docs/EXECUTION-PLAN.md  runner path prefix 1
+  v2/docs/MESHSAT-709-geometry-appendix.md  runner path prefix 3
+  v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+  v2/docs/handover/candidates/hc3.patch  session temp path 1
+  v2/docs/records/cx1/checks/check-1-RESULT.md  runner path prefix 2
+  v2/docs/records/cx1/checks/check-1-phase1.py  runner path prefix 1
+  v2/docs/records/cx1/checks/check-2-RESULT.md  runner path prefix 1
+  v2/docs/records/d4emcon/readings/tests-before-and-after.txt  host name 1
+  v2/docs/records/d6dec/README.md  runner path prefix 1
+  v2/docs/records/d6dec/box/to_box.sh  runner path prefix 2, session temp path 1
+  v2/docs/records/d6rel/apply-script-test.txt  session temp path 6
+  v2/docs/records/handover/H2-USABILITY-CHECK.md  session temp path 1
+  v2/docs/records/handover/H3-COHERENCE-CHECK.md  runner path prefix 1
+  v2/docs/records/handover/H3-USABILITY-CHECK.md  runner path prefix 1
+  v2/docs/records/int10/box/config-apply.log  runner path prefix 1
+  v2/docs/records/int10/dryrun.out  runner path prefix 2
+  v2/docs/records/int10/dryrun.py  runner path prefix 1
+  v2/docs/records/int7/CHECK-2.md  runner path prefix 2
+  v2/docs/records/int7/CHECK-3.md  runner path prefix 2
+  v2/docs/records/int7/CHECK.md  runner path prefix 2
+  v2/docs/records/int7/box/int7_install_pack.sh  runner path prefix 3, session temp path 1
+  v2/docs/records/int7/checks/d6rel-check-1.md  runner path prefix 3
+  v2/docs/records/int7/checks/d8dec31-check-1.md  runner path prefix 2
+  v2/docs/records/int7/checks/p3bind-check-2.md  runner path prefix 1
+  v2/docs/records/int7/checks/w5si-check-2-drafts.md  runner path prefix 1
+  v2/docs/records/int7/checks/w5tray-check-2.md  runner path prefix 3
+  v2/docs/records/int8/CHECK-notes.md  runner path prefix 2
+  v2/docs/records/int8/checks/d6rel-check-2-notes.md  runner path prefix 2
+  v2/docs/records/int8/checks/d8dec31-check-2-notes.md  runner path prefix 1
+  v2/docs/records/int8/checks/d8dec31-check-2.md  runner path prefix 2
+  v2/docs/records/int8/checks/w5si2-check-1-notes.md  runner path prefix 2
+  v2/docs/records/int8/checks/w5si2-check-1.md  runner path prefix 1
+  v2/docs/records/r8int6/commit_r8int6.sh  runner path prefix 1
+  v2/docs/records/r8int6/copy_evidence.sh  runner path prefix 1
+  v2/docs/records/r8int6/fix/validators-760d7f41.txt  host name 1, session temp path 3
+  v2/docs/records/retake6/analysis/audit-diff-before-after.txt  session temp path 3
+  v2/docs/records/retake6/analysis/audit-diff-main-after.txt  session temp path 3
+  v2/docs/records/retake6/worktree/run.txt  runner path prefix 1
+  v2/docs/records/rf2walk/LOG.md  runner path prefix 1
+  v2/docs/records/s117/LOG.md  runner path prefix 1
+  v2/docs/records/s120/LOG.md  runner path prefix 1
+  v2/docs/records/s98/readings/apply-scripts-dryrun.out  runner path prefix 2, session temp path 2
+  v2/docs/records/s98/readings/ast-parse.out  runner path prefix 2
+  v2/docs/records/s98/readings/lead-ends-projection.out  session temp path 2
+  v2/docs/records/w5si/RECOVERY.md  runner path prefix 1
+  v2/docs/records/w5si/check-1/RESULT-w5si-check-1.json  session temp path 3
+  v2/docs/records/w5si/recovery/RESULT-w5si-author-1.json  session temp path 16
+  v2/docs/records/w5si/recovery/replay.py  runner path prefix 2, session temp path 1
+  v2/docs/records/w5tray/pass1/RESULT-w5tray-author-1.json  session temp path 34
+  v2/docs/records/w5tray/recovery/replay.py  session temp path 1
+  v2/docs/respin-footprints-2026-09-04.md  laptop host name 1
+  v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+  v2/ecad/pcb-c-display-c8/routed/doc_provenance_c.verdict.json  session temp path 1
+  v2/ecad/pcb-c-display-c8/routed/ledger_verify.verdict.json  runner path prefix 1
+  v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json  session temp path 1
+  v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json  runner path prefix 1
+  v2/ecad/pcb-p-pack-p2/routed/doc_provenance_p.verdict.json  session temp path 1
+  v2/ecad/pcb-p-pack-p2/routed/ledger_verify.verdict.json  runner path prefix 1
+  v2/release/handover/H1/v2/docs/MESHSAT-709-geometry-appendix.md  runner path prefix 3
+  v2/release/handover/H1/v2/docs/diagrams/README.md  host name 1
+  v2/release/handover/H1/v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+  v2/release/handover/H1/v2/docs/respin-footprints-2026-09-04.md  laptop host name 1
+  v2/release/handover/H1/v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+  v2/release/handover/H1/v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json  session temp path 1
+  v2/release/handover/H1/v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json  runner path prefix 1
+  v2/release/revA/order/ORDER-LOG.md  laptop host name 2
+  v2/vendor/aioc/aioc-net.xml  laptop user path 1
+handover ZIPs:
+  v2/release/handover/H1.1.zip: 8 entries with a pattern
+    v2/docs/MESHSAT-709-geometry-appendix.md  runner path prefix 3
+    v2/docs/diagrams/README.md  host name 1
+    v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+    v2/docs/handover/candidates/hc3.patch  session temp path 1
+    v2/docs/respin-footprints-2026-09-04.md  laptop host name 1
+    v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+    v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json  session temp path 1
+    v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json  runner path prefix 1
+  v2/release/handover/H1.zip: 7 entries with a pattern
+    v2/docs/MESHSAT-709-geometry-appendix.md  runner path prefix 3
+    v2/docs/diagrams/README.md  host name 1
+    v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+    v2/docs/respin-footprints-2026-09-04.md  laptop host name 1
+    v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+    v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json  session temp path 1
+    v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json  runner path prefix 1
+  v2/release/handover/H2.zip: 6 entries with a pattern
+    v2/docs/MESHSAT-709-geometry-appendix.md  runner path prefix 3
+    v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+    v2/docs/respin-footprints-2026-09-04.md  laptop host name 1
+    v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+    v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json  session temp path 1
+    v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json  runner path prefix 1
+  v2/release/handover/H3.zip: 8 entries with a pattern
+    v2/docs/EXECUTION-PLAN.md  runner path prefix 1
+    v2/docs/MESHSAT-709-geometry-appendix.md  runner path prefix 3
+    v2/docs/feasibility/fab/out/pulldowns.txt  runner path prefix 1
+    v2/docs/records/handover/H2-USABILITY-CHECK.md  session temp path 1
+    v2/docs/respin-footprints-2026-09-04.md  laptop host name 1
+    v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md  host name 2, runner path prefix 1, session temp path 1
+    v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json  session temp path 1
+    v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json  runner path prefix 1

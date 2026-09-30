@@ -5,7 +5,7 @@ a maker's document. AI engineering work, not a qualified review. No agent, no ot
 
 ## 29 September 2026 (brief `_runs/claude/s120/BRIEF.md`)
 
-- 17:11 Brief and `_bin/WORKER-RULES.md` read. Worktree `/home/claude-runner/worktrees/meshsat-fieldkit/s120`, branch
+- 17:11 Brief and `_bin/WORKER-RULES.md` read. Worktree `<worktrees>/s120`, branch
   `fnd/s120` from main `e57a7365` (set 12: decision 57's FETs on board A, S-117 and S-118 closed, S-120 open). The four held
   TI FET sheets copied from `int13/v2/vendor/ti/held/` into this worktree's ignored `v2/vendor/ti/held/`; their sha256 match
   `v2/vendor/sources.txt` lines 454 to 457 (c8595fa8 CSD17577Q5A, f1aad251 CSD17578Q5A, 05fea7ab CSD17579Q5A, 99d50d88

@@ -1,4 +1,4 @@
-overlay /home/claude-runner/worktrees/meshsat-fieldkit/_scratch/s99reg/ov from /home/claude-runner/worktrees/meshsat-fieldkit/s99reg
+overlay <worktrees>/_scratch/s99reg/ov from <worktrees>/s99reg
 $ rules_lib.py requirements (overlay, before the scripts)
   exit 1; last line: rules_lib: 144 requirement record(s), 3 error(s), 1 warning(s)
     warn  out/rule-audit is not in this tree: a PASS is not checked against its rules' classes

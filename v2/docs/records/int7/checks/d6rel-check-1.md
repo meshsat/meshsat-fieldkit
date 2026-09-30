@@ -48,8 +48,11 @@ None. H3-01's three conditions are met and I reproduced each myself.
 - **Series-level figures**: FH34, RJHSE and U.FL sheets confirmed at the page, not against each order code's row.
 - **`rules_status` on a merged tree**: only the in-memory consumers probe was run (it reproduces the committed record).
 
-Scratch, with probes and outputs: `/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-d6rel/`. To reproduce P1 to P14:
+Scratch, with probes and outputs: `<worktrees>/_scratch/chk-d6rel/`. To reproduce P1 to P14:
 
-`env -C /home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-d6rel PYTHONDONTWRITEBYTECODE=1 python3 probe.py probes /home/claude-runner/worktrees/meshsat-fieldkit/d6rel/v2/ecad/tools`
+`env -C <worktrees>/_scratch/chk-d6rel PYTHONDONTWRITEBYTECODE=1 python3 probe.py probes <worktrees>/d6rel/v2/ecad/tools`
 
 P15 is `probe2.py` with the same arguments; it prints P15 and then stops on a traceback in my own summary table, which is a bug in my script and not a finding.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 3 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

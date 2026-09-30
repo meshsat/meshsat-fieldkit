@@ -5,7 +5,7 @@ a maker's document. No agent, no other model, no box, no purchase, no contact.
 
 ## 29 September 2026 (brief `_runs/claude/s117/BRIEF.md`)
 
-- 12:37 Brief read. Worktree `/home/claude-runner/worktrees/meshsat-fieldkit/s117`, branch `fnd/s117` from main
+- 12:37 Brief read. Worktree `<worktrees>/s117`, branch `fnd/s117` from main
   `867a18a7`. Read S-117 (`tools/pcb_requirements.yaml`), `records/int11/CHECK.md` B1 and `CHECK-2.md` N1 and N2,
   `records/r4a/r4-open-items.md` O-24 and `r4-decisions.md` R4A-N9, `records/int11/apply_s117_restate.py`, and stream
   d4emcon's LOG row 3 (S-93, board A's LM5176 gate hold: not taken on; this stream touches no LM5176 line). No other branch

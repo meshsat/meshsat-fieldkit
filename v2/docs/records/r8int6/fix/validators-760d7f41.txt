@@ -1,5 +1,5 @@
 THE RUNNER VALIDATORS ON THE SET 6 CANDIDATE AT 760d7f41
-Worker set6fix, MESHSAT-1357, 27 September 2026 22:42 to 22:46 CEST, host nllei01claude01 (no KiCad here).
+Worker set6fix, MESHSAT-1357, 27 September 2026 22:42 to 22:46 CEST, the runner (no KiCad here).
 Tree: branch fnd/r8int6 at 760d7f41db726c8150f17beb2f0aa20533fd0814, with the candidate's gitignored evidence
 restored from the box's /root/r8int6/evidence-head.tar (sha256 814ea3eb1427e736f2224b7266355548a0976bceaa111d2b17f8b6c0a988aa6d).
 Run from v2/ecad/tools with PYTHONDONTWRITEBYTECODE=1. After every command git status --short was empty, and no
@@ -33,7 +33,7 @@ READING OF NUMBER 3, the one refusal. It is NOT a reading bound to a file this w
 changed to answer it. The cause is where the restored audit points:
   * v2/ecad/out/rule-audit/<board>.json, from the tar, was written on 27 September 20:07 CEST in the worktree
     of the session that built set 6, and each row names its deciding verdict by ABSOLUTE path under
-    /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/3744628d-5552-4a03-8300-e043b6cdc9c8/scratchpad/wt/r8int6/
+    /tmp/<scratchpad>/wt/r8int6/
     (293 such paths over the seven boards). That directory no longer exists on this host.
   * open_pairs._missing_input opens that path to read the verdict's missing_input, and
     stale_readings.open_pair_rows opens it to ask whether its tool has changed. With the path gone both
@@ -47,13 +47,13 @@ changed to answer it. The cause is where the restored audit points:
     changed reliability.py in place. REL-001 reads PASS on every board, so no reliability reading decides an
     open pair and the change cannot move this page.
   * WHY THE BOX DOES NOT SEE IT. The box's clone holds the same audit with the same dead paths (read there at
-    20:47 UTC while the suite ran: 49 such paths in a.json, none under /root/r8int6/suite, and /tmp/claude-1000
+    20:47 UTC while the suite ran: 49 such paths in a.json, none under /root/r8int6/suite, and /tmp/<session temp>
     does not exist on the box). The suite's check passes there all the same
     (test_rule_gate_mapping.t_the_documents_are_generated_and_not_hand_maintained PASS, at a76a246e in the
     archived log and at 760d7f41 in suite-box-760d7f41.log line 2410), because the test before it,
     t_one_render_converges_when_a_rule_judges_a_page_the_same_run_writes, runs a full rules_render WRITE against
     the real tree, which re-takes the audit there with that tree's own paths (read on the box after the run:
-    a.json rewritten at 20:48:54 UTC, 49 paths under /root/r8int6/suite, none under /tmp/claude-1000). On this
+    a.json rewritten at 20:48:54 UTC, 49 paths under /root/r8int6/suite, none under /tmp/<session temp>). On this
     host nothing re-took the audit, by the rule that a worker runs no verdict writer in its tree.
   NEXT ACTION, the integrator's: the audit is re-taken (rules_status) in whichever tree the pages are judged
   in, which rewrites the rows with paths of that tree. A row that carries its evidence as a path relative to

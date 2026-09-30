@@ -6,7 +6,7 @@
 
 This is an AI review by a checker that wrote none of the candidate. It is not a qualified engineering review and replaces none. Prototype design: no V2 board has been built, ordered or measured; everything below is a reading of files.
 
-Checked 28 September 2026, 17:15 to 17:34 CEST, in `/home/claude-runner/worktrees/meshsat-fieldkit/int7` (read only; HEAD `1c4235ec`, `git status` empty before and after). Scratch scripts are in `/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-int7/`.
+Checked 28 September 2026, 17:15 to 17:34 CEST, in `<worktrees>/int7` (read only; HEAD `1c4235ec`, `git status` empty before and after). Scratch scripts are in `<worktrees>/_scratch/chk-int7/`.
 
 ```
 mergeable: no
@@ -97,3 +97,6 @@ Three blocking findings, all in text the integration wrote. No reading, page cou
 - **SC-67's voltages:** read, not recalculated.
 - **S-91's 28 findings and errata g to m:** counted, not checked one by one.
 - **S-61, S-67 and S-83:** judged on statements, not every record's acceptance text.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

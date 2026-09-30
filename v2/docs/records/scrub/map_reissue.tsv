@@ -1,0 +1,28 @@
+snapshot	file	line	token class	token	note
+H1-R1	v2/docs/MESHSAT-709-geometry-appendix.md	3111	runner path prefix	<runner home>	
+H1-R1	v2/docs/MESHSAT-709-geometry-appendix.md	3120	runner path prefix	<runner home>	
+H1-R1	v2/docs/MESHSAT-709-geometry-appendix.md	3120	runner path prefix	<runner home>	
+H1-R1	v2/docs/diagrams/README.md	67	host name	the runner	
+H1-R1	v2/docs/respin-footprints-2026-09-04.md	3	laptop host name	on the laptop	
+H1-R1	v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json	13	session temp path	/tmp/<scratchpad>	
+H1-R1	v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json	14	runner path prefix	<repo>	
+H1.1-R1	v2/docs/MESHSAT-709-geometry-appendix.md	3111	runner path prefix	<runner home>	
+H1.1-R1	v2/docs/MESHSAT-709-geometry-appendix.md	3120	runner path prefix	<runner home>	
+H1.1-R1	v2/docs/MESHSAT-709-geometry-appendix.md	3120	runner path prefix	<runner home>	
+H1.1-R1	v2/docs/diagrams/README.md	67	host name	the runner	
+H1.1-R1	v2/docs/respin-footprints-2026-09-04.md	3	laptop host name	on the laptop	
+H1.1-R1	v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json	13	session temp path	/tmp/<scratchpad>	
+H1.1-R1	v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json	14	runner path prefix	<repo>	
+H2-R1	v2/docs/MESHSAT-709-geometry-appendix.md	3111	runner path prefix	<runner home>	
+H2-R1	v2/docs/MESHSAT-709-geometry-appendix.md	3120	runner path prefix	<runner home>	
+H2-R1	v2/docs/MESHSAT-709-geometry-appendix.md	3120	runner path prefix	<runner home>	
+H2-R1	v2/docs/respin-footprints-2026-09-04.md	3	laptop host name	on the laptop	
+H2-R1	v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json	13	session temp path	/tmp/<scratchpad>	
+H2-R1	v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json	14	runner path prefix	<repo>	
+H3-R1	v2/docs/EXECUTION-PLAN.md	291	runner path prefix	<worktrees>	
+H3-R1	v2/docs/MESHSAT-709-geometry-appendix.md	3111	runner path prefix	<runner home>	
+H3-R1	v2/docs/MESHSAT-709-geometry-appendix.md	3120	runner path prefix	<runner home>	
+H3-R1	v2/docs/MESHSAT-709-geometry-appendix.md	3120	runner path prefix	<runner home>	
+H3-R1	v2/docs/respin-footprints-2026-09-04.md	3	laptop host name	on the laptop	
+H3-R1	v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json	13	session temp path	/tmp/<scratchpad>	
+H3-R1	v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json	14	runner path prefix	<repo>	

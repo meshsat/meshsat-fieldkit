@@ -3,10 +3,10 @@
 AI review by a checker session that wrote none of what it checked. It is not a qualified engineering review.
 Prototype design work: nothing has been built, ordered or measured. MESHSAT-1357, layer 9, rule SI-001.
 
-Checked: branch `fnd/w5si2`, tip `f84243ba`, worktree `/home/claude-runner/worktrees/meshsat-fieldkit/w5si2`
+Checked: branch `fnd/w5si2`, tip `f84243ba`, worktree `<worktrees>/w5si2`
 (read only), base `85ad1193`. Integration line `fnd/int8`, at `097b6cf7` when the check began and at `a8607eab`
 when it ended (five commits of the Codex pilot's records, `pcb_interfaces.yaml` and `pcb_requirements.yaml`).
-Everything I wrote is under `/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-w5si2/`. No worktree and
+Everything I wrote is under `<worktrees>/_scratch/chk-w5si2/`. No worktree and
 no main checkout was written; no gate, `rules_status.py` or renderer was run in any tree other than my scratch
 clones; nothing on the rented box; no network (the fetch script was not run).
 
@@ -317,3 +317,6 @@ the only copies remain in the author's worktree.
   the sources instead.
 - `test_pinned_models.py` runs on its own temporary git repository; the pinned-state path was not exercised on a
   real evidence tree (none in the clone carries a SI-001 reading taken with the models).
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

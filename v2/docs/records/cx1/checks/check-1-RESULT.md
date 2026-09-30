@@ -3,7 +3,7 @@
 Independent checker, 28 September 2026 19:30 CEST. Candidate: commit b1c744db on fnd/cx1 (base 6b419b02), four
 files under `v2/docs/records/cx1/`. Blind phase 1 (`PHASE1.md`, `phase1.py`, `phase1.out`) was on disk before any
 candidate file was opened; the comparison is `CHECK.md`. All under
-`/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-cx1/`. Prototype framing: nothing built, ordered or
+`<worktrees>/_scratch/chk-cx1/`. Prototype framing: nothing built, ordered or
 measured; this is an AI review, not a qualified review.
 
 - **acceptable as a record: yes** (as a filed analysis of I-03: its arithmetic reproduces byte for byte, every
@@ -103,7 +103,7 @@ measured; this is an AI review, not a qualified review.
 ## What I ran, and its exact result lines
 
 - `python3 phase1.py > phase1.out`: exit 0 (inputs pinned by sha256 in its first four lines).
-- `env -C /home/claude-runner/worktrees/meshsat-fieldkit/cx1 python3 v2/docs/records/cx1/if_ab_power.py > rerun.out`:
+- `env -C <worktrees>/cx1 python3 v2/docs/records/cx1/if_ab_power.py > rerun.out`:
   `rerun exit 0`; `cmp` with the filed output: `BYTE-FOR-BYTE IDENTICAL`; sha256 of both
   `e4a0397a63082be4802c20e6b1fce3314110bc3966d9deb8b9805fa3c82e1092`, 27262 bytes; `git status --short` in the
   worktree afterwards: empty.
@@ -125,3 +125,6 @@ measured; this is an AI review, not a qualified review.
 - The 60 C copper temperature the candidate uses: it is the job's requested point, not a prediction; no thermal
   reading of the leads exists.
 - No KiCad, no gate, no suite, nothing on the rented box: none was needed for this check and none was run.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

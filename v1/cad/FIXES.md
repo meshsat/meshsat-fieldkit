@@ -54,7 +54,7 @@ Command used for headless validation:
 ```
 flatpak run --command=freecadcmd --filesystem=home org.freecad.FreeCAD -c "
 import FreeCAD, Import
-Import.open('/home/kyriakosp/Downloads/files/field_kit.step')
+Import.open('<laptop home>/Downloads/files/field_kit.step')
 ...
 "
 ```

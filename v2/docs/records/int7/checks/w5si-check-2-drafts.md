@@ -106,4 +106,7 @@ Tested against int7 at 1c4235ec as instructed. int7 moved to 85ad1193 during the
 - `recovery/replay.py`, the superseded first-pass drafts and the second half of `F-Q1-power-stage-nodes.md`.
 - Whether int7 at 85ad1193 changes any result beyond the file comparison above.
 
-The worktrees w5si and int7 and the main checkout are unchanged. Scratch evidence (1.5 MB, no model files) is kept in `/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-w5si-drafts-2/`.
+The worktrees w5si and int7 and the main checkout are unchanged. Scratch evidence (1.5 MB, no model files) is kept in `<worktrees>/_scratch/chk-w5si-drafts-2/`.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

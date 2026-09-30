@@ -2,7 +2,7 @@ mergeable: yes
 
 AI review of stream w5si2 (`fnd/w5si2` at `f84243ba`, base `85ad1193`) by a checker that wrote none of it; not a
 qualified engineering review. Prototype design: nothing built, ordered or measured. Full notes:
-`/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-w5si2/CHECK.md`.
+`<worktrees>/_scratch/chk-w5si2/CHECK.md`.
 
 ## Blocking items
 
@@ -125,3 +125,6 @@ families' documents beyond the five pages quoted; `edge-search.txt` not re-deriv
 re-run (its reasons checked against the sources instead). The pinned-state path of `rules_status` only through
 `test_pinned_models.py` on its own git fixture, not on an evidence tree with a SI-001 reading taken with the models.
 My model copies in the scratch clones were removed at the end; the only copies remain in the author's worktree.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.
