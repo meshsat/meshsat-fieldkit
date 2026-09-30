@@ -10,7 +10,7 @@ the ruling can only name one array (CHECK-1, B1).
                   alternative, its entry at 40 A and a fuse per panel)
   --option keep   REQ-016's 100 W window kept; the array REQ-072 names and REQ-016's fuse and connector clause come from the
                   checked energy basis for the lid chosen (--array-wp, --entry-a and --evidence, each figure asserted in
-                  the evidence file); the 1600 Wp of DECISION-OPTIONS.md A (ii) is for 4S18P and is not used
+                  the evidence file, exactly, and on the tree that file is the filed basis); the 1600 Wp of DECISION-OPTIONS.md A (ii) is for 4S18P and is not used
 
 Every figure written is first asserted in the file it comes from. The array's panels and stand travel outside the case
 (v2/docs/records/a1solar/SELECTION.md), which each ruling states.
@@ -97,10 +97,9 @@ def build(a, raw, d):
             E.refuse("keep needs --array-wp, --entry-a and --evidence: the array REQ-016's 100 W window needs for the "
                      "chosen lid and its entry current, from the checked energy basis (the 1600 Wp of DECISION-OPTIONS.md "
                      "is for 4S18P, not for the lids offered)")
-        evp = ev if os.path.isabs(ev) else os.path.join(E.TOP, ev)
-        et = " ".join(open(evp, encoding="utf-8").read().split())
-        for x in ("%s Wp" % wp, "%s A" % ia):
-            if x not in et: E.refuse("%s does not carry %r" % (ev, x))
+        et = C.evidence_path(a, ev)          # on the tree: the filed basis only (CHECK-2 of L3-R2, minor 6)
+        for x, unit in ((wp, "Wp"), (ia, "A")):
+            if not C.exact_token(et, x, unit): E.refuse("%s does not carry '%s %s' as a figure of its own" % (ev, x, unit))
         ruling = ("Row L3-OD3 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided: REQ-016's 100 W window is kept; the "
                   "kit's array is %s Wp at STC in parallel, of panels inside the window's 25 V at their coldest, sized for "
                   "the lid of row L3-OD2 by the energy basis (%s), and the entry carries a rating of %s A or more." % (wp, ev, ia))

@@ -759,6 +759,49 @@ owner_rulings:
       "Keep the current-limit resistor dependency explicit ... Distinguish performance of the held circuit from
       performance conditional on the proposed change. Track implementation and physical verification separately."
     source: ["owner ruling D-23", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
+  - id: D-24
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's addendum on the power path and the decision package of layer 3 (30 September 2026)"
+    ruling: >-
+      The owner's addendum of 30 September 2026 to the third round of layer 3's second issue, as quoted in
+      v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md (its one elision is the quoting session's, marked). In his
+      words: "Update decision 1's premise. The reported findings make this a power-path correction, potentially
+      involving components, sensing, layout and thermal design. Stop presenting the 6.2 mOhm substitution as a
+      sufficient solution. Keep findings provisional until independently checked, and distinguish: the circuit as drawn;
+      the resistor-only proposal; any hypothetical corrected power path used for feasibility calculations." "Correct the
+      energy claims ... Where a supportable power envelope is not established, label the result conditional or
+      inconclusive. Preserve useful hypothetical calculations, but state the required circuit corrections prominently.
+      Do not count energy available only through an inadequate power path as demonstrated capability." "Finish the
+      concise decision package. Keep the existing six-row owner table. Show each option's checked figures, limitations,
+      required changes and remaining uncertainties, with links to evidence. Retain the weather-coverage choices and
+      quantified capacity/fit comparisons. Do not recommend an option as feasible solely because its idealised energy
+      balance passes." "Close requirements without confusing them with implementation. Complete only the bounded
+      feasibility work necessary for informed requirements decisions. Full circuit correction, layout and bench testing
+      belong to subsequent layers." "Bring me decisions only when the proposed remedy changes mission requirements,
+      functions, deployment conditions, enclosure constraints or approved resources." "Component selection and Kelvin
+      routing are engineering tasks."
+    source: ["owner ruling D-24", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
+  - id: D-25
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's corrections to round 3b of layer 3 (30 September 2026)"
+    ruling: >-
+      The owner's corrections of 30 September 2026 to round 3b of layer 3's second issue, as quoted in
+      v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md. In his words: "Correct the Kelvin classification. The
+      inspected A32 layout is historical evidence. It cannot establish a routing defect in the current board, which has
+      no layout yet. Keep the A32 finding tied to that revision. Unless current schematic/netlist evidence independently
+      establishes an error, record Kelvin sensing and the permitted shared resistance as implementation requirements
+      with measurable verification criteria." "Describe the 4.05 A proposal accurately. Reducing the charger's
+      input-current limit addresses current-limit coordination. It does not establish that the other electrical defects
+      are resolved or that the mission succeeds. Show its energy consequence as a clearly labelled derated variant;
+      preserve the actual as-drawn case. Keep the independently checked 0.378 A comparison closed unless relevant inputs
+      change." "Restrict owner decisions to actual requirement changes. Charging below a source's available power is an
+      engineering choice when approved requirements remain satisfied. Ask me only when the remedy changes an agreed
+      mission condition, charging time, functionality, enclosure constraint or approved resources. Each such question
+      must name the affected requirement and quantify the consequence. Component selection and sensing implementation
+      remain engineering tasks."
+    source: ["owner ruling D-25", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
 # Choices the session took under the owner's standing rule of 26 September 2026: each is the session's, never
 # the owner's, names the ruling that lets the session take it, says why, and can be reversed. `closes` names the
 # open items it answered; `adds_core_needs` a need it added to prototype 1's core. A choice later withdrawn keeps
@@ -7448,11 +7491,22 @@ records:
           V and its stated DC band of 19.080 to 20.960 V; they are the model's most favourable bus, not the kit's across
           its supply range, which the energy basis of the open item that carries it establishes. This entry changes no
           result, statement or acceptance: the verdict stays FAIL.
+      - >-
+          v2/docs/records/l3r2/checks/energy-basis-check-1/CHECK-1.md and v2/docs/records/a1int/RECONCILE.md read on 30
+          September 2026 (L3-R2, round 3b, CHECK-2 of L3-R2 minor 4): the words 'typical' and 'adverse' in the s119
+          entry above name two of the model's cases, whose results are model results on the September reference day
+          (v2/docs/records/a1int/RECONCILE.md), not weather conditions. The energy basis renames the second WAB, which
+          the filed check of that basis reads as a build case on the same mean day, not weather
+          (v2/docs/records/l3r2/checks/energy-basis-check-1/CHECK-1.md, its 'explained rename'). No weather worse than
+          SC-37's mean day is modelled in that entry, and its figures stay the model's on the 20.7 V bus (the entry
+          after it). This entry changes no result, statement or acceptance: the verdict stays FAIL.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
       - "v2/docs/feasibility/POWER-THERMAL.md@ad3ba27cef9e0f68"
       - "v2/docs/records/s120/vbus20_bound.out@35c3e2e30fc637e0"
       - "v2/docs/records/a1elec/energy_two_pack.py@a3426880bf607d38"
+      - "v2/docs/records/l3r2/checks/energy-basis-check-1/CHECK-1.md@845858d6c3059f77"
+      - "v2/docs/records/a1int/RECONCILE.md@4bba0c9eac9c4be1"
     release_effect: BLOCKER
     source:
       - "owner ruling D-06"
@@ -15379,11 +15433,12 @@ records:
       The LoRa transmitter is capped in software to the EU limits: 14 dBm ERP generally, 27 dBm ERP on 869.4 to 869.65
       MHz at 10 % duty.
     acceptance: >-
-      Configuration review: meshtasticd's region, channel, transmit power and duty-cycle settings, with the antenna gain
-      applied, give at most 14 dBm ERP on every configured channel outside 869.4 to 869.65 MHz, and at most 27 dBm ERP
-      at a duty cycle of at most 10 % on a channel inside 869.4 to 869.65 MHz. Prototype: the conducted output measured
-      at each configured channel, plus the antenna's gain, is at or under the limit of the band the channel is in, and
-      the duty cycle measured on 869.4 to 869.65 MHz is at most 10 %.
+      Configuration review: meshtasticd's region, channel, transmit power and duty-cycle settings, with the antenna's
+      gain in dBd applied (the limits are ERP, referenced to a half-wave dipole: a gain in dBi less 2.15 dB), give at
+      most 14 dBm ERP on every configured channel outside 869.4 to 869.65 MHz, and at most 27 dBm ERP at a duty cycle of
+      at most 10 % on a channel inside 869.4 to 869.65 MHz. Prototype: the conducted output measured at each configured
+      channel, plus the antenna's gain in dBd, is at or under the limit of the band the channel is in, and the duty
+      cycle measured on 869.4 to 869.65 MHz is at most 10 %.
     allocated_to: [b, sw]
     verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -15409,7 +15464,14 @@ records:
       Acceptance restated on 30 September 2026 (layer 3's second issue, L3-R2,
       v2/docs/records/l3r2/apply_l3r2_session.py) to a measurable criterion taken from the record's own statement, with
       no limit added or removed. It read: 'Conducted output and duty cycle measured at each configured channel with the
-      antenna gain applied; configuration review of meshtasticd.'
+      antenna gain applied; configuration review of meshtasticd.' Acceptance restated on 30 September 2026 (L3-R2 round
+      3b, v2/docs/records/l3r2/apply_l3r2_r3b.py, CHECK-2 of L3-R2 minor 8): the antenna's gain is named in dBd, the
+      unit ERP is referenced to, with no limit added or removed. It read: 'Configuration review: meshtasticd's region,
+      channel, transmit power and duty-cycle settings, with the antenna gain applied, give at most 14 dBm ERP on every
+      configured channel outside 869.4 to 869.65 MHz, and at most 27 dBm ERP at a duty cycle of at most 10 % on a
+      channel inside 869.4 to 869.65 MHz. Prototype: the conducted output measured at each configured channel, plus the
+      antenna's gain, is at or under the limit of the band the channel is in, and the duty cycle measured on 869.4 to
+      869.65 MHz is at most 10 %.'
     notes: "The module can transmit 30 dBm (32.51 line 2814); the cap is software only."
 
   - id: REQ-055

@@ -13,12 +13,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT = os.path.join(HERE, "..", "README.md")
 ANCHOR = "| `s119/` | stream s119 (29 September 2026, branch `fnd/s119` from `a1f8ec70`, S-119, two rounds)"
 NEW_ROW = ("| `l3r2/` | layer 3's second issue, L3-R2 (30 September 2026, branch `fnd/l3r2` on `4012429e`, on the owner's "
-           "instruction D-21, his review D-22 and his instruction on the six-row table D-23): the registry's editing "
-           "helpers (`l3edit.py`), the session's closures (`apply_l3r2_session.py`, `apply_l3r2_d23.py`), CFL-006's re-read "
-           "(`read_cfl006.py`), the layer status page's layer 3 restated (`apply_layer_status_l3.py`, round 3 "
-           "`apply_layer_status_l3_r3.py`), the prepared "
+           "instruction D-21, his review D-22, his instruction on the six-row table D-23, his addendum on the power path "
+           "D-24 and his corrections D-25): the registry's editing helpers (`l3edit.py`), the session's closures "
+           "(`apply_l3r2_session.py`, `apply_l3r2_d23.py` to `apply_l3r2_d25.py`, `apply_l3r2_r3b.py`), the basis reader "
+           "and the prepared fill (`basis_reader.py`, `set_energy_basis.py`, `fill_l3r2_from_basis.py`), CFL-006's re-read "
+           "(`read_cfl006.py`), the layer status page's layer 3 restated (`apply_layer_status_l3.py`, rounds 3 and 3b "
+           "`apply_layer_status_l3_r3.py` and `apply_layer_status_l3_r3b.py`), the prepared "
            "owner-decision scripts of rows L3-OD1 to L3-OD6 (`conditional/`, not applied, rows 1, 2, 4 and 6 held until "
-           "the energy basis) and their dry runs (`dryrun.py`), the independent checks of L3-R2 and the first check of "
+           "the energy basis and the power path are checked) and their dry runs (`dryrun.py`), the independent checks of L3-R2 and the checks of "
            "the energy basis (`checks/`); the pages are `v2/docs/handover/layer3/`; authored in the tree |")
 
 

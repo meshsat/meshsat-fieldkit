@@ -103,9 +103,11 @@ def decided(req, data):
         d = str(r.get("decides") or "")
         if ":" in d:
             row, opt = d.split(":", 1)
-            out[row] = (opt, r["id"], str(r.get("ruled_on")), p(r.get("words") or ""))
+            out[row] = (opt, r["id"], str(r.get("ruled_on")), p(r.get("words") or ""),
+                        {"share": r.get("weather_share"), "build": r.get("weather_build")})
     rows = {d["id"]: d for d in data["decisions"]}
-    for row, (opt, rid, _, _) in out.items():
+    for row, v in out.items():
+        opt, rid = v[0], v[1]
         if row not in rows: raise RenderError("ruling %s decides %s, which l3r2.yaml does not list" % (rid, row))
         if opt not in [o["id"] for o in rows[row]["options"]]:
             raise RenderError("ruling %s decides %s with option %s, which the row does not offer" % (rid, row, opt))
@@ -177,14 +179,61 @@ def filed(data, key):
     return v
 
 
+def basis_ok(data, key="energy_basis"):
+    """(True, '') when `key` (energy_basis, or power_path_check of D-24) names its record and its check (the energy basis
+    also its outputs), each held at its sha256/16, and the check's first line reads 'accepted: yes' (CHECK-2 of L3-R2,
+    B3: a check is verified, never trusted)."""
+    v = data.get(key)
+    if not v: return False, "not filed (S-127)" if key == "energy_basis" else "not filed"
+    if not v.get("check") or (key == "energy_basis" and not v.get("outputs")): return False, "it names no check or no outputs"
+    filed(data, key)                                # record and check at their shas, or a refusal
+    for o in v.get("outputs") or []:
+        fp = os.path.join(ROOT, str(o["path"]))
+        if not os.path.isfile(fp) or sha16_bytes(open(fp, "rb").read()) != str(o["sha16"]):
+            raise RenderError("l3r2.yaml's energy_basis names the output %s at %s, which this tree does not hold" % (o["path"], o["sha16"]))
+    first = open(os.path.join(ROOT, str(v["check"])), encoding="utf-8").readline().strip()
+    if first != "accepted: yes": return False, "its check reads %r, not 'accepted: yes'" % first
+    return True, ""
+
+
+def reissue_ok(req, data, dec):
+    """(True, '') when definition_reissue names a file this tree holds at its sha that differs from the baselined text,
+    approved by an owner ruling that decides it (`decides: definition_reissue`) dated on or after every row's ruling
+    (CHECK-2 of L3-R2, B3: D-21 or any other ruling does not qualify)."""
+    dr = filed(data, "definition_reissue")
+    if not dr: return False, "not filed"
+    base = data.get("baseline_definition") or {}
+    if str(dr.get("sha16")) in {str(v) for v in base.values()}: return False, "it names the baselined text unchanged"
+    r = next((x for x in req["owner_rulings"] if x["id"] == str(dr.get("approved_by"))), None)
+    if r is None: return False, "its approving ruling %s is not in the registry" % dr.get("approved_by")
+    if str(r.get("decides")) != "definition_reissue": return False, "%s does not decide the re-issue" % r["id"]
+    late = [x[1] for x in dec.values() if str(x[2]) > str(r.get("ruled_on"))]
+    if late: return False, "%s is dated before the rulings %s" % (r["id"], ", ".join(late))
+    return True, ""
+
+
 def held(row, dec, data):
-    """A row is HELD (D-22) while it is undecided and a file it waits on is not filed."""
+    """A row is HELD (D-22, D-23) while it is undecided and a file it waits on is not filed (the energy basis: with an
+    accepted check)."""
     d = next(x for x in data["decisions"] if x["id"] == row)
-    return row not in dec and any(not filed(data, k) for k in (d.get("held_until") or []))
+    return row not in dec and any(not (basis_ok(data, k)[0] if k in ("energy_basis", "power_path_check") else filed(data, k))
+                                  for k in (d.get("held_until") or []))
 
 
-def coherent(dec):
-    """([], True) when the decided rows are one of the combinations the evidence covers (l3r2.yaml `coherence`)."""
+LID = {"qmx-out": "qmx-out", "qmx-outside": "qmx-out", "tablet-out": "tablet-out", "both-kept": "both-kept"}
+
+
+def od6_row(data, option, share, build):
+    q = next(x for x in data["decisions"] if x["id"] == "L3-OD6")["quantified"]["rows"]
+    want = "mean-day" if option == "mean-day" else str(share)
+    return next((r for r in q if r.get("option") == option and str(r.get("build")) == str(build) and
+                 ("mean-day" if r.get("option") == "mean-day" else str(r.get("share"))) == want), None)
+
+
+def coherent(dec, data=None):
+    """([], True) when the decided rows are one of the combinations the evidence covers (l3r2.yaml `coherence`); every
+    rule here is one l3r2.yaml states, and nothing else is claimed (L3-C32)."""
+    data = data or load_data()
     why = []
     opt = lambda r: dec.get(r, ("",))[0]
     if "L3-OD1" in dec and opt("L3-OD1") != "approve": why.append("row L3-OD1 answered %s" % opt("L3-OD1"))
@@ -192,13 +241,24 @@ def coherent(dec):
         why.append("row L3-OD4 adopted a band without row L3-OD3 answered 2s2p, the only array a grid has run")
     if opt("L3-OD4") == "adopt" and opt("L3-OD2") == "both-kept":
         why.append("row L3-OD4 adopted a band for a 4S9P lid, which does not meet M1")
-    if opt("L3-OD4") == "adopt" and opt("L3-OD6") == "coverage":
-        why.append("row L3-OD4 adopted a mean-day band beside a coverage target")
+    if opt("L3-OD4") == "adopt" and opt("L3-OD6") != "mean-day":
+        why.append("row L3-OD4 adopted a mean-day band without row L3-OD6 answered mean-day")
+    if "L3-OD2" in dec and "L3-OD6" in dec:
+        f = dec["L3-OD6"][4] if len(dec["L3-OD6"]) > 4 else {}
+        r = od6_row(data, opt("L3-OD6"), f.get("share"), f.get("build"))
+        if r is None or r.get("fits") is None:
+            why.append("row L3-OD6's answer has no filled fit in its table, so row L3-OD2's lid is not shown to carry it")
+        elif LID[opt("L3-OD2")] not in r["fits"]:
+            why.append("row L3-OD2's lid (%s) does not carry row L3-OD6's %s store in the %s build" % (
+                opt("L3-OD2"), r["id"], f.get("build")))
     return why, not why
 
 
 def row_state(row, dec, data):
-    if row in dec: return "DECIDED: `%s` (%s, %s)" % (dec[row][0], dec[row][1], dec[row][2])
+    if row in dec:
+        f = dec[row][4] if len(dec[row]) > 4 else {}
+        extra = ", ".join("%s %s" % (k, v) for k, v in (("build", f.get("build")), ("share", f.get("share"))) if v is not None)
+        return "DECIDED: `%s`%s (%s, %s)" % (dec[row][0], (" " + extra) if extra else "", dec[row][1], dec[row][2])
     d = next(x for x in data["decisions"] if x["id"] == row)
     return ("HELD (%s)" % d.get("held_by", "D-22")) if held(row, dec, data) else "AWAITING"
 
@@ -225,7 +285,9 @@ def closure_state(item, req, dec, data):
     iid, st = item["id"], item["state"]
     rows = [d["id"] for d in data["decisions"]]
     if iid == "L3-C01":
-        return "CLOSED" if all(r in dec for r in TARGET) and coherent(dec)[1] and filed(data, "energy_basis") else st
+        return "CLOSED" if all(r in dec for r in TARGET) and coherent(dec, data)[1] and basis_ok(data)[0] and \
+            basis_ok(data, "power_path_check")[0] else st
+    if iid == "L3-C45": return "CLOSED" if basis_ok(data, "power_path_check")[0] else st
     if iid == "L3-C09": return "CLOSED" if (recs.get("CFL-017") or {}).get("status") == "CONFLICT_RESOLVED" else st
     if iid == "L3-C16":
         return "CLOSED" if ("S-122" in closed_ids or (recs.get("CFL-016") or {}).get("evidence_result") == "PASS") else st
@@ -238,16 +300,15 @@ def closure_state(item, req, dec, data):
     if iid == "L3-C23":
         return "OPEN" if [i for i in open_ids if i not in (data.get("open_items_layer") or {})] else st
     if iid == "L3-C26":
-        dr = filed(data, "definition_reissue")
-        if dr and str(dr.get("approved_by")) in rulings: return "CLOSED"
+        if reissue_ok(req, data, dec)[0]: return "CLOSED"
         return "OPEN (the session prepares the re-issue for the owner's approval)" if all(r in dec for r in rows) else st
     if iid == "L3-C27":
         chks = filed(data, "independent_check") or []
         return "CLOSED" if chks and str(chks[-1].get("verdict")).upper() == "ACCEPTED" else st
-    if iid == "L3-C28": return "CLOSED" if {"D-21", "D-23"} <= rulings else st
-    if iid == "L3-C30": return "CLOSED" if filed(data, "energy_basis") and "L3-OD2" in dec and "L3-OD4" in dec else st
-    if iid == "L3-C31": return "CLOSED" if filed(data, "energy_basis") else st
-    if iid == "L3-C32": return st if coherent(dec)[1] else "OPEN (%s)" % "; ".join(coherent(dec)[0])
+    if iid == "L3-C28": return "CLOSED" if {"D-21", "D-23", "D-24", "D-25"} <= rulings else st
+    if iid == "L3-C30": return "CLOSED" if basis_ok(data)[0] and "L3-OD2" in dec and "L3-OD4" in dec else st
+    if iid == "L3-C31": return "CLOSED" if basis_ok(data)[0] else st
+    if iid == "L3-C32": return st if coherent(dec, data)[1] else "OPEN (%s)" % "; ".join(coherent(dec, data)[0])
     needed = [r for r in rows if r in str(item.get("closes_by"))]
     if st in ("AWAITING_OWNER", "HELD") and needed and all(r in dec for r in needed): return "CLOSED (decided)"
     return st
@@ -257,9 +318,10 @@ def gate(req, dec, data, h3):
     recs = {r["id"]: r for r in req["records"]}
     rulings = {r["id"] for r in req["owner_rulings"]}
     rows = [d["id"] for d in data["decisions"]]
-    why, ok = coherent(dec)
-    basis = filed(data, "energy_basis")
-    g1 = all(r in dec for r in TARGET) and ok and bool(basis)
+    why, ok = coherent(dec, data)
+    basis, basis_why = basis_ok(data)
+    power, power_why = basis_ok(data, "power_path_check")
+    g1 = all(r in dec for r in TARGET) and ok and bool(basis) and bool(power)
     g2 = all(r in dec for r in rows)
     down = data.get("resolved_fail_downstream") or {}
     open_cfl = [r["id"] for r in recs.values() if r.get("status") == "CONFLICT_OPEN"]
@@ -268,9 +330,8 @@ def gate(req, dec, data, h3):
     tbd = [r["id"] for r in recs.values() if r.get("status") == "TBD"]
     cls = data.get("tbd_mentions") or {}
     unc = sorted({m[0] for m in tbd_mentions(req) if m[0] not in cls})
-    dr = filed(data, "definition_reissue")
-    reissued = bool(dr) and str(dr.get("approved_by")) in rulings
-    ran = {"D-21", "D-23"} <= rulings
+    reissued, reissue_why = reissue_ok(req, data, dec)
+    ran = {"D-21", "D-23", "D-24", "D-25"} <= rulings
     g3 = not open_cfl and not fail_cfl and not tbd and not unc and reissued and ran
     chks = filed(data, "independent_check") or []
     g4 = bool(chks) and str(chks[-1].get("verdict")).upper() == "ACCEPTED"
@@ -278,15 +339,17 @@ def gate(req, dec, data, h3):
         ("Target unambiguous", g1, "rows L3-OD1 to L3-OD4 and L3-OD6 decided on a combination the evidence covers, the "
          "energy basis filed: decided %s; coherence %s; energy basis %s" % (
              ", ".join("%s %s (%s)" % (r, dec[r][0], dec[r][1]) for r in rows if r in dec) or "none",
-             "holds" if ok else "FAILS (%s)" % "; ".join(why), "filed" if basis else "not filed (S-127)")),
+             "holds" if ok else "FAILS (%s)" % "; ".join(why), "filed with an accepted check" if basis else basis_why) +
+         "; the power path at Option A(i)'s currents (D-24): %s" % ("filed with an accepted check" if power else power_why)),
         ("Requirement-changing owner decisions resolved", g2, "%d of %d rows decided; rows held (D-22, D-23): %s" % (
             sum(1 for r in rows if r in dec), len(rows), ", ".join(r for r in rows if held(r, dec, data)) or "none")),
         ("Contradictions and requirement-level TBDs closed", g3,
          "open conflicts: %s; resolved conflicts reading FAIL on a requirement-level source: %s (downstream, listed in "
          "l3r2.yaml: %s); records reading TBD: %s; unclassified TBD mentions: %s; the definition documents re-issued and "
-         "approved (L3-C26): %s; the session's scripts run on the set (L3-C28): %s" % (
+         "approved by a ruling that decides it (L3-C26): %s; the session's scripts run on the set (L3-C28): %s" % (
              ", ".join(open_cfl) or "none", ", ".join(fail_cfl) or "none", ", ".join(sorted(down)) or "none",
-             ", ".join(tbd) or "none", ", ".join(unc) or "none", "yes" if reissued else "no", "yes" if ran else "no")),
+             ", ".join(tbd) or "none", ", ".join(unc) or "none", "yes" if reissued else "no (%s)" % reissue_why,
+             "yes" if ran else "no")),
         ("An independent check accepts the handover", g4,
          "; ".join("%s (%s)" % (c.get("record"), c.get("verdict")) for c in chks) if chks else "not held yet (closure item L3-C27)"),
     ]
@@ -322,6 +385,37 @@ def facts_lines(data):
     return L + [""]
 
 
+def basis_figures_lines(data):
+    """The figures fill_l3r2_from_basis.py read from the filed basis by exact keys; HELD while it has not run."""
+    B = data.get("basis_figures")
+    if not B:
+        return [p("**The checked energy basis's figures:** HELD. `energy_basis` is not named with an accepted check, so "
+                  "`fill_l3r2_from_basis.py` has read nothing (`v2/docs/records/l3r2/README.md`, the fill procedure)."), ""]
+    src = B["source"]
+    lk = lambda s: "[%s](%s)" % (os.path.basename(s["path"]), os.path.relpath(os.path.join(ROOT, s["path"]), HERE).replace(os.sep, "/"))
+    L = [p("**The checked energy basis's figures**, read by exact keys from %s (sha256/16 `%s`) and %s (`%s`) of the "
+           "basis at `%s`. Model results; nothing is measured." % (lk(src["energy_basis"]), src["energy_basis"]["sha16"],
+                                                                   lk(src["weather_basis"]), src["weather_basis"]["sha16"],
+                                                                   src.get("tip"))), "",
+         "SC-37's reference plane (40/0), both starts: the lowest store of both packs in Wh (the base's, the lid's), or the "
+         "energy unserved; COMB/EACH as the basis defines them (energy_basis.out 5):", "",
+         "| Lid | Case | TYP | COMB/EACH | WAB | COMB/EACH |", "|---|---|---|---|---|---|"]
+    for k, v in B["reference_plane"].items():
+        lid, case = k.split("|")
+        L.append("| %s | %s | %s | %s | %s | %s |" % (lid, case, v["TYP"], v["TYP_lines"], v["WAB"], v["WAB_lines"]))
+    L += ["", "Modelled historical coverage of the 864 September windows, not a probability of success (weather_basis.out A):", "",
+          "| Lid | Case | No STOP | COMB above the floor | EACH above the floor |", "|---|---|---|---|---|"]
+    for k, v in B["coverage"].items():
+        lid, case = k.split("|")
+        L.append("| %s | %s | %s | %s | %s |" % (lid, case, v["STOP"], v["COMB"], v["EACH"]))
+    L += ["", "The lids' stores at WE on the mean day and the allowances from nominal to usable (weather_basis.out B):", ""]
+    for k, v in B["stores"].items():
+        L.append("- %s: %s cells, %s Wh nominal, %s Wh usable (%s of nominal)." % (k, v["cells"], v["nominal_wh"], v["usable_wh"], v["fraction"]))
+    for v in B["allowances"]:
+        L.append("- the %s pack %s at %s, %s A a cell: %s of nominal, %s Wh usable." % (v["pack"], v["block"], v["at"], v["a_cell"], v["fraction"], v["usable_wh"]))
+    return L + [""]
+
+
 def option_cell(d, dec):
     out = []
     for o in d["options"]:
@@ -350,41 +444,69 @@ def page_decisions(req, data, dec):
            "session's and is not an approval (D-21): each row stays AWAITING until the owner's own words decide it. Rows "
            "L3-OD1, L3-OD2 and L3-OD4 are HELD by the owner's review of the draft table (D-22), and row L3-OD6's "
            "recommendation and figures by his instruction on this table (D-23), until the corrected, independently "
-           "checked energy comparison is filed (open item S-127); their energy cells state no figure before it, and no "
+           "checked energy comparison is filed (open item S-127) and, by his addendum (D-24), the power path at Option "
+           "A(i)'s currents is independently checked (closure item L3-C45); their energy cells state no figure before "
+           "them, every result on board A's front end is stated in four cases (D-24, D-25), and no "
            "case is called typical or adverse until the basis names each by its exact weather and operating assumptions. "
            "Each row gives its options (an option that cannot meet mission M1, or rests on something no record "
            "establishes, is flagged in capitals), the session's recommendation, quantified consequences with their "
            "evidence linked, and its dependencies (D-23)." % data["written_text"]), "",
          p(data.get("proposal_only") or ""), "",
-         "| Row | Question | Options | Recommendation | Quantified consequences | Dependencies | Affected | State |",
-         "|---|---|---|---|---|---|---|---|"]
+         "| Row | Question | Why it is the owner's: the requirement it changes, quantified (D-25) | Options | Recommendation | "
+         "Quantified consequences | Dependencies | Affected | State |",
+         "|---|---|---|---|---|---|---|---|---|"]
     for d in data["decisions"]:
-        L.append("| %s | %s | %s | %s | %s | %s | %s | %s |" % (
-            d["id"], cell(d["question"]), option_cell(d, dec), cell(d["recommendation"]), cell(d["consequences"]),
-            cell(d["dependencies"]), cell(d["affected"]), row_state(d["id"], dec, data)))
-    L += ["", "## Board A's current-limit resistor R11: the held circuit and the proposed change", "",
-          p("Every Option A(i) energy result depends on board A's front-end shunt R11 (fact CF-02 of "
-            "`L3-RECONCILIATION.md`). Each row's result on the circuit as generated and the result conditional on the "
-            "drafted re-rate are two columns, never one figure (D-23). The change's implementation and its physical "
-            "verification are downstream obligations tracked apart (closure items L3-C34 and L3-C35), not layer 3 "
-            "prerequisites."), "",
-          "| Row | Held circuit: R11 10 mOhm, as generated | Conditional on the drafted R11 6.2 mOhm |", "|---|---|---|"]
+        L.append("| %s | %s | %s | %s | %s | %s | %s | %s | %s |" % (
+            d["id"], cell(d["question"]), cell(d["owner_test"]), option_cell(d, dec), cell(d["recommendation"]),
+            cell(d["consequences"]), cell(d["dependencies"]), cell(d["affected"]), row_state(d["id"], dec, data)))
+    L += ["", "## Board A's front end in four cases: as drawn, derated, the resistor-only proposal and a hypothetical corrected power path", "",
+          p("Every Option A(i) energy result depends on board A's front end (fact CF-02 of `L3-RECONCILIATION.md`). Each "
+            "row's result is stated in four cases, never merged (D-24, D-25): (a) the circuit as drawn; (a') a DERATED "
+            "VARIANT, U3's input limit at 4.05 A or less, which fixes current-limit coordination only and establishes "
+            "neither that the other findings are resolved nor that M1 is met; (b) the resistor-only proposal, which is not a "
+            "sufficient solution and reads CONDITIONAL or INCONCLUSIVE until the electrical check (l3r2.yaml's "
+            "power_path_check) says otherwise; (c) a HYPOTHETICAL corrected power path, whose figures are feasibility "
+            "figures, never demonstrated capability, and rest on the requirements and corrections listed after this table."), "",
+          "| Row | (a) The circuit as drawn: R11 10 mOhm | (a') Derated variant: U3 at 4.05 A or less | (b) The resistor-only proposal: R11 6.2 mOhm | (c) A hypothetical corrected power path |",
+          "|---|---|---|---|---|"]
     for d in data["decisions"]:
-        if d.get("r11"): L.append("| %s | %s | %s |" % (d["id"], cell(d["r11"]["held"]), cell(d["r11"]["drafted"])))
+        if d.get("r11"): L.append("| %s | %s | %s | %s | %s |" % (d["id"], cell(d["r11"]["held"]), cell(d["r11"]["derated"]),
+                                                                 cell(d["r11"]["resistor"]), cell(d["r11"]["corrected"])))
+    L += ["", "**The implementation requirements and corrections case (c) assumes.** Engineering tasks with measurable "
+          "criteria, tracked downstream as closure items, not owner decisions and not layer 3 prerequisites (D-24, D-25); a "
+          "row reaches the owner only where a remedy would change a mission condition, charging time, a function, a "
+          "deployment condition, an enclosure constraint or an approved resource, naming the requirement and the "
+          "consequence. PROVISIONAL: from the author's record of stream r11dep, not yet checked; the final list comes from "
+          "the electrical check.", "",
+          "| Id | Correction | Measurable criterion | Layer | Closure item | Source |", "|---|---|---|---|---|---|"]
+    for c in data.get("power_path_corrections") or []:
+        L.append("| %s | %s | %s | %s | %s | %s |" % (c["id"], cell(c["item"]), cell(c["criterion"]), c["layer"], c["closure"], cell(c["source"])))
     q = next((d for d in data["decisions"] if d.get("quantified")), None)
     if q:
-        L += ["", "## Row %s's options, quantified" % q["id"], "", p(q["quantified"].get("note") or ""), "",
-              "| Option | What it asks | Limitations | Usable energy required (Wh) | Nominal capacity (Wh) | Mass (kg) | "
-              "Volume (litres) | Fits the Peli 1450 | Evidence |", "|---|---|---|---|---|---|---|---|---|"]
-        held_txt = "HELD (S-127)"
-        for r in q["quantified"]["rows"]:
-            f = lambda k: held_txt if r.get(k) in (None, "") else cell(r[k])
-            fits = held_txt if r.get("fits") in (None, "") else ("**NO: CANNOT MEET M1 inside the case**" if str(r["fits"]).upper() == "NO" else cell(r["fits"]))
-            ev = "the energy basis's second round (S-127), not filed" if not r.get("evidence") else "[%s](%s)" % (
-                r["evidence"], os.path.relpath(os.path.join(ROOT, r["evidence"]), HERE).replace(os.sep, "/"))
-            L.append("| `%s`%s | %s | %s | %s | %s | %s | %s | %s | %s |" % (
-                r["option"], (" %s percent" % r["share"]) if r.get("share") else "", cell(r["asks"]), cell(r["limits"]),
-                f("usable_wh"), f("nominal_wh"), f("mass_kg"), f("volume_l"), fits, ev))
+        Q = q["quantified"]
+        L += ["", "## Row %s's options, quantified" % q["id"], "", p(Q.get("note") or ""), "",
+              "| Option | Build | What it asks | Limitations | Usable energy required (Wh) | Lid block | Cells | Nominal (Wh) | "
+              "Cells' mass (kg) | Cells' volume, cylinders / footprint (l) | Times the 4S21P kit: Wh; cells | "
+              "4S14P lid (tablet out) | 4S15P lid (QMX out or outside) | 4S9P lid (both kept) | Evidence |",
+              "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+        H = "HELD (S-127)"
+        for r in Q["rows"]:
+            f = lambda k: H if r.get(k) is None else cell(r[k])
+            vol = H if r.get("volume_cyl_l") is None else "%s / %s" % (r["volume_cyl_l"], r["volume_box_l"])
+            mult = H if r.get("x_wh") is None else "%s; %s" % (r["x_wh"], r["x_cells"])
+            lids = []
+            for lid in ("tablet-out", "qmx-out", "both-kept"):
+                if r.get("fits") is None: lids.append(H)
+                elif lid in r["fits"]: lids.append("carries it")
+                else: lids.append("**NO: CANNOT MEET M1 on this basis**")
+            ev = "the checked basis, not filed (S-127)" if not r.get("evidence") else cell(r["evidence"])
+            L.append("| `%s`%s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |" % (
+                r["option"], (" %s percent" % r["share"]) if r.get("share") else "", r["build"], cell(r["asks"]),
+                cell(r["limits"]), f("usable_wh"), f("lid_block"), f("cells"), f("nominal_wh"), f("mass_kg"), vol, mult,
+                lids[0], lids[1], lids[2], ev))
+        L += ["", "The array build cases, exactly (neither is a weather case):", ""]
+        for k, v in (Q.get("builds") or {}).items():
+            L.append("- **%s:** %s." % (k, p(v)))
     L += ["", "## Applying an answer", "",
           p("Each row has a prepared registry restatement, not applied: `python3 %s/<script> --option <option> --words "
             "\"<the owner's words>\" --date <YYYY-MM-DD>` records his answer as an owner ruling that names the row and "
@@ -415,8 +537,9 @@ def page_recon(req, data, dec, h3, root):
            "registry and `l3r2.yaml`." % (data["written_text"], data["instruction"], data["h3"]["baseline"])), "",
          "## (a) The current target configuration", ""]
     g1 = gate(req, dec, data, h3)[0][1]
-    L += target_lines(req, data, dec, g1, "What the rows propose (AWAITING the owner; rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 HELD, D-22 and D-23).")
+    L += target_lines(req, data, dec, g1, "What the rows propose (AWAITING the owner; rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 HELD, D-22, D-23 and D-24).")
     L += facts_lines(data)
+    L += basis_figures_lines(data)
     L += ["**Under the other answers of each row:**", ""]
     for a in data["target"]["alternatives"]:
         L.append("- %s, option `%s`: %s" % (a["row"], a["option"], p(a["text"])))
@@ -543,12 +666,12 @@ def page_spec(req, data, dec, h3, root):
                                                "IN_PROGRESS (the conditions above that read NOT MET)")), ""]
     # target
     L += ["## 3. The target configuration and the pending owner decisions", "",
-          ] + target_lines(req, data, dec, g[0][1], "What the rows propose (AWAITING the owner; rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 HELD, D-22 and D-23).") + facts_lines(data) + [
+          ] + target_lines(req, data, dec, g[0][1], "What the rows propose (AWAITING the owner; rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 HELD, D-22, D-23 and D-24).") + facts_lines(data) + [
           "| Row | Question | Options | Recommendation | State |", "|---|---|---|---|---|"]
     for d in data["decisions"]:
         L.append("| %s | %s | %s | %s | %s |" % (d["id"], cell(d["question"]), option_cell(d, dec), cell(d["recommendation"]),
                                                row_state(d["id"], dec, data)))
-    L += ["", p("The quantified consequences, the dependencies, board A's R11 in two columns, row L3-OD6's options table "
+    L += ["", p("The quantified consequences, the dependencies, board A's front end in four cases with the corrections, row L3-OD6's options table "
                 "and the scripts that apply each answer: `OWNER-DECISIONS-L3.md`. The proposals behind them, with their "
                 "status and sources: `L3-RECONCILIATION.md` (b). " + p(data.get("proposal_only") or "")), ""]
     # operating conditions
