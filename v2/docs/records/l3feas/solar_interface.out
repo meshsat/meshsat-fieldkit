@@ -16,7 +16,8 @@ nothing bought, built or measured. MAKER = the held sheet's text layer; NETLIST 
    page for the family: Voc 24.4 V, maximum series fuse 15 A, 1093 x 582 mm (not held; compared, not substituted).
    If the kit's panels were that revision, 2S2P's open circuit would read 55.61 V at -20 C cells, 58.63 V at -40 C and 61.00 V
    by the 1.25 clause (INFERRED with the HELD sheet's -0.31 %/K: the current page's coefficient is not read here): OVER the
-   60 V ceiling, where the held sheet gives 56.25 V. Its Vmp, Imp and Isc are not in the review; the stage's fixed input point
+   coordinator's 60 V safety extra-low-voltage ceiling (array_calc.out 2: 'the standard behind it is not held'), where the
+   held sheet gives 56.25 V. Its Vmp, Imp and Isc are not in the review; the stage's fixed input point
    (R8, R9: 34.29 V, a1solar ARRAY.md 3) and its 0.990 ratio are derived from the held sheet's Vmp and would move with them
 
 2. AVAILABLE ARRAY POWER (2S2P, 4 panels)
@@ -29,7 +30,8 @@ nothing bought, built or measured. MAKER = the held sheet's text layer; NETLIST 
 3. THE CONVERTER'S INPUT POWER: NOT A CONTROLLED LIMIT AS DRAWN
    the 200 W is the energy model's window on the stage's input (energy_two_pack.py node_power: min(panel, window))
    NETLIST: U5 LT8705A pins 30, 31 (CSNOUT, CSPOUT) on TRK_OUT and 32, 33 (CSNIN, CSPIN) on PV_P, with no resistor between: the input and output current regulation is NOT used
-     (MAKER, 8705af p.12: 'Connect this pin to VIN when not in use'). So the stage takes what its load asks, up to its own
+     (MAKER, 8705af pp.11 and 12: CSNOUT 'Connect this pin to VOUT when not in use', p.11; CSPIN 'Connect this pin to VIN
+     when not in use', p.12). So the stage takes what its load asks, up to its own
      inductor current limit, from what the array gives
    what the load asks (r11dep, the front end's input is the stage's output): 144.1 W out in service, 154.9 W into the stage at
      0.93 DECLARED; 210.5 W out at the front end's highest permitted current (226.3 W in)
@@ -41,7 +43,8 @@ nothing bought, built or measured. MAKER = the held sheet's text layer; NETLIST 
 4. COLD OPEN-CIRCUIT EXPOSURE (the string is two panels in series; the strings in parallel add no voltage)
    Voc 22.5 V a panel: 51.28 V at -20 C cells (the envelope's in-use minimum), 54.07 V at -40 C (the panel's own limit),
      56.25 V by the 1.25 clause on STC (SunPower 524958 Rev F 3.0, held back): the voltage basis 56.25 V (INFERRED)
-   against: the panel's 600 V system voltage; the LT8705A's 80 V (8705af pp.2, 3); the 60 V ceiling; board E's PV_P parts as
+   against: the panel's 600 V system voltage; the LT8705A's 80 V (8705af pp.2, 3); the coordinator's 60 V ceiling (its standard
+     not held); board E's PV_P parts as
      generated (60 V FETs, 35 V and 50 V capacitors, a 28 V TVS, gen_sch_e.py; a1solar ARRAY.md 6, gated on REQ-016)
 
 5. SHORT-CIRCUIT AND FAULT CURRENTS (hot cells +70 C at 1000 W/m2; the edge-of-cloud factor 1.25)
