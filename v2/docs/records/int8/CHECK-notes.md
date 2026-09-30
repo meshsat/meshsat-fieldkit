@@ -2,8 +2,8 @@
 
 Checker: an independent Claude session (an AI review, not a qualified engineering review). 28 September 2026,
 21:35 to 21:52 CEST. Nothing of the kit has been built, ordered or measured; every verdict quoted below is a desk
-reading of a prototype design. The worktree /home/claude-runner/worktrees/meshsat-fieldkit/int8 was read only.
-Everything written is under /home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-int8/ (this file, RESULT.md,
+reading of a prototype design. The worktree `<worktrees>/int8` was read only.
+Everything written is under `<worktrees>/_scratch/chk-int8/` (this file, RESULT.md,
 CLOSURE-draft.md, the registry diffs, the page copies and the five scenario logs).
 
 Target: fnd/int8 moved to 38fd7cc9 at 21:36:37, one commit past the brief's 7f6de345, filing the box logs and the
@@ -204,3 +204,6 @@ Drafted as CLOSURE-draft.md beside this file, by kind.
 - The engineering content of the streams (the tray's geometry, the port protection review, the reliability list,
   the edge rates, the constraint sheets) was not re-derived; their own checks under records/int7/checks/,
   records/int8/checks/ and records/cx1/checks/ did that and I read only their verdict lines and minor items.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

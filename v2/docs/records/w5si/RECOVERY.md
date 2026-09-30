@@ -9,7 +9,7 @@ this point, and the three blocking items of the independent check (AI review) of
 Pass 1 of this stream worked on 27 September 2026 in a worktree under `/tmp`, committed nothing, and a reboot deleted
 the worktree. An independent checker (AI review) had judged pass 1 not mergeable with three blocking items; a second
 author pass read files for 20 commands and was cut off before it changed anything. What survived is under
-`/home/claude-runner/worktrees/meshsat-fieldkit/_recovered/` (outside the repository): the files pass 1 wrote with
+`<worktrees>/_recovered/` (outside the repository): the files pass 1 wrote with
 the Write tool, six Edit calls whose base file was not held, and the shell transcripts of both passes and of the check.
 
 ## What was recovered, and the evidence that it is what pass 1 held

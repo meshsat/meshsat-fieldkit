@@ -20,8 +20,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import ImportGui
 
-STEP_PATH = "/home/kyriakosp/Downloads/field_kit/field_kit.step"
-OUT_DIR   = "/home/kyriakosp/Downloads/field_kit/renders"
+STEP_PATH = os.environ.get("FIELD_KIT_STEP", os.path.expanduser("~/Downloads/field_kit/field_kit.step"))
+OUT_DIR   = os.environ.get("FIELD_KIT_RENDERS", os.path.expanduser("~/Downloads/field_kit/renders"))
 W, H      = 2400, 1600
 
 os.makedirs(OUT_DIR, exist_ok=True)

@@ -11,7 +11,7 @@
  "evidence": [],
  "inputs": {
   "ecad": {
-   "path": "/home/claude-runner/gitlab/products/meshsat/meshsat-fieldkit/v2/ecad",
+   "path": "<repo>/v2/ecad",
    "sha256_16": null
   }
  },

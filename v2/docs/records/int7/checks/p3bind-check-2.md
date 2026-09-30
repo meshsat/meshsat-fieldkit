@@ -29,4 +29,7 @@ All nine items are verified; nothing is left to request. No background process w
 
 **not_done:** the full suite (not allowed on this host; the author's filed summaries and the on-box log for 3bfaa317 stand as the author's evidence); the makers' datasheets behind SIZED_TO (author says the same); rows of A, B, D and E were not re-derived, only their hashes checked against rail-moves.md; the apply script was not run for real and the `{LETTER}` logic change was judged from `--check` and the trial log only.
 
-Scratch left under `/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-p3bind-2/` (author-result.txt, test-run.log, tool-run.log, rw1.out, rw2.out, rederive.py, quotes.py, quotes_all.py, rederive/). Nothing was written in the worktree.
+Scratch left under `<worktrees>/_scratch/chk-p3bind-2/` (author-result.txt, test-run.log, tool-run.log, rw1.out, rw2.out, rederive.py, quotes.py, quotes_all.py, rederive/). Nothing was written in the worktree.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

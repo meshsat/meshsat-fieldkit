@@ -2,7 +2,7 @@
 
 Checker chk-d8dec31-2. This is an AI review, not a qualified engineering review. Nothing of the kit has been built,
 ordered or measured. Branch `fnd/d8dec31` at `9057e668` (two commits since the first check's `f8e61f05`:
-`ec77e6aa`, `9057e668`), worktree `/home/claude-runner/worktrees/meshsat-fieldkit/d8dec31`, read only and untouched.
+`ec77e6aa`, `9057e668`), worktree `<worktrees>/d8dec31`, read only and untouched.
 Everything I wrote is under `_scratch/chk-d8dec31-2/`. The final message is `RESULT.md` beside this file.
 
 ## 1. The merge as it will happen
@@ -140,3 +140,6 @@ the diff hunks not re-read.
 `int8-registry.yaml`, `repro.py`, `repro2.py`, `seq.sh`, `seq.log`, `m10.err`, `pin-tables.chk.md`,
 `a.json.corrected`, `apply_registry_d31_fixed.py` (the one-line fix), `chk-verdicts/` (the scratch readings of
 section 2). The two scratch clones `view` and `tree2` were removed at the end.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

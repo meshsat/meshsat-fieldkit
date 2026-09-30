@@ -1,4 +1,4 @@
-HEAD 50e3b60b1fda567ac78432c239bc215fe45102b0  start 2026-09-27T21:23:31Z  tree /home/claude-runner/worktrees/meshsat-fieldkit/retake6/v2/ecad
+HEAD 50e3b60b1fda567ac78432c239bc215fe45102b0  start 2026-09-27T21:23:31Z  tree <worktrees>/retake6/v2/ecad
 status-1 exit 1 in 15 s: verdict: rules_status           FAIL         of 338 {"FAIL": 40, "INCONCLUSIVE": 89, "PASS": 209, "WAIVED": 0, "denominator": 338, "fail_percent": 11.8, "inconclusive_percent": 26.3, "pass_percent": 61.8, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
 status-2 exit 1 in 12 s: verdict: rules_status           FAIL         of 338 {"FAIL": 40, "INCONCLUSIVE": 89, "PASS": 209, "WAIVED": 0, "denominator": 338, "fail_percent": 11.8, "inconclusive_percent": 26.3, "pass_percent": 61.8, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen
 status-3 exit 1 in 12 s: verdict: rules_status           FAIL         of 338 {"FAIL": 40, "INCONCLUSIVE": 89, "PASS": 209, "WAIVED": 0, "denominator": 338, "fail_percent": 11.8, "inconclusive_percent": 26.3, "pass_percent": 61.8, "waived_percent": 0.0} | gate state NOT_READY; promotion frozen

@@ -13,7 +13,7 @@ OWED: the readings that record pcb_interfaces.yaml by sha (interfaces.py, rules_
 apply_pages_s99: v2/docs/HW-FW-CONTRACT.md, v2/docs/ASSEMBLY.md, v2/docs/records/s98/README.md and v2/docs/records/s98/LAYER-ROWS.md corrected; ASSEMBLY.md 0ca504d746b427cb -> ee4eff52fc5df307; rebound: CFL-015; the review of decision 31 left as filed (pinned 094817023210d1b0), its erratum v2/docs/records/int10/ERRATA-DECISION-31-REVIEW.md
 OWED: rules_render.py --requirements (the registry changed by the rebind)
 ## energy REQ-072
-apply_req072_evidence_note: added one evidence line to REQ-072 in /home/claude-runner/worktrees/meshsat-fieldkit/int10/v2/ecad/tools/pcb_requirements.yaml (evidence 7 -> 8, FAIL unchanged)
+apply_req072_evidence_note: added one evidence line to REQ-072 in <worktrees>/int10/v2/ecad/tools/pcb_requirements.yaml (evidence 7 -> 8, FAIL unchanged)
 ## circuit rebind
 changed parts: ['C227', 'C228', 'C229', 'C230', 'C231', 'C232', 'L13', 'R217', 'R218', 'U41', 'R186', 'R209', 'U23', 'U32', 'U39']
 changed nets: ['+5V_D8IN', '+5V_DEV', 'D8B_BST', 'D8B_FB', 'D8B_SS', 'D8B_SW', 'GND', 'RAIL_EN', 'VBAT', 'unconnected-(U41-NC-Pad1)']

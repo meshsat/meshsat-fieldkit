@@ -3,8 +3,8 @@ B1 closed: yes
 
 Second fresh check of stream d8dec31 at 9057e668 (AI review, checker chk-d8dec31-2, 28 September 2026 19:54 to
 20:15 CEST). Not a qualified engineering review; nothing of the kit has been built, ordered or measured. The worktree
-`/home/claude-runner/worktrees/meshsat-fieldkit/d8dec31` was read only and is untouched; everything I wrote is under
-`/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-d8dec31-2/` (`CHECK.md` is the working record).
+`<worktrees>/d8dec31` was read only and is untouched; everything I wrote is under
+`<worktrees>/_scratch/chk-d8dec31-2/` (`CHECK.md` is the working record).
 
 **mergeable: yes** for the files (tool, tests, reviewed set, review page, records, two PDFs). **B1 closed: yes** at the
 tool: the counter-example now reads INCONCLUSIVE by name. **Two of the apply scripts do not work on the tree they
@@ -129,3 +129,6 @@ a note after a circuit change not exercised; the review's prose outside the diff
 Scratch: `_scratch/chk-d8dec31-2/` holds `CHECK.md`, `RESULT.md`, `seq.log`, `repro.py`, `repro2.py`, `seq.sh`,
 `apply_registry_d31_fixed.py`, `int8-registry.yaml`, `sources.merged.txt`, `chk-verdicts/` (the scratch readings);
 the two scratch clones were removed; `/tmp/port-*` is empty; the d8dec31 worktree is clean.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

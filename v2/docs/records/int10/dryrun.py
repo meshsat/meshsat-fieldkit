@@ -38,7 +38,7 @@ def realize(ov, relp):
 
 def build(scratch):
     ov = os.path.join(scratch, "ov")
-    if not os.path.realpath(scratch).startswith("/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/"):
+    if not os.path.realpath(scratch).startswith(os.path.join(os.path.realpath(os.environ.get("WORKTREES", os.path.expanduser("~/worktrees/meshsat-fieldkit"))), "_scratch", "")):
         raise SystemExit("the scratch folder must be under _scratch/")
     if os.path.exists(ov): shutil.rmtree(ov)
     os.makedirs(ov)

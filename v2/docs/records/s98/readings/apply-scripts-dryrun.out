@@ -12,8 +12,8 @@ Traceback (most recent call last):
 TypeError: 'NoneType' object is not subscriptable
 rows 4
 == diff
---- /home/claude-runner/worktrees/meshsat-fieldkit/s98/v2/ecad/tools/pcb_interfaces.yaml	2026-09-28 20:32:34.919174903 +0200
-+++ /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/90a77d46-57cf-4758-b702-e06537d0a6cc/scratchpad/s98-apply/v2/ecad/tools/pcb_interfaces.yaml	2026-09-28 20:54:58.487351676 +0200
+--- <worktrees>/s98/v2/ecad/tools/pcb_interfaces.yaml	2026-09-28 20:32:34.919174903 +0200
++++ /tmp/<scratchpad>/s98-apply/v2/ecad/tools/pcb_interfaces.yaml	2026-09-28 20:54:58.487351676 +0200
 @@ -375,15 +375,28 @@
        converters: "A: +5V_S1 and +5V_S3 on AP64500 (U4, U6); +5V_S2 and +5V_DEV on LM5176 stages with a 7.2 to 9.5 A average
          current limit (U5, U7; F-PR-04, 458b2873); +54V_POE on an LM5176 boost (U16)"
@@ -59,8 +59,8 @@ exit 0
 apply_architecture_i03: REFUSED: already applied
 exit 2
 == diff
---- /home/claude-runner/worktrees/meshsat-fieldkit/s98/v2/docs/ARCHITECTURE.md	2026-09-28 20:32:33.866852134 +0200
-+++ /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/90a77d46-57cf-4758-b702-e06537d0a6cc/scratchpad/s98-apply/v2/docs/ARCHITECTURE.md	2026-09-28 20:54:58.781678399 +0200
+--- <worktrees>/s98/v2/docs/ARCHITECTURE.md	2026-09-28 20:32:33.866852134 +0200
++++ /tmp/<scratchpad>/s98-apply/v2/docs/ARCHITECTURE.md	2026-09-28 20:54:58.781678399 +0200
 @@ -1184,7 +1184,7 @@
  | IF-BC-PANEL | B J_PANEL, C J_PANEL (2x13) | PANEL_5V, kit I2C, every safety line, heartbeats, slot enables, panel USB | `check_contracts.py` section 1 (map identity) | the SLOT_EN hold (4.3); I3-F01 (supervisor addresses, a firmware contract); HF-F01 and SC-HF-02 (the kit bus); EMCON L1 and L2 (drawn at desk on B and C in their round 8; C's GPIO21 is off the line since `9f28c238`); FAB-04 on HDMI_SEL1/2 (10 k since board B's round 8 (27 September 2026)); B_PANEL_5V: F1 an MF-MSMF110 (1.1 A hold) under the 1.23 A conductor since then, its hold 0.95 A at 40 C against board C's 1.0 A peak (4.5); the ribbon and IDC parts have no MPN (their rating is TBD) |
  | IF-AB-RIBBON | A J_AB1, B J_AB1 (2x13) | control lines to A, USB to D and E, the kit I2C | section 7 | the SLOT_EN hold; EMCON L2 (R102 10 k 1 % in board A's round 8); HF-F01 |

@@ -1,0 +1,39 @@
+PASS  d6dec/box/to_box.sh: exit 0; the bundle of fnd/d6dec written under $SCRATCH; 3 box call(s) reached the stubs
+      box clone /root/d6dec/t1 at 26bcda7519088405a4db98b7104861918e4e8465
+      stub bxs.sh: mkdir -p /root/d6dec/bundles
+      stub bxcp.sh: to <sandbox>/bx/d6dec-t1.bundle /root/d6dec/bundles/
+      stub bxs.sh: set -e; rm -rf /root/d6dec/t1; git clone -q --no-checkout /root/r8int6/repo /root/d6dec/t1; git -C /root/d6dec/t1 fetch -q /root/d6dec/bundles/d6dec-t1.bundle fnd/d6dec:refs/heads/d6dec; 
+PASS  int7/box/int7_install_pack.sh: exit 3; the pack fetched through the stubs and its checksum checked, then the refusal at the HEAD check; the int7 worktree unchanged
+      x: OK
+      int7 is not at a4b157f0
+PASS  r8int6/commit_r8int6.sh: exit 0; the pre-commit check found beside the sandbox's main clone by the derived default, the commit made in the sandbox repository
+      pre-commit-check: PASSED
+      4618857 docs(test): a sandbox commit on abc12345 [MESHSAT-1357]
+      stub validate: rc=0
+PASS  r8int6/copy_evidence.sh: exit 0; 939 file(s) copied from the main clone found by git into the sandbox
+      main ignored: 939; tracked in worktree (skipped): 0; to copy: 939
+      copied; list <sandbox>/ce/r8int6/ignored-074954.lst
+PASS  int10/dryrun.py (outside): exit 1; refused
+      the scratch folder must be under _scratch/
+PASS  int10/dryrun.py (inside): exit 1; the overlay built under the sandbox and every stage run, the output equal to the filed script's: True (both end DRY RUN FAILED today: the S-99 scripts were applied on 29 September and refuse)
+        v2/docs/records/s98/README.md: +0 -0 lines; overlay sha256/16 cb3ad0882e138978
+        v2/docs/records/s98/LAYER-ROWS.md: +0 -0 lines; overlay sha256/16 7c53a8844330dcb8
+      DRY RUN FAILED
+PASS  w5si/recovery/replay.py: exit 0; the output equals the filed script's line for line: True; three IDENTICAL at command 158
+      final drafts/w5si/apply_coverage_si001.py 3bbeeda0bd61207d
+      final drafts/w5si/apply_rules_status_config_inputs.py 0a87fd8a36f08ae7
+      final drafts/w5si/apply_sources_yaml_ibis.py acd6eeefa5adea72
+      final drafts/w5si/w5si-record.md 14f186825f10ffbf
+PASS  w5tray/recovery/replay.py (as filed): the filed script and this one stop at the same place: the transcript entries (a1.json) were never filed
+PASS  w5tray/recovery/replay.py (fixture): exit 0; the old worktree path read from the entries and replaced by the staging root
+      entry 0 block 0 cwd 'v2': rc 0 True
+PASS  cx1/checks/check-1-phase1.py: exit 0; 69 line(s), equal to the filed script's output: True
+        ASTM B258 formula (not held): AWG 18 diameter 1.024 mm, area 0.823 mm2
+        the contract's budget: 2 percent of 5.1 V = 102 mV, shares A 0.5 point + B 1.5 points = 2.0 points: NO share for the lead and its four contacts
+PASS  v1/cad/inspect_doc.py: exit 0; the STEP path derived from the home directory
+      exit 0
+      calls [('Import.open', '<sandbox>/home/Downloads/field_kit/field_kit.step')]
+PASS  v1/cad/render.py: exit 0; the STEP path derived from the home directory, the render folder made under it
+      exit 0
+      calls [('ImportGui.open', '<sandbox>/home/Downloads/field_kit/field_kit.step')]
+script_tests: 12 of 12 passed; sandbox removed

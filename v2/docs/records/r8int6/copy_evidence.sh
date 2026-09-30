@@ -1,7 +1,7 @@
 #!/bin/bash
 # copy main's gitignored evidence into the r8int6 worktree, by main's ignored-file list only, never over a tracked file
 set -e
-M=/home/claude-runner/gitlab/products/meshsat/meshsat-fieldkit
+M=${MAIN_CLONE:-$(dirname "$(git -C "$(dirname "$0")" rev-parse --path-format=absolute --git-common-dir)")}
 SP=$SP
 W=$SP/wt/r8int6
 L=$SP/r8int6/ignored-$(date +%H%M%S).lst
