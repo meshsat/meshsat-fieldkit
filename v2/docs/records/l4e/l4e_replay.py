@@ -81,6 +81,19 @@ BASE_A1 = 3                 # D-06's 4S3P
 U3_TOL = 0.1                # three_cases.py: U3's minimum 0.1 A under its setting (INFERRED from SLUSE66A p.80's maximum)
 U3_DERATED = 4.00           # r11dep A-1 and three_cases.py: the derated variant of the drawn circuit
 U3_WINDOW = 4.65            # section 8: the least 50 mA setting whose minimum covers REQ-016's window at the declared efficiencies
+# Section 11, O-2 (check astra-check-l4e2-1, B2): the LT8705A's input current limit, MAKER 8705af (v2/vendor/power/lt8705a.pdf,
+# pinned below). p.31: the limit is set by RSENSE1 and RIMON_IN, IMON_IN regulating at 1.208 V typical; p.4: "Regulation
+# Voltages for IMON_IN and IMON_OUT" 1.187 / 1.208 / 1.229 V and "Regulation Voltage for FBIN" 1.184 / 1.205 / 1.226 V, both
+# over the full operating temperature range; p.5: the CSPIN-CSNIN to IMON_IN amplifier A7, gm 0.94 / 1 / 1.06 mmho (LT8705AE
+# and LT8705AI over the full range; the netlist names no grade: ASSUMPTION E or I). p.29: FBIN reduces VC, and so the input
+# current, when the input falls below its set point; it does not clamp the input from above. The two resistors that set the
+# limit are not chosen: ASSUMPTION 1 % each, the tolerance of R8 and R9 on the netlist.
+LT8705A_PDF = ("v2/vendor/power/lt8705a.pdf", "8f552a0b57677bfa7e4a5d5d0fac56d56fbbd1a6f65a9ee7aaaf8743cd534ec3")
+V_IMON = (1.187, 1.208, 1.229)
+GM_A7 = (0.94, 1.00, 1.06)
+V_FBIN = (1.184, 1.205, 1.226)
+R_TOL = 0.01
+CHECK_B1 = ["270.132086", "286.306461", "500.372955", "516.547330"]   # astra-check-l4e2-1, Checks, kit energy conservation
 
 
 def need(text, pat, what):
@@ -194,33 +207,69 @@ def main():
             TP.LOAD = (load0 if load_w is None else load_w) + drain
             if collapse:
                 TP.node_power = node_collapse
-            tr = [] if account else None
+            tr = []
             res = TP.sim(d, pack, r, EBS.Series(vals), wp, window, start, TP.v("t_base_c"), EBS.TMIN if t_l is None else t_l, cfg, tr)
-            if account:
-                res["acct"] = acct(d, r, cfg, res, tr, vals, wp, window, collapse, TP.LOAD, hours)
+            a = res["acct"] = acct(d, r, cfg, res, tr, vals, wp, window, collapse, TP.LOAD, hours, pack.chg_eta)
+            if abs(a["closure"]) > 1e-6 or abs(a["kit_res"]) > 1e-6 or abs(a["legacy_res"]) > 1e-6 or a["node_dev"] > 1e-9 \
+                    or abs(a["dsg_path_res"]) > 1e-6:
+                refuse(4, "a run's energy account or service ledger does not close (%s %s start %d, %d h)" % (arch, key, start, hours))
             res["load"] = TP.LOAD
+            res["uns"] = a["unserved"]
             return res
         finally:
             TP.NP_B, TP.NP_L, TP.NP_T, TP.LOAD, TP.node_power = saved
 
-    def acct(d, r, cfg, res, tr, vals, wp, window, collapse, load, hours):
-        """The per-pack and kit energy account of one run, from the model's own chain and hour trace (Wh)."""
+    def acct(d, r, cfg, res, tr, vals, wp, window, collapse, load, hours, eta_c):
+        """The per-pack and kit energy account of one run, from the model's own chain and hour trace (Wh), with the SERVICE
+        LEDGER (the check astra-check-l4e2-1, B1): energy_two_pack.sim() sets the load to zero while the kit is stopped and
+        then both subtracts that hour's sun from its unserved counter and charges the packs with the same sun. The ledger
+        counts service from the traced load flows instead: an hour served in full, the stop hour's sun plus what the stores
+        delivered, a stopped hour nothing. Its kit balance (node energy + initial store = served + spill + charge losses +
+        discharge losses, the cutoff's included, + final store) closes with the stopped hours' sun counted once. The
+        model's own counter is kept, labelled the legacy model metric, for reproduction and comparison."""
         e_st, e_fe, e_ch = TP.chain(d)
         ent = TP.ENTRIES[cfg["entry"]]
         cap = min(ent["fe_out_w"], ent["u3_in_w"]) if ent is not None else float("inf")
         a = dict.fromkeys(("arr", "clip", "stage_in", "bus_avail", "not_taken", "u3_loss", "node", "sun_load", "offered",
-                           "accepted", "spill", "stored", "drawn", "cap_hours", "full_h"), 0.0)
+                           "accepted", "spill", "stored", "drawn", "cap_hours", "full_h", "node_indep", "served_l", "spill_l",
+                           "chg_eff_b", "chg_conv_l", "chg_eff_l", "clamp", "dsg_loss", "cutoff", "delivered", "stop_sun",
+                           "stop_chg", "stop_spill", "legacy_credit"), 0.0)
         eb, el = res["eb_full"], res["el_full"]
         cut_b = cut_l = None
         worst_dev = 0.0
         for i, row in enumerate(tr):
-            h, _hh, p_sun, ld, a_b, a_l, _d_b, _d_l, e_b, e_l, running = row
+            h, _hh, p_sun, ld, a_b, a_l, d_b, d_l, e_b, e_l, running = row
             g = vals[i]
             p_arr = BUD.panel_w(g, wp, r["pr"])
             p_in = min(p_arr, window)
             avail = p_in * e_st * e_fe
             taken = ((cap if avail >= cap else 0.0) if collapse else min(avail, cap)) if ent is not None else avail
             worst_dev = max(worst_dev, abs(taken * e_ch - p_sun))
+            a["node_indep"] += taken * e_ch
+            # the service ledger, hour by hour from the traced flows
+            if p_sun >= ld:                           # the model's surplus branch (a stopped hour has ld = 0)
+                a["served_l"] += ld
+                a["spill_l"] += p_sun - ld - a_b - a_l
+                a["chg_eff_b"] += a_b * (1.0 - eta_c)
+                clamp = (eb + a_b * eta_c) - e_b
+                if a_l > 0.0:
+                    t_w = TP.lid_terminal_from_node(a_l, res["v_l"], TP.eta_at(cfg["eta_b"], a_l), cfg["r_chg"])
+                    a["chg_conv_l"] += a_l - t_w
+                    a["chg_eff_l"] += t_w * (1.0 - eta_c)
+                    clamp += (el + t_w * eta_c) - e_l
+                a["clamp"] += clamp
+                if ld == 0.0:
+                    a["stop_sun"] += p_sun
+                    a["stop_chg"] += a_b + a_l
+                    a["stop_spill"] += p_sun - a_b - a_l
+                    a["legacy_credit"] += min(p_sun, load)
+            else:                                     # the deficit branch: the stores deliver d_b + d_l at the node
+                a["served_l"] += p_sun + d_b + d_l
+                a["delivered"] += d_b + d_l
+                loss = ((eb + el) - (e_b + e_l)) - (d_b + d_l)
+                a["dsg_loss"] += loss
+                if not running:
+                    a["cutoff"] += loss
             a["arr"] += p_arr
             a["clip"] += p_arr - p_in
             a["stage_in"] += p_in
@@ -248,11 +297,16 @@ def main():
         a["chg_loss"] = a["accepted"] - a["stored"]
         a["dsg_path"] = res["loss"]["dsg_path"]
         a["asked"] = load * hours
-        a["unserved"] = res["short"]
-        a["served"] = a["asked"] - res["short"]
+        a["legacy_unserved"] = res["short"]                     # the legacy model metric
+        a["served"] = a["served_l"]
+        a["unserved"] = a["asked"] - a["served_l"]
         a["start"] = res["eb_full"] + res["el_full"]
         a["end"] = res["end_b"] + res["end_l"]
         a["closure"] = a["start"] + a["stored"] - a["drawn"] - a["end"]
+        a["chg_losses"] = a["chg_eff_b"] + a["chg_conv_l"] + a["chg_eff_l"] + a["clamp"]
+        a["kit_res"] = (a["node_indep"] + a["start"]) - (a["served_l"] + a["spill_l"] + a["chg_losses"] + a["dsg_loss"] + a["end"])
+        a["legacy_res"] = (a["unserved"] - a["legacy_unserved"]) - a["legacy_credit"]
+        a["dsg_path_res"] = (a["dsg_loss"] - a["cutoff"]) - a["dsg_path"]
         a["cut_b"], a["cut_l"] = cut_b, cut_l
         a["node_dev"] = worst_dev
         return a
@@ -263,6 +317,7 @@ def main():
         return {"ok": all(r_["ok"] for r_ in rs), "both": min(r_["low_t"] for r_ in rs), "base": min(r_["low_b"] for r_ in rs),
                 "lid": min(r_["low_l"] for r_ in rs), "short": max(r_["short"] for r_ in rs), "stop": min(stops) if stops else None,
                 "stops": [r_["first_stop"] for r_ in rs], "shorts": [r_["short"] for r_ in rs],
+                "uns": [r_["uns"] for r_ in rs], "unserved": max(r_["uns"] for r_ in rs),
                 "el": rs[0]["el_full"], "eb": rs[0]["eb_full"], "rs": rs}
 
     def cellx(s):
@@ -353,7 +408,7 @@ def main():
         b5[st] = mm.groups()
     rep_d = {}
     for st, s_h in (("06:00", 6), ("18:00", 18)):
-        rr = run("A1", "REC", BASE_A1, "TYP", s_h, 72, win_req016, wp=100.0, ratio=1.0, entry="E3", account=True)
+        rr = run("A1", "REC", BASE_A1, "TYP", s_h, 72, win_req016, wp=100.0, ratio=1.0, entry="E3")
         rep_d[st] = ("%.1f" % rr["eb_full"], str(rr["first_stop"]), "%d" % rr["acct"]["full_h"], "%.1f" % rr["short"])
     # the E3 run must carry the record's own chain, not a case's: check it
     d_chk = EBS.setup(0, pr0, v_nom, u3_e2, {})[0]
@@ -374,15 +429,19 @@ def main():
     P("")
     P("0. REPRODUCTION (before any result)")
     P("   0a l3batt's runtime.py re-run in a child process reproduces runtime.out byte for byte (sha256 %s): yes" % PINS["l3batt/runtime.out"][:16])
+    P("   (0b to 0d reproduce the model's own unserved counter, the LEGACY MODEL METRIC; every served and unserved figure from")
+    P("   section 3 on is the SERVICE LEDGER's of section 5, which counts a stopped hour's sun once)")
     P("   0b this harness reproduces runtime.out section 1's D06 and A35 rows, the twenty cells of section 2 (400 Wp, 200 W) and")
     P("      section 3's %d least-lid lines (48 and 72 h; NOM, WE, NOM90; TYP and WAB): yes" % n3)
     P("   0c this harness reproduces three_cases.out's AS DRAWN and DERATED VARIANT rows at WE inputs, the both-kept lid, 72 h:")
-    P("      TYP %.1f and %.1f, WAB %.1f and %.1f Wh unserved: yes" % (tc_rep[0]["short"], td_rep[0]["short"], tc_rep[1]["short"], td_rep[1]["short"]))
+    P("      TYP %.1f and %.1f, WAB %.1f and %.1f Wh unserved (the legacy model metric): yes" % (
+        tc_rep[0]["short"], td_rep[0]["short"], tc_rep[1]["short"], td_rep[1]["short"]))
     P("   0d the single-pack use (the lid off) reproduces energy_budget.out 5b, PS-IDLE-SPEC, September, a 100 Wp panel in the")
     P("      100 W window on the record's own chain: 06 UTC usable %s Wh, first stop h %s, %s h run, %s Wh unserved; 18 UTC first" % (
         rep_d["06:00"][0], rep_d["06:00"][1], rep_d["06:00"][2], rep_d["06:00"][3]))
-    P("      stop h %s, %s h run, %s Wh unserved: yes (so 'full service' below counts hours as the record's 'h run' does)" % (
+    P("      stop h %s, %s h run, %s Wh unserved (energy_budget.py's counter, the same legacy metric): yes (so 'full service' below" % (
         rep_d["18:00"][1], rep_d["18:00"][2], rep_d["18:00"][3]))
+    P("      counts hours as the record's 'h run' does)")
     P("")
 
     # ------------------------------------------------------------------------------------------ 1. the assumption set
@@ -430,7 +489,7 @@ def main():
     # ------------------------------------------------------------------------------------------ 3. solar-assisted, 100 W
     P("3. SOLAR-ASSISTED, THE STAGE INPUT CLIPPED AT %.0f W: A CONDITIONAL SCREENING STIMULUS (section 7: the series is the 400 Wp" % win_req016)
     P("   2S2P trace, which REQ-016 does not admit). First interruption per start (hour from the start, and its UTC hour), unserved")
-    P("   Wh at 48 h and at 72 h per start, and the hours of full service in each horizon")
+    P("   Wh at 48 h and at 72 h per start (the service ledger, section 5), and the hours of full service in each horizon")
     paths = (("CORRECTED, HYPOTHETICAL, WE", "WE", False), ("AS DRAWN, WE, upper bound", "DRAWN-WE", False),
              ("AS DRAWN, WE, lower bound (A-2 collapse)", "DRAWN-WE", True))
     archs = (("A1", "A1 D-06's 4S3P", BASE_A1), ("A2", "A2 base 4S6P + lid 4S9P", LID_A))
@@ -438,8 +497,8 @@ def main():
     for ak, alab, n in archs:
         for plab, key, col in paths:
             for b in ("TYP", "WAB"):
-                s48 = meanday(ak, key, n, b, 48, win_req016, collapse=col, account=True)
-                s72 = meanday(ak, key, n, b, 72, win_req016, collapse=col, account=True)
+                s48 = meanday(ak, key, n, b, 48, win_req016, collapse=col)
+                s72 = meanday(ak, key, n, b, 72, win_req016, collapse=col)
                 main[(ak, key, col, b)] = (s48, s72)
             s48, s72 = main[(ak, key, col, "TYP")]
             w48, w72 = main[(ak, key, col, "WAB")]
@@ -447,11 +506,11 @@ def main():
             for i, st in enumerate((6, 18)):
                 fs = s72["stops"][i]
                 P("     TYP from %02d UTC: first interruption %s; unserved %6.1f Wh at 48 h, %6.1f Wh at 72 h; full service %2d of 48 h, %2d of 72 h" % (
-                    st, "none" if fs is None else "h %2d (%02d UTC)" % (fs, (st + fs) % 24), s48["shorts"][i], s72["shorts"][i],
+                    st, "none" if fs is None else "h %2d (%02d UTC)" % (fs, (st + fs) % 24), s48["uns"][i], s72["uns"][i],
                     s48["rs"][i]["acct"]["full_h"], s72["rs"][i]["acct"]["full_h"]))
             P("     WAB (sensitivity): first interruption h %s; unserved at 48 h %s Wh, at 72 h %s Wh (06 / 18 UTC)" % (
-                "/".join("-" if x is None else str(x) for x in w72["stops"]), " / ".join("%.1f" % x for x in w48["shorts"]),
-                " / ".join("%.1f" % x for x in w72["shorts"])))
+                "/".join("-" if x is None else str(x) for x in w72["stops"]), " / ".join("%.1f" % x for x in w48["uns"]),
+                " / ".join("%.1f" % x for x in w72["uns"])))
     P("   The same cases in runtime.out's window (200 W, P-03), for the difference the window alone makes (TYP, 06 / 18 UTC):")
     p03 = {}
     for ak, alab, n in archs:
@@ -461,7 +520,7 @@ def main():
             p03[(ak, key)] = (a48, a72)
             P("     %-26s %-28s first interruption h %s; unserved %s Wh at 48 h, %s Wh at 72 h" % (
                 alab, plab.split(",")[0] + ("" if key == "WE" else " (UB)"), "/".join("-" if x is None else str(x) for x in a72["stops"]),
-                " / ".join("%.1f" % x for x in a48["shorts"]), " / ".join("%.1f" % x for x in a72["shorts"])))
+                " / ".join("%.1f" % x for x in a48["uns"]), " / ".join("%.1f" % x for x in a72["uns"])))
     P("")
 
     # ------------------------------------------------------------------------------------------ 4. least additional storage
@@ -493,14 +552,20 @@ def main():
     P("")
 
     # ------------------------------------------------------------------------------------------ 5. energy accounts
-    P("5. THE ENERGY ACCOUNT, TYP, 72 h, the %.0f W window (Wh over the run; per start; kit and per pack)" % win_req016)
+    P("5. THE ENERGY ACCOUNT AND THE SERVICE LEDGER, TYP, 72 h, the %.0f W window (Wh over the run; per start; kit and per pack)" % win_req016)
     P("   array = the 400 Wp trace at the array; clip = above the window; stage in = into the stage; bus = at VBUS20 before the")
     P("   entry's cap (stage and front end losses taken); not taken = refused by the entry's cap or its collapse; U3 = U3's loss;")
     P("   node = at the system node; to load = the node's sun used by the load in the hour; accepted = taken into charge at the")
     P("   node; spill = offered to charge but refused (packs full or tapering, or the charge ceiling); stored = into the cells;")
     P("   chg loss = accepted less stored (U3B, the lid loop, the 0.95 charge efficiency); drawn = out of the cells; lid path =")
     P("   the lid's discharge path loss; cut = the first hour each pack stands at its line (the kit's stop puts both there);")
-    P("   closure = start + stored - drawn - end")
+    P("   closure = start + stored - drawn - end.")
+    P("   SERVICE LEDGER (check astra-check-l4e2-1, B1): served = the load in every hour it is carried in full, plus in the stop")
+    P("   hour the sun and what the stores delivered, nothing in a stopped hour; charge losses = the base's 0.95, U3B and the lid")
+    P("   loop, the lid's 0.95, and the model's full-store clamp; discharge losses = the lid path, and at the cutoff what the")
+    P("   stores held but did not deliver; kit residual = node + start - (served + spill + charge losses + discharge losses + end),")
+    P("   the node summed independently from the chain. The legacy model metric is energy_two_pack's unserved counter, which")
+    P("   also credits each stopped hour's sun, up to the load, as served while charging with it (the credit printed)")
     for ak, alab, n in archs:
         for plab, key, col in paths:
             s72 = main[(ak, key, col, "TYP")][1]
@@ -511,20 +576,41 @@ def main():
                     a["arr"], a["clip"], a["stage_in"], a["bus_avail"], a["not_taken"], a["u3_loss"], a["node"], a["cap_hours"]))
                 P("     to load %.1f, accepted %.1f, spill %.1f, stored %.1f, chg loss %.1f; drawn %.1f, lid path %.1f; start %.1f, end %.1f" % (
                     a["sun_load"], a["accepted"], a["spill"], a["stored"], a["chg_loss"], a["drawn"], a["dsg_path"], a["start"], a["end"]))
-                P("     asked %.1f, served %.1f, unserved %.1f; cut base h %s, lid h %s, kit stop h %s; closure %.2e" % (
-                    a["asked"], a["served"], a["unserved"], "-" if a["cut_b"] is None else a["cut_b"],
-                    ("-" if a["cut_l"] is None else a["cut_l"]) if ak == "A2" else "(no lid)",
+                P("     cut base h %s, lid h %s, kit stop h %s; store closure %.2e" % (
+                    "-" if a["cut_b"] is None else a["cut_b"], ("-" if a["cut_l"] is None else a["cut_l"]) if ak == "A2" else "(no lid)",
                     "-" if s72["rs"][i]["first_stop"] is None else s72["rs"][i]["first_stop"], a["closure"]))
-                if abs(a["closure"]) > 1e-6 or a["node_dev"] > 1e-9:
-                    refuse(4, "the energy account does not close (%s %s %d)" % (ak, key, st))
-    P("   (every account closes to under 1e-6 Wh and its node power equals the model's in every hour)")
+                P("     LEDGER: asked %.1f, served %.1f, unserved %.1f; spill %.1f; charge losses %.1f (base 0.95 %.1f, U3B and loop %.1f," % (
+                    a["asked"], a["served_l"], a["unserved"], a["spill_l"], a["chg_losses"], a["chg_eff_b"], a["chg_conv_l"]))
+                P("     lid 0.95 %.1f, clamp %.1f); discharge losses %.1f (cutoff %.1f); stopped-hour sun %.1f, to charge %.1f, spilled %.1f;" % (
+                    a["chg_eff_l"], a["clamp"], a["dsg_loss"], a["cutoff"], a["stop_sun"], a["stop_chg"], a["stop_spill"]))
+                P("     kit residual %.2e; legacy model metric: unserved %.1f, its stopped-hour credit %.1f" % (
+                    a["kit_res"], a["legacy_unserved"], a["legacy_credit"]))
+    P("   THE LEDGER'S CLOSURE, every architecture, path, horizon and start (TYP, 100 W): unserved Wh and the kit residual")
+    for ak, alab, n in archs:
+        for plab, key, col in paths:
+            cells = []
+            for hi_, hours in enumerate((48, 72)):
+                s_ = main[(ak, key, col, "TYP")][hi_]
+                for i, st in enumerate((6, 18)):
+                    aa = s_["rs"][i]["acct"]
+                    cells.append("%d h %02d UTC %.6f (%.1e)" % (hours, st, aa["unserved"], aa["kit_res"]))
+            P("     %s %-40s %s" % (ak, plab, "; ".join(cells[:2])))
+            P("     %s %-40s %s" % ("  ", "", "; ".join(cells[2:])))
+    chk = [main[("A2", "WE", False, "TYP")][hi_]["rs"][i]["acct"]["unserved"] for hi_ in (0, 1) for i in (0, 1)]
+    if ["%.6f" % x for x in chk] != CHECK_B1:
+        refuse(4, "the ledger does not reproduce the check's A2 corrected figures")
+    P("   the check's own flow-derived figures for A2 corrected (astra-check-l4e2-1: %s Wh at 48 / 72 h, 06 / 18 UTC)" % " / ".join(CHECK_B1))
+    P("   reproduced to the sixth decimal: yes")
+    P("   (every run of this script, not only these, is refused unless its store closure, its kit residual, the legacy")
+    P("   metric's difference from the ledger less the stopped-hour credit, and the lid path's loss less the model's all stay")
+    P("   under 1e-6 Wh, and its node power equals the model's in every hour to 1e-9 W)")
     P("")
 
     # ------------------------------------------------------------------------------------------ 6. thresholds
     P("6. WHERE A RESULT COULD TURN ON AN UNDOCUMENTED FIGURE (TYP, 100 W; the corrected path unless named)")
     for ak, alab, n in archs:
         for key, lab in (("WE90", "the three at their 0.90 bracket"), ("WE97", "stage and front end 0.97, charge 0.98 (the high bracket)"),
-                         ("WE100", "all three at 1.00 (no conversion or charge loss at all: a physical bound)")):
+                         ("WE100", "all three at 1.00 (the three undocumented efficiencies set to 1.00; U3, U3B and the lid path's losses retained)")):
             s48 = meanday(ak, key, n, "TYP", 48, win_req016)
             s72 = meanday(ak, key, n, "TYP", 72, win_req016)
             k = "el" if ak == "A2" else "eb"
@@ -534,7 +620,7 @@ def main():
                 adds.append("none up to 160 in parallel" if x is None else "%+.1f" % (
                     meanday(ak, key, x, "TYP", hours, win_req016)[k] - meanday(ak, key, n, "TYP", hours, win_req016)[k]))
             P("   %s, %s: 48 h %s; 72 h %s; least addition %s / %s Wh" % (
-                ak, lab, "MET" if s48["ok"] else "NOT MET (%.1f)" % s48["short"], "MET" if s72["ok"] else "NOT MET (%.1f)" % s72["short"],
+                ak, lab, "MET" if s48["ok"] else "NOT MET (%.1f)" % s48["unserved"], "MET" if s72["ok"] else "NOT MET (%.1f)" % s72["unserved"],
                 adds[0], adds[1]))
     # U3's efficiency re-weighted over the 100 W day by the same method (s117's efficiency.py, TI's equations)
     e_st0, e_fe0, _ = TP.chain(D0)
@@ -559,15 +645,15 @@ def main():
         s48 = meanday(ak, "WE", n, "TYP", 48, win_req016, ov_extra={"eta_u3": u3w100})
         base72 = main[(ak, "WE", False, "TYP")]
         P("   %s, U3 re-weighted over the 100 W day (%.4f against WE's %.4f, TI's method at the makers' maxima): unserved %s at 48 h" % (
-            ak, u3w100, u3we, " / ".join("%.1f" % x for x in s48["shorts"])))
-        P("      and %s at 72 h (was %s and %s)" % (" / ".join("%.1f" % x for x in s72["shorts"]),
-                                                 " / ".join("%.1f" % x for x in base72[0]["shorts"]), " / ".join("%.1f" % x for x in base72[1]["shorts"])))
+            ak, u3w100, u3we, " / ".join("%.1f" % x for x in s48["uns"])))
+        P("      and %s at 72 h (was %s and %s)" % (" / ".join("%.1f" % x for x in s72["uns"]),
+                                                 " / ".join("%.1f" % x for x in base72[0]["uns"]), " / ".join("%.1f" % x for x in base72[1]["uns"])))
     # A1's charge setting
     s_a = meanday("A1", "WE", BASE_A1, "TYP", 72, win_req016)
     s_b = meanday("A1", "WE", BASE_A1, "TYP", 72, win_req016, chg_cell=TP.v("chg_a_base") / BASE_A1)
     P("   A1 charged at %.3f A (code 31, %.2f A a cell, the generator's 4 A class) instead of 3.06 A: unserved at 72 h %s Wh" % (
-        TP.v("chg_a_base"), TP.v("chg_a_base") / BASE_A1, " / ".join("%.1f" % x for x in s_b["shorts"])))
-    P("      against %s (06 / 18 UTC)" % " / ".join("%.1f" % x for x in s_a["shorts"]))
+        TP.v("chg_a_base"), TP.v("chg_a_base") / BASE_A1, " / ".join("%.1f" % x for x in s_b["uns"])))
+    P("      against %s (06 / 18 UTC)" % " / ".join("%.1f" % x for x in s_a["uns"]))
     # the steady load each store carries (the discriminating measurement: the loads with no document)
     P("   The steady load at the pack terminals each store carries through the horizon (COMB, TYP, the profile's load replaced):")
     for ak, alab, n in archs:
@@ -625,7 +711,7 @@ def main():
             p_arr = [BUD.panel_w(g, wp_, pr0 * rr) for g in prof0]
             P("     1S%dP %3.0f Wp, ratio %.4f, %.1f Wh a day into the stage: %s first interruption h %s; unserved %s at 48 h, %s at 72 h" % (
                 npar, wp_, rr, sum(min(x, win_req016) for x in p_arr), ak, "/".join("-" if x is None else str(x) for x in s72["stops"]),
-                " / ".join("%.1f" % x for x in s48["shorts"]), " / ".join("%.1f" % x for x in s72["shorts"])))
+                " / ".join("%.1f" % x for x in s48["uns"]), " / ".join("%.1f" % x for x in s72["uns"])))
     P("   (1S4P of the held panel: 25.64 V at -20 C cells and a 40 A entry by a1solar ARRAY.md 5; shown for the energy only)")
     P("")
 
@@ -650,22 +736,26 @@ def main():
             add = ["%+.1f" % (meanday(ak, key, x[i], "TYP", h, win_req016)[kk] - r_[i][kk]) if x[i] is not None else "none"
                    for i, h in enumerate((48, 72))]
             P("   %s %-77s unserved %.1f / %.1f Wh at 48 / 72 h; least addition %s / %s Wh" % (
-                ak, lab, r_[0]["short"], r_[1]["short"], add[0], add[1]))
+                ak, lab, r_[0]["unserved"], r_[1]["unserved"], add[0], add[1]))
     P("   the held front end (R11 10 mOhm) gives %.3f A to U3 at its stacked minimum; the drafted 6.2 mOhm gives 6.733 A; the" % fe_held)
     P("   corrected path's 6.1 A cap (%.1f W) never binds at 100 W: %s" % (6.1 * v_min, "yes" if all(
         main[(ak, "WE", False, b)][h]["rs"][i]["acct"]["cap_hours"] == 0 for ak, _l, _n in archs for b in ("TYP", "WAB") for h in (0, 1) for i in (0, 1)) else "NO"))
     P("")
     # ------------------------------------------------------------------------------------------ 9. the layer 3 headline cases
-    P("9. THE LAYER 3 HEADLINE CASES AT REQ-016'S WINDOW: runtime.out section 2's rows (A2, 4S9P lid, TYP), only the window moved")
+    P("9. THE LAYER 3 HEADLINE CASES: runtime.out section 2's rows (A2, 4S9P lid, TYP), the legacy model metric runtime.out")
+    P("   published against the service ledger, under the Layer 3 case's own inputs (P-03's 400 Wp 2S2P array, the 200 W clip),")
+    P("   then with only the window moved to REQ-016's 100 W (each figure the larger of the two starts, as runtime.out prints it)")
     for key, lab in (("DRAWN", "DRAWN, NOM inputs (runtime.out's AS DRAWN, an upper bound)"), ("NOM", "NOM, CORRECTED PATH, HYPOTHETICAL"),
                      ("WE", "WE, CORRECTED PATH, HYPOTHETICAL, CONDITIONAL")):
         r200 = [meanday("A2", key, LID_A, "TYP", h, WIN_P03) for h in (48, 72)]
         r100 = [meanday("A2", key, LID_A, "TYP", h, win_req016) for h in (48, 72)]
-        P("   %-58s 200 W: stops h %s, %.1f / %.1f Wh unserved at 48 / 72 h" % (
-            lab, "/".join("-" if x is None else str(x) for x in r200[1]["stops"]), r200[0]["short"], r200[1]["short"]))
-        P("   %-58s 100 W: stops h %s, %.1f / %.1f Wh unserved at 48 / 72 h" % (
-            "", "/".join("-" if x is None else str(x) for x in r100[1]["stops"]), r100[0]["short"], r100[1]["short"]))
-    P("   (each figure the larger of the two starts, as runtime.out prints it)")
+        P("   %-58s 200 W: stops h %s; legacy model metric %.1f / %.1f Wh (published), ledger %.1f / %.1f Wh at 48 / 72 h" % (
+            lab, "/".join("-" if x is None else str(x) for x in r200[1]["stops"]), r200[0]["short"], r200[1]["short"],
+            r200[0]["unserved"], r200[1]["unserved"]))
+        P("   %-58s 100 W: stops h %s; legacy model metric %.1f / %.1f Wh, ledger %.1f / %.1f Wh at 48 / 72 h" % (
+            "", "/".join("-" if x is None else str(x) for x in r100[1]["stops"]), r100[0]["short"], r100[1]["short"],
+            r100[0]["unserved"], r100[1]["unserved"]))
+    P("   (the published figures are understated by the stopped-hour double count; they stay as published in Layer 3)")
     P("")
 
     # ------------------------------------------------------------------------------------------ 10. the levers together
@@ -693,8 +783,63 @@ def main():
                 else:
                     hi = mid
             loads.append("%.1f" % lo)
-        P("   %-66s store %.1f Wh; unserved %.1f / %.1f Wh at 48 / 72 h;" % (lab, r_[0]["eb"] + r_[0]["el"], r_[0]["short"], r_[1]["short"]))
+        P("   %-66s store %.1f Wh; unserved %.1f / %.1f Wh at 48 / 72 h;" % (lab, r_[0]["eb"] + r_[0]["el"], r_[0]["unserved"], r_[1]["unserved"]))
         P("   %-66s least addition %s / %s Wh; steady load carried %s / %s W" % ("", add[0], add[1], loads[0], loads[1]))
+    P("")
+    # ------------------------------------------------------------------------------------------ 11. O-2's bound
+    if sha(os.path.join(TOP, LT8705A_PDF[0])) != LT8705A_PDF[1]:
+        refuse(2, "the LT8705A sheet is not the pinned file")
+    gse = EBS.head_equal("v2/ecad/tools/gen_sch_e.py")
+    r8 = float(need(gse, r'r\("R8", "([\d.]+)k 1% \(RFBIN1', "gen_sch_e.py R8").group(1))
+    r9 = float(need(gse, r'r\("R9", "([\d.]+)k 1% \(RFBIN2', "gen_sch_e.py R9").group(1))
+    reqs = open(os.path.join(TOP, "v2/ecad/tools/pcb_requirements.yaml"), encoding="utf-8").read()
+    r016 = " ".join(reqs.split("  - id: REQ-016\n", 1)[1].split("\n  - id: ", 1)[0].split())
+    v_oc = float(need(r016, r"an open-circuit voltage of at most ([\d.]+) V at the panel's coldest", "REQ-016's open-circuit ceiling").group(1))
+    p_win = float(need(r016, r"at most ([\d.]+) W into the stage", "REQ-016's window").group(1))
+    v_hold = (V_FBIN[0] * (1 + r8 * (1 - R_TOL) / (r9 * (1 + R_TOL))), V_FBIN[1] * (1 + r8 / r9),
+              V_FBIN[2] * (1 + r8 * (1 + R_TOL) / (r9 * (1 - R_TOL))))
+    k_max = (V_IMON[2] / V_IMON[1]) / (GM_A7[0] * (1 - R_TOL) ** 2)
+    k_min = (V_IMON[0] / V_IMON[1]) / (GM_A7[2] * (1 + R_TOL) ** 2)
+    i_max = p_win / v_oc
+    i_nom = i_max / k_max
+    i_min = i_nom * k_min
+    p_lo, p_typ = v_hold[0] * i_min, v_hold[1] * i_nom
+    P("11. O-2'S BOUND (check astra-check-l4e2-1, B2): V_in x I_in,max at most %.0f W across every loaded input voltage REQ-016 admits" % p_win)
+    P("   a current limit alone does not bound power: FBIN (8705af p.29) only lowers the current when the input falls below its")
+    P("   set point, so while the input-current loop (p.31) limits, the input rises along the panel's curve toward its open-circuit")
+    P("   voltage. A fixed %.2f A (%.0f W at 17.6 V) is %.1f W at a loaded 20 V and %.1f W at %.0f V" % (
+        p_win / 17.6, p_win, 20.0 * p_win / 17.6, v_oc * p_win / 17.6, v_oc))
+    P("   the envelope: an admitted panel's loaded voltage is below its open-circuit voltage, at most %.0f V at its coldest (REQ-016)," % v_oc)
+    P("   and at least the FBIN hold: R8 %.0fk and R9 %.2fk at 1 %% (NETLIST, gen_sch_e.py) with FBIN %.3f / %.3f / %.3f V (p.4) hold the" % (
+        r8, r9, V_FBIN[0], V_FBIN[1], V_FBIN[2]))
+    P("   input at %.3f / %.3f / %.3f V" % v_hold)
+    P("   the limit's tolerance (p.4 IMON_IN %.3f / %.3f / %.3f V; p.5 A7 %.2f / %.2f / %.2f mmho; the two setting resistors at %.0f %%," % (
+        V_IMON + GM_A7 + (100 * R_TOL,)))
+    P("   ASSUMPTION): the limit lies between %.4f and %.4f times its nominal setting" % (k_min, k_max))
+    P("   the bound: I_in,max = %.0f W / %.0f V = %.3f A at the top of the tolerance, so the nominal setting at most %.3f A and the" % (
+        p_win, v_oc, i_max, i_nom))
+    P("   limit at least %.3f A; V_in x I_in,max = %.1f V x %.3f A = %.1f W at the highest loaded voltage, and less at every lower one" % (
+        i_min, v_oc, i_max, v_oc * i_max))
+    P("   its consequence: in an hour the limit acts, the stage takes between the hold point's %.1f W (lower edge: %.3f V x %.3f A)" % (
+        p_lo, v_hold[0], i_min))
+    P("   and %.0f W; at the nominal hold and setting %.1f W (%.3f V x %.3f A); where between is the admitted panel's own curve," % (
+        p_win, p_typ, v_hold[1], i_nom))
+    P("   INCONCLUSIVE until O-1 pins it. The fault threshold sits at IMON_IN %.2f V typical (p.5), %.2f times the limit (p.31)" % (
+        1.61, 1.61 / V_IMON[1]))
+    P("   The replay with the stage window at the lower edge and at the nominal hold point (CORRECTED, WE, TYP; a separate row, not")
+    P("   the 100 W screening case, and still on the non-compliant stimulus):")
+    o2rows = {}
+    for wlab, win_ in (("lower edge %.1f W" % p_lo, p_lo), ("nominal hold %.1f W" % p_typ, p_typ), ("screening case %.0f W" % p_win, p_win)):
+        for ak, alab, n in archs:
+            r_ = [meanday(ak, "WE", n, "TYP", h, win_) for h in (48, 72)]
+            x = [least(ak, "WE", "TYP", h, win_, 1.0, 160.0, 34) for h in (48, 72)]
+            kk = "el" if ak == "A2" else "eb"
+            add = ["%+.1f" % (meanday(ak, "WE", x[i], "TYP", h, win_)[kk] - r_[i][kk]) if x[i] is not None else "none"
+                   for i, h in enumerate((48, 72))]
+            o2rows[(wlab, ak)] = (r_, add)
+            P("     %-22s %s: first interruption h %s; unserved %s at 48 h, %s at 72 h; least addition %s / %s Wh" % (
+                wlab, ak, "/".join("-" if v_ is None else str(v_) for v_ in r_[1]["stops"]), " / ".join("%.1f" % v_ for v_ in r_[0]["uns"]),
+                " / ".join("%.1f" % v_ for v_ in r_[1]["uns"]), add[0], add[1]))
     P("")
     P("END. Each line is the model's arithmetic; nothing is measured. No result here is demonstrated capability: the circuit as")
     P("drawn fails; the corrected path is HYPOTHETICAL and CONDITIONAL on three undocumented efficiencies; the 100 W results rest")
