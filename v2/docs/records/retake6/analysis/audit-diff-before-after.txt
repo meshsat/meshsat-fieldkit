@@ -354,9 +354,9 @@ ROWS NOT CURRENT AFTER, BY CAUSE
         B  IMP-001  ROUTED_BOARD    INCONCLUSIVE impedance_check.py     the coverage map gives this rule no deciding verification
         D  IMP-001  ROUTED_BOARD    INCONCLUSIVE impedance_check.py     the coverage map gives this rule no deciding verification
     3  AWAITING_REVALIDATION (TEMP_INPUT)
-        C  DOC-002  RELEASE_PACKAGE PASS         doc_provenance.py,ledger_verify.py doc_provenance_c judged /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/3744628d-5552-4a03-830, a temporary directory and not this tree
-        P  DOC-002  RELEASE_PACKAGE PASS         doc_provenance.py,ledger_verify.py doc_provenance_p judged /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/3744628d-5552-4a03-830, a temporary directory and not this tree
-        E5 DOC-002  RELEASE_PACKAGE PASS         doc_provenance.py,ledger_verify.py doc_provenance_e5 judged /tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/3744628d-5552-4a03-830, a temporary directory and not this tree
+        C  DOC-002  RELEASE_PACKAGE PASS         doc_provenance.py,ledger_verify.py doc_provenance_c judged /tmp/<scratchpad>, a temporary directory and not this tree
+        P  DOC-002  RELEASE_PACKAGE PASS         doc_provenance.py,ledger_verify.py doc_provenance_p judged /tmp/<scratchpad>, a temporary directory and not this tree
+        E5 DOC-002  RELEASE_PACKAGE PASS         doc_provenance.py,ledger_verify.py doc_provenance_e5 judged /tmp/<scratchpad>, a temporary directory and not this tree
     1  NO_EVIDENCE (NOT_APPLICABLE)
         A  CLK-001  SCHEMATIC       NOT_APPLICABLE clock_check.py         this board carries no crystal, so CLK-001 has nothing on it to judge
     1  NO_EVIDENCE (OPEN)

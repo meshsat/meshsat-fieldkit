@@ -1,0 +1,373 @@
+{
+ "H1": {
+  "commit": "a256fb5e48fa2b34c89ddd18d71824ae0d5ff678",
+  "source": "8a19fe295f4f77b67366854d1006e1feff228fef",
+  "subject": "docs(handover): H1-R1, the redaction reissue of H1: 5 file(s) carry neutral tokens where H1 carried private paths or host names, and START-HERE names what it supersedes [MESHSAT-1357]",
+  "changed": [
+   [
+    "v2/docs/MESHSAT-709-geometry-appendix.md",
+    "5e942dd41e9e4ed0",
+    "852736b661a805e3",
+    [
+     {
+      "line": 3111,
+      "class": "runner path prefix",
+      "token": "<runner home>",
+      "note": ""
+     },
+     {
+      "line": 3120,
+      "class": "runner path prefix",
+      "token": "<runner home>",
+      "note": ""
+     },
+     {
+      "line": 3120,
+      "class": "runner path prefix",
+      "token": "<runner home>",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/docs/diagrams/README.md",
+    "c0ade5c7889b3786",
+    "f6e344fd96cf89ae",
+    [
+     {
+      "line": 67,
+      "class": "host name",
+      "token": "the runner",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/docs/respin-footprints-2026-09-04.md",
+    "469a42d3360979dd",
+    "9b1a295133300fe2",
+    [
+     {
+      "line": 3,
+      "class": "laptop host name",
+      "token": "on the laptop",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json",
+    "c2b8c4d55fd78f87",
+    "9787f6767d5428d7",
+    [
+     {
+      "line": 13,
+      "class": "session temp path",
+      "token": "/tmp/<scratchpad>",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json",
+    "9691276029e09fab",
+    "8ef5495682e031a8",
+    [
+     {
+      "line": 14,
+      "class": "runner path prefix",
+      "token": "<repo>",
+      "note": ""
+     }
+    ]
+   ]
+  ],
+  "left": [
+   [
+    "v2/docs/feasibility/fab/out/pulldowns.txt",
+    "a reading FAILOVER-FABRIC.md cites by sha256; the requirements registry binds that page by sha, so a re-pin would change the baselined registry"
+   ],
+   [
+    "v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md",
+    "a filed review record of layer 1 whose sha256/16 the release records of H2 and H3, the H2 and H3 handover counts, the H3 coherence check, two later reviews and a candidate patch cite"
+   ]
+  ]
+ },
+ "H1.1": {
+  "commit": "8dfdcb6217a045e09f2d0ad6d2a938c1fccc8b81",
+  "source": "98ce9f83269ef61d21b317d8eabbdf35a878923e",
+  "subject": "docs(handover): H1.1-R1, the redaction reissue of H1.1: 5 file(s) carry neutral tokens where H1.1 carried private paths or host names, and START-HERE names what it supersedes [MESHSAT-1357]",
+  "changed": [
+   [
+    "v2/docs/MESHSAT-709-geometry-appendix.md",
+    "5e942dd41e9e4ed0",
+    "852736b661a805e3",
+    [
+     {
+      "line": 3111,
+      "class": "runner path prefix",
+      "token": "<runner home>",
+      "note": ""
+     },
+     {
+      "line": 3120,
+      "class": "runner path prefix",
+      "token": "<runner home>",
+      "note": ""
+     },
+     {
+      "line": 3120,
+      "class": "runner path prefix",
+      "token": "<runner home>",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/docs/diagrams/README.md",
+    "c0ade5c7889b3786",
+    "f6e344fd96cf89ae",
+    [
+     {
+      "line": 67,
+      "class": "host name",
+      "token": "the runner",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/docs/respin-footprints-2026-09-04.md",
+    "469a42d3360979dd",
+    "9b1a295133300fe2",
+    [
+     {
+      "line": 3,
+      "class": "laptop host name",
+      "token": "on the laptop",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json",
+    "c2b8c4d55fd78f87",
+    "9787f6767d5428d7",
+    [
+     {
+      "line": 13,
+      "class": "session temp path",
+      "token": "/tmp/<scratchpad>",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json",
+    "9691276029e09fab",
+    "8ef5495682e031a8",
+    [
+     {
+      "line": 14,
+      "class": "runner path prefix",
+      "token": "<repo>",
+      "note": ""
+     }
+    ]
+   ]
+  ],
+  "left": [
+   [
+    "v2/docs/feasibility/fab/out/pulldowns.txt",
+    "a reading FAILOVER-FABRIC.md cites by sha256; the requirements registry binds that page by sha, so a re-pin would change the baselined registry"
+   ],
+   [
+    "v2/docs/handover/candidates/hc3.patch",
+    "the H1.1 candidate patch as it was reviewed; candidates/README.md pins its sha256"
+   ],
+   [
+    "v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md",
+    "a filed review record of layer 1 whose sha256/16 the release records of H2 and H3, the H2 and H3 handover counts, the H3 coherence check, two later reviews and a candidate patch cite"
+   ]
+  ]
+ },
+ "H2": {
+  "commit": "b290170750bf26fb04a12aad0fbd01a38fa7e1d7",
+  "source": "b89b50b4421fd882967b390a09c21dbd307ca98e",
+  "subject": "docs(handover): H2-R1, the redaction reissue of H2: 4 file(s) carry neutral tokens where H2 carried private paths or host names, and START-HERE names what it supersedes [MESHSAT-1357]",
+  "changed": [
+   [
+    "v2/docs/MESHSAT-709-geometry-appendix.md",
+    "5e942dd41e9e4ed0",
+    "852736b661a805e3",
+    [
+     {
+      "line": 3111,
+      "class": "runner path prefix",
+      "token": "<runner home>",
+      "note": ""
+     },
+     {
+      "line": 3120,
+      "class": "runner path prefix",
+      "token": "<runner home>",
+      "note": ""
+     },
+     {
+      "line": 3120,
+      "class": "runner path prefix",
+      "token": "<runner home>",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/docs/respin-footprints-2026-09-04.md",
+    "469a42d3360979dd",
+    "9b1a295133300fe2",
+    [
+     {
+      "line": 3,
+      "class": "laptop host name",
+      "token": "on the laptop",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json",
+    "c2b8c4d55fd78f87",
+    "9787f6767d5428d7",
+    [
+     {
+      "line": 13,
+      "class": "session temp path",
+      "token": "/tmp/<scratchpad>",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json",
+    "9691276029e09fab",
+    "8ef5495682e031a8",
+    [
+     {
+      "line": 14,
+      "class": "runner path prefix",
+      "token": "<repo>",
+      "note": ""
+     }
+    ]
+   ]
+  ],
+  "left": [
+   [
+    "v2/docs/feasibility/fab/out/pulldowns.txt",
+    "a reading FAILOVER-FABRIC.md cites by sha256; the requirements registry binds that page by sha, so a re-pin would change the baselined registry"
+   ],
+   [
+    "v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md",
+    "a filed review record of layer 1 whose sha256/16 the release records of H2 and H3, the H2 and H3 handover counts, the H3 coherence check, two later reviews and a candidate patch cite"
+   ]
+  ]
+ },
+ "H3": {
+  "commit": "329fcfa64bdf27b86175ecdced361d954cab48e4",
+  "source": "75ad6ee5bc98d7213b9a61d1f64cfa7ea19cc669",
+  "subject": "docs(handover): H3-R1, the redaction reissue of H3: 5 file(s) carry neutral tokens where H3 carried private paths or host names, and START-HERE names what it supersedes [MESHSAT-1357]",
+  "changed": [
+   [
+    "v2/docs/EXECUTION-PLAN.md",
+    "b5ca0386d7ee5712",
+    "e768e25cfc0555e4",
+    [
+     {
+      "line": 291,
+      "class": "runner path prefix",
+      "token": "<worktrees>",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/docs/MESHSAT-709-geometry-appendix.md",
+    "5e942dd41e9e4ed0",
+    "852736b661a805e3",
+    [
+     {
+      "line": 3111,
+      "class": "runner path prefix",
+      "token": "<runner home>",
+      "note": ""
+     },
+     {
+      "line": 3120,
+      "class": "runner path prefix",
+      "token": "<runner home>",
+      "note": ""
+     },
+     {
+      "line": 3120,
+      "class": "runner path prefix",
+      "token": "<runner home>",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/docs/respin-footprints-2026-09-04.md",
+    "469a42d3360979dd",
+    "9b1a295133300fe2",
+    [
+     {
+      "line": 3,
+      "class": "laptop host name",
+      "token": "on the laptop",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/ecad/pcb-e5-block/routed/doc_provenance_e5.verdict.json",
+    "c2b8c4d55fd78f87",
+    "9787f6767d5428d7",
+    [
+     {
+      "line": 13,
+      "class": "session temp path",
+      "token": "/tmp/<scratchpad>",
+      "note": ""
+     }
+    ]
+   ],
+   [
+    "v2/ecad/pcb-e5-block/routed/ledger_verify.verdict.json",
+    "9691276029e09fab",
+    "8ef5495682e031a8",
+    [
+     {
+      "line": 14,
+      "class": "runner path prefix",
+      "token": "<repo>",
+      "note": ""
+     }
+    ]
+   ]
+  ],
+  "left": [
+   [
+    "v2/docs/feasibility/fab/out/pulldowns.txt",
+    "a reading FAILOVER-FABRIC.md cites by sha256; the requirements registry binds that page by sha, so a re-pin would change the baselined registry"
+   ],
+   [
+    "v2/docs/records/handover/H2-USABILITY-CHECK.md",
+    "a filed check whose sha256 records/README.md pins"
+   ],
+   [
+    "v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md",
+    "a filed review record of layer 1 whose sha256/16 the release records of H2 and H3, the H2 and H3 handover counts, the H3 coherence check, two later reviews and a candidate patch cite"
+   ]
+  ]
+ }
+}

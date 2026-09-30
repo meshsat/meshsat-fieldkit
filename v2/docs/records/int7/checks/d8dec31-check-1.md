@@ -1,6 +1,6 @@
 # Fresh check of stream d8dec31 at f8e61f05 (AI review), 28 September 2026 17:05 CEST
 
-This is an AI review (checker chk-d8dec31), not a qualified engineering review. Branch `fnd/d8dec31` at `f8e61f05` in `/home/claude-runner/worktrees/meshsat-fieldkit/d8dec31`, read-only; the worktree is clean at the end (I removed the one untracked file a scratch run of `apply_registry_d31.py` had written beside itself, see M5). Scratch: `/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-d8dec31/`.
+This is an AI review (checker chk-d8dec31), not a qualified engineering review. Branch `fnd/d8dec31` at `f8e61f05` in `<worktrees>/d8dec31`, read-only; the worktree is clean at the end (I removed the one untracked file a scratch run of `apply_registry_d31.py` had written beside itself, see M5). Scratch: `<worktrees>/_scratch/chk-d8dec31/`.
 
 **mergeable: yes** for the declaration, tool, registry and hold halves. Nothing false, unsafe or untraceable found; every claimed number reproduced. **The four circuit scripts are ready for their generator owners** (each applies on a copy of this branch's generator and of int7's identical generator, parses, is refused a second time, and the two E scripts compose in either order), with M6 and M7 as notes for the owners. **S-88's closure: not yet**, one regression owed (B1) plus the box re-take of TRN-001 on A, which is the integrator's.
 
@@ -31,3 +31,6 @@ This is an AI review (checker chk-d8dec31), not a qualified engineering review. 
 9. No U+2014/U+2013 in any added line; "AI review" in the review's title and first paragraph and in the README; prototype framing in line 5; only one PROTECTED AS DRAWN row (PD_CC1, PD_CC2) beyond the definition; "protected" wording beyond it only as M2.
 
 **not_done:** no generator or full suite run (no KiCad on this host, by the rules); the 17 CANNOT BE JUDGED rows checked only for the absence of a figure in the arrestor, SA868 and RA30H1317M1 sheets, not for what a test would show; walk-*.txt not re-read line by line beyond the nets named above; ST DS4260 section 2.3 and Nexperia section 10 items other than 3, 4 and 7 not opened; the TPS37 "byte-identical to r4a's draft" claim not verifiable (that worktree is gone); no check for a schema validator of `boards/*.json` that might object to the new `internal_ports` key beyond the tests that ran.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

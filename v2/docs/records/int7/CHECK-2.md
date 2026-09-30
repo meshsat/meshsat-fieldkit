@@ -6,7 +6,7 @@
 
 This is an AI review by a checker that wrote none of the candidate and did not write the first check. It is not a qualified engineering review and replaces none. Prototype design: no V2 board has been built, ordered or measured; everything below is a reading of files.
 
-Checked 28 September 2026, 18:00 to 18:16 CEST, in `/home/claude-runner/worktrees/meshsat-fieldkit/int7` (read only; HEAD `85ad11933058003b084f1de8a99f99ef58f31653`; `git status` empty before and after; no file in the worktree carries a modification time after 18:00:50). Scratch scripts are in `/home/claude-runner/worktrees/meshsat-fieldkit/_scratch/chk-int7-2/`.
+Checked 28 September 2026, 18:00 to 18:16 CEST, in `<worktrees>/int7` (read only; HEAD `85ad11933058003b084f1de8a99f99ef58f31653`; `git status` empty before and after; no file in the worktree carries a modification time after 18:00:50). Scratch scripts are in `<worktrees>/_scratch/chk-int7-2/`.
 
 ```
 mergeable: no
@@ -103,3 +103,6 @@ One blocking finding, in registry text. B-2 and B-3 of the first check are answe
 - **The 252 gitignored files:** read from the manifest only.
 - **SC-67's voltages and S-91's 28 findings:** not recalculated or re-counted.
 - **The d8dec31 and d6rel check results:** verdict lines read only.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 2 paths in this check are written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

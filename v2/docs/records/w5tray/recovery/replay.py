@@ -3,8 +3,8 @@ Every python heredoc block of the listed entries is run with the old worktree pa
 import json, re, os, subprocess, sys, hashlib
 SP = os.path.dirname(os.path.abspath(__file__))
 RP = os.path.join(SP, "rp")
-OLDW = "/tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/3744628d-5552-4a03-8300-e043b6cdc9c8/scratchpad/wt/w5tray"
 e = json.load(open(os.path.join(SP, "a1.json")))
+OLDW = re.search(r"/tmp/[^\s'\"]+/scratchpad/wt/w5tray", "\n".join(x["cmd"] for x in e)).group(0)  # the lost worktree, read from the transcript
 def blocks(cmd):
     """(cwd relative to W, python source) for each `python3 - <<'EOF'` block, cwd from the last `cd $W...` before it."""
     out = []

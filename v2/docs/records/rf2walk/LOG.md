@@ -1,6 +1,6 @@
 # Stream rf2walk, running log (MESHSAT-1357, RF-002 on set 12)
 
-Newest last. Times CEST, read from `date`. Worktree `/home/claude-runner/worktrees/meshsat-fieldkit/rf2walk`, branch
+Newest last. Times CEST, read from `date`. Worktree `<worktrees>/rf2walk`, branch
 `fnd/rf2walk` from `fnd/int13` at `e41df395` (set 12: stream d4emcon's `apply_b_d4e.py` and `apply_c_d4e_f1.py` applied,
 boards B and C regenerated, `readback_d4e.py` holding on both). Author: stream d4emcon's author. Prototype framing: every
 reading is of a committed netlist or a maker's document; nothing is built.

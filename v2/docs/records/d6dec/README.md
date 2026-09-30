@@ -1,7 +1,7 @@
 # Stream d6dec: decision 42's tool side, T1 to T10 (FEA-006), 27 to 29 September 2026
 
 MESHSAT-1357. Prototype design: nothing has been built, ordered or measured. Branch `fnd/d6dec`, worktree
-`/home/claude-runner/worktrees/meshsat-fieldkit/d6dec`. The first author wrote the class rules, the fan selection, the
+`<worktrees>/d6dec`. The first author wrote the class rules, the fan selection, the
 seat search, the escape cost and the gate's class reading (commits 0f24f750 to 3c98a88e, 27 and 28 September); the
 resumed author (29 September, brief `_runs/claude/d6dec/20260929T0032/BRIEF.md`) checkpointed the two files left
 uncommitted, merged main 9147db5d (sets 6 to 8) with `merge --no-ff`, and finished the rest listed below. The running

@@ -6,10 +6,10 @@ Reads (parsed, never grepped): both intent files and pcb_interfaces.yaml. Maker 
 held documents with their page (the pdftotext page of the held file, and the printed page where it differs).
 Writes nothing but standard output.
 """
-import hashlib, json, sys
+import hashlib, json, os, sys
 import yaml
 
-W = "/home/claude-runner/worktrees/meshsat-fieldkit/cx1"
+W = os.environ.get("CX1_WORKTREE", os.path.join(os.environ.get("WORKTREES", os.path.expanduser("~/worktrees/meshsat-fieldkit")), "cx1"))
 A_INTENT = W + "/v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json"
 B_INTENT = W + "/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json"
 D_INTENT = W + "/v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json"
@@ -147,3 +147,5 @@ for n in (16, 18):
     d_mm = 0.127 * 92 ** ((36 - n) / 39.0)
     print("  ASTM B258 formula (not held): AWG %d diameter %.3f mm, area %.3f mm2" % (n, d_mm, 3.14159265 * d_mm ** 2 / 4))
 print("  the contract's budget: 2 percent of 5.1 V = %.0f mV, shares A 0.5 point + B 1.5 points = 2.0 points: NO share for the lead and its four contacts" % (0.02 * V_SLOT * 1e3))
+
+# Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is derived from an environment variable with a default (`$CX1_WORKTREE`) under the owner's rule that public files carry no internal host names, user paths or addresses; v2/docs/records/scrub/MAP.md lists each by line and token class. No other byte of the check changed but the import of os the derivation needs; the check as filed is in the repository's history at commit 8fec0733 and before.

@@ -100,7 +100,7 @@ the +5V_DEV peak left to the session's decision)
 
 ## What I ran, and its exact result lines
 
-- `env -C /home/claude-runner/worktrees/meshsat-fieldkit/cx1 python3 v2/docs/records/cx1/if_ab_power.py > rerun2.out`:
+- `env -C <worktrees>/cx1 python3 v2/docs/records/cx1/if_ab_power.py > rerun2.out`:
   `rerun2 exit 0; stderr bytes 0`; `cmp` with the filed .out: `BYTE-FOR-BYTE IDENTICAL`; sha256 of both
   `d9fa215b08b8928641a02394449d3e80ca4bdf41c894321b5a7dbdeb9156545a`; `29914 .../if_ab_power.out`; write-call grep of
   the script: `grep exit 1 (1 = none)`; worktree status count `0`.
@@ -131,3 +131,6 @@ the +5V_DEV peak left to the session's decision)
   correction states (the one slip: :119 for the +5V_DEV call, which is line 120).
 - Dash scan (U+2014, U+2013) of the five record files: `dash grep exit 1 (1 = none)`. `git show --stat 8d9dec44`:
   five files, 644 insertions, 469 deletions, author Kyriakos Papadopoulos, no trailer.
+
+---
+Filing note (scrub, 30 September 2026, MESHSAT-1357): 1 path in this check is written as neutral tokens (`<worktrees>`) under the owner's rule that public files carry no internal host names, user paths or addresses; `v2/docs/records/scrub/MAP.md` lists each by line and token class. No other byte of the check changed; the check as filed is in the repository's history at commit `8fec0733` and before.

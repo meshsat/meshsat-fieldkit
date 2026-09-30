@@ -304,7 +304,7 @@ No branch was deleted. The worktree registrations were archived and read back be
 - Candidate: this commit line (`fnd/h3` on `main` `6ec37197`), to be fast-forwarded to `main` once the suite has run
   on its exact commit. Set 6: `fnd/r8int6` `73ae2f21`. No uncommitted work is of value: every worker commits on its
   own branch at least every 30 minutes.
-- Worktrees: `/home/claude-runner/worktrees/meshsat-fieldkit/<name>`, one per branch above (outside `/tmp`). Worker
+- Worktrees: `<worktrees>/<name>`, one per branch above (outside `/tmp`). Worker
   branches are never pushed, because the mirror publishes every branch; an incremental bundle of every branch is
   copied to the owner's laptop after every integration and hourly (`~/meshsat-fieldkit-bundles/`, proven by
   rebuilding every ref from it there).

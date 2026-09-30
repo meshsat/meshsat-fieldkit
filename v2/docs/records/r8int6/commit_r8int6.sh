@@ -9,7 +9,7 @@ cd "$W"
 git add -A v2/ecad v2/docs v2/vendor
 if git status --short | grep -v "^[MADR] "; then echo "commit_r8int6: unstaged or untracked files left"; exit 1; fi
 SUBJ=$(head -1 "$R/msg/$s.txt")
-git diff --cached | bash /home/claude-runner/gitlab/products/meshsat/scripts/pre-commit-check.sh meshsat-fieldkit --msg "$SUBJ" | tail -1
+git diff --cached | bash "${PRECOMMIT_CHECK:-$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/../scripts/pre-commit-check.sh}" meshsat-fieldkit --msg "$SUBJ" | tail -1
 if git status --short | grep "^[MADR]" | grep -v -E "^[MADR]  v2/(ecad|docs|vendor)/"; then echo "commit_r8int6: staged outside v2"; exit 1; fi
 git -c user.name="Kyriakos Papadopoulos" -c user.email="ncpjfuzl@mxmx.email" commit -q -F "$R/msg/$s.txt"
 git log --oneline -1 | cat

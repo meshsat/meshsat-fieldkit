@@ -3,9 +3,9 @@
 # The clone comes from the box's /root/r8int6/repo (it holds 73ae2f21) plus the bundle; nothing is fetched INTO that
 # repository, so no other stream's clone sees this branch. Run from anywhere; no cd.
 set -eu
-W=/home/claude-runner/worktrees/meshsat-fieldkit/d6dec
-B=/home/claude-runner/worktrees/meshsat-fieldkit/_bin
-S=${SCRATCH:-/tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/97d77a0f-0370-4f6d-8c22-b95e41e6e4a1/scratchpad}/bx
+W=${WORKTREES:-$HOME/worktrees/meshsat-fieldkit}/d6dec
+B=${BOX_BIN:-${WORKTREES:-$HOME/worktrees/meshsat-fieldkit}/_bin}
+S=${SCRATCH:-${TMPDIR:-/tmp}/d6dec-to-box}/bx
 N=$1; mkdir -p "$S"
 H=$(git -C $W rev-parse HEAD)
 git -C $W bundle create "$S/d6dec-$N.bundle" 73ae2f21..fnd/d6dec >/dev/null 2>&1

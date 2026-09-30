@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="E">
   <design>
-    <source>/home/kyriakosp/Documents/Team Shared Root/Projects/MeshSat/Field Kit/ECAD/vendor/aioc/k1-aioc.kicad_sch</source>
+    <source>&lt;laptop home&gt;/Documents/Team Shared Root/Projects/MeshSat/Field Kit/ECAD/vendor/aioc/k1-aioc.kicad_sch</source>
     <date>2026-09-02T12:16:19+0200</date>
     <tool>Eeschema 9.0.9-9.0.9~ubuntu24.04.1</tool>
     <sheet number="1" name="/" tstamps="/">
