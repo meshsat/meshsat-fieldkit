@@ -1,0 +1,9 @@
+nominal 20.0000 V
+printed only (VREF, 1 %): 19.3255 to 20.6937 V
+envelope (dT 45.00 K): 19.1458 to 20.8871 V
+M1 day (dT 28.91 K): 19.2050 to 20.8226 V
+amplifier term 7.52 mV, IBIAS term 6.00 mV
+envelope + a 20 K board rise (dT 65.0 K): 19.0724 V min
+envelope + the endurance limits (+-1 % more, opposite): 18.7818 to 21.2926 V
+R11 10.0 mOhm: ISNS loop 4.300 / 5.000 / 5.700 A
+R11 6.2 mOhm: ISNS loop 6.935 / 8.065 / 9.194 A

@@ -1,0 +1,108 @@
+CHECK-2 RUNS (checker's balance). drain 0.0250 W; lid 13.23 C; ratios 40/0 TYP 0.9903 WAB 0.9103
+
+1. WE RESTATED AND ITS NEIGHBOURS ON 40/0 (TYP ; WAB)
+   4S9P NOM   NOT MET 165.7                        ; NOT MET 172.6
+   4S9P WE    NOT MET 169.2                        ; NOT MET 176.1
+   4S9P WE60  NOT MET 169.2                        ; NOT MET 176.1
+   4S9P WEL   NOT MET 169.2                        ; NOT MET 177.2
+   4S9P WA    NOT MET 192.1                        ; NOT MET 246.8
+   4S14P NOM   93.7 (base 49.0, lid 44.6)           ; 75.7 (base 48.2, lid 27.5)
+   4S14P WE    44.0 (base 44.0, lid 0.0)            ; NOT MET 10.7
+   4S14P WE60  23.9 (base 23.9, lid 0.0)            ; NOT MET 30.9
+   4S14P WEL   20.9 (base 20.9, lid 0.0)            ; NOT MET 33.9
+   4S14P WA    NOT MET 71.8                         ; NOT MET 121.9
+   4S15P NOM   125.2 (base 57.1, lid 68.1)          ; 106.8 (base 56.3, lid 50.5)
+   4S15P WE    74.4 (base 52.4, lid 19.5)           ; 19.6 (base 19.6, lid 0.0)
+   4S15P WE60  54.2 (base 48.9, lid 5.3)            ; NOT MET 0.6
+   4S15P WEL   51.1 (base 48.0, lid 3.1)            ; NOT MET 3.6
+   4S15P WA    NOT MET 41.4                         ; NOT MET 93.2
+
+2. ONE AT A TIME FROM WE, 40/0: change in the lowest combined store (NOT MET = minus unserved)
+   4S14P TYP (44.0 (base 44.0, lid 0.0)): charge 0.90 -55.7; bus 18.782 (U3 0.9735) -23.2; bus 19.101 (U3 0.9733) -2.9; stage 0.90 -21.8; front end 0.90 -21.8; U3 6.0 A (0.9734) -20.1; U3B 0.972 +6.8; no drain +1.5; V(AK) 20 mV +0.7; loops nominal +5.0; WAB build -54.8
+   4S14P WAB (NOT MET 10.7): charge 0.90 -53.1; bus 18.782 (U3 0.9735) -23.2; bus 19.101 (U3 0.9733) -2.9; stage 0.90 -20.1; front end 0.90 -20.1; U3 6.0 A (0.9734) -20.1; U3B 0.972 +6.5; no drain +1.5; V(AK) 20 mV +0.7; loops nominal +4.7
+   4S15P TYP (74.4 (base 52.4, lid 19.5)): charge 0.90 -55.7; bus 18.782 (U3 0.9735) -23.3; bus 19.101 (U3 0.9733) -2.9; stage 0.90 -22.0; front end 0.90 -22.0; U3 6.0 A (0.9734) -20.2; U3B 0.972 +6.9; no drain +1.5; V(AK) 20 mV +0.7; loops nominal +5.2; WAB build -54.8
+   4S15P WAB (19.6 (base 19.6, lid 0.0)): charge 0.90 -53.1; bus 18.782 (U3 0.9735) -23.2; bus 19.101 (U3 0.9733) -2.9; stage 0.90 -20.1; front end 0.90 -20.1; U3 6.0 A (0.9734) -20.1; U3B 0.972 +6.6; no drain +1.5; V(AK) 20 mV +0.7; loops nominal +5.0
+
+3. THRESHOLDS FROM WE (each alone; both builds pass the line)
+   4S15P 50/+15 COMB: charge 0.949; stage 0.929; U3 limit (eta held) 6.093
+   4S15P 40/+0 COMB: charge 0.936; stage 0.907; U3 limit (eta held) 6.025
+   4S15P 40/+0 EACH: charge 0.981; stage 0.980; U3 limit (eta held) 6.264
+   4S15P 30/+0 COMB: charge 0.941; stage 0.917; U3 limit (eta held) 6.054
+   4S14P 40/+0 COMB: charge 0.964; stage 0.952; U3 limit (eta held) 6.173
+   4S14P 50/+0 COMB: charge 0.971; stage 0.963; U3 limit (eta held) 6.207
+   4S14P 40/+0 EACH: charge none; stage none; U3 limit (eta held) none
+
+4. THE WE BAND ON COMB AND EACH, 4S15P and 4S14P (B = both builds pass)
+   4S14P COMB
+       0     .    .    .    -    .    .    .
+      10     -    -    -    -    -    -    -
+      20     -    -    -    -    -    -    -
+      30     -    -    -    -    -    -    -
+      40     -    -    -    -    -    -    -
+      50     -    -    -    -    -    -    -
+      60     -    -    -    -    -    -    -
+      70     -    -    -    -    -    -    -
+   4S14P EACH
+       0     .    .    .    -    .    .    .
+      10     -    -    -    -    -    -    -
+      20     -    -    -    -    -    -    -
+      30     -    -    -    -    -    -    -
+      40     -    -    -    -    -    -    -
+      50     -    -    -    -    -    -    -
+      60     -    -    -    -    -    -    -
+      70     -    -    -    -    -    -    -
+   4S15P COMB
+       0     .    .    .    -    .    .    .
+      10     -    -    -    -    -    -    -
+      20     -    -    -    -    -    -    -
+      30     -    -    -    B    B    -    -
+      40     -    -    -    B    B    -    -
+      50     -    -    -    B    B    -    -
+      60     -    -    -    -    -    -    -
+      70     -    -    -    -    -    -    -
+   4S15P EACH
+       0     .    .    .    -    .    .    .
+      10     -    -    -    -    -    -    -
+      20     -    -    -    -    -    -    -
+      30     -    -    -    -    -    -    -
+      40     -    -    -    -    -    -    -
+      50     -    -    -    -    -    -    -
+      60     -    -    -    -    -    -    -
+      70     -    -    -    -    -    -    -
+
+5. WEATHER: 864 windows; the last window ends 2020-09-30 17:11 UTC
+   4S9P WE TYP           STOP   0 (0.0 %)  COMB   0 (0.0 %)  EACH   0 (0.0 %)
+   4S9P WE WAB           STOP   0 (0.0 %)  COMB   0 (0.0 %)  EACH   0 (0.0 %)
+   4S9P NOM TYP          STOP   0 (0.0 %)  COMB   0 (0.0 %)  EACH   0 (0.0 %)
+   4S9P WE-MKR TYP       STOP   0 (0.0 %)  COMB   0 (0.0 %)  EACH   0 (0.0 %)
+   4S14P WE TYP           STOP 166 (19.2 %)  COMB 164 (19.0 %)  EACH 115 (13.3 %)
+   4S14P WE WAB           STOP 121 (14.0 %)  COMB 114 (13.2 %)  EACH  85 (9.8 %)
+   4S14P NOM TYP          STOP 207 (24.0 %)  COMB 200 (23.1 %)  EACH 145 (16.8 %)
+   4S14P WE-LO TYP        STOP 118 (13.7 %)  COMB 114 (13.2 %)  EACH  79 (9.1 %)
+   4S14P WE-MKR TYP       STOP 215 (24.9 %)  COMB 212 (24.5 %)  EACH 147 (17.0 %)
+   4S14P WE TYP link off  STOP 397 (45.9 %)  COMB 394 (45.6 %)  EACH 349 (40.4 %)
+   4S14P WE TYP 600 Wp    STOP 359 (41.6 %)  COMB 354 (41.0 %)  EACH 260 (30.1 %)
+   4S15P WE TYP           STOP 190 (22.0 %)  COMB 186 (21.5 %)  EACH 141 (16.3 %)
+   4S15P WE WAB           STOP 152 (17.6 %)  COMB 146 (16.9 %)  EACH 108 (12.5 %)
+   4S15P NOM TYP          STOP 235 (27.2 %)  COMB 232 (26.9 %)  EACH 177 (20.5 %)
+   4S15P WE-LO TYP        STOP 139 (16.1 %)  COMB 136 (15.7 %)  EACH 104 (12.0 %)
+   4S15P WE-MKR TYP       STOP 255 (29.5 %)  COMB 252 (29.2 %)  EACH 188 (21.8 %)
+   4S15P WE TYP link off  STOP 423 (49.0 %)  COMB 418 (48.4 %)  EACH 388 (44.9 %)
+   4S15P WE TYP 600 Wp    STOP 381 (44.1 %)  COMB 376 (43.5 %)  EACH 315 (36.5 %)
+   mean-day margin 4S14P link off: TYP 175.4 (base 73.6, lid 101.8) ; WAB 172.6 (base 72.8, lid 99.8)
+   mean-day margin 4S14P 600 Wp: TYP 109.3 (base 54.0, lid 55.3) ; WAB 105.1 (base 52.8, lid 52.4)
+   mean-day margin 4S15P link off: TYP 206.9 (base 80.5, lid 126.4) ; WAB 204.1 (base 79.7, lid 124.4)
+   mean-day margin 4S15P 600 Wp: TYP 140.8 (base 61.8, lid 78.9) ; WAB 136.6 (base 60.6, lid 75.9)
+
+6. SIZING: least lid parallel count per window passing COMB at WE (base 4S6P), by bisection; usable at the window's lid temperature
+   the 4S21P kit's usable at WE on the mean day: 692.1 Wh (nominal 1013.0 Wh)
+   TYP mean day: lid 4S12.68P -> 4S13P, 76 cells, usable 618.8 Wh (0.89 x)
+   TYP 50 %: usable 981.6 Wh (1.42 x 4S21P), its lid 4S26.44P -> 132 cells (1.57 x 84, 6.60 kg); percentile of the count itself 4S25.16P -> 128 cells
+   TYP 80 %: usable 1331.0 Wh (1.92 x 4S21P), its lid 4S35.90P -> 168 cells (2.00 x 84, 8.40 kg); percentile of the count itself 4S36.70P -> 172 cells
+   TYP 95 %: usable 1688.7 Wh (2.44 x 4S21P), its lid 4S50.94P -> 228 cells (2.71 x 84, 11.40 kg); percentile of the count itself 4S48.43P -> 220 cells
+   TYP: windows whose need fits 4S15P (84 cells): 186 (21.5 %); median need 982.2 Wh, largest 2174.3 Wh
+   WAB mean day: lid 4S14.49P -> 4S15P, 84 cells, usable 676.1 Wh (0.98 x)
+   WAB 50 %: usable 1055.3 Wh (1.52 x 4S21P), its lid 4S27.70P -> 136 cells (1.62 x 84, 6.80 kg); percentile of the count itself 4S27.63P -> 136 cells
+   WAB 80 %: usable 1420.4 Wh (2.05 x 4S21P), its lid 4S41.02P -> 192 cells (2.29 x 84, 9.60 kg); percentile of the count itself 4S39.37P -> 184 cells
+   WAB 95 %: usable 1760.3 Wh (2.54 x 4S21P), its lid 4S51.38P -> 232 cells (2.76 x 84, 11.60 kg); percentile of the count itself 4S50.64P -> 228 cells
+   WAB: windows whose need fits 4S15P (84 cells): 146 (16.9 %); median need 1056.4 Wh, largest 2282.3 Wh

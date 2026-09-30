@@ -1,0 +1,51 @@
+1. MEAN DAY 40/0, TYP ; WAB
+   DRAWN NOM                  4S9P: NOT MET 494.8 ; NOT MET 522.5
+   DRAWN NOM                  4S14P: NOT MET 357.6 ; NOT MET 383.9
+   DRAWN NOM                  4S15P: NOT MET 326.7 ; NOT MET 352.9
+   DERATED NOM (U3 0.9810)    4S9P: NOT MET 523.9 ; NOT MET 551.6
+   DERATED NOM (U3 0.9810)    4S14P: NOT MET 386.6 ; NOT MET 412.9
+   DERATED NOM (U3 0.9810)    4S15P: NOT MET 355.6 ; NOT MET 381.9
+   DERATED NOM (U3 0.9815)    4S9P: NOT MET 523.1 ; NOT MET 550.9
+   DERATED NOM (U3 0.9815)    4S14P: NOT MET 385.9 ; NOT MET 412.1
+   DERATED NOM (U3 0.9815)    4S15P: NOT MET 354.9 ; NOT MET 381.2
+   DRAWN WE (U3 0.9740)       4S9P: NOT MET 591.5 ; NOT MET 618.8
+   DRAWN WE (U3 0.9740)       4S14P: NOT MET 455.1 ; NOT MET 481.0
+   DRAWN WE (U3 0.9740)       4S15P: NOT MET 424.3 ; NOT MET 450.2
+   DERATED WE (U3 0.9740)     4S9P: NOT MET 618.9 ; NOT MET 646.3
+   DERATED WE (U3 0.9740)     4S14P: NOT MET 482.4 ; NOT MET 508.3
+   DERATED WE (U3 0.9740)     4S15P: NOT MET 451.5 ; NOT MET 477.5
+   RESISTOR-LB NOM            4S9P: NOT MET 805.4 ; NOT MET 1079.8
+   RESISTOR-LB NOM            4S14P: NOT MET 652.8 ; NOT MET 926.5
+   RESISTOR-LB NOM            4S15P: NOT MET 622.1 ; NOT MET 895.6
+   RESISTOR-LB NOM: hours at the cap TYP [9, 10, 11, 12, 13, 14], WAB [9, 10, 11, 12, 13]
+   RESISTOR-LB WE             4S9P: NOT MET 900.8 ; NOT MET 900.8
+   RESISTOR-LB WE             4S14P: NOT MET 749.8 ; NOT MET 749.8
+   RESISTOR-LB WE             4S15P: NOT MET 719.3 ; NOT MET 719.3
+   RESISTOR-LB WE: hours at the cap TYP [9, 10, 11, 12, 13, 14], WAB [9, 10, 11, 12, 13, 14]
+2. COVERAGE, TYP, STOP / COMB / EACH
+   RESISTOR-LB NOM  4S9P: 0 / 0 / 0
+   RESISTOR-LB NOM  4S14P: 2 / 2 / 0
+   RESISTOR-LB NOM  4S15P: 2 / 2 / 2
+   RESISTOR-LB WE   4S9P: 0 / 0 / 0
+   RESISTOR-LB WE   4S14P: 0 / 0 / 0
+   RESISTOR-LB WE   4S15P: 0 / 0 / 0
+   DERATED NOM      4S9P: 0 / 0 / 0
+   DERATED NOM      4S14P: 0 / 0 / 0
+   DERATED NOM      4S15P: 0 / 0 / 0
+   DRAWN NOM        4S9P: 0 / 0 / 0
+   DRAWN NOM        4S14P: 0 / 0 / 0
+   DRAWN NOM        4S15P: 0 / 0 / 0
+3. ELECTRICAL
+   derated 4.05 A: U3 max 4.151; margin with 0.060 +0.001, with 0.079 -0.018
+   derated 4.00 A: U3 max 4.100; margin with 0.060 +0.052, with 0.079 +0.033
+   proposed margin with 0.060 +0.378, with 0.079 +0.359
+   bank at 5.810 A: from 5.7 A point 2.14 / 2.15 / 2.48; from 5.0 A point 2.15 / 2.16 / 2.49
+   bank at 6.415 A: from 5.7 A point 2.36 / 2.37 / 2.73; from 5.0 A point 2.37 / 2.39 / 2.75
+   bank at 9.370 A: from 5.7 A point 3.45 / 3.47 / 3.99; from 5.0 A point 3.47 / 3.49 / 4.01
+   generator rounding: per-ampere ratios 5.7 A 0.3684 / 0.4263, 5.0 A 0.3700 / 0.4280; +-0.005 A on 1.85 is 0.27 %
+   U3 input 5.200 A at 9 V: front end in 13.13 A, L1 peak with both drops 15.74 A (89.9 % of 17.5)
+   U3 input 5.176 A at 9 V: front end in 13.07 A, L1 peak with both drops 15.68 A (89.6 % of 17.5)
+   U3 input 5.300 A at 9 V: front end in 13.38 A, L1 peak with both drops 15.99 A (91.4 % of 17.5)
+   U3 input 5.330 A at 9 V: front end in 13.45 A, L1 peak with both drops 16.06 A (91.8 % of 17.5)
+   the lowest VIN_RAW at which 6.415 A out keeps L1 at 90 % of 17.5 A: 11.00 V
+   Kelvin: 0.371 mOhm working; at 25 C: 0.287 (copper 100 C), 0.324 (62.1 C); bench 0.29 x 6.0 A = 1.74 mV

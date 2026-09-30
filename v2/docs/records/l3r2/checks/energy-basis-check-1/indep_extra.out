@@ -1,0 +1,48 @@
+1. WE (and WE60) with each WA term alone, 40/0, TYP / WAB
+   WE    + none                   4S14P 51.2 / NOT MET 3.8   4S15P 81.8 / 26.8
+   WE    + stage 0.90             4S14P 29.2 / NOT MET 24.0   4S15P 59.8 / 6.6
+   WE    + front end 0.90         4S14P 29.2 / NOT MET 24.0   4S15P 59.8 / 6.6
+   WE    + charge eta 0.90        4S14P NOT MET 4.8 / NOT MET 57.2   4S15P 25.8 / NOT MET 26.6
+   WE    + lid loops 0.045/0.040  4S14P 46.2 / NOT MET 8.6   4S15P 76.6 / 21.8
+   WE    + V(AK) 29 mV            4S14P 50.5 / NOT MET 4.5   4S15P 81.1 / 26.0
+   WE60  + none                   4S14P 30.9 / NOT MET 24.1   4S15P 61.5 / 6.5
+   WE60  + stage 0.90             4S14P 9.0 / NOT MET 44.3   4S15P 39.5 / NOT MET 13.7
+   WE60  + front end 0.90         4S14P 9.0 / NOT MET 44.3   4S15P 39.5 / NOT MET 13.7
+   WE60  + charge eta 0.90        4S14P NOT MET 24.0 / NOT MET 76.4   4S15P 6.6 / NOT MET 45.8
+   WE60  + lid loops 0.045/0.040  4S14P 26.1 / NOT MET 28.7   4S15P 56.4 / 1.6
+   WE60  + V(AK) 29 mV            4S14P 30.2 / NOT MET 24.8   4S15P 60.7 / 5.8
+
+2. the pack charge efficiency at which the 4S15P WE band's points stop counting (both builds, above 4.2 Wh)
+   40/+0: counts at a charge efficiency of 0.929 and above
+   30/+0: counts at a charge efficiency of 0.934 and above
+   50/+15: counts at a charge efficiency of 0.942 and above
+
+3. the lid path's standby drain named in reconcile_lid_panel.out's NOTES (1.8 Wh over 72 h), as 0.025 W on the load, WE and WE60, 40/0 WAB
+   WE    4S14P WAB: NOT MET 3.8 -> NOT MET 5.3
+   WE    4S15P WAB: 26.8 -> 25.3
+   WE60  4S14P WAB: NOT MET 24.1 -> NOT MET 25.6
+   WE60  4S15P WAB: 6.5 -> 5.0
+
+4. ONE AT A TIME FROM NOM AND FROM WE, 40/0: the change in the lowest store (NOT MET counts as minus the unserved)
+   NOM  TYP 4S14P (93.7): stage 0.90 -1.1; front end 0.90 -1.1; charge eta 0.90 -15.6; lid loops 0.045/0.040 -0.8; V(AK) 29 mV -0.2; U3 0.9727 (lower) -0.2
+   NOM  TYP 4S15P (125.2): stage 0.90 -1.1; front end 0.90 -1.1; charge eta 0.90 -16.0; lid loops 0.045/0.040 -0.8; V(AK) 29 mV -0.3; U3 0.9727 (lower) -0.2
+   NOM  WAB 4S14P (75.7): stage 0.90 -16.4; front end 0.90 -16.4; charge eta 0.90 -47.2; lid loops 0.045/0.040 -3.1; V(AK) 29 mV -0.5; U3 0.9727 (lower) -6.8
+   NOM  WAB 4S15P (106.8): stage 0.90 -16.8; front end 0.90 -16.8; charge eta 0.90 -47.6; lid loops 0.045/0.040 -3.2; V(AK) 29 mV -0.5; U3 0.9727 (lower) -6.8
+   WE   TYP 4S14P (51.2): stage 0.90 -21.9; front end 0.90 -21.9; charge eta 0.90 -56.0; lid loops 0.045/0.040 -5.0; V(AK) 29 mV -0.7; U3 0.9727 (lower) -1.2
+   WE   TYP 4S15P (81.8): stage 0.90 -22.0; front end 0.90 -22.0; charge eta 0.90 -56.0; lid loops 0.045/0.040 -5.2; V(AK) 29 mV -0.7; U3 0.9727 (lower) -1.2
+   WE   WAB 4S14P (-3.8): stage 0.90 -20.2; front end 0.90 -20.2; charge eta 0.90 -53.4; lid loops 0.045/0.040 -4.8; V(AK) 29 mV -0.7; U3 0.9727 (lower) -1.2
+   WE   WAB 4S15P (26.8): stage 0.90 -20.2; front end 0.90 -20.2; charge eta 0.90 -53.4; lid loops 0.045/0.040 -5.0; V(AK) 29 mV -0.7; U3 0.9727 (lower) -1.2
+
+5. the stage's (or the front end's) efficiency at which the 4S15P WE band's points stop counting
+   40/+0: counts at a stage efficiency of 0.897 and above (front end at 0.93)
+   50/+15: counts at a stage efficiency of 0.921 and above (front end at 0.93)
+
+6. U3B's efficiency and the lid's charge loop alone at WE, 40/0 (WE carries U3B 0.963)
+   U3B 0.972 (carried)    4S14P TYP 58.1; 4S14P WAB 2.7; 4S15P TYP 88.8; 4S15P WAB 33.4
+   U3B 0.963 (WE)         4S14P TYP 51.2; 4S14P WAB NOT MET 3.8; 4S15P TYP 81.8; 4S15P WAB 26.8
+   charge loop 0.040      4S14P TYP 48.6; 4S14P WAB NOT MET 6.2; 4S15P TYP 79.1; 4S15P WAB 24.2
+   discharge loop 0.045   4S14P TYP 48.8; 4S14P WAB NOT MET 6.2; 4S15P TYP 79.3; 4S15P WAB 24.3
+
+7. the bus (WE otherwise, U3 held at 0.9733) at which the 4S15P WE band's points stop counting
+   40/+0: counts at a bus of 18.800 V and above
+   50/+15: counts at a bus of 18.992 V and above

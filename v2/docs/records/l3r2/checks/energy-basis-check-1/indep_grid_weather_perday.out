@@ -1,0 +1,10 @@
+
+WEATHER: 11520 rows, 16 Septembers; mean day 3.9830 kWh/m2 (DRcalc 40/0 3.9830); largest hourly difference 0.005 W/m2
+windows: 864
+72 h irradiation: lowest 3.17, 10th percentile 7.36, median 11.45 kWh/m2
+   4S14P NOM TYP  207 of 864 (24.0 %)  [ratios perday]
+   4S14P WE TYP   169 of 864 (19.6 %)  [ratios perday]
+   4S14P WE WAB   128 of 864 (14.8 %)  [ratios perday]
+   4S15P NOM TYP  235 of 864 (27.2 %)  [ratios perday]
+   4S15P WE TYP   199 of 864 (23.0 %)  [ratios perday]
+   4S15P WE WAB   157 of 864 (18.2 %)  [ratios perday]

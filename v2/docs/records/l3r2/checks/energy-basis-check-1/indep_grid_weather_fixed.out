@@ -1,0 +1,83 @@
+GRID (checker's balance; per-plane ratios from plane_grid.out 1.1). BW = TYP and WAB both meet with the
+lowest combined store above 4.2 Wh; T = TYP meets only; - neither.
+
+4S14P case NOM
+   slope    -45   -30   -15    +0   +15   +30   +45
+       0      .     .     .     -     .     .     .
+      10      T     T     T     T     T     T     T
+      20      T     T    BW    BW    BW    BW     T
+      30      T     T    BW    BW    BW    BW     T
+      40      T     T    BW    BW    BW    BW     T
+      50      -     T    BW    BW    BW    BW     T
+      60      -     -     T    BW    BW     T     -
+      70      -     -     T    BW     T     -     -
+
+4S14P case WE
+   slope    -45   -30   -15    +0   +15   +30   +45
+       0      .     .     .     -     .     .     .
+      10      -     -     -     -     -     -     -
+      20      -     -     T     T     T     T     -
+      30      -     -     T     T     T     T     -
+      40      -     -     T     T     T     T     -
+      50      -     -     T     T     T     -     -
+      60      -     -     -     T     T     -     -
+      70      -     -     -     -     -     -     -
+   spot values TYP/WAB: 30/+0 43.9/NOT MET 9.8; 30/+15 40.0/NOT MET 13.6; 40/+0 51.2/NOT MET 3.8; 40/+15 43.1/NOT MET 8.3; 50/+0 43.9/NOT MET 10.7; 20/+0 22.6/NOT MET 35.1; 20/+15 20.3/NOT MET 33.3
+
+4S14P case WE60
+   slope    -45   -30   -15    +0   +15   +30   +45
+       0      .     .     .     -     .     .     .
+      10      -     -     -     -     -     -     -
+      20      -     -     -     T     T     -     -
+      30      -     -     T     T     T     -     -
+      40      -     -     T     T     T     -     -
+      50      -     -     -     T     T     -     -
+      60      -     -     -     T     -     -     -
+      70      -     -     -     -     -     -     -
+
+4S15P case NOM
+   slope    -45   -30   -15    +0   +15   +30   +45
+       0      .     .     .     T     .     .     .
+      10      T     T    BW    BW    BW     T     T
+      20      T    BW    BW    BW    BW    BW    BW
+      30      T    BW    BW    BW    BW    BW    BW
+      40      T    BW    BW    BW    BW    BW    BW
+      50      -     T    BW    BW    BW    BW     T
+      60      -     T    BW    BW    BW    BW     -
+      70      -     -     T    BW    BW     T     -
+
+4S15P case WE
+   slope    -45   -30   -15    +0   +15   +30   +45
+       0      .     .     .     -     .     .     .
+      10      -     -     T     T     T     T     -
+      20      -     T     T     T     T     T     T
+      30      -     T     T    BW    BW     T     -
+      40      -     -     T    BW    BW     T     -
+      50      -     -     T    BW    BW     T     -
+      60      -     -     T     T     T     -     -
+      70      -     -     -     T     T     -     -
+   spot values TYP/WAB: 30/+0 74.5/20.8; 30/+15 70.6/16.9; 40/+0 81.8/26.8; 40/+15 73.7/22.2; 50/+0 74.5/19.9; 50/+15 64.4/12.7; 20/+0 53.2/NOT MET 4.5; 60/+0 52.4/0.1; 30/-15 58.8/NOT MET 8.3; 30/+30 52.0/NOT MET 11.1; 40/-15 60.3/NOT MET 6.1; 40/+30 36.4/NOT MET 19.3
+
+4S15P case WE60
+   slope    -45   -30   -15    +0   +15   +30   +45
+       0      .     .     .     -     .     .     .
+      10      -     -     -     -     -     -     -
+      20      -     -     T     T     T     T     -
+      30      -     -     T     T     T     T     -
+      40      -     -     T    BW     T     T     -
+      50      -     -     T     T     T     -     -
+      60      -     -     -     T     T     -     -
+      70      -     -     -     -     -     -     -
+   spot values TYP/WAB: 30/+0 54.2/0.5; 30/+15 50.3/NOT MET 3.3; 40/+0 61.5/6.5; 40/+15 50.3/2.0; 50/+0 54.1/NOT MET 0.4; 50/+15 40.7/NOT MET 6.0; 20/+0 32.9/NOT MET 21.4; 60/+0 32.2/NOT MET 20.2; 30/-15 38.6/NOT MET 25.2; 30/+30 30.0/NOT MET 28.0; 40/-15 36.6/NOT MET 22.9; 40/+30 16.2/NOT MET 39.6
+   peak hour 40/-45: 10 UTC (40/0: 12 UTC)
+   peak hour 40/+45: 13 UTC (40/0: 12 UTC)
+
+WEATHER: 11520 rows, 16 Septembers; mean day 3.9830 kWh/m2 (DRcalc 40/0 3.9830); largest hourly difference 0.005 W/m2
+windows: 864
+72 h irradiation: lowest 3.17, 10th percentile 7.36, median 11.45 kWh/m2
+   4S14P NOM TYP  208 of 864 (24.1 %)  [ratios fixed]
+   4S14P WE TYP   169 of 864 (19.6 %)  [ratios fixed]
+   4S14P WE WAB   141 of 864 (16.3 %)  [ratios fixed]
+   4S15P NOM TYP  237 of 864 (27.4 %)  [ratios fixed]
+   4S15P WE TYP   199 of 864 (23.0 %)  [ratios fixed]
+   4S15P WE WAB   173 of 864 (20.0 %)  [ratios fixed]
