@@ -117,7 +117,8 @@ def t_l3r2_every_named_decision_script_and_record_exists():
 
 def t_l3r2_session_scripts_refuse_a_second_run():
     for s in ("apply_l3r2_session.py", "apply_l3r2_d23.py", "apply_l3r2_d24.py", "apply_l3r2_d25.py", "apply_l3r2_r3b.py",
-              "apply_layer_status_l3_r3c.py", "apply_layer_status_l3_fill.py", "apply_layer_status_l3.py",
+              "apply_layer_status_l3_r3c.py", "apply_layer_status_l3_fill.py", "apply_layer_status_l3_r3d.py",
+              "apply_l3r2_s127.py", "apply_layer_status_l3.py",
               "apply_layer_status_l3_r3.py", "apply_layer_status_l3_r3b.py"):
         p = os.path.join(REC, s)
         need(p, "%s is not in this tree" % s)
@@ -127,20 +128,26 @@ def t_l3r2_session_scripts_refuse_a_second_run():
 
 
 def t_l3r2_a_held_row_is_never_written_into_the_tree():
-    """D-22 holds rows L3-OD1, L3-OD2 and L3-OD4: while l3r2.yaml names no filed energy basis, cond.hold refuses a write
-    to the tree's registry (asked directly, so nothing is written)."""
+    """D-22, D-23 and D-24 hold rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 until the checked basis and the checked power path
+    are filed: on a copy of l3r2.yaml with neither named (the data as round 3c left it before the fill), cond.hold refuses
+    a write to the tree's registry for each, citing the ruling that holds it (asked directly, so nothing is written; CHECK-4
+    of L3-R2, minor 6: the hold stays under test after the fill)."""
     need(os.path.join(COND, "cond.py"), "the conditional scripts are not in this tree")
     sys.path.insert(0, COND)
     import cond as C
-    data = C.l3data()
-    if data.get("energy_basis"): raise Skip("the energy basis is filed: the hold is lifted")
-    for row in ("L3-OD1", "L3-OD2", "L3-OD4", "L3-OD6"):
-        try:
-            C.hold({"check": False, "registry": C.E.REGISTRY}, row)
-        except C.E.Refused as e:
-            assert "held (%s)" % ("D-23, D-24" if row == "L3-OD6" else "D-22, D-24") in str(e), str(e)   # CHECK-2 minor 2
-        else:
-            raise AssertionError("held row %s would be written into the tree's registry" % row)
+    p = _unfilled_data(tempfile.mkdtemp(prefix="l3r2-hold-"))
+    old = C.L3DATA
+    C.L3DATA = p
+    try:
+        for row in ("L3-OD1", "L3-OD2", "L3-OD4", "L3-OD6"):
+            try:
+                C.hold({"check": False, "registry": C.E.REGISTRY}, row)
+            except C.E.Refused as e:
+                assert "held (%s)" % ("D-23, D-24" if row == "L3-OD6" else "D-22, D-24") in str(e), str(e)
+            else:
+                raise AssertionError("held row %s would be written into the tree's registry" % row)
+    finally:
+        C.L3DATA = old
 
 
 FIX = {"mean-day": ("619.0", "4S13P", 76, "916.6", "3.80", "1.3", "1.7", "0.89", "0.90"),
@@ -448,6 +455,14 @@ def t_l3r2_an_accepted_check_is_bound_to_the_files_of_its_tip():
     assert not C.basis_state(d, root4, "energy_basis")[0], "the hold accepts an output that differs from the checked tip"
     d["power_path_check"]["tip"] = TIP3
     assert not C.basis_state(d, root4, "power_path_check")[0], "the hold accepts a check that does not name the recorded tip"
+    import hashlib
+    rec = os.path.join(root4, L3P + "ENERGY-BASIS.md")
+    open(os.path.join(root4, "LISTING.md"), "w", encoding="utf-8").write(
+        "accepted: yes\ntip: %s\n\n%s  %s\n" % (TIP4, hashlib.sha256(open(rec, "rb").read()).hexdigest(), L3P + "ENERGY-BASIS.md"))
+    d2 = RL.load_data()
+    d2["energy_basis"] = _entry(root4, TIP4, L3P + "ENERGY-BASIS.md", [L3P + "energy_basis.out"], "LISTING.md")
+    ok, why = C.basis_state(d2, root4, "energy_basis")
+    assert not ok and "but not" in why, "a check whose sha list leaves out a relied-on file is accepted (minor 7): %s" % why
 
 
 def t_l3r2_the_reader_reads_the_fourth_issue_whole():
@@ -640,3 +655,31 @@ def t_l3r2_the_table_has_six_rows_each_with_its_parts():
             "%s's options do not flag the option that cannot meet M1" % rid
     for name in RL.PAGES.values():
         RL.check_links(name, open(os.path.join(L3, name), encoding="utf-8").read())
+
+
+def t_l3r2_the_wab_build_with_the_tablet_out_is_never_coherent_on_the_checked_table():
+    """CHECK-4 of L3-R2, B1: on the tree's own table, filled from the checked basis, the mean day in the WAB build is
+    carried by the QMX-out lid only. So the WAB answer with the tablet out reads incoherent and records an open conflict,
+    while the TYP answer keeps both lids open; the pairing is the owner's, and it is never silent."""
+    RL = _render_mod()
+    data = RL.load_data()
+    if not (RL.basis_ok(data)[0] and RL.basis_ok(data, "power_path_check")[0]): raise Skip("the checked basis is not filed")
+    x = lambda o, **f: (o, "D-99", "2026-10-01", "", f)
+    base = {"L3-OD1": x("approve"), "L3-OD3": x("2s2p"), "L3-OD4": x("reject"), "L3-OD5": x("reading-c")}
+    for build, lid, want in (("WAB", "tablet-out", False), ("WAB", "qmx-out", True), ("WAB", "qmx-outside", True),
+                             ("TYP", "tablet-out", True), ("TYP", "qmx-out", True), ("TYP", "both-kept", False)):
+        got = RL.coherent(dict(base, **{"L3-OD2": x(lid), "L3-OD6": x("mean-day", build=build, share=None)}), data)[1]
+        assert got is want, "the mean day in %s with %s reads %s" % (build, lid, "coherent" if got else "incoherent")
+    need(os.path.join(COND, "od_l3_6.py"), "the conditional scripts are not in this tree")
+    d, reg, ev = _copy_registry()
+    if any(r in _decided(reg) for r in ("L3-OD1", "L3-OD2", "L3-OD6")): raise Skip("rows 1, 2 or 6 are decided in this tree")
+    _step("od_l3_6.py", "mean-day", reg, "--build", "WAB")                        # the tree's filled table, verified
+    _step("od_l3_1.py", "approve", reg)
+    _step("od_l3_2.py", "tablet-out", reg)                                        # the tree's filled table
+    assert len(_conflicts(reg, "weather basis")) == 1, "the WAB mean day with the tablet out records no conflict"
+    d2, reg2, ev2 = _copy_registry()
+    _step("od_l3_6.py", "mean-day", reg2, "--build", "TYP")
+    _step("od_l3_1.py", "approve", reg2)
+    _step("od_l3_2.py", "tablet-out", reg2)
+    assert not _conflicts(reg2, "weather basis"), "the TYP mean day with the tablet out records a conflict"
+

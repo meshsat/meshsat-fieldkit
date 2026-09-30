@@ -58,6 +58,14 @@ confirms D-24 and D-25):
 - Prepared, not run: `prepared/power_path_classes.yaml` and `restate_power_path.py` restate the power-path list from the
   second issue's classes (A-1 and A-2, B-1 to B-5, C-1 to C-9) once `power_path_check` is filed and verified.
 
+**The fill** (round 3c, against `fnd/l3plane` `cd8720a1`, CHECK-5) and **round 3d** (on CHECK-4 of L3-R2, accepted: no,
+one text item): row L3-OD6 recommends the weather basis only and presents the array build neutrally, coupled with row
+L3-OD2 (the WAB build is carried by the QMX-out lid only, so it removes HF from the kit; TYP keeps both lids), and row
+L3-OD2 states the same dependency; the pairing is tested on the tree's own checked table. S-127 is closed
+(`apply_l3r2_s127.py`); the pre-fill text is brought current (`apply_layer_status_l3_r3d.py` among it); row L3-OD3's
+unshown options are flagged NOT SHOWN and both-kept reads "at least 165.7 Wh"; the hold test runs on an unfilled copy;
+the binding refuses a relied-on file a check's sha list leaves out.
+
 ## Files
 
 | File | What it is |
@@ -73,6 +81,8 @@ confirms D-24 and D-25):
 | `apply_layer_status_l3_r3b.py` | round 3b: the page's coherence sentence says what is enforced, F-01 carries the bus's brackets and board A's front end in four cases, and the rows wait on the power path's check too; refuses unless round 3 ran and D-24 and D-25 are recorded |
 | `basis_binding.py` | binds a filed record, its outputs and its accepted check to the tip the check checked (`git show <tip>:<path>`, byte identical), for the hold, the gate and `set_energy_basis.py` |
 | `restate_power_path.py`, `prepared/power_path_classes.yaml` | PREPARED, NOT RUN: the power-path list restated from the checked classes of stream r11dep's second issue, every anchor asserted in the filed record; refuses until `power_path_check` is verified, and a second run |
+| `apply_l3r2_s127.py` | round 3d: S-127 closed by commit `9493847c` (the basis filed and bound), its closing evidence naming the files by sha; REQ-072 stops waiting on it and gains an evidence entry re-reading it on the basis by exact keys (FAIL stands); refuses a second run |
+| `apply_layer_status_l3_r3d.py` | round 3d: the page names the power-path findings by their checked classes and S-127 closed |
 | `apply_layer_status_l3_fill.py` | the fill: the page's layer 3 states the checked basis at `cd8720a1` and its result; refuses unless both checked files are named and verified |
 | `apply_layer_status_l3_r3c.py` | round 3c: the integrator line says what the scripts enforce, and F-01 states the history of stream r11dep's record |
 | `basis_reader.py` | reads the filed energy basis's outputs by exact keys (weather_basis.out A and B, energy_basis.out 5), each figure as the text the output prints; refuses any other format (written for the basis's third issue, `868c321f`) |
@@ -117,6 +127,8 @@ python3 v2/docs/records/l3r2/apply_layer_status_l3_r3.py --check && python3 v2/d
 python3 v2/docs/records/l3r2/apply_layer_status_l3_r3b.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3_r3b.py
 python3 v2/docs/records/l3r2/apply_layer_status_l3_r3c.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3_r3c.py
 python3 v2/docs/records/l3r2/apply_layer_status_l3_fill.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3_fill.py
+python3 v2/docs/records/l3r2/apply_l3r2_s127.py --check && python3 v2/docs/records/l3r2/apply_l3r2_s127.py
+python3 v2/docs/records/l3r2/apply_layer_status_l3_r3d.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3_r3d.py
 python3 v2/docs/records/l3r2/apply_records_readme_row.py
 env -C v2/ecad/tools python3 rules_lib.py requirements
 env -C v2/ecad/tools python3 rules_render.py --requirements
