@@ -73,6 +73,7 @@ confirms D-24 and D-25):
 | `apply_layer_status_l3_r3b.py` | round 3b: the page's coherence sentence says what is enforced, F-01 carries the bus's brackets and board A's front end in four cases, and the rows wait on the power path's check too; refuses unless round 3 ran and D-24 and D-25 are recorded |
 | `basis_binding.py` | binds a filed record, its outputs and its accepted check to the tip the check checked (`git show <tip>:<path>`, byte identical), for the hold, the gate and `set_energy_basis.py` |
 | `restate_power_path.py`, `prepared/power_path_classes.yaml` | PREPARED, NOT RUN: the power-path list restated from the checked classes of stream r11dep's second issue, every anchor asserted in the filed record; refuses until `power_path_check` is verified, and a second run |
+| `apply_layer_status_l3_fill.py` | the fill: the page's layer 3 states the checked basis at `cd8720a1` and its result; refuses unless both checked files are named and verified |
 | `apply_layer_status_l3_r3c.py` | round 3c: the integrator line says what the scripts enforce, and F-01 states the history of stream r11dep's record |
 | `basis_reader.py` | reads the filed energy basis's outputs by exact keys (weather_basis.out A and B, energy_basis.out 5), each figure as the text the output prints; refuses any other format (written for the basis's third issue, `868c321f`) |
 | `set_energy_basis.py` | PREPARED, NOT RUN: names the basis, its outputs and its check in `l3r2.yaml`'s `energy_basis`; refuses unless each file is in the tree, the check reads "accepted: yes" and names the tip it checked |
@@ -101,7 +102,10 @@ From the repository root. If the set is `fnd/l3r2` itself (it is re-run on `4012
 remain; otherwise take the branch's own files and run the scripts on the set:
 
 ```
-git checkout fnd/l3r2 -- v2/docs/handover/layer3 v2/docs/records/l3r2 v2/ecad/tools/tests/test_l3r2.py
+git checkout fnd/l3r2 -- v2/docs/handover/layer3 v2/docs/records/l3r2 v2/ecad/tools/tests/test_l3r2.py \
+  v2/docs/records/l3plane v2/docs/records/r11dep v2/docs/records/a1int/reconcile_lid_panel.py \
+  v2/vendor/passives/milliohm-hojlr2512-series.pdf v2/vendor/passives/yageo-rc-l-series-v12.pdf \
+  v2/vendor/solar/pvgis-series v2/vendor/sources.txt
 python3 v2/docs/records/l3r2/read_cfl006.py > v2/docs/records/l3r2/read_cfl006.out
 python3 v2/docs/records/l3r2/apply_l3r2_session.py --check && python3 v2/docs/records/l3r2/apply_l3r2_session.py
 python3 v2/docs/records/l3r2/apply_l3r2_d23.py --check && python3 v2/docs/records/l3r2/apply_l3r2_d23.py
@@ -112,6 +116,7 @@ python3 v2/docs/records/l3r2/apply_layer_status_l3.py --check && python3 v2/docs
 python3 v2/docs/records/l3r2/apply_layer_status_l3_r3.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3_r3.py
 python3 v2/docs/records/l3r2/apply_layer_status_l3_r3b.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3_r3b.py
 python3 v2/docs/records/l3r2/apply_layer_status_l3_r3c.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3_r3c.py
+python3 v2/docs/records/l3r2/apply_layer_status_l3_fill.py --check && python3 v2/docs/records/l3r2/apply_layer_status_l3_fill.py
 python3 v2/docs/records/l3r2/apply_records_readme_row.py
 env -C v2/ecad/tools python3 rules_lib.py requirements
 env -C v2/ecad/tools python3 rules_render.py --requirements
@@ -123,11 +128,13 @@ env -C v2/ecad/tools/tests python3 run.py test_requirements test_l3r2
 The renderer lists any open item the set adds as UNCLASSIFIED (closure item L3-C23 then reads OPEN) until `l3r2.yaml`'s
 `open_items_layer` gives it a layer.
 
-## The fill procedure (ready; run only on the coordinator's word, with the final tip)
+## The fill procedure (run in round 3c, 30 September 2026, against `fnd/l3plane` `cd8720a1`)
 
-Nothing below has been run in the branch: `energy_basis`, `power_path_check`, `basis_figures` and `four_cases` are null,
-and every HELD cell stays HELD. `<TIP>` is the final tip of `fnd/l3plane` the coordinator sends, and CHECK-N its accepted
-check (it must name `<TIP>` in its head).
+Run once in the branch with `<TIP>` = `cd8720a1ab6eed891b1afd8b5df3b8ceedf36c0f` and CHECK-N = the energy stream's CHECK-5
+(filed as `checks/energy-basis-check-5/`, with CHECK-1 to CHECK-4 beside it so that the chain is readable). The files of
+`records/l3plane/` and `records/r11dep/`, the three vendor files and `sources.txt` the stream added, and
+`records/a1int/reconcile_lid_panel.py` were checked out at that tip, byte identical to it. Every step refuses a second
+run; an integrator whose set is not `fnd/l3r2` takes the branch's files (the first line of the run order) instead.
 
 1. **Bring the checked files into the tree and read them:**
    ```

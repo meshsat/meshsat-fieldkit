@@ -1,0 +1,16 @@
+{
+ "what": "LCSC public product-detail answer for C2903468 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C2903468), no login; kept fields only",
+ "read_utc": "2026-09-30T01:19Z",
+ "read_by": "stream r11dep (MESHSAT-1357)",
+ "code": "C2903468",
+ "brand": "Milliohm",
+ "model": "HoJLR2512-3W-10mR-1%",
+ "package": "2512",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/bf6eace094b76bcd756cc1a79c576936.pdf?productCode=C2903468",
+ "params": {
+  "Resistance": "10mΩ",
+  "Power(Watts)": "3W",
+  "Type": "Current Sense Resistor",
+  "Tolerance": "±1%"
+ }
+}

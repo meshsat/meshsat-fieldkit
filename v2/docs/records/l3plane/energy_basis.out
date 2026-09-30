@@ -1,0 +1,483 @@
+THE ENERGY BASIS OF LAYER 3'S DECISIONS L3-OD1, L3-OD2 AND L3-OD4 (energy_basis.py second issue, stream l3plane,
+MESHSAT-1357). PROTOTYPE DESIGN: nothing built, powered or measured. Energy figures MODELED (a1elec's energy_two_pack.py,
+pinned, as reconcile_lid_panel.py runs it); the bus range from vbus20_range.py (MAKER, NETLIST, INFERRED per term); bands
+and thresholds INFERRED from the model's grid. The author's analysis, AI arithmetic; not a qualified review, and not
+the independent check.
+
+0. REPRODUCTION
+   0a. v2/docs/records/a1int/reconcile_lid_panel.out: 21 of 21 rows reproduced byte for byte by this script's runs at 20.7 V
+   0b. U3's day at E2 (20.7 V, 6.2 A): 0.9722 / 0.9790 / 0.9826, equal to efficiency.py's daily() and to v2/docs/records/s117/efficiency.out section 7 (yes)
+   0c. v2/docs/records/l3plane/plane_grid.out case P (6.1 A, U3B carried, 20.7 V): 100 of 100 plane cells (both lid options, both array builds) reproduced
+   0d. the mean day fed as a 72 hour series reproduces the mean-day runs exactly (both lids, both starts): yes
+   0e. the first issue's WE (case WE1 here) reproduces its six rows of v2/docs/records/l3plane/energy_basis.out at 6a283b25: yes
+
+1. THE CASES, EXACTLY
+   1a. THE WEATHER: SC-37's reference day, the only weather these runs establish
+       resource: PVGIS 5.2, PVGIS-SARAH2 monthly means 2015 to 2020 at latitude 52.160, longitude 4.497 (v2/vendor/solar/pvgis-leiden-monthly-2015-2020.json), the September mean day
+       on the 40 degree, azimuth 0 plane (PVGIS's optimum): 4.014 kWh/m2 a day
+       shape: PVGIS DRcalc's September mean-day profile, PVGIS-SARAH2 2005 to 2020, hourly, UTC, on that plane (v2/docs/records/a1solar/inputs/pvgis-leiden-daily-profile-2005-2020.json: 3.983 kWh/m2),
+       scaled by 1.007820 to the monthly mean; the same 24 hours repeated for 72 hours; runs from 06 and 18 UTC, a full pack;
+       air 13.23 to 18.33 C (the profile's T2m), the lid pack at 13.23 C (its minimum) and the base pack at +20 C for 72 hours.
+       Other planes: each plane's own DRcalc mean day (v2/vendor/solar/pvgis-planes/), scaled by the same factor.
+       NO WORSE-WEATHER CASE IS ESTABLISHED BY THESE RUNS: a mean day is not a cloudy day; section 7 is INFORMATIVE only.
+   1b. THE ARRAY BUILD (both on the SAME mean day; the ratio multiplies PVGIS's 0.9417, the 40/0 plane's losses kept for every plane)
+       TYP, the typical build: fit 'Rs 0 (section 3)', the FBIN point at 34.29 V, NOCT 45 C, a 5 m lead (0.0465 ohm loop).
+       WAB, the WORST ARRAY BUILD (the earlier records' case C, renamed; it is NOT weather): the worst of the three single-diode
+       fits (Rs 0 (section 3), Rs 0.1, Rs 0.2), the FBIN point at the worse end of its window (33.05 or 35.57 V: FBIN over temperature and R8, R9 at 1 %),
+       cells 10 K above the NOCT model, a 10 m lead (twice the loop), and the hotter cells' own loss of maximum-power energy
+       (the lower of the model's and the maker's -0.42 %/K). At 40/0: TYP 0.9903, WAB 0.9103 of the tracked energy.
+   1c. THE ELECTRICAL AND LOSS INPUTS (basis: MAKER, NETLIST, INFERRED from a maker's figures, DECLARED, ESTIMATE)
+       NOM   nominal: VBUS20 20.000 V, U3's limit 6.2 A, U3 0.9793 (TI's reading at that bus, INFERRED), U3B 0.972 (INFERRED), stage 0.93 and front end 0.93 (DECLARED), pack charge 0.95 (INFERRED, no document), lid loops 0.030 / 0.023 Ohm (ESTIMATE), V(AK) 20 mV (MAKER typical), no standby drain
+       WE    RESTATED: every term with a maker's document at its worst: VBUS20 19.146 V (the steady-state range's minimum, vbus20_range.out 6), U3's limit 6.1 A (INFERRED minimum), U3 0.9733 (the makers' maxima at that bus, INFERRED by TI's method), U3B 0.963 (INFERRED, lower bracket), V(AK) 29 mV (MAKER maximum); the lid loops at their ESTIMATE's worse end 0.045 / 0.040 Ohm; the lid's standby drain 1.8 Wh over 72 h added to the load. CONDITIONAL ON three undocumented efficiencies held at their declared values: stage 0.93, front end 0.93, pack charge 0.95
+       WE60  WE with U3's limit at the 6.0 A bracket
+       WEL   WE with the bus at its endurance bracket 18.782 V (the resistors at the makers' 1000 h limits; a bound)
+       WA    WE60 with the three undocumented efficiencies at their brackets' lower ends: stage 0.90, front end 0.90, pack charge 0.90
+       WE1   the FIRST issue's WE (V(AK), the lid loops and the drain nominal), for continuity with CHECK-1's figures
+       GEN   board A AS GENERATED: R11 10 mOhm, the front end's limit 4.30 A minimum, U3's limit set under it at 4.15 A (entry E1; its 4.25 A maximum is 50 mA under the front end's minimum); bus nominal; U3 0.9810; the rest nominal
+       M207  for comparison, the model as published: 20.7 V, 6.1 A, U3 0.979 and U3B 0.972 carried (plane_grid.out case P)
+       SC76  for comparison, SC-76's basis: 19.08 V, 6.1 A, U3 and U3B carried (plane_grid.out case V19)
+       Common to every case: 400 Wp (four Renogy RNG-100DB-H in 2S2P) into a 200 W stage window, the drafted entry (R11
+       6.2 mOhm: the front end limits at 6.94 A minimum, above U3; GEN excepted), U3B at code 62 (7.936 A), PS-IDLE-SPEC 42.8 W
+       at the pack terminals, the cells aged to 80 percent, the 3.00 V line with the 5 percent reserve, the charge and discharge
+       split by capacity. The standby drain is carried as load at the pack terminals, split by capacity like the rest.
+   1d. THE PASS LINES: M1 is MET when neither start stops the kit. The two tests beside it, each against the floor 4.2 Wh,
+       the model's hourly-step sensitivity as reconcile_lid_panel.out's NOTES print it (measured at 40/0 at an earlier
+       issue's settings; CHECK-1 measured at most 0.1 Wh at WE): COMBINED, the lowest store of both packs together above it;
+       EACH PACK, the base's and the lid's own lowest stores each above it (a pack at 0.0 Wh has reached its own 3.00 V
+       line with the reserve: the kit runs on on the other pack). Which one REQ-072 needs is the owner's reading: L3-OD1's
+       drafted ruling on fnd/l3r2 reads 'the pack' in a requirement as each pack unless it names one.
+
+2. THE THREE UNDOCUMENTED EFFICIENCIES: WHAT THE MAKERS' OWN DOCUMENTS GIVE
+   board E's stage (LT8705A, declared 0.93, bracket 0.90 to 0.97, 'NOT PLOTTED at this ratio'): 8705af p.41's own 12 V, 15 A
+      design (the same M1 and M2 parts as board E's Q3 and Q4) reads 96.5 to 96.8 % at 6 to 12 A from 35 V (TYPICAL, 25 C, INFERRED;
+      curve_readings.out 2). Not a figure for board E at 34.3 to 15.1 V over the day's hours: NOT ESTABLISHED.
+   board A's front end (LM5176, declared 0.93, bracket 0.90 to 0.97, 'NOT PLOTTED at 20 V out'): SNVSAI1D p.9 Figure 6-2's
+      9 V to 12 V boost reads 97.8 to 97.9 % at 5.5 to 6 A (TYPICAL, 25 C, INFERRED; curve_readings.out 1). Not a figure for
+      board A at 15.1 to 20 V, 200 kHz, 10 uH: NOT ESTABLISHED.
+   the pack's charge efficiency (declared 0.95, bracket 0.90 to 0.98, energy_inputs.yaml 'INFERRED ... no held document gives
+      it'): Samsung SDI's INR18650-35E sheet (v2/vendor/battery/samsung-35e-conrad.pdf, pinned by energy_inputs.yaml) gives p.3 the standard 0.2C discharge,
+      3.482 Ah and 12.62 Wh (a mean 3.624 V), and p.7 one storage sample's initial AC-IR 19.8 mOhm and DC-IR 34.5 mOhm. It gives no
+      charged energy, charge curve, coulombic efficiency or hysteresis. The resistive part alone, (OCV - I_dis R) / (OCV + I_chg R)
+      with OCV 3.648 V (the 0.2C mean plus its own IR drop) and R the sample's DC-IR (INFERRED):
+         base 4S6P (4S20P kit) at U3's 3.968 A  0.661 A a cell charging, 0.148 A discharging: 0.9924
+         base 4S6P (4S21P kit) at U3's 3.968 A  0.661 A a cell charging, 0.141 A discharging: 0.9925
+         lid 4S14P at U3B's 7.936 A             0.567 A a cell charging, 0.148 A discharging: 0.9933
+         lid 4S15P at U3B's 7.936 A             0.529 A a cell charging, 0.141 A discharging: 0.9937
+      That is an UPPER bound on the charge efficiency (the undocumented losses only lower it): NOT ESTABLISHED.
+
+3. U3'S EFFICIENCY AGAINST THE BUS AND ITS LIMIT (INFERRED by efficiency.py's method, the reference day at 40/0, the drafted entry)
+   bus, limit                                      lower       TI    upper   power into U3 at the limit
+   the endurance bracket 18.782 V, 6.0 A          0.9736   0.9798   0.9832    112.7 W
+   the endurance bracket 18.782 V, 6.1 A          0.9735   0.9798   0.9831    114.6 W
+   the endurance bracket 18.782 V, 6.2 A          0.9733   0.9797   0.9830    116.4 W
+   the divider-rise bracket 19.101 V, 6.0 A       0.9734   0.9797   0.9831    114.6 W
+   the divider-rise bracket 19.101 V, 6.1 A       0.9733   0.9797   0.9830    116.5 W
+   the divider-rise bracket 19.101 V, 6.2 A       0.9732   0.9796   0.9829    118.4 W
+   the envelope's minimum 19.146 V, 6.0 A         0.9734   0.9797   0.9831    114.9 W
+   the envelope's minimum 19.146 V, 6.1 A         0.9733   0.9796   0.9830    116.8 W
+   the envelope's minimum 19.146 V, 6.2 A         0.9731   0.9796   0.9829    118.7 W
+   SC-76 19.080 V, 6.0 A                          0.9734   0.9798   0.9831    114.5 W
+   SC-76 19.080 V, 6.1 A                          0.9733   0.9797   0.9830    116.4 W
+   SC-76 19.080 V, 6.2 A                          0.9732   0.9796   0.9829    118.3 W
+   nominal 20.000 V, 6.0 A                        0.9729   0.9795   0.9829    120.0 W
+   nominal 20.000 V, 6.1 A                        0.9728   0.9794   0.9828    122.0 W
+   nominal 20.000 V, 6.2 A                        0.9727   0.9793   0.9828    124.0 W
+   the model's 20.700 V, 6.0 A                    0.9725   0.9792   0.9828    124.2 W
+   the model's 20.700 V, 6.1 A                    0.9724   0.9791   0.9827    126.3 W
+   the model's 20.700 V, 6.2 A                    0.9722   0.9790   0.9826    128.3 W
+   the envelope's maximum 20.887 V, 6.0 A         0.9724   0.9791   0.9827    125.3 W
+   the envelope's maximum 20.887 V, 6.1 A         0.9722   0.9790   0.9826    127.4 W
+   the envelope's maximum 20.887 V, 6.2 A         0.9721   0.9789   0.9825    129.5 W
+
+4. ONE INPUT AT A TIME ON 40/0, FROM WE (TYP and WAB) AND FROM NOM WAB: the lowest store of both packs in Wh (or minus the
+   energy left unserved) and its change; the base's and the lid's own lowest in brackets. WE is CONDITIONAL (1c).
+   4S14P, the tablet bracket out (4S20P in all)
+      from WE TYP:   44.0 (base  44.0, lid   0.0)
+         VBUS20, the endurance bracket 18.782 V                 20.8 (base  20.8, lid   0.0)                 -23.2
+         VBUS20, the divider-rise bracket 19.101 V              41.1 (base  41.1, lid   0.0)                  -2.8
+         VBUS20 nominal 20.000 V (favourable)                   82.1 (base  48.9, lid  33.2)                 +38.1
+         U3's limit 6.0 A                                       23.9 (base  23.9, lid   0.0)                 -20.1
+         U3's limit 6.2 A (favourable)                          64.1 (base  47.2, lid  11.1)                 +20.2
+         U3 at TI's reading (favourable)                        56.6 (base  46.1, lid   5.9)                 +12.6
+         U3B carried 0.972 (favourable)                         50.7 (base  44.1, lid   4.0)                  +6.8
+         the stage 0.90                                         22.1 (base  22.1, lid   0.0)                 -21.8
+         the stage 0.97 (favourable)                            71.3 (base  48.9, lid  17.5)                 +27.4
+         the front end 0.90                                     22.1 (base  22.1, lid   0.0)                 -21.8
+         the front end 0.97 (favourable)                        71.3 (base  48.9, lid  17.5)                 +27.4
+         the pack's charge efficiency 0.90                    NOT MET,  11.7 unserved                        -55.7
+         the pack's charge efficiency 0.98 (favourable)         71.9 (base  48.9, lid  20.4)                 +28.0
+         the lid loops nominal 0.030 / 0.023 Ohm (favourable)   48.9 (base  44.1, lid   2.2)                  +5.0
+         V(AK) typical 20 mV (favourable)                       44.7 (base  44.1, lid   0.0)                  +0.7
+         no standby drain (favourable)                          45.4 (base  44.3, lid   0.0)                  +1.5
+         the other array build                                NOT MET,  10.8 unserved                        -54.8
+      from WE WAB: NOT MET,  10.8 unserved
+         VBUS20, the endurance bracket 18.782 V               NOT MET,  34.0 unserved                        -23.2
+         VBUS20, the divider-rise bracket 19.101 V            NOT MET,  13.6 unserved                         -2.8
+         VBUS20 nominal 20.000 V (favourable)                   41.5 (base  41.5, lid   0.0)                 +52.3
+         U3's limit 6.0 A                                     NOT MET,  30.9 unserved                        -20.1
+         U3's limit 6.2 A (favourable)                           9.3 (base   9.3, lid   0.0)                 +20.1
+         U3 at TI's reading (favourable)                         1.4 (base   1.4, lid   0.0)                 +12.2
+         U3B carried 0.972 (favourable)                       NOT MET,   4.4 unserved                         +6.5
+         the stage 0.90                                       NOT MET,  30.9 unserved                        -20.1
+         the stage 0.97 (favourable)                            16.0 (base  16.0, lid   0.0)                 +26.8
+         the front end 0.90                                   NOT MET,  30.9 unserved                        -20.1
+         the front end 0.97 (favourable)                        16.0 (base  16.0, lid   0.0)                 +26.8
+         the pack's charge efficiency 0.90                    NOT MET,  63.9 unserved                        -53.1
+         the pack's charge efficiency 0.98 (favourable)         21.1 (base  21.1, lid   0.0)                 +31.9
+         the lid loops nominal 0.030 / 0.023 Ohm (favourable) NOT MET,   6.1 unserved                         +4.7
+         V(AK) typical 20 mV (favourable)                     NOT MET,  10.1 unserved                         +0.7
+         no standby drain (favourable)                        NOT MET,   9.3 unserved                         +1.5
+         the other array build                                  44.0 (base  44.0, lid   0.0)                 +54.8
+      from NOM WAB:   75.7 (base  48.2, lid  27.5)
+         VBUS20 19.146 V                                        35.6 (base  35.6, lid   0.0)                 -40.1
+         U3's limit 6.1 A                                       66.8 (base  45.5, lid  18.2)                  -8.9
+         U3's limit 6.0 A                                       49.4 (base  42.5, lid   4.8)                 -26.3
+         U3 at the makers' maxima                               68.9 (base  46.1, lid  21.4)                  -6.8
+         U3B 0.963                                              72.1 (base  48.2, lid  23.6)                  -3.5
+         the stage 0.90                                         59.2 (base  43.8, lid  11.5)                 -16.5
+         the front end 0.90                                     59.2 (base  43.8, lid  11.5)                 -16.5
+         the pack's charge efficiency 0.90                      28.5 (base  28.5, lid   0.0)                 -47.2
+         the lid loops 0.045 / 0.040 Ohm                        72.6 (base  48.2, lid  24.4)                  -3.1
+         V(AK) 29 mV                                            75.2 (base  48.2, lid  27.0)                  -0.5
+         the standby drain 1.8 Wh                               74.8 (base  48.0, lid  26.8)                  -0.9
+   4S15P, the QMX HF set out (4S21P in all)
+      from WE TYP:   74.3 (base  52.4, lid  19.4)
+         VBUS20, the endurance bracket 18.782 V                 51.0 (base  48.0, lid   3.1)                 -23.3
+         VBUS20, the divider-rise bracket 19.101 V              71.5 (base  51.9, lid  17.4)                  -2.8
+         VBUS20 nominal 20.000 V (favourable)                  113.0 (base  56.9, lid  56.1)                 +38.7
+         U3's limit 6.0 A                                       54.1 (base  48.9, lid   5.2)                 -20.2
+         U3's limit 6.2 A (favourable)                          94.5 (base  55.4, lid  33.6)                 +20.2
+         U3 at TI's reading (favourable)                        87.0 (base  54.3, lid  28.3)                 +12.6
+         U3B carried 0.972 (favourable)                         81.3 (base  52.4, lid  26.4)                  +6.9
+         the stage 0.90                                         52.3 (base  48.4, lid   3.9)                 -22.0
+         the stage 0.97 (favourable)                           102.2 (base  57.0, lid  40.1)                 +27.9
+         the front end 0.90                                     52.3 (base  48.4, lid   3.9)                 -22.0
+         the front end 0.97 (favourable)                       102.2 (base  57.0, lid  40.1)                 +27.9
+         the pack's charge efficiency 0.90                      18.6 (base  18.6, lid   0.0)                 -55.7
+         the pack's charge efficiency 0.98 (favourable)        102.9 (base  56.9, lid  43.1)                 +28.6
+         the lid loops nominal 0.030 / 0.023 Ohm (favourable)   79.5 (base  52.4, lid  24.6)                  +5.2
+         V(AK) typical 20 mV (favourable)                       75.1 (base  52.4, lid  20.2)                  +0.7
+         no standby drain (favourable)                          75.8 (base  52.6, lid  20.5)                  +1.5
+         the other array build                                  19.5 (base  19.5, lid   0.0)                 -54.8
+      from WE WAB:   19.5 (base  19.5, lid   0.0)
+         VBUS20, the endurance bracket 18.782 V               NOT MET,   3.7 unserved                        -23.2
+         VBUS20, the divider-rise bracket 19.101 V              16.7 (base  16.7, lid   0.0)                  -2.8
+         VBUS20 nominal 20.000 V (favourable)                   71.8 (base  51.5, lid  17.5)                 +52.3
+         U3's limit 6.0 A                                     NOT MET,   0.6 unserved                        -20.1
+         U3's limit 6.2 A (favourable)                          39.5 (base  39.5, lid   0.0)                 +20.0
+         U3 at TI's reading (favourable)                        31.7 (base  31.7, lid   0.0)                 +12.2
+         U3B carried 0.972 (favourable)                         26.1 (base  26.1, lid   0.0)                  +6.6
+         the stage 0.90                                       NOT MET,   0.6 unserved                        -20.1
+         the stage 0.97 (favourable)                            46.2 (base  46.2, lid   0.0)                 +26.7
+         the front end 0.90                                   NOT MET,   0.6 unserved                        -20.1
+         the front end 0.97 (favourable)                        46.2 (base  46.2, lid   0.0)                 +26.7
+         the pack's charge efficiency 0.90                    NOT MET,  33.6 unserved                        -53.1
+         the pack's charge efficiency 0.98 (favourable)         51.3 (base  48.2, lid   3.2)                 +31.8
+         the lid loops nominal 0.030 / 0.023 Ohm (favourable)   24.5 (base  24.5, lid   0.0)                  +5.0
+         V(AK) typical 20 mV (favourable)                       20.2 (base  20.2, lid   0.0)                  +0.7
+         no standby drain (favourable)                          21.0 (base  21.0, lid   0.0)                  +1.5
+         the other array build                                  74.3 (base  52.4, lid  19.4)                 +54.8
+      from NOM WAB:  106.8 (base  56.3, lid  50.5)
+         VBUS20 19.146 V                                        66.3 (base  48.8, lid  17.5)                 -40.5
+         U3's limit 6.1 A                                       97.9 (base  53.7, lid  41.0)                  -8.9
+         U3's limit 6.0 A                                       80.2 (base  50.9, lid  27.3)                 -26.6
+         U3 at the makers' maxima                              100.0 (base  54.3, lid  44.2)                  -6.8
+         U3B 0.963                                             103.2 (base  56.3, lid  46.4)                  -3.6
+         the stage 0.90                                         89.9 (base  52.1, lid  34.1)                 -16.8
+         the front end 0.90                                     89.9 (base  52.1, lid  34.1)                 -16.8
+         the pack's charge efficiency 0.90                      59.2 (base  46.8, lid  12.4)                 -47.6
+         the lid loops 0.045 / 0.040 Ohm                       103.6 (base  56.3, lid  47.3)                  -3.2
+         V(AK) 29 mV                                           106.3 (base  56.3, lid  50.0)                  -0.5
+         the standby drain 1.8 Wh                              105.9 (base  56.1, lid  49.8)                  -0.9
+   The unfavourable changes from WE, largest first:
+      4S14P WE TYP: the pack's charge efficiency 0.90 -55.7; the array build -54.8; VBUS20, the endurance bracket 18.782 V -23.2; the front end 0.90 -21.8; the stage 0.90 -21.8; U3's limit 6.0 A -20.1; VBUS20, the divider-rise bracket 19.101 V -2.8
+      4S14P WE WAB: the pack's charge efficiency 0.90 -53.1; VBUS20, the endurance bracket 18.782 V -23.2; the front end 0.90 -20.1; the stage 0.90 -20.1; U3's limit 6.0 A -20.1; VBUS20, the divider-rise bracket 19.101 V -2.8
+      4S15P WE TYP: the pack's charge efficiency 0.90 -55.7; the array build -54.8; VBUS20, the endurance bracket 18.782 V -23.3; the stage 0.90 -22.0; the front end 0.90 -22.0; U3's limit 6.0 A -20.2; VBUS20, the divider-rise bracket 19.101 V -2.8
+      4S15P WE WAB: the pack's charge efficiency 0.90 -53.1; VBUS20, the endurance bracket 18.782 V -23.2; the front end 0.90 -20.1; the stage 0.90 -20.1; U3's limit 6.0 A -20.1; VBUS20, the divider-rise bracket 19.101 V -2.8
+   (the first issue's table, one at a time from NOM TYP, sat where both packs fill before dusk and hid the charge-side
+   losses; it is withdrawn)
+
+4b. THE LOWEST STORE AGAINST THE POWER U3 MAY TAKE (the bus times U3's limit), every other input at NOM, on 40/0
+   into U3    4S14P TYP                    4S14P WAB                    4S15P TYP                    4S15P WAB                  
+    108.0 W  NOT MET,  25.2 Wh unserved   NOT MET,  80.9 Wh unserved   MEETS    5.5                 NOT MET,  50.2 Wh unserved 
+    110.0 W  NOT MET,   3.6 Wh unserved   NOT MET,  59.2 Wh unserved   MEETS   27.1                 NOT MET,  28.5 Wh unserved 
+    112.0 W  MEETS   18.1                 NOT MET,  37.6 Wh unserved   MEETS   48.7                 NOT MET,   6.9 Wh unserved 
+    114.0 W  MEETS   39.7                 NOT MET,  15.9 Wh unserved   MEETS   70.5                 MEETS   14.8               
+    116.0 W  MEETS   61.4                 MEETS    5.7                 MEETS   92.2                 MEETS   36.4               
+    118.0 W  MEETS   76.1                 MEETS   27.4                 MEETS  107.2                 MEETS   58.1               
+    120.0 W  MEETS   85.4                 MEETS   49.0                 MEETS  116.6                 MEETS   79.8               
+    122.0 W  MEETS   93.7                 MEETS   66.7                 MEETS  125.2                 MEETS   97.8               
+    124.0 W  MEETS   93.7                 MEETS   75.7                 MEETS  125.2                 MEETS  106.8               
+    126.0 W  MEETS   93.7                 MEETS   84.3                 MEETS  125.2                 MEETS  115.4               
+    128.0 W  MEETS   93.7                 MEETS   90.9                 MEETS  125.2                 MEETS  122.4               
+    130.0 W  MEETS   93.7                 MEETS   90.9                 MEETS  125.2                 MEETS  122.4               
+   With the TYP build the store rises steeply from 110 to 122 W and is flat above (the packs fill before dusk); with the WAB
+   build it keeps rising to 128 W. The bus's steady-state range is 116.8 to 127.4 W at 6.1 A and 114.9 to 125.3 W at 6.0 A.
+
+5. THE CASES ON THE REFERENCE PLANE (40/0): both packs' lowest store (the base's, the lid's) in Wh or the unserved energy;
+   COMB and EACH: the two pass lines of 1d (Y meets, N does not)
+   lid      case  TYP                                          COMB/EACH WAB                                          COMB/EACH
+   4S9P     NOM   NOT MET, 165.7 unserved                      N/N       NOT MET, 172.6 unserved                      N/N      
+   4S9P     WE    NOT MET, 169.2 unserved                      N/N       NOT MET, 176.1 unserved                      N/N      
+   4S9P     WE60  NOT MET, 169.2 unserved                      N/N       NOT MET, 176.1 unserved                      N/N      
+   4S9P     WEL   NOT MET, 169.2 unserved                      N/N       NOT MET, 177.2 unserved                      N/N      
+   4S9P     WA    NOT MET, 192.1 unserved                      N/N       NOT MET, 246.8 unserved                      N/N      
+   4S9P     WE1   NOT MET, 166.2 unserved                      N/N       NOT MET, 173.0 unserved                      N/N      
+   4S9P     GEN   NOT MET, 494.7 unserved                      N/N       NOT MET, 522.4 unserved                      N/N      
+   4S9P     M207  NOT MET, 165.7 unserved                      N/N       NOT MET, 172.6 unserved                      N/N      
+   4S9P     SC76  NOT MET, 165.7 unserved                      N/N       NOT MET, 172.6 unserved                      N/N      
+   4S14P    NOM     93.7 (base  49.0, lid  44.6)               Y/Y         75.7 (base  48.2, lid  27.5)               Y/Y      
+   4S14P    WE      44.0 (base  44.0, lid   0.0)               Y/N       NOT MET,  10.8 unserved                      N/N      
+   4S14P    WE60    23.9 (base  23.9, lid   0.0)               Y/N       NOT MET,  30.9 unserved                      N/N      
+   4S14P    WEL     20.8 (base  20.8, lid   0.0)               Y/N       NOT MET,  34.0 unserved                      N/N      
+   4S14P    WA    NOT MET,  71.8 unserved                      N/N       NOT MET, 122.0 unserved                      N/N      
+   4S14P    WE1     51.1 (base  44.3, lid   4.0)               Y/N       NOT MET,   3.9 unserved                      N/N      
+   4S14P    GEN   NOT MET, 357.5 unserved                      N/N       NOT MET, 383.8 unserved                      N/N      
+   4S14P    M207    93.7 (base  49.0, lid  44.6)               Y/Y         85.4 (base  48.2, lid  37.3)               Y/Y      
+   4S14P    SC76    65.1 (base  45.5, lid  15.8)               Y/Y          9.4 (base   9.4, lid   0.0)               Y/N      
+   4S15P    NOM    125.2 (base  57.1, lid  68.1)               Y/Y        106.8 (base  56.3, lid  50.5)               Y/Y      
+   4S15P    WE      74.3 (base  52.4, lid  19.4)               Y/Y         19.5 (base  19.5, lid   0.0)               Y/N      
+   4S15P    WE60    54.1 (base  48.9, lid   5.2)               Y/Y       NOT MET,   0.6 unserved                      N/N      
+   4S15P    WEL     51.0 (base  48.0, lid   3.1)               Y/N       NOT MET,   3.7 unserved                      N/N      
+   4S15P    WA    NOT MET,  41.5 unserved                      N/N       NOT MET,  93.2 unserved                      N/N      
+   4S15P    WE1     81.7 (base  52.6, lid  26.4)               Y/Y         26.7 (base  26.7, lid   0.0)               Y/N      
+   4S15P    GEN   NOT MET, 326.6 unserved                      N/N       NOT MET, 352.8 unserved                      N/N      
+   4S15P    M207   125.2 (base  57.1, lid  68.1)               Y/Y        116.6 (base  56.3, lid  60.3)               Y/Y      
+   4S15P    SC76    95.9 (base  53.7, lid  38.5)               Y/Y         40.1 (base  40.1, lid   0.0)               Y/N      
+
+6. THE PLANES: bands where BOTH builds pass, per case and pass line (maps: B both builds pass, T the TYP build only
+   passes, - neither), INFERRED from the grid
+   4S14P, the tablet bracket out (4S20P in all)
+      case NOM, pass line COMB
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     T    T    T    T    T    T    T
+             20     T    T    B    B    B    B    T
+             30     T    T    B    B    B    B    T
+             40     -    T    B    B    B    B    T
+             50     -    T    B    B    B    B    T
+             60     -    -    T    B    B    T    -
+             70     -    -    T    B    T    -    -
+         band: slope 20 to 50, azimuth -15 to +30 (16 points); least both 18.3 Wh at 50/+30 WAB; base 18.3 Wh at 50/+30 WAB; lid 0.0 Wh at 20/-15 WAB
+         band: slope 20 to 60, azimuth  +0 to +15 (10 points); least both 35.2 Wh at 60/+15 WAB; base 35.2 Wh at 60/+15 WAB; lid 0.0 Wh at 20/+15 WAB
+         band: slope 20 to 70, azimuth  +0 to  +0 ( 6 points); least both 9.8 Wh at 70/+0 WAB; base 9.8 Wh at 70/+0 WAB; lid 0.0 Wh at 70/+0 WAB
+      case NOM, pass line EACH
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    T    T    T    T    -
+             20     -    T    T    T    T    T    T
+             30     -    T    T    B    B    T    T
+             40     -    T    T    B    B    T    T
+             50     -    -    T    B    B    T    -
+             60     -    -    T    B    T    -    -
+             70     -    -    -    T    T    -    -
+         band: slope 30 to 50, azimuth  +0 to +15 ( 6 points); least both 62.9 Wh at 50/+15 WAB; base 45.8 Wh at 50/+15 WAB; lid 17.1 Wh at 50/+15 WAB
+         band: slope 30 to 60, azimuth  +0 to  +0 ( 4 points); least both 55.0 Wh at 60/+0 WAB; base 42.6 Wh at 60/+0 WAB; lid 8.5 Wh at 60/+0 WAB
+      case WE, pass line COMB
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    -    T    T    T    -
+             30     -    -    T    T    T    T    -
+             40     -    -    T    T    T    -    -
+             50     -    -    T    T    T    -    -
+             60     -    -    -    T    -    -    -
+             70     -    -    -    -    -    -    -
+         band: none
+      case WE, pass line EACH
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    -    -    -    -    -
+             30     -    -    -    -    -    -    -
+             40     -    -    -    -    -    -    -
+             50     -    -    -    -    -    -    -
+             60     -    -    -    -    -    -    -
+             70     -    -    -    -    -    -    -
+         band: none
+      case WE60, pass line COMB
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    -    -    -    -    -
+             30     -    -    -    T    T    -    -
+             40     -    -    -    T    T    -    -
+             50     -    -    -    T    -    -    -
+             60     -    -    -    -    -    -    -
+             70     -    -    -    -    -    -    -
+         band: none
+      case WE60, pass line EACH
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    -    -    -    -    -
+             30     -    -    -    -    -    -    -
+             40     -    -    -    -    -    -    -
+             50     -    -    -    -    -    -    -
+             60     -    -    -    -    -    -    -
+             70     -    -    -    -    -    -    -
+         band: none
+      case WA, pass line COMB
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    -    -    -    -    -
+             30     -    -    -    -    -    -    -
+             40     -    -    -    -    -    -    -
+             50     -    -    -    -    -    -    -
+             60     -    -    -    -    -    -    -
+             70     -    -    -    -    -    -    -
+         band: none
+      case WA, pass line EACH
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    -    -    -    -    -
+             30     -    -    -    -    -    -    -
+             40     -    -    -    -    -    -    -
+             50     -    -    -    -    -    -    -
+             60     -    -    -    -    -    -    -
+             70     -    -    -    -    -    -    -
+         band: none
+   4S15P, the QMX HF set out (4S21P in all)
+      case NOM, pass line COMB
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    T    .    .    .
+             10     T    T    B    B    B    T    T
+             20     T    B    B    B    B    B    B
+             30     T    B    B    B    B    B    B
+             40     T    B    B    B    B    B    B
+             50     -    T    B    B    B    B    T
+             60     -    T    B    B    B    B    -
+             70     -    -    T    B    B    T    -
+         band: slope 20 to 60, azimuth -15 to +30 (20 points); least both 6.6 Wh at 60/+30 WAB; base 6.6 Wh at 60/+30 WAB; lid 0.0 Wh at 60/-15 WAB
+         band: slope 10 to 60, azimuth -15 to +15 (18 points); least both 4.8 Wh at 10/-15 WAB; base 4.8 Wh at 10/-15 WAB; lid 0.0 Wh at 10/-15 WAB
+         band: slope 20 to 40, azimuth -30 to +45 (18 points); least both 17.4 Wh at 40/+45 WAB; base 17.4 Wh at 40/+45 WAB; lid 0.0 Wh at 20/-30 WAB
+      case NOM, pass line EACH
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     T    T    T    T    T    T    T
+             20     T    T    B    B    B    B    T
+             30     T    T    B    B    B    B    T
+             40     -    T    B    B    B    B    T
+             50     -    T    B    B    B    B    T
+             60     -    -    T    B    B    T    -
+             70     -    -    -    T    T    -    -
+         band: slope 20 to 50, azimuth -15 to +30 (16 points); least both 49.0 Wh at 50/+30 WAB; base 44.2 Wh at 50/+30 WAB; lid 4.8 Wh at 50/+30 WAB
+         band: slope 20 to 60, azimuth  +0 to +15 (10 points); least both 65.9 Wh at 60/+15 WAB; base 49.0 Wh at 60/+15 WAB; lid 16.9 Wh at 60/+15 WAB
+      case WE, pass line COMB
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    T    T    -    -
+             20     -    -    T    T    T    T    T
+             30     -    -    T    B    B    T    -
+             40     -    -    T    B    B    T    -
+             50     -    -    T    B    B    -    -
+             60     -    -    -    T    T    -    -
+             70     -    -    -    T    -    -    -
+         band: slope 30 to 50, azimuth  +0 to +15 ( 6 points); least both 5.3 Wh at 50/+15 WAB; base 5.3 Wh at 50/+15 WAB; lid 0.0 Wh at 30/+0 WAB
+      case WE, pass line EACH
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    -    -    -    -    -
+             30     -    -    -    T    T    -    -
+             40     -    -    -    T    T    -    -
+             50     -    -    -    T    T    -    -
+             60     -    -    -    -    -    -    -
+             70     -    -    -    -    -    -    -
+         band: none
+      case WE60, pass line COMB
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    T    T    T    T    -
+             30     -    -    T    T    T    T    -
+             40     -    -    T    T    T    T    -
+             50     -    -    T    T    T    -    -
+             60     -    -    -    T    T    -    -
+             70     -    -    -    -    -    -    -
+         band: none
+      case WE60, pass line EACH
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    -    -    -    -    -
+             30     -    -    -    -    -    -    -
+             40     -    -    -    T    -    -    -
+             50     -    -    -    -    -    -    -
+             60     -    -    -    -    -    -    -
+             70     -    -    -    -    -    -    -
+         band: none
+      case WA, pass line COMB
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    -    -    -    -    -
+             30     -    -    -    -    -    -    -
+             40     -    -    -    -    -    -    -
+             50     -    -    -    -    -    -    -
+             60     -    -    -    -    -    -    -
+             70     -    -    -    -    -    -    -
+         band: none
+      case WA, pass line EACH
+          slope   -45  -30  -15   +0  +15  +30  +45
+              0     .    .    .    -    .    .    .
+             10     -    -    -    -    -    -    -
+             20     -    -    -    -    -    -    -
+             30     -    -    -    -    -    -    -
+             40     -    -    -    -    -    -    -
+             50     -    -    -    -    -    -    -
+             60     -    -    -    -    -    -    -
+             70     -    -    -    -    -    -    -
+         band: none
+
+7. WHAT EACH UNDOCUMENTED FIGURE MUST REACH: at each point, the input alone moved from WE (the rest as WE), the least
+   value at which both builds still pass the line (bisection; 'any' = passes at the search's worst end; 'none' = fails
+   at its best end)
+   lid      point   line  pack charge  stage        front end    VBUS20       U3's limit  
+                    WE's  0.95         0.93         0.93         19.146 V     6.1 A       
+   4S15P    30/+0   COMB  0.941        0.917        0.917        19.002 V     6.054 A     
+   4S15P    30/+0   EACH  0.987        0.989        0.989        19.830 V     6.318 A     
+   4S15P    30/+15  COMB  0.945        0.922        0.922        19.061 V     6.073 A     
+   4S15P    30/+15  EACH  0.991        0.995        0.995        19.911 V     6.344 A     
+   4S15P    40/+0   COMB  0.936        0.907        0.907        18.910 V     6.025 A     
+   4S15P    40/+0   EACH  0.981        0.980        0.980        19.663 V     6.265 A     
+   4S15P    40/+15  COMB  0.940        0.916        0.916        18.981 V     6.047 A     
+   4S15P    40/+15  EACH  0.986        0.986        0.986        19.808 V     6.311 A     
+   4S15P    50/+0   COMB  0.942        0.917        0.917        19.016 V     6.059 A     
+   4S15P    50/+0   EACH  0.988        0.991        0.991        19.770 V     6.299 A     
+   4S15P    50/+15  COMB  0.949        0.929        0.929        19.125 V     6.093 A     
+   4S15P    50/+15  EACH  0.995        none         none         20.034 V     none        
+   4S14P    30/+0   COMB  0.970        0.962        0.962        19.488 V     6.209 A     
+   4S14P    30/+0   EACH  none         none         none         20.417 V     none        
+   4S14P    40/+0   COMB  0.964        0.952        0.952        19.377 V     6.174 A     
+   4S14P    40/+0   EACH  none         none         none         20.220 V     none        
+   4S14P    40/+15  COMB  0.968        0.958        0.958        19.464 V     6.201 A     
+   4S14P    40/+15  EACH  none         none         none         20.361 V     none        
+   4S14P    50/+0   COMB  0.971        0.963        0.963        19.484 V     6.208 A     
+   4S14P    50/+0   EACH  none         none         none         20.349 V     none        
+   The makers' documents for the three efficiencies (section 2): the stage's curve reads 96.5 to 96.8 % and the front end's
+   97.8 to 97.9 % at their nearest printed points (other circuits, typical, INFERRED); the cell sheet bounds the charge
+   efficiency's resistive part at 0.9924 to 0.9937 from above. None establishes a figure for this kit.
+
+8. INFORMATIVE ONLY, NOT A REQUIREMENT CASE: M1 IN SEPTEMBER'S ACTUAL WEATHER, 2005 TO 2020, AT 40/0
+   data: v2/vendor/solar/pvgis-series/pvgis-leiden-seriescalc-2005-2020-september-slope40-aspect0.json (fetched by fetch_pvgis_series.py: PVGIS 5.2 seriescalc, PVGIS-SARAH2 2005 to 2020, latitude 52.160, longitude 4.497, slope 40,
+   azimuth 0, hourly averages, UTC): its mean September day is 3.983 kWh/m2, the DRcalc profile's 3.983 (hour by hour equal: yes).
+   Method (one site, one plane, one method): every 72 hour window starting at 06 or 18 UTC on 1 to 27 September of each year
+   (864 windows); the series as PVGIS gives it (NOT scaled to the 2015 to 2020 monthly mean); each calendar day's own TYP or
+   WAB ratio folded into its hours; the lid pack at the window's own minimum air; a full pack at the start; the rest as 1.
+   M1 counted as met when neither pack path stops the kit (the model's verdict); WE is CONDITIONAL (1c).
+   72 hour irradiation over the windows: lowest 3.17, 10th percentile 7.36, median 11.45 kWh/m2; the reference day x 3: 12.04
+   lid      case      windows meeting M1     the darkest window                       the 10th percentile window               meets from / fails up to (kWh/m2)
+   4S14P    NOM TYP    207 of  864 ( 24.0 %)   2019-09-23 18h 3.17 kWh/m2, NOT MET 1461 Wh 2011-09-19 18h 7.36 kWh/m2, NOT MET 846 Wh 9.86 / 18.23
+   4S14P    WE TYP     166 of  864 ( 19.2 %)   2019-09-23 18h 3.17 kWh/m2, NOT MET 1471 Wh 2011-09-19 18h 7.36 kWh/m2, NOT MET 865 Wh 11.24 / 18.68
+   4S14P    WE WAB     121 of  864 ( 14.0 %)   2019-09-23 18h 3.17 kWh/m2, NOT MET 1572 Wh 2011-09-19 18h 7.36 kWh/m2, NOT MET 956 Wh 12.51 / 19.22
+   4S15P    NOM TYP    235 of  864 ( 27.2 %)   2019-09-23 18h 3.17 kWh/m2, NOT MET 1436 Wh 2011-09-19 18h 7.36 kWh/m2, NOT MET 815 Wh 9.86 / 18.23
+   4S15P    WE TYP     190 of  864 ( 22.0 %)   2019-09-23 18h 3.17 kWh/m2, NOT MET 1446 Wh 2011-09-19 18h 7.36 kWh/m2, NOT MET 834 Wh 10.69 / 18.23
+   4S15P    WE WAB     151 of  864 ( 17.5 %)   2019-09-23 18h 3.17 kWh/m2, NOT MET 1549 Wh 2011-09-19 18h 7.36 kWh/m2, NOT MET 925 Wh 11.45 / 19.22
+   4S9P is not run here: it does not meet M1 on the mean day in any case (section 5).
+   Limits of this case: PVGIS's 0.9417 is an average loss applied to single days; one plane; the base at +20 C; a full pack
+   at every window's start (no carry-over from the days before); SARAH2's hourly averages as given.
+
+END. Each line is the model's arithmetic; nothing is measured.

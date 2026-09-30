@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Row L3-OD4 of OWNER-DECISIONS-L3.md: M1's deployment conditions for the lid chosen in row L3-OD2 and the array chosen
-in row L3-OD3. PREPARED, NOT APPLIED. HELD by the owner's review of 30 September 2026 (D-22) until the checked energy
-comparison is filed (a copy is not held).
+in row L3-OD3. PREPARED, NOT APPLIED. Held by the owner's review of 30 September 2026 (D-22) and his addendum (D-24) until
+the checked energy basis and the checked power path are filed (both are, since round 3c; a copy is never held).
 
   --option adopt   requires row L3-OD6 answered mean-day first (the band is a mean-day grid's, so it follows the owner's
                    weather answer and never precedes it, D-23), row L3-OD1 approved, row L3-OD2 decided and row L3-OD3
@@ -9,20 +9,20 @@ comparison is filed (a copy is not held).
                    grid has been run for (v2/docs/records/l3plane/plane_grid.out ran 400 Wp in 2S2P into 200 W; a band for
                    1S4P or for REQ-016 kept needs its own grid, so the script refuses those answers). It is refused while
                    row L3-OD6 stands answered coverage: the grid runs SC-37's mean day on each plane, and no band
-                   exists for a coverage target. REQ-072's acceptance
-                   gains the array's plane band, and a new requirement (the next free REQ id, parent NEED-06, prototype 1
+                   exists for a coverage target. REQ-072 gains a note that no plane band exists (the BAND table),
+                   and a new requirement (the next free REQ id, parent NEED-06, prototype 1
                    core by the ruling) states the open kit's stability: the ground slope toward the hinge a1mech gives for
                    the chosen lid, and the operator push the owner sets.
   --option reject  requires rows L3-OD1 to L3-OD3 decided: no deployment condition; REQ-072 gains a note.
 Row L3-OD2 answered both-kept (a 4S9P lid, M1 not met): adopt is refused, reject stands.
 
-THE BAND COMES FROM THE CHECKED ENERGY BASIS (CHECK-1, B2): it is given with --band "<text>" and --band-evidence PATH, and
-the text must stand in that file as a whole line, table cell or quoted phrase, and on the tree's registry that file must
-be the filed basis or one of its outputs, until the basis is filed and this script's BAND table is written from it. The operator
+THE BAND COMES FROM THE CHECKED ENERGY BASIS (CHECK-1, B2), at the supply range's low end with U3's 6.0 A bracket: the
+BAND table below is written from the filed basis (fnd/l3plane cd8720a1, checked by the energy stream's CHECK-5), which gives
+no band there for any lid, so adopt states the open kit's stability with no plane band; --band is refused. The operator
 push is the owner's: --push-n N, from his answer. Every other figure is asserted in v2/docs/records/a1mech/README.md.
 
 Usage: python3 od_l3_4.py --option adopt|reject --words "<the owner's words>" --date YYYY-MM-DD [--check] [--registry PATH]
-       [--band "<band text>" --band-evidence PATH --push-n N]   (adopt)
+       [--push-n N]   (adopt)
 """
 import os
 import sys
@@ -33,7 +33,13 @@ import cond as C  # noqa: E402
 
 E = C.E
 ROW = "L3-OD4"
-BAND = {}   # written from the checked energy basis: {lid option: band text}; until then --band and --band-evidence
+# The band, written from the checked energy basis at the supply range's low end with U3's 6.0 A bracket (case WE60):
+# none exists for any lid on either pass line (ENERGY-BASIS.md section 1, "Band at WE60 (either line)", asserted below;
+# energy_basis.out 6). So adopt states the open kit's stability and no plane band, and M1 stays judged on SC-37's
+# reference plane. A band text given with --band is refused while the basis gives none.
+BASIS = "v2/docs/records/l3plane/ENERGY-BASIS.md"
+BAND_ROW = "| Band at WE60 (either line) | none | none | none |"
+BAND = {"qmx-out": None, "qmx-outside": None, "tablet-out": None}
 MECH = {    # the open kit's tipping on its stay, a1mech README section 5 (interim, until T-A1-3 measures the feet)
     "qmx-out": {"slope": 1, "mech": "**C on 1.2**", "push": "6.1 N at its far edge", "at": "a press normal to the lid tablet's screen at its far edge"},
     "qmx-outside": {"slope": 1, "mech": "**C on 1.2**", "push": "6.1 N at its far edge", "at": "a press normal to the lid tablet's screen at its far edge"},
@@ -60,32 +66,38 @@ def build(a, raw, d):
     M = MECH.get(lid)
     if M: E.assert_in("v2/docs/records/a1mech/README.md", ["a lid stay at 100 degrees", M["mech"], M["push"]])
     if op == "adopt":
-        band = BAND.get(lid) or a["extra"].get("band")
-        bev = a["extra"].get("band-evidence")
+        band = BAND.get(lid)
         push = a["extra"].get("push-n")
-        if not band or (lid not in BAND and not bev):
-            E.refuse("adopt needs the band from the checked energy basis: --band and --band-evidence (CHECK-1, B2)")
+        if a["extra"].get("band"):
+            E.refuse("the checked basis gives no band at U3's 6.0 A bracket; a band text is not taken from the command line")
         if not push or not push.replace(".", "", 1).isdigit():
             E.refuse("adopt needs --push-n, the operator push the open kit must stand, from the owner's answer")
-        if bev:
-            et = C.evidence_path(a, bev)     # on the tree: the filed basis only (CHECK-2 of L3-R2, minor 6)
-            if not C.exact_phrase(et, band):
-                E.refuse("%s does not carry the band %r as a whole line, cell or quoted phrase" % (bev, band))
+        if band is None:
+            E.assert_in(BASIS, [BAND_ROW])
+            where = ("no plane band: none exists at the supply range's low end with U3's 6.0 A bracket (" + BASIS +
+                     " section 1, energy_basis.out 6), so M1 stays judged on SC-37's reference plane")
+        else:
+            where = "the array at %s" % band
         ruling = ("Row L3-OD4 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md decided: M1's deployment conditions for the "
-                  "%s lid and the 2S2P array are the array at %s, and the open kit, its lid pack and lid items fitted, on "
-                  "ground sloping at most %s toward the hinge and standing an operator push of %s N; both are proposed "
-                  "narrower operating conditions the owner approves here, restated when the case's feet are measured "
-                  "(T-A1-3) and when the charge bus is measured at bring-up." % (lid, band, deg(M["slope"]), push))
+                  "%s lid and the 2S2P array are %s, and the open kit, its lid pack and lid items fitted, on ground sloping "
+                  "at most %s toward the hinge and standing an operator push of %s N; a proposed narrower operating "
+                  "condition the owner approves here, restated when the case's feet are measured (T-A1-3)."
+                  % (lid, where, deg(M["slope"]), push))
         raw, rid = C.add_ruling(raw, d, ROW, "adopt", "M1's deployment conditions adopted (row L3-OD4)", ruling,
                                 a["words"], a["date"])
-        add = ("M1's deployment condition (%s): the array faces %s. The desk calculation above holds on every grid plane of "
-               "that band, each on its own reference-day profile (v2/docs/records/l3plane/plane_grid.py), and the "
-               "prototype run is repeated with the array emulator following the band's least-energy grid plane." % (rid, band))
-        E.screen(add, "REQ-072's added acceptance")
-        raw = E.replace_entry(raw, "REQ-072", lambda b: C.add_ruling_ref(E.append_folded(b, "acceptance", add), rid), "records")
-        raw = E.replace_entry(raw, "REQ-072", lambda b: E.append_folded(b, "history",
-            "The deployment condition added to the acceptance by %s (row L3-OD4, %s)." % (rid, a["date"]), after="source_check"),
-            "records")
+        if band is None:
+            note = "M1's deployment condition (%s, row L3-OD4, %s): %s." % (rid, a["date"], where)
+            E.screen(note, "REQ-072's note")
+            raw = E.replace_entry(raw, "REQ-072", lambda b: C.add_ruling_ref(E.append_folded(b, "notes", note), rid), "records")
+        else:
+            add = ("M1's deployment condition (%s): the array faces %s. The desk calculation above holds on every grid plane "
+                   "of that band, each on its own reference-day profile (v2/docs/records/l3plane/plane_grid.py), and the "
+                   "prototype run is repeated with the array emulator following the band's least-energy grid plane." % (rid, band))
+            E.screen(add, "REQ-072's added acceptance")
+            raw = E.replace_entry(raw, "REQ-072", lambda b: C.add_ruling_ref(E.append_folded(b, "acceptance", add), rid), "records")
+            raw = E.replace_entry(raw, "REQ-072", lambda b: E.append_folded(b, "history",
+                "The deployment condition added to the acceptance by %s (row L3-OD4, %s)." % (rid, a["date"]), after="source_check"),
+                "records")
         nid = E.next_id(d, "REQ", ("records",))
         st = ("With the lid open as the kit is deployed and the lid pack and lid items fitted, the kit stands without "
               "tipping on ground sloping up to %s toward the hinge side, and under an operator push of up to %s N at any "
