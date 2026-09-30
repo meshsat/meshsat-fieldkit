@@ -2,7 +2,7 @@
 """Row L3-OD7 of OWNER-DECISIONS-L3.md: M1's runtime and its store, with HF and the tablet kept. PREPARED, NOT APPLIED.
 No prerequisite; answered before rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6, whose scripts refuse until it is (D-27,
 cond.runtime_first). HELD by the owner's addendum (D-27) until stream l3batt's runtime comparison is filed with its
-accepted check (l3r2.yaml `runtime_comparison`, filed: fnd/l3batt 83577a13, CHECK-2); every figure it writes is row
+accepted check (l3r2.yaml `runtime_comparison`, filed: fnd/l3batt 63897fc3, CHECK-3; runtime.out unchanged since 83577a13); every figure it writes is row
 L3-OD7's table, verified against the filed runtime.out by exact keys before anything is written (cond.runtime_figures).
 
 D-27, the owner: "Evaluate alternatives before asking me to sacrifice functions or accept restrictive deployment
@@ -106,7 +106,7 @@ def build(a, raw, d):
     if P["load"] or P["hours"] != "72":
         new_acc = new_acc.replace(OLD_ACC["proto"], "the kit runs PS-IDLE-SPEC%s for %s hours from a full pack" % (P["load"], P["hours"]))
     raw = C.restate(raw, "REQ-072", stamp, statement=new_st, acceptance=(new_acc if new_acc != acc else None))
-    notes = ["Row L3-OD7 (%s, %s), on the runtime comparison of stream l3batt (fnd/l3batt 83577a13, CHECK-2): %s." % (
+    notes = ["Row L3-OD7 (%s, %s), on the runtime comparison of stream l3batt (fnd/l3batt 63897fc3, CHECK-3; runtime.out unchanged since 83577a13): %s." % (
         rid, a["date"], RUNTIME[op])]
     if op.startswith("48"):
         notes.append("The 72 hours desired are a design objective beside the requirement, not its pass line.")

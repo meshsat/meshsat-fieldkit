@@ -12,6 +12,11 @@
 - Every figure is MAKER, NETLIST, MODELED or INFERRED. The sources are `runtime.out`, `lid_21700.out`, `load_trace.out`,
   `SHORTLIST.md` and `PROVENANCE.md` in this folder.
 
+**Tablet charging, added on 30 September 2026: see `TABLET-BUDGET.md`.** The store figures on this page carry no tablet
+energy. That page proposes a USB-C service budget (a PROPOSAL: 36 Wh a day at the outlet, 18 W peak, one 2 h daylight
+window) and carries it through both options. With it, Option B's external store at TYP is about 190 Wh (WE, NOM90),
+not about 120 Wh; Option A's is about 115 Wh.
+
 ## 0. The inputs, stated once
 
 **The profile: PS-IDLE-SPEC, 42.8 W at the pack terminals** (`load_trace.out`).
@@ -136,7 +141,8 @@ Peli 1450 and the approved load, and it is a **PROPOSAL**. Authorizing it would 
     overnight is not an acceptable substitute";
   - joined at VBAT it reopens D-06 (EQ-13 route (d), "it reopens D-06").
 - **whether WAB becomes an acceptance condition**, which raises both figures (to +109 and +189 Wh);
-- **whether the tablet is to be charged through M1**, which adds an allowance not yet quantifiable (no tablet model).
+- **whether the tablet is to be charged through M1**, which adds an allowance not yet quantifiable (no tablet model);
+  since quantified as a proposed budget in `TABLET-BUDGET.md`.
 
 **3. If no external battery is authorized:** accepting that M1 is not met with HF and the tablet kept (owner action
 M-02). No in-case arrangement found carries either 48 or 72 hours.

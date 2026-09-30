@@ -84,8 +84,26 @@ for basis in ("mean-day", "50", "80", "95"):
                        "null" if basis == "mean-day" else basis, build, fits))
 
 
+def base_registry():
+    """The registry the chains start from: the tree's while its rows are undecided; once the closure decided them (D-28,
+    D-29), the registry as it stood before the closure, read from git at l3r2.yaml's closure_cycle.pre_closure_commit."""
+    import yaml
+    y = yaml.safe_load(open(REG, encoding="utf-8"))
+    if not any(str(r.get("decides") or "").startswith("L3-OD") for r in y["owner_rulings"]): return REG
+    data = yaml.safe_load(open(os.path.join(TOP, "v2/docs/handover/layer3/l3r2.yaml"), encoding="utf-8"))
+    sha = data["closure_cycle"]["pre_closure_commit"]
+    raw = subprocess.run(["git", "show", "%s:v2/ecad/tools/pcb_requirements.yaml" % sha], cwd=TOP, capture_output=True, check=True).stdout
+    path = os.path.join(tempfile.mkdtemp(prefix="l3r2-dry-base-"), "pcb_requirements.yaml")
+    open(path, "wb").write(raw)
+    return path
+
+
 def main(argv):
+    base = base_registry()
     print("L3-R2 DRY RUNS of the prepared owner-decision scripts, each chain on a fresh copy of the registry.")
+    if base != REG:
+        print("The tree's rows are decided by the closure (D-28, D-29): each chain starts from the registry as it stood before")
+        print("the closure, read from git at l3r2.yaml's closure_cycle.pre_closure_commit.")
     print("Placeholder words 'dry run', date 2026-10-01. Nothing in the tree is written. The checked basis (fnd/l3plane cd8720a1,")
     print("CHECK-5) is filed, so the tree's rows are no longer held; the chains run on copies. Row L3-OD3's keep figures and")
     print("row L3-OD6's table come from FIXTURE files, except in the chain that reads the tree's filled table; row L3-OD4's band")
@@ -100,7 +118,7 @@ def main(argv):
             steps = [("od_l3_7.py", "72-required")] + list(steps)
         d = tempfile.mkdtemp(prefix="l3r2-dry-")
         reg = os.path.join(d, "pcb_requirements.yaml")
-        shutil.copy(REG, reg)
+        shutil.copy(base, reg)
         ev = os.path.join(d, "basis-fixture.md")
         open(ev, "w", encoding="utf-8").write('FIXTURE, not the energy basis: "%s"; array 1100 Wp, entry 80 A.\n' % BAND)
         table = os.path.join(d, "table-fixture.yaml")

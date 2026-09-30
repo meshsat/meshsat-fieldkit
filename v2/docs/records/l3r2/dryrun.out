@@ -1,4 +1,6 @@
 L3-R2 DRY RUNS of the prepared owner-decision scripts, each chain on a fresh copy of the registry.
+The tree's rows are decided by the closure (D-28, D-29): each chain starts from the registry as it stood before
+the closure, read from git at l3r2.yaml's closure_cycle.pre_closure_commit.
 Placeholder words 'dry run', date 2026-10-01. Nothing in the tree is written. The checked basis (fnd/l3plane cd8720a1,
 CHECK-5) is filed, so the tree's rows are no longer held; the chains run on copies. Row L3-OD3's keep figures and
 row L3-OD6's table come from FIXTURE files, except in the chain that reads the tree's filled table; row L3-OD4's band

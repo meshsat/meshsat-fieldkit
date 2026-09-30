@@ -105,9 +105,8 @@ def t_l3r5_the_acceptance_definitions_are_in_the_restatements():
     approved apart from its compliance (FI-06); the candidate's status stays beside each, never a PASS."""
     need(COND, "the conditional scripts are not in this tree")
     import yaml
-    reg0 = os.path.join(TOOLS, "pcb_requirements.yaml")
-    if any(str(r.get("decides") or "").startswith("L3-OD") for r in yaml.safe_load(open(reg0, encoding="utf-8"))["owner_rulings"]):
-        raise Skip("rows are decided in this tree")
+    import l3pre
+    reg0 = l3pre.base_registry()
     d = tempfile.mkdtemp(prefix="l3r5-reg-")
     reg = os.path.join(d, "pcb_requirements.yaml")
     shutil.copy(reg0, reg)
@@ -164,28 +163,6 @@ def t_l3r5_the_status_level_follows_the_answers():
     assert RL.status_level(req, dec, d2, h3)[0] is None, "decisions read recorded with the feasibility record unbound"
 
 
-def t_l3r5_layer_status_restated_on_a_copy():
-    need(LSTAT, "apply_layer_status_l3_r5.py is not in this tree")
-    sys.path.insert(0, REC5)
-    import apply_layer_status_l3_r5 as A
-    page = os.path.join(ROOT, "v2", "docs", "handover", "LAYER-STATUS.md")
-    t = open(page, encoding="utf-8").read()
-    if A.MARK in t:
-        r = _run([LSTAT, "--check"])
-        assert r.returncode == 2 and "has run" in r.stdout, "a second run was not refused:\n%s" % r.stdout
-        for old, new in reversed(A.EDITS): t = t.replace(new, old)
-    cp = os.path.join(tempfile.mkdtemp(prefix="l3r5-ls-"), "LAYER-STATUS.md")
-    open(cp, "w", encoding="utf-8").write(t)
-    r = _run([LSTAT, "--page", cp])
-    assert r.returncode == 0, "the page was not restated on a copy:\n%s" % r.stdout
-    new = open(cp, encoding="utf-8").read()
-    assert A.MARK in new and "Status level (the owner's reviewer's three, D-26)" in new
-    back = new
-    for old, nw in reversed(A.EDITS): back = back.replace(nw, old)
-    assert back == t, "the page moved outside the restated texts"
-    assert _run([LSTAT, "--page", cp]).returncode == 2, "a second run on the copy was not refused"
-
-
 def t_l3r5_d27_is_recorded_once_with_the_addendum_quoted():
     need(D27, "the D-27 script is not in this tree")
     sys.path.insert(0, REC5)
@@ -222,7 +199,8 @@ def t_l3r5_the_72_hours_are_the_sessions_sc21_preserved_by_d20():
     assert (pv["choice"], pv["preserved_by"], pv["read_as_approved_under"], pv["questioned_by"]) == ("SC-21", "D-20", "D-21", "D-27")
     assert RL.basis_ok(data, "runtime_comparison")[0], "the comparison is not bound to its checked tip"
     rp = os.path.join(ROOT, pv["record"])
-    assert pv["record"] in [o["path"] for o in data["runtime_comparison"]["outputs"]], "PROVENANCE.md is not bound by the check"
+    assert pv["record"] == data["runtime_provenance_basis"]["record"] and RL.basis_ok(data, "runtime_provenance_basis")[0], \
+        "PROVENANCE.md is not bound by the check that lists it"
     prov = " ".join(open(rp, encoding="utf-8").read().split())
     for w in ("**Provenance of 72 hours as the owner's: UNVERIFIED.**", "SC-L2-05", "`de59686e`"):
         assert w in prov, "PROVENANCE.md does not read %r" % w
@@ -245,7 +223,7 @@ def t_l3r5_row_7_is_filled_from_the_checked_comparison_by_exact_keys():
     assert row["runtime_table"]["store"] == tbl["store"] and row["runtime_table"]["rows"] == tbl["rows"]
     r = _run([os.path.join(REC5, "fill_l3r7_from_comparison.py"), "--check"])
     assert r.returncode == 2 and "has run" in r.stdout, r.stdout
-    assert [c["verdict"] for c in RL.filed(data, "runtime_checks")] == ["ACCEPTED", "ACCEPTED"]
+    assert [c["verdict"] for c in RL.filed(data, "runtime_checks")] == ["ACCEPTED", "ACCEPTED", "ACCEPTED"]
     src = " ".join(" ".join(open(os.path.join(ROOT, "v2/docs/records/l3batt", f), encoding="utf-8").read().split())
                    for f in ("runtime.out", "COMPARISON.md", "SHORTLIST.md", "PROVENANCE.md"))
     prose = " ".join([row["owner_test"], row["recommendation"], row["consequences"]] +
@@ -266,9 +244,8 @@ def t_l3r5_row_7_comes_first_and_carries_its_answer():
     records FI-04. Row L3-OD7 is held on the tree's registry only while the comparison is not bound (it is)."""
     need(COND, "the conditional scripts are not in this tree")
     import yaml
-    reg0 = os.path.join(TOOLS, "pcb_requirements.yaml")
-    if any(str(r.get("decides") or "").startswith("L3-OD") for r in yaml.safe_load(open(reg0, encoding="utf-8"))["owner_rulings"]):
-        raise Skip("rows are decided in this tree")
+    import l3pre
+    reg0 = l3pre.base_registry()
     def copy():
         d = tempfile.mkdtemp(prefix="l3r5-r7-")
         shutil.copy(reg0, os.path.join(d, "pcb_requirements.yaml"))
@@ -328,35 +305,214 @@ def t_l3r5_row_7_comes_first_and_carries_its_answer():
     sys.path.insert(0, COND)
     import cond as C
     C.hold({"check": False, "registry": C.E.REGISTRY}, "L3-OD7")        # bound: not held
+    sys.path.remove(COND)
 
 
-def t_l3r5_the_pages_ask_nothing_before_row_7():
-    """The decision page lists row L3-OD7 first with its sub-choices and its table; rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6
-    read HELD (D-27) and their recommendations ask nothing until it is answered; after it, only row L3-OD6 waits, and only
-    after 48 hours or HF listening; the contradictions are row L3-OD6 beside those answers and the QMX out beside HF
-    listening, while both lid items kept with or without an external store reads coherent."""
+
+
+def _git_page(sha):
+    r = subprocess.run(["git", "-C", ROOT, "show", "%s:v2/docs/handover/LAYER-STATUS.md" % sha], capture_output=True)
+    if r.returncode != 0: raise Skip("the page at %s is not in this repository" % sha)
+    return r.stdout.decode("utf-8")
+
+
+def t_l3r5_layer_status_restated_on_a_copy():
+    """Round 5's two layer status scripts, run in order on a copy of the page as the branch took it (a547fe1d): the
+    first restates the gate for D-26 and D-27, the second writes the closure; each refuses a second run, and the tree's
+    page carries both marks."""
+    need(LSTAT, "apply_layer_status_l3_r5.py is not in this tree")
+    LSTAT_B = os.path.join(REC5, "apply_layer_status_l3_r5b.py")
+    sys.path.insert(0, REC5)
+    import apply_layer_status_l3_r5 as A
+    import apply_layer_status_l3_r5b as B
+    tree = open(os.path.join(ROOT, "v2", "docs", "handover", "LAYER-STATUS.md"), encoding="utf-8").read()
+    assert A.MARK in tree and B.MARK in tree, "the tree's page does not carry both of round 5's restatements"
+    for s in (LSTAT, LSTAT_B):
+        r = _run([s, "--check"])
+        assert r.returncode == 2 and "has run" in r.stdout, "a second run of %s was not refused" % os.path.basename(s)
+    cp = os.path.join(tempfile.mkdtemp(prefix="l3r5-ls-"), "LAYER-STATUS.md")
+    base = _git_page("a547fe1d")
+    open(cp, "w", encoding="utf-8").write(base)
+    for s in (LSTAT, LSTAT_B):
+        r = _run([s, "--page", cp])
+        assert r.returncode == 0, "%s did not restate the copy:\n%s" % (os.path.basename(s), r.stdout)
+        assert _run([s, "--page", cp]).returncode == 2, "a second run of %s on the copy was not refused" % os.path.basename(s)
+    new = open(cp, encoding="utf-8").read()
+    assert B.MARK in new and "No owner decision remains" in new and "| The target is unambiguous | MET |" in new
+    assert "Completion statuses, kept apart" in new and B.WHOSE_NEW in new
+
+
+def _instr():
+    return open(os.path.join(L3, "OWNER-INSTRUCTION-2026-09-30.md"), encoding="utf-8").read()
+
+
+def t_l3r5_the_closure_rulings_and_the_current_owner_brief():
+    """D-28 to D-31 recorded once, each quoted word for word in the instruction file; the file opens with the current
+    owner brief (at most about 40 lines), whose every ruling id exists in the registry, and the superseded instructions
+    are marked in place, their text kept."""
+    import rules_lib as R
+    req = R.load_requirements()
+    have = {r["id"]: r for r in req["owner_rulings"]}
+    for rid in ("D-28", "D-29", "D-30", "D-31"):
+        assert rid in have and have[rid]["authority"] == "OWNER", "%s is not recorded" % rid
+    sys.path.insert(0, REC5)
+    import apply_l3r5_d28_d29 as A
+    import apply_l3r5_d30 as B
+    import apply_l3r5_d31 as C
+    flat = " ".join(" ".join(l.lstrip("> ") for l in _instr().split("\n")).split())
+    for q in A.Q28 + A.Q29 + B.QUOTES + C.QUOTES:
+        assert '"%s"' % " ".join(q.split()) in flat, "a paragraph is not filed word for word: %r" % q[:60]
+    for s in ("apply_l3r5_d28_d29.py", "apply_l3r5_d30.py", "apply_l3r5_d31.py", "apply_l3r5_closure.py"):
+        r = _run([os.path.join(REC5, s), "--check"])
+        assert r.returncode == 2 and "has run" in r.stdout, "a second run of %s was not refused" % s
+    text = _instr()
+    heads = re.findall(r"^## (.+)$", text, re.M)
+    assert heads[0].startswith("Current owner brief"), "the file does not open with the current owner brief"
+    i = text.index("## Current owner brief"); j = text.index("\n## ", i + 5)
+    brief = text[i:j]
+    assert len(brief.strip().split("\n")) <= 45, "the brief runs to %d lines" % len(brief.strip().split("\n"))
+    for rid in sorted(set(re.findall(r"\bD-\d\d\b", brief))):
+        assert rid in have, "the brief names %s, which no ruling carries" % rid
+    for w in ("NO external battery", "48 to 72 hours is a baseline design objective", "Owner decisions open:** none",
+              "Samsung INR18650-35E"):
+        assert w in " ".join(brief.split()), "the brief does not read %r" % w
+    for mark in ("**Superseded in part by D-28:**", "**Superseded by D-28:**", "**Superseded in part:** the third passage"):
+        assert mark in text, "a superseded instruction is not marked in place: %r" % mark
+    assert "Preserve the approved 72-hour mission" in text, "a superseded instruction's text was removed"
+
+
+def t_l3r5_the_closure_applied_to_the_registry():
+    """Rows L3-OD2 to L3-OD7 answered by D-32 to D-37 with D-28's and D-29's words; REQ-072 the only design objective, its
+    profile stated, its baseline read from the bound runtime.out, reading FAIL and not a BLOCKER; the store inside the
+    Peli 1450 (REQ-014); the tablet's charging a capability at the outlet (REQ-011) with R138 named (REQ-017) as CHECK-3
+    of stream l3batt states it; CFL-017 resolved and FEA-008 carrying the modes; M-02 closed by D-28."""
+    import rules_lib as R
+    sys.path.insert(0, REC5)
+    import runtime_reader as RR
+    req = R.load_requirements()
+    recs = {r["id"]: r for r in req["records"]}
+    dec = {str(r["decides"]).split(":")[0]: (str(r["decides"]).split(":")[1], r) for r in req["owner_rulings"]
+           if str(r.get("decides") or "").startswith("L3-OD")}
+    want = {"L3-OD7": "objective-48-72", "L3-OD2": "both-kept", "L3-OD3": "unchanged", "L3-OD4": "reject",
+            "L3-OD5": "layer4-obligation", "L3-OD6": "mean-day"}
+    assert {k: v[0] for k, v in dec.items()} == want, "the rows are not the closure's answers: %s" % dec
+    assert [dec[r][1]["id"] for r in ("L3-OD7", "L3-OD2", "L3-OD3", "L3-OD4", "L3-OD5", "L3-OD6")] == ["D-%d" % n for n in range(32, 38)]
+    r7 = dec["L3-OD7"][1]
+    assert (r7["m1_hf"], r7["m1_external"], r7["m1_tablet_charging"]) == ("available", "no", "optional")
+    assert dec["L3-OD6"][1]["weather_build"] == "TYP" and "L3-OD1" not in dec
+    obj = [r["id"] for r in req["records"] if r.get("obligation") == "OBJECTIVE"]
+    assert obj == ["REQ-072"], "the design objectives are %s" % obj
+    r72 = recs["REQ-072"]
+    assert r72["evidence_result"] == "FAIL" and r72["release_effect"] == "MUST_JUSTIFY" and "M-02" not in (r72.get("waits_on") or [])
+    for w in ("PS-IDLE-SPEC, 42.8 W", "HF available and not receiving", "the tablet not charged", "one plane, 40 degrees facing south",
+              "(WAB) a sensitivity", "not owner-approved operating restrictions"):
+        assert w in " ".join(r72["objective_profile"].split()), "REQ-072's profile does not state %r" % w
+    txt = open(os.path.join(ROOT, "v2/docs/records/l3batt/runtime.out"), encoding="utf-8").read()
+    b, sol = RR.battery_only(txt), RR.solar(txt)
+    ev = " ".join(str(r72["evidence"][-1]).split())
+    for fig in (b["D06"]["hours_20"], b["A35"]["usable_20"], b["A35"]["hours_20"], sol[("48", "DRAWN", "TYP")]["unserved"],
+                sol[("72", "NOM", "TYP")]["unserved"]):
+        assert fig in ev, "REQ-072's baseline evidence does not carry %s from runtime.out" % fig
+    assert "inside the Peli 1450 and no external battery" in " ".join(recs["REQ-014"]["statement"].split())
+    a11 = " ".join(recs["REQ-011"]["acceptance"].split())
+    assert a11.startswith("The charging capability is specified at the USB-C outlet, not by a tablet model") and \
+        "no daily schedule is required" in a11
+    chk = open(os.path.join(REC5, "checks/l3batt-check-3/CHECK-3.md"), encoding="utf-8").read()
+    for rid in ("REQ-011", "REQ-017"):
+        n = " ".join(str(recs[rid]["notes"]).split())
+        assert "R138" in n and "1.92 to 2.26 A" in n and "1.92 to 2.26 A" in chk
+    assert recs["CFL-017"]["status"] == "CONFLICT_RESOLVED" and "FEA-008" in recs["CFL-017"]["resolved_by"]
+    f8 = recs["FEA-008"]
+    assert f8["blocker_ids"] == ["LO-01a", "LO-01d", "LO-01e", "LO-01f", "LO-01g", "LO-01h"] and f8["release_effect"] == "MUST_JUSTIFY"
+    closed = {x["id"]: x for x in req["closed_items"]}
+    assert closed["M-02"]["closed_by"] == "D-28" and not any(x["id"] == "M-02" for x in req["open_items"])
+
+
+def t_l3r5_an_objective_is_validated():
+    """The validator (rules_lib) holds the obligation field: an objective never a BLOCKER, always with its profile, only
+    a requirement; a profile on a mandatory record refused."""
+    import copy
+    import rules_lib as R
+    req = R.load_requirements()
+    for mutate, msg in ((lambda r: r.__setitem__("release_effect", "BLOCKER"), "never a BLOCKER"),
+                        (lambda r: r.pop("objective_profile"), "states the operating profile")):
+        q = copy.deepcopy(req)
+        mutate(next(r for r in q["records"] if r["id"] == "REQ-072"))
+        errs, _ = R.validate_requirements(q)
+        assert any(msg in e for e in errs), "the validator did not refuse: %s" % msg
+    q = copy.deepcopy(req)
+    next(r for r in q["records"] if r["id"] == "REQ-014")["objective_profile"] = "a profile on a mandatory requirement"
+    errs, _ = R.validate_requirements(q)
+    assert any("not a design objective" in e for e in errs), "a profile on a mandatory record was taken"
+
+
+def t_l3r5_cfl017_by_mode_and_the_cells_provenance():
+    """Each quote of the cell's provenance is in its source; each mode's gap is the arithmetic of the figures beside it;
+    the maker sheets as filed carry the limits the modes use (read with pdftotext), and OPERATING-ENVELOPE.md the rises."""
+    RL = _rl()
+    data = RL.load_data()
+    for q in data["cell_provenance"]["quotes"]:
+        src = "\n".join(l.lstrip("> ") for l in open(os.path.join(ROOT, q["source"]), encoding="utf-8").read().replace("**", "").split("\n"))
+        assert " ".join(q["text"].split()) in " ".join(src.split()), "%s does not carry %r" % (q["source"], q["text"][:50])
+    for m in data["cell_modes"]:
+        if m.get("req_c") is None: continue
+        gap = abs(float(m["req_c"]) - float(m["limit_c"]))
+        forms = {"%.1f K" % gap, "%.2f K" % gap, "%d K" % round(gap)}
+        assert any(f in m["gap"] for f in forms), "%s's gap %r is not %s" % (m["id"], m["gap"], sorted(forms))
+    env = " ".join(open(os.path.join(ROOT, "v2/docs/OPERATING-ENVELOPE.md"), encoding="utf-8").read().split())
+    for f in ("+62.1 C lid closed", "+61.6 to +74.2 C", "6.63 to 7.30", "13.16 to 14.47"):
+        assert f in env, "OPERATING-ENVELOPE.md does not read %r" % f
+    if shutil.which("pdftotext") is None: raise Skip("pdftotext is not installed")
+    def sheet(name):
+        out = subprocess.run(["pdftotext", "-layout", os.path.join(ROOT, "v2/vendor/battery", name), "-"], capture_output=True)
+        return " ".join(out.stdout.decode("utf-8", "replace").split())
+    v11, v10 = sheet("samsung-35e-orbtronic.pdf"), sheet("samsung-35e-akkuzentrum.pdf")
+    for w in ("Ver. 1.1", "Charge : 0 to 45°C", "Discharge : -10 to 60°C", "1 year : -20~25°C", "3 months : -20~45°C",
+              "1 month : -20~60°C", "(Cell Surface Temperature)"):
+        assert w in v11, "the Ver. 1.1 sheet does not read %r" % w
+    for w in ("Charge : 0 to 45°C (Ambient)", "Discharge : -10 to 60°C (Ambient)", "1 year : 0~23°C", "3 months : 0~45°C",
+              "1 month : 0~60°C"):
+        assert w in v10, "the Version 1.0 sheet does not read %r" % w
+
+
+def t_l3r5_the_closure_pages_and_the_reissue():
+    """The pages state the closure: row L3-OD7 first, the rows answered with their answers first, row L3-OD1 closed as
+    layer 4 architecture, no owner decision left, the consolidated questions reconciled, the modelled baseline, the
+    design risks, the cell modes and the completion statuses; the definition re-issue drafted and current."""
     RL = _rl()
     data = RL.load_data()
     page = open(os.path.join(L3, "OWNER-DECISIONS-L3.md"), encoding="utf-8").read()
     rows = [l.split("|")[1].strip() for l in page.split("\n") if re.match(r"^\| L3-OD\d \|", l)]
     assert rows[:7] == ["L3-OD7", "L3-OD1", "L3-OD2", "L3-OD3", "L3-OD4", "L3-OD5", "L3-OD6"], rows[:7]
-    for rid in RL.RUNTIME_ROWS:
+    for rid in ("L3-OD7", "L3-OD2", "L3-OD3", "L3-OD4", "L3-OD5", "L3-OD6"):
         line = next(l for l in page.split("\n") if l.startswith("| %s |" % rid))
         cells = [c.strip() for c in line.split("|")]
-        assert cells[5].startswith("**HELD (D-27)") and cells[9].startswith("HELD (D-27)"), "%s asks before row L3-OD7" % rid
-    line7 = next(l for l in page.split("\n") if l.startswith("| L3-OD7 |"))
-    for w in ("`--hf`", "`--external`", "`--tablet-charging`", "`authorise-vbat`", "`authorise-dc-entry`"):
-        assert w in line7, "row L3-OD7 does not show %s" % w
-    assert "## Row L3-OD7's options, quantified" in page and "| 72 hours | WE |" in page
+        assert cells[5].startswith("**Answered (D-3") and cells[9].startswith("DECIDED"), "%s does not show its answer" % rid
+    l1 = next(l for l in page.split("\n") if l.startswith("| L3-OD1 |"))
+    assert "CLOSED AT LAYER 3 AS LAYER 4 ARCHITECTURE" in l1 and "**Closed as layer 4 architecture:**" in l1
+    assert "## The closure (D-28, D-29): the owner decision left" in page and "None. CFL-017" in page
+    for q in data["consolidated_questions"]:
+        assert "| %s |" % q["q"] in page, "%s is not reconciled on the page" % q["q"]
+    spec = open(os.path.join(L3, "REQUIREMENTS-L3-R2.md"), encoding="utf-8").read()
+    for h in ("### 2.2 Mandatory requirements and the design objective (D-28)", "### 2.3 The modelled baseline",
+              "### 2.4 Design risks, assigned", "### 2.5 CFL-017 by mode", "### 2.6 Completion statuses, kept apart"):
+        assert h in spec, "the requirements page has no %r" % h
+    assert "#### REQ-072 (requirement, design objective," in spec and "#### REQ-014 (requirement, mandatory," in spec
+    assert "| Target unambiguous | MET |" in spec and "| Requirement-changing owner decisions resolved | MET |" in spec
+    lvl = RL.status_level(__import__("rules_lib").load_requirements(), RL.decided(__import__("rules_lib").load_requirements(), data),
+                          data, RL.load_h3())[0]
+    assert lvl == "DRAFTED", "the closure does not read requirements drafted and decisions recorded"
+    for s in ([os.path.join(ROOT, "v2/docs/records/l3r4/reissue.py"), "--check"],
+              [os.path.join(ROOT, "v2/docs/records/l3r4/reissue.py"), "--map", "--check"]):
+        r = _run(s, cwd=ROOT)
+        assert r.returncode == 0 and "current" in r.stdout, "the re-issue is not current:\n%s" % r.stdout
+    draft = open(os.path.join(L3, "DEFINITION-REISSUE-DRAFT.md"), encoding="utf-8").read()
+    for pid in ("S01", "S02", "S03", "S04", "S05", "S06", "S07", "S08", "S09", "S10", "S11"):
+        assert "### %s. " % pid in draft, "the draft does not restate %s" % pid
+    assert "48 to 72 hours, a design objective" in draft and "72 hours required" not in draft
     x = lambda o, **f: (o, "D-99", "2026-10-01", "", f)
-    b72 = {"L3-OD7": x("72-required", hf="available", external="no")}
-    assert all(RL.runtime_wait(r, b72) == "" for r in RL.RUNTIME_ROWS)
-    a48 = {"L3-OD7": x("48-required-72-desired", hf="available", external="authorise-vbat")}
-    assert RL.runtime_wait("L3-OD4", a48) == "" and "restated from the runtime comparison" in RL.runtime_wait("L3-OD6", a48)
-    lis = {"L3-OD7": x("72-required", hf="listening", external="no")}
-    assert "restated" in RL.runtime_wait("L3-OD6", lis)
+    a48 = {"L3-OD7": x("48-required-72-desired", hf="available", external="no")}
     assert not RL.coherent(dict(a48, **{"L3-OD6": x("mean-day", build="TYP")}), data)[1]
-    assert not RL.coherent(dict(lis, **{"L3-OD1": x("approve"), "L3-OD2": x("qmx-out")}), data)[1]
-    for ext in ("no", "authorise-vbat"):
-        s = {"L3-OD7": x("72-required", hf="available", external=ext), "L3-OD1": x("approve"), "L3-OD2": x("both-kept")}
-        assert RL.coherent(s, data)[1], "both lid items kept reads as a contradiction (external %s)" % ext
+    obj = {"L3-OD7": x("objective-48-72", hf="available", external="no")}
+    assert RL.coherent(dict(obj, **{"L3-OD6": x("mean-day", build="TYP"), "L3-OD2": x("both-kept")}), data)[1]
+    assert RL.settled("L3-OD1", obj, data) and not RL.settled("L3-OD1", a48, data), "row L3-OD1's closure is not the closure's"

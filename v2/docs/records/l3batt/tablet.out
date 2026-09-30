@@ -1,0 +1,143 @@
+THE LID TABLET'S USB-C SERVICE BUDGET (a PROPOSAL) AND OPTIONS A AND B WITH IT (tablet.py, stream l3batt, MESHSAT-1357).
+PROTOTYPE DESIGN: nothing built, bought, powered or measured. The budget is a proposal measurable at the outlet, not
+verified tablet endurance; no tablet model is picked. Basis per figure: MAKER (sheet, page), NETLIST, MODELED, INFERRED
+(method stated), ASSUMPTION (a figure no document gives), PROPOSAL (the session's setting). The author's analysis, AI
+arithmetic; not a qualified review and not the independent check.
+
+1. DOUBLE COUNTING: what PS-IDLE-SPEC's 42.8 W holds of the tablet and the outlet
+   pwr_budget.out's 39 PS-IDLE-SPEC shares name no tablet, USB-C, outlet or PDO row (none found); load_trace.out: the tablet has
+   no row (yes) and the outlets are off in every state (yes); pwr_budget.py carries the outlet stage as node PDO (15.0 V, its
+   efficiency 0.93 DECLARED: 'USB-C PD outlet stage, LM5176 behind TPS25740A: NOT PLOTTED, declared floor (gen_sch_a.py:978-980)') for the section 7.1 variants only.
+   So the 42.8 W carries no tablet energy, no outlet conversion loss and no idle draw of the outlet converter: every
+   figure below is ADDED to it, and nothing in it is counted twice
+   THE OUTLET CONVERTER'S OWN DRAW WHEN ENABLED, NOT IN THE 42.8 W (board A: U19 LM5176 with VIN and BIAS on VBAT, MODE
+   strapped to forced CCM by R135, RT R78 = 206 kHz, four CSD18510Q5B, L11 6.8uH XAL1010-682ME; U18 TPS25740A with VDD on +5V_DEV; NETLIST
+   v2/ecad/pcb-a-power-a23/out/pcb-a-power.net sha256/16 6c40250c47195ebb):
+     the LM5176's VIN operating current (not switching, VFB = 0.9 V) 2 / 4 mA typ / max (MAKER v2/vendor/ti/lm5176-datasheet.pdf p.6): 0.029 / 0.058 W
+     the gate drive, Qg x fsw x VBAT a FET (VCC is regulated from BIAS = VBAT, so the gate charge is drawn at VBAT): Qg at
+     VCC's 7.35 V (MAKER p.6) interpolated between the sheet's 58 / 75 nC at 4.5 V and 118 / 153 nC at 10 V typ / max (MAKER
+     v2/vendor/battery/ti-csd18510q5b.pdf p.3): 89 / 115 nC; all four switching (buck-boost, the 15 V contract from a 12 to 16.8 V node) 1.057 / 1.370 W;
+     two switching (buck, the 5 and 9 V contracts) 0.529 / 0.685 W (INFERRED)
+     the TPS25740A's operating current while a sink is attached 1 / 3 mA typ / max (MAKER v2/vendor/ti/ti-tps25740.pdf p.8, I(SUPP)) at 5 V over
+     +5V_DEV's converter at 0.90 (INFERRED): 0.006 / 0.017 W
+     IDLE DRAW, ENABLED AND NOT LOADED: 1.09 W typ, 1.44 W max (INFERRED from the sheets' terms). Forced CCM keeps switching
+     at no load; the inductor's ripple and core losses and the FETs' switching of the ripple are not in the sheets held, so
+     the true idle draw is higher by an amount not quantified here. The budget below takes 1.44 W
+
+2. THE PROPOSED USB-C SERVICE BUDGET (a PROPOSAL, measurable at the outlet; not a tablet's verified endurance)
+   the class, 8 to 10 inch rugged tablets (REQ-011), from makers' spec sheets held back and cited in v2/vendor/sources.txt:
+     Zebra ET40/ET45 (sha256/16 59f0c2807fb5b24d, p.3): 8 in. 6100 mAh 3.87 V, 23.61 Wh; 10 in. 7600 mAh 3.87 V, 29.41 Wh (MAKER)
+     Samsung Galaxy Tab Active5, 8 in. (sha256/16 f5a40178566ca410, p.2): 5,050 mAh typical, rated (minimum) 4,900 mAh; no voltage or Wh
+     printed (MAKER). At a 3.8 to 3.9 V cell nominal it is about 19 Wh (INFERRED, not a maker figure)
+   THE OUTLET AS DRAWN (NETLIST, U18 TPS25740A): HIPWR and PSEL straight to DVDD, EN9V to GND, PCTRL to VAUX, so by the
+     maker's Tables 2, 3 and 5 (v2/vendor/ti/ti-tps25740.pdf pp.28 to 29) it advertises 5, 9 and 15 V at 3 A, 45 W peak,
+     with no way to lower it in the field. Its enable PD_EN is U26's AND of PD_SW_EN (an output of U28, the PCA9555PW (0x24))
+     and OUTLET_OK, so the converter can be switched by software on existing hardware. No INA226 monitors the outlet (6 on
+     board A, on +13V8_PA, +54V_POE, +5V_DEV, +5V_S1, +5V_S2, +5V_S3): the kit cannot meter the energy it delivers there
+   P_CAP, PEAK OUTPUT POWER: 18 W at the outlet. It is the maker's own setting for PSEL direct to GND with PCTRL low
+     (Table 5, TPS25740A, HIPWR high: 5 V 3.0 A, 9 V 2.0 A, 15 V 1.2 A). It needs a STRAP CHANGE on board A, an
+     electrical correction neither designed nor checked: PSEL from DVDD to GND, and PCTRL from VAUX to GND (or to a spare
+     expander line, which gives 36 W with PCTRL high, for shore power). With it the board, not the tablet, holds the
+     cap. The 45 W of the drawn straps is a peak capability the budget never assumes
+   SCHEDULE: the outlet converter enabled only in one 2 h window a day by the expander line; the case is W13 (13 to
+     15 UTC). W10 (10 to 12 UTC), W19 (19 to 21 UTC, after dark) and ANY (the converter on all day) are compared in
+     section 5
+   E_OUT, ENERGY DELIVERED AT THE OUTLET: at most 36 Wh a day = the cap x the window, a ceiling the strapped board and
+     the schedule enforce without a meter. It covers one full recharge a day of the class's largest battery (29.41 Wh) with
+     up to 22 % lost in the tablet's own charger (no sheet held gives that loss). The model charges the ceiling every day,
+     at the cap for the whole window: the kit side at its bound, not a guessed tablet draw. Whether a given tablet takes a
+     full recharge in 2 h at 18 W is for the named model's verification (REQ-011's open acceptance, SC-45)
+   STARTING CHARGE: the tablet full at the mission's start; every day's window, the first included, delivers the day's
+     full budget, so the kit's energy does not depend on the tablet's starting charge (it decides only the tablet's use
+     before the first window)
+
+3. THE CONVERTER'S LOSS AT THE BUDGET'S OPERATING POINT (INFERRED: a pixel reading of TI's TYPICAL curve)
+   LM5176 v2/vendor/ti/lm5176-datasheet.pdf sha256/16 98191bec36d43771, p.9 Figure 6-2 'Efficiency vs Load': VOUT 12 V, fsw 300 kHz, L1 4.7 uH, the maker's circuit;
+   read with curve_readings.py's frame and reader (pinned). The VIN 12 V curve (a ratio of 1, as the 15 V contract from
+   the 14.4 V node): 0.50 A 93.9 %; 1.00 A 97.0 %; 1.50 A 97.9 %
+   the VIN 24 V curve (a buck at 0.5, near the 9 V contract's 0.63): 0.50 A 85.6 %; 1.00 A 92.7 %; 1.50 A 94.5 %
+   at the operating point, the cap's 18.0 W, 1.50 A at the plot's 12 V: the lower curve reads 0.945; the record's declared 0.93
+   (pwr_budget.py PDO) is the bracket; the budget takes the lower, 0.930. Board A differs from the maker's circuit: 206 kHz,
+   6.8 uH, CSD18510Q5B, 5 to 15 V out; the plot's curves are typical at 25 C
+   ENERGY AT VBAT A DAY for 36 Wh at the outlet:
+     in a 2 h window: 36 / 0.930 = 38.7 Wh (19.4 W for 2 h); the idle draw is inside the curve's loss while it delivers
+     ANY, the same Wh with the converter on all day: 36 / 0.930 + 1.44 W x 24 h = 73.4 Wh (INFERRED, indicative: at about 1.5 W
+     out on average the converter runs far below the plot's lightest point, 0.2 A, so its loss is taken as the curve's plus
+     the idle draw; the kit cannot hold a daily energy limit in this schedule without a meter on the outlet)
+   PEAK AT VBAT with the cap: 18 W / 0.930 = 19.4 W, on top of the kit's load for the minutes the tablet draws its peak
+
+4. THE BUDGET IN THE MODEL (runtime.py's set-up; the kit's load set hour by hour, the outlet drawing only in its window).
+   Reproduction: with no budget, the 72 h NOM and WE rows of runtime.out section 2 read the same: yes
+   SOLAR ASSISTED, the present store (base 4S6P + lid 4S9P of 35E, 502.6 Wh at the start, runtime.out 2), SC-37's mean
+   September day at 40/0, TYP (WAB a sensitivity), the budget in window W13. Each cell: met with the lowest store, or
+   where the kit stops (hours from the 06 / 18 UTC starts) and the energy unserved. DRAWN = the circuit as drawn (an upper
+   bound); NOM, WE = the corrected path, HYPOTHETICAL and CONDITIONAL on three undocumented efficiencies; NOM90, WE90 =
+   the same at their 0.90 bracket
+     HF available 48 h TYP: DRAWN stops h 23/11, 302.7 Wh unserved; NOM stops h 23/11, 102.2 Wh unserved; NOM90 stops h 23/11, 106.7 Wh unserved; WE stops h 23/11, 104.6 Wh unserved; WE90 stops h 23/11, 140.7 Wh unserved
+     HF available 48 h WAB: DRAWN stops h 23/11, 317.2 Wh unserved; NOM stops h 23/11, 106.3 Wh unserved; NOM90 stops h 23/11, 131.1 Wh unserved; WE stops h 23/11, 123.4 Wh unserved; WE90 stops h 23/11, 170.1 Wh unserved
+     HF available 72 h TYP: DRAWN stops h 23/11, 566.6 Wh unserved; NOM stops h 23/11, 165.7 Wh unserved; NOM90 stops h 23/11, 173.6 Wh unserved; WE stops h 23/11, 169.2 Wh unserved; WE90 stops h 23/11, 240.4 Wh unserved
+     HF available 72 h WAB: DRAWN stops h 23/11, 594.4 Wh unserved; NOM stops h 23/11, 172.6 Wh unserved; NOM90 stops h 23/11, 221.0 Wh unserved; WE stops h 23/11, 205.6 Wh unserved; WE90 stops h 23/11, 298.1 Wh unserved
+     HF listening 48 h TYP: DRAWN stops h 22/11, 344.1 Wh unserved; NOM stops h 22/11, 133.1 Wh unserved; NOM90 stops h 22/11, 142.3 Wh unserved; WE stops h 22/11, 137.6 Wh unserved; WE90 stops h 22/11, 181.4 Wh unserved
+     HF listening 48 h WAB: DRAWN stops h 22/11, 358.6 Wh unserved; NOM stops h 22/11, 137.2 Wh unserved; NOM90 stops h 22/11, 170.5 Wh unserved; WE stops h 22/11, 162.4 Wh unserved; WE90 stops h 22/11, 211.0 Wh unserved
+     HF listening 72 h TYP: DRAWN stops h 22/11, 634.6 Wh unserved; NOM stops h 22/11, 212.5 Wh unserved; NOM90 stops h 22/11, 229.9 Wh unserved; WE stops h 22/11, 220.5 Wh unserved; WE90 stops h 22/11, 307.1 Wh unserved
+     HF listening 72 h WAB: DRAWN stops h 22/11, 662.3 Wh unserved; NOM stops h 22/11, 219.4 Wh unserved; NOM90 stops h 22/11, 285.1 Wh unserved; WE stops h 22/11, 268.7 Wh unserved; WE90 stops h 22/11, 364.9 Wh unserved
+
+5. HOW THE SCHEDULE MATTERS: the least store carrying the mean day (the lid's parallel count, continuous, the base held at
+   4S6P) and the usable Wh it adds to the both-kept 4S9P lid at its 13.23 C, corrected path NOM, TYP, HF available
+     48 h no tablet budget                         lid 4S11.16P, +68.1 Wh usable
+     48 h budget, window 13 to 15 UTC              lid 4S11.16P, +68.1 Wh usable
+     48 h budget, window 10 to 12 UTC              lid 4S11.16P, +68.1 Wh usable
+     48 h budget, window 19 to 21 UTC (after dark) lid 4S12.40P, +107.2 Wh usable
+     48 h budget, any time (converter on 24 h)     lid 4S13.42P, +139.7 Wh usable
+     72 h no tablet budget                         lid 4S11.16P, +68.1 Wh usable
+     72 h budget, window 13 to 15 UTC              lid 4S11.79P, +88.0 Wh usable
+     72 h budget, window 10 to 12 UTC              lid 4S11.79P, +88.0 Wh usable
+     72 h budget, window 19 to 21 UTC (after dark) lid 4S13.15P, +130.9 Wh usable
+     72 h budget, any time (converter on 24 h)     lid 4S15.25P, +197.4 Wh usable
+   Why the daylight windows read alike, from the model's own trace (NOM, TYP, 72 h, the lid at 4S11.79P, the 06 UTC
+   start's second day, window W13):
+     node power at 08/09/10/11/12/13/14/15/16/17 UTC: 104 121 121 121 121 121 121 102 60 16 W
+     level at 121.4 W (the path's limit in the model) from 09 to 14 UTC; both windows' hours inside it: yes
+     the store's highest that day: base 212.5 of 218.4 Wh, lid 358.3 of 372.2 Wh: never full
+   So every Wh the tablet takes in a daylight window is a Wh the packs do not take, whichever level hours the window
+   holds. After dark it comes from the store directly; with the converter enabled all day the idle draw of section 1
+   is added for 24 h
+
+6. THE EXTRA USABLE STORE OPTIONS A (48 h) AND B (72 h) NEED WITH THE BUDGET (window W13), over the both-kept 4S9P lid, Wh
+   at the lid's 13.23 C (35E-equivalent); TYP the case, WAB a sensitivity. DRAWN is the circuit as drawn; the other cases
+   are the corrected path, HYPOTHETICAL and CONDITIONAL. DRAWN keeps min(available, cap), an upper bound on its harvest, so
+   its store is a lower bound; a store does not cure the as-drawn path's defects (r11_dep.out)
+     HF available 48 h (Option A): DRAWN TYP +328.0; NOM TYP +68.1; NOM WAB +94.8; NOM90 TYP +114.7; NOM90 WAB +150.7; WE TYP +116.0; WE WAB +144.8; WE90 TYP +164.3; WE90 WAB +193.1
+     HF available 72 h (Option B): DRAWN TYP +614.4; NOM TYP +88.0; NOM WAB +146.5; NOM90 TYP +186.8; NOM90 WAB +257.9; WE TYP +189.9; WE WAB +246.7; WE90 TYP +286.1; WE90 WAB +342.5
+     HF listening 48 h (Option A): DRAWN TYP +369.8; NOM TYP +105.1; NOM WAB +137.1; NOM90 TYP +156.3; NOM90 WAB +192.3; WE TYP +158.4; WE WAB +187.2; WE90 TYP +206.0; WE90 WAB +234.7
+     HF listening 72 h (Option B): DRAWN TYP +683.1; NOM TYP +153.2; NOM WAB +216.4; NOM90 TYP +255.3; NOM90 WAB +326.1; WE TYP +260.2; WE WAB +316.5; WE90 TYP +354.6; WE90 WAB +410.9
+   OPTION A'S STORE AGAINST ITS DESIRED 72 h (the 48 h store run for 72 h, W13, TYP):
+     HF available NOM stops h 48/60, 15.3 Wh unserved; NOM90 stops h 48/59, 65.7 Wh unserved; WE stops h 48/59, 66.6 Wh unserved; WE90 stops h 48/57, 113.4 Wh unserved
+     HF listening NOM stops h 48/59, 42.3 Wh unserved; NOM90 stops h 48/58, 92.2 Wh unserved; WE stops h 48/58, 93.7 Wh unserved; WE90 stops h 48/57, 139.8 Wh unserved
+   The corrected path's TYP cases, NOM to WE90, as packs outside the case (a PROPOSAL; NH2054HD34 at 67.2 Wh usable aged at
+   +20 C, runtime.out 1, 0.435 kg each; fewer Wh at the lid's 13 C, so the count is a lower bound):
+     HF available 48 h TYP: 68 to 164 Wh, 2 to 3 packs, 0.87 to 1.30 kg
+     HF available 72 h TYP: 88 to 286 Wh, 2 to 5 packs, 0.87 to 2.17 kg
+     HF listening 48 h TYP: 105 to 206 Wh, 2 to 4 packs, 0.87 to 1.74 kg
+     HF listening 72 h TYP: 153 to 355 Wh, 3 to 6 packs, 1.30 to 2.61 kg
+
+7. BATTERY-ONLY ENDURANCE with the budget (no solar), to the kit's shutdown, both packs at +20 C then at -10 C, as
+   runtime.out 1 (A35 there: 544.4 / 224.5 Wh, 12.71 / 5.24 h). In a window schedule the hours depend on whether the
+   day's window falls inside the run: 'window in the run' charges the day's 38.7 Wh at VBAT to the store, 'window after'
+   does not (the tablet then runs on its own battery). The options' stores add the section 6 extra (TYP) as an
+   external store, its Wh taken as usable at +20 C and x 0.4124 at -10 C (runtime.py's cold factor, INFERRED)
+     HF available A35, the present both-kept store                 no budget 12.71 /  5.24 h; window in the run 11.81 /  4.34 h; any time 11.86 /  4.89 h
+     HF available A35 + the Option A store (NOM TYP, +68.1 Wh)     no budget 14.30 /  5.90 h; window in the run 13.40 /  4.99 h; any time 13.35 /  5.50 h
+     HF available A35 + the Option A store (WE TYP, +116.0 Wh)     no budget 15.42 /  6.36 h; window in the run 14.52 /  5.46 h; any time 14.39 /  5.94 h
+     HF available A35 + the Option B store (NOM TYP, +88.0 Wh)     no budget 14.77 /  6.09 h; window in the run 13.86 /  5.19 h; any time 13.78 /  5.68 h
+     HF available A35 + the Option B store (WE TYP, +189.9 Wh)     no budget 17.15 /  7.07 h; window in the run 16.24 /  6.17 h; any time 16.00 /  6.60 h
+     HF listening A35, the present both-kept store                 no budget 12.38 /  5.11 h; window in the run 11.50 /  4.23 h; any time 11.58 /  4.77 h
+     HF listening A35 + the Option A store (NOM TYP, +68.1 Wh)     no budget 13.93 /  5.75 h; window in the run 13.05 /  4.86 h; any time 13.02 /  5.37 h
+     HF listening A35 + the Option A store (WE TYP, +116.0 Wh)     no budget 15.02 /  6.19 h; window in the run 14.14 /  5.31 h; any time 14.04 /  5.79 h
+     HF listening A35 + the Option B store (NOM TYP, +88.0 Wh)     no budget 14.38 /  5.93 h; window in the run 13.50 /  5.05 h; any time 13.45 /  5.55 h
+     HF listening A35 + the Option B store (WE TYP, +189.9 Wh)     no budget 16.70 /  6.89 h; window in the run 15.82 /  6.01 h; any time 15.61 /  6.44 h
+   (+20 C / -10 C; the 'window after' figure equals 'no budget')
+
+END. The budget is a PROPOSAL; nothing is measured. No result here is demonstrated capability: the circuit as drawn
+fails; the corrected path is HYPOTHETICAL and CONDITIONAL on three undocumented efficiencies; external packs are a
+PROPOSAL whose join (D-20's DC entry, EQ-13 (b), or VBAT, reopening D-06, EQ-13 (d)) is not designed.

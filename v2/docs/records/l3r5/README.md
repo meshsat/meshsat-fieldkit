@@ -1,11 +1,44 @@
-# Layer 3, round 5: the owner's target apart from the candidate's compliance (D-26), and M1's runtime first (D-27)
+# Layer 3, round 5: the target apart from the candidate (D-26), M1's runtime first (D-27), and the closure (D-28 to D-31)
 
 MESHSAT-1357, 30 September 2026, branch `fnd/l3r5` from `fnd/l3r4` at `a547fe1d` (round 4d, an ancestor of main
 `00bba92a`), not from main's tip: the re-issue generator of round 4 is adjusted here, and main's later commits (the
-round 4 checks, the public-file scrub, set 17's milestone) touch none of this branch's files. Preparation only: no owner
-answer to `v2/docs/handover/layer3/OWNER-DECISIONS-L3.md` is recorded, and nothing here changes a requirement or a
-baselined document. Prototype design: no V2 board has been fabricated, ordered or powered, and no kit has been field
-deployed.
+round 4 checks, the public-file scrub, set 17's milestone) touch none of this branch's files. The round ends in layer 3's
+closure: the owner's clarifications D-28 and D-29 are applied to the registry (`apply_l3r5_closure.py`), and the
+definition re-issue is drafted for his approval; `CONOPS.md` and `PRODUCT-BRIEF.md` themselves are not edited. Prototype
+design: no V2 board has been fabricated, ordered or powered, and no kit has been field deployed.
+
+## The closure (D-28 to D-31)
+
+- **The owner's words**, quoted word for word in `v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md` and recorded
+  by `apply_l3r5_d28_d29.py`, `apply_l3r5_d30.py` and `apply_l3r5_d31.py`: D-28, the energy and runtime requirement
+  (no external battery; storage inside the Peli 1450; battery and solar required; HF and the tablet kept; 48 to 72 hours
+  a design objective under a stated profile; optional tablet charging reducing endurance, accepted); D-29, CFL-017
+  (product requirements apart from the current cell); D-30, the Codex worker and one decision register; D-31, one
+  authoritative interpretation, kept as the **current owner brief** at the top of that file, each line naming the
+  ruling that carries it, the superseded instructions marked in place.
+- **Applied** (`apply_l3r5_closure.py`): rows L3-OD2 to L3-OD7 answered by rulings D-32 to D-37 (both lid items kept,
+  REQ-016 unchanged, no deployment condition, CFL-017 a layer 4 obligation, SC-37's mean day in TYP, M1's runtime the
+  objective); row L3-OD1 closed as layer 4 architecture (the session's, under D-21 and D-28: D-06 stands, Option A(i) a
+  layer 4 proposal needing the owner's ruling there). REQ-072 becomes the registry's only **design objective**
+  (`obligation: OBJECTIVE`, its `objective_profile`, MUST_JUSTIFY), its modelled baseline read from the bound
+  `runtime.out`: it reads FAIL, design risk DR-01. REQ-014 carries the store inside the Peli 1450; REQ-011 the tablet's
+  charging as a capability at the outlet; REQ-017 R138's trip (CHECK-3 of stream l3batt); CFL-017 is resolved and
+  FEA-008 carries the cell and thermal design mode by mode (`l3r2.yaml` `cell_modes`, LO-01a to LO-01h); M-02 is closed
+  by D-28. The validator (`rules_lib.py`) holds the obligation field; the trace page and the requirements page mark each
+  record mandatory or objective.
+- **The cell's provenance** (`l3r2.yaml` `cell_provenance`): the Samsung 35E is named in the owner's pack rulings as the
+  pack's content, D-06 was ruled at the session's recommendation, and no ruling states the model as a product
+  requirement; D-29 itself calls it "the currently selected Samsung 35E cells". So CFL-017 is a collision between the
+  requirements and the current component; no owner decision remains.
+- **The handover package**: `REQUIREMENTS-L3-R2.md` section 2 (the owner's closure, mandatory and objective, the modelled
+  baseline, the design risks DR-01 to DR-07, CFL-017 by mode, the completion statuses kept apart), the decision page
+  (the closure, the consolidated message Q1 to Q10 reconciled, the rows answered), `LAYER-STATUS.md`
+  (`apply_layer_status_l3_r5b.py`), and the definition re-issue drafted (`handover/layer3/DEFINITION-REISSUE-DRAFT.md`
+  and `DEFINITION-CHANGE-RECORD-L3.md`, by `../l3r4/reissue.py` in its settled mode) for the owner's approval.
+- **The runtime comparison** is filed at its final tip `63897fc3` with CHECK-3 (the tablet's service budget, R138's
+  finding); PROVENANCE.md and SHORTLIST.md stay bound by CHECK-2, which lists them (`runtime_provenance_basis`).
+- **The prepared scripts' dry runs and tests** start from the registry as it stood before the closure (`l3r2.yaml`
+  `closure_cycle.pre_closure_commit`, read from git; `v2/ecad/tools/tests/l3pre.py`), since the tree's rows are decided.
 
 ## What the review found, and the ruling
 
@@ -107,6 +140,11 @@ and punctuation (CHECK-4 of round 4d: CONOPS lines 233 to 234 exempted, 322, 323
 | `apply_l3r5_d27.py` | records D-27 once, the same way; refuses unless D-26 is recorded |
 | `runtime_reader.py` | reads stream l3batt's `runtime.out` by exact keys; a section short of its lines is refused, never read in part |
 | `fill_l3r7_from_comparison.py` | fills row L3-OD7's `runtime_table` from the bound `runtime.out`, reads it back, refuses a second run |
+| `apply_l3r5_d28_d29.py`, `apply_l3r5_d30.py`, `apply_l3r5_d31.py` | record the owner's clarifications D-28 and D-29, his instruction on the Codex worker D-30 and his operating instruction D-31, each once, every quote asserted in the instruction file first |
+| `apply_l3r5_closure.py` | applies D-28 and D-29 to the registry: the rows' rulings D-32 to D-37, REQ-072 the design objective, REQ-014, REQ-011, REQ-017, REQ-002, REQ-016 and REQ-051, CFL-017 resolved, FEA-008, M-02 closed; refuses a second run |
+| `apply_layer_status_l3_r5b.py` | `LAYER-STATUS.md`'s layer 3 at the closure: the closure paragraph, the gate and status level, the completion statuses, the owner's part of the remaining items; `--page` runs it on a copy; a second run is refused |
+| `checks/l3batt-check-3/` | CHECK-3 of stream l3batt (accepted with minors, of `63897fc3`; minor 1 the R138 finding) with `indep_tablet.py`, `indep_tablet2.py` and their outputs, filed byte for byte |
+| `tool_compat_l3r5.out` | `../rel2/tool_compat.py a547fe1d` over the 39 verdicts of `derate.py`, `intent_checks.py`, `edge_length.py` and `emc_sheet.py` that carry a code bundle: the obligation field's edit of `rules_lib.py` changes `validate_requirements` and adds `OBLIGATION`, and no file of the four bundles reaches either; the evidence of the four `kind: tool` entries of 30 September 2026 in `v2/docs/evidence/COMPATIBILITY.md` |
 | `apply_layer_status_l3_r5.py` | `LAYER-STATUS.md`'s layer 3: the first gate condition on requirements that do not contradict, the independent check's re-check once a row is decided, the fifth condition, the round 3b rules followed by those that replace them, row L3-OD7 in the first two conditions and in the page's description, and the status level; refuses unless D-26 and D-27 are recorded; `--page` runs it on a copy; a second run is refused |
 | `checks/l3feas-check-1/` | CHECK-1 of stream l3feas (not accepted) with `indep_l3feas.py` and its output, filed byte for byte |
 | `checks/l3feas-check-2/CHECK-2.md` | CHECK-2 of stream l3feas (accepted: yes, of `c11b99d3`), filed byte for byte |
@@ -114,27 +152,48 @@ and punctuation (CHECK-4 of round 4d: CONOPS lines 233 to 234 exempted, 322, 323
 | `checks/l3batt-check-2/CHECK-2.md` | CHECK-2 of stream l3batt (accepted: yes, of `83577a13`), filed byte for byte |
 
 Changed elsewhere: `v2/docs/handover/layer3/l3r2.yaml` and `render_l3r2.py` (the semantics, items, definitions, levels,
-the gate and the three pages), `../l3r2/conditional/` (the scripts, `od_l3_7.py` new), `../l3batt/` (stream
-l3batt's comparison at `83577a13`, filed byte for byte), `../l3r2/dryrun.py` and `dryrun.out`,
-`../l3r4/reissue.py` and `PASSAGE-MAP.md`, `v2/ecad/tools/pcb_requirements.yaml` (D-26 and D-27 only),
-`v2/ecad/tools/claims-allow.txt` (the reviewer's level name "Design and hardware compliant"), and the tests
-`test_l3r2.py`, `test_l3r4.py` and the new `test_l3r5.py`.
+the gate, the closure's sections and the three pages), `OWNER-INSTRUCTION-2026-09-30.md` (the current owner brief at
+its top, D-26 to D-31 quoted, the superseded instructions marked in place, the session's reading),
+`DEFINITION-REISSUE-DRAFT.md` and `DEFINITION-CHANGE-RECORD-L3.md` (new, generated), `v2/docs/handover/LAYER-STATUS.md`,
+`../l3r2/conditional/` (the scripts, `od_l3_7.py` new), `../l3batt/` (stream l3batt's comparison at `63897fc3`, filed
+byte for byte), `../l3r2/dryrun.py` and `dryrun.out`, `../l3r4/reissue.py` (its settled mode) and `PASSAGE-MAP.md`,
+`v2/ecad/tools/pcb_requirements.yaml` (D-26 to D-37 and the closure's records), `rules_lib.py` and `rules_render.py`
+(the `obligation` field and `objective_profile`), `v2/docs/REQUIREMENTS-TRACE.md` (regenerated),
+`v2/docs/evidence/COMPATIBILITY.md` (four `kind: tool` entries, so CMP-001, PWR-001 and SI-001 keep their current
+readings, VALID_HISTORICAL by rationale, instead of reading TOOL_CHANGED after the `rules_lib.py` edit),
+`v2/docs/CURRENT-EVIDENCE.md` and `v2/docs/PCB-OPEN-PAIRS.md` (rendered on this branch's copy of the evidence: FEA-008
+among the feasibility records, the 19 readings through the entries, SGN-001 re-taken by the render),
+`v2/ecad/tools/claims-allow.txt` (the reviewer's level name "Design and hardware compliant" and the owner's two quoted
+sentences), and the tests `test_l3r2.py`, `test_l3r4.py`, the new `test_l3r5.py` and its helper `l3pre.py`, and
+`test_requirements.py` (its blocker test states the scope as a property: a feasibility record blocking a core record is
+a core BLOCKER, one blocking only deferred records, FEA-008, may be deferred; the review's six pages keep their core
+BLOCKERs).
 
 ## Run order on the integration set (the integrator)
 
 ```
-git merge --no-ff fnd/l3r5        (or: git checkout fnd/l3r5 -- <the files above>, then the two scripts below on the set)
+git merge --no-ff fnd/l3r5        (base a547fe1d, an ancestor of main; or the scripts on the set, below)
 python3 v2/docs/records/l3r5/apply_l3r5_d26.py --check          (refused once applied: "has run")
 python3 v2/docs/records/l3r5/apply_l3r5_d27.py --check          (refused once applied: "has run")
 python3 v2/docs/records/l3r5/fill_l3r7_from_comparison.py --check   (refused once filled: "has run")
+python3 v2/docs/records/l3r5/apply_l3r5_d28_d29.py --check      (refused once applied: "has run")
+python3 v2/docs/records/l3r5/apply_l3r5_d30.py --check          (refused once applied: "has run")
+python3 v2/docs/records/l3r5/apply_l3r5_d31.py --check          (refused once applied: "has run")
+python3 v2/docs/records/l3r5/apply_l3r5_closure.py --check      (refused once applied: "has run")
 python3 v2/docs/records/l3r5/apply_layer_status_l3_r5.py --check (refused once applied: "has run")
+python3 v2/docs/records/l3r5/apply_layer_status_l3_r5b.py --check (refused once applied: "has run")
 python3 v2/docs/handover/layer3/render_l3r2.py --check
+python3 v2/docs/records/l3r4/reissue.py --check
 python3 v2/docs/records/l3r4/reissue.py --map --check
 python3 v2/docs/records/l3r2/dryrun.py | cmp - v2/docs/records/l3r2/dryrun.out
 env -C v2/ecad/tools python3 rules_lib.py requirements
 env -C v2/ecad/tools python3 rules_render.py --requirements --check
+env -C v2/ecad/tools python3 rules_status.py; env -C v2/ecad/tools python3 rules_render.py --no-refresh
+                                  (on the set's evidence; then rules_render.py --check reads 0 out of date)
 env -C v2/ecad/tools/tests python3 run.py test_requirements test_l3r2 test_l3r4 test_l3r5 test_public_hygiene
 ```
 
-If the set's registry is not this branch's, apply D-26, D-27 and the layer status by their scripts on the set (in that order)
-instead of taking the two files, then re-render.
+If the set's registry is not this branch's, apply by their scripts on the set, in this order, instead of taking the files:
+D-26, D-27, the row 7 fill, D-28 and D-29, D-30, D-31, the pages rendered once (the closure's FEA-008 names blocker ids
+the requirements page carries), the closure, the two layer status scripts, then `reissue.py` (the draft) and the pages
+again. The dry run reads the pre-closure registry from git at `2cd18f6d`, a commit of this branch.

@@ -177,7 +177,8 @@ def _copy_registry(runtime="72-required"):
     so that each test's refusals are its own rows'; runtime=None leaves it unanswered."""
     d = tempfile.mkdtemp(prefix="l3r2-reg-")
     p = os.path.join(d, "pcb_requirements.yaml")
-    shutil.copy(os.path.join(TOOLS, "pcb_requirements.yaml"), p)
+    import l3pre
+    shutil.copy(l3pre.base_registry(), p)
     ev = os.path.join(d, "basis.md")
     open(ev, "w", encoding="utf-8").write('TEST BASIS (a fixture, not the energy basis): the band "%s"; the array 1100 Wp, '
                                           'entry 80 A.\n' % BAND)
@@ -741,7 +742,9 @@ def t_l3r2_a_check_verdict_is_read_from_its_record():
     req = R.load_requirements()
     dec = RL.decided(req, data)
     g = RL.gate(req, dec, data, RL.load_h3())
-    assert g[3][1] is True, "the fourth condition reads NOT MET over an accepted check"
+    stale = bool(dec) and "decisions pending" in str(chks[-1].get("scope") or "")
+    # D-26: an acceptance of the handover with the decisions pending does not cover the decided issue (the closure)
+    assert g[3][1] is (not stale), "the fourth condition does not follow the accepted check and its scope"
     if not all(d["id"] in dec for d in data["decisions"]):
         assert not all(x[1] for x in g), "the gate reads MET with rows pending"
     for i, v in ((len(chks) - 1, "NOT_ACCEPTED"), (0, "ACCEPTED"), (len(chks) - 1, "PENDING")):

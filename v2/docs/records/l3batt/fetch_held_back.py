@@ -4,8 +4,12 @@
 (v2/vendor/sources.txt, each line's publication note): Samsung SDI's INR21700-50E cell specification reads "SAMSUNG SDI
 Confidential Proprietary" on every page; Inspired Energy's NH2054HD34 specification states the information "should not,
 in whole or in part, be reproduced"; LG's INR21700M50LT specification is a customer copy that "should only be used for
-engineer study and pre-discussion". This script downloads each from the address recorded there into
-v2/vendor/battery/held/ (ignored), checks the sha256 the stream read, and refuses to keep a file that differs.
+engineer study and pre-discussion". The two rugged-tablet spec sheets of the USB-C service budget carry their makers'
+copyright notices and no grant: Samsung's Galaxy Tab Active5 sheet reads "(c) 2024 Samsung Electronics America, Inc.
+All rights reserved." and Zebra's ET40/ET45 sheet "(c)2025 Zebra Technologies Corp. and/or its affiliates." ((c) for
+the copyright sign). This script downloads each from the address recorded there into v2/vendor/battery/held/ (the
+tablet sheets into v2/vendor/tablet/held/ beside it; both ignored), checks the sha256 the stream read, and refuses to
+keep a file that differs.
 Usage: fetch_held_back.py [--out DIR]   (default: v2/vendor/battery/held/ under this repository's root)"""
 import argparse
 import hashlib
@@ -25,6 +29,13 @@ DOCS = [
     ("inspired-energy-nh2054hd34-v1.8.pdf",
      "https://inspired-energy.com/images/product_data_sheets/NH2054HD34_spec_v1.8.pdf",
      "5be4472514b5557bc529d0b258a8117bd4f930b7880c2ebbb04a62ced448b9b3"),
+    # the rugged tablets' spec sheets (the USB-C service budget, 30 September 2026): each carries its maker's copyright
+    ("../../tablet/held/samsung-galaxy-tab-active5-spec-sheet.pdf",
+     "https://images.samsung.com/is/content/samsung/assets/us/business/mobile/tablets/galaxy-tab-active/explore/Tab_Active5_Spec_Sheet.pdf",
+     "f5a40178566ca410f5a91423730697deeb598edc949ed50f9df5ae054b800fa5"),
+    ("../../tablet/held/zebra-et40-et45-spec-sheet-en-us.pdf",
+     "https://www.zebra.com/content/dam/zebra_dam/en/spec-sheets/et40-et45-spec-sheet-en-us.pdf",
+     "59f0c2807fb5b24d43d418e45f684c0394123cf0cda921a61f030a78c5056d73"),
 ]
 
 
@@ -42,7 +53,9 @@ def main():
             sys.stderr.write("fetch_held_back: %s differs from the pinned file (%s); not kept\n" % (name, got[:16]))
             bad += 1
             continue
-        with open(os.path.join(a.out, name), "wb") as f:
+        dest = os.path.normpath(os.path.join(a.out, name))
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        with open(dest, "wb") as f:
             f.write(data)
         print("fetch_held_back: %s %d bytes, sha256 matches" % (name, len(data)))
     return 1 if bad else 0

@@ -1,0 +1,29 @@
+tablet at VBAT in the window: 19.355 W; a day 38.71 Wh; ANY 3.053 W, 73.27 Wh a day
+1. SCHEDULES, NOM TYP, least lid and added usable Wh
+   48 h none  lid 4S11.16P, +68.1 Wh
+   48 h W13   lid 4S11.16P, +68.1 Wh
+   48 h W10   lid 4S11.16P, +68.1 Wh
+   48 h W19   lid 4S12.40P, +107.2 Wh
+   48 h ANY   lid 4S13.42P, +139.5 Wh
+   72 h none  lid 4S11.16P, +68.1 Wh
+   72 h W13   lid 4S11.79P, +88.0 Wh
+   72 h W10   lid 4S11.79P, +88.0 Wh
+   72 h W19   lid 4S13.15P, +130.9 Wh
+   72 h ANY   lid 4S15.24P, +197.2 Wh
+2. OPTIONS, W13
+   72 h WE TYP     lid 4S15.01P, +189.9 Wh
+   72 h NOM90 TYP  lid 4S14.91P, +186.7 Wh
+   48 h NOM TYP    lid 4S11.16P, +68.1 Wh
+   48 h WE TYP     lid 4S12.67P, +116.0 Wh
+3. AS DRAWN with W13, present store (4S9P): unserved (the tablet not counted while stopped / counted)
+   48 h: 302.7 / 302.7 Wh unserved, stops h 23/11
+   72 h: 566.7 / 566.7 Wh unserved, stops h 23/11
+   as drawn least lid 72 h: 4S28.46P, +614.5 Wh
+   as drawn least lid 48 h: 4S19.39P, +328.1 Wh
+4. OPTION A's 48 h store run for 72 h, W13, TYP
+   NOM: lid 4S11.16P; 72 h: NOT MET, unserved 15.2 Wh, stops h 48/60
+   WE: lid 4S12.67P; 72 h: NOT MET, unserved 66.5 Wh, stops h 48/59
+5. BATTERY ONLY with the window in the run: (544.4 - 38.7) / 42.825 = 11.81 h; (224.5 - 38.7) / 42.825 = 4.34 h
+6. THE TRACE, NOM TYP 72 h W13 at the author's 4S11.79P, start 06, second day
+   node W at 08..17 UTC: 104 121 121 121 121 121 121 102 60 16
+   highest that day: base 212.6 of 218.4, lid 358.3 of 372.3 Wh
