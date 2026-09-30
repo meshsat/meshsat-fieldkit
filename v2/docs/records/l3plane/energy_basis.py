@@ -1,24 +1,30 @@
 #!/usr/bin/env python3
-"""energy_basis.py: the energy basis of the owner's layer 3 decisions L3-OD1, L3-OD2 and L3-OD4 (stream l3plane,
-MESHSAT-1357, 30 September 2026): M1's energy balance with the charge bus at its established range, its sensitivity to
-every input the model carries, exact case definitions, and an INFORMATIVE worse-weather case.
+"""energy_basis.py (second issue): the energy basis of the owner's layer 3 decisions L3-OD1, L3-OD2 and L3-OD4 (stream
+l3plane, MESHSAT-1357, 30 September 2026): M1's energy balance with the charge bus at its established range, what every
+input the model carries does to it at the proposed basis, what each undocumented efficiency must reach, exact case
+definitions, each pack's own lowest store, and an INFORMATIVE worse-weather case.
 
 PROTOTYPE DESIGN, desk arithmetic: nothing is built, powered or measured. Every energy figure is MODELED; the bus range is
-vbus20_range.py's (MAKER, NETLIST, INFERRED per term); every band is INFERRED from the model's grid.
+vbus20_range.py's (MAKER, NETLIST, INFERRED per term); every band and threshold is INFERRED from the model's grid.
 
-The model is reconcile_lid_panel.py's: a1elec's energy_two_pack.py (pinned) with the lid's parallel count, the
-performance ratio and U3's input limit set, the rest of its parameters as carried. This script builds each run the way
-reconcile_lid_panel.run() does, with these inputs made explicit instead of fixed:
-  * the charge bus VBUS20 (V) at which U3's current limit becomes power (the model holds it at V_BUS20 = 20.7 V), and the
-    front end's drafted current limit at the same bus (43 mV over the drafted 6.2 mOhm);
-  * U3's input current limit (A); U3's efficiency, recomputed at that bus and limit by stream s117's own method
-    (efficiency.py's daily(), imported unchanged, pinned), at TI's reading, the makers' maxima (lower) or the favourable
-    reading (upper);
-  * U3B's efficiency, the stage's and the front end's efficiencies, the pack's charge efficiency, the lid's discharge and
-    charge loops and the ideal diode's drop, each within the bracket the model's own sources print (parsed, not typed).
-Before any result it proves (exit 4 otherwise): 0a the runs reproduce every row of reconcile_lid_panel.out byte for byte
-at 20.7 V; 0b the U3 figure reproduces efficiency.py's day at E2 exactly; 0c the plane runs reproduce plane_grid.out's case
-P lowest stores on all 50 planes for both lid options; 0d a 72 hour series fed hour by hour reproduces the mean-day run.
+Second issue, after the independent check CHECK-1 of 6a283b25 (accepted: no):
+  * B1: the one at a time sensitivity is taken from WE (both array builds) and from NOM with the worst array build; the
+    first issue's table from NOM with the typical build sat where the packs fill before dusk and hid every charge-side loss;
+    it is kept, marked so;
+  * B2: WE is restated to hold only figures with a maker's document behind them at their worst, plus the lid path's
+    ESTIMATE resistances at their bracket's worse end and the lid's standby drain; the three efficiencies no maker document
+    gives for this circuit (board E's stage, board A's front end, the pack's charge efficiency) stay at their declared
+    values and every WE result is labelled CONDITIONAL on them; the minimum each must reach, per lid option and band point,
+    is printed beside the makers' own curve readings (curve_readings.out) and the cell sheet's resistive bound;
+  * minors: each pack's lowest store is tested as well as the combined one (two pass lines, COMBINED and EACH PACK); the
+    knee is stated per build; the bus's brackets (the divider's rise, the resistors' endurance) are run; labels.
+
+The model is reconcile_lid_panel.py's: a1elec's energy_two_pack.py (pinned) with the lid's parallel count, the ratio and
+U3's input limit set, the rest as carried; this script builds each run as reconcile_lid_panel.run() does, with the bus,
+the limit and the named inputs explicit. Before any result it proves (exit 4 otherwise): 0a the runs reproduce every row of
+reconcile_lid_panel.out byte for byte at 20.7 V; 0b the U3 figure reproduces efficiency.py's day at E2 exactly; 0c the
+plane runs reproduce plane_grid.out's case P on all 50 planes for both lid options; 0d a 72 hour series fed hour by hour
+reproduces the mean-day run; 0e the first issue's WE is reproduced against its committed rows (commit 6a283b25).
 
 Run from the repository root:  python3 v2/docs/records/l3plane/energy_basis.py > v2/docs/records/l3plane/energy_basis.out
 Deterministic. Exit 2: a pinned script or input is not the pinned file; 3: an input cannot be parsed; 4: a reproduction
@@ -39,9 +45,11 @@ PINS = {"a1int/reconcile_lid_panel.py": "031ab3f99779f657be720b36c9ea71c9933175b
         "a1solar/energy_runs.py": "d0fd1949efce71868a143c57cd9e5a2db516daec774db1085541d1a5a920ffcb",
         "a1elec/energy_two_pack.py": "a3426880bf607d38b08449ec0a880f10a064ee2767324afad2c250cd5a9444f4",
         "s117/efficiency.py": "c24d5cfe209be3db7437c39c6762ef4257dd881d561cba047284aa7cc08b5809",
-        "l3plane/vbus20_range.py": "7b4dbea2e25de487a0ce6e734ab65f74ebea87f7a3532159c611ae47cc7ffeaa"}
+        "l3plane/vbus20_range.py": "f4eabc3536334604b007acc34c4ac78ac218a7cfb294f4352a9baaaeff78ff01"}
 SERIES = ("v2/vendor/solar/pvgis-series/pvgis-leiden-seriescalc-2005-2020-september-slope40-aspect0.json",
           "c5f0363a9d97b6db6e5ef10fa89904fd55e30aca67007760b9d77caa3b0debd7")
+CELL = "v2/vendor/battery/samsung-35e-conrad.pdf"      # pinned by energy_inputs.yaml; checked below against that pin
+FIRST_ISSUE = "6a283b25"                               # the first issue of this script's output, for check 0e
 for _rel, _want in PINS.items():
     if hashlib.sha256(open(os.path.join(RECS, _rel), "rb").read()).hexdigest() != _want:
         sys.stderr.write("energy_basis: %s is not the pinned file; refusing\n" % _rel)
@@ -57,11 +65,14 @@ import reconcile_lid_panel as RL  # noqa: E402
 PANEL = "v2/docs/records/a1int/reconcile_lid_panel.out"
 EFF_OUT = "v2/docs/records/s117/efficiency.out"
 GRID_OUT = "v2/docs/records/l3plane/plane_grid.out"
+CURVES = "v2/docs/records/l3plane/curve_readings.out"
+SELF_OUT = "v2/docs/records/l3plane/energy_basis.out"
 SC76_V = 19.08          # SC-76's figure (fnd/l3r2), stream s120's DC band minimum: run for comparison only
 LIDS = ((9, "4S9P, both lid functions kept (4S15P in all)"), (14, "4S14P, the tablet bracket out (4S20P in all)"),
         (15, "4S15P, the QMX HF set out (4S21P in all)"))
 D0 = PACK0 = RES0 = None
 TMIN = None
+FLOOR = None
 
 
 def refuse(code, msg):
@@ -110,9 +121,15 @@ def setup(n, pr, vbus, iin, over):
 
 
 def run(n, pr, vbus, iin, over=None, prof=None, t_l=None):
-    d, pack, r, cfg = setup(n, pr, vbus, iin, over or {})
+    over = over or {}
+    d, pack, r, cfg = setup(n, pr, vbus, iin, over)
     pf = RES0["months"][TP.MONTH]["profile"] if prof is None else prof
-    return TP.both(d, pack, r, pf, 400.0, 200.0, TP.v("t_base_c"), TMIN if t_l is None else t_l, cfg)
+    load0 = TP.LOAD
+    TP.LOAD = load0 + over.get("drain_w", 0.0)      # the lid path's standby drain as load at the pack terminals
+    try:
+        return TP.both(d, pack, r, pf, 400.0, 200.0, TP.v("t_base_c"), TMIN if t_l is None else t_l, cfg)
+    finally:
+        TP.LOAD = load0
 
 
 class Series:
@@ -128,8 +145,14 @@ class Series:
 
 
 def sim_series(n, pr, vbus, iin, over, vals, start, t_l):
-    d, pack, r, cfg = setup(n, pr, vbus, iin, over or {})
-    return TP.sim(d, pack, r, Series(vals), 400.0, 200.0, start, TP.v("t_base_c"), t_l, cfg)
+    over = over or {}
+    d, pack, r, cfg = setup(n, pr, vbus, iin, over)
+    load0 = TP.LOAD
+    TP.LOAD = load0 + over.get("drain_w", 0.0)
+    try:
+        return TP.sim(d, pack, r, Series(vals), 400.0, 200.0, start, TP.v("t_base_c"), t_l, cfg)
+    finally:
+        TP.LOAD = load0
 
 
 def u3_day(vin, ilim, reading):
@@ -153,25 +176,48 @@ def summ(rs):
             "base": min(r["low_b"] for r in rs), "short": max(r["short"] for r in rs)}
 
 
+def comb(s):
+    return s["ok"] and s["both"] > FLOOR
+
+
+def each(s):
+    return s["ok"] and s["base"] > FLOOR and s["lid"] > FLOOR
+
+
 def cell(s):
     return ("MEETS %6.1f" % s["both"]) if s["ok"] else ("NOT MET, %5.1f Wh unserved" % s["short"])
+
+
+def packs(s):
+    return ("%6.1f (base %5.1f, lid %5.1f)" % (s["both"], s["base"], s["lid"])) if s["ok"] else ("NOT MET, %5.1f unserved" % s["short"])
 
 
 def short(s):
     return ("%6.1f" % s["both"]) if s["ok"] else "   NOT"
 
 
+def metric(s):
+    return s["both"] if s["ok"] else -s["short"]
+
+
 def main():
-    global D0, PACK0, RES0, TMIN
+    global D0, PACK0, RES0, TMIN, FLOOR
     D0, PACK0, RES0, t2m = TP.load_model()
     TMIN = round(min(t2m), 2)
     rat = RL.ratios()
     panel = head_equal(PANEL)
     eff_out = head_equal(EFF_OUT)
     grid_out = head_equal(GRID_OUT)
+    curves = head_equal(CURVES)
+    first = subprocess.run(["git", "-C", TOP, "show", "%s:%s" % (FIRST_ISSUE, SELF_OUT)], capture_output=True, text=True).stdout
+    if "THE ENERGY BASIS OF LAYER 3" not in first:
+        refuse(3, "the first issue's output is not at %s" % FIRST_ISSUE)
     ser = os.path.join(TOP, SERIES[0])
     if hashlib.sha256(open(ser, "rb").read()).hexdigest() != SERIES[1]:
         refuse(2, "the filed PVGIS series is not the pinned file")
+    cell_pin = [p_["sha256"] for p_ in D0["pinned"] if p_["path"] == CELL]
+    if not cell_pin or hashlib.sha256(open(os.path.join(TOP, CELL), "rb").read()).hexdigest() != cell_pin[0]:
+        refuse(2, "the cell sheet is not energy_inputs.yaml's pinned file")
     vr = VR.compute()
     AC, _EA, _TP = ER.pinned_import()
     AC.check_pins()
@@ -179,18 +225,22 @@ def main():
     ga, ta, _pl = ER.september(ER.ANCHOR)
     prof0 = RES0["months"][TP.MONTH]["profile"]
     k_scale = sum(prof0) / sum(ga)
-    m = re.search(r"0\.01 h step lowers the lowest stores by about ([\d.]+) to ([\d.]+) Wh \(B\) and ([\d.]+) to ([\d.]+) Wh \(C\)",
-                  " ".join(panel.split()))
-    if not m:
-        refuse(3, "the hourly-step figures not in reconcile_lid_panel.out")
-    floor = max(float(m.group(2)), float(m.group(4)))
+    notes = " ".join(panel.split())
+    m = re.search(r"0\.01 h step lowers the lowest stores by about ([\d.]+) to ([\d.]+) Wh \(B\) and ([\d.]+) to ([\d.]+) Wh \(C\)", notes)
+    md = re.search(r"standby drain \(about ([\d.]+) to ([\d.]+) Wh over 72 h\)", notes)
+    if not (m and md):
+        refuse(3, "the hourly-step figures or the standby drain not in reconcile_lid_panel.out")
+    FLOOR = max(float(m.group(2)), float(m.group(4)))
+    drain_wh = float(md.group(2))
+    drain_w = drain_wh / D0["mission"]["hours"]
 
     o = []
     P = o.append
-    P("THE ENERGY BASIS OF LAYER 3'S DECISIONS L3-OD1, L3-OD2 AND L3-OD4 (energy_basis.py, stream l3plane, MESHSAT-1357).")
-    P("PROTOTYPE DESIGN: nothing built, powered or measured. Energy figures MODELED (a1elec's energy_two_pack.py, pinned, as")
-    P("reconcile_lid_panel.py runs it); the bus range from vbus20_range.py (MAKER, NETLIST, INFERRED per term); bands INFERRED")
-    P("from the model's grid. AI arithmetic, not a qualified review.")
+    P("THE ENERGY BASIS OF LAYER 3'S DECISIONS L3-OD1, L3-OD2 AND L3-OD4 (energy_basis.py second issue, stream l3plane,")
+    P("MESHSAT-1357). PROTOTYPE DESIGN: nothing built, powered or measured. Energy figures MODELED (a1elec's energy_two_pack.py,")
+    P("pinned, as reconcile_lid_panel.py runs it); the bus range from vbus20_range.py (MAKER, NETLIST, INFERRED per term); bands")
+    P("and thresholds INFERRED from the model's grid. The author's analysis, AI arithmetic; not a qualified review, and not")
+    P("the independent check.")
     P("")
 
     # 0. reproduction
@@ -245,6 +295,73 @@ def main():
             ok = ok and all(a[k] == b[k] for k in ("ok", "first_stop", "short", "low_b", "low_l", "low_t"))
     bad += 0 if ok else 1
     P("   0d. the mean day fed as a 72 hour series reproduces the mean-day runs exactly (both lids, both starts): %s" % ("yes" if ok else "NO"))
+
+    # the cases
+    band_env, band_m1 = vr["bands"][0], vr["bands"][1]
+    v_nom, v_min, v_max = vr["nominal"], band_env[4], band_env[5]
+    v_rise = vr["brackets"][0][2][0]
+    v_life = vr["brackets"][1][2][0]
+    i_nom = TP.v("u3_iin_draft_a")
+    rd = bracket(TP.PAR["r_lid_dsg"][1], "r_lid_dsg")
+    rc_ = bracket(TP.PAR["r_lid_chg"][1], "r_lid_chg")
+    mk = re.search(r"([\d]+) / ([\d]+) / ([\d]+) mV", TP.PAR["v_ak"][1])
+    vak = tuple(float(x) / 1000.0 for x in mk.groups())
+    ch = D0["solar"]["chain"]
+    ce = D0["pack"]["charge"]["energy_efficiency"]
+    e_nom = u3_day(v_nom, i_nom, "TI")
+
+    def we_over(v, i, extra=None):
+        x = {"eta_u3": u3_day(v, i, "lower"), "eta_b": TP.v("eta_u3b_lo"), "v_ak": vak[2], "r_dsg": rd[1], "r_chg": rc_[1],
+             "drain_w": drain_w}
+        x.update(extra or {})
+        return x
+    cases = {
+        "NOM": ("nominal: VBUS20 %.3f V, U3's limit %.1f A, U3 %.4f (TI's reading at that bus, INFERRED), U3B %.3f (INFERRED), stage "
+                "%.2f and front end %.2f (DECLARED), pack charge %.2f (INFERRED, no document), lid loops %.3f / %.3f Ohm (ESTIMATE), "
+                "V(AK) %.0f mV (MAKER typical), no standby drain" % (v_nom, i_nom, e_nom, TP.v("eta_u3b"), ch[0]["eta"], ch[1]["eta"],
+                                                                     ce["value"], TP.v("r_lid_dsg"), TP.v("r_lid_chg"), vak[1] * 1000),
+                v_nom, i_nom, {"eta_u3": e_nom}),
+        "WE": ("RESTATED: every term with a maker's document at its worst: VBUS20 %.3f V (the steady-state range's minimum, "
+               "vbus20_range.out 6), U3's limit 6.1 A (INFERRED minimum), U3 %.4f (the makers' maxima at that bus, INFERRED by TI's "
+               "method), U3B %.3f (INFERRED, lower bracket), V(AK) %.0f mV (MAKER maximum); the lid loops at their ESTIMATE's worse "
+               "end %.3f / %.3f Ohm; the lid's standby drain %.1f Wh over 72 h added to the load. CONDITIONAL ON three undocumented "
+               "efficiencies held at their declared values: stage %.2f, front end %.2f, pack charge %.2f" % (
+                   v_min, u3_day(v_min, 6.1, "lower"), TP.v("eta_u3b_lo"), vak[2] * 1000, rd[1], rc_[1], drain_wh,
+                   ch[0]["eta"], ch[1]["eta"], ce["value"]),
+               v_min, 6.1, we_over(v_min, 6.1)),
+        "WE60": ("WE with U3's limit at the 6.0 A bracket", v_min, 6.0, we_over(v_min, 6.0)),
+        "WEL": ("WE with the bus at its endurance bracket %.3f V (the resistors at the makers' 1000 h limits; a bound)" % v_life,
+                v_life, 6.1, we_over(v_life, 6.1)),
+        "WA": ("WE60 with the three undocumented efficiencies at their brackets' lower ends: stage %.2f, front end %.2f, pack "
+               "charge %.2f" % (ch[0]["low"], ch[1]["low"], ce["low"]),
+               v_min, 6.0, we_over(v_min, 6.0, {"eta_st": ch[0]["low"], "eta_fe": ch[1]["low"], "chg_eta": ce["low"]})),
+        "WE1": ("the FIRST issue's WE (V(AK), the lid loops and the drain nominal), for continuity with CHECK-1's figures",
+                v_min, 6.1, {"eta_u3": u3_day(v_min, 6.1, "lower"), "eta_b": TP.v("eta_u3b_lo")}),
+        "GEN": ("board A AS GENERATED: R11 10 mOhm, the front end's limit %.2f A minimum, U3's limit set under it at %.2f A (entry E1; "
+                "its %.2f A maximum is 50 mA under the front end's minimum); bus nominal; U3 %.4f; the rest nominal" % (
+                    vr["cc"]["gen"][0], TP.v("u3_iin_e1_a"), TP.v("u3_iin_e1_a") + 0.1, u3_day(v_nom, TP.v("u3_iin_e1_a"), "TI")),
+                v_nom, TP.v("u3_iin_e1_a"), {"eta_u3": u3_day(v_nom, TP.v("u3_iin_e1_a"), "TI"), "fe_i": vr["cc"]["gen"][0]}),
+        "M207": ("for comparison, the model as published: %.1f V, 6.1 A, U3 %.3f and U3B %.3f carried (plane_grid.out case P)" % (
+                     TP.V_BUS20, ch[2]["eta"], TP.v("eta_u3b")), TP.V_BUS20, 6.1, {}),
+        "SC76": ("for comparison, SC-76's basis: %.2f V, 6.1 A, U3 and U3B carried (plane_grid.out case V19)" % SC76_V, SC76_V, 6.1, {}),
+    }
+    order = ("NOM", "WE", "WE60", "WEL", "WA", "WE1", "GEN", "M207", "SC76")
+    pp40, rb40, rc40 = PR[(40, 0)]
+
+    def at(n, k, b="TYP", plane=(40, 0), extra=None, vbus=None, iin=None):
+        pp, rb, rc = PR[plane]
+        c = cases[k]
+        ov = dict(c[3])
+        ov.update(extra or {})
+        return summ(run(n, pr0 * (rb if b == "TYP" else rc), vbus or c[1], iin or c[2], over=ov, prof=pp))
+    ok = True
+    for n, _w in LIDS:
+        for b in ("TYP", "WAB"):
+            s = at(n, "WE1", b)
+            ln = ("MEETS  both %6.1f, lid %5.1f, base %5.1f" % (s["both"], s["lid"], s["base"])) if s["ok"] else "NOT MET, unserved %6.1f Wh" % s["short"]
+            ok = ok and ln in first
+    bad += 0 if ok else 1
+    P("   0e. the first issue's WE (case WE1 here) reproduces its six rows of %s at %s: %s" % (SELF_OUT, FIRST_ISSUE, "yes" if ok else "NO"))
     if bad:
         sys.stdout.write("\n".join(o) + "\n")
         refuse(4, "%d reproduction check(s) failed" % bad)
@@ -270,7 +387,7 @@ def main():
     P("       air %.2f to %.2f C (the profile's T2m), the lid pack at %.2f C (its minimum) and the base pack at +%.0f C for 72 hours." % (
         min(t2m), max(t2m), TMIN, TP.v("t_base_c")))
     P("       Other planes: each plane's own DRcalc mean day (v2/vendor/solar/pvgis-planes/), scaled by the same factor.")
-    P("       NO WORSE-WEATHER CASE IS ESTABLISHED BY THESE RUNS: a mean day is not a cloudy day; section 6 is INFORMATIVE only.")
+    P("       NO WORSE-WEATHER CASE IS ESTABLISHED BY THESE RUNS: a mean day is not a cloudy day; section 7 is INFORMATIVE only.")
     P("   1b. THE ARRAY BUILD (both on the SAME mean day; the ratio multiplies PVGIS's %.4f, the 40/0 plane's losses kept for every plane)" % pr0)
     P("       TYP, the typical build: fit '%s', the FBIN point at %.2f V, NOCT %.0f C, a %.0f m lead (%.4f ohm loop)." % (
         fits[0], win[1], AC.CAND["REN100"]["noct"], AC.LEAD_M, AC.lead_r()))
@@ -279,225 +396,276 @@ def main():
         ", ".join(fits), win[0], win[2]))
     P("       cells 10 K above the NOCT model, a %.0f m lead (twice the loop), and the hotter cells' own loss of maximum-power energy" % (2 * AC.LEAD_M))
     P("       (the lower of the model's and the maker's -0.42 %%/K). At 40/0: TYP %.4f, WAB %.4f of the tracked energy." % (PR[(40, 0)][1], PR[(40, 0)][2]))
-    P("   1c. THE ELECTRICAL INPUTS")
-    band_env, band_m1 = vr["bands"][0], vr["bands"][1]
-    v_nom, v_min, v_max = vr["nominal"], band_env[4], band_env[5]
-    i_nom = TP.v("u3_iin_draft_a")
-    e_nom = u3_day(v_nom, i_nom, "TI")
-    e_we = u3_day(v_min, 6.1, "lower")
-    e_we6 = u3_day(v_min, 6.0, "lower")
-    rd = bracket(TP.PAR["r_lid_dsg"][1], "r_lid_dsg")
-    rc_ = bracket(TP.PAR["r_lid_chg"][1], "r_lid_chg")
-    mk = re.search(r"([\d]+) / ([\d]+) / ([\d]+) mV", TP.PAR["v_ak"][1])
-    vak = tuple(float(x) / 1000.0 for x in mk.groups())
-    ch = D0["solar"]["chain"]
-    ce = D0["pack"]["charge"]["energy_efficiency"]
-    cases = {
-        "NOM": ("nominal: VBUS20 %.3f V (the regulation's nominal), U3 at %.1f A (IIN_HOST's nominal), U3 %.4f (TI's reading at that "
-                "bus), U3B %.3f, stage %.2f, front end %.2f, pack charge %.2f, lid loops %.3f / %.3f ohm, V(AK) %.0f mV" % (
-                    v_nom, i_nom, e_nom, TP.v("eta_u3b"), ch[0]["eta"], ch[1]["eta"], ce["value"], TP.v("r_lid_dsg"), TP.v("r_lid_chg"), vak[1] * 1000),
-                v_nom, i_nom, {"eta_u3": e_nom}),
-        "WE": ("the established worst electrical inputs: VBUS20 %.3f V (the envelope's minimum, vbus20_range.out 6), U3 at 6.1 A (its "
-               "minimum), U3 %.4f (the makers' maxima at that bus), U3B %.3f (its lower bracket); the other losses nominal" % (
-                   v_min, e_we, TP.v("eta_u3b_lo")),
-               v_min, 6.1, {"eta_u3": e_we, "eta_b": TP.v("eta_u3b_lo")}),
-        "WE60": ("WE with U3 at the 6.0 A bracket (U3 %.4f)" % e_we6, v_min, 6.0, {"eta_u3": e_we6, "eta_b": TP.v("eta_u3b_lo")}),
-        "WA": ("every bracket unfavourable at once: WE60 plus stage %.2f, front end %.2f, pack charge %.2f, lid loops %.3f / %.3f ohm, "
-               "V(AK) %.0f mV" % (ch[0]["low"], ch[1]["low"], ce["low"], rd[1], rc_[1], vak[2] * 1000),
-               v_min, 6.0, {"eta_u3": e_we6, "eta_b": TP.v("eta_u3b_lo"), "eta_st": ch[0]["low"], "eta_fe": ch[1]["low"],
-                            "chg_eta": ce["low"], "r_dsg": rd[1], "r_chg": rc_[1], "v_ak": vak[2]}),
-        "GEN": ("board A AS GENERATED: R11 10 mOhm, so the front end limits at %.2f A minimum (vbus20_range.out 7) and U3's limit is "
-                "set under it at %.2f A (energy_two_pack entry E1); bus nominal, U3 %.4f (TI's reading there), the rest nominal" % (
-                    vr["cc"]["gen"][0], TP.v("u3_iin_e1_a"), u3_day(v_nom, TP.v("u3_iin_e1_a"), "TI")),
-                v_nom, TP.v("u3_iin_e1_a"), {"eta_u3": u3_day(v_nom, TP.v("u3_iin_e1_a"), "TI"), "fe_i": vr["cc"]["gen"][0]}),
-        "M207": ("for comparison, the model as published: %.1f V, 6.1 A, U3 %.3f and U3B %.3f carried (plane_grid.out case P)" % (
-                     TP.V_BUS20, ch[2]["eta"], TP.v("eta_u3b")), TP.V_BUS20, 6.1, {}),
-        "SC76": ("for comparison, SC-76's basis: %.2f V, 6.1 A, U3 and U3B carried (plane_grid.out case V19)" % SC76_V, SC76_V, 6.1, {}),
-    }
-    order = ("NOM", "WE", "WE60", "WA", "GEN", "M207", "SC76")
+    P("   1c. THE ELECTRICAL AND LOSS INPUTS (basis: MAKER, NETLIST, INFERRED from a maker's figures, DECLARED, ESTIMATE)")
     for k in order:
         P("       %-5s %s" % (k, cases[k][0]))
     P("       Common to every case: 400 Wp (four Renogy RNG-100DB-H in 2S2P) into a 200 W stage window, the drafted entry (R11")
-    P("       6.2 mOhm: the front end limits at 6.94 A minimum, above U3; as generated R11 is 10 mOhm and the bus cannot carry U3's")
-    P("       limit, vbus20_range.out 7), U3B at code 62 (%.3f A), PS-IDLE-SPEC %.1f W at the pack terminals, the cells aged to 80" % (TP.v("chg_a_lid"), TP.LOAD))
-    P("       percent, the 3.00 V line with the 5 percent reserve, the charge and discharge split by capacity.")
+    P("       6.2 mOhm: the front end limits at 6.94 A minimum, above U3; GEN excepted), U3B at code 62 (%.3f A), PS-IDLE-SPEC %.1f W" % (TP.v("chg_a_lid"), TP.LOAD))
+    P("       at the pack terminals, the cells aged to 80 percent, the 3.00 V line with the 5 percent reserve, the charge and discharge")
+    P("       split by capacity. The standby drain is carried as load at the pack terminals, split by capacity like the rest.")
+    P("   1d. THE PASS LINES: M1 is MET when neither start stops the kit. The two tests beside it, each against the floor %.1f Wh," % FLOOR)
+    P("       the model's hourly-step sensitivity as reconcile_lid_panel.out's NOTES print it (measured at 40/0 at an earlier")
+    P("       issue's settings; CHECK-1 measured at most 0.1 Wh at WE): COMBINED, the lowest store of both packs together above it;")
+    P("       EACH PACK, the base's and the lid's own lowest stores each above it (a pack at 0.0 Wh has reached its own 3.00 V")
+    P("       line with the reserve: the kit runs on on the other pack). Which one REQ-072 needs is the owner's reading: L3-OD1's")
+    P("       drafted ruling on fnd/l3r2 reads 'the pack' in a requirement as each pack unless it names one.")
     P("")
 
-    # 2. U3's efficiency against the bus
-    P("2. U3'S EFFICIENCY AGAINST THE BUS AND ITS LIMIT (efficiency.py's method, the reference day at 40/0, the drafted entry)")
+    # 2. the undocumented efficiencies: what the makers' documents give
+    P("2. THE THREE UNDOCUMENTED EFFICIENCIES: WHAT THE MAKERS' OWN DOCUMENTS GIVE")
+    rd_fe = re.search(r"READING at 5\.5 to 6 A \(board A's front end carries U3's 6\.1 A\): ([\d.]+) to ([\d.]+) %", curves)
+    rd_st = re.search(r"READING at 6 to 12 A on the 35 V curve \(board E's stage delivers up to about 12 A at 15\.1 V\): ([\d.]+) to ([\d.]+) %", curves)
+    if not (rd_fe and rd_st):
+        refuse(3, "curve_readings.out's readings not parsed")
+    P("   board E's stage (LT8705A, declared %.2f, bracket %.2f to %.2f, 'NOT PLOTTED at this ratio'): 8705af p.41's own 12 V, 15 A" % (
+        ch[0]["eta"], ch[0]["low"], ch[0]["high"]))
+    P("      design (the same M1 and M2 parts as board E's Q3 and Q4) reads %s to %s %% at 6 to 12 A from 35 V (TYPICAL, 25 C, INFERRED;" % rd_st.groups())
+    P("      curve_readings.out 2). Not a figure for board E at 34.3 to 15.1 V over the day's hours: NOT ESTABLISHED.")
+    P("   board A's front end (LM5176, declared %.2f, bracket %.2f to %.2f, 'NOT PLOTTED at 20 V out'): SNVSAI1D p.9 Figure 6-2's" % (
+        ch[1]["eta"], ch[1]["low"], ch[1]["high"]))
+    P("      9 V to 12 V boost reads %s to %s %% at 5.5 to 6 A (TYPICAL, 25 C, INFERRED; curve_readings.out 1). Not a figure for" % rd_fe.groups())
+    P("      board A at 15.1 to 20 V, 200 kHz, 10 uH: NOT ESTABLISHED.")
+    cp3 = subprocess.run(["pdftotext", "-layout", "-f", "3", "-l", "3", os.path.join(TOP, CELL), "-"], capture_output=True, text=True).stdout
+    cp7 = subprocess.run(["pdftotext", "-layout", "-f", "7", "-l", "7", os.path.join(TOP, CELL), "-"], capture_output=True, text=True).stdout
+    m3 = re.search(r"Standard Capacity_0\.2C[\s\S]*?([\d,]+)\s+([\d.]+)\s", cp3)
+    m7 = re.search(r"Initial\s+After storage[\s\S]*?\n\s+([\d.]+)\s+([\d.]+)\s*\n", cp7)
+    if not (m3 and m7):
+        refuse(3, "the cell sheet's pages 3 and 7 not parsed")
+    ah, wh = float(m3.group(1).replace(",", "")) / 1000.0, float(m3.group(2))
+    r_ac, r_dc = float(m7.group(1)) / 1000.0, float(m7.group(2)) / 1000.0
+    v02 = wh / ah
+    i02 = 0.2 * ah
+    ocv = v02 + i02 * r_dc
+    rows_c = []
+    for lab, n_p, i_c in (("base 4S6P at U3's %.3f A" % TP.v("chg_a_base"), TP.NP_B, TP.v("chg_a_base")),
+                          ("lid 4S14P at U3B's %.3f A" % TP.v("chg_a_lid"), 14, TP.v("chg_a_lid")),
+                          ("lid 4S15P at U3B's %.3f A" % TP.v("chg_a_lid"), 15, TP.v("chg_a_lid"))):
+        icell = i_c / n_p
+        idis = TP.LOAD / (4 * v02) / (TP.NP_B + n_p)
+        rows_c.append((lab, icell, idis, (ocv - idis * r_dc) / (ocv + icell * r_dc)))
+    P("   the pack's charge efficiency (declared %.2f, bracket %.2f to %.2f, energy_inputs.yaml 'INFERRED ... no held document gives" % (
+        ce["value"], ce["low"], ce["high"]))
+    P("      it'): Samsung SDI's INR18650-35E sheet (%s, pinned by energy_inputs.yaml) gives p.3 the standard 0.2C discharge," % CELL)
+    P("      %.3f Ah and %.2f Wh (a mean %.3f V), and p.7 one storage sample's initial AC-IR %.1f mOhm and DC-IR %.1f mOhm. It gives no" % (
+        ah, wh, v02, r_ac * 1000, r_dc * 1000))
+    P("      charged energy, charge curve, coulombic efficiency or hysteresis. The resistive part alone, (OCV - I_dis R) / (OCV + I_chg R)")
+    P("      with OCV %.3f V (the 0.2C mean plus its own IR drop) and R the sample's DC-IR (INFERRED):" % ocv)
+    for lab, icell, idis, e in rows_c:
+        P("         %-34s %.3f A a cell charging, %.3f A discharging: %.4f" % (lab, icell, idis, e))
+    P("      That is an UPPER bound on the charge efficiency (the undocumented losses only lower it): NOT ESTABLISHED.")
+    P("")
+
+    # 3. U3's efficiency against the bus
+    P("3. U3'S EFFICIENCY AGAINST THE BUS AND ITS LIMIT (INFERRED by efficiency.py's method, the reference day at 40/0, the drafted entry)")
     P("   %-44s %8s %8s %8s   %s" % ("bus, limit", "lower", "TI", "upper", "power into U3 at the limit"))
-    for lab, v in (("the envelope's minimum", v_min), ("the reference day's minimum", band_m1[4]), ("SC-76", SC76_V),
-                   ("nominal", v_nom), ("the model's", TP.V_BUS20), ("the envelope's maximum", v_max)):
+    for lab, v in (("the endurance bracket", v_life), ("the divider-rise bracket", v_rise), ("the envelope's minimum", v_min),
+                   ("SC-76", SC76_V), ("nominal", v_nom), ("the model's", TP.V_BUS20), ("the envelope's maximum", v_max)):
         for ilim in (6.0, 6.1, 6.2):
             P("   %-44s %8.4f %8.4f %8.4f   %6.1f W" % ("%s %.3f V, %.1f A" % (lab, v, ilim), u3_day(v, ilim, "lower"),
                                                     u3_day(v, ilim, "TI"), u3_day(v, ilim, "upper"), v * ilim))
-    P("   At a lower bus U3 bucks a smaller ratio and loses slightly less; the power it may take falls in proportion to the bus.")
     P("")
 
-    # 3. sensitivity at 40/0
-    pp40, rb40, rc40 = PR[(40, 0)]
-    nom = cases["NOM"]
-    axes = [("VBUS20 (and U3's TI reading at it)", [("%.3f V" % v_min, dict(vbus=v_min, eta_u3=u3_day(v_min, i_nom, "TI"))),
-                                                    ("%.3f V" % v_max, dict(vbus=v_max, eta_u3=u3_day(v_max, i_nom, "TI")))]),
-            ("U3's input limit (and its TI reading)", [("6.0 A", dict(iin=6.0, eta_u3=u3_day(v_nom, 6.0, "TI"))),
-                                                      ("6.1 A", dict(iin=6.1, eta_u3=u3_day(v_nom, 6.1, "TI")))]),
-            ("U3's efficiency", [("lower %.4f" % u3_day(v_nom, i_nom, "lower"), dict(eta_u3=u3_day(v_nom, i_nom, "lower"))),
-                                 ("upper %.4f" % u3_day(v_nom, i_nom, "upper"), dict(eta_u3=u3_day(v_nom, i_nom, "upper")))]),
-            ("U3B's efficiency", [("%.3f" % TP.v("eta_u3b_lo"), dict(eta_b=TP.v("eta_u3b_lo"))), ("%.3f" % TP.v("eta_u3b_hi"), dict(eta_b=TP.v("eta_u3b_hi")))]),
-            ("the stage's efficiency", [("%.2f" % ch[0]["low"], dict(eta_st=ch[0]["low"])), ("%.2f" % ch[0]["high"], dict(eta_st=ch[0]["high"]))]),
-            ("the front end's efficiency", [("%.2f" % ch[1]["low"], dict(eta_fe=ch[1]["low"])), ("%.2f" % ch[1]["high"], dict(eta_fe=ch[1]["high"]))]),
-            ("the pack's charge efficiency", [("%.2f" % ce["low"], dict(chg_eta=ce["low"])), ("%.2f" % ce["high"], dict(chg_eta=ce["high"]))]),
-            ("the lid's discharge loop", [("%.3f ohm" % rd[1], dict(r_dsg=rd[1])), ("%.3f ohm" % rd[0], dict(r_dsg=rd[0]))]),
-            ("the lid's charge loop", [("%.3f ohm" % rc_[1], dict(r_chg=rc_[1])), ("%.3f ohm" % rc_[0], dict(r_chg=rc_[0]))]),
-            ("the ideal diode's V(AK)", [("%.0f mV" % (vak[2] * 1000), dict(v_ak=vak[2])), ("%.0f mV" % (vak[0] * 1000), dict(v_ak=vak[0]))]),
-            ("the array build", [("WAB", dict(build="WAB")), ("TYP", dict(build="TYP"))])]
+    # 4. sensitivity
+    P("4. ONE INPUT AT A TIME ON 40/0, FROM WE (TYP and WAB) AND FROM NOM WAB: the lowest store of both packs in Wh (or minus the")
+    P("   energy left unserved) and its change; the base's and the lid's own lowest in brackets. WE is CONDITIONAL (1c).")
+    axes_we = [("VBUS20, the endurance bracket %.3f V" % v_life, dict(vbus=v_life, eta_u3=u3_day(v_life, 6.1, "lower"))),
+               ("VBUS20, the divider-rise bracket %.3f V" % v_rise, dict(vbus=v_rise, eta_u3=u3_day(v_rise, 6.1, "lower"))),
+               ("VBUS20 nominal %.3f V (favourable)" % v_nom, dict(vbus=v_nom, eta_u3=u3_day(v_nom, 6.1, "lower"))),
+               ("U3's limit 6.0 A", dict(iin=6.0, eta_u3=u3_day(v_min, 6.0, "lower"))),
+               ("U3's limit 6.2 A (favourable)", dict(iin=6.2, eta_u3=u3_day(v_min, 6.2, "lower"))),
+               ("U3 at TI's reading (favourable)", dict(eta_u3=u3_day(v_min, 6.1, "TI"))),
+               ("U3B carried %.3f (favourable)" % TP.v("eta_u3b"), dict(eta_b=TP.v("eta_u3b"))),
+               ("the stage %.2f" % ch[0]["low"], dict(eta_st=ch[0]["low"])),
+               ("the stage %.2f (favourable)" % ch[0]["high"], dict(eta_st=ch[0]["high"])),
+               ("the front end %.2f" % ch[1]["low"], dict(eta_fe=ch[1]["low"])),
+               ("the front end %.2f (favourable)" % ch[1]["high"], dict(eta_fe=ch[1]["high"])),
+               ("the pack's charge efficiency %.2f" % ce["low"], dict(chg_eta=ce["low"])),
+               ("the pack's charge efficiency %.2f (favourable)" % ce["high"], dict(chg_eta=ce["high"])),
+               ("the lid loops nominal %.3f / %.3f Ohm (favourable)" % (TP.v("r_lid_dsg"), TP.v("r_lid_chg")),
+                dict(r_dsg=TP.v("r_lid_dsg"), r_chg=TP.v("r_lid_chg"))),
+               ("V(AK) typical %.0f mV (favourable)" % (vak[1] * 1000), dict(v_ak=vak[1])),
+               ("no standby drain (favourable)", dict(drain_w=0.0))]
 
-    def run_at(n, extra, build="TYP", plane=(40, 0)):
-        pp, rb, rc = PR[plane]
-        args = dict(vbus=nom[1], iin=nom[2], **nom[3])
-        args.update(extra)
-        b = args.pop("build", build)
-        vbus, iin = args.pop("vbus"), args.pop("iin")
-        return summ(run(n, pr0 * (rb if b == "TYP" else rc), vbus, iin, over=args, prof=pp))
-
-    P("3. SENSITIVITY ON THE REFERENCE PLANE (40 degrees, south), one input at a time from NOM with the TYP build; the lowest")
-    P("   store of both packs in Wh (or the energy left unserved), and its change from NOM")
-    for n, what in LIDS:
-        base = run_at(n, {})
-        P("   %s: NOM %s" % (what, cell(base)))
-        rank = []
-        for name, ends in axes:
-            res = [(lab, run_at(n, ex)) for lab, ex in ends]
-            metric = [(s["both"] if s["ok"] else -s["short"]) for _l, s in res]
-            b0 = base["both"] if base["ok"] else -base["short"]
-            P("      %-38s %-14s %-30s %+7.1f   %-14s %-30s %+7.1f" % (name, res[0][0], cell(res[0][1]), metric[0] - b0,
-                                                                  res[1][0], cell(res[1][1]), metric[1] - b0))
-            rank.append((metric[0] - b0, name))
-        rank.sort()
-        P("      ranked by the unfavourable end: %s" % "; ".join("%s %+.1f" % (nm, dv) for dv, nm in rank[:5]))
-    P("   (a NOT MET row's metric is minus the unserved energy, so the change counts across the verdict)")
+    def ax_run(n, base_k, b, ex):
+        ex = dict(ex)
+        vb, ii = ex.pop("vbus", None), ex.pop("iin", None)
+        return at(n, base_k, b, extra=ex, vbus=vb, iin=ii)
+    ranks = {}
+    for n, what in LIDS[1:]:
+        P("   %s" % what)
+        for b in ("TYP", "WAB"):
+            base = at(n, "WE", b)
+            P("      from WE %s: %s" % (b, packs(base)))
+            rk = []
+            for name, ex in axes_we:
+                s = ax_run(n, "WE", b, ex)
+                dv = metric(s) - metric(base)
+                P("         %-52s %-44s %+7.1f" % (name, packs(s), dv))
+                rk.append((dv, name))
+            other = at(n, "WE", "WAB" if b == "TYP" else "TYP")
+            dv = metric(other) - metric(base)
+            P("         %-52s %-44s %+7.1f" % ("the other array build", packs(other), dv))
+            rk.append((dv, "the array build"))
+            ranks[(n, b)] = sorted(x for x in rk if x[0] < 0)
+        base = at(n, "NOM", "WAB")
+        P("      from NOM WAB: %s" % packs(base))
+        for name, ex in [("VBUS20 %.3f V" % v_min, dict(vbus=v_min, eta_u3=u3_day(v_min, i_nom, "TI"))),
+                         ("U3's limit 6.1 A", dict(iin=6.1, eta_u3=u3_day(v_nom, 6.1, "TI"))),
+                         ("U3's limit 6.0 A", dict(iin=6.0, eta_u3=u3_day(v_nom, 6.0, "TI"))),
+                         ("U3 at the makers' maxima", dict(eta_u3=u3_day(v_nom, i_nom, "lower"))),
+                         ("U3B %.3f" % TP.v("eta_u3b_lo"), dict(eta_b=TP.v("eta_u3b_lo"))),
+                         ("the stage %.2f" % ch[0]["low"], dict(eta_st=ch[0]["low"])),
+                         ("the front end %.2f" % ch[1]["low"], dict(eta_fe=ch[1]["low"])),
+                         ("the pack's charge efficiency %.2f" % ce["low"], dict(chg_eta=ce["low"])),
+                         ("the lid loops %.3f / %.3f Ohm" % (rd[1], rc_[1]), dict(r_dsg=rd[1], r_chg=rc_[1])),
+                         ("V(AK) %.0f mV" % (vak[2] * 1000), dict(v_ak=vak[2])),
+                         ("the standby drain %.1f Wh" % drain_wh, dict(drain_w=drain_w))]:
+            s = ax_run(n, "NOM", "WAB", ex)
+            P("         %-52s %-44s %+7.1f" % (name, packs(s), metric(s) - metric(base)))
+    P("   The unfavourable changes from WE, largest first:")
+    for n, _w in LIDS[1:]:
+        for b in ("TYP", "WAB"):
+            P("      %s WE %s: %s" % (dict(LIDS)[n].split(",")[0], b, "; ".join("%s %+.1f" % (nm, dv) for dv, nm in ranks[(n, b)])))
+    P("   (the first issue's table, one at a time from NOM TYP, sat where both packs fill before dusk and hid the charge-side")
+    P("   losses; it is withdrawn)")
     P("")
 
-    # 3b. the power U3 may take
-    P("3b. THE LOWEST STORE AGAINST THE POWER U3 MAY TAKE (the bus times U3's limit), every other input at NOM, on 40/0: the")
-    P("    electrical inputs VBUS20 and IIN_HOST act only through this product (and U3's efficiency, section 2)")
+    # 4b. the knee
+    P("4b. THE LOWEST STORE AGAINST THE POWER U3 MAY TAKE (the bus times U3's limit), every other input at NOM, on 40/0")
     P("   %-10s %s" % ("into U3", "  ".join("%-27s" % ("%s %s" % (dict(LIDS)[n].split(",")[0], b)) for n in (14, 15) for b in ("TYP", "WAB"))))
     for pw in range(108, 132, 2):
-        cells = []
+        cells_ = []
         for n in (14, 15):
             for b in ("TYP", "WAB"):
                 s_ = summ(run(n, pr0 * (rb40 if b == "TYP" else rc40), v_nom, pw / v_nom, over={"eta_u3": e_nom}, prof=pp40))
-                cells.append("%-27s" % cell(s_))
-        P("   %6.1f W  %s" % (pw, "  ".join(cells)))
-    P("   (the bus's established range %.3f to %.3f V is %.1f to %.1f W at 6.1 A and %.1f to %.1f W at 6.0 A; nominal %.1f W at %.1f A)" % (
-        v_min, v_max, v_min * 6.1, v_max * 6.1, v_min * 6.0, v_max * 6.0, v_nom * i_nom, i_nom))
+                cells_.append("%-27s" % cell(s_))
+        P("   %6.1f W  %s" % (pw, "  ".join(cells_)))
+    P("   With the TYP build the store rises steeply from 110 to 122 W and is flat above (the packs fill before dusk); with the WAB")
+    P("   build it keeps rising to 128 W. The bus's steady-state range is %.1f to %.1f W at 6.1 A and %.1f to %.1f W at 6.0 A." % (
+        v_min * 6.1, v_max * 6.1, v_min * 6.0, v_max * 6.0))
     P("")
 
-    # 4. combined cases at 40/0
-    P("4. THE COMBINED CASES ON THE REFERENCE PLANE (40/0): verdict, lowest store of both packs / lid / base in Wh, unserved")
-    P("   %-44s %-5s %-44s %-44s" % ("lid option", "case", "TYP", "WAB"))
-    combos = {}
+    # 5. combined cases at 40/0
+    P("5. THE CASES ON THE REFERENCE PLANE (40/0): both packs' lowest store (the base's, the lid's) in Wh or the unserved energy;")
+    P("   COMB and EACH: the two pass lines of 1d (Y meets, N does not)")
+    P("   %-8s %-5s %-44s %-9s %-44s %-9s" % ("lid", "case", "TYP", "COMB/EACH", "WAB", "COMB/EACH"))
     for n, what in LIDS:
         for k in order:
-            c = cases[k]
-            row = []
+            r2 = []
             for b in ("TYP", "WAB"):
-                s = summ(run(n, pr0 * (rb40 if b == "TYP" else rc40), c[1], c[2], over=c[3], prof=pp40))
-                combos[(n, k, b)] = s
-                row.append(("MEETS  both %6.1f, lid %5.1f, base %5.1f" % (s["both"], s["lid"], s["base"])) if s["ok"]
-                           else "NOT MET, unserved %6.1f Wh" % s["short"])
-            P("   %-44s %-5s %-44s %-44s" % (what.split(",")[0], k, row[0], row[1]))
+                s = at(n, k, b)
+                r2 += [packs(s), "%s/%s" % ("Y" if comb(s) else "N", "Y" if each(s) else "N")]
+            P("   %-8s %-5s %-44s %-9s %-44s %-9s" % (what.split(",")[0], k, r2[0], r2[1], r2[2], r2[3]))
     P("")
 
-    # 5. the grid at the combined cases
-    P("5. THE PLANES AT NOM, WE, WE60 AND WA (each plane's own mean day and ratios); a point COUNTS when TYP and WAB both meet with")
-    P("   every lowest store above the floor %.1f Wh (reconcile_lid_panel.out's NOTES: the model's hourly-step sensitivity)" % floor)
+    # 6. the grid
+    P("6. THE PLANES: bands where BOTH builds pass, per case and pass line (maps: B both builds pass, T the TYP build only")
+    P("   passes, - neither), INFERRED from the grid")
     grid = {}
     for n in (14, 15):
         for k in ("NOM", "WE", "WE60", "WA"):
-            c = cases[k]
             for pl in planes:
-                pp, rb, rc = PR[pl]
-                grid[(n, k, pl)] = tuple(summ(run(n, pr0 * r, c[1], c[2], over=c[3], prof=pp)) for r in (rb, rc))
+                grid[(n, k, pl)] = (at(n, k, "TYP", pl), at(n, k, "WAB", pl))
 
-    def counts(n, k, sl, az):
+    def passes(n, k, sl, az, line):
         a0 = 0 if sl == 0 else az
-        return all(s["ok"] and s["both"] > floor for s in grid[(n, k, (sl, a0))])
+        return all(line(s) for s in grid[(n, k, (sl, a0))])
 
-    def rects(n, k):
+    def rects(n, k, line):
         rr = []
         S, A = ER.SLOPES, ER.ASPECTS
         for i in range(len(S)):
             for j in range(i, len(S)):
                 for a in range(len(A)):
                     for b in range(a, len(A)):
-                        if all(counts(n, k, S[s], A[t]) for s in range(i, j + 1) for t in range(a, b + 1)):
+                        if all(passes(n, k, S[s], A[t], line) for s in range(i, j + 1) for t in range(a, b + 1)):
                             rr.append((i, j, a, b))
         mx = [r for r in rr if not any(q != r and q[0] <= r[0] and q[1] >= r[1] and q[2] <= r[2] and q[3] >= r[3] for q in rr)]
         mx.sort(key=lambda r: (-(r[1] - r[0] + 1) * (r[3] - r[2] + 1), r))
         return mx
-
-    def least(n, k, pts):
-        return min(((s["both"], sl, az, b) for sl, az in pts for s, b in zip(grid[(n, k, (sl, 0 if sl == 0 else az))], ("TYP", "WAB"))),
-                   key=lambda x: x[0])
     bands = {}
     for n in (14, 15):
-        what = dict(LIDS)[n]
-        P("   %s" % what)
+        P("   %s" % dict(LIDS)[n])
         for k in ("NOM", "WE", "WE60", "WA"):
-            P("      case %s, maps (BW both builds count, T the TYP build only meets, - neither counts)" % k)
-            P("         %6s %s" % ("slope", "".join("%5s" % ("%+d" % a) for a in ER.ASPECTS)))
-            for sl in ER.SLOPES:
-                cells = []
-                for az in ER.ASPECTS:
-                    if sl == 0 and az != 0:
-                        cells.append("%5s" % ".")
-                        continue
-                    t, w = grid[(n, k, (sl, az))]
-                    cells.append("%5s" % ("BW" if counts(n, k, sl, az) else ("T" if t["ok"] else "-")))
-                P("         %6d %s" % (sl, "".join(cells)))
-            mx = rects(n, k)
-            bands[(n, k)] = mx
-            for r in mx[:4]:
-                pts = [(ER.SLOPES[s], ER.ASPECTS[t]) for s in range(r[0], r[1] + 1) for t in range(r[2], r[3] + 1)]
-                lw = least(n, k, pts)
-                P("         band: slope %2d to %2d, azimuth %+3d to %+3d (%2d points); least %5.1f Wh at %d/%+d (%s)" % (
-                    ER.SLOPES[r[0]], ER.SLOPES[r[1]], ER.ASPECTS[r[2]], ER.ASPECTS[r[3]], len(pts), lw[0], lw[1], lw[2], lw[3]))
-            if not mx:
-                P("         band: none (no grid point counts)")
-            for x in (0, 15, 30):
-                a, b = ER.ASPECTS.index(-x), ER.ASPECTS.index(x)
-                runs, cur = [], None
-                for s in range(len(ER.SLOPES)):
-                    okk = all(counts(n, k, ER.SLOPES[s], ER.ASPECTS[t]) for t in range(a, b + 1))
-                    if okk and cur is None:
-                        cur = s
-                    if not okk and cur is not None:
-                        runs.append((cur, s - 1))
-                        cur = None
-                if cur is not None:
-                    runs.append((cur, len(ER.SLOPES) - 1))
-                P("         within %2d of south: %s" % (x, "; ".join("slope %d to %d" % (ER.SLOPES[p], ER.SLOPES[q]) for p, q in runs) or "no slope"))
+            for lname, line in (("COMB", comb), ("EACH", each)):
+                mx = rects(n, k, line)
+                bands[(n, k, lname)] = mx
+                P("      case %s, pass line %s" % (k, lname))
+                P("         %6s %s" % ("slope", "".join("%5s" % ("%+d" % a) for a in ER.ASPECTS)))
+                for sl in ER.SLOPES:
+                    cc = []
+                    for az in ER.ASPECTS:
+                        if sl == 0 and az != 0:
+                            cc.append("%5s" % ".")
+                            continue
+                        t, w = grid[(n, k, (sl, az))]
+                        cc.append("%5s" % ("B" if passes(n, k, sl, az, line) else ("T" if line(t) else "-")))
+                    P("         %6d %s" % (sl, "".join(cc)))
+                for r in mx[:3]:
+                    pts = [(ER.SLOPES[s], ER.ASPECTS[t]) for s in range(r[0], r[1] + 1) for t in range(r[2], r[3] + 1)]
+                    lw = {key: min(((s[key], sl, az, bb) for sl, az in pts for s, bb in zip(grid[(n, k, (sl, az))], ("TYP", "WAB"))),
+                                   key=lambda x: x[0]) for key in ("both", "base", "lid")}
+                    P("         band: slope %2d to %2d, azimuth %+3d to %+3d (%2d points); least %s" % (
+                        ER.SLOPES[r[0]], ER.SLOPES[r[1]], ER.ASPECTS[r[2]], ER.ASPECTS[r[3]], len(pts),
+                        "; ".join("%s %.1f Wh at %d/%+d %s" % ((key,) + lw[key]) for key in ("both", "base", "lid"))))
+                if not mx:
+                    P("         band: none")
     P("")
 
-    # 5b. the proposed bands' edges
-    P("5b. THE EDGES OF EACH OPTION'S WE BAND (the largest rectangle of case WE), lowest store TYP / WAB in Wh per case")
-    for n in (14, 15):
-        mx = bands[(n, "WE")]
-        if not mx:
-            P("   %s: no WE band" % dict(LIDS)[n])
-            continue
-        r = mx[0]
-        s0, s1, a0, a1 = ER.SLOPES[r[0]], ER.SLOPES[r[1]], ER.ASPECTS[r[2]], ER.ASPECTS[r[3]]
-        P("   %s: WE band slope %d to %d, azimuth %+d to %+d" % (dict(LIDS)[n], s0, s1, a0, a1))
-        edge = [(sl, az) for sl in ER.SLOPES for az in ER.ASPECTS if s0 <= sl <= s1 and a0 <= az <= a1 and (sl in (s0, s1) or az in (a0, a1))]
-        for k in ("NOM", "WE", "WE60", "WA"):
-            P("      %-5s %s" % (k, "; ".join("%d/%+d %s/%s" % (sl, az, short(grid[(n, k, (sl, az))][0]).strip(),
-                                                              short(grid[(n, k, (sl, az))][1]).strip()) for sl, az in edge)))
+    # 7. thresholds
+    P("7. WHAT EACH UNDOCUMENTED FIGURE MUST REACH: at each point, the input alone moved from WE (the rest as WE), the least")
+    P("   value at which both builds still pass the line (bisection; 'any' = passes at the search's worst end; 'none' = fails")
+    P("   at its best end)")
+    rng = {"chg_eta": (0.80, 1.00), "eta_st": (0.80, 1.00), "eta_fe": (0.80, 1.00), "vbus": (16.0, 22.0), "iin": (5.0, 6.35)}
+    decl = {"chg_eta": ce["value"], "eta_st": ch[0]["eta"], "eta_fe": ch[1]["eta"], "vbus": v_min, "iin": 6.1}
+    names = {"chg_eta": "pack charge", "eta_st": "stage", "eta_fe": "front end", "vbus": "VBUS20", "iin": "U3's limit"}
+
+    def ok_at(n, pl, key, x, line):
+        ex = {}
+        vb = ii = None
+        if key == "vbus":
+            vb = x
+        elif key == "iin":
+            ii = x
+        else:
+            ex[key] = x
+        return all(line(at(n, "WE", b, pl, extra=ex, vbus=vb, iin=ii)) for b in ("TYP", "WAB"))
+
+    def thresh(n, pl, key, line):
+        lo, hi = rng[key]
+        if ok_at(n, pl, key, lo, line):
+            return "any"
+        if not ok_at(n, pl, key, hi, line):
+            return "none"
+        for _ in range(22):
+            mid = 0.5 * (lo + hi)
+            if ok_at(n, pl, key, mid, line):
+                hi = mid
+            else:
+                lo = mid
+        return ("%.3f V" % hi) if key == "vbus" else (("%.3f A" % hi) if key == "iin" else "%.3f" % hi)
+    th = {}
+    pts_by = {15: sorted(set([(40, 0)] + [(ER.SLOPES[s], ER.ASPECTS[t]) for r in bands[(15, "WE", "COMB")][:1]
+                                          for s in range(r[0], r[1] + 1) for t in range(r[2], r[3] + 1)])),
+              14: [(30, 0), (40, 0), (40, 15), (50, 0)]}
+    P("   %-8s %-7s %-5s %-12s %-12s %-12s %-12s %-12s" % ("lid", "point", "line", "pack charge", "stage", "front end", "VBUS20", "U3's limit"))
+    P("   %-8s %-7s %-5s %-12s %-12s %-12s %-12s %-12s" % ("", "", "WE's", "%.2f" % decl["chg_eta"], "%.2f" % decl["eta_st"],
+                                                       "%.2f" % decl["eta_fe"], "%.3f V" % decl["vbus"], "%.1f A" % decl["iin"]))
+    for n in (15, 14):
+        for pl in pts_by[n]:
+            for lname, line in (("COMB", comb), ("EACH", each)):
+                vals = [thresh(n, pl, key, line) for key in ("chg_eta", "eta_st", "eta_fe", "vbus", "iin")]
+                th[(n, pl, lname)] = vals
+                P("   %-8s %-7s %-5s %-12s %-12s %-12s %-12s %-12s" % (dict(LIDS)[n].split(",")[0], "%d/%+d" % pl, lname, *vals))
+    P("   The makers' documents for the three efficiencies (section 2): the stage's curve reads %s to %s %% and the front end's" % (
+        rd_st.group(1), rd_st.group(2)))
+    P("   %s to %s %% at their nearest printed points (other circuits, typical, INFERRED); the cell sheet bounds the charge" % rd_fe.groups())
+    P("   efficiency's resistive part at %.4f to %.4f from above. None establishes a figure for this kit." % (
+        min(r_[3] for r_ in rows_c), max(r_[3] for r_ in rows_c)))
     P("")
 
-    # 6. informative weather
-    P("6. INFORMATIVE ONLY, NOT A REQUIREMENT CASE: M1 IN SEPTEMBER'S ACTUAL WEATHER, 2005 TO 2020, AT 40/0")
+    # 8. informative weather
+    P("8. INFORMATIVE ONLY, NOT A REQUIREMENT CASE: M1 IN SEPTEMBER'S ACTUAL WEATHER, 2005 TO 2020, AT 40/0")
     sj = json.load(open(ser, encoding="utf-8"))
     rows = sj["outputs"]["hourly"]
     years = sorted({r_["time"][:4] for r_ in rows})
@@ -512,6 +680,7 @@ def main():
     P("   Method (one site, one plane, one method): every 72 hour window starting at 06 or 18 UTC on 1 to 27 September of each year")
     P("   (%d windows); the series as PVGIS gives it (NOT scaled to the 2015 to 2020 monthly mean); each calendar day's own TYP or" % (len(years) * 27 * 2))
     P("   WAB ratio folded into its hours; the lid pack at the window's own minimum air; a full pack at the start; the rest as 1.")
+    P("   M1 counted as met when neither pack path stops the kit (the model's verdict); WE is CONDITIONAL (1c).")
     dayrat = {}
     for y in years:
         for dd in range(30):
@@ -528,8 +697,7 @@ def main():
         for dd in range(27):
             for st in (6, 18):
                 i0 = dd * 24 + st
-                seg = yr[i0:i0 + 72]
-                wins.append((y, dd + 1, st, seg, [(i0 + i) // 24 for i in range(72)]))
+                wins.append((y, dd + 1, st, yr[i0:i0 + 72], [(i0 + i) // 24 for i in range(72)]))
     res = {}
     wcases = (("NOM", "TYP"), ("WE", "TYP"), ("WE", "WAB"))
     for n in (14, 15):
@@ -547,8 +715,8 @@ def main():
     irr = sorted(w[0] for w in res[(14, "NOM", "TYP")])
     P("   72 hour irradiation over the windows: lowest %.2f, 10th percentile %.2f, median %.2f kWh/m2; the reference day x 3: %.2f" % (
         irr[0], irr[len(irr) // 10], irr[len(irr) // 2], ref72))
-    P("   %-44s %-9s %-22s %-40s %-40s %s" % ("lid option", "case", "windows meeting M1", "the darkest window", "the 10th percentile window",
-                                            "meets from / fails up to (kWh/m2)"))
+    P("   %-8s %-9s %-22s %-40s %-40s %s" % ("lid", "case", "windows meeting M1", "the darkest window", "the 10th percentile window",
+                                          "meets from / fails up to (kWh/m2)"))
     for n in (14, 15):
         for k, b in wcases:
             out = sorted(res[(n, k, b)], key=lambda w: (w[0], w[1], w[2], w[3]))
@@ -560,10 +728,10 @@ def main():
             def wtxt(w):
                 return "%s-09-%02d %02dh %.2f kWh/m2, %s" % (w[1], w[2], w[3], w[0], ("MEETS %.1f" % w[5]["low_t"]) if w[5]["ok"]
                                                               else "NOT MET %.0f Wh" % w[5]["short"])
-            P("   %-44s %-9s %4d of %4d (%5.1f %%)   %-40s %-40s %s / %s" % (
+            P("   %-8s %-9s %4d of %4d (%5.1f %%)   %-40s %-40s %s / %s" % (
                 dict(LIDS)[n].split(",")[0], "%s %s" % (k, b), nm, len(out), 100.0 * nm / len(out), wtxt(dk), wtxt(p10),
                 ("%.2f" % min(meets)) if meets else "none", ("%.2f" % max(fails)) if fails else "none"))
-    P("   4S9P is not run here: it does not meet M1 on the mean day in any case (section 4).")
+    P("   4S9P is not run here: it does not meet M1 on the mean day in any case (section 5).")
     P("   Limits of this case: PVGIS's %.4f is an average loss applied to single days; one plane; the base at +%.0f C; a full pack" % (pr0, TP.v("t_base_c")))
     P("   at every window's start (no carry-over from the days before); SARAH2's hourly averages as given.")
     P("")
