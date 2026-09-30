@@ -48,9 +48,9 @@ requirement unchanged, REQ-016 among them (D-34). No service is reduced on this 
 | **Solar contribution** (the stimulus: the 400 Wp trace clipped at 100 W; WE; 72 h from 06 UTC; out 5, 7) | 982.6 Wh a day into the stage, 827.1 Wh a day at the node (2481.4 Wh in 72 h), 200.1 Wh a day under the 1027.2 Wh the load asks; used: 1350.8 Wh straight to the load, 240.5 Wh stored, **854.4 Wh spilled** (the pack is full by midday) | the same sun; used: 1351.5 Wh straight to the load, 734.0 Wh stored, 326.1 Wh spilled (0.0 from 18 UTC). The window's ceiling with a 20 kWp array is 1016.8 Wh a day on WE's chain: at the declared efficiencies no array carries the day through it |
 | **Conversion losses** (72 h from 06 UTC, WE; out 5) | stage and front end 398.3 Wh (2947.8 Wh into the stage, 2549.5 Wh at VBUS20: 0.93 x 0.93, DECLARED); U3 68.2 Wh (0.9733, INFERRED); charge 35.7 Wh (0.95, INFERRED). As drawn, a further 214.8 Wh at VBUS20 is refused by U3's 4.05 A cap (24 capped hours) | stage and front end 398.3 Wh; U3 68.2 Wh; charge side 69.8 Wh (U3B 0.963, the lid loop 0.040 Ohm, 0.95); the lid's discharge path 5.0 Wh (V(AK) 29 mV, 0.045 Ohm). As drawn, 214.8 Wh refused |
 | **Peak power** | discharge: PS-ALLTX 203.8 W PLAN, 272.0 W HIGH; the PA keyed over PS-IDLE-SPEC 122.4 to 162.3 W PLAN, 12.4 to 16.6 A at 10 V (`pwr_budget.out` lines 9, 163, 164), all from the one pack (CELL+ declared 10 A typical, 18 A peak, `gen_sch_a.py`). Charge: at most 100 W into the stage, 86.5 W at VBUS20 on the declared efficiencies (out 8) | the same demand shared through the join; the lid's discharge path limits at 8.7 / 9.8 / 11.0 A (LM5069 VCL 48.5 / 55 / 61.5 mV over 5.6 mOhm, MAKER SNVS452G p.6; `TOPOLOGY.md`), so the base carries the rest, and after the lid's cutoff (hour 22 / 10 in the replay, out 5) the base alone. Charge as A1 |
-| **Thermal limits** (FEA-008, per mode) | charge 0 to +45 C and discharge -10 to +60 C at the cell surface (MAKER, Samsung 35E Ver. 1.1, 3.12); the gauge's ladder starts a charge only between 1 and 42 C in its reading and turns discharge off at -9.0 C in its reading (-9.8 to -8.5 C true, no discharge below -9.8 C; `THERMAL-COORDINATION.md` 4), so REQ-072's -10 C battery-only case lies just past the ladder: a boundary figure, not an operating point. FEA-008's collisions stand: up to 2.1 K in hot use lid closed (LO-01a), 1.6 to 14.2 K at +55 C (LO-01d), at least 6.63 K in the humid dwell (LO-01e), 11 K at +71 C storage (LO-01f), 13 K at -33 C storage (LO-01g). No cell or thermal design closes them | the base as A1; the lid pack at 13.23 C in the model, inside the charge window. Its real temperature is not established: it lies 2.2 mm under the lid's skin, which faces the sky when closed (a1mech README 5), and its heater mat is not placed. The same FEA-008 collisions apply to both packs, the lid's unmodelled |
+| **Thermal limits** (FEA-008, per mode) | charge 0 to +45 C and discharge -10 to +60 C at the cell surface (MAKER, Samsung 35E Ver. 1.1, 3.12); the gauge's ladder starts a charge only between 1 and 42 C in its reading and turns discharge off at -9.0 C in its reading (-9.8 to -8.5 C true, no discharge below -9.8 C; `THERMAL-COORDINATION.md` 4), so REQ-072's -10 C battery-only case lies just past the ladder: a boundary figure, not an operating point. FEA-008's collisions stand: up to 2.1 K in hot use lid closed (LO-01a), 1.6 to 14.2 K at +55 C (LO-01d), at least 6.63 K in the humid dwell (LO-01e), 11 K at +71 C storage (LO-01f), 13 K at -33 C storage (LO-01g). No cell or thermal design closes them | the base as A1; the lid pack at 13.23 C in the model, inside the charge window. Its real temperature is INCONCLUSIVE (no thermal model): it lies 2.2 mm under the lid's skin, which faces the sky when closed (a1mech README 5), and its heater mat is not placed. The same FEA-008 collisions apply to both packs, the lid's unmodelled |
 | **Mass** | 12 cells, 0.60 kg (50 g maximum, spec 3.10) | 60 cells, 3.0 kg. The lid pack adds 2.63 kg to the lid (cells 1.950 for all 39 places, 4S9P using 36; plate 0.248, cover 0.105, strip 0.077, wrap and glue 0.088, P2 0.080, harness 0.080 kg; ESTIMATE but the cells), the lid 4.53 kg in all; the base's second block 0.75 kg; so about 3.2 to 3.4 kg over A1 (`lid_pack_a1.out` 4). Far inside REQ-023's 45.4 kg (a1mech README 5) |
-| **Volume** | one block 56.65 x 133.50 x 38.10 mm (0.288 L) in the east pocket, which holds it alone (`packfit_west.out`) | two such blocks (0.576 L) in the base pockets, with M4a (1.85), M5 (1.77) and the west block over C33 (3.99) OPEN and the west RF entry to re-plan (a1mech README 6); the lid module over 213.75 mm by up to 227.10 mm (INFERRED from its printed coordinates), 24.00 mm deep (40.06 mm under the nested layer), 39 places, 36 used (`lid_pack_a1.out` 2; its volume is not printed) |
+| **Volume** | one block 56.65 x 133.50 x 38.10 mm (0.288 L) in the east pocket, which holds it alone (`packfit_west.out`) | two such blocks (0.576 L) in the base pockets, with M4a (1.85), M5 (1.77) and the west block over C33 (3.99) OPEN and the west RF entry to re-plan (a1mech README 6); the lid module over 213.75 mm by up to 227.10 mm (INFERRED from its printed coordinates), 24.00 mm deep (40.06 mm under the nested layer), 39 places, 36 used (`lid_pack_a1.out` 2; its volume is not printed: INCONCLUSIVE) |
 | **Battery-only runtime** against 48 to 72 h (out 2) | 2.52 h at +20 C, 1.04 h at -10 C: short by 45.5 h at 48 h and 69.5 h at 72 h | 12.71 h at +20 C, 5.24 h at -10 C: short by 35.3 h and 59.3 h |
 | **Solar-assisted runtime** against 48 to 72 h (out 3) | CORRECTED, HYPOTHETICAL: first interruption at h 13 (19 UTC) / h 2 (20 UTC); full service 25 of 48 h and 37 of 72 h. AS DRAWN, upper bound: the same hours. AS DRAWN, lower bound (A-2's collapse): h 12 / 2 | CORRECTED, HYPOTHETICAL: first interruption at h 23 / 11, both 05 UTC; full service 41 / 40 of 48 h and 59 / 58 of 72 h. AS DRAWN, upper bound: h 23 / 11, 40 / 39 and 57 / 56 h. Lower bound: h 21 (03 UTC) / 11, 34 and 47 h |
 | **The gap, Wh and hours** (out 3, 4) | CORRECTED: 889.3 / 887.4 Wh unserved at 48 h, 1346.4 / 1344.4 at 72 h (23 and 35 hours without service); the least addition **+654.8 Wh** (48 h) and **+873.1 Wh** (72 h), one pack of 4S20.95P and 4S26.95P. AS DRAWN: 889.2 and 1346.2 Wh (upper bound), +719.3 and +1002.2 Wh; 1068.3 and 1645.2 Wh (lower bound), +930.8 and +1366.0 Wh. WAB: +668.1 and +898.3 Wh | CORRECTED: 252.1 / 250.2 Wh at 48 h, 464.3 / 462.4 at 72 h (7 to 8 and 13 to 14 hours without service); the least addition **+278.8 Wh** (48 h) and **+515.8 Wh** (72 h), a lid of 4S17.83P and 4S25.33P (781.4 and 1018.4 Wh in all). AS DRAWN: 314.6 and 589.3 Wh (upper bound), +341.6 and +641.0 Wh; 541.9 and 984.8 Wh (lower bound), +555.1 and +1008.0 Wh. WAB: +291.9 and +540.7 Wh |
@@ -167,6 +167,27 @@ each item below says where the kit departs from them.
   *Closure:* the declared figure in `gen_sch_e.py` with its derivation from 8705af's tolerances; a bench measurement of
   the stage's input at the array's maximum with the load at its maximum.
 
+## What stays INCONCLUSIVE, and the evidence missing
+
+- **The performance of a REQ-016-compliant panel.** Missing: a pinned compliant panel's sheet (O-1) and its hourly trace
+  at the 17.6 V point. Every 100 W figure here rests on the non-compliant 400 Wp trace.
+- **The as-drawn figures between their bounds.** Missing: bench row 7b.7 (A-2). The truth lies between the upper bound
+  (`min(available, cap)`) and the collapse bound.
+- **The three efficiencies (C-8) and U3's input-current minimum (C-7).** Missing: the makers' figures for these
+  circuits, or measurements. They move the gap (out 6) but no verdict.
+- **The 8.4 W of PS-IDLE-SPEC with no document.** Missing: the makers' figures or measured loads. A2's corrected path
+  turns at 35.3 W (out 6).
+- **The loads' converters down to the 12.0 V node.** Missing: a record that every load converter runs to the 3.00 V line
+  (SHORTLIST.md 2). The usable-energy figures assume it, for both architectures.
+- **The lid pack's temperature and the cells against FEA-008.** Missing: a thermal model or measurement of the lid pack,
+  and a cell or thermal design for LO-01a to LO-01h. The 13.23 C basis is the model's.
+- **The window-sized path's fault currents (B-1 to B-4).** Missing: `r11_dep.py`'s analysis at a chosen R11. The 6.66 to
+  7.21 A and the bank's 2.85 to 3.09 A are INFERRED by scaling.
+- **The lid module's volume and the base rows M4a, M5 and M6w.** Missing: a printed volume, and the mock-up that closes
+  the OPEN rows (a1mech README 7).
+- **The entry's ratings for an array above about 150 Wp.** Missing: the compliant array's short-circuit current against
+  F2 and J_SOLAR's 10 A (O-3 to O-7 re-derived).
+
 ## The next discriminating calculation, then the experiment
 
 1. **Calculation: a REQ-016-compliant panel's own trace.** Pin a compliant panel (O-1) and compute its hourly power at
@@ -178,7 +199,8 @@ each item below says where the kit departs from them.
    and 400 Wp in 1S4P 259.1 and 477.6 Wh. *Closure:* both architectures' unserved energy and least additional storage on
    the compliant trace, after the same reproduction.
 2. **Experiment: PS-IDLE-SPEC's undocumented loads.** 8.4 W of the 42.8 W has no document. At bring-up, or from the
-   makers, those loads decide whether A2's corrected path reaches 48 h: it does on the model at 35.3 W or less. This
+   makers, those loads decide whether A2's corrected path reaches 48 h: it does on the model, on the stimulus, at 35.3 W
+   or less. This
    measures the same profile; it reduces no service. *Closure:* the measured loads in the profile, the replay re-run.
 
 ## The Layer 3 finding, restated
