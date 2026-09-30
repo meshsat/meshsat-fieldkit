@@ -61,7 +61,7 @@ arrangement A). The author's analysis, AI arithmetic; not a qualified review and
      72 h NOM90  WAB: lid 4S14.97P, against the both-kept 4S9P: +23.9 35E cells, +188.7 Wh usable
    (a negative excess: the both-kept store already carries it; COMB line, the kit never stopping as well)
    SENSITIVITY, the QMX receiving all the time (PS-TYP's QMX HF row, 1.14 W at the battery, pwr_budget.out; PS-IDLE-SPEC
-   carries the QMX's USB and HDMI 5 V only): 48 h NOM TYP lid 4S11.67P (+10.7 cells over 4S9P); 48 h WE TYP lid 4S12.87P (+15.5 cells over 4S9P); 72 h NOM TYP lid 4S12.01P (+12.0 cells over 4S9P); 72 h WE TYP lid 4S14.92P (+23.7 cells over 4S9P)
+   carries the QMX's USB and HDMI 5 V only): 48 h NOM TYP lid 4S11.67P (+10.7 cells, +84.2 Wh usable over 4S9P); 48 h WE TYP lid 4S12.87P (+15.5 cells, +122.2 Wh usable over 4S9P); 72 h NOM TYP lid 4S12.01P (+12.0 cells, +94.9 Wh usable over 4S9P); 72 h WE TYP lid 4S14.92P (+23.7 cells, +187.1 Wh usable over 4S9P)
 
 4. THE MODELLED HISTORICAL COVERAGE, 864 September windows of 2005 to 2020 at 40/0, TYP (weather_basis.out A's windows, the
    first 48 h of each for 48 h; the lid at each window's own minimum air over its hours): kept (no STOP) / COMB / EACH.

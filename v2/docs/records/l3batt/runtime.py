@@ -19,6 +19,8 @@ bracket in the lid, 39 lid places, 4S9P):
          the constants are below); the base pockets' 21700 fit is not shown
   X-NH   A35 plus one or two Inspired Energy NH2054HD34 smart packs OUTSIDE the case: a PROPOSAL (an external battery)
 
+Second issue (CHECK-1 of 05ba0cf0, minor 1): the HF-receiving sensitivity prints its store in usable Wh as well as cells.
+
 Run from the repository root:  python3 v2/docs/records/l3batt/runtime.py > v2/docs/records/l3batt/runtime.out
 Deterministic. Exit 2: a pinned file is not the pinned file; 3: an input cannot be parsed; 4: a reproduction failed."""
 import hashlib
@@ -312,11 +314,12 @@ def main():
     TP.LOAD = load0 + hf_rx
     try:
         xs = {(h, k): least(k, "TYP", h, "COMB") for h in (48, 72) for k in ("NOM", "WE")}
+        xw = {hk: meanday(hk[1], xs[hk], "TYP", hk[0])["el"] - meanday(hk[1], LID_A, "TYP", hk[0])["el"] for hk in xs}
     finally:
         TP.LOAD = load0
     P("   SENSITIVITY, the QMX receiving all the time (PS-TYP's QMX HF row, %.2f W at the battery, pwr_budget.out; PS-IDLE-SPEC" % hf_rx)
-    P("   carries the QMX's USB and HDMI 5 V only): %s" % "; ".join("%d h %s TYP lid 4S%.2fP (%+.1f cells over 4S9P)" % (
-        h, k, xs[(h, k)], 4 * (xs[(h, k)] - LID_A)) for h, k in sorted(xs)))
+    P("   carries the QMX's USB and HDMI 5 V only): %s" % "; ".join("%d h %s TYP lid 4S%.2fP (%+.1f cells, %+.1f Wh usable over 4S9P)" % (
+        h, k, xs[(h, k)], 4 * (xs[(h, k)] - LID_A), xw[(h, k)]) for h, k in sorted(xs)))
     P("")
 
     # 4. coverage, 864 windows, 48 and 72 h
