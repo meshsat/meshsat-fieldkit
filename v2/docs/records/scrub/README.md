@@ -91,9 +91,10 @@ be or accepts a risk. Each is reversible by a later scrub or by the owner.
    replay still ends with three IDENTICAL at the transcript's command 158.
 6. **Re-pins.** Two scripts of `r8int6/` are pinned by sha256 in `v2/docs/records/README.md`; `apply_scrub.py` re-pinned
    both rows and wrote the filed sha256 and size into each row, so the filed bytes stay findable in history.
-7. **The appendix is redacted** although three records cite its sha256/16 `5e942dd41e9e4ed0` (`LAYER-STATUS.md` with
-   commit `b69f20db`, and the layer 2 and layer 3 reviews as what they read): each names the commit it read, no
-   registry binds the file, and it is the living design record (the three lines are not `### 32.` headings, which
+7. **The appendix is redacted** although five files cite its sha256/16 `5e942dd41e9e4ed0`: `LAYER-STATUS.md` with
+   commit `b69f20db`, the layer 2 and layer 3 reviews as what they read, and the frozen candidate patches
+   `candidates/hc2.patch` and `candidates/hc3.patch` of H1.1 (corrected in round 2: the first issue said three). Each is
+   a dated reading or a frozen patch that names the commit it read, no registry binds the file, and it is the living design record (the three lines are not `### 32.` headings, which
    `reserved.json` protects). The bytes those records read are at every commit up to `8fec0733`.
 8. **Snapshots.** All four accepted snapshots carried hits, so all four are reissued (below). A file the tree leaves is
    left in the reissue too, so every hash a page or a check inside the snapshot cites for it still holds.
@@ -132,7 +133,8 @@ Each has its version record `v2/docs/handover/RELEASE-<version>.md`, its `MANIFE
 the ZIP and as `<version>.MANIFEST.tsv` beside it, its `.zip.sha256`, and a START-HERE that opens with a box naming
 the version it supersedes, why, each changed file with its sha256/16 before and after, and each file left with the
 reason. `reissue_snapshots.py commits` makes the four redaction commits with git plumbing (no checkout) as the owner
-at a fixed date, so a second run makes the same ids; each commit's diff passed the pre-commit check. `reissue_snapshots.py
+at a fixed date, so a second run makes the same ids; each commit's diff passed the pre-commit check, which it finds
+through `$PRECOMMIT_CHECK` when set and otherwise beside the main clone (a clone elsewhere sets the variable). `reissue_snapshots.py
 build` builds each with `handover_pack.py build --zip-only`, runs `handover_pack.py verify`, and asserts that every
 manifest row equals the superseded snapshot's except the changed files, START-HERE (root copy and source) and
 `SOURCE.txt`, that only the files the tree leaves carry a pattern, and that the ZIP is under the cap (H3-R1 is 225,050
@@ -143,9 +145,19 @@ H1.1, H2 and H3 from their source commits on the runner on 30 September 2026 wit
 `SOURCE.txt` (the builder named, and the "public" column of the commit timeline, which reads the building clone's
 remote branch); H3's ZIP differed from the published one only in that entry.
 
-**The redaction commits in history.** They are on no branch when made. The set's merge commit records all four in this
-branch's history with `git merge -s ours` (the tree stays this branch's), the way `3f69af66` recorded `fnd/l3r2`. That
-adds history and rewrites none; once main carries it and is pushed, the reissues' source commits are public.
+**The redaction commits in history.** They are on no branch when made. The set's merge commit `b42e1827` records all
+four in this branch's history with `git merge -s ours`, the way `3f69af66` recorded `fnd/l3r2`, and changes no file: its
+tree is its first parent's (`git diff b42e1827^1 b42e1827` is empty). The reissue script and its record of the commits
+come in the ordinary commit before it, `80c0de2e`. (Round 2, after the set's check 1: the first issue of this merge also
+added those two files, so its tree was not its first parent's; the branch was rebuilt from `8fec0733` with the same
+content, and this sentence corrected.) The merge adds history and rewrites none; once main carries it and is pushed, the
+reissues' source commits are public.
+
+**The superseded releases are not edited to point at their reissues.** That is the rule of an accepted release: its
+records stay as released. `RELEASE-H2.md` and `RELEASE-H3.md`, and the pages inside H1, H1.1, H2 and H3, say nothing of
+the reissues. The pointer is the index row of `v2/release/handover/` in `v2/docs/handover/START-HERE.md`, which names the
+four reissues and their records; each reissue's own START-HERE box and `RELEASE-<version>-R1.md` name what it
+supersedes.
 
 ## Validators and tests on this branch
 
@@ -161,13 +173,16 @@ adds history and rewrites none; once main carries it and is pushed, the reissues
 
 ## For the integrator
 
-The set is five commits on `fnd/scrub` from main `8fec0733` (first parent): the tree's scrub, the guard, the merge that
-records the four redaction commits, the four reissues with their records, and this README with the map, the counts
-after and the records index row. From the main clone, with no `cd`:
+The set is seven commits on `fnd/scrub` from main `8fec0733` (first parent): the tree's scrub `de7fc2be`, the guard
+`2c2fe0bb`, the reissue script and its record `80c0de2e`, the merge `b42e1827` that records the four redaction commits
+and changes no file, the four reissues with their records `7258eee4`, this README with the map, the counts after and
+the records index row `cf32b3e2`, and round 2's corrections (this README and the pre-commit override of `reissue_snapshots.py`). From the main
+clone, with no `cd`:
 
 ```
 git -C <repo> log --oneline 8fec0733..fnd/scrub
 git -C <repo> merge --ff-only fnd/scrub                 # main has not moved since 8fec0733; else merge and re-run below
+git -C <repo> diff --stat b42e1827^1 b42e1827           # empty: the merge changes no file
 python3 <repo>/v2/docs/records/scrub/render_map.py --check
 python3 <repo>/v2/ecad/tools/tests/run.py public_hygiene
 python3 <repo>/v2/docs/records/scrub/count_hits.py      # 22 instances in 14 files, as counts-after.out
