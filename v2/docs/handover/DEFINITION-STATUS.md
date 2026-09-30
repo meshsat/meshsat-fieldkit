@@ -102,6 +102,7 @@ are rebound with an entry each naming that change. No reading is bound to the br
 | ZEROIZE on the fitted secure element | `v2/docs/feasibility/ZEROIZE.md`; FEA-001 in the registry | the brief, "What the V2 kit is" (key protection); CONOPS section 4, ZEROIZE row |
 | Each layer of the handover and its reviews | `v2/docs/handover/LAYER-STATUS.md` | the appendix of each document |
 | CONOPS's circuit passages whose values differ from the committed netlists (EMCON, HOT-R1, the TX lamp, the device rails, generator line numbers, the supervisors' status path, the fabric's break-before-make and back-power gating, board A's CC array, the supervisors' part of D-13) | the section "Current values of CONOPS's circuit passages (stream s122, 29 September 2026)" below | `CONOPS.md` sections 4, 4b, 4c, 4e, 4f, 7 and 7a |
+| The passages of both documents that layer 3's closure restates (18 passages; the re-issue authorised by owner ruling D-38, not yet re-stamped into either document) | the section "Layer 3's definition re-issue (30 September 2026): the approved change record governs until the re-stamp" below; `handover/layer3/DEFINITION-CHANGE-RECORD-L3.md` and `handover/layer3/DEFINITION-REISSUE-DRAFT.md` | `CONOPS.md`, passage (baselined line): C01 (3), C02 (15 to 16), S07 (67), S01 (152), S02 (163 to 165), S03 (167 to 198), S04 (215 to 216), S11 (321), S05 (1019 to 1024), C29 (1040), C31 (1062), S06 (1101); `PRODUCT-BRIEF.md`, passage (baselined line): B01 (3), B02 (15), S08 (60), S09 (171 to 179), B18 (207 to 209), S10 (309) |
 
 ## Current values of CONOPS's circuit passages (stream s122, 29 September 2026)
 
@@ -130,6 +131,26 @@ integration set 13: board A `6c40250c47195ebb`, B `3ef9b8c49a01b728`, C `c9f7394
 | DC-08 | the same two passages: the break-before-make order (FAB-03, CON-003) and a bank detached from a host that has lost its power (FAB-02, CON-022), called owed or not done as generated | both drawn in board B's round 8, present at `95e078a1` where the passages were written and at `c5430071`, absent at `45bde541`: each slot's power-good `PG{s}` is its module's own 3.3 V through 1 k with 100 k to ground (`R191` and `R192` for slot 1), buffered by a 74LVC1G17 (`U530` to `U532`) and inverted (`U533` to `U535`); per bank a 74LVC1G157 (`U513` to `U515`) selects the dark flag of the host the delayed select passes, and the bank's enable `BOE{b}_n` (`U516` to `U518`) is forced high while the break-before-make term `BBM{b}` is up and is that flag otherwise; the display switches' enables are the power-good of the slot each passes (`U519` for `U3`, `U520` for `U4`); S-42 stays OPEN, its title listing FAB-02 (b) and (c) and the break-before-make with the gate's assertion and its mutation, and CON-003 and CON-022 read INCONCLUSIVE, waiting on it | `ARCH-PCB-B-IOHA.md` section 5; `feasibility/FAILOVER-FABRIC.md` sections 9 and 9a; S-42, CON-003 and CON-022 in the registry |
 | DC-09 | section 7's D-17 row: board A's USB-C CC pins, the array riding on a board A update called owed | the array is drawn: board A's `U31` (TPD2E2U06) on `PD_CC1` and `PD_CC2`, the CC pins of `J_USBC_OUT`, since `458b2873`, and so at `45bde541` and at `c5430071`; the row was written at `68bc9e8f`, before `458b2873` drew it | this row |
 | DC-10 | section 7's D-13 row: the STM32H753 in the schematic, the component mismatch with the H743 called open (check-s122-3 m1) | the three supervisors' schematic text is the H743 the project buys: board B's `U41`, `U51` and `U61` read STM32H743VIT6 since `458b2873` (STM32H753VITx at `68bc9e8f`, where the row was written), and CON-017, which asks that text, the BOM and regeneration parity, reads PASS | CON-017 in the registry; `V2-SPEC.md` correction 32 |
+
+## Layer 3's definition re-issue (30 September 2026): the approved change record governs until the re-stamp
+
+Layer 3's closure (owner rulings D-28 to D-37, `handover/layer3/`) restates 18 passages of the two documents, each
+listed with its lines, its baselined and its proposed text in the change record
+`handover/layer3/DEFINITION-CHANGE-RECORD-L3.md` (sha256/16 `681f37b665a57d03`) and the draft
+`handover/layer3/DEFINITION-REISSUE-DRAFT.md` (sha256/16 `a04b0a6cc7400635`). The re-issue is authorised by owner ruling
+D-38, his closure instructions of 30 September 2026 (the affected CONOPS and product-brief passages generated from his
+choices and accepted by one targeted acceptance review; the session's reading is labelled as such in
+`handover/layer3/OWNER-INSTRUCTION-2026-09-30.md`), and its acceptance is the targeted independent review of layer 3's
+closure (closure item L3-C27 of `handover/layer3/L3-RECONCILIATION.md`); `handover/layer3/l3r2.yaml` names the record
+with that ruling (`definition_reissue`). **Neither document is re-stamped yet**: the proposed texts are written into
+`CONOPS.md` and `PRODUCT-BRIEF.md` by their re-stamp through layers 1 and 2, each issued again with the change stated in
+it (the rule above), an open obligation of the integrator (closure item L3-C63). **Until that re-stamp, where either
+document differs from the approved change record, the change record governs.** The rows the draft proposes for this
+page's current values, copied from it:
+
+| Row | Where | Current value |
+|---|---|---|
+| DC-L3-M1 | `CONOPS.md` section 3 (M1) and sections 6 and 7a; `PRODUCT-BRIEF.md`, the power bullet and the M1 bullet | REQ-072 reads FAIL (DESK_REVIEW, SCHEMATIC phase, release effect MUST_JUSTIFY) when the re-issue is written; its latest evidence entry in the requirements registry: "The modelled baseline (the owner's clarification D-28: reported honestly, the shortfall recorded prominently), read from v2/docs/records/l3batt/runtime.out, the output of v2/docs/records/l3batt/runtime.py (stream l3batt, checked), by v2/docs/records/l3r5/runtime_reader.py for D-32: with HF and the tablet kept and no tablet charging, battery-only from full, D-06's 4S3P pack runs 2.52 h at +20 C (1.04 h at -10 C) and the studied in-case candidate, Option A(i)'s base 4S6P and a 4S9P lid (544.4 Wh usable aged at +20 C), 12.71 h (5.24 h at -10 C); solar-assisted on the mean day in TYP the candidate stops at 05 UTC of the first night, hour 23 from a 06 UTC start and hour 11 from an 18 UTC start, as drawn (266.7 Wh unserved at 48 h, 494.7 Wh at 72 h) and on the hypothetical corrected path (102.2 Wh at 48 h, 165.7 Wh at 72 h, NOM) alike, in 0 of 864 past September windows at 48 h and 0 at 72 h. The objective's lower end is missed even without tablet charging: design risk DR-01, assigned to layer 4. The corrected path is not implemented. Reads FAIL." |
 
 ## What the two documents carried at their baselines
 

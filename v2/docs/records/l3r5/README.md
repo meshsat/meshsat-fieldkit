@@ -40,6 +40,40 @@ design: no V2 board has been fabricated, ordered or powered, and no kit has been
 - **The prepared scripts' dry runs and tests** start from the registry as it stood before the closure (`l3r2.yaml`
   `closure_cycle.pre_closure_commit`, read from git; `v2/ecad/tools/tests/l3pre.py`), since the tree's rows are decided.
 
+## The fix round on the collaborator's closure check (30 September 2026)
+
+The engineering collaborator's read-only closure check of `72fec7fd` (`checks/astra-check-l3r5-1.md`, "accepted: no")
+found three blocking discrepancies and two minors; no owner decision was required. Answered here, each at its source:
+**B1**, the current owner brief no longer places the registry's ASM and CHO records under two blanket lines; it names
+REQ-072's profile as the modelling assumptions and the Samsung INR18650-35E as the one replaceable selection, and lists
+the ASM and CHO records one by one with the owner rulings that bind them (ASM-006's "operate shaded" under D-02e,
+ASM-002's D-03 residual, CHO-001's device set, CHO-003's D-16). **B2**, `l3r2.yaml`'s classification rows for "72 hours
+in PS-IDLE-SPEC" and for the deployment conditions keep their place marked SUPERSEDED by D-28 (applied as D-32 and
+D-35) with what holds now beside them, the registry's SC-21 is marked superseded in place (`apply_l3r5_supersede_sc21.py`;
+the trace page and the operating-conditions table print the mark), D-21's quoted "approved 72-hour mission" carries its
+mark in that table (`superseded_marks`), proposal P-17 and acceptance definition 1b carry theirs. **B3**, the owner's
+closure instructions are recorded word for word as D-38, which decides the definition re-issue; the draft and the change
+record are regenerated once at the decided state with the approval route that holds (authority D-38, acceptance the
+targeted independent review), `definition_reissue` is filed, `CONOPS.md` and `PRODUCT-BRIEF.md` are not edited (their
+re-stamp is closure item L3-C63, the integrator's), and `DEFINITION-STATUS.md`, the requirements page and the owner
+brief say that the change record governs where a document differs until then. **M1**, DR-03 names the 15 V contract.
+**M2** (D-30's citation of `CODEX-WORKER.md` section 7, on main since `7e4b7a87` and not on this branch) is the
+integrator's. The gate's fourth condition reads NOT MET until the targeted recheck is filed.
+
+What else moved, and why: `../l3r4/apply_layer_status_l3_r4.py` verifies the newest ACCEPTED check (CHECK-5) rather
+than the newest check, which is now the collaborator's NOT_ACCEPTED one; `render_l3r2.py` prints the classification
+rows' supersession, the operating conditions' marks (`l3r2.yaml` `superseded_marks`, the registry's `superseded_by` on
+SC-21), the acceptance definitions' marks and the re-issue's state; `rules_render.py` prints a superseded session
+choice (its bundle is `rules_complete`'s and `rules_status`'s, which judge the registry and are re-taken by the full
+render, as after the closure); `../l3r4/reissue.py` states the approval route that holds once a ruling decides the
+re-issue; `../l3r2/l3edit.py` gains `rebind_to_tree`, which `../l3r2/dryrun.py` and the tests' `l3pre.py` apply to the
+pre-closure registry so that CFL-016's PASS, rebound in the tree to the status page as it now stands, still validates
+there; `dryrun.out` is refreshed, and differs from the one filed at `e5286397` only in its warning counts (2 where it
+read 0: CON-010 and REQ-044, bound to the `CURRENT-EVIDENCE.md` render before that commit's, as in the tree); the tests
+`test_l3r2.py` (the verdict test follows the newest check), `test_l3r4.py` (its fixtures generate on a copy of
+`l3r2.yaml` with `definition_reissue` null, the pre-approval state) and `test_l3r5.py` (the brief's line bound, and two
+tests of this round).
+
 ## What the review found, and the ruling
 
 The owner's reviewer reviewed the decision brief `MESHSAT-L3-OWNER-DECISIONS-2026-09-30.md` (sha256/16
@@ -150,6 +184,11 @@ and punctuation (CHECK-4 of round 4d: CONOPS lines 233 to 234 exempted, 322, 323
 | `checks/l3feas-check-2/CHECK-2.md` | CHECK-2 of stream l3feas (accepted: yes, of `c11b99d3`), filed byte for byte |
 | `checks/l3batt-check-1/` | CHECK-1 of stream l3batt (accepted with minors, of `05ba0cf0`) with `indep_l3batt.py` and its output, filed byte for byte |
 | `checks/l3batt-check-2/CHECK-2.md` | CHECK-2 of stream l3batt (accepted: yes, of `83577a13`), filed byte for byte |
+| `checks/astra-check-l3r5-1.md` | the engineering collaborator's closure check of `72fec7fd` (accepted: no; read-only, job cx5-l3-closure-check), filed byte for byte and named in `l3r2.yaml` `independent_check` as NOT_ACCEPTED: B1 (the owner brief's blanket ASM and CHO lines), B2 (superseded conditions classified as requirements, SC-21 reading "GOVERNS"), B3 (the definition re-issue unfinished), minors M1 (15 V) and M2 (D-30's section 7 citation); B1 to B3 and M1 answered by the fix round below |
+| `apply_l3r5_supersede_sc21.py` | the fix round, B2: marks SC-21 superseded in place by D-28 (applied as D-32) with `superseded_on`, `superseded_by` and `superseded_why` and one dated sentence closing `why`; `taken` and `closes` unchanged; refuses a second run |
+| `apply_l3r5_d38.py` | the fix round, B3: records the owner's closure instructions (three messages, quoted word for word in the instruction file) as D-38, the ruling that decides the definition re-issue (`decides: definition_reissue`); the session's reading labelled as such; refuses a second run |
+| `apply_definition_status_l3r5.py` | the fix round, B3: adds to `handover/DEFINITION-STATUS.md`, from the change record and the draft, one row in "Where the current state lives" and the section stating that the re-issue is authorised by D-38 and accepted by the targeted review, that neither document is re-stamped yet, that until then the approved change record governs where a document differs, and the rows the draft proposes (DC-L3-M1); refuses unless `definition_reissue` is filed, and a second run |
+| `apply_layer_status_l3_r5c.py` | the fix round, B3: `LAYER-STATUS.md`'s layer 3 no longer says the re-issue waits on the owner's approving ruling (the closure paragraph, the gate's third and fourth rows, the status level, whose each item is); the third row's state is read from `REQUIREMENTS-L3-R2.md`'s live gate; refuses a second run |
 
 Changed elsewhere: `v2/docs/handover/layer3/l3r2.yaml` and `render_l3r2.py` (the semantics, items, definitions, levels,
 the gate, the closure's sections and the three pages), `OWNER-INSTRUCTION-2026-09-30.md` (the current owner brief at
@@ -182,6 +221,11 @@ python3 v2/docs/records/l3r5/apply_l3r5_d31.py --check          (refused once ap
 python3 v2/docs/records/l3r5/apply_l3r5_closure.py --check      (refused once applied: "has run")
 python3 v2/docs/records/l3r5/apply_layer_status_l3_r5.py --check (refused once applied: "has run")
 python3 v2/docs/records/l3r5/apply_layer_status_l3_r5b.py --check (refused once applied: "has run")
+python3 v2/docs/records/l3r5/apply_l3r5_supersede_sc21.py --check (refused once applied: "has run")
+python3 v2/docs/records/l3r5/apply_l3r5_d38.py --check          (refused once applied: "has run")
+                                  (then, once only, before definition_reissue is filed: python3 v2/docs/records/l3r4/reissue.py)
+python3 v2/docs/records/l3r5/apply_definition_status_l3r5.py --check (refused once applied: "has run")
+python3 v2/docs/records/l3r5/apply_layer_status_l3_r5c.py --check (refused once applied: "has run")
 python3 v2/docs/handover/layer3/render_l3r2.py --check
 python3 v2/docs/records/l3r4/reissue.py --check
 python3 v2/docs/records/l3r4/reissue.py --map --check

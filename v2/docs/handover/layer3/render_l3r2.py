@@ -683,7 +683,8 @@ def closure_lines(req, data, dec):
     L = ["### 2.1 The owner's closure (%s)" % ", ".join(cc["rulings"]), "",
          p("The owner's clarifications of 30 September 2026 close layer 3: D-28 on the energy and runtime requirement, D-29 "
            "on CFL-017, D-30 on the decision register (`OWNER-INSTRUCTION-2026-09-30.md` quotes each word for word), applied "
-           "by `%s`. **The owner decision left:** %s" % (cc["applied_by"], p(cc["owner_decision_left"]))), "",
+           "by `%s`. **The owner decision left:** %s" % (cc["applied_by"], p(cc["owner_decision_left"]))), ""]
+    L += reissue_lines(req, data, dec) + [
          "### 2.2 Mandatory requirements and the design objective (D-28)", "",
          p("The registry marks every record's obligation: of its %d requirements, %s %s the design objective (`obligation: "
            "OBJECTIVE`, judged under its stated profile, never a release gate) and the rest are mandatory. Each carries its "
@@ -721,6 +722,26 @@ def closure_lines(req, data, dec):
     for c in data["completion_statuses"]:
         L.append("| %s | %s |" % (c["what"], cell(c["status"])))
     return L + [""]
+
+
+def reissue_lines(req, data, dec):
+    """The definition re-issue's state (L3-C26), from l3r2.yaml's definition_reissue and the ruling that decides it: once
+    filed and accepted by reissue_ok, the route that holds and the notice that the approved change record governs where
+    CONOPS.md or PRODUCT-BRIEF.md differs from it until their re-stamp (L3-C63); nothing while it is not filed."""
+    dr = filed(data, "definition_reissue")
+    if not dr: return []
+    ok, why = reissue_ok(req, data, dec)
+    if not ok: return [p("**The definition re-issue (L3-C26):** filed but not accepted by the gate: %s." % why), ""]
+    r = next(x for x in req["owner_rulings"] if x["id"] == str(dr["approved_by"]))
+    item = next((c for c in data["closure"] if c["id"] == "L3-C63"), None)
+    return [p("**The definition re-issue (L3-C26).** The change record `%s` (sha256/16 `%s`) restates the passages of "
+              "`CONOPS.md` and `PRODUCT-BRIEF.md` that rulings D-32 to D-37 change; its authority is owner ruling %s (%s, "
+              "ruled %s), its acceptance the targeted independent review of this closure (L3-C27). **Neither document is "
+              "re-stamped yet**: the texts are written into them by their re-stamp through layers 1 and 2 (%s), and until "
+              "then, where either document differs from the approved change record, the change record governs "
+              "(`handover/DEFINITION-STATUS.md` carries the notice and the rows the draft proposes)." % (
+                  os.path.basename(str(dr["record"])), dr["sha16"], r["id"], p(r["title"]), r["ruled_on"],
+                  "closure item %s, %s, %s" % (item["id"], item["whose"].lower() + "'s", item["state"]) if item else "an open obligation")), ""]
 
 
 def decision_closure_lines(req, data, dec):

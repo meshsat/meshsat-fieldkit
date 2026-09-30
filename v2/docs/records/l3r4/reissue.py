@@ -13,7 +13,9 @@ the answers are recorded, writes the proposed re-issue:
   v2/docs/handover/layer3/DEFINITION-REISSUE-DRAFT.md   every passage the answers change: its baselined text and its
                                                           proposed text, each naming its row and the owner's ruling
   v2/docs/handover/layer3/DEFINITION-CHANGE-RECORD-L3.md  the change record the owner approves (l3r2.yaml's
-                                                          `definition_reissue`: {record, sha16, approved_by})
+                                                          `definition_reissue`: {record, sha16, approved_by}); once the
+                                                          registry holds the ruling that decides the re-issue, both files
+                                                          state the approval route that holds (approving(), route())
 
 It never writes into the baselined files: they change only after the owner approves the change record by a ruling
 whose `decides` is `definition_reissue`, and then through their layers' review. It refuses, writing nothing:
@@ -245,6 +247,41 @@ def answered(c):
     return [r for r in ROWS if r in c.dec]
 
 
+def approving(c):
+    """The owner ruling that decides the re-issue (`decides: definition_reissue`), if the registry holds one. With it the
+    draft, the change record and the head note state the approval route that holds: the authority is that ruling (the
+    owner's closure instructions of 30 September 2026: the affected passages generated from his choices and accepted by
+    one targeted acceptance review) and the acceptance is the targeted independent review of layer 3's closure (L3-C27);
+    without it they read PROPOSED for the owner's approval (round 5's fix round, astra-check-l3r5-1 B3)."""
+    rs = [r for r in c.req["owner_rulings"] if str(r.get("decides")) == "definition_reissue"]
+    if len(rs) > 1: E.refuse("more than one owner ruling decides the re-issue: %s" % ", ".join(r["id"] for r in rs))
+    return rs[0] if rs else None
+
+
+def route(c):
+    """(status sentence, approval paragraph) for the change record, and the draft's status sentence, by approving(c)."""
+    a = approving(c)
+    if a is None: return None
+    rid, day = a["id"], long_date(a["ruled_on"])
+    status = ("**Status: AUTHORISED by owner ruling %s (his closure instructions of %s); its acceptance is the targeted "
+              "independent review of layer 3's closure (closure item L3-C27); not yet written into the baselined documents**"
+              % (rid, day))
+    approval = ("**Authority:** owner ruling %s, the owner's closure instructions of %s, quoted word for word in "
+                "`handover/layer3/OWNER-INSTRUCTION-2026-09-30.md`: the affected CONOPS and product-brief passages are "
+                "generated from his choices and accepted by one targeted acceptance review, without a further review from "
+                "him (the session's reading, labelled as such there); this record restates exactly the passages his "
+                "rulings on the rows change and nothing beyond them. **Acceptance:** the targeted independent review of "
+                "layer 3's closure (L3-C27), filed in `handover/layer3/l3r2.yaml`'s `independent_check`. **Filing:** "
+                "`handover/layer3/l3r2.yaml`'s `definition_reissue` names this record with its sha256/16 and that ruling "
+                "(`{record, sha16, approved_by}`); the ruling does not change the answers digest, so this record and its "
+                "draft stay current, and `reissue.py` never rewrites them once `definition_reissue` is filed. **The "
+                "baselined documents:** the proposed texts are written into `CONOPS.md` and `PRODUCT-BRIEF.md` by their "
+                "re-stamp through layers 1 and 2 (closure item L3-C63), a follow-on of this closure; until then, where "
+                "either document differs from this record, this record governs, and `handover/DEFINITION-STATUS.md` says "
+                "so." % (rid, day))
+    return status, approval
+
+
 def rulings_list(c):
     return and_list(sorted({c.R(r) for r in answered(c)}, key=lambda x: int(x.split("-")[1])))
 
@@ -287,12 +324,15 @@ def head_note(doc):
         s = ("**Re-issue on the owner's rulings on layer 3 (%s).** %s of `%s"
              "OWNER-DECISIONS-L3.md` (owner rulings %s)%s. They restate requirements this %s traces to, which reopens it "
              "by the rule above: each passage they change is restated in place and names its row and ruling, the "
-             "change record `%s%s` lists every passage, and its draft `%s%s` keeps each one's baselined text. The "
-             "owner's approval of that record is named in `%sl3r2.yaml` (`definition_reissue`)." % (
+             "change record `%s%s` lists every passage, and its draft `%s%s` keeps each one's baselined text. %s" % (
                  dates(c), "The owner's clarifications D-28 and D-29 answer rows L3-OD2 to L3-OD7" if settled_mode(c) else
                  "The owner decided rows L3-OD1 to L3-OD7", base, rulings_list(c),
                  "; row L3-OD1's store is layer 4 architecture" if settled_mode(c) else "",
-                 "document" if doc == "CONOPS" else "brief", base, RECORD, base, DRAFT, base))
+                 "document" if doc == "CONOPS" else "brief", base, RECORD, base, DRAFT,
+                 ("The owner ruling that authorises that record, %s (his closure instructions), is named in `%sl3r2.yaml` "
+                  "(`definition_reissue`); its acceptance is the targeted independent review of layer 3's closure."
+                  % (approving(c)["id"], base)) if approving(c) else
+                 "The owner's approval of that record is named in `%sl3r2.yaml` (`definition_reissue`)." % base))
         if c.O("L3-OD1") == "approve": s += (" Where a passage this re-issue does not restate states a requirement, an intention or a condition about "
               "\"the pack\", it reads as each of the two packs of %s, as that ruling reads the requirements. Where it "
               "states the circuit as generated for one pack (one charger, one gauge, one pack node, one protection "
@@ -1119,7 +1159,15 @@ def quote(text):
 
 def render(c, docs, applied, cur, base):
     dg = c.digest()
+    rt = route(c)
     d = ["# The definition re-issue on the owner's layer 3 answers: DRAFT", "",
+         ("%s. Written by `v2/docs/records/l3r4/reissue.py` from the owner's rulings on rows L3-OD1 to L3-OD7 of "
+          "`OWNER-DECISIONS-L3.md` as the requirements registry records them (answers digest `%s`: the sha256/16 of the "
+          "answered rows' rulings and of every record citing them). `CONOPS.md` and `PRODUCT-BRIEF.md` are unchanged and "
+          "stay BASELINED (`%s` and `%s`) until their re-stamp through layers 1 and 2 with the texts below (closure item "
+          "L3-C63; `handover/DEFINITION-STATUS.md`, the rule); until then, where either document differs from the change "
+          "record `%s`, the change record governs. Prototype design: no V2 board has been fabricated, ordered or powered, "
+          "and no kit has been field deployed." % (rt[0], dg, base[DOCS["CONOPS"]], base[DOCS["BRIEF"]], RECORD)) if rt else
          "**Status: PROPOSED, not approved.** Written by `v2/docs/records/l3r4/reissue.py` from the owner's rulings on "
          "rows L3-OD1 to L3-OD7 of `OWNER-DECISIONS-L3.md` as the requirements registry records them (answers digest "
          "`%s`: the sha256/16 of the answered rows' rulings and of every record citing them). `CONOPS.md` and `PRODUCT-BRIEF.md` "
@@ -1166,10 +1214,12 @@ def render(c, docs, applied, cur, base):
 
 def change_record(c, applied, cur, draft_sha, dg, base):
     latest = max(c.dec[r][2] for r in answered(c))
+    rt = route(c)
     d = ["# Change record: the definition re-issue on the owner's layer 3 answers", "",
-         "**Status: PROPOSED for the owner's approval** (closure item L3-C26 of `L3-RECONCILIATION.md`). Written by "
+         "%s (closure item L3-C26 of `L3-RECONCILIATION.md`). Written by "
          "`v2/docs/records/l3r4/reissue.py` from the owner's rulings on the rows and the records citing them (answers digest "
-         "`%s`); the passages, with their baselined and proposed texts, are `%s` (sha256/16 `%s`)." % (dg, DRAFT, draft_sha),
+         "`%s`); the passages, with their baselined and proposed texts, are `%s` (sha256/16 `%s`)." % (
+             rt[0] if rt else "**Status: PROPOSED for the owner's approval**", dg, DRAFT, draft_sha),
          "", "## Why the definition reopens", "",
          "`handover/DEFINITION-STATUS.md`, the rule: a definition baseline is reopened only when a requirement, the "
          "scope, the operating concept or another relevant decision changes, and the affected document is issued again "
@@ -1212,6 +1262,8 @@ def change_record(c, applied, cur, draft_sha, dg, base):
           "", "## The documents", "", "| Document | Baselined sha256/16 | Proposed sha256/16 |", "|---|---|---|"]
     for k in ("CONOPS", "BRIEF"):
         d.append("| `%s` | `%s` | `%s` |" % (DOCS[k], base[DOCS[k]], RL.sha16_bytes(applied[k][0].encode("utf-8"))))
+    if rt:
+        return "\n".join(d + ["", "## Approval", "", rt[1]]).rstrip("\n") + "\n"
     d += ["", "## Approval", "",
           "The re-issue takes effect when an owner ruling that carries `decides: definition_reissue`, dated %s or later "
           "(on or after every row's ruling), approves this record, and `handover/layer3/l3r2.yaml`'s "
@@ -1299,7 +1351,7 @@ def approved_check(dr, out):
         if len(m) != 1: why.append("the record names no single draft sha")
         elif not os.path.exists(draft) or RL.sha16_bytes(open(draft, "rb").read()) != m[0]:
             why.append("%s is not at the sha256/16 the record names (%s)" % (DRAFT, m[0]))
-    print("reissue: the approved draft and change record %s" % ("are the files definition_reissue names" if not why
+    print("reissue: the approved draft and change record %s" % ("are current (the files definition_reissue names)" if not why
                                                                else "DIFFER: " + "; ".join(why)))
     return 0 if not why else 1
 

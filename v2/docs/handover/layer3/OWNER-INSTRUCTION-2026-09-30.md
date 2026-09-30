@@ -41,8 +41,11 @@ implemented (DR-02); the outlet's R138 trips below its 3 A contracts (DR-03); th
 undocumented efficiencies (DR-05); the cell and thermal design against the temperature requirements with the pack
 fitted (FEA-008, DR-06); Option A(i)'s lid consequences (DR-07); each on `REQUIREMENTS-L3-R2.md` section 2.
 Requirements completion stays apart from circuit, PCB, thermal, runtime and product verification (D-28, D-29).
-**Owner decisions open:** none (D-29). **Owner approvals open:** the definition re-issue (L3-C26) and his acceptance
-of the baseline, after the independent check.
+**Owner decisions open:** none (D-29). **The definition re-issue** is authorised by his closure instructions D-38
+(L3-C26), its acceptance the targeted independent review (L3-C27); once the closure criteria pass, the baseline is
+reported COMPLETE without a further review from him (D-38). **Until `CONOPS.md` and `PRODUCT-BRIEF.md` are re-stamped**
+with the approved texts (layers 1 and 2, the integrator's, L3-C63), where either differs from
+`DEFINITION-CHANGE-RECORD-L3.md`, the change record governs (D-38).
 
 **Superseded, kept in place below and marked there.** 72 hours as a mandatory minimum (SC-21, D-21's reading, D-27's
 options), external battery options and the comparison's Options A and B, the ten-row recommendation string, rows
@@ -330,6 +333,24 @@ file is kept under it.
 > from mandatory product constraints, and charging from operation and storage. Any proposed change to approved
 > operating conditions remains an owner decision."
 
+## The owner's closure instructions: prepare the package, apply the choices, one targeted acceptance review, close and advance (30 September 2026), as quoted
+
+Relayed by the coordinating session into layer 3's closure pass, from three of the owner's messages of 30 September
+2026. The three paragraphs below are as quoted there, word for word. The registry records them as owner ruling D-38,
+the ruling that decides the definition re-issue (`decides: definition_reissue`, closure item L3-C26).
+
+> "Prepare the final package while those choices are pending. Complete all independent Layer 3 work and required
+> integration steps. Once I answer, apply the choices, generate the concrete revised requirements and affected
+> CONOPS/product-brief passages, and perform one targeted acceptance review. Fix actual blocking findings and verify
+> their changes; backlog unrelated improvements."
+
+> "Close and advance. Integrate the completed package through the already authorised workflow. Update EXECUTION-PLAN.md
+> with the baseline revision, closure evidence and downstream obligations. Once the criteria pass, report 'Layer 3
+> requirements baseline: COMPLETE' and start Layer 4 architecture work immediately. Prioritise the internal energy
+> architecture and power-path corrections. Do not wait for another generic review from me or jump ahead to PCB layout."
+
+> "When the closure criteria pass, integrate the baseline, update EXECUTION-PLAN.md and start Layer 4 immediately."
+
 ## How this work reads it (the session's reading, not the owner's words)
 
 - **"Battery and solar remain mandatory"**: mission M1 is carried by the kit's own store and its solar input. An
@@ -422,3 +443,11 @@ file is kept under it.
 - **One authoritative interpretation (D-31)**: the current owner brief at the top of this file is that interpretation;
   every line of it names the ruling that carries it, and an instruction a later ruling supersedes stays in place with a
   one-line mark naming that ruling.
+- **The closure instructions (D-38)**, the session's reading and not his words: the owner instructed that the affected
+  CONOPS and product-brief passages be generated from his choices and accepted by one targeted acceptance review,
+  without a further review from him. The re-issue of exactly the passages his rulings D-32 to D-37 change
+  (`DEFINITION-CHANGE-RECORD-L3.md` and its draft) is therefore authorised by this instruction, its acceptance is the
+  targeted independent review of layer 3's closure (L3-C27), and it may contain no change beyond those rulings. The
+  proposed texts reach `CONOPS.md` and `PRODUCT-BRIEF.md` by their re-stamp through layers 1 and 2, an open obligation
+  of the integrator (L3-C63); until then, where either document differs from the change record, the change record
+  governs, and `handover/DEFINITION-STATUS.md` says so.

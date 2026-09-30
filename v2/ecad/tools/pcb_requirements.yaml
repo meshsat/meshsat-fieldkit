@@ -1028,6 +1028,42 @@ owner_rulings:
       build (TYP), the worst array build (WAB) a sensitivity; a benchmark, not a promise under every combination of
       loads and weather; no coverage target.
     source: ["owner ruling D-28", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md", "v2/docs/handover/layer3/OWNER-DECISIONS-L3.md"]
+  - id: D-38
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's closure instructions: prepare the package, apply the choices, one targeted acceptance review, close and advance (30 September 2026)"
+    decides: definition_reissue
+    words: >-
+      Prepare the final package while those choices are pending. Complete all independent Layer 3 work and required
+      integration steps. Once I answer, apply the choices, generate the concrete revised requirements and affected
+      CONOPS/product-brief passages, and perform one targeted acceptance review. Fix actual blocking findings and verify
+      their changes; backlog unrelated improvements. Close and advance. Integrate the completed package through the
+      already authorised workflow. Update EXECUTION-PLAN.md with the baseline revision, closure evidence and downstream
+      obligations. Once the criteria pass, report 'Layer 3 requirements baseline: COMPLETE' and start Layer 4
+      architecture work immediately. Prioritise the internal energy architecture and power-path corrections. Do not wait
+      for another generic review from me or jump ahead to PCB layout. When the closure criteria pass, integrate the
+      baseline, update EXECUTION-PLAN.md and start Layer 4 immediately.
+    ruling: >-
+      The owner's closure instructions of 30 September 2026, relayed by the coordinating session from three of his
+      messages and quoted in v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md; the ruling that decides the
+      definition re-issue (closure item L3-C26). It changes no requirement. In his words: "Prepare the final package
+      while those choices are pending. Complete all independent Layer 3 work and required integration steps. Once I
+      answer, apply the choices, generate the concrete revised requirements and affected CONOPS/product-brief passages,
+      and perform one targeted acceptance review. Fix actual blocking findings and verify their changes; backlog
+      unrelated improvements." "Close and advance. Integrate the completed package through the already authorised
+      workflow. Update EXECUTION-PLAN.md with the baseline revision, closure evidence and downstream obligations. Once
+      the criteria pass, report 'Layer 3 requirements baseline: COMPLETE' and start Layer 4 architecture work
+      immediately. Prioritise the internal energy architecture and power-path corrections. Do not wait for another
+      generic review from me or jump ahead to PCB layout." "When the closure criteria pass, integrate the baseline,
+      update EXECUTION-PLAN.md and start Layer 4 immediately." The session's reading, not his words: the owner
+      instructed that the affected CONOPS and product-brief passages be generated from his choices and accepted by one
+      targeted acceptance review, without a further review from him; the re-issue of exactly the passages his rulings
+      D-32 to D-37 change (v2/docs/handover/layer3/DEFINITION-CHANGE-RECORD-L3.md and its draft) is therefore authorised
+      by this instruction, its acceptance is the targeted independent review of layer 3's closure (L3-C27), and it may
+      contain no change beyond those rulings. The proposed texts reach CONOPS.md and PRODUCT-BRIEF.md by their re-stamp
+      through layers 1 and 2, an open obligation of the integrator; until then, where either document differs from the
+      change record, the change record governs.
+    source: ["owner ruling D-38", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md", "v2/docs/handover/layer3/DEFINITION-CHANGE-RECORD-L3.md"]
 # Choices the session took under the owner's standing rule of 26 September 2026: each is the session's, never
 # the owner's, names the ruling that lets the session take it, says why, and can be reversed. `closes` names the
 # open items it answered; `adds_core_needs` a need it added to prototype 1's core. A choice later withdrawn keeps
@@ -15216,6 +15252,16 @@ records:
           a replaced circuit, and the envelope was re-pinned by apply_registry_s122.py. What is NOT DERIVABLE (held
           documents, firmware, procedures and dated history, 549 sentences) is left as it stands and said so in
           verdicts.out. The result is PASS (was FAIL).
+      - >-
+          v2/docs/handover/DEFINITION-STATUS.md re-read at layer 3's round 5 fix round (MESHSAT-1357, 30 September 2026;
+          v2/docs/records/l3r5/apply_definition_status_l3r5.py, f7f0d7324b94dbc8 to 1b881dc0d897bea6): the change
+          inserts 21 lines and removes none, one row in the section Where the current state lives and the section Layer
+          3's definition re-issue (30 September 2026): the approved change record governs until the re-stamp, which
+          points at layer 3's approved change record until CONOPS.md and PRODUCT-BRIEF.md are re-stamped; the section of
+          CONOPS's current circuit values, the only section of this page the s122 verdicts read (s122lib.STATUS_KEY), is
+          byte-identical, its DC rows unchanged; none of the places this record's evidence names in this document is
+          among the changed ones. This entry does not re-read the rest of this record's argument; rebound to
+          1b881dc0d897bea6. This entry changes no result.
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@a2d48972d171aad1"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@2ed95a0e8069ebf8"
@@ -15229,7 +15275,7 @@ records:
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@3ef9b8c49a01b728"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@c9f7394594201045"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@20c7b0795593d761"
-      - "v2/docs/handover/DEFINITION-STATUS.md@f7f0d7324b94dbc8"
+      - "v2/docs/handover/DEFINITION-STATUS.md@1b881dc0d897bea6"
       - "v2/docs/feasibility/EMCON.md@c8eb306265110076"
       - "v2/docs/ASSEMBLY.md@942d562edd128759"
     release_effect: BLOCKER

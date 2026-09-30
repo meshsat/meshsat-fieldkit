@@ -1,6 +1,6 @@
 # The definition re-issue on the owner's layer 3 answers: DRAFT
 
-**Status: PROPOSED, not approved.** Written by `v2/docs/records/l3r4/reissue.py` from the owner's rulings on rows L3-OD1 to L3-OD7 of `OWNER-DECISIONS-L3.md` as the requirements registry records them (answers digest `156a2e742bda1892`: the sha256/16 of the answered rows' rulings and of every record citing them). `CONOPS.md` and `PRODUCT-BRIEF.md` are unchanged and stay BASELINED (`6cb7b241cb84d729` and `85513b92ed0daf55`) until the owner approves the change record `DEFINITION-CHANGE-RECORD-L3.md` by a ruling that decides the re-issue; the documents are then issued again through their layers' review (`handover/DEFINITION-STATUS.md`, the rule). Prototype design: no V2 board has been fabricated, ordered or powered, and no kit has been field deployed.
+**Status: AUTHORISED by owner ruling D-38 (his closure instructions of 30 September 2026); its acceptance is the targeted independent review of layer 3's closure (closure item L3-C27); not yet written into the baselined documents**. Written by `v2/docs/records/l3r4/reissue.py` from the owner's rulings on rows L3-OD1 to L3-OD7 of `OWNER-DECISIONS-L3.md` as the requirements registry records them (answers digest `156a2e742bda1892`: the sha256/16 of the answered rows' rulings and of every record citing them). `CONOPS.md` and `PRODUCT-BRIEF.md` are unchanged and stay BASELINED (`6cb7b241cb84d729` and `85513b92ed0daf55`) until their re-stamp through layers 1 and 2 with the texts below (closure item L3-C63; `handover/DEFINITION-STATUS.md`, the rule); until then, where either document differs from the change record `DEFINITION-CHANGE-RECORD-L3.md`, the change record governs. Prototype design: no V2 board has been fabricated, ordered or powered, and no kit has been field deployed.
 
 ## The answers
 
@@ -51,8 +51,9 @@ Rows and rulings: L3-OD7 `objective-48-72`, D-32; L3-OD2 `both-kept`, D-33; L3-O
 > L3-OD1's store is layer 4 architecture. They restate requirements this document traces to, which reopens it by the rule
 > above: each passage they change is restated in place and names its row and ruling, the change record
 > `handover/layer3/DEFINITION-CHANGE-RECORD-L3.md` lists every passage, and its draft
-> `handover/layer3/DEFINITION-REISSUE-DRAFT.md` keeps each one's baselined text. The owner's approval of that record is
-> named in `handover/layer3/l3r2.yaml` (`definition_reissue`).
+> `handover/layer3/DEFINITION-REISSUE-DRAFT.md` keeps each one's baselined text. The owner ruling that authorises that
+> record, D-38 (his closure instructions), is named in `handover/layer3/l3r2.yaml` (`definition_reissue`); its acceptance
+> is the targeted independent review of layer 3's closure.
 
 ### S07. section 1, the local end users: the lid tablet (line 67)
 
@@ -282,8 +283,9 @@ Rows and rulings: L3-OD7 `objective-48-72`, D-32; L3-OD2 `both-kept`, D-33; L3-O
 > L3-OD1's store is layer 4 architecture. They restate requirements this brief traces to, which reopens it by the rule
 > above: each passage they change is restated in place and names its row and ruling, the change record
 > `handover/layer3/DEFINITION-CHANGE-RECORD-L3.md` lists every passage, and its draft
-> `handover/layer3/DEFINITION-REISSUE-DRAFT.md` keeps each one's baselined text. The owner's approval of that record is
-> named in `handover/layer3/l3r2.yaml` (`definition_reissue`).
+> `handover/layer3/DEFINITION-REISSUE-DRAFT.md` keeps each one's baselined text. The owner ruling that authorises that
+> record, D-38 (his closure instructions), is named in `handover/layer3/l3r2.yaml` (`definition_reissue`); its acceptance
+> is the targeted independent review of layer 3's closure.
 
 ### S08. who it is for, the local end users: the tablet in the lid (line 60)
 
@@ -369,5 +371,5 @@ The re-issue applied in memory to the baselined files; nothing is written into t
 
 | Document | Baselined sha256/16 | Proposed sha256/16 | Passages restated |
 |---|---|---|---|
-| `v2/docs/CONOPS.md` | `6cb7b241cb84d729` | `d9ae0d8a30c9eb41` | 12 |
-| `v2/docs/PRODUCT-BRIEF.md` | `85513b92ed0daf55` | `a567a7d696098d7e` | 6 |
+| `v2/docs/CONOPS.md` | `6cb7b241cb84d729` | `92f9425e8d31924b` | 12 |
+| `v2/docs/PRODUCT-BRIEF.md` | `85513b92ed0daf55` | `7052556f8f35ae7f` | 6 |

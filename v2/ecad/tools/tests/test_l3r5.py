@@ -554,3 +554,62 @@ def t_l3r5_fix_round_superseded_conditions_are_marked_where_they_stand():
     assert "72 hours today" not in dec_page and "(REQ-072 today)" not in dec_page
     r = _run([os.path.join(REC5, "apply_l3r5_supersede_sc21.py"), "--check"])
     assert r.returncode == 2 and "has run" in r.stdout, "a second run of the SC-21 script was not refused:\n%s" % r.stdout
+
+
+def t_l3r5_fix_round_the_brief_the_reissue_and_the_gate():
+    """The collaborator's closure check astra-check-l3r5-1 (accepted: no) is filed byte for byte and named NOT_ACCEPTED,
+    so the gate's fourth condition reads NOT MET until the targeted recheck is filed. B1: the brief names the ASM and CHO
+    records one by one with the rulings that bind them. B3: D-38 records the owner's closure instructions word for word
+    and decides the re-issue; definition_reissue names the change record at its sha with D-38; the record states the route
+    that holds (authority D-38, acceptance the targeted review) and no PROPOSED; L3-C26 reads CLOSED and the gate's third
+    condition MET; the re-stamp is L3-C63, the integrator's, OPEN; the brief, the requirements page, DEFINITION-STATUS.md and
+    LAYER-STATUS.md say the change record governs until the re-stamp; CFL-016 is rebound to the status page it reads.
+    M1: DR-03 names 15 V. Each fix-round script refuses a second run, and the approved re-issue reads current."""
+    import rules_lib as R
+    RL = _rl()
+    req, data = R.load_requirements(), RL.load_data()
+    chk = data["independent_check"][-1]
+    assert chk["record"].endswith("astra-check-l3r5-1.md") and chk["verdict"] == "NOT_ACCEPTED"
+    assert open(os.path.join(ROOT, chk["record"]), encoding="utf-8").readline().strip() == "accepted: no"
+    flat = " ".join(_instr().split("## Current owner brief", 1)[1].split("\n## ", 1)[0].split())
+    for w in ("ASM-006 carries owner ruling D-02e's operating condition \"operate shaded\"", "CHO-001, the device set, is the owner's ruling",
+              "the one replaceable selection these rulings establish", "the change record governs (D-38)",
+              "**The definition re-issue** is authorised by his closure instructions D-38"):
+        assert w in flat, "the brief does not read %r" % w
+    for w in ("the registry's ASM records. ", "the registry's CHO records. "):
+        assert w not in flat, "the brief still carries the blanket line %r" % w
+    instr = " ".join(" ".join(l.lstrip("> ") for l in _instr().split("\n")).split())
+    r38 = next(x for x in req["owner_rulings"] if x["id"] == "D-38")
+    sys.path.insert(0, REC5)
+    import apply_l3r5_d38 as A
+    assert str(r38.get("decides")) == "definition_reissue" and len(A.QUOTES) == 3
+    for q in A.QUOTES:
+        assert " ".join(q.split()) in instr and " ".join(q.split()) in " ".join(r38["ruling"].split()), "a quote is not word for word"
+    assert "The session's reading, not his words" in " ".join(r38["ruling"].split())
+    dr = data["definition_reissue"]
+    assert dr["approved_by"] == "D-38" and dr["record"].endswith("DEFINITION-CHANGE-RECORD-L3.md")
+    assert RL.sha16_bytes(open(os.path.join(ROOT, dr["record"]), "rb").read()) == dr["sha16"]
+    dec = RL.decided(req, data)
+    assert RL.reissue_ok(req, data, dec)[0], RL.reissue_ok(req, data, dec)[1]
+    items = {c["id"]: c for c in data["closure"]}
+    assert RL.closure_state(items["L3-C26"], req, dec, data) == "CLOSED"
+    assert items["L3-C63"]["whose"] == "INTEGRATOR" and RL.closure_state(items["L3-C63"], req, dec, data) == "OPEN"
+    g = RL.gate(req, dec, data, RL.load_h3())
+    assert g[2][1] and not g[3][1], "the third condition should read MET and the fourth NOT MET: %s" % [(x[0], x[1]) for x in g]
+    record = open(os.path.join(ROOT, dr["record"]), encoding="utf-8").read()
+    assert "AUTHORISED by owner ruling D-38" in record and "**Acceptance:** the targeted independent review" in record
+    assert "PROPOSED" not in record, "the approved record still reads PROPOSED"
+    spec = open(os.path.join(L3, "REQUIREMENTS-L3-R2.md"), encoding="utf-8").read()
+    assert "the change record governs" in spec and "| Contradictions and requirement-level TBDs closed | MET |" in spec
+    assert "on the 5, 9 and 15 V contracts" in spec, "DR-03 does not name the 15 V contract"
+    ds = open(os.path.join(ROOT, "v2", "docs", "handover", "DEFINITION-STATUS.md"), encoding="utf-8").read()
+    assert "the change record governs" in ds and "| DC-L3-M1 |" in ds
+    cfl = next(r for r in req["records"] if r["id"] == "CFL-016")
+    assert "v2/docs/handover/DEFINITION-STATUS.md@%s" % RL.sha16_bytes(ds.encode("utf-8")) in cfl["evidence_bound_to"]
+    ls = open(os.path.join(ROOT, "v2", "docs", "handover", "LAYER-STATUS.md"), encoding="utf-8").read()
+    assert "waits on the owner's approving ruling" not in ls and "L3-C63" in ls
+    for s in ("apply_l3r5_d38.py", "apply_definition_status_l3r5.py", "apply_layer_status_l3_r5c.py"):
+        r = _run([os.path.join(REC5, s), "--check"])
+        assert r.returncode == 2 and "has run" in r.stdout, "a second run of %s was not refused:\n%s" % (s, r.stdout)
+    r = _run([os.path.join(ROOT, "v2/docs/records/l3r4/reissue.py"), "--check"], cwd=ROOT)
+    assert r.returncode == 0 and "current" in r.stdout, "the approved re-issue does not read current:\n%s" % r.stdout
