@@ -93,6 +93,11 @@ def base_registry():
     data = yaml.safe_load(open(os.path.join(TOP, "v2/docs/handover/layer3/l3r2.yaml"), encoding="utf-8"))
     sha = data["closure_cycle"]["pre_closure_commit"]
     raw = subprocess.run(["git", "show", "%s:v2/ecad/tools/pcb_requirements.yaml" % sha], cwd=TOP, capture_output=True, check=True).stdout
+    # the readings' bindings carried to the tree's where the tree has rebound them since (round 5's fix round: CFL-016 to
+    # the status page as it now stands); nothing else of the pre-closure registry moves
+    sys.path.insert(0, HERE)
+    import l3edit as E
+    raw = E.rebind_to_tree(raw.decode("utf-8"), open(REG, encoding="utf-8").read()).encode("utf-8")
     path = os.path.join(tempfile.mkdtemp(prefix="l3r2-dry-base-"), "pcb_requirements.yaml")
     open(path, "wb").write(raw)
     return path

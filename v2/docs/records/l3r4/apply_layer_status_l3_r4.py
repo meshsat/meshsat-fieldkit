@@ -8,7 +8,7 @@ is" on the same page no longer lists the independent check of L3-R2 as remaining
 The edits replace that row and that one sentence, each located by its own text and asserted to occur exactly once;
 nothing else on the page changes. No dash character is written. It refuses unless the accepted check is filed and verified the way the renderer
 verifies it (render_l3r2.handover_checks: every record at its sha256/16, each verdict read from its record's first line,
-the newest ACCEPTED and naming check-l3r2-5.md), and a second run is refused.
+the newest ACCEPTED check naming check-l3r2-5.md), and a second run is refused.
 
 Usage: python3 apply_layer_status_l3_r4.py [--check] [--page PATH]   (--page: a copy of the page, for the tests)
 """
@@ -55,9 +55,14 @@ def build(t):
         chks = RL.handover_checks(data)
     except RL.RenderError as e:
         E.refuse("l3r2.yaml's independent_check does not verify: %s" % e)
-    if not RL.handover_accepted(data): E.refuse("the newest check of L3-R2 is not ACCEPTED")
-    last = chks[-1]
-    if str(last["record"]) != CHECK: E.refuse("the newest check is %s, not %s" % (last["record"], CHECK))
+    # The row states what CHECK-5 accepted, the handover as prepared with the decisions pending; a later check of a later
+    # issue (the closure's, astra-check-l3r5-1 of round 5, NOT_ACCEPTED) does not change that, so the check verified here
+    # is the newest ACCEPTED one (round 5's fix round: the newest check overall held this historical script to the tree's
+    # latest state).
+    acc = [c for c in chks if str(c.get("verdict")).upper() == "ACCEPTED"]
+    if not acc: E.refuse("no check of L3-R2 is ACCEPTED")
+    last = acc[-1]
+    if str(last["record"]) != CHECK: E.refuse("the newest accepted check is %s, not %s" % (last["record"], CHECK))
     out = t
     for old, new in edits(last):
         for d in E.DASHES:

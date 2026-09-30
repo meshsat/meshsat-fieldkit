@@ -738,16 +738,22 @@ def t_l3r2_a_check_verdict_is_read_from_its_record():
     import rules_lib as R
     data = RL.load_data()
     chks = RL.handover_checks(data)
-    if not chks or str(chks[-1].get("verdict")).upper() != "ACCEPTED": raise Skip("no accepted check of L3-R2 is filed")
+    acc = [i for i, c in enumerate(chks) if str(c.get("verdict")).upper() == "ACCEPTED"]
+    if not acc: raise Skip("no accepted check of L3-R2 is filed")
     req = R.load_requirements()
     dec = RL.decided(req, data)
     g = RL.gate(req, dec, data, RL.load_h3())
     stale = bool(dec) and "decisions pending" in str(chks[-1].get("scope") or "")
-    # D-26: an acceptance of the handover with the decisions pending does not cover the decided issue (the closure)
-    assert g[3][1] is (not stale), "the fourth condition does not follow the accepted check and its scope"
+    # D-26: an acceptance of the handover with the decisions pending does not cover the decided issue (the closure); and
+    # since round 5's fix round the newest check may be a later one that did not accept (astra-check-l3r5-1): the fourth
+    # condition follows the NEWEST check, whatever it reads (the test skipped when the newest was not ACCEPTED)
+    newest_ok = str(chks[-1].get("verdict")).upper() == "ACCEPTED"
+    assert g[3][1] is (newest_ok and not stale), "the fourth condition does not follow the newest check and its scope"
     if not all(d["id"] in dec for d in data["decisions"]):
         assert not all(x[1] for x in g), "the gate reads MET with rows pending"
-    for i, v in ((len(chks) - 1, "NOT_ACCEPTED"), (0, "ACCEPTED"), (len(chks) - 1, "PENDING")):
+    flip = lambda v: "NOT_ACCEPTED" if str(v).upper() == "ACCEPTED" else "ACCEPTED"
+    for i, v in ((len(chks) - 1, flip(chks[-1]["verdict"])), (acc[-1], "NOT_ACCEPTED"), (0, flip(chks[0]["verdict"])),
+                 (len(chks) - 1, "PENDING")):
         d2 = copy.deepcopy(data)
         d2["independent_check"][i]["verdict"] = v
         try:
