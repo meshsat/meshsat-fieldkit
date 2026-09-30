@@ -26,6 +26,9 @@ reconcile_lid_panel.out byte for byte at 20.7 V; 0b the U3 figure reproduces eff
 plane runs reproduce plane_grid.out's case P on all 50 planes for both lid options; 0d a 72 hour series fed hour by hour
 reproduces the mean-day run; 0e the first issue's WE is reproduced against its committed rows (commit 6a283b25).
 
+Third issue (CHECK-2 of ec415c09, minor 1): the cell's resistive bound for the base pack takes the kit's whole parallel
+count for the discharge current (it took 12 cells); the WE-MKR reading of weather_basis.py follows it.
+
 Run from the repository root:  python3 v2/docs/records/l3plane/energy_basis.py > v2/docs/records/l3plane/energy_basis.out
 Deterministic. Exit 2: a pinned script or input is not the pinned file; 3: an input cannot be parsed; 4: a reproduction
 check failed."""
@@ -437,11 +440,12 @@ def main():
     i02 = 0.2 * ah
     ocv = v02 + i02 * r_dc
     rows_c = []
-    for lab, n_p, i_c in (("base 4S6P at U3's %.3f A" % TP.v("chg_a_base"), TP.NP_B, TP.v("chg_a_base")),
-                          ("lid 4S14P at U3B's %.3f A" % TP.v("chg_a_lid"), 14, TP.v("chg_a_lid")),
-                          ("lid 4S15P at U3B's %.3f A" % TP.v("chg_a_lid"), 15, TP.v("chg_a_lid"))):
+    for lab, n_p, n_lid, i_c in (("base 4S6P (4S20P kit) at U3's %.3f A" % TP.v("chg_a_base"), TP.NP_B, 14, TP.v("chg_a_base")),
+                                 ("base 4S6P (4S21P kit) at U3's %.3f A" % TP.v("chg_a_base"), TP.NP_B, 15, TP.v("chg_a_base")),
+                                 ("lid 4S14P at U3B's %.3f A" % TP.v("chg_a_lid"), 14, 14, TP.v("chg_a_lid")),
+                                 ("lid 4S15P at U3B's %.3f A" % TP.v("chg_a_lid"), 15, 15, TP.v("chg_a_lid"))):
         icell = i_c / n_p
-        idis = TP.LOAD / (4 * v02) / (TP.NP_B + n_p)
+        idis = TP.LOAD / (4 * v02) / (TP.NP_B + n_lid)      # the kit's whole parallel count (CHECK-2 minor 1)
         rows_c.append((lab, icell, idis, (ocv - idis * r_dc) / (ocv + icell * r_dc)))
     P("   the pack's charge efficiency (declared %.2f, bracket %.2f to %.2f, energy_inputs.yaml 'INFERRED ... no held document gives" % (
         ce["value"], ce["low"], ce["high"]))
@@ -451,7 +455,7 @@ def main():
     P("      charged energy, charge curve, coulombic efficiency or hysteresis. The resistive part alone, (OCV - I_dis R) / (OCV + I_chg R)")
     P("      with OCV %.3f V (the 0.2C mean plus its own IR drop) and R the sample's DC-IR (INFERRED):" % ocv)
     for lab, icell, idis, e in rows_c:
-        P("         %-34s %.3f A a cell charging, %.3f A discharging: %.4f" % (lab, icell, idis, e))
+        P("         %-38s %.3f A a cell charging, %.3f A discharging: %.4f" % (lab, icell, idis, e))
     P("      That is an UPPER bound on the charge efficiency (the undocumented losses only lower it): NOT ESTABLISHED.")
     P("")
 
