@@ -41,9 +41,10 @@ EDITS = [
      "to L3-OD4 and L3-OD6 ("),
     ("| The requirement-changing owner decisions are resolved | NOT MET | the six rows L3-OD1 to L3-OD6, each carrying the "
      "figures of the checked basis",
-     "| The requirement-changing owner decisions are resolved | NOT MET | the seven rows: L3-OD7 (M1's runtime, D-27), its "
-     "figures held for the runtime and battery comparison of stream l3batt, and L3-OD1 to L3-OD6, each carrying the "
-     "figures of the checked basis"),
+     "| The requirement-changing owner decisions are resolved | NOT MET | the seven rows: L3-OD7 (M1's runtime and its "
+     "store, with HF and the tablet kept, D-27), filled from the runtime and battery comparison of stream l3batt "
+     "(fnd/l3batt 83577a13, its CHECK-2 accepted), and L3-OD1 to L3-OD6, each carrying the figures of the checked "
+     "basis"),
     ("decided on a combination the evidence covers,",
      "decided on a combination whose requirements do not contradict (D-26: a target the studied candidate does not meet "
      "is valid and records a feasibility item),"),
@@ -57,13 +58,14 @@ EDITS = [
      "a combination these rules do not name is not claimed coherent. Since round 5 (D-26, `v2/docs/records/l3r5/`) "
      "those rules are replaced: an answer records the owner's target, and a target the studied candidate does not meet "
      "(a lid that does not carry the store, both lid items kept, a coverage target, row L3-OD1's reject) records its "
-     "feasibility item instead of a conflict; since D-27 row L3-OD7 (M1's runtime) is answered first, and rows L3-OD1, "
-     "L3-OD2, L3-OD4 and L3-OD6 refuse until it is answered 72-required (after its other answers they are restated from "
-     "the runtime comparison); row L3-OD2 needs row L3-OD1 approved, row L3-OD3 needs it answered either "
+     "feasibility item instead of a conflict; since D-27 row L3-OD7 (M1's runtime and its store) is answered first, rows "
+     "L3-OD1, L3-OD2, L3-OD4 and L3-OD6 refuse until it is, and row L3-OD6 also after 48 hours or HF listening until its "
+     "table is restated from the runtime comparison; both lid items kept, the owner's stated wish, is never refused; "
+     "row L3-OD2 needs row L3-OD1 approved, row L3-OD3 needs it answered either "
      "way, and row L3-OD4 needs rows L3-OD1 to L3-OD3 answered (row L3-OD2 where it applies), its adopt no particular "
      "answer of them or of row L3-OD6; only requirements that cannot both hold are "
-     "refused: row L3-OD2 after row L3-OD1's reject, and a row L3-OD7 answer other than 72-required beside a row "
-     "prepared for 72 hours (closure item L3-C32; "
+     "refused: row L3-OD2 after row L3-OD1's reject, row L3-OD6 beside row L3-OD7's 48 hours or HF listening, and the "
+     "QMX out beside HF listening (closure item L3-C32; "
      "`OWNER-DECISIONS-L3.md` lists the rules)."),
     ("\n**What the session closed (30 September 2026, `v2/docs/records/l3r2/`).**",
      LEVEL + "\n**What the session closed (30 September 2026, `v2/docs/records/l3r2/`).**"),

@@ -84,22 +84,78 @@ def require(d, row, reqs):
 
 
 # D-27 (the owner): "Evaluate alternatives before asking me to sacrifice functions or accept restrictive deployment
-# conditions." Row L3-OD7 (M1's runtime) is answered first. The rows below state M1's 72 hours in their prepared
-# restatements (REQ-072, the store, the lid, the deployment condition, the weather basis): each refuses while row L3-OD7 is
-# unanswered, and after an answer other than 72-required, until it is restated from the runtime comparison.
+# conditions." Row L3-OD7 (M1's runtime and its store, filled from stream l3batt's checked comparison) is answered first:
+# rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 refuse while it is unanswered. Rows L3-OD1, L3-OD2 and L3-OD4 then carry its
+# answer (the duration, the load, the external store); row L3-OD6's table sizes the store for 72-hour windows at the approved
+# profile, so after 48 hours or HF listening it refuses until it is restated from the comparison (closure item L3-C56).
 RUNTIME_ROWS = ("L3-OD1", "L3-OD2", "L3-OD4", "L3-OD6")
+RUNTIME_SUB = {"hf": ("available", "listening"), "external": ("authorise-vbat", "authorise-dc-entry", "no"),
+               "tablet-charging": ("no", "yes")}
+RUNTIME_FIELDS = {"hf": "m1_hf", "external": "m1_external", "tablet-charging": "m1_tablet_charging"}
+
+
+def runtime(d):
+    """Row L3-OD7's answer as the registry records it: {rid, option, hours, hf, external, tablet} or None."""
+    for r in d.get("owner_rulings") or []:
+        s = str(r.get("decides") or "")
+        if s.startswith("L3-OD7:"):
+            opt = s.split(":", 1)[1]
+            return {"rid": r["id"], "option": opt, "hours": "48" if opt.startswith("48") else "72",
+                    "hf": str(r.get("m1_hf")), "external": str(r.get("m1_external")),
+                    "tablet": str(r.get("m1_tablet_charging"))}
+    return None
 
 
 def runtime_first(d, row):
-    """Refuse `row` (one of RUNTIME_ROWS) unless row L3-OD7 is answered 72-required (D-27)."""
-    dec = decided(d)
-    if "L3-OD7" not in dec:
+    """Refuse `row` (one of RUNTIME_ROWS) while row L3-OD7 is unanswered, and row L3-OD6 after an answer its table does
+    not size (D-27); the answer otherwise."""
+    rt = runtime(d)
+    if rt is None:
         E.refuse("%s presupposes row L3-OD7, M1's runtime, which is not answered: no row asks the owner to remove a "
                  "function or accept a deployment condition before it is (D-27)" % row)
-    if dec["L3-OD7"][0] != "72-required":
-        E.refuse("%s's prepared restatement is written for M1's 72 hours on the studied store and lids; row L3-OD7 was "
-                 "answered %s (%s), so this row is restated from the runtime comparison before it is applied (l3r2.yaml "
-                 "runtime_comparison, closure item L3-C56, D-27)" % (row, dec["L3-OD7"][0], dec["L3-OD7"][1]))
+    if row == "L3-OD6" and (rt["hours"] != "72" or rt["hf"] == "listening"):
+        E.refuse("%s's table sizes the store for 72-hour windows at the approved profile; row L3-OD7 was answered %s with HF "
+                 "%s (%s), so this row is restated from the runtime comparison before it is applied (l3r2.yaml "
+                 "runtime_comparison, closure item L3-C56, D-27)" % (row, rt["option"], rt["hf"], rt["rid"]))
+    return rt
+
+
+def runtime_phrases(rid, option, hf, external, tablet):
+    """The phrases row L3-OD7's answer writes into REQ-072, and rows L3-OD1 carries over: hours, the duration, the load's
+    additions and the store's addition."""
+    hours = "48" if option.startswith("48") else "72"
+    duration = ("M1's 72 hours (owner ruling %s on row L3-OD7)" % rid if hours == "72" else
+                "48 hours, M1's required duration (owner ruling %s on row L3-OD7; 72 hours desired)" % rid)
+    parts = []
+    if hf == "listening": parts.append("the QMX receiver on through M1 (1.14 W more, owner ruling %s)" % rid)
+    if tablet == "yes":
+        parts.append("the tablet charged from the USB-C outlet (an allowance unquantified until a tablet model is named, "
+                     "SC-45)")
+    load = (", with " + " and ".join(parts) + ",") if parts else ""
+    store = {"authorise-vbat": ", with the external battery arrangement owner ruling %s authorises joined at VBAT," % rid,
+             "authorise-dc-entry": (", with the external battery arrangement owner ruling %s authorises joined through the "
+                                    "9 to 36 V DC entry," % rid), "no": ""}[external]
+    return {"hours": hours, "duration": duration, "load": load, "store": store}
+
+
+def runtime_figures():
+    """Row L3-OD7's table as l3r2.yaml holds it, verified against the filed, checked runtime.out by exact keys; refused
+    on any difference (the pattern of od6_verify)."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(HERE)), "l3r5"))
+    import runtime_reader as RR
+    import fill_l3r7_from_comparison as FL
+    data = l3data()
+    ok, why = basis_state(data, key="runtime_comparison")
+    if not ok: E.refuse("row L3-OD7's figures cannot be verified: %s" % why)
+    out = next(o for o in data["runtime_comparison"]["outputs"] if str(o["path"]).endswith("runtime.out"))
+    try:
+        t = FL.table(open(os.path.join(E.TOP, out["path"]), encoding="utf-8").read())
+    except RR.RuntimeFormatError as e:
+        E.refuse("the filed runtime.out does not read: %s" % e)
+    have = next(x for x in data["decisions"] if x["id"] == "L3-OD7").get("runtime_table") or {}
+    if have.get("store") != t["store"] or have.get("rows") != t["rows"]:
+        E.refuse("row L3-OD7's table is not the filed runtime.out's (fill_l3r7_from_comparison.py)")
+    return t
 
 
 def l3data():

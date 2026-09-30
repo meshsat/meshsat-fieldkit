@@ -22,25 +22,39 @@ in the instruction file: "Evaluate alternatives before asking me to sacrifice fu
 conditions." and, as relayed, "He also said to preserve HF and the tablet functionality." It is recorded as owner ruling
 D-27 (`apply_l3r5_d27.py`). What it changes here:
 
-- **Row L3-OD7, M1's runtime**, joins the table ahead of the others: `72-required` (as REQ-072 states it; the figure
-  becomes the owner's in place of the session's SC-21), `48-required-72-desired` and `72-required-battery-upgrade`, the
-  last two keeping HF and the tablet. Structure only: its options' figures, recommendation and consequences are HELD for
-  the bounded runtime and battery comparison of stream l3batt, and `od_l3_7.py` refuses to write the tree's registry until
-  `l3r2.yaml` `runtime_comparison` names it with an accepted check (on a copy it runs).
+- **Row L3-OD7, M1's runtime and its store**, joins the table ahead of the others, filled from stream l3batt's bounded
+  runtime and battery comparison (`../l3batt/`, filed byte for byte at its checked tip `83577a13`, accepted by CHECK-2;
+  CHECK-1, accepted with minors, beside it) and bound in `l3r2.yaml` `runtime_comparison`. The owner's four choices:
+  `72-required` (Option B) or `48-required-72-desired` (Option A); `--hf available|listening` (the receiver's 1.14 W);
+  `--external authorise-vbat|authorise-dc-entry|no` (a separately protected external pack joined at VBAT, which reopens
+  D-06; through the DC entry, which revisits D-20; or none, M1 recorded as not met with HF and the tablet kept, M-02);
+  `--tablet-charging no|yes` (unquantified until a tablet model is named, SC-45). Its table (`runtime_table`) is filled by
+  `fill_l3r7_from_comparison.py` from `runtime.out` by exact keys (`runtime_reader.py`) and read back; `od_l3_7.py`
+  verifies it again before it writes. The checked facts: with HF and the tablet kept the studied store (Option A(i)'s
+  base 4S6P and lid 4S9P, 544.4 Wh usable aged at +20 C) stops the kit at 05 UTC of the first night in every case, 0 of
+  864 windows, at 48 and at 72 hours; the addition it needs is +68.1 Wh at NOM TYP, +79.6 (48 h) and +116.2 (72 h) at WE
+  TYP, +84.2 to +187.1 with the receiver on, up to +188.7 with WAB; no in-case upgrade is found. The session's
+  recommendation, the comparison's: A is no relief; B only with an authorised external store (about 120 Wh at TYP, about
+  190 Wh with the receiver on or WAB); otherwise M1 recorded as not met.
+- **Feasibility items FI-07 to FI-09**: the external store authorised (CONDITIONAL on its size, FI-07), none (NO_ROUTE,
+  M1 recorded as not met, FI-08), the tablet charged (INCONCLUSIVE until a tablet model is named, FI-09). FI-04 (both
+  lid items kept) now says it is carried only with an external store.
 - **Rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 wait on it.** Their scripts refuse while row L3-OD7 is unanswered
-  (`cond.runtime_first`), and after `48-required-72-desired` or `72-required-battery-upgrade` too, because their prepared
-  restatements are written for 72 hours on the studied store and lids: they are restated from the comparison first
-  (closure item L3-C56). The pages read them HELD (D-27), and their recommendations are stated only for the case row
-  L3-OD7 is answered `72-required`, asking nothing before it. Row L3-OD5 does not wait; row L3-OD3 follows row L3-OD1.
-  A row L3-OD7 answer other than `72-required` beside a decided row prepared for 72 hours is a contradiction rule.
-- **Provenance** (`l3r2.yaml` `runtime_provenance`, closure item L3-C57): the 72 hours are SC-21, the session's choice of
-  27 September 2026 under the standing rule; D-20 preserved M1 and REQ-072 "with their specified duration and operating
-  conditions" and states no figure; the session read D-21's "the approved 72-hour mission" as approving it; D-27 questions
-  it. Each clause is read from the registry by `test_l3r5.py`. The comparison's PROVENANCE.md is cited there once it is
-  filed. Proposal P-12 (a shorter mission) is AWAITING again, on row L3-OD7.
-- **The re-issue generator** maps `72-required` (the 72 hours named as the owner's: CONOPS lines 163 to 165, 1019 to 1024
-  and 1101, the brief's line 309) and refuses the other two answers until their passages are mapped with the
-  comparison's figures.
+  (`cond.runtime_first`); then rows L3-OD1, L3-OD2 and L3-OD4 carry its answer (`cond.runtime_phrases`: REQ-072's
+  duration, load and store in row L3-OD1's restatement), and row L3-OD6, whose table sizes the store for 72-hour windows
+  at the approved profile, refuses after 48 hours or HF listening until it is restated from the comparison (closure
+  item L3-C56). The pages read the four HELD (D-27) with their recommendations stated only for the case row L3-OD7 is
+  answered as prepared. **Both lid items kept, the owner's stated wish, is never refused**: without an external store it
+  records FI-04, with one its candidate is FI-07's. Two contradiction rules join: row L3-OD6 beside 48 hours or HF
+  listening, and row L3-OD2's `qmx-out` beside HF listening (a receiver cannot listen in a kit with no HF set).
+- **Provenance** (`l3r2.yaml` `runtime_provenance`, closure item L3-C57, CLOSED on the bound record): the 72 hours are
+  SC-21, the session's choice under the standing rule, first appearing as SC-L2-05 at `de59686e`; D-20 preserved M1 and
+  REQ-072 "with their specified duration and operating conditions" and states no figure; D-21 is the owner's first use
+  of the figure; its provenance as the owner's is UNVERIFIED (`../l3batt/PROVENANCE.md`). Each clause is read by
+  `test_l3r5.py`. Proposal P-12 (a shorter mission) is AWAITING again, on row L3-OD7.
+- **The re-issue generator** maps `72-required` with HF available, no external store and the tablet not charged (the 72
+  hours named as the owner's: CONOPS lines 163 to 165, 1019 to 1024 and 1101, the brief's line 309) and refuses every
+  other answer of row L3-OD7 until its passages are mapped with the comparison's figures.
 
 ## What changes (D-26)
 
@@ -91,12 +105,17 @@ and punctuation (CHECK-4 of round 4d: CONOPS lines 233 to 234 exempted, 322, 323
 |---|---|
 | `apply_l3r5_d26.py` | records D-26 once; every quote asserted in the instruction file first; a second run is refused |
 | `apply_l3r5_d27.py` | records D-27 once, the same way; refuses unless D-26 is recorded |
+| `runtime_reader.py` | reads stream l3batt's `runtime.out` by exact keys; a section short of its lines is refused, never read in part |
+| `fill_l3r7_from_comparison.py` | fills row L3-OD7's `runtime_table` from the bound `runtime.out`, reads it back, refuses a second run |
 | `apply_layer_status_l3_r5.py` | `LAYER-STATUS.md`'s layer 3: the first gate condition on requirements that do not contradict, the independent check's re-check once a row is decided, the fifth condition, the round 3b rules followed by those that replace them, row L3-OD7 in the first two conditions and in the page's description, and the status level; refuses unless D-26 and D-27 are recorded; `--page` runs it on a copy; a second run is refused |
 | `checks/l3feas-check-1/` | CHECK-1 of stream l3feas (not accepted) with `indep_l3feas.py` and its output, filed byte for byte |
 | `checks/l3feas-check-2/CHECK-2.md` | CHECK-2 of stream l3feas (accepted: yes, of `c11b99d3`), filed byte for byte |
+| `checks/l3batt-check-1/` | CHECK-1 of stream l3batt (accepted with minors, of `05ba0cf0`) with `indep_l3batt.py` and its output, filed byte for byte |
+| `checks/l3batt-check-2/CHECK-2.md` | CHECK-2 of stream l3batt (accepted: yes, of `83577a13`), filed byte for byte |
 
 Changed elsewhere: `v2/docs/handover/layer3/l3r2.yaml` and `render_l3r2.py` (the semantics, items, definitions, levels,
-the gate and the three pages), `../l3r2/conditional/` (the scripts, `od_l3_7.py` new), `../l3r2/dryrun.py` and `dryrun.out`,
+the gate and the three pages), `../l3r2/conditional/` (the scripts, `od_l3_7.py` new), `../l3batt/` (stream
+l3batt's comparison at `83577a13`, filed byte for byte), `../l3r2/dryrun.py` and `dryrun.out`,
 `../l3r4/reissue.py` and `PASSAGE-MAP.md`, `v2/ecad/tools/pcb_requirements.yaml` (D-26 and D-27 only),
 `v2/ecad/tools/claims-allow.txt` (the reviewer's level name "Design and hardware compliant"), and the tests
 `test_l3r2.py`, `test_l3r4.py` and the new `test_l3r5.py`.
@@ -107,6 +126,7 @@ the gate and the three pages), `../l3r2/conditional/` (the scripts, `od_l3_7.py`
 git merge --no-ff fnd/l3r5        (or: git checkout fnd/l3r5 -- <the files above>, then the two scripts below on the set)
 python3 v2/docs/records/l3r5/apply_l3r5_d26.py --check          (refused once applied: "has run")
 python3 v2/docs/records/l3r5/apply_l3r5_d27.py --check          (refused once applied: "has run")
+python3 v2/docs/records/l3r5/fill_l3r7_from_comparison.py --check   (refused once filled: "has run")
 python3 v2/docs/records/l3r5/apply_layer_status_l3_r5.py --check (refused once applied: "has run")
 python3 v2/docs/handover/layer3/render_l3r2.py --check
 python3 v2/docs/records/l3r4/reissue.py --map --check

@@ -71,9 +71,11 @@ def approve(a, raw, d):
     if pl not in PASS_LINE:
         E.refuse("approve needs --pass-line kit-loads or each-pack: the owner's sub-choice 1b, REQ-072's pass line at the "
                  "kit loads (D-26)")
-    C.runtime_first(d, ROW)
+    rt = C.runtime_first(d, ROW)
     C.require(d, ROW, [])
     C.hold(a, ROW)
+    P = C.runtime_phrases(rt["rid"], rt["option"], rt["hf"], rt["external"], rt["tablet"])
+    ext = "" if rt["external"] == "no" else " and the external battery arrangement row L3-OD7 authorises"
     r072 = next(r for r in d["records"] if r["id"] == "REQ-072")
     st6, acc6 = C.od6_tail(r072["statement"]), C.od6_tail(r072["acceptance"])   # row L3-OD6 coverage, if applied
     ruling = ("Row L3-OD1 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md approved: the kit's energy store for mission M1 is "
@@ -113,13 +115,13 @@ def approve(a, raw, d):
                     "image are at most that pack's limit (Samsung INR18650-35E Ver. 1.1, clause 3.5; SC-40); prototype: "
                     "the charge current measured at each pack in constant-current charge is at most its limit."))
     raw = C.restate(raw, "REQ-072", stamp,
-        statement=("For mission M1 (CONOPS section 3), the kit's two packs (%s) plus the solar input keep the kit running "
-                   "in PS-IDLE-SPEC for M1's 72 hours (owner ruling %s on row L3-OD7) on the reference day of SC-37, "
-                   "starting from full, aged packs (REQ-014)." % (rid, C.decided(d)["L3-OD7"][1]) + st6),
+        statement=("For mission M1 (CONOPS section 3), the kit's two packs (%s)%s plus the solar input keep the kit running "
+                   "in PS-IDLE-SPEC%s for %s on the reference day of SC-37, starting from full, aged packs (REQ-014)."
+                   % (rid, P["store"], P["load"], P["duration"]) + st6),
         acceptance=("Desk, at the kit loads (the owner's sub-choice 1b, " + PASS_LINE[pl][1] + ", D-26): on the exact "
-                    "reference case of " + FEAS + " section 2 (checked by CHECK-2 of stream l3feas): both packs full and aged "
-                    "at the start (REQ-014), the base pack at +20 C and the lid pack at the reference day's lowest air, "
-                    "13.23 C; the PS-IDLE-SPEC load of POWER-THERMAL.md section 4 at the pack terminals with the lid "
+                    "reference case of " + FEAS + " section 2 (checked by CHECK-2 of stream l3feas): both packs" + ext + " full and "
+                    "aged at the start (REQ-014), the base pack at +20 C and the lid pack at the reference day's lowest air, "
+                    "13.23 C; the PS-IDLE-SPEC load of POWER-THERMAL.md section 4" + P["load"] + " at the pack terminals with the lid "
                     "path's standby drain, split between the packs by capacity; the energy the input path delivers into "
                     "the kit from " + ARRAY + " on the reference day (4.0 kWh/m2, SC-37) on ONE benchmark plane, 40 "
                     "degrees of slope facing south, the single exact orientation while no deployment band is established, "
@@ -128,20 +130,21 @@ def approve(a, raw, d):
                     "base pack at its line; the charge bus anywhere in its steady-state supply range as the energy basis "
                     "gives it (" + BASIS + " section 2) and every limit that must hold a load at its minimum (D-22), the "
                     "basis's brackets below that range stated beside the result; the power-path case named beside the "
-                    "result. It passes only when all four hold: (1) every hour of the 72 serves the load, each pack drawn "
+                    "result. It passes only when all four hold: (1) every hour of the " + P["hours"] + " serves the load, each pack drawn "
                     "only to its own line; " + PASS_LINE[pl][0] + "; (3) every path stays within its limits every hour "
                     "(the lid path under its 8.7 A minimum; the charge currents within U3's 3.968 A, U3B's 7.936 A and the "
                     "cells' REQ-075 current); (4) the node stays at or above every load converter's minimum input with the "
                     "base pack at 12.0 V. After a permitted pack cutoff the remaining supply carries the loads; combined "
                     "stored energy alone is not the line. Repeated with the loads and the stages' efficiencies measured at "
-                    "bring-up. Prototype: the kit runs PS-IDLE-SPEC for 72 hours from full packs on its solar input, fed "
+                    "bring-up. Prototype: the kit runs PS-IDLE-SPEC" + P["load"] + " for " + P["hours"] + " hours from full packs on its solar input, fed "
                     "by an array emulator following the reference day's profile, with the four conditions read at the "
                     "kit loads." + acc6))
     raw = E.replace_entry(raw, "REQ-072", lambda b: E.append_folded(C.add_ruling_ref(C.add_ruling_ref(b, "D-21"), "D-22"),
-        "notes", "Restated by %s: the single pack's pass line 'ends the 72 hours above the graceful shutdown threshold' "
-        "becomes 'serves the load at every hour of the 72 without the kit reaching its graceful shutdown' for two packs, "
+        "notes", ("Restated by %s: the single pack's pass line 'ends the " + P["hours"] + " hours above the graceful shutdown "
+        "threshold' becomes 'serves the load at every hour of the " + P["hours"] + " without the kit reaching its graceful "
+        "shutdown' for two packs, "
         "with a floor of 3.00 V a cell under the graceful shutdown (the line of v2/docs/records/energy/"
-        "ENERGY-RECONCILIATION.md), so that a lower line cannot ease the requirement." % stamp), "records")
+        "ENERGY-RECONCILIATION.md), so that a lower line cannot ease the requirement.") % stamp), "records")
     raw = E.replace_entry(raw, "CFL-006", lambda b: E.set_folded(E.set_folded(b, "acceptance",
         "For each pack of %s: one named cell and one parallel count, with the cell's own sheet in v2/vendor/battery/, used "
         "by the energy chain, the protection table, the runtime and the enclosure." % rid), "resolved_by",

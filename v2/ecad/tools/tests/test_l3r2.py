@@ -172,9 +172,9 @@ def _rows():
 
 
 def _copy_registry(runtime="72-required"):
-    """A copy of the registry with its fixtures. D-27: row L3-OD7 (M1's runtime) is answered first on the copy, with
-    72-required as a STAND-IN for the owner's answer, so that each test's refusals are its own rows'; runtime=None leaves
-    it unanswered."""
+    """A copy of the registry with its fixtures. D-27: row L3-OD7 (M1's runtime and its store) is answered first on the
+    copy, 72-required with HF available, no external store and the tablet not charged, a STAND-IN for the owner's answer,
+    so that each test's refusals are its own rows'; runtime=None leaves it unanswered."""
     d = tempfile.mkdtemp(prefix="l3r2-reg-")
     p = os.path.join(d, "pcb_requirements.yaml")
     shutil.copy(os.path.join(TOOLS, "pcb_requirements.yaml"), p)
@@ -183,7 +183,8 @@ def _copy_registry(runtime="72-required"):
                                           'entry 80 A.\n' % BAND)
     import yaml
     open(os.path.join(d, "table.yaml"), "w", encoding="utf-8").write(yaml.safe_dump({"rows": _rows()}))
-    if runtime and "L3-OD7" not in _decided(p): _step("od_l3_7.py", runtime, p)
+    if runtime and "L3-OD7" not in _decided(p):
+        _step("od_l3_7.py", runtime, p, "--hf", "available", "--external", "no", "--tablet-charging", "no")
     return d, p, ev
 
 
