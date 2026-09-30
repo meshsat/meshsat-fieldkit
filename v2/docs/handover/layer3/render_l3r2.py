@@ -461,15 +461,18 @@ def gate(req, dec, data, h3):
     fok, fwhy = basis_ok(data, "feasibility_basis")
     g5 = g2 and not owed and fok
     return [
-        ("Target unambiguous", g1, "rows L3-OD7, L3-OD1 to L3-OD4 and L3-OD6 decided on a combination whose requirements do not "
-         "contradict (row L3-OD2 not applicable after a reject), the energy basis filed: decided %s; contradictions %s; "
+        ("Target unambiguous", g1, "rows L3-OD7, L3-OD1 to L3-OD4 and L3-OD6 settled (decided, row L3-OD2 not applicable after "
+         "a reject, or a row closed as layer 4 architecture by the closure) on a combination whose requirements do not "
+         "contradict, the energy basis filed: decided %s; contradictions %s; "
          "energy basis %s" % (
              (", ".join("%s %s (%s)" % (r, dec[r][0], dec[r][1]) for r in rows if r in dec) or "none") +
              "".join("; %s closed as layer 4 architecture" % r for r in rows if closed_row(r, dec, data)),
              "none" if ok else "FOUND (%s)" % "; ".join(why), "filed with an accepted check" if basis else basis_why) +
          "; the power path at Option A(i)'s currents (D-24): %s" % ("filed with an accepted check" if power else power_why)),
-        ("Requirement-changing owner decisions resolved", g2, "%d of %d rows decided%s; rows held (D-22 to D-24, D-27): %s" % (
+        ("Requirement-changing owner decisions resolved", g2, "%d of %d rows decided%s%s; rows held (D-22 to D-24, D-27): %s" % (
             sum(1 for r in rows if r in dec), len(rows) - sum(1 for r in rows if closed_row(r, dec, data)),
+            "".join(" (row %s closed as layer 4 architecture, not an owner decision at layer 3)" % r
+                    for r in rows if closed_row(r, dec, data)),
             "" if not any(not_applicable(r, dec) for r in rows) else ", row L3-OD2 not applicable after the reject",
             ", ".join(r for r in rows if held(r, dec, data)) or "none")),
         ("Contradictions and requirement-level TBDs closed", g3,
