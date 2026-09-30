@@ -854,7 +854,7 @@ restrictive deployment condition accepted. Added to Layer 3, bounded, reusing th
    option is adopted until the owner selects it. The owner's selection then enters the decision package (a runtime
    row), and Layer 3's acceptance work continues. Layer 4 and later stays paused.
 
-### Plan update, 30 September 2026 15:10 CEST: Layer 3 closes in one bounded closure cycle (the owner's instruction)
+### Plan update, 30 September 2026 14:42 CEST: Layer 3 closes in one bounded closure cycle (the owner's instruction)
 
 No new tooling, document polishing or broad review rounds. Battery and solar mandatory; HF and the tablet preserved;
 Layer 4 and later paused until Layer 3 is accepted. The cycle, in order:
