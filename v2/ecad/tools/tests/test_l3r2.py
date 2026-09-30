@@ -749,7 +749,10 @@ def t_l3r2_a_check_verdict_is_read_from_its_record():
     # condition follows the NEWEST check, whatever it reads (the test skipped when the newest was not ACCEPTED)
     newest_ok = str(chks[-1].get("verdict")).upper() == "ACCEPTED"
     assert g[3][1] is (newest_ok and not stale), "the fourth condition does not follow the newest check and its scope"
-    if not all(d["id"] in dec for d in data["decisions"]):
+    # a row is pending while it is not SETTLED: decided, or closed as a later layer's (row L3-OD1, closed as layer 4
+    # architecture at the closure, D-28); the test read "not in dec" from before the closure, which counts L3-OD1 as
+    # pending once every other condition, the independent check's included (check 3), reads MET
+    if not all(RL.settled(d["id"], dec, data) for d in data["decisions"]):
         assert not all(x[1] for x in g), "the gate reads MET with rows pending"
     flip = lambda v: "NOT_ACCEPTED" if str(v).upper() == "ACCEPTED" else "ACCEPTED"
     for i, v in ((len(chks) - 1, flip(chks[-1]["verdict"])), (acc[-1], "NOT_ACCEPTED"), (0, flip(chks[0]["verdict"])),
