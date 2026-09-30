@@ -8,8 +8,8 @@ not the independent check.
    0a l3batt's runtime.py re-run in a child process reproduces runtime.out byte for byte (sha256 87d9c1ee59059763): yes
    0b this harness reproduces runtime.out section 1's D06 and A35 rows, the twenty cells of section 2 (400 Wp, 200 W) and
       section 3's 12 least-lid lines (48 and 72 h; NOM, WE, NOM90; TYP and WAB): yes
-   0c this harness reproduces three_cases.out's AS DRAWN rows at WE inputs, the both-kept lid, 72 h: TYP 589.3, WAB 616.7 Wh
-      unserved: yes
+   0c this harness reproduces three_cases.out's AS DRAWN and DERATED VARIANT rows at WE inputs, the both-kept lid, 72 h:
+      TYP 589.3 and 630.4, WAB 616.7 and 657.8 Wh unserved: yes
    0d the single-pack use (the lid off) reproduces energy_budget.out 5b, PS-IDLE-SPEC, September, a 100 Wp panel in the
       100 W window on the record's own chain: 06 UTC usable 107.9 Wh, first stop h 8, 23 h run, 1870.8 Wh unserved; 18 UTC first
       stop h 2, 23 h run, 1781.9 Wh unserved: yes (so 'full service' below counts hours as the record's 'h run' does)
@@ -200,6 +200,14 @@ not the independent check.
                               its maximum 5.15 A, so through R11 5.210 A (0.060 A of other loads) to 5.229 A (C-9's 0.079 A)
    no loss, 1.00 x 1.00       the largest power at VBUS20 100.0 W: U3's input minimum at least 5.223 A; the 50 mA setting at least 5.35 A,
                               its maximum 5.45 A, so through R11 5.510 A (0.060 A of other loads) to 5.529 A (C-9's 0.079 A)
+   A1 CORRECTED, U3 6.1 A minimum (the drafted 6.2 A setting)                       unserved 889.3 / 1346.4 Wh at 48 / 72 h; least addition +654.8 / +873.1 Wh
+   A1 WINDOW-SIZED, U3 4.55 A minimum (a 4.65 A setting), HYPOTHETICAL              unserved 889.3 / 1346.4 Wh at 48 / 72 h; least addition +654.8 / +873.1 Wh
+   A1 DERATED VARIANT, U3 3.90 A minimum (4.00 A set), R11 as drawn, upper bound    unserved 889.2 / 1346.2 Wh at 48 / 72 h; least addition +740.5 / +1044.6 Wh
+   A1 AS DRAWN, U3 4.05 A minimum (4.15 A set), upper bound                         unserved 889.2 / 1346.2 Wh at 48 / 72 h; least addition +719.3 / +1002.2 Wh
+   A2 CORRECTED, U3 6.1 A minimum (the drafted 6.2 A setting)                       unserved 252.1 / 464.3 Wh at 48 / 72 h; least addition +278.8 / +515.8 Wh
+   A2 WINDOW-SIZED, U3 4.55 A minimum (a 4.65 A setting), HYPOTHETICAL              unserved 252.1 / 464.3 Wh at 48 / 72 h; least addition +278.8 / +515.8 Wh
+   A2 DERATED VARIANT, U3 3.90 A minimum (4.00 A set), R11 as drawn, upper bound    unserved 335.1 / 630.4 Wh at 48 / 72 h; least addition +362.2 / +682.1 Wh
+   A2 AS DRAWN, U3 4.05 A minimum (4.15 A set), upper bound                         unserved 314.6 / 589.3 Wh at 48 / 72 h; least addition +341.6 / +641.0 Wh
    the held front end (R11 10 mOhm) gives 4.152 A to U3 at its stacked minimum; the drafted 6.2 mOhm gives 6.733 A; the
    corrected path's 6.1 A cap (116.8 W) never binds at 100 W: yes
 
