@@ -22,19 +22,22 @@ whose `decides` is `definition_reissue`, and then through their layers' review. 
     open conflict other than CFL-017 cites one of the answers' rulings;
   - when a baselined file is not the text l3r2.yaml's `baseline_definition` names (sha256/16), or a passage's text is
     not found exactly once where the map says;
-  - when an output path resolves (os.path.realpath) to a baselined file or is a link, checked before anything is
-    written, or a written text carries a dash character;
+  - when an output path resolves (os.path.realpath) to a baselined file, is the same file as one (os.path.samefile, a
+    hard link), is a link or has more than one link, checked before anything is written, or a written text carries a
+    dash character;
   - to write again once the re-issue is approved (l3r2.yaml's `definition_reissue` filed): an approved record is only
-    compared (--check), never regenerated.
+    compared (--check), and then against the sha256/16 `definition_reissue` files and the draft's sha the record names,
+    never against a digest recomputed from a registry that goes on changing.
 Every proposed text is built from the registry: the rulings' own text, the statements of the records they restated,
 and the option each row was answered with. Nothing else is stated. The draft and the change record are bound to the
 answers digest, the sha256/16 of the six rulings and of every record citing them as the registry holds them, not to
 the whole registry, so the ruling that approves the re-issue leaves them current (CHECK-1 of round 4, minor 1).
 
 Passages of two kinds: DEFINITION passages are restated; CURRENT passages state the design as generated (the QMX's
-rail, enable, bank and lid tray; the one pack's charge, measurement and protection chain; board A's front end at its
-generated 100 W; the held cell and its limits) and stay, read through DEFINITION-STATUS.md, whose current values gain
-the rows the draft proposes (its rule: a circuit correction updates that page, not the baseline).
+rail, enable, bank and lid tray; the one pack's charge, measurement and protection chain, by designator or in words;
+board A's front end at its generated 100 W; the held cell and its limits) and stay, read through DEFINITION-STATUS.md,
+whose current values gain the rows the draft proposes (its rule: a circuit correction updates that page, not the
+baseline). The PACK and CELL lists are held complete by the vocabulary their own passages carry (VOCAB_RX, EXEMPT).
 
 Usage:
   python3 reissue.py [--registry PATH] [--data PATH] [--out-dir DIR] [--check]
@@ -105,9 +108,27 @@ class Ctx:
         if len(m) != 1: E.refuse("row L3-OD2's option %s names no single lid block" % self.O("L3-OD2"))
         return m[0]
 
+    def d27(self):
+        """(cell, base block) as row L3-OD1's ruling states them, with the ruling's own words on the lid pack's board
+        and each pack's charger path and gauge asserted in its text (CHECK-2 of round 4, minor 5)."""
+        t = self.text("L3-OD1")
+        m = re.findall(r"two separately protected packs of the (.+?), a base pack of (4S\d+P) across the two base pockets", t)
+        if len(m) != 1: E.refuse("ruling %s does not name its cell and base block once" % self.R("L3-OD1"))
+        for w in ("a lid pack under its own protection board", "each with its own charger path and gauge"):
+            if w not in t: E.refuse("ruling %s does not read %r" % (self.R("L3-OD1"), w))
+        return m[0]
+
+    def cell(self):
+        """The cell as the registry holds it: D-27's, and under row L3-OD5 `cells` the held cell D-31 reopens."""
+        cell = self.d27()[0]
+        if self.O("L3-OD5") == "cells":
+            return ("the %s as held, the cell of D-06 that %s reopens (CFL-017 %s)"
+                    % (cell, self.cite("L3-OD5"), cfl017_state(self)))
+        return "the " + cell
+
     def store(self):
-        return ("two separately protected packs of the Samsung INR18650-35E, a base 4S6P across the two base pockets "
-                "and a %s lid pack under its own protection board, each with its own charger path and gauge" % self.lid())
+        return ("two separately protected packs of %s, a base %s across the two base pockets and a %s lid pack under its "
+                "own protection board, each with its own charger path and gauge" % (self.cell(), self.d27()[1], self.lid()))
 
     def array_phrase(self):
         """The solar array as row L3-OD3's answer states it: its option label in l3r2.yaml ('A 200 W stage and 400 Wp in
@@ -265,8 +286,8 @@ def head_note(doc):
                   "restated REQ-016 for a %s stage; the current values are kept in `handover/DEFINITION-STATUS.md`."
                   % (c.cite("L3-OD3"), c.stage_w()))
         if c.O("L3-OD5") == "cells":
-            s += (" Where a passage names the held cell, the Samsung INR18650-35E, or its limits, it states the cell of "
-                  "D-06, which %s reopens; CFL-017 stays open until the cell is chosen." % c.cite("L3-OD5"))
+            s += (" Where a passage names the held cell, the %s, or its limits, it states the cell of D-06, which %s "
+                  "reopens; CFL-017 is %s in the requirements registry." % (c.d27()[0], c.cite("L3-OD5"), cfl017_state(c)))
         return old + "\n\n" + wrap(s)
     return f
 
@@ -315,6 +336,10 @@ def deploy_row(c, old):
     if c.O("L3-OD4") == "adopt":
         add += ", and stands the open kit as requirement %s sets it (%s)" % (c.deploy_req(), c.cite("L3-OD4"))
     return sub(old, "(D-02e);", "(D-02e)" + add + ";")
+
+
+def cells_note(c):
+    return (" Row L3-OD5's answer reopens that cell (%s)." % od5_quote(c)) if c.O("L3-OD5") == "cells" else ""
 
 
 def cfl017_state(c):
@@ -366,7 +391,8 @@ QMX_OUT, QMX_ANY, LID_ITEM = ("qmx-out",), ("qmx-out", "qmx-outside"), ("qmx-out
 OD3_ANY, OD5_ANY = ("2s2p", "1s4p", "keep"), ("reading-c", "measure", "cells")
 APPROVE = {"L3-OD1": ("approve",)}
 LID_ANY = ("qmx-out", "qmx-outside", "tablet-out", "both-kept")
-STORE = {"L3-OD1": ("approve",), "L3-OD2": LID_ANY}   # a passage naming the store names the lid block row L3-OD2 sets
+# A passage naming the store names the lid block row L3-OD2 sets and the cell row L3-OD5 `cells` reopens.
+STORE = {"L3-OD1": ("approve",), "L3-OD2": LID_ANY, "L3-OD5": ("cells",)}
 
 PASSAGES = [
     # ---------------------------------------------------------------------------------------------- CONOPS.md
@@ -400,7 +426,7 @@ PASSAGES = [
                     % c.cite("L3-OD2")),
       "section 1, the second kit: HF"),
     P("C07", "CONOPS", 70, "| Power sources | the kit's own pack (one 4S3P block, owner ruling D-06),", 70, "a solar panel |",
-      {"L3-OD1": ("approve",), "L3-OD2": LID_ANY, "L3-OD3": OD3_ANY},
+      dict(STORE, **{"L3-OD3": OD3_ANY}),
       lambda c, o: sub(sub(o, "the kit's own pack (one 4S3P block, owner ruling D-06),",
                            "the kit's own store, %s (%s, superseding D-06's one 4S3P block)," % (c.store(), c.cite("L3-OD1"))),
                        "a solar panel |", solar_source(c) + " |"),
@@ -413,8 +439,8 @@ PASSAGES = [
     P("C09", "CONOPS", 107, "The second pack has no location found yet:", 111, "deferred function of D-01; it is not withdrawn.",
       STORE,
       lambda c, o: wrap("**The two packs (%s, %s; D-06 superseded).** The ruling reads: \"%s\" Row L3-OD2 set the lid "
-                        "pack at %s (%s)." % (c.cite("L3-OD1"), c.date("L3-OD1"), c.text("L3-OD1"), c.lid(),
-                                              c.cite("L3-OD2"))),
+                        "pack at %s (%s).%s" % (c.cite("L3-OD1"), c.date("L3-OD1"), c.text("L3-OD1"), c.lid(),
+                                                c.cite("L3-OD2"), cells_note(c))),
       "section 2a, the second pack"),
     P("C10", "CONOPS", 115, "HF is deferred, VHF voice is not named", 115, "HF is deferred, VHF voice is not named",
       {"L3-OD2": QMX_OUT},
@@ -446,7 +472,7 @@ PASSAGES = [
                     % c.cite("L3-OD1")),
       "section 3, M1's must-hold: the pack plus solar"),
     P("C17", "CONOPS", 167, "**What that asks of the kit's energy, and what the", 198, "whatever the solar rating.",
-      {"L3-OD1": ("approve",), "L3-OD2": LID_ANY, "L3-OD3": OD3_ANY, "L3-OD6": ("mean-day", "coverage")}, energy,
+      dict(STORE, **{"L3-OD3": OD3_ANY, "L3-OD6": ("mean-day", "coverage")}), energy,
       "section 3, M1's energy: the night, the day's energy, the solar window, the design month and the routes"),
     P("C18", "CONOPS", 215, "Until then REQ-072 reads FAIL and this section is not", 216, "restated.", APPROVE,
       lambda c, o: ("The owner answered it on layer 3 with the rulings of section 7 (rows L3-OD1 to L3-OD6), and this "
@@ -487,9 +513,11 @@ PASSAGES = [
                            "(owner ruling D-06, 26 September 2026, kept by %s for both packs together and for each pack "
                            "alone)**" % c.cite("L3-OD1")), "for an aged pack.", "for aged packs."),
       "section 6, the runtime requirement"),
-    P("C27", "CONOPS", 1012, "(3.35 Ah per cell, so 8.04 Ah for the 3P block)", 1012, "for the 3P block)", APPROVE,
-      lambda c, o: ("(3.35 Ah per cell, so 8.04 Ah for D-06's 3P block, and the same share of each pack of %s)"
-                    % c.cite("L3-OD1")),
+    P("C27", "CONOPS", 1012, "(3.35 Ah per cell, so 8.04 Ah for the 3P block)", 1012, "for the 3P block)",
+      {"L3-OD1": ("approve",), "L3-OD5": ("cells",)},
+      lambda c, o: ("(3.35 Ah per cell, so 8.04 Ah for D-06's 3P block, and the same share of each pack of %s%s)"
+                    % (c.cite("L3-OD1"), "; the held cell's figure, which %s reopens" % c.cite("L3-OD5")
+                       if c.O("L3-OD5") == "cells" else "")),
       "section 6, what aged means in ampere-hours"),
     P("C28", "CONOPS", 1019, "Missions longer than the pack rely on vehicle or solar input: M1 is set at 72 hours (section 3,",
       1024, "session's 72 hours, not asked.", APPROVE,
@@ -550,10 +578,10 @@ PASSAGES = [
       "who it is for, the remote correspondents: HF"),
     P("B06", "BRIEF", 66, "P pack protection) and a", 69, "since the owner reversed D-08).", STORE,
       lambda c, o: ("P pack protection) and two separately protected 4S lithium-ion packs to be built for the kit rather "
-                    "than bought, of Samsung INR18650-35E cells: a base 4S6P across the two base pockets and a %s lid pack "
-                    "under its own protection board, each with its own charger path and gauge (%s, which supersedes "
-                    "D-06's one 4S3P block of about 145 Wh in the east pocket; the lid pack's count by %s)."
-                    % (c.lid(), c.cite("L3-OD1"), c.cite("L3-OD2"))),
+                    "than bought, of %s: a base %s across the two base pockets and a %s lid pack under its own protection "
+                    "board, each with its own charger path and gauge (%s, which supersedes D-06's one 4S3P block of about "
+                    "145 Wh in the east pocket; the lid pack's count by %s)."
+                    % (c.cell(), c.d27()[1], c.lid(), c.cite("L3-OD1"), c.cite("L3-OD2"))),
       "what the V2 kit is: the pack"),
     P("B07", "BRIEF", 78, "HF (an assembled QRP Labs QMX), ", 78, "HF (an assembled QRP Labs QMX), ", {"L3-OD2": QMX_ANY},
       brief_bearers, "what the V2 kit is, the long-range bearers: HF"),
@@ -585,7 +613,7 @@ PASSAGES = [
       "what it is not today: the runtime requirement"),
     P("B15", "BRIEF", 171, "- Not able to run through a night on its own pack and solar input.", 179,
       "a night needs that overnight input.",
-      {"L3-OD1": ("approve",), "L3-OD2": LID_ANY, "L3-OD3": OD3_ANY, "L3-OD6": ("mean-day", "coverage")},
+      dict(STORE, **{"L3-OD3": OD3_ANY, "L3-OD6": ("mean-day", "coverage")}),
       brief_night, "what it is not today: the night on the pack and solar input"),
     P("B16", "BRIEF", 180, "- No transport route is claimed for the pack: its classification, the conditions that apply to it "
       "or an applicable", 181, "requirement REQ-069).", APPROVE,
@@ -630,26 +658,87 @@ CURRENT = {
            "CQ", "a statement of the design as generated that names the QMX or HF"),
     "PACK": ([(306, 306, "BQ7720700"), (311, 311, "BQ25731"), (312, 312, "CHRG_INHIBIT"),
               (313, 313, "regulates the charge into the 4S pack beyond its sense resistor `R17`"), (320, 320, "gen_sch_p.py"),
-              (335, 337, "the chemical fuse F2"), (536, 541, "ADCVBAT"), (547, 550, "pcb_pack_protection.yaml"),
-              (583, 588, "CHRG_INHIBIT"), (590, 594, "the pack gauge's only SMBus host"), (598, 600, "the charger at 0x6B"),
-              (634, 640, "BQ7720700"), (695, 695, "the gauge's charge window"), (830, 837, "SLUUAQ3A 5.4.2 and 13.1.8"),
-              (854, 860, "golden image"), (893, 893, "a permanent pack protection"), (928, 934, "(K3)")],
+              (335, 337, "the chemical fuse F2"), (379, 379, "the gauge's 20 A for 2 s limit and the 25 A blade bound"),
+              (529, 529, "the sensor controller's link (the gauge's readings"), (536, 541, "ADCVBAT"),
+              (547, 550, "pcb_pack_protection.yaml"), (566, 569, "as the pack gauge reads them"),
+              (571, 578, "reads the same four thermistors through the same gauge"), (583, 588, "CHRG_INHIBIT"),
+              (590, 594, "the pack gauge's only SMBus host"), (598, 600, "the charger at 0x6B"), (634, 640, "BQ7720700"),
+              (695, 695, "the gauge's charge window"), (697, 698, "the 10 s average pack current above 9.0 A"),
+              (822, 827, "the pack voltage the charger reads"), (830, 837, "SLUUAQ3A 5.4.2 and 13.1.8"),
+              (854, 860, "golden image"), (881, 881, "the charger loses its host"), (882, 882, "the charger has no host"),
+              (887, 887, "the gauge's SMBus shutdown the sensor controller already sends"),
+              (889, 889, "the loads sit on the charger's system node"), (893, 893, "a permanent pack protection"),
+              (911, 911, "the charger falls to its host-free 256 mA"), (928, 934, "(K3)"),
+              (990, 990, "the pack chain's 10 A continuous rating"), (991, 991, "the loads sit on the charger's system node"),
+              (1097, 1097, "the pack's voltage and current read from the charger in place of the gauge's readings"),
+              (1106, 1106, "the pack voltage the charger reads at 12.8 V")],
              "CP", "a statement of the one pack's circuit as generated"),
     "SOLAR": ([(991, 991, "the front end regulates 20 V at up to 5 A (100 W")], "CS",
               "a statement of board A's front end as generated"),
     "CELL": ([(236, 236, "+60 C"), (306, 306, "INR18650-35E"), (321, 321, "Samsung INR18650-35E Ver. 1.1"),
-              (338, 338, "the Samsung INR18650-35E at its"), (363, 364, "the Samsung INR18650-35E, of"),
-              (391, 391, "the Samsung INR18650-35E specification"), (559, 560, "+60 C"), (576, 576, "the cells' +60 C"),
-              (662, 662, "+60 C"), (739, 739, "+60 C"), (821, 821, "Ver. 1.1 3.9"), (1112, 1112, "+60 C")],
+              (338, 339, "the Samsung INR18650-35E at its"), (363, 364, "the Samsung INR18650-35E, of"),
+              (391, 391, "the Samsung INR18650-35E specification"), (394, 394, "section 3.15: discharge -10 to 60 C"),
+              (548, 548, "-10 to 60 C at the cell surface"), (559, 560, "+60 C"), (576, 576, "the cells' +60 C"),
+              (662, 662, "+60 C"), (727, 730, "the cells' 60 C"), (739, 739, "+60 C"), (821, 821, "Ver. 1.1 3.9"),
+              (1012, 1012, "3.35 Ah per cell"), (1106, 1106, "the cell's 2.65 V cut-off"), (1112, 1112, "+60 C"),
+              (158, 158, "their 60 C discharge limit", "BRIEF")],
              "CC", "a statement of the held cell or its limits"),
+}
+# The vocabulary each group's completeness is held to: the phrases VOCAB_RX finds in the group's own passages (so the
+# list grows with the passages, never typed), searched in every line of both documents before their appendices. A
+# line carrying one is in a passage of the group, in section 7's rulings table (history), or in EXEMPT with its reason
+# (CHECK-2 of round 4, minors 1 and 4).
+VOCAB_RX = {"PACK": r"\bthe (?:pack )?(?:charger|gauge)(?:'s)? [a-z0-9]+|\bthe pack chain(?:'s)? [a-z0-9]+",
+            "CELL": r"INR18650-35E|Ver\. 1\.1|Version 1\.0|\bsection 3\.15\b|\b60 C\b|\b3\.35 Ah\b|\b2\.65 V\b"}
+EXEMPT = {
+    "PACK": {("CONOPS", 307): "the Deploy procedure: a pack in its gauge's shutdown is woken by an input, a condition "
+                              "the head note reads per pack",
+             ("CONOPS", 308): "the Startup row: a pack in its gauge's shutdown starts only on an input, a condition read "
+                              "per pack",
+             ("CONOPS", 321): "the Storage procedure, which puts the pack in its gauge's shutdown, read per pack",
+             ("CONOPS", 348): "the power state PS-SHUT, the pack in its gauge's shutdown, read per pack",
+             ("CONOPS", 561): "the pack's own protection opening its FETs, a behaviour each pack's gauge has",
+             ("CONOPS", 817): "graceful shutdown on the gauge's state of charge, an intention the head note reads per "
+                              "pack; its fallback through the charger (822 to 827) is PACK",
+             ("CONOPS", 1100): "section 7a's storage and transport choice, a procedure read per pack",
+             ("CONOPS", 1111): "section 7a's water and gas choice, which puts the pack in its gauge's shutdown, read per "
+                               "pack"},
+    "CELL": {("BRIEF", 67): "restated by B06, whose store names the cell as the registry holds it (reopened under "
+                            "row L3-OD5 `cells`)"},
 }
 GROUP_WHEN = {"HF": {"L3-OD2": QMX_OUT}, "PACK": {"L3-OD1": ("approve",)}, "SOLAR": {"L3-OD3": ("2s2p", "1s4p")},
               "CELL": {"L3-OD5": ("cells",)}}
 for _g, (_items, _pfx, _what) in CURRENT.items():
-    for _i, (_a, _b, _t) in enumerate(_items):
+    for _i, _it in enumerate(_items):
+        _a, _b, _t = _it[:3]
         _when = {"L3-OD2": QMX_ANY} if (_g == "HF" and _a == 1095) else GROUP_WHEN[_g]
-        PASSAGES.append(P("%s%02d" % (_pfx, _i + 1), "CONOPS", _a, _t, _b, None, _when, None, _what, kind="CURRENT",
-                          group=_g))
+        PASSAGES.append(P("%s%02d" % (_pfx, _i + 1), _it[3] if len(_it) > 3 else "CONOPS", _a, _t, _b, None, _when, None,
+                          _what, kind="CURRENT", group=_g))
+
+
+def vocabulary(group, docs):
+    """The phrases VOCAB_RX[group] finds in the group's own passages (their whole lines)."""
+    rx = re.compile(VOCAB_RX[group])
+    out = set()
+    for p in PASSAGES:
+        if p.group == group:
+            out |= {m.group(0) for m in rx.finditer(" ".join(docs[p.doc].split("\n")[p.a - 1:p.b]))}
+    return sorted(out)
+
+
+def uncovered(group, docs):
+    """(doc, line, phrases) of every line before the appendices that carries the group's vocabulary and is in none of
+    its passages, section 7's rulings table or EXEMPT."""
+    vocab = [re.compile(r"(?<![\w-])%s(?![\w])" % re.escape(v)) for v in vocabulary(group, docs)]
+    out = []
+    for k, text in docs.items():
+        lines = text[:text.index("\n## Appendix")].split("\n")
+        cov = {n for p in PASSAGES if p.group == group and p.doc == k for n in range(p.a, p.b + 1)}
+        for i, l in enumerate(lines, 1):
+            hit = [v.pattern for v in vocab if v.search(l)]
+            if hit and i not in cov and not l.startswith("| D-") and (k, i) not in EXEMPT[group]:
+                out.append((k, i, hit))
+    return out
 
 
 def lines_of(ps):
@@ -672,18 +761,23 @@ def current_rows(c, cur):
             what = ("the QMX HF set left the lid for a place outside the case by %s; the lid tray this passage names is "
                     "the design before it" % c.cite("L3-OD2"))
         elif g == "PACK":
-            what = ("these passages state the circuit as generated for one pack (the BQ25731 charging it through `R17`, "
-                    "the gauge on `J_SMB` with board E's `U10` its only SMBus host and the pack node `CELL_F`, board P's "
-                    "second level, JP1 and F2, and K3's pack current); %s makes the store two separately protected packs, "
-                    "each with its own charger path and gauge" % c.cite("L3-OD1"))
+            what = ("these passages state the circuit as generated for one pack, by designator or in words (the BQ25731 "
+                    "charging it through `R17` and reading its voltage and current, the charger's host and its host-free "
+                    "fallback, the gauge on `J_SMB` with board E's `U10` its only SMBus host and the pack node `CELL_F`, "
+                    "the gauge's four thermistors the hot stop reads, board P's second level, JP1 and F2, and the pack "
+                    "chain's ratings); %s makes the store two separately protected packs, each with its own charger path "
+                    "and gauge, and whether the pack-current limits of K3, C2 and C3 (9.0 A) apply per pack or in total is "
+                    "set downstream" % c.cite("L3-OD1"))
         elif g == "SOLAR":
             what = ("this passage states board A's front end as generated, regulating 20 V at up to 5 A (100 W); %s "
                     "restates REQ-016 for a %s stage" % (c.cite("L3-OD3"), c.stage_w()))
         else:
-            what = ("these passages name the held cell of D-06, the Samsung INR18650-35E, and its limits; %s asks for "
-                    "cells rated above +60 C, and CFL-017 is %s until the cell is chosen" % (c.cite("L3-OD5"), cfl017_state(c)))
-        rows.append("| DC-L3-%s | `CONOPS.md` %s | %s; the board, case or cell change that follows is engineering "
-                    "work downstream, not re-issued text |" % (g, lines_of(ps), what))
+            what = ("these passages name the held cell of D-06, the %s, and its limits; %s reads \"%s\", and CFL-017 is "
+                    "%s in the requirements registry" % (c.d27()[0], c.cite("L3-OD5"), c.text("L3-OD5"), cfl017_state(c)))
+        docs_ = [k for k in DOCS if k in {p.doc for p in ps}]
+        where = "; ".join("`%s` %s" % (os.path.basename(DOCS[k]), lines_of([p for p in ps if p.doc == k])) for k in docs_)
+        rows.append("| DC-L3-%s | %s | %s; the board, case or cell change that follows is engineering "
+                    "work downstream, not re-issued text |" % (g, where, what))
     m = c.m1()
     ev = " ".join(str((c.rec["REQ-072"].get("evidence") or [""])[-1]).split()).replace("|", "/")
     rows.append("| DC-L3-M1 | `CONOPS.md` section 3 (M1) and sections 6 and 7a; `PRODUCT-BRIEF.md`, the power bullet and "
@@ -820,8 +914,9 @@ def render(c, docs, applied, cur, base):
           "keeps them in the baseline and carries their current value on that page, as it carries M1's reading. The "
           "rows proposed for it:", "", "| Row | Where | Current value |", "|---|---|---|"] + current_rows(c, cur) + [""]
     for p in cur:
-        d.append("- `CONOPS.md` %s (%s, %s): \"%s\"" % ("line %d" % p.a if p.a == p.b else "lines %d to %d" % (p.a, p.b),
-                                                        p.pid, p.group, excerpt(docs["CONOPS"], p)))
+        d.append("- `%s` %s (%s, %s): \"%s\"" % (os.path.basename(DOCS[p.doc]),
+                                                 "line %d" % p.a if p.a == p.b else "lines %d to %d" % (p.a, p.b),
+                                                 p.pid, p.group, excerpt(docs[p.doc], p)))
     d += ["", "## The proposed documents", "",
           "The re-issue applied in memory to the baselined files; nothing is written into them.", "",
           "| Document | Baselined sha256/16 | Proposed sha256/16 | Passages restated |", "|---|---|---|---|"]
@@ -866,9 +961,11 @@ def change_record(c, applied, cur, draft_sha, dg, base):
     for g in ("HF", "PACK", "SOLAR", "CELL"):
         ps = [p for p in cur if p.group == g]
         if ps:
-            d += ["Statements of the design as generated that name %s (`CONOPS.md` %s): they stay, read through "
+            where = "; ".join("`%s` %s" % (os.path.basename(DOCS[k]), lines_of([p for p in ps if p.doc == k]))
+                              for k in DOCS if k in {p.doc for p in ps})
+            d += ["Statements of the design as generated that name %s (%s): they stay, read through "
                   "`handover/DEFINITION-STATUS.md`, whose current values gain the row DC-L3-%s the draft proposes."
-                  % (names[g], lines_of(ps), g), ""]
+                  % (names[g], where, g), ""]
     d += ["M1's reading: `handover/DEFINITION-STATUS.md`'s current values gain the row DC-L3-M1, carrying REQ-072's "
           "reading as the draft proposes it.", "",
           "Where a passage the re-issue does not restate states a requirement, an intention or a condition about \"the "
@@ -918,11 +1015,38 @@ def passage_map(docs):
 
 # ------------------------------------------------------------------------------------------------ main
 def guard_out(paths):
-    """Refuse, before anything is written, an output that resolves to a baselined file or is a link."""
-    base = {os.path.realpath(os.path.join(E.TOP, x)) for x in DOCS.values()}
+    """Refuse, before anything is written, an output that resolves to a baselined file, is the same file as one (a
+    hard link), is a link, or is a file with more than one link (CHECK-1 of round 4, minor 3; CHECK-2, minor 3)."""
+    base = [os.path.join(E.TOP, x) for x in DOCS.values()]
+    real = {os.path.realpath(x) for x in base}
     for q in paths:
         if os.path.islink(q): E.refuse("%s is a link: the re-issue writes only plain files" % q)
-        if os.path.realpath(q) in base: E.refuse("%s is a baselined file: the re-issue never writes into it" % q)
+        if os.path.realpath(q) in real: E.refuse("%s is a baselined file: the re-issue never writes into it" % q)
+        if os.path.exists(q):
+            if any(os.path.samefile(q, x) for x in base):
+                E.refuse("%s is the same file as a baselined file (a hard link): the re-issue never writes into it" % q)
+            if os.stat(q).st_nlink > 1: E.refuse("%s has more than one link: the re-issue writes only plain files" % q)
+
+
+def approved_check(dr, out):
+    """After the approval (CHECK-2 of round 4, minor 2): the approved record is the file `definition_reissue` names, at
+    the sha256/16 it files, and the draft is at the sha256/16 the record names. Nothing is recomputed from the registry,
+    whose records (REQ-072 among them) go on changing after the approval."""
+    rec, draft = os.path.join(out, RECORD), os.path.join(out, DRAFT)
+    named = dr.get("record") if os.path.isabs(str(dr.get("record"))) else os.path.join(E.TOP, str(dr.get("record")))
+    why = []
+    if not (os.path.exists(rec) and os.path.exists(named) and os.path.samefile(rec, named)):
+        why.append("definition_reissue names %s, not %s" % (dr.get("record"), rec))
+    elif RL.sha16_bytes(open(rec, "rb").read()) != str(dr.get("sha16")):
+        why.append("%s is not at the sha256/16 definition_reissue files (%s)" % (RECORD, dr.get("sha16")))
+    else:
+        m = re.findall(r"`%s` \(sha256/16 `([0-9a-f]{16})`\)" % re.escape(DRAFT), open(rec, encoding="utf-8").read())
+        if len(m) != 1: why.append("the record names no single draft sha")
+        elif not os.path.exists(draft) or RL.sha16_bytes(open(draft, "rb").read()) != m[0]:
+            why.append("%s is not at the sha256/16 the record names (%s)" % (DRAFT, m[0]))
+    print("reissue: the approved draft and change record %s" % ("are the files definition_reissue names" if not why
+                                                               else "DIFFER: " + "; ".join(why)))
+    return 0 if not why else 1
 
 
 def main(argv):
@@ -930,6 +1054,8 @@ def main(argv):
     opt = lambda k, dflt: argv[argv.index(k) + 1] if k in argv and argv.index(k) + 1 < len(argv) else dflt
     try:
         data = yaml.safe_load(open(opt("--data", RL.DATA), encoding="utf-8"))
+        if check and "--map" not in argv and data.get("definition_reissue"):
+            return approved_check(data["definition_reissue"], opt("--out-dir", L3))
         docs = baselined(data=data)
         before = {k: RL.sha16_bytes(open(os.path.join(E.TOP, v), "rb").read()) for k, v in DOCS.items()}
         if "--map" in argv:
