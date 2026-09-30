@@ -220,22 +220,50 @@ def t_l3r4_every_line_of_the_one_pack_chain_is_a_current_passage():
 
 
 def t_l3r4_every_line_naming_the_chain_or_the_cell_in_words_is_mapped():
-    """CHECK-2 of round 4, minors 1 and 4: the phrases each group's own passages carry (VOCAB_RX over the PACK and CELL
-    passages, so the list grows with them) are found in no line of either document, before its appendix, outside the
-    group's passages, section 7's rulings table and the reasoned EXEMPT list; and every EXEMPT line carries one."""
+    """CHECK-2 of round 4, minors 1 and 4, and CHECK-3, minors 1 and 2: VOCAB_RX itself (not only the phrases the
+    group's passages already carry) matches no line of either document, before its appendix, outside the group's
+    passages, section 7's rulings table and the reasoned EXEMPT list; every EXEMPT line carries a match; and the CELL
+    pattern holds the cell sheet's ageing figures."""
     RI = _mod()
     docs = RI.baselined()
     for g in ("PACK", "CELL"):
-        vocab = RI.vocabulary(g, docs)
-        assert vocab, "the %s passages carry none of their vocabulary" % g
+        rx = re.compile(RI.VOCAB_RX[g])
+        assert RI.vocabulary(g, docs), "the %s passages carry none of their vocabulary" % g
         left = RI.uncovered(g, docs)
-        assert not left, "lines naming the %s group in words are in none of its passages: %s" % (g, left[:5])
+        assert not left, "lines the %s pattern matches are in none of its passages: %s" % (g, left[:5])
         for (k, n), why in RI.EXEMPT[g].items():
-            line = docs[k].split("\n")[n - 1]
-            assert why and any(re.search(r"(?<![\w-])%s(?![\w])" % re.escape(v), line) for v in vocab), \
-                "the %s exemption of %s line %d carries none of the vocabulary: a stale exemption" % (g, k, n)
-    assert any(v.startswith("the charger") for v in RI.vocabulary("PACK", docs)) and \
-        any(v.startswith("the gauge") for v in RI.vocabulary("PACK", docs)), "the PACK vocabulary lost the chain's parts"
+            assert why and rx.search(docs[k].split("\n")[n - 1]), \
+                "the %s exemption of %s line %d matches nothing: a stale exemption" % (g, k, n)
+    pv = RI.vocabulary("PACK", docs)
+    assert any(v.startswith("the charger") for v in pv) and any(v.startswith("the gauge") for v in pv), \
+        "the PACK vocabulary lost the chain's parts"
+    cv = RI.vocabulary("CELL", docs)
+    assert "60 % after 500 cycles" in cv and "the cell's specification minimum" in cv, "the CELL group lost the ageing"
+
+
+def t_l3r4_removing_a_group_passage_is_caught():
+    """CHECK-3 of round 4, minor 1: each PACK and CELL passage, taken out of the list, leaves a line its group's pattern
+    (or, for PACK, a designator) matches and no other passage holds, so no passage can be dropped silently; and the
+    passage list is pinned against the committed map's headings."""
+    RI = _mod()
+    docs = RI.baselined()
+    keep = list(RI.PASSAGES)
+    try:
+        for p in [x for x in keep if x.group in ("PACK", "CELL")]:
+            RI.PASSAGES[:] = [x for x in keep if x is not p]
+            left = RI.uncovered(p.group, docs)
+            if p.group == "PACK" and not left:
+                cov = {n for x in RI.PASSAGES if x.group == "PACK" for n in range(x.a, x.b + 1)}
+                left = [n for n in range(p.a, p.b + 1) if n not in cov and
+                        PACK_DESIGNATORS.search(docs[p.doc].split("\n")[n - 1])]
+            assert left, "removing %s (%s lines %d to %d) is not caught" % (p.pid, p.doc, p.a, p.b)
+    finally:
+        RI.PASSAGES[:] = keep
+    body = open(RI.MAP, encoding="utf-8").read()
+    heads = re.findall(r"^### (\w+)\. (\S+), lines? (\d+)(?: to (\d+))? \((DEFINITION|CURRENT)(?:, (\w+))?\)$", body, re.M)
+    pinned = [(h[0], h[1], int(h[2]), int(h[3] or h[2]), h[4], h[5] or None) for h in heads]
+    have = [(p.pid, os.path.basename(RI.DOCS[p.doc]), p.a, p.b, p.kind, p.group) for p in RI.PASSAGES]
+    assert pinned == have, "the passage list differs from the committed map: run reissue.py --map and review the diff"
 
 
 def t_l3r4_the_baselines_are_the_files_l3r2_names():
@@ -275,6 +303,7 @@ def t_l3r4_the_recommended_answers_give_the_reissue():
     cell, base = c.d27()
     assert cell in c.text("L3-OD1") and base in c.text("L3-OD1") and c.store() in flat, "the store is not D-27's"
     assert "reopens" not in c.store(), "the store calls the cell reopened without row L3-OD5 answered cells"
+    assert "of the %s cells: a base %s" % (cell, base) in _flat(_section(draft, "B06")), "B06 lost its cells"
     assert "HF has left the kit (owner ruling %s on row L3-OD2)" % rids["L3-OD2"] in draft
     assert "(CFL-017 resolved)" in flat, "reading-c resolves CFL-017 and the D-02a row does not say so"
 
@@ -381,12 +410,25 @@ def t_l3r4_refuses_an_incoherent_set():
         assert not os.listdir(out), "a refused run wrote a file"
 
 
+def _docs_copy():
+    """A temporary directory holding copies of the two baselined files at their paths: the link tests link these, never
+    the tree's own files (CHECK-3 of round 4, minor 4)."""
+    root = tempfile.mkdtemp(prefix="l3r4-docs-")
+    for rel in BASE:
+        os.makedirs(os.path.dirname(os.path.join(root, rel)), exist_ok=True)
+        shutil.copy(os.path.join(ROOT, rel), os.path.join(root, rel))
+    return root
+
+
 def t_l3r4_never_writes_a_baselined_file():
-    """CHECK-1 of round 4, minor 3: the guard compares real paths and refuses a link before anything is written."""
+    """CHECK-1 of round 4, minor 3, and CHECK-2, minor 3: the guard compares real paths and the same file, and refuses
+    a symbolic or hard link before anything is written; every link here points at a copy of the baselined files, which
+    the generator reads as its baseline through --docs-root."""
     RI = _mod()
+    root = _docs_copy()
     for rel in BASE:
         try:
-            RI.guard_out([os.path.join(ROOT, rel)])
+            RI.guard_out([os.path.join(root, rel)], root)
         except RI.E.Refused:
             continue
         raise AssertionError("the generator would write into %s" % rel)
@@ -394,19 +436,24 @@ def t_l3r4_never_writes_a_baselined_file():
     writes = re.findall(r"open\(([^,]+), \"w\"", src)
     assert sorted(writes) == ["MAP", "q"], "the generator opens another file for writing: %s" % writes
     d, reg = _chain(RECOMMENDED)
+    brief = os.path.join(root, "v2", "docs", "PRODUCT-BRIEF.md")
+    sha = lambda: RI.RL.sha16_bytes(open(brief, "rb").read())
+    before = sha()
     out = tempfile.mkdtemp(prefix="l3r4-out-")
-    os.symlink(os.path.join(ROOT, "v2", "docs", "PRODUCT-BRIEF.md"), os.path.join(out, RI.DRAFT))
-    o, msg = _generate(reg, expect=2, out=out)
+    os.symlink(brief, os.path.join(out, RI.DRAFT))
+    o, msg = _generate(reg, expect=2, out=out, extra=["--docs-root", root])
     assert "link" in msg, "a draft path linked to the brief was not refused before writing: %s" % msg
     assert not os.path.exists(os.path.join(out, RI.RECORD)), "a refused run wrote the change record"
+    assert sha() == before, "a refused run wrote into the copy of the brief"
     out2 = tempfile.mkdtemp(prefix="l3r4-out-")
     try:
-        os.link(os.path.join(ROOT, "v2", "docs", "PRODUCT-BRIEF.md"), os.path.join(out2, RI.DRAFT))
+        os.link(brief, os.path.join(out2, RI.DRAFT))
     except OSError as e:
         raise Skip("no hard link across these file systems (%s)" % e)
-    o, msg = _generate(reg, expect=2, out=out2)
+    o, msg = _generate(reg, expect=2, out=out2, extra=["--docs-root", root])
     assert "hard link" in msg, "a draft path hard linked to the brief was not refused before writing: %s" % msg
-    os.unlink(os.path.join(out2, RI.DRAFT))
+    assert sha() == before, "a refused run wrote into the copy of the brief"
+    shutil.rmtree(root, ignore_errors=True)
 
 
 # ------------------------------------------------------------------------------------------------ LAYER-STATUS

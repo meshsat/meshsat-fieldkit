@@ -1,7 +1,7 @@
 # Layer 3, round 4: the definition re-issue prepared (L3-C26)
 
 MESHSAT-1357, 30 September 2026, branch `fnd/l3r4` from main `8fec0733` (integration set 16 and its milestone); round 4b
-answers CHECK-1 of round 4 (B1 and minors 1 to 9), round 4c CHECK-2's five minors. Preparation only: the owner's six answers to
+answers CHECK-1 of round 4 (B1 and minors 1 to 9), round 4c CHECK-2's five minors, round 4d CHECK-3's four. Preparation only: the owner's six answers to
 `v2/docs/handover/layer3/OWNER-DECISIONS-L3.md` are pending, and nothing here changes a requirement, a ruling or a
 baselined document. Prototype design: no V2 board has been fabricated, ordered or powered, and no kit has been field
 deployed.
@@ -16,13 +16,16 @@ deployed.
 
 The tests are `v2/ecad/tools/tests/test_l3r4.py`: the map against the baselined files (every passage on its line and
 quoted whole; every line naming the one pack's chain by a designator inside a PACK passage; every line carrying the
-vocabulary the PACK and CELL passages themselves carry inside a passage of the group or in the reasoned EXEMPT list),
+match of the PACK and CELL patterns (`VOCAB_RX`) inside a passage of the group or in the reasoned EXEMPT list; each PACK
+and CELL passage, taken out, leaving a line no other passage holds; the passage list pinned against the committed map),
 the generator on copies of
 the registry decided by the prepared scripts, and its refusals. The decided copies: the session's recommended answers
 (approve, 2s2p, adopt, reading-c and the mean day), where the owner's own choices, which the table does not recommend,
 take STAND-INS (the QMX out, TYP and an operator push of 20 N, the placeholders of `../l3r2/dryrun.py`); the QMX
 outside with 1S4P, no deployment condition and CFL-017 kept open; the tablet out with REQ-016 kept and cells above +60 C.
-The refusals: rows undecided, two incoherent sets, a draft path linked to the brief by a symbolic or a hard link, and a
+The refusals: rows undecided, two incoherent sets, a draft path linked by a symbolic or a hard link to a temporary copy
+of the brief (the generator reads that copy as its baseline through `--docs-root`, so no test links the tree's own
+files), and a
 rewrite after the approval (decided, generated, approved: the draft and the record read current, the write is refused,
 the renderer accepts the re-issue, a note added to REQ-072 afterwards leaves them current, and a draft changed on disk
 reads out of date). The layer status script runs on a copy of the page.
@@ -39,7 +42,7 @@ for one pack states the design before owner ruling D-27's answer.
 | Row | Option | Passages (see `PASSAGE-MAP.md` for the lines and texts) |
 |---|---|---|
 | every answer | | the heads of both documents (status line, re-issue note) and section 7's table of rulings (C01, C02, C31, B01, B02) |
-| L3-OD1 | `approve` | the store (its cell, base block and words read from D-27's ruling): section 1's power sources, section 2a's deferred list, second pack, charging and pack safety rows, M1's sequence, energy paragraph and D-20 paragraph, section 4's Charging row, section 4a's table and pack paragraph, section 6, the D-06 row and section 7a's M1 duration row; in the brief the pack, power, closed case, deferred functions, runtime, night and transport bullets and the core. CURRENT (PACK, 32 passages): the one pack's charge, measurement and protection chain as generated, by designator or in words (the BQ25731 and `R17`, its ADCs, bus address and readings, `CHRG_INHIBIT` and `CHG_INHIBIT`, the charger's host and host-free fallback, the gauge's host `J_SMB` and the pack node `CELL_F`, the gauge's thermistors the hot stop reads, its datasheet commands, board P's second level, JP1 and F2, the protection table, the pack chain's ratings, and the pack-current limits K3, C2 and C3, whose per pack or total reading is set downstream) |
+| L3-OD1 | `approve` | the store (its cell, base block and words read from D-27's ruling): section 1's power sources, section 2a's deferred list, second pack, charging and pack safety rows, M1's sequence, energy paragraph and D-20 paragraph, section 4's Charging row, section 4a's table and pack paragraph, section 6, the D-06 row and section 7a's M1 duration row; in the brief the pack, power, closed case, deferred functions, runtime, night and transport bullets and the core. CURRENT (PACK, 37 passages): the one pack's charge, measurement and protection chain as generated, by designator or in words (the BQ25731 and `R17`, its ADCs, bus address and readings, `CHRG_INHIBIT` and `CHG_INHIBIT`, the charger's host and host-free fallback, the gauge's host `J_SMB`, its readings' bank and the pack node `CELL_F`, the gauge's thermistors C1 and the hot stop read, its 336 uA, its datasheet commands, board P's second level, JP1 and F2, the protection table, the pack chain's ratings, and the pack-current limits K3, C2 and C3, whose per pack or total reading is set downstream) |
 | L3-OD1 | `reject` | none: an incoherent set, refused |
 | L3-OD2 | `qmx-out` | HF out of the kit: section 1's operator, remote correspondents and second kit rows, section 2a's messaging row and HF rail, the brief's operator, correspondents and bearers; the tablet size REQ-011 states; the 4S15P lid; CURRENT (HF, 19 passages): the QMX's rail, EMCON enable, bank and port, load row and lid tray |
 | L3-OD2 | `qmx-outside` | the HF transmitter carried outside on a sealed lead, the brief's connector plate, the tablet size, the 4S15P lid; CURRENT (HF): the QMX's lid tray |
@@ -48,7 +51,7 @@ for one pack states the design before owner ruling D-27's answer.
 | L3-OD3 | any | M1's setting, section 1's solar panel, the Deploy row, M1's energy paragraph, section 7a's solar window row, the brief's power bullet, closed case and night bullet; `2s2p` and `1s4p` also CURRENT (SOLAR): board A's front end at its generated 100 W |
 | L3-OD4 | `adopt` | M1's setting and the Deploy row (the open kit's deployment condition, quoted from its requirement), the brief's deployment sentence |
 | L3-OD4 | `reject` | none |
-| L3-OD5 | any | the Storage row, the D-02a row, the brief's qualification margins, each saying whether CFL-017 is resolved or kept open, as the registry reads it; `cells` also restates the store passages with the held cell named as reopened by D-31, and CURRENT (CELL, 18 passages, one in the brief): the held cell and its limits |
+| L3-OD5 | any | the Storage row, the D-02a row, the brief's qualification margins, each saying whether CFL-017 is resolved or kept open, as the registry reads it; `cells` also restates the store passages with the held cell named as reopened by D-31, and CURRENT (CELL, 20 passages, one in the brief): the held cell, its limits and its sheet's ageing figures |
 | L3-OD6 | `mean-day` or `coverage` | M1's energy paragraph, section 7a's design month row, the brief's night bullet; on the checked table no lid carries a coverage target, so `coverage` is refused as incoherent |
 
 ## After the owner has answered (the session or the integrator)
