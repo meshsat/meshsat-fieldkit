@@ -1,0 +1,4330 @@
+{
+ "baseline_state": "BASELINED at a54b793b",
+ "closed_items": [
+  "D-01-R1",
+  "D-01-R2",
+  "D-02a-R1",
+  "D-02d",
+  "D-02e",
+  "D-04",
+  "D-05",
+  "D-06",
+  "D-07",
+  "D-08",
+  "D-08a",
+  "M-01",
+  "D-09",
+  "D-10",
+  "D-11",
+  "D-12",
+  "D-13",
+  "D-14",
+  "D-15",
+  "D-16",
+  "D-17",
+  "S-15",
+  "S-38",
+  "S-03",
+  "S-04",
+  "S-05",
+  "S-43",
+  "S-07",
+  "S-09",
+  "S-06",
+  "S-08",
+  "S-10",
+  "S-11",
+  "S-17",
+  "S-21",
+  "S-25",
+  "S-29",
+  "S-30",
+  "S-31",
+  "S-14",
+  "S-20",
+  "S-16",
+  "S-18",
+  "S-24",
+  "S-26",
+  "S-37",
+  "S-19",
+  "S-39",
+  "S-77",
+  "S-51",
+  "S-78",
+  "S-80",
+  "L-02"
+ ],
+ "evidence_counts": {
+  "ASM-001": 0,
+  "ASM-002": 0,
+  "ASM-003": 0,
+  "ASM-004": 0,
+  "ASM-005": 3,
+  "ASM-006": 0,
+  "ASM-007": 0,
+  "CFL-001": 18,
+  "CFL-002": 4,
+  "CFL-003": 1,
+  "CFL-004": 7,
+  "CFL-005": 14,
+  "CFL-006": 5,
+  "CFL-007": 4,
+  "CFL-008": 4,
+  "CFL-009": 4,
+  "CFL-010": 9,
+  "CFL-011": 0,
+  "CFL-012": 0,
+  "CFL-013": 9,
+  "CFL-014": 29,
+  "CFL-015": 21,
+  "CFL-016": 45,
+  "CFL-017": 0,
+  "CFL-018": 1,
+  "CHO-001": 9,
+  "CHO-002": 0,
+  "CHO-003": 0,
+  "CON-001": 0,
+  "CON-002": 0,
+  "CON-003": 8,
+  "CON-004": 0,
+  "CON-005": 0,
+  "CON-006": 3,
+  "CON-007": 0,
+  "CON-008": 0,
+  "CON-009": 6,
+  "CON-010": 29,
+  "CON-011": 0,
+  "CON-012": 0,
+  "CON-013": 0,
+  "CON-014": 0,
+  "CON-015": 7,
+  "CON-016": 16,
+  "CON-017": 9,
+  "CON-018": 12,
+  "CON-019": 9,
+  "CON-020": 0,
+  "CON-021": 10,
+  "CON-022": 7,
+  "CON-023": 0,
+  "CON-024": 0,
+  "CON-025": 3,
+  "CON-026": 1,
+  "FEA-001": 3,
+  "FEA-002": 12,
+  "FEA-003": 4,
+  "FEA-004": 4,
+  "FEA-005": 4,
+  "FEA-006": 9,
+  "FEA-007": 1,
+  "REQ-001": 0,
+  "REQ-002": 0,
+  "REQ-003": 0,
+  "REQ-004": 0,
+  "REQ-005": 21,
+  "REQ-006": 0,
+  "REQ-007": 0,
+  "REQ-008": 0,
+  "REQ-009": 0,
+  "REQ-010": 0,
+  "REQ-011": 0,
+  "REQ-012": 10,
+  "REQ-013": 0,
+  "REQ-014": 0,
+  "REQ-015": 0,
+  "REQ-016": 0,
+  "REQ-017": 0,
+  "REQ-018": 0,
+  "REQ-019": 3,
+  "REQ-020": 0,
+  "REQ-021": 0,
+  "REQ-022": 0,
+  "REQ-023": 0,
+  "REQ-024": 0,
+  "REQ-025": 0,
+  "REQ-026": 0,
+  "REQ-027": 0,
+  "REQ-028": 0,
+  "REQ-029": 0,
+  "REQ-030": 14,
+  "REQ-031": 0,
+  "REQ-032": 14,
+  "REQ-033": 0,
+  "REQ-034": 0,
+  "REQ-035": 0,
+  "REQ-036": 4,
+  "REQ-037": 0,
+  "REQ-038": 0,
+  "REQ-039": 0,
+  "REQ-040": 0,
+  "REQ-041": 0,
+  "REQ-042": 0,
+  "REQ-043": 0,
+  "REQ-044": 18,
+  "REQ-045": 0,
+  "REQ-046": 0,
+  "REQ-047": 0,
+  "REQ-048": 0,
+  "REQ-049": 0,
+  "REQ-050": 4,
+  "REQ-051": 0,
+  "REQ-052": 5,
+  "REQ-053": 0,
+  "REQ-054": 0,
+  "REQ-055": 0,
+  "REQ-056": 0,
+  "REQ-057": 0,
+  "REQ-058": 0,
+  "REQ-059": 0,
+  "REQ-060": 0,
+  "REQ-061": 0,
+  "REQ-062": 0,
+  "REQ-063": 0,
+  "REQ-064": 0,
+  "REQ-065": 0,
+  "REQ-066": 0,
+  "REQ-067": 0,
+  "REQ-068": 0,
+  "REQ-069": 0,
+  "REQ-070": 0,
+  "REQ-071": 11,
+  "REQ-072": 5,
+  "REQ-073": 0,
+  "REQ-074": 0,
+  "REQ-075": 0,
+  "REQ-076": 0,
+  "REQ-077": 3,
+  "SPD-001": 0,
+  "SPD-002": 0,
+  "SPD-003": 0,
+  "SPD-004": 0,
+  "SPD-005": 0,
+  "SPD-006": 0
+ },
+ "member_sha256": "6eb35694e300abffdb07f2b8c63c8e3341b22c1adfd9d5bb12496fe3b6dc392d",
+ "needs_document_sha256": "6ebe6760c4312bcadab789da80d103d6e40da0a7657dfe636315eef66930fa54",
+ "open_items": [
+  "D-18",
+  "L-01",
+  "L-03",
+  "L-04",
+  "L-05",
+  "L-06",
+  "L-07",
+  "S-01",
+  "S-02",
+  "S-12",
+  "S-13",
+  "S-22",
+  "S-23",
+  "S-27",
+  "S-28",
+  "S-32",
+  "S-33",
+  "S-34",
+  "S-35",
+  "S-36",
+  "S-40",
+  "S-41",
+  "S-42",
+  "S-44",
+  "S-45",
+  "S-46",
+  "S-47",
+  "S-57",
+  "S-58",
+  "S-48",
+  "S-49",
+  "S-50",
+  "S-52",
+  "S-53",
+  "S-54",
+  "S-55",
+  "S-56",
+  "S-59",
+  "S-60",
+  "S-61",
+  "S-62",
+  "S-63",
+  "S-64",
+  "S-65",
+  "S-66",
+  "S-67",
+  "S-68",
+  "S-69",
+  "S-70",
+  "S-71",
+  "S-72",
+  "S-73",
+  "S-74",
+  "S-75",
+  "S-76",
+  "S-79",
+  "S-81",
+  "M-02"
+ ],
+ "owner_rulings": [
+  "D-01",
+  "D-02a",
+  "D-02b",
+  "D-02c",
+  "D-02d",
+  "D-02e",
+  "D-03",
+  "D-04",
+  "D-05",
+  "D-06",
+  "D-07",
+  "D-08",
+  "D-08a",
+  "D-08-reversal",
+  "D-09",
+  "D-10",
+  "D-11",
+  "D-12",
+  "D-13",
+  "D-14",
+  "D-15",
+  "D-16",
+  "D-17",
+  "decision-27",
+  "decision-28",
+  "decision-41",
+  "decision-43",
+  "public-docs",
+  "standing-rule"
+ ],
+ "records": {
+  "ASM-001": {
+   "acceptance": "The two exceptions are named, with the reason, in the prototype's report and in every public or product-level statement of NEED-03 (never \"no single point of failure\" about the kit, IOHA section 15a); the three-of-four bearer claim is shown on the prototype by losing each module in turn.",
+   "allocated_to": [
+    "b"
+   ],
+   "choices": [
+    "SC-02"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "assumption",
+   "parent": "NEED-02",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "Prototype 1 is accepted on NEED-03 with two NAMED EXCEPTIONS (SC-02): the LoRa module (slot 3's SPI) and cellular data (slot 2's PCIe lane) have no second path and go down with their module. D-01 accepts NEED-03 through IOHA tests A1 to A14, which do not exercise these two paths, and the kit is designed to keep at least three of the four core messaging bearers through the loss of any one module (ARCH-PCB-B-IOHA section 15a).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "ASM-002": {
+   "acceptance": "The four are named, with the reason, in the prototype's report and in every public or product-level statement of NEED-03 (never 'no single point of failure' about the kit), and none is recorded as covered by NEED-03 or as a risk the owner accepted; whether each is mitigated is decided at layer 4 (S-36, Review C), and a mitigation that lands is recorded here with its commit.",
+   "allocated_to": [
+    "a",
+    "b",
+    "c"
+   ],
+   "choices": [
+    "SC-39"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "assumption",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-03"
+   ],
+   "statement": "NEED-03's failure set is the loss of one compute module or one I/O supervisor (SC-39). Four shared elements are outside it and are single points of failure of the kit, knowingly unmitigated in the design as generated: +5V_DEV and +3V3_DEV (one converter each on A), the J_PANEL ribbon, the KSZ9897R switch, and the kit I2C bus with its one master.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-36"
+   ]
+  },
+  "ASM-003": {
+   "acceptance": "Superseded for design use by the per-state budget of CONOPS section 4a (PROVISIONAL), then by prototype measurement.",
+   "allocated_to": [
+    "a",
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "assumption",
+   "parent": "NEED-05",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The power budget of 32.52 item 3 is a battery-side design estimate: its listed loads sum to 45.0 W typical and 178 W peak, and with the 12 % allowance give 50.4 W and 199 W, the record's 'about 50 W' and 'about 200 W'; the 'up to 290 W' adds 90 W of outlets without the allowance. No figure is measured.",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "ASM-004": {
+   "acceptance": "Replaced by the TEST-PLAN E3 measurement before any hot-end number is asserted.",
+   "allocated_to": [
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "assumption",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The inside air rises about 10 K over ambient with one module and about 16 K with three loaded modules, lid open, fans on; lid closed the walls and lid shed about 1.5 to 2 W/K.",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PLACED_BOARD",
+   "waits_on": null
+  },
+  "ASM-005": {
+   "acceptance": "Desk: supported by public Microchip documentation (the ATECC508A complete data sheet DS20005927A Tables 2-8, 2-10, 2-15 and section 9.7; the ATECC608B-TNGTLS DS40002250B p. 8 and -TFLXTLS DS40002249B p. 9, GenKey mode 0x04 \"to enable key deletion\"; the ATECC608B summary DS40002239A pp. 12-13) and by Microchip's CryptoAuthLib v3.8.0 test that regenerates a slot on a data-locked device (atca_tests_ecdh.c:62-119); ZEROIZE.md sections 3 and 4. Physical: Z-EXP-A and Z-EXP-B of ZEROIZE.md section 5 pass on ATECC608B-SSHDA-T parts provisioned with the section 3.1 slot map; no bench record exists until the parts do (S-35, L-06).",
+   "allocated_to": [
+    "b",
+    "fw_panel"
+   ],
+   "choices": [
+    "SC-08"
+   ],
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": "PROTOTYPE",
+   "kind": "assumption",
+   "parent": "NEED-10",
+   "prototype_1": "core",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-03"
+   ],
+   "statement": "The ATECC608B's slot configuration lets the keys that wrap the drive and eMMC keys be destroyed (overwritten by GenKey mode 0x04) after its zones are locked; if it cannot, the secure element becomes a TPM 2.0 on board B's U8 site (the SLB 9673), the alternative appendix 32.50 item 5 names.",
+   "status": "DEFINED",
+   "verification_method": [
+    "VENDOR_CONFIRMATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-35",
+    "L-06"
+   ]
+  },
+  "ASM-006": {
+   "acceptance": "The envelope and CONOPS state the condition, the shade accessory is in the kit list, and the operating instruction says to shade the plate.",
+   "allocated_to": [
+    "procedure"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "assumption",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-02e"
+   ],
+   "statement": "The kit is operated shaded: 'operate shaded' is a stated operating condition with a shade accessory (a lid sun shield or a tarp), because a black plate in full sun absorbs about 60 W, more than the electronics; full-sun operation is a later qualification item (D-02e).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-33"
+   ]
+  },
+  "ASM-007": {
+   "acceptance": "The pack is fitted in the kit for every TEST-PLAN environmental test that the kit runs with its pack.",
+   "allocated_to": [
+    "p",
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "assumption",
+   "parent": "NEED-13",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The owner's 'MIL-STD if possible' for the pack (32.62) is met by qualifying the built pack with the kit under TEST-PLAN; no MIL-STD battery specification is claimed for the pack itself.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-001": {
+   "acceptance": "One mapping in every document, equal to the generator's f = s % 3 + 1.",
+   "allocated_to": [
+    "b"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": null,
+   "statement": "Which neighbour adopts each bank: ARCH-PCB-B-IOHA section 4 (bank 1 to slot 2, 2 to 3, 3 to 1) against section 15 (bank 1 to slot 3, 2 to 1, 3 to 2).",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-002": {
+   "acceptance": "The SGP41 is fitted where the battery bay's air is sampled, or an owner ruling drops it; the envelope's hot end is not recomputed until one of the two happens.",
+   "allocated_to": [
+    "e",
+    "p",
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": null,
+   "statement": "The envelope's hot end is set by the Sensirion SGP41 battery-bay sensor (-20 to +55 C), which appendix 32.54 picked for the battery bay beside the BME688 inside and in the pod; no generator fitted the SGP41.",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "SCRIPT",
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-003": {
+   "acceptance": "_product cites the envelope document and its sha, and the CONOPS mode list.",
+   "allocated_to": [
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": null,
+   "statement": "pcb_board_facts.yaml _product says 'no temperature range ruled yet' and lists five operating modes; decision 34 adopted the envelope on 21 September 2026 and the envelope and CONOPS name more modes.",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "SCRIPT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-004": {
+   "acceptance": "No driver sources current into WL_nDIS1..3 or BT_nDIS1..3, and U6's output and its internal pull-up never reach the CM5 pin: each is pulled low through an open-drain element, released only when the software control and EMCON_HW both release it while the gate is powered. The state with the gate's own supply lost is carried by REQ-032 and FEA-002 (EMCON.md L3).",
+   "allocated_to": [
+    "b"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-08",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": [
+    "D-05"
+   ],
+   "statement": "The three CM5 modules' own WiFi and Bluetooth radios were disabled only through the PCA9555 expander U6 on the kit I2C bus (software), not by EMCON_HW; and U6 drove pins the CM5 datasheet allows only to be driven low, from an always-on rail, so it could back-feed an unpowered module.",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "SCRIPT",
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-005": {
+   "acceptance": "PANEL.md section 7 matches the netlists and the charger's behaviour.",
+   "allocated_to": [
+    "a",
+    "c"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-08",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": null,
+   "statement": "PANEL.md section 7 said A22 pulls EMCON_HW HIGH through R102 and that a panel-less kit 'charges and computes'; the netlists pull EMCON_HW LOW (inhibited) and SLOT_EN1..3 LOW (no slot powers), and the charger does not charge a 4S pack usefully without its host.",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "SCRIPT",
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-006": {
+   "acceptance": "One named cell and one parallel count, with the cell's own sheet in v2/vendor/battery/, used by the energy chain, the protection table, the runtime and the enclosure.",
+   "allocated_to": [
+    "p"
+   ],
+   "choices": null,
+   "evidence_result": "FAIL",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-13",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": [
+    "D-06"
+   ],
+   "statement": "The pack headers say 'about 200 Wh' without naming the cell ('4S3P or 4S4P'; '4S4P 18650 or 4S3P 21700'); no 21700 cell sheet is held; and at most about 145 Wh is expected to fit (A06).",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "CALCULATION",
+    "VENDOR_CONFIRMATION"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-27"
+   ]
+  },
+  "CFL-007": {
+   "acceptance": "Each test states its purpose and which limit it verifies; no limit is lowered to the envelope without a recorded purpose (plan condition 3).",
+   "allocated_to": [
+    "procedure"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-15",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": [
+    "D-02a"
+   ],
+   "statement": "TEST-PLAN limits sit outside the adopted envelope: E3 stores at +71 C and operates at +55 C against +45 C storage and +40 C use; E4 stores at -33 C against -20 C. Each may be a deliberate qualification margin; no purpose is recorded.",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-008": {
+   "acceptance": "E5 describes the sealed kit; E8 names the Peli pressure valve if that is what is meant (W5).",
+   "allocated_to": [
+    "procedure"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-15",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": null,
+   "statement": "TEST-PLAN E5 runs 'deployed with the vent open', against the owner's ruling of 7 September 2026 that there is no vent opening anywhere. E8's 'vent ... operate' is ambiguous rather than stale: it plausibly means Peli's pressure valve, which 32.53 keeps (round-2 challenger).",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-009": {
+   "acceptance": "A closed-lid operating state is added to TEST-PLAN section 1 with its own thermal test, or closed-lid operation is ruled out.",
+   "allocated_to": [
+    "procedure"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-15",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": [
+    "D-02b"
+   ],
+   "statement": "TEST-PLAN has three article states (transit, deployed, stored); the reduced mode is defined as closed-lid operation, but no closed-lid operating state (antennas on, cables in, lid closed) is tested.",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-010": {
+   "acceptance": "One description of the dual SIM in V2-SPEC and in board B's generator. The SIM TVS array Quectel asks for is board B's constraint CON-025, and the order code of an eSIM-fitted module variant, needed only before an eSIM build is bought, is on the components layer's list (S-13); neither is a contradiction between sources.",
+   "allocated_to": [
+    "b"
+   ],
+   "choices": [
+    "SC-13"
+   ],
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-16",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "ADVISORY",
+   "rulings": null,
+   "statement": "Dual SIM is 'eSIM plus nano-SIM' in V2-SPEC and 32.50 item 12; the B generator fits two nano-SIM holders with an eSIM build option (Quectel HD v1.1 Figure 19's 0 ohm links at the module).",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "SCRIPT",
+    "VENDOR_CONFIRMATION"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-011": {
+   "acceptance": "One definition (which modules, which bearers, monitor state) and a named trigger source.",
+   "allocated_to": [
+    "sw",
+    "fw_panel",
+    "e"
+   ],
+   "choices": [
+    "SC-17"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": [
+    "D-02b"
+   ],
+   "statement": "The reduced mode is 'one module' in the envelope (PS-RED, 19.7 W) and 'monitor off, cluster idle' in 32.53 (PS-RED-b, 25.4 W, both PROVISIONAL); its trigger is 'lid closed or above +35 C', and the definition that settles which is still the session's.",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-012": {
+   "acceptance": "V2-SPEC line 23 carries the current per-state figures, marked PROVISIONAL, and the D-11 bound.",
+   "allocated_to": [
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-05",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": [
+    "D-06",
+    "D-11"
+   ],
+   "statement": "Peak draw 'about 150 W with everything transmitting' (V2-SPEC, the one-module set of 32.49) against 'about 200 W peak without the outlets, up to 290 W with them' (32.52 item 3, battery-side) and the re-derived PS-ALLTX 227.0 W and PS-ALLTX-OUT 316.4 W (PROVISIONAL).",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "CALCULATION"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-013": {
+   "acceptance": "The pulse reaches every slot, or V2-SPEC says the sensor controller serves DCF77 time over USB.",
+   "allocated_to": [
+    "b",
+    "e"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-11",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "ADVISORY",
+   "rulings": null,
+   "statement": "V2-SPEC said the DCF77 pulse is fanned out to every slot; the generator takes it only to the sensor controller RP2040.",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "SCRIPT",
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-014": {
+   "acceptance": "PANEL.md section 10, CONOPS section 4 and OPERATING-ENVELOPE.md section 3 (re-pinned) describe the charger and the pack path as generated at the commit that carries them; a hostless kit's charge behaviour is stated as the charger state sequence of the battery review packet and bench-confirmed.",
+   "allocated_to": [
+    "a",
+    "fw_panel"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": "PROTOTYPE",
+   "kind": "conflict",
+   "parent": "NEED-05",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "The documents describe the charger circuit 458b2873 replaced: PANEL.md section 10 and CONOPS section 4's Charging row say the cell-count strap selects 2S and the kit's loads sit on the pack side of the charge shunt, where the generator now sets 4S and puts the loads on VSYS; OPERATING-ENVELOPE.md section 3 says the pack lead does not mate and nothing of decision 40 is laid. What a hostless kit charges stays a bench question.",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "SCRIPT",
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-015": {
+   "acceptance": "Both ends are the same family, pitch and pin count, pin n meets pin n with clock, data and ground aligned, P's ground pin is on the pack side of the shunt, check_contracts.py carries a J_SMB contract, and the documents describe the lead as generated.",
+   "allocated_to": [
+    "e",
+    "p",
+    "SMBUS_GAUGE"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-13",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "The pack SMBus lead: both generators now draw a JST-XH 1x4 in board P's pin order (faf8c981), while ASSEMBLY.md section 4 and build step 7 and PANEL.md section 10 still describe board E's end as a 2.54 mm 1x6 pin header that no lead mates, and check_contracts.py carries no J_SMB contract.",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "SCRIPT",
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-016": {
+   "acceptance": "Each named document and outcome, re-read against the generators and committed netlists of the commit that carries them, describes the circuit as generated, and the envelope is re-pinned where it changes.",
+   "allocated_to": [
+    "kit",
+    "procedure"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-15",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "The published contracts describe circuits that faf8c981, 458b2873 and d90f30e4 replaced: PANEL.md sections 1 and 6 (the compute modules' radios with no EMCON path, the WiFi cards' disable unproven, the toggle driving ZEROIZE_HW, U9 a 74LVC1G34, the precondition still behind the NDA datasheet) and section 7 (a bus table without the supervisors at 0x30 to 0x32); CONOPS sections 4, 4b and 5 (the startup enables, EMCON, ZEROIZE and Service rows, the module radios not gated, the outlets with no hardware tie to the PA); V2-SPEC.md lines 24, 34, 41, 43 and 76 (\"none of them in the generators yet\" for D-05, D-11, D-12, D-15 and D-17); OPERATING-ENVELOPE.md section 4 (EMCON's gaps \"not in the generators yet\"); TEST-PLAN.md:46 (EMCON's functional check \"measured with the SDR\", whose supply EMCON removes); and pcb_decisions.yaml's outcomes of decisions 28 and 40 (a stackup record \"still owed\", \"nothing is laid for this ruling yet\").",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-017": {
+   "acceptance": "A result for the kit with its pack: a measured pack arrangement that keeps every cell inside its limits at the margins (the bounded enclosure heat experiment, POWER-THERMAL section 10), cells rated beyond them (which reopens owner ruling D-06), or an owner reading of D-02a that its margins apply to the kit without its cells. Until then TEST-PLAN writes E3-S, E3-O, E4-S and E5 as deviations and never reports their pass as the kit's margin with its pack.",
+   "allocated_to": [
+    "procedure",
+    "p"
+   ],
+   "choices": [
+    "SC-12",
+    "SC-19"
+   ],
+   "evidence_result": "FAIL",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-15",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": null,
+   "statement": "With its own pack fitted the kit cannot meet D-02a's +55 C operating margin, TEST-PLAN E5's +60 C humidity dwell, nor the +71 C and -33 C storage margins, since the stored kit keeps its pack (SC-19): both Samsung revisions rate the cells to +60 C in storage and discharge and the maker forbids use above it, and the storage floor is -20 C (Ver. 1.1) or 0 C (Version 1.0), while OPERATING-ENVELOPE section 8's arithmetic puts the inside air at +65 to +71 C at +55 C ambient (finding BAT-F19). TEST-PLAN runs those levels as stated deviations without the cells in the chamber, which measures the rest of the kit and does not resolve this.",
+   "status": "CONFLICT_OPEN",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CFL-018": {
+   "acceptance": "GROUNDING-AND-SHIELDS.md describes the metal the kit as designed carries (the arrestor bulkheads, the RF entry plates, the connector plate, the face plate and the pack as it is) before GND-002's strategy is ruled.",
+   "allocated_to": [
+    "case",
+    "a",
+    "b",
+    "e"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "conflict",
+   "parent": "NEED-18",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-06"
+   ],
+   "statement": "GROUNDING-AND-SHIELDS.md describes nine SMA bulkhead jacks and the battery module's own enclosure, while the case carries twelve gas-discharge arrestor bulkheads on two aluminium RF entry plates (SC-07) and the pack is a shrink-wrapped block with no rigid enclosure (D-06).",
+   "status": "CONFLICT_RESOLVED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-50"
+   ]
+  },
+  "CHO-001": {
+   "acceptance": "Every listed device appears in the generated schematic of its board with the ordered part number (checked against the BOM), or as a named receptacle device where it is not soldered; every socket or land matches the device's own key and drawing.",
+   "allocated_to": [
+    "b",
+    "c",
+    "d",
+    "a",
+    "e",
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "FAIL",
+   "final_phase": null,
+   "kind": "choice",
+   "parent": "NEED-02",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The device set is the owner's ruling of 6 September 2026: CM5 8 GB / 64 GB wireless; RockBLOCK 9704 SMA with the Maxtena helical; 5G on M.2 B-key (RM520N-GL); E22-900M30S LoRa; two E72 CC2652P; AW7915-AED WiFi link cards; SA868 with a RA30H1317M1 30 W stage; LimeSDR Mini 2.4; Xenarc 709GNK; PDi E2370KS0C1; LG290P GNSS; QMX HF; BME688 inside and in the outside pod, SGP41 in the battery bay (32.54).",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-12"
+   ]
+  },
+  "CHO-002": {
+   "acceptance": "ARCH-PCB-B-IOHA A11: with the primary disabled the second card links to the peer kit with a measured link margin within 1 dB of the primary path.",
+   "allocated_to": [
+    "b",
+    "fw_ioctrl"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "choice",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The WiFi link card is duplicated (slot 1 primary, slot 3 standby) and the two cards share the existing P2P antenna pair through a voted RF changeover that rests on the primary; only one radio is live at a time.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CHO-003": {
+   "acceptance": "n/a (describes the design): no vehicle surge standard is claimed for the prototype (D-16); an installation level would be a new owner ruling.",
+   "allocated_to": [
+    "e"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "choice",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-16"
+   ],
+   "statement": "Surge on long-lead conductors is described by the fitted part (SMCJ40A, 1500 W at 10/1000 us), not constrained to an IEC 61000-4-5 level.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-001": {
+   "acceptance": "check_pcb_b.py invariant 'bank s holds at most one long-range bearer' passes on the generated B netlist.",
+   "allocated_to": [
+    "b"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "constraint",
+   "parent": "NEED-02",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "No I/O bank holds two long-range bearers, where long-range means Iridium, HF and APRS (the 5G data path is on slot 2's PCIe lane, not on a bank).",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-002": {
+   "acceptance": "check_pcb_b.py rail-independence check passes on the netlist; ARCH-PCB-B-IOHA A9 passes on the prototype.",
+   "allocated_to": [
+    "b",
+    "a"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "Each bank's hub, hub core supply, host selects and USB-serial bridges are powered from the shared device rails (+5V_DEV, +3V3_DEV), never from a slot rail.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-003": {
+   "acceptance": "Netlist read-back per ARCH-PCB-B-IOHA section 10a; A10 (no OE and SEL overlap on a scope) and A12 (dark plane: every bank on its home module) pass.",
+   "allocated_to": [
+    "b"
+   ],
+   "choices": null,
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "The voted fabric is fail-safe: every voted select rests on the home module and every OE on disconnected when the control plane is dark; break before make is a hardware delay; every controller output has a pull-down; hub reset is driven through a FET so a dark plane leaves hubs out of reset.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-42"
+   ]
+  },
+  "CON-004": {
+   "acceptance": "Netlist shows three independent supply branches and two fabrics; A7 (either fabric cut, the quorum holds) passes.",
+   "allocated_to": [
+    "b",
+    "fw_ioctrl"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-13"
+   ],
+   "statement": "Each I/O supervisor has its own regulator branch, reset supervisor, watchdog, crystal and SWD pads, and the three talk over two independent CAN-FD fabrics with separate transceivers and termination.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-005": {
+   "acceptance": "Configuration review of the OS image and bridge; the three module links come up at 1000 Mbit/s at bring-up.",
+   "allocated_to": [
+    "b",
+    "sw",
+    "ETHERNET_CM5"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "The OS image, the bridge and any switch configuration never force a fixed speed or duplex on KSZ9897R ports 1 to 3 (the transformer-less module links); auto-negotiation stays enabled.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-006": {
+   "acceptance": "A named pack build (cells, wrap, board P position, mat, pads) is held with a stated minimum in every axis against the committed board B underside and the worst of Peli's own figures for the current moulding (D-08a), every margin MET, none OPEN or NOT MET, and the fit is shown on hardware in a new case of that moulding, on the targeted unpowered mock-up before boards A and P enter layout (FEA-007): M4a and M5 can move board A's east edge and board P's place, so their check is not deferred (the owner's execution prompt of 27 September 2026, sections 2 and 5; v2/docs/CASE-FIT-UNCERTAINTIES.md sections 1 and 2; CASE-MARGINS.md section 7).",
+   "allocated_to": [
+    "p",
+    "case",
+    "b"
+   ],
+   "choices": [
+    "SC-07"
+   ],
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": "ASSEMBLY",
+   "kind": "constraint",
+   "parent": "NEED-05",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-06",
+    "D-08-reversal",
+    "D-08a"
+   ],
+   "statement": "The pack of D-06 (one shrink-wrapped 4S3P 18650 block), its board P, the heater mat and their mounting fit the east pocket, bounded by board A's east edge at X +120, by Peli's R 15.88 floor fillet and east wall and in Y by the frame's setting legs (CASE-MARGINS.md 2.6 and C6; the place is v2/ecad/tools/panel1450.py PACK_BLOCK, PACK_WEST_X and PACK_GROUP_LEN), under board B's underside at Z 49.0 (the dock strip's VHB pads lift the stack, C1 follow-on (a); 47.9 until 27 September 2026).",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PLACED_BOARD",
+   "waits_on": [
+    "S-27",
+    "L-07"
+   ]
+  },
+  "CON-007": {
+   "acceptance": "The HF rail's set point and its worst-case tolerance stay under the QMX's own limit, by calculation from the regulator's feedback network.",
+   "allocated_to": [
+    "a"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "constraint",
+   "parent": "NEED-05",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The HF rail is regulated 12.0 V and never 13.8 V (the QMX manual warns that 13.8 V stresses its PA).",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "SCRIPT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-008": {
+   "acceptance": "claims_check.py (rule ENV-002) finds no unearned rating in the public documents.",
+   "allocated_to": [
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "constraint",
+   "parent": "NEED-06",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-04"
+   ],
+   "statement": "No ingress rating is claimed in any public or shipped document until the seal procedure of appendix 32.34 and TEST-PLAN E6 and E7 have run, and the kit is never labelled IP68.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT"
+   ],
+   "verification_phase": "RELEASE_PACKAGE",
+   "waits_on": null
+  },
+  "CON-009": {
+   "acceptance": "part_temps.py reports no part outside its range, and every bought part's range is in pcb_part_temps.yaml.",
+   "allocated_to": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "p"
+   ],
+   "choices": null,
+   "evidence_result": "FAIL",
+   "final_phase": null,
+   "kind": "constraint",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "Every part's published operating range covers the envelope at its location: the ambient floor of -20 C, and inside air up to 51 C (the larger of 40 + 10 and 35 + 16).",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "VENDOR_CONFIRMATION"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-010": {
+   "acceptance": "Netlist trace on board D, with every element of the transmit gate shown to hold its inhibiting state.",
+   "allocated_to": [
+    "d",
+    "a"
+   ],
+   "choices": null,
+   "evidence_result": "FAIL",
+   "final_phase": null,
+   "kind": "constraint",
+   "parent": "NEED-08",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "The PA's VGG is the EMCON gate of the APRS transmitter; D's KEY = PTT_ANY AND TX_INHIBIT_n.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-011": {
+   "acceptance": "Board B's netlist and the assembly's lead table show slot 1's antenna lead to board A's J_RF3 with no active element between the module and the jack, and slots 2 and 3's radios off from power-up; on the prototype the path's loss from the module's U.FL to the jack is measured at 2.4 and 5 GHz and is not negative; no document claims the module's approval holds through this path until Raspberry Pi's written position is held (SC-42, S-48).",
+   "allocated_to": [
+    "b",
+    "a",
+    "case"
+   ],
+   "choices": [
+    "SC-42"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "constraint",
+   "parent": "NEED-16",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-04"
+   ],
+   "statement": "The compute modules' radios transmit only through antennas of their approved configuration: slot 1's module through the antenna of Raspberry Pi's antenna kit on the WIFI 2.4 jack, over a path that adds no gain (the kit's own lead, board A's J_RF3, the blind-mate and the wall arrestor); slots 2 and 3's radios stay off in hardware unless the panel firmware moves the local WiFi to one of them after slot 1 is lost, when that module uses its own on-board antenna.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "VENDOR_CONFIRMATION"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-48"
+   ]
+  },
+  "CON-012": {
+   "acceptance": "The owner accepted (D-02b) one module above +35 C ambient. Separately, and the session's rather than the owner's (27 September 2026): SC-18 enters the heat stage on measured temperatures, and SC-49 acts past it, on the cells' measured temperature, before they pass +60 C. Stated in CONOPS section 4c; the ambient at which the heat stage is entered is measured by the heat-balance test of POWER-THERMAL.md section 10 and TEST-PLAN E3-A and E3-L, and no document states it before then.",
+   "allocated_to": [
+    "kit",
+    "sw",
+    "fw_panel"
+   ],
+   "choices": [
+    "SC-18",
+    "SC-49"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-03",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-02b"
+   ],
+   "statement": "When C1's triggers (inside air +50 C or any cell +55 C) recur in the reduced mode the kit runs its heat stage, one module (slot 2 as board B is generated, slot 3 once BANK-R1 is in board B), so compute redundancy (NEED-03) is not available in hot conditions, and past the heat stage the kit's hot stop acts on the cells' measured temperature, shedding to its minimum load, with no module, and then shutting down (REQ-077). The ambients at which each happens are bounds until the enclosure is measured: at the independent bound's worst corner the kit runs on one module from about +20.1 C lid closed and +24.0 C lid open, both below the +35 C the owner accepted, so NEED-03 is lost lid open there too, and on none from about +33.2 C lid closed and +36.1 C lid open; whether the hot stop acts inside the envelope at all is FEA-004's (CONOPS section 4c; SC-18, SC-49).",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-013": {
+   "acceptance": "Accepted by the owner (D-02b) as a consequence. The charge hold is the pack gauge's own temperature window (REQ-046, TEST-PLAN section 5 row 7), which is the pass line; the ambient at which it holds charging off with three loaded modules is characterisation, measured by the early heat-balance test of POWER-THERMAL.md section 10 and TEST-PLAN E3, and no document states a hot-weather charging ambient before it is measured (SC-45).",
+   "allocated_to": [
+    "p",
+    "a",
+    "kit"
+   ],
+   "choices": [
+    "SC-45"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-05",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-02b"
+   ],
+   "statement": "With three loaded modules and the lid open, charging holds off above an ambient where the cells reach +45 C (about +25 C in the design record), so a hot-weather mission charges only in the reduced mode.",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-014": {
+   "acceptance": "For every PCA9555-driven enable, the node voltage at power-up with the expander's pull-up at its weakest and strongest is below the load's OFF threshold or above its ON threshold, computed from datasheet limits; DEV_EN is driven high by a resistor to board A's +3V3 rail.",
+   "allocated_to": [
+    "a",
+    "b",
+    "fw_panel"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "constraint",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "Every enable line has a defined state from power-up until firmware writes it, set by external resistors that dominate any device's internal pull-up; the shared device rail comes up by design, not by an unspecified expander parameter.",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "SCRIPT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-015": {
+   "acceptance": "The socket's part number is key B on the maker's drawing and its land matches that drawing; the pigtail and jack map names each ANTx port: three jacks on ANT0, ANT2 and ANT3 if the board A site at X +46 and the board E clamp fit are confirmed (the case half against Peli's figures, CASE-MARGINS.md section 3.4), otherwise two on ANT0 and ANT2.",
+   "allocated_to": [
+    "b",
+    "a",
+    "e",
+    "case",
+    "PCIE_M2_MODULE",
+    "USB_M2_MODULE"
+   ],
+   "choices": [
+    "SC-07"
+   ],
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": null,
+   "kind": "constraint",
+   "parent": "NEED-02",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-07",
+    "D-08-reversal"
+   ],
+   "statement": "The 5G module sits in a key-B M.2 3052 socket, and its jacks carry ANT0, ANT2 and ANT3 (three jacks, the kit's twelfth bulkhead), or ANT0 and ANT2 if the third site is not confirmed (D-07).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "SCRIPT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-12"
+   ]
+  },
+  "CON-016": {
+   "acceptance": "An orientation check in the protection gate reads every unidirectional clamp and rectifier in every generated netlist: the cathode pad of a clamp is on the positive node, the cathode of a rectifier on the node it feeds, and none is drawn on the bidirectional D_TVS symbol.",
+   "allocated_to": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "p"
+   ],
+   "choices": null,
+   "evidence_result": "FAIL",
+   "final_phase": null,
+   "kind": "constraint",
+   "parent": "NEED-13",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "Every one-way surge clamp has its cathode on the positive conductor it protects, and every rectifier its cathode toward the node it feeds, drawn on a symbol that carries a cathode pin, so no clamp conducts forward at its rail's normal polarity.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-017": {
+   "acceptance": "At SCHEMATIC: (1) gen_sch_b.py and board B's BOM name the STM32H743VIT6 for all three supervisors and the pin map is unchanged; (2) regeneration parity traces every other netlist difference to a finding; (3) the compatibility matrix of every pin, peripheral and feature the schematic and the supervisor firmware use is retained with its DS12110 sources, and no requirement depends on an STM32H753-only unit. At ASSEMBLY: (5) the fitted supervisors are silicon revision V or X (marking V or X; DBGMCU_IDC REV_ID 0x2003 or 0x2001; ES0392 Rev 15 section 2.24.2). At the firmware stage (final_phase): (4) the supervisor firmware builds for the STM32H743 and refuses to run both FDCAN fabrics on revision Y or W.",
+   "allocated_to": [
+    "b",
+    "fw_ioctrl",
+    "procedure"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-13"
+   ],
+   "statement": "The three I/O supervisors are the STM32H743VIT6 the project buys, in the schematic text, the symbol value and the BOM, and the regenerated board B netlist matches the committed one apart from that text (D-13, plan condition 1); what the design needs of the part is shown compatible, not only named.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-41"
+   ]
+  },
+  "CON-018": {
+   "acceptance": "The board A netlist shows the array on PD_CC1 and PD_CC2 at the outlet's pigtail header, a part whose capacitance the TPS25740's CC lines tolerate, and TEST-PLAN M7 includes the USB-C outlet.",
+   "allocated_to": [
+    "a"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-18",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-17"
+   ],
+   "statement": "Board A's USB-C CC1 and CC2 pins carry an external low-capacitance ESD array by the connector, in addition to the TPS25740's internal protection (D-17).",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-019": {
+   "acceptance": "Netlist: the PA keying reaches the enables of the PoE and USB-C stages through logic that needs no firmware and turns both off, their minimum contract of 0 W (SC-24); on the prototype, keying the PA turns both outlets off with every processor held in reset.",
+   "allocated_to": [
+    "a",
+    "d"
+   ],
+   "choices": [
+    "SC-24"
+   ],
+   "evidence_result": "PASS",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-13",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-11"
+   ],
+   "statement": "A hardware interlock drops the PoE and USB-C outlets to their minimum contract while the PA keys, with no processor in the path (D-11).",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-020": {
+   "acceptance": "The supervisor firmware's requirements carry Z-C3 and its image is covered by D-13's software-verified boot; a review of the firmware shows no master transaction and no response at 0x60 or at 0x30 to 0x32 (bench V-B08 of v2/docs/HW-FW-CONTRACT.md); the Z-EXP-C held-bus cases C-H1 to C-H3 show the wipe's fail-secure outcome when a supervisor holds the bus.",
+   "allocated_to": [
+    "fw_ioctrl",
+    "b"
+   ],
+   "choices": [
+    "SC-08"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-10",
+   "prototype_1": "core",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-03",
+    "D-13"
+   ],
+   "statement": "The three STM32H743 I/O supervisors' firmware is an I2C target on the kit bus at 0x34, 0x35 and 0x36 only: never a master, never at address 0x60 (firmware rule Z-C3) and never at 0x30 to 0x32, where the TPS23861's broadcast address 0x30 sits (I3-F01), so only the panel controller commands the secure element.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-40"
+   ]
+  },
+  "CON-021": {
+   "acceptance": "Board C's netlist carries the lamp, its gate and its driver from TX_INHIBIT_n or EMCON_HW with no processor in the path; on the bench (EMCON.md E-02) the lamp is lit with EMCON asserted and the panel controller in reset or unflashed, and dark with EMCON released or its lug lead open.",
+   "allocated_to": [
+    "c",
+    "case"
+   ],
+   "choices": [
+    "SC-11"
+   ],
+   "evidence_result": "FAIL",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-08",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "Board C carries a hardware EMCON lamp driven from the EMCON line's state with no processor in its path, and the face plate a light guide for it, so the one element every transmitter's inhibit shares (the SW_EMCON toggle and the TX_INHIBIT_n conductor) shows its state without firmware (SD-EMC-6).",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-44"
+   ]
+  },
+  "CON-022": {
+   "acceptance": "A power-state check over board B's netlist finds no fabric net able to source current into a slot whose +3V3_CM rail is absent (FAILOVER-FABRIC.md FB-FAB-3), or Raspberry Pi states in writing that the module tolerates the currents of FAILOVER-FABRIC.md section 5.2; on the prototype, no slot rail rises through its pins with the slot off.",
+   "allocated_to": [
+    "b"
+   ],
+   "choices": null,
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "No always-on fabric net drives a pin of a compute module whose supply is off: the shared device rails and the hubs they feed never source current into an unpowered module, which the module's own datasheet forbids.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "VENDOR_CONFIRMATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-42"
+   ]
+  },
+  "CON-023": {
+   "acceptance": "Each board's rule readings of SCH-001, SCH-002, SCH-005, STK-001, STK-002, RTE-001, RTE-002, VIA-001, VIA-002, PLN-001, PLC-002, DFM-001, DFA-001, DOC-001, OUT-001 and SGN-001 read PASS, WAIVED or NOT_APPLICABLE at the phase each rule applies to (rules_status), before that board's fabrication release.",
+   "allocated_to": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "e5",
+    "p"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "RELEASE_PACKAGE",
+   "kind": "constraint",
+   "parent": "NEED-15",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "Each board is built from its reviewed netlist and is fabricable and assemblable at its declared fabricator and stack: its schematic is ERC-clean or explained, every pad carries a net or a declared no-connect, the board matches its netlist, its stackup and layer count are declared and decided, its geometry, vias and planes are ones the fabricator makes with nothing unrouted, and its fabrication, assembly and order sets are the current, complete set with every applicable rule judged.",
+   "status": "DEFINED",
+   "verification_method": [
+    "ERC",
+    "DRC",
+    "SCRIPT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-024": {
+   "acceptance": "Each board's rule readings of RET-001 to RET-004, IMP-001, IMP-002, PAIR-001, GND-001 and ANA-001 read PASS, WAIVED or NOT_APPLICABLE at the phase each rule applies to (rules_status); on the prototype, TEST-PLAN M4's radiated emissions are recorded (characterisation, D-04).",
+   "allocated_to": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "e5",
+    "p"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-18",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "Every signal on every board has a continuous return path beside it, with a return transition wherever it changes reference; every net whose interface states an impedance is routed at it on the board's own stack; every differential pair is coupled and matched within its budget; each board has one deliberate ground system; and every sensitive analogue node is identified and protected.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "DRC",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PLACED_BOARD",
+   "waits_on": null
+  },
+  "CON-025": {
+   "acceptance": "Schematic: board B's generator and committed netlist carry, for each SIM holder, a TVS array on the holder side of the 22 ohm series resistors of RST, CLK and DATA, each channel at most 10 pF by its maker's published figure; placed board: the array beside its holder.",
+   "allocated_to": [
+    "b"
+   ],
+   "choices": [
+    "SC-13"
+   ],
+   "evidence_result": "PASS",
+   "final_phase": "PLACED_BOARD",
+   "kind": "constraint",
+   "parent": "NEED-18",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "Board B protects each of the 5G module's SIM interfaces with a TVS array whose parasitic capacitance is at most 10 pF, placed close to the card holder, as the module's maker asks (Quectel RM520N series hardware design v1.1 section 4.1.7).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "CON-026": {
+   "acceptance": "kit_i2c_budget.py reads every segment within its limit on the current netlists; after layout, the field-solver reading of each segment's copper is within the allowance of v2/docs/HW-FW-CONTRACT.md section 6.6; on the prototype, bench V-K01 measures tr at most 300 ns, tf between 12 and 100 ns and fSCL at least 90 kHz at each segment's farthest pin.",
+   "allocated_to": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "fw_panel"
+   ],
+   "choices": null,
+   "evidence_result": "FAIL",
+   "final_phase": "PROTOTYPE",
+   "kind": "constraint",
+   "parent": "NEED-10",
+   "prototype_1": "core",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-03"
+   ],
+   "statement": "Every segment of the kit I2C bus meets, at its published-maximum pin capacitance and its copper, the rise time of the strictest target on it (300 ns for the BQ25731, the TPS23861, the ATECC608B and the ADS1115), with pull-ups no stronger than its weakest target's 3 mA sink at 0.4 V allows, at Standard-mode 100 kHz programmed and at least 90 kHz achieved.",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-59"
+   ]
+  },
+  "FEA-001": {
+   "acceptance": "FB-ZER-1 closed: Z-EXP-A and Z-EXP-B pass on ATECC608B-SSHDA-T parts provisioned with the section 3.1 slot map (configuration read back, GenKey after every zone lock, an interrupted GenKey with its OLD, NEW and ERROR counts), Z-EXP-C passes with the panel firmware, or the SLB 9673 fallback is taken under switch conditions S1 and S2.",
+   "allocated_to": [
+    "b",
+    "fw_panel"
+   ],
+   "choices": [
+    "SC-08"
+   ],
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": "PROTOTYPE",
+   "kind": "feasibility",
+   "parent": "NEED-10",
+   "prototype_1": "core",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-03",
+    "D-09"
+   ],
+   "statement": "ZEROIZE as ruled (D-03) requires that the fitted ATECC608B-SSHDA-T, in the slot map of ZEROIZE.md section 3.1, lets the panel controller destroy both key-encryption keys after every zone is locked, verifiably, with no secret, resumably across a power loss, and never ending where a key survives and cannot be destroyed. The mechanism is supported at desk level by public Microchip documents; it is not yet shown on the part.",
+   "status": "FEASIBILITY_OPEN",
+   "verification_method": [
+    "VENDOR_CONFIRMATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-35",
+    "L-06"
+   ]
+  },
+  "FEA-002": {
+   "acceptance": "Every row of EMCON.md section 4 closed at desk on the committed netlists (SD-EMC-1's two stages drawn for the 5G module; L1 to L4 and L7 remedied; the back-feed of SD-EMC-2 bounded; the RockBLOCK's ENABLE forced low by hardware and its stored energy bounded), each row end to end within its latency under REQ-071, and bench tests E-01 to E-12 passed on the prototype with an external receiver.",
+   "allocated_to": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "kit"
+   ],
+   "choices": [
+    "SC-11"
+   ],
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": "PROTOTYPE",
+   "kind": "feasibility",
+   "parent": "NEED-08",
+   "prototype_1": "core",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-05"
+   ],
+   "statement": "Radios dark (D-05) requires, for every one of the kit's 17 transmitters, a hardware inhibit that holds with every processor dead, in every state of the lines' own supplies, without depending on the radio's firmware. At desk the radio-specific (local) chains are complete for 14 rows and no row is complete end to end; the RM520N-GL's only drawn inhibit is a firmware-mediated airplane mode, the RockBLOCK 9704 keeps running on its own supercapacitors with its ENABLE held by firmware, the shared lines have open items, and no row is shown on the bench.",
+   "status": "FEASIBILITY_OPEN",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-01",
+    "S-02",
+    "S-44"
+   ]
+  },
+  "FEA-003": {
+   "acceptance": "FB-FAB-1 to FB-FAB-8 closed with the evidence FAILOVER-FABRIC.md section 10 names: the map re-read on the netlist main commits, FAB-01 to FAB-04 fixed with their assertions and mutations, a placement that seats every part and a complete route (none of which authorises layout), a channel budget per link from a primary document with routed lengths and a field-solver impedance on the chosen stack, the reference clock measured at each socket, then IOHA A1 to A14 on the bench.",
+   "allocated_to": [
+    "b",
+    "fw_ioctrl"
+   ],
+   "choices": null,
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": "PROTOTYPE",
+   "kind": "feasibility",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "The failover fabric (D-01, IOHA A1 to A14) is wired the way the parts' documents ask on the round-6 netlist, and four major findings stand on it (FAB-01 to FAB-04); board B's escape strategy is diagnosed, not demonstrated, and nothing that needs copper or silicon (impedance and loss at routed length, the reference clock through the switch's buffer, the power-state behaviour) is validated.",
+   "status": "FEASIBILITY_OPEN",
+   "verification_method": [
+    "SCRIPT",
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-42",
+    "L-05"
+   ]
+  },
+  "FEA-004": {
+   "acceptance": "The dominant undocumented loads measured or bounded by a maker; the enclosure conductance measured (the early heat-balance test or TEST-PLAN E3); PWR-F12 closed (the chain re-declared with a short-time rating, board A's pack-node copper judged at 18 A, F2 shown inside its +60 C rating at 18 A); PWR-F15 closed (a flange sensor on the PA); the controls C1 to C4 and rules K1 to K5 re-derived at bring-up from the readings.",
+   "allocated_to": [
+    "a",
+    "p",
+    "d",
+    "kit"
+   ],
+   "choices": [
+    "SC-10",
+    "SC-35",
+    "SC-49",
+    "SC-23"
+   ],
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": "PROTOTYPE",
+   "kind": "feasibility",
+   "parent": "NEED-05",
+   "prototype_1": "core",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-06",
+    "D-11"
+   ],
+   "statement": "The runtime, the all-transmit bound of D-11, the cells' charge and discharge windows in a sealed case and the PA's key-down heat are planning figures: about a fifth of the typical budget has no document, the enclosure conductance is not measured, the +35 C and +25 C restrictions are proposed controls, the key-down near 18 A exceeds the chain's declared 10 A continuous, and the PA's flange has no sensor.",
+   "status": "FEASIBILITY_OPEN",
+   "verification_method": [
+    "CALCULATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "L-04"
+   ]
+  },
+  "FEA-005": {
+   "acceptance": "The battery-and-protection review owed under D-09 (route R-BAT, an electronics engineer outside the agents that wrote the design) examines the packet at the commit whose link is sent, covering fuse actuation and interruption against the prospective fault, FET and gate behaviour, temperature sensing, the commissioning jumper and the charger's state sequence, and its findings are answered before the pack PCB is released or the pack is built.",
+   "allocated_to": [
+    "p",
+    "a"
+   ],
+   "choices": [
+    "SC-12"
+   ],
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": "ASSEMBLY",
+   "kind": "feasibility",
+   "parent": "NEED-13",
+   "prototype_1": "core",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-09",
+    "D-15"
+   ],
+   "statement": "Board P's protection architecture is documented and its second level restored (the BQ7720700 with OV, UV, open wire and over-temperature on its own thermistor, the SCF9550 chemical fuse, the BQ4050's FUSE and PTC), and no qualified engineer has reviewed the actual schematic and BOM: every review so far is by agent sessions.",
+   "status": "FEASIBILITY_OPEN",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "VENDOR_CONFIRMATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "L-03",
+    "S-34",
+    "S-45",
+    "S-46"
+   ]
+  },
+  "FEA-006": {
+   "acceptance": "DECOUPLING.md sections 8 and 10 closed: T1 to T10 merged with DEC-001's registry text, G1 to G14 in each board's generator, every board re-placed with its class seats read and its escape cost measured, DEC-001 read current on each board's candidate.",
+   "allocated_to": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "p"
+   ],
+   "choices": null,
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": "PLACED_BOARD",
+   "kind": "feasibility",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "Decision 42 is ruled per capacitor class (R, D, L, A, B1, B2) from the makers' own words, and nothing is laid for it: the tool changes T1 to T10 and the generator changes G1 to G14 belong to their writers, and the escape cost of the own-pin windows is measured only on each board's next placement; board B's fine-pitch parts carry no declared decoupling, and five circuit gaps stand (among them the STM32H743's VDDA with no capacitor of its own).",
+   "status": "FEASIBILITY_OPEN",
+   "verification_method": [
+    "SCRIPT",
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "FEA-007": {
+   "acceptance": "Every desk item of CASE-FIT-UNCERTAINTIES.md section 2 closed before its board's layout entry; for boards A, B, E and P, the physical checks of their YES rows (A: T4; B: T2, T4, T5, T10, T11; E: T10; P: T2, T4; with T1 at purchase) run on a new case of the current moulding with the made parts and stand-ins, and each YES row read at or above its minimum, or the board's outline or placement changed, before that board's layout entry; every board's committed layout re-read against those readings before its fabrication release; T3, T7, T8 and T9 at the build.",
+   "allocated_to": [
+    "case",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "e5",
+    "p"
+   ],
+   "choices": [
+    "SC-07"
+   ],
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": "ASSEMBLY",
+   "kind": "feasibility",
+   "parent": "NEED-06",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-08-reversal",
+    "D-08a",
+    "D-09"
+   ],
+   "statement": "The case set is drawn and computed on the design basis only (v2/release/case-2026-09-27/, CASE-MARGINS.md): 35 of the 70 case margins are OPEN, two of them (M17g and M17x, the east jumpers under their plugs) fail with the jumper plug as laid out, and 30 rest on allowances no source states (Peli publishes no case tolerance); the pack's hold-down, the rod stack's retention and the dock and blind-mate tolerance stack are not designed, and board A's J_AB2 stands 3.10 into board D (W4-F17). Nominal CAD establishes no fit, seal or alignment, and the bounds of the open rows include failure: eleven of them (the YES rows of CASE-FIT-UNCERTAINTIES.md section 2) would be remedied, if their check failed, by moving a board outline, a connector or a board part of A, B, E or P.",
+   "status": "FEASIBILITY_OPEN",
+   "verification_method": [
+    "CALCULATION",
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PLACED_BOARD",
+   "waits_on": [
+    "S-27",
+    "L-07"
+   ]
+  },
+  "REQ-001": {
+   "acceptance": "In the functional check on the built prototype (TEST-PLAN section 4): an Iridium message is sent and received, 5G data passes, a LoRa mesh packet passes, and an APRS beacon is heard by an external receiver.",
+   "allocated_to": [
+    "kit",
+    "b",
+    "d",
+    "a"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-02",
+   "prototype_1": "core",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-01"
+   ],
+   "statement": "Prototype 1's core bearers pass traffic: Iridium satellite messaging, 5G cellular data, the LoRa mesh and VHF APRS.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-002": {
+   "acceptance": "In the functional check: HF CAT control and audio pass, a VHF voice exchange over a headset is heard by an external receiver, and messages pass over the WiFi link to a second kit with no access point.",
+   "allocated_to": [
+    "kit",
+    "a",
+    "b",
+    "d"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-02",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-01"
+   ],
+   "statement": "The kit also carries an HF bearer (the QMX, with CAT control and audio), VHF voice, and the kit-to-kit WiFi link as a messaging bearer that needs no access point.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-003": {
+   "acceptance": "In the functional check, a message each way between a handheld on the kit's LoRa mesh and a remote correspondent over each core long-range bearer in turn (Iridium, 5G and APRS), with the bearer's own service available: each delivered, the kit's own hand-off of the message to the bearer within 10 s, and the end-to-end time per bearer recorded as characterisation, since networks outside the kit set it (SC-25).",
+   "allocated_to": [
+    "kit",
+    "sw"
+   ],
+   "choices": [
+    "SC-25"
+   ],
+   "evidence_result": "NOT_YET_TESTED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-01",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "A message from a handheld on the kit's LoRa mesh reaches a remote correspondent over each long-range bearer in turn, and a message in the other direction reaches the handheld.",
+   "status": "DEFINED",
+   "verification_method": [
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PROTOTYPE",
+   "waits_on": null
+  },
+  "REQ-004": {
+   "acceptance": "ARCH-PCB-B-IOHA acceptance tests A1 to A6, A8 and A12 pass on the prototype, and A13's USB throughput under failover is measured and recorded (characterisation, no pass line); every device of the moved bank is back in service (IOHA section 7 step 12, application access resumed, by a bridge instance already running on the adopting module) within 30 s of its home module's loss, plus the device's own start-up where its maker states a longer one, and the bridge's own service is back on a surviving module within 60 s of the loss; each time is recorded (SC-25).",
+   "allocated_to": [
+    "b",
+    "fw_ioctrl",
+    "sw"
+   ],
+   "choices": [
+    "SC-02",
+    "SC-25"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "The loss of any one CM5, or of any one I/O supervisor, does not make a peripheral on the voted fabric permanently unreachable; ownership moves to a surviving module without a fourth central arbiter; hardware, not firmware, prevents two hosts owning one peripheral.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-005": {
+   "acceptance": "Every USB peripheral ARCH-PCB-B-IOHA section 15 traces, and the kit-to-kit WiFi link, is critical, and the LoRa module and cellular data are the named exceptions (SC-02); CONOPS section 2a, ARCH-PCB-B-IOHA section 15a and V2-SPEC line 32 name the same set.",
+   "allocated_to": [
+    "kit",
+    "b"
+   ],
+   "choices": [
+    "SC-02"
+   ],
+   "evidence_result": "PASS",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "The set of critical peripherals that NEED-03 protects is named.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-006": {
+   "acceptance": "The kit boots, brings up every bank it can host and serves its bearers with each of the seven non-empty slot combinations on the prototype.",
+   "allocated_to": [
+    "b",
+    "c",
+    "fw_panel",
+    "sw"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "The board is agnostic to how many compute modules are fitted (one, two or three) and in which slots.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-007": {
+   "acceptance": "Every control and indicator behaves as PANEL.md sections 5, 8 and 9 state in the functional check, and the lamp test lights every panel indicator. The lamp test lights seventeen indicators, D1 to D16 and the PI ring (PANEL.md section 9, SC-30).",
+   "allocated_to": [
+    "c",
+    "fw_panel",
+    "sw"
+   ],
+   "choices": [
+    "SC-30"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-04",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The face plate carries the operator controls and indicators of PANEL.md: MAIN, PI and TEST buttons, locking SOS, EMCON and ZEROIZE toggles (covers on SOS and ZEROIZE), the LIGHTING toggle, sixteen indicator LEDs (D1 to D16, the TX lamp D3 among them), a sounder, the e-paper and an ambient light sensor, with the semantics of PANEL.md sections 5, 8 and 9.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-008": {
+   "acceptance": "Inspection of the page with the kit unpowered; firmware review of the refresh limit and the QR payload.",
+   "allocated_to": [
+    "c",
+    "fw_panel"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-04",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The e-paper shows identity, battery and shore state, GPS fix, UTC, last message, bearer and slot health, and holds them with the power off; it refreshes at most once a minute; the enrolment QR is shown only while TEST is held after a UI request and never carries key material.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-009": {
+   "acceptance": "Both jacks key the VHF path and carry receive audio in the functional check; a recording of net audio exists on a drive afterwards.",
+   "allocated_to": [
+    "d",
+    "c",
+    "sw"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-04",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "Two sealed headset jacks, each with its own push-to-talk on its own codec channel, and net audio recording to the drives.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-010": {
+   "acceptance": "An image is captured and sent in the functional check, over Iridium as one message of at most 100,000 bytes (the RockBLOCK 9704's largest packet, its datasheet) and over the mesh (SC-45).",
+   "allocated_to": [
+    "b",
+    "c",
+    "sw"
+   ],
+   "choices": [
+    "SC-45"
+   ],
+   "evidence_result": "NOT_YET_TESTED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-04",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "A camera (sealed on the face, or USB on the wall port) captures images for image messages over Iridium and the mesh.",
+   "status": "DEFINED",
+   "verification_method": [
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PROTOTYPE",
+   "waits_on": null
+  },
+  "REQ-011": {
+   "acceptance": "A tablet model is named, the bracket is drawn and fitted, and the closed lid leaves no mark on the tablet or its bracket at CASE-MARGINS.md test T9; the tablet charges from the USB-C outlet and joins the kit's WiFi (SC-45).",
+   "allocated_to": [
+    "case",
+    "a"
+   ],
+   "choices": [
+    "SC-45"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-04",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "A bracket in the lid holds an 8 to 10 inch rugged tablet, fed by the USB-C outlet and the kit's WiFi.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "RELEASE_PACKAGE",
+   "waits_on": null
+  },
+  "REQ-012": {
+   "acceptance": "Netlist trace from D's KEY line to the lamp driver with no processor in the path; bench check with the panel controller in reset.",
+   "allocated_to": [
+    "c",
+    "d"
+   ],
+   "choices": null,
+   "evidence_result": "FAIL",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-04",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The TX lamp follows the VHF path's real KEY line in hardware, is never dimmed below 10 % duty except in blackout, and a lamp test lights it through its own tie.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-013": {
+   "acceptance": "Unplug the panel's USB host path (fail its bank) while MASTER WARN flashes: the lamp goes steady, not dark.",
+   "allocated_to": [
+    "fw_panel"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-04",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": null,
+   "statement": "A flasher that fails fails to steady on: the panel controller holds the last written indicator state when the USB link drops.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-014": {
+   "acceptance": "The stated hours for PS-IDLE-SPEC and PS-TYP at +20 C are computed for an aged pack, 80 percent of the cells' specification minimum capacity (8.04 Ah for the 3P block, SC-23), then measured on the prototype and scaled to that capacity; no published runtime exceeds the scaled measurement, and the pack is replaced once its gauge's learned full-charge capacity falls below that capacity.",
+   "allocated_to": [
+    "p",
+    "a",
+    "e",
+    "kit"
+   ],
+   "choices": [
+    "SC-05",
+    "SC-23"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-05",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-06"
+   ],
+   "statement": "The kit runs from its internal pack, and its battery-only runtime is stated in hours in an idle and a typical mode (PS-IDLE-SPEC and PS-TYP) at +20 C for an aged pack; missions longer than the pack rely on vehicle or solar input (D-06).",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-015": {
+   "acceptance": "Operates and charges across 9 to 36 V, and takes a reversed input and an over-voltage to the front end's limit (40 V, 32.55) without damage, on the prototype; CE102 under its limit line (TEST-PLAN M1).",
+   "allocated_to": [
+    "e",
+    "a",
+    "case"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-05",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-16"
+   ],
+   "statement": "A 9 to 36 V vehicle and shore input runs the kit and charges the pack, with reverse-polarity protection, under- and over-voltage limits, a line filter designed to MIL-STD-461 limits, a NATO 2-pin plug cable and the MIL-DTL-38999 receptacle. The input is not qualified against any vehicle surge standard and is not intended for 24 V military vehicle buses (D-16).",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-016": {
+   "acceptance": "Netlist (board E): the panel entry (PV_IN and PV_P) is declared at 25 V in the generator's intent (v_max) and every part on it is rated above that; the panel input's clamp D4 is an SMCJ28A (28 V standoff, above the window, conducting from 31.1 V, under the 35 V bulk capacitors); the FBIN divider R8 and R9 sets the 17.6 V operating point; and the input fuse F2 and connector J_SOLAR are rated 10 A, above the 5.68 A the window's 100 W draws at 17.6 V. Prototype: a bench supply set to a 100 W panel's curve with its maximum-power point at 17.6 V and its open-circuit voltage at 25 V charges the pack with the stage holding its input at 17.6 V (SC-36).",
+   "allocated_to": [
+    "e"
+   ],
+   "choices": [
+    "SC-36"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-05",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "The solar input charges the pack through board E's LT8705A stage from a panel inside its declared window: an open-circuit voltage of at most 25 V at the panel's coldest operating temperature, the panel held at 17.6 V by the stage's input regulation, and at most 100 W into the stage.",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-53"
+   ]
+  },
+  "REQ-017": {
+   "acceptance": "Each outlet delivers its rated contract into a load in the functional check; with the PA keyed both outlets are off (their minimum contract, 0 W, SC-24) with no processor in the path; the USB-C outlet carries no data.",
+   "allocated_to": [
+    "a",
+    "b",
+    "case"
+   ],
+   "choices": [
+    "SC-24"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-05",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-11",
+    "D-12"
+   ],
+   "statement": "The kit powers accessories: PoE out on the sealed Gigabit Ethernet port (54 V rail, 0.6 A) and a power-only USB-C PD outlet (5, 9 and 15 V, 45 W; D-12), both dropped to their minimum contract in hardware while the PA keys (D-11, CON-019).",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-018": {
+   "acceptance": "PS-ALLTX (every transmitter keyed, the accessory outlets off at their minimum contract of 0 W, the pack heater and the standby WiFi card off) is supplied with every rail in regulation through a 60 s key-down begun at a pack rest voltage of 15.5 V or more with every cell at most +55 C, and the PA keyed alone likewise from a rest voltage of 12.4 V or more; no key-down lasts longer than 60 s (D-11's declared values, SC-35, from SC-10).",
+   "allocated_to": [
+    "a",
+    "p",
+    "e",
+    "e5"
+   ],
+   "choices": [
+    "SC-10",
+    "SC-35",
+    "SC-24"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-05",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-11"
+   ],
+   "statement": "Every transmitter may key at the same time, for a declared key-down time above a declared state of charge, with the accessory outlets at their minimum contract (D-11); no other transmit serialisation is required of the hardware (the bridge may keep one as a receiver-protection preference).",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-019": {
+   "acceptance": "Every board outline, the plate and the pack are held against the worst of Peli's own figures for the current moulding with a stated minimum, every case-dependent margin MET and none OPEN or NOT MET in CASE-MARGINS.md, and the OPEN rows shown on hardware in a new case of that moulding: the targeted checks of CASE-MARGINS.md section 7 of the rows that can move a board before the layout entry of boards A, B, E and P, which is held on them (FEA-007, v2/docs/CASE-FIT-UNCERTAINTIES.md sections 1, 2 and 7), the rest at the build. Restated 27 September 2026 at the r8int4 integration (verify c7): the earlier clause carried the targeted checks to the affected boards' fabrication release if they had not run before the outlines froze; CASE-MARGINS.md section 7 withdrew that fallback, so it is withdrawn here too.",
+   "allocated_to": [
+    "case",
+    "kit"
+   ],
+   "choices": [
+    "SC-07"
+   ],
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": "ASSEMBLY",
+   "kind": "requirement",
+   "parent": "NEED-06",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-08-reversal",
+    "D-08a"
+   ],
+   "statement": "The case is the Peli 1450 of the current moulding (Peli 1451-931, 15 January 2025, D-08a) with the 1450PF panel frame, and it never changes; the design is held against the worst of Peli's own figures (D-08-reversal).",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PLACED_BOARD",
+   "waits_on": null
+  },
+  "REQ-020": {
+   "acceptance": "Inspection of the case template and the built kit: every penetration is a sealed connector, a sealed switch or the Peli valve.",
+   "allocated_to": [
+    "case",
+    "c"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "ASSEMBLY",
+   "kind": "requirement",
+   "parent": "NEED-06",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "There is no vent opening anywhere in the case skin, the plate or the connector plate; Peli's own pressure equalisation valve stays; sealed connectors are not vents.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "RELEASE_PACKAGE",
+   "waits_on": null
+  },
+  "REQ-021": {
+   "acceptance": "TEST-PLAN E6 (closed, 1 m, 30 min: no water inside), E7 (deployed, 15 min of driven rain at 40 mm/h on every face: no water inside) and the seal check pass.",
+   "allocated_to": [
+    "case",
+    "c",
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-06",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The face is built to an IP67-class construction and the closed kit keeps water out.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "RELEASE_PACKAGE",
+   "waits_on": null
+  },
+  "REQ-022": {
+   "acceptance": "TEST-PLAN E1 (26 drops from 1.22 m onto plywood over concrete, closed and latched, pack fitted) and E2 (composite wheeled vehicle profile, 1 h per axis, closed, pack fitted) pass on their own criteria. These severities are the owner's ruling D-02c.",
+   "allocated_to": [
+    "kit",
+    "case"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_YET_TESTED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-06",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-02c"
+   ],
+   "statement": "The closed, latched kit with its pack fitted is designed to survive transit drops and vehicle vibration at the severities of D-02c.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PROTOTYPE",
+   "waits_on": null
+  },
+  "REQ-023": {
+   "acceptance": "At desk, the mass budget of ARCHITECTURE.md section 11 and the case outline stay inside both limits; at assembly, the kit as the statement defines it is weighed under 45.4 kg and its largest outside dimension measured under 91 cm.",
+   "allocated_to": [
+    "kit"
+   ],
+   "choices": [
+    "SC-14"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "ASSEMBLY",
+   "kind": "requirement",
+   "parent": "NEED-06",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The kit, closed and latched with the pack and the lid's carried items fitted, weighs under 45.4 kg (100 lb) and its largest dimension is under 91 cm (36 in): the man-packed or man-portable category of MIL-STD-810H Method 516.8 Table 516.8-IX, which the ruled transit drop E1 (26 drops from 1.22 m, owner ruling D-02c) presumes.",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PLACED_BOARD",
+   "waits_on": null
+  },
+  "REQ-024": {
+   "acceptance": "TEST-PLAN E3 and E4 functional checks at the envelope's limits; THM-001 junction estimates at +40 C ambient with the inside-air rise; part_temps.py finds no part outside its range.",
+   "allocated_to": [
+    "kit",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "p"
+   ],
+   "choices": [
+    "SC-18",
+    "SC-27",
+    "SC-49"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-02a",
+    "D-02b",
+    "D-02d",
+    "D-02e"
+   ],
+   "statement": "The kit operates at -20 to +40 C ambient, with its declared carve-outs: below -10 C the pack is warmed before charge; below -15 C the e-paper is degraded; on measured inside-air (+50 C) and cell (+55 C) temperatures the kit sheds to its reduced mode and then its heat stage (C1), the ambient at which it does being a bound until measured (the hot stop past the heat stage is not a carve-out: REQ-077 requires the kit to act before any cell passes +60 C, and the design intends the stop to do so once HOT-R1 is drawn on boards A and E, S-57, REQ-077 reading FAIL on the generated boards until then, on the provisional error budget of TEST-PLAN P14; whether it acts inside the envelope is FEA-004's, open until the heat-balance test, and where it does this record reads FAIL there); below 0 C inside air the WiFi link cards and the SDR are powered only once the kit's cold warm-up has brought the air to 0 C (CONOPS section 4c; the bound above about 3.6 W/K is open); a pack cold-soaked below about -10 C at the cells is not started from (shore or vehicle power, or warming, first; D-02d); and the kit is operated shaded (D-02e).",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-55"
+   ]
+  },
+  "REQ-025": {
+   "acceptance": "CONOPS section 4's Storage row, TEST-PLAN's stored configuration and the operating instructions state it: the pack stays fitted, every input unplugged, in its gauge's shutdown at the cells' ex-factory state, every cell at 3.49 to 3.69 V (Samsung INR18650-35E Ver. 1.1, clause 7.11 and 3.13 note 1; SC-19), and the stored kit is never left where the temperature may exceed +60 C (REQ-074).",
+   "allocated_to": [
+    "p",
+    "procedure"
+   ],
+   "choices": [
+    "SC-19"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The kit, pack fitted, is stored at -20 to +45 C for up to three months and at -20 to +25 C for up to a year.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-026": {
+   "acceptance": "Non-condensing in use: no condensation inside the sealed compartment. TEST-PLAN E5-A (10 cycles of 24 h at 95 % RH up to the use envelope's +40 C, pack fitted) is the acceptance inside the envelope. E5 (the same cycle, 30 to 60 C) is a qualification margin under SC-03, run as a stated deviation with the pack outside the chamber (CFL-017) and judged on D-02a's two pass lines: at the margin no damage and no lost data or keys, and full function once the kit is back inside the envelope.",
+   "allocated_to": [
+    "kit"
+   ],
+   "choices": [
+    "SC-03",
+    "SC-12"
+   ],
+   "evidence_result": "NOT_YET_TESTED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-02a"
+   ],
+   "statement": "Humidity: non-condensing in use.",
+   "status": "DEFINED",
+   "verification_method": [
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PROTOTYPE",
+   "waits_on": null
+  },
+  "REQ-027": {
+   "acceptance": "0 to 3000 m in use and 0 to 4500 m in transport (owner ruling D-02c); TEST-PLAN E9 at those levels.",
+   "allocated_to": [
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-02c"
+   ],
+   "statement": "The kit operates from 0 to 3000 m altitude and is transported from 0 to 4500 m.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-028": {
+   "acceptance": "No public or shipped document states or claims a service life, a duty-cycle rating, a connector mating-cycle count, a fan life or a pack cycle life for prototype 1 (D-02c leaves service life undefined for prototype 1, which this record reads as no life requirement; SC-45); REL-001's duty cycle is CONOPS section 5's planning profile (SC-29).",
+   "allocated_to": [
+    "kit"
+   ],
+   "choices": [
+    "SC-45",
+    "SC-29"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-02c"
+   ],
+   "statement": "Expected service life and duty cycle of the kit.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-029": {
+   "acceptance": "TEST-PLAN M7 on the powered kit, every bearer up, at the plate, toggles, display bezel, every bulkhead shell, both headset jacks, USB-C, Ethernet and the pod lead.",
+   "allocated_to": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "p",
+    "case"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "Every surface and conductor a person can touch is designed to withstand IEC 61000-4-2 level 4 (8 kV contact, 15 kV air) with no upset, reset, lost bearer, lost secure-element key or damage.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-030": {
+   "acceptance": "(1) Netlist: every transmitter in the CONOPS section 4b table has a supply, enable or disable pin driven by EMCON_HW or TX_INHIBIT_n, and the rule instrument enumerates them (RF-002 fails on any radio without one). (2) Bench: with EMCON closed and every processor held in reset, the power at each antenna port, measured with an external spectrum analyser in ERC Recommendation 74-01's reference bandwidths over its Table 1 range for the port's band, at or below -67 dBm from 9 kHz to 1 GHz and -57 dBm above (10 dB under its Table 2 line for receivers and idle transmitters); the VHF and GNSS ports, whose receivers D-05 keeps listening, at or below that Table 2 line itself (-57 dBm and -47 dBm) (SC-38); the same with the ribbon unplugged and with each board's logic supply lost.",
+   "allocated_to": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "kit"
+   ],
+   "choices": [
+    "SC-11",
+    "SC-38"
+   ],
+   "evidence_result": "FAIL",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-08",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-05"
+   ],
+   "statement": "One operator action (the EMCON locking toggle) silences every transmitter in the kit through a hardware line that needs no processor, and the line reads 'inhibited' when the panel ribbon is disconnected or a board is unpowered.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-01",
+    "S-02"
+   ]
+  },
+  "REQ-031": {
+   "acceptance": "Functional check; ARCH-PCB-B-IOHA A14 (EMCON asserted while a bank is failed over silences that bank's transmitters).",
+   "allocated_to": [
+    "sw",
+    "fw_panel",
+    "b"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-08",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "Under EMCON the software also holds and queues every send, shows EMCON on the e-paper and keeps MASTER CAUT steady; EMCON holds through a bank failover.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-032": {
+   "acceptance": "Netlist: each radio of the CONOPS section 4b table loses its supply or has its RF disabled through EMCON_HW by a path that does not depend on the radio's firmware, except the VHF exciter, whose KEY gate is transmit-only, and the receive-only radios, in every state of the gates' own supplies. On the prototype with EMCON closed, the VHF receiver still decodes an external APRS beacon and no other radio emits.",
+   "allocated_to": [
+    "a",
+    "b"
+   ],
+   "choices": [
+    "SC-11"
+   ],
+   "evidence_result": "FAIL",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-08",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-05"
+   ],
+   "statement": "While EMCON is closed every radio with an emission path is powered off or RF-disabled in hardware; the VHF path keeps listening because its gate is on the transmit side only; GNSS, DCF77 and the lightning sensor continue (D-05).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-01"
+   ]
+  },
+  "REQ-033": {
+   "acceptance": "The netlist opens the LED rail in hardware; in a dark room with LIGHTING at BLACKOUT an observer dark-adapted for 10 minutes sees no light from any part of the kit at 1 m, and no sound is heard during a bearer event (SC-45).",
+   "allocated_to": [
+    "c",
+    "fw_panel",
+    "sw",
+    "a"
+   ],
+   "choices": [
+    "SC-45"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-09",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "Blackout darkens and silences the kit: the LED rail is opened in hardware, the monitor backlight and touch UI go dark, the monitor speaker and the sounder are muted, the TX lamp is dark.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-034": {
+   "acceptance": "Functional check of the mode's settings (the panel at its 2 % step, the backlight at 5 %, red and amber indicators only; SC-45). Compatibility target (SC-48): MIL-STD-3009's lighting system NVIS compatible examination (5.7.2) for a Type I, Class B NVIS, with the panel, its light guides and the monitor at their NVG levels: the NVIS, focused on the 50 % square-wave NVG resolution chart at 20 ft (5.7.2.2) irradiated to 1.6 x 10^-10 NRB, resolves the same Snellen line as with every light of the kit off, and no light leak is seen through it; each indicator's and the monitor's spectral radiance is recorded against TABLE III as characterisation. No document claims night-vision compatibility until that examination has passed on the built prototype (D-01 defers the claim).",
+   "allocated_to": [
+    "c",
+    "fw_panel",
+    "sw"
+   ],
+   "choices": [
+    "SC-45",
+    "SC-48"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-09",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "NVG mode sets the panel to its lowest PWM step (2 %), the backlight to 5 % and shows red and amber indicators only.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-035": {
+   "acceptance": "On the built prototype: (1) after the toggle is held closed for 5 s, a key operation with either key-encryption key fails; (2) no NVMe drive or eMMC unlocks or mounts on any module afterwards, including a module that was powered off during the wipe; (3) a toggle released before 5 s wipes nothing; (4) no other input starts a wipe: opening and closing the lid wipes nothing; (5) with power removed during the hold or the wipe, the wipe completes at the next power-up before any slot powers, and the kit re-arms only after the toggle is returned; (6) both key-encryption keys are destroyed and verified within 1.5 s of the end of the 5 s hold; (7) the slot rails are cut within 3.0 s of the end of the hold by a hardware timer that does not wait on the secure element, the kit bus or any module (SC-08); (8) the panel shows ZEROIZE complete and ZEROIZE incomplete as PANEL.md section 9 sets them (SC-30).",
+   "allocated_to": [
+    "c",
+    "b",
+    "fw_panel",
+    "sw"
+   ],
+   "choices": [
+    "SC-08",
+    "SC-30"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-10",
+   "prototype_1": "core",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-03"
+   ],
+   "statement": "ZEROIZE crypto-erases the kit's stored data: every drive and eMMC key is wrapped by keys only the secure element holds, and ZEROIZE destroys them, then running modules drop their RAM keys, then the slots are cut. The only trigger is the covered ZEROIZE toggle held closed for 5 s; the tamper and lid switch logs and never triggers it; remote wipe is deferred. ZEROIZE is level-sensitive across a power loss: the toggle is read at boot before any slot powers, a wipe-pending record resumes the wipe, and the kit re-arms only when the toggle returns.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-35"
+   ]
+  },
+  "REQ-036": {
+   "acceptance": "The switch appears in a board netlist on an always-powered input (the approved floor plan sites it on E6), and the log records a lid event in the functional check with the kit on and off; opening the lid wipes nothing.",
+   "allocated_to": [
+    "e",
+    "case",
+    "fw_sensor"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-10",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-03",
+    "D-02b"
+   ],
+   "statement": "A sealed case-open (tamper) switch under the frame logs lid events and senses the lid for the reduced mode; it never triggers ZEROIZE.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-037": {
+   "acceptance": "Procedure document reviewed; a fill and a rotation run on the prototype and appear in the audit log.",
+   "allocated_to": [
+    "procedure",
+    "sw",
+    "b"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-10",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-12",
+    "D-09"
+   ],
+   "statement": "Key fill is a signed procedure to the secure element over the console on the sealed Glenair 233-370 port (D-12), with scheduled rotation and an audit log; there is no separate fill port.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-34"
+   ]
+  },
+  "REQ-038": {
+   "acceptance": "Encryption is configured on every NVMe drive and on each module's eMMC, each key wrapped by the secure element's keys; after ZEROIZE none of them unlocks or mounts.",
+   "allocated_to": [
+    "sw",
+    "b"
+   ],
+   "choices": [
+    "SC-08"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-10",
+   "prototype_1": "core",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-03"
+   ],
+   "statement": "Every NVMe drive and each module's eMMC is encrypted with a key wrapped by the secure element's keys, so ZEROIZE makes them unreadable.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-039": {
+   "acceptance": "Fix and time pulse at every slot in the functional check; during self-compatibility (M6) GNSS keeps its fix or recovers within 10 s.",
+   "allocated_to": [
+    "b",
+    "sw"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-11",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "Multi-constellation GNSS (LG290P, L1/L2/L5/E6) gives position and a time pulse fanned out to every slot; chrony runs on each module.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-040": {
+   "acceptance": "With GNSS and DCF77 both absent, the kit's time stays within 1 s of UTC for 24 h after the last valid time (SC-44); the DCF77 time reaches every running module through the sensor controller, which alone takes the pulse (V2-SPEC line 35, correction 8; CFL-013 resolved).",
+   "allocated_to": [
+    "b",
+    "e",
+    "sw"
+   ],
+   "choices": [
+    "SC-44"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-11",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "A second time source (DCF77, 77.5 kHz) and a holdover clock keep time when GNSS is lost.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-041": {
+   "acceptance": "Each sensor reports in the functional check and agrees with a calibrated reference within the accuracy its maker publishes for it; the kit sets no accuracy target of its own (SC-45); the motion wake-up, the brightness control and the dose rate's log and mesh share work in the functional check. Its alarms are REQ-042's (water and battery-bay gas) and the lightning mast-down alarm: when the AS3935 reports a lightning event with a storm-distance estimate of 10 km or less the kit raises MASTER WARN with the cause shown to the operator, and it clears once 30 minutes have passed with no event at 10 km or less (SC-47), checked by injecting the sensor's interrupt and a 10 km estimate at the sensor controller.",
+   "allocated_to": [
+    "e",
+    "c",
+    "fw_sensor",
+    "sw"
+   ],
+   "choices": [
+    "SC-45",
+    "SC-47"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-12",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The kit senses inside temperature, humidity and pressure (with the outside pressure as a seal check), floor water, battery-bay gas, shock, tilt and heading, ambient light, lightning, gamma dose rate, and outside temperature, humidity, pressure and UV in a sealed pod; the IMU logs shock and tilt and wakes the kit on motion, the ambient light drives the monitor's and the panel's brightness, the dose rate is logged and shared over the mesh, and the lightning detector raises a mast-down alarm (appendix 32.50, the sensor walk-through).",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-042": {
+   "acceptance": "Water bridging the case-floor electrodes, or the battery-bay VOC reading crossing the alarm level set at bring-up from the SGP41's own clean-air baseline, raises MASTER WARN and makes the sensor controller command the pack gauge over J_SMB to open both protection FETs within 10 s, whether or not an input is present (the gauge's SHUTDOWN with no input, its EMERGENCY SHUTDOWN through the Manual FET Control sequence with one, SLUUAQ3A 5.4.2 and 5.4.4.2), the pack staying open until service, with the compute modules and the panel controller off or in reset (SC-41); the hydrogen half of the battery-bay sensing is met once S-49 names its part.",
+   "allocated_to": [
+    "e",
+    "p",
+    "fw_sensor"
+   ],
+   "choices": [
+    "SC-41",
+    "SC-31"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-12",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-15"
+   ],
+   "statement": "Water on the case floor, and hydrogen or VOC in the battery bay, raise an alarm and shut the pack down.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "VENDOR_CONFIRMATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-49"
+   ]
+  },
+  "REQ-043": {
+   "acceptance": "Each of the five fans is one its maker rates IP68 in the maker's own datasheet, filed under v2/vendor/fans/ with the pick, with a published operating range covering -20 C to the inside-air bar part_temps.py computes from pcb_envelope.yaml; the part is D-18's (a 40 mm IP68 fan that fits the coolers); a fan without that rating is a change of this statement, recorded as such; fans run in the functional check (SC-45).",
+   "allocated_to": [
+    "b",
+    "e",
+    "fw_sensor"
+   ],
+   "choices": [
+    "SC-45"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-12",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "Five internal fans, each rated IP68 by its maker (one per CM5 cooler, two mixer fans), are designed to couple the inside air to the skin, with their speed set from the inside climate reading.",
+   "status": "DEFINED",
+   "verification_method": [
+    "VENDOR_CONFIRMATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "D-18"
+   ]
+  },
+  "REQ-044": {
+   "acceptance": "TEST-PLAN section 5 rows 1 to 9 on a replaceable block; board P's netlist carries the secondary protector, the chemical fuse and the FUSE and PTC connections; where no hardware under-voltage protector is fitted, the commissioning procedure reads the gauge's under-voltage settings back from data flash; the qualified battery-and-protection review of D-09 has examined the actual schematic and BOM and its findings are answered before the pack PCB is released.",
+   "allocated_to": [
+    "p"
+   ],
+   "choices": [
+    "SC-12"
+   ],
+   "evidence_result": "INCONCLUSIVE",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-13",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-15",
+    "D-09"
+   ],
+   "statement": "The cell block's protection does not rest on software alone: over-voltage, over-current, short-circuit and over-temperature in the BQ4050 with trip points from the cell maker's own limits, and, as D-15's floor, a 4S secondary over-voltage protector driving a chemical fuse, the BQ4050's FUSE output on that fuse and its PTC input enabled. Cell under-voltage is in hardware if a 4S secondary that covers it is sourced near the over-voltage-only part's cost; otherwise it is the gauge's firmware, with its data flash verified at commissioning.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT",
+    "VENDOR_CONFIRMATION"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-45",
+    "L-03"
+   ]
+  },
+  "REQ-045": {
+   "acceptance": "energy_chain.py passes with every stage's prospective fault current, protection and conductor rating sourced; no coordination study exists yet (OPERATING-ENVELOPE section 4).",
+   "allocated_to": [
+    "p",
+    "e",
+    "e5",
+    "a"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-13",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "From the cells to every load, the maximum fault current is bounded at each stage by a protective element sized for that stage's conductors and connectors, coordinated with what it protects.",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-046": {
+   "acceptance": "TEST-PLAN section 5 rows 7 and 8 (chamber at -5 and +48 C with the charger live, and a block read at 42.5 to 43.0 C taking no charge when the charger is connected; -15 C, then +59 to +60 C at most, under a 2 A load; a thermocouple on every cell): the pack gauge's charge and discharge FETs open before any cell surface passes the windows, at the thresholds set inside them by the gauge's own error budget, and no charge starts above the charge inhibit's T3 (THERMAL-COORDINATION.md sections 3 to 5); the bridge's own hold clears above 3 C (PANEL.md section 10).",
+   "allocated_to": [
+    "p",
+    "a",
+    "e",
+    "fw_panel"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-13",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-02d"
+   ],
+   "statement": "The cells are charged only between 0 and +45 C and discharged only between -10 and +60 C at the cell surface; below 0 C the pack is warmed by its heater mat before charge.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-047": {
+   "acceptance": "Demonstrated on the assembled prototype; the dock and blind-mate float tolerance stack (the SMP-MAX paths, the Preci-Dip 813 contacts and the Mill-Max power pins with the rods, spacers, VHB pads and laminates) closes on paper as its own analysis, which is owed (v2/docs/CASE-FIT-UNCERTAINTIES.md section 3, row DOCK; CASE-MARGINS.md judges no blind-mate row), and the case margins it rests on are held against Peli's own figures (CASE-MARGINS.md), with any OPEN margin shown on hardware at the build.",
+   "allocated_to": [
+    "case",
+    "a",
+    "e",
+    "e5",
+    "kit"
+   ],
+   "choices": [
+    "SC-07"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "ASSEMBLY",
+   "kind": "requirement",
+   "parent": "NEED-14",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-08-reversal",
+    "D-08a"
+   ],
+   "statement": "The face plate comes off (ten 6-32 UNC screws from above into Peli's inserts, C1 of SC-07), the rod stack lifts straight up off the blind-mate joint without unscrewing a cable, and the pack comes out of its cradle.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PLACED_BOARD",
+   "waits_on": null
+  },
+  "REQ-048": {
+   "acceptance": "Schematic: on each board's committed netlist every rail has a point where it can be current-limited and measured before its loads are enabled, and every programmable device its programming header or port (W5's per-board test access list, read against the netlist); placed board: every listed point is reachable on the placed board.",
+   "allocated_to": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "p"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PLACED_BOARD",
+   "kind": "requirement",
+   "parent": "NEED-14",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "Every rail can be brought up current-limited and measured before its loads are enabled, every programmable device (three CM5 over rpiboot, two RP2040, three I/O supervisors, the pack gauge) can be programmed in circuit, and the signals a bring-up needs are reachable.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-049": {
+   "acceptance": "A console session over the Glenair port on the prototype reaches the module that hosts bank 3, and still does after a bank failover; the USB-C outlet enumerates no data device.",
+   "allocated_to": [
+    "a",
+    "b",
+    "sw"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-14",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-12"
+   ],
+   "statement": "The sealed Glenair 233-370 USB receptacle on the connector plate is the maintenance console and key-fill port; the USB-C outlet carries power only (D-12).",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-050": {
+   "acceptance": "TEST-PLAN.md traces every test to a requirement, states each test's purpose (acceptance, qualification margin or characterisation) and keeps operating, storage and qualification limits distinct (W5).",
+   "allocated_to": [
+    "kit",
+    "procedure"
+   ],
+   "choices": null,
+   "evidence_result": "PASS",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-15",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-04"
+   ],
+   "statement": "A whole-kit test plan is written before the build, using MIL-STD-810 and MIL-STD-461 methods where it can, and run on the built prototype, in-house where possible and at a laboratory where not, with pass criteria per test and fixes fed back into the record; no rating is claimed before it runs.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-051": {
+   "acceptance": "Inside the envelope, the functional check (TEST-PLAN section 4) passes at the envelope's limits, the hot and humid limits with the pack fitted (TEST-PLAN E3-A, E5-A). At each margin level, in the state the row names (E3-S and E4-S stored with the pack out; E3-O and E5 as stated deviations, the pack outside the chamber): no damage, no lost data or keys, and full function resumed once the kit is back inside the envelope, with its logs intact. The exposures with the pack fitted (E3-T, E4-T) and the pack's own soaks (E3-P, E4-P) run at its cells' limits (TEST-PLAN section 6). TEST-PLAN states both pass lines, never reports a margin result as an envelope claim, and never reports a deviation's pass as the kit's margin with its pack.",
+   "allocated_to": [
+    "kit",
+    "procedure"
+   ],
+   "choices": [
+    "SC-03",
+    "SC-12",
+    "SC-19"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-02a"
+   ],
+   "statement": "TEST-PLAN's +55 C operation and +71 C storage (E3) and -33 C storage (E4) are qualification margins over the adopted envelope (-20 to +40 C in use, -20 to +45 C storage), each judged on two pass lines: inside the envelope the kit is to operate to specification; at the margin it is to show no damage and recover. E5's humidity cycle is judged the same way (SC-03, REQ-026). The margins are the kit's: E3-S and E4-S run on the kit less its pack and E3-O and E5 with the cells kept out of the heat, each a stated test deviation, since the stored kit keeps its pack (SC-19); the exposures with the pack fitted run at the cells' own limits; and the kit with its own pack does not meet the +55 C, the +60 C humid and the storage levels (CFL-017, finding BAT-F19).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-052": {
+   "acceptance": "TEST-PLAN E3-L: E3-A's pass line with the lid closed; at every level up to the envelope's +40 C at least the owner's example set with the SOS path passes traffic, and the reduced mode's set up to the ambient at which C1 acts, which is recorded; every part inside its published range (an SGP41 above +55 C fails).",
+   "allocated_to": [
+    "kit",
+    "e",
+    "fw_panel",
+    "fw_sensor",
+    "sw",
+    "procedure"
+   ],
+   "choices": [
+    "SC-17",
+    "SC-18",
+    "SC-34"
+   ],
+   "evidence_result": "FAIL",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-02b"
+   ],
+   "statement": "With the lid closed the kit operates in a defined reduced mode (slots 2 and 3, CONOPS section 4c), entered when the lid is sensed closed; when C1's triggers recur there it runs one module that carries the owner's example (GNSS, the LoRa mesh, Iridium and APRS beacons) with the SOS path (SC-17, SC-18).",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PLACED_BOARD",
+   "waits_on": [
+    "S-54"
+   ]
+  },
+  "REQ-053": {
+   "acceptance": "PRODUCT-BRIEF.md and CONOPS.md state the D-04 scope and its obligations (every transmitter to the operator's licence and the EU limits, the VHF band lock, the pack's transport route), and no public document claims CE, RED or EMC conformity (claims_check.py, rule ENV-002).",
+   "allocated_to": [
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-16",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-04"
+   ],
+   "statement": "The markets and obligations are stated: a non-commercial prototype in the Netherlands and the EU, operated by a licensed radio amateur, with no CE or RED conformity marking and no EMC claim, and the design keeps an EU route open (D-04).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-054": {
+   "acceptance": "Conducted output and duty cycle measured at each configured channel with the antenna gain applied; configuration review of meshtasticd.",
+   "allocated_to": [
+    "b",
+    "sw"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-16",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-04"
+   ],
+   "statement": "The LoRa transmitter is capped in software to the EU limits: 14 dBm ERP generally, 27 dBm ERP on 869.4 to 869.65 MHz at 10 % duty.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-28"
+   ]
+  },
+  "REQ-055": {
+   "acceptance": "The band lock refuses a transmit frequency outside the operator's licensed VHF band, shown on the prototype at both band edges; the configuration review names the lock's mechanism (firmware or configuration).",
+   "allocated_to": [
+    "d",
+    "sw"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-16",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-04"
+   ],
+   "statement": "The VHF transmitter operates only on the amateur band of the operator's licence: the SA868 can transmit 134 to 174 MHz and the PA covers 135 to 175 MHz, so the VHF path carries a band lock (D-04).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-28"
+   ]
+  },
+  "REQ-056": {
+   "acceptance": "Configuration review: the SDR's transmit path is disabled unless a configuration names a band the operator's licence permits, at the EU limits (D-04).",
+   "allocated_to": [
+    "sw"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-16",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "ADVISORY",
+   "rulings": [
+    "D-04"
+   ],
+   "statement": "The SDR's transmit path is used only where the operator is permitted.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-28"
+   ]
+  },
+  "REQ-057": {
+   "acceptance": "TEST-PLAN M6 on the prototype, for the core transmitters.",
+   "allocated_to": [
+    "kit",
+    "b",
+    "d"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-17",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "Every core transmitter (the RockBLOCK 9704, the RM520N-GL, the E22 LoRa module, the SA868 with its 30 W PA, and the live WiFi link card) keyed in turn at full power, with every receiver listening, damages no receiver, falsely triggers no EMCON, ZEROIZE or sensor, and leaves GNSS with its fix or recovering it within 10 s.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "ROUTED_BOARD",
+   "waits_on": null
+  },
+  "REQ-058": {
+   "acceptance": "Each element present in the design; during every PA key-down the SDR's receive input stays at or below +7 dBm, 3 dB under the maker's absolute maximum safe receive input power of +10 dBm for the LimeSDR Mini 2.0 family (the product page as filed), with the limiter or relay sized to hold it there, and the SDR receives again within 1 s of each key-down's end (NEED-17's blinding) (SC-45).",
+   "allocated_to": [
+    "case",
+    "b",
+    "d"
+   ],
+   "choices": [
+    "SC-45"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-17",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "RF protection: gas-discharge arrestors at the antenna bulkheads, a receive limiter or relay on the SDR path during PA key-down, and a shielded compartment for the PA.",
+   "status": "DEFINED",
+   "verification_method": [
+    "SCRIPT",
+    "VENDOR_CONFIRMATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-059": {
+   "acceptance": "THM-001 estimate for the PA at +40 C ambient over the declared key-down (SC-35): at most 60 s, begun only with the PA's flange at most +75 C and ended at +85 C on the flange (POWER-THERMAL.md section 7.2, K2 and C4), with the PA junction inside its maker's rating throughout; E3 measurement.",
+   "allocated_to": [
+    "d",
+    "c",
+    "case"
+   ],
+   "choices": [
+    "SC-35"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The 30 W PA's heat (about 45 W at key-down) goes through a stated path to the face plate, and the PA junction stays inside its rating for the APRS duty at +40 C ambient.",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PLACED_BOARD",
+   "waits_on": null
+  },
+  "REQ-060": {
+   "acceptance": "In the functional check: SOS closed 2 s delivers the message with the kit's position (from the LG290P) to each configured recipient over the first available bearer, and over Iridium with every other bearer down; with EMCON closed nothing is transmitted, the message is queued, the operator is told, and it is sent when EMCON opens; flipping back cancels, with the e-paper confirming both.",
+   "allocated_to": [
+    "c",
+    "fw_panel",
+    "sw"
+   ],
+   "choices": [
+    "SC-01"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-19",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-10"
+   ],
+   "statement": "One deliberate, covered action (SOS closed 2 s) sends a distress message with the kit's position over the available bearers, Iridium first when nothing else is up, to a configured recipient list; it never transmits through EMCON: while EMCON is closed the message is queued and the operator is told (D-10). MASTER WARN flashes, the sounder sounds its pattern (muted in blackout), and flipping the toggle back cancels, with the e-paper confirming both.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-32"
+   ]
+  },
+  "REQ-061": {
+   "acceptance": "The stud appears in the case CAD and the connector plate; every arrestor body and every cable shield that crosses the case wall has a named conductor to it, and the bond resistance from each to the stud is measured and recorded at assembly; which board net, if any, meets the stud is decided once, by GND-002's strategy ruled as a decision (S-50).",
+   "allocated_to": [
+    "case",
+    "a",
+    "e"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "ASSEMBLY",
+   "kind": "requirement",
+   "parent": "NEED-18",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "A ground stud on the case wall gives the kit one bonding point, and the RF arrestors and cable shields bond to it by a stated conductor.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "SCRIPT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-50"
+   ]
+  },
+  "REQ-062": {
+   "acceptance": "In the functional check, a slot with its heartbeat forced flat is flagged (MASTER CAUT, the e-paper names the slot), cycled once and left off; the other slots keep running.",
+   "allocated_to": [
+    "fw_panel",
+    "a",
+    "b",
+    "c"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_YET_TESTED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "The panel controller supervises each slot: a slot whose heartbeat stays flat for 60 s after its rail came up is shown as a slot fault, power-cycled once (rail off 5 s), then left off until the operator acts.",
+   "status": "DEFINED",
+   "verification_method": [
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PROTOTYPE",
+   "waits_on": null
+  },
+  "REQ-063": {
+   "acceptance": "Each of TEST-PLAN M1 to M5 is run against the limit MIL-STD-461G (11 December 2015) gives for the 'Ground, Army' installation of its Table V (SC-43), at an EMC pre-compliance session once the prototype exists (D-09). D-04 makes no EMC claim for the prototype, so every run is characterisation and supports no claim (ENV-002).",
+   "allocated_to": [
+    "kit"
+   ],
+   "choices": [
+    "SC-43"
+   ],
+   "evidence_result": "NOT_YET_TESTED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-18",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-04",
+    "D-09"
+   ],
+   "statement": "Conducted emissions and susceptibility on the power leads, bulk cable injection, radiated emissions and radiated susceptibility are to be tested to MIL-STD-461 methods (TEST-PLAN M1 to M5) against the limit curves of a stated edition, at an EMC pre-compliance session once the prototype exists (D-09).",
+   "status": "DEFINED",
+   "verification_method": [
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PROTOTYPE",
+   "waits_on": null
+  },
+  "REQ-064": {
+   "acceptance": "TEST-PLAN E8 (MIL-STD-810 method 510) at a laboratory; the functional check and the seal check pass afterwards.",
+   "allocated_to": [
+    "case",
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_YET_TESTED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-06",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "Deployed, the kit is designed to keep dust out through 6 hours of blowing dust, with its latches, pressure valve and connectors operating afterwards.",
+   "status": "DEFINED",
+   "verification_method": [
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PROTOTYPE",
+   "waits_on": null
+  },
+  "REQ-065": {
+   "acceptance": "Design review of the supervisors' boot chain, then on the prototype an image not signed with the kit's key does not run on a supervisor; whether the compute modules have a documented verified-boot option is recorded from Raspberry Pi's own documentation.",
+   "allocated_to": [
+    "b",
+    "sw",
+    "fw_ioctrl",
+    "fw_panel",
+    "fw_sensor"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-10",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-13"
+   ],
+   "statement": "Firmware integrity (D-13): the prototype's floor is software-verified boot on the three STM32H743 I/O supervisors, and on the compute modules if Raspberry Pi documents it; a hardware root of trust is required at a production trigger.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-40"
+   ]
+  },
+  "REQ-066": {
+   "acceptance": "ASSEMBLY section 7 states the procedure in that order and the cap is a listed kit part, fitted in the service demonstration on the prototype; a hardware stack-present interlock is studied at Review D.",
+   "allocated_to": [
+    "procedure",
+    "e",
+    "e5",
+    "a"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "ASSEMBLY",
+   "kind": "requirement",
+   "parent": "NEED-14",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-14"
+   ],
+   "statement": "Lifting the stack for service is done with the kit off, the pack's XT60 unplugged and shore removed, and an insulating cap covers the dock block E5 while the stack is out (D-14).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-22"
+   ]
+  },
+  "REQ-067": {
+   "acceptance": "Configuration review of the QMX's band settings against the operator's licence; on the prototype a transmit outside those bands is refused.",
+   "allocated_to": [
+    "sw",
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-16",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-04"
+   ],
+   "statement": "The HF transmitter operates only on the amateur bands of the operator's licence (appendix 32.50 item 16a, D-04).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-28"
+   ]
+  },
+  "REQ-068": {
+   "acceptance": "TEST-PLAN M6 on the prototype, for these transmitters.",
+   "allocated_to": [
+    "kit",
+    "a",
+    "b"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-17",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": null,
+   "statement": "The transmitters outside prototype 1's core (the QMX HF unit, the LimeSDR's transmit path, the two E72 radios and the three compute modules' own WiFi and Bluetooth) keyed in turn at full power, with every receiver listening, damage no receiver, falsely trigger no EMCON, ZEROIZE or sensor, and leave GNSS with its fix or recovering it within 10 s.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "ROUTED_BOARD",
+   "waits_on": null
+  },
+  "REQ-069": {
+   "acceptance": "No document claims a transport route for the kit with its pack, or for the pack alone, until CONOPS and the operating instructions state for that route the pack's classification and the conditions or exception it travels under, each with the clause of the regulation as its source (S-52).",
+   "allocated_to": [
+    "procedure",
+    "p"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-13",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-04"
+   ],
+   "statement": "The pack's transport route is claimed only once the pack's dangerous-goods classification, the conditions that apply to it, or an exception that applies is established: an unknown UN 38.3 status permits no route by itself, since road carriage has its own rules (the ADR) as air and parcel carriage have theirs (D-04).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-52"
+   ]
+  },
+  "REQ-070": {
+   "acceptance": "Each review's packet is prepared and its findings are recorded against the requirement ids they touch; the pack is not built before the battery review's findings are answered; any spend beyond the voucher has a quote and the owner's approval.",
+   "allocated_to": [
+    "procedure",
+    "p",
+    "kit"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "ASSEMBLY",
+   "kind": "requirement",
+   "parent": "NEED-15",
+   "prototype_1": "core",
+   "prototype_1_basis": "SESSION",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-09"
+   ],
+   "statement": "Two reviews by people outside the agents that wrote the design are planned before the parts they cover are built: a ZEROIZE and key-fill security review on the SIDN voucher, and a battery-and-protection review by a qualified electronics engineer before the pack is built (D-09).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-34",
+    "L-03"
+   ]
+  },
+  "REQ-071": {
+   "acceptance": "(1) Desk: for every row of EMCON.md section 4 the committed netlist shows a hardware path in each fault condition, and every time term of the row in section 5a is bounded from a held document within the row's maximum: 1 s for every transmitter but the RM520N-GL; for the RM520N-GL 20 s from EMCON on a module that has been turned on, with T_off, T_cut and the rail's decay taken at their parts' worst tolerance, 0 s at a power-up under EMCON (the rail never rises), and W_DISABLE1# low within 1 s. (2) Bench: EMCON.md section 6's rows E-01 to E-12 record, with an external receiver, the time from the contact's closing (TX_INHIBIT_n below 0.8 V at board C's TP10) to no emission above REQ-030's silence line at each antenna port (SC-38), each within its maximum, in the fault conditions each row names, and no emission after it for as long as EMCON is held.",
+   "allocated_to": [
+    "a",
+    "b",
+    "c",
+    "d",
+    "kit"
+   ],
+   "choices": [
+    "SC-38"
+   ],
+   "evidence_result": "FAIL",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-08",
+   "prototype_1": "core",
+   "prototype_1_basis": "NAMED",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-05"
+   ],
+   "statement": "Every transmitter's EMCON inhibit silences it within a stated maximum time of the EMCON toggle's contact closing, through a path in which every element that bounds the time is hardware, and keeps it silent while EMCON is asserted, in each fault condition of v2/docs/feasibility/EMCON.md section 5a: every processor in reset, every processor unpowered, a firmware error on any pin, the radio's own firmware booting, hung, restarting or reconfigured, a ribbon unplugged, a logic rail lost or in its unspecified band, back-feed from the lines that stay live, the energy stored on the radio's side of its gate, and EMCON asserted at power-up, during a transmission, during a boot and through the contact's bounce.",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-01",
+    "S-02"
+   ]
+  },
+  "REQ-072": {
+   "acceptance": "Desk: a calculation from the PS-IDLE-SPEC load of POWER-THERMAL.md section 4, the aged pack of REQ-014 and the energy the input path delivers into the kit on the reference day (4.0 kWh/m2 on the optimally inclined plane, SC-37) ends the 72 hours above the graceful shutdown threshold; repeated with the loads and the stage's efficiency measured at bring-up. Prototype: the kit runs PS-IDLE-SPEC for 72 hours from a full pack on its solar input, fed by a panel emulator following the reference day's profile, and ends above that threshold.",
+   "allocated_to": [
+    "kit",
+    "e",
+    "a",
+    "procedure"
+   ],
+   "choices": [
+    "SC-36",
+    "SC-21",
+    "SC-37"
+   ],
+   "evidence_result": "FAIL",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-05",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-06"
+   ],
+   "statement": "For mission M1 (CONOPS section 3), the pack plus the solar input keep the kit running in PS-IDLE-SPEC for M1's 72 hours (SC-21) on the reference day of SC-37, starting from a full, aged pack (REQ-014).",
+   "status": "DEFINED",
+   "verification_method": [
+    "CALCULATION",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-53",
+    "M-02"
+   ]
+  },
+  "REQ-073": {
+   "acceptance": "Schematic (desk): for each shared element and each way a module or supervisor can fail, the committed netlists of boards A, B and C show what contains it (a series element, an isolating switch or buffer with its maker's partial-power-down rating, a current limit, an open-drain output that can only release, the CAN transceiver's own bus-fault protection), or the pair is recorded as FAIL with its remedy owed; prototype: IOHA A2 and A5 run with the kit I2C bus, both CAN fabrics and +3V3_DEV monitored, and with one supervisor's I2C pins driven low the panel controller still reaches the secure element.",
+   "allocated_to": [
+    "a",
+    "b",
+    "c",
+    "fw_ioctrl"
+   ],
+   "choices": [
+    "SC-39"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-03",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": null,
+   "statement": "A failed compute module or I/O supervisor, in any way it can fail (dead, unpowered while its neighbours run, held in reset, wedged with its outputs at any level, or shorted on its own rails), does not take down a shared element: the kit I2C bus, the +5V_DEV and +3V3_DEV rails, the J_PANEL ribbon's signals, the KSZ9897R's other ports, or either CAN fabric.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-36"
+   ]
+  },
+  "REQ-074": {
+   "acceptance": "CONOPS section 4's Transport row and the operating instructions carry the restriction with the cell maker's own instruction; TEST-PLAN's transport soaks with the pack fitted run at those limits and pass their own criteria.",
+   "allocated_to": [
+    "procedure",
+    "p",
+    "kit"
+   ],
+   "choices": [
+    "SC-12",
+    "SC-19"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-07",
+   "prototype_1": "deferred",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "MUST_JUSTIFY",
+   "rulings": [
+    "D-02a"
+   ],
+   "statement": "With its pack fitted, in transport or anywhere else, the kit is never left where its cells may pass their own storage limits: above +60 C, or below the lowest storage temperature of the governing cell specification (-20 C in Samsung INR18650-35E Ver. 1.1); for such exposure the pack comes out and is stored apart (REQ-025).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-075": {
+   "acceptance": "Desk: the charger's ChargeCurrent setting and the gauge's charging current in the golden image are at most 3.06 A (Samsung INR18650-35E Ver. 1.1, clause 3.5; SC-40); prototype: the charge current measured at the pack in constant-current charge from shore is at most 3.06 A.",
+   "allocated_to": [
+    "a",
+    "p",
+    "procedure"
+   ],
+   "choices": [
+    "SC-40"
+   ],
+   "evidence_result": "NOT_JUDGED",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-13",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-06"
+   ],
+   "statement": "The pack is charged at no more than 3.06 A, 1,020 mA per cell of its 3P block, the cell maker's charge current for cycle life.",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "REQ-076": {
+   "acceptance": "In the functional check, for each core long-range bearer (Iridium, 5G and APRS) in turn, with messages queued for a correspondent another core long-range bearer reaches, the bearer disabled at the kit: it is declared down when its device is lost, or when it has accepted no hand-off for 60 s while one is pending; its queue is handed to the next long-range bearer that is up within 10 s of that; every queued message is delivered, the delivery times recorded as characterisation (SC-25).",
+   "allocated_to": [
+    "kit",
+    "sw"
+   ],
+   "choices": [
+    "SC-25"
+   ],
+   "evidence_result": "NOT_YET_TESTED",
+   "final_phase": null,
+   "kind": "requirement",
+   "parent": "NEED-02",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-01"
+   ],
+   "statement": "When the long-range bearer a message is queued for goes down, the kit hands the queue to another core long-range bearer that is up, without operator action.",
+   "status": "DEFINED",
+   "verification_method": [
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "PROTOTYPE",
+   "waits_on": null
+  },
+  "REQ-077": {
+   "acceptance": "Desk (schematic): the committed netlists carry a path from the pack gauge's cell temperatures to the control that removes the kit's load which needs no compute module (HOT-R1, SC-50: board E's sensor controller to board A's expander input on the dock's spare contact, and on to the panel controller that owns the slot enables, the switched loads and PI_KILL), and the two thresholds sit, in the gauge's own reading, under its discharge over-temperature of 57.5 C and inside +60 C by the published terms of the battery packet's error budget (THERMAL-COORDINATION.md section 3; CONOPS section 4c); a configuration in which the cells' temperature reaches no controller that can remove load reads FAIL. Prototype, on the pack and then on shore, in two parts. (1) Whatever a chamber reaches, the forced trigger at room temperature (TEST-PLAN P15): the gauge's hottest cell reading is driven past +56.5 C and then +57.0 C, and never to its discharge over-temperature of +57.5 C, by substituting one cell thermistor input, each setting read back in the gauge's DAStatus2(); at the second reading at or above +56.5 C the kit sheds to its minimum load within 60 s (every running module shut down on PI_SHDN_REQ and SLOT_EN1 to SLOT_EN3 dropped, the switched loads off, the charge held by the charger's CHRG_INHIBIT with the charger still carrying the kit on shore) with MASTER WARN and the e-paper naming the step and the reading, and the heat stage's module returns only once the reading is at or below +46.5 C and 30 minutes have passed since the stop; at the second reading at or above +57.0 C with H1 acting the kit shuts itself down through PI_KILL and stays off, on shore as well, until MAIN is pressed, and then raises no slot while the reading is above +46.5 C; HOT-R1 carries its four states (1 Hz below H1, 5 Hz in H1, held low in H2, held high with the sensor controller held in reset), a line held low stops the kit, and with the line held high the same two steps act on board B's TMP117 at +55.0 C and +56.0 C, released at +45.0 C; after each run the gauge's SafetyStatus() and PFStatus() show no discharge over-temperature and no permanent failure. (2) TEST-PLAN E3-H, during E3-A and E3-L at +40 C and in its stepped run beyond the envelope to at most +55 C: where the hottest cell as the gauge reads it reaches the first threshold the kit sheds to its minimum load within 60 s, and where it reaches the second the kit shuts itself down, both before any cell surface reaches +59 C on the reference thermocouples and with no permanent protection action (the second level's over-temperature, the gauge's SOT, the chemical fuse F2); a run in which a cell surface reaches +59 C is ended at once and reads FAIL. A step that acted in neither part reads NOT_VERIFIED, never PASS; a thermal run in which no threshold was reached is recorded with its peak readings and does not stand in for (1).",
+   "allocated_to": [
+    "kit",
+    "a",
+    "e",
+    "p",
+    "fw_panel",
+    "fw_sensor"
+   ],
+   "choices": [
+    "SC-49",
+    "SC-50",
+    "SC-18"
+   ],
+   "evidence_result": "FAIL",
+   "final_phase": "PROTOTYPE",
+   "kind": "requirement",
+   "parent": "NEED-13",
+   "prototype_1": "core",
+   "prototype_1_basis": "NEED_DEFAULT",
+   "release_effect": "BLOCKER",
+   "rulings": [
+    "D-02b",
+    "D-15"
+   ],
+   "statement": "In every mode and on every input state (on the pack, or on shore, vehicle or solar input, charging or not), the kit acts on the pack's measured cell temperature before any cell passes the cell maker's +60 C, idle cells on an input included: it sheds to its minimum load and then shuts itself down in a controlled way with the charge held, before the pack gauge's discharge over-temperature or any permanent pack protection acts, and it restarts only once the cells have cooled (the hot stop, SC-49).",
+   "status": "DEFINED",
+   "verification_method": [
+    "MANUAL_REVIEW",
+    "PROTOTYPE_MEASUREMENT"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": [
+    "S-57",
+    "S-58"
+   ]
+  },
+  "SPD-001": {
+   "acceptance": "n/a",
+   "allocated_to": [
+    "b"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_APPLICABLE",
+   "final_phase": null,
+   "kind": "superseded",
+   "parent": "NEED-03",
+   "prototype_1": null,
+   "prototype_1_basis": null,
+   "release_effect": "NONE",
+   "rulings": null,
+   "statement": "'The physical owner is a cabling choice written in the HAL configuration, not a board rule', with the slot distribution of 32.52 item 2 (slot 1 WiFi, GNSS, wall USB, camera; slot 2 5G, RockBLOCK, Zigbee, panel; slot 3 the rest).",
+   "status": "SUPERSEDED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "SPD-002": {
+   "acceptance": "n/a",
+   "allocated_to": [
+    "a"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_APPLICABLE",
+   "final_phase": null,
+   "kind": "superseded",
+   "parent": "NEED-05",
+   "prototype_1": null,
+   "prototype_1_basis": null,
+   "release_effect": "NONE",
+   "rulings": null,
+   "statement": "USB-C PD outlet at 65 W (32.50 item 2; TPS25750 with a TPS55288).",
+   "status": "SUPERSEDED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "SPD-003": {
+   "acceptance": "n/a",
+   "allocated_to": [
+    "p",
+    "a"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_APPLICABLE",
+   "final_phase": null,
+   "kind": "superseded",
+   "parent": "NEED-05",
+   "prototype_1": null,
+   "prototype_1_basis": null,
+   "release_effect": "NONE",
+   "rulings": null,
+   "statement": "One BB-2590/U pack at the west wall, and the runtime computed from it (8 to 9.5 h typical at 29 W, 5 to 6 h with the cluster busy, 11 to 13.5 h dimmed, peak about 150 W).",
+   "status": "SUPERSEDED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "SPD-004": {
+   "acceptance": "n/a",
+   "allocated_to": [
+    "e",
+    "a"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_APPLICABLE",
+   "final_phase": null,
+   "kind": "superseded",
+   "parent": "NEED-07",
+   "prototype_1": null,
+   "prototype_1_basis": null,
+   "release_effect": "NONE",
+   "rulings": null,
+   "statement": "Electrical fast transient 2 kV on the power leads.",
+   "status": "SUPERSEDED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "SPD-005": {
+   "acceptance": "n/a",
+   "allocated_to": [
+    "case",
+    "e"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_APPLICABLE",
+   "final_phase": null,
+   "kind": "superseded",
+   "parent": "NEED-12",
+   "prototype_1": null,
+   "prototype_1_basis": null,
+   "release_effect": "NONE",
+   "rulings": null,
+   "statement": "Outside climate and UV sensors behind a membrane vent in an end wall.",
+   "status": "SUPERSEDED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  },
+  "SPD-006": {
+   "acceptance": "n/a",
+   "allocated_to": [
+    "b",
+    "case"
+   ],
+   "choices": null,
+   "evidence_result": "NOT_APPLICABLE",
+   "final_phase": null,
+   "kind": "superseded",
+   "parent": "NEED-16",
+   "prototype_1": null,
+   "prototype_1_basis": null,
+   "release_effect": "NONE",
+   "rulings": null,
+   "statement": "'The 5G module's hardware design and its jack count are owed' (Quectel's design guide not on file).",
+   "status": "SUPERSEDED",
+   "verification_method": [
+    "MANUAL_REVIEW"
+   ],
+   "verification_phase": "SCHEMATIC",
+   "waits_on": null
+  }
+ },
+ "session_choices": [
+  "SC-01",
+  "SC-02",
+  "SC-03",
+  "SC-04",
+  "SC-05",
+  "SC-06",
+  "SC-07",
+  "SC-08",
+  "SC-09",
+  "SC-10",
+  "SC-11",
+  "SC-12",
+  "SC-13",
+  "SC-14",
+  "SC-15",
+  "SC-16",
+  "SC-35",
+  "SC-36",
+  "SC-37",
+  "SC-38",
+  "SC-39",
+  "SC-40",
+  "SC-41",
+  "SC-42",
+  "SC-43",
+  "SC-44",
+  "SC-45",
+  "SC-47",
+  "SC-48",
+  "SC-49",
+  "SC-50",
+  "SC-46",
+  "SC-17",
+  "SC-18",
+  "SC-19",
+  "SC-20",
+  "SC-21",
+  "SC-22",
+  "SC-23",
+  "SC-24",
+  "SC-25",
+  "SC-26",
+  "SC-27",
+  "SC-28",
+  "SC-29",
+  "SC-30",
+  "SC-31",
+  "SC-32",
+  "SC-33",
+  "SC-34",
+  "SC-51",
+  "SC-52",
+  "SC-53",
+  "SC-54",
+  "SC-55",
+  "SC-56",
+  "SC-57",
+  "SC-58",
+  "SC-59",
+  "SC-60",
+  "SC-61",
+  "SC-62",
+  "SC-63"
+ ],
+ "source": "v2/release/handover/H3.zip!H3/v2/ecad/tools/pcb_requirements.yaml"
+}

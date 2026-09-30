@@ -1,0 +1,601 @@
+# LAYER 3'S SECOND ISSUE (L3-R2), THE DATA ITS PAGES ARE RENDERED FROM (MESHSAT-1357, 30 September 2026; second round
+# after the independent check CHECK-1, v2/docs/records/l3r2/checks/check-l3r2-1.md, and the owner's review of the draft
+# table, owner ruling D-22).
+#
+# render_l3r2.py (beside this file) renders REQUIREMENTS-L3-R2.md, OWNER-DECISIONS-L3.md and L3-RECONCILIATION.md from
+# three inputs: this file, the requirements registry v2/ecad/tools/pcb_requirements.yaml, and the registry as released
+# in handover H3 (frozen from v2/release/handover/H3.zip into h3_registry_digest.json, the ZIP read as it is, never
+# modified). `--check` refuses a page on disk that differs from what the three render, and the suite runs it
+# (v2/ecad/tools/tests/test_l3r2.py).
+#
+# WHAT IS KEPT HERE AND WHAT IS NOT. The registry is the authority for every requirement, its reading and its open
+# items; nothing here repeats a record. What is here is what the registry has no field for: the target in words, the
+# proposals made since H3 with their status, the requirement-or-implementation classification, the owner decisions layer
+# 3 still needs (with the conditional scripts that apply each answer), the closure list, the layer each open item belongs
+# to, each change's downstream impact by layer, and the files the gate waits on (the energy basis, the relocation facts,
+# the re-issue of the definition documents, the independent check). A decision's state is NOT kept here: it is read from
+# the registry, where the conditional script that applies the owner's answer records a ruling with
+# `decides: <row>:<option>`. Prototype design: no V2 board has been fabricated, ordered, assembled or powered.
+#
+# THE OWNER'S REVIEW OF 30 SEPTEMBER 2026 (D-22) HOLDS ROWS L3-OD1, L3-OD2 AND L3-OD4 until the corrected, independently
+# checked energy comparison arrives, and asks that "adverse" be defined by exact weather and operating assumptions. So no
+# energy figure is stated here as the design's, the words "typical" and "adverse" are not used for a case, and the rows'
+# energy cells read HELD until `energy_basis` below names the filed, checked basis.
+#
+# No dash character (U+2013, U+2014) is used in this file or the pages rendered from it.
+
+version: L3-R2
+title: "MeshSat field kit V2: requirements, second issue of layer 3"
+issue: MESHSAT-1357
+written: "2026-09-30"
+written_text: "30 September 2026"
+author: "the author of L3-R2 (an AI session, branch fnd/l3r2 on integration set 15's line fnd/int16 4012429e)"
+instruction: v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md
+h3:
+  zip: v2/release/handover/H3.zip
+  member: H3/v2/ecad/tools/pcb_requirements.yaml
+  source_commit: 75ad6ee5
+  baseline: "BASELINED at a54b793b"
+
+# The files the rows and the gate wait on. Each is null until filed; then {record: <repository path>, sha16: <its
+# sha256/16>, ...}. The renderer and the conditional scripts refuse a named record the tree does not hold at its sha.
+#   energy_basis        stream l3plane's ENERGY-BASIS.md and its independent check (S-127): {record, sha16, check, check_sha16}
+#   relocation_facts    where a displaced lid item goes (the QMX outside the case): {record, sha16}
+#   definition_reissue  the re-issue of CONOPS and PRODUCT-BRIEF passages the decided rows change, through layers 1 and
+#                       2, or a proposed change record the owner approves: {record, sha16, approved_by: <owner ruling id>}
+#   independent_check   the checks of L3-R2 (C27), newest last: [{record, sha16, verdict: ACCEPTED or NOT_ACCEPTED}]
+energy_basis: null
+relocation_facts: null
+definition_reissue: null
+independent_check:
+  - {record: v2/docs/records/l3r2/checks/check-l3r2-1.md, sha16: bbb8c97a165850cf, verdict: NOT_ACCEPTED}
+scripts:
+  session: v2/docs/records/l3r2/apply_l3r2_session.py
+  layer_status: v2/docs/records/l3r2/apply_layer_status_l3.py
+  conditional_dir: v2/docs/records/l3r2/conditional
+
+# A resolved conflict that reads FAIL on an implementation artefact, not on a requirement-level source: the gate reads
+# it as downstream, with the reason here, never by an exception written into the renderer (CHECK-1, minor 14).
+resolved_fail_downstream:
+  CFL-006: "the pack enclosure, a layer 7 design that does not exist yet (S-27); every requirement-level source names D-06's cell and parallel count"
+
+# ------------------------------------------------------------------------------------------------ (a) the target
+target:
+  approved: >-
+    What the owner has approved to date (handover H3's accepted requirements, then D-19 and D-20 of 28 September and
+    D-21 and D-22 of 30 September 2026): the V2 kit in the Peli 1450 of the current moulding (the case never changes,
+    ruling of 7 September 2026), with the device set of V2-SPEC.md; prototype 1 accepted on D-01's named core (messaging
+    over Iridium, 5G, LoRa and APRS; the three-slot failover fabric; pack, vehicle and solar charging; hardware EMCON;
+    ZEROIZE; pack safety; service and programming access), everything else designed, fitted where copper exists and
+    reported NOT_YET_TESTED; one 4S3P pack of the Samsung INR18650-35E, about 145 Wh, in the east pocket (D-06); a solar
+    input window of at most 25 V open circuit at the panel's coldest, held at 17.6 V, at most 100 W into board E's stage
+    (REQ-016); mission M1, 72 hours in PS-IDLE-SPEC (42.8 W at the pack terminals) on the kit's own store and its solar
+    input, from a full aged store, lid open and the kit shaded, judged on SC-37's reference day (the September mean day
+    at Leiden on the optimally inclined plane, 40 degrees facing south), M1 carrying no season (CONOPS section 3); the 72
+    hours preserved by D-20 and approved by D-21. Battery and solar are mandatory for M1; an external DC source is optional
+    and never M1's basis (D-20, D-21, D-22). The approved functions include the lid's QMX HF set (appendix 32.50 item 16a)
+    and its tablet bracket (item 16d), both deferred from prototype 1's acceptance by D-01, not withdrawn.
+  contradiction: >-
+    The approved target is not self-consistent, and that is why layer 3 is not complete: on D-06's one pack M1 fails at
+    desk (REQ-072 FAIL; the pack allows at most 9.1 W for M1 against 42.8 W, energy record section 9d, a limit no bus
+    voltage raises), and REQ-016's 100 W window and REQ-072 cannot both hold. D-20 excludes accepting the shortfall and
+    D-21 preserves the mission, so only owner decisions that change the store (D-06), move an approved lid item (D-01's
+    deferrals) and set the solar input (REQ-016) make the target unambiguous: rows L3-OD1 to L3-OD4. Row L3-OD5 closes the
+    one other open contradiction, CFL-017. Rows L3-OD1, L3-OD2 and L3-OD4 are held by the owner (D-22) until the corrected,
+    independently checked energy comparison (open item S-127) is filed.
+  proposed: >-
+    What the rows propose, as far as the session recommends before the energy basis: Option A(i)'s store (row L3-OD1), a
+    base pack of 4S6P across both base pockets under board P and a lid pack under its own protection board, 4S20P or
+    4S21P in all as the lid is 4S14P or 4S15P (964.8 or 1013.0 Wh nominal: strings of 48.24 Wh at the cell's 3,350 mAh
+    minimum and 14.4 V, the arithmetic of D-06's own 144.7 Wh for 3 strings); the solar input of row L3-OD3, four 100 W
+    panels in two series pairs (400 Wp at STC) into a 200 W stage, the panels and their folding stand carried outside the
+    case; and D-02a's margins read as the kit's without its cells (row L3-OD5). Where the displaced lid item goes and
+    whether its function stays in the kit (row L3-OD2), and M1's deployment conditions (row L3-OD4), are recommended only
+    from the checked energy basis and the relocation facts. REQ-072 stays FAIL until the design is drawn, reviewed and
+    tested: a model result is never a pass.
+  alternatives:
+    - {row: L3-OD1, option: reject, text: "D-06's one 4S3P pack stands; REQ-072 stays FAIL and the contradiction with D-06 is recorded as an open conflict; layer 3 cannot complete unless the owner explicitly authorises a change to M1 or to the approved functions, which D-20, D-21 and D-22 otherwise preserve."}
+    - {row: L3-OD2, option: qmx-out, text: "The QMX HF set leaves the kit and HF leaves with it, the owner's explicit decision to remove an approved function; the lid keeps an 8 inch tablet bracket beside a 4S15P lid pack."}
+    - {row: L3-OD2, option: qmx-outside, text: "The QMX HF set leaves the lid and is carried outside the case, its HF function kept through a sealed lead across the case wall; held on the relocation facts; the lid keeps an 8 inch tablet bracket beside a 4S15P lid pack."}
+    - {row: L3-OD2, option: tablet-out, text: "The tablet bracket leaves the lid; the tablet is carried outside the case and served by the kit's WiFi and the USB-C outlet (REQ-017, deferred from prototype 1's acceptance); the QMX stays in its lid tray beside a 4S14P lid pack."}
+    - {row: L3-OD3, option: 1s4p, text: "The four panels all in parallel: REQ-016 restated to at most 200 W, at most 25.6 V open circuit at -20 C cells, the array held at 16.7 to 17.6 V, an entry of 40 A and a fuse per panel; no plane grid has been run for it, so row L3-OD4 cannot adopt a band on it."}
+    - {row: L3-OD3, option: keep, text: "REQ-016's 100 W window kept, with the array and entry current the checked energy basis gives for the lid chosen (the 1600 Wp of the options sheet is for 4S18P); no plane grid has been run for it."}
+    - {row: L3-OD4, option: reject, text: "No deployment condition is stated: M1's claim stays on SC-37's reference plane (40 degrees, facing south) with no rule for the operator and no open-kit stability requirement."}
+    - {row: L3-OD5, option: measure, text: "CFL-017 stays open until the bounded enclosure heat experiment (POWER-THERMAL.md section 10) is run on hardware; layer 3 then completes with it open only by the owner's explicit authorisation."}
+    - {row: L3-OD5, option: cells, text: "Cells rated above +60 C are selected, reopening D-06's cell and spending money; CFL-017 stays open until the cell is chosen and its sheet held."}
+
+# Feasibility findings for the owner, stated plainly on every page that shows the target.
+findings:
+  - id: F-01
+    title: "The two-pack results were computed on the model's most favourable charge bus; which lid meets M1, and on which planes, waits on the checked energy basis"
+    text: >-
+      The published two-pack figures convert U3's input current limit into power at the energy model's charge bus of 20.7
+      V (v2/docs/records/a1elec/energy_two_pack.py), above the bus's nominal regulation of 20.000 V and its stated DC band
+      of 19.080 to 20.960 V (v2/docs/records/s120/vbus20_bound.out section 2), whose low end rests partly on an INFERRED
+      temperature term. Stream l3plane's plane grid (branch fnd/l3plane at 7a0a9b73) ran the two lids at lower bus
+      voltages, and the independent check CHECK-1 (v2/docs/records/l3r2/checks/check-l3r2-1.md, B2) added U3's 6.0 A
+      bracket: the margins fall as the bus falls, the tablet-out lid's the most, and at the band's low end with the
+      bracket, in the model's worse component and installation case (ratio C of v2/docs/records/a1solar/energy_runs.py),
+      the tablet-out lid met M1 on none of the 24 planes probed. Whether each lid option meets M1 across the kit's supply range, and on which planes, is
+      stated only from the checked energy basis (open item S-127), which names every case by its exact weather and
+      operating assumptions; until then rows L3-OD1, L3-OD2 and L3-OD4 are held (D-22) and no figure on these pages is the
+      design's. Every figure named here is modelled on SC-37's September mean day at Leiden; no run of cloudy days is
+      modelled, and nothing is built.
+
+# The owner questions of v2/docs/EXECUTION-PLAN.md (29 September 2026, "The four owner decisions open for Option A(i)"),
+# which the rows below replace.
+execution_plan_questions:
+  - {q: Q1, row: L3-OD2, note: "which lid function leaves: the plan recommended the tablet out; the row adds where each item goes and whether its function stays, and holds its recommendation for the energy basis"}
+  - {q: Q2, row: L3-OD3, note: "REQ-016 restated for the 200 W stage; the row now carries the whole solar input, its array included"}
+  - {q: Q3, row: L3-OD1, note: "D-06's battery growth: the plan's '4S18P, about 870 Wh' and '4S20P, about 970 Wh' are superseded by the base 4S6P plus a 4S14P or 4S15P lid, 964.8 or 1013.0 Wh nominal"}
+  - {q: Q4, row: L3-OD4, note: "the deployment rule: the plan's '20 to 50 degrees, within 15 degrees of south' is superseded; the band comes from the checked energy basis, and the open kit's slope and push are added"}
+
+# ------------------------------------------------------------------------------------------------ (b) proposals
+# status: APPROVED (the owner's words cited), REJECTED (cited), AWAITING (a proposal his words have not decided),
+# WITHDRAWN (a session's own text reverted by the session), NOT_A_REQUIREMENT_CHANGE (an implementation choice or a record).
+proposals:
+  - id: P-01
+    title: "Option A(i)'s store: two separately protected packs, a base 4S6P across both base pockets and a lid pack with its own protection board, charger and gauge"
+    source: ["v2/docs/records/energy/ENERGY-RECONCILIATION.md sections 8 and 9g", "v2/docs/records/energy/DECISION-OPTIONS.md A", "v2/docs/records/a1elec/TOPOLOGY.md", "v2/docs/records/a1int/RECONCILE.md", "v2/docs/records/a1mech/README.md section 6"]
+    changes: "owner ruling D-06 (size, from one 4S3P of about 145 Wh, and place, from the east pocket to both base pockets and the lid, the west RF entry re-planned); D-01's deferral of the second pack; REQ-014 and REQ-075 (one 3P block); REQ-072 (one pack); CFL-006 (one parallel count)"
+    status: AWAITING
+    basis: "The owner's instruction of 29 September 2026 (v2/docs/EXECUTION-PLAN.md, set 10's milestone): \"move to engineering Option A(i), within existing authorizations\", with \"No purchases or requirement changes are authorized by this instruction\"; held by D-22 until the checked energy comparison."
+    affects: [REQ-014, REQ-075, REQ-072, CFL-006, CON-006, REQ-044, REQ-045, REQ-046, REQ-069, FEA-004, FEA-005, FEA-007]
+    decision: L3-OD1
+  - id: P-02
+    title: "Which approved lid item leaves the lid for the lid pack, where it goes and whether its function stays in the kit: the QMX HF set out of the kit, the QMX carried outside the case with HF kept, or the tablet bracket out with the tablet's use kept"
+    source: ["v2/docs/records/a1mech/DECISION-A1.md", "v2/docs/records/a1mech/README.md sections 3 and 5", "v2/docs/records/a1int/RECONCILE.md", "branch fnd/l3plane (the relocation facts, being written)"]
+    changes: "an approved function (appendix 32.50 item 16a or 16d) and D-01's deferral of it; REQ-002, REQ-067 and REQ-068 (HF out of the kit) or REQ-011; the lid pack's size (4S14P or 4S15P)"
+    status: AWAITING
+    basis: "DECISION-A1.md is a drafted sheet with the session's first view (the tablet out); no owner answer is recorded. D-21: approved functions are preserved unless the owner explicitly authorises a change; D-22: moving equipment out of the lid must not silently remove its function from the kit, and the row is held until the checked energy comparison."
+    affects: [REQ-011, REQ-002, REQ-067, REQ-068, REQ-014, REQ-075, CFL-006]
+    decision: L3-OD2
+  - id: P-03
+    title: "The solar input for Option A(i): a 200 W stage fed by 400 Wp in 2S2P (REQ-016 restated), or 1S4P, or REQ-016's 100 W window kept with a larger array"
+    source: ["v2/docs/records/a1solar/ARRAY.md sections 3 to 6", "v2/docs/records/a1solar/README.md (The owner's, not changed here)", "v2/docs/records/a1solar/SELECTION.md section 4"]
+    changes: "REQ-016's window (25 V, 17.6 V, 100 W), its acceptance (F2 and J_SOLAR 10 A, the SMCJ28A clamp) and SC-36's split; the array REQ-072 names; the kit's claimed form"
+    status: AWAITING
+    basis: "ARRAY.md section 5 is headed 'the owner's; not changed here'; board E's drafts are gated on it (section 6)."
+    affects: [REQ-016, REQ-072]
+    decision: L3-OD3
+  - id: P-04
+    title: "M1's deployment band for the array: first 20 to 50 degrees within 15 degrees of south (the 4S12P lid, the model's 20.7 V bus); a narrower plane band from the plane grid; the band to come from the checked energy basis"
+    source: ["v2/docs/records/a1solar/ARRAY.md section 7", "v2/docs/records/a1int/RECONCILE.md", "v2/docs/records/s119/reconcile_s119.out section 7", "branch fnd/l3plane at 7a0a9b73: v2/docs/records/l3plane/PLANES.md", "v2/docs/records/l3r2/checks/check-l3r2-1.md B2"]
+    changes: "M1's operating conditions (CONOPS section 3: 'a solar panel on the solar input'); REQ-072's acceptance"
+    status: AWAITING
+    basis: "a1solar's README: 'a CONOPS line, the owner's to accept'; PLANES.md: 'It is not a decision'. D-22: narrower deployment angles must be proposed explicitly for the owner's approval; the row is held until the checked energy comparison."
+    affects: [REQ-072]
+    decision: L3-OD4
+  - id: P-05
+    title: "The open kit's stability with the heavier lid: a ground slope limit toward the hinge and an operator push the kit must stand, as a new requirement (REQ-078 when applied)"
+    source: ["v2/docs/records/a1mech/README.md section 5 (Result, Operator loads)", "v2/docs/records/a1mech/DECISION-A1.md"]
+    changes: "M1's setting ('on a table or a vehicle tailgate'), a new operating condition; a new core requirement with the owner's push load"
+    status: AWAITING
+    basis: "a1mech states the slope as an interim basis until T-A1-3 measures the feet and finds the operator pushes that tip the lightest case; no owner answer is recorded. D-22: different operating conditions must be proposed explicitly."
+    affects: [REQ-072]
+    decision: L3-OD4
+  - id: P-06
+    title: "REQ-072 restated for two packs: the array left to row L3-OD3, the load served at every hour of the 72, the claim held across the charge bus's supply range with every load-holding limit at its minimum, and a floor of 3.00 V a cell under the graceful shutdown"
+    source: ["v2/docs/records/l3r2/conditional/od_l3_1.py", "owner ruling D-22", "v2/docs/records/energy/ENERGY-RECONCILIATION.md section 2 (the 3.00 V line)"]
+    changes: "REQ-072's statement and pass line (the single pack's 'ends the 72 hours above the graceful shutdown threshold')"
+    status: AWAITING
+    basis: "A restatement inside row L3-OD1; nothing applied."
+    affects: [REQ-072]
+    decision: L3-OD1
+  - id: P-07
+    title: "REQ-011 narrowed from an 8 to 10 inch tablet to an 8 inch tablet (the QMX out of the lid)"
+    source: ["v2/docs/records/a1mech/DECISION-A1.md option 2"]
+    changes: "REQ-011's statement"
+    status: AWAITING
+    basis: "A restatement inside row L3-OD2's qmx-out and qmx-outside options; nothing applied."
+    affects: [REQ-011]
+    decision: L3-OD2
+  - id: P-08
+    title: "Option B: keep today's limits, M1 not met"
+    source: ["v2/docs/records/energy/DECISION-OPTIONS.md B"]
+    changes: "none to a requirement; REQ-072 stays FAIL"
+    status: AWAITING
+    basis: "The reject option of L3-OD1. D-20 excludes accepting the shortfall as a residual ('(e) is excluded because unmet criteria stay visible'), so under B layer 3 stays open."
+    affects: [REQ-072]
+    decision: L3-OD1
+  - id: P-09
+    title: "Option C and the change sets of energy section 7: reduced service (the night state for all or most hours, the 2.80 V line, a second 4S3P pack, a 200 Wp panel) in place of M1 as written"
+    source: ["v2/docs/records/energy/DECISION-OPTIONS.md C", "v2/docs/records/energy/ENERGY-RECONCILIATION.md sections 7, 8c and 9j"]
+    changes: "M1's operating state (PS-IDLE-SPEC) and REQ-072"
+    status: REJECTED
+    basis: "The owner's ruling of 29 September 2026 that reduced capability does not replace M1 or REQ-072 and that battery and solar stay mandatory under the unchanged mission (recorded in v2/docs/records/energy/ENERGY-RECONCILIATION.md section 9 and v2/docs/records/energy/README.md, fourth issue; his own words are not filed in the tree); D-21: 'Battery and solar remain mandatory. Preserve the approved 72-hour mission'; D-22: 'Preserve your mission requirements'. Option C stays a separate, conditional alternative with REQ-072 FAIL."
+    affects: [REQ-072]
+  - id: P-10
+    title: "EQ-13 route (b): an overnight input on the 9 to 36 V entry as M1's basis"
+    source: ["v2/docs/handover/ENGINEERING-QUESTIONS.md EQ-13", "v2/docs/CONOPS.md section 3 (M1)"]
+    changes: "M1's setting from pack and solar"
+    status: REJECTED
+    basis: "D-20 (28 September 2026): \"an external DC source may remain optional, but requiring it overnight is not an acceptable substitute\"."
+    affects: [REQ-072]
+  - id: P-11
+    title: "EQ-13 route (e): record that prototype 1 does not meet M1 on pack and solar (the owner's first answer to OD-02, '(e) strictly for prototype 1')"
+    source: ["v2/docs/handover/ENGINEERING-QUESTIONS.md EQ-13", "owner ruling D-20"]
+    changes: "REQ-072's standing (a residual accepted)"
+    status: REJECTED
+    basis: "D-20, the owner's correction of the same evening: \"(e) is excluded because unmet criteria stay visible\"."
+    affects: [REQ-072]
+  - id: P-12
+    title: "A shorter mission than 72 hours"
+    source: ["v2/docs/handover/ENGINEERING-QUESTIONS.md EQ-13 (viable options: 'A shorter mission is not an option')"]
+    changes: "M1's duration (SC-21)"
+    status: REJECTED
+    basis: "D-20 preserves M1 and REQ-072 'with their specified duration'; D-21: \"Preserve the approved 72-hour mission\"."
+    affects: [REQ-072]
+  - id: P-13
+    title: "Set 12's circuit edits to CONOPS section 4b and its EMCON row (a46db71b, 7a9f7b5b)"
+    source: ["v2/docs/EXECUTION-PLAN.md, set 13's and set 14's milestones", "v2/docs/handover/DEFINITION-STATUS.md rows DC-01 to DC-09"]
+    changes: "the baselined CONOPS (layer 2)"
+    status: WITHDRAWN
+    basis: "A session's edit, withdrawn by the session: stream s122 restored CONOPS.md byte for byte to c5430071 and moved the current circuit values to DEFINITION-STATUS.md (set 14). No owner status applies."
+    affects: [CFL-016]
+  - id: P-14
+    title: "CFL-017's three routes: (a) the bounded enclosure heat experiment, (b) cells rated above +60 C, (c) the owner's reading of D-02a that its margins apply to the kit without its cells"
+    source: ["v2/docs/handover/ENGINEERING-QUESTIONS.md EQ-26", "v2/docs/review-packets/battery/THERMAL-COORDINATION.md section 9a"]
+    changes: "D-02a's scope (c) or D-06's cell (b); REQ-051; TEST-PLAN E3, E4 and E5's deviations"
+    status: AWAITING
+    basis: "EQ-26 reports (b) and (c) to the owner; no owner answer is recorded."
+    affects: [CFL-017, REQ-051]
+    decision: L3-OD5
+  - id: P-15
+    title: "OD-01: the case test package, the buy route, staged (D-19)"
+    source: ["owner ruling D-19", "v2/docs/records/od01/"]
+    changes: "no requirement statement; a verification route for the case (layer 7) and its purchases, which stay the owner's"
+    status: APPROVED
+    basis: "D-19, ruled by the owner on 28 September 2026 (OD-01 of the decision sheet of that day)."
+    affects: [REQ-019, CON-006, FEA-007]
+  - id: P-16
+    title: "OD-02 corrected: M1 and REQ-072 preserved, the energy budget reconciled (D-20)"
+    source: ["owner ruling D-20", "v2/docs/records/energy/"]
+    changes: "none to a statement: M1 and REQ-072 preserved; the reconciliation S-114 (closed by L3-R2)"
+    status: APPROVED
+    basis: "D-20, ruled by the owner on 28 September 2026, corrected the same evening."
+    affects: [REQ-072]
+  - id: P-17
+    title: "The owner's instruction of 30 September 2026 for layer 3 (D-21) and his review of the draft table (D-22)"
+    source: ["owner ruling D-21", "owner ruling D-22", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
+    changes: "M1's 72 hours approved; approved functions preserved; the completion gate of layer 3; rows L3-OD1, L3-OD2 and L3-OD4 held; the energy basis required"
+    status: APPROVED
+    basis: "D-21 and D-22, the owner's words of 30 September 2026 as quoted by the coordinating session."
+    affects: [REQ-072, REQ-011, REQ-002]
+  - id: P-18
+    title: "Board E's 200 W solar entry as a reversible candidate (branches fnd/e200c, fnd/e200r, fnd/e200r2, not merged)"
+    source: ["branch fnd/e200c: v2/docs/records/e200c/README.md", "branch fnd/e200r2 (box regeneration)"]
+    changes: "no requirement: an implementation of the restated REQ-016, gated on L3-OD3"
+    status: NOT_A_REQUIREMENT_CHANGE
+    basis: "Its own README: 'CANDIDATE, CONDITIONAL ON REQ-016'; nothing adopted."
+    affects: [REQ-016]
+  - id: P-19
+    title: "Session decisions 56 to 59 and choices SC-64 to SC-75 (board A's charger frequency, inductor and FETs, U3B drawn on U3's row, board C's part identities, the EMCON, HOT-R1, PWR-001 and lid tray circuits)"
+    source: ["v2/ecad/tools/pcb_decisions.yaml", "v2/ecad/tools/pcb_requirements.yaml session_choices"]
+    changes: "no requirement statement, acceptance, applicability, allocation, verification or release effect (the registry's difference from H3, computed on REQUIREMENTS-L3-R2.md)"
+    status: NOT_A_REQUIREMENT_CHANGE
+    basis: "Implementation choices of layers 6 to 8, taken by the session under the owner's standing rule and his ruling of 21 September 2026; decision 58 rides on L3-OD1."
+    affects: []
+  - id: P-20
+    title: "Option A(i)'s implementation choices: the 100 degree lid stay, the ideal diode and hot-swap join, the 0.20 V join rule, the lid gauge's SMBus segment and k = 3 calibration, the TCA9543A, board A's entry re-rate, the Renogy RNG-100DB-H panel"
+    source: ["v2/docs/records/a1elec/README.md (decisions taken)", "v2/docs/records/a1mech/README.md section 8", "v2/docs/records/a1solar/SELECTION.md"]
+    changes: "no requirement: each implements a requirement the owner's rows would set"
+    status: NOT_A_REQUIREMENT_CHANGE
+    basis: "Recorded as the session's (authority SESSION, 29 September 2026) and reversible; each rides on the row it implements. The stay is not written into any requirement (REQ-078's draft states the stability, not the stay)."
+    affects: []
+  - id: P-21
+    title: "Stream l3plane's plane grid for the 4S14P and 4S15P lids, with the charge-bus sensitivity (cases P, I, H, V20, V19)"
+    source: ["branch fnd/l3plane at 7a0a9b73: v2/docs/records/l3plane/PLANES.md, plane_grid.py, plane_grid.out"]
+    changes: "none by itself: evidence for rows L3-OD2 and L3-OD4 and finding F-01"
+    status: NOT_A_REQUIREMENT_CHANGE
+    basis: "Its own head: 'Evidence for the owner's decision ... It is not a decision: no requirement, record or decision is changed'. Not merged into this branch."
+    affects: []
+  - id: P-22
+    title: "The charge bus voltage an M1 energy claim rests on: the first draft's SC-76 (19.08 V, the DC band's low end, as a session choice)"
+    source: ["v2/docs/records/s120/vbus20_bound.out section 2", "v2/docs/records/l3r2/checks/check-l3r2-1.md B4", "owner ruling D-22"]
+    changes: "the basis on which REQ-072's desk acceptance and M1's deployment band are judged"
+    status: WITHDRAWN
+    basis: "The session's first-draft choice, withdrawn before it reached the integrated registry: D-22 makes the voltage 'an engineering input, not an author's preference'. It is replaced by open item S-127, the energy basis (the supply range under load and temperature, the current limits and losses, independently checked), which REQ-072 waits on; the claim's rule (every load-holding limit at its minimum across the supply range) is inside row L3-OD1's restatement of REQ-072."
+    affects: [REQ-072]
+  - id: P-23
+    title: "M1's claim limited to the reference day's energy ('no M1 claim is made for a site, month or plane that gives less energy'), written by the first draft as a closure"
+    source: ["v2/docs/records/l3r2/checks/check-l3r2-1.md B3", "v2/docs/CONOPS.md section 3 (M1)"]
+    changes: "M1's scope (a season, site and plane restriction)"
+    status: WITHDRAWN
+    basis: "The session's first-draft sentence, withdrawn: M1 carries no season (CONOPS section 3; its line 1117 withdrew such a clause from a session choice); D-22: 'Preserve your mission requirements'. No site, season or plane restriction is proposed; the plane band of row L3-OD4 is the only narrowing, and it is the owner's to approve."
+    affects: [REQ-072]
+
+# ------------------------------------------------------------------------------------------------ (c) classification
+# level: REQUIREMENT (layer 3) or IMPLEMENTATION (the layer it belongs to).
+classification:
+  - {item: "M1's energy: 72 hours in PS-IDLE-SPEC on the kit's own store and solar, on the reference day, from full aged packs, M1 carrying no season", level: REQUIREMENT, where: "REQ-072 (D-20, D-21, D-22)"}
+  - {item: "The rule that an M1 energy claim holds across the charge bus's supply range with every load-holding limit at its minimum", level: REQUIREMENT, where: "REQ-072's acceptance as row L3-OD1 restates it (D-22: 'If 19.08 V is permitted, mission claims must account for it')"}
+  - {item: "The charge bus's supply range at U3's input (VBUS20) under load and temperature, U3's current limit and the chargers' losses", level: IMPLEMENTATION, layer: 4, where: "the engineering input of every M1 figure: open item S-127 (the energy basis and its check)"}
+  - {item: "The store's size and place (one 4S3P, or Option A(i)'s base 4S6P plus a lid pack)", level: REQUIREMENT, where: "D-06 and L3-OD1: an owner ruling on what the kit carries"}
+  - {item: "Where each approved lid item goes and whether its function stays in the kit", level: REQUIREMENT, where: "L3-OD2 (REQ-002, REQ-067, REQ-068 or REQ-011)"}
+  - {item: "The solar input: the stage's window, the array's wiring and rating, the entry's current rating", level: REQUIREMENT, where: "REQ-016 and REQ-072's array, row L3-OD3"}
+  - {item: "M1's deployment conditions: the array's plane band, the open kit's ground slope and operator push", level: REQUIREMENT, where: "L3-OD4 (M1's operating conditions; REQ-078 when applied)"}
+  - {item: "The reference site and day (September at Leiden, 4.0 kWh/m2 on the 40 degree south plane, PVGIS)", level: REQUIREMENT, where: "SC-37, part of REQ-072's statement, preserved by D-20: the verification condition of REQ-072's desk acceptance, not a restriction on where or when the kit is used; M1 carries no season"}
+  - {item: "The aged capacity and the battery-only runtime statement", level: REQUIREMENT, where: "REQ-014 (per pack under L3-OD1)"}
+  - {item: "The cells' charge current for cycle life", level: REQUIREMENT, where: "REQ-075 (per pack under L3-OD1)"}
+  - {item: "The cells' charge and discharge temperature windows, and each pack's warming before a cold charge", level: REQUIREMENT, where: "REQ-046 (each pack)"}
+  - {item: "The graceful shutdown's floor (3.00 V a cell)", level: REQUIREMENT, where: "REQ-072's pass line as row L3-OD1 restates it; the gauge settings that implement it are layer 6 and 8"}
+  - {item: "D-02a's margins and the cells' limits", level: REQUIREMENT, where: "CFL-017, REQ-051, L3-OD5"}
+  - {item: "Closed-lid reduced mode", level: REQUIREMENT, where: "REQ-052 (unchanged by Option A(i); its FAIL is board B's BANK-R1, layer 8)"}
+  - {item: "Peak simultaneity's declared values (60 s key-down from 15.5 V rest, the PA alone from 12.4 V)", level: REQUIREMENT, where: "REQ-018 (D-11, SC-35); whether the chain meets them is FEA-004 (layer 4)"}
+  - {item: "A second charger (U3B, BQ25731) and its FETs, inductor and frequency", level: IMPLEMENTATION, layer: 8, where: "decision 58, v2/docs/records/a1elec/TOPOLOGY.md 3b"}
+  - {item: "The lid gauge's k = 3 current-scale calibration", level: IMPLEMENTATION, layer: 6, where: "v2/docs/records/a1elec/GAUGE.md"}
+  - {item: "The Renogy RNG-100DB-H panel", level: IMPLEMENTATION, layer: 6, where: "v2/docs/records/a1solar/SELECTION.md (A1SOLAR-01, gated on L3-OD3)"}
+  - {item: "Board E's 200 W stage parts (80 to 100 V FETs, 63 V and 100 V capacitors, D4 58 V standoff, F2 20 A)", level: IMPLEMENTATION, layer: 8, where: "v2/docs/records/a1solar/ARRAY.md section 6; branches fnd/e200c, fnd/e200r2"}
+  - {item: "Board A's entry re-rate (R11 6.2 mOhm, U3 IIN_HOST 6.2 A)", level: IMPLEMENTATION, layer: 8, where: "v2/docs/records/a1elec/CHARGER.md"}
+  - {item: "The ideal diode (LM74700-Q1) and hot-swap limiter (LM5069-2) join and the 0.20 V join rule", level: IMPLEMENTATION, layer: 4, where: "v2/docs/records/a1elec/TOPOLOGY.md 3c (architecture) and layer 8 (circuit)"}
+  - {item: "The lid pack's module, holders, harness and the 100 degree lid stay", level: IMPLEMENTATION, layer: 7, where: "v2/docs/records/a1mech/"}
+  - {item: "The west RF entry re-planned for the west block", level: IMPLEMENTATION, layer: 7, where: "v2/docs/records/a1mech/README.md section 6 (the west RF jumpers fail as assumed, OPEN)"}
+  - {item: "The sealed face-plate crossing of the lid harness; a sealed case-wall lead for a QMX carried outside", level: IMPLEMENTATION, layer: 7, where: "S-95, EQ-31; the relocation facts"}
+  - {item: "The lid pack's heater and its supply", level: IMPLEMENTATION, layer: 8, where: "v2/docs/records/a1elec/README.md open items (required by REQ-046 for each pack)"}
+  - {item: "The pack enclosure and hold-down (pack_4s.py)", level: IMPLEMENTATION, layer: 7, where: "S-27 (CFL-006's remaining FAIL)"}
+  - {item: "The transport classification of each pack", level: IMPLEMENTATION, layer: 4, where: "S-52 (procedure content); the requirement, no route claimed until established, is REQ-069"}
+
+# ------------------------------------------------------------------------------------------------ owner decisions
+# held_until: the l3r2.yaml files a row waits on before its recommendation and its figures are stated (D-22).
+decisions:
+  - id: L3-OD1
+    question: "Adopt Option A(i)'s store for mission M1: two separately protected packs of the ruled cell, a base 4S6P across both base pockets (replacing D-06's one 4S3P in the east pocket) and a lid pack with its own protection board, charger and gauge? The solar input is row L3-OD3's."
+    recommendation: "Approve, if the checked energy basis shows a lid option that meets M1 across the kit's supply range: on one 145 Wh pack M1 cannot be met at any bus voltage (at most 9.1 W for M1 against 42.8 W), D-20 excludes accepting the shortfall, and no other store inside the fixed case is found. If no lid option meets it, the owner is told that M1 cannot be met in the fixed case with the ruled cell, and what would."
+    tradeoff: "Energy: HELD for the checked energy basis (D-22). Costs: approving it forces one approved lid item out of the lid (row L3-OD2), and if that item is the tablet bracket the tablet's use relies on the USB-C outlet REQ-017 defers from prototype 1's acceptance; the second pack leaves D-01's deferred list and joins prototype 1's core; the west RF jumpers fail as assumed under the west block, so the west RF entry is re-planned before the block is taken (a1mech, OPEN); 80 or 84 cells against 12 (4S20P or 4S21P); each pack above the 160 Wh passenger figure the energy record names (the base 289.4 Wh, a lid of 675.4 or 723.6 Wh nominal by the same arithmetic), no transport route claimed (REQ-069); a lid growing from about 1.4 kg to 4.8 to 5.5 kg, on a 100 degree stay; a sealed lid-harness crossing not yet designed; a second charger, gauge and protection board, and board A's entry re-rated; the array, its four panels and folding stand stowed beside the case, are row L3-OD3's. It restates REQ-014 and REQ-075 per pack and REQ-072 to two packs, with its pass line held across the supply range and a 3.00 V a cell floor under the graceful shutdown. Nothing is drawn, built or tested: REQ-072 stays FAIL. It authorises no purchase."
+    affected: "D-06 (superseded), D-01 (the second pack joins the core), REQ-014 and REQ-075 (per pack), REQ-072 (two packs, the supply range, the 3.00 V floor), CFL-006, M-02; each pack under REQ-044, REQ-045, REQ-046, REQ-069, CON-006"
+    held_until: [energy_basis]
+    options:
+      - {id: approve, label: "Approve Option A(i)'s store"}
+      - {id: reject, label: "Keep D-06's one pack: REQ-072 stays FAIL and an open conflict is recorded"}
+    script: od_l3_1.py
+    requires: []
+  - id: L3-OD2
+    question: "Which approved lid item leaves the lid for the lid pack, where does it go, and does its function stay in the kit: the QMX HF set out of the kit, the QMX carried outside the case with HF kept, or the tablet bracket out with the tablet's use kept?"
+    recommendation: "HELD for the checked energy basis and the relocation facts (D-22). The recommendation depends on which lid meets M1 across the supply range (finding F-01) and on where a displaced item can go."
+    tradeoff: "QMX out of the kit: HF leaves the kit, the owner's explicit decision to remove an approved function (it is deferred, no core bearer); the lid keeps an 8 inch tablet bracket (REQ-011 narrowed from 8 to 10 inch) beside a 4S15P lid; the open kit stands on level ground only (1.2 degrees at the interim feet basis, 7.0 if it tips on its flat bottom's edge), and a 6.1 N press at the tablet's far edge tips it. QMX outside the case: HF stays through a sealed lead across the case wall, which the ruled connector plate does not carry today (a1mech), placed as the relocation facts will state; the lid as in QMX out. Tablet out: holding the tablet in the lid leaves the kit, the tablet's use stays over the kit's WiFi and the USB-C outlet (REQ-017, deferred from prototype 1's acceptance); the QMX stays in its lid tray beside a 4S14P lid; the open kit stands on ground sloping under about 3 degrees toward the hinge (3.6 at the interim basis, 9.5 at the edge), and an 11.7 N backward push at the QMX's controls tips it. Keeping both fits only a 4S9P lid, which the model finds NOT MET at 400, 650 and 1000 Wp with the lid at its 13.23 C basis even on its most favourable 20.7 V bus (met only with the lid at +20 C and 650 Wp or more). Energy of each option: HELD."
+    affected: "REQ-002, REQ-067, REQ-068 (the QMX out of the kit) or REQ-011 (the tablet out); REQ-011's size (the QMX out or outside); D-01's deferred list; the lid pack's count in REQ-014, REQ-075 and CFL-006; S-95 and S-96"
+    held_until: [energy_basis, relocation_facts]
+    options:
+      - {id: qmx-out, label: "The QMX HF set leaves the kit, HF with it; an 8 inch tablet bracket stays; the lid pack is 4S15P"}
+      - {id: qmx-outside, label: "The QMX HF set is carried outside the case, HF kept by a sealed lead; an 8 inch tablet bracket stays; the lid pack is 4S15P"}
+      - {id: tablet-out, label: "The tablet bracket leaves, the tablet's use kept outside the case; the QMX stays; the lid pack is 4S14P"}
+    script: od_l3_2.py
+    requires: ["L3-OD1:approve"]
+  - id: L3-OD3
+    question: "Set the solar input for Option A(i): a 200 W stage fed by four 100 W panels in two series pairs (2S2P, 400 Wp), with REQ-016 restated to that array?"
+    recommendation: "Approve 2S2P: at most 200 W into the stage; the array's open circuit at most 51.3 V at -20 C cells (54.1 V at -40 C); every part on the panel entry rated above 56.3 V; the array held at 34.3 V (33.0 to 35.6 V); F2 20 A at 56.3 V DC or more with an interrupting rating at or above the kit-side fault current; J_SOLAR, the wall pair and the lead 20 A or more; the panels and their folding stand carried outside the case, beside it."
+    tradeoff: "2S2P needs 80 to 100 V class parts on board E's entry and the 200 W window implemented (board E senses no input or output current today) or everything downstream rated for the stage's inductor limit; its current stays near 6 A; the only array a plane grid has been run for. 1S4P keeps about 25.6 V at -20 C (still above today's 25 V) but needs a 40 A entry and a 10 to 15 A fuse per panel, and has no plane grid. Keeping REQ-016's 100 W window needs the array and entry current the checked energy basis gives for the lid chosen (the options sheet's 1600 Wp is for 4S18P), panels inside 25 V at their coldest, and has no plane grid. Every option: four 1219 x 549 mm semi-rigid panels (2.7 square metres) or more, and a folding stand, travel flat beside the case, part of the kit's claimed form; no purchase is authorised."
+    affected: "REQ-016 (its window, acceptance and SC-36's split), REQ-072's array, board E, S-47 and S-53"
+    held_until: []
+    options:
+      - {id: 2s2p, label: "A 200 W stage and 400 Wp in 2S2P; REQ-016 restated (recommended)"}
+      - {id: 1s4p, label: "A 200 W stage and 400 Wp in 1S4P; REQ-016 restated"}
+      - {id: keep, label: "REQ-016's 100 W window kept, with the array the checked energy basis gives"}
+    script: od_l3_3.py
+    requires: ["L3-OD1:approve"]
+  - id: L3-OD4
+    question: "Adopt M1's deployment conditions, as proposed narrower operating conditions: the array's plane band for the 2S2P array and the lid chosen, and the open kit's ground slope toward the hinge and an operator push it must stand (a new core requirement)?"
+    recommendation: "HELD for the checked energy basis (D-22): the band is written from it, with U3's 6.0 A bracket at the low end of the supply range (CHECK-1, B2). The open kit's conditions follow the lid chosen: at most 1 degree toward the hinge (the QMX out of the lid) or 3 degrees (the tablet out), restated when the feet are measured (T-A1-3); the push is the owner's to set."
+    tradeoff: "An operator set-up rule, a stand and level or near-level ground: the owner's approval of narrower conditions (D-22), never a closure. Only the 2S2P array has a plane grid, so the scripts refuse a band for 1S4P or for REQ-016 kept. The grid's own basis: one site (Leiden) and one day (SC-37's September mean day, repeated for 72 hours), 10 degree slope and 15 degree azimuth steps with no tolerance beyond a grid edge, PVGIS's 0.9417 carried from the 40 degree south plane to every plane, and the chargers' efficiencies high by their inductors' core loss. The records find the lightest case tips under a 6.1 N press at the lid tablet's far edge (the QMX out of the lid) or an 11.7 N backward push at the QMX's controls (the tablet out); the push the kit must stand is the owner's number, and meeting it may need a wider foot or an outrigger (layer 7)."
+    affected: "REQ-072's acceptance, a new core requirement (REQ-078 when applied, parent NEED-06), CONOPS M1's setting (a change record item), SC-37"
+    held_until: [energy_basis]
+    options:
+      - {id: adopt, label: "Adopt the band from the checked basis and the open kit's conditions for the chosen lid, with the push the owner sets"}
+      - {id: reject, label: "State no deployment condition"}
+    script: od_l3_4.py
+    requires: ["L3-OD1:approve", "L3-OD2:*", "L3-OD3:2s2p (adopt) or any (reject)"]
+  - id: L3-OD5
+    question: "CFL-017: do D-02a's +55 C operating, +71 C and -33 C storage and E5's +60 C humid margins apply to the kit without its cells, with the cells held inside their maker's limits?"
+    recommendation: "Yes (route (c))."
+    tradeoff: "Closes the contradiction with no new cells or money, but the kit with its pack is not claimed at those margins; the heat experiment (route (a)) still runs as characterisation. Route (b), cells rated above +60 C, costs money and reopens D-06's cell; route (a) alone leaves CFL-017 open until hardware exists."
+    affected: "D-02a (read), CFL-017, REQ-051, TEST-PLAN E3, E4 and E5's deviations; the cells' limits in REQ-046 and REQ-074"
+    held_until: []
+    options:
+      - {id: reading-c, label: "The margins apply to the kit without its cells (recommended)"}
+      - {id: measure, label: "Keep CFL-017 open until the heat experiment"}
+      - {id: cells, label: "Select cells rated above +60 C"}
+    script: od_l3_5.py
+    requires: []
+
+# The combinations the evidence covers; the gate's first condition reads MET only on one of them (CHECK-1, B1).
+coherence:
+  - {rule: "row L3-OD1 answered approve", why: "rows L3-OD2 to L3-OD4 need it; a reject records an open conflict instead"}
+  - {rule: "row L3-OD4 answered adopt only with row L3-OD3 answered 2s2p", why: "the plane grid ran 400 Wp in 2S2P into 200 W; no band exists for 1S4P or for REQ-016 kept"}
+  - {rule: "one ruling on the array", why: "row L3-OD1 fixes no array; row L3-OD3 alone does, and od_l3_3.py replaces REQ-072's marked phrase with it"}
+
+# ------------------------------------------------------------------------------------------------ (d) closure list
+# whose: OWNER, SESSION, INTEGRATOR, CHECKER, STREAM. state: CLOSED, AWAITING_OWNER, HELD, DOWNSTREAM, OPEN. `record`
+# names the registry entry whose live state the rendered page prints beside the item.
+closure:
+  - {id: L3-C01, item: "The target configuration is unambiguous", whose: OWNER, closes_by: "rows L3-OD1 to L3-OD4 decided on a combination the evidence covers (coherence rules) and their conditional scripts applied", state: AWAITING_OWNER}
+  - {id: L3-C02, item: "REQ-072 (M1) against D-06's one pack", whose: OWNER, record: REQ-072, closes_by: "L3-OD1 (and L3-OD2 to L3-OD4); M-02 closes when all four are decided", state: AWAITING_OWNER}
+  - {id: L3-C03, item: "REQ-016's window against REQ-072", whose: OWNER, record: REQ-016, closes_by: "L3-OD3 after L3-OD1", state: AWAITING_OWNER}
+  - {id: L3-C04, item: "REQ-014's aged capacity (8.04 Ah for one 3P block) under two packs", whose: OWNER, record: REQ-014, closes_by: "rows L3-OD1 and L3-OD2: od_l3_1.py and od_l3_2.py restate it per pack (80 percent of 3.35 Ah a cell times each block's parallel count), for both packs together and for each pack alone", state: AWAITING_OWNER}
+  - {id: L3-C05, item: "REQ-075's charge current (3.06 A for one 3P block) under two packs", whose: OWNER, record: REQ-075, closes_by: "rows L3-OD1 and L3-OD2: od_l3_1.py and od_l3_2.py restate it per pack (1,020 mA a cell)", state: AWAITING_OWNER}
+  - {id: L3-C06, item: "D-06 against Option A(i)", whose: OWNER, closes_by: "L3-OD1: a ruling that supersedes D-06, its runtime statement kept per pack", state: AWAITING_OWNER}
+  - {id: L3-C07, item: "D-01's deferral list (second pack; tablet bracket; HF) against Option A(i)", whose: OWNER, closes_by: "L3-OD1 (the second pack joins the core) and L3-OD2 (where the displaced lid item goes and whether its function stays)", state: AWAITING_OWNER}
+  - {id: L3-C08, item: "M1's deployment conditions (the array's plane band; the open kit's slope and push)", whose: OWNER, closes_by: "L3-OD4", state: AWAITING_OWNER}
+  - {id: L3-C09, item: "CFL-017 (CONFLICT_OPEN): D-02a's margins against the cells' +60 C", whose: OWNER, record: CFL-017, closes_by: "L3-OD5", state: AWAITING_OWNER}
+  - {id: L3-C10, item: "D-02a against the proposals", whose: OWNER, closes_by: "L3-OD5 (Option A(i) does not change D-02a; a lid pack in the open lid is outside the base's heat)", state: AWAITING_OWNER}
+  - {id: L3-C11, item: "D-11 and REQ-018 against Option A(i)", whose: SESSION, record: REQ-018, closes_by: "no change: the declared values (60 s key-down from a 15.5 V rest, the PA alone from 12.4 V) are 4S voltages and stand for either store; whether the chain meets them is FEA-004 (layer 4)", state: CLOSED}
+  - {id: L3-C12, item: "D-20 against the proposals", whose: SESSION, closes_by: "the reconciliation D-20 asks for is filed (S-114 closed by L3-R2); every option that would accept the shortfall, run M1 on external DC or shorten it is recorded REJECTED (P-09 to P-12)", state: CLOSED}
+  - {id: L3-C13, item: "REQ-052 (closed-lid reduced mode) against Option A(i)", whose: SESSION, record: REQ-052, closes_by: "no statement change: the reduced mode is defined by slots and bearers, not by the store; the lid pack's cells and board PL join its acceptance's 'every part inside its published range'; its FAIL is board B's BANK-R1 (S-54, layer 8) and the SGP41 (S-56, layer 6)", state: CLOSED}
+  - {id: L3-C14, item: "Other functions under Option A(i): the case (the 1450 unchanged), the mass (REQ-023: 45.4 kg; the lid grows from about 1.4 kg to 4.8 to 5.5 kg, a1mech section 5), EMCON (a charger is no transmitter; D-05 unchanged), NEED-18 emissions (a second switching charger is one more source for REQ-063's characterisation), the west RF entry (re-planned, layer 7)", whose: SESSION, closes_by: "no requirement statement changes; each is a downstream verification or design item (layers 4, 7 and 9)", state: CLOSED}
+  - {id: L3-C15, item: "CFL-006 reading FAIL under CONFLICT_RESOLVED", whose: SESSION, record: CFL-006, closes_by: "re-read by read_cfl006.py and noted by apply_l3r2_session.py: the cell and count agree in every requirement-level source; the FAIL is the enclosure's (S-27, layer 7), listed as downstream in l3r2.yaml; per pack under L3-OD1", state: CLOSED}
+  - {id: L3-C16, item: "CFL-016: the definition documents re-read against the netlists", whose: INTEGRATOR, record: CFL-016, closes_by: "S-122 closed on integration set 15 (845a4fd1), CFL-016 reading PASS", state: OPEN}
+  - {id: L3-C17, item: "S-114, the energy reconciliation of D-20", whose: SESSION, closes_by: "closed by apply_l3r2_session.py by commit 1b9f543c (the study filed, REQ-072 re-read on it), its closing evidence qualified by the model's 20.7 V bus", state: OPEN}
+  - {id: L3-C18, item: "M-02, the owner's part of M1's balance", whose: OWNER, closes_by: "restated by apply_l3r2_session.py to rows L3-OD1 to L3-OD4 and D-22's hold; closed by the conditional scripts once all four are decided and L3-OD1 approved", state: AWAITING_OWNER}
+  - {id: L3-C19, item: "S-53, M1's input path judged at layer 4", whose: SESSION, closes_by: "layer 4, on the architecture the owner adopts (after L3-OD1 and L3-OD3); it holds no layer 3 statement", state: DOWNSTREAM}
+  - {id: L3-C20, item: "Requirement-level TBDs", whose: SESSION, closes_by: "no record reads TBD; every 'TBD', 'TBC', 'owed', 'not yet stated', 'exists yet' and 'open' state sentence in a statement, acceptance or note is classified on L3-RECONCILIATION.md (verification activities, part picks, layer 4 bounds), and CFL-002's stale 'REQ-042's TBD' is corrected", state: CLOSED}
+  - {id: L3-C21, item: "Acceptance without a measurable criterion", whose: SESSION, closes_by: "REQ-008, REQ-012, REQ-029, REQ-054, REQ-057, REQ-068 and CHO-003 restated from their own statements, with no limit added or removed (REQ-054 keeps its 27 dBm allowance on 869.4 to 869.65 MHz); ASM-003 and ASM-004 are assumptions, whose acceptance is their validation route (an assumption is validated or replaced, never passed)", state: CLOSED}
+  - {id: L3-C22, item: "Verification method and phase on every record", whose: SESSION, closes_by: "the validator refuses a record without either; every record carries both", state: CLOSED}
+  - {id: L3-C23, item: "Open items sorted into layer 3 or downstream; items in no record's waits_on (acceptance item 3.15)", whose: SESSION, closes_by: "every open item classified on L3-RECONCILIATION.md; every item no record waits on carries a disposition (the validator)", state: CLOSED}
+  - {id: L3-C24, item: "Requirements kept apart from implementation choices", whose: SESSION, closes_by: "the classification table of L3-RECONCILIATION.md (c)", state: CLOSED}
+  - {id: L3-C25, item: "SC-37's reference site and day: a condition or an assumption", whose: SESSION, closes_by: "the verification condition of REQ-072's desk acceptance, inside REQ-072's statement and preserved by D-20; not a restriction on where or when the kit is used: M1 carries no season (CONOPS section 3), and a month with less sun asks more of the array (SC-37). No site, season or plane restriction is proposed except row L3-OD4's band, the owner's to approve", state: CLOSED}
+  - {id: L3-C26, item: "CONOPS and PRODUCT-BRIEF passages the decisions change", whose: OWNER, closes_by: "once the rows are decided, the session prepares the re-issue of both through their layers' review, or a proposed change record, which the owner approves; the gate holds until l3r2.yaml's definition_reissue names it with the approving ruling", state: AWAITING_OWNER}
+  - {id: L3-C27, item: "An independent check accepts the L3-R2 handover", whose: CHECKER, closes_by: "a session or person that wrote none of L3-R2 reads REQUIREMENTS-L3-R2.md, the registry and this list, and files its record; its findings answered (CHECK-1: not accepted, answered in round 2)", state: OPEN}
+  - {id: L3-C28, item: "The session's scripts run and the pages rendered on the integration set", whose: INTEGRATOR, closes_by: "apply_l3r2_session.py and apply_layer_status_l3.py run on the set, then rules_render.py --requirements and render_l3r2.py (v2/docs/records/l3r2/README.md, the run order)", state: OPEN}
+  - {id: L3-C29, item: "The H3 release preserved", whose: SESSION, closes_by: "no file under v2/release/handover/ is touched; the change record reads H3's registry from H3.zip as released", state: CLOSED}
+  - {id: L3-C30, item: "Finding F-01: which lid meets M1 across the supply range, and on which planes", whose: STREAM, closes_by: "the checked energy basis (S-127), then rows L3-OD2 and L3-OD4 restated from it", state: HELD}
+  - {id: L3-C31, item: "The energy basis: the charge bus's supply range under load and temperature, the current limits and losses, the cases named by their weather and operating assumptions, independently checked (D-22)", whose: STREAM, closes_by: "stream l3plane's ENERGY-BASIS.md and its independent check filed and named in l3r2.yaml's energy_basis; S-127 closed and REQ-072 re-read on it", state: OPEN}
+  - {id: L3-C32, item: "The rows are coherent: no combination leaves two contradictory rulings standing", whose: SESSION, closes_by: "row L3-OD1 fixes no array; row L3-OD3 alone does; od_l3_4.py adopts a band only on 2S2P; the gate reads a decided set against the coherence rules; tests hold the incoherent combinations refused (CHECK-1, B1)", state: CLOSED}
+
+# Every 'TBD', 'TBC', 'owed', 'not yet stated', 'exists yet' and 'open' state sentence in a live record's statement,
+# acceptance or notes, classified by record (the renderer lists each occurrence it finds and marks one with no entry here
+# UNCLASSIFIED, which opens closure item L3-C20).
+tbd_mentions:
+  CON-003: "FEA-003 holds its reading while the fabric's feasibility is open: a layer 4 feasibility item; no limit open"
+  REQ-073: "verification wording, not a limit: a pair the netlist leaves uncontained reads FAIL with its remedy owed (layer 8)"
+  REQ-007: "a part pick owed (the SOS and ZEROIZE covers, layer 6); the requirement's limit is settled"
+  REQ-014: "FEA-004 holds its reading while the power and thermal bounds are open (layer 4); its pass line is settled"
+  FEA-004: "the feasibility blocker's own open state and the hot stop's error budget terms of TEST-PLAN P14, layer 4; no layer 3 limit"
+  REQ-018: "FEA-004 holds its reading while the power and thermal bounds are open (layer 4); its declared values are settled"
+  REQ-024: "two bounds open at layer 4: whether the hot stop acts inside the envelope (FEA-004, open until the heat-balance test) and the cold warm-up above about 3.6 W/K (S-55); the requirement's limits and carve-outs are settled"
+  REQ-074: "which revision of the cell specification governs the cells bought, a part-identity question of the battery review packet (BAT-F09, layer 6); the requirement names the governing specification's limits"
+  CFL-002: "the note's stale sentence and its correction of 30 September 2026 (L3-R2): REQ-042 carries no TBD, its hydrogen part waits on S-49"
+  ASM-005: "history: the record's retyping of 27 September 2026, which removed its TBD"
+  REQ-042: "'the pack staying open until service' is the protection FETs held open, a behaviour, not an open question"
+  FEA-005: "a review owed under D-09 (route R-BAT): a verification activity, layers 4 and 8"
+  REQ-045: "a state sentence inside the acceptance: no fault-current coordination study exists yet, which the pass line (energy_chain.py with every stage sourced) requires; layer 4 work for the energy chain's owner, no limit open"
+  REQ-077: "whether the hot stop acts inside the envelope is FEA-004's, open until the heat-balance test (layer 4 and a physical test); the pass line is settled"
+  CFL-006: "L3-R2's own note: the enclosure design does not exist yet (layer 7, S-27)"
+  REQ-047: "an analysis owed (the dock float stack, layer 7): a verification activity; the requirement's pass line is settled"
+  CFL-016: "a quotation of what a source said ('still owed') inside the conflict's statement; S-122 closed it on set 15"
+  CFL-017: "the record's own open state (CONFLICT_OPEN): row L3-OD5"
+  CFL-008: "history in the note (TEST-PLAN at eadbe571); the conflict is resolved and reads PASS"
+  REQ-052: "whether the heat stage's stop acts inside the envelope is FEA-004's, open until the heat-balance test; the pass line is settled"
+  CFL-014: "a bench confirmation owed (the hostless charge default): a verification activity at prototype"
+  FEA-007: "the case margins' OPEN rows and the missing qualified mechanical route: layer 7 feasibility (FEA-007), no requirement limit open"
+
+# ------------------------------------------------------------------------------------------------ open items by layer
+# layer: 3 to 9, EXTERNAL (an outside party or the owner's money), TOOLING or PROCESS.
+open_items_layer:
+  D-18: {layer: 7, why: "IP68 fans on the coolers, a part fit (REQ-043)"}
+  L-01: {layer: EXTERNAL, why: "a fabrication quote before any order"}
+  L-03: {layer: EXTERNAL, why: "the qualified battery review's quote and approval (D-09)"}
+  L-04: {layer: EXTERNAL, why: "the qualified power review, the owner's spend"}
+  L-05: {layer: EXTERNAL, why: "the qualified high-speed review, the owner's spend"}
+  L-06: {layer: EXTERNAL, why: "the ZEROIZE bench parts"}
+  L-07: {layer: EXTERNAL, why: "the case mock-up purchase (D-19's route)"}
+  S-01: {layer: 4, why: "EMCON reaching every transmitter (FEA-002)"}
+  S-02: {layer: TOOLING, why: "RF-002's transmitter walk"}
+  S-12: {layer: 7, why: "the key-B socket's locating holes and D-07's third jack against the clamp"}
+  S-13: {layer: 6, why: "an eSIM order code, before an eSIM build"}
+  S-22: {layer: 7, why: "the dock's insulating cap (D-14)"}
+  S-23: {layer: 8, why: "board A's decision-31 hold"}
+  S-27: {layer: 7, why: "the pack's enclosure and hold-down (CFL-006's remaining FAIL)"}
+  S-28: {layer: 5, why: "every transmitter configured to the licence and the EU limits (firmware and configuration)"}
+  S-32: {layer: 5, why: "SOS firmware (D-10)"}
+  S-33: {layer: 7, why: "the shade accessory in the kit list (D-02e)"}
+  S-34: {layer: EXTERNAL, why: "the review packets and requests of D-09"}
+  S-35: {layer: 4, why: "the secure element's slot map shown on the fitted part (FEA-001)"}
+  S-36: {layer: 4, why: "NEED-03's shared elements mitigated or named (ASM-002)"}
+  S-40: {layer: 5, why: "software-verified boot (D-13)"}
+  S-41: {layer: 5, why: "the supervisor firmware on the STM32H743"}
+  S-42: {layer: 8, why: "board B's fabric findings in the generator"}
+  S-44: {layer: 7, why: "the EMCON lamp's light guide hole in the face plate"}
+  S-46: {layer: 8, why: "board P's discharge through Q1's body diode (BAT-F20)"}
+  S-47: {layer: 8, why: "board E's LT8705A sense and boost diodes"}
+  S-48: {layer: EXTERNAL, why: "Raspberry Pi's written position on the radio approval"}
+  S-49: {layer: 6, why: "a battery-bay hydrogen sensing part"}
+  S-50: {layer: 4, why: "GND-002's grounding strategy"}
+  S-52: {layer: 4, why: "each pack's transport classification (REQ-069's content; the rule is settled)"}
+  S-53: {layer: 4, why: "M1's input path judged on the adopted architecture"}
+  S-54: {layer: 8, why: "BANK-R1 in board B's generator (REQ-052's FAIL)"}
+  S-55: {layer: 4, why: "the cold warm-up's bound"}
+  S-56: {layer: 6, why: "the SGP41 at the worst inside air"}
+  S-58: {layer: 4, why: "a firmware-free stage behind the hot stop"}
+  S-59: {layer: 5, why: "the kit I2C bus's three segments"}
+  S-60: {layer: 8, why: "board A's INA226 on the 54 V rail"}
+  S-61: {layer: 8, why: "a current limit on board D's J_USB3"}
+  S-62: {layer: 8, why: "the Geiger module's pulse into the RP2040"}
+  S-65: {layer: 8, why: "board A's +3V3 clamp against its loads' maxima"}
+  S-66: {layer: 8, why: "the pre-charge resistor's pulse rating"}
+  S-67: {layer: 8, why: "board A's switch-node declarations at VBAT's working maximum"}
+  S-68: {layer: 9, why: "board A's netclass patterns at layout"}
+  S-69: {layer: 4, why: "board A's VBAT declaration against its converters' draw (FEA-004)"}
+  S-70: {layer: 5, why: "the panel firmware's EMCON_EF_FLT duty"}
+  S-71: {layer: 8, why: "the LG290P antenna feed against its maker's reference"}
+  S-72: {layer: 8, why: "the LG290P backup supply's TVS"}
+  S-73: {layer: 8, why: "the TPS23861 items"}
+  S-74: {layer: 5, why: "EQ-16's dock items still in flight"}
+  S-75: {layer: 5, why: "the dock's ground current share (a bench measurement)"}
+  M-02: {layer: 3, why: "the owner's part of M1's balance: rows L3-OD1 to L3-OD4"}
+  S-82: {layer: TOOLING, why: "RF-002's instrument fixtures"}
+  S-83: {layer: 8, why: "board C's +3V3 peak declaration"}
+  S-84: {layer: 8, why: "board B's PI_KILL level shifters"}
+  S-85: {layer: 8, why: "BAT-001's hardware level on board P"}
+  S-86: {layer: PROCESS, why: "documents citing the pack protection table by line"}
+  S-87: {layer: 4, why: "FEA-002's statement brought to stream w4b's circuit"}
+  S-95: {layer: 7, why: "the lid harness's sealed face-plate crossing"}
+  S-96: {layer: 7, why: "the r2 lid tray's physical checks"}
+  S-90: {layer: TOOLING, why: "the rule audit's absolute paths"}
+  S-91: {layer: PROCESS, why: "H3's two checks' minor findings"}
+  S-92: {layer: 8, why: "the SA868 keying row RF-002 reads UNDECIDED"}
+  S-93: {layer: 8, why: "board A's QMX and PA rows RF-002 reads UNDECIDED"}
+  S-94: {layer: 4, why: "REQ-030, REQ-032 and REQ-071's FAIL grounds re-read"}
+  S-97: {layer: TOOLING, why: "tx_inhibit.py's report"}
+  S-99: {layer: 4, why: "board A's declared demand against the D8 split's adequacy"}
+  S-100: {layer: 8, why: "board A's MAIN button network"}
+  S-101: {layer: 8, why: "board C's MAIN button clamp rail"}
+  S-102: {layer: 8, why: "board D's push-to-talk clamps"}
+  S-103: {layer: 8, why: "board D's speaker clamps"}
+  S-104: {layer: 8, why: "board D's J_USB3 port parts"}
+  S-105: {layer: 8, why: "board D's microphone capacitors' voltage"}
+  S-106: {layer: 8, why: "board E's LM74700-Q1 input capacitor"}
+  S-107: {layer: 8, why: "board E's F1 fuse rating"}
+  S-108: {layer: 8, why: "board E's pod lead clamp"}
+  S-109: {layer: 8, why: "board E's pod lead series elements"}
+  S-110: {layer: 6, why: "the bulkhead arrestor's ESD figure"}
+  S-111: {layer: 8, why: "the VIN_RAW clamps against the front end's rating (R-PWR)"}
+  S-112: {layer: TOOLING, why: "port_protect.py's declarations"}
+  S-113: {layer: TOOLING, why: "port_protect.py's off-board entries"}
+  S-115: {layer: 9, why: "board A's layout generator and the D8 buck"}
+  S-116: {layer: 8, why: "board D's +5V_D8 at the codec"}
+  S-124: {layer: 8, why: "board A's charger switch nodes (a prototype measurement)"}
+  S-122: {layer: 3, why: "the documents CFL-016 names re-read; closing on set 15 by the integrator"}
+  S-123: {layer: TOOLING, why: "return_via and ref_change board tables"}
+  S-127: {layer: 4, why: "the energy basis every M1 figure waits on (stream l3plane, then its independent check; D-22)"}
+  S-126: {layer: TOOLING, why: "S-122's regression instrument hardened against its escape classes (opened on set 15)"}
+  S-125: {layer: 6, why: "board C's exact part identities"}
+
+# ------------------------------------------------------------------------------------------------ change impacts
+# For every record whose statement, acceptance, applicability, allocation, verification or release effect differs from
+# H3's registry, the downstream impact by layer (4 to 9). The renderer refuses a changed record with no entry here, so
+# a change never reaches the page without its impacts. Entries for the conditional restatements are here before they
+# are applied, so the page renders whatever the owner decides.
+impacts:
+  REQ-008: {why: "acceptance made measurable (L3-R2)", layers: {5: "the panel firmware's refresh and QR rules are named pass lines", 8: "none", 9: "none"}}
+  REQ-012: {why: "acceptance made measurable (L3-R2)", layers: {8: "board C and D's TX lamp path is judged on a bench line with the panel controller in reset (DC-03 of DEFINITION-STATUS.md: the lamp's feed depends on PANEL_PWM today)", 5: "the lamp test's tie"}}
+  REQ-029: {why: "acceptance made measurable (L3-R2)", layers: {8: "every touchable port's clamp (S-100 to S-109) is judged against the stated criteria", 9: "TEST-PLAN M7's pass line is the statement's"}}
+  REQ-054: {why: "acceptance made measurable (L3-R2)", layers: {5: "meshtasticd's configuration review has numeric pass lines", 9: "none"}}
+  REQ-057: {why: "acceptance made measurable (L3-R2)", layers: {4: "the co-site plan of TEST-PLAN M6 has its pass line", 9: "none"}}
+  REQ-068: {why: "acceptance made measurable (L3-R2); under L3-OD2 qmx-out its QMX clause is removed", layers: {4: "TEST-PLAN M6 for the non-core transmitters", 9: "none"}}
+  CHO-003: {why: "acceptance made measurable (L3-R2)", layers: {4: "none", 8: "the long-lead clamps named by part and pulse figure"}}
+  REQ-014: {why: "L3-OD1 and L3-OD2: aged capacity and runtime stated per pack", layers: {4: "POWER-THERMAL.md's runtime table recomputed for the base pack and for both packs", 6: "the gauges' learned capacity thresholds per pack", 8: "board P and board PL golden images", 9: "none"}}
+  REQ-075: {why: "L3-OD1 and L3-OD2: charge current per pack", layers: {5: "the chargers' ChargeCurrent and the gauges' charging current per pack", 8: "U3 and U3B settings; board PL's image", 9: "none"}}
+  REQ-072: {why: "L3-OD1, L3-OD3 and L3-OD4: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, the deployment band", layers: {4: "the energy model re-run on the drawn circuit across the supply range (S-53, S-127)", 6: "the gauges' graceful shutdown settings at 3.00 V a cell or more", 7: "the lid pack, the stay, the harness crossing (S-95), the west RF re-plan", 8: "board A's entry re-rate, U3B, board PL, board E's stage", 9: "REQ-072's prototype run with an array emulator on the band's least-energy plane"}}
+  CFL-006: {why: "L3-OD1 and L3-OD2: one cell and one count per pack", layers: {7: "pack_4s.py redesigned for the base 4S6P and the lid module (S-27)", 8: "pcb_pack_protection.yaml, pcb_energy_chain.yaml and pcb_board_facts.yaml per pack"}}
+  REQ-016: {why: "L3-OD3: the solar input (200 W in 2S2P or 1S4P, or the 100 W window kept with the basis's array)", layers: {5: "the panel entry's interface (PV_IN, PV_P) at 56.3 V, 28.1 V or 25 V", 6: "board E's entry parts, F2, J_SOLAR, the wall pair and the lead at the array's current", 7: "the panels and their stand, carried beside the case", 8: "gen_sch_e.py's stage (the e200 candidates) and its current regulation", 9: "the stage's switching loop and entry copper at the new current"}}
+  REQ-011: {why: "L3-OD2: the tablet bracket leaves the lid (tablet out) or narrows to 8 inch (QMX out)", layers: {7: "the lid layout, the bracket drawn or dropped", 9: "none"}}
+  REQ-002: {why: "L3-OD2 qmx-out: no HF bearer in the kit (qmx-outside: a note only, the HF bearer kept)", layers: {5: "the QMX's CAT and audio leads dropped (qmx-out) or carried through a sealed case-wall lead (qmx-outside)", 8: "board A's HF rail and board B's J_QMX lose their load (qmx-out)", 7: "the lid tray r2 and S-95's QMX leads; a sealed case-wall lead (qmx-outside)"}}
+  REQ-067: {why: "L3-OD2 qmx-out: no HF transmitter in the kit", layers: {5: "none", 8: "none"}}
+  REQ-078: {why: "L3-OD4: the open kit's stability with the lid pack, its slope and the owner's operator push (core)", layers: {7: "the stay, the feet measured (T-A1-3), a wider foot or an outrigger if the push needs one, the lid's mass budget", 9: "none"}}
+  REQ-051: {why: "L3-OD5: D-02a's margins read as the kit's without its cells", layers: {4: "TEST-PLAN E3, E4 and E5 keep their deviations as the kit's result", 9: "none"}}
+  CFL-017: {why: "L3-OD5: resolved by the owner's reading of D-02a", layers: {4: "none", 9: "none"}}
+  CFL-019: {why: "L3-OD1 reject: REQ-072 against D-06 recorded as an open conflict", layers: {4: "S-53 judged on one pack", 9: "none"}}
+  SPD-007: {why: "L3-OD2: the superseded text of the restated record kept", layers: {}}
+  SPD-008: {why: "L3-OD2 qmx-out: the superseded text of the restated record kept", layers: {}}
+
+# ------------------------------------------------------------------------------------------------ passages to re-issue
+# The baselined CONOPS and PRODUCT-BRIEF are NOT edited (DEFINITION-STATUS.md's rule). Each pattern names passages a
+# decided row changes; the renderer prints the lines that match today, so the list follows the files.
+passages:
+  - {row: L3-OD1, file: v2/docs/CONOPS.md, pattern: "4S3P|145 Wh|second pack|east pocket", why: "the store"}
+  - {row: L3-OD1, file: v2/docs/PRODUCT-BRIEF.md, pattern: "4S3P|145 Wh|second pack|run through a night", why: "the store and M1's shortfall"}
+  - {row: L3-OD2, file: v2/docs/CONOPS.md, pattern: "tablet bracket|tablet|QMX", why: "the lid items and their functions"}
+  - {row: L3-OD2, file: v2/docs/PRODUCT-BRIEF.md, pattern: "tablet|HF", why: "the lid items and their functions"}
+  - {row: L3-OD3, file: v2/docs/CONOPS.md, pattern: "25 V|17\\.6 V|100 W|a solar panel on the solar input", why: "the solar input and the array"}
+  - {row: L3-OD4, file: v2/docs/CONOPS.md, pattern: "a solar panel on the solar input|vehicle tailgate", why: "M1's setting"}
+  - {row: L3-OD5, file: v2/docs/CONOPS.md, pattern: "D-02a|\\+55 C", why: "the qualification margins"}

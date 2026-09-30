@@ -185,6 +185,20 @@
 # D-15; the 4S3P Samsung INR18650-35E pack, D-06) unless the record's choices or notes name a session choice or a
 # generator as its origin, in which case it is the session's and can be reversed there.
 #
+# LAYER 3'S SECOND ISSUE, L3-R2 (30 September 2026, MESHSAT-1357, branch fnd/l3r2 on integration set 15's line). On the
+# owner's instruction of that day and his review of the draft table (owner rulings D-21 and D-22,
+# v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md) the session closed what needs no owner judgement, through
+# v2/docs/records/l3r2/apply_l3r2_session.py: D-21 and D-22 recorded; S-114 closed (the reconciliation filed and REQ-072
+# re-read on it) and the energy basis every M1 figure waits on opened as its own item, which REQ-072 waits on; M-02 and
+# S-53 restated to the decisions they now wait on; CFL-006 re-read (its FAIL stands on the enclosure, a layer 7 item);
+# CFL-002's stale TBD sentence corrected; and seven acceptances made measurable from their own statements (REQ-008,
+# REQ-012, REQ-029, REQ-054, REQ-057, REQ-068, CHO-003), each keeping its old text in `history`. These acceptances are a
+# change to the baseline of a54b793b and are judged by the independent check of L3-R2; baseline_state keeps naming the
+# last reviewed baseline until that check accepts the issue. What awaits the owner (v2/docs/handover/layer3/
+# OWNER-DECISIONS-L3.md) is not changed here: its restatements are prepared, not applied, under
+# v2/docs/records/l3r2/conditional/. The consolidated specification is v2/docs/handover/layer3/REQUIREMENTS-L3-R2.md,
+# generated from this file.
+#
 # IDS ARE STABLE. REQ requirement, CON derived constraint, ASM assumption, CHO implementation choice, SPD superseded
 # statement, CFL conflict between sources, FEA architecture feasibility blocker. An id is never reused or renumbered.
 # No prefix may equal a rule-id prefix of pcb_rules.yaml. Owner rulings are D-nn (and decision-NN for the board-level
@@ -696,6 +710,39 @@ owner_rulings:
       otherwise. The routes (c) to (e) of EQ-13 are not taken by this ruling; (c) and (d) return only as options the
       reconciliation presents explicitly, and (e) is excluded because unmet criteria stay visible.
     source: ["owner ruling OD-02 of 28 September 2026, corrected the same evening", "v2/docs/CONOPS.md sections 3 and 7", "v2/docs/handover/ENGINEERING-QUESTIONS.md EQ-13"]
+  - id: D-21
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "finish layer 3 for the current target configuration (the owner's instruction of 30 September 2026)"
+    ruling: >-
+      The owner's instruction of 30 September 2026, quoted in part in
+      v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md (its omissions are the quoting session's and this entry's,
+      marked). In his words: "finish Layer 3, Requirements for the current target configuration before advancing Layer 4
+      [...] For every requirement-changing proposal, record whether it is approved, rejected or awaiting a decision.
+      [...] Distinguish requirements from implementation choices that properly belong in later layers. Battery and solar
+      remain mandatory. Preserve the approved 72-hour mission and approved functions unless I explicitly authorize a
+      change. Recommendations are not approvals [...] Layer 3 reaches 100% only when the target is unambiguous,
+      requirement-changing owner decisions are resolved, contradictions and requirement-level TBDs are closed, and an
+      independent check accepts the handover. Completed circuits and physical test results belong to later verification
+      stages; do not make them prerequisites for completing the requirements document or mark planned tests as passed."
+    source: ["owner ruling D-21", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
+  - id: D-22
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's review of the draft layer 3 decision table (30 September 2026)"
+    ruling: >-
+      The owner's review of the draft decision table of layer 3's second issue, 30 September 2026, as quoted in
+      v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md. In his words: "The voltage is an engineering input, not
+      an author's preference. Establish the applicable supply range under load and temperature. If 19.08 V is permitted,
+      mission claims must account for it. Independently check how voltage, current limits and losses affect the energy
+      calculation." "Preserve your mission requirements. Narrower deployment angles, reduced functionality or different
+      operating conditions must be proposed explicitly for your approval. They cannot become accepted requirements
+      simply because they make this candidate pass." "Define 'adverse.' A model based on a September average day does
+      not establish performance across unspecified adverse weather. The corrected table must identify the exact weather
+      and operating assumptions." "Hold decisions 1, 2 and 4 until the corrected, independently checked comparison
+      arrives. Battery and solar remain mandatory; moving equipment out of the lid must not silently remove its function
+      from the kit." "The next useful result is one consistent decision table and an updated requirements package."
+    source: ["owner ruling D-22", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
 # Choices the session took under the owner's standing rule of 26 September 2026: each is the session's, never
 # the owner's, names the ruling that lets the session take it, says why, and can be reversed. `closes` names the
 # open items it answered; `adds_core_needs` a need it added to prototype 1's core. A choice later withdrawn keeps
@@ -2769,7 +2816,13 @@ open_items:
       not meet M1, a residual only the owner can accept, are the owner action M-02 (split out on 27 September 2026,
       layer 3's release check, R2). A shorter mission is not the remedy (CONOPS section 3, M1). The reference day is the
       design month's (September, SC-37); a month with less sun asks more of the panel, and the judgement records that
-      beside it. Reported to the owner at the next checkpoint, not asked.
+      beside it. Reported to the owner at the next checkpoint, not asked. Under Option A(i), which the owner has not
+      adopted (OWNER-DECISIONS-L3 rows L3-OD1 and L3-OD3): board A's entry re-rate is drafted in
+      v2/docs/records/a1elec/README.md and CHARGER.md (at least 5.57 A into U3 with its input limit at its minimum, on
+      the model's 20.7 V bus), and board E's 200 W stage exists only on the candidate branches fnd/e200c, fnd/e200r and
+      fnd/e200r2, not merged, gated by REQ-016's restatement; this item's judgement is made on the architecture the
+      owner adopts and on the energy basis the owner's review of 30 September 2026 asks for (layer 3's second issue,
+      L3-R2, v2/docs/records/l3r2/apply_l3r2_session.py).
   - id: S-54
     class: SESSION
     status: OPEN
@@ -3015,7 +3068,15 @@ open_items:
       input on the 9 to 36 V entry, and nothing is lowered: neither REQ-016 nor REQ-072 is restated to fit. Owner's
       instruction of 28 September 2026 (D-20): the routes (c), (d) and (e) are not chosen by the ruling, (c) and (d)
       returning only as options the reconciliation presents explicitly; the energy budget is reconciled first (S-114)
-      and the smallest justified changes come back to the owner; M1 and REQ-072 stay as written.
+      and the smallest justified changes come back to the owner; M1 and REQ-072 stay as written. Since the owner's
+      instruction of 29 September 2026 (v2/docs/EXECUTION-PLAN.md, set 10's milestone: engineer Option A(i) within
+      existing authorisations, with M1 and REQ-072 unchanged and no purchase or requirement change authorised), D-21 and
+      D-22 of 30 September 2026, the decision this item carries is rows L3-OD1 to L3-OD4 of
+      v2/docs/handover/layer3/OWNER-DECISIONS-L3.md: Option A(i)'s two packs (routes (c) and (d) of EQ-13 together),
+      where each approved lid function goes and whether it stays in the kit, the solar input's stage and array, and M1's
+      deployment conditions. Rows L3-OD1, L3-OD2 and L3-OD4 are held by D-22 until the corrected, independently checked
+      energy comparison is filed. Route (e), accepting that prototype 1 does not meet M1, is excluded by D-20 (layer 3's
+      second issue, L3-R2, v2/docs/records/l3r2/apply_l3r2_session.py).
 
   - id: S-82
     class: SESSION
@@ -3463,22 +3524,6 @@ open_items:
       conductors, not judged at the desk, and J_MAINSW, read on board C's netlist). A declaration form that names the
       part, its document and the level it is rated to, read by the tool, is owed (the review of decision 31 (stream
       d8dec31, 28 September 2026), section 10, T-3). For the tools stream.
-  - id: S-114
-    class: SESSION
-    status: OPEN
-    title: >-
-      (stream energy, owner ruling D-20; the finding: EQ-13's arithmetic, M-02: on the one pack of D-06 the balance of
-      mission M1 fails at desk on both limits, the night and the day) The energy reconciliation of mission M1 on the
-      approved constraints: every load of the states M1 uses classed as a maker's figure, a project allocation or a
-      bound (measured: none until the bench); the usable energy of the 4S3P pack new and aged from the cell maker's
-      sheet and the protection and gauge windows; the dark hours at 52 N by month computed from the solar declination;
-      the solar energy per day into the kit within REQ-016's 25 V and 100 W entry by month; an hour-by-hour balance of
-      M1 as written for the design and the worst month with a sensitivity table; the options within the constraints (a
-      night operating mode that still meets M1's must-hold, the usable depth of discharge, the cells the pocket admits,
-      a second pack's location in the fixed case, the panel against the stage's ceiling, an external DC source as
-      optional only) with their numbers; and, if M1 as written is not met, the smallest justified changes for the
-      owner's decision. Record: v2/docs/records/energy/. Open until the study is filed and REQ-072 re-read on it;
-      REQ-072's statement and acceptance are not rewritten.
   - id: S-115
     class: SESSION
     status: OPEN
@@ -3653,6 +3698,20 @@ open_items:
       history excuse tied to a past-tense verb on the part itself, and a rule that pairs a list of parts with a list of
       designators in order. Open until each class is closed by a rule with a fixture that close_s122.py runs, or carried
       with its reason.
+  - id: S-127
+    class: SESSION
+    status: OPEN
+    title: >-
+      (L3-R2; the owner's review of 30 September 2026, D-22) The energy basis of every M1 figure: board A's charge bus
+      VBUS20 at U3's input across its supply range under load and temperature, from makers' pages (the regulated node,
+      the loop's load regulation and the drop to U3's input), U3's input current limit with its bracket, the chargers'
+      efficiencies with their brackets and the inductors' core loss, and each case the energy model runs named by its
+      exact weather and operating assumptions in place of 'typical' and 'adverse'; then an independent check of how
+      voltage, current limits and losses move the energy calculation. Stream l3plane writes it
+      (v2/docs/records/l3plane/ENERGY-BASIS.md, on branch fnd/l3plane). Until it is filed and checked, rows L3-OD1,
+      L3-OD2 and L3-OD4 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md are held (D-22), the L3 pages state no M1
+      energy figure as the design's, and REQ-072 reads FAIL as before. Closed when the basis and its check are filed and
+      REQ-072 is re-read on them.
 closed_items:
   - id: S-89
     closed_by: commit aaed6daa4434f2ae94331cdafb3134056fb1eb97
@@ -4589,6 +4648,36 @@ closed_items:
       article' ('The Lapp article 0021917 cable'). These classes are carried by S-126, which apply_registry_s122_r4.py
       opens at the next free S number with disposition PROCESS and in no record's waits_on: the documents do not hang on
       it. Confirming that each correction is true in substance remains the filed check's job.
+  - id: S-114
+    closed_by: commit 1b9f543ce4695519ba3b5f41b503a07dc7d99124
+    closing_evidence: >-
+      The reconciliation this item asked for is filed: v2/docs/records/energy/ENERGY-RECONCILIATION.md sections 1 to 9,
+      with its options sheet v2/docs/records/energy/DECISION-OPTIONS.md and
+      v2/docs/records/energy/DECISION-PARAGRAPH.md, and the Option A(i) records under v2/docs/records/a1elec/, a1mech/,
+      a1solar/ and a1int/. REQ-072 was re-read on it in two evidence entries, the second on the charger rows of stream
+      s119 (v2/docs/records/s119/README.md) in the commit this item names, and reads FAIL on both; its statement and
+      acceptance are not rewritten. Section 9 derives M1 from the requirement side: D-06's one 4S3P pack allows at most
+      9.1 W for M1 against PS-IDLE-SPEC's 42.8 W, which no bus voltage raises, and on the model's charge bus of 20.7 V
+      (v2/docs/records/a1elec/energy_two_pack.py, V_BUS20) the architecture that meets the reference day is two packs
+      with a 200 W solar stage, which the options sheet presents as its Option A. That 20.7 V is above the bus's nominal
+      regulation of 20.000 V and its stated DC band of 19.080 to 20.960 V (v2/docs/records/s120/vbus20_bound.out section
+      2): the two-pack figures are the model's most favourable bus, not the kit's across its supply range, which the
+      energy basis of the open item this closure opens establishes (the owner's review of 30 September 2026, D-22). What
+      remains is the owner's: the rows of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md that M-02 names. Closed by the
+      author of L3-R2 on 30 September 2026 under the owner's standing rule of 26 September 2026.
+    title: >-
+      (stream energy, owner ruling D-20; the finding: EQ-13's arithmetic, M-02: on the one pack of D-06 the balance of
+      mission M1 fails at desk on both limits, the night and the day) The energy reconciliation of mission M1 on the
+      approved constraints: every load of the states M1 uses classed as a maker's figure, a project allocation or a
+      bound (measured: none until the bench); the usable energy of the 4S3P pack new and aged from the cell maker's
+      sheet and the protection and gauge windows; the dark hours at 52 N by month computed from the solar declination;
+      the solar energy per day into the kit within REQ-016's 25 V and 100 W entry by month; an hour-by-hour balance of
+      M1 as written for the design and the worst month with a sensitivity table; the options within the constraints (a
+      night operating mode that still meets M1's must-hold, the usable depth of discharge, the cells the pocket admits,
+      a second pack's location in the fixed case, the panel against the stage's ceiling, an external DC source as
+      optional only) with their numbers; and, if M1 as written is not met, the smallest justified changes for the
+      owner's decision. Record: v2/docs/records/energy/. Open until the study is filed and REQ-072 re-read on it;
+      REQ-072's statement and acceptance are not rewritten.
 records:
   - id: REQ-001
     kind: requirement
@@ -6597,7 +6686,10 @@ records:
       holds them with the power off; it refreshes at most once a minute; the enrolment QR is shown only while TEST is
       held after a UI request and never carries key material.
     acceptance: >-
-      Inspection of the page with the kit unpowered; firmware review of the refresh limit and the QR payload.
+      Inspection with the kit unpowered: the e-paper page shows the kit's identity, battery and shore state, GPS fix,
+      UTC, the last message, and bearer and slot health. Firmware review: the page is refreshed at most once in any 60
+      s, the enrolment QR is drawn only while TEST is held after a UI request, and the QR's payload holds no key
+      material. Prototype: after power is removed the page still shows every listed field.
     allocated_to: [c, fw_panel]
     verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -6617,7 +6709,10 @@ records:
       Read FAIL at d468613e: the booster rectifiers D19 to D21 were drawn reversed against PDi's driving circuit.
       Corrected in faf8c981 (v2/ecad/tools/gen_sch_c.py:258-264 at eadbe571; on the committed netlist
       v2/ecad/pcb-c-display-c8/out/pcb-c-display.net D19's cathode is on EPD_VGH and D21's anode on EPD_VGL), with the
-      pump capacitor at 4.7 uF and a 30 V boost FET per PDi's note.
+      pump capacitor at 4.7 uF and a 30 V boost FET per PDi's note. Acceptance restated on 30 September 2026 (layer 3's
+      second issue, L3-R2, v2/docs/records/l3r2/apply_l3r2_session.py) to a measurable criterion taken from the record's
+      own statement, with no limit added or removed. It read: 'Inspection of the page with the kit unpowered; firmware
+      review of the refresh limit and the QR payload.'
 
   - id: REQ-009
     kind: requirement
@@ -6717,8 +6812,10 @@ records:
       The TX lamp follows the VHF path's real KEY line in hardware, is never dimmed below 10 % duty except in
       blackout, and a lamp test lights it through its own tie.
     acceptance: >-
-      Netlist trace from D's KEY line to the lamp driver with no processor in the path; bench check with the panel
-      controller in reset.
+      Netlist: a trace from board D's KEY line to the TX lamp's driver with no processor in the path, and the lamp
+      test's own tie to the lamp. Bench, with the panel controller held in reset: the lamp is lit while KEY is asserted
+      and dark when KEY is released. Bench, with the panel controller running: outside blackout the lamp's drive duty is
+      never below 10 %, and the lamp test lights it.
     allocated_to: [c, d]
     verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -6927,6 +7024,11 @@ records:
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/PANEL.md:135", "v2/docs/PANEL.md:189"]
     source_check: VERIFIED
+    history: >-
+      Acceptance restated on 30 September 2026 (layer 3's second issue, L3-R2,
+      v2/docs/records/l3r2/apply_l3r2_session.py) to a measurable criterion taken from the record's own statement, with
+      no limit added or removed. It read: 'Netlist trace from D's KEY line to the lamp driver with no processor in the
+      path; bench check with the panel controller in reset.'
 
   - id: REQ-013
     kind: requirement
@@ -7206,7 +7308,7 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     choices: [SC-36]
-    waits_on: [S-53, S-47, S-114]
+    waits_on: [S-53, S-47]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: BLOCKER
@@ -7257,7 +7359,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-06, D-20]
     choices: [SC-36, SC-21, SC-37]
-    waits_on: [S-53, M-02, S-114]
+    waits_on: [S-53, M-02, S-127]
     status: DEFINED
     evidence_result: FAIL
     evidence_phase: SCHEMATIC
@@ -7323,9 +7425,18 @@ records:
           85.8 hour by hour) and the QMX-out lid at 125.2 and 116.6 Wh (was 118.5; 116.9 hour by hour), both functions
           kept not met; the chargers at the FETs first drawn and drafted read NOT MET in every case. This entry changes
           no result, statement or acceptance: the verdict stays FAIL.
+      - >-
+          v2/docs/records/a1elec/energy_two_pack.py and v2/docs/records/s120/vbus20_bound.out read on 30 September 2026
+          (L3-R2, on the owner's review of that day, D-22): the Option A(i) figures of the entry above convert U3's
+          input current limit into power at the model's V_BUS20 of 20.7 V, above the bus's nominal regulation of 20.000
+          V and its stated DC band of 19.080 to 20.960 V; they are the model's most favourable bus, not the kit's across
+          its supply range, which the energy basis of the open item that carries it establishes. This entry changes no
+          result, statement or acceptance: the verdict stays FAIL.
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
       - "v2/docs/feasibility/POWER-THERMAL.md@ad3ba27cef9e0f68"
+      - "v2/docs/records/s120/vbus20_bound.out@35c3e2e30fc637e0"
+      - "v2/docs/records/a1elec/energy_two_pack.py@a3426880bf607d38"
     release_effect: BLOCKER
     source:
       - "owner ruling D-06"
@@ -8403,8 +8514,10 @@ records:
       Every surface and conductor a person can touch is designed to withstand IEC 61000-4-2 level 4 (8 kV contact, 15
       kV air) with no upset, reset, lost bearer, lost secure-element key or damage.
     acceptance: >-
-      TEST-PLAN M7 on the powered kit, every bearer up, at the plate, toggles, display bezel, every bulkhead shell,
-      both headset jacks, USB-C, Ethernet and the pod lead.
+      TEST-PLAN M7 on the powered kit, every bearer up, at IEC 61000-4-2 level 4 (8 kV contact, 15 kV air), applied at
+      the plate, the toggles, the display bezel, every bulkhead shell, both headset jacks, the USB-C outlet, the
+      Ethernet port and the pod lead: after every discharge no upset, no reset, no bearer lost, no secure-element key
+      lost and no damage, and the functional check (TEST-PLAN section 4) passes at the end.
     allocated_to: [a, b, c, d, e, p, case]
     verification_method: [MANUAL_REVIEW, SCRIPT, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -8425,6 +8538,11 @@ records:
       - "v2/docs/TEST-PLAN.md:44"
       - "v2/ecad/tools/pcb_envelope.yaml:98-99"
     source_check: VERIFIED
+    history: >-
+      Acceptance restated on 30 September 2026 (layer 3's second issue, L3-R2,
+      v2/docs/records/l3r2/apply_l3r2_session.py) to a measurable criterion taken from the record's own statement, with
+      no limit added or removed. It read: 'TEST-PLAN M7 on the powered kit, every bearer up, at the plate, toggles,
+      display bezel, every bulkhead shell, both headset jacks, USB-C, Ethernet and the pod lead.'
     notes: "Board A's USB-C CC pins get an external array under D-17 (CON-018)."
 
   - id: CON-018
@@ -8661,8 +8779,9 @@ records:
       Surge on long-lead conductors is described by the fitted part (SMCJ40A, 1500 W at 10/1000 us), not constrained
       to an IEC 61000-4-5 level.
     acceptance: >-
-      n/a (describes the design): no vehicle surge standard is claimed for the prototype (D-16); an installation level
-      would be a new owner ruling.
+      Inspection: in no public or shipped document is a vehicle surge level (IEC 61000-4-5, ISO 7637-2 or a military
+      vehicle standard) claimed for the prototype's vehicle and shore entry (D-16), and the design record names the
+      long-lead clamps by their part and pulse figure (SMCJ40A, 1500 W at 10/1000 us).
     allocated_to: [e]
     verification_method: [MANUAL_REVIEW]
     verification_phase: SCHEMATIC
@@ -8679,6 +8798,11 @@ records:
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/OPERATING-ENVELOPE.md:342", "v2/ecad/tools/pcb_envelope.yaml:100-101"]
     source_check: VERIFIED
+    history: >-
+      Acceptance restated on 30 September 2026 (layer 3's second issue, L3-R2,
+      v2/docs/records/l3r2/apply_l3r2_session.py) to a measurable criterion taken from the record's own statement, with
+      no limit added or removed. It read: 'n/a (describes the design): no vehicle surge standard is claimed for the
+      prototype (D-16); an installation level would be a new owner ruling.'
 
   - id: SPD-004
     kind: superseded
@@ -8862,7 +8986,9 @@ records:
     conflict_ref: C-05
     notes: >-
       Round 2 (challenger): round 1 treated the omission as the design and proposed recomputing the hot end from the
-      BME688; withdrawn. Whether the SGP41 senses hydrogen at the relevant levels stays REQ-042's TBD.
+      BME688; withdrawn. Whether the SGP41 senses hydrogen at the relevant levels stays REQ-042's TBD. Corrected on 30
+      September 2026 (layer 3's second issue, L3-R2, v2/docs/records/l3r2/apply_l3r2_session.py): REQ-042 carries no TBD
+      since 27 September 2026; the hydrogen half of its battery-bay sensing is met once S-49 names its part.
 
   - id: CFL-003
     kind: conflict
@@ -13374,6 +13500,14 @@ records:
           47), the cell block and the gauge's nine rows are byte-identical; the 4S3P block of Samsung
           INR18650-35E, about 145 Wh, and the one parallel count 3 are the same text, so this reading stands
           on v2/ecad/tools/pcb_pack_protection.yaml@ab1dbc3f3f69aa46
+      - >-
+          v2/docs/records/l3r2/read_cfl006.py re-read the four bound files on 30 September 2026 (L3-R2; its output
+          v2/docs/records/l3r2/read_cfl006.out): the protection table, the energy chain and the board facts each name
+          D-06's one 4S3P block of the Samsung INR18650-35E of about 145 Wh (the protection table with parallel_min and
+          parallel_max 3); v2/cad/pack_4s.py opens SUPERSEDED in its own docstring, names D-06's block and S-27, still
+          draws the wrapped 4S4P box (its CELLS constant) and says the block's hold-down is not designed yet. The FAIL
+          stands on the enclosure alone, on the files at ab1dbc3f3f69aa46, a09ca0293afd1f7c, 07af4d0f2b166694,
+          fab2cc216f7ba460; the runtime pages were not re-read here.
     evidence_bound_to:
       - "v2/ecad/tools/pcb_pack_protection.yaml@ab1dbc3f3f69aa46"
       - "v2/ecad/tools/pcb_energy_chain.yaml@a09ca0293afd1f7c"
@@ -13394,7 +13528,12 @@ records:
       pcb_pack_protection.yaml and pcb_energy_chain.yaml still say 'about 200 Wh', and S-27 brings them into line. On 27
       September 2026 the layer-3 closer brought the three pack documents to D-06 (checker inputs: BAT-001's and
       PWR-003's readings of pack_protection.py and energy_chain.py read CONFIG_CHANGED until they are re-taken; the
-      prospective fault range is kept, and it brackets the 4S3P case).
+      prospective fault range is kept, and it brackets the 4S3P case). Layer 3 (L3-R2, 30 September 2026): the
+      requirement-level question this conflict raised, which cell and which parallel count, is settled by D-06 in every
+      requirement-level source the reading of that day names; what still fails is an enclosure design that does not
+      exist yet (layer 7, S-27), so the FAIL is carried as a layer 7 item and does not hold layer 3. If the owner adopts
+      row L3-OD1 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md (two packs), the acceptance becomes per pack
+      (v2/docs/records/l3r2/conditional/od_l3_1.py).
 
   - id: REQ-047
     kind: requirement
@@ -15224,8 +15363,11 @@ records:
       The LoRa transmitter is capped in software to the EU limits: 14 dBm ERP generally, 27 dBm ERP on 869.4 to 869.65
       MHz at 10 % duty.
     acceptance: >-
-      Conducted output and duty cycle measured at each configured channel with the antenna gain applied; configuration
-      review of meshtasticd.
+      Configuration review: meshtasticd's region, channel, transmit power and duty-cycle settings, with the antenna gain
+      applied, give at most 14 dBm ERP on every configured channel outside 869.4 to 869.65 MHz, and at most 27 dBm ERP
+      at a duty cycle of at most 10 % on a channel inside 869.4 to 869.65 MHz. Prototype: the conducted output measured
+      at each configured channel, plus the antenna's gain, is at or under the limit of the band the channel is in, and
+      the duty cycle measured on 869.4 to 869.65 MHz is at most 10 %.
     allocated_to: [b, sw]
     verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -15247,6 +15389,11 @@ records:
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2761 (item 4)"]
     source_check: VERIFIED
+    history: >-
+      Acceptance restated on 30 September 2026 (layer 3's second issue, L3-R2,
+      v2/docs/records/l3r2/apply_l3r2_session.py) to a measurable criterion taken from the record's own statement, with
+      no limit added or removed. It read: 'Conducted output and duty cycle measured at each configured channel with the
+      antenna gain applied; configuration review of meshtasticd.'
     notes: "The module can transmit 30 dBm (32.51 line 2814); the cap is software only."
 
   - id: REQ-055
@@ -15683,7 +15830,11 @@ records:
       Every core transmitter (the RockBLOCK 9704, the RM520N-GL, the E22 LoRa module, the SA868 with its 30 W PA, and
       the live WiFi link card) keyed in turn at full power, with every receiver listening, damages no receiver,
       falsely triggers no EMCON, ZEROIZE or sensor, and leaves GNSS with its fix or recovering it within 10 s.
-    acceptance: "TEST-PLAN M6 on the prototype, for the core transmitters."
+    acceptance: >-
+      TEST-PLAN M6 on the prototype: each core transmitter (the RockBLOCK 9704, the RM520N-GL, the E22 LoRa module, the
+      SA868 with its 30 W PA and the live WiFi link card) keyed in turn at full power with every receiver listening. It
+      passes when, for every key-down, no receiver is damaged (each passes its part of the functional check afterwards),
+      no EMCON, ZEROIZE or sensor is falsely triggered, and GNSS keeps its fix or regains it within 10 s of the key-up.
     allocated_to: [kit, b, d]
     verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
     verification_phase: ROUTED_BOARD
@@ -15703,6 +15854,10 @@ records:
     release_effect: BLOCKER
     source: ["v2/docs/TEST-PLAN.md:45"]
     source_check: VERIFIED
+    history: >-
+      Acceptance restated on 30 September 2026 (layer 3's second issue, L3-R2,
+      v2/docs/records/l3r2/apply_l3r2_session.py) to a measurable criterion taken from the record's own statement, with
+      no limit added or removed. It read: 'TEST-PLAN M6 on the prototype, for the core transmitters.'
     notes: "Split in the round-3 fix-up: the transmitters D-01 leaves outside the core are REQ-068."
 
   - id: REQ-068
@@ -15713,7 +15868,12 @@ records:
       and the three compute modules' own WiFi and Bluetooth) keyed in turn at full power, with every receiver
       listening, damage no receiver, falsely trigger no EMCON, ZEROIZE or sensor, and leave GNSS with its fix or
       recovering it within 10 s.
-    acceptance: "TEST-PLAN M6 on the prototype, for these transmitters."
+    acceptance: >-
+      TEST-PLAN M6 on the prototype: each transmitter outside prototype 1's core (the QMX HF unit, the LimeSDR's
+      transmit path, the two E72 radios and the three compute modules' own WiFi and Bluetooth) keyed in turn at full
+      power with every receiver listening. It passes when, for every key-down, no receiver is damaged (each passes its
+      part of the functional check afterwards), no EMCON, ZEROIZE or sensor is falsely triggered, and GNSS keeps its fix
+      or regains it within 10 s of the key-up.
     allocated_to: [kit, a, b]
     verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
     verification_phase: ROUTED_BOARD
@@ -15733,6 +15893,10 @@ records:
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/TEST-PLAN.md:45"]
     source_check: VERIFIED
+    history: >-
+      Acceptance restated on 30 September 2026 (layer 3's second issue, L3-R2,
+      v2/docs/records/l3r2/apply_l3r2_session.py) to a measurable criterion taken from the record's own statement, with
+      no limit added or removed. It read: 'TEST-PLAN M6 on the prototype, for these transmitters.'
     notes: "Split from REQ-057 in the round-3 fix-up."
 
   - id: REQ-058
