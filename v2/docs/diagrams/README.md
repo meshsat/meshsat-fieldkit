@@ -64,7 +64,7 @@ this folder on 27 September 2026); nothing in the chain file was changed here.
 
 ## How they are made
 
-Toolchain used for the committed files (runner nllei01claude01, 27 September 2026): Python 3.11.2 with matplotlib
+Toolchain used for the committed files (the runner, 27 September 2026): Python 3.11.2 with matplotlib
 3.10.9 and PyYAML 6.0.3; Node 20.20.2 with `@mermaid-js/mermaid-cli@11.12.0` through npx (it bundles Mermaid and the
 ELK layout engine, used for every Mermaid diagram through `tools/mermaid.json`); Chrome for Testing 151.0.7922.34
 (Playwright's `chrome-headless-shell`) as the browser mermaid-cli drives; Playwright 1.58.0 and poppler's `pdftoppm`
