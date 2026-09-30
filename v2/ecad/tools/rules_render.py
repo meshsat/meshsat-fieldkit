@@ -610,15 +610,18 @@ def requirements_doc(req=None, reg=None, dec=None, needs_doc=None, root=None, in
     for cid, c in choices.items():
         cites = [x["id"] for x in recs if cid in (x.get("choices") or []) or x.get("prototype_1_choice") == cid]
         L.append("| **%s** | %s | %s | %s | %s | %s |" % (cid, _cell(c["question"]), (
-                     "WITHDRAWN %s: " % c["withdrawn_on"] if c.get("withdrawn_on") else "") + _cell(c["taken"], 200),
+                     "WITHDRAWN %s: " % c["withdrawn_on"] if c.get("withdrawn_on") else
+                     "SUPERSEDED %s by %s: " % (c["superseded_on"], c["superseded_by"]) if c.get("superseded_by") else "") + _cell(c["taken"], 200),
                                                           ", ".join(c.get("closes") or []) or "-",
                                                           ", ".join(c.get("adds_core_needs") or []) or "-",
                                                           ", ".join(cites) or "none"))
     L.append("")
     for cid, c in choices.items():
-        L += [_para("**%s**, taken by the session on %s under the owner's ruling `%s`. %s Why: %s%s"
+        L += [_para("**%s**, taken by the session on %s under the owner's ruling `%s`. %s Why: %s%s%s"
                     % (cid, c["taken_on"], c["under"], c["taken"], c["why"],
-                       (" **Withdrawn on %s:** %s" % (c["withdrawn_on"], c["withdrawn_why"])) if c.get("withdrawn_on") else "")), ""]
+                       (" **Withdrawn on %s:** %s" % (c["withdrawn_on"], c["withdrawn_why"])) if c.get("withdrawn_on") else "",
+                       (" **Superseded on %s by %s:** %s" % (c["superseded_on"], c["superseded_by"], c["superseded_why"]))
+                       if c.get("superseded_by") else "")), ""]
 
     # ---- needs -> records
     L += ["## Needs, requirements, rules and verification\n",

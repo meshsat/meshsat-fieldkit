@@ -106,9 +106,26 @@ def _chain(steps):
     return d, reg
 
 
+_PRE = {}
+
+
+def _pre_data():
+    """A copy of l3r2.yaml with definition_reissue null: the fixtures are registries before the owner's approval (the
+    pre-closure registry and the chains on it), and since round 5's fix round the tree's re-issue is approved (D-38), which
+    the generator answers by refusing to write and by comparing the approved record only."""
+    if "p" not in _PRE:
+        import yaml
+        d = yaml.safe_load(open(L3DATA, encoding="utf-8"))
+        d["definition_reissue"] = None
+        _PRE["p"] = os.path.join(tempfile.mkdtemp(prefix="l3r4-data-"), "l3r2.yaml")
+        open(_PRE["p"], "w", encoding="utf-8").write(yaml.safe_dump(d, allow_unicode=True, sort_keys=False))
+    return _PRE["p"]
+
+
 def _generate(reg, expect=0, out=None, extra=()):
     out = out or tempfile.mkdtemp(prefix="l3r4-out-")
     before = {k: _sha(k) for k in BASE}
+    if "--data" not in extra: extra = list(extra) + ["--data", _pre_data()]
     r = _run([GEN, "--registry", reg, "--out-dir", out] + list(extra))
     assert r.returncode == expect, "reissue.py exit %d (expected %d):\n%s" % (r.returncode, expect, (r.stdout + r.stderr)[-600:])
     assert {k: _sha(k) for k in BASE} == before, "a baselined file changed while reissue.py ran"
@@ -161,7 +178,7 @@ def _common(reg, out, rows=None):
         "the change record runs its paragraphs together"
     n, bad = CC.check([os.path.join(out, RI.DRAFT), os.path.join(out, RI.RECORD)])
     assert not bad, "a generated text carries an unqualified claim: %s" % bad[:2]
-    r = _run([GEN, "--registry", reg, "--out-dir", out, "--check"])
+    r = _run([GEN, "--registry", reg, "--out-dir", out, "--check", "--data", _pre_data()])
     assert r.returncode == 0, "--check reads the files it has just written as out of date:\n%s" % r.stdout
     return draft, rec, rids
 

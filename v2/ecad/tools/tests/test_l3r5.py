@@ -370,7 +370,10 @@ def t_l3r5_the_closure_rulings_and_the_current_owner_brief():
     assert heads[0].startswith("Current owner brief"), "the file does not open with the current owner brief"
     i = text.index("## Current owner brief"); j = text.index("\n## ", i + 5)
     brief = text[i:j]
-    assert len(brief.strip().split("\n")) <= 45, "the brief runs to %d lines" % len(brief.strip().split("\n"))
+    # 55 since round 5's fix round (the collaborator's closure check astra-check-l3r5-1, B1: the brief names the ASM and CHO
+    # records one by one instead of two blanket lines, and B3: the line that the approved change record governs until the
+    # documents' re-stamp); the brief stays one screen of 120-character lines.
+    assert len(brief.strip().split("\n")) <= 55, "the brief runs to %d lines" % len(brief.strip().split("\n"))
     for rid in sorted(set(re.findall(r"\bD-\d\d\b", brief))):
         assert rid in have, "the brief names %s, which no ruling carries" % rid
     for w in ("NO external battery", "48 to 72 hours is a baseline design objective", "Owner decisions open:** none",
@@ -516,3 +519,97 @@ def t_l3r5_the_closure_pages_and_the_reissue():
     obj = {"L3-OD7": x("objective-48-72", hf="available", external="no")}
     assert RL.coherent(dict(obj, **{"L3-OD6": x("mean-day", build="TYP"), "L3-OD2": x("both-kept")}), data)[1]
     assert RL.settled("L3-OD1", obj, data) and not RL.settled("L3-OD1", a48, data), "row L3-OD1's closure is not the closure's"
+
+
+def t_l3r5_fix_round_superseded_conditions_are_marked_where_they_stand():
+    """The collaborator's closure check astra-check-l3r5-1, B2: the 72 hours of SC-21 and the deployment conditions are no
+    longer classified as requirements in the current views. SC-21 is marked superseded in the registry by D-28 (applied as
+    D-32), its taken value and L-02 kept, and the mark is printed on the trace page and in the operating conditions; the
+    two classification rows keep their place marked SUPERSEDED with what holds now; D-21's quoted instruction carries its
+    mark; acceptance definitions 1b and 4b are marked; the supersession script refuses a second run. No current view
+    classifies 72 hours or a deployment condition as a REQUIREMENT."""
+    import rules_lib as R
+    RL = _rl()
+    req, data = R.load_requirements(), RL.load_data()
+    sc = next(c for c in req["session_choices"] if c["id"] == "SC-21")
+    assert sc.get("superseded_on") == "2026-09-30" and "D-32" in str(sc.get("superseded_by")) and sc.get("closes") == ["L-02"]
+    assert "72 hours on the PS-IDLE-SPEC energy basis (42.8 W)" in " ".join(sc["taken"].split())
+    spec = open(os.path.join(L3, "REQUIREMENTS-L3-R2.md"), encoding="utf-8").read()
+    rec = open(os.path.join(L3, "L3-RECONCILIATION.md"), encoding="utf-8").read()
+    dec_page = open(os.path.join(L3, "OWNER-DECISIONS-L3.md"), encoding="utf-8").read()
+    trace = open(os.path.join(ROOT, "v2", "docs", "REQUIREMENTS-TRACE.md"), encoding="utf-8").read()
+    assert "**SUPERSEDED on 2026-09-30 by D-28 (applied as D-32):** 72 hours on the PS-IDLE-SPEC energy basis" in spec
+    assert "SUPERSEDED 2026-09-30 by D-28 (applied as D-32): 72 hours on the PS-IDLE-SPEC" in trace
+    assert "**Superseded in part by D-28 (applied as D-32):" in spec, "D-21's quoted instruction carries no mark"
+    for c in data["classification"]:
+        text = " ".join(c["item"].split())
+        if ("72 hours" in text and "48 to 72" not in text) or "deployment conditions" in text:
+            assert c.get("superseded_by") and c.get("now"), "%r is still classified %s" % (text[:60], c["level"])
+    assert "| SUPERSEDED by D-28, applied as D-32 (30 September 2026) (was REQUIREMENT (layer 3)):" in rec
+    assert "| SUPERSEDED by D-28, applied as D-35 (30 September 2026) (was REQUIREMENT (layer 3)):" in rec
+    assert "| DESIGN OBJECTIVE (layer 3) |" in rec
+    for label in ("1b", "4b"):
+        a = next(x for x in data["acceptance_definitions"] if x["label"] == label)
+        assert a.get("superseded_by") and "**Superseded by %s:**" % a["superseded_by"] in dec_page
+    assert "72 hours today" not in dec_page and "(REQ-072 today)" not in dec_page
+    r = _run([os.path.join(REC5, "apply_l3r5_supersede_sc21.py"), "--check"])
+    assert r.returncode == 2 and "has run" in r.stdout, "a second run of the SC-21 script was not refused:\n%s" % r.stdout
+
+
+def t_l3r5_fix_round_the_brief_the_reissue_and_the_gate():
+    """The collaborator's closure check astra-check-l3r5-1 (accepted: no) is filed byte for byte and named NOT_ACCEPTED,
+    so the gate's fourth condition reads NOT MET until the targeted recheck is filed. B1: the brief names the ASM and CHO
+    records one by one with the rulings that bind them. B3: D-38 records the owner's closure instructions word for word
+    and decides the re-issue; definition_reissue names the change record at its sha with D-38; the record states the route
+    that holds (authority D-38, acceptance the targeted review) and no PROPOSED; L3-C26 reads CLOSED and the gate's third
+    condition MET; the re-stamp is L3-C63, the integrator's, OPEN; the brief, the requirements page, DEFINITION-STATUS.md and
+    LAYER-STATUS.md say the change record governs until the re-stamp; CFL-016 is rebound to the status page it reads.
+    M1: DR-03 names 15 V. Each fix-round script refuses a second run, and the approved re-issue reads current."""
+    import rules_lib as R
+    RL = _rl()
+    req, data = R.load_requirements(), RL.load_data()
+    chk = data["independent_check"][-1]
+    assert chk["record"].endswith("astra-check-l3r5-1.md") and chk["verdict"] == "NOT_ACCEPTED"
+    assert open(os.path.join(ROOT, chk["record"]), encoding="utf-8").readline().strip() == "accepted: no"
+    flat = " ".join(_instr().split("## Current owner brief", 1)[1].split("\n## ", 1)[0].split())
+    for w in ("ASM-006 carries owner ruling D-02e's operating condition \"operate shaded\"", "CHO-001, the device set, is the owner's ruling",
+              "the one replaceable selection these rulings establish", "the change record governs (D-38)",
+              "**The definition re-issue** is authorised by his closure instructions D-38"):
+        assert w in flat, "the brief does not read %r" % w
+    for w in ("the registry's ASM records. ", "the registry's CHO records. "):
+        assert w not in flat, "the brief still carries the blanket line %r" % w
+    instr = " ".join(" ".join(l.lstrip("> ") for l in _instr().split("\n")).split())
+    r38 = next(x for x in req["owner_rulings"] if x["id"] == "D-38")
+    sys.path.insert(0, REC5)
+    import apply_l3r5_d38 as A
+    assert str(r38.get("decides")) == "definition_reissue" and len(A.QUOTES) == 3
+    for q in A.QUOTES:
+        assert " ".join(q.split()) in instr and " ".join(q.split()) in " ".join(r38["ruling"].split()), "a quote is not word for word"
+    assert "The session's reading, not his words" in " ".join(r38["ruling"].split())
+    dr = data["definition_reissue"]
+    assert dr["approved_by"] == "D-38" and dr["record"].endswith("DEFINITION-CHANGE-RECORD-L3.md")
+    assert RL.sha16_bytes(open(os.path.join(ROOT, dr["record"]), "rb").read()) == dr["sha16"]
+    dec = RL.decided(req, data)
+    assert RL.reissue_ok(req, data, dec)[0], RL.reissue_ok(req, data, dec)[1]
+    items = {c["id"]: c for c in data["closure"]}
+    assert RL.closure_state(items["L3-C26"], req, dec, data) == "CLOSED"
+    assert items["L3-C63"]["whose"] == "INTEGRATOR" and RL.closure_state(items["L3-C63"], req, dec, data) == "OPEN"
+    g = RL.gate(req, dec, data, RL.load_h3())
+    assert g[2][1] and not g[3][1], "the third condition should read MET and the fourth NOT MET: %s" % [(x[0], x[1]) for x in g]
+    record = open(os.path.join(ROOT, dr["record"]), encoding="utf-8").read()
+    assert "AUTHORISED by owner ruling D-38" in record and "**Acceptance:** the targeted independent review" in record
+    assert "PROPOSED" not in record, "the approved record still reads PROPOSED"
+    spec = open(os.path.join(L3, "REQUIREMENTS-L3-R2.md"), encoding="utf-8").read()
+    assert "the change record governs" in spec and "| Contradictions and requirement-level TBDs closed | MET |" in spec
+    assert "on the 5, 9 and 15 V contracts" in spec, "DR-03 does not name the 15 V contract"
+    ds = open(os.path.join(ROOT, "v2", "docs", "handover", "DEFINITION-STATUS.md"), encoding="utf-8").read()
+    assert "the change record governs" in ds and "| DC-L3-M1 |" in ds
+    cfl = next(r for r in req["records"] if r["id"] == "CFL-016")
+    assert "v2/docs/handover/DEFINITION-STATUS.md@%s" % RL.sha16_bytes(ds.encode("utf-8")) in cfl["evidence_bound_to"]
+    ls = open(os.path.join(ROOT, "v2", "docs", "handover", "LAYER-STATUS.md"), encoding="utf-8").read()
+    assert "waits on the owner's approving ruling" not in ls and "L3-C63" in ls
+    for s in ("apply_l3r5_d38.py", "apply_definition_status_l3r5.py", "apply_layer_status_l3_r5c.py"):
+        r = _run([os.path.join(REC5, s), "--check"])
+        assert r.returncode == 2 and "has run" in r.stdout, "a second run of %s was not refused:\n%s" % (s, r.stdout)
+    r = _run([os.path.join(ROOT, "v2/docs/records/l3r4/reissue.py"), "--check"], cwd=ROOT)
+    assert r.returncode == 0 and "current" in r.stdout, "the approved re-issue does not read current:\n%s" % r.stdout

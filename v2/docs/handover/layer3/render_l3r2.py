@@ -254,6 +254,7 @@ def runtime_wait(row, dec):
 
 
 LID = {"qmx-out": "qmx-out", "qmx-outside": "qmx-out", "tablet-out": "tablet-out", "both-kept": "both-kept"}
+LEVEL_NAMES = {"OBJECTIVE": "DESIGN OBJECTIVE"}   # classification levels beside REQUIREMENT and IMPLEMENTATION
 
 
 def od6_row(data, option, share, build):
@@ -682,7 +683,8 @@ def closure_lines(req, data, dec):
     L = ["### 2.1 The owner's closure (%s)" % ", ".join(cc["rulings"]), "",
          p("The owner's clarifications of 30 September 2026 close layer 3: D-28 on the energy and runtime requirement, D-29 "
            "on CFL-017, D-30 on the decision register (`OWNER-INSTRUCTION-2026-09-30.md` quotes each word for word), applied "
-           "by `%s`. **The owner decision left:** %s" % (cc["applied_by"], p(cc["owner_decision_left"]))), "",
+           "by `%s`. **The owner decision left:** %s" % (cc["applied_by"], p(cc["owner_decision_left"]))), ""]
+    L += reissue_lines(req, data, dec) + [
          "### 2.2 Mandatory requirements and the design objective (D-28)", "",
          p("The registry marks every record's obligation: of its %d requirements, %s %s the design objective (`obligation: "
            "OBJECTIVE`, judged under its stated profile, never a release gate) and the rest are mandatory. Each carries its "
@@ -720,6 +722,26 @@ def closure_lines(req, data, dec):
     for c in data["completion_statuses"]:
         L.append("| %s | %s |" % (c["what"], cell(c["status"])))
     return L + [""]
+
+
+def reissue_lines(req, data, dec):
+    """The definition re-issue's state (L3-C26), from l3r2.yaml's definition_reissue and the ruling that decides it: once
+    filed and accepted by reissue_ok, the route that holds and the notice that the approved change record governs where
+    CONOPS.md or PRODUCT-BRIEF.md differs from it until their re-stamp (L3-C63); nothing while it is not filed."""
+    dr = filed(data, "definition_reissue")
+    if not dr: return []
+    ok, why = reissue_ok(req, data, dec)
+    if not ok: return [p("**The definition re-issue (L3-C26):** filed but not accepted by the gate: %s." % why), ""]
+    r = next(x for x in req["owner_rulings"] if x["id"] == str(dr["approved_by"]))
+    item = next((c for c in data["closure"] if c["id"] == "L3-C63"), None)
+    return [p("**The definition re-issue (L3-C26).** The change record `%s` (sha256/16 `%s`) restates the passages of "
+              "`CONOPS.md` and `PRODUCT-BRIEF.md` that rulings D-32 to D-37 change; its authority is owner ruling %s (%s, "
+              "ruled %s), its acceptance the targeted independent review of this closure (L3-C27). **Neither document is "
+              "re-stamped yet**: the texts are written into them by their re-stamp through layers 1 and 2 (%s), and until "
+              "then, where either document differs from the approved change record, the change record governs "
+              "(`handover/DEFINITION-STATUS.md` carries the notice and the rows the draft proposes)." % (
+                  os.path.basename(str(dr["record"])), dr["sha16"], r["id"], p(r["title"]), r["ruled_on"],
+                  "closure item %s, %s, %s" % (item["id"], item["whose"].lower() + "'s", item["state"]) if item else "an open obligation")), ""]
 
 
 def decision_closure_lines(req, data, dec):
@@ -969,6 +991,7 @@ def review_lines(req, data, dec):
                                                         " PENDING: its feasibility record is not bound" if a["row"] in ("L3-OD1", "L3-OD3") and
                                                         not fok else ""),
               "", p(a["text"])]
+        if a.get("superseded_by"): L += ["", p("**Superseded by %s:** %s" % (a["superseded_by"], a["superseded_note"]))]
         if a.get("table"):
             L += ["", "| Mode | Environment | Functions available | Source |", "|---|---|---|---|"]
             for t in a["table"]:
@@ -1041,7 +1064,9 @@ def page_recon(req, data, dec, h3, root):
     L += ["", "## (c) Requirement or implementation", "",
           "| Item | Level | Where it lives |", "|---|---|---|"]
     for c in data["classification"]:
-        lvl = c["level"] + ((" (layer %s)" % c["layer"]) if c.get("layer") else " (layer 3)")
+        lvl = LEVEL_NAMES.get(c["level"], c["level"]) + ((" (layer %s)" % c["layer"]) if c.get("layer") else " (layer 3)")
+        if c.get("superseded_by"):   # a row superseded by a ruling keeps its place with the mark and what holds now
+            lvl = "SUPERSEDED by %s (was %s): %s" % (cell(c["superseded_by"]), lvl, cell(c["now"]))
         L.append("| %s | %s | %s |" % (cell(c["item"]), lvl, cell(c["where"])))
     L += ["", "## (d) The layer 3 closure list", "",
           p("Each item with whose it is, what closes it and its state, the state read live from the registry where the "
@@ -1165,12 +1190,17 @@ def page_spec(req, data, dec, h3, root):
           "| Ambient in use | %s to %s C | `pcb_envelope.yaml` (ENV-001), `v2/docs/OPERATING-ENVELOPE.md` section 4 |" % (amb["in_use"]["min"], amb["in_use"]["max"]),
           "| Storage, up to three months | %s to %s C | the same |" % (amb["storage_3_months"]["min"], amb["storage_3_months"]["max"]),
           "| Storage, up to a year | %s to %s C | the same |" % (amb["storage_1_year"]["min"], amb["storage_1_year"]["max"])]
+    marks = {m["id"]: m["mark"] for m in data.get("superseded_marks") or []}
     for rid in ("D-02a", "D-02b", "D-02c", "D-02d", "D-02e", "D-04", "D-16", "D-20", "D-21", "D-22", "D-28", "D-29"):
         r = rulings.get(rid)
-        if r: L.append("| %s (owner, %s) | %s | owner ruling %s |" % (cell(r["title"]), r["ruled_on"], cell(r["ruling"]), rid))
+        if r: L.append("| %s (owner, %s) | %s%s | owner ruling %s |" % (
+            cell(r["title"]), r["ruled_on"], ("**%s** " % cell(marks[rid])) if rid in marks else "", cell(r["ruling"]), rid))
     for cid in ("SC-21", "SC-37"):
         c = choices.get(cid)
-        if c: L.append("| %s (session, %s) | %s | session choice %s |" % (cell(c["question"]), c["taken_on"], cell(c["taken"]), cid))
+        if c: L.append("| %s (session, %s) | %s%s | session choice %s |" % (
+            cell(c["question"]), c["taken_on"],
+            ("**SUPERSEDED on %s by %s:** " % (c["superseded_on"], cell(c["superseded_by"]))) if c.get("superseded_by") else "",
+            cell(c["taken"]), cid))
     r72 = next((r for r in req["records"] if r["id"] == "REQ-072"), {})
     if r72.get("obligation") == "OBJECTIVE":
         L += ["", p("**Mission M1's conditions, in one place (D-28).** A design objective of 48 to 72 hours under the stated "

@@ -247,6 +247,30 @@ def next_id(d, prefix, sections):
     return "%s-%0*d" % (prefix, 2 if prefix in ("D", "SC") else 3, (max(nums) + 1) if nums else 1)
 
 
+def rebind_to_tree(base_raw, tree_raw):
+    """A registry from git (the pre-closure registry the prepared chains start from) with each reading's binding carried
+    to the one the tree's registry holds for the same record and path, where the tree has rebound it to the file as it
+    now stands (round 5's fix round: the status page DEFINITION-STATUS.md gained a section and CFL-016 was rebound, and a
+    PASS bound to the file's older sha fails validation). Only binding lines change; nothing else of the base moves."""
+    tree = {r["id"]: r for r in parse(tree_raw).get("records") or []}
+    out = base_raw
+    for r in parse(base_raw).get("records") or []:
+        t = tree.get(r["id"])
+        if not t: continue
+        now = {str(b).rsplit("@", 1)[0]: str(b) for b in t.get("evidence_bound_to") or []}
+        for b in r.get("evidence_bound_to") or []:
+            path = str(b).rsplit("@", 1)[0]
+            nb = now.get(path)
+            if not nb or nb == str(b): continue
+            p = os.path.join(TOP, path)
+            if not os.path.exists(p) or sha16(p) != nb.rsplit("@", 1)[1]: continue
+            s, e = entry_span(out, r["id"], "records")
+            block = out[s:e]
+            if block.count('"%s"' % b) != 1: continue
+            out = out[:s] + block.replace('"%s"' % b, '"%s"' % nb) + out[e:]
+    return out
+
+
 def git(*args):
     return subprocess.run(["git", "-C", TOP] + list(args), capture_output=True)
 
