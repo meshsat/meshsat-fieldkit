@@ -199,7 +199,8 @@ def coherent(dec):
 
 def row_state(row, dec, data):
     if row in dec: return "DECIDED: `%s` (%s, %s)" % (dec[row][0], dec[row][1], dec[row][2])
-    return "HELD (D-22)" if held(row, dec, data) else "AWAITING"
+    d = next(x for x in data["decisions"] if x["id"] == row)
+    return ("HELD (%s)" % d.get("held_by", "D-22")) if held(row, dec, data) else "AWAITING"
 
 
 def baseline_changes(req, h3, data):
