@@ -13,6 +13,10 @@ It is not a weather case, and no worse-weather case is established here. No figu
 (the model's 20.7 V, and the V20 and V19 sensitivities) is superseded by `ENERGY-BASIS.md`**, which establishes the charge
 bus's range from the design and the makers' pages and gives the corrected comparison table for the owner's decisions.
 
+**Third issue, 30 September 2026 (CHECK-1 minor 7).** Every derived condition on this page (sections 2.4, 3.4 and 4) is
+marked SUPERSEDED and was a proposal only: none may be read into the owner's table. At the established worst inputs the
+4S14P lid has no band at all.
+
 ## 0. Tools, outputs and commands
 
 | File | What it is |
@@ -172,7 +176,10 @@ azimuth; 20 to 40 degrees at 45 east; 50 degrees at 30 east and 45 west; 60 degr
 15 east and 30 west. **Neither:** flat; 50 degrees at 45 east; 60 degrees at 45 east and west; 70 degrees at 45 and 30
 east and 45 west.
 
-### 2.4 The conditions (`plane_grid.out` section 3)
+### 2.4 The conditions (`plane_grid.out` section 3): SUPERSEDED
+
+> **SUPERSEDED (third issue, 30 September 2026).** Every condition in this section rests on the model's 20.7 V bus and was never more than a PROPOSAL; none is accepted. The owner's basis is `ENERGY-BASIS.md`, where the 4S14P lid has NO band at the established worst inputs (WE) and the 4S15P band is conditional on efficiencies no maker document establishes.
+
 
 | Set | Largest rectangle (grid points; least store) | Within x of south |
 |---|---|---|
@@ -181,7 +188,7 @@ east and 45 west.
 | the same with V20 (bus at its nominal) | slope 20 to 40, azimuth 15 E to 30 W, or slope 20 to 50 within 15 of south (12 each; least 6.1 Wh at 20/-15, V20 C) | within 15: slope 20 to 50 (least 6.1 Wh) |
 | V19 alone (the DC band's low end) | slope 30 to 50 at south only (3; least 2.5 Wh at 50/+0) | within 15: no slope |
 
-**The derived condition, 4S14P (INFERRED on this model): the array's plane at a slope of 20 to 50 degrees, facing between
+**The derived condition, 4S14P (INFERRED on this model; SUPERSEDED, a proposal only; at WE the 4S14P has no band): the array's plane at a slope of 20 to 50 degrees, facing between
 15 degrees east and 30 degrees west of south** (every one of its 16 grid points meets M1 in both B and C in cases P, I and
 H, least store 19.9 Wh). Its symmetric subset, **20 to 50 degrees within 15 degrees of south**, is the old rule of
 ARRAY.md section 7 and has the larger least store, 26.0 Wh. P alone would admit 60 degrees within 15 of south and every
@@ -302,7 +309,10 @@ west; 60 degrees from 15 east to 30 west; 70 degrees at south and 15 west. **Typ
 and 30 east and 45 west; 20 to 50 degrees at 45 east; 60 degrees at 30 east and 45 west; 70 degrees at 15 east and 30
 west. **Neither:** 60 degrees at 45 east; 70 degrees at 45 and 30 east and 45 west.
 
-### 3.4 The conditions (`plane_grid.out` section 3)
+### 3.4 The conditions (`plane_grid.out` section 3): SUPERSEDED
+
+> **SUPERSEDED (third issue, 30 September 2026).** Every condition in this section rests on the model's 20.7 V bus and was never more than a PROPOSAL; none is accepted. The owner's basis is `ENERGY-BASIS.md`, where the 4S14P lid has NO band at the established worst inputs (WE) and the 4S15P band is conditional on efficiencies no maker document establishes.
+
 
 | Set | Largest rectangles (grid points; least store) | Within x of south |
 |---|---|---|
@@ -311,7 +321,7 @@ west. **Neither:** 60 degrees at 45 east; 70 degrees at 45 and 30 east and 45 we
 | the same with V20 (bus at its nominal) | slope 20 to 50, azimuth 15 E to 30 W (16; least 26.8 Wh at 50/+30, V20 C) | within 15: slope 20 to 60 (least 12.5 Wh at 60/-15); within 30: 20 to 40 (least 6.9 Wh) |
 | V19 alone (the DC band's low end) | slope 20 to 50, azimuth S to 15 W (8; least 9.1 Wh at 20/+0) | within 15: slope 30 to 40 (least 5.6 Wh at 30/-15) |
 
-**The derived condition, 4S15P (INFERRED on this model): the array's plane at a slope of 20 to 60 degrees, facing between
+**The derived condition, 4S15P (INFERRED on this model; SUPERSEDED, a proposal only): the array's plane at a slope of 20 to 60 degrees, facing between
 15 degrees east and 30 degrees west of south** (every one of its 20 grid points meets in both B and C in cases P, I and H,
 least store 7.9 Wh at 60/+30 in case I). Its symmetric form **within 15 degrees of south** reaches **10 to 60 degrees**
 (least 5.4 Wh at 10/-15 in case I, just above the floor). The two other maximal conservative rectangles are in the
@@ -329,7 +339,10 @@ WAB): 10 degrees 16.6 Wh at 15 E, 27.9 at south, 28.6 at 15 W, 14.6 at 30 W, NOT
 **Laid flat (slope 0): meets in the typical case only (P 15.6 Wh, the lid emptied to 0.0 Wh; I 5.1 Wh; H 15.6 Wh), NOT MET
 in the WAB case, and NOT MET in either case at V20 and V19.**
 
-## 4. The two options side by side (INFERRED on this model; for the owner's decision)
+## 4. The two options side by side (INFERRED on this model): SUPERSEDED, not for the owner's decision
+
+> **SUPERSEDED (third issue, 30 September 2026).** Every condition in this section rests on the model's 20.7 V bus and was never more than a PROPOSAL; none is accepted. The owner's basis is `ENERGY-BASIS.md`, where the 4S14P lid has NO band at the established worst inputs (WE) and the 4S15P band is conditional on efficiencies no maker document establishes.
+
 
 | | 4S14P (tablet out) | 4S15P (QMX out) |
 |---|---|---|
@@ -340,7 +353,7 @@ in the WAB case, and NOT MET in either case at V20 and V19.**
 | if the bus sits at its nominal 20.0 V (V20, with P, I and H) | 20 to 40 at 15 E to 30 W, or 20 to 50 within 15 of south (least 6.1 Wh) | 20 to 50 at 15 E to 30 W (least 26.8 Wh) |
 | at the bus's DC band low end, 19.08 V (V19) | due south only, 30 to 50 (least 2.5 Wh, under the floor); the old rule fails at 8 of 12 planes | within 15 of south only 30 to 40 (least 5.6 Wh); the old rule fails at 2 of 12 |
 
-**One condition written for either option:** slope 20 to 50 degrees, azimuth 15 degrees east to 30 degrees west of south
+**One condition written for either option (SUPERSEDED, a proposal only):** slope 20 to 50 degrees, azimuth 15 degrees east to 30 degrees west of south
 meets in both cases for both options in P, I and H above the floor. With the bus at its nominal 20.0 V it still holds for
 4S15P (least 26.8 Wh) and not for 4S14P, whose 50/+30 then meets in the typical case only.
 

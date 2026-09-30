@@ -1,0 +1,24 @@
+THE MAKERS' EFFICIENCY CURVES AT THEIR NEAREST PRINTED POINTS (curve_readings.py, stream l3plane, MESHSAT-1357).
+Every figure INFERRED: a pixel reading of a TYPICAL curve (TA 25 C) of the maker's own demonstration circuit, not a
+figure for board E or board A. Nothing is measured.
+
+1. LM5176 (board A's front end, U2): TI SNVSAI1D v2/vendor/ti/lm5176-datasheet.pdf sha256/16 98191bec36d43771, p.9 Figure 6-2 'Efficiency vs Load',
+   VOUT 12 V, fsw 300 kHz, L1 4.7 uH, the VIN = 9 V curve: a boost at a ratio of 1.33 (board A: 15.1 V to 20 V, 1.32).
+   2.5 A 98.0 %; 3.5 A 98.1 %; 4.5 A 98.0 %; 5.5 A 97.9 %; 5.9 A 97.8 %
+   READING at 5.5 to 6 A (board A's front end carries U3's 6.1 A): 97.8 to 97.9 % (INFERRED). Board A differs: 20 V out,
+   about 200 kHz, 10 uH, CSD19532Q5B; at its 122 W the input current is about 8 A, above the plot's 6 A x 9 V.
+
+2. LT8705A (board E's tracker stage, U5): ADI 8705af v2/vendor/power/lt8705a.pdf sha256/16 8f552a0b57677bfa, p.41 '12V, 15A Output Converter Accepts
+   7.5V to 55V Input', 'Efficiency vs Output Current'. Its buck switches M1 and M2 ARE board E's Q3 BSC028N06NS and Q4 BSC039N06NS as
+   generated (NETLIST v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net; ARRAY.md section 6's draft moves both to an 80 or 100 V part for the 2S2P array):
+   VIN 35 V (a buck, 35 to 12 V; board E: 34.3 to 15.1 V): 1.0 A 92.0 %; 1.5 A 94.4 %; 2.0 A 95.6 %; 3.0 A 96.0 %; 4.5 A 96.6 %; 6.0 A 96.8 %; 7.5 A 96.7 %; 9.0 A 96.7 %; 10.5 A 96.6 %; 12.0 A 96.5 %; 13.5 A 96.4 %; 14.6 A 96.3 %
+   VIN 20 V: 1.0 A 96.3 %; 1.5 A 96.9 %; 2.0 A 97.3 %; 3.0 A 97.7 %; 4.5 A 97.9 %; 6.0 A 97.9 %; 7.5 A 97.8 %; 9.0 A 97.7 %; 10.5 A 97.6 %; 12.0 A 97.4 %; 13.5 A 97.2 %; 14.6 A 97.1 %
+   READING at 6 to 12 A on the 35 V curve (board E's stage delivers up to about 12 A at 15.1 V): 96.5 to 96.8 % (INFERRED).
+   At light load the curve falls: the 1 to 3 A readings above (the steep part of the curve, where a pixel is worth more).
+
+3. WHAT THE READINGS ARE NOT: a figure for board E or board A, at their voltages, frequencies, inductors, FETs,
+   copper or temperature, or weighted over the reference day's hours. They show
+   that the makers' own designs run above the energy model's declared 0.93 at the nearest points; they do not
+   establish 0.93, or any other figure, for the kit.
+
+END.
