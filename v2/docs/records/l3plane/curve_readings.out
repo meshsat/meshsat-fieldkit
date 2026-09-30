@@ -6,7 +6,9 @@ figure for board E or board A. Nothing is measured.
    VOUT 12 V, fsw 300 kHz, L1 4.7 uH, the VIN = 9 V curve: a boost at a ratio of 1.33 (board A: 15.1 V to 20 V, 1.32).
    2.5 A 98.0 %; 3.5 A 98.1 %; 4.5 A 98.0 %; 5.5 A 97.9 %; 5.9 A 97.8 %
    READING at 5.5 to 6 A (board A's front end carries U3's 6.1 A): 97.8 to 97.9 % (INFERRED). Board A differs: 20 V out,
-   about 200 kHz, 10 uH, CSD19532Q5B; at its 122 W the input current is about 8 A, above the plot's 6 A x 9 V.
+   about 200 kHz, 10 uH, CSD19532Q5B. The plot's load current is its OUTPUT current: at 6 A out its 9 V curve draws about
+   8.2 A in (12 V x 6 A / 0.978 / 9 V), close to board A's 8.7 A in at 6.1 A out (6.1 A x 20 V / 0.93 / 15.1 V): the
+   currents are alike, the voltages and the circuit are not (second issue: CHECK-2 minor 6 corrected this sentence).
 
 2. LT8705A (board E's tracker stage, U5): ADI 8705af v2/vendor/power/lt8705a.pdf sha256/16 8f552a0b57677bfa, p.41 '12V, 15A Output Converter Accepts
    7.5V to 55V Input', 'Efficiency vs Output Current'. Its buck switches M1 and M2 ARE board E's Q3 BSC028N06NS and Q4 BSC039N06NS as
