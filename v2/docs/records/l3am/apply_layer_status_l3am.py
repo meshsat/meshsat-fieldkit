@@ -77,7 +77,7 @@ def build(old):
         L.screen(b, "LAYER-STATUS.md")
     na = new.index("## Layer 3. Requirements\n"); nb = new.index("\n### History: layer 3 at H2 and H3", na)
     if old[:sec_a] != new[:na] or old[sec_b:] != new[nb:]: L.refuse("the page changed outside layer 3's section")
-    for c in ("–", "—"):
+    for c in ("\u2013", "\u2014"):
         if c in new and c not in old: L.refuse("a dash character was written")
     return new
 
