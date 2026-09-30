@@ -55,7 +55,11 @@ def main(argv):
             if at != sha(f): E.refuse("%s is not byte identical to the file of that path at the checked tip %s" % (f, tip))
         head = open(os.path.join(root, chk), encoding="utf-8").read().split("\n")
         if head[0].strip() != "accepted: yes": E.refuse("%s reads %r on its first line, not 'accepted: yes'" % (chk, head[0].strip()))
-        if not any(("tip `%s`" % tip) in l for l in head[:12]): E.refuse("%s does not name tip `%s` as the one it checked" % (chk, tip))
+        if not BB.names_tip(head, tip): E.refuse("%s does not name tip `%s` as the one it checked" % (chk, tip))
+        listed = BB.listed_sha256("\n".join(head))
+        for f in [rec] + outl:
+            if f in listed and listed[f] != __import__("hashlib").sha256(open(os.path.join(root, f), "rb").read()).hexdigest():
+                E.refuse("%s lists %s at another sha256" % (chk, f))
         block = ("%s:\n  record: %s\n  sha16: %s\n  tip: %s\n  outputs:\n%s  check: %s\n  check_sha16: %s\n"
                  % (key, rec, sha(rec), tip, "".join("    - {path: %s, sha16: %s}\n" % (o, sha(o)) for o in outl), chk, sha(chk)))
         line = "%s: null\n" % key

@@ -4,9 +4,9 @@
 Each chain starts from a copy of v2/ecad/tools/pcb_requirements.yaml and applies the scripts of conditional/ in the
 order their prerequisites allow, with placeholder words, printing what each changes; nothing in the tree is written. The
 output (dryrun.out beside this file) is deterministic: temporary paths are printed as <copy>. Row L3-OD4's band, row
-L3-OD3's keep figures and row L3-OD6's table come from fixture files written into the copy's directory, standing in for
-the checked energy basis until it is filed (row L3-OD6's own table holds no figure yet, so an answer read from it is
-refused). The fixture table has the mean day in TYP carried by the tablet-out and QMX-out lids, in WAB by the QMX-out lid
+L3-OD3's keep figures and row L3-OD6's table come from fixture files written into the copy's directory, so that each
+chain exercises the lid checks on a known table; one chain reads row L3-OD6's own table, filled from the checked basis
+(fnd/l3plane cd8720a1) and verified against it. Row L3-OD4's band is the basis's: none at U3's 6.0 A bracket. The fixture table has the mean day in TYP carried by the tablet-out and QMX-out lids, in WAB by the QMX-out lid
 only, and no coverage target carried by any lid. The chains are EXAMPLES, not recommendations: row L3-OD6's
 recommendation is held (CHECK-2 of L3-R2, minor 3). The refusals of the incoherent chains are part of the record.
 
@@ -46,7 +46,7 @@ CHAINS = [
     ("both lid items kept: an open conflict, then a band refused and no deployment condition accepted",
      [("od_l3_6.py", "mean-day:TYP"), ("od_l3_1.py", "approve"), ("od_l3_2.py", "both-kept"), ("od_l3_3.py", "2s2p"),
       ("od_l3_4.py", "adopt"), ("od_l3_4.py", "reject")]),
-    ("an answer read from row L3-OD6's own table: refused while its figures are HELD", [("od_l3_6.py", "mean-day:TYP:tree")]),
+    ("an answer read from row L3-OD6's own table, filled from the checked basis and read again from it", [("od_l3_6.py", "mean-day:TYP:tree")]),
     ("a coverage target of 95 percent in WAB that no lid carries (fixture): an open conflict; row L3-OD1 keeps the target; a band refused",
      [("od_l3_6.py", "coverage:WAB:95"), ("od_l3_1.py", "approve"), ("od_l3_2.py", "tablet-out"), ("od_l3_3.py", "2s2p"),
       ("od_l3_4.py", "adopt"), ("od_l3_4.py", "reject")]),
@@ -66,10 +66,10 @@ for basis in ("mean-day", "50", "80", "95"):
 
 def main(argv):
     print("L3-R2 DRY RUNS of the prepared owner-decision scripts, each chain on a fresh copy of the registry.")
-    print("Placeholder words 'dry run', date 2026-10-01. Nothing in the tree is written. Rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 are")
-    print("held by D-22, D-23 and D-24 for the tree's registry; a copy is not held, so each prepared change is exercised here.")
-    print("Row L3-OD4's band, row L3-OD3's keep figures and row L3-OD6's table come from FIXTURE files standing in for the")
-    print("checked energy basis, which is not filed yet; the push is a placeholder of 20 N standing in for the owner's number.")
+    print("Placeholder words 'dry run', date 2026-10-01. Nothing in the tree is written. The checked basis (fnd/l3plane cd8720a1,")
+    print("CHECK-5) is filed, so the tree's rows are no longer held; the chains run on copies. Row L3-OD3's keep figures and")
+    print("row L3-OD6's table come from FIXTURE files, except in the chain that reads the tree's filled table; row L3-OD4's band")
+    print("is the basis's (none at U3's 6.0 A bracket); the push is a placeholder of 20 N standing in for the owner's number.")
     print("The chains are examples, not recommendations.")
     for name, steps in CHAINS:
         d = tempfile.mkdtemp(prefix="l3r2-dry-")
@@ -85,7 +85,7 @@ def main(argv):
             opt = parts[0]
             args = [sys.executable, os.path.join(COND, script), "--option", opt, "--words", "dry run", "--date", "2026-10-01",
                     "--registry", reg]
-            if script == "od_l3_4.py" and opt == "adopt": args += ["--band", BAND, "--band-evidence", ev, "--push-n", "20"]
+            if script == "od_l3_4.py" and opt == "adopt": args += ["--push-n", "20"]
             if script == "od_l3_3.py" and opt == "keep": args += ["--array-wp", "1100", "--entry-a", "80", "--evidence", ev]
             if script == "od_l3_6.py":
                 args += ["--build", parts[1]] + (["--share", parts[2]] if opt == "coverage" else [])

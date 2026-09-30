@@ -1,0 +1,30 @@
+held 10 mOhm       stacked band 4.212 / 5.000 / 5.810 A
+proposed 6.2 mOhm  stacked band 6.793 / 8.065 / 9.370 A
+U3 maximum 6.355 A
+other loads, the record's composition (4 FETs x 62 nC x 225 kHz + 4 mA + R197 + divider): 0.0601 A
+  the LM5176 with two FETs switching (boost: Q4, Q5): 0.0322 A; U3's own VBUS pin (REGN gate drive of Q7, Q8 at 6 V, 460 kHz, light-load 2.2 mA, ILIM divider): 0.0186 A; together 0.0508 A
+in service 6.415 A; margin proposed +0.378 A; held -2.203 A
+GEN: 4.25 + 0.060 = 4.310 A against 4.212: -0.098 A
+Kelvin: copper allowed 0.371 mOhm (2.38 mV at 6.415 A, 4.8 % of 50 mV); at 25 C if the copper sits at 62.1 / 100 C: 0.324 / 0.286 mOhm
+routed board (26.62 + 2.16 mV): at 6.0 A 4.80 mOhm, at 3.80 A 7.57 mOhm
+L1 held max             15.1 V: in 8.64 A, D 0.277, ripple 2.99 A, peak 10.14 A (with L a further 30 % down at Isat: peak 10.78 A), rms 8.68 A, 40 K Irms 15.5
+L1 held max              9.0 V: in 14.50 A, D 0.569, ripple 3.66 A, peak 16.33 A (with L a further 30 % down at Isat: peak 17.11 A), rms 14.54 A, 40 K Irms 15.5
+L1 proposed in service  15.1 V: in 9.54 A, D 0.277, ripple 2.99 A, peak 11.04 A (with L a further 30 % down at Isat: peak 11.68 A), rms 9.58 A, 40 K Irms 15.5
+L1 proposed in service   9.0 V: in 16.01 A, D 0.569, ripple 3.66 A, peak 17.84 A (with L a further 30 % down at Isat: peak 18.62 A), rms 16.04 A, 40 K Irms 15.5
+L1 proposed max         15.1 V: in 13.94 A, D 0.277, ripple 2.99 A, peak 15.43 A (with L a further 30 % down at Isat: peak 16.07 A), rms 13.96 A, 40 K Irms 15.5
+L1 proposed max          9.0 V: in 23.38 A, D 0.569, ripple 3.66 A, peak 25.21 A (with L a further 30 % down at Isat: peak 26.00 A), rms 23.41 A, 40 K Irms 15.5
+L1 GEN in service       15.1 V: in 6.41 A, D 0.277, ripple 2.99 A, peak 7.90 A (with L a further 30 % down at Isat: peak 8.55 A), rms 6.47 A, 40 K Irms 15.5
+L1 GEN in service        9.0 V: in 10.76 A, D 0.569, ripple 3.66 A, peak 12.58 A (with L a further 30 % down at Isat: peak 13.37 A), rms 10.81 A, 40 K Irms 15.5
+Q2 proposed max          15.1 V: rms 13.96 A, P at 150 C 2.23 W, TJ past 150 C; needs RthetaJA <= 39.3 C/W
+Q2 held max               9.0 V: rms 14.54 A, P at 150 C 2.42 W, TJ past 150 C; needs RthetaJA <= 36.3 C/W
+Q2 proposed in service    9.0 V: rms 16.04 A, P at 150 C 2.95 W, TJ past 150 C; needs RthetaJA <= 29.8 C/W
+Q2 proposed in service   15.1 V: rms 9.58 A, P at 150 C 1.05 W, TJ 104 C (P 0.83 W); needs RthetaJA <= 83.6 C/W
+Q2 GEN in service         9.0 V: rms 10.81 A, P at 150 C 1.34 W, TJ 119 C (P 1.14 W); needs RthetaJA <= 65.7 C/W
+board E: front end input held max             130.5 W; stage input at 0.93 140.3 W; R11 I2R 0.341 W
+board E: front end input proposed in service  144.1 W; stage input at 0.93 154.9 W; R11 I2R 0.258 W
+board E: front end input proposed max         210.5 W; stage input at 0.93 226.3 W; R11 I2R 0.550 W
+R11 derated allowance at 62.1 C 3.00 W, at 100 C 2.10 W; 5 s overload at 6.2 mOhm 49.2 A
+cycle-by-cycle over R12: boost peak 20.0/24.0/28.0 A, buck valley 13.2/16.0/18.8 A
+slope Eq. 26: 2 uS x 10 uH / (5 mOhm x 5) = 800 pF
+CC loop gain ratio 6.2 / 10 = 0.62; bias offset in amperes 48 / 30 mA
+vehicle alone: 144.1 W / 6.15 A = 23.4 V; 130.5 W / 6.15 A = 21.2 V

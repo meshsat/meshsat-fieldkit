@@ -301,8 +301,10 @@ def closure_state(item, req, dec, data):
         chks = filed(data, "independent_check") or []
         return "CLOSED" if chks and str(chks[-1].get("verdict")).upper() == "ACCEPTED" else st
     if iid == "L3-C28": return "CLOSED" if {"D-21", "D-23", "D-24", "D-25"} <= rulings else st
-    if iid == "L3-C30": return "CLOSED" if basis_ok(data)[0] and "L3-OD2" in dec and "L3-OD4" in dec else st
-    if iid == "L3-C31": return "CLOSED" if basis_ok(data)[0] else st
+    if iid == "L3-C30": return "CLOSED" if basis_ok(data)[0] else "OPEN (the checked basis is not filed)"
+    if iid == "L3-C31":
+        return "CLOSED" if basis_ok(data)[0] and "S-127" in closed_ids else (
+            "OPEN (the basis is filed and bound to its checked tip; S-127 is closed in the registry next)" if basis_ok(data)[0] else st)
     if iid == "L3-C32": return st if coherent(dec, data)[1] else "OPEN (%s)" % "; ".join(coherent(dec, data)[0])
     needed = [r for r in rows if r in str(item.get("closes_by"))]
     if st in ("AWAITING_OWNER", "HELD") and needed and all(r in dec for r in needed): return "CLOSED (decided)"
@@ -417,6 +419,11 @@ CASE_LABEL = {"a": "AS DRAWN", "a'": "DERATED VARIANT (U3 at {s} A): current-lim
 LID_SHORT = {"4S9P both kept": "4S9P", "4S14P tablet out": "4S14P", "4S15P QMX out": "4S15P"}
 
 
+def derated_text(data):
+    F = data.get("four_cases")
+    return ("%s A (three_cases.out 1)" % F["derated_setting"]) if F else "4.05 A or less"
+
+
 def four_cell(F, case):
     """Row L3-OD1's cell for one front-end case from four_cases (three_cases.out 2), by exact key."""
     out = [CASE_LABEL[case].format(s=F["derated_setting"]) + "."]
@@ -474,21 +481,41 @@ def check_links(name, body):
 
 
 # ------------------------------------------------------------------------------------------------ pages
+def held_sentence(data):
+    """The rows' hold, stated from the files: held (D-22, D-23, D-24) until both checked files are filed, then the checked
+    basis named with its tip."""
+    if basis_ok(data)[0] and basis_ok(data, "power_path_check")[0]:
+        v = data["energy_basis"]
+        return ("Rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 were held by the owner's review (D-22), his instruction on this "
+                "table (D-23) and his addendum (D-24) until the checked energy basis and the checked power path were filed. "
+                "Both are, bound to the tip `%s` of stream l3plane that their accepted check names (`%s`), and every figure "
+                "on these rows is that basis's, linked to its section. Every result on board A's front end is stated in four "
+                "cases (D-24, D-25), and every case is named by its exact weather and operating assumptions: SC-37's mean "
+                "day at Leiden, the input sets NOM and WE, and the array builds TYP and WAB on the same day, neither a "
+                "weather case." % (str(v["tip"])[:12], v["check"]))
+    return ("Rows L3-OD1, L3-OD2 and L3-OD4 are HELD by the owner's review of the draft table (D-22), and row L3-OD6's "
+            "recommendation and figures by his instruction on this table (D-23), until the corrected, independently "
+            "checked energy comparison is filed (open item S-127) and, by his addendum (D-24), the power path at Option "
+            "A(i)'s currents is independently checked (closure item L3-C45); their energy cells state no figure before "
+            "them, every result on board A's front end is stated in four cases (D-24, D-25), and no "
+            "case is called typical or adverse until the basis names each by its exact weather and operating assumptions.")
+
+
+def rows_heading(data):
+    if basis_ok(data)[0] and basis_ok(data, "power_path_check")[0]:
+        return "What the rows propose (AWAITING the owner; their figures are the checked basis's)."
+    return "What the rows propose (AWAITING the owner; rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 HELD, D-22, D-23 and D-24)."
+
+
 def page_decisions(req, data, dec):
     L = [HEAD, "# Owner decisions needed to close layer 3 (L3-R2)", "",
          p("MESHSAT-1357, %s. The only decisions layer 3 still needs from the owner, one row each, from "
            "`v2/docs/handover/layer3/l3r2.yaml`; every figure is a model or desk result of the records named on "
            "`L3-RECONCILIATION.md`, not a measurement, and nothing here is drawn, built or tested. A recommendation is the "
-           "session's and is not an approval (D-21): each row stays AWAITING until the owner's own words decide it. Rows "
-           "L3-OD1, L3-OD2 and L3-OD4 are HELD by the owner's review of the draft table (D-22), and row L3-OD6's "
-           "recommendation and figures by his instruction on this table (D-23), until the corrected, independently "
-           "checked energy comparison is filed (open item S-127) and, by his addendum (D-24), the power path at Option "
-           "A(i)'s currents is independently checked (closure item L3-C45); their energy cells state no figure before "
-           "them, every result on board A's front end is stated in four cases (D-24, D-25), and no "
-           "case is called typical or adverse until the basis names each by its exact weather and operating assumptions. "
-           "Each row gives its options (an option that cannot meet mission M1, or rests on something no record "
+           "session's and is not an approval (D-21): each row stays AWAITING until the owner's own words decide it. "
+           "%s Each row gives its options (an option that cannot meet mission M1, or rests on something no record "
            "establishes, is flagged in capitals), the session's recommendation, quantified consequences with their "
-           "evidence linked, and its dependencies (D-23)." % data["written_text"]), "",
+           "evidence linked, and its dependencies (D-23)." % (data["written_text"], held_sentence(data))), "",
          p(data.get("proposal_only") or ""), "",
          "| Row | Question | Why it is the owner's: the requirement it changes, quantified (D-25) | Options | Recommendation | "
          "Quantified consequences | Dependencies | Affected | State |",
@@ -500,12 +527,13 @@ def page_decisions(req, data, dec):
     L += ["", "## Board A's front end in four cases: as drawn, derated, the resistor-only proposal and a hypothetical corrected power path", "",
           p("Every Option A(i) energy result depends on board A's front end (fact CF-02 of `L3-RECONCILIATION.md`). Each "
             "row's result is stated in four cases, never merged (D-24, D-25): (a) the circuit as drawn; (a') a DERATED "
-            "VARIANT, U3's input limit at 4.05 A or less, which fixes current-limit coordination only and establishes "
+            "VARIANT, U3's input limit at %s, which fixes current-limit coordination only and establishes "
             "neither that the other findings are resolved nor that M1 is met; (b) the resistor-only proposal, which is not a "
             "sufficient solution and reads CONDITIONAL or INCONCLUSIVE until the electrical check (l3r2.yaml's "
             "power_path_check) says otherwise; (c) a HYPOTHETICAL corrected power path, whose figures are feasibility "
-            "figures, never demonstrated capability, and rest on the requirements and corrections listed after this table."), "",
-          "| Row | (a) The circuit as drawn: R11 10 mOhm | (a') Derated variant: U3 at 4.05 A or less | (b) The resistor-only proposal: R11 6.2 mOhm | (c) A hypothetical corrected power path |",
+            "figures, never demonstrated capability, and rest on the requirements and corrections listed after this table."
+            % derated_text(data)), "",
+          "| Row | (a) The circuit as drawn: R11 10 mOhm | (a') Derated variant: U3 at %s | (b) The resistor-only proposal: R11 6.2 mOhm | (c) A hypothetical corrected power path |" % derated_text(data),
           "|---|---|---|---|---|"]
     F = data.get("four_cases")
     for d in data["decisions"]:
@@ -589,7 +617,7 @@ def page_recon(req, data, dec, h3, root):
            "registry and `l3r2.yaml`." % (data["written_text"], data["instruction"], data["h3"]["baseline"])), "",
          "## (a) The current target configuration", ""]
     g1 = gate(req, dec, data, h3)[0][1]
-    L += target_lines(req, data, dec, g1, "What the rows propose (AWAITING the owner; rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 HELD, D-22, D-23 and D-24).")
+    L += target_lines(req, data, dec, g1, rows_heading(data))
     L += facts_lines(data)
     L += basis_figures_lines(data)
     L += four_cases_lines(data)
@@ -624,7 +652,7 @@ def page_recon(req, data, dec, h3, root):
     L += ["", "## (d) The layer 3 closure list", "",
           p("Each item with whose it is, what closes it and its state, the state read live from the registry where the "
             "registry or a filed file decides it: CLOSED, CLOSED (decided) once the owner's row is applied, AWAITING_OWNER, "
-            "HELD (D-22, waiting on the energy basis), DOWNSTREAM (a later layer's, holding no layer 3 statement) or OPEN."), "",
+            "HELD (D-22 to D-24, waiting on the checked files), DOWNSTREAM (a later layer's, holding no layer 3 statement) or OPEN."), "",
           "| Id | Item | Whose | Closes by | State | Registry now |", "|---|---|---|---|---|---|"]
     for it in data["closure"]:
         live = ""
@@ -633,6 +661,11 @@ def page_recon(req, data, dec, h3, root):
             live = "%s %s, %s" % (it["record"], r.get("status"), r.get("evidence_result"))
         L.append("| %s | %s | %s | %s | %s | %s |" % (it["id"], cell(it["item"]), it["whose"], cell(it["closes_by"]),
                                                      closure_state(it, req, dec, data), live))
+    if data.get("carried_items"):
+        L += ["", "### Carried items: minors of the checks kept in the record, not reopened", "",
+              "| Id | From | Item | Where it is carried |", "|---|---|---|---|"]
+        for c in data["carried_items"]:
+            L.append("| %s | %s | %s | %s |" % (c["id"], cell(c["from"]), cell(c["item"]), cell(c["where"])))
     # requirement-level TBD mentions
     L += ["", "### Requirement-level TBDs: every 'TBD', 'TBC', 'owed', 'not yet stated', 'exists yet' and 'open' state sentence in a statement, acceptance or note", "",
           "| Record | Field | Text around it | Classification |", "|---|---|---|---|"]
@@ -719,7 +752,7 @@ def page_spec(req, data, dec, h3, root):
                                                "IN_PROGRESS (the conditions above that read NOT MET)")), ""]
     # target
     L += ["## 3. The target configuration and the pending owner decisions", "",
-          ] + target_lines(req, data, dec, g[0][1], "What the rows propose (AWAITING the owner; rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 HELD, D-22, D-23 and D-24).") + facts_lines(data) + [
+          ] + target_lines(req, data, dec, g[0][1], rows_heading(data)) + facts_lines(data) + [
           "| Row | Question | Options | Recommendation | State |", "|---|---|---|---|---|"]
     for d in data["decisions"]:
         L.append("| %s | %s | %s | %s | %s |" % (d["id"], cell(d["question"]), option_cell(d, dec), cell(d["recommendation"]),
@@ -749,13 +782,14 @@ def page_spec(req, data, dec, h3, root):
                 "acceptance, not a restriction on where or when the kit is used, and a month with less sun asks more of the "
                 "array (SC-37). Any M1 energy claim holds across the kit's supply range, with every limit that must hold a "
                 "load at its minimum (D-22: 'If 19.08 V is permitted, mission claims must account for it'); the range and "
-                "its effect on the calculation are the energy basis (open item S-127). **Pending (L3-OD4, HELD):** the "
-                "array's plane band and the open kit's ground slope and operator push, as narrower operating conditions for "
-                "the owner's approval. **Pending (L3-OD6, HELD):** M1's weather basis, a quantified choice between the "
-                "average-day benchmark (SC-37's reference day as REQ-072 states it today; one site and one month's mean "
-                "day repeated, a mean day is not a cloudy day, and it states no share of real weather in which M1 holds) "
-                "and historical-coverage targets on the September record of fact CF-03, each with the store it needs and "
-                "whether that fits the case."), ""]
+                "its effect on the calculation are the energy basis (fact CF-01). **Pending (L3-OD4):** the open kit's "
+                "ground slope and operator push, as narrower operating conditions for the owner's approval; no plane band "
+                "exists at the supply range's low end with U3's 6.0 A bracket, so none is proposed. **Pending (L3-OD6):** "
+                "M1's weather basis, a quantified choice between the average-day benchmark (SC-37's reference day as "
+                "REQ-072 states it today; one site and one month's mean day repeated, a mean day is not a cloudy day, and "
+                "it states no share of real weather in which M1 holds) and historical-coverage targets on the September "
+                "record of fact CF-03, each with the store it needs and whether that fits the case (no coverage target "
+                "fits it). Every M1 figure that meets rests on the hypothetical corrected power path (finding F-01)."), ""]
     # the requirements by need
     L += ["## 5. The requirements, by need", "",
           p("Every live record, grouped by the need it serves. For each: statement; applicability; acceptance; "

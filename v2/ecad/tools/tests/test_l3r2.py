@@ -117,7 +117,7 @@ def t_l3r2_every_named_decision_script_and_record_exists():
 
 def t_l3r2_session_scripts_refuse_a_second_run():
     for s in ("apply_l3r2_session.py", "apply_l3r2_d23.py", "apply_l3r2_d24.py", "apply_l3r2_d25.py", "apply_l3r2_r3b.py",
-              "apply_layer_status_l3_r3c.py", "apply_layer_status_l3.py",
+              "apply_layer_status_l3_r3c.py", "apply_layer_status_l3_fill.py", "apply_layer_status_l3.py",
               "apply_layer_status_l3_r3.py", "apply_layer_status_l3_r3b.py"):
         p = os.path.join(REC, s)
         need(p, "%s is not in this tree" % s)
@@ -193,7 +193,7 @@ def _step(script, option, reg, *extra, expect=0):
 
 def _extra(script, option, ev, share="50", build="TYP"):
     table = os.path.join(os.path.dirname(ev), "table.yaml")
-    if script == "od_l3_4.py" and option == "adopt": return ["--band", BAND, "--band-evidence", ev, "--push-n", "20"]
+    if script == "od_l3_4.py" and option == "adopt": return ["--push-n", "20"]
     if script == "od_l3_3.py" and option == "keep": return ["--array-wp", "1100", "--entry-a", "80", "--evidence", ev]
     if script == "od_l3_6.py":
         return ["--build", build] + (["--share", share] if option == "coverage" else []) + ["--table", table]
@@ -241,8 +241,11 @@ def t_l3r2_an_example_chain_applies_on_a_copy_and_renders():
     RL = _render_mod()
     pages = RL.render_all(registry=reg)
     assert "DECIDED" in pages["OWNER-DECISIONS-L3.md"], "the decided rows do not render as decided"
-    assert "| Target unambiguous | NOT MET |" in pages["REQUIREMENTS-L3-R2.md"], \
-        "the target reads unambiguous with no energy basis filed"
+    data = RL.load_data()
+    filled = RL.basis_ok(data)[0] and RL.basis_ok(data, "power_path_check")[0]
+    want = "| Target unambiguous | %s |" % ("MET" if filled else "NOT MET")
+    assert want in pages["REQUIREMENTS-L3-R2.md"], "the target's gate does not read %r on the example chain" % want
+    assert "Status of L3-R2: IN_PROGRESS" in pages["REQUIREMENTS-L3-R2.md"], "the issue reads complete on an example chain"
 
 
 def t_l3r2_the_band_never_precedes_the_weather_answer():
@@ -280,7 +283,9 @@ def t_l3r2_a_lid_that_does_not_carry_the_weather_basis_never_reads_coherent():
             "L3-OD6": x("mean-day", build="WAB", share=None)}
     assert not RL.coherent(dict(base, **{"L3-OD2": x("tablet-out")}), data)[1], "path B reads coherent"
     assert RL.coherent(dict(base, **{"L3-OD2": x("qmx-out")}), data)[1], "the QMX-out lid reads incoherent"
-    assert not RL.coherent(dict(base, **{"L3-OD2": x("qmx-out")}))[1], "an unfilled fit reads coherent"
+    unfilled = RL.load_data()
+    for r in next(x for x in unfilled["decisions"] if x["id"] == "L3-OD6")["quantified"]["rows"]: r["fits"] = None
+    assert not RL.coherent(dict(base, **{"L3-OD2": x("qmx-out")}), unfilled)[1], "an unfilled fit reads coherent"
 
 
 def t_l3r2_a_coverage_target_no_lid_carries_is_a_conflict():
@@ -315,8 +320,15 @@ def t_l3r2_row6_figures_are_held_until_filled():
                 "row L3-OD6's %s carries a figure before the checked basis" % r["id"]
     d, reg, ev = _copy_registry()
     if "L3-OD6" in _decided(reg): raise Skip("row L3-OD6 is decided in this tree")
-    out = _step("od_l3_6.py", "mean-day", reg, "--build", "TYP", expect=2)          # the tree's table: HELD
-    assert "HELD" in out, out
+    if RL.load_data().get("energy_basis"):                                        # the tree's table, filled and verified
+        _step("od_l3_6.py", "mean-day", reg, "--build", "TYP")
+        import yaml
+        r072 = next(r for r in yaml.safe_load(open(reg, encoding="utf-8"))["records"] if r["id"] == "REQ-072")
+        assert "619.0 Wh usable" in " ".join(str(r072.get("notes")).split()), "the filled mean day's store is not in REQ-072"
+        d, reg, ev = _copy_registry()
+    else:
+        out = _step("od_l3_6.py", "mean-day", reg, "--build", "TYP", expect=2)      # the tree's table: HELD
+        assert "HELD" in out, out
     tb = os.path.join(d, "table.yaml")
     _step("od_l3_6.py", "coverage", reg, "--build", "TYP", "--share", "70", "--table", tb, expect=2)
     _step("od_l3_6.py", "coverage", reg, "--build", "TYP", "--table", tb, expect=2)
@@ -364,7 +376,18 @@ def t_l3r2_the_gate_verifies_the_basis_check_and_the_reissue_ruling():
     assert RL.reissue_ok(req2, data, dec)[0] is False, "a ruling dated before the rows approves the re-issue"
 
 
-TIP3, TIP4, TIP2 = "868c321f", "06b8ecea", "ec415c09"
+TIP3, TIP4, TIP2, TIP5 = "868c321f", "06b8ecea", "ec415c09", "cd8720a1ab6eed891b1afd8b5df3b8ceedf36c0f"
+UNFILLED = "b0ccff61"   # l3r2.yaml as round 3c left it before the fill: a fixture for the fill's own tests
+
+
+def _unfilled_data(d):
+    """l3r2.yaml as it stood before the fill (UNFILLED), copied into `d`: set_energy_basis.py, restate_power_path.py and
+    fill_l3r2_from_basis.py run on it as they ran on the tree."""
+    _has(UNFILLED)
+    p = os.path.join(d, "l3r2.yaml")
+    open(p, "wb").write(subprocess.run(["git", "-C", ROOT, "show", UNFILLED + ":v2/docs/handover/layer3/l3r2.yaml"],
+                                       capture_output=True).stdout)
+    return p
 
 
 def _has(*tips):
@@ -403,10 +426,7 @@ def t_l3r2_an_accepted_check_is_bound_to_the_files_of_its_tip():
     L3P = "v2/docs/records/l3plane/"
     root = _tip_tree(TIP3, [L3P + f for f in ("ENERGY-BASIS.md", "weather_basis.out", "energy_basis.out")])
     shutil.copy(os.path.join(REC, "checks/energy-basis-check-2/CHECK-2.md"), os.path.join(root, "CHECK-2.md"))
-    data = os.path.join(root, "l3r2.yaml")
-    shutil.copy(os.path.join(L3, "l3r2.yaml"), data)
-    import yaml
-    if yaml.safe_load(open(data, encoding="utf-8")).get("energy_basis"): raise Skip("the tree's energy basis is named")
+    data = _unfilled_data(root)
     base = ["--record", L3P + "ENERGY-BASIS.md", "--outputs", L3P + "weather_basis.out," + L3P + "energy_basis.out",
             "--check", "CHECK-2.md", "--data", data, "--root", root]
     r = _run([os.path.join(REC, "set_energy_basis.py")] + base + ["--tip", TIP2])
@@ -458,19 +478,17 @@ def t_l3r2_the_power_path_list_is_restated_only_from_its_checked_record():
     """restate_power_path.py refuses until power_path_check is filed and verified; on a copy with the fourth issue's record
     and a fixture check of that tip it restates the list from the sixteen classes, anchors asserted, closure items
     restated and added, and refuses a second run."""
-    _has(TIP4)
+    _has(TIP5)
     import yaml
     L3P = "v2/docs/records/l3plane/"
-    root = _tip_tree(TIP4, ["v2/docs/records/r11dep/R11-DEPENDENCY.md", "v2/docs/records/r11dep/r11_dep.out", L3P + "three_cases.out"])
-    open(os.path.join(root, "CHECK.md"), "w", encoding="utf-8").write("accepted: yes\n\nFIXTURE, tip `%s` (confirmed).\n" % TIP4)
-    data = os.path.join(root, "l3r2.yaml")
-    shutil.copy(os.path.join(L3, "l3r2.yaml"), data)
-    if yaml.safe_load(open(data, encoding="utf-8")).get("power_path_check"): raise Skip("the tree's power path check is named")
+    root = _tip_tree(TIP5, ["v2/docs/records/r11dep/R11-DEPENDENCY.md", "v2/docs/records/r11dep/r11_dep.out", L3P + "three_cases.out"])
+    open(os.path.join(root, "CHECK.md"), "w", encoding="utf-8").write("accepted: yes\ntip: %s\n\nFIXTURE.\n" % TIP5)
+    data = _unfilled_data(root)
     rs = [os.path.join(REC, "restate_power_path.py"), "--data", data, "--root", root]
     assert _run(rs).returncode == 2, "the list was restated with no power path check named"
     s = _run([os.path.join(REC, "set_energy_basis.py"), "--key", "power_path_check", "--record",
               "v2/docs/records/r11dep/R11-DEPENDENCY.md", "--outputs", "v2/docs/records/r11dep/r11_dep.out," + L3P + "three_cases.out",
-              "--check", "CHECK.md", "--tip", TIP4, "--data", data, "--root", root])
+              "--check", "CHECK.md", "--tip", TIP5, "--data", data, "--root", root])
     assert s.returncode == 0, s.stdout + s.stderr
     r = _run(rs)
     assert r.returncode == 0, r.stdout + r.stderr
@@ -509,9 +527,7 @@ def t_l3r2_the_fill_reads_the_basis_by_exact_keys():
     outs = [L3P + f for f in ("weather_basis.out", "energy_basis.out", "three_cases.out")]
     d = _tip_tree(TIP4, [L3P + "ENERGY-BASIS.md"] + outs)
     open(os.path.join(d, "CHECK.md"), "w", encoding="utf-8").write("accepted: yes\n\nFIXTURE, tip `%s` (confirmed).\n" % TIP4)
-    data = os.path.join(d, "l3r2.yaml")
-    shutil.copy(os.path.join(L3, "l3r2.yaml"), data)
-    if yaml.safe_load(open(data, encoding="utf-8")).get("energy_basis"): raise Skip("the tree's energy basis is named")
+    data = _unfilled_data(d)
     args = ["--record", L3P + "ENERGY-BASIS.md", "--outputs", ",".join(outs), "--check", "CHECK.md", "--tip", TIP4,
             "--data", data, "--root", d]
     s1 = _run([os.path.join(REC, "set_energy_basis.py")] + args)
@@ -613,10 +629,10 @@ def t_l3r2_the_table_has_six_rows_each_with_its_parts():
         assert c.get("criterion") and closure.get(c["closure"], {}).get("state") == "DOWNSTREAM", \
             "%s has no criterion or no downstream closure item" % c["id"]
     od1 = next(d for d in rows if d["id"] == "L3-OD1")
-    assert "not a sufficient solution" in od1["consequences"] and "HELD" in od1["recommendation"], \
+    assert "not a sufficient solution" in od1["consequences"] and "not as a feasible design" in od1["recommendation"], \
         "row L3-OD1 presents the resistor-only proposal as sufficient or recommends on the energy balance"
     assert "coordination only" in od1["r11"]["derated"], "the derated variant is not labelled as fixing coordination only"
-    pp2 = next(c for c in data["power_path_corrections"] if c["id"] == "PP-02")
+    pp2 = next(c for c in data["power_path_corrections"] if c["id"] in ("PP-02", "C-1"))
     assert "implementation requirement" in pp2["item"] and "not a defect" in pp2["item"], "Kelvin sensing reads as a defect (D-25)"
     page = open(os.path.join(L3, "OWNER-DECISIONS-L3.md"), encoding="utf-8").read()
     for rid in ("L3-OD1", "L3-OD2"):

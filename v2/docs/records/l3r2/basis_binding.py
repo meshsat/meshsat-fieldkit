@@ -14,6 +14,7 @@ they run, so a file changed later, or a tip this repository does not carry, lift
 import functools
 import hashlib
 import os
+import re
 import subprocess
 
 
@@ -25,6 +26,22 @@ def sha16_bytes(b):
 def tip_sha16(repo, tip, path):
     r = subprocess.run(["git", "-C", repo, "show", "%s:%s" % (tip, path)], capture_output=True)
     return sha16_bytes(r.stdout) if r.returncode == 0 else None
+
+
+def names_tip(head, tip):
+    """True when the check's head (its first twelve lines) names `tip`, as "tip `<sha>`" or as a line "tip: <sha>", the
+    one a prefix of the other (at least seven hex digits)."""
+    named = []
+    for l in head[:12]:
+        named += re.findall(r"tip `([0-9a-f]{7,40})`", l)
+        m = re.match(r"^tip: ([0-9a-f]{7,40})\s*$", l.strip())
+        if m: named.append(m.group(1))
+    return len(tip) >= 7 and any(n.startswith(tip) or tip.startswith(n) for n in named)
+
+
+def listed_sha256(text):
+    """{path: sha256} for the lines of a check that list a file as '<sha256>  <path>'."""
+    return {m.group(2): m.group(1) for m in re.finditer(r"^([0-9a-f]{64})  (\S+)\s*$", text, re.M)}
 
 
 def verify(v, root, repo, need_outputs=False):
@@ -43,7 +60,13 @@ def verify(v, root, repo, need_outputs=False):
     cp = os.path.join(root, str(v["check"]))
     if not os.path.isfile(cp) or sha16_bytes(open(cp, "rb").read()) != str(v.get("check_sha16")):
         return False, "the check %s is not held at %s in this tree" % (v["check"], v.get("check_sha16"))
-    head = open(cp, encoding="utf-8").read().split("\n")
+    text = open(cp, encoding="utf-8").read()
+    head = text.split("\n")
     if head[0].strip() != "accepted: yes": return False, "its check reads %r, not 'accepted: yes'" % head[0].strip()
-    if not any(("tip `%s`" % tip) in l for l in head[:12]): return False, "its check does not name the tip %s" % tip
+    if not names_tip(head, tip): return False, "its check does not name the tip %s" % tip
+    listed = listed_sha256(text)
+    for path in [v.get("record")] + [o.get("path") for o in v.get("outputs") or []]:
+        full = hashlib.sha256(open(os.path.join(root, str(path)), "rb").read()).hexdigest()
+        if str(path) in listed and listed[str(path)] != full:
+            return False, "its check lists %s at another sha256" % path
     return True, ""
