@@ -12,7 +12,8 @@ L3-OD3's alone, so the two rows can never leave two rulings on the array standin
                      packs, its array left to row L3-OD3 by a marked phrase od_l3_3.py replaces, its claim held across
                      the charge bus's supply range and every load-holding limit at its minimum (the energy basis), and
                      its graceful shutdown given a floor of 3.00 V a cell; CFL-006's acceptance and resolution become
-                     per pack.
+                     per pack. If row L3-OD6 was answered `coverage` first, its marked sentence in REQ-072's statement
+                     and acceptance is carried over into the restated texts (cond.od6_tail).
   --option reject    D-06's one pack stands; an open conflict (the next free CFL id) records REQ-072 against it, a core
                      BLOCKER reading FAIL on its own sources; M-02 gains the owner's answer.
 
@@ -46,6 +47,8 @@ def approve(a, raw, d):
     for rel, n in ASSERT.items(): E.assert_in(rel, n)
     C.require(d, ROW, [])
     C.hold(a, ROW)
+    r072 = next(r for r in d["records"] if r["id"] == "REQ-072")
+    st6, acc6 = C.od6_tail(r072["statement"]), C.od6_tail(r072["acceptance"])   # row L3-OD6 coverage, if applied
     ruling = ("Row L3-OD1 of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md approved: the kit's energy store for mission M1 is "
               "two separately protected packs of the Samsung INR18650-35E, a base pack of 4S6P across the two base pockets "
               "under board P (the west RF entry re-planned before the west block is taken) and a lid pack under its own "
@@ -84,7 +87,7 @@ def approve(a, raw, d):
     raw = C.restate(raw, "REQ-072", stamp,
         statement=("For mission M1 (CONOPS section 3), the kit's two packs (%s) plus the solar input keep the kit running "
                    "in PS-IDLE-SPEC for M1's 72 hours (SC-21, preserved by D-20 and approved by D-21) on the reference day "
-                   "of SC-37, starting from full, aged packs (REQ-014)." % rid),
+                   "of SC-37, starting from full, aged packs (REQ-014)." % rid + st6),
         acceptance=("Desk: a calculation from the PS-IDLE-SPEC load of POWER-THERMAL.md section 4, the aged packs of "
                     "REQ-014, each at its own cell temperature, and the energy the input path delivers into the kit from "
                     + ARRAY + " on the reference day (4.0 kWh/m2 on the optimally inclined plane, SC-37), with the charge "
@@ -93,7 +96,7 @@ def approve(a, raw, d):
                     "graceful shutdown set at a cell voltage of 3.00 V or more; repeated with the loads and the stages' "
                     "efficiencies measured at bring-up. Prototype: the kit runs PS-IDLE-SPEC for 72 hours from full packs "
                     "on its solar input, fed by an array emulator following the reference day's profile, without "
-                    "reaching its graceful shutdown."))
+                    "reaching its graceful shutdown." + acc6))
     raw = E.replace_entry(raw, "REQ-072", lambda b: E.append_folded(C.add_ruling_ref(C.add_ruling_ref(b, "D-21"), "D-22"),
         "notes", "Restated by %s: the single pack's pass line 'ends the 72 hours above the graceful shutdown threshold' "
         "becomes 'serves the load at every hour of the 72 without the kit reaching its graceful shutdown' for two packs, "

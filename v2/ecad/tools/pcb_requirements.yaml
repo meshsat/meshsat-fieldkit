@@ -743,6 +743,22 @@ owner_rulings:
       arrives. Battery and solar remain mandatory; moving equipment out of the lid must not silently remove its function
       from the kit." "The next useful result is one consistent decision table and an updated requirements package."
     source: ["owner ruling D-22", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
+  - id: D-23
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's instruction on the six-row layer 3 decision table (30 September 2026)"
+    ruling: >-
+      The owner's instruction of 30 September 2026 on the six-row decision table of layer 3's second issue, as quoted in
+      v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md (its two elisions are the quoting session's, marked). In
+      his words: "Changes to weather coverage, deployment restrictions, functionality or enclosure constraints remain
+      proposals requiring my explicit decision. An average-day benchmark may be an option; do not select it
+      automatically because the current design passes it." "Make weather decision 6 a quantified choice ... Substantiate
+      'several times more energy' before recommending against an option." "Update the existing six-row decision table
+      with options, your recommendation, quantified consequences and dependencies. Put detailed calculations in the
+      existing evidence package, linked from the table. Flag any option that cannot meet the stated mission plainly."
+      "Keep the current-limit resistor dependency explicit ... Distinguish performance of the held circuit from
+      performance conditional on the proposed change. Track implementation and physical verification separately."
+    source: ["owner ruling D-23", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
 # Choices the session took under the owner's standing rule of 26 September 2026: each is the session's, never
 # the owner's, names the ruling that lets the session take it, says why, and can be reversed. `closes` names the
 # open items it answered; `adds_core_needs` a need it added to prototype 1's core. A choice later withdrawn keeps

@@ -13,11 +13,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT = os.path.join(HERE, "..", "README.md")
 ANCHOR = "| `s119/` | stream s119 (29 September 2026, branch `fnd/s119` from `a1f8ec70`, S-119, two rounds)"
 NEW_ROW = ("| `l3r2/` | layer 3's second issue, L3-R2 (30 September 2026, branch `fnd/l3r2` on `4012429e`, on the owner's "
-           "instruction D-21 and his review D-22): the registry's editing helpers (`l3edit.py`), the session's closures "
-           "(`apply_l3r2_session.py`), CFL-006's re-read (`read_cfl006.py`), the layer status page's layer 3 restated "
-           "(`apply_layer_status_l3.py`), the prepared owner-decision scripts of rows L3-OD1 to L3-OD5 (`conditional/`, not "
-           "applied, rows 1, 2 and 4 held until the energy basis) and their dry runs (`dryrun.py`), and the independent "
-           "checks of L3-R2 (`checks/`); the pages are `v2/docs/handover/layer3/`; authored in the tree |")
+           "instruction D-21, his review D-22 and his instruction on the six-row table D-23): the registry's editing "
+           "helpers (`l3edit.py`), the session's closures (`apply_l3r2_session.py`, `apply_l3r2_d23.py`), CFL-006's re-read "
+           "(`read_cfl006.py`), the layer status page's layer 3 restated (`apply_layer_status_l3.py`, round 3 "
+           "`apply_layer_status_l3_r3.py`), the prepared "
+           "owner-decision scripts of rows L3-OD1 to L3-OD6 (`conditional/`, not applied, rows 1, 2, 4 and 6 held until "
+           "the energy basis) and their dry runs (`dryrun.py`), the independent checks of L3-R2 and the first check of "
+           "the energy basis (`checks/`); the pages are `v2/docs/handover/layer3/`; authored in the tree |")
 
 
 def refuse(msg):

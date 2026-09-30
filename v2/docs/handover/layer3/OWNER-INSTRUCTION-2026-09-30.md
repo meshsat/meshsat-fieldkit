@@ -2,8 +2,8 @@
 
 MESHSAT-1357. Filed on 30 September 2026 by the author of layer 3's second requirements issue (L3-R2, branch
 `fnd/l3r2`), so that the registry's owner rulings D-21 and D-22 and the pages of this folder cite a file rather than
-a conversation. Prototype design: no V2 board has been fabricated, ordered, assembled or powered, and no kit has been field
-deployed.
+a conversation, and owner ruling D-23 (the owner's newest instruction of the same day, the third section below). Prototype
+design: no V2 board has been fabricated, ordered, assembled or powered, and no kit has been field deployed.
 
 ## Provenance
 
@@ -52,6 +52,26 @@ five paragraphs below are as quoted there, word for word; the registry records t
 
 > "The next useful result is one consistent decision table and an updated requirements package."
 
+## The owner's instruction on the six-row decision table (30 September 2026), as quoted
+
+Relayed by the coordinating session during the third round of L3-R2, introduced as "A correction to your round 3a, from
+the owner's newest instruction (30 Sep 2026). It is binding." The four paragraphs below are as quoted there, word for
+word; the two elisions (`...`) are the coordinator's. The registry records them as owner ruling D-23.
+
+> "Changes to weather coverage, deployment restrictions, functionality or enclosure constraints remain proposals
+> requiring my explicit decision. An average-day benchmark may be an option; do not select it automatically because the
+> current design passes it."
+
+> "Make weather decision 6 a quantified choice ... Substantiate 'several times more energy' before recommending against
+> an option."
+
+> "Update the existing six-row decision table with options, your recommendation, quantified consequences and
+> dependencies. Put detailed calculations in the existing evidence package, linked from the table. Flag any option that
+> cannot meet the stated mission plainly."
+
+> "Keep the current-limit resistor dependency explicit ... Distinguish performance of the held circuit from performance
+> conditional on the proposed change. Track implementation and physical verification separately."
+
 ## How this work reads it (the session's reading, not the owner's words)
 
 - **"Battery and solar remain mandatory"**: mission M1 is carried by the kit's own store and its solar input. An
@@ -72,3 +92,13 @@ five paragraphs below are as quoted there, word for word; the registry records t
   "adverse" are not used until the energy basis names its cases by their exact weather and operating assumptions; every
   narrower angle, function or condition is a row the owner decides; and every option that moves an item out of the lid
   states where its function goes, a function leaving the kit being the owner's explicit decision.
+- **The instruction on the six-row table (D-23)**: weather coverage, deployment restrictions, functionality and
+  enclosure constraints change only by the owner's explicit decision, each a row or an option he answers. Row L3-OD6
+  (M1's weather basis) is a quantified choice between the average-day benchmark, its limitations stated, and
+  historical-coverage targets, each with the store it needs, its mass and volume and whether it fits; its recommendation
+  and figures are held until the checked energy basis gives them, and the benchmark is never taken because the current
+  design passes it. Each row carries its options, the recommendation, quantified consequences with links to the
+  evidence, and its dependencies, and an option that cannot meet M1 says so in plain words. Board A's current-limit
+  resistor R11 is carried as two results: the circuit as generated (R11 10 mOhm) and the result conditional on the
+  drafted 6.2 mOhm; the change's implementation (layer 8) and its physical verification (prototype) are tracked as two
+  downstream items, neither a layer 3 prerequisite.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Shared machinery of the conditional restatements of layer 3's second issue (L3-R2, MESHSAT-1357, 30 September 2026).
 
-PREPARED, NOT APPLIED. Each script beside this module (od_l3_1.py to od_l3_5.py) is the exact registry change one answer
+PREPARED, NOT APPLIED. Each script beside this module (od_l3_1.py to od_l3_6.py) is the exact registry change one answer
 of the owner to one row of v2/docs/handover/layer3/OWNER-DECISIONS-L3.md makes. It is run only once the owner has
 answered that row, with his own words:
 
@@ -34,7 +34,10 @@ import l3edit as E  # noqa: E402
 
 DECISIONS_PAGE = "v2/docs/handover/layer3/OWNER-DECISIONS-L3.md"
 L3DATA = os.path.join(E.TOP, "v2/docs/handover/layer3/l3r2.yaml")
-ROWS = ("L3-OD1", "L3-OD2", "L3-OD3", "L3-OD4", "L3-OD5")
+ROWS = ("L3-OD1", "L3-OD2", "L3-OD3", "L3-OD4", "L3-OD5", "L3-OD6")   # M-02 closes on the first four
+# The head of the sentence row L3-OD6 `coverage` appends to REQ-072's statement and acceptance; od_l3_1.py carries it
+# over when it restates REQ-072 after that answer (od6_tail).
+OD6_MARK = "M1's weather share (row L3-OD6"
 DRY_WORDS = "(dry run: the owner's words go here)"
 
 
@@ -175,6 +178,17 @@ def restate(raw, rid, stamp, statement=None, acceptance=None):
             b = E.set_folded(b, "acceptance", acceptance)
         return E.append_folded(b, "history", "Restated by %s: it read %s." % (stamp, "; ".join(old)), after="source_check")
     return E.replace_entry(raw, rid, f)
+
+
+def ordinal(n):
+    return "%d%s" % (n, "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th"))
+
+
+def od6_tail(text):
+    """The sentence row L3-OD6 `coverage` appended (from OD6_MARK to the end), with a leading space; '' if none."""
+    t = " ".join(str(text or "").split())
+    i = t.find(OD6_MARK)
+    return "" if i < 0 else " " + t[i:]
 
 
 def drop_field(block, field):

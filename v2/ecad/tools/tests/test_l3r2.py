@@ -1,12 +1,16 @@
 """Layer 3's second issue (L3-R2) is generated from the registry, and its prepared restatements apply only on coherent
-combinations (MESHSAT-1357, 30 September 2026; second round, after the independent check CHECK-1).
+combinations (MESHSAT-1357, 30 September 2026; second round, after the independent check CHECK-1; third round, the
+six-row table of the owner's instruction D-23).
 
 `v2/docs/handover/layer3/render_l3r2.py` renders REQUIREMENTS-L3-R2.md, OWNER-DECISIONS-L3.md and L3-RECONCILIATION.md
 from the requirements registry, `l3r2.yaml` and H3's registry as released. These tests hold the three pages to what the
 inputs render (a hand edit is refused, on a copy), keep them free of unqualified claims and dash characters, hold the
 frozen H3 digest to the released ZIP, run the prepared owner-decision scripts on a COPY of the registry, refuse the
 incoherent combinations CHECK-1 found (B1), keep the gate from reading the target unambiguous on one, and stay green
-whatever rows the tree's registry has already decided (CHECK-1, minor 2). Nothing here writes into the tree.
+whatever rows the tree's registry has already decided (CHECK-1, minor 2). The third round adds the table's form (six
+rows, each with options, recommendation, quantified consequences and dependencies, every link resolving), row L3-OD6's
+held figures and its coverage targets read only from filled figures, and the both-kept lid flagged and recorded as a
+conflict. Nothing here writes into the tree.
 """
 import os, re, shutil, subprocess, sys, tempfile
 
@@ -22,7 +26,7 @@ from harness import need, Skip  # noqa: E402
 import claims_check as CC  # noqa: E402
 
 RENDER = os.path.join(L3, "render_l3r2.py")
-DASHES = ("–", "—")
+DASHES = ("\u2013", "\u2014")
 BAND = "30 to 50 degrees of slope, facing between south and 15 degrees west of south"
 
 
@@ -112,7 +116,7 @@ def t_l3r2_every_named_decision_script_and_record_exists():
 
 
 def t_l3r2_session_scripts_refuse_a_second_run():
-    for s in ("apply_l3r2_session.py", "apply_layer_status_l3.py"):
+    for s in ("apply_l3r2_session.py", "apply_l3r2_d23.py", "apply_layer_status_l3.py", "apply_layer_status_l3_r3.py"):
         p = os.path.join(REC, s)
         need(p, "%s is not in this tree" % s)
         r = _run([p, "--check"])
@@ -128,12 +132,13 @@ def t_l3r2_a_held_row_is_never_written_into_the_tree():
     import cond as C
     data = C.l3data()
     if data.get("energy_basis"): raise Skip("the energy basis is filed: the hold is lifted")
-    try:
-        C.hold({"check": False, "registry": C.E.REGISTRY}, "L3-OD1")
-    except C.E.Refused as e:
-        assert "held" in str(e), str(e)
-    else:
-        raise AssertionError("a held row would be written into the tree's registry")
+    for row in ("L3-OD1", "L3-OD2", "L3-OD4", "L3-OD6"):
+        try:
+            C.hold({"check": False, "registry": C.E.REGISTRY}, row)
+        except C.E.Refused as e:
+            assert "held" in str(e), str(e)
+        else:
+            raise AssertionError("held row %s would be written into the tree's registry" % row)
 
 
 def _copy_registry():
@@ -142,7 +147,16 @@ def _copy_registry():
     shutil.copy(os.path.join(TOOLS, "pcb_requirements.yaml"), p)
     ev = os.path.join(d, "basis.md")
     open(ev, "w", encoding="utf-8").write("TEST BASIS (a fixture, not the energy basis): the band %s; the array 1100 Wp, "
-                                          "entry 80 A.\n" % BAND)
+                                          "entry 80 A. Coverage 90: 3000 Wh usable, 4000 Wh nominal, 20.5 kg, 12.5 "
+                                          "litres. Coverage 50: 900 Wh usable, 1100 Wh nominal, 6.5 kg, 3.5 litres.\n" % BAND)
+    import yaml
+    open(os.path.join(d, "table.yaml"), "w", encoding="utf-8").write(yaml.safe_dump({"rows": [
+        {"id": "cov-90", "option": "coverage", "share": 90, "usable_wh": 3000, "nominal_wh": 4000, "mass_kg": 20.5,
+         "volume_l": 12.5, "fits": "NO", "evidence": ev},
+        {"id": "cov-50", "option": "coverage", "share": 50, "usable_wh": 900, "nominal_wh": 1100, "mass_kg": 6.5,
+         "volume_l": 3.5, "fits": "YES", "evidence": ev},
+        {"id": "cov-80", "option": "coverage", "share": 80, "usable_wh": None, "nominal_wh": None, "mass_kg": None,
+         "volume_l": None, "fits": None, "evidence": None}]}))
     return d, p, ev
 
 
@@ -168,14 +182,19 @@ def _chain(steps, reg, ev):
         if row in dec:
             if dec[row] != option: raise Skip("%s is decided %s in this tree; the chain needs %s" % (row, dec[row], option))
             continue
-        extra = []
-        if script == "od_l3_4.py" and option == "adopt": extra = ["--band", BAND, "--band-evidence", ev, "--push-n", "20"]
-        if script == "od_l3_3.py" and option == "keep": extra = ["--array-wp", "1100", "--entry-a", "80", "--evidence", ev]
-        _step(script, option, reg, *extra)
+        _step(script, option, reg, *_extra(script, option, ev))
+
+
+def _extra(script, option, ev, share="90"):
+    if script == "od_l3_4.py" and option == "adopt": return ["--band", BAND, "--band-evidence", ev, "--push-n", "20"]
+    if script == "od_l3_3.py" and option == "keep": return ["--array-wp", "1100", "--entry-a", "80", "--evidence", ev]
+    if script == "od_l3_6.py" and option == "coverage":
+        return ["--share", share, "--table", os.path.join(os.path.dirname(ev), "table.yaml")]
+    return []
 
 
 RECOMMENDED = [("L3-OD1", "od_l3_1.py", "approve"), ("L3-OD2", "od_l3_2.py", "qmx-out"), ("L3-OD3", "od_l3_3.py", "2s2p"),
-               ("L3-OD4", "od_l3_4.py", "adopt"), ("L3-OD5", "od_l3_5.py", "reading-c")]
+               ("L3-OD4", "od_l3_4.py", "adopt"), ("L3-OD5", "od_l3_5.py", "reading-c"), ("L3-OD6", "od_l3_6.py", "mean-day")]
 
 
 def t_l3r2_a_coherent_chain_applies_on_a_copy_and_renders():
@@ -220,6 +239,12 @@ def t_l3r2_the_gate_reads_an_incoherent_set_as_not_unambiguous():
     """A registry whose rulings name an incoherent combination (written by hand here, since the scripts refuse it) keeps
     the gate's first condition NOT MET, even with an energy basis filed."""
     need(os.path.join(COND, "od_l3_1.py"), "the conditional scripts are not in this tree")
+    RL = _render_mod()
+    x = lambda o: (o, "D-99", "2026-10-01", "")
+    base = {"L3-OD1": x("approve"), "L3-OD2": x("qmx-out"), "L3-OD3": x("2s2p"), "L3-OD4": x("adopt")}
+    assert RL.coherent(dict(base, **{"L3-OD6": x("mean-day")}))[1], "the recommended set reads incoherent"
+    for bad in ({"L3-OD6": x("coverage")}, {"L3-OD2": x("both-kept")}, {"L3-OD3": x("keep")}):
+        assert not RL.coherent(dict(base, **bad))[1], "an adopted band beside %s reads coherent" % bad
     d, reg, ev = _copy_registry()
     _chain(RECOMMENDED[:4], reg, ev)
     t = open(reg, encoding="utf-8").read()
@@ -246,3 +271,87 @@ def t_l3r2_the_other_answers_apply_on_a_copy():
     d2, reg2, ev2 = _copy_registry()
     _chain([("L3-OD1", "od_l3_1.py", "approve"), ("L3-OD2", "od_l3_2.py", "qmx-outside"), ("L3-OD3", "od_l3_3.py", "1s4p"),
             ("L3-OD5", "od_l3_5.py", "cells")], reg2, ev2)
+
+
+def t_l3r2_the_table_has_six_rows_each_with_its_parts():
+    """D-23: the six-row table gives each row its options, the recommendation, quantified consequences and dependencies,
+    carries board A's R11 as two results, and every relative link on the pages resolves (the renderer refuses one that
+    does not)."""
+    RL = _render_mod()
+    data = RL.load_data()
+    rows = data["decisions"]
+    assert [d["id"] for d in rows] == ["L3-OD%d" % i for i in range(1, 7)], "the table is not the six rows"
+    for d in rows:
+        for k in ("question", "recommendation", "consequences", "dependencies", "affected"):
+            assert str(d.get(k) or "").strip(), "%s has no %s" % (d["id"], k)
+        assert d.get("options"), "%s has no options" % d["id"]
+    for rid in ("L3-OD1", "L3-OD2", "L3-OD4", "L3-OD6"):
+        r11 = next(d for d in rows if d["id"] == rid).get("r11") or {}
+        assert r11.get("held") and r11.get("drafted"), "%s does not carry R11 as two results" % rid
+    page = open(os.path.join(L3, "OWNER-DECISIONS-L3.md"), encoding="utf-8").read()
+    for rid in ("L3-OD1", "L3-OD2"):
+        assert "CANNOT MEET M1" in [l for l in page.split("\n") if l.startswith("| %s |" % rid)][0], \
+            "%s's options do not flag the option that cannot meet M1" % rid
+    for name in RL.PAGES.values():
+        RL.check_links(name, open(os.path.join(L3, name), encoding="utf-8").read())
+
+
+def t_l3r2_row6_figures_are_held_until_filled():
+    """D-23: row L3-OD6's figures stay placeholders bound to the energy basis; a coverage target is applied only from
+    filled figures (a fixture here), and a held or unknown target is refused."""
+    need(os.path.join(COND, "od_l3_6.py"), "the conditional scripts are not in this tree")
+    RL = _render_mod()
+    q = next(d for d in RL.load_data()["decisions"] if d["id"] == "L3-OD6")
+    if not RL.load_data().get("energy_basis"):
+        for r in q["quantified"]["rows"]:
+            assert all(r.get(k) is None for k in ("usable_wh", "nominal_wh", "mass_kg", "volume_l", "fits")), \
+                "row L3-OD6's %s carries a figure before the checked basis" % r["id"]
+    d, reg, ev = _copy_registry()
+    if "L3-OD6" in _decided(reg): raise Skip("row L3-OD6 is decided in this tree")
+    out = _step("od_l3_6.py", "coverage", reg, "--share", "90", expect=2)          # the tree's table: HELD
+    assert "HELD" in out, out
+    _step("od_l3_6.py", "coverage", reg, *_extra("od_l3_6.py", "coverage", ev, "80"), expect=2)   # fixture, held target
+    _step("od_l3_6.py", "coverage", reg, *_extra("od_l3_6.py", "coverage", ev, "70"), expect=2)   # no such target
+    _step("od_l3_6.py", "coverage", reg, expect=2)                                 # no --share
+
+
+def t_l3r2_a_coverage_target_that_does_not_fit_is_a_conflict():
+    """A coverage target whose store does not fit records an open conflict; row L3-OD1 applied after it keeps the target
+    in REQ-072; row L3-OD4's band is refused beside it; a target that fits leaves a note and no conflict."""
+    need(os.path.join(COND, "od_l3_6.py"), "the conditional scripts are not in this tree")
+    import yaml
+    d, reg, ev = _copy_registry()
+    if any(r in _decided(reg) for r in ("L3-OD1", "L3-OD6")): raise Skip("rows L3-OD1 or L3-OD6 are decided in this tree")
+    n0 = len(yaml.safe_load(open(reg, encoding="utf-8"))["records"])
+    _chain([("L3-OD6", "od_l3_6.py", "coverage")], reg, ev)
+    y = yaml.safe_load(open(reg, encoding="utf-8"))
+    cfl = [r for r in y["records"] if r.get("kind") == "conflict" and r.get("status") == "CONFLICT_OPEN"
+           and "historical coverage" in " ".join(str(r["statement"]).split())]
+    assert len(cfl) == 1 and len(y["records"]) == n0 + 1, "no open conflict for a target that does not fit"
+    _chain([("L3-OD1", "od_l3_1.py", "approve"), ("L3-OD2", "od_l3_2.py", "qmx-out"), ("L3-OD3", "od_l3_3.py", "2s2p")], reg, ev)
+    r072 = next(r for r in yaml.safe_load(open(reg, encoding="utf-8"))["records"] if r["id"] == "REQ-072")
+    for f in ("statement", "acceptance"):
+        assert "at least 90 percent" in " ".join(str(r072[f]).split()), "row L3-OD1 dropped the coverage target from REQ-072's %s" % f
+    out = _step("od_l3_4.py", "adopt", reg, *_extra("od_l3_4.py", "adopt", ev), expect=2)
+    assert "coverage" in out, out
+    d2, reg2, ev2 = _copy_registry()
+    _step("od_l3_6.py", "coverage", reg2, *_extra("od_l3_6.py", "coverage", ev2, "50"))
+    y2 = yaml.safe_load(open(reg2, encoding="utf-8"))
+    assert len(y2["records"]) == n0, "a target that fits recorded a conflict"
+    r072 = next(r for r in y2["records"] if r["id"] == "REQ-072")
+    assert "which fits the case" in " ".join(str(r072.get("notes")).split()), "the fitting target's figures are not in REQ-072's notes"
+
+
+def t_l3r2_both_lid_items_kept_is_flagged_and_recorded():
+    """Row L3-OD2 both-kept: no function leaves the kit, M1 cannot be met, an open conflict is recorded, and row L3-OD4
+    adopts no band for it (reject stands)."""
+    need(os.path.join(COND, "od_l3_2.py"), "the conditional scripts are not in this tree")
+    import yaml
+    d, reg, ev = _copy_registry()
+    _chain([("L3-OD1", "od_l3_1.py", "approve"), ("L3-OD2", "od_l3_2.py", "both-kept"), ("L3-OD3", "od_l3_3.py", "2s2p")], reg, ev)
+    y = yaml.safe_load(open(reg, encoding="utf-8"))
+    assert any(r.get("status") == "CONFLICT_OPEN" and "both approved lid items kept" in " ".join(str(r["statement"]).split())
+               for r in y["records"]), "both lid items kept records no conflict"
+    _step("od_l3_4.py", "adopt", reg, *_extra("od_l3_4.py", "adopt", ev), expect=2)
+    if "L3-OD4" not in _decided(reg): _step("od_l3_4.py", "reject", reg)
+

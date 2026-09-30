@@ -1,13 +1,14 @@
 L3-R2 DRY RUNS of the prepared owner-decision scripts, each chain on a fresh copy of the registry.
-Placeholder words 'dry run', date 2026-10-01. Nothing in the tree is written. Rows L3-OD1, L3-OD2 and L3-OD4 are held
-by D-22 for the tree's registry; a copy is not held, so each prepared change is exercised here. Row L3-OD4's band and
-row L3-OD3's keep figures come from a FIXTURE file standing in for the checked energy basis, which is not filed yet;
+Placeholder words 'dry run', date 2026-10-01. Nothing in the tree is written. Rows L3-OD1, L3-OD2, L3-OD4 and L3-OD6 are
+held by D-22 and D-23 for the tree's registry; a copy is not held, so each prepared change is exercised here. Row L3-OD4's band and
+row L3-OD3's keep figures and row L3-OD6's coverage figures come from FIXTURE files standing in for the checked
+energy basis, which is not filed yet;
 the push is a placeholder of 20 N standing in for the owner's number.
 
-== chain: recommended where recommended (rows 2 and 4 held; the QMX out and adopt shown)
+== chain: recommended where recommended (rows 2, 4 and 6 held; the QMX out, adopt and the average-day benchmark shown)
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-23     added 
+   owner_rulings  D-24     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -19,7 +20,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option qmx-out (exit 0)
-   owner_rulings  D-24     added 
+   owner_rulings  D-25     added 
    records        CFL-006  changed resolved_by,rulings
    records        CON-007  changed notes
    records        REQ-002  changed acceptance,history,rulings,statement
@@ -33,7 +34,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
    od_l3_2: option qmx-out, 11 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 -- od_l3_3.py --option 2s2p (exit 0)
-   owner_rulings  D-25     added 
+   owner_rulings  D-26     added 
    records        REQ-016  changed acceptance,history,notes,rulings,statement
    records        REQ-072  changed acceptance,rulings
    od_l3_3: option 2s2p, 3 entries, validator 0 errors, 0 warnings
@@ -41,22 +42,28 @@ the push is a placeholder of 20 N standing in for the owner's number.
 -- od_l3_4.py --option adopt (exit 0)
    closed_items   M-02     added 
    open_items     M-02     removed 
-   owner_rulings  D-26     added 
+   owner_rulings  D-27     added 
    records        REQ-072  changed acceptance,history,rulings,waits_on
    records        REQ-078  added 
    od_l3_4: option adopt, 5 entries, validator 0 errors, 0 warnings
    od_l3_4: written <copy>
 -- od_l3_5.py --option reading-c (exit 0)
-   owner_rulings  D-27     added 
+   owner_rulings  D-28     added 
    records        CFL-017  changed evidence_phase,evidence_result,notes,resolved_by,rulings,status
    records        REQ-051  changed history,rulings,statement
    od_l3_5: option reading-c, 3 entries, validator 0 errors, 0 warnings
    od_l3_5: written <copy>
+-- od_l3_6.py --option mean-day (exit 0)
+   owner_rulings  D-29     added 
+   records        REQ-072  changed notes,rulings
+   session_choices SC-37    changed source
+   od_l3_6: option mean-day, 3 entries, validator 0 errors, 0 warnings
+   od_l3_6: written <copy>
 
 == chain: the QMX outside the case
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-23     added 
+   owner_rulings  D-24     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -68,7 +75,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option qmx-outside (exit 0)
-   owner_rulings  D-24     added 
+   owner_rulings  D-25     added 
    records        CFL-006  changed resolved_by,rulings
    records        REQ-002  changed notes,rulings
    records        REQ-011  changed history,rulings,statement
@@ -77,7 +84,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
    od_l3_2: option qmx-outside, 6 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 -- od_l3_3.py --option 2s2p (exit 0)
-   owner_rulings  D-25     added 
+   owner_rulings  D-26     added 
    records        REQ-016  changed acceptance,history,notes,rulings,statement
    records        REQ-072  changed acceptance,rulings
    od_l3_3: option 2s2p, 3 entries, validator 0 errors, 0 warnings
@@ -85,7 +92,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
 -- od_l3_4.py --option adopt (exit 0)
    closed_items   M-02     added 
    open_items     M-02     removed 
-   owner_rulings  D-26     added 
+   owner_rulings  D-27     added 
    records        REQ-072  changed acceptance,history,rulings,waits_on
    records        REQ-078  added 
    od_l3_4: option adopt, 5 entries, validator 0 errors, 0 warnings
@@ -94,7 +101,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
 == chain: the tablet out
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-23     added 
+   owner_rulings  D-24     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -106,7 +113,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option tablet-out (exit 0)
-   owner_rulings  D-24     added 
+   owner_rulings  D-25     added 
    records        CFL-006  changed resolved_by,rulings
    records        REQ-011  changed acceptance,history,rulings,statement
    records        REQ-014  changed acceptance,rulings
@@ -115,7 +122,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
    od_l3_2: option tablet-out, 6 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 -- od_l3_3.py --option 2s2p (exit 0)
-   owner_rulings  D-25     added 
+   owner_rulings  D-26     added 
    records        REQ-016  changed acceptance,history,notes,rulings,statement
    records        REQ-072  changed acceptance,rulings
    od_l3_3: option 2s2p, 3 entries, validator 0 errors, 0 warnings
@@ -123,7 +130,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
 -- od_l3_4.py --option adopt (exit 0)
    closed_items   M-02     added 
    open_items     M-02     removed 
-   owner_rulings  D-26     added 
+   owner_rulings  D-27     added 
    records        REQ-072  changed acceptance,history,rulings,waits_on
    records        REQ-078  added 
    od_l3_4: option adopt, 5 entries, validator 0 errors, 0 warnings
@@ -132,7 +139,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
 == chain: 1S4P: a band refused (no grid), no deployment condition accepted
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-23     added 
+   owner_rulings  D-24     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -144,7 +151,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option qmx-out (exit 0)
-   owner_rulings  D-24     added 
+   owner_rulings  D-25     added 
    records        CFL-006  changed resolved_by,rulings
    records        CON-007  changed notes
    records        REQ-002  changed acceptance,history,rulings,statement
@@ -158,7 +165,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
    od_l3_2: option qmx-out, 11 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 -- od_l3_3.py --option 1s4p (exit 0)
-   owner_rulings  D-25     added 
+   owner_rulings  D-26     added 
    records        REQ-016  changed acceptance,history,notes,rulings,statement
    records        REQ-072  changed acceptance,rulings
    od_l3_3: option 1s4p, 3 entries, validator 0 errors, 0 warnings
@@ -168,7 +175,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
 -- od_l3_4.py --option reject (exit 0)
    closed_items   M-02     added 
    open_items     M-02     removed 
-   owner_rulings  D-26     added 
+   owner_rulings  D-27     added 
    records        REQ-072  changed notes,rulings,waits_on
    od_l3_4: option reject, 4 entries, validator 0 errors, 0 warnings
    od_l3_4: written <copy>
@@ -176,7 +183,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
 == chain: CHECK-1's incoherent path: REQ-016 kept, then adopt refused
 -- od_l3_1.py --option approve (exit 0)
    owner_rulings  D-06     changed reversed_by
-   owner_rulings  D-23     added 
+   owner_rulings  D-24     added 
    records        CFL-006  changed acceptance,history,resolved_by,rulings
    records        CFL-012  changed rulings
    records        CFL-018  changed rulings
@@ -188,7 +195,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
    od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option qmx-out (exit 0)
-   owner_rulings  D-24     added 
+   owner_rulings  D-25     added 
    records        CFL-006  changed resolved_by,rulings
    records        CON-007  changed notes
    records        REQ-002  changed acceptance,history,rulings,statement
@@ -202,7 +209,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
    od_l3_2: option qmx-out, 11 entries, validator 0 errors, 0 warnings
    od_l3_2: written <copy>
 -- od_l3_3.py --option keep (exit 0)
-   owner_rulings  D-25     added 
+   owner_rulings  D-26     added 
    records        REQ-016  changed acceptance,history,rulings
    records        REQ-072  changed acceptance,rulings
    od_l3_3: option keep, 3 entries, validator 0 errors, 0 warnings
@@ -210,7 +217,7 @@ the push is a placeholder of 20 N standing in for the owner's number.
 -- od_l3_4.py --option adopt (exit 2)
    od_l3_4: REFUSED: L3-OD4 needs L3-OD3 answered 2s2p; it was answered keep
 -- od_l3_5.py --option reading-c (exit 0)
-   owner_rulings  D-26     added 
+   owner_rulings  D-27     added 
    records        CFL-017  changed evidence_phase,evidence_result,notes,resolved_by,rulings,status
    records        REQ-051  changed history,rulings,statement
    od_l3_5: option reading-c, 3 entries, validator 0 errors, 0 warnings
@@ -219,23 +226,119 @@ the push is a placeholder of 20 N standing in for the owner's number.
 == chain: Option A(i) rejected: row 2 refused
 -- od_l3_1.py --option reject (exit 0)
    open_items     M-02     changed title
-   owner_rulings  D-23     added 
+   owner_rulings  D-24     added 
    records        CFL-019  added 
    od_l3_1: option reject, 3 entries, validator 0 errors, 0 warnings
    od_l3_1: written <copy>
 -- od_l3_2.py --option qmx-out (exit 2)
    od_l3_2: REFUSED: L3-OD2 needs L3-OD1 answered approve; it was answered reject
 
+== chain: both lid items kept: an open conflict, then a band refused and no deployment condition accepted
+-- od_l3_1.py --option approve (exit 0)
+   owner_rulings  D-06     changed reversed_by
+   owner_rulings  D-24     added 
+   records        CFL-006  changed acceptance,history,resolved_by,rulings
+   records        CFL-012  changed rulings
+   records        CFL-018  changed rulings
+   records        CON-006  changed rulings
+   records        FEA-004  changed rulings
+   records        REQ-014  changed acceptance,history,provisional,rulings,statement
+   records        REQ-072  changed acceptance,history,notes,rulings,statement
+   records        REQ-075  changed acceptance,history,rulings,statement
+   od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
+   od_l3_1: written <copy>
+-- od_l3_2.py --option both-kept (exit 0)
+   owner_rulings  D-25     added 
+   records        CFL-006  changed resolved_by,rulings
+   records        CFL-019  added 
+   records        REQ-014  changed acceptance,rulings
+   records        REQ-075  changed rulings,statement
+   od_l3_2: option both-kept, 5 entries, validator 0 errors, 0 warnings
+   od_l3_2: written <copy>
+-- od_l3_3.py --option 2s2p (exit 0)
+   owner_rulings  D-26     added 
+   records        REQ-016  changed acceptance,history,notes,rulings,statement
+   records        REQ-072  changed acceptance,rulings
+   od_l3_3: option 2s2p, 3 entries, validator 0 errors, 0 warnings
+   od_l3_3: written <copy>
+-- od_l3_4.py --option adopt (exit 2)
+   od_l3_4: REFUSED: row L3-OD2 is answered both-kept: M1 is not met with a 4S9P lid, so no deployment band is adopted for it
+-- od_l3_4.py --option reject (exit 0)
+   closed_items   M-02     added 
+   open_items     M-02     removed 
+   owner_rulings  D-27     added 
+   records        REQ-072  changed notes,rulings,waits_on
+   od_l3_4: option reject, 4 entries, validator 0 errors, 0 warnings
+   od_l3_4: written <copy>
+
+== chain: a coverage target read from row L3-OD6's own table: refused while its figures are HELD
+-- od_l3_6.py --option coverage (exit 2)
+   od_l3_6: REFUSED: the target cov-90 is HELD: its usable_wh, nominal_wh, mass_kg, volume_l, fits, evidence are not filled from the checked energy basis
+
+== chain: a coverage target of 90 percent whose store does not fit (fixture figures): an open conflict; row L3-OD1 keeps the target; a band refused
+-- od_l3_6.py --option coverage (exit 0)
+   owner_rulings  D-24     added 
+   records        CFL-019  added 
+   records        REQ-072  changed acceptance,history,rulings,statement
+   session_choices SC-37    changed source
+   od_l3_6: option coverage, 4 entries, validator 0 errors, 0 warnings
+   od_l3_6: written <copy>
+-- od_l3_1.py --option approve (exit 0)
+   owner_rulings  D-06     changed reversed_by
+   owner_rulings  D-25     added 
+   records        CFL-006  changed acceptance,history,resolved_by,rulings
+   records        CFL-012  changed rulings
+   records        CFL-018  changed rulings
+   records        CON-006  changed rulings
+   records        FEA-004  changed rulings
+   records        REQ-014  changed acceptance,history,provisional,rulings,statement
+   records        REQ-072  changed acceptance,history,notes,rulings,statement
+   records        REQ-075  changed acceptance,history,rulings,statement
+   od_l3_1: option approve, 10 entries, validator 0 errors, 0 warnings
+   od_l3_1: written <copy>
+-- od_l3_2.py --option tablet-out (exit 0)
+   owner_rulings  D-26     added 
+   records        CFL-006  changed resolved_by,rulings
+   records        REQ-011  changed acceptance,history,rulings,statement
+   records        REQ-014  changed acceptance,rulings
+   records        REQ-075  changed rulings,statement
+   records        SPD-007  added 
+   od_l3_2: option tablet-out, 6 entries, validator 0 errors, 0 warnings
+   od_l3_2: written <copy>
+-- od_l3_3.py --option 2s2p (exit 0)
+   owner_rulings  D-27     added 
+   records        REQ-016  changed acceptance,history,notes,rulings,statement
+   records        REQ-072  changed acceptance,rulings
+   od_l3_3: option 2s2p, 3 entries, validator 0 errors, 0 warnings
+   od_l3_3: written <copy>
+-- od_l3_4.py --option adopt (exit 2)
+   od_l3_4: REFUSED: row L3-OD6 is answered coverage: the plane grid runs SC-37's mean day on each plane, and no band exists for a coverage target
+-- od_l3_4.py --option reject (exit 0)
+   closed_items   M-02     added 
+   open_items     M-02     removed 
+   owner_rulings  D-28     added 
+   records        REQ-072  changed notes,rulings,waits_on
+   od_l3_4: option reject, 4 entries, validator 0 errors, 0 warnings
+   od_l3_4: written <copy>
+
+== chain: a coverage target of 50 percent whose store fits (fixture figures)
+-- od_l3_6.py --option coverage (exit 0)
+   owner_rulings  D-24     added 
+   records        REQ-072  changed acceptance,history,notes,rulings,statement
+   session_choices SC-37    changed source
+   od_l3_6: option coverage, 3 entries, validator 0 errors, 0 warnings
+   od_l3_6: written <copy>
+
 == chain: CFL-017 kept open
 -- od_l3_5.py --option measure (exit 0)
-   owner_rulings  D-23     added 
+   owner_rulings  D-24     added 
    records        CFL-017  changed notes,rulings
    od_l3_5: option measure, 2 entries, validator 0 errors, 0 warnings
    od_l3_5: written <copy>
 
 == chain: cells above +60 C
 -- od_l3_5.py --option cells (exit 0)
-   owner_rulings  D-23     added 
+   owner_rulings  D-24     added 
    records        CFL-017  changed notes,rulings
    od_l3_5: option cells, 2 entries, validator 0 errors, 0 warnings
    od_l3_5: written <copy>
