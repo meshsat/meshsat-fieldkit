@@ -1,7 +1,6 @@
 # records/l4e: layer 4 task L4-E2, the energy architecture comparison (MESHSAT-1357)
 
-1 October 2026, branch `fnd/l4e` from main `b45d1705`; second issue the same day, answering the focused check filed in
-`checks/`. Prototype design: nothing is bought, built, powered or measured.
+1 October 2026, branch `fnd/l4e` from main `b45d1705`; second and third issues the same day, answering the focused check and its recheck, both filed in `checks/`. Prototype design: nothing is bought, built, powered or measured.
 The author's analysis, AI arithmetic; not a qualified review and not the independent check. No registry record, no Layer 3
 record and nothing under `v2/docs/handover/` is changed by this folder.
 
@@ -13,6 +12,7 @@ record and nothing under `v2/docs/handover/` is changed by this folder.
 | `l4e_replay.py` | the replay: reproduces the checked records first, then moves one input, the solar stage's input clip, from P-03's 200 W to REQ-016's 100 W, and prints both architectures on the drawn and the hypothetical corrected power paths |
 | `l4e_replay.out` | its output; the page cites it as "out N" (its section numbers) |
 | `checks/astra-check-l4e2-1.md` | the collaborator's focused check of the first issue (run `20260930T221538Z-809994` on `0e641bd3`, accepted: no; B1 the stopped-hour double count, B2 O-2's power bound, M1 a label), filed byte for byte; answered by the second issue |
+| `checks/astra-check-l4e2-2.md` | the collaborator's recheck of the second issue (run `20260930T224030Z-833954` on `21a9a6fe`, accepted: no; B1, M1 and the Layer 3 recount pass; B2 fails again on the omitted IMON_IN line regulation, and the sweep's lower end), filed byte for byte; answered by the third issue |
 | `ASTRA-L4E1.md` | the engineering collaborator's L4-E1 assessment (job `cx7-l4e1-dominant-constraints`), filed byte for byte; sha256 `36af43f1769c32c64b95528a69ca6972ee14723eae1d7dd21cf98442b3c6f83b`. It directs this task and accepts nothing |
 
 ## Run order
@@ -21,7 +21,7 @@ record and nothing under `v2/docs/handover/` is changed by this folder.
    `python3 v2/docs/records/l3batt/fetch_held_back.py` if `v2/vendor/battery/held/` is empty (it checks each sha256).
 2. From the repository root: `python3 v2/docs/records/l4e/l4e_replay.py > v2/docs/records/l4e/l4e_replay.out`.
    It takes about one minute on one core, most of it check 0a, and lowers its own priority. Standard library plus PyYAML
-   through the imported model.
+   through the imported model, and poppler's `pdftotext` on the path (the imported `vbus20_range.py` already needs it).
 3. `git diff --exit-code v2/docs/records/l4e/l4e_replay.out`: a clean diff is the reproduction of this record.
 
 ## The checks the script makes before it prints a result (exit 4 otherwise)
@@ -46,6 +46,17 @@ record and nothing under `v2/docs/handover/` is changed by this folder.
   efficiency reproduces `energy_basis.u3_day` at 200 W before it is used at 100 W; the input window read from
   `energy_inputs.yaml` must be REQ-016's 100 W; section 11 reads REQ-016's 25 V and 100 W from the registry and R8 and R9
   from `gen_sch_e.py` (which must equal HEAD's), and the LT8705A sheet is pinned by sha256.
+- **Section 11, O-2's bound:** the LT8705A sheet is pinned by sha256; every row of its electrical characteristics
+  (pp.3 to 6) whose parameter names the input-current mechanism or the input-voltage hold must be classified in
+  `EC_ROWS`, and every tabled row must read back from the sheet, by column, as printed (exit 3 otherwise). The setting is
+  sized from the rows the table classifies, rounded down to 1 mA; the check reads the limit's rows from the sheet
+  independently of that classification and evaluates every corner (the loaded voltage from the hold's tolerance-adjusted
+  lower corner to 25 V in 0.01 V steps, both temperature ends, every tolerance at its limits), and refuses (exit 4) if
+  any corner exceeds 100 W.
+- **The refusal, tested (1 October 2026, then the script restored and its sha256 compared):** with the line regulation
+  reclassified NONE the sizing gives 3.550 A and the run exits 4, "O-2's setting 3.550 A lets the stage take 100.0548 W
+  at 25.000 V"; with the row deleted from the table the run exits 3, the row "Line Regulation for IMON_IN and IMON_OUT
+  Error Amp" unclassified.
 - **Determinism:** two runs give the same bytes; no date, host or absolute path is printed.
 
 ## What the results do and do not show
