@@ -32,7 +32,7 @@ At -10 C the same pack gives 224.5 Wh (the 35E's 0.4124 lower bound).
 
 ## 2. Each candidate in the kit (HF and the tablet kept), at PS-IDLE-SPEC 42.8 W, aged 80 %, to the kit's shutdown
 
-| Candidate | Arrangement | Placement (records) | Usable Wh, +20 C / -10 C | Battery-only hours, +20 C / -10 C | Mass | Electrical compatibility | Charger and protection changes | Cost and availability (30 Sep 2026, a distributor page) |
+| Candidate | Arrangement | Placement (records) | Usable Wh, +20 C / -10 C | Battery-only hours, +20 C / -10 C | Mass | Electrical compatibility | Charger and protection changes | Cost and availability (a distributor page read on 30 Sep 2026, not filed) |
 |---|---|---|---|---|---|---|---|---|
 | **35E, D-06's pack alone** | 4S3P, 12 cells, the east pocket | ESTABLISHED: the ruled block, CON-006 | 107.9 / 44.5 | **2.52 / 1.04** | 0.60 kg of cells | the node's 12.0 to 16.8 V | none (D-06 as ruled) | Battery Junction: USD 8.25 a cell (7.65 at 100+), In Stock |
 | **35E, Option A(i) with both functions kept** | base 4S6P (both base pockets) + lid 4S9P: 60 cells | lid: a1mech arrangement A, 39 places (36 used), module 24.0 mm one layer, 40.06 two; lid 4.53 kg in all with the QMX set, the tablet and the shell. Base: M4a, M5 and M6w OPEN, the rest MET (a1mech 6) | **544.4 / 224.5** | **12.71 / 5.24** | 3.0 kg of cells | as the node's | as a1elec drafts: board PL, U3B, the lid path (LM74700-Q1 and LM5069, 8.7 to 11.0 A) | as above |
@@ -78,3 +78,6 @@ would be a mechanical task.
   hour) requirement asks for is therefore a question of arrangement, not of cell: see `COMPARISON.md`.
 
 The author's analysis, AI arithmetic. Not a qualified review and not the independent check.
+
+**Second issue** (CHECK-1 of `05ba0cf0`, minor 7): the cost and stock column is labelled as distributor pages read on
+30 September 2026 and not filed.

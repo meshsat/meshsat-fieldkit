@@ -9,8 +9,8 @@ The owner's instruction of 30 September 2026:
 
 ## Finding
 
-**No owner statement introducing 72 hours was found in the tree.** The figure first appears as the session's choice
-SC-21 on 27 September 2026. It was taken under the owner's standing rule of 26 September 2026 in place of a setting that
+**No owner statement introducing 72 hours was found in the tree.** The figure first appears on 27 September 2026 at
+07:48, as the layer 2 closer's session choice SC-L2-05 in the H1.1 candidate patches, which became SC-21 the same day. It was taken under the owner's standing rule of 26 September 2026 in place of a setting that
 D-06 reserved for the owner.
 - **D-20 (28 September)** preserved M1 and REQ-072 "with their specified duration" without stating a number. The tree
   holds that ruling as the registry's summary, not in the owner's own words.
@@ -27,7 +27,8 @@ Who spoke is the classification: **OWNER** words, a **SESSION** choice, or a **S
 | # | Date | Source (file, line) | Exact wording | Who |
 |---|---|---|---|---|
 | 1 | 26 Sep 2026 | `v2/ecad/tools/pcb_requirements.yaml` lines 475 to 486, owner ruling D-06 "pack size and runtime" | "Missions longer than the pack rely on vehicle or solar input. The runtime requirement is stated as battery-only hours in an idle and a typical mode at +20 C for an aged pack; the mission duration for the solar energy balance is set later by the owner." | OWNER ruling as the registry records it. It **reserves** the duration and sets no figure |
-| 2 | 27 Sep 2026 12:34 CEST | commit `95e078a1` ("the layer 2 and 3 closers' registry change"), the first commit adding "72 hours" to `v2/docs/CONOPS.md` and the registry | CONOPS: "### M1. Remote site relay on pack and solar (72 hours)" | SESSION (the layer 2 and 3 closers) |
+| 2a | 27 Sep 2026 07:48 CEST | commit `de59686e`, the H1.1 handover's candidate patches (`v2/docs/handover/candidates/hc2.patch`), whose README reads "Every patch here is an UNACCEPTED candidate, not design": the layer 2 closer's session choice SC-L2-05 | "72 hours on the PS-IDLE-SPEC energy basis (42.8 W)", with the why that SC-21 later carries | SESSION (the layer 2 closer): **the figure's first appearance in the tree**. It answered Review A's B3, "M1 and the night"; Review A is "an **AI review** (not a qualified engineering review)" (`v2/docs/reviews/REVIEW-A-LAYER-2-2026-09-27.md`), and its B3 concerned the night, not the duration |
+| 2 | 27 Sep 2026 12:34 CEST | commit `95e078a1` ("the layer 2 and 3 closers' registry change"), the first commit adding "72 hours" to `v2/docs/CONOPS.md` and the registry themselves | CONOPS: "### M1. Remote site relay on pack and solar (72 hours)" | SESSION (the layer 2 and 3 closers) |
 | 3 | 27 Sep 2026 | `pcb_requirements.yaml` lines 1635 to 1645, session choice SC-21, `authority: SESSION`, `under: standing-rule` | question: "M1's mission duration for the pack-plus-solar balance (L-02)." taken: "72 hours on the PS-IDLE-SPEC energy basis (42.8 W)." why: "The planning horizon of a relay site without infrastructure, chosen from the use case (not a sourced figure); D-06 left it for the owner to set later and the standing rule forbids asking." | **SESSION: the origin of the figure** |
 | 4 | 27 Sep 2026 | `pcb_requirements.yaml` lines 4229 to 4235, L-02, `closed_by: SC-21` | "SC-21 governs it: under the owner's standing rule of 26 September 2026 the session set 72 hours, recorded as the session's, and the owner's own setting replaces it whenever he gives one" | SESSION record |
 | 5 | 27 Sep 2026 on | `v2/docs/CONOPS.md` line 164 (M1) and line 1101 (section 7a) | "The duration is 72 hours, taken by the session under the owner's standing rule of 26 September 2026 (section 7a) in place of the setting D-06 reserved for the owner, which replaces it whenever he gives one." | SESSION |
@@ -56,3 +57,6 @@ Who spoke is the classification: **OWNER** words, a **SESSION** choice, or a **S
   `COMPARISON.md`.
 
 The author's record, AI arithmetic on the tree's text. Not a qualified review and not the independent check.
+
+**Second issue** (CHECK-1 of `05ba0cf0`, minor 5): row 2a adds the figure's first appearance (`de59686e`, before
+`95e078a1`) and Review A's nature. Neither changes the finding.
