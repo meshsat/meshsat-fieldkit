@@ -8,7 +8,7 @@ Prototype design: nothing is bought, built or measured. The integrating session'
 | 1 | `apply_hold_back_panjit.py`, `fetch_held_back.py` | PANJIT's SS2020FL series sheet held back from the public tree by its terms (page 4: reproduction prohibited without permission): untracked, moved to the ignored `v2/vendor/power/held/`, cited by URL and sha256 `92544a83...`, fetched by `fetch_held_back.py` |
 | 2 | merge of `fnd/w5identc` | board C's part identities (21 printed, 23 decoded under decision 59, 41 unresolved with reasons, 2 not a part), checked three times |
 | 3 | `apply_panjit_path_w5identc.py` | the identity table rebuilt against the held path |
-| 4 | `records/w5identc/apply_identities_c.py` | decision 59 recorded, CFL-016 rebound, S-125 opened |
+| 4 | `records/w5identc/apply_decision_decoded.py`, `records/w5identc/apply_identities_c.py` | decision 59 recorded and CFL-016 rebound (the first); S-125 opened (the second) |
 | 5 | merge of `fnd/s122c` (`b1fb815f`) | stream s122 rounds 4 to 8, the definition documents re-read against the netlists, checked eight times (`records/s122/checks/`) |
 | 6 | `records/s122/apply_registry_s122_r4.py`; `apply_rebind_page_set15.py` | five records rebound, S-126 opened (PROCESS), S-122's outputs re-run on the decisions pin, CON-010 and REQ-044 rebound to the page |
 | 7 | `records/s122/checks/check-s122-8.md`; `records/s122/close_s122.py` | S-122 closed by its filed closing check; CFL-016 from FAIL to PASS |

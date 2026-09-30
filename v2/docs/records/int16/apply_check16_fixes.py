@@ -56,7 +56,7 @@ def main():
          "the session's decision drafted by apply_decision_decoded.py;",
          "the session's decision 59, ruled by apply_decision_decoded.py;", parse=yaml.safe_load, flex=True)
     edit("v2/docs/records/s122/apply_docs_s122_r4.py",
-         "TJ Junction temperature –40 125",
+         "TJ Junction temperature \u201340 125",
          "TJ Junction temperature \\u204040 125".replace("\\u2040", "\\u2013"),
          parse=lambda u: compile(u, "apply_docs_s122_r4.py", "exec"))
     for p, u in PENDING.items(): open(p, "w", encoding="utf-8").write(u)

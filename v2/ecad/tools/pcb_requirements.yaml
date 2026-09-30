@@ -3606,8 +3606,8 @@ open_items:
       44 (PRINTED 21, DECODED 23), UNRESOLVED 41 (CHOICE_OWED 24, DOCUMENT_DOES_NOT_NAME_THE_PART 8, DOCUMENT_OWED 8,
       PART_DOES_NOT_MEET_THE_REQUIREMENT 1), NOT_A_PART 2. Rule D-2: a selection is RESOLVED only where its held
       maker's document's cited page prints the part number (PRINTED) or is the maker's ordering-code table that
-      decodes it field by field against the selection (DECODED, the session's decision 59, ruled by apply_decision_decoded.py; it does not show the value is made at that rating), read by the tool
-      (v2/docs/records/w5identc/readings/check-board-c-b874b744.json, sha256 42ce2b3ea2c1a406). Owner: the parts
+      decodes it field by field against the selection (DECODED, the session's decision 59, written by apply_decision_decoded.py; it does not show the value is made at that rating), read by the tool
+      (v2/docs/records/w5identc/readings/check-board-c-b874b744.json, sha256 29840bee91216e59). Owner: the parts
       writer and board C's author. Closed when every selection of board C reads RESOLVED by part_identities.py check
       on the netlist board C holds then, with the documents held (or held back by their terms and fetched by sha256)
       and the table re-derived by v2/docs/records/w5identc/build_table.py.
