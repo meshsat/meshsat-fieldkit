@@ -57,5 +57,8 @@ v2/vendor/passives/held/
 # read 'Confidential Proprietary' or forbid reproduction; LG's is a pre-discussion customer copy): fetched by
 # v2/docs/records/l3batt/fetch_held_back.py and checked by sha256, never committed.
 v2/vendor/battery/held/
+# Rugged tablet makers' spec sheets held back by their copyright notices (stream l3batt, 30 September 2026): fetched
+# by v2/docs/records/l3batt/fetch_held_back.py and checked by sha256, never committed.
+v2/vendor/tablet/held/
 # The write-path marker of v2/docs/records/s117/apply_gen_sch_a_s117.py (and its FET sibling): never committed.
 v2/docs/records/s117/*.applied
