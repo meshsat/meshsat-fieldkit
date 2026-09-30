@@ -1,5 +1,9 @@
 # Board A's charge path: the circuit as drawn, the resistor-only proposal, and the corrected path (stream r11dep, MESHSAT-1357)
 
+**Third issue, 30 September 2026:** CHECK-4 of `06b8ecea` accepted the second issue with five minors, answered here
+(section 9): the derated setting is 4.00 A, L1's schedule is written as a register setting, the collapse bound's other
+sources of pessimism are named, A-2's status is stated, and B-2's remedies are named concretely.
+
 **Second issue, 30 September 2026.** It answers the independent check CHECK-3 of `4e9fa869`, which read "accepted: no" on
 two blocking items and seven minors (section 9 maps each to its answer). It also carries the owner's amendments of the same
 day. They are quoted here because they set what this page is:
@@ -33,8 +37,8 @@ is changed, and nothing is implemented.
 - **The circuit as drawn cannot deliver what its own charge design asks, and it fails M1.** R11 is 10 mOhm and the charger
   U3 is set to 4.15 A. The front end's current limit then sits at 4.21 to 5.81 A. M1 fails on every lid option by 326.6 to
   522.4 Wh on the reference day, and the model carries none of 864 past September windows.
-- **The derated variant fixes one thing.** It sets U3 at 4.05 A so that the two current limits agree. It fixes nothing else,
-  and M1 still fails on every lid, by 355.5 to 551.5 Wh.
+- **The derated variant fixes one thing.** It sets U3 at 4.00 A so that the two current limits agree, whatever the other
+  loads turn out to be. It fixes nothing else, and M1 still fails on every lid, by 369.9 to 566.0 Wh.
 - **The resistor-only proposal (R11 6.2 mOhm, U3 6.2 A, nothing else changed) is not a solution.** It clears the front end's
   limit above U3 by 0.378 A, as CHECK-3 closed it. But it introduces five defects in the power path (section 2b), and several
   pieces of evidence are missing (section 2c).
@@ -52,7 +56,7 @@ is changed, and nothing is implemented.
 | Case | What it is | Its standing |
 |---|---|---|
 | **AS DRAWN** | R11 10 mOhm (NETLIST), U3 IIN_HOST 4.15 A (entry E1, board A as generated) | the circuit of record; its defects are 2a |
-| **DERATED VARIANT** | AS DRAWN with U3 at 4.05 A | fixes the current-limit coordination (2a A-1) ONLY; M1 fails |
+| **DERATED VARIANT** | AS DRAWN with U3 at 4.00 A | fixes the current-limit coordination (2a A-1) ONLY; M1 fails |
 | **RESISTOR-ONLY** | R11 6.2 mOhm and U3 6.2 A, nothing else changed | the proposal as drafted in a1elec's E2; INCONCLUSIVE; its own defects are 2b |
 | **CORRECTED PATH** | R11 6.2 mOhm with Kelvin taps, U3 6.2 A under a VIN_RAW-dependent rule, and every 2a, 2b and 2c item closed | HYPOTHETICAL: the path the energy model's NOM and WE cases assume; used for feasibility only |
 
@@ -61,7 +65,10 @@ is changed, and nothing is implemented.
 Each defect carries its correction and a measurable closure criterion. All corrections are engineering tasks. Section 6
 names the few remedies that would change a requirement.
 
-### 2a. Confirmed existing defects of the circuit as drawn
+### 2a. Existing defects of the circuit as drawn
+
+A-1 is confirmed on the makers' figures. A-2 is established from the netlist and the makers' documented behaviour, with its
+mechanism INFERRED; bench row 7b.7 confirms it.
 
 **A-1. The front end limits below what the charge design asks.**
 - **Finding.** The stacked limit is **4.212 / 5.000 / 5.810 A** (`.out` 3).
@@ -72,17 +79,25 @@ names the few remedies that would change a requirement.
     4.30 A.
 - **Evidence.** LM5176 p.7 (VSNS 43 / 50 / 57 mV); HoJLR2512 pp.1 to 2 (the part, 1 %, 50 ppm/K); BQ25731 p.1 and p.80
   (U3's maximum). These are MAKER figures; the stack is INFERRED.
-- **Correction, for the drawn circuit: the DERATED VARIANT, U3 at 4.05 A.**
-  - U3's maximum is then 4.151 A. With the carried 0.060 A that is 4.211 A, against 4.212 A: **+0.001 A**.
-  - If all four FETs switch, the other loads reach 0.079 A (see 2c C-9) and the margin would be minus 0.018 A. The next
-    register step, 4.00 A, holds +0.052 A and +0.033 A (INFERRED from CHARGER.md's code 124 for 6.2 A, 50 mA a step).
-  - This fixes the coordination only. It does not resolve A-3, and it does not meet M1 (section 4).
+- **Correction, for the drawn circuit: the DERATED VARIANT, U3 at 4.00 A.**
+  - U3's maximum is then 4.100 A. With the carried 0.060 A that is 4.160 A, against 4.212 A: **+0.052 A**.
+  - With C-9's four-FET 0.079 A it is **+0.033 A**, so 4.00 A closes whatever C-9 finds (`.out` 3).
+  - **4.05 A was not chosen:** it clears by +0.001 A on 0.060 A and fails by minus 0.018 A on 0.079 A. The step is 50 mA
+    (INFERRED from CHARGER.md's code 124 for 6.2 A).
+  - This fixes the coordination only. It does not resolve A-2, and it does not meet M1 (section 4).
 - **Closure.**
   - The stacked minimum of the fitted R11 is at least U3's maximum plus the other loads.
   - On the bench, the front end's constant-current onset, measured with an electronic load past U3 at -20, 25 and 62 C, lies
     above U3's maximum plus 0.06 A (7b.1).
 
-**A-2. The input bus has no hardware input-power limit, so it collapses on a short source** (INFERRED).
+**A-2. With E1's fixed setting, the input bus collapses on a short source.**
+- **Status.** Established from the netlist and the makers' documented behaviour; the mechanism is INFERRED; bench row 7b.7
+  confirms it.
+  - The netlist fixes the structure: no input-power bound, and U3's VINDPM on the regulated VBUS20 (U3 pin 1).
+  - The makers fix the behaviour: the LM5069's current limit, and the LT8705A's input regulation ("VC will be reduced").
+  - The tree's own FW-A16 and gen_sch_a.py name the collapse for the vehicle entry.
+- **Where the defect sits.** In the **E1 setting** (a fixed 4.15 A), not in FW-A16 as written, which scales IIN_HOST with
+  VIN_RAW and so bounds it.
 - **The mechanism.**
   - The front end is a constant-power load: U3 draws a fixed current from VBUS20, and the LM5176 holds VBUS20 at 20 V.
   - When a source gives less than U3 asks, VIN_RAW sags. The vehicle entry's LM5069 limits, or the panel tracker's input loop
@@ -122,9 +137,11 @@ it is an implementation requirement: C-1.
   out of saturation.
 - **Correction, either of:**
   - an inductor whose Isat at its operating temperature exceeds the peak at the highest permitted current at 9 V, with margin;
-  - IIN_HOST scheduled on VIN_RAW. At 9 V, U3's input at **5.20 A** keeps the peak at 90 % of Isat (`.out` 6). The front end
-    then draws 13.1 A at 9 V, above the vehicle entry's 6.15 A. In service no source gives more at 9 V (the tracker holds
-    15.1 V at U3's full demand), so this charges below no source's available power: an engineering choice.
+  - IIN_HOST scheduled on VIN_RAW. At 9 V the **register setting is 5.05 A** (the 50 mA step at or under 5.20 / 1.025).
+    Its maximum, 5.18 A, puts the peak at 15.68 A, 89.6 % of the typical Isat (`.out` 6); 5.20 A is U3's actual input at 90 %,
+    not a setting. The front end then draws about 13 A at 9 V, above the vehicle entry's 6.15 A. In service no source gives
+    more at 9 V (the tracker holds 15.1 V at U3's full demand), so this charges below no source's available power: an
+    engineering choice. **The figure rests on Isat at 25 C and is recomputed once L1's temperature derating is held (C-5).**
 - **Closure.**
   - Analysis: the peak at the highest permitted current is at most 90 % of Isat at the part's temperature, using the maker's
     derating (C-5).
@@ -136,11 +153,15 @@ it is an implementation requirement: C-1.
   - At a part at the minimum cycle-by-cycle limit, the output at 9 V is bounded at 7.28 A (`.out` 4).
   - In service at 9 V (Q2 30, Q4 38 C/W) and at 15.1 V at the maximum (Q2 39 C/W), the figures are within reach of copper.
     Those cases are MISSING EVIDENCE (C-3), not defects.
-- **Correction, one or more of:**
-  - bound the fault state with an input-side limit at low VIN_RAW;
-  - hiccup (MODE to AGND through 93.1 kOhm, p.20), which shuts down after 128 consecutive cycle-by-cycle limit cycles
-    (p.17). It catches only parts whose peak limit sits under the fault's peak;
-  - FETs and cooling rated for the fault.
+- **Correction, one or both of:**
+  - **hiccup** (MODE to AGND through 93.1 kOhm, p.20), which shuts down after 128 consecutive cycle-by-cycle limit cycles
+    (p.17). It is **partial**: it catches only parts whose peak limit sits under the fault's peak;
+  - **FETs and cooling rated for the fault**, for example FETs in parallel, with board A's copper and any heat path sized for
+    the dissipation above.
+
+  An input-side average limit is not available: the LM5176's one average loop senses input or output, and R11 must sense
+  the output. A firmware schedule does not bound this fault either, since the fault is the front end at its own limit.
+  **Neither remedy, nor B-4's, is yet shown to fit on board A.**
 - **Closure.** TJ at most 150 C, or the tree's derating where one applies, at the highest permitted current at 9, 15.1 and
   36 V in 62.1 C air. The figure comes from board A's own thermal resistance or from a measurement (7b.4).
 
@@ -179,10 +200,18 @@ it is an implementation requirement: C-1.
 
 **B-5. A fixed IIN_HOST of 6.2 A drops FW-A16's VIN_RAW scaling** (INFERRED; the proposal's form of A-2).
 - **Finding.** Whenever the array gives less than U3 asks (124 W at VBUS20 at 6.2 A and 20 V; up to 144 W at the front end's
-  input at U3's maximum and the bus's maximum), the bus collapses to the latch instead of settling at the available power. The energy model's `min(available, cap)` presumes the opposite.
+  input at U3's maximum and the bus's maximum), the bus collapses to the latch instead of settling at the available power.
+  The energy model's `min(available, cap)` presumes the opposite.
 - **Its cost as a bound** (MODELED, `three_cases.out`). If a collapsed hour delivers nothing, every lid fails by 622 to 1080
-  Wh on the mean day, and the model carries 0 to 2 of 864 past windows. The bound is pessimistic in hours where the packs are
-  full, when U3 asks less than its cap.
+  Wh on the mean day, and the model carries 0 to 2 of 864 past windows.
+- **How far the bound is from the truth.**
+  - It is pessimistic in hours where the packs are full, when U3 asks less than its cap.
+  - It is also pessimistic because the restart latch brings the front end back within about 1 to 2.5 s (gen_sch_a.py: "a
+    dip under 8 V interrupts charging for about 1 to 2.5 s").
+  - And because U3 resets its input limit to 3.25 A at every bus drop (SLUSE66A pp.26 and 80; FW-A16 (b)), so after a
+    collapse it asks about 65 W until the host rewrites it.
+  - The other way, on real weather a dip inside an hour whose mean clears the cap can also collapse the bus. So on the
+    series it is a bound on hourly means only, not a strict one.
 - **Correction and closure.** As A-2, for the proposal's setting.
 
 ### 2c. Missing evidence (not a demonstrated failure)
@@ -258,8 +287,8 @@ store in Wh, or the energy left unserved. TYP / WAB are the two array builds. NO
 |---|---|---|---|
 | **AS DRAWN**, NOM (the model's min(available, cap) kept: an upper bound, A-2) | NOT MET, 494.7 / 522.4 unserved | NOT MET, 357.5 / 383.8 | NOT MET, 326.6 / 352.8 |
 | AS DRAWN, WE (U3 at its INFERRED 4.05 A minimum) | NOT MET, 589.3 / 616.7 | NOT MET, 452.9 / 478.9 | NOT MET, 422.1 / 448.0 |
-| **DERATED VARIANT** (U3 4.05 A), NOM | NOT MET, 523.7 / 551.5 | NOT MET, 386.5 / 412.7 | NOT MET, 355.5 / 381.7 |
-| DERATED VARIANT, WE (3.95 A) | NOT MET, 616.7 / 644.1 | NOT MET, 480.1 / 506.1 | NOT MET, 449.3 / 475.3 |
+| **DERATED VARIANT** (U3 4.00 A), NOM | NOT MET, 538.3 / 566.0 | NOT MET, 400.9 / 427.2 | NOT MET, 369.9 / 396.2 |
+| DERATED VARIANT, WE (3.90 A) | NOT MET, 630.4 / 657.8 | NOT MET, 493.7 / 519.7 | NOT MET, 462.9 / 488.9 |
 | **RESISTOR-ONLY: INCONCLUSIVE**, between its lower bound under B-5's collapse (NOM) and the corrected path | NOT MET, 805.5 / 1079.9, up to NOT MET, 165.7 / 172.6 | NOT MET, 652.9 / 926.5, up to 93.7 / 75.7 | NOT MET, 622.1 / 895.7, up to 125.2 / 106.8 |
 | RESISTOR-ONLY, WE: the same bounds | NOT MET, 900.9 / 900.9, up to NOT MET, 169.2 / 176.1 | NOT MET, 749.9 / 749.9, up to 44.0 / NOT MET, 10.8 | NOT MET, 719.4 / 719.4, up to 74.3 / 19.5 |
 | **CORRECTED PATH, HYPOTHETICAL**, NOM | NOT MET, 165.7 / 172.6 | 93.7 (49.0, 44.6) / 75.7 (48.2, 27.5) | 125.2 (57.1, 68.1) / 106.8 (56.3, 50.5) |
@@ -315,7 +344,7 @@ chose them:
 | Remedy, if chosen instead of the engineering form | Requirement it changes | Consequence |
 |---|---|---|
 | Raise the input floor so L1 needs no new part or schedule (B-1) | **REQ-015**: "A 9 to 36 V vehicle and shore input runs the kit and charges the pack" | Full charge current needs VIN_RAW of **11.0 V** or more (`.out` 6). Inputs from 9.0 to 11.0 V (a 12 V system's low end) would leave REQ-015. No energy is lost on the reference day, where the tracker holds 15.1 V |
-| Cap U3 below 6.2 A permanently for B-1 to B-4 | **REQ-072** (M1) | About 20 Wh of lowest store per 0.1 A at WE (ENERGY-BASIS section 4). At the derated 4.05 A every lid fails by 355.5 to 551.5 Wh (section 4) |
+| Cap U3 below 6.2 A permanently for B-1 to B-4 | **REQ-072** (M1) | About 20 Wh of lowest store per 0.1 A at WE (ENERGY-BASIS section 4). At the derated 4.00 A every lid fails by 369.9 to 566.0 Wh (section 4) |
 | A part or bank that does not fit board A's place (B-1, B-2, B-4) | **CON-006** (the pack pocket bounded by board A's east edge at X +120), or **REQ-019** (the case never changes) if it went further | Not quantified: no part is selected. The question arises only if no fitting part exists |
 
 **Already the owner's, not new here.** Option A(i)'s 200 W stage exceeds **REQ-016**, which allows at most 100 W into the
@@ -328,15 +357,17 @@ service and 226.3 W at the maximum.
 
 1. **R11 at 6.2 mOhm** in gen_sch_a.py and lcsc_fill.py, with an order code (C-2).
 2. **U3's IIN_HOST.**
-   - For the drawn circuit: the derated 4.05 A, or 4.00 A (A-1).
+   - For the drawn circuit: the derated 4.00 A (A-1).
    - With the change: 6.2 A, only with item 3 and the VIN_RAW rule (A-2, B-5).
 3. **Kelvin taps on R11 in the layout,** with kelvin_check PASS at 0.29 mOhm or less at 25 C (C-1).
 4. **Re-declarations:** VBUS20 and FE_OUT (6.415 A typical, 9.370 A peak); VIN_RAW's _VIN_RAW_A with board E's _FE_A and
    _VIN_T (22.74 A at 9 V by the printed maximum); TRK_OUT; and pcb_sensitive.yaml's FE_ISNS text, which still names 3.80 A
    (B-3).
-5. **L1:** a part rated for the highest permitted current at 9 V, or the 5.20 A schedule at 9 V (B-1, C-5).
-6. **The FETs:** a bound on the fault state, or parts and cooling for it, and board A's own RthetaJA (B-2, C-3).
-7. **VBUS20's bank,** re-sized by the generator's node analysis at 9.37 A (B-4).
+5. **L1:** a part rated for the highest permitted current at 9 V, or the schedule's 5.05 A setting at 9 V, recomputed once
+   C-5 is held (B-1).
+6. **The FETs:** hiccup (partial), or FETs and cooling rated for the fault, and board A's own RthetaJA (B-2, C-3); their fit
+   on board A to be shown.
+7. **VBUS20's bank,** re-sized by the generator's node analysis at 9.37 A, its fit on board A to be shown (B-4).
 8. **C11 and C12:** a part with a maker's ripple rating (C-4).
 9. **Board E's stage,** designed for 226.3 W in at the maximum or with the demand bounded (C-6).
 10. **Regeneration of board A** (and of board E where re-declared), the gates and the evidence re-take.
@@ -381,7 +412,12 @@ service and 226.3 W at the maximum.
 | 7, the layout statement's revision | 2d: revision A32, `b7e0d28f`, its pins read from the board file |
 | Owner: three cases kept apart | sections 1 and 4 |
 | Owner: the Kelvin classification | 2a (not an existing defect), 2c C-1 (implementation requirement and verification), 2d (A32 historical) |
-| Owner: the 4.05 A setting | 2a A-1: coordination only, shown as the DERATED VARIANT beside the actual AS DRAWN case |
+| Owner: the derated setting | 2a A-1: coordination only, shown as the DERATED VARIANT beside the actual AS DRAWN case |
+| CHECK-4 minor 1, the derated setting | 2a A-1 and section 4: 4.00 A (+0.052 / +0.033 A); its energy re-run; 4.05 A kept as the reason it was not chosen |
+| CHECK-4 minor 2, L1's schedule | 2b B-1 and `.out` 6: the setting 5.05 A (maximum 5.18 A, 89.6 % of Isat), recomputed once C-5 is held |
+| CHECK-4 minor 3, the collapse bound | 2b B-5: the restart latch, U3's 3.25 A reset, and the sub-hour dip named beside the bound |
+| CHECK-4 minor 4, A-2's status | 2a: established from the netlist and the makers' documented behaviour, mechanism INFERRED, 7b.7 confirms; the defect sits in E1's setting |
+| CHECK-4 minor 5, B-2's mechanism | 2b B-2: hiccup (partial) or FETs and cooling rated for the fault; B-2's and B-4's fit on board A not yet shown |
 | Owner: questions only for requirement changes | section 6 |
 | Owner: energy only through an adequate path counts | section 4: nothing is demonstrated capability; each row names its case |
 

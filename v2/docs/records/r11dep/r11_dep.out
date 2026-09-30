@@ -80,10 +80,9 @@ Basis per figure: MAKER (page), NETLIST, MODELED, INFERRED (method stated), ASSU
    CURRENT-LIMIT COORDINATION of the circuit as drawn (entry E1): U3 at 4.15 A, its maximum 4.25 A, plus 0.060 A of the other loads =
      4.310 A through R11, against the stacked minimum 4.212 A: -0.098 A (energy_basis names 50 mA between U3's maximum and the printed
      4.30 A minimum; with the other loads and the stacked band the front end can limit first)
-   THE DERATED VARIANT, U3 at 4.05 A: its maximum 4.151 A plus 0.060 A = 4.211 A against 4.212 A: +0.001 A. It fixes the coordination
-     only; it resolves no other item and it does not meet M1 (l3plane three_cases.out). With the other loads at four FETs'
-     0.079 A it would read -0.018 A; the next setting down, 4.00 A (the register's 50 mA steps, INFERRED from CHARGER.md's code
-     124 for 6.2 A), holds +0.052 A and +0.033 A
+   THE DERATED VARIANT, U3 at 4.00 A: its maximum 4.100 A plus 0.060 A = 4.160 A against 4.212 A: +0.052 A; with four FETs' 0.079 A
+     of other loads +0.033 A. It clears whatever C-9 finds. It fixes the coordination only; it resolves no other item and it does
+     not meet M1 (l3plane three_cases.out). Not chosen: 4.05 A (CHECK-3's figure), +0.001 A on 0.060 A and -0.018 A on 0.079 A
    M1 for each case (as drawn, the derated variant, the resistor-only proposal, the hypothetical corrected path): l3plane
      three_cases.out, which reads this file's bands
 
@@ -224,10 +223,13 @@ Basis per figure: MAKER (page), NETLIST, MODELED, INFERRED (method stated), ASSU
      that is U3's input at 5.20 A (less the 0.060 A of other loads): a VIN_RAW-scheduled limit at 9 V (a front end input of 13.1 A,
      above the vehicle entry's 6.15 A; the tracker holds 15.1 V at U3's full demand, so in service no source gives more at 9 V:
      such a limit charges below no source's available power there)
+     the REGISTER SETTING at 9 V is 5.05 A (the 50 mA step at or under 5.20 / 1.025 = 5.077 A), whose maximum 5.18 A puts the
+     peak at 15.68 A, 89.6 % of the typical Isat; it rests on Isat at 25 C and is recomputed once L1's temperature derating
+     is held (C-5)
    VBUS20's bank: the worst can reaches 2.8 A at a front end current of 7.57 A matched and 6.54 A at a 2:1 ESR spread; at the
      proposed maximum 9.370 A the bank's worst can must fall by 1.24 to 1.43 times (matched to 2:1) to meet 2.8 A
    the FETs: the RthetaJA each case needs for TJ 150 C in 62.1 C air is printed in section 4 beside each FET
    R11's taps: at most 0.29 mOhm at 25 C for the two together (section 3)
-   the derated variant: U3 at 4.05 A clears the stacked minimum by +0.001 A on the carried 0.060 A (section 3)
+   the derated variant: U3 at 4.00 A clears the stacked minimum by +0.052 A on the carried 0.060 A and +0.033 A on 0.079 A (section 3)
 
 END. Desk figures on the makers' pages and the committed netlists; nothing is measured, nothing implemented.
