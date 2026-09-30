@@ -1,0 +1,79 @@
+INDEPENDENT BALANCE (checker, AI check). mean day 4.0142 kWh/m2, scale 1.007820, lid at 13.23 C, base +20 C
+pack: 4S, Cmin 3.35 Ah, aged 0.80, reserve 0.05, taper 0.85, charge eta 0.95; chain 0.93 / 0.93
+
+1. 40/0 CASES (ratios TYP 0.9903, WAB 0.9103 to four places): lowest store both / lid / base, or NOT MET unserved
+   4S9P NOM   TYP NOT MET 165.7                    WAB NOT MET 172.6
+   4S9P WE    TYP NOT MET 166.2                    WAB NOT MET 173.0
+   4S9P WE60  TYP NOT MET 166.2                    WAB NOT MET 173.0
+   4S9P WA    TYP NOT MET 190.8                    WAB NOT MET 245.3
+   4S9P GEN   TYP NOT MET 494.8                    WAB NOT MET 522.5
+   4S9P M207  TYP NOT MET 165.7                    WAB NOT MET 172.6
+   4S9P SC76  TYP NOT MET 165.7                    WAB NOT MET 172.6
+   4S14P NOM   TYP 93.7 (lid 44.6, base 49.0)       WAB 75.7 (lid 27.5, base 48.2)
+   4S14P WE    TYP 51.2 (lid 4.0, base 44.4)        WAB NOT MET 3.8
+   4S14P WE60  TYP 30.9 (lid 0.0, base 30.9)        WAB NOT MET 24.1
+   4S14P WA    TYP NOT MET 70.3                     WAB NOT MET 120.5
+   4S14P GEN   TYP NOT MET 357.6                    WAB NOT MET 383.9
+   4S14P M207  TYP 93.7 (lid 44.6, base 49.0)       WAB 85.4 (lid 37.2, base 48.2)
+   4S14P SC76  TYP 65.1 (lid 15.8, base 45.5)       WAB 9.4 (lid 0.0, base 9.4)
+   4S15P NOM   TYP 125.2 (lid 68.1, base 57.1)      WAB 106.8 (lid 50.5, base 56.3)
+   4S15P WE    TYP 81.8 (lid 26.5, base 52.6)       WAB 26.8 (lid 0.0, base 26.8)
+   4S15P WE60  TYP 61.5 (lid 12.2, base 49.3)       WAB 6.5 (lid 0.0, base 6.5)
+   4S15P WA    TYP NOT MET 40.0                     WAB NOT MET 91.7
+   4S15P GEN   TYP NOT MET 326.7                    WAB NOT MET 352.9
+   4S15P M207  TYP 125.2 (lid 68.1, base 57.1)      WAB 116.5 (lid 60.2, base 56.3)
+   4S15P SC76  TYP 95.8 (lid 38.5, base 53.7)       WAB 40.1 (lid 0.0, base 40.1)
+
+1b. STEP SENSITIVITY at 40/0: hourly vs 0.1 h and 0.01 h sub-steps (same hourly irradiance)
+   4S14P NOM   TYP: 1 h 93.7           0.1 h 91.6           0.01 h 91.1          
+   4S14P NOM   WAB: 1 h 75.7           0.1 h 74.1           0.01 h 73.7          
+   4S14P WE    TYP: 1 h 51.2           0.1 h 51.2           0.01 h 51.2          
+   4S14P WE    WAB: 1 h NOT MET 3.8    0.1 h NOT MET 3.8    0.01 h NOT MET 3.8   
+   4S14P WE60  TYP: 1 h 30.9           0.1 h 30.9           0.01 h 30.9          
+   4S14P WE60  WAB: 1 h NOT MET 24.1   0.1 h NOT MET 24.1   0.01 h NOT MET 24.1  
+   4S15P NOM   TYP: 1 h 125.2          0.1 h 122.7          0.01 h 122.1         
+   4S15P NOM   WAB: 1 h 106.8          0.1 h 104.8          0.01 h 104.4         
+   4S15P WE    TYP: 1 h 81.8           0.1 h 81.8           0.01 h 81.8          
+   4S15P WE    WAB: 1 h 26.8           0.1 h 26.7           0.01 h 26.7          
+   4S15P WE60  TYP: 1 h 61.5           0.1 h 61.5           0.01 h 61.5          
+   4S15P WE60  WAB: 1 h 6.5            0.1 h 6.5            0.01 h 6.5           
+
+2. POWER INTO U3 (bus x limit), NOM otherwise, 40/0
+   108.0 W  NOT MET 25.2   NOT MET 80.8   5.5            NOT MET 50.1  
+   110.0 W  NOT MET 3.6    NOT MET 59.2   27.1           NOT MET 28.4  
+   112.0 W  18.1           NOT MET 37.5   48.8           NOT MET 6.8   
+   114.0 W  39.8           NOT MET 15.9   70.5           14.8          
+   116.0 W  61.5           5.8            92.2           36.4          
+   118.0 W  76.1           27.4           107.2          58.1          
+   120.0 W  85.4           49.1           116.6          79.8          
+   122.0 W  93.7           66.7           125.2          97.8          
+   124.0 W  93.7           75.7           125.2          106.8         
+   126.0 W  93.7           84.3           125.2          115.5         
+   128.0 W  93.7           90.9           125.2          122.4         
+   130.0 W  93.7           90.9           125.2          122.4         
+
+3. ONE AT A TIME FROM NOM, TYP, 40/0
+   4S14P bus 19.146 (U3 0.9796)     79.7           delta -14.0
+   4S14P limit 6.0 (U3 0.9795)      85.7           delta -8.0
+   4S14P chg eta 0.90               78.0           delta -15.6
+   4S14P stage 0.90                 92.5           delta -1.1
+   4S14P U3B 0.963                  93.7           delta +0.0
+   4S14P WAB build                  75.7           delta -18.0
+   4S15P bus 19.146 (U3 0.9796)     110.8          delta -14.3
+   4S15P limit 6.0 (U3 0.9795)      116.9          delta -8.3
+   4S15P chg eta 0.90               109.2          delta -16.0
+   4S15P stage 0.90                 124.0          delta -1.1
+   4S15P U3B 0.963                  125.2          delta +0.0
+   4S15P WAB build                  106.8          delta -18.4
+
+3b. WHERE THE PACK CHARGE EFFICIENCY BINDS: WE, both builds, chg eta 0.90 / 0.95 / 0.98
+   4S14P TYP: NOT MET 4.8 / 51.2 / 76.2
+   4S14P WAB: NOT MET 57.2 / NOT MET 3.8 / 28.3
+   4S15P TYP: 25.8 / 81.8 / 107.2
+   4S15P WAB: NOT MET 26.6 / 26.8 / 58.8
+
+3c. THE BUS BELOW THE FILED RANGE (WE otherwise; U3 held at 0.9733): 19.072 V (a 20 K board rise at the divider) and 18.782 V (the endurance limits added)
+   4S14P TYP: 51.2 / 46.3 / 27.5
+   4S14P WAB: NOT MET 3.8 / NOT MET 8.6 / NOT MET 27.5
+   4S15P TYP: 81.8 / 77.0 / 58.0
+   4S15P WAB: 26.8 / 21.9 / 3.0
