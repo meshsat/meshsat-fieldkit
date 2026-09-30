@@ -40,9 +40,10 @@ whose current values gain the rows the draft proposes (its rule: a circuit corre
 baseline). The PACK and CELL lists are held complete by the vocabulary their own passages carry (VOCAB_RX, EXEMPT).
 
 Usage:
-  python3 reissue.py [--registry PATH] [--data PATH] [--out-dir DIR] [--check]
+  python3 reissue.py [--registry PATH] [--data PATH] [--docs-root DIR] [--out-dir DIR] [--check]
                                               the draft and the change record (--check: compare); --data is a copy of
-                                              l3r2.yaml (the tests)
+                                              l3r2.yaml and --docs-root a directory holding copies of v2/docs/CONOPS.md
+                                              and v2/docs/PRODUCT-BRIEF.md at their sha (the tests)
   python3 reissue.py --map [--check]                                v2/docs/records/l3r4/PASSAGE-MAP.md, the passages
                                                                     each row and option changes (no answer needed)
 """
@@ -581,7 +582,8 @@ PASSAGES = [
                     "than bought, of %s: a base %s across the two base pockets and a %s lid pack under its own protection "
                     "board, each with its own charger path and gauge (%s, which supersedes D-06's one 4S3P block of about "
                     "145 Wh in the east pocket; the lid pack's count by %s)."
-                    % (c.cell(), c.d27()[1], c.lid(), c.cite("L3-OD1"), c.cite("L3-OD2"))),
+                    % ("cells of " + c.cell() if c.O("L3-OD5") == "cells" else c.cell() + " cells", c.d27()[1], c.lid(),
+                       c.cite("L3-OD1"), c.cite("L3-OD2"))),
       "what the V2 kit is: the pack"),
     P("B07", "BRIEF", 78, "HF (an assembled QRP Labs QMX), ", 78, "HF (an assembled QRP Labs QMX), ", {"L3-OD2": QMX_ANY},
       brief_bearers, "what the V2 kit is, the long-range bearers: HF"),
@@ -658,7 +660,9 @@ CURRENT = {
            "CQ", "a statement of the design as generated that names the QMX or HF"),
     "PACK": ([(306, 306, "BQ7720700"), (311, 311, "BQ25731"), (312, 312, "CHRG_INHIBIT"),
               (313, 313, "regulates the charge into the 4S pack beyond its sense resistor `R17`"), (320, 320, "gen_sch_p.py"),
-              (335, 337, "the chemical fuse F2"), (379, 379, "the gauge's 20 A for 2 s limit and the 25 A blade bound"),
+              (310, 310, "any cell +55 C on the gauge's thermistors"), (335, 337, "the chemical fuse F2"),
+              (349, 349, "the gauge's 336 uA"), (379, 379, "the gauge's 20 A for 2 s limit and the 25 A blade bound"),
+              (468, 468, "the sensor controller and with it the pack gauge's readings"),
               (529, 529, "the sensor controller's link (the gauge's readings"), (536, 541, "ADCVBAT"),
               (547, 550, "pcb_pack_protection.yaml"), (566, 569, "as the pack gauge reads them"),
               (571, 578, "reads the same four thermistors through the same gauge"), (583, 588, "CHRG_INHIBIT"),
@@ -667,8 +671,9 @@ CURRENT = {
               (822, 827, "the pack voltage the charger reads"), (830, 837, "SLUUAQ3A 5.4.2 and 13.1.8"),
               (854, 860, "golden image"), (881, 881, "the charger loses its host"), (882, 882, "the charger has no host"),
               (887, 887, "the gauge's SMBus shutdown the sensor controller already sends"),
-              (889, 889, "the loads sit on the charger's system node"), (893, 893, "a permanent pack protection"),
-              (911, 911, "the charger falls to its host-free 256 mA"), (928, 934, "(K3)"),
+              (889, 889, "the loads sit on the charger's system node"), (890, 890, "the hottest cell as the gauge reads it"),
+              (893, 893, "a permanent pack protection"), (911, 911, "the charger falls to its host-free 256 mA"),
+              (914, 914, "the gauge and board P's second level"), (928, 934, "(K3)"),
               (990, 990, "the pack chain's 10 A continuous rating"), (991, 991, "the loads sit on the charger's system node"),
               (1097, 1097, "the pack's voltage and current read from the charger in place of the gauge's readings"),
               (1106, 1106, "the pack voltage the charger reads at 12.8 V")],
@@ -680,18 +685,24 @@ CURRENT = {
               (391, 391, "the Samsung INR18650-35E specification"), (394, 394, "section 3.15: discharge -10 to 60 C"),
               (548, 548, "-10 to 60 C at the cell surface"), (559, 560, "+60 C"), (576, 576, "the cells' +60 C"),
               (662, 662, "+60 C"), (727, 730, "the cells' 60 C"), (739, 739, "+60 C"), (821, 821, "Ver. 1.1 3.9"),
-              (1012, 1012, "3.35 Ah per cell"), (1106, 1106, "the cell's 2.65 V cut-off"), (1112, 1112, "+60 C"),
+              (1012, 1012, "3.35 Ah per cell"), (1015, 1015, "60 % after 500 cycles (7.9)"),
+              (1103, 1103, "80 % of the cell's specification minimum capacity"), (1106, 1106, "the cell's 2.65 V cut-off"),
+              (1112, 1112, "+60 C"),
               (158, 158, "their 60 C discharge limit", "BRIEF")],
              "CC", "a statement of the held cell or its limits"),
 }
-# The vocabulary each group's completeness is held to: the phrases VOCAB_RX finds in the group's own passages (so the
-# list grows with the passages, never typed), searched in every line of both documents before their appendices. A
-# line carrying one is in a passage of the group, in section 7's rulings table (history), or in EXEMPT with its reason
-# (CHECK-2 of round 4, minors 1 and 4).
+# The vocabulary each group's completeness is held to: VOCAB_RX itself, searched in every line of both documents before
+# their appendices (CHECK-3 of round 4, minor 1: the pattern, not only the phrases the group's passages already carry).
+# A line it matches is in a passage of the group, in section 7's rulings table (history), or in EXEMPT with its reason
+# (CHECK-2 of round 4, minors 1 and 4). The CELL pattern carries the cell sheet's ageing figures (CHECK-3, minor 2).
 VOCAB_RX = {"PACK": r"\bthe (?:pack )?(?:charger|gauge)(?:'s)? [a-z0-9]+|\bthe pack chain(?:'s)? [a-z0-9]+",
-            "CELL": r"INR18650-35E|Ver\. 1\.1|Version 1\.0|\bsection 3\.15\b|\b60 C\b|\b3\.35 Ah\b|\b2\.65 V\b"}
+            "CELL": r"INR18650-35E|Ver\. 1\.1|Version 1\.0|\bsection 3\.15\b|\b60 C\b|\b3\.35 Ah\b|\b2\.65 V\b|"
+                    r"\b\d+ % after \d+ cycles\b|\bthe cell's specification minimum\b"}
 EXEMPT = {
-    "PACK": {("CONOPS", 307): "the Deploy procedure: a pack in its gauge's shutdown is woken by an input, a condition "
+    "PACK": {("CONOPS", 205): "the gauge holding the charge on its cells' measured temperature, a behaviour each pack's "
+                              "gauge has",
+             ("CONOPS", 289): "the pack gauge holding charging off in the cold, a condition read per pack",
+             ("CONOPS", 307): "the Deploy procedure: a pack in its gauge's shutdown is woken by an input, a condition "
                               "the head note reads per pack",
              ("CONOPS", 308): "the Startup row: a pack in its gauge's shutdown starts only on an input, a condition read "
                               "per pack",
@@ -700,6 +711,10 @@ EXEMPT = {
              ("CONOPS", 561): "the pack's own protection opening its FETs, a behaviour each pack's gauge has",
              ("CONOPS", 817): "graceful shutdown on the gauge's state of charge, an intention the head note reads per "
                               "pack; its fallback through the charger (822 to 827) is PACK",
+             ("CONOPS", 819): "the voltage line standing in for the gauge's state of charge until the pack's learning "
+                              "cycle, a condition of graceful shutdown read per pack (817)",
+             ("CONOPS", 1014): "the pack replaced when its gauge's learned capacity falls below the aged line, a "
+                               "condition read per pack",
              ("CONOPS", 1100): "section 7a's storage and transport choice, a procedure read per pack",
              ("CONOPS", 1111): "section 7a's water and gas choice, which puts the pack in its gauge's shutdown, read per "
                                "pack"},
@@ -727,15 +742,15 @@ def vocabulary(group, docs):
 
 
 def uncovered(group, docs):
-    """(doc, line, phrases) of every line before the appendices that carries the group's vocabulary and is in none of
-    its passages, section 7's rulings table or EXEMPT."""
-    vocab = [re.compile(r"(?<![\w-])%s(?![\w])" % re.escape(v)) for v in vocabulary(group, docs)]
+    """(doc, line, matches) of every line before the appendices that VOCAB_RX[group] matches and that is in none of the
+    group's passages, section 7's rulings table or EXEMPT."""
+    rx = re.compile(VOCAB_RX[group])
     out = []
     for k, text in docs.items():
         lines = text[:text.index("\n## Appendix")].split("\n")
         cov = {n for p in PASSAGES if p.group == group and p.doc == k for n in range(p.a, p.b + 1)}
         for i, l in enumerate(lines, 1):
-            hit = [v.pattern for v in vocab if v.search(l)]
+            hit = sorted({m.group(0) for m in rx.finditer(l)})
             if hit and i not in cov and not l.startswith("| D-") and (k, i) not in EXEMPT[group]:
                 out.append((k, i, hit))
     return out
@@ -1014,10 +1029,10 @@ def passage_map(docs):
 
 
 # ------------------------------------------------------------------------------------------------ main
-def guard_out(paths):
+def guard_out(paths, root=E.TOP):
     """Refuse, before anything is written, an output that resolves to a baselined file, is the same file as one (a
     hard link), is a link, or is a file with more than one link (CHECK-1 of round 4, minor 3; CHECK-2, minor 3)."""
-    base = [os.path.join(E.TOP, x) for x in DOCS.values()]
+    base = [os.path.join(root, x) for x in DOCS.values()]
     real = {os.path.realpath(x) for x in base}
     for q in paths:
         if os.path.islink(q): E.refuse("%s is a link: the re-issue writes only plain files" % q)
@@ -1056,8 +1071,9 @@ def main(argv):
         data = yaml.safe_load(open(opt("--data", RL.DATA), encoding="utf-8"))
         if check and "--map" not in argv and data.get("definition_reissue"):
             return approved_check(data["definition_reissue"], opt("--out-dir", L3))
-        docs = baselined(data=data)
-        before = {k: RL.sha16_bytes(open(os.path.join(E.TOP, v), "rb").read()) for k, v in DOCS.items()}
+        root = opt("--docs-root", E.TOP)
+        docs = baselined(root=root, data=data)
+        before = {k: RL.sha16_bytes(open(os.path.join(root, v), "rb").read()) for k, v in DOCS.items()}
         if "--map" in argv:
             body = passage_map(docs)
             guard_out([MAP])
@@ -1078,7 +1094,7 @@ def main(argv):
                 if d in t: E.refuse("a written text carries a dash character")
         out = opt("--out-dir", L3)
         targets = [os.path.join(out, DRAFT), os.path.join(out, RECORD)]
-        guard_out(targets)
+        guard_out(targets, root)
         if check:
             same = all(os.path.exists(q) and open(q, encoding="utf-8").read() == t for q, t in zip(targets, (draft, rec)))
             print("reissue: the draft and the change record %s" % ("are current" if same else "are OUT OF DATE"))
@@ -1089,7 +1105,7 @@ def main(argv):
         os.makedirs(out, exist_ok=True)
         for q, t in zip(targets, (draft, rec)):
             open(q, "w", encoding="utf-8").write(t)
-        after = {k: RL.sha16_bytes(open(os.path.join(E.TOP, v), "rb").read()) for k, v in DOCS.items()}
+        after = {k: RL.sha16_bytes(open(os.path.join(root, v), "rb").read()) for k, v in DOCS.items()}
         if after != before: E.refuse("a baselined file changed while the re-issue ran")
         print("reissue: %d passages restated (%d in CONOPS.md, %d in PRODUCT-BRIEF.md), %d statement(s) of the design "
               "as generated read through DEFINITION-STATUS.md; wrote %s and %s" % (
