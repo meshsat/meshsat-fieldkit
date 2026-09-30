@@ -19,12 +19,17 @@ Before any result it proves (exit 4 otherwise):
   0c  this harness reproduces three_cases.out's AS DRAWN rows at WE for the both-kept lid (the drawn case used here);
   0d  the single-pack use of the two-pack model (A1: the lid off) reproduces energy_budget.out section 5b's two
       PS-IDLE-SPEC September rows (a 100 Wp panel in the 100 W window, the record's chain): first stop and unserved Wh.
-Only then does it change one input, the stage window, from 200 W to 100 W, and print the comparison.
+Only then does it change one input, the stage window, from 200 W to 100 W, and print the comparison. Every run of the model
+is refused unless its store account and its service ledger close (section 5). Section 11 refuses (exit 3) when a row of the
+LT8705A sheet's electrical characteristics that names the input-current mechanism or the input-voltage hold reads back
+differently from its table or is not classified there, and (exit 4) when O-2's setting lets any corner of the envelope take
+more than REQ-016's 100 W.
 
 Run from the repository root:  python3 v2/docs/records/l4e/l4e_replay.py > v2/docs/records/l4e/l4e_replay.out
 Deterministic; standard library plus PyYAML (through the imported model). About one minute, most of it 0a.
 Exit 2: a pinned file is not the pinned file; 3: an input cannot be parsed; 4: a reproduction failed."""
 import hashlib
+import itertools
 import math
 import os
 import re
@@ -81,18 +86,109 @@ BASE_A1 = 3                 # D-06's 4S3P
 U3_TOL = 0.1                # three_cases.py: U3's minimum 0.1 A under its setting (INFERRED from SLUSE66A p.80's maximum)
 U3_DERATED = 4.00           # r11dep A-1 and three_cases.py: the derated variant of the drawn circuit
 U3_WINDOW = 4.65            # section 8: the least 50 mA setting whose minimum covers REQ-016's window at the declared efficiencies
-# Section 11, O-2 (check astra-check-l4e2-1, B2): the LT8705A's input current limit, MAKER 8705af (v2/vendor/power/lt8705a.pdf,
-# pinned below). p.31: the limit is set by RSENSE1 and RIMON_IN, IMON_IN regulating at 1.208 V typical; p.4: "Regulation
-# Voltages for IMON_IN and IMON_OUT" 1.187 / 1.208 / 1.229 V and "Regulation Voltage for FBIN" 1.184 / 1.205 / 1.226 V, both
-# over the full operating temperature range; p.5: the CSPIN-CSNIN to IMON_IN amplifier A7, gm 0.94 / 1 / 1.06 mmho (LT8705AE
-# and LT8705AI over the full range; the netlist names no grade: ASSUMPTION E or I). p.29: FBIN reduces VC, and so the input
-# current, when the input falls below its set point; it does not clamp the input from above. The two resistors that set the
-# limit are not chosen: ASSUMPTION 1 % each, the tolerance of R8 and R9 on the netlist.
+# Section 11, O-2 (checks astra-check-l4e2-1 B2 and astra-check-l4e2-2 B2): the LT8705A's input-current limit (8705af p.31,
+# Figure 11: IMON_IN = I x RSENSE1 x gm(A7) x RIMON_IN, regulated by EA2 at the IMON_IN reference) must keep V_in x I_in at or
+# under REQ-016's 100 W at every loaded input voltage an admitted panel presents. The second check found a tolerance list
+# picked by hand; so every row of the sheet's electrical characteristics (pp.3 to 6) whose parameter names the input-current
+# mechanism (CSPIN, CSNIN, A7, IMON_IN, EA2, SRVO_IIN) or the input-voltage hold (FBIN, EA3, VC) is enumerated below, each
+# quoted as `pdftotext -f 4 -l 6 -layout v2/vendor/power/lt8705a.pdf -` prints it, and classified. At run time every row's
+# printed MIN / TYP / MAX is read back from the pinned sheet by column and must equal the table (exit 3), and every parameter
+# line of pp.3 to 6 that names the mechanism must be classified here (exit 3). The page header of pp.4 and 5 reads "The l
+# denotes the specifications which apply over the full operating temperature range, otherwise specifications are at TA =
+# 25 C. VIN = 12V, SHDN = 3V unless otherwise noted."
+#   use STACK      its printed limits enter the worst-case stack of the limit
+#   use ALLOWANCE  a TYP-only row entered with a stated assumption (the TYP taken as the bound)
+#   use HOLD       the input-voltage hold's stack (the lower corner of the envelope)
+#   use CONDITION  a range the design must stay inside; checked, it moves nothing while it holds
+#   use NONE       it does not move the limit; the reason given
+EC_ROWS = [
+    # p.4: "Regulation Voltages for IMON_IN and IMON_OUT   VC = 1.2V   l   1.187 1.208 1.229   V"
+    dict(id="IMON_REG", page=4, name="Regulation Voltages for IMON_IN and IMON_OUT", sub=None, full=True, min=1.187, typ=1.208, max=1.229,
+         unit="V", use="STACK", why="the reference EA2 regulates IMON_IN to (Figure 11), printed at VIN = 12 V and VC = 1.2 V"),
+    # p.4: "Line Regulation for IMON_IN and IMON_OUT Error Amp   VIN = 12V to 80V; Not Switching   0.002 0.005   %/V" / "Reference Voltage"
+    dict(id="IMON_LINE", page=4, name="Line Regulation for IMON_IN and IMON_OUT Error Amp", sub=None, full=False, min=None, typ=0.002,
+         max=0.005, unit="%/V", use="STACK", why="the reference's shift with VIN from the 12 V IMON_REG is printed at; its maximum, "
+         "either sign, from 12 V to the corner's voltage (printed 'Not Switching'; applied as printed while switching, ASSUMPTION)"),
+    # p.5: "VCSPIN-CSNIN to IMON_IN Amplifier A7 gm   VCSPIN - VCSNIN = 50mV, VCSPIN = 5.025V" then
+    #      "(All Grades)   0.95 1 1.05 mmho", "(LT8705AE, LT8705AI)   l   0.94 1 1.06 mmho", "(LT8705AH, LT8705AMP)   l   0.93 1 1.07 mmho"
+    dict(id="A7_ALL", page=5, name="VCSPIN-CSNIN to IMON_IN Amplifier A7 gm", sub="(All Grades)", full=False, min=0.95, typ=1.0, max=1.05,
+         unit="mmho", use="STACK", why="the sense gain at 25 C, every grade"),
+    dict(id="A7_EI", page=5, name="VCSPIN-CSNIN to IMON_IN Amplifier A7 gm", sub="(LT8705AE, LT8705AI)", full=True, min=0.94, typ=1.0,
+         max=1.06, unit="mmho", use="STACK", why="the sense gain over the full range, E and I grades"),
+    dict(id="A7_HMP", page=5, name="VCSPIN-CSNIN to IMON_IN Amplifier A7 gm", sub="(LT8705AH, LT8705AMP)", full=True, min=0.93, typ=1.0,
+         max=1.07, unit="mmho", use="STACK", why="the sense gain over the full range, H and MP grades: the netlist names no grade, "
+         "so the widest printed limits are stacked"),
+    # p.5: "IMON_IN Error Amp EA2 Voltage Gain   130   V/V"
+    dict(id="EA2_AV", page=5, name="IMON_IN Error Amp EA2 Voltage Gain", sub=None, full=False, min=None, typ=130.0, max=None,
+         unit="V/V", use="ALLOWANCE", why="IMON_REG is printed at VC = 1.2 V; in regulation VC sits where the power stage needs it, "
+         "which moves the regulated point by (VC - 1.2 V) / gain. No VC operating range and no minimum gain are printed: the "
+         "allowance takes VC anywhere in its absolute maximum range (p.2) and the TYP gain as its bound (ASSUMPTION)"),
+    # p.5: "IMON_IN Error Amp EA2 gm   185   umho"
+    dict(id="EA2_GM", page=5, name="IMON_IN Error Amp EA2 gm", sub=None, full=False, min=None, typ=185.0, max=None, unit="umho",
+         use="NONE", why="its effect on the regulated point is carried by the voltage-gain row (EA2_AV)"),
+    # p.4: "CSPIN, CSNIN Bias Current   BOOST Capacitor Charge Control Block Not Active" / "ICSPIN + ICSNIN, VCSPIN = VCSNIN = 12V   31   uA"
+    dict(id="CS_BIAS", page=4, name="CSPIN, CSNIN Bias Current", sub="ICSPIN + ICSNIN", full=False, min=None, typ=31.0, max=None,
+         unit="uA", use="CONDITION", why="an offset only through resistance in series with the pins, which the maker forbids "
+         "(p.30: 'do not place resistors in series with any of the CSxIN or CSxOUT pins'); zero while that holds. No offset "
+         "voltage row is printed for A7; its gm is printed at a 50 mV differential, the point the setting is sized to sit at"),
+    # p.5: "CSPIN, CSNIN Common Mode Operating Voltage Range   l   1.5   80   V"
+    dict(id="CS_CM", page=5, name="CSPIN, CSNIN Common Mode Operating Voltage Range", sub=None, full=True, min=1.5, typ=None, max=80.0,
+         unit="V", use="CONDITION", why="the pins sit at the panel voltage, inside it across the envelope"),
+    # p.5: "CSPIN, CSNIN Differential Operating Voltage Range   l   -100   100   mV"
+    dict(id="CS_DIFF", page=5, name="CSPIN, CSNIN Differential Operating Voltage Range", sub=None, full=True, min=-100.0, typ=None,
+         max=100.0, unit="mV", use="CONDITION", why="the sense resistor puts 50 mV across the pins at the nominal limit, and "
+         "the fault's 1.61 / 1.208 of it stays inside"),
+    # p.5: "IMON_IN Maximum Output Current   l   100   uA"
+    dict(id="IMON_IOUT", page=5, name="IMON_IN Maximum Output Current", sub=None, full=True, min=100.0, typ=None, max=None, unit="uA",
+         use="CONDITION", why="A7 sources 50 mV x its gm at the limit, at most 53.5 uA, under it"),
+    # p.5: "IMON_IN Overvoltage Threshold   l   1.55 1.61 1.67   V"
+    dict(id="IMON_OV", page=5, name="IMON_IN Overvoltage Threshold", sub=None, full=True, min=1.55, typ=1.61, max=1.67, unit="V",
+         use="NONE", why="the overcurrent fault (p.31) above the limit; switching stops, which bounds nothing upward"),
+    # p.5: "SRVO_IIN Activation Threshold (Note 5)   (VIMON_IN Rising) - (Regulation Voltage for   -60 -49 -37 mV"
+    dict(id="SRVO_IIN", page=5, name="SRVO_IIN Activation Threshold (Note 5)", sub=None, full=False, min=-60.0, typ=-49.0, max=-37.0,
+         unit="mV", use="NONE", why="a status output, not in the loop"),
+    dict(id="SRVO_IIN_H", page=5, name="SRVO_IIN Activation Threshold Hysteresis (Note 5)", sub=None, full=False, min=None, typ=22.0,
+         max=None, unit="mV", use="NONE", why="a status output, not in the loop"),
+    dict(id="SRVO_IIN_LV", page=5, name="SRVO_IIN, SRVO_IOUT Low Voltage (Note 5)", sub=None, full=True, min=None, typ=110.0, max=330.0,
+         unit="mV", use="NONE", why="a status output, not in the loop"),
+    dict(id="SRVO_IIN_LK", page=5, name="SRVO_IIN, SRVO_IOUT Leakage Current (Note 5)", sub=None, full=True, min=None, typ=0.0, max=1.0,
+         unit="uA", use="NONE", why="a status output, not in the loop"),
+    # p.4: "Gain from VC to Maximum Current Sense Voltage   Boost Mode   150   mV/V"
+    dict(id="VC_GAIN", page=4, name="Gain from VC to Maximum Current Sense Voltage", sub=None, full=False, min=None, typ=150.0, max=None,
+         unit="mV/V", use="NONE", why="the inner current loop's gain; the limit is set at EA2's input whatever it is"),
+    # the input-voltage hold, the envelope's lower corner. p.4: "Regulation Voltage for FBIN   VC = 1.2V (LT8705AE, LT8705AI)   l
+    # 1.184 1.205 1.226 V" and "VC = 1.2V (LT8705AH, LT8705AMP)   l   1.182 1.205 1.226 V"
+    dict(id="FBIN_EI", page=4, name="Regulation Voltage for FBIN", sub="(LT8705AE, LT8705AI)", full=True, min=1.184, typ=1.205,
+         max=1.226, unit="V", use="HOLD", why="the hold's reference, E and I grades"),
+    dict(id="FBIN_HMP", page=4, name="Regulation Voltage for FBIN", sub="(LT8705AH, LT8705AMP)", full=True, min=1.182, typ=1.205,
+         max=1.226, unit="V", use="HOLD", why="the hold's reference, H and MP grades (no grade named: the widest stacked)"),
+    # p.4: "Line Regulation for FBOUT and FBIN Error Amp Reference   VIN = 12V to 80V; Not Switching   0.002 0.005   %/V"
+    dict(id="FB_LINE", page=4, name="Line Regulation for FBOUT and FBIN Error Amp Reference", sub=None, full=False, min=None, typ=0.002,
+         max=0.005, unit="%/V", use="HOLD", why="the hold reference's shift from 12 V, either sign"),
+    # p.4: "FBIN Pin Bias Current   Current Out of Pin   10   nA"
+    dict(id="FBIN_BIAS", page=4, name="FBIN Pin Bias Current", sub=None, full=False, min=None, typ=10.0, max=None, unit="nA",
+         use="HOLD", why="out of the pin into the divider, lowering the hold by the current x R8; TYP taken (ASSUMPTION)"),
+    # p.4: "FBIN Error Amp EA3 Voltage Gain   90   V/V"
+    dict(id="EA3_AV", page=4, name="FBIN Error Amp EA3 Voltage Gain", sub=None, full=False, min=None, typ=90.0, max=None, unit="V/V",
+         use="HOLD", why="as EA2_AV, for the hold: VC in its absolute maximum range, the TYP gain as the bound (ASSUMPTION)"),
+    dict(id="EA3_GM", page=4, name="FBIN Error Amp EA3 gm", sub=None, full=False, min=None, typ=130.0, max=None, unit="umho",
+         use="NONE", why="carried by EA3_AV"),
+    dict(id="SRVO_FBIN", page=4, name="SRVO_FBIN Activation Threshold (Note 5)", sub=None, full=False, min=56.0, typ=72.0, max=89.0,
+         unit="mV", use="NONE", why="a status output, not in the loop"),
+    dict(id="SRVO_FBIN_H", page=4, name="SRVO_FBIN Activation Threshold Hysteresis (Note 5)", sub=None, full=False, min=None, typ=33.0,
+         max=None, unit="mV", use="NONE", why="a status output, not in the loop"),
+    dict(id="SRVO_FBIN_LV", page=4, name="SRVO_FBIN, SRVO_FBOUT Low Voltage (Note 5)", sub=None, full=True, min=None, typ=110.0,
+         max=330.0, unit="mV", use="NONE", why="a status output, not in the loop"),
+    dict(id="SRVO_FBIN_LK", page=4, name="SRVO_FBIN, SRVO_FBOUT Leakage Current (Note 5)", sub=None, full=True, min=None, typ=0.0,
+         max=1.0, unit="uA", use="NONE", why="a status output, not in the loop"),
+]
+EC_TOKENS = ("CSPIN", "CSNIN", "A7", "IMON_IN", "EA2", "SRVO_IIN", "FBIN", "EA3", "VC ")
+# p.2 (absolute maximum ratings): "VC Voltage (Note 2).................................... -0.3V to 2.2V"
 LT8705A_PDF = ("v2/vendor/power/lt8705a.pdf", "8f552a0b57677bfa7e4a5d5d0fac56d56fbbd1a6f65a9ee7aaaf8743cd534ec3")
-V_IMON = (1.187, 1.208, 1.229)
-GM_A7 = (0.94, 1.00, 1.06)
-V_FBIN = (1.184, 1.205, 1.226)
-R_TOL = 0.01
+R_TOL = 0.01                # RSENSE1 and RIMON_IN are not chosen: 1 % each, all of tolerance and drift (ASSUMPTION); R8, R9 1 % (NETLIST)
+I_RES = 0.001               # the nominal setting's stated resolution, A; the derived setting is rounded DOWN to it
+V_LINE_REF = 12.0           # the VIN the page header prints the references at
+T_ENDS = ("the cold end", "the hot end")   # the full-range (l) limits hold at both; no end-specific values are printed
 CHECK_B1 = ["270.132086", "286.306461", "500.372955", "516.547330"]   # astra-check-l4e2-1, Checks, kit energy conservation
 
 
@@ -101,6 +197,58 @@ def need(text, pat, what):
     if not m:
         refuse(3, "%s not parsed" % what)
     return m
+
+
+NUM = re.compile(r"(?<![\w.])[–-]?\d+(?:\.\d+)?(?![\w.])")
+
+
+def pdf_lines(rel, n):
+    r = subprocess.run(["pdftotext", "-layout", "-f", str(n), "-l", str(n), os.path.join(TOP, rel), "-"], capture_output=True, text=True)
+    if r.returncode != 0:
+        refuse(3, "pdftotext could not read %s p.%d" % (rel, n))
+    return r.stdout.split("\n")
+
+
+def ec_cols(lines):
+    """The MIN / TYP / MAX / UNITS columns of an electrical-characteristics page, from its PARAMETER header line."""
+    for ln in lines:
+        if ln.startswith("PARAMETER") and " MIN " in ln and " MAX " in ln:
+            return {k: ln.index(k) for k in ("MIN", "TYP", "MAX", "UNITS")}
+    return None
+
+
+def ec_vals(ln, c):
+    """The printed MIN, TYP and MAX of one line, each number assigned to the nearest column (the sheet's minus is U+2013)."""
+    out = {"min": None, "typ": None, "max": None}
+    for m in NUM.finditer(ln):
+        if m.start() < c["MIN"] - 4 or m.start() >= c["UNITS"]:
+            continue
+        mid = 0.5 * (m.start() + m.end())
+        k = min(("MIN", "TYP", "MAX"), key=lambda kk: abs(c[kk] + 1.5 - mid))
+        out[k.lower()] = float(m.group(0).replace("–", "-"))
+    return out
+
+
+def ec_row(pages, page, name, sub):
+    L = pages[page]
+    c = ec_cols(L)
+    if c is None:
+        refuse(3, "8705af p.%d has no PARAMETER header" % page)
+    idx = [i for i, ln in enumerate(L) if ln.startswith(name)]
+    if len(idx) != 1:
+        refuse(3, "8705af p.%d: the row '%s' is found %d times" % (page, name, len(idx)))
+    j = idx[0]
+    if sub is not None:
+        js = [i for i in range(idx[0], min(idx[0] + 8, len(L))) if sub in L[i]]
+        if not js:
+            refuse(3, "8705af p.%d: the row '%s' has no line '%s'" % (page, name, sub))
+        j = js[0]
+    return ec_vals(L[j], c)
+
+
+def i_factor(v, vref, vref_typ, line_pct, ls, dv_ea, es, gm, r1, r2):
+    """I_lim / I_set at input voltage v for one vertex (8705af p.31: I_lim = V_IMON / (gm x RSENSE1 x RIMON_IN))."""
+    return (vref * (1.0 + ls * line_pct * 1e-2 * (v - V_LINE_REF)) + es * dv_ea) / vref_typ / (gm * r1 * r2)
 
 
 def main():
@@ -789,6 +937,27 @@ def main():
     # ------------------------------------------------------------------------------------------ 11. O-2's bound
     if sha(os.path.join(TOP, LT8705A_PDF[0])) != LT8705A_PDF[1]:
         refuse(2, "the LT8705A sheet is not the pinned file")
+    pages = {n: pdf_lines(LT8705A_PDF[0], n) for n in (2, 3, 4, 5, 6)}
+    # (a) every tabled row reads back from the sheet as printed
+    for r_ in EC_ROWS:
+        got = ec_row(pages, r_["page"], r_["name"], r_["sub"])
+        want = {"min": r_["min"], "typ": r_["typ"], "max": r_["max"]}
+        if any((got[k] is None) != (want[k] is None) or (got[k] is not None and abs(got[k] - want[k]) > 1e-9) for k in want):
+            refuse(3, "8705af p.%d '%s' %s reads %s, not the table's %s" % (r_["page"], r_["name"], r_["sub"] or "", got, want))
+    # (b) every parameter line of pp.3 to 6 that names the mechanism is classified in the table
+    unclassified = []
+    for n in (3, 4, 5, 6):
+        for ln in pages[n]:
+            if not ln or ln[0].isspace() or ln.startswith("Note") or ln.startswith("Electrical") or ln.startswith("PARAMETER"):
+                continue
+            param = re.split(r"\s{3,}", ln.strip())[0]
+            if any(t in param + " " for t in EC_TOKENS) and not any(r_["page"] == n and ln.startswith(r_["name"]) for r_ in EC_ROWS):
+                unclassified.append("p.%d '%s'" % (n, param))
+    if unclassified:
+        refuse(3, "rows of 8705af that name the input-current mechanism or the hold are not classified: %s" % "; ".join(unclassified))
+    m_vc = need("\n".join(pages[2]), r"VC Voltage \(Note 2\)\.+\s*([–-]?[\d.]+)V to ([\d.]+)V", "8705af p.2 VC absolute maximum")
+    vc_lo, vc_hi = (float(x.replace("–", "-")) for x in m_vc.groups())
+    dvc = max(abs(vc_hi - 1.2), abs(1.2 - vc_lo))        # the largest VC excursion from the 1.2 V the references are printed at
     gse = EBS.head_equal("v2/ecad/tools/gen_sch_e.py")
     r8 = float(need(gse, r'r\("R8", "([\d.]+)k 1% \(RFBIN1', "gen_sch_e.py R8").group(1))
     r9 = float(need(gse, r'r\("R9", "([\d.]+)k 1% \(RFBIN2', "gen_sch_e.py R9").group(1))
@@ -796,40 +965,118 @@ def main():
     r016 = " ".join(reqs.split("  - id: REQ-016\n", 1)[1].split("\n  - id: ", 1)[0].split())
     v_oc = float(need(r016, r"an open-circuit voltage of at most ([\d.]+) V at the panel's coldest", "REQ-016's open-circuit ceiling").group(1))
     p_win = float(need(r016, r"at most ([\d.]+) W into the stage", "REQ-016's window").group(1))
-    v_hold = (V_FBIN[0] * (1 + r8 * (1 - R_TOL) / (r9 * (1 + R_TOL))), V_FBIN[1] * (1 + r8 / r9),
-              V_FBIN[2] * (1 + r8 * (1 + R_TOL) / (r9 * (1 - R_TOL))))
-    k_max = (V_IMON[2] / V_IMON[1]) / (GM_A7[0] * (1 - R_TOL) ** 2)
-    k_min = (V_IMON[0] / V_IMON[1]) / (GM_A7[2] * (1 + R_TOL) ** 2)
-    i_max = p_win / v_oc
-    i_nom = i_max / k_max
-    i_min = i_nom * k_min
-    p_lo, p_typ = v_hold[0] * i_min, v_hold[1] * i_nom
-    P("11. O-2'S BOUND (check astra-check-l4e2-1, B2): V_in x I_in,max at most %.0f W across every loaded input voltage REQ-016 admits" % p_win)
+
+    # (c) THE SIZING: the stack the table's classification gives (STACK and ALLOWANCE rows only)
+    by = {r_["id"]: r_ for r_ in EC_ROWS}
+    use = lambda i, u: by[i]["use"] == u
+
+    def size_kmax(v, ids):
+        ref = by["IMON_REG"]
+        vref = ref["max"] if (use("IMON_REG", "STACK") and "IMON_REG" in ids) else ref["typ"]
+        line = by["IMON_LINE"]["max"] if (use("IMON_LINE", "STACK") and "IMON_LINE" in ids) else 0.0
+        gms = [by[i]["min"] for i in ("A7_ALL", "A7_EI", "A7_HMP") if use(i, "STACK") and i in ids] or [by["A7_ALL"]["typ"]]
+        ea = dvc / by["EA2_AV"]["typ"] if (use("EA2_AV", "ALLOWANCE") and "EA2_AV" in ids) else 0.0
+        return i_factor(v, vref, ref["typ"], line, 1.0, ea, 1.0, min(gms), 1.0 - R_TOL, 1.0 - R_TOL)
+    all_ids = set(by)
+    steps = (("IMON_REG, A7 over the E and I grades' full range, the two resistors (the first issue's stack)", {"IMON_REG", "A7_EI"}),
+             ("+ IMON_LINE, the reference's line regulation from 12 V to %.0f V" % v_oc, {"IMON_REG", "A7_EI", "IMON_LINE"}),
+             ("+ A7 over every grade's printed limits (A7_ALL, A7_HMP: no grade is named)", {"IMON_REG", "A7_EI", "IMON_LINE", "A7_ALL", "A7_HMP"}),
+             ("+ EA2_AV, the error amplifier's finite gain over VC's range (the ALLOWANCE)", all_ids))
+    i_ceil = p_win / v_oc / size_kmax(v_oc, all_ids)
+    i_set = math.floor(i_ceil / I_RES + 1e-9) * I_RES
+
+    # (d) THE CHECK, independent of the classification: the limit's physics (p.31) with its rows read from the sheet
+    ref_p = ec_row(pages, 4, "Regulation Voltages for IMON_IN and IMON_OUT", None)
+    line_p = ec_row(pages, 4, "Line Regulation for IMON_IN and IMON_OUT Error Amp", None)["max"]
+    gm_p = [ec_row(pages, 5, "VCSPIN-CSNIN to IMON_IN Amplifier A7 gm", g) for g in ("(All Grades)", "(LT8705AE, LT8705AI)", "(LT8705AH, LT8705AMP)")]
+    gm_lo, gm_hi = min(g["min"] for g in gm_p), max(g["max"] for g in gm_p)
+    ea_p = dvc / ec_row(pages, 5, "IMON_IN Error Amp EA2 Voltage Gain", None)["typ"]
+    fb_p = [ec_row(pages, 4, "Regulation Voltage for FBIN", g) for g in ("(LT8705AE, LT8705AI)", "(LT8705AH, LT8705AMP)")]
+    fbline_p = ec_row(pages, 4, "Line Regulation for FBOUT and FBIN Error Amp Reference", None)["max"]
+    fbbias_p = ec_row(pages, 4, "FBIN Pin Bias Current", None)["typ"] * 1e-9
+    ea3_p = dvc / ec_row(pages, 4, "FBIN Error Amp EA3 Voltage Gain", None)["typ"]
+
+    def hold(vfb, ls, es, s8, s9, bias):
+        v = vfb * (1 + r8 / r9)
+        for _ in range(50):                          # the line term depends on the hold's own voltage: iterate to the fixed point
+            vref = vfb * (1.0 + ls * fbline_p * 1e-2 * (v - V_LINE_REF)) + es * ea3_p
+            v = vref * (1.0 + r8 * s8 / (r9 * s9)) - bias * r8 * 1e3 * s8
+        return v
+    v_lo = min(hold(min(f["min"] for f in fb_p), -1, -1, s8, s9, fbbias_p) for s8 in (1 - R_TOL, 1 + R_TOL) for s9 in (1 - R_TOL, 1 + R_TOL))
+    v_hi_hold = max(hold(max(f["max"] for f in fb_p), 1, 1, s8, s9, 0.0) for s8 in (1 - R_TOL, 1 + R_TOL) for s9 in (1 - R_TOL, 1 + R_TOL))
+    v_nom_hold = hold(fb_p[0]["typ"], 0, 0, 1.0, 1.0, 0.0)
+    grid = sorted(set([v_lo, v_oc] + [round(v_lo + 0.01 * k, 6) for k in range(int((v_oc - v_lo) / 0.01) + 1)]))
+    grid = [v for v in grid if v_lo - 1e-12 <= v <= v_oc + 1e-12]
+    worst, n_corners = None, 0
+    for t_end in T_ENDS:
+        for vref, ls, gm, r1, r2, es in itertools.product((ref_p["min"], ref_p["max"]), (-1, 1), (gm_lo, gm_hi),
+                                                           (1 - R_TOL, 1 + R_TOL), (1 - R_TOL, 1 + R_TOL), (-1, 1)):
+            for v in grid:
+                pw = v * i_set * i_factor(v, vref, ref_p["typ"], line_p, ls, ea_p, es, gm, r1, r2)
+                n_corners += 1
+                if worst is None or pw > worst[0]:
+                    worst = (pw, v, t_end, vref, ls, gm, r1, r2, es)
+    if worst[0] > p_win + 1e-9:
+        sys.stdout.write("\n".join(o) + "\n")
+        refuse(4, "O-2's setting %.3f A lets the stage take %.4f W at %.3f V (%s): over REQ-016's %.0f W" % (
+            i_set, worst[0], worst[1], worst[2], p_win))
+    k_lo = min(i_factor(v_lo, vref, ref_p["typ"], line_p, ls, ea_p, es, gm, r1, r2)
+               for vref, ls, gm, r1, r2, es in itertools.product((ref_p["min"], ref_p["max"]), (-1, 1), (gm_lo, gm_hi),
+                                                                 (1 - R_TOL, 1 + R_TOL), (1 - R_TOL, 1 + R_TOL), (-1, 1)))
+    i_lo = i_set * k_lo
+    p_lo, p_typ = v_lo * i_lo, v_nom_hold * i_set
+    # the E or I grade fixed by procurement (information only)
+    i_ceil_ei = p_win / v_oc / i_factor(v_oc, by["IMON_REG"]["max"], by["IMON_REG"]["typ"], by["IMON_LINE"]["max"], 1, dvc / by["EA2_AV"]["typ"], 1,
+                                         min(by["A7_ALL"]["min"], by["A7_EI"]["min"]), 1 - R_TOL, 1 - R_TOL)
+
+    P("11. O-2'S BOUND (checks astra-check-l4e2-1 and -2, B2): V_in x I_in,max at most %.0f W at every corner of the envelope" % p_win)
     P("   a current limit alone does not bound power: FBIN (8705af p.29) only lowers the current when the input falls below its")
     P("   set point, so while the input-current loop (p.31) limits, the input rises along the panel's curve toward its open-circuit")
     P("   voltage. A fixed %.2f A (%.0f W at 17.6 V) is %.1f W at a loaded 20 V and %.1f W at %.0f V" % (
         p_win / 17.6, p_win, 20.0 * p_win / 17.6, v_oc * p_win / 17.6, v_oc))
-    P("   the envelope: an admitted panel's loaded voltage is below its open-circuit voltage, at most %.0f V at its coldest (REQ-016)," % v_oc)
-    P("   and at least the FBIN hold: R8 %.0fk and R9 %.2fk at 1 %% (NETLIST, gen_sch_e.py) with FBIN %.3f / %.3f / %.3f V (p.4) hold the" % (
-        r8, r9, V_FBIN[0], V_FBIN[1], V_FBIN[2]))
-    P("   input at %.3f / %.3f / %.3f V" % v_hold)
-    P("   the limit's tolerance (p.4 IMON_IN %.3f / %.3f / %.3f V; p.5 A7 %.2f / %.2f / %.2f mmho; the two setting resistors at %.0f %%," % (
-        V_IMON + GM_A7 + (100 * R_TOL,)))
-    P("   ASSUMPTION): the limit lies between %.4f and %.4f times its nominal setting" % (k_min, k_max))
-    P("   the bound: I_in,max = %.0f W / %.0f V = %.3f A at the top of the tolerance, so the nominal setting at most %.3f A and the" % (
-        p_win, v_oc, i_max, i_nom))
-    P("   limit at least %.3f A; V_in x I_in,max = %.1f V x %.3f A = %.1f W at the highest loaded voltage, and less at every lower one" % (
-        i_min, v_oc, i_max, v_oc * i_max))
-    P("   its consequence: in an hour the limit acts, the stage takes between the hold point's %.1f W (lower edge: %.3f V x %.3f A)" % (
-        p_lo, v_hold[0], i_min))
-    P("   and %.0f W; at the nominal hold and setting %.1f W (%.3f V x %.3f A); where between is the admitted panel's own curve," % (
-        p_win, p_typ, v_hold[1], i_nom))
-    P("   INCONCLUSIVE until O-1 pins it. The fault threshold sits at IMON_IN %.2f V typical (p.5), %.2f times the limit (p.31)" % (
-        1.61, 1.61 / V_IMON[1]))
-    P("   The replay with the stage window at the lower edge and at the nominal hold point (CORRECTED, WE, TYP; a separate row, not")
+    P("   THE ROWS (8705af pp.2 to 6, read back from the pinned sheet by column, each equal to the table: yes; every parameter line")
+    P("   of pp.3 to 6 naming %s classified: yes)" % ", ".join(t.strip() for t in EC_TOKENS))
+    for r_ in EC_ROWS:
+        P("     p.%d %-12s %-5s %s%s: %s / %s / %s %s%s" % (
+            r_["page"], r_["id"], r_["use"][:5] if r_["use"] != "ALLOWANCE" else "ALLOW", r_["name"], (" " + r_["sub"]) if r_["sub"] else "",
+            *("-" if r_[k] is None else ("%g" % r_[k]) for k in ("min", "typ", "max")), r_["unit"], " (full range)" if r_["full"] else " (25 C)"))
+    P("     p.2 VC absolute maximum %.1f to %.1f V: the largest VC excursion from the references' VC = 1.2 V is %.1f V, so the" % (vc_lo, vc_hi, dvc))
+    P("     EA2 allowance is %.1f V / %.0f = %.2f mV on IMON_IN and the EA3 allowance %.1f V / %.0f = %.2f mV on FBIN" % (
+        dvc, by["EA2_AV"]["typ"], 1e3 * dvc / by["EA2_AV"]["typ"], dvc, by["EA3_AV"]["typ"], 1e3 * dvc / by["EA3_AV"]["typ"]))
+    P("     RSENSE1 and RIMON_IN at %.0f %% each (ASSUMPTION, all of tolerance and drift); R8 %.0fk and R9 %.2fk at 1 %% (NETLIST)" % (
+        100 * R_TOL, r8, r9))
+    P("   THE ENVELOPE: the loaded input voltage from the hold's tolerance-adjusted lower corner %.3f V (FBIN %.3f V, every grade's" % (
+        v_lo, min(f["min"] for f in fb_p)))
+    P("   minimum; its line regulation, the EA3 allowance and the FBIN bias against it; R8 and R9 at their worst) to REQ-016's")
+    P("   %.0f V open-circuit ceiling, which no loaded voltage exceeds; the hold spans %.3f / %.3f / %.3f V; both temperature ends" % (
+        v_oc, v_lo, v_nom_hold, v_hi_hold))
+    P("   (the full-range rows' printed limits hold at both; the 25 C rows applied as printed at both, ASSUMPTION)")
+    P("   THE SETTING, sized by the classified stack at the %.0f V corner (the rows that moved it):" % v_oc)
+    for lab, ids in steps:
+        P("     %-100s ceiling %.6f A" % (lab, p_win / v_oc / size_kmax(v_oc, ids)))
+    P("     rounded DOWN to the stated %.0f mA resolution: the nominal setting %.3f A (the E or I grade fixed by procurement would" % (
+        1e3 * I_RES, i_set))
+    P("     allow %.6f A)" % i_ceil_ei)
+    P("   THE CHECK, independent of the classification (the limit's rows read from the sheet, %d corners: %d voltages from %.3f to" % (
+        n_corners, len(grid), v_lo))
+    P("   %.0f V, both temperature ends, and every combination of the reference, its line regulation, A7, the two resistors and" % v_oc)
+    P("   the EA2 allowance at their limits): the worst corner %.3f V (both temperature ends alike), reference %.3f V, line %s," % (
+        worst[1], worst[3], "+" if worst[4] > 0 else "-"))
+    P("   gm %.2f mmho, resistors %s / %s, EA2 %s: V_in x I_in,max = %.4f W, margin %.4f W under %.0f W (refused above it)" % (
+        worst[5], "low" if worst[6] < 1 else "high", "low" if worst[7] < 1 else "high", "+" if worst[8] > 0 else "-", worst[0],
+        p_win - worst[0], p_win))
+    P("   THE CONSEQUENCE: in an hour the limit acts, the stage takes between %.1f W at the lower corner (%.3f V x %.3f A, the" % (
+        p_lo, v_lo, i_lo))
+    P("   limit's lowest there) and %.0f W; at the nominal hold and setting %.1f W (%.3f V x %.3f A). Where between is the admitted" % (
+        p_win, p_typ, v_nom_hold, i_set))
+    P("   panel's own curve, INCONCLUSIVE until O-1 pins it. The fault threshold sits at IMON_IN 1.61 V typical, %.2f times the" % (
+        by["IMON_OV"]["typ"] / by["IMON_REG"]["typ"]))
+    P("   limit (p.31). The bench sweep runs from %.3f V to %.0f V at both temperature ends, steady state and transients recorded" % (v_lo, v_oc))
+    P("   apart")
+    P("   The replay with the stage window at the lower corner and at the nominal hold (CORRECTED, WE, TYP; a separate row, not")
     P("   the 100 W screening case, and still on the non-compliant stimulus):")
     o2rows = {}
-    for wlab, win_ in (("lower edge %.1f W" % p_lo, p_lo), ("nominal hold %.1f W" % p_typ, p_typ), ("screening case %.0f W" % p_win, p_win)):
+    for wlab, win_ in (("lower corner %.1f W" % p_lo, p_lo), ("nominal hold %.1f W" % p_typ, p_typ), ("screening case %.0f W" % p_win, p_win)):
         for ak, alab, n in archs:
             r_ = [meanday(ak, "WE", n, "TYP", h, win_) for h in (48, 72)]
             x = [least(ak, "WE", "TYP", h, win_, 1.0, 160.0, 34) for h in (48, 72)]

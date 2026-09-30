@@ -294,26 +294,68 @@ not the independent check.
    + stage and front end 0.97, charge 0.98 (the high bracket)         store 582.5 Wh; unserved 126.6 / 277.3 Wh at 48 / 72 h;
                                                                       least addition +116.0 / +271.9 Wh; steady load carried 39.7 / 38.4 W
 
-11. O-2'S BOUND (check astra-check-l4e2-1, B2): V_in x I_in,max at most 100 W across every loaded input voltage REQ-016 admits
+11. O-2'S BOUND (checks astra-check-l4e2-1 and -2, B2): V_in x I_in,max at most 100 W at every corner of the envelope
    a current limit alone does not bound power: FBIN (8705af p.29) only lowers the current when the input falls below its
    set point, so while the input-current loop (p.31) limits, the input rises along the panel's curve toward its open-circuit
    voltage. A fixed 5.68 A (100 W at 17.6 V) is 113.6 W at a loaded 20 V and 142.0 W at 25 V
-   the envelope: an admitted panel's loaded voltage is below its open-circuit voltage, at most 25 V at its coldest (REQ-016),
-   and at least the FBIN hold: R8 102k and R9 7.50k at 1 % (NETLIST, gen_sch_e.py) with FBIN 1.184 / 1.205 / 1.226 V (p.4) hold the
-   input at 16.968 / 17.593 / 18.236 V
-   the limit's tolerance (p.4 IMON_IN 1.187 / 1.208 / 1.229 V; p.5 A7 0.94 / 1.00 / 1.06 mmho; the two setting resistors at 1 %,
-   ASSUMPTION): the limit lies between 0.9087 and 1.1043 times its nominal setting
-   the bound: I_in,max = 100 W / 25 V = 4.000 A at the top of the tolerance, so the nominal setting at most 3.622 A and the
-   limit at least 3.292 A; V_in x I_in,max = 25.0 V x 4.000 A = 100.0 W at the highest loaded voltage, and less at every lower one
-   its consequence: in an hour the limit acts, the stage takes between the hold point's 55.9 W (lower edge: 16.968 V x 3.292 A)
-   and 100 W; at the nominal hold and setting 63.7 W (17.593 V x 3.622 A); where between is the admitted panel's own curve,
-   INCONCLUSIVE until O-1 pins it. The fault threshold sits at IMON_IN 1.61 V typical (p.5), 1.33 times the limit (p.31)
-   The replay with the stage window at the lower edge and at the nominal hold point (CORRECTED, WE, TYP; a separate row, not
+   THE ROWS (8705af pp.2 to 6, read back from the pinned sheet by column, each equal to the table: yes; every parameter line
+   of pp.3 to 6 naming CSPIN, CSNIN, A7, IMON_IN, EA2, SRVO_IIN, FBIN, EA3, VC classified: yes)
+     p.4 IMON_REG     STACK Regulation Voltages for IMON_IN and IMON_OUT: 1.187 / 1.208 / 1.229 V (full range)
+     p.4 IMON_LINE    STACK Line Regulation for IMON_IN and IMON_OUT Error Amp: - / 0.002 / 0.005 %/V (25 C)
+     p.5 A7_ALL       STACK VCSPIN-CSNIN to IMON_IN Amplifier A7 gm (All Grades): 0.95 / 1 / 1.05 mmho (25 C)
+     p.5 A7_EI        STACK VCSPIN-CSNIN to IMON_IN Amplifier A7 gm (LT8705AE, LT8705AI): 0.94 / 1 / 1.06 mmho (full range)
+     p.5 A7_HMP       STACK VCSPIN-CSNIN to IMON_IN Amplifier A7 gm (LT8705AH, LT8705AMP): 0.93 / 1 / 1.07 mmho (full range)
+     p.5 EA2_AV       ALLOW IMON_IN Error Amp EA2 Voltage Gain: - / 130 / - V/V (25 C)
+     p.5 EA2_GM       NONE  IMON_IN Error Amp EA2 gm: - / 185 / - umho (25 C)
+     p.4 CS_BIAS      CONDI CSPIN, CSNIN Bias Current ICSPIN + ICSNIN: - / 31 / - uA (25 C)
+     p.5 CS_CM        CONDI CSPIN, CSNIN Common Mode Operating Voltage Range: 1.5 / - / 80 V (full range)
+     p.5 CS_DIFF      CONDI CSPIN, CSNIN Differential Operating Voltage Range: -100 / - / 100 mV (full range)
+     p.5 IMON_IOUT    CONDI IMON_IN Maximum Output Current: 100 / - / - uA (full range)
+     p.5 IMON_OV      NONE  IMON_IN Overvoltage Threshold: 1.55 / 1.61 / 1.67 V (full range)
+     p.5 SRVO_IIN     NONE  SRVO_IIN Activation Threshold (Note 5): -60 / -49 / -37 mV (25 C)
+     p.5 SRVO_IIN_H   NONE  SRVO_IIN Activation Threshold Hysteresis (Note 5): - / 22 / - mV (25 C)
+     p.5 SRVO_IIN_LV  NONE  SRVO_IIN, SRVO_IOUT Low Voltage (Note 5): - / 110 / 330 mV (full range)
+     p.5 SRVO_IIN_LK  NONE  SRVO_IIN, SRVO_IOUT Leakage Current (Note 5): - / 0 / 1 uA (full range)
+     p.4 VC_GAIN      NONE  Gain from VC to Maximum Current Sense Voltage: - / 150 / - mV/V (25 C)
+     p.4 FBIN_EI      HOLD  Regulation Voltage for FBIN (LT8705AE, LT8705AI): 1.184 / 1.205 / 1.226 V (full range)
+     p.4 FBIN_HMP     HOLD  Regulation Voltage for FBIN (LT8705AH, LT8705AMP): 1.182 / 1.205 / 1.226 V (full range)
+     p.4 FB_LINE      HOLD  Line Regulation for FBOUT and FBIN Error Amp Reference: - / 0.002 / 0.005 %/V (25 C)
+     p.4 FBIN_BIAS    HOLD  FBIN Pin Bias Current: - / 10 / - nA (25 C)
+     p.4 EA3_AV       HOLD  FBIN Error Amp EA3 Voltage Gain: - / 90 / - V/V (25 C)
+     p.4 EA3_GM       NONE  FBIN Error Amp EA3 gm: - / 130 / - umho (25 C)
+     p.4 SRVO_FBIN    NONE  SRVO_FBIN Activation Threshold (Note 5): 56 / 72 / 89 mV (25 C)
+     p.4 SRVO_FBIN_H  NONE  SRVO_FBIN Activation Threshold Hysteresis (Note 5): - / 33 / - mV (25 C)
+     p.4 SRVO_FBIN_LV NONE  SRVO_FBIN, SRVO_FBOUT Low Voltage (Note 5): - / 110 / 330 mV (full range)
+     p.4 SRVO_FBIN_LK NONE  SRVO_FBIN, SRVO_FBOUT Leakage Current (Note 5): - / 0 / 1 uA (full range)
+     p.2 VC absolute maximum -0.3 to 2.2 V: the largest VC excursion from the references' VC = 1.2 V is 1.5 V, so the
+     EA2 allowance is 1.5 V / 130 = 11.54 mV on IMON_IN and the EA3 allowance 1.5 V / 90 = 16.67 mV on FBIN
+     RSENSE1 and RIMON_IN at 1 % each (ASSUMPTION, all of tolerance and drift); R8 102k and R9 7.50k at 1 % (NETLIST)
+   THE ENVELOPE: the loaded input voltage from the hold's tolerance-adjusted lower corner 16.695 V (FBIN 1.182 V, every grade's
+   minimum; its line regulation, the EA3 allowance and the FBIN bias against it; R8 and R9 at their worst) to REQ-016's
+   25 V open-circuit ceiling, which no loaded voltage exceeds; the hold spans 16.695 / 17.593 / 18.490 V; both temperature ends
+   (the full-range rows' printed limits hold at both; the 25 C rows applied as printed at both, ASSUMPTION)
+   THE SETTING, sized by the classified stack at the 25 V corner (the rows that moved it):
+     IMON_REG, A7 over the E and I grades' full range, the two resistors (the first issue's stack)        ceiling 3.622207 A
+     + IMON_LINE, the reference's line regulation from 12 V to 25 V                                       ceiling 3.619854 A
+     + A7 over every grade's printed limits (A7_ALL, A7_HMP: no grade is named)                           ceiling 3.581345 A
+     + EA2_AV, the error amplifier's finite gain over VC's range (the ALLOWANCE)                          ceiling 3.548056 A
+     rounded DOWN to the stated 1 mA resolution: the nominal setting 3.548 A (the E or I grade fixed by procurement would
+     allow 3.586207 A)
+   THE CHECK, independent of the classification (the limit's rows read from the sheet, 106496 corners: 832 voltages from 16.695 to
+   25 V, both temperature ends, and every combination of the reference, its line regulation, A7, the two resistors and
+   the EA2 allowance at their limits): the worst corner 25.000 V (both temperature ends alike), reference 1.229 V, line +,
+   gm 0.93 mmho, resistors low / low, EA2 +: V_in x I_in,max = 99.9984 W, margin 0.0016 W under 100 W (refused above it)
+   THE CONSEQUENCE: in an hour the limit acts, the stage takes between 52.8 W at the lower corner (16.695 V x 3.162 A, the
+   limit's lowest there) and 100 W; at the nominal hold and setting 62.4 W (17.593 V x 3.548 A). Where between is the admitted
+   panel's own curve, INCONCLUSIVE until O-1 pins it. The fault threshold sits at IMON_IN 1.61 V typical, 1.33 times the
+   limit (p.31). The bench sweep runs from 16.695 V to 25 V at both temperature ends, steady state and transients recorded
+   apart
+   The replay with the stage window at the lower corner and at the nominal hold (CORRECTED, WE, TYP; a separate row, not
    the 100 W screening case, and still on the non-compliant stimulus):
-     lower edge 55.9 W      A1: first interruption h 13/2; unserved 958.1 / 974.2 at 48 h, 1483.9 / 1500.0 at 72 h; least addition +961.4 / +1486.2 Wh
-     lower edge 55.9 W      A2: first interruption h 23/11; unserved 567.7 / 583.9 at 48 h, 1095.6 / 1111.7 at 72 h; least addition +576.9 / +1109.9 Wh
-     nominal hold 63.7 W    A1: first interruption h 13/2; unserved 907.4 / 923.5 at 48 h, 1382.5 / 1398.6 at 72 h; least addition +898.4 / +1360.3 Wh
-     nominal hold 63.7 W    A2: first interruption h 23/11; unserved 506.5 / 522.7 at 48 h, 973.1 / 989.3 at 72 h; least addition +515.7 / +987.8 Wh
+     lower corner 52.8 W    A1: first interruption h 13/2; unserved 991.7 / 998.6 at 48 h, 1541.9 / 1548.8 at 72 h; least addition +995.0 / +1544.3 Wh
+     lower corner 52.8 W    A2: first interruption h 22/11; unserved 601.4 / 607.7 at 48 h, 1153.0 / 1159.4 at 72 h; least addition +610.8 / +1167.3 Wh
+     nominal hold 62.4 W    A1: first interruption h 13/2; unserved 907.4 / 923.5 at 48 h, 1382.5 / 1398.6 at 72 h; least addition +908.8 / +1381.2 Wh
+     nominal hold 62.4 W    A2: first interruption h 23/11; unserved 516.6 / 532.8 at 48 h, 993.4 / 1009.6 at 72 h; least addition +525.8 / +1008.0 Wh
      screening case 100 W   A1: first interruption h 13/2; unserved 907.4 / 923.5 at 48 h, 1382.5 / 1398.6 at 72 h; least addition +654.8 / +873.1 Wh
      screening case 100 W   A2: first interruption h 23/11; unserved 270.1 / 286.3 at 48 h, 500.4 / 516.5 at 72 h; least addition +278.8 / +515.8 Wh
 
