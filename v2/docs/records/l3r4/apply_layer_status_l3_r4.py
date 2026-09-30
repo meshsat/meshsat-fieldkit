@@ -2,10 +2,11 @@
 """LAYER-STATUS.md's layer 3 gate row "An independent check accepts the handover" brought current (MESHSAT-1357, layer 3
 round 4, 30 September 2026; set 16's integration check, minor 1): the row still read NOT MET and cited CHECK-1 to
 CHECK-3, while CHECK-5 of L3-R2 accepted the handover as prepared with the six owner decisions pending and l3r2.yaml's
-`independent_check` names it ACCEPTED.
+`independent_check` names it ACCEPTED. Round 4b (CHECK-1 of round 4, minor 4): the paragraph "Whose each remaining item
+is" on the same page no longer lists the independent check of L3-R2 as remaining.
 
-The edit replaces that one row, located by its own text and asserted to occur exactly once; nothing else on the page
-changes. No dash character is written. It refuses unless the accepted check is filed and verified the way the renderer
+The edits replace that row and that one sentence, each located by its own text and asserted to occur exactly once;
+nothing else on the page changes. No dash character is written. It refuses unless the accepted check is filed and verified the way the renderer
 verifies it (render_l3r2.handover_checks: every record at its sha256/16, each verdict read from its record's first line,
 the newest ACCEPTED and naming check-l3r2-5.md), and a second run is refused.
 
@@ -29,6 +30,8 @@ OLD = ("| An independent check accepts the handover | NOT MET | the checks CHECK
        "owner's instructions in rounds 3 to 3c, and a further check of the filled issue by a checker who wrote none of "
        "L3-R2 is owed (L3-C27) |")
 MARK = "| An independent check accepts the handover | MET for the handover as prepared"
+CHECKER = " A checker: the independent check of L3-R2 (L3-C27)."
+CHECKER_AT = "The integrator: the scripts and renders on the integration set (L3-C28)."
 
 
 def new_row(entry):
@@ -38,9 +41,15 @@ def new_row(entry):
             "3b, 3c and 3d, and CHECK-5's minors are answered in round 3e (L3-C27) |" % (CHECK, entry["sha16"]))
 
 
+def edits(entry):
+    """(old, new) pairs: the gate row, and the remaining-items sentence that named the check."""
+    return [(OLD, new_row(entry)), (CHECKER_AT + CHECKER, CHECKER_AT)]
+
+
 def build(t):
     if MARK in t: E.refuse("the page already carries %r: this script has run" % MARK)
     if t.count(OLD) != 1: E.refuse("the page does not carry the row CHECK-1 to CHECK-3 left once (%d)" % t.count(OLD))
+    if t.count(CHECKER_AT + CHECKER) != 1: E.refuse("the page does not carry the remaining-items sentence on the check once")
     data = RL.load_data()
     try:
         chks = RL.handover_checks(data)
@@ -49,11 +58,15 @@ def build(t):
     if not RL.handover_accepted(data): E.refuse("the newest check of L3-R2 is not ACCEPTED")
     last = chks[-1]
     if str(last["record"]) != CHECK: E.refuse("the newest check is %s, not %s" % (last["record"], CHECK))
-    new = new_row(last)
-    for d in E.DASHES:
-        if d in new: E.refuse("the row carries a dash character")
-    out = t.replace(OLD, new)
-    if out.replace(new, OLD) != t: E.refuse("the page outside the replaced row moved")
+    out = t
+    for old, new in edits(last):
+        for d in E.DASHES:
+            if d in new: E.refuse("an edit carries a dash character")
+        out = out.replace(old, new)
+    back = out
+    for old, new in reversed(edits(last)):
+        back = back.replace(new, old, 1) if new != CHECKER_AT else back.replace(CHECKER_AT, CHECKER_AT + CHECKER, 1)
+    if back != t: E.refuse("the page outside the replaced row and sentence moved")
     return out
 
 
@@ -65,7 +78,7 @@ def main(argv):
     except E.Refused as e:
         print("apply_layer_status_l3_r4: REFUSED: %s" % e)
         return 2
-    print("apply_layer_status_l3_r4: the independent-check row restated%s" % (" (check only, nothing written)" if "--check" in argv else ""))
+    print("apply_layer_status_l3_r4: the independent-check row restated and the remaining-items sentence on it dropped%s" % (" (check only, nothing written)" if "--check" in argv else ""))
     if "--check" not in argv:
         open(page, "w", encoding="utf-8").write(new)
         print("apply_layer_status_l3_r4: written %s" % os.path.relpath(os.path.abspath(page), E.TOP))

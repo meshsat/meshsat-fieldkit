@@ -1,13 +1,16 @@
 """The definition re-issue on the owner's layer 3 answers is prepared and follows the recorded answers (MESHSAT-1357,
-layer 3 round 4, 30 September 2026; closure item L3-C26).
+layer 3 round 4, 30 September 2026; closure item L3-C26; round 4b on CHECK-1 of round 4).
 
 `v2/docs/records/l3r4/reissue.py` maps every passage of the baselined CONOPS.md and PRODUCT-BRIEF.md that an answer to
-rows L3-OD1 to L3-OD6 makes inconsistent with the requirements, and once the registry records the answers it writes the
-proposed re-issue and its change record. These tests hold the passage map to the baselined files, run the prepared
-owner-decision scripts of L3-R2 (v2/docs/records/l3r2/conditional/) on COPIES of the registry in the pattern of its dry
-runs, and check the generator on the session's recommended answers, on two other coherent combinations, and its
-refusals: rows undecided, an incoherent set, and any write into a baselined file. `apply_layer_status_l3_r4.py` is run
-on a copy of LAYER-STATUS.md. Nothing here writes into the tree.
+rows L3-OD1 to L3-OD6 makes inconsistent with the requirements, restated (DEFINITION) or read through
+DEFINITION-STATUS.md as the design as generated (CURRENT: the QMX, the one pack's chain, board A's front end, the held
+cell), and once the registry records the answers it writes the proposed re-issue and its change record. These tests
+hold the passage map to the baselined files, run the prepared owner-decision scripts of L3-R2
+(v2/docs/records/l3r2/conditional/) on COPIES of the registry in the pattern of its dry runs, and check the generator on
+the session's recommended answers, on two other coherent combinations, and its refusals: rows undecided, an incoherent
+set, a write into a baselined file or through a link, and a rewrite once the re-issue is approved (the approval leaves
+the draft and the record current and the renderer accepts them). `apply_layer_status_l3_r4.py` is run on a copy of
+LAYER-STATUS.md. Nothing here writes into the tree.
 """
 import os
 import re
@@ -20,6 +23,7 @@ TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
 REC = os.path.join(ROOT, "v2", "docs", "records", "l3r4")
 COND = os.path.join(ROOT, "v2", "docs", "records", "l3r2", "conditional")
+L3DATA = os.path.join(ROOT, "v2", "docs", "handover", "layer3", "l3r2.yaml")
 GEN = os.path.join(REC, "reissue.py")
 LSTAT = os.path.join(REC, "apply_layer_status_l3_r4.py")
 BASE = {"v2/docs/CONOPS.md": None, "v2/docs/PRODUCT-BRIEF.md": None}
@@ -30,8 +34,8 @@ from harness import need, Skip  # noqa: E402
 import claims_check as CC  # noqa: E402
 
 # The session's recommended answers (OWNER-DECISIONS-L3.md): approve, 2s2p, adopt, reading-c and the mean day. Rows
-# L3-OD2 (which lid item leaves) and L3-OD6's build are the owner's with no recommendation; the fixture takes the QMX
-# out and TYP, the placeholders of dryrun.py's example chain.
+# L3-OD2 (which lid item leaves), L3-OD6's build and row L3-OD4's operator push are the owner's with no recommendation;
+# the fixture takes the QMX out, TYP and a push of 20 N as STAND-INS (dryrun.py's placeholders), not as recommendations.
 RECOMMENDED = [("od_l3_6.py", "mean-day", "--build", "TYP"), ("od_l3_1.py", "approve"), ("od_l3_2.py", "qmx-out"),
                ("od_l3_3.py", "2s2p"), ("od_l3_4.py", "adopt", "--push-n", "20"), ("od_l3_5.py", "reading-c")]
 OTHER = [("od_l3_6.py", "mean-day", "--build", "WAB"), ("od_l3_1.py", "approve"), ("od_l3_2.py", "qmx-outside"),
@@ -39,6 +43,11 @@ OTHER = [("od_l3_6.py", "mean-day", "--build", "WAB"), ("od_l3_1.py", "approve")
 THIRD = [("od_l3_6.py", "mean-day", "--build", "TYP"), ("od_l3_1.py", "approve"), ("od_l3_2.py", "tablet-out"),
          ("od_l3_3.py", "keep", "--array-wp", "1100", "--entry-a", "80", "--evidence", "EV"), ("od_l3_4.py", "reject"),
          ("od_l3_5.py", "cells")]
+# The one pack's generated chain by its designators: every baselined line naming one lies in a PACK passage (B1).
+PACK_DESIGNATORS = re.compile(r"BQ25731|BQ7720700|\bR17\b|ADCVBAT|ADCIDCHG|0x6B|0x0010|SLUSE66A|SLUUAQ3A|CHRG_INHIBIT|"
+                              r"\bCHG_INHIBIT\b|CELL_F|J_SMB|pack node|\bK3\b|\bVBAT\b|\bF2\b|\bJP1\b|gen_sch_p\.py|"
+                              r"pcb_pack_protection")
+_CHAINS = {}
 
 
 def _run(args, cwd=None):
@@ -65,26 +74,33 @@ def _tree_undecided():
 
 
 def _chain(steps):
-    """A copy of the registry with the steps applied by the prepared scripts, as dryrun.py applies them."""
+    """A copy of the registry with the steps applied by the prepared scripts, as dryrun.py applies them; each chain
+    is built once per run and handed out as a fresh copy."""
     need(COND, "the conditional scripts of L3-R2 are not in this tree")
     _tree_undecided()
+    key = tuple(tuple(s) for s in steps)
+    if key not in _CHAINS:
+        d = tempfile.mkdtemp(prefix="l3r4-reg-")
+        reg = os.path.join(d, "pcb_requirements.yaml")
+        shutil.copy(os.path.join(TOOLS, "pcb_requirements.yaml"), reg)
+        ev = os.path.join(d, "basis-fixture.md")
+        open(ev, "w", encoding="utf-8").write("FIXTURE, not the energy basis: array 1100 Wp, entry 80 A.\n")
+        for s in steps:
+            extra = [ev if x == "EV" else x for x in s[2:]]
+            r = _run([os.path.join(COND, s[0]), "--option", s[1], "--words", "test words", "--date", "2026-10-01",
+                      "--registry", reg] + extra, cwd=d)
+            assert r.returncode == 0, "%s --option %s exit %d:\n%s" % (s[0], s[1], r.returncode, (r.stdout + r.stderr)[-500:])
+        _CHAINS[key] = reg
     d = tempfile.mkdtemp(prefix="l3r4-reg-")
     reg = os.path.join(d, "pcb_requirements.yaml")
-    shutil.copy(os.path.join(TOOLS, "pcb_requirements.yaml"), reg)
-    ev = os.path.join(d, "basis-fixture.md")
-    open(ev, "w", encoding="utf-8").write("FIXTURE, not the energy basis: array 1100 Wp, entry 80 A.\n")
-    for s in steps:
-        extra = [ev if x == "EV" else x for x in s[2:]]
-        r = _run([os.path.join(COND, s[0]), "--option", s[1], "--words", "test words", "--date", "2026-10-01",
-                  "--registry", reg] + extra, cwd=d)
-        assert r.returncode == 0, "%s --option %s exit %d:\n%s" % (s[0], s[1], r.returncode, (r.stdout + r.stderr)[-500:])
+    shutil.copy(_CHAINS[key], reg)
     return d, reg
 
 
-def _generate(reg, expect=0):
-    out = tempfile.mkdtemp(prefix="l3r4-out-")
+def _generate(reg, expect=0, out=None, extra=()):
+    out = out or tempfile.mkdtemp(prefix="l3r4-out-")
     before = {k: _sha(k) for k in BASE}
-    r = _run([GEN, "--registry", reg, "--out-dir", out])
+    r = _run([GEN, "--registry", reg, "--out-dir", out] + list(extra))
     assert r.returncode == expect, "reissue.py exit %d (expected %d):\n%s" % (r.returncode, expect, (r.stdout + r.stderr)[-600:])
     assert {k: _sha(k) for k in BASE} == before, "a baselined file changed while reissue.py ran"
     return out, r.stdout
@@ -96,9 +112,19 @@ def _read(out):
             open(os.path.join(out, RI.RECORD), encoding="utf-8").read())
 
 
+def _flat(text):
+    return " ".join(re.sub(r"^> ?", "", text, flags=re.M).split())
+
+
+def _section(draft, pid):
+    m = re.search(r"^### %s\. .*?(?=^### |^## )" % pid, draft, re.M | re.S)
+    return m.group(0) if m else ""
+
+
 def _common(reg, out):
     """What holds for every generated re-issue: each passage names its rows and rulings, every ruling of the answers is
-    cited, the change record binds the draft by its sha, and the texts carry no dash and no unqualified claim."""
+    cited, the change record binds the draft by its sha, M1's reading is stated plainly with its status row, and the
+    texts carry no dash and no unqualified claim."""
     import yaml
     RI = _mod()
     draft, rec = _read(out)
@@ -115,8 +141,15 @@ def _common(reg, out):
     import hashlib
     assert hashlib.sha256(draft.encode("utf-8")).hexdigest()[:16] in rec, "the change record does not name the draft's sha"
     assert "PROPOSED" in draft and "PROPOSED" in rec and "definition_reissue" in rec
+    r72 = next(r for r in d["records"] if r["id"] == "REQ-072")
+    assert "REQ-072 reads %s" % r72["evidence_result"] in _flat(draft), "the draft does not state REQ-072's reading"
+    assert "| DC-L3-M1 |" in draft, "the draft proposes no status row for M1's reading"
+    if r72["evidence_result"] == "FAIL":
+        assert "Does not meet mission M1 as the design stands." in _flat(_section(draft, "B15")), "B15 is softer than FAIL"
     for t in (draft, rec):
         assert not any(x in t for x in DASHES), "a generated text carries a dash character"
+    assert "\n\nStatements of the design as generated" in rec and "\n\nWhere a passage the re-issue does not restate" in rec, \
+        "the change record runs its paragraphs together"
     n, bad = CC.check([os.path.join(out, RI.DRAFT), os.path.join(out, RI.RECORD)])
     assert not bad, "a generated text carries an unqualified claim: %s" % bad[:2]
     r = _run([GEN, "--registry", reg, "--out-dir", out, "--check"])
@@ -139,11 +172,22 @@ def _proposed(RI, reg):
     return c, applied, cur
 
 
+def _groups(cur):
+    out = {}
+    for p in cur: out.setdefault(p.group, []).append(p.a)
+    return out
+
+
 # ------------------------------------------------------------------------------------------------ the map
 def t_l3r4_the_passage_map_is_generated_from_the_baselined_files():
-    _mod()
+    RI = _mod()
     r = _run([GEN, "--map", "--check"])
     assert r.returncode == 0, "PASSAGE-MAP.md is not what reissue.py --map writes:\n%s" % r.stdout
+    body = open(RI.MAP, encoding="utf-8").read()
+    docs = RI.baselined()
+    for p in RI.PASSAGES:
+        off, end, old = RI.locate(docs[p.doc], p)
+        assert RI.quote(old) in body, "the map does not quote %s whole" % p.pid
 
 
 def t_l3r4_every_passage_is_found_once_where_the_map_says():
@@ -156,7 +200,23 @@ def t_l3r4_every_passage_is_found_once_where_the_map_says():
         line = docs[p.doc][:off].count("\n") + 1
         assert line == p.a, "%s starts on line %d, not %d" % (p.pid, line, p.a)
         assert (p.new is None) == (p.kind == "CURRENT"), "%s: a CURRENT passage has no proposed text, a DEFINITION one does" % p.pid
+        assert (p.group is None) == (p.kind == "DEFINITION"), "%s: only a CURRENT passage has a group" % p.pid
         assert p.when == RI.ALL or set(p.when) <= set(RI.ROWS), "%s names a row that is not L3-OD1 to L3-OD6" % p.pid
+
+
+def t_l3r4_every_line_of_the_one_pack_chain_is_a_current_passage():
+    """CHECK-1 of round 4, B1: a baselined line of the definition that names the one pack's charge, measurement or
+    protection chain by a designator lies in a PACK passage, except the rulings table of section 7 (history)."""
+    RI = _mod()
+    docs = RI.baselined()
+    text = docs["CONOPS"]
+    lines = text[:text.index("\n## Appendix")].split("\n")
+    covered = {n for p in RI.PASSAGES if p.group == "PACK" for n in range(p.a, p.b + 1)}
+    rulings = [i for i, l in enumerate(lines, 1) if l.startswith("| D-")]
+    miss = [i for i, l in enumerate(lines, 1) if PACK_DESIGNATORS.search(l) and i not in covered and i not in rulings]
+    assert not miss, "lines naming the one pack's chain are in no PACK passage: %s" % miss
+    brief = docs["BRIEF"][:docs["BRIEF"].index("\n## Appendix")]
+    assert not PACK_DESIGNATORS.search(brief), "the brief names the pack's chain by a designator the map does not hold"
 
 
 def t_l3r4_the_baselines_are_the_files_l3r2_names():
@@ -177,18 +237,29 @@ def t_l3r4_the_recommended_answers_give_the_reissue():
     for pid in ("C03", "C05", "C06", "C07", "C09", "C14", "C17", "C19", "C21", "C29", "C31", "B03", "B06", "B08", "B13",
                 "B15", "B18"):
         assert pid in got, "the recommended answers leave %s unrestated" % pid
-    assert len(cur) == len(RI.QMX_CURRENT), "the QMX out of the kit leaves %d statements of the design as generated, not %d" % (
-        len(cur), len(RI.QMX_CURRENT))
+    g = _groups(cur)
+    assert len(g["HF"]) == len(RI.CURRENT["HF"][0]) and len(g["PACK"]) == len(RI.CURRENT["PACK"][0]), \
+        "the QMX out and two packs leave %s as the design as generated" % {k: len(v) for k, v in g.items()}
+    assert set(g) == {"HF", "PACK", "SOLAR"} and g["SOLAR"] == [991], "the recommended answers touch %s" % sorted(g)
+    for row in ("HF", "PACK", "SOLAR"):
+        assert "| DC-L3-%s |" % row in draft, "the status row DC-L3-%s for the design as generated is missing" % row
+    head = _flat(_section(draft, "C02"))
+    assert "states a requirement, an intention or a condition about \"the pack\"" in head and \
+        "states the circuit as generated for one pack" in head, "the head note reads every passage as two packs"
     rq = c.deploy_req()
-    flat = " ".join(re.sub(r"^> ?", "", draft, flags=re.M).split())
+    flat = _flat(draft)
     assert rq in draft and c.stmt(rq) in flat, "the deployment condition is not quoted from %s" % rq
     assert c.stmt("REQ-072") in flat, "M1's energy passage does not quote REQ-072 as restated"
     assert "4S15P lid pack" in draft, "the QMX out of the lid does not give the 4S15P lid pack"
+    assert "an %s tablet in the lid bracket" % c.tablet_size() in flat and c.tablet_size() in c.stmt("REQ-011")
+    assert c.array_phrase() in flat and "2S2P" in c.text("L3-OD3"), "the array is not the ruling's"
     assert "HF has left the kit (owner ruling %s on row L3-OD2)" % rids["L3-OD2"] in draft
+    assert "(CFL-017 resolved)" in flat, "reading-c resolves CFL-017 and the D-02a row does not say so"
 
 
 def t_l3r4_another_coherent_combination_gives_its_own_reissue():
-    """The QMX carried outside with HF kept, 1S4P, no deployment condition and CFL-017 kept open: other passages."""
+    """The QMX carried outside with HF kept, 1S4P, no deployment condition and CFL-017 kept open; and the tablet out
+    with REQ-016 kept and cells above +60 C: other passages, other rows for the design as generated."""
     RI = _mod()
     d, reg = _chain(OTHER)
     out, msg = _generate(reg)
@@ -197,16 +268,54 @@ def t_l3r4_another_coherent_combination_gives_its_own_reissue():
     got = {p.pid for k in applied for p, o, n in applied[k][1]}
     assert {"B09", "C03", "C21", "C29"} <= got, "the QMX outside or CFL-017 kept open leaves a passage unrestated"
     assert not ({"C05", "C06", "C10", "C13", "B05", "B13"} & got), "HF kept or no deployment condition restates a passage"
-    assert [p.a for p in cur] == [1095], "the QMX outside leaves the lid tray alone as the design as generated"
-    assert "1S4P" in draft and "deployment condition (owner ruling" not in draft
-    assert "4S15P lid pack" in draft
+    g = _groups(cur)
+    assert g.get("HF") == [1095] and g.get("SOLAR") == [991] and "CELL" not in g, "the groups read %s" % g
+    assert "1S4P" in draft and "deployment condition (owner ruling" not in draft and "4S15P lid pack" in draft
+    for pid in ("C29", "B18"):
+        sec = _flat(_section(draft, pid)).split("Proposed text:")[-1]
+        assert "answered" not in sec.lower() and "kept open" in sec, "%s says CFL-017 was answered under measure" % pid
     d3, reg3 = _chain(THIRD)
     out3, msg3 = _generate(reg3)
     draft3, rec3, rids3 = _common(reg3, out3)
     c3, applied3, cur3 = _proposed(RI, reg3)
     got3 = {p.pid for k in applied3 for p, o, n in applied3[k][1]}
-    assert {"C04", "B04", "C08", "B12"} <= got3 and not cur3, "the tablet out restates its passages and no QMX statement"
+    g3 = _groups(cur3)
+    assert {"C04", "B04", "C08", "B12"} <= got3 and set(g3) == {"PACK", "CELL"}, "the tablet out and cells read %s" % sorted(g3)
     assert "4S14P lid pack" in draft3 and "the tablet bracket has left the kit" in draft3
+    assert "| DC-L3-CELL |" in draft3 and "reopens; CFL-017 stays open until the cell is chosen" in _flat(draft3)
+    assert c3.array_phrase() in _flat(draft3) and "1100 Wp" in c3.text("L3-OD3")
+
+
+def t_l3r4_the_approval_leaves_the_reissue_current_and_unwritten():
+    """CHECK-1 of round 4, minor 1: decide the rows, generate, record the owner's approval (a ruling that decides
+    definition_reissue, and l3r2.yaml's definition_reissue naming the record at its sha); the draft and the record read
+    current, a write is refused and leaves them unchanged, and the renderer accepts the re-issue."""
+    import yaml
+    RI = _mod()
+    d, reg = _chain(RECOMMENDED)
+    out, msg = _generate(reg)
+    draft, rec = _read(out)
+    req = yaml.safe_load(open(reg, encoding="utf-8"))
+    n = max(int(r["id"].split("-")[1]) for r in req["owner_rulings"] if re.match(r"^D-\d+$", str(r["id"])))
+    req["owner_rulings"].append({"id": "D-%d" % (n + 1), "authority": "OWNER", "ruled_on": "2026-10-02",
+                                 "title": "The definition re-issue approved (test)", "decides": "definition_reissue",
+                                 "words": "test words", "ruling": "The change record is approved (a test fixture).",
+                                 "source": ["owner ruling D-%d" % (n + 1)]})
+    reg2 = os.path.join(d, "approved.yaml")
+    open(reg2, "w", encoding="utf-8").write(yaml.safe_dump(req, allow_unicode=True, sort_keys=False))
+    data = yaml.safe_load(open(L3DATA, encoding="utf-8"))
+    recp = os.path.join(out, RI.RECORD)
+    data["definition_reissue"] = {"record": recp, "sha16": RI.RL.sha16_bytes(open(recp, "rb").read()),
+                                  "approved_by": "D-%d" % (n + 1)}
+    data2 = os.path.join(d, "l3r2-approved.yaml")
+    open(data2, "w", encoding="utf-8").write(yaml.safe_dump(data, allow_unicode=True, sort_keys=False))
+    r = _run([GEN, "--registry", reg2, "--data", data2, "--out-dir", out, "--check"])
+    assert r.returncode == 0, "the approval made the draft or the record out of date:\n%s" % r.stdout
+    _generate(reg2, expect=2, out=out, extra=["--data", data2])
+    assert _read(out) == (draft, rec), "a refused rewrite changed the approved draft or record"
+    dec = RI.RL.decided(req, data)
+    ok, why = RI.RL.reissue_ok(req, data, dec)
+    assert ok, "the renderer refuses the approved re-issue: %s" % why
 
 
 # ------------------------------------------------------------------------------------------------ the refusals
@@ -238,6 +347,7 @@ def t_l3r4_refuses_an_incoherent_set():
 
 
 def t_l3r4_never_writes_a_baselined_file():
+    """CHECK-1 of round 4, minor 3: the guard compares real paths and refuses a link before anything is written."""
     RI = _mod()
     for rel in BASE:
         try:
@@ -248,6 +358,12 @@ def t_l3r4_never_writes_a_baselined_file():
     src = open(GEN, encoding="utf-8").read()
     writes = re.findall(r"open\(([^,]+), \"w\"", src)
     assert sorted(writes) == ["MAP", "q"], "the generator opens another file for writing: %s" % writes
+    d, reg = _chain(RECOMMENDED)
+    out = tempfile.mkdtemp(prefix="l3r4-out-")
+    os.symlink(os.path.join(ROOT, "v2", "docs", "PRODUCT-BRIEF.md"), os.path.join(out, RI.DRAFT))
+    o, msg = _generate(reg, expect=2, out=out)
+    assert "link" in msg, "a draft path linked to the brief was not refused before writing: %s" % msg
+    assert not os.path.exists(os.path.join(out, RI.RECORD)), "a refused run wrote the change record"
 
 
 # ------------------------------------------------------------------------------------------------ LAYER-STATUS
@@ -258,16 +374,19 @@ def t_l3r4_layer_status_row_brought_current_on_a_copy():
     sys.path.insert(0, REC)
     import apply_layer_status_l3_r4 as A
     if A.MARK in t:
-        assert A.OLD not in t, "the page carries both the old row and the new one"
+        assert A.OLD not in t and A.CHECKER not in t, "the page carries an old text beside the new one"
         r = _run([LSTAT, "--check"])
         assert r.returncode == 2 and "has run" in r.stdout, "a second run was not refused:\n%s" % r.stdout
         t = t.replace(t[t.index(A.MARK):t.index("\n", t.index(A.MARK))], A.OLD)
+        t = t.replace(A.CHECKER_AT, A.CHECKER_AT + A.CHECKER, 1)
     cp = os.path.join(tempfile.mkdtemp(prefix="l3r4-ls-"), "LAYER-STATUS.md")
     open(cp, "w", encoding="utf-8").write(t)
     r = _run([LSTAT, "--page", cp])
     assert r.returncode == 0, "the row was not restated on a copy:\n%s" % r.stdout
     new = open(cp, encoding="utf-8").read()
     assert A.MARK in new and A.OLD not in new and "check-l3r2-5.md" in new
-    assert new.replace(new[new.index(A.MARK):new.index("\n", new.index(A.MARK))], A.OLD) == t, "the page moved elsewhere"
+    assert A.CHECKER not in new and "A checker:" not in new, "the check still reads as a remaining item"
+    back = new.replace(new[new.index(A.MARK):new.index("\n", new.index(A.MARK))], A.OLD)
+    assert back.replace(A.CHECKER_AT, A.CHECKER_AT + A.CHECKER, 1) == t, "the page moved elsewhere"
     r = _run([LSTAT, "--page", cp])
     assert r.returncode == 2, "a second run on the copy was not refused"
