@@ -79,6 +79,8 @@ LID_A = 9                   # a1mech arrangement A (HF and the tablet kept): 4S9
 BASE_A2 = 6                 # the base pockets' 4S6P (energy_two_pack.NP_B)
 BASE_A1 = 3                 # D-06's 4S3P
 U3_TOL = 0.1                # three_cases.py: U3's minimum 0.1 A under its setting (INFERRED from SLUSE66A p.80's maximum)
+U3_DERATED = 4.00           # r11dep A-1 and three_cases.py: the derated variant of the drawn circuit
+U3_WINDOW = 4.65            # section 8: the least 50 mA setting whose minimum covers REQ-016's window at the declared efficiencies
 
 
 def need(text, pat, what):
@@ -147,6 +149,8 @@ def main():
         "WE97": (v_min, 6.1, we(v_min, 6.1, hi3)),
         "WE100": (v_min, 6.1, we(v_min, 6.1, one3)),
         "REC": (v_nom, u3_e2, {}),
+        "DERATED-WE": (v_min, U3_DERATED - U3_TOL, we(v_min, U3_DERATED - U3_TOL, {"fe_i": fe_held})),
+        "WINDOW-WE": (v_min, U3_WINDOW - U3_TOL, we(v_min, 6.1)),
     }
     node0 = TP.node_power
 
@@ -334,6 +338,10 @@ def main():
     mrow = need(blk, r"^\s+4S9P both kept\s+TYP NOT MET,\s+([\d.]+) unserved\s+N/N\s+WAB NOT MET,\s+([\d.]+) unserved", "three_cases.out drawn WE 4S9P")
     tc_rep = [meanday("A2", "DRAWN-WE", LID_A, b, 72, WIN_P03) for b in ("TYP", "WAB")]
     tc_ok = all((not s["ok"]) and "%.1f" % s["short"] == mrow.group(1 + i) for i, s in enumerate(tc_rep))
+    blk = tco.split("DERATED VARIANT, WE inputs:", 1)[1].split("\n   RESISTOR", 1)[0]
+    mrow_d = need(blk, r"^\s+4S9P both kept\s+TYP NOT MET,\s+([\d.]+) unserved\s+N/N\s+WAB NOT MET,\s+([\d.]+) unserved", "three_cases.out derated WE 4S9P")
+    td_rep = [meanday("A2", "DERATED-WE", LID_A, b, 72, WIN_P03) for b in ("TYP", "WAB")]
+    tc_ok = tc_ok and all((not s["ok"]) and "%.1f" % s["short"] == mrow_d.group(1 + i) for i, s in enumerate(td_rep))
     if not tc_ok:
         bad.append("three_cases.out AS DRAWN WE 4S9P")
     # 0d: the single-pack use (A1 with the lid off) against energy_budget.out 5b (100 Wp, 100 W, the record's chain, E3)
@@ -368,9 +376,8 @@ def main():
     P("   0a l3batt's runtime.py re-run in a child process reproduces runtime.out byte for byte (sha256 %s): yes" % PINS["l3batt/runtime.out"][:16])
     P("   0b this harness reproduces runtime.out section 1's D06 and A35 rows, the twenty cells of section 2 (400 Wp, 200 W) and")
     P("      section 3's %d least-lid lines (48 and 72 h; NOM, WE, NOM90; TYP and WAB): yes" % n3)
-    P("   0c this harness reproduces three_cases.out's AS DRAWN rows at WE inputs, the both-kept lid, 72 h: TYP %.1f, WAB %.1f Wh" % (
-        tc_rep[0]["short"], tc_rep[1]["short"]))
-    P("      unserved: yes")
+    P("   0c this harness reproduces three_cases.out's AS DRAWN and DERATED VARIANT rows at WE inputs, the both-kept lid, 72 h:")
+    P("      TYP %.1f and %.1f, WAB %.1f and %.1f Wh unserved: yes" % (tc_rep[0]["short"], td_rep[0]["short"], tc_rep[1]["short"], td_rep[1]["short"]))
     P("   0d the single-pack use (the lid off) reproduces energy_budget.out 5b, PS-IDLE-SPEC, September, a 100 Wp panel in the")
     P("      100 W window on the record's own chain: 06 UTC usable %s Wh, first stop h %s, %s h run, %s Wh unserved; 18 UTC first" % (
         rep_d["06:00"][0], rep_d["06:00"][1], rep_d["06:00"][2], rep_d["06:00"][3]))
@@ -632,6 +639,18 @@ def main():
             lab, p_bus, p_bus / v_min, setting))
         P("   %-26s its maximum %.2f A, so through R11 %.3f A (0.060 A of other loads) to %.3f A (C-9's 0.079 A)" % (
             "", setting + U3_TOL, setting + U3_TOL + 0.060, setting + U3_TOL + 0.079))
+    for ak, alab, n in archs:
+        for key, lab in (("WE", "CORRECTED, U3 6.1 A minimum (the drafted 6.2 A setting)"),
+                         ("WINDOW-WE", "WINDOW-SIZED, U3 %.2f A minimum (a %.2f A setting), HYPOTHETICAL" % (U3_WINDOW - U3_TOL, U3_WINDOW)),
+                         ("DERATED-WE", "DERATED VARIANT, U3 %.2f A minimum (4.00 A set), R11 as drawn, upper bound" % (U3_DERATED - U3_TOL)),
+                         ("DRAWN-WE", "AS DRAWN, U3 %.2f A minimum (4.15 A set), upper bound" % (u3_e1 - U3_TOL))):
+            r_ = [meanday(ak, key, n, "TYP", h, win_req016) for h in (48, 72)]
+            x = [least(ak, key, "TYP", h, win_req016, 1.0, 160.0, 34) for h in (48, 72)]
+            kk = "el" if ak == "A2" else "eb"
+            add = ["%+.1f" % (meanday(ak, key, x[i], "TYP", h, win_req016)[kk] - r_[i][kk]) if x[i] is not None else "none"
+                   for i, h in enumerate((48, 72))]
+            P("   %s %-77s unserved %.1f / %.1f Wh at 48 / 72 h; least addition %s / %s Wh" % (
+                ak, lab, r_[0]["short"], r_[1]["short"], add[0], add[1]))
     P("   the held front end (R11 10 mOhm) gives %.3f A to U3 at its stacked minimum; the drafted 6.2 mOhm gives 6.733 A; the" % fe_held)
     P("   corrected path's 6.1 A cap (%.1f W) never binds at 100 W: %s" % (6.1 * v_min, "yes" if all(
         main[(ak, "WE", False, b)][h]["rs"][i]["acct"]["cap_hours"] == 0 for ak, _l, _n in archs for b in ("TYP", "WAB") for h in (0, 1) for i in (0, 1)) else "NO"))
