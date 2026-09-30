@@ -26,6 +26,11 @@ What it reads (each checked; the script refuses, exit 3, if a fact it rests on i
     PS-IDLE-SPEC with the lid open) and the reference day's T2m (the 40/0 DRcalc file of the energy model);
   * stream s120's printed band (records/s120/vbus20_bound.out section 2), for comparison.
 
+Second issue (30 September 2026, after the independent check CHECK-1 of 6a283b25, minors 1, 2, 3, 5 and 10): the range is
+called what it is, a STEADY-STATE range, and the soft start, the transients and the ground offset are named; two brackets are
+added beside it, the divider's own rise on board A (an assumption, stated) and the resistors' endurance limits (a bound at
+test stress); U3's input current is labelled (its 6.1 A minimum is INFERRED: SLUSE66A prints only the maximum, and its front
+page's +-2.5 %); and the as-generated entry's 50 mA margin is named.
 Run from the repository root:  python3 v2/docs/records/l3plane/vbus20_range.py > v2/docs/records/l3plane/vbus20_range.out
 Deterministic (pdftotext's text layer of pinned files). Exit 3: an input is missing, changed or not what is expected."""
 import ast
@@ -54,6 +59,9 @@ LM5176 = "v2/vendor/ti/lm5176-datasheet.pdf"
 ENVELOPE = "v2/ecad/tools/pcb_envelope.yaml"
 ANCHOR = "v2/docs/records/a1solar/inputs/pvgis-leiden-daily-profile-2005-2020.json"
 S120_OUT = "v2/docs/records/s120/vbus20_bound.out"
+BQ25731 = "v2/vendor/ti/bq25731-datasheet.pdf"
+BOARD_RISE_K = 20.0                    # ASSUMPTION (CHECK-1 minor 2): the divider's own rise over the inside air on board A,
+                                       # which no layout establishes; printed as a bracket beside the range, not in it
 
 R6_TOP, R7_BOT = 240e3, 10e3           # checked against the netlist's values below
 T_REF = 25.0                           # the makers' TCR reference, read below: UNI-ROYAL p.6 and YAGEO p.8, "t1 = +25 C"
@@ -100,11 +108,12 @@ def code_for(mp, value, footprint):
     return None
 
 
-def band(vref, tol, tcr6, tcr7, dt, ibias, reg):
+def band(vref, tol, tcr6, tcr7, dt, ibias, reg, life6=0.0, life7=0.0):
     """(low, high) of VOUT = VREF (1 + R6 / R7) at the regulation point: tolerance and TCR taken in opposite directions on
     the two resistors (the makers give each a limit, not a tracking figure, and the two are different makers' parts),
-    IBIAS(FB) through R6 both ways, and the error amplifier's finite gain both ways."""
-    d6, d7 = tol + tcr6 * dt, tol + tcr7 * dt
+    IBIAS(FB) through R6 both ways, and the error amplifier's finite gain both ways; life6 and life7 add each resistor's
+    endurance limit as a fraction of its value, in the same opposite directions."""
+    d6, d7 = tol + tcr6 * dt + life6, tol + tcr7 * dt + life7
     r_lo = 1 + R6_TOP * (1 - d6) / (R7_BOT * (1 + d7))
     r_hi = 1 + R6_TOP * (1 + d6) / (R7_BOT * (1 - d7))
     return vref[0] * r_lo - ibias * R6_TOP * (1 + d6) - reg, vref[2] * r_hi + ibias * R6_TOP * (1 + d6) + reg
@@ -173,6 +182,10 @@ def compute():
     need(p8, r"At \+25/\u201355°C and \+25/\+125°C", "YAGEO p.8 the TCR test temperatures")
     need(p8, r"t1=\+25 °C or specified room temperature", "YAGEO p.8 the TCR reference")
     tcr6 = 100e-6
+    need(p8, r"Life/", "YAGEO p.8 the Life/Endurance row")
+    need(p8, r"At 70± 2°C for 1,000 hours", "YAGEO p.8 the endurance test")
+    need(p8, r"± \(1%\+50mΩ\) for B/D/F tol", "YAGEO p.8 the endurance limit for 1 % parts")
+    life6 = 0.01 + 0.050 / R6_TOP
     out["yageo"] = (YAGEO[0], YAGEO[1][:16], [l.strip() for l in blk])
     # UNI-ROYAL, R7 (held back)
     up = os.path.join(TOP, UNIROYAL[0])
@@ -184,6 +197,10 @@ def compute():
         need(u2, r"F=±1%", "UNI-ROYAL p.2 tolerance code F")
         m = need(u6, r"0603：[\s\S]*?>10Ω: ±100PPM/℃", "UNI-ROYAL p.6 0603 TCR row")
         need(u6, r"t1: \+25°C or specified room temperature", "UNI-ROYAL p.6 TCR reference")
+        u7 = page(UNIROYAL[0], 7)
+        need(u7, r"Load life", "UNI-ROYAL p.7 the load life row")
+        need(u7, r"70℃±2℃ ambient", "UNI-ROYAL p.7 the load life test")
+        need(u7, r"±0\.5%,±1%\s*:\s*±\(1\.0%\+0\.05Ω\)", "UNI-ROYAL p.7 the 1 % limit")
         rows = re.findall(r"1Ω≤R≤10Ω: ±200PPM/°C|>10Ω: ±100PPM/℃", m.group(0))
         if rows != ["1Ω≤R≤10Ω: ±200PPM/°C", ">10Ω: ±100PPM/℃"]:
             refuse("UNI-ROYAL p.6's 0603 rows not the two expected")
@@ -192,6 +209,8 @@ def compute():
         out["uniroyal"] = (UNIROYAL[0], UNIROYAL[1][:16], "NOT PRESENT here (held back): not re-read; the LCSC reading's "
                            "'Temperature Coefficient %s' is used" % r7_read["params"].get("Temperature Coefficient"))
     tcr7 = 100e-6
+    life7 = 0.01 + 0.05 / R7_BOT
+    out["life"] = (life6, life7)
 
     # TI SNVSAI1D
     t5, t6, t7 = page(LM5176, 5), page(LM5176, 6), page(LM5176, 7)
@@ -209,7 +228,19 @@ def compute():
         tn = page(LM5176, n).replace("Submit Document Feedback", "")
         if re.search(r"(?i)reference|vref|feedback", tn):
             refuse("SNVSAI1D p.%d names the reference; the no-curve reading must be re-read" % n)
-    out["ti"] = dict(vref=vref, gm=gm, rout=rout, ibias=ibias, vcc_max=vcc_max, vsns=vsns)
+    iss = tuple(float(x) for x in need(t6, r"ISS\s+Soft-start pullup current\s+VSS = 0 V\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+\S*A",
+                                        "SNVSAI1D p.6 ISS").groups())
+    t11 = page(LM5176, 11)
+    for fig in ("Figure 6-15. Load Step (Boost)", "Figure 6-16. Load Step (Buck-Boost)", "Figure 6-17. Load Step (Buck)",
+                "Figure 6-18. Line Transient"):
+        if fig not in t11:
+            refuse("SNVSAI1D p.11 %s not found" % fig)
+    divs = sorted(set(re.findall(r"(\d+ [\u00b5m]s)/div", t11)))
+    out["ti"] = dict(vref=vref, gm=gm, rout=rout, ibias=ibias, vcc_max=vcc_max, vsns=vsns, iss=iss, divs=divs)
+    b1 = page(BQ25731, 1)
+    need(b1, r"±2\.5% Input current regulation", "SLUSE66A p.1 input current accuracy")
+    b80 = page(BQ25731, 80)
+    need(b80, r"Additional 100-mA \(10-mΩ sense", "SLUSE66A p.80 the 100 mA for the maximum")
 
     # temperatures
     env = yaml.safe_load(open(os.path.join(TOP, ENVELOPE), encoding="utf-8"))
@@ -232,6 +263,10 @@ def compute():
     a_dc = gm * rout
     reg = vcc_max / a_dc * (1 + R6_TOP / R7_BOT)
     out["reg"] = (a_dc, reg)
+    ss_c = [comp[r]["value"] for r, pp in pins.items() if r != "U2" and any(v["net"] == "FE_SS" for v in pp.values())]
+    if ss_c != ["4.7u"]:
+        refuse("FE_SS is not one 4.7u capacitor")
+    out["ss"] = (4.7e-6 * vref[1] / iss[2] * 1e6, 4.7e-6 * vref[1] / iss[0] * 1e6)
 
     # the bands
     rows = []
@@ -242,6 +277,14 @@ def compute():
     out["bands"] = rows
     out["nominal"] = vref[1] * (1 + R6_TOP / R7_BOT)
     out["printed_only"] = band(vref, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0)
+    env = rows[0]
+    dt_rise = max(abs(env[1] - T_REF), abs(env[2] + BOARD_RISE_K - T_REF))
+    out["brackets"] = [
+        ("the envelope with the divider %.0f K above the inside air (an ASSUMPTION: no layout)" % BOARD_RISE_K, dt_rise,
+         band(vref, 0.01, tcr6, tcr7, dt_rise, ibias, reg)),
+        ("the envelope with both resistors at their endurance limits (MAKER test limits, a bound)", env[3],
+         band(vref, 0.01, tcr6, tcr7, env[3], ibias, reg, life6, life7)),
+        ("both brackets together", dt_rise, band(vref, 0.01, tcr6, tcr7, dt_rise, ibias, reg, life6, life7))]
     # term by term at the envelope's temperature
     dt = rows[0][3]
     nom = out["nominal"]
@@ -281,8 +324,8 @@ def compute():
 def main():
     o = compute()
     P = print
-    P("VBUS20 AT U3'S INPUT, UNDER LOAD AND TEMPERATURE, FROM THE DESIGN AS GENERATED (vbus20_range.py, stream l3plane,")
-    P("MESHSAT-1357). PROTOTYPE DESIGN: desk arithmetic, nothing built, powered or measured. Basis per figure: MAKER (document,")
+    P("VBUS20 AT U3'S INPUT, UNDER LOAD AND TEMPERATURE, FROM THE DESIGN AS GENERATED (vbus20_range.py second issue, stream")
+    P("l3plane, MESHSAT-1357). PROTOTYPE DESIGN: desk arithmetic, nothing built, powered or measured. Basis per figure: MAKER (document,")
     P("page, read from its text layer here), NETLIST, or INFERRED (reason given).")
     P("")
     net, s16, facts = o["netlist"]
@@ -327,25 +370,44 @@ def main():
         P("   %-78s %+8.3f %+8.3f   %s; %s" % (name, lo, hi, basis, kind))
     a_dc, reg = o["reg"]
     P("")
-    P("6. THE RANGE (min, nominal, max) at the regulation point, all terms together (tolerance and TCR opposite on R6 and R7)")
+    P("6. THE STEADY-STATE RANGE (min, nominal, max) at the regulation point, all terms together (tolerance and TCR opposite on")
+    P("   R6 and R7)")
     P("   the printed figures alone (VREF and 1 %%): %.3f to %.3f V" % o["printed_only"])
     for name, tmin, tmax, dt, lo, hi, why in o["bands"]:
         P("   %-36s min %.3f V, nominal %.3f V, max %.3f V" % (name, lo, o["nominal"], hi))
     P("   stream s120's band (65 K of TCR assumed, no amplifier term): %.3f to %.3f V" % o["s120"])
+    P("   BRACKETS beside the range (not in it):")
+    for name, dt, (lo, hi) in o["brackets"]:
+        P("   %-86s min %.3f V, max %.3f V (%.1f K)" % (name, lo, hi, dt))
+    P("   The endurance limits (YAGEO p.8: +-(1 % + 50 mOhm) after 1000 h at 70 C at rated voltage; UNI-ROYAL p.7: +-(1.0 % +")
+    P("   0.05 Ohm) after 1000 h at 70 C) are test limits at far more stress than the divider sees (about %.0f uA): a bound, not an" % (
+        o["nominal"] / (R6_TOP + R7_BOT) * 1e6))
+    P("   expectation. The divider's rise is an assumption until board A is laid out; it warms the hot end only (at the cold end the")
+    P("   board starts unpowered at the air), which is why it adds %.1f K and not its full %.0f K to the envelope's %.1f K." % (
+        o["brackets"][0][1] - o["bands"][0][3], BOARD_RISE_K, o["bands"][0][3]))
+    P("   Not steady state, and outside the range: the soft start (C7 4.7 uF on FE_SS, NETLIST, charged at ISS %.2f / %.0f / %.2f uA" % o["ti"]["iss"])
+    P("   to the %.1f V reference, SNVSAI1D p.6: %.2f to %.2f s after each enable); load steps and line transients (TI Figures 6-15" % (
+        o["ti"]["vref"][1], o["ss"][0], o["ss"][1]))
+    P("   to 6-18, p.11, plotted at %s per division); neither moves an hourly energy balance. Not established: the ground offset" % " and ".join(o["ti"]["divs"]))
+    P("   between R7's return and U2's AGND, a layout term like the copper to R16.")
     P("")
     cc = o["cc"]
     P("7. UNDER LOAD: U3'S INPUT CURRENT AGAINST THE FRONT END'S CURRENT LIMIT, AND THE COPPER")
-    P("   U3's IIN_HOST %.1f A nominal, %.1f A maximum (energy_two_pack.py PAR u3_iin_draft_a; SLUSE66A 9.6.22 p.80)." % (cc["u3_nom"], cc["u3_max"]))
+    P("   U3's IIN_HOST %.1f A nominal, %.1f A maximum (energy_two_pack.py PAR u3_iin_draft_a; SLUSE66A 9.6.22 p.80, which gives" % (cc["u3_nom"], cc["u3_max"]))
+    P("   only the maximum). Its MINIMUM is not printed for the 10 mOhm sense: the energy records take 6.1 A (INFERRED, the maximum's")
+    P("   100 mA mirrored) with 6.0 A as a bracket; SLUSE66A's front page (p.1) states +-2.5 % input current regulation, which")
+    P("   gives %.3f A at the %.1f A setting, inside that bracket." % (cc["u3_nom"] * 0.975, cc["u3_nom"]))
     P("   As generated, R11 10 mOhm: the front end's constant-current loop holds %.2f / %.2f / %.2f A (VSNS over R11, MAKER p.7 with" % cc["gen"])
     P("   NETLIST R11): below U3's %.1f A, so at U3's full input current THE BUS IS NOT IN VOLTAGE REGULATION as generated: the" % cc["u3_nom"])
     P("   front end limits its current and VBUS20 falls below the band until the charger's input loops settle (energy_two_pack")
-    P("   entry E1 is that regime, U3 held at 4.15 A). Every Option A(i) figure uses entry E2, the DRAFTED re-rate R11 %.1f mOhm" % (cc["r11_draft"] * 1e3))
+    P("   entry E1 is that regime, U3 held at 4.15 A, whose 4.25 A maximum sits only 50 mA under the front end's 4.30 A minimum,")
+    P("   and R11 also carries the VBUS20 currents that do not pass R16: U2's BIAS, R197, the divider; not quantified, and they")
+    P("   can only make E1 worse). Every Option A(i) figure uses entry E2, the DRAFTED re-rate R11 %.1f mOhm" % (cc["r11_draft"] * 1e3))
     P("   (a1elec TOPOLOGY.md 7; not in the generator): %.2f / %.2f / %.2f A, above U3's %.1f A maximum, so the bus stays in" % (cc["draft"] + (cc["u3_max"],)))
     P("   voltage regulation and the range above applies at the regulation point.")
     P("   The copper from R6's tap to R16's pin: NOT ESTABLISHED (board A's routed file is of 15 September, A32, and predates the")
     P("   netlist read here). Each 1 mOhm of it lowers U3's input by %.1f mV at %.1f A (0.03 %% of the bus), load-proportional." % (cc["u3_max"], cc["u3_max"]))
-    P("   Not included: the resistors' long-term drift (the makers' endurance limits, YAGEO p.8 and UNI-ROYAL p.7, are test")
-    P("   limits of +-(1 % + 0.05 Ohm) after 1000 h at 70 C, not an in-service rate).")
+    P("   The resistors' long-term drift is not in the range: it is the endurance bracket of section 6.")
     P("")
     P("8. THE KINDS: part to part (a fixed offset per unit): the resistors' 1 % and, as far as TI says anything, VREF's band;")
     P("   temperature: the resistors' TCR (and any part of VREF's band TI does not separate); load and line: the amplifier's finite")
