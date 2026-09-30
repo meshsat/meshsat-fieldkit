@@ -756,6 +756,17 @@ def t_l3r5_recheck_decided_rows_carry_no_option_they_did_not_take():
     assert RL.row_tag("L3-OD1", dec, data) == "L3-OD1, closed as layer 4 architecture (P-01)"
     assert "| REQ-075 (layer 4 proposal P-01, not applied) |" in pages["REQUIREMENTS-L3-R2.md"]
     assert "REQ-016 not changed (D-34)" in pages["REQUIREMENTS-L3-R2.md"] and "REQ-078 not added (D-35)" in pages["REQUIREMENTS-L3-R2.md"]
+    # D-22's supply-range rule is carried by a record (the gap the author raised on this fix): its classification row
+    # names REQ-072, and REQ-072's desk acceptance carries the clause, written once by its apply script
+    row = next(c for c in data["classification"] if c["item"].startswith("The rule that an M1 energy claim holds across"))
+    assert row["level"] == "REQUIREMENT" and "REQ-072" in row["where"] and "D-22" in row["where"], row["where"]
+    r72 = next(r for r in req["records"] if r["id"] == "REQ-072")
+    a72 = " ".join(r72["acceptance"].split())
+    assert "with the charge bus at U3's input (VBUS20) at its lowest established steady-state voltage" in a72 and \
+        "every load-holding limit at its minimum" in a72 and "(D-22: " in a72 and "D-22" in r72["rulings"], \
+        "REQ-072's acceptance does not carry D-22's clause"
+    r = _run([os.path.join(REC5, "apply_l3r5_d22_req072.py"), "--check"])
+    assert r.returncode == 2 and "has run" in r.stdout, "a second run of the D-22 script was not refused:\n%s" % r.stdout
     # the fixtures: one stale entry each, rendered in memory from a copy of l3r2.yaml; the tree is not written
     stale72 = ("L3-OD1, L3-OD3, L3-OD4 and L3-OD6: two packs, the array (row L3-OD3), the supply range and the 3.00 V floor, "
                "the deployment band, the weather basis (the benchmark's limitations in its notes, or a coverage target)")
@@ -845,3 +856,65 @@ def t_l3r5_current_status_follows_the_ruling():
         d2 = copy.deepcopy(data)
         d2["impacts"]["REQ-002"]["why"] = why
         assert _status_wrong(req, d2, pages), "a fixture with %s passes" % name
+
+
+def t_l3r5_d39_is_conditional_and_acceptance_is_its_own_record():
+    """D-39 (decides layer3_baseline) records the owner's conditional closure authorisation, its four quotes filed word
+    for word, and a second run refuses. The ruling is not acceptance: with D-39 alone the status level reads DRAFTED, on
+    the tree and on a fixture whose newest independent check is accepted; only with l3r2.yaml's baseline_acceptance filed
+    (the verified revision, D-39, the evidence held, the newest check among it) does it read VALIDATED. The acceptance
+    script refuses on the tree (its newest check is not accepted), a revision that is no commit and a path the tree does
+    not hold, files one line on a copy, and refuses a second run; it is never run on the tree here."""
+    import copy
+    import yaml
+    import rules_lib as R
+    RL = _rl()
+    req, data = R.load_requirements(), RL.load_data()
+    sys.path.insert(0, REC5)
+    import apply_l3r5_d39 as A
+    r39 = [r for r in req["owner_rulings"] if str(r.get("decides")) == "layer3_baseline"]
+    assert [r["id"] for r in r39] == ["D-39"] and r39[0]["authority"] == "OWNER" and str(r39[0]["ruled_on"]) == "2026-09-30"
+    flat = " ".join(" ".join(l.lstrip("> ") for l in _instr().split("\n")).split())
+    for q in A.QUOTES:
+        assert q in flat and q in " ".join(r39[0]["ruling"].split()), "a quote is not word for word: %r" % q[:50]
+    assert "D-39 is a CONDITIONAL authorisation" in " ".join(r39[0]["ruling"].split())
+    r = _run([os.path.join(REC5, "apply_l3r5_d39.py"), "--check"])
+    assert r.returncode == 2 and "has run" in r.stdout, "a second run of the D-39 script was not refused:\n%s" % r.stdout
+    dec, h3 = RL.decided(req, data), RL.load_h3()
+    assert data.get("baseline_acceptance") is None and RL.status_level(req, dec, data, h3)[0] == "DRAFTED"
+    fixture_check = {"record": "v2/docs/records/l3r2/checks/check-l3r2-5.md", "sha16": "c1c9db881ededfe2",
+                     "verdict": "ACCEPTED", "scope": "a fixture: an accepted newest check"}
+    d1 = copy.deepcopy(data)
+    d1["independent_check"].append(fixture_check)
+    assert all(x[1] for x in RL.gate(req, dec, d1, h3)), "the fixture's gate is not all MET"
+    assert RL.status_level(req, dec, d1, h3)[0] == "DRAFTED", "D-39 without the acceptance record reads beyond DRAFTED"
+    head = subprocess.run(["git", "-C", ROOT, "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    d2 = copy.deepcopy(d1)
+    d2["baseline_acceptance"] = {"revision": head, "authorised_by": "D-39", "evidence": [fixture_check["record"]],
+                                 "accepted_on": "2026-10-01"}
+    assert RL.status_level(req, dec, d2, h3)[0] == "VALIDATED", RL.acceptance_ok(req, d2)
+    d3 = copy.deepcopy(d2)
+    d3["baseline_acceptance"]["evidence"] = ["v2/docs/handover/layer3/l3r2.yaml"]
+    assert RL.status_level(req, dec, d3, h3)[0] == "DRAFTED", "an acceptance not listing the newest check validates"
+    acc = os.path.join(REC5, "apply_l3r5_accept.py")
+    r = _run([acc, "--revision", head, "--evidence", fixture_check["record"], "--check"])
+    assert r.returncode == 2 and "not ACCEPTED" in r.stdout, "the acceptance script ran on the tree:\n%s" % r.stdout
+    d = tempfile.mkdtemp(prefix="l3r5-accept-")
+    copy_path = os.path.join(d, "l3r2.yaml")
+    raw = open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read()
+    add = "  - {record: %s, sha16: %s, verdict: ACCEPTED, scope: fixture}\nbaseline_acceptance: null\n" % (
+        fixture_check["record"], fixture_check["sha16"])
+    assert raw.count("\nbaseline_acceptance: null\n") == 1
+    open(copy_path, "w", encoding="utf-8").write(raw.replace("\nbaseline_acceptance: null\n", "\n" + add))
+    for args, why in (([ "--revision", "0" * 40, "--evidence", fixture_check["record"]], "not a commit"),
+                      (["--revision", head, "--evidence", "v2/docs/records/l3r5/checks/no-such-check.md"], "not a file"),
+                      (["--revision", head, "--evidence", "v2/docs/handover/layer3/l3r2.yaml"], "does not list the newest")):
+        r = _run([acc] + args + ["--data", copy_path])
+        assert r.returncode == 2 and why in r.stdout, "%s was not refused:\n%s" % (why, r.stdout)
+    r = _run([acc, "--revision", head, "--evidence", fixture_check["record"], "--date", "2026-10-01", "--data", copy_path])
+    assert r.returncode == 0, r.stdout
+    got = yaml.safe_load(open(copy_path, encoding="utf-8"))["baseline_acceptance"]
+    assert got == {"revision": head, "authorised_by": "D-39", "evidence": [fixture_check["record"]], "accepted_on": "2026-10-01"}
+    r = _run([acc, "--revision", head, "--evidence", fixture_check["record"], "--data", copy_path])
+    assert r.returncode == 2 and "has run" in r.stdout, "a second acceptance was not refused:\n%s" % r.stdout
+    assert yaml.safe_load(open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8")).get("baseline_acceptance") is None

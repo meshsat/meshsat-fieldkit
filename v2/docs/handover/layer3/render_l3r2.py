@@ -381,13 +381,38 @@ def dispositions(req, dec, data):
     return out
 
 
+def acceptance_ok(req, data):
+    """(True, '') when the layer 3 baseline's acceptance is filed as its own record (the owner's clarification quoted in
+    D-39: "Record final baseline acceptance against the verified revision after those gates pass; the ruling itself is
+    not evidence that they passed"): a ruling decides `layer3_baseline`, and l3r2.yaml's `baseline_acceptance` is
+    {revision: a 40-hex commit, authorised_by: that ruling, evidence: [paths], accepted_on}, every evidence path held in
+    this tree, the newest independent_check ACCEPTED and listed in its evidence. The ruling alone is not acceptance."""
+    rid = [r["id"] for r in req["owner_rulings"] if str(r.get("decides")) == "layer3_baseline"]
+    if not rid: return False, "no ruling decides the layer 3 baseline"
+    ba = data.get("baseline_acceptance")
+    if not ba: return False, "%s authorises it conditionally; l3r2.yaml's baseline_acceptance is not filed" % rid[0]
+    if not re.fullmatch(r"[0-9a-f]{40}", str(ba.get("revision") or "")): return False, "its revision is not a 40-hex commit"
+    if str(ba.get("authorised_by")) not in rid: return False, "it is not authorised by %s" % rid[0]
+    if not ba.get("accepted_on"): return False, "it carries no date"
+    ev = [str(x) for x in ba.get("evidence") or []]
+    if not ev: return False, "it names no evidence"
+    miss = [x for x in ev if not os.path.exists(os.path.join(ROOT, x))]
+    if miss: return False, "its evidence %s is not in this tree" % ", ".join(miss)
+    chks = handover_checks(data)
+    if not chks or str(chks[-1].get("verdict")).upper() != "ACCEPTED": return False, "the newest independent check is not ACCEPTED"
+    if str(chks[-1]["record"]) not in ev: return False, "its evidence does not list the newest independent check"
+    return True, ""
+
+
 def status_level(req, dec, data, h3, g=None):
-    """The reviewer's status level that holds (D-26), read from the gate and the rulings: (id or None, sentence)."""
+    """The reviewer's status level that holds (D-26), read from the gate, the rulings and the acceptance record:
+    VALIDATED only with the gate's conditions MET, a ruling deciding `layer3_baseline` and the baseline's acceptance
+    filed against the verified revision (acceptance_ok); D-39 alone leaves DRAFTED. (id or None, sentence)."""
     lv = {x["id"]: x for x in data.get("status_levels") or []}
     g = g or gate(req, dec, data, h3)
     rows = [d["id"] for d in data["decisions"]]
     drafted = all(settled(r, dec, data) for r in rows) and basis_ok(data, "feasibility_basis")[0]
-    accepted = any(str(r.get("decides")) == "layer3_baseline" for r in req["owner_rulings"])
+    accepted = acceptance_ok(req, data)[0]
     if drafted and all(x[1] for x in g) and accepted:
         return "VALIDATED", "**%s** holds: %s." % (lv["VALIDATED"]["name"], lv["VALIDATED"]["means"])
     if drafted:

@@ -50,10 +50,10 @@ The owner's reviewer reviewed the decision brief MESHSAT-L3-OWNER-DECISIONS-2026
 | Level | What it means | When it holds here |
 |---|---|---|
 | requirements drafted / decisions recorded (HOLDS) | the intended product and its acceptance criteria are explicit | every row decided (row L3-OD2 not applicable after a reject) and applied by its script, and every acceptance definition written into the requirements it defines |
-| requirements baseline validated and accepted | the chosen constraints have a credible feasibility basis, the identified gaps are resolved to the agreed review scope, and the owner has accepted the baseline | the completion gate's five conditions MET, the definition re-issue approved (L3-C26) and the owner's acceptance of the baseline recorded |
+| requirements baseline validated and accepted | the chosen constraints have a credible feasibility basis, the identified gaps are resolved to the agreed review scope, and the owner has accepted the baseline | the completion gate's five conditions MET, the definition re-issue approved (L3-C26), the owner's conditional closure authorisation recorded (D-39, a ruling deciding layer3_baseline, not itself evidence that any gate passed) and the baseline's acceptance filed against the verified revision after the gates pass (l3r2.yaml baseline_acceptance, apply_l3r5_accept.py) |
 | design and hardware compliant | later circuit, layout and physical evidence demonstrate those requirements | never in layer 3: layers 5 to 9 (a later target) |
 
-**requirements drafted / decisions recorded** holds (the intended product and its acceptance criteria are explicit); **requirements baseline validated and accepted** does not yet: the completion gate's five conditions MET, the definition re-issue approved (L3-C26) and the owner's acceptance of the baseline recorded.
+**requirements drafted / decisions recorded** holds (the intended product and its acceptance criteria are explicit); **requirements baseline validated and accepted** does not yet: the completion gate's five conditions MET, the definition re-issue approved (L3-C26), the owner's conditional closure authorisation recorded (D-39, a ruling deciding layer3_baseline, not itself evidence that any gate passed) and the baseline's acceptance filed against the verified revision after the gates pass (l3r2.yaml baseline_acceptance, apply_l3r5_accept.py).
 
 ## The acceptance definitions (D-26)
 

@@ -1064,6 +1064,36 @@ owner_rulings:
       through layers 1 and 2, an open obligation of the integrator; until then, where either document differs from the
       change record, the change record governs.
     source: ["owner ruling D-38", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md", "v2/docs/handover/layer3/DEFINITION-CHANGE-RECORD-L3.md"]
+  - id: D-39
+    authority: OWNER
+    ruled_on: "2026-09-30"
+    title: "the owner's conditional closure authorisation: the layer 3 baseline reported COMPLETE once the agreed criteria pass, its acceptance recorded against the verified revision (30 September 2026)"
+    decides: layer3_baseline
+    words: >-
+      Once the criteria pass, report 'Layer 3 requirements baseline: COMPLETE' and start Layer 4 architecture work
+      immediately. When the closure criteria pass, integrate the baseline, update EXECUTION-PLAN.md and start Layer 4
+      immediately. If a genuine unresolved owner decision prevents closure, finish everything else and identify only the
+      exact conflicting requirement and decision needed. Do not manufacture 100% completion, but do not keep us in
+      review loops over an ordinary, explicitly accepted runtime trade-off. My instruction authorizes closure once the
+      agreed criteria pass. Record final baseline acceptance against the verified revision after those gates pass; the
+      ruling itself is not evidence that they passed.
+    ruling: >-
+      The owner's closure instructions of 30 September 2026 and his clarification of the same evening, relayed by the
+      coordinating session and quoted in v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md; the ruling that
+      decides the layer 3 baseline's closure. It changes no requirement. In his words, from the instructions: "Once the
+      criteria pass, report 'Layer 3 requirements baseline: COMPLETE' and start Layer 4 architecture work immediately."
+      "When the closure criteria pass, integrate the baseline, update EXECUTION-PLAN.md and start Layer 4 immediately."
+      "If a genuine unresolved owner decision prevents closure, finish everything else and identify only the exact
+      conflicting requirement and decision needed. Do not manufacture 100% completion, but do not keep us in review
+      loops over an ordinary, explicitly accepted runtime trade-off." And, clarifying them: "My instruction authorizes
+      closure once the agreed criteria pass. Record final baseline acceptance against the verified revision after those
+      gates pass; the ruling itself is not evidence that they passed." The session's reading, not his words: D-39 is a
+      CONDITIONAL authorisation. It authorises reporting 'Layer 3 requirements baseline: COMPLETE' and starting layer 4
+      once the agreed closure criteria pass; it is not evidence that any gate passed. The final baseline acceptance is a
+      separate record, v2/docs/handover/layer3/l3r2.yaml's baseline_acceptance, filed against the verified revision
+      after the gates pass by v2/docs/records/l3r5/apply_l3r5_accept.py; until it is filed the requirements baseline
+      reads DRAFTED, not VALIDATED.
+    source: ["owner ruling D-39", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"]
 # Choices the session took under the owner's standing rule of 26 September 2026: each is the session's, never
 # the owner's, names the ruling that lets the session take it, says why, and can be reversed. `closes` names the
 # open items it answered; `adds_core_needs` a need it added to prototype 1's core. A choice later withdrawn keeps
@@ -7723,11 +7753,18 @@ records:
       Desk: the modelled endurance under the stated profile, reported at the kit loads (the service continues within
       voltage, power and pack limits, and after a permitted pack cutoff the remaining supply carries the loads, D-26):
       battery-only in hours from full at +20 C and -10 C, and solar-assisted in hours on the mean day from full at 06
-      and 18 UTC, on the power path as drawn and on any corrected path named beside it as hypothetical. The objective
-      reads met when the solar-assisted run serves the load for 48 hours or more, 72 hours reported beside it; a
-      shortfall is reported as a design risk with its layer (D-28). Repeated with the loads and the efficiencies
-      measured at bring-up. Prototype: the kit runs the stated profile from a full store on its solar input, fed by an
-      array emulator following the reference day's profile, and the hours served are reported.
+      and 18 UTC, on the power path as drawn and on any corrected path named beside it as hypothetical. The
+      solar-assisted endurance is computed with the charge bus at U3's input (VBUS20) at its lowest established
+      steady-state voltage, 19.146 V across the in-use envelope, and every load-holding limit at its minimum, U3's input
+      current limit at 6.1 A, with the checked energy basis's brackets below that range stated beside the result: 19.101
+      V (the divider 20 K above the inside air, an assumption), 18.782 V (both divider resistors at their makers'
+      endurance limits, a bound) and 18.738 V (both together), and U3's 6.0 A bracket (D-22: "Establish the applicable
+      supply range under load and temperature. If 19.08 V is permitted, mission claims must account for it."; the
+      figures are ENERGY-BASIS.md section 2's). The objective reads met when the solar-assisted run serves the load for
+      48 hours or more, 72 hours reported beside it; a shortfall is reported as a design risk with its layer (D-28).
+      Repeated with the loads and the efficiencies measured at bring-up. Prototype: the kit runs the stated profile from
+      a full store on its solar input, fed by an array emulator following the reference day's profile, and the hours
+      served are reported.
     allocated_to: [kit, e, a, procedure]
     verification_method: [CALCULATION, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -7738,7 +7775,7 @@ records:
       rules: [PWR-001]
       decisions: []
     rule_coverage: PARTIAL
-    rulings: [D-06, D-20, D-28, D-32]
+    rulings: [D-06, D-20, D-28, D-32, D-22]
     choices: [SC-36, SC-37]
     waits_on: [S-53]
     status: DEFINED
@@ -7870,7 +7907,16 @@ records:
       into the kit on the reference day (4.0 kWh/m2 on the optimally inclined plane, SC-37) ends the 72 hours above the
       graceful shutdown threshold; repeated with the loads and the stage's efficiency measured at bring-up. Prototype:
       the kit runs PS-IDLE-SPEC for 72 hours from a full pack on its solar input, fed by a panel emulator following the
-      reference day's profile, and ends above that threshold.'.
+      reference day's profile, and ends above that threshold.'. Restated by layer 3's closure, round 5's last fix round
+      (2026-09-30), which carries owner ruling D-22 into the acceptance: an owner ruling that stands, not a new
+      requirement: it read acceptance 'Desk: the modelled endurance under the stated profile, reported at the kit loads
+      (the service continues within voltage, power and pack limits, and after a permitted pack cutoff the remaining
+      supply carries the loads, D-26): battery-only in hours from full at +20 C and -10 C, and solar-assisted in hours
+      on the mean day from full at 06 and 18 UTC, on the power path as drawn and on any corrected path named beside it
+      as hypothetical. The objective reads met when the solar-assisted run serves the load for 48 hours or more, 72
+      hours reported beside it; a shortfall is reported as a design risk with its layer (D-28). Repeated with the loads
+      and the efficiencies measured at bring-up. Prototype: the kit runs the stated profile from a full store on its
+      solar input, fed by an array emulator following the reference day's profile, and the hours served are reported.'.
     notes: >-
       Split from REQ-016 on 27 September 2026 by the layer-3 closer (SC-36). The mission duration was the owner's to set
       (D-06); the layer-2 closer set 72 hours under the standing rule (SC-21), which the owner's own setting replaces.
