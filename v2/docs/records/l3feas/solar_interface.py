@@ -13,6 +13,9 @@ held document: they are compared, never substituted.
 
 Before any result it proves that its derivations reproduce a1solar's array_calc.out section 2 row for 2S2P (exit 4).
 
+Second issue (CHECK-1 of 24942a5f, minors 6 and 7): the 60 V ceiling is labelled as the coordinator's safety extra-low-
+voltage ceiling whose standard is not held, and the LT8705A's unused sense pins are cited on pp.11 and 12.
+
 Run from the repository root:  python3 v2/docs/records/l3feas/solar_interface.py > v2/docs/records/l3feas/solar_interface.out
 Deterministic. Exit 2: the held sheet is not the pinned file; 3: an input cannot be parsed; 4: a reproduction failed."""
 import hashlib
@@ -120,6 +123,11 @@ def main():
     u5 = {p: pa["U5"][p]["net"] for p in ("29", "30", "31", "32", "33", "34")}
     lt = " ".join(subprocess.run(["pdftotext", "-layout", "-f", "12", "-l", "12", os.path.join(TOP, LT8705A), "-"],
                                  capture_output=True, text=True, check=True).stdout.split())
+    lt11 = " ".join(subprocess.run(["pdftotext", "-layout", "-f", "11", "-l", "11", os.path.join(TOP, LT8705A), "-"],
+                                   capture_output=True, text=True, check=True).stdout.split())
+    need(lt11, r"CSNOUT \(Pin 30/Pin 32\): The \(.\) Input to the Output Cur", "LT8705A p.11 CSNOUT")
+    need(lt11, r"rent Monitor Amplifier\. Connect this pin to VOUT when not", "LT8705A p.11 CSNOUT's use")
+    need(ac, r"60 V: the coordinator's safety-extra-low-voltage ceiling \(README of this folder\); the standard behind it is not held", "array_calc.out the 60 V ceiling")
     need(lt, r"CSPIN \(Pin 33/Pin 37\): The \(\+\) Input to the Input Cur", "LT8705A p.12 CSPIN")
     need(lt, r"rent Monitor Amplifier\. Connect this pin to VIN when not", "LT8705A p.12 CSPIN's use")
     need(lt, r"CSNIN \(Pin 32/Pin 36\)", "LT8705A p.12 CSNIN")
@@ -168,7 +176,8 @@ def main():
         rv_c, rv_l, rv_125))
     P("   by the 1.25 clause (INFERRED with the HELD sheet's %.2f %%/K: the current page's coefficient is not read here): %s the" % (
         b_v * 100, "OVER" if rv_125 > CEIL else "under"))
-    P("   %.0f V ceiling, where the held sheet gives %.2f V. Its Vmp, Imp and Isc are not in the review; the stage's fixed input point" % (CEIL, voc_125))
+    P("   coordinator's %.0f V safety extra-low-voltage ceiling (array_calc.out 2: 'the standard behind it is not held'), where the" % CEIL)
+    P("   held sheet gives %.2f V. Its Vmp, Imp and Isc are not in the review; the stage's fixed input point" % voc_125)
     P("   (R8, R9: 34.29 V, a1solar ARRAY.md 3) and its 0.990 ratio are derived from the held sheet's Vmp and would move with them")
     P("")
     P("2. AVAILABLE ARRAY POWER (2S2P, %d panels)" % (NS * NP))
@@ -182,7 +191,8 @@ def main():
     P("   the 200 W is the energy model's window on the stage's input (energy_two_pack.py node_power: min(panel, window))")
     P("   NETLIST: U5 LT8705A pins 30, 31 (CSNOUT, CSPOUT) on %s and 32, 33 (CSNIN, CSPIN) on %s, with no resistor between: %s" % (
         u5["30"], u5["32"], "the input and output current regulation is NOT used" if no_sense else "UNEXPECTED"))
-    P("     (MAKER, 8705af p.12: 'Connect this pin to VIN when not in use'). So the stage takes what its load asks, up to its own")
+    P("     (MAKER, 8705af pp.11 and 12: CSNOUT 'Connect this pin to VOUT when not in use', p.11; CSPIN 'Connect this pin to VIN")
+    P("     when not in use', p.12). So the stage takes what its load asks, up to its own")
     P("     inductor current limit, from what the array gives")
     P("   what the load asks (r11dep, the front end's input is the stage's output): %.1f W out in service, %.1f W into the stage at" % (st_serv, st_serv / 0.93))
     P("     0.93 DECLARED; %.1f W out at the front end's highest permitted current (%.1f W in)" % (st_max, st_max / 0.93))
@@ -195,7 +205,8 @@ def main():
     P("4. COLD OPEN-CIRCUIT EXPOSURE (the string is two panels in series; the strings in parallel add no voltage)")
     P("   Voc %.1f V a panel: %.2f V at -20 C cells (the envelope's in-use minimum), %.2f V at -40 C (the panel's own limit)," % (voc, voc_c, voc_l))
     P("     %.2f V by the 1.25 clause on STC (SunPower 524958 Rev F 3.0, held back): the voltage basis %.2f V (INFERRED)" % (voc_125, v_basis))
-    P("   against: the panel's %.0f V system voltage; the LT8705A's 80 V (8705af pp.2, 3); the %.0f V ceiling; board E's PV_P parts as" % (vsys, CEIL))
+    P("   against: the panel's %.0f V system voltage; the LT8705A's 80 V (8705af pp.2, 3); the coordinator's %.0f V ceiling (its standard" % (vsys, CEIL))
+    P("     not held); board E's PV_P parts as")
     P("     generated (60 V FETs, 35 V and 50 V capacitors, a 28 V TVS, gen_sch_e.py; a1solar ARRAY.md 6, gated on REQ-016)")
     P("")
     P("5. SHORT-CIRCUIT AND FAULT CURRENTS (hot cells +70 C at 1000 W/m2; the edge-of-cloud factor %.2f)" % EOC)
