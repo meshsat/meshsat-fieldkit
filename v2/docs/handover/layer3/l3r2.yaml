@@ -155,7 +155,7 @@ proposals:
     source: ["v2/docs/records/a1solar/ARRAY.md sections 3 to 6", "v2/docs/records/a1solar/README.md (The owner's, not changed here)", "v2/docs/records/a1solar/SELECTION.md section 4"]
     changes: "REQ-016's window (25 V, 17.6 V, 100 W), its acceptance (F2 and J_SOLAR 10 A, the SMCJ28A clamp) and SC-36's split; the array REQ-072 names; the kit's claimed form"
     status: AWAITING
-    basis: "ARRAY.md section 5 is headed 'the owner's; not changed here'; board E's drafts are gated on it (section 6)."
+    basis: "ARRAY.md section 5 is headed 'the owner's; not changed here'; board E's drafts are gated on it (section 6). Its sentence 'Under Option A(i) the 100 W becomes 200 W in every arrangement (the owner's instruction)' refers to the instruction to engineer Option A(i), whose filed words authorise no requirement change (v2/docs/EXECUTION-PLAN.md, set 10's milestone); it is not an approval of the 200 W stage (CHECK-1, item 2)."
     affects: [REQ-016, REQ-072]
     decision: L3-OD3
   - id: P-04
