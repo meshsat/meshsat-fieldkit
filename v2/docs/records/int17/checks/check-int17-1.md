@@ -126,8 +126,8 @@ With `int17-evidence-de11cc4e.tar` installed (`git status` clean after it):
 
 ## Hygiene
 
-* **Added lines against main.** None carries a U+2013 or U+2014, and none carries a host name or user path (`/home/`,
-  the runner, `nllei`, `/tmp/claude`, `ankh`, a private address, `root@`).
+* **Added lines against main.** None carries a U+2013 or U+2014, and none carries a host name or user path (the
+  patterns of the repository's hygiene scan).
 * **Tracked files at the tip.** No `held/` file and no `.ibs` is tracked.
 * **The two new vendor PDFs.** Neither the Milliohm nor the Yageo RC_L text layer has a copyright, rights or
   reproduction term, as their `sources.txt` lines say.
@@ -137,3 +137,6 @@ With `int17-evidence-de11cc4e.tar` installed (`git status` clean after it):
 Blocking 0. Minors 3 (one stale status row, two history observations). Replays: the apply commit reproduced byte
 identical. Bindings: 21 of 21. Energy files: 26 of 26. Filed checks: 10 of 10 identical. Tests: 202/0/2 in the
 single-branch clone. Box suite on `3f69af66`: not seen by me.
+
+---
+Filing note (integrator, 30 September 2026): filed as the checker wrote it except lines 129 and 130, whose list of the scan's search patterns named internal host prefixes; they are written here as "the patterns of the repository's hygiene scan".
