@@ -730,3 +730,37 @@ substance to the filed check. S-122's fourth round is running.
 - the identities stream's check, then set 15;
 - a layout-entry record for exact-part identities (layer 6, every board);
 - board C's C1 and C2 order code (an X5R code where the identity is X7R).
+
+### Milestone, 30 September 2026 02:37 CEST: integration set 15 on main (S-122 closed, CFL-016 PASS; the PANJIT sheet held back; board C's part identities)
+
+**Accepted:** `e5322674`. Merged:
+- **PANJIT's SS2020FL series sheet held back** (`records/int16/apply_hold_back_panjit.py`): untracked from this set on,
+  in the ignored `v2/vendor/power/held/`, cited by URL and sha256, fetched by `records/int16/fetch_held_back.py`. Its
+  copy in git history and on the public mirror stays unless the owner asks for a history rewrite.
+- **Stream w5identc** (checked three times): board C's part identities, 21 printed and 23 decoded under decision 59
+  (the session's ruling), 41 unresolved with their reasons, 2 not a part. S-125 is opened. Its three PANJIT
+  bindings are marked held back, so the identity tests pass on a host without the sheet.
+- **Stream s122** (rounds 4 to 8, checked eight times): the definition documents re-read against the netlists, 1011
+  sentences, 422 true, 0 stale, 40 baseline values, 549 not derivable, 0 unjudged. **S-122 is closed by its filed
+  closing check** (`records/s122/checks/check-s122-8.md`), and **CFL-016 reads PASS** (was FAIL). S-126 is opened as a
+  process item for the regression instrument's named escape classes; no record waits on it.
+
+**Gates:** validators 0 errors 0 warnings; the full render order reaches the same evidence page twice (`c9b98931`, the
+same page as set 14's), with CON-010 and REQ-044 bound to it; the isolated clone is clean; the box suite on
+`e5322674` 2303 passed, 0 failed, 3 skipped. Three integration checks (AI reviews) are filed under
+`records/int16/checks/`, the last mergeable.
+
+**Priority since 30 September 2026 00:13 CEST (the owner): Layer 3 first.** Layer 4 and later streams are paused at
+checkpoints, nothing discarded: board C's RD-C-24 remedy (`fnd/rdc24`, its box regeneration done, the proof not yet
+run) and review D of board C (`fnd/reviewdc`, round 4, its narrow check not run). Set 15 was completed because it
+carries CFL-016's closure, a Layer 3 contradiction. The Layer 3 closure is on `fnd/l3r2` (the reconciliation, the
+owner decision table and the consolidated requirements `REQUIREMENTS-L3-R2.md`); its first independent check did not
+accept it, and its second round is done. Owner decision rows L3-OD1, L3-OD2 and L3-OD4 are held, on the owner's
+instruction, until a corrected and independently checked energy basis arrives (`fnd/l3plane`, round 2 running): its
+first check confirmed VBUS20 at U3's input at 19.146 / 20.000 / 20.887 V steady state, that board A as generated
+(R11 10 mOhm) limits the front end below U3's setting so that no lid option meets M1, and that PVGIS September weather
+windows of 72 hours meet M1 in only 15 to 27 percent of cases; it did not accept the basis because three
+efficiencies were held at nominal without a maker's document.
+
+**Next, ready:** the energy basis's round 2 check; the Layer 3 rows restated from it; the Layer 3 delta check; the
+owner's answers; then the definition documents' re-issue (L3-C26) and the Layer 3 gate.
