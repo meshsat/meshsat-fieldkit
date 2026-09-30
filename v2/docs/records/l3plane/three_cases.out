@@ -9,7 +9,7 @@ success probability. The author's analysis, AI arithmetic; not a qualified revie
 1. THE ELECTRICAL LIMITS FED IN (r11dep's r11_dep.out 3, stacked; checked by CHECK-3)
    the front end's average limit, held R11 10 mOhm: 4.212 / 5.000 / 5.810 A; proposed R11 6.2 mOhm: 6.793 / 8.065 / 9.370 A
    VBUS20's other loads through R11 besides U3: 0.060 A; so U3 can draw at most 4.152 A (held) and 6.733 A (proposed) at the
-   front end's stacked minimum. U3's settings: E1 4.15 A (board A as generated), E2 6.20 A (drafted), the derated variant 4.05 A;
+   front end's stacked minimum. U3's settings: E1 4.15 A (board A as generated), E2 6.20 A (drafted), the derated variant 4.00 A;
    U3's minimum at a setting taken 0.1 A under it (INFERRED, as WE's 6.1 A)
 
 2. THE REFERENCE DAY AT 40/0 (SC-37's mean September day; each cell: both packs' lowest store (base, lid) in Wh, or the
@@ -22,14 +22,14 @@ success probability. The author's analysis, AI arithmetic; not a qualified revie
      4S9P both kept     TYP NOT MET, 589.3 unserved                  N/N   WAB NOT MET, 616.7 unserved                  N/N
      4S14P tablet out   TYP NOT MET, 452.9 unserved                  N/N   WAB NOT MET, 478.9 unserved                  N/N
      4S15P QMX out      TYP NOT MET, 422.1 unserved                  N/N   WAB NOT MET, 448.0 unserved                  N/N
-   DERATED VARIANT of AS DRAWN, NOM inputs: U3 at 4.05 A (coordination only)
-     4S9P both kept     TYP NOT MET, 523.7 unserved                  N/N   WAB NOT MET, 551.5 unserved                  N/N
-     4S14P tablet out   TYP NOT MET, 386.5 unserved                  N/N   WAB NOT MET, 412.7 unserved                  N/N
-     4S15P QMX out      TYP NOT MET, 355.5 unserved                  N/N   WAB NOT MET, 381.7 unserved                  N/N
-   DERATED VARIANT, WE inputs: U3 at its INFERRED minimum 3.95 A
-     4S9P both kept     TYP NOT MET, 616.7 unserved                  N/N   WAB NOT MET, 644.1 unserved                  N/N
-     4S14P tablet out   TYP NOT MET, 480.1 unserved                  N/N   WAB NOT MET, 506.1 unserved                  N/N
-     4S15P QMX out      TYP NOT MET, 449.3 unserved                  N/N   WAB NOT MET, 475.3 unserved                  N/N
+   DERATED VARIANT of AS DRAWN, NOM inputs: U3 at 4.00 A (coordination only)
+     4S9P both kept     TYP NOT MET, 538.3 unserved                  N/N   WAB NOT MET, 566.0 unserved                  N/N
+     4S14P tablet out   TYP NOT MET, 400.9 unserved                  N/N   WAB NOT MET, 427.2 unserved                  N/N
+     4S15P QMX out      TYP NOT MET, 369.9 unserved                  N/N   WAB NOT MET, 396.2 unserved                  N/N
+   DERATED VARIANT, WE inputs: U3 at its INFERRED minimum 3.90 A
+     4S9P both kept     TYP NOT MET, 630.4 unserved                  N/N   WAB NOT MET, 657.8 unserved                  N/N
+     4S14P tablet out   TYP NOT MET, 493.7 unserved                  N/N   WAB NOT MET, 519.7 unserved                  N/N
+     4S15P QMX out      TYP NOT MET, 462.9 unserved                  N/N   WAB NOT MET, 488.9 unserved                  N/N
    RESISTOR-ONLY, lower bound under B-5's inferred collapse, NOM inputs (INCONCLUSIVE between this and CORRECTED NOM)
      4S9P both kept     TYP NOT MET, 805.5 unserved                  N/N   WAB NOT MET, 1079.9 unserved                 N/N
      4S14P tablet out   TYP NOT MET, 652.9 unserved                  N/N   WAB NOT MET, 926.5 unserved                  N/N

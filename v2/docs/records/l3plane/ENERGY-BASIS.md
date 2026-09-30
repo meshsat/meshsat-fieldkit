@@ -8,6 +8,8 @@ modelled historical coverage of all three lids on the corrected inputs (section 
 independent check `CHECK-2` of `ec415c09` accepted the second issue with seven minors; this issue answers them (section 11),
 and three change figures the owner sees: the cell counts and multiples of section 8a, and one coverage row of section 8.
 **Fourth issue, 30 September 2026:** it carries the owner's amendments of that day and CHECK-3 of `4e9fa869` (stream r11dep).
+CHECK-4 of `06b8ecea` accepted it with five minors. They move one set of figures here, the derated variant's, now at 4.00 A
+(`three_cases.out` regenerated), and add the collapse bound's limits to section 0.
 - **Three power-path cases are kept apart:** AS DRAWN, RESISTOR-ONLY and the CORRECTED PATH, with the DERATED VARIANT beside
   AS DRAWN (section 0).
 - **Every Option A(i) figure of the earlier issues is the CORRECTED PATH's, and HYPOTHETICAL.** Its required corrections are
@@ -44,9 +46,16 @@ independently checked.
 | Case | What it is | M1 on the reference day at 40/0, TYP / WAB (MODELED, `three_cases.out` 2) | Coverage of 864 past September windows, TYP, no STOP (`three_cases.out` 3) |
 |---|---|---|---|
 | **(i) AS DRAWN** | R11 10 mOhm, U3 at 4.15 A (entry E1): the front end limits at 4.212 to 5.810 A | every lid NOT MET: 4S9P 494.7 / 522.4, 4S14P 357.5 / 383.8, 4S15P 326.6 / 352.8 Wh unserved (NOM inputs; at WE 422.1 to 616.7) | 0 for every lid |
-| **(i') DERATED VARIANT** of (i) | U3 at 4.05 A: fixes the current-limit coordination ONLY; resolves nothing else | every lid NOT MET: 4S9P 523.7 / 551.5, 4S14P 386.5 / 412.7, 4S15P 355.5 / 381.7 Wh unserved (NOM; at WE 449.3 to 644.1) | 0 for every lid |
+| **(i') DERATED VARIANT** of (i) | U3 at 4.00 A: fixes the current-limit coordination ONLY; resolves nothing else | every lid NOT MET: 4S9P 538.3 / 566.0, 4S14P 400.9 / 427.2, 4S15P 369.9 / 396.2 Wh unserved (NOM; at WE 462.9 to 657.8) | 0 for every lid |
 | **(ii) RESISTOR-ONLY** | R11 6.2 mOhm and U3 6.2 A, nothing else changed | **INCONCLUSIVE:** the path is not shown to carry the current. The result lies between a lower bound that takes r11dep B-5's inferred bus collapse (every lid NOT MET, 622.1 to 1079.9 Wh unserved at NOM) and case (iii) | between 0 to 2 windows and case (iii)'s figures |
 | **(iii) CORRECTED PATH, HYPOTHETICAL** | the path the NOM and WE cases assume: `min(available, cap)` at U3's 6.2 A, with every correction below closed | the table of section 1: 4S14P and 4S15P meet at NOM; at WE conditionally | 4S14P 19.2 to 24.0 %, 4S15P 22.0 to 27.2 % (WE to NOM); 4S9P 0 |
+
+**Case (ii)'s lower bound is a bound on hourly means.**
+- It takes a collapsed hour as delivering nothing.
+- That is pessimistic in three ways: the packs may be full, the restart latch brings the front end back within about 1 to
+  2.5 s, and U3 resets its input limit to 3.25 A at every bus drop, asking about 65 W until the host rewrites it.
+- The other way, on real weather a dip inside an hour whose mean clears the cap can also collapse the bus.
+- r11dep B-5 gives the sources.
 
 **The corrections case (iii) assumes, none of them closed** (r11dep R11-DEPENDENCY.md section 2):
 - Kelvin taps on R11 with at most 0.29 mOhm of shared copper at 25 C (C-1), and the 6.2 mOhm part's order code (C-2);
@@ -126,7 +135,7 @@ figures are MODELED on SC-37's reference day (section 6a), on the 40 degree sout
 | WEL, the bus at its endurance bracket 18.782 V: TYP / WAB | NOT MET | 20.8 (20.8, 0.0) / NOT MET, 34.0 | 51.0 (48.0, 3.1) / NOT MET, 3.7 |
 | WA, the three undocumented efficiencies at 0.90 as well | NOT MET | NOT MET, 71.8 / 122.0 | NOT MET, 41.5 / 93.2 |
 | GEN, board A **as generated** (R11 10 mOhm): **case (i), AS DRAWN** | NOT MET, 494.7 / 522.4 | NOT MET, 357.5 / 383.8 | NOT MET, 326.6 / 352.8 |
-| **Case (i'), the DERATED VARIANT** (U3 at 4.05 A; `three_cases.out`) | NOT MET, 523.7 / 551.5 | NOT MET, 386.5 / 412.7 | NOT MET, 355.5 / 381.7 |
+| **Case (i'), the DERATED VARIANT** (U3 at 4.00 A; `three_cases.out`) | NOT MET, 538.3 / 566.0 | NOT MET, 400.9 / 427.2 | NOT MET, 369.9 / 396.2 |
 | **Case (ii), RESISTOR-ONLY: INCONCLUSIVE**, its lower bound under the inferred collapse, NOM (`three_cases.out`) | NOT MET, 805.5 / 1079.9 | NOT MET, 652.9 / 926.5 | NOT MET, 622.1 / 895.7 |
 | **Band at WE, pass line COMB** (both builds pass; `energy_basis.out` 6) | none | **none** | **slope 30 to 50, south to 15 W, CONDITIONAL**; least combined 5.3 Wh at 50/+15 WAB; the lid empties at 30/0 WAB |
 | Band at WE, pass line EACH | none | none | **none** |
