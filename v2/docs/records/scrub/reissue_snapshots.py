@@ -26,6 +26,10 @@ NEW version beside it, <V>-R1, built the way the snapshots were built, so the re
 The redaction commits are not on any branch when this runs: the integrating commit records them in main's history with
 a merge that keeps main's tree (git merge -s ours), so the snapshot's commit is public once main is.
 
+`commits` sends each redaction commit's diff through the repository's pre-commit check: $PRECOMMIT_CHECK when it is set,
+else scripts/pre-commit-check.sh in the folder that holds the main clone (found from git's common directory, as
+r8int6/commit_r8int6.sh finds it). A clone elsewhere sets the variable.
+
 Usage: python3 reissue_snapshots.py commits          make (or re-make, the same ids) the four redaction commits
        python3 reissue_snapshots.py build [--out D]  build, verify and compare, write the records (default out:
                                                      v2/release/handover of this worktree)
@@ -127,8 +131,10 @@ def box(v, src, change, left):
 
 def commits():
     out = {}
-    pcc = os.path.join(os.path.dirname(git("rev-parse", "--path-format=absolute", "--git-common-dir").decode().strip()),
-                       "..", "scripts", "pre-commit-check.sh")
+    pcc = os.environ.get("PRECOMMIT_CHECK") or os.path.join(
+        os.path.dirname(git("rev-parse", "--path-format=absolute", "--git-common-dir").decode().strip()),
+        "..", "scripts", "pre-commit-check.sh")
+    if not os.path.isfile(pcc): raise SystemExit("no pre-commit check found; set $PRECOMMIT_CHECK to the repository's one")
     for v, src in SNAPS:
         change, left, tree = plan(v, src)
         sh_mode, sh_sha = tree[SH]
