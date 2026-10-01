@@ -1,0 +1,158 @@
+L4-E5: SOURCE CONTROL FOR BOARD A'S CHARGER ON THE ORED BUS (l4e5_source_control.py, MESHSAT-1357). PROTOTYPE DESIGN:
+nothing bought, built, powered or measured; no generator, registry, rendered page or HW-FW-CONTRACT.md in the tree edited.
+Basis per figure: MAKER (document, page), NETLIST, MODELED (l4e_replay.py's functions), INFERRED (method stated),
+ASSUMPTION; INCONCLUSIVE where no held document gives the figure.
+
+0. REPRODUCTIONS BEFORE ANY RESULT
+   0a l4e4_limits.py re-run in a child process reproduces l4e4_limits.out byte for byte: yes
+   0b r11_dep.py re-run in a child process reproduces r11_dep.out byte for byte: yes
+   0c l4e4_limits.compute() run here renders l4e4_limits.out byte for byte: yes
+   0d l4e_replay.main() run here (locals captured by l4e4_limits.run_main_captured) prints l4e_replay.out byte for byte: yes
+   and its corrected A2 rows re-run by this script give the printed unserved figures: 100 W screening 286.3 / 516.5 Wh,
+   candidate panel 1196.1 / 1950.7 Wh (48 / 72 h, the worse start)
+
+1. WHAT THE BOARDS CARRY (NETLIST, read from the committed netlists)
+   - E: VIN_MON = R40 100k over R41 10k, U10 pin 39
+   - E: DCIN_PGD = U6 (LM5069) pin 8 to U10 pin 15, R25 10k to +3V3_E6
+   - E: U6 VIN pin 2 on DC_P, SENSE pin 1 on HS_S, OUT pin 9 on DC_HS
+   - E: Q7 the hot-swap pass FET, source pins 1-3 on DC_HS, drain pin 5 on HS_S
+   - E: L2 passes DC_HS (pad 1) to VIN_RAW (pad 3)
+   - E: R19 10 mOhm between DC_P and HS_S
+   - E: the vehicle's ideal diode U3 (LM74700) DC_F to DC_P, the tracker's U4 TRK_OUT to VIN_RAW
+   - E: LT8705A U5 pins 25 to 28 (SRVO_FBIN, SRVO_IIN, SRVO_IOUT, SRVO_FBOUT) unconnected
+   - E: U10 pins 31, 32 (GPIO20, 21) and 41 (GPIO29, ADC3) unconnected
+   - E: the tracker's FBOUT divider R10 115k over R11 10.0k
+   - A: U3 (BQ25731) pin 6 ILIM_HIZ on CHG_ILIM, R19 16.5k from REGN, R20 34.8k to GND, Q6 drain
+   - A: U3 pin 1 (VBUS) on VBUS20
+   - A: FE_PGOOD on U27 pin 20, CHRG_OK on U27 pin 13, U27 INT on EXP_INT
+   - A: no IC pin on VIN_RAW, FE_UVS or FE_RUN reaches a controller (no reading of VIN_RAW on board A)
+   board A's VIN_RAW members: C11, C12, D19, D2, J_VR1, J_VR2, J_VR3, J_VR4, Q2, R14, R195, R196, R200, TP13
+   board E's VIN_RAW members: C7, C8, D2, L2, P_VR, Q2, R27, R40, TP3, U4
+   FW-A16 as written (HW-FW-CONTRACT.md): IIN_HOST at or below 0.80 x 4.80 A x 0.93 x VIN_RAW / 20.7 V = 0.172522 A/V x VIN_RAW;
+   its own figures 1.55 / 2.07 / 4.14 A at 9 / 12 / 24 V reproduced; O-33: about 54 W against the tracker's 93 W
+   FW-E04 reports VIN_MON over USB every 1 s; board E's USB goes to board B's bank 3, the panel controller (the charger's
+   only host, on the kit bus) is a USB device on bank 1 (FW-C12): VIN_RAW reaches the charger's host only through a running
+   compute module's bridge. Board A has no reading of VIN_RAW at all.
+   REQ-015 (l3r2.yaml): "A 9 to 36 V vehicle and shore input runs the kit and charges the pack"
+   the front end's restart guard U34 (gen_sch_a.py): UV falling 7.86 / 8.08 / 8.31 V; a dip under 8 V interrupts charging for
+   1.0 to 2.5 s; the vehicle entry's LM5069 limits at 4.85 to 6.15 A (4.80 A with R19's 1 %); VIN_RAW's clamp 64.5 V
+
+2. WHY THE SOURCES CANNOT BE TOLD APART, AND HOW FAST THE BUS COLLAPSES
+   - VIN_MON's value: REQ-015 admits every voltage from 9 to 36 V, the tracker's whole output range included (as drawn
+     14.62 / 15.09 / 15.56 V: FBOUT 1.191 / 1.207 / 1.222 V, MAKER 8705af p.4, every grade; R10 and R11 at 1 %): no voltage band is
+     the tracker's alone (INFERRED).
+   - DCIN_PGD: the LM5069 raises PGD when OUT is within 1.25 V of SENSE (MAKER SNVS452G p.3 and p.12, 8.3.6). Q7's source
+     is on DC_HS and its drain on HS_S, so the tracker feeds DC_P back through Q7's body diode whenever it holds VIN_RAW over
+     the 9 V UVLO; the LM5069 then starts with OUT above SENSE and PGD reads high with no vehicle connected (INFERRED from
+     the netlist and the maker's PGD rule). The vehicle's own ideal diode U3 blocks the back-feed at DC_F (MAKER SNOSD17G
+     p.12), so nothing on board E sees whether a vehicle is plugged in while the tracker holds the bus.
+   - The LT8705A's SRVO_FBIN and SRVO_FBOUT (pins 25 and 28, open drain, pulled low while the input or output voltage loop
+     is active; MAKER 8705af p.11 and p.19; SRVO_FBIN asserts 56 / 72 / 89 mV above FBIN's regulation, p.4) would tell
+     'the panel limits' from 'the tracker regulates'; both are unconnected (NETLIST).
+   - The collapse: VIN_RAW and TRK_OUT hold 129 uF nominal (NETLIST: A C11 10u, A C12 10u, E C7 1u, E C8 10u, E C24 39u, E C25 39u, E C26 10u, E C27 10u).
+     From the tracker's 15.09 V to the latch's highest 8.31 V that is 10.23 mJ, so a constant-power deficit empties it in
+     10.2 ms at 1 W, 3.4 ms at 3 W, 1.0 ms at 10 W (INFERRED: energy over deficit, the nominal capacitance an upper bound).
+   - The vehicle entry: C5 100 nF on TIMER (NETLIST) with VTMRH 3.76 / 4 / 4.16 V and 51 / 85 / 120 uA (MAKER SNVS452G p.6) gives a
+     fault timeout of 3.13 / 4.71 / 8.16 ms before Q7 turns off (INFERRED, C x V / I).
+   - FW-E04's 1 s period is 319 times the entry's shortest fault timeout: no firmware rule fed by VIN_MON can act inside a
+     source step. Steady state and transients are therefore separate acceptances, as A-2 asks.
+
+3. THE CANDIDATES' PER-SOURCE ENVELOPES (vehicle and shore at the entry's FW-A16 basis 4.80 A, the front end at 0.93 and
+   VBUS20 at its 20.7 V maximum; U3's and the pin's maxima in board current with R16 at its low corner, L4-E4's rules;
+   VBUS20's other loads 0.079094 A)
+   VIN_RAW | FW-A16 line | (a) register, FE input | (b) register, FE input | H pin V | pin target lo/hi | H effective max | H FE input
+     9.0 V |  1.553 A    | 1.55 A, 4.333 A ( 90.3 %) | 1.55 A, 4.333 A ( 90.3 %) | 1.621 V | 1.337 / 1.768 A | 1.793 A | 4.629 A ( 96.4 %)
+    12.0 V |  2.070 A    | 2.05 A, 4.190 A ( 87.3 %) | 2.05 A, 4.190 A ( 87.3 %) | 1.828 V | 1.850 / 2.291 A | 2.323 A | 4.455 A ( 92.8 %)
+    24.0 V |  4.141 A    | 4.10 A, 4.025 A ( 83.9 %) | 4.10 A, 4.025 A ( 83.9 %) | 2.656 V | 3.899 / 4.382 A | 4.443 A | 4.194 A ( 87.4 %)
+    36.0 V |  6.211 A    | 6.20 A, 4.033 A ( 84.0 %) | 4.70 A, 3.069 A ( 63.9 %) | 3.484 V | 5.949 / 6.473 A | 4.884 A | 3.069 A ( 63.9 %)
+   (a)'s register passes L4-E4's 4.70 A from 27.6 V and reaches 6.20 A at 36 V (U3's clamp 6.35 A, MAKER SLUSE66A p.25).
+   The hardware line (H): V(ILIM_HIZ) = 1 V + 40 x IDPM x RAC (MAKER SLUSE66A p.6), the lower of the pin and IIN_HOST
+   governs (p.6, p.26 9.3.6), the pin read continuously (p.6). Its line: 1.000 V + 0.069009 V/V x VIN_RAW at R16 10 mOhm.
+   The pin's accuracy is printed only for a 5 mOhm RAC: +-0.400 A at every row (2.6 V 7.6/8.0/8.4 A, 2.2 V 5.6/6.0/6.4 A, 1.6 V 2.6/3.0/3.4 A, 1.2 V 0.6/1.0/1.4 A; p.10); at R16's 10 mOhm
+   INFERRED +-0.200 A (the same error at the pin); INCONCLUSIVE until measured. The network's own tolerance +-1 % (ASSUMPTION).
+   H's highest front-end input current over 9 to 36 V: 4.629 A at 9.0 V, 96.4 % of 4.80 A, under the entry's 4.85 A minimum;
+   it reaches 4.80 A only if the front end's efficiency at 9 V falls to 0.897 (C-8: undocumented).
+   The pin stays inside its range: 3.509 V at 36 V, 5.496 V at the clamp's 64.5 V (recommended 6.5 V, absolute 7 V, p.8);
+   it disables itself above 4.0 V (p.80) only above 43.5 V of VIN_RAW, outside service, where IIN_HOST still holds.
+   Solar under (a): the tracker's nominal 15.09 V reads as 2.60 A, 53.9 W at 20.7 V (O-33); under H1 the same line in
+   hardware, 2.296 A at the tracker's lowest ceiling. H2 raises the tracker's ceiling so the line's MINIMUM covers the window:
+   the window's 4.517 A at the lowest bus (l4e_replay.out 8, MODELED; L4-E4's need) needs the line at 4.828 A, VIN_RAW 27.98 V;
+   R10 at least 229 k, so E96 232 k: ceiling 28.28 / 29.21 / 30.15 V (INFERRED, the sheet's FBOUT rows, R10 and R11 at 1 %),
+   inside REQ-015's 36 V. TRK_OUT's parts at that ceiling's maximum: C24 39u 35V Panasonic 35SVPF39M polymer at 86 % of its 35 V; C25 39u 35V Panasonic 35SVPF39M polymer at 86 % of its 35 V; C26 10u 25V at 121 % of its 25 V; C27 10u 25V at 121 % of its 25 V
+   Low light under H1 and H2: the bus settles below the latch, and the front end restarts, when the power at VBUS20 is under
+   36.2 W (nominal 31.3 W); it settles below 12 V under 49.7 W (nominal 44.5 W) (INFERRED: the pin's band at 8.31 V and 12 V).
+   H3 adds a knee under REQ-015's 9 V floor: the pin falls from the line at 9.00 V to 1 V (no current) at 8.75 V (SESSION)
+   and on to HIZ, 0.4 V falling and 0.8 V rising (MAKER SLUSE66A p.17; p.27), so U3 stops converting at 8.508 V nominal,
+   at 8.434 V at the least (the knee's thresholds +-0.5 %, ASSUMPTION, and the pin's error), 0.12 V above the latch's
+   highest; it converts again by 8.745 V at the most. At the 9 V floor U3 still gets at least 1.068 A (REQ-015's "charges").
+   The knee's slope at the pin is 2.484 V/V against the line's 0.0690 V/V: it needs a gain stage, not a divider (OWED).
+   H3's settle point on the solar hold (the stage at FBIN, the pin taking what the panel gives; VBUS20 nominal 20.000 V,
+   the extremes over the pin's band and VBUS20 19.146 to 20.7 V):
+      86.5 W at VBUS20: VIN_RAW 24.61 V nominal (22.06 V to 27.52 V), U3 up to 4.439 A
+      60.0 W at VBUS20: VIN_RAW 16.93 V nominal (14.81 V to 19.30 V), U3 up to 3.055 A
+      50.0 W at VBUS20: VIN_RAW 14.03 V nominal (12.08 V to 16.20 V), U3 up to 2.532 A
+      40.0 W at VBUS20: VIN_RAW 11.13 V nominal (9.34 V to 13.10 V), U3 up to 2.010 A
+      30.0 W at VBUS20: VIN_RAW 8.98 V nominal (8.93 V to 10.00 V), U3 up to 1.488 A
+      20.0 W at VBUS20: VIN_RAW 8.90 V nominal (8.86 V to 8.94 V), U3 up to 0.966 A
+      10.0 W at VBUS20: VIN_RAW 8.82 V nominal (8.78 V to 8.86 V), U3 up to 0.443 A
+       5.0 W at VBUS20: VIN_RAW 8.78 V nominal (HIZ cycling to 8.81 V), U3 up to 0.182 A
+   Under 5.8 W at VBUS20 the pin's own error alone can ask more than the stage gives: U3 cycles in and out of HIZ
+   above the latch (INFERRED), and the front end never restarts.
+   Rejected variant, an offset through zero at 8.4 V (slope 0.22503 A/V bounded at 36 V): 9 V 0.14 A against 1.55 A, 12 V 0.81 A against 2.07 A, 24 V 3.51 A against 4.14 A; the tracker would sit at 29.9 V.
+
+4. THE SOLAR ENERGY EACH GIVES UP AGAINST THE UNCAPPED TRACKER (MODELED: l4e_replay.py's run() and meanday(), architecture
+   A2, the corrected path WE, the lowest bus 19.146 V, U3 at its minimum; per hour, the charge path takes min(available, cap),
+   upper bound, or its collapse bound; H1's and H2's lower bound takes nothing in an hour under 36.2 W at VBUS20, H3's under
+   5.8 W, its HIZ cycling counted as nothing)
+   A   FW-A16 as written (a)                           U3 minimum 2.500 A, cap 47.9 W at VBUS20
+   B   per-source firmware (b), solar at 4.70 A        U3 minimum 4.600 A, cap 88.1 W at VBUS20
+   H1  hardware line, tracker as drawn (c, H1)         U3 minimum 2.296 A, cap 44.0 W at VBUS20
+   H2  hardware line, tracker ceiling raised (c, H2)   U3 minimum 4.600 A, cap 88.1 W at VBUS20
+   H3  H2 with the knee into HIZ (c, H3, CHOSEN)       U3 minimum 4.600 A, cap 88.1 W at VBUS20
+   the 100 W screening case (SC-37's mean September day, 400 Wp clipped to 100 W, TYP):
+     849.8 Wh a day at VBUS20, peak 86.5 W; hours under 36.2 W 3 (35.2 Wh), 36.2 to 49.7 W 0, at or above 10; under 5.8 W 1 (0.1 Wh)
+     uncapped (WE): A2 unserved 286.3 / 516.5 Wh at 48 / 72 h
+     A   taken  478.6 to  513.9 Wh a day, given up  336.0 to  371.2 Wh; A2 unserved 587.9 to 629.0 Wh (48 h), 1119.7 to 1193.8 Wh (72 h)
+     B   taken    0.0 to  849.8 Wh a day, given up    0.0 to  849.8 Wh; A2 unserved 286.3 to 1555.1 Wh (48 h), 516.5 to 2582.9 Wh (72 h)
+     H1  taken  439.7 to  474.9 Wh a day, given up  374.9 to  410.2 Wh; A2 unserved 899.9 to 979.1 Wh (48 h), 1486.8 to 1602.3 Wh (72 h)
+     H2  taken  814.6 to  849.8 Wh a day, given up    0.0 to   35.2 Wh; A2 unserved 286.3 to 319.4 Wh (48 h), 516.5 to 582.6 Wh (72 h)
+     H3  taken  849.7 to  849.8 Wh a day, given up    0.0 to    0.1 Wh; A2 unserved 286.3 to 286.6 Wh (48 h), 516.5 to 516.9 Wh (72 h)
+   the candidate panel's trace (SPR-E-Flex-100, O-2 nominal, section 12 of l4e_replay.out):
+     302.7 Wh a day at VBUS20, peak 38.7 W; hours under 36.2 W 9 (187.5 Wh), 36.2 to 49.7 W 3, at or above 0; under 5.8 W 2 (7.1 Wh)
+     uncapped (WE): A2 unserved 1196.1 / 1950.7 Wh at 48 / 72 h
+     A   taken    0.0 to  302.7 Wh a day, given up    0.0 to  302.7 Wh; A2 unserved 1196.1 to 1555.1 Wh (48 h), 1950.7 to 2582.9 Wh (72 h)
+     B   taken    0.0 to  302.7 Wh a day, given up    0.0 to  302.7 Wh; A2 unserved 1196.1 to 1555.1 Wh (48 h), 1950.7 to 2582.9 Wh (72 h)
+     H1  taken  115.2 to  302.7 Wh a day, given up    0.0 to  187.5 Wh; A2 unserved 1196.1 to 1555.1 Wh (48 h), 1950.7 to 2470.7 Wh (72 h)
+     H2  taken  115.2 to  302.7 Wh a day, given up    0.0 to  187.5 Wh; A2 unserved 1196.1 to 1555.1 Wh (48 h), 1950.7 to 2470.7 Wh (72 h)
+     H3  taken  295.6 to  302.7 Wh a day, given up    0.0 to    7.1 Wh; A2 unserved 1196.1 to 1202.8 Wh (48 h), 1950.7 to 1963.9 Wh (72 h)
+
+5. THE DECISION (engineering, the session's; the reasons are on the page)
+   H3: U3's input-current limit made a function of VIN_RAW in hardware, on its own ILIM_HIZ pin: FW-A16's line from REQ-015's
+   9 V floor up, a knee into HIZ below it; the tracker's output ceiling raised (R10 232 k) so the line admits the window;
+   firmware holds IIN_HOST at L4-E4's 4.70 A ceiling and no longer reads VIN_RAW for control.
+
+6. THE CHOSEN RULE'S CONTRACT VALUES
+   values U3's IIN_HOST ever holds under H3: POR reset 3.25 A; after every adapter removal (reset) 3.25 A; firmware ceiling (FW-A16 restated) 4.70 A; highest 4.70 A (code 94, 0x5E00)
+   the pin's line crosses IIN_HOST at 27.24 V; between 26.50 and 27.24 V the pin governs and its maximum passes U3's own 4.817 A
+   stale or missing VIN_MON (older than 3 s): no setting changes; the line is hardware. Diagnostic only: a fresh VIN_MON
+   with the charger's input reading over the pin's band by 0.3 A in three readings falls back to FW-A16's old rule.
+
+7. THE CONSEQUENCE FOR L4-E4 (its own functions, from compute() above)
+   L4-E4's setting 4.70 A, U3's maximum 4.817 A, through R11 4.964 A; R11 8 mOhm, C-1 0.3803 mOhm at 25 C. Its margins:
+      -20.0 C: R11 alone +0.309 A, kelvin_check's 1 % taps +0.218 A, C-1's full taps +0.097 A
+       25.0 C: R11 alone +0.317 A, kelvin_check's 1 % taps +0.207 A, C-1's full taps +0.064 A
+       62.1 C: R11 alone +0.307 A, kelvin_check's 1 % taps +0.183 A, C-1's full taps +0.023 A
+   H3 writes nothing above 4.70 A, so every register path holds. The pin path just under the crossover: at most 5.016 A in
+   board current, 5.095 A through R11 (INFERRED with the pin's +-0.200 A and the network's 1 %):
+      -20.0 C: R11 alone +0.178 A, kelvin_check's 1 % taps +0.087 A, C-1's full taps -0.034 A
+       25.0 C: R11 alone +0.185 A, kelvin_check's 1 % taps +0.076 A, C-1's full taps -0.067 A
+       62.1 C: R11 alone +0.175 A, kelvin_check's 1 % taps +0.052 A, C-1's full taps -0.109 A
+   R11 alone holds, with kelvin_check's taps holds, with C-1's full 0.38 mOhm FAILS. L4-E4's tap rule at 5.095 A gives 0.2091 mOhm at 25 C
+   (C-1's accepted criterion 0.2900 mOhm: NOT met).
+   What would change: nothing, if the pin's error at 10 mOhm is at most 0.071 A in that band (bench V-A07); otherwise, by
+   L4-E4's own rule, R11 7.0 mOhm (C2904239): C-1 0.9921 mOhm at 25 C, its highest permitted current 8.300 A against 8 mOhm's 7.262 A,
+   carried to item 4 (fault handling).
+   For comparison, (a) as written: 6.20 A at 36 V, 6.522 A through R11, worst margin -1.252 A with R11 alone; the largest catalogue R11 that would coordinate: 6.0 mOhm
+
+END. Desk arithmetic; nothing is measured. The hardware line and the raised ceiling are not drawn (OWED); the transient
+behaviour of every candidate is INCONCLUSIVE until the bench rows of L4E5-SOURCE-CONTROL.md are run.
