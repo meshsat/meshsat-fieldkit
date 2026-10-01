@@ -388,11 +388,14 @@ def dispositions(req, dec, data):
 # commit, or a registry changed after the acceptance, kept it valid. An acceptance now carries a content manifest and
 # holds only while the revision it names is a commit of this repository that holds exactly that content and the tree
 # still holds it. What the manifest hashes, and what it leaves out on purpose:
-#   requirements       the requirements baseline of pcb_requirements.yaml: the needs and every record's baseline fields
-#                      (BASE_FIELDS, the fields whose change section 6 lists as a change to the baseline, with
-#                      obligation and objective_profile), in canonical JSON. Readings, evidence, bindings, notes, history,
-#                      rulings and open items are left out: they move without a review of the baseline, and later layers
-#                      add readings to the same records.
+#   requirements       the normative content of pcb_requirements.yaml (requirements_projection): the needs, every
+#                      owner ruling and session choice (the authority the baseline rests on), and every record's
+#                      demands, allocation, verification, authority links, accepted exceptions and residual risks, gates
+#                      and stage conditions, in canonical JSON; observations (readings, evidence and their bindings),
+#                      closure evidence and state, commentary and provenance are left out (B1 of the amendment's check
+#                      astra-check-l3am-1: the first projection kept the record fields of BASE_FIELDS only and missed
+#                      the rulings, the accepted exceptions and the stage conditions). REQUIREMENTS_FIELDS states, field
+#                      by field, which are in and why; a field the lists do not name is IN (fail closed).
 #   owner_brief        OWNER-INSTRUCTION-2026-09-30.md, the file's bytes (the current owner brief and the rulings quoted).
 #   change_record      DEFINITION-CHANGE-RECORD-L3.md, the file's bytes (the governing definition changes, D-38).
 #   acceptance_policy  l3r2.yaml as parsed (the gate's inputs, the status levels and their definitions), in canonical
@@ -404,7 +407,6 @@ BRIEF_REL = "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md"
 RECORD_REL = "v2/docs/handover/layer3/DEFINITION-CHANGE-RECORD-L3.md"
 DATA_REL = "v2/docs/handover/layer3/l3r2.yaml"
 POLICY_EXCLUDE = ("baseline_acceptance", "baseline_acceptance_history")
-BASELINE_KEYS = BASE_FIELDS + ("obligation", "objective_profile")
 MANIFEST = (("requirements", REGISTRY_REL, "baseline"), ("owner_brief", BRIEF_REL, "file"),
             ("change_record", RECORD_REL, "file"), ("acceptance_policy", DATA_REL, "policy"))
 _AT = {}
@@ -415,10 +417,109 @@ def _canon(obj):
                                      default=str).encode("utf-8")).hexdigest()
 
 
+# THE REGISTRY'S FIELDS, IN OR OUT OF THE REQUIREMENTS DIGEST (B1, 1 October 2026). Every field the registry carries is
+# named here with its reason; requirements_projection keeps the IN fields and every field no list names (fail closed: a new
+# field binds until it is classified), and test_l3am holds that every field of the tree's registry is classified.
+# IN: what is demanded, of what, under whose authority, with which accepted exceptions, gates and conditions.
+# OUT: observations, closure evidence and closure state, commentary and provenance, bookkeeping.
+REQUIREMENTS_FIELDS = {
+    "top": {
+        "needs": "IN: the needs every record traces to, each statement quoted from CONOPS",
+        "needs_document": "IN: the document the needs are quoted from",
+        "owner_rulings": "IN: the owner's authority, ruling by ruling (projected by RULING_FIELDS)",
+        "session_choices": "IN: the session's choices under the standing rule (projected by CHOICE_FIELDS)",
+        "records": "IN: the requirements themselves (projected by RECORD_FIELDS)",
+        "schema_version": "OUT: the file's format version; a change of meaning shows in the fields it changes",
+        "registry": "OUT: the registry's name", "issue": "OUT: the tracker issue", "written": "OUT: the date written",
+        "baseline_state": "OUT: the H3 baselining's status label; acceptance is l3r2.yaml's baseline_acceptance",
+        "baseline_reviews": "OUT: the reviews filed against earlier baselines, closure evidence",
+        "sources_read_at": "OUT: the commit the sources were read at, provenance",
+        "needs_document_sha256": "OUT: the CONOPS pin, provenance; the needs' text it pins is IN",
+        "companion_documents": "OUT: documents a source may resolve to, provenance",
+        "open_items": "OUT: work tracking: items open and close as later layers progress",
+        "closed_items": "OUT: work tracking and the evidence each item closed with",
+    },
+    "ruling": {
+        "id": "IN: the ruling's identity", "authority": "IN: whose ruling it is", "ruled_on": "IN: when, which orders rulings",
+        "title": "IN: what it rules on", "ruling": "IN: the ruling's text", "words": "IN: the owner's own words",
+        "decides": "IN: the row or the record it decides", "decision": "IN: the decision index entry it rules",
+        "core_needs": "IN: prototype 1's scope", "deferred_named": "IN: the functions deferred by name",
+        "reversed_by": "IN: whether the ruling still holds",
+        "m1_hf": "IN: an answer's parameter", "m1_external": "IN: an answer's parameter",
+        "m1_tablet_charging": "IN: an answer's parameter", "weather_build": "IN: an answer's parameter",
+        "weather_share": "IN: an answer's parameter",
+        "source": "OUT: where the ruling is quoted, provenance",
+        "note": "OUT: the session's reading beside a ruling, which says it is not part of the ruling",
+    },
+    "choice": {
+        "id": "IN: the choice's identity", "authority": "IN: whose choice it is", "question": "IN: what was asked",
+        "taken": "IN: what was taken", "why": "IN: the basis the choice states", "under": "IN: the authority it was taken under",
+        "taken_on": "IN: when", "adds_core_needs": "IN: prototype 1's scope",
+        "superseded_by": "IN: whether it still holds", "superseded_on": "IN: whether it still holds",
+        "superseded_why": "IN: whether it still holds", "withdrawn_on": "IN: whether it still holds",
+        "withdrawn_why": "IN: whether it still holds",
+        "source": "OUT: where it is recorded, provenance", "drafted_as": "OUT: a draft alias, bookkeeping",
+        "closes": "OUT: the open items it closed, work tracking",
+    },
+    "record": {
+        "id": "IN: the record's identity", "kind": "IN: what kind of record", "parent": "IN: the need it traces to",
+        "statement": "IN: the demand", "acceptance": "IN: how success is judged",
+        "allocated_to": "IN: what carries it", "verification_method": "IN: how it is verified",
+        "verification_phase": "IN: when it is judged first", "final_phase": "IN: when it is judged finally",
+        "prototype_1": "IN: its applicability", "prototype_1_basis": "IN: its applicability",
+        "prototype_1_choice": "IN: the choice its scope rests on", "prototype_1_why": "IN: the stated basis of its scope",
+        "release_effect": "IN: what it gates", "status": "IN: its state as section 6 counts the baseline's",
+        "obligation": "IN: mandatory or a design objective", "objective_profile": "IN: the profile an objective is judged under",
+        "rulings": "IN: the owner rulings it rests on", "choices": "IN: the session choices it rests on",
+        "residual_risk_accepted": "IN: an accepted operating exception or residual risk, by the owner",
+        "stages": "IN: the stage conditions (projected by STAGE_FIELDS)",
+        "blocks": "IN: the records a feasibility record blocks", "holds_layout_entry": "IN: the boards it holds",
+        "blocker_ids": "IN: the items a feasibility record consists of", "closing_evidence": "IN: what closes a feasibility record, its criterion",
+        "owner": "IN: who carries a feasibility record", "title": "IN: a feasibility record's name",
+        "superseded_by": "IN: what replaces a superseded statement",
+        "evidence": "OUT: readings, added as layers judge the record", "evidence_bound_to": "OUT: the files a reading is bound to",
+        "evidence_class": "OUT: a reading's class", "evidence_phase": "OUT: a reading's phase", "evidence_result": "OUT: a reading",
+        "resolved_by": "OUT: how a conflict was resolved, closure evidence (its status is IN)",
+        "waits_on": "OUT: the open items it waits on, work tracking",
+        "satisfied_by": "OUT: the rules and decisions that judge it, extended as checks are implemented; what passes is the acceptance",
+        "rule_coverage": "OUT: how far those rules cover it, with satisfied_by",
+        "provisional": "OUT: a provisional figure, which gates nothing by the validator's rule",
+        "notes": "OUT: commentary, which later layers append to", "history": "OUT: what earlier readings said",
+        "stages_note": "OUT: commentary on the stages", "source": "OUT: where the text was read, provenance",
+        "source_check": "OUT: how the source was checked, provenance", "candidate": "OUT: the extraction's candidate id",
+        "conflict_ref": "OUT: a cross-reference to the conflict list", "feasibility_page": "OUT: the page a feasibility record lives on",
+    },
+    "stage": {
+        "stage": "IN: which stage", "requires": "IN: what closes the stage", "needs": "IN: the kinds of evidence it needs",
+        "holds": "IN: what it holds", "status": "OUT: the stage's closure state, progress",
+    },
+}
+
+
+def _keep(obj, kind):
+    """The fields of one entry that the requirements digest binds: every field but those REQUIREMENTS_FIELDS marks OUT."""
+    out = {k for k, why in REQUIREMENTS_FIELDS[kind].items() if why.startswith("OUT")}
+    return {k: v for k, v in (obj or {}).items() if k not in out}
+
+
+def requirements_projection(req):
+    """The normative content of the registry, as REQUIREMENTS_FIELDS states it."""
+    pr = {k: v for k, v in _keep(req, "top").items() if k not in ("owner_rulings", "session_choices", "records", "needs")}
+    pr["needs"] = [{"id": n.get("id"), "statement": p(n.get("statement"))} for n in req.get("needs") or []]
+    pr["owner_rulings"] = {str(r.get("id")): _keep(r, "ruling") for r in req.get("owner_rulings") or []}
+    pr["session_choices"] = {str(c.get("id")): _keep(c, "choice") for c in req.get("session_choices") or []}
+    recs = {}
+    for r in req.get("records") or []:
+        x = _keep(r, "record")
+        if isinstance(x.get("stages"), list): x["stages"] = [_keep(s, "stage") for s in x["stages"]]
+        recs[str(r.get("id"))] = x
+    pr["records"] = recs
+    return pr
+
+
 def requirements_digest(req):
-    """sha256 of the requirements baseline (the needs and every record's baseline fields), canonical JSON."""
-    return _canon({"needs": [{"id": n.get("id"), "statement": p(n.get("statement"))} for n in req.get("needs") or []],
-                   "records": {str(r.get("id")): {k: r.get(k) for k in BASELINE_KEYS} for r in req.get("records") or []}})
+    """sha256 of the registry's normative content (requirements_projection), canonical JSON."""
+    return _canon(requirements_projection(req))
 
 
 def policy_digest(data):

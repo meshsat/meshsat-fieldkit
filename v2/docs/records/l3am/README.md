@@ -25,7 +25,8 @@ the requirements registry, and the acceptance of `b4b199d0` carries no content m
 | `apply_l3am_r02.py` | L3-R02: REQ-042's acceptance (end to end, channel by channel), its history and waits_on, S-49's title (the selection only), the open item S-128 (layer 4), `l3r2.yaml`'s impacts and open-item layers |
 | `apply_l3am_r05.py` | L3-R05: REQ-016's acceptance (protection judged apart from the window under TRN-001), history, source and satisfied_by; `l3r2.yaml`'s impacts entry |
 | `apply_layer_status_l3am.py` | `LAYER-STATUS.md`'s layer 3: the status wording, the status level and completion status restated, the solar figures labelled |
-| `apply_l3am_findings_closed.py` | the coordinator's, after the amendment's check: `review_findings` CLOSED, naming the check |
+| `apply_l3am_findings_closed.py` | the coordinator's, after the amendment's check: `review_findings` CLOSED, naming the check, only with a new accepted check of this amendment (the record format below); its `verify` is what `apply_l3r5_accept.py` runs again |
+| `checks/astra-check-l3am-1.md` | the engineering collaborator's one check of the amendment (job `cx10-l3am-check`, run `20260930T235755Z-972100`, on `29947b27`; accepted: no), filed byte for byte: L3-R01, L3-R02, L3-R05 and the supplied binding tests PASS; B1 (the requirements digest omitted the owner rulings, the session choices, the accepted exceptions and the stage conditions) and B2 (the findings could be closed with the pre-amendment check-l3r5-3) answered in the fix round below |
 
 Changed elsewhere: `v2/docs/handover/layer3/render_l3r2.py` (the solar case, its labels and guard; the acceptance's
 content binding, `acceptance_ok`, `content_manifest`, `manifest_at`; the review's and the acceptance record's lines),
@@ -60,10 +61,39 @@ If the set's files are not this branch's, apply the scripts on the set in this o
 `apply_l3am_r01.py`; `rules_render.py` re-renders the evidence pages on the set's evidence afterwards, as for any
 registry change.
 
+## The fix round on the amendment's check (1 October 2026)
+
+- **B1.** The requirements digest of the acceptance's manifest is now `render_l3r2.requirements_projection`: the needs,
+  every owner ruling and session choice, and every record's demands, allocation, verification, authority links, accepted
+  exceptions and residual risks, gates and stage conditions (`requires`, `needs`, `holds`); out: observations (readings,
+  evidence, bindings), closure evidence and state (a stage's status, a conflict's resolution text, open and closed items,
+  waits_on), commentary and provenance. `REQUIREMENTS_FIELDS` names every field the registry carries with its reason; a
+  field it does not name binds (fail closed), and the test holds that every field of the tree's registry is named.
+- **B2.** `apply_l3am_findings_closed.py` closes the findings only with a new accepted check of this amendment, in the
+  format below, bound to a reviewed revision that is the tip or its ancestor, with the amendment unchanged since; the
+  checks filed before the amendment (check-l3r5-3 among them) are refused. `apply_l3r5_accept.py` verifies the same check
+  again against the revision it accepts, so a hand edit of the state does not open the acceptance.
+
+## The record format of the amendment's check (B2)
+
+The record's first three lines, exactly, then a blank line and the check's own text:
+
+```
+accepted: yes
+scope: Layer 3 amendment l3am (L3-R01 to L3-R05)
+reviewed-revision: <the full 40-hex commit the check read>
+```
+
+It is filed in `v2/docs/records/l3am/checks/` and listed as the newest entry of `l3r2.yaml`'s `independent_check`:
+`{record: <path>, sha16: <its sha256/16>, verdict: ACCEPTED, scope: "..."}`. The reviewed revision must be a commit that is
+the branch's tip or its ancestor, and the amendment must be unchanged since it: the requirements, the owner brief and the
+change record as the acceptance's manifest hashes them, `l3r2.yaml` as its policy hashes it (also without
+`independent_check` and `review_findings`), and every file of `l3amlib.AMENDMENT_FILES` byte for byte.
+
 ## The re-acceptance (the coordinator's; D-39 remains a conditional authorisation)
 
-1. The amendment's independent check, filed as the newest `independent_check` of `l3r2.yaml` (ACCEPTED only over a record
-   whose first line reads "accepted: yes").
+1. The amendment's independent check, written in the format above and filed as the newest `independent_check` of
+   `l3r2.yaml` (ACCEPTED only over a record whose first line reads "accepted: yes").
 2. `python3 v2/docs/records/l3am/apply_l3am_findings_closed.py --check-record <that record>`, committed: the findings
    CLOSED (the acceptance script refuses while they are OPEN).
 3. The gates and the suite on the revision that holds that content (its clean-clone check and box suite, as for

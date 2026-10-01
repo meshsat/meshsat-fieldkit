@@ -10,8 +10,9 @@ never before.
   apply_l3r5_accept.py --revision <40-hex sha> --evidence <path> [<path> ...] [--date YYYY-MM-DD] [--supersede]
                        [--check] [--data PATH]
 
-The record carries a content manifest (render_l3r2.content_manifest): the sha256 of the requirements baseline (the needs
-and every record's baseline fields), of the owner brief OWNER-INSTRUCTION-2026-09-30.md, of the governing definition
+The record carries a content manifest (render_l3r2.content_manifest): the sha256 of the registry's normative content
+(render_l3r2.requirements_projection: the needs, the owner rulings and session choices, and every record's demands,
+authority, accepted exceptions, gates and stage conditions), of the owner brief OWNER-INSTRUCTION-2026-09-30.md, of the governing definition
 change record DEFINITION-CHANGE-RECORD-L3.md, and of the acceptance policy (l3r2.yaml without baseline_acceptance and
 baseline_acceptance_history). The manifest is computed from the files as the revision holds them (git show) and must
 equal the content as the tree holds it now: the revision accepted is the content reviewed, and the renderer re-checks both
@@ -20,7 +21,10 @@ every time it reads the status level.
 Refuses: a record already filed, unless --supersede (then the filed record is kept byte for byte, as parsed, at the end
 of `baseline_acceptance_history` and the new one replaces it; --supersede with nothing filed is refused); no ruling
 deciding `layer3_baseline`; any of the gate's five conditions NOT MET on the data given; the independent review's findings
-still OPEN in l3r2.yaml's `review_findings`; a revision that is not a full 40-hex commit of this repository; a revision
+in l3r2.yaml's `review_findings` not CLOSED, or closed by a check that does not verify against the revision accepted
+(v2/docs/records/l3am/apply_l3am_findings_closed.verify: a new accepted check of the amendment, bound to a reviewed
+revision that is this revision or its ancestor, the amendment unchanged since; B2 of astra-check-l3am-1); a revision
+that is not a full 40-hex commit of this repository; a revision
 whose files do not hold the content the tree holds now (the manifest differs); an evidence path this tree does not hold;
 evidence that does not list the newest independent check of l3r2.yaml, or a newest check that is not ACCEPTED. It writes
 baseline_acceptance (and, with --supersede, baseline_acceptance_history) and nothing else, reads the record back through
@@ -64,7 +68,7 @@ def flow(obj):
     return json.dumps(obj, ensure_ascii=False, separators=(", ", ": "), default=str)
 
 
-def build(raw, revision, evidence, date, supersede=False, full=None):
+def build(raw, revision, evidence, date, supersede=False, full=None, allow_abs=False):
     d = yaml.safe_load(raw)
     filed = d.get("baseline_acceptance")
     if filed and not supersede:
@@ -85,7 +89,8 @@ def build(raw, revision, evidence, date, supersede=False, full=None):
     if r.returncode != 0: E.refuse("%s is not a commit of this repository" % revision)
     if not evidence: E.refuse("no --evidence named")
     for p in evidence:
-        if os.path.isabs(p) or ".." in p.split("/") or not os.path.isfile(os.path.join(E.TOP, p)):
+        # an absolute path only on a copy given by --data (the tests' fixture records); on the tree a repository path
+        if (os.path.isabs(p) and not allow_abs) or ".." in p.split("/") or not os.path.isfile(os.path.join(E.TOP, p)):
             E.refuse("%s is not a file this tree holds (a path relative to the repository)" % p)
     chks = d.get("independent_check") or []
     if not chks or str(chks[-1].get("verdict")).upper() != "ACCEPTED":
@@ -99,9 +104,18 @@ def build(raw, revision, evidence, date, supersede=False, full=None):
     unmet = [x[0] for x in RL.gate(full, RL.decided(full, d), d, RL.load_h3()) if not x[1]]
     if unmet: E.refuse("the gate reads NOT MET on %s: %s" % ("; ".join(unmet), "no acceptance while a closure criterion is unmet"))
     rf = d.get("review_findings") or {}
-    if str(rf.get("state") or "").upper() == "OPEN":
-        E.refuse("the independent review's findings (%s) are OPEN in l3r2.yaml's review_findings: the amendment is checked "
-                 "and its findings closed before the baseline is accepted again" % ", ".join(rf.get("findings") or []))
+    if rf and str(rf.get("state") or "").upper() != "CLOSED":
+        E.refuse("the independent review's findings (%s) are %s in l3r2.yaml's review_findings: the amendment is checked "
+                 "and its findings closed before the baseline is accepted again" % (", ".join(rf.get("findings") or []),
+                                                                                    rf.get("state") or "not CLOSED"))
+    if rf:
+        sys.path.insert(0, os.path.join(E.TOP, "v2", "docs", "records", "l3am"))
+        import apply_l3am_findings_closed as FC  # noqa: E402
+        if not rf.get("checked_by"): E.refuse("review_findings is CLOSED and names no check (checked_by)")
+        try:
+            FC.verify(str(rf["checked_by"]), d, head=revision, req=full, allow_abs=allow_abs)
+        except FC.L.Refused as e:
+            E.refuse("the check that closed the findings does not verify against %s: %s" % (revision[:12], e))
     # the binding (L3-R04): the revision holds the content the tree holds now, and the record names that content
     at, why = RL.manifest_at(revision)
     if at is None: E.refuse("the revision %s does not hold the reviewed content: %s" % (revision[:12], why))
@@ -142,7 +156,8 @@ def main(argv):
     date = opt(argv, "--date") or datetime.date.today().isoformat()
     sup = "--supersede" in argv
     try:
-        new = build(old, opt(argv, "--revision"), evidence_args(argv), date, supersede=sup)
+        new = build(old, opt(argv, "--revision"), evidence_args(argv), date, supersede=sup,
+                    allow_abs=os.path.realpath(path) != os.path.realpath(DATA))
     except E.Refused as e:
         print("apply_l3r5_accept: REFUSED: %s" % e)
         return 2
