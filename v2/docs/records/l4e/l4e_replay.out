@@ -1,0 +1,453 @@
+L4-E2: THE ENERGY ARCHITECTURE REPLAY UNDER REQ-016'S 100 W WINDOW (l4e_replay.py, layer 4, MESHSAT-1357).
+PROTOTYPE DESIGN: nothing built, bought, powered or measured. MODELED on a1elec's energy_two_pack.py through l3plane's
+energy_basis.py set-up (both pinned, imported unchanged). The corrected power path is HYPOTHETICAL; every WE figure is
+CONDITIONAL on the three undocumented efficiencies (C-8). The author's analysis, AI arithmetic; not a qualified review and
+not the independent check.
+
+0. REPRODUCTION (before any result)
+   0a l3batt's runtime.py re-run in a child process reproduces runtime.out byte for byte (sha256 87d9c1ee59059763): yes
+   (0b to 0d reproduce the model's own unserved counter, the LEGACY MODEL METRIC; every served and unserved figure from
+   section 3 on is the SERVICE LEDGER's of section 5, which counts a stopped hour's sun once)
+   0b this harness reproduces runtime.out section 1's D06 and A35 rows, the twenty cells of section 2 (400 Wp, 200 W) and
+      section 3's 12 least-lid lines (48 and 72 h; NOM, WE, NOM90; TYP and WAB): yes
+   0c this harness reproduces three_cases.out's AS DRAWN and DERATED VARIANT rows at WE inputs, the both-kept lid, 72 h:
+      TYP 589.3 and 630.4, WAB 616.7 and 657.8 Wh unserved (the legacy model metric): yes
+   0d the single-pack use (the lid off) reproduces energy_budget.out 5b, PS-IDLE-SPEC, September, a 100 Wp panel in the
+      100 W window on the record's own chain: 06 UTC usable 107.9 Wh, first stop h 8, 23 h run, 1870.8 Wh unserved; 18 UTC first
+      stop h 2, 23 h run, 1781.9 Wh unserved (energy_budget.py's counter, the same legacy metric): yes (so 'full service' below
+      counts hours as the record's 'h run' does)
+
+1. THE ONE ASSUMPTION SET (both architectures; only the stage window differs from runtime.out section 2)
+   load       PS-IDLE-SPEC 42.8 W at the pack terminals over its 39 loads (REQ-072's objective_profile); HF available, not
+              receiving; the tablet not charged, the USB-C outlet off; A2 adds the lid path's standby drain 0.025 W (WE)
+   store      full at the start, aged to 80 % (REQ-014), each pack to its 3.00 V line with the 5 % reserve; the base at
+              +20 C, A2's lid at 13.23 C (SC-37's air minimum); battery-only both at +20 C, then both at -10 C
+   sun        SC-37's mean September day at Leiden, one plane 40/0, repeated; TYP the case, WAB a sensitivity (build ratio
+              0.9903 / 0.9103 on PVGIS's 0.9417); starts 06 and 18 UTC; the availability series is the checked 400 Wp 2S2P trace
+   window     the stage's input clipped at REQ-016's 100 W (energy_inputs.yaml: 'REQ-016 (SC-36): at most 100 W into board E's LT8705A stage;')
+   CORRECTED  HYPOTHETICAL, ENERGY-BASIS 6c's WE: bus 19.146 V, U3's limit 6.1 A, U3 0.9733, U3B 0.963, stage 0.93, front end
+              0.93, charge 0.95 (CONDITIONAL), lid loops 0.045 / 0.040 Ohm, V(AK) 29 mV; U3's cap 116.8 W
+   AS DRAWN   board A as generated: R11 10 mOhm (front end's stacked minimum 4.212 A less 0.060 A of other loads = 4.152 A),
+              U3 at its INFERRED minimum 4.05 A (set 4.15 A), U3 0.9755; the other WE inputs as above (three_cases.py's
+              DRAWN at WE); cap 77.5 W. UPPER BOUND: min(available, cap) kept, which A-2 says the drawn path does not
+              guarantee. LOWER BOUND: A-2's inferred collapse, an hour whose power at VBUS20 is under the cap delivers nothing
+   A1         one pack at +20 C, charged at 1.02 A a cell (energy_inputs.yaml's D-06 figure, 3.06 A for 4S3P), no lid path
+   A2         base 4S6P at +20 C (U3, 3.968 A) and lid 4S9P at 13.23 C (U3B, 7.936 A, IIN 6.2 A; the join of TOPOLOGY.md)
+   pass line  COMB (the kit never stops and the lowest combined store stays above the 4.2 Wh floor), as runtime.py
+
+2. BATTERY-ONLY ENDURANCE (runtime.out section 1, reproduced in 0b; no solar)
+   A1 D-06's 4S3P: usable 107.9 Wh at +20 C, 44.5 Wh at -10 C: 2.52 h and 1.04 h
+   A2 base 4S6P + lid 4S9P: usable 544.4 Wh at +20 C, 224.5 Wh at -10 C: 12.71 h and 5.24 h
+   against 48 h: A1 short by 45.5 h (1947 Wh at +20 C), A2 short by 35.3 h (1511 Wh at +20 C); against 72 h: A1 69.5 h (2974 Wh),
+   A2 59.3 h (2539 Wh). Battery-only closes neither end at any temperature; the objective is a solar-assisted one.
+
+3. SOLAR-ASSISTED, THE STAGE INPUT CLIPPED AT 100 W: A CONDITIONAL SCREENING STIMULUS (section 7: the series is the 400 Wp
+   2S2P trace, which REQ-016 does not admit). First interruption per start (hour from the start, and its UTC hour), unserved
+   Wh at 48 h and at 72 h per start (the service ledger, section 5), and the hours of full service in each horizon
+   A1 D-06's 4S3P             CORRECTED, HYPOTHETICAL, WE
+     TYP from 06 UTC: first interruption h 13 (19 UTC); unserved  907.4 Wh at 48 h, 1382.5 Wh at 72 h; full service 25 of 48 h, 37 of 72 h
+     TYP from 18 UTC: first interruption h  2 (20 UTC); unserved  923.5 Wh at 48 h, 1398.6 Wh at 72 h; full service 25 of 48 h, 37 of 72 h
+     WAB (sensitivity): first interruption h 13/2; unserved at 48 h 910.0 / 924.8 Wh, at 72 h 1386.4 / 1401.2 Wh (06 / 18 UTC)
+   A1 D-06's 4S3P             AS DRAWN, WE, upper bound
+     TYP from 06 UTC: first interruption h 13 (19 UTC); unserved  907.3 Wh at 48 h, 1382.4 Wh at 72 h; full service 25 of 48 h, 37 of 72 h
+     TYP from 18 UTC: first interruption h  2 (20 UTC); unserved  923.5 Wh at 48 h, 1398.5 Wh at 72 h; full service 25 of 48 h, 37 of 72 h
+     WAB (sensitivity): first interruption h 13/2; unserved at 48 h 909.9 / 924.8 Wh, at 72 h 1386.3 / 1401.2 Wh (06 / 18 UTC)
+   A1 D-06's 4S3P             AS DRAWN, WE, lower bound (A-2 collapse)
+     TYP from 06 UTC: first interruption h 12 (18 UTC); unserved 1068.3 Wh at 48 h, 1645.2 Wh at 72 h; full service 22 of 48 h, 32 of 72 h
+     TYP from 18 UTC: first interruption h  2 (20 UTC); unserved 1068.3 Wh at 48 h, 1645.2 Wh at 72 h; full service 22 of 48 h, 32 of 72 h
+     WAB (sensitivity): first interruption h 12/2; unserved at 48 h 1068.3 / 1068.3 Wh, at 72 h 1645.2 / 1645.2 Wh (06 / 18 UTC)
+   A2 base 4S6P + lid 4S9P    CORRECTED, HYPOTHETICAL, WE
+     TYP from 06 UTC: first interruption h 23 (05 UTC); unserved  270.1 Wh at 48 h,  500.4 Wh at 72 h; full service 41 of 48 h, 59 of 72 h
+     TYP from 18 UTC: first interruption h 11 (05 UTC); unserved  286.3 Wh at 48 h,  516.5 Wh at 72 h; full service 40 of 48 h, 58 of 72 h
+     WAB (sensitivity): first interruption h 23/11; unserved at 48 h 283.0 / 297.9 Wh, at 72 h 524.8 / 539.7 Wh (06 / 18 UTC)
+   A2 base 4S6P + lid 4S9P    AS DRAWN, WE, upper bound
+     TYP from 06 UTC: first interruption h 23 (05 UTC); unserved  332.7 Wh at 48 h,  625.5 Wh at 72 h; full service 40 of 48 h, 57 of 72 h
+     TYP from 18 UTC: first interruption h 11 (05 UTC); unserved  348.9 Wh at 48 h,  641.7 Wh at 72 h; full service 39 of 48 h, 56 of 72 h
+     WAB (sensitivity): first interruption h 23/11; unserved at 48 h 345.6 / 360.5 Wh, at 72 h 649.9 / 664.8 Wh (06 / 18 UTC)
+   A2 base 4S6P + lid 4S9P    AS DRAWN, WE, lower bound (A-2 collapse)
+     TYP from 06 UTC: first interruption h 21 (03 UTC); unserved  541.9 Wh at 48 h,  984.8 Wh at 72 h; full service 34 of 48 h, 47 of 72 h
+     TYP from 18 UTC: first interruption h 11 (05 UTC); unserved  541.9 Wh at 48 h,  984.8 Wh at 72 h; full service 34 of 48 h, 47 of 72 h
+     WAB (sensitivity): first interruption h 21/11; unserved at 48 h 541.9 / 541.9 Wh, at 72 h 984.8 / 984.8 Wh (06 / 18 UTC)
+   The same cases in runtime.out's window (200 W, P-03), for the difference the window alone makes (TYP, 06 / 18 UTC):
+     A1 D-06's 4S3P             CORRECTED                    first interruption h 13/2; unserved 907.4 / 923.5 Wh at 48 h, 1382.5 / 1398.6 Wh at 72 h
+     A1 D-06's 4S3P             AS DRAWN (UB)                first interruption h 13/2; unserved 907.3 / 923.5 Wh at 48 h, 1382.4 / 1398.5 Wh at 72 h
+     A2 base 4S6P + lid 4S9P    CORRECTED                    first interruption h 23/11; unserved 122.6 / 138.8 Wh at 48 h, 205.3 / 221.5 Wh at 72 h
+     A2 base 4S6P + lid 4S9P    AS DRAWN (UB)                first interruption h 23/11; unserved 332.7 / 348.9 Wh at 48 h, 625.5 / 641.7 Wh at 72 h
+
+4. THE LEAST ADDITIONAL USABLE STORAGE (COMB line, both starts, the 100 W window; continuous parallel count; A1 grows its
+   one pack at +20 C, A2 grows its lid at 13.23 C with the base held at 4S6P, as runtime.py section 3; usable Wh aged)
+     A1   CORRECTED, HYPOTHETICAL, WE              48 h TYP: pack 4S20.95P;  +654.8 Wh usable (+71.8 35E cells) over 4S3P, store 762.7 Wh in all
+     A1   CORRECTED, HYPOTHETICAL, WE              48 h WAB: pack 4S21.31P;  +668.1 Wh usable (+73.3 35E cells) over 4S3P, store 775.9 Wh in all
+     A1   CORRECTED, HYPOTHETICAL, WE              72 h TYP: pack 4S26.95P;  +873.1 Wh usable (+95.8 35E cells) over 4S3P, store 981.0 Wh in all
+     A1   CORRECTED, HYPOTHETICAL, WE              72 h WAB: pack 4S27.64P;  +898.3 Wh usable (+98.6 35E cells) over 4S3P, store 1006.2 Wh in all
+     A1   AS DRAWN, WE, upper bound                48 h TYP: pack 4S22.72P;  +719.3 Wh usable (+78.9 35E cells) over 4S3P, store 827.2 Wh in all
+     A1   AS DRAWN, WE, upper bound                72 h TYP: pack 4S30.49P; +1002.2 Wh usable (+110.0 35E cells) over 4S3P, store 1110.0 Wh in all
+     A1   AS DRAWN, WE, lower bound (A-2 collapse) 48 h TYP: pack 4S28.53P;  +930.8 Wh usable (+102.1 35E cells) over 4S3P, store 1038.6 Wh in all
+     A1   AS DRAWN, WE, lower bound (A-2 collapse) 72 h TYP: pack 4S40.48P; +1366.0 Wh usable (+149.9 35E cells) over 4S3P, store 1473.8 Wh in all
+     A2   CORRECTED, HYPOTHETICAL, WE              48 h TYP: lid 4S17.83P;  +278.8 Wh usable (+35.3 35E cells) over 4S9P lid, store 781.4 Wh in all
+     A2   CORRECTED, HYPOTHETICAL, WE              48 h WAB: lid 4S18.24P;  +291.9 Wh usable (+37.0 35E cells) over 4S9P lid, store 794.6 Wh in all
+     A2   CORRECTED, HYPOTHETICAL, WE              72 h TYP: lid 4S25.33P;  +515.8 Wh usable (+65.3 35E cells) over 4S9P lid, store 1018.4 Wh in all
+     A2   CORRECTED, HYPOTHETICAL, WE              72 h WAB: lid 4S26.12P;  +540.7 Wh usable (+68.5 35E cells) over 4S9P lid, store 1043.3 Wh in all
+     A2   AS DRAWN, WE, upper bound                48 h TYP: lid 4S19.82P;  +341.6 Wh usable (+43.3 35E cells) over 4S9P lid, store 844.2 Wh in all
+     A2   AS DRAWN, WE, upper bound                72 h TYP: lid 4S29.30P;  +641.0 Wh usable (+81.2 35E cells) over 4S9P lid, store 1143.7 Wh in all
+     A2   AS DRAWN, WE, lower bound (A-2 collapse) 48 h TYP: lid 4S26.58P;  +555.1 Wh usable (+70.3 35E cells) over 4S9P lid, store 1057.7 Wh in all
+     A2   AS DRAWN, WE, lower bound (A-2 collapse) 72 h TYP: lid 4S40.92P; +1008.0 Wh usable (+127.7 35E cells) over 4S9P lid, store 1510.6 Wh in all
+   What the records say fits (not changed here): A1's east pocket holds the ruled 4S3P block alone (packfit_west.out);
+   A2 is the largest in-case store found with both lid functions kept: base 4S6P (M4a, M5, M6w OPEN) and 39 lid places
+   (36 used; a1mech 1 and 2; the check's bound with P2 costing nothing, 43 places); no 21700 lid beats it (SHORTLIST.md 3)
+
+5. THE ENERGY ACCOUNT AND THE SERVICE LEDGER, TYP, 72 h, the 100 W window (Wh over the run; per start; kit and per pack)
+   array = the 400 Wp trace at the array; clip = above the window; stage in = into the stage; bus = at VBUS20 before the
+   entry's cap (stage and front end losses taken); not taken = refused by the entry's cap or its collapse; U3 = U3's loss;
+   node = at the system node; to load = the node's sun used by the load in the hour; accepted = taken into charge at the
+   node; spill = offered to charge but refused (packs full or tapering, or the charge ceiling); stored = into the cells;
+   chg loss = accepted less stored (U3B, the lid loop, the 0.95 charge efficiency); drawn = out of the cells; lid path =
+   the lid's discharge path loss; cut = the first hour each pack stands at its line (the kit's stop puts both there);
+   closure = start + stored - drawn - end.
+   SERVICE LEDGER (check astra-check-l4e2-1, B1): served = the load in every hour it is carried in full, plus in the stop
+   hour the sun and what the stores delivered, nothing in a stopped hour; charge losses = the base's 0.95, U3B and the lid
+   loop, the lid's 0.95, and the model's full-store clamp; discharge losses = the lid path, and at the cutoff what the
+   stores held but did not deliver; kit residual = node + start - (served + spill + charge losses + discharge losses + end),
+   the node summed independently from the chain. The legacy model metric is energy_two_pack's unserved counter, which
+   also credits each stopped hour's sun, up to the load, as served while charging with it (the credit printed)
+   A1 CORRECTED, HYPOTHETICAL, WE, from 06 UTC
+     array 4492.4, clip 1544.6, stage in 2947.8, bus 2549.5, not taken 0.0, U3 68.2, node 2481.4 (hours the cap binds: 0)
+     to load 1350.8, accepted 276.2, spill 854.4, stored 240.5, chg loss 35.7; drawn 348.3, lid path 0.0; start 107.9, end 0.0
+     cut base h 13, lid h (no lid), kit stop h 13; store closure 0.00e+00
+     LEDGER: asked 3081.6, served 1699.1, unserved 1382.5; spill 854.4; charge losses 35.7 (base 0.95 13.8, U3B and loop 0.0,
+     lid 0.95 0.0, clamp 21.9); discharge losses 0.0 (cutoff 0.0); stopped-hour sun 36.1, to charge 36.1, spilled 0.0;
+     kit residual 9.09e-13; legacy model metric: unserved 1346.4, its stopped-hour credit 36.1
+   A1 CORRECTED, HYPOTHETICAL, WE, from 18 UTC
+     array 4492.4, clip 1544.6, stage in 2947.8, bus 2549.5, not taken 0.0, U3 68.2, node 2481.4 (hours the cap binds: 0)
+     to load 1332.7, accepted 354.4, spill 794.2, stored 323.6, chg loss 30.8; drawn 350.3, lid path 0.0; start 107.9, end 81.2
+     cut base h 2, lid h (no lid), kit stop h 2; store closure 5.68e-14
+     LEDGER: asked 3081.6, served 1683.0, unserved 1398.6; spill 794.2; charge losses 30.8 (base 0.95 17.7, U3B and loop 0.0,
+     lid 0.95 0.0, clamp 13.1); discharge losses 0.0 (cutoff 0.0); stopped-hour sun 54.2, to charge 54.2, spilled 0.0;
+     kit residual 4.55e-13; legacy model metric: unserved 1344.4, its stopped-hour credit 54.2
+   A1 AS DRAWN, WE, upper bound, from 06 UTC
+     array 4492.4, clip 1544.6, stage in 2947.8, bus 2549.5, not taken 214.8, U3 57.2, node 2277.5 (hours the cap binds: 24)
+     to load 1350.9, accepted 305.8, spill 620.8, stored 240.4, chg loss 65.3; drawn 348.3, lid path 0.0; start 107.9, end 0.0
+     cut base h 13, lid h (no lid), kit stop h 13; store closure 0.00e+00
+     LEDGER: asked 3081.6, served 1699.2, unserved 1382.4; spill 620.8; charge losses 65.3 (base 0.95 15.3, U3B and loop 0.0,
+     lid 0.95 0.0, clamp 50.1); discharge losses 0.0 (cutoff 0.0); stopped-hour sun 36.2, to charge 36.2, spilled 0.0;
+     kit residual 9.09e-13; legacy model metric: unserved 1346.2, its stopped-hour credit 36.2
+   A1 AS DRAWN, WE, upper bound, from 18 UTC
+     array 4492.4, clip 1544.6, stage in 2947.8, bus 2549.5, not taken 214.8, U3 57.2, node 2277.5 (hours the cap binds: 24)
+     to load 1332.8, accepted 399.3, spill 545.4, stored 323.6, chg loss 75.7; drawn 350.2, lid path 0.0; start 107.9, end 81.2
+     cut base h 2, lid h (no lid), kit stop h 2; store closure -1.42e-13
+     LEDGER: asked 3081.6, served 1683.1, unserved 1398.5; spill 545.4; charge losses 75.7 (base 0.95 20.0, U3B and loop 0.0,
+     lid 0.95 0.0, clamp 55.7); discharge losses 0.0 (cutoff 0.0); stopped-hour sun 54.3, to charge 54.3, spilled 0.0;
+     kit residual 1.36e-12; legacy model metric: unserved 1344.2, its stopped-hour credit 54.3
+   A1 AS DRAWN, WE, lower bound (A-2 collapse), from 06 UTC
+     array 4492.4, clip 1544.6, stage in 2947.8, bus 2549.5, not taken 688.6, U3 45.6, node 1815.4 (hours the cap binds: 24)
+     to load 1027.2, accepted 361.2, spill 426.9, stored 301.3, chg loss 59.9; drawn 409.2, lid path 0.0; start 107.9, end 0.0
+     cut base h 12, lid h (no lid), kit stop h 12; store closure -1.14e-13
+     LEDGER: asked 3081.6, served 1436.4, unserved 1645.2; spill 426.9; charge losses 59.9 (base 0.95 18.1, U3B and loop 0.0,
+     lid 0.95 0.0, clamp 41.8); discharge losses 0.0 (cutoff 0.0); stopped-hour sun 0.0, to charge 0.0, spilled 0.0;
+     kit residual 9.09e-13; legacy model metric: unserved 1645.2, its stopped-hour credit 0.0
+   A1 AS DRAWN, WE, lower bound (A-2 collapse), from 18 UTC
+     array 4492.4, clip 1544.6, stage in 2947.8, bus 2549.5, not taken 688.6, U3 45.6, node 1815.4 (hours the cap binds: 24)
+     to load 1027.2, accepted 394.1, spill 394.1, stored 323.6, chg loss 70.5; drawn 409.2, lid path 0.0; start 107.9, end 22.3
+     cut base h 2, lid h (no lid), kit stop h 2; store closure -1.56e-13
+     LEDGER: asked 3081.6, served 1436.4, unserved 1645.2; spill 394.1; charge losses 70.5 (base 0.95 19.7, U3B and loop 0.0,
+     lid 0.95 0.0, clamp 50.8); discharge losses 0.0 (cutoff 0.0); stopped-hour sun 0.0, to charge 0.0, spilled 0.0;
+     kit residual 9.09e-13; legacy model metric: unserved 1645.2, its stopped-hour credit 0.0
+   A2 CORRECTED, HYPOTHETICAL, WE, from 06 UTC
+     array 4492.4, clip 1544.6, stage in 2947.8, bus 2549.5, not taken 0.0, U3 68.2, node 2481.4 (hours the cap binds: 0)
+     to load 1351.5, accepted 803.8, spill 326.1, stored 734.0, chg loss 69.8; drawn 1236.6, lid path 5.0; start 502.6, end 0.0
+     cut base h 23, lid h 22, kit stop h 23; store closure -6.82e-13
+     LEDGER: asked 3083.4, served 2583.0, unserved 500.4; spill 326.1; charge losses 69.8 (base 0.95 15.9, U3B and loop 19.8,
+     lid 0.95 23.3, clamp 10.8); discharge losses 5.1 (cutoff 0.1); stopped-hour sun 36.1, to charge 36.1, spilled 0.0;
+     kit residual 0.00e+00; legacy model metric: unserved 464.3, its stopped-hour credit 36.1
+   A2 CORRECTED, HYPOTHETICAL, WE, from 18 UTC
+     array 4492.4, clip 1544.6, stage in 2947.8, bus 2549.5, not taken 0.0, U3 68.2, node 2481.4 (hours the cap binds: 0)
+     to load 1333.5, accepted 1147.9, spill 0.0, stored 1063.7, chg loss 84.2; drawn 1238.5, lid path 5.1; start 502.6, end 327.8
+     cut base h 11, lid h 10, kit stop h 11; store closure -6.25e-13
+     LEDGER: asked 3083.4, served 2566.9, unserved 516.5; spill 0.0; charge losses 84.2 (base 0.95 23.0, U3B and loop 28.2,
+     lid 0.95 33.0, clamp 0.0); discharge losses 5.2 (cutoff 0.1); stopped-hour sun 54.2, to charge 54.2, spilled 0.0;
+     kit residual 0.00e+00; legacy model metric: unserved 462.4, its stopped-hour credit 54.2
+   A2 AS DRAWN, WE, upper bound, from 06 UTC
+     array 4492.4, clip 1544.6, stage in 2947.8, bus 2549.5, not taken 214.8, U3 57.2, node 2277.5 (hours the cap binds: 24)
+     to load 1351.7, accepted 667.5, spill 258.3, stored 608.2, chg loss 59.3; drawn 1110.9, lid path 4.6; start 502.6, end 0.0
+     cut base h 23, lid h 22, kit stop h 23; store closure -4.55e-13
+     LEDGER: asked 3083.4, served 2457.9, unserved 625.5; spill 258.3; charge losses 59.3 (base 0.95 13.2, U3B and loop 16.2,
+     lid 0.95 19.3, clamp 10.6); discharge losses 4.6 (cutoff 0.0); stopped-hour sun 36.2, to charge 36.2, spilled 0.0;
+     kit residual 4.55e-13; legacy model metric: unserved 589.3, its stopped-hour credit 36.2
+   A2 AS DRAWN, WE, upper bound, from 18 UTC
+     array 4492.4, clip 1544.6, stage in 2947.8, bus 2549.5, not taken 214.8, U3 57.2, node 2277.5 (hours the cap binds: 24)
+     to load 1333.6, accepted 943.9, spill 0.0, stored 875.1, chg loss 68.8; drawn 1112.8, lid path 4.7; start 502.6, end 264.9
+     cut base h 11, lid h 10, kit stop h 11; store closure -3.41e-13
+     LEDGER: asked 3083.4, served 2441.7, unserved 641.7; spill 0.0; charge losses 68.8 (base 0.95 18.9, U3B and loop 22.8,
+     lid 0.95 27.2, clamp 0.0); discharge losses 4.7 (cutoff 0.0); stopped-hour sun 54.3, to charge 54.3, spilled 0.0;
+     kit residual 4.55e-13; legacy model metric: unserved 587.4, its stopped-hour credit 54.3
+   A2 AS DRAWN, WE, lower bound (A-2 collapse), from 06 UTC
+     array 4492.4, clip 1544.6, stage in 2947.8, bus 2549.5, not taken 688.6, U3 45.6, node 1815.4 (hours the cap binds: 24)
+     to load 1027.8, accepted 623.5, spill 164.1, stored 572.7, chg loss 50.8; drawn 1075.4, lid path 4.4; start 502.6, end 0.0
+     cut base h 21, lid h 20, kit stop h 21; store closure -2.27e-13
+     LEDGER: asked 3083.4, served 2098.6, unserved 984.8; spill 164.1; charge losses 50.8 (base 0.95 12.5, U3B and loop 15.1,
+     lid 0.95 17.9, clamp 5.2); discharge losses 4.6 (cutoff 0.1); stopped-hour sun 0.0, to charge 0.0, spilled 0.0;
+     kit residual -1.82e-12; legacy model metric: unserved 984.8, its stopped-hour credit 0.0
+   A2 AS DRAWN, WE, lower bound (A-2 collapse), from 18 UTC
+     array 4492.4, clip 1544.6, stage in 2947.8, bus 2549.5, not taken 688.6, U3 45.6, node 1815.4 (hours the cap binds: 24)
+     to load 1027.8, accepted 787.6, spill 0.0, stored 730.0, chg loss 57.5; drawn 1075.4, lid path 4.4; start 502.6, end 157.3
+     cut base h 11, lid h 10, kit stop h 11; store closure 1.71e-13
+     LEDGER: asked 3083.4, served 2098.6, unserved 984.8; spill 0.0; charge losses 57.5 (base 0.95 15.8, U3B and loop 19.1,
+     lid 0.95 22.7, clamp 0.0); discharge losses 4.6 (cutoff 0.1); stopped-hour sun 0.0, to charge 0.0, spilled 0.0;
+     kit residual -1.36e-12; legacy model metric: unserved 984.8, its stopped-hour credit 0.0
+   THE LEDGER'S CLOSURE, every architecture, path, horizon and start (TYP, 100 W): unserved Wh and the kit residual
+     A1 CORRECTED, HYPOTHETICAL, WE              48 h 06 UTC 907.382714 (0.0e+00); 48 h 18 UTC 923.494365 (2.3e-13)
+                                                 72 h 06 UTC 1382.474072 (9.1e-13); 72 h 18 UTC 1398.585722 (4.5e-13)
+     A1 AS DRAWN, WE, upper bound                48 h 06 UTC 907.308252 (9.1e-13); 48 h 18 UTC 923.456829 (9.1e-13)
+                                                 72 h 06 UTC 1382.362378 (9.1e-13); 72 h 18 UTC 1398.510955 (1.4e-12)
+     A1 AS DRAWN, WE, lower bound (A-2 collapse) 48 h 06 UTC 1068.271853 (4.5e-13); 48 h 18 UTC 1068.271853 (4.5e-13)
+                                                 72 h 06 UTC 1645.207780 (9.1e-13); 72 h 18 UTC 1645.207780 (9.1e-13)
+     A2 CORRECTED, HYPOTHETICAL, WE              48 h 06 UTC 270.132086 (-1.8e-12); 48 h 18 UTC 286.306461 (-1.4e-12)
+                                                 72 h 06 UTC 500.372955 (0.0e+00); 72 h 18 UTC 516.547330 (0.0e+00)
+     A2 AS DRAWN, WE, upper bound                48 h 06 UTC 332.661407 (-1.1e-12); 48 h 18 UTC 348.872773 (-9.1e-13)
+                                                 72 h 06 UTC 625.468894 (4.5e-13); 72 h 18 UTC 641.680260 (4.5e-13)
+     A2 AS DRAWN, WE, lower bound (A-2 collapse) 48 h 06 UTC 541.918125 (-9.1e-13); 48 h 18 UTC 541.918125 (-1.1e-12)
+                                                 72 h 06 UTC 984.812723 (-1.8e-12); 72 h 18 UTC 984.812723 (-1.4e-12)
+   the check's own flow-derived figures for A2 corrected (astra-check-l4e2-1: 270.132086 / 286.306461 / 500.372955 / 516.547330 Wh at 48 / 72 h, 06 / 18 UTC)
+   reproduced to the sixth decimal: yes
+   (every run of this script, not only these, is refused unless its store closure, its kit residual, the legacy
+   metric's difference from the ledger less the stopped-hour credit, and the lid path's loss less the model's all stay
+   under 1e-6 Wh, and its node power equals the model's in every hour to 1e-9 W)
+
+6. WHERE A RESULT COULD TURN ON AN UNDOCUMENTED FIGURE (TYP, 100 W; the corrected path unless named)
+   A1, the three at their 0.90 bracket: 48 h NOT MET (924.5); 72 h NOT MET (1400.7); least addition +721.6 / +1005.6 Wh
+   A1, stage and front end 0.97, charge 0.98 (the high bracket): 48 h NOT MET (922.1); 72 h NOT MET (1395.7); least addition +571.2 / +707.2 Wh
+   A1, all three at 1.00 (the three undocumented efficiencies set to 1.00; U3, U3B and the lid path's losses retained): 48 h NOT MET (920.9); 72 h NOT MET (1393.5); least addition +504.8 / +575.7 Wh
+   A2, the three at their 0.90 bracket: 48 h NOT MET (350.9); 72 h NOT MET (645.6); least addition +344.0 / +644.8 Wh
+   A2, stage and front end 0.97, charge 0.98 (the high bracket): 48 h NOT MET (206.1); 72 h NOT MET (356.1); least addition +196.7 / +353.4 Wh
+   A2, all three at 1.00 (the three undocumented efficiencies set to 1.00; U3, U3B and the lid path's losses retained): 48 h NOT MET (150.9); 72 h NOT MET (245.8); least addition +131.4 / +223.4 Wh
+   A1, U3 re-weighted over the 100 W day (0.9751 against WE's 0.9733, TI's method at the makers' maxima): unserved 907.3 / 923.5 at 48 h
+      and 1382.4 / 1398.5 at 72 h (was 907.4 / 923.5 and 1382.5 / 1398.6)
+   A2, U3 re-weighted over the 100 W day (0.9751 against WE's 0.9733, TI's method at the makers' maxima): unserved 268.7 / 284.9 at 48 h
+      and 497.5 / 513.7 at 72 h (was 270.1 / 286.3 and 500.4 / 516.5)
+   A1 charged at 3.968 A (code 31, 1.32 A a cell, the generator's 4 A class) instead of 3.06 A: unserved at 72 h 1382.5 / 1398.6 Wh
+      against 1382.5 / 1398.6 (06 / 18 UTC)
+   The steady load at the pack terminals each store carries through the horizon (COMB, TYP, the profile's load replaced):
+     A1 CORRECTED, HYPOTHETICAL, WE              48 h 8.8 W, 72 h 8.8 W (PS-IDLE-SPEC: PLAN 42.8, LOW 33.1, HIGH 82.8 W)
+     A1 AS DRAWN, WE, upper bound                48 h 8.8 W, 72 h 8.8 W (PS-IDLE-SPEC: PLAN 42.8, LOW 33.1, HIGH 82.8 W)
+     A2 CORRECTED, HYPOTHETICAL, WE              48 h 35.3 W, 72 h 34.4 W (PS-IDLE-SPEC: PLAN 42.8, LOW 33.1, HIGH 82.8 W)
+     A2 AS DRAWN, WE, upper bound                48 h 33.5 W, 72 h 32.3 W (PS-IDLE-SPEC: PLAN 42.8, LOW 33.1, HIGH 82.8 W)
+
+7. WHAT THE 100 W RESULT REPRESENTS: the series is the 400 Wp 2S2P trace (a1solar's build, fixed point 34.29 V, ratio 0.9903 TYP)
+   the stimulus: 1497.5 Wh a day at the array (peak 194.3 W); 1497.5 Wh into the stage at 200 W; 982.6 Wh at 100 W, clipped in 8 hours
+   at the node on WE: 827.1 Wh a day through the 100 W window; the window's ceiling with a 20 kWp array (energy_budget.out 4's
+   method, on WE's chain) 1016.8. PS-IDLE-SPEC asks 1027.2 Wh a day at the pack terminals (1027.8 with A2's drain): under WE no
+   array carries the day's demand through this window, so each day ends shorter than it began and the store must hold the
+   first night plus each later day's deficit (at the node, before charge losses, 200.1 Wh a day with the stimulus)
+   the array needed to reach 100 W in an hour at the trace's ratio: 06 UTC 1865 Wp, 07 UTC 560 Wp, 08 UTC 326 Wp, 09 UTC 243 Wp, 10 UTC 213 Wp, 11 UTC 208 Wp, 12 UTC 206 Wp, 13 UTC 222 Wp, 14 UTC 263 Wp, 15 UTC 331 Wp, 16 UTC 568 Wp
+   REQ-016 admits a panel of at most 25 V open circuit at its coldest, held at 17.6 V, at most 100 W into the stage
+   (acceptance: a bench supply on a 100 W panel's curve, MPP 17.6 V, Voc 25 V). The trace is 2S2P at 34.29 V: 51.28 V cold
+   (a1solar ARRAY.md 1), outside it. The held panel is outside it even alone (25.64 V at -20 C cells); a1solar ARRAY.md 5
+   reads the SunPower (24.05 V) and PowerFilm's 15 V model (24.86 V) as admitted at -20 C, none at -40 C; neither has an
+   availability trace in the tree. The records read an array above about 150 Wp of the 12 V class as re-rating the
+   entry's 10 A (energy_budget.out 4), which REQ-016's acceptance names. So the 100 W result is a CONDITIONAL SCREENING
+   STIMULUS: it stands for a compliant source only if one delivers, in every hour, at least min(the 400 Wp trace, 100 W).
+   Sensitivity on the held panel's fit held at 17.6 V (a1solar's ratio method, INFERRED; the panel itself is not compliant):
+     1S1P 100 Wp, ratio 0.9794, 370.2 Wh a day into the stage: A1 first interruption h 8/2; unserved 1345.1 / 1331.2 at 48 h, 2049.2 / 2050.7 at 72 h
+     1S1P 100 Wp, ratio 0.9794, 370.2 Wh a day into the stage: A2 first interruption h 18/11; unserved 954.1 / 1180.3 at 48 h, 1692.8 / 1919.0 at 72 h
+     1S2P 200 Wp, ratio 0.9705, 733.7 Wh a day into the stage: A1 first interruption h 13/2; unserved 994.3 / 1031.2 at 48 h, 1534.2 / 1571.1 at 72 h
+     1S2P 200 Wp, ratio 0.9705, 733.7 Wh a day into the stage: A2 first interruption h 22/11; unserved 490.4 / 527.4 at 48 h, 918.8 / 955.8 at 72 h
+     1S4P 400 Wp, ratio 0.9513, 975.4 Wh a day into the stage: A1 first interruption h 13/2; unserved 908.7 / 924.1 at 48 h, 1384.4 / 1399.9 at 72 h
+     1S4P 400 Wp, ratio 0.9513, 975.4 Wh a day into the stage: A2 first interruption h 23/11; unserved 276.4 / 292.0 at 48 h, 512.3 / 527.8 at 72 h
+   (1S4P of the held panel: 25.64 V at -20 C cells and a 40 A entry by a1solar ARRAY.md 5; shown for the energy only)
+
+8. THE CHARGE PATH REQ-016'S WINDOW NEEDS (TYP, 100 W, the lowest bus 19.146 V)
+   declared 0.93 x 0.93       the largest power at VBUS20 86.5 W: U3's input minimum at least 4.517 A; the 50 mA setting at least 4.65 A,
+                              its maximum 4.75 A, so through R11 4.810 A (0.060 A of other loads) to 4.829 A (C-9's 0.079 A)
+   high bracket 0.97 x 0.97   the largest power at VBUS20 94.1 W: U3's input minimum at least 4.914 A; the 50 mA setting at least 5.05 A,
+                              its maximum 5.15 A, so through R11 5.210 A (0.060 A of other loads) to 5.229 A (C-9's 0.079 A)
+   no loss, 1.00 x 1.00       the largest power at VBUS20 100.0 W: U3's input minimum at least 5.223 A; the 50 mA setting at least 5.35 A,
+                              its maximum 5.45 A, so through R11 5.510 A (0.060 A of other loads) to 5.529 A (C-9's 0.079 A)
+   A1 CORRECTED, U3 6.1 A minimum (the drafted 6.2 A setting)                       unserved 923.5 / 1398.6 Wh at 48 / 72 h; least addition +654.8 / +873.1 Wh
+   A1 WINDOW-SIZED, U3 4.55 A minimum (a 4.65 A setting), HYPOTHETICAL              unserved 923.5 / 1398.6 Wh at 48 / 72 h; least addition +654.8 / +873.1 Wh
+   A1 DERATED VARIANT, U3 3.90 A minimum (4.00 A set), R11 as drawn, upper bound    unserved 923.5 / 1398.5 Wh at 48 / 72 h; least addition +740.5 / +1044.6 Wh
+   A1 AS DRAWN, U3 4.05 A minimum (4.15 A set), upper bound                         unserved 923.5 / 1398.5 Wh at 48 / 72 h; least addition +719.3 / +1002.2 Wh
+   A2 CORRECTED, U3 6.1 A minimum (the drafted 6.2 A setting)                       unserved 286.3 / 516.5 Wh at 48 / 72 h; least addition +278.8 / +515.8 Wh
+   A2 WINDOW-SIZED, U3 4.55 A minimum (a 4.65 A setting), HYPOTHETICAL              unserved 286.3 / 516.5 Wh at 48 / 72 h; least addition +278.8 / +515.8 Wh
+   A2 DERATED VARIANT, U3 3.90 A minimum (4.00 A set), R11 as drawn, upper bound    unserved 369.4 / 682.8 Wh at 48 / 72 h; least addition +362.2 / +682.1 Wh
+   A2 AS DRAWN, U3 4.05 A minimum (4.15 A set), upper bound                         unserved 348.9 / 641.7 Wh at 48 / 72 h; least addition +341.6 / +641.0 Wh
+   the held front end (R11 10 mOhm) gives 4.152 A to U3 at its stacked minimum; the drafted 6.2 mOhm gives 6.733 A; the
+   corrected path's 6.1 A cap (116.8 W) never binds at 100 W: yes
+
+9. THE LAYER 3 HEADLINE CASES: runtime.out section 2's rows (A2, 4S9P lid, TYP), the legacy model metric runtime.out
+   published against the service ledger, under the Layer 3 case's own inputs (P-03's 400 Wp 2S2P array, the 200 W clip),
+   then with only the window moved to REQ-016's 100 W (each figure the larger of the two starts, as runtime.out prints it)
+   DRAWN, NOM inputs (runtime.out's AS DRAWN, an upper bound) 200 W: stops h 23/11; legacy model metric 266.7 / 494.7 Wh (published), ledger 301.2 / 547.4 Wh at 48 / 72 h
+                                                              100 W: stops h 23/11; legacy model metric 266.7 / 494.7 Wh, ledger 301.2 / 547.4 Wh at 48 / 72 h
+   NOM, CORRECTED PATH, HYPOTHETICAL                          200 W: stops h 23/11; legacy model metric 102.2 / 165.7 Wh (published), ledger 136.6 / 218.2 Wh at 48 / 72 h
+                                                              100 W: stops h 23/11; legacy model metric 242.8 / 446.7 Wh, ledger 277.2 / 499.3 Wh at 48 / 72 h
+   WE, CORRECTED PATH, HYPOTHETICAL, CONDITIONAL              200 W: stops h 23/11; legacy model metric 104.6 / 169.2 Wh (published), ledger 138.8 / 221.5 Wh at 48 / 72 h
+                                                              100 W: stops h 23/11; legacy model metric 252.1 / 464.3 Wh, ledger 286.3 / 516.5 Wh at 48 / 72 h
+   (the published figures are understated by the stopped-hour double count; they stay as published in Layer 3)
+
+10. THE IN-CONSTRAINT LEVERS TOGETHER, A2, CORRECTED, TYP, 100 W: each at its favourable end, none established
+   WE as above (4S9P lid at 13.23 C)                                  store 502.6 Wh; unserved 286.3 / 516.5 Wh at 48 / 72 h;
+                                                                      least addition +278.8 / +515.8 Wh; steady load carried 35.3 / 34.4 W
+   + the lid at the base's +20 C (a bound: no heating energy counted) store 546.1 Wh; unserved 241.8 / 472.0 Wh at 48 / 72 h;
+                                                                      least addition +234.6 / +471.2 Wh; steady load carried 36.5 / 35.1 W
+   + 4S10P in the lid (the check's 43-place bound, a1mech README 1)   store 582.5 Wh; unserved 206.3 / 437.0 Wh at 48 / 72 h;
+                                                                      least addition +198.2 / +434.8 Wh; steady load carried 37.4 / 35.7 W
+   + stage and front end 0.97, charge 0.98 (the high bracket)         store 582.5 Wh; unserved 126.6 / 277.3 Wh at 48 / 72 h;
+                                                                      least addition +116.0 / +271.9 Wh; steady load carried 39.7 / 38.4 W
+
+11. O-2'S BOUND (checks astra-check-l4e2-1 and -2, B2): V_in x I_in,max at most 100 W at every corner of the envelope
+   a current limit alone does not bound power: FBIN (8705af p.29) only lowers the current when the input falls below its
+   set point, so while the input-current loop (p.31) limits, the input rises along the panel's curve toward its open-circuit
+   voltage. A fixed 5.68 A (100 W at 17.6 V) is 113.6 W at a loaded 20 V and 142.0 W at 25 V
+   THE ROWS (8705af pp.2 to 6, read back from the pinned sheet by column, each equal to the table: yes; every parameter line
+   of pp.3 to 6 naming CSPIN, CSNIN, A7, IMON_IN, EA2, SRVO_IIN, FBIN, EA3, VC classified: yes)
+     p.4 IMON_REG     STACK Regulation Voltages for IMON_IN and IMON_OUT: 1.187 / 1.208 / 1.229 V (full range)
+     p.4 IMON_LINE    STACK Line Regulation for IMON_IN and IMON_OUT Error Amp: - / 0.002 / 0.005 %/V (25 C)
+     p.5 A7_ALL       STACK VCSPIN-CSNIN to IMON_IN Amplifier A7 gm (All Grades): 0.95 / 1 / 1.05 mmho (25 C)
+     p.5 A7_EI        STACK VCSPIN-CSNIN to IMON_IN Amplifier A7 gm (LT8705AE, LT8705AI): 0.94 / 1 / 1.06 mmho (full range)
+     p.5 A7_HMP       STACK VCSPIN-CSNIN to IMON_IN Amplifier A7 gm (LT8705AH, LT8705AMP): 0.93 / 1 / 1.07 mmho (full range)
+     p.5 EA2_AV       ALLOW IMON_IN Error Amp EA2 Voltage Gain: - / 130 / - V/V (25 C)
+     p.5 EA2_GM       NONE  IMON_IN Error Amp EA2 gm: - / 185 / - umho (25 C)
+     p.4 CS_BIAS      CONDI CSPIN, CSNIN Bias Current ICSPIN + ICSNIN: - / 31 / - uA (25 C)
+     p.5 CS_CM        CONDI CSPIN, CSNIN Common Mode Operating Voltage Range: 1.5 / - / 80 V (full range)
+     p.5 CS_DIFF      CONDI CSPIN, CSNIN Differential Operating Voltage Range: -100 / - / 100 mV (full range)
+     p.5 IMON_IOUT    CONDI IMON_IN Maximum Output Current: 100 / - / - uA (full range)
+     p.5 IMON_OV      NONE  IMON_IN Overvoltage Threshold: 1.55 / 1.61 / 1.67 V (full range)
+     p.5 SRVO_IIN     NONE  SRVO_IIN Activation Threshold (Note 5): -60 / -49 / -37 mV (25 C)
+     p.5 SRVO_IIN_H   NONE  SRVO_IIN Activation Threshold Hysteresis (Note 5): - / 22 / - mV (25 C)
+     p.5 SRVO_IIN_LV  NONE  SRVO_IIN, SRVO_IOUT Low Voltage (Note 5): - / 110 / 330 mV (full range)
+     p.5 SRVO_IIN_LK  NONE  SRVO_IIN, SRVO_IOUT Leakage Current (Note 5): - / 0 / 1 uA (full range)
+     p.4 VC_GAIN      NONE  Gain from VC to Maximum Current Sense Voltage: - / 150 / - mV/V (25 C)
+     p.4 FBIN_EI      HOLD  Regulation Voltage for FBIN (LT8705AE, LT8705AI): 1.184 / 1.205 / 1.226 V (full range)
+     p.4 FBIN_HMP     HOLD  Regulation Voltage for FBIN (LT8705AH, LT8705AMP): 1.182 / 1.205 / 1.226 V (full range)
+     p.4 FB_LINE      HOLD  Line Regulation for FBOUT and FBIN Error Amp Reference: - / 0.002 / 0.005 %/V (25 C)
+     p.4 FBIN_BIAS    HOLD  FBIN Pin Bias Current: - / 10 / - nA (25 C)
+     p.4 EA3_AV       HOLD  FBIN Error Amp EA3 Voltage Gain: - / 90 / - V/V (25 C)
+     p.4 EA3_GM       NONE  FBIN Error Amp EA3 gm: - / 130 / - umho (25 C)
+     p.4 SRVO_FBIN    NONE  SRVO_FBIN Activation Threshold (Note 5): 56 / 72 / 89 mV (25 C)
+     p.4 SRVO_FBIN_H  NONE  SRVO_FBIN Activation Threshold Hysteresis (Note 5): - / 33 / - mV (25 C)
+     p.4 SRVO_FBIN_LV NONE  SRVO_FBIN, SRVO_FBOUT Low Voltage (Note 5): - / 110 / 330 mV (full range)
+     p.4 SRVO_FBIN_LK NONE  SRVO_FBIN, SRVO_FBOUT Leakage Current (Note 5): - / 0 / 1 uA (full range)
+     p.2 VC absolute maximum -0.3 to 2.2 V: the largest VC excursion from the references' VC = 1.2 V is 1.5 V, so the
+     EA2 allowance is 1.5 V / 130 = 11.54 mV on IMON_IN and the EA3 allowance 1.5 V / 90 = 16.67 mV on FBIN
+     RSENSE1 and RIMON_IN at 1 % each (ASSUMPTION, all of tolerance and drift); R8 102k and R9 7.50k at 1 % (NETLIST)
+   THE ENVELOPE: the loaded input voltage from the hold's tolerance-adjusted lower corner 16.695 V (FBIN 1.182 V, every grade's
+   minimum; its line regulation, the EA3 allowance and the FBIN bias against it; R8 and R9 at their worst) to REQ-016's
+   25 V open-circuit ceiling, which no loaded voltage exceeds; the hold spans 16.695 / 17.593 / 18.490 V; both temperature ends
+   (the full-range rows' printed limits hold at both; the 25 C rows applied as printed at both, ASSUMPTION)
+   THE SETTING, sized by the classified stack at the 25 V corner (the rows that moved it):
+     IMON_REG, A7 over the E and I grades' full range, the two resistors (the first issue's stack)        ceiling 3.622207 A
+     + IMON_LINE, the reference's line regulation from 12 V to 25 V                                       ceiling 3.619854 A
+     + A7 over every grade's printed limits (A7_ALL, A7_HMP: no grade is named)                           ceiling 3.581345 A
+     + EA2_AV, the error amplifier's finite gain over VC's range (the ALLOWANCE)                          ceiling 3.548056 A
+     rounded DOWN to the stated 1 mA resolution: the nominal setting 3.548 A (the E or I grade fixed by procurement would
+     allow 3.586207 A)
+   THE CHECK, independent of the classification (the limit's rows read from the sheet, 106496 corners: 832 voltages from 16.695 to
+   25 V, both temperature ends, and every combination of the reference, its line regulation, A7, the two resistors and
+   the EA2 allowance at their limits): the worst corner 25.000 V (both temperature ends alike), reference 1.229 V, line +,
+   gm 0.93 mmho, resistors low / low, EA2 +: V_in x I_in,max = 99.9984 W, margin 0.0016 W under 100 W (refused above it)
+   THE CONSEQUENCE: in an hour the limit acts, the stage takes between 52.8 W at the lower corner (16.695 V x 3.162 A, the
+   limit's lowest there) and 100 W; at the nominal hold and setting 62.4 W (17.593 V x 3.548 A). Where between is the admitted
+   panel's own curve, INCONCLUSIVE until O-1 pins it. The fault threshold sits at IMON_IN 1.61 V typical, 1.33 times the
+   limit (p.31). The bench sweep runs from 16.695 V to 25 V at both temperature ends, steady state and transients recorded
+   apart
+   The replay with the stage window at the lower corner and at the nominal hold (CORRECTED, WE, TYP; a separate row, not
+   the 100 W screening case, and still on the non-compliant stimulus):
+     lower corner 52.8 W    A1: first interruption h 13/2; unserved 991.7 / 998.6 at 48 h, 1541.9 / 1548.8 at 72 h; least addition +995.0 / +1544.3 Wh
+     lower corner 52.8 W    A2: first interruption h 22/11; unserved 601.4 / 607.7 at 48 h, 1153.0 / 1159.4 at 72 h; least addition +610.8 / +1167.3 Wh
+     nominal hold 62.4 W    A1: first interruption h 13/2; unserved 907.4 / 923.5 at 48 h, 1382.5 / 1398.6 at 72 h; least addition +908.8 / +1381.2 Wh
+     nominal hold 62.4 W    A2: first interruption h 23/11; unserved 516.6 / 532.8 at 48 h, 993.4 / 1009.6 at 72 h; least addition +525.8 / +1008.0 Wh
+     screening case 100 W   A1: first interruption h 13/2; unserved 907.4 / 923.5 at 48 h, 1382.5 / 1398.6 at 72 h; least addition +654.8 / +873.1 Wh
+     screening case 100 W   A2: first interruption h 23/11; unserved 270.1 / 286.3 at 48 h, 500.4 / 516.5 at 72 h; least addition +278.8 / +515.8 Wh
+
+12. A NOMINALLY COMPATIBLE CANDIDATE PANEL WITH THE PROPOSED CONTROL (review L4-R02): the SunPower SPR-E-Flex-100, 1S1P;
+   SOURCE COMPLIANCE INCONCLUSIVE (check astra-check-l4e3-1, B1); every figure below is conditional on the sheet's nominal values
+   the sheet: v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf
+   (SunPower document 523809 Rev D, a distributor's issue; held back by its terms, pinned by sha256; its one page read
+   back and equal to a1solar's CAND['SPR100']): Pnom 100 W (+6 / -3 %), Vmpp 17.1 V, Impp 5.9 A, Voc 21.4 V, Isc 6.3 A;
+   Voc -58.9 mV/K, Isc +2.6 mA/K, Pmax -0.35 %/K; 32 cells; no NOCT and no low-irradiance data printed
+   REQ-016's window at the kit's use boundary, -20 C (REQ-024 and D-02a: use at -20 to +40 C; REQ-016: at most 25 V at the
+   coldest operating temperature): the NOMINAL open circuit is 24.05 V there, 0.95 V under; the panel's own -40 C rating is a
+   component limit, not the kit's range (25.23 V there, for information). The guide v2/vendor/solar/held/sunpower-flex-safety-installation-524958-revf.pdf
+   (SunPower 524958 Rev F, printed p.2, PDF p.3, under Table 1, which lists the SPR-E-Flex-100) reads, verbatim:
+     "Rated electrical characteristics are within 10% of measured values at Standard Test Conditions of:
+     1000W/m2, 25°C cell temperature and solar spectral irradiation of AM 1.5 spectrum."
+   The nominal margin admits an STC open circuit
+   at most 4.44 % above the sheet's 21.4 V (the coefficient held at its nominal); 10 % above gives 26.19 V at -20 C. So the
+   panel is a nominally compatible candidate, not a shown compliant source; the 100 W nominal rating, the
+   stage's window holding the input at most 100 W; its hot short-circuit current about 6.42 A, under F2 and J_SOLAR's 10 A
+   the model (a1solar's array_calc, imported and pinned): the single-diode model without a shunt term, fitted to Isc, Voc,
+   Vmpp and Impp with dP/dV = 0 at the maker's point (A 1.0673 V, Rs 0.2301 Ohm: exact fit: dP/dV = 0 at the maker's (Vmp, Imp), Rs >= 0),
+   temperature by the maker's coefficients, the current in proportion to irradiance; cells by the NOCT model at 47 C
+   (INFERRED: SunPower prints none)
+   over SC-37's hourly air (13.2 to 18.3 C), the 5 m lead at 0.0465 Ohm (ESTIMATE); by a1solar's convention the stage's input
+   is PVGIS's maximum-power figure (its 0.9417) times the model's operating point over the model's own maximum-power point
+   the stage's input each hour: the FBIN hold while the panel gives less than O-2's limit there, else the limit with the
+   voltage riding up the curve; the hold at 16.695 / 17.593 / 18.490 V (section 11) and the limit at its lowest, nominal 3.548 A
+   and its highest (section 11's rows at the operating voltage). At the maximum-power point the day gives 378.0 Wh (PVGIS)
+   Wh a day into the stage (hours the limit binds):
+     lower hold corner  16.695 V, no input limit (as drawn)   373.5 Wh (0 h)
+     lower hold corner  16.695 V, limit at its lowest         373.5 Wh (0 h)
+     lower hold corner  16.695 V, limit nominal               373.5 Wh (0 h)
+     lower hold corner  16.695 V, limit at its highest        373.5 Wh (0 h)
+     nominal hold       17.593 V, no input limit (as drawn)   350.0 Wh (0 h)
+     nominal hold       17.593 V, limit at its lowest         350.0 Wh (0 h)
+     nominal hold       17.593 V, limit nominal               350.0 Wh (0 h)
+     nominal hold       17.593 V, limit at its highest        350.0 Wh (0 h)
+     upper hold corner  18.490 V, no input limit (as drawn)   280.6 Wh (0 h)
+     upper hold corner  18.490 V, limit at its lowest         280.6 Wh (0 h)
+     upper hold corner  18.490 V, limit nominal               280.6 Wh (0 h)
+     upper hold corner  18.490 V, limit at its highest        280.6 Wh (0 h)
+   sensitivity at the nominal hold and limit: the Rs 0.1 Ohm fit 330.9 Wh; the Rs 0.2 Ohm fit 346.1 Wh; cells 10 K hotter (NOCT 57 C) 331.3 Wh; the lead twice as long 343.4 Wh
+   two panels in parallel (1S2P), the same control: 580.7 Wh a day (6 h limited); their 12.8 A short circuit re-rates F2 and
+   J_SOLAR's 10 A, which REQ-016's acceptance names: a proposal, the owner's (shown for the energy only)
+   A1 AND A2 ON THE CANDIDATE'S TRACE, conditional on its nominal sheet values (the stage's input as above; the rest of
+   section 1's assumption set; the service
+   ledger; pairs 06 / 18 UTC). The 100 W screening case of sections 3 and 4 stays beside it as a labelled comparison.
+   AS DRAWN, WE, upper bound; no input limit, hold 17.593 V: 350.0 Wh a day into the stage
+     A1: first interruption h 6/2; unserved 1366.0 / 1366.8 at 48 h, 2101.9 / 2102.6 at 72 h; least addition +1360.1 / +2092.1 Wh
+     A2: first interruption h 18/11; unserved 985.6 / 1195.5 at 48 h, 1739.5 / 1949.4 at 72 h; least addition +977.8 / +1717.7 Wh
+   AS DRAWN, WE, lower bound (A-2 collapse); the same trace: 350.0 Wh a day into the stage
+     A1: first interruption h 2/2; unserved 1946.5 / 1946.5 at 48 h, 2973.7 / 2973.7 at 72 h; least addition +1950.7 / +2977.9 Wh
+     A2: first interruption h 11/11; unserved 1555.1 / 1555.1 at 48 h, 2582.9 / 2582.9 at 72 h; least addition +1576.1 / +2615.3 Wh
+   CORRECTED, WE; O-2 nominal (17.593 V, 3.548 A): 350.0 Wh a day into the stage
+     A1: first interruption h 6/2; unserved 1367.4 / 1368.1 at 48 h, 2103.9 / 2104.6 at 72 h; least addition +1361.5 / +2094.1 Wh
+     A2: first interruption h 18/11; unserved 986.9 / 1196.1 at 48 h, 1741.4 / 1950.7 at 72 h; least addition +979.2 / +1719.7 Wh
+   CORRECTED, WE; O-2 lower edge (the lower hold corner 16.695 V, the limit's lowest; the limit never binds): 373.5 Wh a day into the stage
+     A1: first interruption h 8/2; unserved 1339.7 / 1325.8 at 48 h, 2040.9 / 2042.7 at 72 h; least addition +1322.0 / +2034.8 Wh
+     A2: first interruption h 19/11; unserved 948.8 / 1177.8 at 48 h, 1685.0 / 1914.0 at 72 h; least addition +939.4 / +1660.1 Wh
+   CORRECTED, WE; the least-energy corner (upper hold corner, limit at its lowest): 280.6 Wh a day into the stage
+     A1: first interruption h 3/2; unserved 1511.9 / 1535.8 at 48 h, 2330.4 / 2289.0 at 72 h; least addition +1478.4 / +2269.4 Wh
+     A2: first interruption h 17/11; unserved 1318.5 / 1169.6 at 48 h, 1894.5 / 2131.1 at 72 h; least addition +1097.1 / +1896.6 Wh
+   The steady load at the pack terminals A2 carries through the horizon on the candidate's trace (COMB, a sensitivity:
+   PS-IDLE-SPEC stays the defined 42.8 W profile):
+     CORRECTED, O-2 nominal       A2 48 h 21.1 W, 72 h 17.5 W; A1 48 h 8.0 W, 72 h 8.0 W
+     CORRECTED, O-2 lower edge    A2 48 h 21.6 W, 72 h 18.1 W; A1 48 h 8.1 W, 72 h 8.1 W
+     AS DRAWN, upper bound        A2 48 h 21.1 W, 72 h 17.5 W; A1 48 h 8.0 W, 72 h 8.0 W
+
+13. THE LOADS OF PS-IDLE-SPEC WITH NO DOCUMENT (review item): 3 rows of load_trace.out's tier T, 8.40 W at the pack
+   terminals of the profile's 42.8 W. Each: its figure now, the maker's figure held, and what would settle it
+      6.03 W  Xenarc 709GNK
+            now: 6.0 W at the load, the design record's figure (appendix 32.52); HIGH 10 W
+            held: v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf p.4 'Power Consumption: <= 10W', a maximum; no typical,
+            no figure per brightness (the manual's dimmer and auto sensor, pp.5 onward); the product page says the same
+            INCONCLUSIVE: measure its DC input at the kit's supply, at the brightness settings the profile uses, warm and cold
+      1.30 W  WiFi link card 2 (standby)
+            now: 1.0 W at the load, a placeholder (energy_inputs.yaml); 0 W if held unpowered by PCIE_PWR_EN; bounded by 9.1 W
+            held: v2/vendor/wifi/asiarf-AW7915-AED_V1.pdf p.4 'Power consumption maximum is 9.1W, average is 7W' (an active card);
+            p.1 'Deep sleep mode is supported', no figure; the product page 'maximum is 9W, average is 4 - 8W'
+            INCONCLUSIVE: measure the card's 3.3 V current in the standby state its firmware sets; holding it unpowered is a
+            design choice that changes the link's failover (CHO-002), not a measurement
+      1.07 W  VHF PA 30 W
+            now: 0.9 W at the load, a planning placeholder, about 1.2 % duty of a key-down (energy_inputs.yaml)
+            held: v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf p.2: Pout 30 W at a total efficiency above 40 % (VDD 12.5 V),
+            so at most 75 W in at key-down; leakage IGG at most 1 mA at VGG 0 V. The average is that input times the beacon duty,
+            which is the profile's: CONOPS section 5's fixed site (one 1 s beacon in 10 minutes) is about 0.13 W
+            INCONCLUSIVE: the beacon rate the profile means, and the PA's measured supply energy per beacon at the kit's VDD
+   none of the three is settled by a held maker's figure: each stays INCONCLUSIVE until measured or specified. The profile
+   is not lowered. On the candidate's trace A2's corrected path meets 48 h at a steady 21.1 W (section 12), 21.7 W under
+   the profile, against 8.40 W of undocumented loads: settling them cannot by itself close the gap on that trace
+
+END. Each line is the model's arithmetic; nothing is measured. No result here is demonstrated capability: the circuit as
+drawn fails; the corrected path is HYPOTHETICAL and CONDITIONAL on three undocumented efficiencies; the 100 W results rest
+on a series REQ-016 does not admit and are a screening stimulus only; section 12's candidate trace rests on one held sheet's
+nominal values (source compliance INCONCLUSIVE), a single-diode fit to them and an INFERRED cell temperature, on one mean day.
