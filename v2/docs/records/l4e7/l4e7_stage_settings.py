@@ -851,7 +851,7 @@ def compute():
              small={"stability": "the setpoint moves with the source voltage: over the envelope's %.3f V swing at most %.4f %% printed, %.4f %% assumed" % (
                  R["line_coupling"]["swing"], R["line_coupling"]["printed"], R["line_coupling"]["assumed"])},
              why_bound="the reference moves with VIN from the 12 V it is printed at: at 25 V the printed maximum moves the corner by %.4f W" % (R["main_chk"][0][1][0] - p_cold(ea2, 0.0, False, tcr_h)),
-             why_stability="small, not zero: the reference's VIN dependence couples a moving source voltage into the regulated current (a feedforward path, at most %.4f %% of the setpoint per volt assumed), with no gain of its own; the loop's margin is set elsewhere" % (
+             why_stability="small, not zero: the reference's VIN dependence couples a moving source voltage into the regulated current (a feedforward path, at most %.4f %% of the setpoint per volt assumed); the loop's margin is set elsewhere" % (
                  LINE_FLOOR_MUL * line_p),
              why_protection="the regulated point would reach the IMON_IN fault minimum only at %.0f times the printed maximum" % R["k_fault"],
              sheet="p.4 0.002 / 0.005 %/V, VIN 12 to 80 V, not switching, at 25 C (no bullet); p.4 the regulation itself is a full-range row at VIN = 12 V, so its temperature drift at 12 V is guaranteed; p.7 'Feedback Voltages' against temperature at VC = 1.2 V is TYPICAL",
@@ -977,7 +977,7 @@ def render(R):
         R["tj_cold"], R["gm_lo"], R["gm_hi"], R["a7"]["(LT8705AH, LT8705AMP)"]["min"]))
     P("     Hot end (INFERRED): INTVCC from EXTVCC on TRK_OUT up to L4-E5's %.2f V; gate charge 2 x %.0f + 2 x %.0f nC at %.0f kHz plus" % (
         R["ceil5"][2], R["qg028"] * 1e9, R["qg039"] * 1e9, R["f_max"] / 1e3))
-    P("     %.1f mA: %.1f mA, %.2f W, TJ at most %.1f C in %.1f C air with theta-JA %.0f C/W (%.1f C at the drawn output's %.2f V), under" % (
+    P("     %.1f mA: %.1f mA, %.2f W, TJ estimated about %.1f C (INFERRED) in %.1f C air with theta-JA %.0f C/W (%.1f C at the drawn output's %.2f V), under" % (
         R["iq"] * 1e3, R["i_g"] * 1e3, R["p_ic"], R["tj_hot"], R["t_air"], R["tja"], R["tj_hot_old"], R["out_drawn"][2]))
     P("     125 C.")
     P("     So the I grade's tested range, -40 to 125 C junction, covers %.0f to %.1f C. Catalogue: stock 0 at LCSC on 1 October 2026" % (

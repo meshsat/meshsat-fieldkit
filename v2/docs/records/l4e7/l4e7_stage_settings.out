@@ -45,7 +45,7 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      only I is GUARANTEED (tested) below 0 C junction; the kit starts cold at -20 C ambient, so its junction range starts at
      -20 C. With I fixed, A7's limits are 0.94 / 1.06 mmho (the replay stacked H and MP's 0.93 because no grade was named).
      Hot end (INFERRED): INTVCC from EXTVCC on TRK_OUT up to L4-E5's 30.15 V; gate charge 2 x 49 + 2 x 32 nC at 235 kHz plus
-     4.2 mA: 42.3 mA, 1.27 W, TJ at most 105.4 C in 62.1 C air with theta-JA 34 C/W (84.5 C at the drawn output's 15.56 V), under
+     4.2 mA: 42.3 mA, 1.27 W, TJ estimated about 105.4 C (INFERRED) in 62.1 C air with theta-JA 34 C/W (84.5 C at the drawn output's 15.56 V), under
      125 C.
      So the I grade's tested range, -40 to 125 C junction, covers -20 to 105.4 C. Catalogue: stock 0 at LCSC on 1 October 2026
      (U5 is bench-fitted; another distributor)
@@ -252,8 +252,7 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      - the bound: the reference moves with VIN from the 12 V it is printed at: at 25 V the printed maximum moves the corner
        by 0.0619 W
      - loop stability: small, not zero: the reference's VIN dependence couples a moving source voltage into the regulated
-       current (a feedforward path, at most 0.0100 % of the setpoint per volt assumed), with no gain of its own; the loop's
-       margin is set elsewhere
+       current (a feedforward path, at most 0.0100 % of the setpoint per volt assumed); the loop's margin is set elsewhere
      - protection: the regulated point would reach the IMON_IN fault minimum only at 402 times the printed maximum
      - the sheet: p.4 0.002 / 0.005 %/V, VIN 12 to 80 V, not switching, at 25 C (no bullet); p.4 the regulation itself is a
        full-range row at VIN = 12 V, so its temperature drift at 12 V is guaranteed; p.7 'Feedback Voltages' against
