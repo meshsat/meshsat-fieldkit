@@ -121,7 +121,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      protection: the stage's own limit | U4 blocks VIN_RAW into TRK_OUT
      settled by: l4e5 (ceiling, C26/C27), this record (reverse)
        - NOT MET: C26 and C27 (10u 25 V) at the raised ceiling: 121 <= 100 % of rating; NETLIST (l4e5 out 3) [as drawn]
-       - MEETS: C26 and C27 re-rated to a 50 V part (the drawn C13's 10u 50V) at the raised ceiling: 30.15 <= 50 V; NETLIST (the owed re-rate, register R-06)
+       - MEETS: C26 and C27 re-rated to a 50 V part (the drawn C13's 10u 50V) at the raised ceiling: 30.15 <= 50 V; NETLIST (the owed re-rate, register R-14)
        - MEETS: C24 and C25 (35 V polymer) at the raised ceiling, for the derating gate: 86 <= 100 % of rating; NETLIST (l4e5 out 3)
        - MEETS: Q2 (BSC039N06NS, 60 V) blocking the vehicle bus at its OVLO maximum with TRK_OUT at 0: 42.49 <= 60 V; MAKER (s120 out 5; Infineon p.1)
        - MEETS: U4 (LM74700-Q1) cathode to anode at the OVLO maximum: 42.49 <= 75 V; MAKER (TI SNOSD17G 6.1)
@@ -139,7 +139,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - MEETS: Q1 in reverse with the raised ceiling, Q1 a CSD19532Q5B (the part Q7 carries; SESSION, register R-17): 66.15 <= 100 V; INFERRED (TI CSD19532Q5B p.1)
        - MEETS: U3 (LM74700-Q1) cathode to anode in that reverse: 66.15 <= 70 V; MAKER (TI SNOSD17G 6.3, recommended; 75 V absolute)
        - NOT MET: F1's voltage rating (Littelfuse 297, the series the holder takes) against the highest steady input the entry admits: 42.49 <= 32 V; MAKER (Littelfuse 297 sheet; s120 OVLO) [as drawn]
-       - OPEN: F1 rated for 42.49 V DC with an interrupting rating of at least 561 A (the kit's own cable at -20 C), part not yet evidenced: (specification); CONDITIONAL (register R-18 (Layer 6))
+       - OPEN: F1 with a DC voltage rating of at least 42.49 V and an interrupting rating of at least 561 A (the kit's own cable at -20 C), part not yet evidenced: (specification); CONDITIONAL (register R-18 (Layer 6))
        - MEETS: the entry's limit inside F1 (10 A blade): 6.15 <= 10 A; MAKER (LM5069 VCL / R19; gen F1)
        - MEETS: the entry's limit inside J_DCIN's nearest stated VH rating (AWG 18, shrouded header): 6.15 <= 7 A; ASSUMPTION (JST VH catalogue p.1; the fitted header and gauge are not rated)
        - MEETS: the negative discharge at the ruled level (15 kV) with E-F1's 1 uF input capacitor: DC_F's rise against D10's breakdown: 2.25 < 44.4 V; INFERRED (DECISION-31 6.3 (d8dec31 apply_gen_sch_e_cin.py, register R-16))
@@ -239,7 +239,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - MEETS: every PDO below the trip window's minimum (the 3 A row; bench (a) decides the row): 3 < 3.793 A; CONDITIONAL (l4e4 out 3: VI(TRIP)'s label)
        - MEETS: the trip maximum inside the receptacle: 4.576 <= 5 A; MAKER (l4e4 out 3; Bulgin)
        - MEETS: the trip maximum inside Q27: 4.576 <= 42 A; MAKER (TI SLPS632)
-       - OPEN: J_USBC_OUT's VBUS pin rated for the trip maximum (a 2.54 mm pin, no part number): (a rating); ASSUMPTION (l4e4: INCONCLUSIVE; register R-26 (Layer 6))
+       - OPEN: J_USBC_OUT's VBUS pin with a maker's rating at or above the trip maximum (a 2.54 mm pin, no part number): (a rating); ASSUMPTION (l4e4: INCONCLUSIVE; register R-30 (Layer 6))
        - MEETS: PS-TYP with the outlet inside the declared continuous pack current at 14.4 V: 7.8 <= 10 A; MODELED (pwr_budget.out)
    IF-13  VBAT to the PoE stage (U16 LM5176 boost, R71, +54V_POE, J_54V to board B) and its monitor U17  [MEETS, INFERRED]
      sides: VBAT | +54V_POE at 0.6 A peak (REQ-017)
@@ -249,7 +249,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      protection: OUTLET_OK interlock | U16's average limit; board B's TPS23861 port limit
      settled by: HW-FW-CONTRACT HF-F02 (S-60), this record (the resolution)
        - NOT MET: U17's inputs at the rail (HF-F02): 54 <= 40 V; MAKER (TI SBOS547 5.1) [as drawn]
-       - MEETS: U17 on a 20 mOhm shunt in the stage's VBAT input: its common mode at the SYSOVP maximum (SESSION, register R-19): 20 <= 36 V; MAKER (TI SBOS547 CMRR condition)
+       - MEETS: U17 on a 20 mOhm shunt in the stage's VBAT input: its common mode at the SYSOVP maximum (SESSION, register R-06): 20 <= 36 V; MAKER (TI SBOS547 CMRR condition)
        - MEETS: that shunt's drop at the stage's input at the lowest stack inside the INA226's full scale: 73.6364 <= 81.92 mV; INFERRED (the declared 0.6 A at 54 V over 0.88)
    IF-14  VBAT to the PA rail (+13V8_PA, J_PA) with the PA keyed  [CONDITIONAL, ASSUMPTION]
      sides: VBAT | the RA30H1317M1 PA, 13.8 V
@@ -326,8 +326,9 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    Layer 4's power architecture closes: NO, criteria 1, 2, 5 are not PASS
 
 10. THE REGISTERS (this folder's DOWNSTREAM-REGISTER.md and LAYER5-HANDOVER.md, read and checked)
-   register: 0 items; by owner: 
-     by kind: 
-   Layer 5 handover: 0 interface entries drafted (pcb_interfaces.yaml and HW-FW-CONTRACT.md, drafts only)
+   register: 82 items; by owner: Layer 4 coordinator 6; Layer 5 interfaces 2; Layer 6 components 8; Layer 7 mechanical 1; Layer 8 board A generator owner 11; Layer 8 board E generator owner 9; Layer 9 pre-layout analysis 15; prototype bench 26; firmware owner 4
+     by kind: EVIDENCE 16; IMPLEMENTATION 27; LAYOUT 9; RELEASE 4; TEST 26
+     implementation changes by state: DRAFTED 13; MISSING DRAFT 7; OWED 6; PENDING 1
+   Layer 5 handover: 9 interface entries drafted (pcb_interfaces.yaml and HW-FW-CONTRACT.md, drafts only)
 
 END. Desk arithmetic on read figures; nothing is measured.

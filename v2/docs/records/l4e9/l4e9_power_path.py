@@ -740,7 +740,7 @@ def rows(F, D):
         "prot_a": "the stage's own limit", "prot_b": "U4 blocks VIN_RAW into TRK_OUT",
         "settled": "l4e5 (ceiling, C26/C27), this record (reverse)", "checks": [
             Chk("C26 and C27 (10u 25 V) at the raised ceiling", F["c26_pct"], "<=", 100.0, "% of rating", "NETLIST", "l4e5 out 3", scope="drawn"),
-            Chk("C26 and C27 re-rated to a 50 V part (the drawn C13's 10u 50V) at the raised ceiling", F["trk_ceiling"][2], "<=", 50.0, "V", "NETLIST", "the owed re-rate, register R-06"),
+            Chk("C26 and C27 re-rated to a 50 V part (the drawn C13's 10u 50V) at the raised ceiling", F["trk_ceiling"][2], "<=", 50.0, "V", "NETLIST", "the owed re-rate, register R-14"),
             Chk("C24 and C25 (35 V polymer) at the raised ceiling, for the derating gate", F["c24_pct"], "<=", 100.0, "% of rating", "NETLIST", "l4e5 out 3"),
             Chk("Q2 (BSC039N06NS, 60 V) blocking the vehicle bus at its OVLO maximum with TRK_OUT at 0", F["ovlo"][2], "<=", F["bsc039_vds"], "V", "MAKER", "s120 out 5; Infineon p.1"),
             Chk("U4 (LM74700-Q1) cathode to anode at the OVLO maximum", F["ovlo"][2], "<=", F["ld_ca_abs"], "V", "MAKER", "TI SNOSD17G 6.1"),
@@ -762,7 +762,7 @@ def rows(F, D):
             Chk("Q1 in reverse with the raised ceiling, Q1 a CSD19532Q5B (the part Q7 carries; SESSION, register R-17)", D["q1_rev"], "<=", F["csd19532_vds"], "V", "INFERRED", "TI CSD19532Q5B p.1"),
             Chk("U3 (LM74700-Q1) cathode to anode in that reverse", D["q1_rev"], "<=", F["ld_ac_rec"], "V", "MAKER", "TI SNOSD17G 6.3, recommended; 75 V absolute"),
             Chk("F1's voltage rating (Littelfuse 297, the series the holder takes) against the highest steady input the entry admits", D["f1_v"], "<=", F["f297_v"], "V", "MAKER", "Littelfuse 297 sheet; s120 OVLO", scope="drawn"),
-            Chk("F1 rated for %s V DC with an interrupting rating of at least %s A (the kit's own cable at -20 C), part not yet evidenced" % (fmt(D["f1_v"]), fmt(round(D["f1_ipf"]))), None, "<=", None, "specification", "CONDITIONAL", "register R-18 (Layer 6)"),
+            Chk("F1 with a DC voltage rating of at least %s V and an interrupting rating of at least %s A (the kit's own cable at -20 C), part not yet evidenced" % (fmt(D["f1_v"]), fmt(round(D["f1_ipf"]))), None, "<=", None, "specification", "CONDITIONAL", "register R-18 (Layer 6)"),
             Chk("the entry's limit inside F1 (10 A blade)", F["entry_lim"][1], "<=", amps_in(F["e_f1"], "F1"), "A", "MAKER", "LM5069 VCL / R19; gen F1"),
             Chk("the entry's limit inside J_DCIN's nearest stated VH rating (AWG 18, shrouded header)", F["entry_lim"][1], "<=", F["vh_18"], "A", "ASSUMPTION", "JST VH catalogue p.1; the fitted header and gauge are not rated"),
             Chk("the negative discharge at the ruled level (15 kV) with E-F1's 1 uF input capacitor: DC_F's rise against D10's breakdown", F["ef1_dv"][1], "<", sm40["vbr_min"], "V", "INFERRED", "DECISION-31 6.3 (d8dec31 apply_gen_sch_e_cin.py, register R-16)"),
@@ -892,7 +892,7 @@ def rows(F, D):
             Chk("every PDO below the trip window's minimum (the 3 A row; bench (a) decides the row)", F["pdo_a"], "<", F["trip"][0], "A", "CONDITIONAL", "l4e4 out 3: VI(TRIP)'s label"),
             Chk("the trip maximum inside the receptacle", F["trip"][1], "<=", F["recept_a"], "A", "MAKER", "l4e4 out 3; Bulgin"),
             Chk("the trip maximum inside Q27", F["trip"][1], "<=", F["q27_a"], "A", "MAKER", "TI SLPS632"),
-            Chk("J_USBC_OUT's VBUS pin rated for the trip maximum (a 2.54 mm pin, no part number)", None, "<=", None, "a rating", "ASSUMPTION", "l4e4: INCONCLUSIVE; register R-26 (Layer 6)"),
+            Chk("J_USBC_OUT's VBUS pin with a maker's rating at or above the trip maximum (a 2.54 mm pin, no part number)", None, "<=", None, "a rating", "ASSUMPTION", "l4e4: INCONCLUSIVE; register R-30 (Layer 6)"),
             Chk("PS-TYP with the outlet inside the declared continuous pack current at 14.4 V", F["typ_usbc"][4], "<=", F["pp_cont"], "A", "MODELED", "pwr_budget.out"),
         ]})
     poe = F["poe"]
@@ -906,7 +906,7 @@ def rows(F, D):
         "prot_a": "OUTLET_OK interlock", "prot_b": "U16's average limit; board B's TPS23861 port limit",
         "settled": "HW-FW-CONTRACT HF-F02 (S-60), this record (the resolution)", "checks": [
             Chk("U17's inputs at the rail (HF-F02)", poe["volts"], "<=", F["ina_abs"], "V", "MAKER", "TI SBOS547 5.1", scope="drawn"),
-            Chk("U17 on a 20 mOhm shunt in the stage's VBAT input: its common mode at the SYSOVP maximum (SESSION, register R-19)", F["sysovp"][2], "<=", F["ina_cm_op"], "V", "MAKER", "TI SBOS547 CMRR condition"),
+            Chk("U17 on a 20 mOhm shunt in the stage's VBAT input: its common mode at the SYSOVP maximum (SESSION, register R-06)", F["sysovp"][2], "<=", F["ina_cm_op"], "V", "MAKER", "TI SBOS547 CMRR condition"),
             Chk("that shunt's drop at the stage's input at the lowest stack inside the INA226's full scale", D["poe_shunt_mv"], "<=", F["ina_fs_mv"], "mV", "INFERRED", "the declared 0.6 A at 54 V over 0.88"),
         ]})
     pa = F["pa"]
@@ -950,6 +950,26 @@ GATE = [
 OWNERS = ["Layer 4 coordinator", "Layer 5 interfaces", "Layer 6 components", "Layer 7 mechanical", "Layer 8 board A generator owner",
           "Layer 8 board E generator owner", "Layer 8 board P generator owner", "Layer 9 pre-layout analysis", "prototype bench",
           "firmware owner"]
+
+
+def gate_violations(gate, st):
+    """The criteria marked PASS that rest on a row not reading MEETS, or on an ASSUMPTION, CONDITIONAL or PENDING row; and
+    the criteria naming a row the reconciliation does not print. The closure gate's rule, held by test_l4e9.py too."""
+    bad = []
+    for g in gate:
+        for rid in g["rows"]:
+            if rid not in st:
+                bad.append((g["n"], "unknown row %s" % rid))
+        if g["verdict"] == "PASS":
+            for rid in g["rows"]:
+                cls, s = st.get(rid, ("PENDING", "PENDING"))
+                if s != "MEETS" or cls in ("ASSUMPTION", "CONDITIONAL", "PENDING"):
+                    bad.append((g["n"], "%s reads %s, %s" % (rid, s, cls)))
+        elif not g["constraint"] or not g["overturn"]:
+            bad.append((g["n"], "a criterion not PASS names no constraint or no overturn answer"))
+    if sorted(g["n"] for g in gate) != [1, 2, 3, 4, 5]:
+        bad.append((0, "the gate does not cover the five criteria"))
+    return bad
 
 
 def md_table(text, header_start):
@@ -1145,20 +1165,14 @@ def main():
     p("   the objective of 48 to 72 h is unmet by A1 on every trace (DR-01); no mandatory function is reduced to narrow it")
     p("")
     p("9. THE CLOSURE GATE (a criterion reads PASS only on rows that read MEETS; ASSUMPTION, CONDITIONAL and PENDING rows cannot carry a PASS)")
-    bad = []
+    bad = gate_violations(GATE, st)
     for g in GATE:
-        rcls = [st[r] for r in g["rows"]]
-        if g["verdict"] == "PASS" and any(s in ("CONDITIONAL", "PENDING", "NOT MET") or c in ("ASSUMPTION", "CONDITIONAL", "PENDING") for c, s in rcls):
-            bad.append(g["n"])
-        for rid in g["rows"]:
-            if rid not in st:
-                refuse(4, "gate %d names an unknown row %s" % (g["n"], rid))
         p("   %d. %s: %s; rows %s" % (g["n"], g["criterion"], g["verdict"], ", ".join("%s %s" % (r, st[r][1]) for r in g["rows"]) or "none (the registers)"))
         if g["constraint"]:
             p("      constraint: %s" % g["constraint"])
             p("      could it overturn the architecture: %s" % g["overturn"])
     if bad:
-        refuse(4, "a PASS rests on a conditional row (criteria %s)" % bad)
+        refuse(4, "the gate's rule fails: %s" % bad)
     closed = all(g["verdict"] == "PASS" for g in GATE)
     p("   Layer 4's power architecture closes: %s" % ("YES" if closed else "NO, criteria %s are not PASS" % ", ".join(str(g["n"]) for g in GATE if g["verdict"] != "PASS")))
     p("")
@@ -1173,6 +1187,11 @@ def main():
         by_kind[r[1]] = by_kind.get(r[1], 0) + 1
     p("   register: %d items; by owner: %s" % (len(reg), "; ".join("%s %d" % (o, by_owner[o]) for o in OWNERS if o in by_owner)))
     p("     by kind: %s" % "; ".join("%s %d" % (k, by_kind[k]) for k in sorted(by_kind)))
+    by_state = {}
+    for r in reg:
+        if r[1] == "IMPLEMENTATION":
+            by_state[r[6]] = by_state.get(r[6], 0) + 1
+    p("     implementation changes by state: %s" % "; ".join("%s %d" % (k, by_state[k]) for k in sorted(by_state)))
     h_text = open(os.path.join(HERE, "LAYER5-HANDOVER.md"), encoding="utf-8").read() if os.path.exists(os.path.join(HERE, "LAYER5-HANDOVER.md")) else ""
     ho = md_table(h_text, "| ID | Target |")
     for r in ho:
