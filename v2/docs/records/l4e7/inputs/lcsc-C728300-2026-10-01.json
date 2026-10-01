@@ -1,0 +1,23 @@
+{
+ "what": "LCSC public product-detail answer for C728300 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C728300), no login; kept fields only",
+ "read_utc": "2026-10-01T16:49Z",
+ "read_by": "task L4-E7 (MESHSAT-1357)",
+ "role": "an RSENSE1 alternative read by L4-E7's qualification (its TCR is tested on the hot side only), not taken",
+ "code": "C728300",
+ "brand": "YAGEO",
+ "model": "PA2512FKE7T0R015E",
+ "package": "2512",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/5b6b15592a49e0e574b8071c20ab494b.pdf?productCode=C728300",
+ "pdf_sha256": "141cabd71261b4d9b0b27541d160b9fa17e8894c2a7e0615c494e480985bdbfd",
+ "pdf_note": "fetched at read_utc; YAGEO PA series (current sensor, low TCR) product specification V.10, January 31 2018; read (p.9: TCR by MIL-STD-202 Method 304 at +25/+150 C only), not filed",
+ "stock": 7800,
+ "params": {
+  "Power(Watts)": "3W",
+  "Resistance": "15mΩ",
+  "Voltage Rating": "-",
+  "Operating Temperature": "-55℃~+170℃",
+  "Type": "-",
+  "Temperature Coefficient": "±50ppm/℃",
+  "Tolerance": "±1%"
+ }
+}

@@ -1,0 +1,19 @@
+DRAFT FOR THE OWNER TO SEND. The MeshSat session contacts no outside party; it prepared this text only.
+Addressee: Shenzhen Milliohm Electronics Co., Ltd. (www.moolee.com.cn), technical support (the owner chooses the channel).
+Prepared 1 October 2026, task L4-E7 (MESHSAT-1357).
+
+Subject: HoJLR2512-3W-15mR-1% (LCSC C2903494): temperature coefficient below +25 C
+
+We use the HoJLR2512-3W-15mR-1% as the current-sense resistor of an input-current limit that must hold over -20 to +40 C
+ambient. Your HoJLR2512 series specification (Ho-A0) gives T.C.R. +-50 ppm/C for 2 mOhm to 500 mOhm (page 2) and an
+operating temperature range of -50 to +170 C, and the reliability table (page 4) tests the temperature coefficient by
+IEC 60115-1 4.8 / JIS C5201 4.8 from +25 C to +125 C only.
+
+1. Does the +-50 ppm/C limit hold from -55 C (or -40 C) to +25 C as well? If not, what is the guaranteed limit below
+   +25 C?
+2. Is the temperature coefficient specified for the component including its terminations (as mounted), or for the
+   resistive element only?
+3. If a limit below +25 C is not part of the specification, can you provide characterization data over production lots
+   (resistance change from +25 C to -40 C), with the sample size and the number of lots?
+
+A statement of the guaranteed value, or the production characterization behind it, is what we need. Thank you.
