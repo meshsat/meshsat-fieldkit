@@ -1,0 +1,3 @@
+verify(check-l3am-4) returned '8146b4cc09223c5486e7d553d8711854a3d7678c'
+the old helper reads that return as False
+the old helper reads a verifier that accepts the stale check (returns a revision) as False
