@@ -13,7 +13,9 @@ execution plan) merged in at step 5. Requirements maturity, design compliance an
 | 5 | `8e4262ce` | merge of main at `1b1fe7df`: the execution plan's two entries of 1 October 2026 (the compute ruling and its amendment); no other file |
 | 6 | `41881d8f` | this record; the candidate promoted to main after its gates (below) |
 | 7 | `8146b4cc` | the supersede test of `test_l3am.py` reads the history its copy already holds (below: the first acceptance attempt) |
-| 8 | this commit | check 4 of the amendment (`check-l3am-4`, Claude's, reviewed revision `8146b4cc`) filed and named as the check that closed the findings (`apply_l3am_check4.py`, `apply_l3am_findings_rechecked.py`); the acceptance-guard check restated for the binding; the re-acceptance's status script and its test; the pages rendered |
+| 8 | `aa9a1bef` | check 4 of the amendment (`check-l3am-4`, Claude's, reviewed revision `8146b4cc`) filed and named as the check that closed the findings (`apply_l3am_check4.py`, `apply_l3am_findings_rechecked.py`); the acceptance-guard check restated for the binding; the re-acceptance's status script and its test; the pages rendered |
+| 9 | `d850141a` | merge of `fnd/l4e4` at `bb7ebf12`: Layer 4 task L4-E4, board A's current-limit coordination (U3's IIN_HOST 4.70 A with R16's tolerance in its bounds, R11 8 mOhm, the Kelvin allowance 0.38 mOhm at 25 C) and the outlet's R138 at 5 mOhm with a bench procedure that isolates U18's comparator; drafts for board A's generator owner, nothing applied; the collaborator's check and recheck (not accepted) and the coordinator's check 3 (accepted) |
+| 10 | this commit | this record's steps 7 to 9 |
 
 **The amendment's checks, attributed.** The engineering collaborator (Astra, `gpt-6-astra` at `xhigh`, read-only)
 checked the amendment twice, the owner's allowance of one assessment and one targeted follow-up: both read NOT
