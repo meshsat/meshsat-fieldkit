@@ -11,9 +11,10 @@ relations, `band()`, lcsc_fill.py's map and the C2903468 reading. The resistors'
 (p.1, F = ±1 %) and from each part's LCSC answer. r11_dep.py's `band()` types its 1 % inside, so it is checked to equal the
 band at that read tolerance.
 
-**Status.** No owner requirement changes, and no owner decision is needed (the check found none). The record awaits the
-targeted recheck of this round. Two things stay conditional on the bench: the setting depends on C-7, and the outlet's
-VI(TRIP) row on bench (a).
+**Status.** No owner requirement changes, and no owner decision is needed (neither check found one). The targeted
+recheck (`checks/astra-check-l4e4-2.md`) accepted B1 and the three minors. Its one remaining B2 item, the 15 V hold
+window, is fixed here for the coordinator's own verification. Two things stay conditional on the bench: the setting
+depends on C-7, and the outlet's VI(TRIP) row on bench (a).
 
 ## The chosen values
 
@@ -74,17 +75,25 @@ identify U18's comparator.
 - **Recorded together:** U18's differential sense voltage V(pin 19) - V(pin 21) by a Kelvin differential probe; VBUS at
   pin 21 and at the connector; Q27's gate PD_GDNG; the supply's current-limit flag; the load current; R138 measured
   four-wire.
-- **When a run counts.** Only if the supply never limits, and VBUS stays inside the contract's hold window up to the
-  GDNG falling edge. The windows are above the slow UVP and V(VBUS_FTH) maxima and below the slow OVP minimum (MAKER
-  p.8, TPS25740A rows): 3.9 to 5.5 V at 5 V, 7.1 to 10.0 V at 9 V, 12.2 to 16.3 V at 15 V.
+- **When a run counts.** Only if the supply never limits, and VBUS stays **strictly** inside the contract's hold window
+  up to the GDNG falling edge.
+  - **Lower bound:** above the larger of the slow UVP maximum and V(VBUS_FTH)'s maximum, 3.9 V (MAKER SLVSDG8B p.8, 7.5).
+  - **Upper bound:** below the smaller of the fast OVP and slow OVP minima, because a fast OVP also disables GDNG (p.31).
+  - **The windows** (p.8, TPS25740A rows, min / typ / max):
+
+    | Contract | V(FOVP) | V(SOVP) | V(SUVP) | Window |
+    |---|---|---|---|---|
+    | 5 V | 5.8 / 6.05 / 6.3 V | 5.5 / 5.65 / 5.8 V | 3.5 / 3.65 / 3.8 V | 3.9 V < VBUS < 5.5 V (slow OVP) |
+    | 9 V | 10.1 / 10.55 / 11.0 V | 10.0 / 10.2 / 10.4 V | 6.8 / 6.95 / 7.1 V | 7.1 V < VBUS < 10.0 V (slow OVP) |
+    | 15 V | 16.2 / 16.95 / 17.7 V | 16.3 / 16.5 / 17.0 V | 11.7 / 11.95 / 12.2 V | 12.2 V < VBUS < 16.2 V (fast OVP) |
 - **Closure.** Take the last differential reading before the GDNG edge as the demonstrated threshold.
   - In 19.2 to 22.6 mV, it demonstrates the 3 A row, and the trip current with R138 as measured lies in 3.79 to 4.58 A.
   - In 29 to 34 mV, it demonstrates the label's row, and R138 is re-chosen (that window exceeds the receptacle's 5 A).
   - Anything else is no result.
 
 **(b) The delivered configuration, U19 in the path.** Hold 3.0 A on each advertised voltage (5, 9 and 15 V, and the
-non-PD 5 V) for at least one hour or to thermal steady state. There must be no GDNG edge, and VBUS must stay inside its
-hold window.
+non-PD 5 V) for at least one hour or to thermal steady state. There must be no GDNG edge, and VBUS must stay strictly
+inside its hold window.
 
 ## What stays INCONCLUSIVE, and why
 
@@ -113,6 +122,7 @@ hold window.
 | Minor 1, typed tolerance | The tolerance is read from the sheet and the LCSC answers, and r11_dep.py's `band()` is checked against it. `l4e4_limits.py` holds no 1.01 or 0.99 literal. Test `t_tolerance_is_read_not_typed` |
 | Minor 2, "hiccup closes these" | Hiccup is now a candidate remedy whose peak current and ripple must pass item 4's criteria |
 | Minor 3, "nothing blocks" | Restated under **Status**: no owner decision, the recheck owed, two items conditional on the bench |
+| Recheck (`checks/astra-check-l4e4-2.md`), B2: the 15 V window reached 16.3 V, past the fast OVP's 16.2 V minimum | Each window's upper bound is now the smaller of the V(FOVP) and V(SOVP) minima, read from p.8 for every contract, with VBUS strictly inside. The 15 V window becomes 12.2 V < VBUS < 16.2 V. The 5 V and 9 V upper bounds do not move: their slow OVP minima, 5.5 V and 10.0 V, are below their fast OVP minima, 5.8 V and 10.1 V. Test `t_outlet_bench_isolates_u18` now refuses a 16.25 V and a 16.3 V excursion at 15 V, accepts 16.15 V, and refuses each boundary itself |
 
 ## For board A's generator owner
 
