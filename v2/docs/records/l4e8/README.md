@@ -23,6 +23,7 @@ the cans' cold ESR is an OPEN finding on the drawn front end (`L4E8-BANK.md`).
 | `CORRECTIONS-DRAFT.md` | DRAFTS ONLY: the text proposed for `gen_sch_a.py`'s third fix-up comment and for `r11_dep.py`'s carried bank figures (and L4-E6's, which take them), per spread |
 | `apply_gen_sch_a_bank.py` | DRAFT for board A's generator owner: a ballast resistor (R221 to R226) in series with each of the front end's six cans in `v2/ecad/tools/gen_sch_a.py`. See its docstring for the mode, the refusals, the order with L4-E6's R12 and the composition |
 | `checks/astra-check-l4e8-1.md` | The engineering collaborator's check of `5ff06474` (accepted: no; blockers B1 to B4 and four minors), filed as received. The page's section "The check, and what changed" maps each item to its change |
+| `checks/astra-check-l4e8-2.md` | The engineering collaborator's targeted recheck of `cc95fe1f` (accepted: no; R1/R2 the bound over fully independent cans not established, R4 the cold-loop closure rule too weak; the last collaborator run on L4-E8), filed as received |
 | `inputs/recovered/` | The predecessor's drafts as a session transcript holds them, filed as cited inputs (their code is never run here) |
 | `README.md` | This list |
 
