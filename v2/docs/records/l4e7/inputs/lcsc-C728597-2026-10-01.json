@@ -1,0 +1,23 @@
+{
+ "what": "LCSC public product-detail answer for C728597 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C728597), no login; kept fields only",
+ "read_utc": "2026-10-01T14:20Z",
+ "read_by": "task L4-E7 (MESHSAT-1357)",
+ "role": "board E R9 (RFBIN2), chosen (7.5k, the drawn value at 0.1 %: REQ-016's 17.6 V point kept)",
+ "code": "C728597",
+ "brand": "YAGEO",
+ "model": "RT0603BRD077K5L",
+ "package": "0603",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/46d7760c582640714d605308a25a220a.pdf?productCode=C728597",
+ "pdf_sha256": "0a729d144519a7021c82a0ef242b064e467c70d44afcf9eabd6c7ffdc4b673a3",
+ "pdf_note": "fetched at read_utc; YAGEO RT series product specification V.16, May 06 2025; held back (v2/vendor/passives/held/, fetched by ../fetch_held_back.py)",
+ "stock": 27580,
+ "params": {
+  "Resistance": "7.5kΩ",
+  "Power(Watts)": "100mW",
+  "Voltage Rating": "75V",
+  "Operating Temperature": "-55℃~+155℃",
+  "Type": "Thin Film Resistor",
+  "Temperature Coefficient": "±25ppm/℃",
+  "Tolerance": "±0.1%"
+ }
+}
