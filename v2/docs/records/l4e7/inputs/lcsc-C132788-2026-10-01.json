@@ -1,0 +1,30 @@
+{
+ "what": "LCSC public product-detail answer for C132788 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C132788), no login; kept fields only",
+ "read_utc": "2026-10-01T19:37Z",
+ "read_by": "task L4-E7R (MESHSAT-1357)",
+ "role": "board E U19, the 100 W backstop's comparator (TPS3701DDCR), chosen by L4-E7R",
+ "code": "C132788",
+ "brand": "TI",
+ "model": "TPS3701DDCR",
+ "package": "SOT-23-Thin-6",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/70c280196e80c334a7bad819e8aae670.pdf?productCode=C132788",
+ "pdf_sha256": "f8e48e94bc3c20160392fa34e3e0569f1ddd78e4c7b5cb882b6ba788456d5eef",
+ "pdf_note": "fetched at read_utc; LCSC links a translated (Chinese) issue; the English data sheet read is held under v2/vendor/ti/held/ (../fetch_held_back.py)",
+ "stock": 26813,
+ "params": {
+  "Number of Channels": "2",
+  "Output Mode": "CMOS;TTL",
+  "Operating Temperature": "-40℃~+125℃",
+  "Features": "-",
+  "Ib - Input Bias Current": "1nA",
+  "Output Type": "Open-drain",
+  "Propagation Delay(tpd)": "9.9us",
+  "Common Mode Rejection Ratio(CMRR)": "-",
+  "Input Hysteresis Voltage (Vhys)": "5.5mV",
+  "Quiescent Current(Iq)": "7uA",
+  "Vos - Input Offset Voltage": "-",
+  "Maximum Power Supply Range (Vdd-Vss)": "40V",
+  "Response Time (tr)": "2.7us",
+  "Single Supply": "1.8V~36V"
+ }
+}

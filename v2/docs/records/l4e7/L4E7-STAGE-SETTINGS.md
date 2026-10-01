@@ -9,6 +9,11 @@ the arithmetic. Bases: MAKER (document, revision, page), NETLIST, CATALOGUE (fil
 ASSUMPTION, SESSION. Second round: after the collaborator's check `checks/astra-check-l4e7-1.md` (NOT YET, B1 and three
 minors; see the last section).
 
+**The control decision (L4-E7R, 1 October 2026): `L4E7-CONTROL-DECISION.md`.** The input-current limit below is not shown
+to hold 100 W on warranted manufacturer limits alone; the decision places a hardware backstop under it (INA250A2 and
+TPS3701 on SWEN) and moves RIMON_IN from 23.2k to 26.1k so the limit regulates below the backstop. The settings on this
+page stand otherwise; `apply_gen_sch_e_backstop.py` applies on top of the input limit draft.
+
 ## As drawn (NETLIST)
 
 U5's CSPIN, CSNIN and VIN all sit on PV_P and IMON_IN has R16 10k alone: the input-current sense is tied off (8705af p.12),
@@ -145,6 +150,11 @@ Each asserts its old text once and new text different, refuses a second applicat
 until a `RELEASE.md` names an accepted check. Owed beside them: R59's Kelvin taps and placement, the regeneration and its
 gates, and the requirement records that name the 225 uF "on PV_P" (behind R59 after the change). After any application
 l4e_replay.py section 11, l4e5 and this record refuse by design: they record the circuit before it.
+
+L4-E7R adds `apply_gen_sch_e_backstop.py`, which applies after `apply_gen_sch_e_input_limit.py` and refuses a generator
+without R59: U18 INA250A2PWR ahead of R59 on the new net TRK_VS (R59 and U5's CSPIN move behind it), R60 over R61 into U19
+TPS3701DDCR, U5's SWEN on TRK_SWEN with R62 and C68, C66 and C67, and R16 from 23.2k to 26.1k (C728586). The reasons and
+every figure are in `L4E7-CONTROL-DECISION.md`.
 
 ## The check, and what changed
 

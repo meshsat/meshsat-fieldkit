@@ -1,0 +1,119 @@
+{
+ "what": "JLCPCB public parts search for the keyword RT0603BRD07 (the same API and paging as jlc-search-rt0603brd07-2026-10-01.json), no login; the rows from 30.0k to 39.9k, for the control decision's approach (a), code, model and stock kept",
+ "read_utc": "2026-10-01T19:37Z",
+ "read_by": "task L4-E7R (MESHSAT-1357)",
+ "count_all": 820,
+ "count_kept": 22,
+ "rows": [
+  {
+   "code": "C705764",
+   "model": "RT0603BRD0730K1L",
+   "stock": 1228
+  },
+  {
+   "code": "C861313",
+   "model": "RT0603BRD0730K9L",
+   "stock": 2834
+  },
+  {
+   "code": "C723585",
+   "model": "RT0603BRD0730KL",
+   "stock": 431305
+  },
+  {
+   "code": "C861319",
+   "model": "RT0603BRD0731K2L",
+   "stock": 0
+  },
+  {
+   "code": "C705766",
+   "model": "RT0603BRD0731K6L",
+   "stock": 4216
+  },
+  {
+   "code": "C861323",
+   "model": "RT0603BRD0732K4L",
+   "stock": 19058
+  },
+  {
+   "code": "C861324",
+   "model": "RT0603BRD0732K8L",
+   "stock": 2060
+  },
+  {
+   "code": "C861325",
+   "model": "RT0603BRD0732KL",
+   "stock": 19316
+  },
+  {
+   "code": "C705767",
+   "model": "RT0603BRD0733K2L",
+   "stock": 11281
+  },
+  {
+   "code": "C705768",
+   "model": "RT0603BRD0733KL",
+   "stock": 61161
+  },
+  {
+   "code": "C861338",
+   "model": "RT0603BRD0734K8L",
+   "stock": 6
+  },
+  {
+   "code": "C705770",
+   "model": "RT0603BRD0734KL",
+   "stock": 21960
+  },
+  {
+   "code": "C861343",
+   "model": "RT0603BRD0735K2L",
+   "stock": 0
+  },
+  {
+   "code": "C861344",
+   "model": "RT0603BRD0735K7L",
+   "stock": 4869
+  },
+  {
+   "code": "C861351",
+   "model": "RT0603BRD0736K1L",
+   "stock": 6787
+  },
+  {
+   "code": "C861352",
+   "model": "RT0603BRD0736K5L",
+   "stock": 1152
+  },
+  {
+   "code": "C136964",
+   "model": "RT0603BRD0736KL",
+   "stock": 41935
+  },
+  {
+   "code": "C326727",
+   "model": "RT0603BRD0737K4L",
+   "stock": 11806
+  },
+  {
+   "code": "C6207642",
+   "model": "RT0603BRD0737K9L",
+   "stock": 0
+  },
+  {
+   "code": "C861362",
+   "model": "RT0603BRD0738K3L",
+   "stock": 1688
+  },
+  {
+   "code": "C861369",
+   "model": "RT0603BRD0739K2L",
+   "stock": 27781
+  },
+  {
+   "code": "C309652",
+   "model": "RT0603BRD0739KL",
+   "stock": 108126
+  }
+ ]
+}
