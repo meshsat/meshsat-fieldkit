@@ -1,0 +1,28 @@
+DRAFT FOR THE OWNER TO SEND. The MeshSat session contacts no outside party; it prepared this text only.
+Addressee: Texas Instruments, technical support for the INA250 (the owner chooses the channel, for example the E2E forum).
+Prepared 1 October 2026, task L4-E7R (MESHSAT-1357).
+
+Subject: INA250A2PWR: limits at VS = 3.3 V and VREF = 0 V, and the integrated shunt's stress drift
+
+We use the INA250A2PWR (data sheet SBOS511C, April 2015, revised September 2023) to sense a solar converter's input
+current, 0 to about 4 A at 12 V to 25 V common mode, supplied from a 3.23 V to 3.35 V rail with REF tied to ground as
+page 15 describes for unidirectional operation. Its output, through a resistor divider, drives a fixed comparator
+threshold that must hold a power limit with the board's air at -20 C to about +62 C. We size it from the Electrical
+Characteristics on pages 5 and 6, which are printed at VS = 5 V, VIN+ = 12 V and VREF = 2.5 V.
+
+1. Do the system gain error limit (+-0.75 %, -40 to 125 C, page 6) and the offset current limit (+-50 mA at 25 C,
+   page 5) hold at VS = 3.3 V and VREF = 0 V? If they change, what limits apply? We add the supply rejection
+   (+-1 mA/V, page 5) to the offset for the change of VS from 5 V to 3.23 V.
+2. The common-mode rejection (97 dB minimum for the A2, VIN+ = 0 V to 36 V, -40 to 125 C, page 5): is it referred to
+   the input as a voltage across the 2 mOhm shunt, so that a change of common mode from 12 V to 25 V moves the
+   input-referred current by at most 13 V x 10^(-97/20) / 2 mOhm, about 92 mA?
+3. The shunt's stress rows on page 5 (short time overload, thermal shock, resistance to solder heat, high temperature
+   exposure, cold temperature storage) are printed as typical values only, and note 6 on page 6 says the system gain
+   error excludes them. Is there a limit you warrant for the shunt's resistance change after board assembly (one
+   reflow at 260 C) and over life at up to 85 C?
+4. The nonlinearity (+-0.03 % typical, 0.5 A to 10 A, page 6) and the output impedance (1.5 Ohm typical): are they
+   inside the system gain error limit, or additional to it?
+
+For each item we ask for a limit Texas Instruments warrants, and the conditions under which it applies.
+Characterization over production lots is welcome as supporting evidence, but on its own we cannot treat it as a
+production guarantee. Thank you.

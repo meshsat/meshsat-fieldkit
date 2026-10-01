@@ -155,6 +155,7 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      was CORRECTED, WE; the least-energy corner, A2: unserved 1318.5 / 1169.6 at 48 h, 1894.5 / 2131.1 at 72 h; least addition +1097.1 / +1896.6 Wh
 
 6. THE INTERACTION WITH L4-E5 (R10 115k to 232k, the ceiling raised, C26 and C27 re-rated)
+   apply_gen_sch_e_backstop.py: 6 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C2859736, C132788, C705756, C861565, C728586: yes
    apply_gen_sch_e_hold.py: 1 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C861068, C728597: yes
    apply_gen_sch_e_input_limit.py: 9 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C2903494, C861244, C14663: yes
    apply_gen_sch_e_u5_grade.py: 2 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C674169: yes
@@ -392,3 +393,164 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
    PROTOTYPE MEASUREMENTS ARE DOWNSTREAM OBLIGATIONS, NOT BLOCKERS: no architecture decision depends on 7b.9, 7b.9t, 7b.10,
      7b.11, 7b.12, 7b.13 or 7b.14 (R59 at -20 C and +25 C). The current-limit mechanism holds its bound under the conservative
      assumptions above; an adverse reading changes a value (RIMON_IN, the compensation), not the mechanism or the architecture
+
+10. THE CONTROL DECISION (L4-E7R, the owner's instruction of 1 October 2026; SESSION decision)
+   THE VERDICT ON THE CURRENT CONTROL: NOT SHOWN on warranted manufacturer limits alone. The LT8705A's input-current
+     limit as set (RIMON_IN 23.2k, RSENSE1 15 mOhm) holds 100 W only under values no maker warrants: EA2 (break-even
+     25.026426 V/V (stack A, cold), 55.191656 V/V (stack C's other terms, cold)); A7 (break-even the effective gain may
+     fall to 0.904726 mmho (3.7526 % under 0.94) under stack A, 0.936935 mmho (0.3261 %) under stack C and 0.939053 mmho
+     (0.1008 %) under every conservative assumption together, other terms fixed (cold)); LINE (break-even 61.6 times the
+     printed maximum (stack A, cold); 47.1 with EA2 at 65 V/V); TCR (break-even 882.027 ppm/K (stack A), 122.295 ppm/K
+     (stack C)); TJ (break-even 125 C junction (19.6 K above the estimate)). Under all their conservative assumptions
+     together the corner reads 99.8992 W (margin 0.1008 W)
+   THE COMPARISON (at most three; each bound at 25 V, the energy on SC-37's day at the kept hold, the limit at its lowest):
+     id bound W   regulating setting         Wh a day lower / nominal / upper (h bound) bright hours independent of the answers
+     A  97.8269   31.6k C705766 2.5485 A     344.0 (5) / 336.6 (5) / 307.9 (0)      -26.6 %      no
+     B  99.1059   26.1k C728586 3.0856 A     368.1 (3) / 350.0 (0) / 307.9 (0)      -11.1 %      yes
+     C  99.1059   23.2k C861244 3.4713 A     369.7 (0) / 350.0 (0) / 307.9 (0)      +0.0 %       yes
+   (A) the present control with argued margins (the IMON_IN fault comparator bounds EA2; RIMON_IN raised)
+     - warranted: IMON_IN fault maximum 1.67 V (p.5, full range); RSENSE1 1 % and RIMON_IN 0.1 %; the resistors' printed
+       drifts
+     - assumption: A7 at its test-point limits; the fault threshold's VIN dependence (twice the reference's printed line
+       regulation); RSENSE1's cold TCR at 100 ppm/K
+     - parts and board E: none added; R16 to 31.6k (C705766)
+     - new failure mode: a regulation point past the fault minimum would turn steady current limiting into fault hiccup
+       (switching stops: energy, not the bound)
+     - still depends on: Analog Devices (A7 away from its test point; the fault threshold away from VIN = 12 V) and Milliohm
+       (the cold TCR)
+   (B) a hardware 100 W backstop: INA250A2 (integrated shunt) and TPS3701 pull SWEN low; the present limit regulates
+       below it
+     - warranted: INA250A2 system gain error (amplifier and shunt), -40 to 125 C; INA250A2 offset at 25 C; its drift, 45 K at
+       most; common-mode rejection from 12 V to 25 V, 97 dB minimum; supply rejection from 5 V to LDO33's 3.23 V; TPS3701 INB
+       rising threshold, -40 to 125 C junction; TPS3701 input current through the divider's Thevenin resistance; R60 and R61,
+       0.1 % and 25 ppm/K over 45 K; R60 and R61, the printed solder-heat and life limits, opposite directions; PV_P's two
+       dividers, bypassing U18's shunt, at 25 V: R8 and R9 (108405 Ohm at least), R14 and R15 (113850 Ohm at least); U18's
+       VIN+ bias, 35 uA at most at 25 C, carried at twice across temperature
+     - typical: the INA250's shunt stress drift (overload, thermal shock, solder heat, high temperature, cold storage); the
+       INA250's nonlinearity, 0.5 to 10 A; the INA250's output impedance into the divider (26 kOhm at least); the three
+       typical-only gain terms together, carried at 2 times
+     - inferred: the INA250's gain rows at VS = 3.23 V (printed at VS = 5 V; only the offset's supply rejection is printed);
+       REF at ground: the maker's unidirectional configuration; the rows are printed at VREF = 2.5 V; D4's reverse current, 1
+       uA at 25 C, carried at 13.1 times for 62 C air (doubled per 10 K)
+     - parts and board E: U18 INA250A2PWR, U19 TPS3701DDCR, R60 28k, R61 7.87k, R62 100k, C66 and C67 100n, C68 1u; SWEN off
+       INTVCC; R16 to 26.1k
+     - new failure mode: a hiccup (SWEN low, then a soft start, 8705af p.14) if the regulation's high corner passes the
+       backstop's low corner: energy, not the bound; a failed U18 or U19 (open, stuck) leaves the conditional regulation
+       alone, a single fault the bound does not cover; an LDO33 sag stops the stage first (its UVLO, 8705af p.3, above both
+       parts' least supply)
+     - still depends on: no Analog Devices or Milliohm answer for the bound; Texas Instruments is asked to warrant its
+       inferred readings and typical-only rows, carried meanwhile at their stated classes; the coordination and the energy
+       stay with Analog Devices' and Milliohm's answers
+   (C) a firmware trim from a power monitor read by U10 (the regulation held just under the backstop's lowest trip by the
+       monitor's reading), with B's hardware backstop
+     - warranted: as B (the backstop carries the bound in every firmware state)
+     - typical: as B
+     - inferred: as B
+     - parts and board E: B's parts, a monitor on U10's bus and a trim element on RIMON_IN (not selected)
+     - new failure mode: a stale or wrong trim, an I2C fault, a reset or a boot window before the trim, a firmware update;
+       each bounded by B's backstop, none by firmware. Without the backstop REQ-016's CALCULATION would have to cover every
+       firmware state and the controller's faults, which no calculation in this tree can
+     - still depends on: as B
+   THE CHOICE: (B). U18 INA250A2 senses the stage's whole input current on its own 2 mOhm shunt (500 mV/A); R60 28k over
+     R61 7.87k divide its output into U19 TPS3701's INB; past its threshold OUTB pulls SWEN low and switching stops (8705af
+     p.11); R62 100k and C68 1 uF on SWEN set the restart. The LT8705A's input-current limit stays, as the regulation,
+     coordinated below the backstop: RIMON_IN 26.1k (C728586), 3.0856 A nominal
+   THE BOUND: 99.1059 W at 25 V (the backstop's highest trip current 3.9637 A there), margin 0.8941 W. Every term below
+     sits in it at the end that raises the trip, summed, not combined statistically; the divider carries its printed solder
+     and life limits. The terms no maker warrants with a limit, the INA250's typical-only gain rows (its shunt's stress
+     rows, its nonlinearity, its output impedance into the divider), are carried together at 2 times their typical (the
+     floor this record gives every typical-only row) and the margin is sized to them (SESSION): the divider is the stocked
+     pair with the highest lowest trip whose bound would still hold with them at 4 times their typical (99.9998 W). They
+     may grow to 4.00 times their typical before 100 W; the bound reads 98.6651 W with them at their typical and 98.2284 W
+     without them
+     - INA250A2 system gain error (amplifier and shunt), -40 to 125 C: +-0.75 % (warranted; INA250 SBOS511C p.6)
+     - INA250A2 offset at 25 C: +-50 mA (warranted; p.5)
+     - its drift, 45 K at most: +-11.25 mA (warranted; p.5, -40 to 125 C)
+     - common-mode rejection from 12 V to 25 V, 97 dB minimum: +-91.8 mA (warranted (referred to the input through the 2 mOhm
+       shunt, INFERRED); p.5, 0 to 36 V, -40 to 125 C)
+     - supply rejection from 5 V to LDO33's 3.23 V: +-1.77 mA (warranted; p.5; 8705af p.3 LDO33)
+     - TPS3701 INB rising threshold, -40 to 125 C junction: 397 to 403 mV (warranted; TPS3701 SBVS240C p.5)
+     - TPS3701 input current through the divider's Thevenin resistance: +-25 nA (warranted; p.5)
+     - R60 and R61, 0.1 % and 25 ppm/K over 45 K: ratio (warranted; YAGEO RT V.16 p.2)
+     - R60 and R61, the printed solder-heat and life limits, opposite directions: +-(0.5 % + 0.05 Ohm) each (warranted
+       (printed test limits); YAGEO RT V.16 pp.7, 8)
+     - the INA250's shunt stress drift (overload, thermal shock, solder heat, high temperature, cold storage): 0.425 % summed
+       (typical; INA250 p.5, typical only)
+     - the INA250's nonlinearity, 0.5 to 10 A: 0.03 % (typical; INA250 p.6, typical only)
+     - the INA250's output impedance into the divider (26 kOhm at least): 1.5 Ohm, 0.0058 % (typical; INA250 p.6, typical
+       only)
+     - the three typical-only gain terms together, carried at 2 times: 0.461 %, so 0.922 % (typical; SESSION: twice, this
+       record's floor)
+     - the INA250's gain rows at VS = 3.23 V (printed at VS = 5 V; only the offset's supply rejection is printed): 0
+       (inferred; INA250 pp.5, 6)
+     - REF at ground: the maker's unidirectional configuration; the rows are printed at VREF = 2.5 V: 0 (the REF path adds
+       VREF x its gain, nothing at 0 V) (inferred; INA250 p.15 and p.12's block diagram)
+     - PV_P's two dividers, bypassing U18's shunt, at 25 V: R8 and R9 (108405 Ohm at least), R14 and R15 (113850 Ohm at
+       least): 11.26 mW (warranted (NETLIST values at their tolerance); netlist, 1 % as drawn)
+     - D4's reverse current, 1 uA at 25 C, carried at 13.1 times for 62 C air (doubled per 10 K): 13.1 uA (inferred;
+       Littelfuse SMCJ series p.2, the SMCJ28A row at 25 C)
+     - U18's VIN+ bias, 35 uA at most at 25 C, carried at twice across temperature: 70 uA (warranted (printed at 25 C; twice
+       across temperature, SESSION); INA250 p.5)
+     - the input voltage at most 25 V: REQ-016 (requirement; REQ-016)
+   THE TRIP AGAINST THE DAY: its lowest trip at 25 V is 3.4239 A (new parts) and 3.3524 A (with the divider's printed
+     limits and the typical-only terms at their floor); at the hold's voltages it stays at or above 3.4003 A, against the
+     panel's highest current on SC-37's day, 2.8779 A at the lower hold corner: the backstop never acts that day
+   HOW IT ACTS: OUTB low holds SWEN at most 250 mV (TPS3701 p.5) against SWEN's rising threshold's least 1.156 V (8705af
+     p.4, full range); SWEN low puts the LT8705A in its switcher off state and its return passes the initialize state with
+     SS pulled low, so every restart is a soft start (8705af p.14, Figure 2). INB's hysteresis (2 to 12 mV, TPS3701 p.5)
+     releases OUTB once the current falls; R62 100k and C68 1 uF then hold SWEN under its threshold for about 46 ms
+     (MODELED, R62 x C68 x ln(LDO33 / (LDO33 - 1.206 V))), so a fault the regulation does not hold becomes a hiccup at a
+     low duty, never a steady current over the trip. EA2's finite gain does not enter the bound: the backstop acts on SWEN,
+     a logic input, not through VC and the error amplifiers; EA2 sets only where the regulation sits below the backstop
+   ITS SUPPLY: U18 and U19 run from TRK_LDO33, 3.23 to 3.35 V in regulation (8705af p.3, full range), regulated whenever
+     SHDN is high and unaffected by SWEN (p.14); the LT8705A stops switching when LDO33 falls under its UVLO, 2.96 to 3.12
+     V (p.3, printed at 25 C; across temperature INFERRED), above U18's least supply 2.7 V (INA250 p.6) and U19's 1.8 V
+     (TPS3701 p.5). U18's output at the highest trip, 1.873 V, stays under its swing limit 3.03 V at LDO33's least (p.6).
+     U18 draws at most 300 uA
+   THE COORDINATION (SESSION): the largest stocked RIMON_IN whose stack A highest current (3.4221 A at 25 V) stays at or
+     under the backstop's lowest trip with new parts at every input voltage: 26.1k. Against the backstop's lowest with its
+     drifts (3.3524 A) the regulation may meet it after ageing; that is a hiccup in bright hours (energy), never on SC-37's
+     day, and bench row 7b.17 reads it. Its cost: 11.1 % less input in every hour the limit binds, against 23.2k; on
+     SC-37's day 368.1 Wh at the lower hold corner (3 h bound), 350.0 Wh at the nominal hold (0 h) and 307.9 Wh at the
+     upper (0 h), against 369.7 / 350.0 / 307.9 Wh with 23.2k. The INA250's shunt and package path add about 0.27 Wh a day
+     of conduction at the nominal hold (INFERRED: its 4.5 mOhm package path is typical)
+   PROTOTYPE MEASUREMENT (REQ-016's second method; downstream obligations, not blockers): 7b.15, on each built board, the
+     input current at which SWEN falls, at 17.6 V and 25 V, against the band 3.3524 to 3.9637 A at 25 V; 7b.16, with R16
+     shorted (IMON_IN held at 0 V, so neither the regulation nor its fault comparator acts), the input power stays at or
+     under 100 W averaged over the hiccup, and the restart passes the soft start; 7b.17, the regulation at 26.1k on a bench
+     panel curve does not trip the backstop at 25 C and at the cold end
+   THE DRAFT FOR BOARD E'S GENERATOR OWNER: apply_gen_sch_e_backstop.py, 6 edit(s) on the text
+     apply_gen_sch_e_input_limit.py leaves (it refuses a generator without R59): U18 and U19 added, U5's SWEN (pin 36) on
+     TRK_SWEN: yes; R59 and U5's CSPIN (pin 33) behind U18 on TRK_VS: yes; R60 and R61 as chosen: yes; R16 at 26.1k: yes;
+     carries C2859736, C132788, C705756, C861565, C728586: yes; R10's drawn line untouched: yes. Read back here on top of
+     the input limit draft; never applied to the tree
+   WHY NOT (A): the IMON_IN fault comparator does bound EA2 without a gain value, but the setting it needs (RIMON_IN at
+     least 30540 Ohm, so 31.6k, 2.5485 A) costs 26.6 % of every limited hour and 13.4 Wh at the nominal hold on SC-37's
+     day, and the bound still rests on A7 away from its test point, the fault threshold away from VIN = 12 V and RSENSE1's
+     cold TCR
+   WHY NOT (C): REQ-016's verification methods are CALCULATION and PROTOTYPE_MEASUREMENT. A loop that is partly firmware
+     is bounded by calculation only in the states the firmware is in; a reset, a boot window before the first trim, an I2C
+     fault, a stale reading or an update are states it is not in, so its bound must rest on hardware beneath it, which is
+     (B)'s backstop, and on a controller fault the trim keeps its last or power-up value while the backstop holds the
+     bound. What (C) adds is energy in hours the limit binds: on SC-37's day 23.2k binds 0 h at every hold corner, so any
+     trim at or above it gives the panel's whole output, 369.7 Wh at the lower corner against (B)'s 368.1 Wh, and the same
+     at the nominal and upper corners. A monitor, a trim element and firmware for 1.6 Wh at one corner of the design day
+   WHAT WOULD OVERTURN IT: Analog Devices warranting EA2's gain and A7 away from its test point, and Milliohm the cold
+     TCR (the present limit would then hold the bound itself and the backstop could go); the INA250A2's supply (LCSC stock
+     359 on 1 October 2026; U18 is one per board); TRN-001 finding the INA250's 40 V common-mode absolute maximum
+     unworkable on the panel entry (the SMCJ28A clamps at up to 45.4 V at its full pulse, as for the 35 V bulk capacitors);
+     a bench nuisance trip under the coordinated setting
+   WHAT REMAINS CONDITIONAL: the bound rests on the makers' printed limits (TI's INA250 and TPS3701, YAGEO's RT, 8705af's
+     SWEN and LDO33 rows, Littelfuse's SMCJ28A row), the INA250's typical-only gain rows carried at 2 times their typical
+     with the margin sized to 4 times, and inferred readings (the common-mode rejection referred through the 2 mOhm shunt,
+     REF at ground, the gain rows at VS = 3.23 V, D4's leakage across temperature); none of them is an Analog Devices or
+     Milliohm answer. The bound covers U18 and U19 working; a failed U18 or U19 is a single fault it does not cover (layer
+     8's fault analysis). The regulation's own corner (96.25 W at 23.2k) stays CONDITIONAL on EA2, A7, LINE, TCR and TJ;
+     those now set the coordination (whether the regulation or the backstop holds the stage in the bright hours) and the
+     energy, not the bound. The transient (the INA250's 50 kHz bandwidth and TPS3701's 9.9 us delay are typical) is 7b.9t's
+   THE CLARIFICATION DRAFTS (adjusted; text for the owner to send, the session contacts no one): Analog Devices' and
+     Milliohm's answers now decide the coordination and the energy, not the bound. Analog Devices' draft gains item 5:
+     SWEN's delay and restart, and LDO33's undervoltage lockout across temperature, which the backstop's supply reads as
+     INFERRED. A third draft asks Texas Instruments for the INA250's rows at VS = 3.3 V and VREF = 0 V, the common-mode
+     referral, and a warranted limit for its typical-only rows: clarification/analog-devices-lt8705a.txt,
+     clarification/milliohm-hojlr2512.txt, clarification/texas-instruments-ina250.txt
