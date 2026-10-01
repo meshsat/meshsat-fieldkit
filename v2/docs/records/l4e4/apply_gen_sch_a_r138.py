@@ -15,8 +15,10 @@ contract's hold window; (b) 3 A held on each advertised voltage with U19 in the 
 
 Usage:  apply_gen_sch_a_r138.py TARGET [--check | --write]     (default --check: nothing is written)
 Each edit's old text must occur exactly once and its new text must differ and must not occur yet; the result must parse.
-Exit 0: checked (or written); 3: refused (the target is not the expected text, or the change is already applied)."""
+Exit 0: checked (or written); 3: refused (the target is not the expected text, the change is already applied, or the
+repository's own generator is named while these values are PROVISIONAL: see RELEASE.md below)."""
 import ast
+import os
 import difflib
 import sys
 
@@ -53,6 +55,30 @@ def patched(text):
     return new
 
 
+# PROVISIONAL (1 October 2026, the owner's instruction): the values wait on the source-control decision (L4-E5) and the
+# fault-handling decision (L4-E6). Writing the repository's own board A generator is refused until RELEASE.md beside this
+# script reads "released: yes" and names an accepted check of each ("source-control: <check record>", "fault-handling:
+# <check record>", each a repository path whose first line is "accepted: yes"). A copy elsewhere may be written (tests).
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(HERE))))
+TREE_GEN = os.path.join(REPO, "v2", "ecad", "tools", "gen_sch_a.py")
+RELEASE = os.path.join(HERE, "RELEASE.md")
+
+
+def released():
+    if not os.path.isfile(RELEASE):
+        refuse("PROVISIONAL: no RELEASE.md: the source-control (L4-E5) and fault-handling (L4-E6) decisions have not released these values")
+    lines = [l.rstrip("\n") for l in open(RELEASE, encoding="utf-8")]
+    if not lines or lines[0] != "released: yes": refuse("PROVISIONAL: RELEASE.md's first line is not 'released: yes'")
+    for key in ("source-control", "fault-handling"):
+        rec = [l.split(":", 1)[1].strip() for l in lines if l.startswith(key + ":")]
+        if len(rec) != 1: refuse("PROVISIONAL: RELEASE.md names no single %s check" % key)
+        path = os.path.join(REPO, rec[0])
+        if ".." in rec[0].split("/") or not os.path.isfile(path): refuse("PROVISIONAL: %s check %s is not in this tree" % (key, rec[0]))
+        if open(path, encoding="utf-8").readline().rstrip("\n") != "accepted: yes":
+            refuse("PROVISIONAL: %s check %s is not accepted" % (key, rec[0]))
+
+
 def main(argv):
     args = [a for a in argv if not a.startswith("--")]
     flags = [a for a in argv if a.startswith("--")]
@@ -60,6 +86,8 @@ def main(argv):
         sys.stderr.write(__doc__.split("Usage:")[1].split("\n")[0] + "\n")
         return 2
     target, write = args[0], flags == ["--write"]
+    if write and os.path.realpath(target) == os.path.realpath(TREE_GEN):
+        released()
     text = open(target, encoding="utf-8").read()
     new = patched(text)
     sys.stdout.writelines(difflib.unified_diff(text.splitlines(True), new.splitlines(True), "a/gen_sch_a.py", "b/gen_sch_a.py", n=0))
