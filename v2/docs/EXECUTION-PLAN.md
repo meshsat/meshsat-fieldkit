@@ -977,7 +977,7 @@ stays the coordinator's, after the backups are verified. State at this ruling: n
 destroyed on 30 September at 23:13 after its outputs were preserved); credit 110.45 USD; the next job needing an
 instance is the integration set's full suite (Layer 3 amendment and Layer 4 records).
 
-### Owner amendment, 1 October 2026 02:50 CEST: the prepared instance is kept, stopped when idle, never destroyed without his instruction
+### Owner amendment, 1 October 2026 02:48 CEST: the prepared instance is kept, stopped when idle, never destroyed without his instruction
 
 The owner, in his words: "Keep the no-spending-cap ruling. Treat the prepared Vast.ai build instance as reusable
 infrastructure. After two hours of genuine inactivity, use Vast.ai's STOP action, preserving its disk, installed tools,
