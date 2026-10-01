@@ -976,3 +976,20 @@ up (its job outboxes pulled to the runner) and stopped through the provider's AP
 stays the coordinator's, after the backups are verified. State at this ruling: no instance rented (vast.ai 52646493 was
 destroyed on 30 September at 23:13 after its outputs were preserved); credit 110.45 USD; the next job needing an
 instance is the integration set's full suite (Layer 3 amendment and Layer 4 records).
+
+### Owner amendment, 1 October 2026 02:48 CEST: the prepared instance is kept, stopped when idle, never destroyed without his instruction
+
+The owner, in his words: "Keep the no-spending-cap ruling. Treat the prepared Vast.ai build instance as reusable
+infrastructure. After two hours of genuine inactivity, use Vast.ai's STOP action, preserving its disk, installed tools,
+repository, caches and outputs. Remove automatic destruction from the watchdog and execution plan. Never destroy this
+instance without my explicit instruction. Resume the existing instance when needed. Reuse its environment and update the
+checkout incrementally; avoid repeating full installation and cloning. Save job checkpoints before stopping and maintain
+verified off-instance backups. Continue reporting compute and retained-storage costs. Do not interrupt a healthy clone,
+setup, test or other progressing job. Determine activity from useful job progress, excluding the watchdog's own logs."
+This supersedes the earlier instruction to destroy finished instances, including the line of the entry above that left
+destroying to the coordinator: no instance is destroyed by the watchdog or the coordinator without the owner's explicit
+instruction. The instance is vast.ai 53608225 (label meshsat-1357-suite, rented 1 October 02:09 for integration set 19's
+suite). The watchdog's only action is STOP (it pulls the job outboxes to the runner first); `_bin/vast_resume.py` starts
+the stopped instance and waits for ssh, and never rents, re-creates or destroys; the box's clone is updated by fetch or
+bundle. Activity is read from job markers, the processes' CPU time and changed files on the instance; the probe writes
+nothing there and the watchdog's logs live on the runner.
