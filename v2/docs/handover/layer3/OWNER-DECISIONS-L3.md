@@ -57,9 +57,9 @@ The owner's reviewer reviewed the decision brief MESHSAT-L3-OWNER-DECISIONS-2026
 
 **requirements drafted / decisions recorded** holds (the intended product and its acceptance criteria are explicit); **requirements baseline validated and accepted** does not yet: the completion gate's five conditions MET, the definition re-issue approved (L3-C26), the owner's conditional closure authorisation recorded (D-39, a ruling deciding layer3_baseline, not itself evidence that any gate passed) and the baseline's acceptance filed against the verified revision after the gates pass (l3r2.yaml baseline_acceptance, apply_l3r5_accept.py), its content manifest matching both that revision and the tree (render_l3r2.acceptance_ok, L3-R04 of the independent review of 1 October 2026).
 
-**The independent review the owner relayed on 1 October 2026** (`v2/docs/records/l3am/REVIEW-AS-RECEIVED.md`, sha256/16 `cbe90e44fa8f9e7f`; findings L3-R01, L3-R02, L3-R03, L3-R04, L3-R05): **Layer 3 accepted baseline; independent review findings open (L3-R01 to L3-R05).** It is kept apart from "design compliance verified" and "fab-ready", neither of which holds. The findings' dispositions: `v2/docs/records/l3am/DISPOSITIONS.md` (state OPEN).
+**The independent review the owner relayed on 1 October 2026** (`v2/docs/records/l3am/REVIEW-AS-RECEIVED.md`, sha256/16 `cbe90e44fa8f9e7f`; findings L3-R01, L3-R02, L3-R03, L3-R04, L3-R05): **Layer 3 amendment checked; independent review findings dispositioned (L3-R01 to L3-R05).** It is kept apart from "design compliance verified" and "fab-ready", neither of which holds. The findings' dispositions: `v2/docs/records/l3am/DISPOSITIONS.md` (state CLOSED).
 
-**The acceptance record** (`baseline_acceptance`, bound to the reviewed content since L3-R04): filed at `b4b199d0` (D-39, 2026-09-30); it does not validate: it carries no content manifest (filed before the binding of 1 October 2026, L3-R04), so it binds no content: it is history, not an acceptance of what the tree now holds.
+**The acceptance record** (`baseline_acceptance`, bound to the reviewed content since L3-R04): filed at `b4b199d0` (D-39, 2026-09-30); it does not validate: its evidence does not list the newest independent check.
 
 ## The acceptance definitions (D-26)
 
