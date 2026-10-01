@@ -448,8 +448,8 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        VSENSE = 50 mV; the two rejections above carried at the larger of their offset reading and their gain reading; R66
        8.06k, 0.1 %, 25 ppm/K over 45 K, the printed solder-heat and life limits; the bank, 5 x WSL2512R0700FEA in parallel:
        1 %, 75 ppm/K from -55 to +155 C; the bank's solder-heat and load-life test limits; R8 and R9 (the hold draft's RT
-       parts) across 25 V, bypassing the bank; U18's VIN+ pin current (its output current and its input bias, which prints no
-       maximum), bypassing the bank
+       parts) across 25 V, bypassing the bank
+     - rating: U18's VIN+ pin current (its output current and its input bias, which prints no maximum), bypassing the bank
      - requirement: the input voltage at most 25 V (REQ-016)
      - parts and board E: U18 INA169NA/3K, U19 TPS3701DDCR, U20 TPS3808G33DBVR, R60 to R64 (5 x WSL2512R0700FEA), R65 16.9k,
        R66 8.06k, R67 110k, R68 9.53k, R69 100k, R70 22k, R71 33k, C66 to C68 100n; C11, C12 and C69 the 50 V bulk; R16 to
@@ -475,7 +475,8 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      rejections are carried at the larger of their offset and gain readings, so no row is extended past its condition
    THE STATIC BOUND: 98.1890 W at 25 V (the highest trip current 3.9173 A at 25 V, the trip's sense voltage 52.537 mV at
      most), margin 1.8110 W. Every term at the end that raises the trip, summed, each a printed limit at the condition it
-     is used at (no common multiplier; no typical row; nothing assigned zero):
+     is used at, or, for U18's VIN+ pin, its printed absolute maximum (no common multiplier; no typical row; nothing
+     assigned zero). SBOS181F p.6 prints every INA169 row over TA -40 to +85 C ('all other characteristics at'):
      - U19 TPS3701 INB rising threshold, TJ -40 to 125 C, VDD 1.8 to 36 V: 397 to 403 mV (warranted; TPS3701 SBVS240C p.5)
      - U19 input current at INB: +-25 nA, through R66 (warranted; p.5)
      - U18 INA169 transconductance, VSENSE 10 to 150 mV, TA -40 to 85 C: 990 to 1010 uA/V (warranted; INA169 SBOS181F p.6)
@@ -494,7 +495,7 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        (warranted (printed test limits); WSL 30100 p.3)
      - R8 and R9 (the hold draft's RT parts) across 25 V, bypassing the bank: 5.78 mW (warranted; YAGEO RT V.16)
      - U18's VIN+ pin current (its output current and its input bias, which prints no maximum), bypassing the bank: at most
-       10 mA: 250 mW (warranted (the pin's absolute maximum); INA169 p.4)
+       10 mA: 250 mW (rating (the pin's absolute maximum); INA169 p.4)
      - the input voltage at most 25 V: REQ-016 (requirement; REQ-016)
    THE TRIP: its lowest at the hold's voltages 3.2119 A with the parts aged (3.2026 A at 25 V; 3.3311 A new), against the
      panel's highest current on SC-37's day at any hold corner, 2.8779 A: it never acts that day. One bank part carries at
@@ -520,7 +521,10 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      VOL rows end: SWEN could rise only if its pin sourced 28.4 uA (8705af p.12 describes a logic input; no current row:
      INFERRED), and TRK_LDO33 under 1.3 V with INTVCC above its 4.45 V lockout is an LDO33 failure, a single fault (below).
      The power-up reset (VPOR 0.8 V) holds for a rise no faster than 66667 V/s; LDO33's 22 mA limit into C20's 1 uF gives
-     22000 V/s (INFERRED: C20's capacitance at bias has no row)
+     22000 V/s (INFERRED: C20's capacitance at bias has no row). The arrangement draws at most 158 uA from TRK_LDO33 (the
+     IDD rows, the dividers, U20's MR pull-up at its least and CT's resistor), under the 5 mA its regulation row is printed
+     at. U18's output at the highest trip, 1.329 V into R65 + R66, stays under its compliance where the chain is armed,
+     3.76 V (V+ less 1.2 V at TRK_VS = 4.960 V, SBOS181F p.6)
    THE COORDINATION (SESSION, one basis at both corners): the smallest stocked RIMON_IN whose regulation at its highest
      under the joint assumptions (EA2 and EA3 at half gain, the line at twice, RSENSE1's cold TCR at 100 ppm/K, the drifts,
      each resistor at its worst end) stays at or under C's lowest trip with its parts aged, at every input voltage: 29.4k,
@@ -529,11 +533,12 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      bright day's hours whose panel current at the nominal hold exceeds C's lowest trip are 09, 10, 11, 12, 13, 14, 15,
      462.4 Wh, the energy such an overlap would put at risk
    THE ENERGY: on SC-37's day 355.0 / 345.5 / 307.9 Wh at the lower, nominal and upper hold corners (5 / 3 / 0 h bound)
-     against 369.7 / 350.0 / 307.9 Wh with 23.2k; on the bright day 457.4 Wh (9 h bound) against 534.7 Wh; at bright noon
-     the input power falls 19.4 % (the current 21.1 %). The bank's conduction (14.0000 mOhm, the hourly current at the
-     nominal hold) costs 0.5773 Wh on SC-37's day and 1.6072 Wh on the bright day; R59 stays. The bright day is the check's
-     own (astra-check-l4e7r-1, D3) and this model reproduces its figures: 26.1k 495.3165 Wh, the noon power 10.06 % under
-     23.2k; 28.7k 465.6367 Wh, the noon power 17.54 % under 23.2k
+     against 369.7 / 350.0 / 307.9 Wh with 23.2k (4.5 Wh less at the nominal hold, 14.7 Wh at the lower corner); on the
+     bright day 457.4 Wh (9 h bound) against 534.7 Wh (77.4 Wh less); at bright noon the input power falls 19.4 % (the
+     current 21.1 %). The bank's conduction (14.0000 mOhm, the hourly current at the nominal hold) costs 0.5773 Wh on
+     SC-37's day and 1.6072 Wh on the bright day; R59 stays. The bright day is the check's own (astra-check-l4e7r-1, D3)
+     and this model reproduces its figures: 26.1k 495.3165 Wh, the noon power 10.06 % under 23.2k; 28.7k 465.6367 Wh, the
+     noon power 17.54 % under 23.2k
    THE SOLAR ENTRY'S PROTECTION (B6; the derived disturbance, SESSION): no surge level is ruled (DECISION-31 section 3,
      D-04, D-16) and the tree holds no surge standard; TRN-001 asks the clamp to clamp below every protected part's
      absolute maximum, and D4's maker prints its clamping only at its rated pulse. So the design disturbance is that pulse:
