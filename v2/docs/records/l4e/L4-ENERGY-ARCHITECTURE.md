@@ -13,6 +13,10 @@ ledger (last section). **Third issue, 1 October 2026:** it answers the recheck `
 no; B2 again, the IMON_IN line regulation left out of a tolerance list picked by hand, and the sweep's lower end). O-2's
 setting now comes from every row of the LT8705A's electrical characteristics that moves the limit, enumerated, read back
 from the sheet and stacked worst case, and the replay refuses to print if any corner of the envelope exceeds 100 W.
+**Fourth issue, 1 October 2026:** it answers the independent power review filed as
+`REVIEW-POWER-ARCHITECTURE-AS-RECEIVED.md` (CONDITIONAL; no owner decision): L4-R01's wording on what B2 closed and what
+stays open, L4-R02's compliant panel evaluated with the proposed control (out 12), L4-R04's per-source acceptance, and
+the profile's undocumented loads (out 13). L4-R03, the replay companion, is the coordinator's.
 
 **Labels.** MAKER (a maker's document, file and page); NETLIST; MODELED (the energy model); INFERRED (a stated method);
 DECLARED or ESTIMATE (a figure no maker document gives for this circuit); HYPOTHETICAL (a corrected path not
@@ -43,12 +47,22 @@ requirement unchanged, REQ-016 among them (D-34). No service is reduced on this 
   setting of 4.65 A gives the same result (out 8). As drawn, A2 is 332.7 Wh short at 48 h against 270.1 corrected (06
   UTC): under the retained window the corrections are worth about 62.5 Wh at 48 h and 125.1 Wh at 72 h, not the about
   210.1 and 420.2 Wh the 200 W runs show at WE (out 3).
-- **O-2 amended** (check B2, then the recheck's B2): a current limit bounds current, not power. The LT8705A's
-  input-current limit is sized from every electrical-characteristics row that moves it, stacked worst case and rounded
-  down: **3.548 A** nominal. A mechanical check of 106,496 corners (the loaded voltage from the hold's lower corner
-  16.695 V to 25 V, both temperature ends, every tolerance at its limits) puts the worst at 25 V, 99.9984 W, a margin of
-  0.0016 W; the replay refuses above 100 W (out 11). Its consequence is its own row in the table: in a limited hour the
-  stage may take as little as 52.8 W, and A2 then needs +610.8 / +1167.3 Wh instead of +278.8 / +515.8 Wh.
+- **B2: arithmetic corrected under stated assumptions (closed). O-2 physical compliance: OPEN** (review L4-R01). The
+  LT8705A's input-current limit is sized from every electrical-characteristics row that moves it, stacked worst case:
+  3.548 A nominal, the worst of 106,496 corners 99.9984 W at 25 V (out 11). That bound holds only under assumptions a
+  real design must replace: EA2's and EA3's gains are printed TYP only; the line regulation is printed at 25 C, not
+  switching; the two resistors are taken at 1 % with tolerance and drift unselected; and the two temperature ends repeat
+  the same printed bounds. The review's sensitivity shows why: EA2's gain at 120 V/V instead of 130 V/V gives
+  **100.0758831 W**. The engineer selects the IC grade, the actual resistor values and their tolerance and drift budget,
+  and evaluates the setting those values achieve, not a 1 mA grid.
+- **A compliant panel, with the proposed control** (review L4-R02; out 12). The SunPower SPR-E-Flex-100 is pinned from
+  its held sheet: open circuit 24.05 V at -20 C cells, inside REQ-016's 25 V (25.23 V at its own -40 C limit, the other
+  reading, named). On SC-37's day it gives **350.0 Wh a day into the stage** at the nominal hold of 17.593 V (373.5 Wh
+  at the lower hold corner 16.695 V, 280.6 Wh at the upper 18.490 V), against 982.6 Wh from the screening stimulus.
+  O-2's limit never binds for one panel on that day; the fixed hold above the panel's 17.1 V maximum-power voltage does.
+  On it A2's corrected path stops at hour 18 / 11 and is **986.9 / 1196.1 Wh short at 48 h and 1741.4 / 1950.7 Wh at 72
+  h**, needing **+979.2 / +1719.7 Wh** more storage; A1 needs +1361.5 / +2094.1 Wh. A2 would carry 48 h at a steady 21.1
+  W, not 42.8 W.
 - **Is REQ-016's window with a compliant panel represented by the SC-37 series? No.** The series in the tree is the 400
   Wp 2S2P array's (51.28 V cold), which REQ-016 does not admit, and no compliant panel's series is held. The 100 W
   results are therefore a conditional screening stimulus (out 7): they stand for a compliant source only if it delivers,
@@ -58,6 +72,9 @@ requirement unchanged, REQ-016 among them (D-34). No service is reduced on this 
   h shortfall 1692.8 / 1919.0 Wh, not 500.4 / 516.5.
 - **DR-01 stands** (last section): the Layer 3 corrected-path headline was computed at 200 W, and its unserved figures
   carry the same stopped-hour double count.
+- **Status.** Neither architecture is approved or shown realizable. A1 is the ruled pack; A2 stays a proposal to change
+  D-06, with its mechanical fit (the base rows, the lid) and its thermal obligations (FEA-008) open. The larger store
+  performing better in the model makes it neither.
 
 ## The comparison (TYP; the corrected path unless named; each pair of figures is 06 UTC / 18 UTC start where it differs)
 
@@ -74,6 +91,7 @@ requirement unchanged, REQ-016 among them (D-34). No service is reduced on this 
 | **Battery-only runtime** against 48 to 72 h (out 2) | 2.52 h at +20 C, 1.04 h at -10 C: short by 45.5 h at 48 h and 69.5 h at 72 h | 12.71 h at +20 C, 5.24 h at -10 C: short by 35.3 h and 59.3 h |
 | **Solar-assisted runtime** against 48 to 72 h (out 3) | CORRECTED, HYPOTHETICAL: first interruption at h 13 (19 UTC) / h 2 (20 UTC); full service 25 of 48 h and 37 of 72 h. AS DRAWN, upper bound: the same hours. AS DRAWN, lower bound (A-2's collapse): h 12 / 2 | CORRECTED, HYPOTHETICAL: first interruption at h 23 / 11, both 05 UTC; full service 41 / 40 of 48 h and 59 / 58 of 72 h. AS DRAWN, upper bound: h 23 / 11, 40 / 39 and 57 / 56 h. Lower bound: h 21 (03 UTC) / 11, 34 and 47 h |
 | **The gap, Wh and hours** (the service ledger; out 3, 4, 5) | CORRECTED: 907.4 / 923.5 Wh unserved at 48 h, 1382.5 / 1398.6 at 72 h (23 and 35 hours without service); the least addition **+654.8 Wh** (48 h) and **+873.1 Wh** (72 h), one pack of 4S20.95P and 4S26.95P. AS DRAWN: 907.3 / 923.5 and 1382.4 / 1398.5 Wh (upper bound), +719.3 and +1002.2 Wh; 1068.3 and 1645.2 Wh (lower bound), +930.8 and +1366.0 Wh. WAB: +668.1 and +898.3 Wh | CORRECTED: **270.1 / 286.3 Wh** at 48 h, **500.4 / 516.5 Wh** at 72 h (7 to 8 and 13 to 14 hours without service); the least addition **+278.8 Wh** (48 h) and **+515.8 Wh** (72 h), a lid of 4S17.83P and 4S25.33P (781.4 and 1018.4 Wh in all). AS DRAWN: 332.7 / 348.9 and 625.5 / 641.7 Wh (upper bound), +341.6 and +641.0 Wh; 541.9 and 984.8 Wh (lower bound), +555.1 and +1008.0 Wh. WAB: +291.9 and +540.7 Wh |
+| **Solar-assisted on a compliant panel** (SPR-E-Flex-100, 1S1P; 350.0 Wh a day into the stage at the nominal hold; out 12) | CORRECTED, O-2 nominal: first interruption h 6 / 2; 1367.4 / 1368.1 Wh unserved at 48 h, 2103.9 / 2104.6 at 72 h; least addition +1361.5 / +2094.1 Wh. AS DRAWN: 1366.0 / 1366.8 and 2101.9 / 2102.6 Wh (upper bound), 1946.5 and 2973.7 Wh (the collapse bound: the drawn 4.05 A asks more than the panel ever gives) | CORRECTED, O-2 nominal: first interruption h 18 / 11; **986.9 / 1196.1 Wh** unserved at 48 h, **1741.4 / 1950.7 Wh** at 72 h; least addition **+979.2 / +1719.7 Wh**; steady load carried 21.1 / 17.5 W. AS DRAWN: 985.6 / 1195.5 and 1739.5 / 1949.4 Wh (upper bound), 1555.1 and 2582.9 Wh (collapse). The hold's corners: 373.5 Wh a day at 16.695 V (+939.4 / +1660.1 Wh), 280.6 Wh at 18.490 V (+1097.1 / +1896.6 Wh) |
 | **Solar-assisted under O-2's conservative bound** (its own row, apart from the 100 W screening case; CORRECTED, WE, TYP, still on the stimulus; setting 3.548 A; out 11) | at the lower corner, 52.8 W into the stage in a limited hour (16.695 V x 3.162 A): first interruption h 13 / 2; 991.7 / 998.6 Wh unserved at 48 h, 1541.9 / 1548.8 at 72 h; least addition +995.0 / +1544.3 Wh. At the nominal hold, 62.4 W (17.593 V x 3.548 A): 907.4 / 923.5 and 1382.5 / 1398.6 Wh (the pack is night-limited), +908.8 / +1381.2 Wh | at the lower corner, 52.8 W: first interruption h 22 (04 UTC) / 11; 601.4 / 607.7 Wh unserved at 48 h, 1153.0 / 1159.4 at 72 h; least addition **+610.8 / +1167.3 Wh**. At the nominal hold, 62.4 W: 516.6 / 532.8 and 993.4 / 1009.6 Wh, +525.8 / +1008.0 Wh. Where a compliant panel lands between these and the 100 W case is its own curve (O-1) |
 | **Owner rulings changed** (explicit proposals) | **None.** Closing its gap would need 4S21P to 4S27P in one pack: that changes D-06 (one 4S3P in the east pocket) and has no place in the case | **D-06 only** (proposal P-01: two separately protected packs, with DR-07's lid consequences). REQ-016 is kept; P-03's 200 W stage is not part of it. Closing its own gap would need a lid of about 4S18P to 4S25P, which the lid does not hold with both functions kept (39 places; SHORTLIST.md 3) |
 
@@ -125,8 +143,16 @@ kit's voltages; each item below says where the kit departs from them.
   Figure 10-1 the charger's VBUS is the source itself, so its own input regulation sees a sagging source. Board A's
   front end regulates VBUS20, so U3 cannot see the panel sag, and a firmware rule is the bound that remains. A2's lower
   bound under the collapse leaves 193.0 to 209.3 Wh (48 h) and 343.1 to 359.3 Wh (72 h) more unserved than its upper
-  bound, by start (out 3). *Closure:* bench 7b.7: a source stepped below U3's demand, VIN_RAW settles above 12 V and
-  FE_PGOOD never drops.
+  bound, by start (out 3). *Closure, by source (review L4-R04; acceptance statements, no new owner requirement):*
+  **solar**, the panel or its simulator inside REQ-016's window (open circuit at most 25 V, the hold at 16.695 to 18.490
+  V, at most 100 W into the stage): stepped below U3's demand, VIN_RAW settles above 12 V and FE_PGOOD never drops
+  (R11-DEP 2a, bench 7b.7). **Vehicle and shore**, from the retained 9 V floor to 36 V (REQ-015) and up to the entry's
+  LM5069 limit of 4.85 to 6.15 A: IIN_HOST follows FW-A16 (a), 1.55 A at 9 V, 2.07 A at 12 V and 4.14 A at 24 V, so the
+  entry never reaches its limit, VIN_RAW stays above the front end's latch (7.86 to 8.31 V falling) and FE_PGOOD never
+  drops; no 12 V criterion applies at the 9 V floor. The control decision must cover **startup** (FW-A16 (b): the 9 V
+  figure until VIN_RAW is known; the charger resets to 3.25 A at each removal), **source changes** (the panel's tracker
+  and the vehicle entry are ORed onto VIN_RAW), and **missing or stale telemetry** (fall back to the 9 V figure). FW-E04's 1 s USB report of VIN_MON is not evidence of transient response: steady state and transients are accepted
+  separately, each source stepped and switched, the response time measured.
 - **B-1, L1 past its typical Isat at 9 V.** *Remedy:* in service, the window-sized setting (4.65 A, or 5.05 A at the
   bracket) is at or under r11dep's 9 V schedule setting of 5.05 A, whose 5.18 A maximum puts L1's peak at 15.68 A, 89.6
   % of the typical Isat; so no separate schedule is needed at the declared figures, and A-2's rule carries it if one is.
@@ -177,12 +203,14 @@ kit's voltages; each item below says where the kit departs from them.
   *Reason:* the maker's reference, no custom part; at 10 mOhm the trip is 1.92 to 2.26 A (CHECK-3 of l3batt). The
   profile charges no tablet, so no figure here moves. *Closure:* the netlist carries 5 mOhm; the trip from VI(TRIP) 19.2
   to 22.6 mV lies above every PDO's current; a bench 3 A load on each PDO holds without a trip.
-- **O-1, DR-04: the panel is not pinned.** *Remedy:* select and pin a panel that REQ-016 admits. The held RNG-100DB-H is
-  outside it even alone (25.64 V at -20 C cells); a1solar ARRAY.md 5 admits the SunPower (24.05 V) and PowerFilm's 15 V
-  model (24.86 V) at -20 C, and none at -40 C. *Reason:* the energy result needs a compliant source's own trace (next
-  section). *Closure:* the sheet of the revision bought filed with its mark and sha256; its open-circuit voltage at its
-  coldest operating temperature at most 25 V; its availability trace at the 17.6 V point computed by a1solar's method;
-  O-3 to O-7 re-derived for it, the entry's 10 A included.
+- **O-1, DR-04: the panel is not pinned.** *Remedy (fourth issue):* the SunPower SPR-E-Flex-100 is pinned from its held
+  sheet (out 12): open circuit 24.05 V at -20 C cells, hot short circuit about 6.42 A under the entry's 10 A. Before
+  this remedy: select and pin a panel that REQ-016 admits. The held RNG-100DB-H is outside it even alone (25.64 V at -20
+  C cells); a1solar ARRAY.md 5 admits the SunPower (24.05 V) and PowerFilm's 15 V model (24.86 V) at -20 C, and none at
+  -40 C. *Reason:* the energy result needs a compliant source's own trace (next section). *Closure:* the sheet of the
+  revision bought filed with its mark and sha256; its open-circuit voltage at its coldest operating temperature at most
+  25 V; its availability trace at the 17.6 V point computed by a1solar's method; O-3 to O-7 re-derived for it, the
+  entry's 10 A included.
 - **O-2, DR-04: the stage's input power is not controlled** (amended after check B2 and the recheck's B2). *Remedy:* the
   LT8705A's own input-current limit (MAKER 8705af p.31, "Current Limiting", Figure 11: IMON_IN = I x RSENSE1 x gm(A7) x
   RIMON_IN, regulated by EA2 at 1.208 V typical; as drawn CSPIN and CSNIN are tied to the input, pp.11 and 12), sized so
@@ -201,37 +229,50 @@ kit's voltages; each item below says where the kit departs from them.
   maker forbids series resistance on them (p.30); the common-mode, differential and IMON_IN output-current rows are
   conditions the design meets; the fault threshold and the SRVO flags do not move the limit. *The setting:* the ceiling
   at 25 V falls from the first issue's 3.622207 A to 3.619854 A with the line regulation, to 3.581345 A with every
-  grade's A7 limits, and to 3.548056 A with the EA2 allowance; rounded down to the stated 1 mA, **3.548 A** (3.586 A if
-  procurement fixed the E or I grade). *The envelope and the check:* the loaded voltage runs from the hold's
-  tolerance-adjusted lower corner, **16.695 V** (R8 102k and R9 7.50k at 1 %, NETLIST; FBIN 1.182 V, every grade's
-  minimum, p.4; its line regulation, the EA3 allowance of 16.67 mV and the FBIN bias against it), to REQ-016's 25 V
-  open-circuit ceiling, at both temperature ends. The check reads the limit's rows from the sheet independently of the
-  classification and evaluates 106,496 corners: the worst is 25 V with every term at its high end, **99.9984 W, a margin
-  of 0.0016 W**; the replay refuses to print above 100 W (it does when the line regulation is dropped from the stack:
-  100.0548 W). *Consequence, its own row in the table:* in a limited hour the stage takes between 52.8 W (16.695 V x
-  3.162 A, the limit's lowest there) and 100 W; at the nominal hold and setting 62.4 W. Where in between is the admitted
-  panel's own curve (INCONCLUSIVE until O-1); once O-1 pins a panel, its highest loaded voltage at the limit replaces 25
-  V and lifts the setting. *Reason:* it is the maker's own function on the part already on board E, and its bound needs
-  no efficiency. An output-current limit at the regulated 15.1 V bounds the input only through the stage's undocumented
-  efficiency (C-8). A voltage-dependent limit would be custom circuitry, justified only if the pinned panel shows the
-  conservative bound costs too much. Rating everything downstream for the uncontrolled ceiling of about 331 W
-  (L3-FEASIBILITY 3b) is the larger change. *Closure:* the setting's derivation in `gen_sch_e.py` from the chosen
-  resistors' own figures and the rows above, re-run through `l4e_replay.py`'s check. Then a bench sweep, not a single
-  point: a PV emulator whose curves put the loaded voltage at the limit from the tolerance-adjusted lower hold corner,
-  16.695 V, up to 25 V, at the load's maximum and at both temperature ends, reading V_in x I_in at or under 100 W at
-  every point. The IMON_IN loop regulates a filtered current (CIMON_IN, p.31), so the steady-state record and the
-  transient record are kept apart.
+  grade's A7 limits, and to 3.548056 A with the EA2 allowance; rounded down to 1 mA, 3.548 A (3.586 A if procurement
+  fixed the E or I grade). *Status (review L4-R01):* **B2: arithmetic corrected under stated assumptions (closed). O-2
+  physical compliance: OPEN.** The assumptions a real design replaces: EA2's and EA3's TYP-only gains, the line
+  regulation printed at 25 C and not switching, the 1 % resistors with tolerance and drift unselected, and the
+  temperature ends repeating the same bounds; EA2 at 120 V/V gives 100.0758831 W (the review's sensitivity). The
+  engineer selects the IC grade, the actual RSENSE1 and RIMON_IN values and their tolerance and drift budget, and the
+  setting those values achieve replaces the 1 mA grid in the same check. One compliant panel does not reach the limit on
+  SC-37's day (out 12); the hold's tolerance moves its energy from 280.6 to 373.5 Wh a day. *The envelope and the
+  check:* the loaded voltage runs from the hold's tolerance-adjusted lower corner, **16.695 V** (R8 102k and R9 7.50k at
+  1 %, NETLIST; FBIN 1.182 V, every grade's minimum, p.4; its line regulation, the EA3 allowance of 16.67 mV and the
+  FBIN bias against it), to REQ-016's 25 V open-circuit ceiling, at both temperature ends. The check reads the limit's
+  rows from the sheet independently of the classification and evaluates 106,496 corners: the worst is 25 V with every
+  term at its high end, **99.9984 W, a margin of 0.0016 W**; the replay refuses to print above 100 W (it does when the
+  line regulation is dropped from the stack: 100.0548 W). *Consequence, its own row in the table:* in a limited hour the
+  stage takes between 52.8 W (16.695 V x 3.162 A, the limit's lowest there) and 100 W; at the nominal hold and setting
+  62.4 W. Where in between is the admitted panel's own curve (INCONCLUSIVE until O-1); once O-1 pins a panel, its
+  highest loaded voltage at the limit replaces 25 V and lifts the setting. *Reason:* it is the maker's own function on
+  the part already on board E, and its bound needs no efficiency. An output-current limit at the regulated 15.1 V bounds
+  the input only through the stage's undocumented efficiency (C-8). A voltage-dependent limit would be custom circuitry,
+  justified only if the pinned panel shows the conservative bound costs too much. Rating everything downstream for the
+  uncontrolled ceiling of about 331 W (L3-FEASIBILITY 3b) is the larger change. *Closure:* the setting's derivation in
+  `gen_sch_e.py` from the chosen resistors' own figures and the rows above, re-run through `l4e_replay.py`'s check. Then
+  a bench sweep, not a single point: a PV emulator whose curves put the loaded voltage at the limit from the
+  tolerance-adjusted lower hold corner, 16.695 V, up to 25 V, at the load's maximum and at both temperature ends,
+  reading V_in x I_in at or under 100 W at every point in steady state. Transients are accepted separately: the IMON_IN
+  loop regulates a filtered current (CIMON_IN, p.31), so a source step and an irradiance step are recorded with their
+  peak and duration against a stated transient limit.
 
 ## What stays INCONCLUSIVE, and the evidence missing
 
-- **The performance of a REQ-016-compliant panel.** Missing: a pinned compliant panel's sheet (O-1) and its hourly trace
-  at the 17.6 V point. Every 100 W figure here rests on the non-compliant 400 Wp trace.
+- **The performance of the pinned compliant panel.** Its trace (out 12) rests on one held sheet that prints no NOCT, no
+  low-irradiance data and no Voc tolerance; on a single-diode fit to four points (Rs 0.1 and 0.2 Ohm brackets: 330.9 and
+  346.1 Wh a day against 350.0); on an INFERRED 47 C NOCT (57 C gives 331.3 Wh); and on one mean day. Missing: the
+  maker's NOCT and low-irradiance curves, the revision bought, and a bench curve. REQ-016's -40 C reading (25.23 V) is
+  not met by this panel; which reading binds is the requirement's own wording, named not decided here.
 - **The as-drawn figures between their bounds.** Missing: bench row 7b.7 (A-2). The truth lies between the upper bound
   (`min(available, cap)`) and the collapse bound.
 - **The three efficiencies (C-8) and U3's input-current minimum (C-7).** Missing: the makers' figures for these
   circuits, or measurements. They move the gap (out 6) but no verdict.
-- **The 8.4 W of PS-IDLE-SPEC with no document.** Missing: the makers' figures or measured loads. A2's corrected path
-  turns at 35.3 W (out 6).
+- **The 8.4 W of PS-IDLE-SPEC with no document** (out 13): the Xenarc monitor 6.03 W (its sheet prints only "<= 10W"),
+  the standby WiFi card 1.30 W (no standby figure; "average is 7W" active), the VHF PA's 1.07 W average (75 W at
+  key-down times a beacon duty the profile does not state). Missing: their measurements, and the profile's beacon rate.
+  A2's corrected path turns at 35.3 W on the stimulus and 21.1 W on the compliant panel: settling them cannot by itself
+  close the gap on the compliant trace.
 - **The loads' converters down to the 12.0 V node.** Missing: a record that every load converter runs to the 3.00 V line
   (SHORTLIST.md 2). The usable-energy figures assume it, for both architectures.
 - **The lid pack's temperature and the cells against FEA-008.** Missing: a thermal model or measurement of the lid pack,
@@ -247,20 +288,27 @@ kit's voltages; each item below says where the kit departs from them.
 - **The entry's ratings for an array above about 150 Wp.** Missing: the compliant array's short-circuit current against
   F2 and J_SOLAR's 10 A (O-3 to O-7 re-derived).
 
-## The next discriminating calculation, then the experiment
+## The next implementable power-path choices, each with its acceptance (review L4-R02 and its bounded next steps)
 
-1. **Calculation: a REQ-016-compliant panel's own trace.** Pin a compliant panel (O-1) and compute its hourly power at
-   the 17.6 V point on SC-37's day by a1solar's ratio method. Check its array's short-circuit current against the
-   entry's 10 A (the records read an array above about 150 Wp of the 12 V class as re-rating it, `energy_budget.out` 4).
-   Then re-run `l4e_replay.py` on that trace in place of the stimulus. *Why it discriminates:* the stimulus fills the
-   window for eight hours a day, which at its ratio needs at least 331 Wp (to fill 08 to 15 UTC; out 7). On the held
-   panel's fit at 17.6 V, 100 Wp makes A2's shortfall 954.1 / 1180.3 Wh at 48 h and 1692.8 / 1919.0 Wh at 72 h, 200 Wp
-   490.4 / 527.4 and 918.8 / 955.8 Wh, and 400 Wp in 1S4P 276.4 / 292.0 and 512.3 / 527.8 Wh (06 / 18 UTC). *Closure:*
-   both architectures' unserved energy and least additional storage on the compliant trace, after the same reproduction.
-2. **Experiment: PS-IDLE-SPEC's undocumented loads.** 8.4 W of the 42.8 W has no document. At bring-up, or from the
-   makers, those loads decide whether A2's corrected path reaches 48 h: it does on the model, on the stimulus, at 35.3 W
-   or less. This measures the same profile; it reduces no service. *Closure:* the measured loads in the profile, the
-   replay re-run.
+The compliant panel's own trace is now computed (out 12) and the undocumented loads listed (out 13). What follows is the
+engineer's to choose; none changes an owner requirement.
+
+1. **Source control.** The VIN_RAW-dependent IIN_HOST rule (A-2) with its startup, source-change and stale-telemetry
+   behaviour, or a hardware source-tracking alternative. *Acceptance:* the per-source envelopes of A-2 above, steady
+   state and transients recorded apart.
+2. **Current-limit coordination.** U3's setting, R11 and the front end's average limit chosen together for the window
+   (A-1, C-1, C-9). *Acceptance:* the stacked minimum of the fitted R11 above U3's maximum plus 0.079 A, re-run through
+   `r11_dep.py`; bench 7b.1.
+3. **Real component settings.** The LT8705A grade, RSENSE1, RIMON_IN, R8 and R9 chosen with their tolerance and drift
+   budget (O-2, the hold). *Acceptance:* section 11's corner check passes on the achieved values with the TYP-only rows
+   replaced or justified; the hold's band chosen against its cost (280.6 to 373.5 Wh a day on the pinned panel).
+4. **Fault handling.** The front end's fault current bounded or rated for (B-1, B-2, B-4: hiccup, FETs, L1, the bulk
+   bank). *Acceptance:* B-1, B-2 and B-4's closures at the chosen highest permitted current.
+5. **Protection.** The solar entry's clamp coordinated with what it protects (TRN-001; D4 against the 35 V bulk) and the
+   outlet's trip set (R138). *Acceptance:* the clamp's voltage at the design surge current below every protected part's
+   rating; a 3 A load on each PDO without a trip.
+
+Beside these, the undocumented loads are measured at bring-up, and the panel's revision is confirmed against its sheet.
 
 ## The Layer 3 finding, restated
 
