@@ -401,3 +401,26 @@ def t_thermal_coupling_hold_floor_junction_and_panel_scenarios():
     text = "\n".join(_CACHE["M"].render(R))
     sec8 = text.split("8. BENCH ROWS")[1].split("9. QUALIFICATION")[0]
     assert ("%.1f W, a warmed" % o["p_panel_cold"]) in sec8 and ("%.1f W, a cold-soaked" % o["p_panel_soak"]) in sec8
+
+
+def t_the_junction_estimate_is_never_called_a_bound_and_line_keeps_its_coupling():
+    """The residues of astra-check-l4e7q-2: U5's junction (about 105.4 C) is an INFERRED estimate everywhere, never "at most",
+    an "upper bound" or a "limit"; LINE's stability wording drops "no gain of its own" and keeps its quantified coupling."""
+    import re
+    R = _R()
+    tj = "%.1f" % R["tj_hot"]
+    texts = {"out": open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read()}
+    for nm in ("L4E7-STAGE-SETTINGS.md", "L4E7-QUALIFICATION.md", "README.md"):
+        texts[nm] = open(os.path.join(REC, nm), encoding="utf-8").read()
+    for nm, t in texts.items():
+        flat_ = " ".join(t.split())
+        assert not re.search(r"at most (about )?%s" % re.escape(tj), flat_), "%s calls the junction 'at most %s C'" % (nm, tj)
+        assert not re.search(r"%s C? ?(\w+ ){0,3}(limit|upper bound)" % re.escape(tj), flat_), "%s calls %s C a limit or bound" % (nm, tj)
+        assert not re.search(r"(limit|upper bound)( of| at)? (about )?%s" % re.escape(tj), flat_), "%s calls %s C a limit or bound" % (nm, tj)
+        rest = flat_.replace("not a demonstrated upper bound", "").replace("not a demonstrated bound", "")
+        assert "upper bound" not in rest, "%s calls something an upper bound outside the negation" % nm
+        assert "no gain of its own" not in t, "%s keeps 'no gain of its own'" % nm
+    assert "TJ estimated about %s C (INFERRED)" % tj in " ".join(texts["out"].split())
+    line = [r_ for r_ in R["qual_rows"] if r_["id"] == "LINE"][0]
+    assert "no gain of its own" not in line["why_stability"] and "couples a moving source voltage" in line["why_stability"]
+    assert "%.4f %%" % (2.0 * R["line_p"]) in line["why_stability"] and "setpoint" in line["small"]["stability"]
