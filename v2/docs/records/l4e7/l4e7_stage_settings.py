@@ -2323,7 +2323,7 @@ def render(R):
               c101["v_pk"], rw["d4"]["vr"], c101["part_w"], c101["ratio_bound"], 1e3 * rw["za"]["ripple"], c101["worst"]["f"], c101["ratio_drawn"]))
     wrapP("     - ", "       ", "the backstop under CS101: the injected current crosses the bank, %.2f A rms at most at 1 kHz and above even with "
           "Figure CS101-4's setup and an ideal source, so its peaks over the trip less the operating current stop the stage for td each "
-          "time, the safe direction; M2's pass line ('no upset') reads it, and a filter on INB slow enough to ride through it would "
+          "time, the direction that stops charging; M2's pass line ('no upset') reads it, and a filter on INB slow enough to ride through it would "
           "exceed check (b)'s allowance at the regulation's highest current. Above the lumped model's reach (the discharge's first "
           "nanoseconds, CS114 at MHz) the board's parasitics decide, a layout matter: C71 to C74 at R59's pad and R59's Kelvin taps, "
           "M3 and M7 at layer 8. A reversed panel conducts through D4 as DECISION-31's note E-N1 records" % c101["trip_drawn"])
