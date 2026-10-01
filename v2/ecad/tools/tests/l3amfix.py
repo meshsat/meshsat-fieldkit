@@ -10,6 +10,13 @@ index of the worktree, no working file); git's garbage collection prunes them. `
 holds HEAD's content for those files, and such a fixture commit otherwise. `amendment_check` writes a fixture check record
 in a temporary directory, in the format apply_l3am_findings_closed.py states; `closed_copy` files it as the newest
 independent check of a copy of l3r2.yaml and closes the findings there, as the coordinator's two steps would.
+
+THE TREE'S STATE MOVES (set 19, 1 October 2026: the coordinator filed the amendment's check and closed the findings on the
+integration set, and three tests that built their copies from the tree's l3r2.yaml assumed the findings OPEN). So every
+copy starts from `open_state`: the findings set back to OPEN, as apply_l3am_findings.py filed them, and the checks filed
+after the amendment's base (l3amlib.BASE) taken out, which is l3r2.yaml as it stood before the amendment's check whatever
+the tree holds now. `pre_amendment_newest` is the newest check filed at the base (check-l3r5-3), the one a pre-amendment
+reuse would name.
 """
 import hashlib
 import os
@@ -23,6 +30,8 @@ TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
 sys.path.insert(0, os.path.join(ROOT, "v2", "docs", "records", "l3am"))
 import l3amlib as L  # noqa: E402
+import apply_l3am_findings as AF  # noqa: E402
+import yaml  # noqa: E402
 
 MANIFEST_FILES = ("v2/ecad/tools/pcb_requirements.yaml", "v2/docs/handover/layer3/OWNER-INSTRUCTION-2026-09-30.md",
                   "v2/docs/handover/layer3/DEFINITION-CHANGE-RECORD-L3.md", "v2/docs/handover/layer3/l3r2.yaml")
@@ -78,11 +87,48 @@ def with_check(raw, path, sha):
                      + lines[k + 1:])
 
 
+def base_checks():
+    """The records l3r2.yaml listed in independent_check at the amendment's base, in order."""
+    raw = _git(["show", "%s:v2/docs/handover/layer3/l3r2.yaml" % L.BASE])
+    return [str(c["record"]) for c in (yaml.safe_load(raw).get("independent_check") or [])]
+
+
+def pre_amendment_newest():
+    return base_checks()[-1]
+
+
+def open_state(raw):
+    """l3r2.yaml's text as it stood before the amendment's check, whatever the tree holds now: review_findings OPEN with
+    the status apply_l3am_findings.py filed (checked_by removed), and every independent check the base did not list
+    taken out. Each other key reads back unchanged."""
+    lines = raw.split("\n")
+    k = [i for i, l in enumerate(lines) if l.startswith("review_findings: {")]
+    if len(k) != 1: raise AssertionError("review_findings is not one flow line")
+    head, sep, _tail = lines[k[0]].partition(", state: ")
+    if not sep: raise AssertionError("review_findings carries no state")
+    lines[k[0]] = head + ", state: OPEN, status: \"%s\"}" % AF.STATUS
+    keep = set(base_checks())
+    s = lines.index("independent_check:") + 1
+    e = s
+    while e < len(lines) and lines[e].startswith("  - {record: "): e += 1
+    block = [l for l in lines[s:e] if l.split("record: ", 1)[1].split(",", 1)[0] in keep]
+    text = "\n".join(lines[:s] + block + lines[e:])
+    a, b = yaml.safe_load(raw), yaml.safe_load(text)
+    if {x: y for x, y in a.items() if x not in ("review_findings", "independent_check")} != \
+            {x: y for x, y in b.items() if x not in ("review_findings", "independent_check")}:
+        raise AssertionError("open_state changed more than the findings and the checks")
+    ra, rb = dict(a["review_findings"]), b["review_findings"]
+    ra.pop("checked_by", None)
+    if dict(ra, state="OPEN", status=AF.STATUS) != rb or [str(c["record"]) for c in b["independent_check"]] != base_checks():
+        raise AssertionError("open_state does not read back as the state before the amendment's check")
+    return text
+
+
 def closed_copy(raw, rev):
-    """(text, check path): a copy of l3r2.yaml with a fixture check of `rev` filed as the newest independent check and
-    the findings closed by it, as apply_l3am_findings_closed.py writes them."""
+    """(text, check path): a copy of l3r2.yaml in its open state (open_state) with a fixture check of `rev` filed as the
+    newest independent check and the findings closed by it, as apply_l3am_findings_closed.py writes them."""
     path, sha = amendment_check(rev)
-    text = with_check(raw, path, sha)
+    text = with_check(open_state(raw), path, sha)
     rf = [l for l in text.split("\n") if l.startswith("review_findings: {")]
     if len(rf) != 1 or ", state: OPEN, status: " not in rf[0]: raise AssertionError("the findings are not filed OPEN")
     head, _, _ = rf[0].partition(", state: OPEN, status: ")
