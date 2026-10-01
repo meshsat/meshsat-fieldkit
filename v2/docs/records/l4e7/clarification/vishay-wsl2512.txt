@@ -1,0 +1,21 @@
+DRAFT FOR THE OWNER TO SEND. The MeshSat session contacts no outside party; it prepared this text only.
+Addressee: Vishay Dale, technical support for the WSL power metal strip resistors (ww2bresistors@vishay.com, the address
+the data sheet prints; the owner chooses the channel).
+Prepared 2 October 2026, task L4-E7R (MESHSAT-1357).
+
+Subject: WSL2512R0700FEA: pulse capability for a 10/1000 us surge current at up to 62 C
+
+We use five WSL2512R0700FEA (data sheet Document Number 30100, Revision 23-Nov-2023) in parallel as a current-sense bank
+on a solar converter's input, about 0.55 A each in normal operation, the air at -20 C to about +62 C. The data sheet's
+performance table prints the short time overload test limit as +-(0.5 % + 0.0005 Ohm) and refers to the online
+calculator for short time overload performance and pulse capability; its pulse capability chart is marked as illustrative.
+
+1. Each part may carry a 10/1000 us surge (the double exponential of IEC 61000-4-5 class, 10 us front, 1000 us to half
+   value) of up to 7.4 A peak, about 3.5 mJ in the part, once, at an ambient of up to 62 C. Do you warrant that the part
+   stays inside the short time overload test limit after such a pulse, and inside its ratings during it?
+2. If the online calculator is your statement of pulse capability, which of its results do you warrant, and under which
+   mounting conditions (pad size, copper weight)?
+
+We ask for a limit Vishay warrants and the conditions under which it applies. Characterization over production lots is
+welcome as supporting evidence, but on its own we cannot treat it as a production guarantee. The answer bounds a
+capability scenario only (no surge level is ruled for this input). Thank you.

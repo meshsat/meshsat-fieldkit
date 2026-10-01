@@ -1,0 +1,21 @@
+{
+ "what": "LCSC public product-detail answer for C1588 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C1588), no login; kept fields only",
+ "read_utc": "2026-10-01T23:21Z",
+ "read_by": "task L4-E7R (MESHSAT-1357), third round",
+ "role": "board E C70, the trip node's filter across R66 (1 nF X7R 50 V), L4-E7R third round",
+ "code": "C1588",
+ "brand": "Samsung Electro-Mechanics",
+ "model": "CL10B102KB8NNNC",
+ "package": "0603",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/02336ea48ea44ca18c72517dd3cb7b47.pdf?productCode=C1588",
+ "pdf_sha256": "96baebe4bd0ce363e87be28b5b003f511f1502e084a6fc4f02333ded56c808f6",
+ "pdf_note": "fetched at read_utc; the record uses the catalogue's capacitance, tolerance, dielectric and voltage rating only",
+ "stock": 4342900,
+ "params": {
+  "Capacitance": "1nF",
+  "Temperature Coefficient": "X7R",
+  "Tolerance": "±10%",
+  "Operating Temperature": "-55℃~+125℃",
+  "Voltage Rating": "50V"
+ }
+}
