@@ -1,0 +1,333 @@
+{
+ "what": "JLCPCB public parts search for the keyword HoJLR2512-3W (POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList, keyword, page 1, 100 a page), no login; code, model and stock kept",
+ "read_utc": "2026-10-01T02:58Z",
+ "read_by": "task L4-E4 (MESHSAT-1357)",
+ "count": 65,
+ "rows": [
+  {
+   "code": "C2903468",
+   "model": "HoJLR2512-3W-10mR-1%",
+   "stock": 136379
+  },
+  {
+   "code": "C2903469",
+   "model": "HoJLR2512-3W-20mR-1%",
+   "stock": 25697
+  },
+  {
+   "code": "C2903470",
+   "model": "HoJLR2512-3W-1mR-1%",
+   "stock": 77538
+  },
+  {
+   "code": "C2903471",
+   "model": "HoJLR2512-3W-2mR-1%",
+   "stock": 11930
+  },
+  {
+   "code": "C2903472",
+   "model": "HoJLR2512-3W-270mR-1%",
+   "stock": 5948
+  },
+  {
+   "code": "C2903473",
+   "model": "HoJLR2512-3W-200mR-1%",
+   "stock": 113627
+  },
+  {
+   "code": "C2903474",
+   "model": "HoJLR2512-3W-330mR-1%",
+   "stock": 10243
+  },
+  {
+   "code": "C2903475",
+   "model": "HoJLR2512-3W-50mR-1%",
+   "stock": 82704
+  },
+  {
+   "code": "C2903476",
+   "model": "HoJLR2512-3W-100mR-1%",
+   "stock": 121313
+  },
+  {
+   "code": "C2903477",
+   "model": "HoJLR2512-3W-30mR-1%",
+   "stock": 0
+  },
+  {
+   "code": "C2903478",
+   "model": "HoJLR2512-3W-220mR-1%",
+   "stock": 22875
+  },
+  {
+   "code": "C2903479",
+   "model": "HoJLR2512-3W-26mR-1%",
+   "stock": 3575
+  },
+  {
+   "code": "C2903480",
+   "model": "HoJLR2512-3W-25mR-1%",
+   "stock": 19328
+  },
+  {
+   "code": "C2903481",
+   "model": "HoJLR2512-3W-38mR-1%",
+   "stock": 3460
+  },
+  {
+   "code": "C2903482",
+   "model": "HoJLR2512-3W-5mR-1%",
+   "stock": 106666
+  },
+  {
+   "code": "C2903483",
+   "model": "HoJLR2512-3W-80mR-1%",
+   "stock": 3241
+  },
+  {
+   "code": "C2903484",
+   "model": "HoJLR2512-3W-250mR-1%",
+   "stock": 0
+  },
+  {
+   "code": "C2903485",
+   "model": "HoJLR2512-3W-150mR-1%",
+   "stock": 18681
+  },
+  {
+   "code": "C2903486",
+   "model": "HoJLR2512-3W-390mR-1%",
+   "stock": 10710
+  },
+  {
+   "code": "C2903487",
+   "model": "HoJLR2512-3W-22mR-1%",
+   "stock": 9698
+  },
+  {
+   "code": "C2903488",
+   "model": "HoJLR2512-3W-3mR-1%",
+   "stock": 6996
+  },
+  {
+   "code": "C2903489",
+   "model": "HoJLR2512-3W-60mR-1%",
+   "stock": 24712
+  },
+  {
+   "code": "C2903490",
+   "model": "HoJLR2512-3W-18mR-1%",
+   "stock": 4226
+  },
+  {
+   "code": "C2903491",
+   "model": "HoJLR2512-3W-45mR-1%",
+   "stock": 15868
+  },
+  {
+   "code": "C2903492",
+   "model": "HoJLR2512-3W-75mR-1%",
+   "stock": 13608
+  },
+  {
+   "code": "C2903493",
+   "model": "HoJLR2512-3W-360mR-1%",
+   "stock": 1817
+  },
+  {
+   "code": "C2903494",
+   "model": "HoJLR2512-3W-15mR-1%",
+   "stock": 4871
+  },
+  {
+   "code": "C2903495",
+   "model": "HoJLR2512-3W-33mR-1%",
+   "stock": 7506
+  },
+  {
+   "code": "C2904233",
+   "model": "HoJLR2512-3W-1.5mR-1%",
+   "stock": 21729
+  },
+  {
+   "code": "C2904234",
+   "model": "HoJLR2512-3W-2.5mR-1%",
+   "stock": 14510
+  },
+  {
+   "code": "C2904235",
+   "model": "HoJLR2512-3W-3.5mR-1%",
+   "stock": 2328
+  },
+  {
+   "code": "C2904236",
+   "model": "HoJLR2512-3W-4mR-1%",
+   "stock": 31341
+  },
+  {
+   "code": "C2904237",
+   "model": "HoJLR2512-3W-4.5mR-1%",
+   "stock": 1457
+  },
+  {
+   "code": "C2904238",
+   "model": "HoJLR2512-3W-6mR-1%",
+   "stock": 5536
+  },
+  {
+   "code": "C2904239",
+   "model": "HoJLR2512-3W-7mR-1%",
+   "stock": 1833
+  },
+  {
+   "code": "C2904240",
+   "model": "HoJLR2512-3W-8mR-1%",
+   "stock": 9630
+  },
+  {
+   "code": "C2904241",
+   "model": "HoJLR2512-3W-9mR-1%",
+   "stock": 2938
+  },
+  {
+   "code": "C2904242",
+   "model": "HoJLR2512-3W-12mR-1%",
+   "stock": 3407
+  },
+  {
+   "code": "C2904243",
+   "model": "HoJLR2512-3W-17mR-1%",
+   "stock": 2028
+  },
+  {
+   "code": "C2904244",
+   "model": "HoJLR2512-3W-24mR-1%",
+   "stock": 2324
+  },
+  {
+   "code": "C2904245",
+   "model": "HoJLR2512-3W-27mR-1%",
+   "stock": 3896
+  },
+  {
+   "code": "C2904246",
+   "model": "HoJLR2512-3W-35mR-1%",
+   "stock": 3404
+  },
+  {
+   "code": "C2904247",
+   "model": "HoJLR2512-3W-36mR-1%",
+   "stock": 2767
+  },
+  {
+   "code": "C2904248",
+   "model": "HoJLR2512-3W-40mR-1%",
+   "stock": 4061
+  },
+  {
+   "code": "C2904249",
+   "model": "HoJLR2512-3W-47mR-1%",
+   "stock": 0
+  },
+  {
+   "code": "C2904250",
+   "model": "HoJLR2512-3W-65mR-1%",
+   "stock": 1085
+  },
+  {
+   "code": "C2904251",
+   "model": "HoJLR2512-3W-68mR-1%",
+   "stock": 14867
+  },
+  {
+   "code": "C2904252",
+   "model": "HoJLR2512-3W-70mR-1%",
+   "stock": 5225
+  },
+  {
+   "code": "C2904253",
+   "model": "HoJLR2512-3W-82mR-1%",
+   "stock": 889
+  },
+  {
+   "code": "C2904254",
+   "model": "HoJLR2512-3W-90mR-1%",
+   "stock": 3
+  },
+  {
+   "code": "C2904255",
+   "model": "HoJLR2512-3W-120mR-1%",
+   "stock": 3652
+  },
+  {
+   "code": "C2904256",
+   "model": "HoJLR2512-3W-130mR-1%",
+   "stock": 3
+  },
+  {
+   "code": "C2904257",
+   "model": "HoJLR2512-3W-140mR-1%",
+   "stock": 0
+  },
+  {
+   "code": "C2904258",
+   "model": "HoJLR2512-3W-160mR-1%",
+   "stock": 8323
+  },
+  {
+   "code": "C2904259",
+   "model": "HoJLR2512-3W-180mR-1%",
+   "stock": 5524
+  },
+  {
+   "code": "C2904260",
+   "model": "HoJLR2512-3W-210mR-1%",
+   "stock": 1
+  },
+  {
+   "code": "C2904261",
+   "model": "HoJLR2512-3W-240mR-1%",
+   "stock": 7355
+  },
+  {
+   "code": "C2904262",
+   "model": "HoJLR2512-3W-300mR-1%",
+   "stock": 1590
+  },
+  {
+   "code": "C2904263",
+   "model": "HoJLR2512-3W-350mR-1%",
+   "stock": 10890
+  },
+  {
+   "code": "C2904264",
+   "model": "HoJLR2512-3W-400mR-1%",
+   "stock": 26007
+  },
+  {
+   "code": "C2904265",
+   "model": "HoJLR2512-3W-430mR-1%",
+   "stock": 2723
+  },
+  {
+   "code": "C2904266",
+   "model": "HoJLR2512-3W-450mR-1%",
+   "stock": 3048
+  },
+  {
+   "code": "C2904267",
+   "model": "HoJLR2512-3W-470mR-1%",
+   "stock": 16928
+  },
+  {
+   "code": "C2904268",
+   "model": "HoJLR2512-3W-500mR-1%",
+   "stock": 42503
+  },
+  {
+   "code": "C9900145646",
+   "model": "HoJLR2512-3W-50mR-1%",
+   "stock": 0
+  }
+ ]
+}
