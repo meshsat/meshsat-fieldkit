@@ -326,8 +326,8 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    Layer 4's power architecture closes: NO, criteria 1, 2, 5 are not PASS
 
 10. THE REGISTERS (this folder's DOWNSTREAM-REGISTER.md and LAYER5-HANDOVER.md, read and checked)
-   register: 82 items; by owner: Layer 4 coordinator 6; Layer 5 interfaces 2; Layer 6 components 8; Layer 7 mechanical 1; Layer 8 board A generator owner 11; Layer 8 board E generator owner 9; Layer 9 pre-layout analysis 15; prototype bench 26; firmware owner 4
-     by kind: EVIDENCE 16; IMPLEMENTATION 27; LAYOUT 9; RELEASE 4; TEST 26
+   register: 83 items; by owner: Layer 4 coordinator 6; Layer 5 interfaces 2; Layer 6 components 8; Layer 7 mechanical 1; Layer 8 board A generator owner 11; Layer 8 board E generator owner 9; Layer 9 pre-layout analysis 15; prototype bench 27; firmware owner 4
+     by kind: EVIDENCE 16; IMPLEMENTATION 27; LAYOUT 9; RELEASE 4; TEST 27
      implementation changes by state: DRAFTED 13; MISSING DRAFT 7; OWED 6; PENDING 1
    Layer 5 handover: 9 interface entries drafted (pcb_interfaces.yaml and HW-FW-CONTRACT.md, drafts only)
 
