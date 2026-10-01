@@ -9,8 +9,11 @@ stated power); the knee fits between the restart guard's latch and REQ-015's flo
 stale-telemetry rules never hold U3's IIN_HOST above L4-E4's 4.70 A, and the fallback never asks the entry past its basis;
 the highest IIN_HOST against L4-E4's 4.70 A, the pin path re-run through L4-E4's own functions, and FW-A16 as written as the
 negative case; the chosen mechanism gives up the least solar energy on both traces; the committed .out is what the script
-prints; the draft apply script checks without writing, applies once to a copy and refuses a second application. Nothing
-here writes into the tree.
+prints; the draft apply script checks without writing, applies once to a copy and refuses a second application. After the
+check astra-check-l4e5-1: V-A09's HIZ entry, exit and zero-current thresholds agree with the knee's transfer function and
+TI's levels (B1); V-A10's telemetry fault injection is bounded and its fallback never passes 4.70 A (B2); the 12 V solar
+boundary is H3's, and the check's source-blind example trades the 12 V vehicle for it (B3); the POR value is kept apart
+from the removal reset (minor 1); the collapse times are nominal estimates (minor 2). Nothing here writes into the tree.
 """
 import hashlib
 import importlib.util
@@ -110,7 +113,12 @@ def t_knee_fits_between_the_latch_and_reqs_floor():
 def t_startup_source_change_and_stale_rules_never_exceed_their_limits():
     R = _R()
     w = R["writes"]
-    assert abs(w["POR reset"] - 3.25) < 1e-12 and abs(w["after every adapter removal (reset)"] - 3.25) < 1e-12
+    assert abs(w["after every adapter removal (one-time reset, p.26, p.80)"] - 3.25) < 1e-12
+    por = R["por"]
+    assert set(por) == {"2000h (p.80 heading)", "4100h (p.80 figure)"} and R["por_table_code"] == 0x20, "minor 1: the POR annotations"
+    assert abs(por["2000h (p.80 heading)"][0] - 3.2) < 1e-9 and abs(por["4100h (p.80 figure)"][1] - 3.25) < 1e-9
+    assert all(b <= R["setting"] for _r5, b in por.values()), "a POR reading is above L4-E4's setting"
+    assert abs(w["at POR, RSNS_RAC = 1b, board current (the larger annotation)"] - max(b for _r5, b in por.values())) < 1e-12
     assert all(v <= R["setting"] + 1e-12 for v in w.values()), "a value U3 holds is above L4-E4's setting"
     assert R["code"] == 94 and R["word"] == 0x5E00
     # the stale rule changes nothing, and its diagnostic fallback (FW-A16's line clipped at 4.70 A) stays inside the basis
@@ -173,7 +181,7 @@ def t_apply_script_checks_applies_once_and_refuses_a_second():
         r = run("--write")
         assert r.returncode == 0 and _sha(cp) != orig, (r.returncode, r.stderr)
         text = open(cp, encoding="utf-8").read()
-        assert "| FW-A18 |" in text and "| V-A09 |" in text and "| 1 (L4-E5) |" in text
+        assert "| FW-A18 |" in text and "| V-A09 |" in text and "| V-A10 |" in text and "| 1 (L4-E5) |" in text
         assert "\u2013" not in text and "\u2014" not in text
         r = run("--write")
         assert r.returncode == 3 and "already applied" in r.stderr, (r.returncode, r.stderr)
@@ -185,6 +193,78 @@ def t_apply_script_checks_applies_once_and_refuses_a_second():
     finally:
         shutil.rmtree(d)
     assert _sha(CONTRACT) == before, "the tree's contract changed"
+
+
+def _apply_rows():
+    sp = importlib.util.spec_from_file_location("apply_fw_a16_under_test", need(APPLY, "the draft apply script"))
+    m = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(m)
+    return m
+
+
+def _has(text, v):
+    """The figure printed to three decimals, as a whole number in the text."""
+    import re
+    return re.search(r"(?<![\d.])%s(?![\d])" % re.escape("%.3f" % v), text) is not None
+
+
+def t_v_a09_thresholds_agree_with_the_knee():
+    """B1: the zero-current target, HIZ entry and HIZ exit sit where the knee puts the pin at 1.0, 0.4 and 0.8 V, each with
+    the network's tolerance carried; at 8.70 V HIZ is not the specified state; V-A09 and FW-A18 carry those numbers."""
+    R = _R()
+    m = _CACHE["M"]
+    K = R["knee"]
+    tab = dict(K["table"])
+    pin = lambda v: R["pin_off"] + R["s_k"] * (v - m.V_K0)
+    assert abs(pin(K["zero"][1]) - 1.0) < 1e-9 and abs(pin(K["entry"][1]) - R["hiz"][0]) < 1e-9 and abs(pin(K["exit"][1]) - R["hiz"][1]) < 1e-9
+    assert abs(R["hiz"][0] - 0.4) < 1e-12 and abs(R["hiz"][1] - 0.8) < 1e-12
+    for key in ("zero", "entry", "exit", "rng"):
+        lo, nom, hi = K[key]
+        assert abs(lo - nom * (1 - m.T_KNEE)) < 1e-12 and abs(hi - nom * (1 + m.T_KNEE)) < 1e-12, key
+    assert abs(tab[8.70] - 0.87578) < 1e-4 and tab[8.70] > R["hiz"][0] and 8.70 > R["v_hiz_lo"], "B1's 8.70 V reading"
+    assert abs(R["v_hiz_lo"] - K["entry"][0]) < 1e-12 and abs(R["v_unhiz_hi"] - K["exit"][2]) < 1e-12
+    assert K["entry"][1] < K["exit"][1] < K["zero"][1] < K["rng"][1] < R["vk1"]
+    A = _apply_rows()
+    for v in (K["entry"][1], K["entry"][0], K["entry"][2], K["exit"][1], K["exit"][0], K["exit"][2], K["zero"][1], K["zero"][0],
+              K["zero"][2], K["rng"][2]):
+        assert _has(A.V_A09, v), "V-A09 does not carry %.3f V" % v
+    assert _has(A.FW_A18, R["v_hiz_lo"]) and _has(A.FW_A18, R["v_unhiz_hi"])
+    assert "below 8.75 V" not in A.V_A09 and "8.43 V" not in A.V_A08 + A.FW_A18
+    for word in ("RSNS_RAC", "before FW-A01", "2000h", "4100h", "falling", "rising"):
+        assert word in A.V_A09, word
+
+
+def t_v_a10_fault_injection_is_bounded():
+    """B2: one bounded row covers stale and missing telemetry and the network seen to fail, and its fallback values never
+    pass 4.70 A."""
+    R = _R()
+    D = R["diag"]
+    assert D["max_fallback"] <= R["setting"] + 1e-12 and abs(D["stale"] - 1.55) < 1e-12
+    assert abs(D["fallback"][12.0] - 2.05) < 1e-12 and D["trip12"] < D["pin_off_board"], "the injected failure would not trip"
+    A = _apply_rows()
+    row = A.V_A10
+    for word in ("stopped for 30 s", "absent from boot", "two readings", "the third in a row", "%.3f A" % (D["trip12"] - _CACHE["M"].DIAG_A), "%.3f A" % D["trip12"],
+                 "2.05 A at 12 V", "1.55 A", "older than 3 s", "no write above 4.70 A", "at most 10 s"):
+        assert word in row, "V-A10 lacks: %s" % word
+    assert "V-A10" in A.FW_A16 and "V-A10" in A.FW_A18
+
+
+def t_b3_the_12_v_boundary_is_h3s_and_the_example_trades_the_vehicle():
+    R = _R()
+    F = R["flat"]
+    assert abs(F["b12_h3"] - 49.7195) < 1e-3 and abs(F["b12"] - 38.74834) < 1e-4 and abs(F["s40"] - 12.34226) < 1e-4
+    assert F["fe_max"] <= R["fe_h_max"] + 1e-12, "the example leaves the vehicle envelope"
+    assert F["at"][1][1] < F["at"][1][2] and F["p12"][0] < F["p12"][1], "the example does not trade the 12 V vehicle"
+    assert F["trk"][0] >= F["v_need"] and F["trk"][2] <= 36.0 and F["c35"] > max(f for _r, _v, rt, f in R["trk_parts"] if rt > 30)
+    page = open(os.path.join(REC, "L4E5-SOURCE-CONTROL.md"), encoding="utf-8").read()
+    assert "by any source-blind mechanism" not in page and "Meeting 12 V needs source identity" not in page
+    assert "restricted to H3" in page and "not necessary" in page
+
+
+def t_collapse_times_are_nominal_estimates():
+    out = open(os.path.join(REC, "l4e5_source_control.out"), encoding="utf-8").read()
+    assert "nominal estimates pending evidence of the effective capacitance" in out
+    assert "the nominal capacitance an upper bound" not in out
 
 
 def t_no_dash_characters_in_the_record():
