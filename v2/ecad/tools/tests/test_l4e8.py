@@ -1,5 +1,5 @@
-"""Layer 4 task L4-E8 (MESHSAT-1357, 1 October 2026, the fix round after the collaborator's check of 5ff06474;
-v2/docs/records/l4e8/): board A's VBUS20 bank re-sized on a derived dense node analysis, held as predicates on properties the
+"""Layer 4 task L4-E8 (MESHSAT-1357, 1 October 2026, the fix rounds after the collaborator's check of 5ff06474 and its recheck of
+cc95fe1f; v2/docs/records/l4e8/): board A's VBUS20 bank re-sized on a conservative bound, held as predicates on properties the
 tests recompute.
 
 The predicates:
@@ -7,21 +7,22 @@ The predicates:
     its recorded corner within the stated tolerance; the committed output's consistency table holds every can figure and its
     finer grids have converged;
   - B1: the check's eight-can counterexample reproduces (2.738774 A in mean square, 2.854635 A at the 204 / 816 kHz
-    coincidence, 2.813686 A at 204 / 408 kHz) and the coherent rule puts that bank over 2.8 A;
-  - B3: the front end's envelope is SNVSAI1D p.6's row carried to RT by Equation 5 with RT's tolerance and TCR, below the first
-    round's 180.3 kHz;
-  - B2: with every can independent over the sheet's bands and no resistance floor, no count of cans bounds a can; the chosen
-    ballast meets 2.8 A less the margin at both R11 outcomes on the decision box (ESR 0 to size G's 300 mOhm cold limit),
-    recomputed here by the script's own search and coincidences; the drawn bank does not;
+    coincidence, 2.813686 A at 204 / 408 kHz); B3: the front end's envelope is SNVSAI1D p.6's row carried to RT with its
+    tolerance and TCR; B2: the check's ESL counterexample reproduces and lies in the bound's can region, and with no resistance
+    floor no count of cans bounds a can; the drawn bank fails on the corrected model;
+  - R1/R2: the bound's enclosures hold their sets (random points); a bin's bound is never exceeded by brute-force sampling of
+    fully independent configurations (a seed of its own); no end-to-end sample of configurations and operating points exceeds
+    the committed figure; the committed bound meets both limits with the chosen ballast and every smaller catalogue value is
+    excluded (a feasible configuration over the limit, or the bound over it);
   - the rating applies unmodified at the harmonics' frequencies, and the lifetime is printed CONDITIONAL (B4);
-  - the loop with the ballast meets its margins at L4-E6's R12 12 mOhm to the highest permitted current with the cans' ESR to
-    the +20 C endurance limit, and not on the drawn R12's widened band (the ORDER); at the sheet's cold limit the drawn front
-    end's own loop misses GM 10 dB (an open finding on the drawn compensation, not the ballast's);
+  - R4: with the chosen Cc2 the loop meets its margins at both ends of the cold ESR envelope at L4-E6's R12, both bands, loads
+    to the highest permitted current; the drawn Cc2 misses GM 10 dB at the cold end; the acceptance names the bank's envelope;
   - the draft checks without writing, applies once to a copy, refuses a second application, refuses the repository's own
     generator without a RELEASE.md and without L4-E6's R12, adds only unused designators, changes only the helper and the front
-    end's call, draws the other stages as before, and composes with L4-E4's and L4-E6's drafts in every order on disjoint lines;
+    end's call (the ballast and Cc2), draws the other stages as before, and composes with L4-E4's and L4-E6's drafts in every
+    order on disjoint lines;
   - no em or en dash and no claim word in the record.
-That the committed .out is what the script prints is checked by running `ripple_dense.py` (about six minutes; README.md's run
+That the committed .out is what the script prints is checked by running `ripple_dense.py` (about eight minutes; README.md's run
 order), not here. Nothing here writes into the tree.
 """
 import ast
@@ -32,6 +33,7 @@ import itertools
 import json
 import math
 import os
+import random
 import re
 import shutil
 import subprocess
@@ -203,8 +205,9 @@ def _pick(t):
 def _gnode(m, R, model, rb, r11, rb_tol=None):
     mk, b = R["mk"], R["bands"]
     c_k = ((1 - mk["c_tol"]) * (1 - mk["c_life"]), (1 + mk["c_tol"]) * (1 + mk["c_life"]))
-    box = m.with_cold(m.box_grid([k * mk["c_can"] for k in c_k], mk["esr_life"] * mk["esr_can"], (b["esl_b"][0] + m.RB_ESL[0], b["esl_b"][-1] + m.RB_ESL[1])), mk)
-    assert max(box["r"]) == mk["esr_cold"] == 0.3 and mk["size"] == "G", "the decision box does not reach size G's cold limit"
+    box = m.box_grid([k * mk["c_can"] for k in c_k], mk["esr_life"] * mk["esr_can"], (b["esl_b"][0] + m.RB_ESL[0], b["esl_b"][-1] + m.RB_ESL[1]))
+    box["r"] = sorted(set(box["r"]) | {mk["esr_cold"]})
+    assert mk["esr_cold"] == 0.3 and mk["size"] == "G", "the sheet's cold limit for size G is not 300 mOhm"
     drawn = (len(R["gen"]["bulk"]), len(R["gen"]["vbus_cer"]) + len(R["gen"]["ch_in"]), len(R["gen"]["cout_pre"]))
     hoj = m.flat(m.page(m.HOJLR, 2))
     tcr = float(re.search(r"±(\d+) \(2mR~500mR\)", hoj).group(1)) * 1e-6
@@ -232,7 +235,7 @@ def t_b1_the_checks_counterexample_reproduces_and_the_rule_counts_it():
 
 def t_b2_the_checks_esl_counterexample_reproduces_inside_the_decision_box():
     """The check's C3 corner: the eight-can corner above with the siblings' own ESL at the band's 3.5 nH plus the layout's 0.5 nH,
-    3.586976 A in mean square; that corner lies inside the decision box of the ballasted bank."""
+    3.586976 A in mean square; that corner's can lies inside the bound's can region of the ballasted bank."""
     m, R = _m()
     mk, b, G = R["mk"], R["bands"], R["gen"]
     hi8 = _hi(_out())["8"]
@@ -242,11 +245,10 @@ def t_b2_the_checks_esl_counterexample_reproduces_inside_the_decision_box():
     nd = m.GNode(Mc, b, (8, 18, 3), 0.008, 0.010, _hf(m, R), bxc, 0.0, 0.0, m.LAYOUT)
     got = math.sqrt(m.exact(nd.vectors(sx, ("odd",))["odd"], Mc.weights(hi8))[0])
     assert abs(got - 3.586976) < 5e-4, got
-    Me, _f, _r = _corrected()
-    box = _gnode(m, R, Me, 0.038, 0.008).box
-    lo, hi_ = min(box["l"]), max(box["l"])
-    assert lo <= b["esl_b"][0] + m.RB_ESL[0] + 1e-15 and hi_ + m.LAYOUT[0] >= b["esl_b"][-1] + m.LAYOUT[0] and min(box["r"]) == 0.0 \
-        and max(box["r"]) >= 0.6 * mk["esr_can"] and min(box["c"]) <= 1.2 * mk["c_can"] <= max(box["c"]), "the corner is outside the box"
+    rb, _code = _pick(_out())
+    can = _regs(m, R)[1](rb)
+    assert can["l"][0] <= b["esl_b"][0] + m.RB_ESL[0] + 1e-15 and can["l"][1] >= b["esl_b"][-1] + m.RB_ESL[1] + m.LAYOUT[0] - 1e-15 \
+        and can["r"][1] >= rb + 0.6 * mk["esr_can"] and can["c"][0] <= 1.2 * mk["c_can"] <= can["c"][1], "the corner's can is outside the bound's region"
 
 
 def t_b3_the_envelope_is_the_specified_row_carried_to_rt_with_its_tolerance():
@@ -273,23 +275,138 @@ def t_b2_without_a_resistance_floor_no_count_of_cans_bounds_a_can():
         assert math.sqrt(g["ms"]) > 10.0, "%d cans with no floor read %.2f A" % (nb, math.sqrt(g["ms"]))
 
 
-def t_b2_the_chosen_ballast_meets_the_rule_at_both_outcomes_on_the_independent_box():
-    """recomputed here: the search on the independent box and the coincidences at its worst set, at both R11 outcomes"""
+def _regs(m, R):
+    """the bound's regions as ripple_dense.py's compute() builds them (section 6), and the can's region for a ballast value"""
+    mk, b, G = R["mk"], R["bands"], R["gen"]
+    hoj = m.flat(m.page(m.HOJLR, 2))
+    tol = 0.01 + float(re.search(r"±(\d+) \(2mR~500mR\)", hoj).group(1)) * 1e-6 * m.RB_DT
+    c_k = ((1 - mk["c_tol"]) * (1 - mk["c_life"]), (1 + mk["c_tol"]) * (1 + mk["c_life"]))
+    drawn = (len(G["bulk"]), len(G["vbus_cer"]) + len(G["ch_in"]), len(G["cout_pre"]))
+    hf = _hf(m, R)
+    band = lambda v, e: dict(c=(m.HF_BAND["c"][0] * v, m.HF_BAND["c"][1] * v), r=(m.HF_BAND["esr"][0] * e, m.HF_BAND["esr"][1] * e), l=m.HF_BAND["esl"])
+    regs = dict(cer=dict(r=(b["cer_esr"][0], b["cer_esr"][-1]), l=(b["cer_esl"][0], b["cer_esl"][-1]), c=(b["cer_c"][0], b["cer_c"][-1])),
+                c190=band(hf[0][0], hf[0][1]), c191=band(hf[1][0], hf[1][1]), l11=(b["l11"][0], b["l11"][-1]), l16=(b["l16"][0], b["l16"][-1]),
+                r16=(0.010 * (1 - tol), 0.010 * (1 + tol)), r_tol=tol, n_fe=drawn[2], n_vb=drawn[1], n_can=drawn[0])
+    can = lambda rb: dict(r=(rb * (1 - tol), rb * (1 + tol) + mk["esr_cold"] + m.LAYOUT[1]),
+                          l=(b["esl_b"][0] + m.RB_ESL[0], b["esl_b"][-1] + m.RB_ESL[1] + m.LAYOUT[0]), c=(c_k[0] * mk["c_can"], c_k[1] * mk["c_can"]))
+    return regs, can
+
+
+def _bin_bound(m, regs, can, r11, f1, f2):
+    """one bin's bound on each source's transfer to the can, every source-side cell together (the weakest claim the script makes)"""
+    w1, w2 = 2 * math.pi * f1, 2 * math.pi * f2
+    Hcer = m.ihull(m.branch_rect(regs["cer"], w1, w2))
+    A = m.pscale(Hcer, regs["n_fe"])
+    A2 = m.mink(m.ihull(m.branch_rect(regs["c190"], w1, w2)), m.ihull(m.branch_rect(regs["c191"], w1, w2)))
+    Z16 = m.zrect(regs["r16"][0], regs["r16"][1], w1 * regs["l16"][0], w2 * regs["l16"][1])
+    Zl = m.zrect(r11 * (1 - regs["r_tol"]), r11 * (1 + regs["r_tol"]), w1 * regs["l11"][0], w2 * regs["l11"][1])
+    Q = m.mink(m.mink(m.mink(m.pscale(Hcer, regs["n_vb"]), m.ihull(m.mink(Z16, m.ihull(A2)))), m.pscale(m.ihull(m.branch_rect(can, w1, w2)), regs["n_can"] - 1)),
+               m.ihull(m.mink(Zl, m.ihull(A))))
+    T = m.tmax_bb(m.branch_rect(can, w1, w2), Q, 1e-3)[0]
+    return T / m.kmin_bb(Zl, A, 1e-3), T / m.kmin_bb(Z16, A2, 1e-3)
+
+
+def _draw(rnd, regs, can, r11, p_ext=0.7):
+    def u(lo, hi):
+        x = rnd.random()
+        return lo if x < p_ext / 2 else hi if x < p_ext else lo + rnd.random() * (hi - lo)
+    br = lambda reg: (u(*reg["r"]), u(*reg["l"]), u(*reg["c"]))
+    return dict(t=br(can), sib=[br(can) for _ in range(regs["n_can"] - 1)], cer_v=[br(regs["cer"]) for _ in range(regs["n_vb"])],
+                cer_o=[br(regs["cer"]) for _ in range(regs["n_fe"])], r11=u(r11 * (1 - regs["r_tol"]), r11 * (1 + regs["r_tol"])), l11=u(*regs["l11"]),
+                c190=br(regs["c190"]), c191=br(regs["c191"]), r16=u(*regs["r16"]), l16=u(*regs["l16"]))
+
+
+def t_r1_the_enclosures_hold_their_sets():
+    """inv_hull holds every image point of its rectangle; mink equals the hull of the vertex sums"""
+    m, _R = _m()
+    rnd = random.Random(7)
+    for _ in range(40):
+        r0 = rnd.uniform(1e-3, 0.05)
+        x0 = rnd.uniform(-0.5, 0.2)
+        P = m.zrect(r0, r0 + rnd.uniform(0, 0.3), x0, x0 + rnd.uniform(0, 0.5))
+        H = m.ihull(P)
+        for _ in range(300):
+            y = 1 / complex(rnd.uniform(P[0][0], P[1][0]), rnd.uniform(P[0][1], P[2][1]))
+            assert m.pdist(y.real, y.imag, H) == 0.0, "a point of the image lies outside its enclosure"
+    for _ in range(40):
+        A = m.cvx_hull([(rnd.gauss(0, 1), rnd.gauss(0, 3)) for _ in range(rnd.randint(3, 20))])
+        B = m.cvx_hull([(rnd.gauss(5, 2), rnd.gauss(0, 1)) for _ in range(rnd.randint(3, 20))])
+        M, H = m.mink(A, B), m.cvx_hull([(a[0] + b_[0], a[1] + b_[1]) for a in A for b_ in B])
+        assert max(m.pdist(x, y, M) for x, y in H) < 1e-9 and max(m.pdist(x, y, H) for x, y in M) < 1e-9
+
+
+def t_r1_the_bin_bound_is_never_exceeded_by_brute_force_sampling():
+    """fully independent branches, each parameter at an end of its interval with probability 0.7, at a random frequency in the
+    bin: each source's transfer to the can at most the bin's bound (a seed of its own, not the script's)"""
+    m, R = _m()
+    rb, _code = _pick(_out())
+    regs, canf = _regs(m, R)
+    can = canf(rb)
+    rnd = random.Random(424242)
+    for r11 in (0.007, 0.008):
+        for f in (190e3, 410e3, 610e3, 1.3e6, 9.6e6, 14e6, 40e6):
+            f2 = f * 1.005
+            bfe, bch = _bin_bound(m, regs, can, r11, f, f2)
+            worst = 0.0
+            for _ in range(250):
+                c = _draw(rnd, regs, can, r11)
+                tf, tc = m.net_t(c, 2 * math.pi * (f + rnd.random() * (f2 - f)))
+                worst = max(worst, abs(tf) / bfe, abs(tc) / bch)
+            assert worst <= 1.0, "at %.0f kHz a sample reads %.4f of the bound" % (f / 1e3, worst)
+
+
+def t_r1_no_end_to_end_sample_exceeds_the_committed_figure():
+    """random fully independent configurations and operating points (VIN from the bound's grid, fSW in B3's envelope, VBAT from
+    10 V up, fCH in a row; half at an exact coincidence fch = (p/q) fsw added at |a| + |c|, half with L16 resonating with C190 on a
+    charger harmonic): the can's rms with the bound's 120 harmonics at most the committed figure of its outcome"""
     m, R = _m()
     t = _out()
-    Me, _f, rows = _corrected()
-    rb, code = _pick(t)
+    rb, _code = _pick(t)
+    regs, canf = _regs(m, R)
+    can = canf(rb)
     hi = _hi(t)
+    figs = {k: float(re.search(r"R11 %s mOhm, [\d.]+ A: every can at most ([\d.]+) A against" % k, t).group(1)) for k in ("8", "7")}
+    _Me, fenv, rows = _corrected()
+    G = R["gen"]
+    vout, l1, l2 = G["rails"]["VBUS20"]["volts"], m.si(G["lval"], "H"), m.si(G["one"]["L2"][3], "H")
+    rnd = random.Random(99)
     for key, r11 in (("8", 0.008), ("7", 0.007)):
-        lim = R["mk"]["rip"] - m.MARGIN_PER_A * hi[key]
-        nd = _gnode(m, R, Me, rb, r11)
-        g = m.gsearch(nd, Me.weights(hi[key]))
-        coh = m.coherent(nd, g["set"], Me, hi[key], rows)[0]
-        got = math.sqrt(max(g["ms"], coh))
-        assert got <= lim, "%.0f mOhm at R11 %s mOhm reads %.4f A against %.4f A" % (rb * 1e3, key, got, lim)
-    cat = json.load(open(os.path.join(ROOT, m.JLC_HOJLR), encoding="utf-8"))
-    row = [r for r in cat["rows"] if r["code"] == code]
-    assert row and row[0]["stock"] > 0 and row[0]["model"] == "HoJLR2512-3W-%gmR-1%%" % (rb * 1e3), row
+        for n in range(60):
+            c = _draw(rnd, regs, can, r11)
+            vin, vbat = rnd.choice(m.VIN_BOUND), 10.0 + 0.05 * rnd.randint(0, 136)
+            lo, hi_ = rnd.choice(rows)
+            fsw = fenv[0] + rnd.random() * (fenv[2] - fenv[0])
+            if n % 2:
+                pq = rnd.choice([m.Fraction(p, q) for p in range(1, 5) for q in range(1, 5) if lo / fenv[2] <= p / q <= hi_ / fenv[0]])
+                fsw = min(max(fsw, lo / float(pq)), hi_ / float(pq), fenv[2])
+                fch = fsw * pq
+            else:
+                fch = lo + rnd.random() * (hi_ - lo)
+                lt = 1 / ((2 * math.pi * rnd.randint(5, 40) * fch) ** 2 * c["c190"][2]) - c["c190"][1]
+                if regs["l16"][0] <= lt <= regs["l16"][1]:
+                    c["l16"] = lt
+            a = m.src_fe(vout, l1, vin, fsw, hi[key], 120)[0]
+            b_ = m.src_ch(vout, l2, vbat, fch, hi[key], 120)[0]
+            A = {round((k + 1) * fsw, 3): abs(x * m.net_t(c, 2 * math.pi * (k + 1) * fsw)[0]) for k, x in enumerate(a)}
+            C = {round((k + 1) * fch, 3): abs(x * m.net_t(c, 2 * math.pi * (k + 1) * fch)[1]) for k, x in enumerate(b_)}
+            ms = sum(x * x for f_, x in A.items() if f_ not in C) + sum(x * x for f_, x in C.items() if f_ not in A) \
+                + sum((A[f_] + C[f_]) ** 2 for f_ in A if f_ in C)
+            assert math.sqrt(ms) <= figs[key], "R11 %s mOhm: a sample reads %.4f A against the figure %.4f A" % (key, math.sqrt(ms), figs[key])
+
+
+def t_r1_the_committed_bound_meets_both_limits_and_smaller_values_are_excluded():
+    m, R = _m()
+    t = _out()
+    rb, _code = _pick(t)
+    for key in ("8", "7"):
+        got = re.search(r"R11 %s mOhm, [\d.]+ A: every can at most ([\d.]+) A against ([\d.]+) A \(meets\)" % key, t)
+        assert got and float(got.group(1)) <= float(got.group(2)), "the bound at %s mOhm does not meet its limit" % key
+    rows = re.findall(r"^   \| (\d+) mOhm \(C\d+\) \| (\S+)(?: A)? \| (\S+)(?: A)? \| \S+(?: A)? \| \S+(?: A)? \| (.+) \|$", t, re.M)
+    assert rows and rows[-1][0] == "%.0f" % (rb * 1e3) and rows[-1][3] == "TAKEN", rows[-3:]
+    lim7 = float(re.search(r"R11 7 mOhm, [\d.]+ A: every can at most [\d.]+ A against ([\d.]+) A", t).group(1))
+    for v, b7, f7, outc in rows[:-1]:
+        assert (outc.startswith("excluded") and float(f7) > lim7) or (outc.startswith("the bound does not") and float(b7) > lim7), (v, b7, f7, outc)
+    assert re.search(r"CONSERVATIVE, CHECKED: \d+ seeded random .* read at most (0\.\d+|1\.0000) of the bin's bound", t)
 
 
 def t_the_drawn_bank_fails_on_the_corrected_model():
@@ -313,11 +430,23 @@ def t_the_rating_applies_in_frequency_and_the_lifetime_is_conditional():
     assert "so its own rise is under the rated one" not in t
 
 
-def t_the_loop_with_the_ballast_meets_its_margins_at_l4e6s_r12_and_not_on_the_drawn_r12():
-    """recomputed here: the selected ballast, the sheet's C band, B3's envelope; loads to the highest permitted current"""
+def _cc2(t):
+    m_ = re.search(r"CHOSEN: Cc2 (\S+) \((C\d+), lcsc_fill\.py\)", t)
+    assert m_, "no chosen Cc2 in the output"
+    return m_.group(1), m_.group(2)
+
+
+def t_r4_the_loop_holds_the_cold_envelope_with_the_chosen_cc2_and_not_with_the_drawn_one():
+    """recomputed here at the envelope's two ends (the script scans it whole): the chosen ballast and Cc2, R12 12 mOhm, B3's
+    envelope, loads to the highest permitted current, the cans' intrinsic ESR 0 and 300 mOhm, both bands; the drawn Cc2 misses
+    GM 10 dB at the cold end"""
     m, R = _m()
     t = _out()
     rb, _code = _pick(t)
+    cc2_text, cc2_code = _cc2(t)
+    lc = open(os.path.join(ROOT, m.LCSC_FILL), encoding="utf-8").read()
+    pat = cc2_text.replace(".", chr(92) + ".")
+    assert any(('(r"^%s%s", "C_0603"): "%s"' % (pat, e, cc2_code)) in lc for e in ("$", "")), "the Cc2 code is not lcsc_fill.py's"
     hi = _hi(t)
     _Me, fenv, _rows = _corrected()
     mk, G, rec = R["mk"], R["gen"], R["rec"]
@@ -329,23 +458,23 @@ def t_the_loop_with_the_ballast_meets_its_margins_at_l4e6s_r12_and_not_on_the_dr
                iouts=[rec["loop_stage"]["iout"], 0.25], cl0=rec["loop_stage"]["cl0"], ncer0=rec["loop_stage"]["ncer0"], esr_l=0.0004,
                c_can=mk["c_can"], esr_can=mk["esr_can"], p_bound=rec["loop_stage"]["p"])
     comp = tuple(si(v, "") for v, _l in G["comp"])
-    hoj = m.flat(m.page(m.HOJLR, 2))
-    tol = 0.01 + float(re.search(r"±(\d+) \(2mR~500mR\)", hoj).group(1)) * 1e-6 * m.RB_DT
+    new = (comp[0], comp[1], si(cc2_text, ""))
+    assert new[2] > comp[2], "the chosen Cc2 is not larger than the drawn one"
+    _regs_, canf = _regs(m, R)
+    tol = _regs_["r_tol"]
     c_k = ((1 - mk["c_tol"]) * (1 - mk["c_life"]), (1 + mk["c_tol"]) * (1 + mk["c_life"]))
-    bulk = [(k * mk["c_can"], e) for k in c_k for e in (rb * (1 - tol), rb * (1 + tol) + mk["esr_life"] * mk["esr_can"])]
     nb, ncer = len(G["bulk"]), len(G["vbus_cer"]) + len(G["ch_in"]) + len(G["cout_pre"])
     loads = sorted({hi["8"], hi["7"], rec["loop_stage"]["iout"], 0.25}, reverse=True)
-    for kw in ({}, dict(qs=rec["wide"]["q"], lks=rec["wide"]["lk"])):
-        x = m.loop_eval(cfg, nb, ncer, m.R12_E6, *comp, bulk=bulk, iouts=loads, p_bound=vout * loads[0], **kw)
-        assert x["pm"] >= 50 and x["gm"] >= 10 and x["mm"] >= 0.5 and x["ceil_ok"] and x["all_cross"] and x["z_ratio"] <= 1.0, x
-    w5 = m.loop_eval(cfg, nb, ncer, si(G["rcs"] + "Ohm", "Ohm"), *comp, qs=rec["wide"]["q"], lks=rec["wide"]["lk"], bulk=bulk,
-                     iouts=[rec["loop_stage"]["iout"], 0.25], p_bound=vout * rec["loop_stage"]["iout"])
-    assert w5["gm"] < 10, "the drawn R12's widened gain margin with the ballast is %.2f dB: the ORDER would not be needed" % w5["gm"]
-    cold = [(k * mk["c_can"], e) for k in c_k for e in (0.0, mk["esr_cold"])]
-    wc = m.loop_eval(cfg, nb, ncer, si(G["rcs"] + "Ohm", "Ohm"), *comp, qs=rec["wide"]["q"], lks=rec["wide"]["lk"], bulk=cold,
-                     iouts=[rec["loop_stage"]["iout"], 0.25], p_bound=vout * rec["loop_stage"]["iout"])
-    assert wc["gm"] < 10, "the drawn bank's loop at the cold limit reads %.2f dB: the open finding would not stand" % wc["gm"]
-    assert "THE COLD LIMIT" in t and "a finding on the drawn compensation" in t
+    ok = lambda x: x["pm"] >= 50 and x["gm"] >= 10 and x["mm"] >= 0.5 and x["ceil_ok"] and x["all_cross"] and x["z_ratio"] <= 1.0
+    for e in (0.0, mk["esr_cold"]):
+        bulk = [(k * mk["c_can"], x) for k in c_k for x in (rb * (1 - tol) + e, rb * (1 + tol) + e)]
+        for kw in ({}, dict(qs=rec["wide"]["q"], lks=rec["wide"]["lk"])):
+            x = m.loop_eval(cfg, nb, ncer, m.R12_E6, *new, bulk=bulk, iouts=loads, p_bound=vout * loads[0], **kw)
+            assert ok(x), (e, kw, x)
+    cold = [(k * mk["c_can"], x) for k in c_k for x in (rb * (1 - tol) + mk["esr_cold"], rb * (1 + tol) + mk["esr_cold"])]
+    wc = m.loop_eval(cfg, nb, ncer, m.R12_E6, *comp, qs=rec["wide"]["q"], lks=rec["wide"]["lk"], bulk=cold, iouts=loads, p_bound=vout * loads[0])
+    assert wc["gm"] < 10, "the drawn Cc2 holds GM %.2f dB at the cold end: the change would not be needed" % wc["gm"]
+    assert "the bank's ESR envelope at -20 C over service life at" in t and "or below the modelled envelope" in t
 
 
 def t_the_draft_refuses_the_tree_without_l4e6s_r12():
@@ -421,7 +550,8 @@ def t_the_draft_adds_only_the_ballast_and_leaves_the_other_stages_as_drawn():
     a, b = ast.parse(src), ast.parse(new)
     ka = {k.arg: ast.literal_eval(k.value) for k in _fe_call(a).keywords}
     kb = {k.arg: ast.literal_eval(k.value) for k in _fe_call(b).keywords}
-    assert sorted(k for k in set(ka) | set(kb) if ka.get(k) != kb.get(k)) == ["bulk_ballast"]
+    assert sorted(k for k in set(ka) | set(kb) if ka.get(k) != kb.get(k)) == ["bulk_ballast", "comp"]
+    assert kb["comp"][:2] == ka["comp"][:2] and kb["comp"][2] == _cc2(t), (ka["comp"], kb["comp"])
     refs, value, lcsc = kb["bulk_ballast"]
     assert len(refs) == len(kb["bulk"]) == len(R["gen"]["bulk"]) and kb["bulk_part"] == "V331"
     assert all(not re.search(r"\b%s\b" % r_, src) for r_ in refs), "a ballast designator is used already"

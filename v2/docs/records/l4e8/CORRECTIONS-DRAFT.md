@@ -1,4 +1,4 @@
-# Draft corrections from L4-E8 (MESHSAT-1357, 1 October 2026, the fix round): DRAFTS ONLY, nothing here is applied
+# Draft corrections from L4-E8 (MESHSAT-1357, 1 October 2026, the fix rounds): DRAFTS ONLY, nothing here is applied
 
 Prototype design, desk arithmetic. These are proposed texts for the owners of `v2/ecad/tools/gen_sch_a.py` (board A's generator)
 and `v2/docs/records/r11dep/r11_dep.py`. Neither file is edited by L4-E8. Every figure is `ripple_dense.out`'s ("out N"); the
@@ -14,6 +14,8 @@ design. So the corrections belong in the same circuit round as the bank itself, 
 - **The corrected model.** The coincidences at the worst phase (B1, out 5b) and B3's frequency envelope (out 5). Under B2's
   independent cans with no ESR floor, no count of unballasted cans has a bounded current (out 5), so the record's sharing
   figures cannot be made into a bound by correcting them. They are kept only as the record's own description.
+- **The bound.** The chosen bank rests on section 6's conservative bound over arbitrary independent branches, not on any of
+  the figures above.
 
 ## 1. `gen_sch_a.py`, the front end's output node comment (the third fix-up, about lines 716 to 721)
 
@@ -39,7 +41,9 @@ stay word for word until it is retired.
 > - The front end's frequency is SNVSAI1D p.6's row carried to RT with its tolerance: 171.76 to 227.08 kHz, not 180.3 to
 >   231.8 kHz.
 >
-> The bank is therefore six EEHZK1V331P, each behind a 38 mOhm ballast (R221 to R226; L4E8-BANK.md).
+> The bank is therefore six EEHZK1V331P, each behind a 45 mOhm ballast (R221 to R226), with Cc2 at 3.3 nF and L4-E6's R12 at
+> 12 mOhm (L4E8-BANK.md). A conservative bound over arbitrary independent cans and passives holds every can under 2.8 A at
+> both R11 outcomes there.
 
 **Replace "SIX EEHZK1V331P" in the call's comment when the bank draft is applied.** The applied line carries its own L4-E8
 comment (`apply_gen_sch_a_bank.py`).
@@ -47,14 +51,12 @@ comment (`apply_gen_sch_a_bank.py`).
 **No loop correction is needed for the drawn circuit's figures.** The loop sentence ("PM 73.1 degrees, GM 15.7 dB ...") is the
 grid's figure; interpolated at each crossing it reads 73.02 deg and 15.68 dB (out 4).
 
-**A loop limitation to add** (out 7, the cold limit, an open finding). Proposed sentence:
+**A loop sentence to add with the Cc2 change** (out 7). Proposed sentence:
 
-> L4-E8: the loop's corners stop at the cans' ESR after endurance at +20 C (40 mOhm). The ZK sheet allows 300 mOhm after
-> endurance at -40 C (size G).
-> - As drawn, the loop holds every margin with the cans' ESR to 60 mOhm.
-> - With L4-E6's R12 12 mOhm and the ballast, it holds them to 80 mOhm.
->
-> The cans' ESR at the in-use minimum is owed (L4E8-BANK.md, bench 7b.8).
+> L4-E8: the loop's corners stopped at the cans' ESR after endurance at +20 C (40 mOhm). The ZK sheet allows 300 mOhm after
+> endurance at -40 C (size G), which the record takes down to -20 C. With the drawn Cc2 (680 pF) the gain margin falls under
+> 10 dB at that end. With Cc2 at 3.3 nF, R12 at 12 mOhm and the 45 mOhm ballasts, every margin holds over the cans' whole ESR
+> envelope (0 to 300 mOhm), Cc2's tolerance and mixed banks (MODELED; the bench Bode row is owed).
 
 ## 2. `r11_dep.py`, the bank lines it carries (section 4's "VBUS20's bank, the worst can, scaled in proportion to the front end's current")
 
@@ -90,4 +92,4 @@ grids under-sample the node's resonance peaks is INFERRED, not read from the los
 
 **The same note applies to L4-E6's B-4 lines** (`l4e6_fault_handling.out` section 6 and `L4E6-FAULT-HANDLING.md`, "The
 closures"). Those are L4-E6's files, for the coordinator to re-point. Their decision is unchanged: B-4 is not met on the drawn
-bank, and by more than they read. It is met by the ballasted bank of `L4E8-BANK.md`.
+bank, and by more than they read. It is met by the ballasted bank of `L4E8-BANK.md`, on a conservative bound.
