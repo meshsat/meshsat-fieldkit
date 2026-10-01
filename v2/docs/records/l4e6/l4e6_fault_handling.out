@@ -1,0 +1,203 @@
+L4-E6: FAULT HANDLING OF BOARD A'S FRONT END U2 (LM5176), FINDINGS B-1, B-2 AND B-4 (l4e6_fault_handling.py, MESHSAT-1357).
+PROTOTYPE DESIGN: nothing bought, built, powered or measured; no generator, registry, rendered page or L4-E4/L4-E5 record
+edited. Basis per figure: MAKER (document, page), NETLIST, MODELED, INFERRED (method stated), ASSUMPTION; INCONCLUSIVE
+where no held document gives the figure.
+
+0. REPRODUCTIONS BEFORE ANY RESULT
+   0a l4e4_limits.py re-run in a child process reproduces l4e4_limits.out byte for byte (sha256/16 f68bf6951a6361ca): yes
+   0b l4e5_source_control.py re-run in a child process reproduces l4e5_source_control.out byte for byte (sha256/16 f9c98ec5c43ada0e): yes
+   0c r11_dep.py re-run in a child process reproduces r11_dep.out byte for byte (sha256/16 f9d2c6f23fab3edc): yes
+   0d l4e4_limits.compute() run here renders l4e4_limits.out byte for byte: yes (band(), R11 8 mOhm and its 7 mOhm alternative taken from it)
+   0e r11_dep.main() run here (locals captured by l4e4_limits.run_main_captured) prints r11_dep.out byte for byte: yes
+      (stage(), peak_b(), fet_tj(), Figure 8's readings, the generator's VBUS20 bank figures and their per-can scaling taken from it);
+      r11_dep.py's FET loss relations, restated here once, reprint all nine of its section 4 FET lines byte for byte: yes
+   L4-E5's figures read from its reproduced output: the pin path 5.016 A in board current, 5.095 A through R11, between 26.50 and
+   27.24 V; V-A07's threshold 0.071 A; H3's highest U3 board current 1.793 A at 9 V and 2.323 A at 12 V; the 7 mOhm consequence
+   (C2904239, 8.300 A) checked equal to L4-E4's alternative. The vehicle entry's 6.15 A from r11_dep.out (gen_sch_e.py _VEH_T)
+   LM5176 sheet sha256/16 98191bec36d43771; Coilcraft XAL1010 (Document 804-1, revised 02/25/26) and XAL1510 (Document 947-1, revised 05/04/26) pinned
+
+1. WHAT BOARD A CARRIES AND WHAT THE MAKERS PRINT
+   NETLIST: R12 '5mOhm 1% 2512 (CS)' from FE_CS to GND, U2's cycle-by-cycle sense (lcsc_fill.py C500739, LR2512D-3W-5mR-1%)
+   NETLIST: Q3 and Q4 sources (pins 1 to 3) on FE_CS: R12 carries the low-side switches' current
+   NETLIST: the CS filter R150, R151 '100R 1%' into U2 pins 16 and 15, C123 '1n' across
+   NETLIST: R119 '100k (MODE: CCM)' from FE_MODE (U2 pin 4) to FE_VCC (pin 23): MODE to VCC
+   NETLIST: C147 '680p' on FE_SLOPE (the slope capacitor)
+   NETLIST: C7 '4.7u' on FE_SS (the soft start)
+   NETLIST: L1 '10uH XAL1010-103ME (Isat 17.5 A)'
+   NETLIST: U2 is the HTSSOP-28 (LM5176PWPR): the HTSSOP current-limit rows apply
+   MAKER SNVSAI1D (LM5176, rev. D, August 2021):
+     p.13: the inductor current is sensed through ONE resistor in series with the low-side MOSFETs (R12) and monitored for the
+       cycle-by-cycle limit; without hiccup the controller stays in that limit until the overload is removed
+     p.16 7.3.5: boost, the low-side switch turns off for the rest of the cycle when CS-CSG exceeds VCS(BOOST); buck, the high-side
+       switch skips a cycle while the sensed valley stays above VCS(BUCK). p.7 (HTSSOP): VCS(BOOST) 100 / 120 / 140 mV, VCS(BUCK)
+       66 / 80 / 94 mV, IOFFSET(CS/CSG) 19 uA (MAX column), gmSLOPE 2 uS; p.5: CS, CSG at most 0.3 V
+     p.17 7.3.5: hiccup shuts the controller down after 128 CONSECUTIVE CYCLE-BY-CYCLE LIMITS and releases SS after 4000 clock cycles;
+       p.16 7.3.4 and p.17 7.3.6: the AVERAGE limit acts by discharging SS through its gm amplifier, so it never counts as a
+       cycle-by-cycle limit: hiccup does not act on the highest permitted current the average limit sets (INFERRED from the two)
+     p.3 and p.20: 1.38 V < MODE < 2.22 V selects CCM with hiccup (RMODE 93.1 kOhm to AGND); 2.6 V < MODE < VCC, or MODE to VCC,
+       no hiccup; MODE is latched at start-up. p.7: IMODE 17 / 20 / 23 uA
+     p.6: ISS 3.75 / 5 / 6.35 uA, VREF 0.788 / 0.800 / 0.812 V, fSW 175 / 200 / 225 kHz at RT 40 k
+     p.24 8.2.2.7: the CS resistor is sized from the application's own currents (Equation 23, 80 mV / IOUT(MAX); Equation 24,
+       120 mV / IL(PEAK)); 8.2.2.8 Equation 26, CSLOPE = gmSLOPE x L1 / (RSENSE x ACS), ACS 5 (its example): 800 pF at the drawn
+       5 mOhm, C147 680 pF; 'a current mode loop is stable with half the dead-beat slope'
+   MAKER Coilcraft XAL1010-103ME (Document 804-1, p.1): Isat 17.5 A typical at 25 C (note 5: 30 % inductance drop), Irms 15.5 A at
+     40 K rise, L +-20 %; temperature derating is a link ('Click for temperature derating information'), and p.3's 'Typical L
+     vs Current' is one 25 C curve: Isat at the part's temperature is NOT HELD (C-5) -> INCONCLUSIVE
+   MAKER Coilcraft XAL1510-103ME (Document 947-1, p.1; board E's tracker inductor): 10 uH, DCR 9.00 mOhm max, Isat 26.3 A typical
+     at 25 C, Irms 16 / 22 A (20 / 40 K); the same derating link, not held
+   INFERRED here: the CS filter's lag 222 ns (R150 + R151 at +1 %, C123 at +10 %, an ASSUMPTION: the netlist prints '1n');
+     the CSG offset 1.9 mV (IOFFSET over one 100 Ohm), added against each end of the limits; the comparator's own delay is NOT
+     PRINTED (INCONCLUSIVE), so B-1 states the delay its headroom admits
+
+2. THE HIGHEST PERMITTED CURRENT AT EACH R11 OUTCOME (L4-E4's band(), r11_dep.py's stacking)
+   R11 8 mOhm (C2904240): band 5.265 / 6.250 / 7.262 A; the highest permitted current 7.262 A
+   R11 7 mOhm (C2904239): band 6.017 / 7.143 / 8.300 A; the highest permitted current 8.300 A
+   relations (INFERRED, r11_dep.py section 4): VBUS20 at 20.887 V, efficiency 0.93 DECLARED, L at -20 % and fSW minimum for the
+   ripple; B-1's peak as r11_dep.py's note 5 (Isat's 30 % drop on the -20 % tolerance); the FETs on RDS(on) max x Figure 8 at TJ
+   and the maker's RthetaJA 50 C/W on its 1 in2 2 oz pad, used for board A as an ASSUMPTION (board A's own is not known, C-3)
+
+3. CANDIDATE (a): HICCUP ALONE (R119 to AGND at 93.1 kOhm; R12 as drawn, 5 mOhm: peak limit 19.35 / 24.00 / 28.77 A, valley 12.65 / 16.00 / 19.45 A,
+   stacked as the HoJLR2512 series, +-1 % and 50 ppm/K, the drawn LR2512D's own TCR not being held: an ASSUMPTION)
+   MODE at 93.1 kOhm: 1.567 to 2.163 V (IMODE's band, the resistor at 1 %, an ASSUMPTION), inside 1.38 to 2.22 V: hiccup at every corner
+   its timing (INFERRED from p.17, p.6 and C7): trips after 0.57 to 0.73 ms of consecutive limits, off 17.8 to 22.9 ms, then a full soft
+   start, 0.58 to 1.02 s (C7 4.7 uF nominal x VREF / ISS); the peak in each burst is the cycle-by-cycle limit's own, the ripple
+   per cycle unchanged; only the average falls
+   R11 8 mOhm, 7.262 A:
+      9.0 V (boost): L1 average at the average limit 18.12 A, peak 19.95 A (L -20 %); hiccup not guaranteed: between the peak limit's minimum and maximum;
+       continuous (no hiccup credit): L1 18.12 A average, B-1 peak 20.74 A (118.5 % of the typical Isat); FETs: Q2 (on) past 150 C (needs RthetaJA <= 23 C/W); Q4 (boost switch) past 150 C (needs RthetaJA <= 31 C/W); Q5 (rectifier) TJ 139 C
+     15.1 V (boost): L1 average at the average limit 10.80 A, peak 12.30 A (L -20 %); hiccup never: the average limit's peak stays under the peak limit's minimum;
+       continuous (no hiccup credit): L1 10.80 A average, B-1 peak 12.94 A (73.9 % of the typical Isat); FETs: Q2 (on) TJ 120 C; Q4 (boost switch) TJ 103 C; Q5 (rectifier) TJ 100 C
+     36.0 V (buck): L1 average at the average limit 7.26 A, peak 10.39 A (L -20 %); hiccup the average limit governs (buck); the valley limit is not reached;
+       continuous (no hiccup credit): L1 7.26 A average, B-1 peak 11.74 A (67.1 % of the typical Isat); FETs: Q2 (buck switch) TJ 117 C; Q3 (rectifier) TJ 71 C; Q5 (on) TJ 85 C
+     B-1 20.74 A against 15.75 A (90 % of 17.5 A): NOT MET; B-2: NOT MET; B-4 unchanged (section 6)
+   R11 7 mOhm, 8.300 A:
+      9.0 V (boost): L1 average at the average limit 20.71 A, peak 22.54 A (L -20 %); hiccup not guaranteed: between the peak limit's minimum and maximum;
+       continuous (no hiccup credit): L1 20.71 A average, B-1 peak 23.32 A (133.3 % of the typical Isat); FETs: Q2 (on) past 150 C (needs RthetaJA <= 18 C/W); Q4 (boost switch) past 150 C (needs RthetaJA <= 25 C/W); Q5 (rectifier) past 150 C (needs RthetaJA <= 41 C/W)
+     15.1 V (boost): L1 average at the average limit 12.34 A, peak 13.84 A (L -20 %); hiccup never: the average limit's peak stays under the peak limit's minimum;
+       continuous (no hiccup credit): L1 12.34 A average, B-1 peak 14.48 A (82.7 % of the typical Isat); FETs: Q2 (on) TJ 150 C; Q4 (boost switch) TJ 110 C; Q5 (rectifier) TJ 115 C
+     36.0 V (buck): L1 average at the average limit 8.30 A, peak 11.43 A (L -20 %); hiccup the average limit governs (buck); the valley limit is not reached;
+       continuous (no hiccup credit): L1 8.30 A average, B-1 peak 12.77 A (73.0 % of the typical Isat); FETs: Q2 (buck switch) TJ 124 C; Q3 (rectifier) TJ 74 C; Q5 (on) TJ 93 C
+     B-1 23.32 A against 15.75 A (90 % of 17.5 A): NOT MET; B-2: NOT MET; B-4 unchanged (section 6)
+   NOT CHOSEN: the average limit, not the cycle-by-cycle limit, sets the fault current at 9 V, so hiccup cannot be relied on
+   to engage; where it does, it bounds the average, not L1's peak, which stays above Isat
+
+4. CANDIDATE (b): RATE L1, THE FETS AND THE BANK FOR THE HIGHEST PERMITTED CURRENT
+   R11 8 mOhm: L1 as XAL1510-103ME, B-1's 20.74 A is 78.8 % of its 26.3 A typical (25 C; temperature INCONCLUSIVE; its 15.2 x 16.2 mm
+     outline, Document 947-1 p.3, against the XAL1010's 10.0 x 11.3 mm, p.4: board A's placement moves); the FETs at 9 V need
+     RthetaJA <= 23 C/W each, against the maker's 50; no 100 V FET with a lower RDS(on) is held (CSD18510Q5B, SLPS632 p.1, is
+     40 V, under VIN_RAW's 64.5 V clamp in L4-E5): INCONCLUSIVE; the bank as section 6
+   R11 7 mOhm: L1 as XAL1510-103ME, B-1's 23.32 A is 88.7 % of its 26.3 A typical (25 C; temperature INCONCLUSIVE; its 15.2 x 16.2 mm
+     outline, Document 947-1 p.3, against the XAL1010's 10.0 x 11.3 mm, p.4: board A's placement moves); the FETs at 9 V need
+     RthetaJA <= 18 C/W each, against the maker's 50; no 100 V FET with a lower RDS(on) is held (CSD18510Q5B, SLPS632 p.1, is
+     40 V, under VIN_RAW's 64.5 V clamp in L4-E5): INCONCLUSIVE; the bank as section 6
+   NOT CHOSEN: three part changes, a new land, and a thermal figure no held document or measurement supports
+
+5. THE DECISION: BOUND L1 AND THE FETS WITH U2'S OWN CYCLE-BY-CYCLE LIMIT (R12), RATE THE BANK, NO HICCUP
+   the scan (HoJLR2512-3W, JLCPCB's catalogue reading of L4-E4, 1 %, in stock, 5 to 20 mOhm): peak and valley limits stacked;
+   service: H3's highest boost peak 6.50 A (9 and 12 V, L -20 %; 7.28 A by note 5), the pin path's valley 4.28 A at 26.50 V (ripple
+   at its smallest); B-1 over 9 to 36 V; B-2 at 9, 15.1 and 36 V, both outcomes; CS within 0.3 V
+     HoJLR2512-3W-5mR-1%    C2903482: peak 19.35 / 24.00 / 28.77 A, valley 12.65 / 16.00 / 19.45 A; service +12.85 / +8.37 A; B-1 20.74 / 23.32 A; B-2 NOT met; fails
+       at 9 V (7 mOhm): L1 20.71 A average continuous, hottest Q2 (on) past 150 C
+     HoJLR2512-3W-6mR-1%    C2904238: peak 16.13 / 20.00 / 23.98 A, valley 10.54 / 13.33 / 16.21 A; service +9.63 / +6.26 A; B-1 20.74 / 23.32 A; B-2 NOT met; fails
+       at 9 V (7 mOhm): L1 20.71 A average continuous, hottest Q2 (on) past 150 C
+     HoJLR2512-3W-7mR-1%    C2904239: peak 13.82 / 17.14 / 20.55 A, valley 9.03 / 11.43 / 13.89 A; service +7.32 / +4.76 A; B-1 20.74 / 20.95 A; B-2 NOT met; fails
+       at 9 V (7 mOhm): L1 19.96 A average continuous, hottest Q2 (on) past 150 C
+     HoJLR2512-3W-8mR-1%    C2904240: peak 12.10 / 15.00 / 17.98 A, valley 7.90 / 10.00 / 12.15 A; service +5.59 / +3.63 A; B-1 18.39 / 18.45 A; B-2 NOT met; fails
+       at 9 V (7 mOhm): L1 17.39 A average continuous, hottest Q2 (on) past 150 C
+     HoJLR2512-3W-9mR-1%    C2904241: peak 10.75 / 13.33 / 15.99 A, valley 7.03 / 8.89 / 10.80 A; service +4.25 / +2.75 A; B-1 16.45 / 16.51 A; B-2 NOT met; fails
+       at 9 V (7 mOhm): L1 15.39 A average continuous, hottest Q2 (on) past 150 C
+     HoJLR2512-3W-10mR-1%   C2903468: peak 9.68 / 12.00 / 14.39 A, valley 6.32 / 8.00 / 9.72 A; service +3.18 / +2.05 A; B-1 14.91 / 14.97 A; B-2 NOT met; fails
+       at 9 V (7 mOhm): L1 13.80 A average continuous, hottest Q2 (on) past 150 C
+     HoJLR2512-3W-12mR-1%   C2904242: peak 8.06 / 10.00 / 11.99 A, valley 5.27 / 6.67 / 8.10 A; service +1.56 / +0.99 A; B-1 12.60 / 12.77 A; B-2 met; PASSES
+       at 9 V (7 mOhm): L1 11.40 A average continuous, hottest Q2 (on) TJ 130 C
+     HoJLR2512-3W-15mR-1%   C2903494: peak 6.45 / 8.00 / 9.59 A, valley 4.22 / 5.33 / 6.48 A; service -0.05 / -0.06 A; B-1 11.74 / 12.77 A; B-2 met; fails
+       at 9 V (7 mOhm): L1 9.00 A average continuous, hottest Q4 (boost switch) TJ 108 C
+     HoJLR2512-3W-17mR-1%   C2904243: peak 5.69 / 7.06 / 8.46 A, valley 3.72 / 4.71 / 5.72 A; service -0.81 / -0.56 A; B-1 11.74 / 12.77 A; B-2 met; fails
+       at 9 V (7 mOhm): L1 7.87 A average continuous, hottest Q4 (boost switch) TJ 101 C
+     HoJLR2512-3W-18mR-1%   C2903490: peak 5.38 / 6.67 / 7.99 A, valley 3.51 / 4.44 / 5.40 A; service -1.13 / -0.76 A; B-1 11.74 / 12.77 A; B-2 met; fails
+       at 9 V (7 mOhm): L1 7.40 A average continuous, hottest Q4 (boost switch) TJ 99 C
+     HoJLR2512-3W-20mR-1%   C2903469: peak 4.84 / 6.00 / 7.19 A, valley 3.16 / 4.00 / 4.86 A; service -1.66 / -1.11 A; B-1 11.74 / 12.77 A; B-2 met; fails
+       at 9 V (7 mOhm): L1 6.60 A average continuous, hottest Q4 (boost switch) TJ 95 C
+   CHOSEN: R12 12 mOhm, HoJLR2512-3W-12mR-1%, LCSC C2904242 (stock 3407), the smallest value that passes: the most service margin. Its sheet is the
+     held HoJLR2512 series sheet (+-1 %, 50 ppm/K, 3 W). Peak limit 8.06 / 10.00 / 11.99 A, valley limit 5.27 / 6.67 / 8.10 A
+   C147 to 330 pF C0G (lcsc_fill.py's C1664): Equation 26 gives 333 pF at 12 mOhm; the drawn 680 pF was the same at-or-below choice
+     for 800 pF. The current loop's gain per ampere falls to 0.417 of the drawn: the voltage loop's crossover, 0.71 to 3.6 kHz in
+     gen_sch_a.py, moves toward 0.30 to 1.5 kHz to first order (INFERRED); the compensation is re-verified by the generator's loop
+     check before regeneration (OWED, INCONCLUSIVE here)
+   MODE stays at VCC (no hiccup): the closures below take no hiccup credit; at 9 V the vehicle entry's 6.15 A all through L1
+     peaks at 7.98 A, +0.08 A from the chosen peak limit's minimum, so hiccup would turn an entry at its limit into a 0.58 to 1.02 s
+     restart with FE_PGOOD down, against V-A08; without it the limit only clips the current
+   ORDER: R12 goes in with L4-E5's line (H3), never before it: IIN_HOST fixed at 4.70 A without the line (4.964 A through R11)
+     would meet the chosen peak limit's minimum in service below 16.3 V; under H3 the boost peak stays at 6.50 A (section 5's service)
+   CS pins: R12 at +1 % times the highest current it carries, 0.155 V against the 0.3 V absolute maximum (p.5)
+
+   CLOSURES AT EACH OUTCOME (continuous, no hiccup credit; the FETs on the ASSUMED 50 C/W)
+   R11 8 mOhm, 7.262 A:
+      9.0 V (boost, set by the cycle-by-cycle limit): L1 11.40 A average, 11.45 A rms, peak bound 12.35 A, L1 at 84 C; output 4.57 A; FETs: Q2 (on) 1.35 W, TJ 130 C; Q4 (boost switch) 1.29 W, TJ 127 C; Q5 (rectifier) 0.47 W, TJ 85 C
+     15.1 V (boost, set by the average limit): L1 10.80 A average, 10.84 A rms, peak bound 12.59 A, L1 at 82 C; output 7.26 A; FETs: Q2 (on) 1.15 W, TJ 120 C; Q4 (boost switch) 0.82 W, TJ 103 C; Q5 (rectifier) 0.76 W, TJ 100 C
+     36.0 V (buck, set by the average limit): L1 7.26 A average, 7.48 A rms, peak bound 11.74 A, L1 at 71 C; output 7.26 A; FETs: Q2 (buck switch) 1.09 W, TJ 117 C; Q3 (rectifier) 0.18 W, TJ 71 C; Q5 (on) 0.46 W, TJ 85 C
+     B-1: the peak bound over 9 to 36 V 12.60 A (at 15.4 V), 72.0 % of the typical 17.5 A at 25 C: MET at 25 C; it holds at the part's
+       temperature if Isat there is at least 80.0 % of its 25 C value, 14.00 A: INCONCLUSIVE (C-5). L1's temperature over 9 to 36 V
+       at 1 mV (check 1, M1): at most 84.99 C, at 13.957 V, so the qualifying temperature is 85 C (rounded up; the three B-2
+       voltages alone gave 83.92 C). The peak bound at 1 mV: 12.60 A at 15.456 V, the same to 0.01 A. The headroom admits a
+       comparator delay of 0.84 us at the top of boost
+       C-5 (check 1, M2): L1's inductance swept against DC current at 85 C or above, from zero bias (L0, the maker's note 2:
+       1 MHz, 0.1 Vrms, 0 Adc) through at least 14.2 A; Isat at temperature is where L falls by the maker's 30 % (note 5) from L0;
+       B-1 closes there if L stays at or above 70 % of L0 up to 14.00 A, so the peak bound is at most 90 % of that Isat
+     B-2: every FET at most 130 C: MET on the ASSUMED RthetaJA; R12 itself 0.90 W at 9 V, 0.28 W at 36 V, at most 92 C
+     above 14.0 V the average limit, not the peak limit, sets the fault current; at 9 V the output is held to 4.57 A
+   R11 7 mOhm, 8.300 A:
+      9.0 V (boost, set by the cycle-by-cycle limit): L1 11.40 A average, 11.45 A rms, peak bound 12.35 A, L1 at 84 C; output 4.57 A; FETs: Q2 (on) 1.35 W, TJ 130 C; Q4 (boost switch) 1.29 W, TJ 127 C; Q5 (rectifier) 0.47 W, TJ 85 C
+     15.1 V (boost, set by the cycle-by-cycle limit): L1 11.81 A average, 11.85 A rms, peak bound 12.59 A, L1 at 85 C; output 7.94 A; FETs: Q2 (on) 1.51 W, TJ 138 C; Q4 (boost switch) 0.90 W, TJ 107 C; Q5 (rectifier) 0.95 W, TJ 109 C
+     36.0 V (buck, set by the average limit): L1 8.30 A average, 8.49 A rms, peak bound 12.77 A, L1 at 74 C; output 8.30 A; FETs: Q2 (buck switch) 1.23 W, TJ 124 C; Q3 (rectifier) 0.23 W, TJ 74 C; Q5 (on) 0.62 W, TJ 93 C
+     B-1: the peak bound over 9 to 36 V 12.77 A (at 36.0 V), 73.0 % of the typical 17.5 A at 25 C: MET at 25 C; it holds at the part's
+       temperature if Isat there is at least 81.1 % of its 25 C value, 14.19 A: INCONCLUSIVE (C-5). L1's temperature over 9 to 36 V
+       at 1 mV (check 1, M1): at most 85.74 C, at 15.680 V, so the qualifying temperature is 86 C (rounded up; the three B-2
+       voltages alone gave 85.46 C). The peak bound at 1 mV: 12.77 A at 36.000 V, the same to 0.01 A. The headroom admits a
+       comparator delay of 0.80 us at the top of boost
+       C-5 (check 1, M2): L1's inductance swept against DC current at 86 C or above, from zero bias (L0, the maker's note 2:
+       1 MHz, 0.1 Vrms, 0 Adc) through at least 14.2 A; Isat at temperature is where L falls by the maker's 30 % (note 5) from L0;
+       B-1 closes there if L stays at or above 70 % of L0 up to 14.19 A, so the peak bound is at most 90 % of that Isat
+     B-2: every FET at most 138 C: MET on the ASSUMED RthetaJA; R12 itself 0.90 W at 9 V, 0.37 W at 36 V, at most 92 C
+     above 15.7 V the average limit, not the peak limit, sets the fault current; at 9 V the output is held to 4.57 A
+
+6. B-4, VBUS20'S BANK, BY THE GENERATOR'S NODE ANALYSIS AS r11_dep.py CARRIES IT (gen_sch_a.py's third fix-up figures at 5.7
+   and 5.0 A, the worst can scaled in proportion to the front end's current; the dense script drafts/scripts/ripple_dense.py is
+   not in this tree, so the method is VIN-blind and is applied at the current the fault can hold continuously)
+   R11 8 mOhm, 7.262 A: worst can 2.69 A matched, 2.70 A at 1.5:1, 3.11 A at 2:1 against 2.8 A: matched met, 1.5:1 met, 2:1 NOT MET
+     the bank's worst can per ampere must be at most 1.042 / 1.036 / 0.901 times today's (matched / 1.5:1 / 2:1); at 9 V, where the peak
+     limit holds the output to 4.57 A, it reads 1.69 / 1.70 / 1.95 A
+   R11 7 mOhm, 8.300 A: worst can 3.07 A matched, 3.09 A at 1.5:1, 3.55 A at 2:1 against 2.8 A: matched NOT MET, 1.5:1 NOT MET, 2:1 NOT MET
+     the bank's worst can per ampere must be at most 0.912 / 0.907 / 0.788 times today's (matched / 1.5:1 / 2:1); at 9 V, where the peak
+     limit holds the output to 4.57 A, it reads 1.69 / 1.70 / 1.95 A
+   DECISION for B-4: the bank is rated, not bounded (the average limit holds the highest permitted current above the boundary
+   VIN at both outcomes, and no peak or valley limit compatible with service holds it lower). Closure OWED to the generator owner:
+   the dense node analysis re-run with a re-sized bank (more EEHZK1V331P, one part number, or ceramics moved to FE_OUT) at the
+   chosen current; INCONCLUSIVE until then; bench 7b.8
+
+7. THE CONSEQUENCE FOR L4-E4
+   B-1 and B-2 close at both outcomes by the same R12 (the peak limit does not depend on R11); B-4 does not close on the drawn
+   bank at either, and its gap is 0.31 A at 2:1 only at 8 mOhm against 0.75 A at all three spreads at 7 mOhm. This decision
+   SUPPORTS R11 8 mOhm (C2904240) with IIN_HOST 4.70 A and L4-E5's line; it does not require 7 mOhm. For 8 mOhm to stand, bench
+   V-A07 must show the pin's error at 10 mOhm at most 0.071 A between 26.50 and 27.24 V (L4-E5's figure, unchanged here: R12 is not
+   in the ISNS path). If it fails, 7 mOhm stands with the same R12 and a larger bank re-size
+
+8. ACCEPTANCE PREDICATES (held by v2/ecad/tools/tests/test_l4e6.py on these computed values)
+   0: the three outputs reproduced byte for byte in child processes: yes
+   0: l4e4_limits.compute() and r11_dep.main() print their records in-process; the FET relations reprint r11_dep.out's: yes
+   (a) hiccup counts cycle-by-cycle limits only; with R12 as drawn it is not guaranteed at 9 V at either outcome: yes
+   (a) alone leaves B-1 over 90 % of the typical Isat at 9 V at both outcomes: yes
+   (a) alone leaves a FET past 150 C at 9 V at both outcomes on the maker's RthetaJA: yes
+   the chosen R12 is the smallest catalogue value that closes B-1 (25 C) and B-2 at both outcomes with service margin: yes
+   B-1 at 25 C: L1's peak at most 90 % of the typical Isat at both outcomes, 9 to 36 V: yes
+   B-1 at temperature: INCONCLUSIVE (the held Coilcraft sheet carries no temperature derating): yes
+   check 1, M1: L1's temperature taken over 9 to 36 V at 1 mV, its maximum off the three B-2 voltages at both outcomes, the qualifying temperature at or above it, and the 1 mV peak bound equal to the 0.1 V one to 0.01 A: yes
+   check 1, M2: C-5's sweep ends at or above the Isat each outcome needs (the peak bound over 0.9), under the maker's 30 % drop definition read from note 5: yes
+   B-2: every FET at most 150 C at 9, 15.1 and 36 V at both outcomes (RthetaJA the maker's, an ASSUMPTION for board A): yes
+   B-4 on the drawn bank: NOT met at the 2:1 spread at either outcome; met matched and at 1.5:1 at 8 mOhm only: yes
+   service: the chosen peak limit's minimum above H3's in-service boost peak; the valley limit's minimum above the pin path's valley: yes
+   the chosen R12 needs L4-E5's line first: L4-E4's 4.964 A alone would meet the peak limit below 16.3 V: yes
+   the consequence for L4-E4: 8 mOhm supported (B-1, B-2 independent of R11; B-4's gap smaller at 8 mOhm): yes
+
+END. Desk arithmetic; nothing is measured. B-1 at temperature, the comparator's delay, the loop at the new R12 and the
+re-sized bank stay INCONCLUSIVE until the documents, the generator owner's analyses and the bench rows of L4E6-FAULT-HANDLING.md.
