@@ -15,6 +15,7 @@ are a consistency check, reconciled where they differ.
 | `ripple_dense.out` | Its output, committed; the script reproduces it byte for byte |
 | `CORRECTIONS-DRAFT.md` | DRAFTS ONLY: the text proposed for `gen_sch_a.py`'s third fix-up comment and for `r11_dep.py`'s carried bank figures (and L4-E6's, which take them) |
 | `apply_gen_sch_a_bank.py` | DRAFT for board A's generator owner: the front end's `bulk=` line in `v2/ecad/tools/gen_sch_a.py`, `--bank 8` (default, C236 and C237 added) or `--bank 7` (C236 to C239). See its docstring for the mode, the refusals and the composition |
+| `checks/astra-check-l4e8-1.md` | The engineering collaborator's check of `5ff06474` (accepted: no; blockers B1 to B4 and four minors), filed as received |
 | `inputs/recovered/` | The predecessor's drafts as a session transcript holds them, filed as cited inputs (their code is never run here) |
 | `README.md` | This list |
 
