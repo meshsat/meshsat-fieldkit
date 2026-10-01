@@ -2,15 +2,16 @@
 battery path, held as predicates on properties of what l4e10_cell_thermal.py computes.
 
 The predicates: the thermal records it rests on are reproduced byte for byte and the committed .out is what the script
-prints; every LO row of Layer 3's cell modes table has a decision of a known kind; a row recorded as closed or free of
-collision rests on MAKER or bounded MODELED evidence only, and a row resting on INFERRED or ASSUMPTION figures is never
-recorded as closed; no cell change is recorded as taken, and any cell route names the owner's approval; the collisions
-are recomputed here in closed form and agree with Layer 3's table; the coupling measure's figures are recomputed here from
-the W4 constants and the block's dimensions; the feasibility screen covers every row, rejects powered means where no power
-exists and shows the storage hold time shorter than the exposure; the conflict names its requirements and offers at most
-three options with the session's recommendation marked as not adopted; the page's figures are the .out's; the held files
-are ignored by git and pinned alike in the script and the fetcher; no dash or claim word is written. Nothing here writes
-into the tree.
+prints; every LO row of Layer 3's cell modes table has a decision of a known kind with its complete acceptance; a row
+recorded as closed or free of collision rests on MAKER or bounded MODELED evidence only, and a row resting on INFERRED or
+ASSUMPTION figures is never recorded as closed; no cell change is recorded as taken, and any cell route names the owner's
+approval; an owner decision is recorded only where every route of a row is rejected, and an open row keeps a route that is
+not; the collisions are recomputed here in closed form and agree with Layer 3's table; LO-01a's three thresholds (the
+rating, FEA-008's +59 C abort, the complete pass line) are recomputed here and ordered; the coupling measure's figures
+are recomputed from the W4 constants and shown not to meet the air criteria; LO-01g's pack-only heating and the two-node
+storage lag are recomputed in closed form; the screen covers every row and every TEST-PLAN exposure it maps; the check is
+filed byte for byte from its result; the page's figures are the .out's; the held files are ignored by git and pinned
+alike in the script and the fetcher; no dash or claim word is written. Nothing here writes into the tree.
 """
 import ast
 import hashlib
@@ -79,10 +80,11 @@ def t_every_lo_row_has_a_decision_of_a_known_kind():
     l3 = yaml.safe_load(open(os.path.join(ROOT, "v2/docs/handover/layer3/l3r2.yaml"), encoding="utf-8"))
     ids = sorted(m["id"] for m in l3["cell_modes"])
     assert ids == sorted(R["dec"]), "decisions %s against Layer 3's rows %s" % (sorted(R["dec"]), ids)
-    kinds = {"CLOSED", "CONDITIONAL", "NO_COLLISION", "NOT_CLOSABLE"}
+    kinds = {"CLOSED", "CONDITIONAL", "NO_COLLISION", "OPEN"}
     assert all(d["decision"] in kinds for d in R["dec"].values())
+    assert all(d["acceptance"] for d in R["dec"].values()), "a row without its complete acceptance"
     for k in ("LO-01a", "LO-01d", "LO-01e", "LO-01f", "LO-01g", "LO-01h"):   # FEA-008's blocker rows
-        assert R["dec"][k]["verify"], "%s has no verification" % k
+        assert R["dec"][k]["gap"] and R["dec"][k]["acceptance"], "%s has no gap or acceptance" % k
 
 
 def t_closed_rows_rest_on_maker_or_bounded_modeled_only():
@@ -103,9 +105,9 @@ def t_no_cell_change_is_taken_without_the_owner():
             assert cc["taken"] is False and cc["owner_approval_required"] is True, "%s records a cell change as taken" % k
     page = open(PAGE, encoding="utf-8").read()
     assert "no cell change is taken" in page
-    assert not re.search(r"(?<!no )cell change (is|was) taken", page.replace("No row is recorded as CLOSED, and no cell change is taken", ""))
-    b = " ".join(_CACHE["M"].option_lines(R))
-    assert "spend approval" in b and "not adopted" in b
+    assert not re.search(r"(?<!no )cell change (is|was) taken", page.replace("No row is recorded as CLOSED, and no cell change is taken", "").replace("No cell change is taken", ""), re.I)
+    b = " ".join(_CACHE["M"].later_lines(R))
+    assert "approval" in b and "none proposed" not in b
 
 
 def t_collisions_recomputed_in_closed_form_agree_with_layer3():
@@ -165,34 +167,118 @@ def t_screen_covers_every_row_and_judges_power_and_hold_time():
             assert not r["result"].startswith("CREDIBLE: thermal"), "%s credits a thermal design with no power" % r["id"]
     for k in ("LO-01d", "LO-01e", "LO-01f", "LO-01g"):
         rr = [r for r in rows if r["lo"] == k]
-        assert rr and all(r["result"].startswith("REJECTED") for r in rr), "%s is not rejected for thermal design" % k
+        assert rr and all(r["result"].startswith("OPEN") and any("INCONCLUSIVE" in a for a in r["approaches"]) for r in rr), "%s's screen row" % k
     H = R["hold"]
     assert 3 * H["tau_kit_s"][1] < R["f"]["hours"] * 3600.0 and 3 * H["tau_pack_s"][1] < H["e3o_s"]
-    assert min(H["e_hold_cold_Wh"]) > H["pack_Wh_nom"]
+    assert max(r["Wh_prim_direct"] for r in R["selfheat"]["rows"].values()) < min(H["e_kit_cold_Wh"]), "the pack-only demand is not below the whole-kit figure"
 
 
-def t_conflict_and_owner_options():
+def t_no_owner_decision_unless_every_route_is_rejected():
     R = _R()
-    m = _CACHE["M"]
-    c = " ".join(m.conflict_lines(R))
-    for tok in ("D-02a", "SC-03", "D-06", "REQ-074", "REQ-051", "D-29", "F2"):
-        assert tok in c, "the conflict does not name %s" % tok
-    opts = [l for l in m.option_lines(R) if re.match(r"^[A-Z]\. ", l)]
-    assert 1 <= len(opts) <= 3
-    assert "Session's recommendation (not adopted" in " ".join(m.option_lines(R))
+    forced = sorted(k for k, d in R["dec"].items() if d["decision"] == "OPEN" and all(r["status"] == "REJECTED" for r in d["routes"]))
+    assert R["owner_decision_required"] is bool(forced) and R["forced_rows"] == forced
+    assert R["owner_decision_required"] is False, "no row has every route rejected, yet an owner decision is recorded"
+    for k, d in R["dec"].items():
+        if d["decision"] == "OPEN":
+            assert d["routes"] and any(r["status"] == "INCONCLUSIVE" for r in d["routes"]), "%s is open with no live route" % k
+            for r in d["routes"]:
+                if r["status"] == "INCONCLUSIVE":
+                    assert r["missing"] and r["missing"] != "none", "%s: an INCONCLUSIVE route names no missing input" % k
+    lines = _CACHE["M"].later_lines(R)
+    assert sum(1 for l in lines if re.match(r"^[A-Z]\. ", l)) <= 3
+    assert any("existing state" in l for l in lines)
+    out = open(OUT, encoding="utf-8").read()
+    assert "OWNER DECISION: none is forced" in out
+    assert "contradiction" not in open(PAGE, encoding="utf-8").read().replace("not a contradiction between owner requirements", "")
     assert R["meets"]["30Q6"]["LO-01h"] is False and R["meets"]["35E"]["LO-01h"] is True, "S2's year row"
-    assert not any(R["meets"]["35E"][k] for k in ("LO-01d", "LO-01e", "LO-01f", "LO-01g"))
-    assert R["maker_floor"] > R["g"]["amb"] and R["maker_top"] < R["f"]["amb"], "a held maker's sheet covers a storage margin"
+
+
+def t_lo01a_thresholds_recomputed_and_ordered():
+    R = _R()
+    qR, pR = R["heat"]["SURVR"]
+    g = R["Gblk"][0]
+    assert abs((qR + pR) / (60.0 - 40.0 - pR / g) - R["gov"]["rating_pack"]) < 1e-12
+    assert abs((qR + pR) / (59.0 - 40.0 - pR / g) - 1.315393) < 5e-7, "the +59 C abort's conductance"
+    assert abs((qR + pR) / (56.5 - 40.0 - pR / g) - 1.529988) < 5e-7, "H1's conductance"
+    sgp = (R["shore_heat"]) / (55.0 - 40.0)
+    assert abs(sgp - R["gov"]["all"][4]) < 1e-12 and R["gov"]["all"][0].startswith("SGP41")
+    assert R["gov"]["all"][4] > R["gov"]["fea008_pack"] > R["gov"]["rating_pack"]
+    assert max(c[4] for c in R["crit"]) == R["gov"]["all"][4]
+    # the coupling meets the cell criteria at the worst corner and not the air criteria
+    vs = dict((n, (v, l)) for n, v, l in R["meas"]["fallback_vs"])
+    assert vs["cell rating"][0] <= vs["cell rating"][1] and vs["the +59 C abort"][0] <= vs["the +59 C abort"][1]
+    assert vs["SGP41 air"][0] > vs["SGP41 air"][1] and vs["F2 at the air"][0] > vs["F2 at the air"][1]
+    # lid open at the bound's lowest also passes +60 C on the pack
+    assert R["open_worst"]["cell_pack"] > 60.0
+
+
+def t_lo01g_three_cases_on_usable_energy():
+    R = _R()
+    sh, H = R["selfheat"], R["hold"]
+    gs = [1.0 / (1.0 / R["Gblk"][i] + 1.0 / R["Gb"]["closed_still"][i]) for i in (0, 1)]
+    assert all(abs(a - b) < 1e-12 for a, b in zip(gs, sh["g_series"]))
+    # a heater at the storage floor, driven direct: the series path times 13 K for 24 h
+    e = [g * 13.0 * 24.0 for g in gs]
+    assert abs(e[0] - sh["rows"]["slow"]["Wh_prim_direct"]) < 1e-9 and abs(e[1] - sh["rows"]["fast"]["Wh_prim_direct"]) < 1e-9
+    assert abs(e[0] - 38.1) < 0.05 and abs(e[1] - 106.1) < 0.05
+    # the pack-fed heater discharges the cells: its setpoint sits on the discharge side, UTD plus the published cold budget
+    assert abs(sh["set_pack"] - (R["ladder"]["UTD"] + sh["budget_cold"])) < 1e-12 and sh["set_pack"] > -10.0
+    # usable energy at the stored charge, recomputed: never 24 h at any corner, and no protected path in shutdown
+    lim = R["S"]["35E_11"]
+    for cf, row, dur in ((sh["cold_f"][0], "fast", sh["dur_h_range"][0]), (sh["cold_f"][1], "slow", sh["dur_h_range"][1])):
+        e_use = 12 * lim["c_min"] * 3.6 * sh["age"] * (sh["soc_store"] - sh["reserve"]) * cf
+        assert abs(e_use / sh["rows"][row]["pt_pack"] - dur) < 1e-9
+    assert sh["dur_h_range"][1] + max(r["tc_pack_h"] for r in sh["rows"].values()) < R["g"]["hours"], "the pack-fed heater covers E4-S after all"
+    assert "turns off the FETs" in sh["shutdown_fets_off"]
+    # the regulator's loss is counted once, into the air node: the terminal power exceeds the mat's by exactly that share
+    for row in sh["rows"].values():
+        assert row["pt_prim_reg"] > row["pt_prim_direct"]
+    # the nominal comparison is withdrawn on the page and in the output
+    assert "WITHDRAWN as a feasibility basis" in open(OUT, encoding="utf-8").read()
+    assert "**withdrawn** as a feasibility basis" in open(PAGE, encoding="utf-8").read()
+    # the separately fed heater stays INCONCLUSIVE with its missing facts named
+    rt = [r for r in R["dec"]["LO-01g"]["routes"] if "separate primary" in r["route"]][0]
+    assert rt["status"] == "INCONCLUSIVE" and "usable energy at -33 C" in rt["missing"]
+    assert abs(H["resid2_hot"] - 0.351) < 0.001 and abs(H["resid2_cold"] - 0.301) < 0.001
+    for k in ("LO-01f", "LO-01g"):
+        assert R["passive"][k]["ins_mm"] > 2.66, "%s's passive route fits the pocket after all" % k
+
+
+def t_shortlist_selects_an_approach_that_keeps_the_constraints():
+    R = _R()
+    lines = " ".join(_CACHE["M"].shortlist_lines(R))
+    assert lines.count("A1 ") == 1 and "SELECTED" in lines and lines.count("A3 ") == 1 and "A4 " not in lines
+    assert "Constraints kept" in lines and "changes an approved constraint" in lines
+    out = open(OUT, encoding="utf-8").read()
+    assert "SELECTION: A1" in out and "A1 changes no approved constraint" in out
+
+
+def t_check_filed_byte_for_byte():
+    import json
+    p = os.path.join(REC, "checks", "astra-check-l4e10-1.md")
+    need(p, "the filed check")
+    t = open(p, encoding="utf-8").read()
+    assert t.startswith("accepted: no\n")
+    res = os.path.join(os.path.dirname(ROOT), "_runs", "codex", "cx26-l4e10-check", "20261001T223709Z-4184732", "result.json")
+    if not os.path.exists(res):
+        return
+    d = json.load(open(res, encoding="utf-8"))
+    for b in d["blockers"]:
+        assert "- " + b in t, "a blocker is not filed verbatim"
+    assert d["summary"] in t and d["closure_criterion"] in t and d["smallest_next_action"] in t
 
 
 def t_page_figures_are_the_outs():
     R = _R()
     out = open(OUT, encoding="utf-8").read()
     page = open(PAGE, encoding="utf-8").read()
-    figs = ["63.29", "62.12", "56.22", "1.246", "1.164", "1.530", "1.410", "58.64", "51.99", "57.97", "0.824", "0.485", "61.94",
-            "-10.24", "-5.52", "0.39 W", "14.69", "15.68", "6.7 to 13.7", "0.77 to 2.66", "1081 to 4457", "0.21 K", "0.18 K",
-            "185 to 383", "218 to 452", "144.7", "127.4", "121.0", "108.1", "95.2", "90.4", "2.52", "2.22", "2.11", "11.9", "16.4",
-            "44.3", "71.4", "1.37 to 3.24", "56.37 to 58.24", "61.63", "74.22", "66.63", "79.22", "1554 to 3773", "3.66"]
+    figs = ["63.29", "62.12", "56.22", "60.39", "60.49", "1.2455", "1.3154", "1.5300", "1.6043", "1.6664", "58.64", "61.94",
+            "0.824", "0.485", "-10.24", "-5.52", "12.44", "12.84", "0.38 W", "0.44 W", "0.351 K", "0.301 K", "24.6 mm", "30.3 mm",
+            "38.1 to 106.1", "42.2 to 116.6", "2.93 to 8.16", "3.37 to 9.30", "11.9 to 28.9", "1.3 to 8.6", "4.9 to 32.6",
+            "-211.2 to -51.9", "-8.14", "0.30 to 1.09", "1.57 to 4.57", "2.58 to 7.27", "-30.7 to -30.0", "0.133 to 0.183",
+            "40.78", "53.37", "5.68 h", "14.4 to 21.2", "0.76 to 7.87", "1.50 to 10.09", "1.60 to 4.44", "144.7", "127.4", "121.0",
+            "108.1", "95.2", "90.4", "2.52", "2.22", "2.11", "1.37 to 3.24", "56.37 to 58.24", "4.67 to 8.00", "10.5 to 54.0",
+            "52.04", "53.29", "1.725"]
     for f in figs:
         assert f in out, "%s not in the .out" % f
         assert f in page, "%s not on the page" % f
