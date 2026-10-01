@@ -946,3 +946,33 @@ suite logs and the paused stream rdc24's outputs were preserved on the runner (t
 left); credit 110.45 USD, about 17.55 USD of the foundation cap of 20 used. The bookkeeping after promotion (the
 acceptance guards, the acceptance, the pages, this entry) checked by the targeted modules (133 passed, 0 failed, the
 hygiene module among them) and the acceptance-guard check.
+
+### Owner ruling, 1 October 2026 02:07 CEST: compute without a fixed cap, a two-hour idle stop, a persistent watchdog
+
+The owner, in his words: "Remove the USD 20 rental cap. There is no fixed spending cap for compute needed by this project.
+Rent, resume and use multiple instances autonomously when they accelerate useful work. Do not request approval merely
+because the old budget is exhausted." His operating rules, as given:
+
+- "Choose instances suited to the workload's CPU, RAM, storage and GPU needs. Use parallelism where jobs are independent."
+- "Automatically stop an instance after two hours without useful work. Stop sooner when no near-term job needs it. This
+  supersedes the earlier 24-hour idle rule."
+- "Determine activity from job state and actual progress, not GPU utilisation alone. Preserve healthy long-running jobs;
+  diagnose stalled jobs."
+- "Enforce the idle rule through a persistent watchdog or provider mechanism that continues working if this Claude
+  session ends."
+- "Save checkpoints, logs, results and uncommitted work off the instance. Before destroying a finished instance, verify
+  those backups."
+- "Stopped instances still incur storage charges. Destroy instances that are no longer needed once their backups are
+  verified."
+- "Resume or replace instances automatically when work becomes ready."
+- "Include active/stopped instances, assigned jobs, hourly cost and cumulative spend in normal progress reports. These
+  are visibility measures, not approval gates."
+
+This supersedes the foundation cap of 20 USD (the session's figure of 25 September, raised to 20 USD on 28 September) and
+the 24-hour idle rule. The earlier box-money rulings of 6 and 7 September stand as history. How it is applied: a
+watchdog on the runner (run by cron every ten minutes, independent of any Claude session) reads each rented instance's
+job markers, its processes' CPU time and its newest file changes; an instance with none of these for two hours is backed
+up (its job outboxes pulled to the runner) and stopped through the provider's API, and every action is logged. Destroying
+stays the coordinator's, after the backups are verified. State at this ruling: no instance rented (vast.ai 52646493 was
+destroyed on 30 September at 23:13 after its outputs were preserved); credit 110.45 USD; the next job needing an
+instance is the integration set's full suite (Layer 3 amendment and Layer 4 records).
