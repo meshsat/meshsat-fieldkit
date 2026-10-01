@@ -180,9 +180,10 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
    7b.9 (steady state): a PV emulator puts the loaded input at the limit from 16.420 V (the kept hold's lowest: EA3 at half, the
      resistors' drifts) to 25 V, at the load's maximum, cold-soaked
      at -20 C and in 62.1 C air; V_in x I_in at or under 100 W at every point; the limit's current at 25 V at most 4.000 A
-   7b.9t (transients, recorded apart): a source step (open circuit to the limit) and an irradiance step; the peak and the
-     time above 100 W against the filter's 2.32 ms (SESSION: no fault trip, IMON_IN under 1.55 V; above 100 W no longer than
-     five time constants, 11.6 ms)
+   7b.9t (transients, recorded apart): a source step (open circuit to the limit) and irradiance steps to the two panel
+     scenarios of section 9 (110.2 W, a warmed 13.8 C cell; 122.7 W, a cold-soaked -20 C cell; both at 1000 W/m2); the peak and
+     the time above 100 W against the filter's 2.32 ms (SESSION: no fault trip, IMON_IN under 1.55 V; above 100 W no longer
+     than five time constants, 11.6 ms)
    7b.10 the EA2 gain row and 7b.11 the line row above; 7b.12 the hold, read at both ends: accepted inside 16.420 to 18.813 V (EA3 at
      half, the resistors' drifts: the conditioned envelope); a reading outside 16.970 to 18.221 V (EA3 typical, new parts) is recorded
      with EA3's gain it implies
@@ -195,11 +196,12 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      8f552a0b57677bfa7e4a5d5d0fac56d56fbbd1a6f65a9ee7aaaf8743cd534ec3, byte-identical to the held
      v2/vendor/power/lt8705a.pdf; it prints its document code 8705af on each of its 44 pages and carries no revision table.
      Only its rows are used
-   THE CLASSIFICATION (Y: the value can move that outcome; the reasons below):
+   THE CLASSIFICATION (Y: the value can move that outcome; small: it moves it by the stated fraction, nonzero; the reasons below):
      id   unprinted value                                                            bound  stability protection other
      EA2  EA2's gain and VC's operating range                                        Y      Y         N          energy, only in hours the limit binds
-     LINE the IMON_IN reference's line regulation while switching and at temperature Y      N         N          energy, a fraction of a percent of the limit, only in hours it binds
-     TCR  RSENSE1's TCR below +25 C                                                  Y      N         N          energy, a fraction of a percent of the limit, only in hours it binds
+     A7   A7's gain outside its test point (50 mV differential, CSPIN at 5.025 V)    Y      Y         Y          energy, only in hours the limit binds
+     LINE the IMON_IN reference's line regulation while switching and at temperature Y      small     N          energy, a fraction of a percent of the limit, only in hours it binds
+     TCR  RSENSE1's TCR below +25 C                                                  Y      small     small      energy, a fraction of a percent of the limit, only in hours it binds
      HOLD EA3's gain and the FBIN bias                                               N      Y         N          energy (the hold band)
      TJ   U5's junction temperature                                                  Y      N         Y          lifetime (Note 3: derated above 125 C)
    EA2, EA2's gain and VC's operating range
@@ -216,15 +218,42 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      - guaranteed limit: none printed
      - conservative assumption: EA2 at least 65 V/V (half its typical) with VC anywhere in its absolute maximum range (the
        replay's allowance doubled)
-     - qualification needed: Analog Devices' statement of EA2's minimum gain, or of the IMON_IN regulation point's guaranteed
-       shift with VC, over -40 to 125 C junction (a production limit); a bench reading of a few units (7b.10) checks the
-       design, it is not that limit
+     - qualification needed: Analog Devices: EA2's minimum gain, or the IMON_IN regulation point's shift with VC, over -40 to
+       125 C junction, as a limit the manufacturer warrants, with the conditions it applies to; characterization over
+       production lots is supporting evidence, not a production guarantee, and the row stays CONDITIONAL until a warranted
+       limit exists; a bench reading of a few units (7b.10) checks the design only
      - margin kept: 2.8579 W under its conservative assumption alone (stack A otherwise, cold end); break-even 25.026426 V/V
        (stack A, cold), 55.191656 V/V (stack C's other terms, cold)
+   A7, A7's gain outside its test point (50 mV differential, CSPIN at 5.025 V)
+     - the bound: the limit is 1.208 V / (gm x RSENSE1 x RIMON_IN) (p.31): the effective gain enters in proportion. The full-
+       range gm row (0.94 / 1.06 mmho, E and I) is printed at a 50 mV differential with CSPIN at 5.025 V; the design runs
+       CSPIN at the panel voltage, 16.420 to 25 V, and up to 57.5 mV across RSENSE1. The CSPIN and CSNIN ranges, 1.5 to 80 V
+       common mode and -100 to 100 mV differential (p.5), are operating ranges, not a gain guarantee
+     - loop stability: the sense path's gain enters the input-current loop in proportion; an error outside the test point
+       moves the loop gain by the same fraction
+     - protection: the fault comparator's threshold voltage on IMON_IN (p.5) does not move; the input current at which it
+       trips moves inversely with the effective gain, as the limit does
+     - the sheet: p.5 A7 gm 0.95 / 1.05 mmho at 25 C and 0.94 / 1.06 mmho over the full range (E, I), each at VCSPIN - VCSNIN
+       = 50 mV and VCSPIN = 5.025 V; p.5 CSPIN and CSNIN 1.5 to 80 V common mode and -100 to 100 mV differential (operating
+       ranges); p.8 'IMON Output Currents' plots the output current against the differential only (TYPICAL, TA = 25 C); no
+       curve against common mode, no transfer-error or offset row
+     - guaranteed limit: the gm limits at the test point, over the full temperature range; nothing printed at the design's
+       common mode and differential, or while switching
+     - conservative assumption: the test-point limits apply at the design's common mode and differential while switching (an
+       extrapolation, ASSUMPTION)
+     - qualification needed: Analog Devices: A7's transfer error (gm and offset) over the common mode, the differential, -40
+       to 125 C junction and switching the design uses, as a limit the manufacturer warrants, with the conditions it applies
+       to; characterization over production lots is supporting evidence, not a production guarantee, and the row stays
+       CONDITIONAL until a warranted limit exists
+     - margin kept: 3.7526 W under its conservative assumption alone (stack A otherwise, cold end); break-even the effective
+       gain may fall to 0.904726 mmho (3.7526 % under 0.94) under stack A, 0.936935 mmho (0.3261 %) under stack C and
+       0.939053 mmho (0.1008 %) under every conservative assumption together, other terms fixed (cold)
    LINE, the IMON_IN reference's line regulation while switching and at temperature
      - the bound: the reference moves with VIN from the 12 V it is printed at: at 25 V the printed maximum moves the corner
        by 0.0619 W
-     - loop stability: a static shift of the reference with VIN; it adds no gain or pole to the loop
+     - loop stability: small, not zero: the reference's VIN dependence couples a moving source voltage into the regulated
+       current (a feedforward path, at most 0.0100 % of the setpoint per volt assumed), with no gain of its own; the loop's
+       margin is set elsewhere
      - protection: the regulated point would reach the IMON_IN fault minimum only at 402 times the printed maximum
      - the sheet: p.4 0.002 / 0.005 %/V, VIN 12 to 80 V, not switching, at 25 C (no bullet); p.4 the regulation itself is a
        full-range row at VIN = 12 V, so its temperature drift at 12 V is guaranteed; p.7 'Feedback Voltages' against
@@ -232,27 +261,38 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      - guaranteed limit: the full-range IMON_IN regulation row covers temperature at VIN = 12 V; the VIN dependence while
        switching and away from 25 C is not printed
      - conservative assumption: twice the printed maximum (0.010 %/V), either sign, at every temperature and while switching
-     - qualification needed: Analog Devices' statement of the IMON_IN reference's line regulation while switching, over -40
-       to 125 C junction
+     - qualification needed: Analog Devices: the IMON_IN reference's line regulation while switching, over -40 to 125 C
+       junction, as a limit the manufacturer warrants, with the conditions it applies to; characterization over production
+       lots is supporting evidence, not a production guarantee, and the row stays CONDITIONAL until a warranted limit exists
+     - small effect on loop stability: the setpoint moves with the source voltage: over the envelope's 8.580 V swing at most
+       0.0429 % printed, 0.0858 % assumed
      - margin kept: 3.6906 W under its conservative assumption alone (stack A otherwise, cold end); break-even 61.6 times the
        printed maximum (stack A, cold); 47.1 with EA2 at 65 V/V
    TCR, RSENSE1's TCR below +25 C
      - the bound: RSENSE1 sits in the limit's denominator; at -20 C its TCR sets its low end
-     - loop stability: a fraction of a percent of loop gain at most; the loop's margin is set by the compensation, not by
-       this
-     - protection: the fault and the limit both act on IMON_IN, so their ratio (1.55 / 1.229 V at its least) does not depend
-       on RSENSE1
+     - loop stability: small, not zero: the sense-path loop gain is proportional to RSENSE1, -0.2255 % from 50 to 100 ppm/K
+       at -20 C; the loop's margin is set by the compensation
+     - protection: small, not zero: the fault comparator's threshold voltage (IMON_IN 1.55 / 1.61 / 1.67 V, p.5) does not
+       move, but the input current at which it trips is proportional to 1 / RSENSE1 (p.31), +0.2260 % from 50 to 100 ppm/K at
+       -20 C. The fault-to-limit ratio does not depend on RSENSE1; at its least it is 1.248653 (stack A, regulation at most
+       1.241337312 V) and 1.236365 with every conservative assumption (regulation at most 1.253674623 V)
      - the sheet: HoJLR2512 Ho-A0 p.2 +-50 ppm/K (2 to 500 mOhm); p.4 the TCR test spans +25 to +125 C only; the catalogue
        prints no TCR for C2903494
      - guaranteed limit: none printed
      - conservative assumption: +-100 ppm/K below +25 C (twice the printed hot-side value)
-     - qualification needed: Milliohm's statement of the HoJLR2512 TCR from -55 (or -40) to +25 C, or its production
-       characterization; a bench reading of R59 at -20 C (7b.14) checks the design only
+     - qualification needed: Milliohm: the HoJLR2512 TCR from -40 to +25 C, as a limit the manufacturer warrants, with the
+       conditions it applies to; characterization over production lots is supporting evidence, not a production guarantee,
+       and the row stays CONDITIONAL until a warranted limit exists; a bench reading of R59 at -20 C (7b.14) checks the
+       design only
+     - small effect on loop stability: the sense-path loop gain moves with RSENSE1: -0.2255 % from 50 to 100 ppm/K at -20 C
+     - small effect on protection: the current at which the fault trips moves with 1 / RSENSE1 (p.31): +0.2260 % from 50 to
+       100 ppm/K at -20 C; the comparator's threshold does not move
      - margin kept: 3.5350 W under its conservative assumption alone (stack A otherwise, cold end); break-even 882.027 ppm/K
        (stack A), 122.295 ppm/K (stack C)
    HOLD, EA3's gain and the FBIN bias
-     - the bound: they set the hold, the envelope's low end: the corner there is 63.7897 W against 99.6739 W at 25 V (the
-       power rises with the input voltage at every vertex)
+     - the bound: they set the hold, the envelope's low end 16.419845 V, where the matching stacks (each resistor at its
+       worst end) read 63.1883 W (A), 65.4106 W (C, drifts included) and 65.5580 W (every conservative assumption) against
+       96.2474 W, 99.6739 W and 99.8992 W at 25 V: the power rises with the input voltage at every vertex
      - loop stability: EA3 closes the input-voltage loop through VC; its margin is part of the hold's bench row
      - protection: the hold is a regulation, not a protection; FBOUT's overvoltage and the IMON_IN fault are other pins
      - the sheet: p.4 EA3 90 V/V and FBIN bias 10 nA, typical only; p.4 FBIN regulation 1.184 / 1.226 V, full range (I
@@ -264,44 +304,55 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
    TJ, U5's junction temperature
      - the bound: every LT8705A row the corner uses is a full-range row, guaranteed for the I grade from -40 to 125 C
        junction (p.6 Note 3); the bound needs only the junction inside that range, not its value
-     - loop stability: the loop's gains move with temperature inside the unprinted EA2 row already carried above
+     - loop stability: the loop's gains move with temperature inside the unprinted EA2 and A7 rows already carried above
      - protection: the overtemperature protection acts at approximately 165 C (p.34, approximate): the estimate stays 59.6 K
        under it
-     - the sheet: p.2 theta-JA 34 C/W (UHF, a package figure on the maker's board); p.6 Note 3 and Note 8; p.34 the CLKOUT
-       method (+-10 C) and the thermal shutdown at approximately 165 C
-     - guaranteed limit: the I grade's rows hold over -40 to 125 C junction
-     - conservative assumption: TJ at most 105.4 C: the maximum gate charge at 10 V for all four FETs at the highest
-       oscillator frequency, the VIN quiescent maximum, EXTVCC at L4-E5's 30.15 V ceiling and theta-JA 34 C/W in 62.1 C air
-     - qualification needed: a design verification of board E's thermal path (7b.13 by p.34's method), with the margin
-       covering the unit spread the maximum gate charge already bounds
+     - the sheet: p.2 theta-JA 34 C/W (UHF, a package figure on the maker's board); p.3 the VIN quiescent current, 4.2 mA
+       maximum, printed at 25 C, not switching, EXTVCC = 0; p.6 Note 3 and Note 8; p.34 the CLKOUT method (+-10 C) and the
+       thermal shutdown at approximately 165 C
+     - guaranteed limit: the I grade's rows hold over -40 to 125 C junction; no junction temperature is printed for this
+       board
+     - conservative assumption: an INFERRED estimate, TJ about 105.4 C: the maximum gate charge at 10 V for all four FETs at
+       the highest oscillator frequency, the VIN quiescent maximum (printed at 25 C, not switching, EXTVCC = 0, so an
+       extrapolation), EXTVCC at L4-E5's 30.15 V ceiling and theta-JA 34 C/W (board-dependent) in 62.1 C air; not a
+       demonstrated upper bound
+     - qualification needed: a design verification of board E's thermal path (7b.13 by p.34's method, +-10 C), with the
+       margin covering the unit spread the maximum gate charge already bounds
      - margin kept: 19.6 K of junction; break-even 125 C junction (19.6 K above the estimate)
-   THE RESULT: CONDITIONAL on EA2, LINE, TCR, TJ. 96.2474 W (cold) and 96.2291 W (hot) are calculated results under the
-   assumptions listed below. Under each unresolved row's conservative assumption alone the cold corner reads 97.1421 /
-   96.3094 / 96.4650 W (EA2 / LINE / TCR; TJ moves no figure while the junction stays inside -40 to 125 C), and all of
-   them together with the resistors' drifts 99.8992 W (stack C with RSENSE1's cold TCR at 100 ppm/K): margin 0.1008 W.
-   The design floor stack C itself reads 99.6739 / 99.6549 W (cold / hot)
+   THE RESULT: CONDITIONAL on EA2, A7, LINE, TCR, TJ. 96.2474 W (cold) and 96.2291 W (hot), 96.2481 W with each resistor
+   at its own worst end (the mixed envelope), are calculated results under the assumptions listed below. Under each
+   unresolved row's conservative assumption alone the cold corner reads 97.1421 / 96.3094 / 96.4650 W (EA2 / LINE / TCR);
+   A7 at its test-point limits is stack A itself, and TJ moves no figure while the junction stays inside -40 to 125 C.
+   All of them together with the resistors' drifts read 99.8992 W (stack C with RSENSE1's cold TCR at 100 ppm/K): margin
+   0.1008 W, which A7 consumes at an effective gain 0.1008 % under its printed minimum (0.939053 mmho). The design floor
+   stack C itself reads 99.6739 / 99.6549 W (cold / hot)
    THE ASSUMPTIONS OF 96.25 W (stack A), in one list:
      1. 8705af's full-range rows for the I grade: the IMON_IN regulation 1.187 / 1.229 V and A7's gm 0.94 / 1.06 mmho,
-        with U5's junction inside -40 to 125 C (estimated at most 105.4 C)
-     2. the IMON_IN line regulation at its printed maximum (0.005 %/V, 25 C, not switching), applied while switching and
+        with U5's junction inside -40 to 125 C (an INFERRED estimate of about 105.4 C, not a demonstrated bound)
+     2. A7's gm limits, printed at VCSPIN - VCSNIN = 50 mV and VCSPIN = 5.025 V, applied at the design's common mode
+        16.420 to 25 V and up to 57.5 mV differential while switching (ASSUMPTION, condition A7)
+     3. the IMON_IN line regulation at its printed maximum (0.005 %/V, 25 C, not switching), applied while switching and
         at both ends (ASSUMPTION)
-     3. EA2's gain at its typical 130 V/V as its bound, with VC anywhere in its absolute maximum range -0.3 to 2.2 V
+     4. EA2's gain at its typical 130 V/V as its bound, with VC anywhere in its absolute maximum range -0.3 to 2.2 V
         (ASSUMPTION)
-     4. RSENSE1 15 mOhm +-1 % and +-50 ppm/K, the TCR printed for +25 to +125 C applied at -20 C (ASSUMPTION); its hot end
+     5. RSENSE1 15 mOhm +-1 % and +-50 ppm/K, the TCR printed for +25 to +125 C applied at -20 C (ASSUMPTION); its hot end
         70.1 C by the derating line (INFERRED)
-     5. RIMON_IN 23.2k +-0.1 %, +-25 ppm/K (tested from -55 to +125 C); the resistors' soldering and life drifts not
+     6. RIMON_IN 23.2k +-0.1 %, +-25 ppm/K (tested from -55 to +125 C); the resistors' soldering and life drifts not
         stacked (they are in C and D)
-     6. the envelope: the input from the hold's lowest 16.420 V to REQ-016's 25 V, ambient -20 to +40 C (REQ-024), inside
+     7. both resistors in the same inside air at each end (the thermal coupling of the paired ends); the mixed envelope
+        below drops it
+     8. the envelope: the input from the hold's lowest 16.420 V to REQ-016's 25 V, ambient -20 to +40 C (REQ-024), inside
         air at most 62.1 C (pcb_envelope.yaml)
-     7. nothing in series with CSPIN or CSNIN (p.30): R59's pads are their Kelvin taps (a layout obligation)
-     8. steady state; transients are 7b.9t's
-     9. the setting realised as drafted: R59 15 mOhm and R16 23.2k with C65 (the drafts applied in a circuit round)
+     9. nothing in series with CSPIN or CSNIN (p.30): R59's pads are their Kelvin taps (a layout obligation)
+     10. steady state; transients are 7b.9t's
+     11. the setting realised as drafted: R59 15 mOhm and R16 23.2k with C65 (the drafts applied in a circuit round)
    WHY THE CORNERS BOUND THE PERMITTED RANGE
      - the input voltage: P = v x I_set x [Vref (1 + ls lam (v - 12)) + es dVC / G] / (Vref_typ gm r1 r2); its slope in v is
        I_set [Vref (1 + ls lam (2v - 12)) + es dVC / G] / (Vref_typ gm r1 r2), whose bracket is at least 1.173206 V (stack A) and
        1.159412 V (stack C) at every vertex over 16.420 to 25 V: the power rises with v, so 25 V is the worst; no loaded voltage
        exceeds REQ-016's 25 V open circuit (the panel is PV_P's only source and in discontinuous mode M4 is held off on reverse
-       current, p.18); the hold's lowest is the floor (the corner there 63.7897 W). The dense check (0.01 V) of each stack finds
+       current, p.18); the hold's lowest is the floor (there, with matching stacks and each resistor at its worst end: 63.1883 W
+       A, 65.4106 W C with the drifts, 65.5580 W with every conservative assumption). The dense check (0.01 V) of each stack finds
        its worst at the 25 V vertex
      - every tolerance direction: P is monotonic in each term (up in Vref, in the line term for v above 12 V, in the EA2 term;
        down in gm, RSENSE1 and RIMON_IN), so the 64 vertices an end hold the extremes; a resistor's low end 1 - a|T - 25| is
@@ -310,14 +361,20 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        RSENSE1's own rise (70.1 C); the LT8705A rows are full range, so U5's junction enters only as the condition -40 to
        125 C. RSENSE1 would have to reach past its 170 C rating (stack A) or 139.0 C (stack C) for the corner to reach 100 W:
        a board hot spot beside L1 and the FETs is covered by that much
+     - the thermal coupling: the paired ends assume both resistors sit in the same inside air at each end (RSENSE1 adds its
+       own rise). The mixed envelope drops that and lets each take its own worst end: 96.248120559 W (A), 99.674651953 W
+       (C), 99.899220557 W (every conservative assumption), against 96.247433497 / 99.673940430 / 99.899220557 W paired; a
+       dense air sweep from -20 to 62.1 C in 0.1 C steps, RSENSE1 with and without its rise, finds 96.247433497 /
+       99.673940430 / 99.899220557 W. The mixed envelope is the bound's figure
    STATES OUTSIDE THE CORNERS
      - below -20 C ambient: outside REQ-024's -20 to +40 C. Computed for information at -40 C (the I grade's least junction):
        the candidate's open circuit reaches 25.23 V there, outside REQ-016's window; the corner at that voltage with both
        resistors at -40 C reads 97.2744 W under stack A
      - a source step (a panel plugged in live): TRK_VIN's 224.8 uF (NETLIST: C11, C12, C13, C14, C15, C64) charge through R59 at
        most the panel's short circuit, 70.2 mJ at 25 V; start-up ramps VC by the soft start (p.15). Bench 7b.9t
-     - an irradiance step: the candidate panel can give up to 110.2 W (100 W +6 % at 1000 W/m2, cells 13.8 C at -20 C air,
-       its -0.35 %/K, INFERRED), more than 100 W, until the IMON_IN loop settles through CIMON_IN (tau 2.32 ms). Bench 7b.9t
+     - an irradiance step, two scenarios of the candidate panel (100 W +6 %, -0.35 %/K, 1000 W/m2; INFERRED from its sheet):
+       110.2 W with a cell warmed to 13.8 C by the NOCT model in -20 C air, and 122.7 W with a cold-soaked -20 C cell; either
+       exceeds 100 W until the IMON_IN loop settles through CIMON_IN (tau 2.32 ms). Bench 7b.9t, both scenarios
      - the hold transition: VC passes between EA3 and EA2 (the diode-AND, p.14); each side's steady state is bounded above.
        The handover is a transient: bench 7b.9t
      - an unstable current loop would break the steady-state premise: bench 7b.9t with p.33's load and line steps
