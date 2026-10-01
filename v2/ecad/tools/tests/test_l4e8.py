@@ -1,15 +1,17 @@
-"""Layer 4 task L4-E8 (MESHSAT-1357, 1 October 2026; v2/docs/records/l4e8/): board A's VBUS20 bank re-sized on a rebuild of the
-generator's lost dense node analysis, held as predicates on properties the tests recompute.
+"""Layer 4 task L4-E8 (MESHSAT-1357, 1 October 2026; v2/docs/records/l4e8/): board A's VBUS20 bank re-sized on a derived dense
+node analysis, held as predicates on properties the tests recompute.
 
-The predicates: the rebuild's model reproduces the re-review's point to the record's 0.001 A and the drawn node's recorded worst
-can at its recorded corner within the stated tolerance, recomputed here from the module's own functions; the committed output's
-validation table holds every gating figure within the tolerance the script states; the chosen 8 mOhm bank meets 2.8 A at the 2:1
-spread at R11 8 mOhm, recomputed here by the script's own search, and the drawn bank does not; the draft apply script checks
-without writing, applies once to a copy, refuses a second application, refuses the repository's own generator without a
-RELEASE.md, adds only unused designators, changes only the bank's three keyword arguments, and composes with L4-E4's and L4-E6's
-drafts in every order on disjoint lines; no em or en dash and no claim word in the record. The committed .out is what the
-script prints is checked by `ripple_dense.py` itself (four minutes; L4E8-BANK.md's run order), not here. Nothing here writes
-into the tree.
+The predicates: the derivation meets the re-review's point to the record's 0.001 A and the drawn node's recorded worst can at its
+recorded corner within the stated tolerance (consistency, recomputed from the module's own functions); the committed output's
+consistency table holds every can figure within the stated tolerance and its finer grids have themselves converged; the chosen
+8 mOhm bank meets 2.8 A less the margin at the 2:1 spread at R11 8 mOhm on the sharing basis, recomputed here by the script's own
+search on the decision grids and converged, the drawn bank does not, and the layout rule binds (the bank fails at twice it); the
+rating applies unmodified at the harmonics' frequencies and each can's loss is under the rated condition's; the draft apply
+script checks without writing, applies once to a copy, refuses a second application, refuses the repository's own generator
+without a RELEASE.md, adds only unused designators, changes only the bank's arguments, keeps the 8 mOhm bank inside the 7 mOhm
+one, and composes with L4-E4's and L4-E6's drafts in every order on disjoint lines; no em or en dash and no claim word in the
+record. That the committed .out is what the script prints is checked by running `ripple_dense.py` (about five minutes;
+README.md's run order), not here. Nothing here writes into the tree.
 """
 import ast
 import difflib
@@ -128,7 +130,7 @@ def t_the_drawn_nodes_recorded_worst_can_recomputes_within_the_tolerance():
     assert abs(math.sqrt(best) - want) <= m.TOL_DENSE, "%.4f A at the record's corner against %.2f A" % (math.sqrt(best), want)
 
 
-def t_the_committed_validation_holds_every_gating_figure_within_the_stated_tolerance():
+def t_the_committed_consistency_holds_every_can_figure_and_the_finer_grids_converged():
     m, R = _m()
     t = _out()
     rows = re.findall(r"^   \| (drawn \(third fix-up\)|second fix-up|re-review's point) \| ([\d.:]+) \| ([\d.]+) A \| ([\d.]+) A \| ([\d.]+) A \| ([+-][\d.]+) A \| (yes|NO) \|$", t, re.M)
@@ -146,7 +148,10 @@ def t_the_committed_validation_holds_every_gating_figure_within_the_stated_toler
         assert abs(float(got) - want[key]) <= m.TOL_DENSE and ok == "yes", "row %s: %s A against %s A" % (key, got, recd)
     loop = re.findall(r"^   \| ((?:wide )?\w+) \| ([\d.]+) \| ([\d.]+) \| ([\d.]+) \| (yes|NO) \|$", t, re.M)
     assert len(loop) == 9 and all(abs(float(g) - float(w)) <= float(tol) and ok == "yes" for _k, w, g, tol, ok in loop), loop
-    assert "VERDICT: the rebuild is VALIDATED" in t
+    assert "CONSISTENCY: every can figure, the re-review's point and the loop within tolerance" in t
+    conv = re.search(r"the finer grids themselves converged: .*?read (.*?)$", t, re.S | re.M)
+    deltas = [float(x) for x in re.findall(r"\(([+-][\d.]+) A\)", conv.group(1))]
+    assert len(deltas) == 3 and all(abs(x) <= 0.001 for x in deltas), deltas
     assert re.search(r"ENUMERATED IN FULL \(110700 sets, 5\.7 A, matched\): 4450 over 2\.8 A \(RECORD: 4450 of 110700\)", t)
 
 
@@ -156,20 +161,44 @@ def _chosen(t, key):
     return float(m_.group(1)), tuple(int(m_.group(i)) for i in (2, 3, 4))
 
 
-def t_the_chosen_bank_meets_2_8_a_at_2_to_1_at_8_mohm_on_the_rebuild_and_the_drawn_does_not():
+def t_the_chosen_bank_meets_the_rule_at_2_to_1_at_8_mohm_and_the_drawn_does_not():
     m, R = _m()
     t = _out()
     lim, bank = _chosen(t, "8")
     hi = float(re.search(r"R11 8 mOhm \(C\d+\): ([\d.]+) A; L4-E6 prints", t).group(1))
     assert lim < R["mk"]["rip"] and bank[2] >= 3 and bank[0] >= 6
     M, _f, _ch = _model()
-    w = [M.weights(hi)]
-    got = math.sqrt(m.worst_can(m.search(m.Node(M, R["bands"], bank, 0.008, 0.010, 2.0, _hf(m, R)), w, ("odd", "sib")))["ms"])
-    assert got <= R["mk"]["rip"], "the chosen bank's worst can at 2:1 is %.3f A" % got
+    mk = R["mk"]
+    rows = [(mk["f400"][0], mk["f400"][2]), (mk["f800"][0], mk["f800"][2])]
+    Md = m.fine_model(M, rows, m.DECIDE)
+    lay = dict(sib_dl=m.LAYOUT[0], sib_dr=m.LAYOUT[1])
+    res = m.search(m.Node(Md, R["bands"], bank, 0.008, 0.010, 2.0, _hf(m, R), **lay), [Md.weights(hi)], ("odd", "sib"))
+    w = m.worst_can(res)
+    met = "odd" if w is res[("odd", 0)] else "sib"
+    mkn = lambda mm: m.Node(mm, R["bands"], bank, 0.008, 0.010, 2.0, _hf(m, R), **lay)
+    conv = m.converge(mkn, m.fine_model(M, rows), w["set"], met, hi)[1][0]
+    got = max(math.sqrt(w["ms"]), math.sqrt(conv))
     assert got <= lim + 1e-9, "the chosen bank's worst can at 2:1 is %.4f A against the rule's %.4f A" % (got, lim)
     drawn = (len(R["gen"]["bulk"]), len(R["gen"]["vbus_cer"]) + len(R["gen"]["ch_in"]), len(R["gen"]["cout_pre"]))
-    got0 = math.sqrt(m.worst_can(m.search(m.Node(M, R["bands"], drawn, 0.008, 0.010, 2.0, _hf(m, R)), w, ("odd",), slice_check=False))["ms"])
+    got0 = math.sqrt(m.worst_can(m.search(m.Node(M, R["bands"], drawn, 0.008, 0.010, 2.0, _hf(m, R)), [M.weights(hi)], ("odd",), slice_check=False))["ms"])
     assert got0 > R["mk"]["rip"], "the drawn bank reads %.3f A at 2:1: B-4 would not be open" % got0
+    geo = dict(sib_dl=m.GEOM[0], sib_dr=m.GEOM[1])
+    got2 = math.sqrt(m.worst_can(m.search(m.Node(M, R["bands"], bank, 0.008, 0.010, 2.0, _hf(m, R), **geo), [M.weights(hi)], ("odd",), slice_check=False))["ms"])
+    assert got2 > lim, "the layout rule does not bind: the bank holds at twice it (%.3f A)" % got2
+
+
+def t_the_rating_applies_unmodified_at_frequency_and_each_loss_is_under_the_rated():
+    m, R = _m()
+    t = _out()
+    _M, (f0, lo, hi), fchs = _model()
+    fmin = min(lo, min(fchs))
+    corr = R["mk"]["corr"]
+    assert all(c == 1.0 for f, c in corr if f >= 100e3) and fmin >= 100e3, (fmin, corr)
+    assert any(f == 100e3 for f, _c in corr), "the 100 kHz column of p.2 was not read"
+    pct = int(re.search(r"Each can's loss is at most (\d+) % of the rated condition's", t).group(1))
+    assert pct < 100
+    rows = re.findall(r"^   \| ([\d.]+):1 \| ([\d.]+) A \| ([\d.]+) A \| ([\d.]+) A \| ([\d.]+) mW \| (\d+) % \|$", t, re.M)
+    assert len(rows) == 3 and all(float(r[3]) > 0 and int(r[5]) < 100 for r in rows), rows
 
 
 def _run(*a):
@@ -214,7 +243,7 @@ def t_the_draft_checks_applies_once_refuses_a_second_and_the_tree_without_releas
     assert _sha(GEN_A) == before, "the tree's gen_sch_a.py changed"
 
 
-def t_the_draft_changes_only_the_banks_three_arguments_by_the_chosen_counts():
+def t_the_draft_changes_only_the_banks_arguments_by_the_chosen_counts_and_keeps_8_inside_7():
     m, R = _m()
     t = _out()
     D = _load(DRAFT, "apply_bank_t1")
@@ -228,12 +257,13 @@ def t_the_draft_changes_only_the_banks_three_arguments_by_the_chosen_counts():
         ka = {k.arg: ast.literal_eval(k.value) for k in call(a).keywords}
         kb = {k.arg: ast.literal_eval(k.value) for k in call(b).keywords}
         changed = sorted(k for k in set(ka) | set(kb) if ka.get(k) != kb.get(k))
-        assert changed == ["bulk", "cout_extra", "cout_pre"], changed
+        assert changed and set(changed) <= {"bulk", "cout_extra", "cout_pre"}, changed
         assert [ast.dump(x) for x in call(a).args] == [ast.dump(x) for x in call(b).args]
         strip = lambda tree: [ast.dump(s) for s in tree.body if not (isinstance(s, ast.Expr) and isinstance(s.value, ast.Call)
                                                                      and getattr(s.value.func, "id", "") == "lm5176" and ast.literal_eval(s.value.args[0]) == "FE")]
         assert strip(a) == strip(b), "the draft changes something besides the front end's call"
         co = ("C13", "C14", "C15")
+        kb.setdefault("cout_extra", ka["cout_extra"])
         vbus = [c for c in co + tuple(kb["cout_extra"]) if c not in kb["cout_pre"]]
         got = (len(kb["bulk"]), len(vbus) + len(R["gen"]["ch_in"]), len(kb["cout_pre"]))
         assert got == bank, "--bank %s draws %s, the output chose %s" % (key, got, bank)
@@ -241,7 +271,12 @@ def t_the_draft_changes_only_the_banks_three_arguments_by_the_chosen_counts():
         added = (set(kb["bulk"]) | set(kb["cout_extra"])) - (set(ka["bulk"]) | set(ka["cout_extra"]))
         assert all(not re.search(r"\b%s\b" % r, src) for r in added), "a new designator is used already"
         assert kb["bulk_part"] == ka["bulk_part"] == "V331", "one can part number"
-    assert set(D.patched(src, "8").splitlines()) - set(src.splitlines()) <= set(D.patched(src, "7").splitlines()) | set(D.patched(src, "8").splitlines())
+    kw = {}
+    for key in ("8", "7"):
+        call = [n for n in ast.walk(ast.parse(D.patched(src, key))) if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "lm5176"
+                and n.args and ast.literal_eval(n.args[0]) == "FE"][0]
+        kw[key] = {k.arg: ast.literal_eval(k.value) for k in call.keywords}
+    assert all(set(kw["8"][k]) <= set(kw["7"][k]) for k in ("bulk", "cout_extra", "cout_pre")), "the 7 mOhm bank does not keep the 8 mOhm bank's parts"
 
 
 def _changed_lines(src, new):
@@ -276,10 +311,12 @@ def t_the_draft_composes_with_l4e4_and_l4e6_in_every_order_on_disjoint_lines():
 
 def t_no_em_or_en_dash_and_no_claim_word_in_the_record():
     words = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives|rated for)\b", re.I)
-    files = [os.path.join(REC, f) for f in sorted(os.listdir(REC)) if f.endswith((".md", ".py", ".out"))] + [os.path.abspath(__file__)]
-    for p in files:
+    need(REC, "the L4-E8 record")
+    files = [os.path.join(REC, f) for f in sorted(os.listdir(REC)) if f.endswith((".md", ".py", ".out"))]
+    assert len(files) >= 6, files
+    for p in files + [os.path.abspath(__file__)]:
         t = open(p, encoding="utf-8").read()
-        assert "—" not in t and "–" not in t, "%s carries an em or en dash" % p
-        mine = t.replace("certified C596319", "").replace(" proven,", "")
-        hits = [h for h in words.findall(mine) if not (p == os.path.abspath(__file__))]
+        assert chr(0x2014) not in t and chr(0x2013) not in t, "%s carries an em or en dash" % p
+    for p in files:
+        hits = words.findall(open(p, encoding="utf-8").read())
         assert not hits, "%s carries %s" % (p, hits)
