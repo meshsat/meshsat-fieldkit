@@ -7,7 +7,8 @@ first). The decisions and the corner check are on `L4E7-STAGE-SETTINGS.md`. Seco
 `checks/astra-check-l4e7q-1.md` (NOT YET, B1, B2 and five minors; see the last section).
 
 **What follows from it (L4-E7R, 1 October 2026): `L4E7-CONTROL-DECISION.md`.** The result below stays CONDITIONAL;
-the control decision places a hardware 100 W backstop under the limit, whose bound needs none of the five values.
+the control decision places a hardware trip under the limit whose bound rests on printed limits only and needs none
+of the five values.
 
 ## The sheet
 

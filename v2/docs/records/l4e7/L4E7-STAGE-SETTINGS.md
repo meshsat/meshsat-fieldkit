@@ -9,10 +9,12 @@ the arithmetic. Bases: MAKER (document, revision, page), NETLIST, CATALOGUE (fil
 ASSUMPTION, SESSION. Second round: after the collaborator's check `checks/astra-check-l4e7-1.md` (NOT YET, B1 and three
 minors; see the last section).
 
-**The control decision (L4-E7R, 1 October 2026): `L4E7-CONTROL-DECISION.md`.** The input-current limit below is not shown
-to hold 100 W on warranted manufacturer limits alone; the decision places a hardware backstop under it (INA250A2 and
-TPS3701 on SWEN) and moves RIMON_IN from 23.2k to 26.1k so the limit regulates below the backstop. The settings on this
-page stand otherwise; `apply_gen_sch_e_backstop.py` applies on top of the input limit draft.
+**The control decision (L4-E7R, 1 October 2026): `L4E7-CONTROL-DECISION.md`.** The input-current limit below is not
+shown to hold 100 W on warranted manufacturer limits alone; the decision (second round) places a hardware trip under it
+whose bound rests on printed limits only (a WSL2512 sense bank, an INA169, a TPS3701 and a TPS3808 holding SWEN low),
+moves RIMON_IN from 23.2k to 29.4k so the limit regulates under the trip, and moves D4 and a 50 V bulk behind the sense
+bank. The settings on this page stand otherwise; `apply_gen_sch_e_backstop.py` applies on top of the hold and input
+limit drafts.
 
 ## As drawn (NETLIST)
 
@@ -151,10 +153,11 @@ until a `RELEASE.md` names an accepted check. Owed beside them: R59's Kelvin tap
 gates, and the requirement records that name the 225 uF "on PV_P" (behind R59 after the change). After any application
 l4e_replay.py section 11, l4e5 and this record refuse by design: they record the circuit before it.
 
-L4-E7R adds `apply_gen_sch_e_backstop.py`, which applies after `apply_gen_sch_e_input_limit.py` and refuses a generator
-without R59: U18 INA250A2PWR ahead of R59 on the new net TRK_VS (R59 and U5's CSPIN move behind it), R60 over R61 into U19
-TPS3701DDCR, U5's SWEN on TRK_SWEN with R62 and C68, C66 and C67, and R16 from 23.2k to 26.1k (C728586). The reasons and
-every figure are in `L4E7-CONTROL-DECISION.md`.
+L4-E7R adds `apply_gen_sch_e_backstop.py`, which applies after `apply_gen_sch_e_hold.py` and
+`apply_gen_sch_e_input_limit.py` and refuses a generator without them: the sense bank R60 to R64 ahead of R59 on the new
+net TRK_VS (R59 and U5's CSPIN move behind it), U18 INA169, U19 TPS3701, U20 TPS3808G33, U5's SWEN on TRK_SWEN, the 50 V
+bulk with D4 and R14 on TRK_VS, and R16 from 23.2k to 29.4k (C861288). The reasons and every figure are in
+`L4E7-CONTROL-DECISION.md`.
 
 ## The check, and what changed
 
