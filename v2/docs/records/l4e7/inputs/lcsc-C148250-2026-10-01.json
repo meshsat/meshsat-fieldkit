@@ -1,0 +1,30 @@
+{
+ "what": "LCSC public product-detail answer for C148250 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C148250), no login; kept fields only",
+ "read_utc": "2026-10-01T13:30Z",
+ "read_by": "task L4-E7 (MESHSAT-1357)",
+ "role": "board E Q3 and Q5 (BSC028N06NS, as drawn): its sheet's gate charge for U5's junction estimate",
+ "code": "C148250",
+ "brand": "Infineon",
+ "model": "BSC028N06NS",
+ "package": "TDSON-8(5x6)",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/0ee6668d612fe4d6661ddc31bcb9aa36.pdf?productCode=C148250",
+ "pdf_sha256": "2959653166e981f9de24cd9c141c44490ecc62acba5971ec8c0b263eca9708e0",
+ "pdf_note": "fetched at read_utc; Infineon BSC028N06NS Rev.2.1 2013-01-18; held back (v2/vendor/power/held/, fetched by ../fetch_held_back.py)",
+ "stock": 20000,
+ "params": {
+  "Output Capacitance(Coss)": "825pF",
+  "Ciss-Input Capacitance": "3.375nF",
+  "Pd - Power Dissipation": "83W",
+  "Configuration": "-",
+  "Operating Temperature": "-55℃~+150℃",
+  "Drain to Source Voltage": "60V",
+  "Current - Continuous Drain(Id)": "100A",
+  "Reverse Transfer Capacitance (Crss)": "56pF",
+  "RDS(on)": "2.8mΩ@10V",
+  "Number": "1 N-channel",
+  "Gate Charge(Qg)": "49nC@10V",
+  "Vgs": "±20V",
+  "Gate Threshold Voltage (Vgs(th))": "3.3V",
+  "Type": "N-Channel"
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "what": "LCSC public product-detail answer for C2903494 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C2903494), no login; kept fields only",
+ "read_utc": "2026-10-01T13:30Z",
+ "read_by": "task L4-E7 (MESHSAT-1357)",
+ "role": "board E RSENSE1 (new R59), chosen (15 mOhm)",
+ "code": "C2903494",
+ "brand": "Milliohm",
+ "model": "HoJLR2512-3W-15mR-1%",
+ "package": "2512",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/bf6eace094b76bcd756cc1a79c576936.pdf?productCode=C2903494",
+ "pdf_sha256": "3224518dbc8bdc858a96cfde88de2611494550f95406f6b65130c232cdfc93fb",
+ "pdf_note": "fetched at read_utc; byte-identical to v2/vendor/passives/milliohm-hojlr2512-series.pdf (the series sheet already filed)",
+ "stock": 4870,
+ "params": {
+  "Power(Watts)": "3W",
+  "Resistance": "15mΩ",
+  "Type": "Current Sense Resistor",
+  "Tolerance": "±1%"
+ }
+}

@@ -1,0 +1,449 @@
+{
+ "what": "JLCPCB public parts search for the keyword RT0603BRD07 (YAGEO RT0603, 0.1 %, 25 ppm/K, 7 inch reel; the same API, every page of 100), no login; the rows of the three decades this record chose from (6.0k to 9.99k, 20k to 29.9k, 90k to 119k), code, model and stock kept",
+ "read_utc": "2026-10-01T13:30Z",
+ "read_by": "task L4-E7 (MESHSAT-1357)",
+ "count_all": 820,
+ "count_kept": 88,
+ "rows": [
+  {
+   "code": "C122538",
+   "model": "RT0603BRD07100KL",
+   "stock": 1276914
+  },
+  {
+   "code": "C861068",
+   "model": "RT0603BRD07102KL",
+   "stock": 9902
+  },
+  {
+   "code": "C861070",
+   "model": "RT0603BRD07104KL",
+   "stock": 8550
+  },
+  {
+   "code": "C861072",
+   "model": "RT0603BRD07105KL",
+   "stock": 18611
+  },
+  {
+   "code": "C861074",
+   "model": "RT0603BRD07107KL",
+   "stock": 8766
+  },
+  {
+   "code": "C6668645",
+   "model": "RT0603BRD07109KL",
+   "stock": 0
+  },
+  {
+   "code": "C326736",
+   "model": "RT0603BRD07110KL",
+   "stock": 40904
+  },
+  {
+   "code": "C705718",
+   "model": "RT0603BRD07113KL",
+   "stock": 4377
+  },
+  {
+   "code": "C861084",
+   "model": "RT0603BRD07115KL",
+   "stock": 4239
+  },
+  {
+   "code": "C861086",
+   "model": "RT0603BRD07118KL",
+   "stock": 8802
+  },
+  {
+   "code": "C705746",
+   "model": "RT0603BRD0720K5L",
+   "stock": 5674
+  },
+  {
+   "code": "C861220",
+   "model": "RT0603BRD0720K8L",
+   "stock": 0
+  },
+  {
+   "code": "C723637",
+   "model": "RT0603BRD0720KL",
+   "stock": 77979
+  },
+  {
+   "code": "C705747",
+   "model": "RT0603BRD0721K5L",
+   "stock": 79
+  },
+  {
+   "code": "C861228",
+   "model": "RT0603BRD0721KL",
+   "stock": 4434
+  },
+  {
+   "code": "C723484",
+   "model": "RT0603BRD0722K1L",
+   "stock": 27904
+  },
+  {
+   "code": "C861235",
+   "model": "RT0603BRD0722K3L",
+   "stock": 10
+  },
+  {
+   "code": "C861236",
+   "model": "RT0603BRD0722K6L",
+   "stock": 9240
+  },
+  {
+   "code": "C469656",
+   "model": "RT0603BRD0722KL",
+   "stock": 50468
+  },
+  {
+   "code": "C861244",
+   "model": "RT0603BRD0723K2L",
+   "stock": 4030
+  },
+  {
+   "code": "C861245",
+   "model": "RT0603BRD0723K7L",
+   "stock": 648
+  },
+  {
+   "code": "C136968",
+   "model": "RT0603BRD0724K3L",
+   "stock": 29267
+  },
+  {
+   "code": "C861250",
+   "model": "RT0603BRD0724K6L",
+   "stock": 1689
+  },
+  {
+   "code": "C136967",
+   "model": "RT0603BRD0724K9L",
+   "stock": 6232
+  },
+  {
+   "code": "C326729",
+   "model": "RT0603BRD0724KL",
+   "stock": 59731
+  },
+  {
+   "code": "C20165689",
+   "model": "RT0603BRD0725K2L",
+   "stock": 0
+  },
+  {
+   "code": "C861257",
+   "model": "RT0603BRD0725K5L",
+   "stock": 25442
+  },
+  {
+   "code": "C861258",
+   "model": "RT0603BRD0725K8L",
+   "stock": 0
+  },
+  {
+   "code": "C728586",
+   "model": "RT0603BRD0726K1L",
+   "stock": 11283
+  },
+  {
+   "code": "C861266",
+   "model": "RT0603BRD0726K4L",
+   "stock": 4451
+  },
+  {
+   "code": "C728587",
+   "model": "RT0603BRD0726K7L",
+   "stock": 13112
+  },
+  {
+   "code": "C861273",
+   "model": "RT0603BRD0727K1L",
+   "stock": 0
+  },
+  {
+   "code": "C861274",
+   "model": "RT0603BRD0727K4L",
+   "stock": 17669
+  },
+  {
+   "code": "C309651",
+   "model": "RT0603BRD0727KL",
+   "stock": 54067
+  },
+  {
+   "code": "C861281",
+   "model": "RT0603BRD0728K4L",
+   "stock": 2127
+  },
+  {
+   "code": "C861282",
+   "model": "RT0603BRD0728K7L",
+   "stock": 9651
+  },
+  {
+   "code": "C705756",
+   "model": "RT0603BRD0728KL",
+   "stock": 17690
+  },
+  {
+   "code": "C20165691",
+   "model": "RT0603BRD0729K1L",
+   "stock": 0
+  },
+  {
+   "code": "C861288",
+   "model": "RT0603BRD0729K4L",
+   "stock": 1701
+  },
+  {
+   "code": "C861289",
+   "model": "RT0603BRD0729K8L",
+   "stock": 0
+  },
+  {
+   "code": "C728595",
+   "model": "RT0603BRD076K04L",
+   "stock": 3604
+  },
+  {
+   "code": "C861529",
+   "model": "RT0603BRD076K12L",
+   "stock": 0
+  },
+  {
+   "code": "C861530",
+   "model": "RT0603BRD076K19L",
+   "stock": 363
+  },
+  {
+   "code": "C861531",
+   "model": "RT0603BRD076K26L",
+   "stock": 6594
+  },
+  {
+   "code": "C136960",
+   "model": "RT0603BRD076K2L",
+   "stock": 91967
+  },
+  {
+   "code": "C861532",
+   "model": "RT0603BRD076K34L",
+   "stock": 7813
+  },
+  {
+   "code": "C861533",
+   "model": "RT0603BRD076K42L",
+   "stock": 0
+  },
+  {
+   "code": "C861534",
+   "model": "RT0603BRD076K49L",
+   "stock": 18
+  },
+  {
+   "code": "C861535",
+   "model": "RT0603BRD076K57L",
+   "stock": 2761
+  },
+  {
+   "code": "C861536",
+   "model": "RT0603BRD076K65L",
+   "stock": 2347
+  },
+  {
+   "code": "C861537",
+   "model": "RT0603BRD076K73L",
+   "stock": 0
+  },
+  {
+   "code": "C861538",
+   "model": "RT0603BRD076K81L",
+   "stock": 17647
+  },
+  {
+   "code": "C861539",
+   "model": "RT0603BRD076K8L",
+   "stock": 132417
+  },
+  {
+   "code": "C861540",
+   "model": "RT0603BRD076K98L",
+   "stock": 9176
+  },
+  {
+   "code": "C861541",
+   "model": "RT0603BRD076K9L",
+   "stock": 14723
+  },
+  {
+   "code": "C861561",
+   "model": "RT0603BRD077K06L",
+   "stock": 12005
+  },
+  {
+   "code": "C861562",
+   "model": "RT0603BRD077K15L",
+   "stock": 6092
+  },
+  {
+   "code": "C861563",
+   "model": "RT0603BRD077K32L",
+   "stock": 6808
+  },
+  {
+   "code": "C861564",
+   "model": "RT0603BRD077K41L",
+   "stock": 0
+  },
+  {
+   "code": "C728597",
+   "model": "RT0603BRD077K5L",
+   "stock": 32275
+  },
+  {
+   "code": "C375517",
+   "model": "RT0603BRD077K68L",
+   "stock": 7175
+  },
+  {
+   "code": "C861565",
+   "model": "RT0603BRD077K87L",
+   "stock": 13398
+  },
+  {
+   "code": "C861587",
+   "model": "RT0603BRD078K06L",
+   "stock": 2902
+  },
+  {
+   "code": "C861588",
+   "model": "RT0603BRD078K16L",
+   "stock": 0
+  },
+  {
+   "code": "C705798",
+   "model": "RT0603BRD078K25L",
+   "stock": 16682
+  },
+  {
+   "code": "C861589",
+   "model": "RT0603BRD078K2L",
+   "stock": 62367
+  },
+  {
+   "code": "C861590",
+   "model": "RT0603BRD078K45L",
+   "stock": 69884
+  },
+  {
+   "code": "C7064990",
+   "model": "RT0603BRD078K56L",
+   "stock": 0
+  },
+  {
+   "code": "C861591",
+   "model": "RT0603BRD078K66L",
+   "stock": 11395
+  },
+  {
+   "code": "C861592",
+   "model": "RT0603BRD078K76L",
+   "stock": 5
+  },
+  {
+   "code": "C861593",
+   "model": "RT0603BRD078K87L",
+   "stock": 2527
+  },
+  {
+   "code": "C5197519",
+   "model": "RT0603BRD078K98L",
+   "stock": 16
+  },
+  {
+   "code": "C728600",
+   "model": "RT0603BRD0790K9L",
+   "stock": 19052
+  },
+  {
+   "code": "C326721",
+   "model": "RT0603BRD0791KL",
+   "stock": 55568
+  },
+  {
+   "code": "C705799",
+   "model": "RT0603BRD0793K1L",
+   "stock": 8607
+  },
+  {
+   "code": "C861602",
+   "model": "RT0603BRD0794K2L",
+   "stock": 9520
+  },
+  {
+   "code": "C861605",
+   "model": "RT0603BRD0795K3L",
+   "stock": 1838
+  },
+  {
+   "code": "C861608",
+   "model": "RT0603BRD0797K6L",
+   "stock": 4772
+  },
+  {
+   "code": "C6288325",
+   "model": "RT0603BRD0798K8L",
+   "stock": 0
+  },
+  {
+   "code": "C861611",
+   "model": "RT0603BRD079K09L",
+   "stock": 13033
+  },
+  {
+   "code": "C861612",
+   "model": "RT0603BRD079K1L",
+   "stock": 41968
+  },
+  {
+   "code": "C20165694",
+   "model": "RT0603BRD079K2L",
+   "stock": 11
+  },
+  {
+   "code": "C861613",
+   "model": "RT0603BRD079K31L",
+   "stock": 2040
+  },
+  {
+   "code": "C861614",
+   "model": "RT0603BRD079K42L",
+   "stock": 9
+  },
+  {
+   "code": "C705800",
+   "model": "RT0603BRD079K53L",
+   "stock": 14784
+  },
+  {
+   "code": "C861615",
+   "model": "RT0603BRD079K65L",
+   "stock": 0
+  },
+  {
+   "code": "C861616",
+   "model": "RT0603BRD079K76L",
+   "stock": 5424
+  },
+  {
+   "code": "C5197531",
+   "model": "RT0603BRD079K88L",
+   "stock": 5
+  }
+ ]
+}
