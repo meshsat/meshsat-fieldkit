@@ -435,7 +435,7 @@ def t_the_junction_estimate_is_never_called_a_bound_and_line_keeps_its_coupling(
 # ---------------------------------------------------------------- the control decision (L4-E7R, owner, 1 October 2026; second
 # round after checks/astra-check-l4e7r-1.md)
 BACKSTOP = "apply_gen_sch_e_backstop.py"
-WARRANTED = {"warranted", "warranted (printed test limits)", "warranted (the rows, read both ways)", "warranted (the pin's absolute maximum)",
+WARRANTED = {"warranted", "warranted (printed test limits)", "warranted (the rows, read both ways)", "rating (the pin's absolute maximum)",
              "requirement"}
 ANSWERS = ("EA2", "A7", "LINE", "RSENSE1", "HoJLR", "Milliohm", "Analog Devices")
 
@@ -480,7 +480,8 @@ def t_the_chosen_bound_rests_only_on_warranted_rows_and_reproduces_in_closed_for
     for t_ in c["terms"]:
         assert not any(w in t_[0] for w in ANSWERS), "the chosen bound names %s" % t_[0]
         assert "typical" not in t_[2] and "times its typical" not in t_[1] and "twice" not in t_[0], t_
-    assert set(_approach(R, "C")["classes"]) <= {"warranted", "requirement"}
+    assert set(_approach(R, "C")["classes"]) <= {"warranted", "rating", "requirement"}
+    assert [t_[0] for t_ in c["terms"] if t_[2].startswith("rating")] == [t_[0] for t_ in c["terms"] if "VIN+ pin" in t_[0]]
     # the controlling calculation in separate arithmetic: the highest trip at 25 V and the bound
     dt = 45.0
     r66 = rw["r66"] * (1 - 0.001) * (1 - 25e-6 * dt) * (1 - 0.005 - 0.05 / rw["r66"]) ** 2
@@ -510,6 +511,8 @@ def t_the_supply_sequencing_holds_on_printed_rows():
     assert sq["ldo_enable_min"] > max(sq["vdd38"], sq["vdd_t"]), "SWEN could rise before U19 and U20 work"
     assert sq["swen_at_ldo_lo"] > rw["swen"][1] and sq["i_sw_reset"] <= 1e-3 and sq["td_min"] >= 0.18 > rw["st_t"]
     assert sq["uv_ts_lo"] > 2.7 and sq["uv_ts_hi"] < 15.0, "U19's INA does not cover U18's supply below the hold"
+    c = R["decision"]["c"]
+    assert sq["i_ldo"] < 5e-3 and c["vout_hi"] < sq["uv_ts_lo"] - rw["sw169"], "LDO33's load or U18's compliance"
 
 
 def t_the_dynamic_bound_uses_the_input_edge_and_names_its_basis():

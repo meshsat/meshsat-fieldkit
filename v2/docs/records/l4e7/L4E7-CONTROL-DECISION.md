@@ -7,8 +7,8 @@ second round, after the check `checks/astra-check-l4e7r-1.md` (NOT YET, B1 to B6
 its change). Every figure below is printed by section 10 of `l4e7_stage_settings.out` (the script `l4e7_stage_settings.py`,
 after its reproductions of section 0); the sheet values quoted in the verdict's table are section 9's. Evidence classes:
 **warranted** (a limit the maker prints for the condition it is used at, with its page; "printed test limits" for a
-passive's drift rows; "the pin's absolute maximum" where only the rating bounds a term), **typical**, **inferred**,
-**assumption**, **requirement**, **MODELED**. The decision is the session's, taken under the owner's standing rule of
+passive's drift rows), **rating** (a printed absolute maximum, used only where no characteristic row bounds a term),
+**typical**, **inferred**, **assumption**, **requirement**, **MODELED**. The decision is the session's, taken under the owner's standing rule of
 26 September 2026 (`ruled_by: SESSION`): it changes no requirement, spends no money and buys nothing.
 
 ## The verdict on the present control: NOT SHOWN on warranted limits alone
@@ -40,7 +40,7 @@ the input power's (the panel's voltage rises as its current falls, so the power 
 |---|---|---|---|
 | Bound | 97.8269 W | 98.2217 W (every row at its printed value) | **98.1890 W** |
 | Status | CONDITIONAL | CONDITIONAL | **UNCONDITIONAL** (static bound) |
-| Evidence | warranted: IMON_IN fault maximum 1.67 V, RSENSE1 1 %, RIMON_IN 0.1 %, the drifts; **assumption**: A7 away from its test point, the fault threshold's line dependence at twice the reference's, RSENSE1's cold TCR at 100 ppm/K, the fault's timing | warranted: the TPS3701, TPS3808 and RT rows, the offset's supply and common-mode rows at 0 A; **conditional**: the gain error and offset at VS = 3.3 V and VREF = 0 V (printed at 5 V and 2.5 V), the CMR away from 0 A, the shunt's stress rows (typical, 0.425 %), the nonlinearity and output impedance (typical), the VIN+ bias across temperature (25 C row) | warranted, every term at its operating condition (below); requirement: 25 V |
+| Evidence | warranted: IMON_IN fault maximum 1.67 V, RSENSE1 1 %, RIMON_IN 0.1 %, the drifts; **assumption**: A7 away from its test point, the fault threshold's line dependence at twice the reference's, RSENSE1's cold TCR at 100 ppm/K, the fault's timing | warranted: the TPS3701, TPS3808 and RT rows, the offset's supply and common-mode rows at 0 A; **conditional**: the gain error and offset at VS = 3.3 V and VREF = 0 V (printed at 5 V and 2.5 V), the CMR away from 0 A, the shunt's stress rows (typical, 0.425 %), the nonlinearity and output impedance (typical), the VIN+ bias across temperature (25 C row) | warranted, every term at its operating condition, and one rating, U18's VIN+ pin at its absolute maximum (below); requirement: 25 V |
 | Regulating setting | 31.6k (C705766), 2.5485 A | 28k (C705756), 2.8762 A | 29.4k (C861288), 2.7392 A |
 | SC-37 Wh, lower / nominal / upper (h) | 344.0 (5) / 336.6 (5) / 307.9 (0) | 361.2 (4) / 349.8 (2) / 307.9 (0) | 355.0 (5) / 345.5 (3) / 307.9 (0) |
 | Bright day Wh (h) | 431.9 (9) | 473.2 (7) | 457.4 (9) |
@@ -75,7 +75,7 @@ bound; the trip acts on SWEN, a logic input, so EA2's finite gain sets only wher
 
 **The static bound: 98.1890 W at 25 V** (the highest trip current 3.9173 A, the trip's sense voltage 52.537 mV at most),
 **margin 1.8110 W**. Every term sits at the end that raises the trip, summed; no common multiplier, no typical row, no term
-assigned zero:
+assigned zero. SBOS181F p.6 prints every INA169 row over TA -40 to +85 C ("all other characteristics at"):
 
 | Term | Value | Class | Source |
 |---|---|---|---|
@@ -90,7 +90,7 @@ assigned zero:
 | the bank, 5 x WSL2512R0700FEA: 1 %, 75 ppm/K from -55 to +155 C | 14.0000 mOhm | warranted | Vishay WSL 30100 pp.1, 2 |
 | the bank's solder-heat and load-life test limits | +-(0.5 % + 0.0005 Ohm), +-(1.0 % + 0.0005 Ohm) per part | warranted (printed test limits) | WSL 30100 p.3 |
 | R8 and R9 (the hold draft's RT parts) across 25 V, bypassing the bank | 5.78 mW | warranted | YAGEO RT V.16 |
-| U18's VIN+ pin current, bypassing the bank (its bias prints no maximum) | at most 10 mA: 250 mW | warranted (the pin's absolute maximum) | INA169 p.4 |
+| U18's VIN+ pin current, bypassing the bank (its bias prints no maximum) | at most 10 mA: 250 mW | rating (the pin's absolute maximum) | INA169 p.4 |
 | the input voltage | at most 25 V | requirement | REQ-016 |
 
 The margin covers the dynamic term below; the static terms are each at their limit and need none.
@@ -133,6 +133,9 @@ The stage is held off whenever the sensing chain is unsupplied, on printed rows 
   input; no current row: INFERRED), and TRK_LDO33 under 1.3 V with INTVCC above its 4.45 V lockout is an LDO33 failure, a
   single fault (below). The power-up reset (VPOR 0.8 V) holds for a rise no faster than 66667 V/s; LDO33's 22 mA limit into
   C20's 1 uF gives 22000 V/s (INFERRED: C20's capacitance at bias has no row); bench row 7b.19.
+- The arrangement draws at most 158 uA from TRK_LDO33 (the IDD rows, the dividers, U20's MR pull-up at its least and CT's
+  resistor), under the 5 mA its regulation row is printed at. U18's output at the highest trip, 1.329 V into R65 + R66,
+  stays under its compliance where the chain is armed, 3.76 V (V+ less 1.2 V at TRK_VS = 4.960 V, SBOS181F p.6).
 
 ## The coordination and the energy (B4)
 
@@ -145,7 +148,7 @@ at the nominal hold exceeds C's lowest trip are 09 to 15, 462.4 Wh: the energy s
 
 **The energy cost:** on SC-37's day 355.0 / 345.5 / 307.9 Wh at the lower, nominal and upper corners (5 / 3 / 0 h bound)
 against 369.7 / 350.0 / 307.9 Wh with 23.2k: **4.5 Wh at the nominal hold, 14.7 Wh at the lower corner**; on the bright day
-457.4 Wh against 534.7 Wh, **77.3 Wh**; at bright noon the input power falls 19.4 % (the current 21.1 %). The bank's
+457.4 Wh against 534.7 Wh, **77.4 Wh**; at bright noon the input power falls 19.4 % (the current 21.1 %). The bank's
 conduction costs 0.5773 Wh on SC-37's day and 1.6072 Wh on the bright day; R59 stays.
 
 ## The solar entry's protection (B6)
