@@ -49,6 +49,7 @@ L4E4_PY = "v2/docs/records/l4e4/l4e4_limits.py"
 GEN_E = "v2/ecad/tools/gen_sch_e.py"
 NET_E = "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net"
 ENV = "v2/ecad/tools/pcb_envelope.yaml"
+REQS = "v2/ecad/tools/pcb_requirements.yaml"
 LT = "v2/vendor/power/lt8705a.pdf"
 HOJ = "v2/vendor/passives/milliohm-hojlr2512-series.pdf"
 RT = "v2/vendor/passives/held/yageo-rt-series-v16-2025-05-06.pdf"
@@ -77,7 +78,7 @@ LINE_FLOOR_MUL = 2.0     # SESSION: and the references' line regulation (printed
 STOCK_MIN = 1000         # SESSION: a catalogue value is a candidate only with at least this many in stock at the reading
 V_STEP = 0.01            # the corner check's voltage grid, V (the replay's own step)
 I_RES = 0.001            # the old setting's grid, A (the replay's I_RES), for its row only
-HOLD_RANGE = (15.5, 17.5)  # SESSION: the hold pairs scanned have their nominal inside the candidate's hourly MPP span +- about 1 V
+HOLD_RANGE = (15.5, 17.5)  # the NOT ADOPTED proposal's scan only: nominals inside the candidate's hourly MPP span +- about 1 V
 CIMON = ("C65", "100n", "C14663")   # SESSION: CIMON_IN at the maker's 0.1 uF lower end (8705af p.31), the 0603 X7R board E uses
 
 
@@ -359,7 +360,7 @@ def compute():
     END = ends(i_nom, rm)
     R["ends"] = END
 
-    # ================================================================== 4: the hold (R8 and R9), chosen against its energy
+    # ================================================================== 4: the hold (R8 and R9), REQ-016's 17.6 V point kept
     hold, trace, dsp = LR["hold"], LR["trace"], LR["dsp"]
     r8n, r9n = LR["r8"], LR["r9"]
 
@@ -387,6 +388,48 @@ def compute():
                 e_at[k] = trace(dsp, v, None)
             return e_at[k]
         return trace(dsp, v, lim)
+    # REQ-016 (approved) holds the panel at 17.6 V, and D-34 keeps REQ-016's window unchanged unless the owner rules otherwise
+    # (check astra-check-l4e7-1, B1): the hold keeps the drawn nominal ratio. SESSION: R8 and R9 at their drawn values as the
+    # RT0603BRD07 parts (0.1 %, 25 ppm/K) with the most stock; only tolerance and drift change.
+    reqs = open(os.path.join(TOP, REQS), encoding="utf-8").read()
+    r016 = " ".join(reqs.split("  - id: REQ-016\n", 1)[1].split("\n  - id: ", 1)[0].split())
+    need(r016, r"the panel held at 17\.6 V by the stage's input regulation", "REQ-016's 17.6 V hold")
+    need(r016, r"the FBIN divider R8 and R9 sets the 17\.6 V operating point", "REQ-016's acceptance on R8 and R9")
+    d34 = " ".join(reqs.split("  - id: D-34\n", 1)[1].split("\n  - id: ", 1)[0].split())
+    need(d34, r"authority: OWNER", "D-34's authority")
+    need(d34, r"REQ-016's approved solar window stays unchanged", "D-34's ruling")
+    r8v, r9v = r8n * 1e3, r9n * 1e3
+
+    def stocked(val):
+        rows = [(r_["stock"], r_["code"]) for r_ in rtj if rvalue(r_["model"]) == val and r_["stock"] >= STOCK_MIN]
+        if not rows:
+            refuse(4, "BLOCKER: no stocked RT0603BRD07 part at %.0f Ohm" % val)
+        return max(rows)[1]
+    r8c, r9c = stocked(r8v), stocked(r9v)
+    for code, val in ((r8c, r8v), (r9c, r9v)):
+        verify_rt(code, val)
+    hb = band(r8v, r9v, 1.0)                                  # EA3 at its typical, tolerance and TCR
+    hb4 = band(r8v, r9v, 1.0, drifts=True)                    # EA3 at its typical, with the soldering and life drifts
+    hb2 = band(r8v, r9v, EA2_FLOOR_DIV)                       # EA3 at half its typical
+    hb3 = band(r8v, r9v, EA2_FLOOR_DIV, drifts=True)          # EA3 at half, with the drifts: the widest conditioned band
+    # the drawn circuit (check astra-check-l4e7-1, M1): the replay's band takes H and MP's FBIN minimum; with the E grade's
+    # (the netlist's C674164) and the replay's other terms, 1 % resistors
+    rt_ = RP.R_TOL
+    drawn_e_lo = min(hold(fbin["min"], -1, -1, s8, s9, LR["fbbias_p"]) for s8 in (1 - rt_, 1 + rt_) for s9 in (1 - rt_, 1 + rt_))
+    # the FBIN bias as an energy sensitivity (check M2): the lower corner (EA3 typical) with no bias, the typical and ten times it
+    k8lo = rfac(tol_y, tcr_y, t_cold - 25.0, sgn=-1)
+    k9hi = rfac(tol_y, tcr_y, t_cold - 25.0, sgn=1)
+    bias_rows = []
+    for mult in (0.0, 1.0, 10.0):
+        lo_b = min(hold(fbin["min"], -1, -1, s8 * r8v / (r8n * 1e3), s9 * r9v / (r9n * 1e3), LR["fbbias_p"] * mult)
+                   for s8 in (k8lo, rfac(tol_y, tcr_y, t_air - 25.0, sgn=-1)) for s9 in (k9hi, rfac(tol_y, tcr_y, t_air - 25.0, sgn=1)))
+        bias_rows.append((mult * LR["fbbias_p"], lo_b, sum(energy(lo_b)[0])))
+    R.update(r8v=r8v, r9v=r9v, r8c=r8c, r9c=r9c, hb=hb, hb2=hb2, hb3=hb3, hb4=hb4, drawn_e_lo=drawn_e_lo, bias_rows=bias_rows,
+             fbin_hmp_min=LR["fb_p"][1]["min"],
+             hold_drawn=(LR["v_lo"], LR["v_nom_hold"], LR["v_hi_hold"]), stock={r_["code"]: r_["stock"] for r_ in rtj})
+
+    # THE PROPOSAL, NOT ADOPTED: a lower hold would change REQ-016's 17.6 V point and needs the owner's ruling (D-34). Nothing
+    # below depends on it and no draft carries it: the stocked pair whose band's worse end gives the most energy on SC-37's day.
     r8s = sorted({(rvalue(r_["model"]), r_["code"], r_["stock"]) for r_ in rtj if rvalue(r_["model"]) and 90e3 <= rvalue(r_["model"]) < 120e3 and r_["stock"] >= STOCK_MIN})
     r9s = sorted({(rvalue(r_["model"]), r_["code"], r_["stock"]) for r_ in rtj if rvalue(r_["model"]) and 6e3 <= rvalue(r_["model"]) < 10e3 and r_["stock"] >= STOCK_MIN})
     hold_rows = []
@@ -398,22 +441,16 @@ def compute():
         elo, ehi = sum(energy(lo)[0]), sum(energy(hi)[0])
         hold_rows.append((round(min(elo, ehi), 1), -min(s8_, s9_), a8, a9, c8, c9, lo, nm, hi, elo, ehi))
     hold_rows.sort(key=lambda t: (-t[0], t[1], t[2], t[3]))
-    best = hold_rows[0]
-    r8v, r9v, r8c, r9c = best[2], best[3], best[4], best[5]
-    for code, val in ((r8c, r8v), (r9c, r9v)):
-        verify_rt(code, val)
-    hb = band(r8v, r9v, 1.0)
-    hb2 = band(r8v, r9v, EA2_FLOOR_DIV)
-    hb3 = band(r8v, r9v, EA2_FLOOR_DIV, drifts=True)
-    R.update(r8v=r8v, r9v=r9v, r8c=r8c, r9c=r9c, hb=hb, hb2=hb2, hb3=hb3, hold_rows=hold_rows[:8], n_hold=len(hold_rows),
-             hold_drawn=(LR["v_lo"], LR["v_nom_hold"], LR["v_hi_hold"]), stock={r_["code"]: r_["stock"] for r_ in rtj})
+    pb = hold_rows[0]
+    R["proposal"] = dict(r8=pb[2], r9=pb[3], c8=pb[4], c9=pb[5], band=(pb[6], pb[7], pb[8]), e_band=(pb[9], sum(energy(pb[7])[0]), pb[10]),
+                         e_nom_kept=sum(energy(hb[1])[0]), n=len(hold_rows))
     # the hourly maximum-power voltage on SC-37's day (the model's own), for the hold's reason
     AC = LR["AC"]
     vmpp = [dsp.mpp(LR["prof0"][h], AC.t_cell(LR["TA40"][h], LR["prof0"][h], LR["noct"]))[0] for h in range(24) if LR["prof0"][h] >= 100.0]
     R["vmpp"] = (min(vmpp), max(vmpp))
 
     # ================================================================== 5: THE CORNER CHECK on the achieved values
-    v_lo_env = min(hb[0], hb2[0])
+    v_lo_env = min(hb[0], hb2[0], hb3[0], hb4[0])         # the widest conditioned band's lowest (check M3)
     grid = sorted(set([v_lo_env, v_oc] + [round(v_lo_env + V_STEP * k, 6) for k in range(int((v_oc - v_lo_env) / V_STEP) + 1)]))
     grid = [v for v in grid if v_lo_env - 1e-12 <= v <= v_oc + 1e-12]
 
@@ -478,12 +515,14 @@ def compute():
         return lo
     R["be_line"] = (breakeven_line(ea2), breakeven_line(ea2 / EA2_FLOOR_DIV))
 
-    def breakeven_tcr_cold():
-        """RSENSE1's TCR below 25 C at which the cold 25 V corner (the worst, above) reaches 100 W; searched up to 10000 ppm/K,
-        inside which the low end (1 - TCR x 45 K) stays positive and the power rises with the TCR."""
+    def breakeven_tcr_cold(gain, lmul, drifts):
+        """RSENSE1's TCR below 25 C at which the cold 25 V corner (the worst, above) reaches 100 W under the named stack (check
+        M2: each break-even states its stack); searched up to 10000 ppm/K, inside which the low end (1 - TCR x 45 K) stays positive
+        and the power rises with the TCR."""
         dt = abs(END[0][1] - 25.0)
-        rm_lo = rfac(tol_y, tcr_y, END[0][2] - 25.0)
-        f = lambda tc: v_oc * i_nom * corner_k(v_oc, ea2, 1.0, rfac(tol_h, tc, dt), rm_lo)
+        rm_lo = rfac(tol_y, tcr_y, END[0][2] - 25.0, (R["life_y"][0] + R["life_y"][1] / rm) if drifts else 0.0,
+                     (R["sold_y"][0] + R["sold_y"][1] / rm) if drifts else 0.0)
+        f = lambda tc: v_oc * i_nom * corner_k(v_oc, gain, lmul, rfac(tol_h, tc, dt, life_h if drifts else 0.0, sold_h if drifts else 0.0), rm_lo)
         if f(0.01) <= p_win:
             return None
         lo, hi = 0.0, 0.01
@@ -494,7 +533,8 @@ def compute():
             else:
                 lo = mid
         return lo
-    R["be_tcr_cold"] = breakeven_tcr_cold()
+    R["be_tcr_cold"] = breakeven_tcr_cold(ea2, 1.0, False)                                   # stack A
+    R["be_tcr_cold_floor"] = breakeven_tcr_cold(ea2 / EA2_FLOOR_DIV, LINE_FLOOR_MUL, True)   # stack C, the design floor
     # the old setting on the achieved parts (information): 3.548 A on the replay's 1 mA grid, with these parts
     R["old_on_parts"] = max(v_oc * LR["i_set"] * corner_k(v_oc, ea2, 1.0, rfac(tol_h, tcr_h, en[1] - 25.0), rfac(tol_y, tcr_y, en[2] - 25.0)) for en in END)
 
@@ -531,7 +571,8 @@ def compute():
     R["zero"] = zero
     grid_e = []
     for hl, vh in (("lower hold corner", lo_h), ("nominal hold", nom_h), ("upper hold corner", hi_h),
-                   ("lower, EA3 at its floor", hb2[0]), ("upper, EA3 at its floor", hb2[2])):
+                   ("lower, EA3 at its floor", hb2[0]), ("upper, EA3 at its floor", hb2[2]),
+                   ("lower, EA3 floor, drifts", hb3[0]), ("upper, EA3 floor, drifts", hb3[2])):
         row = [hl, vh, sum(energy(vh)[0])]
         for inom, rmv in ((i_nom, rm), (zero[3], zero[0])):
             for which in ("lo", "nom", "hi"):
@@ -562,7 +603,9 @@ def compute():
     cands_w = [(r_[0] + ", limit at its lowest", r_[3][2]) for r_ in grid_e[:3]] + [(r_[0] + ", no limit", energy(r_[1])[0]) for r_ in grid_e[:3]]
     lab_w, tr_w = min(cands_w, key=lambda t: sum(t[1]))
     runs = {}
-    for lab, tr in (("NEW nominal (hold %.3f V, limit %.3f A)" % (nom_h, i_nom), tr_nom), ("NEW least-energy corner (%s)" % lab_w, tr_w)):
+    tr_cond = energy(hb3[2])[0]                          # the conditioned envelope's upper end (EA3 at half, drifts): information
+    for lab, tr in (("NEW nominal (hold %.3f V, limit %.3f A)" % (nom_h, i_nom), tr_nom), ("NEW least-energy corner (%s)" % lab_w, tr_w),
+                    ("NEW conditioned upper end (%.3f V: EA3 at half, the resistors' drifts; information)" % hb3[2], tr_cond)):
         for ak, _alab, n in archs:
             r_ = [meanday(ak, "WE", n, "TYP", h, win, collapse=False, gser=gs(tr), wp=100.0, ratio=1.0) for h in (48, 72)]
             x = [least(ak, "WE", "TYP", h, win, 1.0, 160.0, 34, collapse=False, gser=gs(tr), wp=100.0, ratio=1.0) for h in (48, 72)]
@@ -673,19 +716,30 @@ def render(R):
     P("   THE HOLD: R8 %gk (%s, LCSC %s, stock %d) over R9 %gk (%s, LCSC %s, stock %d), 0.1 %%, 25 ppm/K: nominal %.3f V" % (
         R["r8v"] / 1e3, R["models"][R["r8c"]], R["r8c"], R["stock"][R["r8c"]], R["r9v"] / 1e3, R["models"][R["r9c"]], R["r9c"],
         R["stock"][R["r9c"]], R["hb"][1]))
-    P("     Rule (SESSION): of the %d stocked pairs with a nominal from %.1f to %.1f V, the one whose band's worse end gives the most energy" % (
-        R["n_hold"], HOLD_RANGE[0], HOLD_RANGE[1]))
-    P("     on SC-37's day (the model's hourly maximum-power voltage there runs %.2f to %.2f V). The best eight (worse end Wh, pair, band):" % R["vmpp"])
-    for row in R["hold_rows"]:
-        P("       %.1f Wh  %5.1fk / %4.2fk  %.3f / %.3f / %.3f V" % (row[0], row[2] / 1e3, row[3] / 1e3, row[6], row[7], row[8]))
-    P("     the band (FBIN's I-grade limits, its line term, the FBIN bias, R8 and R9 at 0.1 % and 25 ppm/K at both ends):")
-    P("       EA3 at its typical %.0f V/V: %.3f / %.3f / %.3f V; EA3 at half: %.3f / %.3f V; with the resistors' drifts too: %.3f / %.3f V" % (
-        R["ea3"], R["hb"][0], R["hb"][1], R["hb"][2], R["hb2"][0], R["hb2"][2], R["hb3"][0], R["hb3"][2]))
-    P("     as drawn the band was %.3f / %.3f / %.3f V (the replay: 1 %% parts, H and MP's FBIN minimum)" % R["hold_drawn"])
+    P("     Rule (SESSION, under REQ-016 \"the panel held at 17.6 V by the stage's input regulation\" and the owner's D-34, which keeps")
+    P("     REQ-016's window unchanged; check astra-check-l4e7-1, B1): the drawn ratio 102k over 7.5k kept, each at its drawn value as")
+    P("     the stocked RT0603BRD07 part (0.1 %, 25 ppm/K); only the tolerance and the drift change")
+    P("     the band at both ends (FBIN's I-grade limits, its line term, the FBIN bias at its typical, R8 and R9 at 0.1 % and 25 ppm/K):")
+    P("       EA3 at its typical %.0f V/V:                      %.6f / %.6f / %.6f V" % (R["ea3"], R["hb"][0], R["hb"][1], R["hb"][2]))
+    P("       EA3 at its typical, soldering and life drifts:  %.6f / %.6f V" % (R["hb4"][0], R["hb4"][2]))
+    P("       EA3 at half its typical:                       %.6f / %.6f V" % (R["hb2"][0], R["hb2"][2]))
+    P("       EA3 at half, soldering and life drifts:        %.6f / %.6f V (the widest conditioned band)" % (R["hb3"][0], R["hb3"][2]))
+    P("     as drawn (1 %% parts), the replay's legacy calculation with H and MP's FBIN minimum %.3f V: %.3f / %.3f / %.3f V; with the" % (
+        R["fbin_hmp_min"], *R["hold_drawn"]))
+    P("     E grade the netlist names (C674164, FBIN minimum %.3f V) and the replay's other terms, its lower corner is %.6f V" % (
+        R["fbin"]["min"], R["drawn_e_lo"]))
+    P("   PROPOSAL, NOT ADOPTED: it would change REQ-016's 17.6 V point and needs the owner's ruling (D-34). Not drafted; nothing here")
+    P("     depends on it. Of %d stocked RT0603BRD07 pairs with a nominal from %.1f to %.1f V (the model's hourly maximum-power voltage on" % (
+        R["proposal"]["n"], HOLD_RANGE[0], HOLD_RANGE[1]))
+    P("     SC-37's day runs %.2f to %.2f V), the one whose band's worse end gives the most energy: %gk over %gk (%s, %s), band" % (
+        R["vmpp"][0], R["vmpp"][1], R["proposal"]["r8"] / 1e3, R["proposal"]["r9"] / 1e3, R["proposal"]["c8"], R["proposal"]["c9"]))
+    P("     %.3f / %.3f / %.3f V (EA3 typical), %.1f / %.1f / %.1f Wh a day; at nominal %+.1f Wh a day against the kept hold's %.1f Wh" % (
+        *R["proposal"]["band"], *R["proposal"]["e_band"], R["proposal"]["e_band"][1] - R["proposal"]["e_nom_kept"], R["proposal"]["e_nom_kept"]))
     P("")
     P("4. THE 100 W CORNER CHECK ON THE ACHIEVED VALUES (section 11's physics: the replay's i_factor, 8705af p.31)")
-    P("   envelope: %.3f V (the hold's lowest, EA3 at half) to REQ-016's %.0f V in %.2f V steps; I grade; both ends:" % (
-        min(R["hb"][0], R["hb2"][0]), 25.0, V_STEP))
+    P("   envelope: %.6f V (the kept hold's lowest: EA3 at half, the resistors' drifts) to REQ-016's %.0f V in %.2f V steps; I grade;" % (
+        min(R["hb"][0], R["hb2"][0], R["hb3"][0], R["hb4"][0]), 25.0, V_STEP))
+    P("   both ends:")
     for lab, t_rs, t_rm, _t3, p_ in END:
         P("     %s: RSENSE1 at %.1f C, RIMON_IN at %.1f C%s" % (lab, t_rs, t_rm, "" if lab == "the cold end" else
                                                                " (RSENSE1 %.2f W x %.1f K/W over the air, INFERRED)" % (p_, R["k_r"])))
@@ -700,14 +754,17 @@ def render(R):
     show("C. the design floor", R["chk_floor"], "EA2 at 65 V/V, line x2, the resistors' soldering and life drifts stacked: SESSION")
     show("D. drifts at the typical rows", R["chk_drift"], "information")
     P("   VERDICT: A PASSES at both ends with a margin of %.2f W, and C (the floor) passes; refused above 100 W" % (100.0 - max(w[0] for _l, w, _n in R["main_chk"])))
-    P("   THE UNPRINTED ROWS, as break-even values for this setting (the corner reaches 100 W at the value shown):")
+    P("   THE UNPRINTED ROWS, as break-even values for this setting (the corner reaches 100 W at the value shown), each with its stack:")
     for (lm, dr), (gc, gh) in sorted(R["be_gain"].items()):
-        P("     EA2's gain, line x%-4g%-14s cold end %s V/V, hot end %s V/V" % (lm, ", with drifts" if dr else "", "%.1f" % gc if gc else "none passes",
-                                                                       "%.1f" % gh if gh else "none passes"))
-    P("     the line regulation (cold end) at EA2 130 V/V: up to %.1f times its printed maximum (%.3f %%/V); at 65 V/V: %.1f times" % (
-        R["be_line"][0], R["be_line"][0] * R["line_p"], R["be_line"][1]))
+        P("     EA2's gain; printed limits, line x%-4g%-28s cold end %s V/V, hot end %s V/V" % (
+            lm, ", resistors' drifts stacked" if dr else (", no drifts (stack A)" if lm == 1.0 else ", no drifts"), "%.1f" % gc if gc else "none passes",
+            "%.1f" % gh if gh else "none passes"))
+    P("     the line regulation (cold end; printed limits, no drifts): with EA2 at 130 V/V (stack A) up to %.1f times its printed" % R["be_line"][0])
+    P("     maximum (%.3f %%/V); with EA2 at 65 V/V, %.1f times" % (R["be_line"][0] * R["line_p"], R["be_line"][1]))
     P("     RSENSE1's TCR below 25 C (HoJLR prints its TCR from +25 to +125 C only, so the cold end applies it as an ASSUMPTION): the")
-    P("     cold corner passes up to %s" % ("%.0f ppm/K" % (R["be_tcr_cold"] * 1e6) if R["be_tcr_cold"] is not None else "10000 ppm/K and beyond"))
+    P("     cold corner passes up to %s under stack A, and up to %s under stack C (EA2 65 V/V, line x2, drifts)" % (
+        "%.3f ppm/K" % (R["be_tcr_cold"] * 1e6) if R["be_tcr_cold"] is not None else "10000 ppm/K and beyond",
+        "%.3f ppm/K" % (R["be_tcr_cold_floor"] * 1e6) if R["be_tcr_cold_floor"] is not None else "10000 ppm/K and beyond"))
     P("   for comparison, the replay's 3.548 A on these parts would take %.3f W at the worse end" % R["old_on_parts"])
     P("   CONDITIONS: sense voltage at the limit's highest %.1f mV (operating range %.0f mV); IMON_IN %.1f uA at it (at least %.0f uA);" % (
         R["vd_lim_hi"] * 1e3, R["csd"]["max"], R["i_imon_lim"] * 1e6, R["ioutmin"]))
@@ -722,11 +779,19 @@ def render(R):
         P("     %-24s %.3f V  %6.1f | %s | %s" % (row[0], row[1], row[2], " ".join("%6.1f (%d h)" % x for x in row[3:6]),
                                                  " ".join("%6.1f (%d h)" % x for x in row[6:9])))
     d_ = [row[3 + k][0] - row[6 + k][0] for row in R["grid_e"] for k in range(3)]
-    P("   the margin's cost on this day: %.1f Wh at the most over the fifteen cells (chosen less zero-margin from %+.1f to %+.1f Wh:" % (
-        max(0.0, -min(d_)), min(d_), max(d_)))
-    P("   where the chosen limit binds below the panel's maximum-power point, the voltage rides up toward it)")
-    P("   as drawn (the replay, section 12, no input limit): %s" % "; ".join("%.1f Wh at %.3f V" % (g_[3], g_[1]) for g_ in R["old_grid"]
-                                                                        if g_[2] == "no input limit (as drawn)"))
+    P("   the margin's cost on this day: %.1f Wh at the most over the %d cells (chosen less zero-margin from %+.1f to %+.1f Wh:" % (
+        max(0.0, -min(d_)), len(d_), min(d_), max(d_)))
+    P("   %s)" % ("where the chosen limit binds below the panel's maximum-power point, the voltage rides up toward it" if max(d_) > 0.05
+                     else "the limit binds in no hour of this day at any cell"))
+    P("   as drawn (the replay, section 12, no input limit; its legacy band): %s" % "; ".join("%.1f Wh at %.3f V" % (g_[3], g_[1]) for g_ in R["old_grid"]
+                                                                                       if g_[2] == "no input limit (as drawn)"))
+    ge = {r_[0]: r_ for r_ in R["grid_e"]}
+    P("   ENERGY SENSITIVITY of the two TYP-only hold rows (check M2: energy rows, not parameter break-evens; no input limit):")
+    P("     EA3's gain from its typical to half: lower corner %.1f to %.1f Wh, upper corner %.1f to %.1f Wh (with the drifts %.1f / %.1f Wh)" % (
+        ge["lower hold corner"][2], ge["lower, EA3 at its floor"][2], ge["upper hold corner"][2], ge["upper, EA3 at its floor"][2],
+        ge["lower, EA3 floor, drifts"][2], ge["upper, EA3 floor, drifts"][2]))
+    P("     the FBIN bias (out of the pin, lowering the hold; EA3 typical, the lower corner): %s" % "; ".join(
+        "%.0f nA %.6f V %.1f Wh" % (b[0] * 1e9, b[1], b[2]) for b in R["bias_rows"]))
     P("   where the margin costs: the limit's lowest begins to bind above (hour 12's %.1f C air, the model's cells):" % R["ta12"])
     for inom, vh, lim, g in R["g_bind"]:
         P("     setting %.4f A, hold %.3f V: lowest %.4f A, above %.0f W/m2" % (inom, vh, lim, g))
@@ -750,26 +815,36 @@ def render(R):
     P("   L4-E5's line (sized for the window's 100 W) covers it; the hold and the limit are on the input, R10 and C26/C27 on the output")
     P("")
     P("7. INCONCLUSIVE (no printed bound), each with the measurement that bounds it")
-    P("   - EA2's voltage gain (130 V/V TYP, p.5) and VC's operating range: the corner passes down to %.1f V/V (cold end, line x1)." % R["be_gain"][(1.0, False)][0])
+    P("   - EA2's voltage gain (130 V/V TYP, p.5) and VC's operating range: the corner passes down to %.1f V/V (stack A, cold end) and" % R["be_gain"][(1.0, False)][0])
+    P("     %.1f V/V with line x2 and the drifts (stack C's other terms)." % R["be_gain"][(2.0, True)][0])
     P("     Bench: in input-current limit at 25 V, step the load to move VC across its range, read VC and IMON_IN; the gain is")
     P("     dVC / dV(IMON_IN); accept at or above 65 V/V (the floor), and at least the break-even at every point")
     P("   - the IMON_IN reference's line regulation while switching and at both ends (printed at 25 C, not switching, p.4): the corner")
-    P("     passes up to %.0f times its printed maximum. Bench: the limit's current at VIN 16 and 25 V, switching, at both ends" % R["be_line"][0])
-    P("   - RSENSE1's TCR below +25 C (HoJLR p.4 tests +25 to +125 C): passes up to %s. Bench: R59 at -20 C and +25 C" % (
-        "%.0f ppm/K" % (R["be_tcr_cold"] * 1e6) if R["be_tcr_cold"] is not None else "10000 ppm/K and beyond"))
-    P("   - EA3's gain (90 V/V TYP) and the FBIN bias (10 nA TYP): energy only (the hold band above); the bench reads the hold at both ends")
+    P("     passes up to %.0f times its printed maximum (stack A, cold end). Bench: the limit's current at VIN 16 and 25 V, switching," % R["be_line"][0])
+    P("     at both ends")
+    P("   - RSENSE1's TCR below +25 C (HoJLR p.4 tests +25 to +125 C): passes up to %s (stack A) and %s (stack C). Bench: R59 at -20 C" % (
+        "%.0f ppm/K" % (R["be_tcr_cold"] * 1e6) if R["be_tcr_cold"] is not None else "10000 ppm/K and beyond",
+        "%.0f ppm/K" % (R["be_tcr_cold_floor"] * 1e6) if R["be_tcr_cold_floor"] is not None else "10000 ppm/K and beyond"))
+    P("     and +25 C")
+    P("   - EA3's gain (90 V/V TYP) and the FBIN bias (10 nA TYP): no compliance effect (the corner is at 25 V); an energy sensitivity")
+    P("     only (section 5); the bench reads the hold at both ends (7b.12)")
     P("   - U5's junction (INFERRED from the gate charge at 10 V and theta-JA): the CLKOUT duty cycle method of p.34 (+-10 C)")
     P("   - the candidate panel's own source compliance (O-1) and every efficiency (C-8): unchanged by this record")
     P("")
     P("8. BENCH ROWS")
-    P("   7b.9 (steady state): a PV emulator puts the loaded input at the limit from %.3f V to 25 V, at the load's maximum, cold-soaked" % R["hb"][0])
+    P("   7b.9 (steady state): a PV emulator puts the loaded input at the limit from %.3f V (the kept hold's lowest: EA3 at half, the" % R["hb3"][0])
+    P("     resistors' drifts) to 25 V, at the load's maximum, cold-soaked")
     P("     at %.0f C and in %.1f C air; V_in x I_in at or under 100 W at every point; the limit's current at 25 V at most %.3f A" % (
         R["t_cold"], R["t_air"], 100.0 / 25.0))
     P("   7b.9t (transients, recorded apart): a source step (open circuit to the limit) and an irradiance step; the peak and the")
     P("     time above 100 W against the filter's %.2f ms (SESSION: no fault trip, IMON_IN under %.2f V; above 100 W no longer than" % (
         R["tau"] * 1e3, R["iovm"]["min"]))
     P("     five time constants, %.1f ms)" % (5 * R["tau"] * 1e3))
-    P("   7b.10 the EA2 gain row and 7b.11 the line row above; 7b.12 the hold: the panel held at %.3f to %.3f V at both ends" % (R["hb"][0], R["hb"][2]))
+    P("   7b.10 the EA2 gain row and 7b.11 the line row above; 7b.12 the hold, read at both ends: accepted inside %.3f to %.3f V (EA3 at" % (
+        R["hb3"][0], R["hb3"][2]))
+    P("     half, the resistors' drifts: the conditioned envelope); a reading outside %.3f to %.3f V (EA3 typical, new parts) is recorded" % (
+        R["hb"][0], R["hb"][2]))
+    P("     with EA3's gain it implies")
     P("   7b.13 U5's junction by CLKOUT at all four switches, EXTVCC at the ceiling, %.1f C air: at most 125 C less p.34's 10 C" % R["t_air"])
     return o
 

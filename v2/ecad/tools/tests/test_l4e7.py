@@ -7,7 +7,7 @@ offers that 8705af guarantees below 0 C junction, and the junction range it need
 corner holds at both temperature ends on the achieved setting, recomputed here in closed form from the chosen parts' own
 tolerance and TCR, and the next larger catalogue setting fails the same design floor; every unprinted row carries a
 break-even and a bench row; the hold's band and its energy are as chosen and the margin costs nothing on SC-37's day; the
-committed .out is what the script prints; each draft apply script checks without writing, applies once to a copy and
+committed .out is what the script prints; the hold keeps REQ-016's ratio and no draft carries the proposal; each draft apply script checks without writing, applies once to a copy and
 refuses a second application, the three apply in either order and on top of L4-E5's R10 change, and none touches R10.
 Nothing here writes into the tree.
 """
@@ -118,25 +118,50 @@ def t_unprinted_rows_have_break_evens_and_bench_rows():
     assert all(g is not None and g < R["ea2"] / 2.0 for g in gd), "with the drifts and line x2 the floor does not cover EA2: %s" % gd
     assert R["be_line"][0] > 2.0 and R["be_line"][1] > 2.0
     assert R["be_tcr_cold"] is None or R["be_tcr_cold"] > 10 * R["tcr_h"]
+    assert R["be_tcr_cold_floor"] is not None and R["be_tcr_cold_floor"] > R["tcr_h"], "under the design floor the printed TCR fails"
+    assert abs(R["be_tcr_cold_floor"] * 1e6 - 122.295) < 0.01, "stack C's cold TCR break-even is not the check's"
     text = "\n".join(_CACHE["M"].render(R))
     sec7 = text.split("7. INCONCLUSIVE")[1].split("8. BENCH ROWS")[0]
     for row in ("EA2's voltage gain", "line regulation", "RSENSE1's TCR below", "EA3's gain", "U5's junction"):
         assert row in sec7 and "Bench" in sec7, "INCONCLUSIVE row %s or its bench measurement missing" % row
     sec8 = text.split("8. BENCH ROWS")[1]
     assert "7b.9 (steady state)" in sec8 and "7b.9t (transients, recorded apart)" in sec8
+    assert ("from %.3f V" % R["hb3"][0]) in sec8 and ("accepted inside %.3f to %.3f V" % (R["hb3"][0], R["hb3"][2])) in sec8, \
+        "the sweep and the hold acceptance do not start at the conditioned envelope's low end (M3)"
+    assert "(stack A)" in sec7 and "(stack C)" in sec7, "a break-even without its stack (M2)"
 
 
-def t_hold_band_and_its_energy_as_chosen():
+def t_hold_keeps_req016_ratio_and_its_band_reproduces():
+    """B1 of astra-check-l4e7-1: REQ-016's 17.6 V point and D-34 stand, so the hold keeps the drawn 102k over 7.5k as 0.1 %
+    25 ppm/K parts; the band reproduces the check's figures; the drawn E-grade lower corner is reported (M1)."""
     R = _R()
     lo, nom, hi = R["hb"]
-    assert (R["r8c"], R["r9c"]) == ("C861602", "C728597") and abs(nom - 1.205 * (1 + 94.2 / 7.5)) < 1e-9
-    assert lo < nom < hi and hi - lo < R["hold_drawn"][2] - R["hold_drawn"][0], "the band is not narrower than as drawn"
-    best = R["hold_rows"][0]
-    assert all(best[0] >= r_[0] for r_ in R["hold_rows"]) and (best[4], best[5]) == (R["r8c"], R["r9c"])
-    worse_end = min(R["grid_e"][0][2], R["grid_e"][2][2])
-    old_worst = min(g_[3] for g_ in R["old_grid"] if g_[2] == "no input limit (as drawn)")
-    assert worse_end > old_worst + 80.0, "the band's worse end %.1f Wh is not well above the drawn %.1f Wh" % (worse_end, old_worst)
-    assert worse_end <= R["e_mpp"]
+    assert (R["r8c"], R["r9c"]) == ("C861068", "C728597") and (R["r8v"], R["r9v"]) == (102000.0, 7500.0)
+    assert abs(nom - 1.205 * (1 + 102.0 / 7.5)) < 1e-9 and abs(nom - R["hold_drawn"][1]) < 1e-9, "the nominal hold is not the drawn one"
+    assert abs(lo - 16.970441) < 5e-7 and abs(hi - 18.220502) < 5e-7, "the band %.6f to %.6f V is not the check's" % (lo, hi)
+    assert abs(R["drawn_e_lo"] - 16.723678) < 5e-7, "the drawn E-grade lower corner %.6f V" % R["drawn_e_lo"]
+    assert hi - lo < R["hold_drawn"][2] - R["hold_drawn"][0], "the band is not narrower than as drawn"
+    assert R["hb3"][0] < R["hb2"][0] < lo and hi < R["hb2"][2] < R["hb3"][2], "the conditioned bands do not nest"
+    e_nom = [r_ for r_ in R["grid_e"] if r_[0] == "nominal hold"][0][2]
+    assert abs(e_nom - 349.9991) < 5e-4, "the kept hold's nominal energy %.4f Wh is not the check's" % e_nom
+    pr = R["proposal"]
+    assert abs(pr["band"][1] - 1.205 * (1 + 94.2 / 7.5)) < 1e-9 and 24.5 < pr["e_band"][1] - pr["e_nom_kept"] < 25.5
+
+
+def t_no_draft_carries_the_proposal_and_the_entry_keeps_17_6_v():
+    need(GEN_E, "board E's generator")
+    for name in DRAFTS:
+        spec = importlib.util.spec_from_file_location(name[:-3] + "_p", os.path.join(REC, name))
+        m = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(m)
+        new = m.patched(open(GEN_E, encoding="utf-8").read())
+        assert new.count('    _intent.rail(_pvn, 17.6, 5.68, 6.25, "J_SOLAR" if _pvn == "PV_IN" else "F2",') == 1, "%s moves the entry's 17.6 V" % name
+        assert "C861602" not in new and "94.2k" not in new and "16.34 V" not in new, "%s carries the unadopted proposal" % name
+    hold = [n for n in DRAFTS if "hold" in n][0]
+    spec = importlib.util.spec_from_file_location("hold_p", os.path.join(REC, hold))
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    assert len(m.EDITS) == 1 and 'r("R8", "102k 0.1% 25ppm' in m.EDITS[0][1] and 'r("R9", "7.50k 0.1% 25ppm' in m.EDITS[0][1]
 
 
 def t_margin_costs_nothing_on_the_design_day():
@@ -145,7 +170,7 @@ def t_margin_costs_nothing_on_the_design_day():
     assert min(d) >= -0.05, "the margin gives up %.2f Wh at some cell of SC-37's day" % -min(d)
     a2 = [v for (lab, ak), v in R["runs"].items() if ak == "A2" and lab.startswith("NEW nominal")][0]
     was = R["old_runs"][("CORRECTED, WE; O-2 nominal", "A2")]
-    assert a2[2][0] < was[1][0], "A2's unserved energy at 48 h did not fall with the new hold"
+    assert all(abs(a2[2][k] - was[1][k]) < 0.05 for k in range(2)), "the kept nominal hold does not give the replay's A2 figures"
 
 
 def t_committed_out_is_what_the_script_prints():

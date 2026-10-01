@@ -2,16 +2,15 @@
 """apply_gen_sch_e_hold.py: DRAFT for board E's generator owner (task L4-E7, MESHSAT-1357, 1 October 2026). NOT APPLIED to
 the tree by L4-E7; its author ran it only on scratch copies with --check (the tests also write scratch copies).
 
-What it changes in v2/ecad/tools/gen_sch_e.py, and nothing else: the input-voltage hold R8 and R9 (FBIN) from 102k and
-7.50k at 1 % (nominal 17.593 V) to YAGEO RT0603BRD0794K2L (94.2k, 0.1 %, 25 ppm/K, LCSC C861602) over RT0603BRD077K5L (7.5k,
-0.1 %, 25 ppm/K, LCSC C728597): nominal 16.340 V, band 15.763 to 16.921 V over both ends with the I grade's FBIN limits and
-EA3 at its typical gain (l4e7_stage_settings.out section 3); and the panel entry's declared voltage, which `volts` judges the
-drop against, from the old 17.6 V point to 16.3 V, with its note. The amps (5.68 and 6.25 A) and v_max 25 V are kept.
+What it changes in v2/ecad/tools/gen_sch_e.py, and nothing else: the input-voltage hold R8 and R9 (FBIN) keep their drawn
+values and ratio, 102k over 7.50k (17.593 V nominal, REQ-016's "the panel held at 17.6 V", which the owner's D-34 keeps), and
+become YAGEO RT0603BRD07102KL (LCSC C861068) over RT0603BRD077K5L (LCSC C728597), 0.1 % and 25 ppm/K, in place of 1 % parts
+with no order code. Only their tolerance, drift and order codes change: the band at both ends narrows (l4e7_stage_settings.out
+section 3). The panel entry keeps its declared 17.6 V and its note; no other line is touched. A lower hold would change
+REQ-016 and is not drafted (the page's proposal section, for the owner's ruling).
 
-It is not the whole change: the tracker section's title "(FBIN 17.6 V, FBOUT 15.1 V, 202 kHz)" and the comments that name
-17.6 V are text for the owner (L4-E5 changes the FBOUT figure on the same title). After any application, l4e_replay.py
-section 11 refuses by design (it parses R8 and R9 at 1 %), and so do l4e5's and this record's pins of gen_sch_e.py: those
-are records of the circuit before the change.
+After any application, l4e_replay.py section 11 refuses by design (it parses R8 and R9 at 1 %), and so do l4e5's and this
+record's pins of gen_sch_e.py: those are records of the circuit before the change.
 
 Usage:  apply_gen_sch_e_hold.py TARGET [--check | --write]     (default --check: nothing is written)
 Each edit's old text must occur exactly once and its new text must differ and must not occur yet; the result must parse.
@@ -25,12 +24,8 @@ import sys
 NAME = "apply_gen_sch_e_hold"
 EDITS = [
     ('r("R8", "102k 1% (RFBIN1: panel point 17.6 V)", "PV_P", "TRK_FBIN"); r("R9", "7.50k 1% (RFBIN2)", "TRK_FBIN", "GND")',
-     'r("R8", "94.2k 0.1% 25ppm (RFBIN1: panel hold 16.34 V)", "PV_P", "TRK_FBIN", "R", "C861602"); r("R9", "7.50k 0.1% 25ppm (RFBIN2)", "TRK_FBIN", "GND", "R", "C728597")'
-     '   # L4-E7 (MESHSAT-1357): YAGEO RT0603BRD0794K2L over RT0603BRD077K5L, hold 15.76 / 16.34 / 16.92 V; v2/docs/records/l4e7/L4E7-STAGE-SETTINGS.md'),
-    ('    _intent.rail(_pvn, 17.6, 5.68, 6.25, "J_SOLAR" if _pvn == "PV_IN" else "F2",',
-     '    _intent.rail(_pvn, 16.3, 5.68, 6.25, "J_SOLAR" if _pvn == "PV_IN" else "F2",   # L4-E7: the hold R8 and R9 set, 16.34 V nominal'),
-    ('"25 degC and about 25 V cold, held at its 17.6 V maximum-power point by the LT8705A\'s "',
-     '"25 degC and about 25 V cold, held near its maximum-power point at 16.34 V (L4-E7) by the LT8705A\'s "'),
+     'r("R8", "102k 0.1% 25ppm (RFBIN1: panel point 17.6 V)", "PV_P", "TRK_FBIN", "R", "C861068"); r("R9", "7.50k 0.1% 25ppm (RFBIN2)", "TRK_FBIN", "GND", "R", "C728597")'
+     '   # L4-E7 (MESHSAT-1357): YAGEO RT0603BRD07102KL over RT0603BRD077K5L, the drawn ratio (REQ-016\'s 17.6 V point), 0.1 % and 25 ppm/K; v2/docs/records/l4e7/L4E7-STAGE-SETTINGS.md'),
 ]
 
 
