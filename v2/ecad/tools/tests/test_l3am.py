@@ -234,7 +234,9 @@ def t_l3am_the_acceptance_script_files_a_bound_record_and_supersedes():
     amendment (l3amfix.closed_copy) it refuses a revision that is not a commit or does not hold the copy's content, and
     --supersede with nothing filed; at a commit holding the copy's content, a child of the checked revision, it files a
     record with the content manifest that acceptance_ok validates; a second run is refused; --supersede keeps the filed
-    record, as parsed, at the end of baseline_acceptance_history."""
+    record, as parsed, at the end of baseline_acceptance_history, after whatever history the copy already held (the tree's
+    own acceptance, once superseded, leaves its earlier record there: the expected history is read from the copy, never
+    assumed empty)."""
     need(ACC, "the acceptance script is not in this tree")
     import l3amfix as F
     RL, req, data = _tree()
@@ -267,6 +269,8 @@ def t_l3am_the_acceptance_script_files_a_bound_record_and_supersedes():
     r = _run([ACC, "--data", p, "--revision", rev, "--evidence", check, "--date", "2026-10-01"])
     assert r.returncode == 0, r.stdout
     got = yaml.safe_load(open(p, encoding="utf-8"))
+    hist0 = got.get("baseline_acceptance_history") or []
+    assert hist0 == (yaml.safe_load(closed).get("baseline_acceptance_history") or []), "filing without --supersede changed the history"
     ba = got["baseline_acceptance"]
     assert ba["revision"] == rev and ba["authorised_by"] == "D-39" and ba["evidence"] == [check]
     assert set(ba["manifest"]) == {"requirements", "owner_brief", "change_record", "acceptance_policy"}
@@ -276,7 +280,7 @@ def t_l3am_the_acceptance_script_files_a_bound_record_and_supersedes():
     r = _run([ACC, "--data", p, "--revision", rev, "--evidence", check, "--date", "2026-10-02", "--supersede"])
     assert r.returncode == 0, r.stdout
     got2 = yaml.safe_load(open(p, encoding="utf-8"))
-    assert got2["baseline_acceptance_history"] == [ba] and got2["baseline_acceptance"]["accepted_on"] == "2026-10-02"
+    assert got2["baseline_acceptance_history"] == hist0 + [ba] and got2["baseline_acceptance"]["accepted_on"] == "2026-10-02"
     assert {k: v for k, v in got2.items() if not k.startswith("baseline_acceptance")} == \
         {k: v for k, v in got.items() if not k.startswith("baseline_acceptance")}
     # the tree's legacy record, superseded on a copy: kept as history, as filed
@@ -288,7 +292,8 @@ def t_l3am_the_acceptance_script_files_a_bound_record_and_supersedes():
         r = _run([ACC, "--data", p2, "--revision", rev, "--evidence", check, "--supersede"])
         assert r.returncode == 0, r.stdout
         got3 = yaml.safe_load(open(p2, encoding="utf-8"))
-        assert got3["baseline_acceptance_history"] == [data["baseline_acceptance"]]
+        assert got3["baseline_acceptance_history"] == (yaml.safe_load(legacy).get("baseline_acceptance_history") or []) + \
+            [data["baseline_acceptance"]]
     assert open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read() == raw, "the test changed the tree's l3r2.yaml"
 
 
