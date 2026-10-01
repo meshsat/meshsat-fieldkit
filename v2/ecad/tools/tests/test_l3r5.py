@@ -1003,17 +1003,16 @@ def t_l3r5_acceptance_refused_while_a_criterion_is_unmet():
         r = run(raw.replace(dr[0], "definition_reissue: null", 1), [rec])
         assert r.returncode == 2 and "the gate reads NOT MET" in r.stdout, "filed with a gate condition unmet:\n%s" % r.stdout
         # every criterion holding (since the layer 3 amendment of 1 October 2026: the review's findings closed, and the
-        # revision the one that holds the content, L3-R04); with the findings OPEN it refuses
-        # (closed by a fixture check of the amendment, the newest accepted check, l3amfix.closed_copy: B2 of
-        # astra-check-l3am-1, the acceptance verifies the check that closed them)
+        # revision the one that holds the content, L3-R04); with the findings OPEN it refuses. Both copies are built from
+        # the state before the amendment's check (l3amfix.open_state), never from the tree's own closing check, so this
+        # holds whether the tree's findings are OPEN or CLOSED (set 19): the open copy refuses, and the copy closed by a
+        # fixture check of the amendment (l3amfix.closed_copy; B2 of astra-check-l3am-1, the acceptance verifies the
+        # check that closed them) is accepted at a revision holding it
         import l3amfix as F
-        rf = [l for l in lines if l.startswith("review_findings: {")]
-        rev_parent = None
-        if rf and ", state: OPEN," in rf[0]:
-            r = run(raw, [rec])
-            assert r.returncode == 2 and "are OPEN" in r.stdout, "filed with the review's findings open:\n%s" % r.stdout
-            rev_parent = F.tip()
-            raw, rec = F.closed_copy(raw, rev_parent)
+        r = run(F.open_state(raw), [F.pre_amendment_newest()])
+        assert r.returncode == 2 and "are OPEN" in r.stdout, "filed with the review's findings open:\n%s" % r.stdout
+        rev_parent = F.tip()
+        raw, rec = F.closed_copy(raw, rev_parent)
         p = os.path.join(tempfile.mkdtemp(prefix="l3r5-gate-"), "l3r2.yaml"); open(p, "w", encoding="utf-8").write(raw)
         rev = F.commit_with({"v2/docs/handover/layer3/l3r2.yaml": raw.encode("utf-8")}, parent=rev_parent)
         r = _run([acc, "--data", p, "--revision", rev, "--evidence", rec, "--check"])

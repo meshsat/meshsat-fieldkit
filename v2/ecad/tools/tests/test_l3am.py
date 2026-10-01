@@ -227,8 +227,10 @@ def t_l3am_the_requirements_digest_binds_normative_content():
 
 
 def t_l3am_the_acceptance_script_files_a_bound_record_and_supersedes():
-    """apply_l3r5_accept.py on copies of l3r2.yaml: it refuses while the review's findings are OPEN, and when they read
-    CLOSED by a check that does not verify (check-l3r5-3 named by hand); with the findings closed by a fixture check of the
+    """apply_l3r5_accept.py on copies of l3r2.yaml, each built from the state before the amendment's check
+    (l3amfix.open_state), so the test holds whether the tree's findings are OPEN or CLOSED: it refuses while the review's
+    findings are OPEN, and when they read CLOSED by a check that does not verify (check-l3r5-3, the newest check filed
+    before the amendment, named by hand); with the findings closed by a fixture check of the
     amendment (l3amfix.closed_copy) it refuses a revision that is not a commit or does not hold the copy's content, and
     --supersede with nothing filed; at a commit holding the copy's content, a child of the checked revision, it files a
     record with the content manifest that acceptance_ok validates; a second run is refused; --supersede keeps the filed
@@ -242,9 +244,11 @@ def t_l3am_the_acceptance_script_files_a_bound_record_and_supersedes():
         p = os.path.join(tempfile.mkdtemp(prefix="l3am-accept-"), "l3r2.yaml"); open(p, "w", encoding="utf-8").write(text)
         return p
     null = "\n".join("baseline_acceptance: null" if l.startswith("baseline_acceptance:") else l for l in raw.split("\n"))
+    null = F.open_state(null)
     rf = [l for l in null.split("\n") if l.startswith("review_findings: {")]
-    assert len(rf) == 1 and ", state: OPEN," in rf[0], "the review's findings are not filed OPEN"
-    old_check = data["independent_check"][-1]["record"]
+    assert len(rf) == 1 and ", state: OPEN," in rf[0], "the open state does not read OPEN"
+    old_check = F.pre_amendment_newest()
+    assert yaml.safe_load(null)["independent_check"][-1]["record"] == old_check
     r = _run([ACC, "--data", copy_of(null), "--revision", F.commit_with(), "--evidence", old_check, "--check"])
     assert r.returncode == 2 and "are OPEN" in r.stdout, "filed with the findings open:\n%s" % r.stdout
     by_hand = null.replace(rf[0], rf[0].replace(", state: OPEN,", ", state: CLOSED, checked_by: %s," % old_check), 1)
@@ -290,7 +294,10 @@ def t_l3am_the_acceptance_script_files_a_bound_record_and_supersedes():
 
 def t_l3am_findings_close_only_with_a_check_of_the_amendment():
     """B2 of the amendment's check: apply_l3am_findings_closed.py closes the findings only with a new accepted check of
-    this amendment. Refused: check-l3r5-3 (on the tree, where it is the newest accepted check), a fixture record carrying
+    this amendment. The copies are built from the state before the amendment's check (l3amfix.open_state: findings OPEN,
+    the checks filed since the amendment's base taken out), whatever the tree holds; on the tree only what holds in either
+    state: check-l3r5-3 never closes the findings, and findings the tree reads CLOSED are closed by a check of the
+    amendment that verifies. Refused: check-l3r5-3 (the newest check before the amendment), a fixture record carrying
     the format under an old check's name, a record whose first line says no while filed ACCEPTED, a record without the
     scope line, a header line padded with a space (the three lines are compared exactly), a reviewed revision that is not a
     commit or not an ancestor of the tip, and a reviewed revision before a later change to any test file the amendment's
@@ -300,10 +307,22 @@ def t_l3am_findings_close_only_with_a_check_of_the_amendment():
     need(CLOSE, "the closing script is not in this tree")
     import l3amfix as F
     RL, req, data = _tree()
-    raw = open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read()
-    old_check = data["independent_check"][-1]["record"]
+    tree_raw = open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read()
+    raw = F.open_state(tree_raw)
+    old_check = F.pre_amendment_newest()
+    assert yaml.safe_load(raw)["independent_check"][-1]["record"] == old_check
     r = _run([CLOSE, "--check-record", old_check, "--check"])
     assert r.returncode == 2 and "REFUSED" in r.stdout, "the pre-amendment check closed the findings:\n%s" % r.stdout
+    rf = data["review_findings"]
+    assert rf["state"] in ("OPEN", "CLOSED"), rf["state"]
+    if rf["state"] == "CLOSED":
+        sys.path.insert(0, AM)
+        import apply_l3am_findings_closed as FC
+        assert str(rf["checked_by"]) not in F.base_checks(), "the tree's findings are closed by a pre-amendment check"
+        try:
+            FC.verify(str(rf["checked_by"]), data)
+        except FC.L.Refused as e:
+            raise AssertionError("the check that closed the tree's findings does not verify: %s" % e)
 
     def copy_of(text):
         p = os.path.join(tempfile.mkdtemp(prefix="l3am-close-"), "l3r2.yaml"); open(p, "w", encoding="utf-8").write(text)
@@ -357,7 +376,7 @@ def t_l3am_findings_close_only_with_a_check_of_the_amendment():
     assert b["state"] == "CLOSED" and b["checked_by"] == path
     r = _run([CLOSE, "--data", p, "--check-record", path, "--head", tip, "--check"])
     assert r.returncode == 2 and "has run" in r.stdout, r.stdout
-    assert open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read() == raw, "the test changed the tree's l3r2.yaml"
+    assert open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read() == tree_raw, "the test changed the tree's l3r2.yaml"
 
 
 # ------------------------------------------------------------------------------------------------ L3-R01
