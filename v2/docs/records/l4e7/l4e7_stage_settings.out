@@ -103,14 +103,14 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      the hot end  worst 98.6743 W at 25.000 V (ref 1.229 V, line +, gm 0.94, RSENSE1 x0.97300, RIMON_IN x0.98811, EA2 +); margin 1.3257 W; 55040 corners
    VERDICT: A PASSES at both ends with a margin of 3.75 W, and C (the floor) passes; refused above 100 W
    THE UNPRINTED ROWS, as break-even values for this setting (the corner reaches 100 W at the value shown), each with its stack:
-     EA2's gain; printed limits, line x1   , no drifts (stack A)        cold end 25.0 V/V, hot end 24.9 V/V
-     EA2's gain; printed limits, line x1   , resistors' drifts stacked  cold end 53.6 V/V, hot end 53.2 V/V
-     EA2's gain; printed limits, line x2   , no drifts                  cold end 25.4 V/V, hot end 25.3 V/V
-     EA2's gain; printed limits, line x2   , resistors' drifts stacked  cold end 55.2 V/V, hot end 54.7 V/V
-     EA2's gain; printed limits, line x5   , no drifts                  cold end 26.4 V/V, hot end 26.3 V/V
-     EA2's gain; printed limits, line x5   , resistors' drifts stacked  cold end 60.5 V/V, hot end 59.9 V/V
-     EA2's gain; printed limits, line x10  , no drifts                  cold end 28.4 V/V, hot end 28.3 V/V
-     EA2's gain; printed limits, line x10  , resistors' drifts stacked  cold end 72.2 V/V, hot end 71.3 V/V
+     EA2's gain; printed limits, line x1   , no drifts (stack A)        cold end 25.026426 V/V, hot end 24.924212 V/V
+     EA2's gain; printed limits, line x1   , resistors' drifts stacked  cold end 53.615717 V/V, hot end 53.160232 V/V
+     EA2's gain; printed limits, line x2   , no drifts                  cold end 25.364490 V/V, hot end 25.259501 V/V
+     EA2's gain; printed limits, line x2   , resistors' drifts stacked  cold end 55.191656 V/V, hot end 54.709122 V/V
+     EA2's gain; printed limits, line x5   , no drifts                  cold end 26.435797 V/V, hot end 26.321772 V/V
+     EA2's gain; printed limits, line x5   , resistors' drifts stacked  cold end 60.529094 V/V, hot end 59.949208 V/V
+     EA2's gain; printed limits, line x10  , no drifts                  cold end 28.437640 V/V, hot end 28.305735 V/V
+     EA2's gain; printed limits, line x10  , resistors' drifts stacked  cold end 72.159717 V/V, hot end 71.337086 V/V
      the line regulation (cold end; printed limits, no drifts): with EA2 at 130 V/V (stack A) up to 61.6 times its printed
      maximum (0.308 %/V); with EA2 at 65 V/V, 47.1 times
      RSENSE1's TCR below 25 C (HoJLR prints its TCR from +25 to +125 C only, so the cold end applies it as an ASSUMPTION): the
@@ -162,8 +162,8 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
    L4-E5's line (sized for the window's 100 W) covers it; the hold and the limit are on the input, R10 and C26/C27 on the output
 
 7. INCONCLUSIVE (no printed bound), each with the measurement that bounds it
-   - EA2's voltage gain (130 V/V TYP, p.5) and VC's operating range: the corner passes down to 25.0 V/V (stack A, cold end) and
-     55.2 V/V with line x2 and the drifts (stack C's other terms).
+   - EA2's voltage gain (130 V/V TYP, p.5) and VC's operating range: the corner passes for an EA2 gain at or above 25.026426 V/V
+     cold and 24.924212 V/V hot under stack A, and 55.191656 V/V cold and 54.709122 V/V hot with stack C's other terms (line x2, drifts).
      Bench: in input-current limit at 25 V, step the load to move VC across its range, read VC and IMON_IN; the gain is
      dVC / dV(IMON_IN); accept at or above 65 V/V (the floor), and at least the break-even at every point
    - the IMON_IN reference's line regulation while switching and at both ends (printed at 25 C, not switching, p.4): the corner
