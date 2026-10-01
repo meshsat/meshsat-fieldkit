@@ -566,7 +566,7 @@ def t_the_supply_sequencing_is_default_off_on_printed_rows():
     assert sq["sw_hi_min"] > sq["swen"][1] and sq["i_reset"] <= 1e-3 and sq["rel_hi"] < sq["ldo_lo"] and sq["td_min"] >= 0.18 > rw["st_t"]
     assert sq["i_sw_be"] >= 50e-6 and sq["i_sw_be_dead"] > sq["i_sw_be"] and sq["hys_be"] > 0.5
     assert not {"vpor", "ramp", "ramp_limit", "pin_needed_13"} & set(sq), "the sequencing still leans on the power-up row or a ramp"
-    assert sq["uv_ts_lo"] > 2.7 and sq["uv_ts_hi"] < 15.0 and sq["i_ldo"] < 5e-3 and rw["r70"] == 8060.0 and rw["r71"] == 6040.0
+    assert sq["uv_ts_lo"] > 2.7 and sq["uv_ts_hi"] < 15.0 and sq["i_ldo"] < 5e-3 and abs(rw["r70"] - 8060.0) < 1e-6 and abs(rw["r71"] - 6040.0) < 1e-6
     c = R["decision"]["c"]
     assert c["vout_hi"] < sq["uv_ts_lo"] - rw["sw169"]
     assert "with no condition on TRK_LDO33's ramp or sag rate and no use of U20's power-up row" in _s10(R)

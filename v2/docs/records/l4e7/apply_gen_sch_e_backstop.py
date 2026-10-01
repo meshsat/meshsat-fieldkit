@@ -30,7 +30,8 @@ does not carry them. What it changes in v2/ecad/tools/gen_sch_e.py, and nothing 
   - the declarations: PV_P's loads are the bank; TRK_VS a series segment of PV_P from the bank to R59; the tracker section's list.
 
 It is not the whole change: the layout owes the bank's Kelvin taps to U18 and R59's to U5 (board E's layout constraints), the
-regeneration and its gates, and the input capacitance's ripple and damping check with the new bulk (99 uF in place of 200 uF);
+regeneration and its gates, and the input capacitance's ripple and damping check with the new bulk (99 uF of bulk and
+40 uF of ceramics ahead of RSENSE1 in place of 200 uF);
 the requirement records that name "the 35 V bulk capacitors" and "the 225 uF on PV_P" see the new values (their owners restate
 them). After any application the record's and l4e5's pins of the netlist refuse by design. R10 (L4-E5) is not touched.
 
