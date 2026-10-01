@@ -1,0 +1,141 @@
+L4-E4: BOARD A'S CURRENT-LIMIT COORDINATION (U3 IIN_HOST, R11) AND THE OUTLET'S TRIP (R138) (l4e4_limits.py,
+MESHSAT-1357). PROTOTYPE DESIGN: nothing bought, built, powered or measured; no generator, registry or page edited.
+Basis per figure: MAKER (document, page), NETLIST, MODELED, INFERRED (method stated), ASSUMPTION; INCONCLUSIVE where no
+held document gives the figure.
+
+0. REPRODUCTIONS (refused, exit 4, if either fails)
+   0a r11_dep.py re-run in a child process reproduces r11_dep.out byte for byte (sha256/16 f9d2c6f23fab3edc): yes
+   0b r11_dep.main() run in this process, its locals taken at return, prints the same bytes: yes; every figure below
+      that r11_dep.py computes (VSNS, the ISNS offset, R11's tolerance and TCR, U3's accuracy, the other loads, the
+      temperatures, the stage relations, the bands) is taken from that run, not retyped
+   pinned: r11_dep.py 6636a7489d3d1406, l4e_replay.out 59c6eeab16da98f8; board A's netlist sha256/16 6c40250c47195ebb (r11_dep.py's 14 facts hold on it)
+
+1. U3's IIN_HOST FOR REQ-016's 100 W WINDOW
+   what the window needs at VBUS20 (MODELED, l4e_replay.out 8; the lowest bus 19.146 V), with the records' INFERRED 0.10 A
+   between a setting and U3's minimum (C-7), and U3's maximum by r11_dep.py's rule (the larger of SLUSE66A p.80's
+   100 mA and p.1's +-2.5 %), plus C-9's 0.079 A of VBUS20's other loads through R11 (r11_dep.out 3, four FETs switching):
+     declared     0.93 x 0.93: 86.5 W, U3's minimum at least 4.517 A -> setting 4.65 A, its maximum 4.766 A, through R11 4.845 A
+     high bracket 0.97 x 0.97: 94.1 W, U3's minimum at least 4.914 A -> setting 5.05 A, its maximum 5.176 A, through R11 5.255 A
+     no loss      1.00 x 1.00: 100.0 W, U3's minimum at least 5.223 A -> setting 5.35 A, its maximum 5.484 A, through R11 5.563 A
+     (l4e_replay.out 8 prints 4.829 / 5.229 / 5.529 A through R11 with the 100 mA alone; p.1's 2.5 % is the larger above 4 A,
+     so the coordination here uses 4.845 A for the chosen setting)
+   CHOSEN: IIN_HOST 4.65 A. Reason: the declared efficiencies are the only figures this tree holds for the stage and the
+     front end (C-8 open, no maker figure); the 0.97 bracket is a sensitivity no document establishes. At 4.65 A U3's
+     INFERRED minimum 4.55 A carries all the window gives at the declared figures (4.517 A), and the corrected path's
+     result is unchanged (MODELED, l4e_replay.out 8: A2 window-sized 286.3 / 516.5 Wh unserved at 48 / 72 h, the same as the
+     drafted 6.2 A's 286.3 / 516.5 Wh). A higher setting asks more than the declared window gives, which is A-2's collapse case;
+     raising it to 5.05 A is a firmware step only once C-8's bench figures reach the bracket, and needs R11 at 7 mOhm (2 below)
+   REGISTER (MAKER SLUSE66A p.80, 9.6.22 and Figure 9-35): R16 is 10mOhm 1% 2512 (NETLIST), so RSNS_RAC = 0b (p.25, 9.3.5,
+     'if 10-mOhm sensing is used please configure RSNS_RAC=0b'; the POR default is 5 mOhm); the 10 mOhm range is 50 to 6350 mA
+     with 50 mA resolution, a 7-bit code in bits 14:8: code 93 (0x5D), REG0x0F/0E() = 0x5D00; nominal 4.65 A; maximum
+     nominal + 100 mA = 4.750 A (p.80), +2.5 % = 4.766 A (p.1); carried 4.766 A. The host writes it again after every
+     adapter removal, which resets IIN_HOST to 3.25 A (p.26, 9.3.6): A-2's startup rule
+   TI's accuracy (MAKER SLUSE66A): p.1 '+-2.5 % input current regulation' (a feature line, no conditions); p.10, 8.5
+     Electrical Characteristics, IIN_DPM_REG_ACC over -40 to 105 C, rows only for the 5 mOhm RAC: 7.8 A: 7.6 to 8.0 A; 5.8 A: 5.6 to 6.0 A; 2.8 A: 2.6 to 3.0 A; 0.8 A: 0.6 to 1.0 A
+     (+-0.2 A, that is +-1 mV of sense voltage); no row is printed for the 10 mOhm RAC
+   C-7, U3's input-current MINIMUM at 4.65 A: INCONCLUSIVE. No TI figure is held for the 10 mOhm RAC. Carried: the records'
+     INFERRED 0.10 A margin, 4.55 A (consistent with p.10's +-1 mV over 10 mOhm and with p.80's 100 mA / 200 mA pair for
+     10 / 5 mOhm, INFERRED); read on p.1's 2.5 % it would be 4.534 A, still at or above the 4.517 A the window needs
+     (+0.017 A). Closure (the page's): the bench reading at or above 4.55 A
+
+2. R11, THE LM5176 U2's AVERAGE-CURRENT SENSE (SNVSAI1D p.17 Equation 4, ICL(AVG) = VSNS / RSNS; VSNS 43 / 50 / 57 mV p.7)
+   the stacked band, r11_dep.py's own band(): VSNS minimum less the ISNS offset 0.3 mV, R11 +1 % and its TCR 50 ppm/K
+     over r11_dep.py's 75 K envelope (R11 between -20 C and the ASSUMED 100 C). Must exceed 4.845 A (U3 at 4.65 A, its maximum
+     4.766 A, plus 0.079 A). C-1's tap allowance by r11_dep.py's margin rule; the page accepted 0.29 mOhm at 25 C for 6.2 mOhm
+   the held part's catalogue family (JLCPCB's public search for HoJLR2512-3W, jlc-search-hojlr2512-3w-2026-10-01.json; 1 %, 3 W, in stock, 5 to 10 mOhm):
+     HoJLR2512-3W-5mR-1%    C2903482 stock 106666: band 8.424 / 10.000 / 11.619 A; taps at most +3.744 mOhm working, +2.891 mOhm at 25 C: eligible
+     HoJLR2512-3W-6mR-1%    C2904238 stock   5536: band 7.020 / 8.333 / 9.683 A; taps at most +2.730 mOhm working, +2.108 mOhm at 25 C: eligible
+     HoJLR2512-3W-7mR-1%    C2904239 stock   1833: band 6.017 / 7.143 / 8.300 A; taps at most +1.716 mOhm working, +1.325 mOhm at 25 C: eligible
+     HoJLR2512-3W-8mR-1%    C2904240 stock   9630: band 5.265 / 6.250 / 7.262 A; taps at most +0.702 mOhm working, +0.542 mOhm at 25 C: eligible
+     HoJLR2512-3W-9mR-1%    C2904241 stock   2938: band 4.680 / 5.556 / 6.455 A; taps at most -0.312 mOhm working, -0.241 mOhm at 25 C: not eligible
+     HoJLR2512-3W-10mR-1%   C2903468 stock 136379: band 4.212 / 5.000 / 5.810 A; taps at most -1.325 mOhm working, -1.024 mOhm at 25 C: not eligible
+   CHOSEN: R11 8 mOhm, HoJLR2512-3W-8mR-1%, LCSC C2904240 (Milliohm; LCSC's answer 2026-10-01T02:58Z: ±1%, ±50ppm/℃, 3W; its datasheet link returns the held
+     series sheet byte for byte, sha256/16 3224518dbc8bdc85, so C-2's 'its sheet filed' holds: MAKER HoJLR2512 p.1 F = +-1 %, 3 W for
+     0.5 to 500 mOhm; p.2 TCR +-50 ppm/K for 2 to 500 mOhm). Rule: the LARGEST eligible value, because the band's maximum,
+     the highest permitted current that B-1, B-2 and B-4 must be closed at, falls as R11 rises; 9 mOhm leaves no tap budget
+   per temperature (R11's own temperature from the air to the air plus 17.3 K, its rise at the band minimum's 5.265 A with
+     the output ripple all through R11, 0.52 W, by the derating line's 33.3 K/W, INFERRED as r11_dep.py; TCR on the larger
+     excursion from 25 C; copper of the taps at the upper end, 0.00393 /K):
+     air      R11 C     stacked min, R11 alone             with kelvin_check's 1 % per tap    with C-1's full allowance         
+      -20.0 C -20.0..-2.7 5.273 A, margin +0.427 A           5.182 A, margin +0.336 A           4.976 A, margin +0.130 A
+       25.0 C 25.0..42.3 5.280 A, margin +0.435 A           5.171 A, margin +0.325 A           4.927 A, margin +0.082 A
+       62.1 C 62.1..79.4 5.270 A, margin +0.425 A           5.147 A, margin +0.302 A           4.874 A, margin +0.029 A
+     every margin over U3's maximum plus 0.079 A is positive at all three; at r11_dep.py's 75 K envelope the stacked
+     minimum of R11 alone is 5.265 A, margin +0.420 A, which C-1's allowance is defined to take whole
+   C-1 RECOMPUTED (r11_dep.py's margin rule at 8 mOhm and 4.845 A): the copper R11's current shares with the two taps, both
+     together, at most 0.702 mOhm at its working temperature; 0.613 mOhm at 25 C with the copper at 62.1 C and 0.542 mOhm with it
+     at 100 C: the criterion is 0.54 mOhm at 25 C (it was 0.29 for 6.2 mOhm). kelvin_check's own 1 % per tap (0.16 mOhm for
+     both) is stricter and closes it too. Bench 7b.3: the DC voltage across U2 pins 14 and 13 exceeds I x R11 (four-wire)
+     by at most 0.54 mOhm x I (2.63 mV at 4.845 A)
+   R11's DISSIPATION at 4.845 A (in service): 0.190 W DC (I2R at +1 %); with the output ripple all through R11 (an upper
+     bound) 0.262 W at 15.1 V and 0.440 W at 9.0 V in (r11_dep.py's stage relations). Its own temperature (INFERRED, 33.3 K/W):
+     -20.0 C air: -13.7 C DC, -5.3 C upper bound, rating derated to 3.00 W; 25.0 C air: 31.3 C DC, 39.7 C upper bound, rating derated to 3.00 W; 62.1 C air: 68.4 C DC, 76.8 C upper bound, rating derated to 2.80 W
+     (MAKER p.2: 3 W derated from 70 C to 0 at 170 C). Rated current sqrt(P/R) 19.4 A (p.3); the ASSUMED 100 C of r11_dep.py holds
+   sensitivity, not stacked by r11_dep.py's rule: the series' load-life drift (MAKER p.4, < +-1 % after 1000 h at rated power
+     and 70 C) added as a further +1 % leaves the 75 K envelope's R11-alone margin at +0.367 A
+   carried to item 4 (fault handling; INFERRED by r11_dep.py's relations, nothing decided here): the band's maximum, the
+     highest permitted current, 7.262 A (held 10 mOhm 5.810 A, the drafted 6.2 mOhm 9.370 A); L1's peak at 9 V there 20.74 A
+     with Isat's 30 % drop on the -20 % tolerance, against the typical Isat 17.5 A; VBUS20's worst can scaled 2.69 A matched,
+     3.11 A at a 2:1 ESR spread, against 2.8 A a can (B-4 stays open at 2:1 unless hiccup bounds the fault, B-2)
+   NOT CHOSEN: the 0.97 bracket's 5.05 A (5.255 A through R11) would need HoJLR2512-3W-7mR-1% (C2904239): band 6.017 / 7.143 / 8.300 A, taps 0.79 mOhm
+     at 25 C; its highest permitted current is 8.300 A, 1.037 A above the chosen R11's; 8 mOhm leaves 0.011 mOhm for the taps
+     there, so the bracket is a hardware change (R11 and the fault closures), not a register write
+
+3. R138, THE USB-C OUTLET'S OCP SENSE (DR-03), TPS25740A U18
+   NETLIST: R138 '10mOhm 1% 2512 (ISNS)' from PD_SW (U18 pin 19 ISNS, Q27's source) to PD_VBUS (U18 pin 21 VBUS, J_USBC_OUT pin 1);
+     straps: HIPWR (pin 5) on PD_DVDD, EN9V (pin 8) on GND, PSEL (pin 12) on PD_DVDD, PCTRL (pin 14) on PD_VAUX
+   the PDO table (MAKER SLVSDG8B): Table 2 p.28, EN9V low and HIPWR direct, 5, 9 and 15 V; Equation 2 p.28, HIPWR high,
+     Imax = 3 A, PCTRL high, Pmax = P(SEL) = 93 W (Table 3, PSEL direct to DVDD); Table 5 p.29 (TPS25740A, the 3 A block),
+     PSEL direct to DVDD, PCTRL high: 5 V 3.0 A, 9 V 3.0 A, 15 V 3.0 A; 8.3.6 p.28: a non-PD Type-C sink is
+     offered 15 W, 3.0 A at 5 V. Every row of Table 5's 3 A block is at most 3.0 A (l3batt's 18 W straps among them).
+     The generator declares the same: U18 '5, 9, 15 V at 3 A', _PD_A 3.0 A (gen_sch_a.py). Largest PDO current 3.0 A
+   TI's recommendation: 5 mOhm (p.31, 8.3.8.2: at 3 A via HIPWR 'the OCP threshold lies between 3.8 A and 4.5 A'; p.49,
+     9.2.4.2.3, the 5, 9 and 15 V at 3 A example: 'targeted towards a 5 mOhm, +-1 % sense resistor', 45 mW at 3 A)
+   CHOSEN: R138 5 mOhm, HoJLR2512-3W-5mR-1%, LCSC C2903482 (Milliohm; LCSC's answer 2026-10-01T02:58Z: ±1%, 3W; its datasheet link returns the held HoJLR2512
+     series sheet byte for byte: MAKER p.1 F = +-1 %, p.2 TCR +-50 ppm/K). Board A's other 5 mOhm parts are LR2512D-3W-5mR-1%
+     C500739, whose maker sheet is not held (gen_sch_a.py); the held sheet's part is named so the window rests on MAKER figures
+   VI(TRIP) (MAKER p.11, 7.5, V(ISNS) - V(VBUS), -40 to 125 C): 19.2 to 22.6 mV 'HIPWR: 5 A not enabled'; 29 to 34 mV
+     'HIPWR = DVDD (5 A enabled)'. That label contradicts Tables 4 and 5, Equation 2 and 8.3.6, where HIPWR to DVDD is the
+     3 A configuration (l3batt CHECK-3 minor 1 found the same); p.31 ties the 3.8 to 4.5 A threshold to the 3 A configuration
+     and to 5 mOhm, which is 19.2 to 22.6 mV over 5 mOhm. Taken: the 3 A row (INFERRED from p.29 and p.31 together)
+   R138's temperature: the air from -20 to 62.1 C plus 3.5 K of its own (its trip maximum's I2R, 33.3 K/W INFERRED); TCR over
+     45.0 K from 25 C
+   TRIP WINDOW at 5 mOhm (+-1 %, TCR): 3.793 to 4.576 A. Above every PDO: 5 V 3.0 A +0.793 A; 9 V 3.0 A +0.793 A; 15 V 3.0 A +0.793 A;
+     the non-PD 5 V 3.0 A +0.793 A. (As drawn, 10 mOhm: 1.897 to 2.288 A, below every 3 A contract: DR-03 reproduced)
+   below the ratings of what it protects (the trip maximum 4.576 A):
+     R138 itself: rated current sqrt(3 W / 5 mOhm) 24.5 A (MAKER HoJLR2512 p.1, p.3); 0.045 W at 3 A, 0.106 W at the trip maximum
+     Q27 CSD18510Q5B (NETLIST, the VBUS switch the trip opens): 42 A continuous (MAKER SLPS632 p.1, note 1: TA 25 C, 1 in2 2 oz)
+     the wall receptacle, Bulgin PXP4043/C (CASE-MARGINS.md): 5 A (MAKER Bulgin 4000 series sheet p.3, 'Current rating'):
+       below, +0.424 A
+     board A's J_USBC_OUT 'wall USB-C outlet, power only (pigtail header)': no part number, no maker
+       rating held: INCONCLUSIVE (its VBUS is one 2.54 mm pin carrying the whole outlet current)
+     the user's cable: no rating held (no e-marker is read; 8.3.6 p.28 caps the advertisement at 3 A for that reason): not judged
+   if the p.11 label were right (29 to 34 mV with HIPWR on DVDD), the window would be 5.730 to 6.884 A: above the receptacle's
+     5 A. The bench must therefore find the trip current itself, not only a 3 A load without a trip
+   the stage ahead (U19, R81 10 mOhm, r11_dep.py's band at 10 mOhm, INFERRED for R81): 4.212 / 5.000 / 5.810 A; above every PDO,
+     overlapping the trip's upper end: in an overload between them the stage limits, VBUS falls, and p.31 treats VBUS below
+     V(VBUS_FTH) as an OCP event
+   R138's taps (INFERRED, C-1's margin rule applied to U18): the copper R138's current shares with ISNS and VBUS at most
+     1.34 mOhm at its working temperature, 1.15 mOhm at 25 C, for the trip minimum to stay at or above 3.0 A; pcb_sensitive.yaml
+     declares no R138 tap today (a layout item for the generator owner)
+
+4. ACCEPTANCE PREDICATES (held by v2/ecad/tools/tests/test_l4e4.py on these computed values)
+   r11_dep.out reproduced byte for byte (child and in-process)                                                            PASS
+   U3's INFERRED minimum at the setting covers the window's need at the declared efficiencies                             PASS
+   R11 stacked minimum above U3's maximum + 0.079 A at -20, 25, 62.1 C, alone, with kelvin_check's 1 %, with C-1's allowance PASS
+   R11 stacked minimum (R11 alone) above it at r11_dep.py's 75 K envelope                                                 PASS
+   C-1's recomputed allowance at 25 C at least the page's accepted 0.29 mOhm                                              PASS
+   R138's trip window above every PDO's current                                                                           PASS
+   R138's trip maximum below R138's, Q27's and the receptacle's ratings                                                   PASS
+
+5. INCONCLUSIVE, AND WHAT THE BENCH MUST STILL SHOW
+   INCONCLUSIVE: C-7 (U3's minimum for the 10 mOhm RAC; carried 0.10 A INFERRED); J_USBC_OUT's pin rating (no part); which
+     VI(TRIP) row board A's strap selects (the maker's own label conflict); R11's actual temperature (the 100 C stays an
+     ASSUMPTION; the INFERRED rise is the derating line's, no thermal resistance printed); the undocumented efficiencies (C-8)
+   bench 7b.1: the front end's CC onset with an electronic load past U3, at -20, 25 and 62 C: above 4.845 A at each
+   bench 7b.3: R11's Kelvin error, at most 0.54 mOhm x I at 25 C
+   C-7: U3's input current at the 4.65 A setting read at or above 4.55 A
+   the outlet: a 3 A load on each PDO (5, 9, 15 V and the non-PD 5 V) held without a trip; then the trip current itself
+     by a slow ramp, inside 3.79 to 4.58 A (it would read about 5.7 to 6.9 A on the p.11 label's reading)
+
+END. Desk figures on the makers' pages, the committed netlist and the reproduced records; nothing measured or implemented.
