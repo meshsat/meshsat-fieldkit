@@ -82,12 +82,14 @@ where no held document gives the figure.
    to engage; where it does, it bounds the average, not L1's peak, which stays above Isat
 
 4. CANDIDATE (b): RATE L1, THE FETS AND THE BANK FOR THE HIGHEST PERMITTED CURRENT
-   R11 8 mOhm: L1 as XAL1510-103ME, B-1's 20.74 A is 78.8 % of its 26.3 A typical (25 C; temperature INCONCLUSIVE, a 15 x 15 mm
-     land against 10 x 11 mm: board A's placement moves); the FETs at 9 V need RthetaJA <= 23 C/W each, against the maker's 50;
-     no 100 V FET with a lower RDS(on) is held (CSD18510Q5B is 40 V, under VIN_RAW's 64.5 V clamp): INCONCLUSIVE; the bank as section 6
-   R11 7 mOhm: L1 as XAL1510-103ME, B-1's 23.32 A is 88.7 % of its 26.3 A typical (25 C; temperature INCONCLUSIVE, a 15 x 15 mm
-     land against 10 x 11 mm: board A's placement moves); the FETs at 9 V need RthetaJA <= 18 C/W each, against the maker's 50;
-     no 100 V FET with a lower RDS(on) is held (CSD18510Q5B is 40 V, under VIN_RAW's 64.5 V clamp): INCONCLUSIVE; the bank as section 6
+   R11 8 mOhm: L1 as XAL1510-103ME, B-1's 20.74 A is 78.8 % of its 26.3 A typical (25 C; temperature INCONCLUSIVE; its 15.2 x 16.2 mm
+     outline, Document 947-1 p.3, against the XAL1010's 10.0 x 11.3 mm, p.4: board A's placement moves); the FETs at 9 V need
+     RthetaJA <= 23 C/W each, against the maker's 50; no 100 V FET with a lower RDS(on) is held (CSD18510Q5B, SLPS632 p.1, is
+     40 V, under VIN_RAW's 64.5 V clamp in L4-E5): INCONCLUSIVE; the bank as section 6
+   R11 7 mOhm: L1 as XAL1510-103ME, B-1's 23.32 A is 88.7 % of its 26.3 A typical (25 C; temperature INCONCLUSIVE; its 15.2 x 16.2 mm
+     outline, Document 947-1 p.3, against the XAL1010's 10.0 x 11.3 mm, p.4: board A's placement moves); the FETs at 9 V need
+     RthetaJA <= 18 C/W each, against the maker's 50; no 100 V FET with a lower RDS(on) is held (CSD18510Q5B, SLPS632 p.1, is
+     40 V, under VIN_RAW's 64.5 V clamp in L4-E5): INCONCLUSIVE; the bank as section 6
    NOT CHOSEN: three part changes, a new land, and a thermal figure no held document or measurement supports
 
 5. THE DECISION: BOUND L1 AND THE FETS WITH U2'S OWN CYCLE-BY-CYCLE LIMIT (R12), RATE THE BANK, NO HICCUP
@@ -95,16 +97,27 @@ where no held document gives the figure.
    service: H3's highest boost peak 6.50 A (9 and 12 V, L -20 %; 7.28 A by note 5), the pin path's valley 4.28 A at 26.50 V (ripple
    at its smallest); B-1 over 9 to 36 V; B-2 at 9, 15.1 and 36 V, both outcomes; CS within 0.3 V
      HoJLR2512-3W-5mR-1%    C2903482: peak 19.35 / 24.00 / 28.77 A, valley 12.65 / 16.00 / 19.45 A; service +12.85 / +8.37 A; B-1 20.74 / 23.32 A; B-2 NOT met; fails
+       at 9 V (7 mOhm): L1 20.71 A average continuous, hottest Q2 (on) past 150 C
      HoJLR2512-3W-6mR-1%    C2904238: peak 16.13 / 20.00 / 23.98 A, valley 10.54 / 13.33 / 16.21 A; service +9.63 / +6.26 A; B-1 20.74 / 23.32 A; B-2 NOT met; fails
+       at 9 V (7 mOhm): L1 20.71 A average continuous, hottest Q2 (on) past 150 C
      HoJLR2512-3W-7mR-1%    C2904239: peak 13.82 / 17.14 / 20.55 A, valley 9.03 / 11.43 / 13.89 A; service +7.32 / +4.76 A; B-1 20.74 / 20.95 A; B-2 NOT met; fails
+       at 9 V (7 mOhm): L1 19.96 A average continuous, hottest Q2 (on) past 150 C
      HoJLR2512-3W-8mR-1%    C2904240: peak 12.10 / 15.00 / 17.98 A, valley 7.90 / 10.00 / 12.15 A; service +5.59 / +3.63 A; B-1 18.39 / 18.45 A; B-2 NOT met; fails
+       at 9 V (7 mOhm): L1 17.39 A average continuous, hottest Q2 (on) past 150 C
      HoJLR2512-3W-9mR-1%    C2904241: peak 10.75 / 13.33 / 15.99 A, valley 7.03 / 8.89 / 10.80 A; service +4.25 / +2.75 A; B-1 16.45 / 16.51 A; B-2 NOT met; fails
+       at 9 V (7 mOhm): L1 15.39 A average continuous, hottest Q2 (on) past 150 C
      HoJLR2512-3W-10mR-1%   C2903468: peak 9.68 / 12.00 / 14.39 A, valley 6.32 / 8.00 / 9.72 A; service +3.18 / +2.05 A; B-1 14.91 / 14.97 A; B-2 NOT met; fails
+       at 9 V (7 mOhm): L1 13.80 A average continuous, hottest Q2 (on) past 150 C
      HoJLR2512-3W-12mR-1%   C2904242: peak 8.06 / 10.00 / 11.99 A, valley 5.27 / 6.67 / 8.10 A; service +1.56 / +0.99 A; B-1 12.60 / 12.77 A; B-2 met; PASSES
+       at 9 V (7 mOhm): L1 11.40 A average continuous, hottest Q2 (on) TJ 130 C
      HoJLR2512-3W-15mR-1%   C2903494: peak 6.45 / 8.00 / 9.59 A, valley 4.22 / 5.33 / 6.48 A; service -0.05 / -0.06 A; B-1 11.74 / 12.77 A; B-2 met; fails
+       at 9 V (7 mOhm): L1 9.00 A average continuous, hottest Q4 (boost switch) TJ 108 C
      HoJLR2512-3W-17mR-1%   C2904243: peak 5.69 / 7.06 / 8.46 A, valley 3.72 / 4.71 / 5.72 A; service -0.81 / -0.56 A; B-1 11.74 / 12.77 A; B-2 met; fails
+       at 9 V (7 mOhm): L1 7.87 A average continuous, hottest Q4 (boost switch) TJ 101 C
      HoJLR2512-3W-18mR-1%   C2903490: peak 5.38 / 6.67 / 7.99 A, valley 3.51 / 4.44 / 5.40 A; service -1.13 / -0.76 A; B-1 11.74 / 12.77 A; B-2 met; fails
+       at 9 V (7 mOhm): L1 7.40 A average continuous, hottest Q4 (boost switch) TJ 99 C
      HoJLR2512-3W-20mR-1%   C2903469: peak 4.84 / 6.00 / 7.19 A, valley 3.16 / 4.00 / 4.86 A; service -1.66 / -1.11 A; B-1 11.74 / 12.77 A; B-2 met; fails
+       at 9 V (7 mOhm): L1 6.60 A average continuous, hottest Q4 (boost switch) TJ 95 C
    CHOSEN: R12 12 mOhm, HoJLR2512-3W-12mR-1%, LCSC C2904242 (stock 3407), the smallest value that passes: the most service margin. Its sheet is the
      held HoJLR2512 series sheet (+-1 %, 50 ppm/K, 3 W). Peak limit 8.06 / 10.00 / 11.99 A, valley limit 5.27 / 6.67 / 8.10 A
    C147 to 330 pF C0G (lcsc_fill.py's C1664): Equation 26 gives 333 pF at 12 mOhm; the drawn 680 pF was the same at-or-below choice
@@ -124,7 +137,7 @@ where no held document gives the figure.
      15.1 V (boost, set by the average limit): L1 10.80 A average, 10.84 A rms, peak bound 12.59 A, L1 at 82 C; output 7.26 A; FETs: Q2 (on) 1.15 W, TJ 120 C; Q4 (boost switch) 0.82 W, TJ 103 C; Q5 (rectifier) 0.76 W, TJ 100 C
      36.0 V (buck, set by the average limit): L1 7.26 A average, 7.48 A rms, peak bound 11.74 A, L1 at 71 C; output 7.26 A; FETs: Q2 (buck switch) 1.09 W, TJ 117 C; Q3 (rectifier) 0.18 W, TJ 71 C; Q5 (on) 0.46 W, TJ 85 C
      B-1: the peak bound over 9 to 36 V 12.60 A (at 15.4 V), 72.0 % of the typical 17.5 A at 25 C: MET at 25 C; it holds at the part's
-       temperature (at most 84 C here) if Isat there is at least 80.0 % of its 25 C value: INCONCLUSIVE (C-5); the headroom admits
+       temperature (at most 84 C here) if Isat there is at least 80.0 % of its 25 C value, 14.00 A: INCONCLUSIVE (C-5); the headroom admits
        a comparator delay of 0.84 us at the top of boost
      B-2: every FET at most 130 C: MET on the ASSUMED RthetaJA; R12 itself 0.90 W at 9 V, 0.28 W at 36 V, at most 92 C
      above 14.0 V the average limit, not the peak limit, sets the fault current; at 9 V the output is held to 4.57 A
@@ -133,7 +146,7 @@ where no held document gives the figure.
      15.1 V (boost, set by the cycle-by-cycle limit): L1 11.81 A average, 11.85 A rms, peak bound 12.59 A, L1 at 85 C; output 7.94 A; FETs: Q2 (on) 1.51 W, TJ 138 C; Q4 (boost switch) 0.90 W, TJ 107 C; Q5 (rectifier) 0.95 W, TJ 109 C
      36.0 V (buck, set by the average limit): L1 8.30 A average, 8.49 A rms, peak bound 12.77 A, L1 at 74 C; output 8.30 A; FETs: Q2 (buck switch) 1.23 W, TJ 124 C; Q3 (rectifier) 0.23 W, TJ 74 C; Q5 (on) 0.62 W, TJ 93 C
      B-1: the peak bound over 9 to 36 V 12.77 A (at 36.0 V), 73.0 % of the typical 17.5 A at 25 C: MET at 25 C; it holds at the part's
-       temperature (at most 85 C here) if Isat there is at least 81.1 % of its 25 C value: INCONCLUSIVE (C-5); the headroom admits
+       temperature (at most 85 C here) if Isat there is at least 81.1 % of its 25 C value, 14.19 A: INCONCLUSIVE (C-5); the headroom admits
        a comparator delay of 0.80 us at the top of boost
      B-2: every FET at most 138 C: MET on the ASSUMED RthetaJA; R12 itself 0.90 W at 9 V, 0.37 W at 36 V, at most 92 C
      above 15.7 V the average limit, not the peak limit, sets the fault current; at 9 V the output is held to 4.57 A
