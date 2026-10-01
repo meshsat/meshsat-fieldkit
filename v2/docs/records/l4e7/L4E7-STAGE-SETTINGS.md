@@ -67,8 +67,8 @@ and the candidate panel's hot short circuit 97.4 mV.
 
 | Row (no printed bound) | Break-even for this setting, with its stack | Measurement |
 |---|---|---|
-| EA2's voltage gain (130 V/V TYP, p.5) and VC's operating range | **25.0 V/V** cold, 24.9 hot (stack A); 55.2 / 54.7 V/V with line x2 and the drifts (stack C's other terms) | In input-current limit at 25 V, move VC across its range by the load; the gain is dVC / dV(IMON_IN). Accept at or above 65 V/V |
-| IMON_IN line regulation while switching and at temperature (printed 25 C, not switching, p.4) | 61.6 times its printed maximum (stack A, cold); 47.1 with EA2 at 65 V/V | the limit's current at VIN 16 and 25 V, switching, at both ends |
+| EA2's voltage gain (130 V/V TYP, p.5) and VC's operating range | **25.026426 V/V** cold, 24.924212 hot (stack A); 55.191656 / 54.709122 V/V with line x2 and the drifts (stack C's other terms) | In input-current limit at 25 V, move VC across its range by the load; the gain is dVC / dV(IMON_IN). Accept at or above 65 V/V |
+| IMON_IN line regulation while switching and at temperature (printed 25 C, not switching, p.4) | 61.6 times its printed maximum (stack A, cold); 47.1 with EA2 at 65 V/V and stack A's other terms (cold) | the limit's current at VIN 16 and 25 V, switching, at both ends |
 | RSENSE1's TCR below +25 C (HoJLR p.4 tests +25 to +125 C; the cold end applies it, ASSUMPTION) | **882.027 ppm/K** (stack A); **122.295 ppm/K** (stack C) | R59 at -20 and +25 C |
 | U5's junction (INFERRED) | 105.4 C against 125 C | CLKOUT duty cycle, p.34 (+-10 C) |
 
@@ -77,9 +77,10 @@ and the candidate panel's hot short circuit 97.4 mV.
 307.9 to 283.4 Wh (240.0 Wh with the drifts too). The FBIN bias at 0, 10 and 100 nA puts the lower corner at 16.971458,
 16.970441 and 16.961288 V: 369.7, 369.7 and 369.9 Wh. The bench reads the hold at both ends (7b.12).
 
-A design margin answers the review's question: with no printed EA2 minimum, the corner passes for any EA2 gain at or above
-25 V/V, a fifth of the typical, at a cost of 0.0 Wh a day on the design day (below). The source's own compliance (O-1) and
-the efficiencies (C-8) are not changed by this record.
+A design margin answers the review's question: with no printed EA2 minimum, the corner passes for an EA2 gain at or above
+25.026426 V/V cold and 24.924212 V/V hot under stack A, and at or above 55.191656 V/V cold and 54.709122 V/V hot with stack
+C's other terms (line x2, the drifts), at a cost of 0.0 Wh a day on the design day (below). The bench accepts EA2 at or above
+65 V/V. The source's own compliance (O-1) and the efficiencies (C-8) are not changed by this record.
 
 ## The energy (MODELED: the replay's trace, SunPower SPR-E-Flex-100 1S1P, SC-37's mean September day)
 
@@ -147,3 +148,4 @@ l4e_replay.py section 11, l4e5 and this record refuse by design: they record the
 | M1, 16.695 V called the drawn lower corner | Labelled the replay's legacy H/MP-minimum calculation; the E-grade drawn lower corner 16.723678 V reported |
 | M2, break-evens without their stacks; EA3 and bias as break-evens | Every break-even names its stack (cold TCR 882.027 ppm/K stack A, 122.295 ppm/K stack C); EA3 and the FBIN bias carry an energy-sensitivity row |
 | M3, the sweep and hold acceptance started inside the admitted envelope | 7b.9 starts and 7b.12 accepts at the conditioned envelope (EA3 at half, the drifts), 16.420 to 18.813 V |
+| Recheck `checks/astra-check-l4e7-2.md` (ACCEPT), M2 residue: the EA2 sentence without its stack | The sentence gives the stack-specific thresholds the script now prints to six decimals (25.026426 / 24.924212 V/V stack A; 55.191656 / 54.709122 V/V with stack C's other terms); the bench acceptance stays 65 V/V |

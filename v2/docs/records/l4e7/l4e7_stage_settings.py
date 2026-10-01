@@ -757,8 +757,8 @@ def render(R):
     P("   THE UNPRINTED ROWS, as break-even values for this setting (the corner reaches 100 W at the value shown), each with its stack:")
     for (lm, dr), (gc, gh) in sorted(R["be_gain"].items()):
         P("     EA2's gain; printed limits, line x%-4g%-28s cold end %s V/V, hot end %s V/V" % (
-            lm, ", resistors' drifts stacked" if dr else (", no drifts (stack A)" if lm == 1.0 else ", no drifts"), "%.1f" % gc if gc else "none passes",
-            "%.1f" % gh if gh else "none passes"))
+            lm, ", resistors' drifts stacked" if dr else (", no drifts (stack A)" if lm == 1.0 else ", no drifts"), "%.6f" % gc if gc else "none passes",
+            "%.6f" % gh if gh else "none passes"))
     P("     the line regulation (cold end; printed limits, no drifts): with EA2 at 130 V/V (stack A) up to %.1f times its printed" % R["be_line"][0])
     P("     maximum (%.3f %%/V); with EA2 at 65 V/V, %.1f times" % (R["be_line"][0] * R["line_p"], R["be_line"][1]))
     P("     RSENSE1's TCR below 25 C (HoJLR prints its TCR from +25 to +125 C only, so the cold end applies it as an ASSUMPTION): the")
@@ -815,8 +815,9 @@ def render(R):
     P("   L4-E5's line (sized for the window's 100 W) covers it; the hold and the limit are on the input, R10 and C26/C27 on the output")
     P("")
     P("7. INCONCLUSIVE (no printed bound), each with the measurement that bounds it")
-    P("   - EA2's voltage gain (130 V/V TYP, p.5) and VC's operating range: the corner passes down to %.1f V/V (stack A, cold end) and" % R["be_gain"][(1.0, False)][0])
-    P("     %.1f V/V with line x2 and the drifts (stack C's other terms)." % R["be_gain"][(2.0, True)][0])
+    P("   - EA2's voltage gain (130 V/V TYP, p.5) and VC's operating range: the corner passes for an EA2 gain at or above %.6f V/V" % R["be_gain"][(1.0, False)][0])
+    P("     cold and %.6f V/V hot under stack A, and %.6f V/V cold and %.6f V/V hot with stack C's other terms (line x2, drifts)." % (
+        R["be_gain"][(1.0, False)][1], R["be_gain"][(2.0, True)][0], R["be_gain"][(2.0, True)][1]))
     P("     Bench: in input-current limit at 25 V, step the load to move VC across its range, read VC and IMON_IN; the gain is")
     P("     dVC / dV(IMON_IN); accept at or above 65 V/V (the floor), and at least the break-even at every point")
     P("   - the IMON_IN reference's line regulation while switching and at both ends (printed at 25 C, not switching, p.4): the corner")
