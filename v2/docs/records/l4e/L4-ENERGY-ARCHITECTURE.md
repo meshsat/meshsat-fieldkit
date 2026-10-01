@@ -16,7 +16,7 @@ from the sheet and stacked worst case, and the replay refuses to print if any co
 **Fourth issue, 1 October 2026:** it answers the independent power review filed as
 `REVIEW-POWER-ARCHITECTURE-AS-RECEIVED.md` (CONDITIONAL; no owner decision): L4-R01's wording on what B2 closed and what
 stays open, L4-R02's candidate panel evaluated with the proposed control (out 12), L4-R04's per-source acceptance, and
-the profile's undocumented loads (out 13). L4-R03, the replay companion, is the coordinator's. **Fifth issue, 1 October
+the profile's undocumented loads (out 13). L4-R03, the replay companion, is the coordinator's; it is CLOSED by the owner's reviewer's independent, network-blocked replay of `MESHSAT-POWER-REPLAY-c1321ebc.zip` (`REVIEW-POWER-REPLAY-REASSESSMENT-AS-RECEIVED.md`, 1 October 2026), which leaves L4-R01 and L4-R02 PARTIAL and L4-R04 to the source-control task L4-E5. **Fifth issue, 1 October
 2026:** it answers the check `checks/astra-check-l4e3-1.md` (accepted: no; B1): the panel is a nominally compatible
 candidate whose source compliance is INCONCLUSIVE, by its installation guide's 10 % qualification; the -20 C reading is
 the records', and older lines about an unpinned panel are brought up to date.
