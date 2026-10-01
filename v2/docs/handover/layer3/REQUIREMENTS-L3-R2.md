@@ -27,11 +27,11 @@ Layer 3 reaches completion only when every condition below holds: the four of th
 
 **Status of L3-R2: COMPLETE.**
 
-**Status level (the owner's reviewer's three, D-26):** **requirements drafted / decisions recorded** holds (the intended product and its acceptance criteria are explicit); **requirements baseline validated and accepted** does not yet: the completion gate's five conditions MET, the definition re-issue approved (L3-C26), the owner's conditional closure authorisation recorded (D-39, a ruling deciding layer3_baseline, not itself evidence that any gate passed) and the baseline's acceptance filed against the verified revision after the gates pass (l3r2.yaml baseline_acceptance, apply_l3r5_accept.py), its content manifest matching both that revision and the tree (render_l3r2.acceptance_ok, L3-R04 of the independent review of 1 October 2026). The fifth condition joins the gate with D-26: a recorded target may have a FAIL or INCONCLUSIVE candidate, but not an owed disposition.
+**Status level (the owner's reviewer's three, D-26):** **requirements baseline validated and accepted** holds: the chosen constraints have a credible feasibility basis, the identified gaps are resolved to the agreed review scope, and the owner has accepted the baseline. The fifth condition joins the gate with D-26: a recorded target may have a FAIL or INCONCLUSIVE candidate, but not an owed disposition.
 
 **The independent review the owner relayed on 1 October 2026** (`v2/docs/records/l3am/REVIEW-AS-RECEIVED.md`, sha256/16 `cbe90e44fa8f9e7f`; findings L3-R01, L3-R02, L3-R03, L3-R04, L3-R05): **Layer 3 amendment checked; independent review findings dispositioned (L3-R01 to L3-R05).** It is kept apart from "design compliance verified" and "fab-ready", neither of which holds. The findings' dispositions: `v2/docs/records/l3am/DISPOSITIONS.md` (state CLOSED).
 
-**The acceptance record** (`baseline_acceptance`, bound to the reviewed content since L3-R04): filed at `b4b199d0` (D-39, 2026-09-30); it does not validate: its evidence does not list the newest independent check.
+**The acceptance record** (`baseline_acceptance`, bound to the reviewed content since L3-R04): filed at `3b4b92cf` (D-39, 2026-10-01); it holds: its revision is a commit of this repository holding the content its manifest names, and the tree still holds it. Earlier records kept as history (`baseline_acceptance_history`): `b4b199d0` (2026-09-30).
 
 ### 2.1 The owner's closure (D-28, D-29, D-30)
 

@@ -47,3 +47,43 @@ check 3 stopped verifying (the binding of B2 doing its work) and check 4 re-veri
 second is answered on the page, which keeps the open status once as what the layer read until the acceptance. The
 acceptance's post-filing state is now simulated before promotion: a single-branch clone holding this set's content, the
 acceptance filed there, the pages rendered, the status restated, and every Layer 3 module and check run on it.
+
+## The gates, candidate by candidate
+
+Each suite judged by the coordinator's promotion gate on its log (the candidate named, the last EXIT 0, totals 0 failed
+matching the result lines, no load failure, every test module of the candidate's tree ran, the named modules required,
+no tracked file changed), never by a wrapper's exit code; every clone `--no-local --single-branch`, the evidence archive
+installed (942 files, sha256/16 `e8636c65d84c0250`). Times CEST, 1 October 2026; the box is vast.ai 53619970.
+
+**`7a1523d0` and `41881d8f` (promoted).** The suite on `7a1523d0` (04:23 to 04:46) and on `41881d8f` (04:31 to 04:54):
+2378 passed, 0 failed, 3 skipped (host properties: a path pinned by a routing profile exists there, no numba, pcbnew
+importable), 201 of 201 modules, gate PASS. The clone of each: every merge present, the render order 0 changed and stable
+twice (page `85256b70`), validators 0 errors 0 warnings, the decision pages current, the dry run reproduced, `verify_b2.py`
+0 findings, `verify_l3am.py` 16 of 16, the six Layer 3 modules with `test_public_hygiene` 141 passed, 0 failed. Promoted by
+fast-forward; the acceptance attempt there is described above.
+
+**`87dfa55f` (not promoted).** The clone (05:59 to 06:21): as above, with `verify_acceptance.py` 18 of 18 and eight modules,
+156 passed, 0 failed. The suite (05:59 to 06:22): 2382 passed, 11 failed, 3 skipped, gate FAIL: every failure in
+`test_l4e4`, because `r11_dep.py` refused on the box ("revision A32's last commit is not b7e0d28f"): it compared git's
+abbreviated hash, and the box's clone prints nine characters for that commit where the runner's prints eight. Fixed in step
+11 (`3b4b92cf`), reproduced on the runner first by forcing a longer abbreviation.
+
+**`3b4b92cf` (promoted).** Before it: the pre-acceptance state on the worktree, 144 passed, 0 failed over seven modules; the
+post-acceptance simulation (a clone holding step 8's content as a commit, the acceptance filed there, the pages rendered,
+the status restated): `verify_l3am.py` 16 of 16, `verify_acceptance.py` 18 of 18, 144 passed, 0 failed. The clone
+(06:25 to 06:47): every commit present, the render order 0 changed and stable twice, validators 0 errors 0 warnings, the dry
+run reproduced, `verify_b2.py` 0 findings, `verify_l3am.py` 16 of 16, `verify_acceptance.py` 18 of 18; `test_requirements`
+66, `test_l3r2` 27, `test_l3r4` 15, `test_l3r5` 21, `test_l3am` 8, `test_l3_reaccept` 3, `test_l4e4` 12, `test_r11dep` 2 and
+`test_public_hygiene` 4: 158 passed, 0 failed. The suite (06:25 to 06:48): 2395 passed, 0 failed, 3 skipped (the same host
+properties), 204 of 204 modules, the nine above required, gate PASS; the box was stopped after its logs were fetched
+(stopped, not destroyed). Promoted by fast-forward: main at `3b4b92cf`, pushed, mirror synced.
+
+## After promotion: the acceptance at `3b4b92cf`
+
+`apply_l3r5_accept.py --supersede` filed the acceptance against `3b4b92cf` under D-39, its evidence the amendment's checks
+(check 4 the newest independent check, check 3, the collaborator's two), the dispositions and this record, with the content
+manifest of the registry's normative content, the owner brief, the change record and the acceptance policy; the record at
+`b4b199d0` is kept in `baseline_acceptance_history`. The pages were rendered and LAYER-STATUS's layer 3 restated by
+`../l3am/apply_layer_status_reaccept.py` (the accepted revision and check 4 named, the open status kept once as what the
+layer read until then). On the accepted tree: the status level VALIDATED with `acceptance_ok` true; the render order stable twice (page `85256b70`, only the four files of the acceptance changed); validators 0 errors 0 warnings; the dry run reproduced; `verify_b2.py` 0 findings; `verify_l3am.py` 16 of 16; `verify_acceptance.py` 18 of 18; the nine modules 158 passed, 0 failed (06:50 to 07:10).
+
