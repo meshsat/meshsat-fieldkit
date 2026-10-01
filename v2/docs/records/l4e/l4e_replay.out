@@ -359,6 +359,86 @@ not the independent check.
      screening case 100 W   A1: first interruption h 13/2; unserved 907.4 / 923.5 at 48 h, 1382.5 / 1398.6 at 72 h; least addition +654.8 / +873.1 Wh
      screening case 100 W   A2: first interruption h 23/11; unserved 270.1 / 286.3 at 48 h, 500.4 / 516.5 at 72 h; least addition +278.8 / +515.8 Wh
 
+12. A COMPLIANT PANEL WITH THE PROPOSED CONTROL (review L4-R02): the SunPower SPR-E-Flex-100, one panel, 1S1P
+   the sheet: v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf
+   (SunPower document 523809 Rev D, a distributor's issue; held back by its terms, pinned by sha256; its one page read
+   back and equal to a1solar's CAND['SPR100']): Pnom 100 W (+6 / -3 %), Vmpp 17.1 V, Impp 5.9 A, Voc 21.4 V, Isc 6.3 A;
+   Voc -58.9 mV/K, Isc +2.6 mA/K, Pmax -0.35 %/K; 32 cells; no NOCT and no low-irradiance data printed
+   REQ-016's window: open circuit 24.05 V at -20 C cells (the kit's cold end, a1solar ARRAY.md 5's reading) against 25 V:
+   inside, margin 0.95 V; at the panel's own -40 C limit 25.23 V, outside (the other reading, named); 100 W nominal, the
+   stage's window holding the input at most 100 W; its hot short-circuit current about 6.42 A, under F2 and J_SOLAR's 10 A
+   the model (a1solar's array_calc, imported and pinned): the single-diode model without a shunt term, fitted to Isc, Voc,
+   Vmpp and Impp with dP/dV = 0 at the maker's point (A 1.0673 V, Rs 0.2301 Ohm: exact fit: dP/dV = 0 at the maker's (Vmp, Imp), Rs >= 0),
+   temperature by the maker's coefficients, the current in proportion to irradiance; cells by the NOCT model at 47 C
+   (INFERRED: SunPower prints none)
+   over SC-37's hourly air (13.2 to 18.3 C), the 5 m lead at 0.0465 Ohm (ESTIMATE); by a1solar's convention the stage's input
+   is PVGIS's maximum-power figure (its 0.9417) times the model's operating point over the model's own maximum-power point
+   the stage's input each hour: the FBIN hold while the panel gives less than O-2's limit there, else the limit with the
+   voltage riding up the curve; the hold at 16.695 / 17.593 / 18.490 V (section 11) and the limit at its lowest, nominal 3.548 A
+   and its highest (section 11's rows at the operating voltage). At the maximum-power point the day gives 378.0 Wh (PVGIS)
+   Wh a day into the stage (hours the limit binds):
+     lower hold corner  16.695 V, no input limit (as drawn)   373.5 Wh (0 h)
+     lower hold corner  16.695 V, limit at its lowest         373.5 Wh (0 h)
+     lower hold corner  16.695 V, limit nominal               373.5 Wh (0 h)
+     lower hold corner  16.695 V, limit at its highest        373.5 Wh (0 h)
+     nominal hold       17.593 V, no input limit (as drawn)   350.0 Wh (0 h)
+     nominal hold       17.593 V, limit at its lowest         350.0 Wh (0 h)
+     nominal hold       17.593 V, limit nominal               350.0 Wh (0 h)
+     nominal hold       17.593 V, limit at its highest        350.0 Wh (0 h)
+     upper hold corner  18.490 V, no input limit (as drawn)   280.6 Wh (0 h)
+     upper hold corner  18.490 V, limit at its lowest         280.6 Wh (0 h)
+     upper hold corner  18.490 V, limit nominal               280.6 Wh (0 h)
+     upper hold corner  18.490 V, limit at its highest        280.6 Wh (0 h)
+   sensitivity at the nominal hold and limit: the Rs 0.1 Ohm fit 330.9 Wh; the Rs 0.2 Ohm fit 346.1 Wh; cells 10 K hotter (NOCT 57 C) 331.3 Wh; the lead twice as long 343.4 Wh
+   two panels in parallel (1S2P), the same control: 580.7 Wh a day (6 h limited); their 12.8 A short circuit re-rates F2 and
+   J_SOLAR's 10 A, which REQ-016's acceptance names: a proposal, the owner's (shown for the energy only)
+   A1 AND A2 ON THE COMPLIANT TRACE (the stage's input as above; the rest of section 1's assumption set; the service
+   ledger; pairs 06 / 18 UTC). The 100 W screening case of sections 3 and 4 stays beside it as a labelled comparison.
+   AS DRAWN, WE, upper bound; no input limit, hold 17.593 V: 350.0 Wh a day into the stage
+     A1: first interruption h 6/2; unserved 1366.0 / 1366.8 at 48 h, 2101.9 / 2102.6 at 72 h; least addition +1360.1 / +2092.1 Wh
+     A2: first interruption h 18/11; unserved 985.6 / 1195.5 at 48 h, 1739.5 / 1949.4 at 72 h; least addition +977.8 / +1717.7 Wh
+   AS DRAWN, WE, lower bound (A-2 collapse); the same trace: 350.0 Wh a day into the stage
+     A1: first interruption h 2/2; unserved 1946.5 / 1946.5 at 48 h, 2973.7 / 2973.7 at 72 h; least addition +1950.7 / +2977.9 Wh
+     A2: first interruption h 11/11; unserved 1555.1 / 1555.1 at 48 h, 2582.9 / 2582.9 at 72 h; least addition +1576.1 / +2615.3 Wh
+   CORRECTED, WE; O-2 nominal (17.593 V, 3.548 A): 350.0 Wh a day into the stage
+     A1: first interruption h 6/2; unserved 1367.4 / 1368.1 at 48 h, 2103.9 / 2104.6 at 72 h; least addition +1361.5 / +2094.1 Wh
+     A2: first interruption h 18/11; unserved 986.9 / 1196.1 at 48 h, 1741.4 / 1950.7 at 72 h; least addition +979.2 / +1719.7 Wh
+   CORRECTED, WE; O-2 lower edge (the lower hold corner 16.695 V, the limit's lowest; the limit never binds): 373.5 Wh a day into the stage
+     A1: first interruption h 8/2; unserved 1339.7 / 1325.8 at 48 h, 2040.9 / 2042.7 at 72 h; least addition +1322.0 / +2034.8 Wh
+     A2: first interruption h 19/11; unserved 948.8 / 1177.8 at 48 h, 1685.0 / 1914.0 at 72 h; least addition +939.4 / +1660.1 Wh
+   CORRECTED, WE; the least-energy corner (upper hold corner, limit at its lowest): 280.6 Wh a day into the stage
+     A1: first interruption h 3/2; unserved 1511.9 / 1535.8 at 48 h, 2330.4 / 2289.0 at 72 h; least addition +1478.4 / +2269.4 Wh
+     A2: first interruption h 17/11; unserved 1318.5 / 1169.6 at 48 h, 1894.5 / 2131.1 at 72 h; least addition +1097.1 / +1896.6 Wh
+   The steady load at the pack terminals A2 carries through the horizon on the compliant trace (COMB, a sensitivity:
+   PS-IDLE-SPEC stays the defined 42.8 W profile):
+     CORRECTED, O-2 nominal       A2 48 h 21.1 W, 72 h 17.5 W; A1 48 h 8.0 W, 72 h 8.0 W
+     CORRECTED, O-2 lower edge    A2 48 h 21.6 W, 72 h 18.1 W; A1 48 h 8.1 W, 72 h 8.1 W
+     AS DRAWN, upper bound        A2 48 h 21.1 W, 72 h 17.5 W; A1 48 h 8.0 W, 72 h 8.0 W
+
+13. THE LOADS OF PS-IDLE-SPEC WITH NO DOCUMENT (review item): 3 rows of load_trace.out's tier T, 8.40 W at the pack
+   terminals of the profile's 42.8 W. Each: its figure now, the maker's figure held, and what would settle it
+      6.03 W  Xenarc 709GNK
+            now: 6.0 W at the load, the design record's figure (appendix 32.52); HIGH 10 W
+            held: v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf p.4 'Power Consumption: <= 10W', a maximum; no typical,
+            no figure per brightness (the manual's dimmer and auto sensor, pp.5 onward); the product page says the same
+            INCONCLUSIVE: measure its DC input at the kit's supply, at the brightness settings the profile uses, warm and cold
+      1.30 W  WiFi link card 2 (standby)
+            now: 1.0 W at the load, a placeholder (energy_inputs.yaml); 0 W if held unpowered by PCIE_PWR_EN; bounded by 9.1 W
+            held: v2/vendor/wifi/asiarf-AW7915-AED_V1.pdf p.4 'Power consumption maximum is 9.1W, average is 7W' (an active card);
+            p.1 'Deep sleep mode is supported', no figure; the product page 'maximum is 9W, average is 4 - 8W'
+            INCONCLUSIVE: measure the card's 3.3 V current in the standby state its firmware sets; holding it unpowered is a
+            design choice that changes the link's failover (CHO-002), not a measurement
+      1.07 W  VHF PA 30 W
+            now: 0.9 W at the load, a planning placeholder, about 1.2 % duty of a key-down (energy_inputs.yaml)
+            held: v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf p.2: Pout 30 W at a total efficiency above 40 % (VDD 12.5 V),
+            so at most 75 W in at key-down; leakage IGG at most 1 mA at VGG 0 V. The average is that input times the beacon duty,
+            which is the profile's: CONOPS section 5's fixed site (one 1 s beacon in 10 minutes) is about 0.13 W
+            INCONCLUSIVE: the beacon rate the profile means, and the PA's measured supply energy per beacon at the kit's VDD
+   none of the three is settled by a held maker's figure: each stays INCONCLUSIVE until measured or specified. The profile
+   is not lowered. On the compliant trace A2's corrected path meets 48 h at a steady 21.1 W (section 12), 21.7 W under
+   the profile, against 8.40 W of undocumented loads: settling them cannot by itself close the gap on that trace
+
 END. Each line is the model's arithmetic; nothing is measured. No result here is demonstrated capability: the circuit as
 drawn fails; the corrected path is HYPOTHETICAL and CONDITIONAL on three undocumented efficiencies; the 100 W results rest
-on a series REQ-016 does not admit and are a screening stimulus only.
+on a series REQ-016 does not admit and are a screening stimulus only; section 12's compliant trace rests on one held sheet,
+a single-diode fit to it and an INFERRED cell temperature, on one mean day.

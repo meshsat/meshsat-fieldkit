@@ -23,7 +23,9 @@ Only then does it change one input, the stage window, from 200 W to 100 W, and p
 is refused unless its store account and its service ledger close (section 5). Section 11 refuses (exit 3) when a row of the
 LT8705A sheet's electrical characteristics that names the input-current mechanism or the input-voltage hold reads back
 differently from its table or is not classified there, and (exit 4) when O-2's setting lets any corner of the envelope take
-more than REQ-016's 100 W.
+more than REQ-016's 100 W. Section 12 (the review's L4-R02) pins a panel REQ-016 admits, the SunPower SPR-E-Flex-100, from its
+held sheet (read back and pinned), builds its hourly operating point under the stage's input hold and O-2's limit with
+a1solar's single-diode model, and reruns A1 and A2 on that trace; section 13 lists the profile's undocumented loads.
 
 Run from the repository root:  python3 v2/docs/records/l4e/l4e_replay.py > v2/docs/records/l4e/l4e_replay.out
 Deterministic; standard library plus PyYAML (through the imported model). About one minute, most of it 0a.
@@ -52,6 +54,7 @@ PINS = {
     "l3plane/three_cases.out": "8119987a20fad08cae0edc928726c847b1f5ec41f81cfd9552849793567e96be",
     "energy/energy_budget.out": "5b11a90df10fee7bcafbb4e9931e05eafbc91120083e6e33815b12bce943e4dd",
     "r11dep/r11_dep.out": "f9d2c6f23fab3edcb48ad0116366fe588a514f755aafe56ebd62a0fe9495a209",
+    "a1solar/array_calc.py": "fdeaf63f525f1d7f4ca54502083369cfd4f322a41207ff0a52582c27038fd1e4",
 }
 
 
@@ -189,6 +192,39 @@ R_TOL = 0.01                # RSENSE1 and RIMON_IN are not chosen: 1 % each, all
 I_RES = 0.001               # the nominal setting's stated resolution, A; the derived setting is rounded DOWN to it
 V_LINE_REF = 12.0           # the VIN the page header prints the references at
 T_ENDS = ("the cold end", "the hot end")   # the full-range (l) limits hold at both; no end-specific values are printed
+# Section 12 (review L4-R02): the panel pinned inside REQ-016's window, from its maker's sheet (held back by its terms and
+# fetched by v2/docs/records/a1solar/fetch_held_back.py into v2/vendor/solar/held/, which git ignores; pinned by sha256).
+SPR_PDF = ("v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf",
+           "da06e5e2d9bca625f54a756105e009950a2352e4764868853cb26921372ff605")
+SPR_ROWS = (   # (label on the sheet, the figure as printed, a1solar's CAND['SPR100'] key, the value in its units)
+    (r"Nominal Power \(Pnom\)\s+(\d+) W", "p", 1.0),
+    (r"Rated Voltage \(Vmpp\)\s+([\d.]+) V", "vmp", 1.0),
+    (r"Rated Current \(Impp\)\s+([\d.]+) A", "imp", 1.0),
+    (r"Open-circuit voltage \(Voc\)\s+([\d.]+) V", "voc", 1.0),
+    (r"Short-curcuit current \(Isc\)\s+([\d.]+) A", "isc", 1.0),
+    (r"Voltage Temp Coefficient\s+[\u2013-]([\d.]+) mV", "beta_voc_abs", -1e-3),
+    (r"Current Temp Coefficient\s+([\d.]+) mA", "alpha_isc_abs", 1e-3),
+    (r"Power Temp Coeffiecient\s+[\u2013-]([\d.]+)%", "gamma_p", -1e-2),
+)
+UNDOC = {   # section 13: each tier T load of load_trace.out, the maker's figure held, and what would settle it
+    "Xenarc 709GNK": (
+        "now: 6.0 W at the load, the design record's figure (appendix 32.52); HIGH 10 W",
+        "held: v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf p.4 'Power Consumption: <= 10W', a maximum; no typical,",
+        "no figure per brightness (the manual's dimmer and auto sensor, pp.5 onward); the product page says the same",
+        "INCONCLUSIVE: measure its DC input at the kit's supply, at the brightness settings the profile uses, warm and cold"),
+    "WiFi link card 2 (standby)": (
+        "now: 1.0 W at the load, a placeholder (energy_inputs.yaml); 0 W if held unpowered by PCIE_PWR_EN; bounded by 9.1 W",
+        "held: v2/vendor/wifi/asiarf-AW7915-AED_V1.pdf p.4 'Power consumption maximum is 9.1W, average is 7W' (an active card);",
+        "p.1 'Deep sleep mode is supported', no figure; the product page 'maximum is 9W, average is 4 - 8W'",
+        "INCONCLUSIVE: measure the card's 3.3 V current in the standby state its firmware sets; holding it unpowered is a",
+        "design choice that changes the link's failover (CHO-002), not a measurement"),
+    "VHF PA 30 W": (
+        "now: 0.9 W at the load, a planning placeholder, about 1.2 % duty of a key-down (energy_inputs.yaml)",
+        "held: v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf p.2: Pout 30 W at a total efficiency above 40 % (VDD 12.5 V),",
+        "so at most 75 W in at key-down; leakage IGG at most 1 mA at VGG 0 V. The average is that input times the beacon duty,",
+        "which is the profile's: CONOPS section 5's fixed site (one 1 s beacon in 10 minutes) is about 0.13 W",
+        "INCONCLUSIVE: the beacon rate the profile means, and the PA's measured supply energy per beacon at the kit's VDD"),
+}
 CHECK_B1 = ["270.132086", "286.306461", "500.372955", "516.547330"]   # astra-check-l4e2-1, Checks, kit energy conservation
 
 
@@ -199,7 +235,7 @@ def need(text, pat, what):
     return m
 
 
-NUM = re.compile(r"(?<![\w.])[–-]?\d+(?:\.\d+)?(?![\w.])")
+NUM = re.compile(r"(?<![\w.])[\u2013-]?\d+(?:\.\d+)?(?![\w.])")
 
 
 def pdf_lines(rel, n):
@@ -225,7 +261,7 @@ def ec_vals(ln, c):
             continue
         mid = 0.5 * (m.start() + m.end())
         k = min(("MIN", "TYP", "MAX"), key=lambda kk: abs(c[kk] + 1.5 - mid))
-        out[k.lower()] = float(m.group(0).replace("–", "-"))
+        out[k.lower()] = float(m.group(0).replace("\u2013", "-"))
     return out
 
 
@@ -330,13 +366,13 @@ def main():
     prof0 = RES0["months"][TP.MONTH]["profile"]
 
     def run(arch, key, n, build, start, hours, window, wp=WP_TRACE, collapse=False, load_w=None, chg_cell=None,
-            account=False, ratio=None, entry=None, ov_extra=None, t_l=None):
+            account=False, ratio=None, entry=None, ov_extra=None, t_l=None, gser=None):
         """One run of energy_two_pack.sim(). arch A2: the base 4S6P and a lid of n in parallel at the lid's temperature;
         arch A1: one pack of n in parallel at the base temperature, no lid (so no lid path and no lid drain)."""
         vb, iin, ov = CASES[key]
         ov = dict(ov, **(ov_extra or {}))
         pr = pr0 * (rat40[build] if ratio is None else ratio)
-        vals = [prof0[(start + h) % 24] for h in range(hours)]
+        vals = [(prof0 if gser is None else gser)[(start + h) % 24] for h in range(hours)]
         saved = (TP.NP_B, TP.NP_L, TP.NP_T, TP.LOAD, TP.node_power)
         try:
             if arch == "A2":
@@ -955,8 +991,8 @@ def main():
                 unclassified.append("p.%d '%s'" % (n, param))
     if unclassified:
         refuse(3, "rows of 8705af that name the input-current mechanism or the hold are not classified: %s" % "; ".join(unclassified))
-    m_vc = need("\n".join(pages[2]), r"VC Voltage \(Note 2\)\.+\s*([–-]?[\d.]+)V to ([\d.]+)V", "8705af p.2 VC absolute maximum")
-    vc_lo, vc_hi = (float(x.replace("–", "-")) for x in m_vc.groups())
+    m_vc = need("\n".join(pages[2]), r"VC Voltage \(Note 2\)\.+\s*([\u2013-]?[\d.]+)V to ([\d.]+)V", "8705af p.2 VC absolute maximum")
+    vc_lo, vc_hi = (float(x.replace("\u2013", "-")) for x in m_vc.groups())
     dvc = max(abs(vc_hi - 1.2), abs(1.2 - vc_lo))        # the largest VC excursion from the 1.2 V the references are printed at
     gse = EBS.head_equal("v2/ecad/tools/gen_sch_e.py")
     r8 = float(need(gse, r'r\("R8", "([\d.]+)k 1% \(RFBIN1', "gen_sch_e.py R8").group(1))
@@ -1088,9 +1124,194 @@ def main():
                 wlab, ak, "/".join("-" if v_ is None else str(v_) for v_ in r_[1]["stops"]), " / ".join("%.1f" % v_ for v_ in r_[0]["uns"]),
                 " / ".join("%.1f" % v_ for v_ in r_[1]["uns"]), add[0], add[1]))
     P("")
+    # ------------------------------------------------------------------------------------------ 12. the compliant panel
+    sp = os.path.join(TOP, SPR_PDF[0])
+    if not os.path.exists(sp) or sha(sp) != SPR_PDF[1]:
+        refuse(2, "the SunPower SPR-E-Flex-100 sheet is not the pinned file (fetch it: v2/docs/records/a1solar/fetch_held_back.py)")
+    sp_text = " ".join(pdf_lines(SPR_PDF[0], 1))
+    cspr = AC.CAND["SPR100"]
+    for pat, key, scale in SPR_ROWS:
+        val = float(need(sp_text, pat, "the SunPower sheet's %s" % key).group(1)) * scale
+        if abs(val - cspr[key]) > 1e-9:
+            refuse(3, "the SunPower sheet's %s reads %g, a1solar's CAND %g" % (key, val, cspr[key]))
+    cells = int(need(sp_text, r"(\d+) Prime monocrystalline", "the SunPower sheet's cell count").group(1))
+    tol = need(sp_text, r"Power Tolerance\s+\+(\d+)/[\u2013-](\d+)%", "the SunPower sheet's power tolerance").groups()
+    voc20, voc40 = AC.voc_at(cspr, -20.0), AC.voc_at(cspr, -40.0)
+    if voc20 > v_oc + 1e-9:
+        refuse(4, "the pinned panel's cold open-circuit voltage %.2f V exceeds REQ-016's %.0f V" % (voc20, v_oc))
+    dsp = AC.Diode(cspr)
+    fits = [("the exact fit", dsp), ("Rs 0.1 Ohm", AC.DiodeRs(cspr, 0.1)), ("Rs 0.2 Ohm", AC.DiodeRs(cspr, 0.2))]
+    noct, rl = AC.NOCT_ASSUMED, AC.lead_r()
+    vfx = [v_lo, v_nom_hold, v_hi_hold]
+    vert = list(itertools.product((ref_p["min"], ref_p["max"]), (-1, 1), (gm_lo, gm_hi), (1 - R_TOL, 1 + R_TOL), (1 - R_TOL, 1 + R_TOL), (-1, 1)))
+
+    def lim_lo(v):
+        return i_set * min(i_factor(v, a, ref_p["typ"], line_p, b, ea_p, c_, gm, r1, r2) for a, b, gm, r1, r2, c_ in vert)
+
+    def lim_hi(v):
+        return i_set * max(i_factor(v, a, ref_p["typ"], line_p, b, ea_p, c_, gm, r1, r2) for a, b, gm, r1, r2, c_ in vert)
+
+    def lim_nom(v):
+        return i_set
+
+    def op_point(d, g, tc, v_hold, lim, r_lead):
+        """The stage's input in one hour: the FBIN hold at v_hold (8705af p.29) while the panel gives less than the limit
+        there; else the input-current limit (p.31), the board's voltage rising along the curve to where the panel gives it."""
+        if g <= 0.0:
+            return 0.0, 0.0, 0.0, False
+        i_h = d.current(v_hold, g, tc, r_lead)
+        if lim is None or i_h <= lim(v_hold):
+            return v_hold * i_h, v_hold, i_h, False
+        lo, hi = v_hold, d.mpp(g, tc)[2]
+        for _ in range(80):
+            m = 0.5 * (lo + hi)
+            if d.current(m, g, tc, r_lead) > lim(m):
+                lo = m
+            else:
+                hi = m
+        v = 0.5 * (lo + hi)
+        return v * lim(v), v, lim(v), True
+
+    def trace(d, v_hold, lim, noct_=noct, r_lead=rl, npar=1):
+        """Hour by hour on SC-37's mean September day: the stage's input power (W), by a1solar's convention: PVGIS's power at
+        the maximum-power point (panel_w, its 0.9417 carrying the angle, spectral and temperature losses) times the single-diode
+        model's operating point over its own maximum-power point at the same irradiance and cell temperature."""
+        out, bound, lim_h = [], [], 0
+        for h in range(24):
+            g, ta = prof0[h], TA40[h]
+            if g <= 0.0:
+                out.append(0.0)
+                continue
+            tc = AC.t_cell(ta, g, noct_)
+            pw, v_, i_, limited = op_point(d, g, tc, v_hold, (None if lim is None else (lambda v, lim=lim: lim(v) / npar)), r_lead * npar)
+            pm = AC.arr_mpp(d, 1, 1, g, tc)[0]
+            st = BUD.panel_w(g, 100.0 * npar, pr0) * (pw / pm)
+            if st > p_win + 1e-9 or v_ * i_ * npar > p_win + 1e-9:
+                refuse(4, "the compliant trace exceeds %.0f W at hour %d" % (p_win, h))
+            out.append(st)
+            lim_h += limited
+        return out, lim_h
+    grid_rows = []
+    for vlab, vh in (("lower hold corner", v_lo), ("nominal hold", v_nom_hold), ("upper hold corner", v_hi_hold)):
+        for llab, lf in (("no input limit (as drawn)", None), ("limit at its lowest", lim_lo), ("limit nominal", lim_nom), ("limit at its highest", lim_hi)):
+            tr, nl = trace(dsp, vh, lf)
+            grid_rows.append((vlab, vh, llab, sum(tr), nl, tr))
+    e_mpp = sum(BUD.panel_w(g, 100.0, pr0) for g in prof0)
+    P("12. A COMPLIANT PANEL WITH THE PROPOSED CONTROL (review L4-R02): the SunPower SPR-E-Flex-100, one panel, 1S1P")
+    P("   the sheet: %s" % SPR_PDF[0])
+    P("   (SunPower document 523809 Rev D, a distributor's issue; held back by its terms, pinned by sha256; its one page read")
+    P("   back and equal to a1solar's CAND['SPR100']): Pnom %.0f W (+%s / -%s %%), Vmpp %.1f V, Impp %.1f A, Voc %.1f V, Isc %.1f A;" % (
+        cspr["p"], tol[0], tol[1], cspr["vmp"], cspr["imp"], cspr["voc"], cspr["isc"]))
+    P("   Voc %.1f mV/K, Isc +%.1f mA/K, Pmax %.2f %%/K; %d cells; no NOCT and no low-irradiance data printed" % (
+        1e3 * cspr["beta_voc_abs"], 1e3 * cspr["alpha_isc_abs"], 100 * cspr["gamma_p"], cells))
+    P("   REQ-016's window: open circuit %.2f V at -20 C cells (the kit's cold end, a1solar ARRAY.md 5's reading) against %.0f V:" % (voc20, v_oc))
+    P("   inside, margin %.2f V; at the panel's own -40 C limit %.2f V, outside (the other reading, named); 100 W nominal, the" % (
+        v_oc - voc20, voc40))
+    P("   stage's window holding the input at most %.0f W; its hot short-circuit current about %.2f A, under F2 and J_SOLAR's 10 A" % (
+        p_win, AC.isc_at(cspr, 70.0)))
+    P("   the model (a1solar's array_calc, imported and pinned): the single-diode model without a shunt term, fitted to Isc, Voc,")
+    P("   Vmpp and Impp with dP/dV = 0 at the maker's point (A %.4f V, Rs %.4f Ohm: %s)," % (dsp.a_ref, dsp.rs, dsp.fit_note))
+    P("   temperature by the maker's coefficients, the current in proportion to irradiance; cells by the NOCT model at %.0f C" % noct)
+    P("   (INFERRED: SunPower prints none)")
+    P("   over SC-37's hourly air (%.1f to %.1f C), the 5 m lead at %.4f Ohm (ESTIMATE); by a1solar's convention the stage's input" % (
+        min(TA40), max(TA40), rl))
+    P("   is PVGIS's maximum-power figure (its 0.9417) times the model's operating point over the model's own maximum-power point")
+    P("   the stage's input each hour: the FBIN hold while the panel gives less than O-2's limit there, else the limit with the")
+    P("   voltage riding up the curve; the hold at %.3f / %.3f / %.3f V (section 11) and the limit at its lowest, nominal %.3f A" % (
+        v_lo, v_nom_hold, v_hi_hold, i_set))
+    P("   and its highest (section 11's rows at the operating voltage). At the maximum-power point the day gives %.1f Wh (PVGIS)" % e_mpp)
+    P("   Wh a day into the stage (hours the limit binds):")
+    for vlab, vh, llab, e_, nl, _tr in grid_rows:
+        P("     %-18s %.3f V, %-26s %6.1f Wh (%d h)" % (vlab, vh, llab, e_, nl))
+    get = {(r_[0], r_[2]): r_ for r_ in grid_rows}
+    tr_drawn = get[("nominal hold", "no input limit (as drawn)")][5]
+    tr_nom = get[("nominal hold", "limit nominal")][5]
+    tr_low = get[("lower hold corner", "limit at its lowest")][5]
+    worst_row = min(grid_rows, key=lambda r_: r_[3] if r_[2] != "no input limit (as drawn)" else 1e9)
+    tr_worst = worst_row[5]
+    sens = []
+    for lab, dd, nn, rr in (("the Rs 0.1 Ohm fit", fits[1][1], noct, rl), ("the Rs 0.2 Ohm fit", fits[2][1], noct, rl),
+                            ("cells 10 K hotter (NOCT %.0f C)" % (noct + 10), dsp, noct + 10, rl), ("the lead twice as long", dsp, noct, 2 * rl)):
+        sens.append((lab, sum(trace(dd, v_nom_hold, lim_nom, nn, rr)[0])))
+    P("   sensitivity at the nominal hold and limit: %s" % "; ".join("%s %.1f Wh" % x for x in sens))
+    two = trace(dsp, v_nom_hold, lim_nom, npar=2)
+    P("   two panels in parallel (1S2P), the same control: %.1f Wh a day (%d h limited); their %.1f A short circuit re-rates F2 and" % (
+        sum(two[0]), two[1], 2 * AC.isc_at(cspr, 70.0)))
+    P("   J_SOLAR's 10 A, which REQ-016's acceptance names: a proposal, the owner's (shown for the energy only)")
+    gs = lambda tr: [x / (100.0 * pr0 / 1000.0) for x in tr]    # the stage's input as the model's irradiance at 100 Wp, pr0
+    runs = (("AS DRAWN, WE, upper bound; no input limit, hold %.3f V" % v_nom_hold, "DRAWN-WE", False, tr_drawn),
+            ("AS DRAWN, WE, lower bound (A-2 collapse); the same trace", "DRAWN-WE", True, tr_drawn),
+            ("CORRECTED, WE; O-2 nominal (%.3f V, %.3f A)" % (v_nom_hold, i_set), "WE", False, tr_nom),
+            ("CORRECTED, WE; O-2 lower edge (the lower hold corner %.3f V, the limit's lowest; the limit never binds)" % v_lo, "WE", False, tr_low),
+            ("CORRECTED, WE; the least-energy corner (%s, %s)" % (worst_row[0], worst_row[2]), "WE", False, tr_worst))
+    P("   A1 AND A2 ON THE COMPLIANT TRACE (the stage's input as above; the rest of section 1's assumption set; the service")
+    P("   ledger; pairs 06 / 18 UTC). The 100 W screening case of sections 3 and 4 stays beside it as a labelled comparison.")
+    ctr = {}
+    for lab, key, col, tr in runs:
+        P("   %s: %.1f Wh a day into the stage" % (lab, sum(tr)))
+        for ak, alab, n in archs:
+            r_ = [meanday(ak, key, n, "TYP", h, win_req016, collapse=col, gser=gs(tr), wp=100.0, ratio=1.0) for h in (48, 72)]
+            x = [least(ak, key, "TYP", h, win_req016, 1.0, 160.0, 34, collapse=col, gser=gs(tr), wp=100.0, ratio=1.0) for h in (48, 72)]
+            kk = "el" if ak == "A2" else "eb"
+            add = ["%+.1f" % (meanday(ak, key, x[i], "TYP", h, win_req016, collapse=col, gser=gs(tr), wp=100.0, ratio=1.0)[kk] - r_[i][kk])
+                   if x[i] is not None else "none up to 160 in parallel" for i, h in enumerate((48, 72))]
+            ctr[(lab, ak)] = (r_, add)
+            P("     %s: first interruption h %s; unserved %s at 48 h, %s at 72 h; least addition %s / %s Wh" % (
+                ak, "/".join("-" if v_ is None else str(v_) for v_ in r_[1]["stops"]), " / ".join("%.1f" % v_ for v_ in r_[0]["uns"]),
+                " / ".join("%.1f" % v_ for v_ in r_[1]["uns"]), add[0], add[1]))
+    P("   The steady load at the pack terminals A2 carries through the horizon on the compliant trace (COMB, a sensitivity:")
+    P("   PS-IDLE-SPEC stays the defined 42.8 W profile):")
+    thr = {}
+    for lab, key, tr in (("CORRECTED, O-2 nominal", "WE", tr_nom), ("CORRECTED, O-2 lower edge", "WE", tr_low),
+                         ("AS DRAWN, upper bound", "DRAWN-WE", tr_drawn)):
+        vals_ = []
+        for ak in ("A2", "A1"):
+            n = LID_A if ak == "A2" else BASE_A1
+            for hours in (48, 72):
+                lo, hi = 1.0, load0
+                okf = lambda L: (lambda s_: s_["ok"] and s_["both"] > FLOOR)(meanday(ak, key, n, "TYP", hours, win_req016, load_w=L,
+                                                                                    gser=gs(tr), wp=100.0, ratio=1.0))
+                if okf(hi):
+                    vals_.append(">= %.1f" % hi)
+                    continue
+                for _ in range(30):
+                    mid = 0.5 * (lo + hi)
+                    if okf(mid):
+                        lo = mid
+                    else:
+                        hi = mid
+                vals_.append("%.1f" % lo)
+                thr[(lab, ak, hours)] = lo
+        P("     %-28s A2 48 h %s W, 72 h %s W; A1 48 h %s W, 72 h %s W" % (lab, vals_[0], vals_[1], vals_[2], vals_[3]))
+    P("")
+
+    # ------------------------------------------------------------------------------------------ 13. the undocumented loads
+    lto = EBS.head_equal("v2/docs/records/l3batt/load_trace.out")
+    t_rows = [(float(m_.group(1)), m_.group(2).strip()) for m_ in re.finditer(r"^\s+([\d.]+)\s+T\s+(.+?)\s{2,}", lto, re.M)]
+    t_sum = sum(w for w, _n in t_rows)
+    tier = need(lto, r"T ([\d.]+)\s*$", "load_trace.out's tier T total")
+    if abs(t_sum - float(tier.group(1))) > 0.051:
+        refuse(3, "load_trace.out's T rows sum %.2f W, its tier line %s" % (t_sum, tier.group(1)))
+    P("13. THE LOADS OF PS-IDLE-SPEC WITH NO DOCUMENT (review item): %d rows of load_trace.out's tier T, %.2f W at the pack" % (len(t_rows), t_sum))
+    P("   terminals of the profile's %.1f W. Each: its figure now, the maker's figure held, and what would settle it" % load0)
+    for w_, nm in t_rows:
+        info = UNDOC.get(nm)
+        if info is None:
+            refuse(3, "the undocumented load '%s' has no entry in UNDOC" % nm)
+        P("     %5.2f W  %s" % (w_, nm))
+        for ln in info:
+            P("            %s" % ln)
+    P("   none of the three is settled by a held maker's figure: each stays INCONCLUSIVE until measured or specified. The profile")
+    P("   is not lowered. On the compliant trace A2's corrected path meets 48 h at a steady %.1f W (section 12), %.1f W under" % (
+        thr[("CORRECTED, O-2 nominal", "A2", 48)], load0 - thr[("CORRECTED, O-2 nominal", "A2", 48)]))
+    P("   the profile, against %.2f W of undocumented loads: settling them cannot by itself close the gap on that trace" % t_sum
+      if load0 - thr[("CORRECTED, O-2 nominal", "A2", 48)] > t_sum else
+      "   the profile, against %.2f W of undocumented loads: settling them could close the gap only if they fall that far" % t_sum)
+    P("")
     P("END. Each line is the model's arithmetic; nothing is measured. No result here is demonstrated capability: the circuit as")
     P("drawn fails; the corrected path is HYPOTHETICAL and CONDITIONAL on three undocumented efficiencies; the 100 W results rest")
-    P("on a series REQ-016 does not admit and are a screening stimulus only.")
+    P("on a series REQ-016 does not admit and are a screening stimulus only; section 12's compliant trace rests on one held sheet,")
+    P("a single-diode fit to it and an INFERRED cell temperature, on one mean day.")
     sys.stdout.write("\n".join(o) + "\n")
     return 0
 
