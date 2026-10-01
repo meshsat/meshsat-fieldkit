@@ -3,7 +3,8 @@
 
 YAGEO's RT series product specification V.16 (May 06, 2025; the sheet LCSC links for C861244, C861068, C861589 and
 C136968) gives the tolerance and TCR codes of RIMON_IN, R8 and R9. Infineon's BSC028N06NS data sheet Rev.2.1 (2013-01-18;
-LCSC's link for C148250) gives Q3's and Q5's gate charge for U5's junction estimate. Both are held back from the public tree
+LCSC's link for C148250) gives Q3's and Q5's gate charge for U5's junction estimate. Vishay Dale's WSL sheet (Document Number
+30100, Revision 23-Nov-2023; LCSC's link for C844695) is the RSENSE1 alternative the qualification evaluates. Both are held back from the public tree
 by the conservative reading of their terms (the owner's rule of 27 September 2026), as the a1solar, s117 and w5identc
 records do: this script downloads each from the address its catalogue reading in inputs/ records into an ignored held/
 folder, checks the sha256 l4e7_stage_settings.py pins, and refuses to keep a file that differs. It is never run by a test.
@@ -23,6 +24,9 @@ DOCS = [
     ("v2/vendor/power/held/infineon-bsc028n06ns-rev2.1-c148250.pdf",
      "https://datasheet.lcsc.com/datasheet/pdf/0ee6668d612fe4d6661ddc31bcb9aa36.pdf?productCode=C148250",
      "2959653166e981f9de24cd9c141c44490ecc62acba5971ec8c0b263eca9708e0"),
+    ("v2/vendor/passives/held/vishay-wsl-30100-2023-11-23.pdf",
+     "https://datasheet.lcsc.com/datasheet/pdf/548f4c1b2301e9c8a8b168347d5344c1.pdf?productCode=C844695",
+     "1b5c68910aa562a0dcce11ec572b4dd1febe63cfb90d20f3eaf5f9c7e01b59ac"),
 ]
 
 

@@ -1,0 +1,10 @@
+{
+ "what": "The Internet Archive's copy of the LT8705A data sheet at the URL the owner names (the live site resets this runner's connection), fetched with the id_ form",
+ "url": "https://www.analog.com/media/en/technical-documentation/data-sheets/8705af.pdf",
+ "snapshot": "20250322064938",
+ "fetched": "https://web.archive.org/web/20250322064938id_/https://www.analog.com/media/en/technical-documentation/data-sheets/8705af.pdf",
+ "read_utc": "2026-10-01T16:49Z",
+ "read_by": "task L4-E7 (MESHSAT-1357)",
+ "sha256": "8f552a0b57677bfa7e4a5d5d0fac56d56fbbd1a6f65a9ee7aaaf8743cd534ec3",
+ "note": "byte-identical to the held v2/vendor/power/lt8705a.pdf; the coordinator found the same on 1 October 2026"
+}

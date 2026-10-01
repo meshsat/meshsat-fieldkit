@@ -1,0 +1,28 @@
+DRAFT FOR THE OWNER TO SEND. The MeshSat session contacts no outside party; it prepared this text only.
+Addressee: Analog Devices, technical support for the LT8705A (the owner chooses the channel).
+Prepared 1 October 2026, task L4-E7 (MESHSAT-1357).
+
+Subject: LT8705AIUHF: guaranteed limits for the IMON_IN input-current regulation (EA2 gain, VC dependence, line regulation)
+
+We use the LT8705AIUHF#PBF to hold a solar panel's input power under 100 W by its input-current limit (data sheet 8705af,
+https://www.analog.com/media/en/technical-documentation/data-sheets/8705af.pdf, "Current Limiting" on page 31 and
+Figure 11). We size the limit from the Electrical Characteristics, and three quantities that set the regulated input
+current are printed only as typical values or only at 25 C. We ask for guaranteed limits, or a statement of what your
+production test covers, for each:
+
+1. The IMON_IN error amplifier EA2 (page 5: voltage gain 130 V/V and gm 185 umho, typical only). The IMON_IN regulation
+   voltage (page 4: 1.187 / 1.208 / 1.229 V over the full temperature range) is printed at VC = 1.2 V. In input-current
+   regulation VC settles where the power stage needs it. What is the guaranteed minimum EA2 voltage gain over -40 to
+   125 C junction for the I grade, or, equivalently, the guaranteed range of the IMON_IN regulation voltage over the VC
+   operating range? What is the VC operating range in regulation (minimum and the clamp), as opposed to the absolute
+   maximum rating of -0.3 to 2.2 V on page 2?
+
+2. The line regulation of the IMON_IN and IMON_OUT error amplifier reference (page 4: 0.002 / 0.005 %/V, VIN = 12 V to
+   80 V, not switching, at 25 C). What is its limit while the converter is switching, and over -40 to 125 C junction,
+   for VIN from 12 V to 25 V?
+
+3. Do the full-range limits of the IMON_IN regulation voltage on page 4 already include the reference's temperature
+   drift at VIN = 12 V, and do they hold with CIMON_IN filtering a discontinuous input current as page 31 describes?
+
+A statement of the guaranteed values, or of the production test conditions and the characterization over production
+lots behind them, is what we need; typical curves are not sufficient for our purpose. Thank you.

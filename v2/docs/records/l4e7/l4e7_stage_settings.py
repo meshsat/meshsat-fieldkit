@@ -56,6 +56,7 @@ RT = "v2/vendor/passives/held/yageo-rt-series-v16-2025-05-06.pdf"
 BSC039 = "v2/vendor/infineon/infineon-bsc039n06ns-rev2.4-c534330.pdf"
 BSC028 = "v2/vendor/power/held/infineon-bsc028n06ns-rev2.1-c148250.pdf"
 INP = "v2/docs/records/l4e7/inputs"
+CLAR = "v2/docs/records/l4e7/clarification"
 INP_L4E4 = "v2/docs/records/l4e4/inputs/jlc-search-hojlr2512-3w-2026-10-01.json"
 PINS = {
     REPLAY_PY: "3de985e2e3e06453d2c9d576311c1f39935149ac1e9b7cff0431a40933bb8734",
@@ -79,6 +80,8 @@ STOCK_MIN = 1000         # SESSION: a catalogue value is a candidate only with a
 V_STEP = 0.01            # the corner check's voltage grid, V (the replay's own step)
 I_RES = 0.001            # the old setting's grid, A (the replay's I_RES), for its row only
 HOLD_RANGE = (15.5, 17.5)  # the NOT ADOPTED proposal's scan only: nominals inside the candidate's hourly MPP span +- about 1 V
+OFFICIAL_URL = "https://www.analog.com/media/en/technical-documentation/data-sheets/8705af.pdf"   # the owner's named sheet
+IA_SNAPSHOT = "20250322064938"   # the Internet Archive's copy of that URL (the live site resets this runner's connection)
 CIMON = ("C65", "100n", "C14663")   # SESSION: CIMON_IN at the maker's 0.1 uF lower end (8705af p.31), the 0603 X7R board E uses
 
 
@@ -129,6 +132,11 @@ def rvalue(model):
     """The resistance of a YAGEO RT0603BRD07 model in ohms ('RT0603BRD0723K2L' is 23.2k)."""
     m = re.match(r"RT0603BRD07(\d+)K(\d*)L$", model)
     return float(m.group(1) + ("." + m.group(2) if m.group(2) else "")) * 1e3 if m else None
+
+
+def bound_status(rows):
+    """CONDITIONAL exactly when a row that affects the 100 W bound is not resolved by a guaranteed limit or a maker's statement."""
+    return "CONDITIONAL" if any(r_["bound"] and not r_["resolved"] for r_ in rows) else "UNCONDITIONAL"
 
 
 def compute():
@@ -621,6 +629,197 @@ def compute():
     R["old_runs"] = old
     R["old_grid"] = [(g_[0], g_[1], g_[2], g_[3], g_[4]) for g_ in LR["grid_rows"]]
 
+    # ================================================================== 10: QUALIFICATION OF THE 100 W BOUND (the owner's instruction,
+    # 1 October 2026): each unprinted value classified by the outcome it affects, the sheet searched for a guaranteed limit
+    # beyond the electrical table, a conservative assumption and the qualification it needs where none exists, the corners
+    # shown to bound the permitted range, and the states outside them made a computed case or a bench obligation.
+    ia = json.load(open(os.path.join(TOP, INP, "ia-8705af-20250322064938.json"), encoding="utf-8"))
+    if ia["sha256"] != PINS[LT] or ia["url"] != OFFICIAL_URL or ia["snapshot"] != IA_SNAPSHOT:
+        refuse(3, "the Internet Archive reading of 8705af is not the held sheet at the official URL")
+    raw = {n: flat(pg(LT, n, False)) for n in range(1, 45)}
+    if sum(1 for n in raw if "8705af" in raw[n]) != 44:
+        refuse(3, "8705af does not print its code on each of its 44 pages")
+    R["prov"] = dict(url=ia["url"], snapshot=ia["snapshot"], sha=ia["sha256"], read=ia["read_utc"])
+    # what the sheet gives beyond the electrical table (each phrase read back; curves are TYPICAL, p.7 and p.8 headers)
+    for n, phrase in ((7, "Feedback Voltages"), (7, "Inductor Current Sense Voltage at Minimum Duty Cycle"),
+                      (7, "TA = 25\u00b0C unless otherwise specified"), (8, "Maximum VC vs SS"), (8, "IMON Output Currents"),
+                      (8, "TA = 25\u00b0C unless otherwise specified"), (14, "which is the diode-AND of error amplifiers EA1-EA4"),
+                      (15, "gradual ramp-up of the inductor current by gradually allowing the VC voltage to rise"),
+                      (18, "synchronous switch M4 is held off whenever reverse current in the inductor is detected"),
+                      (33, "The loop stability is affected by a number of factors"), (34, "reaches approximately 165\u00b0C")):
+        need(raw[n], re.escape(phrase), "8705af p.%d '%s'" % (n, phrase))
+    ec = {r_["id"]: r_ for r_ in RP.EC_ROWS}
+    unprinted_rows = {k: (ec[k]["page"], ec[k]["full"], ec[k]["min"], ec[k]["typ"], ec[k]["max"]) for k in ("EA2_AV", "EA2_GM", "IMON_LINE", "EA3_AV", "FBIN_BIAS")}
+    if any(v[1] for v in unprinted_rows.values()) or any(unprinted_rows[k][2] is not None for k in ("EA2_AV", "EA3_AV", "FBIN_BIAS")):
+        refuse(4, "a row taken as unprinted carries a full-range limit or a minimum")
+    R["unprinted_rows"] = unprinted_rows
+    # (a) monotonicity: P(v) = v I_set F(v); dP/dv = I_set [Vref (1 + ls lam (2v - 12)) + es dVC / G] / (Vref_typ gm r1 r2) at every vertex
+    def dpdv_min(gain, lmul):
+        lam = line_p * lmul * 1e-2
+        return min(a * (1 + ls * lam * (2 * v - V_LINE_REF)) + es * dvc / gain
+                   for a in (ref_p["min"], ref_p["max"]) for ls in (-1, 1) for es in (-1, 1) for v in (v_lo_env, v_oc))
+    V_LINE_REF = RP.V_LINE_REF
+    R["dpdv"] = (dpdv_min(ea2, 1.0), dpdv_min(ea2 / EA2_FLOOR_DIV, LINE_FLOOR_MUL))
+    if min(R["dpdv"]) <= 0:
+        refuse(4, "the power is not increasing in the input voltage at every vertex")
+    for nm, chk in (("A", R["main_chk"]), ("B", R["chk_printed"]), ("C", R["chk_floor"]), ("D", R["chk_drift"])):
+        if any(abs(w[1] - v_oc) > 1e-9 for _l, w, _n in chk):
+            refuse(4, "stack %s's dense check finds its worst below the 25 V vertex" % nm)
+    # (b) RSENSE1's temperature: the break-even over the air, stacks A and C (a hot spot on the board beside L1 and the FETs)
+    def rs_t_breakeven(gain, lmul, drifts):
+        rm_lo = rfac(tol_y, tcr_y, t_air - 25.0, (R["life_y"][0] + R["life_y"][1] / rm) if drifts else 0.0,
+                     (R["sold_y"][0] + R["sold_y"][1] / rm) if drifts else 0.0)
+        f = lambda t: v_oc * i_nom * corner_k(v_oc, gain, lmul, rfac(tol_h, tcr_h, t - 25.0, life_h if drifts else 0.0, sold_h if drifts else 0.0), rm_lo)
+        if f(170.0) <= p_win:
+            return None
+        lo, hi = 25.0, 170.0
+        for _ in range(200):
+            mid = 0.5 * (lo + hi)
+            if f(mid) > p_win:
+                hi = mid
+            else:
+                lo = mid
+        return lo
+    R["rs_t_be"] = (rs_t_breakeven(ea2, 1.0, False), rs_t_breakeven(ea2 / EA2_FLOOR_DIV, LINE_FLOOR_MUL, True))
+    # (c) the conservative assumptions one at a time on stack A (the cold end, the worse), and together (stack C with RSENSE1's
+    # cold TCR at twice its printed hot-side value)
+    TCR_COLD_CONS = 2.0 * tcr_h
+    def p_cold(gain, lmul, drifts, tcr_cold):
+        dt = abs(END[0][1] - 25.0)
+        rs_lo = rfac(tol_h, tcr_cold, dt, life_h if drifts else 0.0, sold_h if drifts else 0.0)
+        rm_lo = rfac(tol_y, tcr_y, END[0][2] - 25.0, (R["life_y"][0] + R["life_y"][1] / rm) if drifts else 0.0,
+                     (R["sold_y"][0] + R["sold_y"][1] / rm) if drifts else 0.0)
+        return v_oc * i_nom * corner_k(v_oc, gain, lmul, rs_lo, rm_lo)
+    R["cons"] = dict(base=p_cold(ea2, 1.0, False, tcr_h), ea2=p_cold(ea2 / EA2_FLOOR_DIV, 1.0, False, tcr_h),
+                     line=p_cold(ea2, LINE_FLOOR_MUL, False, tcr_h), tcr=p_cold(ea2, 1.0, False, TCR_COLD_CONS),
+                     joint=p_cold(ea2 / EA2_FLOOR_DIV, LINE_FLOOR_MUL, True, TCR_COLD_CONS), tcr_cons=TCR_COLD_CONS)
+    if R["cons"]["joint"] > p_win:
+        refuse(4, "the conservative assumptions together take the corner over 100 W")
+    # (d) protection: the IMON_IN fault (p.5, full range) against the regulated point; the fault/limit ratio does not depend on RSENSE1
+    reg_hi = ref_p["max"] * (1 + line_p * 1e-2 * (v_oc - V_LINE_REF))
+    R["g_fault"] = dvc / (iovm["min"] - reg_hi)                         # EA2 gain below which regulation would reach the fault (safe side)
+    R["k_fault"] = (iovm["min"] / ref_p["max"] - 1.0) / (line_p * 1e-2 * (v_oc - V_LINE_REF))
+    R["tsd"], R["tj_margin"] = 165.0, 125.0 - R["tj_hot"]
+    need(raw[34], r"reaches approximately 165\u00b0C", "8705af p.34 the thermal shutdown")
+    # (e) the hold's lowest against the 25 V corner (why EA3 and the FBIN bias do not reach the bound)
+    w_lo = max(v_lo_env * i_nom * RP.i_factor(v_lo_env, ref_p["max"], vref_n, line_p * LINE_FLOOR_MUL, ls, dvc / (ea2 / EA2_FLOOR_DIV), 1, gm_lo,
+                                               rfac(tol_h, tcr_h, END[1][1] - 25.0), rfac(tol_y, tcr_y, END[0][2] - 25.0)) for ls in (-1, 1))
+    R["p_hold_lo"] = w_lo
+    # (f) states outside the corners
+    voc40 = LR["voc40"]
+    p40 = voc40 * i_nom * corner_k(voc40, ea2, 1.0, rfac(tol_h, tcr_h, -40.0 - 25.0), rfac(tol_y, tcr_y, -40.0 - 25.0))
+    caps = 0.0
+    for ref in ("C11", "C12", "C13", "C14", "C15", "C64"):
+        m = re.match(r"([\d.]+)(u|n)", e["components"][ref]["value"])
+        caps += float(m.group(1)) * (1e-6 if m.group(2) == "u" else 1e-9)
+    cspr = AC.CAND["SPR100"]
+    tol_p = float(need(" ".join(RP.pdf_lines(RP.SPR_PDF[0], 1)), r"Power Tolerance\s+\+(\d+)/", "the SunPower sheet's power tolerance").group(1)) / 100.0
+    t_cell_cold = AC.t_cell(t_cold, 1000.0, LR["noct"])
+    p_panel_cold = cspr["p"] * (1 + tol_p) * (1 + cspr["gamma_p"] * (t_cell_cold - 25.0))
+    R["outside"] = dict(voc40=voc40, p40=p40, c_vin=caps, e_caps=0.5 * caps * v_oc ** 2, t_cell_cold=t_cell_cold, p_panel_cold=p_panel_cold,
+                        tol_p=tol_p)
+    # (g) the design option that removes RSENSE1's cold TCR unknown: a stocked 15 mOhm 1 % 2512 whose maker states TCR from
+    # -55 C, evaluated by the same rules (Vishay Dale WSL, Document Number 30100, Revision 23-Nov-2023, held)
+    WSL = "v2/vendor/passives/held/vishay-wsl-30100-2023-11-23.pdf"
+    if sha(WSL) != "1b5c68910aa562a0dcce11ec572b4dd1febe63cfb90d20f3eaf5f9c7e01b59ac":
+        refuse(2, "%s is not the pinned file (fetch it: v2/docs/records/l4e7/fetch_held_back.py)" % WSL)
+    w1, w2, w3 = flat(pg(WSL, 1)), flat(pg(WSL, 2)), flat(pg(WSL, 3))
+    wp = float(need(w1, r"WSL2512 2512 ([\d.]+) \(1\) 0\.003 to 0\.5", "WSL p.1 WSL2512's P70").group(1))
+    wtcr = float(need(w2, r"\u00b1 (\d+) for 7 m\u03a9 to 500 m\u03a9", "WSL p.2 TCR 7 to 500 mOhm").group(1)) * 1e-6
+    need(w2, r"TCR measured from -55 \u00b0C to \+155 \u00b0C", "WSL p.2 the TCR's span")
+    wtop = float(need(w2, r"Operating temperature range \u00b0C -65 to \+(\d+)", "WSL p.2 operating range").group(1))
+    wlife = need(w3, r"Load life 1000 h at rated power, \+ 70 \u00b0C.*?\u00b1 \(([\d.]+) % \+ ([\d.]+) \u03a9\)", "WSL p.3 load life").groups()
+    wsold = need(w3, r"Resistance to solder heat .*?\u00b1 \(([\d.]+) % \+ ([\d.]+) \u03a9\)", "WSL p.3 solder heat").groups()
+    wc = catalogue("C844695")
+    if wc["model"] != "WSL2512R0150FEA" or wc["params"].get("Tolerance") != "\u00b11%" or wc["pdf_sha256"] != sha(WSL):
+        refuse(3, "the filed WSL reading is not the evaluated part")
+    w_kr = (wtop - 70.0) / wp                                         # INFERRED, as for HoJLR: rated at 70 C to zero at the top of its range
+    w_life = float(wlife[0]) / 100.0 + float(wlife[1]) / rs
+    w_sold = float(wsold[0]) / 100.0 + float(wsold[1]) / rs
+
+    def p_wsl(rmv, inom, floor):
+        out = []
+        t = t_air
+        for _ in range(30):
+            i_hi = inom * corner_k(v_oc, ea2 / EA2_FLOOR_DIV, LINE_FLOOR_MUL, rfac(0.01, wtcr, t - 25.0, w_life, w_sold), 1.0)
+            t = t_air + i_hi ** 2 * rs * 1.01 * w_kr
+        for t_rs, t_rm in ((t_cold, t_cold), (t, t_air)):
+            rs_lo = rfac(0.01, wtcr, t_rs - 25.0, w_life if floor else 0.0, w_sold if floor else 0.0)
+            rm_lo = rfac(tol_y, tcr_y, t_rm - 25.0, (R["life_y"][0] + R["life_y"][1] / rmv) if floor else 0.0,
+                         (R["sold_y"][0] + R["sold_y"][1] / rmv) if floor else 0.0)
+            out.append(v_oc * inom * corner_k(v_oc, ea2 / EA2_FLOOR_DIV if floor else ea2, LINE_FLOOR_MUL if floor else 1.0, rs_lo, rm_lo))
+        return max(out), t
+    wa, w_t = p_wsl(rm, i_nom, False)
+    wf, _ = p_wsl(rm, i_nom, True)
+    w_ok = [(rv, c_, st, iv) for rv, c_, st, iv, _a, _b in rows_rm if st >= STOCK_MIN and p_wsl(rv, iv, True)[0] <= p_win]
+    w_pick = min(w_ok, key=lambda t: t[0]) if w_ok else None
+    R["wsl"] = dict(model=wc["model"], code="C844695", stock=wc["stock"], p70=wp, tcr=wtcr, life=w_life, sold=w_sold, kr=w_kr, t_hot=w_t,
+                    p_a=wa, p_floor=wf, pick=w_pick, cost=(1.0 - w_pick[3] / i_nom) if w_pick else None)
+    # the classification (each figure above; `resolved` is True only where the sheet or a maker's statement bounds the row)
+    rows = [
+        dict(id="EA2", name="EA2's gain and VC's operating range", bound=True, stability=True, protection=False, other="energy, only in hours the limit binds",
+             why_bound="the regulated IMON_IN moves by (VC - 1.2 V) / gain (p.5, p.2): %.4f W at 130 V/V against %.4f W with the term left out (stack A, cold)" % (
+                 R["main_chk"][0][1][0], R["chk_printed"][0][1][0]),
+             why_stability="EA2 drives VC through the compensation network in the input-current loop; with no printed minimum gain or gm the loop's margin is not guaranteed (p.33: the loop stability is affected by a number of factors)",
+             why_protection="the IMON_IN fault is a comparator on IMON_IN itself (p.5, 1.55 V minimum, full range), not through EA2; only a gain under %.2f V/V would hold the regulated point at the fault, which stops switching (the safe side)" % R["g_fault"],
+             sheet="p.5 EA2 gain 130 V/V and gm 185 umho, typical only; p.4 the IMON_IN regulation, full range, printed at VC = 1.2 V; p.2 VC's absolute maximum -0.3 to 2.2 V; p.7 'Inductor Current Sense Voltage at Minimum Duty Cycle' against VC and p.8 'Maximum VC vs SS' plot VC within 0.5 to 2.0 V (TYPICAL, TA = 25 C; not a limit); p.31 the current-limiting text names 1.208 V typical and no gain bound",
+             guaranteed=None,
+             conservative="EA2 at least 65 V/V (half its typical) with VC anywhere in its absolute maximum range (the replay's allowance doubled)",
+             qualification="Analog Devices' statement of EA2's minimum gain, or of the IMON_IN regulation point's guaranteed shift with VC, over -40 to 125 C junction (a production limit); a bench reading of a few units (7b.10) checks the design, it is not that limit",
+             margin_w=p_win - R["cons"]["ea2"], breakeven="%.6f V/V (stack A, cold), %.6f V/V (stack C's other terms, cold)" % (R["be_gain"][(1.0, False)][0], R["be_gain"][(2.0, True)][0]),
+             resolved=False, clarification="analog-devices-lt8705a.txt"),
+        dict(id="LINE", name="the IMON_IN reference's line regulation while switching and at temperature", bound=True, stability=False, protection=False, other="energy, a fraction of a percent of the limit, only in hours it binds",
+             why_bound="the reference moves with VIN from the 12 V it is printed at: at 25 V the printed maximum moves the corner by %.4f W" % (R["main_chk"][0][1][0] - p_cold(ea2, 0.0, False, tcr_h)),
+             why_stability="a static shift of the reference with VIN; it adds no gain or pole to the loop",
+             why_protection="the regulated point would reach the IMON_IN fault minimum only at %.0f times the printed maximum" % R["k_fault"],
+             sheet="p.4 0.002 / 0.005 %/V, VIN 12 to 80 V, not switching, at 25 C (no bullet); p.4 the regulation itself is a full-range row at VIN = 12 V, so its temperature drift at 12 V is guaranteed; p.7 'Feedback Voltages' against temperature at VC = 1.2 V is TYPICAL",
+             guaranteed="the full-range IMON_IN regulation row covers temperature at VIN = 12 V; the VIN dependence while switching and away from 25 C is not printed",
+             conservative="twice the printed maximum (0.010 %/V), either sign, at every temperature and while switching",
+             qualification="Analog Devices' statement of the IMON_IN reference's line regulation while switching, over -40 to 125 C junction",
+             margin_w=p_win - R["cons"]["line"], breakeven="%.1f times the printed maximum (stack A, cold); %.1f with EA2 at 65 V/V" % R["be_line"],
+             resolved=False, clarification="analog-devices-lt8705a.txt"),
+        dict(id="TCR", name="RSENSE1's TCR below +25 C", bound=True, stability=False, protection=False, other="energy, a fraction of a percent of the limit, only in hours it binds",
+             why_bound="RSENSE1 sits in the limit's denominator; at -20 C its TCR sets its low end",
+             why_stability="a fraction of a percent of loop gain at most; the loop's margin is set by the compensation, not by this",
+             why_protection="the fault and the limit both act on IMON_IN, so their ratio (1.55 / 1.229 V at its least) does not depend on RSENSE1",
+             sheet="HoJLR2512 Ho-A0 p.2 +-50 ppm/K (2 to 500 mOhm); p.4 the TCR test spans +25 to +125 C only; the catalogue prints no TCR for C2903494",
+             guaranteed=None,
+             conservative="+-%.0f ppm/K below +25 C (twice the printed hot-side value)" % (TCR_COLD_CONS * 1e6),
+             qualification="Milliohm's statement of the HoJLR2512 TCR from -55 (or -40) to +25 C, or its production characterization; a bench reading of R59 at -20 C (7b.14) checks the design only",
+             margin_w=p_win - R["cons"]["tcr"], breakeven="%.3f ppm/K (stack A), %.3f ppm/K (stack C)" % (R["be_tcr_cold"] * 1e6, R["be_tcr_cold_floor"] * 1e6),
+             resolved=False, clarification="milliohm-hojlr2512.txt"),
+        dict(id="HOLD", name="EA3's gain and the FBIN bias", bound=False, stability=True, protection=False, other="energy (the hold band)",
+             why_bound="they set the hold, the envelope's low end: the corner there is %.4f W against %.4f W at 25 V (the power rises with the input voltage at every vertex)" % (
+                 R["p_hold_lo"], R["chk_floor"][0][1][0]),
+             why_stability="EA3 closes the input-voltage loop through VC; its margin is part of the hold's bench row",
+             why_protection="the hold is a regulation, not a protection; FBOUT's overvoltage and the IMON_IN fault are other pins",
+             sheet="p.4 EA3 90 V/V and FBIN bias 10 nA, typical only; p.4 FBIN regulation 1.184 / 1.226 V, full range (I grade), at VC = 1.2 V",
+             guaranteed="the FBIN reference is full range; the gain and the bias are typical",
+             conservative="EA3 at half its typical with the resistors' drifts: the hold inside %.3f to %.3f V; the bias at ten times its typical moves the lower corner by %.1f mV" % (
+                 hb3[0], hb3[2], 1e3 * (R["bias_rows"][2][1] - R["bias_rows"][1][1])),
+             qualification="none for the bound; the hold's energy rows carry them as sensitivities and 7b.12 reads the hold",
+             margin_w=None, breakeven=None, resolved=False, clarification=None),
+        dict(id="TJ", name="U5's junction temperature", bound=True, stability=False, protection=True, other="lifetime (Note 3: derated above 125 C)",
+             why_bound="every LT8705A row the corner uses is a full-range row, guaranteed for the I grade from -40 to 125 C junction (p.6 Note 3); the bound needs only the junction inside that range, not its value",
+             why_stability="the loop's gains move with temperature inside the unprinted EA2 row already carried above",
+             why_protection="the overtemperature protection acts at approximately 165 C (p.34, approximate): the estimate stays %.1f K under it" % (165.0 - R["tj_hot"]),
+             sheet="p.2 theta-JA 34 C/W (UHF, a package figure on the maker's board); p.6 Note 3 and Note 8; p.34 the CLKOUT method (+-10 C) and the thermal shutdown at approximately 165 C",
+             guaranteed="the I grade's rows hold over -40 to 125 C junction",
+             conservative="TJ at most %.1f C: the maximum gate charge at 10 V for all four FETs at the highest oscillator frequency, the VIN quiescent maximum, EXTVCC at L4-E5's %.2f V ceiling and theta-JA 34 C/W in %.1f C air" % (
+                 R["tj_hot"], R["ceil5"][2], t_air),
+             qualification="a design verification of board E's thermal path (7b.13 by p.34's method), with the margin covering the unit spread the maximum gate charge already bounds",
+             margin_w=None, margin_k=R["tj_margin"], breakeven="125 C junction (%.1f K above the estimate)" % R["tj_margin"], resolved=False, clarification=None),
+    ]
+    for r_ in rows:
+        if r_["clarification"]:
+            cp = os.path.join(TOP, CLAR, r_["clarification"])
+            if not os.path.isfile(cp):
+                refuse(3, "the clarification text %s is missing" % r_["clarification"])
+            ct = open(cp, encoding="utf-8").read()
+            if not ct.startswith("DRAFT FOR THE OWNER TO SEND.") or not any(k in ct for k in ("LT8705AIUHF", "HoJLR2512-3W-15mR-1%")):
+                refuse(3, "the clarification text %s does not read as a draft naming its part" % r_["clarification"])
+    R["qual_rows"] = rows
+    R["bound_status"] = bound_status(rows)
     # ================================================================== 9: what the drafts change (read back from each)
     R["models"] = {c_: v_["model"] for c_, v_ in lc.items()}
     R["drafts"] = {}
@@ -847,6 +1046,102 @@ def render(R):
         R["hb"][0], R["hb"][2]))
     P("     with EA3's gain it implies")
     P("   7b.13 U5's junction by CLKOUT at all four switches, EXTVCC at the ceiling, %.1f C air: at most 125 C less p.34's 10 C" % R["t_air"])
+    P("   7b.14 R59 at -20 C and +25 C (a design check of the cold TCR; Milliohm's statement is the qualification)")
+    P("")
+    P("9. QUALIFICATION OF THE 100 W BOUND (the owner's instruction of 1 October 2026)")
+    pv = R["prov"]
+
+    def wrapP(first, rest, text, width=118):
+        for k, ln in enumerate(textwrap.wrap(text, width)):
+            P((first if k == 0 else rest) + ln)
+    wrapP("   ", "     ", "THE SHEET: %s, read as the Internet Archive's snapshot %s (the id_ form; the live site resets this runner's "
+          "connection), sha256 %s, byte-identical to the held v2/vendor/power/lt8705a.pdf; it prints its document code 8705af on "
+          "each of its 44 pages and carries no revision table. Only its rows are used" % (pv["url"], pv["snapshot"], pv["sha"]))
+    P("   THE CLASSIFICATION (Y: the value can move that outcome; the reasons below):")
+    P("     %-4s %-74s %-6s %-9s %-10s %s" % ("id", "unprinted value", "bound", "stability", "protection", "other"))
+    for r_ in R["qual_rows"]:
+        P("     %-4s %-74s %-6s %-9s %-10s %s" % (r_["id"], r_["name"], "Y" if r_["bound"] else "N", "Y" if r_["stability"] else "N",
+                                                "Y" if r_["protection"] else "N", r_["other"]))
+    for r_ in R["qual_rows"]:
+        P("   %s, %s" % (r_["id"], r_["name"]))
+        for lab, key in (("the bound", "why_bound"), ("loop stability", "why_stability"), ("protection", "why_protection"),
+                         ("the sheet", "sheet"), ("guaranteed limit", "guaranteed"), ("conservative assumption", "conservative"),
+                         ("qualification needed", "qualification")):
+            text = r_[key] if r_[key] is not None else "none printed"
+            for k, ln in enumerate(textwrap.wrap("%s: %s" % (lab, text), 118)):
+                P("     " + ("- " if k == 0 else "  ") + ln)
+        if r_["bound"]:
+            mtxt = ("%.4f W under its conservative assumption alone (stack A otherwise, cold end)" % r_["margin_w"]) if r_["margin_w"] is not None \
+                else "%.1f K of junction" % r_["margin_k"]
+            wrapP("     - ", "       ", "margin kept: %s; break-even %s" % (mtxt, r_["breakeven"]))
+    cs = R["cons"]
+    unres = [r_["id"] for r_ in R["qual_rows"] if r_["bound"] and not r_["resolved"]]
+    wrapP("   ", "   ", "THE RESULT: %s on %s. %.4f W (cold) and %.4f W (hot) are calculated results under the assumptions listed below. "
+          "Under each unresolved row's conservative assumption alone the cold corner reads %.4f / %.4f / %.4f W (EA2 / LINE / TCR; "
+          "TJ moves no figure while the junction stays inside -40 to 125 C), and all of them together with the resistors' drifts "
+          "%.4f W (stack C with RSENSE1's cold TCR at %.0f ppm/K): margin %.4f W. The design floor stack C itself reads %.4f / %.4f W "
+          "(cold / hot)" % (R["bound_status"], ", ".join(unres), R["main_chk"][0][1][0], R["main_chk"][1][1][0], cs["ea2"], cs["line"],
+                            cs["tcr"], cs["joint"], cs["tcr_cons"] * 1e6, 100.0 - cs["joint"], R["chk_floor"][0][1][0], R["chk_floor"][1][1][0]))
+    P("   THE ASSUMPTIONS OF 96.25 W (stack A), in one list:")
+    for k, a in enumerate((
+            "8705af's full-range rows for the I grade: the IMON_IN regulation 1.187 / 1.229 V and A7's gm 0.94 / 1.06 mmho, with U5's junction inside -40 to 125 C (estimated at most %.1f C)" % R["tj_hot"],
+            "the IMON_IN line regulation at its printed maximum (0.005 %/V, 25 C, not switching), applied while switching and at both ends (ASSUMPTION)",
+            "EA2's gain at its typical 130 V/V as its bound, with VC anywhere in its absolute maximum range -0.3 to 2.2 V (ASSUMPTION)",
+            "RSENSE1 15 mOhm +-1 %% and +-50 ppm/K, the TCR printed for +25 to +125 C applied at -20 C (ASSUMPTION); its hot end %.1f C by the derating line (INFERRED)" % END[1][1],
+            "RIMON_IN 23.2k +-0.1 %, +-25 ppm/K (tested from -55 to +125 C); the resistors' soldering and life drifts not stacked (they are in C and D)",
+            "the envelope: the input from the hold's lowest %.3f V to REQ-016's 25 V, ambient -20 to +40 C (REQ-024), inside air at most %.1f C (pcb_envelope.yaml)" % (min(R["hb"][0], R["hb2"][0], R["hb3"][0], R["hb4"][0]), R["t_air"]),
+            "nothing in series with CSPIN or CSNIN (p.30): R59's pads are their Kelvin taps (a layout obligation)",
+            "steady state; transients are 7b.9t's",
+            "the setting realised as drafted: R59 15 mOhm and R16 23.2k with C65 (the drafts applied in a circuit round)"), 1):
+        for j, ln in enumerate(textwrap.wrap(a, 114)):
+            P("     %s %s" % (("%d." % k) if j == 0 else "  ", ln))
+    P("   WHY THE CORNERS BOUND THE PERMITTED RANGE")
+    P("     - the input voltage: P = v x I_set x [Vref (1 + ls lam (v - 12)) + es dVC / G] / (Vref_typ gm r1 r2); its slope in v is")
+    P("       I_set [Vref (1 + ls lam (2v - 12)) + es dVC / G] / (Vref_typ gm r1 r2), whose bracket is at least %.6f V (stack A) and" % R["dpdv"][0])
+    P("       %.6f V (stack C) at every vertex over %.3f to 25 V: the power rises with v, so 25 V is the worst; no loaded voltage" % (
+        R["dpdv"][1], min(R["hb"][0], R["hb2"][0], R["hb3"][0], R["hb4"][0])))
+    P("       exceeds REQ-016's 25 V open circuit (the panel is PV_P's only source and in discontinuous mode M4 is held off on reverse")
+    P("       current, p.18); the hold's lowest is the floor (the corner there %.4f W). The dense check (0.01 V) of each stack finds" % R["p_hold_lo"])
+    P("       its worst at the 25 V vertex")
+    P("     - every tolerance direction: P is monotonic in each term (up in Vref, in the line term for v above 12 V, in the EA2 term;")
+    P("       down in gm, RSENSE1 and RIMON_IN), so the 64 vertices an end hold the extremes; a resistor's low end 1 - a|T - 25| is")
+    P("       least at the end of its temperature span farthest from 25 C, so the two ends are enough")
+    P("     - temperature: the air from %.0f C (no self-heating; self-heating only moves a part toward 25 C there) to %.1f C plus" % (R["t_cold"], R["t_air"]))
+    P("       RSENSE1's own rise (%.1f C); the LT8705A rows are full range, so U5's junction enters only as the condition -40 to" % END[1][1])
+    tb = ["%.1f C" % t_ if t_ is not None else "past its 170 C rating" for t_ in R["rs_t_be"]]
+    P("       125 C. RSENSE1 would have to reach %s (stack A) or %s (stack C) for the corner to reach 100 W:" % tuple(tb))
+    P("       a board hot spot beside L1 and the FETs is covered by that much")
+    P("   STATES OUTSIDE THE CORNERS")
+    o_ = R["outside"]
+    P("     - below -20 C ambient: outside REQ-024's -20 to +40 C. Computed for information at -40 C (the I grade's least junction):")
+    P("       the candidate's open circuit reaches %.2f V there, outside REQ-016's window; the corner at that voltage with both" % o_["voc40"])
+    P("       resistors at -40 C reads %.4f W under stack A" % o_["p40"])
+    P("     - a source step (a panel plugged in live): TRK_VIN's %.1f uF (NETLIST: C11, C12, C13, C14, C15, C64) charge through R59 at" % (o_["c_vin"] * 1e6))
+    P("       most the panel's short circuit, %.1f mJ at 25 V; start-up ramps VC by the soft start (p.15). Bench 7b.9t" % (o_["e_caps"] * 1e3))
+    P("     - an irradiance step: the candidate panel can give up to %.1f W (%.0f W +%.0f %% at 1000 W/m2, cells %.1f C at -20 C air," % (
+        o_["p_panel_cold"], 100.0, 100 * o_["tol_p"], o_["t_cell_cold"]))
+    P("       its -0.35 %%/K, INFERRED), more than 100 W, until the IMON_IN loop settles through CIMON_IN (tau %.2f ms). Bench 7b.9t" % (R["tau"] * 1e3))
+    P("     - the hold transition: VC passes between EA3 and EA2 (the diode-AND, p.14); each side's steady state is bounded above.")
+    P("       The handover is a transient: bench 7b.9t")
+    P("     - an unstable current loop would break the steady-state premise: bench 7b.9t with p.33's load and line steps")
+    w = R["wsl"]
+    wrapP("   ", "     ", "THE DESIGN OPTION THAT REMOVES AN UNKNOWN (SESSION decision): RSENSE1's cold TCR. Of the stocked 15 mOhm 1 %% 2512 "
+          "parts read, only Vishay Dale's WSL2512 (%s, LCSC %s, stock %d; Document 30100, Revision 23-Nov-2023, p.2) states its TCR "
+          "from -55 C: +-%.0f ppm/K, %.1f W at 70 C (HoJLR: +25 to +125 C, Ho-A0 p.4; YAGEO PA V.10 p.9 and RALEC LR IE-SP-060 p.10: "
+          "the hot side only). Its printed solder-heat and life limits each carry 0.5 mOhm (p.3): %.2f %% and %.2f %% of 15 mOhm. "
+          "With it, stack A reads %.4f W (RSENSE1 at %.1f C by %.0f K/W, INFERRED) and the design floor %.4f W at 23.2k; the same "
+          "rule would move RIMON_IN to %s" % (
+              w["model"], w["code"], w["stock"], w["tcr"] * 1e6, w["p70"], 100 * w["sold"], 100 * w["life"], w["p_a"], w["t_hot"], w["kr"],
+              w["p_floor"], ("%gk (%.4f A), %.1f %% less input in every hour the limit binds" % (w["pick"][0] / 1e3, w["pick"][3], 100 * w["cost"]))
+              if w["pick"] else "no stocked value"))
+    wrapP("     ", "     ", "NOT TAKEN: the swap trades an unknown with a large margin (break-even %.3f ppm/K under stack C, %.1f times the "
+          "printed value) for a certain loss of setting; the unknown is qualified by Milliohm's statement instead (clarification/)" % (
+              R["be_tcr_cold_floor"] * 1e6, R["be_tcr_cold_floor"] / R["tcr_h"]))
+    P("   CLARIFICATION REQUESTS (text for the owner to send; the session contacts no one): clarification/analog-devices-lt8705a.txt,")
+    P("     clarification/milliohm-hojlr2512.txt")
+    P("   PROTOTYPE MEASUREMENTS ARE DOWNSTREAM OBLIGATIONS, NOT BLOCKERS: no architecture decision depends on 7b.9, 7b.9t, 7b.10,")
+    P("     7b.11, 7b.12, 7b.13 or 7b.14 (R59 at -20 C and +25 C). The current-limit mechanism holds its bound under the conservative")
+    P("     assumptions above; an adverse reading changes a value (RIMON_IN, the compensation), not the mechanism or the architecture")
     return o
 
 
