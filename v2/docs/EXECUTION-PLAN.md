@@ -993,3 +993,57 @@ suite). The watchdog's only action is STOP (it pulls the job outboxes to the run
 the stopped instance and waits for ssh, and never rents, re-creates or destroys; the box's clone is updated by fetch or
 bundle. Activity is read from job markers, the processes' CPU time and changed files on the instance; the probe writes
 nothing there and the watchdog's logs live on the runner.
+
+### Milestone, 1 October 2026 09:17 CEST: Layer 3 accepted again after the amendment; Layer 4's L4-E4 (integration set 19 on main)
+
+**Layer 3: accepted baseline, accepted again at `3b4b92cf` after the amendment; independent review findings
+dispositioned (L3-R01 to L3-R05).** Accepted under the owner's conditional authorisation D-39 once set 19's gates passed,
+recorded at `c1321ebc`; the acceptance binds the reviewed content (a content manifest the revision and the tree must both
+hold, L3-R04) and the record at `b4b199d0` is kept as history. The findings are closed by Claude's check 4 of the
+amendment (`check-l3am-4`, at `8146b4cc`), not by the reviewer, who has not re-read it; the collaborator's two checks of the
+amendment did not accept it. Requirements maturity only (D-28, D-29): neither design compliance nor fab readiness holds.
+
+**What set 19 carries:** the amendment (`fnd/l3am` at `d3e3b415`: L3-R01 the solar-assisted figures labelled as proposal
+P-03's, understated; L3-R02 REQ-042's end-to-end acceptance with S-128; L3-R04 the acceptance bound to its content, the
+requirements digest defined by a principle; L3-R05 REQ-016's protection judged apart under TRN-001); Layer 4's energy
+records (`fnd/l4e` at `3ed52f3a`) and L4-E4 (`fnd/l4e4` at `bb7ebf12`: U3's IIN_HOST 4.70 A with R16's tolerance in its
+bounds, R11 8 mOhm with a 0.38 mOhm Kelvin allowance at 25 C, margins +0.097 / +0.064 / +0.023 A at -20 / 25 / 62 C, R138
+5 mOhm tripping at 3.79 to 4.58 A, a bench procedure that isolates U18's comparator; drafts for board A's generator owner,
+nothing applied; the collaborator's check and recheck not accepted, the coordinator's check 3 accepted); `r11_dep.py`
+made independent of git's hash abbreviation (`test_r11dep.py`).
+
+**What went wrong and was fixed on the way:** the first acceptance, at the first promoted candidate `41881d8f`, failed two
+Layer 3 tests pinned to the state before a re-acceptance and was not committed; the supersede test was corrected, which
+invalidated check 3 by design, and check 4 re-verified the amendment; since then the accepted state is simulated in a clone
+before promotion. The suite on `87dfa55f` failed 11 L4-E4 tests on the box because `r11_dep.py` compared git's abbreviated
+hash (nine characters there, eight on the runner); fixed and reproduced on the runner by forcing the abbreviation.
+
+**Evidence:** the box suite at `3b4b92cf` 2395 passed, 0 failed, 3 skipped, 204 of 204 modules, judged by the promotion gate
+on its log; its clean single-branch clone 158 passed, 0 failed with `verify_l3am` 16 of 16 and `verify_acceptance` 18 of
+18; on the accepted tree the status level VALIDATED and the same 158 passed. Details: `records/int20/README.md`,
+`records/l3am/`, `records/l4e4/`.
+
+**Handover:** `MESHSAT-LAYER3-REVIEW-c1321ebc.zip` (1,606,980,036 bytes, sha256 `fb67d1d7eee8cae95d932739a1de714f4609ca190a7b13a82334bf1893d6d42d`): the corrected Layer 3 review package (L3-R03): the
+measured export, a bounded pack of the repository's own objects, the ignored evidence and one command; `REPRODUCE: PASS`
+from a clean extraction with no network. `MESHSAT-POWER-REPLAY-c1321ebc.zip` (21,322,720 bytes, sha256
+`514ce797b09b521ad5a89ccf537ca1bda5385beb1f615400c887f32d51524bea`): the power packet's replay companion (L4-R03),
+`REPLAY: PASS` from a clean extraction with no network. Both copied to the laptop's Downloads and handover folder, their
+checksums verified there.
+
+**Remaining material risk (assigned, not hidden):** DR-01 to DR-07 and FEA-008 as at set 18; REQ-072 reads FAIL at desk;
+Layer 4's open items (O-2's physical compliance, the candidate panel's source compliance under the maker's 10 %
+qualification, the three undocumented efficiencies C-8, the 8.4 W of the profile with no document, C-7 U3's
+input-current minimum, which VI(TRIP) row board A's strapping selects, J_USBC_OUT's contact rating). The re-stamp of
+CONOPS and PRODUCT-BRIEF (L3-C63) and REQ-051's cell-free deviations remain follow-ups; other scripts that read git's
+abbreviated hash are named in the session's facts.
+
+**Next executable action:** Layer 4's remaining implementable choices of the power review (source control A-2's
+per-source envelopes in firmware terms, the LT8705A's real settings and tolerance budget for O-2, fault handling for the
+front end); L4-E4's drafts applied by board A's generator owner in a circuit round with a box regeneration. The engineer's
+review of the packet is the owner's to arrange.
+
+**Elapsed and compute:** set 19 from about 02:30 to 09:17 CEST. Compute: vast.ai 53619970 (0.210 USD/h) ran set 19's
+four suites (about 2.1 h in two runs) and is stopped, its disk kept (0.037 USD/h); 53608225 (0.136 USD/h) finished its
+GitHub clone (a full checkout for reuse) and was stopped by the watchdog after two idle hours, its disk kept (0.030
+USD/h); nothing destroyed; credit 108.71 USD.
+The collaborator: four runs (the amendment's check and recheck, L4-E4's check and recheck), drawn on the ChatGPT plan.
