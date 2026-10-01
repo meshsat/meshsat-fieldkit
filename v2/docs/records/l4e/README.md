@@ -1,6 +1,6 @@
 # records/l4e: layer 4 task L4-E2, the energy architecture comparison (MESHSAT-1357)
 
-1 October 2026, branch `fnd/l4e` from main `b45d1705`; second and third issues the same day, answering the focused check and its recheck, both filed in `checks/`. Prototype design: nothing is bought, built, powered or measured.
+1 October 2026, branch `fnd/l4e` from main `b45d1705`; second and third issues the same day, answering the focused check and its recheck, both filed in `checks/`; fourth issue the same day, answering the independent power review filed as `REVIEW-POWER-ARCHITECTURE-AS-RECEIVED.md`. Prototype design: nothing is bought, built, powered or measured.
 The author's analysis, AI arithmetic; not a qualified review and not the independent check. No registry record, no Layer 3
 record and nothing under `v2/docs/handover/` is changed by this folder.
 
@@ -9,6 +9,7 @@ record and nothing under `v2/docs/handover/` is changed by this folder.
 | File | What it is |
 |---|---|
 | `PACKET-POWER-ARCHITECTURE.md`, `PACKET-FILES.txt` | the electronics engineer's review packet (the entry point: questions, the power path as drawn, the decisions, one line each) and the exact files it needs, tracked or ignored; they point into the records and repeat none |
+| `REVIEW-POWER-ARCHITECTURE-AS-RECEIVED.md` | the independent power-architecture review of the packet at `eb3849d5` (CONDITIONAL: L4-R01 to L4-R04), filed byte for byte as received, its own dash characters kept; answered by the fourth issue (L4-R03, the replay companion, is the coordinator's) |
 | `L4-ENERGY-ARCHITECTURE.md` | the page: one table comparing A1 (D-06's single 4S3P) and A2 (base 4S6P plus a separately protected lid 4S9P, both lid functions kept) under one assumption set; the power-path corrections (A-1, A-2, B-1 to B-5, C-1 to C-9, R138, O-1, O-2) as architecture decisions; the next discriminating calculation and experiment; the Layer 3 finding restated |
 | `l4e_replay.py` | the replay: reproduces the checked records first, then moves one input, the solar stage's input clip, from P-03's 200 W to REQ-016's 100 W, and prints both architectures on the drawn and the hypothetical corrected power paths |
 | `l4e_replay.out` | its output; the page cites it as "out N" (its section numbers) |
@@ -59,6 +60,12 @@ record and nothing under `v2/docs/handover/` is changed by this folder.
   reclassified NONE the sizing gives 3.550 A and the run exits 4, "O-2's setting 3.550 A lets the stage take 100.0548 W
   at 25.000 V"; with the row deleted from the table the run exits 3, the row "Line Regulation for IMON_IN and IMON_OUT
   Error Amp" unclassified.
+- **Section 12, the compliant panel:** the held SunPower SPR-E-Flex-100 sheet is pinned by sha256 (fetched into the
+  ignored `v2/vendor/solar/held/` by `../a1solar/fetch_held_back.py`; exit 2 if absent); its printed figures must equal
+  a1solar's `CAND['SPR100']` (exit 3); its open circuit at -20 C must be inside REQ-016's 25 V (exit 4); a1solar's
+  `array_calc.py` is pinned; and no hour of any trace may put more than 100 W into the stage (exit 4).
+- **Section 13, the undocumented loads:** `load_trace.out`'s tier T rows must sum to its tier line and each must have an
+  entry in `UNDOC` (exit 3).
 - **Determinism:** two runs give the same bytes; no date, host or absolute path is printed.
 
 ## What the results do and do not show
@@ -68,6 +75,11 @@ conditional screening stimulus (out 7), not the performance of a compliant panel
 every WE figure is CONDITIONAL on the three undocumented efficiencies (C-8). Served and unserved energy is the service
 ledger's; the model's own unserved counter, which credits a stopped hour's sun as served while charging with it, prints
 only as the legacy model metric (sections 0, 5 and 9). O-2's conservative bound (section 11) is shown as its own case
-beside the 100 W screening case, not in place of it. The AS DRAWN figures are bounds (the upper
+beside the 100 W screening case, not in place of it. **B2: arithmetic corrected under stated assumptions (closed). O-2
+physical compliance: OPEN:** the bound rests on EA2's and EA3's TYP-only gains, the line regulation printed at 25 C and
+not switching, two 1 % resistors with tolerance and drift unselected, and temperature ends that repeat the same bounds
+(EA2 at 120 V/V gives 100.0758831 W, the review's sensitivity); the engineer's grade, resistor values and tolerance
+budget replace them. Section 12's compliant trace rests on one held sheet, a single-diode fit and an INFERRED NOCT, on
+one mean day; neither architecture is approved or shown realizable. The AS DRAWN figures are bounds (the upper
 bound keeps the model's `min(available, cap)`; the lower bound takes A-2's inferred collapse). Nothing here is
 demonstrated capability.

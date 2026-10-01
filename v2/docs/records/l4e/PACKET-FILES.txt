@@ -1,8 +1,9 @@
-# The files an electronics engineer needs for the power-architecture review (MESHSAT-1357, layer 4, 1 October 2026).
+# The files an electronics engineer needs for the power-architecture review (MESHSAT-1357, layer 4, 1 October 2026; second issue).
 # One repository-relative path a line: TRACKED (committed) or IGNORED (present in the working tree, kept out of git:
 # a build output, or a maker's sheet held back by its terms), then the reason. Start with PACKET-POWER-ARCHITECTURE.md.
-# An IGNORED schematic PDF is regenerated from its committed schematic source; a held-back sheet is fetched by
-# v2/docs/records/l3batt/fetch_held_back.py, which checks its sha256.
+# An IGNORED schematic PDF is regenerated from its committed schematic source; a held-back sheet is fetched by its
+# stream's fetch_held_back.py (v2/docs/records/l3batt/ for the cells, v2/docs/records/a1solar/ for the SunPower
+# sheets), which checks its sha256.
 
 
 # THIS RECORD SET (v2/docs/records/l4e/)
@@ -16,6 +17,7 @@ v2/docs/records/l4e/ASTRA-L4E1.md                                    TRACKED  th
 v2/docs/records/l4e/checks/astra-check-l4e2-1.md                     TRACKED  the first check: the stopped-hour double count (B1), O-2's power bound (B2)
 v2/docs/records/l4e/checks/astra-check-l4e2-2.md                     TRACKED  the recheck: the omitted line-regulation row (B2 again)
 v2/docs/records/l4e/checks/check-l4e2-3.md                           TRACKED  the coordinator's verification of O-2's final bound; the acceptance
+v2/docs/records/l4e/REVIEW-POWER-ARCHITECTURE-AS-RECEIVED.md         TRACKED  the independent power review of the packet at eb3849d5 (CONDITIONAL; L4-R01 to L4-R04), as received
 
 # REGISTRY
 v2/ecad/tools/pcb_requirements.yaml                                  TRACKED  requirements and owner rulings: REQ-014, REQ-015, REQ-016, REQ-017, REQ-046, REQ-072, FEA-008; D-06, D-28, D-29, D-32, D-33, D-34
@@ -36,6 +38,10 @@ v2/docs/records/l3batt/SHORTLIST.md                                  TRACKED  th
 v2/docs/records/a1elec/TOPOLOGY.md                                   TRACKED  A2's drafted lid path: U3B, LM74700-Q1, LM5069 (hypothetical, on no board)
 v2/docs/records/a1mech/README.md                                     TRACKED  the lid pack's places, mass, stability and the base pockets
 v2/docs/records/a1solar/ARRAY.md                                     TRACKED  panel wirings, cold open-circuit voltages, the panels REQ-016 admits
+v2/docs/records/a1solar/array_calc.py                                TRACKED  the panel candidates and the single-diode model the compliant trace uses (out 12)
+v2/docs/records/a1solar/fetch_held_back.py                           TRACKED  fetches the held SunPower sheets into v2/vendor/solar/held/ and checks their sha256
+v2/docs/records/l3batt/load_trace.out                                TRACKED  PS-IDLE-SPEC's 39 loads with their tiers; tier T is the 8.4 W with no document (out 13)
+v2/docs/CONOPS.md                                                    TRACKED  the operating states; section 5's fixed-site beacon rate behind the VHF PA's average
 v2/docs/records/energy/energy_inputs.yaml                            TRACKED  the energy model's inputs: the chain, the pack, the window, with sources
 v2/docs/records/rv-pwr/pwr_budget.out                                TRACKED  the load states: PS-IDLE-SPEC, key-down and all-transmit peaks
 v2/docs/HW-FW-CONTRACT.md                                            TRACKED  FW-A16, the IIN_HOST rule that scales with VIN_RAW (A-2's remedy)
@@ -68,6 +74,11 @@ v2/vendor/power/ti-csd19532q5b-n-fet.pdf                             TRACKED  CS
 v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf                      TRACKED  Panasonic EEHZK hybrid polymer (VBUS20's bulk, B-4)
 v2/vendor/passives/milliohm-hojlr2512-series.pdf                     TRACKED  HoJLR2512 (board A, R11, the front end's average-current sense)
 v2/vendor/solar/renogy-rng-100db-h-flexible-100w-datasheet-2018.pdf  TRACKED  the held panel (not REQ-016-compliant at -20 C; O-1)
+v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf IGNORED  SunPower SPR-E-Flex-100, the pinned compliant panel (O-1, out 12); held back by its terms
+v2/vendor/solar/held/sunpower-flex-safety-installation-524958-revf.pdf IGNORED  SunPower's installation guide 524958 Rev F: its operating range and 1.25 clause; held back
+v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf                 TRACKED  Xenarc 709GNK monitor: p.4 'Power Consumption: <= 10W', the largest undocumented load
+v2/vendor/wifi/asiarf-AW7915-AED_V1.pdf                              TRACKED  AsiaRF AW7915-AED: p.4 maximum 9.1 W, average 7 W; p.1 deep sleep, no figure (the standby card)
+v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf                       TRACKED  RA30H1317M1 VHF PA: p.2 Pout 30 W above 40 % total efficiency; leakage IGG at most 1 mA
 v2/vendor/battery/samsung-35e-orbtronic.pdf                          TRACKED  Samsung INR18650-35E Ver. 1.1: the cell's windows (3.12) and ratings
 v2/vendor/battery/samsung-35e-akkuzentrum.pdf                        TRACKED  Samsung INR18650-35E Version 1.0: the older revision FEA-008 compares
 v2/vendor/battery/samsung-35e-conrad.pdf                             TRACKED  Samsung INR18650-35E technical report: the energy model's cell data
@@ -75,4 +86,4 @@ v2/vendor/battery/molicel-inr21700-p45b-v1.2.pdf                     TRACKED  Mo
 v2/vendor/battery/held/samsung-inr21700-50e-v1.0.pdf                 IGNORED  Samsung 50E, a shortlisted 21700 cell; held back by its terms (fetch_held_back.py)
 v2/vendor/battery/held/lg-inr21700-m50lt-2020-08-27.pdf              IGNORED  LG M50LT, a shortlisted 21700 cell; held back by its terms (fetch_held_back.py)
 
-# 58 paths: 54 TRACKED, 4 IGNORED.
+# 68 paths: 62 TRACKED, 6 IGNORED.
