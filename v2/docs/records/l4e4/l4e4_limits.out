@@ -136,14 +136,19 @@ held document gives the figure.
          an electronic load steps up from 3.0 A in 10 mA steps, each held at least 1 ms (tOCP 15 us, p.11). Recorded
          together: U18's differential sense voltage V(pin 19) - V(pin 21) by a Kelvin differential probe, VBUS at pin 21 and
          at J_USBC_OUT, Q27's gate PD_GDNG, the supply's current-limit flag, the load current, and R138 four-wire at its pads
-     a run COUNTS only if VBUS stays inside the contract's hold window (MAKER p.8, 7.5, TPS25740A: above the slow UVP and
-         V(VBUS_FTH) maxima, below the slow OVP minimum) up to the GDNG falling edge and the supply never limits: 5 V contract 3.9 to 5.5 V; 9 V contract 7.1 to 10.0 V; 15 V contract 12.2 to 16.3 V
+     a run COUNTS only if the supply never limits and VBUS stays STRICTLY inside the contract's hold window up to the GDNG
+         falling edge: above the larger of the slow UVP maximum and V(VBUS_FTH)'s maximum (3.9 V), below the SMALLER of the
+         fast OVP and the slow OVP minima (p.31: a fast OVP disables GDNG). MAKER SLVSDG8B p.8, 7.5, TPS25740A rows, min / typ /
+         max V:
+          5 V contract: V(FOVP) 5.8 / 6.05 / 6.3, V(SOVP) 5.5 / 5.65 / 5.8, V(SUVP) 3.5 / 3.65 / 3.8: 3.9 V < VBUS < 5.5 V (the upper bound the slow OVP minimum)
+          9 V contract: V(FOVP) 10.1 / 10.55 / 11, V(SOVP) 10 / 10.2 / 10.4, V(SUVP) 6.8 / 6.95 / 7.1: 7.1 V < VBUS < 10.0 V (the upper bound the slow OVP minimum)
+         15 V contract: V(FOVP) 16.2 / 16.95 / 17.7, V(SOVP) 16.3 / 16.5 / 17, V(SUVP) 11.7 / 11.95 / 12.2: 12.2 V < VBUS < 16.2 V (the upper bound the fast OVP minimum)
      its CLOSURE: the last differential reading before the GDNG edge, the demonstrated threshold, lies in 19.2 to 22.6 mV:
          the 3 A row is demonstrated and the trip current lies in 3.79 to 4.58 A by R138 measured. A threshold in 29 to 34 mV
          demonstrates the label's row instead: R138 is then re-chosen (that window, 5.73 to 6.88 A, exceeds the receptacle's
          5 A). Anything else is no result
      (b) the delivered configuration, U19 in the path: 3.0 A held on each advertised voltage (5, 9 and 15 V, and the non-PD
-         5 V) for at least one hour or to thermal steady state, with no GDNG edge and VBUS inside its hold window
+         5 V) for at least one hour or to thermal steady state, with no GDNG edge and VBUS strictly inside its hold window
 
 4. ACCEPTANCE PREDICATES (held by v2/ecad/tools/tests/test_l4e4.py on these computed values)
    r11_dep.out reproduced byte for byte (child and in-process); band() at the read tolerance                                  PASS

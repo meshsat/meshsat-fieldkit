@@ -387,8 +387,9 @@ def compute():
     i_pdo = max(i for _v, i in pdo)
     tap138 = vtrip3[0] / i_pdo - r138 * (1 + tol138) * (1 + tcr * dT138)
     tap138_25 = tap138 / (1 + M.CU_TCR * (t_air + rise138 - 25.0))
-    # the bench's VBUS hold window per contract (check B2): above the slow UVP and the falling VBUS threshold, below the
-    # slow OVP (MAKER SLVSDG8B p.8, 7.5, TPS25740A rows), so a shutdown inside it is not a voltage fault
+    # the bench's VBUS hold window per contract (check B2, and the recheck astra-check-l4e4-2): above the slow UVP and the
+    # falling VBUS threshold maxima, below the SMALLER of the fast and the slow OVP minima (MAKER SLVSDG8B p.8, 7.5,
+    # TPS25740A rows; p.31: a fast OVP disables GDNG), VBUS strictly inside, so a shutdown inside it is not a voltage fault
     t8 = page(TPS25740, 8)
     ov = t8[t8.find("Over/Under Voltage Protection (VBUS)"):t8.find("V(VAUX)")]
     rws = re.findall(r"^\s*(?:V\(\w+\)\s+)?(?:Fast OVP threshold, always enabled\s+)?(5|9|15) V PD contract(?: \(TPS25740A\))?\s+"
@@ -397,16 +398,26 @@ def compute():
         refuse(3, "SLVSDG8B p.8 the FOVP, SOVP and SUVP rows not parsed: %s" % [x[0] for x in rws])
     fth = need(t8, r"V\(VBUS_FTH\)\s+VBUS Threshold \(Falling voltage\)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+V", "p.8 V(VBUS_FTH)")
     fth_max = float(fth.group(3))
-    hold = {}
+    t31v = " ".join(t31.split())
+    need(t31v, r"If an over-voltage condition is sensed by the Fast OVP mechanism, GDNG is disabled within tFOVP \+ tFOVPDG",
+         "p.31 a fast OVP disables GDNG")
+    hold, ovrows = {}, {}
     for i, v in enumerate((5, 9, 15)):
-        sovp_min, suvp_max = float(rws[3 + i][1]), float(rws[6 + i][3])
-        hold[v] = (max(suvp_max, fth_max), sovp_min)
+        fovp, sovp, suvp = (tuple(float(x) for x in rws[k * 3 + i][1:]) for k in (0, 1, 2))
+        ovrows[v] = dict(fovp=fovp, sovp=sovp, suvp=suvp)
+        hold[v] = (max(suvp[2], fth_max), min(fovp[0], sovp[0]))
+
+    def vbus_counts(contract, vbus):
+        """A bench run counts only with VBUS strictly inside the contract's window."""
+        lo_, hi_ = hold[contract]
+        return lo_ < vbus < hi_
     tocp = float(need(t11, r"tOCP\s+Deglitch Filter for over-current protection\s+(\d+)\s+µs", "p.11 tOCP").group(1))
     R.update(vtrip3=vtrip3, vtrip5=vtrip5, straps=straps, pdo=pdo, pdo_max=i_pdo, t5max=all3, pd_a=pd_a, r138=r138,
              r138_read=rd138, dT138=dT138, rise138=rise138, w3=w3, w5=w5, drawn=drawn, q27_id=q27_id, rec_a=rec_a,
              r138_rated=math.sqrt(p_rated / r138), jhdr=jhdr, tap138=tap138, tap138_25=tap138_25, tol138=tol138,
              p138=(3.0 ** 2 * r138 * (1 + tol138), w3[1] ** 2 * r138 * (1 + tol138)), stage_band=band(0.010),
-             hold=hold, fth_max=fth_max, tocp=tocp)
+             hold=hold, ovrows=ovrows, fth=tuple(float(fth.group(k)) for k in (1, 2, 3)), fth_max=fth_max, tocp=tocp)
+    R["fn"]["vbus_counts"] = vbus_counts
     return R
 
 
@@ -592,9 +603,15 @@ def render(R):
     P("         an electronic load steps up from 3.0 A in 10 mA steps, each held at least 1 ms (tOCP %.0f us, p.11). Recorded" % R["tocp"])
     P("         together: U18's differential sense voltage V(pin 19) - V(pin 21) by a Kelvin differential probe, VBUS at pin 21 and")
     P("         at J_USBC_OUT, Q27's gate PD_GDNG, the supply's current-limit flag, the load current, and R138 four-wire at its pads")
-    P("     a run COUNTS only if VBUS stays inside the contract's hold window (MAKER p.8, 7.5, TPS25740A: above the slow UVP and")
-    P("         V(VBUS_FTH) maxima, below the slow OVP minimum) up to the GDNG falling edge and the supply never limits: " + "; ".join(
-        "%d V contract %.1f to %.1f V" % (v, lo, hi) for v, (lo, hi) in sorted(R["hold"].items())))
+    P("     a run COUNTS only if the supply never limits and VBUS stays STRICTLY inside the contract's hold window up to the GDNG")
+    P("         falling edge: above the larger of the slow UVP maximum and V(VBUS_FTH)'s maximum (%.1f V), below the SMALLER of the" % R["fth_max"])
+    P("         fast OVP and the slow OVP minima (p.31: a fast OVP disables GDNG). MAKER SLVSDG8B p.8, 7.5, TPS25740A rows, min / typ /")
+    P("         max V:")
+    for v, (lo, hi) in sorted(R["hold"].items()):
+        rw = R["ovrows"][v]
+        P("         %2d V contract: V(FOVP) %s, V(SOVP) %s, V(SUVP) %s: %.1f V < VBUS < %.1f V (the upper bound the %s minimum)" % (
+            v, " / ".join("%g" % x for x in rw["fovp"]), " / ".join("%g" % x for x in rw["sovp"]), " / ".join("%g" % x for x in rw["suvp"]),
+            lo, hi, "fast OVP" if rw["fovp"][0] < rw["sovp"][0] else "slow OVP"))
     P("     its CLOSURE: the last differential reading before the GDNG edge, the demonstrated threshold, lies in %.1f to %.1f mV:" % (
         R["vtrip3"][0] * 1e3, R["vtrip3"][1] * 1e3))
     P("         the 3 A row is demonstrated and the trip current lies in %.2f to %.2f A by R138 measured. A threshold in %.0f to %.0f mV" % (
@@ -602,7 +619,7 @@ def render(R):
     P("         demonstrates the label's row instead: R138 is then re-chosen (that window, %.2f to %.2f A, exceeds the receptacle's" % R["w5"])
     P("         %.0f A). Anything else is no result" % R["rec_a"])
     P("     (b) the delivered configuration, U19 in the path: 3.0 A held on each advertised voltage (5, 9 and 15 V, and the non-PD")
-    P("         5 V) for at least one hour or to thermal steady state, with no GDNG edge and VBUS inside its hold window")
+    P("         5 V) for at least one hour or to thermal steady state, with no GDNG edge and VBUS strictly inside its hold window")
     P("")
     P("4. ACCEPTANCE PREDICATES (held by v2/ecad/tools/tests/test_l4e4.py on these computed values)")
     acc_rows = [

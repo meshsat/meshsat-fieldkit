@@ -194,16 +194,26 @@ def t_tolerance_is_read_not_typed():
 
 def t_outlet_bench_isolates_u18():
     """Check B2: the stage ahead overlaps both trip windows, so the procedure takes U19 out of the path, holds VBUS inside
-    the maker's windows (above the slow UVP and the falling threshold, below the slow OVP) and closes on the measured
-    differential threshold; the delivered configuration then holds 3 A on each advertised voltage."""
+    the maker's windows strictly (above the slow UVP and the falling threshold, below the SMALLER of the fast and the slow
+    OVP minima: the recheck astra-check-l4e4-2 found the 15 V window reaching 16.3 V past the fast OVP's 16.2 V) and closes
+    on the measured differential threshold; the delivered configuration then holds 3 A on each advertised voltage."""
     R = _R()
     st = R["stage_band"]
     assert st[0] < R["w3"][1] and st[2] > R["w5"][0], "the stage no longer overlaps the windows: revisit the procedure"
-    assert R["hold"] == {5: (3.9, 5.5), 9: (7.1, 10.0), 15: (12.2, 16.3)}, R["hold"]
+    assert R["hold"] == {5: (3.9, 5.5), 9: (7.1, 10.0), 15: (12.2, 16.2)}, R["hold"]
     for v, (lo, hi) in R["hold"].items():
         assert lo < v < hi
+        rw = R["ovrows"][v]
+        assert hi == min(rw["fovp"][0], rw["sovp"][0]) and lo == max(rw["suvp"][2], R["fth_max"]), (v, rw)
+    counts = R["fn"]["vbus_counts"]
+    assert not counts(15, 16.25), "a 16.25 V excursion on the 15 V contract counts (past the fast OVP minimum)"
+    assert not counts(15, 16.3), "the first window's 16.3 V counts"
+    assert counts(15, 16.15)
+    for v, (lo, hi) in R["hold"].items():            # strictly inside: the boundaries themselves do not count
+        assert not counts(v, lo) and not counts(v, hi) and counts(v, (lo + hi) / 2)
     out = open(os.path.join(REC, "l4e4_limits.out"), encoding="utf-8").read()
-    for phrase in ("U19 held in shutdown", "regulated", "differential sense voltage", "PD_GDNG", "a run COUNTS only if VBUS stays inside",
+    for phrase in ("U19 held in shutdown", "regulated", "differential sense voltage", "PD_GDNG", "VBUS stays STRICTLY inside",
+                   "12.2 V < VBUS < 16.2 V (the upper bound the fast OVP minimum)", "3.9 V < VBUS < 5.5 V", "7.1 V < VBUS < 10.0 V",
                    "the supply never limits", "the demonstrated threshold, lies in 19.2 to 22.6 mV",
                    "3.0 A held on each advertised voltage"):
         assert phrase in out, phrase

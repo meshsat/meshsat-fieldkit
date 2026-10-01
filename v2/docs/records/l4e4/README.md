@@ -7,6 +7,7 @@ power-path choices") turned into checkable values: U3's IIN_HOST, R11 and R138.
 |---|---|
 | `L4E4-CURRENT-LIMITS.md` | The one page (second round): the chosen values, each with its reason and closure criterion, the outlet's bench procedure, what stays INCONCLUSIVE and why, the bench rows, and how the check's items were answered |
 | `checks/astra-check-l4e4-1.md` | The engineering collaborator's one check of the first round (not accepted: B1, R16's tolerance in U3's bounds; B2, the outlet ramp's isolation; three minors), filed by the coordinator |
+| `checks/astra-check-l4e4-2.md` | The collaborator's targeted recheck of the second round (B1 and the minors accepted; B2's 15 V hold window past the fast OVP minimum, fixed in the third round), filed by the coordinator |
 | `l4e4_limits.py` | The script. Section 0 reproduces `../r11dep/r11_dep.out` byte for byte, first in a child process and then in-process with its locals captured. Then it prints the setting with R16's tolerance and TCR in U3's bounds, R11's choice and margins, C-1, R138's trip window and the outlet's bench procedure. Run from the repository root: `python3 v2/docs/records/l4e4/l4e4_limits.py > v2/docs/records/l4e4/l4e4_limits.out` |
 | `l4e4_limits.out` | Its output, committed |
 | `inputs/lcsc-C2904240-2026-10-01.json` | LCSC's answer for the chosen R11, HoJLR2512-3W-8mR-1%, with the sha256 of its datasheet link, which is the held series sheet |
