@@ -137,8 +137,13 @@ where no held document gives the figure.
      15.1 V (boost, set by the average limit): L1 10.80 A average, 10.84 A rms, peak bound 12.59 A, L1 at 82 C; output 7.26 A; FETs: Q2 (on) 1.15 W, TJ 120 C; Q4 (boost switch) 0.82 W, TJ 103 C; Q5 (rectifier) 0.76 W, TJ 100 C
      36.0 V (buck, set by the average limit): L1 7.26 A average, 7.48 A rms, peak bound 11.74 A, L1 at 71 C; output 7.26 A; FETs: Q2 (buck switch) 1.09 W, TJ 117 C; Q3 (rectifier) 0.18 W, TJ 71 C; Q5 (on) 0.46 W, TJ 85 C
      B-1: the peak bound over 9 to 36 V 12.60 A (at 15.4 V), 72.0 % of the typical 17.5 A at 25 C: MET at 25 C; it holds at the part's
-       temperature (at most 84 C here) if Isat there is at least 80.0 % of its 25 C value, 14.00 A: INCONCLUSIVE (C-5); the headroom admits
-       a comparator delay of 0.84 us at the top of boost
+       temperature if Isat there is at least 80.0 % of its 25 C value, 14.00 A: INCONCLUSIVE (C-5). L1's temperature over 9 to 36 V
+       at 1 mV (check 1, M1): at most 84.99 C, at 13.957 V, so the qualifying temperature is 85 C (rounded up; the three B-2
+       voltages alone gave 83.92 C). The peak bound at 1 mV: 12.60 A at 15.456 V, the same to 0.01 A. The headroom admits a
+       comparator delay of 0.84 us at the top of boost
+       C-5 (check 1, M2): L1's inductance swept against DC current at 85 C or above, from zero bias (L0, the maker's note 2:
+       1 MHz, 0.1 Vrms, 0 Adc) through at least 14.2 A; Isat at temperature is where L falls by the maker's 30 % (note 5) from L0;
+       B-1 closes there if L stays at or above 70 % of L0 up to 14.00 A, so the peak bound is at most 90 % of that Isat
      B-2: every FET at most 130 C: MET on the ASSUMED RthetaJA; R12 itself 0.90 W at 9 V, 0.28 W at 36 V, at most 92 C
      above 14.0 V the average limit, not the peak limit, sets the fault current; at 9 V the output is held to 4.57 A
    R11 7 mOhm, 8.300 A:
@@ -146,8 +151,13 @@ where no held document gives the figure.
      15.1 V (boost, set by the cycle-by-cycle limit): L1 11.81 A average, 11.85 A rms, peak bound 12.59 A, L1 at 85 C; output 7.94 A; FETs: Q2 (on) 1.51 W, TJ 138 C; Q4 (boost switch) 0.90 W, TJ 107 C; Q5 (rectifier) 0.95 W, TJ 109 C
      36.0 V (buck, set by the average limit): L1 8.30 A average, 8.49 A rms, peak bound 12.77 A, L1 at 74 C; output 8.30 A; FETs: Q2 (buck switch) 1.23 W, TJ 124 C; Q3 (rectifier) 0.23 W, TJ 74 C; Q5 (on) 0.62 W, TJ 93 C
      B-1: the peak bound over 9 to 36 V 12.77 A (at 36.0 V), 73.0 % of the typical 17.5 A at 25 C: MET at 25 C; it holds at the part's
-       temperature (at most 85 C here) if Isat there is at least 81.1 % of its 25 C value, 14.19 A: INCONCLUSIVE (C-5); the headroom admits
-       a comparator delay of 0.80 us at the top of boost
+       temperature if Isat there is at least 81.1 % of its 25 C value, 14.19 A: INCONCLUSIVE (C-5). L1's temperature over 9 to 36 V
+       at 1 mV (check 1, M1): at most 85.74 C, at 15.680 V, so the qualifying temperature is 86 C (rounded up; the three B-2
+       voltages alone gave 85.46 C). The peak bound at 1 mV: 12.77 A at 36.000 V, the same to 0.01 A. The headroom admits a
+       comparator delay of 0.80 us at the top of boost
+       C-5 (check 1, M2): L1's inductance swept against DC current at 86 C or above, from zero bias (L0, the maker's note 2:
+       1 MHz, 0.1 Vrms, 0 Adc) through at least 14.2 A; Isat at temperature is where L falls by the maker's 30 % (note 5) from L0;
+       B-1 closes there if L stays at or above 70 % of L0 up to 14.19 A, so the peak bound is at most 90 % of that Isat
      B-2: every FET at most 138 C: MET on the ASSUMED RthetaJA; R12 itself 0.90 W at 9 V, 0.37 W at 36 V, at most 92 C
      above 15.7 V the average limit, not the peak limit, sets the fault current; at 9 V the output is held to 4.57 A
 
@@ -181,6 +191,8 @@ where no held document gives the figure.
    the chosen R12 is the smallest catalogue value that closes B-1 (25 C) and B-2 at both outcomes with service margin: yes
    B-1 at 25 C: L1's peak at most 90 % of the typical Isat at both outcomes, 9 to 36 V: yes
    B-1 at temperature: INCONCLUSIVE (the held Coilcraft sheet carries no temperature derating): yes
+   check 1, M1: L1's temperature taken over 9 to 36 V at 1 mV, its maximum off the three B-2 voltages at both outcomes, the qualifying temperature at or above it, and the 1 mV peak bound equal to the 0.1 V one to 0.01 A: yes
+   check 1, M2: C-5's sweep ends at or above the Isat each outcome needs (the peak bound over 0.9), under the maker's 30 % drop definition read from note 5: yes
    B-2: every FET at most 150 C at 9, 15.1 and 36 V at both outcomes (RthetaJA the maker's, an ASSUMPTION for board A): yes
    B-4 on the drawn bank: NOT met at the 2:1 spread at either outcome; met matched and at 1.5:1 at 8 mOhm only: yes
    service: the chosen peak limit's minimum above H3's in-service boost peak; the valley limit's minimum above the pin path's valley: yes
