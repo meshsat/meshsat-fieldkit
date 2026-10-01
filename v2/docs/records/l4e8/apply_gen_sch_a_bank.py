@@ -1,22 +1,24 @@
 #!/usr/bin/env python3
-"""apply_gen_sch_a_bank.py: DRAFT for board A's generator owner (task L4-E8, MESHSAT-1357, 1 October 2026, the fix round). NOT
+"""apply_gen_sch_a_bank.py: DRAFT for board A's generator owner (task L4-E8, MESHSAT-1357, 1 October 2026, the fix rounds). NOT
 APPLIED to the tree by L4-E8; its author ran it only on scratch copies (the tests also write scratch copies).
 
 What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else: a ballast resistor in series with each of the front end's six
-EEHZK1V331P, so that no can's current depends on the cans matching (L4E8-BANK.md; ripple_dense.out section 6). Three edits:
+EEHZK1V331P, so that no can's current depends on the cans matching (L4E8-BANK.md; ripple_dense.out section 6), and the front
+end's Cc2 (C6, the comp tuple's third part) from 680 pF to 3.3 nF so that the voltage loop keeps its
+margins over the cans' cold ESR envelope (ripple_dense.out section 7). Three edits:
   - the lm5176() helper takes `bulk_ballast=None`, a tuple (references, value, LCSC code);
   - its bulk loop, when `bulk_ballast` is given, draws each can on its own node <p>_BULK<k> behind its resistor from the output
     rail, declares that node to the intent (the rail's voltage), and adds the resistors to the output power loop's parts; with
     `bulk_ballast` absent the helper draws exactly what it drew before (the other six stages are untouched);
-  - the front end's call passes R221 to R226, "38mOhm 1% 2512 (bulk ballast)", Milliohm HoJLR2512-3W-38mR-1%, LCSC C2903481 (in
-    stock in L4-E4's catalogue reading, v2/docs/records/l4e4/inputs/jlc-search-hojlr2512-3w-2026-10-01.json).
-The cans, their part number and the ceramics stay as drawn. One value serves both R11 outcomes (8 mOhm and, if bench V-A07 fails,
-7 mOhm). The third fix-up's comment block above the call is left as the record of 26 September 2026 (its corrections are drafted
+  - the front end's call passes R221 to R226, "45mOhm 1% 2512 (bulk ballast)", Milliohm HoJLR2512-3W-45mR-1%, LCSC C2903491 (in
+    stock in L4-E4's catalogue reading, v2/docs/records/l4e4/inputs/jlc-search-hojlr2512-3w-2026-10-01.json), and its comp
+    tuple's Cc2 becomes ("3.3n", "C1613") (lcsc_fill.py's 0603 3.3 nF); Rc1 15k and Cc1 220n stay.
+The cans, their part number and the ceramics stay as drawn. One ballast value serves both R11 outcomes (8 mOhm and, if bench
+V-A07 fails, 7 mOhm). The third fix-up's comment block above the call is left as the record of 26 September 2026 (its corrections are drafted
 in CORRECTIONS-DRAFT.md); the edited call line carries its own comment naming this record. R221 to R226 must be unused.
 
-ORDER: the ballast goes in with L4-E6's R12 12 mOhm (apply_gen_sch_a_r12.py), never on the drawn 5 mOhm: there the ballast's
-resistance moves the bank's zero down and the voltage loop's gain margin falls under 10 dB on the widened band even at the record's
-loads (ripple_dense.out section 7). Writing the repository's own generator is refused until the front end's call carries
+ORDER: the ballast and Cc2 go in with L4-E6's R12 12 mOhm (apply_gen_sch_a_r12.py): the loop is verified at it over the cold
+envelope (ripple_dense.out section 7). Writing the repository's own generator is refused until the front end's call carries
 rcs="12m"; on a copy (the tests) the drafts still compose in any order.
 
 It is not the whole change. The same circuit round owes: L4-E4's R11 (apply_gen_sch_a_r11.py) and R138, L4-E6's R12 and C147
@@ -39,8 +41,8 @@ import sys
 
 NAME = "apply_gen_sch_a_bank"
 RB_REFS = ("R221", "R222", "R223", "R224", "R225", "R226")
-RB_VALUE = "38mOhm 1% 2512 (bulk ballast)"
-RB_CODE = "C2903481"
+RB_VALUE = "45mOhm 1% 2512 (bulk ballast)"
+RB_CODE = "C2903491"
 
 OLD_SIG = '           bias_cap=None, css=("47n", ""), cout_pre=(), vin_block=None, visns_r=None, en_node=None, en_vals=None, vin_cap=None):\n'
 NEW_SIG = ('           bias_cap=None, css=("47n", ""), cout_pre=(), vin_block=None, visns_r=None, en_node=None, en_vals=None, vin_cap=None,\n'
@@ -64,8 +66,10 @@ NEW_LOOP = ('    if bulk_ballast and len(bulk_ballast[0]) != len(bulk):\n'
             '          _LM_LOOP_OUT)   # round 8: COUT against the output loop (decision 42 R4); L4-E8: the ballasts in the loop\n')
 OLD_CALL = ('       comp=(("15k", "C22809"), ("220n", "C160828"), ("680p", "C30816")), bulk=("C163", "C178", "C179", "C180", "C199", "C200"),'
             ' bulk_part="V331",\n')
-NEW_CALL = OLD_CALL.rstrip("\n") + (' bulk_ballast=((%s), "%s", "%s"),   # L4-E8 (MESHSAT-1357): a %s ballast per can;'
-                                    ' v2/docs/records/l4e8/L4E8-BANK.md\n') % (", ".join('"%s"' % r_ for r_ in RB_REFS), RB_VALUE, RB_CODE, RB_VALUE.split()[0])
+CC2_OLD, CC2_NEW = '("680p", "C30816"))', '("3.3n", "C1613"))'
+NEW_CALL = OLD_CALL.rstrip("\n").replace(CC2_OLD, CC2_NEW, 1) + (
+    ' bulk_ballast=((%s), "%s", "%s"),   # L4-E8 (MESHSAT-1357): a %s ballast per can, Cc2 3.3 nF for the cold ESR envelope;'
+    ' v2/docs/records/l4e8/L4E8-BANK.md\n') % (", ".join('"%s"' % r_ for r_ in RB_REFS), RB_VALUE, RB_CODE, RB_VALUE.split()[0])
 EDITS = [(OLD_SIG, NEW_SIG), (OLD_LOOP, NEW_LOOP), (OLD_CALL, NEW_CALL)]
 
 
