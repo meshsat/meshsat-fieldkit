@@ -911,16 +911,27 @@ def compute():
     R["qual_rows"] = rows
     R["bound_status"] = bound_status(rows)
     # ================================================================== 11: THE CONTROL DECISION (L4-E7R, the owner's instruction of
-    # 1 October 2026): does the control hold REQ-016's 100 W on warranted limits alone; if not, at most three approaches compared,
-    # one chosen (SESSION) with its bound, margin and evidence classes, its energy on SC-37's day and its board E changes
+    # 1 October 2026; second round after checks/astra-check-l4e7r-1.md): the verdict on the present limit; at most three approaches,
+    # each bound with every term classed by the maker's row for its own condition (a term no row bounds is CONDITIONAL and carried by
+    # its break-even, never by a common multiplier); the chosen arrangement's static bound, its dynamics and averaging basis, its
+    # supply sequencing, its coordination with the regulation, its energy on SC-37's day and a bright day, and the solar entry's
+    # protection against the derived disturbance (each SESSION decision named where it is taken)
     INA, TPS = "v2/vendor/ti/held/ti-ina250-sbos511c.pdf", "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf"
+    I169, T38 = "v2/vendor/ti/held/ti-ina169-sbos181f.pdf", "v2/vendor/ti/ti-tps3808.pdf"
+    LM69, SMC = "v2/vendor/ti/ti-lm5069.pdf", "v2/vendor/power/littelfuse-smcj-series-tvs.pdf"
+    ZA = "v2/vendor/power/held/panasonic-za-eehza1h330xp-2017-11-07.pdf"
     for rel_, want_ in ((INA, "4690d49c0e10739b6dfc1da4d56bc2eeda8276d9b8816fb7b90db539c1eb0868"),
-                        (TPS, "27c94a6c3a243bf539e98942d26f0bd9ed979c5775c12cf86b7c1a8c3d7d9560")):
+                        (TPS, "27c94a6c3a243bf539e98942d26f0bd9ed979c5775c12cf86b7c1a8c3d7d9560"),
+                        (I169, "dbb74b6cdc5431353f17b044b7d762df1f2f9049d03d2d1611a53058e570d62c"),
+                        (T38, "74d889c0f68af88032f1633c26381817cc03e10d9fd3b4c177a044ad3ed86eed"),
+                        (LM69, "d60d8106a6e8113900ff8b9576dd959942fa7169742baf0beeb30684d4d64681"),
+                        (SMC, "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea"),
+                        (ZA, "43628e509458b8995a5c5e1ade2334286c5acfddf859bf9aa4daf59d5653258a")):
         if sha(rel_) != want_:
             refuse(2, "%s is not the pinned file (fetch it: v2/docs/records/l4e7/fetch_held_back.py)" % rel_)
+    # ---- the INA250 (approach B): every row read, then classed by its own condition
     i5, i6, i15 = flat(pg(INA, 5)), flat(pg(INA, 6)), flat(pg(INA, 15, False))
-    t5 = flat(pg(TPS, 5))
-    need(i5, r"At TA = 25.C, VS = 5 V, VIN\+ = 12 V, VREF = 2\.5 V", "INA250 p.5 the test conditions")
+    need(i5, r"At TA = 25.C, VS = 5 V, VIN\+ = 12 V, VREF = 2\.5 V, ISENSE = IN\+ = 0 A, unless otherwise noted", "INA250 p.5 the test conditions")
     cmr = float(need(i5, r"INA250A2, VIN\+ = 0 V to 36 V, (\d+) \d+ TA = .40.C to 125.C", "INA250 p.5 CMR A2").group(1))
     ios = float(need(i5, r"INA250A2, ISENSE = 0 A \u00b1[\d.]+ \u00b1(\d+)", "INA250 p.5 offset A2").group(1)) * 1e-3
     dios = float(need(i5, r"dIOS/dT RTI versus temperature TA = .40.C to 125.C \d+ (\d+) \u03bcA/.C", "INA250 p.5 offset drift").group(1)) * 1e-6
@@ -928,235 +939,466 @@ def compute():
     rsh_n = float(need(i5, r"Shunt resistance [\d.]+ (\d+) [\d.]+", "INA250 p.5 shunt").group(1)) * 1e-3
     st = need(i5, r"Shunt short time overload ISENSE = 30 A for 5 seconds \u00b1([\d.]+)% Shunt thermal shock .65.C to 150.C, 500 cycles \u00b1([\d.]+)% "
               r"Shunt resistance to solder 260.C solder, 10 s \u00b1([\d.]+)% heat Shunt high temperature 1000 hours, TA = 150.C \u00b1([\d.]+)% "
-              r"exposure Shunt cold temperature 24 hours, TA = .65.C \u00b1([\d.]+)%",
-              "INA250 p.5 the shunt's stress rows (typical only)").groups()
+              r"exposure Shunt cold temperature 24 hours, TA = .65.C \u00b1([\d.]+)%", "INA250 p.5 the shunt's stress rows (typical only)").groups()
     stress_sh = sum(float(x) for x in st) / 100.0
-    nl = float(need(flat(pg(INA, 6)), r"Nonlinearity error ISENSE = 0\.5 A to 10 A \u00b1([\d.]+)%", "INA250 p.6 nonlinearity (typical only)").group(1)) / 100.0
-    ro = float(need(flat(pg(INA, 6)), r"RO Output impedance ([\d.]+) [\u2126\u03a9]", "INA250 p.6 output impedance (typical only)").group(1))
-    # the typical-only gain terms together: the shunt's stress rows, the nonlinearity and the output impedance into the divider
-    # (taken at the smallest divider the scan admits, 26 kOhm); every one raises the trip at its sign
-    stress = stress_sh + nl + ro / 26e3
+    nl = float(need(i6, r"Nonlinearity error ISENSE = 0\.5 A to 10 A \u00b1([\d.]+)%", "INA250 p.6 nonlinearity (typical only)").group(1)) / 100.0
+    ro = float(need(i6, r"RO Output impedance ([\d.]+) [\u2126\u03a9]", "INA250 p.6 output impedance (typical only)").group(1))
     g_ina = float(need(i6, r"INA250A2 (\d+) mV/A", "INA250 p.6 gain A2").group(1)) * 1e-3
     eg = float(need(i6, r"System gain error\(6\) \u00b1([\d.]+)% TA = .40.C to 125.C", "INA250 p.6 full-range system gain error").group(1)) / 100.0
+    need(flat(pg(INA, 6, False)), r"System gain error does not include the stress related characteristics", "INA250 p.6 note 6")
     iq_ina = float(need(i6, r"IQ Quiescent current TA = .40.C to 125.C \d+ (\d+) \u03bcA", "INA250 p.6 IQ").group(1)) * 1e-6
+    ib_ina = float(need(i5, r"IB Input bias current IB\+, IB., ISENSE = 0 A \u00b1[\d.]+ \u00b1(\d+) \u03bcA", "INA250 p.5 IB (25 C)").group(1)) * 1e-6
+    abs_ina = float(need(flat(pg(INA, 4)), r"Analog inputs \(IN\+, IN.\) Common-mode GND . 0\.3 (\d+)", "INA250 p.4 IN+ and IN- absolute maximum").group(1))
     need(i15, r"For unidirectional operation, tie the REF pin to ground", "INA250 p.15 REF to ground for unidirectional operation")
+    # ---- the TPS3701 (both B and C): its rows hold over TJ -40 to 125 C and VDD 1.8 to 36 V
+    t5, t6 = flat(pg(TPS, 5)), flat(pg(TPS, 6))
+    need(t5, r"Over the operating temperature range of TJ = .40.C to \+125.C, 1\.8 V \u2264 VDD < 36 V", "TPS3701 p.5 the full-range header")
     vit = need(t5, r"VIT\+\(INB\) INB pin positive input threshold voltage VDD = 1\.8 V to 36 V (\d+) (\d+) (\d+) mV", "TPS3701 p.5 VIT+(INB)").groups()
     vth = (float(vit[0]) * 1e-3, float(vit[2]) * 1e-3)
+    via = need(t5, r"VIT.\(INA\) INA pin negative input threshold voltage VDD = 1\.8 V to 36 V (\d+) (\d+) (\d+) mV", "TPS3701 p.5 VIT-(INA)").groups()
+    via_p = need(t5, r"VIT\+\(INA\) INA pin positive input threshold voltage VDD = 1\.8 V to 36 V (\d+) ([\d.]+) (\d+) mV", "TPS3701 p.5 VIT+(INA)").groups()
+    vtha = (float(via[0]) * 1e-3, float(via_p[2]) * 1e-3)            # INA asserts below the first; releases above at most the second
     iin_t = float(need(t5, r"VDD = 1\.8 V and 36 V, VINA, VINB = 6\.5 V .(\d+) \+1 \+\d+ nA", "TPS3701 p.5 input current").group(1)) * 1e-9
-    need(t5, r"Over the operating temperature range of TJ = .40.C to \+125.C, 1\.8 V \u2264 VDD < 36 V", "TPS3701 p.5 the full-range header")
+    vol_max = float(need(t5, r"VDD = 5 V, IOUT = 5 mA \d+ (\d+) mV", "TPS3701 p.5 VOL").group(1)) * 1e-3
+    vdd_t = float(need(t5, r"VDD Supply voltage range ([\d.]+) 36 V", "TPS3701 p.5 VDD").group(1))
+    uvlo_t = need(t5, r"UVLO Undervoltage lockout \(2\) VDD falling ([\d.]+) ([\d.]+) ([\d.]+) V", "TPS3701 p.5 UVLO").groups()
+    need(t5, r"When VDD falls below UVLO, OUTA is driven low and OUTB goes to high impedance", "TPS3701 p.5 note 2")
+    st_t = float(need(flat(pg(TPS, 6, False)), r"VDD must exceed 1\.8 V for at least (\d+) [\u00b5\u03bc]s \(typical\)", "TPS3701 p.6 note 2 (start)").group(1)) * 1e-6
+    tpd_lh = float(need(t6, r"tpd\(LH\) Low-to-high propagation delay \(1\) .*?([\d.]+) [\u00b5\u03bc]s", "TPS3701 p.6 tpd(LH) (typical)").group(1)) * 1e-6
+    need(flat(pg(TPS, 6, False)), r"High-to-low and low-to-high refers to the transition at the input pins", "TPS3701 p.6 note 1 (the input edge)")
+    # ---- the TPS3808 (both B and C): the supervisor, its reset delay with CT to VDD, its power-up reset
+    s6, s7, s4 = flat(pg(T38, 6)), flat(pg(T38, 7)), flat(pg(T38, 4))
+    need(s6, r"1\.7V \u2264 VDD \u2264 6\.5V, RLRESET = 100k\u2126, CLRESET = 50pF, over operating temperature range \(TJ = .40.C to 125.C\)", "TPS3808 p.6 the header")
+    acc38 = float(need(s6, r"VIT \u2264 3\.3V .([\d.]+)% \u00b10\.5% ([\d.]+)%", "TPS3808 p.6 VIT accuracy (VIT up to 3.3 V, full range)").group(2)) / 100.0
+    hys38 = float(need(s6, r"Fixed versions 1% ([\d.]+)%", "TPS3808 p.6 VHYS of the fixed versions").group(1)) / 100.0
+    vit38 = float(need(flat(pg(T38, 3)), r"TPS3808G33 3\.3V ([\d.]+)V", "TPS3808 p.3 the G33 threshold").group(1))
+    vpor38 = float(need(s6, r"VPOR Power-up reset voltage\(2\) VOL \(max\) = 0\.2V, I RESET = 15\u03bcA ([\d.]+)", "TPS3808 p.6 VPOR").group(1))
+    need(flat(pg(T38, 6, False)), r"Trise\(VDD\) \u2265 15 \u03bcs/V", "TPS3808 p.6 the ramp condition of VPOR")
+    vol38 = float(need(s6, r"1\.8V \u2264 VDD \u2264 6\.5V, IOL = 1mA ([\d.]+) V", "TPS3808 p.6 VOL at 1 mA").group(1))
+    rmr38 = float(need(s6, r"R MR MR Internal pullup resistance (\d+) \d+ k\u2126", "TPS3808 p.6 MR pull-up minimum").group(1)) * 1e3
+    td38 = need(s7, r"CT = VDD (\d+) (\d+) (\d+) ms", "TPS3808 p.7 td with CT to VDD").groups()
+    td_min = float(td38[0]) * 1e-3
+    vdd38 = float(need(s6, r"TJ < 125.C ([\d.]+) 6\.5 V VDD Input supply range", "TPS3808 p.6 VDD").group(1))
+    ioh38 = float(need(s6, r"IOH RESET leakage current V RESET = 6\.5V, RESET not asserted (\d+) nA", "TPS3808 p.6 RESET leakage").group(1)) * 1e-9
+    need(s4, r"Connecting this pin to VDD through a 40k\u2126 to 200k\u2126 resistor", "TPS3808 p.4 CT to VDD through 40k to 200k")
+    need(s4, r"Driving the manual reset pin \( MR\) low asserts RESET", "TPS3808 p.4 MR")
+    mr_ns = float(need(s7, r"MR to RESET VIH = 0\.7VDD, VIL = 0\.3VDD (\d+) ns", "TPS3808 p.7 MR to RESET (typical)").group(1)) * 1e-9
+    # ---- the INA169 (approach C): every row at TA -40 to 85 C, V+ = 5 V, VIN+ = 12 V, ROUT = 25 kOhm; CMR and PSR printed at VSENSE = 50 mV
+    j6, j4 = flat(pg(I169, 6)), flat(pg(I169, 4))
+    need(j6, r"INA169: all other characteristics at TA = .40.C to \+85.C V\+ = 5 V, VIN\+ = 12 V, and ROUT = 25 k[\u2126\u03a9]", "INA169 p.6 the header")
+    cmr169 = float(need(j6, r"INA169: (\d+) 120 dB VIN\+ = 2\.7 V to 60 V, VSENSE = 50 mV", "INA169 p.6 CMR at VSENSE = 50 mV").group(1))
+    vos169 = float(need(j6, r"INA169 \u00b10\.2 \u00b1(\d+) vs\. temperature", "INA169 p.6 offset (RTI)").group(1)) * 1e-3
+    psr169 = float(need(j6, r"INA169: 0\.1 (\d+) \u00b5V/V V\+ = 2\.7 V to 60 V, VSENSE = 50 mV", "INA169 p.6 PSR at VSENSE = 50 mV").group(1)) * 1e-6
+    gm169 = need(j6, r"VSENSE = 10 mV . 150 mV (\d+) 1000 (\d+) \u00b5A/V", "INA169 p.6 transconductance").groups()
+    gm169 = (float(gm169[0]) * 1e-6, float(gm169[1]) * 1e-6)                 # A/V
+    nl169 = float(need(j6, r"INA169 \u00b10\.01% \u00b1([\d.]+)%", "INA169 p.6 nonlinearity").group(1)) / 100.0
+    iq169 = float(need(j6, r"Quiescent current VSENSE = 0, IO = 0 \d+ (\d+) \u00b5A", "INA169 p.6 quiescent").group(1)) * 1e-6
+    sw169 = float(need(j6, r"Swing to power supply, V\+ \(V\+\) . [\d.]+ \(V\+\) . ([\d.]+)", "INA169 p.6 swing to V+").group(1))
+    swcm169 = float(need(j6, r"Swing to common-mode, VCM VCM . [\d.]+ VCM . ([\d.]+)", "INA169 p.6 swing to VCM").group(1))
+    need(j6, r"Specification, TMIN to TMAX INA169 .40 85 .C", "INA169 p.6 the specified range")
+    need(j6, r"Defined as the amount of voltage \(VSENSE\) to drive the output to zero", "INA169 p.6 note 1 (the offset)")
+    abs169 = need(j4, r"\(2\) Common-mode .0\.3 (\d+) V Analog inputs, INA169 Differential \(VIN\+\) . \(VIN.\) .40 (\d+) V", "INA169 p.4 inputs' absolute maxima").groups()
+    abs169 = (float(abs169[0]), float(abs169[1]))
+    ipin169 = float(need(j4, r"Input current into any pin (\d+) mA", "INA169 p.4 input current into any pin").group(1)) * 1e-3
+    vsabs169 = float(need(j4, r"Supply voltage, VS INA169 .0\.3 (\d+) V", "INA169 p.4 V+ absolute maximum").group(1))
+    bw169 = float(need(j6, r"Bandwidth ROUT = 20 k[\u2126\u03a9] (\d+) kHz", "INA169 p.6 bandwidth at 20 kOhm (typical)").group(1)) * 1e3
+    # ---- the LT8705A rows the arrangement uses (all printed; none is an answer the drafts ask for)
     ldo = need(flat(p3), r"LDO33 Pin Voltage 5mA from LDO33 Pin l ([\d.]+) ([\d.]+) ([\d.]+) V", "8705af p.3 LDO33").groups()
     v_ldo = (float(ldo[0]), float(ldo[2]))
-    dvs = 5.0 - v_ldo[0]                                   # the INA250's supply (TRK_LDO33) against the 5 V its rows are printed at
+    ilim33 = float(need(flat(p3), r"LDO33 Pin Current Limit l (\d+) [\d.]+ (\d+) mA", "8705af p.3 LDO33 current limit").group(2)) * 1e-3
+    uvi = float(need(flat(p3), r"INTVCC, GATEVCC Undervoltage Lockout INTVCC Falling, GATEVCC Connected to INTVCC l ([\d.]+)", "8705af p.3 INTVCC lockout").group(1))
     swen_r = RP.ec_row(pages, 4, "SWEN Rising Threshold Voltage (Note 5)", None)
-    vol_max = float(need(t5, r"VDD = 5 V, IOUT = 5 mA \d+ (\d+) mV", "TPS3701 p.5 VOL").group(1)) * 1e-3
-    lc_ina, lc_tps = catalogue("C2859736"), catalogue("C132788")
-    if lc_ina["model"] != "INA250A2PWR" or lc_tps["model"] != "TPS3701DDCR":
-        refuse(3, "the backstop's catalogue readings are not the parts named")
+    need(raw[12], r"SWEN \(Pin 36 QFN Only\): Switch Enable Pin\. Tie high to enable switching\. Ground to disable switching\. Don.t float this pin", "8705af p.12 SWEN")
+    need(raw[14], r"In the initialize state, the SS \(soft-start\) pin is pulled low", "8705af p.14 the initialize state")
+    need(raw[15], r"INITIALIZE . SS PULLED LOW", "8705af p.15 Figure 2 (SS pulled low)")
+    csd_abs = float(need(p2, r"VCSP-VCSN, VCSPIN-VCSNIN, VCSPOUT-VCSNOUT\.+ .0\.3V to ([\d.]+)V", "8705af p.2 CSPIN-CSNIN absolute maximum").group(1))
+    vin_abs = float(need(p2, r"VIN, EXTVCC Voltage\.+ .0\.3V to (\d+)V", "8705af p.2 VIN absolute maximum").group(1))
+    fb_abs = float(need(p2, r"FBIN, SHDN Voltage\.+ .0\.3V to (\d+)V", "8705af p.2 FBIN and SHDN absolute maximum").group(1))
+    r14_ = float(re.match(r"([\d.]+)k", e["components"]["R14"]["value"]).group(1)) * 1e3
+    r15_ = float(re.match(r"([\d.]+)k", e["components"]["R15"]["value"]).group(1)) * 1e3
+    # ---- the clamp D4 and the bulk the entry needs (the derived disturbance, below)
+    l1, l2 = flat(pg(SMC, 1, False)), flat(pg(SMC, 2))
+    need(l1, r"1500W peak pulse power capability at 10/1000[\u00b5\u03bc]s waveform", "SMCJ p.1 the 10/1000 us rating")
+    d4row = need(l2, r"SMCJ28A SMCJ28CA GFG BFG (\d+\.\d) (\d+\.\d+) (\d+\.\d+) 1 (\d+\.\d) (\d+\.\d) (\d+) X", "SMCJ p.2 the SMCJ28A row").groups()
+    d4 = dict(vr=float(d4row[0]), vbr=(float(d4row[1]), float(d4row[2])), vc=float(d4row[3]), ipp=float(d4row[4]), ir=float(d4row[5]) * 1e-6)
+    z1, z2 = flat(pg(ZA, 1)), flat(pg(ZA, 2))
+    zrow = need(z2, r"50 33 6\.3 7\.7 D8 (\d+) (\d+) [\d.]+ EEHZA1H330XP", "ZA p.2 the EEHZA1H330XP row").groups()
+    za = dict(v=50.0, c=33e-6, ripple=float(zrow[0]) * 1e-3, esr=float(zrow[1]) * 1e-3)
+    za["tol"] = float(need(z1, r"Capacitance tolerance \u00b1(\d+) % \(120 Hz/\+20 .C\)", "ZA p.1 capacitance tolerance").group(1)) / 100.0
+    za["end_dc"] = float(need(z1, r"Capacitance change Within \u00b1(\d+)% of the initial value tan d < 200 % of the initial limit E\. S\. R\. < 200 % of the initial limit Endurance", "ZA p.1 endurance capacitance").group(1)) / 100.0
+    za["esr_cold"] = float(need(z1, r"\(.40 .C\) 2\.0 1\.4 ([\d.]+) 0\.4 0\.3", "ZA p.1 ESR after endurance at -40 C (D8)").group(1))
+    lm6 = flat(pg(LM69, 6))
+    need(flat(pg(LM69, 5)), r"VIN = 48 V \(unless otherwise noted\)", "LM5069 p.5 the header")
+    vcl69 = need(lm6, r"VCL Threshold voltage VIN-SENSE voltage ([\d.]+) (\d+) ([\d.]+) mV", "LM5069 p.6 VCL").groups()
+    # ---- the parts' catalogue readings (filed under inputs/)
+    lc_ina, lc_tps, lc169, lc38, lcza, lc104 = (catalogue(c_) for c_ in ("C2859736", "C132788", "C44322", "C43698", "C178637", "C14663"))
+    if (lc_ina["model"], lc_tps["model"], lc169["model"], lc38["model"], lcza["model"]) != ("INA250A2PWR", "TPS3701DDCR", "INA169NA/3K", "TPS3808G33DBVR", "EEHZA1H330XP") \
+            or lcza["params"].get("Voltage Rating") != "50V" or lc104["params"].get("Voltage Rating") != "50V":
+        refuse(3, "the arrangement's catalogue readings are not the parts named")
+    amps_pk = float(need(gse, r'_intent\.rail\(_pvn, 17\.6, 5\.68, ([\d.]+), "J_SOLAR" if _pvn == "PV_IN" else "F2"', "gen_sch_e.py the panel entry's amps_peak").group(1))
+    dt_end = max(abs(t_cold - 25.0), abs(t_air - 25.0))
 
-    def i_err(v):
-        """The INA250A2's current error referred to the input at input voltage v, every warranted term at its maximum: the offset
-        at 25 C plus its drift over the larger temperature excursion, the common-mode rejection from the 12 V the rows are printed
-        at (referred to the input through the 2 mOhm shunt, INFERRED), the supply rejection from 5 V to LDO33's least."""
-        return ios + dios * max(abs(t_cold - 25.0), abs(t_air - 25.0)) + abs(v - 12.0) * 10 ** (-cmr / 20.0) / rsh_n + psr * dvs
+    # ---- shared models: the regulation's highest current under the joint assumptions at any RIMON_IN (each resistor at its own
+    # worst end, the mixed envelope), the bright day (SESSION: the check's definition), and the energy of a setting on both days
+    def inom_of(rmv):
+        return vref_n / (a7["(All Grades)"]["typ"] * 1e-3 * rs * rmv)
 
-    def trip(rt, rb, v, drift_lo, drift_hi, stress_mul=1.0):
-        """The input current at which U19 trips at input voltage v: (lowest, highest) over the divider's ends, the INA250's gain
-        error and errors, the threshold and the input current through the divider's Thevenin resistance."""
-        def kk(s_t, s_b, drift):
-            def f(s_, r_):
-                d = ((1 + s_ * (R["life_y"][0] + R["life_y"][1] / r_)) * (1 + s_ * (R["sold_y"][0] + R["sold_y"][1] / r_))) if drift else 1.0
-                return (1 + s_ * tol_y) * (1 + s_ * tcr_y * max(abs(t_cold - 25.0), abs(t_air - 25.0))) * d
-            return rb * f(s_b, rb) / (rt * f(s_t, rt) + rb * f(s_b, rb))
-        rth = rt * rb / (rt + rb)
-        kmin = min(kk(a, b, drift_hi) for a in (-1, 1) for b in (-1, 1))
-        kmax = max(kk(a, b, drift_lo) for a in (-1, 1) for b in (-1, 1))
-        hi = (vth[1] + iin_t * rth) / (kmin * g_ina * (1 - eg) * (1 - stress * stress_mul)) + i_err(v)
-        lo = (vth[0] - iin_t * rth) / (kmax * g_ina * (1 + eg) * (1 + (stress * stress_mul if drift_lo else 0.0))) - i_err(v)
-        return lo, hi
-    # the stage's input that bypasses U18's shunt, PV_P's own loads (NETLIST; U18 sits ahead of R59, so U5's CSPIN, CSNIN and VIN
-    # are inside it): the hold divider R8 and R9 (1 % as drawn; 0.1 % with the hold draft), the SHDN divider R14 and R15 (1 %), D4's
-    # reverse current (1 uA at its 28 V standoff, printed at 25 C; across temperature doubled per 10 K, INFERRED) and U18's VIN+
-    # bias (35 uA at most, printed at 25 C; carried at twice across temperature, SESSION)
-    def rv_net(ref):
-        m_ = re.match(r"([\d.]+)k (\d+(?:\.\d+)?)%", e["components"][ref]["value"])
-        if not m_:
-            refuse(3, "%s's drawn value is not read" % ref)
-        return float(m_.group(1)) * 1e3, float(m_.group(2)) / 100.0
-    (r14v, r14t), (r15v, r15t) = rv_net("R14"), rv_net("R15")
-    if nets("R14") != {"1": "PV_P", "2": "TRK_SHDN"} or members("PV_P") != ["C11", "C12", "C13", "C14", "C15", "C64", "D4", "F2", "Q3", "R14", "R8", "TP5", "U5"]:
-        refuse(3, "PV_P's loads are not the ones the bypass term names")
-    lf = flat(pg("v2/vendor/power/littelfuse-smcj-series-tvs.pdf", 2))
-    need(lf, r"Electrical Characteristics \(T =25.C unless otherwise noted\)", "SMCJ p.2 at 25 C")
-    ir_d4 = float(need(lf, r"SMCJ28A SMCJ28CA GFG BFG 28\.0 31\.10 34\.40 1 45\.4 33\.1 (\d+) X", "SMCJ p.2 the SMCJ28A row").group(1)) * 1e-6
-    ib_ina = float(need(i5, r"IB Input bias current IB\+, IB., ISENSE = 0 A \u00b1[\d.]+ \u00b1(\d+) \u03bcA", "INA250 p.5 IB").group(1)) * 1e-6
-    k_leak = 2.0 ** ((t_air - 25.0) / 10.0)
-    def pb(v):
-        r89 = (R["r8v"] + R["r9v"]) * (1 - 0.01)
-        r1415 = r14v * (1 - r14t) + r15v * (1 - r15t)
-        return v * v / r89 + v * v / r1415 + v * (ir_d4 * k_leak + 2.0 * ib_ina)
-    pairs = [(rvalue(a["model"]), a["code"], b_["code"], rvalue(b_["model"])) for a in rtj for b_ in rtj
-             if rvalue(a["model"]) and rvalue(b_["model"]) and 20e3 <= rvalue(a["model"]) < 30e3 and 6e3 <= rvalue(b_["model"]) < 10e3
-             and a["stock"] >= STOCK_MIN and b_["stock"] >= STOCK_MIN]
-    best_ = None
-    STRESS_MUL = 2.0      # SESSION: the shunt's stress drift is printed typical only; the bound carries it at twice that, the floor this
-                          # record applies to every typical-only row (EA2 and EA3 at half gain, the line and the cold TCR at twice)
-    STRESS_SEL = 2.0 * STRESS_MUL   # SESSION: the margin. The divider is chosen so the bound would still hold with that one unwarranted
-                          # term at twice its floor; every warranted term is inside the bound at its limit, so the margin is sized to it
-    for rt, ct, cb, rb in pairs:
-        lo25, hi25 = trip(rt, rb, v_oc, False, True, STRESS_SEL)
-        if all(v * trip(rt, rb, v, False, True, STRESS_SEL)[1] + pb(v) <= p_win for v in (v_lo_env, 0.5 * (v_lo_env + v_oc), v_oc)) and (best_ is None or lo25 > best_[0]):
-            best_ = (lo25, hi25, rt, rb, ct, cb)
-    if best_ is None:
-        refuse(4, "BLOCKER: no stocked divider puts the backstop at or under 100 W")
-    _l, _h, r60, r61, c60, c61 = best_
-    for code, val in ((c60, r60), (c61, r61)):
+    def reg_hi(rmv, v):
+        rs_lo = min(rfac_end(tol_h, TCR_COLD_CONS, tcr_h, t_, life_h, sold_h) for t_ in (END[0][1], END[1][1]))
+        rm_lo = min(rfac_end(tol_y, tcr_y, tcr_y, t_, R["life_y"][0] + R["life_y"][1] / rmv, R["sold_y"][0] + R["sold_y"][1] / rmv)
+                    for t_ in (END[0][2], END[1][2]))
+        return inom_of(rmv) * corner_k(v, ea2 / EA2_FLOOR_DIV, LINE_FLOOR_MUL, rs_lo, rm_lo)
+    BRIGHT = [1000.0 * math.sin(math.pi * (h - 6) / 12.0) if 6 < h < 18 else 0.0 for h in range(24)]
+    ta12 = round(LR["TA40"][12], 1)                         # 18.1 C, as the check states it
+
+    def bright(vh, lim):
+        """SESSION, the check's bright day (astra-check-l4e7r-1, D3): a twelve-hour sine to 1000 W/m2 at noon, the air constant at
+        18.1 C (SC-37's hour-12 value to 0.1 C), NOCT 47 C, the replay's panel, lead and op_point, by the trace's a1solar convention."""
+        out, nl_ = [], 0
+        for h in range(24):
+            g = BRIGHT[h]
+            if g <= 0.0:
+                out.append(0.0)
+                continue
+            tc = AC.t_cell(ta12, g, LR["noct"])
+            pw, _v, _i, limited = LR["op_point"](dsp, g, tc, vh, lim, LR["rl"])
+            out.append(RP.BUD.panel_w(g, 100.0, LR["pr0"]) * (pw / AC.arr_mpp(dsp, 1, 1, g, tc)[0]))
+            nl_ += limited
+        return out, nl_
+
+    def day(inom_, rmv):
+        out = []
+        for lab, vh in (("lower", lo_h), ("nominal", nom_h), ("upper", hi_h)):
+            tr, nl_ = energy(vh, lim_of(inom_, rmv, "lo"))
+            out.append((lab, vh, sum(tr), nl_))
+        btr, bnl = bright(nom_h, lim_of(inom_, rmv, "lo"))
+        out.append(("bright", nom_h, sum(btr), bnl))
+        return out
+    gnoon = 1000.0
+    tcn = AC.t_cell(ta12, gnoon, LR["noct"])
+
+    def noon_power(inom_, rmv):
+        """The stage's input at bright noon at the nominal hold, the regulation at its lowest (as the check reads it)."""
+        return LR["op_point"](dsp, gnoon, tcn, nom_h, lim_of(inom_, rmv, "lo"), LR["rl"])[0]
+    p_noon_now = noon_power(i_nom, rm)
+    e_now = day(i_nom, rm)
+    e_free = (sum(bright(nom_h, None)[0]))
+    # ---- approach C: a sense bank of identical WSL2512 parts in parallel ahead of everything but R8, R9, TP5 and U18's VIN+ pin;
+    # U18 an INA169 (current output into R65 + R66 = its 25 kOhm test load), U19's INB on R66; U19's INA watches TRK_VS; U19's
+    # outputs drive U20's MR; U20 a TPS3808G33 on TRK_LDO33 (its own supply is what it watches), CT to VDD through R69 (the fixed
+    # delay); U20's RESET drives SWEN through R70 over R71. Every term of the trip is a printed limit at the operating condition
+    wsl_rows = json.load(open(os.path.join(TOP, INP, "jlc-search-wsl2512-2026-10-01.json"), encoding="utf-8"))["rows"]
+    W_AVG = 0.1                # SESSION: the averaging basis of REQ-016's "at most 100 W into the stage" (the argument is printed)
+    R66, R65 = rvalue("RT0603BRD078K06L"), rvalue("RT0603BRD0716K9L")  # SESSION: R65 + R66 = 24.96 kOhm, the INA169's 25 kOhm test load; R66 puts the trip at 49.6 mV nominal
+    for code, val in (("C861587", R66), ("C861156", R65)):
         verify_rt(code, val)
-    bk = dict(r60=r60, r61=r61, c60=c60, c61=c61)
-    bk["hi"] = max(v * trip(r60, r61, v, False, True, STRESS_MUL)[1] + pb(v) for v in grid)   # the bound: the highest power it lets through
-    bk["hi_v"] = max(grid, key=lambda v: v * trip(r60, r61, v, False, True, STRESS_MUL)[1] + pb(v))
-    bk["hi_typ"] = max(v * trip(r60, r61, v, False, True, 1.0)[1] + pb(v) for v in grid)      # the stress term at its typical
-    bk["pb"] = pb(v_oc)
-    bk["byp"] = dict(r89=(R["r8v"] + R["r9v"]) * (1 - 0.01), r1415=r14v * (1 - r14t) + r15v * (1 - r15t), ir=ir_d4, k_leak=k_leak, ib=ib_ina)
-    bk["stress_mul"], bk["stress_sel"] = STRESS_MUL, STRESS_SEL
-    bk["hi_sel"] = max(v * trip(r60, r61, v, False, True, STRESS_SEL)[1] + pb(v) for v in grid)   # the bound with the term at twice its floor
-    bk["hi_none"] = max(v * trip(r60, r61, v, False, True, 0.0)[1] + pb(v) for v in grid)         # and without it
-    bk["i_hi25"], bk["i_lo25"] = trip(r60, r61, v_oc, False, True, STRESS_MUL)[1], trip(r60, r61, v_oc, False, True)[0]
-    bk["i_lo25_drift"] = trip(r60, r61, v_oc, True, True)[0]
-    bk["i_lo_vlo"] = trip(r60, r61, v_lo_env, False, True)[0]
-    def bound_m(m_):
-        return max(v * trip(r60, r61, v, False, True, m_)[1] + pb(v) for v in grid)
-    lo_m, hi_m = 1.0, 0.99 / stress                         # the typical-only gain terms' break-even multiple (inside 1 - m x stress > 0)
-    for _ in range(60):
-        mid = 0.5 * (lo_m + hi_m)
-        if bound_m(mid) > p_win:
-            hi_m = mid
-        else:
-            lo_m = mid
-    bk["stress_be"] = lo_m if bound_m(0.99 / stress) > p_win else None
-    # U18's output at the highest trip against its swing (VS - 0.2 V at most, 10 kOhm load, p.6) at LDO33's least
-    rth_ = r60 * r61 / (r60 + r61)
-    dt_ = max(abs(t_cold - 25.0), abs(t_air - 25.0))
-    rt_hi = r60 * (1 + tol_y) * (1 + tcr_y * dt_) * (1 + R["life_y"][0] + R["life_y"][1] / r60) * (1 + R["sold_y"][0] + R["sold_y"][1] / r60)
-    rb_lo = r61 * (1 - tol_y) * (1 - tcr_y * dt_) * (1 - R["life_y"][0] - R["life_y"][1] / r61) * (1 - R["sold_y"][0] - R["sold_y"][1] / r61)
-    bk["vout_hi"] = (vth[1] + iin_t * rth_) * (rt_hi + rb_lo) / rb_lo
-    bk["swing"] = v_ldo[0] - float(need(i6, r"RL = 10 k[\u2126\u03a9] to GND \(VS\) . 0\.1 \(VS\) . ([\d.]+) V", "INA250 p.6 swing to VS").group(1))
-    uv = need(flat(p3), r"LDO33 Pin Undervoltage Lockout LDO33 Falling ([\d.]+) ([\d.]+) ([\d.]+) V", "8705af p.3 LDO33 UVLO (25 C)").groups()
-    bk["ldo_uv"] = (float(uv[0]), float(uv[2]))
-    bk["ina_vs_min"] = float(need(i6, r"VS Operating voltage range ([\d.]+) 36 V", "INA250 p.6 VS").group(1))
-    bk["tps_vdd_min"] = float(need(t5, r"VDD Supply voltage range ([\d.]+) 36 V", "TPS3701 p.5 VDD").group(1))
-    bk["vhys_b"] = need(t5, r"VHYS\(INB\) (\d+) ([\d.]+) (\d+) mV", "TPS3701 p.5 INB hysteresis").groups()
-    bk["terms"] = [
-        ("INA250A2 system gain error (amplifier and shunt), -40 to 125 C", "+-%.2f %%" % (100 * eg), "warranted", "INA250 SBOS511C p.6"),
-        ("INA250A2 offset at 25 C", "+-%.0f mA" % (ios * 1e3), "warranted", "p.5"),
-        ("its drift, %.0f K at most" % max(abs(t_cold - 25.0), abs(t_air - 25.0)), "+-%.2f mA" % (dios * 45.0 * 1e3), "warranted", "p.5, -40 to 125 C"),
-        ("common-mode rejection from 12 V to 25 V, %.0f dB minimum" % cmr, "+-%.1f mA" % (1e3 * 13.0 * 10 ** (-cmr / 20.0) / rsh_n), "warranted (referred to the input through the 2 mOhm shunt, INFERRED)", "p.5, 0 to 36 V, -40 to 125 C"),
-        ("supply rejection from 5 V to LDO33's %.2f V" % v_ldo[0], "+-%.2f mA" % (psr * dvs * 1e3), "warranted", "p.5; 8705af p.3 LDO33"),
-        ("TPS3701 INB rising threshold, -40 to 125 C junction", "%.0f to %.0f mV" % (vth[0] * 1e3, vth[1] * 1e3), "warranted", "TPS3701 SBVS240C p.5"),
-        ("TPS3701 input current through the divider's Thevenin resistance", "+-%.0f nA" % (iin_t * 1e9), "warranted", "p.5"),
-        ("R60 and R61, 0.1 % and 25 ppm/K over 45 K", "ratio", "warranted", "YAGEO RT V.16 p.2"),
-        ("R60 and R61, the printed solder-heat and life limits, opposite directions", "+-(0.5 % + 0.05 Ohm) each", "warranted (printed test limits)", "YAGEO RT V.16 pp.7, 8"),
-        ("the INA250's shunt stress drift (overload, thermal shock, solder heat, high temperature, cold storage)", "%.3f %% summed" % (100 * stress_sh), "typical", "INA250 p.5, typical only"),
-        ("the INA250's nonlinearity, 0.5 to 10 A", "%.2f %%" % (100 * nl), "typical", "INA250 p.6, typical only"),
-        ("the INA250's output impedance into the divider (26 kOhm at least)", "%.1f Ohm, %.4f %%" % (ro, 100 * ro / 26e3), "typical", "INA250 p.6, typical only"),
-        ("the three typical-only gain terms together, carried at %.0f times" % STRESS_MUL, "%.3f %%, so %.3f %%" % (100 * stress, 100 * stress * STRESS_MUL), "typical", "SESSION: twice, this record's floor"),
-        ("the INA250's gain rows at VS = 3.23 V (printed at VS = 5 V; only the offset's supply rejection is printed)", "0", "inferred", "INA250 pp.5, 6"),
-        ("REF at ground: the maker's unidirectional configuration; the rows are printed at VREF = 2.5 V", "0 (the REF path adds VREF x its gain, nothing at 0 V)", "inferred", "INA250 p.15 and p.12's block diagram"),
-        ("PV_P's two dividers, bypassing U18's shunt, at 25 V: R8 and R9 (%.0f Ohm at least), R14 and R15 (%.0f Ohm at least)" % (
-            bk["byp"]["r89"], bk["byp"]["r1415"]), "%.2f mW" % (1e3 * 625.0 * (1.0 / bk["byp"]["r89"] + 1.0 / bk["byp"]["r1415"])),
-         "warranted (NETLIST values at their tolerance)", "netlist, 1 % as drawn"),
-        ("D4's reverse current, 1 uA at 25 C, carried at %.1f times for %.0f C air (doubled per 10 K)" % (k_leak, t_air), "%.1f uA" % (1e6 * ir_d4 * k_leak), "inferred",
-         "Littelfuse SMCJ series p.2, the SMCJ28A row at 25 C"),
-        ("U18's VIN+ bias, 35 uA at most at 25 C, carried at twice across temperature", "%.0f uA" % (2e6 * ib_ina), "warranted (printed at 25 C; twice across temperature, SESSION)", "INA250 p.5"),
+
+    def rdrift(rp, sgn, aged):
+        """A WSL part's factor at the end that moves the trip (sgn -1 lowers R): tolerance, TCR over the larger excursion, and, aged,
+        the printed solder-heat and load-life test limits (each (x % + 0.5 mOhm)), Document 30100 pp.2, 3."""
+        f = (1 + sgn * 0.01) * (1 + sgn * wtcr * dt_end)
+        if aged:
+            f *= (1 + sgn * (float(wsold[0]) / 100.0 + float(wsold[1]) / rp)) * (1 + sgn * (float(wlife[0]) / 100.0 + float(wlife[1]) / rp))
+        return f
+
+    def r66f(sgn, aged):
+        f = (1 + sgn * tol_y) * (1 + sgn * tcr_y * dt_end)
+        if aged:
+            f *= (1 + sgn * (R["life_y"][0] + R["life_y"][1] / R66)) * (1 + sgn * (R["sold_y"][0] + R["sold_y"][1] / R66))
+        return f
+
+    def vs_trip(v, sgn, aged):
+        """The sense voltage at which U19 trips, at input voltage v: sgn +1 the highest, -1 the lowest. The CMR and PSR rows are
+        printed at VSENSE = 50 mV, so they bound the whole output there, offset and gain together; carried at the larger of the
+        offset reading and the gain reading (scaled by VSENSE / 50 mV), every other term a printed limit."""
+        vit_ = vth[1] if sgn > 0 else vth[0]
+        gm_ = (gm169[0] if sgn > 0 else gm169[1]) * (1 - sgn * nl169)
+        base = (vit_ + sgn * iin_t * R66 * r66f(-sgn, aged)) / (gm_ * R66 * r66f(-sgn, aged))
+        drift = 10 ** (-cmr169 / 20.0) * abs(v - 12.0) + psr169 * abs(v - 5.0)
+        return base + sgn * (vos169 + drift * max(1.0, base / 0.050))
+
+    def i_trip_c(v, rp, n, sgn, aged):
+        return vs_trip(v, sgn, aged) / (rp / n * rdrift(rp, -sgn, aged))
+    r89_min = (R["r8v"] + R["r9v"]) * (1 - tol_y) * (1 - tcr_y * dt_end) * (1 - R["life_y"][0] - R["life_y"][1] / R["r8v"]) * (1 - R["sold_y"][0] - R["sold_y"][1] / R["r8v"])
+
+    def pb_c(v):
+        """What enters the stage without crossing the bank: R8 and R9 (the hold draft's RT parts at their lowest) and U18's VIN+ pin,
+        whose current (its output current and its input bias, which has no printed maximum) is carried at the pin's absolute maximum."""
+        return v * v / r89_min + v * ipin169
+
+    def p_c(rp, n):
+        return max(v * i_trip_c(v, rp, n, 1, True) + pb_c(v) for v in grid)
+    # the entry's capacitance at its largest (the cap-charge energy of an event): three ZA 33 uF +20 % and C13 to C15, C64 (+10 %)
+    c_entry_max = 3 * za["c"] * (1 + za["tol"]) + (10e-6 + 10e-6 + 4.7e-6 + 0.1e-6) * 1.10
+    e_cap = 0.5 * c_entry_max * v_oc ** 2
+    banks = []
+    for r_ in wsl_rows:
+        m_ = re.match(r"WSL2512R(\d{4})FEA$", r_["model"])
+        if not m_ or r_["stock"] < STOCK_MIN:
+            continue
+        rp = float("0." + m_.group(1))                    # "R0700" is 0.0700 Ohm
+        for n in range(1, 7):
+            if p_c(rp, n) + e_cap / W_AVG <= p_win:
+                banks.append((min(i_trip_c(v, rp, n, -1, True) for v in grid), -n, rp, r_["code"], r_["model"], r_["stock"]))
+    if not banks:
+        refuse(4, "BLOCKER: no stocked WSL2512 bank puts approach C's static bound and an event under 100 W")
+    bank = max(banks)
+    i_lo_aged_c, nb, rpb, bcode, bmodel = bank[0], -bank[1], bank[2], bank[3], bank[4]
+    lcb = catalogue(bcode)
+    if lcb["model"] != bmodel or lcb["params"].get("Tolerance") != "\u00b11%":
+        refuse(3, "the bank part's filed reading is not the chosen part")
+    rbank = rpb / nb
+    c = dict(rp=rpb, n=nb, rbank=rbank, code=bcode, model=bmodel, stock=lcb["stock"])
+    c["p_static"] = p_c(rpb, nb)
+    c["v_hi"] = max(grid, key=lambda v: v * i_trip_c(v, rpb, nb, 1, True) + pb_c(v))
+    c["i_hi25"] = i_trip_c(v_oc, rpb, nb, 1, True)
+    c["i_lo_new"] = min(i_trip_c(v, rpb, nb, -1, False) for v in grid)
+    c["i_lo_aged"] = i_lo_aged_c
+    c["vs_hi"], c["vs_lo"] = vs_trip(v_oc, 1, True), vs_trip(v_oc, -1, True)
+    c["pb25"] = pb_c(v_oc)
+    c["e_cap"], c["c_entry_max"] = e_cap, c_entry_max
+    # the response (typical rows only): U18 to 0.1 % in about 5 us at 20 kOhm, U19's INB rising edge 28.1 us, U20's MR to RESET,
+    # and one switching period of the LT8705A after SWEN falls (INFERRED); a bench row reads it. What the margin leaves for it:
+    t_resp_typ = 1.0 / bw169 + tpd_lh + mr_ns + 1.0 / 180e3
+    p_ev = v_oc * amps_pk                                  # the most power the panel delivers while the chain responds (REQ-016's 6.25 A)
+    c["t_resp_typ"], c["p_ev"] = t_resp_typ, p_ev
+    c["t_resp_max"] = ((p_win - c["p_static"]) * W_AVG - e_cap) / p_ev
+    c["p_dyn_typ"] = c["p_static"] + (e_cap + p_ev * t_resp_typ) / W_AVG
+    # the terms of C's bound, each with its class and its source (no common multiplier)
+    c["terms"] = [
+        ("U19 TPS3701 INB rising threshold, TJ -40 to 125 C, VDD 1.8 to 36 V", "397 to 403 mV", "warranted", "TPS3701 SBVS240C p.5"),
+        ("U19 input current at INB", "+-%.0f nA, through R66" % (iin_t * 1e9), "warranted", "p.5"),
+        ("U18 INA169 transconductance, VSENSE 10 to 150 mV, TA -40 to 85 C", "%.0f to %.0f uA/V" % (gm169[0] * 1e6, gm169[1] * 1e6), "warranted", "INA169 SBOS181F p.6"),
+        ("its nonlinearity", "+-%.1f %%" % (100 * nl169), "warranted", "p.6"),
+        ("its offset, referred to the input", "+-%.0f mV" % (vos169 * 1e3), "warranted", "p.6"),
+        ("its common-mode rejection from VIN+ = 12 V to 25 V, at VSENSE = 50 mV", "%.0f dB minimum: %.0f uV" % (cmr169, 1e6 * 10 ** (-cmr169 / 20.0) * 13.0), "warranted", "p.6, VIN+ 2.7 to 60 V"),
+        ("its supply rejection from V+ = 5 V to 25 V, at VSENSE = 50 mV", "%.0f uV/V: %.0f uV" % (psr169 * 1e6, psr169 * 20.0 * 1e6), "warranted", "p.6, V+ 2.7 to 60 V"),
+        ("the two rejections above carried at the larger of their offset reading and their gain reading", "x %.4f" % max(1.0, c["vs_hi"] / 0.050), "warranted (the rows, read both ways)", "p.6"),
+        ("R66 8.06k, 0.1 %%, 25 ppm/K over %.0f K, the printed solder-heat and life limits" % dt_end, "+-(0.5 % + 0.05 Ohm) each", "warranted (printed test limits)", "YAGEO RT V.16 pp.2, 7, 8"),
+        ("the bank, %d x %s in parallel: 1 %%, %.0f ppm/K from -55 to +155 C" % (nb, bmodel, wtcr * 1e6), "%.4f mOhm" % (rbank * 1e3), "warranted", "Vishay WSL 30100 pp.1, 2"),
+        ("the bank's solder-heat and load-life test limits", "+-(%s %% + %s Ohm) and +-(%s %% + %s Ohm) per part" % (wsold[0], wsold[1], wlife[0], wlife[1]), "warranted (printed test limits)", "WSL 30100 p.3"),
+        ("R8 and R9 (the hold draft's RT parts) across 25 V, bypassing the bank", "%.2f mW" % (1e3 * v_oc ** 2 / r89_min), "warranted", "YAGEO RT V.16"),
+        ("U18's VIN+ pin current (its output current and its input bias, which prints no maximum), bypassing the bank", "at most %.0f mA: %.0f mW" % (ipin169 * 1e3, 1e3 * v_oc * ipin169), "warranted (the pin's absolute maximum)", "INA169 p.4"),
         ("the input voltage at most 25 V", "REQ-016", "requirement", "REQ-016"),
     ]
-    # the primary regulation coordinated below the backstop: the largest stocked RIMON_IN whose stack A highest current, at every
-    # input voltage, stays at or under the backstop's lowest trip current (the new parts' tolerance and TCR)
-    def prim_hi(rmv, v):
-        inom_ = vref_n / (a7["(All Grades)"]["typ"] * 1e-3 * rs * rmv)
-        return inom_ * corner_k(v, ea2, 1.0, rfac(tol_h, tcr_h, t_cold - 25.0), rfac(tol_y, tcr_y, t_cold - 25.0))
-    coord = [r_ for r_ in sorted(rows_rm + [(rvalue(r_["model"]), r_["code"], r_["stock"], vref_n / (1e-3 * rs * rvalue(r_["model"])), None, None)
-                                             for r_ in json.load(open(os.path.join(TOP, INP, "jlc-search-rt0603brd07-30k-2026-10-01.json"), encoding="utf-8"))["rows"]
-                                             if rvalue(r_["model"])], key=lambda t: t[0])
-             if r_[2] >= STOCK_MIN and all(prim_hi(r_[0], v) <= trip(r60, r61, v, False, True)[0] for v in (v_lo_env, v_oc))]
-    rm_b = coord[0]
-    verify_rt(rm_b[1], rm_b[0])
-    inom_b = rm_b[3]
-    # approach (a): the present control with argued margins. EA2 needs no gain value: in any steady state with switching IMON_IN
-    # stays under the IMON_IN fault (p.5, full range), so the regulated point is at most its 1.67 V; that maximum taken with the
-    # line term at twice the printed reference's (the fault row prints none), A7 at its printed limits, RSENSE1's cold TCR at
-    # 100 ppm/K and the drifts. The setting that holds: the smallest stocked RIMON_IN at or above the need
+    # ---- approach C's coordination (B4 of the check): the smallest stocked RIMON_IN whose regulation, at its highest under the
+    # joint assumptions, stays at or under C's lowest trip with its parts aged, at every input voltage: one basis at both corners
+    rm_rows = sorted([(r_[0], r_[1], r_[2]) for r_ in rows_rm] + [(rvalue(r_["model"]), r_["code"], r_["stock"]) for r_ in
+                     json.load(open(os.path.join(TOP, INP, "jlc-search-rt0603brd07-30k-2026-10-01.json"), encoding="utf-8"))["rows"]
+                     if rvalue(r_["model"])], key=lambda t: t[0])
+
+    def coordinate(trip_lo):
+        for rv_, c_, s_ in rm_rows:
+            if s_ >= STOCK_MIN and all(reg_hi(rv_, v) <= trip_lo(v) for v in (v_lo_env, 0.5 * (v_lo_env + v_oc), v_oc)):
+                return rv_, c_, s_
+        refuse(4, "no stocked RIMON_IN coordinates under the trip")
+    rc_ = coordinate(lambda v: i_trip_c(v, rpb, nb, -1, True))
+    verify_rt(rc_[1], rc_[0])
+    c["rm"], c["inom"] = rc_, inom_of(rc_[0])
+    c["reg_hi25"] = reg_hi(rc_[0], v_oc)
+    c["energy"] = day(c["inom"], rc_[0])
+    c["noon_red"] = 1.0 - noon_power(c["inom"], rc_[0]) / p_noon_now
+    c["cur_red"] = 1.0 - c["inom"] / i_nom
+    # where an overlap could cost energy if the regulation's unprinted values were worse than the joint assumptions: the bright
+    # day's hours whose panel current at the nominal hold exceeds C's lowest aged trip (a restart model, below, bounds them)
+    # the check's bright-day figures, reproduced by this model (astra-check-l4e7r-1, D3: 26.1k 495.3165 Wh, 28.7k 465.6367 Wh)
+    c["check_repro"] = [(rv_, sum(bright(nom_h, lim_of(inom_of(rv_), rv_, "lo"))[0]), 1.0 - noon_power(inom_of(rv_), rv_) / p_noon_now) for rv_ in (26100.0, 28700.0)]
+    c["exposed"] = [(h, BRIGHT[h], bright(nom_h, None)[0][h]) for h in range(24) if BRIGHT[h] > 0.0
+                    and dsp.current(nom_h, BRIGHT[h], AC.t_cell(ta12, BRIGHT[h], LR["noct"]), LR["rl"]) > i_trip_c(nom_h, rpb, nb, -1, True)]
+    c["pk_day"] = max(dsp.current(vh, LR["prof0"][h], AC.t_cell(LR["TA40"][h], LR["prof0"][h], LR["noct"]), LR["rl"])
+                      for vh in (lo_h, nom_h, hi_h) for h in range(24) if LR["prof0"][h] > 0)
+    c["trip_lo_hold"] = min(i_trip_c(vh, rpb, nb, -1, True) for vh in (lo_h, nom_h, hi_h))
+    # the bank's conduction on both days at the nominal hold (its nominal resistance; the trace's convention, hourly W over the hold)
+    c["loss"] = (sum((p_ / nom_h) ** 2 * rbank for p_ in energy(nom_h)[0]), sum((p_ / nom_h) ** 2 * rbank for p_ in bright(nom_h, None)[0]))
+    c["p_bank_max"] = (c["i_hi25"] / nb) ** 2 * rpb * (1 + 0.01)          # one part at the highest trip current, W (its P70 is 1 W)
+    # ---- approach B, reclassed (the INA250 with the same trip chain and entry): every row at its printed value; the rows printed at
+    # another condition, or typical only, are CONDITIONAL and named, with the gain error they may add before the bound reaches 100 W
+    r60b, r61b = rvalue("RT0603BRD0728KL"), rvalue("RT0603BRD077K87L")
+    for code, val in (("C705756", r60b), ("C861565", r61b)):
+        verify_rt(code, val)
+
+    def i_err_b(v):
+        return ios + dios * dt_end + abs(v - 12.0) * 10 ** (-cmr / 20.0) / rsh_n + psr * (5.0 - v_ldo[0])
+
+    def trip_b(v, sgn, aged, extra=0.0):
+        def kk(s_t, s_b):
+            def f(s_, r_):
+                d = ((1 + s_ * (R["life_y"][0] + R["life_y"][1] / r_)) * (1 + s_ * (R["sold_y"][0] + R["sold_y"][1] / r_))) if aged else 1.0
+                return (1 + s_ * tol_y) * (1 + s_ * tcr_y * dt_end) * d
+            return r61b * f(s_b, r61b) / (r60b * f(s_t, r60b) + r61b * f(s_b, r61b))
+        rth = r60b * r61b / (r60b + r61b)
+        if sgn > 0:
+            k_ = min(kk(a, b) for a in (-1, 1) for b in (-1, 1))
+            return (vth[1] + iin_t * rth) / (k_ * g_ina * (1 - eg - extra)) + i_err_b(v)
+        k_ = max(kk(a, b) for a in (-1, 1) for b in (-1, 1))
+        return (vth[0] - iin_t * rth) / (k_ * g_ina * (1 + eg + extra)) - i_err_b(v)
+
+    def pb_b(v):
+        return v * v / r89_min + v * ib_ina
+    b = dict(p_static=max(v * trip_b(v, 1, True) + pb_b(v) for v in grid))
+    lo_, hi_ = 0.0, 0.2
+    for _ in range(60):
+        mid = 0.5 * (lo_ + hi_)
+        if max(v * trip_b(v, 1, True, mid) + pb_b(v) for v in grid) + e_cap / W_AVG > p_win:
+            hi_ = mid
+        else:
+            lo_ = mid
+    b["gain_be"] = lo_                                     # the unprinted gain terms together may reach this before 100 W
+    b["typ_gain"] = stress_sh + nl + ro / (r60b + r61b)    # what the typical-only rows print, for scale
+    rb_ = coordinate(lambda v: trip_b(v, -1, True))
+    verify_rt(rb_[1], rb_[0])
+    b["rm"], b["inom"] = rb_, inom_of(rb_[0])
+    b["energy"] = day(b["inom"], rb_[0])
+    b["noon_red"], b["cur_red"] = 1.0 - noon_power(b["inom"], rb_[0]) / p_noon_now, 1.0 - b["inom"] / i_nom
+    r_ina = 4.5e-3                                         # p.5, the package path, IN+ to IN-, the shunt included (typical)
+    b["loss"] = (sum((p_ / nom_h) ** 2 * r_ina for p_ in energy(nom_h)[0]), sum((p_ / nom_h) ** 2 * r_ina for p_ in bright(nom_h, None)[0]))
+    b["abs"] = abs_ina
+    b["conditional"] = [
+        "the system gain error and the offset at VS = 3.23 to 3.35 V and VREF = 0 V (both printed at VS = 5 V and VREF = 2.5 V, p.5)",
+        "the common-mode rejection away from zero current (printed at ISENSE = 0 A, p.5)",
+        "the integrated shunt's change after reflow, thermal cycling and life (typical only, %.3f %% summed; note 6 of p.6 excludes them from the gain error)" % (100 * stress_sh),
+        "the nonlinearity (typical only, %.2f %%) and the output impedance (typical only, %.1f Ohm)" % (100 * nl, ro),
+        "U18's VIN+ bias across temperature (%.0f uA printed at 25 C only)" % (ib_ina * 1e6),
+    ]
+    # ---- approach A: the present control with argued margins (unchanged method; its fault comparator's action has no printed timing)
     v_f = iovm["max"] * (1 + LINE_FLOOR_MUL * line_p * 1e-2 * (v_oc - V_LINE_REF))
     rs_lo_c = rfac(tol_h, TCR_COLD_CONS, abs(t_cold - 25.0), life_h, sold_h)
     need_rm = v_oc * v_f / (p_win * gm_lo * 1e-3 * rs * rs_lo_c)
     a30 = json.load(open(os.path.join(TOP, INP, "jlc-search-rt0603brd07-30k-2026-10-01.json"), encoding="utf-8"))["rows"]
-    cand_a = sorted((rvalue(r_["model"]), r_["code"], r_["stock"]) for r_ in a30 if rvalue(r_["model"]) and r_["stock"] >= STOCK_MIN)
     rm_a = None
-    for rv_, c_, s_ in cand_a:
+    for rv_, c_, s_ in sorted((rvalue(r_["model"]), r_["code"], r_["stock"]) for r_ in a30 if rvalue(r_["model"]) and r_["stock"] >= STOCK_MIN):
         rm_lo_c = rfac(tol_y, tcr_y, abs(t_cold - 25.0), R["life_y"][0] + R["life_y"][1] / rv_, R["sold_y"][0] + R["sold_y"][1] / rv_)
         if v_oc * v_f / (gm_lo * 1e-3 * rs * rs_lo_c * rv_ * rm_lo_c) <= p_win:
             rm_a = (rv_, c_, s_, v_oc * v_f / (gm_lo * 1e-3 * rs * rs_lo_c * rv_ * rm_lo_c))
             break
     if rm_a is None:
         refuse(4, "no stocked RIMON_IN holds approach (a)'s argued bound")
-    inom_a = vref_n / (1e-3 * rs * rm_a[0])
-    # the energy of each regulating setting on SC-37's day at the kept hold (the limit at its lowest, the least energy)
-    def day(inom_, rmv):
-        out = []
-        for lab, vh in (("lower", lo_h), ("nominal", nom_h), ("upper", hi_h)):
-            tr, nl = energy(vh, lim_of(inom_, rmv, "lo"))
-            trn, nln = energy(vh, lambda v, i=inom_: i)
-            out.append((lab, vh, sum(tr), nl, sum(trn), nln))
-        return out
-    e_now = day(i_nom, rm)
-    e_a = day(inom_a, rm_a[0])
-    e_b = day(inom_b, rm_b[0])
-    # the backstop never acts on the day: the panel's highest current at each hold corner against its lowest trip there
-    pk = {}
-    for lab, vh in (("lower", lo_h), ("nominal", nom_h), ("upper", hi_h)):
-        pk[lab] = max(dsp.current(vh, LR["prof0"][h], AC.t_cell(LR["TA40"][h], LR["prof0"][h], LR["noct"]), LR["rl"]) for h in range(24) if LR["prof0"][h] > 0)
-    bk["pk"] = pk
-    bk["trip_at_hold"] = {lab: trip(r60, r61, vh, True, True)[0] for lab, vh in (("lower", lo_h), ("nominal", nom_h), ("upper", hi_h))}
-    # the added conduction: the INA250's 2 mOhm shunt and its 4.5 mOhm package path (p.5, typical) in the panel current
-    r_add = 0.0045 + rsh_n
-    e_loss = sum((p_ / nom_h) ** 2 * r_add for p_ in energy(nom_h)[0])
+    a_ = dict(v_f=v_f, need=need_rm, rm=rm_a, inom=vref_n / (1e-3 * rs * rm_a[0]), bound=rm_a[3])
+    a_["energy"] = day(a_["inom"], rm_a[0])
+    a_["noon_red"], a_["cur_red"] = 1.0 - noon_power(a_["inom"], rm_a[0]) / p_noon_now, 1.0 - a_["inom"] / i_nom
+    # ---- approach C's supply sequencing (B3 of the check): the stage is held off whenever the sensing chain is unsupplied
+    seq = dict(vit_lo=vit38 * (1 - acc38), vit_hi=vit38 * (1 + acc38), rel_hi=vit38 * (1 + acc38) * (1 + hys38), ldo_lo=v_ldo[0],
+               vdd38=vdd38, vdd_t=vdd_t, vpor=vpor38, td_min=td_min, vol38=vol38, rmr=rmr38, ioh=ioh38)
+    R70, R71, R67, R68, R69 = (rvalue("RT0603BRD07%sL" % x_) for x_ in ("22K", "33K", "110K", "9K53", "100K"))
+    for code, val in (("C469656", R70), ("C705768", R71), ("C326736", R67), ("C705800", R68), ("C122538", R69)):
+        verify_rt(code, val)
+    k_sw_hi = R71 * (1 + tol_y) * (1 + tcr_y * dt_end) / (R70 * (1 - tol_y) * (1 - tcr_y * dt_end) + R71 * (1 + tol_y) * (1 + tcr_y * dt_end))
+    k_sw_lo = R71 * (1 - tol_y) * (1 - tcr_y * dt_end) / (R70 * (1 + tol_y) * (1 + tcr_y * dt_end) + R71 * (1 - tol_y) * (1 - tcr_y * dt_end))
+    seq["ldo_enable_min"] = swen_r["min"] / k_sw_hi     # SWEN cannot reach its least rising threshold below this LDO33 (pin current zero)
+    seq["swen_at_ldo_lo"] = k_sw_lo * v_ldo[0]          # SWEN with RESET released at LDO33's least, against its highest threshold
+    seq["sw_th"] = R70 * R71 / (R70 + R71)
+    seq["pin_needed_13"] = (swen_r["min"] - k_sw_hi * 1.3) / seq["sw_th"]      # the SWEN source current that alone could enable it below 1.3 V
+    seq["uv_ts_lo"] = vtha[0] * (1 + R67 * (1 - tol_y) * (1 - tcr_y * dt_end) / (R68 * (1 + tol_y) * (1 + tcr_y * dt_end)))
+    seq["uv_ts_hi"] = vtha[1] * (1 + R67 * (1 + tol_y) * (1 + tcr_y * dt_end) / (R68 * (1 - tol_y) * (1 - tcr_y * dt_end)))
+    seq["ramp"] = ilim33 / 1e-6                         # V/s into C20's 1 uF (INFERRED: its capacitance at bias has no row)
+    seq["ramp_limit"] = 1.0 / 15e-6                     # TPS3808's VPOR row holds for a rise no faster than this
+    seq["intvcc_uv"] = uvi
+    seq["i_sw_reset"] = v_ldo[1] / (R70 * (1 - tol_y))  # RESET's sink current, against its VOL row at 1 mA
+    if not (seq["rel_hi"] < seq["ldo_lo"] and seq["ldo_enable_min"] > max(vdd38, vdd_t) and seq["swen_at_ldo_lo"] > swen_r["max"]
+            and seq["uv_ts_lo"] > 2.7 and seq["i_sw_reset"] <= 1e-3 and td_min > st_t):
+        refuse(4, "approach C's supply sequencing does not hold on the printed rows")
+    # ---- the solar entry's protection (B6 of the check): the derived disturbance and every part on the entry against it
+    def r59_peak(rb_esr, cb, cc, r59):
+        """MODELED: the pulse into TRK_VS, shared by the bulk (rb_esr, cb) and, through R59, the ceramics behind it (cc); the clamp
+        left out, which only adds current into the bulk side. The 10/1000 us pulse as a double exponential (3.4 us, 1.44 ms; INFERRED
+        shape), scaled to D4's 33.1 A; the peak voltage across R59 in the first 200 us."""
+        t1, t2 = 3.4e-6, 1.44e-3
+        f = lambda t: math.exp(-t / t2) - math.exp(-t / t1)
+        amp = d4["ipp"] / max(f(k * 1e-7) for k in range(2000))
+        vb = vc_ = 17.6
+        pk = 0.0
+        dt_s = 1e-8
+        for n_ in range(20000):
+            i_ = amp * f(n_ * dt_s)
+            vn = (i_ + vb / rb_esr + vc_ / r59) / (1.0 / rb_esr + 1.0 / r59)
+            ib_, ic_ = (vn - vb) / rb_esr, (vn - vc_) / r59
+            vb += ib_ / cb * dt_s
+            vc_ += ic_ / cc * dt_s
+            pk = max(pk, abs(ic_) * r59)
+        return pk
+    cer = (10e-6 + 10e-6 + 4.7e-6 + 0.1e-6) * 1.10
+    cb_lo = 3 * za["c"] * (1 - za["tol"]) * (1 - za["end_dc"])
+    s59 = [(lab, r59_peak(esr, cb_lo, cer, rs * (1 + 0.01))) for lab, esr in (("new, 20 C", za["esr"] / 3.0), ("after endurance, -40 C", za["esr_cold"] / 3.0))]
+    surge = dict(vc=d4["vc"], ipp=d4["ipp"], vbr=d4["vbr"], vr=d4["vr"], s59=s59, csd_abs=csd_abs, vin_abs=vin_abs,
+                 d169=d4["ipp"] * rbank * rdrift(rpb, 1, True), d169_abs=abs169[1], cm169_abs=abs169[0], vs169_abs=vsabs169,
+                 v_pvp=d4["vc"] + d4["ipp"] * rbank * rdrift(rpb, 1, True), b_abs=abs_ina, za_v=za["v"],
+                 esd_dv=2.25e-6 / (3 * za["c"] * (1 - za["tol"]) * (1 - za["end_dc"]) + (10e-6 + 10e-6 + 4.7e-6) * 0.9),
+                 esd_d169=45.5 * rbank * rdrift(rpb, 1, True), fb_abs=fb_abs,
+                 v_r14=d4["vc"] * r14_ / (r14_ + r15_), v_shdn=d4["vc"] * r15_ / (r14_ + r15_),
+                 v_fbin=(d4["vc"] + d4["ipp"] * rbank * rdrift(rpb, 1, True)) * R["r9v"] / (R["r8v"] + R["r9v"]))
+    if max(x[1] for x in s59) > csd_abs or surge["d169"] > abs169[1] or surge["v_pvp"] > min(abs169[0], vsabs169) or za["v"] < d4["vc"]:
+        refuse(4, "a part on the solar entry exceeds its rating at the derived disturbance")
+    # ---- the single faults (for layer 8's fault analysis; this record assigns them, it does not close them)
+    faults = dict(
+        defeat=["U18's output stuck low or open, or R65 open (no current reaches R66)", "R66 shorted", "U19's OUTB stuck open (high impedance)",
+                "U20's RESET stuck open, or its MR input stuck high", "a short across the sense bank", "U5's SWEN input failed active"],
+        stop=["U19's OUTA or OUTB stuck low", "U20's RESET stuck low", "R70 open (SWEN pulled to ground by R71)", "U18's output stuck high",
+              "the whole sense bank open (one part open only raises the bank's resistance: the trip falls, charging continues)",
+              "TRK_LDO33 lost (U20 holds the stage off)"],
+        acceptance="Layer 8 lists each fault above with its effect; acceptance: no single fault both defeats the backstop and removes "
+                   "the LT8705A's own input-current limit (a defeated backstop leaves the regulation, which holds the stage under the "
+                   "trip when its unprinted values are inside the joint assumptions), and every fault that defeats the backstop is "
+                   "found by the commissioning and periodic trip test (bench row 7b.15) at an interval layer 8 sets")
+    # ---- the series disconnect, evaluated and not taken (the check's suggestion; SESSION)
+    disc = dict(vcl=(float(vcl69[0]), float(vcl69[1]), float(vcl69[2])), vin_test=48.0,
+                why="the LM5069 class hot-swap controller prints its current limit (VCL %s / %s / %s mV) at VIN = 48 V, not at the "
+                    "panel's 17 to 25 V, and its spread (%.0f %% from typical to either end) would push the regulation further down than "
+                    "C's; SWEN already removes the path from the panel to the pack (the four switches stop and M1's body diode blocks "
+                    "the input), and the input capacitors' charge is bounded as an event (below). A series FET would cover a shorted "
+                    "switch of the LT8705A, a single fault layer 8 judges" % (vcl69[0], vcl69[1], vcl69[2], 100 * (float(vcl69[2]) / float(vcl69[1]) - 1)))
+    # ---- the verdict on the present control (unchanged reading of section 9)
+    verdict = dict(shown=False, depends=[(r_["id"], r_["breakeven"]) for r_ in R["qual_rows"] if r_["bound"] and not r_["resolved"]])
     R["decision"] = dict(
-        verdict=dict(shown=False, depends=[(r_["id"], r_["breakeven"]) for r_ in R["qual_rows"] if r_["bound"] and not r_["resolved"]]),
+        verdict=verdict, chosen="C", w_avg=W_AVG, e_now=e_now, e_free=e_free, p_noon_now=p_noon_now, ta12=ta12,
         approaches=[
             dict(id="A", name="the present control with argued margins (the IMON_IN fault comparator bounds EA2; RIMON_IN raised)",
-                 bound=rm_a[3], setting=(rm_a[0], rm_a[1], inom_a), energy=e_a, independent=False,
-                 classes={"warranted": ["IMON_IN fault maximum 1.67 V (p.5, full range)", "RSENSE1 1 % and RIMON_IN 0.1 %", "the resistors' printed drifts"],
-                          "assumption": ["A7 at its test-point limits", "the fault threshold's VIN dependence (twice the reference's printed line regulation)",
-                                         "RSENSE1's cold TCR at 100 ppm/K"]},
-                 parts="none added; R16 to %gk (%s)" % (rm_a[0] / 1e3, rm_a[1]), failure="a regulation point past the fault minimum would turn steady current limiting into fault hiccup (switching stops: energy, not the bound)",
-                 depends="Analog Devices (A7 away from its test point; the fault threshold away from VIN = 12 V) and Milliohm (the cold TCR)"),
-            dict(id="B", name="a hardware 100 W backstop: INA250A2 (integrated shunt) and TPS3701 pull SWEN low; the present limit regulates below it",
-                 bound=bk["hi"], setting=(rm_b[0], rm_b[1], inom_b), energy=e_b, independent=True,
-                 classes={"warranted": [t_[0] for t_ in bk["terms"] if t_[2].startswith("warranted")], "typical": [t_[0] for t_ in bk["terms"] if t_[2] == "typical"],
-                          "inferred": [t_[0] for t_ in bk["terms"] if t_[2] == "inferred"]},
-                 parts="U18 INA250A2PWR, U19 TPS3701DDCR, R60 %gk, R61 %gk, R62 100k, C66 and C67 100n, C68 1u; SWEN off INTVCC; R16 to %gk" % (r60 / 1e3, r61 / 1e3, rm_b[0] / 1e3),
-                 failure="a hiccup (SWEN low, then a soft start, 8705af p.14) if the regulation's high corner passes the backstop's low corner: energy, not the bound; a failed U18 or U19 (open, stuck) leaves the conditional regulation alone, a single fault the bound does not cover; an LDO33 sag stops the stage first (its UVLO, 8705af p.3, above both parts' least supply)",
-                 depends="no Analog Devices or Milliohm answer for the bound; Texas Instruments is asked to warrant its inferred readings and typical-only rows, carried meanwhile at their stated classes; the coordination and the energy stay with Analog Devices' and Milliohm's answers"),
-            dict(id="C", name="a firmware trim from a power monitor read by U10 (the regulation held just under the backstop's lowest trip by the monitor's reading), with B's hardware backstop",
-                 bound=bk["hi"], setting=(rm, rm_code, i_nom), energy=e_now, independent=True,
-                 classes={"warranted": ["as B (the backstop carries the bound in every firmware state)"], "typical": ["as B"], "inferred": ["as B"]},
-                 parts="B's parts, a monitor on U10's bus and a trim element on RIMON_IN (not selected)",
-                 failure="a stale or wrong trim, an I2C fault, a reset or a boot window before the trim, a firmware update; each bounded by B's backstop, none by firmware. Without the backstop REQ-016's CALCULATION would have to cover every firmware state and the controller's faults, which no calculation in this tree can",
-                 depends="as B"),
+                 bound=a_["bound"], status="CONDITIONAL", setting=(rm_a[0], rm_a[1], a_["inom"]), energy=a_["energy"], independent=False,
+                 noon_red=a_["noon_red"], cur_red=a_["cur_red"], loss=(0.0, 0.0),
+                 classes={"warranted": ["IMON_IN fault maximum 1.67 V (8705af p.5, full range)", "RSENSE1 1 % and RIMON_IN 0.1 %", "the resistors' printed drifts"],
+                          "assumption": ["A7 at its test-point limits away from its test point", "the fault threshold's VIN dependence (twice the reference's printed line regulation)",
+                                         "RSENSE1's cold TCR at 100 ppm/K", "the fault comparator's response and restart, which print no timing"]},
+                 parts="none added; R16 to %gk (%s)" % (rm_a[0] / 1e3, rm_a[1]),
+                 failure="a regulation point past the fault minimum turns limiting into the fault's hiccup (switching stops: energy, not the bound)",
+                 depends="Analog Devices (A7 away from its test point, the fault threshold away from VIN = 12 V, the fault's timing) and Milliohm (the cold TCR)",
+                 surge="no part added; the entry's capacitors need the same correction as C"),
+            dict(id="B", name="the INA250A2 (its own 2 mOhm shunt) with the same trip chain as C (TPS3701 into a TPS3808 on SWEN)",
+                 bound=b["p_static"], status="CONDITIONAL", setting=(b["rm"][0], b["rm"][1], b["inom"]), energy=b["energy"], independent=False,
+                 noon_red=b["noon_red"], cur_red=b["cur_red"], loss=b["loss"],
+                 classes={"warranted": ["the TPS3701 and TPS3808 rows", "the divider's RT rows", "the offset's supply and common-mode rows (at ISENSE = 0 A)"],
+                          "conditional": b["conditional"]},
+                 parts="U18 INA250A2PWR, the trip chain of C, R60 28k and R61 7.87k; R16 to %gk" % (b["rm"][0] / 1e3),
+                 failure="as C; and its integrated shunt carries the surge with the amplifier",
+                 depends="Texas Instruments (the rows at VS = 3.3 V and VREF = 0 V, the stress rows); the coordination with Analog Devices and Milliohm",
+                 surge="FAILS: U18's inputs are rated %.0f V and the derived disturbance clamps at up to %.1f V" % (abs_ina, d4["vc"])),
+            dict(id="C", name="a WSL2512 sense bank read by an INA169 into a TPS3701, a TPS3808 supervisor holding SWEN low",
+                 bound=c["p_static"], status="UNCONDITIONAL", setting=(rc_[0], rc_[1], c["inom"]), energy=c["energy"], independent=True,
+                 noon_red=c["noon_red"], cur_red=c["cur_red"], loss=c["loss"],
+                 classes={"warranted": [t_[0] for t_ in c["terms"] if t_[2].startswith("warranted")], "requirement": ["the input voltage at most 25 V (REQ-016)"]},
+                 parts="U18 INA169NA/3K, U19 TPS3701DDCR, U20 TPS3808G33DBVR, R60 to R64 (%d x %s), R65 16.9k, R66 8.06k, R67 110k, R68 9.53k, "
+                       "R69 100k, R70 22k, R71 33k, C66 to C68 100n; C11, C12 and C69 the 50 V bulk; R16 to %gk" % (nb, bmodel, rc_[0] / 1e3),
+                 failure="a hiccup if the regulation's unprinted values exceed the joint assumptions (energy, not the bound); the single faults of the fault list",
+                 depends="no Analog Devices, Milliohm or Texas Instruments answer for the bound; the coordination and the energy stay with Analog Devices' and Milliohm's answers",
+                 surge="passes: every part with a maker row on the entry rated above %.1f V (C13 to C15 and R14 by the generator's value text; their "
+                       "maker parts are the regeneration's), U18's differential under %.0f V, U5's sense differential under %.1f V (MODELED)" % (d4["vc"], abs169[1], csd_abs)),
         ],
-        chosen="B", backstop=bk, coord=dict(rm=rm_b, inom=inom_b, prim_hi=prim_hi(rm_b[0], v_oc), bright_cost=1.0 - inom_b / i_nom),
-        a=dict(v_f=v_f, need=need_rm, rm=rm_a, inom=inom_a, bright_cost=1.0 - inom_a / i_nom), e_now=e_now, e_loss=e_loss, iq=iq_ina,
-        v_ldo=v_ldo, stress=stress, eg=eg, cmr=cmr, ios=ios, g=g_ina, vth=vth, swen_min=swen_r["min"], vol_max=vol_max,
-        stock_ina=lc_ina["stock"], stock_tps=lc_tps["stock"])
-    # the clarification drafts the decision adjusts: Analog Devices' gains SWEN and LDO33's lockout; a third goes to Texas Instruments
-    ti_p, ad_p = os.path.join(TOP, CLAR, "texas-instruments-ina250.txt"), os.path.join(TOP, CLAR, "analog-devices-lt8705a.txt")
-    if not os.path.isfile(ti_p):
-        refuse(3, "the clarification text texas-instruments-ina250.txt is missing")
+        c=c, b=b, a=a_, seq=seq, surge=surge, faults=faults, disc=disc,
+        rows=dict(st_t=st_t, vth=vth, vtha=vtha, iin_t=iin_t, vol_max=vol_max, tpd_lh=tpd_lh, uvlo_t=uvlo_t, vdd_t=vdd_t, vit38=vit38, acc38=acc38,
+                  hys38=hys38, td38=td38, mr_ns=mr_ns, gm169=gm169, vos169=vos169, cmr169=cmr169, psr169=psr169, nl169=nl169,
+                  iq169=iq169, sw169=sw169, swcm169=swcm169, ipin169=ipin169, bw169=bw169, v_ldo=v_ldo, ilim33=ilim33,
+                  swen=(swen_r["min"], swen_r["max"]), d4=d4, za=za, wtcr=wtcr, wsold=wsold, wlife=wlife, amps_pk=amps_pk,
+                  r65=R65, r66=R66, r67=R67, r68=R68, r69=R69, r70=R70, r71=R71, stock169=lc169["stock"], stock38=lc38["stock"],
+                  stock_tps=lc_tps["stock"], stockza=lcza["stock"]))
+    # the clarification drafts after the decision: no answer moves C's bound; Analog Devices' and Milliohm's answers set the coordination
+    # and the energy; the Texas Instruments draft now asks about the INA169's VIN+ pin current only (supporting, not needed)
+    ti_p, ad_p = os.path.join(TOP, CLAR, "texas-instruments-ina169.txt"), os.path.join(TOP, CLAR, "analog-devices-lt8705a.txt")
+    if not os.path.isfile(ti_p) or os.path.isfile(os.path.join(TOP, CLAR, "texas-instruments-ina250.txt")):
+        refuse(3, "the clarification drafts do not follow the decision (the INA169 draft, no INA250 draft)")
     ti_t, ad_t = open(ti_p, encoding="utf-8").read(), " ".join(open(ad_p, encoding="utf-8").read().split())
-    if not ti_t.startswith("DRAFT FOR THE OWNER TO SEND.") or "INA250A2PWR" not in ti_t or "VREF = 0 V" not in ti_t:
-        refuse(3, "the clarification text texas-instruments-ina250.txt does not read as a draft naming its part")
-    if "SWEN" not in ad_t or "LDO33 undervoltage lockout" not in ad_t:
-        refuse(3, "the Analog Devices draft does not carry the backstop's question")
-    R["decision"]["clar"] = ["analog-devices-lt8705a.txt", "milliohm-hojlr2512.txt", "texas-instruments-ina250.txt"]
+    if not ti_t.startswith("DRAFT FOR THE OWNER TO SEND.") or "INA169" not in ti_t:
+        refuse(3, "the clarification text texas-instruments-ina169.txt does not read as a draft naming its part")
+    if "SWEN" not in ad_t or "input current" not in ad_t:
+        refuse(3, "the Analog Devices draft does not carry the SWEN question")
+    R["decision"]["clar"] = ["analog-devices-lt8705a.txt", "milliohm-hojlr2512.txt", "texas-instruments-ina169.txt"]
     # ================================================================== 9: what the drafts change (read back from each)
     R["models"] = {c_: v_["model"] for c_, v_ in lc.items()}
     R["drafts"] = {}
@@ -1169,17 +1411,19 @@ def compute():
                            all(new.count('"%s")' % c_) > gse.count('"%s")' % c_) for c_ in want), want)
         if nm == "apply_gen_sch_e_input_limit.py":
             after_il = new
-    # the backstop's draft edits the input limit draft's text: read back on top of it, its codes the decision's
+    # the backstop's draft edits the hold and input limit drafts' text: read back on top of both, its codes the decision's
     nm = "apply_gen_sch_e_backstop.py"
     m = load(nm[:-3] + "_for_l4e7", "v2/docs/records/l4e7/" + nm)
-    new = m.patched(after_il)
-    bkd = R["decision"]["backstop"]
-    want = ["C2859736", "C132788", bkd["c60"], bkd["c61"], R["decision"]["coord"]["rm"][1]]
+    base_ = load("hold_for_backstop", "v2/docs/records/l4e7/apply_gen_sch_e_hold.py").patched(after_il)
+    new = m.patched(base_)
+    cd_ = R["decision"]["c"]
+    want = ["C44322", "C132788", "C43698", cd_["code"], "C178637", cd_["rm"][1], "C861587", "C861156"]
     R["drafts"][nm] = (len(m.EDITS), "R10" in "".join(o_ for o_, _r in m.EDITS), new.count('r("R10", "115k 1% (RFBOUT1: 15.1 V)"') == 1,
-                       all(new.count('"%s")' % c_) > after_il.count('"%s")' % c_) for c_ in want), want)
+                       all(new.count('"%s")' % c_) > base_.count('"%s")' % c_) for c_ in want), want)
     R["backstop_draft"] = dict(swen='"36": "TRK_SWEN"' in new, cspin='"33": "TRK_VS"' in new, r59='"TRK_VS", "TRK_VIN", "RS2512"' in new,
-                               r60=('r("R60", "%gk 0.1%%' % (bkd["r60"] / 1e3)) in new, r61=('r("R61", "%gk 0.1%%' % (bkd["r61"] / 1e3)) in new,
-                               r16=('r("R16", "%gk 0.1%%' % (R["decision"]["coord"]["rm"][0] / 1e3)) in new)
+                               bank=('for _bk in range(%d): r("R6%%d" %% _bk, ' % cd_["n"]) in new and new.count('"PV_P", "TRK_VS", "RS2512", "%s")' % cd_["code"]) == 1,
+                               r16=('r("R16", "%gk 0.1%%' % (cd_["rm"][0] / 1e3)) in new, d4='"1": "TRK_VS", "2": "GND"}, "C224047")' in new,
+                               bulk=new.count('"C178637")') == 2 and 'part("C69", ' in new, r14='r("R14", "100k 1%", "TRK_VS", "TRK_SHDN")' in new)
     return R
 
 
@@ -1520,123 +1764,172 @@ def render(R):
     P("     7b.11, 7b.12, 7b.13 or 7b.14 (R59 at -20 C and +25 C). The current-limit mechanism holds its bound under the conservative")
     P("     assumptions above; an adverse reading changes a value (RIMON_IN, the compensation), not the mechanism or the architecture")
     P("")
-    P("10. THE CONTROL DECISION (L4-E7R, the owner's instruction of 1 October 2026; SESSION decision)")
+    P("10. THE CONTROL DECISION (L4-E7R, the owner's instruction of 1 October 2026; second round after checks/astra-check-l4e7r-1.md;")
+    P("    SESSION decision)")
     d = R["decision"]
+    c, b, a_, sq, sg, rw = d["c"], d["b"], d["a"], d["seq"], d["surge"], d["rows"]
     wrapP("   ", "     ", "THE VERDICT ON THE CURRENT CONTROL: NOT SHOWN on warranted manufacturer limits alone. The LT8705A's input-current limit "
           "as set (RIMON_IN %gk, RSENSE1 %.0f mOhm) holds 100 W only under values no maker warrants: %s. Under all their conservative "
           "assumptions together the corner reads %.4f W (margin %.4f W)" % (
               R["rm"] / 1e3, R["rs"] * 1e3, "; ".join("%s (break-even %s)" % (i_, b_) for i_, b_ in d["verdict"]["depends"]),
               R["cons"]["joint"], 100.0 - R["cons"]["joint"]))
-    P("   THE COMPARISON (at most three; each bound at 25 V, the energy on SC-37's day at the kept hold, the limit at its lowest):")
-    P("     %-2s %-9s %-26s %-38s %-12s %s" % ("id", "bound W", "regulating setting", "Wh a day lower / nominal / upper (h bound)", "bright hours", "independent of the answers"))
-    for a_ in d["approaches"]:
-        e_ = a_["energy"]
-        P("     %-2s %-9.4f %-26s %-38s %-12s %s" % (a_["id"], a_["bound"], "%gk %s %.4f A" % (a_["setting"][0] / 1e3, a_["setting"][1], a_["setting"][2]),
-                                               " / ".join("%.1f (%d)" % (x[2], x[3]) for x in e_),
-                                               "%+.1f %%" % (-100.0 * (1.0 - a_["setting"][2] / R["i_nom"]) + 0.0), "yes" if a_["independent"] else "no"))
-    for a_ in d["approaches"]:
-        wrapP("   ", "       ", "(%s) %s" % (a_["id"], a_["name"]))
-        for k_ in ("warranted", "typical", "inferred", "assumption"):
-            if k_ in a_["classes"]:
-                wrapP("     - ", "       ", "%s: %s" % (k_, "; ".join(a_["classes"][k_])))
-        wrapP("     - ", "       ", "parts and board E: %s" % a_["parts"])
-        wrapP("     - ", "       ", "new failure mode: %s" % a_["failure"])
-        wrapP("     - ", "       ", "still depends on: %s" % a_["depends"])
-    bk = d["backstop"]
-    wrapP("   ", "     ", "THE CHOICE: (B). U18 INA250A2 senses the stage's whole input current on its own 2 mOhm shunt (%.0f mV/A); R60 %gk over "
-          "R61 %gk divide its output into U19 TPS3701's INB; past its threshold OUTB pulls SWEN low and switching stops (8705af p.11); "
-          "R62 100k and C68 1 uF on SWEN set the restart. The LT8705A's input-current limit stays, as the regulation, coordinated "
-          "below the backstop: RIMON_IN %gk (%s), %.4f A nominal" % (
-              1e3 * d["g"], bk["r60"] / 1e3, bk["r61"] / 1e3, d["coord"]["rm"][0] / 1e3, d["coord"]["rm"][1], d["coord"]["inom"]))
-    wrapP("   ", "     ", "THE BOUND: %.4f W at %.0f V (the backstop's highest trip current %.4f A there), margin %.4f W. Every term below sits "
-          "in it at the end that raises the trip, summed, not combined statistically; the divider carries its printed solder and life "
-          "limits. The terms no maker warrants with a limit, the INA250's typical-only gain rows (its shunt's stress rows, its "
-          "nonlinearity, its output impedance into the divider), are carried together at %.0f times their typical (the floor this "
-          "record gives every typical-only row) and the margin is sized to them (SESSION): the divider is the stocked pair with the "
-          "highest lowest trip whose bound would still hold with them at %.0f times their typical (%.4f W). They may grow to "
-          "%s before 100 W; the bound reads %.4f W with them at their typical and %.4f W without them" % (
-              bk["hi"], bk["hi_v"], bk["i_hi25"], 100.0 - bk["hi"], bk["stress_mul"], bk["stress_sel"], bk["hi_sel"],
-              ("%.2f times their typical" % bk["stress_be"]) if bk["stress_be"] is not None else "any multiple the factor admits",
-              bk["hi_typ"], bk["hi_none"]))
-    for t_ in bk["terms"]:
+    P("   THE COMPARISON (three approaches; each bound is the static input power at most, at 25 V; the energy is the stage's input on SC-37's")
+    P("   day at the kept hold's corners and on the bright day at its nominal, the regulation at its lowest; hours bound in brackets):")
+    P("     %-2s %-9s %-13s %-24s %-34s %-17s %-11s %s" % ("id", "bound W", "status", "regulating setting", "Wh SC-37 lower / nominal / upper",
+                                                         "Wh bright", "noon I / P", "independent"))
+    for x in d["approaches"]:
+        e_ = x["energy"]
+        P("     %-2s %-9.4f %-13s %-24s %-34s %-17s %-11s %s" % (
+            x["id"], x["bound"], x["status"], "%gk %s %.4f A" % (x["setting"][0] / 1e3, x["setting"][1], x["setting"][2]),
+            " / ".join("%.1f (%d)" % (y[2], y[3]) for y in e_[:3]), "%.1f (%d)" % (e_[3][2], e_[3][3]),
+            "-%.1f / -%.1f %%" % (100 * x["cur_red"], 100 * x["noon_red"]), "yes" if x["independent"] else "no"))
+    en = d["e_now"]
+    P("     now 23.2k: SC-37 %s; bright %.1f (%d) Wh (the bright day unlimited: %.1f Wh); noon input %.2f W (bright noon, %.1f C air)" % (
+        " / ".join("%.1f (%d)" % (y[2], y[3]) for y in en[:3]), en[3][2], en[3][3], d["e_free"], d["p_noon_now"], d["ta12"]))
+    P("     (noon I / P: the regulating current's reduction against 23.2k and the input power's reduction it gives at bright noon; the")
+    P("     panel's voltage rises when its current falls, so the power falls less than the current)")
+    for x in d["approaches"]:
+        wrapP("   ", "       ", "(%s) %s" % (x["id"], x["name"]))
+        for k_ in ("warranted", "requirement", "assumption", "conditional"):
+            if k_ in x["classes"]:
+                wrapP("     - ", "       ", "%s: %s" % (k_, "; ".join(x["classes"][k_])))
+        wrapP("     - ", "       ", "parts and board E: %s" % x["parts"])
+        wrapP("     - ", "       ", "new failure mode: %s" % x["failure"])
+        wrapP("     - ", "       ", "still depends on: %s" % x["depends"])
+        wrapP("     - ", "       ", "the derived disturbance: %s" % x["surge"])
+        if x["id"] == "B":
+            wrapP("     - ", "       ", "its bound with every row at its printed value, %.4f W; the unprinted gain terms together may add %.3f %% before "
+                  "100 W with an event (they print %.3f %% typical, not a limit); the conduction of its 4.5 mOhm package path (the shunt "
+                  "included, typical) %.4f / %.4f Wh a day" % (b["p_static"], 100 * b["gain_be"], 100 * b["typ_gain"], b["loss"][0], b["loss"][1]))
+    wrapP("   ", "     ", "THE CHOICE: (C), UNCONDITIONAL in its static bound. R60 to R64, %d %s (%s) in parallel, %.4f mOhm, carry everything "
+          "entering the stage but R8, R9 and U18's VIN+ pin; U18 INA169 (SBOS181F) turns their voltage into a current into R65 %gk and R66 "
+          "%gk (its %g kOhm test load); U19 TPS3701 trips at INB on R66 and watches TRK_VS at INA (R67 %gk, R68 %gk); either output pulls "
+          "U20 TPS3808G33's MR, whose RESET holds SWEN low through R70 %gk over R71 %gk. The LT8705A's own limit stays as the regulation, "
+          "coordinated under the trip: RIMON_IN %gk (%s), %.4f A nominal" % (
+              c["n"], c["model"], c["code"], c["rbank"] * 1e3, rw["r65"] / 1e3, rw["r66"] / 1e3, (rw["r65"] + rw["r66"]) / 1e3,
+              rw["r67"] / 1e3, rw["r68"] / 1e3, rw["r70"] / 1e3, rw["r71"] / 1e3, c["rm"][0] / 1e3, c["rm"][1], c["inom"]))
+    wrapP("   ", "     ", "WHY (C): it is the one arrangement whose bound rests on printed limits at its own operating condition. (A) rests on "
+          "assumptions about A7, the fault threshold and the cold TCR; (B) on rows printed at another supply, reference or current "
+          "and on typical-only rows, and its sensor's %.0f V inputs fail the derived disturbance. (C)'s INA169 prints its common-mode "
+          "and supply rejection at VSENSE = 50 mV over VIN+ and V+ 2.7 to 60 V, which covers the board's 9 to 25 V at the trip's 49.6 mV, "
+          "and its transconductance, offset and nonlinearity over the full temperature range; the two rejections are carried at the "
+          "larger of their offset and gain readings, so no row is extended past its condition" % sg["b_abs"])
+    wrapP("   ", "     ", "THE STATIC BOUND: %.4f W at %.0f V (the highest trip current %.4f A at 25 V, the trip's sense voltage %.3f mV at most), "
+          "margin %.4f W. Every term at the end that raises the trip, summed, each a printed limit at the condition it is used at "
+          "(no common multiplier; no typical row; nothing assigned zero):" % (
+              c["p_static"], c["v_hi"], c["i_hi25"], 1e3 * c["vs_hi"], 100.0 - c["p_static"]))
+    for t_ in c["terms"]:
         wrapP("     - ", "       ", "%s: %s (%s; %s)" % t_)
-    wrapP("   ", "     ", "THE TRIP AGAINST THE DAY: its lowest trip at 25 V is %.4f A (new parts) and %.4f A (with the divider's printed "
-          "limits and the typical-only terms at their floor); at the hold's voltages it stays at or above %.4f A, against the panel's highest "
-          "current on SC-37's day, %.4f A at the lower hold corner: the backstop never acts that day" % (
-              bk["i_lo25"], bk["i_lo25_drift"], min(bk["trip_at_hold"].values()), bk["pk"]["lower"]))
-    wrapP("   ", "     ", "HOW IT ACTS: OUTB low holds SWEN at most %.0f mV (TPS3701 p.5) against SWEN's rising threshold's least %.3f V "
-          "(8705af p.4, full range); SWEN low puts the LT8705A in its switcher off state and its return passes the initialize state "
-          "with SS pulled low, so every restart is a soft start (8705af p.14, Figure 2). INB's hysteresis (%s to %s mV, TPS3701 p.5) "
-          "releases OUTB once the current falls; R62 100k and C68 1 uF then hold SWEN under its threshold for about %.0f ms "
-          "(MODELED, R62 x C68 x ln(LDO33 / (LDO33 - 1.206 V))), so a fault the regulation does not hold becomes a hiccup at a low "
-          "duty, never a steady current over the trip. EA2's finite gain does not enter the bound: the backstop acts on SWEN, a logic "
-          "input, not through VC and the error amplifiers; EA2 sets only where the regulation sits below the backstop" % (
-              1e3 * d["vol_max"], d["swen_min"], bk["vhys_b"][0], bk["vhys_b"][2], 1e3 * 100e3 * 1e-6 * math.log(3.295 / (3.295 - 1.206))))
-    wrapP("   ", "     ", "ITS SUPPLY: U18 and U19 run from TRK_LDO33, %.2f to %.2f V in regulation (8705af p.3, full range), regulated "
-          "whenever SHDN is high and unaffected by SWEN (p.14); the LT8705A stops switching when LDO33 falls under its UVLO, %.2f to "
-          "%.2f V (p.3, printed at 25 C; across temperature INFERRED), above U18's least supply %.1f V (INA250 p.6) and U19's %.1f V "
-          "(TPS3701 p.5). U18's output at the highest trip, %.3f V, stays under its swing limit %.2f V at LDO33's least (p.6). "
-          "U18 draws at most %.0f uA" % (d["v_ldo"][0], d["v_ldo"][1], bk["ldo_uv"][0], bk["ldo_uv"][1], bk["ina_vs_min"],
-                                         bk["tps_vdd_min"], bk["vout_hi"], bk["swing"], 1e6 * d["iq"]))
-    c_ = d["coord"]
-    wrapP("   ", "     ", "THE COORDINATION (SESSION): the largest stocked RIMON_IN whose stack A highest current (%.4f A at 25 V) stays at or "
-          "under the backstop's lowest trip with new parts at every input voltage: %gk. Against the backstop's lowest with its "
-          "drifts (%.4f A) the regulation may meet it after ageing; that is a hiccup in bright hours (energy), never on SC-37's "
-          "day, and bench row 7b.17 reads it. Its cost: %.1f %% less input in every hour "
-          "the limit binds, against 23.2k; on SC-37's day %.1f Wh at the lower hold corner (%d h bound), %.1f Wh at the nominal hold "
-          "(%d h) and %.1f Wh at the upper (%d h), against %.1f / %.1f / %.1f Wh with 23.2k. The INA250's shunt and package path add "
-          "about %.2f Wh a day of conduction at the nominal hold (INFERRED: its 4.5 mOhm package path is typical)" % (
-              c_["prim_hi"], c_["rm"][0] / 1e3, bk["i_lo25_drift"], 100 * c_["bright_cost"], d["approaches"][1]["energy"][0][2], d["approaches"][1]["energy"][0][3],
-              d["approaches"][1]["energy"][1][2], d["approaches"][1]["energy"][1][3], d["approaches"][1]["energy"][2][2],
-              d["approaches"][1]["energy"][2][3], d["e_now"][0][2], d["e_now"][1][2], d["e_now"][2][2], d["e_loss"]))
-    wrapP("   ", "     ", "PROTOTYPE MEASUREMENT (REQ-016's second method; downstream obligations, not blockers): 7b.15, on each built "
-          "board, the input current at which SWEN falls, at 17.6 V and 25 V, against the band %.4f to %.4f A at 25 V; 7b.16, "
-          "with R16 shorted (IMON_IN held at 0 V, so neither the regulation nor its fault comparator acts), the input power stays "
-          "at or under 100 W averaged over the hiccup, "
-          "and the restart passes the soft start; 7b.17, the regulation at 26.1k on a bench panel curve does not trip the "
-          "backstop at 25 C and at the cold end" % (bk["i_lo25_drift"], bk["i_hi25"]))
+    wrapP("   ", "     ", "THE TRIP: its lowest at the hold's voltages %.4f A with the parts aged (%.4f A at 25 V; %.4f A new), against the "
+          "panel's highest current on SC-37's day at any hold corner, %.4f A: it never acts that day. One bank part carries at most "
+          "%.3f W at the highest trip (its P70 is 1 W)" % (c["trip_lo_hold"], c["i_lo_aged"], c["i_lo_new"], c["pk_day"], c["p_bank_max"]))
+    wrapP("   ", "     ", "THE DYNAMIC BOUND AND ITS AVERAGING BASIS (SESSION): REQ-016's 'at most 100 W into the stage' is judged as the mean "
+          "input power over any %.1f s. Why: the limit sizes the stage's power parts, F2, J_SOLAR and the pack's charge, whose thermal "
+          "and charge time constants are seconds and longer; a sub-millisecond event of tens of mJ is TRN-001's and the inrush's "
+          "matter. The events: after a trip U20 holds SWEN low at least %.0f ms (CT to VDD through R69, SBVS050N p.7, full range), so "
+          "any %.1f s holds one event at most. Its energy: the entry's capacitance at its largest (%.1f uF) charged to 25 V, %.1f mJ, "
+          "plus the panel's %.2f W (25 V at REQ-016's %.2f A) over the chain's response. The response prints only typical rows: U18 "
+          "about %.1f us, U19's INB rising edge %.1f us (the input edge, SBVS240C p.6, at 10 mV overdrive and a 100 kOhm load), U20's MR "
+          "to RESET %.2f us, one switching period after SWEN falls (INFERRED): %.1f us together, giving %.4f W over %.1f s. The bound "
+          "holds for a response up to %.3f ms; bench row 7b.16 reads it, and a slower response would overturn the %.1f s basis, not the "
+          "arrangement (a longer basis or a lower trip restores it)" % (
+              d["w_avg"], 1e3 * sq["td_min"], d["w_avg"], 1e6 * c["c_entry_max"], 1e3 * c["e_cap"], c["p_ev"], rw["amps_pk"],
+              1e6 / rw["bw169"], 1e6 * rw["tpd_lh"], 1e6 * rw["mr_ns"], 1e6 * c["t_resp_typ"], c["p_dyn_typ"], d["w_avg"],
+              1e3 * c["t_resp_max"], d["w_avg"]))
+    wrapP("   ", "     ", "THE SUPPLY SEQUENCING (warranted rows, no Analog Devices answer): U20 asserts RESET whenever TRK_LDO33 is under its "
+          "threshold, %.3f to %.3f V, and releases it only above %.3f V (VIT %.2f V, %.1f %% and its %.1f %% hysteresis, SBVS050N pp.3, 6), "
+          "under LDO33's least in regulation, %.2f V (8705af p.3, full range); then it holds RESET a further %.0f ms at least, past "
+          "U19's %.0f us start (SBVS240C p.6, typical). Where RESET is released, U19 (VDD from %.1f V) and U20 (from %.1f V) are inside their ranges, and U19's "
+          "INA holds MR low whenever TRK_VS is under %.3f V (U18 works from 2.7 V) and lets it go by %.3f V at most, under the hold. R70 over R71 keep SWEN under its least threshold "
+          "(%.3f V, 8705af p.4) until TRK_LDO33 reaches %.3f V, above both parts' least supply; at LDO33's least with RESET released SWEN "
+          "reads %.3f V, over its highest threshold %.3f V. RESET sinks at most %.3f mA there (its VOL row %.1f V at 1 mA). Below 1.3 V the "
+          "VOL rows end: SWEN could rise only if its pin sourced %.1f uA (8705af p.12 describes a logic input; no current row: INFERRED), and "
+          "TRK_LDO33 under 1.3 V with INTVCC above its %.2f V lockout is an LDO33 failure, a single fault (below). The power-up reset (VPOR "
+          "%.1f V) holds for a rise no faster than %.0f V/s; LDO33's %.0f mA limit into C20's 1 uF gives %.0f V/s (INFERRED: C20's "
+          "capacitance at bias has no row)" % (
+              sq["vit_lo"], sq["vit_hi"], sq["rel_hi"], rw["vit38"], 100 * rw["acc38"], 100 * rw["hys38"], sq["ldo_lo"], 1e3 * sq["td_min"],
+              1e6 * rw["st_t"], sq["vdd_t"], sq["vdd38"], sq["uv_ts_lo"], sq["uv_ts_hi"], rw["swen"][0], sq["ldo_enable_min"], sq["swen_at_ldo_lo"], rw["swen"][1],
+              1e3 * sq["i_sw_reset"], sq["vol38"], 1e6 * sq["pin_needed_13"], sq["intvcc_uv"], sq["vpor"], sq["ramp_limit"],
+              1e3 * rw["ilim33"], sq["ramp"]))
+    e_c = c["energy"]
+    wrapP("   ", "     ", "THE COORDINATION (SESSION, one basis at both corners): the smallest stocked RIMON_IN whose regulation at its highest "
+          "under the joint assumptions (EA2 and EA3 at half gain, the line at twice, RSENSE1's cold TCR at 100 ppm/K, the drifts, each "
+          "resistor at its worst end) stays at or under C's lowest trip with its parts aged, at every input voltage: %gk, %.4f A at 25 V "
+          "against %.4f A. If the regulation's unprinted values were worse than those assumptions, the overlap would be a hiccup: each "
+          "trip stops the stage %.0f to %.0f ms (SBVS050N p.7) and restarts it through the soft start; the bright day's hours whose panel "
+          "current at the nominal hold exceeds C's lowest trip are %s, %.1f Wh, the energy such an overlap would put at risk" % (
+              c["rm"][0] / 1e3, c["reg_hi25"], c["i_lo_aged"], float(rw["td38"][0]), float(rw["td38"][2]),
+              ", ".join("%02d" % h for h, _g, _p in c["exposed"]) or "none", sum(p_ for _h, _g, p_ in c["exposed"])))
+    wrapP("   ", "     ", "THE ENERGY: on SC-37's day %.1f / %.1f / %.1f Wh at the lower, nominal and upper hold corners (%d / %d / %d h bound) "
+          "against %.1f / %.1f / %.1f Wh with 23.2k; on the bright day %.1f Wh (%d h bound) against %.1f Wh; at bright noon the input "
+          "power falls %.1f %% (the current %.1f %%). The bank's conduction (%.4f mOhm, the hourly current at the nominal hold) costs "
+          "%.4f Wh on SC-37's day and %.4f Wh on the bright day; R59 stays. The bright day is the check's own (astra-check-l4e7r-1, "
+          "D3) and this model reproduces its figures: %s" % (
+              e_c[0][2], e_c[1][2], e_c[2][2], e_c[0][3], e_c[1][3], e_c[2][3], en[0][2], en[1][2], en[2][2], e_c[3][2], e_c[3][3], en[3][2],
+              100 * c["noon_red"], 100 * c["cur_red"], 1e3 * c["rbank"], c["loss"][0], c["loss"][1],
+              "; ".join("%gk %.4f Wh, the noon power %.2f %% under 23.2k" % (rv_ / 1e3, e_, 100 * nr_) for rv_, e_, nr_ in c["check_repro"])))
+    s59 = sg["s59"]
+    wrapP("   ", "     ", "THE SOLAR ENTRY'S PROTECTION (B6; the derived disturbance, SESSION): no surge level is ruled (DECISION-31 section 3, "
+          "D-04, D-16) and the tree holds no surge standard; TRN-001 asks the clamp to clamp below every protected part's absolute "
+          "maximum, and D4's maker prints its clamping only at its rated pulse. So the design disturbance is that pulse: 10/1000 us "
+          "(SMCJ p.1), %.1f A at D4, clamped at %.1f V at most (p.2); any source of impedance Z gives it with an open-circuit %.1f V "
+          "+ %.1f A x Z. The assumption: no surge on the panel lead inside the kit's use exceeds D4's rating; a larger ruled level "
+          "would need a larger clamp and parts rated above its clamping voltage, which changes ratings, not the arrangement (U18's "
+          "inputs are rated %.0f V, U5's %.0f V)" % (sg["ipp"], sg["vc"], sg["vc"], sg["ipp"], sg["cm169_abs"], sg["vin_abs"]))
+    wrapP("     - ", "       ", "the correction: D4 and the bulk move behind the sense bank onto TRK_VS, and the bulk becomes three Panasonic "
+          "EEHZA1H330XP, %.0f V, 33 uF (ZA p.2, the same 6.3 x 7.7 mm land; %.0f mA ripple, %.0f mOhm), over D4's %.1f V; the 35 V parts "
+          "were under it" % (rw["za"]["v"], 1e3 * rw["za"]["ripple"], 1e3 * rw["za"]["esr"], sg["vc"]))
+    wrapP("     - ", "       ", "every part on the entry against it: TRK_VS and TRK_VIN at %.1f V at most: the bulk %.0f V, C13 to C15 50 V (the "
+          "generator's value text: their maker parts are the regeneration's), C64 and C66 50 V (C14663), U5's VIN and sense pins %.0f V, "
+          "Q3 60 V, U18's V+ and VIN- %.0f V, R67 75 V (RT), R14 %.1f V across it (the generator's 100k 1%%: its maker part is the "
+          "regeneration's), SHDN %.2f V and FBIN %.2f V against their %.0f V; PV_P %.2f V at most (the bank's drop added): U18's VIN+, "
+          "R8 75 V (RT)" % (sg["vc"], sg["za_v"], sg["vin_abs"], sg["vs169_abs"], sg["v_r14"], sg["v_shdn"], sg["v_fbin"], sg["fb_abs"], sg["v_pvp"]))
+    wrapP("     - ", "       ", "U18's differential: the whole pulse crosses the bank, %.3f V at most against its %.0f V; U5's sense "
+          "differential: R59 carries only the ceramics' share, %s (MODELED: the bulk's ESR %.0f mOhm new and %.1f Ohm after endurance at "
+          "-40 C (ZA p.1), three in parallel, its capacitance at its least, the ceramics at their largest, the clamp left out), against "
+          "%.1f V (8705af p.2)" % (sg["d169"], sg["d169_abs"], ", ".join("%.3f V %s" % (v_, l_) for l_, v_ in s59), 1e3 * rw["za"]["esr"],
+                                    rw["za"]["esr_cold"], sg["csd_abs"]))
+    wrapP("     - ", "       ", "electrostatic discharge (decision 34): its %.2f uC moves the entry by %.3f V at most and puts %.3f V across "
+          "the bank; a reversed panel conducts through D4 as DECISION-31's note E-N1 records, now with U18's inputs near -1 V as well "
+          "(its sheet allows a pin past its rating while the pin's current stays under %.0f mA, p.4; its gain resistor sits in the "
+          "path: INFERRED), board E's owner's note" % (2.25, sg["esd_dv"], sg["esd_d169"], 1e3 * rw["ipin169"]))
+    di = d["disc"]
+    wrapP("   ", "     ", "THE SERIES DISCONNECT (the check's suggestion, evaluated, not taken; SESSION): %s" % di["why"])
+    fl = d["faults"]
+    wrapP("   ", "     ", "THE SINGLE FAULTS (assigned to layer 8's fault analysis): those that defeat the backstop: %s. Those that stop "
+          "charging: %s. %s" % ("; ".join(fl["defeat"]), "; ".join(fl["stop"]), fl["acceptance"]))
     bd = R["backstop_draft"]
     n_e, _t, r10_once, codes_ok, codes = R["drafts"]["apply_gen_sch_e_backstop.py"]
-    wrapP("   ", "     ", "THE DRAFT FOR BOARD E'S GENERATOR OWNER: apply_gen_sch_e_backstop.py, %d edit(s) on the text "
-          "apply_gen_sch_e_input_limit.py leaves (it refuses a generator without R59): U18 and U19 added, U5's SWEN (pin 36) on "
-          "TRK_SWEN: %s; R59 and U5's CSPIN (pin 33) behind U18 on TRK_VS: %s; R60 and R61 as chosen: %s; R16 at %gk: %s; "
-          "carries %s: %s; R10's drawn line untouched: %s. Read back here on top of the input limit draft; never applied "
-          "to the tree" % (n_e, "yes" if bd["swen"] else "NO", "yes" if (bd["cspin"] and bd["r59"]) else "NO",
-                           "yes" if (bd["r60"] and bd["r61"]) else "NO", d["coord"]["rm"][0] / 1e3, "yes" if bd["r16"] else "NO",
-                           ", ".join(codes), "yes" if codes_ok else "NO", "yes" if r10_once else "NO"))
-    a_ = d["a"]
-    wrapP("   ", "     ", "WHY NOT (A): the IMON_IN fault comparator does bound EA2 without a gain value, but the setting it needs (RIMON_IN at "
-          "least %.0f Ohm, so %gk, %.4f A) costs %.1f %% of every limited hour and %.1f Wh at the nominal hold on SC-37's day, and the "
-          "bound still rests on A7 away from its test point, the fault threshold away from VIN = 12 V and RSENSE1's cold TCR" % (
-              a_["need"], a_["rm"][0] / 1e3, a_["inom"], 100 * a_["bright_cost"], d["e_now"][1][2] - d["approaches"][0]["energy"][1][2]))
-    eb_, en_ = d["approaches"][1]["energy"], d["e_now"]
-    wrapP("   ", "     ", "WHY NOT (C): REQ-016's verification methods are CALCULATION and PROTOTYPE_MEASUREMENT. A loop that is partly firmware is "
-          "bounded by calculation only in the states the firmware is in; a reset, a boot window before the first trim, an I2C fault, "
-          "a stale reading or an update are states it is not in, so its bound must rest on hardware beneath it, which is (B)'s "
-          "backstop, and on a controller fault the trim keeps its last or power-up value while the backstop holds the bound. What "
-          "(C) adds is energy in hours the limit binds: on SC-37's day 23.2k binds %d h at every hold corner, so any trim at or "
-          "above it gives the panel's whole output, %.1f Wh at the lower corner against (B)'s %.1f Wh, and the same at the nominal "
-          "and upper corners. A monitor, a trim element and firmware for %.1f Wh at one corner of the design day" % (
-              max(x[3] for x in en_), en_[0][2], eb_[0][2], en_[0][2] - eb_[0][2]))
-    wrapP("   ", "     ", "WHAT WOULD OVERTURN IT: Analog Devices warranting EA2's gain and A7 away from its test point, and Milliohm the cold "
-          "TCR (the present limit would then hold the bound itself and the backstop could go); the INA250A2's supply (LCSC stock %d on "
-          "1 October 2026; U18 is one per board); TRN-001 finding the INA250's 40 V common-mode absolute maximum unworkable on the "
-          "panel entry (the SMCJ28A clamps at up to 45.4 V at its full pulse, as for the 35 V bulk capacitors); a bench nuisance trip "
-          "under the coordinated setting" % d["stock_ina"])
-    wrapP("   ", "     ", "WHAT REMAINS CONDITIONAL: the bound rests on the makers' printed limits (TI's INA250 and TPS3701, YAGEO's RT, "
-          "8705af's SWEN and LDO33 rows, Littelfuse's SMCJ28A row), the INA250's typical-only gain rows carried at %.0f times their "
-          "typical with the margin sized to %.0f times, and inferred readings (the common-mode rejection referred through the 2 mOhm "
-          "shunt, REF at ground, the gain rows at VS = 3.23 V, D4's leakage across temperature); none of them is an Analog "
-          "Devices or Milliohm answer. "
-          "The bound covers U18 and U19 working; a failed U18 or U19 is a single fault it does not cover (layer 8's fault analysis). "
-          "The regulation's own corner (96.25 W at 23.2k) stays CONDITIONAL on EA2, A7, LINE, TCR and TJ; those now set the "
-          "coordination (whether the regulation or the backstop holds the stage in the bright hours) and the energy, not the bound. "
-          "The transient (the INA250's 50 kHz bandwidth and TPS3701's 9.9 us delay are typical) is 7b.9t's" % (bk["stress_mul"], bk["stress_sel"]))
-    wrapP("   ", "     ", "THE CLARIFICATION DRAFTS (adjusted; text for the owner to send, the session contacts no one): Analog Devices' and "
-          "Milliohm's answers now decide the coordination and the energy, not the bound. Analog Devices' draft gains item 5: "
-          "SWEN's delay and restart, and LDO33's undervoltage lockout across temperature, which the backstop's supply reads as "
-          "INFERRED. A third draft asks Texas Instruments for the INA250's rows at VS = 3.3 V and VREF = 0 V, the common-mode "
-          "referral, and a warranted limit for its typical-only rows: %s" % ", ".join("clarification/" + c_ for c_ in d["clar"]))
+    wrapP("   ", "     ", "THE DRAFT FOR BOARD E'S GENERATOR OWNER: apply_gen_sch_e_backstop.py, %d edit(s) on the text the hold and input "
+          "limit drafts leave (it refuses a generator without them): the bank on PV_P to TRK_VS: %s; R59 and CSPIN behind it: %s; "
+          "SWEN on TRK_SWEN: %s; D4 on TRK_VS: %s; the 50 V bulk: %s; R14 on TRK_VS: %s; R16 at %gk: %s; carries %s: %s; R10 untouched: "
+          "%s. Read back here; never applied to the tree" % (
+              n_e, "yes" if bd["bank"] else "NO", "yes" if (bd["cspin"] and bd["r59"]) else "NO", "yes" if bd["swen"] else "NO",
+              "yes" if bd["d4"] else "NO", "yes" if bd["bulk"] else "NO", "yes" if bd["r14"] else "NO", c["rm"][0] / 1e3,
+              "yes" if bd["r16"] else "NO", ", ".join(codes), "yes" if codes_ok else "NO", "yes" if r10_once else "NO"))
+    wrapP("   ", "     ", "PROTOTYPE MEASUREMENTS (REQ-016's second method; downstream obligations, not blockers): 7b.15, on each built "
+          "board, the input current at which SWEN falls, at 17.6 V and 25 V, against %.4f to %.4f A at 25 V, at commissioning and at "
+          "layer 8's interval; 7b.16, the response from a current step over the trip to the last switching edge, against %.3f ms, and "
+          "with R16 shorted (IMON_IN at 0 V, so neither the regulation nor its fault acts) the mean input over %.1f s at or under 100 W, "
+          "each restart through the soft start; 7b.17, the regulation at %gk on a bench panel curve does not trip at 25 C and at the cold "
+          "end; 7b.18, R59's differential under a 10/1000 us pulse at D4's rating, against %.1f V; 7b.19, TRK_LDO33's rise at power-up "
+          "against %.0f V/s" % (c["i_lo_aged"], c["i_hi25"], 1e3 * c["t_resp_max"], d["w_avg"], c["rm"][0] / 1e3, sg["csd_abs"],
+                                 sq["ramp_limit"]))
+    wrapP("   ", "     ", "WHAT WOULD OVERTURN IT: a measured response over %.3f ms (the averaging basis, not the arrangement); a stock "
+          "change of the bank part (LCSC %d on 1 October 2026; five per board), of U18 (%d) or U20 (%d); a ruled surge level above D4's "
+          "rating (the clamp and the ratings, not the arrangement); Analog Devices warranting EA2, A7 and the line row, and Milliohm "
+          "the cold TCR (the regulation would then hold the bound itself and C would be redundant protection); layer 8 finding a single "
+          "fault that both defeats the backstop and removes the regulation" % (1e3 * c["t_resp_max"], c["stock"], rw["stock169"], rw["stock38"]))
+    wrapP("   ", "     ", "WHAT REMAINS CONDITIONAL: nothing in C's static bound. The dynamic bound rests on the response's typical rows "
+          "(bench row 7b.16, tolerance %.3f ms against %.1f us typical) and the %.1f s basis (SESSION); the supply sequencing below 1.3 V "
+          "on TRK_LDO33 only through a fault (SWEN's pin current INFERRED); the surge protection on the stated design disturbance; the "
+          "coordination and the energy on Analog Devices' and Milliohm's answers (EA2, A7, LINE, TCR, TJ), whose failure costs energy, "
+          "not the bound" % (1e3 * c["t_resp_max"], 1e6 * c["t_resp_typ"], d["w_avg"]))
+    wrapP("   ", "     ", "THE CLARIFICATION DRAFTS (adjusted; text for the owner to send, the session contacts no one): no answer moves "
+          "C's bound. Analog Devices' and Milliohm's answers set the coordination and the energy; Analog Devices' item 5 now asks "
+          "SWEN's input current and its delay to the last switching edge (the sequencing's one inference and bench row 7b.16). The "
+          "Texas Instruments draft now asks the INA169's VIN+ pin current, carried at its absolute maximum meanwhile (supporting); "
+          "the INA250 draft is withdrawn with approach B: %s" % ", ".join("clarification/" + c_ for c_ in d["clar"]))
     return o
 
 

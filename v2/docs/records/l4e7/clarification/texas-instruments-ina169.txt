@@ -1,0 +1,22 @@
+DRAFT FOR THE OWNER TO SEND. The MeshSat session contacts no outside party; it prepared this text only.
+Addressee: Texas Instruments, technical support for the INA169 (the owner chooses the channel, for example the E2E forum).
+Prepared 1 October 2026, task L4-E7R (MESHSAT-1357).
+
+Subject: INA169NA: the VIN+ pin current, and the reading of the CMR and PSR rows at VSENSE = 50 mV
+
+We use the INA169NA (data sheet SBOS181F, December 2000, revised February 2017) as a high-side monitor on a solar
+converter's input, 9 V to 25 V common mode, V+ tied to the shunt's load side, its output current into 25 kOhm to ground,
+the air at -20 C to about +62 C. A comparator trips on the output at a sense voltage of about 50 mV. Our bound uses
+the Electrical Characteristics on page 6: the transconductance (990 to 1010 uA/V), the offset (1 mV), the nonlinearity
+(0.1 %), and the common-mode rejection (100 dB minimum, VIN+ = 2.7 V to 60 V) and supply rejection (10 uV/V maximum,
+V+ = 2.7 V to 60 V), both printed at VSENSE = 50 mV.
+
+1. The input bias current is printed as 10 uA typical. What maximum current do you warrant into the VIN+ pin, its
+   output current included, over -40 to 85 C and VIN+ up to 25 V? Meanwhile we carry it at the pin's absolute maximum
+   input current, 10 mA (page 4).
+2. Are the CMR and PSR rows measured as the change of the whole output at VSENSE = 50 mV, so that they include any change
+   of the transconductance with the common-mode and supply voltages? We read them so.
+
+For each item we ask for a limit Texas Instruments warrants, and the conditions under which it applies. Characterization
+over production lots is welcome as supporting evidence, but on its own we cannot treat it as a production guarantee. The
+answers are supporting: our bound does not wait on them. Thank you.

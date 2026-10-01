@@ -9,11 +9,12 @@ tolerance and TCR, and the next larger catalogue setting fails the same design f
 break-even and a bench row; the hold's band and its energy are as chosen and the margin costs nothing on SC-37's day; the
 committed .out is what the script prints; the hold keeps REQ-016's ratio and no draft carries the proposal; each draft apply script checks without writing, applies once to a copy and
 refuses a second application, the three apply in either order and on top of L4-E5's R10 change, and none touches R10.
-The control decision (L4-E7R): the verdict on the present limit names the unwarranted values it rests on; the comparison
-holds at most three approaches, each quantified, at least one independent of the clarification answers; the chosen bound
-rests only on the evidence classes it states and holds with its typical-only terms at the multiple its margin is sized
-to; the backstop never acts on SC-37's day and the regulation is coordinated under it; the backstop's draft applies only
-after the input limit draft. Nothing here writes into the tree.
+The control decision (L4-E7R, second round): the verdict on the present limit names the unwarranted values it rests on;
+the comparison holds at most three approaches, each quantified on both days, one on warranted rows only and chosen; the
+chosen bound's terms are printed limits at their own condition and the bound reproduces in separate arithmetic; the trip
+never acts on SC-37's day and the regulation sits under its aged lowest on one basis; the supply sequencing, the dynamic
+basis and the solar entry's ratings hold on their rows; the backstop's draft applies only after the hold and input limit
+drafts; the drafts to the makers follow the decision. Nothing here writes into the tree.
 """
 import hashlib
 import importlib.util
@@ -431,9 +432,11 @@ def t_the_junction_estimate_is_never_called_a_bound_and_line_keeps_its_coupling(
     assert "%.4f %%" % (2.0 * R["line_p"]) in line["why_stability"] and "setpoint" in line["small"]["stability"]
 
 
-# ---------------------------------------------------------------- the control decision (L4-E7R, owner, 1 October 2026)
+# ---------------------------------------------------------------- the control decision (L4-E7R, owner, 1 October 2026; second
+# round after checks/astra-check-l4e7r-1.md)
 BACKSTOP = "apply_gen_sch_e_backstop.py"
-STATED = {"warranted", "typical", "inferred", "requirement"}
+WARRANTED = {"warranted", "warranted (printed test limits)", "warranted (the rows, read both ways)", "warranted (the pin's absolute maximum)",
+             "requirement"}
 ANSWERS = ("EA2", "A7", "LINE", "RSENSE1", "HoJLR", "Milliohm", "Analog Devices")
 
 
@@ -451,55 +454,87 @@ def t_the_verdict_names_what_the_present_limit_rests_on():
     assert "THE VERDICT ON THE CURRENT CONTROL: NOT SHOWN on warranted manufacturer limits alone." in text
 
 
-def t_at_most_three_approaches_each_quantified_one_independent():
+def t_at_most_three_approaches_each_quantified_one_on_warranted_rows_only():
     R = _R()
     d = R["decision"]
     ap = d["approaches"]
     assert 1 <= len(ap) <= 3, len(ap)
     for a in ap:
         assert isinstance(a["bound"], float) and 90.0 < a["bound"] <= 100.0, (a["id"], a["bound"])
-        assert len(a["setting"]) == 3 and a["setting"][2] > 0
-        assert [e_[0] for e_ in a["energy"]] == ["lower", "nominal", "upper"]
+        assert a["status"] in ("CONDITIONAL", "UNCONDITIONAL")
+        assert [e_[0] for e_ in a["energy"]] == ["lower", "nominal", "upper", "bright"]
         assert all(e_[2] > 0 and isinstance(e_[3], int) for e_ in a["energy"]), "an approach's energy or bound hours are missing"
-        assert a["classes"] and a["parts"] and a["failure"] and a["depends"], a["id"]
-    assert any(a["independent"] for a in ap), "no approach is independent of the clarification answers"
-    for a in ap:
-        if a["independent"]:
-            assert a["depends"].startswith("no Analog Devices or Milliohm answer for the bound") or a["depends"] == "as B", a["id"]
-    assert d["chosen"] in {a["id"] for a in ap} and _approach(R, d["chosen"])["independent"]
+        assert a["classes"] and a["parts"] and a["failure"] and a["depends"] and a["surge"], a["id"]
+        assert 0 < a["noon_red"] < a["cur_red"], "%s: the noon power reduction is not computed below the current reduction" % a["id"]
+    ind = [a for a in ap if a["independent"]]
+    assert len(ind) >= 1 and all(a["status"] == "UNCONDITIONAL" for a in ind)
+    assert all(a["status"] == "CONDITIONAL" for a in ap if not a["independent"])
+    assert d["chosen"] == "C" and _approach(R, "C")["independent"]
 
 
-def t_the_chosen_bound_rests_only_on_the_classes_it_states():
+def t_the_chosen_bound_rests_only_on_warranted_rows_and_reproduces_in_closed_form():
     R = _R()
     d = R["decision"]
-    ch, bk = _approach(R, d["chosen"]), d["backstop"]
-    used = {t_[2].split(" ")[0] for t_ in bk["terms"]}
-    assert used <= STATED, used
-    assert used - {"requirement"} <= set(ch["classes"]), (used, set(ch["classes"]))
-    for t_ in bk["terms"]:
-        assert not any(w in t_[0] for w in ANSWERS), "the chosen bound names %s, a value the clarification answers decide" % t_[0]
-    typ = [t_ for t_ in bk["terms"] if t_[2] == "typical"]
-    assert typ and all("typical only" in t_[3] or "floor" in t_[3] for t_ in typ)
-    assert bk["hi"] <= 100.0 and bk["hi_sel"] <= 100.0 and bk["hi_typ"] < bk["hi"] < bk["hi_sel"], (bk["hi_typ"], bk["hi"], bk["hi_sel"])
-    assert bk["stress_sel"] == 2 * bk["stress_mul"] == 4.0 and bk["stress_be"] >= bk["stress_sel"] - 1e-6
-    assert abs(ch["bound"] - bk["hi"]) < 1e-12 and bk["pb"] > 0, "the input that bypasses the shunt is not in the bound"
+    c, rw = d["c"], d["rows"]
+    assert {t_[2] for t_ in c["terms"]} <= WARRANTED, {t_[2] for t_ in c["terms"]}
+    for t_ in c["terms"]:
+        assert not any(w in t_[0] for w in ANSWERS), "the chosen bound names %s" % t_[0]
+        assert "typical" not in t_[2] and "times its typical" not in t_[1] and "twice" not in t_[0], t_
+    assert set(_approach(R, "C")["classes"]) <= {"warranted", "requirement"}
+    # the controlling calculation in separate arithmetic: the highest trip at 25 V and the bound
+    dt = 45.0
+    r66 = rw["r66"] * (1 - 0.001) * (1 - 25e-6 * dt) * (1 - 0.005 - 0.05 / rw["r66"]) ** 2
+    gm = rw["gm169"][0] * (1 - rw["nl169"])
+    base = (rw["vth"][1] + rw["iin_t"] * r66) / (gm * r66)
+    vs = base + rw["vos169"] + (10 ** (-rw["cmr169"] / 20.0) * 13.0 + rw["psr169"] * 20.0) * max(1.0, base / 0.050)
+    rp = c["rp"]
+    rb = rp / c["n"] * (1 - 0.01) * (1 - rw["wtcr"] * dt) * (1 - 0.005 - 0.0005 / rp) * (1 - 0.01 - 0.0005 / rp)
+    p = 25.0 * vs / rb + 625.0 / (R["r8v"] + R["r9v"]) / ((1 - 0.001) * (1 - 25e-6 * dt) * (1 - 0.005 - 0.05 / R["r8v"]) ** 2) + 25.0 * rw["ipin169"]
+    assert abs(c["v_hi"] - 25.0) < 1e-9 and abs(p - c["p_static"]) < 1e-6, (p, c["p_static"])
+    assert c["p_static"] < 100.0 and c["p_dyn_typ"] < 100.0 and c["t_resp_max"] > 10 * c["t_resp_typ"]
 
 
-def t_the_backstop_never_acts_on_the_day_and_the_regulation_sits_under_it():
+def t_the_trip_never_acts_on_the_day_and_the_regulation_sits_under_it_on_one_basis():
+    R = _R()
+    c = R["decision"]["c"]
+    assert c["trip_lo_hold"] > c["pk_day"], "the trip would act on SC-37's day"
+    assert c["reg_hi25"] <= c["i_lo_aged"] < c["i_lo_new"] < c["i_hi25"], "the regulation is not coordinated under the aged trip"
+    assert c["rm"][0] > R["rm"] and c["rm"][2] >= 1000
+    assert c["exposed"] and all(p_ > 0 for _h, _g, p_ in c["exposed"])
+
+
+def t_the_supply_sequencing_holds_on_printed_rows():
+    R = _R()
+    sq, rw = R["decision"]["seq"], R["decision"]["rows"]
+    assert sq["rel_hi"] < sq["ldo_lo"], "U20 could hold RESET with LDO33 in regulation"
+    assert sq["ldo_enable_min"] > max(sq["vdd38"], sq["vdd_t"]), "SWEN could rise before U19 and U20 work"
+    assert sq["swen_at_ldo_lo"] > rw["swen"][1] and sq["i_sw_reset"] <= 1e-3 and sq["td_min"] >= 0.18 > rw["st_t"]
+    assert sq["uv_ts_lo"] > 2.7 and sq["uv_ts_hi"] < 15.0, "U19's INA does not cover U18's supply below the hold"
+
+
+def t_the_dynamic_bound_uses_the_input_edge_and_names_its_basis():
     R = _R()
     d = R["decision"]
-    bk, c_ = d["backstop"], d["coord"]
-    assert min(bk["trip_at_hold"].values()) > max(bk["pk"].values()), "the backstop would act on SC-37's day"
-    assert c_["prim_hi"] <= bk["i_lo25"], "the regulation's stack A highest passes the backstop's lowest trip"
-    assert c_["rm"][0] > R["rm"] and 0 < c_["bright_cost"] < 0.2
-    assert d["vol_max"] < d["swen_min"] - 0.5 and bk["vout_hi"] < bk["swing"] and bk["ldo_uv"][0] > bk["ina_vs_min"]
-    b, now = _approach(R, "B")["energy"], d["e_now"]
-    assert abs(b[1][2] - now[1][2]) < 0.05 and abs(b[2][2] - now[2][2]) < 0.05 and 0 <= now[0][2] - b[0][2] < 2.0, (b, now)
-    a = _approach(R, "A")["energy"]
-    assert now[1][2] - a[1][2] > 5.0, "approach (a)'s cost at the nominal hold is not what the page rejects it for"
+    c, rw = d["c"], d["rows"]
+    assert d["w_avg"] == 0.1 and abs(rw["tpd_lh"] - 28.1e-6) < 1e-12, "the rising INB edge is not the 28.1 us row"
+    assert c["e_cap"] > 0 and c["p_ev"] == 25.0 * rw["amps_pk"]
+    assert abs(c["p_dyn_typ"] - (c["p_static"] + (c["e_cap"] + c["p_ev"] * c["t_resp_typ"]) / d["w_avg"])) < 1e-9
+    text = " ".join("\n".join(_CACHE["M"].render(R)).split())
+    assert "7b.16" in text and "%.3f ms" % (1e3 * c["t_resp_max"]) in text
 
 
-def t_the_backstop_draft_follows_the_input_limit_draft_on_a_copy():
+def t_the_solar_entry_stays_inside_its_ratings_at_the_derived_disturbance():
+    R = _R()
+    d = R["decision"]
+    sg, rw = d["surge"], d["rows"]
+    assert sg["vc"] == 45.4 and sg["ipp"] == 33.1 and rw["za"]["v"] >= sg["vc"]
+    assert sg["d169"] < sg["d169_abs"] and sg["v_pvp"] < min(sg["cm169_abs"], sg["vs169_abs"])
+    assert max(v_ for _l, v_ in sg["s59"]) < sg["csd_abs"], sg["s59"]
+    assert sg["b_abs"] < sg["vc"] and _approach(R, "B")["surge"].startswith("FAILS")
+    assert _approach(R, "C")["surge"].startswith("passes")
+
+
+def t_the_backstop_draft_follows_the_hold_and_input_limit_drafts_on_a_copy():
     need(GEN_E, "board E's generator")
     before = _sha(GEN_E)
     src = open(GEN_E, encoding="utf-8").read()
@@ -522,29 +557,45 @@ def t_the_backstop_draft_follows_the_input_limit_draft_on_a_copy():
             assert r.returncode == 3 and "already applied" in r.stderr, r.stderr
             out = open(cp, encoding="utf-8").read()
             outs.append(out)
-            for want in ('"36": "TRK_SWEN"', '"33": "TRK_VS"', '"TRK_VS", "TRK_VIN", "RS2512"', '"C2859736")', '"C132788")',
-                         'r("R16", "26.1k', 'else "U18": 5.68}', '_intent.rail("TRK_VS"'):
+            for want in ('"36": "TRK_SWEN"', '"33": "TRK_VS"', '"TRK_VS", "TRK_VIN", "RS2512"', '"C44322")', '"C132788")', '"C43698")',
+                         'r("R16", "29.4k', '{"1": "TRK_VS", "2": "GND"}, "C224047")', 'r("R14", "100k 1%", "TRK_VS", "TRK_SHDN")',
+                         '_intent.rail("TRK_VS"', 'part("C69", '):
                 assert out.count(want) == 1, want
+            assert out.count('"C178637")') == 2 and '"C454360")' not in out
             assert out.count('r("R10", "115k 1% (RFBOUT1: 15.1 V)"') == 1
         finally:
             shutil.rmtree(d)
     assert outs[0] == outs[1], "the backstop does not land the same after either order of the three"
     R = _R()
     assert all(R["backstop_draft"].values()), R["backstop_draft"]
-    bk = R["decision"]["backstop"]
-    assert R["drafts"][BACKSTOP][3] and set(R["drafts"][BACKSTOP][4]) == {"C2859736", "C132788", bk["c60"], bk["c61"], R["decision"]["coord"]["rm"][1]}
+    assert R["drafts"][BACKSTOP][3]
     assert _sha(GEN_E) == before, "the tree's gen_sch_e.py changed"
 
 
 def t_the_clarification_drafts_follow_the_decision():
     R = _R()
-    assert R["decision"]["clar"] == ["analog-devices-lt8705a.txt", "milliohm-hojlr2512.txt", "texas-instruments-ina250.txt"]
-    ti = open(need(os.path.join(CLAR, "texas-instruments-ina250.txt"), "the TI draft"), encoding="utf-8").read()
-    assert ti.startswith("DRAFT FOR THE OWNER TO SEND.") and "contacts no outside party" in ti and all(ord(c) < 128 for c in ti)
+    assert R["decision"]["clar"] == ["analog-devices-lt8705a.txt", "milliohm-hojlr2512.txt", "texas-instruments-ina169.txt"]
+    assert not os.path.exists(os.path.join(CLAR, "texas-instruments-ina250.txt"))
+    ti = open(need(os.path.join(CLAR, "texas-instruments-ina169.txt"), "the TI draft"), encoding="utf-8").read()
+    assert ti.startswith("DRAFT FOR THE OWNER TO SEND.") and "contacts no outside party" in ti and all(ord(ch) < 128 for ch in ti)
     t = " ".join(ti.split())
-    assert "INA250A2PWR" in t and "VREF = 0 V" in t and "warrant" in t and "supporting" in t and "production guarantee" in t
+    assert "INA169" in t and "VIN+" in t and "warrant" in t and "supporting" in t and "production guarantee" in t
     ad = " ".join(open(os.path.join(CLAR, "analog-devices-lt8705a.txt"), encoding="utf-8").read().split())
-    assert "SWEN" in ad and "LDO33 undervoltage lockout" in ad
+    assert "SWEN" in ad and "input current" in ad
+
+
+def t_the_minors_and_the_faults():
+    R = _R()
+    d = R["decision"]
+    b, c = d["b"], d["c"]
+    assert abs(b["loss"][0] - 0.1855) < 5e-4, b["loss"]
+    rep = dict((rv, (e_, nr)) for rv, e_, nr in c["check_repro"])
+    assert abs(rep[26100.0][0] - 495.3165) < 5e-5 and abs(rep[28700.0][0] - 465.6367) < 5e-5 and abs(100 * rep[26100.0][1] - 10.06) < 5e-3
+    assert abs(100 * _approach(R, "A")["noon_red"] - 24.57) < 5e-3
+    fl = d["faults"]
+    assert fl["defeat"] and fl["stop"] and "Layer 8" in fl["acceptance"]
+    text = " ".join("\n".join(_CACHE["M"].render(R)).split())
+    assert "the smallest stocked RIMON_IN" in text and "largest stocked RIMON_IN" not in text.split("10. THE CONTROL DECISION")[1]
 
 
 def t_the_decision_page_is_linked_and_carries_the_printed_figures():
@@ -553,10 +604,11 @@ def t_the_decision_page_is_linked_and_carries_the_printed_figures():
     t = " ".join(open(page, encoding="utf-8").read().split())
     for nm in ("L4E7-STAGE-SETTINGS.md", "README.md"):
         assert "L4E7-CONTROL-DECISION.md" in open(os.path.join(REC, nm), encoding="utf-8").read(), nm
-    bk = R["decision"]["backstop"]
-    for a in R["decision"]["approaches"]:
+    d = R["decision"]
+    c = d["c"]
+    for a in d["approaches"]:
         assert ("%.4f" % a["bound"]) in t, a["id"]
-    for fig in ("%.4f W" % bk["hi"], "%.4f W" % (100.0 - bk["hi"]), "%.4f A" % bk["i_lo25"], "%gk" % (bk["r60"] / 1e3),
-                "%gk" % (bk["r61"] / 1e3), "%gk" % (R["decision"]["coord"]["rm"][0] / 1e3)):
+    for fig in ("%.4f W" % c["p_static"], "%.4f W" % (100.0 - c["p_static"]), "%.4f A" % c["i_lo_aged"], c["model"],
+                "%gk" % (c["rm"][0] / 1e3), "%.3f ms" % (1e3 * c["t_resp_max"]), "%.4f W" % c["p_dyn_typ"]):
         assert fig in t, fig
     assert "\u2013" not in t and "\u2014" not in t

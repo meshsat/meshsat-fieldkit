@@ -1,0 +1,22 @@
+{
+ "what": "LCSC public product-detail answer for C2076144 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C2076144), no login; kept fields only",
+ "read_utc": "2026-10-01T21:18Z",
+ "read_by": "task L4-E7R (MESHSAT-1357)",
+ "role": "board E R60 to R64, the chosen backstop's sense bank (five WSL2512R0700FEA in parallel), L4-E7R second round",
+ "code": "C2076144",
+ "brand": "VISHAY",
+ "model": "WSL2512R0700FEA",
+ "package": "2512",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/4d4bf60fad50a44c856878f2a415848b.pdf?productCode=C2076144",
+ "pdf_sha256": "ebec50566fb003c8809e5e3e703766af622016b6aa501080797c5e0223da60e4",
+ "pdf_note": "fetched at read_utc; LCSC links Vishay Dale WSL Document Number 30100, Revision 22-Feb-2021; the record reads Revision 23-Nov-2023, held back (v2/vendor/passives/held/, fetched by ../fetch_held_back.py)",
+ "stock": 1970,
+ "params": {
+  "Power(Watts)": "1W",
+  "Resistance": "70mΩ",
+  "Voltage Rating": "-",
+  "Type": "Current Sense Resistor",
+  "Tolerance": "±1%",
+  "Temperature Coefficient": "±75ppm/℃"
+ }
+}

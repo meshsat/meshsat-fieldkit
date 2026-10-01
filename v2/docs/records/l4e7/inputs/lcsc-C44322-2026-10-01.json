@@ -1,0 +1,30 @@
+{
+ "what": "LCSC public product-detail answer for C44322 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C44322), no login; kept fields only",
+ "read_utc": "2026-10-01T21:18Z",
+ "read_by": "task L4-E7R (MESHSAT-1357)",
+ "role": "board E U18, the chosen backstop's current-shunt monitor (INA169NA/3K), L4-E7R second round",
+ "code": "C44322",
+ "brand": "TI",
+ "model": "INA169NA/3K",
+ "package": "SOT-23-5",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/e9ca75f84a404aafa6728ca8748beab6.pdf?productCode=C44322",
+ "pdf_sha256": "ce9fc4f234a23864f5f83414c75c8084db3bde6d076376f29ce5d584f6bfc737",
+ "pdf_note": "fetched at read_utc; LCSC links TI SBOS181D (2005); the record reads TI SBOS181F (February 2017) from ti.com, held back (v2/vendor/ti/held/, fetched by ../fetch_held_back.py)",
+ "stock": 61878,
+ "params": {
+  "Features": "High-side detection;Analog output interface",
+  "Vcm - Common Mode Voltage": "2.7V~60V",
+  "Output Current": "-",
+  "Bandwidth": "440kHz",
+  "Input Voltage (Vin)": "2.7V~60V",
+  "Operating Temperature": "-40℃~+85℃",
+  "Gain": "1000V/V",
+  "Common Mode Rejection Ratio(CMRR)": "120dB",
+  "Quiescent Current": "60uA",
+  "Vos - Input Offset Voltage": "1mV",
+  "Ib - Input Bias Current": "100nA",
+  "Number of Channels": "-",
+  "Differential Voltage": "-40V~2V",
+  "Input Offset Voltage Drift(Vos TC)": "0.5uV/℃"
+ }
+}
