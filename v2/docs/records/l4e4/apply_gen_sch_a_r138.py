@@ -9,7 +9,9 @@ for R138. The netlist then reads R138 "5mOhm 1% 2512 (ISNS)" with the trip at 3.
 
 Owed beside it in the same round: R138's two taps (U18 pin 19 ISNS on PD_SW, pin 21 VBUS on PD_VBUS) declared for
 kelvin_check in pcb_sensitive.yaml within 1.15 mOhm at 25 C; a box regeneration with the gates and the evidence re-taken;
-the bench rows (a 3 A load on each PDO without a trip, then the trip current by a slow ramp inside 3.79 to 4.58 A).
+the bench procedure of l4e4_limits.out section 3: (a) U19 held in shutdown and a regulated supply on PD_VPWR, U18's
+differential sense voltage, VBUS and PD_GDNG recorded, the threshold demonstrated in 19.2 to 22.6 mV with VBUS inside the
+contract's hold window; (b) 3 A held on each advertised voltage with U19 in the path.
 
 Usage:  apply_gen_sch_a_r138.py TARGET [--check | --write]     (default --check: nothing is written)
 Each edit's old text must occur exactly once and its new text must differ and must not occur yet; the result must parse.

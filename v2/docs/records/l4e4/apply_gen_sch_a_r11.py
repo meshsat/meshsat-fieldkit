@@ -4,14 +4,16 @@ the tree by L4-E4; its author ran it only on scratch copies with --check.
 
 What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else: the front end's ISNS shunt R11 from the lm5176() default
 10 mOhm (lcsc_fill.py's C2903468) to 8 mOhm with its own order code, Milliohm HoJLR2512-3W-8mR-1%, LCSC C2904240, the value
-l4e4_limits.py chose for U3's IIN_HOST of 4.65 A (L4E4-CURRENT-LIMITS.md). The netlist then reads R11 "8mOhm 1% 2512 (ISNS)".
+l4e4_limits.py chose together with U3's IIN_HOST of 4.70 A (code 94; its second round, R16's tolerance included;
+L4E4-CURRENT-LIMITS.md). The netlist then reads R11 "8mOhm 1% 2512 (ISNS)".
 
-It is not the whole change. The same circuit round owes, beside it: the firmware's IIN_HOST 4.65 A with RSNS_RAC = 0b and
-A-2's VIN_RAW rule; the re-declarations of VBUS20, FE_OUT and VIN_RAW at the window-sized currents and the generator's own
-VBUS20 node analysis at the new highest permitted current, 7.262 A (B-3, B-4); L1 and the FETs at that current or hiccup
-(B-1, B-2); pcb_sensitive.yaml's FE_ISNS text; Kelvin taps within 0.54 mOhm at 25 C (C-1); a box regeneration with the
-gates and the evidence re-taken. After regeneration r11_dep.py refuses by design (its netlist facts describe the held
-10 mOhm circuit), and l4e4_limits.py's section 0 with it: both are records of the circuit before this change.
+It is not the whole change. The same circuit round owes, beside it: the firmware's IIN_HOST 4.70 A (REG0x0F/0E 0x5E00)
+with RSNS_RAC = 0b and A-2's VIN_RAW rule; the re-declarations of VBUS20, FE_OUT and VIN_RAW at the window-sized currents
+and the generator's own VBUS20 node analysis at the new highest permitted current, 7.262 A (B-3, B-4); L1 and the FETs
+rated for that current, or hiccup as a candidate whose peak current and ripple pass item 4's criteria (B-1, B-2);
+pcb_sensitive.yaml's FE_ISNS text; Kelvin taps within 0.38 mOhm at 25 C (C-1); a box regeneration with the gates and the
+evidence re-taken. After regeneration r11_dep.py refuses by design (its netlist facts describe the held 10 mOhm circuit),
+and l4e4_limits.py's section 0 with it: both are records of the circuit before this change.
 
 Usage:  apply_gen_sch_a_r11.py TARGET [--check | --write]     (default --check: nothing is written)
 Each edit's old text must occur exactly once and its new text must differ and must not occur yet; the result must parse.
@@ -24,7 +26,7 @@ EDITS = [
     ('       cs_filter=("R150", "R151", "C123"), isns_filter=("R160", "R161", "C128"), cin="10u 100V X7R 1210", l_lcsc="C6358489",\n',
      '       cs_filter=("R150", "R151", "C123"), isns_filter=("R160", "R161", "C128"), isns="8m", isns_lcsc="C2904240", cin="10u 100V X7R 1210",'
      ' l_lcsc="C6358489",   # L4-E4 (MESHSAT-1357): R11 8 mOhm, Milliohm HoJLR2512-3W-8mR-1% (LCSC C2904240), coordinated with U3\'s'
-     ' IIN_HOST 4.65 A; v2/docs/records/l4e4/L4E4-CURRENT-LIMITS.md\n'),
+     ' IIN_HOST 4.70 A; v2/docs/records/l4e4/L4E4-CURRENT-LIMITS.md\n'),
 ]
 
 

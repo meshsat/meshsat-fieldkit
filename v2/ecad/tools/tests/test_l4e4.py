@@ -2,11 +2,14 @@
 USB-C outlet's trip, held as predicates on the values l4e4_limits.py computes.
 
 The predicates: r11_dep.out is reproduced byte for byte before any figure is used; U3's IIN_HOST setting is a register
-code whose INFERRED minimum covers REQ-016's window at the declared efficiencies; the chosen R11's stacked minimum (VSNS
-minimum less the ISNS offset, R11 +1 % and its TCR, the taps) lies above U3's maximum at that setting plus C-9's 0.079 A
-at -20, 25 and 62.1 C and at r11_dep.py's own envelope, and the larger catalogue values do not (the negative case); C-1's
+code whose INFERRED minimum in board current, with U3's own sense resistor R16 at its highest (tolerance and TCR over
+r11_dep.py's envelope), covers REQ-016's window at the declared efficiencies (check astra-check-l4e4-1, B1: the first
+round's 4.65 A passed only because R16 was left out, and fails once it is in); the chosen R11's stacked minimum (VSNS
+minimum less the ISNS offset, R11 at its read tolerance and TCR, the taps) lies above U3's maximum board current plus
+C-9's 0.079 A at -20, 25 and 62.1 C and at r11_dep.py's own envelope, and the larger catalogue values do not; C-1's
 recomputed allowance is no tighter than the one already accepted; R138's trip window lies above every PDO's current and
-below the ratings of what it protects, and the drawn 10 mOhm does not (DR-03, the negative case); the committed .out is
+below the ratings of what it protects, and the drawn 10 mOhm does not (DR-03, the negative case); the outlet's bench
+procedure holds VBUS inside the maker's windows with U19 out of the path (B2); the committed .out is
 what the script prints; the two draft apply scripts check without writing, apply once to a copy and refuse a second
 application. Nothing here writes into the tree: the apply scripts run on copies in a temporary directory.
 """
@@ -56,17 +59,21 @@ def t_r11_dep_out_reproduced_byte_for_byte():
 
 def t_iin_host_setting_is_a_register_code_that_covers_the_window():
     R = _R()
-    assert abs(R["setting"] - 4.65) < 1e-9 and R["code"] == 93 and R["word"] == 0x5D00, (R["setting"], R["code"], hex(R["word"]))
+    assert abs(R["setting"] - 4.70) < 1e-9 and R["code"] == 94 and R["word"] == 0x5E00, (R["setting"], R["code"], hex(R["word"]))
     assert abs(R["lsb"] - 0.05) < 1e-12 and abs(R["code"] * R["lsb"] - R["setting"]) < 1e-9
-    assert R["u3min_inf"] >= R["req"], "U3's INFERRED minimum %.3f A under the window's %.3f A" % (R["u3min_inf"], R["req"])
+    assert R["u3min_inf"] >= R["req"], "U3's INFERRED board minimum %.3f A under the window's %.3f A" % (R["u3min_inf"], R["req"])
     assert abs(R["u3max"] - max(R["setting"] + 0.1, R["setting"] * 1.025)) < 1e-9, "U3's maximum not by r11_dep.py's rule"
-    assert R["serv"] > R["u3max"] + 0.079, "C-9's 0.079 A not added"
+    assert abs(R["bmax"] - R["u3max"] / R["r16_lo"]) < 1e-12 and abs(R["serv"] - R["bmax"] - R["loads4"]) < 1e-12
+    # the code is the smallest one that covers the need with R16: one code lower does not
+    fn = R["fn"]
+    assert fn["board_min"](R["setting"] - R["lsb"]) < R["req"] <= fn["board_min"](R["setting"])
 
 
 def t_r11_stacked_minimum_above_u3_maximum_plus_c9_at_three_temperatures():
     R = _R()
     temps = [round(t["t"], 1) for t in R["per_t"]]
     assert temps == [-20.0, 25.0, 62.1], temps
+    assert abs(R["serv"] - (R["fn"]["u3_max"](R["setting"]) / R["r16_lo"] + R["loads4"])) < 1e-12, "R16 not in U3's bound"
     for t in R["per_t"]:
         for k in ("m_alone", "m_kel", "m_full"):
             assert t[k] > 0, "%s at %.1f C: %+.4f A" % (k, t["t"], t[k])
@@ -149,3 +156,54 @@ def t_apply_scripts_check_apply_once_and_refuse_a_second_application():
         finally:
             shutil.rmtree(d)
     assert _sha(GEN_A) == before, "the tree's generator changed"
+
+
+def t_r16_tolerance_old_bounds_fail_new_bounds_pass():
+    """Check B1: the first round's bounds left R16's tolerance and TCR out. Under those bounds its choice (4.65 A, the
+    0.542 mOhm allowance) passed; with R16 in it fails both ways (the minimum under the need, the hot full-tap margin
+    negative), and the second round's choice passes."""
+    R = _R()
+    fn, req, m_inf, l4 = R["fn"], R["req"], R["margin_inf"], R["loads4"]
+    old_s, r11 = R["old_setting"], R["r11"]
+    assert abs(old_s - 4.65) < 1e-9 and abs(R["r16_hi"] - 1.01 * (1 + 50e-6 * 75)) < 1e-12 and abs(R["r16_lo"] - 0.99 * (1 - 50e-6 * 75)) < 1e-12
+    # the old bounds (R16 nominal): passed
+    old_nom_serv = fn["u3_max"](old_s) + l4
+    old_tap = fn["tap_rule"](r11, old_nom_serv)[2]
+    assert old_s - m_inf >= req
+    assert all(t["m_full"] > 0 for t in fn["margins_for"](old_nom_serv, r11, old_tap))
+    # the new bounds (R16 at its corners): the old choice fails
+    assert fn["board_min"](old_s) < req, "the old setting still covers the need with R16 in"
+    assert fn["margins_for"](fn["serv_of"](old_s), r11, old_tap)[-1]["m_full"] < 0, "the old allowance still clears at 62.1 C"
+    # and the new choice passes under the new bounds
+    new_tap = R["r11_pick"]["tap"][2]
+    assert fn["board_min"](R["setting"]) >= req
+    assert all(t["m_full"] > 0 and t["m_kel"] > 0 and t["m_alone"] > 0 for t in fn["margins_for"](fn["serv_of"](R["setting"]), r11, new_tap))
+    assert 0.38e-3 <= new_tap < 0.3804e-3, "the C-1 allowance is not the recomputed 0.380 mOhm: %.5f" % (new_tap * 1e3)
+
+
+def t_tolerance_is_read_not_typed():
+    """Minor 1: the tolerance comes from the sheet and the LCSC answers, and r11_dep.py's band() equals the band at it."""
+    R = _R()
+    assert R["tol"] == 0.01 and R["tol_s"] == "\u00b11%" and R["tol138"] == R["tol"]
+    src = open(SCRIPT, encoding="utf-8").read()
+    assert "1.01" not in src and "0.99" not in src, "a typed tolerance in l4e4_limits.py"
+    b = R["fn"]["band"](0.008)
+    lo = (R["vsns"][0] - R["offs"]) / (0.008 * (1 + R["tol"]) * (1 + R["tcr"] * R["dt_env"]))
+    assert abs(b[0] - lo) < 1e-12
+
+
+def t_outlet_bench_isolates_u18():
+    """Check B2: the stage ahead overlaps both trip windows, so the procedure takes U19 out of the path, holds VBUS inside
+    the maker's windows (above the slow UVP and the falling threshold, below the slow OVP) and closes on the measured
+    differential threshold; the delivered configuration then holds 3 A on each advertised voltage."""
+    R = _R()
+    st = R["stage_band"]
+    assert st[0] < R["w3"][1] and st[2] > R["w5"][0], "the stage no longer overlaps the windows: revisit the procedure"
+    assert R["hold"] == {5: (3.9, 5.5), 9: (7.1, 10.0), 15: (12.2, 16.3)}, R["hold"]
+    for v, (lo, hi) in R["hold"].items():
+        assert lo < v < hi
+    out = open(os.path.join(REC, "l4e4_limits.out"), encoding="utf-8").read()
+    for phrase in ("U19 held in shutdown", "regulated", "differential sense voltage", "PD_GDNG", "a run COUNTS only if VBUS stays inside",
+                   "the supply never limits", "the demonstrated threshold, lies in 19.2 to 22.6 mV",
+                   "3.0 A held on each advertised voltage"):
+        assert phrase in out, phrase
