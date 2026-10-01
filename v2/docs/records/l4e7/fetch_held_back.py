@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""fetch_held_back.py: fetch the two makers' documents task L4-E7 read but did not file (MESHSAT-1357, 1 October 2026).
+"""fetch_held_back.py: fetch the three makers' documents task L4-E7 read but did not file (MESHSAT-1357, 1 October 2026).
 
 YAGEO's RT series product specification V.16 (May 06, 2025; the sheet LCSC links for C861244, C861068, C861589 and
 C136968) gives the tolerance and TCR codes of RIMON_IN, R8 and R9. Infineon's BSC028N06NS data sheet Rev.2.1 (2013-01-18;
 LCSC's link for C148250) gives Q3's and Q5's gate charge for U5's junction estimate. Vishay Dale's WSL sheet (Document Number
-30100, Revision 23-Nov-2023; LCSC's link for C844695) is the RSENSE1 alternative the qualification evaluates. Both are held back from the public tree
+30100, Revision 23-Nov-2023; LCSC's link for C844695) is the RSENSE1 alternative the qualification evaluates. All three are held back from the public tree
 by the conservative reading of their terms (the owner's rule of 27 September 2026), as the a1solar, s117 and w5identc
 records do: this script downloads each from the address its catalogue reading in inputs/ records into an ignored held/
 folder, checks the sha256 l4e7_stage_settings.py pins, and refuses to keep a file that differs. It is never run by a test.

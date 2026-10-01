@@ -247,3 +247,96 @@ def t_the_record_names_the_drafts_codes_and_never_wrote_the_tree():
     for name, (n_e, touches, r10_once, codes_ok, codes) in R["drafts"].items():
         assert n_e > 0 and not touches and r10_once and codes_ok, (name, codes)
     assert _sha(GEN_E) == _CACHE["gen_before"], "the tree's gen_sch_e.py changed during the record's run"
+
+
+# ---------------------------------------------------------------- the qualification of the 100 W bound (owner, 1 October 2026)
+QUAL_IDS = {"EA2", "LINE", "TCR", "HOLD", "TJ"}
+CLAR = os.path.join(REC, "clarification")
+
+
+def t_every_unprinted_row_is_classified():
+    R = _R()
+    rows = R["qual_rows"]
+    assert {r_["id"] for r_ in rows} == QUAL_IDS and len(rows) == len(QUAL_IDS), [r_["id"] for r_ in rows]
+    for r_ in rows:
+        for k in ("bound", "stability", "protection"):
+            assert isinstance(r_[k], bool), (r_["id"], k)
+        for k in ("why_bound", "why_stability", "why_protection", "sheet", "other", "conservative", "qualification"):
+            assert isinstance(r_[k], str) and len(r_[k]) > 10, "%s has no %s" % (r_["id"], k)
+    for k, v in R["unprinted_rows"].items():
+        assert not v[1], "%s is a full-range row, not an unprinted one" % k
+
+
+def t_a_row_that_moves_the_bound_has_an_assumption_a_qualification_and_a_margin():
+    R = _R()
+    moving = [r_ for r_ in R["qual_rows"] if r_["bound"]]
+    assert moving, "no row moves the bound"
+    for r_ in moving:
+        assert r_["conservative"] and r_["qualification"] and r_["breakeven"], r_["id"]
+        margin = r_["margin_w"] if r_["margin_w"] is not None else r_.get("margin_k")
+        assert margin is not None and margin > 0, "%s keeps no positive margin" % r_["id"]
+        if not r_["resolved"] and r_["id"] != "TJ":
+            assert r_["clarification"], "%s has no clarification request" % r_["id"]
+        assert "a production limit" in r_["qualification"] or "statement" in r_["qualification"] or "design verification" in r_["qualification"], r_["id"]
+    assert R["cons"]["joint"] < 100.0 and all(R["cons"][k] < 100.0 for k in ("ea2", "line", "tcr"))
+
+
+def t_clarification_texts_exist_and_contact_no_one():
+    R = _R()
+    named = {r_["clarification"] for r_ in R["qual_rows"] if r_["clarification"]}
+    assert named == {"analog-devices-lt8705a.txt", "milliohm-hojlr2512.txt"}, named
+    for nm in named:
+        p = need(os.path.join(CLAR, nm), "a clarification text")
+        t = open(p, encoding="utf-8").read()
+        assert t.startswith("DRAFT FOR THE OWNER TO SEND.") and "contacts no outside party" in t, nm
+        assert "\u2013" not in t and "\u2014" not in t and all(ord(c) < 128 for c in t), "%s is not plain ASCII text" % nm
+    ad = open(os.path.join(CLAR, "analog-devices-lt8705a.txt"), encoding="utf-8").read()
+    assert "LT8705AIUHF" in ad and "EA2" in ad and "line regulation" in ad and "VC" in ad
+    mo = open(os.path.join(CLAR, "milliohm-hojlr2512.txt"), encoding="utf-8").read()
+    assert "HoJLR2512-3W-15mR-1%" in mo and "+25 C" in mo
+
+
+def t_result_is_conditional_exactly_when_an_unresolved_row_moves_the_bound():
+    R = _R()
+    M = _CACHE["M"]
+    assert R["bound_status"] == M.bound_status(R["qual_rows"]) == "CONDITIONAL"
+    base = [dict(r_) for r_ in R["qual_rows"]]
+    resolved = [dict(r_, resolved=True) for r_ in base]
+    assert M.bound_status(resolved) == "UNCONDITIONAL"
+    only_hold_open = [dict(r_, resolved=(r_["id"] != "HOLD")) for r_ in base]
+    assert M.bound_status(only_hold_open) == "UNCONDITIONAL", "a row that does not move the bound made it conditional"
+    for k in ("EA2", "LINE", "TCR", "TJ"):
+        one_open = [dict(r_, resolved=(r_["id"] != k)) for r_ in base]
+        assert M.bound_status(one_open) == "CONDITIONAL", k
+    text = "\n".join(M.render(R))
+    assert "THE RESULT: CONDITIONAL on EA2, LINE, TCR, TJ." in text
+
+
+def t_the_corners_bound_the_permitted_range():
+    R = _R()
+    assert min(R["dpdv"]) > 0, "the power is not increasing in the input voltage at every vertex"
+    for chk in (R["main_chk"], R["chk_printed"], R["chk_floor"], R["chk_drift"]):
+        assert all(abs(w[1] - 25.0) < 1e-9 for _l, w, _n in chk), "a stack's worst is not at the 25 V vertex"
+    assert R["p_hold_lo"] < R["chk_floor"][0][1][0], "the hold's lowest is not below the 25 V corner"
+    t_be_a, t_be_c = R["rs_t_be"]
+    assert (t_be_a is None or t_be_a > R["ends"][1][1]) and t_be_c is not None and t_be_c > R["ends"][1][1] + 50.0
+    assert R["ends"][0][1] == R["t_cold"] and R["ends"][1][2] == R["t_air"]
+    assert R["outside"]["voc40"] > 25.0, "below -20 C the candidate is not outside REQ-016's window"
+
+
+def t_the_sheet_is_the_owners_official_url():
+    R = _R()
+    pv = R["prov"]
+    assert pv["url"] == "https://www.analog.com/media/en/technical-documentation/data-sheets/8705af.pdf"
+    assert pv["snapshot"] == "20250322064938" and pv["sha"].startswith("8f552a0b57677bfa")
+    assert pv["sha"] == hashlib.sha256(open(os.path.join(ROOT, "v2/vendor/power/lt8705a.pdf"), "rb").read()).hexdigest()
+
+
+def t_the_full_range_tcr_swap_is_evaluated_and_not_taken():
+    R = _R()
+    w = R["wsl"]
+    assert w["p_floor"] > 100.0, "the alternative passes the design floor at 23.2k: the swap would cost nothing"
+    assert w["pick"] is not None and w["pick"][0] > R["rm"] and w["cost"] > 0.0
+    for name, (_n, _t, _r, codes_ok, codes) in R["drafts"].items():
+        assert "C844695" not in codes
+    assert "C2903494" in R["drafts"]["apply_gen_sch_e_input_limit.py"][4]
