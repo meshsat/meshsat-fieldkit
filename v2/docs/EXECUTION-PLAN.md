@@ -1145,3 +1145,45 @@ check and one targeted recheck, and the L4-E4 release record once the circuit-ro
 **Elapsed and compute:** sets 22 and 23 from about 15:55 to 18:20 CEST. vast.ai 53619970 ran both suites and is stopped with
 its disk kept; 53608225 stays stopped; nothing destroyed; credit 107.65 USD. The collaborator made two runs on the ChatGPT
 plan: L4-E7's check and its recheck.
+
+### Milestone, 1 October 2026 21:15 CEST: L4-E7's 100 W bound qualified (integration set 24 on main)
+
+**Closed:** the owner's instruction to qualify L4-E7's 96.25 W result (`records/l4e7/L4E7-QUALIFICATION.md`).
+- **The sheet.** The held LT8705A sheet is byte for byte the one at the owner's URL; the Internet Archive record is filed.
+- **The classification.** Each value the sheet gives no guaranteed limit for is classified by the outcome it affects (the
+  100 W bound, stability, protection or energy). Each has a conservative assumption, a break-even and the qualification it
+  needs.
+- **The range argument.** The assessed corners are shown to bound the permitted range: the input voltage, every tolerance
+  direction, both temperature ends with a mixed-temperature envelope. The states outside the corners are bench row 7b.9t,
+  including a cold-soaked irradiance step at about 122.7 W of available panel power.
+- **No part changed.**
+- **Checks:** the collaborator's focused check was not accepted (A7's gain extrapolated from its test point; the cold
+  TCR's small effects); its recheck accepted the fixes; the coordinator's check 3 recomputed stack A's corner and A7's
+  break-even in separate arithmetic.
+
+**Conditional:** 96.25 W is a calculated result under stated assumptions, CONDITIONAL on five values:
+- EA2's gain and VC's range;
+- A7's gain away from its 50 mV, 5.025 V test point;
+- the IMON_IN line regulation while switching and at temperature;
+- RSENSE1's TCR below +25 C;
+- U5's junction, an inferred estimate.
+
+With every conservative assumption together, the corner reads 99.8992 W, a margin of 0.1008 W. Clearing a condition needs a
+manufacturer-warranted limit; drafts for Analog Devices and Milliohm are in `records/l4e7/clarification/` for the owner to
+send.
+
+**Drafted, not implemented:** every circuit change of L4-E4 to L4-E7 is a draft for a generator owner. Nothing is applied to
+any generator.
+
+**Evidence:** the box suite at `6145f00f` read 2450 passed, 0 failed, 3 skipped, 208 of 208 modules, judged by the promotion
+gate on its log. The runner's gates passed: 213 module tests, every validator and page current.
+
+**Next:** L4-E8, the VBUS20 bank. The collaborator's check did not accept the author's eight-can selection: coincident
+harmonics at worst phase give 2.855 A; independent per-can ESL gives 3.587 A; the LM5176's specified frequency row; the
+lifetime evidence. Its fix round is running. Then its recheck, the coordinator's check, set 25, and L4-E4's release record
+once the circuit-round drafts are complete.
+
+**Blocker:** none for an owner decision.
+
+**Elapsed and compute:** 18:20 to 21:15 CEST. vast.ai 53619970 ran set 24's suite and is stopped with its disk kept; credit
+107.28 USD. The collaborator made four runs on the ChatGPT plan: L4-E7Q's check and recheck, and L4-E8's check.
