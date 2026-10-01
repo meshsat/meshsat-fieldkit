@@ -28,6 +28,7 @@ go in with L4-E6's R12 12 mOhm.
 | `apply_gen_sch_a_bank.py` | DRAFT for board A's generator owner: a 45 mOhm ballast resistor (R221 to R226) in series with each of the front end's six cans in `v2/ecad/tools/gen_sch_a.py`, and the front end's Cc2 (C6) at 3.3 nF. See its docstring for the mode, the refusals, the order with L4-E6's R12 and the composition |
 | `checks/astra-check-l4e8-1.md` | The engineering collaborator's check of `5ff06474` (accepted: no; blockers B1 to B4 and four minors), filed as received. The page's section "The recheck, and what changed" closes with how its items stand |
 | `checks/astra-check-l4e8-2.md` | The engineering collaborator's targeted recheck of `cc95fe1f` (accepted: no; R1/R2 the bound over fully independent cans not established, R4 the cold-loop closure rule too weak; the last collaborator run on L4-E8), filed as received. The page's section "The recheck, and what changed" maps each item to its change |
+| `checks/check-l4e8-3.md` | Claude's (the coordinator's) verification at `a282c8b7` after the collaborator's two runs: the bound's construction read, `mink` and `inv_hull` tested with the coordinator's own random cases, the output reproduced, the tests run (accepted: yes; B-4 closed at R11 8 mOhm, the 7 mOhm fallback CONDITIONAL); not a model review and not an Astra check |
 | `inputs/recovered/` | The predecessor's drafts as a session transcript holds them, filed as cited inputs (their code is never run here) |
 | `README.md` | This list |
 
