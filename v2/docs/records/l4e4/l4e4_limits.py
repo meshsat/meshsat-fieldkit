@@ -46,7 +46,7 @@ R11DEP_PY = "v2/docs/records/r11dep/r11_dep.py"
 R11DEP_OUT = "v2/docs/records/r11dep/r11_dep.out"
 REPLAY_OUT = "v2/docs/records/l4e/l4e_replay.out"
 PINS = {
-    R11DEP_PY: "6636a7489d3d1406ec8e4ea68c48169466edeb244ce0de4c350a8aca7161fb56",
+    R11DEP_PY: "c5e9d5713abfcb07a15276c489ce9774a20bff029b11d205a9e9877a21ed2684",  # 1 Oct 2026: the A32 lookup compares the full hash by prefix
     R11DEP_OUT: "f9d2c6f23fab3edcb48ad0116366fe588a514f755aafe56ebd62a0fe9495a209",
     REPLAY_OUT: "59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d",
 }

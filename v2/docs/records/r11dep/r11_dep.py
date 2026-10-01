@@ -298,8 +298,10 @@ def main():
     a32_isns = [a32_pins.get(k) for k in ("13", "14", "15", "16")]
     if a32_isns != ["/VBUS20", "/FE_OUT", "GND", "/FE_CS"] or '"R160"' in bt:
         refuse("revision A32's U2 pins 13 to 16 are not as recorded")
-    a32_log = subprocess.run(["git", "-C", TOP, "log", "-1", "--format=%h %ad", "--date=short", "--", A32[0]], capture_output=True, text=True).stdout.split()
-    if a32_log[0] != A32[1]:
+    # the full hash compared by its recorded prefix: %h's length is the clone's choice (a rented box's clone printed nine
+    # characters for this commit on 1 October 2026 and the check refused a correct history)
+    a32_log = subprocess.run(["git", "-C", TOP, "log", "-1", "--format=%H %ad", "--date=short", "--", A32[0]], capture_output=True, text=True).stdout.split()
+    if not a32_log or not a32_log[0].startswith(A32[1]):
         refuse("revision A32's last commit is not %s" % A32[1])
     # envelope, declarations, the energy records
     env = yaml.safe_load(open(os.path.join(TOP, ENVELOPE), encoding="utf-8"))

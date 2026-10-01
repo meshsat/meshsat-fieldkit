@@ -15,7 +15,8 @@ execution plan) merged in at step 5. Requirements maturity, design compliance an
 | 7 | `8146b4cc` | the supersede test of `test_l3am.py` reads the history its copy already holds (below: the first acceptance attempt) |
 | 8 | `aa9a1bef` | check 4 of the amendment (`check-l3am-4`, Claude's, reviewed revision `8146b4cc`) filed and named as the check that closed the findings (`apply_l3am_check4.py`, `apply_l3am_findings_rechecked.py`); the acceptance-guard check restated for the binding; the re-acceptance's status script and its test; the pages rendered |
 | 9 | `d850141a` | merge of `fnd/l4e4` at `bb7ebf12`: Layer 4 task L4-E4, board A's current-limit coordination (U3's IIN_HOST 4.70 A with R16's tolerance in its bounds, R11 8 mOhm, the Kelvin allowance 0.38 mOhm at 25 C) and the outlet's R138 at 5 mOhm with a bench procedure that isolates U18's comparator; drafts for board A's generator owner, nothing applied; the collaborator's check and recheck (not accepted) and the coordinator's check 3 (accepted) |
-| 10 | this commit | this record's steps 7 to 9 |
+| 10 | `87dfa55f` | this record's steps 7 to 9 |
+| 11 | this commit | `r11_dep.py` compares revision A32's full hash by its recorded prefix (it compared git's abbreviated hash, whose length is the clone's choice: the box suite on `87dfa55f` failed 11 `test_l4e4` tests because the box's clone printed nine characters); `r11_dep.out` unchanged byte for byte; L4-E4's pin of the script and the one line of `l4e4_limits.out` that prints it updated; `tests/test_r11dep.py` runs the record under abbreviations of 7, 9, 12 and 40 characters |
 
 **The amendment's checks, attributed.** The engineering collaborator (Astra, `gpt-6-astra` at `xhigh`, read-only)
 checked the amendment twice, the owner's allowance of one assessment and one targeted follow-up: both read NOT
