@@ -1,5 +1,11 @@
 # L4-E4: board A's current-limit coordination and the outlet's trip (MESHSAT-1357, 1 October 2026)
 
+**PROVISIONAL (the owner's instruction of 1 October 2026).** The values below (U3's IIN_HOST 4.70 A, R11 8 mOhm, R138
+5 mOhm) are provisional until the source-control decision (task L4-E5, implementable choice 1: the per-source IIN_HOST
+rule of finding A-2) and the fault-handling decision (task L4-E6, implementable choice 4: B-1, B-2, B-4) support them.
+Both draft apply scripts refuse to write board A's generator in this repository until `RELEASE.md` beside them reads
+"released: yes" and names an accepted check of each decision; a copy elsewhere may still be written (the tests).
+
 Prototype design, desk arithmetic: nothing is bought, built, powered or measured, and no generator, registry or rendered
 page is edited. Items 2 and 5 of "The next implementable power-path choices" on
 `../l4e/L4-ENERGY-ARCHITECTURE.md`, turned into values. This is the second round, after check `checks/astra-check-l4e4-1.md`
