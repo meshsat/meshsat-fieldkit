@@ -1,0 +1,29 @@
+{
+ "what": "LCSC public product-detail answer for C674169 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C674169), no login; kept fields only",
+ "read_utc": "2026-10-01T13:30Z",
+ "read_by": "task L4-E7 (MESHSAT-1357)",
+ "role": "board E U5, chosen: the I grade in the drawn QFN, cut tape",
+ "code": "C674169",
+ "brand": "ADI",
+ "model": "LT8705AIUHF#PBF",
+ "package": "QFN-38-EP(5x7)",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/f14444a692e8f998db783eaa7f33f0d3.pdf?productCode=C674169",
+ "pdf_sha256": "8f552a0b57677bfa7e4a5d5d0fac56d56fbbd1a6f65a9ee7aaaf8743cd534ec3",
+ "pdf_note": "fetched at read_utc; byte-identical to v2/vendor/power/lt8705a.pdf (8705af, the sheet already filed)",
+ "stock": 0,
+ "params": {
+  "Synchronous Rectifier": "Yes",
+  "Features": "Frequency synchronization;External compensation;Light load efficient mode;Built-in LDO regulator",
+  "Number of Channels": "1",
+  "Topology": "Buck-Boost",
+  "Operating Voltage": "2.8V~80V",
+  "Switch tube (built-in/external)": "External",
+  "Output Voltage": "1.3V~80V",
+  "Operating Temperature": "-40℃~+125℃",
+  "Output Current": "-",
+  "Frequency - Switching": "100kHz~400kHz",
+  "Output Type": "Adjustable",
+  "Function": "Buck-Boost",
+  "Quiescent Current": "2.65mA"
+ }
+}

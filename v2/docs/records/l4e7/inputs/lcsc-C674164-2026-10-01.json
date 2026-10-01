@@ -1,0 +1,29 @@
+{
+ "what": "LCSC public product-detail answer for C674164 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C674164), no login; kept fields only",
+ "read_utc": "2026-10-01T13:30Z",
+ "read_by": "task L4-E7 (MESHSAT-1357)",
+ "role": "board E U5 as drawn (the netlist's LCSC field): the E grade, tape and reel",
+ "code": "C674164",
+ "brand": "ADI",
+ "model": "LT8705AEUHF#TRPBF",
+ "package": "QFN-38-EP(5x7)",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/f14444a692e8f998db783eaa7f33f0d3.pdf?productCode=C674164",
+ "pdf_sha256": "8f552a0b57677bfa7e4a5d5d0fac56d56fbbd1a6f65a9ee7aaaf8743cd534ec3",
+ "pdf_note": "fetched at read_utc; byte-identical to v2/vendor/power/lt8705a.pdf (8705af, the sheet already filed)",
+ "stock": 3,
+ "params": {
+  "Operating Temperature": "-40℃~+125℃@(TA)",
+  "Synchronous Rectifier": "Yes",
+  "Output Current": "-",
+  "Features": "Frequency synchronization;Light load efficient mode;Built-in LDO regulator;External compensation",
+  "Number of Channels": "1",
+  "Topology": "Buck-Boost",
+  "Operating Voltage": "2.8V~80V",
+  "Frequency - Switching": "100kHz~400kHz",
+  "Output Type": "Adjustable",
+  "Switch tube (built-in/external)": "External",
+  "Output Voltage": "1.3V~80V",
+  "Function": "Buck-Boost",
+  "Quiescent Current": "2.65mA"
+ }
+}

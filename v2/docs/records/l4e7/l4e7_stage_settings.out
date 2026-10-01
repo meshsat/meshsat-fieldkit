@@ -1,0 +1,172 @@
+L4-E7: REAL COMPONENT SETTINGS FOR BOARD E'S SOLAR STAGE (layer 4, MESHSAT-1357, 1 October 2026)
+prototype design, desk arithmetic; nothing bought, built, powered or measured. Bases: MAKER, NETLIST, CATALOGUE, MODELED,
+INFERRED, ASSUMPTION, SESSION, as named on each line
+
+0. REPRODUCTIONS (before any figure)
+   0a l4e_replay.py in a child process reproduces l4e_replay.out byte for byte: yes
+   0b l4e5_source_control.py in a child process reproduces l4e5_source_control.out byte for byte: yes
+   0c l4e_replay.main() in-process, locals captured, prints l4e_replay.out byte for byte: yes
+   (the functions used below are the replay's: i_factor, ec_row, pdf_lines, hold, trace, meanday, least; no git hash compared)
+
+1. BOARD E AS DRAWN (NETLIST v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net, pinned)
+   - U5 pins 32 (CSNIN), 33 (CSPIN) and 34 (VIN) all on PV_P: the input-current sense is tied off, so as drawn no input limit acts (8705af p.12, p.31)
+   - U5 pin 38 (IMON_IN) on TRK_IMONI with R16 alone, 10k, and no CIMON_IN
+   - U5 pins 29 to 31 (EXTVCC, CSNOUT, CSPOUT) on TRK_OUT: INTVCC is regulated from the output (8705af p.32)
+   - U5's LCSC field C674164 and its land WQFN-38-1EP_5x7mm_P0.5mm_EP3.15x5.15mm
+   - R8 102k 1% from PV_P to TRK_FBIN, R9 7.50k 1% to GND
+   - R12 215k (RT), the oscillator's 202 kHz row
+   - Q3 and Q5 BSC028N06NS (M1, M3), Q4 and Q6 BSC039N06NS (M2, M4)
+   - PV_P carries F2, D4, the bulk C11 to C15, C64, Q3's drain, R8, R14, TP5 and U5
+   gen_sch_e.py's R10 reads 115k; L4-E5 (its record, reproduced in 0b) raises it to 232k, ceiling 28.28 / 29.21 / 30.15 V
+
+2. THE MAKERS' ROWS USED
+   LT8705A 8705af (v2/vendor/power/lt8705a.pdf): p.3 order table: grades in the drawn QFN (UHF): E, I; H and MP only in the
+     TSSOP (FE); p.6 Note 3, its U+2013 minus written -:
+       "Note 3: The LT8705AE is guaranteed to meet performance specifications from 0°C to 125°C junction temperature.
+       Specifications over the -40°C to 125°C operating junction temperature range are assured by design, characterization
+       and correlation with statistical process controls. The LT8705AI is guaranteed over the full -40°C to 125°C junction
+       temperature range."
+   p.4 IMON_IN regulation 1.187 / 1.208 / 1.229 V (full range); line regulation max 0.005 %/V (25 C, VIN 12 to 80 V, not switching);
+     p.5 A7 gm E, I 0.94 / 1.06 mmho (full range), all grades 0.95 / 1.05 (25 C); EA2 gain 130 V/V TYP only; p.4 FBIN E, I
+     1.184 / 1.205 / 1.226 V (full range); EA3 gain 90 V/V TYP only; p.5 IMON_IN fault 1.55 / 1.61 / 1.67 V; IMON_IN output
+     current at least 100 uA; CSPIN-CSNIN differential -100 to 100 mV; p.31 CIMON_IN > 100 / (f x RIMON_IN), 0.1 to 1 uF in a
+     current loop; p.2 QFN theta-JA 34 C/W; p.3 VIN quiescent 4.2 mA max; p.6 fOSC at RT 215k up to 235 kHz
+   Milliohm HoJLR2512 series (v2/vendor/passives/milliohm-hojlr2512-series.pdf, Ho-A0): p.1 F = +-1 %; p.2 TCR +-50 ppm/K
+     (2 to 500 mOhm), 3 W derating from 70 C to 0 at 170 C (33.3 K/W, INFERRED as r11_dep.py); p.4 the TCR test spans +25 to
+     +125 C only; soldering heat < +-0.5 %; load life < +-1 %
+   YAGEO RT series V.16, May 06 2025 (held: v2/vendor/passives/held/yageo-rt-series-v16-2025-05-06.pdf): p.2 B = +-0.1 %,
+     D = 25 ppm/K; p.7 TCR tested at +25/-55 C and +25/+125 C; life +-(0.5 % + 0.05 Ohm); p.8 soldering heat +-(0.5 % + 0.05 Ohm)
+   Infineon BSC028N06NS Rev.2.1 p.3 (held) Qg max 49 nC; BSC039N06NS Rev.2.4 p.4 Qg max 32 nC (both VGS 0 to 10 V)
+   the envelope (v2/ecad/tools/pcb_envelope.yaml): ambient in use -20 to 40 C (REQ-024, D-02a); worst inside air 62.1 C
+
+3. THE DECISIONS
+   GRADE: LT8705AI in the drawn QFN (LT8705AIUHF#PBF, LCSC C674169; #TRPBF C674170), replacing the netlist's C674164
+     (LT8705AEUHF#TRPBF, the E grade). The H and MP grades exist only in the TSSOP, which is not the drawn land. Of E and I,
+     only I is GUARANTEED (tested) below 0 C junction; the kit starts cold at -20 C ambient, so its junction range starts at
+     -20 C. With I fixed, A7's limits are 0.94 / 1.06 mmho (the replay stacked H and MP's 0.93 because no grade was named).
+     Hot end (INFERRED): INTVCC from EXTVCC on TRK_OUT up to L4-E5's 30.15 V; gate charge 2 x 49 + 2 x 32 nC at 235 kHz plus
+     4.2 mA: 42.3 mA, 1.27 W, TJ at most 105.4 C in 62.1 C air with theta-JA 34 C/W (84.5 C at the drawn output's 15.56 V), under
+     125 C.
+     So the I grade's tested range, -40 to 125 C junction, covers -20 to 105.4 C. Catalogue: stock 0 at LCSC on 1 October 2026
+     (U5 is bench-fitted; another distributor)
+   RSENSE1 (new, R59): 15 mOhm, Milliohm HoJLR2512-3W-15mR-1%, LCSC C2903494 (stock 4871): +-1 % (CATALOGUE and MAKER p.1),
+     +-50 ppm/K (MAKER p.2). Rule (SESSION): the family value that puts the zero-margin limit (3.607 A) nearest A7's printed
+     50 mV test point (p.5), since no A7 offset row is printed; at the chosen setting 52.1 mV
+   RIMON_IN (R16): 23.2k, YAGEO RT0603BRD0723K2L, LCSC C861244 (stock 4030): +-0.1 %, +-25 ppm/K (MAKER p.2, CATALOGUE).
+     Rule (SESSION): the largest stocked RT0603BRD07 setting whose 25 V corner stays at or under 100 W at both ends with every
+     printed limit, the resistors' printed soldering-heat and life drifts stacked, EA2's gain at 1/2 of its typical and the
+     line regulation at 2 times its printed maximum. ACHIEVED SETTING: 1.208 V / (1 mmho x 15 mOhm x 23.2k) = 3.4713 A
+     candidates (setting A; worst corner at the typical rows / under the floor with drifts, W):
+        22.0k C469656   stock  50468  3.6606 A  101.497 / 105.111
+        22.1k C723484   stock  27904  3.6440 A  101.038 / 104.635
+        22.3k C861235   stock     10  3.6114 A  100.132 / 103.697  (stock under 1000)
+        22.6k C861236   stock   9240  3.5634 A   98.803 / 102.320  (zero margin)
+        23.2k C861244   stock   4030  3.4713 A   96.247 /  99.674  <- chosen
+        23.7k C861245   stock    648  3.3980 A   94.217 /  97.571  (stock under 1000)
+        24.0k C326729   stock  59731  3.3556 A   93.039 /  96.351
+        24.3k C136968   stock  29267  3.3141 A   91.891 /  95.162
+        24.6k C861250   stock   1689  3.2737 A   90.770 /  94.001
+        24.9k C136967   stock   6232  3.2343 A   89.676 /  92.869
+     CIMON_IN (new, C65): 100n, LCSC C14663: above p.31's minimum 25.4 nF at the slowest oscillator, at the 0.1 uF lower end; tau 2.32 ms
+   THE HOLD: R8 94.2k (RT0603BRD0794K2L, LCSC C861602, stock 9520) over R9 7.5k (RT0603BRD077K5L, LCSC C728597, stock 32275), 0.1 %, 25 ppm/K: nominal 16.340 V
+     Rule (SESSION): of the 97 stocked pairs with a nominal from 15.5 to 17.5 V, the one whose band's worse end gives the most energy
+     on SC-37's day (the model's hourly maximum-power voltage there runs 16.34 to 16.70 V). The best eight (worse end Wh, pair, band):
+       370.6 Wh   94.2k / 7.50k  15.763 / 16.340 / 16.921 V
+       370.4 Wh  102.0k / 8.20k  15.622 / 16.194 / 16.770 V
+       370.3 Wh   91.0k / 7.32k  15.614 / 16.185 / 16.761 V
+       370.3 Wh  113.0k / 9.09k  15.613 / 16.185 / 16.760 V
+       370.2 Wh  105.0k / 8.45k  15.607 / 16.178 / 16.754 V
+       370.1 Wh   90.9k / 7.32k  15.598 / 16.169 / 16.744 V
+       370.1 Wh  113.0k / 9.10k  15.597 / 16.168 / 16.743 V
+       370.0 Wh   93.1k / 7.50k  15.593 / 16.163 / 16.738 V
+     the band (FBIN's I-grade limits, its line term, the FBIN bias, R8 and R9 at 0.1 % and 25 ppm/K at both ends):
+       EA3 at its typical 90 V/V: 15.763 / 16.340 / 16.921 V; EA3 at half: 15.538 / 17.148 V; with the resistors' drifts too: 15.253 / 17.470 V
+     as drawn the band was 16.695 / 17.593 / 18.490 V (the replay: 1 % parts, H and MP's FBIN minimum)
+
+4. THE 100 W CORNER CHECK ON THE ACHIEVED VALUES (section 11's physics: the replay's i_factor, 8705af p.31)
+   envelope: 15.538 V (the hold's lowest, EA3 at half) to REQ-016's 25 V in 0.01 V steps; I grade; both ends:
+     the cold end: RSENSE1 at -20.0 C, RIMON_IN at -20.0 C
+     the hot end: RSENSE1 at 70.1 C, RIMON_IN at 62.1 C (RSENSE1 0.24 W x 33.3 K/W over the air, INFERRED)
+   A. THE CHECK (printed limits; the two TYP-only rows as the replay carries them: EA2 at 130 V/V over VC's absolute range, line at its 25 C maximum):
+     the cold end worst 96.2474 W at 25.000 V (ref 1.229 V, line +, gm 0.94, RSENSE1 x0.98777, RIMON_IN x0.99788, EA2 +); margin 3.7526 W; 60736 corners
+     the hot end  worst 96.2291 W at 25.000 V (ref 1.229 V, line +, gm 0.94, RSENSE1 x0.98777, RIMON_IN x0.99807, EA2 +); margin 3.7709 W; 60736 corners
+   B. printed rows alone (information: EA2's and the line term left out):
+     the cold end worst 95.2909 W at 25.000 V (ref 1.229 V, line -, gm 0.94, RSENSE1 x0.98777, RIMON_IN x0.99788, EA2 -); margin 4.7091 W; 60736 corners
+     the hot end  worst 95.2727 W at 25.000 V (ref 1.229 V, line -, gm 0.94, RSENSE1 x0.98777, RIMON_IN x0.99807, EA2 -); margin 4.7273 W; 60736 corners
+   C. the design floor (EA2 at 65 V/V, line x2, the resistors' soldering and life drifts stacked: SESSION):
+     the cold end worst 99.6739 W at 25.000 V (ref 1.229 V, line +, gm 0.94, RSENSE1 x0.97301, RIMON_IN x0.98792, EA2 +); margin 0.3261 W; 60736 corners
+     the hot end  worst 99.6549 W at 25.000 V (ref 1.229 V, line +, gm 0.94, RSENSE1 x0.97300, RIMON_IN x0.98811, EA2 +); margin 0.3451 W; 60736 corners
+   D. drifts at the typical rows (information):
+     the cold end worst 98.6931 W at 25.000 V (ref 1.229 V, line +, gm 0.94, RSENSE1 x0.97301, RIMON_IN x0.98792, EA2 +); margin 1.3069 W; 60736 corners
+     the hot end  worst 98.6743 W at 25.000 V (ref 1.229 V, line +, gm 0.94, RSENSE1 x0.97300, RIMON_IN x0.98811, EA2 +); margin 1.3257 W; 60736 corners
+   VERDICT: A PASSES at both ends with a margin of 3.75 W, and C (the floor) passes; refused above 100 W
+   THE UNPRINTED ROWS, as break-even values for this setting (the corner reaches 100 W at the value shown):
+     EA2's gain, line x1                  cold end 25.0 V/V, hot end 24.9 V/V
+     EA2's gain, line x1   , with drifts  cold end 53.6 V/V, hot end 53.2 V/V
+     EA2's gain, line x2                  cold end 25.4 V/V, hot end 25.3 V/V
+     EA2's gain, line x2   , with drifts  cold end 55.2 V/V, hot end 54.7 V/V
+     EA2's gain, line x5                  cold end 26.4 V/V, hot end 26.3 V/V
+     EA2's gain, line x5   , with drifts  cold end 60.5 V/V, hot end 59.9 V/V
+     EA2's gain, line x10                 cold end 28.4 V/V, hot end 28.3 V/V
+     EA2's gain, line x10  , with drifts  cold end 72.2 V/V, hot end 71.3 V/V
+     the line regulation (cold end) at EA2 130 V/V: up to 61.6 times its printed maximum (0.308 %/V); at 65 V/V: 47.1 times
+     RSENSE1's TCR below 25 C (HoJLR prints its TCR from +25 to +125 C only, so the cold end applies it as an ASSUMPTION): the
+     cold corner passes up to 882 ppm/K
+   for comparison, the replay's 3.548 A on these parts would take 98.375 W at the worse end
+   CONDITIONS: sense voltage at the limit's highest 57.5 mV (operating range 100 mV); IMON_IN 60.9 uA at it (at least 100 uA);
+     the fault (IMON_IN 1.67 V maximum) at up to 76.7 mV across RSENSE1; the candidate's hot short circuit through RSENSE1 97.4 mV,
+     inside the operating range; no resistor in series with CSPIN or CSNIN (p.30): R59's pads are their Kelvin taps
+
+5. THE ENERGY (MODELED: the replay's trace on SC-37's mean September day, the SunPower SPR-E-Flex-100, 1S1P, nominal sheet)
+   Wh a day into the stage (hours the limit binds); PVGIS's maximum-power figure 378.0 Wh. Columns: no limit; the chosen setting
+   at its lowest / nominal / highest; the zero-margin catalogue setting (22.6k, 3.5634 A) at its lowest / nominal / highest
+     lower hold corner        15.763 V   371.9 |  372.0 (1 h)  371.9 (0 h)  371.9 (0 h) |  371.9 (0 h)  371.9 (0 h)  371.9 (0 h)
+     nominal hold             16.340 V   375.0 |  375.0 (0 h)  375.0 (0 h)  375.0 (0 h) |  375.0 (0 h)  375.0 (0 h)  375.0 (0 h)
+     upper hold corner        16.921 V   370.6 |  370.6 (0 h)  370.6 (0 h)  370.6 (0 h) |  370.6 (0 h)  370.6 (0 h)  370.6 (0 h)
+     lower, EA3 at its floor  15.538 V   369.4 |  369.8 (2 h)  369.4 (0 h)  369.4 (0 h) |  369.4 (0 h)  369.4 (0 h)  369.4 (0 h)
+     upper, EA3 at its floor  17.148 V   365.8 |  365.8 (0 h)  365.8 (0 h)  365.8 (0 h) |  365.8 (0 h)  365.8 (0 h)  365.8 (0 h)
+   the margin's cost on this day: 0.0 Wh at the most over the fifteen cells (chosen less zero-margin from +0.0 to +0.4 Wh:
+   where the chosen limit binds below the panel's maximum-power point, the voltage rides up toward it)
+   as drawn (the replay, section 12, no input limit): 373.5 Wh at 16.695 V; 350.0 Wh at 17.593 V; 280.6 Wh at 18.490 V
+   where the margin costs: the limit's lowest begins to bind above (hour 12's 18.1 C air, the model's cells):
+     setting 3.4713 A, hold 15.763 V: lowest 3.1407 A, above 520 W/m2
+     setting 3.4713 A, hold 16.340 V: lowest 3.1406 A, above 537 W/m2
+     setting 3.5634 A, hold 15.763 V: lowest 3.2240 A, above 534 W/m2
+     setting 3.5634 A, hold 16.340 V: lowest 3.2239 A, above 553 W/m2
+     (SC-37's day peaks at 520.7 W/m2); in an hour it binds, the stage's input falls in the ratio of the two settings, 2.6 %
+   A1 AND A2 ON THE NEW TRACES (CORRECTED, WE, TYP; the replay's meanday and least, unchanged; pairs 06 / 18 UTC):
+     NEW least-energy corner (upper hold corner, limit at its lowest), A1: 370.6 Wh a day; first interruption h 8/2; unserved 1344.3 / 1330.7 at 48 h, 2048.0 / 2049.9 at 72 h; least addition +1326.9 / +2042.1 Wh
+     NEW least-energy corner (upper hold corner, limit at its lowest), A2: 370.6 Wh a day; first interruption h 18/11; unserved 953.5 / 1180.1 at 48 h, 1692.0 / 1918.5 at 72 h; least addition +944.3 / +1667.4 Wh
+     NEW nominal (hold 16.340 V, limit 3.471 A), A1: 375.0 Wh a day; first interruption h 8/2; unserved 1337.2 / 1323.2 at 48 h, 2037.0 / 2038.7 at 72 h; least addition +1319.3 / +2030.8 Wh
+     NEW nominal (hold 16.340 V, limit 3.471 A), A2: 375.0 Wh a day; first interruption h 19/11; unserved 944.3 / 1131.8 at 48 h, 1677.2 / 1864.7 at 72 h; least addition +936.7 / +1656.0 Wh
+     was CORRECTED, WE; O-2 nominal, A1: unserved 1367.4 / 1368.1 at 48 h, 2103.9 / 2104.6 at 72 h; least addition +1361.5 / +2094.1 Wh
+     was CORRECTED, WE; O-2 nominal, A2: unserved 986.9 / 1196.1 at 48 h, 1741.4 / 1950.7 at 72 h; least addition +979.2 / +1719.7 Wh
+     was CORRECTED, WE; the least-energy corner, A1: unserved 1511.9 / 1535.8 at 48 h, 2330.4 / 2289.0 at 72 h; least addition +1478.4 / +2269.4 Wh
+     was CORRECTED, WE; the least-energy corner, A2: unserved 1318.5 / 1169.6 at 48 h, 1894.5 / 2131.1 at 72 h; least addition +1097.1 / +1896.6 Wh
+
+6. THE INTERACTION WITH L4-E5 (R10 115k to 232k, the ceiling raised, C26 and C27 re-rated)
+   apply_gen_sch_e_hold.py: 3 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C861602, C728597: yes
+   apply_gen_sch_e_input_limit.py: 9 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C2903494, C861244, C14663: yes
+   apply_gen_sch_e_u5_grade.py: 2 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C674169: yes
+   U5's junction is taken at L4-E5's raised EXTVCC (30.15 V): 105.4 C; the stage's input stays at or under REQ-016's window, so
+   L4-E5's line (sized for the window's 100 W) covers it; the hold and the limit are on the input, R10 and C26/C27 on the output
+
+7. INCONCLUSIVE (no printed bound), each with the measurement that bounds it
+   - EA2's voltage gain (130 V/V TYP, p.5) and VC's operating range: the corner passes down to 25.0 V/V (cold end, line x1).
+     Bench: in input-current limit at 25 V, step the load to move VC across its range, read VC and IMON_IN; the gain is
+     dVC / dV(IMON_IN); accept at or above 65 V/V (the floor), and at least the break-even at every point
+   - the IMON_IN reference's line regulation while switching and at both ends (printed at 25 C, not switching, p.4): the corner
+     passes up to 62 times its printed maximum. Bench: the limit's current at VIN 16 and 25 V, switching, at both ends
+   - RSENSE1's TCR below +25 C (HoJLR p.4 tests +25 to +125 C): passes up to 882 ppm/K. Bench: R59 at -20 C and +25 C
+   - EA3's gain (90 V/V TYP) and the FBIN bias (10 nA TYP): energy only (the hold band above); the bench reads the hold at both ends
+   - U5's junction (INFERRED from the gate charge at 10 V and theta-JA): the CLKOUT duty cycle method of p.34 (+-10 C)
+   - the candidate panel's own source compliance (O-1) and every efficiency (C-8): unchanged by this record
+
+8. BENCH ROWS
+   7b.9 (steady state): a PV emulator puts the loaded input at the limit from 15.763 V to 25 V, at the load's maximum, cold-soaked
+     at -20 C and in 62.1 C air; V_in x I_in at or under 100 W at every point; the limit's current at 25 V at most 4.000 A
+   7b.9t (transients, recorded apart): a source step (open circuit to the limit) and an irradiance step; the peak and the
+     time above 100 W against the filter's 2.32 ms (SESSION: no fault trip, IMON_IN under 1.55 V; above 100 W no longer than
+     five time constants, 11.6 ms)
+   7b.10 the EA2 gain row and 7b.11 the line row above; 7b.12 the hold: the panel held at 15.763 to 16.921 V at both ends
+   7b.13 U5's junction by CLKOUT at all four switches, EXTVCC at the ceiling, 62.1 C air: at most 125 C less p.34's 10 C

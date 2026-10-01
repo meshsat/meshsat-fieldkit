@@ -1,0 +1,92 @@
+{
+ "what": "JLCPCB public parts search for the keyword LT8705A (POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList, keyword, page 1, 50 a page), no login; code, model, package, stock and the catalogue's description kept",
+ "read_utc": "2026-10-01T13:30Z",
+ "read_by": "task L4-E7 (MESHSAT-1357)",
+ "count": 12,
+ "rows": [
+  {
+   "code": "C674165",
+   "model": "LT8705AHFE#PBF",
+   "package": "TSSOP-38-4.4mm",
+   "stock": 5,
+   "describe": "-40℃~+150℃ 2 2.8V~80V 400kHz Buck-Boost Buck-Boost External Yes TSSOP-38-4.4mm DC-DC Converters ROHS"
+  },
+  {
+   "code": "C674167",
+   "model": "LT8705AIFE#PBF",
+   "package": "TSSOP-38-EP-4.4mm",
+   "stock": 1,
+   "describe": "-40℃~+125℃ 1 1.3V~80V 100kHz~400kHz 2.8V~80V Adjustable Buck-Boost Buck-Boost External Yes TSSOP-38-EP-4.4mm DC-DC Converters ROHS"
+  },
+  {
+   "code": "C580337",
+   "model": "LT8705AEUHF#PBF",
+   "package": "QFN-38-EP(5x7)",
+   "stock": 3,
+   "describe": "-40℃~+125℃@(TJ) 1 1.3V~80V 100kHz~400kHz 2.8V~80V Adjustable Buck-Boost Buck-Boost External Yes QFN-38-EP(5x7) DC-DC Converters ROHS"
+  },
+  {
+   "code": "C674162",
+   "model": "LT8705AEFE#PBF",
+   "package": "TSSOP-38-EP-4.4mm",
+   "stock": 0,
+   "describe": "-40℃~+125℃ 1.3V~80V 2.8V~80V Adjustable Buck-Boost Yes TSSOP-38-EP-4.4mm DC-DC Converters ROHS"
+  },
+  {
+   "code": "C674169",
+   "model": "LT8705AIUHF#PBF",
+   "package": "QFN-38-EP(5x7)",
+   "stock": 0,
+   "describe": "-40℃~+125℃ 1 1.3V~80V 100kHz~400kHz 2.65mA 2.8V~80V Adjustable Buck-Boost Buck-Boost External Yes QFN-38-EP(5x7) DC-DC Converters ROHS"
+  },
+  {
+   "code": "C674171",
+   "model": "LT8705AMPFE#PBF",
+   "package": "TSSOP-38-EP-4.4mm",
+   "stock": 0,
+   "describe": "-55℃~+125℃ 1.3V~80V 2 2.8V~80V 400kHz Adjustable Buck-Boost Buck-Boost External Yes TSSOP-38-EP-4.4mm DC-DC Converters ROHS"
+  },
+  {
+   "code": "C674164",
+   "model": "LT8705AEUHF#TRPBF",
+   "package": "QFN-38-EP(5x7)",
+   "stock": 3,
+   "describe": "-40℃~+125℃@(TA) 1.3V~80V 100kHz~400kHz 2.8V~80V Adjustable Buck-Boost Buck-Boost External Yes QFN-38-EP(5x7) DC-DC Converters ROHS"
+  },
+  {
+   "code": "C674163",
+   "model": "LT8705AEFE#TRPBF",
+   "package": "TSSOP-38-4.4mm",
+   "stock": 0,
+   "describe": "-40℃~+125℃ 1.3V~80V 2 2.8V~80V 400kHz Adjustable Buck-Boost Buck-Boost External Yes TSSOP-38-4.4mm DC-DC Converters ROHS"
+  },
+  {
+   "code": "C674166",
+   "model": "LT8705AHFE#TRPBF",
+   "package": "TSSOP-38-EP-4.4mm",
+   "stock": 0,
+   "describe": "-40℃~+150℃ 2 2.8V~80V 400kHz Buck-Boost Buck-Boost External Yes TSSOP-38-EP-4.4mm DC-DC Converters ROHS"
+  },
+  {
+   "code": "C674168",
+   "model": "LT8705AIFE#TRPBF",
+   "package": "TSSOP-38-EP-4.4mm",
+   "stock": 0,
+   "describe": "-40℃~+125℃ 2 2.8V~80V 400kHz Buck-Boost Buck-Boost External Yes TSSOP-38-EP-4.4mm DC-DC Converters ROHS"
+  },
+  {
+   "code": "C674170",
+   "model": "LT8705AIUHF#TRPBF",
+   "package": "QFN-38-EP(5x7)",
+   "stock": 0,
+   "describe": "-40℃~+125℃ 2 2.8V~80V 400kHz Buck-Boost Buck-Boost External Yes QFN-38-EP(5x7) DC-DC Converters ROHS"
+  },
+  {
+   "code": "C674172",
+   "model": "LT8705AMPFE#TRPBF",
+   "package": "TSSOP-38-4.4mm",
+   "stock": 0,
+   "describe": "-55℃~+125℃ 2 2.8V~80V 400kHz Buck-Boost Buck-Boost External Yes TSSOP-38-4.4mm DC-DC Converters ROHS"
+  }
+ ]
+}
