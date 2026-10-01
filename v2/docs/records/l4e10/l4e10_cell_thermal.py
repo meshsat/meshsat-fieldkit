@@ -729,7 +729,7 @@ def render(R):
       % (R["env"]["in_use"]["min"], R["b"]["air"], R["b"]["rise_air"], R["b"]["cell"], lim["discharge"][0], R["b"]["cell"] - lim["discharge"][0]))
     w("LO-01c  charging in use: the 0 to 45 C window is reached at ambients of %.1f to +%.1f C by state on the independent bound (MODELED, the records' ceilings); the charge is held off outside it (no collision)"
       % (R["c"]["reach_lo"], R["c"]["reach_hi"]))
-    w("LO-01d  D-02a's +%.0f C operating margin, %.0f h (E3-O; qualification margin: survive and recover, no shutdown)" % (d["amb"], d["hours"]))
+    w("LO-01d  D-02a's +%.0f C operating margin, %.0f h (E3-O; qualification margin: no damage and recovery to specification, no shutdown)" % (d["amb"], d["hours"]))
     w("   inside air in the heat stage lid open, both configurations (MODELED): %.2f to %.2f C; gap %.2f to %.2f K (Layer 3: 1.6 to 14.2 K; %s); on the pack at the worst corner %.2f C"
       % (d["air_lo"], d["air_hi"], R["gaps"]["LO-01d"][0], R["gaps"]["LO-01d"][1], R["agree"]["LO-01d"][2], d["cell_hi_pack"]))
     w("LO-01e  E5: %.0f cycles of %.0f h at %.0f %% RH, %.0f to %.0f C, on an input with the kit logging (qualification margin, SC-03): the pack idle at the inside air,"
@@ -743,7 +743,7 @@ def render(R):
     w("LO-01h  storage inside the envelope (%.0f to +%.0f C three months, %.0f to +%.0f C a year): none on Ver. 1.1; on Version 1.0 %.0f K at the cold end and %.0f K at the one-year top (%s)"
       % (R["env"]["storage_3_months"]["min"], R["env"]["storage_3_months"]["max"], R["env"]["storage_1_year"]["min"], R["env"]["storage_1_year"]["max"],
          R["gaps"]["LO-01h"][0], R["gaps"]["LO-01h"][1], R["agree"]["LO-01h"][2]))
-    w("In-use (the envelope, operate to specification): LO-01a, LO-01b, LO-01c, LO-01h. Qualification margins (D-02a, SC-03; survive and recover): LO-01d, LO-01e, LO-01f, LO-01g.")
+    w("In-use (the envelope, operate to specification): LO-01a, LO-01b, LO-01c, LO-01h. Qualification margins (D-02a, SC-03; no damage and recovery): LO-01d, LO-01e, LO-01f, LO-01g.")
     w("")
     # ---------------------------------------------------------------- 2: the feasibility screen
     H, G2 = R["hold"], R["gaps"]
@@ -795,10 +795,15 @@ def render(R):
       % (R["env"]["in_use"]["max"], R["a"]["cell_closed_W4_pack"], m["a_base_pack"][1]))
     w("   with it %.2f C (worst) to %.2f C (best) on the pack, %.2f C on an input: inside +%.0f C by %.2f K at the worst corner; under H1's +%.1f C reading only at the best."
       % (m["a_pack_worst"][1], m["a_pack_best"][1], m["a_input_worst"][1], lim["discharge"][1], lim["discharge"][1] - m["a_pack_worst"][1], hot["H1"]))
+    w("   The inside air there moves from %.2f C to %.2f C: the area the pack takes from the case skin is outweighed by the path through the pack (every other part moves with it)."
+      % (R["a"]["air_closed_W4"], m["a_pack_worst"][0]))
     w("   The same measure at the +%.0f C margin (E3-O): cells %.2f C (worst) to %.2f C (best); the margin would need f at most %.3f to %.3f for +%.0f C and %.3f to %.3f for H1: REJECTED (best f %.3f)."
       % (d["amb"], m["d_worst"][1], m["d_best"][1], m["d_f_needed"][0], m["d_f_needed"][1], lim["discharge"][1], m["d_f_needed"][2], m["d_f_needed"][3], be["f"]))
     w("   At E5's +%.0f C the pack on an input, best case: %.2f C, past the +%.0f C limit: REJECTED." % (e["amb"], m["e_best"][1], lim["discharge"][1]))
     w("   Time constant of the coupled pack %.0f to %.0f s (INFERRED): a key-down's heat leaves it about as slowly as now (section 6)." % R["hold"]["tau_pack_meas_s"])
+    w("   Placement: the block's top lies about %.2f mm under board B's underside (SHORTLIST's %.2f mm of room plus the 1.0 mm minimum, CASE-MARGINS M6); the model takes that face at the"
+      % (R["room"]["height"] + 1.0, R["room"]["height"]))
+    w("   inside air, and board B's underside has no local model (POWER-THERMAL.md 9.2): a hotter underside raises f. T-H1's dummy block carries a thermocouple on that face (INFERRED).")
     c = R["cold"]
     w("3c The cold end the measure touches (LO-01b; PS-IDLE-SPEC on the pack, lid open, -%.0f C, the highest conductance): cells %.2f C without the measure, %.2f C with it (%.2f C on W4's highest);"
       % (-R["env"]["in_use"]["min"], c["base"][1], c["meas"][1], c["meas_w4"][1]))
@@ -929,6 +934,7 @@ def screen_rows(R):
          "approaches": ["the cells sit ABOVE the ambient by the kit's own heat, so moving that heat out works: credible",
                         "the enclosure's conductance itself decides it (break-even, section 3a): T-H1 measures it",
                         "fallback: couple the block to the case skin (section 3b), steady state, no hold time needed",
+                        "a path to the face plate instead: rejected, the block sits on the floor under board B and the plate above it, and the plate is the inside air's main exit, so it runs near that air (INFERRED from 32.53's split)",
                         "a lower heat stage: rejected, its 23 W carries REQ-052's required set"],
          "result": "CREDIBLE: thermal design, CONDITIONAL on T-H1 (section 3)"},
         {"id": "C02", "lo": "LO-01a", "cond": "idle on an input at the hot edge (shore, vehicle or solar; the pack neither charging nor discharging), E5-A included", "zero_power": False,
@@ -985,7 +991,7 @@ def screen_rows(R):
          "gap": "%.0f K: the ambient alone exceeds the limit" % G2["LO-01f"],
          "approaches": ["fans, spreading, heating or cooling: no power in this condition",
                         "insulation or thermal storage: the kit settles within %.2f K of the ambient in %.0f h (time constant at most %.2f h)" % (H["resid_hot"], R["f"]["hours"], H["tau_kit_s"][1] / 3600.0)],
-         "result": "REJECTED for thermal design: the ambient alone exceeds the cell's limit; a cell rated for it only"},
+         "result": "REJECTED for thermal design: the ambient alone exceeds the cell's limit; only a cell whose maker's sheet covers the level"},
         {"id": "C10", "lo": "LO-01g", "cond": "D-02a's %.0f C storage margin (E4-S)" % R["g"]["amb"], "zero_power": True,
          "amb": "%.0f C" % R["g"]["amb"], "dur": "%.0f h" % R["g"]["hours"], "cfg": "stored, as C09",
          "limit": "storage floor %.0f C (Ver. 1.1); %.0f C (Version 1.0)" % (lim["st_1m"][0], S["35E_10"]["st_1m"][0]),
@@ -993,7 +999,7 @@ def screen_rows(R):
          "gap": "%.0f K (Ver. 1.1); %.0f K (Version 1.0)" % G2["LO-01g"],
          "approaches": ["heating: no power; to hold %.0f C for the %.0f h would take %.0f to %.0f Wh, more than the pack's %.1f Wh" % (lim["st_1m"][0], R["g"]["hours"], H["e_hold_cold_Wh"][0], H["e_hold_cold_Wh"][1], H["pack_Wh_nom"]),
                         "insulation: settles within %.2f K in %.0f h" % (H["resid_cold"], R["g"]["hours"])],
-         "result": "REJECTED for thermal design; a cell rated for it only"},
+         "result": "REJECTED for thermal design; only a cell whose maker's sheet covers the level"},
         {"id": "C11", "lo": "LO-01h", "cond": "storage inside the envelope", "zero_power": True,
          "amb": "%.0f to +%.0f C; %.0f to +%.0f C" % (env["storage_3_months"]["min"], env["storage_3_months"]["max"], env["storage_1_year"]["min"], env["storage_1_year"]["max"]),
          "dur": "three months; a year", "cfg": "stored, as C09",

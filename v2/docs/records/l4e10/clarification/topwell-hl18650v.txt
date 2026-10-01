@@ -1,0 +1,22 @@
+DRAFT for the owner to send (task L4-E10, MESHSAT-1357, 2 October 2026). The session contacts no outside party.
+To: Yichun Topwell Power Co., Ltd, through the contact form of https://www.topwellpower.com (product TWE0388, model HL18650V)
+
+Subject: HL18650V wide-temperature 18650 cell: request for the signed product specification
+
+Dear Topwell Power team,
+
+We are evaluating your HL18650V (TWE0388) for a non-commercial prototype: a 4S3P pack of twelve cells inside a sealed field
+case. Your product page lists discharge from -40 to 85 C, charge from -20 to 60 C and storage of -40 to 80 C within 30 days.
+Before any purchase we need the maker's signed product specification. Could you send it, and confirm the following in it?
+
+1. Storage: may a cell be held for 24 hours at +71 C, and separately for 24 hours at -33 C, and at what state of charge?
+   What capacity recovery do you guarantee after each (the test method and the percentage)?
+2. The discharge range of -40 to 85 C: is it the ambient air or the cell surface temperature? Does it include a cell at
+   rest (neither charging nor discharging) at a high state of charge, for example ten days of cycles between +30 and +60 C
+   at 95 % relative humidity?
+3. Cycle life: the conditions behind "at least 500 cycles" (charge and discharge currents, end voltages, temperature).
+4. The minimum capacity, the maximum dimensions with tolerances, and the maximum mass.
+5. The UN 38.3 test summary and the IEC 62133 report for this model, and whether you are the cell's manufacturer.
+6. The open-circuit voltage against state of charge at 25 C, so that a fuel gauge can be configured.
+
+Thank you. We will treat the document under the terms you state.
