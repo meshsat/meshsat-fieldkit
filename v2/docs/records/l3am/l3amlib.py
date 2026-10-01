@@ -21,6 +21,26 @@ REVIEW = "v2/docs/records/l3am/REVIEW-AS-RECEIVED.md"
 DISPOSITIONS = "v2/docs/records/l3am/DISPOSITIONS.md"
 RELAYED_ON = "2026-10-01"
 RELAYED_ON_TEXT = "1 October 2026"
+# The amendment's base (main when the amendment branched) and the files whose bytes its check reviews, besides the
+# content the acceptance's manifest binds (the requirements, the owner brief, the change record, l3r2.yaml's policy): the
+# code and the claims a check of the amendment reads. Views rendered or restated from these (the three pages, the trace,
+# LAYER-STATUS.md, DEFINITION-STATUS.md) are not listed: their renderers' checks bind them to their inputs.
+BASE = "b45d1705c816b5f9bc6bf9d14f4409545047ebd6"
+AMENDMENT_FILES = (
+    "v2/docs/handover/layer3/render_l3r2.py",
+    "v2/docs/records/l3r5/apply_l3r5_accept.py",
+    "v2/docs/records/l3am/l3amlib.py",
+    "v2/docs/records/l3am/apply_l3am_findings.py",
+    "v2/docs/records/l3am/apply_l3am_r01.py",
+    "v2/docs/records/l3am/apply_l3am_r02.py",
+    "v2/docs/records/l3am/apply_l3am_r05.py",
+    "v2/docs/records/l3am/apply_layer_status_l3am.py",
+    "v2/docs/records/l3am/apply_l3am_findings_closed.py",
+    "v2/docs/records/l3am/DISPOSITIONS.md",
+    "v2/docs/records/l3am/REVIEW-AS-RECEIVED.md",
+    "v2/ecad/tools/tests/test_l3am.py",
+    "v2/ecad/tools/tests/l3amfix.py",
+)
 Refused = E.Refused
 refuse = E.refuse
 

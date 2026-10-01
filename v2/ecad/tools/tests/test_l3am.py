@@ -4,8 +4,11 @@ findings L3-R01, L3-R02, L3-R04 and L3-R05, and the finding carried from the eng
 Each test states a property that holds before and after an acceptance is filed again, with fixtures for the negative case:
 the acceptance binds the reviewed content (L3-R04: a revision that is no commit or the wrong commit, or a material change
 to the requirements, the owner brief, the governing change record or the acceptance policy, invalidates it; a change to
-anything else does not; a record without a manifest binds nothing); the acceptance script writes the manifest, refuses
-what the binding refuses and keeps a superseded record as history; every section of a current view that states a
+anything else does not; a record without a manifest binds nothing; B1 of the amendment's check: the requirements digest
+binds the owner rulings, the session choices, the accepted exceptions and the stage conditions, and every field of the
+registry is classified in or out); the findings close only with a new accepted check of this amendment, bound to a
+reviewed revision whose content the tree still holds (B2), and the acceptance script verifies that check again; the
+acceptance script writes the manifest, refuses what the binding refuses and keeps a superseded record as history; every section of a current view that states a
 solar-assisted figure names the case it was computed with (L3-R01), and the case agrees with the files and the summary;
 REQ-042 cannot read satisfied because its hydrogen part is named (L3-R02); REQ-016's window is the one D-34 retained and
 its protection is judged apart from it (L3-R05). Nothing here writes into the tree; the fixture commits are unreferenced
@@ -32,6 +35,7 @@ sys.path.insert(0, L3)
 from harness import need  # noqa: E402
 
 LEGACY = "b4b199d0ceee6d7a632b85090fbf3bf95a602758"
+CLOSE = os.path.join(AM, "apply_l3am_findings_closed.py")
 
 
 def _run(args):
@@ -125,16 +129,76 @@ def t_l3am_acceptance_binds_the_reviewed_content():
     if filed and not filed.get("manifest"): assert not RL.acceptance_ok(req, data)[0]
 
 
+def t_l3am_the_requirements_digest_binds_normative_content():
+    """B1 of the amendment's check: every field the tree's registry carries is classified in or out of the requirements
+    digest (REQUIREMENTS_FIELDS, with its reason). A bound acceptance is invalidated by a change to an owner ruling's text
+    (D-11, simultaneous transmission), a session choice's taken answer, an accepted operating exception (CON-012's
+    residual_risk_accepted), a stage's requires, needs or holds, a record's rulings, or an added owner ruling; it stays
+    valid when a reading or a note is added, a stage's status or an open item's state moves, a conflict's closure evidence
+    or a record's rule coverage is extended, or the acceptance's history grows."""
+    import l3amfix as F
+    RL, req, data = _tree()
+    F_ = RL.REQUIREMENTS_FIELDS
+    seen = {"top": set(req), "ruling": {k for x in req["owner_rulings"] for k in x},
+            "choice": {k for x in req["session_choices"] for k in x}, "record": {k for x in req["records"] for k in x},
+            "stage": {k for x in req["records"] for s in (x.get("stages") or []) for k in s}}
+    for kind, keys in seen.items():
+        miss = sorted(keys - set(F_[kind]))
+        assert not miss, "the registry's %s fields %s are not classified in or out of the digest" % (kind, miss)
+        assert all(v.split(":")[0] in ("IN", "OUT") and v.split(":", 1)[1].strip() for v in F_[kind].values()), \
+            "a %s field is classified without its reason" % kind
+    good = copy.deepcopy(data); good["baseline_acceptance"] = _record(RL, req, data, F.commit_with())
+    assert RL.acceptance_ok(req, good)[0], RL.acceptance_ok(req, good)[1]
+
+    def rec(r, rid): return next(x for x in r["records"] if x["id"] == rid)
+
+    def stage(r): return next(x for x in r["records"] if x.get("stages"))["stages"][0]
+    mutations = (
+        ("D-11's ruling", lambda r: next(x for x in r["owner_rulings"] if x["id"] == "D-11").update(
+            ruling="Only one radio may transmit at a time.")),
+        ("a session choice's answer", lambda r: r["session_choices"][0].update(taken="a different answer")),
+        ("CON-012's accepted exception", lambda r: rec(r, "CON-012")["residual_risk_accepted"].update(
+            what="Above +25 C ambient the kit runs one compute module.")),
+        ("a stage's requires", lambda r: stage(r).update(requires="nothing")),
+        ("a stage's needs", lambda r: stage(r).update(needs=["DESK", "BENCH"])),
+        ("a stage's holds", lambda r: stage(r).update(holds=[])),
+        ("a record's rulings", lambda r: rec(r, "REQ-016")["rulings"].append("D-11")),
+        ("an added owner ruling", lambda r: r["owner_rulings"].append({"id": "D-99", "authority": "OWNER", "ruled_on": "2026-10-02",
+                                                                       "title": "a fixture", "ruling": "a fixture ruling", "source": []})),
+    )
+    for name, edit in mutations:
+        r2 = copy.deepcopy(req); edit(r2)
+        ok, why = RL.acceptance_ok(r2, good)
+        assert not ok and "requirements" in why, "%s kept the acceptance: %s" % (name, why or "valid")
+    keeps = (
+        ("a reading", lambda r: rec(r, "REQ-042").setdefault("evidence", []).append("v2/docs/records/l4e/x.md read (a fixture)")),
+        ("a note", lambda r: rec(r, "REQ-016").update(notes="a fixture note")),
+        ("a history line", lambda r: rec(r, "REQ-016").update(history="a fixture history")),
+        ("a stage's status", lambda r: stage(r).update(status="MET")),
+        ("an open item closed", lambda r: (r["closed_items"].append(dict(r["open_items"].pop(0), closed_by="a fixture")))),
+        ("a record's waits_on", lambda r: rec(r, "REQ-042").update(waits_on=["S-56"])),
+        ("a conflict's resolution text", lambda r: next(x for x in r["records"] if x.get("resolved_by")).update(resolved_by="a fixture")),
+        ("a record's rule coverage", lambda r: rec(r, "REQ-042")["satisfied_by"]["rules"].append("TRN-001")),
+        ("a ruling's source", lambda r: r["owner_rulings"][0].update(source=["a fixture"])),
+    )
+    for name, edit in keeps:
+        r2 = copy.deepcopy(req); edit(r2)
+        assert RL.acceptance_ok(r2, good)[0], "%s invalidated the acceptance: %s" % (name, RL.acceptance_ok(r2, good)[1])
+    hist = copy.deepcopy(good); hist["baseline_acceptance_history"] = [{"revision": LEGACY}]
+    assert RL.acceptance_ok(req, hist)[0], "the acceptance's history entered the policy"
+
+
 def t_l3am_the_acceptance_script_files_a_bound_record_and_supersedes():
-    """apply_l3r5_accept.py on copies of l3r2.yaml: it refuses while the review's findings are OPEN, a revision that is not
-    a commit or does not hold the content the copy holds, and --supersede with nothing filed; with the findings closed and
-    a commit holding the copy's content it files a record with the content manifest that acceptance_ok validates; a
-    second run is refused; --supersede keeps the filed record, as parsed, at the end of baseline_acceptance_history."""
+    """apply_l3r5_accept.py on copies of l3r2.yaml: it refuses while the review's findings are OPEN, and when they read
+    CLOSED by a check that does not verify (check-l3r5-3 named by hand); with the findings closed by a fixture check of the
+    amendment (l3amfix.closed_copy) it refuses a revision that is not a commit or does not hold the copy's content, and
+    --supersede with nothing filed; at a commit holding the copy's content, a child of the checked revision, it files a
+    record with the content manifest that acceptance_ok validates; a second run is refused; --supersede keeps the filed
+    record, as parsed, at the end of baseline_acceptance_history."""
     need(ACC, "the acceptance script is not in this tree")
     import l3amfix as F
     RL, req, data = _tree()
     raw = open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read()
-    newest = data["independent_check"][-1]["record"]
 
     def copy_of(text):
         p = os.path.join(tempfile.mkdtemp(prefix="l3am-accept-"), "l3r2.yaml"); open(p, "w", encoding="utf-8").write(text)
@@ -142,26 +206,32 @@ def t_l3am_the_acceptance_script_files_a_bound_record_and_supersedes():
     null = "\n".join("baseline_acceptance: null" if l.startswith("baseline_acceptance:") else l for l in raw.split("\n"))
     rf = [l for l in null.split("\n") if l.startswith("review_findings: {")]
     assert len(rf) == 1 and ", state: OPEN," in rf[0], "the review's findings are not filed OPEN"
-    closed = null.replace(rf[0], rf[0].replace(", state: OPEN,", ", state: CLOSED,"), 1)
-    rev = F.commit_with({"v2/docs/handover/layer3/l3r2.yaml": closed.encode("utf-8")})
-    r = _run([ACC, "--data", copy_of(null), "--revision", F.commit_with(), "--evidence", newest, "--check"])
+    old_check = data["independent_check"][-1]["record"]
+    r = _run([ACC, "--data", copy_of(null), "--revision", F.commit_with(), "--evidence", old_check, "--check"])
     assert r.returncode == 2 and "are OPEN" in r.stdout, "filed with the findings open:\n%s" % r.stdout
-    for bad, want in (("0" * 40, "not a commit"), (F.commit_with(), "does not hold the content")):
-        r = _run([ACC, "--data", copy_of(closed), "--revision", bad, "--evidence", newest, "--check"])
+    by_hand = null.replace(rf[0], rf[0].replace(", state: OPEN,", ", state: CLOSED, checked_by: %s," % old_check), 1)
+    rev_h = F.commit_with({"v2/docs/handover/layer3/l3r2.yaml": by_hand.encode("utf-8")})
+    r = _run([ACC, "--data", copy_of(by_hand), "--revision", rev_h, "--evidence", old_check, "--check"])
+    assert r.returncode == 2 and "does not verify" in r.stdout, "filed with the findings closed by the old check:\n%s" % r.stdout
+    tip = F.tip()
+    closed, check = F.closed_copy(null, tip)
+    rev = F.commit_with({"v2/docs/handover/layer3/l3r2.yaml": closed.encode("utf-8")}, parent=tip)
+    for bad, want in (("0" * 40, "not a commit"), (F.commit_with(), "does not")):
+        r = _run([ACC, "--data", copy_of(closed), "--revision", bad, "--evidence", check, "--check"])
         assert r.returncode == 2 and want in r.stdout, "revision %s was not refused:\n%s" % (bad[:12], r.stdout)
-    r = _run([ACC, "--data", copy_of(closed), "--revision", rev, "--evidence", newest, "--supersede", "--check"])
+    r = _run([ACC, "--data", copy_of(closed), "--revision", rev, "--evidence", check, "--supersede", "--check"])
     assert r.returncode == 2 and "nothing to supersede" in r.stdout, r.stdout
     p = copy_of(closed)
-    r = _run([ACC, "--data", p, "--revision", rev, "--evidence", newest, "--date", "2026-10-01"])
+    r = _run([ACC, "--data", p, "--revision", rev, "--evidence", check, "--date", "2026-10-01"])
     assert r.returncode == 0, r.stdout
     got = yaml.safe_load(open(p, encoding="utf-8"))
     ba = got["baseline_acceptance"]
-    assert ba["revision"] == rev and ba["authorised_by"] == "D-39" and ba["evidence"] == [newest]
+    assert ba["revision"] == rev and ba["authorised_by"] == "D-39" and ba["evidence"] == [check]
     assert set(ba["manifest"]) == {"requirements", "owner_brief", "change_record", "acceptance_policy"}
     assert RL.acceptance_ok(req, got)[0], RL.acceptance_ok(req, got)[1]
-    r = _run([ACC, "--data", p, "--revision", rev, "--evidence", newest])
+    r = _run([ACC, "--data", p, "--revision", rev, "--evidence", check])
     assert r.returncode == 2 and "has run" in r.stdout, "a second acceptance was not refused:\n%s" % r.stdout
-    r = _run([ACC, "--data", p, "--revision", rev, "--evidence", newest, "--date", "2026-10-02", "--supersede"])
+    r = _run([ACC, "--data", p, "--revision", rev, "--evidence", check, "--date", "2026-10-02", "--supersede"])
     assert r.returncode == 0, r.stdout
     got2 = yaml.safe_load(open(p, encoding="utf-8"))
     assert got2["baseline_acceptance_history"] == [ba] and got2["baseline_acceptance"]["accepted_on"] == "2026-10-02"
@@ -171,12 +241,66 @@ def t_l3am_the_acceptance_script_files_a_bound_record_and_supersedes():
     if data.get("baseline_acceptance") and not data["baseline_acceptance"].get("manifest"):
         legacy = closed.replace("baseline_acceptance: null", [l for l in raw.split("\n") if l.startswith("baseline_acceptance:")][0], 1)
         p2 = copy_of(legacy)
-        r = _run([ACC, "--data", p2, "--revision", rev, "--evidence", newest])
+        r = _run([ACC, "--data", p2, "--revision", rev, "--evidence", check])
         assert r.returncode == 2 and "has run" in r.stdout, r.stdout
-        r = _run([ACC, "--data", p2, "--revision", rev, "--evidence", newest, "--supersede"])
+        r = _run([ACC, "--data", p2, "--revision", rev, "--evidence", check, "--supersede"])
         assert r.returncode == 0, r.stdout
         got3 = yaml.safe_load(open(p2, encoding="utf-8"))
         assert got3["baseline_acceptance_history"] == [data["baseline_acceptance"]]
+    assert open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read() == raw, "the test changed the tree's l3r2.yaml"
+
+
+def t_l3am_findings_close_only_with_a_check_of_the_amendment():
+    """B2 of the amendment's check: apply_l3am_findings_closed.py closes the findings only with a new accepted check of
+    this amendment. Refused: check-l3r5-3 (on the tree, where it is the newest accepted check), a fixture record carrying
+    the format under an old check's name, a record whose first line says no while filed ACCEPTED, a record without the
+    scope line, a reviewed revision that is not a commit or not an ancestor of the tip, and a reviewed revision before a
+    later change to an amendment file. Accepted: a fixture check of the tip; the script then changes checked_by, state and
+    status and nothing else, and a second run is refused."""
+    need(CLOSE, "the closing script is not in this tree")
+    import l3amfix as F
+    RL, req, data = _tree()
+    raw = open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read()
+    old_check = data["independent_check"][-1]["record"]
+    r = _run([CLOSE, "--check-record", old_check, "--check"])
+    assert r.returncode == 2 and "REFUSED" in r.stdout, "the pre-amendment check closed the findings:\n%s" % r.stdout
+
+    def copy_of(text):
+        p = os.path.join(tempfile.mkdtemp(prefix="l3am-close-"), "l3r2.yaml"); open(p, "w", encoding="utf-8").write(text)
+        return p
+    tip = F.tip()
+
+    def close(path, sha, head=tip, check=True):
+        p = copy_of(F.with_check(raw, path, sha))
+        return p, _run([CLOSE, "--data", p, "--check-record", path, "--head", head] + (["--check"] if check else []))
+    r = _run([CLOSE, "--data", copy_of(raw), "--check-record", old_check, "--head", tip, "--check"])
+    assert r.returncode == 2 and "scope" in r.stdout, "check-l3r5-3 closed the findings on a copy:\n%s" % r.stdout
+    for args, want in (((tip, "check-l3r5-3.md"), "before the amendment"),
+                       ((tip, "check-x.md", F.SCOPE, "accepted: no"), "accepted"),
+                       ((tip, "check-x.md", "scope: Layer 3 closure"), "scope"),
+                       (("0" * 40,), "not a commit"),
+                       ((F.commit_with(parent=F.root_commit()),), "ancestor")):
+        path, sha = F.amendment_check(*args)
+        _p, r = close(path, sha)
+        assert r.returncode == 2 and want in r.stdout, "%s: %s" % (want, r.stdout)
+    # a revision before a later change to an amendment file
+    rel = "v2/ecad/tools/tests/test_l3am.py"
+    earlier = F.commit_with({rel: open(os.path.join(ROOT, rel), "rb").read() + b"# an earlier text\n"})
+    later = F.commit_with(parent=earlier)
+    path, sha = F.amendment_check(earlier)
+    _p, r = close(path, sha, head=later)
+    assert r.returncode == 2 and "changed since" in r.stdout and rel in r.stdout, r.stdout
+    # a check of the tip: accepted, and only checked_by, state and status change
+    path, sha = F.amendment_check(tip)
+    p, r = close(path, sha, check=False)
+    assert r.returncode == 0, r.stdout
+    before = yaml.safe_load(F.with_check(raw, path, sha)); after = yaml.safe_load(open(p, encoding="utf-8"))
+    assert {k: v for k, v in after.items() if k != "review_findings"} == {k: v for k, v in before.items() if k != "review_findings"}
+    a, b = before["review_findings"], after["review_findings"]
+    assert sorted(k for k in set(a) | set(b) if a.get(k) != b.get(k)) == ["checked_by", "state", "status"]
+    assert b["state"] == "CLOSED" and b["checked_by"] == path
+    r = _run([CLOSE, "--data", p, "--check-record", path, "--head", tip, "--check"])
+    assert r.returncode == 2 and "has run" in r.stdout, r.stdout
     assert open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read() == raw, "the test changed the tree's l3r2.yaml"
 
 

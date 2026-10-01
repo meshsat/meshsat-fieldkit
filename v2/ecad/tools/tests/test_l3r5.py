@@ -942,28 +942,30 @@ def t_l3r5_d39_is_conditional_and_acceptance_is_its_own_record():
     raw = open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read()
     before = yaml.safe_load(raw).get("baseline_acceptance")
     raw = "\n".join("baseline_acceptance: null" if l.startswith("baseline_acceptance:") else l for l in raw.split("\n"))
-    add = "  - {record: %s, sha16: %s, verdict: ACCEPTED, scope: fixture}\nbaseline_acceptance: null\n" % (
-        fixture_check["record"], fixture_check["sha16"])
-    assert raw.count("\nbaseline_acceptance: null\n") == 1
-    text = raw.replace("\nbaseline_acceptance: null\n", "\n" + add)
-    # the review's findings closed on the copy, where they are filed (the acceptance refuses while they are OPEN), and a
-    # revision holding the copy's content (the manifest is the binding, L3-R04)
-    text = "\n".join(l.replace(", state: OPEN,", ", state: CLOSED,") if l.startswith("review_findings: {") else l
-                     for l in text.split("\n"))
+    # the review's findings, where they are filed, closed by a fixture check of the amendment filed as the newest accepted
+    # check (the acceptance refuses while they are OPEN and verifies the check that closed them, B2 of astra-check-l3am-1),
+    # and a revision holding the copy's content, a child of the checked one (the manifest is the binding, L3-R04)
+    if "\nreview_findings: {" in raw:
+        tip = F.tip()
+        text, ev = F.closed_copy(raw, tip)
+    else:
+        tip, ev = None, fixture_check["record"]
+        add = "  - {record: %s, sha16: %s, verdict: ACCEPTED, scope: fixture}\nbaseline_acceptance: null\n" % (ev, fixture_check["sha16"])
+        text = raw.replace("\nbaseline_acceptance: null\n", "\n" + add)
     open(copy_path, "w", encoding="utf-8").write(text)
-    rev = F.commit_with({"v2/docs/handover/layer3/l3r2.yaml": text.encode("utf-8")})
-    for args, why in (([ "--revision", "0" * 40, "--evidence", fixture_check["record"]], "not a commit"),
+    rev = F.commit_with({"v2/docs/handover/layer3/l3r2.yaml": text.encode("utf-8")}, parent=tip)
+    for args, why in (([ "--revision", "0" * 40, "--evidence", ev], "not a commit"),
                       (["--revision", rev, "--evidence", "v2/docs/records/l3r5/checks/no-such-check.md"], "not a file"),
                       (["--revision", rev, "--evidence", "v2/docs/handover/layer3/l3r2.yaml"], "does not list the newest")):
         r = _run([acc] + args + ["--data", copy_path])
         assert r.returncode == 2 and why in r.stdout, "%s was not refused:\n%s" % (why, r.stdout)
-    r = _run([acc, "--revision", rev, "--evidence", fixture_check["record"], "--date", "2026-10-01", "--data", copy_path])
+    r = _run([acc, "--revision", rev, "--evidence", ev, "--date", "2026-10-01", "--data", copy_path])
     assert r.returncode == 0, r.stdout
     got = yaml.safe_load(open(copy_path, encoding="utf-8"))["baseline_acceptance"]
     assert {k: v for k, v in got.items() if k != "manifest"} == {"revision": rev, "authorised_by": "D-39",
-                                                                 "evidence": [fixture_check["record"]], "accepted_on": "2026-10-01"}
+                                                                 "evidence": [ev], "accepted_on": "2026-10-01"}
     assert got["manifest"] == RL.manifest_at(rev)[0], "the record's manifest is not the content its revision holds"
-    r = _run([acc, "--revision", rev, "--evidence", fixture_check["record"], "--data", copy_path])
+    r = _run([acc, "--revision", rev, "--evidence", ev, "--data", copy_path])
     assert r.returncode == 2 and "has run" in r.stdout, "a second acceptance was not refused:\n%s" % r.stdout
     assert yaml.safe_load(open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8")).get("baseline_acceptance") == before, \
         "the test changed the tree's acceptance record"
@@ -1002,15 +1004,21 @@ def t_l3r5_acceptance_refused_while_a_criterion_is_unmet():
         assert r.returncode == 2 and "the gate reads NOT MET" in r.stdout, "filed with a gate condition unmet:\n%s" % r.stdout
         # every criterion holding (since the layer 3 amendment of 1 October 2026: the review's findings closed, and the
         # revision the one that holds the content, L3-R04); with the findings OPEN it refuses
+        # (closed by a fixture check of the amendment, the newest accepted check, l3amfix.closed_copy: B2 of
+        # astra-check-l3am-1, the acceptance verifies the check that closed them)
+        import l3amfix as F
         rf = [l for l in lines if l.startswith("review_findings: {")]
+        rev_parent = None
         if rf and ", state: OPEN," in rf[0]:
             r = run(raw, [rec])
             assert r.returncode == 2 and "are OPEN" in r.stdout, "filed with the review's findings open:\n%s" % r.stdout
-            raw = raw.replace(rf[0], rf[0].replace(", state: OPEN,", ", state: CLOSED,"), 1)
-        import l3amfix as F
+            rev_parent = F.tip()
+            raw, rec = F.closed_copy(raw, rev_parent)
         p = os.path.join(tempfile.mkdtemp(prefix="l3r5-gate-"), "l3r2.yaml"); open(p, "w", encoding="utf-8").write(raw)
-        rev = F.commit_with({"v2/docs/handover/layer3/l3r2.yaml": raw.encode("utf-8")})
+        rev = F.commit_with({"v2/docs/handover/layer3/l3r2.yaml": raw.encode("utf-8")}, parent=rev_parent)
         r = _run([acc, "--data", p, "--revision", rev, "--evidence", rec, "--check"])
         assert r.returncode == 0, "refused with every criterion holding:\n%s" % r.stdout
         r = _run([acc, "--data", p, "--revision", head, "--evidence", rec, "--check"])
-        assert r.returncode == 2 and ("does not hold the content" in r.stdout), "accepted at a revision that does not hold the content:\n%s" % r.stdout
+        # HEAD neither holds the copy's content nor descends from the revision the closing check read
+        assert r.returncode == 2 and ("does not hold the content" in r.stdout or "does not verify" in r.stdout), \
+            "accepted at a revision that does not hold the content:\n%s" % r.stdout
