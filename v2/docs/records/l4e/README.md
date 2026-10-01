@@ -1,6 +1,6 @@
 # records/l4e: layer 4 task L4-E2, the energy architecture comparison (MESHSAT-1357)
 
-1 October 2026, branch `fnd/l4e` from main `b45d1705`; second and third issues the same day, answering the focused check and its recheck, both filed in `checks/`; fourth issue the same day, answering the independent power review filed as `REVIEW-POWER-ARCHITECTURE-AS-RECEIVED.md`. Prototype design: nothing is bought, built, powered or measured.
+1 October 2026, branch `fnd/l4e` from main `b45d1705`; second and third issues the same day, answering the focused check and its recheck, both filed in `checks/`; fourth issue the same day, answering the independent power review filed as `REVIEW-POWER-ARCHITECTURE-AS-RECEIVED.md`; fifth issue the same day, answering its check `checks/astra-check-l4e3-1.md`. Prototype design: nothing is bought, built, powered or measured.
 The author's analysis, AI arithmetic; not a qualified review and not the independent check. No registry record, no Layer 3
 record and nothing under `v2/docs/handover/` is changed by this folder.
 
@@ -16,6 +16,7 @@ record and nothing under `v2/docs/handover/` is changed by this folder.
 | `checks/astra-check-l4e2-1.md` | the collaborator's focused check of the first issue (run `20260930T221538Z-809994` on `0e641bd3`, accepted: no; B1 the stopped-hour double count, B2 O-2's power bound, M1 a label), filed byte for byte; answered by the second issue |
 | `checks/astra-check-l4e2-2.md` | the collaborator's recheck of the second issue (run `20260930T224030Z-833954` on `21a9a6fe`, accepted: no; B1, M1 and the Layer 3 recount pass; B2 fails again on the omitted IMON_IN line regulation, and the sweep's lower end), filed byte for byte; answered by the third issue |
 | `checks/check-l4e2-3.md` | check 3: Claude's (the coordinator's) verification of B2 at `197350a7` against the recheck's own criterion, computed from the maker's table independently of the replay (accepted: yes); not a model review and not an Astra check |
+| `checks/astra-check-l4e3-1.md` | the collaborator's check of the fourth issue (run `20261001T001305Z-988756` on `fd82f4cc`, accepted: no; B1: the panel labelled compliant on its nominal cold open circuit alone, against its guide's 10 % qualification), filed byte for byte; answered by the fifth issue |
 | `ASTRA-L4E1.md` | the engineering collaborator's L4-E1 assessment (job `cx7-l4e1-dominant-constraints`), filed byte for byte; sha256 `36af43f1769c32c64b95528a69ca6972ee14723eae1d7dd21cf98442b3c6f83b`. It directs this task and accepts nothing |
 
 ## Run order
@@ -60,7 +61,8 @@ record and nothing under `v2/docs/handover/` is changed by this folder.
   reclassified NONE the sizing gives 3.550 A and the run exits 4, "O-2's setting 3.550 A lets the stage take 100.0548 W
   at 25.000 V"; with the row deleted from the table the run exits 3, the row "Line Regulation for IMON_IN and IMON_OUT
   Error Amp" unclassified.
-- **Section 12, the compliant panel:** the held SunPower SPR-E-Flex-100 sheet is pinned by sha256 (fetched into the
+- **Section 12, the nominally compatible candidate panel:** the held SunPower SPR-E-Flex-100 sheet and its installation
+  guide 524958 Rev F (whose p.3 must carry Table 1's 10 % qualification, quoted verbatim in the output) are pinned by sha256 (fetched into the
   ignored `v2/vendor/solar/held/` by `../a1solar/fetch_held_back.py`; exit 2 if absent); its printed figures must equal
   a1solar's `CAND['SPR100']` (exit 3); its open circuit at -20 C must be inside REQ-016's 25 V (exit 4); a1solar's
   `array_calc.py` is pinned; and no hour of any trace may put more than 100 W into the stage (exit 4).
@@ -79,7 +81,8 @@ beside the 100 W screening case, not in place of it. **B2: arithmetic corrected 
 physical compliance: OPEN:** the bound rests on EA2's and EA3's TYP-only gains, the line regulation printed at 25 C and
 not switching, two 1 % resistors with tolerance and drift unselected, and temperature ends that repeat the same bounds
 (EA2 at 120 V/V gives 100.0758831 W, the review's sensitivity); the engineer's grade, resistor values and tolerance
-budget replace them. Section 12's compliant trace rests on one held sheet, a single-diode fit and an INFERRED NOCT, on
-one mean day; neither architecture is approved or shown realizable. The AS DRAWN figures are bounds (the upper
+budget replace them. Section 12's candidate trace rests on one held sheet's nominal values (source compliance INCONCLUSIVE: its guide holds
+rated values within 10 % of measured ones, the cold margin admits 4.44 %), a single-diode fit and an INFERRED NOCT, on one
+mean day; neither architecture is approved or shown realizable. The AS DRAWN figures are bounds (the upper
 bound keeps the model's `min(available, cap)`; the lower bound takes A-2's inferred collapse). Nothing here is
 demonstrated capability.
