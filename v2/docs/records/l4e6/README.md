@@ -12,6 +12,7 @@ L4-E4 and L4-E5 leave open (8 mOhm, 7.262 A; 7 mOhm, 8.300 A).
 | `apply_gen_sch_a_r12.py` | DRAFT for board A's generator owner: `rcs="12m"` and `cslope=("330p", "C1664")` on the front end's `lm5176()` call in `v2/ecad/tools/gen_sch_a.py`; MODE is left as drawn. Composes with L4-E4's `apply_gen_sch_a_r11.py` in either order. Default `--check`, writes only with `--write`, refuses a second application. Never applied to the tree here |
 | `apply_lcsc_fill_r12.py` | DRAFT for the same owner: the `lcsc_fill.py` line that buys "12mOhm 1% 2512" as HoJLR2512-3W-12mR-1%, LCSC C2904242. Same contract |
 | `checks/astra-check-l4e6-1.md` | The engineering collaborator's one check (ACCEPTED as a provisional engineering decision, no blocking item, no owner decision; minors M1, L1's temperature over the full VIN grid, and M2, C-5 as an L-versus-current sweep), filed by the coordinator. The page's section "The check, and what changed" maps each minor to its change |
+| `checks/check-l4e6-2.md` | Claude's verification of the accepted check's two minors at `cc95a829` (accepted: yes): the full-grid temperature, the C-5 sweep, the reproduction and the tests re-run; not a model review and not an Astra check |
 | `README.md` | This list |
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e6.py`. Run it with
