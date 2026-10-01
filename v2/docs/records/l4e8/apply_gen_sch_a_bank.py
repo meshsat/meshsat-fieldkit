@@ -2,24 +2,26 @@
 """apply_gen_sch_a_bank.py: DRAFT for board A's generator owner (task L4-E8, MESHSAT-1357, 1 October 2026). NOT APPLIED to the
 tree by L4-E8; its author ran it only on scratch copies (the tests also write scratch copies).
 
-What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else: the front end's (U2, LM5176) bank, three keyword arguments of
-its lm5176() call, each on its own line:
-  --bank 8 (the default; R11 8 mOhm, L4-E4's provisional value, highest permitted current 7.262 A):
-    bulk=      the six EEHZK1V331P and one more, C236 (BULK_ZK["V331"], LCSC C278516, the same part number);
-    cout_extra the fifteen and three more, C237 to C239 (the stage's own "10u 50V X7R 1210", C596319 by lcsc_fill.py);
-    cout_pre=  C13 to C15 and C237 to C239: six ceramics on FE_OUT before R11 (SNVSAI1D 9.1's division), eighteen on VBUS20 as drawn.
-  --bank 7 (R11 7 mOhm, only if bench V-A07 fails; 8.300 A): a superset of the 8 mOhm bank, its designators kept:
-    bulk=      eight cans, C236 and C240; cout_extra and cout_pre as --bank 8 with nine more on VBUS20, C241 to C249.
-Both banks are ripple_dense.out's section 6 (L4E8-BANK.md): every can at most 2.8 A less the rebuild's validation tolerance at
-the matched, 1.5:1 and 2:1 ESR spreads. The third fix-up's comment block above the call is left as the record of 26 September
-2026; the edited lines carry their own comment naming this record. The new designators must be unused in the target.
+What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else: the front end's (U2, LM5176) bulk bank, the one line of its
+lm5176() call that names `bulk=`:
+  --bank 8 (the default; R11 8 mOhm, L4-E4's provisional value, highest permitted current 7.262 A): the six EEHZK1V331P and two
+    more, C236 and C237 (BULK_ZK["V331"], LCSC C278516, the same part number); the ceramics stay as drawn (eighteen on VBUS20,
+    three on FE_OUT before R11).
+  --bank 7 (R11 7 mOhm, only if bench V-A07 fails; 8.300 A): a superset of the 8 mOhm bank, its designators kept: ten cans,
+    C236 to C239; the ceramics as drawn. Its restart ring through L1 is over L1's typical Isat (L4E8-BANK.md): that path owes
+    the ring's own remedy as well.
+Both banks are ripple_dense.out's section 6 (L4E8-BANK.md): every can at most 2.8 A less the consistency tolerance at the
+matched, 1.5:1 and 2:1 ESR spreads, on the sharing basis the page states (the cans' ESR read and held within 2:1 before fitting;
+each can's branch within 0.5 nH and 0.5 mOhm of every other's, a layout rule for the generator owner). The third fix-up's comment
+block above the call is left as the record of 26 September 2026 (its corrections are drafted in CORRECTIONS-DRAFT.md); the
+edited line carries its own comment naming this record. The new designators must be unused in the target.
 
 It is not the whole change. The same circuit round owes: L4-E4's R11 (apply_gen_sch_a_r11.py) and R138, L4-E6's R12 and C147
-(apply_gen_sch_a_r12.py), L4-E5's ILIM_HIZ line on U3, board A's layout seating the new parts (placement is the generator
-owner's), the soft start and the start-up totals re-taken (L4E8-BANK.md section 8), the loop re-verified on the regenerated
-board, and the gates and evidence re-taken on a box. These drafts edit disjoint lines of the same call and apply in either
-order (test_l4e8.py). After any application, ripple_dense.py, r11_dep.py and the L4-E4 to L4-E6 records refuse by design:
-they pin the generator before the change.
+(apply_gen_sch_a_r12.py), L4-E5's ILIM_HIZ line on U3, board A's layout seating the new cans symmetrically about one VBUS20
+entry and its extracted branches checked against the layout rule (placement is the generator owner's), the soft start and the
+start-up totals re-taken (L4E8-BANK.md), the loop re-verified on the regenerated board, and the gates and evidence re-taken on a
+box. These drafts edit disjoint lines of the same call and apply in either order (test_l4e8.py). After any application,
+ripple_dense.py, r11_dep.py and the L4-E4 to L4-E6 records refuse by design: they pin the generator before the change.
 
 Usage:  apply_gen_sch_a_bank.py TARGET [--check | --write] [--bank 8 | --bank 7]     (default --check, --bank 8)
 Each edit's old text must occur exactly once and its new text must differ and must not occur yet; no new designator may occur in
@@ -33,24 +35,18 @@ import sys
 
 NAME = "apply_gen_sch_a_bank"
 OLD_BULK = '       comp=(("15k", "C22809"), ("220n", "C160828"), ("680p", "C30816")), bulk=("C163", "C178", "C179", "C180", "C199", "C200"), bulk_part="V331",\n'
-OLD_EXTRA = ('       cout_extra=("C181", "C182", "C183", "C184", "C185", "C186", "C187", "C188", "C189", "C201", "C202", "C203", "C204", "C205",'
-             ' "C206"),\n')
-OLD_PRE = '       cout_pre=("C13", "C14", "C15"), css=("4.7u", "C354262", "C10u"), vin_block=("D19", "C207", "1u 100V 1210", "C382212", "C1210"),\n'
 NOTE = "   # L4-E8 (MESHSAT-1357): %s; v2/docs/records/l4e8/L4E8-BANK.md\n"
 
 
+BANKS = {"8": (("C236", "C237"), "eight EEHZK1V331P, the ceramics as drawn, for R11 8 mOhm at 7.262 A"),
+         "7": (("C236", "C237", "C238", "C239"), "ten EEHZK1V331P, the ceramics as drawn, for R11 7 mOhm at 8.300 A")}
+
+
 def _edits(bank):
-    if bank == "8":
-        new_cans, new_pre, new_vbus = ("C236",), ("C237", "C238", "C239"), ()
-        what = "seven EEHZK1V331P, eighteen ceramics on VBUS20 and six on FE_OUT, for R11 8 mOhm at 7.262 A"
-    else:
-        new_cans, new_pre, new_vbus = ("C236", "C240"), ("C237", "C238", "C239"), tuple("C%d" % n for n in range(241, 250))
-        what = "eight EEHZK1V331P, twenty-seven ceramics on VBUS20 and six on FE_OUT, for R11 7 mOhm at 8.300 A"
-    q = lambda refs: ", ".join('"%s"' % r for r in refs)
-    new_bulk = OLD_BULK.replace('"C199", "C200")', '"C199", "C200", %s)' % q(new_cans)).rstrip("\n") + NOTE % what
-    new_extra = OLD_EXTRA.replace('"C205", "C206")', '"C205", "C206", %s)' % q(new_pre + new_vbus)).rstrip("\n") + NOTE % "the added ceramics"
-    new_pre_line = OLD_PRE.replace('cout_pre=("C13", "C14", "C15")', 'cout_pre=("C13", "C14", "C15", %s)' % q(new_pre)).rstrip("\n") + NOTE % "FE_OUT's six"
-    return [(OLD_BULK, new_bulk), (OLD_EXTRA, new_extra), (OLD_PRE, new_pre_line)], new_cans + new_pre + new_vbus
+    new_cans, what = BANKS[bank]
+    q = ", ".join('"%s"' % r for r in new_cans)
+    new_bulk = OLD_BULK.replace('"C199", "C200")', '"C199", "C200", %s)' % q).rstrip("\n") + NOTE % what
+    return [(OLD_BULK, new_bulk)], new_cans
 
 
 def refuse(msg):

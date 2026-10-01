@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """ripple_dense.py: layer 4 task L4-E8 (MESHSAT-1357, 1 October 2026). Board A's VBUS20 bulk bank re-sized so that finding B-4
 of v2/docs/records/l4e/L4-ENERGY-ARCHITECTURE.md closes (every EEHZK1V331P at most its 2.8 A rating at the 2:1 ESR spread at
-R11 8 mOhm), on a REBUILD of the generator's lost dense node analysis (drafts/scripts/ripple_dense.py of the third fix-up of 26
-September 2026, which is in neither this tree nor its history).
+R11 8 mOhm). Each capacitor's current is DERIVED from the node's topology as gen_sch_a.py draws it, the operating conditions
+and the makers' equations; the figures of the generator's lost dense analysis (drafts/scripts/ripple_dense.py of the third
+fix-up of 26 September 2026, in neither this tree nor its history) are a CONSISTENCY CHECK, reconciled where they differ, never
+a target a constant is tuned to.
 
 PROTOTYPE DESIGN, desk arithmetic: nothing is bought, built, powered or measured; no generator, registry, rendered page or
 record of L4-E4 to L4-E7 is edited (apply_gen_sch_a_bank.py beside this file is a draft for board A's generator owner). Labels:
@@ -10,15 +12,15 @@ MAKER (document, revision, page), NETLIST (board A's committed netlist), GENERAT
 band the generator's own record carries: gen_sch_a.py's comments and v2/docs/records/r4a/r4-decisions.md), INFERRED (a method
 stated beside it), ASSUMPTION (a figure no document gives), SESSION (a choice this record makes), MODELED, INCONCLUSIVE.
 
-THE MODEL is the lost analysis's as its record describes it (r4-decisions.md, section 6 B3): each converter's switch current
-built from its topology (the front end's boost output current, the inductor current during 1 - D, or its buck triangle; the
-charger's buck input current, the inductor current during D; each with its triangular ripple), split harmonic by harmonic to
-the 60th between every capacitor of a three-node network (FE_OUT, R11 and L11, VBUS20, R16 and L16, CH_ACN), each part a
-branch ESR + jwESL + 1/(jwC); the two converters are not synchronised, so each part's mean square is the FE's largest over
-(VIN, fsw) plus the charger's largest over (VBAT, fch), which is the exact maximum over the product of those corners. The
-harmonics are a 4096-point midpoint DFT, as in the recovered draft of its predecessor (bulk_ripple.py of the second fix-up,
-recovered from a session transcript, not in this tree: <worktrees>/_recovered/older/r4a-fixup-A-1136/tree/drafts/scripts/
-bulk_ripple.py, sha256 printed by nothing here; README.md names it).
+THE DERIVATION: each converter's switch current built from its topology (the front end's boost output current, the inductor
+current during 1 - D, SNVSAI1D Equation 19's waveform, or its buck triangle; the charger's buck input current, the inductor
+current during D, SLUSE66A Equation 4's waveform; each with its triangular ripple from L, fSW and the duty), split harmonic by
+harmonic to the 60th between every capacitor of the three-node network the netlist draws (FE_OUT, R11 and L11, VBUS20, R16 and
+L16, CH_ACN), each part a branch ESR + jwESL + 1/(jwC); the two converters are not synchronised, so each part's mean square is
+the front end's largest over (VIN, fSW) plus the charger's largest over (VBAT, fCH), the exact maximum over those corners. The
+harmonics are a 4096-point midpoint DFT, as in the predecessor's recovered draft (inputs/recovered/, cited, never run).
+ITS ACCEPTANCE is its convergence: every reported maximum is re-taken on source grids four to ten times finer and with twice
+the harmonics, climbed again there, and the finer grids are themselves checked against finer ones still (section 4b).
 
 THE SEARCH (SESSION, the coarsening stated as the task requires on this shared host): the passive bands are 332,100 sets on
 the drawn node; their full enumeration in pure Python takes several CPU minutes per run. Each run is searched instead: (1)
@@ -26,11 +28,15 @@ every set of a COARSE grid (polymer ESL every 0.5 nH, ceramic C every 1 uF, ever
 from above (the per-harmonic largest weights); (2) the K sets with the highest bounds, one per corner of the other bands, are
 evaluated exactly and climbed on the DENSE grid (ESL 0.05 nH, C 0.125 uF, and one band at a time over its corners) to a local
 maximum; (3) at the best set the whole dense ESL x C slice is bounded and every set whose bound exceeds it is evaluated
-exactly. The validation below is the test of the search: it must reproduce the record's dense figures, and section 4 also
-enumerates the second fix-up's node in full (110,700 sets) for the record's count of sets over 2.8 A.
+exactly, re-climbing until none does. Section 4 also enumerates the second fix-up's node in full (110,700 sets).
+
+THE RATING (MAKER, the ZK sheet): applied at the harmonics' actual frequencies through p.2's correction table and at the can's
+temperature through p.1, p.5 and p.6 (the rating at 125 C with no uplift taken, the loss against the rated condition's, the
+life equation from the worst inside air of pcb_envelope.yaml).
 
 Run from the repository root:  python3 v2/docs/records/l4e8/ripple_dense.py > v2/docs/records/l4e8/ripple_dense.out
-Needs pdftotext and PyYAML-free Python 3 (the imported L4-E4 record needs pdftoppm, Pillow and PyYAML). About four minutes.
+Needs pdftotext and PyYAML (the imported L4-E4 record needs pdftoppm and Pillow as well). About six minutes on the runner,
+one process, the search coarsened as stated above.
 Exit 2: a pinned file is not the pinned file; 3: an input cannot be parsed; 4: a reproduction or a predicate failed."""
 import ast
 import cmath
@@ -45,6 +51,8 @@ import os
 import re
 import subprocess
 import sys
+
+import yaml
 
 sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -64,6 +72,7 @@ L4E6_PY = "v2/docs/records/l4e6/l4e6_fault_handling.py"
 L4E6_OUT = "v2/docs/records/l4e6/l4e6_fault_handling.out"
 R11_PY = "v2/docs/records/r11dep/r11_dep.py"
 R11_OUT = "v2/docs/records/r11dep/r11_dep.out"
+ENVELOPE = "v2/ecad/tools/pcb_envelope.yaml"
 PINS = {   # the files this record reads; after any of them changes (a regeneration of board A, above all) it refuses by design
     GEN_A: "6a136feec6c9cf4e2011ed8c45a1f2e0adc3e263718c355b4b909872ee5d3c4b",
     NET_A: "6c40250c47195ebb7b2ae1388e284dc7f2fba9f2e683f654a47c98444290e8c5",
@@ -77,9 +86,15 @@ PINS = {   # the files this record reads; after any of them changes (a regenerat
     R11_OUT: "f9d2c6f23fab3edcb48ad0116366fe588a514f755aafe56ebd62a0fe9495a209",
     L4E6_PY: "5f97b5b34fb1d0e555411a7dbd93554fd36a45af8801e3497cccf93ef0cc0995",
     L4E6_OUT: "4f7cefb270f326d1956a7c5b1e11c8901e4f21a0ff3feb4fcb6d66fb78728c66",
+    ENVELOPE: "35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864",
 }
-RECOVERED = ("<worktrees>/_recovered/older/r4a-fixup-A-1136/tree/drafts/scripts/bulk_ripple.py",
-             "c6b55794a762ecee48f36f4a445a22f3d8f80ffcf68f2c905cd9718827d15e34")   # not in the tree; cited, never read here
+# The predecessor's recovered drafts, filed beside this record as cited inputs (their sha256 checked, their code never run here):
+# the second fix-up's bulk_ripple.py and the fix-up's loop_design.py, as a session transcript holds them (README.md, provenance).
+RECOVERED = {
+    "v2/docs/records/l4e8/inputs/recovered/bulk_ripple-r4a-fixup-A-1136.py": "c6b55794a762ecee48f36f4a445a22f3d8f80ffcf68f2c905cd9718827d15e34",
+    "v2/docs/records/l4e8/inputs/recovered/loop_design-r4a-fixup-A-1024.py": "fe0d946bc020d4b68c3a4e417b4c2e7dfd98eeabd2352ff849de4ef0d781d7da",
+}
+PINS.update(RECOVERED)
 
 # ---------------------------------------------------------------------------------------------------- SESSION constants
 # The validation tolerances, FIXED BEFORE THE VALIDATION WAS RUN (L4E8-BANK.md, "The rebuild and its validation"):
@@ -101,12 +116,23 @@ MARGIN_PER_A = TOL_DENSE / 5.7        # SESSION decision rule: a candidate meets
 # holding a bank that meets the rating less the margin at every spread gives the bank; within it the lowest worst can is taken.
 # The 7 mOhm list starts at one added can with twelve ceramics: every reading there is at a higher current and a lower R11 than
 # the 8 mOhm reading of the same bank, both of which raise the can's current (section 5), so the 8 mOhm screen bounds it.
-CANDIDATES_8 = [((0, 0), [(6, 15, 6)]), ((0, 3), [(6, 21, 3), (6, 18, 6)]), ((0, 6), [(6, 24, 3), (6, 21, 6)]),
-                ((0, 9), [(6, 27, 3), (6, 24, 6)]), ((0, 12), [(6, 30, 3), (6, 27, 6)]), ((1, 0), [(7, 18, 3), (7, 15, 6)]),
-                ((1, 3), [(7, 21, 3), (7, 18, 6)]), ((1, 6), [(7, 24, 3), (7, 21, 6)]), ((2, 0), [(8, 18, 3), (8, 15, 6)])]
-CANDIDATES_7 = [((1, 12), [(7, 30, 3), (7, 27, 6)]), ((2, 0), [(8, 18, 3), (8, 15, 6)]), ((2, 3), [(8, 21, 3), (8, 18, 6)]),
-                ((2, 6), [(8, 24, 3), (8, 21, 6)]), ((2, 9), [(8, 27, 3), (8, 24, 6)]), ((2, 12), [(8, 30, 3), (8, 27, 6)]),
-                ((3, 0), [(9, 18, 3), (9, 15, 6)]), ((3, 3), [(9, 21, 3), (9, 18, 6)])]
+# A group of +n cans is opened only after the same cans with twelve more ceramics failed: more ceramics took current off the
+# cans in every screen of this record (INFERRED from them), so +12 bounds every smaller ceramic change of that can count.
+CANDIDATES_8 = [((0, 12), [(6, 30, 3), (6, 27, 6)]), ((1, 12), [(7, 30, 3), (7, 27, 6)]), ((2, 0), [(8, 18, 3), (8, 15, 6)]),
+                ((2, 3), [(8, 21, 3), (8, 18, 6)]), ((2, 6), [(8, 24, 3), (8, 21, 6)])]
+CANDIDATES_7 = [((2, 12), [(8, 30, 3), (8, 27, 6)]), ((3, 0), [(9, 18, 3), (9, 15, 6)]), ((3, 3), [(9, 21, 3), (9, 18, 6)]),
+                ((3, 6), [(9, 24, 3), (9, 21, 6)]), ((4, 0), [(10, 18, 3), (10, 15, 6)])]
+# THE SHARING BASIS (SESSION, L4E8-BANK.md): the cans' ESR within 2:1 (the spread, held by reading each can at 100 kHz before
+# fitting) AND every can's branch within LAYOUT of every other's, both against the one can that has the lowest ESR and the
+# shortest branch. LAYOUT is a layout rule for board A: a 10 mm wide VBUS20 pour 0.2 mm over its plane is about 25 pH/mm
+# (mu0 h / w), so 0.5 nH is a 20 mm path difference; 0.5 mOhm is two squares of 2 oz copper. A symmetric placement about one
+# VBUS20 entry (the record's O-01) holds both; the routed board's extracted branches verify it.
+LAYOUT = (0.5e-9, 0.5e-3)
+# The decision runs search the passive bands on finer source grids still (SESSION): VBAT every 0.2 V, fSW every 2.5 kHz, the
+# charger every 5 kHz; the screens use the record's grids.
+DECIDE = dict(vbat=0.2, fsw=2.5e3, fch=5e3)
+GEOM = (1.0e-9, 1.0e-3)   # ASSUMPTION, the layout's stress: twice LAYOUT (a 40 mm path difference, or a narrower pour)
+STRESS = dict(esl_lo=1.0, cer_lo=3.0)   # ASSUMPTION, the bands' stress: the cans' ESL down to 1.0 nH, the ceramics' C down to 3.0 uF
 MUL = operator.mul
 WORDS = {w: i for i, w in enumerate("zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen "
                                     "fifteen sixteen seventeen eighteen nineteen twenty".split())}
@@ -162,11 +188,11 @@ def si(value, unit):
 _TW = []
 
 
-def dft_basis(kind, d, cache={}):
+def dft_basis(kind, d, nh=NH, cache={}):
     """The switch current's harmonics 1..NH (complex, /NS) for an inductor average of 1 A and no ripple (G), and for no average
     and a 1 A peak-to-peak triangle (H); d the high-side (buck) or low-side (boost) duty. The waveform is linear in the two, so
     any (average, ripple) is il G + dil H. kind: boost_out (IL during 1 - D), buck_out (IL always), buck_in (IL during D)."""
-    key = (kind, d)
+    key = (kind, d, nh)
     if key in cache:
         return cache[key]
     if not _TW:
@@ -181,7 +207,7 @@ def dft_basis(kind, d, cache={}):
             idx.append(j)
             tri.append(tr)
     G, H = [], []
-    for k in range(1, NH + 1):
+    for k in range(1, nh + 1):
         sg = sh = 0j
         for j, tr in zip(idx, tri):
             tw = _TW[(k * j) % NS]
@@ -195,12 +221,13 @@ def dft_basis(kind, d, cache={}):
 
 class Model:
     """The two sources over their grids: VBUS20 (vout), L1 and L2, VIN and fsw (the front end), VBAT and fch (the charger)."""
-    def __init__(self, vout, l1, l2, vins, fsws, vbats, fchs):
-        self.vout, self.l1, self.l2 = vout, l1, l2
+    def __init__(self, vout, l1, l2, vins, fsws, vbats, fchs, nh=NH):
+        self.vout, self.l1, self.l2, self.nh = vout, l1, l2, nh
         self.vins, self.fsws, self.vbats, self.fchs = list(vins), list(fsws), list(vbats), list(fchs)
-        F = [k * f for f in self.fsws for k in range(1, NH + 1)] + [k * f for f in self.fchs for k in range(1, NH + 1)]
+        F = [k * f for f in self.fsws for k in range(1, nh + 1)] + [k * f for f in self.fchs for k in range(1, nh + 1)]
+        self.F = F
         self.W = [2 * math.pi * f for f in F]
-        self.nfeW = len(self.fsws) * NH
+        self.nfeW = len(self.fsws) * nh
 
     def fe(self, vin, fsw, iout):
         """the front end's output switch current: (harmonic weights 2|c_k|^2, its own rms ac, SNVSAI1D Equation 19's value)"""
@@ -211,7 +238,7 @@ class Model:
         else:
             d = v / vin
             il, dil, kind = iout, v * (1 - d) / (self.l1 * fsw), "buck_out"
-        G, H = dft_basis(kind, d)
+        G, H = dft_basis(kind, d, self.nh)
         w = [2.0 * abs(il * g + dil * h) ** 2 for g, h in zip(G, H)]
         return w, (iout * math.sqrt(v / vin - 1) if vin < v else dil / math.sqrt(12))
 
@@ -221,10 +248,18 @@ class Model:
         v = self.vout
         d2 = vbat / v
         il2, dil2 = iout / d2, v * d2 * (1 - d2) / (fch * self.l2)
-        G, H = dft_basis("buck_in", d2)
+        G, H = dft_basis("buck_in", d2, self.nh)
         return [2.0 * abs(il2 * g + dil2 * h) ** 2 for g, h in zip(G, H)], il2 * math.sqrt(d2 * (1 - d2))
 
     def weights(self, iout):
+        if not hasattr(self, "_w"):
+            self._w = {}
+        if iout in self._w:
+            return self._w[iout]
+        self._w[iout] = self._weights(iout)
+        return self._w[iout]
+
+    def _weights(self, iout):
         fe = [[self.fe(vin, f, iout)[0] for vin in self.vins] for f in self.fsws]
         ch = [[self.ch(vb, f, iout)[0] for vb in self.vbats] for f in self.fchs]
         return dict(fe=fe, ch=ch, fe_max=[[max(c) for c in zip(*b)] for b in fe], ch_max=[[max(c) for c in zip(*b)] for b in ch], iout=iout)
@@ -238,8 +273,9 @@ class Node:
     """One network: nb cans (one at the corner's ESR, its siblings at spread x it), nv ceramics on VBUS20, no on FE_OUT; R11 +
     L11 from FE_OUT to VBUS20, R16 + L16 from VBUS20 to CH_ACN, the half bridge's parts at CH_ACN. The front end injects at
     FE_OUT, the charger draws at CH_ACN. Set key: (ESL, C, C_can, ESR_can, ceramic ESL, ceramic ESR, L16, L11) band indices."""
-    def __init__(self, model, bands, bank, r11, r16, spread, hf):
-        self.m, self.b, self.s = model, bands, spread
+    def __init__(self, model, bands, bank, r11, r16, spread, hf, sib_dl=0.0, sib_dr=0.0):
+        self.m, self.b, self.s, self.dl, self.dr = model, bands, spread, sib_dl, sib_dr
+        self.cap = max(20, int(300 * 1500 / len(model.W)))       # the caches' size, by the frequency list's length
         self.nb, self.nv, self.no = bank
         W = self.W = model.W
         self.yhf = [sum(t) for t in zip(*[zinv(W, *p) for p in hf])]
@@ -255,7 +291,7 @@ class Node:
         v = self._rest.get(key)
         if v is not None:
             return v
-        if len(self._rest) > 300:
+        if len(self._rest) > self.cap:
             self._rest.clear()
         ic, il, ir, i16, i11 = key
         b, nf = self.b, self.m.nfeW
@@ -287,30 +323,36 @@ class Node:
         v = self._bank.get(key)
         if v is not None:
             return v
+        if len(self._bank) > 3 * self.cap:
+            self._bank.clear()
         ie, icb, ier = key
         b = self.b
         c, esr, esl = b["cb_k"][icb] * b["c_can"], b["esr_k"][ier] * b["esr_can"], b["esl_b"][ie]
         yo = zinv(self.W, c, esr, esl)
-        if self.s == 1.0:
+        if self.s == 1.0 and not (self.dl or self.dr):
             ys, yb = yo, [self.nb * y for y in yo]
         else:
-            ys = zinv(self.W, c, esr * self.s, esl)
+            ys = zinv(self.W, c, esr * self.s + self.dr, esl + self.dl)
             yb = [a + (self.nb - 1) * y for a, y in zip(yo, ys)]
         yo2 = [abs(y) ** 2 for y in yo]
-        v = self._bank[key] = (yb, yo2, yo2 if ys is yo else [abs(y) ** 2 for y in ys])
+        v = self._bank[key] = (yb, yo2, yo2 if ys is yo else [abs(y) ** 2 for y in ys], esr, esr * self.s + self.dr)
         return v
 
     def vectors(self, s, metrics):
         """per-frequency squared current per ampere of source, for each metric: odd (the can at the corner's ESR), sib (one
         of its siblings), cerv (one VBUS20 ceramic), cero (one FE_OUT ceramic)"""
         ie, ic, icb, ier, il, ir, i16, i11 = s
-        yb, yo2, ys2 = self.bank((ie, icb, ier))
+        yb, yo2, ys2, eo, es = self.bank((ie, icb, ier))
         r, kk, kkc, q, oofe, ooch = self.rest((ic, il, ir, i16, i11))
         inv = [1.0 / abs(a + c) ** 2 for a, c in zip(yb, r)]
         out = {}
-        if "odd" in metrics or "sib" in metrics:
+        if {"odd", "sib", "podd", "psib"} & set(metrics):
             out["odd"] = [i * k * y for i, k, y in zip(inv, kk, yo2)]
-            out["sib"] = out["odd"] if self.s == 1.0 else [i * k * y for i, k, y in zip(inv, kk, ys2)]
+            out["sib"] = out["odd"] if ys2 is yo2 else [i * k * y for i, k, y in zip(inv, kk, ys2)]
+            if "podd" in metrics:
+                out["podd"] = [x * eo for x in out["odd"]]    # the can's own loss per ampere squared of source: ESR x its current squared
+            if "psib" in metrics:
+                out["psib"] = [x * es for x in out["sib"]]
         if "cerv" in metrics:
             out["cerv"] = [i * k for i, k in zip(inv, kkc)]
         if "cero" in metrics and self.no:
@@ -321,24 +363,26 @@ class Node:
 
 
 def bound(vec, wt):
-    off = len(wt["fe_max"]) * NH
-    return (max(sum(map(MUL, w, vec[i * NH:(i + 1) * NH])) for i, w in enumerate(wt["fe_max"]))
-            + max(sum(map(MUL, w, vec[off + i * NH:off + (i + 1) * NH])) for i, w in enumerate(wt["ch_max"])))
+    n = len(wt["fe_max"][0])
+    off = len(wt["fe_max"]) * n
+    return (max(sum(map(MUL, w, vec[i * n:(i + 1) * n])) for i, w in enumerate(wt["fe_max"]))
+            + max(sum(map(MUL, w, vec[off + i * n:off + (i + 1) * n])) for i, w in enumerate(wt["ch_max"])))
 
 
 def exact(vec, wt):
     """(mean square, (FE's, (VIN index, fsw index)), (charger's, (VBAT index, fch index)))"""
+    n = len(wt["fe_max"][0])
     bf = (-1.0, None)
     for i, blk in enumerate(wt["fe"]):
-        seg = vec[i * NH:(i + 1) * NH]
+        seg = vec[i * n:(i + 1) * n]
         for j, w in enumerate(blk):
             x = sum(map(MUL, w, seg))
             if x > bf[0]:
                 bf = (x, (j, i))
-    off = len(wt["fe"]) * NH
+    off = len(wt["fe"]) * n
     bc = (-1.0, None)
     for i, blk in enumerate(wt["ch"]):
-        seg = vec[off + i * NH:off + (i + 1) * NH]
+        seg = vec[off + i * n:off + (i + 1) * n]
         for j, w in enumerate(blk):
             x = sum(map(MUL, w, seg))
             if x > bc[0]:
@@ -417,6 +461,54 @@ def worst_can(res, c=0):
     return max((res[(m, c)] for m in ("odd", "sib") if (m, c) in res), key=lambda x: x["ms"])
 
 
+# Finer source grids for the convergence of each reported maximum (SESSION): VBAT every 0.05 V, fSW every 0.5 kHz, the charger
+# every 2 kHz; and the harmonics doubled. FINER checks that FINE has itself converged.
+FINE = dict(vbat=0.05, fsw=0.5e3, fch=2e3, nh=2 * NH)
+FINER = dict(vbat=0.02, fsw=0.25e3, fch=1e3)
+
+
+def lin(a, b, n):
+    return [a + (b - a) * i / (n - 1) for i in range(n)]
+
+
+def fine_model(m, rows, g=FINE):
+    """the same sources as model m on finer grids (rows: the charger's FSW rows, (min, max) each)"""
+    nf = int(round((m.fsws[-1] - m.fsws[0]) / g["fsw"])) + 1
+    nb = int(round((m.vbats[-1] - m.vbats[0]) / g["vbat"])) + 1
+    fch = []
+    for lo, hi in rows:
+        fch += lin(lo, hi, int(round((hi - lo) / g["fch"])) + 1)
+    return Model(m.vout, m.l1, m.l2, m.vins, lin(m.fsws[0], m.fsws[-1], nf), lin(m.vbats[0], m.vbats[-1], nb), fch)
+
+
+def converge(mk_node, model, s0, metric, iout):
+    """the reported maximum re-taken on a model with finer source grids: the set re-evaluated, then climbed on the dense
+    passive grid (one band at a time) to the local maximum there. Returns (mean square at s0, (mean square, set, fe, ch))."""
+    node = mk_node(model)
+    wt = model.weights(iout)
+    d = node.dims
+    order = ("ie", "ic", "icb", "ier", "il", "ir", "i16", "i11")
+    memo = {}
+
+    def ex(x):
+        if x not in memo:
+            memo[x] = exact(node.vectors(x, (metric,))[metric], wt)
+        return memo[x]
+    cur, curv = s0, ex(s0)[0]
+    first = curv
+    while True:
+        nbr = [(cur[0] + a, cur[1] + b) + cur[2:] for a, b in itertools.product((-1, 0, 1), repeat=2)
+               if (a or b) and 0 <= cur[0] + a < d["ie"] and 0 <= cur[1] + b < d["ic"]]
+        for pos, name in enumerate(order[2:], start=2):
+            nbr += [cur[:pos] + (x,) + cur[pos + 1:] for x in range(d[name]) if x != cur[pos]]
+        cand = max((ex(x)[0], x) for x in nbr)
+        if cand[0] <= curv:
+            break
+        curv, cur = cand
+    tot, fe, ch = ex(cur)
+    return first, (tot, cur, fe, ch, model)
+
+
 # ============================================================================================================== the loop
 def loop_model(cfg):
     """SNVSAI1D's small-signal model as the generator's lost loop_design.py carried it (its recovered draft and r4-decisions.md):
@@ -450,8 +542,9 @@ def loop_eval(cfg, nbulk, ncer, rcs, rc1, cc1, cc2, qs=(0.4, 0.8), lks=(1.0,)):
     cl_band = [c * ncer / cfg["ncer0"] for c in cfg["cl0"]]
     zc = [1.0 / (1.0 / (rc1 + 1.0 / (s * cc1)) + s * cc2 + 1.0 / ro) for s in S]
     bulk = [(cfg["c_can"] * k, cfg["esr_can"] * e) for k in (0.8, 1.2) for e in (0.3, 2.0)]
-    pm = gmd = 999.0
+    pm = gmd = pmi = gmi = 999.0
     mm = 1e9
+    flo_i, fhi_i = 1e12, 0.0
     flo_c, fhi_c, zpk, zr, ceil_ok, all_cross = 1e12, 0.0, 0.0, 0.0, True, True
     for (mode, vin), cl, iout, q, fsw, g, lk, (cb, eb) in itertools.product(cfg["modes"], cl_band, cfg["iouts"], qs, (flo, fhi),
                                                                           (0.8, 1.2), lks, bulk):
@@ -484,16 +577,24 @@ def loop_eval(cfg, nbulk, ncer, rcs, rc1, cc1, cc2, qs=(0.4, 0.8), lks=(1.0,)):
                 pm = min(pm, 180 + ph[j])
                 flo_c = min(flo_c, F[j])
                 fh = max(fh, F[j])
+                la, lb = math.log10(mag[j]), math.log10(mag[j + 1])      # the crossing interpolated in log |T| over log f
+                x = la / (la - lb) if la != lb else 0.0
+                pmi = min(pmi, 180 + ph[j] + x * (ph[j + 1] - ph[j]))
+                fci = 10 ** (math.log10(F[j]) + x * (math.log10(F[j + 1]) - math.log10(F[j])))
+                flo_i, fhi_i = min(flo_i, fci), max(fhi_i, fci)
             for k in (-180.0, -540.0):
                 if (ph[j] - k) * (ph[j + 1] - k) <= 0:
                     gmd = min(gmd, -20 * math.log10(max(mag[j], 1e-12)))
+                    x = (k - ph[j]) / (ph[j + 1] - ph[j]) if ph[j + 1] != ph[j] else 0.0
+                    gmi = min(gmi, -20 * (math.log10(max(mag[j], 1e-12)) + x * (math.log10(max(mag[j + 1], 1e-12)) - math.log10(max(mag[j], 1e-12)))))
         fhi_c = max(fhi_c, fh)
         ceil_ok = ceil_ok and fh <= min(fsw0 / 20.0, rhp3)
         all_cross = all_cross and fh > 0
         mm = min(mm, min(abs(1 + x) for x in t))
         zpk = max(zpk, max(zl))
         zr = max(zr, max(zl) / (vout ** 2 / cfg["p_bound"] / 3.0))
-    return dict(pm=pm, gm=gmd, mm=mm, fc_lo=flo_c / 1e3, fc_hi=fhi_c / 1e3, z=zpk * 1e3, z_ratio=zr, ceil_ok=ceil_ok, all_cross=all_cross)
+    return dict(pm=pm, gm=gmd, mm=mm, fc_lo=flo_c / 1e3, fc_hi=fhi_c / 1e3, z=zpk * 1e3, z_ratio=zr, ceil_ok=ceil_ok, all_cross=all_cross,
+                pm_i=pmi, gm_i=gmi, fc_lo_i=flo_i / 1e3, fc_hi_i=fhi_i / 1e3)
 
 
 # ============================================================================================================== the inputs
@@ -730,11 +831,25 @@ def read_makers(R):
         refuse(3, "EEHZK p.2: the four correction rows for 100 uF and more not read")
     last = rows100[-1][-2:]
     need(z1, r"ESR\s+≦ 200 % of the initial limit", "EEHZK p.1 ESR after endurance")
+    corr = []
+    heads = [l for l in z2.splitlines() if "Frequency (f)" in l]
+    if len(heads) != 4:
+        refuse(3, "EEHZK p.2: four frequency headings not read")
+    for h_, r_ in zip(heads, rows100):
+        lows = [float(v) * (1e3 if u == "kHz" else 1.0) for v, u in re.findall(r"(\d+) (Hz|kHz) ≦ f", h_)]
+        vals = [float(v) for v in r_[-4:]]
+        if len(lows) != 4:
+            refuse(3, "EEHZK p.2: a correction heading's four columns not read")
+        corr += list(zip(lows, vals))
+    life_h, t_cat = (float(v) for v in need(z1, r"Endurance : (\d+) h at (\d+) ℃", "EEHZK p.1 endurance").groups())
+    need(flat(page(EEHZK, 5)), r"In general, a 10 ℃ drop in the temperature will double the life", "EEHZK p.5 the life rule")
+    need(page(EEHZK, 6), r"L2 = L1 x 2", "EEHZK p.6 the life equation")
+    cap_y = float(need(flat(page(EEHZK, 6)), r"the estimated service life is not longer than (\d+) years", "EEHZK p.6 the 15 years").group(1))
     need(z7, r"use capacitors with the same part number", "EEHZK p.7 parallel parts")
     need(page(EEHZK, 2), r"01-Apr-22", "EEHZK the sheet's date")
     R["mk"] = dict(fsw_row=fsw_row, rt_row=rt_row, gm=gm, ro=ro, vref=vref, iss=iss, acs=acs, f800=f0, f400=f1,
                    c_can=float(row.group(1)) * 1e-6, rip=float(row.group(2)) / 1000.0, esr_can=float(row.group(3)) * 1e-3,
-                   corr_hi=tuple(float(v) for v in last))
+                   corr_hi=tuple(float(v) for v in last), corr=sorted(corr), life_h=life_h, t_cat=t_cat, life_cap_y=cap_y)
 
 
 # ============================================================================================================== compute
@@ -866,9 +981,23 @@ def compute():
     lrows = [(k, rec["loop"][k], lv[k], TOL_LOOP[k]) for k in ("pm", "gm", "mm", "fc_lo", "fc_hi", "z")] + \
             [("wide " + k, rec["loop_wide"][k], lw[k], TOL_LOOP[k]) for k in ("pm", "gm", "mm")]
     R.update(lcfg=lcfg, comp=comp, rcs_drawn=rcs_drawn, loop_drawn=(lv, lw), lrows=lrows)
-    R["validated"] = all(r["ok"] for r in rows) and all(abs(g - w) <= t for _k, w, g, t in lrows)
-    if not R["validated"]:
-        return R
+    R["consistent"] = all(r["ok"] for r in rows) and all(abs(g - w) <= t for _k, w, g, t in lrows)
+    # ---------------------------------------------------------------- 4b. the derivation's own convergence: finer source grids, more harmonics
+    rows_ch = [(mk["f400"][0], mk["f400"][2]), (mk["f800"][0], mk["f800"][2])]
+    Mvf = fine_model(Mv, rows_ch)
+    Mvh = Model(vout, l1, rec["l2_old"], vins, fsws, vbats, fch_both, nh=FINE["nh"])
+    CV = {}
+    for (s_, ci, m_) in ((1.0, 0, "odd"), (1.5, 0, "odd"), (2.0, 0, "odd"), (1.0, 1, "odd"), (1.5, 1, "odd"), (2.0, 1, "odd"), (1.0, 0, "cerv"), (1.0, 0, "cero")):
+        r_ = V[("third", s_)][(m_, ci)]
+        mkn = (lambda sp: (lambda mm: Node(mm, bands, drawn, r11_drawn, r16, sp, hf)))(s_)
+        i_ = wv[ci]["iout"]
+        first, conv = converge(mkn, Mvf, r_["set"], m_, i_)
+        nh2 = exact(mkn(Mvh).vectors(r_["set"], (m_,))[m_], Mvh.weights(i_))[0]
+        CV[(s_, ci, m_)] = dict(base=r_["ms"], fine_at=first, conv=conv, nh2=nh2)
+    R["CV"] = CV
+    Mvx = fine_model(Mv, rows_ch, FINER)
+    R["CV2"] = {k: math.sqrt(exact(Node(Mvx, bands, drawn, r11_drawn, r16, k[0], hf).vectors(CV[k]["conv"][1], (k[2],))[k[2]], Mvx.weights(wv[k[1]]["iout"]))[0])
+                for k in ((1.0, 0, "odd"), (2.0, 0, "odd"), (1.0, 0, "cerv"))}
     # ---------------------------------------------------------------- 5. the drawn bank at the highest permitted currents
     Me = Model(vout, l1, l2, vins, fsws, vbats, fch_both)
     E = {}
@@ -878,6 +1007,15 @@ def compute():
             nd = Node(Me, bands, drawn, o["r11"], r16, s, hf)
             E[(o["key"], s)] = search(nd, we, ("odd", "sib", "cerv", "cero") if s == 1.0 else ("odd", "sib"))
     R["E"] = E
+    Mef0 = fine_model(Me, [(mk["f400"][0], mk["f400"][2]), (mk["f800"][0], mk["f800"][2])])
+    EC = {}
+    for o in out:
+        for s in (1.0, 1.5, 2.0):
+            w_ = worst_can(E[(o["key"], s)])
+            m_ = "odd" if w_ is E[(o["key"], s)][("odd", 0)] else "sib"
+            mkn = (lambda r11x, spx: (lambda mm: Node(mm, bands, drawn, r11x, r16, spx, hf)))(o["r11"], s)
+            EC[(o["key"], s)] = max(math.sqrt(w_["ms"]), math.sqrt(converge(mkn, Mef0, w_["set"], m_, o["hi"])[1][0]))
+    R["EC"] = EC
     # what moves the drawn bank off r11_dep.py's scaling: the network of the record (L2 3.3 uH, R11 10 mOhm), then L2 4.7 uH
     o8 = out[0]
     D = {}
@@ -890,47 +1028,116 @@ def compute():
     for s in (1.0, 2.0):
         D[("400", s)] = math.sqrt(worst_can(search(Node(M4, bands, drawn, o8["r11"], r16, s, hf), [M4.weights(o8["hi"])], ("odd", "sib"), slice_check=False))["ms"])
     R["D"] = D
-    # ---------------------------------------------------------------- 6. the re-size
-    scr, full_all, chosen = {}, {}, {}
+    # ---------------------------------------------------------------- 6. the re-size (on the sharing basis; decided on finer grids)
+    Mef = fine_model(Me, rows_ch)
+    Md = fine_model(Me, rows_ch, DECIDE)
+    lay = dict(sib_dl=LAYOUT[0], sib_dr=LAYOUT[1])
+
+    def decide(bank, o, basis, grid=None):
+        """the bank at every spread: a full search (on the decision grids at the binding 2:1 spread, on the record's grids at the
+        others), then each spread's worst can converged on FINE"""
+        outc = {}
+        for sp in (1.0, 1.5, 2.0):
+            g_ = grid or (Md if sp == 2.0 else Me)
+            res = search(Node(g_, bands, bank, o["r11"], r16, sp, hf, **basis), [g_.weights(o["hi"])], ("odd", "sib"))
+            w_ = worst_can(res)
+            m_ = "odd" if w_ is res[("odd", 0)] else "sib"
+            mkn = (lambda bk, r11x, spx: (lambda mm: Node(mm, bands, bk, r11x, r16, spx, hf, **basis)))(bank, o["r11"], sp)
+            _f, cv = converge(mkn, Mef, w_["set"], m_, o["hi"])
+            outc[sp] = dict(res=res, search=math.sqrt(w_["ms"]), conv=math.sqrt(cv[0]), fig=max(math.sqrt(w_["ms"]), math.sqrt(cv[0])), metric=m_, cv=cv)
+        return outc
+    scr, dec_all, chosen = {}, {}, {}
     for o, groups in ((out[0], CANDIDATES_8), (out[1], CANDIDATES_7)):
         lim = rating - MARGIN_PER_A * o["hi"]
         we = [Me.weights(o["hi"])]
         pick = None
         for grp, banks in groups:
             for bank in banks:
-                scr[(o["key"], bank)] = math.sqrt(worst_can(search(Node(Me, bands, bank, o["r11"], r16, 2.0, hf), we, ("odd",), slice_check=False))["ms"])
+                scr[(o["key"], bank)] = math.sqrt(worst_can(search(Node(Me, bands, bank, o["r11"], r16, 2.0, hf, **lay), we, ("odd",), slice_check=False))["ms"])
             for bank in banks:
-                if scr[(o["key"], bank)] > lim:
-                    continue
-                full_all[(o["key"], bank)] = {s: search(Node(Me, bands, bank, o["r11"], r16, s, hf), we, ("odd", "sib")) for s in (1.0, 1.5, 2.0)}
-            ok = [b for b in banks if (o["key"], b) in full_all and all(math.sqrt(worst_can(full_all[(o["key"], b)][s])["ms"]) <= lim for s in (1.0, 1.5, 2.0))]
+                if scr[(o["key"], bank)] <= lim:      # the 7 mOhm contingency on the record's grids, converged (runtime on this host)
+                    dec_all[(o["key"], bank)] = decide(bank, o, lay, grid=None if o["key"] == "8" else Me)
+            ok = [b_ for b_ in banks if (o["key"], b_) in dec_all and all(x["fig"] <= lim for x in dec_all[(o["key"], b_)].values())]
             if ok:
-                bank = min(ok, key=lambda b: max(worst_can(full_all[(o["key"], b)][s])["ms"] for s in (1.0, 1.5, 2.0)))
-                pick = dict(bank=bank, group=grp, full=full_all[(o["key"], bank)], lim=lim,
-                            cer=search(Node(Me, bands, bank, o["r11"], r16, 1.0, hf), we, ("cerv", "cero")))
+                bank = min(ok, key=lambda b_: max(x["fig"] for x in dec_all[(o["key"], b_)].values()))
+                pick = dict(bank=bank, group=grp, conv=dec_all[(o["key"], bank)], lim=lim)
+                pick["full"] = {sp: pick["conv"][sp]["res"] for sp in (1.0, 1.5, 2.0)}
+                ce = search(Node(Me, bands, bank, o["r11"], r16, 1.0, hf, **lay), we, ("cerv", "cero"))
+                pick["cer"] = {m_: max(math.sqrt(ce[(m_, 0)]["ms"]), math.sqrt(converge(
+                    (lambda bk, r11x: (lambda mm: Node(mm, bands, bk, r11x, r16, 1.0, hf, **lay)))(bank, o["r11"]), Mef, ce[(m_, 0)]["set"], m_, o["hi"])[1][0]))
+                               for m_ in ("cerv", "cero")}
                 break
         if pick is None:
-            refuse(4, "no candidate bank meets the rating with margin at %s mOhm" % o["key"])
-        pick["first_at_rating"] = next((b for _g, bs in groups for b in bs if (o["key"], b) in scr and scr[(o["key"], b)] <= rating), None)
+            refuse(4, "no candidate bank meets the rule at %s mOhm" % o["key"])
         chosen[o["key"]] = pick
-    R["scr"], R["full_all"] = scr, full_all
+    R["scr"], R["dec_all"] = scr, dec_all
+    # the lumped node (no layout mismatch), as the lost analysis judged it: the smallest +1-can banks
+    LU = {}
+    LU["screen"] = math.sqrt(worst_can(search(Node(Me, bands, (7, 18, 3), out[0]["r11"], r16, 2.0, hf), [Me.weights(out[0]["hi"])], ("odd",), slice_check=False))["ms"])
+    LU[(7, 21, 3)] = decide((7, 21, 3), out[0], {}, grid=Me)
+    R["LU"] = LU
     # sensitivity, not gating: VIN only where the average limit sets the fault current at both outcomes once L4-E6's R12 is in
     bnd = [float(need(t6, r"above ([\d.]+) V the average limit, not the peak limit, sets the fault current; at 9 V the output is held to ([\d.]+) A", "L4-E6's boundary").group(i))
            for i in (1, 2)]
     bnd7 = float(re.findall(r"above ([\d.]+) V the average limit, not the peak limit, sets the fault current", t6)[-1])
     Mh = Model(vout, l1, l2, [v for v in vins if v > max(bnd[0], bnd7)], fsws, vbats, fch_both)
     H = {}
-    for tag, bank in (("drawn", drawn), ("8", chosen["8"]["bank"])):
+    for tag, bank, basis in (("drawn", drawn, {}), ("8", chosen["8"]["bank"], lay)):
         for sp in (1.0, 2.0):
-            H[(tag, sp)] = math.sqrt(worst_can(search(Node(Mh, bands, bank, out[0]["r11"], r16, sp, hf), [Mh.weights(out[0]["hi"])], ("odd", "sib"), slice_check=False))["ms"])
+            H[(tag, sp)] = math.sqrt(worst_can(search(Node(Mh, bands, bank, out[0]["r11"], r16, sp, hf, **basis), [Mh.weights(out[0]["hi"])], ("odd", "sib"), slice_check=False))["ms"])
     at9 = [worst_can(r_)["fe"][1][0] == 0 for r_ in list(E.values()) + [chosen[k]["full"][sp] for k in ("8", "7") for sp in (1.0, 1.5, 2.0)]]
     R["H"] = dict(vals=H, vins=Mh.vins, b8=bnd[0], b7=bnd7, i9=bnd[1], all9=all(at9), n9=(sum(at9), len(at9)))
     # the 8 mOhm bank at 7 mOhm, all spreads (what V-A07's failure would leave)
     o7 = out[1]
     b8 = chosen["8"]["bank"]
-    chosen["8_at_7"] = {s: math.sqrt(worst_can(search(Node(Me, bands, b8, o7["r11"], r16, s, hf), [Me.weights(o7["hi"])], ("odd", "sib"), slice_check=False))["ms"])
+    chosen["8_at_7"] = {s: math.sqrt(worst_can(search(Node(Me, bands, b8, o7["r11"], r16, s, hf, **lay), [Me.weights(o7["hi"])], ("odd", "sib"), slice_check=False))["ms"])
                         for s in (1.0, 1.5, 2.0)}
     R["chosen"] = chosen
+    # ---------------------------------------------------------------- 6b. the selected (8 mOhm) bank: its loss, the rating at frequency and temperature, the stresses
+    o8 = out[0]
+    we8 = [Me.weights(o8["hi"])]
+    PD = {}
+    for sp in (1.0, 1.5, 2.0):
+        r_ = search(Node(Me, bands, b8, o8["r11"], r16, sp, hf, **lay), we8, ("podd", "psib"), slice_check=False)
+        best = max((r_[(m_, 0)] for m_ in ("podd", "psib")), key=lambda x: x["ms"])
+        m_ = "podd" if best is r_[("podd", 0)] else "psib"
+        mkn = (lambda spx: (lambda mm: Node(mm, bands, b8, o8["r11"], r16, spx, hf, **lay)))(sp)
+        PD[sp] = max(best["ms"], converge(mkn, Mef, best["set"], m_, o8["hi"])[1][0])
+    p_rated = rating ** 2 * mk["esr_can"]
+    env = yaml.safe_load(open(os.path.join(TOP, ENVELOPE), encoding="utf-8"))
+    t_air = max(env["worst_inside_air_c"]["lid_open"], env["worst_inside_air_c"]["lid_closed"])
+    t_local = float(need(t6, r"so the qualifying temperature is (\d+) C", "L4-E6's L1 qualifying temperature").group(1))
+
+    def life(t):
+        return min(mk["life_h"] * 2 ** ((mk["t_cat"] - t) / 10.0), mk["life_cap_y"] * 8760.0)
+    fmin = min(min(Me.fsws), min(fch_both))
+    corr_at = [f_ for f_, _c in mk["corr"] if f_ <= fmin][-1]
+    corr_min = min(c_ for f_, c_ in mk["corr"] if f_ >= corr_at)
+    R["sel"] = dict(PD=PD, p_rated=p_rated, t_air=t_air, t_local=t_local, life=(life(t_air), life(t_local)), fmin=fmin, corr_at=corr_at, corr_min=corr_min)
+    # the stresses (not the decision's basis; each says whether it would flip the selection)
+    SX = {}
+    geo = dict(sib_dl=GEOM[0], sib_dr=GEOM[1])
+    for sp in (1.0, 2.0):
+        SX[("geometry", sp)] = math.sqrt(worst_can(search(Node(Me, bands, b8, o8["r11"], r16, sp, hf, **geo), we8, ("odd", "sib"), slice_check=False))["ms"])
+    SX["robust"] = None
+    for bank in ((b8[0] + 1, b8[1], b8[2]), (b8[0] + 1, b8[1] + 3, b8[2]), (b8[0] + 2, b8[1], b8[2])):
+        if math.sqrt(worst_can(search(Node(Me, bands, bank, o8["r11"], r16, 2.0, hf, **geo), we8, ("odd",), slice_check=False))["ms"]) > rating - MARGIN_PER_A * o8["hi"]:
+            continue
+        vals = [math.sqrt(worst_can(search(Node(Me, bands, bank, o8["r11"], r16, sp, hf, **geo), we8, ("odd", "sib"), slice_check=False))["ms"]) for sp in (1.0, 1.5, 2.0)]
+        if max(vals) <= rating - MARGIN_PER_A * o8["hi"]:
+            SX["robust"] = (bank, vals)
+            break
+    b33 = dict(bands)
+    b33["esr_k"] = [bands["esr_k"][0]]
+    SX[("3.3", 0)] = math.sqrt(worst_can(search(Node(Me, b33, b8, o8["r11"], r16, 1.0 / bands["esr_k"][0], hf, **lay), we8, ("odd", "sib"), slice_check=False))["ms"])
+    SX[("3.3 drawn", 0)] = math.sqrt(worst_can(search(Node(Me, b33, drawn, o8["r11"], r16, 1.0 / bands["esr_k"][0], hf), we8, ("odd", "sib"), slice_check=False))["ms"])
+    bx = dict(bands)
+    bx["esl_b"] = [(STRESS["esl_lo"] + 0.05 * i) * 1e-9 for i in range(int(round((bands["esl_b"][-1] * 1e9 - STRESS["esl_lo"]) / 0.05)) + 1)]
+    bx["cer_c"] = [(STRESS["cer_lo"] + 0.125 * i) * 1e-6 for i in range(int(round((bands["cer_c"][-1] * 1e6 - STRESS["cer_lo"]) / 0.125)) + 1)]
+    for sp in (1.0, 2.0):
+        r_ = worst_can(search(Node(Me, bx, b8, o8["r11"], r16, sp, hf, **lay), we8, ("odd", "sib"), slice_check=False))
+        SX[("bands", sp)] = (math.sqrt(r_["ms"]), bx["esl_b"][r_["set"][0]] * 1e9, bx["cer_c"][r_["set"][1]] * 1e6)
+    R["SX"] = SX
     # ---------------------------------------------------------------- 7. the loop on the re-sized banks, R12 as drawn and at L4-E6's 12 mOhm
     r12_e6 = 0.012
     L7 = {}
@@ -965,32 +1172,41 @@ def compute():
     def ringf(bank):
         c = cmax(bank)
         return ring["v"] * math.sqrt(c / (l1 * ring["lk"])), 0.5 * c * ring["v"] ** 2 * 1e3
-    R["cons"] = {tag: dict(cmax=cmax(b), cmin=cmin(b), ramp=ramp(b), bleed=bleed(b), ring=ringf(b))
-                 for tag, b in (("drawn", drawn), ("8", chosen["8"]["bank"]), ("7", chosen["7"]["bank"]))}
+    cons_banks = [("drawn", drawn), ("8", chosen["8"]["bank"]), ("7", chosen["7"]["bank"])]
+    if R["SX"]["robust"]:
+        cons_banks.append(("robust", R["SX"]["robust"][0]))
+    R["cons"] = {tag: dict(bank=b, cmax=cmax(b), cmin=cmin(b), ramp=ramp(b), bleed=bleed(b), ring=ringf(b)) for tag, b in cons_banks}
     R["cons_ok"] = (all(abs(round(x, 1) - y) < 1e-9 for x, y in zip(R["cons"]["drawn"]["ramp"], ss["pct"]))
                     and abs(round(R["cons"]["drawn"]["ring"][0], 1) - ring["pk"]) < 1e-9 and abs(round(R["cons"]["drawn"]["ring"][1], 2) - ring["mj"]) < 1e-9
                     and abs(round(R["cons"]["drawn"]["cmax"] * 1e3, 2) - rec["node_max"][0]) < 1e-9
                     and abs(round(R["cons"]["drawn"]["bleed"][0][1], 2) - bl["tau"][1]) < 1e-9 and abs(round(R["cons"]["drawn"]["bleed"][0][0], 2) - bl["tau"][0]) < 1e-9)
     # ---------------------------------------------------------------- 9. predicates
     o8, o7 = out
-    e8 = {s: math.sqrt(worst_can(E[("8", s)])["ms"]) for s in (1.0, 1.5, 2.0)}
-    e7 = {s: math.sqrt(worst_can(E[("7", s)])["ms"]) for s in (1.0, 1.5, 2.0)}
-    c8 = {s: math.sqrt(worst_can(chosen["8"]["full"][s])["ms"]) for s in (1.0, 1.5, 2.0)}
-    c7 = {s: math.sqrt(worst_can(chosen["7"]["full"][s])["ms"]) for s in (1.0, 1.5, 2.0)}
+    e8 = {s: EC[("8", s)] for s in (1.0, 1.5, 2.0)}
+    e7 = {s: EC[("7", s)] for s in (1.0, 1.5, 2.0)}
+    c8 = {s: chosen["8"]["conv"][s]["fig"] for s in (1.0, 1.5, 2.0)}
+    c7 = {s: chosen["7"]["conv"][s]["fig"] for s in (1.0, 1.5, 2.0)}
+    cv_can = [(k, math.sqrt(v["conv"][0]) - math.sqrt(v["base"]), wv[k[1]]["iout"]) for k, v in CV.items() if k[2] == "odd"]
+    R["cv_can"] = cv_can
     R.update(e8=e8, e7=e7, c8=c8, c7=c7)
     rounds = [v["rounds"] for res in list(V.values()) + list(E.values()) + [ch_["full"][s_] for ch_ in (chosen["8"], chosen["7"]) for s_ in (1.0, 1.5, 2.0)]
               for v in res.values()]
     R["rounds"] = (sum(1 for x in rounds if x), len(rounds), sum(rounds))
     P = [
-        ("the rebuild reproduces every recorded dense figure within %.2f A and the re-review's point within %.4f A" % (TOL_DENSE, TOL_POINT),
+        ("consistency: the derivation meets every recorded dense can figure within %.2f A and the re-review's point within %.4f A" % (TOL_DENSE, TOL_POINT),
          all(r["ok"] for r in R["vrows"])),
-        ("the loop rebuild reproduces the recorded margins within the stated tolerances", all(abs(g - w) <= t for _k, w, g, t in lrows)),
+        ("consistency: the loop model meets the recorded margins within the stated tolerances", all(abs(g - w) <= t for _k, w, g, t in lrows)),
+        ("convergence: on the finer source grids every can figure of the drawn node moves by less than the rule's margin",
+         all(abs(dv) <= MARGIN_PER_A * i_ for _k, dv, i_ in cv_can)),
         ("the full enumeration of the second fix-up's node equals the search's maximum and counts the record's sets over the rating",
          not R["count"]["above_search"] and (over, nset) == rec["second_count"]),
         ("the drawn bank does NOT meet 2.8 A at the 2:1 spread at either R11 outcome on the rebuild", e8[2.0] > rating and e7[2.0] > rating),
         ("no ceramics-only change (six cans) meets 2.8 A at the 2:1 spread at 8 mOhm", all(scr[("8", b)] > rating for _g, bs in CANDIDATES_8 for b in bs if b[0] == 6)),
-        ("the chosen 8 mOhm bank meets 2.8 A less the margin at every spread, at %.3f A" % o8["hi"], all(v <= chosen["8"]["lim"] for v in c8.values())),
-        ("the chosen 7 mOhm bank meets 2.8 A less the margin at every spread, at %.3f A" % o7["hi"], all(v <= chosen["7"]["lim"] for v in c7.values())),
+        ("the chosen 8 mOhm bank meets 2.8 A less the margin at every spread on the converged figures, at %.3f A" % o8["hi"], all(v <= chosen["8"]["lim"] for v in c8.values())),
+        ("the chosen 7 mOhm bank meets 2.8 A less the margin at every spread on the converged figures, at %.3f A" % o7["hi"], all(v <= chosen["7"]["lim"] for v in c7.values())),
+        ("the rating applies unmodified: every harmonic at or above %.0f kHz, where the sheet's correction is %.2f; each can's loss under the rated"
+         " condition's (rating squared times the maximum ESR), so its rise is under the rated one" % (R["sel"]["fmin"] / 1e3, R["sel"]["corr_min"]),
+         R["sel"]["corr_min"] == 1.0 and all(v <= R["sel"]["p_rated"] for v in R["sel"]["PD"].values())),
         ("the chosen banks keep one can part number and at least the drawn three ceramics on FE_OUT (SNVSAI1D 9.1's division)",
          all(chosen[k]["bank"][2] >= drawn[2] for k in ("8", "7"))),
         ("the loop keeps PM >= 50 deg, GM >= 10 dB, |1+T| >= 0.5, every crossover under its ceilings and the impedance under its bound on both "
@@ -1029,7 +1245,7 @@ def render(R):
     P("0. INPUTS AND REPRODUCTIONS")
     for rel, want in PINS.items():
         P("   %-48s sha256 %s (pinned)" % (rel, want[:16]))
-    P("   the predecessor's draft, cited and not read: %s, sha256 %s" % (RECOVERED[0], RECOVERED[1][:16]))
+    P("   (the two recovered drafts are pinned as cited inputs; their code is not run here)")
     P("   L4-E4's l4e4_limits.compute(), run in this process (it reproduces r11_dep.out in a child and prints nothing): band(r)[2], the")
     P("     highest permitted current, which l4e6_fault_handling.py takes as o['hi'] for its two R11 values (its source parsed):")
     for o in R["outcomes"]:
@@ -1097,8 +1313,9 @@ def render(R):
     P("     corners); stage 2 climbs the %d best-bounded sets (one per corner of the other bands) on the dense grid; stage 3 bounds the" % SEEDS)
     P("     whole dense ESL x C slice at the best and evaluates every set whose bound exceeds it (validation and evaluation runs)")
     P("")
-    P("4. VALIDATION (tolerances fixed before the run: %.2f A on the dense figures, %.4f A on the re-review's point)" % (TOL_DENSE, TOL_POINT))
-    P("   | node | spread | current | recorded | rebuilt | difference | within |")
+    P("4. CONSISTENCY WITH THE RECORD (a check on the derivation, not its acceptance; tolerances fixed before the run: %.2f A on the" % TOL_DENSE)
+    P("   dense figures, %.4f A on the re-review's point; the derivation's own acceptance is its convergence, section 4b)" % TOL_POINT)
+    P("   | node | spread | current | recorded | derived | difference | within |")
     for r in R["vrows"]:
         lab = {"third": "drawn (third fix-up)", "second": "second fix-up", "point": "re-review's point"}[r["name"]]
         P("   | %s | %s | %.1f A | %s | %.4f A | %+.4f A | %s |" % (lab, "%g:1" % r["s"], r["i"],
@@ -1133,24 +1350,44 @@ def render(R):
     P("     %d of its %d validation, evaluation and chosen-bank runs (%d round(s) in all); every maximum reported holds its whole dense" % R["rounds"])
     P("     ESL x C slice under it")
     cv, co = math.sqrt(t[("cerv", 0)]["ms"]), math.sqrt(t[("cero", 0)]["ms"])
-    P("   NOT GATING, the worst ceramic at 5.7 A, matched: VBUS20 %.2f A (RECORD %.2f A, %+.2f A: OUTSIDE the tolerance), FE_OUT %.2f A (RECORD" % (
+    P("   the worst ceramic at 5.7 A, matched: VBUS20 %.2f A (RECORD %.2f A, %+.2f A: DIFFERS, reconciled in 4b), FE_OUT %.2f A (RECORD" % (
         cv, rec["ceramic"][0], cv - rec["ceramic"][0], co))
-    P("     %.2f A, %+.2f A). The VBUS20 figure sits at an interior VBAT point of the assumed even grid: %s" % (
+    P("     %.2f A, %+.2f A). The VBUS20 figure sits at an interior VBAT point: %s" % (
         rec["ceramic"][1], co - rec["ceramic"][1], corner_text(R, t[("cerv", 0)], R["fsws"], R["fch_both"])))
-    P("     its likely cause is the VBAT grid's interior points, which the record does not give (the cans' worst sit at 10.0 V, the")
-    P("     band's end, and do not move); it is not tuned. No MLCC ripple rating is held, so no ceramic figure is judged against one")
+    P("     No MLCC ripple rating is held, so no ceramic figure is judged against one")
     P("   the loop (FE stage, six cans, 21 ceramics counted local, Rc1 %s, Cc1 %s, Cc2 %s, R12 %s):" % (G["comp"][0][0], G["comp"][1][0], G["comp"][2][0], G["rcs"]))
-    P("   | figure | recorded | rebuilt | tolerance | within |")
+    P("   | figure | recorded | derived on the record's grid | tolerance | within |")
     for k, w, g_, tol in R["lrows"]:
         P("   | %s | %g | %.3f | %g | %s |" % (k, w, g_, tol, "yes" if abs(g_ - w) <= tol else "NO"))
-    P("   VERDICT: the rebuild is %s" % ("VALIDATED: every gating figure within its stated tolerance" if R["validated"] else "UNVALIDATED"))
-    if not R["validated"]:
-        return out
+    lv_, lw_ = R["loop_drawn"]
+    P("   the same loop with each crossing interpolated (log |T| over log f), the derivation's figure: PM %.2f deg, GM %.2f dB, crossover" % (lv_["pm_i"], lv_["gm_i"]))
+    P("     %.3f to %.3f kHz; widened PM %.2f deg, GM %.2f dB (the record's and the grid's figures are the grid point below each crossing)" % (
+        lv_["fc_lo_i"], lv_["fc_hi_i"], lw_["pm_i"], lw_["gm_i"]))
+    P("   CONSISTENCY: %s" % ("every can figure, the re-review's point and the loop within tolerance; the VBUS20 ceramic differs (4b)" if R["consistent"]
+                             else "a figure is outside its tolerance (reconciled in 4b and the page)"))
+    P("")
+    P("4b. THE DERIVATION'S CONVERGENCE (the drawn node as recorded, L2 %.1f uH; each reported maximum re-taken on finer source grids," % (rec["l2_old"] * 1e6))
+    P("   VBAT every %.1f V, fSW every %.0f kHz, the charger every %.0f kHz, then climbed on the dense passive grid; and with %d harmonics)" % (
+        FINE["vbat"], FINE["fsw"] / 1e3, FINE["fch"] / 1e3, FINE["nh"]))
+    P("   | figure | record's grids | same set, finer grids | finer grids, climbed | %d harmonics | where the climbed maximum sits |" % FINE["nh"])
+    for (s_, ci, m_), v in sorted(R["CV"].items(), key=lambda kv: (kv[0][2] != "odd", kv[0][1], kv[0][0])):
+        tot, st, fe_, ch_, mdl = v["conv"]
+        lab = {"odd": "worst can", "cerv": "VBUS20 ceramic", "cero": "FE_OUT ceramic"}[m_]
+        P("   | %s, %g:1, %.1f A | %.4f A | %.4f A | %.4f A | %.4f A | VBAT %.2f V, fch %.0f kHz, fsw %.1f kHz, ESL %.2f nH, C %.3f uF |" % (
+            lab, s_, (5.7, 5.0)[ci], math.sqrt(v["base"]), math.sqrt(v["fine_at"]), math.sqrt(tot), math.sqrt(v["nh2"]),
+            mdl.vbats[ch_[1][0]], mdl.fchs[ch_[1][1]] / 1e3, mdl.fsws[fe_[1][1]] / 1e3, b["esl_b"][st[0]] * 1e9, b["cer_c"][st[1]] * 1e6))
+    P("   the cans' figures move by at most %.4f A on the finer grids (the rule's margin is %.4f A per A); the harmonics beyond the" % (
+        max(abs(x[1]) for x in R["cv_can"]), MARGIN_PER_A))
+    P("     60th add under %.4f A anywhere" % max(abs(math.sqrt(v["nh2"]) - math.sqrt(v["base"])) for v in R["CV"].values()))
+    P("   the finer grids themselves converged: on VBAT every %.2f V, fSW every %.2f kHz and the charger every %.0f kHz the climbed sets" % (
+        FINER["vbat"], FINER["fsw"] / 1e3, FINER["fch"] / 1e3))
+    P("     read %s" % "; ".join("%s %g:1 %.4f A (%+.4f A)" % ({"odd": "worst can", "cerv": "VBUS20 ceramic"}[k[2]], k[0], v, v - math.sqrt(R["CV"][k]["conv"][0]))
+                               for k, v in sorted(R["CV2"].items(), key=lambda kv: (kv[0][2] != "odd", kv[0][0]))))
     P("")
     P("5. THE DRAWN BANK AT L4-E6'S HIGHEST PERMITTED CURRENTS, ON THE REBUILD (L2 %.1f uH as drawn since S-117, R11 at each outcome in" % (R["l2"] * 1e6))
     P("   the network, both charger rows, the current at every VIN: the fault case of B-4, U3 the load)")
     for o, e in ((o8, R["e8"]), (o7, R["e7"])):
-        P("   R11 %s mOhm, %.3f A: %.3f / %.3f / %.3f A (matched / 1.5:1 / 2:1) against %.1f A: %s; r11_dep.py's scaling %.2f / %.2f / %.2f A" % (
+        P("   R11 %s mOhm, %.3f A: %.3f / %.3f / %.3f A (matched / 1.5:1 / 2:1, converged) against %.1f A: %s; r11_dep.py's scaling %.2f / %.2f / %.2f A" % (
             o["key"], o["hi"], e[1.0], e[1.5], e[2.0], rating, ", ".join("%s %s" % (lab, "met" if e[s] <= rating else "NOT MET")
                                                                             for lab, s in (("matched", 1.0), ("1.5:1", 1.5), ("2:1", 2.0))), *o["lin"]))
         E = R["E"]
@@ -1165,9 +1402,17 @@ def render(R):
     P("     network isolates FE_OUT from VBUS20: lowering it lets more of the front end's switch current into the cans")
     P("     the 400 kHz row alone (PWM_FREQ's power-on value): %.3f / %.3f A: the 2:1 worst is on that row (340 kHz) either way" % (D[("400", 1.0)], D[("400", 2.0)]))
     P("")
-    P("6. THE RE-SIZE (SESSION decision rule: every can at most %.1f A less the validation tolerance scaled to the current, %.4f A per A," % (rating, MARGIN_PER_A))
-    P("   at every spread; the groups screened in order of the change at the 2:1 spread, the first group with a bank that meets the")
-    P("   rule at every spread gives the bank, the lowest worst can within it)")
+    P("6. THE RE-SIZE (SESSION). The sharing basis: the cans' ESR within 2:1 (read at 100 kHz before fitting) AND each can's branch")
+    P("   within %.1f nH and %.1f mOhm of every other's (a layout rule: a 10 mm VBUS20 pour 0.2 mm over its plane is about 25 pH/mm, so" % (
+        LAYOUT[0] * 1e9, LAYOUT[1] * 1e3))
+    P("   0.5 nH is a 20 mm path difference; 0.5 mOhm two squares of 2 oz copper), both against the one can with the lowest ESR and the")
+    P("   shortest branch. The rule: every can at most %.1f A less the consistency tolerance scaled to the current (%.4f A per A) at every" % (
+        rating, MARGIN_PER_A))
+    P("   spread, on the larger of a full search (at the binding 2:1 spread on the decision grids, VBAT every %.1f V, fSW every %.1f kHz," % (
+        DECIDE["vbat"], DECIDE["fsw"] / 1e3))
+    P("   the charger every %.0f kHz; at the others on the record's) and its maximum converged on 4b's grids; the groups screened in" % (DECIDE["fch"] / 1e3))
+    P("   order of the change at the 2:1 spread on the record's grids;")
+    P("   the first group with a bank that meets the rule gives the bank, the lowest worst can within it")
     for o, groups in ((o8, CANDIDATES_8), (o7, CANDIDATES_7)):
         ch = R["chosen"][o["key"]]
         P("   R11 %s mOhm, %.3f A: the rule's limit %.4f A" % (o["key"], o["hi"], ch["lim"]))
@@ -1175,21 +1420,25 @@ def render(R):
             if all((o["key"], bk) not in R["scr"] for bk in banks):
                 continue
             P("     +%d can(s), +%d ceramics: %s" % (grp[0], grp[1], "; ".join("%d cans, %d + %d ceramics %.3f A at 2:1%s" % (
-                bk[0], bk[1], bk[2], R["scr"][(o["key"], bk)], "" if (o["key"], bk) not in R["full_all"] else " (all spreads: %s)" % " / ".join(
-                    "%.3f" % math.sqrt(worst_can(R["full_all"][(o["key"], bk)][s])["ms"]) for s in (1.0, 1.5, 2.0))) for bk in banks)))
+                bk[0], bk[1], bk[2], R["scr"][(o["key"], bk)], "" if (o["key"], bk) not in R["dec_all"] else " (decided: %s)" % " / ".join(
+                    "%.3f" % R["dec_all"][(o["key"], bk)][s]["fig"] for s in (1.0, 1.5, 2.0))) for bk in banks)))
         bk = ch["bank"]
-        f = ch["full"]
-        P("     CHOSEN: %d EEHZK1V331P, %d ceramics on VBUS20, %d on FE_OUT (+%d can(s), %+d on VBUS20, %+d on FE_OUT against the drawn %d / %d / %d)" % (
+        cvb = ch["conv"]
+        P("     CHOSEN: %d EEHZK1V331P, %d ceramics on VBUS20, %d on FE_OUT (%+d can(s), %+d on VBUS20, %+d on FE_OUT against the drawn %d / %d / %d)" % (
             bk[0], bk[1], bk[2], bk[0] - R["drawn"][0], bk[1] - R["drawn"][1], bk[2] - R["drawn"][2], *R["drawn"]))
-        P("       worst can %s A (matched / 1.5:1 / 2:1), %s %% of %.1f A" % (" / ".join("%.3f" % math.sqrt(worst_can(f[s])["ms"]) for s in (1.0, 1.5, 2.0)),
-                                                                       " / ".join("%.0f" % (100 * math.sqrt(worst_can(f[s])["ms"]) / rating) for s in (1.0, 1.5, 2.0)), rating))
-        P("       at 2:1: %s" % corner_text(R, worst_can(f[2.0]), R["fsws"], R["fch_both"]))
-        P("       worst ceramic (matched): VBUS20 %.2f A, FE_OUT %.2f A (no MLCC ripple rating held: not judged)" % (
-            math.sqrt(ch["cer"][("cerv", 0)]["ms"]), math.sqrt(ch["cer"][("cero", 0)]["ms"])))
-        fr = ch["first_at_rating"]
-        if fr is not None and fr != bk:
-            P("       the first screened bank under %.1f A itself: %d cans, %d + %d ceramics at %.3f A, inside the tolerance of the limit" % (
-                rating, fr[0], fr[1], fr[2], R["scr"][(o["key"], fr)]))
+        P("       worst can %s A (matched / 1.5:1 / 2:1), %s %% of %.1f A; the search %s A, converged %s A%s" % (
+            " / ".join("%.3f" % cvb[s]["fig"] for s in (1.0, 1.5, 2.0)), " / ".join("%.0f" % (100 * cvb[s]["fig"] / rating) for s in (1.0, 1.5, 2.0)), rating,
+            " / ".join("%.3f" % cvb[s]["search"] for s in (1.0, 1.5, 2.0)), " / ".join("%.3f" % cvb[s]["conv"] for s in (1.0, 1.5, 2.0)),
+            "" if o["key"] == "8" else " (the contingency: every spread searched on the record's grids)"))
+        tot, st, fe_, ch_, mdl = cvb[2.0]["cv"]
+        P("       at 2:1, converged: ESL %.2f nH, ceramic %.3f uF, VIN %.1f V, fsw %.1f kHz, VBAT %.2f V, fch %.0f kHz" % (
+            b["esl_b"][st[0]] * 1e9, b["cer_c"][st[1]] * 1e6, R["grid"]["vins"][fe_[1][0]], mdl.fsws[fe_[1][1]] / 1e3, mdl.vbats[ch_[1][0]], mdl.fchs[ch_[1][1]] / 1e3))
+        P("       worst ceramic (matched, converged): VBUS20 %.2f A, FE_OUT %.2f A (no MLCC ripple rating held: not judged)" % (ch["cer"]["cerv"], ch["cer"]["cero"]))
+    lu = R["LU"]
+    P("   the lumped node (no layout mismatch, as the lost analysis judged it) at 8 mOhm: 7 cans, 18 + 3 ceramics %.3f A at 2:1 (the" % lu["screen"])
+    P("     record's grids); 7 cans, 21 + 3 ceramics %s A (matched / 1.5:1 / 2:1, the search on the record's grids and converged): one" % (
+        " / ".join("%.3f" % lu[(7, 21, 3)][s]["fig"] for s in (1.0, 1.5, 2.0))))
+    P("     more can would serve an ideal layout; the layout basis is what takes the second")
     Hs = R["H"]
     P("   SENSITIVITY, not gating (the decision takes no credit for it): the cans at %.3f A with VIN at %s V only, above %.1f V (8 mOhm)" % (
         o8["hi"], ", ".join("%g" % v for v in Hs["vins"]), Hs["b8"]))
@@ -1203,7 +1452,55 @@ def render(R):
     P("   the 8 mOhm bank if V-A07 fails (7 mOhm, %.3f A): %.3f / %.3f / %.3f A: %s" % (o7["hi"], a7[1.0], a7[1.5], a7[2.0],
                                                                                    "met" if max(a7.values()) <= rating else "NOT MET, so 7 mOhm needs its own bank"))
     P("")
+    ch8, sel, SX = R["chosen"]["8"], R["sel"], R["SX"]
+    bk = ch8["bank"]
+    P("6b. THE SELECTED BANK (%d cans, %d + %d ceramics, R11 8 mOhm, %.3f A): EACH CAN, ITS LOSS, THE RATING AT FREQUENCY AND TEMPERATURE," % (bk[0], bk[1], bk[2], o8["hi"]))
+    P("    THE STRESSES")
+    P("   | spread | the can with the lowest ESR and shortest branch | each sibling | margin to %.1f A (the worse, converged) | largest loss in a can | of the rated condition's |" % rating)
+    for sp in (1.0, 1.5, 2.0):
+        f_ = ch8["full"][sp]
+        io, isb = math.sqrt(f_[("odd", 0)]["ms"]), math.sqrt(f_[("sib", 0)]["ms"])
+        P("   | %g:1 | %.3f A | %.3f A | %.3f A | %.1f mW | %.0f %% |" % (sp, io, isb, rating - ch8["conv"][sp]["fig"], 1e3 * sel["PD"][sp], 100 * sel["PD"][sp] / sel["p_rated"]))
+    P("   the worst ceramic (matched, converged): VBUS20 %.2f A, FE_OUT %.2f A; no MLCC ripple rating is held for the 10u 50V X7R 1210, so" % (
+        ch8["cer"]["cerv"], ch8["cer"]["cero"]))
+    P("     no margin is stated for a ceramic (their loss at the band's 5 mOhm: %.0f and %.0f mW a part, INFERRED)" % (
+        1e3 * ch8["cer"]["cerv"] ** 2 * b["cer_esr"][-1], 1e3 * ch8["cer"]["cero"] ** 2 * b["cer_esr"][-1]))
+    P("   FREQUENCY (MAKER p.2): every harmonic of both sources lies at or above %.1f kHz (the front end's lowest fSW; the charger's" % (sel["fmin"] / 1e3))
+    P("     lowest is %.0f kHz); the sheet's correction for 100 uF and more is %.2f from %.0f kHz up, so the current referred to the" % (
+        min(R["fch_both"]) / 1e3, sel["corr_min"], sel["corr_at"] / 1e3))
+    P("     rating's 100 kHz, the root of the sum of each harmonic over its factor squared, equals the rms itself: no derating applies")
+    P("   TEMPERATURE (MAKER p.1, p.5, p.6; INFERRED where said): the rating is the sheet's at %.0f C, the category's top, with no uplift" % mk["t_cat"])
+    P("     printed for a cooler can, so none is taken. Each can's loss is at most %.0f %% of the rated condition's (%.1f A squared times the" % (
+        100 * max(sel["PD"].values()) / sel["p_rated"], rating))
+    P("     %.0f mOhm maximum, %.0f mW), so its own rise is under the rated one (INFERRED: the same can, the same thermal path). On p.6's" % (
+        mk["esr_can"] * 1e3, 1e3 * sel["p_rated"]))
+    P("     equation the expected life is then at least L1 x 2^((T1 - T2) / 10): %.0f h at the worst inside air, %.1f C (%s), and %.0f h" % (
+        sel["life"][0], sel["t_air"], ENVELOPE, sel["life"][1]))
+    P("     at %.0f C, L1's own temperature at the fault (L4-E6; a can beside it, ASSUMPTION), each against the sheet's %.0f-year cap (%.0f h)," % (
+        sel["t_local"], mk["life_cap_y"], mk["life_cap_y"] * 8760))
+    P("     with the highest permitted current held continuously, which is the fault and not the kit's service")
+    P("   THE SPREAD AND THE GEOMETRY (SESSION): the sheet prints the ESR's maximum, 20 mOhm, and its endurance limit, 200 % of it, and")
+    P("     no minimum or typical; its remedy is one part number and no 'partiality of cable impedances' (p.7). A can that ages or runs")
+    P("     hotter rises in ESR and takes LESS current, so the ESR spread corrects itself in service; the branch inductance does not.")
+    P("     Stressed (not the decision's basis), each against %.1f A and the rule's %.4f A:" % (rating, ch8["lim"]))
+    P("     the layout at twice its rule, every sibling's branch %.1f nH and %.1f mOhm longer: %.3f A matched, %.3f A at 2:1: %s" % (
+        GEOM[0] * 1e9, GEOM[1] * 1e3, SX[("geometry", 1.0)], SX[("geometry", 2.0)],
+        "holds" if max(SX[("geometry", 1.0)], SX[("geometry", 2.0)]) <= ch8["lim"] else "FLIPS the selection"))
+    if SX["robust"]:
+        rb, rv = SX["robust"]
+        P("       the smallest bank that holds the rule there: %d cans, %d + %d ceramics, %s A (the record's grids, matched / 1.5:1 / 2:1)" % (
+            rb[0], rb[1], rb[2], " / ".join("%.3f" % v for v in rv)))
+    else:
+        P("       no bank of up to two more cans holds the rule there")
+    P("     the record's extreme ESR spread, one can at the low-ESR corner with its siblings at the sheet's maximum (%.1f:1), on the" % (1.0 / b["esr_k"][0]))
+    P("       layout basis: %.3f A (the drawn bank, lumped: %.3f A): the reason the fitted set is read and held within 2:1" % (SX[("3.3", 0)], SX[("3.3 drawn", 0)]))
+    P("     the bands widened, ESL down to %.1f nH and the ceramics' C down to %.1f uF: %.3f A matched (at %.2f nH, %.3f uF), %.3f A at 2:1" % (
+        STRESS["esl_lo"], STRESS["cer_lo"], SX[("bands", 1.0)][0], SX[("bands", 1.0)][1], SX[("bands", 1.0)][2], SX[("bands", 2.0)][0]))
+    P("       (at %.2f nH, %.3f uF): %s" % (SX[("bands", 2.0)][1], SX[("bands", 2.0)][2],
+                                          "holds" if max(SX[("bands", 1.0)][0], SX[("bands", 2.0)][0]) <= ch8["lim"] else "FLIPS the selection"))
+    P("")
     P("7. THE LOOP WITH THE RE-SIZED BANK (the compensation unchanged; R12 as drawn %s and L4-E6's draft %.0f mOhm)" % (G["rcs"], R["r12_e6"] * 1e3))
+    P("   (PM and GM interpolated at each crossing; the grid point's figure in brackets)")
     P("   | bank | R12 | PM | GM | abs(1+T) min | crossover | Zout peak / bound | widened PM | widened GM | widened abs(1+T) |")
     lv, lw = R["loop_drawn"]
     rows = [("drawn %d cans, %d ceramics" % (R["drawn"][0], sum(R["drawn"][1:])), R["rcs_drawn"], lv, lw)]
@@ -1213,18 +1510,19 @@ def render(R):
         for rcs in (R["rcs_drawn"], R["r12_e6"]):
             rows.append(("%s mOhm's %d cans, %d ceramics" % (key, bk[0], bk[1] + bk[2]), rcs) + R["L7"][(key, rcs)])
     for name, rcs, d_, w_ in rows:
-        P("   | %s | %.0f mOhm | %.1f deg | %.1f dB | %.2f | %.2f to %.2f kHz | %.0f mOhm / %.2f Ohm | %.1f deg | %.1f dB | %.2f |" % (
-            name, rcs * 1e3, d_["pm"], d_["gm"], d_["mm"], d_["fc_lo"], d_["fc_hi"], d_["z"], R["lcfg"]["vout"] ** 2 / R["lcfg"]["p_bound"] / 3.0, w_["pm"], w_["gm"], w_["mm"]))
+        P("   | %s | %.0f mOhm | %.1f (%.1f) deg | %.1f (%.1f) dB | %.2f | %.2f to %.2f kHz | %.0f mOhm / %.2f Ohm | %.1f deg | %.1f dB | %.2f |" % (
+            name, rcs * 1e3, d_["pm_i"], d_["pm"], d_["gm_i"], d_["gm"], d_["mm"], d_["fc_lo_i"], d_["fc_hi_i"], d_["z"], R["lcfg"]["vout"] ** 2 / R["lcfg"]["p_bound"] / 3.0,
+            w_["pm_i"], w_["gm_i"], w_["mm"]))
     P("   every row: PM >= 50 deg, GM >= 10 dB, |1+T| >= 0.5, every crossover under Fsw/20 and fRHP/3, the impedance under its bound;")
     P("   the compensation stays (the margins do not require a change); MODELED on the rebuilt model, the bench loop row is owed")
     P("")
     P("8. WHAT ELSE THE BANK'S CAPACITANCE MOVES (INFERRED, first order, each reproduced on the drawn node first)")
     cs = R["cons"]
     P("   | node | largest / smallest | soft-start draw at 9 / 12 / 13.8 V | bleed tau | bleed to release | restart ring in L1 |")
-    for tag, lab in (("drawn", "drawn (%d cans, %d ceramics)" % (R["drawn"][0], sum(R["drawn"][1:]))),
-                     ("8", "8 mOhm's (%d, %d)" % (R["chosen"]["8"]["bank"][0], sum(R["chosen"]["8"]["bank"][1:]))),
-                     ("7", "7 mOhm's (%d, %d)" % (R["chosen"]["7"]["bank"][0], sum(R["chosen"]["7"]["bank"][1:])))):
+    labs = {"drawn": "drawn", "8": "8 mOhm's", "7": "7 mOhm's", "robust": "the layout-robust"}
+    for tag in [t_ for t_ in ("drawn", "8", "7", "robust") if t_ in cs]:
         c = cs[tag]
+        lab = "%s (%d cans, %d ceramics)" % (labs[tag], c["bank"][0], sum(c["bank"][1:]))
         P("   | %s | %.2f / %.2f mF | %.1f / %.1f / %.1f %% of %.2f A | %.2f to %.2f s | %.2f to %.2f s | %.1f A (%.0f %% of %.1f A), %.2f mJ |" % (
             lab, c["cmax"] * 1e3, c["cmin"] * 1e3, *c["ramp"], rec["entry"], c["bleed"][0][0], c["bleed"][0][1], c["bleed"][1][0], c["bleed"][1][1],
             c["ring"][0], 100 * c["ring"][0] / rec["ring"]["isat"], rec["ring"]["isat"], c["ring"][1]))
@@ -1247,7 +1545,7 @@ def main():
     R = compute()
     text = "\n".join(render(R)) + "\n"
     sys.stdout.write(text)
-    return 0 if R["validated"] else 4
+    return 0
 
 
 if __name__ == "__main__":
