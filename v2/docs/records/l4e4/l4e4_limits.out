@@ -11,7 +11,7 @@ held document gives the figure.
       lcsc_fill.py's map and the C2903468 reading. The TOLERANCE is read, not typed: the HoJLR2512 sheet p.1 'F=±1%'
       and each part's LCSC answer (±1% for C2903468, the chosen R11 and R138); r11_dep.py's band(), which types 1 %
       inside, is checked to equal the band at the read tolerance (exit 4 otherwise)
-   pinned: r11_dep.py 6636a7489d3d1406, l4e_replay.out 59c6eeab16da98f8; board A's netlist sha256/16 6c40250c47195ebb (r11_dep.py's 14 facts hold on it)
+   pinned: r11_dep.py c5e9d5713abfcb07, l4e_replay.out 59c6eeab16da98f8; board A's netlist sha256/16 6c40250c47195ebb (r11_dep.py's 14 facts hold on it)
 
 1. U3's IIN_HOST FOR REQ-016's 100 W WINDOW, R16 INCLUDED (check B1)
    U3 regulates the voltage across its RAC, R16 '10mOhm 1% 2512 (RAC, input current sense)' (NETLIST), lcsc_fill.py's C2903468 HoJLR2512-3W-10mR-1% (the same
