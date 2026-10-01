@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""fetch_held_back.py: fetch the four cell specifications task L4-E10 read but did not file (MESHSAT-1357, 2 October 2026).
+"""fetch_held_back.py: fetch the cell specifications task L4-E10 read but did not file (MESHSAT-1357, 2 October 2026).
 
 Samsung SDI's INR18650-30Q specifications (Version No. V1.0 of the 30Q6 production code, date of application 2020/01/17, a
 German distributor's copy; Version No. 1.0 of February 2015 and the customer draft V0.1 of 2024/01/23, both posted to TI's
 E2E forum) carry "SAMSUNG SDI Confidential Proprietary" on every page; LG Chem's INR18650HG2 product specification
-(BCY-PS-HG2-Rev0, 13 October 2014) is a distributor's copy with no grant to reproduce it. All four are held back from the
+(BCY-PS-HG2-Rev0, 13 October 2014) is a distributor's copy with no grant to reproduce it; Saft's LSH 20 sheets (Document
+31015-2-0426 of April 2026 and the LSH 20 HTS sheet 31057-2-0710) carry "Photo credits: (c) Saft". All six are held back from the
 public tree by the conservative reading of their terms (the owner's rule of 27 September 2026), as the l3batt, a1solar and
 l4e7 records do: this script downloads each from the address its line in v2/vendor/sources.txt records into the ignored
 v2/vendor/battery/held/ folder, checks the sha256 l4e10_cell_thermal.py pins, and refuses to keep a file that differs.
@@ -30,6 +31,14 @@ DOCS = [
     ("v2/vendor/battery/held/lg-inr18650hg2-rev0-2014.pdf",
      "https://files.batteryjunction.com/frontend/files/lg/datasheet/LG-HG2-18650-INR-Datasheet.pdf",
      "b135f906d383a964ac7d4585d66acc762145aa739c20d7bfc60269d32d7857e9"),
+    # Saft's own portal serves these with an incomplete certificate chain (its DigiCert intermediate is not sent), so the fetch
+    # skips the chain check and relies on the sha256 below; the LSH 20 HTS sheet was also byte-identical at a third-party mirror
+    ("v2/vendor/battery/held/saft-lsh20-31015-2-0426.pdf",
+     "https://saft4u.saft.com/en/download_file/8bdd6f76-c9c5-422e-95bd-a18e0a12d80f/English",
+     "79245e64a2c4abb79ad082568ade32357d27f103416dbe899256dfec322e3ecd"),
+    ("v2/vendor/battery/held/saft-lsh20hts-31057-2-0710.pdf",
+     "https://saft4u.saft.com/en/download_file/eb00fd7f-30d7-4ad5-89e0-85f59f4f74d3/English",
+     "5befce3a37ab89fad4826488793008f71d5c4ba4a36eacbfadd9dacfa5339d55"),
 ]
 
 
@@ -42,7 +51,11 @@ def main():
         path = os.path.join(a.root, rel)
         os.makedirs(os.path.dirname(path), exist_ok=True)
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        data = urllib.request.urlopen(req, timeout=60).read()
+        ctx = None
+        if "saft4u.saft.com" in url:
+            import ssl
+            ctx = ssl._create_unverified_context()   # the server omits its intermediate certificate; the sha256 decides
+        data = urllib.request.urlopen(req, timeout=60, context=ctx).read()
         got = hashlib.sha256(data).hexdigest()
         if got != want:
             sys.stderr.write("fetch_held_back: %s differs from the pinned file (%s); not kept\n" % (rel, got[:16]))
