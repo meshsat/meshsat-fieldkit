@@ -155,7 +155,7 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      was CORRECTED, WE; the least-energy corner, A2: unserved 1318.5 / 1169.6 at 48 h, 1894.5 / 2131.1 at 72 h; least addition +1097.1 / +1896.6 Wh
 
 6. THE INTERACTION WITH L4-E5 (R10 115k to 232k, the ceiling raised, C26 and C27 re-rated)
-   apply_gen_sch_e_backstop.py: 9 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C44322, C132788, C43698, C2076144, C178637, C861288, C861587, C861156: yes
+   apply_gen_sch_e_backstop.py: 9 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C44322, C132788, C43698, C2076144, C178637, C723585, C705798, C861156, C728595, C1588: yes
    apply_gen_sch_e_hold.py: 1 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C861068, C728597: yes
    apply_gen_sch_e_input_limit.py: 9 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C2903494, C861244, C14663: yes
    apply_gen_sch_e_u5_grade.py: 2 edit(s); names R10: no; R10's drawn line still present once after it: yes; carries C674169: yes
@@ -394,8 +394,8 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      7b.11, 7b.12, 7b.13 or 7b.14 (R59 at -20 C and +25 C). The current-limit mechanism holds its bound under the conservative
      assumptions above; an adverse reading changes a value (RIMON_IN, the compensation), not the mechanism or the architecture
 
-10. THE CONTROL DECISION (L4-E7R, the owner's instruction of 1 October 2026; second round after checks/astra-check-l4e7r-1.md;
-    SESSION decision)
+10. THE CONTROL DECISION (L4-E7R, the owner's instruction of 1 October 2026 and his decision process of 2 October 2026; third
+    round after checks/astra-check-l4e7r-2.md; SESSION decision)
    THE VERDICT ON THE CURRENT CONTROL: NOT SHOWN on warranted manufacturer limits alone. The LT8705A's input-current
      limit as set (RIMON_IN 23.2k, RSENSE1 15 mOhm) holds 100 W only under values no maker warrants: EA2 (break-even
      25.026426 V/V (stack A, cold), 55.191656 V/V (stack C's other terms, cold)); A7 (break-even the effective gain may
@@ -404,15 +404,28 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      printed maximum (stack A, cold); 47.1 with EA2 at 65 V/V); TCR (break-even 882.027 ppm/K (stack A), 122.295 ppm/K
      (stack C)); TJ (break-even 125 C junction (19.6 K above the estimate)). Under all their conservative assumptions
      together the corner reads 99.8992 W (margin 0.1008 W)
+   WHAT IS BOUNDED (item 1 of the owner's process): REQ-016 bounds 'at most 100 W into the stage'. The measurement
+     boundary is board E's panel entry (J_SOLAR, PV_IN): F2, the sense bank, the bulk, the ceramics and the LT8705A stage
+     behind it (REQ-016's acceptance names the panel entry, PV_IN and PV_P); everything behind it is the stage. The
+     operating conditions are a panel inside REQ-016's window (open circuit at most 25 V at its coldest, held at 17.6 V by
+     the stage) over the envelope's -20 to 62.1 C, its prototype measurement a bench supply on a 100 W panel's curve
+     (SC-36). The averaging window: REQ-016 states none, and neither of its verification methods (calculation and prototype
+     measurement) names one. The interpretation (SESSION, CONDITIONAL for layer 8 to confirm): the mean power over any 0.1
+     s, the shortest window a bench power reading forms; the parts the limit protects (the bank, RSENSE1, the stage's
+     switches and inductor, F2, the pack's charge) heat over seconds and longer, and the excess the window admits after a
+     trip (the response allowance below at the source's whole current) puts 0.51 mJ into one bank part and 2.65 mJ into
+     RSENSE1, against 100 mJ and 300 mJ their continuous ratings (1 W at 70 C, 3 W) carry in one window. A longer window
+     would be easier to meet and is not taken. Three checks follow, each with its own result: (a) normal operation, (b)
+     startup, shutdown and the fault response, (c) the parts' ratings during the specified disturbances; an averaged pass
+     never excuses an absolute maximum
    THE COMPARISON (three approaches; each bound is the static input power at most, at 25 V; the energy is the stage's input on SC-37's
    day at the kept hold's corners and on the bright day at its nominal, the regulation at its lowest; hours bound in brackets):
-     id bound W   status        regulating setting       Wh SC-37 lower / nominal / upper   Wh bright         noon I / P  independent
-     A  97.8269   CONDITIONAL   31.6k C705766 2.5485 A   344.0 (5) / 336.6 (5) / 307.9 (0)  431.9 (9)         -26.6 / -24.6 % no
-     B  98.2217   CONDITIONAL   28k C705756 2.8762 A     361.2 (4) / 349.8 (2) / 307.9 (0)  473.2 (7)         -17.1 / -15.6 % no
-     C  98.1890   UNCONDITIONAL 29.4k C861288 2.7392 A   355.0 (5) / 345.5 (3) / 307.9 (0)  457.4 (9)         -21.1 / -19.4 % yes
+     id bound W   status        regulating setting       Wh SC-37 lower / nominal / upper   Wh bright         noon I / P
+     A  97.8269   CONDITIONAL   31.6k C705766 2.5485 A   344.0 (5) / 336.6 (5) / 307.9 (0)  431.9 (9)         -26.6 / -24.6 %
+     B  98.2217   CONDITIONAL   28k C705756 2.8762 A     361.2 (4) / 349.8 (2) / 307.9 (0)  473.2 (7)         -17.1 / -15.6 %
+     C  95.7788   CONDITIONAL   30k C723585 2.6844 A     352.0 (5) / 343.4 (4) / 307.9 (0)  450.1 (9)         -22.7 / -20.8 %
      now 23.2k: SC-37 369.7 (0) / 350.0 (0) / 307.9 (0); bright 534.7 (7) Wh (the bright day unlimited: 594.4 Wh); noon input 57.03 W (bright noon, 18.1 C air)
-     (noon I / P: the regulating current's reduction against 23.2k and the input power's reduction it gives at bright noon; the
-     panel's voltage rises when its current falls, so the power falls less than the current)
+     (noon I / P: the regulating current's reduction against 23.2k and the input power's reduction it gives at bright noon)
    (A) the present control with argued margins (the IMON_IN fault comparator bounds EA2; RIMON_IN raised)
      - warranted: IMON_IN fault maximum 1.67 V (8705af p.5, full range); RSENSE1 1 % and RIMON_IN 0.1 %; the resistors'
        printed drifts
@@ -424,7 +437,7 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        energy, not the bound)
      - still depends on: Analog Devices (A7 away from its test point, the fault threshold away from VIN = 12 V, the fault's
        timing) and Milliohm (the cold TCR)
-     - the derived disturbance: no part added; the entry's capacitors need the same correction as C
+     - the disturbances: no part added; the entry needs the same correction as C
    (B) the INA250A2 (its own 2 mOhm shunt) with the same trip chain as C (TPS3701 into a TPS3808 on SWEN)
      - warranted: the TPS3701 and TPS3808 rows; the divider's RT rows; the offset's supply and common-mode rows (at ISENSE =
        0 A)
@@ -437,171 +450,276 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      - new failure mode: as C; and its integrated shunt carries the surge with the amplifier
      - still depends on: Texas Instruments (the rows at VS = 3.3 V and VREF = 0 V, the stress rows); the coordination with
        Analog Devices and Milliohm
-     - the derived disturbance: FAILS: U18's inputs are rated 40 V and the derived disturbance clamps at up to 45.4 V
-     - its bound with every row at its printed value, 98.2217 W; the unprinted gain terms together may add 1.371 % before 100
-       W with an event (they print 0.459 % typical, not a limit); the conduction of its 4.5 mOhm package path (the shunt
-       included, typical) 0.1855 / 0.5166 Wh a day
+     - the disturbances: FAILS: U18's inputs are rated 40 V and the capability scenario clamps at up to 45.4 V
+     - its bound with every row at its printed value, 98.2217 W; the unprinted gain terms together may add 0.384 % before 100
+       W with the capacitor charge (they print 0.459 % typical, not a limit); the conduction of its 4.5 mOhm package path
+       (the shunt included, typical) at its own regulation 0.1853 / 0.3111 Wh a day
    (C) a WSL2512 sense bank read by an INA169 into a TPS3701, a TPS3808 supervisor holding SWEN low
-     - warranted: U19 TPS3701 INB rising threshold, TJ -40 to 125 C, VDD 1.8 to 36 V; U19 input current at INB; U18 INA169
-       transconductance, VSENSE 10 to 150 mV, TA -40 to 85 C; its nonlinearity; its offset, referred to the input; its
-       common-mode rejection from VIN+ = 12 V to 25 V, at VSENSE = 50 mV; its supply rejection from V+ = 5 V to 25 V, at
-       VSENSE = 50 mV; the two rejections above carried at the larger of their offset reading and their gain reading; R66
-       8.06k, 0.1 %, 25 ppm/K over 45 K, the printed solder-heat and life limits; the bank, 5 x WSL2512R0700FEA in parallel:
-       1 %, 75 ppm/K from -55 to +155 C; the bank's solder-heat and load-life test limits; R8 and R9 (the hold draft's RT
-       parts) across 25 V, bypassing the bank
-     - rating: U18's VIN+ pin current (its output current and its input bias, which prints no maximum), bypassing the bank
+     - warranted: U19 TPS3701 INB rising threshold, TJ -40 to 125 C, VDD 1.8 to 36 V; U19 input current at INB, through R66;
+       U18 INA169 transconductance, VSENSE 10 to 150 mV, at V+ = 5 V, VIN+ = 12 V, ROUT = 25 kOhm; its nonlinearity; its
+       offset referred to the input, at the same point; its output's move from VIN+ = 12 V to 25 V, at VSENSE = 50 mV (CMR);
+       its output's move from V+ = 5 V to 25 V, at VSENSE = 50 mV (PSR); R66 8.25k, 0.1 %, 25 ppm/K over 45 K, the printed
+       solder-heat and life limits; the bank, 5 x WSL2512R0700FEA in parallel: 1 %, 75 ppm/K from -55 to +155 C; the bank's
+       solder-heat and load-life test limits; R8 and R9 (the hold draft's RT parts) across 25 V, bypassing the bank; U18's
+       VIN+ pin: its output current, bypassing the bank
+     - documented dependency: the load R65 + R66 (25.15k nominal, 24.85k to 25.46k with tolerance, drift and aging) against
+       the 25 kOhm of the gain row
+     - assumption: the same move at the trip's own VSENSE (45.626 to 51.365 mV): G_CM x |VSENSE - 50 mV|; U18's VIN+ input
+       bias (10 uA typical, no maximum printed)
      - requirement: the input voltage at most 25 V (REQ-016)
      - parts and board E: U18 INA169NA/3K, U19 TPS3701DDCR, U20 TPS3808G33DBVR, R60 to R64 (5 x WSL2512R0700FEA), R65 16.9k,
-       R66 8.06k, R67 110k, R68 9.53k, R69 100k, R70 22k, R71 33k, C66 to C68 100n; C11, C12 and C69 the 50 V bulk; R16 to
-       29.4k
+       R66 8.25k, R67 110k, R68 9.53k, R69 100k, R70 8.06k, R71 6.04k, C66 to C68 100n, C71 to C74 10u 50V; C11, C12 and C69
+       the 50 V bulk; R16 to 30k
      - new failure mode: a hiccup if the regulation's unprinted values exceed the joint assumptions (energy, not the bound);
        the single faults of the fault list
-     - still depends on: no Analog Devices, Milliohm or Texas Instruments answer for the bound; the coordination and the
-       energy stay with Analog Devices' and Milliohm's answers
-     - the derived disturbance: passes: every part with a maker row on the entry rated above 45.4 V (C13 to C15 and R14 by
-       the generator's value text; their maker parts are the regeneration's), U18's differential under 2 V, U5's sense
-       differential under 0.3 V (MODELED)
-   THE CHOICE: (C), UNCONDITIONAL in its static bound. R60 to R64, 5 WSL2512R0700FEA (C2076144) in parallel, 14.0000
-     mOhm, carry everything entering the stage but R8, R9 and U18's VIN+ pin; U18 INA169 (SBOS181F) turns their voltage
-     into a current into R65 16.9k and R66 8.06k (its 24.96 kOhm test load); U19 TPS3701 trips at INB on R66 and watches
-     TRK_VS at INA (R67 110k, R68 9.53k); either output pulls U20 TPS3808G33's MR, whose RESET holds SWEN low through R70
-     22k over R71 33k. The LT8705A's own limit stays as the regulation, coordinated under the trip: RIMON_IN 29.4k
-     (C861288), 2.7392 A nominal
-   WHY (C): it is the one arrangement whose bound rests on printed limits at its own operating condition. (A) rests on
-     assumptions about A7, the fault threshold and the cold TCR; (B) on rows printed at another supply, reference or
-     current and on typical-only rows, and its sensor's 40 V inputs fail the derived disturbance. (C)'s INA169 prints its
-     common-mode and supply rejection at VSENSE = 50 mV over VIN+ and V+ 2.7 to 60 V, which covers the board's 9 to 25 V at
-     the trip's 49.6 mV, and its transconductance, offset and nonlinearity over the full temperature range; the two
-     rejections are carried at the larger of their offset and gain readings, so no row is extended past its condition
-   THE STATIC BOUND: 98.1890 W at 25 V (the highest trip current 3.9173 A at 25 V, the trip's sense voltage 52.537 mV at
-     most), margin 1.8110 W. Every term at the end that raises the trip, summed, each a printed limit at the condition it
-     is used at, or, for U18's VIN+ pin, its printed absolute maximum (no common multiplier; no typical row; nothing
-     assigned zero). SBOS181F p.6 prints every INA169 row over TA -40 to +85 C ('all other characteristics at'):
+     - still depends on: Texas Instruments for the two assumptions (G_CM and I_B169, each with its break-even); Analog
+       Devices and Milliohm for the coordination and the energy; Vishay for the bank's pulse capability (the capability
+       scenario only)
+     - the disturbances: every part inside its rating at the approved levels and in the capability scenario; U5's sense
+       differential at most 0.2144 V (MODELED, lumped)
+   THE CHOICE: (C), CONDITIONAL on two named assumptions, each carried past its physical meaning (below). R60 to R64, 5
+     WSL2512R0700FEA (C2076144) in parallel, 14.0000 mOhm, carry everything entering the stage but R8, R9 and U18's VIN+
+     pin; U18 INA169 (SBOS181F) turns their voltage into a current into R65 16.9k and R66 8.25k (25.15k together, 24.85k to
+     25.46k with tolerance, drift and aging, beside the 25 kOhm of its gain row), C70 1 nF across R66; U19 TPS3701 trips at
+     INB on R66 and watches TRK_VS at INA (R67 110k, R68 9.53k); either output pulls U20 TPS3808G33's MR, whose RESET holds
+     SWEN low; R70 8.06k from TRK_LDO33 over R71 6.04k set SWEN when released and hold it low with no supply. The LT8705A's
+     own limit stays as the regulation, coordinated under the trip: RIMON_IN 30k (C723585), 2.6844 A nominal
+   WHY (C): its bound rests on printed limits at their own conditions plus two assumptions about one part, each with a
+     break-even beyond its physical meaning; (A) rests on four assumptions about the LT8705A and RSENSE1 that set the bound
+     itself; (B) on rows printed at another supply, reference or current and on typical-only rows, and its sensor's inputs
+     fail the capability scenario. No answer from a maker is needed for (C)'s bound; the Texas Instruments draft asks for
+     the envelope that would retire both assumptions
+   CHECK (a), NORMAL OPERATION: ONE ERROR BUDGET for the whole limiting chain, the bank, U18, its load, R66 with C70, U19
+     and the trip, every term at its end that raises the trip, at the static bound's point (25 V, parts aged):
      - U19 TPS3701 INB rising threshold, TJ -40 to 125 C, VDD 1.8 to 36 V: 397 to 403 mV (warranted; TPS3701 SBVS240C p.5)
-     - U19 input current at INB: +-25 nA, through R66 (warranted; p.5)
-     - U18 INA169 transconductance, VSENSE 10 to 150 mV, TA -40 to 85 C: 990 to 1010 uA/V (warranted; INA169 SBOS181F p.6)
+     - U19 input current at INB, through R66: +-25 nA (warranted; p.5)
+     - U18 INA169 transconductance, VSENSE 10 to 150 mV, at V+ = 5 V, VIN+ = 12 V, ROUT = 25 kOhm: 990 to 1010 uA/V
+       (warranted; INA169 SBOS181F p.6)
      - its nonlinearity: +-0.1 % (warranted; p.6)
-     - its offset, referred to the input: +-1 mV (warranted; p.6)
-     - its common-mode rejection from VIN+ = 12 V to 25 V, at VSENSE = 50 mV: 100 dB minimum: 130 uV (warranted; p.6, VIN+
-       2.7 to 60 V)
-     - its supply rejection from V+ = 5 V to 25 V, at VSENSE = 50 mV: 10 uV/V: 200 uV (warranted; p.6, V+ 2.7 to 60 V)
-     - the two rejections above carried at the larger of their offset reading and their gain reading: x 1.0507 (warranted
-       (the rows, read both ways); p.6)
-     - R66 8.06k, 0.1 %, 25 ppm/K over 45 K, the printed solder-heat and life limits: +-(0.5 % + 0.05 Ohm) each (warranted
+     - its offset referred to the input, at the same point: +-1 mV (warranted; p.6)
+     - its output's move from VIN+ = 12 V to 25 V, at VSENSE = 50 mV (CMR): 100 dB minimum: 130 uV (warranted (at 50 mV);
+       p.6, VIN+ 2.7 to 60 V)
+     - its output's move from V+ = 5 V to 25 V, at VSENSE = 50 mV (PSR): 10 uV/V: 200 uV (warranted (at 50 mV); p.6, V+ 2.7
+       to 60 V)
+     - the same move at the trip's own VSENSE (45.626 to 51.365 mV): G_CM x |VSENSE - 50 mV|: G_CM 1 %: 13.5 uV (assumption;
+       no row; break-even printed)
+     - the load R65 + R66 (25.15k nominal, 24.85k to 25.46k with tolerance, drift and aging) against the 25 kOhm of the gain
+       row: 0.0077 uV through the 1 GOhm output impedance (documented dependency (typical row); p.6)
+     - R66 8.25k, 0.1 %, 25 ppm/K over 45 K, the printed solder-heat and life limits: +-(0.5 % + 0.05 Ohm) each (warranted
        (printed test limits); YAGEO RT V.16 pp.2, 7, 8)
      - the bank, 5 x WSL2512R0700FEA in parallel: 1 %, 75 ppm/K from -55 to +155 C: 14.0000 mOhm (warranted; Vishay WSL 30100
        pp.1, 2)
      - the bank's solder-heat and load-life test limits: +-(0.5 % + 0.0005 Ohm) and +-(1.0 % + 0.0005 Ohm) per part
        (warranted (printed test limits); WSL 30100 p.3)
      - R8 and R9 (the hold draft's RT parts) across 25 V, bypassing the bank: 5.78 mW (warranted; YAGEO RT V.16)
-     - U18's VIN+ pin current (its output current and its input bias, which prints no maximum), bypassing the bank: at most
-       10 mA: 250 mW (rating (the pin's absolute maximum); INA169 p.4)
+     - U18's VIN+ pin: its output current, bypassing the bank: 1.30 mW at 25 V (warranted (from the rows above); p.6)
+     - U18's VIN+ input bias (10 uA typical, no maximum printed): I_B169 1 mA: 25 mW at 25 V (assumption; no row; break-even
+       printed)
      - the input voltage at most 25 V: REQ-016 (requirement; REQ-016)
-   THE TRIP: its lowest at the hold's voltages 3.2119 A with the parts aged (3.2026 A at 25 V; 3.3311 A new), against the
-     panel's highest current on SC-37's day at any hold corner, 2.8779 A: it never acts that day. One bank part carries at
-     most 0.043 W at the highest trip (its P70 is 1 W)
-   THE DYNAMIC BOUND AND ITS AVERAGING BASIS (SESSION): REQ-016's 'at most 100 W into the stage' is judged as the mean
-     input power over any 0.1 s. Why: the limit sizes the stage's power parts, F2, J_SOLAR and the pack's charge, whose
-     thermal and charge time constants are seconds and longer; a sub-millisecond event of tens of mJ is TRN-001's and the
-     inrush's matter. The events: after a trip U20 holds SWEN low at least 180 ms (CT to VDD through R69, SBVS050N p.7,
-     full range), so any 0.1 s holds one event at most. Its energy: the entry's capacitance at its largest (146.1 uF)
-     charged to 25 V, 45.7 mJ, plus the panel's 156.25 W (25 V at REQ-016's 6.25 A) over the chain's response. The response
-     prints only typical rows: U18 about 4.5 us, U19's INB rising edge 28.1 us (the input edge, SBVS240C p.6, at 10 mV
-     overdrive and a 100 kOhm load), U20's MR to RESET 0.15 us, one switching period after SWEN falls (INFERRED): 38.4 us
-     together, giving 98.7054 W over 0.1 s. The bound holds for a response up to 0.867 ms; bench row 7b.16 reads it, and a
-     slower response would overturn the 0.1 s basis, not the arrangement (a longer basis or a lower trip restores it)
-   THE SUPPLY SEQUENCING (warranted rows, no Analog Devices answer): U20 asserts RESET whenever TRK_LDO33 is under its
-     threshold, 3.024 to 3.116 V, and releases it only above 3.194 V (VIT 3.07 V, 1.5 % and its 2.5 % hysteresis, SBVS050N
-     pp.3, 6), under LDO33's least in regulation, 3.23 V (8705af p.3, full range); then it holds RESET a further 180 ms at
-     least, past U19's 150 us start (SBVS240C p.6, typical). Where RESET is released, U19 (VDD from 1.8 V) and U20 (from
-     1.7 V) are inside their ranges, and U19's INA holds MR low whenever TRK_VS is under 4.960 V (U18 works from 2.7 V) and
-     lets it go by 5.200 V at most, under the hold. R70 over R71 keep SWEN under its least threshold (1.156 V, 8705af p.4)
-     until TRK_LDO33 reaches 1.923 V, above both parts' least supply; at LDO33's least with RESET released SWEN reads 1.935
-     V, over its highest threshold 1.256 V. RESET sinks at most 0.152 mA there (its VOL row 0.4 V at 1 mA). Below 1.3 V the
-     VOL rows end: SWEN could rise only if its pin sourced 28.4 uA (8705af p.12 describes a logic input; no current row:
-     INFERRED), and TRK_LDO33 under 1.3 V with INTVCC above its 4.45 V lockout is an LDO33 failure, a single fault (below).
-     The power-up reset (VPOR 0.8 V) holds for a rise no faster than 66667 V/s; LDO33's 22 mA limit into C20's 1 uF gives
-     22000 V/s (INFERRED: C20's capacitance at bias has no row). The arrangement draws at most 158 uA from TRK_LDO33 (the
-     IDD rows, the dividers, U20's MR pull-up at its least and CT's resistor), under the 5 mA its regulation row is printed
-     at. U18's output at the highest trip, 1.329 V into R65 + R66, stays under its compliance where the chain is armed,
-     3.76 V (V+ less 1.2 V at TRK_VS = 4.960 V, SBOS181F p.6)
+   the chain together: the trip's nominal current 3.4632 A (the nominal sense voltage 48.485 mV over the bank's nominal);
+     the trip current at which 25 V reaches 100 W, the bypass included, 3.9987 A: the combined error the setting can
+     tolerate before 100 W is 15.46 % of nominal. The supported bound, every term above together (the bank alone 4.39 %),
+     is 10.59 %: the trip at most 3.8299 A at 25 V (its sense voltage 51.365 mV), the static bound 95.7788 W, the margin
+     4.88 % of nominal, 4.2212 W. The second round's multiplier on the rejection rows (the larger of their offset and gain
+     readings; printed 1.0507, applied 1.0240) is withdrawn: the rows enter at the 50 mV they are printed at, and their
+     move at the trip's own sense voltage is the separate, named assumption G_CM
+   the two assumptions and their break-evens (each alone, the other at its stated value): U18's gain move between its
+     printed point and V+ = VIN+ = 25 V at the trip's own sense voltage (G_CM, taken 1 %) reaches 100 W at 169 % on the
+     static bound alone and at 100.5 % once check (b)'s capacitor charge and ten typical responses are taken from the
+     headroom; U18's VIN+ bias (taken 1 mA, 10 uA typical) at 169.8 mA and 101.2 mA. Their meaning: G_CM at 100 % would be
+     a gain change the size of the gain itself, with an offset change cancelling it exactly at 50 mV; a bias of 10 mA is
+     the pin's absolute maximum, a stress the maker calls damaging (SBOS181F p.4), so beyond it the part is in a fault,
+     layer 8's matter. Neither is a maker's limit; the Texas Instruments draft asks for the envelope
+   THE SETTINGS (stocked RT0603BRD07 values for R66; each with its static bound, its coordinated regulation, its energy on SC-37's
+   day and the bright day, the noon reduction, check (b)'s response allowance and the two break-evens with check (b)'s room):
+     R66     code     trip mV    bound W   R16, nominal A             Wh SC-37  bright  noon P     allow ms  G_CM be   I_B be mA
+     8.06k   C861587  52.5549    97.9977   29.4k C861288 2.7392       345.5     457.4   -19.4 %    0.820     7.3 %     12.8      
+     8.2k    C861589  51.6724    96.3527   30k C723585 2.6844         343.4     450.1   -20.8 %    3.034     63.6 %    78.3      
+     8.25k   C705798  51.3645    95.7788   30k C723585 2.6844         343.4     450.1   -20.8 %    3.783     100.5 %   101.2     CHOSEN
+     8.45k   C861590  50.1693    93.5508   30.9k C861313 2.6063       339.6     439.7   -23.0 %    6.585     >500 %    190.0     meets
+     8.66k   C861591  48.9941    91.3602   31.6k C705766 2.5485       336.6     431.9   -24.6 %    9.186     365.6 %   277.2     meets
+   THE SETTING (SESSION, the margin decided by what it must absorb, no percentage): the least energy cost for which (i)
+     check (b)'s response allowance covers the response chain's typical sum with every typical-only link at 10 times its
+     typical value at once, plus C70's printed delay, and (ii) with that response spent, both assumptions are carried past
+     their meaning (G_CM's break-even at or over 100 %, the bias's at or over the pin's 10 mA). Why ten: the largest
+     maximum-to-typical ratio among the timing rows these makers print for the chain's parts is 1.4 (TPS3808's td with CT
+     to VDD; the LT8705A's oscillator), so ten covers several times any printed spread. The present 8.06k meets (i) but
+     carries G_CM only to 7.3 %: its trip's highest sense voltage, 52.555 mV, sits 2.55 mV past the 50 mV the rejection
+     rows are printed at. 8.25k puts it at 51.365 mV; it costs 3.0 / 2.1 / 0.0 Wh on SC-37's day (lower / nominal / upper
+     hold) and 7.2 Wh on the bright day against 8.06k, and raises the margin from 2.00 W to 4.22 W and the allowance from
+     0.820 ms to 3.783 ms. 8.2k sits at the same regulation and energy with less margin, so it is never the choice. The
+     next step, 8.45k, would cost a further 3.8 Wh at the nominal hold and 10.4 Wh on the bright day.
+   the trip in normal operation: its lowest at the hold's voltages 3.1331 A with the parts aged (3.1238 A at 25 V; 3.2495
+     A new), against the panel's highest current on SC-37's day at any hold corner, 2.8779 A: it never acts that day. One
+     bank part carries at most 0.041 W at the highest trip (its rating 1 W to 70 C). CAN A CONDITIONAL TERM OVERTURN THE
+     SOLAR ARCHITECTURE: no. Each one, past its break-even, is answered by the next stocked R66 (the table's costs) or by a
+     part, on the same topology: the arrangement, its parts and the stage stay
+   CHECK (b), STARTUP, SHUTDOWN AND THE FAULT RESPONSE (the energy into the stage over any 0.1 s): the capacitor INPUT
+     energy of one charge from zero to 25 V, C x Vmax^2 (half stored, half lost in the charging path), with every capacitor
+     on the entry at its largest: the 50 V bulk 154.4 uF (+20 % and the endurance row's +30 %), C66, C71 to C74 and C13 to
+     C15 with C64 at +10 % and no bias derating, 225.83 uF in all: 141.1 mJ. The source: REQ-016's window bounds the open
+     circuit (25 V); the current is the panel the window was ruled with (the SunPower 100 W of a1solar), its short circuit
+     at 1000 W/m2 and the trace's hottest cell, 70 C, 6.417 A, with the sheet's +6 % power tolerance on it: 6.802 A, 170.05
+     W with 25 V (not the generator's 1.1 x 5.68 A)
+     - the fault response (a trip): the stage at the static bound before it, the source's whole power while the chain
+       responds, then one full capacitor charge (a deliberate over-count: the capacitors sit at the hold voltage while the
+       stage runs). The response prints only typical rows: U18's settling 5 us (5 V step at 20 kOhm), U19's INB rising edge
+       28.1 us (at 10 mV overdrive), U20's MR to RESET 0.15 us, RESET pulling SWEN through the divider (under 1 us, INFERRED)
+       and one switching period at the LT8705A's lowest printed frequency, 5.88 us (INFERRED: no SWEN timing row): 40.1 us;
+       C70's delay at R66 and C70 at their largest, 8.7 us (printed values). The window holds its 10 J for a response up to
+       3.783 ms, 94 times the typical sum; at the typical sum the window reads 9.7226 J
+     - startup: the capacitors charge when the panel connects; U20 holds SWEN low for td after TRK_LDO33 passes its
+       threshold, at least 180 ms (SBVS050N p.7, full range), longer than the window, so no window holds both that charge and
+       switching: the connection's window reads at most 0.1465 J. Shutdown and repeated events: after a trip SWEN stays low
+       at least 180 ms, so one window holds one trip at most; each restart goes through the soft start (8705af Figure 2)
+     - repeated source steps with SWEN low: the capacitors take energy again only after giving it up; with SWEN low they lose
+       it to the quiescent loads (in one window a fraction of a volt) or back into the panel when its voltage falls under
+       theirs (that energy leaves the stage). Each full swing between the hold's lowest corner and 25 V loses at most C x
+       dV^2 = 14.56 mJ inside the stage, so the window holds after the trip and its charge 17.2 such swings. No document
+       bounds how often a panel's open circuit swings in 0.1 s (it follows irradiance and cell temperature, which change over
+       seconds): CONDITIONAL, bench row 7b.16 steps the bench supply's curve with SWEN held low
+   CHECK (c), THE PARTS' RATINGS DURING THE SPECIFIED DISTURBANCES. The derivation (B6): TRN-001's port table
+     (DECISION-31) lists J_SOLAR as EXTERNAL, a long outdoor lead; no document of the tree states its length or routing (a
+     search of v2/docs and the registries finds none), so the levels are the approved test plan's for power leads, which do
+     not depend on them: M2, MIL-STD-461G CS101 on DC input power leads, curve 2 (sources of 28 V or below): 126 dBuV, 2.00
+     V rms, at the EUT's input to the knee (read from Figure CS101-1 at 5 kHz), then the straight line to 96.5 dBuV at 150
+     kHz, or the source set to Figure CS101-2's 80 W into 0.5 Ohm, with the 10 uF return capacitor of Figure CS101-4; M3,
+     CS114, the current induced on the lead at most curve 4's 103 dBuA (141 mA rms; Table VI, ground, Army: curves 3 and
+     4); M7, the discharge at decision 34's level, 8 kV contact and 15 kV air, through CS118's 150 pF and 330 Ohm (Table
+     IX's +30 % on the contact current, the air level scaled from it). Surge and sustained over-voltage: no level is ruled
+     (REQ-016, DECISION-31 section 3), so D4's own 10/1000 us rating stays a CAPABILITY SCENARIO, labelled: 33.1 A at an
+     initial junction of 25 C or below, derated to 88.1 % (29.2 A) at the hot end's 62.1 C (Figure 3 as drawn, INFERRED
+     from the figure)
+     - the corrected network: four 10 uF 50 V ceramics, C71 to C74 (the value text and land of C13 and C14), on TRK_VS at
+       RSENSE1's pad, so a fast edge reaches R59 only through C13 to C15's share; nothing in series with CSPIN or CSNIN,
+       which the maker forbids (8705af p.30: all four sense pins draw bias current); C70 1 nF across R66. The model (MODELED,
+       lumped): the stage's operating current superposed at the trip's highest, 3.830 A; RSENSE1 at its highest; the bulk new
+       at its 20 C row, after endurance at 200 % of it, and after endurance at its -40 C row (0.8 Ohm a can); the ceramics
+       ahead at -10 % times a bias factor 1, 0.5 or 0.25 (C13 and C14 the same factor: the same part at the same bias), each
+       at most 10 mOhm (SESSION assumption: no maker part is chosen), those behind with none (more current through R59); D4
+       off below its highest breakdown, then the straight line to its clamping point
+     case (the worst of the bias factors and bulks shown per level)             U5 V   D4 A      TRK_VS V  bank A    U18 V     part mJ
+     capability, cold end (D4 at its full rating, the bulk aged, -40 C row)     0.2144 28.64     43.92     36.93     0.5394    3.5423
+     capability, hot end (D4 derated to 88.1 % at 62.1 C, the bulk new)         0.1454 24.83     42.65     33.00     0.4820    2.8956
+     capability, hot end (D4 derated, the bulk aged)                            0.1627 25.45     42.86     33.00     0.4820    2.8956
+     discharge 8 kV (contact)                                                   0.1372 0.00      17.69     35.35     0.5163    0.0002
+     discharge 15 kV (air, scaled from the contact waveform)                    0.2055 0.00      17.78     62.92     0.9190    0.0004
+     - U5's sense differential, the rating that bounded the second round: at most 0.2144 V (capability, cold end (D4 at its
+       full rating, the bulk aged, -40 C row)), 0.2055 V at the approved discharge, 0.0961 V under CS101 and 0.0622 V under
+       CS114, against 0.3 V (8705af p.2); the operating current's own drop is 0.0592 V, so the margin, 0.0856 V, would take a
+       further 5.54 A of converter current at the event's peak (its loops print no input impedance). With two ceramics
+       instead of four the approved 15 kV discharge reads 0.2945 V: four is the least count that keeps the margin over the
+       operating drop. The negative differential stays at 0.0455 V or above
+     - every other part at its worst case: TRK_VS 44.26 V against the bulk's 50 V, the ceramics' 50 V, U5's VIN 80 V, Q3 60 V
+       (BSC028N06NS p.1); PV_P 45.18 V against U18's VIN+ and V+ 75 V; U18's differential 0.919 V against 2 V; U19's INB
+       4.554 V (C70 holding a discharge's charge to 56 mV) and INA 3.529 V against 7 V (SBVS240C p.4); FBIN 3.09 V and SHDN
+       5.77 V against 30 V; D4 carries less than the scenario's whole current (its share at most 29.68 A of 33.1 A) and so
+       stays inside its rating, derated or not; a bulk can 8.1 A at the pulse's peak (no single-pulse row is printed; its
+       voltage stays under its rating); one bank part 3.54 mJ over the capability pulse, CONDITIONAL: Vishay prints its pulse
+       capability only through an online calculator whose chart it marks illustrative (the Vishay draft asks)
+     - under CS101 the input reaches 27.82 V at most (open circuit and the peak), under D4's 28 V stand-off, so D4 never
+       conducts; a bank part dissipates 0.614 W at most against 1 W; R59 and the ceramics are far inside. The bulk's ripple:
+       with the voltage limit at the input (any test source) a can carries up to 4.41 times its ripple rating at that
+       frequency (ZA p.2, 1600 mA at 100 kHz and 105 C, the frequency table), at 4972 Hz; with Figure CS101-4's setup and an
+       ideal source at the calibrated power, 0.60 times. The rating is the 10000 h endurance figure at 105 C, not an absolute
+       maximum: the bounding case's heating depends on the cans' thermal resistance and the time the test spends in that
+       band, neither printed nor ruled: CONDITIONAL, M2 records the cans' temperature (a larger can or a fourth is the
+       remedy, on the same topology)
+     - the backstop under CS101: the injected current crosses the bank, 1.91 A rms at most at 1 kHz and above even with
+       Figure CS101-4's setup and an ideal source, so its peaks over the trip less the operating current stop the stage for
+       td each time, the safe direction; M2's pass line ('no upset') reads it, and a filter on INB slow enough to ride
+       through it would exceed check (b)'s allowance at the regulation's highest current. Above the lumped model's reach (the
+       discharge's first nanoseconds, CS114 at MHz) the board's parasitics decide, a layout matter: C71 to C74 at R59's pad
+       and R59's Kelvin taps, M3 and M7 at layer 8. A reversed panel conducts through D4 as DECISION-31's note E-N1 records
+   THE SUPPLY SEQUENCING (B3), SWEN OFF BY DEFAULT, on printed rows: R71 6.04k holds SWEN to ground and R70 8.06k feeds
+     it from TRK_LDO33 only, so SWEN is at most 0.4343 x TRK_LDO33 (both at their worst ends, aged). Below 2.662 V on
+     TRK_LDO33 SWEN cannot reach its least rising threshold, 1.156 V (8705af p.4), whatever the ramp, the delays or U20's
+     state; 2.662 V is above every sensing part's least supply (U19 1.8 V, U20 1.7 V; U18 sits on TRK_VS, watched by U19's
+     INA from 4.870 V). Above it U19 and U20 are inside their ranges: U20 holds RESET at its VOL, 0.4 V at 1 mA (SBVS050N
+     p.6; RESET sinks at most 0.528 mA here), while TRK_LDO33 is under its threshold (3.024 to 3.116 V; it releases at
+     3.194 V at most) and for td after; U19's outputs reach U20's MR at 0.25 V at most (VOL at 1.8 V and 3 mA) against MR's
+     0.54 V. So SWEN can rise only while the sensing chain is supplied and armed, with no condition on TRK_LDO33's ramp or
+     sag rate and no use of U20's power-up row. Released, at LDO33's least (3.23 V) SWEN reads 1.364 V against its highest
+     threshold 1.256 V. The one unprinted figure is SWEN's own pin current: it could enable the stage below 1.80 V on
+     TRK_LDO33 only by sourcing 107 uA (189 uA with TRK_LDO33 floating), keep it off only by sinking 31 uA, and RESET's VOL
+     fails to disable it only if the threshold's hysteresis (22 mV typical) reached 0.756 V; the Analog Devices draft asks.
+     TRK_LDO33 carries at most 338 uA of the arrangement, under the 5 mA its regulation row is printed at. U18's output at
+     the highest trip, 1.322 V into R65 + R66 at their largest, stays under its compliance where the chain is armed, 3.67 V
    THE COORDINATION (SESSION, one basis at both corners): the smallest stocked RIMON_IN whose regulation at its highest
      under the joint assumptions (EA2 and EA3 at half gain, the line at twice, RSENSE1's cold TCR at 100 ppm/K, the drifts,
-     each resistor at its worst end) stays at or under C's lowest trip with its parts aged, at every input voltage: 29.4k,
-     3.1533 A at 25 V against 3.2026 A. If the regulation's unprinted values were worse than those assumptions, the overlap
+     each resistor at its worst end) stays at or under C's lowest trip with its parts aged, at every input voltage: 30k,
+     3.0902 A at 25 V against 3.1238 A. If the regulation's unprinted values were worse than those assumptions, the overlap
      would be a hiccup: each trip stops the stage 180 to 420 ms (SBVS050N p.7) and restarts it through the soft start; the
      bright day's hours whose panel current at the nominal hold exceeds C's lowest trip are 09, 10, 11, 12, 13, 14, 15,
      462.4 Wh, the energy such an overlap would put at risk
-   THE ENERGY: on SC-37's day 355.0 / 345.5 / 307.9 Wh at the lower, nominal and upper hold corners (5 / 3 / 0 h bound)
-     against 369.7 / 350.0 / 307.9 Wh with 23.2k (4.5 Wh less at the nominal hold, 14.7 Wh at the lower corner); on the
-     bright day 457.4 Wh (9 h bound) against 534.7 Wh (77.4 Wh less); at bright noon the input power falls 19.4 % (the
-     current 21.1 %). The bank's conduction (14.0000 mOhm, the hourly current at the nominal hold) costs 0.5773 Wh on
-     SC-37's day and 1.6072 Wh on the bright day; R59 stays. The bright day is the check's own (astra-check-l4e7r-1, D3)
-     and this model reproduces its figures: 26.1k 495.3165 Wh, the noon power 10.06 % under 23.2k; 28.7k 465.6367 Wh, the
-     noon power 17.54 % under 23.2k
-   THE SOLAR ENTRY'S PROTECTION (B6; the derived disturbance, SESSION): no surge level is ruled (DECISION-31 section 3,
-     D-04, D-16) and the tree holds no surge standard; TRN-001 asks the clamp to clamp below every protected part's
-     absolute maximum, and D4's maker prints its clamping only at its rated pulse. So the design disturbance is that pulse:
-     10/1000 us (SMCJ p.1), 33.1 A at D4, clamped at 45.4 V at most (p.2); any source of impedance Z gives it with an open-
-     circuit 45.4 V + 33.1 A x Z. The assumption: no surge on the panel lead inside the kit's use exceeds D4's rating; a
-     larger ruled level would need a larger clamp and parts rated above its clamping voltage, which changes ratings, not
-     the arrangement (U18's inputs are rated 75 V, U5's 80 V)
-     - the correction: D4 and the bulk move behind the sense bank onto TRK_VS, and the bulk becomes three Panasonic
-       EEHZA1H330XP, 50 V, 33 uF (ZA p.2, the same 6.3 x 7.7 mm land; 1600 mA ripple, 40 mOhm), over D4's 45.4 V; the 35 V
-       parts were under it
-     - every part on the entry against it: TRK_VS and TRK_VIN at 45.4 V at most: the bulk 50 V, C13 to C15 50 V (the
-       generator's value text: their maker parts are the regeneration's), C64 and C66 50 V (C14663), U5's VIN and sense pins
-       80 V, Q3 60 V, U18's V+ and VIN- 75 V, R67 75 V (RT), R14 39.5 V across it (the generator's 100k 1%: its maker part is
-       the regeneration's), SHDN 5.92 V and FBIN 3.14 V against their 30 V; PV_P 45.88 V at most (the bank's drop added):
-       U18's VIN+, R8 75 V (RT)
-     - U18's differential: the whole pulse crosses the bank, 0.483 V at most against its 2 V; U5's sense differential: R59
-       carries only the ceramics' share, 0.165 V new, 20 C, 0.268 V after endurance, -40 C (MODELED: the bulk's ESR 40 mOhm
-       new and 0.8 Ohm after endurance at -40 C (ZA p.1), three in parallel, its capacitance at its least, the ceramics at
-       their largest, the clamp left out), against 0.3 V (8705af p.2)
-     - electrostatic discharge (decision 34): its 2.25 uC moves the entry by 0.029 V at most and puts 0.665 V across the
-       bank; a reversed panel conducts through D4 as DECISION-31's note E-N1 records, now with U18's inputs near -1 V as well
-       (its sheet allows a pin past its rating while the pin's current stays under 10 mA, p.4; its gain resistor sits in the
-       path: INFERRED), board E's owner's note
+   THE ENERGY: on SC-37's day 352.0 / 343.4 / 307.9 Wh at the lower, nominal and upper hold corners (5 / 4 / 0 h bound)
+     against 369.7 / 350.0 / 307.9 Wh with 23.2k (6.6 Wh less at the nominal hold, 17.7 Wh at the lower corner); on the
+     bright day 450.1 Wh (9 h bound) against 534.7 Wh (84.6 Wh less); at bright noon the input power falls 20.8 % (the
+     current 22.7 %). The bank's conduction at the selected regulation's own currents (its nominal 14.0000 mOhm, the
+     trace's hourly current at the nominal hold with the regulation at its lowest) costs 0.5513 Wh on SC-37's day and
+     0.8705 Wh on the bright day; R59 stays. The bright day is the check's own (astra-check-l4e7r-1, D3) and this model
+     reproduces its figures: 26.1k 495.3165 Wh, the noon power 10.06 % under 23.2k; 28.7k 465.6367 Wh, the noon power 17.54
+     % under 23.2k
+   L4-E9'S FIGURES THIS ROUND SETS (its power-path output at fnd/l4e9 539dc57c, read only; excerpt in inputs/): line 86
+     and 109, 'limit 3.4713 A' becomes the regulation at RIMON_IN 30k, 2.6844 A nominal and 3.0882 A at its highest on the
+     hold's corners (47.23 W at the nominal hold, 56.27 W at most there); lines 86, 109 and 113, the 25 V corner's 96.2474
+     W and 99.8992 W become the backstop's static bound, 95.7788 W (CONDITIONAL on G_CM and the VIN+ bias, break-evens
+     above), with the regulation's own 25 V corner at 77.2553 W; line 97, the panel's hot short circuit 6.42 A, is 6.802 A
+     with the sheet's power tolerance (still under J_SOLAR's nearest stated 7 A); lines 99, 105 and 115, PENDING, become
+     the drafted bank, D4 and the 50 V bulk on TRK_VS, C71 to C74 and the backstop (drafts, not applied); line 119's 93 W
+     out 'at the window' is above what the stage converts at the hold (56.27 W in at most), so its current is a ceiling,
+     not an expectation; line 307's 350 Wh a day becomes 352.0 / 343.4 / 307.9 Wh (SC-37) and 450.1 Wh on the bright day
    THE SERIES DISCONNECT (the check's suggestion, evaluated, not taken; SESSION): the LM5069 class hot-swap controller
      prints its current limit (VCL 48.5 / 55 / 61.5 mV) at VIN = 48 V, not at the panel's 17 to 25 V, and its spread (12 %
      from typical to either end) would push the regulation further down than C's; SWEN already removes the path from the
      panel to the pack (the four switches stop and M1's body diode blocks the input), and the input capacitors' charge is
-     bounded as an event (below). A series FET would cover a shorted switch of the LT8705A, a single fault layer 8 judges
+     bounded as an event (check (b)). A series FET would cover a shorted switch of the LT8705A, a single fault layer 8
+     judges
    THE SINGLE FAULTS (assigned to layer 8's fault analysis): those that defeat the backstop: U18's output stuck low or
      open, or R65 open (no current reaches R66); R66 shorted; U19's OUTB stuck open (high impedance); U20's RESET stuck
-     open, or its MR input stuck high; a short across the sense bank; U5's SWEN input failed active. Those that stop
-     charging: U19's OUTA or OUTB stuck low; U20's RESET stuck low; R70 open (SWEN pulled to ground by R71); U18's output
-     stuck high; the whole sense bank open (one part open only raises the bank's resistance: the trip falls, charging
-     continues); TRK_LDO33 lost (U20 holds the stage off). Layer 8 lists each fault above with its effect; acceptance: no
-     single fault both defeats the backstop and removes the LT8705A's own input-current limit (a defeated backstop leaves
-     the regulation, which holds the stage under the trip when its unprinted values are inside the joint assumptions), and
-     every fault that defeats the backstop is found by the commissioning and periodic trip test (bench row 7b.15) at an
+     open, or its MR input stuck high; a short across the sense bank; U5's SWEN input failed active. Those that remove the
+     supply guard only: R71 open (SWEN then follows TRK_LDO33 when RESET is released: the trip still acts through RESET,
+     the supply guard is lost). Those that stop charging: U19's OUTA or OUTB stuck low; U20's RESET stuck low; R70 open
+     (SWEN held to ground by R71); U18's output stuck high; the whole sense bank open (one part open only raises the bank's
+     resistance: the trip falls, charging continues); TRK_LDO33 lost (SWEN under its threshold by the divider, U20 holds
+     the stage off above it); a ceramic of C71 to C74 shorted (TRK_VS to ground: the panel into a short through the bank,
+     F2 above the panel's current). Layer 8 lists each fault above with its effect; acceptance: no single fault both
+     defeats the backstop and removes the LT8705A's own input-current limit (a defeated backstop leaves the regulation,
+     which holds the stage under the trip when its unprinted values are inside the joint assumptions), and every fault that
+     defeats the backstop or its supply guard is found by the commissioning and periodic trip test (bench row 7b.15) at an
      interval layer 8 sets
-   THE DRAFT FOR BOARD E'S GENERATOR OWNER: apply_gen_sch_e_backstop.py, 9 edit(s) on the text the hold and input limit
-     drafts leave (it refuses a generator without them): the bank on PV_P to TRK_VS: yes; R59 and CSPIN behind it: yes;
-     SWEN on TRK_SWEN: yes; D4 on TRK_VS: yes; the 50 V bulk: yes; R14 on TRK_VS: yes; R16 at 29.4k: yes; carries C44322,
-     C132788, C43698, C2076144, C178637, C861288, C861587, C861156: yes; R10 untouched: yes. Read back here; never applied
-     to the tree
-   PROTOTYPE MEASUREMENTS (REQ-016's second method; downstream obligations, not blockers): 7b.15, on each built board,
-     the input current at which SWEN falls, at 17.6 V and 25 V, against 3.2026 to 3.9173 A at 25 V, at commissioning and at
-     layer 8's interval; 7b.16, the response from a current step over the trip to the last switching edge, against 0.867
-     ms, and with R16 shorted (IMON_IN at 0 V, so neither the regulation nor its fault acts) the mean input over 0.1 s at
-     or under 100 W, each restart through the soft start; 7b.17, the regulation at 29.4k on a bench panel curve does not
-     trip at 25 C and at the cold end; 7b.18, R59's differential under a 10/1000 us pulse at D4's rating, against 0.3 V;
-     7b.19, TRK_LDO33's rise at power-up against 66667 V/s
-   WHAT WOULD OVERTURN IT: a measured response over 0.867 ms (the averaging basis, not the arrangement); a stock change
-     of the bank part (LCSC 1970 on 1 October 2026; five per board), of U18 (61878) or U20 (36047); a ruled surge level
-     above D4's rating (the clamp and the ratings, not the arrangement); Analog Devices warranting EA2, A7 and the line
-     row, and Milliohm the cold TCR (the regulation would then hold the bound itself and C would be redundant protection);
-     layer 8 finding a single fault that both defeats the backstop and removes the regulation
-   WHAT REMAINS CONDITIONAL: nothing in C's static bound. The dynamic bound rests on the response's typical rows (bench
-     row 7b.16, tolerance 0.867 ms against 38.4 us typical) and the 0.1 s basis (SESSION); the supply sequencing below 1.3
-     V on TRK_LDO33 only through a fault (SWEN's pin current INFERRED); the surge protection on the stated design
-     disturbance; the coordination and the energy on Analog Devices' and Milliohm's answers (EA2, A7, LINE, TCR, TJ), whose
-     failure costs energy, not the bound
-   THE CLARIFICATION DRAFTS (adjusted; text for the owner to send, the session contacts no one): no answer moves C's
-     bound. Analog Devices' and Milliohm's answers set the coordination and the energy; Analog Devices' item 5 now asks
-     SWEN's input current and its delay to the last switching edge (the sequencing's one inference and bench row 7b.16).
-     The Texas Instruments draft now asks the INA169's VIN+ pin current, carried at its absolute maximum meanwhile
-     (supporting); the INA250 draft is withdrawn with approach B: clarification/analog-devices-lt8705a.txt,
-     clarification/milliohm-hojlr2512.txt, clarification/texas-instruments-ina169.txt
+   THE DRAFT FOR BOARD E'S GENERATOR OWNER (drafted, never implemented here): apply_gen_sch_e_backstop.py, 9 edit(s) on
+     the text the hold and input limit drafts leave (it refuses a generator without them): the bank on PV_P to TRK_VS: yes;
+     R59 and CSPIN behind it, nothing in series with CSPIN or CSNIN: yes; SWEN on TRK_SWEN with R70 and R71 as the guard:
+     yes; D4 on TRK_VS: yes; the 50 V bulk: yes; C71 to C74 on TRK_VS: yes; C70 across R66: yes; R66 at 8.25k: yes; R14 on
+     TRK_VS: yes; R16 at 30k: yes; carries C44322, C132788, C43698, C2076144, C178637, C723585, C705798, C861156, C728595,
+     C1588: yes; R10 untouched: yes. Read back here on a scratch copy; never applied to the tree
+   PROTOTYPE MEASUREMENTS (REQ-016's second method; the exact downstream verification): 7b.15, on each built board, the
+     input current at which SWEN falls, at 17.6 V and 25 V, against 3.1238 to 3.8299 A at 25 V, at commissioning and at
+     layer 8's interval; 7b.16, the response from a current step over the trip to the last switching edge, against 3.783
+     ms, and with R16 shorted (IMON_IN at 0 V, so neither the regulation nor its fault acts) the energy over every 0.1 s at
+     or under 10 J, through a trip, a panel connection and the bench supply's curve stepped with SWEN held low, each
+     restart through the soft start; 7b.17, the regulation at 30k on a bench panel curve does not trip at 25 C and at the
+     cold end; 7b.18, R59's differential (Kelvin at U5's pins) under the M7 discharge at J_SOLAR and under a 10/1000 us
+     pulse at D4's rating, against 0.3 V; 7b.19, SWEN at TRK_LDO33's power-up, sag and loss, against 1.156 V while
+     TRK_LDO33 is under 2.66 V and U20's VOL above it; and M2 with the bulk cans' temperature recorded
+   THE DECISION (item 5): the selected solution is (C) at R66 8.25k and RIMON_IN 30k, with the corrected entry and SWEN
+     off by default, because it is the one arrangement whose bound needs no maker's answer and whose two assumptions are
+     carried past their physical meaning at an energy cost of 2.1 Wh a day at the nominal hold. (a) normal operation:
+     95.7788 W at most, margin 4.2212 W, CONDITIONAL on G_CM (break-even 100 %) and the VIN+ bias (101 mA); (b) startup,
+     shutdown and the fault response: at most 10 J in any 0.1 s for a response up to 3.783 ms (94 times the typical sum),
+     CONDITIONAL on the 0.1 s interpretation (layer 8), the response's typical rows (7b.16) and the panel's swing rate with
+     SWEN low (17.2 full swings per window); (c) the disturbances: every part inside its rating at the approved levels and
+     in the capability scenario, U5's differential at most 0.2144 V, CONDITIONAL on the lumped model (layout, M3, M7,
+     7b.18), the bulk's heating under CS101's bounding case (M2) and the bank's pulse capability in the capability scenario
+     (Vishay). Drafted: the board E edits above and four clarification texts; implemented: nothing in the tree. L4-E7R's
+     architecture criterion: MET, CONDITIONAL on the named items, none of which can overturn the architecture (each
+     resolves by a stocked setting or a part on the same topology). If the coordinator's closing check finds otherwise, the
+     engineering alternative is the next stocked setting for (a) and (b) (the table above) and a larger or added bulk can
+     for (c)'s heating, before any change of arrangement
+   THE CLARIFICATION DRAFTS (text for the owner to send, the session contacts no one): no answer moves C's bound into or
+     out of 100 W. Texas Instruments: the warranted error envelope at V+ = VIN+ of 9 V to 25 V and the trip's sense
+     voltage, the VIN+ current, the output past 150 mV (retiring both assumptions); Analog Devices: the coordination's and
+     energy's rows, and SWEN's input current, falling threshold and delay; Milliohm: the cold TCR; Vishay: the bank's pulse
+     capability (the capability scenario only): clarification/analog-devices-lt8705a.txt, clarification/milliohm-
+     hojlr2512.txt, clarification/texas-instruments-ina169.txt, clarification/vishay-wsl2512.txt
