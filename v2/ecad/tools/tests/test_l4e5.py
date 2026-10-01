@@ -13,7 +13,10 @@ prints; the draft apply script checks without writing, applies once to a copy an
 check astra-check-l4e5-1: V-A09's HIZ entry, exit and zero-current thresholds agree with the knee's transfer function and
 TI's levels (B1); V-A10's telemetry fault injection is bounded and its fallback never passes 4.70 A (B2); the 12 V solar
 boundary is H3's, and the check's source-blind example trades the 12 V vehicle for it (B3); the POR value is kept apart
-from the removal reset (minor 1); the collapse times are nominal estimates (minor 2). Nothing here writes into the tree.
+from the removal reset (minor 1); the collapse times are nominal estimates (minor 2). After the recheck
+astra-check-l4e5-2: HIZ release is never asserted as conversion below TI's printed regulation range (B1), and V-A10's boot
+case permits FW-A16's initialization from POR before it forbids telemetry-caused changes (B2). Nothing here writes into the
+tree.
 """
 import hashlib
 import importlib.util
@@ -265,6 +268,47 @@ def t_collapse_times_are_nominal_estimates():
     out = open(os.path.join(REC, "l4e5_source_control.out"), encoding="utf-8").read()
     assert "nominal estimates pending evidence of the effective capacitance" in out
     assert "the nominal capacitance an upper bound" not in out
+
+
+def t_hiz_release_is_not_asserted_as_conversion():
+    """Recheck B1: above the HIZ exit U3 is out of HIZ (with EN_HIZ = 0b), not proven to convert; regulation by the pin is
+    asserted only from the start of TI's printed range, and between the two the behaviour is recorded."""
+    import re
+    R = _R()
+    A = _apply_rows()
+    page = open(os.path.join(REC, "L4E5-SOURCE-CONTROL.md"), encoding="utf-8").read()
+    out = open(os.path.join(REC, "l4e5_source_control.out"), encoding="utf-8").read()
+    bad = re.compile(r"converting (at every VIN_RAW )?above|certainly converting|converting at every")
+    for name, text in (("the page", page), ("FW-A18", A.FW_A18), ("V-A09", A.V_A09), ("the output", out)):
+        assert not bad.search(text), "%s asserts conversion at HIZ release: %s" % (name, bad.search(text).group(0))
+    for name, text in (("FW-A18", A.FW_A18), ("V-A09", A.V_A09)):
+        assert "out of HIZ above 8.713 V" in text or "out of HIZ at every VIN_RAW above 8.713 V" in text, name
+        assert "EN_HIZ" in text, name
+    rng_top = R["knee"]["rng"][2]
+    assert _has(A.V_A09, rng_top) and "regulating its input current by the pin" in A.V_A09 and "conversion not asserted" in A.V_A09
+    assert R["knee"]["exit"][2] < rng_top, "the regulation range would start below the HIZ release"
+    assert "Out of HIZ is not proven conversion" in out and "out of HIZ (with EN_HIZ = 0" in out
+    assert "Out of HIZ is not proven conversion" in page
+
+
+def t_v_a10_boot_permits_initialization():
+    """Recheck B2: telemetry absent from boot is split into (2i) the normal initialization from POR, permitted, verified and
+    logged, and (2ii) no telemetry-caused change after it, every write at or under 4.70 A."""
+    A = _apply_rows()
+    row = A.V_A10
+    i1, i2, i3 = row.find("(2i)"), row.find("(2ii)"), row.find("(3)")
+    assert 0 < row.find("(1) after initialization") < i1 < i2 < i3, "V-A10's parts are not (1) after initialization, (2i), (2ii), (3)"
+    seg_i, seg_ii = row[i1:i2], row[i2:i3]
+    for word in ("permitted and verified", "logged from POR", "RSNS_RAC = 0b", "IIN_HOST 4.70 A", "VINDPM", "InputVoltage",
+                 "at or under 4.70 A"):
+        assert word in seg_i, "(2i) lacks: %s" % word
+    assert "no write" not in seg_i and "no further write" not in seg_i, "(2i) forbids the initialization writes"
+    for word in ("after initialization", "no change caused by the missing telemetry", "at or under 4.70 A"):
+        assert word in seg_ii, "(2ii) lacks: %s" % word
+    assert "absent from boot: no write" not in row
+    page = open(os.path.join(REC, "L4E5-SOURCE-CONTROL.md"), encoding="utf-8").read()
+    assert "(2i) Normal initialization from POR, permitted and verified" in page
+    assert "In both cases there must be no write" not in page
 
 
 def t_no_dash_characters_in_the_record():
