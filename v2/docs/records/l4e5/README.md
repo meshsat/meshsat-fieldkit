@@ -11,7 +11,8 @@ contract rows and bench rows.
 | `l4e5_source_control.out` | Its output, committed |
 | `apply_fw_a16.py` | DRAFT for the coordinator. It restates FW-A16 in `v2/docs/HW-FW-CONTRACT.md`, adds FW-A18 and V-A06 to V-A10, and touches FW-E04, FW-C01, section 3.1's heading and the change record. Usage: `apply_fw_a16.py TARGET [--check \| --write]`. The default `--check` writes nothing, and a second application is refused. It was run only on scratch copies, never on the tree |
 | `checks/astra-check-l4e5-1.md` | The engineering collaborator's one check (NOT YET: B1, V-A09's HIZ thresholds; B2, a telemetry fault-injection row; B3, the 49.7 W boundary restricted to H3; two minors), filed by the coordinator. The page's last section, "The check, and what changed", maps each item to its change |
+| `checks/astra-check-l4e5-2.md` | The collaborator's targeted recheck (NOT YET: HIZ release stated as conversion; V-A10's boot case forbidding FW-A16's initialization), filed by the coordinator; answered in the page's same section |
 | `README.md` | This list |
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e5.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e5`; it reports 15 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e5`; it reports 17 tests.

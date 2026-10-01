@@ -26,9 +26,13 @@ as written.
     - the zero-current target, the pin at 1.0 V (p.6's equation at no current): 8.750 V (8.706 to 8.794 V);
     - HIZ entry, the pin falling to 0.4 V (p.17 VHIZ_HIGH, p.6): 8.508 V (8.466 to 8.551 V);
     - HIZ exit, the pin rising to 0.8 V (p.17 VHIZ_LO, p.6, p.27): 8.669 V (8.626 to 8.713 V).
-  - So U3 is certainly in HIZ below 8.466 V, 0.156 V above the restart guard's highest falling threshold of 8.31 V, and
-    certainly converting above 8.713 V. Between the two, the state depends on the sweep's direction and on the comparator's
-    unprinted spread. At 8.70 V the pin is at 0.876 V nominal, so HIZ is not the specified state there.
+  - So U3 is certainly in HIZ below 8.466 V, 0.156 V above the restart guard's highest falling threshold of 8.31 V, and out
+    of HIZ above 8.713 V while EN_HIZ = 0b (ChargeOption3 REG0x35 bit 7, reset 0b, p.64; p.27). Between the two, the state
+    depends on the sweep's direction and on the comparator's unprinted spread. At 8.70 V the pin is at 0.876 V nominal, so HIZ
+    is not the specified state there.
+  - Out of HIZ is not proven conversion. TI specifies regulation by the pin only from 1.15 V on the pin (p.10), which is VIN_RAW
+    8.810 V nominal (8.766 to 8.854 V). Between HIZ release and 8.854 V, V-A09 records the switching and the input current and
+    asserts neither.
   - The knee's slope at the pin is 2.484 V/V, so it needs a gain stage, not a divider (OWED).
   - U3 uses the lower of the pin and IIN_HOST, reads the pin continuously, and EN_EXTILIM is 1b at reset (MAKER pp.6, 26 and
     63).
@@ -136,7 +140,7 @@ and 0.93.
 
 | Behaviour | Steady state | Transients |
 |---|---|---|
-| **Startup** (VIN_RAW unknown to firmware; U3 resets IIN_HOST once to 3.25 A after every adapter removal, SLUSE66A 9.3.6 p.26 and p.80) | The pin bounds U3's input to the line at the actual VIN_RAW from the first switching cycle, with no host. At POR, IIN_HOST holds its power-on value. p.80 annotates the reset as 2000h in the heading and 4100h in the figure, and Table 9-50's reset bits read 0x20 (3.2 A in the 5 mOhm terms of RSNS_RAC = 1b). Over R16, either annotation is at most 3.25 A of board current (INFERRED). V-A09 records the raw register and RSNS_RAC before and after FW-A01. The POR value is kept apart from the one-time 3.25 A reset after a removal. Firmware writes 4.70 A after FW-A01. On every removal, on CHRG_OK or FE_PGOOD falling (EXP_INT), it writes 4.70 A while the adapter is absent: 9.3.6 allows the write under battery only and does not reset it again at the next plug-in. Highest value ever held: 4.70 A | U3 is certainly in HIZ below 8.466 V and certainly converting above 8.713 V. HIZ entry falls at the pin's 0.4 V (8.508 V nominal), HIZ exit at the pin's 0.8 V (8.669 V nominal), and the zero-current target at 1.0 V (8.750 V). No firmware timing is involved. INCONCLUSIVE until V-A09's sweeps |
+| **Startup** (VIN_RAW unknown to firmware; U3 resets IIN_HOST once to 3.25 A after every adapter removal, SLUSE66A 9.3.6 p.26 and p.80) | The pin bounds U3's input to the line at the actual VIN_RAW from the first switching cycle, with no host. At POR, IIN_HOST holds its power-on value. p.80 annotates the reset as 2000h in the heading and 4100h in the figure, and Table 9-50's reset bits read 0x20 (3.2 A in the 5 mOhm terms of RSNS_RAC = 1b). Over R16, either annotation is at most 3.25 A of board current (INFERRED). V-A09 records the raw register and RSNS_RAC before and after FW-A01. The POR value is kept apart from the one-time 3.25 A reset after a removal. Firmware writes 4.70 A after FW-A01. On every removal, on CHRG_OK or FE_PGOOD falling (EXP_INT), it writes 4.70 A while the adapter is absent: 9.3.6 allows the write under battery only and does not reset it again at the next plug-in. Highest value ever held: 4.70 A | U3 is certainly in HIZ below 8.466 V and out of HIZ above 8.713 V while EN_HIZ = 0b, and regulates by the pin from 8.854 V (the pin's printed 1.15 V, p.10); between HIZ release and 8.854 V conversion is unproven. HIZ entry falls at the pin's 0.4 V (8.508 V nominal), HIZ exit at the pin's 0.8 V (8.669 V nominal), and the zero-current target at 1.0 V (8.750 V). No firmware timing is involved. INCONCLUSIVE until V-A09's sweeps |
 | **Source change** (the tracker and the vehicle ORed, each appearing or disappearing) | No firmware action. The higher source carries the bus. The front end's input stays inside the line for either, and for both together | The pin is read continuously (p.6) and acts through U3's input loop and the front end's loop (crossover 0.71 to 3.6 kHz, gen_sch_a.py, MODELED). U3's loop response is not printed: INCONCLUSIVE. It must beat the entry's 3.13 ms fault timeout and keep VIN_RAW above 8.41 V, the guard's highest 8.31 V plus 0.1 V (V-A08) |
 | **Missing or stale telemetry** (VIN_MON older than 3 s: FW-E04's 1 s is not transient evidence) | Changes no setting: the line is hardware. Diagnostic only: with VIN_MON fresh and U3's input ADC above the pin's band by 0.3 A in three readings, report FW-A18 failed and fall back to the previous rule (the line at the reported VIN_RAW, at most 4.70 A; 1.55 A while stale). Verified by V-A10's fault injection | None needed |
 
@@ -189,22 +193,33 @@ need 6 mOhm.
   never reaches 3.76 V, VIN_RAW never falls below 8.41 V, and FE_PGOOD never drops. Peak and settling time recorded.
 - **V-A09, startup and the knee.** With no host and U3 asked for full charge, VIN_RAW is swept quasi-statically (10 mV steps,
   each held 1 s) from 9.5 V down to 8.35 V and back up.
-  - Pass: U3 converting at every VIN_RAW above 8.713 V, and in HIZ at every VIN_RAW below 8.466 V.
+  - EN_HIZ is read as 0b first. Pass, each with its band:
+    - U3 in HIZ at every VIN_RAW below 8.466 V;
+    - out of HIZ at every VIN_RAW above 8.713 V;
+    - regulating its input current by the pin, at most the line's band, from 8.854 V up. That is where the pin enters TI's
+      printed 1.15 to 4 V range (8.810 V nominal, 8.766 to 8.854 V).
+  - Between HIZ release and 8.854 V, the switching (CH_SW1) and the input current are recorded. Conversion is not asserted
+    there.
   - Recorded with the pin's voltage, each against its band: the HIZ entry on the falling sweep (8.508 V predicted, 8.466 to
     8.551 V), the HIZ exit on the rising sweep (8.669 V, 8.626 to 8.713 V) and the 1.0 V zero-current target (8.750 V,
     8.706 to 8.794 V).
-  - U3's input current at most the line's band from 8.854 V up, where the pin enters the printed 1.15 to 4 V range. Below
-    that it is recorded, and it must be at least 1.068 A at 9.0 V.
+  - U3's input current must be at least 1.068 A at 9.0 V.
   - Then shore at 9, 12 and 24 V.
   - With the host: the raw IIN_HOST and RSNS_RAC at POR, before FW-A01 and after it; the one-time reset after a removal; then
     4.70 A.
   - The actual thresholds stay INCONCLUSIVE until measured.
-- **V-A10, telemetry fault injection.** Every kit-bus write is logged, with U3 asked for more than its limit.
-  - Reports stopped, then resumed: the sensor controller's reports stop for 30 s and then resume, on shore at 12 V and on the
-    panel simulator at 50 W.
-  - Telemetry absent from boot: the same two runs with no reports from the start.
-  - In both cases there must be no write to IIN_HOST, ChargeOption2 or InputVoltage, IIN_HOST stays at 4.70 A, and U3's
-    input current stays inside the band.
+- **V-A10, telemetry fault injection.** Every kit-bus write is logged from POR, with U3 asked for more than its limit, on
+  shore at 12 V and on the panel simulator at 50 W.
+  - **(1) Reports stopped, then resumed, after initialization.** The sensor controller's reports stop for 30 s and then
+    resume. There must be no write caused by the stop or the resumption, IIN_HOST must stay at 4.70 A, and U3's input current
+    must stay inside the band.
+  - **(2) Telemetry absent from boot, in two parts.**
+    - (2i) Normal initialization from POR, permitted and verified. The raw IIN_HOST, ChargeOption1, ChargeOption2 and
+      InputVoltage are logged from POR. Then come FW-A01's RSNS_RAC = 0b, IIN_HOST 4.70 A, VINDPM about 18.5 V once FE_PGOOD
+      is high, and EN_EXTILIM kept 1b, each write at or under 4.70 A.
+    - (2ii) After initialization, no change caused by the missing telemetry. There must be no further write to IIN_HOST,
+      ChargeOption2 or InputVoltage except FW-A16 (b)'s after an adapter removal. Every write stays at or under 4.70 A,
+      IIN_HOST stays at 4.70 A, and U3's input current stays inside the band.
   - The network seen to fail: a laboratory supply on VIN_RAW at 12 V in place of the entry, the pin lifted above 4.0 V through
     a test link, for at most 10 s.
     - Two readings above 2.623 A (the band's 2.323 A plus 0.3 A) must not trigger the fallback; the third in a row must.
@@ -219,11 +234,19 @@ changed in the page, the script and its output, `apply_fw_a16.py` and the tests:
 
 | Item | What changed |
 |---|---|
-| B1, V-A09 required HIZ below 8.75 V, which contradicts the knee | The knee's three thresholds are computed from the transfer function and TI's levels: zero current at the pin's 1.0 V (8.750 V), HIZ entry at 0.4 V (8.508 V) and HIZ exit at 0.8 V (8.669 V). The network's +-0.5 % is carried through each, and also through the printed regulation range's start (8.810 V). U3 is certainly in HIZ below 8.466 V and certainly converting above 8.713 V. TI's current-loop error is no longer folded into the comparator, which moved the latch margin from 0.12 V to 0.156 V. V-A09 is rewritten as falling and rising sweeps, and FW-A18 and V-A08 (8.41 V) follow. Tests `t_v_a09_thresholds_agree_with_the_knee` and `t_knee_fits_between_the_latch_and_reqs_floor` |
+| B1, V-A09 required HIZ below 8.75 V, which contradicts the knee | The knee's three thresholds are computed from the transfer function and TI's levels: zero current at the pin's 1.0 V (8.750 V), HIZ entry at 0.4 V (8.508 V) and HIZ exit at 0.8 V (8.669 V). The network's +-0.5 % is carried through each, and also through the printed regulation range's start (8.810 V). U3 is certainly in HIZ below 8.466 V and out of HIZ above 8.713 V (restated after the recheck). TI's current-loop error is no longer folded into the comparator, which moved the latch margin from 0.12 V to 0.156 V. V-A09 is rewritten as falling and rising sweeps, and FW-A18 and V-A08 (8.41 V) follow. Tests `t_v_a09_thresholds_agree_with_the_knee` and `t_knee_fits_between_the_latch_and_reqs_floor` |
 | B2, the stale rule and the diagnostic had no verification | V-A10 added: reports stopped and resumed, telemetry absent from boot, and the network made to fail, with pass criteria. The two-reading no-trigger and third-reading trigger, the 2.05 A fallback at 12 V, 1.55 A once stale, and no write above 4.70 A. The script values the trip and the fallback. Test `t_v_a10_fault_injection_is_bounded` |
 | B3, the 49.7 W boundary was claimed for every source-blind mechanism | Restricted to H3. The script evaluates the check's example line (38.748 W; 12.342 V at 40 W), and the necessity of source identity is withdrawn. The trade that does hold is stated: for any source-blind line, the 12 V solar boundary equals its 12 V vehicle charge power. H3 is kept, with reasons, and the 7b.7 rewording is kept. Test `t_b3_the_12_v_boundary_is_h3s_and_the_example_trades_the_vehicle` |
 | Minor 1, the POR value was stated unqualified | p.80's 2000h and 4100h annotations and Table 9-50's reset bits are read back. The POR value (at most 3.25 A of board current, INFERRED) is kept apart from the removal reset. V-A09 records the raw IIN_HOST and RSNS_RAC before and after FW-A01. The 4.70 A ceiling stands. Test `t_startup_source_change_and_stale_rules_never_exceed_their_limits` |
 | Minor 2, nominal capacitance called an upper bound | The collapse times are now nominal estimates, pending evidence of the effective capacitance (out 2 and above). Test `t_collapse_times_are_nominal_estimates` |
+
+**The targeted recheck** (`checks/astra-check-l4e5-2.md`) accepted the revised arithmetic, the fallback coverage, the
+H3-specific conclusion and both minors. Two acceptance statements remained, and this round changes them:
+
+| Item | What changed |
+|---|---|
+| Recheck B1, HIZ exit stated as guaranteed conversion above 8.713 V | "Out of HIZ above 8.713 V while EN_HIZ = 0b" replaces "converting". That applies to the decision, the startup row, FW-A18 (which now also keeps EN_HIZ = 0b) and the script's output, which now reads EN_HIZ back from p.64 and p.27's exit condition. V-A09's pass is in HIZ below 8.466 V, out of HIZ above 8.713 V, and regulating by the pin from 8.854 V (the pin's printed 1.15 V, p.10), each with its band. Between HIZ release and 8.854 V the switching and current are recorded, not asserted. Test `t_hiz_release_is_not_asserted_as_conversion` fails if any of the page, FW-A18, V-A09 or the output asserts conversion at HIZ release |
+| Recheck B2, V-A10's boot case forbade FW-A16's own initialization | The boot case is split. (2i) is normal initialization from POR, permitted and verified, with the raw registers logged from POR. (2ii) is, after initialization, no change caused by the missing telemetry, and every write at or under 4.70 A. Case (1) runs after initialization. Test `t_v_a10_boot_permits_initialization` fails if the boot case forbids the initialization writes |
 
 ## For the generator owners (OWED, nothing applied)
 
