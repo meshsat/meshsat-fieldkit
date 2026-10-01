@@ -247,3 +247,180 @@ def t_the_record_names_the_drafts_codes_and_never_wrote_the_tree():
     for name, (n_e, touches, r10_once, codes_ok, codes) in R["drafts"].items():
         assert n_e > 0 and not touches and r10_once and codes_ok, (name, codes)
     assert _sha(GEN_E) == _CACHE["gen_before"], "the tree's gen_sch_e.py changed during the record's run"
+
+
+# ---------------------------------------------------------------- the qualification of the 100 W bound (owner, 1 October 2026)
+QUAL_IDS = {"EA2", "A7", "LINE", "TCR", "HOLD", "TJ"}
+CLAR = os.path.join(REC, "clarification")
+
+
+def t_every_unprinted_row_is_classified():
+    R = _R()
+    rows = R["qual_rows"]
+    assert {r_["id"] for r_ in rows} == QUAL_IDS and len(rows) == len(QUAL_IDS), [r_["id"] for r_ in rows]
+    for r_ in rows:
+        for k in ("bound", "stability", "protection"):
+            assert isinstance(r_[k], bool), (r_["id"], k)
+        for k in ("why_bound", "why_stability", "why_protection", "sheet", "other", "conservative", "qualification"):
+            assert isinstance(r_[k], str) and len(r_[k]) > 10, "%s has no %s" % (r_["id"], k)
+        for outcome, text in r_["small"].items():
+            assert r_[outcome], "%s calls its %s effect small but does not mark it" % (r_["id"], outcome)
+            assert "%" in text and any(ch.isdigit() for ch in text), "%s's small %s effect carries no number" % (r_["id"], outcome)
+    for k, v in R["unprinted_rows"].items():
+        assert not v[1], "%s is a full-range row, not an unprinted one" % k
+
+
+def t_a_row_that_moves_the_bound_has_an_assumption_a_qualification_and_a_margin():
+    R = _R()
+    moving = [r_ for r_ in R["qual_rows"] if r_["bound"]]
+    assert moving, "no row moves the bound"
+    for r_ in moving:
+        assert r_["conservative"] and r_["qualification"] and r_["breakeven"], r_["id"]
+        margin = r_["margin_w"] if r_["margin_w"] is not None else r_.get("margin_k")
+        assert margin is not None and margin > 0, "%s keeps no positive margin" % r_["id"]
+        if not r_["resolved"] and r_["id"] != "TJ":
+            assert r_["clarification"], "%s has no clarification request" % r_["id"]
+        if r_["id"] == "TJ":
+            assert "design verification" in r_["qualification"]
+        else:
+            assert "warrants" in r_["qualification"] and "supporting evidence, not a production guarantee" in r_["qualification"], r_["id"]
+    assert R["cons"]["joint"] < 100.0 and all(R["cons"][k] < 100.0 for k in ("ea2", "line", "tcr"))
+
+
+def t_clarification_texts_exist_and_contact_no_one():
+    R = _R()
+    named = {r_["clarification"] for r_ in R["qual_rows"] if r_["clarification"]}
+    assert named == {"analog-devices-lt8705a.txt", "milliohm-hojlr2512.txt"}, named
+    for nm in named:
+        p = need(os.path.join(CLAR, nm), "a clarification text")
+        t = open(p, encoding="utf-8").read()
+        assert t.startswith("DRAFT FOR THE OWNER TO SEND.") and "contacts no outside party" in t, nm
+        assert "\u2013" not in t and "\u2014" not in t and all(ord(c) < 128 for c in t), "%s is not plain ASCII text" % nm
+    ad = " ".join(open(os.path.join(CLAR, "analog-devices-lt8705a.txt"), encoding="utf-8").read().split())
+    assert "LT8705AIUHF" in ad and "EA2" in ad and "line regulation" in ad and "VC" in ad
+    assert "A7" in ad and "common mode" in ad and "transfer error" in ad and "while switching" in ad, "the A7 question is missing"
+    mo = " ".join(open(os.path.join(CLAR, "milliohm-hojlr2512.txt"), encoding="utf-8").read().split())
+    assert "HoJLR2512-3W-15mR-1%" in mo and "-40 C to +25 C" in mo
+    for t in (ad, mo):
+        assert "warrant" in t and "supporting" in t and "production guarantee" in t, "a draft lets characterization stand as a guarantee"
+
+
+def t_result_is_conditional_exactly_when_an_unresolved_row_moves_the_bound():
+    R = _R()
+    M = _CACHE["M"]
+    assert R["bound_status"] == M.bound_status(R["qual_rows"]) == "CONDITIONAL"
+    base = [dict(r_) for r_ in R["qual_rows"]]
+    resolved = [dict(r_, resolved=True) for r_ in base]
+    assert M.bound_status(resolved) == "UNCONDITIONAL"
+    only_hold_open = [dict(r_, resolved=(r_["id"] != "HOLD")) for r_ in base]
+    assert M.bound_status(only_hold_open) == "UNCONDITIONAL", "a row that does not move the bound made it conditional"
+    for k in ("EA2", "A7", "LINE", "TCR", "TJ"):
+        one_open = [dict(r_, resolved=(r_["id"] != k)) for r_ in base]
+        assert M.bound_status(one_open) == "CONDITIONAL", k
+    text = "\n".join(M.render(R))
+    assert "THE RESULT: CONDITIONAL on EA2, A7, LINE, TCR, TJ." in text
+
+
+def t_the_corners_bound_the_permitted_range():
+    R = _R()
+    assert min(R["dpdv"]) > 0, "the power is not increasing in the input voltage at every vertex"
+    for chk in (R["main_chk"], R["chk_printed"], R["chk_floor"], R["chk_drift"]):
+        assert all(abs(w[1] - 25.0) < 1e-9 for _l, w, _n in chk), "a stack's worst is not at the 25 V vertex"
+    hl = R["p_hold_lo"]
+    assert hl["a"] < R["main_chk"][0][1][0] and hl["c"] < R["chk_floor"][0][1][0] and hl["joint"] < R["cons"]["joint"], \
+        "the hold's lowest is not below the 25 V corner under a matching stack"
+    t_be_a, t_be_c = R["rs_t_be"]
+    assert (t_be_a is None or t_be_a > R["ends"][1][1]) and t_be_c is not None and t_be_c > R["ends"][1][1] + 50.0
+    assert R["ends"][0][1] == R["t_cold"] and R["ends"][1][2] == R["t_air"]
+    assert R["outside"]["voc40"] > 25.0, "below -20 C the candidate is not outside REQ-016's window"
+
+
+def t_the_sheet_is_the_owners_official_url():
+    R = _R()
+    pv = R["prov"]
+    assert pv["url"] == "https://www.analog.com/media/en/technical-documentation/data-sheets/8705af.pdf"
+    assert pv["snapshot"] == "20250322064938" and pv["sha"].startswith("8f552a0b57677bfa")
+    assert pv["sha"] == hashlib.sha256(open(os.path.join(ROOT, "v2/vendor/power/lt8705a.pdf"), "rb").read()).hexdigest()
+
+
+def t_the_full_range_tcr_swap_is_evaluated_and_not_taken():
+    R = _R()
+    w = R["wsl"]
+    assert w["p_floor"] > 100.0, "the alternative passes the design floor at 23.2k: the swap would cost nothing"
+    assert w["pick"] is not None and w["pick"][0] > R["rm"] and w["cost"] > 0.0
+    for name, (_n, _t, _r, codes_ok, codes) in R["drafts"].items():
+        assert "C844695" not in codes
+    assert "C2903494" in R["drafts"]["apply_gen_sch_e_input_limit.py"][4]
+
+
+def t_a7_is_a_condition_with_its_sensitivity():
+    """B1 of astra-check-l4e7q-1: A7's gm row is printed at a 50 mV differential with CSPIN at 5.025 V; applying it at the
+    design's common mode and differential is a condition of the bound, with its sensitivity printed."""
+    R = _R()
+    a7 = [r_ for r_ in R["qual_rows"] if r_["id"] == "A7"][0]
+    assert a7["bound"] and not a7["resolved"] and a7["clarification"] == "analog-devices-lt8705a.txt"
+    assert "5.025 V" in a7["sheet"] and "50 mV" in a7["sheet"] and "TYPICAL" in a7["sheet"] and "against the differential only" in a7["sheet"]
+    q = R["a7q"]
+    assert abs(q["be"]["joint"] - 0.939053) < 1e-6 and abs(q["loss"]["joint"] - 0.100779) < 1e-5, (q["be"]["joint"], q["loss"]["joint"])
+    assert q["be"]["a"][0] < q["be"]["c"][0] < q["be"]["joint"] < R["gm_lo"], "the break-evens are not ordered A, C, together"
+    assert q["cm"][1] == 25.0 and q["cm"][0] > 5.025, "the design's common mode is not away from the test point"
+
+
+def t_tcr_and_line_carry_their_small_nonzero_effects():
+    """B2 of astra-check-l4e7q-1: the cold TCR moves the sense-path loop gain and the current at which the fault trips, not the
+    comparator's threshold; the fault-to-limit ratio counts the line and EA2 allowances; the line couples the source voltage."""
+    R = _R()
+    rows = {r_["id"]: r_ for r_ in R["qual_rows"]}
+    tcr, line = rows["TCR"], rows["LINE"]
+    assert tcr["stability"] and tcr["protection"] and set(tcr["small"]) == {"stability", "protection"}
+    e = R["tcr_effects"]
+    assert abs(100 * e["loop"] + 0.2255) < 5e-4 and abs(100 * e["trip"] - 0.2260) < 5e-4, (e["loop"], e["trip"])
+    assert "threshold voltage" in tcr["why_protection"] and "does not move" in tcr["why_protection"] and "trips" in tcr["why_protection"]
+    fr = R["fault_ratio"]
+    assert abs(fr["reg_c"] - 1.253674623) < 1e-9 and abs(fr["c"] - 1.236365) < 5e-7, (fr["reg_c"], fr["c"])
+    assert fr["c"] < fr["a"] < 1.55 / 1.229, "the ratio leaves out the line or EA2 allowance"
+    assert ("%.6f" % fr["c"]) in tcr["why_protection"] and "1.55 / 1.229" not in tcr["why_protection"]
+    assert line["stability"] and "stability" in line["small"] and "couples" in line["why_stability"]
+    assert R["line_coupling"]["assumed"] > R["line_coupling"]["printed"] > 0
+
+
+def t_thermal_coupling_hold_floor_junction_and_panel_scenarios():
+    """M1 to M4 of astra-check-l4e7q-1."""
+    R = _R()
+    th = R["thermal"]
+    assert abs(th["mixed"]["a"] - 96.248120559) < 1e-8 and abs(th["mixed"]["c"] - 99.674651953) < 1e-8, th["mixed"]
+    for k in ("a", "c", "joint"):
+        assert th["paired"][k] <= th["mixed"][k] + 1e-12 and th["sweep"][k] <= th["mixed"][k] + 1e-12 and th["mixed"][k] < 100.0
+    hl = R["p_hold_lo"]
+    assert 65.40 < hl["c"] < 65.42 and 65.55 < hl["joint"] < 65.57 and hl["c"] < R["chk_floor"][0][1][0]
+    tj = [r_ for r_ in R["qual_rows"] if r_["id"] == "TJ"][0]
+    assert "INFERRED estimate" in tj["conservative"] and "not a demonstrated upper bound" in tj["conservative"]
+    assert "not switching, EXTVCC = 0" in tj["sheet"]
+    o = R["outside"]
+    assert abs(o["p_panel_soak"] - 122.695) < 0.01 and o["p_panel_cold"] < o["p_panel_soak"]
+    text = "\n".join(_CACHE["M"].render(R))
+    sec8 = text.split("8. BENCH ROWS")[1].split("9. QUALIFICATION")[0]
+    assert ("%.1f W, a warmed" % o["p_panel_cold"]) in sec8 and ("%.1f W, a cold-soaked" % o["p_panel_soak"]) in sec8
+
+
+def t_the_junction_estimate_is_never_called_a_bound_and_line_keeps_its_coupling():
+    """The residues of astra-check-l4e7q-2: U5's junction (about 105.4 C) is an INFERRED estimate everywhere, never "at most",
+    an "upper bound" or a "limit"; LINE's stability wording drops "no gain of its own" and keeps its quantified coupling."""
+    import re
+    R = _R()
+    tj = "%.1f" % R["tj_hot"]
+    texts = {"out": open(os.path.join(REC, "l4e7_stage_settings.out"), encoding="utf-8").read()}
+    for nm in ("L4E7-STAGE-SETTINGS.md", "L4E7-QUALIFICATION.md", "README.md"):
+        texts[nm] = open(os.path.join(REC, nm), encoding="utf-8").read()
+    for nm, t in texts.items():
+        flat_ = " ".join(t.split())
+        assert not re.search(r"at most (about )?%s" % re.escape(tj), flat_), "%s calls the junction 'at most %s C'" % (nm, tj)
+        assert not re.search(r"%s C? ?(\w+ ){0,3}(limit|upper bound)" % re.escape(tj), flat_), "%s calls %s C a limit or bound" % (nm, tj)
+        assert not re.search(r"(limit|upper bound)( of| at)? (about )?%s" % re.escape(tj), flat_), "%s calls %s C a limit or bound" % (nm, tj)
+        rest = flat_.replace("not a demonstrated upper bound", "").replace("not a demonstrated bound", "")
+        assert "upper bound" not in rest, "%s calls something an upper bound outside the negation" % nm
+        assert "no gain of its own" not in t, "%s keeps 'no gain of its own'" % nm
+    assert "TJ estimated about %s C (INFERRED)" % tj in " ".join(texts["out"].split())
+    line = [r_ for r_ in R["qual_rows"] if r_["id"] == "LINE"][0]
+    assert "no gain of its own" not in line["why_stability"] and "couples a moving source voltage" in line["why_stability"]
+    assert "%.4f %%" % (2.0 * R["line_p"]) in line["why_stability"] and "setpoint" in line["small"]["stability"]

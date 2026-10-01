@@ -1,0 +1,21 @@
+{
+ "what": "LCSC public product-detail answer for C844695 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C844695), no login; kept fields only",
+ "read_utc": "2026-10-01T16:49Z",
+ "read_by": "task L4-E7 (MESHSAT-1357)",
+ "role": "an RSENSE1 alternative evaluated by L4-E7's qualification (a TCR stated from -55 to +155 C), not taken",
+ "code": "C844695",
+ "brand": "VISHAY",
+ "model": "WSL2512R0150FEA",
+ "package": "2512",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/548f4c1b2301e9c8a8b168347d5344c1.pdf?productCode=C844695",
+ "pdf_sha256": "1b5c68910aa562a0dcce11ec572b4dd1febe63cfb90d20f3eaf5f9c7e01b59ac",
+ "pdf_note": "fetched at read_utc; Vishay Dale WSL, Document Number 30100, Revision 23-Nov-2023; held back (v2/vendor/passives/held/, fetched by ../fetch_held_back.py)",
+ "stock": 13410,
+ "params": {
+  "Power(Watts)": "1W",
+  "Resistance": "15mΩ",
+  "Type": "Current Sense Resistor",
+  "Tolerance": "±1%",
+  "Temperature Coefficient": "±75ppm/℃"
+ }
+}
