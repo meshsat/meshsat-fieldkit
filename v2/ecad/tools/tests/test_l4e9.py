@@ -135,6 +135,15 @@ def t_every_downstream_item_has_an_owner_and_an_acceptance():
     assert {"IMPLEMENTATION", "LAYOUT", "TEST"} <= kinds
 
 
+def t_the_page_counts_are_the_registers():
+    _M()
+    rows = _md_rows(REG, "| ID | Kind |")
+    page = open(PAGE, encoding="utf-8").read()
+    assert "holds %d items" % len(rows) in page and "%d items, each with one owner" % len(rows) in page, "the page's register count"
+    m = re.search(r"register: (\d+) items", _C["text"])
+    assert m and int(m.group(1)) == len(rows), "the output's register count"
+
+
 def _drafts():
     names = set()
     for rec in ("l4e4", "l4e5", "l4e6", "l4e7"):
@@ -216,7 +225,9 @@ def t_the_page_interface_table_agrees_with_the_output():
     for r in rows:
         status = r[-1].split(" (")[0]
         assert status == st[r[0]][1], "%s: the page says %s, the output %s" % (r[0], status, st[r[0]][1])
-        assert r[2].strip() and r[3].strip() and r[6].strip(), "%s lacks a voltage, a current or a settling record on the page" % r[0]
+        assert len(r) == 9, "%s does not have the nine columns" % r[0]
+        assert all(x.strip() for x in r[2:8]), "%s lacks a voltage, a current, losses, a thermal assumption, protection or a settling record on the page" % r[0]
+        assert " / " in r[2] and " / " in r[3] and " / " in r[6], "%s does not give both sides on the page" % r[0]
 
 
 def t_layer5_handover_entries_name_printed_rows():

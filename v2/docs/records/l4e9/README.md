@@ -21,4 +21,4 @@ downstream register and the Layer 5 handover. It edits no generator, registry re
 landed; the rows and register items that wait on it read PENDING and are re-run when it lands.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 15 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 16 tests.
