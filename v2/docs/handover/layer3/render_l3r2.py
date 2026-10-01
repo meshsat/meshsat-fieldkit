@@ -388,14 +388,8 @@ def dispositions(req, dec, data):
 # commit, or a registry changed after the acceptance, kept it valid. An acceptance now carries a content manifest and
 # holds only while the revision it names is a commit of this repository that holds exactly that content and the tree
 # still holds it. What the manifest hashes, and what it leaves out on purpose:
-#   requirements       the normative content of pcb_requirements.yaml (requirements_projection): the needs, every
-#                      owner ruling and session choice (the authority the baseline rests on), and every record's
-#                      demands, allocation, verification, authority links, accepted exceptions and residual risks, gates
-#                      and stage conditions, in canonical JSON; observations (readings, evidence and their bindings),
-#                      closure evidence and state, commentary and provenance are left out (B1 of the amendment's check
-#                      astra-check-l3am-1: the first projection kept the record fields of BASE_FIELDS only and missed
-#                      the rulings, the accepted exceptions and the stage conditions). REQUIREMENTS_FIELDS states, field
-#                      by field, which are in and why; a field the lists do not name is IN (fail closed).
+#   requirements       the normative content of pcb_requirements.yaml (requirements_projection, by the principle stated
+#                      at REQUIREMENTS_PRINCIPLE below), in canonical JSON.
 #   owner_brief        OWNER-INSTRUCTION-2026-09-30.md, the file's bytes (the current owner brief and the rulings quoted).
 #   change_record      DEFINITION-CHANGE-RECORD-L3.md, the file's bytes (the governing definition changes, D-38).
 #   acceptance_policy  l3r2.yaml as parsed (the gate's inputs, the status levels and their definitions), in canonical
@@ -417,93 +411,91 @@ def _canon(obj):
                                      default=str).encode("utf-8")).hexdigest()
 
 
-# THE REGISTRY'S FIELDS, IN OR OUT OF THE REQUIREMENTS DIGEST (B1, 1 October 2026). Every field the registry carries is
-# named here with its reason; requirements_projection keeps the IN fields and every field no list names (fail closed: a new
-# field binds until it is classified), and test_l3am holds that every field of the tree's registry is classified.
-# IN: what is demanded, of what, under whose authority, with which accepted exceptions, gates and conditions.
-# OUT: observations, closure evidence and closure state, commentary and provenance, bookkeeping.
-REQUIREMENTS_FIELDS = {
-    "top": {
-        "needs": "IN: the needs every record traces to, each statement quoted from CONOPS",
-        "needs_document": "IN: the document the needs are quoted from",
-        "owner_rulings": "IN: the owner's authority, ruling by ruling (projected by RULING_FIELDS)",
-        "session_choices": "IN: the session's choices under the standing rule (projected by CHOICE_FIELDS)",
-        "records": "IN: the requirements themselves (projected by RECORD_FIELDS)",
-        "schema_version": "OUT: the file's format version; a change of meaning shows in the fields it changes",
-        "registry": "OUT: the registry's name", "issue": "OUT: the tracker issue", "written": "OUT: the date written",
-        "baseline_state": "OUT: the H3 baselining's status label; acceptance is l3r2.yaml's baseline_acceptance",
-        "baseline_reviews": "OUT: the reviews filed against earlier baselines, closure evidence",
-        "sources_read_at": "OUT: the commit the sources were read at, provenance",
-        "needs_document_sha256": "OUT: the CONOPS pin, provenance; the needs' text it pins is IN",
-        "companion_documents": "OUT: documents a source may resolve to, provenance",
-        "open_items": "OUT: work tracking: items open and close as later layers progress",
-        "closed_items": "OUT: work tracking and the evidence each item closed with",
-    },
-    "ruling": {
-        "id": "IN: the ruling's identity", "authority": "IN: whose ruling it is", "ruled_on": "IN: when, which orders rulings",
-        "title": "IN: what it rules on", "ruling": "IN: the ruling's text", "words": "IN: the owner's own words",
-        "decides": "IN: the row or the record it decides", "decision": "IN: the decision index entry it rules",
-        "core_needs": "IN: prototype 1's scope", "deferred_named": "IN: the functions deferred by name",
-        "reversed_by": "IN: whether the ruling still holds",
-        "m1_hf": "IN: an answer's parameter", "m1_external": "IN: an answer's parameter",
-        "m1_tablet_charging": "IN: an answer's parameter", "weather_build": "IN: an answer's parameter",
-        "weather_share": "IN: an answer's parameter",
-        "source": "OUT: where the ruling is quoted, provenance",
-        "note": "OUT: the session's reading beside a ruling, which says it is not part of the ruling",
-    },
-    "choice": {
-        "id": "IN: the choice's identity", "authority": "IN: whose choice it is", "question": "IN: what was asked",
-        "taken": "IN: what was taken", "why": "IN: the basis the choice states", "under": "IN: the authority it was taken under",
-        "taken_on": "IN: when", "adds_core_needs": "IN: prototype 1's scope",
-        "superseded_by": "IN: whether it still holds", "superseded_on": "IN: whether it still holds",
-        "superseded_why": "IN: whether it still holds", "withdrawn_on": "IN: whether it still holds",
-        "withdrawn_why": "IN: whether it still holds",
-        "source": "OUT: where it is recorded, provenance", "drafted_as": "OUT: a draft alias, bookkeeping",
-        "closes": "OUT: the open items it closed, work tracking",
-    },
-    "record": {
-        "id": "IN: the record's identity", "kind": "IN: what kind of record", "parent": "IN: the need it traces to",
-        "statement": "IN: the demand", "acceptance": "IN: how success is judged",
-        "allocated_to": "IN: what carries it", "verification_method": "IN: how it is verified",
-        "verification_phase": "IN: when it is judged first", "final_phase": "IN: when it is judged finally",
-        "prototype_1": "IN: its applicability", "prototype_1_basis": "IN: its applicability",
-        "prototype_1_choice": "IN: the choice its scope rests on", "prototype_1_why": "IN: the stated basis of its scope",
-        "release_effect": "IN: what it gates", "status": "IN: its state as section 6 counts the baseline's",
-        "obligation": "IN: mandatory or a design objective", "objective_profile": "IN: the profile an objective is judged under",
-        "rulings": "IN: the owner rulings it rests on", "choices": "IN: the session choices it rests on",
-        "residual_risk_accepted": "IN: an accepted operating exception or residual risk, by the owner",
-        "stages": "IN: the stage conditions (projected by STAGE_FIELDS)",
-        "blocks": "IN: the records a feasibility record blocks", "holds_layout_entry": "IN: the boards it holds",
-        "blocker_ids": "IN: the items a feasibility record consists of", "closing_evidence": "IN: what closes a feasibility record, its criterion",
-        "owner": "IN: who carries a feasibility record", "title": "IN: a feasibility record's name",
-        "superseded_by": "IN: what replaces a superseded statement",
-        "evidence": "OUT: readings, added as layers judge the record", "evidence_bound_to": "OUT: the files a reading is bound to",
-        "evidence_class": "OUT: a reading's class", "evidence_phase": "OUT: a reading's phase", "evidence_result": "OUT: a reading",
-        "resolved_by": "OUT: how a conflict was resolved, closure evidence (its status is IN)",
-        "waits_on": "OUT: the open items it waits on, work tracking",
-        "satisfied_by": "OUT: the rules and decisions that judge it, extended as checks are implemented; what passes is the acceptance",
-        "rule_coverage": "OUT: how far those rules cover it, with satisfied_by",
-        "provisional": "OUT: a provisional figure, which gates nothing by the validator's rule",
-        "notes": "OUT: commentary, which later layers append to", "history": "OUT: what earlier readings said",
-        "stages_note": "OUT: commentary on the stages", "source": "OUT: where the text was read, provenance",
-        "source_check": "OUT: how the source was checked, provenance", "candidate": "OUT: the extraction's candidate id",
-        "conflict_ref": "OUT: a cross-reference to the conflict list", "feasibility_page": "OUT: the page a feasibility record lives on",
-    },
-    "stage": {
-        "stage": "IN: which stage", "requires": "IN: what closes the stage", "needs": "IN: the kinds of evidence it needs",
-        "holds": "IN: what it holds", "status": "OUT: the stage's closure state, progress",
-    },
+# THE REQUIREMENTS DIGEST, BY A PRINCIPLE (the amendment's recheck astra-check-l3am-2, B1 a second time: classifying field
+# by field missed the rulings first, then kept closure progress in; the method is now the principle below, tested on
+# closures the registry's own validator accepts).
+REQUIREMENTS_PRINCIPLE = (
+    "IN is whatever states what is demanded or authorised: the statements, the acceptance, the applicability, the "
+    "verification method and phase, the allocation, the owner's and the session's authority, the accepted risks and "
+    "exceptions, and the stage requirements (requires, needs, holds). OUT is any field that legitimately changes when "
+    "downstream work progresses while the demand is unchanged: closure state, closure evidence, derived summaries of stage "
+    "state, and readings; and commentary, provenance and bookkeeping, which demand nothing. An enumerated status that "
+    "mixes the two is projected to its normative distinction only (STATUS_PROJECTION), never to its progress value.")
+# Each field of the registry is placed in a category of the principle. A field no category names is IN (fail closed),
+# and test_l3am holds that every field of the tree's registry is placed.
+IN_CATEGORIES = {
+    "DEMAND": "what is demanded and how success is judged",
+    "APPLICABILITY": "where and when the demand applies, and how and when it is verified",
+    "ALLOCATION": "what carries the demand",
+    "AUTHORITY": "the owner's and the session's authority, and whether it still holds",
+    "ACCEPTED_RISK": "an accepted risk or operating exception",
+    "STAGE_REQUIREMENT": "what a stage requires, needs and holds",
 }
+OUT_CATEGORIES = {
+    "CLOSURE_STATE": "set when downstream work closes a stage, an item or a conflict",
+    "CLOSURE_EVIDENCE": "what a closure was done with",
+    "DERIVED_SUMMARY": "a summary the validator derives from other fields (stage state)",
+    "READING": "a reading, its class, phase and binding, or a provisional figure that gates nothing",
+    "JUDGING_INSTRUMENT": "the rules and decisions that judge a record, extended as checks are implemented (what passes is "
+                          "the acceptance, which is IN)",
+    "COMMENTARY": "notes and history, which later layers append to",
+    "PROVENANCE": "where a text was read or quoted",
+    "BOOKKEEPING": "names, ids and tracking that demand nothing",
+}
+REQUIREMENTS_FIELDS = {
+    "top": {"needs": "DEMAND", "needs_document": "DEMAND", "owner_rulings": "AUTHORITY", "session_choices": "AUTHORITY",
+            "records": "DEMAND", "schema_version": "BOOKKEEPING", "registry": "BOOKKEEPING", "issue": "BOOKKEEPING",
+            "written": "BOOKKEEPING", "baseline_state": "BOOKKEEPING", "baseline_reviews": "CLOSURE_EVIDENCE",
+            "sources_read_at": "PROVENANCE", "needs_document_sha256": "PROVENANCE", "companion_documents": "PROVENANCE",
+            "open_items": "CLOSURE_STATE", "closed_items": "CLOSURE_EVIDENCE"},
+    "ruling": {k: "AUTHORITY" for k in ("id", "authority", "ruled_on", "title", "ruling", "words", "decides", "decision",
+                                        "reversed_by", "m1_hf", "m1_external", "m1_tablet_charging", "weather_build",
+                                        "weather_share")},
+    "choice": {k: "AUTHORITY" for k in ("id", "authority", "question", "taken", "why", "under", "taken_on",
+                                        "superseded_by", "superseded_on", "superseded_why", "withdrawn_on", "withdrawn_why")},
+    "record": {k: "DEMAND" for k in ("id", "kind", "parent", "statement", "acceptance", "obligation", "objective_profile",
+                                     "release_effect", "status", "superseded_by", "title", "blocker_ids", "blocks",
+                                     "closing_evidence")},
+    "stage": {"stage": "STAGE_REQUIREMENT", "requires": "STAGE_REQUIREMENT", "needs": "STAGE_REQUIREMENT",
+              "holds": "STAGE_REQUIREMENT", "status": "CLOSURE_STATE", "closed_by": "CLOSURE_EVIDENCE"},
+}
+REQUIREMENTS_FIELDS["ruling"].update({"core_needs": "APPLICABILITY", "deferred_named": "APPLICABILITY",
+                                      "source": "PROVENANCE", "note": "COMMENTARY"})
+REQUIREMENTS_FIELDS["choice"].update({"adds_core_needs": "APPLICABILITY", "source": "PROVENANCE",
+                                      "drafted_as": "BOOKKEEPING", "closes": "CLOSURE_STATE"})
+REQUIREMENTS_FIELDS["record"].update({
+    "verification_method": "APPLICABILITY", "verification_phase": "APPLICABILITY", "final_phase": "APPLICABILITY",
+    "prototype_1": "APPLICABILITY", "prototype_1_basis": "APPLICABILITY", "prototype_1_choice": "APPLICABILITY",
+    "prototype_1_why": "APPLICABILITY", "allocated_to": "ALLOCATION", "owner": "ALLOCATION",
+    "rulings": "AUTHORITY", "choices": "AUTHORITY", "residual_risk_accepted": "ACCEPTED_RISK",
+    "stages": "STAGE_REQUIREMENT",
+    "holds_layout_entry": "DERIVED_SUMMARY", "resolved_by": "CLOSURE_EVIDENCE", "waits_on": "CLOSURE_STATE",
+    "evidence": "READING", "evidence_bound_to": "READING", "evidence_class": "READING", "evidence_phase": "READING",
+    "evidence_result": "READING", "satisfied_by": "JUDGING_INSTRUMENT", "rule_coverage": "JUDGING_INSTRUMENT",
+    "provisional": "READING",
+    "notes": "COMMENTARY", "history": "COMMENTARY", "stages_note": "COMMENTARY", "source": "PROVENANCE",
+    "source_check": "PROVENANCE", "candidate": "BOOKKEEPING", "conflict_ref": "BOOKKEEPING",
+    "feasibility_page": "BOOKKEEPING"})
+# A record's status mixes a normative distinction with progress. Per value (rules_lib.REQ_STATUS):
+#   DEFINED, TBD                         -> LIVE        normative: the record demands (whether its acceptance still
+#                                                        carries a TBD is the acceptance's own text, which is IN)
+#   SUPERSEDED                           -> SUPERSEDED  normative: the record no longer demands
+#   CONFLICT_OPEN, CONFLICT_RESOLVED     -> CONFLICT    the record is a conflict; open against resolved is progress
+#   FEASIBILITY_OPEN, FEASIBILITY_CLOSED -> FEASIBILITY the record is a feasibility blocker; open against closed is
+#                                                        progress (its stages' requirements are IN, their state OUT)
+# A stage's status (OPEN, CLOSED) is progress: OUT. A value this map does not name is kept as it is (fail closed).
+STATUS_PROJECTION = {"DEFINED": "LIVE", "TBD": "LIVE", "SUPERSEDED": "SUPERSEDED", "CONFLICT_OPEN": "CONFLICT",
+                     "CONFLICT_RESOLVED": "CONFLICT", "FEASIBILITY_OPEN": "FEASIBILITY", "FEASIBILITY_CLOSED": "FEASIBILITY"}
 
 
 def _keep(obj, kind):
-    """The fields of one entry that the requirements digest binds: every field but those REQUIREMENTS_FIELDS marks OUT."""
-    out = {k for k, why in REQUIREMENTS_FIELDS[kind].items() if why.startswith("OUT")}
+    """The fields of one entry the digest binds: every field but those REQUIREMENTS_FIELDS places in an OUT category."""
+    out = {k for k, cat in REQUIREMENTS_FIELDS[kind].items() if cat in OUT_CATEGORIES}
     return {k: v for k, v in (obj or {}).items() if k not in out}
 
 
 def requirements_projection(req):
-    """The normative content of the registry, as REQUIREMENTS_FIELDS states it."""
+    """The normative content of the registry, by REQUIREMENTS_PRINCIPLE."""
     pr = {k: v for k, v in _keep(req, "top").items() if k not in ("owner_rulings", "session_choices", "records", "needs")}
     pr["needs"] = [{"id": n.get("id"), "statement": p(n.get("statement"))} for n in req.get("needs") or []]
     pr["owner_rulings"] = {str(r.get("id")): _keep(r, "ruling") for r in req.get("owner_rulings") or []}
@@ -511,6 +503,7 @@ def requirements_projection(req):
     recs = {}
     for r in req.get("records") or []:
         x = _keep(r, "record")
+        if "status" in x: x["status"] = STATUS_PROJECTION.get(str(x["status"]), x["status"])
         if isinstance(x.get("stages"), list): x["stages"] = [_keep(s, "stage") for s in x["stages"]]
         recs[str(r.get("id"))] = x
     pr["records"] = recs

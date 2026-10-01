@@ -26,6 +26,7 @@ the requirements registry, and the acceptance of `b4b199d0` carries no content m
 | `apply_l3am_r05.py` | L3-R05: REQ-016's acceptance (protection judged apart from the window under TRN-001), history, source and satisfied_by; `l3r2.yaml`'s impacts entry |
 | `apply_layer_status_l3am.py` | `LAYER-STATUS.md`'s layer 3: the status wording, the status level and completion status restated, the solar figures labelled |
 | `apply_l3am_findings_closed.py` | the coordinator's, after the amendment's check: `review_findings` CLOSED, naming the check, only with a new accepted check of this amendment (the record format below); its `verify` is what `apply_l3r5_accept.py` runs again |
+| `checks/astra-check-l3am-2.md` | the collaborator's targeted recheck (job `cx12-l3am-recheck`, run `20261001T003321Z-1017926`, on `932e0f7f`; accepted: no), filed byte for byte: B2 and the scope PASS; B1 failed a second time, the other way (closure progress kept in the digest), with two minors on B2 (the exact header, the test files compared); answered by the principle above |
 | `checks/astra-check-l3am-1.md` | the engineering collaborator's one check of the amendment (job `cx10-l3am-check`, run `20260930T235755Z-972100`, on `29947b27`; accepted: no), filed byte for byte: L3-R01, L3-R02, L3-R05 and the supplied binding tests PASS; B1 (the requirements digest omitted the owner rulings, the session choices, the accepted exceptions and the stage conditions) and B2 (the findings could be closed with the pre-amendment check-l3r5-3) answered in the fix round below |
 
 Changed elsewhere: `v2/docs/handover/layer3/render_l3r2.py` (the solar case, its labels and guard; the acceptance's
@@ -63,12 +64,20 @@ registry change.
 
 ## The fix round on the amendment's check (1 October 2026)
 
-- **B1.** The requirements digest of the acceptance's manifest is now `render_l3r2.requirements_projection`: the needs,
-  every owner ruling and session choice, and every record's demands, allocation, verification, authority links, accepted
-  exceptions and residual risks, gates and stage conditions (`requires`, `needs`, `holds`); out: observations (readings,
-  evidence, bindings), closure evidence and state (a stage's status, a conflict's resolution text, open and closed items,
-  waits_on), commentary and provenance. `REQUIREMENTS_FIELDS` names every field the registry carries with its reason; a
-  field it does not name binds (fail closed), and the test holds that every field of the tree's registry is named.
+- **B1, after the recheck (`checks/astra-check-l3am-2.md`).** The requirements digest of the acceptance's manifest is
+  `render_l3r2.requirements_projection`, defined by a principle (`REQUIREMENTS_PRINCIPLE`), not field by field:
+  **IN is whatever states what is demanded or authorised**: the statements, the acceptance, the applicability, the
+  verification method and phase, the allocation, the owner's and the session's authority, the accepted risks and
+  exceptions, and the stage requirements (`requires`, `needs`, `holds`). **OUT is any field that legitimately changes when
+  downstream work progresses while the demand is unchanged**: closure state, closure evidence, derived summaries of stage
+  state (`holds_layout_entry`), and readings; and commentary, provenance and bookkeeping, which demand nothing. Each field
+  is placed in a category of the principle (`IN_CATEGORIES`, `OUT_CATEGORIES`, `REQUIREMENTS_FIELDS`; a field placed in
+  none binds). A record's status is projected to its normative distinction only (`STATUS_PROJECTION`): DEFINED and TBD to
+  LIVE, SUPERSEDED to SUPERSEDED, CONFLICT_OPEN and CONFLICT_RESOLVED to CONFLICT, FEASIBILITY_OPEN and FEASIBILITY_CLOSED
+  to FEASIBILITY; a stage's status (OPEN, CLOSED) and its `closed_by` are out. The positive fixtures are closures the
+  registry's own validator (`rules_lib.validate_requirements`) accepts with 0 errors: FEA-003's layout stage closed
+  (status CLOSED, `closed_by`, `holds_layout_entry` emptied), FEA-003 closed altogether, CFL-006 between open and
+  resolved, S-128 closed by a commit; each leaves the digest and a bound acceptance unchanged.
 - **B2.** `apply_l3am_findings_closed.py` closes the findings only with a new accepted check of this amendment, in the
   format below, bound to a reviewed revision that is the tip or its ancestor, with the amendment unchanged since; the
   checks filed before the amendment (check-l3r5-3 among them) are refused. `apply_l3r5_accept.py` verifies the same check
@@ -88,7 +97,8 @@ It is filed in `v2/docs/records/l3am/checks/` and listed as the newest entry of 
 `{record: <path>, sha16: <its sha256/16>, verdict: ACCEPTED, scope: "..."}`. The reviewed revision must be a commit that is
 the branch's tip or its ancestor, and the amendment must be unchanged since it: the requirements, the owner brief and the
 change record as the acceptance's manifest hashes them, `l3r2.yaml` as its policy hashes it (also without
-`independent_check` and `review_findings`), and every file of `l3amlib.AMENDMENT_FILES` byte for byte.
+`independent_check` and `review_findings`), and every file of `l3amlib.AMENDMENT_FILES` byte for byte. The three lines
+are compared exactly: no leading or trailing space and no carriage return.
 
 ## The re-acceptance (the coordinator's; D-39 remains a conditional authorisation)
 

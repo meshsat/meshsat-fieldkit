@@ -13,7 +13,8 @@ closed the findings with no check of the amendment). The record's first three li
     scope: Layer 3 amendment l3am (L3-R01 to L3-R05)
     reviewed-revision: <the full 40-hex commit the check read>
 
-then a blank line and the check's own text. The record is filed in l3r2.yaml's `independent_check` as the newest entry,
+then a blank line and the check's own text. The three lines are compared exactly: no leading or trailing space, no
+carriage return. The record is filed in l3r2.yaml's `independent_check` as the newest entry,
 `{record: <path>, sha16: <its sha256/16>, verdict: ACCEPTED, scope: "..."}`, before this script runs.
 
 `verify` refuses, and nothing is written, unless every one of these holds:
@@ -80,7 +81,9 @@ def verify(record, data, head="HEAD", req=None, allow_abs=False):
     if not chks or str(chks[-1]["record"]) != record or str(chks[-1].get("verdict")).upper() != "ACCEPTED":
         L.refuse("%s is not the newest independent check, filed and ACCEPTED" % record)
     lines = open(os.path.join(L.TOP, record), encoding="utf-8").read().split("\n")
-    if lines[0].strip() != "accepted: yes": L.refuse("%s's first line does not read 'accepted: yes'" % record)
+    # the three lines compared exactly, nothing stripped (the recheck astra-check-l3am-2, minor): a padded or re-encoded
+    # header is not the declared format
+    if lines[0] != "accepted: yes": L.refuse("%s's first line is not exactly 'accepted: yes'" % record)
     if len(lines) < 3 or lines[1] != SCOPE_LINE:
         L.refuse("%s does not declare this amendment's scope on its second line (%r)" % (record, SCOPE_LINE))
     m = REV_RX.match(lines[2])
