@@ -11,7 +11,9 @@ execution plan) merged in at step 5. Requirements maturity, design compliance an
 | 3 | `cd231260` | the amendment's tests restated to hold before and after the review findings close (copies built from the open state; the tree's own closing check is never a fixture) |
 | 4 | `7a1523d0` | the coordinator's amendment check `check-l3am-3` (reviewed revision `cd231260`) filed, the review findings CLOSED by `apply_l3am_findings_closed.py`, the pages rendered |
 | 5 | `8e4262ce` | merge of main at `1b1fe7df`: the execution plan's two entries of 1 October 2026 (the compute ruling and its amendment); no other file |
-| 6 | this commit | this record |
+| 6 | `41881d8f` | this record; the candidate promoted to main after its gates (below) |
+| 7 | `8146b4cc` | the supersede test of `test_l3am.py` reads the history its copy already holds (below: the first acceptance attempt) |
+| 8 | this commit | check 4 of the amendment (`check-l3am-4`, Claude's, reviewed revision `8146b4cc`) filed and named as the check that closed the findings (`apply_l3am_check4.py`, `apply_l3am_findings_rechecked.py`); the acceptance-guard check restated for the binding; the re-acceptance's status script and its test; the pages rendered |
 
 **The amendment's checks, attributed.** The engineering collaborator (Astra, `gpt-6-astra` at `xhigh`, read-only)
 checked the amendment twice, the owner's allowance of one assessment and one targeted follow-up: both read NOT
@@ -30,3 +32,15 @@ by the coordinator's own verification of the corrected candidate (`../l4e/checks
 check and box suite pass on the candidate and the candidate is promoted, `../l3r5/apply_l3r5_accept.py --supersede`
 files the acceptance against the promoted revision, with the content manifest the amendment added (L3-R04); the old
 record is kept byte for byte in `baseline_acceptance_history`. The results are added below when they exist.
+
+**The first acceptance attempt, at `41881d8f` (not committed).** After promotion the acceptance was filed against
+`41881d8f` in the coordinator's worktree, the pages rendered and LAYER-STATUS restated, and the acceptance-guard check read
+18 of 18; the Layer 3 modules then read 142 passed and 2 failed on that tree, so nothing was committed and the edits were
+set aside (the diff is kept with the session's evidence). Both failures were tests pinned to the state before the
+re-acceptance: the supersede test of `test_l3am.py` expected an empty history in its copy, which the tree's own superseded
+record now fills; the amendment's status test expected its script to refuse a second run by finding the open status on
+LAYER-STATUS.md, which the restatement had removed. The first is corrected in the test (`8146b4cc`), an amendment file, so
+check 3 stopped verifying (the binding of B2 doing its work) and check 4 re-verifies the amendment at that revision; the
+second is answered on the page, which keeps the open status once as what the layer read until the acceptance. The
+acceptance's post-filing state is now simulated before promotion: a single-branch clone holding this set's content, the
+acceptance filed there, the pages rendered, the status restated, and every Layer 3 module and check run on it.
