@@ -17,6 +17,7 @@ record and nothing under `v2/docs/handover/` is changed by this folder.
 | `checks/astra-check-l4e2-2.md` | the collaborator's recheck of the second issue (run `20260930T224030Z-833954` on `21a9a6fe`, accepted: no; B1, M1 and the Layer 3 recount pass; B2 fails again on the omitted IMON_IN line regulation, and the sweep's lower end), filed byte for byte; answered by the third issue |
 | `checks/check-l4e2-3.md` | check 3: Claude's (the coordinator's) verification of B2 at `197350a7` against the recheck's own criterion, computed from the maker's table independently of the replay (accepted: yes); not a model review and not an Astra check |
 | `checks/astra-check-l4e3-1.md` | the collaborator's check of the fourth issue (run `20261001T001305Z-988756` on `fd82f4cc`, accepted: no; B1: the panel labelled compliant on its nominal cold open circuit alone, against its guide's 10 % qualification), filed byte for byte; answered by the fifth issue |
+| `checks/check-l4e3-2.md` | the coordinator's verification of L4-E3's B1 at `eb9211f0`: the guide's 10 % qualification read, every compliance label replaced, the replay reproduced (accepted: yes); not a model review and not an Astra check |
 | `ASTRA-L4E1.md` | the engineering collaborator's L4-E1 assessment (job `cx7-l4e1-dominant-constraints`), filed byte for byte; sha256 `36af43f1769c32c64b95528a69ca6972ee14723eae1d7dd21cf98442b3c6f83b`. It directs this task and accepts nothing |
 
 ## Run order
