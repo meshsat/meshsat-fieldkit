@@ -87,8 +87,11 @@ ASSUMPTION; INCONCLUSIVE where no held document gives the figure.
      HIZ entry, the pin falling to 0.4 V (p.17 VHIZ_HIGH; p.6 'below 0.4 V'): VIN_RAW 8.508 V (8.466 to 8.551 V)
      HIZ exit, the pin rising to 0.8 V (p.17 VHIZ_LO; p.6 'above 0.8 V'; p.27): VIN_RAW 8.669 V (8.626 to 8.713 V)
      the printed regulation range starting at 1.15 V on the pin (p.10): VIN_RAW 8.810 V (8.766 to 8.854 V)
-   So U3 is certainly in HIZ below 8.466 V of VIN_RAW, 0.156 V above the latch's highest, and certainly converting above
-   8.713 V; between them the state depends on the sweep's direction and the comparator's unprinted spread (V-A09).
+   So U3 is certainly in HIZ below 8.466 V of VIN_RAW, 0.156 V above the latch's highest, and out of HIZ (with EN_HIZ = 0,
+   REG0x35 bit 7, reset 0b, p.64; p.27) above 8.713 V; between them the state depends on the sweep's direction and the
+   comparator's unprinted spread. Out of HIZ is not proven conversion: TI specifies regulation by the pin only from 1.15 V on
+   the pin (p.10), VIN_RAW 8.854 V at the band's top; from HIZ release to there the switching and the input current are
+   recorded, not asserted (V-A09).
    The pin along the knee: 0.130 V at 8.400 V, 0.294 V at 8.466 V, 0.399 V at 8.508 V, 0.627 V at 8.600 V, 0.799 V at 8.669 V, 0.876 V at 8.700 V, 0.908 V at 8.713 V, 1.000 V at 8.750 V, 1.149 V at 8.810 V, 1.621 V at 9.000 V.
    At the 9 V floor U3 still gets at least 1.068 A (REQ-015's "charges"). TI's +-0.4 A row is the current loop's accuracy,
    not the HIZ comparator's, so it is not carried into the HIZ thresholds.

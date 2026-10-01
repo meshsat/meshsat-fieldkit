@@ -256,7 +256,10 @@ def compute():
     b17 = pg(BQ, 17)
     hiz_rise = float(need(b17, r"VHIZ_ LO\s+ILIM_HIZ pin rising\s+([\d.]+)\s+V", "p.17 VHIZ_LO").group(1))
     hiz_fall = float(need(b17, r"VHIZ_ HIGH\s+ILIM_HIZ pin falling\s+([\d.]+)\s+V", "p.17 VHIZ_HIGH").group(1))
-    need(flat(pg(BQ, 27, False)), r"In order to exit HIZ mode, ILIM_HIZ pin voltage has to be higher than 0\.8 V", "p.27 the HIZ exit")
+    need(flat(pg(BQ, 27, False)), r"In order to exit HIZ mode, ILIM_HIZ pin voltage has to be higher than 0\.8 V and EN_HIZ bit has to be set to 0b\.",
+         "p.27 the HIZ exit, the pin and EN_HIZ")
+    need(pg(BQ, 64), r"Table 9-32\. ChargeOption3 Register \(I2C address = 35h\) Field Descriptions\s+BIT\s+FIELD\s+TYPE\s+RESET\s+DESCRIPTION\s+"
+                     r"7\s+EN_HIZ\s+R/W\s+0b\s+Device HIZ Mode Enable", "p.64 EN_HIZ, REG0x35 bit 7, reset 0b")
     b10 = pg(BQ, 10)
     need(b10, r"5-m[\u03a9\u2126] RAC sensing\s+VILIM_HIZ = 1\.2 V", "p.10 the ILIM_HIZ rows are for the 5 mOhm RAC")
     rows = re.findall(r"VILIM_HIZ = ([\d.]+) V\s+(\d+)\s+(\d+)\s+(\d+)\s+mA", b10)
@@ -366,7 +369,7 @@ def compute():
     v_unhiz = v_at_pin(hiz_rise)
     v_rng = v_at_pin(pin_rng[0])
     v_hiz_lo = band(v_hiz)[0]                      # HIZ certain below this (the pin under 0.4 V at the network's low corner)
-    v_unhiz_hi = band(v_unhiz)[2]                  # converting certain above this (the pin over 0.8 V at the high corner)
+    v_unhiz_hi = band(v_unhiz)[2]                  # out of HIZ above this with EN_HIZ = 0 (the pin over 0.8 V at the high corner)
     R["knee"] = dict(zero=band(V_K0), entry=band(v_hiz), exit=band(v_unhiz), rng=band(v_rng),
                      table=[(v, vpin_h3(v)) for v in (8.40, round(v_hiz_lo, 3), round(v_hiz, 3), 8.60, round(v_unhiz, 3), 8.70,
                                                       round(v_unhiz_hi, 3), V_K0, round(v_rng, 3), 9.0)])
@@ -679,9 +682,12 @@ def render(R):
         R["hiz"][1], K["exit"][1], K["exit"][0], K["exit"][2]))
     P("     the printed regulation range starting at %.2f V on the pin (p.10): VIN_RAW %.3f V (%.3f to %.3f V)" % (
         R["pin_rng"][0], K["rng"][1], K["rng"][0], K["rng"][2]))
-    P("   So U3 is certainly in HIZ below %.3f V of VIN_RAW, %.3f V above the latch's highest, and certainly converting above" % (
+    P("   So U3 is certainly in HIZ below %.3f V of VIN_RAW, %.3f V above the latch's highest, and out of HIZ (with EN_HIZ = 0," % (
         R["v_hiz_lo"], R["v_hiz_lo"] - R["latch"][2]))
-    P("   %.3f V; between them the state depends on the sweep's direction and the comparator's unprinted spread (V-A09)." % R["v_unhiz_hi"])
+    P("   REG0x35 bit 7, reset 0b, p.64; p.27) above %.3f V; between them the state depends on the sweep's direction and the" % R["v_unhiz_hi"])
+    P("   comparator's unprinted spread. Out of HIZ is not proven conversion: TI specifies regulation by the pin only from %.2f V on" % R["pin_rng"][0])
+    P("   the pin (p.10), VIN_RAW %.3f V at the band's top; from HIZ release to there the switching and the input current are" % R["knee"]["rng"][2])
+    P("   recorded, not asserted (V-A09).")
     P("   The pin along the knee: %s." % ", ".join("%.3f V at %.3f V" % (vp, v) for v, vp in K["table"]))
     P("   At the %.0f V floor U3 still gets at least %.3f A (REQ-015's \"charges\"). TI's +-0.4 A row is the current loop's accuracy," % (
         R["vk1"], R["floor_min"]))
