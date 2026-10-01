@@ -241,10 +241,15 @@ def compute():
     my = need(y1, r"XAL1510-103ME_\s+(\d+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+(\d+)\s+(\d+)", "XAL1510 p.1 the 103ME row")
     xal15 = dict(l=float(my.group(1)), dcr_max=float(my.group(3)), isat=float(my.group(5)), irms20=float(my.group(6)), irms40=float(my.group(7)))
     need(y1, r"Document 947-1\s+Revised 05/04/26", "XAL1510 Document 947-1 revision")
+    dims10 = tuple(float(x.replace(",", ".")) for x in re.findall(r"(\d+,\d) ±0,50", page(M.XAL1010, 4))[:2])
+    dims15 = tuple(float(x.replace(",", ".")) for x in re.findall(r"(\d+,\d) ±0,2\b", page(XAL1510, 3))[:2])
+    if len(dims10) != 2 or len(dims15) != 2:
+        refuse(3, "the two inductors' outline dimensions not read (XAL1010 p.4, XAL1510 p.3)")
+    vds18510 = float(need(page(L4.CSD18510, 1), r"VDS\s+Drain-to-Source Voltage\s+(\d+)\s+V", "SLPS632 p.1 VDS").group(1))
     R.update(n_trip=n_trip, n_off=n_off, mode_hic=(float(mode_hic.group(1)), float(mode_hic.group(2)), float(mode_hic.group(3))),
              mode_no=float(mode_no.group(1)), iss=iss, vref=vref, imode=imode, v_hic=v_hic, v_ccm=v_ccm, gm_slope=gm_slope, acs=acs,
              i_off=i_off, cs_off=cs_off, cs_abs=cs_abs, tau_cs=tau_cs, c7=c7, l_tol=l_tol, derating_held=derating_held, xal15=xal15,
-             isat=isat, irms40=irms40, vcs_boost=vcs_boost, vcs_buck=vcs_buck, fsw=fsw, rtja=rtja, t_air=t_air, VB=VB, eta=ETA,
+             dims10=dims10, dims15=dims15, vds18510=vds18510, isat=isat, irms40=irms40, vcs_boost=vcs_boost, vcs_buck=vcs_buck, fsw=fsw, rtja=rtja, t_air=t_air, VB=VB, eta=ETA,
              r12_drawn=M.R12_CS, c_slope_drawn=L["c_slope"], rip_bulk=rip_bulk, can_k=can_k)
 
     # L4-E4 and L4-E5's figures (their own functions, or read from their reproduced outputs)
@@ -263,6 +268,7 @@ def compute():
     if sorted(h3) != [9.0, 12.0, 24.0, 36.0]:
         refuse(3, "L4-E5's H3 envelope rows not parsed: %s" % sorted(h3))
     veh = float(need(t11, r"the vehicle entry passes at most its LM5069's ([\d.]+) A", "r11_dep.out the entry's 6.15 A").group(1))
+    R["clamp"] = float(need(t45, r"at the clamp's ([\d.]+) V", "L4-E5 the input clamp").group(1))
     if not (abs(float(alt45.group(1)) * 1e-3 - out_r11["7"]) < 1e-12 and alt45.group(2) == R4["alt"]["code"]
             and abs(float(alt45.group(3)) - round(R["outcomes"][1]["hi"], 3)) < 1e-9):
         refuse(4, "L4-E5's 7 mOhm consequence is not L4-E4's alternative")
@@ -364,7 +370,9 @@ def compute():
         m_boost = lim["boost"][0] - svc_boost_pk
         m_buck = lim["buck"][0] - svc_valley
         cs_v = r * (1 + tol) * max(max(x["b1"] for x in res.values()), lim["boost"][2] + lag(VB))
+        g9_ = res["7"]["gs"][9.0]
         rows.append(dict(r=r, code=row["code"], model=row["model"], stock=row["stock"], lim=lim, res=res, ok_b1=ok_b1, ok_b2=ok_b2,
+                         l9=g9_["s"]["i_l"], hot9=max(g9_["fets"], key=lambda f: (f["tj"] is None, f["tj"] or 0.0)),
                          m_boost=m_boost, m_buck=m_buck, cs_v=cs_v, ok=ok_b1 and ok_b2 and m_boost > 0 and m_buck > 0 and cs_v < cs_abs))
     rows.sort(key=lambda x: x["r"])
     passing = [x for x in rows if x["ok"]]
@@ -523,10 +531,11 @@ def render(R):
     P("")
     P("4. CANDIDATE (b): RATE L1, THE FETS AND THE BANK FOR THE HIGHEST PERMITTED CURRENT")
     for o in R["outcomes"]:
-        P("   R11 %s mOhm: L1 as XAL1510-103ME, B-1's %.2f A is %.1f %% of its %.1f A typical (25 C; temperature INCONCLUSIVE, a 15 x 15 mm" % (
-            o["key"], o["a_b1"], 100 * o["b_l1_ratio"], R["xal15"]["isat"]))
-        P("     land against 10 x 11 mm: board A's placement moves); the FETs at 9 V need RthetaJA <= %.0f C/W each, against the maker's %.0f;" % (o["b_need_rth"], R["rtja"]))
-        P("     no 100 V FET with a lower RDS(on) is held (CSD18510Q5B is 40 V, under VIN_RAW's 64.5 V clamp): INCONCLUSIVE; the bank as section 6")
+        P("   R11 %s mOhm: L1 as XAL1510-103ME, B-1's %.2f A is %.1f %% of its %.1f A typical (25 C; temperature INCONCLUSIVE; its %.1f x %.1f mm" % (
+            o["key"], o["a_b1"], 100 * o["b_l1_ratio"], R["xal15"]["isat"], R["dims15"][0], R["dims15"][1]))
+        P("     outline, Document 947-1 p.3, against the XAL1010's %.1f x %.1f mm, p.4: board A's placement moves); the FETs at 9 V need" % R["dims10"])
+        P("     RthetaJA <= %.0f C/W each, against the maker's %.0f; no 100 V FET with a lower RDS(on) is held (CSD18510Q5B, SLPS632 p.1, is" % (o["b_need_rth"], R["rtja"]))
+        P("     %.0f V, under VIN_RAW's %.1f V clamp in L4-E5): INCONCLUSIVE; the bank as section 6" % (R["vds18510"], R["clamp"]))
     P("   NOT CHOSEN: three part changes, a new land, and a thermal figure no held document or measurement supports")
     P("")
     P("5. THE DECISION: BOUND L1 AND THE FETS WITH U2'S OWN CYCLE-BY-CYCLE LIMIT (R12), RATE THE BANK, NO HICCUP")
@@ -538,6 +547,8 @@ def render(R):
         P("     %-22s %s: peak %.2f / %.2f / %.2f A, valley %.2f / %.2f / %.2f A; service %+.2f / %+.2f A; B-1 %.2f / %.2f A; B-2 %s; %s" % (
             c["model"], c["code"], c["lim"]["boost"][0], c["lim"]["boost"][1], c["lim"]["boost"][2], c["lim"]["buck"][0], c["lim"]["buck"][1], c["lim"]["buck"][2],
             c["m_boost"], c["m_buck"], c["res"]["8"]["b1"], c["res"]["7"]["b1"], "met" if c["ok_b2"] else "NOT met", "PASSES" if c["ok"] else "fails"))
+        h = c["hot9"]
+        P("       at 9 V (7 mOhm): L1 %.2f A average continuous, hottest %s" % (c["l9"], ("%s past 150 C" % h["name"]) if h["tj"] is None else ("%s TJ %.0f C" % (h["name"], h["tj"]))))
     P("   CHOSEN: R12 %.0f mOhm, %s, LCSC %s (stock %d), the smallest value that passes: the most service margin. Its sheet is the" % (
         ch["r"] * 1e3, ch["model"], ch["code"], ch["stock"]))
     P("     held HoJLR2512 series sheet (+-1 %%, 50 ppm/K, 3 W). Peak limit %.2f / %.2f / %.2f A, valley limit %.2f / %.2f / %.2f A" % (lim["boost"] + lim["buck"]))
@@ -565,8 +576,8 @@ def render(R):
                     ("%s past 150 C" % f["name"]) if f["tj"] is None else ("%s %.2f W, TJ %.0f C" % (f["name"], f["p"], f["tj"])) for f in g["fets"])))
         P("     B-1: the peak bound over 9 to 36 V %.2f A (at %.1f V), %.1f %% of the typical %.1f A at 25 C: MET at 25 C; it holds at the part's" % (
             o["c_b1"], o["c"]["b1_v"], 100 * o["c_b1"] / isat, isat))
-        P("       temperature (at most %.0f C here) if Isat there is at least %.1f %% of its 25 C value: INCONCLUSIVE (C-5); the headroom admits" % (
-            o["c_l1_temp"], 100 * o["c_derate_need"]))
+        P("       temperature (at most %.0f C here) if Isat there is at least %.1f %% of its 25 C value, %.2f A: INCONCLUSIVE (C-5); the headroom admits" % (
+            o["c_l1_temp"], 100 * o["c_derate_need"], o["c_b1"] / 0.9))
         P("       a comparator delay of %.2f us at the top of boost" % (o["c_delay_head"] * 1e6))
         P("     B-2: every FET at most %.0f C: MET on the ASSUMED RthetaJA; R12 itself %.2f W at 9 V, %.2f W at 36 V, at most %.0f C" % (
             max(f["tj"] for g in o["c"]["gs"].values() for f in g["fets"]), o["c_r12"][0], o["c_r12"][1], o["c_r12"][2]))
