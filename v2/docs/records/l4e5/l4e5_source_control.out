@@ -51,7 +51,7 @@ ASSUMPTION; INCONCLUSIVE where no held document gives the figure.
      'the panel limits' from 'the tracker regulates'; both are unconnected (NETLIST).
    - The collapse: VIN_RAW and TRK_OUT hold 129 uF nominal (NETLIST: A C11 10u, A C12 10u, E C7 1u, E C8 10u, E C24 39u, E C25 39u, E C26 10u, E C27 10u).
      From the tracker's 15.09 V to the latch's highest 8.31 V that is 10.23 mJ, so a constant-power deficit empties it in
-     10.2 ms at 1 W, 3.4 ms at 3 W, 1.0 ms at 10 W (INFERRED: energy over deficit, the nominal capacitance an upper bound).
+     10.2 ms at 1 W, 3.4 ms at 3 W, 1.0 ms at 10 W (INFERRED: energy over deficit; nominal estimates pending evidence of the effective capacitance).
    - The vehicle entry: C5 100 nF on TIMER (NETLIST) with VTMRH 3.76 / 4 / 4.16 V and 51 / 85 / 120 uA (MAKER SNVS452G p.6) gives a
      fault timeout of 3.13 / 4.71 / 8.16 ms before Q7 turns off (INFERRED, C x V / I).
    - FW-E04's 1 s period is 319 times the entry's shortest fault timeout: no firmware rule fed by VIN_MON can act inside a
@@ -80,11 +80,18 @@ ASSUMPTION; INCONCLUSIVE where no held document gives the figure.
    R10 at least 229 k, so E96 232 k: ceiling 28.28 / 29.21 / 30.15 V (INFERRED, the sheet's FBOUT rows, R10 and R11 at 1 %),
    inside REQ-015's 36 V. TRK_OUT's parts at that ceiling's maximum: C24 39u 35V Panasonic 35SVPF39M polymer at 86 % of its 35 V; C25 39u 35V Panasonic 35SVPF39M polymer at 86 % of its 35 V; C26 10u 25V at 121 % of its 25 V; C27 10u 25V at 121 % of its 25 V
    Low light under H1 and H2: the bus settles below the latch, and the front end restarts, when the power at VBUS20 is under
-   36.2 W (nominal 31.3 W); it settles below 12 V under 49.7 W (nominal 44.5 W) (INFERRED: the pin's band at 8.31 V and 12 V).
+   36.2 W (nominal 31.3 W); under H1 to H3 it settles below 12 V under 49.7 W (nominal 44.5 W) (INFERRED: the pin's band at 8.31 V and 12 V).
    H3 adds a knee under REQ-015's 9 V floor: the pin falls from the line at 9.00 V to 1 V (no current) at 8.75 V (SESSION)
-   and on to HIZ, 0.4 V falling and 0.8 V rising (MAKER SLUSE66A p.17; p.27), so U3 stops converting at 8.508 V nominal,
-   at 8.434 V at the least (the knee's thresholds +-0.5 %, ASSUMPTION, and the pin's error), 0.12 V above the latch's
-   highest; it converts again by 8.745 V at the most. At the 9 V floor U3 still gets at least 1.068 A (REQ-015's "charges").
+   and on down. The pin's thresholds are TI's, the network's +-0.5 % (ASSUMPTION) carried through each (nominal, low to high):
+     zero-current target, the pin at 1.0 V (p.6's equation at IDPM 0): VIN_RAW 8.750 V (8.706 to 8.794 V)
+     HIZ entry, the pin falling to 0.4 V (p.17 VHIZ_HIGH; p.6 'below 0.4 V'): VIN_RAW 8.508 V (8.466 to 8.551 V)
+     HIZ exit, the pin rising to 0.8 V (p.17 VHIZ_LO; p.6 'above 0.8 V'; p.27): VIN_RAW 8.669 V (8.626 to 8.713 V)
+     the printed regulation range starting at 1.15 V on the pin (p.10): VIN_RAW 8.810 V (8.766 to 8.854 V)
+   So U3 is certainly in HIZ below 8.466 V of VIN_RAW, 0.156 V above the latch's highest, and certainly converting above
+   8.713 V; between them the state depends on the sweep's direction and the comparator's unprinted spread (V-A09).
+   The pin along the knee: 0.130 V at 8.400 V, 0.294 V at 8.466 V, 0.399 V at 8.508 V, 0.627 V at 8.600 V, 0.799 V at 8.669 V, 0.876 V at 8.700 V, 0.908 V at 8.713 V, 1.000 V at 8.750 V, 1.149 V at 8.810 V, 1.621 V at 9.000 V.
+   At the 9 V floor U3 still gets at least 1.068 A (REQ-015's "charges"). TI's +-0.4 A row is the current loop's accuracy,
+   not the HIZ comparator's, so it is not carried into the HIZ thresholds.
    The knee's slope at the pin is 2.484 V/V against the line's 0.0690 V/V: it needs a gain stage, not a divider (OWED).
    H3's settle point on the solar hold (the stage at FBIN, the pin taking what the panel gives; VBUS20 nominal 20.000 V,
    the extremes over the pin's band and VBUS20 19.146 to 20.7 V):
@@ -98,6 +105,12 @@ ASSUMPTION; INCONCLUSIVE where no held document gives the figure.
        5.0 W at VBUS20: VIN_RAW 8.78 V nominal (HIZ cycling to 8.81 V), U3 up to 0.182 A
    Under 5.8 W at VBUS20 the pin's own error alone can ask more than the stage gives: U3 cycles in and out of HIZ
    above the latch (INFERRED), and the front end never restarts.
+   B3 of the check: a source-blind line held at H3's 9 V target up to 12 V, then rising with H3's slope (the knee kept).
+   For ANY source-blind line the solar power that settles the bus at 12 V is the charge power the line admits from a 12 V
+   source (the same pin target at the same VIN_RAW; INFERRED). H3: 49.720 W; the example: 38.748 W. At 40 W the example's
+   lowest settle is 12.342 V against H3's 9.342 V. Its price: at 12 V 1.55 A (31.1 W at VBUS20 nominal) against H3's 2.07 A (41.4 W),
+   at 24 V 3.62 A against 4.14 A, against the profile's 42.8 W at the pack terminals; and its window needs the tracker's ceiling
+   at 30.98 V at the least (R10 261 k: 31.66 / 32.71 / 33.76 V), the 35 V polymer then at 96 %. Its front end's highest input 4.629 A.
    Rejected variant, an offset through zero at 8.4 V (slope 0.22503 A/V bounded at 36 V): 9 V 0.14 A against 1.55 A, 12 V 0.81 A against 2.07 A, 24 V 3.51 A against 4.14 A; the tracker would sit at 29.9 V.
 
 4. THE SOLAR ENERGY EACH GIVES UP AGAINST THE UNCAPPED TRACKER (MODELED: l4e_replay.py's run() and meanday(), architecture
@@ -132,10 +145,16 @@ ASSUMPTION; INCONCLUSIVE where no held document gives the figure.
    firmware holds IIN_HOST at L4-E4's 4.70 A ceiling and no longer reads VIN_RAW for control.
 
 6. THE CHOSEN RULE'S CONTRACT VALUES
-   values U3's IIN_HOST ever holds under H3: POR reset 3.25 A; after every adapter removal (reset) 3.25 A; firmware ceiling (FW-A16 restated) 4.70 A; highest 4.70 A (code 94, 0x5E00)
+   values U3's IIN_HOST ever holds under H3: at POR, RSNS_RAC = 1b, board current (the larger annotation) 3.25 A; after every adapter removal (one-time reset, p.26, p.80) 3.25 A; firmware ceiling (FW-A16 restated) 4.70 A; highest 4.70 A (code 94, 0x5E00)
    the pin's line crosses IIN_HOST at 27.24 V; between 26.50 and 27.24 V the pin governs and its maximum passes U3's own 4.817 A
+   POR, IIN_HOST 2000h (p.80 heading): 3.20 A in the 5 mOhm table's terms (Table 9-50, pp.80 and 81; its reset bits read 0x20), 1.600 A of
+   board current at RSNS_RAC = 1b over R16 (INFERRED); recorded raw by V-A09, kept apart from the removal reset
+   POR, IIN_HOST 4100h (p.80 figure): 6.50 A in the 5 mOhm table's terms (Table 9-50, pp.80 and 81; its reset bits read 0x20), 3.250 A of
+   board current at RSNS_RAC = 1b over R16 (INFERRED); recorded raw by V-A09, kept apart from the removal reset
    stale or missing VIN_MON (older than 3 s): no setting changes; the line is hardware. Diagnostic only: a fresh VIN_MON
    with the charger's input reading over the pin's band by 0.3 A in three readings falls back to FW-A16's old rule.
+   V-A10's values: the trip at 12 V 2.623 A of board current; with the pin lifted above 4.0 V U3 can reach 4.884 A, over it;
+   the fallback's registers 9 V 1.55 A, 12 V 2.05 A, 24 V 4.10 A, 36 V 4.70 A; stale 1.55 A; the highest 4.70 A, at or under 4.70 A
 
 7. THE CONSEQUENCE FOR L4-E4 (its own functions, from compute() above)
    L4-E4's setting 4.70 A, U3's maximum 4.817 A, through R11 4.964 A; R11 8 mOhm, C-1 0.3803 mOhm at 25 C. Its margins:

@@ -278,10 +278,26 @@ def compute():
     need(b63, r"Table 9-31\. ChargeOption2 Register \(I2C address = 32h\) Field Descriptions\s+BIT\s+FIELD\s+TYPE\s+RESET\s+DESCRIPTION\s+7\s+EN_EXTILIM\s+R/W\s+1b",
          "p.63 EN_EXTILIM, REG0x32 bit 7, reset 1b")
     need(b80, r"In order to disable ILIM_HIZ pin, the host can write EN_EXTILIM=0b to disable ILIM_HIZ pin, or pull ILIM_HIZ pin above 4\.0 V\.", "p.80 the pin's disable")
-    need(b80, r"IIN_HOST Register \(I2C address = 0F/0Eh\) \[reset = 4100h\]", "p.80 IIN_HOST's reset")
+    need(b80, r"IIN_HOST Register \(I2C address = 0F/0Eh\) \[reset = 4100h\]", "p.80 IIN_HOST's figure annotation 4100h")
+    need(b80, r"9\.6\.22 IIN_HOST Register \(I2C address = 0F/0Eh\) \[reset = 2000h\]", "p.80 IIN_HOST's heading annotation 2000h")
+    need(b80, r"The default nominal input current limit is 3\.25 A\. Upon adapter removal, the input current limit is reset to the default value of 3\.25 A\.",
+         "p.80 the 10 mOhm default and its removal reset")
+    need(b80, r"The default current limit is 3\.2 A\.", "p.80 the 5 mOhm default")
+    t9 = pg(BQ, 80) + pg(BQ, 81)
+    bits = re.findall(r"^\s*(\d)\s+Input Current set by host, bit (\d)\s+R/W\s+([01])b\s+0 = Adds 0 mA of input current\.\s+1 = Adds (\d+) mA", t9, re.M)
+    if [int(b_[0]) for b_ in bits] != [6, 5, 4, 3, 2, 1, 0] or any(b_[0] != b_[1] for b_ in bits):
+        refuse(3, "SLUSE66A Table 9-50's seven IIN_HOST bits not parsed (pp.80 and 81)")
+    w5 = {int(b_[0]): float(b_[3]) * 1e-3 for b_ in bits}
+    reset_bits = sum(1 << int(b_[0]) for b_ in bits if b_[2] == "1")
+
+    def reg5(hi_byte):                             # the register's current in the 5 mOhm table's terms (RSNS_RAC = 1b at POR)
+        return sum(w5[k] for k in range(7) if hi_byte >> k & 1)
     b8 = pg(BQ, 8)
     amax = float(need(b8, r"CELL_BATPRESZ, ILIM_HIZ,\s+LODRV1, LODRV2, VDDA, COMP2, CMPIN, CMPOUT,OTG/VAP/\s+\u20130\.3\s+(\d+)", "p.8 ILIM_HIZ absolute maximum").group(1))
     rmax = float(need(b8, r"CELL_BATPRESZ, ILIM_HIZ,\s+0\s+([\d.]+)", "p.8 ILIM_HIZ recommended maximum").group(1))
+    por = {"2000h (p.80 heading)": 0x20, "4100h (p.80 figure)": 0x41}
+    R["por"] = {k: (reg5(v), reg5(v) * 0.005 / float(re.match(r"(\d+)mOhm", R4["r16"]).group(1)) * 1e3) for k, v in por.items()}
+    R["por_table_code"] = reset_bits
     R.update(hiz=(hiz_fall, hiz_rise), pin_off=pin_off, pin_gain=pin_gain, err5=err5, err10=err10, pin_rng=pin_rng, r16_nom=r16_nom, host_clamp=host_clamp,
              pin_amax=amax, pin_rmax=rmax, ilim_rows=[(float(v), float(lo), float(ty), float(hi)) for v, lo, ty, hi in rows])
     l4 = pg(LT, 4)
@@ -343,14 +359,22 @@ def compute():
 
     def tgt_h3(v):
         return max(0.0, (vpin_h3(v) - pin_off) / g_pin)
-    v_hiz = V_K0 - (pin_off - hiz_fall) / s_k
-    v_hiz_lo = v_hiz * (1 - T_KNEE) - err10 * g_pin / s_k
-    v_unhiz_hi = (V_K0 - (pin_off - hiz_rise) / s_k) * (1 + T_KNEE) + err10 * g_pin / s_k
+    def v_at_pin(vp):                              # VIN_RAW at which H3's nominal knee puts the pin at vp (below the 9 V floor)
+        return V_K0 - (pin_off - vp) / s_k
+    band = lambda v: (v * (1 - T_KNEE), v, v * (1 + T_KNEE))
+    v_hiz = v_at_pin(hiz_fall)
+    v_unhiz = v_at_pin(hiz_rise)
+    v_rng = v_at_pin(pin_rng[0])
+    v_hiz_lo = band(v_hiz)[0]                      # HIZ certain below this (the pin under 0.4 V at the network's low corner)
+    v_unhiz_hi = band(v_unhiz)[2]                  # converting certain above this (the pin over 0.8 V at the high corner)
+    R["knee"] = dict(zero=band(V_K0), entry=band(v_hiz), exit=band(v_unhiz), rng=band(v_rng),
+                     table=[(v, vpin_h3(v)) for v in (8.40, round(v_hiz_lo, 3), round(v_hiz, 3), 8.60, round(v_unhiz, 3), 8.70,
+                                                      round(v_unhiz_hi, 3), V_K0, round(v_rng, 3), 9.0)])
     k0h, k1h = V_K0 * (1 + T_KNEE), vk1 * (1 + T_KNEE)
     floor_min = max(0.0, line(k1h) * (vk1 - k0h) / (k1h - k0h) * (1 - T_NET) - err10)
     if not (v_hiz_lo >= latch[2] + LATCH_MARGIN and floor_min > 0 and V_K0 * (1 + T_KNEE) < vk1):
         refuse(4, "the knee does not fit between the latch and REQ-015's floor")
-    R.update(vk1=vk1, s_k=s_k, v_hiz=v_hiz, v_hiz_lo=v_hiz_lo, v_unhiz_hi=v_unhiz_hi, floor_min=floor_min, g_pin=g_pin)
+    R.update(vk1=vk1, s_k=s_k, v_hiz=v_hiz, v_hiz_lo=v_hiz_lo, v_unhiz=v_unhiz, v_unhiz_hi=v_unhiz_hi, floor_min=floor_min, g_pin=g_pin)
 
     def board_max_h(v):                 # the hardware line under the 4.70 A ceiling: the lower TARGET governs, with its own error
         return (pin_hi(v) / r16_lo) if line(v) < setting else fn["board_max"](setting)
@@ -422,6 +446,25 @@ def compute():
                        solve(max(0.0, p / v_min - loads4), f_lo), p / v_min - loads4))
     R["settle"] = settle
     R["thr_h3"] = (err10 / r16_lo + loads4) * vbus_max     # under it the pin's own error may hold U3 above the stage: HIZ cycling
+
+    # B3 (check astra-check-l4e5-1): a source-blind line held at H3's 9 V target up to 12 V, then rising with the same slope
+    def tgt_flat(v):
+        return tgt_h3(v) if v < vk1 else (line(vk1) if v < 12.0 else line(vk1) + slope * (v - 12.0))
+    fh_flat = lambda v: (tgt_flat(v) * (1 + T_NET) + err10) / r16_lo
+    b12 = lambda f12: (f12 + loads4) * vbus_max        # the solar power that settles the bus at 12 V = the charge power admitted at 12 V
+    v_need_flat = 12.0 + (lim_need - line(vk1)) / slope
+    r10f = e96(r11e * (1 + rtol) / (1 - rtol) * (v_need_flat / fbout[0] - 1))
+    trk_f = (fbout[0] * (1 + r10f * (1 - rtol) / (r11e * (1 + rtol))), fbout[1] * (1 + r10f / r11e),
+             fbout[2] * (1 + r10f * (1 + rtol) / (r11e * (1 - rtol))))
+    fe_flat = max(fe_in(min(fh_flat(v / 10.0), fn["board_max"](setting) if tgt_flat(v / 10.0) >= setting else fh_flat(v / 10.0)), v / 10.0)
+                  for v in range(90, 361))
+    R["flat"] = dict(b12=b12(fh_flat(12.0)), b12_h3=b12(f_hi(12.0)), s40=solve(40.0 / vbus_max - loads4, fh_flat),
+                     s40_h3=solve(40.0 / vbus_max - loads4, f_hi), at=[(v, tgt_flat(v), line(v)) for v in (9.0, 12.0, 24.0)],
+                     p12=(tgt_flat(12.0) * v_nom, line(12.0) * v_nom), fe_max=fe_flat, v_need=v_need_flat, r10=r10f, trk=trk_f,
+                     c35=max(trk_f[2] / rt for _r, _v, rt, _f in trk_parts if rt > 30))
+    R["load0"] = LR["load0"]
+    if not (abs(R["flat"]["b12"] - 38.748) < 0.01 and R["flat"]["fe_max"] <= R["fe_h_max"] + 1e-12):
+        refuse(4, "the check's counter-example does not reproduce (%.3f W)" % R["flat"]["b12"])
     # the offset variant, rejected: a line through zero just above the latch, slope bounded at 36 V
     v0 = 8.4
     k_off = slope / (1 - v0 / 36.0)
@@ -493,7 +536,11 @@ def compute():
     R["ER"] = ER
 
     # ================================================================== 6: the chosen rule's contract predicates
-    writes = {"POR reset": 3.25, "after every adapter removal (reset)": 3.25, "firmware ceiling (FW-A16 restated)": setting}
+    writes = {"at POR, RSNS_RAC = 1b, board current (the larger annotation)": max(v_[1] for v_ in R["por"].values()),
+              "after every adapter removal (one-time reset, p.26, p.80)": 3.25, "firmware ceiling (FW-A16 restated)": setting}
+    fb = {v: min(reg_a(v), setting) for v in VOLTS}
+    R["diag"] = dict(trip12=board_max_h(12.0) + DIAG_A, pin_off_board=fn["board_max"](setting), fallback=fb, stale=reg_a(9.0),
+                     max_fallback=max(list(fb.values()) + [reg_a(9.0)]))
     R["writes"] = writes
     R["max_written"] = max(writes.values())
     R["code"], R["word"] = R4["code"], R4["word"]
@@ -578,7 +625,7 @@ def render(R):
         R["c_bus"] * 1e6, ", ".join("%s %s %.0fu" % (c[0], c[1], c[3]) for c in R["caps"])))
     P("     From the tracker's %.2f V to the latch's highest %.2f V that is %.2f mJ, so a constant-power deficit empties it in" % (
         R["v_trk"][1], R["latch"][2], 1e3 * R["e_col"]))
-    P("     %s (INFERRED: energy over deficit, the nominal capacitance an upper bound)." % ", ".join("%.1f ms at %.0f W" % (1e3 * t, dp) for dp, t in R["t_col"]))
+    P("     %s (INFERRED: energy over deficit; nominal estimates pending evidence of the effective capacitance)." % ", ".join("%.1f ms at %.0f W" % (1e3 * t, dp) for dp, t in R["t_col"]))
     P("   - The vehicle entry: C5 100 nF on TIMER (NETLIST) with VTMRH %s V and 51 / 85 / 120 uA (MAKER SNVS452G p.6) gives a" % "3.76 / 4 / 4.16")
     P("     fault timeout of %.2f / %.2f / %.2f ms before Q7 turns off (INFERRED, C x V / I)." % tuple(1e3 * t for t in R["t_fault"]))
     P("   - FW-E04's %.0f s period is %.0f times the entry's shortest fault timeout: no firmware rule fed by VIN_MON can act inside a" % (
@@ -619,15 +666,26 @@ def render(R):
     P("   inside REQ-015's 36 V. TRK_OUT's parts at that ceiling's maximum: %s" % "; ".join(
         "%s %s at %.0f %% of its %.0f V" % (r, v.split(" (")[0], 100 * f, rt) for r, v, rt, f in R["trk_parts"]))
     P("   Low light under H1 and H2: the bus settles below the latch, and the front end restarts, when the power at VBUS20 is under")
-    P("   %.1f W (nominal %.1f W); it settles below 12 V under %.1f W (nominal %.1f W) (INFERRED: the pin's band at %.2f V and 12 V)." % (
+    P("   %.1f W (nominal %.1f W); under H1 to H3 it settles below 12 V under %.1f W (nominal %.1f W) (INFERRED: the pin's band at %.2f V and 12 V)." % (
         R["thr"], R["thr_nom"], R["thr12"], R["thr12_nom"], R["latch"][2]))
     P("   H3 adds a knee under REQ-015's %.0f V floor: the pin falls from the line at %.2f V to 1 V (no current) at %.2f V (SESSION)" % (
         R["vk1"], R["vk1"], V_K0))
-    P("   and on to HIZ, %.1f V falling and %.1f V rising (MAKER SLUSE66A p.17; p.27), so U3 stops converting at %.3f V nominal," % (R["hiz"] + (R["v_hiz"],)))
-    P("   at %.3f V at the least (the knee's thresholds +-%.1f %%, ASSUMPTION, and the pin's error), %.2f V above the latch's" % (
-        R["v_hiz_lo"], 100 * T_KNEE, R["v_hiz_lo"] - R["latch"][2]))
-    P("   highest; it converts again by %.3f V at the most. At the %.0f V floor U3 still gets at least %.3f A (REQ-015's \"charges\")." % (
-        R["v_unhiz_hi"], R["vk1"], R["floor_min"]))
+    K = R["knee"]
+    P("   and on down. The pin's thresholds are TI's, the network's +-%.1f %% (ASSUMPTION) carried through each (nominal, low to high):" % (100 * T_KNEE))
+    P("     zero-current target, the pin at 1.0 V (p.6's equation at IDPM 0): VIN_RAW %.3f V (%.3f to %.3f V)" % (K["zero"][1], K["zero"][0], K["zero"][2]))
+    P("     HIZ entry, the pin falling to %.1f V (p.17 VHIZ_HIGH; p.6 'below 0.4 V'): VIN_RAW %.3f V (%.3f to %.3f V)" % (
+        R["hiz"][0], K["entry"][1], K["entry"][0], K["entry"][2]))
+    P("     HIZ exit, the pin rising to %.1f V (p.17 VHIZ_LO; p.6 'above 0.8 V'; p.27): VIN_RAW %.3f V (%.3f to %.3f V)" % (
+        R["hiz"][1], K["exit"][1], K["exit"][0], K["exit"][2]))
+    P("     the printed regulation range starting at %.2f V on the pin (p.10): VIN_RAW %.3f V (%.3f to %.3f V)" % (
+        R["pin_rng"][0], K["rng"][1], K["rng"][0], K["rng"][2]))
+    P("   So U3 is certainly in HIZ below %.3f V of VIN_RAW, %.3f V above the latch's highest, and certainly converting above" % (
+        R["v_hiz_lo"], R["v_hiz_lo"] - R["latch"][2]))
+    P("   %.3f V; between them the state depends on the sweep's direction and the comparator's unprinted spread (V-A09)." % R["v_unhiz_hi"])
+    P("   The pin along the knee: %s." % ", ".join("%.3f V at %.3f V" % (vp, v) for v, vp in K["table"]))
+    P("   At the %.0f V floor U3 still gets at least %.3f A (REQ-015's \"charges\"). TI's +-0.4 A row is the current loop's accuracy," % (
+        R["vk1"], R["floor_min"]))
+    P("   not the HIZ comparator's, so it is not carried into the HIZ thresholds.")
     P("   The knee's slope at the pin is %.3f V/V against the line's %.4f V/V: it needs a gain stage, not a divider (OWED)." % (
         R["s_k"], R["g_pin"] * R["slope"]))
     P("   H3's settle point on the solar hold (the stage at FBIN, the pin taking what the panel gives; VBUS20 nominal %.3f V," % R["v_nom"])
@@ -637,6 +695,16 @@ def render(R):
         P("     %5.1f W at VBUS20: VIN_RAW %s nominal (%s to %s), U3 up to %.3f A" % (p, fv(vn), fv(lo), fv(hi), i_))
     P("   Under %.1f W at VBUS20 the pin's own error alone can ask more than the stage gives: U3 cycles in and out of HIZ" % R["thr_h3"])
     P("   above the latch (INFERRED), and the front end never restarts.")
+    FL = R["flat"]
+    P("   B3 of the check: a source-blind line held at H3's %.0f V target up to 12 V, then rising with H3's slope (the knee kept)." % R["vk1"])
+    P("   For ANY source-blind line the solar power that settles the bus at 12 V is the charge power the line admits from a 12 V")
+    P("   source (the same pin target at the same VIN_RAW; INFERRED). H3: %.3f W; the example: %.3f W. At 40 W the example's" % (FL["b12_h3"], FL["b12"]))
+    P("   lowest settle is %.3f V against H3's %.3f V. Its price: at 12 V %.2f A (%.1f W at VBUS20 nominal) against H3's %.2f A (%.1f W)," % (
+        FL["s40"], FL["s40_h3"], FL["at"][1][1], FL["p12"][0], FL["at"][1][2], FL["p12"][1]))
+    P("   at 24 V %.2f A against %.2f A, against the profile's %.1f W at the pack terminals; and its window needs the tracker's ceiling" % (
+        FL["at"][2][1], FL["at"][2][2], R["load0"]))
+    P("   at %.2f V at the least (R10 %.0f k: %.2f / %.2f / %.2f V), the 35 V polymer then at %.0f %%. Its front end's highest input %.3f A." % (
+        (FL["v_need"], FL["r10"] / 1e3) + tuple(FL["trk"]) + (100 * FL["c35"], FL["fe_max"])))
     off = R["offset"]
     P("   Rejected variant, an offset through zero at %.1f V (slope %.5f A/V bounded at 36 V): %s; the tracker would sit at %.1f V." % (
         off["v0"], off["k"], ", ".join("%.0f V %.2f A against %.2f A" % x for x in off["at"]), off["trk"]))
@@ -670,8 +738,17 @@ def render(R):
         "; ".join("%s %.2f A" % kv for kv in R["writes"].items()), R["max_written"], R["code"], R["word"]))
     P("   the pin's line crosses IIN_HOST at %.2f V; between %.2f and %.2f V the pin governs and its maximum passes U3's own %.3f A" % (
         R["v_cross"], R["band_x"][0], R["band_x"][1], R["u3max_host"]))
+    for k, (r5, b) in R["por"].items():
+        P("   POR, IIN_HOST %s: %.2f A in the 5 mOhm table's terms (Table 9-50, pp.80 and 81; its reset bits read 0x%02X), %.3f A of" % (
+            k, r5, R["por_table_code"], b))
+        P("   board current at RSNS_RAC = 1b over R16 (INFERRED); recorded raw by V-A09, kept apart from the removal reset")
     P("   stale or missing VIN_MON (older than %.0f s): no setting changes; the line is hardware. Diagnostic only: a fresh VIN_MON" % FRESH_S)
     P("   with the charger's input reading over the pin's band by %.1f A in three readings falls back to FW-A16's old rule." % DIAG_A)
+    D = R["diag"]
+    P("   V-A10's values: the trip at 12 V %.3f A of board current; with the pin lifted above 4.0 V U3 can reach %.3f A, over it;" % (
+        D["trip12"], D["pin_off_board"]))
+    P("   the fallback's registers %s; stale %.2f A; the highest %.2f A, at or under %.2f A" % (
+        ", ".join("%.0f V %.2f A" % kv for kv in D["fallback"].items()), D["stale"], D["max_fallback"], R["setting"]))
     P("")
     P("7. THE CONSEQUENCE FOR L4-E4 (its own functions, from compute() above)")
     L = R["l4e4"]
