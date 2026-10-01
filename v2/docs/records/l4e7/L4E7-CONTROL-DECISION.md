@@ -4,7 +4,7 @@ Prototype design, desk arithmetic: nothing is bought, built, powered or measured
 2026: establish whether the proposed control supports REQ-016's retained limit, "at most 100 W into the stage", across the
 permitted operating range, and if it does not do so on warranted evidence, choose a defensible approach. Every figure
 below is printed by section 10 of `l4e7_stage_settings.out` (the script `l4e7_stage_settings.py`, after its
-reproductions of section 0). Evidence classes: **warranted** (a limit the maker prints, with its page), **typical** (a
+reproductions of section 0); the sheet values quoted in the verdict's table are section 9's. Evidence classes: **warranted** (a limit the maker prints, with its page), **typical** (a
 typical-only row), **inferred** (a reading the session derives), **assumption** (a value the session sets where nothing is
 printed), **requirement**. The decision is the session's, taken under the owner's standing rule of 26 September 2026
 (`ruled_by: SESSION`): it changes no requirement, spends no money and buys nothing, and after the comparison below one

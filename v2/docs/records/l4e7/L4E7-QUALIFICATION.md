@@ -6,6 +6,9 @@ Prototype design, desk arithmetic: nothing is bought, built, powered or measured
 first). The decisions and the corner check are on `L4E7-STAGE-SETTINGS.md`. Second round: after the focused check
 `checks/astra-check-l4e7q-1.md` (NOT YET, B1, B2 and five minors; see the last section).
 
+**What follows from it (L4-E7R, 1 October 2026): `L4E7-CONTROL-DECISION.md`.** The result below stays CONDITIONAL;
+the control decision places a hardware 100 W backstop under the limit, whose bound needs none of the five values.
+
 ## The sheet
 
 The owner names https://www.analog.com/media/en/technical-documentation/data-sheets/8705af.pdf. The live site resets this
