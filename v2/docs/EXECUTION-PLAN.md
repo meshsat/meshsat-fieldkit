@@ -1047,3 +1047,52 @@ four suites (about 2.1 h in two runs) and is stopped, its disk kept (0.037 USD/h
 GitHub clone (a full checkout for reuse) and was stopped by the watchdog after two idle hours, its disk kept (0.030
 USD/h); nothing destroyed; credit 108.71 USD.
 The collaborator: four runs (the amendment's check and recheck, L4-E4's check and recheck), drawn on the ChatGPT plan.
+
+### Milestone, 1 October 2026 15:55 CEST: Layer 4's source control and fault handling (integration sets 20 and 21 on main)
+
+**Deliverable:** two power-path decisions accepted and merged, with L4-E4's component values held PROVISIONAL until the
+circuit round they belong to is complete.
+- **L4-E5, source control** (`fnd/l4e5` at `0e7e7f11`, merged `7d9d9753`). H3: a hardware VIN_RAW line on U3's ILIM_HIZ
+  pin with a knee below 9 V; board E's tracker ceiling raised (R10 115 k to 232 k); firmware holds IIN_HOST at 4.70 A,
+  which supports L4-E4's 4.70 A. The stiff-source band of 26.50 to 27.24 V (5.095 A) needs bench V-A07 or R11 at 7 mOhm.
+  The collaborator's check and recheck did not accept it; the coordinator's check 3 accepted it after the recheck's two
+  items were fixed.
+- **L4-E6, fault handling** (`fnd/l4e6` at `843f48c1`, merged `74416392`). R12 12 mOhm (LCSC C2904242) and C147 330 pF bound
+  L1 and the FETs by U2's cycle-by-cycle limit; hiccup stays off; the VBUS20 bulk bank is rated, not bounded, and is to be
+  re-sized. It supports R11 8 mOhm, subject to V-A07. The collaborator's check accepted it; the coordinator's check 2
+  covered its two minors.
+- **L4-E4 stays PROVISIONAL** (set 20, `05e8f912`): the draft apply scripts refuse to write board A's generator until
+  `records/l4e4/RELEASE.md` reads "released: yes" and names an accepted check of each decision
+  (`tests/test_l4e4_provisional.py`). Both decisions now support its values, but B-4 (the bank's re-size, 3.11 A at 2:1
+  against 2.8 A) is open, and the dense ripple script the generator cites (`drafts/scripts/ripple_dense.py`) is in neither
+  the tree nor its history.
+- **The power replay companion's reassessment** filed as received (`f8514c0b`): L4-R03 CLOSED; PR-01 (the measurement hook
+  recorded its own writes) fixed in the coordinator's tools and tested (one deliberate open gives one record, process
+  launches logged, a truncated or failed trace refused).
+
+**Evidence:** box suite at `2e354f30` 2427 passed, 0 failed, 3 skipped (host properties), 207 of 207 modules, judged by the
+promotion gate on its log with the L4 and Layer 3 modules required; set 20's at `05e8f912` 2397 passed, 0 failed, 205 of
+205. On the runner before promotion: render order twice with no page changed; the rule library 145 and 59 of each with 0
+errors. Records: `records/int21/README.md`, `records/l4e5/`, `records/l4e6/`.
+
+**Handover:** `MESHSAT-L3-AMENDMENT-f8514c0b`, the compact Layer 3 amendment package, made at the owner's request of 1
+October: 16 ordinary ZIPs, each at most 24 MB, 166.1 MB in all, disjoint files under one folder (`SHA256SUMS` sha256
+`ba8758c253a8b0062aea7efb639f18d19f36cf94aebd72fee435c2c64e8e8d8b`). It exports `f8514c0b` and verifies the acceptance at
+`3b4b92cf` (D-39, recorded at `c1321ebc`). It adds one review-workspace commit, whose parent is the exported revision and
+whose tree is the Layer 3 workspace measured with the fixed hook; every original commit and tree is kept under its own id.
+`REPRODUCE: PASS` from a clean extraction with no network (140 passed, 0 failed, 0 skipped; the dry run byte for byte).
+Copied to the laptop's Downloads and handover folder, checksums verified there. It does not reproduce: the full suite,
+the rule registry and its pages, the public hygiene test, or history beyond what the checks read (its README section 5).
+
+**Remaining material risk (assigned):** B-4 and the missing ripple script (the next circuit-round item); V-A07 for R11; DR-01
+to DR-07, FEA-008, C-8, O-2, L3-C63 and REQ-051 as at set 19.
+
+**Next executable action:** L4-E7, the solar stage's settings for O-2 (the LT8705A's real values and tolerance budget),
+being authored on `fnd/l4e7` from `7d9d9753`; then its check. After that, the VBUS20 bank's re-size with the dense ripple
+analysis rebuilt, which completes the drafts and allows L4-E4's release record. The engineer's review of the power packet
+is the owner's to arrange; nothing here waits on it.
+
+**Elapsed and compute:** sets 20 and 21 from about 09:20 to 15:55 CEST. vast.ai 53619970 (0.210 USD/h) ran both suites and
+is stopped with its disk kept (0.037 USD/h); 53608225 stays stopped (0.030 USD/h); nothing destroyed; credit 108.12 USD
+(0.59 USD since set 19, storage included). The collaborator: three runs (L4-E5's check and recheck, L4-E6's check), drawn
+on the ChatGPT plan. The runner's disk: about 140 GB freed by removing 61 merged, clean worktrees at the owner's request.
