@@ -1,23 +1,35 @@
-"""Layer 4 task L4-E8 (MESHSAT-1357, 1 October 2026; v2/docs/records/l4e8/): board A's VBUS20 bank re-sized on a derived dense
-node analysis, held as predicates on properties the tests recompute.
+"""Layer 4 task L4-E8 (MESHSAT-1357, 1 October 2026, the fix round after the collaborator's check of 5ff06474;
+v2/docs/records/l4e8/): board A's VBUS20 bank re-sized on a derived dense node analysis, held as predicates on properties the
+tests recompute.
 
-The predicates: the derivation meets the re-review's point to the record's 0.001 A and the drawn node's recorded worst can at its
-recorded corner within the stated tolerance (consistency, recomputed from the module's own functions); the committed output's
-consistency table holds every can figure within the stated tolerance and its finer grids have themselves converged; the chosen
-8 mOhm bank meets 2.8 A less the margin at the 2:1 spread at R11 8 mOhm on the sharing basis, recomputed here by the script's own
-search on the decision grids and converged, the drawn bank does not, and the layout rule binds (the bank fails at twice it); the
-rating applies unmodified at the harmonics' frequencies and each can's loss is under the rated condition's; the draft apply
-script checks without writing, applies once to a copy, refuses a second application, refuses the repository's own generator
-without a RELEASE.md, adds only unused designators, changes only the bank's arguments, keeps the 8 mOhm bank inside the 7 mOhm
-one, and composes with L4-E4's and L4-E6's drafts in every order on disjoint lines; no em or en dash and no claim word in the
-record. That the committed .out is what the script prints is checked by running `ripple_dense.py` (about five minutes;
-README.md's run order), not here. Nothing here writes into the tree.
+The predicates:
+  - consistency: the derivation meets the re-review's point to the record's 0.001 A and the drawn node's recorded worst can at
+    its recorded corner within the stated tolerance; the committed output's consistency table holds every can figure and its
+    finer grids have converged;
+  - B1: the check's eight-can counterexample reproduces (2.738774 A in mean square, 2.854635 A at the 204 / 816 kHz
+    coincidence, 2.813686 A at 204 / 408 kHz) and the coherent rule puts that bank over 2.8 A;
+  - B3: the front end's envelope is SNVSAI1D p.6's row carried to RT by Equation 5 with RT's tolerance and TCR, below the first
+    round's 180.3 kHz;
+  - B2: with every can independent over the sheet's bands and no resistance floor, no count of cans bounds a can; the chosen
+    ballast meets 2.8 A less the margin at both R11 outcomes on the decision box (ESR 0 to size G's 300 mOhm cold limit),
+    recomputed here by the script's own search and coincidences; the drawn bank does not;
+  - the rating applies unmodified at the harmonics' frequencies, and the lifetime is printed CONDITIONAL (B4);
+  - the loop with the ballast meets its margins at L4-E6's R12 12 mOhm to the highest permitted current with the cans' ESR to
+    the +20 C endurance limit, and not on the drawn R12's widened band (the ORDER); at the sheet's cold limit the drawn front
+    end's own loop misses GM 10 dB (an open finding on the drawn compensation, not the ballast's);
+  - the draft checks without writing, applies once to a copy, refuses a second application, refuses the repository's own
+    generator without a RELEASE.md and without L4-E6's R12, adds only unused designators, changes only the helper and the front
+    end's call, draws the other stages as before, and composes with L4-E4's and L4-E6's drafts in every order on disjoint lines;
+  - no em or en dash and no claim word in the record.
+That the committed .out is what the script prints is checked by running `ripple_dense.py` (about six minutes; README.md's run
+order), not here. Nothing here writes into the tree.
 """
 import ast
 import difflib
 import hashlib
 import importlib.util
 import itertools
+import json
 import math
 import os
 import re
@@ -155,50 +167,202 @@ def t_the_committed_consistency_holds_every_can_figure_and_the_finer_grids_conve
     assert re.search(r"ENUMERATED IN FULL \(110700 sets, 5\.7 A, matched\): 4450 over 2\.8 A \(RECORD: 4450 of 110700\)", t)
 
 
-def _chosen(t, key):
-    m_ = re.search(r"R11 %s mOhm, [\d.]+ A: the rule's limit ([\d.]+) A.*?CHOSEN: (\d+) EEHZK1V331P, (\d+) ceramics on VBUS20, (\d+) on FE_OUT" % key, t, re.S)
-    assert m_, "no chosen bank at %s mOhm in the output" % key
-    return float(m_.group(1)), tuple(int(m_.group(i)) for i in (2, 3, 4))
+def _corrected():
+    """the corrected model as the script builds it: B3's envelope from the row, RT's tolerance and TCR, the in-use range"""
+    if "me" not in _C:
+        m, R = _m()
+        mk, grid, G = R["mk"], R["grid"], R["gen"]
+        lc = open(os.path.join(ROOT, m.LCSC_FILL), encoding="utf-8").read()
+        tol = float(re.search(r'^ \(r"\^40\\\.2k", "R_0603"\): "C\d+",\s+# \S+ \S+, (\d+)%', lc, re.M).group(1)) / 100.0
+        need(os.path.join(ROOT, m.UNIROYAL), "the held UNI-ROYAL sheet (RT's TCR)")
+        u6 = m.page(m.UNIROYAL, 6)
+        tcr = float(re.search(r">10\S*:\s*\S*?(\d+)\s*PPM", u6[u6.find("0603："):]).group(1)) * 1e-6
+        import yaml
+        env = yaml.safe_load(open(os.path.join(ROOT, m.ENVELOPE), encoding="utf-8"))
+        t_air = max(env["worst_inside_air_c"]["lid_open"], env["worst_inside_air_c"]["lid_closed"])
+        dt = max(25.0 - env["ambient_c"]["in_use"]["min"], t_air - 25.0)
+        fenv = m.fsw_envelope(mk["fsw_row"], mk["rt_row"], m.si(G["rt"], ""), tol, tcr, dt)
+        lin = lambda a, b, n: [a + (b - a) * i / (n - 1) for i in range(n)]
+        fchs = lin(mk["f400"][0], mk["f400"][2], grid["n_fch"]) + lin(mk["f800"][0], mk["f800"][2], grid["n_fch"])
+        Me = m.Model(G["rails"]["VBUS20"]["volts"], m.si(G["lval"], "H"), m.si(G["one"]["L2"][3], "H"), grid["vins"], lin(fenv[0], fenv[2], grid["n_fsw"]),
+                     lin(grid["vbat"][0], grid["vbat"][1], grid["n_vbat"]), fchs)
+        _C["me"] = (Me, fenv, [(mk["f400"][0], mk["f400"][2]), (mk["f800"][0], mk["f800"][2])])
+    return _C["me"]
 
 
-def t_the_chosen_bank_meets_the_rule_at_2_to_1_at_8_mohm_and_the_drawn_does_not():
-    m, R = _m()
-    t = _out()
-    lim, bank = _chosen(t, "8")
-    hi = float(re.search(r"R11 8 mOhm \(C\d+\): ([\d.]+) A; L4-E6 prints", t).group(1))
-    assert lim < R["mk"]["rip"] and bank[2] >= 3 and bank[0] >= 6
-    M, _f, _ch = _model()
-    mk = R["mk"]
-    rows = [(mk["f400"][0], mk["f400"][2]), (mk["f800"][0], mk["f800"][2])]
-    Md = m.fine_model(M, rows, m.DECIDE)
-    lay = dict(sib_dl=m.LAYOUT[0], sib_dr=m.LAYOUT[1])
-    res = m.search(m.Node(Md, R["bands"], bank, 0.008, 0.010, 2.0, _hf(m, R), **lay), [Md.weights(hi)], ("odd", "sib"))
-    w = m.worst_can(res)
-    met = "odd" if w is res[("odd", 0)] else "sib"
-    mkn = lambda mm: m.Node(mm, R["bands"], bank, 0.008, 0.010, 2.0, _hf(m, R), **lay)
-    conv = m.converge(mkn, m.fine_model(M, rows), w["set"], met, hi)[1][0]
-    got = max(math.sqrt(w["ms"]), math.sqrt(conv))
-    assert got <= lim + 1e-9, "the chosen bank's worst can at 2:1 is %.4f A against the rule's %.4f A" % (got, lim)
+def _hi(t):
+    return {k: float(re.search(r"R11 %s mOhm \(C\d+\): ([\d.]+) A; L4-E6 prints" % k, t).group(1)) for k in ("8", "7")}
+
+
+def _pick(t):
+    m_ = re.search(r"CHOSEN: six EEHZK1V331P as drawn, each in series with a (\d+) mOhm 1 % 2512 ballast, Milliohm HoJLR2512-3W-(\d+)mR-1%, LCSC (C\d+)", t)
+    assert m_ and m_.group(1) == m_.group(2), "no chosen ballast in the output"
+    return float(m_.group(1)) * 1e-3, m_.group(3)
+
+
+def _gnode(m, R, model, rb, r11, rb_tol=None):
+    mk, b = R["mk"], R["bands"]
+    c_k = ((1 - mk["c_tol"]) * (1 - mk["c_life"]), (1 + mk["c_tol"]) * (1 + mk["c_life"]))
+    box = m.with_cold(m.box_grid([k * mk["c_can"] for k in c_k], mk["esr_life"] * mk["esr_can"], (b["esl_b"][0] + m.RB_ESL[0], b["esl_b"][-1] + m.RB_ESL[1])), mk)
+    assert max(box["r"]) == mk["esr_cold"] == 0.3 and mk["size"] == "G", "the decision box does not reach size G's cold limit"
     drawn = (len(R["gen"]["bulk"]), len(R["gen"]["vbus_cer"]) + len(R["gen"]["ch_in"]), len(R["gen"]["cout_pre"]))
-    got0 = math.sqrt(m.worst_can(m.search(m.Node(M, R["bands"], drawn, 0.008, 0.010, 2.0, _hf(m, R)), [M.weights(hi)], ("odd",), slice_check=False))["ms"])
-    assert got0 > R["mk"]["rip"], "the drawn bank reads %.3f A at 2:1: B-4 would not be open" % got0
-    geo = dict(sib_dl=m.GEOM[0], sib_dr=m.GEOM[1])
-    got2 = math.sqrt(m.worst_can(m.search(m.Node(M, R["bands"], bank, 0.008, 0.010, 2.0, _hf(m, R), **geo), [M.weights(hi)], ("odd",), slice_check=False))["ms"])
-    assert got2 > lim, "the layout rule does not bind: the bank holds at twice it (%.3f A)" % got2
+    hoj = m.flat(m.page(m.HOJLR, 2))
+    tcr = float(re.search(r"±(\d+) \(2mR~500mR\)", hoj).group(1)) * 1e-6
+    return m.GNode(model, b, drawn, r11, 0.010, _hf(m, R), box, rb, 0.01 + tcr * m.RB_DT if rb_tol is None else rb_tol, m.LAYOUT)
 
 
-def t_the_rating_applies_unmodified_at_frequency_and_each_loss_is_under_the_rated():
+def t_b1_the_checks_counterexample_reproduces_and_the_rule_counts_it():
+    """The check's eight-can corner: 2.738774 A in mean square at 198.8 / 816 kHz, 2.854635 A at the 204 / 816 kHz coincidence and
+    2.813686 A at 204 / 408 kHz; the rule (exact coincidences permitted, coherent at the worst phase) puts that bank over 2.8 A."""
+    m, R = _m()
+    mk, b, G = R["mk"], R["bands"], R["gen"]
+    t = _out()
+    hi8 = _hi(t)["8"]
+    bxc = dict(c=[1.2 * mk["c_can"]], r=[0.3 * mk["esr_can"], 0.6 * mk["esr_can"]], l=[b["esl_b"][0]])
+    sx = (0, 0, 0, 0, 1, 0, 0, b["cer_esl"].index(max(b["cer_esl"])), 0, len(b["l16"]) - 1, len(b["l11"]) - 1)
+    got = {}
+    for tag, fsw, fch, op in (("rss", 198.8e3, 816e3, None), ("4", 204e3, 816e3, (m.Fraction(4), 204e3, 9.0, 10.0)), ("2", 204e3, 408e3, (m.Fraction(2), 204e3, 9.0, 10.0))):
+        Mc = m.Model(G["rails"]["VBUS20"]["volts"], m.si(G["lval"], "H"), m.si(G["one"]["L2"][3], "H"), [9.0], [fsw], [10.0], [fch])
+        nd = m.GNode(Mc, b, (8, 18, 3), 0.008, 0.010, _hf(m, R), bxc, 0.0, 0.0, m.LAYOUT)
+        got[tag] = math.sqrt(m.coherent(nd, sx, Mc, hi8, [(340e3, 460e3), (680e3, 920e3)], op=op)[0] if op else
+                             m.exact(nd.vectors(sx, ("odd",))["odd"], Mc.weights(hi8))[0])
+    assert abs(got["rss"] - 2.738774) < 5e-4 and abs(got["4"] - 2.854635) < 5e-4 and abs(got["2"] - 2.813686) < 5e-4, got
+    assert got["4"] > R["mk"]["rip"] > got["rss"], "the coincidence does not flip that bank: %s" % got
+
+
+def t_b2_the_checks_esl_counterexample_reproduces_inside_the_decision_box():
+    """The check's C3 corner: the eight-can corner above with the siblings' own ESL at the band's 3.5 nH plus the layout's 0.5 nH,
+    3.586976 A in mean square; that corner lies inside the decision box of the ballasted bank."""
+    m, R = _m()
+    mk, b, G = R["mk"], R["bands"], R["gen"]
+    hi8 = _hi(_out())["8"]
+    Mc = m.Model(G["rails"]["VBUS20"]["volts"], m.si(G["lval"], "H"), m.si(G["one"]["L2"][3], "H"), [9.0], [198.8e3], [10.0], [816e3])
+    bxc = dict(c=[1.2 * mk["c_can"]], r=[0.3 * mk["esr_can"], 0.6 * mk["esr_can"]], l=[b["esl_b"][0], b["esl_b"][-1]])
+    sx = (0, 0, 0, 0, 1, 1, 0, b["cer_esl"].index(max(b["cer_esl"])), 0, len(b["l16"]) - 1, len(b["l11"]) - 1)
+    nd = m.GNode(Mc, b, (8, 18, 3), 0.008, 0.010, _hf(m, R), bxc, 0.0, 0.0, m.LAYOUT)
+    got = math.sqrt(m.exact(nd.vectors(sx, ("odd",))["odd"], Mc.weights(hi8))[0])
+    assert abs(got - 3.586976) < 5e-4, got
+    Me, _f, _r = _corrected()
+    box = _gnode(m, R, Me, 0.038, 0.008).box
+    lo, hi_ = min(box["l"]), max(box["l"])
+    assert lo <= b["esl_b"][0] + m.RB_ESL[0] + 1e-15 and hi_ + m.LAYOUT[0] >= b["esl_b"][-1] + m.LAYOUT[0] and min(box["r"]) == 0.0 \
+        and max(box["r"]) >= 0.6 * mk["esr_can"] and min(box["c"]) <= 1.2 * mk["c_can"] <= max(box["c"]), "the corner is outside the box"
+
+
+def t_b3_the_envelope_is_the_specified_row_carried_to_rt_with_its_tolerance():
+    m, R = _m()
+    _Me, fenv, _rows = _corrected()
+    mk = R["mk"]
+    eq5 = lambda r: r * 116e-12 + 190e-9
+    plain = [x * eq5(mk["rt_row"]) / eq5(m.si(R["gen"]["rt"], "")) for x in mk["fsw_row"]]
+    assert fenv[0] < plain[0] < fenv[1] < plain[2] < fenv[2], (fenv, plain)
+    assert fenv[0] < 175e3 * eq5(mk["rt_row"]) / eq5(40.2e3) < 180e3, "the envelope does not reach below the record's 180.3 kHz"
+    t = _out()
+    shown = [float(x) * 1e3 for x in re.search(r"inside air\): ([\d.]+) / ([\d.]+) / ([\d.]+) kHz", t).groups()]
+    assert all(abs(a - b_) < 10.0 for a, b_ in zip(shown, fenv)), (shown, fenv)
+
+
+def t_b2_without_a_resistance_floor_no_count_of_cans_bounds_a_can():
+    m, R = _m()
+    Me, _f, _rows = _corrected()
+    hi8 = _hi(_out())["8"]
+    for nb in (6, 8):
+        nd = _gnode(m, R, Me, 0.0, 0.008, rb_tol=0.0)
+        nd.nb = nb
+        g = m.gsearch(nd, Me.weights(hi8))
+        assert math.sqrt(g["ms"]) > 10.0, "%d cans with no floor read %.2f A" % (nb, math.sqrt(g["ms"]))
+
+
+def t_b2_the_chosen_ballast_meets_the_rule_at_both_outcomes_on_the_independent_box():
+    """recomputed here: the search on the independent box and the coincidences at its worst set, at both R11 outcomes"""
     m, R = _m()
     t = _out()
-    _M, (f0, lo, hi), fchs = _model()
-    fmin = min(lo, min(fchs))
+    Me, _f, rows = _corrected()
+    rb, code = _pick(t)
+    hi = _hi(t)
+    for key, r11 in (("8", 0.008), ("7", 0.007)):
+        lim = R["mk"]["rip"] - m.MARGIN_PER_A * hi[key]
+        nd = _gnode(m, R, Me, rb, r11)
+        g = m.gsearch(nd, Me.weights(hi[key]))
+        coh = m.coherent(nd, g["set"], Me, hi[key], rows)[0]
+        got = math.sqrt(max(g["ms"], coh))
+        assert got <= lim, "%.0f mOhm at R11 %s mOhm reads %.4f A against %.4f A" % (rb * 1e3, key, got, lim)
+    cat = json.load(open(os.path.join(ROOT, m.JLC_HOJLR), encoding="utf-8"))
+    row = [r for r in cat["rows"] if r["code"] == code]
+    assert row and row[0]["stock"] > 0 and row[0]["model"] == "HoJLR2512-3W-%gmR-1%%" % (rb * 1e3), row
+
+
+def t_the_drawn_bank_fails_on_the_corrected_model():
+    m, R = _m()
+    t = _out()
+    Me, _f, _rows = _corrected()
+    hi8 = _hi(t)["8"]
+    drawn = (len(R["gen"]["bulk"]), len(R["gen"]["vbus_cer"]) + len(R["gen"]["ch_in"]), len(R["gen"]["cout_pre"]))
+    res = m.search(m.Node(Me, R["bands"], drawn, 0.008, 0.010, 2.0, _hf(m, R)), [Me.weights(hi8)], ("odd",), slice_check=False)
+    assert math.sqrt(res[("odd", 0)]["ms"]) > R["mk"]["rip"], "the drawn bank meets 2.8 A at 2:1"
+
+
+def t_the_rating_applies_in_frequency_and_the_lifetime_is_conditional():
+    m, R = _m()
+    Me, fenv, rows = _corrected()
+    fmin = min(fenv[0], rows[0][0])
     corr = R["mk"]["corr"]
-    assert all(c == 1.0 for f, c in corr if f >= 100e3) and fmin >= 100e3, (fmin, corr)
-    assert any(f == 100e3 for f, _c in corr), "the 100 kHz column of p.2 was not read"
-    pct = int(re.search(r"Each can's loss is at most (\d+) % of the rated condition's", t).group(1))
-    assert pct < 100
-    rows = re.findall(r"^   \| ([\d.]+):1 \| ([\d.]+) A \| ([\d.]+) A \| ([\d.]+) A \| ([\d.]+) mW \| (\d+) % \|$", t, re.M)
-    assert len(rows) == 3 and all(float(r[3]) > 0 and int(r[5]) < 100 for r in rows), rows
+    assert all(c == 1.0 for f, c in corr if f >= 100e3) and fmin >= 100e3 and any(f == 100e3 for f, _c in corr), (fmin, corr)
+    t = _out()
+    assert "TEMPERATURE AND LIFE: CONDITIONAL (B4)" in t and "the obligation: the can's top temperature at the worst ripple" in t
+    assert "so its own rise is under the rated one" not in t
+
+
+def t_the_loop_with_the_ballast_meets_its_margins_at_l4e6s_r12_and_not_on_the_drawn_r12():
+    """recomputed here: the selected ballast, the sheet's C band, B3's envelope; loads to the highest permitted current"""
+    m, R = _m()
+    t = _out()
+    rb, _code = _pick(t)
+    hi = _hi(t)
+    _Me, fenv, _rows = _corrected()
+    mk, G, rec = R["mk"], R["gen"], R["rec"]
+    si = m.si
+    vout = G["rails"]["VBUS20"]["volts"]
+    cfg = dict(fsw=(fenv[1], fenv[0], fenv[2]), gm=mk["gm"], ro=mk["ro"], acs=mk["acs"], L=si(G["lval"], "H"),
+               vout=mk["vref"][1] * (1 + si(G["rfb_top"], "") / si(G["rfb_bot"], "")),
+               kfb=si(G["rfb_bot"], "") / (si(G["rfb_top"], "") + si(G["rfb_bot"], "")), modes=[("boost", 9.0), ("buck", 36.0), ("buck", 24.0)],
+               iouts=[rec["loop_stage"]["iout"], 0.25], cl0=rec["loop_stage"]["cl0"], ncer0=rec["loop_stage"]["ncer0"], esr_l=0.0004,
+               c_can=mk["c_can"], esr_can=mk["esr_can"], p_bound=rec["loop_stage"]["p"])
+    comp = tuple(si(v, "") for v, _l in G["comp"])
+    hoj = m.flat(m.page(m.HOJLR, 2))
+    tol = 0.01 + float(re.search(r"±(\d+) \(2mR~500mR\)", hoj).group(1)) * 1e-6 * m.RB_DT
+    c_k = ((1 - mk["c_tol"]) * (1 - mk["c_life"]), (1 + mk["c_tol"]) * (1 + mk["c_life"]))
+    bulk = [(k * mk["c_can"], e) for k in c_k for e in (rb * (1 - tol), rb * (1 + tol) + mk["esr_life"] * mk["esr_can"])]
+    nb, ncer = len(G["bulk"]), len(G["vbus_cer"]) + len(G["ch_in"]) + len(G["cout_pre"])
+    loads = sorted({hi["8"], hi["7"], rec["loop_stage"]["iout"], 0.25}, reverse=True)
+    for kw in ({}, dict(qs=rec["wide"]["q"], lks=rec["wide"]["lk"])):
+        x = m.loop_eval(cfg, nb, ncer, m.R12_E6, *comp, bulk=bulk, iouts=loads, p_bound=vout * loads[0], **kw)
+        assert x["pm"] >= 50 and x["gm"] >= 10 and x["mm"] >= 0.5 and x["ceil_ok"] and x["all_cross"] and x["z_ratio"] <= 1.0, x
+    w5 = m.loop_eval(cfg, nb, ncer, si(G["rcs"] + "Ohm", "Ohm"), *comp, qs=rec["wide"]["q"], lks=rec["wide"]["lk"], bulk=bulk,
+                     iouts=[rec["loop_stage"]["iout"], 0.25], p_bound=vout * rec["loop_stage"]["iout"])
+    assert w5["gm"] < 10, "the drawn R12's widened gain margin with the ballast is %.2f dB: the ORDER would not be needed" % w5["gm"]
+    cold = [(k * mk["c_can"], e) for k in c_k for e in (0.0, mk["esr_cold"])]
+    wc = m.loop_eval(cfg, nb, ncer, si(G["rcs"] + "Ohm", "Ohm"), *comp, qs=rec["wide"]["q"], lks=rec["wide"]["lk"], bulk=cold,
+                     iouts=[rec["loop_stage"]["iout"], 0.25], p_bound=vout * rec["loop_stage"]["iout"])
+    assert wc["gm"] < 10, "the drawn bank's loop at the cold limit reads %.2f dB: the open finding would not stand" % wc["gm"]
+    assert "THE COLD LIMIT" in t and "a finding on the drawn compensation" in t
+
+
+def t_the_draft_refuses_the_tree_without_l4e6s_r12():
+    need(GEN_A, "board A's generator")
+    src = open(GEN_A, encoding="utf-8").read()
+    D = _load(DRAFT, "apply_bank_t0")
+    r12 = _load(OTHERS[2], "apply_r12_t0")
+    assert D.fe_rcs(src) is None, "the drawn front end already sets rcs"
+    try:
+        D.order_ok(src)
+        raise AssertionError("order_ok() passed the drawn R12")
+    except SystemExit as e:
+        assert e.code == 3
+    with_r12 = r12.patched(src)
+    assert D.fe_rcs(with_r12) == "12m"
+    D.order_ok(with_r12)
+    D.order_ok(D.patched(with_r12))
 
 
 def _run(*a):
@@ -216,67 +380,67 @@ def t_the_draft_checks_applies_once_refuses_a_second_and_the_tree_without_releas
     need(GEN_A, "board A's generator")
     need(DRAFT, "the draft apply script")
     before = _sha(GEN_A)
-    for bank in ("8", "7"):
-        d = tempfile.mkdtemp(prefix="l4e8-apply-")
-        try:
-            cp = os.path.join(d, "gen_sch_a.py")
-            shutil.copyfile(GEN_A, cp)
-            orig = _sha(cp)
-            r = _run(cp, "--check", "--bank", bank)
-            assert r.returncode == 0 and "CHECK OK" in r.stdout and _sha(cp) == orig, (bank, r.returncode, r.stderr)
-            r = _run(cp, "--write", "--bank", bank)
-            assert r.returncode == 0 and _sha(cp) != orig, (bank, r.returncode, r.stderr)
-            r = _run(cp, "--write", "--bank", bank)
-            assert r.returncode == 3 and "already applied" in r.stderr, (bank, r.returncode, r.stderr)
-            open(cp, "w", encoding="utf-8").write(open(GEN_A, encoding="utf-8").read() + "\n# C236 already here\n")
-            r = _run(cp, "--check", "--bank", bank)
-            assert r.returncode == 3 and "already used" in r.stderr, (bank, r.returncode, r.stderr)
-            open(cp, "w", encoding="utf-8").write("x = 1\n")
-            r = _run(cp, "--check", "--bank", bank)
-            assert r.returncode == 3 and "occurs 0 times" in r.stderr, (bank, r.returncode, r.stderr)
-        finally:
-            shutil.rmtree(d)
+    d = tempfile.mkdtemp(prefix="l4e8-apply-")
+    try:
+        cp = os.path.join(d, "gen_sch_a.py")
+        shutil.copyfile(GEN_A, cp)
+        orig = _sha(cp)
+        r = _run(cp, "--check")
+        assert r.returncode == 0 and "CHECK OK" in r.stdout and _sha(cp) == orig, (r.returncode, r.stderr)
+        r = _run(cp, "--write")
+        assert r.returncode == 0 and _sha(cp) != orig, (r.returncode, r.stderr)
+        r = _run(cp, "--write")
+        assert r.returncode == 3 and "already applied" in r.stderr, (r.returncode, r.stderr)
+        open(cp, "w", encoding="utf-8").write(open(GEN_A, encoding="utf-8").read() + "\n# R221 already here\n")
+        r = _run(cp, "--check")
+        assert r.returncode == 3 and "already used" in r.stderr, (r.returncode, r.stderr)
+        open(cp, "w", encoding="utf-8").write("x = 1\n")
+        r = _run(cp, "--check")
+        assert r.returncode == 3 and "occurs 0 times" in r.stderr, (r.returncode, r.stderr)
+    finally:
+        shutil.rmtree(d)
     assert not os.path.exists(os.path.join(REC, "RELEASE.md")), "RELEASE.md exists: this test assumes the bank is not released"
     r = _run(GEN_A, "--write")
     assert r.returncode == 3 and "NOT RELEASED" in r.stderr, (r.returncode, r.stderr)
-    assert _run("x", "--bank", "9").returncode == 2
+    assert _run("a", "b").returncode == 2
     assert _sha(GEN_A) == before, "the tree's gen_sch_a.py changed"
 
 
-def t_the_draft_changes_only_the_banks_arguments_by_the_chosen_counts_and_keeps_8_inside_7():
+def _fe_call(tree):
+    return [n for n in ast.walk(tree) if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "lm5176" and n.args
+            and ast.literal_eval(n.args[0]) == "FE"][0]
+
+
+def t_the_draft_adds_only_the_ballast_and_leaves_the_other_stages_as_drawn():
     m, R = _m()
     t = _out()
+    rb, code = _pick(t)
     D = _load(DRAFT, "apply_bank_t1")
     src = open(GEN_A, encoding="utf-8").read()
-    for key in ("8", "7"):
-        _lim, bank = _chosen(t, key)
-        new = D.patched(src, key)
-        a, b = ast.parse(src), ast.parse(new)
-        call = lambda tree: [n for n in ast.walk(tree) if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "lm5176"
-                             and n.args and ast.literal_eval(n.args[0]) == "FE"][0]
-        ka = {k.arg: ast.literal_eval(k.value) for k in call(a).keywords}
-        kb = {k.arg: ast.literal_eval(k.value) for k in call(b).keywords}
-        changed = sorted(k for k in set(ka) | set(kb) if ka.get(k) != kb.get(k))
-        assert changed and set(changed) <= {"bulk", "cout_extra", "cout_pre"}, changed
-        assert [ast.dump(x) for x in call(a).args] == [ast.dump(x) for x in call(b).args]
-        strip = lambda tree: [ast.dump(s) for s in tree.body if not (isinstance(s, ast.Expr) and isinstance(s.value, ast.Call)
-                                                                     and getattr(s.value.func, "id", "") == "lm5176" and ast.literal_eval(s.value.args[0]) == "FE")]
-        assert strip(a) == strip(b), "the draft changes something besides the front end's call"
-        co = ("C13", "C14", "C15")
-        kb.setdefault("cout_extra", ka["cout_extra"])
-        vbus = [c for c in co + tuple(kb["cout_extra"]) if c not in kb["cout_pre"]]
-        got = (len(kb["bulk"]), len(vbus) + len(R["gen"]["ch_in"]), len(kb["cout_pre"]))
-        assert got == bank, "--bank %s draws %s, the output chose %s" % (key, got, bank)
-        assert set(kb["cout_pre"]) <= set(co + tuple(kb["cout_extra"])), "a cout_pre part is not one of the stage's ceramics"
-        added = (set(kb["bulk"]) | set(kb["cout_extra"])) - (set(ka["bulk"]) | set(ka["cout_extra"]))
-        assert all(not re.search(r"\b%s\b" % r, src) for r in added), "a new designator is used already"
-        assert kb["bulk_part"] == ka["bulk_part"] == "V331", "one can part number"
-    kw = {}
-    for key in ("8", "7"):
-        call = [n for n in ast.walk(ast.parse(D.patched(src, key))) if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "lm5176"
-                and n.args and ast.literal_eval(n.args[0]) == "FE"][0]
-        kw[key] = {k.arg: ast.literal_eval(k.value) for k in call.keywords}
-    assert all(set(kw["8"][k]) <= set(kw["7"][k]) for k in ("bulk", "cout_extra", "cout_pre")), "the 7 mOhm bank does not keep the 8 mOhm bank's parts"
+    new = D.patched(src)
+    a, b = ast.parse(src), ast.parse(new)
+    ka = {k.arg: ast.literal_eval(k.value) for k in _fe_call(a).keywords}
+    kb = {k.arg: ast.literal_eval(k.value) for k in _fe_call(b).keywords}
+    assert sorted(k for k in set(ka) | set(kb) if ka.get(k) != kb.get(k)) == ["bulk_ballast"]
+    refs, value, lcsc = kb["bulk_ballast"]
+    assert len(refs) == len(kb["bulk"]) == len(R["gen"]["bulk"]) and kb["bulk_part"] == "V331"
+    assert all(not re.search(r"\b%s\b" % r_, src) for r_ in refs), "a ballast designator is used already"
+    assert m.si(value, "Ohm") == rb and lcsc == code, (value, lcsc, rb, code)
+    fd = lambda tree: [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "lm5176"][0]
+    fa, fb = fd(a), fd(b)
+    assert [x.arg for x in fb.args.args] == [x.arg for x in fa.args.args] + ["bulk_ballast"] and ast.unparse(fb.args.defaults[-1]) == "None"
+    old_part = [ast.dump(n) for n in ast.walk(fa) if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "part" and n.args
+                and isinstance(n.args[0], ast.Name) and n.args[0].id == "cb"]
+    new_else = [ast.dump(n) for st in ast.walk(fb) if isinstance(st, ast.If) and ast.unparse(st.test) == "bulk_ballast" for n in st.orelse
+                for n in ast.walk(n) if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "part"]
+    assert old_part and old_part == new_else, "without bulk_ballast the helper does not draw the cans as before"
+    keep = lambda tree: [ast.dump(s) for s in tree.body if not (isinstance(s, ast.FunctionDef) and s.name == "lm5176")
+                         and not (isinstance(s, ast.Expr) and isinstance(s.value, ast.Call) and getattr(s.value.func, "id", "") == "lm5176"
+                                  and ast.literal_eval(s.value.args[0]) == "FE")]
+    assert keep(a) == keep(b), "the draft changes something besides the helper and the front end's call"
+    other = lambda tree: [ast.dump(n) for n in ast.walk(tree) if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "lm5176"
+                          and ast.literal_eval(n.args[0]) != "FE"]
+    assert other(a) == other(b) and len(other(a)) == 6, "another stage's call changed"
 
 
 def _changed_lines(src, new):
@@ -294,7 +458,7 @@ def t_the_draft_composes_with_l4e4_and_l4e6_in_every_order_on_disjoint_lines():
     src = open(GEN_A, encoding="utf-8").read()
     mods = [_load(p, "other_%d" % i) for i, p in enumerate(OTHERS)]
     D = _load(DRAFT, "apply_bank_t2")
-    fns = [(os.path.basename(p), (lambda mm: (lambda x: mm.patched(x)))(mm)) for p, mm in zip(OTHERS, mods)] + [("bank", lambda x: D.patched(x, "8"))]
+    fns = [(os.path.basename(p), (lambda mm: (lambda x: mm.patched(x)))(mm)) for p, mm in zip(OTHERS, mods)] + [("bank", D.patched)]
     lines = {name: _changed_lines(src, f(src)) for name, f in fns}
     names = [n for n, _f in fns]
     for a_, b_ in itertools.combinations(names, 2):
