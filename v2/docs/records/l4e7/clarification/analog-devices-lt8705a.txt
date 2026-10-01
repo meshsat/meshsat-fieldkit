@@ -2,12 +2,13 @@ DRAFT FOR THE OWNER TO SEND. The MeshSat session contacts no outside party; it p
 Addressee: Analog Devices, technical support for the LT8705A (the owner chooses the channel).
 Prepared 1 October 2026, task L4-E7 (MESHSAT-1357).
 
-Subject: LT8705AIUHF: guaranteed limits for the IMON_IN input-current regulation (EA2 gain, VC dependence, line regulation)
+Subject: LT8705AIUHF: guaranteed limits for the IMON_IN input-current regulation (EA2 gain, VC dependence, line regulation,
+A7 transfer error)
 
 We use the LT8705AIUHF#PBF to hold a solar panel's input power under 100 W by its input-current limit (data sheet 8705af,
 https://www.analog.com/media/en/technical-documentation/data-sheets/8705af.pdf, "Current Limiting" on page 31 and
 Figure 11). We size the limit from the Electrical Characteristics, and three quantities that set the regulated input
-current are printed only as typical values or only at 25 C. We ask for guaranteed limits, or a statement of what your
+current are printed only as typical values, only at 25 C, or only at one test point. We ask for guaranteed limits, or a statement of what your
 production test covers, for each:
 
 1. The IMON_IN error amplifier EA2 (page 5: voltage gain 130 V/V and gm 185 umho, typical only). The IMON_IN regulation
@@ -24,5 +25,13 @@ production test covers, for each:
 3. Do the full-range limits of the IMON_IN regulation voltage on page 4 already include the reference's temperature
    drift at VIN = 12 V, and do they hold with CIMON_IN filtering a discontinuous input current as page 31 describes?
 
-A statement of the guaranteed values, or of the production test conditions and the characterization over production
-lots behind them, is what we need; typical curves are not sufficient for our purpose. Thank you.
+4. The CSPIN/CSNIN to IMON_IN amplifier A7 (page 5: gm 0.95 / 1 / 1.05 mmho at 25 C and 0.94 / 1.06 mmho over the full
+   range for the E and I grades, each at VCSPIN - VCSNIN = 50 mV and VCSPIN = 5.025 V). Our circuit runs CSPIN and CSNIN
+   at the panel voltage, 16 V to 25 V common mode, with up to about 58 mV across the sense resistor, while the converter
+   switches. What transfer error (gain and offset, IMON_IN current against the differential voltage) do you guarantee
+   over 1.5 V to 80 V common mode (page 5's operating range), 0 to 100 mV differential, -40 to 125 C junction and while
+   switching? If the page 5 limits apply only at the test point, what limits apply at 16 V to 25 V common mode?
+
+For each item we ask for a limit Analog Devices warrants, and the conditions under which it applies. Characterization
+over production lots is welcome as supporting evidence, but on its own we cannot treat it as a production guarantee;
+typical curves are not sufficient for our purpose. Thank you.

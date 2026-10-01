@@ -60,8 +60,9 @@ not move it.
 | D. Drifts at the typical rows | 98.6931 W | 98.6743 W |
 
 **Qualification of the 100 W bound: `L4E7-QUALIFICATION.md`** (the owner's instruction of 1 October 2026). The result is
-CONDITIONAL on EA2's gain, the line regulation while switching, RSENSE1's TCR below +25 C and U5's junction staying inside
-the I grade's range; under all their conservative assumptions together the cold corner reads 99.8992 W.
+CONDITIONAL on EA2's gain, A7's gain away from its 50 mV / 5.025 V test point, the line regulation while switching,
+RSENSE1's TCR below +25 C and U5's junction staying inside the I grade's range; under all their conservative assumptions
+together the cold corner reads 99.8992 W (margin 0.1008 W, an effective A7 gain 0.1008 % under its printed minimum).
 
 The script refuses above 100 W. For comparison, O-2's 3.548 A on these parts takes 98.375 W. The conditions hold: 57.5 mV
 across RSENSE1 at the limit's highest (100 mV range, p.5), IMON_IN 60.9 uA (at least 100 uA), the fault at up to 76.7 mV,
