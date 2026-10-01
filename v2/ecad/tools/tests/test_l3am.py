@@ -129,63 +129,101 @@ def t_l3am_acceptance_binds_the_reviewed_content():
     if filed and not filed.get("manifest"): assert not RL.acceptance_ok(req, data)[0]
 
 
+def _valid(R, req):
+    """rules_lib's own validation of a fixture registry: [] when the registry is schema-valid."""
+    errs, _w = R.validate_requirements(copy.deepcopy(req))
+    return errs
+
+
 def t_l3am_the_requirements_digest_binds_normative_content():
-    """B1 of the amendment's check: every field the tree's registry carries is classified in or out of the requirements
-    digest (REQUIREMENTS_FIELDS, with its reason). A bound acceptance is invalidated by a change to an owner ruling's text
-    (D-11, simultaneous transmission), a session choice's taken answer, an accepted operating exception (CON-012's
-    residual_risk_accepted), a stage's requires, needs or holds, a record's rulings, or an added owner ruling; it stays
-    valid when a reading or a note is added, a stage's status or an open item's state moves, a conflict's closure evidence
-    or a record's rule coverage is extended, or the acceptance's history grows."""
+    """B1 of the amendment's check and its recheck, by the principle (render_l3r2.REQUIREMENTS_PRINCIPLE): what states a
+    demand or an authority is in the digest; what legitimately changes as downstream work progresses is not. Every field
+    of the tree's registry is placed in a category of the principle, and every record status value rules_lib allows has
+    its projection. Closures the registry's own validator accepts leave the digest and a bound acceptance unchanged:
+    FEA-003's layout stage closed as rules_lib requires (status CLOSED, closed_by, holds_layout_entry updated; the same
+    closure with the summary left stale is refused by the validator), FEA-003 closed altogether (FEASIBILITY_CLOSED,
+    resolved_by), CFL-006 between its open and its resolved state, and S-128 closed by a commit with REQ-042 no longer
+    waiting on it; so do an added reading, a note and a history line, each schema-valid. Eight normative changes
+    invalidate, each for a requirements mismatch: D-11's ruling, a session choice's answer, CON-012's accepted exception,
+    a stage's requires, needs and holds, a record's rulings, and an added owner ruling."""
     import l3amfix as F
+    import rules_lib as R
     RL, req, data = _tree()
-    F_ = RL.REQUIREMENTS_FIELDS
+    cats = dict(RL.IN_CATEGORIES, **RL.OUT_CATEGORIES)
+    assert not set(RL.IN_CATEGORIES) & set(RL.OUT_CATEGORIES) and "IN is whatever states" in RL.REQUIREMENTS_PRINCIPLE
     seen = {"top": set(req), "ruling": {k for x in req["owner_rulings"] for k in x},
             "choice": {k for x in req["session_choices"] for k in x}, "record": {k for x in req["records"] for k in x},
             "stage": {k for x in req["records"] for s in (x.get("stages") or []) for k in s}}
     for kind, keys in seen.items():
-        miss = sorted(keys - set(F_[kind]))
-        assert not miss, "the registry's %s fields %s are not classified in or out of the digest" % (kind, miss)
-        assert all(v.split(":")[0] in ("IN", "OUT") and v.split(":", 1)[1].strip() for v in F_[kind].values()), \
-            "a %s field is classified without its reason" % kind
+        miss = sorted(keys - set(RL.REQUIREMENTS_FIELDS[kind]))
+        assert not miss, "the registry's %s fields %s are placed in no category of the principle" % (kind, miss)
+        assert all(c in cats for c in RL.REQUIREMENTS_FIELDS[kind].values()), kind
+    assert set(RL.STATUS_PROJECTION) == set(R.REQ_STATUS), "a record status value has no projection"
+    assert len({RL.STATUS_PROJECTION[s] for s in ("FEASIBILITY_OPEN", "FEASIBILITY_CLOSED")}) == 1
+    assert len({RL.STATUS_PROJECTION[s] for s in ("CONFLICT_OPEN", "CONFLICT_RESOLVED")}) == 1
+    assert RL.STATUS_PROJECTION["SUPERSEDED"] != RL.STATUS_PROJECTION["DEFINED"]
+    assert not _valid(R, req), "the tree's registry does not validate"
+    digest = RL.requirements_digest(req)
     good = copy.deepcopy(data); good["baseline_acceptance"] = _record(RL, req, data, F.commit_with())
     assert RL.acceptance_ok(req, good)[0], RL.acceptance_ok(req, good)[1]
 
     def rec(r, rid): return next(x for x in r["records"] if x["id"] == rid)
 
-    def stage(r): return next(x for x in r["records"] if x.get("stages"))["stages"][0]
+    def stage(r, rid="FEA-003", name="LAYOUT_ENTRY"): return next(s for s in rec(r, rid)["stages"] if s["stage"] == name)
+    assert rec(req, "FEA-003")["holds_layout_entry"] and stage(req)["status"] == "OPEN", "FEA-003's layout stage is not open"
+    # FEA-003's layout stage closed as rules_lib requires
+    closed = copy.deepcopy(req)
+    stage(closed).update(status="CLOSED", closed_by="a fixture closure: FB-FAB-1 to FB-FAB-7 closed on the committed netlist")
+    stale = _valid(R, closed)
+    assert stale and "holds_layout_entry" in stale[0], "the validator accepts a closed layout stage with a stale hold: %s" % stale
+    rec(closed, "FEA-003")["holds_layout_entry"] = []
+    # FEA-003 closed altogether
+    whole = copy.deepcopy(closed)
+    for s in rec(whole, "FEA-003")["stages"]:
+        s.update(status="CLOSED", closed_by="a fixture closure of the stage, its evidence named")
+    rec(whole, "FEA-003").update(status="FEASIBILITY_CLOSED", resolved_by="a fixture: every stage closed with its evidence")
+    # CFL-006 between its open and its resolved state
+    assert rec(req, "CFL-006")["status"] == "CONFLICT_RESOLVED" and rec(req, "CFL-006")["evidence_result"] == "FAIL"
+    opened = copy.deepcopy(req)
+    rec(opened, "CFL-006")["status"] = "CONFLICT_OPEN"; rec(opened, "CFL-006").pop("resolved_by")
+    # S-128 closed by a commit, REQ-042 no longer waiting on it
+    s128 = copy.deepcopy(req)
+    item = next(x for x in s128["open_items"] if x["id"] == "S-128"); s128["open_items"].remove(item)
+    s128["closed_items"].append({"id": "S-128", "title": item["title"], "closed_by": "commit %s" % F.root_commit()[:12],
+                                 "closing_evidence": "a fixture closure read in v2/docs/records/l3am/DISPOSITIONS.md"})
+    rec(s128, "REQ-042")["waits_on"] = [x for x in rec(s128, "REQ-042")["waits_on"] if x != "S-128"]
+    reading = copy.deepcopy(req)
+    rec(reading, "REQ-072")["evidence"].append("v2/docs/records/l3batt/COMPARISON.md re-read at layer 4 (a fixture reading)")
+    noted = copy.deepcopy(req)
+    rec(noted, "REQ-016")["notes"] = str(rec(noted, "REQ-016")["notes"]) + " A fixture note."
+    rec(noted, "REQ-016")["history"] = str(rec(noted, "REQ-016")["history"]) + " A fixture history line."
+    for name, fx in (("FEA-003's layout stage closed", closed), ("FEA-003 closed", whole), ("CFL-006 open", opened),
+                     ("S-128 closed", s128), ("a reading added", reading), ("a note and a history line", noted)):
+        errs = _valid(R, fx)
+        assert not errs, "%s is not schema-valid: %s" % (name, errs[:3])
+        assert RL.requirements_digest(fx) == digest, "%s changed the requirements digest" % name
+        assert RL.acceptance_ok(fx, good)[0], "%s invalidated the acceptance: %s" % (name, RL.acceptance_ok(fx, good)[1])
+    hist = copy.deepcopy(good); hist["baseline_acceptance_history"] = [{"revision": LEGACY}]
+    assert RL.acceptance_ok(req, hist)[0], "the acceptance's history entered the policy"
     mutations = (
         ("D-11's ruling", lambda r: next(x for x in r["owner_rulings"] if x["id"] == "D-11").update(
             ruling="Only one radio may transmit at a time.")),
         ("a session choice's answer", lambda r: r["session_choices"][0].update(taken="a different answer")),
         ("CON-012's accepted exception", lambda r: rec(r, "CON-012")["residual_risk_accepted"].update(
             what="Above +25 C ambient the kit runs one compute module.")),
-        ("a stage's requires", lambda r: stage(r).update(requires="nothing")),
-        ("a stage's needs", lambda r: stage(r).update(needs=["DESK", "BENCH"])),
-        ("a stage's holds", lambda r: stage(r).update(holds=[])),
+        ("a stage's requires", lambda r: stage(r).update(requires="nothing closes this stage but a fixture text")),
+        ("a stage's needs", lambda r: stage(r).update(needs=["DESK", "VENDOR_ANSWER"])),
+        ("a stage's holds", lambda r: stage(r).update(holds=["b", "e"])),
         ("a record's rulings", lambda r: rec(r, "REQ-016")["rulings"].append("D-11")),
         ("an added owner ruling", lambda r: r["owner_rulings"].append({"id": "D-99", "authority": "OWNER", "ruled_on": "2026-10-02",
                                                                        "title": "a fixture", "ruling": "a fixture ruling", "source": []})),
     )
+    assert len(mutations) == 8
     for name, edit in mutations:
         r2 = copy.deepcopy(req); edit(r2)
+        assert RL.requirements_digest(r2) != digest, "%s left the digest unchanged" % name
         ok, why = RL.acceptance_ok(r2, good)
-        assert not ok and "requirements" in why, "%s kept the acceptance: %s" % (name, why or "valid")
-    keeps = (
-        ("a reading", lambda r: rec(r, "REQ-042").setdefault("evidence", []).append("v2/docs/records/l4e/x.md read (a fixture)")),
-        ("a note", lambda r: rec(r, "REQ-016").update(notes="a fixture note")),
-        ("a history line", lambda r: rec(r, "REQ-016").update(history="a fixture history")),
-        ("a stage's status", lambda r: stage(r).update(status="MET")),
-        ("an open item closed", lambda r: (r["closed_items"].append(dict(r["open_items"].pop(0), closed_by="a fixture")))),
-        ("a record's waits_on", lambda r: rec(r, "REQ-042").update(waits_on=["S-56"])),
-        ("a conflict's resolution text", lambda r: next(x for x in r["records"] if x.get("resolved_by")).update(resolved_by="a fixture")),
-        ("a record's rule coverage", lambda r: rec(r, "REQ-042")["satisfied_by"]["rules"].append("TRN-001")),
-        ("a ruling's source", lambda r: r["owner_rulings"][0].update(source=["a fixture"])),
-    )
-    for name, edit in keeps:
-        r2 = copy.deepcopy(req); edit(r2)
-        assert RL.acceptance_ok(r2, good)[0], "%s invalidated the acceptance: %s" % (name, RL.acceptance_ok(r2, good)[1])
-    hist = copy.deepcopy(good); hist["baseline_acceptance_history"] = [{"revision": LEGACY}]
-    assert RL.acceptance_ok(req, hist)[0], "the acceptance's history entered the policy"
+        assert not ok and "(requirements)" in why, "%s kept the acceptance: %s" % (name, why or "valid")
 
 
 def t_l3am_the_acceptance_script_files_a_bound_record_and_supersedes():
@@ -254,8 +292,10 @@ def t_l3am_findings_close_only_with_a_check_of_the_amendment():
     """B2 of the amendment's check: apply_l3am_findings_closed.py closes the findings only with a new accepted check of
     this amendment. Refused: check-l3r5-3 (on the tree, where it is the newest accepted check), a fixture record carrying
     the format under an old check's name, a record whose first line says no while filed ACCEPTED, a record without the
-    scope line, a reviewed revision that is not a commit or not an ancestor of the tip, and a reviewed revision before a
-    later change to an amendment file. Accepted: a fixture check of the tip; the script then changes checked_by, state and
+    scope line, a header line padded with a space (the three lines are compared exactly), a reviewed revision that is not a
+    commit or not an ancestor of the tip, and a reviewed revision before a later change to any test file the amendment's
+    commits changed (every one of them listed in AMENDMENT_FILES) or to one of its scripts. Accepted: a fixture check of
+    the tip, its header exact; the script then changes checked_by, state and
     status and nothing else, and a second run is refused."""
     need(CLOSE, "the closing script is not in this tree")
     import l3amfix as F
@@ -277,19 +317,35 @@ def t_l3am_findings_close_only_with_a_check_of_the_amendment():
     assert r.returncode == 2 and "scope" in r.stdout, "check-l3r5-3 closed the findings on a copy:\n%s" % r.stdout
     for args, want in (((tip, "check-l3r5-3.md"), "before the amendment"),
                        ((tip, "check-x.md", F.SCOPE, "accepted: no"), "accepted"),
+                       ((tip, "check-x.md", F.SCOPE, "accepted: yes "), "not exactly"),
+                       ((tip, "check-x.md", F.SCOPE, " accepted: yes"), "not exactly"),
+                       ((tip, "check-x.md", F.SCOPE + " "), "scope"),
                        ((tip, "check-x.md", "scope: Layer 3 closure"), "scope"),
                        (("0" * 40,), "not a commit"),
                        ((F.commit_with(parent=F.root_commit()),), "ancestor")):
         path, sha = F.amendment_check(*args)
         _p, r = close(path, sha)
         assert r.returncode == 2 and want in r.stdout, "%s: %s" % (want, r.stdout)
-    # a revision before a later change to an amendment file
-    rel = "v2/ecad/tools/tests/test_l3am.py"
-    earlier = F.commit_with({rel: open(os.path.join(ROOT, rel), "rb").read() + b"# an earlier text\n"})
-    later = F.commit_with(parent=earlier)
-    path, sha = F.amendment_check(earlier)
-    _p, r = close(path, sha, head=later)
-    assert r.returncode == 2 and "changed since" in r.stdout and rel in r.stdout, r.stdout
+    # a revision before a later change to an amendment file: every test file the amendment changed is compared (the
+    # recheck's minor), and so is a script of the amendment; the test files its commits change are all listed
+    sys.path.insert(0, AM)
+    import l3amlib as LIB
+    msgs = subprocess.run(["git", "-C", ROOT, "log", "--format=%H", "-i", "--grep=layer 3 amendment", "%s..HEAD" % LIB.BASE],
+                          capture_output=True, text=True).stdout.split()
+    changed = set()
+    for c in msgs:
+        changed |= set(subprocess.run(["git", "-C", ROOT, "diff-tree", "--no-commit-id", "--name-only", "-r", c],
+                                      capture_output=True, text=True).stdout.split())
+    changed |= set(subprocess.run(["git", "-C", ROOT, "diff", "--name-only", "HEAD"], capture_output=True, text=True).stdout.split())
+    tests = sorted(x for x in changed if x.startswith("v2/ecad/tools/tests/"))
+    assert tests and not set(tests) - set(LIB.AMENDMENT_FILES), "test files the amendment changed are not compared: %s" % (
+        sorted(set(tests) - set(LIB.AMENDMENT_FILES)))
+    for rel in tests + ["v2/docs/records/l3am/apply_l3am_r02.py"]:
+        earlier = F.commit_with({rel: open(os.path.join(ROOT, rel), "rb").read() + b"# an earlier text\n"})
+        later = F.commit_with(parent=earlier)
+        path, sha = F.amendment_check(earlier)
+        _p, r = close(path, sha, head=later)
+        assert r.returncode == 2 and "changed since" in r.stdout and rel in r.stdout, "%s: %s" % (rel, r.stdout)
     # a check of the tip: accepted, and only checked_by, state and status change
     path, sha = F.amendment_check(tip)
     p, r = close(path, sha, check=False)
