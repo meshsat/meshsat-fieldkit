@@ -1,0 +1,11 @@
+{
+ "what": "Topwell Power's product page for its HL18650V wide-temperature 18650 cell, read by task L4-E10 (MESHSAT-1357). A maker's product page, NOT a specification: no signed document, no test conditions, no state of charge for the storage rows, no ambient or cell-surface basis stated. The page's 'PDF Format' button renders the page itself; no specification PDF is linked.",
+ "url": "https://www.topwellpower.com/products/-40%C2%B0c-to-85%C2%B0c-18650-36v-2900mah-wide-temperature-lithium-battery",
+ "fetched_utc": "2026-10-01T22:12Z",
+ "bytes": 152293,
+ "sha256": "25dd8ee2d51eef91b66f704054fe64b6801be2d9e9e47e79bba85dd7ed015aad",
+ "company_named_on_page": "Yichun Topwell Power Co., Ltd",
+ "header_verbatim": "Item No.: TWE0388 Model: HL18650V Nominal Voltage: 3.6V Typical Capacity: 2900mAh Minimum Capacity: 2800mAh Wide Temperature Range: -40°C to 85°C (discharge) Wide Applications: outdoor special equipment, GPS, military equipment, vehicle-mounted devices, etc.",
+ "specification_table_verbatim": "Product Specifications Item Specifications Remark Model No. HL18650V Nominal Voltage 3.6V Nominal Capacity 2900mAh (Min. 2800mAh) @0.2C standard charge&discharge Dimensions 18.5*65.5mm max Diameter*Height Cycle Life ≥500 times (25 ℃，0.5 C / 1C ) Charge Method CC/CV Charge Cut-off Voltage 4.2V Discharge Cut-off Voltage 2.75V Standard Charge Current 0.56A Standard Discharge Current 0.56A Max Continuous Charge Current 1.4A Max Continuous Discharge Current 10A Operating Temperature Range Charge: -20 ~60℃ -20 -10＜T≤0℃: 0.1C to 4.1V, 0＜T≤10℃: 0.2C to 4.2V, 10＜T＜60℃: 0.5C to 4.2V Discharge: -40~85℃ 0＜T≤85℃: 2.75V, -20＜T≤0℃: 2.5V, -40≤T≤-20℃: 2.0V Storage Temperature Range -20~25℃ 0 - 12 months -20~45℃ 0 - 6 months -40~60℃ 0 - 3 months -40~80 ℃ Within 30 days Internal Resistance ≤18mΩ Weight Approx. 44g",
+ "publication": "HELD BACK: the page's HTML is not filed (its terms are not stated); this reading quotes the specification lines only."
+}
