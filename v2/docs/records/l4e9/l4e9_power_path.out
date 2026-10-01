@@ -116,7 +116,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    IF-03  TRK_OUT through U4/Q2 (ideal diode) onto VIN_RAW  [MEETS, MAKER/NETLIST]
      sides: TRK_OUT (C24, C25 35 V polymer; C26, C27 10u 25 V) | VIN_RAW (board E)
      voltage: TRK_OUT at most 30.15 V (raised ceiling) | VIN_RAW up to the vehicle's OVLO maximum 42.49 V with TRK_OUT at 0
-     current: at the window 93 W out; at H3's lowest settle point (22.06 V) 4.216 A; declared _TRK_A 10.33 A
+     current: asked: at the window 93 W out, at H3's lowest settle point (22.06 V) 4.216 A | available: the declared _TRK_A 10.33 A
      losses: Q2's RDS(on) (milliohms); thermal: inside air 62.1 C
      protection: the stage's own limit | U4 blocks VIN_RAW into TRK_OUT
      settled by: l4e5 (ceiling, C26/C27), this record (reverse)
@@ -128,7 +128,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    IF-04  the vehicle and shore input to board E's entry (J_DCIN, F1, D10, U3/Q1 LM74700 ideal diode) to DC_P  [CONDITIONAL, ASSUMPTION]
      sides: a vehicle or shore supply, 9 to 36 V (REQ-015), reversed or at an over-voltage to 40 V | board E, DC_F and DC_P
      voltage: 9 to 36 V in service; OVLO 37.78 / 40.09 / 42.49 V; reversed to -36 V | D10 SMCJ40CA breakdown 44.4 V minimum either way
-     current: the entry limits at 4.85 to 6.15 A (LM5069, R19 10 mOhm, VCL 48.5 / 55 / 61.5 mV); J_DCIN VH, the lead AWG 18 (no stated rating at it)
+     current: asked: the entry limits at 4.85 to 6.15 A (LM5069, R19 10 mOhm, VCL 48.5 / 55 / 61.5 mV) | available: F1 10 A; J_DCIN VH, the lead AWG 18 (no stated rating at it)
      losses: F1, Q1, R19, Q7 and L2 in series (about 0.2 V, the generator's note); thermal: R19 and Q7 at 6.15 A continuous, 32 K rise (gen_sch_e.py)
      protection: the supply's own | F1 blade; D10 (two-way, at the entry); U3/Q1 reverse block; D1 at DC_P; the LM5069 (UVLO 9 V, OVLO 40 V, current limit and its timer)
      settled by: d8dec31 (E-F1, E-F2), this record (Q1 in reverse with the raised ceiling), l4e5
@@ -145,8 +145,8 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - MEETS: the negative discharge at the ruled level (15 kV) with E-F1's 1 uF input capacitor: DC_F's rise against D10's breakdown: 2.25 < 44.4 V; INFERRED (DECISION-31 6.3 (d8dec31 apply_gen_sch_e_cin.py, register R-16))
    IF-05  DC_P through the hot swap U6/Q7 (LM5069) and the choke L2 to VIN_RAW  [MEETS, MAKER/NETLIST]
      sides: DC_P | VIN_RAW (board E)
-     voltage: DC_P up to D1's clamping 64.5 V at 23.3 A; LM5069 VIN 100 V absolute; Q7 100 V
-     current: limit 4.85 to 6.15 A; fault timer 3.13 / 4.71 / 8.16 ms then off and retry (-2); L2 6.89 A Irms, 9.15 A Isat (its value text)
+     voltage: DC_P up to D1's clamping 64.5 V at 23.3 A | LM5069 VIN 100 V absolute; Q7 100 V
+     current: asked: the limit 4.85 to 6.15 A, fault timer 3.13 / 4.71 / 8.16 ms then off and retry (-2) | available: L2 6.89 A Irms, 9.15 A Isat (its value text)
      losses: R19 0.38 W at 6.15 A; thermal: inside air 62.1 C
      protection: D1 SMCJ40A at DC_P | D2 SMCJ40A on VIN_RAW
      settled by: gen_sch_e.py (F-IN-02), l4e5
@@ -181,8 +181,8 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - MEETS: U2's VIN at the highest steady input: 42.49 <= 60 V; MAKER (TI SNVSAI1D 6.1)
    IF-08  VBUS20's bulk bank (six EEHZK1V331P, each behind a 45 mOhm ballast; Cc2 3.3 nF)  [CONDITIONAL, CONDITIONAL]
      sides: the front end's output and U3's input pulses | the six cans
-     voltage: VBUS20 at most 23.397 V against the cans' 35 V
-     current: every can at most 2.4096 A (R11 8 mOhm, 7.262 A) against the rule's 2.7745 A; 2.7661 A against 2.7709 A at 7 mOhm
+     voltage: VBUS20 at most 23.397 V | the cans' 35 V
+     current: every can at most 2.4096 A (R11 8 mOhm, 7.262 A); 2.7661 A at 7 mOhm | the rule's 2.7745 A; 2.7709 A at 7 mOhm
      losses: the ballasts at most 2.09 W at the bound's worst corner (an operating-point term for REQ-072's owner); thermal: the can's rise is a bench reading (lifetime CONDITIONAL); the cold ESR envelope INFERRED
      protection: R12's peak limit and R11's average limit | the ballasts
      settled by: l4e8 (accepted, check 3)
@@ -205,7 +205,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - MEETS: the charge per cell inside the cell maker's maximum charge current: 1000 <= 2000 mA; MAKER (Samsung 35E 3.7)
    IF-10  VBAT and the pack (board A F1 and R17, the dock's pack pins, board E F3, the XT60 lead, board P's chain)  [CONDITIONAL, CONDITIONAL]
      sides: VBAT (the kit's loads and U3) | the 4S3P pack (D-06) and board P
-     voltage: 10 V (the gauge's CUV 2.5 V a cell) to 16.884 V; BATOVP 17.64 V; D1 SMCJ18A standoff 18 V, breakdown 20 V minimum; the pack FETs 30 V
+     voltage: 10 V (the gauge's CUV 2.5 V a cell) to 16.884 V; BATOVP 17.64 V | D1 SMCJ18A standoff 18 V, breakdown 20 V minimum; the pack FETs 30 V
      current: declared 10 A continuous, 18 A peak; PS-IDLE-SPEC 2.5 / 3 / 3.6 / 4.3 A at 16.8 / 14.4 / 12.0 / 10.0 V; the PA keyed at 113 W 16.6 A at 10.0 V; PS-ALLTX's 18 A at a 11.48 V stack (D-11); charge 3 A | OCD1 20 A for 2 s, SCD 60 A; the pins 4.5 / 6 A; XT60 30 A
      losses: R17, F1, the pins, F3, the lead, the pack's FETs and F2 (POWER-THERMAL 7.3's 22.5 mOhm); thermal: the cells' windows 0 to 45 C charge, -10 to 60 C discharge (REQ-046); FEA-008's collisions OPEN
      protection: D1 SMCJ18A on VBAT; A F1 25 A | BQ4050 (COV 4.25 V, CUV 2.5 V, OCC, OCD1, SCD, temperatures); BQ7720700; F1 25 A; F2 SCF9550 30 A
@@ -221,8 +221,8 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - OPEN: the cells' temperature design against REQ-046 with the pack fitted (FEA-008, DR-06): (a design); CONDITIONAL (FEA-008: LO-01a, d, e, f, g, h OPEN)
    IF-11  VBAT to the load converters (slot rails, device rail, logic, monitor, heater; board E's always-on on CELL_F)  [CONDITIONAL, ASSUMPTION]
      sides: VBAT | the 39 loads of PS-IDLE-SPEC and the PS-ALLTX set
-     voltage: 10 to 16.884 V; the converters assumed to run to 10 V (SHORTLIST.md 2, not shown)
-     current: PS-IDLE-SPEC 33.1 / 42.8 / 82.8 W; PS-ALLTX 168.9 / 203.8 / 272 W (low / plan / high at the pack terminals); 8.4 W of PS-IDLE-SPEC has no document
+     voltage: 10 to 16.884 V | the converters assumed to run to 10 V (SHORTLIST.md 2, not shown)
+     current: asked: PS-IDLE-SPEC 33.1 / 42.8 / 82.8 W; PS-ALLTX 168.9 / 203.8 / 272 W (low / plan / high at the pack terminals); 8.4 W of PS-IDLE-SPEC has no document | available: each converter's own rating (pwr_budget.py)
      losses: the converters' makers' floors (pwr_budget.py); thermal: the heat per state, POWER-THERMAL 9 (conductance unmeasured, FEA-004)
      protection: the eFuses (monitor 1 A peak declared, heater) and the stages' limits | each converter's own
      settled by: pwr_budget.out, load_trace.out, POWER-THERMAL
@@ -231,8 +231,8 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - MEETS: TPS2596 eFuses (U21, U22) on VBAT at the SYSOVP maximum: 20 <= 21 V; MAKER (TI TPS2596 7.1)
    IF-12  VBAT to the USB-C outlet (U19 LM5176, Q27, R138, J_USBC_OUT; U18 TPS25740A), the tablet's optional charge  [CONDITIONAL, ASSUMPTION]
      sides: VBAT | the outlet's sink (a tablet), 5, 9 and 15 V at 3 A
-     voltage: 5 / 9 / 15 V contracts; each held inside the maker's window (L4-E4 bench (a))
-     current: 3 A each PDO | R138 5 mOhm trip 3.793 to 4.576 A; U19's own limit 4.212 to 5.81 A; the Bulgin receptacle 5 A; Q27 42 A; J_USBC_OUT no rating held | with PS-TYP 112.3 W plan (45 W at the outlet), 7.8 A at 14.4 V
+     voltage: VBAT 10 to 16.884 V into U19 | 5 / 9 / 15 V contracts, each held inside the maker's window (L4-E4 bench (a))
+     current: asked: 3 A each PDO; with PS-TYP 112.3 W plan (45 W at the outlet), 7.8 A at 14.4 V | available: R138 5 mOhm trip 3.793 to 4.576 A; U19's own limit 4.212 to 5.81 A; the Bulgin receptacle 5 A; Q27 42 A; J_USBC_OUT no rating held
      losses: U19 0.93 DECLARED; thermal: inside air 62.1 C
      protection: OUTLET_OK interlock (off while the PA keys, CON-019); C2's shed at 9.0 A | U18's OCP over R138 (15 us); fast and slow OVP
      settled by: l4e4 (R138, bench a and b)
@@ -243,8 +243,8 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - MEETS: PS-TYP with the outlet inside the declared continuous pack current at 14.4 V: 7.8 <= 10 A; MODELED (pwr_budget.out)
    IF-13  VBAT to the PoE stage (U16 LM5176 boost, R71, +54V_POE, J_54V to board B) and its monitor U17  [MEETS, INFERRED]
      sides: VBAT | +54V_POE at 0.6 A peak (REQ-017)
-     voltage: 54 V; U17 (INA226) IN+ and IN- on POE_OUT and +54V_POE (U17 pins 10 and 9) | INA226 40 V absolute, 36 V common mode
-     current: 0.3 / 0.6 A; the stage's input at a 10 V stack 3.682 A; PS-TYP plus PoE 100.4 W plan (32.4 W outside)
+     voltage: VBAT 10 to 16.884 V into U16 | 54 V; U17 (INA226) IN+ and IN- on POE_OUT and +54V_POE as drawn (U17 pins 10 and 9); INA226 40 V absolute, 36 V common mode
+     current: asked: 0.3 / 0.6 A at 54 V, the stage's input at a 10 V stack 3.682 A, PS-TYP plus PoE 100.4 W plan (32.4 W outside) | available: the shunt's full scale at 20 mOhm, U16's limit
      losses: U16 0.88 (the generator's figure outside the maker's plots); thermal: inside air 62.1 C
      protection: OUTLET_OK interlock | U16's average limit; board B's TPS23861 port limit
      settled by: HW-FW-CONTRACT HF-F02 (S-60), this record (the resolution)
@@ -253,8 +253,8 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - MEETS: that shunt's drop at the stage's input at the lowest stack inside the INA226's full scale: 73.6364 <= 81.92 mV; INFERRED (the declared 0.6 A at 54 V over 0.88)
    IF-14  VBAT to the PA rail (+13V8_PA, J_PA) with the PA keyed  [CONDITIONAL, ASSUMPTION]
      sides: VBAT | the RA30H1317M1 PA, 13.8 V
-     voltage: 13.8 V; PA_EN gated by EMCON and TX_INHIBIT_n
-     current: declared 5 / 6 A (the drain 5.4 to 8.2 A not characterised, F-PR-02); the stage's average loop 7.2 to 9.5 A; PS-IDLE-SPEC plus the PA at 113 W 162.3 W, 16.6 A at 10.0 V
+     voltage: VBAT 10 to 16.884 V into U13 | 13.8 V; PA_EN gated by EMCON and TX_INHIBIT_n
+     current: asked: the drain 5.4 to 8.2 A, not characterised (F-PR-02); PS-IDLE-SPEC plus the PA at 113 W 162.3 W, 16.6 A at 10.0 V | available: declared 5 / 6 A, the stage's average loop 7.2 to 9.5 A
      losses: U13 0.93; thermal: key-down at most 60 s, flange gates +75 C and +85 C (D-11, PROVISIONAL)
      protection: the K rules (FW-A05), the outlets dropped by OUTLET_OK | the stage's limit
      settled by: POWER-THERMAL 7.2, FEA-004
