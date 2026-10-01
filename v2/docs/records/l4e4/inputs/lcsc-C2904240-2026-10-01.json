@@ -1,0 +1,22 @@
+{
+ "what": "LCSC public product-detail answer for C2904240 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C2904240), no login; kept fields only",
+ "read_utc": "2026-10-01T02:58Z",
+ "read_by": "task L4-E4 (MESHSAT-1357)",
+ "role": "board A R11, chosen (8 mOhm)",
+ "code": "C2904240",
+ "brand": "Milliohm",
+ "model": "HoJLR2512-3W-8mR-1%",
+ "package": "2512",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/bf6eace094b76bcd756cc1a79c576936.pdf?productCode=C2904240",
+ "pdf_sha256": "3224518dbc8bdc858a96cfde88de2611494550f95406f6b65130c232cdfc93fb",
+ "pdf_note": "fetched at read_utc; byte-identical to v2/vendor/passives/milliohm-hojlr2512-series.pdf (the series sheet already filed for C2903468)",
+ "stock": 9630,
+ "params": {
+  "Resistance": "8mΩ",
+  "Power(Watts)": "3W",
+  "Voltage Rating": "-",
+  "Type": "Current Sense Resistor",
+  "Temperature Coefficient": "±50ppm/℃",
+  "Tolerance": "±1%"
+ }
+}
