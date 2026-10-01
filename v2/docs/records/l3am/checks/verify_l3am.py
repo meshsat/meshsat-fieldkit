@@ -7,7 +7,7 @@ check 2: B2 and scope accepted, B1 not). Every expected outcome is a literal wri
      eight existing normative mutations still invalidate acceptance for a requirements mismatch."
   B2: the findings close only with a new accepted check whose first three lines are exact; the pre-amendment check is refused.
 Usage: verify_l3am.py <worktree at the candidate>. Writes only a temporary record under v2/docs/records/l3am/checks/ and removes it."""
-import copy, os, subprocess, sys
+import copy, os, re, subprocess, sys
 WT = sys.argv[1]; sys.dont_write_bytecode = True
 for p in ("v2/docs/handover/layer3", "v2/ecad/tools", "v2/docs/records/l3am"): sys.path.insert(0, os.path.join(WT, p))
 os.chdir(os.path.join(WT, "v2/ecad/tools"))
@@ -59,13 +59,25 @@ q = copy.deepcopy(REQ); f = rec(q, "FEA-003"); st = next(s for s in f["stages"] 
 expect("acceptance after a schema-valid downstream closure", acc(HEAD, req=q), True)
 expect("a legacy record without a manifest", acc(HEAD, manifest=None), False)
 
-# B2: the findings-closing verification
-def ver(record_rel):
+# B2: the findings-closing verification. CL.verify returns the reviewed revision (40 hex) and refuses by raising. Finding
+# L3-N01 of the unified independent review (1 October 2026, records/l3am/REVIEW-UNIFIED-AS-RECEIVED.md): this helper read
+# only None, True or a tuple as success, so it read the valid check as refused and its one negative probe could not fail.
+HEX40 = re.compile(r"[0-9a-f]{40}")
+STALE = "v2/docs/records/l3r5/checks/check-l3r5-3.md"
+def ver(record_rel, fn=None):
     try:
-        out = CL.verify(record_rel, DATA, head=HEAD, req=REQ)
-        return True if out in (None, True) or (isinstance(out, tuple) and out[0]) else False
+        out = (fn or CL.verify)(record_rel, DATA, head=HEAD, req=REQ)
     except Exception: return False
-expect("closing with the pre-amendment check-l3r5-3", ver("v2/docs/records/l3r5/checks/check-l3r5-3.md"), False)
+    return isinstance(out, str) and bool(HEX40.fullmatch(out))
+NEWEST = str(RL.handover_checks(DATA)[-1]["record"])
+named = open(os.path.join(WT, NEWEST), encoding="utf-8").read().split("\n")[2].split(":", 1)[-1].strip()
+try: got = CL.verify(NEWEST, DATA, head=HEAD, req=REQ)
+except Exception: got = None
+expect("closing with the newest accepted check of the amendment, %s" % os.path.basename(NEWEST), ver(NEWEST), True)
+expect("that closing returns the revision its third line names", got == named and bool(HEX40.fullmatch(named)), True)
+expect("closing with the pre-amendment check-l3r5-3", ver(STALE), False)
+# the negative probe's own sensitivity: under a verifier that wrongly accepts the stale check, the probe above reads WRONG
+expect("the stale-check probe still passes under a verifier that accepts it", ver(STALE, fn=lambda *a, **k: named) is False, False)
 
 w = max(len(r[0]) for r in rows)
 for n, g, wa, ok in rows: print("%-*s  got %-6s want %-6s %s" % (w, n, g, wa, "OK" if ok else "WRONG"))

@@ -1,0 +1,17 @@
+validator on the layout-stage closure (errors)                    got 0      want 0      OK
+digest after a schema-valid layout-stage closure                  got True   want True   OK
+digest after an added reading and note                            got True   want True   OK
+digest after REQ-016 statement at 500 W                           got False  want False  OK
+digest after REQ-072 acceptance changed                           got False  want False  OK
+digest after an owner ruling's text changed (D-34)                got False  want False  OK
+digest after CON-012's accepted residual risk changed             got False  want False  OK
+digest after a stage's requires changed (FEA-003 layout)          got False  want False  OK
+digest after a record superseded (REQ-016 DEFINED to SUPERSEDED)  got False  want False  OK
+acceptance bound at the candidate                                 got True   want True   OK
+acceptance at forty zeros                                         got False  want False  OK
+acceptance at b4b199d0 (exists, other content)                    got False  want False  OK
+acceptance with REQ-016 changed after it                          got False  want False  OK
+acceptance after a schema-valid downstream closure                got True   want True   OK
+a legacy record without a manifest                                got False  want False  OK
+closing with the pre-amendment check-l3r5-3                       got False  want False  OK
+verify_l3am: PASS (16 of 16 as the criteria require) at 548ad56a1aa2
