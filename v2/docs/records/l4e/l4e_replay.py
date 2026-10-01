@@ -23,8 +23,9 @@ Only then does it change one input, the stage window, from 200 W to 100 W, and p
 is refused unless its store account and its service ledger close (section 5). Section 11 refuses (exit 3) when a row of the
 LT8705A sheet's electrical characteristics that names the input-current mechanism or the input-voltage hold reads back
 differently from its table or is not classified there, and (exit 4) when O-2's setting lets any corner of the envelope take
-more than REQ-016's 100 W. Section 12 (the review's L4-R02) pins a panel REQ-016 admits, the SunPower SPR-E-Flex-100, from its
-held sheet (read back and pinned), builds its hourly operating point under the stage's input hold and O-2's limit with
+more than REQ-016's 100 W. Section 12 (the review's L4-R02) pins a nominally compatible candidate panel, the SunPower SPR-E-Flex-100,
+from its held sheet (read back and pinned; its installation guide's 10 % qualification keeps source compliance
+INCONCLUSIVE, check astra-check-l4e3-1), builds its hourly operating point under the stage's input hold and O-2's limit with
 a1solar's single-diode model, and reruns A1 and A2 on that trace; section 13 lists the profile's undocumented loads.
 
 Run from the repository root:  python3 v2/docs/records/l4e/l4e_replay.py > v2/docs/records/l4e/l4e_replay.out
@@ -196,6 +197,9 @@ T_ENDS = ("the cold end", "the hot end")   # the full-range (l) limits hold at b
 # fetched by v2/docs/records/a1solar/fetch_held_back.py into v2/vendor/solar/held/, which git ignores; pinned by sha256).
 SPR_PDF = ("v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf",
            "da06e5e2d9bca625f54a756105e009950a2352e4764868853cb26921372ff605")
+SPR_GUIDE = ("v2/vendor/solar/held/sunpower-flex-safety-installation-524958-revf.pdf",   # held back; pinned by a1solar too
+             "b8ebdfb7019a399accd75e564a4a764eed565f7066dfd25b131fe65365ec6dd9")
+SPR_QUAL = "Rated electrical characteristics are within 10% of measured values at Standard Test Conditions"
 SPR_ROWS = (   # (label on the sheet, the figure as printed, a1solar's CAND['SPR100'] key, the value in its units)
     (r"Nominal Power \(Pnom\)\s+(\d+) W", "p", 1.0),
     (r"Rated Voltage \(Vmpp\)\s+([\d.]+) V", "vmp", 1.0),
@@ -1124,7 +1128,7 @@ def main():
                 wlab, ak, "/".join("-" if v_ is None else str(v_) for v_ in r_[1]["stops"]), " / ".join("%.1f" % v_ for v_ in r_[0]["uns"]),
                 " / ".join("%.1f" % v_ for v_ in r_[1]["uns"]), add[0], add[1]))
     P("")
-    # ------------------------------------------------------------------------------------------ 12. the compliant panel
+    # ------------------------------------------------------------------------------------------ 12. the candidate panel
     sp = os.path.join(TOP, SPR_PDF[0])
     if not os.path.exists(sp) or sha(sp) != SPR_PDF[1]:
         refuse(2, "the SunPower SPR-E-Flex-100 sheet is not the pinned file (fetch it: v2/docs/records/a1solar/fetch_held_back.py)")
@@ -1135,6 +1139,13 @@ def main():
         if abs(val - cspr[key]) > 1e-9:
             refuse(3, "the SunPower sheet's %s reads %g, a1solar's CAND %g" % (key, val, cspr[key]))
     cells = int(need(sp_text, r"(\d+) Prime monocrystalline", "the SunPower sheet's cell count").group(1))
+    gp = os.path.join(TOP, SPR_GUIDE[0])
+    if not os.path.exists(gp) or sha(gp) != SPR_GUIDE[1]:
+        refuse(2, "SunPower's guide 524958 Rev F is not the pinned file (fetch it: v2/docs/records/a1solar/fetch_held_back.py)")
+    g3 = " ".join(" ".join(pdf_lines(SPR_GUIDE[0], 3)).split())
+    if SPR_QUAL not in g3 or "Table 1: Electrical Characteristics" not in g3 or "SPR-E-Flex-100" not in g3 or "Page | 2" not in g3:
+        refuse(3, "SunPower's guide 524958 Rev F p.3 does not carry Table 1's qualification as read")
+    qual = float(need(g3, r"within (\d+)% of measured values", "the guide's tolerance").group(1)) / 100.0
     tol = need(sp_text, r"Power Tolerance\s+\+(\d+)/[\u2013-](\d+)%", "the SunPower sheet's power tolerance").groups()
     voc20, voc40 = AC.voc_at(cspr, -20.0), AC.voc_at(cspr, -40.0)
     if voc20 > v_oc + 1e-9:
@@ -1187,7 +1198,7 @@ def main():
             pm = AC.arr_mpp(d, 1, 1, g, tc)[0]
             st = BUD.panel_w(g, 100.0 * npar, pr0) * (pw / pm)
             if st > p_win + 1e-9 or v_ * i_ * npar > p_win + 1e-9:
-                refuse(4, "the compliant trace exceeds %.0f W at hour %d" % (p_win, h))
+                refuse(4, "the candidate's trace exceeds %.0f W at hour %d" % (p_win, h))
             out.append(st)
             lim_h += limited
         return out, lim_h
@@ -1197,16 +1208,28 @@ def main():
             tr, nl = trace(dsp, vh, lf)
             grid_rows.append((vlab, vh, llab, sum(tr), nl, tr))
     e_mpp = sum(BUD.panel_w(g, 100.0, pr0) for g in prof0)
-    P("12. A COMPLIANT PANEL WITH THE PROPOSED CONTROL (review L4-R02): the SunPower SPR-E-Flex-100, one panel, 1S1P")
+    P("12. A NOMINALLY COMPATIBLE CANDIDATE PANEL WITH THE PROPOSED CONTROL (review L4-R02): the SunPower SPR-E-Flex-100, 1S1P;")
+    P("   SOURCE COMPLIANCE INCONCLUSIVE (check astra-check-l4e3-1, B1); every figure below is conditional on the sheet's nominal values")
     P("   the sheet: %s" % SPR_PDF[0])
     P("   (SunPower document 523809 Rev D, a distributor's issue; held back by its terms, pinned by sha256; its one page read")
     P("   back and equal to a1solar's CAND['SPR100']): Pnom %.0f W (+%s / -%s %%), Vmpp %.1f V, Impp %.1f A, Voc %.1f V, Isc %.1f A;" % (
         cspr["p"], tol[0], tol[1], cspr["vmp"], cspr["imp"], cspr["voc"], cspr["isc"]))
     P("   Voc %.1f mV/K, Isc +%.1f mA/K, Pmax %.2f %%/K; %d cells; no NOCT and no low-irradiance data printed" % (
         1e3 * cspr["beta_voc_abs"], 1e3 * cspr["alpha_isc_abs"], 100 * cspr["gamma_p"], cells))
-    P("   REQ-016's window: open circuit %.2f V at -20 C cells (the kit's cold end, a1solar ARRAY.md 5's reading) against %.0f V:" % (voc20, v_oc))
-    P("   inside, margin %.2f V; at the panel's own -40 C limit %.2f V, outside (the other reading, named); 100 W nominal, the" % (
-        v_oc - voc20, voc40))
+    rise = (v_oc - voc20) / cspr["voc"]
+    P("   REQ-016's window at the kit's use boundary, -20 C (REQ-024 and D-02a: use at -20 to +40 C; REQ-016: at most %.0f V at the" % v_oc)
+    P("   coldest operating temperature): the NOMINAL open circuit is %.2f V there, %.2f V under; the panel's own -40 C rating is a" % (
+        voc20, v_oc - voc20))
+    P("   component limit, not the kit's range (%.2f V there, for information). The guide %s" % (voc40, SPR_GUIDE[0]))
+    quote = need(g3, r"(Rated electrical characteristics are within \d+% of measured values at Standard Test Conditions of: .*?spectrum\.)",
+                 "the guide's qualification sentence").group(1)
+    P("   (SunPower 524958 Rev F, printed p.2, PDF p.3, under Table 1, which lists the SPR-E-Flex-100) reads, verbatim:")
+    P("     \"%s" % quote.split(" of: ")[0] + " of:")
+    P("     %s\"" % quote.split(" of: ")[1])
+    P("   The nominal margin admits an STC open circuit")
+    P("   at most %.2f %% above the sheet's %.1f V (the coefficient held at its nominal); %.0f %% above gives %.2f V at -20 C. So the" % (
+        100 * rise, cspr["voc"], 100 * qual, cspr["voc"] * (1 + qual) - (cspr["voc"] - voc20)))
+    P("   panel is a nominally compatible candidate, not a shown compliant source; the 100 W nominal rating, the")
     P("   stage's window holding the input at most %.0f W; its hot short-circuit current about %.2f A, under F2 and J_SOLAR's 10 A" % (
         p_win, AC.isc_at(cspr, 70.0)))
     P("   the model (a1solar's array_calc, imported and pinned): the single-diode model without a shunt term, fitted to Isc, Voc,")
@@ -1244,7 +1267,8 @@ def main():
             ("CORRECTED, WE; O-2 nominal (%.3f V, %.3f A)" % (v_nom_hold, i_set), "WE", False, tr_nom),
             ("CORRECTED, WE; O-2 lower edge (the lower hold corner %.3f V, the limit's lowest; the limit never binds)" % v_lo, "WE", False, tr_low),
             ("CORRECTED, WE; the least-energy corner (%s, %s)" % (worst_row[0], worst_row[2]), "WE", False, tr_worst))
-    P("   A1 AND A2 ON THE COMPLIANT TRACE (the stage's input as above; the rest of section 1's assumption set; the service")
+    P("   A1 AND A2 ON THE CANDIDATE'S TRACE, conditional on its nominal sheet values (the stage's input as above; the rest of")
+    P("   section 1's assumption set; the service")
     P("   ledger; pairs 06 / 18 UTC). The 100 W screening case of sections 3 and 4 stays beside it as a labelled comparison.")
     ctr = {}
     for lab, key, col, tr in runs:
@@ -1259,7 +1283,7 @@ def main():
             P("     %s: first interruption h %s; unserved %s at 48 h, %s at 72 h; least addition %s / %s Wh" % (
                 ak, "/".join("-" if v_ is None else str(v_) for v_ in r_[1]["stops"]), " / ".join("%.1f" % v_ for v_ in r_[0]["uns"]),
                 " / ".join("%.1f" % v_ for v_ in r_[1]["uns"]), add[0], add[1]))
-    P("   The steady load at the pack terminals A2 carries through the horizon on the compliant trace (COMB, a sensitivity:")
+    P("   The steady load at the pack terminals A2 carries through the horizon on the candidate's trace (COMB, a sensitivity:")
     P("   PS-IDLE-SPEC stays the defined 42.8 W profile):")
     thr = {}
     for lab, key, tr in (("CORRECTED, O-2 nominal", "WE", tr_nom), ("CORRECTED, O-2 lower edge", "WE", tr_low),
@@ -1302,7 +1326,7 @@ def main():
         for ln in info:
             P("            %s" % ln)
     P("   none of the three is settled by a held maker's figure: each stays INCONCLUSIVE until measured or specified. The profile")
-    P("   is not lowered. On the compliant trace A2's corrected path meets 48 h at a steady %.1f W (section 12), %.1f W under" % (
+    P("   is not lowered. On the candidate's trace A2's corrected path meets 48 h at a steady %.1f W (section 12), %.1f W under" % (
         thr[("CORRECTED, O-2 nominal", "A2", 48)], load0 - thr[("CORRECTED, O-2 nominal", "A2", 48)]))
     P("   the profile, against %.2f W of undocumented loads: settling them cannot by itself close the gap on that trace" % t_sum
       if load0 - thr[("CORRECTED, O-2 nominal", "A2", 48)] > t_sum else
@@ -1310,8 +1334,8 @@ def main():
     P("")
     P("END. Each line is the model's arithmetic; nothing is measured. No result here is demonstrated capability: the circuit as")
     P("drawn fails; the corrected path is HYPOTHETICAL and CONDITIONAL on three undocumented efficiencies; the 100 W results rest")
-    P("on a series REQ-016 does not admit and are a screening stimulus only; section 12's compliant trace rests on one held sheet,")
-    P("a single-diode fit to it and an INFERRED cell temperature, on one mean day.")
+    P("on a series REQ-016 does not admit and are a screening stimulus only; section 12's candidate trace rests on one held sheet's")
+    P("nominal values (source compliance INCONCLUSIVE), a single-diode fit to them and an INFERRED cell temperature, on one mean day.")
     sys.stdout.write("\n".join(o) + "\n")
     return 0
 
