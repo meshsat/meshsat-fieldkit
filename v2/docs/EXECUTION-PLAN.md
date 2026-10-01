@@ -1096,3 +1096,52 @@ is the owner's to arrange; nothing here waits on it.
 is stopped with its disk kept (0.037 USD/h); 53608225 stays stopped (0.030 USD/h); nothing destroyed; credit 108.12 USD
 (0.59 USD since set 19, storage included). The collaborator: three runs (L4-E5's check and recheck, L4-E6's check), drawn
 on the ChatGPT plan. The runner's disk: about 140 GB freed by removing 61 merged, clean worktrees at the owner's request.
+
+### Milestone, 1 October 2026 18:20 CEST: the unified independent review of the Layer 3 amendment; Layer 4's solar stage settings (integration sets 22 and 23 on main)
+
+**Deliverable.**
+- **Layer 3, independently reviewed:** the owner's reviewer reproduced the compact package `MESHSAT-L3-AMENDMENT-f8514c0b`
+  offline in a second environment (140 passed, 0 failed, 0 skipped). Verdict: READY as an accepted Layer 3 requirements
+  baseline for Layer 4 work and engineering handover; L3-R01 to L3-R05 CLOSED against their criteria; no Layer 3 restart
+  and no owner decision required. Filed byte for byte (`records/l3am/REVIEW-UNIFIED-AS-RECEIVED.md`). The acceptance at
+  `3b4b92cf` and every file it binds are unchanged.
+- **L3-N01** (P2, the checking tool): `verify_l3am.py`'s closing helper read the verifier's revision return as a refusal.
+  Fixed, with a positive case and a mutation check: a verifier that accepts the stale check now fails the run
+  (`records/int22/l3n01/`).
+- **The review's item 3, the energy pointer:** REQ-072's notes and LAYER-STATUS's layer 3 now name L4-E2's checked result
+  on the retained 100 W window. The accepted policy (`l3r2.yaml`) and the Layer 3 pages keep naming it pending, as accepted:
+  changing them would need the baseline accepted again.
+- **L4-E7, the solar stage's real settings** (O-2, review L4-R01):
+  - As drawn, board E has no input-current limit: U5's sense pins are tied together on PV_P.
+  - The decision: U5 the LT8705AI; RSENSE1 15 mOhm on a new net TRK_VIN; RIMON_IN 23.2k for 3.4713 A; CIMON_IN 100 nF.
+  - The 100 W corner at 25 V reads 96.25 W at both temperature ends under the printed limits, and passes a design floor
+    that takes the unprinted gains at half their typical.
+  - The hold stays at REQ-016's approved 17.6 V point (102k over 7.50k, now 0.1 % parts, band 16.970 to 18.221 V).
+  - Drafts only, for board E's generator owner.
+  - Checks: the collaborator's check did not accept the author's first hold (16.340 V), which changed REQ-016; its
+    recheck accepted the fix; the coordinator's check 3 recomputed the band in separate code.
+
+**Proposal held for the owner (not adopted, not drafted):** the 16.340 V hold would give about 25.0 Wh a day more on the
+design day, but it changes REQ-016's approved operating point, so it is his to rule on if he ever wants it.
+
+**Evidence:**
+- Box suites: set 22 at `cece7c1c` 2427 passed, 0 failed, 3 skipped (207 of 207 modules); set 23 at `13068724` 2439 passed,
+  0 failed, 3 skipped (208 of 208). Both judged by the promotion gate on their logs.
+- On the runner: every validator 0 errors and 0 warnings, every page current, the render order twice with no page moved,
+  `verify_l3am` 19 of 19, `verify_acceptance` 18 of 18.
+- One failure on the way: a first pointer that appended a REQ-072 evidence entry failed `test_l3r5`, which reads the last
+  entry as the baseline evidence and is bound to the amendment's closure. It was dropped before any push.
+
+**Remaining material risk (assigned):**
+- B-4, the VBUS20 bank re-size: the dense ripple analysis it needs is lost and is being rebuilt as L4-E8. L4-E4 stays
+  PROVISIONAL until then.
+- V-A07 for R11; L4-E7's unprinted rows (bench 7b.9 to 7b.13) and R59's Kelvin taps.
+- Unchanged: DR-01 to DR-07, FEA-008, C-8, O-2's physical compliance, L3-C63, REQ-051.
+
+**Next executable action:** L4-E8, the dense VBUS20 node analysis rebuilt and validated against its recorded figures, then
+the bank re-sized to close B-4, with the loop margins. Its author is running on `fnd/l4e8` from `13068724`. Then its one
+check and one targeted recheck, and the L4-E4 release record once the circuit-round drafts are complete.
+
+**Elapsed and compute:** sets 22 and 23 from about 15:55 to 18:20 CEST. vast.ai 53619970 ran both suites and is stopped with
+its disk kept; 53608225 stays stopped; nothing destroyed; credit 107.65 USD. The collaborator made two runs on the ChatGPT
+plan: L4-E7's check and its recheck.
