@@ -10,7 +10,10 @@ INCONCLUSIVE; B-4 by the generator's node analysis as r11_dep.py carries it is n
 outcome; the service margins and the order against L4-E5's line hold; the consequence for L4-E4 supports 8 mOhm with
 V-A07's 0.071 A; the committed .out is what the script prints; the two draft apply scripts check without writing, apply once
 to a copy, refuse a second application, leave MODE alone and compose with L4-E4's R11 draft in either order; no em or en
-dash in the record. Nothing here writes into the tree: the apply scripts run on copies in a temporary directory.
+dash in the record. After the check astra-check-l4e6-1: L1's temperature is taken over 9 to 36 V at 1 mV and its qualifying
+temperature rounds that maximum up (M1); C-5 is an L-versus-current sweep from zero bias through at least the Isat each
+outcome needs, on the maker's 30 % drop definition and B-1's 90 % margin, not one reading (M2). Nothing here writes into the
+tree: the apply scripts run on copies in a temporary directory.
 """
 import importlib.util
 import os
@@ -22,6 +25,7 @@ import tempfile
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(TOOLS)))
 REC = os.path.join(ROOT, "v2", "docs", "records", "l4e6")
+PAGE = os.path.join(REC, "L4E6-FAULT-HANDLING.md")
 SCRIPT = os.path.join(REC, "l4e6_fault_handling.py")
 OUT = os.path.join(REC, "l4e6_fault_handling.out")
 L4E4_R11 = os.path.join(ROOT, "v2", "docs", "records", "l4e4", "apply_gen_sch_a_r11.py")
@@ -95,6 +99,36 @@ def t_b1_met_at_25_c_and_inconclusive_at_temperature():
     assert not R["derating_held"], "the record claims a temperature derating the held sheet does not carry"
     text = open(OUT, encoding="utf-8").read()
     assert "INCONCLUSIVE (C-5)" in text
+
+
+def t_l1_temperature_over_the_full_vin_grid():
+    R = _R()
+    m = _CACHE["M"]
+    assert len(m.VIN_FINE) == 27001 and m.VIN_FINE[0] == 9.0 and m.VIN_FINE[-1] == 36.0, "the 1 mV grid does not span 9 to 36 V"
+    want = {"8": (84.99, 13.957, 85.0, 14.00), "7": (85.74, 15.680, 86.0, 14.19)}
+    for o in R["outcomes"]:
+        t, v, q, isat_need = want[o["key"]]
+        assert o["c_l1_temp"] > o["c_l1_temp3"], "the full grid's maximum is not above the three B-2 voltages' at %s mOhm" % o["key"]
+        assert o["c_l1_temp_v"] not in m.CLOSE_VINS, "L1's maximum sits at a B-2 voltage, so the grid was not used"
+        assert abs(round(o["c_l1_temp"], 2) - t) < 1e-9 and abs(o["c_l1_temp_v"] - v) < 1e-9, "L1's maximum is not the swept one"
+        assert o["c_l1_qual"] == q and o["c_l1_qual"] >= o["c_l1_temp"], "the qualifying temperature is not the maximum rounded up"
+        assert abs(round(o["c_b1"] / 0.9, 2) - isat_need) < 1e-9
+        assert round(o["c_b1_fine"], 2) == round(o["c_b1"], 2), "the peak bound moved on the 1 mV grid"
+    text = open(PAGE, encoding="utf-8").read()
+    assert "qualifying 85 C" in text and "qualifying 86 C" in text and "84.99 C" in text and "85.74 C" in text
+
+
+def t_c5_is_a_sweep_that_can_demonstrate_the_isat():
+    R = _R()
+    assert abs(R["l_drop"] - 0.30) < 1e-12, "the maker's drop definition is not read as 30 %"
+    assert R["c5_end"] >= max(o["c_b1"] / 0.9 for o in R["outcomes"]) and abs(R["c5_end"] - 14.2) < 1e-9
+    text = " ".join(open(PAGE, encoding="utf-8").read().split())
+    c5 = text[text.index("**C-5, B-1 at temperature.**"):text.index("**7b.4, B-2.**")]
+    for frag in ("L-versus-current sweep", "zero-bias inductance at the qualifying temperature", "1 MHz, 0.1 Vrms, 0 Adc",
+                 "through at least 14.2 A", "fallen by 30 % from L0", "0.70 x L0 at every step up to 14.00 A",
+                 "14.19 A (7 mOhm build)", "at most 90 % of it", "A single reading at one current does not establish Isat"):
+        assert frag in c5, "C-5's sweep lacks: %s" % frag
+    assert "measured at 12.6 A" not in text, "the single-point measurement is still offered"
 
 
 def t_b2_met_at_9_15_and_36_v_at_both_outcomes_without_hiccup_credit():

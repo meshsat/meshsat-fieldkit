@@ -56,6 +56,7 @@ PINS = {
 C123_TOL = 0.10      # ASSUMPTION: C123's tolerance (the netlist prints "1n" only), carried at its high end into the CS lag
 R_TOL_0603 = 0.01    # ASSUMPTION: a 93.1 kOhm MODE resistor at 1 % (for candidate (a) only; the netlist has no such part yet)
 VIN_GRID = [round(9.0 + 0.1 * i, 1) for i in range(271)]     # 9.0 to 36.0 V, REQ-015's service range, for the B-1 envelope
+VIN_FINE = [round(9.0 + 0.001 * i, 3) for i in range(27001)]  # the same range at 1 mV, for L1's temperature (check 1, M1)
 CLOSE_VINS = (9.0, 15.1, 36.0)                               # the closure's three voltages (architecture page, B-2)
 
 
@@ -231,7 +232,8 @@ def compute():
     # Coilcraft
     x1 = page(M.XAL1010, 1)
     l_tol = float(need(x1, r"±(\d+)%", "XAL1010 inductance tolerance").group(1)) / 100.0
-    need(x1, r"5\. DC current at 25°C that causes an inductance drop of 30% \(typ\) from", "XAL1010 note 5: Isat at 25 C")
+    l_drop = float(need(x1, r"5\. DC current at 25°C that causes an inductance drop of (\d+)% \(typ\) from", "XAL1010 note 5: Isat at 25 C").group(1)) / 100.0
+    l0_cond = need(x1, r"2\. Inductance tested at ([^.]+(?:\.\d[^.]*)*?), 0 Adc\.", "XAL1010 note 2: the zero-bias test condition").group(1)
     need(x1, r"Click for temperature derating information", "XAL1010 the derating as a link")
     need(x1, r"Document 804-1\s+Revised 02/25/26", "XAL1010 Document 804-1 revision")
     xr = page(M.XAL1010, 3)
@@ -248,7 +250,7 @@ def compute():
     vds18510 = float(need(page(L4.CSD18510, 1), r"VDS\s+Drain-to-Source Voltage\s+(\d+)\s+V", "SLPS632 p.1 VDS").group(1))
     R.update(n_trip=n_trip, n_off=n_off, mode_hic=(float(mode_hic.group(1)), float(mode_hic.group(2)), float(mode_hic.group(3))),
              mode_no=float(mode_no.group(1)), iss=iss, vref=vref, imode=imode, v_hic=v_hic, v_ccm=v_ccm, gm_slope=gm_slope, acs=acs,
-             i_off=i_off, cs_off=cs_off, cs_abs=cs_abs, tau_cs=tau_cs, c7=c7, l_tol=l_tol, derating_held=derating_held, xal15=xal15,
+             l_drop=l_drop, l0_cond=l0_cond, i_off=i_off, cs_off=cs_off, cs_abs=cs_abs, tau_cs=tau_cs, c7=c7, l_tol=l_tol, derating_held=derating_held, xal15=xal15,
              dims10=dims10, dims15=dims15, vds18510=vds18510, isat=isat, irms40=irms40, vcs_boost=vcs_boost, vcs_buck=vcs_buck, fsw=fsw, rtja=rtja, t_air=t_air, VB=VB, eta=ETA,
              r12_drawn=M.R12_CS, c_slope_drawn=L["c_slope"], rip_bulk=rip_bulk, can_k=can_k)
 
@@ -294,7 +296,7 @@ def compute():
         return dict(r=r, boost=((vcs_boost[0] - cs_off) / k_hi, vcs_boost[1] / r, (vcs_boost[2] + cs_off) / k_lo),
                     buck=((vcs_buck[0] - cs_off) / k_hi, vcs_buck[1] / r, (vcs_buck[2] + cs_off) / k_lo))
 
-    def regime(hi, vin, lim):
+    def regime(hi, vin, lim, with_fets=True):
         """The worst continuous fault at VIN with the average limit at hi and the cycle-by-cycle limits lim (None: no
         cycle-by-cycle bound counted). Boost: the inductor average is the lower of the average limit's and the one under
         the peak limit's maximum (its lag in, the ripple at its smallest), with no hiccup credit. Buck: the average limit."""
@@ -308,7 +310,7 @@ def compute():
         else:
             s, pk, who = s_lim, peak_b(hi, vin), "the average limit"
         rise = 40.0 * (s["rms"] / irms40) ** 2
-        return dict(vin=vin, s=s, s_lim=s_lim, peak=pk, who=who, fets=fets(s), i_out=s["i_out"], l1_temp=t_air + rise)
+        return dict(vin=vin, s=s, s_lim=s_lim, peak=pk, who=who, fets=fets(s) if with_fets else None, i_out=s["i_out"], l1_temp=t_air + rise)
 
     def b1_env(hi, lim):
         worst = max(VIN_GRID, key=lambda v: regime(hi, v, lim)["peak"])
@@ -387,7 +389,14 @@ def compute():
         x = ch["res"][o["key"]]
         o["c"] = x
         o["c_b1"] = x["b1"]
-        o["c_l1_temp"] = max(g["l1_temp"] for g in x["gs"].values())
+        o["c_l1_temp3"] = max(g["l1_temp"] for g in x["gs"].values())      # the first round's figure: the three B-2 voltages only
+        # check 1, M1: L1's temperature over the whole 9 to 36 V range at 1 mV (r11_dep.py's rise by the square of the rms)
+        fine = [regime(o["hi"], v, lim, with_fets=False) for v in VIN_FINE]
+        hot = max(fine, key=lambda g: g["l1_temp"])
+        o["c_l1_temp"], o["c_l1_temp_v"] = hot["l1_temp"], hot["vin"]
+        o["c_l1_qual"] = float(math.ceil(hot["l1_temp"]))               # the qualifying temperature, rounded up to the degree
+        pk_fine = max(fine, key=lambda g: g["peak"])
+        o["c_b1_fine"], o["c_b1_fine_v"] = pk_fine["peak"], pk_fine["vin"]
         o["c_derate_need"] = x["b1"] / (0.9 * isat)
         o["c_delay_head"] = (0.9 * isat - x["b1"]) / (VB / l_low)       # the comparator delay the headroom admits at the top of boost
         g9 = x["gs"][9.0]
@@ -395,6 +404,8 @@ def compute():
         g36 = x["gs"][36.0]
         p12b = g36["s"]["rms"] ** 2 * (1 - g36["s"]["d"]) * ch["r"] * (1 + tol)
         o["c_r12"] = (p12, p12b, t_air + max(p12, p12b) * k_r)
+    # check 1, M2: C-5's measurement as an L-versus-current sweep that can demonstrate the Isat each outcome needs
+    R["c5_end"] = math.ceil(max(o["c_b1"] / 0.9 for o in R["outcomes"]) * 10.0 - 1e-9) / 10.0
     # the boundary above which the average limit, not the peak limit, sets the fault current (boost)
     for o in R["outcomes"]:
         o["v_avg"] = next((v for v in VIN_GRID if regime(o["hi"], v, lim)["who"] == "the average limit"), None)
@@ -427,6 +438,12 @@ def compute():
          ch is passing[0] and all(not x["ok"] for x in rows if x["r"] < ch["r"])),
         ("B-1 at 25 C: L1's peak at most 90 % of the typical Isat at both outcomes, 9 to 36 V", all(o["c_b1"] <= 0.9 * isat for o in R["outcomes"])),
         ("B-1 at temperature: INCONCLUSIVE (the held Coilcraft sheet carries no temperature derating)", not derating_held),
+        ("check 1, M1: L1's temperature taken over 9 to 36 V at 1 mV, its maximum off the three B-2 voltages at both outcomes, the qualifying"
+         " temperature at or above it, and the 1 mV peak bound equal to the 0.1 V one to 0.01 A",
+         all(o["c_l1_temp"] >= o["c_l1_temp3"] and o["c_l1_temp_v"] not in CLOSE_VINS and o["c_l1_qual"] >= o["c_l1_temp"]
+             and round(o["c_b1_fine"], 2) == round(o["c_b1"], 2) for o in R["outcomes"])),
+        ("check 1, M2: C-5's sweep ends at or above the Isat each outcome needs (the peak bound over 0.9), under the maker's %.0f %% drop"
+         " definition read from note 5" % (100 * l_drop), all(R["c5_end"] >= o["c_b1"] / 0.9 for o in R["outcomes"]) and abs(l_drop - 0.30) < 1e-12),
         ("B-2: every FET at most 150 C at 9, 15.1 and 36 V at both outcomes (RthetaJA the maker's, an ASSUMPTION for board A)",
          all(f["tj"] is not None and f["tj"] <= 150.0 for o in R["outcomes"] for g in o["c"]["gs"].values() for f in g["fets"])),
         ("B-4 on the drawn bank: NOT met at the 2:1 spread at either outcome; met matched and at 1.5:1 at 8 mOhm only",
@@ -576,9 +593,18 @@ def render(R):
                     ("%s past 150 C" % f["name"]) if f["tj"] is None else ("%s %.2f W, TJ %.0f C" % (f["name"], f["p"], f["tj"])) for f in g["fets"])))
         P("     B-1: the peak bound over 9 to 36 V %.2f A (at %.1f V), %.1f %% of the typical %.1f A at 25 C: MET at 25 C; it holds at the part's" % (
             o["c_b1"], o["c"]["b1_v"], 100 * o["c_b1"] / isat, isat))
-        P("       temperature (at most %.0f C here) if Isat there is at least %.1f %% of its 25 C value, %.2f A: INCONCLUSIVE (C-5); the headroom admits" % (
-            o["c_l1_temp"], 100 * o["c_derate_need"], o["c_b1"] / 0.9))
-        P("       a comparator delay of %.2f us at the top of boost" % (o["c_delay_head"] * 1e6))
+        P("       temperature if Isat there is at least %.1f %% of its 25 C value, %.2f A: INCONCLUSIVE (C-5). L1's temperature over 9 to 36 V" % (
+            100 * o["c_derate_need"], o["c_b1"] / 0.9))
+        P("       at 1 mV (check 1, M1): at most %.2f C, at %.3f V, so the qualifying temperature is %.0f C (rounded up; the three B-2" % (
+            o["c_l1_temp"], o["c_l1_temp_v"], o["c_l1_qual"]))
+        P("       voltages alone gave %.2f C). The peak bound at 1 mV: %.2f A at %.3f V, the same to 0.01 A. The headroom admits a" % (
+            o["c_l1_temp3"], o["c_b1_fine"], o["c_b1_fine_v"]))
+        P("       comparator delay of %.2f us at the top of boost" % (o["c_delay_head"] * 1e6))
+        P("       C-5 (check 1, M2): L1's inductance swept against DC current at %.0f C or above, from zero bias (L0, the maker's note 2:" % o["c_l1_qual"])
+        P("       %s, 0 Adc) through at least %.1f A; Isat at temperature is where L falls by the maker's %.0f %% (note 5) from L0;" % (
+            R["l0_cond"], R["c5_end"], 100 * R["l_drop"]))
+        P("       B-1 closes there if L stays at or above %.0f %% of L0 up to %.2f A, so the peak bound is at most 90 %% of that Isat" % (
+            100 * (1 - R["l_drop"]), o["c_b1"] / 0.9))
         P("     B-2: every FET at most %.0f C: MET on the ASSUMED RthetaJA; R12 itself %.2f W at 9 V, %.2f W at 36 V, at most %.0f C" % (
             max(f["tj"] for g in o["c"]["gs"].values() for f in g["fets"]), o["c_r12"][0], o["c_r12"][1], o["c_r12"][2]))
         P("     above %.1f V the average limit, not the peak limit, sets the fault current; at 9 V the output is held to %.2f A" % (o["v_avg"], o["i_out9"]))

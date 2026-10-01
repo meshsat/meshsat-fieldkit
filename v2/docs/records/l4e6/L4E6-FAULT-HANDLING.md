@@ -76,7 +76,7 @@ used for board A as an ASSUMPTION; board A's own figure is not known (C-3).
 
 | Finding | R11 8 mOhm, highest permitted current 7.262 A | R11 7 mOhm, 8.300 A |
 |---|---|---|
-| **B-1**, L1's peak at most 90 % of Isat at its temperature | Peak bound over 9 to 36 V: 12.60 A (at 15.4 V), 72.0 % of 17.5 A. **MET at 25 C.** At temperature **INCONCLUSIVE**: it holds if Coilcraft's Isat at L1's 84 C is at least 80.0 % of its 25 C value | 12.77 A (at 36 V), 73.0 %. **MET at 25 C.** At temperature INCONCLUSIVE: needs at least 81.1 % at 85 C |
+| **B-1**, L1's peak at most 90 % of Isat at its temperature | Peak bound over 9 to 36 V: 12.60 A (at 15.4 V), 72.0 % of 17.5 A. **MET at 25 C.** At temperature **INCONCLUSIVE**: it holds if Coilcraft's Isat at the qualifying 85 C is at least 14.00 A, 80.0 % of its 25 C value (L1 at most 84.99 C over 9 to 36 V, at 13.957 V) | 12.77 A (at 36 V), 73.0 %. **MET at 25 C.** At temperature INCONCLUSIVE: needs at least 14.19 A, 81.1 %, at the qualifying 86 C (L1 at most 85.74 C, at 15.680 V) |
 | **B-2**, TJ at most 150 C at 9, 15.1 and 36 V in 62.1 C air | 9 V (peak limit): Q2 130, Q4 127, Q5 85 C. 15.1 V (average limit): Q2 120, Q4 103, Q5 100 C. 36 V (average limit): Q2 117, Q3 71, Q5 85 C. **MET on the ASSUMED 50 C/W** | 9 V: as at 8 mOhm. 15.1 V (peak limit): Q2 138, Q4 107, Q5 109 C. 36 V: Q2 124, Q3 74, Q5 93 C. **MET on the ASSUMED 50 C/W** |
 | **B-4**, every bulk can at most 2.8 A over the ESR bands | 2.69 A matched, 2.70 A at 1.5:1, **3.11 A at 2:1: NOT MET**. The worst can per ampere must reach at most 0.901 of today's at 2:1 | 3.07 / 3.09 / **3.55 A: NOT MET** at every spread. It must reach 0.912 / 0.907 / 0.788 of today's |
 
@@ -88,7 +88,9 @@ used for board A as an ASSUMPTION; board A's own figure is not known (C-3).
     only.
   - The comparator's own delay is not printed. The headroom to 15.75 A admits 0.84 us (8 mOhm) or 0.80 us (7 mOhm) at the
     top of boost.
-- **L1's temperature** is r11_dep.py's method: the maker's 40 K at 15.5 A, scaled by the square.
+- **L1's temperature** is r11_dep.py's method: the maker's 40 K at 15.5 A, scaled by the square. Its maximum is taken over
+  9 to 36 V at 1 mV, not at the three B-2 voltages only (check 1, M1). The qualifying temperature rounds that maximum up to the
+  degree: 85 C at 8 mOhm and 86 C at 7 mOhm.
 - **R12's own load.** 0.90 W at 9 V and 0.28 to 0.37 W at 36 V, at most 92 C (the derating line's 33.3 K/W, as r11_dep.py).
   The CS pins see at most 0.155 V against p.5's 0.3 V absolute maximum.
 - **B-4's method.** It is the generator's own VBUS20 node analysis as r11_dep.py carries it.
@@ -101,8 +103,8 @@ used for board A as an ASSUMPTION; board A's own figure is not known (C-3).
 ## What stays INCONCLUSIVE
 
 - **L1's Isat at its temperature (C-5).** The held XAL1010 sheet (Document 804-1, revised 02/25/26) prints Isat at 25 C only
-  (note 5) and refers temperature derating to a link. Its "Typical L vs Current" (p.3) is one curve. B-1 needs at least
-  80.0 % (8 mOhm) or 81.1 % (7 mOhm) of the 25 C Isat at 84 to 85 C.
+  (note 5) and refers temperature derating to a link. Its "Typical L vs Current" (p.3) is one curve. B-1 needs Isat of at
+  least 14.00 A at 85 C (8 mOhm; 80.0 % of the 25 C figure) or 14.19 A at 86 C (7 mOhm; 81.1 %).
 - **The CS comparator's propagation delay.** It is not printed, and the headroom admits up to 0.80 us. The leading-edge
   behaviour is not printed either.
 - **The limits with slope compensation in.** p.7 prints VCS(BOOST) and VCS(BUCK) at VSLOPE = 0 V. Taking them that way is
@@ -129,8 +131,19 @@ used for board A as an ASSUMPTION; board A's own figure is not known (C-3).
   - Pass: L1's peak at most 12.6 A (12.8 A on the 7 mOhm build); the peak limit's onset at or above 8.06 A; no
     cycle-by-cycle limit at H3's in-service 9 and 12 V demand.
   - At 26.5 to 27.24 V with 5.1 A out, no valley-limit skip.
-- **C-5.** Coilcraft's temperature derating for the XAL1010 filed, or L1's inductance measured at 12.6 A with the part at
-  85 C. B-1 closes at temperature if Isat at L1's temperature is at least 81.1 % of 17.5 A, which is 14.2 A.
+- **C-5, B-1 at temperature.** Either Coilcraft's temperature derating for the XAL1010 is filed and read at the qualifying
+  temperature, or L1 is measured with an L-versus-current sweep (check 1, M2):
+  - **The part.** An XAL1010-103ME from the build's lot, held at the qualifying temperature or above (85 C for the 8 mOhm
+    build, 86 C for 7 mOhm) in a chamber, its temperature read at the part. The DC bias is pulsed or held short enough
+    that the part stays at that temperature at every point.
+  - **The reference.** L0, the zero-bias inductance at the qualifying temperature, measured at the maker's own condition
+    (Document 804-1 note 2: 1 MHz, 0.1 Vrms, 0 Adc).
+  - **The sweep.** DC bias from zero through at least 14.2 A, in steps of at most 0.5 A, with L read at each step.
+  - **The definition.** Isat at temperature is the current where L has fallen by 30 % from L0, the maker's definition
+    (note 5).
+  - **Pass.** L at or above 0.70 x L0 at every step up to 14.00 A (8 mOhm build) or 14.19 A (7 mOhm build). Isat at
+    temperature is then at least that current, and B-1's peak bound of 12.60 A (12.77 A) is at most 90 % of it.
+  - A single reading at one current does not establish Isat and does not close C-5.
 - **7b.4, B-2.** In 62.1 C air, with the load held past the limit to thermal steady state at 9 V (peak limit), 15.1 V and
   36 V (average limit at the build's R11):
   - Q2 to Q5 case temperatures by thermocouple, and TJ inferred from them by the maker's RthetaJC.
@@ -141,6 +154,16 @@ used for board A as an ASSUMPTION; board A's own figure is not known (C-3).
   targets.
 - **V-A08 (L4-E5) with R12 fitted.** No FE_PGOOD drop (unchanged), and a cycle-by-cycle limit at the vehicle entry's limit
   only clips.
+
+## The check, and what changed
+
+The collaborator's check `checks/astra-check-l4e6-1.md` ACCEPTS L4-E6 as a provisional engineering decision. It names no
+blocking item and no owner decision. Its two minors are fixed here; no figure other than L1's temperature moves.
+
+| Item | What changed |
+|---|---|
+| M1, L1's maximum temperature was taken at the three B-2 voltages only, while B-1's envelope covers 9 to 36 V | The script now takes L1's temperature over 9 to 36 V at 1 mV (`VIN_FINE`). The maximum is 84.99 C at 13.957 V (8 mOhm) and 85.74 C at 15.680 V (7 mOhm), against the first round's 83.92 and 85.46 C, which agrees with the collaborator's sweep. The qualifying temperatures are 85 and 86 C, rounded up, and the Isat each needs is 14.00 and 14.19 A. The peak bounds re-taken at 1 mV are the same to 0.01 A (12.60 and 12.77 A). Test `t_l1_temperature_over_the_full_vin_grid` |
+| M2, C-5 offered one inductance reading at 12.6 A, which cannot establish Isat of at least 14.2 A | C-5 is now an L-versus-current sweep at the qualifying temperature, from zero bias (L0 at the maker's note 2 condition) through at least 14.2 A. It keeps the maker's 30 % drop definition (note 5) and B-1's 90 % margin, and it states that one reading does not close C-5. The script prints the sweep's figures for each outcome. Test `t_c5_is_a_sweep_that_can_demonstrate_the_isat` |
 
 ## The consequence for L4-E4
 
