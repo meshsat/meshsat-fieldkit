@@ -59,6 +59,10 @@ not move it.
 | C. The design floor (EA2 65 V/V, line x2, drifts) | 99.6739 W | 99.6549 W |
 | D. Drifts at the typical rows | 98.6931 W | 98.6743 W |
 
+**Qualification of the 100 W bound: `L4E7-QUALIFICATION.md`** (the owner's instruction of 1 October 2026). The result is
+CONDITIONAL on EA2's gain, the line regulation while switching, RSENSE1's TCR below +25 C and U5's junction staying inside
+the I grade's range; under all their conservative assumptions together the cold corner reads 99.8992 W.
+
 The script refuses above 100 W. For comparison, O-2's 3.548 A on these parts takes 98.375 W. The conditions hold: 57.5 mV
 across RSENSE1 at the limit's highest (100 mV range, p.5), IMON_IN 60.9 uA (at least 100 uA), the fault at up to 76.7 mV,
 and the candidate panel's hot short circuit 97.4 mV.
@@ -126,7 +130,8 @@ kept hold leaves L4-E5's solar trace as the replay computed it.
   under 100 W at every point (at 25 V, at most 4.000 A).
 - **7b.9t, transients, recorded apart:** a source step and an irradiance step; peak and time above 100 W. SESSION limit: no
   fault trip (IMON_IN under 1.55 V) and no more than five time constants, 11.6 ms, above 100 W.
-- **7b.10** EA2's gain, **7b.11** the line row, **7b.13** U5's junction by CLKOUT, as in the table above.
+- **7b.10** EA2's gain, **7b.11** the line row, **7b.13** U5's junction by CLKOUT, as in the table above; **7b.14** R59 at
+  -20 and +25 C (a design check of the cold TCR; Milliohm's statement is the qualification).
 - **7b.12, the hold**, read at both ends: accepted inside **16.420 to 18.813 V** (the conditioned envelope: EA3 at half, the
   resistors' drifts); a reading outside 16.970 to 18.221 V (EA3 typical, new parts) is recorded with the EA3 gain it implies.
 
