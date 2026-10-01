@@ -766,7 +766,13 @@ def t_l3r5_recheck_decided_rows_carry_no_option_they_did_not_take():
     dec = RL.decided(req, data)
     assert RL.row_tag("L3-OD1", dec, data) == "L3-OD1, closed as layer 4 architecture (P-01)"
     assert "| REQ-075 (layer 4 proposal P-01, not applied) |" in pages["REQUIREMENTS-L3-R2.md"]
-    assert "REQ-016 not changed (D-34)" in pages["REQUIREMENTS-L3-R2.md"] and "REQ-078 not added (D-35)" in pages["REQUIREMENTS-L3-R2.md"]
+    # REQ-016's D-34 disposition in either rendering: left out as H3 has it, or, once its acceptance changed for another
+    # reason (the layer 3 amendment's L3-R05, 1 October 2026), applied with a why naming D-34 and its statement H3's
+    spec = pages["REQUIREMENTS-L3-R2.md"]
+    r16 = next(r for r in req["records"] if r["id"] == "REQ-016")
+    assert "REQ-016 not changed (D-34)" in spec or ("| REQ-016 (applied) |" in spec and "(D-34)" in data["impacts"]["REQ-016"]["why"]
+                                                    and r16["statement"] == RL.load_h3()["records"]["REQ-016"]["statement"])
+    assert "REQ-078 not added (D-35)" in spec
     # D-22's supply-range rule is carried by a record (the gap the author raised on this fix): its classification row
     # names REQ-072, and REQ-072's desk acceptance carries the clause, written once by its apply script
     row = next(c for c in data["classification"] if c["item"].startswith("The rule that an M1 energy claim holds across"))
@@ -898,9 +904,12 @@ def t_l3r5_d39_is_conditional_and_acceptance_is_its_own_record():
     dec, h3 = RL.decided(req, data), RL.load_h3()
     # the tree reads VALIDATED only with the acceptance record filed and holding; D-39 alone (a copy without the record)
     # reads DRAFTED, on the tree's checks and on a fixture whose newest check is accepted
+    # (since the layer 3 amendment of 1 October 2026, L3-R04, a filed record validates only with a content manifest that
+    # its revision and the tree both hold: a record without one reads DRAFTED)
     filed = data.get("baseline_acceptance")
-    assert RL.status_level(req, dec, data, h3)[0] == ("VALIDATED" if filed else "DRAFTED")
-    if filed: assert RL.acceptance_ok(req, data)[0] and filed["authorised_by"] == "D-39", RL.acceptance_ok(req, data)
+    ok = RL.acceptance_ok(req, data)[0]
+    assert RL.status_level(req, dec, data, h3)[0] == ("VALIDATED" if filed and ok and all(x[1] for x in RL.gate(req, dec, data, h3)) else "DRAFTED")
+    if filed: assert filed["authorised_by"] == "D-39" and (ok or not filed.get("manifest") or "changed since" in RL.acceptance_ok(req, data)[1])
     data0 = copy.deepcopy(data); data0["baseline_acceptance"] = None
     assert RL.status_level(req, dec, data0, h3)[0] == "DRAFTED", "D-39 alone reads beyond DRAFTED"
     fixture_check = {"record": "v2/docs/records/l3r2/checks/check-l3r2-5.md", "sha16": "c1c9db881ededfe2",
@@ -910,17 +919,22 @@ def t_l3r5_d39_is_conditional_and_acceptance_is_its_own_record():
     assert all(x[1] for x in RL.gate(req, dec, d1, h3)), "the fixture's gate is not all MET"
     assert RL.status_level(req, dec, d1, h3)[0] == "DRAFTED", "D-39 without the acceptance record reads beyond DRAFTED"
     head = subprocess.run(["git", "-C", ROOT, "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    import l3amfix as F
     d2 = copy.deepcopy(d1)
-    d2["baseline_acceptance"] = {"revision": head, "authorised_by": "D-39", "evidence": [fixture_check["record"]],
-                                 "accepted_on": "2026-10-01"}
+    # a revision holding the fixture's content (an unreferenced commit, l3amfix.py), the manifest of that content
+    rev = F.commit_with({"v2/docs/handover/layer3/l3r2.yaml": yaml.safe_dump(d1, sort_keys=False).encode("utf-8")})
+    d2["baseline_acceptance"] = {"revision": rev, "authorised_by": "D-39", "evidence": [fixture_check["record"]],
+                                 "accepted_on": "2026-10-01", "manifest": RL.content_manifest(req, d1)}
     assert RL.status_level(req, dec, d2, h3)[0] == "VALIDATED", RL.acceptance_ok(req, d2)
+    dnm = copy.deepcopy(d2); dnm["baseline_acceptance"].pop("manifest")
+    assert RL.status_level(req, dec, dnm, h3)[0] == "DRAFTED", "a record without its content manifest validates"
     d3 = copy.deepcopy(d2)
     d3["baseline_acceptance"]["evidence"] = ["v2/docs/handover/layer3/l3r2.yaml"]
     assert RL.status_level(req, dec, d3, h3)[0] == "DRAFTED", "an acceptance not listing the newest check validates"
     acc = os.path.join(REC5, "apply_l3r5_accept.py")
     r = _run([acc, "--revision", head, "--evidence", fixture_check["record"], "--check"])
     # on the tree it refuses with the fixture's evidence: before check 3 because the newest check was not accepted, after
-    # it because the evidence does not list the newest check
+    # it because the evidence does not list the newest check, and once a record is filed because it has run
     assert r.returncode == 2 and ("not ACCEPTED" in r.stdout or "does not list the newest independent check" in r.stdout
                                   or (filed and "has run" in r.stdout)), "the acceptance script ran on the tree:\n%s" % r.stdout
     d = tempfile.mkdtemp(prefix="l3r5-accept-")
@@ -928,20 +942,30 @@ def t_l3r5_d39_is_conditional_and_acceptance_is_its_own_record():
     raw = open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8").read()
     before = yaml.safe_load(raw).get("baseline_acceptance")
     raw = "\n".join("baseline_acceptance: null" if l.startswith("baseline_acceptance:") else l for l in raw.split("\n"))
-    add = "  - {record: %s, sha16: %s, verdict: ACCEPTED, scope: fixture}\nbaseline_acceptance: null\n" % (
-        fixture_check["record"], fixture_check["sha16"])
-    assert raw.count("\nbaseline_acceptance: null\n") == 1
-    open(copy_path, "w", encoding="utf-8").write(raw.replace("\nbaseline_acceptance: null\n", "\n" + add))
-    for args, why in (([ "--revision", "0" * 40, "--evidence", fixture_check["record"]], "not a commit"),
-                      (["--revision", head, "--evidence", "v2/docs/records/l3r5/checks/no-such-check.md"], "not a file"),
-                      (["--revision", head, "--evidence", "v2/docs/handover/layer3/l3r2.yaml"], "does not list the newest")):
+    # the review's findings, where they are filed, closed by a fixture check of the amendment filed as the newest accepted
+    # check (the acceptance refuses while they are OPEN and verifies the check that closed them, B2 of astra-check-l3am-1),
+    # and a revision holding the copy's content, a child of the checked one (the manifest is the binding, L3-R04)
+    if "\nreview_findings: {" in raw:
+        tip = F.tip()
+        text, ev = F.closed_copy(raw, tip)
+    else:
+        tip, ev = None, fixture_check["record"]
+        add = "  - {record: %s, sha16: %s, verdict: ACCEPTED, scope: fixture}\nbaseline_acceptance: null\n" % (ev, fixture_check["sha16"])
+        text = raw.replace("\nbaseline_acceptance: null\n", "\n" + add)
+    open(copy_path, "w", encoding="utf-8").write(text)
+    rev = F.commit_with({"v2/docs/handover/layer3/l3r2.yaml": text.encode("utf-8")}, parent=tip)
+    for args, why in (([ "--revision", "0" * 40, "--evidence", ev], "not a commit"),
+                      (["--revision", rev, "--evidence", "v2/docs/records/l3r5/checks/no-such-check.md"], "not a file"),
+                      (["--revision", rev, "--evidence", "v2/docs/handover/layer3/l3r2.yaml"], "does not list the newest")):
         r = _run([acc] + args + ["--data", copy_path])
         assert r.returncode == 2 and why in r.stdout, "%s was not refused:\n%s" % (why, r.stdout)
-    r = _run([acc, "--revision", head, "--evidence", fixture_check["record"], "--date", "2026-10-01", "--data", copy_path])
+    r = _run([acc, "--revision", rev, "--evidence", ev, "--date", "2026-10-01", "--data", copy_path])
     assert r.returncode == 0, r.stdout
     got = yaml.safe_load(open(copy_path, encoding="utf-8"))["baseline_acceptance"]
-    assert got == {"revision": head, "authorised_by": "D-39", "evidence": [fixture_check["record"]], "accepted_on": "2026-10-01"}
-    r = _run([acc, "--revision", head, "--evidence", fixture_check["record"], "--data", copy_path])
+    assert {k: v for k, v in got.items() if k != "manifest"} == {"revision": rev, "authorised_by": "D-39",
+                                                                 "evidence": [ev], "accepted_on": "2026-10-01"}
+    assert got["manifest"] == RL.manifest_at(rev)[0], "the record's manifest is not the content its revision holds"
+    r = _run([acc, "--revision", rev, "--evidence", ev, "--data", copy_path])
     assert r.returncode == 2 and "has run" in r.stdout, "a second acceptance was not refused:\n%s" % r.stdout
     assert yaml.safe_load(open(os.path.join(L3, "l3r2.yaml"), encoding="utf-8")).get("baseline_acceptance") == before, \
         "the test changed the tree's acceptance record"
@@ -978,5 +1002,23 @@ def t_l3r5_acceptance_refused_while_a_criterion_is_unmet():
         assert len(dr) == 1
         r = run(raw.replace(dr[0], "definition_reissue: null", 1), [rec])
         assert r.returncode == 2 and "the gate reads NOT MET" in r.stdout, "filed with a gate condition unmet:\n%s" % r.stdout
-        r = run(raw, [rec])
+        # every criterion holding (since the layer 3 amendment of 1 October 2026: the review's findings closed, and the
+        # revision the one that holds the content, L3-R04); with the findings OPEN it refuses
+        # (closed by a fixture check of the amendment, the newest accepted check, l3amfix.closed_copy: B2 of
+        # astra-check-l3am-1, the acceptance verifies the check that closed them)
+        import l3amfix as F
+        rf = [l for l in lines if l.startswith("review_findings: {")]
+        rev_parent = None
+        if rf and ", state: OPEN," in rf[0]:
+            r = run(raw, [rec])
+            assert r.returncode == 2 and "are OPEN" in r.stdout, "filed with the review's findings open:\n%s" % r.stdout
+            rev_parent = F.tip()
+            raw, rec = F.closed_copy(raw, rev_parent)
+        p = os.path.join(tempfile.mkdtemp(prefix="l3r5-gate-"), "l3r2.yaml"); open(p, "w", encoding="utf-8").write(raw)
+        rev = F.commit_with({"v2/docs/handover/layer3/l3r2.yaml": raw.encode("utf-8")}, parent=rev_parent)
+        r = _run([acc, "--data", p, "--revision", rev, "--evidence", rec, "--check"])
         assert r.returncode == 0, "refused with every criterion holding:\n%s" % r.stdout
+        r = _run([acc, "--data", p, "--revision", head, "--evidence", rec, "--check"])
+        # HEAD neither holds the copy's content nor descends from the revision the closing check read
+        assert r.returncode == 2 and ("does not hold the content" in r.stdout or "does not verify" in r.stdout), \
+            "accepted at a revision that does not hold the content:\n%s" % r.stdout

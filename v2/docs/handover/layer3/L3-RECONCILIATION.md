@@ -26,6 +26,8 @@ MESHSAT-1357, 30 September 2026, on the owner's instruction of that day (`v2/doc
 
 **The checked energy basis's figures**, read by exact keys from [energy_basis.out](../../records/l3plane/energy_basis.out) (sha256/16 `73fd16915ddf8edf`) and [weather_basis.out](../../records/l3plane/weather_basis.out) (`8cc676433f4e3fb8`) of the basis at `cd8720a1ab6eed891b1afd8b5df3b8ceedf36c0f`. Model results; nothing is measured.
 
+*The solar-assisted figures of these tables (where the kit stops, the energy unserved, the September windows of 864) are historical results of proposal P-03's array (400 Wp in 2S2P into the model's 200 W stage window), which retained REQ-016 (D-34) does not admit, their unserved energy understated; the retained window's result awaits layer 4 task L4-E2, its record `v2/docs/records/l4e/L4-ENERGY-ARCHITECTURE.md` pending; the case is `REQUIREMENTS-L3-R2.md` section 2.3.*
+
 SC-37's reference plane (40/0), both starts: the lowest store of both packs in Wh (the base's, the lid's), or the energy unserved; COMB/EACH as the basis defines them (energy_basis.out 5):
 
 | Lid | Case | TYP | COMB/EACH | WAB | COMB/EACH |
@@ -87,6 +89,8 @@ The lids' stores at WE on the mean day and the allowances from nominal to usable
 - the lid pack 4S15P at 13.23 C, 0.141 A a cell: 0.655 of nominal, 473.7 Wh usable.
 
 **Board A's front end in four cases** (D-24, D-25), read by exact keys from [three_cases.out](../../records/l3plane/three_cases.out) (sha256/16 `8119987a20fad08c`, tip `cd8720a1ab6eed891b1afd8b5df3b8ceedf36c0f`). SC-37's reference day at 40/0, both starts: the lowest store of both packs in Wh (the base's, the lid's), or the energy unserved. No figure here is demonstrated capability.
+
+*The solar-assisted figures of these tables (where the kit stops, the energy unserved, the September windows of 864) are historical results of proposal P-03's array (400 Wp in 2S2P into the model's 200 W stage window), which retained REQ-016 (D-34) does not admit, their unserved energy understated; the retained window's result awaits layer 4 task L4-E2, its record `v2/docs/records/l4e/L4-ENERGY-ARCHITECTURE.md` pending; the case is `REQUIREMENTS-L3-R2.md` section 2.3.*
 
 | Case | Inputs | Lid | TYP | COMB/EACH | WAB | COMB/EACH |
 |---|---|---|---|---|---|---|
@@ -314,7 +318,7 @@ Each item with whose it is, what closes it and its state, the state read live fr
 | CFL-002 | notes | E688; withdrawn. Whether the SGP41 senses hydrogen at the relevant levels stays REQ-042's TBD. Corrected on 30 September 2026 (layer 3's second issue, L3 | the note's stale sentence and its correction of 30 September 2026 (L3-R2): REQ-042 carries no TBD, its hydrogen part waits on S-49 |
 | CFL-002 | notes | 3's second issue, L3-R2, v2/docs/records/l3r2/apply_l3r2_session.py): REQ-042 carries no TBD since 27 September 2026; the hydrogen half of its battery-b | the note's stale sentence and its correction of 30 September 2026 (L3-R2): REQ-042 carries no TBD, its hydrogen part waits on S-49 |
 | ASM-005 | notes | ssumption's. FEA-001 holds it. Retyped on 27 September 2026 by the layer-3 closer so that TBD marks only unsettled limits: the pass line (Z-EXP-A and Z-E | history: the record's retyping of 27 September 2026, which removed its TBD |
-| REQ-042 | acceptance | h the Manual FET Control sequence with one, SLUUAQ3A 5.4.2 and 5.4.4.2), the pack staying open until service, with the compute modules and the panel controller | 'the pack staying open until service' is the protection FETs held open, a behaviour, not an open question |
+| REQ-042 | acceptance | 3A 5.4.2 and 5.4.4.2), and both FETs read open at the pack. Persistence: the pack staying open until service, with the stimulus removed and any input applied or | 'the pack staying open until service' is the protection FETs held open, a behaviour, not an open question |
 | FEA-005 | acceptance | The battery-and-protection review owed under D-09 (route R-BAT, an electronics engineer outside th | a review owed under D-09 (route R-BAT): a verification activity, layers 4 and 8 |
 | REQ-045 | acceptance | prospective fault current, protection and conductor rating sourced; no coordination study exists yet (OPERATING-ENVELOPE section 4). | a state sentence inside the acceptance: no fault-current coordination study exists yet, which the pass line (energy_chain.py with every stage sourced) requires; layer 4 work for the energy chain's owner, no limit open |
 | REQ-077 | notes | hardware stage is needed is S-58. Whether the stop acts inside the envelope is FEA-004's, OPEN until the heat-balance test: at the independent bound's worst cor | whether the hot stop acts inside the envelope is FEA-004's, open until the heat-balance test (layer 4 and a physical test); the pass line is settled |
@@ -332,11 +336,12 @@ Records whose status is TBD: none.
 
 ### Open items, by the layer each belongs to
 
-85 open items. Layer 3 holds no open item; the energy basis S-127 is closed (commit 9493847c), yet a row still reads HELD; everything else is downstream work, an outside step or tooling, and holds no requirement's statement.
+86 open items. Layer 3 holds no open item; the energy basis S-127 is closed (commit 9493847c), yet a row still reads HELD; everything else is downstream work, an outside step or tooling, and holds no requirement's statement.
 
 | Item | Class | Layer | Why | Records waiting on it | Disposition |
 |---|---|---|---|---|---|
 | S-01 | SESSION | 4 | EMCON reaching every transmitter (FEA-002) | REQ-030, REQ-071, REQ-032, FEA-002 |  |
+| S-128 | SESSION | 4 | REQ-042's alarm levels, test stimuli and covered states, derived with their sources (L3-R02) | REQ-042 |  |
 | S-35 | SESSION | 4 | the secure element's slot map shown on the fitted part (FEA-001) | REQ-035, ASM-005, FEA-001 |  |
 | S-36 | SESSION | 4 | NEED-03's shared elements mitigated or named (ASM-002) | ASM-002, REQ-073 |  |
 | S-50 | SESSION | 4 | GND-002's grounding strategy | REQ-061, CFL-018 |  |
@@ -359,7 +364,7 @@ Records whose status is TBD: none.
 | S-110 | SESSION | 6 | the bulkhead arrestor's ESD figure | REQ-058 |  |
 | S-125 | SESSION | 6 | board C's exact part identities | none | LAYOUT_ENTRY_PACKET |
 | S-13 | SESSION | 6 | an eSIM order code, before an eSIM build | none | PROCUREMENT |
-| S-49 | SESSION | 6 | a battery-bay hydrogen sensing part | REQ-042 |  |
+| S-49 | SESSION | 6 | a battery-bay hydrogen sensing part, its selection only (REQ-042's acceptance is the end-to-end test, L3-R02) | REQ-042 |  |
 | S-56 | SESSION | 6 | the SGP41 at the worst inside air | REQ-042, REQ-052 |  |
 | D-18 | CONDITIONAL | 7 | IP68 fans on the coolers, a part fit (REQ-043) | REQ-043 |  |
 | S-12 | SESSION | 7 | the key-B socket's locating holes and D-07's third jack against the clamp | CHO-001, CON-015 |  |
