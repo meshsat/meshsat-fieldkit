@@ -7971,7 +7971,15 @@ records:
       v2/docs/records/a1elec/energy_two_pack.py lines 257 to 280 credit the sun twice in an hour the kit is stopped (the
       engineering collaborator's layer 4 check of 30 September 2026). The entry is kept as written; the result on the
       retained window awaits layer 4 task L4-E2 (v2/docs/records/l4e/L4-ENERGY-ARCHITECTURE.md, pending). REQ-072 reads
-      FAIL at desk either way (DR-01).
+      FAIL at desk either way (DR-01). Pointer maintained on 1 October 2026 (item 3 of the unified independent review of
+      the amendment, v2/docs/records/l3am/REVIEW-UNIFIED-AS-RECEIVED.md): L4-E2's result on the retained window is filed
+      and checked in v2/docs/records/l4e/L4-ENERGY-ARCHITECTURE.md (its figures printed in l4e_replay.out; the
+      coordinator's check v2/docs/records/l4e/checks/check-l4e2-3.md accepted it, and the owner's independent reviewer
+      reproduced its replay companion offline). With the stage's input clipped at REQ-016's 100 W instead of the 200 W
+      window of proposal P-03's array, neither architecture meets 48 hours: A2 on the hypothetical corrected path stops
+      at 05 UTC of the first night, 270.1 / 286.3 Wh unserved at 48 h (06 / 18 UTC starts); A1 stops 2 or 13 h in. It is
+      a layer 4 reading, not this record's evidence: the verdict and the latest evidence entry stay as accepted, and
+      l3r2.yaml's solar_case and the Layer 3 pages keep naming the result pending as accepted at 3b4b92cf.
 
   - id: REQ-017
     kind: requirement
