@@ -647,7 +647,7 @@ R227's single-pulse rating (R-101).
 17. **U-03 moved from the choices into the register as PANEL-ACC** (update round 3). *Why:* L4-E13, accepted, shows route 2
    feasible on a unit equal to the typical rows and REQ-016's window, the stage, its hold and its 100 W control unchanged, so
    what remains decides a unit (a purchase and a measurement), not the topology or the source class; criteria 1 and 5 name only
-   the choices that can still overturn the architecture. Its row stays in 7b with its class so the move is visible. **J_SOLAR's
+   the choices that can still overturn the architecture. Its row stays in 8b with its class so the move is visible. **J_SOLAR's
    rating amends LH-02 and adds no handover row:** it is a property of the existing interface IF-EXT-DC (its `current.solar`),
    whose envelope changes to PANEL-ACC's three cases (3.987, 8.1817 and 13.82 A); no interface is created. **R-29 moves to A-3(b)'s
    8.1817 A:** the shrouded AWG 18 row's 7 A no longer covers SunPower's own 1.25 allowance, so the lead goes to AWG 16 on the
@@ -764,7 +764,7 @@ owner's purchase. The items under U-01's approach (II)
 - **Recorded residuals outside every requirement:** A-N1 (the VIN_RAW clamps' 64.5 V against U2's 60 V at their rated pulse; no
   surge level is ruled, D-16) and the capability scenario on Q1, the LM74700-Q1 and U17's POE_VIN (part A). S-111 (VBUS20's
   single faults) is an engineering decision still open (R-48), with no exemption claimed; the short at DC_P and the weak-source
-  band behind F1 are traced in section 5 (F1's let-through R-115, D-06), not exempted.
+  band behind F1 are traced in 4e (F1's let-through R-115, D-06), not exempted.
 - **Not claimed:** nothing is verified, built or measured; every row is a desk reading of documents and records.
 
 ## Appendix A. History: the inputs of each round, the earlier summary and the endurance statement
