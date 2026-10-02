@@ -1,0 +1,20 @@
+{
+ "what": "LCSC public product-detail answer for C170182 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C170182), no login; kept fields only",
+ "read_utc": "2026-10-02T00:27Z",
+ "read_by": "task L4-E7R (MESHSAT-1357), third round",
+ "role": "board E, the INB filter across R66 (100 nF NP0 50 V 1206, one or more in parallel), L4-E7R's CS101 correction",
+ "code": "C170182",
+ "brand": "Walsin",
+ "model": "1206N104J500CT",
+ "package": "1206",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/d292b592987b2b556ebeda25b5137751.pdf?productCode=C170182",
+ "pdf_sha256": "346d7ddd653b94a0ebff5d30c64fa6a591392c8dc1482ff0914292d665aeb17b",
+ "pdf_note": "fetched at read_utc; the record uses the catalogue's capacitance, tolerance, dielectric and voltage rating only",
+ "stock": 162175,
+ "params": {
+  "Capacitance": "100nF",
+  "Temperature Coefficient": "NP0",
+  "Tolerance": "±5%",
+  "Voltage Rating": "50V"
+ }
+}

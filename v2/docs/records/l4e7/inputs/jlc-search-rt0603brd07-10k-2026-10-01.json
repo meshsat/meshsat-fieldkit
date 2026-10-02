@@ -1,0 +1,249 @@
+{
+ "what": "JLCPCB public parts search for the keyword RT0603BRD07 (the same API and paging as jlc-search-rt0603brd07-2026-10-01.json), no login; the rows from 10.0k to 19.9k, for the control decision's divider of U18's output, code, model and stock kept",
+ "read_utc": "2026-10-01T21:17Z",
+ "read_by": "task L4-E7R (MESHSAT-1357)",
+ "count_all": 820,
+ "count_kept": 48,
+ "rows": [
+  {
+   "code": "C95204",
+   "model": "RT0603BRD0710KL",
+   "stock": 1866154
+  },
+  {
+   "code": "C515735",
+   "model": "RT0603BRD0710K2L",
+   "stock": 14241
+  },
+  {
+   "code": "C861076",
+   "model": "RT0603BRD0710K4L",
+   "stock": 91
+  },
+  {
+   "code": "C861077",
+   "model": "RT0603BRD0710K5L",
+   "stock": 16346
+  },
+  {
+   "code": "C861078",
+   "model": "RT0603BRD0710K7L",
+   "stock": 971
+  },
+  {
+   "code": "C728581",
+   "model": "RT0603BRD0711KL",
+   "stock": 11343
+  },
+  {
+   "code": "C5197511",
+   "model": "RT0603BRD0711K1L",
+   "stock": 4408
+  },
+  {
+   "code": "C861088",
+   "model": "RT0603BRD0711K3L",
+   "stock": 273
+  },
+  {
+   "code": "C705719",
+   "model": "RT0603BRD0711K5L",
+   "stock": 9939
+  },
+  {
+   "code": "C7064969",
+   "model": "RT0603BRD0711K7L",
+   "stock": 0
+  },
+  {
+   "code": "C861089",
+   "model": "RT0603BRD0711K8L",
+   "stock": 2
+  },
+  {
+   "code": "C326735",
+   "model": "RT0603BRD0712KL",
+   "stock": 60726
+  },
+  {
+   "code": "C705723",
+   "model": "RT0603BRD0712K1L",
+   "stock": 11270
+  },
+  {
+   "code": "C861101",
+   "model": "RT0603BRD0712K3L",
+   "stock": 9580
+  },
+  {
+   "code": "C861102",
+   "model": "RT0603BRD0712K4L",
+   "stock": 15195
+  },
+  {
+   "code": "C9900214620",
+   "model": "RT0603BRD0712K5L",
+   "stock": 0
+  },
+  {
+   "code": "C861103",
+   "model": "RT0603BRD0712K6L",
+   "stock": 1202
+  },
+  {
+   "code": "C861104",
+   "model": "RT0603BRD0712K7L",
+   "stock": 4028
+  },
+  {
+   "code": "C20165687",
+   "model": "RT0603BRD0712K9L",
+   "stock": 280
+  },
+  {
+   "code": "C861121",
+   "model": "RT0603BRD0713KL",
+   "stock": 20893
+  },
+  {
+   "code": "C861116",
+   "model": "RT0603BRD0713K2L",
+   "stock": 6142
+  },
+  {
+   "code": "C861117",
+   "model": "RT0603BRD0713K3L",
+   "stock": 6665
+  },
+  {
+   "code": "C861118",
+   "model": "RT0603BRD0713K5L",
+   "stock": 12
+  },
+  {
+   "code": "C861119",
+   "model": "RT0603BRD0713K7L",
+   "stock": 11768
+  },
+  {
+   "code": "C861120",
+   "model": "RT0603BRD0713K8L",
+   "stock": 3842
+  },
+  {
+   "code": "C723488",
+   "model": "RT0603BRD0714KL",
+   "stock": 122
+  },
+  {
+   "code": "C861131",
+   "model": "RT0603BRD0714K3L",
+   "stock": 4
+  },
+  {
+   "code": "C861132",
+   "model": "RT0603BRD0714K5L",
+   "stock": 0
+  },
+  {
+   "code": "C705725",
+   "model": "RT0603BRD0714K7L",
+   "stock": 37480
+  },
+  {
+   "code": "C861133",
+   "model": "RT0603BRD0714K9L",
+   "stock": 4
+  },
+  {
+   "code": "C326733",
+   "model": "RT0603BRD0715KL",
+   "stock": 69935
+  },
+  {
+   "code": "C861141",
+   "model": "RT0603BRD0715K2L",
+   "stock": 2
+  },
+  {
+   "code": "C861142",
+   "model": "RT0603BRD0715K4L",
+   "stock": 4091
+  },
+  {
+   "code": "C6460571",
+   "model": "RT0603BRD0715K6L",
+   "stock": 0
+  },
+  {
+   "code": "C861143",
+   "model": "RT0603BRD0715K8L",
+   "stock": 7727
+  },
+  {
+   "code": "C326732",
+   "model": "RT0603BRD0716KL",
+   "stock": 21625
+  },
+  {
+   "code": "C728583",
+   "model": "RT0603BRD0716K2L",
+   "stock": 5205
+  },
+  {
+   "code": "C728584",
+   "model": "RT0603BRD0716K5L",
+   "stock": 19452
+  },
+  {
+   "code": "C9900009447",
+   "model": "RT0603BRD0716K5L",
+   "stock": 0
+  },
+  {
+   "code": "C861155",
+   "model": "RT0603BRD0716K7L",
+   "stock": 4160
+  },
+  {
+   "code": "C861156",
+   "model": "RT0603BRD0716K9L",
+   "stock": 28661
+  },
+  {
+   "code": "C861167",
+   "model": "RT0603BRD0717K4L",
+   "stock": 2191
+  },
+  {
+   "code": "C705729",
+   "model": "RT0603BRD0717K8L",
+   "stock": 16064
+  },
+  {
+   "code": "C309650",
+   "model": "RT0603BRD0718KL",
+   "stock": 61538
+  },
+  {
+   "code": "C861175",
+   "model": "RT0603BRD0718K2L",
+   "stock": 14979
+  },
+  {
+   "code": "C705732",
+   "model": "RT0603BRD0718K7L",
+   "stock": 6720
+  },
+  {
+   "code": "C861184",
+   "model": "RT0603BRD0719K1L",
+   "stock": 12480
+  },
+  {
+   "code": "C861185",
+   "model": "RT0603BRD0719K6L",
+   "stock": 20549
+  }
+ ]
+}

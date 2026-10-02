@@ -1,0 +1,21 @@
+{
+ "what": "an excerpt of L4-E9's power-path output at fnd/l4e9 539dc57c (read only; that branch is another author's), the lines that carry figures L4-E7R's third round sets",
+ "read_utc": "2026-10-01T23:25Z",
+ "read_by": "task L4-E7R (MESHSAT-1357), third round",
+ "commit": "539dc57cd7d1b989c6181862d4cfeb1b91ca407d",
+ "path": "v2/docs/records/l4e9/l4e9_power_path.out",
+ "blob_sha256": "9b0c1e7029495ca93d5ef3abd4648d84978ccfc13584a0080002296ee7534652",
+ "lines": {
+  "86": "   L4-E7: limit 3.4713 A; 25 V corner 96.2474 W (stack A), 99.8992 W (every conservative assumption); hold 16.9704 / 17.593 / 18.2205 V, conditioned 16.4198 to 18.8132 V; U5 about 105.4 C",
+  "97": "     current: panel hot short circuit about 6.42 A | F2 10 A blade, J_SOLAR VH (10 A at AWG 16, standard header; 7 A at AWG 18, shrouded only; the lead is AWG 18 on a standard header: no stated rating)",
+  "99": "     protection: none (a bare panel) | F2; D4 one-way clamp (its 45.4 V clamping against the 35 V bulk and the reversed panel: L4-E7R)",
+  "105": "       - PENDING: the solar entry's surge protection (D4's clamping against what it protects) and a reversed panel: (L4-E7R); PENDING (PENDING: L4-E7R, the 100 W control decision on board E and the solar entry's surge protection (fnd/l4e7, fix round))",
+  "108": "     voltage: in: hold 16.9704 / 17.593 / 18.2205 V (EA3 typical), 16.4198 to 18.8132 V conditioned (L4-E7), at most 25 V | out: ceiling 28.28 / 29.21 / 30.15 V (L4-E5, R10 232 k; as drawn 14.62 / 15.09 / 15.56 V)",
+  "109": "     current: input limit 3.4713 A (L4-E7); the 25 V corner 96.2474 W (stack A), 99.8992 W under every conservative assumption | out at the window 93 W (stage 0.93 DECLARED)",
+  "113": "       - MEETS: the stage's input power at the 25 V corner under every conservative assumption, against REQ-016's 100 W: 99.8992 <= 100 W; CONDITIONAL (l4e7 out 9: CONDITIONAL on EA2, A7, LINE, TCR, TJ)",
+  "115": "       - PENDING: the 100 W control decision (the backstop) on board E: (L4-E7R); PENDING (PENDING: L4-E7R, the 100 W control decision on board E and the solar entry's surge protection (fnd/l4e7, fix round))",
+  "119": "     current: asked: at the window 93 W out, at H3's lowest settle point (22.06 V) 4.216 A | available: the declared _TRK_A 10.33 A",
+  "307": "   solar-assisted on the candidate panel (nominal sheet, source compliance INCONCLUSIVE; L4-E7's settings, 350 Wh a day): A1 first interruption",
+  "310": "   the 100 W screening stimulus (a conditional comparison): A1 h 13 / 2, unserved 907.4 / 923.5 and 1382.5 / 1398.6 Wh, +654.8 / +873.1 Wh; A2 h 23 / 11, +278.8 / +515.8 Wh"
+ }
+}

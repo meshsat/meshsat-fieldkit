@@ -9,7 +9,14 @@ tolerance and TCR, and the next larger catalogue setting fails the same design f
 break-even and a bench row; the hold's band and its energy are as chosen and the margin costs nothing on SC-37's day; the
 committed .out is what the script prints; the hold keeps REQ-016's ratio and no draft carries the proposal; each draft apply script checks without writing, applies once to a copy and
 refuses a second application, the three apply in either order and on top of L4-E5's R10 change, and none touches R10.
-Nothing here writes into the tree.
+The control decision (L4-E7R, third round, the owner's decision process of 2 October 2026): the verdict on the present
+limit names the unwarranted values it rests on; what REQ-016 bounds is read from it and the window is an interpretation;
+the comparison holds at most three approaches, each quantified on both days, none called unconditional; one error budget
+names its two assumptions and the bound reproduces in separate arithmetic; the setting is the least-cost one carrying both
+assumptions past their meaning; check (b) counts the capacitor input energy, the panel's own current and the events; SWEN
+is off by default on printed rows; the disturbances come from the approved test plan and every part holds; the backstop's
+draft applies only after the hold and input limit drafts; the drafts to the makers follow the decision and quote its
+figures; L4-E9's figures are named. Nothing here writes into the tree.
 """
 import hashlib
 import importlib.util
@@ -39,7 +46,10 @@ def _R():
         for rel in ("v2/vendor/power/lt8705a.pdf", "v2/vendor/passives/held/yageo-rt-series-v16-2025-05-06.pdf",
                     "v2/vendor/power/held/infineon-bsc028n06ns-rev2.1-c148250.pdf",
                     "v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf",
-                    "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net"):
+                    "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net", "v2/vendor/ti/held/ti-ina250-sbos511c.pdf",
+                    "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf", "v2/vendor/power/littelfuse-smcj-series-tvs.pdf",
+                    "v2/vendor/ti/held/ti-ina169-sbos181f.pdf", "v2/vendor/power/held/panasonic-za-eehza1h330xp-2017-11-07.pdf",
+                    "v2/vendor/power/held/mil-std-461g-2015-12-11.pdf", "v2/vendor/passives/held/vishay-wsl-30100-2023-11-23.pdf"):
             need(os.path.join(ROOT, rel), "an input of the L4-E7 record (held documents: its fetch_held_back.py)")
         if shutil.which("pdftotext") is None:
             raise Skip("pdftotext is needed")
@@ -424,3 +434,285 @@ def t_the_junction_estimate_is_never_called_a_bound_and_line_keeps_its_coupling(
     line = [r_ for r_ in R["qual_rows"] if r_["id"] == "LINE"][0]
     assert "no gain of its own" not in line["why_stability"] and "couples a moving source voltage" in line["why_stability"]
     assert "%.4f %%" % (2.0 * R["line_p"]) in line["why_stability"] and "setpoint" in line["small"]["stability"]
+
+
+# ---------------------------------------------------------------- the control decision (L4-E7R, owner, 1 October 2026; third
+# round after checks/astra-check-l4e7r-2.md and the owner's decision process of 2 October 2026)
+BACKSTOP = "apply_gen_sch_e_backstop.py"
+CLASSES = {"warranted", "warranted (printed test limits)", "warranted (at 50 mV)", "warranted (from the rows above)",
+           "documented dependency (typical row)", "assumption", "requirement"}
+ANSWERS = ("EA2", "A7", "LINE", "RSENSE1", "HoJLR", "Milliohm", "Analog Devices")
+
+
+def _approach(R, i):
+    return [a for a in R["decision"]["approaches"] if a["id"] == i][0]
+
+
+def _s10(R):
+    return " ".join("\n".join(_CACHE["M"].render(R)).split()).split("10. THE CONTROL DECISION", 1)[1]
+
+
+def t_the_verdict_names_what_the_present_limit_rests_on():
+    R = _R()
+    v = R["decision"]["verdict"]
+    assert v["shown"] is False
+    assert {i for i, _b in v["depends"]} == {"EA2", "A7", "LINE", "TCR", "TJ"}, v["depends"]
+    assert all(b for _i, b in v["depends"]), "a value the verdict rests on has no break-even"
+    assert "THE VERDICT ON THE CURRENT CONTROL: NOT SHOWN on warranted manufacturer limits alone." in _s10(R)
+
+
+def t_what_is_bounded_is_read_from_req016_and_the_window_is_an_interpretation():
+    R = _R()
+    d = R["decision"]
+    bs = d["basis"]
+    assert bs["window_printed"] is False and bs["vm"] == ["CALCULATION", "PROTOTYPE_MEASUREMENT"] and bs["lead_hits"] == 0
+    assert d["w_avg"] == 0.1 and "panel entry" in bs["boundary"]
+    s = _s10(R)
+    assert "The averaging window: REQ-016 states none" in s and "CONDITIONAL for layer 8 to confirm" in s
+    assert "A longer window would be easier to meet and is not taken." in s
+    c = d["c"]
+    assert c["e_part_allow"] < 0.01 * 1.0 * d["w_avg"] and c["e_r59_allow"] < 0.01 * 3.0 * d["w_avg"]
+    for k in ("CHECK (a), NORMAL OPERATION", "CHECK (b), STARTUP, SHUTDOWN AND THE FAULT RESPONSE", "CHECK (c), THE PARTS' RATINGS DURING THE SPECIFIED DISTURBANCES"):
+        assert k in s, k
+
+
+def t_at_most_three_approaches_each_quantified_none_called_unconditional():
+    R = _R()
+    d = R["decision"]
+    ap = d["approaches"]
+    assert 1 <= len(ap) <= 3, len(ap)
+    for a in ap:
+        assert isinstance(a["bound"], float) and 90.0 < a["bound"] <= 100.0, (a["id"], a["bound"])
+        assert a["status"] == "CONDITIONAL" and a["independent"] is False, a["id"]
+        assert [e_[0] for e_ in a["energy"]] == ["lower", "nominal", "upper", "bright"]
+        assert all(e_[2] > 0 and isinstance(e_[3], int) for e_ in a["energy"]), "an approach's energy or bound hours are missing"
+        assert a["classes"] and a["parts"] and a["failure"] and a["depends"] and a["surge"], a["id"]
+        assert 0 < a["noon_red"] < a["cur_red"], "%s: the noon power reduction is not computed below the current reduction" % a["id"]
+    assert d["chosen"] == "C" and "UNCONDITIONAL" not in _s10(R)
+
+
+def t_one_error_budget_names_its_assumptions_and_reproduces_in_closed_form():
+    R = _R()
+    d = R["decision"]
+    c, rw = d["c"], d["rows"]
+    assert {t_[2] for t_ in c["terms"]} <= CLASSES, {t_[2] for t_ in c["terms"]}
+    assm = [t_[0] for t_ in c["terms"] if t_[2] == "assumption"]
+    assert len(assm) == 2 and "G_CM" in assm[0] and "VIN+ input bias" in assm[1], assm
+    assert not any(t_[2].startswith("rating") for t_ in c["terms"]), "an absolute maximum is used as a ceiling"
+    for t_ in c["terms"]:
+        assert not any(w in t_[0] for w in ANSWERS), "the chosen bound names %s" % t_[0]
+    assert set(_approach(R, "C")["classes"]) == {"warranted", "assumption", "documented dependency", "requirement"}
+    # the controlling calculation in separate arithmetic: the highest trip at 25 V and the bound, at the chosen R66
+    dt = 45.0
+    agl = lambda r_, s_: (1 + s_ * 0.001) * (1 + s_ * 25e-6 * dt) * (1 + s_ * (0.005 + 0.05 / r_)) ** 2
+    r66 = rw["r66"] * agl(rw["r66"], -1)
+    gm = rw["gm169"][0] * (1 - rw["nl169"])
+    base = (rw["vth"][1] + rw["iin_t"] * r66) / (gm * r66)
+    rej = 10 ** (-rw["cmr169"] / 20.0) * 13.0 + rw["psr169"] * 20.0
+    load = rw["r65"] * agl(rw["r65"], -1) + r66
+    vs = base + rw["vos169"] + rej + c["g_cm"] * abs(base + rw["vos169"] + rej - 0.050) + base * abs(load - 25e3) / rw["ro169"]
+    rp = c["rp"]
+    rb = rp / c["n"] * (1 - 0.01) * (1 - rw["wtcr"] * dt) * (1 - 0.005 - 0.0005 / rp) * (1 - 0.01 - 0.0005 / rp)
+    r89 = (R["r8v"] + R["r9v"]) * (1 - 0.001) * (1 - 25e-6 * dt) * (1 - 0.005 - 0.05 / R["r8v"]) ** 2
+    p = 25.0 * vs / rb + 625.0 / r89 + 25.0 * (vs * rw["gm169"][1] * (1 + rw["nl169"]) + c["i_b"]) + (25.0 * c["leak"] if c["layout"] == "ahead" else 0.0)
+    assert abs(c["v_hi"] - 25.0) < 1e-9 and abs(p - c["p_static"]) < 1e-6, (p, c["p_static"])
+    bu = c["budget"]
+    assert abs(bu["e_margin"] - (bu["e_tol"] - bu["e_sup"])) < 1e-12 and bu["e_margin"] > 0 and abs(bu["p_margin"] - (100.0 - c["p_static"])) < 1e-9
+    assert abs(25.0 * bu["i_100"] + c["pb25"] - 100.0) < 1e-9
+    assert c["g_cm"] == 0.01 and c["i_b"] == 1e-3
+
+
+def t_the_setting_holds_round_3s_rule_and_the_cs101_search_takes_the_least_cost():
+    R = _R()
+    d = R["decision"]
+    c, rw, cs = d["c"], d["rows"], R["cs101"]
+    st = c["settings"]
+    assert [s_["r66"] for s_ in st] == sorted(s_["r66"] for s_ in st) and len(st) >= 3
+    r3 = [s_ for s_ in st if abs(s_["r66"] - 8250.0) < 1e-6][0]
+    assert r3["ok"] and r3["g_cm_be"] >= 1.0 and not st[0]["ok"] and st[0]["g_cm_be"] < 1.0, "round 3's rule no longer picks 8.25k"
+    assert c["t_fac"] == 10.0 and c["t_spread"] <= c["t_fac"] / 5.0
+    b = cs["best"]
+    assert b["immune"] and b["protect"] and abs(b["r66"] - c["r66"]) < 1e-6 and b["rm"][0] == c["rm"][0] and b["layout"] == c["layout"]
+    assert c["r66_code"] == "C861590" and c["rm"][1] == "C705766" and c["layout"] == "ahead" and c["n_cf"] == 5
+    # no candidate of more energy holds the three conditions, and the filter's size balances the two unprinted rooms
+    assert cs["top_e"] == (round(b["energy"][1][2], 6), round(b["energy"][3][2], 6)) and cs["n_cands"] >= len(cs["top"]) >= 1
+    assert max(min(lb_, rr_) for *_x, lb_, _ta, rr_ in cs["top"]) == min(cs["loop_be"], cs["best"]["resp_room"])
+    assert c["g_cm_be_b"] >= 1.0 and c["i_b_be_b"] >= rw["ipin169"] and c["t_allow"] >= c["t_fac"] * c["t_resp_typ"]
+    s = _s10(R)
+    assert "THE SETTING (SESSION, the margin decided by what it must absorb, no percentage)" in s and "round 3's choice" in "\n".join(_CACHE["M"].render(R))
+
+
+def t_check_b_counts_the_capacitor_input_energy_the_panels_current_and_the_events():
+    R = _R()
+    d = R["decision"]
+    c, rw = d["c"], d["rows"]
+    za = rw["za"]
+    cmax = 3 * za["c"] * (1 + za["tol"]) * (1 + za["end_dc"]) + (0.1e-6 + 4 * 10e-6 + 24.8e-6) * 1.10
+    assert abs(c["c_entry_max"] - cmax) < 1e-12 and abs(c["e_cap"] - cmax * 625.0) < 1e-12 and c["n_ca"] == 4
+    assert abs(c["i_src"] - rw["isc_hot"] * (1 + rw["tol_p"])) < 1e-12 and abs(c["i_src"] - rw["amps_pk"]) > 0.05
+    assert abs(c["t_allow"] - ((100.0 - c["p_static"]) * d["w_avg"] - c["e_cap"] - c["e_f"]) / (c["p_src"] - c["p_static"])) < 1e-12
+    assert abs(c["e_f"] - 25.0 * c["i_hi25"] * c["tau"][1]) < 1e-9 and c["tau"][1] > c["tau"][0] > 0
+    assert c["e_window_typ"] <= 100.0 * d["w_avg"] and c["e_start"] < 1.0 and c["td_min"] > d["w_avg"]
+    assert c["cycle_be"] > 1.0 and 0 < c["cycle_e"] < c["e_cap"]
+    assert abs(rw["tpd_lh"] - 28.1e-6) < 1e-12
+    s = _s10(R)
+    assert "7b.16" in s and "%.3f ms" % (1e3 * c["t_allow"]) in s and "SWEN held low" in s and "CONDITIONAL" in s
+
+
+def t_the_supply_sequencing_is_default_off_on_printed_rows():
+    R = _R()
+    sq, rw = R["decision"]["seq"], R["decision"]["rows"]
+    assert sq["guard_v"] > sq["vdd_sense"] >= max(sq["vdd38"], sq["vdd_t"]), "SWEN could rise below a sensing part's supply range"
+    assert sq["sw_hi_min"] > sq["swen"][1] and sq["i_reset"] <= 1e-3 and sq["rel_hi"] < sq["ldo_lo"] and sq["td_min"] >= 0.18 > rw["st_t"]
+    assert sq["i_sw_be"] >= 50e-6 and sq["i_sw_be_dead"] > sq["i_sw_be"] and sq["hys_be"] > 0.5
+    assert not {"vpor", "ramp", "ramp_limit", "pin_needed_13"} & set(sq), "the sequencing still leans on the power-up row or a ramp"
+    assert sq["uv_ts_lo"] > 2.7 and sq["uv_ts_hi"] < 15.0 and sq["i_ldo"] < 5e-3 and abs(rw["r70"] - 8060.0) < 1e-6 and abs(rw["r71"] - 6040.0) < 1e-6
+    c = R["decision"]["c"]
+    assert c["vout_hi"] < sq["uv_ts_lo"] - rw["sw169"]
+    assert "with no condition on TRK_LDO33's ramp or sag rate and no use of U20's power-up row" in _s10(R)
+
+
+def t_the_disturbances_come_from_the_approved_plan_and_every_part_holds():
+    R = _R()
+    d = R["decision"]
+    sg, rw = d["surge"], d["rows"]
+    ds = sg["dist"]
+    assert abs(ds["v101"] - 1.9953) < 1e-3 and abs(ds["v101_150k"] - 0.0668) < 1e-3 and ds["p101"] == (80.0, 0.09)
+    assert abs(ds["i114"] - 0.1413) < 1e-3 and ds["esd"] == (8e3, 15e3) and ds["r_esd"] == 330.0 and ds["c_esd"] == 150e-12
+    assert abs(sg["d4_der"] - (1.0 - 0.40 * (rw["t_air"] - 25.0) / 125.0)) < 1e-12
+    kinds = {x_["kind"] for x_ in sg["cases"]}
+    assert kinds == {"capability", "M7"}
+    assert sg["worst"]["d59"] < sg["rating"]["csd"] and sg["d59_margin"] >= sg["d59_op"] and sg["alt_ca"][2] > sg["worst_app"]["d59"]
+    assert sg["c101"]["d59"] < sg["rating"]["csd"] and sg["c114"]["d59"] < sg["rating"]["csd"]
+    assert -min(x_["d59n"] for x_ in sg["cases"]) < sg["rating"]["csd"]
+    assert sg["c101"]["v_pk"] < rw["d4"]["vr"] and sg["c101"]["part_w"] < 1.0
+    assert sg["v_pk"] < min(sg["rating"]["za_v"], sg["rating"]["cer_v"], sg["rating"]["q3"]) and sg["v_pvp"] < sg["rating"]["vs169"]
+    assert sg["d169"] < sg["rating"]["d169"] and sg["v_inb"] < sg["rating"]["tps_in"] and sg["v_ina"] < sg["rating"]["tps_in"]
+    assert max(x_["id4"] for x_ in sg["cases"] if x_["kind"] == "capability") < rw["d4"]["ipp"]
+    assert 0 < sg["c101"]["ratio_drawn"] <= sg["c101"]["ratio_bound"] and sg["v_bulk"] < sg["rating"]["za_v"]
+    s = _s10(R)
+    assert "CAPABILITY SCENARIO, labelled" in s and "nothing in series with CSPIN or CSNIN" in s and "the Vishay draft asks" in s
+    assert "M2 records the cans' temperature" in s and "a long outdoor lead" in s
+
+
+def t_the_backstop_holds_through_cs101_and_the_failing_case_is_kept():
+    R = _R()
+    cs = R["cs101"]
+    fl, ra, rb, be = cs["fail"], cs["rem_a"], cs["rem_b"], cs["best"]
+    tab = cs["tab"]
+    assert len(cs["freqs"]) == 121 and abs(cs["freqs"][0] - 30.0) < 1e-9 and abs(cs["freqs"][-1] - 150e3) < 1e-6
+    # the failing case: round 3's circuit trips at every frequency; each remedy alone fails somewhere; the selection nowhere
+    assert fl["layout"] == "behind" and abs(fl["r66"] - 8250.0) < 1e-6 and fl["rm"][0] == 30000.0 and fl["n_cf"] == 0
+    assert not fl["immune"] and all(not r_[4] for r_ in tab["fail"])
+    assert not ra["immune"] and ra["t_allow"] >= 10.0 * R["decision"]["c"]["t_resp_typ"] and not tab["rem_a"][0][4], "(a) alone at 30 Hz"
+    assert not rb["immune"] and tab["rem_b"][0][4] and not all(r_[4] for r_ in tab["rem_b"]), "(b) alone"
+    assert be["immune"] and all(r_[4] for r_ in tab["best"]) and all(r_[3] <= be["m"] for r_ in tab["best"])
+    assert all(max(r_[1], r_[2]) >= r_[3] for r_ in tab["best"]), "a filtered value above its own unfiltered current"
+    # remedy (b) taken far cannot lower the voltage-limit setup at all
+    assert all(abs(a_[0] - b_[0]) < 1e-9 for _f, a_, b_ in cs["rem_b_add"]) and any(b_[1] < a_[1] - 1e-6 for _f, a_, b_ in cs["rem_b_add"])
+    # the coordinator's estimate tested; the loop branch's room; the step crossing times inside the allowance's arithmetic
+    es = cs["est"]
+    assert es["r30"] > fl["m"] and es["m_hi"] > 10 * fl["m"] and abs(1e3 * es["t_cross"] - 0.196) < 0.01
+    assert cs["loop_be"] >= 2.0 and cs["t_stepr"] < cs["t_step0"]
+    s = _s10(R)
+    for k in ("no upset of the kit's operation, no reset, no loss of a bearer", "That is an upset of the kit's operation",
+              "THE CONTROLLING TRADE-OFF", "(i) NO UPSET under M2", "(ii) PROTECTION", "(iii) RATINGS", "the coordinator's starting estimate, tested",
+              "M2 (the laboratory validation of CS101, downstream", "what it does not: the bulk's charge"):
+        assert k in s, k
+
+
+def t_the_backstop_draft_follows_the_hold_and_input_limit_drafts_on_a_copy():
+    need(GEN_E, "board E's generator")
+    before = _sha(GEN_E)
+    src = open(GEN_E, encoding="utf-8").read()
+    outs = []
+    for order in (DRAFTS, tuple(reversed(DRAFTS))):
+        d = tempfile.mkdtemp(prefix="l4e7-bk-")
+        try:
+            cp = os.path.join(d, "gen_sch_e.py")
+            open(cp, "w", encoding="utf-8").write(src)
+            r = _run(BACKSTOP, cp, "--check")
+            assert r.returncode == 3 and "occurs 0 times" in r.stderr, (r.returncode, r.stderr)
+            for name in order:
+                assert _run(name, cp, "--write").returncode == 0, name
+            orig = _sha(cp)
+            r = _run(BACKSTOP, cp, "--check")
+            assert r.returncode == 0 and "CHECK OK" in r.stdout and _sha(cp) == orig, (r.returncode, r.stderr)
+            r = _run(BACKSTOP, cp, "--write")
+            assert r.returncode == 0 and _sha(cp) != orig, r.stderr
+            r = _run(BACKSTOP, cp, "--write")
+            assert r.returncode == 3 and "already applied" in r.stderr, r.stderr
+            out = open(cp, encoding="utf-8").read()
+            outs.append(out)
+            for want in ('"36": "TRK_SWEN"', '"33": "TRK_VS"', '"32": "TRK_VIN"', '"TRK_VS", "TRK_VIN", "RS2512"', '"C44322")', '"C132788")',
+                         '"C43698")', 'r("R16", "31.6k', 'r("R66", "8.45k', '"C861590")',
+                         'for _cf in ("C70", "C75", "C76", "C77", "C78"): c(_cf, "100n NP0 50V", "TRK_BKS", "GND", "C10u50", "C170182")',
+                         '"C728595")', 'for _ca in range(4): c("C7%d" % (_ca + 1), "10u 50V", "TRK_VS", "GND", "C10u50")',
+                         '{"1": "TRK_VS", "2": "GND"}, "C224047")', 'r("R14", "100k 1%", "TRK_VS", "TRK_SHDN")', '_intent.rail("TRK_VS"',
+                         'part("C69", '):
+                assert out.count(want) == 1, want
+            assert out.count('{"1": "PV_P", "2": "GND"}, "C178637")') == 2 and '"C454360")' not in out and "CSPF" not in out and "C469656" not in out
+            assert 'c("C70", "1n", "TRK_BKS"' not in out
+            assert out.count('r("R10", "115k 1% (RFBOUT1: 15.1 V)"') == 1
+        finally:
+            shutil.rmtree(d)
+    assert outs[0] == outs[1], "the backstop does not land the same after either order of the three"
+    R = _R()
+    assert all(R["backstop_draft"].values()), R["backstop_draft"]
+    assert R["drafts"][BACKSTOP][3]
+    assert _sha(GEN_E) == before, "the tree's gen_sch_e.py changed"
+
+
+def t_the_clarification_drafts_follow_the_decision():
+    R = _R()
+    assert R["decision"]["clar"] == ["analog-devices-lt8705a.txt", "milliohm-hojlr2512.txt", "texas-instruments-ina169.txt", "vishay-wsl2512.txt"]
+    assert not os.path.exists(os.path.join(CLAR, "texas-instruments-ina250.txt"))
+    for nm in ("texas-instruments-ina169.txt", "vishay-wsl2512.txt"):
+        raw = open(need(os.path.join(CLAR, nm), nm), encoding="utf-8").read()
+        assert raw.startswith("DRAFT FOR THE OWNER TO SEND.") and "contacts no outside party" in raw and all(ord(ch) < 128 for ch in raw), nm
+        t = " ".join(raw.split())
+        assert "warrant" in t and "production guarantee" in t, nm
+    ti = " ".join(open(os.path.join(CLAR, "texas-instruments-ina169.txt"), encoding="utf-8").read().split())
+    assert "total error of the output current" in ti and "VIN+ pin" in ti and "1 kOhm" in ti and "supporting" in ti
+    ad = " ".join(open(os.path.join(CLAR, "analog-devices-lt8705a.txt"), encoding="utf-8").read().split())
+    assert "SWEN" in ad and "input current" in ad and "falling threshold" in ad
+
+
+def t_the_minors_the_l4e9_figures_and_the_faults():
+    R = _R()
+    d = R["decision"]
+    b, c = d["b"], d["c"]
+    assert 0 < c["loss"][0] < c["loss"][1] and 0 < b["loss"][0] < b["loss"][1]
+    rep = dict((rv, (e_, nr)) for rv, e_, nr in c["check_repro"])
+    assert abs(rep[26100.0][0] - 495.3165) < 5e-5 and abs(rep[28700.0][0] - 465.6367) < 5e-5 and abs(100 * rep[26100.0][1] - 10.06) < 5e-3
+    assert abs(100 * _approach(R, "A")["noon_red"] - 24.57) < 5e-3
+    fl = d["faults"]
+    assert fl["defeat"] and fl["stop"] and fl["guard"] and "Layer 8" in fl["acceptance"]
+    s = _s10(R)
+    assert "the smallest stocked RIMON_IN" in s and "largest stocked RIMON_IN" not in s
+    assert "printed 1.0507, applied 1.0240) is withdrawn" in s and "it releases at 3.194 V at most" in s
+    assert "%.2fk together, %.2fk to %.2fk with tolerance, drift and aging" % (c["r_load"][0] / 1e3, c["r_load"][1] / 1e3, c["r_load"][2] / 1e3) in s
+    assert "at the selected regulation's own currents" in s
+    l9 = c["l4e9"]
+    assert l9["p_hold_hi"] < 93.0 and l9["reg_hi_hold"] < 3.4713 and "L4-E9'S FIGURES THIS ROUND SETS" in s
+    for k in ("line 86", "line 97", "lines 99, 105 and 115", "line 119", "line 307"):
+        assert k in s, k
+
+
+def t_the_decision_page_is_linked_and_carries_the_printed_figures():
+    R = _R()
+    page = need(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), "the decision page")
+    t = " ".join(open(page, encoding="utf-8").read().split())
+    for nm in ("L4E7-STAGE-SETTINGS.md", "README.md"):
+        assert "L4E7-CONTROL-DECISION.md" in open(os.path.join(REC, nm), encoding="utf-8").read(), nm
+    d = R["decision"]
+    c, sg, sq = d["c"], d["surge"], d["seq"]
+    for a in d["approaches"]:
+        assert ("%.4f" % a["bound"]) in t, a["id"]
+    for fig in ("%.4f W" % c["p_static"], "%.4f W" % (100.0 - c["p_static"]), "%.4f A" % c["i_lo_aged"], c["model"],
+                "%gk" % (c["rm"][0] / 1e3), "%gk" % (c["r66"] / 1e3), "%.3f ms" % (1e3 * c["t_allow"]), "%.1f mJ" % (1e3 * c["e_cap"]),
+                "%.3f A" % c["i_src"], "%.4f V" % sg["worst"]["d59"], "%.3f V" % sq["guard_v"], "%.1f %%" % (100 * c["g_cm_be_b"]),
+                "%.2f %%" % (100 * c["budget"]["e_tol"]), "%.2f %%" % (100 * c["budget"]["e_sup"])):
+        assert fig in t, fig
+    assert "\u2013" not in t and "\u2014" not in t
+    assert "CONDITIONAL on two named assumptions" in t and "astra-check-l4e7r-2" in t

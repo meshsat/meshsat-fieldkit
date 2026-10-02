@@ -1,0 +1,26 @@
+{
+ "what": "LCSC public product-detail answer for C43698 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C43698), no login; kept fields only",
+ "read_utc": "2026-10-01T21:18Z",
+ "read_by": "task L4-E7R (MESHSAT-1357)",
+ "role": "board E U20, the chosen backstop's supervisor and off-time (TPS3808G33DBVR), L4-E7R second round",
+ "code": "C43698",
+ "brand": "TI",
+ "model": "TPS3808G33DBVR",
+ "package": "SOT-23-6",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/11f32af539b24342abd293a76f2241d9.pdf?productCode=C43698",
+ "pdf_sha256": "52446728d1e14cefc5246cf8a3f337bc8ddd41600661d80bdada364091cb808d",
+ "pdf_note": "fetched at read_utc; LCSC links TI SBVS050J (2008); the record reads TI SBVS050N (August 2026), v2/vendor/ti/ti-tps3808.pdf",
+ "stock": 36047,
+ "params": {
+  "Reset Timeout": "20ms",
+  "Operating Temperature": "-40℃~+125℃",
+  "output type": "Open-drain",
+  "Function": "Manual reset input",
+  "Reset Active Level": "Active Low",
+  "standby current": "2.4uA",
+  "Voltage - Supply": "1.7V~6.5V",
+  "ChipType": "Voltage monitor",
+  "Threshold Voltage": "3.07V",
+  "Number of Voltages Monitored": "1"
+ }
+}
