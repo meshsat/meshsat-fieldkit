@@ -861,7 +861,7 @@ def t_l4f02_ciss_is_not_shown_under_tis_figure_and_the_item_stays_open():
 def t_l4f02_the_docking_pulse_is_taken_whole_in_one_fet_with_no_i2t_conversion():
     R = _R()
     K, L, Q0 = R["K"], R["L"], R["H"]["Q"]
-    rise, energy, ppk = L["dock_k1"]
+    rise, energy, ppk, t_pk = L["dock_k1"]
     assert abs(ppk - L["vsd_max"] * Q0["i_dock"] / L["vsd_is"] * Q0["i_dock"]) < 1e-6, "the peak power is not the concave VF bound's"
     q = Q0["i_dock"] * Q0["tau"]
     assert energy < L["vf_pk_bound"] * q and energy > L["vsd_max"] * 0.5 * q
