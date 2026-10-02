@@ -38,6 +38,11 @@ stated), ASSUMPTION (a figure no held document gives), CONDITIONAL (holds only o
   (`clarification/topwell-hl18650v.txt`); (2) once it confirms the rows, approving the cell change inside D-06's 4S3P,
   which restates D-06's "about 145 Wh" to about 121 Wh nominal and, with the cell, the cell-derived numbers of REQ-046
   and REQ-077, and its spend (about USD 42 a pack at the marketplace price).
+- **U-01 by mode (section 14, 2 October 2026):** the HL18650V's charge, discharge and storage rows each with their
+  condition and class (all MAKER-PAGE; the cold charge row garbled, no pulse, cold capacity, termination, storage charge
+  state or recovery stated); the drafted charge ranges for the 4S3P (0.84 A to 16.40 V from -9 C, 1.68 A from 1 C, the
+  drawn 3.00 A from 11 C); usable energy 90.2 Wh at +25 C against the 35E's 107.9 Wh, the cold end a bracket; the threshold
+  of each row at which the architecture moves.
 - **The thermal architecture criterion (criterion 1) is not met by this record.** Every LO row now has a route that is not
   rejected; LO-01a stays CONDITIONAL on T-H1 (at least 1.666 W/K in both lid states) for every approach, LO-01h on the
   lot, and LO-01d to LO-01g rest on a product page until the signed specification arrives.
@@ -391,8 +396,105 @@ energy store for LO-01g under a ruling on D-06, only if the specification leaves
 ## 13. Files
 
 `l4e10_cell_thermal.py` and `.out` (section 0 reproduces `pwr_budget.out` and `.json`, `pwr_red2.out` and
-`hotstop_bounds.out` byte for byte and pins 40 inputs by sha256; section 8 prints the predicates); `fetch_held_back.py`;
+`hotstop_bounds.out` byte for byte and pins 46 inputs by sha256; section 8 prints the predicates; section 9 is U-01 by mode); `fetch_held_back.py`;
 `inputs/` (the Topwell page, the prices, Saft's curves read by eye, the cells beyond the held set); `clarification/`
 (Topwell, Eaton); `checks/astra-check-l4e10-1.md` and `-2.md`; `README.md`. The tests:
 `env -C v2/ecad/tools/tests python3 run.py test_l4e10 test_public_hygiene`. No generator, BOM, registry or Layer 3 file
 is changed.
+
+## 14. U-01 by mode: the limits established separately, the charging constraints, usable energy (`.out` section 9; 2 October 2026)
+
+The owner's instruction of 2 October 2026: charging, discharging and storage limits established separately with their
+conditions, and usable energy and the charging constraints for the proposed cell. **No cell is adopted and every setting
+below is a draft; FEA-008 stays open until the signed specification and the owner's approval.** Classes in this section:
+MAKER (a maker's signed document or datasheet), MAKER-PAGE (a maker's product page: no signature, no test conditions),
+INFERRED (computed, method stated), ASSUMPTION, SESSION (a draft setting chosen here).
+
+### 14a. The HL18650V class's limits by mode (MAKER-PAGE: Yichun Topwell Power's product page, `inputs/topwell-hl18650v-page-2026-10-01.json`)
+
+| Mode | Row | Figure | Condition as the page states it | The signed specification must confirm |
+|---|---|---|---|---|
+| Charge | window | -20 to 60 C (a headline) | basis (cell surface or ambient) and state of charge not stated | the basis; the window at every state of charge |
+| Charge | coldest row | 0.1C (0.28 A a cell) to 4.1 V | printed "-20 -10<T<=0 C": legible from -10 C; -20 to -10 C not legible | the band's lower edge, current and voltage |
+| Charge | middle row | 0.2C (0.56 A a cell) to 4.2 V | 0 < T <= 10 C; C is the 2.80 Ah minimum (0.56 A = 0.2C) | the temperature basis |
+| Charge | warm row | 0.5C (1.40 A a cell, its maximum continuous charge) to 4.2 V | 10 < T < 60 C; no derating toward the hot end | any derating or time limit at 4.2 V above 45 C |
+| Charge | method and end | CC/CV to 4.2 V; standard charge 0.56 A | termination current not stated | the termination current at 4.2 V and 4.1 V |
+| Discharge | window | -40 to 85 C (a headline) | basis and current not stated | the basis; the current at the window's ends |
+| Discharge | end voltage | 2.75 V (0 to 85 C), 2.50 V (-20 to 0 C), 2.00 V (-40 to -20 C) | the current not stated | the current behind each end voltage |
+| Discharge | current | 10 A continuous; no pulse figure | no temperature or duration stated | the pulse current and duration; any derating |
+| Discharge | capacity | 2.90 Ah typical, 2.80 Ah minimum at 0.2C | temperature not stated; nothing at the cold end | the capacity at -20 and -40 C at 0.2C and 0.5C |
+| Storage | rows | -20 to 25 C 12 months; -20 to 45 C 6 months; -40 to 60 C 3 months; -40 to 80 C within 30 days | state of charge, recovery and self-discharge not stated | each row's state of charge, recovery and self-discharge |
+| Rest | high charge, hot | not stated | the kit on an input in E3-O and E5 holds the pack up to its charge | the recovery after E5's ten cycles and E3-O's 4 h |
+| Other | | at most 18 mOhm; about 44 g; at least 500 cycles (25 C, 0.5C / 1C) | no end-of-life capacity | the capacity after the stated cycles |
+
+**Comparable 18650s with makers' own sheets, context only and never a substitute for the HL18650V's figures:** Samsung's
+INR18650-30Q V1.0 of 2020 (signed, held back): surface discharge -20 to 80 C, ambient charge 0 to 45 C, storage 1 month
+-20 to 60 C at 30 % of charge, 60 % of capacity at -20 C and 75 % at -10 C at 10 A, a full charge stored 30 days at 60 C
+recovering at least 2,320 mAh (80 % of rated); its Version 1.0 of 2015 (signed): surface discharge to 75 C, storage 1
+month -30 to 60 C at 40 % of charge, recovery 90 %; Molicel's INR-18650-P28A data sheet ("for reference only", not
+signed): ambient charge 0 to 60 C, discharge -40 to 60 C. **The page's rows beyond every comparable are charge below
+0 C, storage above +60 C and storage below -30 C**: the rows most exposed to a narrower signed figure.
+
+### 14b. The charging constraints in D-06's 4S3P (drafts, never applied)
+
+The BQ25731 has no cell temperature input, ends a charge only on the host's word, straps 16.800 V for 4S and trips BATOVP at
+104 % of ChargeVoltage (MAKER, SLUSE66A, through `review-packets/battery/CHARGER-STATE-SEQUENCE.md`). The windows are the
+gauge's: the BQ4050's ranges T1, T2, T5, T6, T3 and T4 set ChargingCurrent() and ChargingVoltage() per range and UTC holds
+the charge FET off (MAKER, SLUUAQ3A 14.4 and 2.11); the host relays them to the charger. Today: UTC 1.0 C (recovery 5.0 C),
+T1 1 C, T3 42 C, T4 43 C, OTC 44.0 C, the kit's hold below +3 C.
+
+| Range (draft, SESSION) | Page's band | Page's current for the pack | Set current | Charge voltage, pack (BATOVP) |
+|---|---|---|---|---|
+| Low Temp, T1 -9 C to T2 1 C | -10 to 0 C | 0.1C, 0.84 A | 0.84 A | 4.10 V a cell, 16.40 V (17.06 V) |
+| Standard Temp low, T2 1 C to T5 11 C | 0 to 10 C | 0.2C, 1.68 A | 1.68 A | 4.20 V a cell, 16.80 V (17.47 V) |
+| Recommended and Standard Temp high, T5 11 C to T3 42 C | 10 to 60 C | 0.5C, 4.20 A | 3.00 A (the drawn limit, 0.357C) | 4.20 V a cell, 16.80 V (17.47 V) |
+
+- **Thresholds:** UTC -9.0 C (recovery -5.0 C), each threshold kept today's 1.0 K inside its band edge; T3 42 C, T4 43 C
+  and OTC 44.0 C kept (SESSION: inside the page's +60 C, for cell life; reversed by the signed charge rows); the kit's hold
+  below -7 C; the gauge's CUV from 2.50 V to 2.75 V a cell (the page's end above 0 C; the kit's graceful line at 3.00 V
+  under load acts first); the termination current: none on the page, TI's default 250 mA kept (ASSUMPTION).
+- **Below the cold charge limit** no charge starts (UTC holds the charge FET; the host starts none). The mat (U22 on
+  VBAT = VSYS) warms the block first. On battery it is a discharge load under the cells' discharge rows, so its energy
+  comes out of usable energy (14c); with an input and the charge FET off it is fed through VSYS by the source,
+  CONDITIONAL on U-04's VSYS regulation (L4-E11). The 35E cannot feed it below UTD's -9.0 C reading; the HL18650V's page
+  lets the pack feed it down to -40 C.
+
+### 14c. Usable energy, not nameplate
+
+The tree's energy chain (`records/energy/energy_budget.py`, behind L4-E9's battery-only figure) at PS-IDLE-SPEC 42.8 W, the
+run ending at the graceful line of 3.00 V a cell under load (before either cell's end voltage), aged to 0.80. **The ageing
+allowance** is REQ-014 and SC-23's replacement point, the basis of the 35E's figure, so the two compare; for the HL18650V
+it is an ASSUMPTION: the page gives 500 cycles and no end-of-life capacity, and its rest at high charge in the hot is
+unstated (the 30Q6's signed full-charge row loses up to 20 % in 30 days at 60 C).
+
+| Pack | +25 C | Cells at -5.52 C (LO-01b, -20 C ambient, the kit's heat) | Cold start, cells at -20 C | The heater, out of usable energy |
+|---|---|---|---|---|
+| 35E (D-06) | **107.9 Wh, 2.52 h** (the replay's figure reproduced) | 54.0 Wh (44.5 Wh at its -10 C floor, 1.04 h) | out of scope (D-02d): no discharge below its floor | none at that corner; 0.44 W with the coupling fitted (0.45 Wh over the run) |
+| HL18650V (II) | **90.2 Wh, 2.11 h** (16.4 % less; the 35E's curve shapes, ASSUMPTION) | 45.1 to 69.6 Wh (ASSUMPTION: the 35E's own factor 0.500 to the 30Q6's 0.772) | 37.2 to 54.1 Wh (ASSUMPTION: 0.4124 to 0.600) | none required by its rows; a warm-up of a cold-soaked block from -20 C: to T1 -9 C 1.6 to 2.8 Wh, to T2 1 C 3.4 to 12.3 Wh, to T5 11 C 5.7 Wh or not reached at the high corner (the mat alone stops at 2.1 C) |
+
+The objective (REQ-072, 48 to 72 h at 42.8 W) is 2054 to 3082 Wh; both packs stay far under it (DR-01 FAIL either way).
+**Where they enter:** L4-E9 section 10's U-01 bullet reads 90.4 Wh against 108.1 Wh (this record's first chain) and
+every shortfall growing by at most 17.7 Wh; this chain gives 90.2 Wh, 17.7 Wh less than the 35E's 107.9 Wh, the same
+growth. REQ-014 takes the aged figure; REQ-046 the charge rows of 14b and the discharge window with its end voltages;
+REQ-077 the idle limit of 14d (+80 C on the page). None is applied.
+
+### 14d. What the signed specification would change
+
+| Row | Confirmed | A narrower figure: the threshold where the architecture moves | No answer | Fallback and its cost |
+|---|---|---|---|---|
+| Idle hot limit (30-day row, +80 C) | 4d's margins stand | under 78.94 C H1 acts in E5's dwell (E5 does not require it idle, INFERRED); under 74.73 C E5's cells pass the limit; under 73.07 C E3-O loses "no shutdown"; under 71.00 C E3-S fails; under 68.86 C E3-O's cells pass it | CONDITIONAL; U-01 a release gate | E3-O and E5: (I)'s cooler, 8.18 to 35.21 W, INCONCLUSIVE; E3-S: no route within D-06's pocket, requirement change A (the owner's; no spend, the kit not claimed at that level with its own pack) |
+| Storage floor (-40 C rows) | LO-01g closes on the cell | warmer than -33 C | as above | (III)'s primary-fed heater, 470 to 940 Wh of added storage (an owner's ruling under D-06), or requirement change A |
+| State of charge of the storage rows | no change | below REQ-025's stored charge (30 %) | as above | the stored charge restated (REQ-025, the owner's) or the fallback above |
+| Rest at high charge, hot | no change | a loss beyond TEST-PLAN's recovery line | as above | a High Temp range to 4.1 V a cell above T3 or L4-E12's hold of the charge (SESSION levers); not architecture-level |
+| Charge below 0 C | the drafts of 14b | refused | T1 at +1 C, the mat first | as the 35E today; no architecture effect |
+| Charge current from +10 C | the drawn 3.0 A stands | under 0.357C | as above | the set current lower, and the solar day's stored energy with it (L4-E9's replay) |
+| Continuous discharge | no change | under 6.0 A a cell (PS-ALLTX's 18 A) | as above | D-06's 4S3P cannot carry PS-ALLTX with this cell: back to (I) |
+| End voltage | no energy change | above the graceful 3.00 V under load | as above | usable energy falls with the end fraction |
+| Minimum capacity | no change | any: 3.22 Wh of usable energy per 100 mAh a cell (INFERRED) | as above | not architecture-level (DR-01 already FAIL) |
+
+Cold capacity, cycle life and the basis move 14c's figures and the ageing allowance, not the architecture. With no answer
+every row stays CONDITIONAL, the owner's second item cannot proceed, and U-01 stays a release gate (the existing state,
+needing no ruling). **The drafted request gained questions 7 to 10** (`clarification/topwell-hl18650v.txt`): the cold
+charge band and termination, the pulse current, the cold capacity, the end-of-life capacity and self-discharge;
+questions 1, 2 and 6 already asked for the storage rows with their charge and recovery, the basis with the rest at high
+charge, and the gauge's data.
