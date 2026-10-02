@@ -80,7 +80,14 @@ storage evidence; R-185 new (the e-paper's storage soak); the register at 175 it
 source arriving with the guard already on is NOT CLOSED: with the margin chosen first (U5 within +-0.240 V, the numerical error
 added) and each ceramic bank bounded on its own, every rating holds only from a stiff source's 3.30 uH loop, and the floor goes to
 the engineer as B6-ENG-1 (the page's 8a); R-173 carries the Samsung parts, R97 28.0k and 8 edits; R-176 six rows; R-180 restated as
-B6-ENG-1's route (2), R-186 and R-187 new; the register at 177 items. Status: known defects addressed in drafts; feasibility
+B6-ENG-1's route (2), R-186 and R-187 new; the register at 177 items. The second external review (of the 22:30 checkpoint): the page
+states three decisions apart (the architecture candidate CONDITIONAL, the power-design closure gate BLOCKED, fabrication release
+BLOCKED; the engineer handoff ready to start, provisional, its omitted dependencies named); L4-F03 reads "sustained-overload remedy
+drafted; fault qualification open"; the guard's 0.240 V margin a design target. L4-E11's round 3 (`1a4245c3`, L4-CP01 to L4-CP03 and
+its evidence specimens; output section 26e): R-160, R-179, R-181 and R-184 rewritten, R-188 new; the register at 178 items. The
+prototype qualification route (the page's 5d, output section 27, the review's next milestone): one table over every measurement row
+that decides a Layer 4 condition, with what to buy (the prices read in this tree, checked against their files) and what to send; the
+purchase and send lists for the owner; desk work on those items stops there. Status: known defects addressed in drafts; feasibility
 conditions remain open.
 
 | File | What it is |
@@ -114,4 +121,4 @@ storage qualification, no demonstrated conflict; OW-10 held for a measured confl
 unit selection (PANEL-ACC), no unit bought or measured.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 52 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 53 tests.
