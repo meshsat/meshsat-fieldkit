@@ -27,7 +27,11 @@ modes has a printed bound on VSYS whose floor clears the converters' assumed one
 latches; the battery FET meets TI's selection rule, its thermal bar and its LDO-mode floor follow from its sheet in closed form,
 and its docking pulse exceeds IDM and is named a gap; Figure 14's reader is independent of poppler's serialisation; the
 cost is the catalogues'; the charger draft composes with the guard
-draft in either order; (B1) is selected and U-04 becomes a downstream qualification test. Nothing here writes into the tree:
+draft in either order; (B1) is selected and U-04 becomes a downstream qualification test. The fix round for the consolidation
+review cx36 adds: board E's auxiliary domain leaves CELL_F for VSYS on the dock's pin 1 (the three drafts agree, and no kit load
+stays on the pack); the start is bounded by the input clamp, the retries and a bench acceptance, the 502.3 ms withdrawn; the
+battery FET's RDS(on) is bounded by the two chords of the makers' printed maxima at BATDRV's 8.5 V and the pair is selected on its
+bar; the inhibited acceptance is piecewise; the precharge counts R17's tolerance. Nothing here writes into the tree:
 drafts run on temporary copies.
 Software tests establish this record's own behaviour only.
 """
@@ -52,7 +56,7 @@ PAGE = os.path.join(REC, "L4E11-SOURCE-ONLY-AND-ENTRY.md")
 GEN_E = os.path.join(TOOLS, "gen_sch_e.py")
 GEN_A = os.path.join(TOOLS, "gen_sch_a.py")
 DRAFTS = (("apply_gen_sch_e_entry.py", GEN_E, True), ("apply_gen_sch_e_timer.py", GEN_E, False), ("apply_gen_sch_a_guard.py", GEN_A, False),
-          ("apply_gen_sch_a_charger.py", GEN_A, False))
+          ("apply_gen_sch_a_charger.py", GEN_A, False), ("apply_gen_sch_e_aux.py", GEN_E, False))
 sys.dont_write_bytecode = True
 sys.path.insert(0, TOOLS)
 from harness import need, Skip  # noqa: E402
@@ -432,7 +436,8 @@ def t_the_record_carries_the_outputs_numbers():
               "0.71 A", "6.364", "7.136", "5.983", "0.704", "3.08", "0.743", "73.4 A", "2.08 uH", "29.09", "42.52", "43.82", "35.24",
               "20.51", "56.93", "58.51", "64.21", "1.2567", "50.99", "69.73", "72.41", "7.378", "6.754 / 6.944 / 7.139", "0.908691", "0.88021",
               "12.054", "17.375", "20.54", "0.221", "4.1792", "6.2468", "12.057", "14.41", "7.744", "9.216", "242.9", "17.7", "502.3",
-              "2.347", "0.916", "10.44", "120.9", "107.8", "170.3", "184.4", "0.302"):
+              "0.916", "10.44", "120.9", "107.8", "170.3", "184.4", "0.302",
+              "34.42", "21.136", "0.33616", "5.632", "11.96", "3.062", "0.848", "119.8", "9.688", "12.179", "0.1408", "2.406", "28.32"):
         assert s in page and s in out, "%s is not in both the record and the output" % s
 
 
@@ -619,9 +624,11 @@ def t_the_charger_draft_composes_with_the_guard_in_either_order():
             assert _run([s_, b, "--write"]).returncode == 0
         assert open(a, "rb").read() == open(b, "rb").read(), "the order of the two board A drafts changes the result"
         txt = open(a, encoding="utf-8").read()
-        for want in ('"21": "CH_BATDRV", "22": "VBAT"', '"C5219071")', 'nfet("Q39", ', '"CH_BATDRV", "CH_BATQ", "VBAT", lcsc="C404364")',
+        for want in ('"21": "CH_BATDRV", "22": "VBAT"', '"C5219071")', 'for _qb in ("Q39", "Q40"): nfet(_qb, ',
+                     '"CH_BATDRV", "CH_BATQ", "VBAT", fp="LFPAK56", lcsc="C3278350")', '"LFPAK56": "Package_TO_SOT_SMD:LFPAK56"',
                      '"CH_BATQ", "CELL_FUSED", "RS2512")', 'r("R149", "10R", "CH_BATQ", "CH_SRP_F")', 'c("C236", ',
-                     '_intent.rail("CH_BATQ", 14.4, 10.0, 18.0, "R17"', '"Q39", always_on=True', 'fed_from="CH_BATQ"', '"R17", "Q39", "C236", "C16"'):
+                     '_intent.rail("CH_BATQ", 14.4, 10.0, 18.0, "R17"', '"Q39", always_on=True', 'fed_from="CH_BATQ"',
+                     '"R17", "Q39", "Q40", "C236", "C16"', '{"1": "VBAT", "2": "GND", "3": "GND"', 'loads={"J_DOCK": 1.0, "U4": 2.0'):
             assert txt.count(want) == 1, want
         assert '"21": "NC"' not in txt and "C2871872" not in txt
 
@@ -629,9 +636,9 @@ def t_the_charger_draft_composes_with_the_guard_in_either_order():
 def t_b1_is_selected_and_u04_becomes_a_downstream_qualification_test():
     out = open(OUT, encoding="utf-8").read()
     page = " ".join(open(PAGE, encoding="utf-8").read().split())
-    assert "SELECTED (SESSION): (B1), TI's BQ25730 in U3's land with Q39." in out
+    assert "SELECTED (SESSION): (B1), TI's BQ25730 in U3's land with Q39 (the fix round, 15c: Q39 and Q40, two BUK6Y10-30P; 15a: board E on VSYS)." in out
     assert "U-04 BY THE OWNER'S EXIT DEFINITION: A DOWNSTREAM QUALIFICATION TEST WITH BOUNDED EVIDENCE AND A WORKABLE FALLBACK" in out
-    assert "**SELECTED (SESSION): (B1), TI's BQ25730 in U3's land with the battery FET Q39.**" in page
+    assert "**SELECTED (SESSION): (B1), TI's BQ25730 in U3's land with the battery FET Q39** (the fix round: Q39 and Q40" in page
     assert "**U-04 by the owner's exit definition: A DOWNSTREAM QUALIFICATION TEST WITH BOUNDED EVIDENCE AND A WORKABLE FALLBACK**" in page
     assert "NONE FOUND" in out and "none found" in page
     lines = open(PAGE, encoding="utf-8").read().splitlines()
@@ -681,3 +688,114 @@ def t_the_battery_fets_figure_14_reads_the_same_from_either_poppler_serialisatio
             m.subprocess.run = real
         assert span2 == span and [z2(t) for t in ts] == base, "Figure 14 reads differently from the %s form" % rw.__name__
     assert all(a < b for a, b in zip(base, base[1:])), "ZthJA does not rise with the pulse"
+
+
+def _apply(script, target):
+    r = _run([os.path.join(REC, script), target, "--write"])
+    assert r.returncode == 0, r.stderr.decode()[-300:]
+
+
+def t_board_es_aux_domain_leaves_cell_f_for_vsys_and_the_three_drafts_agree():
+    R = _R()
+    K = R["K"]
+    assert K["aux"] == {"U12": 0.8, "J_FAN1": 0.1, "J_FAN2": 0.1} and abs(K["aux_a"] - 1.0) < 1e-12
+    assert abs(K["i_div"] - R["cv_max"] / (122e3 * 0.99)) < 1e-15
+    assert K["ret"][2][2] > K["ret"][0][2] and K["ret"][3][4] < 85.0, "seven ground contacts with one open would pass the 813's 85 C at 51 C"
+    with tempfile.TemporaryDirectory() as d:
+        a, e, y, c = (os.path.join(d, x) for x in ("gen_sch_a.py", "gen_sch_e.py", "pcb_interfaces.yaml", "check_contracts.py"))
+        shutil.copy(GEN_A, a)
+        shutil.copy(GEN_E, e)
+        shutil.copy(os.path.join(TOOLS, "pcb_interfaces.yaml"), y)
+        shutil.copy(os.path.join(TOOLS, "check_contracts.py"), c)
+        _apply("apply_gen_sch_a_charger.py", a)
+        _apply("apply_gen_sch_e_aux.py", e)
+        _apply("apply_pcb_interfaces_dock.py", y)
+        _apply("apply_pcb_interfaces_dock.py", c)
+        ta, te = open(a, encoding="utf-8").read(), open(e, encoding="utf-8").read()
+        assert '"POGO12",\n     {"1": "VBAT", "2": "GND"' in ta
+        assert '"POGO_T6",\n     {"1": "VSYS_E", "2": "GND"' in te
+        assert '{"1": "+5V_E6", "2": "VSYS_E", "3": "VSYS_E"' in te and 'c("C31", "10u 25V 1210", "VSYS_E", "GND", "C1210")' in te
+        assert te.count('{"1": "VSYS_E", "2": "FAN%s_SW" % n') == 2 and 'loads={"P_CP": 9.0},' in te
+        assert '_intent.rail("VSYS_E", 14.4, 1.0, 1.0, "J_BLK"' in te and 'loads={"U12": 0.8, "J_FAN1": 0.1, "J_FAN2": 0.1}' in te
+        left = set()
+        for ln in te.splitlines():
+            for st in re.split(r"\);\s*", ln):
+                m2 = re.match(r'\s*(?:ic|part|c|r|ph|tp)\("([A-Z][A-Z0-9_]*)"', st)
+                if m2 and '"CELL_F"' in st:
+                    left.add(m2.group(1))
+        assert left == {"F3", "P_CP", "C1", "D3", "R42", "TP8"}, "the parts left on CELL_F: %s" % sorted(left)
+        doc = yaml.safe_load(open(y, encoding="utf-8").read())
+        dock = None
+        if dock is None:
+            stack = [doc]
+            while stack:
+                o = stack.pop()
+                if isinstance(o, dict):
+                    if "IF-AE-DOCK" in o:
+                        dock = o["IF-AE-DOCK"]
+                        break
+                    stack.extend(o.values())
+                elif isinstance(o, list):
+                    stack.extend(o)
+        assert dock["pins"][1] == "VBAT" and ["VBAT", "VSYS_E", "A's VSYS to E's auxiliary domain on pin 1 (L4-E11)"] in dock["aliases"]
+        assert "2.238 A, 2.406 A" in dock["aux_feed"] and "%s to %s V" % ("9.688", "17.375") in dock["aux_feed"]
+        assert '({"VBAT", "VSYS_E"},' in open(c, encoding="utf-8").read()
+    for tree in (os.path.join(TOOLS, "pcb_interfaces.yaml"), os.path.join(TOOLS, "check_contracts.py")):
+        r = _run([os.path.join(REC, "apply_pcb_interfaces_dock.py"), tree, "--write"])
+        assert r.returncode == 3 and b"NOT RELEASED" in r.stderr
+
+
+def t_the_held_state_feeds_no_kit_load_from_the_pack_and_the_start_ends_in_vsys_min_or_a_latch():
+    R = _R()
+    K, H = R["K"], R["H"]
+    assert abs(K["held_dv"] - (R["cv_max"] - (R["cv_max"] + 0.15) * 0.98)) < 1e-12 and K["held_dv"] > 0
+    assert K["held_bounded_a"] < 1e-3, "the bounded drains alone exceed the bench acceptance"
+    u = H["uvp"]
+    assert abs(K["t_latch"] - (u["deg"] + (u["n"] - 1) * (u["off"] + u["on"]))) < 1e-12
+    out = open(OUT, encoding="utf-8").read()
+    assert "the 502.3 ms of 12c withdrawn: 0.5 A is an input ceiling, not a delivered current" in out
+    assert "bounded at 502.3 ms and never latches" not in out
+    row = [x for x in _M().downstream(R) if x[0] == "E11-31"][0][3]
+    assert "Fault VSYS_UVP clear" in row and "the held pack current at most 1 mA" in row
+
+
+def t_the_fet_bound_is_the_two_chords_and_the_pair_is_selected_on_its_bar():
+    R = _R()
+    m = _M()
+    K = R["K"]
+    kg = (10.0 + (25.0 - 10.0) * 1.5 / 5.5) / 10.0
+    rb = kg * (10.0 + 6.0 * 125.0 / 150.0) * 1e-3
+    sel = K["sel"]
+    assert sel["key"] == "c" and abs(sel["rb"] - rb) < 1e-12 and sel["n"] == 2
+    a, b = K["cands"][0], K["cands"][1]
+    assert a["tjlim"] == 125.0, "AONS21357 judged above its last printed row"
+    assert a["bar"]["route"] < 0.2 * a["rboard"] and b["bar"]["route"] < 0.2 * b["rboard"]
+    assert sel["bar"]["route"] > 3 * max(a["bar"]["route"], b["bar"]["route"])
+    assert all(cd["ciss_ok"] for cd in K["cands"]) and 3 * sel["rdef"]["ciss"] > R["H"]["bf_ciss"], "a third FET would fit TI's Ciss"
+    z = K["z"]
+    p = sel["p"]
+    budget = 150.0 - K["air"]["route"]
+    bar = min(budget / p["p10"], budget / (p["p10"] + (p["p18"] - p["p10"]) * z[60.0]), budget / p["p20"],
+              budget / (p["p20"] + (p["p24"] - p["p20"]) * z[1.0]), budget / (p["p20"] + (p["p30"] - p["p20"]) * z[0.02]),
+              budget / (p["p20"] + (p["pscd"] - p["p20"]) * z[2.44e-4]))
+    assert abs(bar - sel["bar"]["route"]) < 1e-9
+    assert abs(p["p18"] - 81.0 * rb) < 1e-12, "the pair's 18 A is not split in two"
+    d = K["dock"]
+    assert d["i2t_pulse"] <= d["i2t_rect"] and R["H"]["Q"]["i_dock"] <= sel["rdef"]["ism"], "all of the pulse in one FET would not fit at 25 C"
+    assert abs(d["der"] - (175.0 - 70.0) / 150.0) < 1e-12 and 0.5 < d["s_max"] < 1.0
+    assert abs(m.sel_tj_18(K) - (K["air"]["route"] + sel["bar"]["route"] * (p["p10"] + (p["p18"] - p["p10"]) * z[60.0]))) < 1e-9
+
+
+def t_the_inhibited_acceptance_is_piecewise_and_the_precharge_counts_r17s_tolerance():
+    R = _R()
+    K, H = R["K"], R["H"]
+    assert abs(K["lo_v"] - 12.3 * 0.98) < 1e-12 and abs(K["hi_v"] - 12.3 * 1.02) < 1e-12
+    assert abs(K["inh_floor"] - min(12.3 * 0.98, (12.3 * 0.98 + 0.15) * 0.98)) < 1e-12 and K["inh_floor"] < H["floor"]
+    assert abs(K["review_case"] - 10.353) < 1e-9
+    assert abs(K["i_pre"] - 0.256 * 1.30 / 0.99) < 1e-12
+    sel = K["sel"]
+    assert abs(K["ldo_floor"] - (12.3 * 1.02 - (150.0 - K["air"]["route"]) / (sel["bar"]["route"] * K["i_pre"]))) < 1e-9
+    assert K["rb_floor"] == max(math.ceil(K["ldo_floor"] * 10) / 10.0, 4.0) and K["rb_floor"] < 7.8
+    page = open(PAGE, encoding="utf-8").read()
+    assert "between the two: either mode, so at least **11.96 V**" in page.replace("\n  ", " ").replace("Between", "between")
+
