@@ -18,8 +18,10 @@ October 2026 (the record's section 13, the .out's section 8): the lines' basis a
 fans-off case; the fans counted in the power budget, the profile and its replay; T-H1's owner, method, steady-state times
 and pass line, with its draft procedure; a failed reading's cases and the session's fallbacks. The consolidation (section 14, the .out's section 9): a first-principles
 conservative bound from held geometry at the coefficients' conservative ends, reconciled with W4's 1.22 W/K; U-02's class
-DECIDES because E3-O's gap stays positive with every session measure; the smallest experiment's thresholds. Nothing here
-writes into the tree.
+DECIDES because E3-O's gap stays positive with every session measure; the smallest experiment's thresholds. The heat-rejection
+question (section 15, the .out's section 10): three approaches on the same bound, none reaching the approved profile's need at
++40 C or charging on the design day, the shortfall, the owner's options and the deciding point. Nothing here writes into the
+tree.
 """
 import hashlib
 import importlib.util
@@ -250,7 +252,9 @@ def t_the_page_carries_the_out_figures():
                 "%.3f" % R["dep"]["fan_sens"]["g_hi"], "%.3f" % R["dep"]["fan_sens"]["prof_hi"], "%.2f" % R["dep"]["fans_off"]["e5_plate_max"],
                 "%.3f" % R["cb"]["E5"]["open"]["g"], "%.3f" % R["cb"]["E3-O"]["open"]["g"], "%.3f" % R["cb"]["gap_w"]["E3-O"],
                 "%.3f" % R["cb"]["bind"]["E3-O with F4"]["need"], "%.3f" % R["cb"]["cap"]["E5"], "%.2f" % R["cb"]["ops"]["E3-O, the heat stage"]["air"],
-                "%.3f" % R["cb"]["exp"]["targets"][0][2], "%.3f" % R["cb"]["exp"]["targets"][1][2], "%.3f" % R["cb"]["exp"]["targets"][4][2]):
+                "%.3f" % R["cb"]["exp"]["targets"][0][2], "%.3f" % R["cb"]["exp"]["targets"][1][2], "%.3f" % R["cb"]["exp"]["targets"][4][2],
+                "%.3f" % R["hr"]["short_w"], "%.3f" % R["hr"]["q_max_best"], "%.3f" % R["hr"]["rows"][-1]["use"]["g"], "%.3f" % R["hr"]["q_idle"],
+                "%.3f" % R["hr"]["need_ch"][0], "%.3f" % R["hr"]["need_ch"][1], "%.3f" % R["hr"]["exp2"][0][2], "%.3f" % R["hr"]["exp2"][2][2]):
         assert fig in page and fig in out, "the figure %s is not on both the page and the .out" % fig
 
 
@@ -374,6 +378,25 @@ def t_the_conservative_bound_and_u02s_class():
     assert all(x[2] > x[1] for x in cb["exp"]["targets"]) and rd == sorted(rd, reverse=True)
     out = open(OUT, encoding="utf-8").read()
     assert "9e U-02'S CLASS: T-H1 DECIDES." in out
+
+
+def t_the_heat_rejection_approaches_and_the_shortfall():
+    R = _R()
+    hr, T = R["hr"], R["T"]
+    assert abs(hr["q_prof"] - 43.4) < 0.02, "the profile's heat into the case is L4-E9's 43.4 W"
+    assert abs(hr["need_g"] - hr["q_prof"] / (R["ap"]["c"]["trip"]["need_by"] - T["t_use"])) < 1e-12
+    assert hr["t3"] == 42.0 and hr["day"] == (13.2, 18.3)
+    assert abs(hr["need_ch"][0] - hr["q_prof"] / (42.0 - 13.2)) < 1e-12 and abs(hr["need_ch"][1] - hr["q_prof"] / (42.0 - 18.3)) < 1e-12
+    rows = hr["rows"]
+    assert len(rows) == 7 and rows[-1]["use"]["g"] == max(r["use"]["g"] for r in rows) and rows[0]["use"]["g"] == min(r["use"]["g"] for r in rows)
+    for r in rows:
+        assert abs(r["use"]["g"] - hr["q_prof"] / (r["use"]["air"] - T["t_use"])) < 1e-9
+        assert r["use"]["walls"] > 0 and r["use"]["plate_out"] > 0
+    assert not hr["reaches"] and not hr["charges"] and hr["short_w"] > 0 and hr["short_g"] > 0 and min(hr["short_ch"]) > 0
+    assert hr["q_idle"] < hr["q_max_best"] < hr["q_prof"] and hr["q_max_bare"] < hr["q_max_best"]
+    ex = hr["exp2"]
+    assert all(rd > tg for _l, tg, rd, _r in ex) and ex[0][1] == hr["need_g"]
+    assert R["pred"]["P21 heat rejection on the bound: no approach reaches the profile at +40 C (the best short by a positive margin) nor charging on the design day; U-02 stays a closure condition"]
 
 
 def t_both_checks_are_filed_and_listed():
