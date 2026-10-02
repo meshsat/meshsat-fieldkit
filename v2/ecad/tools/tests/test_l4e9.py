@@ -991,6 +991,32 @@ def t_consolidation_the_one_diagram_covers_every_interface_row():
     assert [r[0] for r in blk] == [n[0] for n in N] and all(r[2] == "; ".join(n[4]) for r, n in zip(blk, N))
 
 
+def t_consolidation_one_budget_with_pinned_inputs_and_the_reconciliation():
+    m = _M()
+    F, st = _C["F"], _C["st"]
+    for key in ("budget", "trace", "replay", "tablet", "l4e10", "l4e12", "l4e13", "l4e11", "l4e7r", "l4e8", "hwfw"):
+        assert key in m.PINS and re.fullmatch(r"[0-9a-f]{64}", m.PINS[key][1]) and m.PINS[key][1][:16] in _C["text"].split("1. THE MAKERS")[0], key
+    for _rid, _q, figs, _k, _w in m.RECON:
+        for val, key, _b in figs:
+            assert key in m.PINS and re.search(r"(?<![\d.])%s(?![\d])" % re.escape(val), m._C_TEXT[key]), (val, key)
+    named = {v for _r, _q, figs, _k, _w in m.RECON for v, _k2, _b in figs}
+    for a, b in (("107.9", "108.1"), ("350.0", "336.6"), ("2.9337", "2.9318"), ("90.2", "90.4")):
+        assert a in named and b in named and any({a, b} <= {v for v, _k2, _b in figs} for _r, _q, figs, _k, _w in m.RECON), (a, b)
+    page = open(PAGE, encoding="utf-8").read()
+    T = m.cons_budget_tables(F, _C["D"], st)
+    for head, lines in T.items():
+        rows = m.md_table(page, head)
+        assert rows == [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in lines[2:]], "the page's %s table is not the script's" % head.strip()
+    modes, energy, ef, heat = m.cons_budget(F, st)
+    ids = [e[0] for e in energy]
+    assert any(i.startswith("B") for i in ids) and any(i.startswith("S") for i in ids) and any(i.startswith("P") for i in ids), "battery-only, solar-assisted, the proposal"
+    assert all("PROPOSAL" in e[1] or "proposed" not in e[1] for e in energy) and "PROPOSAL" in energy[ids.index("P1")][1]
+    assert ef["steady"] == F["steady"][2] and abs(ef["deficit"] - (F["idle"][1] - F["steady"][2])) < 1e-9
+    assert [mm[0] for mm in modes] == ["M1", "M2", "M3", "M4", "M5", "M6"]
+    assert "NOT MET" in _C["text"].split("16b ENERGY")[1] and "A charger change does not close it" in _C["text"]
+    assert any(h[2] == F["e5_hold_wb"] and "BINDING" in h[3] for h in heat), "the binding line in the heat budget"
+
+
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
 
 
