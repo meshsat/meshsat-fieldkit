@@ -123,10 +123,13 @@ def _M():
 def _pin_held(m, key):
     """A property, not history: the key's selected commit is a labelled one, and the pinned bytes are the tree's file or that commit's."""
     rel, sha = m.PINS[key]
+    p = os.path.join(ROOT, rel)
+    in_tree = os.path.exists(p) and hashlib.sha256(open(p, "rb").read()).hexdigest() == sha
+    if key not in m.FROM_COMMIT:
+        return in_tree
     if m.FROM_COMMIT[key] not in m.COMMIT_LABEL:
         return False
-    p = os.path.join(ROOT, rel)
-    if os.path.exists(p) and hashlib.sha256(open(p, "rb").read()).hexdigest() == sha:
+    if in_tree:
         return True
     r = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (m.FROM_COMMIT[key], rel)], capture_output=True)
     return r.returncode == 0 and hashlib.sha256(r.stdout).hexdigest() == sha
@@ -1296,7 +1299,7 @@ def t_consolidation_the_panel_lead_surge():
     rm = sv["rm"]
     for key in ("l4e7chk5", "l4e7md", "e7guard"):
         assert key in m.PINS and m.PINS[key][1][:16] in _C["text"].split("1. THE MAKERS")[0], key
-    assert m.FROM_COMMIT["l4e7r"] == "11339ec7" and "B6" in m.COMMIT_LABEL["11339ec7"] and "check 5" in m.COMMIT_LABEL["573fd5b8"]
+    assert _pin_held(m, "l4e7r") and "L4-F01" in m.COMMIT_LABEL[m.FROM_COMMIT["l4e7r"]] and "check 5" in m.COMMIT_LABEL["573fd5b8"]
     # the derivation's figures as L4-E7 printed them, against REQ-016's criterion
     assert sv["lim_drawn"] < sv["d1"][0] <= sv["lim"] and sv["lim_drawn"] < sv["d2"][0] <= sv["lim"], "CS116 and CS115 inside the drafted 50 V, over the drawn 35 V"
     assert all(pw > sv["d4_cap"][0] for _n, _v, _i, pw in sv["d4_rows"]) and len(sv["d4_rows"]) == 4, "without the guard a 36 V source is over D4's capability"
@@ -1452,44 +1455,57 @@ def t_fix_round_the_layer4_review_integrated():
 
 
 def t_b6_the_solar_guard_already_on():
-    """B6 of the Layer 4 review (L4-E7 at 11339ec7): the guard as first drafted fails four ratings when a 36 V source steps on with
-    it on; four drafted parts fix them; every rating MEETS, CONDITIONAL on the panel lead's loop inductance at least 2.47 uH; the
-    re-runs; R-176's seven rows; D-12's text exactly as L4-E7 gives it; the lead a Layer 7 harness row."""
+    """B6 and the external review's L4-F01 (L4-E7's round 2): held as properties, never as round 1's values. The margin is chosen
+    before any value and the numerical error added to U5's reading; every rating at the floor sits inside its own margin and the
+    floor is where the binding rating first holds; under it the case is NOT MET, so D-10's guard-on case reads NOT CLOSED wherever
+    it is stated, never CONDITIONAL on a lead's inductance; the engineer's row has its six fields, the page carries it as printed,
+    and its three routes are register rows; R-176's rows are L4-E7's, row 3 naming the floor; D-12's text is L4-E7's."""
     m = _M()
     F, D, st = _C["F"], _C["D"], _C["st"]
     rm = F["sv"]["rm"]
     b6 = rm["b6"]
-    assert b6["l_uh"] == 2.47 and b6["mm"] == 4.21 and b6["bind"] == "U5's CSPIN to CSNIN, positive"
-    assert all(w <= lim for n_, w, lim, mg, h in b6["rows"] if lim > 0) and all(mg >= 0 for n_, w, lim, mg, h in b6["rows"]), "every rating MEETS at 2.47 uH"
-    assert b6["drafted"] == (102.1, 397.7, 29.07, 0.4218) and b6["drafted"][0] > 100 and b6["drafted"][1] > 60 and b6["drafted"][2] > 20 and b6["drafted"][3] > 0.3
-    assert b6["start"] == (6.109, 6.364) and rm["cs101"][0] == 0.0591 and rm["chkb"][0] == 0.67 and rm["static"][0] == 93.5957
-    assert len(b6["r176"]) == 7 and "2.47 uH" in b6["r176"][1] and "4.21 mm" in b6["r176"][1]
+    assert _pin_held(m, "l4e7r") and _pin_held(m, "l4e7md") and _pin_held(m, "e7guard")
+    assert 0 < b6["margin"] < b6["u5_abs"] and 0 < b6["err"] < b6["u5_abs"] - b6["margin"]
+    assert b6["env"][0] < b6["l_uh"] < b6["env"][1], "the floor lies inside the declared envelope"
+    assert all(mg >= 0 for n_, w, lim, mg, h in b6["rows"]), "every rating inside its margin at the floor"
+    u5 = [r for r in b6["rows"] if r[0] == b6["bind"]][0]
+    assert u5[2] == b6["margin"] and u5[1] <= b6["margin"] and b6["at1"] > b6["u5_abs"] and b6["at03"][0] > b6["at1"], "under the floor U5 passes its absolute maximum"
+    assert b6["d"][0] < b6["l_uh"] and b6["d"][1] > b6["margin"], "(D) lowers the floor and still fails at 1.00 uH"
+    assert [k for k, _ in b6["eng"]] == ["affected circuit", "evidence and failed condition", "decision or measurement needed", "pass criterion",
+                                         "consequence of failure", "work blocked"] and all(v for _, v in b6["eng"])
     want = ("CS116 MEETS with the block on and off; CS115 MEETS with the block off and, with it on, is CONDITIONAL on R-174 (the cable's "
             "recorded loop current under 15.68 A, or U5's differential measured under 0.3 V).")
     assert b6["d12"] == want
+    floor = "%.2f uH" % b6["l_uh"]
+    assert len(b6["r176"]) == 6 and "a pass only for a loop at or over %s until B6-ENG-1 is decided" % floor in b6["r176"][2]
     de = {d["id"]: d for d in m.DEFECTS}
-    assert want in de["D-12"]["options"] and "2.47 uH" in de["D-10"]["state"] and "R-180" in de["D-10"]["resolution"]
-    for part in ("C131 and C132", "C133 and C134", "C126 330 pF", "R97 30.0k"):
-        assert part in de["D-10"]["options"], part
+    assert want in de["D-12"]["options"] and de["D-10"]["state"].startswith("ADDRESSED IN DRAFTS") and "NOT CLOSED" in de["D-10"]["state"]
+    assert floor in de["D-10"]["state"] and "B6-ENG-1" in de["D-10"]["state"] and "CONDITIONAL on the panel lead" not in de["D-10"]["state"]
+    for rid in ("R-173", "R-176", "R-180", "R-186", "R-187"):
+        assert rid in de["D-10"]["resolution"] or rid in de["D-10"]["options"], rid
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
-    for part in ("C131 and C132, two 10 uF 100 V", "C133 and C134, two 10 uF 50 V", "R97 30.0k", "C126 330 pF"):
+    for part in ("CL32B225KCJSNNE", "CL32B106KBJNNNE", "R97 28.0k", "C126 330 pF", "8 edits"):
         assert part in reg["R-173"][2], part
     for i, row in enumerate(b6["r176"], 1):
         assert "(%d) %s" % (i, row) in reg["R-176"][2], i
-    assert reg["R-180"][4] == "Layer 7 mechanical" and "2.47 uH" in reg["R-180"][2] and "4.21 mm" in reg["R-180"][2]
+    assert reg["R-180"][4] == "Layer 7 mechanical" and floor in reg["R-180"][2] and "route (2)" in reg["R-180"][2]
+    assert reg["R-186"][1] == "EVIDENCE" and "route (1)" in reg["R-186"][2] and reg["R-187"][1] == "IMPLEMENTATION" and "route (3)" in reg["R-187"][2]
     ch = {c[2]: c for c in m.cons_changes(list(reg.values()))}
-    assert ch["R-180"][1] == "8"
+    assert ch["R-180"][1] == "8" and ch["R-187"][1] == "B6-ENG-1" and ch["R-173"][1] == "4e"
     rows = {r["id"]: r for r in _C["R"]}
     b6c = [c for c in rows["IF-01"]["checks"] if "already on" in c.what][0]
-    assert b6c.cls == "CONDITIONAL" and b6c.met and b6c.a == 0.2991
+    assert b6c.cls == "CONDITIONAL" and b6c.met and b6c.a == u5[1] and b6c.b == b6["margin"] and "B6-ENG-1" in b6c.what
     exd = {d[0]: d for d in m.cons_exit_defects(F)}
-    assert "2.47 uH" in exd["D-10"][2] and exd["D-12"][2].endswith(want)
+    assert "NOT CLOSED" in exd["D-10"][2] and exd["D-12"][2].endswith(want)
     beh = " ".join(" ".join(r) for r in m.cons_behaviour(F, D, st)["4e"])
-    assert "already on" in beh and want in beh
+    assert "already on" in beh and want in beh and "NOT CLOSED" in beh
     page = open(PAGE, encoding="utf-8").read()
     short = page.split("## In short\n")[1].split("\n## 1. ")[0]
-    assert want in short and "2.47 uH" in short
-    assert "25m B6" in _C["text"] and "MEETS with the block on and off (R-174" not in page
+    assert want in short and "NOT CLOSED" in short and "B6-ENG-1" in short
+    assert page.split("<!-- gen:b6eng:begin -->")[1].split("<!-- gen:b6eng:end -->")[0].strip() == m.cons_b6eng(F)
+    cur = page.split("## 7. Standalone analyses")[0] + page.split("### 8a.")[1].split("### 8b.")[0]
+    assert "2.47 uH" not in cur.replace("from a 2.47 uH lead", ""), "round 1's condition is not stated as current"
+    assert "26d L4-F01" in _C["text"] and "PENDING L4-E7's round" not in _C["text"] and "25m B6" in _C["text"]
 
 
 def t_the_review_of_the_provisional_fixes_l4f04_the_thermal_categories():
@@ -1522,21 +1538,6 @@ def t_the_review_of_the_provisional_fixes_l4f04_the_thermal_categories():
         assert name in page and name in _C["text"].split("26c L4-F04")[1], name
     rows = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
     assert rows["R-185"][1] == "TEST" and "function read back" in rows["R-185"][2] and "for that lot" in rows["R-185"][5]
-
-
-def t_l4f01_has_its_place_until_l4e7_lands():
-    """L4-F01 (the review of the provisional fixes keeps B6 open): until L4-E7's round lands, D-10's already-on rating claim is not
-    called established anywhere it is stated, and the page and the output name the place its result enters."""
-    m = _M()
-    F, D, st = _C["F"], _C["D"], _C["st"]
-    de = {d["id"]: d for d in m.DEFECTS}
-    assert de["D-10"]["state"].startswith("ADDRESSED IN DRAFTS") and "L4-F01" in de["D-10"]["state"] and "pending" in de["D-10"]["state"]
-    exd = {d[0]: d for d in m.cons_exit_defects(F)}
-    assert "L4-F01" in exd["D-10"][2]
-    page = open(PAGE, encoding="utf-8").read()
-    short = page.split("## In short\n")[1].split("\n## 1. ")[0]
-    assert short.count("L4-F01") >= 2 and "**The review of the provisional fixes keeps B6 open (L4-F01; out 26d).**" in page
-    assert "26d L4-F01" in _C["text"] and "PENDING L4-E7's round" in _C["text"]
 
 
 def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
@@ -1581,7 +1582,7 @@ def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
     assert "Zself + Zmut" in u4[2] and "E11-37" in u4[2] and "quantified subset" in u4[4]
     assert len(g["f16"]) == 4 and len(g["g16"]) == 5
     sec = _C["text"].split("26. THE REVIEW OF THE PROVISIONAL FIXES")[1]
-    assert "26a L4-F02" in sec and "26b L4-F03" in sec and "PENDING L4-E7's round" in sec or "26d L4-F01" in sec
+    assert "26a L4-F02" in sec and "26b L4-F03" in sec and "26d L4-F01" in sec
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
