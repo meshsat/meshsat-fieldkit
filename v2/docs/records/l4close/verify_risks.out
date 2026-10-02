@@ -1,0 +1,67 @@
+verify_risks.py: the independent verification of the findings ledger's concrete remaining risks (MESHSAT-1357, 2 October 2026)
+PAUSED CHECKPOINT: items 2, 4 and 5 settled; item 3 an interim reading only; items 6, 7, 9 and 11 NOT YET VERIFIED (paused)
+
+ITEM 2. L4-E10's screen rows C04, C05, C16, C17, C18 against TEST-PLAN.md (the recheck's R2 list)
+   E3-H: the +40 C lid-closed level held until the hot stop acts or 4 h pass                    TEST-PLAN yes  C05 yes
+   E3-H: repeated with the sensor controller in reset                                           TEST-PLAN yes  C05 yes
+   E3-H: the TMP117 fallback thresholds +55.0 and +56.0 C                                       TEST-PLAN yes  C05 yes
+   P15: the TMP117 release at +45.0 C                                                           TEST-PLAN yes  C05 yes
+   E3-H: the restart at or below +46.5 C after 30 minutes                                       TEST-PLAN yes  C05 yes
+   E3-H: the stepped run from +40 C by 2 K an hour to at most +55 C, on shore then on the pack  TEST-PLAN yes  C05 yes
+   E3-L: started once with the lid already closed                                               TEST-PLAN yes  C04 yes
+   E3-L: the lid-closed start enters the reduced mode once the lid is read                      TEST-PLAN yes  C04 yes
+   E3-L: the +40 C level (in C01, as the recheck's list does not name it)                       TEST-PLAN yes  C01 yes
+   E3-P: OTD recovers at or below +52.5 C                                                       TEST-PLAN yes  C17 yes
+   E4-T: full function after return to 25 C, capacity within 5 %                                TEST-PLAN yes  C16 yes
+   E4-P: recovery as E4-T                                                                       TEST-PLAN yes  C18 yes
+   charge state unstated in TEST-PLAN named as a missing input (E3-L)                           TEST-PLAN n/a  C04 yes
+   charge state unstated in TEST-PLAN named as a missing input (E3-H)                           TEST-PLAN n/a  C05 yes
+   charge state unstated in TEST-PLAN named as a missing input (E4-T transport)                 TEST-PLAN n/a  C16 yes
+   charge state unstated in TEST-PLAN named as a missing input (E4-P)                           TEST-PLAN n/a  C18 yes
+   E3-P's charge state is TEST-PLAN's own (full charge)                                         TEST-PLAN yes  C17 yes
+   mapped and read at the source: 17 of 17
+   observation, not on the recheck's list: E3-P: the second level does not fire             TEST-PLAN yes; restated in C17: no (C17 cites MAKER 7.10)
+   observation, not on the recheck's list: E3-P: capacity recovery at least 95 % as E3-T    TEST-PLAN yes; restated in C17: no (C17 cites MAKER 7.10)
+
+ITEM 3, INTERIM READING ONLY (paused; not the item's result): the pocket's room beyond the 1.0 mm minimums
+   block 56.65 x 133.50 x 38.10 mm; east face 5086.35, top 7562.77, each end 2158.37 mm2
+   the worst stack (SHORTLIST's rooms 6.38 / 2.66 / 0.77 mm): 0.0559 L (the record: 0.056 L)
+   CASE-MARGINS 3.2, chosen nominal (C1 on the C6 legs): M4b +9.68, M5 +3.65, M6 +4.42 mm; M5 as designed on the flat floor +11.74 mm
+   as designed on the chosen column throughout: 0.0865 L
+   with M5 taken from the flat-floor 'As designed' column (the record's 0.121 L): 0.1215 L
+   why the record's reading differs: M5's margin text carries escaped pipes ('\|Y\|'), so a split on '|' that skips three
+   cells lands one cell early for M5 only and its maximum picks the flat-floor +11.74 mm (l4e10_cell_thermal.py, rows_cm)
+
+ITEM 4. L4-E11's R-b against SLUSE66A p.10 (BQ25731, v2/vendor/ti/bq25731-datasheet.pdf)
+   p.10 table condition: 'TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)'
+   ICHRG_REG_ACC, 'Charge current regulation accuracy 5-mΩ RSR sensing resistor, VBAT above VSYS_MIN(0°C to 85°C)':
+     REG0x03/02() = 0x0200H, 1024 mA: -18 % / +21.5 % (MIN / MAX); the (0°C to 85°C) is the row's 'otherwise noted'
+     temperature under a TJ table: a junction range
+   ICLAMP, CELL(>=2 S), VSRN < VSYS_MIN: 384 mA in the TYP column, no MIN or MAX
+   R17: '5mOhm 1% 2512 (RSR, charge current sense)' (gen_sch_a.py): case (i) 0.8314 to 1.2567 A (the record: 0.8314 to 1.2567 A)
+   Q2's diode: 1.2567 W at VSD 1 V, 62.836 K over the 62.1 C air at 50 C/W: TJ 124.936 C (the record: 1.257 W, 62.8 K, 124.9 C) against 150 C
+   R-b's charge power above 14 V: 1.2567 A x 16.884 V = 21.22 W (the record: 21.22 W)
+   sensitivity, not in the record: R17 at -75 ppm/K over 60 K (0 to 85 C from 25 C): 1.2624 A, Q2 at 125.22 C
+   sensitivity, not in the record: R17 at -200 ppm/K over 60 K (0 to 85 C from 25 C): 1.2720 A, Q2 at 125.70 C
+   L4E11 section 4: case (ii) INCONCLUSIVE, the charger's own rise counted  read
+   L4E11 section 4: case (iii) INCONCLUSIVE                                 read
+   L4E11 section 4: Q2's 124.9 C CONDITIONAL                                read
+   R-136 carries cases (ii) and (iii)                                                        yes
+   R-136 carries the charger's temperature bounded inside 0 to 85 C, or TI's accuracy outside it yes
+   R-136 carries the clamp's maximum under VSYS_MIN                                          yes
+   R-136 carries Q2's copper for 50 C/W                                                      yes
+   R-136 carries acceptance: Q2 at most 124.9 C confirmed or re-derived                      yes
+
+ITEM 5. L4-E12's SGP41 shutdown on a TMP117 (v2/vendor/ti/ti-tmp117-temperature.pdf)
+   p.1: '+-0.15 C (maximum) from -40 C to 70 C' (SNOSD82D, revised September 2022; the sheet prints the minus as an en dash)
+   p.6, 6.5 Electrical Characteristics, TMP117 row -40 to 70 C: MIN -0.15, TYP +-0.05, MAX 0.15 C, over free-air temperature;
+     conditions: 8 averages, 1-Hz conversion cycle, thermal pad unsoldered (DRV), I2C inputs VIL <= 0.05 V+, VIH >= 0.95 V+;
+     the TMP117N rows print +-0.2 C from -40 to 100 C (no +-0.15 C row); board B's part is TMP117AIDRVR (gen_sch_b.py)
+   the lag: 15.0 K/h x 61 s = 0.254167 K (the record: 0.254167 K)
+   off at 55 - 0.15 - 0.5 - lag = 54.095833 C, set at 54.0 C; the SGP41 then at most 54.904167 C (the record: 54.095833, 54.904167 C)
+   on and used at 50 - 0.15 - 0.5 - lag = 49.095833 C, set at 49.0 C; at most 49.904167 C while used (the record: 49.095833, 49.904167 C)
+   break-even of the 54.0 C setting at +-0.15 C: the sensor-to-SGP41 time constant at most 83.0 s at 15 K/h (the record assumes 60 s); off point 54.095833 C
+   break-even of the 54.0 C setting at +-0.20 C: the sensor-to-SGP41 time constant at most 71.0 s at 15 K/h (the record assumes 60 s); off point 54.045833 C
+   the register: R-146 carries the 0.5 K placement (yes); R-138 and R-139 a forced shutdown at room temperature (yes, yes); no row names the 61 s lag or its time constant (none)
+
+SUMMARY: item 2 CONFIRMED; item 4 CONFIRMED; item 5 CONFIRMED (the row and the arithmetic; the lag carried by no register row); items 3, 6, 7, 9, 11 NOT YET VERIFIED (paused)

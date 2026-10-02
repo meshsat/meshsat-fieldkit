@@ -12,6 +12,13 @@ states (CLOSED, CLOSED AS CONDITIONAL, OPEN DOWNSTREAM, STILL OPEN); every cross
 summary's counts equal the rows'; every STILL OPEN row appears under "Concrete remaining risks"; no em or en dash in the
 ledger, the inventory script or this module. These are software predicates on the record's own text: they establish no
 electrical or thermal property and close no finding.
+
+The independent verification of 2 October 2026 (VERIFICATION-2026-10-02.md, its code verify_risks.py and its output
+verify_risks.out): the page has one section for each of the concrete risks 2 to 7, 9 and 11 it took, each with exactly one
+verdict (CONFIRMED, DIFFERS, CANNOT VERIFY, or NOT YET VERIFIED (paused) at a checkpoint) that agrees with the page's table;
+every ledger row that cites one of its items cites a section that exists and is settled, and every settled item is cited by
+a ledger row; every figure a settled section lists as printed appears in verify_risks.out; and the three files carry no em
+or en dash. Again predicates on text: the verification's engineering content is the page's, not this module's.
 """
 import importlib.util
 import os
@@ -24,6 +31,12 @@ RECORDS = os.path.join(ROOT, "v2", "docs", "records")
 REC = os.path.join(RECORDS, "l4close")
 LEDGER = os.path.join(REC, "FINDINGS-LEDGER.md")
 INVENTORY = os.path.join(REC, "findings_inventory.py")
+VERIF = os.path.join(REC, "VERIFICATION-2026-10-02.md")
+VERIF_PY = os.path.join(REC, "verify_risks.py")
+VERIF_OUT = os.path.join(REC, "verify_risks.out")
+VERIF_ITEMS = (2, 3, 4, 5, 6, 7, 9, 11)
+VERDICTS = ("CONFIRMED", "DIFFERS", "CANNOT VERIFY", "NOT YET VERIFIED (paused)")
+PAUSED = "NOT YET VERIFIED (paused)"
 sys.dont_write_bytecode = True
 sys.path.insert(0, TOOLS)
 from harness import need  # noqa: E402
@@ -184,8 +197,65 @@ def t_every_still_open_row_is_a_concrete_risk():
             assert r["key"] in risks, "row %s is STILL OPEN and absent from the concrete risks" % r["key"]
 
 
+def _verif():
+    if "verif" not in _C:
+        need(VERIF, "the independent verification page")
+        with open(VERIF, encoding="utf-8") as fh:
+            text = fh.read()
+        secs = {}
+        for m in re.finditer(r"^## Item (\d+)\n(.*?)(?=^## |\Z)", text, re.M | re.S):
+            secs[int(m.group(1))] = m.group(2)
+        table = dict((int(a), b.strip()) for a, b in re.findall(r"^\| (\d+) \| [^|]+ \| ([^|]+) \|$", text, re.M))
+        _C["verif"] = (text, secs, table)
+    return _C["verif"]
+
+
+def _verdict(body):
+    v = re.findall(r"^\*\*Verdict:\*\* (.+)$", body, re.M)
+    assert len(v) == 1, "a section carries %d verdict lines, not one" % len(v)
+    return v[0].strip()
+
+
+def t_the_verification_has_one_section_and_one_verdict_per_item():
+    _text, secs, table = _verif()
+    assert sorted(secs) == sorted(VERIF_ITEMS), "the verification's item sections are %s, not %s" % (sorted(secs), list(VERIF_ITEMS))
+    for n in VERIF_ITEMS:
+        v = _verdict(secs[n])
+        assert v in VERDICTS, "item %d's verdict %r is not one of %s" % (n, v, VERDICTS)
+        assert table.get(n) == v, "item %d: the page's table reads %r, its section %r" % (n, table.get(n), v)
+
+
+def t_the_ledger_cites_every_settled_item_and_no_paused_one():
+    _text, secs, _t = _verif()
+    settled = set(n for n in VERIF_ITEMS if _verdict(secs[n]) != PAUSED)
+    cited = set()
+    for r in _rows():
+        for n in re.findall(r"VERIFICATION-2026-10-02\.md`?,? Item (\d+)", " ".join(r["cells"][2:])):
+            n = int(n)
+            assert n in secs, "row %s cites Item %d, which the page does not have" % (r["key"], n)
+            assert n in settled, "row %s cites Item %d, which is %s" % (r["key"], n, PAUSED)
+            cited.add(n)
+    assert settled <= cited, "settled items no ledger row cites: %s" % sorted(settled - cited)
+
+
+def t_every_printed_figure_is_in_the_output():
+    _text, secs, _t = _verif()
+    need(VERIF_OUT, "the verification's output")
+    with open(VERIF_OUT, encoding="utf-8") as fh:
+        out = fh.read()
+    for n in VERIF_ITEMS:
+        if _verdict(secs[n]) == PAUSED:
+            continue
+        lines = [ln for ln in secs[n].splitlines() if ln.startswith("Printed figures:")]
+        assert len(lines) == 1, "settled item %d lists its printed figures %d times, not once" % (n, len(lines))
+        figs = re.findall(r"`([^`]+)`", lines[0])
+        assert figs, "settled item %d lists no printed figure" % n
+        for f in figs:
+            assert f in out, "item %d: %r is not in verify_risks.out" % (n, f)
+
+
 def t_no_em_or_en_dash():
-    for path in (LEDGER, INVENTORY, os.path.abspath(__file__)):
+    for path in (LEDGER, INVENTORY, os.path.abspath(__file__), VERIF, VERIF_PY, VERIF_OUT):
         need(path, os.path.basename(path))
         with open(path, encoding="utf-8") as fh:
             text = fh.read()
