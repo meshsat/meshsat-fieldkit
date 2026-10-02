@@ -2,17 +2,20 @@
 the vehicle-entry interconnect (D-06) and the hot swap's fault timer (D-09), held as predicates on the values
 l4e11_power.py computes, recomputed here in closed form where the property is arithmetic.
 
-The predicates: the committed .out is what the script prints; no mandatory requirement names a load state for a source alone
-and the record quotes REQ-015 as the registry holds it; the charger's rows are the maker's and CHRG_OK names no battery; the
-holds never cut the source while the pack cannot discharge (the drafts say so); rule R-b keeps Q2's junction under its
-maximum where 3 A would not; the drawn UVLO's maximum is over 9 V and the drafted one under it; the plug's 9 V gives less than
-VIN_RAW's; no owner question is forced and the reason is a part choice, not a capability; the drawn interconnect fails the
-weak-source band and the selected one covers it while a stiff source stays under F1's 1000 A only with the length floor; the
-selected timer pair meets both ends and is the only stocked set of at most two parts that does; the start counts the new
-capacitors and the load, and the front end cannot overlap it; each draft checks, applies once, refuses twice and refuses the
-tree's own generator, and both compose with L4-E9's hot-swap draft in the stated order; every figure carries a class; every
-downstream item has one owner and an acceptance; no em or en dash and no claim word. Nothing here writes into the tree:
-drafts run on temporary copies. Software tests establish this record's own behaviour only.
+The predicates (the fix round of 2 October 2026 included): the committed .out is what the script prints; no mandatory
+requirement names a load state for a source alone and the record quotes REQ-015 as the registry holds it; the charger's rows
+are the maker's and CHRG_OK names no battery; the charge holds are a state table that keeps the source carrying the kit (B2);
+rule R-b's register value bounds the actual current and Q2's junction where 3 A would not (B5); the LM5069 cannot start from a
+9.00 V plug by TI's Equations 38 to 40 and POREN (B1); the selected entry sits between the in-service maximum and F1, and its
+pass FET carries a start into a resistive fault where the drawn one does not; the corrected knee and the guard clear the plug's
+operating point and the functional warm-up is carried at its plan figure (B3); the plug's 9 V through the drawn knee gives less
+than VIN_RAW's; no owner question is forced and the losses lower every ceiling; the weak-source envelope is monotone (B4), the
+drawn interconnect fails it, and a stiff source stays under F1's 1000 A only with the resistance floor; the selected timer pair
+meets both ends and is the only stocked set of at most two parts that does; the start counts the new capacitors and the load;
+each draft checks, applies once, refuses twice and refuses the tree's own generator, and they compose with L4-E9's hot-swap
+draft as stated, the entry and timer drafts excluding each other; every figure carries a class; every downstream item has one
+owner and an acceptance; no em or en dash and no claim word. Nothing here writes into the tree: drafts run on temporary copies.
+Software tests establish this record's own behaviour only.
 """
 import hashlib
 import importlib.util
@@ -33,7 +36,8 @@ SCRIPT = os.path.join(REC, "l4e11_power.py")
 OUT = os.path.join(REC, "l4e11_power.out")
 PAGE = os.path.join(REC, "L4E11-SOURCE-ONLY-AND-ENTRY.md")
 GEN_E = os.path.join(TOOLS, "gen_sch_e.py")
-DRAFTS = ("apply_gen_sch_e_uvlo.py", "apply_gen_sch_e_timer.py")
+GEN_A = os.path.join(TOOLS, "gen_sch_a.py")
+DRAFTS = (("apply_gen_sch_e_entry.py", GEN_E, True), ("apply_gen_sch_e_timer.py", GEN_E, False), ("apply_gen_sch_a_guard.py", GEN_A, False))
 sys.dont_write_bytecode = True
 sys.path.insert(0, TOOLS)
 from harness import need, Skip  # noqa: E402
@@ -104,38 +108,82 @@ def t_the_charger_rows_are_the_makers_and_chrg_ok_names_no_battery():
     assert R["strap"][2] > 68.4 and R["strap"][2] < 81.5, "the strap is not in the 4S window"
 
 
-def t_the_holds_never_cut_the_source_while_the_pack_cannot_discharge():
+def t_the_charge_holds_are_a_state_table_that_keeps_the_source_carrying_the_kit():
     R = _R()
     assert "below 0 C" in R["fwc08"], "FW-C08 as written no longer asserts SHORE_INHIBIT on the cold hold"
-    page = open(PAGE, encoding="utf-8").read()
+    out = open(OUT, encoding="utf-8").read()
+    for s in ("S1 charge on, discharge on", "S2 charge on, discharge off", "S3 charge off, discharge on", "S4 charge off, discharge off"):
+        assert s in out, "the state table lacks %r" % s
+    assert "so the gauge does NOT hold the charge" in out, "S2's counterexample (a warm CUV) is not stated"
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
     assert "Finding U4-F1" in page and "never for a temperature or 'no charge' hold" in page
-    assert "never while the pack cannot discharge" in page
-    assert "R-a." in page and "never assert" in page
+    assert "| S2 |" in page and "N2" in page and "OPEN" in page, "the record's state table does not keep N2 open for S2"
+    assert "CHRG_INHIBIT bit" in page and "never by the CHG_INHIBIT line" in page
+    assert "carried by the pack either way" not in page, "the first round's REQ-077 fallback is still in the record"
 
 
-def t_rule_rb_keeps_q2_under_its_maximum_where_three_amps_would_not():
+def t_rule_rb_bounds_the_actual_current_and_keeps_q2_under_its_maximum_where_three_amps_would_not():
     R = _R()
-    P = R["P"]
+    P, N = R["P"], R["N"]
     air = R["F"]["air_hot"]
+    assert N["rb_err"] == (0.18, 0.215), "the 0x0200 row is not TI's -18 / +21.5 %"
+    assert abs(N["rb_max"] - 1.024 * 1.215 / 0.99) < 1e-12 and abs(N["rb_max"] - 1.2567) < 1e-4
+    assert air + N["rb_max"] * P["vsd_max"] * P["rja"] < P["tj_max"], "R-b's actual maximum does not keep Q2 under its TJ"
     rows = {round(i, 3): (w, dt) for i, w, dt in P["q2"]}
-    w1, dt1 = rows[1.0]
-    w3, dt3 = rows[3.0]
-    assert w1 <= 1.0 + 1e-9 and air + dt1 < P["tj_max"], "R-b's 1.0 A does not keep Q2 under its TJ"
-    assert air + dt3 > P["tj_max"], "3 A through the diode would be inside TJ: R-b would not be needed"
+    assert air + rows[3.0][1] > P["tj_max"], "3 A through the diode would be inside TJ: R-b would not be needed"
     assert abs(P["rb_imbalance"] - 0.25) < 1e-9
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
+    assert "0x0200" in page and "1.257 A" in page and "4.22 W" in page and "withdrawn" in page
 
 
-def t_the_uvlo_draft_puts_the_entry_on_under_nine_volts():
+def t_the_lm5069_cannot_start_from_a_nine_volt_plug():
     R = _R()
-    E = R["E"]
-    uv = E["uv_rows"]
-    hi = lambda r21: uv[2] * (1 + 100e3 * 1.01 / (r21 * 0.99))
-    assert abs(hi(38.3e3) - E["uvlo_drawn"][0][2]) < 1e-9 and hi(38.3e3) > 9.0, "the drawn UVLO's maximum is not over 9 V"
-    assert hi(42.2e3) < 9.0, "the drafted UVLO's maximum is not under 9 V"
-    falling_hi = E["uvlo_new"][1][2]
-    assert falling_hi < E["k0"] and falling_hi < 7.86, "the drafted UVLO's falling band reaches the knee or the guard"
-    draft = open(os.path.join(REC, "apply_gen_sch_e_uvlo.py"), encoding="utf-8").read()
-    assert "on by %.2f V" % E["uvlo_new"][0][2] in draft, "the draft's label is not the computed maximum"
+    E, N = R["E"], R["N"]
+    uv, hy = E["uv_rows"], E["hy_rows"]
+    rise_hi = lambda r21: uv[2] * (1 + 100e3 * 1.01 / (r21 * 0.99)) + hy[2] * 100e3 * 1.01      # SNVS452G Equation 38 at its corners
+    for r21, got in ((38.3e3, N["uvlo_drawn"]), (42.2e3, N["uvlo_withdrawn"])):
+        assert abs(rise_hi(r21) - got[0][2]) < 1e-9 and rise_hi(r21) > 9.0
+        assert abs(uv[1] * (1 + 100e3 / r21) - got[1][1]) < 1e-9, "the falling threshold is not Equation 39"
+    assert abs(rise_hi(38.3e3) - 12.372) < 1e-3 and abs(rise_hi(42.2e3) - 11.745) < 1e-3, "not the check's reproduced corners"
+    assert N["poren"] == (8.4, 9.0) and abs(N["vin_ic_max"] - (9.0 - 0.013)) < 1e-12 and not N["poren_met"]
+    assert not os.path.exists(os.path.join(REC, "apply_gen_sch_e_uvlo.py")), "the withdrawn R21 draft is still in the record"
+
+
+def t_the_selected_entry_sits_between_the_in_service_maximum_and_f1():
+    R = _R()
+    N, F = R["N"], R["F"]
+    lo = 29.2e-3 * (1 - 0.002 - 0.005) / (4.5e-3 * 1.01 * (1 + 50e-6 * 50))
+    hi = 31.5e-3 * (1 + 0.002 + 0.005) / (4.5e-3 * 0.99 * (1 + 50e-6 * (-45)))
+    assert abs(N["ioc"][0] - lo) < 1e-9 and abs(N["ioc"][2] - hi) < 1e-9
+    assert N["i9"] < N["ioc"][0] and N["ioc"][2] <= F["f_hot_a"], "the breaker is not between the in-service maximum and F1"
+    assert N["imax_all"] == max(e["i_max"] for e in N["env"].values()) and N["imax_all"] < N["ioc"][0]
+    assert N["uv_rise"][2] < N["dcp_noload"] and N["uv_fall"][2] < N["dcp9"], "the UVLO does not clear the plug's 9 V"
+    assert N["cs101_peak"] < N["ov_rise"][0] and N["ov_rise"][2] < N["d10"][1] and N["ov_fall"][0] > 36.0
+    assert N["t63_ilim"][0] < N["i9"], "the TPS1663 would carry the in-service maximum: its rejection is wrong"
+    assert N["isc"][0] > N["ioc"][2] and max(N["pins_at_clamp"]) < N["t48_pin_abs"] and N["inp_on_at"] < N["uv_rise"][0]
+    assert N["l2_rise"] + F["air_hot"] < 105.0 and N["cbst_need"] < 1e-6
+
+
+def t_the_selected_fet_carries_a_fault_start_where_the_drawn_one_does_not():
+    R = _R()
+    N = R["N"]
+    (d_name, d_worst, d_start), (k_name, k_worst, k_start) = N["scan"]
+    assert "CSD19532Q5B" in d_name and "CSD19536KTT" in k_name
+    assert d_worst[0] > 1.0, "the drawn FET would carry a fault start: the FET change would not be needed"
+    assert k_worst[0] < 1.0 and k_start < 1.0, "the selected FET does not carry a fault start on its derated chart"
+    assert abs(N["ktt_at"]["1ms"] - 20.02) < 0.05 and abs(N["ktt_at"]["10ms"] - 6.228) < 0.01
+
+
+def t_the_corrected_knee_and_the_guard_clear_the_plugs_point_and_the_warm_up_is_carried():
+    R = _R()
+    N = R["N"]
+    assert N["top_margin"] > 0 and N["guard_margin"] >= 0.1, "the knee or the guard does not clear the 9 V plug's point"
+    assert abs(N["func"][1] - (21.73 + 8.58)) < 1e-9 and abs(N["heater_w"] - 8.58) < 1e-9
+    e9 = N["env"][9.0]
+    assert N["func"][1] <= e9["w_lo"], "the functional warm-up's plan figure is not carried at 9 V at the plug"
+    assert N["func"][2] > e9["w_hi"], "the hi corner is carried: the record's shed statement would be wrong"
+    assert N["it_need"] <= 1.89 < N["it_need"] + 0.01
+    assert N["guard_levels"][1] > N["guard_levels"][2] and N["guard_levels"][3] > N["ven_op"]
 
 
 def t_nine_volts_at_the_plug_gives_less_than_at_vin_raw():
@@ -148,13 +196,27 @@ def t_nine_volts_at_the_plug_gives_less_than_at_vin_raw():
     assert E["plug"]["selected"]["r"] < E["plug"]["drawn"]["r"]
 
 
-def t_no_owner_question_is_forced_and_the_reason_is_a_part_choice():
+def t_no_owner_question_is_forced_and_the_losses_lower_every_ceiling():
     R = _R()
-    F = R["F"]
+    F, N = R["F"], R["N"]
     assert F["owner_question"] is False
+    for (lab, ia, rr, vr, w), (ia2, wref) in zip(N["caps"], N["check_ref"]):
+        assert ia == ia2 and w < wref, "%s: the losses do not lower the ceiling" % lab
+    assert [round(w, 2) for _i, w in N["check_ref"]] == [53.9, 69.79, 76.96], "not the check's reference figures"
     plans = {n: pl for n, (_lo, pl, _hi) in R["E"]["states"].items()}
-    assert max(plans.values()) < F["cap9_15a_hot_w"], "a 15 A part would not lift the hottest cap over every state"
-    assert all(pl <= F["cap9_cold_w"] for n, pl in plans.items() if "cold" in n or "warm-up" in n)
+    assert max(plans.values()) < N["caps"][2][4], "a 15 A part would not lift the 9 V ceiling over every state"
+
+
+def t_d06_the_weak_source_envelope_is_monotone_with_its_energies():
+    R = _R()
+    N, D = R["N"], R["D"]
+    assert [(lo, hi, t) for lo, hi, t in N["intervals"]] == [(None, 13.5, None), (13.5, 20.0, 600.0), (20.0, 35.0, 5.0), (35.0, 60.0, 0.5), (60.0, D["sel_ipf"], 0.1)]
+    assert [i2t for _l, _h, _t, i2t in N["i2t_top"]][1:4] == [240000.0, 6125.0, 1800.0]
+    eq = {hi: e for _lo, hi, _t, e in N["contact_eq"]}
+    assert abs(eq[35.0] - 35.0 ** 2 * 5.0 / 23.0 ** 2) < 1e-9 and abs(eq[60.0] - 60.0 ** 2 * 0.5 / 23.0 ** 2) < 1e-9
+    assert abs(N["loop_floor20"] - D["r_floor"] / (1 - 0.00393 * 40.0)) < 1e-12 and N["loop_floor20"] < N["loop_nom20"] < N["loop_ceil20"]
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
+    assert "35 A for 5 s" in page and "60 A for 0.5 s" in page and "crimp" in page and "four-wire" in page
 
 
 def t_d06_the_drawn_interconnect_fails_and_the_selected_one_covers_the_band():
@@ -207,47 +269,61 @@ def _run(args, cwd=None):
     return subprocess.run([sys.executable] + args, capture_output=True, cwd=cwd)
 
 
-def t_each_draft_checks_applies_once_refuses_twice_and_refuses_the_tree():
-    _R()
-    before = _sha(GEN_E)
-    with tempfile.TemporaryDirectory() as d:
-        for name in DRAFTS:
-            tgt = os.path.join(d, "gen_" + name)
-            shutil.copy(GEN_E, tgt)
-            script = os.path.join(REC, name)
-            r = _run([script, tgt])
-            assert r.returncode == 0 and b"CHECK OK" in r.stdout, r.stderr.decode()[-300:]
-            assert _sha(tgt) == before, "--check wrote"
-            r = _run([script, tgt, "--write"])
-            assert r.returncode == 0 and b"WRITTEN" in r.stdout
-            r = _run([script, tgt, "--write"])
-            assert r.returncode == 3, "a second application was not refused"
-            r = _run([script, GEN_E, "--write"])
-            assert r.returncode == 3 and b"NOT RELEASED" in r.stderr, "the tree's own generator was not refused"
-    assert _sha(GEN_E) == before, "a draft wrote into the tree"
-
-
-def t_both_drafts_compose_with_l4e9s_hotswap_draft_in_the_stated_order():
+def _hotswap(d):
     m = _M()
     rel, want = m.GIT_PINS["l4e9_hotswap"]
     blob = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (m.L4E9_COMMIT, rel)], capture_output=True).stdout
     assert hashlib.sha256(blob).hexdigest() == want
-    uv, tm = (os.path.join(REC, n) for n in DRAFTS)
+    hs = os.path.join(d, "hotswap.py")
+    open(hs, "wb").write(blob)
+    return hs
+
+
+def t_each_draft_checks_applies_once_refuses_twice_and_refuses_the_tree():
+    _R()
+    before = {g: _sha(g) for g in (GEN_E, GEN_A)}
     with tempfile.TemporaryDirectory() as d:
-        hs = os.path.join(d, "hotswap.py")
-        open(hs, "wb").write(blob)
-        a, b, c = (os.path.join(d, x) for x in ("a.py", "b.py", "c.py"))
-        for p in (a, b, c):
+        hs = _hotswap(d)
+        for name, gen, after_hotswap in DRAFTS:
+            tgt = os.path.join(d, "gen_" + name)
+            shutil.copy(gen, tgt)
+            if after_hotswap:
+                assert _run([hs, tgt, "--write"]).returncode == 0
+            pre = _sha(tgt)
+            script = os.path.join(REC, name)
+            r = _run([script, tgt])
+            assert r.returncode == 0 and b"CHECK OK" in r.stdout, r.stderr.decode()[-300:]
+            assert _sha(tgt) == pre, "--check wrote"
+            r = _run([script, tgt, "--write"])
+            assert r.returncode == 0 and b"WRITTEN" in r.stdout
+            r = _run([script, tgt, "--write"])
+            assert r.returncode == 3, "a second application was not refused"
+            r = _run([script, gen, "--write"])
+            assert r.returncode == 3 and b"NOT RELEASED" in r.stderr, "the tree's own generator was not refused"
+    assert all(_sha(g) == s for g, s in before.items()), "a draft wrote into the tree"
+
+
+def t_the_drafts_compose_with_l4e9s_hotswap_draft_and_the_entry_and_timer_exclude_each_other():
+    _M()
+    en, tm = os.path.join(REC, "apply_gen_sch_e_entry.py"), os.path.join(REC, "apply_gen_sch_e_timer.py")
+    with tempfile.TemporaryDirectory() as d:
+        hs = _hotswap(d)
+        a, b, c, e = (os.path.join(d, x) for x in ("a.py", "b.py", "c.py", "e.py"))
+        for p in (a, b, c, e):
             shutil.copy(GEN_E, p)
-        for s in (hs, uv, tm):
+        for s in (hs, en):
             assert _run([s, a, "--write"]).returncode == 0
-        for s in (tm, hs, uv):
-            assert _run([s, b, "--write"]).returncode == 0
-        assert open(a, "rb").read() == open(b, "rb").read(), "the timer draft's order changes the result"
         txt = open(a, encoding="utf-8").read()
-        assert 'r("R21", "42.2k 1%' in txt and 'r("R24", "22k 1%' in txt and 'c("C121", "68n C0G 5%' in txt
-        assert _run([uv, c, "--write"]).returncode == 0
-        assert _run([hs, c, "--write"]).returncode == 3, "L4-E9's draft after this one should refuse (the stated order)"
+        assert 'ic("U6", 20, "TPS48110AQDGXRQ1' in txt and '"CSD19536KTT' in txt and 'r("R24", "39.7k 0.1%' in txt and "SRF1260-1R0Y" in txt
+        assert '"9": "HS_TIMER"' in txt and '"8": "HS_IWRN"' in txt and 'lcsc="C2985708"' in txt and "_VEH_T, _VEH_P = 7.14, 7.14" in txt
+        assert _run([tm, a, "--write"]).returncode == 3, "the timer draft did not refuse after the entry draft"
+        for s in (hs, tm):
+            assert _run([s, b, "--write"]).returncode == 0
+        for s in (tm, hs):
+            assert _run([s, c, "--write"]).returncode == 0
+        assert open(b, "rb").read() == open(c, "rb").read(), "the timer draft's order with L4-E9's changes the result"
+        assert _run([en, b, "--write"]).returncode == 3, "the entry draft did not refuse after the timer draft"
+        assert _run([en, e, "--write"]).returncode == 3, "the entry draft ran before L4-E9's draft (the stated order)"
 
 
 def t_every_figure_carries_a_class():
@@ -275,7 +351,7 @@ def t_every_figure_carries_a_class():
 def t_every_downstream_item_has_one_owner_and_an_acceptance():
     R = _R()
     m = _M()
-    owners = {"Layer 4 coordinator", "Layer 5 interfaces", "Layer 6 components", "Layer 7 mechanical",
+    owners = {"Layer 4 coordinator", "Layer 5 interfaces", "Layer 6 components", "Layer 7 mechanical", "Layer 8 board A generator owner",
               "Layer 8 board E generator owner", "Layer 9 pre-layout analysis", "prototype bench", "firmware owner", "CONOPS owner"}
     items = m.downstream(R)
     assert [x[0] for x in items] == ["E11-%02d" % k for k in range(1, len(items) + 1)]
@@ -290,8 +366,9 @@ def t_every_downstream_item_has_one_owner_and_an_acceptance():
 def t_the_record_carries_the_outputs_numbers():
     page = open(PAGE, encoding="utf-8").read()
     out = open(OUT, encoding="utf-8").read()
-    for s in ("4.927 to 14.653", "883.5", "1236.9", "8.14 / 8.42 / 8.71", "8.72 / 9.03 / 9.34", "19.7 to 36.6", "3.062", "4.593",
-              "0.71 A", "59.5 W", "89.6 W", "8.318", "8.465"):
+    for s in ("4.927 to 14.653", "883.5", "1236.9", "9.91 / 11.13 / 12.37", "9.33 / 10.52 / 11.74", "8.987", "3.062", "4.593",
+              "0.71 A", "6.364", "7.136", "6.2 A", "0.685", "3.038", "30.37", "43.97", "50.58", "51.23", "60.89", "1.2567", "51.03",
+              "7.367", "6.754 / 6.944 / 7.139"):
         assert s in page and s in out, "%s is not in both the record and the output" % s
 
 

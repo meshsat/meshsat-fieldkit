@@ -2,7 +2,7 @@
 """apply_gen_sch_e_timer.py: DRAFT for board E's generator owner (task L4-E11, MESHSAT-1357, 2 October 2026). NOT APPLIED to
 the tree by L4-E11; its author ran it only on scratch copies (the tests write scratch copies).
 
-Why (defect D-09, found by L4-E9's final round; L4E11-SOURCE-ONLY-AND-ENTRY.md section 6, l4e11_power.out section 7): the
+Why (defect D-09, found by L4-E9's final round; L4E11-SOURCE-ONLY-AND-ENTRY.md section 7, l4e11_power.out section 7): the
 LM5069's fault time is C x VTMRH / ITIMER (3.76 to 4.16 V over 120 to 51 uA, SNVS452G p.5). C5 as drawn, 100 nF K X7R, stacked
 over its printed rows gives 2.04 to 11.87 ms, under TI's half-again margin over the start into VIN_RAW (9.2.1.2.4): the start
 at 43.18 V into the 34 uF the hot swap charges, with the power limit following VDS, the X7R rows stacked and the bias load,
@@ -16,7 +16,8 @@ What it changes in v2/ecad/tools/gen_sch_e.py, and nothing else: C5's call, whic
 its land (the 1206 key C10u50) and its LCSC code, and the vehicle entry's schematic section, which lists C121 after C5.
 
 ORDER: none with L4-E9's apply_gen_sch_e_hotswap.py: the two touch disjoint text on the same line (C5's call against R24's),
-so either may run first; and none with apply_gen_sch_e_uvlo.py.
+so either may run first. It is the ALTERNATIVE to apply_gen_sch_e_entry.py, for a board that keeps the LM5069 (the fix round
+selects the TPS48110 entry, which removes this timer): each refuses once the other has run.
 
 Usage:  apply_gen_sch_e_timer.py TARGET [--check | --write]     (default --check: nothing is written)
 Each edit's old text must occur exactly once and its new text must differ and must not occur yet; the result must parse.

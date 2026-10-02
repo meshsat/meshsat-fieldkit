@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
-"""apply_gen_sch_e_uvlo.py: DRAFT for board E's generator owner (task L4-E11, MESHSAT-1357, 2 October 2026). NOT APPLIED to
-the tree by L4-E11; its author ran it only on scratch copies (the tests write scratch copies).
+"""apply_gen_sch_a_guard.py: DRAFT for board A's generator owner (task L4-E11, MESHSAT-1357, fix round of 2 October 2026). NOT
+APPLIED to the tree by L4-E11; its author ran it only on scratch copies (the tests write scratch copies).
 
-Why (finding U4-F2 of L4E11-SOURCE-ONLY-AND-ENTRY.md, l4e11_power.out section 3): REQ-015 asks the vehicle and shore input
-to operate from 9 V. The LM5069's UVLO turns the entry on at UVLOTH x (1 + R20 / R21), with UVLOTH 2.45 / 2.5 / 2.55 V
-(SNVS452G p.5) and R20 100k over R21 38.3k at 1 %: 8.72 / 9.03 / 9.34 V. At its nominal and upper corners a 9.00 V source
-never turns the entry on, before any current flows. R21 42.2k 1 % puts the rising threshold at 8.14 / 8.42 / 8.71 V, under
-9.00 V by 0.29 V at its maximum, and the falling one at 5.11 / 6.32 / 7.53 V, under H3's knee (8.71 V) and the restart guard
-(7.86 V at its lowest falling). Nothing on DC_P draws power before the hot swap turns on, so the source's voltage is the
-UVLO's. U6's value text follows it.
+Why (blocker B3 of the focused check cx30, l4e11_power.out section 3f): with REQ-015's 9 V at the kit's plug, the in-service
+maximum from a 9.00 V plug settles VIN_RAW at 8.12 V (the kit's own losses hot), so L4-E5's knee moves down (a specification:
+a flat 1.89 A from 7.95 V, zero at 7.646 V, HIZ certain below 7.367 V) and the front end's restart guard U34 must fall under the
+knee's certain HIZ by L4-E5's 0.1 V. As drawn (R14 91k over R15 10k) it falls at 7.86 / 8.08 / 8.31 V, above the plug's 8.12 V
+operating point; R14 76.8k 1 % (LCSC C23107) puts the fall at 6.75 / 6.94 / 7.14 V (0.23 V under 7.367 V) and the rise at
+6.89 / 7.08 / 7.28 V (TPS37A VIT 0.792 to 0.808 V, 2 % hysteresis, SNVSBJ1E). At the lowest fall the guard's own running levels
+scale to FE_VZ 4.64 V, FE_RUN 2.75 V (Q36 and Q37 need 2.5 V at most) and EN 1.89 V (VEN(OP) 1.29 V at most).
 
-What it changes in v2/ecad/tools/gen_sch_e.py, and nothing else: R21's value text and U6's value text.
+What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else: R14's call and its line comment, FE_UVS's declared fraction of
+VIN_RAW (10 / 86.8), and the two comment lines that state the guard's thresholds; C212's release text is untouched.
 
-ORDER: apply it AFTER L4-E9's apply_gen_sch_e_hotswap.py (R22, R23, R24 and U6's OVLO; L4-E9's release order step 4e). That
-draft replaces the whole R20 to R23 line by its old text, which carries R21's drawn value, so it refuses once this one has
-run; this one edits R21's own text and the "9 V on," part of U6's, which both of L4-E9's states keep.
+ORDER: apply it with the corrected knee (E11-09), never before it: with the drawn knee the plug's 9 V settles VIN_RAW on the
+knee and the guard's position does not matter, but the knee drawn to the specification needs this guard under it.
 
-Usage:  apply_gen_sch_e_uvlo.py TARGET [--check | --write]     (default --check: nothing is written)
+Usage:  apply_gen_sch_a_guard.py TARGET [--check | --write]     (default --check: nothing is written)
 Each edit's old text must occur exactly once and its new text must differ and must not occur yet; the result must parse.
 Exit 0: checked (or written); 3: refused (the target is not the expected text, the change is already applied, or the
 repository's own generator is named before RELEASE.md releases it)."""
@@ -25,14 +25,19 @@ import difflib
 import os
 import sys
 
-NAME = "apply_gen_sch_e_uvlo"
+NAME = "apply_gen_sch_a_guard"
 EDITS = [
-    ('r("R21", "38.3k 1% (UVLO: 9 V)", "HS_UVLO", "GND_V")',
-     'r("R21", "42.2k 1% (UVLO: on by 8.71 V, L4-E11)", "HS_UVLO", "GND_V")'),
-    ('"LM5069MM-2 hot-swap controller: 9 V on, ',
-     '"LM5069MM-2 hot-swap controller: on by 8.71 V, '),
+    ('r("R14", "91k 1%", "VIN_RAW", "FE_UVS", lcsc="C23265")',
+     'r("R14", "76.8k 1% (guard under the L4-E11 knee)", "VIN_RAW", "FE_UVS", lcsc="C23107")'),
+    ('# channel 2 (UV): 8.08 V falling, 8.24 V rising',
+     '# channel 2 (UV): 6.94 V falling, 7.08 V rising (L4-E11)'),
+    ('_intent.node("FE_UVS", round(_GVIN * 10 / 101, 2), _gw + "SENSE2, VIN_RAW over R14 / R15 (10 / 101 of it)")',
+     '_intent.node("FE_UVS", round(_GVIN * 10 / 86.8, 2), _gw + "SENSE2, VIN_RAW over R14 / R15 (10 / 86.8 of it)")'),
+    ("#  Channel 2 (UV) is the stage's UVLO now: R14 91 k over R15 10 k (the old UVLO pair, re-valued) put VIN_RAW's\n"
+     "#   threshold at 7.86 / 8.08 / 8.31 V falling and 8.01 / 8.24 / 8.48 V rising, under the 9 V service floor; C212",
+     "#  Channel 2 (UV) is the stage's UVLO now: R14 76.8 k over R15 10 k (L4-E11, under the corrected knee) put VIN_RAW's\n"
+     "#   threshold at 6.75 / 6.94 / 7.14 V falling and 6.89 / 7.08 / 7.28 V rising, under the knee's certain HIZ (7.367 V); C212"),
 ]
-
 
 def refuse(msg):
     sys.stderr.write("%s: %s; refusing\n" % (NAME, msg))
@@ -59,12 +64,12 @@ def patched(text):
 
 
 # NOT RELEASED: task L4-E11 drafts this value for board E's generator owner and never applies it. Writing the repository's
-# own gen_sch_e.py is refused until RELEASE.md beside this script reads "released: yes" on its first line and names an
+# own gen_sch_a.py is refused until RELEASE.md beside this script reads "released: yes" on its first line and names an
 # accepted check of L4-E11 ("check: <repository path whose first line is 'accepted: yes'>"). A copy elsewhere may be written
 # (the tests do, on scratch copies).
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(HERE))))
-TREE_GEN = os.path.join(REPO, "v2", "ecad", "tools", "gen_sch_e.py")
+TREE_GEN = os.path.join(REPO, "v2", "ecad", "tools", "gen_sch_a.py")
 RELEASE = os.path.join(HERE, "RELEASE.md")
 
 
@@ -95,7 +100,7 @@ def main(argv):
         released()
     text = open(target, encoding="utf-8").read()
     new = patched(text)
-    sys.stdout.writelines(difflib.unified_diff(text.splitlines(True), new.splitlines(True), "a/gen_sch_e.py", "b/gen_sch_e.py", n=0))
+    sys.stdout.writelines(difflib.unified_diff(text.splitlines(True), new.splitlines(True), "a/gen_sch_a.py", "b/gen_sch_a.py", n=0))
     if not write:
         print("%s: CHECK OK, %d edit(s), nothing written" % (NAME, len(EDITS)))
         return 0

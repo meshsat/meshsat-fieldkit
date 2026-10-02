@@ -1,0 +1,20 @@
+{
+ "what": "LCSC public product-detail answer for C861872 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C861872), no login; kept fields only",
+ "read_utc": "2026-10-02T03:41Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), fix round",
+ "role": "board E R24, the entry's overcurrent setting RIWRN in the U-04 fix round (39.7k 0.1 %, TI's characterised value)",
+ "code": "C861872",
+ "brand": "YAGEO",
+ "model": "RT0603BRE0739K7L",
+ "package": "0603",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/46d7760c582640714d605308a25a220a.pdf?productCode=C861872",
+ "stock": 4760,
+ "params": {
+  "Power(Watts)": "100mW",
+  "Resistance": "39.7kΩ",
+  "Operating Temperature": "-55℃~+155℃",
+  "Type": "Thin Film Resistor",
+  "Temperature Coefficient": "±50ppm/℃",
+  "Tolerance": "±0.1%"
+ }
+}
