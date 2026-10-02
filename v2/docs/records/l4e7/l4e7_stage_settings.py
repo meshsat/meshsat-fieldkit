@@ -20,8 +20,8 @@ Section 0 proves, before any result (exit 4 otherwise):
      least) are the ones that printed the record. Nothing here compares a git hash with a recorded string.
 
 Run from the repository root:  python3 v2/docs/records/l4e7/l4e7_stage_settings.py > v2/docs/records/l4e7/l4e7_stage_settings.out
-Needs pdftotext, PyYAML and the held documents (fetch_held_back.py beside this file, and the ones the imported records
-name). About five minutes, most of it section 0.
+Needs pdftotext and pdftocairo (poppler), PyYAML and the held documents (fetch_held_back.py beside this file, and the ones the
+imported records name). About six minutes, most of it section 0 and the guard's transients (B6).
 Exit 2: a pinned file is not the pinned file; 3: an input cannot be parsed; 4: a reproduction or a predicate failed."""
 import hashlib
 import importlib.util
@@ -147,6 +147,181 @@ def rvalue(model):
 def bound_status(rows):
     """CONDITIONAL exactly when a row that affects the 100 W bound is not resolved by a guaranteed limit or a maker's statement."""
     return "CONDITIONAL" if any(r_["bound"] and not r_["resolved"] for r_ in rows) else "UNCONDITIONAL"
+
+
+def soa_lines_csd32():
+    """CSD19532Q5B Figure 10 (SLPS414B p.6), the SOA lines read from the sheet's vector drawing by L4-E9's method, as L4-E11's
+    soa_lines() reads them (the same frame, legend and consistency checks), so every line is TI's own coordinates."""
+    svg = subprocess.run(["pdftocairo", "-svg", "-f", "6", "-l", "6", os.path.join(TOP, CSD32), "-"], capture_output=True).stdout.decode("utf-8", "replace")
+    tr = "matrix(0.097966,0,0,-0.097966,64.4,445.1)"
+    paths = []
+    for m in re.finditer(r"<path[^>]*>", svg):
+        t = re.sub(r",\s+", ",", m.group(0))
+        st = re.search(r'stroke(?::|=")(rgb\([^)]*\))', t)
+        if tr not in t or not st:
+            continue
+        pts = [(float(a), float(b)) for a, b in re.findall(r"[ML] ([-\d.]+) ([-\d.]+)", re.search(r' d="([^"]*)"', t).group(1))]
+        paths.append((st.group(1), pts))
+    frames = [p for c, p in paths if c == "rgb(0%,0%,0%)" and len(p) == 5 and p[0] == p[-1]]
+    if not frames:
+        refuse(3, "CSD19532Q5B Figure 10's frame")
+    fr = max(frames, key=lambda q: (max(a for a, _ in q) - min(a for a, _ in q)) * (max(b for _, b in q) - min(b for _, b in q)))
+    x0, x1 = min(q[0] for q in fr), max(q[0] for q in fr)
+    y0, y1 = min(q[1] for q in fr), max(q[1] for q in fr)
+    lv = lambda x: -1.0 + 4.0 * (x - x0) / (x1 - x0)
+    li = lambda y: -1.0 + 5.0 * (y - y0) / (y1 - y0)
+    idm = [p for c, p in paths if c == "rgb(0%,0%,0%)" and len(p) == 3]
+    if not idm or abs(10 ** li(idm[0][0][1]) - 400.0) > 4.0 or abs(10 ** lv(idm[0][1][0]) - 100.0) > 1.0:
+        refuse(3, "CSD19532Q5B Figure 10's IDM and 100 V boundary")
+    rows = [re.findall(r"(10us|100us|1ms|10ms|DC)\b", ln) for ln in pg(CSD32, 6).splitlines() if re.search(r"\b(10us|100us)\b", ln)]
+    if len(rows) != 2:
+        refuse(3, "CSD19532Q5B Figure 10's legend")
+    legend = sorted(((p[0][1], p[0][0], c) for c, p in paths if len(p) == 2 and p[0][1] == p[1][1] and c != "rgb(0%,0%,0%)"
+                     and 100 < p[1][0] - p[0][0] < 150 and p[0][1] > 1200), key=lambda q: (-q[0], q[1]))
+    labels = rows[0] + rows[1]
+    if len(legend) < len(labels):
+        refuse(3, "CSD19532Q5B Figure 10's legend segments")
+    out = {}
+    for lab, (_y, _x, col) in zip(labels, legend):
+        cands = [p for c, p in paths if c == col and len(p) >= 3 and abs(10 ** lv(p[-1][0]) - 100.0) < 1.0]
+        if len(cands) != 1:
+            refuse(3, "CSD19532Q5B Figure 10's %s line" % lab)
+        out[lab] = [(lv(x), li(y)) for x, y in cands[0]]
+    return {1e-5: out["10us"], 1e-4: out["100us"], 1e-3: out["1ms"], 1e-2: out["10ms"]}
+
+
+def soa_t(lines, vds, t):
+    """A line's current at vds for a pulse of t s (L4-E9's and L4-E11's method): log-log on the line, log-log between the
+    printed lines in time; under the shortest line its value; below a line's first voltage its first current."""
+    def at(line):
+        lx = math.log10(vds)
+        if lx < line[0][0]:
+            return 10 ** line[0][1]
+        for (xa, ya), (xb, yb) in zip(line, line[1:]):
+            if xa <= lx <= xb:
+                return 10 ** (ya + (yb - ya) * (lx - xa) / (xb - xa))
+        refuse(3, "Figure 10 has no segment at %s V" % vds)
+    ts = sorted(lines)
+    if t <= ts[0]:
+        return at(lines[ts[0]])
+    for a, b in zip(ts, ts[1:]):
+        if a <= t <= b:
+            ia, ib = at(lines[a]), at(lines[b])
+            return 10 ** (math.log10(ia) + (math.log10(ib) - math.log10(ia)) * (math.log10(t) - math.log10(a)) / (math.log10(b) - math.log10(a)))
+    ia, ib = at(lines[ts[-2]]), at(lines[ts[-1]])
+    return ib * (ts[-1] / t) ** (math.log10(ia / ib) / math.log10(ts[-1] / ts[-2]))
+
+
+def guard_event(g, v0, i0, L, bulk, k, cold=False, ramp=None, dt=20e-9, t_end=60e-6):
+    """MODELED (B6 of the consolidation review): a stiff source g["E"] arriving at J_SOLAR through the panel lead (g["r_lead"], L)
+    with the solar guard already on (cold=False) or off (cold=True: Q12 never conducts, the port's capacitance alone), as a step
+    at t = 0 or, with ramp (V/s), rising from v0 at that rate. Lumped parts, backward Euler on four nodes in a chain (PV_F,
+    PV_P, TRK_VS, TRK_VIN, a tridiagonal system solved exactly each step), the clamps as straight lines (off below their
+    breakdown) with their on/off state iterated to consistency inside the step:
+      PV_F    C131 and C132 (g["c131"], no ESR) to GND, D11 (g["d11"]: breakdown, slope; both polarities), Q12 with R87 to PV_P
+              (g["r_on"], R87 at its least, the FET's resistance not credited);
+      PV_P    the bulk (bulk = (ESR, C)), g["n_pc"] 10 uF ceramics (each -10 % times the bias factor k, ESR g["esr_cer"]),
+              the sense bank g["rb"] to TRK_VS;
+      TRK_VS  C71 to C74 (g["n_ca"] ceramics, as above), D4 (g["d4"]: breakdown, slope), RSENSE1 g["r59"] to TRK_VIN;
+      TRK_VIN C13 to C15 and C64 (C13 and C14 at the bias factor k, all at +10 %, no ESR), the stage drawing i0 throughout.
+    The source's return is not credited (Q13, F2 and the body diode's drop left out: each would lower the drive). Q12 conducts
+    fully until the earlier of the two comparators' commands, each at its latest: the OV comparator's first crossing of g["ov"] on
+    PV_F plus g["t_ov"] (OV to PD), the short-circuit comparator's first crossing of g["isc"] by R87's current through the RISCP
+    x CSCP filter (first order, g["tau"]) plus g["t_sc"] (to PD); then its conductance falls linearly to zero over g["t_f"]. Returns the peaks,
+    the samples of Q12's (VDS, ID) while it conducts and the lead current's slope at the turn-off command."""
+    E, rl = g["E"], g["r_lead"]
+    esr_b, cb = bulk
+    ca, ra = g["n_ca"] * 10e-6 * 0.9 * k, g["esr_cer"] / g["n_ca"]
+    cc = (20e-6 * k + 4.8e-6) * 1.10
+    npc = g["n_pc"]
+    cpc, rpc = npc * 10e-6 * 0.9 * k, (g["esr_cer"] / npc if npc else 0.0)
+    rb, r59, ron = g["rb"], g["r59"], g["r_on"]
+    vb4, rd4 = g["d4"]
+    vb11, rd11 = g["d11"]
+    io = 0.0 if cold else i0
+    if cold:
+        vF, vP, vS, vC, iL = v0, g["v_behind"], g["v_behind"], g["v_behind"], 0.0
+    else:
+        vP, vS = v0, v0 - io * rb
+        vC, vF, iL = vS - io * r59, v0 + io * ron, io
+    vB, vA, vPc = vP, vS, vP
+    y, t_go, why, s11, s4, t_ovc, t_scc = io, None, None, 0, 0, None, None
+    pk = dict(vF=vF, vFmin=vF, vP=vP, vS=vS, vC=vC, i4=0.0, e4=0.0, i11=0.0, e11=0.0, iQ=0.0, iL=abs(iL), vds=vF - vP, vdsmin=vF - vP,
+              slew=0.0, u5=vS - vC, u5n=vS - vC, u18=vP - vS, u18n=vP - vS, di_go=None, i_go=None, t11=None)
+    samp = []
+    gl_ = (dt / L) / (1.0 + rl * dt / L)
+    gC, gc = g["c131"] / dt, cc / dt
+    gB, gA = 1.0 / (esr_b + dt / cb), 1.0 / (ra + dt / ca)
+    gPc = 1.0 / (rpc + dt / cpc) if npc else 0.0
+    g59, gbk = 1.0 / r59, 1.0 / rb
+    il_prev = iL
+    for kk in range(int(round(t_end / dt))):
+        t = (kk + 1) * dt
+        e_t = E if ramp is None else min(E, v0 + ramp * t)
+        if cold:
+            gq = 0.0
+        elif t_go is None or t <= t_go:
+            gq = 1.0 / ron
+        else:
+            gq = max(0.0, 1.0 - (t - t_go) / g["t_f"]) / ron
+        jl = iL / (1.0 + rl * dt / L) + gl_ * e_t
+        for _it in range(8):
+            g11, j11 = (1.0 / rd11, s11 * vb11 / rd11) if s11 else (0.0, 0.0)
+            g4, j4 = (1.0 / rd4, vb4 / rd4) if s4 else (0.0, 0.0)
+            b0, c0, d0 = gl_ + gC + gq + g11, -gq, jl + gC * vF + j11
+            a1, b1, c1, d1 = -gq, gq + gB + gPc + gbk, -gbk, gB * vB + gPc * vPc
+            a2, b2, c2, d2 = -gbk, gbk + gA + g59 + g4, -g59, gA * vA + j4
+            a3, b3, d3 = -g59, g59 + gc, gc * vC - io
+            cp0, dp0 = c0 / b0, d0 / b0
+            m1 = b1 - a1 * cp0
+            cp1, dp1 = c1 / m1, (d1 - a1 * dp0) / m1
+            m2 = b2 - a2 * cp1
+            cp2, dp2 = c2 / m2, (d2 - a2 * dp1) / m2
+            xC = (d3 - a3 * dp2) / (b3 - a3 * cp2)
+            xS = dp2 - cp2 * xC
+            xP = dp1 - cp1 * xS
+            xF = dp0 - cp0 * xP
+            n11 = 1 if xF > vb11 else (-1 if xF < -vb11 else 0)
+            n4 = 1 if xS > vb4 else 0
+            if (n11, n4) == (s11, s4):
+                break
+            s11, s4 = n11, n4
+        iL = jl - gl_ * xF
+        iQ = gq * (xF - xP)
+        i11 = (xF - s11 * vb11) / rd11 if s11 else 0.0
+        i4 = (xS - vb4) / rd4 if s4 else 0.0
+        vB += gB * (xP - vB) * dt / cb
+        vA += gA * (xS - vA) * dt / ca
+        if npc:
+            vPc += gPc * (xP - vPc) * dt / cpc
+        pk["slew"] = max(pk["slew"], abs(xF - vF) / dt)
+        vF, vP, vS, vC = xF, xP, xS, xC
+        if i11:
+            pk["t11"] = (pk["t11"][0] if pk["t11"] else t, t)
+        if not cold:
+            y += (iQ - y) * dt / g["tau"]
+            if t_ovc is None and vF >= g["ov"]:
+                t_ovc = t + g["t_ov"]
+            if t_scc is None and y >= g["isc"]:
+                t_scc = t + g["t_sc"]
+            cmd_ = [(x_, w_) for x_, w_ in ((t_ovc, "OV"), (t_scc, "SCP")) if x_ is not None]
+            if cmd_:
+                t_go, why = min(cmd_)
+            if t_go is not None and pk["di_go"] is None and t >= t_go:
+                pk["di_go"], pk["i_go"] = (iL - il_prev) / dt, iL
+        il_prev = iL
+        if gq > 0.0:
+            samp.append((vF - vP, iQ))
+        pk["vF"], pk["vFmin"] = max(pk["vF"], vF), min(pk["vFmin"], vF)
+        pk["vP"], pk["vS"], pk["vC"] = max(pk["vP"], vP), max(pk["vS"], vS), max(pk["vC"], vC)
+        pk["i4"], pk["e4"] = max(pk["i4"], i4), pk["e4"] + vS * i4 * dt
+        pk["i11"], pk["e11"] = max(pk["i11"], abs(i11)), pk["e11"] + abs(vF * i11) * dt
+        pk["iQ"], pk["iL"] = max(pk["iQ"], abs(iQ)), max(pk["iL"], abs(iL))
+        pk["vds"], pk["vdsmin"] = max(pk["vds"], vF - vP), min(pk["vdsmin"], vF - vP)
+        pk["u5"], pk["u5n"] = max(pk["u5"], vS - vC), min(pk["u5n"], vS - vC)
+        pk["u18"], pk["u18n"] = max(pk["u18"], vP - vS), min(pk["u18n"], vP - vS)
+    pk.update(why=why, t_go=t_go, t_on=len(samp) * dt, samp=samp)
+    return pk
 
 
 def compute():
@@ -2198,7 +2373,14 @@ def compute():
     # (2) the selected block, implementation 3 (SESSION): U21, the TPS48110-Q1 over-voltage cut-off on the high side (TI's own
     # topology, the vehicle entry's network) with one CSD19532Q5B (Q12) behind R87, and a CSD19532Q5B return switch (Q13) in the
     # panel's return, its gate from PV_F through R101 100k over R102 100k, clamped by D12 BZT52C12-7-F; D11 SMCJ40CA across the
-    # connector; C131 1 uF 100 V on PV_F; D4 to the SMCJ row the cut-off needs
+    # connector; C131 1 uF 100 V on PV_F (two 10 uF since B6, below); D4 to the SMCJ row the cut-off needs.
+    # B6 (the consolidation review, astra-check-l4close-1; SESSION, the transient analysis below): U21's network is L4-E11's but
+    # the OV divider, INP's bottom resistor R97 (39k to 30k: INP under its 20 V for PV_F up to 85 V) and CSCP C126 (1 nF to 330 pF:
+    # the short-circuit trip's filter shorter, CS116's filtered sense still under the trip's least; SLUSEE5E 9.x lets CSCP be
+    # tuned in the real system); C131 becomes C131 and C132, two 10 uF 100 V X7R 1210 (board E's C8 part text), and C133 and
+    # C134, two 10 uF 50 V ceramics (C13's part text and land), join the bulk on PV_P
+    GD = dict(L11, inp_div=(L11["inp_div"][0], 30e3), cscp=330e-12)
+    N131, K131, N_PC = 2, 0.25, 2      # K131: SESSION, the 100 V X7R's bias factor floor over the events' 36 to 85 V (no maker curve)
     rq11 = QF["rds"][3] * 1e-3 * QF["rds_norm"]        # VGS from the charge pump, at least 11 V: the 10 V row's maximum, at 150 C
     rq12 = QF["rds"][1] * 1e-3 * QF["rds_norm"]        # VGS at least 6 V in operation (below): the 6 V row's maximum, at 150 C
     rsn_hi = L11["rsns"] * (1 + L11["rsns_tol"]) * (1 + L11["rsns_tcr"] * dt_end)
@@ -2210,7 +2392,7 @@ def compute():
     i_reg_hi, i_trip_hi = max(reg_hi(rc_[0], v_) for v_ in v_ops), c["i_hi25"]
     # what the block draws from the panel around the bank (at the window's top, every resistor at its least)
     i_uv = v_oc / (sum(L11["cin_uv"]) * 0.99)
-    i_inp = v_oc / (sum(L11["inp_div"]) * 0.99)
+    i_inp = v_oc / (sum(GD["inp_div"]) * 0.99)
     i_ovd = v_oc * ovs["band"]["cur"]
     i_g12 = v_oc / ((R101 + R102) * 0.99) + max(0.0, (v_oc * R102 / (R101 + R102) - BZ["vz"][0]) / R101)
     i_byp = T48["iq"] + T48["ics"] + T48["iscp"] + T48["enleak"] + T48["ovleak"] + i_uv + i_inp + i_ovd + i_g12 + 1e-6
@@ -2227,18 +2409,19 @@ def compute():
     dv_blk = i_trip_hi * r_blk
     p_static_blk = max(v_ * max(i_trip_c(v_, rpb, nb, 1, True, R66), i_trip_c(max(v_ - dv_blk, grid[0]), rpb, nb, 1, True, R66)) + pb_c(v_, R66)
                        for v_ in grid) + p_byp
-    c_in = 1e-6
-    e_cap_blk = e_cap + (c_in * 1.10 + L11["cvs"] * 1.10 + QF["coss"] + L11["cscp"]) * v_oc ** 2
+    c_in = N131 * 10e-6
+    c_pc_max = N_PC * 10e-6 * 1.10
+    e_cap_blk = e_cap + (c_in * 1.10 + c_pc_max + L11["cvs"] * 1.10 + QF["coss"] + GD["cscp"]) * v_oc ** 2
     t_allow_blk = ((p_win - p_static_blk) * W_AVG - e_cap_blk - c["e_f"]) / (p_src - p_static_blk)
     slew_hi = L11["slew"][2] * 1e3                      # V/s
     c_behind_max = c_a_max + c66_ + c_b_max
     i_bank_slew = c_behind_max * slew_hi
     t_slew = v_oc / (L11["slew"][0] * 1e3)
     # the CS101 immunity re-run with the block in the path: its series resistance ahead of the bulk (S1 and S2), C_in across the input
-    def cs101_blk(f_, i_, vin_, r_ser, cin_):
+    def cs101_blk(f_, i_, vin_, r_ser, cin_, cpc_=0.0):
         w_ = 2 * math.pi * f_
         z_b = rbank + 1.0 / y_behind(f_, LAYOUT, rc_[0], i_, vin_)
-        y_a = 3.0 / (za["esr"] + 1.0 / (1j * w_ * c_can_max))
+        y_a = 3.0 / (za["esr"] + 1.0 / (1j * w_ * c_can_max)) + (N_PC / (ESR_CER + 1.0 / (1j * w_ * cpc_)) if cpc_ else 0.0)
         z_eut = 1.0 / (1.0 / z_b + y_a)
         h_ = abs(z_eut / (z_eut + r_ser))
         z_in = 1.0 / (1.0 / (z_eut + r_ser) + 1j * w_ * cin_)
@@ -2252,22 +2435,24 @@ def compute():
         wr_ = []
         for f_ in freqs:
             hf_ = 1.0 / abs(1 + 1j * 2 * math.pi * f_ * tau_lo)
-            s_ = max(max(cs101_blk(f_, i_reg_hi, v_, r_, cin_)[:2]) for v_ in v_ops)
-            wr_.append((f_, s_, s_ * hf_, max(cs101_blk(f_, i_reg_hi, v_, r_, cin_)[2] for v_ in v_ops)))
+            cps_ = (0.0,) if lab_ == "none" else (0.0, c_pc_max / N_PC)    # C133 and C134 absent or at their largest
+            s_ = max(max(cs101_blk(f_, i_reg_hi, v_, r_, cin_, cp_)[:2]) for v_ in v_ops for cp_ in cps_)
+            wr_.append((f_, s_, s_ * hf_, max(cs101_blk(f_, i_reg_hi, v_, r_, cin_, cp_)[2] for v_ in v_ops for cp_ in cps_)))
         cs_re[lab_] = dict(worst=max(wr_, key=lambda x_: x_[2]), hmax=max(x_[3] for x_ in wr_), r=r_)
     if abs(cs_re["none"]["worst"][2] - best["worst"][2]) > 1e-9:
         refuse(4, "the CS101 re-run with no series resistance does not reproduce the accepted immunity")
     # the faults (D4 and D5 of the derivation) with the block
     st_min = L11["cbst"] * (1 - L11["cbst_tol"]) * T48["bst_uv"][0] / (T48["bst_i"][2] * 1e-6)   # the gate cannot rise before BST is charged
     f36 = dict(v=v_src, vds=v_src, vs=v_src, en=v_src * L11["cin_uv"][1] * 1.01 / (L11["cin_uv"][0] * 0.99 + L11["cin_uv"][1] * 1.01),
-               inp=v_src * L11["inp_div"][1] * 1.01 / (L11["inp_div"][0] * 0.99 + L11["inp_div"][1] * 1.01),
+               inp=v_src * GD["inp_div"][1] * 1.01 / (GD["inp_div"][0] * 0.99 + GD["inp_div"][1] * 1.01),
                ov=v_src / bandA["k"][0], ring=D11["vc"], st_min=st_min, cut_hi=bandA["rise"][1], d4_room=D4N["vbr_cold"] - bandA["rise"][1])
-    g_hs = 1.0 / (sum(L11["cin_uv"]) * 1.01) + 1.0 / (sum(L11["inp_div"]) * 1.01) + 1.0 / (bandA["rt"][1] + ovs["rb"] * rtf(ovs["rb"], 1, True)) + 1.0 / ((R101 + R102) * 1.01)
+    g_hs = 1.0 / (sum(L11["cin_uv"]) * 1.01) + 1.0 / (sum(GD["inp_div"]) * 1.01) + 1.0 / (bandA["rt"][1] + ovs["rb"] * rtf(ovs["rb"], 1, True)) + 1.0 / ((R101 + R102) * 1.01)
     rev = dict(v=v_oc, vds=v_oc, i_be=g_hs * 1.0, idss=QF["idss"][1] * 1e-6, idss_v=QF["idss"][0], q12_vds=QF["vds"], ring=D11["vc"],
                floor_c=-D11["vc"] * QF["coss"] / (c_in * 0.9))
     # CS116 and CS115 with the block on (in the path) and off (night, after a cut)
-    t_rc = L11["riscp"] * 1.01 * L11["cscp"] * 1.05
-    scp_lo = g3(o11, r"short circuit ([\d.]+) / ([\d.]+) / ([\d.]+) A;", "L4-E11's short-circuit threshold")[0]   # the same RISCP, CSCP and RSNS
+    t_rc = L11["riscp"] * 0.99 * GD["cscp"] * 0.95     # B6: the guard's CSCP, at its least (the least attenuation of CS116's lobes)
+    scp3 = g3(o11, r"short circuit ([\d.]+) / ([\d.]+) / ([\d.]+) A;", "L4-E11's short-circuit threshold")   # the same RISCP and RSNS
+    scp_lo = scp3[0]
     ocp11 = g3(o11, r"overcurrent ([\d.]+) / ([\d.]+) / ([\d.]+) A \(the printed row", "L4-E11's overcurrent threshold")
     scp_f = max(i_op + r_["ip"] * min(1.0, 1.0 / (math.pi * r_["f"] * t_rc)) for r_ in r116)
     ocp_lo = ocp11[0]
@@ -2277,7 +2462,7 @@ def compute():
     def dv_hi(div_):
         """A 1 % divider's output fraction at its highest (top at -1 %, bottom at +1 %)."""
         return div_[1] * 1.01 / (div_[0] * 0.99 + div_[1] * 1.01)
-    off116 = dict(v=clamp(D11, 10.0, t_air), en=clamp(D11, 10.0, t_air) * dv_hi(L11["cin_uv"]), inp=clamp(D11, 10.0, t_air) * dv_hi(L11["inp_div"]),
+    off116 = dict(v=clamp(D11, 10.0, t_air), en=clamp(D11, 10.0, t_air) * dv_hi(L11["cin_uv"]), inp=clamp(D11, 10.0, t_air) * dv_hi(GD["inp_div"]),
                   floor=-clamp(D11, 10.0, t_air) * QF["coss"] / (c_in * 0.9), v115=clamp(D11, A115, t_air),
                   e=clamp(D11, 10.0, t_air) * 10.0 * max(Q116) / (math.pi * 1e6))
     t_gate = T48["t_ov"][1] * 1e-6
@@ -2286,18 +2471,208 @@ def compute():
                rq11=rq11, rq12=rq12, rsn_hi=rsn_hi, r_blk=r_blk, vgs12_min=vgs12_min, i_byp=i_byp, p_byp=p_byp, p_cond=p_cond, e_blk=e_blk, e_day=e_day,
                p_static_blk=p_static_blk, e_cap_blk=e_cap_blk, t_allow_blk=t_allow_blk, i_bank_slew=i_bank_slew, t_slew=t_slew, cs_re=cs_re,
                f36=f36, rev=rev, scp_f=scp_f, scp_lo=scp_lo, ocp_lo=ocp_lo, t_over=t_over, v_tmr=v_tmr, ov_in116=ov_in116, off116=off116,
-               t_gate=t_gate, gate_load=gate_load, ocp11=ocp11, ring_en=D11["vc"] * dv_hi(L11["cin_uv"]), ring_inp=D11["vc"] * dv_hi(L11["inp_div"]), cs101_pk=cs101_pk, c_in=c_in, i_reg_hi=i_reg_hi, i_trip_hi=i_trip_hi,
+               t_gate=t_gate, gate_load=gate_load, ocp11=ocp11, ring_en=D11["vc"] * dv_hi(L11["cin_uv"]), ring_inp=D11["vc"] * dv_hi(GD["inp_div"]), cs101_pk=cs101_pk, c_in=c_in, i_reg_hi=i_reg_hi, i_trip_hi=i_trip_hi,
                gap=(v_oc, bandA["rise"][1], bandA["rise"][1] * i_trip_c(bandA["rise"][1], rpb, nb, 1, True, R66)),
                hold_shift=i_reg_hi * r_blk, dv_blk=dv_blk, t_fac=T_FAC, t_resp_typ=c["t_resp_typ"], tau_lo=tau_lo, margin=best["m"], R101=R101, R102=R102,
                ov_codes=(rows_rt[ovs["a"]][0], rows_rt[ovs["b"]][0], rows_rt[ovs["rb"]][0]))
+    # ---- B6, THE GUARD ALREADY ON (the consolidation review, astra-check-l4close-1 B6: a source stepping onto the port while U21
+    # holds Q12 on was argued, not calculated). MODELED by guard_event: a stiff source of the kit's declared range through the
+    # panel lead, the loaded network, U21's latest turn-off, every node against the parts' printed ratings. The lead's loop
+    # inductance is printed nowhere (a1solar leaves the lead unspecified), so each rating is stated with the least inductance it
+    # holds at; the verdict is CONDITIONAL on the lead's measured inductance (R-176)
+    slew_abs = float(need(t48, r"Voltage slew rate on drain side input pins \(VS, CS\+, CS.,\s*(\d+) V/.s ISCP\)", "TPS4811 6.1: the drain-side pins' slew").group(1)) * 1e6
+    vsrc_ab = g3(t48, r"VS, CS\+, CS. to SRC .(\d+) (\d+)", "TPS4811 6.1: VS, CS+ and CS- to SRC")
+    ics_abs = g3(t48, r"I\(CS\+\) to I\(CS.\) , 1msec .(\d+) (\d+)", "TPS4811 6.1: I(CS+) to I(CS-) for 1 ms")[1] * 1e-3
+    cspm = g3(t48, r"CS\+ to CS. .(0\.3) (0\.3)", "TPS4811 6.1: CS+ to CS-")[1]
+    need(t48, r"Current sense positive input\. Connect a 50 - 100. resistor across CS\+ 18 18 I CS\+ to the external current sense resistor", "TPS4811 5: CS+ through 50 to 100 Ohm")
+    need(t48, r"TI recommends to add filter capacitor of 1nF \(CSCP\) across ISCP and CS. pins close to the device\. Because nuisance trips are "
+              r"dependent on the system and layout parasitics, TI recommends to test the design in a real system and tweaked as necessary", "TPS4811 9: CSCP tuned in the real system")
+    need(t48, r"Use of a TVS diode and input capacitor filter combination across input to and GND to absorb the energy and dampen the positive transients", "TPS4811 9: the input's TVS and capacitor")
+    tsc6 = g3(t48, r"V\(SNS_SCP\) to PD ., (\d+) (\d+) .s Delay CL = 47nF, TPS48110.Q1 Only", "TPS4811 tSC (TPS48110-Q1)")
+    inph = g3(t48, r"V\(INP_H\) ([\d.]+) ([\d.]+) V", "TPS4811 V(INP_H)")
+    c32_ = flat(subprocess.run(["pdftotext", "-layout", os.path.join(TOP, CSD32), "-"], capture_output=True).stdout.decode("utf-8", "replace"))
+    rja_q = float(need(c32_, r"R.JA Junction-to-Ambient Thermal Resistance \(1\) \(2\) (\d+)", "CSD19532Q5B RthJA").group(1))
+    tjm_q = float(need(c32_, r"TJ, Operating Junction and .55 to (\d+) .C Tstg", "CSD19532Q5B TJ's maximum").group(1))
+    # Q12's and Q13's SOA: TI's Figure 10 read from its vector drawing (soa_lines_csd32, L4-E9's and L4-E11's method); derated by
+    # LM5069 Equation 19's form (L4-E9's method) at a case no hotter than the junction in normal operation (the trip's highest
+    # current on RthJA, the 150 C resistance)
+    soa_l = soa_lines_csd32()
+    tc_q = (t_air + i_trip_hi ** 2 * rq11 * rja_q, t_air + i_trip_hi ** 2 * rq12 * rja_q)
+    der_q = tuple((tjm_q - tc_) / (tjm_q - 25.0) for tc_ in tc_q)
+    rd_ = lambda row_: (row_["vc"] - row_["vbr"][1]) / row_["ipp"]
+    d11_hot = (smcj[40]["vbr"][1] * (1 + aT * (t_air - 25.0)), rd_(smcj[40]))
+    d11_cold = (smcj[40]["vbr"][0] * (1 + aT * (t_cold - 25.0)), rd_(smcj[40]))
+    t_f6 = 5 * 10.0 * 1.01 * QF["ciss"]                # INFERRED: a further 5 x R91 x Ciss after PD's 1 V (already under VGS(th)'s least)
+    c131_lo, c131_hi = N131 * 10e-6 * 0.9 * K131, N131 * 10e-6 * 1.10
+    kov = ovs["rb"] * rtf(ovs["rb"], 1, True) / (bandA["rt"][0] + ovs["rb"] * rtf(ovs["rb"], 1, True))
+    inp_on6 = inph[1] * (GD["inp_div"][0] * 1.01 + GD["inp_div"][1] * 0.99) / (GD["inp_div"][1] * 0.99)
+
+    # the lead's resistance at the cold end (a1solar's 0.0465 Ohm is at its 40 C sun estimate; its own copper coefficient): the
+    # least damping, consistent with the bulk's cold row
+    r_lead6 = lead["r"] * (1 + AC_.ALPHA_CU * (t_cold - 20.0)) / (1 + AC_.ALPHA_CU * (AC_.T_LEAD - 20.0))
+
+    def gpar6(c131_, npc_, cscp_):
+        return dict(E=v_src, r_lead=r_lead6, c131=c131_, n_ca=N_CA, esr_cer=ESR_CER, n_pc=npc_, rb=rb_lo, r59=r59_hi,
+                    r_on=L11["rsns"] * (1 - L11["rsns_tol"]), d4=(D4N["vbr_cold"], rd_(D4N)), d11=d11_hot, ov=bandA["rise"][1], isc=scp3[2],
+                    tau=L11["riscp"] * 1.01 * cscp_ * 1.05, t_ov=T48["t_ov"][1] * 1e-6, t_sc=tsc6[1] * 1e-6, t_f=t_f6, v_behind=0.0)
+    bk6 = (("the largest, no ESR credited", (0.0, c_bulk_max)), ("aged, at -40 C", bulks["cold_aged"]), ("new, at 20 C", bulks["new_20"]))
+    ks6 = (1.0, 0.5, 0.25)
+    st6 = (("U21's least turn-off, idle", L11["uvf"][0], 0.0), ("the hold's least corner, idle", lo_h, 0.0),
+           ("the hold's least corner, at the trip's highest current", lo_h, i_op), ("REQ-016's open circuit, idle", v_oc, 0.0),
+           ("REQ-016's open circuit, at the trip's highest current (a bound)", v_oc, i_op))
+
+    def soa_r(samp_, t_on_, der_):
+        return max((iq_ / (der_ * soa_t(soa_l, max(vd_, 0.1), max(t_on_, 1e-6))) for vd_, iq_ in samp_), default=0.0)
+
+    def eval6(L_, g_, cold=False, starts_=None, soa=False, ramp=None):
+        W_ = dict(vF=-1e9, vFmin=1e9, vP=-1e9, vS=-1e9, i4=0.0, e4=0.0, i11=0.0, e11=0.0, t11=0.0, iQ=0.0, iL=0.0, vds=-1e9, vdsmin=1e9,
+                  slew=0.0, u5=-1e9, u5n=1e9, u18=-1e9, u18n=1e9, soa12=0.0, soa13=0.0, mono=True, ton=0.0, why=set(), n=0)
+        for _lab, v0_, i0_ in (starts_ or st6):
+            for _bl, bk_ in (bk6[:1] if cold else bk6):
+                for k_ in (ks6[:1] if cold else ks6):
+                    for d11_ in ((d11_hot, d11_cold) if ramp is None else (d11_hot,)):
+                        g_["d11"] = d11_
+                        if ramp is None:
+                            r_ = guard_event(g_, v0_, i0_, L_, bk_, k_, cold=cold)
+                        else:
+                            r_ = guard_event(g_, v0_, i0_, L_, bk_, k_, ramp=ramp, dt=(20e-9 if ramp >= 1e6 else 100e-9),
+                                             t_end=(v_src - v0_) / ramp + 40e-6)
+                        W_["n"] += 1
+                        for kk_ in ("vF", "vP", "vS", "i4", "e4", "i11", "e11", "iQ", "iL", "vds", "slew", "u5", "u18"):
+                            W_[kk_] = max(W_[kk_], r_[kk_])
+                        for kk_ in ("vFmin", "vdsmin", "u5n", "u18n"):
+                            W_[kk_] = min(W_[kk_], r_[kk_])
+                        if r_["t11"]:
+                            W_["t11"] = max(W_["t11"], r_["t11"][1] - r_["t11"][0])
+                        W_["ton"] = max(W_["ton"], r_["t_on"])
+                        if not cold:
+                            W_["why"].add(r_["why"])
+                            if ramp is None and not (r_["di_go"] is not None and r_["di_go"] > 0.0):
+                                W_["mono"] = False
+                            if soa:
+                                W_["soa12"] = max(W_["soa12"], soa_r(r_["samp"], r_["t_on"], der_q[0]))
+        g_["d11"] = d11_hot
+        W_["soa13"] = W_["iL"] / (der_q[1] * soa_t(soa_l, 1.0, max(W_["ton"], 1e-6)))
+        return W_
+    kinp, ken = dv_hi(GD["inp_div"]), dv_hi(L11["cin_uv"])
+    # each rating: its value, its printed limit and the side it must stay on (+1: at or under, -1: at or over)
+    RT6 = (("pvf", "PV_F (U21's VS, CS+, CS-, ISCP; C131, C132)", lambda W_, ki_=kinp: (W_["vF"], 100.0, 1)),
+           ("slew", "PV_F's slew at CS-, CS+ and ISCP, V/us", lambda W_, ki_=kinp: (W_["slew"] / 1e6, slew_abs / 1e6, 1)),
+           ("vds", "Q12's VDS (and VS, CS+, CS- to SRC)", lambda W_, ki_=kinp: (W_["vds"], min(QF["vds"], vsrc_ab[1]), 1)),
+           ("inp", "U21's INP (R96 over R97)", lambda W_, ki_=kinp: (W_["vF"] * ki_, T48["pin_abs"], 1)),
+           ("en", "U21's EN/UVLO (R94 over R95)", lambda W_, ki_=kinp: (W_["vF"] * ken, T48["pin_abs"], 1)),
+           ("floor", "PV_F's least (VS, CS+, CS-, ISCP to GND)", lambda W_, ki_=kinp: (W_["vFmin"], -1.0, -1)),
+           ("u5p", "U5's CSPIN to CSNIN, positive", lambda W_, ki_=kinp: (W_["u5"], csd_abs, 1)),
+           ("u5n", "U5's CSPIN to CSNIN, negative", lambda W_, ki_=kinp: (W_["u5n"], -csd_abs, -1)),
+           ("d4", "D4's current, A (SMCJ30A, least, cold end)", lambda W_, ki_=kinp: (W_["i4"], 0.0, 1)),
+           ("u18", "U18's differential", lambda W_, ki_=kinp: (W_["u18"], abs169[1], 1)),
+           ("pvp", "PV_P (bulk, C133, C134, U18's common mode)", lambda W_, ki_=kinp: (W_["vP"], min(za["v"], abs169[0], vsabs169), 1)),
+           ("trkvs", "TRK_VS (C71 to C74), under D4's least", lambda W_, ki_=kinp: (W_["vS"], D4N["vbr_cold"], 1)))
+
+    def okr6(f_, W_, ki_=kinp):
+        v_, l_, s_ = f_(W_, ki_)
+        return (l_ - v_) * s_ >= -1e-12
+
+    def ok6(W_, ki_=kinp):
+        return {id_: okr6(f_, W_, ki_) for id_, _t, f_ in RT6}
+    G6 = gpar6(c131_lo, N_PC, GD["cscp"])
+    grid6 = [1.0e-6 * 1.05 ** j_ for j_ in range(41)]
+    ev6 = [eval6(L_, G6) for L_ in grid6]
+    lstar6 = {}
+    for id_, _t, _f in RT6:
+        j_ = len(grid6)
+        while j_ > 0 and ok6(ev6[j_ - 1])[id_]:
+            j_ -= 1
+        if j_ == len(grid6):
+            refuse(4, "B6: %s does not hold even at %.2f uH" % (id_, 1e6 * grid6[-1]))
+        lstar6[id_] = grid6[j_] if j_ > 0 else None
+    jb = max((grid6.index(v_) for v_ in lstar6.values() if v_ is not None), default=0)
+    lo_, hi_ = (grid6[jb - 1], grid6[jb]) if jb else (grid6[0], grid6[0])
+    for _ in range(12 if jb else 0):
+        mid_ = 0.5 * (lo_ + hi_)
+        lo_, hi_ = (lo_, mid_) if all(ok6(eval6(mid_, G6)).values()) else (mid_, hi_)
+    Lb6 = math.ceil(hi_ * 1e8) / 1e8                     # the binding least inductance, up to 0.01 uH
+    W6 = eval6(Lb6, G6, soa=True)
+    if not all(ok6(W6).values()) or not W6["mono"]:
+        refuse(4, "B6: the selected network does not hold at its own least inductance %.2f uH" % (1e6 * Lb6))
+    bind6 = [id_ for id_, v_ in lstar6.items() if v_ == grid6[jb]]
+    W25 = eval6(Lb6, G6, starts_=(st6[3], st6[4]))      # the reviewed case: from REQ-016's open circuit
+    W6lo = eval6(grid6[0], G6)
+    fail_lo = [id_ for id_, v_ in ok6(W6lo).items() if not v_]
+    # the cold connection (the guard off: BST not charged, after a cut, or under the UVLO): the port's capacitance alone
+    cold6 = []
+    for L_ in grid6:
+        Wc_ = dict(vF=-1e9, slew=0.0, iL=0.0, i11=0.0, e11=0.0, vFmin=1e9)
+        for c_ in (c131_lo, c131_hi):
+            gc_ = gpar6(c_, N_PC, GD["cscp"])
+            Wx_ = eval6(L_, gc_, cold=True, starts_=(("discharged", 0.0, 0.0), ("REQ-016's open circuit", v_oc, 0.0)))
+            for kk_ in ("vF", "slew", "iL", "i11", "e11"):
+                Wc_[kk_] = max(Wc_[kk_], Wx_[kk_])
+            Wc_["vFmin"] = min(Wc_["vFmin"], Wx_["vFmin"])
+        cold6.append(Wc_)
+    Wc6 = eval6(Lb6, gpar6(c131_lo, N_PC, GD["cscp"]), cold=True, starts_=(("discharged", 0.0, 0.0), ("REQ-016's open circuit", v_oc, 0.0)))
+    Wc6h = eval6(Lb6, gpar6(c131_hi, N_PC, GD["cscp"]), cold=True, starts_=(("discharged", 0.0, 0.0), ("REQ-016's open circuit", v_oc, 0.0)))
+    cold_ok = (max(Wc6["vF"], Wc6h["vF"]) <= 100.0 and max(Wc6["slew"], Wc6h["slew"]) <= slew_abs and max(Wc6["vF"], Wc6h["vF"]) * kinp <= T48["pin_abs"]
+               and min(Wc6["vFmin"], Wc6h["vFmin"]) >= -1.0
+               and all(c_["vF"] <= 100.0 and c_["slew"] <= slew_abs and c_["vF"] * kinp <= T48["pin_abs"] for L_, c_ in zip(grid6, cold6) if L_ >= Lb6))
+    # ramps: a source rising to 36 V at a finite rate with the guard on (the review's 0.184 V/us: the OV path's 4 us against D4's
+    # 0.737 V room, the short-circuit trip for every faster ramp)
+    # the handover between the two comparators sits near the short-circuit trip's highest over the least capacitance behind Q12
+    # (the aged bulk at -40 C, every ceramic at the bias floor): swept densely from 0.7 to 1.1 times that rate
+    c_min6 = bulks["cold_aged"][1] + N_PC * 10e-6 * 0.9 * 0.25 + N_CA * 10e-6 * 0.9 * 0.25 + (20e-6 * 0.25 + 4.8e-6) * 1.10
+    s_h6 = scp3[2] / c_min6
+    rates6 = tuple(sorted({0.01e6, 0.05e6, 0.1e6, 0.3e6, 1e6, 3e6, 10e6} | {round(s_h6 * (0.7 + 0.01 * j_), -2) for j_ in range(41)}))
+    st6r = (st6[2], st6[3], st6[4])
+    ramp6 = []
+    for rt_ in rates6:
+        Wr_ = eval6(Lb6, G6, starts_=st6r, ramp=rt_)
+        ramp6.append(dict(rate=rt_, vS=Wr_["vS"], vP=Wr_["vP"], i4=Wr_["i4"], u5=Wr_["u5"], u5n=Wr_["u5n"], vF=Wr_["vF"], slew=Wr_["slew"], why=sorted(Wr_["why"]), ok=all(ok6(Wr_).values())))
+    ramp_ok = all(r_["ok"] for r_ in ramp6)
+    ramp_w = max(ramp6, key=lambda r_: r_["vS"])
+    # the start's inrush through Q12 under U21's overcurrent (every capacitor behind Q12 at its largest, the gate's fastest slew)
+    i_start6 = (c_bulk_max + c_pc_max + c_behind_max) * slew_hi
+    # the drafted network (C131 1 uF, R97 39k, CSCP 1 nF, no C133 and C134) and each change reverted alone, at the binding inductance
+    kinp39 = dv_hi(L11["inp_div"])
+    var6 = []
+    for lab_, g_, ki_ in (("as drafted in the remedies round (C131 1 uF, R97 39k, CSCP 1 nF, no C133 and C134)", gpar6(1e-6 * 0.9 * K131, 0, L11["cscp"]), kinp39),
+                          ("C131 back to one 1 uF", gpar6(1e-6 * 0.9 * K131, N_PC, GD["cscp"]), kinp),
+                          ("R97 back to 39k", G6, kinp39),
+                          ("CSCP back to 1 nF", gpar6(c131_lo, N_PC, L11["cscp"]), kinp),
+                          ("no C133 and C134", gpar6(c131_lo, 0, GD["cscp"]), kinp)):
+        Wv_ = eval6(Lb6, g_) if g_ is not G6 else W6
+        var6.append((lab_, [(id_, f_(Wv_, ki_)[0], f_(Wv_, ki_)[1]) for id_, _t, f_ in RT6 if not okr6(f_, Wv_, ki_)]))
+    if any(not v_[1] for v_ in var6):
+        refuse(4, "B6: a change is not needed at the binding inductance: %s" % [v_[0] for v_ in var6 if not v_[1]])
+    # D11's and D4's pulse energy against their 10/1000 us rows, scaled to the event by the square root of its duration (the
+    # record's INFERRED adiabatic scaling) and derated at the hot end
+    e11_cap = smcj[40]["vc"] * smcj[40]["ipp"] * (t2s - t1s) / f_n * d4_der
+    t11_6 = max(W6["t11"], Wc6["t11"], Wc6h["t11"])
+    e11_6 = max(W6["e11"], Wc6["e11"], Wc6h["e11"])
+    e11_room = e11_cap * math.sqrt(min(1.0, max(t11_6, 1e-6) / 1e-3))
+    s_star6 = 2 * math.sqrt(lead["mm2"] * 1e-6 / math.pi) * math.cosh(Lb6 / (4e-7 * lead["m"]))
+    s_lo6 = 2 * math.sqrt(lead["mm2"] * 1e-6 / math.pi) * math.cosh(grid6[0] / (4e-7 * lead["m"]))
+    rsns_v = W6["iQ"] * L11["rsns"] * (1 + L11["rsns_tol"]) * (1 + L11["rsns_tcr"] * dt_end)
+    b6 = dict(Lb=Lb6, r_lead=r_lead6, t_lead=AC_.T_LEAD, s_star=s_star6, s_lo=s_lo6, lstar=lstar6, bind=bind6, W=W6, W25=W25, Wlo=W6lo, fail_lo=fail_lo, cold=(Wc6, Wc6h), cold_ok=cold_ok,
+              ramp=ramp6, ramp_ok=ramp_ok, i_start=i_start6, var=var6, e11=e11_6, e11_cap=e11_cap, e11_room=e11_room, t11=t11_6,
+              rsns_v=rsns_v, i_cs=rsns_v / (100.0 * 0.999), ics_abs=ics_abs, cspm=cspm, cold_lo=[(L_, c_["vF"], c_["slew"], c_["iL"]) for L_, c_ in zip(grid6, cold6)][0],
+              slew_abs=slew_abs, vsrc_ab=vsrc_ab, tsc=tsc6, inph=inph, inp_on=inp_on6, rja=rja_q, tjm=tjm_q, tc=tc_q, der=der_q,
+              tau=(L11["riscp"] * 0.99 * GD["cscp"] * 0.95, L11["riscp"] * 1.01 * GD["cscp"] * 1.05), t_f=t_f6, c131=(c131_lo, c131_hi),
+              kinp=kinp, kinp39=kinp39, ken=ken, kov=kov, grid=(grid6[0], grid6[-1], len(grid6)), runs=sum(e_["n"] for e_ in ev6) + W6["n"],
+              d11=(d11_hot, d11_cold), N131=N131, K131=K131, N_PC=N_PC, GD=GD, st=[s_[0] for s_ in st6], bk=[b_[0] for b_ in bk6],
+              rt=[(id_, t_) for id_, t_, _f in RT6], vals=[(id_,) + f_(W6, kinp) for id_, _t, f_ in RT6], rates=rates6,
+              ramp_w=ramp_w, s_h=s_h6, c_min=c_min6, isc_hi=scp3[2], u18_abs=abs169[1], be115=csd_abs / r59_hi - i_op, d59_115=(i_op + A115) * r59_hi, d59_116=(i_op + 10.0) * r59_hi)
     verd2 = [
-        dict(id="D4", name="a stiff 36 V source", ok=st_min > 1e-3 and f36["cut_hi"] < v_src and f36["d4_room"] > 0 and v_src < D11["vr"]
-             and f36["ring"] < min(QF["vds"], 100.0) and f36["en"] <= 15.0 and f36["inp"] < T48["pin_abs"]),
+        dict(id="D4", name="a stiff 36 V source, connected cold", ok=st_min > 1e-3 and f36["cut_hi"] < v_src and f36["d4_room"] > 0 and v_src < D11["vr"]
+             and cold_ok and f36["en"] <= 15.0 and f36["inp"] < T48["pin_abs"]),
         dict(id="D5", name="a reversed panel", note=" (CONDITIONAL on Q13's leakage above 25 C)", ok=rev["vds"] < QF["vds"] and rev["i_be"] > rev["idss"] and rev["ring"] < QF["vds"]),
-        dict(id="CS116/115 on", name="CS116 and CS115 with the block on", ok=scp_f < scp_lo and v_tmr < T48["tmr_v"][0] and ov_in116 < bandA["rise"][0] and D4N["v116"] <= lim_draft),
+        dict(id="CS116/115 on", name="CS116 and CS115 with the block on", note=" (CS115 CONDITIONAL on R-174: its loop current under %.2f A, or U5's differential measured under %.1f V)" % (b6["be115"], csd_abs),
+             ok=scp_f < scp_lo and v_tmr < T48["tmr_v"][0] and ov_in116 < bandA["rise"][0] and D4N["v116"] <= lim_draft and b6["d59_116"] < csd_abs),
         dict(id="CS116/115 off", name="CS116 and CS115 with the block off", ok=off116["v"] < QF["vds"] and off116["en"] <= 15.0 and off116["inp"] < T48["pin_abs"] and off116["floor"] > -1.0),
-        dict(id="turn-off", name="the turn-off against D4 and the bulk", ok=gate_load < T48["cl"] and f36["d4_room"] > 0 and bandA["rise"][1] < za["v"]),
-        dict(id="window", name="the window kept", ok=bandA["rise"][0] > cs101_pk and bandA["fall"][0] > v_oc and L11["uv"][2] < float(shdn_txt)
+        dict(id="already on", name="a stiff 36 V source with the guard on (B6)", note=" (CONDITIONAL on the lead's loop inductance at least %.2f uH, R-176)" % (1e6 * b6["Lb"]),
+             ok=gate_load < T48["cl"] and all(ok6(b6["W"]).values()) and b6["W"]["mono"] and ramp_ok and b6["W"]["soa12"] < 1.0 and b6["W"]["soa13"] < 1.0
+             and e11_6 < e11_room and b6["i_cs"] < ics_abs),
+        dict(id="window", name="the window kept", ok=bandA["rise"][0] > cs101_pk and bandA["fall"][0] > v_oc and max(L11["uv"][2], inp_on6) < float(shdn_txt)
+             and i_start6 < ocp_lo
              and p_static_blk < p_win and t_allow_blk >= T_FAC * c["t_resp_typ"] and i_bank_slew < c["i_lo_aged"]
              and max(cs_re[k_]["worst"][2] for k_ in ("least", "most")) < best["m"]),
     ]
@@ -2305,6 +2680,7 @@ def compute():
         refuse(4, "the remedy's verdicts are not the ones the record states: %s, SMCJ28A aged %.3f, D4 SMCJ%dA" % (
             [(v_["id"], v_["ok"]) for v_ in verd2], min(ov28["aged"]["m"]), d4n))
     rem["verd"] = verd2
+    rem["b6"] = b6
     R["remedy"] = rem
     # ---- the single faults (for layer 8's fault analysis; this record assigns them, it does not close them)
     faults = dict(
@@ -2478,7 +2854,10 @@ def compute():
                             switch='{"switch": "U21", "enable_net": "PV_UVLO"}),' in new2 and new2.count('"always_on_why": "a photovoltaic panel') == 0,
                             q13='"PV_RG", "PV_RTN", "GND", lcsc="C473333")' in new2, d11='{"1": "PV_F", "2": "PV_RTN"}, "C80273")' in new2,
                             rails=all(('_intent.rail("%s"' % n_) in new2 for n_ in ("PV_F", "PV_SNS", "PV_RTN")),
-                            u21='"13": "PV_P", "14": "PV_GATE", "15": "PV_PU"' in new2 and '"2": "PV_OVLO"' in new2)
+                            u21='"13": "PV_P", "14": "PV_GATE", "15": "PV_PU"' in new2 and '"2": "PV_OVLO"' in new2,
+                            b6=all(new2.count(s_) == 1 for s_ in ('c("C131", "10u 100V X7R 1210', 'c("C132", "10u 100V X7R 1210', 'c("C126", "330p C0G 100V',
+                                                                  'r("R97", "30.0k 1%', 'c("C133", "10u 50V', 'c("C134", "10u 50V"'))
+                            and '"1u 100V 1210 (panel port' not in new2)
     return R
 
 
@@ -3206,56 +3585,71 @@ def render(R):
               ovs["m"][1], ovs["m"][2], DN["n"], DN["v116"], DN["v115"], R["lead"]["lim_draft"], R["lead"]["lim_drawn"],
               DN["vr"] - rm["cs101_pk"], rw10["d4"]["vr"] - rm["cs101_pk"]))
     wrapP("     - ", "       ", "THE CIRCUIT CHANGES (drafted in apply_gen_sch_e_solar_guard.py, never applied): J_SOLAR.2 becomes PV_RTN "
-          "and F2 feeds PV_F; D11 SMCJ40CA (C80273) across PV_F and PV_RTN at the connector; C131 1 uF 100 V on PV_F; U21 "
+          "and F2 feeds PV_F; D11 SMCJ40CA (C80273) across PV_F and PV_RTN at the connector; C131 and C132, two 10 uF 100 V X7R 1210 "
+          "(board E's C8 part text), on PV_F; U21 "
           "TPS48110AQDGXRQ1 (C17556513) with R87 %.1f mOhm (C2985708) from PV_F to PV_SNS, Q12 CSD19532Q5B (C473333) from PV_SNS to "
-          "PV_P, RSET R88 100R 0.1 %%, RISCP R89 3.01k with C126 1 nF C0G 100 V, the gate slew R90 36.5k, R91 10R and C127 10 nF "
+          "PV_P, RSET R88 100R 0.1 %%, RISCP R89 3.01k with C126 330 pF C0G 100 V, the gate slew R90 36.5k, R91 10R and C127 10 nF "
           "C0G 100 V (C184799), CBST C128 1 uF, CTMR C129 22 nF C0G (C97929) with RIWRN R92 39.7k 0.1 %% (C861872), the VS filter "
-          "R93 100R and C130 100 nF 100 V, UVLO R94 59.0k over R95 10.0k, INP R96 100k over R97 39k, the OV divider R98, R99 and "
-          "R100 above (all L4-E11's vehicle-entry values but the OV divider); Q13 CSD19532Q5B (C473333) from PV_RTN to GND, its gate "
+          "R93 100R and C130 100 nF 100 V, UVLO R94 59.0k over R95 10.0k, INP R96 100k over R97 30.0k, the OV divider R98, R99 and "
+          "R100 above (L4-E11's vehicle-entry values but the OV divider, R97 and C126, the last two from B6, THE GUARD ALREADY ON below); C133 and "
+          "C134, two 10 uF 50 V ceramics (C13's part text and land), on PV_P beside the bulk (B6); Q13 CSD19532Q5B (C473333) from "
+          "PV_RTN to GND, its gate "
           "PV_RG from PV_F through R101 %.0fk and to GND through R102 %.0fk, D12 BZT52C12-7-F (C124196) gate to source; D4 to "
           "SMCJ%dA, its LCSC code owed (no catalogue reading of it is filed). Placement on board E: at J_SOLAR, ahead of F2's load, the "
           "bulk, the sense bank and D4; Q13 in the return pin's copper. Owed with it: U21's DGX-19 land (as L4-E11's E11-01), the "
           "regeneration and its gates. Read back here on a scratch copy after the five drafts it follows (this record's hold, input "
           "limit and backstop, L4-E9's hot swap, L4-E11's entry): %d edits; the return, F2, the OV divider and its codes, D4, PV_P's "
-          "switch, Q13, D11, the rails and U21's pins: %s; R10 untouched: %s" % (
+          "switch, Q13, D11, the rails, U21's pins and B6's six parts: %s; R10 untouched: %s" % (
               1e3 * L11["rsns"], rm["R101"] / 1e3, rm["R102"] / 1e3, DN["n"], R["drafts"]["apply_gen_sch_e_solar_guard.py"][0],
               "yes" if all(R["guard_draft"].values()) else "NO", "yes" if R["drafts"]["apply_gen_sch_e_solar_guard.py"][2] else "NO"))
     vd = {v_["id"]: v_ for v_ in rm["verd"]}
     P("     THE BOUNDED ANALYSIS (the drafted entry with the block and D4 SMCJ%dA; each against the parts' printed ratings):" % DN["n"])
+    b6 = rm["b6"]
+    wc_ = (max(b6["cold"][0]["vF"], b6["cold"][1]["vF"]), max(b6["cold"][0]["slew"], b6["cold"][1]["slew"]) / 1e6,
+           max(b6["cold"][0]["iL"], b6["cold"][1]["iL"]), max(b6["cold"][0]["e11"], b6["cold"][1]["e11"]))
     rows_r = (
-        ("D4, a stiff %.0f V source through the %.4f Ohm lead" % (R["lead"]["v_src"], R["lead"]["lead"]["r"]),
+        ("D4, a stiff %.0f V source through the %.4f Ohm lead, connected cold (the block off)" % (R["lead"]["v_src"], R["lead"]["lead"]["r"]),
          "the block never turns on: the gate cannot rise before BST charges, at least %.1f ms (1 uF -10 %% to %.1f V at %.0f uA), while "
          "the OV pin follows the input at once; the cut-off's highest %.2f V is %.2f V under the source; Q12 holds %.0f V of %.0f V; "
-         "U21's VS %.0f V of 80 V, EN/UVLO %.2f V of 15 V, INP %.2f V of %.0f V; D11 at %.0f V under its %.0f V standoff; a "
-         "connection's ring bounded by D11 at %.1f V at its rated current (EN/UVLO %.2f V, INP %.2f V); D4 and the bulk see nothing; a "
-         "source rising with the block on is cut at %.2f V at most, %.3f V under D4" % (
+         "U21's VS %.0f V of 80 V, EN/UVLO %.2f V of 15 V, INP %.2f V of %.0f V; D11 at %.0f V under its %.0f V standoff. The "
+         "connection's ring (MODELED, THE GUARD ALREADY ON below, a lead of at least %.2f uH): PV_F at most %.1f V, its slew %.1f V/us of %.0f, INP "
+         "%.2f V and EN/UVLO %.2f V of %.0f V, D11 at most %.1f mJ; Q13's body diode carries the ring, at most %.1f A; D4 and the bulk "
+         "see nothing" % (
              1e3 * rm["f36"]["st_min"], T4["bst_uv"][0], T4["bst_i"][2], rm["f36"]["cut_hi"], R["lead"]["v_src"] - rm["f36"]["cut_hi"],
              rm["f36"]["vds"], QF["vds"], rm["f36"]["vs"], rm["f36"]["en"], rm["f36"]["inp"], T4["pin_abs"], R["lead"]["v_src"], D11["vr"],
-             rm["f36"]["ring"], rm["ring_en"], rm["ring_inp"], rm["f36"]["cut_hi"], rm["f36"]["d4_room"]), "MEETS"),
+             1e6 * b6["Lb"], wc_[0], wc_[1], b6["slew_abs"] / 1e6, wc_[0] * b6["kinp"], wc_[0] * b6["ken"], T4["pin_abs"], 1e3 * wc_[3], wc_[2]), "MEETS"),
         ("D5, a reversed panel (%.3f A short circuit with tolerance, %.0f V open circuit)" % (R["lead"]["rev"]["i"], rm["rev"]["v"]),
          "Q13 off (its gate at or under its source), its body diode reverse biased: no current; it holds %.0f V of %.0f V, and a "
          "reversed connection's ring at most D11's %.1f V; the high side's pins stay within 1 V of GND while Q13 leaks under %.1f uA "
-         "(the dividers' conductance), against %.0f uA printed at %.0f V and 25 C; on a fast ring C131 holds them within %.3f V; D4 and "
+         "(the dividers' conductance), against %.0f uA printed at %.0f V and 25 C; on a fast ring C131 and C132 hold them within %.3f V; D4 and "
          "the stage see no reversal" % (rm["rev"]["vds"], QF["vds"], rm["rev"]["ring"], 1e6 * rm["rev"]["i_be"], 1e6 * rm["rev"]["idss"],
                                          rm["rev"]["idss_v"], abs(rm["rev"]["floor_c"])),
          "MEETS, CONDITIONAL on Q13's leakage above 25 C (no row; %.0f times the printed one)" % (rm["rev"]["i_be"] / rm["rev"]["idss"])),
         ("CS116 and CS115, the block on (in the path)",
-         "the short-circuit trip's sense, filtered by RISCP x CSCP, at most %.2f A against its least %.2f A; the overcurrent timer at "
+         "the short-circuit trip's sense, filtered by RISCP x CSCP (330 pF, at its shortest), at most %.2f A against its least %.2f A; "
+         "the overcurrent timer at "
          "most %.3f V against %.3f V (the time over its least %.3f A, %.1f us at most); the input at most %.2f V against the cut-off's "
          "least %.2f V; Q12 and Q13 carry at most %.2f A against %.0f A; D4 (SMCJ%dA) at the disturbance's current %.2f V, under %.0f V; "
-         "D4 off in the loaded network" % (rm["scp_f"], rm["scp_lo"], rm["v_tmr"], T4["tmr_v"][0], rm["ocp_lo"], 1e6 * rm["t_over"],
+         "D4 off in the loaded network. U5: CS116's whole 10 A on the trip's highest current, the conservative screen, %.4f V of "
+         "%.1f V. CS115's 5 A is the generator's calibration level, not a bound on the cable's current: U5 at 5 A reads %.4f V, and "
+         "the cable may carry up to %.3f A more before %.1f V" % (rm["scp_f"], rm["scp_lo"], rm["v_tmr"], T4["tmr_v"][0], rm["ocp_lo"], 1e6 * rm["t_over"],
                                            rm["ov_in116"], bA["rise"][0], rm["i_trip_hi"] + 10.0, QF["idm"], DN["n"], DN["v116"],
-                                           R["lead"]["lim_draft"]), "MEETS"),
+                                           R["lead"]["lim_draft"], b6["d59_116"], 0.3, b6["d59_115"], b6["be115"], 0.3),
+         "MEETS for CS116; CS115 CONDITIONAL on R-174 (its recorded loop current under %.2f A, or U5's differential measured under 0.3 V)" % b6["be115"]),
         ("CS116 and CS115, the block off (night, or after a cut)",
          "D11 clamps the port: at 10 A at the hot end %.2f V (5 A, %.2f V): Q12 holds it against %.0f V, U21's VS against 80 V, "
-         "EN/UVLO %.2f V, INP %.2f V; D11 takes at most %.1f mJ a pulse; C131 holds PV_F within %.3f V of GND against Q13's %.0f pF" % (
+         "EN/UVLO %.2f V, INP %.2f V; D11 takes at most %.1f mJ a pulse; C131 and C132 hold PV_F within %.3f V of GND against Q13's %.0f pF" % (
              rm["off116"]["v"], rm["off116"]["v115"], QF["vds"], rm["off116"]["en"], rm["off116"]["inp"], 1e3 * rm["off116"]["e"],
              abs(rm["off116"]["floor"]), 1e12 * QF["coss"]), "MEETS"),
-        ("the turn-off against D4's and the bulk's exposure",
-         "OV to PD %.1f us at most at 47 nF, the gate's load %.1f nF; a rising source is cut at %.2f V at most, %.3f V under D4's least "
-         "breakdown at the cold end and %.1f V under the bulk's %.0f V; D4 never conducts" % (
-             1e6 * rm["t_gate"], 1e9 * rm["gate_load"], bA["rise"][1], rm["f36"]["d4_room"], R["decision"]["surge"]["rating"]["za_v"] - bA["rise"][1],
-             R["decision"]["surge"]["rating"]["za_v"]), "MEETS"),
+        ("a stiff %.0f V source arriving with the block on (B6: a step from every state the guard is on in, and ramps)" % R["lead"]["v_src"],
+         "MODELED in THE GUARD ALREADY ON below against every printed rating: with the lead's loop inductance at least %.2f uH (U5's positive "
+         "differential binds) Q12 turns off at most %.1f A within %.1f us, PV_F reaches at most %.1f V (slew %.1f V/us of %.0f), PV_P "
+         "%.2f V, TRK_VS %.2f V (D4's least breakdown at the cold end %.2f V: D4 carries no current), U5 %.4f V and %.4f V of 0.3 V, Q12 "
+         "at %.3f of its derated chart; a rising source cut with D4's room at least %.3f V at any rate. The drafted network fails it "
+         "(PV_F, its slew, INP and U5) and needs C131 and C132, R97, C126 and C133 and C134 (THE GUARD ALREADY ON below)" % (
+             1e6 * b6["Lb"], b6["W"]["iQ"], 1e6 * b6["W"]["ton"], b6["W"]["vF"], b6["W"]["slew"] / 1e6, b6["slew_abs"] / 1e6, b6["W"]["vP"],
+             b6["W"]["vS"], DN["vbr_cold"], b6["W"]["u5"], -b6["W"]["u5n"], b6["W"]["soa12"], DN["vbr_cold"] - b6["ramp_w"]["vS"]),
+         "MEETS, CONDITIONAL on the lead's loop inductance at least %.2f uH (no document gives it; R-176 measures it)" % (1e6 * b6["Lb"])),
         ("the quiescent and conduction loss in normal operation",
          "the series path at most %.2f mOhm (Q12 %.2f, Q13 %.2f at VGS %.1f V or more, R87 %.2f; the FETs at their 150 C reading); "
          "%.3f W at the regulation's highest %.3f A and %.3f W at the trip's highest %.3f A; %.2f mA around the bank at 25 V (IQ, "
@@ -3270,44 +3664,140 @@ def render(R):
     wrapP("     - ", "       ", "THE WINDOW KEPT. REQ-016's normal window is unchanged: open circuit at most 25 V at the panel's coldest, the "
           "hold at 17.6 V, at most 100 W. The cut-off rises at %.2f V at the least and falls back at %.2f V at the least, both over 25 "
           "V with their tolerance and drift, and its highest, %.2f V, is under every rating on the entry; above it the stage is off, "
-          "not running. U21 turns on at %.2f V at the most and off at %.2f V at the least (L4-E11's figures for the same divider), "
+          "not running. U21 turns on at %.2f V at the most (INP through R96 over R97 30.0k at V(INP_H)'s %.1f V; the UVLO by %.2f V, "
+          "L4-E11's figure for the same divider) and off at %.2f V at the least, "
           "under the stage's own enable (R14 and R15, about %.1f V as drawn), so it narrows nothing. The hold: the panel sits at most "
           "%.3f V above PV_P at the regulation's highest current. 100 W: the static bound at the panel entry with the block's own "
           "currents around the bank and the trip read at both ends of its %.3f V drop, %.4f W (%.4f W without it). NOT CLAIMED, a "
           "residual named for layer 8: a stiff source between 25 V and the cut-off (outside the window, so a fault) runs the stage "
           "under the backstop's current trip, at most %.1f W at the cut-off's highest; no protection here extends the permitted "
-          "range" % (bA["rise"][0], bA["fall"][0], bA["rise"][1], L11["uv"][2], L11["uvf"][0], rm["shdn"], rm["hold_shift"], rm["dv_blk"],
+          "range" % (bA["rise"][0], bA["fall"][0], bA["rise"][1], rm["b6"]["inp_on"], rm["b6"]["inph"][1], L11["uv"][2], L11["uvf"][0], rm["shdn"], rm["hold_shift"], rm["dv_blk"],
                      rm["p_static_blk"], R["decision"]["c"]["p_static"], rm["gap"][2]))
     cr_ = rm["cs_re"]
     wrapP("     - ", "       ", "THE INTERACTIONS, AND WHAT WAS RE-RUN. The backstop: the sense bank, U18, U19, U20 and SWEN are behind the "
           "block and see its cut as the panel's absence (as at dusk); a connection now rises at the gate's slew, %.2f to %.2f V/ms "
           "(L4-E11), so the bank carries at most %.3f A into the capacitors behind it, under the trip's least %.4f A, and U20 holds "
-          "SWEN low 180 ms anyway. CS101 (M2), RE-RUN with the block's series resistance ahead of the bulk and C131 across the input: "
+          "SWEN low 180 ms anyway; Q12 carries at most %.3f A into every capacitor behind it (C133 and C134 included, each at its "
+          "largest), under U21's overcurrent least %.3f A, so the start never runs the breaker's timer. CS101 (M2), RE-RUN with the "
+          "block's series resistance ahead of the bulk, C131 and C132 across the input and C133 and C134 beside the bulk (absent or "
+          "at their largest): "
           "the filtered peak %.4f A at %.0f Hz (least resistance %.4f A; the accepted %.4f A reproduced with none), against the margin "
           "%.4f A: the series element lifts the bank's share by at most %.2f %% where the entry's impedance has a negative real part (the converter's "
           "constant power), and the "
-          "loop branch's room is read at M2 as accepted. Check (b), RE-RUN: the capacitors at the entry %.1f mJ (C131 and U21's filter "
-          "added), the response allowance %.3f ms against %.0f times the typical sum (%.3f ms), the accepted %.3f ms. The LT8705A: "
+          "loop branch's room is read at M2 as accepted. Check (b), RE-RUN: the capacitors at the entry %.1f mJ (C131 to C134 and U21's "
+          "filter added, at their largest), the response allowance %.3f ms against %.0f times the typical sum (%.3f ms), the accepted %.3f ms. The LT8705A: "
           "its own enable, the hold (FBIN on PV_P) and the IMON_IN regulation (R59 behind the block) are unchanged. The BQ25730 on "
           "VBUS20: no path couples; the stage's output reaches it only through U4 and Q2 into VIN_RAW and board A's front end, and the "
           "block's cut is the panel's absence. TRN-001's port table: J_SOLAR's pin 2 becomes PV_RTN (switched by Q13), the first "
-          "parts at the port are D11 and C131, and note E-N1 is closed. STAYING VALID UNCHANGED: check (a)'s chain and its 93.5521 "
-          "W at the stage; the supply sequencing; check (c)'s loaded network (D4 off, its breakdown now higher); the M7 figures (C131 "
-          "ahead takes a discharge's 2.25 uC as about 2.3 V); L4-E13's standoff check (now 30 V). CHANGED: D1 and D2 under REQ-016's "
+          "parts at the port are D11, C131 and C132, and note E-N1 is closed. STAYING VALID UNCHANGED: check (a)'s chain and its 93.5521 "
+          "W at the stage; the supply sequencing; check (c)'s loaded network (D4 off, its breakdown now higher; C133 and C134 beside "
+          "the bulk only take current from the paths it bounds); the M7 figures (C131 and C132 ahead take a discharge's 2.25 uC as "
+          "about %.2f V); L4-E13's standoff check (now 30 V). CHANGED: D1 and D2 under REQ-016's "
           "criterion (SMCJ%dA, %.2f and %.2f V); the margin beyond the basis is now D11's own rating, %.1f A at 10/1000 us, since a "
           "pulse over the cut-off turns the block off within %.0f us" % (
-              L11["slew"][0], L11["slew"][2], rm["i_bank_slew"] if False else rm["i_bank_slew"], R["decision"]["c"]["i_lo_aged"],
+              L11["slew"][0], L11["slew"][2], rm["i_bank_slew"], R["decision"]["c"]["i_lo_aged"], rm["b6"]["i_start"], rm["ocp_lo"],
               cr_["most"]["worst"][2], cr_["most"]["worst"][0], cr_["least"]["worst"][2], cr_["none"]["worst"][2], rm["margin"],
               100 * (cr_["most"]["hmax"] - 1.0), 1e3 * rm["e_cap_blk"], 1e3 * rm["t_allow_blk"], rm["t_fac"], 1e3 * rm["t_fac"] * rm["t_resp_typ"],
-              1e3 * R["decision"]["c"]["t_allow"], DN["n"], DN["v116"], DN["v115"], D11["ipp"], 1e6 * rm["t_gate"]))
+              1e3 * R["decision"]["c"]["t_allow"], 2.25e-6 / rm["b6"]["c131"][0], DN["n"], DN["v116"], DN["v115"], D11["ipp"], 1e6 * rm["t_gate"]))
+    rtn_ = dict(b6["rt"])
+    W6_, Lu6 = b6["W"], 1e6 * b6["Lb"]
+    wrapP("     - ", "       ", "THE GUARD ALREADY ON (B6 of the consolidation review, astra-check-l4close-1: a source arriving while U21 holds Q12 "
+          "on was argued from the cut-off's threshold, not calculated). THE EXPOSURE: a stiff %.0f V source (V2-SPEC's declared range) "
+          "stepping onto J_SOLAR through the panel lead (a1solar's %.0f m of %.0f mm2, %.4f Ohm at its %.0f C; %.4f Ohm at the cold "
+          "end, used: the least damping) while the guard is on, from each state "
+          "it is on in: %s; and the same source rising to %.0f V at %.2f to %.0f V/us (%d rates, densest around the comparators' "
+          "handover near %.3f V/us, the short-circuit trip's highest over the least capacitance behind Q12, %.1f uF). THE LEAD'S "
+          "INDUCTANCE is printed nowhere: a1solar leaves the lead unspecified, and the two-wire value (mu0 l / pi) acosh(s / 2r) "
+          "(r %.3f mm, s the conductors' centre spacing) is zero for bare conductors touching, so no geometric floor exists. It is an "
+          "unprinted value: each rating below is stated with the least inductance it holds at (a grid of %d values from %.2f to %.2f "
+          "uH, 5 %% apart, the binding one then bisected), and the verdict is CONDITIONAL on the lead's measured inductance (R-176)" % (
+              R["lead"]["v_src"], R["lead"]["lead"]["m"], R["lead"]["lead"]["mm2"], R["lead"]["lead"]["r"], b6["t_lead"], b6["r_lead"], "; ".join(b6["st"]),
+              R["lead"]["v_src"], b6["rates"][0] / 1e6, b6["rates"][-1] / 1e6, len(b6["rates"]), b6["s_h"] / 1e6, 1e6 * b6["c_min"],
+              1e3 * math.sqrt(R["lead"]["lead"]["mm2"] * 1e-6 / math.pi), b6["grid"][2], 1e6 * b6["grid"][0], 1e6 * b6["grid"][1]))
+    wrapP("       ", "       ", "THE MODEL (MODELED, guard_event: lumped parts, backward Euler at 20 ns on four nodes, each clamp as its straight "
+          "line): PV_F with C131 and C132 at their least (2 x 10 uF, -10 %%, the bias floor %.2f: %.2f uF; at their largest, %.0f uF, "
+          "for the cold ring) and D11 at its highest breakdown at the hot end (%.2f V) or its least at the cold end (%.2f V), the "
+          "slope through its printed clamping point; Q12 and R87 to PV_P (R87 at its least, the FET's resistance not credited); PV_P "
+          "with the bulk in three corners (%s) and C133, C134; the bank at its least to TRK_VS with C71 to C74 and D4 (the SMCJ%dA at "
+          "its least at the cold end, %.2f V); RSENSE1 at its highest to TRK_VIN with C13 to C15 and C64 at +10 %%; every ceramic at "
+          "the bias factor 1, 0.5 and 0.25; the stage drawing nothing or the trip's highest current throughout; the source's return "
+          "(Q13, F2) not credited. U21's commands at their latest, the earlier of the two acting: the OV comparator at the cut-off's "
+          "highest, %.2f V, plus OV to PD %.1f us (SLUSEE5E 6.6 at 47 nF; the gate's load %.1f nF); the short-circuit comparator at "
+          "L4-E11's highest, %.2f A, read through RISCP x CSCP at its longest, %.3f us, plus tSC %.0f us (TPS48110-Q1); then a further "
+          "5 x R91 x Ciss, %.3f us, as a linear fall (INFERRED: PD at 1 V is already under VGS(th)'s least). In every step run the "
+          "lead's current is still rising at the command, so the latest corner bounds the earliest. %d runs on the grid" % (
+              b6["K131"], 1e6 * b6["c131"][0], 1e6 * b6["c131"][1], b6["d11"][0][0], b6["d11"][1][0], "; ".join(b6["bk"]), DN["n"],
+              DN["vbr_cold"], bA["rise"][1], 1e6 * rm["t_gate"], 1e9 * rm["gate_load"], b6["isc_hi"],
+              1e6 * b6["tau"][1], b6["tsc"][1], 1e6 * b6["t_f"], b6["runs"]))
+    P("       AT %.2f uH, the worst over every start and corner, against each printed rating (and the least inductance it holds at):" % Lu6)
+    for id_, v_, l_, s_ in b6["vals"]:
+        ls_ = b6["lstar"][id_]
+        P("         - %-43s %s, margin %7.4f; holds from %s" % (
+            rtn_[id_], ("none" if id_ == "d4" and v_ == 0.0 else "%8.4f %s %8.4f" % (v_, "of" if s_ > 0 else "against", l_)),
+            (l_ - v_) * s_, ("%.2f uH" % (1e6 * ls_)) if ls_ else "under %.2f uH" % (1e6 * b6["grid"][0])))
+    wrapP("       ", "       ", "THE BINDING RATING: %s, at %.2f uH: two conductors whose centres stay at least %.2f mm apart over the %.0f m "
+          "(the conductors' internal inductance not credited). Below it the guard does not hold: at %.2f uH (%.2f mm apart) %s exceed "
+          "their ratings (NOT MET). Q12 while it conducts, against its derated chart (TI's Figure 10 read from its vector drawing, L4-E9's and L4-E11's method, the 10 us "
+          "line for a pulse of %.2f us; derated %.3f for a case at %.1f C, RthJA %.0f C/W at the trip's highest current, TJ %.0f C): "
+          "at most %.3f of it, %.1f A at the turn-off. Q13 in the third quadrant carries the lead's %.1f A at most, %.3f of its derated "
+          "chart (channel and body diode together; no diode pulse row is printed, the channel's is taken, INFERRED). D11 at most %.1f "
+          "A and %.1f mJ against %.0f mJ (its 10/1000 us row derated at the hot end, %.0f mJ, scaled to its %.0f us by the square root "
+          "of the duration, INFERRED). R87's %.3f V reaches CS+ only through RSET (TI's 50 to 100 Ohm connection, the amplifier holding "
+          "CS+ at CS-): %.2f mA against I(CS+) %.0f mA for 1 ms. U18's differential %.3f V of %.0f V" % (
+              ", ".join(rtn_[i_] for i_ in b6["bind"]), Lu6, 1e3 * b6["s_star"], R["lead"]["lead"]["m"], 1e6 * b6["grid"][0], 1e3 * b6["s_lo"],
+              ", ".join(rtn_[i_] for i_ in b6["fail_lo"]), 1e6 * W6_["ton"], b6["der"][0], b6["tc"][0], b6["rja"], b6["tjm"], W6_["soa12"],
+              W6_["iQ"], W6_["iL"], W6_["soa13"], W6_["i11"], 1e3 * b6["e11"], 1e3 * b6["e11_room"], 1e3 * b6["e11_cap"], 1e6 * b6["t11"],
+              b6["rsns_v"], 1e3 * b6["i_cs"], 1e3 * b6["ics_abs"], W6_["u18"], b6["u18_abs"]))
+    W25_ = b6["W25"]
+    wrapP("       ", "       ", "THE REVIEWED CASE (from REQ-016's open circuit, idle and at the trip's highest current): the short-circuit trip "
+          "acts first; Q12 turns off at most %.1f A; PV_P reaches at most %.2f V and TRK_VS %.2f V, %.3f V under D4's least breakdown at "
+          "the cold end: D4 carries no current. The review's point stands for the OV path alone (%.1f us against %.3f V of room); "
+          "the short-circuit trip ends every step first, and every ramp the OV path ends is slower than the handover" % (
+              W25_["iQ"], W25_["vP"], W25_["vS"], DN["vbr_cold"] - W25_["vS"], 1e6 * rm["t_gate"], rm["f36"]["d4_room"]))
+    rw_ = b6["ramp_w"]
+    pick_ = [r_ for r_ in b6["ramp"] if r_["rate"] in (0.01e6, 0.1e6, 1e6, 10e6)] + [rw_]
+    wrapP("       ", "       ", "RAMPS (from the hold's least corner at the trip's highest current and from REQ-016's open circuit): the closest "
+          "TRK_VS comes to D4 is %.3f V at %.3f V/us (cut by %s), %.3f V under its least breakdown at the cold end; D4 carries no "
+          "current at any rate; U5 at most %.4f V. %s" % (
+              rw_["vS"], rw_["rate"] / 1e6, " and ".join(rw_["why"]), DN["vbr_cold"] - rw_["vS"], max(r_["u5"] for r_ in b6["ramp"]),
+              "; ".join("%.3f V/us: TRK_VS %.3f V, PV_F %.1f V, cut by %s" % (r_["rate"] / 1e6, r_["vS"], r_["vF"], " and ".join(r_["why"])) for r_ in pick_)))
+    wc0_, wc1_ = b6["cold"]
+    wrapP("       ", "       ", "THE COLD CONNECTION (the guard off; the port discharged or at REQ-016's open circuit; C131 and C132 at their "
+          "least and largest): PV_F at most %.1f V, its slew %.1f V/us, INP %.2f V, EN/UVLO %.2f V; the ring through Q13's body diode at "
+          "most %.1f A; D11 at most %.1f mJ; at every grid inductance from %.2f uH up the same ratings hold" % (
+              max(wc0_["vF"], wc1_["vF"]), max(wc0_["slew"], wc1_["slew"]) / 1e6, max(wc0_["vF"], wc1_["vF"]) * b6["kinp"],
+              max(wc0_["vF"], wc1_["vF"]) * b6["ken"], max(wc0_["iL"], wc1_["iL"]), 1e3 * max(wc0_["e11"], wc1_["e11"]), Lu6))
+    wrapP("       ", "       ", "THE CHANGES, AND WHY EACH (SESSION; at %.2f uH, each reverted alone; drafted in apply_gen_sch_e_solar_guard.py): "
+          "%s. So C131 becomes C131 and C132, two 10 uF 100 V X7R 1210 (the lead's current at the turn-off goes into them, PV_F's "
+          "slew under the pins' %.0f V/us); R97 becomes 30.0k (INP %.3f of PV_F, under its %.0f V up to %.1f V; INP high from %.2f V, "
+          "still under the stage's own enable); C126 becomes 330 pF (the short-circuit trip's filter %.2f to %.2f us; CS116's filtered "
+          "sense %.2f A against the trip's least %.2f A; TI's 1 nF is its starting value, to be tested in the real system, R-176); and "
+          "C133 and C134, two 10 uF 50 V ceramics, join the bulk on PV_P (they take the turn-off's charge where the aged bulk is "
+          "resistive at -40 C). The start: Q12 carries at most %.3f A into every capacitor behind it at the gate's fastest slew, under "
+          "U21's overcurrent least %.3f A" % (
+              Lu6, "; ".join("%s: %s" % (lab_, ", ".join("%s %.4g of %.4g" % (rtn_[i_], v_, l_) for i_, v_, l_ in fl_)) for lab_, fl_ in b6["var"]),
+              b6["slew_abs"] / 1e6, b6["kinp"], T4["pin_abs"], T4["pin_abs"] / b6["kinp"], b6["inp_on"], 1e6 * b6["tau"][0], 1e6 * b6["tau"][1],
+              rm["scp_f"], rm["scp_lo"], b6["i_start"], rm["ocp_lo"]))
     P("     THE VERDICTS, with the remedies:")
     for v_ in rm["verd"]:
         P("       %-14s %-44s %s" % (v_["id"], v_["name"], ("MEETS" if v_["ok"] else "NOT MET") + v_.get("note", "")))
-    wrapP("     ", "     ", "FOR L4-E9'S REGISTER (its D-10, D-11 and R-173): D-10 and D-11 have a selected remedy, drafted (not applied): "
-          "the cut-off U21 with Q12 and the return switch Q13, D11, C131, D4 to SMCJ%dA; owed with it: D4's LCSC code, U21's DGX-19 "
-          "land, the regeneration and its gates, and the bench rows: the cut-off's rise and fall on a ramped supply, a 36 V supply "
-          "connected live (Q12 never conducts, D4 carries nothing), a reversed bench panel curve (no current; the high side's pins "
-          "against GND), CS116 and CS115 on the port with the block on and off (R-174), and Q13's leakage at the hot end" % DN["n"])
+    wrapP("     ", "     ", "FOR L4-E9'S REGISTER (its D-10, D-11, D-12, R-173, R-174 and R-176): D-10 and D-11 have a selected remedy, "
+          "drafted (not applied): the cut-off U21 with Q12 and the return switch Q13, D11, C131 and C132, C133 and C134, D4 to SMCJ%dA, "
+          "R97 30.0k and C126 330 pF; D-10's source arriving with the guard on is bounded (B6) and CONDITIONAL on the lead's loop "
+          "inductance at least %.2f uH. D-12: CS116 MEETS with the block on and off; CS115 MEETS with the block off and, with it on, "
+          "is CONDITIONAL on R-174 (the cable's recorded loop current under %.2f A, or U5's differential measured under 0.3 V; U5 "
+          "reads %.4f V at CS115's 5 A calibration level). Owed with it: D4's LCSC code, U21's DGX-19 land, the regeneration and "
+          "its gates, and R-176's bench rows, REVISED: (1) the cut-off's rise and fall on a ramped supply (%.2f to %.2f V rising, "
+          "%.2f V or more falling); (2) the panel lead's loop inductance measured, at least %.2f uH (else the lead is re-specified, "
+          "its conductors' centres at least %.2f mm apart over its length); (3) a %.0f V supply connected cold: Q12 never conducts, "
+          "D4 carries nothing, PV_F at most %.0f V; (4) the %.0f V supply stepped onto the port with the guard on, from about %.1f V "
+          "and from 25 V, through that lead: U21 turns Q12 off (at most %.0f A, within %.0f us), D4 carries nothing, PV_P stays under "
+          "%.2f V and U5's sense differential inside +-0.3 V (measured at CSPIN and CSNIN); (5) a reversed bench panel's curve (no "
+          "current; the high side's pins against GND); (6) Q13's leakage at the hot end, under %.1f uA; (7) no short-circuit trip "
+          "with C126 at 330 pF in operation and under CS116 (R-174)" % (
+              DN["n"], 1e6 * b6["Lb"], b6["be115"], b6["d59_115"], bA["rise"][0], bA["rise"][1], bA["fall"][0], 1e6 * b6["Lb"],
+              1e3 * b6["s_star"], R["lead"]["v_src"], max(b6["cold"][0]["vF"], b6["cold"][1]["vF"]) + 0.5, R["lead"]["v_src"],
+              L11["uvf"][0] + 0.05, b6["W"]["iQ"] + 0.5, 1e6 * b6["W"]["ton"] + 0.5, DN["vbr_cold"], 1e6 * rm["rev"]["i_be"]))
     # ---- sequencing
     # ---- the backstop under CS101 (the closing check's defect and its correction)
     cs, tb = R["cs101"], R["cs101"]["tab"]

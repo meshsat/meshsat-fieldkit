@@ -18,7 +18,9 @@ is off by default on printed rows; the disturbances come from the approved test 
 surge and sustained over-voltage are derived from the lead the records give and the row REQ-063 commits to, each judged by
 REQ-016's own criterion, the clamp and the source figures reproduced in closed form; the solar-fault remedies select one
 remedy for each fault on held sheets, the cut-off's band recomputed here, the window kept and the re-runs named, and their
-draft applies once after the five drafts it follows; the backstop's
+draft applies once after the five drafts it follows; the guard already on (the consolidation review's B6) is bounded in the
+loaded network against every printed rating with the least lead inductance each holds at, the solver checked against the
+closed-form series RLC step, the drafted network failing and each change necessary; the backstop's
 draft applies only after the hold and input limit drafts; the drafts to the makers follow the decision and quote its
 figures; L4-E9's figures are named. Nothing here writes into the tree.
 """
@@ -56,8 +58,8 @@ def _R():
                     "v2/vendor/power/held/mil-std-461g-2015-12-11.pdf", "v2/vendor/passives/held/vishay-wsl-30100-2023-11-23.pdf",
                     "v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf"):
             need(os.path.join(ROOT, rel), "an input of the L4-E7 record (held documents: its fetch_held_back.py)")
-        if shutil.which("pdftotext") is None:
-            raise Skip("pdftotext is needed")
+        if shutil.which("pdftotext") is None or shutil.which("pdftocairo") is None:
+            raise Skip("pdftotext and pdftocairo are needed")
         _CACHE["gen_before"] = _sha(GEN_E)
         sp = importlib.util.spec_from_file_location("l4e7_stage_settings_under_test", SCRIPT)
         m = importlib.util.module_from_spec(sp)
@@ -750,7 +752,11 @@ def t_the_solar_fault_remedies_select_one_for_each_fault_and_keep_the_window():
     assert abs(d4n["v116"] - (36.8 * (1 + 0.001 * (rws["t_air"] - 25.0)) + (48.4 - 36.8) / 31.0 * 10.0)) < 1e-9 and d4n["v116"] <= 50.0
     # each fault and disturbance
     assert [(v["id"], v["ok"]) for v in rm["verd"]] == [("D4", True), ("D5", True), ("CS116/115 on", True), ("CS116/115 off", True),
-                                                        ("turn-off", True), ("window", True)]
+                                                        ("already on", True), ("window", True)]
+    vd = {v["id"]: v.get("note", "") for v in rm["verd"]}
+    assert "CONDITIONAL on Q13's leakage" in vd["D5"] and "CS115 CONDITIONAL on R-174" in vd["CS116/115 on"]
+    assert "CONDITIONAL on the lead's loop inductance at least %.2f uH" % (1e6 * rm["b6"]["Lb"]) in vd["already on"]
+    assert vd["D4"] == vd["CS116/115 off"] == vd["window"] == ""
     assert rm["f36"]["st_min"] > 0.04 and rm["f36"]["cut_hi"] < lead["v_src"] and rm["f36"]["ring"] < rm["QF"]["vds"]
     assert rm["rev"]["vds"] < rm["QF"]["vds"] and rm["rev"]["i_be"] > 10 * rm["rev"]["idss"]
     assert rm["scp_f"] < rm["scp_lo"] and rm["v_tmr"] < T4["tmr_v"][0] and rm["ov_in116"] < bA["rise"][0]
@@ -758,7 +764,7 @@ def t_the_solar_fault_remedies_select_one_for_each_fault_and_keep_the_window():
     # the window, the static bound and the re-runs
     c = d["c"]
     assert c["p_static"] < rm["p_static_blk"] < 100.0 and rm["t_allow_blk"] >= rm["t_fac"] * rm["t_resp_typ"] and rm["t_allow_blk"] < c["t_allow"]
-    assert rm["L11"]["uv"][2] < rm["shdn"] and rm["i_bank_slew"] < c["i_lo_aged"]
+    assert max(rm["L11"]["uv"][2], rm["b6"]["inp_on"]) < rm["shdn"] and rm["i_bank_slew"] < c["i_lo_aged"] and rm["b6"]["i_start"] < rm["ocp_lo"]
     cr = rm["cs_re"]
     assert abs(cr["none"]["worst"][2] - R["cs101"]["best"]["worst"][2]) < 1e-9
     assert cr["none"]["worst"][2] <= cr["least"]["worst"][2] <= cr["most"]["worst"][2] < rm["margin"]
@@ -768,7 +774,7 @@ def t_the_solar_fault_remedies_select_one_for_each_fault_and_keep_the_window():
     assert R["drafts"][GUARD][3] and not R["drafts"][GUARD][1] and R["drafts"][GUARD][2]
     s = _s10(R)
     for k_ in ("THE SOLAR-FAULT REMEDIES (the owner's amendment of 2 October 2026", "NOT TAKEN. (2) The LM74700-Q1", "SELECTED (SESSION)",
-               "THE WINDOW KEPT", "NOT CLAIMED, a residual named for layer 8", "RE-RUN with the block's series resistance",
+               "THE WINDOW KEPT", "NOT CLAIMED, a residual named for layer 8", "with the block's series resistance ahead of the bulk",
                "STAYING VALID UNCHANGED", "THE TVS-ONLY CHANGE for D4, evaluated and not taken"):
         assert k_ in s, k_
     page = " ".join(open(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), encoding="utf-8").read().split())
@@ -805,14 +811,69 @@ def t_the_solar_guard_draft_follows_the_five_drafts_on_a_copy():
         out = open(cp, encoding="utf-8").read()
         for want in ('"VH2", {"1": "PV_IN", "2": "PV_RTN"}, "C274411")', '"FUSE", {"1": "PV_IN", "2": "PV_F"})', 'ic("U21", 20, "TPS48110AQDGXRQ1', 'r("R87", "4.5mOhm 1% 2512 3W 50ppm',
                      '{"1": "PV_F", "2": "PV_RTN"}, "C80273")', '"PV_RG", "PV_RTN", "GND", lcsc="C473333")', '"C124196")',
-                     '{"switch": "U21", "enable_net": "PV_UVLO"}),', '_intent.rail("PV_RTN"', 'part("D4", "Device", "D_Zener", "SMCJ30A'):
+                     '{"switch": "U21", "enable_net": "PV_UVLO"}),', '_intent.rail("PV_RTN"', 'part("D4", "Device", "D_Zener", "SMCJ30A',
+                     'c("C131", "10u 100V X7R 1210', 'c("C132", "10u 100V X7R 1210', 'c("C126", "330p C0G 100V', 'r("R97", "30.0k 1%',
+                     'c("C133", "10u 50V', 'c("C134", "10u 50V"', '"C132", "C133", "C134", "D4", '):
             assert out.count(want) == 1, want
+        assert '"1u 100V 1210 (panel port' not in out and 'r("R97", "39k' not in out and 'c("C126", "1n C0G' not in out
         assert '"SMCJ28A (panel surge' not in out and out.count('r("R10", "115k 1% (RFBOUT1: 15.1 V)"') == 1
     finally:
         shutil.rmtree(dd)
     r = _run_any(g, GEN_E, "--write")
     assert r.returncode == 3 and ("NOT RELEASED" in r.stderr or "not applied" in r.stderr), r.stderr
     assert _sha(GEN_E) == before, "the tree's gen_sch_e.py changed"
+
+
+def t_the_guard_already_on_is_bounded_in_the_loaded_network():
+    """The consolidation review's B6 (astra-check-l4close-1): a stiff 36 V source arriving with the solar guard already on.
+    The solver against the closed-form series RLC step; the latest corner bounding (the lead's current still rising at every
+    command); every rating at the binding inductance on its side of its printed limit; the binding rating and the conductor
+    spacing it needs recomputed; below it NOT MET; the drafted network failing and each change necessary; ramps, the cold
+    connection, the SOA reading, D11's energy, CS115 carried CONDITIONAL; the page and the draft carrying the figures."""
+    R = _R()
+    m = _CACHE["M"]
+    rm, b6 = R["remedy"], R["remedy"]["b6"]
+    # the solver: the port alone (cold), D11 out of reach, against the underdamped series RLC step's first peak
+    L, C, Rl, E = 3e-6, 4.5e-6, 0.0465, 36.0
+    g = dict(E=E, r_lead=Rl, c131=C, n_ca=4, esr_cer=0.01, n_pc=0, rb=0.0137, r59=0.0155, r_on=0.0045, d4=(1e3, 1.0), d11=(1e3, 1.0),
+             ov=1e3, isc=1e6, tau=1e-6, t_ov=4e-6, t_sc=5e-6, t_f=0.2e-6, v_behind=0.0)
+    r = m.guard_event(g, 0.0, 0.0, L, (0.0, 1e-4), 1.0, cold=True, dt=2e-9, t_end=30e-6)
+    zeta = Rl / 2.0 * (C / L) ** 0.5
+    peak = E * (1 + __import__("math").exp(-zeta * __import__("math").pi / (1 - zeta ** 2) ** 0.5))
+    assert abs(r["vF"] - peak) < 0.01 * peak, (r["vF"], peak)
+    assert abs(r["iL"] - E / (L / C) ** 0.5 * __import__("math").exp(-zeta * __import__("math").atan((1 - zeta ** 2) ** 0.5 / zeta) / (1 - zeta ** 2) ** 0.5)) < 0.02 * E / (L / C) ** 0.5
+    # the binding inductance: every rating on its side, U5's positive differential the binding one, below it NOT MET
+    W = b6["W"]
+    assert W["mono"] and W["why"] == {"SCP"}
+    for id_, v, lim, s in b6["vals"]:
+        assert (lim - v) * s >= -1e-12, (id_, v, lim)
+    assert b6["bind"] == ["u5p"] and 1.0e-6 < b6["Lb"] < 7.04e-6 and abs(W["u5"] - 0.3) < 0.002
+    assert "u5p" in b6["fail_lo"] and "inp" in b6["fail_lo"]
+    r_c = (4e-6 / __import__("math").pi) ** 0.5
+    assert abs(b6["s_star"] - 2 * r_c * __import__("math").cosh(b6["Lb"] / (4e-7 * 5.0))) < 1e-9
+    assert W["i4"] == 0.0 and W["vS"] < rm["D4N"]["vbr_cold"] and W["vP"] < 50.0 and W["vF"] < 100.0 and W["slew"] < 60e6
+    assert W["soa12"] < 1.0 and W["soa13"] < 1.0 and b6["e11"] < b6["e11_room"] and b6["i_cs"] < b6["ics_abs"]
+    assert b6["der"][0] < 1.0 and b6["tc"][0] > R["decision"]["rows"]["t_air"]
+    # each change necessary; the drafted network fails PV_F, its slew, INP and U5
+    var = dict(b6["var"])
+    assert all(var.values())
+    assert sorted(i for i, _v, _l in var["as drafted in the remedies round (C131 1 uF, R97 39k, CSCP 1 nF, no C133 and C134)"]) == ["inp", "pvf", "slew", "u5p"]
+    # ramps and the cold connection
+    assert b6["ramp_ok"] and all(r_["i4"] == 0.0 for r_ in b6["ramp"]) and b6["ramp_w"]["vS"] < rm["D4N"]["vbr_cold"]
+    assert b6["cold_ok"] and max(c["vF"] for c in b6["cold"]) < 100.0
+    assert sum(1 for r_ in b6["ramp"] if 0.7 * b6["s_h"] - 100.0 <= r_["rate"] <= 1.1 * b6["s_h"] + 100.0) >= 35
+    # CS115 carried CONDITIONAL; CS116's screen as the review computes it
+    assert abs(b6["d59_116"] - 0.2123) < 0.0005 and abs(b6["be115"] - 15.680) < 0.002
+    assert rm["scp_f"] < rm["scp_lo"] and abs(b6["tau"][0] - 3010 * 0.99 * 330e-12 * 0.95) < 1e-15
+    s = _s10(R)
+    for k_ in ("THE GUARD ALREADY ON (B6", "THE BINDING RATING", "THE REVIEWED CASE", "RAMPS (from", "THE COLD CONNECTION",
+               "THE CHANGES, AND WHY EACH", "R-176's bench rows, REVISED", "CS115 CONDITIONAL on R-174"):
+        assert k_ in s, k_
+    page = " ".join(open(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), encoding="utf-8").read().split())
+    for fig in ("%.2f uH" % (1e6 * b6["Lb"]), "%.2f mm" % (1e3 * b6["s_star"]), "%.4f V" % W["u5"], "%.1f A" % W["iQ"],
+                "%.3f V" % (rm["D4N"]["vbr_cold"] - b6["ramp_w"]["vS"]), "%.3f A" % b6["i_start"], "%.2f A" % b6["be115"],
+                "### The guard already on (B6 of the consolidation review)", "R-176's acceptance, revised"):
+        assert fig in page, fig
 
 
 def t_the_clarification_drafts_follow_the_decision():
