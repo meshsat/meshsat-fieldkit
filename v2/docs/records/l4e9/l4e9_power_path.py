@@ -37,6 +37,7 @@ Run from the repository root:  python3 v2/docs/records/l4e9/l4e9_power_path.py >
 Needs pdftotext and PyYAML. A few seconds. Exit 2: a pinned file is not the pinned file; 3: an input cannot be parsed;
 4: a predicate failed (a check's arithmetic, the gate's rule, the register's or the handover's form)."""
 import ast
+import glob
 import hashlib
 import math
 import os
@@ -3213,6 +3214,9 @@ def main():
     for ln in cons_budget_lines(F, st):
         p(ln)
     p("")
+    for ln in cons_change_lines(reg):
+        p(ln)
+    p("")
     p("END. Desk arithmetic on read figures; nothing is measured.")
     return "\n".join(out) + "\n", F, D, R, st
 
@@ -3659,6 +3663,145 @@ def cons_budget_tables(F, D, st):
     T["| Figure | "] = ["| Figure | Quantity | The figures, each with its basis and the file that prints it | Kept | Why |", "|---|---|---|---|---|"] + \
         ["| %s | %s | %s | %s | %s |" % (rid, q, "; ".join("%s (%s: %s)" % (v, PINS[k][0].split("/")[-1], b) for v, k, b in figs), kept, why) for rid, q, figs, kept, why in RECON]
     return T
+
+
+# THE CIRCUIT-CHANGE LIST in application order: every implementation row of the register (L4-E4 to L4-E13, this record, the
+# U-01 and U-04 drafts), with its board and generator, apply script, dependency, release guard and state. Nothing is APPLIED.
+GA, GE, GB, GC, GP = "board A, gen_sch_a.py", "board E, gen_sch_e.py", "board B, gen_sch_b.py", "board C, gen_sch_c.py", "board P, gen_sch_p.py"
+G_L4E4 = "L4-E4's RELEASE.md (R-90: accepted checks of L4-E4, L4-E5, L4-E6 and L4-E8)"
+G_L4E7 = "L4-E7's RELEASE.md (R-92: L4-E7R's check 4)"
+G_L4E8 = "L4-E8's RELEASE.md (R-91: check-l4e8-3.md), and the draft refuses a generator without R12"
+G_L4E9 = "this record's RELEASE.md (R-93, after its check)"
+G_L4E11 = "L4-E11's RELEASE.md (R-147: check-l4e11-3.md at a15ab384)"
+CHANGE_ORDER = [
+    ("1", "R-23", "HW-FW-CONTRACT.md (Layer 5)", "with board A's H3 line", "the draft refuses a second application"),
+    ("1", "R-24", "pcb_interfaces.yaml, HW-FW-CONTRACT.md (Layer 5)", "with the release records", "a text draft"),
+    ("1", "R-125", "HW-FW-CONTRACT.md, PANEL.md (Layer 5)", "with the release records", "a text draft"),
+    ("1", "R-133", "CONOPS", "with the release records", "a text draft"),
+    ("1", "R-135", "L4-E5's V-A08 (Layer 4)", "with the release records", "a text draft"),
+    ("1", "R-138", "CONOPS 4, HW-FW-CONTRACT.md (Layer 5)", "with the release records", "a text draft"),
+    ("3a", "R-01", GA, "first in board A's round, together with R-03 and R-124: L4-E6 forbids R12 before the H3 line", "none: L4-E6's draft carries no release guard"),
+    ("3a", "R-02", "board A, lcsc_fill.py", "with R-01", "none"),
+    ("3a", "R-03", GA, "with R-01 and R-124 (the corrected knee)", "no draft yet"),
+    ("3a", "R-124", GA, "with R-03 (the guard under the corrected knee)", G_L4E11),
+    ("3b", "R-04", GA, "after R-01: R11 never before R12", G_L4E4),
+    ("3c", "R-07", GA, "after R-01: the ballasts and Cc2 only with R12", G_L4E8),
+    ("3c", "R-08", "board A, lcsc_fill.py", "with R-07", "no draft yet"),
+    ("3d", "R-05", GA, "independent", G_L4E4),
+    ("3e", "R-06", GA, "after 3a to 3d", G_L4E9),
+    ("3f", "R-09", GA, "with R-07", "a text draft"),
+    ("3f", "R-10", "board A, the declarations", "with R-04", "no draft yet"),
+    ("3f", "R-152", GA, "U-04's fallback, in board A's round once drafted (its zone and height Layer 9's)", "no draft yet"),
+    ("3g", "R-11", "board A, regenerated on the box", "after 3a to 3f", "the gates and the evidence re-taken"),
+    ("4a", "R-16", GE, "no later than R-13", "none: d8dec31's draft carries no release guard"),
+    ("4a", "R-17", GE, "no later than R-13", G_L4E9),
+    ("4b", "R-13", GE, "only in the same release as board A's H3 line (R-03)", "no draft yet"),
+    ("4b", "R-14", GE, "with R-13", "no draft yet"),
+    ("4b", "R-15", "board E, the declarations", "with R-13", "no draft yet"),
+    ("4c", "R-12", GE, "board E's round", G_L4E7),
+    ("4c", "R-19", GE, "board E's round", G_L4E7),
+    ("4c", "R-20", GE, "after R-19", G_L4E7),
+    ("4c", "R-144", GE, "U-02's board E changes", "no draft yet"),
+    ("4d", "R-21", GE, "on the texts R-19 and R-20 leave", G_L4E7),
+    ("4d", "R-98", GE, "with R-21 (the same draft)", G_L4E7),
+    ("4e", "R-18", GE, "after 4c and 4d", G_L4E9),
+    ("4e", "R-95", "board E, pcb_energy_chain.yaml", "with R-18", "no draft yet"),
+    ("4e", "R-96", "pcb_fuse_derating.yaml", "with R-18", "no draft yet"),
+    ("4e", "R-132", GE, "with R-18 (F1's holder)", "no draft yet"),
+    ("4e", "R-94", GE, "after R-18: the base the entry draft applies on", G_L4E9),
+    ("4e", "R-123", GE, "AFTER R-94 (its old texts are that draft's results) and INSTEAD of the timer draft (R-119)", G_L4E11),
+    ("4e", "R-116", "board E, lcsc_fill.py", "with R-123", "no draft yet"),
+    ("4f", "R-22", "board E, regenerated on the box", "after 4a to 4e", "the gates and the evidence re-taken"),
+    ("B", "R-107", GB, "board B's round", "no draft yet"),
+    ("C", "R-145", GC, "board C's round", "no draft yet"),
+    ("5", "R-25", "firmware", "only on a board A with the H3 line (else the derated limit)", "firmware"),
+    ("5", "R-26", "firmware", "with R-23", "firmware"),
+    ("5", "R-27", "firmware", "after R-06", "firmware"),
+    ("5", "R-28", "firmware", "with the D-11 rules", "firmware"),
+    ("5", "R-126", "firmware", "with R-125", "firmware"),
+    ("5", "R-139", "firmware", "with R-138", "firmware"),
+    ("8", "R-129", "Layer 7, the DC receptacle and plug", "before the harness is built", "no draft yet"),
+    ("8", "R-130", "Layer 7, the interconnect", "with R-129", "no draft yet"),
+    ("8", "R-131", "Layer 7, the inside lead and J_DCIN", "with R-129", "no draft yet"),
+    ("8", "R-111", "Layer 7, the enclosure", "U-02: to T-H1's line", "no draft yet"),
+    ("U-01", "R-105", GP, "only under U-01's approach (II), after the owner's approval", "no draft yet"),
+    ("U-01", "R-106", "firmware, the gauge image", "only under (II)", "firmware"),
+    ("U-01", "R-154", "firmware, the gauge image and the host", "only under (II), with R-106", "a text draft"),
+    ("ALT", "R-119", GE, "the LM5069 alternative only: refuses once the selected entry (R-123) has run", G_L4E11),
+]
+ORDER_CONSTRAINTS = [
+    ("R-90 before every board A circuit change", "R-90", "R-04"),
+    ("R12 (R-01) before R11 (R-04)", "R-01", "R-04"),
+    ("R12 (R-01) before the ballasts and Cc2 (R-07)", "R-01", "R-07"),
+    ("the H3 line (R-03) with R12, before R11", "R-03", "R-04"),
+    ("Q1 and E-F1's capacitor (R-17, R-16) no later than R10 (R-13)", "R-17", "R-13"),
+    ("the hot-swap settings (R-94) before the selected entry's draft (R-123)", "R-94", "R-123"),
+    ("F1 (R-18) before the hot-swap settings (R-94)", "R-18", "R-94"),
+    ("L4-E7's hold and input limit (R-19, R-20) before its backstop (R-21)", "R-20", "R-21"),
+    ("U17's move (R-06) before its firmware recalibration (R-27)", "R-06", "R-27"),
+    ("board A regenerated (R-11) after its circuit changes", "R-152", "R-11"),
+    ("board E regenerated (R-22) after its circuit changes", "R-116", "R-22"),
+]
+CHANGE_SCRIPTS = ["l4e4/apply_gen_sch_a_r11.py", "l4e4/apply_gen_sch_a_r138.py", "l4e5/apply_fw_a16.py", "l4e6/apply_gen_sch_a_r12.py", "l4e6/apply_lcsc_fill_r12.py",
+                  "l4e7/apply_gen_sch_e_backstop.py", "l4e7/apply_gen_sch_e_hold.py", "l4e7/apply_gen_sch_e_input_limit.py", "l4e7/apply_gen_sch_e_u5_grade.py",
+                  "l4e8/apply_gen_sch_a_bank.py", "l4e9/apply_gen_sch_a_u17.py", "l4e9/apply_gen_sch_e_f1.py", "l4e9/apply_gen_sch_e_hotswap.py", "l4e9/apply_gen_sch_e_q1.py",
+                  "l4e11/apply_gen_sch_a_guard.py", "l4e11/apply_gen_sch_e_entry.py", "l4e11/apply_gen_sch_e_timer.py", "d8dec31/apply_gen_sch_e_cin.py"]
+
+
+def cons_changes(reg):
+    """The change list from the register's rows; refuses a list that misses an implementation row, an apply script of L4-E4
+    to L4-E13 (and d8dec31's input capacitor), or breaks a named order constraint."""
+    rows = {r[0]: r for r in reg}
+    impl = [r[0] for r in reg if r[1] == "IMPLEMENTATION"]
+    listed = [c[1] for c in CHANGE_ORDER]
+    if len(listed) != len(set(listed)) or sorted(set(impl) - set(listed)) or any(x not in rows for x in listed):
+        refuse(4, "the change list is not every implementation row once: missing %s" % sorted(set(impl) - set(listed)))
+    out = []
+    for i, (step, rid, bg, dep, guard) in enumerate(CHANGE_ORDER, 1):
+        r = rows[rid]
+        scripts = re.findall(r"`?(apply_[a-z0-9_]+\.py)`?", r[3]) or re.findall(r"`?(apply_[a-z0-9_]+\.py)`?", r[2])
+        if r[6] == "MISSING DRAFT":
+            script = "none: a missing draft"
+        else:
+            script = ", ".join(scripts) if scripts else ("none: %s work" % r[6].lower() if r[6] != "DRAFTED" else "a text draft (%s)" % r[3].split(",")[0])
+        state = "%s (not applied)" % r[6] if rid != "R-119" else "DRAFTED, the alternative only (not applied)"
+        out.append((i, step, rid, bg, script, dep, guard, r[2], state))
+    named = " ".join(c[4] for c in out)
+    for s in CHANGE_SCRIPTS:
+        if os.path.basename(s) not in named:
+            refuse(4, "the change list misses %s" % s)
+    have = set(re.sub(r"^.*/records/", "", p) for p in glob.glob(os.path.join(TOP, "v2/docs/records/l4e*/apply_*.py")))
+    if sorted(have - set(CHANGE_SCRIPTS)):
+        refuse(4, "an apply script of L4-E4 to L4-E13 is not in the change list: %s" % sorted(have - set(CHANGE_SCRIPTS)))
+    pos = {c[2]: c[0] for c in out}
+    pos["R-90"] = 0
+    for what, a, b in ORDER_CONSTRAINTS:
+        if not pos[a] < pos[b]:
+            refuse(4, "the change list breaks: %s" % what)
+    return out
+
+
+def cons_change_lines(reg):
+    ch = cons_changes(reg)
+    L = ["17. THE CIRCUIT-CHANGE LIST, IN APPLICATION ORDER (every implementation row of the register; %d changes; none APPLIED)" % len(ch)]
+    L.append("   the release records first: R-90 (L4-E4's, naming L4-E4 to L4-E6 and L4-E8), R-91 (L4-E8's), R-92 (L4-E7's), R-93 (this record's), R-147 (L4-E11's)")
+    for i, step, rid, bg, script, dep, guard, what, state in ch:
+        L.append("   %2d [%s] %s %s; %s; depends: %s; guard: %s; %s" % (i, step, rid, bg, script, dep, guard, state))
+    L.append("   the order constraints, each checked on the list:")
+    for what, _a, _b in ORDER_CONSTRAINTS:
+        L.append("     %s: holds" % what)
+    states = {}
+    for c in ch:
+        states[c[8].split(" (")[0].split(",")[0]] = states.get(c[8].split(" (")[0].split(",")[0], 0) + 1
+    L.append("   by state: %s; APPLIED 0" % "; ".join("%s %d" % (k, states[k]) for k in sorted(states)))
+    return L
+
+
+def cons_change_table(F, D, st):
+    reg = md_table(open(os.path.join(HERE, "DOWNSTREAM-REGISTER.md"), encoding="utf-8").read(), "| ID | Kind |")
+    ch = cons_changes(reg)
+    return {"| # | Step | Row | ": ["| # | Step | Row | Board and generator | Apply script | Depends on | Release guard | What it changes (the register's item) | State |",
+                                "|---|---|---|---|---|---|---|---|---|"] + ["| %d | %s | %s | %s | %s | %s | %s | %s | %s |" % c for c in ch]}
 
 
 def poe_v(F):

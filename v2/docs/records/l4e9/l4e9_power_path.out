@@ -1085,4 +1085,74 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    R19 the panel's day at the conditioned upper corner: 240.0 (l4e13_panel.out: the rated unit); 52.3 (l4e13_panel.out: a unit at A-2's floor)
       kept: both; why: PANEL-ACC accepts any unit inside the window; the unserved energy grows toward the floor's unit
 
+17. THE CIRCUIT-CHANGE LIST, IN APPLICATION ORDER (every implementation row of the register; 54 changes; none APPLIED)
+   the release records first: R-90 (L4-E4's, naming L4-E4 to L4-E6 and L4-E8), R-91 (L4-E8's), R-92 (L4-E7's), R-93 (this record's), R-147 (L4-E11's)
+    1 [1] R-23 HW-FW-CONTRACT.md (Layer 5); apply_fw_a16.py; depends: with board A's H3 line; guard: the draft refuses a second application; DRAFTED (not applied)
+    2 [1] R-24 pcb_interfaces.yaml, HW-FW-CONTRACT.md (Layer 5); a text draft (this record); depends: with the release records; guard: a text draft; DRAFTED (not applied)
+    3 [1] R-125 HW-FW-CONTRACT.md, PANEL.md (Layer 5); a text draft (L4-E11 7a (E11-03); LAYER5-HANDOVER LH-10); depends: with the release records; guard: a text draft; DRAFTED (not applied)
+    4 [1] R-133 CONOPS; a text draft (L4-E11 7b (E11-18)); depends: with the release records; guard: a text draft; DRAFTED (not applied)
+    5 [1] R-135 L4-E5's V-A08 (Layer 4); a text draft (L4-E11 7a (E11-21)); depends: with the release records; guard: a text draft; DRAFTED (not applied)
+    6 [1] R-138 CONOPS 4, HW-FW-CONTRACT.md (Layer 5); a text draft (L4-E12 sections 6 and 9; LAYER5-HANDOVER LH-11); depends: with the release records; guard: a text draft; DRAFTED (not applied)
+    7 [3a] R-01 board A, gen_sch_a.py; apply_gen_sch_a_r12.py; depends: first in board A's round, together with R-03 and R-124: L4-E6 forbids R12 before the H3 line; guard: none: L4-E6's draft carries no release guard; DRAFTED (not applied)
+    8 [3a] R-02 board A, lcsc_fill.py; apply_lcsc_fill_r12.py; depends: with R-01; guard: none; DRAFTED (not applied)
+    9 [3a] R-03 board A, gen_sch_a.py; none: a missing draft; depends: with R-01 and R-124 (the corrected knee); guard: no draft yet; MISSING DRAFT (not applied)
+   10 [3a] R-124 board A, gen_sch_a.py; apply_gen_sch_a_guard.py; depends: with R-03 (the guard under the corrected knee); guard: L4-E11's RELEASE.md (R-147: check-l4e11-3.md at a15ab384); DRAFTED (not applied)
+   11 [3b] R-04 board A, gen_sch_a.py; apply_gen_sch_a_r11.py; depends: after R-01: R11 never before R12; guard: L4-E4's RELEASE.md (R-90: accepted checks of L4-E4, L4-E5, L4-E6 and L4-E8); DRAFTED (not applied)
+   12 [3c] R-07 board A, gen_sch_a.py; apply_gen_sch_a_bank.py; depends: after R-01: the ballasts and Cc2 only with R12; guard: L4-E8's RELEASE.md (R-91: check-l4e8-3.md), and the draft refuses a generator without R12; DRAFTED (not applied)
+   13 [3c] R-08 board A, lcsc_fill.py; none: a missing draft; depends: with R-07; guard: no draft yet; MISSING DRAFT (not applied)
+   14 [3d] R-05 board A, gen_sch_a.py; apply_gen_sch_a_r138.py; depends: independent; guard: L4-E4's RELEASE.md (R-90: accepted checks of L4-E4, L4-E5, L4-E6 and L4-E8); DRAFTED (not applied)
+   15 [3e] R-06 board A, gen_sch_a.py; apply_gen_sch_a_u17.py; depends: after 3a to 3d; guard: this record's RELEASE.md (R-93, after its check); DRAFTED (not applied)
+   16 [3f] R-09 board A, gen_sch_a.py; a text draft (L4-E8); depends: with R-07; guard: a text draft; DRAFTED (not applied)
+   17 [3f] R-10 board A, the declarations; none: a missing draft; depends: with R-04; guard: no draft yet; MISSING DRAFT (not applied)
+   18 [3f] R-152 board A, gen_sch_a.py; none: a missing draft; depends: U-04's fallback, in board A's round once drafted (its zone and height Layer 9's); guard: no draft yet; MISSING DRAFT (not applied)
+   19 [3g] R-11 board A, regenerated on the box; none: owed work; depends: after 3a to 3f; guard: the gates and the evidence re-taken; OWED (not applied)
+   20 [4a] R-16 board E, gen_sch_e.py; apply_gen_sch_e_cin.py; depends: no later than R-13; guard: none: d8dec31's draft carries no release guard; DRAFTED (not applied)
+   21 [4a] R-17 board E, gen_sch_e.py; apply_gen_sch_e_q1.py; depends: no later than R-13; guard: this record's RELEASE.md (R-93, after its check); DRAFTED (not applied)
+   22 [4b] R-13 board E, gen_sch_e.py; none: a missing draft; depends: only in the same release as board A's H3 line (R-03); guard: no draft yet; MISSING DRAFT (not applied)
+   23 [4b] R-14 board E, gen_sch_e.py; none: a missing draft; depends: with R-13; guard: no draft yet; MISSING DRAFT (not applied)
+   24 [4b] R-15 board E, the declarations; none: a missing draft; depends: with R-13; guard: no draft yet; MISSING DRAFT (not applied)
+   25 [4c] R-12 board E, gen_sch_e.py; apply_gen_sch_e_u5_grade.py; depends: board E's round; guard: L4-E7's RELEASE.md (R-92: L4-E7R's check 4); DRAFTED (not applied)
+   26 [4c] R-19 board E, gen_sch_e.py; apply_gen_sch_e_hold.py; depends: board E's round; guard: L4-E7's RELEASE.md (R-92: L4-E7R's check 4); DRAFTED (not applied)
+   27 [4c] R-20 board E, gen_sch_e.py; apply_gen_sch_e_input_limit.py; depends: after R-19; guard: L4-E7's RELEASE.md (R-92: L4-E7R's check 4); DRAFTED (not applied)
+   28 [4c] R-144 board E, gen_sch_e.py; none: a missing draft; depends: U-02's board E changes; guard: no draft yet; MISSING DRAFT (not applied)
+   29 [4d] R-21 board E, gen_sch_e.py; apply_gen_sch_e_backstop.py; depends: on the texts R-19 and R-20 leave; guard: L4-E7's RELEASE.md (R-92: L4-E7R's check 4); DRAFTED (not applied)
+   30 [4d] R-98 board E, gen_sch_e.py; apply_gen_sch_e_backstop.py; depends: with R-21 (the same draft); guard: L4-E7's RELEASE.md (R-92: L4-E7R's check 4); DRAFTED (not applied)
+   31 [4e] R-18 board E, gen_sch_e.py; apply_gen_sch_e_f1.py; depends: after 4c and 4d; guard: this record's RELEASE.md (R-93, after its check); DRAFTED (not applied)
+   32 [4e] R-95 board E, pcb_energy_chain.yaml; none: a missing draft; depends: with R-18; guard: no draft yet; MISSING DRAFT (not applied)
+   33 [4e] R-96 pcb_fuse_derating.yaml; none: a missing draft; depends: with R-18; guard: no draft yet; MISSING DRAFT (not applied)
+   34 [4e] R-132 board E, gen_sch_e.py; none: a missing draft; depends: with R-18 (F1's holder); guard: no draft yet; MISSING DRAFT (not applied)
+   35 [4e] R-94 board E, gen_sch_e.py; apply_gen_sch_e_hotswap.py; depends: after R-18: the base the entry draft applies on; guard: this record's RELEASE.md (R-93, after its check); DRAFTED (not applied)
+   36 [4e] R-123 board E, gen_sch_e.py; apply_gen_sch_e_entry.py; depends: AFTER R-94 (its old texts are that draft's results) and INSTEAD of the timer draft (R-119); guard: L4-E11's RELEASE.md (R-147: check-l4e11-3.md at a15ab384); DRAFTED (not applied)
+   37 [4e] R-116 board E, lcsc_fill.py; none: a missing draft; depends: with R-123; guard: no draft yet; MISSING DRAFT (not applied)
+   38 [4f] R-22 board E, regenerated on the box; none: owed work; depends: after 4a to 4e; guard: the gates and the evidence re-taken; OWED (not applied)
+   39 [B] R-107 board B, gen_sch_b.py; none: a missing draft; depends: board B's round; guard: no draft yet; MISSING DRAFT (not applied)
+   40 [C] R-145 board C, gen_sch_c.py; none: a missing draft; depends: board C's round; guard: no draft yet; MISSING DRAFT (not applied)
+   41 [5] R-25 firmware; none: owed work; depends: only on a board A with the H3 line (else the derated limit); guard: firmware; OWED (not applied)
+   42 [5] R-26 firmware; apply_fw_a16.py; depends: with R-23; guard: firmware; OWED (not applied)
+   43 [5] R-27 firmware; none: owed work; depends: after R-06; guard: firmware; OWED (not applied)
+   44 [5] R-28 firmware; none: owed work; depends: with the D-11 rules; guard: firmware; OWED (not applied)
+   45 [5] R-126 firmware; none: owed work; depends: with R-125; guard: firmware; OWED (not applied)
+   46 [5] R-139 firmware; none: owed work; depends: with R-138; guard: firmware; OWED (not applied)
+   47 [8] R-129 Layer 7, the DC receptacle and plug; none: a missing draft; depends: before the harness is built; guard: no draft yet; MISSING DRAFT (not applied)
+   48 [8] R-130 Layer 7, the interconnect; none: a missing draft; depends: with R-129; guard: no draft yet; MISSING DRAFT (not applied)
+   49 [8] R-131 Layer 7, the inside lead and J_DCIN; none: a missing draft; depends: with R-129; guard: no draft yet; MISSING DRAFT (not applied)
+   50 [8] R-111 Layer 7, the enclosure; none: owed work; depends: U-02: to T-H1's line; guard: no draft yet; OWED (not applied)
+   51 [U-01] R-105 board P, gen_sch_p.py; none: owed work; depends: only under U-01's approach (II), after the owner's approval; guard: no draft yet; OWED (not applied)
+   52 [U-01] R-106 firmware, the gauge image; none: owed work; depends: only under (II); guard: firmware; OWED (not applied)
+   53 [U-01] R-154 firmware, the gauge image and the host; a text draft (L4-E10 section 14b (out 9b)); depends: only under (II), with R-106; guard: a text draft; DRAFTED (not applied)
+   54 [ALT] R-119 board E, gen_sch_e.py; apply_gen_sch_e_timer.py; depends: the LM5069 alternative only: refuses once the selected entry (R-123) has run; guard: L4-E11's RELEASE.md (R-147: check-l4e11-3.md at a15ab384); DRAFTED, the alternative only (not applied)
+   the order constraints, each checked on the list:
+     R-90 before every board A circuit change: holds
+     R12 (R-01) before R11 (R-04): holds
+     R12 (R-01) before the ballasts and Cc2 (R-07): holds
+     the H3 line (R-03) with R12, before R11: holds
+     Q1 and E-F1's capacitor (R-17, R-16) no later than R10 (R-13): holds
+     the hot-swap settings (R-94) before the selected entry's draft (R-123): holds
+     F1 (R-18) before the hot-swap settings (R-94): holds
+     L4-E7's hold and input limit (R-19, R-20) before its backstop (R-21): holds
+     U17's move (R-06) before its firmware recalibration (R-27): holds
+     board A regenerated (R-11) after its circuit changes: holds
+     board E regenerated (R-22) after its circuit changes: holds
+   by state: DRAFTED 26; MISSING DRAFT 17; OWED 11; APPLIED 0
+
 END. Desk arithmetic on read figures; nothing is measured.

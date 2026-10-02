@@ -48,6 +48,7 @@ findings ledger, at 146 items; the TI request and T-H1's bench are owner's items
 """
 import ast
 import copy
+import glob
 import hashlib
 import importlib.util
 import os
@@ -1015,6 +1016,37 @@ def t_consolidation_one_budget_with_pinned_inputs_and_the_reconciliation():
     assert [mm[0] for mm in modes] == ["M1", "M2", "M3", "M4", "M5", "M6"]
     assert "NOT MET" in _C["text"].split("16b ENERGY")[1] and "A charger change does not close it" in _C["text"]
     assert any(h[2] == F["e5_hold_wb"] and "BINDING" in h[3] for h in heat), "the binding line in the heat budget"
+
+
+def t_consolidation_the_change_list_covers_every_apply_script_in_order():
+    m = _M()
+    reg = _md_rows(REG, "| ID | Kind |")
+    ch = m.cons_changes(reg)
+    impl = {r[0] for r in reg if r[1] == "IMPLEMENTATION"}
+    assert impl <= {c[2] for c in ch} and len({c[2] for c in ch}) == len(ch), "every implementation row once"
+    scripts = " ".join(c[4] for c in ch)
+    for p in glob.glob(os.path.join(ROOT, "v2", "docs", "records", "l4e*", "apply_*.py")) + [os.path.join(ROOT, "v2", "docs", "records", "d8dec31", "apply_gen_sch_e_cin.py")]:
+        assert os.path.basename(p) in scripts, "%s is not in the change list" % os.path.relpath(p, ROOT)
+    assert not any("APPLIED" == c[8].split(" ")[0] for c in ch), "nothing is applied"
+    pos = {c[2]: c[0] for c in ch}
+    assert pos["R-01"] < pos["R-04"] and pos["R-01"] < pos["R-07"] and pos["R-94"] < pos["R-123"] and pos["R-17"] < pos["R-13"]
+    for c in ch:
+        assert c[3] and c[5] and c[6] and c[7], "each change names its board, dependency, guard and what it changes: %s" % c[2]
+    page = m.md_table(open(PAGE, encoding="utf-8").read(), "| # | Step | Row |")
+    assert page == [["%d" % c[0]] + [str(x) for x in c[1:]] for c in ch], "the page's change list is the script's"
+    bad = list(m.CHANGE_ORDER)
+    i, j = [k for k, c in enumerate(bad) if c[1] in ("R-94", "R-123")]
+    bad[i], bad[j] = bad[j], bad[i]
+    saved = m.CHANGE_ORDER
+    try:
+        m.CHANGE_ORDER = bad
+        try:
+            m.cons_changes(reg)
+            raise AssertionError("the entry before the hot swap must be refused")
+        except SystemExit:
+            pass
+    finally:
+        m.CHANGE_ORDER = saved
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
