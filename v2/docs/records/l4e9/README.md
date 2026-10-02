@@ -68,7 +68,12 @@ the shed states 2.52 to 2.95 h); L4-E10 at `ee09aa09` finds the Saft supported f
 adoptable; the register at 169 items. B6, the last fix (L4-E7 at `11339ec7`, output section 25m): the solar guard already on
 takes four drafted parts (C131 and C132 two 10 uF 100 V, C133 and C134 two 10 uF 50 V, C126 330 pF, R97 30.0k), and D-10 is
 CONDITIONAL on the panel lead's loop inductance at least 2.47 uH (R-176's seven rows; R-180, the lead's spacing at Layer 7); D-12's
-text is L4-E7's; the register at 170 items. Status: known defects addressed in drafts; feasibility conditions remain open.
+text is L4-E7's; the register at 170 items. The review of the provisional fixes (an external engineering review of 2 October 2026
+on `8fbb68b6`, `516d43fe` and `11339ec7`; output section 26): L4-F02 and L4-F03 from L4-E11 at `d2a59468`: D-14 restated,
+CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss against TI's 5 nF OPEN (E11-37); D-15 new, the dock's VSYS contact behind the
+eFuse U42 (R-181, step 3a with R-157), its hard short CONDITIONAL on E11-38 (R-184); R-182 and R-183 new; the held pack's
+0.1408 mA a quantified subset, the 1 mA bench acceptance kept; the register at 174 items. Status: known defects addressed in
+drafts; feasibility conditions remain open.
 
 | File | What it is |
 |---|---|

@@ -120,6 +120,18 @@ def _M():
     return _C["M"]
 
 
+def _pin_held(m, key):
+    """A property, not history: the key's selected commit is a labelled one, and the pinned bytes are the tree's file or that commit's."""
+    rel, sha = m.PINS[key]
+    if m.FROM_COMMIT[key] not in m.COMMIT_LABEL:
+        return False
+    p = os.path.join(ROOT, rel)
+    if os.path.exists(p) and hashlib.sha256(open(p, "rb").read()).hexdigest() == sha:
+        return True
+    r = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (m.FROM_COMMIT[key], rel)], capture_output=True)
+    return r.returncode == 0 and hashlib.sha256(r.stdout).hexdigest() == sha
+
+
 def _md_rows(path, header):
     m = _M()
     return m.md_table(open(path, encoding="utf-8").read(), header)
@@ -922,9 +934,9 @@ def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
     m = _M()
     F = _C["F"]
     r5 = F["r5"]
-    for key, commit in (("l4e10", "ee09aa09"), ("l4e10md", "ee09aa09"), ("cl_topwell", "e464ff88"), ("l4e11", "656fc540"),
-                        ("l4e11md", "656fc540"), ("l4e12", "b1cd32ba"), ("l4e12md", "b1cd32ba")):
-        assert m.FROM_COMMIT[key] == commit, key
+    for key in ("l4e10", "l4e10md", "cl_topwell", "l4e11", "l4e11md", "l4e12", "l4e12md"):
+        commit = m.FROM_COMMIT[key]
+        assert _pin_held(m, key), key
         rel, sha = m.PINS[key]
         rb = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (commit, rel)], capture_output=True)
         if rb.returncode != 0:
@@ -1129,7 +1141,7 @@ def t_consolidation_the_charger_selection_and_the_thermal_verdict_are_carried():
     b1, tb = F["cb"]["b1"], F["cb"]["tb"]
     for key in ("l4e11chk5", "l4e12chk5", "e11charger"):
         assert key in m.PINS and m.PINS[key][1][:16] in _C["text"].split("1. THE MAKERS")[0], key
-    assert m.FROM_COMMIT["l4e11"] == "656fc540" and m.FROM_COMMIT["l4e12"] == "b1cd32ba"
+    assert _pin_held(m, "l4e11") and _pin_held(m, "l4e12")
     N, E, C, NP = m.cons_diagram(F, st)
     blk = {n[0]: " ".join(n[4]) for n in N}
     assert "BQ25730" in blk["CHG"] and "Q39" in blk["VBAT"] and "%s" % b1["vsys_min"] in blk["VBAT"], "(B1) is in the figure"
@@ -1166,7 +1178,7 @@ def t_consolidation_the_cell_route_and_normal_operation():
     u1, tb = cb["u1"], cb["tb"]
     for key in ("l4e10chk5", "l4e10chk6", "cl_saft"):
         assert key in m.PINS and m.PINS[key][1][:16] in _C["text"].split("1. THE MAKERS")[0], key
-    assert m.FROM_COMMIT["l4e10"] == "ee09aa09"
+    assert _pin_held(m, "l4e10")
     # the battery comparison as the budget's and the handover's cell row
     modes, energy, ef, heat = m.cons_budget(F, st)
     e = {x[0]: x for x in energy}
@@ -1210,7 +1222,7 @@ def t_consolidation_the_amendment_of_14_20():
     K, R, H = rc["K"], rc["R"], rc["H"]
     for key in ("l4e12chk7", "l4e10chk6", "ledger", "verify"):
         assert key in m.PINS and m.PINS[key][1][:16] in _C["text"].split("1. THE MAKERS")[0], key
-    assert "check 7" in m.COMMIT_LABEL["6f8fd652"] and m.FROM_COMMIT["l4e12"] == "b1cd32ba"
+    assert "check 7" in m.COMMIT_LABEL["6f8fd652"] and _pin_held(m, "l4e12")
     # 1. the thermal correction of check 7, as the fix round restates it: section 11's conditions read, K1 and K5 screens since 12a
     assert (K["K1"]["need"], K["K2"]["need"], K["K3"]["need"], K["K6"]["need"], K["K7"]["need"], K["K8"]["need"]) == ("1.806", "2.709", "0.903", "1.447", "1.810", "2.200")
     assert (R["K1"]["read"], R["K3"]["read"], R["K6"]["read"], R["K10"]["read"]) == ("1.958", "0.941", "1.508", "2.455") and H["M2"][1] == 25.136
@@ -1366,8 +1378,8 @@ def t_fix_round_the_layer4_review_integrated():
     fx = F["fx"]
     text = _C["text"]
     page = open(PAGE, encoding="utf-8").read()
-    for key, commit in (("l4e10", "ee09aa09"), ("l4e11", "656fc540"), ("l4e12", "b1cd32ba")):
-        assert m.FROM_COMMIT[key] == commit, key
+    for key in ("l4e10", "l4e11", "l4e12"):
+        assert _pin_held(m, key), key
     for key in ("e11aux", "e11dock"):
         assert key in m.PINS and m.PINS[key][1][:16] in text.split("1. THE MAKERS")[0], key
     # B1: board E's auxiliary domain on VSYS_E; the held pack's drains; the start bounded; the system node
@@ -1473,6 +1485,51 @@ def t_b6_the_solar_guard_already_on():
     short = page.split("## In short\n")[1].split("\n## 1. ")[0]
     assert want in short and "2.47 uH" in short
     assert "25m B6" in _C["text"] and "MEETS with the block on and off (R-174" not in page
+
+
+def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
+    """The external review of the provisional fixes (2 October 2026): L4-F02 and L4-F03 as L4-E11's round answers them, carried. Held
+    as properties: D-14 reads CONDITIONAL on the three evidence rows with Ciss OPEN, D-15 is the dock branch's protection addressed in
+    drafts, every E11 item L4-E11 prints is in the register with L4-E11's owner, the eFuse is its own change before board E's feed, the
+    held pack's 0.1408 mA is nowhere a bound, and the texts L4-E11 16f drafted stand at their places."""
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    g = F["f02"]
+    assert _pin_held(m, "l4e11") and _pin_held(m, "l4e11md")
+    assert g["allow"] < g["rds_max"][0] and g["z_ev"][0][2] > g["z_ev"][1][2] > g["z_ev"][2][2] and g["svc"][0] < 150.0
+    assert g["ef"][1] < g["ef"][0] < g["ef"][2] and g["ef_c"][0] < g["ef_c"][2] and g["cex"][0] > g["ef_c"][2]
+    de = {d["id"]: d for d in m.DEFECTS}
+    assert not [d for d in m.DEFECTS if d["state"] == "OPEN"]
+    s14 = de["D-14"]["state"]
+    assert s14.startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL on E11-29, E11-30 and E11-36" in s14 and "E11-37" in s14 and "OPEN" in s14
+    assert de["D-15"]["state"].startswith("ADDRESSED IN DRAFTS") and "E11-38" in de["D-15"]["state"] and "R-181" in de["D-15"]["resolution"]
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    owner_of = {i: o.strip() for i, _k, o in F["e11_items"]}
+    for item in ("E11-35", "E11-36", "E11-37", "E11-38"):
+        rows = [r for r in reg.values() if re.search(r"\b%s\b" % item, r[3])]
+        assert rows and all(r[4] == owner_of[item] for r in rows), item
+    r181 = reg["R-181"]
+    assert r181[1] == "IMPLEMENTATION" and "apply_gen_sch_a_charger.py" in r181[3] and r181[6] == "DRAFTED"
+    for part in ("U42", "R221", "C237", "VSYS_DOCK"):
+        assert part in r181[2], part
+    ch = {c[2]: c for c in m.cons_changes(list(reg.values()))}
+    assert ch["R-181"][1] == "3a" and ch["R-181"][0] < ch["R-177"][0] and ch["R-181"][0] < ch["R-11"][0]
+    page = open(PAGE, encoding="utf-8").read()
+    for f_ in (page, _C["text"].split("25. THE FIX ROUND")[0], open(REG, encoding="utf-8").read()):
+        assert "bounded at 0.1408" not in f_ and "drains total 0.1408" not in f_.split("25a B1")[0]
+    cur = page.split("## 7. Standalone analyses")[0]
+    for w in ("34.42", "0.848 hot", "at 119.8 C"):
+        assert w not in cur, w
+    assert "quantified subset" in cur and "quantified subset" in page.split("### 8b.")[0].split("### 8a.")[1]
+    N, E, C, NP = m.cons_diagram(F, st)
+    assert "U42" in [e for e in E if e[0] == "P16"][0][4]
+    ex = page.split("**The exit: Layer 4 power closure is not reached")[1].split("## 7. ")[0]
+    assert "quantified drains 0.1408 mA" in ex and "RDS(on) allowance of 21.136 mOhm" in ex and "(Zself + Zmut)" in ex
+    u4 = {e[0]: e for e in m.cons_exit(F)}["U-04"]
+    assert "Zself + Zmut" in u4[2] and "E11-37" in u4[2] and "quantified subset" in u4[4]
+    assert len(g["f16"]) == 4 and len(g["g16"]) == 5
+    sec = _C["text"].split("26. THE REVIEW OF THE PROVISIONAL FIXES")[1]
+    assert "26a L4-F02" in sec and "26b L4-F03" in sec and "PENDING L4-E7's round" in sec or "26d L4-F01" in sec
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
