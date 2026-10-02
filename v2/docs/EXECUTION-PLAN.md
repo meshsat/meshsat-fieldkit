@@ -1289,3 +1289,59 @@ Electrical feasibility and endurance are separate questions.
 **External, not estimable:** Topwell's signed specification, TI's statements (unless U-04's selection removes them), T-H1 on a
 bench, the CFL-002 choice. Purchases and outside contacts stay with the owner.
 
+
+### Plan, 2 October 2026 23:42 CEST: continue autonomously through the layers (the owner's instruction of 23:40)
+
+The instruction is filed as received at `v2/docs/handover/OWNER-INSTRUCTION-2026-10-02.md`; this entry applies it to the plan
+once. Everything above stands where it does not conflict.
+
+**Fixed:** as in the plan of 11:27 (battery and solar mandatory; storage inside the Peli; HF and the tablet kept; 48 to 72 h an
+objective under its profile, reported honestly, tablet charging a cost; the ruled pack and cell; no reduced service, no relaxed
+protection or temperature requirement; Layer 3 closed). The owner is asked only for an actual ruling or an action outside
+authority (purchases, outside contacts, host power).
+
+**Completion claims, five, always apart** (a layer reads 100 % only against its fixed criteria; a blocked gate is never renamed):
+documents and editable artifacts complete; design reviewed and accepted; circuit or layout changes implemented; physical
+qualification completed; fabrication release approved. A named future test does not establish feasibility; a software test
+establishes its tested behaviour.
+
+**Per power issue, three kinds, each with its own remedy:** a demonstrated defect is corrected; an unresolved assumption is
+bounded with applicable evidence or designed out (fewer dependencies, adequate margin, supported component behaviour; a third
+compensating circuit on one stage reopens the stage); a physical question gets a specimen, a measurement, an acceptance and a
+consequence. An unsuccessful approach is never repeated on unchanged evidence; a review budget closes nothing. Reviews: one
+focused independent check and one targeted recheck per issue on the exact candidate with a bounded question; coordinator
+verification is labelled and never overwrites an independent rejection.
+
+**Order of work:** by dependencies, the earliest incomplete layer first; an open question blocks only its dependants.
+Provisional work on stable parts of later layers is allowed with its assumptions and invalidation triggers visible; no routing
+on an unstable circuit. Two workers, one author per artifact, the coordinator owns integration and the system model; an idle
+slot takes the critical path or the next ready layer without waiting for the owner.
+
+| Layer | First ready task under this plan | Entry condition | Blocks only |
+|---|---|---|---|
+| 4 | finish CP01 to CP03 (done, L4-E11 `1a4245c3`), the one design-out attempt on B6 (L4-E7, running), the consolidation's three-level decision and the prototype qualification route with the purchase and send lists (running); integrate as set 27; the one targeted Astra recheck on the exact integrated commit; the box suite; promote | none | the L4 "reviewed and accepted" claim; nothing in L5 or L6 that reads the accepted parts |
+| 5 | write the power contracts L4-E9's `LAYER5-HANDOVER.md` drafts (LH-01 to LH-11) into `pcb_interfaces.yaml` and `HW-FW-CONTRACT.md` with the pass-2 fields (5.2, 5.4, 5.5), the new rows of set 27 (VSYS_DOCK behind U42 on IF-AE-DOCK, the fan-start stagger E11-39, the guard's R-176 rows), the sequencing and line states (5.6, 5.7) from L4-E9 section 4; each entry names its L4 row and its invalidation trigger | the L4 record it reads is on a committed candidate (set 27's line); items that rest on B6 or U-04's open conditions are marked PROVISIONAL | 5.2, 5.4 to 5.7, 5.11, 5.13 |
+| 6 | the identity, rating, derating and source evidence of every part Layer 4 selected (the charger and its FETs, the eFuse, the entry and guard parts, the sense bank, the Samsung capacitors, the fans once named): exact MPN, package, grade, the maker's document with revision and sha256, LCSC or maker availability and price read publicly, one alternative each, the qualification obligation it carries (6.1 to 6.3, 6.6, 6.8) | the part is selected in an L4 record on a committed candidate | 6.1 to 6.3, 6.6, 6.8 for those parts |
+| 7 | the harness and fit items L4 created: the solar lead's loop bound (R-180) as a controlled harness or dropped by B6's route 3, the dock contact and wiring pulse capability, the fans' pick and mounting (D-18), T-H1's mock-up specification | L4's qualification route names them | 7.x rows for those items |
+| 8 | apply the APPROVED circuit drafts of L4-E4 to L4-E13 in application order with their release guards (L4-E4's release record first), then regeneration and `check_contracts.py` against the Layer 5 contracts | the draft's guard reads released; the stage it changes has no open design-out attempt | 8.x for that board |
+| 9 | the analyses re-run on the implemented circuit (dc_drop, impedance, the walk), assumptions and cases named, the bench rows tied to specimens | Layer 8 applied the change | 9.x |
+| 10 to 12 | layout only behind the schematic, stackup, interface and mechanical gates; manufacturing packages from the validated revision; firmware, bring-up and test plans in parallel where dependencies allow | the named gates | as stated |
+
+**Physical verification route:** every experiment names its specimen (evaluation hardware, coupon, enclosure mock-up or
+controlled prototype), what it represents and what transfers, the procedure and pass limits, the consequence of failure and the
+authorisation still needed; an evidence build is separate from fabrication release, and no gate requires a finished board to
+permit a representative prototype. The table is L4-E9's "prototype qualification route" (the consolidation's round 2).
+
+**Execution:** the existing tools, worktrees, ledger and `regen_out.py`; targeted checks while changing, the release suite on the
+exact integrated candidate; artifacts regenerated in dependency order; no repeated full suite or rewrite without a changed risk;
+the rented instance resumed for the suite and stopped after about two hours idle, disks kept; snapshots packaged promptly and
+labelled; every checkpoint commits the state and names the next executable action.
+
+**Milestone reports, brief:** what changed and its commit; which layer criteria are met and which open; what runs; the next
+milestone with an evidence-based ETA; only the owner decisions genuinely needed. Documents, tests and review rounds are not
+hardware progress.
+
+**ETA (evidence-based, estimates):** set 27 integration and freeze about 1 h after the two running rounds land (the freeze of
+21:00 took 25 min); the Astra recheck about 1 h (runs of this size took 45 to 70 min); the box suite about 25 min plus the
+instance's resume; promotion 30 min. Layer 5's first task about 2 to 3 h on one slot; Layer 6's first task about 2 to 3 h on the
+other. External and not estimable: the vendor answers and every measurement.
