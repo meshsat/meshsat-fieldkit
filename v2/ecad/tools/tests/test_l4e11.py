@@ -18,7 +18,17 @@ owner and an acceptance; no em or en dash and no claim word. The final round add
 and the voltage and reproduces the check's 6.36376 A at 0.908691; the breaker's delay is TI's loaded row and the scan carries the
 short-circuit filter and the delays; REQ-015 at the plug is a CONDITIONAL CANDIDATE on a bounded shedding sequence; the
 specified resistance floor keeps a stiff source at 900 A and the last interval and the obligations reach it; R-b permits two
-settings and its bound holds only inside TI's row condition. Nothing here writes into the tree: drafts run on temporary copies.
+settings and its bound holds only inside TI's row condition. The dependency round adds: one row per specification left to a
+maker (D1 to D10) with all seven columns and its cited record lines; the bounded fallback holds the worst admitted step for at
+least the assumed response and keeps the pack's inrush under ASCD; U-04 stays an architecture-level choice resting on D1 and D3;
+the POR value is TI's 256 mA; the TI draft asks only what REVIEW-REQUEST.md does not. The consolidation round adds: TI's BQ25730
+differs from the drawn BQ25731 at pin 21 alone and keeps every electrical row the drafted settings rest on; each of the three
+modes has a printed bound on VSYS whose floor clears the converters' assumed one; the start into VSYS's capacitance never
+latches; the battery FET meets TI's selection rule, its thermal bar and its LDO-mode floor follow from its sheet in closed form,
+and its docking pulse exceeds IDM and is named a gap; Figure 14's reader is independent of poppler's serialisation; the
+cost is the catalogues'; the charger draft composes with the guard
+draft in either order; (B1) is selected and U-04 becomes a downstream qualification test. Nothing here writes into the tree:
+drafts run on temporary copies.
 Software tests establish this record's own behaviour only.
 """
 import hashlib
@@ -41,7 +51,8 @@ OUT = os.path.join(REC, "l4e11_power.out")
 PAGE = os.path.join(REC, "L4E11-SOURCE-ONLY-AND-ENTRY.md")
 GEN_E = os.path.join(TOOLS, "gen_sch_e.py")
 GEN_A = os.path.join(TOOLS, "gen_sch_a.py")
-DRAFTS = (("apply_gen_sch_e_entry.py", GEN_E, True), ("apply_gen_sch_e_timer.py", GEN_E, False), ("apply_gen_sch_a_guard.py", GEN_A, False))
+DRAFTS = (("apply_gen_sch_e_entry.py", GEN_E, True), ("apply_gen_sch_e_timer.py", GEN_E, False), ("apply_gen_sch_a_guard.py", GEN_A, False),
+          ("apply_gen_sch_a_charger.py", GEN_A, False))
 sys.dont_write_bytecode = True
 sys.path.insert(0, TOOLS)
 from harness import need, Skip  # noqa: E402
@@ -385,12 +396,12 @@ def t_every_figure_carries_a_class():
     sec, bad, i = None, [], 0
     while i < len(text):
         ln = text[i]
-        m = re.match(r"^(\d)\. ", ln)
+        m = re.match(r"^(\d{1,2})\. ", ln)
         if m:
             sec, i = int(m.group(1)), i + 1
             continue
         grp, j = [ln], i + 1
-        while j < len(text) and text[j].strip() and ind(text[j]) > ind(ln) and not re.match(r"^\d\. ", text[j]):
+        while j < len(text) and text[j].strip() and ind(text[j]) > ind(ln) and not re.match(r"^\d{1,2}\. ", text[j]):
             grp.append(text[j])
             j += 1
         if sec not in (None, 0, 8) and any(fig.search(g) for g in grp) and not cls.search(" ".join(grp)):
@@ -419,7 +430,9 @@ def t_the_record_carries_the_outputs_numbers():
     out = open(OUT, encoding="utf-8").read()
     for s in ("4.927 to 14.653", "1236.9", "9.91 / 11.13 / 12.37", "9.33 / 10.52 / 11.74", "8.987", "3.062", "4.593",
               "0.71 A", "6.364", "7.136", "5.983", "0.704", "3.08", "0.743", "73.4 A", "2.08 uH", "29.09", "42.52", "43.82", "35.24",
-              "20.51", "56.93", "58.51", "64.21", "1.2567", "50.99", "69.73", "72.41", "7.378", "6.754 / 6.944 / 7.139", "0.908691", "0.88021"):
+              "20.51", "56.93", "58.51", "64.21", "1.2567", "50.99", "69.73", "72.41", "7.378", "6.754 / 6.944 / 7.139", "0.908691", "0.88021",
+              "12.054", "17.375", "20.54", "0.221", "4.1792", "6.2468", "12.057", "14.41", "7.744", "9.216", "242.9", "17.7", "502.3",
+              "2.347", "0.916", "10.44", "120.9", "107.8", "170.3", "184.4", "0.302"):
         assert s in page and s in out, "%s is not in both the record and the output" % s
 
 
@@ -441,3 +454,230 @@ def t_no_dashes_and_no_claim_words():
                 flat = flat.replace(q, "")      # a quoted approved requirement is the owner's text, not this record's claim
             m = CLAIM.search(flat)
             assert not m, "%s carries a claim word: %r" % (os.path.relpath(p, ROOT), m.group(0))
+
+
+DEP_PHRASES = {"D1": "| absent, or both FETs open", "D2": "**R-c.**", "D3": "| S2 | on | off |", "D4": "**ChargeCurrent() at POR.**",
+               "D5": "| E11-07 |", "D6": "**R-d.**", "D7": "| (iii) |", "D8": "| (ii) |", "D9": "| overcurrent delay |",
+               "D10": "| a start into a hard short"}
+
+
+def t_the_dependency_table_has_one_row_per_missing_specification_with_its_claim_lines():
+    R = _R()
+    m = _M()
+    rows = m.dep_rows(R)
+    assert [r["id"] for r in rows] == ["D%d" % k for k in range(1, 11)]
+    for r in rows:
+        for k in ("name", "missing", "claim", "maker", "bench", "cannot", "method", "negative"):
+            assert len(r[k]) > 10, "%s lacks %s" % (r["id"], k)
+    lines = open(PAGE, encoding="utf-8").read().split("\n")
+    s11 = lines.index([l for l in lines if l.startswith("## 11. ")][0])
+    e11 = lines.index([l for l in lines if l.startswith("### 11a. ")][0])
+    table = [l for l in lines[s11:e11] if re.match(r"^\| D\d+", l)]
+    assert [re.match(r"^\| (D\d+)", l).group(1) for l in table] == ["D%d" % k for k in range(1, 11)]
+    for l in table:
+        assert l.count("|") == 8, "a dependency row does not carry the seven columns: %s" % l[:40]
+        rid = re.match(r"^\| (D\d+)", l).group(1)
+        cites = re.findall(r"line (\d+):", l)
+        assert len(cites) == 1, "%s cites no record line" % rid
+        assert DEP_PHRASES[rid] in lines[int(cites[0]) - 1], "%s's cited line does not hold its claim" % rid
+        assert "**can:**" in l and "**Cannot:**" in l, "%s does not separate what a sample can and cannot establish" % rid
+
+
+def t_the_fallback_holds_the_worst_admitted_step_and_keeps_the_pack_under_ascd():
+    R = _R()
+    m = _M()
+    G = R["G"]
+    assert G["worst"][0].startswith("USB-C PD") and abs(G["worst"][1] - 3.0 * 15.0 / 0.93) < 1e-9
+    pa = [ok for nm, dp, ok in G["admit"] if nm.startswith("PA rail")][0]
+    assert pa is False, "the PA's step is admitted in S4: the worst step would be another"
+    k = 0.8 * 0.7 * 0.9
+    c_bank = 4 * 470e-6 * k
+    v1 = 16.8 * 0.995 - 4 * 0.01 * 470 * 25e-6 * 330.0
+    v2 = 12.3 + 0.55 + 0.10
+    e = c_bank * (0.5 * (v1 ** 2 - v2 ** 2) - 0.65 * (v1 - v2)) + 0.5 * 180e-6 * k * ((16.8 * 0.995) ** 2 - 12.3 ** 2)
+    assert abs(e - G["e_tot"]) < 1e-12
+    assert G["worst_hold"] >= m.T_RESP, "the fallback does not hold the worst admitted step for the assumed response"
+    assert dict(G["cans_for"])[1e-3] == m.BANK_N, "the bank is not the least that meets 1 ms"
+    assert G["c_dir_eff"] * 1e6 >= R["B"]["csys_uf"], "the direct can does not give TI's 50 uF by itself"
+    assert G["t_over_ascd"] < G["ascd_us"], "the pack's inrush stays over ASCD longer than its delay"
+    assert G["p_ch_pk"] <= G["p_rc2512"] and R["F"]["air_hot"] <= 70.0, "R_CH runs over its rating"
+    direct4 = G["r_loop"] * (G["c_pack_side_max"] + 4 * 470e-6 * 1.2) * math.log(G["i_conn_pk"] / G["ascd_a"])
+    assert direct4 > G["ascd_us"], "four cans directly on VSYS would not trip ASCD: the isolation's reason would be wrong"
+    assert G["s9_deficit"] > 0 and G["s2_vsys"][0] <= 10.0 + 1e-9
+
+
+def t_u04_stays_an_architecture_level_choice_resting_on_d1_and_d3():
+    out = open(OUT, encoding="utf-8").read()
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
+    assert "U-04 STAYS AN ARCHITECTURE-LEVEL CHOICE" in out and "U-04 stays an ARCHITECTURE-LEVEL CHOICE" in page
+    assert "with none: D1 and D3, whose negative answers return (B)" in out
+    assert "**With none:** D1 and D3" in page
+
+
+def t_the_por_value_is_tis_256_ma_and_the_ti_draft_asks_only_what_is_missing():
+    R = _R()
+    assert R["G"]["por_ma"] == 256.0
+    page = open(PAGE, encoding="utf-8").read()
+    assert "ChargeCurrent() is 0 A" not in page and "0 A at POR, and at" not in page, "the POR error is still stated as fact"
+    assert "ChargeCurrent() is 256 mA" in page.replace("\n", " ")
+    draft = open(os.path.join(REC, "clarification", "TI-QUESTIONS.md"), encoding="utf-8").read()
+    review = open(os.path.join(ROOT, "v2", "docs", "review-packets", "battery", "REVIEW-REQUEST.md"), encoding="utf-8").read()
+    for q in ("Q-TI-11", "Q-TI-12", "Q-TI-13", "Q-TI-14"):
+        assert ("**%s" % q) in draft and q not in review, "%s is not a question REVIEW-REQUEST.md lacks" % q
+    assert "Q-TI-3, addendum" in draft and "not sent" in draft
+
+
+def t_the_bq25730_differs_only_at_pin_21_and_keeps_every_row_the_drafted_settings_rest_on():
+    R = _R()
+    m = _M()
+    H = R["H"]
+    assert H["pins_diff"] == [(21, "NC", "BATDRV")]
+    assert H["u3"]["21"] == "NC" and H["u3"]["22"] == "VBAT"
+    assert all(k in H["ec_same"] for k in m.EC_RESTS_ON)
+    assert sorted(H["ec_diff"]) == sorted(m.EC_CHANGED)
+    assert H["ichg_pct"] == ["-12%", "13.5%", "-18%", "21.5%"]
+    assert H["ichg_por"] == "0000" and H["devid"] == "D5" and H["devid31"] == "D6"
+    assert H["rm"] == (3.6, 25.0, 4.2) and 68.4 < R["strap"][2] < 81.5, "the 4S strap would read battery removal"
+
+
+def t_each_mode_has_a_printed_vsys_bound_and_the_floor_clears_the_converters():
+    R = _R()
+    H = R["H"]
+    assert abs(H["floor"] - 12.30 * 0.98) < 1e-12 and H["floor"] > 10.0
+    assert abs(H["vsys_top"] - (R["cv_max"] + 0.150) * 1.02) < 1e-12 and H["vsys_top"] < R["B"]["sysovp4s"]
+    assert H["ec_tj"] == (-40.0, 125.0), "VSYS_MIN's floor would not hold over the cold"
+    assert H["smin_max_printed"] == "-2", "the printed gap in VSYS_MIN_REG_ACC's maximum is not what the record names"
+    assert H["regs"]["EN_OOA"][0] == 1, "the boot write of EN_OOA would not be needed"
+    assert H["regs"]["BATFETOFF_HIZ"][0] == 0 and H["regs"]["BATFET_ENZ"][0] == 0 and H["regs"]["EN_LDO"][0] == 1
+    out = open(OUT, encoding="utf-8").read()
+    assert out.count("BOUNDED (MAKER, INFERRED)") == 3
+    page = open(PAGE, encoding="utf-8").read()
+    rows = [l for l in page.splitlines() if l.startswith("| (1) battery present") or l.startswith("| (2) battery absent") or l.startswith("| (3) battery present")]
+    assert len(rows) == 3 and all("**BOUNDED**" in l for l in rows) and all(l.count("|") == 6 for l in rows)
+
+
+def t_the_start_into_vsys_never_latches():
+    R = _R()
+    H = R["H"]
+    u = H["uvp"]
+    assert (u["v"], u["iin"], u["deg"], u["off"], u["on"], u["n"]) == (2.4, 0.5, 2e-3, 0.5, 10e-3, 7)
+    c = H["c_vsys_nom"] * 1.1 + 180e-6 * 1.2
+    assert abs(H["c_vsys_max"] - c) < 1e-15
+    t = c * 2.4 / 0.5
+    assert abs(H["t_2v4"] - t) < 1e-15 and t <= u["on"], "VSYS could not reach 2.4 V inside one retry"
+    assert H["hiccups"] == (0 if t <= u["deg"] else 1) and H["start_bound"] < u["n"] * u["off"]
+
+
+def t_the_battery_fet_meets_tis_rule_and_its_bars_follow_from_its_sheet():
+    R = _R()
+    H, Q = R["H"], R["H"]["Q"]
+    air = R["F"]["air_hot"]
+    assert Q["ciss"] < H["bf_ciss"] and Q["vds"] >= H["bf_v"] and Q["vds"] > R["B"]["sysovp4s"] and H["drv"][2] < Q["vgs"]
+    assert abs(Q["z10"] - Q["rja10"]) <= 0.02 * Q["rja10"]
+    assert abs(Q["rja_need_20"] - (150.0 - air) / (20.0 ** 2 * Q["rds125"])) < 1e-9
+    assert abs(Q["rja_need_18"] - (150.0 - air) / (18.0 ** 2 * Q["rds125"])) < 1e-9
+    assert Q["rja_need_20"] < Q["rja_ss"], "the sheet's own board would carry OCD1 held: no bar would be needed"
+    assert abs(Q["tj_10a_ss"] - (air + 100.0 * Q["rds125"] * Q["rja_ss"])) < 1e-9 and Q["tj_10a_ss"] < 150.0
+    ocd1 = [r for r in Q["prot"] if r[0] == "the gauge's OCD1"][0]
+    assert ocd1[4] < 150.0 < ocd1[5], "OCD1 is either carried after 10 A held or not even from the air"
+    assert 0 < Q["t18_hot"] < Q["t18_air"]
+    for _n, i, w, fr in Q["prof"]:
+        assert abs(w - i * i * Q["rds125"]) < 1e-12 and fr < 0.005
+    i_pre = 0.256 * 1.30
+    assert abs(Q["i_pre"] - i_pre) < 1e-12
+    assert abs(Q["ldo_floor"] - (12.3 * 1.02 - (150.0 - air) / (Q["rja_ss"] * i_pre))) < 1e-9
+    assert Q["ldo_floor3"] > Q["ldo_floor"] and Q["ldo_floor"] < R["P"]["vsys_shut"][0] < R["P"]["vsys_cuv"][0]
+    assert Q["i_dock"] > Q["idm"] and Q["t_over_idm"] > 0, "the docking pulse would sit under IDM: E11-30 would be no gap"
+    assert abs(Q["t_over_idm"] - Q["tau"] * math.log(Q["i_dock"] / Q["idm"])) < 1e-15
+
+
+def t_the_cost_is_the_catalogues_and_the_bank_is_what_b1_withdraws():
+    R = _R()
+    H = R["H"]
+    import json
+    def p10(name):
+        j = json.load(open(os.path.join(REC, "inputs", name), encoding="utf-8"))
+        lad = j["price_usd"]
+        return float(lad["10"] if "10" in lad else lad[sorted(lad, key=int)[0]])
+    a = p10("lcsc-C2871872-2026-10-02.json") + 4 * p10("lcsc-C242138-price-2026-10-02.json") + p10("lcsc-C72264-price-2026-10-02.json") \
+        + p10("lcsc-C137025-price-2026-10-02.json") + p10("lcsc-C242139-price-2026-10-02.json")
+    b = p10("lcsc-C5219071-2026-10-02.json") + p10("lcsc-C404364-2026-10-02.json") + p10("lcsc-C242139-price-2026-10-02.json")
+    assert abs(H["cost"][0] - a) < 1e-9 and abs(H["cost"][1] - b) < 1e-9 and b < a
+    assert H["bank_b1"] < 1e-3 < R["G"]["worst_hold"], "at B1's floor the bank would still carry the assumed millisecond"
+
+
+def t_the_charger_draft_composes_with_the_guard_in_either_order():
+    _M()
+    ch, gd = os.path.join(REC, "apply_gen_sch_a_charger.py"), os.path.join(REC, "apply_gen_sch_a_guard.py")
+    with tempfile.TemporaryDirectory() as d:
+        a, b = os.path.join(d, "a.py"), os.path.join(d, "b.py")
+        shutil.copy(GEN_A, a)
+        shutil.copy(GEN_A, b)
+        for s_ in (ch, gd):
+            assert _run([s_, a, "--write"]).returncode == 0
+        for s_ in (gd, ch):
+            assert _run([s_, b, "--write"]).returncode == 0
+        assert open(a, "rb").read() == open(b, "rb").read(), "the order of the two board A drafts changes the result"
+        txt = open(a, encoding="utf-8").read()
+        for want in ('"21": "CH_BATDRV", "22": "VBAT"', '"C5219071")', 'nfet("Q39", ', '"CH_BATDRV", "CH_BATQ", "VBAT", lcsc="C404364")',
+                     '"CH_BATQ", "CELL_FUSED", "RS2512")', 'r("R149", "10R", "CH_BATQ", "CH_SRP_F")', 'c("C236", ',
+                     '_intent.rail("CH_BATQ", 14.4, 10.0, 18.0, "R17"', '"Q39", always_on=True', 'fed_from="CH_BATQ"', '"R17", "Q39", "C236", "C16"'):
+            assert txt.count(want) == 1, want
+        assert '"21": "NC"' not in txt and "C2871872" not in txt
+
+
+def t_b1_is_selected_and_u04_becomes_a_downstream_qualification_test():
+    out = open(OUT, encoding="utf-8").read()
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
+    assert "SELECTED (SESSION): (B1), TI's BQ25730 in U3's land with Q39." in out
+    assert "U-04 BY THE OWNER'S EXIT DEFINITION: A DOWNSTREAM QUALIFICATION TEST WITH BOUNDED EVIDENCE AND A WORKABLE FALLBACK" in out
+    assert "**SELECTED (SESSION): (B1), TI's BQ25730 in U3's land with the battery FET Q39.**" in page
+    assert "**U-04 by the owner's exit definition: A DOWNSTREAM QUALIFICATION TEST WITH BOUNDED EVIDENCE AND A WORKABLE FALLBACK**" in page
+    assert "NONE FOUND" in out and "none found" in page
+    lines = open(PAGE, encoding="utf-8").read().splitlines()
+    i = lines.index("## 13. Three approaches compared (out 13)")
+    rows = [l.split(" | ")[0][2:] for l in lines[i:] if l.startswith("| D")]
+    assert rows[:9] == ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9, D10"]
+    removed = [l.split(" | ")[0][2:] for l in lines[i:] if l.startswith("| D") and "**removed" in l]
+    assert removed == ["D1", "D3", "D4", "D7"]
+
+
+
+def t_the_battery_fets_figure_14_reads_the_same_from_either_poppler_serialisation():
+    m = _M()
+    real = subprocess.run
+
+    def p22(svg):
+        def el(mo):
+            t = re.sub(r",\s+", ",", mo.group(0))
+            a = re.search(r' stroke="([^"]*)"', t)
+            return t.replace(a.group(0), ' style="stroke:%s;"' % a.group(1)) if a and ' style="' not in t else t
+        return re.sub(r"<path[^>]*>", el, svg)
+
+    def p24(svg):
+        def el(mo):
+            t = mo.group(0)
+            st = re.search(r' style="([^"]*)"', t)
+            if st:
+                kv = [p.split(":", 1) for p in st.group(1).split(";") if ":" in p]
+                t = t.replace(st.group(0), "".join(' %s="%s"' % (k.strip(), v.strip()) for k, v in kv))
+            return re.sub(r",(?=\S)", ", ", t)
+        return re.sub(r"<path[^>]*>", el, svg)
+    ts = (2.44e-4, 1e-3, 0.02, 1.0, 2.0, 10.0, 60.0, 1000.0)
+    z, span = m.z_ja_aons()
+    base = [z(t) for t in ts]
+    for rw in (p22, p24):
+        def fake(cmd, *a, **k):
+            r = real(cmd, *a, **k)
+            if cmd and cmd[0] == "pdftocairo" and "-svg" in cmd:
+                r = subprocess.CompletedProcess(r.args, r.returncode, rw(r.stdout.decode("utf-8", "replace")).encode("utf-8"), r.stderr)
+            return r
+        m.subprocess.run = fake
+        try:
+            z2, span2 = m.z_ja_aons()
+        except SystemExit as e:
+            raise AssertionError("z_ja_aons refused (exit %s) on the %s form" % (e.code, rw.__name__))
+        finally:
+            m.subprocess.run = real
+        assert span2 == span and [z2(t) for t in ts] == base, "Figure 14 reads differently from the %s form" % rw.__name__
+    assert all(a < b for a, b in zip(base, base[1:])), "ZthJA does not rise with the pulse"

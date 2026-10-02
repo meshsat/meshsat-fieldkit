@@ -1,0 +1,31 @@
+{
+ "what": "LCSC public product-detail answer for C5219071 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C5219071), no login; kept fields only, with the price ladder in USD",
+ "read_utc": "2026-10-02T09:58Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), the U-04 question for the consolidation",
+ "role": "option (B1): TI BQ25730RSNR, the NVDC charger in U3's land (the U-04 question for the consolidation)",
+ "code": "C5219071",
+ "brand": "TI",
+ "model": "BQ25730RSNR",
+ "package": "QFN-32(4x4)",
+ "pdf": "https://www.ti.com/cn/lit/ds/symlink/bq25730.pdf",
+ "stock": 0,
+ "price_usd": {
+  "1": 2.8553,
+  "10": 2.7966,
+  "30": 2.7558,
+  "100": 2.7166
+ },
+ "params": {
+  "End-Off Voltage": "-",
+  "Interface": "I2C",
+  "Features": "Programmable charging current;Overcurrent Protection;Overvoltage protection;Soft-start;Under-voltage lockout",
+  "Voltage - Supply": "3.5V~26V",
+  "Quiescent Current": "22uA",
+  "Operating Temperature": "-40℃~+85℃",
+  "Type of Battery": "-",
+  "The Chip Type": "Charging IC",
+  "Number of Cells": "1~5",
+  "Charge Current - Max": "16.2A",
+  "Charging Saturation Voltage": "21V"
+ }
+}
