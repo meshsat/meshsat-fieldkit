@@ -935,4 +935,154 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      C13 CTL_HW -> USBC [hardware]: OUTLET_OK = NOT (TR_APRS AND PA_EN), A:U30, drops both outlets while the PA keys; U18's OCP
      N01 VINRAW -> DC_IN: the tracker back-feeds DC_P through Q7's body diode (no power is delivered this way)
 
+16. THE BUDGET: ONE INPUT SET (every figure read above; MODELED unless named; the approved profile PS-IDLE-SPEC is kept, alternatives labelled)
+16a POWER PER MODE (the loads, the conversion losses, the auxiliaries, into the case and out of it)
+   M1 PS-IDLE-SPEC, the approved profile (the tablet not charged)
+      the loads: 36.5 W at the load pins; 6.3 W in the converters and the distribution
+      at the pack or VBAT: 42.8 W (low 33.1, high 82.8 W, every load at its maximum)
+      auxiliaries: inside the 42.8 W: 4 fans 3.128 W at the pack; 8.4 W of loads with no document (tier T); the board logic rows carry the power path's quiescent draws (not itemized by part)
+      into the case: 43.4 W (the pack's I2R 0.59 W inside)
+      leaves the case: 0 W
+      read from: pwr_budget.out, load_trace.out, L4-E12 out 8c
+   M2 the same with the tablet charged in its window (a PROPOSAL: 13 to 15 UTC, the outlet capped at 18 W)
+      the loads: the outlet 18 W for 2 h, at 0.93 through U19
+      at the pack or VBAT: 42.8 W plus 19.4 W at VBAT for 2 h: 38.7 Wh a day
+      auxiliaries: the outlet converter's idle 1.09 to 1.44 W only while enabled (on all day: 73.4 Wh a day)
+      into the case: 43.4 W plus the converter's 1.4 W in the window
+      leaves the case: 18 W to the tablet in the window
+      read from: tablet.out (l3batt)
+   M3 E3-O: the heat stage on shore (PS-SURV-R), every radio C1 leaves on
+      the loads: one module running; the shed set off
+      at the pack or VBAT: 23.272 W at the pack
+      auxiliaries: 2 fans 2.000 W at the pack; the ballasts at most 2.09 W (the bound's worst corner)
+      into the case: 24.996 W on shore (the front end's and the charger's loss on the loads), 27.086 W with the ballasts
+      leaves the case: 0 W
+      read from: L4-E12 out 2a, 8a
+   M4 E5: the hold at the +60 C dwell, on shore
+      the loads: 14.671 W at the load pins; 3.445 W in the converters; 0.036 W in the distribution
+      at the pack or VBAT: 18.152 W at the pack
+      auxiliaries: 2 fans 2.010 W at the pack; the ballasts at most 2.09 W
+      into the case: 19.497 W on shore (+1.345 W), 21.587 W with the ballasts
+      leaves the case: 0 W
+      read from: L4-E12 out 8a
+   M5 source-only at a 9.00 V plug, no usable pack (state S4; U-04)
+      the loads: P1 at VBAT 19.57 W plan (11.17 to 35.24 W), at most 20.51 W by the rule; the shed warm-up P2 28.12 W plan
+      at the pack or VBAT: the source delivers 29.09 to 42.52 W at VBAT
+      auxiliaries: the entry's loop 5.095 W at 5.983 A (on the source's side); the front end at least 0.88021 there
+      into the case: 23.94 W at the rule's bound (the loads, U3 at 0.9733 and the front end at 0.88021)
+      leaves the case: 0 W
+      read from: L4-E11 out 3g, 3h
+   M6 solar charging at the window (the source's side)
+      the loads: the stage takes at most 53.42 W in at the hold (44.84 W nominal) under L4-E7R's regulation
+      at the pack or VBAT: into VBUS20 through U4/Q2
+      auxiliaries: the stage's own drive and quiescent 1.27 W (from the panel); the sense bank 0.5262 Wh a day; the ballasts at most 2.09 W while U3 runs (0.0093 W at nominal parts)
+      into the case: a charge on shore adds 3.446 W
+      leaves the case: 0 W
+      read from: L4-E7R, L4-E13 out (A-2), L4-E8, L4-E12 out 2d
+16b ENERGY: battery-only and solar-assisted, SEPARATELY; the ruled cell, the proposed cell beside it (a proposal)
+   B1 ruled 35E, D-06 4S3P; battery-only, room temperature (the chain's +20 C)
+      the store: 107.9 Wh usable
+      runtime, the tablet not charged: 2.52 h
+      with the tablet's window: 1.73 h (the window at the start, the worst placement)
+      the steady load each horizon carries: 2.25 W over 48 h, 1.50 W over 72 h
+      read from: l4e_replay.out 2 (MODELED)
+   B2 ruled 35E; battery-only, the cells at -10 C (the 35E's discharge floor)
+      the store: 44.5 Wh usable
+      runtime, the tablet not charged: 1.04 h
+      with the tablet's window: 0.72 h
+      the steady load each horizon carries: 0.93 W over 48 h, 0.62 W over 72 h
+      read from: l4e_replay.out 2
+   B3 ruled 35E; battery-only, the cells at -5.52 C (REQ-024's -20 C with the kit's heat, LO-01b)
+      the store: 54.0 Wh usable
+      runtime, the tablet not charged: 1.26 h
+      with the tablet's window: 0.87 h
+      the steady load each horizon carries: 1.12 W over 48 h, 0.75 W over 72 h
+      read from: L4-E10 out 9c
+   S1 ruled 35E; solar-assisted, room temperature, the candidate panel's day (350.0 Wh into the stage, L4-E7's first round)
+      the store: first stop at h 6 (06 UTC start) / h 2 (18 UTC start)
+      runtime, the tablet not charged: unserved 1367.4 / 1368.1 Wh at 48 h (33.4 % of the profile's 2054.4 Wh served at most), 2103.9 / 2104.6 Wh at 72 h (31.7 % served)
+      with the tablet's window: unserved at most 77.4 / 116.1 Wh more at 48 / 72 h (38.7 Wh a day for 2 / 3 windows; INFERRED bound); the first stops unchanged (they precede the 13 UTC window)
+      the steady load each horizon carries: 8.0 W at both horizons; with the tablet at most 1.61 W lower (6.4 to 8.0 W)
+      read from: l4e_replay.out 12 (MODELED; the corrected path, WE)
+   S2 ruled 35E; solar-assisted, L4-E7R's accepted stage (336.6 Wh a day at the nominal hold)
+      the store: as S1 (not re-run)
+      runtime, the tablet not charged: unserved at most 26.8 / 40.2 Wh more than S1 (13.4 Wh a day less into the stage; INFERRED bound)
+      with the tablet's window: as S1, plus S1's tablet bound
+      the steady load each horizon carries: 7.4 to 8.0 W; with the tablet 5.8 to 8.0 W (INFERRED bounds)
+      read from: L4-E13 check 4, l4e_replay.out 12
+   S3 ruled 35E; solar-assisted at the cold end
+      the store: NOT COMPUTED: no cold-day sun trace is held, and the cells' temperature through the day is not modelled
+      runtime, the tablet not charged: not computed
+      with the tablet's window: not computed
+      the steady load each horizon carries: 3.3 W if the steady load scales with the store as at room temperature (44.5 Wh against 107.9 Wh; INFERRED, an estimate, not a run)
+      read from: this record (the method stated)
+   P1 proposed HL18650V (a PROPOSAL, U-01; not adopted); battery-only, room temperature (L4-E10's chain at +25 C)
+      the store: 90.2 Wh usable
+      runtime, the tablet not charged: 2.11 h
+      with the tablet's window: 1.45 h
+      the steady load each horizon carries: 1.88 W over 48 h, 1.25 W over 72 h
+      read from: L4-E10 out 9c
+   P2 proposed HL18650V (a PROPOSAL); battery-only at the cold end (brackets, ASSUMPTION)
+      the store: 45.1 to 69.6 Wh with the cells at -5.52 C; 37.2 to 54.1 Wh from a cold start at -20 C
+      runtime, the tablet not charged: 1.05 to 1.63 h; 0.87 to 1.26 h
+      with the tablet's window: less, by the same arithmetic
+      the steady load each horizon carries: 0.94 to 1.45 W over 48 h at -5.52 C
+      read from: L4-E10 out 9c
+   P3 proposed HL18650V (a PROPOSAL); solar-assisted, room temperature
+      the store: not run by the replay
+      runtime, the tablet not charged: not computed
+      with the tablet's window: as S1's bound
+      the steady load each horizon carries: 6.7 W if the steady load scales with the store (INFERRED estimate); every storage shortfall grows by at most 17.7 Wh
+      read from: L4-E10 out 9c
+   ENDURANCE, apart from electrical feasibility: the objective of 48 to 72 h is NOT MET by A1 (DR-01): the steady load the store and the sun
+     carry is 8.0 W against the profile's 42.8 W, a deficit of 34.8 W (81 % of the profile); the least storage to add is +1361.5 / +2094.1 Wh at 48 / 72 h.
+     A charger change does not close it: the deficit is the store and the day's harvest, not a conversion efficiency. No mandatory function is reduced.
+16c HEAT INTO THE SEALED CASE PER MODE, against T-H1's lines (the rise Q / G INFERRED on W4's lumped model)
+   H1 PS-IDLE-SPEC (M1): 43.40 W; the line: C1's inside-air trigger +50 C; at the binding line +20.1 K: C1 sheds the profile to the reduced mode above 29.9 C ambient; on W4's lid-open 1.22 to 2.85 W/K +15.2 to +35.6 K
+   H2 PS-IDLE-SPEC with the tablet's window (M2): 44.80 W; the line: as H1; +20.8 K at the binding line; C1 above 29.2 C ambient
+   H3 E3-O, the heat stage with the ballasts (M3): 27.09 W; the line: +70 C class at +55 C: 1.806 W/K; 67.55 C at the binding line (L4-E12)
+   H4 E5 under the hold, with the ballasts (M4): 21.59 W; the line: +70 C class at +60 C: 2.159 W/K, the BINDING line; 70.00 C at the line; T-H1 passes at a reading of at least 2.416 W/K (its expanded uncertainty deducted)
+   H5 E5 with no hold: 27.09 W; the line: +70 C class at +60 C: 2.709 W/K; the hold is what lowers E5's line to 2.159 W/K
+   H6 source-only at a 9.00 V plug (M5): 23.94 W; the line: none set by the record (the envelope's state); +11.1 K at the binding line (the loads and the two stages' losses at the rule's bound; INFERRED)
+   H7 a charge running on shore (added to a mode): 3.45 W; the line: LO-01a's floor 1.666 W/K (1.8058 W/K with the ballasts); +1.60 K at the binding line
+16d THE RECONCILIATION (each figure printed by the file named; kept with its basis, or merged with the reason)
+   R01 the 35E pack's usable energy at room temperature: 107.9 (l4e_replay.out: the energy chain (energy_budget.py: the 35E's rate, mean-voltage and end-fraction curves, aged 0.80, to the graceful 3.00 V line) at PS-IDLE-SPEC); 108.1 (pwr_budget.out: pwr_budget.py's derating chain (12 x 3.35 Ah x 3.60 V, rate 0.997, sag, ageing 0.80, the 5 % reserve))
+      kept: 107.9 Wh; why: the endurance runs (battery-only and solar-assisted) rest on the energy chain; 108.1 Wh stays only as L4-E10's first-chain comparison and in the U-01 bullet L4-E10 reads back (Appendix A)
+   R02 the proposed HL18650V pack's usable energy: 90.2 (l4e10_cell_thermal.out: L4-E10's chain, the same as R01's 107.9 Wh); 90.4 (l4e10_cell_thermal.out: L4-E10's first chain, the same as R01's 108.1 Wh)
+      kept: 90.2 Wh; why: one chain with the ruled cell; the difference to the 35E is 17.7 Wh on both chains
+   R03 the panel's day into the stage at the nominal hold: 350.0 (l4e_replay.out: the candidate's trace with no input limit (L4-E7's first round); every solar-assisted run of the replay); 336.6 (l4e7_stage_settings.out: the same day under L4-E7R's accepted regulation (RIMON_IN 31.6k))
+      kept: 336.6 Wh for the design; why: the replay is not re-run: its solar rows stay on 350.0 Wh, bounded at most 13.4 Wh a day worse at the accepted stage (S2)
+   R04 the hold corners' days: 344.0 (l4e7_stage_settings.out: L4-E7R, the hold 16.970 to 18.221 V with the regulation); 373.5 (l4e_replay.out: L4-E7's first round, the hold 16.695 to 18.490 V, no limit); 307.9 (l4e7_stage_settings.out: L4-E7R's upper corner); 280.6 (l4e_replay.out: L4-E7's first round's upper corner)
+      kept: L4-E7R's 344.0 / 336.6 / 307.9 Wh; why: the accepted stage; the replay's corners are the first round's window
+   R05 L4-E7R's highest regulated current: 2.9318 (l4e7_stage_settings.out: at the hold's corners, the stage's operating range); 2.9337 (l4e13_panel.out: at REQ-016's 25 V ceiling, A-3(a)'s conservative input)
+      kept: both; why: two operating points of the same regulation; neither replaces the other
+   R06 the 100 W bound's layers: 73.3436 (l4e13_panel.out: the regulation's own 25 V corner); 93.5521 (l4e7_stage_settings.out: the backstop's static bound, CONDITIONAL on G_CM and U18's VIN+ bias); 96.25 (l4e7_stage_settings.out: L4-E7's stack A, CONDITIONAL on five unprinted values)
+      kept: all three, each with its layer; why: the regulation acts first, the backstop second; 96.25 W is the earlier qualification, kept as context
+   R07 A1's steady load through the horizon: 8.0 (l4e_replay.out: on the candidate panel's trace (350.0 Wh a day)); 8.8 (l4e_replay.out: on the 100 W screening stimulus (a 400 Wp series REQ-016 does not admit))
+      kept: 8.0 W; why: the screening stimulus is not a source REQ-016 admits
+   R08 the profile's power: 42.8 (load_trace.out: the profile's stated figure); 42.82 (load_trace.out: load_trace's sum of 39 loads); 42.824 (l4e12_thermal.out: L4-E12's reproduction of the same sum)
+      kept: 42.8 W; why: one quantity at three roundings
+   R09 the enclosure lines (W/K): 1.666 (l4e10_cell_thermal.out: LO-01a's floor: the inside air at the SGP41's +55 C at +40 C on shore, the heat stage); 1.8058 (l4e12_thermal.out: LO-01a's floor with L4-E8's ballasts counted); 1.806 (l4e12_thermal.out: E3-O alone: the heat stage with the ballasts, +55 to +70 C); 2.159 (l4e12_thermal.out: E5 under the hold, +60 to +70 C: the BINDING line); 2.709 (l4e12_thermal.out: E5 with no hold); 2.416 (l4e12_thermal.out: T-H1's pass reading at a 10 K rise: 2.159 W/K plus its expanded uncertainty)
+      kept: all, each with its criterion; why: different states and limits; T-H1 is judged at 2.416 W/K for the binding 2.159 W/K
+   R10 E5's heat under the hold: 18.152 (l4e12_thermal.out: at the pack); 19.497 (l4e12_thermal.out: into the case on shore); 21.587 (l4e12_thermal.out: with L4-E8's ballasts)
+      kept: 21.587 W for the line; why: three boundaries of one budget
+   R11 E3-O's heat: 24.996 (l4e12_thermal.out: into the case on shore); 27.086 (l4e12_thermal.out: with the ballasts)
+      kept: 27.086 W; why: the ballasts counted once
+   R12 the charge current: 3.0 A (HW-FW-CONTRACT.md: the drawn ChargeCurrent limit (FW-A02)); 3.06 A (l4e_replay.out: energy_inputs.yaml's D-06 figure (1.02 A a cell), the replay's runs)
+      kept: 3.0 A for the design; why: the replay's solar rows charge 2 % faster than the drawn limit allows, so they lean optimistic (not re-run)
+   R13 the 35E's usable energy cold: 44.5 (l4e_replay.out: the cells at -10 C, the 35E's discharge floor); 54.0 (l4e10_cell_thermal.out: the cells at -5.52 C, REQ-024's -20 C with the kit's heat (LO-01b))
+      kept: both, each at its cell temperature; why: two temperatures
+   R14 the hold's point: 17.6 V (l4e7_stage_settings.out: REQ-016's stated point); 17.593 (l4e7_stage_settings.out: the FBIN divider's nominal (R8 102 k, R9 7.50 k at 0.1 %))
+      kept: 17.593 V nominal; why: the divider's own value; 17.6 V is the requirement's rounded point
+   R15 ChargeCurrent at the charger's POR: 256 mA (l4e11_power.out: TI's E2E answer (the register's reset code)); 0 A (l4e11_power.out: the register description's text)
+      kept: 256 mA; why: L4-E11's correction: the description is in error by TI's word; the hold's persistence already covers it
+   R16 the ballasts' loss: 2.09 (ripple_dense.out: at the bound's worst corner); 0.0093 (ripple_dense.out: at L4-E8's nominal illustration)
+      kept: 2.09 W in every heat budget; why: the worst corner is what the thermal lines carry
+   R17 the pack heater: 7.5 W into the cells (l4e10_cell_thermal.out: the mat's output); 8.5 W at the pack (l4e10_cell_thermal.out: with its buck's loss)
+      kept: both, each at its boundary; why: one heater, two boundaries
+   R18 P1, the kit's shed state with no usable pack: 19.57 (l4e11_power.out: the plan figure at VBAT); 20.51 (l4e11_power.out: the rule's bound); 35.24 (l4e11_power.out: the loads' high corner)
+      kept: 20.51 W as the bound; why: the high corner exceeds the source's least, which is why REQ-015 at 9.00 V is a CONDITIONAL CANDIDATE
+   R19 the panel's day at the conditioned upper corner: 240.0 (l4e13_panel.out: the rated unit); 52.3 (l4e13_panel.out: a unit at A-2's floor)
+      kept: both; why: PANEL-ACC accepts any unit inside the window; the unserved energy grows toward the floor's unit
+
 END. Desk arithmetic on read figures; nothing is measured.

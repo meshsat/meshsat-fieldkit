@@ -1113,6 +1113,11 @@ def compute():
     cb["c1_air"], cb["c1_cell"] = f(m, 1), f(m, 2)
     m = need(T["l4e13"], r"the stage draws its own drive and quiescent power, ([\d.]+) mA, ([\d.]+) W", "the stage's own power")
     cb["stage_q"] = (f(m, 1), f(m, 2))
+    m = need(T["l4e10"], r"35E \(D-06; the chain's inputs MAKER\): ([\d.]+) Wh at \+25 C \(([\d.]+) h\), ([\d.]+) Wh with the cells at -10 C \(([\d.]+) h, the replay's [\d.]+ / [\d.]+ Wh reproduced\), ([\d.]+) Wh at -5\.52 C",
+             "the 35E on L4-E10's chain")
+    if (f(m, 1), f(m, 3), f(m, 2), f(m, 4)) != F["a1_bat"]:
+        refuse(3, "L4-E10's chain does not reproduce the replay's battery-only figures")
+    cb["e35_552"] = f(m, 5)
     F["cb"] = cb
     return F, where
 
@@ -3204,6 +3209,10 @@ def main():
     for ln in cons_diagram_lines(N, Ed, Cd, NP, st, hashlib.sha256(svg.encode("utf-8")).hexdigest()):
         p(ln)
     p("")
+    recon_check(_C_TEXT)
+    for ln in cons_budget_lines(F, st):
+        p(ln)
+    p("")
     p("END. Desk arithmetic on read figures; nothing is measured.")
     return "\n".join(out) + "\n", F, D, R, st
 
@@ -3425,6 +3434,231 @@ def cons_diagram_lines(N, E, C, NOPOWER, st, svg_sha):
     for nid, a, b, what in NOPOWER:
         p("     %s %s -> %s: %s" % (nid, a, b, what))
     return L
+
+
+def _rt(e_wh, p_w, extra_w=0.0, window_h=0.0):
+    """Battery-only runtime (h) of a store of e_wh at p_w, with an extra extra_w for the first window_h hours (the tablet's
+    window at the start, the worst placement): INFERRED arithmetic."""
+    if extra_w and e_wh / (p_w + extra_w) <= window_h:
+        return e_wh / (p_w + extra_w)
+    if extra_w:
+        return window_h + (e_wh - window_h * (p_w + extra_w)) / p_w
+    return e_wh / p_w
+
+
+def cons_budget(F, st):
+    """ONE BUDGET on one input set: power per mode, energy (battery-only and solar-assisted, separately), heat into the
+    sealed case per mode against T-H1's lines, and the reconciliation of every figure that differs between records."""
+    cb, r5 = F["cb"], F["r5"]
+    prof = F["idle"][1]
+    tab_w, tab_wh = cb["tab_w"], cb["tab_wh"]
+    out_w = cb["tab_cap"]
+    tab_in = round(tab_w - out_w, 2)
+    e5 = cb["e5"]
+    modes = [
+        ("M1", "PS-IDLE-SPEC, the approved profile (the tablet not charged)",
+         "%s W at the load pins; %s W in the converters and the distribution" % (fmt(cb["idle_pins"]), fmt(round(prof - cb["idle_pins"], 2))),
+         "%s W (low %s, high %s W, every load at its maximum)" % (fmt(prof), fmt(F["idle"][0]), fmt(F["idle"][2])),
+         "inside the %s W: %d fans %s W at the pack; %s W of loads with no document (tier T); the board logic rows carry the power path's quiescent draws (not itemized by part)"
+         % (fmt(prof), cb["fans_idle"][0], fmt(cb["fans_idle"][1]), fmt(F["undoc_w"])),
+         "%s W (the pack's I2R %s W inside)" % (fmt(cb["idle_heat"]), fmt(cb["idle_i2r"])), "0 W", "pwr_budget.out, load_trace.out, L4-E12 out 8c"),
+        ("M2", "the same with the tablet charged in its window (a PROPOSAL: %02d to %02d UTC, the outlet capped at %s W)" % (cb["tab_win"][0], cb["tab_win"][1], fmt(out_w)),
+         "the outlet %s W for 2 h, at %s through U19" % (fmt(out_w), fmt(cb["tab_eta"])),
+         "%s W plus %s W at VBAT for 2 h: %s Wh a day" % (fmt(prof), fmt(tab_w), fmt(tab_wh)),
+         "the outlet converter's idle %s to %s W only while enabled (on all day: %s Wh a day)" % (fmt(cb["tab_idle"][0]), fmt(cb["tab_idle"][1]), fmt(cb["tab_any"])),
+         "%s W plus the converter's %s W in the window" % (fmt(cb["idle_heat"]), fmt(tab_in)), "%s W to the tablet in the window" % fmt(out_w), "tablet.out (l3batt)"),
+        ("M3", "E3-O: the heat stage on shore (PS-SURV-R), every radio C1 leaves on",
+         "one module running; the shed set off", "%s W at the pack" % fmt(cb["stage_pack"]),
+         "%d fans %.3f W at the pack; the ballasts at most %s W (the bound's worst corner)" % (2, cb["fans_stage"], fmt(F["ballast_w"])),
+         "%s W on shore (the front end's and the charger's loss on the loads), %s W with the ballasts" % (fmt(cb["stage_case"]), fmt(F["e3o_wb"])), "0 W",
+         "L4-E12 out 2a, 8a"),
+        ("M4", "E5: the hold at the +60 C dwell, on shore",
+         "%s W at the load pins; %s W in the converters; %s W in the distribution" % (fmt(e5[0]), fmt(e5[1]), fmt(e5[2])),
+         "%s W at the pack" % fmt(e5[3]),
+         "%d fans %.3f W at the pack; the ballasts at most %s W" % (2, cb["fans_e5"], fmt(F["ballast_w"])),
+         "%s W on shore (+%s W), %s W with the ballasts" % (fmt(F["e5_hold_w"]), fmt(e5[4]), fmt(F["e5_hold_wb"])), "0 W", "L4-E12 out 8a"),
+        ("M5", "source-only at a 9.00 V plug, no usable pack (state S4; U-04)",
+         "P1 at VBAT %s W plan (%s to %s W), at most %s W by the rule; the shed warm-up P2 %s W plan" % (fmt(F["e_p1"][1]), fmt(F["e_p1"][0]), fmt(F["e_p1"][2]),
+                                                                                                   fmt(F["e_p1_max"]), fmt(F["e_p2"][1])),
+         "the source delivers %s to %s W at VBAT" % (fmt(F["e_env"][9][1]), fmt(F["e_env"][9][2])),
+         "the entry's loop %s W at %s A (on the source's side); the front end at least %s there" % ("%.3f" % (F["e_svc"][1] ** 2 * F["e_loop_mohm"][2] / 1000.0), fmt(F["e_svc"][1]), "%s" % F["e_eta_floor"]),
+         "%s W at the rule's bound (the loads, U3 at %s and the front end at %s)" % ("%.2f" % (F["e_p1_max"] / F["eta_u3"] / F["e_eta_floor"]), "%s" % F["eta_u3"], "%s" % F["e_eta_floor"]),
+         "0 W", "L4-E11 out 3g, 3h"),
+        ("M6", "solar charging at the window (the source's side)",
+         "the stage takes at most %s W in at the hold (%s W nominal) under L4-E7R's regulation" % (fmt(F["reg_w"][1]), fmt(F["reg_w"][0])),
+         "into VBUS20 through U4/Q2", "the stage's own drive and quiescent %s W (from the panel); the sense bank %s Wh a day; the ballasts at most %s W while U3 runs (%s W at nominal parts)"
+         % (fmt(cb["stage_q"][1]), fmt(F["bank_wh"][0]), fmt(F["ballast_w"]), fmt(F["ballast_nom_w"])),
+         "a charge on shore adds %s W" % fmt(cb["chg_heat"]), "0 W", "L4-E7R, L4-E13 out (A-2), L4-E8, L4-E12 out 2d"),
+    ]
+    # energy: battery-only and solar-assisted separately; the ruled cell, the proposed cell beside it
+    bat20, batc, h20, hc = F["a1_bat"]
+    cand = F["a1_cand"]
+    d48, d72 = 48 * prof, 72 * prof
+    lost_day = round(F["a1_cand"][0] - F["e13_day_e7r"], 1)
+    st48 = F["steady"][2]
+    tab_steady = round(tab_wh / 24.0, 2)
+    e7r_steady = round(lost_day / 24.0, 2)
+    hl, e35 = (float(r5["hl"][0]), float(r5["hl"][1])), (float(r5["e35"][0]), float(r5["e35"][1]))
+    cold_lo, cold_hi = float(r5["cold"][0]), float(r5["cold"][1])
+    st_lo, st_hi = float(r5["start"][0]), float(r5["start"][1])
+    e35_552 = F["cb"]["e35_552"]
+    win = lambda h: 2 if h == 48 else 3
+    energy = [
+        ("B1", "ruled 35E, D-06 4S3P", "battery-only, room temperature (the chain's +20 C)", "%s Wh usable" % fmt(bat20),
+         "%s h" % fmt(h20), "%.2f h (the window at the start, the worst placement)" % _rt(bat20, prof, tab_w, 2.0),
+         "%.2f W over 48 h, %.2f W over 72 h" % (bat20 / 48.0, bat20 / 72.0), "l4e_replay.out 2 (MODELED)"),
+        ("B2", "ruled 35E", "battery-only, the cells at -10 C (the 35E's discharge floor)", "%s Wh usable" % fmt(batc),
+         "%s h" % fmt(hc), "%.2f h" % _rt(batc, prof, tab_w, 2.0), "%.2f W over 48 h, %.2f W over 72 h" % (batc / 48.0, batc / 72.0), "l4e_replay.out 2"),
+        ("B3", "ruled 35E", "battery-only, the cells at -5.52 C (REQ-024's -20 C with the kit's heat, LO-01b)", "%.1f Wh usable" % e35_552,
+         "%.2f h" % (e35_552 / prof), "%.2f h" % _rt(e35_552, prof, tab_w, 2.0), "%.2f W over 48 h, %.2f W over 72 h" % (e35_552 / 48.0, e35_552 / 72.0), "L4-E10 out 9c"),
+        ("S1", "ruled 35E", "solar-assisted, room temperature, the candidate panel's day (%.1f Wh into the stage, L4-E7's first round)" % cand[0],
+         "first stop at h %d (06 UTC start) / h %d (18 UTC start)" % (int(cand[1]), int(cand[2])),
+         "unserved %s / %s Wh at 48 h (%.1f %% of the profile's %s Wh served at most), %s / %s Wh at 72 h (%.1f %% served)"
+         % (fmt(cand[3]), fmt(cand[4]), 100.0 * (1 - max(cand[3], cand[4]) / d48), fmt(round(d48, 1)), fmt(cand[5]), fmt(cand[6]), 100.0 * (1 - max(cand[5], cand[6]) / d72)),
+         "unserved at most %s / %s Wh more at 48 / 72 h (%s Wh a day for %d / %d windows; INFERRED bound); the first stops unchanged (they precede the %02d UTC window)"
+         % (fmt(round(tab_wh * 2, 1)), fmt(round(tab_wh * 3, 1)), fmt(tab_wh), 2, 3, cb["tab_win"][0]),
+         "%.1f W at both horizons; with the tablet at most %s W lower (%.1f to %.1f W)" % (st48, fmt(tab_steady), st48 - tab_steady, st48),
+         "l4e_replay.out 12 (MODELED; the corrected path, WE)"),
+        ("S2", "ruled 35E", "solar-assisted, L4-E7R's accepted stage (%s Wh a day at the nominal hold)" % fmt(F["e13_day_e7r"]),
+         "as S1 (not re-run)", "unserved at most %s / %s Wh more than S1 (%s Wh a day less into the stage; INFERRED bound)" % (fmt(round(lost_day * 2, 1)), fmt(round(lost_day * 3, 1)), fmt(lost_day)),
+         "as S1, plus S1's tablet bound", "%.1f to %.1f W; with the tablet %.1f to %.1f W (INFERRED bounds)" % (st48 - e7r_steady, st48, st48 - e7r_steady - tab_steady, st48),
+         "L4-E13 check 4, l4e_replay.out 12"),
+        ("S3", "ruled 35E", "solar-assisted at the cold end", "NOT COMPUTED: no cold-day sun trace is held, and the cells' temperature through the day is not modelled",
+         "not computed", "not computed", "%.1f W if the steady load scales with the store as at room temperature (%s Wh against %s Wh; INFERRED, an estimate, not a run)" % (st48 * batc / bat20, fmt(batc), fmt(bat20)),
+         "this record (the method stated)"),
+        ("P1", "proposed HL18650V (a PROPOSAL, U-01; not adopted)", "battery-only, room temperature (L4-E10's chain at +25 C)", "%s Wh usable" % r5["hl"][0],
+         "%s h" % r5["hl"][1], "%.2f h" % _rt(hl[0], prof, tab_w, 2.0), "%.2f W over 48 h, %.2f W over 72 h" % (hl[0] / 48.0, hl[0] / 72.0), "L4-E10 out 9c"),
+        ("P2", "proposed HL18650V (a PROPOSAL)", "battery-only at the cold end (brackets, ASSUMPTION)", "%s to %s Wh with the cells at -5.52 C; %s to %s Wh from a cold start at -20 C" % (r5["cold"] + r5["start"]),
+         "%.2f to %.2f h; %.2f to %.2f h" % (cold_lo / prof, cold_hi / prof, st_lo / prof, st_hi / prof), "less, by the same arithmetic",
+         "%.2f to %.2f W over 48 h at -5.52 C" % (cold_lo / 48.0, cold_hi / 48.0), "L4-E10 out 9c"),
+        ("P3", "proposed HL18650V (a PROPOSAL)", "solar-assisted, room temperature", "not run by the replay",
+         "not computed", "as S1's bound", "%.1f W if the steady load scales with the store (INFERRED estimate); every storage shortfall grows by at most %s Wh" % (st48 * hl[0] / bat20, r5["growth"]),
+         "L4-E10 out 9c"),
+    ]
+    energy_facts = {"short48": cand[7], "short72": cand[8], "profile": prof, "steady": st48, "deficit": prof - st48}
+    # heat into the sealed case per mode, against T-H1's lines (the rise Q / G is INFERRED, W4's lumped model)
+    gc, th1 = F["gc"], F["th1"]
+    w4 = cb["w4"]
+    src_case = F["e_p1_max"] / F["eta_u3"] / F["e_eta_floor"]
+    heat = [
+        ("H1", "PS-IDLE-SPEC (M1)", cb["idle_heat"], "C1's inside-air trigger +%s C" % fmt(cb["c1_air"]),
+         "at the binding line +%.1f K: C1 sheds the profile to the reduced mode above %.1f C ambient; on W4's lid-open %s to %s W/K +%.1f to +%.1f K"
+         % (cb["idle_heat"] / gc, cb["c1_air"] - cb["idle_heat"] / gc, fmt(w4[0]), fmt(w4[1]), cb["idle_heat"] / w4[1], cb["idle_heat"] / w4[0])),
+        ("H2", "PS-IDLE-SPEC with the tablet's window (M2)", cb["idle_heat"] + tab_in, "as H1",
+         "+%.1f K at the binding line; C1 above %.1f C ambient" % ((cb["idle_heat"] + tab_in) / gc, cb["c1_air"] - (cb["idle_heat"] + tab_in) / gc)),
+        ("H3", "E3-O, the heat stage with the ballasts (M3)", F["e3o_wb"], "+70 C class at +%s C: %s W/K" % (fmt(F["e3o_amb"]), fmt(F["g_e3o"])),
+         "%s C at the binding line (L4-E12)" % "%.2f" % F["e3o_line"]),
+        ("H4", "E5 under the hold, with the ballasts (M4)", F["e5_hold_wb"], "+70 C class at +%s C: %s W/K, the BINDING line" % (fmt(F["e5_amb"]), fmt(gc)),
+         "%s C at the line; T-H1 passes at a reading of at least %s W/K (its expanded uncertainty deducted)" % ("%.2f" % F["e5_line"], r5["pass"][0])),
+        ("H5", "E5 with no hold", F["e3o_wb"], "+70 C class at +%s C: %s W/K" % (fmt(F["e5_amb"]), fmt(F["g_a"])), "the hold is what lowers E5's line to %s W/K" % fmt(gc)),
+        ("H6", "source-only at a 9.00 V plug (M5)", round(src_case, 2), "none set by the record (the envelope's state)",
+         "+%.1f K at the binding line (the loads and the two stages' losses at the rule's bound; INFERRED)" % (src_case / gc)),
+        ("H7", "a charge running on shore (added to a mode)", cb["chg_heat"], "LO-01a's floor %s W/K (%s W/K with the ballasts)" % (fmt(th1), fmt(F["lo01a_ball"])),
+         "+%.2f K at the binding line" % (cb["chg_heat"] / gc)),
+    ]
+    return modes, energy, energy_facts, heat
+
+
+# The figures that differ between records, each kept with its basis or merged with the reason (the owner's instruction:
+# "a figure that differs because its basis differs is kept with its basis stated, not merged"). Each figure is checked to
+# be printed by the pinned file named beside it.
+RECON = [
+    ("R01", "the 35E pack's usable energy at room temperature", [("107.9", "replay", "the energy chain (energy_budget.py: the 35E's rate, mean-voltage and end-fraction curves, aged 0.80, to the graceful 3.00 V line) at PS-IDLE-SPEC"),
+                                                                ("108.1", "budget", "pwr_budget.py's derating chain (12 x 3.35 Ah x 3.60 V, rate 0.997, sag, ageing 0.80, the 5 % reserve)")],
+     "107.9 Wh", "the endurance runs (battery-only and solar-assisted) rest on the energy chain; 108.1 Wh stays only as L4-E10's first-chain comparison and in the U-01 bullet L4-E10 reads back (Appendix A)"),
+    ("R02", "the proposed HL18650V pack's usable energy", [("90.2", "l4e10", "L4-E10's chain, the same as R01's 107.9 Wh"), ("90.4", "l4e10", "L4-E10's first chain, the same as R01's 108.1 Wh")],
+     "90.2 Wh", "one chain with the ruled cell; the difference to the 35E is 17.7 Wh on both chains"),
+    ("R03", "the panel's day into the stage at the nominal hold", [("350.0", "replay", "the candidate's trace with no input limit (L4-E7's first round); every solar-assisted run of the replay"),
+                                                                  ("336.6", "l4e7r", "the same day under L4-E7R's accepted regulation (RIMON_IN 31.6k)")],
+     "336.6 Wh for the design", "the replay is not re-run: its solar rows stay on 350.0 Wh, bounded at most 13.4 Wh a day worse at the accepted stage (S2)"),
+    ("R04", "the hold corners' days", [("344.0", "l4e7r", "L4-E7R, the hold 16.970 to 18.221 V with the regulation"), ("373.5", "replay", "L4-E7's first round, the hold 16.695 to 18.490 V, no limit"),
+                                       ("307.9", "l4e7r", "L4-E7R's upper corner"), ("280.6", "replay", "L4-E7's first round's upper corner")],
+     "L4-E7R's 344.0 / 336.6 / 307.9 Wh", "the accepted stage; the replay's corners are the first round's window"),
+    ("R05", "L4-E7R's highest regulated current", [("2.9318", "l4e7r", "at the hold's corners, the stage's operating range"), ("2.9337", "l4e13", "at REQ-016's 25 V ceiling, A-3(a)'s conservative input")],
+     "both", "two operating points of the same regulation; neither replaces the other"),
+    ("R06", "the 100 W bound's layers", [("73.3436", "l4e13", "the regulation's own 25 V corner"), ("93.5521", "l4e7r", "the backstop's static bound, CONDITIONAL on G_CM and U18's VIN+ bias"),
+                                        ("96.25", "l4e7r", "L4-E7's stack A, CONDITIONAL on five unprinted values")],
+     "all three, each with its layer", "the regulation acts first, the backstop second; 96.25 W is the earlier qualification, kept as context"),
+    ("R07", "A1's steady load through the horizon", [("8.0", "replay", "on the candidate panel's trace (350.0 Wh a day)"), ("8.8", "replay", "on the 100 W screening stimulus (a 400 Wp series REQ-016 does not admit)")],
+     "8.0 W", "the screening stimulus is not a source REQ-016 admits"),
+    ("R08", "the profile's power", [("42.8", "trace", "the profile's stated figure"), ("42.82", "trace", "load_trace's sum of 39 loads"), ("42.824", "l4e12", "L4-E12's reproduction of the same sum")],
+     "42.8 W", "one quantity at three roundings"),
+    ("R09", "the enclosure lines (W/K)", [("1.666", "l4e10", "LO-01a's floor: the inside air at the SGP41's +55 C at +40 C on shore, the heat stage"),
+                                         ("1.8058", "l4e12", "LO-01a's floor with L4-E8's ballasts counted"), ("1.806", "l4e12", "E3-O alone: the heat stage with the ballasts, +55 to +70 C"),
+                                         ("2.159", "l4e12", "E5 under the hold, +60 to +70 C: the BINDING line"), ("2.709", "l4e12", "E5 with no hold"),
+                                         ("2.416", "l4e12", "T-H1's pass reading at a 10 K rise: 2.159 W/K plus its expanded uncertainty")],
+     "all, each with its criterion", "different states and limits; T-H1 is judged at 2.416 W/K for the binding 2.159 W/K"),
+    ("R10", "E5's heat under the hold", [("18.152", "l4e12", "at the pack"), ("19.497", "l4e12", "into the case on shore"), ("21.587", "l4e12", "with L4-E8's ballasts")],
+     "21.587 W for the line", "three boundaries of one budget"),
+    ("R11", "E3-O's heat", [("24.996", "l4e12", "into the case on shore"), ("27.086", "l4e12", "with the ballasts")], "27.086 W", "the ballasts counted once"),
+    ("R12", "the charge current", [("3.0 A", "hwfw", "the drawn ChargeCurrent limit (FW-A02)"), ("3.06 A", "replay", "energy_inputs.yaml's D-06 figure (1.02 A a cell), the replay's runs")],
+     "3.0 A for the design", "the replay's solar rows charge 2 % faster than the drawn limit allows, so they lean optimistic (not re-run)"),
+    ("R13", "the 35E's usable energy cold", [("44.5", "replay", "the cells at -10 C, the 35E's discharge floor"), ("54.0", "l4e10", "the cells at -5.52 C, REQ-024's -20 C with the kit's heat (LO-01b)")],
+     "both, each at its cell temperature", "two temperatures"),
+    ("R14", "the hold's point", [("17.6 V", "l4e7r", "REQ-016's stated point"), ("17.593", "l4e7r", "the FBIN divider's nominal (R8 102 k, R9 7.50 k at 0.1 %)")],
+     "17.593 V nominal", "the divider's own value; 17.6 V is the requirement's rounded point"),
+    ("R15", "ChargeCurrent at the charger's POR", [("256 mA", "l4e11", "TI's E2E answer (the register's reset code)"), ("0 A", "l4e11", "the register description's text")],
+     "256 mA", "L4-E11's correction: the description is in error by TI's word; the hold's persistence already covers it"),
+    ("R16", "the ballasts' loss", [("2.09", "l4e8", "at the bound's worst corner"), ("0.0093", "l4e8", "at L4-E8's nominal illustration")],
+     "2.09 W in every heat budget", "the worst corner is what the thermal lines carry"),
+    ("R17", "the pack heater", [("7.5 W into the cells", "l4e10", "the mat's output"), ("8.5 W at the pack", "l4e10", "with its buck's loss")],
+     "both, each at its boundary", "one heater, two boundaries"),
+    ("R18", "P1, the kit's shed state with no usable pack", [("19.57", "l4e11", "the plan figure at VBAT"), ("20.51", "l4e11", "the rule's bound"), ("35.24", "l4e11", "the loads' high corner")],
+     "20.51 W as the bound", "the high corner exceeds the source's least, which is why REQ-015 at 9.00 V is a CONDITIONAL CANDIDATE"),
+    ("R19", "the panel's day at the conditioned upper corner", [("240.0", "l4e13", "the rated unit"), ("52.3", "l4e13", "a unit at A-2's floor")],
+     "both", "PANEL-ACC accepts any unit inside the window; the unserved energy grows toward the floor's unit"),
+]
+
+
+def recon_check(T):
+    """Each reconciled figure is printed by its named file; refuse otherwise."""
+    for rid, _q, figs, _k, _w in RECON:
+        for val, key, _basis in figs:
+            if not re.search(r"(?<![\d.])%s(?![\d])" % re.escape(val), T[key]):
+                refuse(4, "%s: %s is not printed by %s" % (rid, val, PINS[key][0]))
+
+
+def cons_budget_lines(F, st):
+    modes, energy, ef, heat = cons_budget(F, st)
+    L = []
+    p = L.append
+    p("16. THE BUDGET: ONE INPUT SET (every figure read above; MODELED unless named; the approved profile PS-IDLE-SPEC is kept, alternatives labelled)")
+    p("16a POWER PER MODE (the loads, the conversion losses, the auxiliaries, into the case and out of it)")
+    for row in modes:
+        p("   %s %s" % (row[0], row[1]))
+        for lab, x in zip(("the loads", "at the pack or VBAT", "auxiliaries", "into the case", "leaves the case", "read from"), row[2:]):
+            p("      %s: %s" % (lab, x))
+    p("16b ENERGY: battery-only and solar-assisted, SEPARATELY; the ruled cell, the proposed cell beside it (a proposal)")
+    for row in energy:
+        p("   %s %s; %s" % (row[0], row[1], row[2]))
+        for lab, x in zip(("the store", "runtime, the tablet not charged", "with the tablet's window", "the steady load each horizon carries", "read from"), row[3:]):
+            p("      %s: %s" % (lab, x))
+    p("   ENDURANCE, apart from electrical feasibility: the objective of 48 to 72 h is NOT MET by A1 (DR-01): the steady load the store and the sun")
+    p("     carry is %.1f W against the profile's %s W, a deficit of %.1f W (%.0f %% of the profile); the least storage to add is +%s / +%s Wh at 48 / 72 h."
+      % (ef["steady"], fmt(ef["profile"]), ef["deficit"], 100.0 * ef["deficit"] / ef["profile"], fmt(ef["short48"]), fmt(ef["short72"])))
+    p("     A charger change does not close it: the deficit is the store and the day's harvest, not a conversion efficiency. No mandatory function is reduced.")
+    p("16c HEAT INTO THE SEALED CASE PER MODE, against T-H1's lines (the rise Q / G INFERRED on W4's lumped model)")
+    for hid, mode, q, line, at in heat:
+        p("   %s %s: %s W; the line: %s; %s" % (hid, mode, "%.2f" % q, line, at))
+    p("16d THE RECONCILIATION (each figure printed by the file named; kept with its basis, or merged with the reason)")
+    for rid, q, figs, kept, why in RECON:
+        p("   %s %s: %s" % (rid, q, "; ".join("%s (%s: %s)" % (v, PINS[k][0].split("/")[-1], b) for v, k, b in figs)))
+        p("      kept: %s; why: %s" % (kept, why))
+    return L
+
+
+def cons_budget_tables(F, D, st):
+    modes, energy, ef, heat = cons_budget(F, st)
+    T = {}
+    T["| Mode | "] = ["| Mode | State | The loads | At the pack or VBAT | Auxiliaries | Into the case | Leaves the case | Read from |", "|---|---|---|---|---|---|---|---|"] + \
+        ["| %s |" % " | ".join(r) for r in modes]
+    T["| Case | "] = ["| Case | Cell | Basis | The store | Runtime, the tablet not charged | With the tablet's window | The steady load each horizon carries | Read from |",
+                      "|---|---|---|---|---|---|---|---|"] + ["| %s |" % " | ".join(r) for r in energy]
+    T["| Heat | "] = ["| Heat | Mode | Into the case (W) | T-H1's line | The inside air (INFERRED unless named) |", "|---|---|---|---|---|"] + \
+        ["| %s | %s | %.2f | %s | %s |" % h for h in heat]
+    T["| Figure | "] = ["| Figure | Quantity | The figures, each with its basis and the file that prints it | Kept | Why |", "|---|---|---|---|---|"] + \
+        ["| %s | %s | %s | %s | %s |" % (rid, q, "; ".join("%s (%s: %s)" % (v, PINS[k][0].split("/")[-1], b) for v, k, b in figs), kept, why) for rid, q, figs, kept, why in RECON]
+    return T
 
 
 def poe_v(F):
