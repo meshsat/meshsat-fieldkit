@@ -7,7 +7,9 @@ process of 2 October 2026 shapes the third round: three separate checks with the
 whole limiting chain, a margin justified by what it must absorb, the circuit corrections, one coherent candidate and a
 decision. It follows the targeted recheck `checks/astra-check-l4e7r-2.md` (NOT YET) and carries the **CS101 correction**
 after the coordinator's closing check `checks/check-l4e7r-3.md` (not accepted on one defect: the backstop tripped under
-TEST-PLAN M2's CS101) and the owner's CS101 instruction of the same day; the last section maps each item to its change.
+TEST-PLAN M2's CS101) and the owner's CS101 instruction of the same day, the **panel lead's surge and sustained
+over-voltage derived** for REQ-016 (the coordinator's surge round, the findings ledger's item 1) and the **solar-fault
+remedies** (the owner's amendment of 2 October 2026, item 3); the last section maps each item to its change.
 Every figure below is printed by section 10 of `l4e7_stage_settings.out` (the script `l4e7_stage_settings.py`, after its
 reproductions of section 0); the sheet values in the verdict's table are section 9's. Evidence classes: **warranted** (a
 limit the maker prints for the condition it is used at, with its page; "printed test limits" for a passive's drift rows),
@@ -183,9 +185,9 @@ The energy into the stage over any 0.1 s, at most 10 J:
 
 ## Check (c): the parts' ratings during the specified disturbances
 
-**The derivation (B6).** TRN-001's port table (DECISION-31) lists J_SOLAR as EXTERNAL, a long outdoor lead; no document
-of the tree states its length or routing, so the levels are the approved test plan's for power leads, which do not
-depend on them:
+**The derivation (B6).** TRN-001's port table (DECISION-31) lists J_SOLAR as EXTERNAL, a long outdoor lead; the records
+give a 5 m lead (a1solar's array record, ESTIMATE; the next section derives the panel lead's own disturbances), and
+the approved test plan's levels for power leads do not depend on its length:
 
 - **M2, MIL-STD-461G CS101** on DC input power leads, curve 2 (sources of 28 V or below): 126 dBuV, 2.00 V rms, at the
   EUT's input to the knee (read from Figure CS101-1 at 5 kHz), then the straight line to 96.5 dBuV at 150 kHz; or the
@@ -194,9 +196,11 @@ depend on them:
   and 4);
 - **M7**: the discharge at decision 34's level, 8 kV contact and 15 kV air, through CS118's 150 pF and 330 Ohm (Table
   IX's +30 % on the contact current; the air level scaled from it);
-- surge and sustained over-voltage: no level is ruled (REQ-016, DECISION-31 section 3), so D4's own 10/1000 us rating
-  stays a **capability scenario, labelled**: 33.1 A at an initial junction of 25 C or below, derated to 88.1 % (29.2 A) at
-  the hot end's 62.1 C (Littelfuse Figure 3 as drawn, INFERRED from the figure).
+- surge and sustained over-voltage on the panel lead: derived in "The panel lead's surge and sustained over-voltage" below
+  (MIL-STD-461G CS116 and CS115, the row REQ-063 commits to, and the sustained sources); D4's own 10/1000 us rating stays
+  here as a **capability scenario, labelled**, the entry's margin beyond that derived basis: 33.1 A at an initial junction
+  of 25 C or below, derated to 88.1 % (29.2 A) at the hot end's 62.1 C (Littelfuse Figure 3 as drawn, INFERRED from the
+  figure).
 
 **The corrected network.** The 50 V bulk on PV_P ahead of the bank (the CS101 correction); four 10 uF 50 V ceramics, C71
 to C74 (the value text and land of C13 and C14), on TRK_VS at RSENSE1's pad, so a fast edge reaches R59 only through C13
@@ -235,6 +239,266 @@ breakdown, then the straight line to its clamping point.
 - **Beyond the lumped model** (the discharge's first nanoseconds, CS114 at MHz) the board's parasitics decide, a layout
   matter (C71 to C74 at R59's pad, R59's Kelvin taps), judged by M3, M7 and bench row 7b.18 at layer 8. A reversed panel
   conducts through D4 as DECISION-31's note E-N1 records.
+
+## The panel lead's surge and sustained over-voltage, derived (REQ-016; R-156)
+
+REQ-016's acceptance gives layer 4 the derivation (the disturbance, its source impedance or current, its duration and the
+limit) and layer 8 the judgement under TRN-001. It also states the pass criterion: a disturbance passes only when **D4's
+clamping voltage at that disturbance's current, with the part's tolerance, is at or below the lowest limit on PV_P**. This
+section answers the findings ledger's item 1 (L4-E7R's checks 1.6 and 2.4; the collaborator's B6 R5: D4's own rating "a
+component-capability test, not a derivation of the panel-entry disturbance"). Section 10 of the .out prints every figure
+under THE PANEL LEAD'S DISTURBANCES, DERIVED.
+
+**The exposure.** J_SOLAR is EXTERNAL in TRN-001's port table, a long outdoor lead by definition: PV_IN on pin 1 and the
+return on pin 2, which is board E's GND (DECISION-31). The records give the lead: a1solar's **5 m one way of 4 mm2 copper**
+(`array_calc.py`, ESTIMATE), **0.0465 Ohm in loop** (the replay's own figure). It is unshielded and laid on the ground from
+the panel to the case (SESSION reading: a panel's own leads and an extension of their class carry no shield). There is no
+earth bond: the case is plastic and no board has a chassis net (GROUNDING-AND-SHIELDS.md). So the kit floats, a
+common-mode transient on the lead closes only through stray capacitance, and the high side lead against its return, through
+the entry, is the path that loads D4. The lead's quarter wave is 15.0 MHz in free space (half wave 30.0 MHz), lower on soil:
+inside CS116's flat band, so it is added to the test frequencies as an installation resonance (461G 5.14.2).
+
+**The basis (SESSION: the reading of what the requirements commit to).** REQ-063 commits the kit's EMC characterisation to
+MIL-STD-461G (11 December 2015) and the "Ground, Army" row of its Table V (held; transcribed in
+`v2/vendor/standards/mil-std-461g-requirement-matrix.md` from the same file). That row marks:
+- CS116 **A** (5.14): damped sinusoids from 10 kHz to 100 MHz on every interconnecting cable, power cables included, and on
+  each individual high side power lead;
+- CS115 **A** (5.13): an impulse on every interconnecting cable;
+- CS117 **S** (5.15): lightning induced, for the procuring activity to specify.
+
+TEST-PLAN.md runs M1 to M5, and no row runs CS115, CS116 or CS117. The derivation takes **CS116 and CS115** as the panel
+lead's surge:
+1. they are the transients of the one edition and row the requirements commit to;
+2. the standard's appendix says that "for most equipment, testing with some combination of CS116 and CS115 may provide
+   sufficient coverage to address the environment for nearby lightning called out in MIL-STD-464" (A.5.15), which is the
+   exposure an outdoor lead adds;
+3. IEC 61000-4-5 is neither held in this tree nor freely published, and the envelope's surge row (decision 34) and CHO-003
+   decline to constrain the long leads to it;
+4. CS117 is not taken: its levels "were derived from general and civil aviation experience" for aircraft equipment
+   (A.5.15), it applies to safety-critical equipment (5.15.1), and the row leaves it to the procuring activity.
+
+**Not covered**, a residual for layer 8 and the register: a direct strike, or one nearer than MIL-STD-464's nearby
+lightning (CS117 covers neither, and CS116 with CS115 only "may"). The kit's posture there is REQ-041's mast-down alarm.
+
+**The disturbances.**
+
+| | Disturbance | Source and waveform | Duration |
+|---|---|---|---|
+| D1 | CS116 on PV_IN alone and on the J_SOLAR cable (461G 5.14, Figures CS116-1 and CS116-2) | each pulse e^(-pi f t / Q) sin(2 pi f t), Q 15 +- 5 (10 and 20 both run), at 0.01, 0.1, 1, 10, 30 and 100 MHz and the lead's 15.0 MHz; Ip from Figure CS116-2 as drawn (INFERRED from the figure): 0.1 A at 10 kHz rising 20 dB a decade to 10 A at 1 MHz, flat to 30 MHz, 3 A at 100 MHz. A generator of at most 100 Ohm through the injection probe; the current is the test's controlled quantity ("Reduce the signal, if necessary, to produce the required current", 5.14.3.4c(3)), so the port sees a current source of Ip | one pulse every 1 to 2 s for five minutes |
+| D2 | CS115 on the J_SOLAR cable (461G 5.13, Figure CS115-1) | 5 A, 30 ns at least, edges at most 2 ns; a 50 Ohm charged-line generator through the probe, set at least to the calibration's drive (500 V across the fixture's 100 Ohm loop, A.5.13); the cable's peak current is recorded, not limited | 30 Hz for one minute |
+| D3 | the panel's own cold open circuit | REQ-016's window, 25 V at most at -20 C, current-limited (L4-E13's check against D4's standoff holds below 8574 W/m2) | held for hours |
+| D4 | a stiff source on the port by mistake (a vehicle or shore lead wired to the panel's receptacle) | the kit's declared source range, 9 to 36 V (V2-SPEC line 21), through the lead's 0.0465 Ohm loop and F2 (10 A) | held |
+| D5 | a reversed panel (DECISION-31, note E-N1) | the panel's short-circuit current, 6.802 A (check (b)'s, with the sheet's power tolerance), forward through D4 | held |
+
+**D1, frequency by frequency.** The bound puts the disturbance's whole current in D4 (REQ-016's criterion) and in R59 and
+the bank on top of the operating current, 3.7408 A, with no capacitor credited. The loaded network is check (c)'s corrected
+entry (MODELED, lumped, to 1 MHz; above it the board's parasitics decide). It is run from two starts: operating at the
+hold, and open at 25 V at the cold end with the stage off. Each start runs each bulk (the cold end's aged -40 C row and the
+new 20 C row), each bias factor, both polarities and both Q ends. The trip filter's excursion is bounded by 2 x Ip / (pi f)
+/ tau, the first half cycle's charge over the filter's least time constant (3.960 ms).
+
+| f MHz | Ip A | D4 at Ip, 25 C / hot end | U5 bound | U18 bound | U5, loaded | U18, loaded | TRK_VS, loaded | PV_P, loaded | D4, loaded | trip filter | D4 energy bound |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0.01 | 0.10 | 34.43 / 35.71 V | 0.0593 V | 0.0561 V | 0.0582 V | 0.0555 V | 25.05 V | 25.05 V | 0 A | 0.00161 A | 2.27 mJ (0.13 % of its scaled rating) |
+| 0.1 | 1.00 | 34.73 / 36.01 V | 0.0732 V | 0.0692 V | 0.0648 V | 0.0672 V | 25.10 V | 25.11 V | 0 A | 0.00161 A | 2.29 mJ (0.41 %) |
+| 1 | 10.00 | 37.72 / 39.00 V | 0.2123 V | 0.2007 V | 0.1238 V | 0.1860 V | 25.16 V | 25.24 V | 0 A | 0.00161 A | 2.48 mJ (1.42 %) |
+| 10 | 10.00 | 37.72 / 39.00 V | 0.2123 V | 0.2007 V | (layout) | | | | | 0.00016 A | 0.25 mJ (0.45 %) |
+| 14.9896 | 10.00 | 37.72 / 39.00 V | 0.2123 V | 0.2007 V | (layout) | | | | | 0.00011 A | 0.17 mJ (0.37 %) |
+| 30 | 10.00 | 37.72 / 39.00 V | 0.2123 V | 0.2007 V | (layout) | | | | | 0.00005 A | 0.08 mJ (0.26 %) |
+| 100 | 3.00 | 35.40 / 36.67 V | 0.1041 V | 0.0985 V | (layout) | | | | | 0.00000 A | 0.01 mJ (0.04 %) |
+
+- D4 at Ip: the highest part (34.40 V breakdown, the printed slope to 45.4 V at 33.1 A, INFERRED straight line), at 25 C
+  and at the hot end's 62.1 C with the sheet's typical coefficient, 0.1 %/C. The worst is **39.00 V**, under the drafted
+  entry's 50 V parts and over the drawn C11 and C12's 35 V.
+- The ratings: U5's 0.3 V sense differential, U18's 2 V differential, and U18's 75 V common mode and supply.
+- The trip filter's excursion stays under the immunity margin, 0.1130 A.
+- D4's energy: the bound with the whole current in D4, against the 10/1000 us row's energy (VC x IPP over the shape's
+  integral) scaled by the square root of the event's duration (INFERRED: the junction heats adiabatically).
+- In the loaded network D4 carries nothing: the entry's capacitors take the pulse, and TRK_VS peaks at 25.16 V, under D4's
+  least breakdown at the cold end, **29.70 V** (the sheet's 31.10 V moved by its typical coefficient to -20 C; L4-E13's
+  figure). U5's VIN sees at most the TRK_VS figure, against 80 V.
+
+**D2.** D4 at 5 A reads 36.06 V at 25 C and 37.34 V at the hot end. The bound reads U5 0.1350 V and U18 0.1277 V; the
+loaded network reads U5 0.0766 V, TRK_VS 25.02 V, PV_P 25.08 V and D4 0 A. The pulse's charge is 0.160 uC, the trip filter's
+excursion at most 0.000081 A, and D4's energy with the whole pulse in it 0.0060 mJ. The standard does not limit the loop
+current the test drives. U5's rating is reached at **15.7 A** with the whole current through R59 (the bound) and at 64 A in
+the loaded network; D4's clamp reaches the drafted entry's 50 V at 43.1 A.
+
+**D4, with the drafted SMCJ28A.** A stiff 36 V source drives the lead's loop into the clamp (INFERRED straight line from
+each breakdown at the printed slope). D4's continuous capability on the board, from TJ 150 C and RthJA 75 C/W (typical, 8 x
+8 mm pads), is **1.17 W** at the hot end's air and 2.27 W at the cold end's; the sheet's 6.5 W is on an infinite heat sink.
+
+| D4 part and temperature | Breakdown | Current | Power |
+|---|---|---|---|
+| the least part at the cold end | 29.70 V | 16.63 A | 585.8 W |
+| the least part at 25 C | 31.10 V | 12.94 A | 457.9 W |
+| the highest part at 25 C | 34.40 V | 4.22 A | 151.2 W |
+| the least part at the junction's maximum | 34.99 V | 2.67 A | 95.9 W |
+
+D4 conducts amps at any junction temperature it can reach, two orders of magnitude over its rating. The sheet's typical
+failure mode is a short, which F2 then clears. Every other part of the drafted entry is rated above 36 V: the bulk and C71
+to C74 at 50 V, U18 at 75 V, U5 at 80 V and Q3 at 60 V. As drawn, C11 and C12 are 35 V, under it. The largest sustained
+source the drafted entry holds is D4's least breakdown at the cold end, 29.70 V; below it D4 carries less than its 1 mA
+test current.
+
+**The TVS-only change for D4, evaluated and not taken** (superseded by "The solar-fault remedies" below), read from the held
+series (Littelfuse SMCJ p.2). The least row that stands off 36
+V and does not break down at the cold end is **SMCJ36A**: VR 36.0 V, VBR 40.00 to 44.20 V (38.20 V at the cold end), VC
+58.1 V at 25.9 A.
+- **Alone it does not hold the derived set on the drafted entry.** Under REQ-016's criterion, D1's 10 A plateau puts its
+  clamp at 49.57 V at 25 C and **51.21 V** at the hot end (typical coefficient), against the 50 V parts. Those parts are
+  reached at 10.81 A (25 C) and 7.75 A (hot end), and Q3's 60 V at 29.4 A.
+- **So the change that holds every derived disturbance is SMCJ36A with the entry's 50 V parts at the 63 V class.** The
+  bulk C11, C12 and C69 go to EEHZA1J220XP: 22 uF 63 V in the same 6.3 x 7.7 mm D8 land, ESR 80 mOhm against 40 (ZA p.2).
+  That takes the bulk ahead of the bank from 99 uF to 66 uF and so re-opens the CS101 correction, which is re-run with it.
+  C71 to C74 go to 63 V or more (no ceramic's sheet is held).
+- With the change, a 36 V source runs the stage. Its input is then the regulation's 105.73 W to the trip's 135.26 W at 36
+  V, outside REQ-016's window: a single fault for layer 8.
+- The alternative that also closes D5 is an input over-voltage and reverse disconnect ahead of PV_P (a series FET with its
+  controller): more parts, and no sheet for one is held.
+
+It was carried as a register row, not drafted; the owner's amendment of the same day asked for a selected remedy instead,
+which the section below gives.
+
+**D5.** D4's forward path carries 6.802 A, held. On the board D4 can dissipate 1.17 W at the hot end, so it holds only
+below a forward drop of 0.172 V, which no silicon junction has at that current (INFERRED; the sheet prints the forward drop
+at 100 A only). It is NOT MET as DECISION-31 recorded (E-N1, board E's owner); the keyed receptacle is the barrier against
+it.
+
+**The verdicts**, each against REQ-016's criterion on the drafted entry (50 V); as drawn, the lowest limit on PV_P is C11
+and C12 at 35 V:
+
+| | Disturbance | D4 at its current | Drafted entry | As drawn |
+|---|---|---|---|---|
+| D1 | CS116, PV_IN and the cable | 39.00 V (10 A, hot end); D4 off in the loaded network | **MEETS** | NOT MET (39.00 > 35 V) |
+| D2 | CS115, the cable | 37.34 V (5 A, hot end); D4 off in the loaded network | **CONDITIONAL**: the loop current under 15.7 A (U5's bound) | NOT MET (37.34 > 35 V) |
+| D3 | the panel's cold open circuit | 25 V, under D4's 28 V standoff | **MEETS** (CONDITIONAL on PANEL-ACC) | MEETS |
+| D4 | a 36 V source on the port | D4 conducts 2.7 to 16.6 A | **NOT MET** on the drafted entry: remedied below (the over-voltage cut-off) | NOT MET |
+| D5 | a reversed panel (E-N1) | D4 forward, 6.802 A held | **NOT MET** on the drafted entry: remedied below (the return switch) | NOT MET |
+
+**For L4-E9's register** (R-156 and its companions; the register is L4-E9's to write):
+- (a) R-156's input is this derivation: D1 and D3 MEET, D2 is CONDITIONAL on the recorded loop current, D4 and D5 are NOT
+  MET. R-156's text names the INA250's 40 V; the drafted U18 is the INA169 (75 V).
+- (b) A TEST row owed at layer 8: CS116 on PV_IN alone and on the J_SOLAR cable at the six frequencies and the lead's 15.0
+  MHz, and CS115 on the cable, recording the cable's peak current. TEST-PLAN runs M1 to M5 only, though the row REQ-063
+  commits to marks both A.
+- (c) The remedies for D4 and D5: "The solar-fault remedies" below.
+- (d) The residual beyond the basis: a direct or nearer strike. With the remedies the entry's margin there is the port
+  clamp's own rating (D4's without them, check (c)'s capability rows).
+
+## The solar-fault remedies (the owner's amendment of 2 October 2026, item 3)
+
+The owner's words: "The 36 V source and reversed-panel findings are open engineering defects while their remedies are still
+being selected. Give each a selected remedy, its circuit changes, and a bounded analysis against the approved fault exposure and
+component ratings. Check affected interfaces and calculations, including interactions with the selected charger and backstop.
+Include both remedies and their evidence in the consolidated candidate. Preserve the approved normal solar-input window; fault
+protection does not extend the permitted operating range." The two defects are D4 and D5 of the derivation above (L4-E9's D-10
+and D-11, R-173). Section 10 of the .out prints every figure under THE SOLAR-FAULT REMEDIES.
+
+**The comparison, three implementations, each on its held sheet:**
+
+| | Implementation | What the sheets say | Verdict |
+|---|---|---|---|
+| (1) | The TPS48110-Q1 alone driving back-to-back FETs (SLUSEE5E: "Drives external back-to-back N-channel MOSFETs") | TI draws it (Figure 9-14) with VS, CS+ and ISCP on the input, rated -1 V to GND (6.1): a reversed panel takes them to -25 V. Rearranged (VS behind a diode, the sense behind the pair), the reversal lands on SRC, rated -30 V (6.1; 8.3.7 prints that state). The reversed panel's -25 V fits with 5 V to spare, but a reversed connection's ring is bounded only by the input clamp. That clamp must stand off 36 V both ways, so it breaks down no lower than -42.4 V at the cold end. The diode's drop (at most 0.715 V, no minimum printed) also enters the cut-off's reference, inside a room of 1.88 V | not taken |
+| (2) | The LM74700-Q1 ideal diode ahead of the TPS48110-Q1 (the vehicle entry's pair, L4-E9's suggestion) | Its reverse comparator (V(AK REV) -17 to -2 mV) blocks every reverse current. CS116's negative lobes then find only the input clamp, and CATHODE to ANODE (75 V) carries the clamp plus up to 25 V held behind it. With the SMCJ36CA at 10 A that is 74.57 V at 25 C and **76.21 V at the hot end**; with the SMCJ40CA, 82.53 V. It also rectifies CS101's ripple wherever the input falls faster than the stage drains the 226 uF behind it: above about 733 Hz at the regulation's highest current, inside the 2 to 5 kHz band where the accepted M2 immunity is decided | not taken |
+| (3) | **Selected (SESSION)**: one remedy for each fault, from parts already in the design | For D4, the TPS48110-Q1 over-voltage cut-off on the high side, in TI's own topology with the vehicle entry's network (L4-E11) and one CSD19532Q5B. For D5, a CSD19532Q5B in the panel's return, its gate from the input through a divider and a BZT52C12 clamp: it blocks a reversal with its 100 V rating and no controller. The path is linear when on, and no control acts on a reverse current | **selected** |
+
+**The cut-off's band decides the clamp D4.** The band must meet three conditions:
+- it sits over CS101's peak at the input, 27.82 V, so M2 never trips it;
+- it sits under D4's least breakdown at the cold end, so a sustained source never reaches the clamp;
+- it falls back over 25 V, so a panel inside the window is never locked out after a cut.
+
+The comparator prints OV at 1.16 / 1.18 / 1.20 V rising and 1.10 / 1.11 / 1.13 V falling, with the pin's leakage up to 300
+nA either way through the top resistor. The divider is built from stocked YAGEO RT 0.1 % 25 ppm/K parts, aged by their printed
+load-life and solder-heat limits (the record's convention for a protection threshold).
+
+- **With the drafted SMCJ28A (29.70 V at the cold end) the band does not fit.** New parts leave 0.275 V on the worst side
+  (L4-E9's "about 0.4 V each side" less the leakage and the drift); aged parts leave **-0.282 V**: NOT MET.
+- So D4 becomes the next held row, **SMCJ30A**: VR 30.0 V, VBR 33.30 to 36.80 V (31.80 V at the cold end), VC 48.4 V at 31.0 A.
+- The divider is **R98 90.9k + R99 95.3k over R100 7.68k** (C728600, C861605, C375517). Aged, the cut-off rises at **28.55 to
+  31.06 V** and falls back at **27.07 to 29.26 V** (29.11 to 30.47 V rising when new). That leaves 0.731 V over CS101's peak,
+  0.737 V under the clamp and 2.07 V over 25 V on the fall.
+- Under REQ-016's criterion the SMCJ30A clamps D1's 10 A plateau at **41.91 V** at the hot end and D2's 5 A at 40.04 V, under the
+  drafted entry's 50 V parts. It stands off CS101's peak by 2.18 V, where the SMCJ28A did by 0.18 V.
+
+**The circuit changes** (`apply_gen_sch_e_solar_guard.py`, drafted, never applied; it applies after this record's hold, input
+limit and backstop drafts, L4-E9's hot swap and L4-E11's entry draft, and refuses a generator without them):
+- J_SOLAR.2 becomes **PV_RTN**, and F2 feeds **PV_F**.
+- **D11** SMCJ40CA (C80273, the vehicle entry's D10 part) across PV_F and PV_RTN at the connector; **C131** 1 uF 100 V on PV_F.
+- **U21** TPS48110AQDGXRQ1 (C17556513). **R87** 4.5 mOhm (C2985708) from PV_F to PV_SNS and **Q12** CSD19532Q5B (C473333) from
+  PV_SNS to PV_P.
+- U21's network is L4-E11's vehicle-entry network except the OV divider:
+  - RSET R88 100R 0.1 %, and RISCP R89 3.01k with C126 1 nF C0G 100 V;
+  - the gate slew R90 36.5k, R91 10R and C127 10 nF C0G 100 V (C184799), and CBST C128 1 uF;
+  - CTMR C129 22 nF C0G (C97929) with RIWRN R92 39.7k 0.1 % (C861872);
+  - the VS filter R93 100R and C130 100 nF 100 V;
+  - UVLO R94 59.0k over R95 10.0k, and INP R96 100k over R97 39k;
+  - the OV divider R98, R99 and R100 above.
+- **Q13** CSD19532Q5B (C473333) from PV_RTN to GND. Its gate PV_RG comes from PV_F through **R101** 100k and goes to GND through
+  **R102** 100k, with **D12** BZT52C12-7-F (C124196) from gate to source.
+- **D4** becomes the SMCJ30A; its LCSC code is owed (no catalogue reading is filed).
+- PV_P's declaration is now switched by U21 through PV_UVLO; PV_F and PV_SNS are segments of PV_P, and PV_RTN returns PV_P.
+
+Placement on board E: at J_SOLAR, ahead of the bulk, the sense bank and D4; Q13 in the return pin's copper. Owed with it: U21's
+DGX-19 land (as L4-E11's E11-01), the nodes, the regeneration and its gates. Read back here on a scratch copy after the five
+drafts: 7 edits, every check yes, R10 untouched.
+
+**The bounded analysis** (the drafted entry with the block and D4 SMCJ30A, each against the parts' printed ratings):
+
+| Exposure | Result | Verdict |
+|---|---|---|
+| **D4: a stiff 36 V source** through the 0.0465 Ohm lead | The block never turns on. The gate cannot rise before BST charges, at least 50.0 ms (1 uF -10 % to 7.0 V at 126 uA), while the OV pin follows the input at once. The cut-off's highest, 31.06 V, is 4.94 V under the source. Ratings: Q12 holds 36 V of 100 V; U21's VS 36 V of 80 V, EN/UVLO 5.31 V of 15 V, INP 10.25 V of 20 V; D11 sits under its 40 V standoff. A connection's ring is bounded by D11 at 64.5 V at its rated current (EN/UVLO 9.51 V, INP 18.36 V). D4 and the bulk see nothing. A source rising with the block on is cut at 31.06 V at most, 0.737 V under D4 | **MEETS** |
+| **D5: a reversed panel** (6.802 A short circuit with tolerance, 25 V open circuit) | Q13 is off and its body diode reverse biased: no current. It holds 25 V of 100 V, and a reversed connection's ring at most D11's 64.5 V. The high side's pins stay within 1 V of GND while Q13 leaks under 31.5 uA (the dividers' conductance), against 1 uA printed at 80 V and 25 C; on a fast ring C131 holds them within 0.066 V. D4 and the stage see no reversal | **MEETS**, CONDITIONAL on Q13's leakage above 25 C (no row; 32 times the printed one) |
+| **CS116 and CS115, the block on** | The short-circuit trip's sense, filtered by RISCP x CSCP, reaches at most 4.74 A against its least 10.36 A. The overcurrent timer reaches 0.037 V against 1.112 V. The input reaches at most 25.59 V against the cut-off's least 28.55 V. Q12 and Q13 carry at most 13.74 A against 400 A. D4 (SMCJ30A) at the disturbance's current reads 41.91 V, under 50 V, and stays off in the loaded network | **MEETS** |
+| **CS116 and CS115, the block off** (night, after a cut) | D11 clamps the port at 57.53 V at 10 A at the hot end (54.23 V at 5 A), which Q12 holds against 100 V and U21's VS against 80 V (EN/UVLO 8.48 V, INP 16.38 V). D11 takes at most 3.7 mJ a pulse. C131 holds PV_F within 0.059 V of GND against Q13's 918 pF | **MEETS** |
+| **The turn-off** against D4's and the bulk's exposure | OV to PD takes 4.0 us at most at 47 nF; the gate's load is 15.3 nF. A rising source is cut at 31.06 V at most, 0.737 V under D4's least breakdown at the cold end and 18.9 V under the bulk's 50 V. D4 never conducts | **MEETS** |
+| **Quiescent and conduction loss** in normal operation | The series path is at most 25.23 mOhm (Q12 9.56, Q13 11.12 at VGS 8.5 V or more, R87 4.56; the FETs at their 150 C reading). That is 0.217 W at the regulation's highest 2.934 A and 0.353 W at the trip's highest 3.741 A. The block draws 1.73 mA around the bank at 25 V (43.3 mW). On SC-37's day it costs 1.31 Wh of 336.6 Wh (0.39 %); on the bright day 1.77 Wh of 431.9 Wh | the energy budget's entry (an endurance cost) |
+
+**The window kept.** REQ-016's normal window is unchanged: open circuit at most 25 V at the panel's coldest, the hold at 17.6
+V, at most 100 W.
+- The cut-off rises at 28.55 V at the least and falls back at 27.07 V at the least, both over 25 V with their tolerance and
+  drift. Its highest, 31.06 V, is under every rating on the entry, and above it the stage is off, not running.
+- U21 turns on at 8.44 V at the most and off at 7.46 V at the least (L4-E11's figures for the same divider). That is under the
+  stage's own enable (R14 and R15, about 9.5 V), so it narrows nothing.
+- The hold: the panel sits at most 0.074 V above PV_P at the regulation's highest current.
+- 100 W: the static bound at the panel entry is **93.5954 W** (93.5521 W without the block). It counts the block's own currents
+  around the bank, with the trip read at both ends of its 0.094 V drop.
+- **Not claimed**, a residual named for layer 8: a stiff source between 25 V and the cut-off (outside the window, so a fault)
+  runs the stage under the backstop's current trip, at most 116.5 W at the cut-off's highest. No protection here extends the
+  permitted range.
+
+**The interactions, and what was re-run.**
+- **The backstop.** The sense bank, U18, U19, U20 and SWEN are behind the block and see its cut as the panel's absence (as at
+  dusk). A connection now rises at the gate's slew, 17.28 to 24.65 V/ms (L4-E11), so the bank carries at most 1.760 A into the
+  capacitors behind it, under the trip's least 3.0468 A, and U20 holds SWEN low for 180 ms anyway.
+- **CS101 (M2), re-run** with the block's series resistance ahead of the bulk and C131 across the input. The filtered peak is
+  **0.0591 A** at 2121 Hz (0.0589 A at the least resistance; the accepted 0.0585 A is reproduced with none), against the margin
+  0.1130 A. The series element lifts the bank's share by at most 1.42 %, where the entry's impedance has a negative real part
+  (the converter's constant power). The loop branch's room is read at M2 as accepted.
+- **Check (b), re-run.** The capacitors at the entry hold 141.9 mJ (C131 and U21's filter added). The response allowance is
+  **1.021 ms** against ten times the typical sum (0.401 ms); the accepted figure was 1.087 ms.
+- **The LT8705A.** Its own enable, the hold (FBIN on PV_P) and the IMON_IN regulation (R59 behind the block) are unchanged.
+- **The BQ25730 on VBUS20.** No path couples. The stage's output reaches it only through U4 and Q2 into VIN_RAW and board A's
+  front end, and the block's cut is the panel's absence.
+- **TRN-001's port table.** J_SOLAR's pin 2 becomes PV_RTN (switched by Q13), the first parts at the port are D11 and C131, and
+  note E-N1 is closed.
+- **Staying valid unchanged:** check (a)'s chain and its 93.5521 W at the stage; the supply sequencing; check (c)'s loaded
+  network (D4 off, its breakdown now higher); the M7 figures (C131 ahead takes a discharge's 2.25 uC as about 2.3 V); L4-E13's
+  standoff check (now 30 V).
+- **Changed:** D1 and D2 under REQ-016's criterion (SMCJ30A, 41.91 and 40.04 V). The margin beyond the basis is now D11's own
+  rating, 23.3 A at 10/1000 us, since a pulse over the cut-off turns the block off within 4 us.
+
+**For L4-E9's register** (its D-10, D-11 and R-173): D-10 and D-11 have a selected remedy, drafted and not applied: the cut-off
+U21 with Q12, the return switch Q13, D11, C131, and D4 to the SMCJ30A. Owed with it:
+- D4's LCSC code;
+- U21's DGX-19 land;
+- the regeneration and its gates;
+- the bench rows:
+  - the cut-off's rise and fall on a ramped supply;
+  - a 36 V supply connected live (Q12 never conducts, D4 carries nothing);
+  - a reversed bench panel curve (no current; the high side's pins against GND);
+  - CS116 and CS115 on the port with the block on and off (R-174);
+  - Q13's leakage at the hot end.
 
 ## The backstop under CS101 (the closing check's defect, corrected)
 
@@ -364,13 +628,16 @@ From L4-E9's power-path output at fnd/l4e9 539dc57c (read only; `inputs/l4e9-pow
 | 99, 105, 115: the entry's protection and the backstop | PENDING | the drafted bank, the 50 V bulk on PV_P ahead of it, D4 and C71 to C74 on TRK_VS, the INB filter and the backstop (drafts, not applied) |
 | 119: 93 W out at the window | 4.216 A at 22.06 V | a ceiling, not an expectation: the stage takes 53.42 W in at most at the hold |
 | 307: L4-E7's settings, 350 Wh a day | 350 Wh | 344.0 / 336.6 / 307.9 Wh (SC-37) and 431.9 Wh on the bright day |
+| R-156 (register): the panel lead's surge and sustained over-voltage | PENDING on this round | derived: CS116 MEETS, CS115 CONDITIONAL (the loop current under 15.7 A), the panel's cold open circuit MEETS, a 36 V source on the port and a reversed panel NOT MET; remedied by the over-voltage cut-off U21 with Q12, D4 to the SMCJ30A and the return switch Q13 (drafted), the TVS-only change SMCJ36A with the 63 V class parts, or an over-voltage and reverse disconnect; a CS116 and CS115 test row owed (see the panel lead's section) |
 
 ## The series disconnect: evaluated, not taken (SESSION)
 
 The LM5069 class hot-swap controller prints its current limit (VCL 48.5 / 55 / 61.5 mV) at VIN = 48 V, not at the
 panel's 17 to 25 V, and its 12 % spread would push the regulation further down than C's; SWEN already removes the path
 from the panel to the pack, and the input capacitors' charge is bounded in check (b). A series FET would cover a shorted
-switch of the LT8705A, a single fault layer 8 judges.
+switch of the LT8705A, a single fault layer 8 judges. The solar-fault remedies select a series element for another reason:
+the TPS48110-Q1 over-voltage cut-off (U21, Q12) for a 36 V source on the port, beside a return switch (Q13) for a reversed
+panel. It is not a current limit for the stage, and the LM5069's row does not enter it.
 
 ## The single faults (assigned to layer 8)
 
@@ -393,6 +660,11 @@ behind it, nothing in series with CSPIN or CSNIN; U18 with R65 16.9k, R66 8.45k 
 to C78, five 100 nF NP0 50 V 1206 (C170182); U19 with R67 and R68; U20 with R69; SWEN on TRK_SWEN with R70 8.06k and R71
 6.04k (C728595); C66 to C68; C71 to C74 and D4 and R14 on TRK_VS; R16 31.6k (C705766); the declarations. Read back on a
 scratch copy; never applied to the tree; R10 untouched.
+
+`apply_gen_sch_e_solar_guard.py` (the solar-fault remedies), seven edits after the backstop's, L4-E9's hot swap and L4-E11's
+entry drafts (it refuses a generator without them): J_SOLAR.2 to PV_RTN and F2 to PV_F; D11, C131, U21 with R87 to R100 and
+C126 to C130, Q12; Q13 with R101, R102 and D12; D4 to the SMCJ30A (code owed); PV_P switched by U21, the rails PV_F, PV_SNS
+and PV_RTN; the schematic section. Read back on a scratch copy; never applied to the tree; R10 untouched.
 
 ## Prototype measurements (the exact downstream verification)
 
@@ -417,6 +689,13 @@ scratch copy; never applied to the tree; R10 untouched.
 
   The pass line is M2's own: SWEN never falls and charging never stops (no upset), no reset, no lost bearer. The least
   margin read at the worst frequency (the model puts it near 2121 Hz) is stated beside the model's 0.0545 A.
+- **The solar-fault remedies** (with the block fitted):
+  - the cut-off's rise and fall on a supply ramped through 25 to 32 V, against 28.55 to 31.06 V rising and 27.07 V
+    falling at the least;
+  - a 36 V supply connected live through a 5 m lead: Q12 never conducts and D4 carries nothing;
+  - a reversed bench panel curve: no current, and the high side's pins within 1 V of GND;
+  - CS116 and CS115 on the port with the block on and off (R-174);
+  - Q13's leakage at 25 V across it at the hot end, against the 31.5 uA break-even.
 
 ## The decision (item 5)
 
@@ -431,6 +710,8 @@ two assumptions are carried past their physical meaning and whose backstop holds
 | (a) normal operation | 93.5521 W | 6.4479 W (7.63 % of nominal against 18.26 % tolerable) | G_CM (break-even 168.8 %) and the VIN+ bias (22.0 mA) |
 | (b) startup, shutdown, fault response | at most 10 J in any 0.1 s for a response up to 1.087 ms after the filter's held charge | 27 times the typical sum | the 0.1 s interpretation (layer 8), the typical rows (7b.16), the panel's swing rate with SWEN low (3.6 swings) |
 | (c) the disturbances | every part inside its rating; U5's sense differential at most 0.2094 V | 0.0906 V (5.86 A of further converter current) | the lumped model (layout, M3, M7, 7b.18), the bulk's heating under CS101 (M2), the bank's pulse capability in the capability scenario (Vishay) |
+| (c) the panel lead, derived | CS116 MEETS (D4 at 10 A 39.00 V against 50 V; D4 off in the loaded network); the panel's cold open circuit MEETS | CS115 CONDITIONAL on the loop current (U5's bound reached at 15.7 A) | a 36 V source on the port and a reversed panel NOT MET on the drafted entry |
+| the solar-fault remedies | the cut-off U21 with Q12 (D4 to the SMCJ30A) and the return switch Q13: the 36 V source, the reversed panel, CS116 and CS115 with the block on and off, the turn-off and the window all MEET | the cut-off 0.731 V over CS101's peak and 0.737 V under D4 (aged); the static bound 93.5954 W | Q13's leakage above 25 C (the reversed panel), D4's LCSC code, U21's land, the bench rows |
 
 Drafted: the board E edits and four clarification texts. Implemented: nothing in the tree. **L4-E7R's architecture
 criterion: MET, CONDITIONAL on the named items**, none of which can overturn the architecture: each resolves by a stocked
@@ -445,9 +726,23 @@ The texts are for the owner to send; the session contacts no one, and no answer 
   sense voltage, the VIN+ current and the output past 150 mV (retiring both assumptions);
 - `analog-devices-lt8705a.txt`: the coordination's and energy's rows and SWEN's input current, falling threshold and delay;
 - `milliohm-hojlr2512.txt`: the cold TCR;
-- `vishay-wsl2512.txt`: the bank's pulse capability (the capability scenario only).
+- `vishay-wsl2512.txt`: the bank's pulse capability at D4's own rating (the capability scenario, beyond the derived surge).
 
 ## The checks, and what changed
+
+| Item of the owner's amendment of 2 October 2026, item 3 (the solar-fault remedies) | Change |
+|---|---|
+| A selected remedy for each open defect, its circuit changes | Three implementations compared on held sheets; selected: the TPS48110-Q1 over-voltage cut-off (U21, Q12) for the 36 V source and a CSD19532Q5B return switch (Q13) for the reversed panel, with D11, C131 and D4 to the SMCJ30A; drafted in `apply_gen_sch_e_solar_guard.py` |
+| A bounded analysis against the fault exposure and the ratings | The 36 V source, the reversed panel, CS116 and CS115 with the block on and off, the turn-off against D4 and the bulk, the loss and its energy: each with its margin |
+| The interfaces and calculations, the charger and the backstop | The backstop (the slew's bank current), CS101 re-run (0.0591 A against 0.1130 A), check (b) re-run (1.021 ms), the static bound (93.5954 W), the LT8705A, the BQ25730 (no coupling), TRN-001's port table; what stays valid named |
+| The window kept, protection never extending the range | The cut-off over 25 V and CS101's peak, falling back over 25 V, under every rating; above it the stage off; the gap from 25 V to the cut-off named as a residual |
+| L4-E9's input (its 0.4 V margins) | Verified on the sheets: with the SMCJ28A, 0.275 V new and -0.282 V aged: NOT MET, which is why D4 becomes the SMCJ30A |
+
+| Item of the coordinator's surge round (the findings ledger's item 1: L4-E7R's checks 1.6 and 2.4; `checks/astra-check-l4e7r-2.md` B6 R5) | Change |
+|---|---|
+| The record stopped at "no level is ruled" and took D4's own pulse rating as a capability scenario | The panel lead's disturbances derived from the exposure (the 5 m lead the records give, unshielded, on the ground, no earth bond) and the basis the requirements commit to (MIL-STD-461G's Ground, Army row: CS116 and CS115 marked A, CS117 S and not taken; A.5.15's nearby-lightning statement); the sustained sources (the panel's cold open circuit, a stiff source of the kit's declared range, a reversed panel); each judged by REQ-016's own criterion with the part's tolerance and its typical temperature coefficient, the energy into D4, U18's limits and U5 in the loaded network from the cold end; the D4 capability rows kept as the margin beyond the basis |
+| For a NOT MET, the smallest change | A 36 V source: SMCJ36A with the entry's 63 V class parts (EEHZA1J220XP for the bulk), or the over-voltage and reverse disconnect that also closes E-N1; register rows for L4-E9 (R-156's input, a CS116 and CS115 test row, the change), not drafted (no catalogue reading filed, no one contacted) |
+| The statements resting on "no level is ruled" | Check (c)'s derivation and bullet, the decision table, the Vishay draft's closing sentence and its pulse wording, the README |
 
 | Item of `checks/check-l4e7r-3.md` (the coordinator's closing check) | Change |
 |---|---|

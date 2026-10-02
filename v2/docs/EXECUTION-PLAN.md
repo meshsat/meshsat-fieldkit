@@ -1187,3 +1187,105 @@ once the circuit-round drafts are complete.
 
 **Elapsed and compute:** 18:20 to 21:15 CEST. vast.ai 53619970 ran set 24's suite and is stopped with its disk kept; credit
 107.28 USD. The collaborator made four runs on the ChatGPT plan: L4-E7Q's check and recheck, and L4-E8's check.
+
+### Milestone, 2 October 2026 10:50 CEST: Layer 4's connected power architecture and its closure gate (integration sets 25 and 26 on main)
+
+**Closed (each accepted by the coordinator's closing check; the collaborator's two runs per issue did not accept them):**
+- **L4-E7R, the 100 W control.** Approach C on board E: a WSL sense bank, INA169, TPS3701 and a TPS3808 holding SWEN low, off
+  by default.
+  - The static bound is 93.5521 W, CONDITIONAL on G_CM and U18's VIN+ bias.
+  - The CS101 correction puts the bulk ahead of the bank and adds a 4 ms trip filter; the worst immunity ripple is 0.0585 A
+    against a 0.1130 A margin.
+  - The regulation stays the LT8705A's at RIMON_IN 31.6k, coordinated under the trip.
+- **L4-E8, board A's VBUS20 bank.** Six cans, each behind a 45 mOhm ballast, and Cc2 3.3 nF, from a conservative bound over
+  independent cans. B-4 closes at R11 8 mOhm; the 7 mOhm fallback stays CONDITIONAL on V-A07.
+- **L4-E10, FEA-008.** A feasibility screen and three complete approaches. The recommendation is a wide-temperature 18650 in
+  D-06's 4S3P, CONDITIONAL on the maker's signed specification and the owner's approval. **FEA-008 is not closed.**
+- **L4-E11, U-04 and D-06.** The hot swap becomes a TPS48110-Q1 that starts from a 9.00 V plug (REQ-015 a CONDITIONAL
+  CANDIDATE). The vehicle entry is rated 20 A or more, with a controlled DC-loop floor.
+- **L4-E12 (MESHSAT-1478), the electronics against the inside air.** E3-O holds as stated. E5 with the margin hold is
+  CONDITIONAL on T-H1 at 2.159 W/K. The SGP41 is the owner question CFL-002.
+- **L4-E13, U-03, the solar panel.** It is now a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC). The window is measured at
+  -20 C and 1000 W/m2 (margin 0.8495 V on the typical rows). The irradiance disturbance is checked apart, against D4's 28 V, by
+  junction physics (threshold 8574 W/m2). Route 2 is feasible on one identified SunPower unit, and no unit is accepted.
+- **L4-E9, the connected architecture.** A1 under D-06, with no material power-path defect open. The register holds 139
+  items, with the Layer 5 handover LH-01 to LH-11.
+
+**The closure gate: NOT CLOSED.**
+- Criteria 3 and 4 pass. Criteria 1, 2 and 5 are CONDITIONAL on three architecture-level choices, each with the evidence that
+  settles it:
+  - U-01, the cell's signed specification (Topwell);
+  - U-02, T-H1 at or above 2.159 W/K and the fans (a measurement);
+  - U-04, TI's N1 answer or the bench's VSYS.
+- No internal engineering step remains on that path.
+
+**Drafted, not implemented:** every circuit change of L4-E4 to L4-E13 is a release-guarded draft. Nothing is applied to a
+generator.
+
+**Integration findings:**
+- Set 25's first box run refused 82 tests for environment and instrument reasons; no engineering figure moved:
+  - no `poppler-data` on the box;
+  - poppler 24's SVG serialisation, against which L4-E9's and L4-E11's readers are now fixed and tested;
+  - CPython 3.12's float `sum()` in `rv-pwr/pwr_budget.py` (MESHSAT-1480).
+- The suite now runs in two passes, and the gate judges both logs.
+- Set 26 found L4-E13's stale pin of L4-E7's output, and the record was re-read on L4-E7R: the nominal hold's day is 336.6 Wh
+  under the accepted stage.
+
+**Evidence:**
+- Set 25 at `50a44371`: 2545 passed + 32 passed, 0 failed, 3 skipped, 214 of 214 modules.
+- Set 26 at `aa897e38`: 2564 passed + 32 passed, 0 failed, 3 skipped, 215 of 215 modules.
+- The runner's gates passed for both.
+
+**Next (the owner's instruction of 2 October 2026, in progress):**
+- U-01 and U-02 are resolved at the engineering level and accepted by the coordinator's checks (L4-E10 check 4, L4-E12 check 4).
+- U-04's round, the findings ledger and the closure-path page are running, then set 27.
+- Layer 5 starts from the handover LH-01 to LH-11; the circuit round applies the drafts in their recorded order.
+
+**Owner actions:**
+- U-01: send the Topwell request, then approve or decline the cell change.
+- U-04 and L4-E7R: send the TI drafts.
+- Decide CFL-002 (A, B or C).
+- U-02: authorise T-H1 on a bench: an empty Peli 1450 with the frame, a plate blank, dummy heaters and the picked fans (`records/l4e12/T-H1-PROCEDURE-DRAFT.md`).
+- Send the other clarification drafts.
+- When convenient, buy one SPR-E-Flex-100 for PANEL-ACC; it is off the gate's path.
+
+### Plan, 2 October 2026 11:27 CEST: the bounded power-architecture closure (the owner's instruction of 11:25)
+
+**Fixed:** battery and solar mandatory; HF and the tablet kept; storage internal to the Peli; no external battery; D-06's pack
+arrangement the baseline (alternatives proposals); REQ-016 and every mandatory requirement preserved; Layer 3 closed. 48 to
+72 h is an endurance objective: battery-only and solar-assisted runtime reported separately, tablet charging shown as a cost.
+Electrical feasibility and endurance are separate questions.
+
+**The steps, at most two workers:**
+1. *Running:* L4-E9 round 5 (the dependency rounds re-pinned, the register's new rows) and the independent verifier of the
+   findings ledger's risks.
+2. *Three specific questions, one worker at a time,* each answering the consolidation's need:
+   - U-02: does T-H1 confirm an already-supported design or decide feasibility (a conservative lower bound on the conductance
+     against the lines and the session's fallback)?
+   - U-04: at most three approaches: the BQ25731 with the hold-up bank, TI's BQ25730 (the same family's NVDC charger with an
+     external battery FET; TI states the system keeps operating with the battery removed), one other if better documented.
+     Selected on margin, interacting controls, power, heat, space, cost and endurance.
+   - U-01: published specifications sufficient, or a vendor answer genuinely necessary; at most three candidates within the
+     approved arrangement; else the exact missing fact and the smallest experiment.
+   Then the panel lead's surge derivation (L4-E7).
+3. *The consolidation,* one Claude author in L4-E9:
+   - one connected diagram, one budget, one circuit-change list;
+   - the operating behaviour (source changes, simultaneous operation, startup, shutdown, faults, thermal management, control
+     dependencies);
+   - the implementation handover by layer, drafted against applied;
+   - the exit statement per U against the owner's definition.
+4. *One Astra engineering review* of the consolidation, with at most one targeted recheck: the decision-critical electrical and
+   thermal bounds and interactions, primary sources and counterexamples. The findings ledger is mapped on the exact candidate.
+   If a material uncertainty survives the recheck: a component or topology change, or the specific experiment or engineer
+   handoff.
+5. The coordinator's closing check, set 27, the box suite, promotion.
+
+**Estimated engineering time** (estimates; the dependency rounds measured 17 to 22 min each):
+- the questions about 1.5 to 2.5 h on one slot, with the consolidation about 2 to 3 h in parallel;
+- the review, fix and recheck about 2 h;
+- set 27 about 1.2 h (measured).
+- In all about 5 to 7 h of wall-clock.
+
+**External, not estimable:** Topwell's signed specification, TI's statements (unless U-04's selection removes them), T-H1 on a
+bench, the CFL-002 choice. Purchases and outside contacts stay with the owner.
+
