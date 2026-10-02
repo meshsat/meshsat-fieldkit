@@ -1,0 +1,8 @@
+{
+ "what": "Points read by eye by task L4-E10 (MESHSAT-1357) from page 2 of Saft's LSH 20 data sheet, Document N 31015-2-0426, Edition April 2026 (v2/vendor/battery/held/saft-lsh20-31015-2-0426.pdf, sha256 79245e64a2c4abb79ad082568ade32357d27f103416dbe899256dfec322e3ecd), rendered at 300 dpi. INFERRED: a reading of the maker's figure, which the sheet calls typical: 'The curves presented are based on experimental averages and do not necessarily reflect the minimum values that may be observed, particularly when the discharge regime exceeds the nominal conditions specific to each temperature.' The script interpolates log-linearly in current between the two points of each curve and linearly in temperature between the curves.",
+ "figure_capacity": "LSH 20 Typical Capacity vs current at various temperatures",
+ "figure_voltage": "LSH 20 Voltage plateau vs current at various temperatures (at mid-discharge)",
+ "capacity_Ah": {"-40": [[100, 6.0], [1000, 4.1]], "-20": [[100, 7.8], [1000, 5.0]]},
+ "voltage_V": {"-40": [[100, 2.94], [1000, 2.66]], "-20": [[100, 3.21], [1000, 3.00]]},
+ "read_by": "task L4-E10, 1 October 2026 23:35 UTC; current in mA"
+}

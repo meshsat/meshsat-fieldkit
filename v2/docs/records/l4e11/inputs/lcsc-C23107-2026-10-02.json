@@ -1,0 +1,21 @@
+{
+ "what": "LCSC public product-detail answer for C23107 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C23107), no login; kept fields only",
+ "read_utc": "2026-10-02T03:41Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), fix round",
+ "role": "board A R14, the restart guard's divider top in the U-04 fix round (76.8k 1 %)",
+ "code": "C23107",
+ "brand": "UNI-ROYAL",
+ "model": "0603WAF7682T5E",
+ "package": "0603",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C23107",
+ "stock": 25700,
+ "params": {
+  "Resistance": "76.8kΩ",
+  "Power(Watts)": "100mW",
+  "Voltage Rating": "75V",
+  "Operating Temperature": "-55℃~+155℃",
+  "Type": "Thick Film Resistor",
+  "Temperature Coefficient": "±100ppm/℃",
+  "Tolerance": "±1%"
+ }
+}

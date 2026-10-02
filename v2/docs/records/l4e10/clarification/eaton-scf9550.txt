@@ -1,0 +1,21 @@
+DRAFT for the owner to send (task L4-E10, MESHSAT-1357, 2 October 2026). The session contacts no outside party. It
+extends question Q-E2 of v2/docs/review-packets/battery/ (F2's behaviour above +60 C) with the storage questions.
+To: Eaton Electronics Division, technical support for the SCF9550 self-control fuse (data sheet ELX1135, effective January 2022)
+
+Subject: SCF9550-30-05: storage and exposure temperatures of a mounted part
+
+Dear Eaton team,
+
+We use one SCF9550-30-05 as the secondary protection fuse of a 4S lithium-ion pack (a non-commercial prototype). Your
+data sheet lists an operating temperature of -20 to +60 C, a storage temperature of -10 to +40 C below 90 % relative
+humidity for one year, and the lines "High temperature: +105 C @ 1000 hours" and "Low temperature: -40 C @ 500 hours".
+
+1. Does the storage line apply to parts in their packaging before assembly only, or also to a part soldered on a board
+   that carries no current (a pack stored with its electronics in shutdown)?
+2. May a mounted part, carrying no current and with its heater not energised, be held for 24 hours at +71 C, and
+   separately for 24 hours at -33 C, and keep its current rating and its opening behaviour afterwards?
+3. What were the conditions of the +105 C and -40 C endurance lines (powered or not, the pass criteria)?
+4. Above +60 C (Q-E2): is there a current derating, and what is the part's behaviour carrying 10 A continuously or 18 A
+   for 60 s with its body at +60 to +65 C?
+
+Thank you.

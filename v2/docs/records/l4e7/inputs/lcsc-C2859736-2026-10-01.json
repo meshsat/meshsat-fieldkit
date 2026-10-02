@@ -1,0 +1,33 @@
+{
+ "what": "LCSC public product-detail answer for C2859736 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C2859736), no login; kept fields only",
+ "read_utc": "2026-10-01T19:37Z",
+ "read_by": "task L4-E7R (MESHSAT-1357)",
+ "role": "board E U18, the 100 W backstop's sensor (INA250A2PWR), chosen by L4-E7R",
+ "code": "C2859736",
+ "brand": "TI",
+ "model": "INA250A2PWR",
+ "package": "TSSOP-16",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/15c0b8f076ed00f9bf0cc1a2580f3594.pdf?productCode=C2859736",
+ "pdf_sha256": "1c347649cd6ffc1c0e3f6bd210727eaf6c7a508e0e4beabf7a68693a89692ac0",
+ "pdf_note": "fetched at read_utc; LCSC links a translated (Chinese) issue; the English data sheet read is held under v2/vendor/ti/held/ (../fetch_held_back.py)",
+ "stock": 359,
+ "params": {
+  "Output Current": "-",
+  "Number of Channels": "1",
+  "Vos - Input Offset Voltage": "-",
+  "Vcm - Common Mode Voltage": "0V~36V",
+  "Slew Rate": "0.2V/us",
+  "Operating Temperature": "-40℃~+125℃",
+  "Common Mode Rejection Ratio(CMRR)": "97dB",
+  "Ib - Input Bias Current": "28uA",
+  "Input Offset Voltage Drift(Vos TC)": "-",
+  "-3dB Bandwidth": "50kHz",
+  "Quiescent Current": "200uA",
+  "Gain": "-",
+  "Features": "Integrated shunt;Bidirectional detection;Input filter;Zero drift / auto-zero",
+  "Input Voltage Noise Density": "35nV/√Hz@1kHz",
+  "Differential Voltage": "±40V",
+  "Dual Supply": "-",
+  "Single Supply": "2.7V~36V"
+ }
+}

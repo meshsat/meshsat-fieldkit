@@ -1,0 +1,15 @@
+Draft for the owner to send (the session contacts no outside party). MESHSAT-1478 under MESHSAT-1357, task L4-E12,
+2 October 2026. To: Pervasive Displays, product support.
+
+Subject: E2370KS0C1 (3.7 inch, wide temperature): storage temperature and an unpowered hot exposure
+
+We use the E2370KS0C1 behind a lens in the aluminium face of a sealed equipment case. Your flyer gives "Operation
+Temperature -15~60 C" and no storage range. Could you send the product specification and confirm:
+
+1. The storage (non-operating) temperature range of the E2370KS0C1, and any limit on its duration or on humidity.
+2. Whether a module that is not driven (no image update) may sit at up to +70 C for 4 hours, and at up to +70 C for about
+   6 hours a day on 10 consecutive days, at a non-condensing humidity, and then work to specification once back inside
+   -15 to +60 C. Is any lasting change to the displayed image or the contrast to be expected?
+3. Whether an image update between +60 C and +70 C can damage the module, or only falls outside its specification.
+
+Thank you.

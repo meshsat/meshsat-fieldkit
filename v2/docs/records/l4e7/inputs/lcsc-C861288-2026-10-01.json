@@ -1,0 +1,23 @@
+{
+ "what": "LCSC public product-detail answer for C861288 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C861288), no login; kept fields only",
+ "read_utc": "2026-10-01T21:39Z",
+ "read_by": "task L4-E7R (MESHSAT-1357)",
+ "role": "board E R16 (RIMON_IN), the regulation coordinated under the chosen backstop (29.4k)",
+ "code": "C861288",
+ "brand": "YAGEO",
+ "model": "RT0603BRD0729K4L",
+ "package": "0603",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/46d7760c582640714d605308a25a220a.pdf?productCode=C861288",
+ "pdf_sha256": "0a729d144519a7021c82a0ef242b064e467c70d44afcf9eabd6c7ffdc4b673a3",
+ "pdf_note": "fetched at read_utc; YAGEO RT series product specification V.16, May 06 2025; held back (v2/vendor/passives/held/, fetched by ../fetch_held_back.py)",
+ "stock": 1620,
+ "params": {
+  "Resistance": "29.4kΩ",
+  "Power(Watts)": "100mW",
+  "Voltage Rating": "75V",
+  "Operating Temperature": "-55℃~+155℃",
+  "Type": "Thin Film Resistor",
+  "Temperature Coefficient": "±25ppm/℃",
+  "Tolerance": "±0.1%"
+ }
+}

@@ -1,0 +1,8 @@
+{
+  "what": "the three Texas Instruments sheets part A reads, fetched again from ti.com on 2 October 2026 and compared with the copies held in the tree",
+  "rows": [
+    {"held": "v2/vendor/power/ti-csd19532q5b-n-fet.pdf", "address": "https://www.ti.com/lit/ds/symlink/csd19532q5b.pdf", "revision": "SLPS414B, revised May 2017", "sha256_16": "353ce937cff0b719", "byte_identical": true},
+    {"held": "v2/vendor/ti/ti-lm74700-q1.pdf", "address": "https://www.ti.com/lit/ds/symlink/lm74700-q1.pdf", "revision": "SNOSD17G, revised December 2020", "sha256_16": "e16b3a8c0023201f", "byte_identical": true},
+    {"held": "v2/vendor/ti/ti-ina226.pdf", "address": "https://www.ti.com/lit/ds/symlink/ina226.pdf", "revision": "SBOS547C, revised August 2026", "sha256_16": "c9b67f886d4a5241", "byte_identical": true}
+  ]
+}

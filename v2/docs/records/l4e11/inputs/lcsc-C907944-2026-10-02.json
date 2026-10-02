@@ -1,0 +1,18 @@
+{
+ "what": "LCSC public product-detail answer for C907944 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C907944), no login; kept fields only",
+ "read_utc": "2026-10-02T02:10Z",
+ "read_by": "task L4-E11 (MESHSAT-1357)",
+ "role": "board E C5 (the hot swap's fault timer), chosen: 100 nF C0G 2 %, paralleled with C3847777 (D-09)",
+ "code": "C907944",
+ "brand": "muRata",
+ "model": "GRM3195C1H104GA05D",
+ "package": "1206",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/640ba04c281d78b9ca8f9477f7eb4c8b.pdf?productCode=C907944",
+ "stock": 11861,
+ "params": {
+  "Capacitance": "100nF",
+  "Temperature Coefficient": "C0G",
+  "Tolerance": "±2%",
+  "Voltage Rating": "50V"
+ }
+}

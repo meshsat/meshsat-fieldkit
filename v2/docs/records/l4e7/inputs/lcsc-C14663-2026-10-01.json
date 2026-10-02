@@ -1,0 +1,20 @@
+{
+ "what": "LCSC public product-detail answer for C14663 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C14663), no login; kept fields only",
+ "read_utc": "2026-10-01T21:18Z",
+ "read_by": "task L4-E7R (MESHSAT-1357)",
+ "role": "board E C66 to C68, the backstop's 100 nF bypasses (and C64, C65 of the input limit draft), L4-E7R second round",
+ "code": "C14663",
+ "brand": "YAGEO",
+ "model": "CC0603KRX7R9BB104",
+ "package": "0603",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/23ccee80ee542e7cf156a772bb589942.pdf?productCode=C14663",
+ "pdf_sha256": "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648",
+ "pdf_note": "fetched at read_utc; the record uses the catalogue's voltage rating only",
+ "stock": 6948600,
+ "params": {
+  "Capacitance": "100nF",
+  "Temperature Coefficient": "X7R",
+  "Tolerance": "±10%",
+  "Voltage Rating": "50V"
+ }
+}

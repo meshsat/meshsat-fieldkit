@@ -1,0 +1,28 @@
+{
+ "what": "LCSC public product-detail answer for C178637 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C178637), no login; kept fields only",
+ "read_utc": "2026-10-01T21:18Z",
+ "read_by": "task L4-E7R (MESHSAT-1357)",
+ "role": "board E C11, C12 and C69, the solar entry's bulk at 50 V (EEHZA1H330XP), L4-E7R second round (the surge correction)",
+ "code": "C178637",
+ "brand": "PANASONIC",
+ "model": "EEHZA1H330XP",
+ "package": "SMD,D6.3xL7.7mm",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/1c2830538a911821e67a23b2b07487d4.pdf?productCode=C178637",
+ "pdf_sha256": "43628e509458b8995a5c5e1ade2334286c5acfddf859bf9aa4daf59d5653258a",
+ "pdf_note": "fetched at read_utc; Panasonic ZA series, 07 Nov. 2017, held back (v2/vendor/power/held/, fetched by ../fetch_held_back.py)",
+ "stock": 1523,
+ "params": {
+  "Lifetime": "10000hrs@105℃",
+  "Capacitance": "33uF",
+  "Height - Seated (Max)": "7.7mm",
+  "Polarity type": "Polarized",
+  "Voltage Rating": "50V",
+  "Mounting Type": "SMD",
+  "Diameter": "6.3mm",
+  "Operating Temperature": "-55℃~+105℃",
+  "Pin Spacing": "-",
+  "Ripple Current": "240mA@100Hz",
+  "Equivalent Series Resistance(ESR)": "40mΩ",
+  "Tolerance": "±20%"
+ }
+}
