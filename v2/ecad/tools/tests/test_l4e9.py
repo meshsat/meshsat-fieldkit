@@ -38,9 +38,17 @@ leaving one of U-01, U-02, U-04 out, is refused); the register carries PANEL-ACC
 owner's list carries the panel's purchase and the two route-1 drafts; the gate reads NOT CLOSED. Update round 4: L4-E13's update
 after set 25 is pinned with its check 4, its citation of L4-E7R equals L4-E7R's own figures, and the nominal hold's day under the
 accepted stage is 336.6 Wh wherever this record cites it on that basis.
+
+Update round 5 (the dependency rounds of L4-E10, L4-E12 and L4-E11, each accepted by a check 4): their inputs are pinned at those
+commits; U-01, U-02 and U-04 each give their question, their evidence by vendor, physical and owner, who supplies it, the fallback
+and what they could overturn, quoting the rounds' figures as printed (a choice quoting another figure, or missing a source of
+evidence, is refused); U-02's fallback is the session's down to its floor and the owner's below E3-O's; U-04 turns on D1 and D3;
+the register carries L4-E12's drafted fan row, T-H1's procedure, E11-24, E11-26, L4-E10's charge drafts and four items of the
+findings ledger, at 146 items; the TI request and T-H1's bench are owner's items; the bullet L4-E10 reads back is unchanged.
 """
 import ast
 import copy
+import hashlib
 import importlib.util
 import os
 import re
@@ -558,8 +566,8 @@ def t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register():
     ch = m.md_table(page, "| Choice | Class |")
     assert [r[0] for r in ch] == [c["id"] for c in m.CHOICES]
     for r, c in zip(ch, m.CHOICES):
-        assert r[1] == c["class"] and r[2] == c["title"] and r[3] == c["constraint"] and r[4] == c["settles"], c["id"]
-        assert r[5] == c["alternatives"] and r[6] == c["owner"] and r[7] == c["overturns"], c["id"]
+        assert r[1] == c["class"] and r[2] == c["title"] and r[3] == c["question"] and r[4] == c["constraint"], c["id"]
+        assert r[5] == m.evidence_text(c) and r[6] == c["supplier"] and r[7] == c["fallback"] and r[8] == c["overturns"], c["id"]
     de = m.md_table(page, "| Defect | What |")
     assert [r[0] for r in de] == [d["id"] for d in m.DEFECTS]
     for r, d in zip(de, m.DEFECTS):
@@ -575,8 +583,9 @@ def t_choice_and_defect_figures_are_printed_by_the_reconciliation():
     text = _C["text"]
     body = text.split("9. THE CLOSURE GATE")[0] + text.split("11. PART A")[1]
     for c in m.CHOICES:
-        for k in ("constraint", "settles", "alternatives", "owner", "overturns"):
-            for fig in re.findall(r"\d+\.\d+", c[k]):
+        fields = dict(c, evidence=m.evidence_text(c))
+        for k in ("question", "constraint", "evidence", "supplier", "fallback", "overturns"):
+            for fig in re.findall(r"\d+\.\d+", fields[k]):
                 assert fig in body, "%s's %s figure %s is not printed outside the gate" % (c["id"], k, fig)
     for d in m.DEFECTS:
         for fig in re.findall(r"\d+\.\d+", d["constraint"]):
@@ -693,7 +702,7 @@ def t_b3_r227_transients_are_bounded_for_every_required_event():
 def t_b4_source_only_operation_is_an_unresolved_choice():
     m = _M()
     u4 = [c for c in m.CHOICES if c["id"] == "U-04"][0]
-    assert "Q-TI-3" in u4["constraint"] and u4["alternatives"] and u4["overturns"]
+    assert "Q-TI-3" in u4["constraint"] and u4["fallback"] and u4["overturns"]
     for g in m.GATE:
         if g["n"] in (1, 5):
             assert "U-04" in g["choices"]
@@ -759,8 +768,8 @@ def t_the_register_carries_the_accepted_records_items():
             continue
         assert any(re.search(r"\b%s\b" % eid, r[3]) for r in reg), "%s is not in the register's From column" % eid
     ow = {o["id"] for o in m.OWNER_ITEMS}
-    for commit, path, header, mp in (("79b2f568", "v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "| Owner | Item |", m.E10_MAP),
-                                     ("a86be47b", "v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "| Owner | Item |", m.E12_MAP)):
+    for commit, path, header, mp in ((m.FROM_COMMIT["l4e10md"], "v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "| Owner | Item |", m.E10_MAP),
+                                     (m.FROM_COMMIT["l4e12md"], "v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "| Owner | Item |", m.E12_MAP)):
         owners = [r[0] for r in _rows_of(commit, path, header)]
         assert owners and set(owners) == set(mp), "%s: its owner rows %s are not the map's" % (path, sorted(set(owners) ^ set(mp)))
         for refs in mp.values():
@@ -780,7 +789,7 @@ def t_the_thermal_line_is_l4e12s_binding_line():
     assert "THE THERMAL BUDGET" in bud and "%s W/K" % m.fmt(F["gc"]) in bud and "%s W" % m.fmt(round(F["e5_hold_wb"], 3)) in bud
     assert "THE ENERGY BUDGET" in bud
     u2 = [c for c in m.CHOICES if c["id"] == "U-02"][0]
-    assert m.fmt(F["gc"]) in u2["constraint"] and "CFL-002" in u2["owner"]
+    assert m.fmt(F["gc"]) in u2["constraint"] and "CFL-002" in u2["evidence"][2]
 
 
 def t_the_owner_items_are_kept_apart_with_their_documents_pinned():
@@ -831,7 +840,7 @@ def t_u03_is_a_downstream_unit_selection_and_the_gate_stays_not_closed():
     assert "PANEL-ACC" in reg["R-35"][2] and reg["R-35"][4] == "Layer 6 components" and "25.000 V" in reg["R-35"][5]
     assert "trace rerun" in reg["R-52"][2] and "13.82 A" in reg["R-148"][5] and "n at or under 2" in reg["R-149"][5]
     assert "8.1817 A" in reg["R-29"][5]
-    assert len(reg) == 139
+    assert len(reg) >= 139
     ho = {r[0]: r for r in _md_rows(HAND, "| ID | Target |")}
     assert "13.82 A" in ho["LH-02"][2] and "R-148" in ho["LH-02"][2] and len(ho) == 11, "J_SOLAR's rating amends LH-02, no new row"
     ow = {o["id"]: o for o in m.OWNER_ITEMS}
@@ -883,6 +892,74 @@ def t_the_entry_draft_applies_on_the_hotswap_draft_and_not_before_it():
         assert _run(timer, x, "--write").returncode == 3, "the LM5069's timer draft must refuse the selected entry"
         after = open(x, encoding="utf-8").read()
         assert "TPS48110AQDGXRQ1" in after and "CSD19536KTT" in after and "LM5069MM-2 hot-swap controller" not in after
+
+
+def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
+    m = _M()
+    F = _C["F"]
+    r5 = F["r5"]
+    for key, commit in (("l4e10", "e464ff88"), ("l4e10md", "e464ff88"), ("cl_topwell", "e464ff88"), ("l4e11", "f1856bfd"),
+                        ("l4e11md", "f1856bfd"), ("l4e12", "c933724e"), ("l4e12md", "c933724e")):
+        assert m.FROM_COMMIT[key] == commit, key
+        rel, sha = m.PINS[key]
+        rb = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (commit, rel)], capture_output=True)
+        if rb.returncode != 0:
+            raise Skip("%s is not at %s in this checkout" % (rel, commit))
+        assert hashlib.sha256(rb.stdout).hexdigest() == sha, "%s is not pinned at %s" % (key, commit)
+    for key in ("l4e10chk4", "l4e12chk4", "l4e11chk4", "th1proc", "cl_tiq"):
+        assert key in m.PINS and m.PINS[key][1][:16] in _C["text"].split("1. THE MAKERS")[0], key
+    arch = [c for c in m.CHOICES if c["class"] == m.ARCH]
+    assert [c["id"] for c in arch] == ["U-01", "U-02", "U-04"]
+    for c in m.CHOICES:
+        assert c["question"] and c["supplier"] and c["fallback"] and len(c["evidence"]) == 3 and all(c["evidence"]), c["id"]
+    exp = m.round5_expect(F)
+    for c in arch:
+        whole = " ".join([c["question"], c["constraint"], m.evidence_text(c), c["supplier"], c["fallback"], c["overturns"]])
+        for s in exp[c["id"]]:
+            assert " ".join(s.split()) in whole, (c["id"], s)
+    u1, u2, u4 = arch
+    assert "%s Wh (%s h) against the 35E's %s Wh" % (r5["hl"] + (r5["e35"][0],)) in u1["constraint"]
+    assert abs(float(r5["e35"][0]) - float(r5["hl"][0]) - float(r5["growth"])) < 1e-9
+    assert "session's" in u2["fallback"] and "down to %s" % r5["f4"][3] in u2["fallback"] and "the remaining option is the owner's" in u2["fallback"]
+    assert float(r5["f4"][3]) < float(r5["f4"][1]) < F["gc"] < float(r5["pass"][0])
+    assert "For D1 and D3 there is none inside (A)" in u4["fallback"] and r5["remedy"][1:] == ("D1", "D3")
+    assert "CFL-002" in u2["evidence"][2] and "OW-8" in u2["evidence"][2] and "OW-7" in u4["evidence"][2]
+    bad = copy.deepcopy(m.CHOICES)
+    for c in bad:
+        if c["id"] == "U-02":
+            c["fallback"] = c["fallback"].replace(r5["f4"][3], "1.000")
+    whole = " ".join(" ".join([c["question"], c["constraint"], m.evidence_text(c), c["supplier"], c["fallback"], c["overturns"]]) for c in bad if c["id"] == "U-02")
+    assert any(" ".join(s.split()) not in whole for s in exp["U-02"]), "a choice quoting another fallback figure must be caught"
+    bad = copy.deepcopy(m.CHOICES)
+    bad[1]["evidence"] = bad[1]["evidence"][:2]
+    saved = m.CHOICES
+    try:
+        m.CHOICES = bad
+        assert m.gate_violations(m.GATE, _C["st"]), "a choice without its evidence by vendor, physical and owner must be refused"
+    finally:
+        m.CHOICES = saved
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    assert len(reg) == 146 and [x for x in reg if int(x[2:]) >= 150] == ["R-150", "R-151", "R-152", "R-153", "R-154", "R-155", "R-156"]
+    k, what, frm, own, acc = r5["fanrow"]
+    assert reg["R-150"][1] == k and what in reg["R-150"][2] and own.startswith(reg["R-150"][4]) and acc.lower() in reg["R-150"][5].lower()
+    assert "T-H1-PROCEDURE-DRAFT.md" in reg["R-151"][2] and "%s W/K" % r5["pass"][0] in reg["R-151"][5] and reg["R-151"][4] == "TEST-PLAN owner"
+    assert "E11-24" in reg["R-152"][3] and "%s ms" % r5["hold_ms"][0] in reg["R-152"][5] and reg["R-152"][6] == "MISSING DRAFT"
+    assert "E11-26" in reg["R-153"][3] and "E11-25" in reg["R-114"][3] and "TI-QUESTIONS.md" in reg["R-114"][2]
+    assert "U-01" in reg["R-154"][2] and reg["R-154"][4] == "firmware owner" and r5["ranges"][0][7] in reg["R-154"][2]
+    for rid, item in (("R-102", 8), ("R-139", 5), ("R-155", 10), ("R-156", 1)):
+        assert "FINDINGS-LEDGER item %d" % item in reg[rid][3], (rid, item)
+    assert "per-can ripple bound" in reg["R-102"][5] and "worst phase" in reg["R-102"][5]
+    assert "61 s" in reg["R-139"][5] and "intervals" in reg["R-155"][2] and reg["R-156"][6] == "PENDING" and "L4-E7's surge round" in reg["R-156"][2]
+    assert reg["R-156"][4] == "Layer 8 board E generator owner" and "TRN-001" in reg["R-156"][5]
+    ow = {o["id"]: o for o in m.OWNER_ITEMS}
+    assert [k for k, _ in ow["OW-7"]["docs"]] == ["ti_review", "cl_tiq"] and [k for k, _ in ow["OW-8"]["docs"]] == ["th1proc"]
+    assert "ten questions" in ow["OW-2"]["what"] and r5["tw_q"] == list(range(1, 11))
+    assert not any(k in ("cl_topwell", "ti_review") for k, _ in ow["OW-4"]["docs"]), "Topwell's and TI's requests are their own items"
+    sec = _C["text"].split("14. UPDATE ROUND 5")[1]
+    assert "the gate: NOT CLOSED" in sec and "146 items" in sec and "Layer 4's power architecture closes: NO" in _C["text"]
+    page = open(PAGE, encoding="utf-8").read()
+    assert "**Under U-01's recommended cell** (CONDITIONAL, not taken): usable %s Wh against the 35E's %s Wh" % (m.fmt(F["cell_usable"][1]), m.fmt(F["cell_usable"][0])) in page, \
+        "the bullet L4-E10 reads back keeps its first chain's figures"
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
