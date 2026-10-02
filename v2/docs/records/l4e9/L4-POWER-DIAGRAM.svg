@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="840" viewBox="0 0 1900 840" font-family="DejaVu Sans, Arial, sans-serif">
+<rect x="0" y="0" width="1900" height="840" fill="#ffffff"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2937"/></marker></defs>
+<text x="20" y="24" font-size="15" font-weight="bold" fill="#111827">L4-E9: the connected power design (A1 under D-06). Solid lines carry power, each labelled with its interface row; blue tags C01 to C13 are the controls (the page's table).</text>
+<text x="20" y="42" font-size="12" fill="#b91c1c">Status: known defects addressed in drafts; feasibility conditions remain open.</text>
+<rect x="20" y="80" width="206" height="71" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="27" y="98" font-size="12" font-weight="bold" fill="#111827">Panel (REQ-016)</text>
+<text x="27" y="114" font-size="10.5" fill="#1f2937">Voc at most 25 V at -20 C</text>
+<text x="27" y="127" font-size="10.5" fill="#1f2937">at most 100 W into the stage</text>
+<text x="27" y="140" font-size="10.5" fill="#1f2937">PANEL-ACC unit: none accepted (U-03)</text>
+<rect x="20" y="390" width="206" height="71" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="27" y="408" font-size="12" font-weight="bold" fill="#111827">Vehicle or shore DC (REQ-015)</text>
+<text x="27" y="424" font-size="10.5" fill="#1f2937">9 to 36 V at the plug, -36 V reversed</text>
+<text x="27" y="437" font-size="10.5" fill="#1f2937">D38999 size 12, loop &gt;= 56.93 mOhm</text>
+<text x="27" y="450" font-size="10.5" fill="#1f2937">XT60-class J_DCIN (drafted, R-131)</text>
+<rect x="20" y="630" width="206" height="45" rx="6" fill="#f3f4f6" stroke="#374151" stroke-width="1.2"/>
+<text x="27" y="648" font-size="12" font-weight="bold" fill="#111827">USB-C input: none (D-12)</text>
+<text x="27" y="664" font-size="10.5" fill="#1f2937">the USB-C port is an outlet only</text>
+<rect x="296" y="80" width="206" height="97" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="303" y="98" font-size="12" font-weight="bold" fill="#111827">Solar entry, board E</text>
+<text x="303" y="114" font-size="10.5" fill="#1f2937">J_SOLAR VH 10 A, F2 10 A</text>
+<text x="303" y="127" font-size="10.5" fill="#1f2937">D4 SMCJ28A; the 50 V bulk</text>
+<text x="303" y="140" font-size="10.5" fill="#1f2937">ahead of the sense bank</text>
+<text x="303" y="153" font-size="10.5" fill="#1f2937">(L4-E7R, drafted)</text>
+<text x="303" y="166" font-size="10.5" fill="#1f2937">R59 15 mOhm on TRK_VIN</text>
+<rect x="296" y="390" width="206" height="84" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="303" y="408" font-size="12" font-weight="bold" fill="#111827">Vehicle entry, board E</text>
+<text x="303" y="424" font-size="10.5" fill="#1f2937">F1 0997010.WXN 58 V DC (drafted)</text>
+<text x="303" y="437" font-size="10.5" fill="#1f2937">D10 SMCJ40CA, D1 SMCJ40A</text>
+<text x="303" y="450" font-size="10.5" fill="#1f2937">Q1 CSD19532Q5B 100 V (drafted)</text>
+<text x="303" y="463" font-size="10.5" fill="#1f2937">U3/Q1 LM74700-Q1 ideal diode</text>
+<rect x="572" y="80" width="206" height="110" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="579" y="98" font-size="12" font-weight="bold" fill="#111827">U5 LT8705AI stage</text>
+<text x="579" y="114" font-size="10.5" fill="#1f2937">hold 16.970 / 17.593 / 18.221 V</text>
+<text x="579" y="127" font-size="10.5" fill="#1f2937">regulation RIMON_IN 31.6k</text>
+<text x="579" y="140" font-size="10.5" fill="#1f2937">2.5485 A nominal, 2.9318 A highest</text>
+<text x="579" y="153" font-size="10.5" fill="#1f2937">backstop on SWEN 3.0468 to 3.7408 A</text>
+<text x="579" y="166" font-size="10.5" fill="#1f2937">TRK_OUT ceiling 28.28 to 30.15 V</text>
+<text x="579" y="179" font-size="10.5" fill="#1f2937">U4/Q2 ideal diode out</text>
+<rect x="752" y="66" width="26" height="13" rx="3" fill="#2563eb"/>
+<text x="756" y="76" font-size="9.5" font-weight="bold" fill="#ffffff">C08</text>
+<rect x="572" y="390" width="206" height="110" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="579" y="408" font-size="12" font-weight="bold" fill="#111827">Entry breaker (L4-E11, drafted)</text>
+<text x="579" y="424" font-size="10.5" fill="#1f2937">U6 TPS48110-Q1, Q7 CSD19536KTT</text>
+<text x="579" y="437" font-size="10.5" fill="#1f2937">UVLO on 7.87 to 8.44 V</text>
+<text x="579" y="450" font-size="10.5" fill="#1f2937">OV off 39.6 to 41.22 V</text>
+<text x="579" y="463" font-size="10.5" fill="#1f2937">6.364 to 7.136 A after 0.247 to 0.49 ms</text>
+<text x="579" y="476" font-size="10.5" fill="#1f2937">short 10.36 to 13.87 A, retry 0.5 s</text>
+<text x="579" y="489" font-size="10.5" fill="#1f2937">R19 4.5 mOhm, L2 SRF1260-1R0Y</text>
+<rect x="752" y="376" width="26" height="13" rx="3" fill="#2563eb"/>
+<text x="756" y="386" font-size="9.5" font-weight="bold" fill="#ffffff">C09</text>
+<rect x="848" y="250" width="206" height="84" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="855" y="268" font-size="12" font-weight="bold" fill="#111827">VIN_RAW (board E to A)</text>
+<text x="855" y="284" font-size="10.5" fill="#1f2937">D2 SMCJ40A clamp</text>
+<text x="855" y="297" font-size="10.5" fill="#1f2937">four Mill-Max 9 A dock pins</text>
+<text x="855" y="310" font-size="10.5" fill="#1f2937">declared 14.10 A</text>
+<text x="855" y="323" font-size="10.5" fill="#1f2937">basis 43.18 V maximum</text>
+<rect x="1124" y="80" width="206" height="84" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="1131" y="98" font-size="12" font-weight="bold" fill="#111827">U2 LM5176 front end, board A</text>
+<text x="1131" y="114" font-size="10.5" fill="#1f2937">R11 8 mOhm, R12 12 mOhm (drafted)</text>
+<text x="1131" y="127" font-size="10.5" fill="#1f2937">U34 guard R14 76.8k (drafted)</text>
+<text x="1131" y="140" font-size="10.5" fill="#1f2937">VBUS20 19.08 to 20.96 V</text>
+<text x="1131" y="153" font-size="10.5" fill="#1f2937">efficiency 0.93 declared (C-8)</text>
+<rect x="1304" y="66" width="26" height="13" rx="3" fill="#2563eb"/>
+<text x="1308" y="76" font-size="9.5" font-weight="bold" fill="#ffffff">C10</text>
+<rect x="1124" y="255" width="206" height="71" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="1131" y="273" font-size="12" font-weight="bold" fill="#111827">VBUS20 bank (L4-E8, drafted)</text>
+<text x="1131" y="289" font-size="10.5" fill="#1f2937">six EEHZK1V331P, 45 mOhm each</text>
+<text x="1131" y="302" font-size="10.5" fill="#1f2937">every can at most 2.4096 A</text>
+<text x="1131" y="315" font-size="10.5" fill="#1f2937">rule 2.7745 A; Cc2 3.3 nF</text>
+<rect x="1124" y="405" width="206" height="84" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="1131" y="423" font-size="12" font-weight="bold" fill="#111827">U3 BQ25731 charger, board A</text>
+<text x="1131" y="439" font-size="10.5" fill="#1f2937">R16 10 mOhm; IIN_HOST 4.70 A</text>
+<text x="1131" y="452" font-size="10.5" fill="#1f2937">H3 line: flat 1.82 A, HIZ &lt; 7.378 V</text>
+<text x="1131" y="465" font-size="10.5" fill="#1f2937">ChargeCurrent at most 3.0 A</text>
+<text x="1131" y="478" font-size="10.5" fill="#1f2937">BATOVP 17.64 V; no battery FET</text>
+<rect x="1279" y="391" width="51" height="13" rx="3" fill="#2563eb"/>
+<text x="1283" y="401" font-size="9.5" font-weight="bold" fill="#ffffff">C01 C11</text>
+<rect x="1400" y="405" width="206" height="71" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="1407" y="423" font-size="12" font-weight="bold" fill="#111827">VBAT = VSYS node</text>
+<text x="1407" y="439" font-size="10.5" fill="#1f2937">10.0 to 16.884 V</text>
+<text x="1407" y="452" font-size="10.5" fill="#1f2937">D1 SMCJ18A clamp</text>
+<text x="1407" y="465" font-size="10.5" fill="#1f2937">U-04: VSYS with no battery</text>
+<rect x="1676" y="70" width="206" height="97" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="1683" y="88" font-size="12" font-weight="bold" fill="#111827">Pack, board P (D-06 4S3P; U-01)</text>
+<text x="1683" y="104" font-size="10.5" fill="#1f2937">Samsung 35E x 12 (ruled cell)</text>
+<text x="1683" y="117" font-size="10.5" fill="#1f2937">BQ4050 gauge and its FETs</text>
+<text x="1683" y="130" font-size="10.5" fill="#1f2937">BQ7720700 -&gt; F2 SCF9550</text>
+<text x="1683" y="143" font-size="10.5" fill="#1f2937">F1 25 A; OCD1 20 A for 2 s</text>
+<text x="1683" y="156" font-size="10.5" fill="#1f2937">usable 107.9 Wh at +20 C</text>
+<rect x="1831" y="56" width="51" height="13" rx="3" fill="#2563eb"/>
+<text x="1835" y="66" font-size="9.5" font-weight="bold" fill="#ffffff">C06 C12</text>
+<rect x="1676" y="235" width="206" height="84" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="1683" y="253" font-size="12" font-weight="bold" fill="#111827">Load converters</text>
+<text x="1683" y="269" font-size="10.5" fill="#1f2937">PS-IDLE-SPEC 42.8 W at the pack</text>
+<text x="1683" y="282" font-size="10.5" fill="#1f2937">slot, device, logic, monitor</text>
+<text x="1683" y="295" font-size="10.5" fill="#1f2937">heater U22/U33 12.0 V 7.5 W</text>
+<text x="1683" y="308" font-size="10.5" fill="#1f2937">eFuses TPS2596 21 V</text>
+<rect x="1831" y="221" width="51" height="13" rx="3" fill="#2563eb"/>
+<text x="1835" y="231" font-size="9.5" font-weight="bold" fill="#ffffff">C02 C07</text>
+<rect x="1676" y="380" width="206" height="71" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="1683" y="398" font-size="12" font-weight="bold" fill="#111827">USB-C outlet U19 + U18</text>
+<text x="1683" y="414" font-size="10.5" fill="#1f2937">5 / 9 / 15 V at 3 A</text>
+<text x="1683" y="427" font-size="10.5" fill="#1f2937">OCP 3.793 to 4.576 A</text>
+<text x="1683" y="440" font-size="10.5" fill="#1f2937">tablet budget 18 W cap (proposal)</text>
+<rect x="1831" y="366" width="51" height="13" rx="3" fill="#2563eb"/>
+<text x="1835" y="376" font-size="9.5" font-weight="bold" fill="#ffffff">C03 C13</text>
+<rect x="1676" y="510" width="206" height="58" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="1683" y="528" font-size="12" font-weight="bold" fill="#111827">PoE stage</text>
+<text x="1683" y="544" font-size="10.5" fill="#1f2937">R227 5 mOhm, U17 on it (drafted)</text>
+<text x="1683" y="557" font-size="10.5" fill="#1f2937">U16 boost 54 V at 0.6 A</text>
+<rect x="1856" y="496" width="26" height="13" rx="3" fill="#2563eb"/>
+<text x="1860" y="506" font-size="9.5" font-weight="bold" fill="#ffffff">C04</text>
+<rect x="1676" y="610" width="206" height="71" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<text x="1683" y="628" font-size="12" font-weight="bold" fill="#111827">PA and HF rails</text>
+<text x="1683" y="644" font-size="10.5" fill="#1f2937">U13 13.8 V; key-down at most 60 s</text>
+<text x="1683" y="657" font-size="10.5" fill="#1f2937">U15 12 V to the QMX</text>
+<text x="1683" y="670" font-size="10.5" fill="#1f2937">outlets off while the PA keys</text>
+<rect x="1856" y="596" width="26" height="13" rx="3" fill="#2563eb"/>
+<text x="1860" y="606" font-size="9.5" font-weight="bold" fill="#ffffff">C05</text>
+<rect x="296" y="700" width="206" height="97" rx="6" fill="#eef2ff" stroke="#374151" stroke-width="1.2"/>
+<text x="303" y="718" font-size="12" font-weight="bold" fill="#111827">Panel controller C:U3 RP2040</text>
+<text x="303" y="734" font-size="10.5" fill="#1f2937">the kit I2C: the charger,</text>
+<text x="303" y="747" font-size="10.5" fill="#1f2937">the expanders, the INA226s</text>
+<text x="303" y="760" font-size="10.5" fill="#1f2937">and the key-down rules</text>
+<text x="303" y="773" font-size="10.5" fill="#1f2937">acts through C01, C02, C03, C04</text>
+<text x="303" y="786" font-size="10.5" fill="#1f2937">  C05</text>
+<rect x="848" y="700" width="206" height="71" rx="6" fill="#eef2ff" stroke="#374151" stroke-width="1.2"/>
+<text x="855" y="718" font-size="12" font-weight="bold" fill="#111827">Sensor controller E:U10 RP2040</text>
+<text x="855" y="734" font-size="10.5" fill="#1f2937">the gauge's SMBus, the mixer</text>
+<text x="855" y="747" font-size="10.5" fill="#1f2937">fans, VIN_MON; always on</text>
+<text x="855" y="760" font-size="10.5" fill="#1f2937">acts through C06, C07</text>
+<rect x="1400" y="700" width="206" height="84" rx="6" fill="#eef2ff" stroke="#374151" stroke-width="1.2"/>
+<text x="1407" y="718" font-size="12" font-weight="bold" fill="#111827">Hardware, no firmware</text>
+<text x="1407" y="734" font-size="10.5" fill="#1f2937">comparators, the gauge, the</text>
+<text x="1407" y="747" font-size="10.5" fill="#1f2937">breaker, the knee, OUTLET_OK</text>
+<text x="1407" y="760" font-size="10.5" fill="#1f2937">acts through C08, C09, C10, C11</text>
+<text x="1407" y="773" font-size="10.5" fill="#1f2937">  C12, C13</text>
+<path d="M226,115 L261,115 L261,128 L296,128" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="243" y="115" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="261" y="125" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-01</text>
+<path d="M502,128 L537,128 L537,135 L572,135" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="519" y="125" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="537" y="135" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-02</text>
+<path d="M778,135 L813,135 L813,272 L848,272" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="795" y="197" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="813" y="207" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-03</text>
+<path d="M226,425 L261,425 L261,432 L296,432" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="243" y="422" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="261" y="432" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-04</text>
+<path d="M502,432 L537,432 L537,445 L572,445" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="519" y="432" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="537" y="442" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-05</text>
+<path d="M778,445 L813,445 L813,312 L848,312" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="795" y="372" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="813" y="382" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-05</text>
+<path d="M1054,292 L1089,292 L1089,122 L1124,122" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="1062" y="201" width="54" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="1089" y="211" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-06/07</text>
+<path d="M1227,164 L1227,255" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="1249" y="203" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="1267" y="213" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-07</text>
+<path d="M1227,326 L1227,405" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="1240" y="359" width="54" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="1267" y="369" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-08/09</text>
+<path d="M1330,447 L1365,447 L1365,440 L1400,440" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="1347" y="437" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="1365" y="447" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-09</text>
+<path d="M1622,118 L1676,118" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)" marker-start="url(#a)"/>
+<rect x="1631" y="104" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="1649" y="114" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-10</text>
+<path d="M1622,277 L1676,277" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="1631" y="263" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="1649" y="273" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-11</text>
+<path d="M1622,415 L1676,415" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="1631" y="401" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="1649" y="411" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-12</text>
+<path d="M1622,539 L1676,539" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="1631" y="525" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="1649" y="535" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-13</text>
+<path d="M1622,645 L1676,645" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="1631" y="631" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="1649" y="641" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-14</text>
+<path d="M1606,440 L1622,440" fill="none" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M1622,118 L1622,645" fill="none" stroke="#1f2937" stroke-width="2.2"/>
+<path d="M951,334 L951,352 L738,352 L738,384" fill="none" stroke="#9ca3af" stroke-width="1.2" stroke-dasharray="2,3"/>
+<text x="306" y="348" font-size="9.5" fill="#6b7280">N01: back-feed into DC_P through Q7's body diode (no power delivered)</text>
+<text x="20" y="828" font-size="10" fill="#374151">Every figure is printed by l4e9_power_path.py (out 15) from its pinned inputs; prototype design: nothing bought, built, powered or measured; the drafted changes are not applied.</text>
+</svg>
