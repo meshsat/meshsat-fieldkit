@@ -1,0 +1,798 @@
+L6: THE COMPONENT IDENTITIES OF THE PARTS LAYER 4 SELECTED FOR THE POWER DESIGN (l6pwr_parts.py, MESHSAT-1357, 3 October 2026).
+PROTOTYPE DESIGN: nothing bought, built, powered or measured. The parts are Layer 4's selections in release-guarded drafts on no committed
+netlist; this record records and sources them and reselects nothing. Basis per figure: MAKER (document, revision, page, read here by
+pdftotext), RECORD (a Layer 4 record's figure, its page pinned), CATALOGUE (a dated public reading in inputs/), COMPUTED (shown).
+
+0. THE PINS (sha256 of every input this record reads; a held-back sheet by the sha256 its fetch script pins)
+   35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864 v2/ecad/tools/pcb_envelope.yaml
+   6238d781c682832c66d7a09996cc5af031db5a004f7ec71b5db1c4fa073fb6d2 v2/docs/records/l6pwr/inputs/lcsc-2026-10-02.json
+   7172761e1970691edc75b476f236a8b69502267879b2e1bf35bcfb6867a387ff v2/docs/records/l6pwr/inputs/jlc-search-2026-10-02.json
+   85f4a7e33a06b0c2298f39d1d534c75c84ef1ebb132b2ad7cc641dca722072af v2/docs/records/l6pwr/inputs/samsung-spec-pages-2026-10-02.json
+   7f664f7c46297ddeed3b15be2039b476cc5d3a716e741c3479ec7f06a646afd4 v2/docs/records/l6pwr/fetch_held_back.py
+   6a136feec6c9cf4e2011ed8c45a1f2e0adc3e263718c355b4b909872ee5d3c4b v2/ecad/tools/gen_sch_a.py
+   0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c v2/docs/records/l4e10/L4E10-CELL-THERMAL.md
+   188ac85879346be5f896e6f8212abf853f4751cc25ec6a6ee4b495ee3b705cbd v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
+   b46a1987bc136d459524028c8b31be83d698446ebbbda33351cedc91c6ba846d v2/docs/records/l4e11/apply_gen_sch_a_charger.py
+   418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32 v2/docs/records/l4e11/apply_gen_sch_e_entry.py
+   6d5a02aaeb5a76828ce9545ebb0238f5678d4d459197916effc6243c9344d0cb v2/docs/records/l4e5/L4E5-SOURCE-CONTROL.md
+   acea53b3a60e88e4b391deba17e430ba71407b09f1ce8554f7f9b1bc87432212 v2/docs/records/l4e6/L4E6-FAULT-HANDLING.md
+   261cb597dc70dc859a9e4c18ee9834796023d030fcd40e01adbf20949ab6b912 v2/docs/records/l4e7/apply_gen_sch_e_backstop.py
+   887ae50ff42ef569caeab5f33b9c1c205db9fede3b2da46f8c46453cbee9772f v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md
+   d6f10ce7bde8f348ca7547a10d9d4d0837853278b325530b84179454751be621 v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py
+   b32b61b77c0510e2f638f4956a19d27b2b566003958e385b871351e48602721f v2/docs/records/l4e7/l4e7_stage_settings.out
+   5a50ed9e06c57efd196219087ec42da2b39ea3e035fdb22044e7761d247afd83 v2/docs/records/l4e8/L4E8-BANK.md
+   0d9abf89d3675d55a7cedb912bed1935f077f28f41a49df5591d368629154f4a v2/docs/records/l4e8/apply_gen_sch_a_bank.py
+   a1cfdea4472bb221acf9402ce7711cfd0d65b59bf96fc27d82d64c772acdd62f v2/docs/records/l4e9/L4E9-ENTRY-PROPOSALS.md
+   af4b17762723c20a6bf4dd0d8554319ffd8920fae2125495f2f5fd32ac963995 v2/docs/records/l4e9/DOWNSTREAM-REGISTER.md
+   5ec577b952b9dc5106593a4e4c3a6e8cea64f6f72b8faaf1bb512155c29dc516 v2/vendor/battery/samsung-35e-orbtronic.pdf
+   e41ef289ce1de377d7b92bce609177d924e149099d9c4424d88f6b21ad57153f v2/vendor/ti/held/ti-bq25730-sluse65a.pdf (held back, fetched and matching its pin)
+   ba928dfe6a85134423562bd378bdfafafb26d857ba08b50560ce5aacb956da40 v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf (held back, fetched and matching its pin)
+   353ce937cff0b719e730010829720d25c2ece3637ed92fb7ad8cc370438559d1 v2/vendor/power/ti-csd19532q5b-n-fet.pdf
+   19e1a9660fac8577743f40acc2cdc791539afd5232bbc1fc350e15fec735d78d v2/vendor/ti/held/ti-csd19536ktt-slps540c.pdf (held back, fetched and matching its pin)
+   1b1de94df0a7729f4a69a885edd54213594acdce3cd6d4fa072961431ddf71ff v2/vendor/power/held/diodes-b520c-b560c-ds13012-rev18-2.pdf (held back, fetched and matching its pin)
+   3224518dbc8bdc858a96cfde88de2611494550f95406f6b65130c232cdfc93fb v2/vendor/passives/milliohm-hojlr2512-series.pdf
+   dbb74b6cdc5431353f17b044b7d762df1f2f9049d03d2d1611a53058e570d62c v2/vendor/ti/held/ti-ina169-sbos181f.pdf (held back, fetched and matching its pin)
+   8ca0a3e09997a4a30567a4313cf83c2b6cf165543baf424e0ff788d5a8d27f8e v2/vendor/battery/held/saft-mp176065xtd-31109-2-0625.pdf (held back, fetched and matching its pin)
+   6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea v2/vendor/power/littelfuse-smcj-series-tvs.pdf
+   8f91a0db2daf2da35abd335420ff9f8b4ac9a99c93dac93e215e0a75e9a866fe v2/vendor/ti/held/ti-tps1663-slvset9g.pdf (held back, fetched and matching its pin)
+   27c94a6c3a243bf539e98942d26f0bd9ed979c5775c12cf86b7c1a8c3d7d9560 v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf (held back, fetched and matching its pin)
+   74d889c0f68af88032f1633c26381817cc03e10d9fd3b4c177a044ad3ed86eed v2/vendor/ti/ti-tps3808.pdf
+   3cfe41fef1407b85abaaee1e27a95ac3cf2cb1bdf218209b8578a835c4c9497f v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf (held back, fetched and matching its pin)
+   96c2dc89ae1e3039815ed6c41f566a6e9f6b53035f8e45ea2ada1697935a44dc v2/vendor/vishay/vishay-wsl-power-metal-strip.pdf
+   1b5c68910aa562a0dcce11ec572b4dd1febe63cfb90d20f3eaf5f9c7e01b59ac v2/vendor/passives/held/vishay-wsl-30100-2023-11-23.pdf (held back, fetched and matching its pin)
+   5455014606c0b676ca1df345f1969ee1b056403b8ee424bb29245115facda389 v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf
+
+1. THE ENVELOPE THE GRADES ARE JUDGED AGAINST (pcb_envelope.yaml, read back)
+   in use -20 to 40 C ambient; the worst inside air, lid closed, 62.1 C (the board air a part is judged against until T-H1); storage 3 months -20 to 45 C;
+   the owner's qualification margins (D-02a): operate at +55 C, store at +71 C and -33 C, survive and recover. Verdicts: INSIDE when the maker's
+   operating row strictly covers -20 to 62.1 C; AT_LIMIT when it meets an end exactly; OUTSIDE otherwise; NOT READ when no row is read at the source.
+
+2. THE PARTS (one block each)
+   L6P-01  board A  U3
+      maker, MPN:     Texas Instruments, BQ25730RSNR
+      package, land:  WQFN-32 RSN (4.0 x 4.0 mm, 0.4 mm pitch), RSN0032B; U3's RSN land as drawn for the BQ25731 (the same package; pin 21 NC becomes BATDRV)
+      selected by:    L4-E11 section 14, arrangement (B1), the fix round 15 and the review round 16 (E11-27, R-157)
+      draft:          l4e11_charger
+      grade:          industrial; operating -20 to 125 C (TI BQ25730 datasheet p.9: 'Junction temperature range, TJ' printed) -> AT_LIMIT against -20 to 62.1 C
+                      electrical table over TJ -40 to 125 C (p.9)
+                      storage -55 to 150 C (p.8): covers the -33 C and +71 C storage margins
+      rating used:    VBUS 19.15 to 20.96 V (L4-E11 E11-31's start window) against the recommended ACN, ACP, VBUS 0 to 26 V (p.8): 80.6 percent, no further derating applied
+      rating used:    VSYS_MIN 12.054 V, charge 3.0 A, BATDRV 8.5 / 10 / 11.5 V (p.17) at the pair's sources on VSYS; TI's rule 'Ciss ... less than 5 nF' (p.92), the pair 4.72 nF typical (OPEN, E11-37)
+      rating used:    the register rules of E11-28 (EN_OOA, ChargeCurrent 0 A at POR, the watchdog); the three modes bounded piecewise (L4-E11 15d, E11-31)
+      document:       TI BQ25730 datasheet; SLUSE65A, February 2021, revised January 2024; https://www.ti.com/lit/ds/symlink/bq25730.pdf
+                      v2/vendor/ti/held/ti-bq25730-sluse65a.pdf sha256 e41ef289ce1de377d7b92bce609177d924e149099d9c4424d88f6b21ad57153f (held back; v2/docs/records/l6pwr/fetch_held_back.py)
+                      rule D-2 PRINTED: p.104 prints BQ25730RSNR: 'BQ25730RSNR Active Production QFN (RSN) | 32 3000 | LARGE T&R Yes NIPDAU Level-1-260C-UNLIM -40 to 85 BQ25730'
+                      cited p.8 prints 'ACN, ACP, VBUS 0 26': yes
+                      cited p.92 prints 'Ciss of': yes
+      catalogue:      C5219071 = BQ25730RSNR, TI, QFN-32(4x4); LCSC stock 0; USD 2.8553 at 1, USD 2.7966 at 10; min buy 1 (read 2026-10-02T23:20:31Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    BQ25731RSNR (LCSC C2871872, the part drawn today, the same RSN land; pin 21 NC): no battery FET, so arrangement (A) with E11-24's hold-up bank stands; its recommended TJ row is the same -20 to 125 C
+      obligation:     E11-27 (R-157) the draft applied
+      obligation:     E11-28 (R-158) firmware
+      obligation:     E11-31 (R-161) bench, the three modes
+      obligation:     E11-32 (R-162) supply for the build quantity: LCSC stock 0
+      obligation:     E11-37 (R-183) Ciss against TI's 5 nF, Q-TI-17 drafted
+      rationale:      L4-E11 selected (B1) because the BQ25730's sheet prints VSYS's regulation with no battery (p.1, 9.1) and drives an external battery FET for the pack's 18 A, which the drawn BQ25731 cannot (U-04).
+      provisional:    no
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   L6P-02  board A  Q39, Q40
+      maker, MPN:     Nexperia, BUK6Y10-30P (the fitted code's model BUK6Y10-30PX)
+      package, land:  LFPAK56 (Power-SO8), SOT669, 4 terminals; LFPAK56 lands checked against Nexperia's SOT669 drawing (E11-27)
+      selected by:    L4-E11 section 15c, option (Q-c), two in parallel (E11-27, R-157)
+      draft:          l4e11_charger
+      grade:          automotive (AEC-Q101 qualified, p.1); operating -55 to 175 C (Nexperia BUK6Y10-30P product data sheet p.3: 'junction temperature' printed) -> INSIDE against -20 to 62.1 C
+                      storage -65 to 175 C (p.3): covers the -33 C and +71 C storage margins
+      rating used:    VDS -30 V (p.1) against VBAT at most 17.375 V (L4-E11 15a): 58 percent
+      rating used:    RDS(on) at most 10 mOhm at -10 V and 25 C, 16 mOhm at -10 V and 175 C, 25 mOhm at -4.5 V and 25 C (p.6, Table 7); the record's 21.136 mOhm at -8.5 V and 150 C is an ALLOWANCE no printed point bounds (E11-36)
+      rating used:    ISM 320 A single pulse 10 us at Tmb 25 C (p.3) against the docking pulse 242.9 A peak, 33.8 us; derated x0.7 at the +70 C air (224 A), one FET takes at most 0.848 of it (E11-30); the junction limit 150 C, 25 K under the 175 C rating
+      rating used:    Ciss 2.36 nF typical at -15 V (p.6 Table 7; about 2.87 nF near 0 V, Fig. 12), the pair 4.72 nF against TI's 5 nF (E11-37)
+      document:       Nexperia BUK6Y10-30P product data sheet; 17 April 2020; https://assets.nexperia.com/documents/data-sheet/BUK6Y10-30P.pdf
+                      v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf sha256 ba928dfe6a85134423562bd378bdfafafb26d857ba08b50560ce5aacb956da40 (held back; v2/docs/records/l6pwr/fetch_held_back.py)
+                      rule D-2 PRINTED: p.1 prints BUK6Y10-30P: 'BUK6Y10-30P'
+                      cited p.1 prints 'AEC-Q101': yes
+                      cited p.3 prints '320': yes
+                      cited p.6 prints '- 13 16 m': yes
+      catalogue:      C3278350 = BUK6Y10-30PX, Nexperia, LFPAK-56; LCSC stock 67, JLCPCB assembly stock 67; USD 2.0603 at 1, USD 1.7386 at 10; min buy 1 (read 2026-10-02T23:20:31Z)
+      catalogue:      C2846047 = BUK6Y10-30P, Nexperia, SOT-669; LCSC stock 0, JLCPCB assembly stock 0; NOT READ (no ladder in the answer); min buy 1 (read 2026-10-02T23:20:31Z)
+      need:           2 a kit, 10 for 5 kits
+      alternative:    Vishay SQJ403EP (option Q-b, held sheet 67109 Rev. A): a PowerPAK SO-8 single, the same 5 x 6 mm class but a different land drawing, one FET whose bar is 9.49 C/W (a heat path through the case, not a pour): not a drop-in
+      obligation:     E11-27 (R-157)
+      obligation:     E11-29 (R-159) the installed pair's Zself + Zmut
+      obligation:     E11-30 (R-160) the whole hot docking waveform; Q-NXP-1
+      obligation:     E11-32 (R-162) supply: LCSC stock 67 against a need of 10
+      obligation:     E11-36 (R-182) RDS(on) at -8.5 V and 150 C
+      obligation:     E11-37 (R-183) Ciss
+      rationale:      L4-E11 15c chose two BUK6Y10-30P because it is the only option inside TI's Ciss whose thermal bar (34.42 C/W per FET at +70 C air) a board pour gives, with a printed RDS(on) maximum to 175 C and a printed body-diode pulse rating over the docking pulse.
+      provisional:    no
+      identity:       UNRESOLVED, PART_NUMBER_INFERRED: the sheet prints BUK6Y10-30P (p.1, the ordering table p.2 names that type only); the fitted code C3278350 resolves to BUK6Y10-30PX, a suffix the sheet does not print (LCSC and JLCPCB list BUK6Y10-30P, SOT-669, stock 0, and BUK6Y10-30PX, LFPAK-56, stock 67, with the same ratings), so the X is INFERRED to be Nexperia's packing code
+                      next action: Nexperia's packing-code document or its written confirmation that BUK6Y10-30PX is BUK6Y10-30P on a reel (Q-NXP-1 can carry it); then the identity reads PRINTED by rule D-2's packing clause
+
+   L6P-03  board A  U42
+      maker, MPN:     Texas Instruments, TPS16630PWPR
+      package, land:  HTSSOP-20 PWP (6.50 x 4.40 mm), PWP0020T; the HTSSOP-20 land checked against TI's PWP0020 drawing (E11-27)
+      selected by:    L4-E11 section 16e, option (E), and 17a (L4-F03, D-15; E11-27, R-181)
+      draft:          l4e11_charger
+      grade:          industrial; operating -40 to 125 C (TI TPS1663 datasheet p.7: 'Operating Junction temperature' printed) -> INSIDE against -20 to 62.1 C
+                      storage -65 to 150 C (p.7): covers the -33 C and +71 C storage margins
+      rating used:    IN 4.5 to 60 V (p.7) against VSYS at most 17.375 V: 29 percent; the absolute maximum 67 V (p.7)
+      rating used:    I(OL) 1.4713 to 1.8018 A at R(ILIM) 11.0 kOhm 0.1 percent, INFERRED between the printed 9 kOhm and 30 kOhm rows (p.8) by Equation 6 (p.20); the 813 contact at 51.5 percent of 3.5 A
+      rating used:    limiting at most 202 ms, auto-retry after 500 to 800 ms with MODE to GND (p.10, p.26); RON at most 53 mOhm; the hard short's 566 A ceiling over 4.5 us (17a)
+      document:       TI TPS1663 datasheet; SLVSET9G, September 2018, revised April 2026; https://www.ti.com/lit/ds/symlink/tps1663.pdf
+                      v2/vendor/ti/held/ti-tps1663-slvset9g.pdf sha256 8f91a0db2daf2da35abd335420ff9f8b4ac9a99c93dac93e215e0a75e9a866fe (held back; v2/docs/records/l6pwr/fetch_held_back.py)
+                      rule D-2 PRINTED: p.36 prints TPS16630PWPR: 'TPS16630PWPR Active Production HTSSOP (PWP) | 20 2000 | LARGE T&R Yes NIPDAU Level-2-260C-1 YEAR -40 to 125 TPS16630'
+                      cited p.8 prints 'R(ILIM) = 9k': yes
+                      cited p.4 prints 'Overvoltage cutoff, adjustable': yes
+      catalogue:      C1849461 = TPS16630PWPR, TI, HTSSOP-20; LCSC stock 1141, JLCPCB assembly stock 1141; USD 2.8002 at 1, USD 2.3521 at 10; min buy 1 (read 2026-10-02T23:20:32Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    none on the PWP land: the orderable addendum (p.36) lists TPS16630 alone in HTSSOP-20; TPS16632 (overvoltage clamp, power limiting) is VQFN-24 only. The latch-off response is MODE's setting, not another part
+      obligation:     E11-27 (R-157, R-181) the draft applied
+      obligation:     E11-38 (R-184) the whole fault envelope on the bench; Q-TI-18 the OUT undershoot
+      obligation:     E11-35 (R-179) the fans' start under the least limit 1.471 A
+      obligation:     E11-39 (R-188) the fans started one at a time
+      rationale:      L4-E11 16e selected the eFuse as the only protection of three whose printed rows keep the 813 contact, the 24 AWG and the copper inside their ratings in a sustained overload over temperature.
+      provisional:    no
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   L6P-04  board A  R221, C237, C238, C239
+      maker, MPN:     not named, none (values only: 11k 0.1 percent; 22 nF 50 V C0G; 1 uF 50 V X7R; 100 nF 50 V X7R)
+      package, land:  0603 or as lcsc_fill.py maps the value (not stated by the draft); the draft's default lands
+      selected by:    L4-E11 16e and 17a: U42's network (E11-27)
+      draft:          l4e11_charger
+      grade:          NOT READ at the source (no part named or no maker's document read)
+      rating used:    R221 sets I(OL) = 18 / R(ILIM): its 0.1 percent is inside the record's 1.4713 to 1.8018 A band; C237 TI's characterised 22 nF; C238 TI 9.4.1's 1 uF at IN; C239 TI 6.3's 0.1 uF at OUT
+      document:       none bound (see the identity line)
+      catalogue:      no LCSC code (the draft names a value only)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    none (no part named)
+      obligation:     E11-27 (R-157): the regenerated netlist reads each; lcsc_fill.py maps the values
+      rationale:      L4-E11 17a added TI's recommended network to U42's draft; the parts are values the pipeline maps by value, no maker's part is named.
+      provisional:    no
+      identity:       UNRESOLVED, CHOICE_OWED: the draft names values and tolerances and no part number; a 0.1 percent 11k resistor and three capacitors are chosen by lcsc_fill.py's value map at the regeneration (Layer 8)
+                      next action: the board A generator owner names the parts or lets the value map choose them; the identity table's selection then resolves on the catalogue reading
+
+   L6P-05  board A  D23
+      maker, MPN:     Diodes Incorporated, B540C-13-F
+      package, land:  SMC (DO-214AB), 3,000 a reel; the land key SMC (E11-27)
+      selected by:    L4-E11 17a (TI 9.4.1 and 9.5.1's Schottky at OUT; E11-27)
+      draft:          l4e11_charger
+      grade:          commercial (the sheet: 'general requirements of commercial applications'; an automotive-compliant part exists under a separate sheet, p.1); operating -55 to 150 C (Diodes Incorporated B520C to B560C datasheet p.2: 'Operating Temperature Range' printed) -> INSIDE against -20 to 62.1 C
+                      storage -55 to 150 C (p.2): covers the -33 C and +71 C storage margins
+      rating used:    VRRM 40 V, IO 5.0 A, VF at most 0.55 V, IR at most 0.5 mA (p.1) against VSYS at most 17.375 V: 43 percent; it clamps OUT's negative spike in a hard short (Equation 14, 17a)
+      document:       Diodes Incorporated B520C to B560C datasheet; DS13012 Rev. 18-2, March 2023; https://www.diodes.com/assets/Datasheets/ds13012.pdf
+                      v2/vendor/power/held/diodes-b520c-b560c-ds13012-rev18-2.pdf sha256 1b1de94df0a7729f4a69a885edd54213594acdce3cd6d4fa072961431ddf71ff (held back; v2/docs/records/l6pwr/fetch_held_back.py)
+                      rule D-2: p.1 prints the numbering scheme, not B540C-13-F (confirmed: not printed); the identity is decoded, see the identity line
+                      cited p.1 prints 'B5xxC-13-F': yes
+                      cited p.1 prints '0.55': yes
+      catalogue:      C72264 = B540C-13-F, DIODES, SMC(DO-214AB); LCSC stock 52515; USD 0.2332 at 5, no 10-piece row; min buy 5 (read 2026-10-02T23:20:32Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    B550C-13-F (the same sheet and SMC land, 50 V): VF at most 0.70 V, so the clamp level rises by 0.15 V
+      obligation:     E11-27 (R-157)
+      obligation:     E11-38 (R-184): D23's VF at 5 A within +5 percent after every case
+      rationale:      L4-E11 17a added TI's recommended Schottky at OUT for the negative spike of a hard short (SLVSET9G 9.4.1, 9.5.1).
+      provisional:    no
+      identity:       UNRESOLVED, PART_NUMBER_INFERRED: page 1 prints the ordering pattern 'B5xxC-13-F ... xx = Device type, e.g., B520C-13-F' and the marking code 'B540C', not the string B540C-13-F; the part number is decoded by the sheet's own pattern (x = 4 for B540C)
+                      next action: a DECODED scheme for Diodes' B5xxC-13-F pattern in part_identities.SCHEMES, or Diodes' orderable list naming B540C-13-F; until then the catalogue reading (C72264, DIODES B540C-13-F, SMC) is the only text that names it
+
+   L6P-06  board A  R11
+      maker, MPN:     Shenzhen Milliohm Electronics, HoJLR2512-3W-8mR-1% (7 mOhm, HoJLR2512-3W-7mR-1%, only if bench V-A07 fails)
+      package, land:  2512 (6.4 x 3.2 mm), 3 W; RS2512 (Kelvin taps R-37)
+      selected by:    L4-E4 (R-04); L4-E5 'What would change' keeps 8 mOhm unless V-A07 (R-75) fails, then 7 mOhm (C2904239, R-155)
+      draft:          l4e4 apply_gen_sch_a_r11.py (R-04), kept by L4-E5
+      grade:          industrial; operating -50 to 170 C (Shenzhen Milliohm Electronics HoJLR2512 series alloy current-sense resistor specification p.2: 'Operating Temperature Range' printed) -> INSIDE against -20 to 62.1 C
+                      storage: NOT READ (no storage row cited)
+      rating used:    3 W rated at 70 C, derated linearly to zero at 170 C (p.2; L4-E8's reading); at the highest permitted current 7.262 A (8 mOhm) 0.42 W, at 8.300 A (7 mOhm) 0.48 W
+      rating used:    tolerance +-1 percent (F), TCR +-50 ppm/K for 2 to 500 mOhm (p.2); L4-E5's INFERRED 5.095 A through R11 at the pin's maximum
+      document:       Shenzhen Milliohm Electronics HoJLR2512 series alloy current-sense resistor specification; version Ho-A0, revision dated 2020-04-13 on page 1 (2019-04-13 on pages 2 and 3); https://datasheet.lcsc.com/datasheet/pdf/bf6eace094b76bcd756cc1a79c576936.pdf?productCode=C2903468 (the maker's sheet as LCSC hosts it)
+                      v2/vendor/passives/milliohm-hojlr2512-series.pdf sha256 3224518dbc8bdc858a96cfde88de2611494550f95406f6b65130c232cdfc93fb
+                      rule D-2: p.1 prints the numbering scheme, not HoJLR2512-3W-8mR-1% (confirmed: not printed); the identity is decoded, see the identity line
+                      cited p.1 prints '3W': yes
+                      cited p.2 prints '50': yes
+      catalogue:      C2904240 = HoJLR2512-3W-8mR-1%, Milliohm, 2512; LCSC stock 9600; USD 0.0832 at 10, USD 0.0832 at 10; min buy 10 (read 2026-10-02T23:20:34Z)
+      catalogue:      C2904239 = HoJLR2512-3W-7mR-1%, Milliohm, 2512; LCSC stock 1830; USD 0.1022 at 5, no 10-piece row; min buy 5 (read 2026-10-02T23:20:34Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    Vishay WSL2512R0080FEA (the same land; Document 30100): rated 1.0 W at 70 C against 3 W, TCR +-75 ppm/K for 7 to 500 mOhm, so the derating basis and the tap arithmetic change; not a drop-in on power
+      obligation:     R-04 the draft
+      obligation:     R-37, R-62 the Kelvin taps (0.38 mOhm)
+      obligation:     R-75 V-A07 (else 7 mOhm, R-155)
+      obligation:     R-73 (C-9)
+      obligation:     R-101 Milliohm's clarification: TCR from -40 to +25 C
+      rationale:      L4-E4 set R11 to 8 mOhm so U3's input limit stays inside the front end's band; L4-E5 keeps it pending V-A07.
+      provisional:    no
+      identity:       UNRESOLVED, PART_NUMBER_INFERRED: page 1 prints the numbering scheme (Ho JLR 2512 3W 100mR 1%: maker, series, size, power, value, tolerance F = +-1 percent) and not the part number; the string HoJLR2512-3W-8mR-1% appears nowhere in the sheet
+                      next action: a DECODED scheme for Milliohm's HoJLR numbering in part_identities.SCHEMES (the page prints the layout), or the maker's confirmation; the catalogue reading names the model
+
+   L6P-07  board A  R12
+      maker, MPN:     Shenzhen Milliohm Electronics, HoJLR2512-3W-12mR-1%
+      package, land:  2512, 3 W; RS2512
+      selected by:    L4-E6, candidate (c): R12 12 mOhm, C147 330 pF (R-01)
+      draft:          l4e6 apply_gen_sch_a_r12.py and apply_lcsc_fill_r12.py (R-01, R-02)
+      grade:          industrial; operating -50 to 170 C (Shenzhen Milliohm Electronics HoJLR2512 series alloy current-sense resistor specification p.2: 'Operating Temperature Range' printed) -> INSIDE against -20 to 62.1 C
+                      storage: NOT READ (no storage row cited)
+      rating used:    0.90 W at 9 V and 0.28 to 0.37 W at 36 V against 3 W derated from 70 C (the derating line's 33.3 K/W): at most 92 C (L4-E6)
+      rating used:    the boost peak limit 8.06 / 10.00 / 11.99 A under L1's Isat, stacked at +-1 percent and 50 ppm/K over 75 K (L4-E6)
+      document:       Shenzhen Milliohm Electronics HoJLR2512 series alloy current-sense resistor specification; version Ho-A0, revision dated 2020-04-13 on page 1 (2019-04-13 on pages 2 and 3); https://datasheet.lcsc.com/datasheet/pdf/bf6eace094b76bcd756cc1a79c576936.pdf?productCode=C2903468 (the maker's sheet as LCSC hosts it)
+                      v2/vendor/passives/milliohm-hojlr2512-series.pdf sha256 3224518dbc8bdc858a96cfde88de2611494550f95406f6b65130c232cdfc93fb
+                      rule D-2: p.1 prints the numbering scheme, not HoJLR2512-3W-12mR-1% (confirmed: not printed); the identity is decoded, see the identity line
+                      cited p.2 prints '0.5mR~500mR': yes
+      catalogue:      C2904242 = HoJLR2512-3W-12mR-1%, Milliohm, 2512; LCSC stock 3405; USD 0.0949 at 5, no 10-piece row; min buy 5 (read 2026-10-02T23:20:34Z)
+      catalogue:      C500739 = LR2512D-3W-5mR-1%, Milliohm, 2512; LCSC stock 14730; USD 0.1208 at 5, no 10-piece row; min buy 5 (read 2026-10-02T23:20:34Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    the drawn LR2512D-3W-5mR-1% (C500739) is the superseded 5 mOhm value, not an alternative; a WSL2512 at 12 mOhm fits the land at 1.0 W (70 C)
+      obligation:     R-01, R-02 the drafts
+      obligation:     R-64 (7b.5) L1's current with R12 fitted
+      obligation:     R-66 the loop's Bode row
+      rationale:      L4-E6 found 12 mOhm the smallest catalogue value closing B-1 and B-2 at both R11 outcomes (its out 5 scan).
+      provisional:    no
+      identity:       UNRESOLVED, PART_NUMBER_INFERRED: as R11: the sheet prints the numbering scheme, not HoJLR2512-3W-12mR-1%
+                      next action: as R11
+
+   L6P-08  board A  R227
+      maker, MPN:     Shenzhen Milliohm Electronics, HoJLR2512-3W-5mR-1%
+      package, land:  2512, 3 W; RS2512 with Kelvin taps (R-97)
+      selected by:    L4-E9 round 2 part A, section 3 (U17 on R227 in the PoE stage's input; R-06)
+      draft:          l4e9 apply_gen_sch_a_u17.py (R-06)
+      grade:          industrial; operating -50 to 170 C (Shenzhen Milliohm Electronics HoJLR2512 series alloy current-sense resistor specification p.2: 'Operating Temperature Range' printed) -> INSIDE against -20 to 62.1 C
+                      storage: NOT READ (no storage row cited)
+      rating used:    1.037 W at the stage's fault bound 14.33 A against 3 W at 62.1 C derated from 70 C (L4-E9 IF-13: MEETS, MAKER)
+      rating used:    a hard VBAT connect: 2.879 mJ nominal through R227, its maximum UNRESOLVED until Milliohm's single-pulse rating (R-101)
+      document:       Shenzhen Milliohm Electronics HoJLR2512 series alloy current-sense resistor specification; version Ho-A0, revision dated 2020-04-13 on page 1 (2019-04-13 on pages 2 and 3); https://datasheet.lcsc.com/datasheet/pdf/bf6eace094b76bcd756cc1a79c576936.pdf?productCode=C2903468 (the maker's sheet as LCSC hosts it)
+                      v2/vendor/passives/milliohm-hojlr2512-series.pdf sha256 3224518dbc8bdc858a96cfde88de2611494550f95406f6b65130c232cdfc93fb
+                      rule D-2: p.1 prints the numbering scheme, not HoJLR2512-3W-5mR-1% (confirmed: not printed); the identity is decoded, see the identity line
+                      cited p.2 prints '70': yes
+      catalogue:      C2903482 = HoJLR2512-3W-5mR-1%, Milliohm, 2512; LCSC stock 106575; USD 0.1023 at 5, no 10-piece row; min buy 5 (read 2026-10-02T23:20:34Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    Vishay WSL2512R0050FEA (the same land, 1.0 W at 70 C): the 1.037 W fault-bound dissipation would exceed it, so not an alternative at this rating
+      obligation:     R-06 the draft
+      obligation:     R-27 firmware (FW-A09 recalibrated)
+      obligation:     R-84 V-A04 on R227
+      obligation:     R-97 the Kelvin taps and the lcsc_fill line
+      obligation:     R-101 Milliohm's pulse rating
+      obligation:     R-117 the loop's inductance
+      obligation:     R-120, R-121 L10's L(I)
+      rationale:      L4-E9 moved U17's shunt to the stage's input because the INA226's pins are 40 V absolute and the drawn rail is 54 V (HF-F02).
+      provisional:    no
+      identity:       UNRESOLVED, PART_NUMBER_INFERRED: as R11: the sheet prints the numbering scheme, not HoJLR2512-3W-5mR-1%
+                      next action: as R11
+
+   L6P-09  board A  R221, R222, R223, R224, R225, R226
+      maker, MPN:     Shenzhen Milliohm Electronics, HoJLR2512-3W-45mR-1%
+      package, land:  2512, 3 W; RS2512, each beside its can (R-40)
+      selected by:    L4-E8 'Status': six ballasts, one in series with each EEHZK1V331P (R-07)
+      draft:          l4e8_bank
+      grade:          industrial; operating -50 to 170 C (Shenzhen Milliohm Electronics HoJLR2512 series alloy current-sense resistor specification p.2: 'Operating Temperature Range' printed) -> INSIDE against -20 to 62.1 C
+                      storage: NOT READ (no storage row cited)
+      rating used:    each can's current at most 2.4096 A (R11 8 mOhm) or 2.7661 A (7 mOhm) on L4-E8's bound: 0.26 to 0.35 W against 3 W; the ballast term at most 2.09 W in all at the bound's worst corner (R-51)
+      document:       Shenzhen Milliohm Electronics HoJLR2512 series alloy current-sense resistor specification; version Ho-A0, revision dated 2020-04-13 on page 1 (2019-04-13 on pages 2 and 3); https://datasheet.lcsc.com/datasheet/pdf/bf6eace094b76bcd756cc1a79c576936.pdf?productCode=C2903468 (the maker's sheet as LCSC hosts it)
+                      v2/vendor/passives/milliohm-hojlr2512-series.pdf sha256 3224518dbc8bdc858a96cfde88de2611494550f95406f6b65130c232cdfc93fb
+                      rule D-2: p.1 prints the numbering scheme, not HoJLR2512-3W-45mR-1% (confirmed: not printed); the identity is decoded, see the identity line
+                      cited p.2 prints '3W': yes
+      catalogue:      C2903491 = HoJLR2512-3W-45mR-1%, Milliohm, 2512; LCSC stock 15860; USD 0.0621 at 10, USD 0.0621 at 10; min buy 10 (read 2026-10-02T23:20:34Z)
+      need:           6 a kit, 30 for 5 kits
+      alternative:    a WSL2512 at 45 mOhm fits the land (1.0 W at 70 C covers 0.35 W); its TCR +-75 ppm/K changes nothing the bound needs
+      obligation:     R-07 the draft (refuses before R12)
+      obligation:     R-09 the text corrections
+      obligation:     R-40 branch mismatch at layout
+      obligation:     R-68 (7b.8) the bank on the bench
+      obligation:     R-91 L4-E8's release guard
+      rationale:      L4-E8 put a 45 mOhm ballast in series with each can so no can's current depends on the cans matching (the conservative bound over independent branches).
+      provisional:    no
+      identity:       UNRESOLVED, PART_NUMBER_INFERRED: as R11: the sheet prints the numbering scheme, not HoJLR2512-3W-45mR-1%
+                      next action: as R11
+
+   L6P-10  board A  C163, C178, C179, C180, C199, C200
+      maker, MPN:     Panasonic, EEHZK1V331P
+      package, land:  SMD can G, 10.0 mm diameter x 10.2 mm (CPOL10); the generator's CPOL10 land (gen_sch_a.py V331 tuple)
+      selected by:    the drawn cans, kept by L4-E8 (B-4 closes on the bound at both R11 outcomes)
+      draft:          gen_a (drawn; kept by L4-E8 behind the ballasts)
+      grade:          industrial (AEC-Q200 compliant, p.1); operating -55 to 125 C (Panasonic ZK series conductive polymer hybrid aluminium electrolytic capacitors p.1: 'Category temp. range' printed) -> INSIDE against -20 to 62.1 C
+                      storage: NOT READ (no storage row cited)
+      rating used:    330 uF +-20 percent, 35 V (p.2) against VBUS20 at most 20.96 V: 60 percent
+      rating used:    ripple current 2800 mA rms at 100 kHz and +125 C, ESR 20 mOhm at 100 kHz and +20 C (p.2) against each can's bound 2.4096 A (8 mOhm; 86 percent) or 2.7661 A (7 mOhm; 98.8 percent, the rule's limit 2.7709 A, L4-E8)
+      rating used:    endurance 4000 h at 125 C (p.1); the rated temperature rise is not printed, so the can's own rise is measured (L4-E8 CONDITIONAL B4, bench 7b.8)
+      document:       Panasonic ZK series conductive polymer hybrid aluminium electrolytic capacitors; no revision date printed (the sheet's RoHS note cites October 2017; LCSC's copy, filed before this record); NOT RECORDED in sources.txt (owed)
+                      v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf sha256 5455014606c0b676ca1df345f1969ee1b056403b8ee424bb29245115facda389
+                      rule D-2 PRINTED: p.2 prints EEHZK1V331P: '330 10.0 10.2 10.5 G 2800 20 0.12 EEHZK1V331P EEHZK1V331V 500'
+                      cited p.2 prints '2800': yes
+                      cited p.1 prints '4000 h': yes
+      catalogue:      C278516 = EEHZK1V331P, PANASONIC, SMD,D10xL10.2mm; LCSC stock 6246, JLCPCB assembly stock 6246; USD 0.8074 at 1, USD 0.6449 at 10; min buy 1 (read 2026-10-02T23:20:34Z)
+      need:           6 a kit, 30 for 5 kits
+      alternative:    EEHZK1V331V (the same row, the vibration-proof product, the same land and ratings): the mechanical build changes, nothing electrical
+      obligation:     R-07
+      obligation:     R-68 (7b.8): the ESR envelope at -20 C, each can's rise (the lifetime) and current
+      obligation:     R-102 the cans' own ESR, ESL and capacitance regions
+      obligation:     R-51 the ballast term in the budgets
+      rationale:      L4-E8 kept the six drawn EEHZK1V331P because, ballasted, every can stays under its 2.8 A rating on a bound over the sheet's whole printed range (0.56 to 1.56 x 330 uF, ESR 0 to the cold limit).
+      provisional:    no
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   L6P-11  board A  C236
+      maker, MPN:     Panasonic, EEHZK1V181P
+      package, land:  SMD can F, 8.0 mm diameter x 10.2 mm (CPOL8); CPOL8
+      selected by:    L4-E11 section 12 (D5) and 14: VSYS's 50 uF effective by design (SLUSE65A 9.1); E11-27
+      draft:          l4e11_charger
+      grade:          industrial (AEC-Q200 compliant, p.1); operating -55 to 125 C (Panasonic ZK series conductive polymer hybrid aluminium electrolytic capacitors p.1: 'Category temp. range' printed) -> INSIDE against -20 to 62.1 C
+                      storage: NOT READ (no storage row cited)
+      rating used:    180 uF +-20 percent, 35 V (p.2) against VBAT at most 17.375 V: 50 percent; ripple 2000 mA rms, ESR 27 mOhm (p.2); 90.7 uF effective at its stacked worst (17a) against TI's 50 uF
+      document:       Panasonic ZK series conductive polymer hybrid aluminium electrolytic capacitors; no revision date printed (the sheet's RoHS note cites October 2017; LCSC's copy, filed before this record); NOT RECORDED in sources.txt (owed)
+                      v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf sha256 5455014606c0b676ca1df345f1969ee1b056403b8ee424bb29245115facda389
+                      rule D-2 PRINTED: p.2 prints EEHZK1V181P: '180 8.0 10.2 10.5 F 2000 27 0.12 EEHZK1V181P EEHZK1V181V 500'
+                      cited p.2 prints '2000 27': yes
+      catalogue:      C242139 = EEHZK1V181P, PANASONIC, SMD,D8xL10.2mm; LCSC stock 2843; USD 1.1407 at 1, USD 0.9588 at 10; min buy 1 (read 2026-10-02T23:20:34Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    EEHZK1V181V (the same row, vibration-proof): mechanical only
+      obligation:     E11-27 (R-157)
+      obligation:     E11-07 VSYS's effective capacitance at 16.884 V (given by design with this part)
+      rationale:      L4-E11 added one 180 uF hybrid on VSYS so TI's 50 uF minimum holds by design at the pack's top voltage.
+      provisional:    no
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   L6P-12  board A  C6
+      maker, MPN:     Samsung Electro-Mechanics (the catalogue's model for C1613), CL10B332KB8NNNC (3.3 nF 50 V X7R 0603, lcsc_fill.py's 0603 3.3 nF)
+      package, land:  0603; C0603
+      selected by:    L4-E8 'The choice (SESSION)': Cc2 from 680 pF to 3.3 nF (R-07)
+      draft:          l4e8_bank
+      grade:          NOT READ at the source (the maker's page prints no temperature range)
+      rating used:    the front end's compensation (type II): 3.3 nF with Rc1 15k and Cc1 220n kept; the loop re-verified by the generator's loop check (R-01, R-66)
+      document:       none bound (see the identity line)
+      catalogue:      C1613 = CL10B332KB8NNNC, Samsung Electro-Mechanics, 0603; LCSC stock 32760; USD 0.0084 at 20, no 10-piece row; min buy 20 (read 2026-10-02T23:20:35Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    any 3.3 nF 50 V X7R 0603 (a compensation part; the loop check judges it)
+      obligation:     R-07
+      obligation:     R-66 the loop's Bode row
+      rationale:      L4-E8 took Cc2 ascending through lcsc_fill.py's 0603 capacitors until the loop held with the ballasts.
+      provisional:    no
+      identity:       UNRESOLVED, DOCUMENT_OWED: the draft names the code C1613 and the value; the catalogue reads Samsung CL10B332KB8NNNC; no Samsung page for it is read here
+                      next action: read Samsung's specification page for CL10B332KB8NNN (read_catalogue.py's Samsung reader takes it) and bind it as the other CL parts are
+
+   L6P-13  board E  U21 (guard), U6 (entry)
+      maker, MPN:     Texas Instruments, TPS48110AQDGXRQ1
+      package, land:  VSSOP-19 DGX (5.10 x 3.00 mm), DGX0019A; DGX-19, to be added to meshsat.pretty from TI's DGX0019A drawing (E11-01)
+      selected by:    L4-E11 3c (the entry, E11-01, R-123); L4-E7's solar-fault remedies, check 5 (the guard, R-173)
+      draft:          l4e7_guard (U21), l4e11_entry (U6)
+      grade:          automotive (AEC-Q100 grade 1, -40 to +125 C ambient, p.1); operating -40 to 125 C (TI TPS4811-Q1 datasheet p.8: 'TJ = -40' printed) -> INSIDE against -20 to 62.1 C
+                      storage -55 to 150 C (p.7): covers the -33 C and +71 C storage margins
+      rating used:    V(VS) operating 3.5 to 80 V (p.8), absolute 100 V (p.7): the entry's OVLO maximum 43.18 V (54 percent); the guard's VS 36 V with a stiff source connected cold (45 percent) and PV_F at most 80.6 V at the modelled step with the guard on (L4-E7 round 2), over the 80 V operating row, 10 percent under the 100 V absolute maximum (FINDING L6P-F10)
+      rating used:    the entry: OCP 29.2 / 30.6 / 31.5 mV at RSET 100 Ohm with R19 4.5 mOhm (6.36 to 7.14 A), the short-circuit trip 10.36 to 13.87 A on the filtered sense, CTMR 22 nF (0.247 to 0.49 ms), auto-retry 512 ms (p.4)
+      rating used:    the guard: OV rising 28.55 to 31.06 V, falling 27.07 V or more; INP high from 9.29 V through R96 100k over R97 28.0k; INP's absolute maximum -1 to 20 V (p.7), the record's line 18 V (10 percent under)
+      document:       TI TPS4811-Q1 datasheet; SLUSEE5E, January 2022, revised April 2026; https://www.ti.com/lit/ds/symlink/tps4811-q1.pdf
+                      v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf sha256 3cfe41fef1407b85abaaee1e27a95ac3cf2cb1bdf218209b8578a835c4c9497f (held back; v2/docs/records/l6pwr/fetch_held_back.py)
+                      rule D-2 PRINTED: p.44 prints TPS48110AQDGXRQ1: 'TPS48110AQDGXRQ1 Active Production VSSOP (DGX) | 19 5000 | LARGE T&R Yes NIPDAU Level-2-260C-1 YEAR -40 to 125 2UZS'
+                      cited p.8 prints 'Operating input voltage 3.5 80': yes
+                      cited p.7 prints '20': yes
+                      cited p.4 prints 'Auto-retry': yes
+      catalogue:      C17556513 = TPS48110AQDGXRQ1, TI, VSSOP-19; LCSC stock 326; USD 4.4674 at 1, USD 4.0004 at 10; min buy 1 (read 2026-10-02T23:20:32Z)
+      need:           2 a kit, 10 for 5 kits
+      alternative:    TPS48111AQDGXRQ1 (the same DGX land; p.4): no overvoltage protection and latch-off, so the guard loses its OV cut-off (its whole function) and the entry latches after a fault until a re-plug
+      obligation:     E11-01 (R-123) the entry draft and the DGX-19 land
+      obligation:     E11-17 (R-118) the trip thresholds and the start at 43 V
+      obligation:     E11-20 the hard short's loop inductance
+      obligation:     R-153 (D9) the overcurrent delay's spread
+      obligation:     R-173 the guard draft, R-176 its seven bench rows, R-174 CS116 and CS115
+      rationale:      L4-E11 3c selected the TPS4811-Q1 because it starts from a 9.00 V plug, meets the 100 V class and 43.18 V OVLO and trips the breaker inside 0.247 ms where the LM5069 cannot; L4-E7 reused it as the panel port's over-voltage cut-off in TI's own topology.
+      provisional:    the guard's instance (U21): L4-E7's round 3 on the solar guard is running and may change the guard's capacitor set; the entry's instance (U6) is not under that trigger
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   L6P-14  board E  Q7
+      maker, MPN:     Texas Instruments, CSD19536KTT
+      package, land:  D2PAK (TO-263) KTT, 3 pins; the D2PAK land checked against TI's KTT drawing (E11-01)
+      selected by:    L4-E11 3c, the entry's pass FET (E11-01, R-123)
+      draft:          l4e11_entry
+      grade:          industrial; operating -55 to 175 C (TI CSD19536KTT datasheet p.1: 'Operating Junction' printed) -> INSIDE against -20 to 62.1 C
+                      storage: NOT READ (no storage row cited)
+      rating used:    VDS 100 V (p.1) against the entry's OVLO maximum 43.18 V: 43 percent; RDS(on) at most 2.3 mOhm at 10 V (p.5); ID 272 A at TC 25 C (p.1)
+      rating used:    Figure 4-10 (p.6, the SOA) read from TI's vector drawing and derated by L4-E9's 0.4454 for the whole pulse: a start into a hard short reaches 0.743 of the derated chart (L4-E11 3c); the transconductance 329 S typical only (D10, R-153)
+      document:       TI CSD19536KTT datasheet; SLPS540C, March 2015, revised May 2025; https://www.ti.com/lit/ds/symlink/csd19536ktt.pdf
+                      v2/vendor/ti/held/ti-csd19536ktt-slps540c.pdf sha256 19e1a9660fac8577743f40acc2cdc791539afd5232bbc1fc350e15fec735d78d (held back; v2/docs/records/l6pwr/fetch_held_back.py)
+                      rule D-2 PRINTED: p.1 prints CSD19536KTT: 'CSD19536KTT'
+                      cited p.6 prints 'Figure 4-10': yes
+                      cited p.1 prints '100': yes
+      catalogue:      C2687963 = CSD19536KTT, TI, TO-263-3; LCSC stock 611; USD 4.4897 at 1, USD 3.9324 at 10; min buy 1 (read 2026-10-02T23:20:32Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    NOT READ: TI's other 100 V KTT (D2PAK) parts share the land, but each one's SOA figure decides E11-17's start into a short and none was read here
+      obligation:     E11-01 (R-123)
+      obligation:     E11-14 its D2PAK land's copper at 20 A
+      obligation:     E11-17 (R-118) the peaks held under the chart, Q7 unharmed
+      obligation:     E11-20 the hard short in service (at most 178 A, IDM derated)
+      obligation:     R-153 (D10) the transfer curve
+      rationale:      L4-E11 3c paired the breaker with the CSD19536KTT because the TPS4811-Q1 limits no power and this FET's printed SOA carries the start into a short with headroom (1.346) that the drawn CSD19532Q5B's does not (3.08 of its derated chart).
+      provisional:    no
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   L6P-15  board E  Q12 (guard pass), Q13 (guard return), Q1 (entry ideal diode, L4-E9)
+      maker, MPN:     Texas Instruments, CSD19532Q5B
+      package, land:  VSON-CLIP 8 (DNK), 5 x 6 mm (SON-8 5x6); the PPAK / SON 5x6 land Q7 carries today (R-17)
+      selected by:    L4-E9 part A section 1 (Q1, R-17); L4-E7's remedies, check 5 (Q12, Q13; R-173)
+      draft:          l4e7_guard (Q12, Q13), l4e9 apply_gen_sch_e_q1.py (Q1)
+      grade:          industrial; operating -55 to 150 C (TI CSD19532Q5B datasheet p.1: 'Operating Junction' printed) -> INSIDE against -20 to 62.1 C
+                      storage: NOT READ (no storage row cited)
+      rating used:    VDS 100 V (p.1): Q1 holds 66.15 V reversed (66 percent, L4-E9); Q12 holds 36 V connected cold and at most 80.6 V at the step (81 percent, L4-E7); Q13 holds 25 V reversed
+      rating used:    RDS(on) at most 4.9 mOhm at VGS 10 V and 17 A (p.3); ID 140 A, IDM 400 A (p.1); Q12 turns off at most 60.3 A within 11.4 us (L4-E7); the series path 25.23 mOhm at the FETs' 150 C reading
+      rating used:    Q13's leakage: 1 uA printed at 80 V and 25 C against 32.1 uA (the dividers' conductance); D-11 CONDITIONAL on the leakage above +25 C (L4-E7)
+      rating used:    Q1: avalanche 83.6 mJ in the capability scenario against EAS 274 mJ; 100.5 V against 100 V, NOT MET by 0.5 V outside every requirement (L4-E9, DECISION-31)
+      document:       TI CSD19532Q5B datasheet; SLPS414B, December 2013, revised May 2017; https://www.ti.com/lit/ds/symlink/csd19532q5b.pdf
+                      v2/vendor/power/ti-csd19532q5b-n-fet.pdf sha256 353ce937cff0b719e730010829720d25c2ece3637ed92fb7ad8cc370438559d1
+                      rule D-2 PRINTED: p.1 prints CSD19532Q5B: 'CSD19532Q5B'
+                      cited p.3 prints '4.9': yes
+                      cited p.1 prints '400': yes
+      catalogue:      C473333 = CSD19532Q5B, TI, SON-8(5x6); LCSC stock 2522; USD 2.1572 at 1, USD 1.8436 at 10; min buy 1 (read 2026-10-02T23:20:32Z)
+      need:           3 a kit, 15 for 5 kits
+      alternative:    NOT READ: TI's Q5B family (VSON-CLIP 5 x 6) shares the land; no other 100 V member was read, and Q13's hot leakage and Q1's avalanche figures are this part's
+      obligation:     R-17 (Q1) the draft and the reverse check
+      obligation:     R-173 the guard draft
+      obligation:     R-176 rows 1 to 7 (the cut-off's rise and fall, the 36 V source cold, Q12's waveforms, Q13's hot leakage)
+      obligation:     R-112 Q1's threshold against TI's 2.5 V recommendation
+      rationale:      L4-E9 chose the 100 V CSD19532Q5B for Q1 because a reversed 36 V input puts 66.15 V across it (over the drawn 60 V part), and L4-E7 reused the same part for the guard's pass and return switches.
+      provisional:    Q12 and Q13 belong to the guard: L4-E7's round 3 may change the guard's capacitor set (the FETs are not named as changing)
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   L6P-16  board E  D4
+      maker, MPN:     Littelfuse, SMCJ30A
+      package, land:  DO-214AB (SMC); TVS (the drawn D4 land)
+      selected by:    L4-E7's remedies, check 5: D4 from the SMCJ28A to the SMCJ30A (R-173); its LCSC code 'owed' in the draft
+      draft:          l4e7_guard
+      grade:          industrial; operating -65 to 150 C (Littelfuse SMCJ series 1500 W TVS datasheet p.1: 'Operating Temperature Range' printed) -> INSIDE against -20 to 62.1 C
+                      storage -65 to 175 C (p.1): covers the -33 C and +71 C storage margins
+      rating used:    VR 30.0 V, VBR 33.30 to 36.80 V at 1 mA, VC 48.4 V at 31.0 A (p.2) over CS101's 27.82 V input peak and the cut-off's band (28.55 to 31.06 V); the clamp under the 50 V bulk; at CS116's current it reads 41.91 V (L4-E7)
+      rating used:    a stiff 36 V source connected cold: the block never turns on and D4 carries nothing (L4-E7 D4 row); the breakdown falls about 0.1 percent/K cold (typical)
+      document:       Littelfuse SMCJ series 1500 W TVS datasheet; Revised 11/20/15; https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052 (LCSC's copy of the maker's sheet)
+                      v2/vendor/power/littelfuse-smcj-series-tvs.pdf sha256 6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea
+                      rule D-2 PRINTED: p.2 prints SMCJ30A: 'SMCJ30A SMCJ30CA GFK BFK 30.0 33.30 36.80 1 48.4 31.0 1 X'
+                      cited p.2 prints '33.30 36.80': yes
+                      cited p.1 prints '-65 to 150': yes
+      catalogue:      C224048 = SMCJ30A, Littelfuse, DO-214AB; LCSC stock 15670, JLCPCB assembly stock 18349; USD 0.2982 at 5, no 10-piece row; min buy 5 (read 2026-10-02T23:20:32Z)
+      catalogue:      C224047 = SMCJ28A, Littelfuse, DO-214AB; LCSC stock 5845; USD 0.3024 at 5, no 10-piece row; min buy 5 (read 2026-10-02T23:20:32Z)
+      catalogue:      C135160 = SMCJ30A-13-F, DIODES, SMC; LCSC stock 1417, JLCPCB assembly stock 1417; USD 0.5217 at 1, USD 0.4151 at 10; min buy 1 (read 2026-10-02T23:20:32Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    Diodes Incorporated SMCJ30A-13-F (C135160, SMC, -55 to +150 C): the same row by the series' naming, another maker, so a substitution under condition 1 until its sheet is read
+      obligation:     R-173 the guard draft (the code the draft owes: C224048 reads SMCJ30A, Littelfuse, this reading)
+      obligation:     R-174 CS116 and CS115 on the lead: D4's clamp at each disturbance
+      obligation:     R-176 row 2 (a 36 V supply cold: D4 carries nothing)
+      rationale:      L4-E7 raised D4 to the SMCJ30A as the least held Littelfuse row that leaves the cut-off's aged band room above CS101's peak.
+      provisional:    the guard: L4-E7's round 3 may change the guard's capacitor set
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   L6P-17  board E  D11
+      maker, MPN:     Littelfuse, SMCJ40CA
+      package, land:  DO-214AB (SMC); TVS
+      selected by:    L4-E7's remedies, check 5: the port's clamp when the cut-off is off (R-173); the entry's D10 part
+      draft:          l4e7_guard
+      grade:          industrial; operating -65 to 150 C (Littelfuse SMCJ series 1500 W TVS datasheet p.1: 'Operating Temperature Range' printed) -> INSIDE against -20 to 62.1 C
+                      storage -65 to 175 C (p.1): covers the -33 C and +71 C storage margins
+      rating used:    bidirectional, VR 40.0 V, VBR 44.40 to 49.10 V, VC 64.5 V at 23.3 A (p.2): clamps the port at 57.53 V at 10 A hot (54.23 V at 5 A), at most 3.7 mJ a pulse, under Q12's 100 V and U21's VS (L4-E7 CS116 off row)
+      document:       Littelfuse SMCJ series 1500 W TVS datasheet; Revised 11/20/15; https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052 (LCSC's copy of the maker's sheet)
+                      v2/vendor/power/littelfuse-smcj-series-tvs.pdf sha256 6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea
+                      rule D-2 PRINTED: p.2 prints SMCJ40CA: 'SMCJ40A SMCJ40CA GFR BFR 40.0 44.40 49.10 1 64.5 23.3 1 X'
+                      cited p.2 prints '44.40 49.10': yes
+      catalogue:      C80273 = SMCJ40CA, Littelfuse, DO-214AB; LCSC stock 4925; USD 0.3544 at 5, no 10-piece row; min buy 5 (read 2026-10-02T23:20:32Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    SMCJ40A (unidirectional, the same row and land): a reversed panel's ring would then be clamped at one diode drop instead of VC; not equivalent for D-11
+      obligation:     R-173
+      obligation:     R-176
+      obligation:     R-174
+      rationale:      L4-E7 placed the bidirectional clamp across the port for the cut-off's off state (night, after a cut) and a reversed panel's ring.
+      provisional:    the guard: L4-E7's round 3 may change the guard's capacitor set
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   L6P-18  board E  C131, C132, C135, C136
+      maker, MPN:     Samsung Electro-Mechanics, CL32B225KCJSNNE
+      package, land:  1210 (3.2 x 2.5 x 2.5 mm); C1210
+      selected by:    L4-E7 round 2 for the review's B6 and L4-F01 (the port bank; R-173, R-176 row 3)
+      draft:          l4e7_guard
+      grade:          NOT READ at the source (the maker's page prints no temperature range)
+      rating used:    2.2 uF +-10 percent, 100 V, X7R (the maker's page) against PV_F at most 80.6 V at the step: 81 percent; the bound on the maker's curves: 3.98 uF at 36 V for the four, 1.68 uF at 75 V (L4-E7's fetch_maker_curves.py, held back)
+      document:       none bound (see the identity line)
+      catalogue:      C55151 = CL32B225KCJSNNE, Samsung Electro-Mechanics, 1210; LCSC stock 0, JLCPCB assembly stock 4654; USD 0.1599 at 1, USD 0.1352 at 10; min buy 1 (read 2026-10-02T23:20:33Z)
+      need:           4 a kit, 20 for 5 kits
+      alternative:    another maker's 2.2 uF 100 V X7R 1210 fits the land, but the record's bound rests on Samsung's own DC-bias, bias-TCC and ESR curves, so a substitute is bounded again before it is a substitute
+      obligation:     R-173 the guard draft (the code the draft owes: C55151 reads CL32B225KCJSNNE, this reading)
+      obligation:     R-176 row 3 (the waveforms at the IC pins with the port bank)
+      obligation:     R-180, R-186, R-187 (B6-ENG-1: the source loop at least 3.30 uH)
+      rationale:      L4-E7's B6 round 2 chose the parts whose maker publishes the DC-bias curves the bound needs, four 2.2 uF 100 V on PV_F holding the high side while Q13 is off.
+      provisional:    L4-E7's round 3 on the solar guard is running and may change this capacitor set
+      identity:       UNRESOLVED, PART_NUMBER_INFERRED: Samsung's specification page prints CL32B225KCJSNN (the part number less its last character, the packaging code E the catalogue's model carries) and no temperature range; the page is date-stamped and not filed (the excerpt in inputs/ is the reading)
+                      next action: Samsung's part-number legend (the catalogue's packaging code) read and filed, or the catalogue reading accepted as the identity; the grade needs Samsung's MLCC catalogue (X7R: -55 to +125 C as the EIA class), NOT READ here
+
+   L6P-19  board E  C133, C134, C71, C72, C73, C74
+      maker, MPN:     Samsung Electro-Mechanics, CL32B106KBJNNNE
+      package, land:  1210 (3.2 x 2.5 x 2.5 mm); C1210
+      selected by:    L4-E7 round 2 (B6): C133 and C134 on PV_P beside the bulk, C71 to C74 on TRK_VS (R-173, R-21)
+      draft:          l4e7_guard (edits the backstop draft's C71 to C74)
+      grade:          NOT READ at the source (the maker's page prints no temperature range)
+      rating used:    10 uF +-10 percent, 50 V, X7R (the maker's page) against PV_P at most 30 V: 60 percent; the bound on the maker's curves: 12.88 uF at 7.46 V, 5.07 uF at 30 V for the two on PV_P (L4-E7)
+      document:       none bound (see the identity line)
+      catalogue:      C138687 = CL32B106KBJNNNE, Samsung Electro-Mechanics, 1210; LCSC stock 16710, JLCPCB assembly stock 30940; USD 0.3288 at 1, USD 0.2609 at 10; min buy 1 (read 2026-10-02T23:20:33Z)
+      need:           6 a kit, 30 for 5 kits
+      alternative:    as C131: another maker's 10 uF 50 V X7R 1210 fits the land and is bounded again on its own curves
+      obligation:     R-173, R-21 the drafts (the code the drafts owe: C138687 reads CL32B106KBJNNNE, this reading)
+      obligation:     R-176 row 3
+      obligation:     R-36 the MLCC ripple rating (board A's 10 uF 50 V 1210 rows, the same class)
+      rationale:      as C131: the part whose DC-bias curve the record bounds.
+      provisional:    L4-E7's round 3 may change this capacitor set
+      identity:       UNRESOLVED, PART_NUMBER_INFERRED: as CL32B225KCJSNNE: the page prints CL32B106KBJNNN and no temperature range
+                      next action: as CL32B225KCJSNNE
+
+   L6P-20  board E  C13, C14
+      maker, MPN:     Samsung Electro-Mechanics, CL31B106KBHNNNE
+      package, land:  1206 (3.2 x 1.6 x 1.6 mm); C1206 (drawn)
+      selected by:    the drawn part; L4-E7 round 2 bounds its curve (TRK_VIN)
+      draft:          gen_sch_e.py (drawn on TRK_VIN; L4-E7 bounds it)
+      grade:          NOT READ at the source (the maker's page prints no temperature range)
+      rating used:    10 uF +-10 percent, 50 V, X7R (the maker's page) against TRK_VIN at most 30 V: 60 percent; 23.51 uF at 7.46 V and 9.54 uF at 30 V for the bank with C15 and C64 (L4-E7)
+      document:       none bound (see the identity line)
+      catalogue:      C89632 = CL31B106KBHNNNE, Samsung Electro-Mechanics, 1206; LCSC stock 0, JLCPCB assembly stock 109264; USD 0.2829 at 5, no 10-piece row; min buy 5 (read 2026-10-02T23:20:33Z)
+      need:           2 a kit, 10 for 5 kits
+      alternative:    as C131
+      obligation:     R-176 row 3
+      obligation:     R-36
+      rationale:      the drawn part, kept; listed because L4-E7's bound rests on its curve.
+      provisional:    L4-E7's round 3 may change the guard's capacitor set
+      identity:       UNRESOLVED, PART_NUMBER_INFERRED: as CL32B225KCJSNNE: the page prints CL31B106KBHNNN and no temperature range
+                      next action: as CL32B225KCJSNNE
+
+   L6P-21  board E  R60, R61, R62, R63, R64
+      maker, MPN:     Vishay Dale, WSL2512R0700FEA
+      package, land:  2512 (6.35 x 3.18 mm), 1.0 W at 70 C; RS2512
+      selected by:    L4-E7R, the 100 W backstop's sense bank (R-21, R-98)
+      draft:          l4e7_backstop
+      grade:          industrial; operating -65 to 170 C (Vishay Dale WSL Power Metal Strip resistors, Document 30100 p.2: 'Operating temperature range' printed) -> INSIDE against -20 to 62.1 C
+                      storage: NOT READ (no storage row cited)
+      rating used:    70 mOhm +-1 percent (F), five in parallel 14 mOhm; P70 1.0 W each (p.1) against at most 0.039 W each at the trip's highest 3.741 A (0.196 W in all, COMPUTED: 3.741 squared x 0.014 / 5)
+      rating used:    TCR +-75 ppm/K for 7 to 500 mOhm (p.2), the record's 75 ppm/K from -55 to +155 C; the warranted rows L4-E7's bound rests on
+      document:       Vishay Dale WSL Power Metal Strip resistors, Document 30100; Revision 23-Nov-2023 (the legal page dated 01-Jan-2026); https://www.vishay.com/docs/30100/wsl.pdf
+                      v2/vendor/vishay/vishay-wsl-power-metal-strip.pdf sha256 96c2dc89ae1e3039815ed6c41f566a6e9f6b53035f8e45ea2ada1697935a44dc
+                      rule D-2: p.1 prints the numbering scheme, not WSL2512R0700FEA (confirmed: not printed); the identity is decoded, see the identity line
+                      cited p.1 prints 'WSL25124L000FEA': yes
+                      cited p.2 prints '-65 to +170': yes
+                      cited p.1 prints '1.0 (1)': yes
+      catalogue:      C2076144 = WSL2512R0700FEA, VISHAY, 2512; LCSC stock 1970; USD 0.8059 at 1, USD 0.6645 at 10; min buy 1 (read 2026-10-02T23:20:33Z)
+      catalogue:      C844695 = WSL2512R0150FEA, VISHAY, 2512; LCSC stock 13410; USD 0.2753 at 5, no 10-piece row; min buy 5 (read 2026-10-02T23:20:33Z)
+      need:           5 a kit, 25 for 5 kits
+      alternative:    WSL2512R0700DEA (the same part at +-0.5 percent, tolerance code D; p.1 lists WSL2512 at +-0.5 percent from 0.0005 to 0.5 Ohm): the trip's resistor error halves; a different maker is a substitution under condition 1
+      obligation:     R-21 (apply_gen_sch_e_backstop.py), R-98
+      obligation:     R-101 Vishay's clarification (vishay-wsl2512.txt, the owner sends)
+      obligation:     R-70 bench rows 7b.10, 7b.11, 7b.14
+      rationale:      L4-E7R chose five WSL2512 70 mOhm in parallel because their rows (tolerance, TCR, power) are warranted where the LT8705A's own sense is not.
+      provisional:    no
+      identity:       UNRESOLVED, PART_NUMBER_INFERRED: Document 30100 prints the global numbering example WSL25124L000FEA and the decode lines (R0100 = 0.01 Ohm; F = +-1 percent; EA = packaging) and not WSL2512R0700FEA; the catalogue reading names it
+                      next action: a DECODED scheme for Vishay's WSL global part number in part_identities.SCHEMES (the page prints the layout), as SOURCES.yaml's board A WSL entry already decodes by the example
+
+   L6P-22  board E  U18
+      maker, MPN:     Texas Instruments, INA169NA/3K
+      package, land:  SOT-23-5 DBV; SOT235
+      selected by:    L4-E7R control decision (C): the sense bank read by an INA169 (R-21)
+      draft:          l4e7_backstop
+      grade:          industrial; operating -40 to 85 C (TI INA139, INA169 datasheet p.6: 'INA169 -40 85' printed) -> INSIDE against -20 to 62.1 C
+                      storage -65 to 125 C (p.4): covers the -33 C and +71 C storage margins
+      rating used:    supply and common mode 2.7 to 60 V (p.1, p.6), analog inputs -0.3 to 75 V absolute (p.4) against PV_P at most 30 V: 50 percent
+      rating used:    the specified range TMIN to TMAX -40 to +85 C (p.6) covers the 62.1 C board air; its rows are printed at VSENSE 50 mV (the recheck's B1: the gain move at the trip's own sense voltage is an assumption with its break-even)
+      document:       TI INA139, INA169 datasheet; SBOS181F, December 2000, revised February 2017; https://www.ti.com/lit/ds/symlink/ina169.pdf
+                      v2/vendor/ti/held/ti-ina169-sbos181f.pdf sha256 dbb74b6cdc5431353f17b044b7d762df1f2f9049d03d2d1611a53058e570d62c (held back; v2/docs/records/l6pwr/fetch_held_back.py)
+                      rule D-2 PRINTED: p.21 prints INA169NA/3K: 'INA169NA/3K Active Production SOT-23 (DBV) | 5 3000 | LARGE T&R Yes NIPDAU Level-2-260C-1 YEAR -40 to 125 A69'
+                      cited p.6 prints 'INA169 2.7 60': yes
+                      cited p.4 prints '75': yes
+      catalogue:      C44322 = INA169NA/3K, TI, SOT-23-5; LCSC stock 61868; USD 1.1380 at 1, USD 0.8704 at 10; min buy 1 (read 2026-10-02T23:20:33Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    INA139NA/3K (the same DBV land and sheet, 2.7 to 40 V): PV_P's 30 V is 75 percent of its range, the specified range widens to 125 C; INA169NA/250 is the same part on a 250 reel
+      obligation:     R-21
+      obligation:     R-33, R-101 TI's clarification (texas-instruments-ina169.txt)
+      obligation:     R-70 bench rows
+      rationale:      L4-E7R chose the INA169 because its rows cover the operating condition where the INA250's gain and offset rows are printed at other supplies (approach (B) refused).
+      provisional:    no
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   L6P-23  board E  U19
+      maker, MPN:     Texas Instruments, TPS3701DDCR
+      package, land:  SOT-23-THIN-6 DDC; SOT236 (the draft's land)
+      selected by:    L4-E7R control decision (C): the window comparator (R-21)
+      draft:          l4e7_backstop
+      grade:          industrial; operating -40 to 125 C (TI TPS3701 datasheet p.4: 'Junction temperature' printed) -> INSIDE against -20 to 62.1 C
+                      storage -65 to 150 C (p.4): covers the -33 C and +71 C storage margins
+      rating used:    VDD 1.8 to 36 V (p.4); VDD on TRK_LDO33 (C67 bypass): 3.3 V, 9 percent; INA watches TRK_VS through R67 110k over R68 9.53k
+      rating used:    INB rising threshold 397 to 403 mV over TJ -40 to 125 C and VDD 1.8 to 36 V (p.5): warranted (L4-E7 CONTROL-DECISION)
+      document:       TI TPS3701 datasheet; SBVS240C, November 2014, revised February 2019; https://www.ti.com/lit/ds/symlink/tps3701.pdf
+                      v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf sha256 27c94a6c3a243bf539e98942d26f0bd9ed979c5775c12cf86b7c1a8c3d7d9560 (held back; v2/docs/records/l6pwr/fetch_held_back.py)
+                      rule D-2 PRINTED: p.21 prints TPS3701DDCR: 'TPS3701DDCR Active Production SOT-23- 3000 | LARGE T&R Yes NIPDAU Level-2-260C-1 YEAR -40 to 125 ZABO'
+                      cited p.4 prints 'Supply pin voltage 1.8 36': yes
+                      cited p.5 prints '397': yes
+      catalogue:      C132788 = TPS3701DDCR, TI, SOT-23-Thin-6; LCSC stock 26813; USD 0.6932 at 1, USD 0.5536 at 10; min buy 1 (read 2026-10-02T23:20:33Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    TPS3700DDCR (the same DDC land, VDD to 18 V): INSIDE on a 3.3 V supply; INA's divider ratio and the input absolute maximum change
+      obligation:     R-21
+      obligation:     R-70
+      rationale:      L4-E7R chose the TPS3701 for its warranted threshold rows over the full supply and temperature range.
+      provisional:    no
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   L6P-24  board E  U20
+      maker, MPN:     Texas Instruments, TPS3808G33DBVR
+      package, land:  SOT-23-6 DBV; SOT236
+      selected by:    L4-E7R control decision (C): the off-time after a trip, default-off on TRK_LDO33 (R-21)
+      draft:          l4e7_backstop
+      grade:          industrial; operating -40 to 125 C (TI TPS3808 datasheet p.6: 'TJ = -40 C to 125 C' printed) -> INSIDE against -20 to 62.1 C
+                      storage -65 to 150 C (p.5): covers the -33 C and +71 C storage margins
+      rating used:    VDD 1.7 to 6.5 V (p.6) on TRK_LDO33 3.3 V; G33 threshold 3.07 V typical (p.3); td with CT = VDD 180 / 300 / 420 ms (p.7): the record's 'RESET low at least 180 ms after any trip'
+      document:       TI TPS3808 datasheet; SBVS050N, May 2004, revised August 2026; https://www.ti.com/lit/ds/symlink/tps3808.pdf
+                      v2/vendor/ti/ti-tps3808.pdf sha256 74d889c0f68af88032f1633c26381817cc03e10d9fd3b4c177a044ad3ed86eed
+                      rule D-2 PRINTED: p.22 prints TPS3808G33DBVR: 'TPS3808G33DBVR Active Production SOT-23 (DBV) | 6 3000 | LARGE T&R Yes NIPDAU | SN Level-1-260C-UNLIM -40 to 125 AVO'
+                      cited p.7 prints '180 300 420': yes
+                      cited p.3 prints '3.07V': yes
+      catalogue:      C43698 = TPS3808G33DBVR, TI, SOT-23-6; LCSC stock 36030, JLCPCB assembly stock 36030; USD 0.4435 at 1, USD 0.3466 at 10; min buy 1 (read 2026-10-02T23:20:33Z)
+      catalogue:      C189211 = TPS3808G30DBVR, TI, SOT-23-6; LCSC stock 2472; USD 0.8555 at 1, USD 0.6959 at 10; min buy 1 (read 2026-10-02T23:20:33Z)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    TPS3808G33DBVT (the same part on a small reel, JLCPCB C702174); TPS3808G30DBVR (board B's part, C189211, VIT 2.79 V): the off-time's supply threshold moves
+      obligation:     R-21
+      obligation:     R-70
+      rationale:      L4-E7R chose the TPS3808G33 for a fixed, printed minimum off-time (180 ms) holding SWEN low after a trip.
+      provisional:    no
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   L6P-25  board E  R97
+      maker, MPN:     not named, none (28.0k, the draft prints 1 percent; the Layer 6 brief names 0.1 percent)
+      package, land:  0603 or as mapped; the draft's default
+      selected by:    L4-E7 round 2 (B6): INP's bottom resistor 28.0k (39k before B6; 30.0k in round 1) (R-173)
+      draft:          l4e7_guard
+      grade:          NOT READ at the source (no part named or no maker's document read)
+      rating used:    INP high from 9.29 V (R96 100k over R97 28.0k at V(INP_H) 2.0 V); INP at most 17.9046 V against the record's 18.0 V line (10 percent under the 20 V absolute maximum) at the modelled peak (l4e7_stage_settings.out section 10): FINDING L6P-F04 on the tolerance
+      document:       none bound (see the identity line)
+      catalogue:      no LCSC code (the draft names a value only)
+      need:           1 a kit, 5 for 5 kits
+      alternative:    none (no part named)
+      obligation:     R-173 the guard draft
+      obligation:     R-176 row 3
+      rationale:      L4-E7's B6 set R97 so U21 turns on by 9.29 V and INP stays 10 percent under its 20 V to 81 V on PV_F.
+      provisional:    L4-E7's round 3 may change the guard set
+      identity:       UNRESOLVED, CHOICE_OWED: the draft names a value and tolerance (28.0k 1%) and no part number or code; the brief's 0.1 percent and the draft's 1 percent disagree (L6P-F04)
+                      next action: L4-E7 states the tolerance its 18 V line needs (L6P-F04's arithmetic) and the board E generator owner names the part or lets the value map choose it
+
+   L6P-26  board E  R19 (entry), R87 (guard)
+      maker, MPN:     Shenzhen Milliohm Electronics, HoLLR2512-3W-4.5mR-1% (the catalogue's model for C2985708; the drafts say '4.5mOhm 1% 2512 3W 50ppm')
+      package, land:  2512, 3 W; RS2512
+      selected by:    L4-E11 3c (R19, the breaker's sense: 30.6 mV at 6.8 A; E11-01); L4-E7's remedies (R87; R-173)
+      draft:          l4e11_entry (R19), l4e7_guard (R87)
+      grade:          NOT READ at the source (no part named or no maker's document read)
+      rating used:    4.5 mOhm +-1 percent: the breaker at 6.36 to 7.14 A with RSET 100 Ohm; at 7.14 A 0.23 W against 3 W (COMPUTED); the 50 ppm/K the drafts state is not read in any held sheet
+      document:       none bound (see the identity line)
+      catalogue:      C2985708 = HoLLR2512-3W-4.5mR-1%, Milliohm, 2512; LCSC stock 4225; USD 0.0865 at 5, no 10-piece row; min buy 5 (read 2026-10-02T23:20:34Z)
+      need:           2 a kit, 10 for 5 kits
+      alternative:    HoJLR2512 at 4.5 mOhm if Milliohm makes it (the held HoJLR sheet's range 0.5 to 500 mOhm covers it; no catalogue reading of such a code is filed): the held sheet would then apply
+      obligation:     E11-01 (R-123), R-173 the drafts
+      obligation:     E11-17 the trip thresholds on a slow ramp
+      rationale:      L4-E11 3c sized R19 for a 30.6 mV sense at the panel's and the entry's current; the part is the catalogue's 4.5 mOhm 3 W 2512.
+      provisional:    R87 belongs to the guard (L4-E7's round 3)
+      identity:       UNRESOLVED, DOCUMENT_OWED: the code C2985708 resolves to Milliohm's HoLLR2512 series (LCSC: HoLLR2512-3W-4.5mR-1%), not the HoJLR2512 series whose sheet the tree holds; no HoLLR sheet is held, so the 3 W, 1 percent and 50 ppm/K the drafts state are the catalogue's words
+                      next action: fetch Milliohm's HoLLR2512 sheet from LCSC's datasheet link for C2985708 and read its power, tolerance and TCR rows; or the drafts name a HoJLR2512 4.5 mOhm code
+
+   L6P-27  board P (pack build)  the 12 cells, 4S3P (D-06)
+      maker, MPN:     Samsung SDI, INR18650-35E
+      package, land:  18650 cylindrical cell, at most 18.55 mm diameter x 65.25 mm (p.3); not a placed part (the pack build; SOURCES.yaml pack-cells, placed_part false)
+      selected by:    the owner's ruling D-06 (the 145 Wh 4S3P pack); L4-E10 FEA-008 final: 'suitable on published evidence' for the envelope rows, 'unsuitable on published evidence' for LO-01d, e, f, g (the margins)
+      draft:          none (the ruled cell, D-06; pcb_pack_protection.yaml and pcb_energy_chain.yaml)
+      grade:          consumer or industrial cell (no grade word printed); operating -10 to 60 C (Samsung SDI INR18650-35E product specification (a distributor's copy) p.3: 'Discharge : -10 to 60' printed) -> OUTSIDE against -20 to 62.1 C
+                      charge 0 to 45 C (p.3) -> the envelope's cold end is reached by the heater mat (REQ-046)
+                      storage -20 to 45 C (p.3): does NOT cover the storage margins (-33 to +71 C): -20 to 45 C printed
+      rating used:    capacity at least 3,350 mAh (p.3); the budget's 144.72 Wh nominal and 107.9 Wh usable at +20 C (L4-E10, MODELLED)
+      rating used:    max. discharge 8,000 mA continuous, 13,000 mA not continuous (p.3): 4S3P at 10 A held is 3.33 A a cell (42 percent), 18 A for 60 s is 6 A a cell (75 percent)
+      rating used:    standard charge 1,700 mA, max. 2,000 mA (p.3): the charger's 3.0 A is 1.0 A a cell (50 percent of the maximum); the discharge cut-off 2.65 V (p.3) against the pack's CUV 2.50 V (L4-E10: the 35E's pack guideline)
+      rating used:    operating: charge 0 to 45 C, discharge -10 to 60 C at the cell surface (p.3): the envelope's -20 C floor is reached by the heater mat (REQ-046); storage 3 months -20 to 45 C, 1 month -20 to 60 C, 1 year -20 to 25 C (p.3): the +71 C and -33 C margins are outside every printed row (L4-E10, U-01)
+      document:       Samsung SDI INR18650-35E product specification (a distributor's copy); Ver. 1.1 (L4-E10 reads its date as 2015-07-09); TBD (SOURCES.yaml pack-cells: the maker's own copy is not held)
+                      v2/vendor/battery/samsung-35e-orbtronic.pdf sha256 5ec577b952b9dc5106593a4e4c3a6e8cea64f6f72b8faaf1bb512155c29dc516
+                      rule D-2 PRINTED: p.3 prints INR18650-35E: 'Spec. No. INR18650-35E Version No. Ver. 1.1'
+                      cited p.3 prints '8,000mA': yes
+                      cited p.3 prints '1,700mA': yes
+      catalogue:      no LCSC code (owner-side purchase; price indicators in L4-E10: USD 8.25 a cell (l3batt) for the 35E, NZ$ 238.72 a cell (SIMPOWER listing archived 2025-01-16) for the Saft)
+      need:           12 a kit, 60 for 5 kits
+      alternative:    Samsung INR18650-30Q (30Q6, the same 18650 format, compared by L4-E10 as S2 and not adopted); a cell change is the owner's (D-06), never the session's
+      obligation:     R-47 FEA-008's downstream evidence
+      obligation:     R-103 U-01's evidence (the HL18650V specification, F2's rating)
+      obligation:     R-109 the E3 and E5 runs with a thermocouple on every cell
+      obligation:     R-110 TEST-PLAN's cell-derived numbers
+      obligation:     U-01 itself is the owner's
+      rationale:      the owner ruled the 35E 4S3P pack (D-06); L4-E10 found it suitable on published evidence inside the envelope and not for the qualification margins, which U-01 carries.
+      provisional:    no
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   L6P-28  board P (pack build)  the PROPOSAL only: 4 cells, 4S1P
+      maker, MPN:     Saft, MP 176065 xtd
+      package, land:  prismatic cell, 18.65 x 60.5 x 68.7 mm (sleeved, including terminals), 135 g typical (p.1); not a placed part; a prismatic holder and the pocket's fit are OPEN (R-167)
+      selected by:    L4-E10 section 15 (restated after Astra's B5) and 16: 'a supported route exists on published manufacturer evidence for the temperature windows'; NOT adopted
+      draft:          none: a labelled PROPOSAL (L4-E10 section 15, U-01's supported route); adoption is the owner's
+      grade:          industrial cell (the sheet: 'unregulated temperature environments from -40 C to +85 C'); operating -40 to 85 C (Saft MP 176065 xtd rechargeable Li-ion cell datasheet p.1: 'Discharge -40 C' printed) -> INSIDE against -20 to 62.1 C
+                      charge -30 to 85 C (p.1) -> the envelope's cold end is reached by the heater mat (REQ-046)
+                      storage -40 to 85 C (p.1): covers the -33 C and +71 C storage margins
+      rating used:    typical capacity 5.6 Ah (C/5, +25 C, 2.5 V cut-off), 3.65 V, 20.4 Wh (p.1): 4S1P 81.6 Wh nominal against the 35E pack's 144.72 Wh; 53.5 to 58.8 Wh usable MODELLED (L4-E10 16)
+      rating used:    recommended maximum discharge 11 A continuous, 22 A pulses, 'Can vary depending on temperatures. Consult Saft' (footnote 2, p.1): the pack's 10 A held and 18 A for 60 s on one cell AWAITING Saft or the sample qualification (R-168)
+      rating used:    maximum continuous charge 5.6 A, 'for optimised operation below 0 C consult Saft' (footnote 4); charge -30 to +85 C, discharge -40 to +85 C, storage allowable -40 to +85 C, recommended +15 to +30 C (p.1): every window covers the envelope and the margins
+      document:       Saft MP 176065 xtd rechargeable Li-ion cell datasheet; Doc. n 31109-2-0625, June 2025; https://saft4u.saft.com/en/download_file/58d1fabc-9a46-4c07-8df1-0a00d3a1e7a9/English
+                      v2/vendor/battery/held/saft-mp176065xtd-31109-2-0625.pdf sha256 8ca0a3e09997a4a30567a4313cf83c2b6cf165543baf424e0ff788d5a8d27f8e (held back; v2/docs/records/l6pwr/fetch_held_back.py)
+                      rule D-2 PRINTED: p.1 prints MP 176065 xtd: 'MP 176065 xtd'
+                      cited p.1 prints '5.6 Ah': yes
+                      cited p.1 prints '11 A': yes
+                      cited p.2 prints '31109-2-0625': yes
+      catalogue:      no LCSC code (owner-side purchase; price indicators in L4-E10: USD 8.25 a cell (l3batt) for the 35E, NZ$ 238.72 a cell (SIMPOWER listing archived 2025-01-16) for the Saft)
+      need:           4 a kit, 20 for 5 kits
+      alternative:    none: it is itself the alternative to the ruled cell, recorded as a proposal
+      obligation:     R-167 the pocket mock-up (at most 1.40 mm of wrap along the axis)
+      obligation:     R-168 current at temperature and the storage dwell (Saft's statement, clarification/saft-mp176065xtd.txt, the owner sends)
+      obligation:     R-169 the lot's capacity at receipt
+      obligation:     U-01: the owner's adoption
+      rationale:      L4-E10 recorded the Saft as the one cell whose published windows cover every LO row including the margins, at less than half the usable energy and a price indicator of NZ$ 238.72 a cell.
+      provisional:    no
+      identity:       RESOLVED (rule D-2 PRINTED on the page above)
+
+   identity count: 28 parts; RESOLVED 14; UNRESOLVED 14 (CHOICE_OWED 2, DOCUMENT_OWED 2, PART_NUMBER_INFERRED 10)
+
+3. THE CATALOGUE TABLE (LCSC public product detail, v2/docs/records/l6pwr/inputs/lcsc-2026-10-02.json; JLCPCB public parts search for the uncoded rows; a stock figure is true at its time only)
+   code        model                      brand                        package                LCSC   JLCPCB  price (USD at qty)
+   C1613       CL10B332KB8NNNC            Samsung Electro-Mechanics    0603                  32760        -  USD 0.0084 at 20, no 10-piece row
+   C43698      TPS3808G33DBVR             TI                           SOT-23-6              36030    36030  USD 0.4435 at 1, USD 0.3466 at 10
+   C44322      INA169NA/3K                TI                           SOT-23-5              61868        -  USD 1.1380 at 1, USD 0.8704 at 10
+   C55151      CL32B225KCJSNNE            Samsung Electro-Mechanics    1210                      0     4654  USD 0.1599 at 1, USD 0.1352 at 10
+   C72264      B540C-13-F                 DIODES                       SMC(DO-214AB)         52515        -  USD 0.2332 at 5, no 10-piece row
+   C80273      SMCJ40CA                   Littelfuse                   DO-214AB               4925        -  USD 0.3544 at 5, no 10-piece row
+   C89632      CL31B106KBHNNNE            Samsung Electro-Mechanics    1206                      0   109264  USD 0.2829 at 5, no 10-piece row
+   C132788     TPS3701DDCR                TI                           SOT-23-Thin-6         26813        -  USD 0.6932 at 1, USD 0.5536 at 10
+   C135160     SMCJ30A-13-F               DIODES                       SMC                    1417     1417  USD 0.5217 at 1, USD 0.4151 at 10
+   C138687     CL32B106KBJNNNE            Samsung Electro-Mechanics    1210                  16710    30940  USD 0.3288 at 1, USD 0.2609 at 10
+   C189211     TPS3808G30DBVR             TI                           SOT-23-6               2472        -  USD 0.8555 at 1, USD 0.6959 at 10
+   C224047     SMCJ28A                    Littelfuse                   DO-214AB               5845        -  USD 0.3024 at 5, no 10-piece row
+   C224048     SMCJ30A                    Littelfuse                   DO-214AB              15670    18349  USD 0.2982 at 5, no 10-piece row
+   C242139     EEHZK1V181P                PANASONIC                    SMD,D8xL10.2mm         2843        -  USD 1.1407 at 1, USD 0.9588 at 10
+   C278516     EEHZK1V331P                PANASONIC                    SMD,D10xL10.2mm        6246     6246  USD 0.8074 at 1, USD 0.6449 at 10
+   C473333     CSD19532Q5B                TI                           SON-8(5x6)             2522        -  USD 2.1572 at 1, USD 1.8436 at 10
+   C500739     LR2512D-3W-5mR-1%          Milliohm                     2512                  14730        -  USD 0.1208 at 5, no 10-piece row
+   C844695     WSL2512R0150FEA            VISHAY                       2512                  13410        -  USD 0.2753 at 5, no 10-piece row
+   C1849461    TPS16630PWPR               TI                           HTSSOP-20              1141     1141  USD 2.8002 at 1, USD 2.3521 at 10
+   C2076144    WSL2512R0700FEA            VISHAY                       2512                   1970        -  USD 0.8059 at 1, USD 0.6645 at 10
+   C2687963    CSD19536KTT                TI                           TO-263-3                611        -  USD 4.4897 at 1, USD 3.9324 at 10
+   C2846047    BUK6Y10-30P                Nexperia                     SOT-669                   0        0  NOT READ (no ladder in the answer)
+   C2871872    BQ25731RSNR                TI                           QFN-32(4x4)            1125        -  USD 3.0564 at 1, USD 2.6918 at 10
+   C2903482    HoJLR2512-3W-5mR-1%        Milliohm                     2512                 106575        -  USD 0.1023 at 5, no 10-piece row
+   C2903491    HoJLR2512-3W-45mR-1%       Milliohm                     2512                  15860        -  USD 0.0621 at 10, USD 0.0621 at 10
+   C2904239    HoJLR2512-3W-7mR-1%        Milliohm                     2512                   1830        -  USD 0.1022 at 5, no 10-piece row
+   C2904240    HoJLR2512-3W-8mR-1%        Milliohm                     2512                   9600        -  USD 0.0832 at 10, USD 0.0832 at 10
+   C2904242    HoJLR2512-3W-12mR-1%       Milliohm                     2512                   3405        -  USD 0.0949 at 5, no 10-piece row
+   C2985708    HoLLR2512-3W-4.5mR-1%      Milliohm                     2512                   4225        -  USD 0.0865 at 5, no 10-piece row
+   C3278350    BUK6Y10-30PX               Nexperia                     LFPAK-56                 67       67  USD 2.0603 at 1, USD 1.7386 at 10
+   C5219071    BQ25730RSNR                TI                           QFN-32(4x4)               0        -  USD 2.8553 at 1, USD 2.7966 at 10
+   C17556513   TPS48110AQDGXRQ1           TI                           VSSOP-19                326        -  USD 4.4674 at 1, USD 4.0004 at 10
+   Samsung's pages (v2/docs/records/l6pwr/inputs/samsung-spec-pages-2026-10-02.json):
+   CL32B225KCJSNNE    2.2uF +-10% 100.0Vdc X7R 1210(unit:inch), 3225(unit:mm); prints a temperature range: False; terms: Any data in this sheet are subject to change, modify or discontinue without notice. The da
+   CL32B106KBJNNNE    10.0uF +-10% 50.0Vdc X7R 1210(unit:inch), 3225(unit:mm); prints a temperature range: False; terms: Any data in this sheet are subject to change, modify or discontinue without notice. The da
+   CL31B106KBHNNNE    10.0uF +-10% 50.0Vdc X7R 1206(unit:inch), 3216(unit:mm); prints a temperature range: False; terms: Any data in this sheet are subject to change, modify or discontinue without notice. The da
+
+4. FINDINGS (each computed or read here; a FINDING is recorded with the Layer 4 row it affects, never applied as a change)
+   L6P-F01 STANDS
+      DESIGNATOR COLLISION, board A: L4-E8's bank draft reserves R221, R222, R223, R224, R225, R226 for the ballasts (RB_REFS, apply_gen_sch_a_bank.py, 'R221 to R226 must be unused') and L4-E11's charger draft names R221 for U42's ILIM resistor among the designators it adds (apply_gen_sch_a_charger.py: 'if another draft takes them first, renumber'); the common designator(s), read by parsing both drafts: R221. Whichever applies second refuses or renumbers, so the two drafts cannot both be applied as written. AFFECTS: register R-07 (the bank, order 3f) and R-157 / R-181 (E11-27, the charger and eFuse). Remedy: L4-E11's R221 renumbered (R-181's text and apply_gen_sch_a_charger.py), a Layer 4 edit this record does not make.
+   L6P-F02 STANDS
+      IDENTITY, board A Q39 and Q40: the fitted code C3278350 resolves to BUK6Y10-30PX (LCSC and JLCPCB, LFPAK-56, stock 67); Nexperia's sheet prints BUK6Y10-30P (pages [1]) and never BUK6Y10-30PX (pages []); its ordering table (p.2) names the type without a suffix. The X is INFERRED to be a packing code. AFFECTS: E11-27 (R-157) and E11-32 (R-162): the identity stays PART_NUMBER_INFERRED until Nexperia's packing-code legend is filed or Q-NXP-1 carries the question.
+   L6P-F03 STANDS
+      IDENTITY (rule D-2): six selections rest on sheets that print a numbering scheme and not the part number: L6P-05 B540C-13-F; L6P-06 HoJLR2512-3W-8mR-1%; L6P-07 HoJLR2512-3W-12mR-1%; L6P-08 HoJLR2512-3W-5mR-1%; L6P-09 HoJLR2512-3W-45mR-1%; L6P-21 WSL2512R0700FEA. Each is PART_NUMBER_INFERRED in the identity block; the next action is a DECODED scheme in part_identities.SCHEMES for Milliohm's HoJLR, Vishay's WSL and Diodes' B5xxC-13-F patterns (a tool change, Layer 6 tools), which would bind them DECODED as the Yageo and Uniroyal resistors are. AFFECTS: R-04, R-01, R-06, R-07, R-21, R-157 (no circuit change).
+   L6P-F04 STANDS
+      TOLERANCE, board E R97: the guard draft prints 'R97 28.0k 1%' and the Layer 6 brief names 28.0k 0.1 percent. L4-E7's stage settings read INP at 17.9046 V against its own 18.0000 V line (10 percent under the TPS4811-Q1's 20 V absolute maximum on INP, SLUSEE5E p.7) at the modelled peak. COMPUTED: with R96 100k and R97 28.0k both at 1 percent (R96 low, R97 high) the divider's ratio rises by 1.57 percent and INP reads 18.186 V, over the 18 V line by 0.186 V and under the 20 V absolute maximum by 1.814 V; at 0.1 percent it reads 17.933 V and the line holds. AFFECTS: R-173 (the guard draft's R96 and R97 tolerance) and R-176 row 3; L4-E7 states which tolerance its line assumes and the draft carries it (a Layer 4 edit this record does not make).
+   L6P-F05 STANDS
+      AVAILABILITY (readings of 2 October 2026, true at their time only): L6P-01 BQ25730RSNR (C5219071): LCSC 0 against a need of 5 for 5 kits; L6P-18 CL32B225KCJSNNE (C55151): LCSC 0 against a need of 20 for 5 kits, JLCPCB's assembly stock 4654; L6P-20 CL31B106KBHNNNE (C89632): LCSC 0 against a need of 10 for 5 kits, JLCPCB's assembly stock 109264. AFFECTS: E11-32 (R-162) for the charger; the Samsung rows R-173; PROCUREMENT.md section 8 carries the table.
+   L6P-F06 STANDS
+      CODES THE DRAFTS OWE: TPS16630PWPR: the draft carries no LCSC code, C1849461 reads it (E11-27 / R-181); SMCJ30A (Littelfuse): the draft carries no LCSC code, C224048 reads it (R-173); CL32B225KCJSNNE: the draft carries no LCSC code, C55151 reads it (R-173); CL32B106KBJNNNE: the draft carries no LCSC code, C138687 reads it (R-173, R-21). Each code is a catalogue reading made here (inputs/), not a selection; the generator edit is Layer 8's with the draft.
+   L6P-F07 STANDS
+      GRADE AT_LIMIT, board A U3: SLUSE65A's recommended operating junction temperature is -20 to 125 C (p.9), its electrical table is characterised over TJ -40 to +125 C (p.9) and Tstg is -55 to 150 C (p.8); the envelope's in-use floor is -20 C, so the recommended row is met with no margin at the cold end (the drawn BQ25731 prints the same row). No requirement is unmet; recorded for TEST-PLAN E4-O (the cold start, E11-23 / R-137). AFFECTS: none (information for the bench rows).
+   L6P-F08 STANDS
+      GRADE NOT READ, board E's Samsung ceramics (CL32B225KCJSNNE, CL32B106KBJNNNE, CL31B106KBHNNNE): the maker's specification pages print capacitance, tolerance, rated Vdc, TCC and dimensions and no temperature range; X7R's -55 to +125 C is the EIA class, not a reading. AFFECTS: R-173 (the guard's capacitor set; L4-E7's round 3 may change it); next action: Samsung's MLCC catalogue filed.
+   L6P-F09 STANDS
+      DOCUMENT OWED, board E R19 and R87: the code C2985708 resolves to HoLLR2512-3W-4.5mR-1%, Milliohm's HoLLR2512 series; the tree holds the HoJLR2512 series sheet only (no HoLLR sheet held), so the '3W 50ppm' the drafts state is the catalogue's description. AFFECTS: E11-01 (R-123) and R-173; next action: the HoLLR2512 sheet fetched from LCSC's link for C2985708 and read.
+   L6P-F10 STANDS
+      RATING BASIS, board E U21 and Q12: L4-E7's round 2 bounds PV_F at most 80.6 V at the modelled step with the guard on (the phrase is in L4E7-CONTROL-DECISION.md) and judges every rating 'with its margin' against the parts' absolute maxima less 10 percent (U21's VS 100 V, SLUSEE5E p.7); the TPS4811-Q1's recommended operating V(VS) is 3.5 to 80 V (p.8), which the 80.6 V excursion exceeds for the event's 11.4 us. Whether an 11 us excursion is judged on the recommended row or the absolute maximum is L4-E7's to state. AFFECTS: R-173, R-176 row 3; no change is made here.
+   L6P-F11 STANDS
+      GRADE OUTSIDE at the cell's own rows, the pack's INR18650-35E: discharge -10 to 60 C and charge 0 to 45 C at the cell surface (Ver. 1.1 p.3) against the envelope's -20 C floor; pcb_envelope.yaml carries the carve-out (below -10 C the pack is warmed by its heater mat before charge; discharge continues to the cells' own -10 C surface limit) and L4-E10 judges the margin rows (LO-01d to LO-01g) unsuitable on published evidence, which U-01 carries. Information only: no row moves here. AFFECTS: none new (R-47, R-103, U-01 as recorded).
+
+5. THE LAYER 6 CRITERIA FOR THESE PARTS (LAYER-STATUS.md section 'Layer 6. Components', items 6.1, 6.2, 6.3, 6.6, 6.8)
+   6.1 exact manufacturer, MPN, package and grade per fitted part: for the 28 Layer 4 selections here, 14 RESOLVED on a maker's page that prints the part
+       number (rule D-2), 14 UNRESOLVED with their reason (PART_NUMBER_INFERRED 10 on numbering-scheme sheets and Samsung's suffix, CHOICE_OWED 2 value-only rows,
+       DOCUMENT_OWED 2); grades read at the source for 21 of them, NOT READ for 7. MOVED from OPEN toward PARTLY for the power parts: the block in pcb_part_identities.yaml holds them.
+   6.2 supporting documents with revision, source and currency: 17 makers' documents named with title, revision, URL and sha256; 10 held back under their terms with one fetch
+       script (fetch_held_back.py, the pins those of L4-E7, L4-E10 and L4-E11, every one fetched and matching on 3 October 2026); Samsung's three pages excerpted (date-stamped, not filed).
+       MOVED: PARTLY, the power parts covered; the ZK sheet's URL and the 35E's maker copy stay owed.
+   6.3 selection rationale recorded: one sentence per part pointing at its Layer 4 decision (28 of 28). MOVED to PARTLY for these parts (the passive majority of the boards is untouched).
+   6.6 procurement constraints and alternatives: dated LCSC and JLCPCB readings for 32 codes, an alternative or NOT READ per part, the five-kit need against stock (finding L6P-F05);
+       PROCUREMENT.md section 8 carries the table. MOVED to PARTLY for these parts.
+   6.8 a current, versioned BOM with identity per board: NOT MOVED. These parts are on no committed BOM; their identities are staged for the Layer 8 regeneration.
