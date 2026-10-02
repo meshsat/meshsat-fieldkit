@@ -1,6 +1,6 @@
 L4-E13 (MESHSAT-1357): U-03, A PANEL WHOSE OPEN-CIRCUIT VOLTAGE IS BOUNDED AT THE COLDEST OPERATING TEMPERATURE INSIDE
-REQ-016'S WINDOW, BY ITS MAKER'S DOCUMENT OR BY A CONTROLLED UNIT (PANEL-ACC). Prototype design, desk arithmetic: nothing
-bought, built, powered or measured; no physical unit is accepted.
+REQ-016'S WINDOW, BY ITS MAKER'S DOCUMENT OR BY A CONTROLLED UNIT (PANEL-ACC), WITH THE DISTURBANCE CHECK JUDGED APART. Prototype
+design, desk arithmetic: nothing bought, built, powered or measured; no physical unit is accepted.
 
 0. INPUTS AND REPRODUCTIONS
    reqs       v2/ecad/tools/pcb_requirements.yaml  sha256 b624ac495650a359
@@ -14,6 +14,8 @@ bought, built, powered or measured; no physical unit is accepted.
    sbx_ds     v2/vendor/solar/held/solbian-sx-series-datasheet-eng-2023-02.pdf  sha256 da89757253556a9d
    bgv_page   v2/vendor/solar/bougerv-sp001-100w-n-type-foldable-product-page-2026-10-02.md  sha256 fc9de44fa8149c70
    screen     v2/docs/records/l4e13/inputs/screen-2026-10-02.json  sha256 bdf17c68de48f8f8
+   smcj       v2/vendor/power/littelfuse-smcj-series-tvs.pdf  sha256 6e610db955ed8763
+   vh         v2/vendor/connectors/jst-vh-catalogue.pdf  sha256 d51e669c597988b2
    enh        v2/vendor/solar/irradiance-enhancement-sources-2026-10-02.md  sha256 e33b0a05c27f6763
    l4e_replay.main() in-process, its locals captured, prints l4e_replay.out byte for byte: yes
    this record's trace equals the replay's trace hour for hour on the SunPower panel at its three holds: yes
@@ -21,26 +23,27 @@ bought, built, powered or measured; no physical unit is accepted.
    the SunPower day (Wh, no limit) against L4-E7's section 5 (the selected hold): 16.970 V 369.7 = 369.7; 17.593 V 350.0 = 350.0; 18.221 V 307.9 = 307.9; 16.420 V 375.0 = 375.0; 18.813 V 240.0 = 240.0
    A1 on the SunPower trace at 17.593 V and 3.4713 A equals L4-E7's NEW nominal row: yes (350.0 Wh a day; h 6/2; 1367.4 / 1368.1 at 48 h, 2103.9 / 2104.6 at 72 h; +1361.5 / +2094.1 Wh)
    A2 on the SunPower trace at 17.593 V and 3.4713 A equals L4-E7's NEW nominal row: yes (350.0 Wh a day; h 18/11; 986.9 / 1196.1 at 48 h, 1741.4 / 1950.7 at 72 h; +979.2 / +1719.7 Wh)
+   A1 on the rated unit at the conditioned upper corner 18.813 V equals L4-E7's NEW conditioned upper end row: yes (240.0 Wh a day; h 3/2; 1559.2 / 1595.8 at 48 h, 2424.8 / 2381.5 at 72 h; +1546.7 / +2371.8 Wh)
+   A2 on the rated unit at the conditioned upper corner 18.813 V equals L4-E7's NEW conditioned upper end row: yes (240.0 Wh a day; h 16/11; 1352.7 / 1255.3 at 48 h, 1997.8 / 2200.2 at 72 h; +1166.1 / +2000.1 Wh)
 
-1. THE REQUIREMENT AND THE ENVELOPE
+1. THE REQUIREMENT AND ITS THREE CHECKS
    REQ-016 (v2/ecad/tools/pcb_requirements.yaml), verbatim: "The solar input charges the pack through board E's LT8705A stage from a panel inside its declared window: an open-circuit voltage of at most 25 V at the panel's coldest operating temperature, the panel held at 17.6 V by the stage's input regulation, and at most 100 W into the stage."
    read: at most 25 V open circuit at the panel's coldest operating temperature; held at 17.6 V; at most 100 W into the stage;
-   its acceptance: F2 and J_SOLAR rated 10 A. A series diode or a clamp in place of the panel's own open circuit: NOT admitted (the statement constrains the panel's own open circuit; D4 is judged apart under TRN-001)
-   TEMPERATURE: -20 C, REQ-024's in-use minimum (-20 to +40 C ambient; pcb_envelope.yaml in_use agrees); the records settle
+   its acceptance: F2 and J_SOLAR rated 10 A; and "Protection is judged apart from the window, under rule TRN-001". A series diode or a clamp in place of the panel's own open
+   circuit: NOT admitted (the statement constrains the panel's own open circuit)
+   THE WINDOW (normal operation, REQ-016's rated quantity): the makers' rated Voc row is defined at 1000 W/m2 (SunPower 523809
+   p.1: 'Typical Electrical Data at STC: 25°C, 1000 W/m² and AM 1.5'; Solbian's STC note and BougeRV's rows alike), moved to the coldest operating
+   temperature, -20 C, REQ-024's in-use minimum (-20 to +40 C ambient; pcb_envelope.yaml in_use agrees). The records settle
    REQ-016's reading there (L4-ENERGY-ARCHITECTURE.md, 'What stays INCONCLUSIVE'); the panels' -40 C ratings are information.
-   SESSION: with no irradiance the cells sit at the ambient (cold-soaked); Voc answers a burst of light at once, before the cells
-   warm, so the envelope puts its largest irradiance on cells still at -20 C.
-   IRRADIANCE (SESSION, the check's B1): G_MAX = (1 + E) x E0, with E0 the extraterrestrial irradiance at perihelion,
-   1361 W/m2 / (1 - 0.0167)^2 = 1407.6 W/m2 (physical constants, ASSUMPTION class), which no clear sky exceeds on a plane facing the sun,
-   and E the read source's cloud enhancement (v2/vendor/solar/irradiance-enhancement-sources-2026-10-02.md, Mol and van
-   Heerwaarden 2025, ACP 25, p.1, CC BY 4.0): "In cloud fields with enough optically thin area, such as altocumulus, forward escape alone can drive areas of irradiance enhancement of over 50 % of clear-sky irradiance." E = 0.50.
-   G_MAX = 2111.4 W/m2. Why so high: the enhancement is taken on the extraterrestrial irradiance, not on the clear-sky one (about
-   1000 W/m2 at noon in the Netherlands: "A value of 10 W m-2 is based on 1 % of the typical order of magnitude for clear-sky irradiance around noon for Cabauw.", Mol, Knap and van Heerwaarden 2023, ESSD 15, p.8),
-   so it covers the kit's in-use altitude to 3000 m (D-02c), a snow-covered ground's reflection (the same source, p.5) and
-   more enhancement than the source names, with no season or weather correlation. Its cost is small: Voc grows with ln G, by
-   A(T) x ln(G_MAX / 1000) = A(T) x 0.7474, with A the panel's irradiance slope (the fit's, INFERRED, until measured).
-   USEFUL POWER: the stage draws its own drive and quiescent power, 42.3 mA, 1.27 W at L4-E5's raised EXTVCC (L4-E7, INFERRED there),
-   from its output; at its declared 0.93 (the replay) the input must exceed 1.27 / 0.93 = 1.3656 W before any charge reaches the pack.
+   No irradiance above 1000 W/m2 enters the window: the earlier G_MAX of 2111.4 W/m2 is WITHDRAWN as a decision input.
+   THE DISTURBANCE CHECK (component limits during an irradiance burst on cold-soaked cells, seconds to minutes): judged apart
+   from the window under TRN-001, against the lowest rating on PV_P (section 11); it needs no irradiance maximum.
+   USEFUL POWER (A-2): the stage draws its own drive and quiescent power, 42.3 mA, 1.27 W at L4-E5's raised EXTVCC (L4-E7,
+   INFERRED there), from its output; at its declared 0.93 (the replay) the input must exceed 1.27 / 0.93 = 1.365591 W.
+   CONTEXT, not a bound: E0 = 1361 W/m2 / (1 - 0.0167)^2 = 1407.6 W/m2, the extraterrestrial irradiance at perihelion (physical
+   constants); the read source (Mol and van Heerwaarden 2025, ACP 25, p.1, CC BY 4.0): "In cloud fields with enough optically thin area, such as altocumulus, forward escape alone can drive areas of irradiance enhancement of over 50 % of clear-sky irradiance."
+   and the clear-sky noon irradiance at Cabauw near 1000 W/m2 (Mol, Knap and van Heerwaarden 2023, p.8). The kit's in-use
+   altitude reaches 3000 m (D-02c).
    owner rulings in the registry naming a panel class (a class word beside 'panel' or 'array' in one sentence): none; a1solar SELECTION.md 1 (a session's criterion) prefers folding, semi-rigid or blanket for a carried kit
 
 2. THE CANDIDATES, AS THEIR MAKERS PRINT THEM
@@ -52,7 +55,7 @@ bought, built, powered or measured; no physical unit is accepted.
      the open-circuit band: MAKER (guide 524958 Rev F, Table 1's note: 'Rated electrical characteristics are within 10% of measured values at Standard Test Conditions of: 1000W/m2, 25°C cell temperature and solar spectral irradiation of AM 1.5 spectrum.')
      test conditions: 25°C, 1000 W/m² and AM 1.5; NOCT: none printed; operating range -40.0 to 85.0 C
      the sheet's heading over every row: 'Typical Electrical Data' (yes)
-     the model's fit (a1solar's single-diode model, imported and pinned): exact fit: dP/dV = 0 at the maker's (Vmp, Imp), Rs >= 0; its irradiance slope A at -20 C 0.9062 V
+     the model's fit (a1solar's single-diode model, imported and pinned): exact fit: dP/dV = 0 at the maker's (Vmp, Imp), Rs >= 0; its ideality n 1.2981 (INFERRED, from 32 cells)
    BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA) (BougeRV) [MAKER-PAGE]
      document: v2/vendor/solar/bougerv-sp001-100w-n-type-foldable-product-page-2026-10-02.md (the maker's product page, its 'Product Specifications' table transcribed; the page's HTML sha256 ffc8cf99..., fetched 2026-10-02T04:28Z)
      Pmax 100 W (power band -5 / +10 %), Vmp 16.70 V, Imp 6.17 A, Voc 19.60 V, Isc 6.48 A
@@ -61,7 +64,7 @@ bought, built, powered or measured; no physical unit is accepted.
      the open-circuit band: MAKER-PAGE (the page's Voc row: '19.6V(-5%,+10%)')
      test conditions: NOT STATED on the page (ASSUMPTION: the rows are STC values); NOCT: none printed; operating range -20.0 to 60.0 C
      the page's Vmp x Imp is 103.0 W against its 100 W Pmax; its 'Series Fuse Rating' row prints no number ('A')
-     the model's fit (a1solar's single-diode model, imported and pinned): exact fit: dP/dV = 0 at the maker's (Vmp, Imp), Rs >= 0; its irradiance slope A at -20 C 0.6948 V
+     the model's fit (a1solar's single-diode model, imported and pinned): exact fit: dP/dV = 0 at the maker's (Vmp, Imp), Rs >= 0; its ideality n not derived (no cell count printed)
    Solbian SX 156 (Solbian Energie Alternative Srl) [MAKER]
      document: v2/vendor/solar/held/solbian-sx-series-datasheet-eng-2023-02.pdf p.2 (the SX table, the SX 156 column, and its STC note) and p.1 (the features list); created 7 February 2023
      Pmax 156 W (power band +0 / +5 %), Vmp 17.60 V, Imp 8.90 A, Voc 21.30 V, Isc 9.40 A
@@ -70,30 +73,31 @@ bought, built, powered or measured; no physical unit is accepted.
      the open-circuit band: none printed (MAKER: the sheet's only tolerance is 'Positive power tolerance (0%, +5%)', on Pmax)
      test conditions: Values at STC = Standard Test Conditions: (a) light Spectrum for an Air Mass of 1.5; (b) irradiance of 1000 W/m2 with perpendicular incidence and (c) cell temperature of 25 °C.; NOCT: 45 +- 2 C (MAKER); operating range -40.0 to 85.0 C
      the STC note adds: 'Measurements carried out according to the Standard IEC 61215 requirements' (yes); a Voc tolerance printed anywhere on the sheet: no
-     the model's fit (a1solar's single-diode model, imported and pinned): exact fit: dP/dV = 0 at the maker's (Vmp, Imp), Rs >= 0; its irradiance slope A at -20 C 0.7939 V
+     the model's fit (a1solar's single-diode model, imported and pinned): exact fit: dP/dV = 0 at the maker's (Vmp, Imp), Rs >= 0; its ideality n 1.1373 (INFERRED, from 32 cells)
 
-3. ROUTE 1, THE MAKER'S BAND: Voc OVER THE ENVELOPE (-20 C, 2111.4 W/m2) AT THE TOP OF THE PRINTED BAND, AGAINST 25 V
-   At STC irradiance the readings below are a SCENARIO and an EXTRAPOLATION of the printed rows: neither is a warranted maximum,
-   since no maker prints a limit on its coefficient. The envelope adds the irradiance term (the fit's slope, INFERRED).
-   SunPower SPR-E-Flex-100: rated Voc at -20 C, STC irradiance 24.050 V (the typical row); over the envelope 24.728 V (25.228 V at -40 C, information)
+3. ROUTE 1, THE MAKER'S BAND IN THE WINDOW: Voc AT -20 C AND 1000 W/m2 AT THE TOP OF THE PRINTED BAND, AGAINST 25 V
+   The readings are a SCENARIO and an EXTRAPOLATION of the printed rows: neither is a warranted maximum, since no maker prints a
+   limit on its coefficient; the bound is the larger.
+   SunPower SPR-E-Flex-100: rated Voc at -20 C 24.050 V (the typical row; 25.228 V at -40 C, information)
      SCENARIO, the band's top 1.1111 x rated with the coefficient relative to the unit's Voc              26.723 V
      EXTRAPOLATION, the band's top 1.1111 x rated with the printed absolute coefficient                   26.428 V
      the records' reading, rated x 1.10 with the absolute coefficient (L4-ENERGY O-1)                     26.190 V
-     the largest at STC irradiance 26.723 V, plus the band top's irradiance term 0.753 V: over the envelope 27.475 V:
-     NOT BOUNDED: the maker's own band reaches past 25 V (margin -2.475 V)
-     what a warranted band on Voc at STC would have to stay inside: 20.1188 to 21.6356 V
-     (top: the envelope at 25 V, +1.10 % on the rated Voc; bottom: the conditioned upper corner 18.813 V reached at noon, -5.99 %; the printed absolute coefficient gives the higher floor)
-   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA): rated Voc at -20 C, STC irradiance 22.246 V (the typical row); over the envelope 22.765 V (23.422 V at -40 C, information)
+     the bound 26.723 V: NOT BOUNDED: the maker's own band reaches past 25 V (margin -1.723 V)
+     what a warranted band on Voc at STC would have to stay inside: 20.1188 to 22.2449 V
+     (top: 25 V at -20 C by the stricter coefficient reading, +3.95 % on the rated Voc; bottom: the conditioned upper corner 18.813 V
+     reached at noon, -5.99 %; the printed absolute coefficient gives the higher floor)
+   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA): rated Voc at -20 C 22.246 V (the typical row; 23.422 V at -40 C, information)
      SCENARIO, the band's top 1.1000 x rated with the coefficient relative to the unit's Voc              24.471 V
      EXTRAPOLATION, the band's top 1.1000 x rated, the coefficient's change taken on the rated Voc        24.206 V
-     the largest at STC irradiance 24.471 V, plus the band top's irradiance term 0.571 V: over the envelope 25.042 V:
-     NOT BOUNDED: the maker's own band reaches past 25 V (margin -0.042 V)
-     what a warranted band on Voc at STC would have to stay inside: 20.0179 to 21.5240 V
-     (top: the envelope at 25 V, +9.82 % on the rated Voc; bottom: the conditioned upper corner 18.813 V reached at noon, +2.13 %)
-   Solbian SX 156: rated Voc at -20 C, STC irradiance 24.367 V (the typical row); over the envelope 24.961 V (25.730 V at -40 C, information)
+     the bound 24.471 V: BOUNDED at or under 25 V (margin +0.529 V)
+     what a warranted band on Voc at STC would have to stay inside: 20.0179 to 22.0264 V
+     (top: 25 V at -20 C by the stricter coefficient reading, +12.38 % on the rated Voc; bottom: the conditioned upper corner 18.813 V
+     reached at noon, +2.13 %)
+   Solbian SX 156: rated Voc at -20 C 24.367 V (the typical row; 25.730 V at -40 C, information)
      NOT BOUNDED: the maker prints no open-circuit band, so no maximum exists on its document
-     what a warranted band on Voc at STC would have to stay inside: 20.0944 to 21.3337 V
-     (top: the envelope at 25 V, +0.16 % on the rated Voc; bottom: the conditioned upper corner 18.813 V reached at noon, -5.66 %)
+     what a warranted band on Voc at STC would have to stay inside: 20.0944 to 21.8531 V
+     (top: 25 V at -20 C by the stricter coefficient reading, +2.60 % on the rated Voc; bottom: the conditioned upper corner 18.813 V
+     reached at noon, -5.66 %)
 
 4. THE HOLD: board E's input regulation (L4-E7, selected, drafted and not applied; RECORD l4e7_stage_settings.out)
    nominal 17.593 V; EA3 at its typical gain 16.970 / 18.221 V; the widest conditioned band (EA3 at half, the drifts) 16.420 / 18.813 V
@@ -207,13 +211,13 @@ bought, built, powered or measured; no physical unit is accepted.
    cells' temperature in full sun at the envelope's +40 C ambient (73.8 C at 1000 W/m2 by the NOCT model at 47 C, INFERRED)
 
 7. THE WINDOW AGAINST A PRINTED BAND (route 1's gap, INFERRED on the model)
-   A band's spread is its top over its bottom (as factors on the rated Voc). A panel of a given curve shape is bounded over the
-   envelope only while its band top is at most k_bound (25 V over its rated Voc at -20 C and 2111.4 W/m2) and is held only while
-   its band bottom is at least k_reach (the hold's upper corner over its rated Voc at noon; the fit's Voc scales exactly with the
+   A band's spread is its top over its bottom (as factors on the rated Voc). A panel of a given curve shape is bounded in the
+   window only while its band top is at most k_bound (25 V over its rated Voc at -20 C and 1000 W/m2) and is held only while its
+   band bottom is at least k_reach (the hold's upper corner over its rated Voc at noon; the fit's Voc scales exactly with the
    voltages, checked). Both hold for some rating only while the spread is at most W = k_bound / k_reach.
-   SunPower SPR-E-Flex-100                                      k_bound 1.0110; k_reach 0.9383 (18.813 V) / 0.9087 (18.221 V); W 1.0775 / 1.1126 (symmetric +-3.73 / +-5.33 %); printed spread 1.2222: WIDER than W, no rating of this shape and band fits both
-   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA)    k_bound 1.0982; k_reach 1.0213 (18.813 V) / 0.9891 (18.221 V); W 1.0752 / 1.1102 (symmetric +-3.63 / +-5.22 %); printed spread 1.1579: WIDER than W, no rating of this shape and band fits both
-   Solbian SX 156                                               k_bound 1.0016; k_reach 0.9434 (18.813 V) / 0.9137 (18.221 V); W 1.0617 / 1.0962 (symmetric +-2.99 / +-4.59 %); printed spread none printed
+   SunPower SPR-E-Flex-100                                      k_bound 1.0395; k_reach 0.9383 (18.813 V) / 0.9087 (18.221 V); W 1.1079 / 1.1439 (symmetric +-5.12 / +-6.71 %); printed spread 1.2222: WIDER than W, no rating of this shape and band fits both
+   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA)    k_bound 1.1238; k_reach 1.0213 (18.813 V) / 0.9891 (18.221 V); W 1.1003 / 1.1361 (symmetric +-4.78 / +-6.37 %); printed spread 1.1579: WIDER than W, no rating of this shape and band fits both
+   Solbian SX 156                                               k_bound 1.0260; k_reach 0.9434 (18.813 V) / 0.9137 (18.221 V); W 1.0875 / 1.1229 (symmetric +-4.19 / +-5.79 %); printed spread none printed
    BougeRV's rated row sits under its own reach floor (k_reach 1.0213 > 1): its rating, not only its band, is too low for the
    hold's upper corner.
 
@@ -256,81 +260,128 @@ bought, built, powered or measured; no physical unit is accepted.
    Victron Energy, the 12 V models (36 cells): above 25 V at -20 C on its typical values already (the 150W-12V row; every 12 V row higher); rigid glass (sha256 ad32cb7fe0ec45ce); https://www.victronenergy.com/upload/documents/Datasheet-BlueSolar-Monocrystalline-Panels-EN.pdf
    in the tree already: Renogy RNG-100DB-H (Voc 22.5 V, -0.31 %/C: 25.64 V at -20 C on its typical values; no Voc tolerance), PowerFilm F16-7200 (Voc 21.9 V, -0.300 %/C: 24.86 V; no Voc tolerance, no operating range), PowerFilm 120W 30V (43.7 V), BLUETTI PV420 (44.3 V), Victron (above): a1solar SELECTION.md 2
 
-10. ROUTE 2, PANEL-ACC: ONE IDENTIFIED UNIT, ACCEPTED BY ITS OWN MEASUREMENT (the check's B1; O-1's controlled unit)
-   THE UNIT (SESSION): one SunPower SPR-E-Flex-100, recorded by serial number. Why this one: a unit equal to its typical rows
-   passes all three measured conditions below, where the others' typical rows fail one (same specification):
-     SunPower SPR-E-Flex-100                                      A-1 24.895 V (pass); A-2 26.68 W (pass); A-3 8.18 A (pass)
-     BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA)    A-1 22.917 V (pass); A-2 0.00 W (FAIL); A-3 8.44 A (pass)
-     Solbian SX 156                                               A-1 25.120 V (FAIL); A-2 41.06 W (pass); A-3 12.25 A (FAIL)
-   THE MEASUREMENTS ON THE UNIT (Layer 6, an I-V characterization over temperature and irradiance; the owner's purchase):
+10. ROUTE 2, PANEL-ACC: ONE IDENTIFIED UNIT, ACCEPTED BY ITS OWN MEASUREMENT (O-1's controlled unit)
+   THE UNIT (SESSION): one SunPower SPR-E-Flex-100, recorded by serial number. The three typical rows under the same contract:
+     SunPower SPR-E-Flex-100                                      A-1 24.151 V (pass); A-2 27.085 W lower bound (pass); A-3(b) 8.18 A (pass); A-3(c) 13.82 A
+     BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA)    A-1 22.346 V (pass); A-2 0.000 W lower bound (FAIL); A-3(b) 8.44 A (pass); A-3(c) 14.26 A
+     Solbian SX 156                                               A-1 24.467 V (pass); A-2 41.671 W lower bound (pass); A-3(b) 12.25 A (FAIL); A-3(c) 20.70 A
+   Why SunPower: BougeRV's rated curve gives the stage nothing at the corner (A-2); Solbian's rated row passes A-1 with 0.533 V
+   to spare against SunPower's 0.849 V, and its hot short circuit is 9.80 A before any allowance, where the 1.25 its own maker does
+   not print (SunPower's, transferred) puts it over 10 A; SunPower's 1.25 is its own instruction. It is the energy record's pinned panel.
+   THE MEASUREMENTS ON THE UNIT (Layer 6; the owner's purchase and measurement):
      M1  the I-V curve at STC (25 C cells, 1000 W/m2): Isc, Voc25, Vmp, Imp
      M2  Voc at -20 +- 1 C cells and 1000 W/m2 (a cooled flash or a cold-chamber measurement): Vm20
-     M3  Voc at 25 C at a second irradiance (at most 500 W/m2): the irradiance slope A25 = dVoc / d ln G
-     M4  Voc at a warm point of at least +40 C cells and 1000 W/m2: the warm-side coefficient beta (relative, between 25 C and it)
+     M3  Voc at 25 C at a second irradiance of at most 500 W/m2: the slope A25 = dVoc / d ln G, so n = A25 / (Ns kT/q at 298.15 K)
+     A2m the current at A-2's corner (below)
+     (M5, optional and not an acceptance row: Voc under an irradiance above 1000 W/m2 on the cold unit, for the disturbance check)
    THE MEASUREMENT SPECIFICATION (SESSION; the laboratory states its expanded uncertainties, k = 2, each at or under these):
-     U_V 0.10 V on each Voc (the cell temperature's own uncertainty inside it); U_A 10 % of A25; U_beta 10 % of beta; U_I 2 % of Isc
-   THE ACCEPTANCE (every condition, on the unit's own figures):
-     A-1 the cold envelope: Vm20 + U_V + A25 (1 + U_A) x (T + 273.15) / 298.15 x ln(G_MAX / 1000) <= 25.000 V, at T = -20 C:
-         Vm20 + 0.10 + A25 x 0.698023 <= 25.000 V (the irradiance term's factor 1.1000 x 0.8491 x 0.7474)
-     A-2 useful charging at the applicable hold corner, the conditioned upper corner 18.813 V: on the unit's own curve (its M1 points)
-         at Voc25 - U_V, beta (1 + U_beta) and A25 (1 + U_A), the stage's input at SC-37's noon (520.7 W/m2, cells 35.65 C, the lead)
-         strictly above 1.3656 W; then its day traced through the replay (A1, A2)
-     A-3 the entry: Isc (1 + U_I) at +70 C cells by the sheet's coefficient, x 1.25, at or under F2's and J_SOLAR's 10 A
+     U_V 0.10 V on each voltage (M2's cell temperature inside it); U_A 10 % of A25; U_I 2 % of a current; U_G 2 % of A-2's
+     irradiance setting; U_TC 1.0 K on A-2's cell temperature
+   THE ACCEPTANCE (on the unit's own measurements):
+     A-1 THE WINDOW: Vm20 + U_V <= 25.000 V (no slope, no extrapolation, no temperature scaling)
+     A-2 USEFUL CHARGING, MEASURED at SC-37's noon corner, offset to the conservative side: irradiance at or under 520.7 W/m2
+         minus U_G (510.3 W/m2 at the specification), cells at or above 35.65 C plus U_TC (36.65 C), the current I read at the panel
+         voltage 18.813 V + I x R_lead (the 5 m lead, 0.0465 Ohm, ESTIMATE as the record states it); P = 18.813 V x I; accepted on
+         P - U_P strictly above 1.365591 W, U_P = 18.813 V x sqrt((U_I I)^2 + (dI/dV U_V)^2) with dI/dV the measured local slope
+         why the offsets are conservative (the model's signs at the corner, the rated unit / the floor unit): dI/dG +0.00446 / +0.00361 A
+         per W/m2 (less light, less current); dI/dT -0.06749 / -0.09478 A/K (warmer cells, less current); the hold 18.813 V lies above Vmp
+         there, 16.267 / 15.442 V (16.339 / 15.511 V at the unshifted noon)
+     A-3 THE ENTRY, THREE CASES:
+       (a) normal operation: the entry carries the stage's input current, bounded by L4-E7's drafted limit and independent of
+           irradiance: at most 99.6739 W / 25.000 V = 3.9870 A at the design floor's worst corner (stack C, L4-E7 out 4), under 10 A;
+           CONDITIONAL with A-4
+       (b) a sustained input fault (a short downstream of F2, D4 failing short for example): the panel's Isc for hours, hot cells
+           +70 C, (1 + U_I), x 1.25, the maker's own sizing allowance, at or under 10 A. SunPower 524958 Rev F prints it in
+           section 3.0 (PDF p.2; the coordinator's direction named section 5.1, which holds the operating temperature), verbatim:
+           "Under normal conditions, a photovoltaic module may experience conditions that produce more current and/or voltage than reported at Standard Test Conditions. Accordingly, the values of ISC and VOC marked on the modules should be multiplied by a factor of 1.25 when determining component voltage ratings, conductor capacities, fuse sizes and size of controls connected to the module output."
+       (c) the enhancement transient during an existing input fault (a double contingency): F2 opening is the safe outcome; if
+           F2 holds, J_SOLAR and the PV_IN conductors carry Isc_hot (1 + U_I) x G_T / 1000 for the event. G_T = 2111.4 W/m2 is a
+           SESSION design level for this case only (the source's enhancement on E0; a design level, not a claimed maximum).
+           J_SOLAR's held catalogue (JST VH, p.1) prints 'Current rating: 10 A AC/DC' and 'Temperature range: -40℃ to +105℃' and no short-time overload: COMPONENT_LIMITATION,
+           carried as PANEL-ACC row A-3(c): J_SOLAR and PV_IN rated at least that current at their maximum ambient, or a bench row
      A-4 the 100 W into the stage: CONDITIONAL on L4-E7's drafted input limit applied on board E and its bench rows (the unit's
          maximum at -20 C, 1000 W/m2 is 117.4 W, over 100 W as drawn; section 5); not a measured condition of the unit
-   THE DEMONSTRATION ON A UNIT EQUAL TO THE TYPICAL ROWS (INFERRED: the sheet's coefficient gives its Vm20, the larger of its two
-   readings; the fit gives A25; a real unit replaces each by its measurement):
-     Voc25 21.400 V, Vm20 24.050 V, A25 1.0673 V, beta 0.2752 %/K, Isc 6.30 A
-     A-1 24.8955 V: PASS, margin 0.1045 V (Vm20 24.050 + U_V 0.10 + the irradiance term 0.7450)
-     A-2 26.681 W at the noon corner: PASS (above 1.3656 W)
-     A-3 8.182 A (6.545 A before the factor): PASS
+   THE DEMONSTRATION ON A UNIT EQUAL TO THE TYPICAL ROWS (INFERRED: the sheet's coefficient, the larger of its two readings, gives
+   Vm20; the energy record's fit gives the curve; a real unit replaces each by its measurement):
+     Voc25 21.400 V, Vm20 24.0505 V, Isc 6.30 A
+     A-1 24.1505 V: PASS, margin 0.8495 V
+     A-2 I 1.5508 A, P 29.1760 W, dI/dV -1.0674 A/V, U_P 2.0911 W, lower bound 27.0849 W: PASS (above 1.365591 W)
+     A-3 (a) 3.9870 A: PASS; (b) 8.1817 A (6.5453 A before the factor): PASS; (c) 13.8200 A at G_T, over J_SOLAR's 10 A: a downstream row
+         a 20 A part would cover the double contingency up to 3056 W/m2, 2.17 x E0
    THE WINDOW for a unit of this curve shape (the unit's own measurements decide; these are the specification's limits):
-     Voc25 from 20.395 V (A-2's floor: 0.9530 x rated) to 21.490 V (A-1's ceiling: 1.0042 x rated); Vm20 at most 24.152 V
+     Voc25 from 20.315 V (A-2's floor: 0.9493 x rated) to 22.156 V (A-1's ceiling: 1.0353 x rated); Vm20 at most 24.900 V
      the rated 21.400 V lies inside it: yes; the window is not empty: yes
-     M2 is required: extrapolating the cold point from Voc25 instead needs U_beta at or under 3.46 % of beta for the rated unit
-     (the printed coefficient has no limits at all)
-   THE ENERGY OF THE WORST ACCEPTED UNITS (the acceptance's own worst curve; the drafted limit 3.4713 A; the replay's A1 and A2):
-     the rated unit at its acceptance's worst, the conditioned upper corner (18.813 V): 205.5 Wh a day; at noon 26.24 W; [0 limited, 2 daylight hours with no input]
-       A1: first interruption h 3/2; unserved 1628.4 / 1645.8 at 48 h, 2503.7 / 2467.8 at 72 h; least addition +1604.7 / +2458.9 Wh
-       A2: first interruption h 15/11; unserved 1381.7 / 1340.9 at 48 h, 2085.3 / 2258.6 at 72 h; least addition +1224.8 / +2088.2 Wh
-       the trace (W, hours 0 to 23): 0.0 0.0 0.0 0.0 0.0 0.0 0.0 10.7 19.7 25.1 27.0 26.7 26.2 24.5 21.1 16.7 7.9 0.0 0.0 0.0 0.0 0.0 0.0 0.0
-     the rated unit at its acceptance's worst, the nominal hold (17.593 V): 336.4 Wh a day; at noon 43.01 W; [0 limited, 0 daylight hours with no input]
-       A1: first interruption h 5/2; unserved 1389.8 / 1390.1 at 48 h, 2137.6 / 2137.9 at 72 h; least addition +1384.5 / +2128.5 Wh
-       A2: first interruption h 18/11; unserved 1010.1 / 1250.7 at 48 h, 1776.4 / 2017.0 at 72 h; least addition +1002.4 / +1754.5 Wh
-       the trace (W, hours 0 to 23): 0.0 0.0 0.0 0.0 0.0 0.0 4.1 16.8 28.9 37.8 42.3 43.0 43.0 40.2 34.3 27.5 15.8 2.8 0.0 0.0 0.0 0.0 0.0 0.0
-     the floor unit at its acceptance's worst, the conditioned upper corner (18.813 V): 16.0 Wh a day; at noon 1.35 W; [0 limited, 5 daylight hours with no input]
-       A1: first interruption h 2/2; unserved 1943.6 / 1946.5 at 48 h, 2970.8 / 2973.7 at 72 h; least addition +1923.8 / +2937.5 Wh
-       A2: first interruption h 12/11; unserved 1541.5 / 1555.1 at 48 h, 2569.3 / 2582.9 at 72 h; least addition +1548.7 / +2574.2 Wh
-       the trace (W, hours 0 to 23): 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 3.5 4.5 3.5 2.3 1.3 0.8 0.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
-   (the floor unit's noon input on the model is 1.3656 W, the useful-power line; its trace's noon figure carries the replay's
-   PVGIS convention)
+     information: a laboratory without a cold chamber could extrapolate Vm20 from M1 with a coefficient measured to within 27.7 %
+     for the rated unit; the contract keeps M2 measured
+   THE ENERGY (the drafted limit 3.4713 A; the replay's A1 and A2):
+     the rated unit (the typical rows), the conditioned upper corner (18.813 V): 240.0 Wh a day; at noon 30.54 W; [0 limited, 1 daylight hours with no input]
+       A1: first interruption h 3/2; unserved 1559.2 / 1595.8 at 48 h, 2424.8 / 2381.5 at 72 h; least addition +1546.7 / +2371.8 Wh
+       A2: first interruption h 16/11; unserved 1352.7 / 1255.3 at 48 h, 1997.8 / 2200.2 at 72 h; least addition +1166.1 / +2000.1 Wh
+       the trace (W, hours 0 to 23): 0.0 0.0 0.0 0.0 0.0 0.0 1.2 12.5 22.2 28.4 30.9 30.8 30.5 28.6 24.6 19.8 10.5 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+     the rated unit (the typical rows), the nominal hold (17.593 V): 350.0 Wh a day; at noon 44.78 W; [0 limited, 0 daylight hours with no input]
+       A1: first interruption h 6/2; unserved 1367.4 / 1368.1 at 48 h, 2103.9 / 2104.6 at 72 h; least addition +1361.5 / +2094.1 Wh
+       A2: first interruption h 18/11; unserved 986.9 / 1196.1 at 48 h, 1741.4 / 1950.7 at 72 h; least addition +979.2 / +1719.7 Wh
+       the trace (W, hours 0 to 23): 0.0 0.0 0.0 0.0 0.0 0.0 4.6 17.3 29.7 39.0 43.8 44.6 44.8 41.8 35.6 28.6 16.6 3.6 0.0 0.0 0.0 0.0 0.0 0.0
+     the floor unit (A-2's lower bound on the line), the conditioned upper corner (18.813 V): 52.3 Wh a day; at noon 6.73 W; [0 limited, 3 daylight hours with no input]
+       A1: first interruption h 2/2; unserved 1872.5 / 1878.1 at 48 h, 2899.7 / 2847.5 at 72 h; least addition +1862.7 / +2845.9 Wh
+       A2: first interruption h 12/11; unserved 1510.9 / 1555.1 at 48 h, 2538.7 / 2582.9 at 72 h; least addition +1486.5 / +2480.8 Wh
+       the trace (W, hours 0 to 23): 0.0 0.0 0.0 0.0 0.0 0.0 0.0 1.5 6.6 8.5 8.3 7.4 6.7 5.9 4.6 2.6 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+   (the floor unit's lower bound at A-2's corner is 1.3656 W, on the useful-power line; its trace's noon figure carries the
+   replay's PVGIS convention, at the unshifted noon)
 
-11. THE DECISION ON U-03 (SESSION, the check's B2): TWO ROUTES
-   Route 1, a maker-bound sheet: bounded over the envelope by the printed band AND the hold inside the curve at the conditioned
-   upper corner over that band AND portable:
+11. THE DISTURBANCE CHECK: COMPONENT LIMITS DURING AN IRRADIANCE BURST ON COLD-SOAKED CELLS (TRN-001, apart from the window)
+   THE LIMIT: the lowest rating on PV_P for a current-limited source held for minutes is D4's printed standoff, the SMCJ28A's
+   VR 28.0 V (at most 1 uA there; Littelfuse SMCJ sheet p.2, the row VR 28.0 / VBR 31.10 to 34.40 V at 1 mA / VC 45.4 V at 33.1 A /
+   IR 1 uA). The sheet prints VBR(TJ) = VBR(25 C) x (1 + aT (TJ - 25)), aT typical 0.1 %/C (p.1): the cold VBR minimum at -20 C
+   is 29.70 V (a typical coefficient). C11 and C12's 35 V lie above.
+   THE IRRADIANCE TERM, by junction physics, not by a measured slope: dVoc / d ln G <= n x Ns x kT/q, Ns 32 (the sheet), T 253.15 K
+   (kT/q 0.021815 V); n_max = 2 is a MODELLING_ASSUMPTION (the silicon junction's ideality ceiling: 1 for diffusion, 2 for
+   depletion-region recombination); M3's measured n = A25 / (Ns kT/q at 298.15 K, 0.025693 V) must read at or under 2 with its
+   uncertainty, else this check is re-judged (the typical unit's fit: n 1.2981, 1.4279 with U_A).
+   THE COLDEST CELLS ARE THE WORST CASE: d/dT [Voc(T, 1000) + n Ns kT/q ln(G / 1000)] = beta + n Ns k/q ln(G / 1000); up to the
+   threshold below the second term is at most 3.000 V / 253.15 K = 0.011851 V/K, against the sheet's coefficient of at least 0.0589 V/K
+   in magnitude (the smaller of its two readings): the derivative stays negative, so cells warmer than -20 C give less.
+   THE THRESHOLD: a unit at A-1's ceiling (Vm20 + U_V = 25.000 V) reaches D4's 28.0 V standoff at G = 1000 exp(3.000 V / (n Ns kT/q)):
+     n from the typical unit's fit (INFERRED)                 n 1.2981: 0.9062 V per unit of ln G; 27401 W/m2, 19.47 x E0
+     n_max = 2 (MODELLING_ASSUMPTION): the decision row       n 2.0000: 1.3961 V per unit of ln G; 8574 W/m2, 6.09 x E0
+     n = 3 (a sensitivity)                                    n 3.0000: 2.0942 V per unit of ln G; 4189 W/m2, 2.98 x E0
+   RESULT: the disturbance check is implied by A-1 for every plane-of-array irradiance below 8574 W/m2 (n <= 2), 6.09 x the
+   extraterrestrial irradiance; no irradiance maximum is a decision input. ASSUMPTION: the plane-of-array irradiance stays below
+   that threshold (the context of section 1 puts the read enhancement at 2111.4 W/m2 on E0). Its impact if it fails: D4 rises above
+   its standoff and conducts under 1 mA until its VBR (29.70 V cold minimum), no damage below VBR. Its verification: none beyond
+   M3's n check (M5 optional). Cross-check: SunPower's own allowance, 1.25 x Voc for component voltage ratings, is 26.75 V on the
+   rated row and 27.69 V at the window's Voc25 ceiling, both under the 28.0 V standoff.
+
+12. THE DECISION ON U-03 (SESSION): TWO ROUTES
+   Route 1, a maker-bound sheet: bounded in the window by the printed band AND the hold inside the curve at the conditioned upper
+   corner over that band AND portable:
      SunPower SPR-E-Flex-100                                      bounded NO; hold NO; portable yes -> does not qualify
-     BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA)    bounded NO; hold NO; portable yes -> does not qualify
+     BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA)    bounded yes; hold NO; portable yes -> does not qualify
      Solbian SX 156                                               bounded NO; hold yes; portable yes -> does not qualify
      on EA3's typical band (upper corner 18.221 V) instead: SPR does not qualify; BGV does not qualify; SBX does not qualify
    Route 2, a controlled unit: PANEL-ACC's contract (section 10) has a non-empty window that holds the identified panel's typical
-   rows, with every condition met at the specification: yes
+   rows, with A-1, A-2, A-3(a) and A-3(b) met at the specification: yes
    U-03: CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC).
    It is not an architecture-level choice: REQ-016's window, the stage, its hold and the drafted limit stay, and the panel is
-   selected downstream by measurement. It is CONDITIONAL on: a bought unit passing A-1 to A-3 by its own measurement (M1 to M4
-   at the specification); L4-E7's drafted input limit applied (A-4, its 96.25 W CONDITIONAL); the unit's trace rerun (A1, A2).
+   selected downstream by measurement. It is CONDITIONAL on: a bought unit passing A-1, A-2 and A-3(b) by its own measurement
+   (M1 to M3 and A-2's reading at the specification); L4-E7's drafted input limit applied (A-3(a) and A-4, its 96.25 W
+   CONDITIONAL); A-3(c)'s connector and conductor rating at Layer 5/6; the disturbance check's assumption (section 11) and M3's n;
+   the unit's trace rerun (A1, A2). None of these can overturn the architecture: A-3(c) is a connector rating (REQ-016's 'rated
+   10 A' is a minimum), and the rest decide a unit, not the topology.
    NO PHYSICAL UNIT IS ACCEPTED: none is bought or measured; the purchase and the measurement are the owner's actions (money).
    Route 1 stays open beside it: the drafts in clarification/ ask the two hold-matched makers for a warranted band (the owner
-   sends them; the session contacts no outside party). REQ-016 need not change, so no owner question is raised; a series diode
-   or a clamp is not a substitute (section 1).
+   sends them; the session contacts no outside party). REQ-016 need not change, so no owner question is raised.
    THE DOWNSTREAM ITEM, PANEL-ACC (Layer 6, component selection; the purchase is the owner's): accept the panel by route 1 (the
-   bought revision's document, filed with its sha256, passes section 3 and section 4 over the envelope) or by route 2 (the
-   identified unit passes A-1 to A-3 at the specification, section 10); in either case rerun its trace through the replay's
-   section 12 and L4-E7's section 5 (A1 and A2), keep F2's and J_SOLAR's 10 A (A-3) and the 100 W on L4-E7's limit (A-4).
+   bought revision's document, filed with its sha256, bounds its band in the window and keeps the hold inside the curve, sections
+   3 and 4) or by route 2 (the identified unit passes A-1, A-2 and A-3(b) at the specification, section 10); in either case rerun
+   its trace through the replay's section 12 and L4-E7's section 5 (A1 and A2), rate J_SOLAR and PV_IN for A-3(c), keep F2's and
+   J_SOLAR's 10 A minimum and the 100 W on L4-E7's limit (A-3(a), A-4), and check M3's n against the disturbance threshold.
 
-12. EVIDENCE CLASSES: MAKER (SunPower's sheet and guide, Solbian's sheet), MAKER-PAGE (BougeRV's page, transcribed), RECORD
-    (the replay's and L4-E7's outputs, the stage's drive power), MODELED (the energy record's single-diode model and day), INFERRED
-    (the irradiance slopes, the window ratios, the demonstration unit, the cell temperature at the hot end), ASSUMPTION (S0 and the
-    orbit's eccentricity as physical constants; a band's voltages scaled with its currents kept; BougeRV's rows taken as STC),
-    LITERATURE (the enhancement and the Cabauw quotations, CC BY 4.0), SESSION (the envelope, the 10 % sentence's reading, the
-    coefficient as a fraction, the hold screen and the day's 5 % hours, the conditioned band, PANEL-ACC's unit, measurements and
-    specification, the useful-power line).
+13. EVIDENCE CLASSES: MAKER (SunPower's sheet and guide, Solbian's sheet, Littelfuse's SMCJ sheet, JST's VH catalogue),
+    MAKER-PAGE (BougeRV's page, transcribed), RECORD (the replay's and L4-E7's outputs, the stage's drive power), LITERATURE
+    (the enhancement and the Cabauw quotations, CC BY 4.0, context only), MODELED (the energy record's single-diode model and day),
+    INFERRED (the window ratios, the demonstration unit, A-2's signs, the cell temperature at the hot end), ASSUMPTION (S0 and the
+    orbit's eccentricity as physical constants; a band's voltages scaled with its currents kept; BougeRV's rows taken as STC; the
+    irradiance below the disturbance threshold), MODELLING_ASSUMPTION (n_max = 2), COMPONENT_LIMITATION (J_SOLAR prints no
+    short-time overload), SESSION (the window's reading, the 10 % sentence's reading, the hold screen, the conditioned band,
+    PANEL-ACC's unit, measurements and specification, the useful-power line, A-3(c)'s design level).

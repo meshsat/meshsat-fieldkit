@@ -1,25 +1,29 @@
 #!/usr/bin/env python3
-"""l4e13_panel.py: layer 4 task L4-E13 (MESHSAT-1357, 2 October 2026; fix round after the check astra-check-l4e13-1): U-03, a
-solar panel whose open-circuit voltage is bounded at the coldest operating temperature inside REQ-016's window, by its
-MAKER's document (route 1) or by the measurement of ONE identified unit (route 2, PANEL-ACC).
+"""l4e13_panel.py: layer 4 task L4-E13 (MESHSAT-1357, 2 October 2026; second fix round after the recheck astra-check-l4e13-2):
+U-03, a solar panel whose open-circuit voltage is bounded at the coldest operating temperature inside REQ-016's window, by its
+MAKER's document (route 1) or by the measurement of ONE identified unit (route 2, PANEL-ACC), with the disturbance check
+judged apart from the window as REQ-016 directs ("Protection is judged apart from the window, under rule TRN-001").
 
 PROTOTYPE DESIGN, desk arithmetic: nothing is bought, built, powered or measured, and no physical unit is accepted. No
 generator, registry, Layer 3 file or other record is edited. For each candidate panel (the present one, SunPower's
 SPR-E-Flex-100, and at most two more) this script reads the maker's printed rows from the pinned document and prints:
-  - THE ENVELOPE: REQ-024's coldest in-use temperature (-20 C, cold-soaked cells) under the largest irradiance the panel can
-    see, G_MAX = (1 + the read source's cloud enhancement) x the extraterrestrial irradiance at perihelion; and the stage's
-    useful-power line (its own drive power over its declared efficiency);
-  - ROUTE 1: the open-circuit voltage over the envelope at the top of the maker's printed band, its coefficient read both
-    ways (a scenario and an extrapolation, neither warranted), against REQ-016's 25 V; a band the maker does not print is not
-    invented (NOT BOUNDED); and the band a maker would have to warrant (the clarification drafts ask for it);
+  - THE WINDOW (normal operation, REQ-016's rated quantity): the makers' rated Voc row, defined at 1000 W/m2, moved to
+    REQ-024's coldest in-use temperature (-20 C); route 1 reads each maker's printed band there, the coefficient both ways (a
+    scenario and an extrapolation, neither warranted); a band the maker does not print is not invented (NOT BOUNDED); and the
+    band a maker would have to warrant (the clarification drafts ask for it);
   - the panel against the input hold of board E's stage (L4-E7's selected settings: 17.593 V nominal, 16.970 / 18.221 V with
     EA3 at its typical gain, 16.420 / 18.813 V the widest conditioned band), the energy into the stage on SC-37's mean
-    September day at every hold corner, the power against REQ-016's 100 W, the hot short-circuit current against the entry's
-    10 A, and the panel's portable class from its own document;
-  - ROUTE 2, PANEL-ACC: the measurements on one identified unit, the measurement specification, the acceptance conditions
-    A-1 (the cold envelope at or under 25.000 V with the uncertainty), A-2 (useful charging at the conditioned upper hold
-    corner), A-3 (the 10 A entry) and A-4 (the 100 W on L4-E7's limit), demonstrated on a unit equal to the typical rows, the
-    window of measured values, and A1 and A2 (the replay's own meanday and least) on the worst accepted units' traces;
+    September day at every hold corner, the power against REQ-016's 100 W, the hot short-circuit current, and the panel's
+    portable class from its own document;
+  - ROUTE 2, PANEL-ACC: the measurements on one identified unit and their specification; A-1, the window, Vm20 + U_V at or
+    under 25.000 V; A-2, the useful charging power measured at the noon corner on the conservative side, P - U_P strictly above
+    the stage's own drive power over its efficiency, with the model's signs showing the offsets conservative; A-3, the entry,
+    in three cases (normal operation under L4-E7's limit, a sustained input fault with the maker's 1.25 allowance, the
+    enhancement transient during a fault as a downstream connector row); A-4, the 100 W on L4-E7's limit; demonstrated on a
+    unit equal to the typical rows, with the window of measured values and A1 and A2 (the replay's own meanday and least);
+  - THE DISTURBANCE CHECK: D4's standoff against a unit at A-1's ceiling under an irradiance burst on cold cells, bounded by
+    junction physics (n_max = 2, a modelling assumption M3 verifies), with the coldest cells shown to be the worst case and the
+    irradiance threshold below which A-1 implies it; no irradiance maximum is a decision input;
   - the classification of U-03 by a predicate that admits either route, and the downstream item.
 
 The model is the energy record's, not a new one: l4e_replay.main() runs here with its locals captured and must print
@@ -28,9 +32,10 @@ day sums must equal the replay's section 12 and L4-E7's section 5 at every hold 
 trace at L4-E7's nominal hold and limit must equal L4-E7's printed rows (exit 4 otherwise).
 
 Evidence classes: MAKER (a maker's document, page named), MAKER-PAGE (a maker's web page, transcribed and filed), RECORD (a
-committed output read by pattern), LITERATURE (a quoted open-access paper), MODELED (the energy record's model), INFERRED
-(arithmetic on the above with a stated step), ASSUMPTION (a figure no document gives, physical constants included), SESSION
-(a reading or choice this record takes, with its reason).
+committed output read by pattern), LITERATURE (a quoted open-access paper, context only), MODELED (the energy record's model),
+INFERRED (arithmetic on the above with a stated step), ASSUMPTION (a figure no document gives, physical constants included),
+MODELLING_ASSUMPTION (n_max), COMPONENT_LIMITATION (a rating no held document prints), SESSION (a reading or choice this
+record takes, with its reason).
 
 Run from the repository root:  python3 v2/docs/records/l4e13/l4e13_panel.py > v2/docs/records/l4e13/l4e13_panel.out
 Needs pdftotext and PyYAML (through the replay). About a minute and a half (most of it the replay). The held documents are
@@ -72,29 +77,33 @@ PINS = {
                  "fc9de44fa8149c70e166823ed591093bf971a44eafb7b833a74087f1aff8c658"),
     "screen": ("v2/docs/records/l4e13/inputs/screen-2026-10-02.json",
                "bdf17c68de48f8f85a1177bc8814f890224e310c42a0ffc3cc5c76eb0f1fcb5c"),
+    "smcj": ("v2/vendor/power/littelfuse-smcj-series-tvs.pdf", "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea"),
+    "vh": ("v2/vendor/connectors/jst-vh-catalogue.pdf", "d51e669c597988b20c0963daf5bef7356cbd2104c1f867e9107c6fa6cd2b899c"),
     "enh": ("v2/vendor/solar/irradiance-enhancement-sources-2026-10-02.md",
             "e33b0a05c27f67635f7537ad6ba4b9b85623427e99550c4e9343c24bb91903a5"),
 }
 
 # The few figures and readings this record sets itself (each named where it is used)
-G_STC = 1000.0        # STC irradiance, W/m2: the makers' rows are printed at it
+G_STC = 1000.0        # STC irradiance, W/m2: the makers' rated Voc row is defined at it, and so is THE WINDOW (REQ-016's rated
+                      # quantity: the open-circuit voltage at 1000 W/m2, moved to the coldest operating temperature, -20 C)
 S0 = 1361.0           # ASSUMPTION (a physical constant): the total solar irradiance at one astronomical unit, W/m2
-ECC = 0.0167          # ASSUMPTION (a physical constant): the eccentricity of the Earth's orbit; at perihelion the
-                      # extraterrestrial irradiance is S0 / (1 - ECC)^2, which no clear sky exceeds on any plane facing the sun
-# THE ENVELOPE (SESSION, the check's B1): the cells at REQ-024's -20 C (cold-soaked: with no irradiance they sit at the
-# ambient, and Voc responds to a burst of light at once, before they warm) under the largest irradiance the panel can see,
-# G_MAX = (1 + the read source's cloud enhancement) x the extraterrestrial irradiance at perihelion. Taking the enhancement on
-# the extraterrestrial value rather than the clear-sky one covers the kit's altitude to 3000 m (D-02c) and a snow-covered
-# ground's reflection without a weather or season correlation; it is computed in compute() from the filed quotation.
+ECC = 0.0167          # ASSUMPTION (a physical constant): the eccentricity of the Earth's orbit; S0 / (1 - ECC)^2 is the
+                      # extraterrestrial irradiance at perihelion, E0. CONTEXT only (and the base of A-3(c)'s design level):
+                      # no irradiance maximum is an input to the window or to the disturbance check
+N_MAX = 2.0           # MODELLING_ASSUMPTION: the ideality ceiling of a silicon junction (n = 1 for diffusion current, n = 2 for
+                      # recombination in the depletion region; a module's n lies between them); M3's measured n must read at or
+                      # under it, else the disturbance check is re-judged
+N_SENS = 3.0          # a sensitivity row of the disturbance check only
 T_ISC_HOT = 70.0      # a1solar's convention for the hot short-circuit current (array_calc.T_HOT): cells at +70 C, 1000 W/m2
 # PANEL-ACC's measurement specification (SESSION: requirements on the Layer 6 measurement, not a claim about a laboratory;
 # the laboratory states its own expanded uncertainties, k = 2, and each must be at or under these)
-SPEC_UV = 0.10        # V: Voc's expanded uncertainty at each measured temperature, the cell temperature's own (1 K, about
-                      # 0.06 V on this panel) included
-SPEC_TM = 1.0         # K: the cold measurement's cell temperature within -20 +- 1 C
-SPEC_UA = 0.10        # the irradiance slope dVoc / d ln G at 25 C: its expanded uncertainty as a fraction of the slope
-SPEC_UB = 0.10        # the Voc temperature coefficient between 25 C and the warm point (at least +40 C): fraction of itself
-SPEC_UI = 0.02        # Isc at STC: its expanded uncertainty as a fraction
+SPEC_UV = 0.10        # V: on each voltage: M2's Voc at -20 C (the cell temperature's own 1 K, about 0.06 V here, inside it)
+                      # and A-2's voltage point
+SPEC_TM = 1.0         # K: M2's cell temperature within -20 +- 1 C
+SPEC_UA = 0.10        # M3's irradiance slope A25 = dVoc / d ln G at 25 C: a fraction of the slope (it gives the measured n)
+SPEC_UI = 0.02        # a current reading (Isc at STC; A-2's current): a fraction of the reading
+SPEC_UG = 0.02        # A-2's irradiance setting: a fraction of the setting (the lab sets at or under 520.7 W/m2 minus it)
+SPEC_UTC = 1.0        # K: A-2's cell temperature (the lab sets at or above 35.65 C plus it)
 K_CLAUSE = 1.25       # SunPower 524958 Rev F 3.0's multiplier of Isc and Voc for component ratings (the one such clause held)
 DAY_FRACTION = 0.05   # SESSION: the day's maximum-power voltage band is read over the hours with at least 5 % of the peak irradiance
 ENTRY_A = 10.0        # REQ-016's acceptance: F2 and J_SOLAR rated 10 A
@@ -103,7 +112,8 @@ PORTABLE_KG = 2.5     # SESSION: "portable" is a flexible or folding class at or
 # a panel-class word beside "panel" or "array" in one sentence (a bare "blanket" also means "blanket approval", D-26)
 PANEL_CLASS = re.compile(r"(?i)\b(foldable|folding|flexible|semi-rigid|blanket)\b[^.]{0,60}\b(panel|array)s?\b|"
                          r"\b(panel|array)s?\b[^.]{0,60}\b(foldable|folding|flexible|semi-rigid|blanket)\b")
-CLASSES = ("MAKER", "MAKER-PAGE", "RECORD", "LITERATURE", "MODELED", "INFERRED", "ASSUMPTION", "SESSION")
+CLASSES = ("MAKER", "MAKER-PAGE", "RECORD", "LITERATURE", "MODELED", "INFERRED", "ASSUMPTION", "MODELLING_ASSUMPTION",
+           "COMPONENT_LIMITATION", "SESSION")
 
 
 def classify(route1, route2):
@@ -392,11 +402,41 @@ def compute():
     R["enh"] = float(need(R["enh_quote"], r"over (\d+) %", "the enhancement").group(1)) / 100.0
     R["cabauw_quote"] = need(enh, r"(A value of 10 W m-2 is based on 1 % of the typical order of magnitude for clear-sky irradiance "
                                   r"around noon for Cabauw\.)", "the Cabauw quote").group(1)
-    R["e0_max"] = S0 / (1.0 - ECC) ** 2
-    R["g_max"] = (1.0 + R["enh"]) * R["e0_max"]
-    R["ln_g"] = math.log(R["g_max"] / G_STC)
+    R["e0_max"] = S0 / (1.0 - ECC) ** 2                       # CONTEXT only: no irradiance maximum is a decision input
+    R["g_t"] = (1.0 + R["enh"]) * R["e0_max"]                 # SESSION design level of A-3(c), the double contingency, only
     alt = need(env, r"altitude_m:\n.*?in_use: \{min: (\d+), max: (\d+)\}", "the envelope's altitude", re.S)
     R["alt_max"] = float(alt.group(2))
+    # THE DISTURBANCE CHECK's limits on PV_P (REQ-016: "Protection is judged apart from the window, under rule TRN-001")
+    R["prot_quote"] = need(acc016, r"(Protection is judged apart from the window, under rule TRN-001)", "REQ-016's split").group(1)
+    m = need(acc016, r"D4, an SMCJ28A, stands off ([\d.]+) V \(at most ([\d.]+) uA there", "REQ-016's D4 standoff")
+    R["d4_vr"], R["d4_ir_ua"] = float(m.group(1)), float(m.group(2))
+    R["cap_v"] = float(need(acc016, r"the ([\d.]+) V bulk capacitors C11 and C12", "REQ-016's bulk capacitors").group(1))
+    sm1, sm2 = flat(pdf_page(PINS["smcj"][0], 1)), pdf_page(PINS["smcj"][0], 2)
+    row = need(sm2, r"^\s*SMCJ28A\s+SMCJ28CA\s+\S+\s+\S+\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)",
+               "Littelfuse's SMCJ28A row").groups()
+    R["d4_row"] = tuple(float(x) for x in row)            # VR, VBR min, VBR max, IT mA, VC, Ipp, IR uA
+    if (R["d4_row"][0], R["d4_row"][6]) != (R["d4_vr"], R["d4_ir_ua"]):
+        refuse(3, "REQ-016's D4 figures are not Littelfuse's SMCJ28A row")
+    at = need(sm1, r"VBR @ TJ= VBR@25°C .*?x \(1\+αT x \(TJ - 25\)\) .*?\(αT:Temperature .*?Coefficient, typical value .*?is ([\d.]+)%\)",
+              "Littelfuse's VBR temperature coefficient")
+    R["d4_alpha_t"] = float(at.group(1)) / 100.0
+    R["d4_vbr_cold"] = R["d4_row"][1] * (1.0 + R["d4_alpha_t"] * (R["t_cold"] - 25.0))
+    # A-3(a): the stage's input current, bounded by L4-E7's drafted limit at its design floor's worst corner (stack C)
+    cw = need(o7, r"C\. the design floor .*?\n\s+the cold end worst ([\d.]+) W at ([\d.]+) V.*?\n\s+the hot end  worst ([\d.]+) W at ([\d.]+) V",
+              "L4-E7's stack C corners", re.S).groups()
+    R["i_norm_max"] = max(float(cw[0]) / float(cw[1]), float(cw[2]) / float(cw[3]))
+    R["stack_c"] = tuple(float(x) for x in cw)
+    # A-3(b)/(c): the maker's own sizing allowance (SunPower 524958 Rev F, 3.0) and J_SOLAR's held catalogue rows
+    g2 = flat(pdf_page(PINS["spr_guide"][0], 2))
+    R["clause_quote"] = need(g2, r"(Under normal conditions, a photovoltaic module may experience conditions that produce more current "
+                                 r"and/or voltage than reported at Standard Test Conditions\. Accordingly, the values of ISC and VOC marked "
+                                 r"on the modules should be multiplied by a factor of 1\.25 when determining component voltage ratings, "
+                                 r"conductor capacities, fuse sizes and size of controls connected to the module output\.)",
+                             "SunPower's 1.25 clause").group(1)
+    vh = flat(pdf_page(PINS["vh"][0], 1))
+    R["vh_rating"] = need(vh, r"(Current rating: 10 A AC/DC)", "JST VH's current rating").group(1)
+    R["vh_temp"] = need(vh, r"(Temperature range: \S+40℃ to \+105℃)", "JST VH's temperature range").group(1).replace("\u2011", "-")
+    R["vh_overload"] = bool(re.search(r"(?i)overload|short.time|surge current", flat("".join(pdf_page(PINS["vh"][0], n) for n in range(1, 7)))))
 
     # ---------------------------------------------------------------- the model: the replay's main(), in-process
     RP = load("l4e_replay_for_l4e13", PINS["replay_py"][0])
@@ -543,14 +583,11 @@ def compute():
         c["beta_rel"] = AC.coef(scaled(c, 1.0), "beta_voc")[0]
         c["voc_cold_nom"] = AC.voc_at(scaled(c, 1.0), R["t_cold"])
         c["voc_m40_nom"] = AC.voc_at(scaled(c, 1.0), -40.0)
-        # the irradiance term of the envelope: A(T) ln(G_MAX / 1000) with the fit's A at -20 C (INFERRED: no maker prints the
-        # irradiance slope); it scales with the panel's voltages
-        c["a_m20"] = c["fit"].a_ref * (R["t_cold"] + 273.15) / 298.15
-        c["env_term_nom"] = c["a_m20"] * R["ln_g"]
-        if abs(voc_model(c["fit"], R["g_max"], R["t_cold"]) - c["voc_cold_nom"] - c["env_term_nom"]) > 1e-3:
-            refuse(4, "%s: the fit's Voc at G_MAX is not the log term" % c["name"])
+        # the module's diode ideality from the fit (INFERRED): n = A_ref / (Ns kT/q at 298.15 K); used only in the
+        # disturbance check's sensitivity rows, never in the window
+        c["n_fit"] = c["fit"].a_ref / (c["cells"] * 298.15 / AC.Q_OVER_K) if c.get("cells") else None
         if c["band"] is None:
-            c["bound"], c["readings"], c["bounded"], c["bound_stc"] = None, [], False, None
+            c["bound"], c["readings"], c["bounded"] = None, [], False
         else:
             top = c["band"][1]
             rd = [("SCENARIO, the band's top %.4f x rated with the coefficient relative to the unit's Voc" % top,
@@ -566,15 +603,14 @@ def compute():
                 rd.append(("the records' reading, rated x %.2f with the absolute coefficient (L4-ENERGY O-1)" % rt,
                            AC.voc_at(scaled(c, rt, False), R["t_cold"])))
             c["readings"] = rd
-            c["bound_stc"] = max(v for _l, v in rd)
             if abs(voc_model(AC.Diode(scaled(c, top, True)), G_STC, R["t_cold"]) - rd[0][1]) > 1e-6:
                 refuse(4, "%s: the fit's Voc at STC irradiance and -20 C is not the coefficient's" % c["name"])
-            c["env_term_top"] = top * c["env_term_nom"]
-            c["bound"] = c["bound_stc"] + c["env_term_top"]       # over the envelope: -20 C and G_MAX
+            c["bound"] = max(v for _l, v in rd)          # THE WINDOW: the rated quantity, 1000 W/m2, moved to -20 C
             c["bounded"] = c["bound"] <= R["v_oc"] + 1e-9
-        # the maker-bound route's window on the rated Voc at STC (what a maker's warranted band would have to stay inside)
-        c["k_bound"] = R["v_oc"] / (c["voc_cold_nom"] + c["env_term_nom"])
-        c["k_bound_stc_only"] = R["v_oc"] / c["voc_cold_nom"]
+        # the maker-bound route's window on the rated Voc at STC (what a maker's warranted band would have to stay inside):
+        # the stricter of the coefficient's two readings at the band's top
+        dv_rated = abs(c["beta_rel"]) * c["voc"] * (25.0 - R["t_cold"])
+        c["k_bound"] = min(R["v_oc"] / c["voc_cold_nom"], (R["v_oc"] - dv_rated) / c["voc"])
         c["tol_needed_up"] = c["k_bound"] - 1.0
         # 4. the hold
         c["voc_noon_nom"] = voc_model(c["fit"], R["g_noon"], R["tc_noon"])
@@ -655,84 +691,66 @@ def compute():
         c["maker_ceiling"] = c["k_bound"] * c["voc"]             # route 1: a warranted Voc at STC at or under this is bounded
         c["maker_floor"] = c["k_floor_maker"] * c["voc"]         # and at or over this reaches the conditioned upper corner at noon
 
-    # ---------------------------------------------------------------- PANEL-ACC: route 2, one identified unit (B1)
-    class Lowered:
-        """A unit's curve lowered by delta(G, T) = u_a x A(T) x ln(1000 / G) below 1000 W/m2: the irradiance slope's
-        uncertainty taken against the unit (a steeper slope lowers its Voc in weak light). Above 1000 W/m2 nothing moves."""
-
-        def __init__(self, d, u_a):
-            self.d, self.u_a, self.c = d, u_a, d.c
-
-        def delta(self, g, t):
-            if g >= G_STC or self.u_a == 0.0:
-                return 0.0
-            return self.u_a * self.d.a_ref * (t + 273.15) / 298.15 * math.log(G_STC / g)
-
-        def params(self, g, t):
-            return self.d.params(g, t)
-
-        def current(self, v, g, t, r_extra=0.0):
-            return self.d.current(v + self.delta(g, t), g, t, r_extra)
-
-        def mpp(self, g, t, r_extra=0.0):
-            voc = self.d.mpp(g, t, r_extra)[2] - self.delta(g, t)     # the whole curve shifted down by delta
-            lo, hi = 0.0, voc
-            for _ in range(80):                                        # golden-section search on P(V), as Diode.mpp
-                m1 = lo + (hi - lo) * 0.381966
-                m2 = lo + (hi - lo) * 0.618034
-                if m1 * self.current(m1, g, t, r_extra) < m2 * self.current(m2, g, t, r_extra):
-                    lo = m1
-                else:
-                    hi = m2
-            v = 0.5 * (lo + hi)
-            return v, self.current(v, g, t, r_extra), voc
-
-    def unit_curve(c, v25, beta_rel, u_v, u_b, u_a):
-        """A unit of c's curve shape measured at v25 (Voc at STC): its curve at the bottom of its measurement (v25 - u_v),
-        its warm-side coefficient at the top of its uncertainty, its irradiance slope at the top of its uncertainty."""
-        k = (v25 - u_v) / c["voc"]
-        d = {"p": c["p"] * k, "vmp": c["vmp"] * k, "imp": c["imp"], "voc": c["voc"] * k, "isc": c["isc"], "gamma_p": c["gamma_p"],
-             "beta_voc": -abs(beta_rel) * (1.0 + u_b), "alpha_isc": AC.coef(scaled(c, 1.0), "alpha_isc")[0]}
-        return Lowered(AC.Diode(d), u_a), d
-
-    def accept(c, unit, spec):
-        """PANEL-ACC's three measured conditions on one unit (A-1 to A-3); unit holds its measured v25, vm20 (Voc at -20 C cells,
-        1000 W/m2), a25 (the irradiance slope at 25 C, V per unit of ln G), beta (the warm-side coefficient, relative) and
-        isc; spec holds the expanded uncertainties."""
-        a1 = unit["vm20"] + spec["u_v"] + unit["a25"] * (1.0 + spec["u_a"]) * (R["t_cold"] + 273.15) / 298.15 * R["ln_g"]
-        cur, _d = unit_curve(c, unit["v25"], unit["beta"], spec["u_v"], spec["u_b"], spec["u_a"])
-        dl = cur.delta(R["g_noon"], R["tc_noon"])
-        p_noon = R["hold_cond"][1] * cur.d.current(R["hold_cond"][1] + dl, R["g_noon"], R["tc_noon"], rl)
-        alpha = AC.coef(scaled(c, 1.0), "alpha_isc")[0]
-        isc_hot = unit["isc"] * (1.0 + spec["u_i"]) * (1.0 + alpha * (T_ISC_HOT - 25.0))
-        return {"a1": a1, "a1_ok": a1 <= R["v_oc"] + 1e-12, "p_noon": p_noon, "a2_ok": p_noon > R["p_use"],
-                "isc_hot": isc_hot, "isc_clause": K_CLAUSE * isc_hot, "a3_ok": K_CLAUSE * isc_hot <= R["entry_a"] + 1e-12, "curve": cur}
-
-    spec = {"u_v": SPEC_UV, "u_a": SPEC_UA, "u_b": SPEC_UB, "u_i": SPEC_UI}
+    # ---------------------------------------------------------------- PANEL-ACC: route 2, one identified unit
+    spec = {"u_v": SPEC_UV, "u_a": SPEC_UA, "u_i": SPEC_UI, "u_g": SPEC_UG, "u_tc": SPEC_UTC}
     R["spec"] = spec
+    vh_c = R["hold_cond"][1]
+    g_a2 = R["g_noon"] * (1.0 - spec["u_g"])          # A-2's corner, offset to the conservative side by the lab's settings
+    t_a2 = R["tc_noon"] + spec["u_tc"]
+    R["a2_corner"] = (g_a2, t_a2)
+
+    def a2_measure(d):
+        """A-2 as the laboratory measures it, here on the model (INFERRED): the current at the panel voltage vh_c + I R_lead
+        (the 5 m lead's resistance), at g_a2 and t_a2; the stage's input P = vh_c x I; U_P from U_I and the voltage point's
+        U_V through the local slope dI/dV; accepted on P - U_P strictly above the useful-power line."""
+        i = d.current(vh_c, g_a2, t_a2, rl)
+        h = 1e-4
+        didv = (d.current(vh_c + h, g_a2, t_a2, rl) - d.current(vh_c - h, g_a2, t_a2, rl)) / (2.0 * h)
+        p = vh_c * i
+        up = vh_c * math.sqrt((spec["u_i"] * i) ** 2 + (didv * spec["u_v"]) ** 2)
+        return {"i": i, "didv": didv, "p": p, "u_p": up, "p_low": p - up, "ok": p - up > R["p_use"]}
+
+    def a2_signs(d):
+        """At A-2's corner on the model: dI/dG, dI/dT at the fixed hold voltage, and the maximum-power voltage there."""
+        dg, dt = 1.0, 0.01
+        di_dg = (d.current(vh_c, g_a2 + dg, t_a2, rl) - d.current(vh_c, g_a2 - dg, t_a2, rl)) / (2.0 * dg)
+        di_dt = (d.current(vh_c, g_a2, t_a2 + dt, rl) - d.current(vh_c, g_a2, t_a2 - dt, rl)) / (2.0 * dt)
+        return {"di_dg": di_dg, "di_dt": di_dt, "vmp": d.mpp(g_a2, t_a2)[0], "vmp_noon": d.mpp(R["g_noon"], R["tc_noon"])[0]}
 
     def rated_unit(c, k=1.0):
-        """A unit equal to c's typical rows scaled by k (INFERRED: the sheet's coefficient gives its -20 C Voc and the fit its
-        slope; a real unit replaces every figure by its measurement)."""
+        """A unit equal to c's typical rows at k times their voltages (INFERRED: the sheet's coefficient, the larger of its two
+        readings, gives its -20 C Voc; the energy record's fit gives its curve; a real unit replaces each by its measurement)."""
         absb = abs(c["beta_voc_abs"]) if c.get("beta_voc_abs") is not None else None
-        beta = max(abs(c["beta_rel"]), absb / (c["voc"] * k) if absb is not None else 0.0)
         vm20 = c["voc"] * k * (1.0 + abs(c["beta_rel"]) * (25.0 - R["t_cold"]))
-        if absb is not None:                       # the printed absolute coefficient, where it gives the higher cold Voc
+        if absb is not None:
             vm20 = max(vm20, c["voc"] * k + absb * (25.0 - R["t_cold"]))
-        return {"v25": c["voc"] * k, "vm20": vm20, "a25": c["fit"].a_ref * k, "beta": beta, "isc": c["isc"]}
+        return {"v25": c["voc"] * k, "vm20": vm20, "isc": c["isc"], "d": AC.Diode(scaled(c, k, True)), "k": k,
+                "a25": c["fit"].a_ref * k}
+
+    def accept(c, unit):
+        """PANEL-ACC's measured conditions on one unit: A-1 (the window), A-2 (useful charging, measured), A-3(a) and (b)."""
+        a1 = unit["vm20"] + spec["u_v"]
+        a2 = a2_measure(unit["d"])
+        alpha = AC.coef(scaled(c, 1.0), "alpha_isc")[0]
+        isc_hot = unit["isc"] * (1.0 + spec["u_i"]) * (1.0 + alpha * (T_ISC_HOT - 25.0))
+        return {"a1": a1, "a1_ok": a1 <= R["v_oc"] + 1e-12, "a2": a2, "a2_ok": a2["ok"],
+                "a3a": R["i_norm_max"], "a3a_ok": R["i_norm_max"] <= R["entry_a"],
+                "isc_hot": isc_hot, "a3b": K_CLAUSE * isc_hot, "a3b_ok": K_CLAUSE * isc_hot <= R["entry_a"] + 1e-12,
+                "a3c": isc_hot * R["g_t"] / G_STC}
 
     R["acc_cands"] = {}
     for c in cands:
-        R["acc_cands"][c["key"]] = accept(c, rated_unit(c), spec)
+        R["acc_cands"][c["key"]] = accept(c, rated_unit(c))
     unit_c = spr                                                # the identified unit's model: SunPower SPR-E-Flex-100 (SESSION)
     R["acc_unit"] = unit_c["key"]
     ru = rated_unit(unit_c)
     ra = R["acc_cands"][unit_c["key"]]
-    # the window for a unit of this shape: the scale k at the cold ceiling and at the useful-power floor (both by bisection)
+    R["a2_signs_rated"] = a2_signs(ru["d"])
+    # the window for a unit of this shape: the scale k at A-1's ceiling and at A-2's floor (both by bisection)
     lo_k, hi_k = 0.80, 1.20
     for _ in range(80):
         mk = 0.5 * (lo_k + hi_k)
-        if accept(unit_c, rated_unit(unit_c, mk), spec)["a1"] <= R["v_oc"]:
+        if rated_unit(unit_c, mk)["vm20"] + spec["u_v"] <= R["v_oc"]:
             lo_k = mk
         else:
             hi_k = mk
@@ -740,32 +758,75 @@ def compute():
     lo_k, hi_k = 0.80, 1.10
     for _ in range(80):
         mk = 0.5 * (lo_k + hi_k)
-        if accept(unit_c, rated_unit(unit_c, mk), spec)["p_noon"] > R["p_use"]:
+        if a2_measure(rated_unit(unit_c, mk)["d"])["p_low"] > R["p_use"]:
             hi_k = mk
         else:
             lo_k = mk
     k_floor = hi_k
-    if not (accept(unit_c, rated_unit(unit_c, k_ceil), spec)["a1"] <= R["v_oc"] + 1e-9):
-        refuse(4, "PANEL-ACC's ceiling does not meet A-1")
+    fu = rated_unit(unit_c, k_floor)
+    fl = accept(unit_c, fu)
+    R["a2_signs_floor"] = a2_signs(fu["d"])
+    for sg in (R["a2_signs_rated"], R["a2_signs_floor"]):
+        if not (sg["di_dg"] > 0.0 and sg["di_dt"] < 0.0 and sg["vmp"] < vh_c):
+            refuse(4, "A-2's offsets are not conservative on the model at its corner")
     R["acc"] = {"k_ceil": k_ceil, "k_floor": k_floor, "v25_ceil": k_ceil * unit_c["voc"], "v25_floor": k_floor * unit_c["voc"],
-                "vm20_ceil": rated_unit(unit_c, k_ceil)["vm20"], "rated": ra, "rated_unit": ru,
-                "feasible": k_floor < 1.0 <= k_ceil and ra["a1_ok"] and ra["a2_ok"] and ra["a3_ok"]}
-    # the cold point extrapolated from a warmer measurement instead of measured at -20 C: the coefficient's uncertainty it needs
-    # for the rated unit (A-1 with vm20 = (v25 + u_v)(1 + 45 K |beta| (1 + u_beta)))
-    rest = R["v_oc"] - ru["a25"] * (1.0 + spec["u_a"]) * (R["t_cold"] + 273.15) / 298.15 * R["ln_g"]
-    R["acc"]["ub_extrap_max"] = (rest / (ru["v25"] + spec["u_v"]) - 1.0) / (abs(unit_c["beta_rel"]) * (25.0 - R["t_cold"])) - 1.0
-    # the energy of the worst accepted rated unit and of the floor unit, through the replay (A1, A2)
-    fl = accept(unit_c, rated_unit(unit_c, k_floor), spec)
-    R["acc"]["floor_p_noon"] = fl["p_noon"]
+                "vm20_ceil": rated_unit(unit_c, k_ceil)["vm20"], "rated": ra, "rated_unit": ru, "floor": fl,
+                "feasible": k_floor < 1.0 <= k_ceil and ra["a1_ok"] and ra["a2_ok"] and ra["a3a_ok"] and ra["a3b_ok"]}
+    # information: a laboratory without a cold chamber could extrapolate the cold point from M1 instead; the coefficient's
+    # uncertainty that would leave the rated unit inside A-1 (Vm20 = (Voc25 + U_V)(1 + 45 K |beta| (1 + u)))
+    R["acc"]["ub_extrap_max"] = ((R["v_oc"] - spec["u_v"]) / (ru["v25"] + spec["u_v"]) - 1.0) / (
+        abs(unit_c["beta_rel"]) * (25.0 - R["t_cold"])) - 1.0
+    # A-3(c), the double contingency: what a 20 A part would cover
+    R["acc"]["g_20a"] = 20.0 / ra["isc_hot"] * G_STC
+    # the energy of the rated unit and of the floor unit through the replay (A1, A2)
     R["acc_runs"] = []
-    for lab, cur, vh in (("the rated unit at its acceptance's worst, the conditioned upper corner", ra["curve"], R["hold_cond"][1]),
-                         ("the rated unit at its acceptance's worst, the nominal hold", ra["curve"], R["hold_typ"][1]),
-                         ("the floor unit at its acceptance's worst, the conditioned upper corner", fl["curve"], R["hold_cond"][1])):
-        tr, nl, zh = trace(cur, vh, R["i_set"], cur.c["p"], unit_c["noct_used"])
-        noon_w = tr[R["h_noon"]]
-        R["acc_runs"].append((lab, vh, sum(tr), nl, zh, noon_w, a1a2(tr), [round(x, 1) for x in tr]))
+    for lab, d, vh in (("the rated unit (the typical rows), the conditioned upper corner", ru["d"], vh_c),
+                       ("the rated unit (the typical rows), the nominal hold", ru["d"], R["hold_typ"][1]),
+                       ("the floor unit (A-2's lower bound on the line), the conditioned upper corner", fu["d"], vh_c)):
+        tr, nl, zh = trace(d, vh, R["i_set"], d.c["p"], unit_c["noct_used"])
+        R["acc_runs"].append((lab, vh, sum(tr), nl, zh, tr[R["h_noon"]], a1a2(tr), [round(x, 1) for x in tr]))
         if sum(tr) <= 0.0:
             refuse(4, "an accepted unit's trace gives no energy at %.3f V" % vh)
+
+    # the rated unit's trace at the conditioned upper corner must be L4-E7's own row (its "NEW conditioned upper end")
+    l7c = {}
+    for mm in re.finditer(r"NEW conditioned upper end \(([\d.]+) V: [^)]*\), (A1|A2): ([\d.]+) Wh a day; first interruption h (\d+)/(\d+); "
+                          r"unserved ([\d.]+) / ([\d.]+) at 48 h, ([\d.]+) / ([\d.]+) at 72 h; least addition \+([\d.]+) / \+([\d.]+) Wh", o7):
+        l7c[mm.group(2)] = mm.groups()[2:]
+    if set(l7c) != {"A1", "A2"}:
+        refuse(3, "L4-E7's NEW conditioned upper end rows not parsed")
+    r0_ = R["acc_runs"][0]
+    R["m4"] = []
+    for ak in ("A1", "A2"):
+        st, u48, u72, add = r0_[6][ak]
+        mine = ("%.1f" % r0_[2], "%d" % st[0], "%d" % st[1], "%.1f" % u48[0], "%.1f" % u48[1], "%.1f" % u72[0], "%.1f" % u72[1],
+                "%.1f" % add[0], "%.1f" % add[1])
+        R["m4"].append((ak, mine == tuple(l7c[ak]), mine))
+        if mine != tuple(l7c[ak]):
+            refuse(4, "the rated unit's corner trace differs from L4-E7's printed row (%s: %s against %s)" % (ak, mine, l7c[ak]))
+
+    # ---------------------------------------------------------------- THE DISTURBANCE CHECK (protection, apart from the window)
+    ns = spr["cells"]
+    tk = R["t_cold"] + 273.15
+    vt_cold, vt_25 = tk / AC.Q_OVER_K, 298.15 / AC.Q_OVER_K
+    dv = R["d4_vr"] - R["v_oc"]               # from A-1's ceiling (Voc at -20 C, 1000 W/m2 at most 25.000 V) to D4's standoff
+    rows = []
+    for lab, n in (("n from the typical unit's fit (INFERRED)", spr["n_fit"]),
+                   ("n_max = 2 (MODELLING_ASSUMPTION): the decision row", N_MAX),
+                   ("n = 3 (a sensitivity)", N_SENS)):
+        slope = n * ns * vt_cold
+        g_thr = G_STC * math.exp(dv / slope)
+        rows.append((lab, n, slope, g_thr, g_thr / R["e0_max"]))
+    R["dist"] = {"ns": ns, "vt_cold": vt_cold, "vt_25": vt_25, "dv": dv, "rows": rows,
+                 "dlog_dt_max": dv / tk,                                   # V/K: the log term's temperature slope at threshold
+                 "beta_mag_min": min(abs(spr["beta_voc_abs"]), abs(spr["beta_rel"]) * spr["voc"]),
+                 "n_meas_typ": ru["a25"] / (ns * vt_25), "n_meas_typ_upper": ru["a25"] * (1.0 + spec["u_a"]) / (ns * vt_25),
+                 "clause_v_rated": K_CLAUSE * spr["voc"], "clause_v_ceil": K_CLAUSE * R["acc"]["v25_ceil"],
+                 "enh_level": R["g_t"]}
+    if not (R["dist"]["beta_mag_min"] > R["dist"]["dlog_dt_max"]):
+        refuse(4, "the coldest cells would not be the worst case")
+    R["dist"]["g_thr_dec"] = rows[1][3]
+    R["dist"]["implied"] = R["dist"]["g_thr_dec"] > R["e0_max"]        # the threshold lies above every clear-sky irradiance
 
     # ---------------------------------------------------------------- the decision (B2): two routes
     R["qualifying"] = [c["key"] for c in cands if c["qualifies"]]
@@ -783,11 +844,10 @@ def render(R):
     cands = {c["key"]: c for c in R["cands"]}
     spr, bgv, sbx = cands["SPR"], cands["BGV"], cands["SBX"]
     A = R["acc"]
-    ra, ru, sp = A["rated"], A["rated_unit"], R["spec"]
-    lt = (R["t_cold"] + 273.15) / 298.15
+    ra, ru, spec = A["rated"], A["rated_unit"], R["spec"]
     P("L4-E13 (MESHSAT-1357): U-03, A PANEL WHOSE OPEN-CIRCUIT VOLTAGE IS BOUNDED AT THE COLDEST OPERATING TEMPERATURE INSIDE")
-    P("REQ-016'S WINDOW, BY ITS MAKER'S DOCUMENT OR BY A CONTROLLED UNIT (PANEL-ACC). Prototype design, desk arithmetic: nothing")
-    P("bought, built, powered or measured; no physical unit is accepted.")
+    P("REQ-016'S WINDOW, BY ITS MAKER'S DOCUMENT OR BY A CONTROLLED UNIT (PANEL-ACC), WITH THE DISTURBANCE CHECK JUDGED APART. Prototype")
+    P("design, desk arithmetic: nothing bought, built, powered or measured; no physical unit is accepted.")
     P("")
     P("0. INPUTS AND REPRODUCTIONS")
     for key, (rel, want) in PINS.items():
@@ -801,33 +861,35 @@ def render(R):
     for ak, ok, mine in R["m3"]:
         P("   %s on the SunPower trace at %.3f V and %.4f A equals L4-E7's NEW nominal row: %s (%s Wh a day; h %s/%s; %s / %s at 48 h, %s / %s at 72 h; +%s / +%s Wh)"
           % ((ak, R["hold_typ"][1], R["i_set"], "yes" if ok else "NO") + mine))
+    for ak, ok, mine in R["m4"]:
+        P("   %s on the rated unit at the conditioned upper corner %.3f V equals L4-E7's NEW conditioned upper end row: %s (%s Wh a day; h %s/%s; %s / %s at 48 h, %s / %s at 72 h; +%s / +%s Wh)"
+          % ((ak, R["hold_cond"][1], "yes" if ok else "NO") + mine))
     P("")
-    P("1. THE REQUIREMENT AND THE ENVELOPE")
+    P("1. THE REQUIREMENT AND ITS THREE CHECKS")
     P("   REQ-016 (v2/ecad/tools/pcb_requirements.yaml), verbatim: \"%s\"" % R["req016"])
     P("   read: at most %.0f V open circuit at the panel's coldest operating temperature; held at %.1f V; at most %.0f W into the stage;"
       % (R["v_oc"], R["v_hold_req"], R["p_win"]))
-    P("   its acceptance: F2 and J_SOLAR rated %.0f A. A series diode or a clamp in place of the panel's own open circuit: %s"
-      % (R["entry_a"], "admitted by the text" if R["series_admitted"] else "NOT admitted (the statement constrains the panel's own open circuit; D4 is judged apart under TRN-001)"))
-    P("   TEMPERATURE: %.0f C, REQ-024's in-use minimum (%s to +%s C ambient; pcb_envelope.yaml in_use agrees); the records settle"
+    P("   its acceptance: F2 and J_SOLAR rated %.0f A; and \"%s\". A series diode or a clamp in place of the panel's own open"
+      % (R["entry_a"], R["prot_quote"]))
+    P("   circuit: %s" % ("admitted by the text" if R["series_admitted"] else "NOT admitted (the statement constrains the panel's own open circuit)"))
+    P("   THE WINDOW (normal operation, REQ-016's rated quantity): the makers' rated Voc row is defined at %.0f W/m2 (SunPower 523809" % G_STC)
+    P("   p.1: 'Typical Electrical Data at STC: %s'; Solbian's STC note and BougeRV's rows alike), moved to the coldest operating" % spr["stc"])
+    P("   temperature, %.0f C, REQ-024's in-use minimum (%s to +%s C ambient; pcb_envelope.yaml in_use agrees). The records settle"
       % (R["t_cold"], R["req024_range"][0], R["req024_range"][1]))
     P("   REQ-016's reading there (L4-ENERGY-ARCHITECTURE.md, 'What stays INCONCLUSIVE'); the panels' -40 C ratings are information.")
-    P("   SESSION: with no irradiance the cells sit at the ambient (cold-soaked); Voc answers a burst of light at once, before the cells")
-    P("   warm, so the envelope puts its largest irradiance on cells still at %.0f C." % R["t_cold"])
-    P("   IRRADIANCE (SESSION, the check's B1): G_MAX = (1 + E) x E0, with E0 the extraterrestrial irradiance at perihelion,")
-    P("   %.0f W/m2 / (1 - %.4f)^2 = %.1f W/m2 (physical constants, ASSUMPTION class), which no clear sky exceeds on a plane facing the sun,"
-      % (S0, ECC, R["e0_max"]))
-    P("   and E the read source's cloud enhancement (v2/vendor/solar/irradiance-enhancement-sources-2026-10-02.md, Mol and van")
-    P("   Heerwaarden 2025, ACP 25, p.1, CC BY 4.0): \"%s\" E = %.2f." % (R["enh_quote"], R["enh"]))
-    P("   G_MAX = %.1f W/m2. Why so high: the enhancement is taken on the extraterrestrial irradiance, not on the clear-sky one (about"
-      % R["g_max"])
-    P("   1000 W/m2 at noon in the Netherlands: \"%s\", Mol, Knap and van Heerwaarden 2023, ESSD 15, p.8)," % R["cabauw_quote"])
-    P("   so it covers the kit's in-use altitude to %.0f m (D-02c), a snow-covered ground's reflection (the same source, p.5) and" % R["alt_max"])
-    P("   more enhancement than the source names, with no season or weather correlation. Its cost is small: Voc grows with ln G, by")
-    P("   A(T) x ln(G_MAX / 1000) = A(T) x %.4f, with A the panel's irradiance slope (the fit's, INFERRED, until measured)." % R["ln_g"])
-    P("   USEFUL POWER: the stage draws its own drive and quiescent power, %.1f mA, %.2f W at L4-E5's raised EXTVCC (L4-E7, INFERRED there),"
+    P("   No irradiance above %.0f W/m2 enters the window: the earlier G_MAX of %.1f W/m2 is WITHDRAWN as a decision input." % (
+        G_STC, R["g_t"]))
+    P("   THE DISTURBANCE CHECK (component limits during an irradiance burst on cold-soaked cells, seconds to minutes): judged apart")
+    P("   from the window under TRN-001, against the lowest rating on PV_P (section 11); it needs no irradiance maximum.")
+    P("   USEFUL POWER (A-2): the stage draws its own drive and quiescent power, %.1f mA, %.2f W at L4-E5's raised EXTVCC (L4-E7,"
       % (R["i_fixed_ma"], R["p_fixed"]))
-    P("   from its output; at its declared %.2f (the replay) the input must exceed %.2f / %.2f = %.4f W before any charge reaches the pack."
-      % (R["eta_stage"], R["p_fixed"], R["eta_stage"], R["p_use"]))
+    P("   INFERRED there), from its output; at its declared %.2f (the replay) the input must exceed %.2f / %.2f = %.6f W." % (
+        R["eta_stage"], R["p_fixed"], R["eta_stage"], R["p_use"]))
+    P("   CONTEXT, not a bound: E0 = %.0f W/m2 / (1 - %.4f)^2 = %.1f W/m2, the extraterrestrial irradiance at perihelion (physical"
+      % (S0, ECC, R["e0_max"]))
+    P("   constants); the read source (Mol and van Heerwaarden 2025, ACP 25, p.1, CC BY 4.0): \"%s\"" % R["enh_quote"])
+    P("   and the clear-sky noon irradiance at Cabauw near 1000 W/m2 (Mol, Knap and van Heerwaarden 2023, p.8). The kit's in-use")
+    P("   altitude reaches %.0f m (D-02c)." % R["alt_max"])
     P("   owner rulings in the registry naming a panel class (a class word beside 'panel' or 'array' in one sentence): %s"
       % (", ".join(R["owner_panel_rulings"]) or "none; a1solar SELECTION.md 1 (a session's criterion) prefers folding, semi-rigid or blanket for a carried kit"))
     P("")
@@ -856,30 +918,29 @@ def render(R):
         if c is sbx:
             P("     the STC note adds: 'Measurements carried out according to the Standard IEC 61215 requirements' (%s); a Voc tolerance"
               " printed anywhere on the sheet: %s" % ("yes" if c["iec_note"] else "no", "yes" if c["voc_tol_printed"] else "no"))
-        P("     the model's fit (a1solar's single-diode model, imported and pinned): %s; its irradiance slope A at %.0f C %.4f V" % (
-            c["fit_note"], R["t_cold"], c["a_m20"]))
+        P("     the model's fit (a1solar's single-diode model, imported and pinned): %s; its ideality n %s" % (
+            c["fit_note"], "%.4f (INFERRED, from %d cells)" % (c["n_fit"], c["cells"]) if c["n_fit"] else "not derived (no cell count printed)"))
     P("")
-    P("3. ROUTE 1, THE MAKER'S BAND: Voc OVER THE ENVELOPE (%.0f C, %.1f W/m2) AT THE TOP OF THE PRINTED BAND, AGAINST %.0f V" % (
-        R["t_cold"], R["g_max"], R["v_oc"]))
-    P("   At STC irradiance the readings below are a SCENARIO and an EXTRAPOLATION of the printed rows: neither is a warranted maximum,")
-    P("   since no maker prints a limit on its coefficient. The envelope adds the irradiance term (the fit's slope, INFERRED).")
+    P("3. ROUTE 1, THE MAKER'S BAND IN THE WINDOW: Voc AT %.0f C AND %.0f W/m2 AT THE TOP OF THE PRINTED BAND, AGAINST %.0f V" % (
+        R["t_cold"], G_STC, R["v_oc"]))
+    P("   The readings are a SCENARIO and an EXTRAPOLATION of the printed rows: neither is a warranted maximum, since no maker prints a")
+    P("   limit on its coefficient; the bound is the larger.")
     for c in (spr, bgv, sbx):
-        P("   %s: rated Voc at %.0f C, STC irradiance %.3f V (the typical row); over the envelope %.3f V (%.3f V at -40 C, information)" % (
-            c["name"], R["t_cold"], c["voc_cold_nom"], c["voc_cold_nom"] + c["env_term_nom"], c["voc_m40_nom"]))
+        P("   %s: rated Voc at %.0f C %.3f V (the typical row; %.3f V at -40 C, information)" % (
+            c["name"], R["t_cold"], c["voc_cold_nom"], c["voc_m40_nom"]))
         if c["band"] is None:
             P("     NOT BOUNDED: the maker prints no open-circuit band, so no maximum exists on its document")
         else:
             for lab, v in c["readings"]:
                 P("     %-100s %.3f V" % (lab, v))
-            P("     the largest at STC irradiance %.3f V, plus the band top's irradiance term %.3f V: over the envelope %.3f V:" % (
-                c["bound_stc"], c["env_term_top"], c["bound"]))
-            P("     %s (margin %+.3f V)" % ("BOUNDED at or under 25 V" if c["bounded"] else "NOT BOUNDED: the maker's own band reaches past 25 V",
-                                           R["v_oc"] - c["bound"]))
-        P("     what a warranted band on Voc at STC would have to stay inside: %.4f to %.4f V" % (
-            c["maker_floor"], c["maker_ceiling"]))
-        P("     (top: the envelope at 25 V, %+.2f %% on the rated Voc; bottom: the conditioned upper corner %.3f V reached at noon, %+.2f %%%s)" % (
-            100 * c["tol_needed_up"], R["hold_cond"][1], -100 * c["tol_needed_down"],
-            "; the printed absolute coefficient gives the higher floor" if c["k_reach_abs"] and c["k_reach_abs"] > c["k_reach_cond"] else ""))
+            P("     the bound %.3f V: %s (margin %+.3f V)" % (
+                c["bound"], "BOUNDED at or under 25 V" if c["bounded"] else "NOT BOUNDED: the maker's own band reaches past 25 V",
+                R["v_oc"] - c["bound"]))
+        P("     what a warranted band on Voc at STC would have to stay inside: %.4f to %.4f V" % (c["maker_floor"], c["maker_ceiling"]))
+        P("     (top: 25 V at %.0f C by the stricter coefficient reading, %+.2f %% on the rated Voc; bottom: the conditioned upper corner %.3f V"
+          % (R["t_cold"], 100 * c["tol_needed_up"], R["hold_cond"][1]))
+        P("     reached at noon, %+.2f %%%s)" % (-100 * c["tol_needed_down"],
+                                             "; the printed absolute coefficient gives the higher floor" if c["k_reach_abs"] and c["k_reach_abs"] > c["k_reach_cond"] else ""))
     P("")
     P("4. THE HOLD: board E's input regulation (L4-E7, selected, drafted and not applied; RECORD l4e7_stage_settings.out)")
     P("   nominal %.3f V; EA3 at its typical gain %.3f / %.3f V; the widest conditioned band (EA3 at half, the drifts) %.3f / %.3f V"
@@ -944,10 +1005,10 @@ def render(R):
         R["t_hot_amb"], R["t_hot_amb"] + (R["noct_inf"] - 20.0) / 800.0 * 1000.0, R["noct_inf"]))
     P("")
     P("7. THE WINDOW AGAINST A PRINTED BAND (route 1's gap, INFERRED on the model)")
-    P("   A band's spread is its top over its bottom (as factors on the rated Voc). A panel of a given curve shape is bounded over the")
-    P("   envelope only while its band top is at most k_bound (25 V over its rated Voc at %.0f C and %.1f W/m2) and is held only while"
-      % (R["t_cold"], R["g_max"]))
-    P("   its band bottom is at least k_reach (the hold's upper corner over its rated Voc at noon; the fit's Voc scales exactly with the")
+    P("   A band's spread is its top over its bottom (as factors on the rated Voc). A panel of a given curve shape is bounded in the")
+    P("   window only while its band top is at most k_bound (25 V over its rated Voc at %.0f C and %.0f W/m2) and is held only while its"
+      % (R["t_cold"], G_STC))
+    P("   band bottom is at least k_reach (the hold's upper corner over its rated Voc at noon; the fit's Voc scales exactly with the")
     P("   voltages, checked). Both hold for some rating only while the spread is at most W = k_bound / k_reach.")
     for c in (spr, bgv, sbx):
         P("   %-60s k_bound %.4f; k_reach %.4f (%.3f V) / %.4f (%.3f V); W %.4f / %.4f (symmetric +-%.2f / +-%.2f %%); printed spread %s" % (
@@ -977,55 +1038,83 @@ def render(R):
         P("   %s, %s: %s (sha256 %s); %s" % (r_["maker"], r_["model"], r_["why_not"], r_["sha256"][:16], r_["url"]))
     P("   in the tree already: %s" % R["screen"]["in_the_tree_already"])
     P("")
-    P("10. ROUTE 2, PANEL-ACC: ONE IDENTIFIED UNIT, ACCEPTED BY ITS OWN MEASUREMENT (the check's B1; O-1's controlled unit)")
-    P("   THE UNIT (SESSION): one SunPower SPR-E-Flex-100, recorded by serial number. Why this one: a unit equal to its typical rows")
-    P("   passes all three measured conditions below, where the others' typical rows fail one (same specification):")
+    P("10. ROUTE 2, PANEL-ACC: ONE IDENTIFIED UNIT, ACCEPTED BY ITS OWN MEASUREMENT (O-1's controlled unit)")
+    P("   THE UNIT (SESSION): one SunPower SPR-E-Flex-100, recorded by serial number. The three typical rows under the same contract:")
     for c in (spr, bgv, sbx):
         a = R["acc_cands"][c["key"]]
-        P("     %-60s A-1 %.3f V (%s); A-2 %.2f W (%s); A-3 %.2f A (%s)" % (
-            c["name"], a["a1"], "pass" if a["a1_ok"] else "FAIL", a["p_noon"], "pass" if a["a2_ok"] else "FAIL",
-            a["isc_clause"], "pass" if a["a3_ok"] else "FAIL"))
-    P("   THE MEASUREMENTS ON THE UNIT (Layer 6, an I-V characterization over temperature and irradiance; the owner's purchase):")
+        P("     %-60s A-1 %.3f V (%s); A-2 %.3f W lower bound (%s); A-3(b) %.2f A (%s); A-3(c) %.2f A" % (
+            c["name"], a["a1"], "pass" if a["a1_ok"] else "FAIL", a["a2"]["p_low"], "pass" if a["a2_ok"] else "FAIL",
+            a["a3b"], "pass" if a["a3b_ok"] else "FAIL", a["a3c"]))
+    sa = R["acc_cands"]["SBX"]
+    P("   Why SunPower: BougeRV's rated curve gives the stage nothing at the corner (A-2); Solbian's rated row passes A-1 with %.3f V"
+      % (R["v_oc"] - sa["a1"]))
+    P("   to spare against SunPower's %.3f V, and its hot short circuit is %.2f A before any allowance, where the 1.25 its own maker does"
+      % (R["v_oc"] - ra["a1"], sa["isc_hot"]))
+    P("   not print (SunPower's, transferred) puts it over 10 A; SunPower's 1.25 is its own instruction. It is the energy record's pinned panel.")
+    P("   THE MEASUREMENTS ON THE UNIT (Layer 6; the owner's purchase and measurement):")
     P("     M1  the I-V curve at STC (25 C cells, 1000 W/m2): Isc, Voc25, Vmp, Imp")
     P("     M2  Voc at %.0f +- %.0f C cells and 1000 W/m2 (a cooled flash or a cold-chamber measurement): Vm20" % (R["t_cold"], SPEC_TM))
-    P("     M3  Voc at 25 C at a second irradiance (at most 500 W/m2): the irradiance slope A25 = dVoc / d ln G")
-    P("     M4  Voc at a warm point of at least +40 C cells and 1000 W/m2: the warm-side coefficient beta (relative, between 25 C and it)")
+    P("     M3  Voc at 25 C at a second irradiance of at most 500 W/m2: the slope A25 = dVoc / d ln G, so n = A25 / (Ns kT/q at 298.15 K)")
+    P("     A2m the current at A-2's corner (below)")
+    P("     (M5, optional and not an acceptance row: Voc under an irradiance above 1000 W/m2 on the cold unit, for the disturbance check)")
     P("   THE MEASUREMENT SPECIFICATION (SESSION; the laboratory states its expanded uncertainties, k = 2, each at or under these):")
-    P("     U_V %.2f V on each Voc (the cell temperature's own uncertainty inside it); U_A %.0f %% of A25; U_beta %.0f %% of beta; U_I %.0f %% of Isc"
-      % (sp["u_v"], 100 * sp["u_a"], 100 * sp["u_b"], 100 * sp["u_i"]))
-    P("   THE ACCEPTANCE (every condition, on the unit's own figures):")
-    P("     A-1 the cold envelope: Vm20 + U_V + A25 (1 + U_A) x (T + 273.15) / 298.15 x ln(G_MAX / 1000) <= %.3f V, at T = %.0f C:" % (
-        R["v_oc"], R["t_cold"]))
-    P("         Vm20 + %.2f + A25 x %.6f <= %.3f V (the irradiance term's factor %.4f x %.4f x %.4f)" % (
-        sp["u_v"], (1 + sp["u_a"]) * lt * R["ln_g"], R["v_oc"], 1 + sp["u_a"], lt, R["ln_g"]))
-    P("     A-2 useful charging at the applicable hold corner, the conditioned upper corner %.3f V: on the unit's own curve (its M1 points)"
-      % R["hold_cond"][1])
-    P("         at Voc25 - U_V, beta (1 + U_beta) and A25 (1 + U_A), the stage's input at SC-37's noon (%.1f W/m2, cells %.2f C, the lead)"
-      % (R["g_noon"], R["tc_noon"]))
-    P("         strictly above %.4f W; then its day traced through the replay (A1, A2)" % R["p_use"])
-    P("     A-3 the entry: Isc (1 + U_I) at +%.0f C cells by the sheet's coefficient, x %.2f, at or under F2's and J_SOLAR's %.0f A" % (
+    P("     U_V %.2f V on each voltage (M2's cell temperature inside it); U_A %.0f %% of A25; U_I %.0f %% of a current; U_G %.0f %% of A-2's"
+      % (spec["u_v"], 100 * spec["u_a"], 100 * spec["u_i"], 100 * spec["u_g"]))
+    P("     irradiance setting; U_TC %.1f K on A-2's cell temperature" % spec["u_tc"])
+    P("   THE ACCEPTANCE (on the unit's own measurements):")
+    P("     A-1 THE WINDOW: Vm20 + U_V <= %.3f V (no slope, no extrapolation, no temperature scaling)" % R["v_oc"])
+    P("     A-2 USEFUL CHARGING, MEASURED at SC-37's noon corner, offset to the conservative side: irradiance at or under %.1f W/m2"
+      % R["g_noon"])
+    P("         minus U_G (%.1f W/m2 at the specification), cells at or above %.2f C plus U_TC (%.2f C), the current I read at the panel"
+      % (R["a2_corner"][0], R["tc_noon"], R["a2_corner"][1]))
+    P("         voltage %.3f V + I x R_lead (the 5 m lead, %.4f Ohm, ESTIMATE as the record states it); P = %.3f V x I; accepted on"
+      % (R["hold_cond"][1], R["rl"], R["hold_cond"][1]))
+    P("         P - U_P strictly above %.6f W, U_P = %.3f V x sqrt((U_I I)^2 + (dI/dV U_V)^2) with dI/dV the measured local slope" % (
+        R["p_use"], R["hold_cond"][1]))
+    sg, sf = R["a2_signs_rated"], R["a2_signs_floor"]
+    P("         why the offsets are conservative (the model's signs at the corner, the rated unit / the floor unit): dI/dG %+.5f / %+.5f A"
+      % (sg["di_dg"], sf["di_dg"]))
+    P("         per W/m2 (less light, less current); dI/dT %+.5f / %+.5f A/K (warmer cells, less current); the hold %.3f V lies above Vmp"
+      % (sg["di_dt"], sf["di_dt"], R["hold_cond"][1]))
+    P("         there, %.3f / %.3f V (%.3f / %.3f V at the unshifted noon)" % (sg["vmp"], sf["vmp"], sg["vmp_noon"], sf["vmp_noon"]))
+    P("     A-3 THE ENTRY, THREE CASES:")
+    P("       (a) normal operation: the entry carries the stage's input current, bounded by L4-E7's drafted limit and independent of")
+    P("           irradiance: at most %.4f W / %.3f V = %.4f A at the design floor's worst corner (stack C, L4-E7 out 4), under %.0f A;"
+      % (max(R["stack_c"][0], R["stack_c"][2]), R["stack_c"][1], R["i_norm_max"], R["entry_a"]))
+    P("           CONDITIONAL with A-4")
+    P("       (b) a sustained input fault (a short downstream of F2, D4 failing short for example): the panel's Isc for hours, hot cells")
+    P("           +%.0f C, (1 + U_I), x %.2f, the maker's own sizing allowance, at or under %.0f A. SunPower 524958 Rev F prints it in" % (
         T_ISC_HOT, K_CLAUSE, R["entry_a"]))
+    P("           section 3.0 (PDF p.2; the coordinator's direction named section 5.1, which holds the operating temperature), verbatim:")
+    P("           \"%s\"" % R["clause_quote"])
+    P("       (c) the enhancement transient during an existing input fault (a double contingency): F2 opening is the safe outcome; if")
+    P("           F2 holds, J_SOLAR and the PV_IN conductors carry Isc_hot (1 + U_I) x G_T / 1000 for the event. G_T = %.1f W/m2 is a"
+      % R["g_t"])
+    P("           SESSION design level for this case only (the source's enhancement on E0; a design level, not a claimed maximum).")
+    P("           J_SOLAR's held catalogue (JST VH, p.1) prints '%s' and '%s' and %s: COMPONENT_LIMITATION," % (
+        R["vh_rating"], R["vh_temp"], "a short-time overload" if R["vh_overload"] else "no short-time overload"))
+    P("           carried as PANEL-ACC row A-3(c): J_SOLAR and PV_IN rated at least that current at their maximum ambient, or a bench row")
     P("     A-4 the 100 W into the stage: CONDITIONAL on L4-E7's drafted input limit applied on board E and its bench rows (the unit's")
     P("         maximum at -20 C, 1000 W/m2 is %.1f W, over 100 W as drawn; section 5); not a measured condition of the unit" % max(
         x[5] for x in spr["power"] if x[0] == "nominal"))
-    P("   THE DEMONSTRATION ON A UNIT EQUAL TO THE TYPICAL ROWS (INFERRED: the sheet's coefficient gives its Vm20, the larger of its two")
-    P("   readings; the fit gives A25; a real unit replaces each by its measurement):")
-    P("     Voc25 %.3f V, Vm20 %.3f V, A25 %.4f V, beta %.4f %%/K, Isc %.2f A" % (
-        ru["v25"], ru["vm20"], ru["a25"], 100 * ru["beta"], ru["isc"]))
-    P("     A-1 %.4f V: %s, margin %.4f V (Vm20 %.3f + U_V %.2f + the irradiance term %.4f)" % (
-        ra["a1"], "PASS" if ra["a1_ok"] else "FAIL", R["v_oc"] - ra["a1"], ru["vm20"], sp["u_v"],
-        ru["a25"] * (1 + sp["u_a"]) * lt * R["ln_g"]))
-    P("     A-2 %.3f W at the noon corner: %s (above %.4f W)" % (ra["p_noon"], "PASS" if ra["a2_ok"] else "FAIL", R["p_use"]))
-    P("     A-3 %.3f A (%.3f A before the factor): %s" % (ra["isc_clause"], ra["isc_hot"], "PASS" if ra["a3_ok"] else "FAIL"))
+    P("   THE DEMONSTRATION ON A UNIT EQUAL TO THE TYPICAL ROWS (INFERRED: the sheet's coefficient, the larger of its two readings, gives")
+    P("   Vm20; the energy record's fit gives the curve; a real unit replaces each by its measurement):")
+    P("     Voc25 %.3f V, Vm20 %.4f V, Isc %.2f A" % (ru["v25"], ru["vm20"], ru["isc"]))
+    P("     A-1 %.4f V: %s, margin %.4f V" % (ra["a1"], "PASS" if ra["a1_ok"] else "FAIL", R["v_oc"] - ra["a1"]))
+    P("     A-2 I %.4f A, P %.4f W, dI/dV %.4f A/V, U_P %.4f W, lower bound %.4f W: %s (above %.6f W)" % (
+        ra["a2"]["i"], ra["a2"]["p"], ra["a2"]["didv"], ra["a2"]["u_p"], ra["a2"]["p_low"], "PASS" if ra["a2_ok"] else "FAIL", R["p_use"]))
+    P("     A-3 (a) %.4f A: %s; (b) %.4f A (%.4f A before the factor): %s; (c) %.4f A at G_T, over J_SOLAR's 10 A: a downstream row" % (
+        ra["a3a"], "PASS" if ra["a3a_ok"] else "FAIL", ra["a3b"], ra["isc_hot"], "PASS" if ra["a3b_ok"] else "FAIL", ra["a3c"]))
+    P("         a 20 A part would cover the double contingency up to %.0f W/m2, %.2f x E0" % (A["g_20a"], A["g_20a"] / R["e0_max"]))
     P("   THE WINDOW for a unit of this curve shape (the unit's own measurements decide; these are the specification's limits):")
     P("     Voc25 from %.3f V (A-2's floor: %.4f x rated) to %.3f V (A-1's ceiling: %.4f x rated); Vm20 at most %.3f V" % (
         A["v25_floor"], A["k_floor"], A["v25_ceil"], A["k_ceil"], A["vm20_ceil"]))
     P("     the rated %.3f V lies inside it: %s; the window is not empty: %s" % (
         spr["voc"], "yes" if A["k_floor"] < 1.0 <= A["k_ceil"] else "NO", "yes" if A["k_floor"] < A["k_ceil"] else "NO"))
-    P("     M2 is required: extrapolating the cold point from Voc25 instead needs U_beta at or under %.2f %% of beta for the rated unit"
+    P("     information: a laboratory without a cold chamber could extrapolate Vm20 from M1 with a coefficient measured to within %.1f %%"
       % (100 * A["ub_extrap_max"]))
-    P("     (the printed coefficient has no limits at all)")
-    P("   THE ENERGY OF THE WORST ACCEPTED UNITS (the acceptance's own worst curve; the drafted limit %.4f A; the replay's A1 and A2):" % R["i_set"])
+    P("     for the rated unit; the contract keeps M2 measured")
+    P("   THE ENERGY (the drafted limit %.4f A; the replay's A1 and A2):" % R["i_set"])
     for lab, vh, tot, nl, zh, noon_w, rr, tr in R["acc_runs"]:
         P("     %s (%.3f V): %.1f Wh a day; at noon %.2f W; [%d limited, %d daylight hours with no input]" % (lab, vh, tot, noon_w, nl, zh))
         for ak in ("A1", "A2"):
@@ -1034,12 +1123,47 @@ def render(R):
                 ak, "/".join("-" if x is None else str(x) for x in st), u48[0], u48[1], u72[0], u72[1],
                 " / ".join("-" if a is None else "+%.1f" % a for a in add) + " Wh"))
         P("       the trace (W, hours 0 to 23): %s" % " ".join("%.1f" % x for x in tr))
-    P("   (the floor unit's noon input on the model is %.4f W, the useful-power line; its trace's noon figure carries the replay's" % A["floor_p_noon"])
-    P("   PVGIS convention)")
+    P("   (the floor unit's lower bound at A-2's corner is %.4f W, on the useful-power line; its trace's noon figure carries the" % (
+        A["floor"]["a2"]["p_low"]))
+    P("   replay's PVGIS convention, at the unshifted noon)")
     P("")
-    P("11. THE DECISION ON U-03 (SESSION, the check's B2): TWO ROUTES")
-    P("   Route 1, a maker-bound sheet: bounded over the envelope by the printed band AND the hold inside the curve at the conditioned")
-    P("   upper corner over that band AND portable:")
+    D = R["dist"]
+    P("11. THE DISTURBANCE CHECK: COMPONENT LIMITS DURING AN IRRADIANCE BURST ON COLD-SOAKED CELLS (TRN-001, apart from the window)")
+    P("   THE LIMIT: the lowest rating on PV_P for a current-limited source held for minutes is D4's printed standoff, the SMCJ28A's")
+    P("   VR %.1f V (at most %.0f uA there; Littelfuse SMCJ sheet p.2, the row VR %.1f / VBR %.2f to %.2f V at %.0f mA / VC %.1f V at %.1f A /"
+      % (R["d4_vr"], R["d4_ir_ua"], R["d4_row"][0], R["d4_row"][1], R["d4_row"][2], R["d4_row"][3], R["d4_row"][4], R["d4_row"][5]))
+    P("   IR %.0f uA). The sheet prints VBR(TJ) = VBR(25 C) x (1 + aT (TJ - 25)), aT typical %.1f %%/C (p.1): the cold VBR minimum at %.0f C"
+      % (R["d4_row"][6], 100 * R["d4_alpha_t"], R["t_cold"]))
+    P("   is %.2f V (a typical coefficient). C11 and C12's %.0f V lie above." % (R["d4_vbr_cold"], R["cap_v"]))
+    P("   THE IRRADIANCE TERM, by junction physics, not by a measured slope: dVoc / d ln G <= n x Ns x kT/q, Ns %d (the sheet), T %.2f K"
+      % (D["ns"], R["t_cold"] + 273.15))
+    P("   (kT/q %.6f V); n_max = %.0f is a MODELLING_ASSUMPTION (the silicon junction's ideality ceiling: 1 for diffusion, 2 for" % (
+        D["vt_cold"], N_MAX))
+    P("   depletion-region recombination); M3's measured n = A25 / (Ns kT/q at 298.15 K, %.6f V) must read at or under %.0f with its"
+      % (D["vt_25"], N_MAX))
+    P("   uncertainty, else this check is re-judged (the typical unit's fit: n %.4f, %.4f with U_A)." % (D["n_meas_typ"], D["n_meas_typ_upper"]))
+    P("   THE COLDEST CELLS ARE THE WORST CASE: d/dT [Voc(T, 1000) + n Ns kT/q ln(G / 1000)] = beta + n Ns k/q ln(G / 1000); up to the")
+    P("   threshold below the second term is at most %.3f V / %.2f K = %.6f V/K, against the sheet's coefficient of at least %.4f V/K"
+      % (D["dv"], R["t_cold"] + 273.15, D["dlog_dt_max"], D["beta_mag_min"]))
+    P("   in magnitude (the smaller of its two readings): the derivative stays negative, so cells warmer than %.0f C give less." % R["t_cold"])
+    P("   THE THRESHOLD: a unit at A-1's ceiling (Vm20 + U_V = %.3f V) reaches D4's %.1f V standoff at G = 1000 exp(%.3f V / (n Ns kT/q)):"
+      % (R["v_oc"], R["d4_vr"], D["dv"]))
+    for lab, n, slope, g_thr, mult in D["rows"]:
+        P("     %-56s n %.4f: %.4f V per unit of ln G; %.0f W/m2, %.2f x E0" % (lab, n, slope, g_thr, mult))
+    P("   RESULT: the disturbance check is implied by A-1 for every plane-of-array irradiance below %.0f W/m2 (n <= 2), %.2f x the"
+      % (D["g_thr_dec"], D["g_thr_dec"] / R["e0_max"]))
+    P("   extraterrestrial irradiance; no irradiance maximum is a decision input. ASSUMPTION: the plane-of-array irradiance stays below")
+    P("   that threshold (the context of section 1 puts the read enhancement at %.1f W/m2 on E0). Its impact if it fails: D4 rises above"
+      % D["enh_level"])
+    P("   its standoff and conducts under %.0f mA until its VBR (%.2f V cold minimum), no damage below VBR. Its verification: none beyond"
+      % (R["d4_row"][3], R["d4_vbr_cold"]))
+    P("   M3's n check (M5 optional). Cross-check: SunPower's own allowance, 1.25 x Voc for component voltage ratings, is %.2f V on the"
+      % D["clause_v_rated"])
+    P("   rated row and %.2f V at the window's Voc25 ceiling, both under the %.1f V standoff." % (D["clause_v_ceil"], R["d4_vr"]))
+    P("")
+    P("12. THE DECISION ON U-03 (SESSION): TWO ROUTES")
+    P("   Route 1, a maker-bound sheet: bounded in the window by the printed band AND the hold inside the curve at the conditioned upper")
+    P("   corner over that band AND portable:")
     for c in (spr, bgv, sbx):
         P("     %-60s bounded %s; hold %s; portable %s -> %s" % (
             c["name"], "yes" if c["bounded"] else "NO", "yes" if c["reach_cond_upper"] else "NO", "yes" if c["portable"] else "NO",
@@ -1047,28 +1171,32 @@ def render(R):
     P("     on EA3's typical band (upper corner %.3f V) instead: %s" % (R["hold_typ"][2], "; ".join(
         "%s %s" % (c["key"], "qualifies" if c["qualifies_typ"] else "does not qualify") for c in (spr, bgv, sbx))))
     P("   Route 2, a controlled unit: PANEL-ACC's contract (section 10) has a non-empty window that holds the identified panel's typical")
-    P("   rows, with every condition met at the specification: %s" % ("yes" if R["route2"] else "NO"))
+    P("   rows, with A-1, A-2, A-3(a) and A-3(b) met at the specification: %s" % ("yes" if R["route2"] else "NO"))
     P("   U-03: %s." % R["decision"])
     if R["decision"].startswith("CONDITIONAL"):
         P("   It is not an architecture-level choice: REQ-016's window, the stage, its hold and the drafted limit stay, and the panel is")
-        P("   selected downstream by measurement. It is CONDITIONAL on: a bought unit passing A-1 to A-3 by its own measurement (M1 to M4")
-        P("   at the specification); L4-E7's drafted input limit applied (A-4, its 96.25 W CONDITIONAL); the unit's trace rerun (A1, A2).")
+        P("   selected downstream by measurement. It is CONDITIONAL on: a bought unit passing A-1, A-2 and A-3(b) by its own measurement")
+        P("   (M1 to M3 and A-2's reading at the specification); L4-E7's drafted input limit applied (A-3(a) and A-4, its 96.25 W")
+        P("   CONDITIONAL); A-3(c)'s connector and conductor rating at Layer 5/6; the disturbance check's assumption (section 11) and M3's n;")
+        P("   the unit's trace rerun (A1, A2). None of these can overturn the architecture: A-3(c) is a connector rating (REQ-016's 'rated")
+        P("   10 A' is a minimum), and the rest decide a unit, not the topology.")
         P("   NO PHYSICAL UNIT IS ACCEPTED: none is bought or measured; the purchase and the measurement are the owner's actions (money).")
         P("   Route 1 stays open beside it: the drafts in clarification/ ask the two hold-matched makers for a warranted band (the owner")
-        P("   sends them; the session contacts no outside party). REQ-016 need not change, so no owner question is raised; a series diode")
-        P("   or a clamp is not a substitute (section 1).")
+        P("   sends them; the session contacts no outside party). REQ-016 need not change, so no owner question is raised.")
     P("   THE DOWNSTREAM ITEM, PANEL-ACC (Layer 6, component selection; the purchase is the owner's): accept the panel by route 1 (the")
-    P("   bought revision's document, filed with its sha256, passes section 3 and section 4 over the envelope) or by route 2 (the")
-    P("   identified unit passes A-1 to A-3 at the specification, section 10); in either case rerun its trace through the replay's")
-    P("   section 12 and L4-E7's section 5 (A1 and A2), keep F2's and J_SOLAR's %.0f A (A-3) and the 100 W on L4-E7's limit (A-4)." % R["entry_a"])
+    P("   bought revision's document, filed with its sha256, bounds its band in the window and keeps the hold inside the curve, sections")
+    P("   3 and 4) or by route 2 (the identified unit passes A-1, A-2 and A-3(b) at the specification, section 10); in either case rerun")
+    P("   its trace through the replay's section 12 and L4-E7's section 5 (A1 and A2), rate J_SOLAR and PV_IN for A-3(c), keep F2's and")
+    P("   J_SOLAR's %.0f A minimum and the 100 W on L4-E7's limit (A-3(a), A-4), and check M3's n against the disturbance threshold." % R["entry_a"])
     P("")
-    P("12. EVIDENCE CLASSES: MAKER (SunPower's sheet and guide, Solbian's sheet), MAKER-PAGE (BougeRV's page, transcribed), RECORD")
-    P("    (the replay's and L4-E7's outputs, the stage's drive power), MODELED (the energy record's single-diode model and day), INFERRED")
-    P("    (the irradiance slopes, the window ratios, the demonstration unit, the cell temperature at the hot end), ASSUMPTION (S0 and the")
-    P("    orbit's eccentricity as physical constants; a band's voltages scaled with its currents kept; BougeRV's rows taken as STC),")
-    P("    LITERATURE (the enhancement and the Cabauw quotations, CC BY 4.0), SESSION (the envelope, the 10 % sentence's reading, the")
-    P("    coefficient as a fraction, the hold screen and the day's 5 % hours, the conditioned band, PANEL-ACC's unit, measurements and")
-    P("    specification, the useful-power line).")
+    P("13. EVIDENCE CLASSES: MAKER (SunPower's sheet and guide, Solbian's sheet, Littelfuse's SMCJ sheet, JST's VH catalogue),")
+    P("    MAKER-PAGE (BougeRV's page, transcribed), RECORD (the replay's and L4-E7's outputs, the stage's drive power), LITERATURE")
+    P("    (the enhancement and the Cabauw quotations, CC BY 4.0, context only), MODELED (the energy record's single-diode model and day),")
+    P("    INFERRED (the window ratios, the demonstration unit, A-2's signs, the cell temperature at the hot end), ASSUMPTION (S0 and the")
+    P("    orbit's eccentricity as physical constants; a band's voltages scaled with its currents kept; BougeRV's rows taken as STC; the")
+    P("    irradiance below the disturbance threshold), MODELLING_ASSUMPTION (n_max = 2), COMPONENT_LIMITATION (J_SOLAR prints no")
+    P("    short-time overload), SESSION (the window's reading, the 10 % sentence's reading, the hold screen, the conditioned band,")
+    P("    PANEL-ACC's unit, measurements and specification, the useful-power line, A-3(c)'s design level).")
     return "\n".join(o) + "\n"
 
 
