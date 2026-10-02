@@ -94,9 +94,12 @@ brackets point to the `.out`.
   battery-only run coupled to C1: on the bound C1 sheds the profile from 2.01 h and the run lasts 2.52 to 2.95 h with its shed
   states; 2.52 h stays energy-only. A bench point closes only the conductance of its own configuration. The addendum (17.9): the
   outside capacity with a zero inside resistance (1.856 to 1.906 W/K at the margins' rises, conservative; section 14's 1.540 to
-  1.571 W/K was the bound with a 50 m/s inside flow) leaves four lines in class (iii), where no measurement can pass: E3-L at +40
-  C lid closed as ruled (the SGP41's Table 4; short by 0.275 W/K on the pack, 0.430 W/K on shore) and the e-paper's unpowered
-  +60 C row at E3-O (short 0.955 W/K) and E5 (no room). Every other line T-H1 decides, some only with the route fitted.
+  1.571 W/K was the bound with a 50 m/s inside flow) leaves four lines over the MODELLED capacity even with the route (a model
+  figure on named coefficient ends, not a physical bound), none of them shown impossible (the review of the provisional fixes,
+  L4-F04): E3-L at +40 C lid closed as ruled, a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT (the SGP41's Table 4 on the mixed
+  air; short by 0.275 W/K on the pack, 0.430 W/K on shore), and the e-paper's unpowered +60 C row at E3-O (short 0.955 W/K) and
+  E5 (no modelled room), a MISSING STORAGE QUALIFICATION; no DEMONSTRATED CONFLICT. Every other line T-H1 decides, some only with
+  the route fitted.
 
 ## 2. The acceptance, read first [1]
 
@@ -1474,8 +1477,17 @@ Some of 17.2's lines are high, so each line needs a class:
 - **(i):** reachable in the bare sealed case, so T-H1 decides;
 - **(ii):** reachable only with the combined heat-rejection route fitted (section 15: R-170 fins, R-171 the large loads into the
   plate, R-172 the lid skin), so T-H1 with the route decides;
-- **(iii):** over the capacity even with the route and a perfect inside film. No measurement can pass it: it is a contradiction
-  between the rulings (no vent, the Peli 1450, the device set) and that mode's requirement, and the owner's to decide.
+- **Over the modelled capacity even with the route and a perfect inside film.** The capacity is a model figure on the coefficient
+  ends and heat paths named below, not a physical upper bound on every arrangement the rulings allow, so a line over it is not proof that
+  no measurement can pass it (the review of the provisional fixes, L4-F04). It falls in one of three named categories, decided by
+  the line's own property:
+  - **MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT:** a held local limit over the analysed arrangement's modelled capacity,
+    judged on the mixed air. An engineering task: a different heat path, or the part's local temperature measured apart from
+    the mixed-air screen, may change it.
+  - **MISSING STORAGE QUALIFICATION:** an unpowered part judged on an operating row read to cover storage (INFERRED). An
+    evidence task: the maker's storage statement, or a storage soak of a sample with its function read back.
+  - **DEMONSTRATED CONFLICT:** a measured local temperature over a mandatory limit with the route fitted. Only this category
+    justifies asking the owner to change a requirement or a ruling. None at present: nothing is built or measured.
 
 **The capacity.** It is computed with the inside resistance at zero:
 - **Every inner face sits at the inside air,** and the 3 mm aluminium plate is taken as isothermal.
@@ -1499,65 +1511,67 @@ So E3-O's 1.806 W/K and K1 lie under it even on the conservative ends (14.4 and 
 
 **The classes.** Each class is read at the optimistic ends (what physics may allow), with the conservative-end class beside it:
 
-| Mode | Line | Needs | Capacity bare (cons. / opt.) | With the route (cons. / opt.) | Class (conservative ends) | Class (iii): shortfall |
+| Mode | Line | Needs | Capacity bare (cons. / opt.) | With the route (cons. / opt.) | Class (conservative ends) | Over the model: category and shortfall |
 |---|---|---|---|---|---|---|
-| M1 E3-A on the pack, open | the SGP41's Table 4 (as ruled) | 2.554 W/K at 10.00 K | 1.725 / 2.849 | 2.468 / 4.391 | (i) ((iii)) | |
+| M1 E3-A on the pack, open | the SGP41's Table 4 (as ruled) | 2.554 W/K at 10.00 K | 1.725 / 2.849 | 2.468 / 4.391 | (i) (over the model) | |
 | M1 | the cells' hot stop H1 (C, A, B) | 1.666 W/K at 15.32 K | 1.815 / 2.969 | 2.594 / 4.589 | (i) ((i)) | |
-| M2 E3-A on shore, open | the SGP41's Table 4 | 2.709 W/K at 10.00 K | 1.725 / 2.849 | 2.468 / 4.391 | (i) ((iii)) | |
+| M2 E3-A on shore, open | the SGP41's Table 4 | 2.709 W/K at 10.00 K | 1.725 / 2.849 | 2.468 / 4.391 | (i) (over the model) | |
 | M2 | the idle cells' H1 | 1.642 W/K at 16.50 K | 1.832 / 2.993 | 2.617 / 4.627 | (i) ((i)) | |
-| M3 E3-L on the pack, closed | the SGP41's Table 4 | 2.554 W/K at 10.00 K | 1.335 / 2.279 | as bare | **(iii)** | **0.275 W/K, 2.749 W** |
-| M3 | the cells' H1 | 1.666 W/K at 15.32 K | 1.385 / 2.356 | as bare | (i) ((iii)) | |
-| M4 E3-L on shore, closed | the SGP41's Table 4 | 2.709 W/K at 10.00 K | 1.335 / 2.279 | as bare | **(iii)** | **0.430 W/K, 4.300 W** |
-| M4 | the idle cells' H1 | 1.642 W/K at 16.50 K | 1.395 / 2.371 | as bare | (i) ((iii)) | |
+| M3 E3-L on the pack, closed | the SGP41's Table 4 | 2.554 W/K at 10.00 K | 1.335 / 2.279 | as bare | **over the model** | **MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT: 0.275 W/K, 2.749 W** |
+| M3 | the cells' H1 | 1.666 W/K at 15.32 K | 1.385 / 2.356 | as bare | (i) (over the model) | |
+| M4 E3-L on shore, closed | the SGP41's Table 4 | 2.709 W/K at 10.00 K | 1.335 / 2.279 | as bare | **over the model** | **MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT: 0.430 W/K, 4.300 W** |
+| M4 | the idle cells' H1 | 1.642 W/K at 16.50 K | 1.395 / 2.371 | as bare | (i) (over the model) | |
 | M5 REQ-014 at +20 C | C1's air trigger | 1.447 W/K at 30.00 K | 1.875 / 2.950 | 2.686 / 4.596 | (i) ((i)) | |
-| M6 E3-O at +55 C | the e-paper's +60 C operating row, unpowered (INFERRED) | 5.417 W/K at 5.00 K | 1.704 / 2.915 | 2.429 / 4.462 | **(iii)** | **0.955 W/K, 4.775 W** |
+| M6 E3-O at +55 C | the e-paper's +60 C operating row, unpowered (INFERRED) | 5.417 W/K at 5.00 K | 1.704 / 2.915 | 2.429 / 4.462 | **over the model** | **MISSING STORAGE QUALIFICATION: 0.955 W/K, 4.775 W** |
 | M6 | the +70 C class (maker-stated) | 1.806 W/K at 15.00 K | 1.906 / 3.181 | 2.714 / 4.904 | (i) ((i)) | |
-| M7 E5 at +60 C | the e-paper's +60 C row | no room (the limit at the ambient) | none at a zero rise | none | **(iii)** | **the whole 21.587 W** |
+| M7 E5 at +60 C | the e-paper's +60 C row | no room (the limit at the ambient) | none at a zero rise | none | **over the model** | **MISSING STORAGE QUALIFICATION: the whole 21.587 W** |
 | M7 | the LimeSDR's +70 C storage row (maker-stated) | 2.159 W/K at 10.00 K | 1.856 / 3.144 | 2.642 / 4.831 | (i) ((ii)) | |
 | M8 charging, cold end | T4 on the charging cells | 2.025 W/K at 25.75 K | 1.797 / 2.803 | 2.578 / 4.369 | (i) ((ii)) | |
 | M8 | T3's start (K7) | 1.810 W/K at 28.80 K | 1.829 / 2.849 | 2.623 / 4.443 | (i) ((i)) | |
 | M9 charging, warm end | T4 on the charging cells | 2.525 W/K at 20.65 K | 1.764 / 2.782 | 2.531 / 4.326 | (i) ((ii)) | |
 | M9 | T3's start (K8) | 2.200 W/K at 23.70 K | 1.800 / 2.833 | 2.581 / 4.409 | (i) ((ii)) | |
 
-**So T-H1 decides every line but four.** Where a line is (ii) or (iii) only at the conservative ends, the bare reading may fall
-short; the same point is then repeated with the route fitted (`T-H1-PROCEDURE-DRAFT.md` section 6).
+**So T-H1 decides every line but four, and those four are not shown impossible.** Where a line is (ii), or over the model, only at
+the conservative ends, the bare reading may fall short; the same point is then repeated with the route fitted (`T-H1-PROCEDURE-DRAFT.md` section 6).
 
-**The four class (iii) lines, and their options** (none lowers a requirement silently):
+**The four lines over the modelled capacity, by category** (none lowers a requirement silently; an option that changes a
+requirement or a ruling stays the owner's and goes to him only when a measurement demonstrates the conflict).
 
-**(1) E3-L at +40 C, lid closed, as ruled (M3 on the pack, M4 on shore).** The SGP41's Table 4 +50 C lies over the closed case's
-capacity.
-
-| Option | Effect | Authority |
-|---|---|---|
-| CFL-002's C, A or B | the line moves to the cells' hot stop H1 (1.666 and 1.642 W/K), under the closed capacity's optimistic end and over its conservative one: T-H1's lid-closed point decides | the owner's |
-| a closed-lid ceiling on REQ-042's VOC channel | the bay air holds Table 4's +50 C lid closed only to an ambient of +31.3 to +38.8 C on the pack and +30.2 to +38.2 C on shore (conservative to optimistic) | the owner's (a requirement change) |
-| D-02b's closed-lid test at +40 C restated | E3-L's +40 C level with the VOC channel's state named | the owner's (a ruling change) |
-| a closed-lid conduction path, plate to the lid's inner face inside the seal | not modelled here, so it closes nothing yet | the session's to develop (Layer 7) |
-
-**(2) E3-O at +55 C (M6).** The unpowered e-paper, judged on its +60 C operating row read to cover it, lies over the route's
-capacity.
+**MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT: (1) E3-L at +40 C, lid closed, as ruled (M3 on the pack, M4 on shore).** The
+SGP41's Table 4 +50 C sensing row, judged on the bay's mixed air, lies over the analysed closed case's modelled capacity (a model
+figure on the coefficient ends above, not a physical bound).
 
 | Option | Effect | Authority |
 |---|---|---|
-| PDi's storage statement | with a range at or over +70 C the line becomes the +70 C class, 1.806 W/K, class (i) | the request is the session's (drafted, `clarification/pervasive-displays-e2370ks0c1.txt`); sending it is the owner's |
-| the e-paper's own temperature at its window in the plate, measured | at the bound's plate fraction 0.362 it needs 1.963 W/K, at W4's high 0.725 it needs 3.926 W/K, both under the route's optimistic capacity: the measured fraction decides | the session's (a T-H1 channel at the window) |
-| an e-paper with a held range at or over +70 C | the line becomes the +70 C class | the owner's (CHO-001) |
-| E3-O run with the e-paper's state recorded as a deviation | the margin's acceptance restated for that part | the owner's (TEST-PLAN) |
+| a closed-lid conduction path, plate to the lid's inner face inside the seal (the combined route R-170 to R-172 carried to the closed lid) | not modelled here, so it closes nothing yet; it changes the analysed arrangement | the session's to develop (Layer 7) |
+| the SGP41's local air measured at its port, apart from the mixed-air screen | the sensor's own temperature, not the mixed air, against Table 4's +50 C | the session's (a T-H1 channel) |
+| CFL-002's C, A or B | the line moves to the cells' hot stop H1 (1.666 and 1.642 W/K), under the closed capacity's optimistic end and over its conservative one: T-H1's lid-closed point decides | the owner's, only if a measurement demonstrates the conflict |
+| a closed-lid ceiling on REQ-042's VOC channel | on the model the bay air holds Table 4's +50 C lid closed only to an ambient of +31.3 to +38.8 C on the pack and +30.2 to +38.2 C on shore (conservative to optimistic) | the owner's (a requirement change), only if a measurement demonstrates the conflict |
+| D-02b's closed-lid test at +40 C restated | E3-L's +40 C level with the VOC channel's state named | the owner's (a ruling change), only if a measurement demonstrates the conflict |
 
-**(3) E5's +60 C dwell (M7).** The ambient equals the e-paper's operating top, so no capacity and no plate fraction carries it.
+**MISSING STORAGE QUALIFICATION: (2) E3-O at +55 C (M6) and (3) E5's +60 C dwell (M7).** The unpowered e-paper is judged on its
++60 C operating row read to cover it (INFERRED); no storage row is held, so the shortfall is against an inferred limit, not a
+demonstrated one. At E3-O it lies over the route's modelled capacity; at E5 the ambient equals that row, so no modelled capacity
+and no plate fraction carries it.
 
 | Option | Effect | Authority |
 |---|---|---|
-| PDi's storage statement | then the LimeSDR's +70 C storage row governs, 2.159 W/K, class (i) at the optimistic ends | as above |
-| a different e-paper | as above | the owner's (CHO-001) |
-| E5 run with the e-paper out, as a recorded deviation | the margin's acceptance restated | the owner's (TEST-PLAN) |
+| PDi's storage statement | with a range at or over +70 C M6's line becomes the +70 C class, 1.806 W/K, class (i), and M7's the LimeSDR's +70 C storage row, 2.159 W/K, class (i) at the optimistic ends | the request is the session's (drafted, `clarification/pervasive-displays-e2370ks0c1.txt`); sending it is the owner's |
+| a storage soak of a sample at the mode's temperature, its function read back after it | evidence for that lot, not a maker's range | the session's (a bench item) |
+| the e-paper's own temperature at its window in the plate, measured (M6) | a local temperature apart from the mixed air: at the bound's plate fraction 0.362 it needs 1.963 W/K, at W4's high 0.725 it needs 3.926 W/K, both under the route's optimistic capacity: the measured fraction decides | the session's (a T-H1 channel at the window) |
+| an e-paper with a held range at or over +70 C | the line becomes the +70 C class | the owner's (CHO-001), only if a measurement demonstrates the conflict |
+| E3-O or E5 run with the e-paper's state recorded as a deviation | the margin's acceptance restated for that part | the owner's (TEST-PLAN), only if a measurement demonstrates the conflict |
 
-**Charging is not class (iii).** For scale only: charging solely in the heat stage would put 31.133 W into the case and need 1.209
+**DEMONSTRATED CONFLICT: none at present.** A line enters it only on a measured local temperature over a mandatory limit with the
+route fitted; no part of this kit is built or measured.
+
+**Charging lies under the modelled capacity (class (i)).** For scale only: charging solely in the heat stage would put 31.133 W into the case and need 1.209
 and 1.508 W/K at T4's line, class (i) at both ends. That would cost the profile's service while charging, against the 48 to
 72 h DESIGN OBJECTIVE that is already NOT MET. It is the owner's choice of duty cycle, and is not taken.
 
 | Decision (authority: SESSION) | Why the session's | Reversed by |
 |---|---|---|
 | The capacity taken with the inside resistance at zero, the plate isothermal and still air | the coordinator's definition; still air is the conservative environment | a measured outside film |
-| The class read at the optimistic ends, the conservative-end class printed beside it | (iii) is claimed only where no coefficient in the held ranges carries the line | none needed |
+| The class read at the optimistic ends, the conservative-end class printed beside it | a line is put over the model only where no coefficient end in the held ranges carries it on the analysed paths | none needed |
+| A line over the modelled capacity is put in a named category by its property (MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, MISSING STORAGE QUALIFICATION, DEMONSTRATED CONFLICT), never called a line no reading can pass | the review of the provisional fixes (L4-F04): the capacity is a model figure on chosen coefficients and paths, an INFERRED storage reading is not a demonstrated limit, and only a measured local temperature demonstrates a conflict | a measured local temperature over a mandatory limit with the route fitted (then DEMONSTRATED CONFLICT, the owner's) |
 | The route not credited with the lid closed | its fins and skin act on the open lid | a closed-lid route, modelled |

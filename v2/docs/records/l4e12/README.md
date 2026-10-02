@@ -19,8 +19,10 @@ translation to +40 C, what one point closes and what remains, and the revised pr
 review's B3, B4 and B7 (astra-check-l4close-1): the SGP41's Table 5 +55 C a screen and option C as defined, every required mode
 with its heat balance, ambient, correctly categorised local limits and governing line per CFL-002 option, the charging heat as a
 balance (52.134 W), and the battery-only run coupled to C1 (2.52 h energy-only; 2.52 to 2.95 h with the shed states); its
-17.9 (the addendum) classes every line against the outside capacity with a zero inside resistance: four lines no measurement can
-pass (E3-L at +40 C lid closed as ruled, the e-paper's unpowered +60 C row at E3-O and E5), each with its owner's options.
+17.9 (the addendum) classes every line against the modelled outside capacity with a zero inside resistance: four lines lie over it
+even with the route, none shown impossible (categories restated after the review of the provisional fixes, L4-F04): E3-L at +40 C
+lid closed as ruled a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, the e-paper's unpowered +60 C row at E3-O and E5 a MISSING
+STORAGE QUALIFICATION; no DEMONSTRATED CONFLICT (nothing is measured), so no requirement change is asked of the owner.
 
 | File | What it is |
 |---|---|

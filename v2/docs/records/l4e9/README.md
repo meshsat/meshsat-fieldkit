@@ -62,8 +62,8 @@ guard's bench rows are R-176; the register at 166 items. The fix round of the La
 set 27's `8fbb68b6`; output section 25): L4-E11 at `656fc540` moves board E's auxiliary domain to VSYS_E over the dock's pin 1
 and selects two BUK6Y10-30P as the battery FET pair Q39 and Q40 (D-13 and D-14, addressed in drafts; R-177 to R-179; the system
 node 9.688 to 17.375 V; the start bounded to VSYS_MIN or a latch within 3.062 s); L4-E12 at `b1cd32ba` restates the thermal
-question per required mode against its governing local limit (the SGP41's +55 C a screen; four class (iii) lines no reading can
-pass, the owner's, OW-10), the charging heat as a balance (52.134 W) and the battery-only run coupled to C1 (2.52 h energy only;
+question per required mode against its governing local limit (the SGP41's +55 C a screen; four lines over the modelled capacity, since the
+review of the provisional fixes a modelled shortfall and a missing storage qualification, no demonstrated conflict), the charging heat as a balance (52.134 W) and the battery-only run coupled to C1 (2.52 h energy only;
 the shed states 2.52 to 2.95 h); L4-E10 at `ee09aa09` finds the Saft supported for the temperature windows and not yet
 adoptable; the register at 169 items. B6, the last fix (L4-E7 at `11339ec7`, output section 25m): the solar guard already on
 takes four drafted parts (C131 and C132 two 10 uF 100 V, C133 and C134 two 10 uF 50 V, C126 330 pF, R97 30.0k), and D-10 is
@@ -72,8 +72,12 @@ text is L4-E7's; the register at 170 items. The review of the provisional fixes 
 on `8fbb68b6`, `516d43fe` and `11339ec7`; output section 26): L4-F02 and L4-F03 from L4-E11 at `d2a59468`: D-14 restated,
 CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss against TI's 5 nF OPEN (E11-37); D-15 new, the dock's VSYS contact behind the
 eFuse U42 (R-181, step 3a with R-157), its hard short CONDITIONAL on E11-38 (R-184); R-182 and R-183 new; the held pack's
-0.1408 mA a quantified subset, the 1 mA bench acceptance kept; the register at 174 items. Status: known defects addressed in
-drafts; feasibility conditions remain open.
+0.1408 mA a quantified subset, the 1 mA bench acceptance kept; the register at 174 items. L4-F04 (the thermal categories,
+L4-E12 12e restated in this round, output section 26c): the four lines over the modelled capacity are a MODELLED SHORTFALL OF THE
+ANALYSED ARRANGEMENT (M3, M4) and a MISSING STORAGE QUALIFICATION (M6, M7), no DEMONSTRATED CONFLICT; the capacity a model figure,
+not a physical bound; OW-10 and CFL-002 (OW-1) no longer forced owner questions; U-02 a closure condition decided by T-H1 plus the
+storage evidence; R-185 new (the e-paper's storage soak); the register at 175 items. Status: known defects addressed in drafts;
+feasibility conditions remain open.
 
 | File | What it is |
 |---|---|
@@ -100,9 +104,10 @@ drafts; feasibility conditions remain open.
 
 **PENDING:** none in the rows. L4-E7R is accepted (the coordinator's check 4, `fnd/l4e7` `91e9a4b5`, its figures at
 `675b8068`); D-01 is resolved in design (drafted, not applied). L4-E11 resolved D-06 in design and made U-04 a CONDITIONAL
-CANDIDATE; L4-E12 made U-02 CONDITIONAL on T-H1 with CFL-002 the owner's question, and its fix round named four class (iii)
-lines no reading can pass (the owner's, OW-10); L4-E13 made U-03 a conditional downstream
+CANDIDATE; L4-E12 made U-02 CONDITIONAL on T-H1 with CFL-002 the owner's question, and its fix round named four lines over the
+modelled capacity (since the review of the provisional fixes' L4-F04 a modelled shortfall of the analysed arrangement and a missing
+storage qualification, no demonstrated conflict; OW-10 held for a measured conflict); L4-E13 made U-03 a conditional downstream
 unit selection (PANEL-ACC), no unit bought or measured.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 48 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 51 tests.
