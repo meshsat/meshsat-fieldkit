@@ -1,0 +1,25 @@
+{
+ "what": "LCSC public product-detail answer for C242139 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C242139), no login; kept fields only",
+ "read_utc": "2026-10-02T08:55Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), dependency round",
+ "role": "VSYS's direct hybrid capacitor (board A): EEHZK1V181P, N4's fallback (dependency round, E11-24)",
+ "code": "C242139",
+ "brand": "PANASONIC",
+ "model": "EEHZK1V181P",
+ "package": "SMD,D8xL10.2mm",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/aad518e45aac6db154ff8e08c50569f1.pdf?productCode=C242139",
+ "stock": 2843,
+ "params": {
+  "Lifetime": "4000hrs@125℃",
+  "Capacitance": "180uF",
+  "Height - Seated (Max)": "10.2mm",
+  "Polarity type": "Polarized",
+  "Voltage Rating": "35V",
+  "Mounting Type": "SMD",
+  "Diameter": "8mm",
+  "Operating Temperature": "-55℃~+125℃",
+  "Ripple Current": "300mA@100Hz",
+  "Equivalent Series Resistance(ESR)": "27mΩ",
+  "Tolerance": "±20%"
+ }
+}

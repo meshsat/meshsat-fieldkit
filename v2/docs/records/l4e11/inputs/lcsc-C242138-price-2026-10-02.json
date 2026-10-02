@@ -1,0 +1,33 @@
+{
+ "what": "LCSC public product-detail answer for C242138 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C242138), no login; kept fields only, with the price ladder in USD",
+ "read_utc": "2026-10-02T09:58Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), the U-04 question for the consolidation",
+ "role": "option (A)'s hold-up bank can EEHZK1E471P (price for the comparison; E11-24)",
+ "code": "C242138",
+ "brand": "PANASONIC",
+ "model": "EEHZK1E471P",
+ "package": "SMD,D10xL10.2mm",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/242ede0bfb543b5edcc6a9353c456beb.pdf?productCode=C242138",
+ "stock": 459,
+ "price_usd": {
+  "1": 0.7063,
+  "10": 0.57,
+  "30": 0.5026,
+  "100": 0.4369,
+  "500": 0.3959,
+  "1000": 0.3762
+ },
+ "params": {
+  "Lifetime": "4000hrs@125℃",
+  "Capacitance": "470uF",
+  "Height - Seated (Max)": "10.2mm",
+  "Polarity type": "Polarized",
+  "Voltage Rating": "25V",
+  "Mounting Type": "SMD",
+  "Diameter": "10mm",
+  "Operating Temperature": "-55℃~+125℃",
+  "Equivalent Series Resistance(ESR)": "20mΩ",
+  "Ripple Current": "420mA@100Hz",
+  "Tolerance": "±20%"
+ }
+}
