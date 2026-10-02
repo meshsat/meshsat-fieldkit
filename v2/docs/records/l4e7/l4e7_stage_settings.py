@@ -1092,7 +1092,8 @@ def compute():
     # conditions and its averaging window, read from the requirement and its verification; TRN-001's port table and the approved
     # test plan for the disturbances. Three checks follow, each with its own result: (a) normal operation, (b) startup, shutdown
     # and the fault response, (c) the parts' ratings during the specified disturbances
-    q16 = [x_ for x_ in yaml.safe_load(open(os.path.join(TOP, REQS), encoding="utf-8"))["records"] if x_.get("id") == "REQ-016"][0]
+    reqs_ = yaml.safe_load(open(os.path.join(TOP, REQS), encoding="utf-8"))["records"]
+    q16 = [x_ for x_ in reqs_ if x_.get("id") == "REQ-016"][0]
     st16, ac16 = " ".join(q16["statement"].split()), " ".join(q16["acceptance"].split())
     need(st16, r"the panel held at 17\.6 V by the stage's input regulation, and at most 100 W into the stage\.", "REQ-016 the bound, into the stage")
     need(st16, r"an open-circuit voltage of at most 25 V at the panel's coldest operating temperature", "REQ-016 the panel's window")
@@ -1110,8 +1111,9 @@ def compute():
                         (r"\| M3 \| CS114, bulk cable injection on the antenna and power cables, 10 kHz to 200 MHz \| laboratory \|", "M3"),
                         (r"\| M7 \| Electrostatic discharge to every touchable surface and every exposed conductor, at decision 34's ruled level, IEC 61000-4-2 level 4: 8 kV contact and 15 kV air", "M7")):
         need(tp_, pat_, "TEST-PLAN.md row " + what_)
-    # the panel lead's length and routing: no document of the tree states them (a search of v2/docs and the registries, this
-    # record's own folder left out); the levels used below do not depend on them, and a stated length would have to be used
+    # the panel lead's length: the records give a1solar's 5 m (array_calc.py, ESTIMATE; the panel lead's derivation below reads it);
+    # no other document of v2/docs or the registries states a panel lead's length (this record's own folder left out), and one
+    # that did would have to be read against it
     lead_hits = []
     for root_, dirs_, files_ in os.walk(os.path.join(TOP, "v2")):
         dirs_[:] = [d_ for d_ in dirs_ if d_ not in ("vendor", "release", "l4e7", ".git", "out")]
@@ -1122,7 +1124,7 @@ def compute():
                     if re.search(r"\b\d+(?:\.\d+)? ?(?:m|metres?|meters?)\b", t_[max(0, m_.start() - 120):m_.end() + 160]):
                         lead_hits.append(os.path.relpath(os.path.join(root_, f_), TOP))
     if lead_hits:
-        refuse(3, "a document now states the panel lead's length (%s); the disturbance below must use it" % ", ".join(sorted(set(lead_hits))))
+        refuse(3, "a document now states the panel lead's length (%s); the derivation below must be read against it" % ", ".join(sorted(set(lead_hits))))
     M461 = "v2/vendor/power/held/mil-std-461g-2015-12-11.pdf"
     if sha(M461) != "491f015e386136b58af90e86066533ca073d31210913a766cb236cf05a876bb8":
         refuse(2, "%s is not the pinned file (fetch it: v2/docs/records/l4e7/fetch_held_back.py)" % M461)
@@ -1686,11 +1688,12 @@ def compute():
             and c["vout_hi"] < min(seq["uv_ts_lo"] - sw169, seq["uv_ts_lo"] - swcm169) and seq["uv_ts_lo"] > 2.7 and td_min > st_t):
         refuse(4, "approach C's supply sequencing does not hold on the printed rows")
     # ---- check (c): the parts' ratings during the specified disturbances (B6 of the checks). The panel lead is EXTERNAL in
-    # TRN-001's port table (DECISION-31, a long outdoor lead); its length and routing are stated nowhere, so the levels are the
-    # approved test plan's for power leads, which do not depend on them: M2 CS101 (461G curve 2, the voltage at the input; the
+    # TRN-001's port table (DECISION-31, a long outdoor lead); the records give a 5 m lead (a1solar), and the approved test plan's
+    # levels for power leads do not depend on its length: M2 CS101 (461G curve 2, the voltage at the input; the
     # power limit with Figure CS101-4's 10 uF return capacitor), M3 CS114 (Table VI, ground, Army: curves 3 and 4) and M7 the
     # discharge at decision 34's level through 461G CS118's network; and, labelled apart, a capability scenario: D4's own
-    # 10/1000 us rating, derated at the hot end (no surge level is ruled: REQ-016, DECISION-31 section 3). The stage's operating
+    # 10/1000 us rating, derated at the hot end, the entry's margin beyond the panel lead's derived surge (THE PANEL LEAD'S
+    # DISTURBANCES, below: MIL-STD-461G CS116 and CS115, the row REQ-063 commits to, and the sustained sources). The stage's operating
     # current is superposed at the trip's highest (the most it carries in normal operation); the corrected network adds four
     # 10 uF ceramics on TRK_VS at RSENSE1's pad (C71 to C74), no part in series with CSPIN or CSNIN (8705af p.30)
     need(raw[30], r"all four of the current sense pins can draw bias current under normal operating conditions\. As such, do not place resistors in series with any of the CSxIN or CSxOUT pins", "8705af p.30 no series resistor at CSPIN or CSNIN")
@@ -1717,31 +1720,35 @@ def compute():
 
     rb_lo = rbank * rdrift(rpb, -1, True)
 
-    def entry_event(i_s, t_end, dt, esr_b, cb, n_ca, k_ca, lay=None):
+    def entry_event(i_s, t_end, dt, esr_b, cb, n_ca, k_ca, lay=None, v0=None, iop=None):
         """MODELED: the entry as lumped parts with a disturbance current i_s(t) injected at PV_P on top of the operating current
         i_op (drawn from TRK_VIN, crossing the bank and RSENSE1): the bulk (esr_b, cb) on TRK_VS behind the bank or, with the
         CS101 correction, on PV_P ahead of it (the bank then at its least, which sends more current on toward R59), n_ca ceramics
         ahead of RSENSE1 (each at ESR_CER, at their least, -10 % times the bias factor k_ca), D4 at TRK_VS (off below its highest
         breakdown, 34.4 V, then the straight line to 45.4 V at 33.1 A), RSENSE1 at its highest to TRK_VIN with C13 to C15 and C64
         behind it (C13 and C14 the same 10 uF part and bias as the ceramics ahead, so the same factor; C15 and C64 at +10 % with
-        none; no ESR behind, which sends more current through RSENSE1). The conservative direction is stated for every choice."""
+        none; no ESR behind, which sends more current through RSENSE1). The conservative direction is stated for every choice.
+        v0 and iop (the panel lead's derivation): the start voltage and the operating current, by default the hold and i_op."""
         lay = lay or LAYOUT
+        v0_ = nom_h if v0 is None else v0
+        io_ = i_op if iop is None else iop
         ca = n_ca * 10e-6 * 0.9 * k_ca
         ra = ESR_CER / n_ca
         cc = (20e-6 * k_ca + 4.7e-6 + 0.1e-6) * 1.10
-        pk = dict(d59=-1.0, d59n=1.0, id4=0.0, v=0.0, vp=0.0, ib=0.0, ibank=0.0, e_part=0.0)
+        pk = dict(d59=-1.0, d59n=1.0, id4=0.0, v=0.0, vp=0.0, ib=0.0, ibank=0.0, e_part=0.0, e_d4=0.0)
+        fp_ = rdrift(rpb, 1, True)
         if lay == "behind":
-            vb = va = nom_h
-            vcc = nom_h - i_op * r59_hi
+            vb = va = v0_
+            vcc = v0_ - io_ * r59_hi
             g_ = 1.0 / esr_b + 1.0 / ra + 1.0 / r59_hi
         else:
-            vb = nom_h
-            va = nom_h - i_op * rb_lo
-            vcc = va - i_op * r59_hi
+            vb = v0_
+            va = v0_ - io_ * rb_lo
+            vcc = va - io_ * r59_hi
             kk = esr_b / (esr_b + rb_lo)
             g_ = 1.0 / ra + 1.0 / r59_hi + kk / esr_b
         for k_ in range(int(t_end / dt)):
-            iin = i_op + i_s(k_ * dt)
+            iin = io_ + i_s(k_ * dt)
             if lay == "behind":
                 j_ = iin + vb / esr_b + va / ra + vcc / r59_hi
             else:
@@ -1759,11 +1766,12 @@ def compute():
             i59 = (v_ - vcc) / r59_hi
             vb += ib_ / cb * dt
             va += (v_ - va) / ra / ca * dt
-            vcc += (i59 - i_op) / cc * dt
+            vcc += (i59 - io_) / cc * dt
             pk["d59"], pk["d59n"] = max(pk["d59"], i59 * r59_hi), min(pk["d59n"], i59 * r59_hi)
             pk["id4"] = max(pk["id4"], max(0.0, (v_ - d4["vbr"][1]) / rd4))
+            pk["e_d4"] += v_ * max(0.0, (v_ - d4["vbr"][1]) / rd4) * dt
             pk["v"], pk["vp"], pk["ib"], pk["ibank"] = max(pk["v"], v_), max(pk["vp"], vp_), max(pk["ib"], abs(ib_)), max(pk["ibank"], abs(ibk))
-            pk["e_part"] += (ibk / nb) ** 2 * rpb * rdrift(rpb, 1, True) * dt
+            pk["e_part"] += (ibk / nb) ** 2 * rpb * fp_ * dt
         return pk
     t1s, t2s = 3.4e-6, 1.44e-3                         # the 10/1000 us shape as a double exponential (INFERRED shape)
     f_s = lambda t: math.exp(-t / t2s) - math.exp(-t / t1s)
@@ -1848,6 +1856,207 @@ def compute():
                                 ("D4's stand-off under CS101", c101_["v_pk"] > d4["vr"]), ("U5's margin under its operating drop", surge["d59_margin"] < surge["d59_op"])) if bad_]
     if over:
         refuse(4, "at the derived disturbance: %s (U5 %.4f V, CS101 %.4f V, U18 %.3f V, %.2f V peak)" % (", ".join(over), worst["d59"], c101_["d59"], surge["d169"], v_pk))
+    # ---- THE PANEL LEAD'S DISTURBANCES, DERIVED (the coordinator's surge round of 2 October 2026; the findings ledger's item 1,
+    # L4-E7R's checks 1.6 and 2.4; L4-E9's register row R-156). REQ-016's acceptance gives layer 4 the derivation (the disturbance,
+    # its source impedance or current, its duration and the limit) and layer 8 the judgement under TRN-001, and states the pass
+    # criterion: D4's clamping voltage at the disturbance's current, with the part's tolerance, at or below the lowest limit on PV_P
+    need(ac16, r"Surge and sustained over-voltage on the panel lead: no level is ruled \(DECISION-31 section 3; D-16 for the vehicle entry\), so the "
+         r"disturbance, its source impedance or current, its duration and the limit are derived at layer 4 and judged at layer 8 under TRN-001", "REQ-016 the surge's assignment")
+    need(ac16, r"It passes for a disturbance only when D4's clamping voltage at that disturbance's current \(from its source impedance, waveform and "
+         r"duration, with the part's tolerance\) is at or below the lowest limit on PV_P, the capacitors' 35 V\.", "REQ-016 the pass criterion")
+    # (1) the exposure: J_SOLAR is EXTERNAL (TRN-001's port table, read above); the lead is the one the records give, a1solar's
+    # array record, through the replay's own loop resistance; the return is board E's GND and no board has a chassis net
+    AC_ = LR["AC"]
+    acs_ = open(os.path.join(TOP, "v2/docs/records/a1solar/array_calc.py"), encoding="utf-8").read()
+    need(acs_, r"LEAD_M = 5\.0 +# ESTIMATE: array combiner to the case's wall connector, one way", "array_calc.py the lead's length (ESTIMATE)")
+    need(acs_, r"LEAD_MM2 = 4\.0 +# ESTIMATE: 4 mm2 \(12 AWG class, the size the Renogy and SunPower leads use\)", "array_calc.py the lead's section (ESTIMATE)")
+    if (AC_.LEAD_M, AC_.LEAD_MM2) != (5.0, 4.0) or abs(AC_.lead_r() - LR["rl"]) > 1e-12:
+        refuse(3, "the lead the replay uses is not a1solar's 5 m of 4 mm2")
+    gnd_ = flat(open(os.path.join(TOP, "v2/docs/GROUNDING-AND-SHIELDS.md"), encoding="utf-8").read())
+    need(gnd_, r"The enclosure is a \*\*Peli 1450, which is plastic\*\*", "GROUNDING-AND-SHIELDS.md the plastic case")
+    need(gnd_, r"There is no chassis net anywhere in this kit", "GROUNDING-AND-SHIELDS.md no chassis net")
+    need(flat(open(os.path.join(TOP, "v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md"), encoding="utf-8").read()),
+         r"The return is the board's ground directly \(J_SOLAR\.2 is GND, not GND_V\)", "DECISION-31 J_SOLAR's return")
+    C0 = 299792458.0
+    lead = dict(m=AC_.LEAD_M, mm2=AC_.LEAD_MM2, r=AC_.lead_r(), f_q=C0 / (4.0 * AC_.LEAD_M), f_h=C0 / (2.0 * AC_.LEAD_M))
+    # (2) the basis: REQ-063 commits the kit's EMC characterisation to MIL-STD-461G's 'Ground, Army' row of Table V (transcribed in
+    # v2/vendor/standards/, the same file as the held copy); that row marks CS115 and CS116 applicable to every interconnecting
+    # cable, CS116 to each individual high side power lead, and CS117 (lightning induced) for the procuring activity to specify;
+    # the plan runs M1 to M5 and no row of it runs CS115, CS116 or CS117
+    q63 = [x_ for x_ in reqs_ if x_.get("id") == "REQ-063"][0]
+    need(" ".join(q63["acceptance"].split()), r"Each of TEST-PLAN M1 to M5 is run against the limit MIL-STD-461G \(11 December 2015\) gives for the "
+         r"'Ground, Army' installation of its Table V", "REQ-063 the edition and the installation row")
+    mx_ = open(os.path.join(TOP, "v2/vendor/standards/mil-std-461g-requirement-matrix.md"), encoding="utf-8").read()
+    need(mx_, r"sha256 of the file read \| `491f015e386136b58af90e86066533ca073d31210913a766cb236cf05a876bb8`", "the Table V transcription's file")
+    hdr_ = need(mx_, r"\n\| Installation \|([^\n]+)\|\n", "Table V's header").group(1)
+    row_ = need(mx_, r"\n\| Ground, Army \|([^\n]+)\|\n", "Table V's Ground, Army row").group(1)
+    tv = dict(zip([h_.strip() for h_ in hdr_.split("|")], [c_.strip() for c_ in row_.split("|")]))
+    if [tv.get(k_) for k_ in ("CS101", "CS114", "CS115", "CS116", "CS117")] != ["A", "A", "A", "A", "S"]:
+        refuse(3, "Table V's Ground, Army row is not the one the derivation reads")
+    if re.search(r"CS11[5-7]", tp_):
+        refuse(3, "TEST-PLAN.md now names CS115, CS116 or CS117; the derivation below must use its row")
+    # IEC 61000-4-5 is not held (no file of v2/vendor names it) and the envelope's surge row and CHO-003 decline it for the long leads
+    if any("61000-4-5" in f_ or "61000_4_5" in f_ for _r, _d, fs_ in os.walk(os.path.join(TOP, "v2/vendor")) for f_ in fs_):
+        refuse(3, "an IEC 61000-4-5 file is now held under v2/vendor; the basis below must be re-chosen against it")
+    need(open(os.path.join(TOP, "v2/docs/OPERATING-ENVELOPE.md"), encoding="utf-8").read(), r"\| Surge on the conductors that leave the case on a long "
+         r"lead \(shore and vehicle DC, PoE\) \| what the fitted part survives.*Asking instead for an IEC 61000-4-5 installation level is a ruling", "OPERATING-ENVELOPE.md the surge row")
+    need(" ".join([x_ for x_ in reqs_ if x_.get("id") == "CHO-003"][0]["statement"].split()), r"Surge on long-lead conductors is described by the "
+         r"fitted part \(SMCJ40A, 1500 W at 10/1000 us\), not constrained to an IEC 61000-4-5 level\.", "CHO-003")
+    k86, k87, k88, k91, k92, k94, k95, k98, k249, k255 = (flat(pg(M461, n_, False)) for n_ in (86, 87, 88, 91, 92, 94, 95, 98, 249, 255))
+    need(k86, r"This requirement is applicable to all aircraft, space, and ground system interconnecting cables, including power cables\.", "461G 5.13.1 CS115 applicability")
+    need(k86, r"rise and fall times, pulse width, and amplitude as specified on Figure CS115-1 at a 30 Hz rate for one minute", "461G 5.13.2 CS115 limit")
+    need(k86, r"a\. Pulse generator, 50 ohm, charged line \(coaxial\)", "461G 5.13.3.2 CS115 generator")
+    need(k87, r"Adjust the pulse generator, as a minimum, for the amplitude setting", "461G 5.13.3.4c(2)(a)")
+    need(k87, r"Record the peak current induced in the cable as indicated on the oscilloscope", "461G 5.13.3.4c(2)(e)")
+    need(k88, r"30 ns\. \(Minimum\) 5 90% Limit Level \(Amps\) 4 REPETITION RATE = 30Hz 3 2 1 10% 0 .2 .2 Nanoseconds FIGURE CS115-1", "461G Figure CS115-1")
+    need(k249, r"The 5 ampere amplitude \(500 V across 100 ohm loop impedance calibration fixture\)", "461G A.5.13 the 5 A amplitude")
+    need(k91, r"This requirement is applicable from 10 kHz to 100 MHz for all interconnecting cables, including power cables, and individual "
+         r"high side power leads\.", "461G 5.14.1 CS116 applicability")
+    need(k91, r"Compliance shall be demonstrated at the following frequencies: 0\.01, 0\.1, 1, 10, 30, and 100 MHz\. If there are other frequencies "
+         r"known to be critical to the equipment installation, such as platform resonances, compliance shall also be demonstrated at those frequencies\.", "461G 5.14.2 the frequencies")
+    need(k91, r"The test signal repetition rate shall be no greater than one pulse per second and no less than one pulse every two seconds\. The "
+         r"pulses shall be applied for a period of five minutes\.", "461G 5.14.2 the repetition")
+    need(k91, r"a\. Damped sinusoid transient generator, . 100 ohm output impedance", "461G 5.14.3.2 CS116 generator (at most 100 ohm)")
+    need(k92, r"Reduce the signal, if necessary, to produce the required current\.", "461G 5.14.3.4c(3)")
+    need(k94, r"Normalized waveform: e -\( f t\)/Q sin\(2.ft\) Where: f = Frequency \(Hz\) t = Time \(sec\) Q = Damping factor, 15 .5", "461G Figure CS116-1")
+    need(k95, r"Peak current \(Amperes\) 100 10 1 0\.1 0\.01 0\.1 1 10 100 Frequency \(MHz\) FIGURE CS116-2\. CS116 limit for all applications\.", "461G Figure CS116-2's axes")
+    need(k98, r"This requirement is applicable to all safety-critical equipment interconnecting cables", "461G 5.15.1 CS117 applicability")
+    need(k255, r"These levels and waveforms were derived from general and civil aviation experience and are considered applicable to military "
+         r"aircraft equipment and subsystems\.", "461G A.5.15 CS117's origin")
+    need(k255, r"However, for most equipment, testing with some combination of CS116 and CS115 may provide sufficient coverage to address the "
+         r"environment for nearby lightning called out in MIL-STD-464\.", "461G A.5.15 nearby lightning")
+
+    def ip116(f_):
+        """Figure CS116-2 as drawn (INFERRED from the figure: its curve is a drawing, the text layer holds the axes only): 0.1 A at
+        10 kHz rising 20 dB a decade to 10 A at 1 MHz, flat to 30 MHz, falling 20 dB a decade to 3 A at 100 MHz."""
+        return 10.0 * min(1.0, f_ / 1e6) if f_ <= 30e6 else 10.0 * 30e6 / f_
+    Q116 = (10.0, 20.0)                                # Figure CS116-1's Q, 15 +- 5, both ends
+    f116 = sorted({1e4, 1e5, 1e6, 1e7, 3e7, 1e8, lead["f_q"]})
+    A115, T115, E115 = 5.0, 30e-9, 2e-9                # Figure CS115-1: 5 A, 30 ns at least, edges at most 2 ns
+    # the sustained source a mistaken connection puts on the port: the kit's own declared vehicle and shore range (V2-SPEC line 21)
+    v_src = float(need(open(os.path.join(TOP, "v2/docs/V2-SPEC.md"), encoding="utf-8").read(), r"\| Inputs \| 9 to (\d+) V filtered vehicle and shore input",
+                       "V2-SPEC line 21 the kit's source range").group(1))
+    # the clamp's other rows (SMCJ p.1, the series' rows p.2)
+    aT = float(need(l1, r"VBR @ TJ= VBR@25.C x \(1\+.T x \(TJ - 25\)\) \(.T:Temperature Coefficient, typical value is ([\d.]+)%\)", "SMCJ p.1 VBR's coefficient (typical)").group(1)) / 100.0
+    pd4 = float(need(l1, r"Power Dissipation on Infinite Heat Sink at TL=50OC PD ([\d.]+) W", "SMCJ p.1 PD").group(1))
+    tjmax = float(need(l1, r"Operating Temperature Range TJ -65 to (\d+) .C", "SMCJ p.1 the junction's range").group(1))
+    rja = float(need(l1, r"Junction to Ambient R.JA (\d+) .C/W", "SMCJ p.1 RthJA (typical)").group(1))
+    need(l1, r"Typical failure mode is short from over-specified voltage or current", "SMCJ p.1 the failure mode (typical)")
+    smcj = {int(m_.group(1)): dict(vr=float(m_.group(2)), vbr=(float(m_.group(3)), float(m_.group(4))), vc=float(m_.group(5)), ipp=float(m_.group(6)))
+            for m_ in re.finditer(r"SMCJ(\d+)A SMCJ\1CA \w+ \w+ (\d+\.\d) (\d+\.\d+) (\d+\.\d+) 1 (\d+\.\d) (\d+\.\d) \d+ X", l2)}
+    if smcj.get(28) != dict(vr=d4["vr"], vbr=d4["vbr"], vc=d4["vc"], ipp=d4["ipp"]) or 36 not in smcj:
+        refuse(3, "SMCJ p.2's rows are not the ones read")
+    lim_drawn = float(need(gse, r'for k in range\(1, 3\): part\("C%d" % \(10 \+ k\), "Device", "C_Polarized", "100u (\d+)V Panasonic EEHZK1V101XP', "gen_sch_e.py C11 and C12 as drawn").group(1))
+    lim_draft = min(za["v"], 50.0)                     # the drafted entry: the bulk on PV_P and C71 to C74 on TRK_VS
+
+    def clamp(row_, i_, tj_):
+        """INFERRED: the straight line from the highest part's breakdown (1 mA) to the printed clamping point, the breakdown moved by
+        the sheet's typical coefficient at the junction temperature tj_ (the part's tolerance: the highest part; its temperature)."""
+        return row_["vbr"][1] * (1 + aT * (tj_ - 25.0)) + (row_["vc"] - row_["vbr"][1]) / row_["ipp"] * i_
+
+    def be_clamp(row_, lim_, tj_):
+        """The current at which clamp() reaches lim_."""
+        return (lim_ - row_["vbr"][1] * (1 + aT * (tj_ - 25.0))) / ((row_["vc"] - row_["vbr"][1]) / row_["ipp"])
+    vbr_cold = d4["vbr"][0] * (1 + aT * (t_cold - 25.0))
+    # the loaded network (MODELED, lumped, the corrected entry of check (c)): each start, bulk and bias, both polarities
+    starts = (("operating at the hold, the trip's highest current", None, None), ("open circuit at the cold end, the stage off", v_oc, 0.0))
+
+    def run_set(wave_, t_end, dt):
+        out_ = []
+        for lab_, v0_, io_ in starts:
+            for bk_ in ("cold_aged", "new_20"):
+                for k_ in (1.0, 0.25):
+                    out_.append(dict(start=lab_, bulk=bk_, k=k_, **entry_event(wave_, t_end, dt, bulks[bk_][0], bulks[bk_][1], N_CA, k_, v0=v0_, iop=io_)))
+        return out_
+
+    def agg(runs_):
+        return dict(d59=max(r_["d59"] for r_ in runs_), d59n=min(r_["d59n"] for r_ in runs_), v=max(r_["v"] for r_ in runs_),
+                    vp=max(r_["vp"] for r_ in runs_), ibank=max(r_["ibank"] for r_ in runs_), id4=max(r_["id4"] for r_ in runs_),
+                    e_d4=max(r_["e_d4"] for r_ in runs_))
+    # D4's energy rating at its 10/1000 us row (VC x IPP over the shape's integral, INFERRED), scaled for a shorter event by the square
+    # root of its duration (INFERRED: adiabatic heating of the junction), against a bound with the whole current in D4
+    e_rating = d4["vc"] * d4["ipp"] * (t2s - t1s) / f_n
+    r116 = []
+    for f_ in f116:
+        ip_ = ip116(f_)
+        row116 = dict(f=f_, ip=ip_, d59_b=(i_op + ip_) * r59_hi, d169_b=(i_op + ip_) * rb_hi, vc25=clamp(d4, ip_, 25.0), vch=clamp(d4, ip_, t_air),
+                      q_half=ip_ / (math.pi * f_), e_b=clamp(d4, ip_, t_air) * ip_ * max(Q116) / (math.pi * f_),
+                      y_trip=2.0 * ip_ / (math.pi * f_) / best["tau"][0], lumped=f_ <= 1e6)
+        row116["e_cap"] = e_rating * math.sqrt(min(1.0, max(Q116) / (math.pi * f_) / 1e-3))
+        if f_ <= 1e6:                                   # the lumped model's reach (above it the board's parasitics decide)
+            runs_ = []
+            for q_ in Q116:
+                for s_ in (1.0, -1.0):
+                    runs_ += run_set(lambda t, a_=ip_, f2=f_, q2=q_, s2=s_: s2 * a_ * math.exp(-math.pi * f2 * t / q2) * math.sin(2 * math.pi * f2 * t),
+                                     3.0 * q_ / (math.pi * f_) + 1.0 / f_, min(50e-9, 1.0 / (200.0 * f_)))
+            row116.update(agg(runs_))
+        r116.append(row116)
+
+    def w115(t, s_=1.0, a_=A115):
+        if t < E115:
+            return s_ * a_ * t / E115
+        if t < E115 + T115:
+            return s_ * a_
+        if t < 2 * E115 + T115:
+            return s_ * a_ * (2 * E115 + T115 - t) / E115
+        return 0.0
+    runs115 = run_set(lambda t: w115(t, 1.0), 1e-6, 0.1e-9) + run_set(lambda t: w115(t, -1.0), 1e-6, 0.1e-9)
+    l115 = agg(runs115)
+    d59_base = {starts[0][0]: i_op * r59_hi, starts[1][0]: 0.0}
+    be115_l = min(A115 * (csd_abs - d59_base[r_["start"]]) / (r_["d59"] - d59_base[r_["start"]]) for r_ in runs115 if r_["d59"] > d59_base[r_["start"]])
+    r115 = dict(a=A115, t=T115, e=E115, q=A115 * (T115 + E115), d59_b=(i_op + A115) * r59_hi, d169_b=(i_op + A115) * rb_hi,
+                vc25=clamp(d4, A115, 25.0), vch=clamp(d4, A115, t_air), be_l=be115_l, be_b=csd_abs / r59_hi - i_op,
+                be_c50=be_clamp(d4, lim_draft, t_air), e_b=clamp(d4, A115, t_air) * A115 * (T115 + E115),
+                y_trip=2.0 * A115 * (T115 + E115) / best["tau"][0], **l115)
+    # the sustained over-voltage: (D3) the panel's own cold open circuit, REQ-016's window and L4-E13's check; (D4) a stiff source of
+    # the kit's declared range on the port through the 5 m lead; (D5) a reversed panel, DECISION-31's note E-N1
+    l13 = flat(open(os.path.join(TOP, "v2/docs/records/l4e13/L4E13-PANEL.md"), encoding="utf-8").read())
+    g13 = float(need(l13, r"the disturbance check is implied by A-1 for every plane-of-array irradiance below (\d+) W/m2 \(n <= 2\)", "L4E13-PANEL.md the check").group(1))
+    vbr13 = float(need(l13, r"conducts under 1 mA until its VBR \(([\d.]+) V cold minimum\)", "L4E13-PANEL.md the cold breakdown").group(1))
+    if abs(vbr13 - vbr_cold) > 0.005:
+        refuse(3, "L4-E13's cold breakdown is not this record's")
+    p_ok = ((tjmax - t_air) / rja, (tjmax - t_cold) / rja)        # D4's continuous dissipation on the board, hot and cold ends (RthJA typical)
+
+    def held(row_, vs_, vbr_):
+        """A stiff source vs_ through the lead's loop into the clamp from breakdown vbr_ (INFERRED straight line, the same slope)."""
+        rd_ = (row_["vc"] - row_["vbr"][1]) / row_["ipp"]
+        i_ = max(0.0, (vs_ - vbr_) / (rd_ + lead["r"]))
+        return i_, i_ * (vbr_ + rd_ * i_)
+    src = [(lab_, vb_) + held(d4, v_src, vb_) for lab_, vb_ in (("the least part at the cold end", vbr_cold), ("the least part at 25 C", d4["vbr"][0]),
+                                                                ("the highest part at 25 C", d4["vbr"][1]),
+                                                                ("the least part at the junction's maximum", d4["vbr"][0] * (1 + aT * (tjmax - 25.0))))]
+    # the smallest change for D4: the least row of the held series that stands off the source and does not break down at the cold end
+    n36 = min(n_ for n_, r_ in smcj.items() if r_["vr"] >= v_src and r_["vbr"][0] * (1 + aT * (t_cold - 25.0)) > v_src)
+    r36 = dict(smcj[n36])
+    r36.update(n=n36, vbr_cold=r36["vbr"][0] * (1 + aT * (t_cold - 25.0)), vc116_25=clamp(r36, 10.0, 25.0), vc116_h=clamp(r36, 10.0, t_air),
+               i50_25=be_clamp(r36, lim_draft, 25.0), i50_h=be_clamp(r36, lim_draft, t_air), iq3=be_clamp(r36, vds028, 25.0))
+    z63 = need(z2, r"22 6\.3 7\.7 D8 (\d+) (\d+) [\d.]+ EEHZA1J220XP EEHZA1J220XV \d+ 63 ", "ZA p.2 the 63 V part in the D8 land").groups()
+    r36["za63"] = dict(c=22e-6, ripple=float(z63[0]) * 1e-3, esr=float(z63[1]) * 1e-3)
+    p_src36 = (v_src * reg_hi(rc_[0], v_src), v_src * i_trip_c(v_src, rpb, nb, 1, True, R66))
+    rev = dict(i=c["i_src"], vf_be=p_ok[0] / c["i_src"])
+    peak_v = max(max(r_["v"] for r_ in r116 if r_["lumped"]), r115["v"])
+    peak_vp = max(max(r_["vp"] for r_ in r116 if r_["lumped"]), r115["vp"])
+    v116 = max(r_["vch"] for r_ in r116)
+    verd = [
+        dict(id="D1", name="CS116 on PV_IN alone and on the J_SOLAR cable",
+             ok=(v116 <= lim_draft and max(r_["d59_b"] for r_ in r116) < csd_abs and max(r_["d169_b"] for r_ in r116) < abs169[1]
+                 and peak_v < vbr_cold and peak_vp < min(abs169[0], vsabs169) and max(r_["y_trip"] for r_ in r116) < best["m"]
+                 and max(r_["e_b"] / r_["e_cap"] for r_ in r116) < 1.0 and max(r_["e_d4"] for r_ in r116 if r_["lumped"]) == 0.0),
+             drawn=v116 <= lim_drawn),
+        dict(id="D2", name="CS115 on the J_SOLAR cable",
+             ok=(r115["vch"] <= lim_draft and r115["d59"] < csd_abs and r115["d59_b"] < csd_abs and r115["v"] < vbr_cold and r115["y_trip"] < best["m"]),
+             drawn=r115["vch"] <= lim_drawn),
+        dict(id="D3", name="the panel's own cold open circuit", ok=v_oc < d4["vr"] and v_oc < lim_draft, drawn=v_oc < lim_drawn),
+        dict(id="D4", name="a stiff source of the kit's declared range on the port", ok=min(p_ for _l, _v, _i, p_ in src) <= p_ok[0], drawn=False),
+        dict(id="D5", name="a reversed panel (DECISION-31, note E-N1)", ok=False, drawn=False),
+    ]
+    if [v_["ok"] for v_ in verd] != [True, True, True, False, False] or r36["vc116_h"] <= lim_draft or r36["vc116_25"] > lim_draft:
+        refuse(4, "the panel lead's verdicts are not the ones the record states: %s" % [(v_["id"], v_["ok"]) for v_ in verd])
+    R["lead"] = dict(lead=lead, tv=tv, f116=f116, q116=Q116, r116=r116, r115=r115, v_src=v_src, aT=aT, pd4=pd4, tjmax=tjmax, rja=rja, p_ok=p_ok,
+                     vbr_cold=vbr_cold, lim_drawn=lim_drawn, lim_draft=lim_draft, src=src, r36=r36, p_src36=p_src36, rev=rev, g13=g13,
+                     peak_v=peak_v, peak_vp=peak_vp, v116=v116, verd=verd, m_trip=best["m"], tau_lo=best["tau"][0],
+                     smcj=sorted(smcj), i_op=i_op, v_oc=v_oc, n_runs=sum(1 for r_ in r116 if r_["lumped"]) * len(Q116) * 2 * 8 + len(runs115),
+                     e_rating=e_rating)
     # ---- the single faults (for layer 8's fault analysis; this record assigns them, it does not close them)
     faults = dict(
         defeat=["U18's output stuck low or open, or R65 open (no current reaches R66)", "R66 shorted", "U19's OUTB stuck open (high impedance)",
@@ -2493,16 +2702,16 @@ def render(R):
           "bench row 7b.16 steps the bench supply's curve with SWEN held low" % (1e3 * c["cycle_e"], c["cycle_be"], d["w_avg"]))
     # ---- check (c)
     wrapP("   ", "     ", "CHECK (c), THE PARTS' RATINGS DURING THE SPECIFIED DISTURBANCES. The derivation (B6): TRN-001's port table "
-          "(DECISION-31) lists J_SOLAR as EXTERNAL, a long outdoor lead; no document of the tree states its length or routing (a search "
-          "of v2/docs and the registries finds none), so the levels are the approved test plan's for power leads, which do not depend "
-          "on them: M2, MIL-STD-461G CS101 on DC input power leads, curve 2 (sources of 28 V or below): %.0f dBuV, %.2f V rms, at the "
+          "(DECISION-31) lists J_SOLAR as EXTERNAL, a long outdoor lead; the records give a 5 m lead (a1solar's array record, ESTIMATE, "
+          "the panel lead's derivation below), and the approved test plan's levels for power leads do not depend on its length: M2, MIL-STD-461G CS101 on DC input power leads, curve 2 (sources of 28 V or below): %.0f dBuV, %.2f V rms, at the "
           "EUT's input to the knee (read from Figure CS101-1 at 5 kHz), then the straight line to %.1f dBuV at 150 kHz, or the source "
           "set to Figure CS101-2's %.0f W into 0.5 Ohm, with the 10 uF return capacitor of Figure CS101-4; M3, CS114, the current "
           "induced on the lead at most curve 4's %s dBuA (%.0f mA rms; Table VI, ground, Army: curves 3 and 4); M7, the discharge at "
           "decision 34's level, 8 kV contact and 15 kV air, through CS118's 150 pF and 330 Ohm (Table IX's +30 %% on the contact "
-          "current, the air level scaled from it). Surge and sustained over-voltage: no level is ruled (REQ-016, DECISION-31 section 3), "
-          "so D4's own 10/1000 us rating stays a CAPABILITY SCENARIO, labelled: %.1f A at an initial junction of 25 C or below, derated "
-          "to %.1f %% (%.1f A) at the hot end's %.1f C (Figure 3 as drawn, INFERRED from the figure)" % (
+          "current, the air level scaled from it). Surge and sustained over-voltage on the panel lead: derived below (THE PANEL "
+          "LEAD'S DISTURBANCES: MIL-STD-461G CS116 and CS115, the row REQ-063 commits to, and the sustained sources); D4's own 10/1000 us "
+          "rating stays here as a CAPABILITY SCENARIO, labelled, the entry's margin beyond that derived basis: %.1f A at an initial "
+          "junction of 25 C or below, derated to %.1f %% (%.1f A) at the hot end's %.1f C (Figure 3 as drawn, INFERRED from the figure)" % (
               20 * math.log10(ds["v101"] * 1e6), ds["v101"], 20 * math.log10(ds["v101_150k"] * 1e6), ds["p101"][0], ds["c114"][0], 1e3 * ds["i114"],
               rw["d4"]["ipp"], 100 * sg["d4_der"], rw["d4"]["ipp"] * sg["d4_der"], rw["t_air"]))
     wrapP("     - ", "       ", "the corrected network: four 10 uF 50 V ceramics, C71 to C74 (the value text and land of C13 and C14), on TRK_VS "
@@ -2554,6 +2763,133 @@ def render(R):
           "current at any frequency in either setup). Above the lumped model's reach (the discharge's first nanoseconds, CS114 at MHz) "
           "the board's parasitics decide, a layout matter: C71 to C74 at R59's pad and R59's Kelvin taps, M3 and M7 at layer 8. A "
           "reversed panel conducts through D4 as DECISION-31's note E-N1 records")
+    # ---- the panel lead's disturbances, derived (the surge round)
+    ld = R["lead"]
+    le_, r115, r36, vd = ld["lead"], ld["r115"], ld["r36"], {v_["id"]: v_ for v_ in ld["verd"]}
+    wrapP("   ", "     ", "THE PANEL LEAD'S DISTURBANCES, DERIVED (REQ-016's acceptance gives layer 4 the disturbance, its source impedance or "
+          "current, its duration and the limit, and layer 8 the judgement under TRN-001; the findings ledger's item 1, L4-E7R's checks "
+          "1.6 and 2.4, L4-E9's register row R-156). The criterion is REQ-016's own: a disturbance passes only when D4's clamping "
+          "voltage at that disturbance's current, with the part's tolerance, is at or below the lowest limit on PV_P")
+    wrapP("     - ", "       ", "the exposure: J_SOLAR (PV_IN on pin 1, the return on pin 2, board E's GND) is EXTERNAL in TRN-001's port table, "
+          "a long outdoor lead by definition. The lead the records give: a1solar's %.0f m one way of %.0f mm2 copper (array_calc.py, "
+          "ESTIMATE), %.4f Ohm in loop (the replay's own figure); unshielded and laid on the ground from the panel to the case (SESSION "
+          "reading: a panel's own leads and an extension of their class carry no shield); no earth bond: the case is plastic and no board "
+          "has a chassis net (GROUNDING-AND-SHIELDS.md), so the kit floats and a common-mode transient on the lead closes only through "
+          "stray capacitance, while the high side lead against its return, through the entry, is the path that loads D4. The lead's "
+          "quarter wave is %.1f MHz in free space (half wave %.1f MHz), lower on soil: inside CS116's flat band, so it is added to the "
+          "test frequencies as 5.14.2's installation resonance" % (le_["m"], le_["mm2"], le_["r"], le_["f_q"] / 1e6, le_["f_h"] / 1e6))
+    wrapP("     - ", "       ", "THE BASIS (SESSION, the reading of what the requirements commit to): REQ-063 commits the kit's EMC "
+          "characterisation to MIL-STD-461G (11 December 2015) and the 'Ground, Army' row of its Table V (held; transcribed in "
+          "v2/vendor/standards/mil-std-461g-requirement-matrix.md, the same file). That row marks CS116 %s (5.14, damped sinusoids from 10 "
+          "kHz to 100 MHz on every interconnecting cable, power cables included, and on each individual high side power lead) and CS115 %s "
+          "(5.13, an impulse on every interconnecting cable), and CS117 %s (5.15, lightning induced, for the procuring activity to "
+          "specify). TEST-PLAN.md runs M1 to M5 and no row runs CS115, CS116 or CS117. The derivation takes CS116 and CS115 as the panel "
+          "lead's surge: (1) they are the transients of the one edition and row the requirements commit to; (2) the standard's appendix "
+          "says that 'for most equipment, testing with some combination of CS116 and CS115 may provide sufficient coverage to address the "
+          "environment for nearby lightning called out in MIL-STD-464' (A.5.15), which is the exposure an outdoor lead adds; (3) IEC "
+          "61000-4-5 is neither held in this tree nor freely published, and the envelope's surge row (decision 34) and CHO-003 decline to "
+          "constrain the long leads to it; (4) CS117 is not taken: its levels 'were derived from general and civil aviation experience' "
+          "for aircraft equipment (A.5.15), it applies to safety-critical equipment (5.15.1), and the row leaves it to the procuring "
+          "activity. NOT COVERED, a residual for layer 8 and the register: a direct strike, or one nearer than MIL-STD-464's nearby "
+          "lightning (CS117 covers neither, and CS116 with CS115 only 'may'); the kit's posture there is REQ-041's mast-down alarm" % (
+              ld["tv"]["CS116"], ld["tv"]["CS115"], ld["tv"]["CS117"]))
+    wrapP("     - ", "       ", "D1, CS116 on PV_IN alone and on the J_SOLAR cable: each pulse e^(-pi f t / Q) sin(2 pi f t), Q 15 +- 5 (both "
+          "ends, %.0f and %.0f, run), at 0.01, 0.1, 1, 10, 30 and 100 MHz and the lead's %.1f MHz; its peak Ip from Figure CS116-2 as drawn "
+          "(INFERRED from the figure: 0.1 A at 10 kHz rising 20 dB a decade to 10 A at 1 MHz, flat to 30 MHz, 3 A at 100 MHz); one pulse "
+          "every 1 to 2 s for five minutes; the source a generator of at most 100 Ohm through the injection probe, and the current is "
+          "the test's controlled quantity ('Reduce the signal, if necessary, to produce the required current', 5.14.3.4c(3)): the port "
+          "sees a current source of Ip" % (ld["q116"][0], ld["q116"][1], le_["f_q"] / 1e6))
+    wrapP("     - ", "       ", "D2, CS115 on the J_SOLAR cable: %.0f A, %.0f ns at least, edges at most %.0f ns (Figure CS115-1), 30 Hz for one "
+          "minute; a 50 Ohm charged-line generator through the probe, set at least to the calibration's drive (5.13.3.4c(2)(a)), 500 V "
+          "across the calibration fixture's 100 Ohm loop (A.5.13); the cable's peak current is recorded (5.13.3.4c(2)(e)), not limited" % (
+              r115["a"], 1e9 * r115["t"], 1e9 * r115["e"]))
+    wrapP("     - ", "       ", "D3, the panel's own cold open circuit: REQ-016's window, %.0f V at most at %.0f C, current-limited, held for "
+          "hours (L4-E13's disturbance check against D4's standoff holds for every plane-of-array irradiance below %.0f W/m2)" % (
+              ld["v_oc"], R["decision"]["rows"]["t_cold"], ld["g13"]))
+    wrapP("     - ", "       ", "D4, a stiff source on the port by mistake (a vehicle or shore lead wired to the panel's receptacle): the kit's "
+          "declared source range, 9 to %.0f V (V2-SPEC line 21), through the lead's %.4f Ohm loop and F2 (10 A), held" % (ld["v_src"], le_["r"]))
+    wrapP("     - ", "       ", "D5, a reversed panel: DECISION-31's note E-N1, the panel's short-circuit current %.3f A (check (b)'s, with "
+          "the sheet's power tolerance) forward through D4" % ld["rev"]["i"])
+    wrapP("     ", "     ", "D1 frequency by frequency. The bound puts the disturbance's whole current in D4 (REQ-016's criterion) and in "
+          "R59 and the bank on top of the operating current %.4f A (no capacitor credited); the loaded network is check (c)'s corrected "
+          "entry (MODELED, lumped, to 1 MHz; above it the board's parasitics decide), from two starts, operating at the hold and open at "
+          "%.0f V cold with the stage off, each bulk and bias factor, both polarities and both Q ends; the trip's filter excursion is "
+          "the bound 2 x Ip / (pi f) / tau (the first half cycle's charge over the filter's least time constant, %.3f ms):" % (
+              ld["i_op"], ld["v_oc"], 1e3 * ld["tau_lo"]))
+    rbh_ = R["decision"]["surge"]["rb_hi"]
+    P("     %-8s %-6s %-15s %-8s %-8s %-8s %-8s %-9s %-8s %-6s %-9s %s" % ("f MHz", "Ip A", "D4 at Ip V", "U5 bnd", "U18 bnd", "U5 V", "U18 V",
+                                                                          "TRK_VS V", "PV_P V", "D4 A", "trip A", "D4 energy bound"))
+    for r_ in ld["r116"]:
+        lm = ("%-8.4f %-8.4f %-9.2f %-8.2f %-6.2f" % (r_["d59"], r_["ibank"] * rbh_, r_["v"], r_["vp"], r_["id4"])) if r_["lumped"] else \
+             ("%-8s %-8s %-9s %-8s %-6s" % ("-", "-", "-", "-", "-"))
+        P("     %-8g %-6.2f %-15s %-8.4f %-8.4f %s %-9.5f %.2f mJ (%.2f %% of its scaled rating)" % (
+            r_["f"] / 1e6, r_["ip"], "%.2f / %.2f" % (r_["vc25"], r_["vch"]), r_["d59_b"], r_["d169_b"], lm, r_["y_trip"], 1e3 * r_["e_b"],
+            100 * r_["e_b"] / r_["e_cap"]))
+    wrapP("     ", "     ", "(D4 at Ip: the highest part at 25 C and at the hot end's %.1f C with the sheet's typical coefficient %.1f %%/C; "
+          "U5 bnd and U18 bnd: R59's and the bank's differential with the whole current in them, against %.1f V and %.0f V; U5 V, U18 V, "
+          "TRK_VS V, PV_P V and D4 A: the loaded network, worst case; the loaded network's D4 current is %.2f A at every lumped frequency: the "
+          "entry's capacitors take the pulse and TRK_VS peaks at %.2f V, under D4's least breakdown at the cold end, %.2f V)" % (
+              R["decision"]["rows"]["t_air"], 100 * ld["aT"], R["decision"]["surge"]["rating"]["csd"], R["decision"]["surge"]["rating"]["d169"],
+              max(r_["id4"] for r_ in ld["r116"] if r_["lumped"]), max(r_["v"] for r_ in ld["r116"] if r_["lumped"]), ld["vbr_cold"]))
+    wrapP("     ", "     ", "D2: D4 at %.0f A %.2f V (25 C) and %.2f V (hot end); the bound U5 %.4f V and U18 %.4f V; the loaded network U5 "
+          "%.4f V, TRK_VS %.2f V, PV_P %.2f V, D4 %.2f A; the pulse's charge %.3f uC, the trip filter's excursion at most %.6f A; D4's "
+          "energy with the whole pulse in it %.4f mJ. The loop current the test may drive is not limited by the standard: U5's rating "
+          "is reached at %.1f A with the whole current through R59 (the bound) and at %.0f A in the loaded network; D4's clamp reaches "
+          "the drafted entry's %.0f V at %.1f A" % (
+              r115["a"], r115["vc25"], r115["vch"], r115["d59_b"], r115["d169_b"], r115["d59"], r115["v"], r115["vp"], r115["id4"],
+              1e6 * r115["q"], r115["y_trip"], 1e3 * r115["e_b"], r115["be_b"], r115["be_l"], ld["lim_draft"], r115["be_c50"]))
+    wrapP("     ", "     ", "D4 with the drafted SMCJ28A: a stiff %.0f V through the lead into the clamp (INFERRED straight line from each "
+          "breakdown at the printed slope); D4's continuous capability on the board, from TJ %.0f C and RthJA %.0f C/W (typical, 8 x 8 "
+          "mm pads), is %.2f W at the hot end's air and %.2f W at the cold end's (the sheet's %.1f W is on an infinite heat sink):" % (
+              ld["v_src"], ld["tjmax"], ld["rja"], ld["p_ok"][0], ld["p_ok"][1], ld["pd4"]))
+    for lab_, vb_, i_, p_ in ld["src"]:
+        P("       %-44s breakdown %.2f V: %6.2f A, %7.1f W" % (lab_, vb_, i_, p_))
+    wrapP("     ", "     ", "so D4 conducts amps at any junction temperature it can reach and is over its rating by two orders of magnitude; "
+          "the sheet's typical failure mode is a short, which F2 then clears; every other part of the drafted entry is rated above %.0f V "
+          "(the bulk and C71 to C74 %.0f V, U18 %.0f V, U5 %.0f V, Q3 %.0f V); as drawn, C11 and C12 are %.0f V, under it. The largest "
+          "sustained source the drafted entry holds is D4's least breakdown at the cold end, %.2f V (under it D4 carries less than its 1 mA "
+          "test current)" % (ld["v_src"], ld["lim_draft"], R["decision"]["surge"]["rating"]["vs169"], R["decision"]["surge"]["rating"]["vin"],
+                              R["decision"]["surge"]["rating"]["q3"], ld["lim_drawn"], ld["vbr_cold"]))
+    wrapP("     ", "     ", "THE SMALLEST CHANGE for D4 (SESSION), read from the held series (Littelfuse SMCJ p.2): the least row that stands off %.0f V "
+          "and does not break down at the cold end is SMCJ%dA (VR %.1f V, VBR %.2f to %.2f V, %.2f V at the cold end; VC %.1f V at %.1f A). "
+          "Alone it does not hold the derived set on the drafted entry: under REQ-016's criterion D1's 10 A plateau puts its clamp at "
+          "%.2f V at 25 C and %.2f V at the hot end (typical coefficient), against the %.0f V parts; the %.0f V parts are reached at %.2f A "
+          "(25 C) and %.2f A (hot end), Q3's %.0f V at %.1f A. So the change that holds every derived disturbance is SMCJ%dA WITH the "
+          "entry's %.0f V parts at the 63 V class: the bulk C11, C12 and C69 to EEHZA1J220XP (22 uF 63 V in the same 6.3 x 7.7 mm D8 "
+          "land, ESR %.0f mOhm against %.0f, ZA p.2), which takes the bulk ahead of the bank from %.0f uF to %.0f uF and so re-opens the "
+          "CS101 correction (re-run with it), and C71 to C74 at 63 V or more (no ceramic's sheet is held); and with it a %.0f V source "
+          "runs the stage, whose input is "
+          "then the regulation's %.2f W to the trip's %.2f W at %.0f V, outside REQ-016's window (a single fault for layer 8). The "
+          "alternative that also closes D5 is an input over-voltage and reverse disconnect ahead of PV_P (a series FET with its "
+          "controller): more parts, and no sheet for one is held" % (
+              ld["v_src"], r36["n"], r36["vr"], r36["vbr"][0], r36["vbr"][1], r36["vbr_cold"], r36["vc"], r36["ipp"], r36["vc116_25"],
+              r36["vc116_h"], ld["lim_draft"], ld["lim_draft"], r36["i50_25"], r36["i50_h"], R["decision"]["surge"]["rating"]["q3"], r36["iq3"],
+              r36["n"], ld["lim_draft"], 1e3 * r36["za63"]["esr"], 1e3 * R["decision"]["rows"]["za"]["esr"], 3e6 * R["decision"]["rows"]["za"]["c"],
+              3e6 * r36["za63"]["c"], ld["v_src"], ld["p_src36"][0], ld["p_src36"][1], ld["v_src"]))
+    wrapP("     ", "     ", "D5: D4's forward path carries %.3f A held; on the board it can dissipate %.2f W at the hot end, so it holds only "
+          "below a forward drop of %.3f V, which no silicon junction has at that current (INFERRED; the sheet prints the forward drop at "
+          "100 A only): NOT MET as DECISION-31 recorded (E-N1, board E's owner); the keyed receptacle is the barrier against it" % (
+              ld["rev"]["i"], ld["p_ok"][0], ld["rev"]["vf_be"]))
+    P("     THE VERDICTS (each against REQ-016's criterion on the drafted entry, %.0f V; as drawn the lowest limit on PV_P is C11 and C12, %.0f V):" % (
+        ld["lim_draft"], ld["lim_drawn"]))
+    rows_v = (("D1", "CS116, PV_IN and the cable", "D4 at the disturbance's current %.2f V (10 A, hot end), D4 off in the loaded network" % ld["v116"], "MEETS", "NOT MET (%.2f > %.0f V)" % (ld["v116"], ld["lim_drawn"])),
+              ("D2", "CS115, the cable", "D4 at the disturbance's current %.2f V (5 A, hot end), D4 off in the loaded network" % r115["vch"], "CONDITIONAL: the loop current under %.1f A (U5's bound)" % r115["be_b"],
+               "NOT MET (%.2f > %.0f V)" % (r115["vch"], ld["lim_drawn"])),
+              ("D3", "the panel's cold open circuit", "%.0f V, under D4's %.0f V standoff" % (ld["v_oc"], R["decision"]["rows"]["d4"]["vr"]), "MEETS (CONDITIONAL on PANEL-ACC)", "MEETS"),
+              ("D4", "a %.0f V source on the port" % ld["v_src"], "D4 conducts %.1f to %.1f A" % (min(i_ for _l, _v, i_, _p in ld["src"]), max(i_ for _l, _v, i_, _p in ld["src"])),
+               "NOT MET: SMCJ%dA with the 63 V class (register row)" % r36["n"], "NOT MET"),
+              ("D5", "a reversed panel (E-N1)", "D4 forward, %.3f A held" % ld["rev"]["i"], "NOT MET as recorded (E-N1)", "NOT MET"))
+    for r_ in rows_v:
+        wrapP("       - ", "         ", "%s, %s: %s: %s; as drawn, %s" % r_)
+    wrapP("     ", "     ", "FOR L4-E9'S REGISTER (R-156 and its companions; the register is L4-E9's to write): (a) R-156's input is this "
+          "derivation: D1 and D3 MEET, D2 CONDITIONAL on the recorded loop current, D4 and D5 NOT MET; R-156's text names the INA250's "
+          "40 V, and the drafted U18 is the INA169 (%.0f V); (b) a TEST row owed at layer 8: CS116 on PV_IN alone and on the J_SOLAR "
+          "cable at the six frequencies and the lead's %.1f MHz, and CS115 on the cable, recording the cable's peak current (TEST-PLAN "
+          "runs M1 to M5 only, though the row REQ-063 commits to marks both A); (c) a CHANGE row for D4: SMCJ%dA with the entry's 63 V "
+          "class parts (EEHZA1J220XP for the bulk, C71 to C74 at 63 V or more) and the CS101 correction re-run, or the over-voltage and reverse disconnect that also closes D5, catalogue rows and "
+          "sheets owed (no catalogue reading is filed and this round contacts no one); (d) the residual beyond the basis: a direct or "
+          "nearer strike, with the entry's margin there D4's own rating (check (c)'s capability rows)" % (
+              R["decision"]["surge"]["rating"]["vs169"], le_["f_q"] / 1e6, r36["n"]))
     # ---- sequencing
     # ---- the backstop under CS101 (the closing check's defect and its correction)
     cs, tb = R["cs101"], R["cs101"]["tab"]
@@ -2737,7 +3073,9 @@ def render(R):
           "interpretation (layer 8), the response's typical rows (7b.16) and the panel's swing rate with SWEN low (%.1f full swings per "
           "window); (c) the disturbances: every part inside its rating at the approved levels and in the capability scenario, U5's "
           "differential at most %.4f V, CONDITIONAL on the lumped model (layout, M3, M7, 7b.18), the bulk's heating under CS101's bounding "
-          "case (M2) and the bank's pulse capability in the capability scenario (Vishay). Drafted: the board E edits above and four "
+          "case (M2) and the bank's pulse capability in the capability scenario (Vishay); the panel lead's derived disturbances: CS116 "
+          "MEETS, CS115 CONDITIONAL on the loop current, the panel's cold open circuit MEETS, a stiff source of the kit's range on the "
+          "port and a reversed panel NOT MET (register rows, the change named). Drafted: the board E edits above and four "
           "clarification texts; implemented: nothing in the tree. L4-E7R's architecture criterion: MET, CONDITIONAL on the named "
           "items, none of which can overturn the architecture (each resolves by a stocked setting or a part on the same topology). If "
           "the coordinator's closing check finds otherwise, the engineering alternative is the next stocked RIMON_IN for M2's margin and "
