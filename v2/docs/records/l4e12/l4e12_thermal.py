@@ -517,6 +517,10 @@ def base():
     hold_ov45 = dict(hold_ov)
     hold_ov45["CM5 slot 3"] = pb.up(2.0, 4.5, 4.5, "S")
     q_m45 = shore(hold_ov45)[1]
+    hold_gen = dict(red2.SURV)   # as board B is generated: slot 2 alone; the 5G module's socket supply dropped as well
+    hold_gen.update({"CM5 slot 2": pb.same(2.0, "S"), "board D (SA868 and logic)": off, "VHF PA 30 W": off, "RockBLOCK 9704": off,
+                     "LoRa E22-900M30S": off, "E72 x2 (Zigbee, Thread)": off, "Geiger module": off, "5G RM520N-GL": off})
+    q_m_gen = shore(hold_gen)[1]
     t_use = float(env["in_use"]["max"])
     sgp55 = S["sgp_op"]["v"][1]
     g_floor = q_hs / (sgp55 - t_use)
@@ -525,7 +529,7 @@ def base():
     e5_t = A["e5"][4]
     e5_lo = A["e5"][3]
     charge_extra = pb.charge_heat(pb_hs, eta_fe) - (q_hs - q_hs_pack)
-    T = {"q_hs": q_hs, "q_hs_pack": q_hs_pack, "q_hs_hi": q_hs_hi, "q_gen": q_gen, "q_m": q_m, "q_m_pack": q_m_pack, "q_m_hi": q_m_hi,
+    T = {"q_m_gen": q_m_gen, "q_hs": q_hs, "q_hs_pack": q_hs_pack, "q_hs_hi": q_hs_hi, "q_gen": q_gen, "q_m": q_m, "q_m_pack": q_m_pack, "q_m_hi": q_m_hi,
          "q_m45": q_m45, "g_floor": g_floor, "qb": qb, "charge_extra": charge_extra, "sgp55": sgp55, "t_use": t_use}
     T["agree_g"] = abs(g_floor - L4E10_G_FLOOR) < 5e-5
     T["air_uncond"] = (e3o_t + q_hs / g_floor, e5_t + q_hs / g_floor)
@@ -1157,7 +1161,10 @@ def render(R):
     for k in sorted(c["g"], key=lambda k: -c["g"][k]):
         w("      %-9s %.3f W/K (MODELED)" % (k, c["g"][k]))
     w("   so the line is G_c = %.3f W/K (0 K margin; %.3f with 1 K, %.3f with 2 K); with the module at its typical 4.5 W instead of" % (c["gmax"], c["g_m"][0], c["g_m"][1]))
-    w("   idle %.3f W/K; at HIGH heat %.3f W/K (not covered). E3-O closes at T-H1's floor (mixed air %.2f C). Not routed by the air:" % (c["g_cm45"], c["g_hi"], c["L_floor"]["E3-O"]["mixed"]))
+    w("   idle %.3f W/K; at HIGH heat %.3f W/K (not covered). As board B is generated (slot 2 alone, the 5G socket's supply dropped" % (c["g_cm45"], c["g_hi"]))
+    w("   too) the hold's heat is %.3f W (MODELED), so the same line covers it. E3-O closes at T-H1's floor (mixed air %.2f C)." % (
+        T["q_m_gen"], c["L_floor"]["E3-O"]["mixed"]))
+    w("   Not routed by the air:")
     for k, why in c["open"]:
         w("      %-9s %s" % (k, why))
     t_ = c["trip"]
