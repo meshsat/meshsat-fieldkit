@@ -2,7 +2,7 @@
 the vehicle-entry interconnect (D-06) and the hot swap's fault timer (D-09), held as predicates on the values
 l4e11_power.py computes, recomputed here in closed form where the property is arithmetic.
 
-The predicates (the fix round of 2 October 2026 included): the committed .out is what the script prints; no mandatory
+The predicates (the fix round and the final round of 2 October 2026 included): the committed .out is what the script prints; no mandatory
 requirement names a load state for a source alone and the record quotes REQ-015 as the registry holds it; the charger's rows
 are the maker's and CHRG_OK names no battery; the charge holds are a state table that keeps the source carrying the kit (B2);
 rule R-b's register value bounds the actual current and Q2's junction where 3 A would not (B5); the LM5069 cannot start from a
@@ -14,7 +14,11 @@ drawn interconnect fails it, and a stiff source stays under F1's 1000 A only wit
 meets both ends and is the only stocked set of at most two parts that does; the start counts the new capacitors and the load;
 each draft checks, applies once, refuses twice and refuses the tree's own generator, and they compose with L4-E9's hot-swap
 draft as stated, the entry and timer drafts excluding each other; every figure carries a class; every downstream item has one
-owner and an acceptance; no em or en dash and no claim word. Nothing here writes into the tree: drafts run on temporary copies.
+owner and an acceptance; no em or en dash and no claim word. The final round adds: the efficiency floor couples the current
+and the voltage and reproduces the check's 6.36376 A at 0.908691; the breaker's delay is TI's loaded row and the scan carries the
+short-circuit filter and the delays; REQ-015 at the plug is a CONDITIONAL CANDIDATE on a bounded shedding sequence; the
+specified resistance floor keeps a stiff source at 900 A and the last interval and the obligations reach it; R-b permits two
+settings and its bound holds only inside TI's row condition. Nothing here writes into the tree: drafts run on temporary copies.
 Software tests establish this record's own behaviour only.
 """
 import hashlib
@@ -118,7 +122,9 @@ def t_the_charge_holds_are_a_state_table_that_keeps_the_source_carrying_the_kit(
     page = " ".join(open(PAGE, encoding="utf-8").read().split())
     assert "Finding U4-F1" in page and "never for a temperature or 'no charge' hold" in page
     assert "| S2 |" in page and "N2" in page and "OPEN" in page, "the record's state table does not keep N2 open for S2"
-    assert "CHRG_INHIBIT bit" in page and "never by the CHG_INHIBIT line" in page
+    assert "THE ONE EXCEPTION" in out and "THE HOLD PERSISTS ACROSS STATES" in out, "S4's exception or the hold's persistence is not stated"
+    assert "The one exception to the bit" in page and "The hold persists across states" in page
+    assert "CHRG_INHIBIT bit" in page and "the CHG_INHIBIT line (HIZ) and SHORE_INHIBIT are never a charge hold" in page
     assert "carried by the pack either way" not in page, "the first round's REQ-077 fallback is still in the record"
 
 
@@ -133,7 +139,12 @@ def t_rule_rb_bounds_the_actual_current_and_keeps_q2_under_its_maximum_where_thr
     assert air + rows[3.0][1] > P["tj_max"], "3 A through the diode would be inside TJ: R-b would not be needed"
     assert abs(P["rb_imbalance"] - 0.25) < 1e-9
     page = " ".join(open(PAGE, encoding="utf-8").read().split())
-    assert "0x0200" in page and "1.257 A" in page and "4.22 W" in page and "withdrawn" in page
+    assert "0x0000 (no charge) and 0x0200" in page and "0 to 85 C" in page and "21.22 W" in page
+    assert N["rb_temp"] == (0.0, 85.0), "the accuracy row's temperature condition is not TI's 0 to 85 C"
+    assert abs(N["dead_charge_w_max"] - N["rb_max"] * R["cv_max"]) < 1e-12 and abs(N["dead_charge_w_max"] - 21.2186) < 1e-3
+    out = open(OUT, encoding="utf-8").read()
+    assert "(ii) SRN at or above VSYS_MIN with the charger outside 0 to 85 C" in out and "INCONCLUSIVE" in out
+    assert "CONDITIONAL: on R-b's bound holding" in out, "Q2's junction is not kept conditional"
 
 
 def t_the_lm5069_cannot_start_from_a_nine_volt_plug():
@@ -147,6 +158,8 @@ def t_the_lm5069_cannot_start_from_a_nine_volt_plug():
     assert abs(rise_hi(38.3e3) - 12.372) < 1e-3 and abs(rise_hi(42.2e3) - 11.745) < 1e-3, "not the check's reproduced corners"
     assert N["poren"] == (8.4, 9.0) and abs(N["vin_ic_max"] - (9.0 - 0.013)) < 1e-12 and not N["poren_met"]
     assert not os.path.exists(os.path.join(REC, "apply_gen_sch_e_uvlo.py")), "the withdrawn R21 draft is still in the record"
+    src = open(SCRIPT, encoding="utf-8").read()
+    assert "uvlo_new" not in src and "R21_NEW_K" not in src, "the obsolete UVLO model is still in the script"
 
 
 def t_the_selected_entry_sits_between_the_in_service_maximum_and_f1():
@@ -171,19 +184,53 @@ def t_the_selected_fet_carries_a_fault_start_where_the_drawn_one_does_not():
     assert "CSD19532Q5B" in d_name and "CSD19536KTT" in k_name
     assert d_worst[0] > 1.0, "the drawn FET would carry a fault start: the FET change would not be needed"
     assert k_worst[0] < 1.0 and k_start < 1.0, "the selected FET does not carry a fault start on its derated chart"
+    assert "short-circuit trip" in k_worst[3] or "overcurrent" in k_worst[3]
+    assert N["hs_start"][2] < 1.0 and N["hs_start"][0] > N["isc"][2], "the start into a hard short is not bounded past the threshold"
     assert abs(N["ktt_at"]["1ms"] - 20.02) < 0.05 and abs(N["ktt_at"]["10ms"] - 6.228) < 0.01
 
 
-def t_the_corrected_knee_and_the_guard_clear_the_plugs_point_and_the_warm_up_is_carried():
+def t_the_efficiency_floor_couples_current_and_voltage_and_reproduces_the_check():
+    R = _R()
+    N, E = R["N"], R["E"]
+    it = N["ioc"][0]
+    pout, rr = 46.83613751272727, 0.141525                       # the fix round's own point, as the check reproduced it
+    assert abs(N["fix_pout"] - pout) < 1e-9
+    eta = pout / (it * (9.0 - it * rr))
+    assert abs(eta - 0.908691) < 5e-7 and abs(N["fix_eta"] - eta) < 1e-12
+    i_at = (9.0 - (81.0 - 4 * rr * pout / 0.908691) ** 0.5) / (2 * rr)
+    assert abs(i_at - 6.36376) < 5e-6 and abs(N["fix_i"] - i_at) < 1e-9, "the boundary does not reproduce 6.36376 A at 0.908691"
+    assert abs(N["i_at_eta"](N["eta_floor"]) - it) < 1e-9 and abs(N["i_at_eta"](E["eta_fe"]) - N["i9"]) < 1e-6
+    assert N["eta_floor"] < E["eta_fe"] and N["ioc_margin"] > 0.05, "the final round's margin is not the one the record states"
+    assert N["trip_min_r19_f1"] < N["ioc"][0] * 1.03, "R19 would buy more than the record says"
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
+    assert "0.908691" in page and "6.36376" in page and "0.88021" in page and "0.906 scaled" in page
+
+
+def t_the_breakers_timing_is_tis_loaded_row_and_the_scan_carries_the_filter():
     R = _R()
     N = R["N"]
-    assert N["top_margin"] > 0 and N["guard_margin"] >= 0.1, "the knee or the guard does not clear the 9 V plug's point"
-    assert abs(N["func"][1] - (21.73 + 8.58)) < 1e-9 and abs(N["heater_w"] - 8.58) < 1e-9
+    assert abs(N["t48_toc22"] - 370e-6) < 1e-12 and abs(N["t48_toc0"][0] - 25e-6) < 1e-12 and abs(N["t48_toc0"][1] - 30e-6) < 1e-12
+    assert abs(N["toc"][1] - 370e-6) < 1e-12 and abs(N["toc"][0] - N["toc_eq7"][0]) < 1e-15
+    assert abs(N["toc"][2] - N["toc_eq7"][2] * 370e-6 / N["toc_eq7"][1]) < 1e-12 and N["toc"][2] > N["toc_eq7"][2]
+    assert abs(N["tau"][1] - 3.01e3 * 1e-9) < 1e-15
+    assert abs(N["filt_14"] - 14.19e-6) < 0.01e-6, "the check's 14 A example does not reproduce"
+    assert abs(N["l_min"] - N["v_on_max"] * (N["tau"][2] + N["t48_tsc"][1]) / (N["idm"] * R["T9"]["derate"] - N["isc"][2])) < 1e-15
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
+    assert "5 us + 3RC" in page and "The threshold is where the trip begins" in page and "0.247 ms" in page and "7.24 V" in page
+
+
+def t_req015_at_the_plug_is_a_conditional_candidate_on_a_bounded_shedding_sequence():
+    R = _R()
+    N = R["N"]
     e9 = N["env"][9.0]
-    assert N["func"][1] <= e9["w_lo"], "the functional warm-up's plan figure is not carried at 9 V at the plug"
-    assert N["func"][2] > e9["w_hi"], "the hi corner is carried: the record's shed statement would be wrong"
-    assert N["it_need"] <= 1.89 < N["it_need"] + 0.01
+    assert N["func"][1] <= e9["w_lo"] and N["func_margin"] > 0.5, "the warm-up's plan figure is not carried with margin"
+    assert N["shed"][2] > e9["w_lo"], "the hi corner's shed state is carried: the record's CONDITIONAL would be wrong"
+    assert abs(N["shed_room"] - (e9["w_lo"] - N["heater_w"])) < 1e-12
+    assert N["surplus"][0] > 0 and N["it_need"] <= 1.82 and N["top_margin"] > 0 and N["guard_margin"] >= 0.1
     assert N["guard_levels"][1] > N["guard_levels"][2] and N["guard_levels"][3] > N["ven_op"]
+    assert N["air_m20"][1] < 0, "the inside air reaches 0 C: the thermal statement would be wrong"
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
+    assert "CONDITIONAL CANDIDATE" in page and "met with drafts" not in page.replace('"met with drafts"', "")
 
 
 def t_nine_volts_at_the_plug_gives_less_than_at_vin_raw():
@@ -210,11 +257,15 @@ def t_no_owner_question_is_forced_and_the_losses_lower_every_ceiling():
 def t_d06_the_weak_source_envelope_is_monotone_with_its_energies():
     R = _R()
     N, D = R["N"], R["D"]
-    assert [(lo, hi, t) for lo, hi, t in N["intervals"]] == [(None, 13.5, None), (13.5, 20.0, 600.0), (20.0, 35.0, 5.0), (35.0, 60.0, 0.5), (60.0, D["sel_ipf"], 0.1)]
+    assert [(lo, hi, t) for lo, hi, t in N["intervals"]] == [(None, 13.5, None), (13.5, 20.0, 600.0), (20.0, 35.0, 5.0), (35.0, 60.0, 0.5), (60.0, N["i_pf_spec"], 0.1)]
+    assert abs(N["i_pf_spec"] - 900.0) < 1e-9 and N["i2t_top"][4][3] == 900.0 ** 2 * 0.1
     assert [i2t for _l, _h, _t, i2t in N["i2t_top"]][1:4] == [240000.0, 6125.0, 1800.0]
     eq = {hi: e for _lo, hi, _t, e in N["contact_eq"]}
     assert abs(eq[35.0] - 35.0 ** 2 * 5.0 / 23.0 ** 2) < 1e-9 and abs(eq[60.0] - 60.0 ** 2 * 0.5 / 23.0 ** 2) < 1e-9
-    assert abs(N["loop_floor20"] - D["r_floor"] / (1 - 0.00393 * 40.0)) < 1e-12 and N["loop_floor20"] < N["loop_nom20"] < N["loop_ceil20"]
+    assert abs(N["loop_floor20"] - 43.18 / 900.0 / (1 - 0.00393 * 40.0)) < 1e-12
+    assert abs(N["acc"][0] - N["loop_floor20"] * (1.02 + 0.00393 * 2)) < 1e-12 and abs(N["acc"][1] - 0.066 / (1.02 + 0.00393 * 2)) < 1e-12
+    assert N["acc"][0] < N["constr"][0] < N["constr"][1] < N["acc"][1], "the construction is not inside the measured window"
+    assert 43.18 / (N["loop_floor20"] * (1 - 0.00393 * 40.0)) <= 0.9 * D["interrupt_a"] + 1e-9
     page = " ".join(open(PAGE, encoding="utf-8").read().split())
     assert "35 A for 5 s" in page and "60 A for 0.5 s" in page and "crimp" in page and "four-wire" in page
 
@@ -233,7 +284,7 @@ def t_d06_a_stiff_source_stays_under_f1_only_with_the_length_floor():
     D = R["D"]
     rho = 0.01724 * (1 + 0.00393 * (-20.0 - 20.0))
     ipf = lambda cable_m, mm2: 43.18 / ((2 * cable_m + 1.0) * rho / mm2)
-    assert abs(ipf(3.0, 2.081) - D["sel_ipf"]) < 0.05 and D["sel_ipf"] <= 1000.0
+    assert abs(ipf(3.05, 2.081) - D["sel_ipf"]) < 0.05 and D["sel_ipf"] <= 900.0
     assert ipf(2.0, 2.081) > 1000.0, "the floor is not load-bearing: 2 m of AWG 14 already stays under 1000 A"
     assert D["min_len_14"] <= 3.0 and ipf(D["min_len_14"], 2.081) <= 1000.0 + 1e-6
     assert D["min_fault_9v"] >= 6.0 * D["rating"], "the lowest stiff fault at 9 V is not past the 600 % row"
@@ -366,9 +417,9 @@ def t_every_downstream_item_has_one_owner_and_an_acceptance():
 def t_the_record_carries_the_outputs_numbers():
     page = open(PAGE, encoding="utf-8").read()
     out = open(OUT, encoding="utf-8").read()
-    for s in ("4.927 to 14.653", "883.5", "1236.9", "9.91 / 11.13 / 12.37", "9.33 / 10.52 / 11.74", "8.987", "3.062", "4.593",
-              "0.71 A", "6.364", "7.136", "6.2 A", "0.685", "3.038", "30.37", "43.97", "50.58", "51.23", "60.89", "1.2567", "51.03",
-              "7.367", "6.754 / 6.944 / 7.139"):
+    for s in ("4.927 to 14.653", "1236.9", "9.91 / 11.13 / 12.37", "9.33 / 10.52 / 11.74", "8.987", "3.062", "4.593",
+              "0.71 A", "6.364", "7.136", "5.983", "0.704", "3.08", "0.743", "73.4 A", "2.08 uH", "29.09", "42.52", "43.82", "35.24",
+              "20.51", "56.93", "58.51", "64.21", "1.2567", "50.99", "69.73", "72.41", "7.378", "6.754 / 6.944 / 7.139", "0.908691", "0.88021"):
         assert s in page and s in out, "%s is not in both the record and the output" % s
 
 

@@ -3,10 +3,10 @@
 APPLIED to the tree by L4-E11; its author ran it only on scratch copies (the tests write scratch copies).
 
 Why (blocker B3 of the focused check cx30, l4e11_power.out section 3f): with REQ-015's 9 V at the kit's plug, the in-service
-maximum from a 9.00 V plug settles VIN_RAW at 8.12 V (the kit's own losses hot), so L4-E5's knee moves down (a specification:
-a flat 1.89 A from 7.95 V, zero at 7.646 V, HIZ certain below 7.367 V) and the front end's restart guard U34 must fall under the
-knee's certain HIZ by L4-E5's 0.1 V. As drawn (R14 91k over R15 10k) it falls at 7.86 / 8.08 / 8.31 V, above the plug's 8.12 V
-operating point; R14 76.8k 1 % (LCSC C23107) puts the fall at 6.75 / 6.94 / 7.14 V (0.23 V under 7.367 V) and the rise at
+maximum from a 9.00 V plug settles VIN_RAW at 8.15 V (the kit's own losses hot), so L4-E5's knee moves down (a specification:
+a flat 1.82 A from 7.95 V, zero at 7.657 V, HIZ certain below 7.378 V) and the front end's restart guard U34 must fall under the
+knee's certain HIZ by L4-E5's 0.1 V. As drawn (R14 91k over R15 10k) it falls at 7.86 / 8.08 / 8.31 V, above the plug's 8.15 V
+operating point; R14 76.8k 1 % (LCSC C23107) puts the fall at 6.75 / 6.94 / 7.14 V (0.24 V under 7.378 V) and the rise at
 6.89 / 7.08 / 7.28 V (TPS37A VIT 0.792 to 0.808 V, 2 % hysteresis, SNVSBJ1E). At the lowest fall the guard's own running levels
 scale to FE_VZ 4.64 V, FE_RUN 2.75 V (Q36 and Q37 need 2.5 V at most) and EN 1.89 V (VEN(OP) 1.29 V at most).
 
@@ -36,7 +36,7 @@ EDITS = [
     ("#  Channel 2 (UV) is the stage's UVLO now: R14 91 k over R15 10 k (the old UVLO pair, re-valued) put VIN_RAW's\n"
      "#   threshold at 7.86 / 8.08 / 8.31 V falling and 8.01 / 8.24 / 8.48 V rising, under the 9 V service floor; C212",
      "#  Channel 2 (UV) is the stage's UVLO now: R14 76.8 k over R15 10 k (L4-E11, under the corrected knee) put VIN_RAW's\n"
-     "#   threshold at 6.75 / 6.94 / 7.14 V falling and 6.89 / 7.08 / 7.28 V rising, under the knee's certain HIZ (7.367 V); C212"),
+     "#   threshold at 6.75 / 6.94 / 7.14 V falling and 6.89 / 7.08 / 7.28 V rising, under the knee's certain HIZ (7.378 V); C212"),
 ]
 
 def refuse(msg):

@@ -7,10 +7,12 @@ first round). The drawn LM5069 enables all its functions only with VIN at POREN,
 DC_P behind the LM74700 ideal diode, at most 9.00 V less 13 mV from a 9.00 V plug before any current flows: no divider makes it
 start, and VIN is its current-sense reference, so it cannot be supplied from elsewhere. The TPS48110-Q1 (TI SLUSEE5E, held
 back; VS 3.5 to 80 V, 100 V absolute, EN/UVLO and OV at 1.16 to 1.2 V) replaces it: on by 8.44 V and off by 7.95 V of DC_P at
-the most, off above 41.22 V, a breaker at 6.36 to 7.14 A for 0.25 to 0.43 ms (the in-service maximum from a 9.00 V plug is
-6.20 A; F1's 80 C column 7.3 A), a short-circuit trip at 10.36 to 13.87 A within 5 us, gate-slew inrush of 0.38 to 1.22 A. It
-limits no power, so the pass FET carries a start into a resistive fault on its own chart: the drawn CSD19532Q5B reaches 3.04 of
-its derated Figure 10, the CSD19536KTT (D2PAK, Figure 4-10) 0.69, by a conservative whole-pulse reading (section 3c). R19
+the most, off above 41.22 V, a breaker at 6.36 to 7.14 A after 0.25 to 0.49 ms (TI's loaded row; the in-service maximum from
+a 9.00 V plug is 5.98 A with the final round's knee; F1's 80 C column 7.3 A), a short-circuit trip at 10.36 to 13.87 A on the
+sense filtered by RISCP x CSCP (about 3 us) and then 5 us, gate-slew inrush of 0.38 to 1.22 A. It limits no power, so the pass
+FET carries a start into a resistive fault on its own chart: with the filter and the delays in the scan the drawn CSD19532Q5B
+reaches 3.08 of its derated Figure 10, the CSD19536KTT (D2PAK, Figure 4-10) 0.70, by a conservative whole-pulse reading, and
+0.74 in a start into a hard short (section 3c). R19
 becomes 4.5 mOhm so the breaker sits at TI's characterised 30.6 mV point (RSET 100 Ohm, RIWRN 39.7 k); L2 becomes the
 SRF1260-1R0Y, whose 7.51 A carries the breaker's highest current at 98.2 C against its 105 C.
 
@@ -53,14 +55,14 @@ EDITS = [
      '{"1": "HS_GATE", "2": "HS_S", "3": "DC_HS"}, "C2687963")'),
     ('# L4-E9 (MESHSAT-1357, D-02 and D-07): the OVLO clear of CS101 at 36 V (R22 and R23 at 0.1 %) and the power limit at 5 mV or more at 43.18 V.\n'
      'r("R20", "100k 1%", "DC_P", "HS_UVLO"); r("R21", "38.3k 1% (UVLO: 9 V)", "HS_UVLO", "GND_V"); r("R22", "100k 0.1%", "DC_P", "HS_OVLO"); r("R23", "6.42k 0.1% (OVLO: 41.4 V)", "HS_OVLO", "GND_V")',
-     '# L4-E11 (MESHSAT-1357, fix round): UVLO on by 8.44 V and off by 7.95 V of DC_P at the most (9.00 V at the plug gives DC_P 8.42 V at 6.20 A, hot);\n'
+     '# L4-E11 (MESHSAT-1357, fix round): UVLO on by 8.44 V and off by 7.95 V of DC_P at the most (9.00 V at the plug gives DC_P 8.43 V at 5.98 A, hot);\n'
      '# OV off above 39.60 to 41.22 V (over CS101\'s 38.83 V, under D10\'s 42.4 V at -20 C); INP high from 7.23 V and 18.4 V at the 64.5 V clamp; TI\'s VS filter.\n'
      'r("R20", "59.0k 1%", "DC_P", "HS_UVLO"); r("R21", "10.0k 1% (UVLO: on by 8.44 V, L4-E11)", "HS_UVLO", "GND_V"); r("R22", "332k 0.1%", "DC_P", "HS_OVLO"); r("R23", "10.0k 0.1% (OV: off above 41.22 V, L4-E11)", "HS_OVLO", "GND_V")\n'
      'r("R84", "100k 1%", "DC_P", "HS_INP"); r("R85", "39k 1% (INP: high from 7.23 V)", "HS_INP", "GND_V"); r("R86", "100R 1% (VS filter, SLUSEE5E 9.5)", "DC_P", "HS_VS"); c("C124", "100n 100V", "HS_VS", "GND_V", "C0805")'),
     ('c("C5", "100n (TIMER)", "HS_TIMER", "GND_V"); r("R24", "22k 1% (PWR: power limit, 5.06 mV at 43.18 V at its low corner)", "HS_PWR", "GND_V"); r("R25", "10k", "DCIN_PGD", "+3V3_E6")',
-     'c("C5", "22n C0G 5% 50V 1206 (CTMR: 0.25 to 0.43 ms, retry 0.5 s, L4-E11)", "HS_TIMER", "GND_V", "C10u50", lcsc="C97929"); '
+     'c("C5", "22n C0G 5% 50V 1206 (CTMR: 0.25 to 0.49 ms, retry 0.5 s, L4-E11)", "HS_TIMER", "GND_V", "C10u50", lcsc="C97929"); '
      'r("R24", "39.7k 0.1% (RIWRN: breaker 6.36 to 7.14 A with R19, L4-E11)", "HS_IWRN", "GND_V", lcsc="C861872"); r("R25", "10k", "DCIN_PGD", "+3V3_E6")\n'
-     'r("R80", "100R 0.1% (RSET)", "DC_P", "HS_CSP"); r("R81", "3.01k 1% (RISCP: short circuit 10.36 to 13.87 A)", "DC_P", "HS_ISCP"); c("C125", "1n C0G 100V (CSCP, SLUSEE5E 9.5)", "HS_ISCP", "HS_S")\n'
+     'r("R80", "100R 0.1% (RSET)", "DC_P", "HS_CSP"); r("R81", "3.01k 1% (RISCP: short circuit 10.36 to 13.87 A, filtered)", "DC_P", "HS_ISCP"); c("C125", "1n C0G 100V (CSCP, SLUSEE5E 9.5)", "HS_ISCP", "HS_S")\n'
      'r("R82", "36.5k 1% (R1: gate slew)", "HS_PU", "HS_GATE"); r("R83", "10R 1% (R2: damping)", "HS_GATE", "HS_SLEW"); c("C122", "10n C0G 5% 100V 1206 (C1: gate slew, 17.3 to 24.7 V/ms)", "HS_SLEW", "GND_V", "C10u50", lcsc="C184799")\n'
      'c("C123", "1u 25V X7R (CBST: over Qg and 10 x C1, SLUSEE5E Equation 4)", "HS_BST", "DC_HS")'),
     ('"Bourns SRF1260-1R5Y dual-winding choke, common-mode connection (each winding carries the line current: 6.89 A Irms and 9.15 A Isat in the series column, 1.5 uH per winding)',
