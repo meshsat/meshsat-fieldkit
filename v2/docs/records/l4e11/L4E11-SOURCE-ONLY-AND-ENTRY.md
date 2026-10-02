@@ -19,7 +19,8 @@ bounds, the weak-source envelope, the charge bounds). **The final round** answer
 out TI's loaded delay and the short-circuit filter; (3) "met with drafts" compared the plan load only; (4) the resistance floor
 allowed 1000 A while the obligations stopped at 883.5 A; (5) R-b's bound ignored the accuracy row's temperature condition; and
 four minors. **The consolidation round** (2 October 2026, sections 12 to 14) answers the coordinator's U-04 question for the
-consolidation: TI's BQ25730 against this circuit, at most three approaches compared, one selected and U-04 classified.
+consolidation: TI's BQ25730 against this circuit, at most three approaches compared, one selected and U-04 classified. **The fix
+round** (section 15) answers the consolidation review cx36 (set 27, NOT YET): its B1, B2 and the charger minors.
 
 ## In short
 
@@ -62,6 +63,14 @@ consolidation: TI's BQ25730 against this circuit, at most three approaches compa
   (SESSION), drafted in `apply_gen_sch_a_charger.py`**; E11-24's bank is withdrawn; Q39's thermal bar (RthJA at most 20.54 C/W
   for OCD1's 20 A held) and its docking pulse are the new items. **U-04 becomes a downstream qualification test with bounded
   evidence and a workable fallback** once the draft is applied (on the drawn board it stays section 11's architecture-level choice).
+- **The fix round (section 15, review cx36):**
+  - *B1:* board E's auxiliary domain (U12 and both mixer fans) moves from CELL_F to board A's VSYS over the dock's pin 1, so the
+    source carries it while the charge is held and with the pack absent (`apply_gen_sch_e_aux.py`, `apply_pcb_interfaces_dock.py`).
+  - *The start:* bounded by the input clamp, the retries (a latch within 3.062 s at worst) and a bench acceptance; the 502.3 ms
+    claim is withdrawn.
+  - *B2:* the battery FET is re-selected on its makers' printed maxima at BATDRV's least 8.5 V drive: **two Nexperia BUK6Y10-30P
+    in parallel**, a bar of 34.42 C/W per FET at +70 C air, with the 18 A for 60 s service kept and no protection lowered.
+  - *The charger minors:* the inhibited acceptance is now piecewise.
 - **D-06** stays resolved in design with the corrected envelope and floor; **D-09** keeps its reproduced margin (4.927 to 14.653
   ms against 4.593 ms) and its conditional chart (0.71 A against 0.675 A), as the resolution while the LM5069 stays.
 
@@ -603,12 +612,15 @@ An owner and an acceptance close the assignment, not the item.
 | E11-24 | implementation | Layer 8 board A generator owner | the dependency round's fallback on VBAT (a register row, never applied by this record): one EEHZK1V181P direct (C242139) and a hold-up bank of four EEHZK1E471P (C242138) charged through R_CH 330 Ohm RC2512FK-07330RL (C137025) and discharging through D_H B540C-13-F (C72264); the regenerated netlist carries them; the bank's hold recomputed from the fitted parts reads at least 1.117 ms for the worst admitted step (48.39 W); withdrawn once E11-27 is applied (section 14) |
 | E11-25 | evidence | Layer 6 components | the questions of `clarification/TI-QUESTIONS.md` (Q-TI-11 to Q-TI-14, the addendum to Q-TI-3) sent by the owner and answered, each answer filed against its row D1 to D10 and judged: a limit closes a row production-wide, a typical figure does not |
 | E11-26 | test | prototype bench | the bench methods of rows D1 to D10 run on one unit each, every reading filed as a sample with its uncertainty and conditions, never as a limit; D2's recovery at most 0.2 ms against the bank's 1 ms assumption gives the engineering margin section 11 names |
-| E11-27 | implementation | Layer 8 board A generator owner | `apply_gen_sch_a_charger.py` applied (section 14): U3 BQ25730RSNR (C5219071) with pin 21 on CH_BATDRV; Q39 AONS21357 (C404364), source on VBAT, drain on CH_BATQ; R17 and R149 on CH_BATQ; C236 EEHZK1V181P (C242139) on VBAT; CH_BATQ declared a segment of the pack path; Q39's land checked against AOS's DFN 5x6 drawing and seated by R17; the regenerated netlist reads each |
-| E11-28 | firmware | firmware owner | the BQ25730's register rules: EN_OOA 0 at boot; ChargeCurrent written for any charge (0 A at POR and after the watchdog's 175 s), the watchdog serviced or WDTMR_ADJ 00; VSYS_MIN, EN_LDO, EN_PORT_CTRL, BATFET_ENZ and BATFETOFF_HIZ never written from their power-on values; the device ID D5h checked; R-a's bit following the hold flag in every state (S4's exception withdrawn); R-b' under VSYS_MIN: 0x0080 only, and no charge under 7.8 V on SRN |
-| E11-29 | layout | Layer 9 pre-layout analysis | Q39's installed thermal path: RthJA at most 20.54 C/W at the 62.1 C inside air (OCD1's 20 A held, RDS(on) at its 125 C maximum), from the layout's copper with AOS's RthJC; or the gauge's OCD1 set to the current the installed path carries (board P's image), the 18 A peak kept under 0.916 s after 10 A held |
-| E11-30 | evidence | Layer 6 components | the docking inrush through Q39's body diode: AOS's pulse capability for 242.9 A over 17.7 us filed, or a bench pulse on samples with its margin named; if neither, board P's discharge FET turned on through a series gate resistor sized to hold the inrush under 144 A, with Q2's SOA at that slew read on its sheet |
-| E11-31 | test | prototype bench | the three modes on the BQ25730 build (EN_OOA 0): pack absent, VSYS 12.054 to 12.546 V; CHRG_INHIBIT 1 with the pack present, VSYS at the pack plus 150 mV within 2 percent and no battery current; the start into VSYS's capacitance without a VSYS_UVP latch; VSYS's step response in S2 and S4 for each declared step against the converters' floor (D2, 2.054 V of margin), the outlets held by R-c where a step uses more |
-| E11-32 | evidence | Layer 6 components | the BQ25730RSNR's supply for the build quantity from an authorised source, filed (LCSC stock 0 on 2 October 2026), and Q39's (LCSC stock 3875) |
+| E11-27 | implementation | Layer 8 board A generator owner | `apply_gen_sch_a_charger.py` applied (sections 14 and 15): U3 BQ25730RSNR (C5219071) with pin 21 on CH_BATDRV; Q39 and Q40, two Nexperia BUK6Y10-30PX (C3278350) in parallel, sources on VBAT, drains on CH_BATQ, gates on CH_BATDRV; R17 and R149 on CH_BATQ; C236 EEHZK1V181P (C242139) on VBAT; J_DOCK pin 1 on VBAT for board E's VSYS_E; CH_BATQ declared a segment of the pack path; the LFPAK56 lands checked against Nexperia's SOT669 drawing, seated by R17 with matched paths; the regenerated netlist reads each |
+| E11-28 | firmware | firmware owner | the BQ25730's register rules: EN_OOA 0 at boot; ChargeCurrent written for any charge (0 A at POR and after the watchdog's 175 s), the watchdog serviced or WDTMR_ADJ 00; VSYS_MIN, EN_LDO, EN_PORT_CTRL, BATFET_ENZ and BATFETOFF_HIZ never written from their power-on values; the device ID D5h checked; R-a's bit following the hold flag in every state (S4's exception withdrawn); R-b' under VSYS_MIN: 0x0080 only, and no charge under 5.7 V on SRN (section 15c) |
+| E11-29 | layout | Layer 9 pre-layout analysis | the installed thermal path of each of Q39 and Q40: junction to air at most 34.42 C/W at the +70 C mixed air (set by OCD2 24 A for 1 s after 20 A held, RDS(on) bounded at BATDRV's 8.5 V and 150 C, section 15c), from the layout's copper with Nexperia's Rth(j-mb); the service's 18 A for 60 s and 10 A continuous kept, no protection lowered; read on the bench as each FET's case rise at 10 A |
+| E11-30 | evidence | Layer 6 components | the docking inrush through the pair's body diodes (242.9 A peak, time constant 33.8 us): at 25 C it sits under one FET's printed ISM rectangle; from the +70 C air the share one FET takes at most 0.848 (ISM derated linearly, A11-22): the split measured on the pair at the docking waveform, or Nexperia's hot ISM filed, or the two diode paths matched by layout and read |
+| E11-31 | test | prototype bench | the three modes on the BQ25730 build (EN_OOA 0), piecewise (section 15d): pack absent, VSYS at least 12.054 V; CHRG_INHIBIT 1 with SRN over 12.546 V, VSRN plus 150 mV within 2 percent, under 12.054 V at least 12.054 V, between at least 11.96 V; the held pack current at most 1 mA with board E on VSYS_E; the start from cold at VBUS20 19.15 and 20.96 V, VSYS's maximum capacitance and the always-on loads, at -20, 25 and 62.1 C, with Fault VSYS_UVP clear, the hiccup and latch on a shorted VSYS and the re-plug; VSYS before EN_OOA's write recorded; VSYS's step response in S2 and S4 for each declared step against the converters' floor (D2, 2.054 V of margin), the outlets held by R-c where a step uses more |
+| E11-32 | evidence | Layer 6 components | the BQ25730RSNR's supply for the build quantity from an authorised source, filed (LCSC stock 0 on 2 October 2026), and the two battery FETs' (BUK6Y10-30PX, LCSC stock 67) |
+| E11-33 | implementation | Layer 8 board E generator owner | `apply_gen_sch_e_aux.py` applied with E11-27 (section 15a): J_BLK pin 1 on VSYS_E; U12's VIN and EN, C31, J_FAN1 and J_FAN2 pin 1 and D7 and D8 on VSYS_E; VSYS_E declared (source J_BLK, 1 A: U12 0.8, the fans 0.1 each, always on); CELL_F's loads the pack path alone; E6_SW, E6_BST and the fans' switched returns re-declared to VSYS's 17.375 V; the regenerated netlist and check_contracts read the dock's pin 1 as VBAT and VSYS_E |
+| E11-34 | interface | Layer 4 coordinator | `apply_pcb_interfaces_dock.py` applied (IF-AE-DOCK: pin 1 VBAT and VSYS_E, the alias, BAT-F06's charge_share replaced by the VSYS feed, the ground return with seven 813 contacts) and section 15e's texts for L4-E9's record: the IF rows of VBAT and the dock, the source-change rows, the two sentences that say no battery FET and the diagram's system-node label (9.688 to 17.375 V) |
+| E11-35 | evidence | Layer 6 components | the mixer fans' maximum supply voltage from their maker at least 17.375 V (VSYS_E's top; CELL_F reached 16.884 V), or a fan of that rating named |
 
 ## 9. What stays conditional, and the decisions this record takes
 
@@ -636,7 +648,9 @@ direct EEHZK1V181P and the isolated hold-up bank of four EEHZK1E471P, R_CH 330 O
 pack's inrush stays under ASCD; (14) the consolidation (section 14), superseding (1)'s arrangement and (13)'s bank once E11-27 is applied: arrangement (B1), TI's BQ25730 with the battery FET Q39
 AONS21357 and the direct can C236, the bank withdrawn; rule R-b' (ChargeCurrent 0x0080 under VSYS_MIN, no charge under 7.8 V on
 SRN); EN_OOA 0 at boot; the battery FET's registers left at POR; R-a without S4's exception; CELL_BATPRESZ never tied to battery
-presence. Each carries its reason and reversal above. **Conditional with (B1) (named):** Q39's installed thermal path (E11-29),
+presence; (15) the fix round (section 15): board E's auxiliary domain on VSYS over one 813 contact (pin 1), the battery FETs two
+Nexperia BUK6Y10-30P in parallel (Q39, Q40), RDS(on) bounded at BATDRV's 8.5 V by `fet_bound`, the junction limit 150 C, the +70 C
+air line, R-b' revised to no charge under 5.7 V on SRN, the held pack current's bench acceptance 1 mA. Each carries its reason and reversal above. **Conditional with (B1) (named):** Q39's installed thermal path (E11-29),
 its docking pulse (E11-30), D2 (E11-31), the BQ25730's supply (E11-32), VSYS_MIN's upper accuracy (A11-18).
 
 **The gate's view (for the coordinator, not decided here):** U-04 moves from "unresolved by the held documents" to a selected
@@ -666,7 +680,9 @@ round, U-04 with (B1) applied is a downstream qualification test with bounded ev
 | A11-16 | The slot rail's efficiency 0.90 (+5V_DEV's declared figure) | the slot step at VSYS | E11-26 |
 | A11-17 | The kit's declared load steps are r4a's session targets (INFERRED there), the largest a rail takes at once | the worst admitted step | E11-06, E11-26 |
 | A11-18 | VSYS_MIN_REG_ACC's maximum, printed -2 % (SLUSE65A p.10), read as +2 % (12.546 V) | Q39's LDO-mode heat and the 7.8 V floor of R-b', by a few tenths of a volt | E11-31 |
-| A11-19 | Q39's RDS(on) at its 125 C maximum (10.7 mOhm) held up to 150 C | Q39's junction at the pack's protection currents | E11-29 |
+| A11-19 | Q39's RDS(on) at its 125 C maximum (10.7 mOhm) held up to 150 C (the first selection's; withdrawn by 15c, which judges no option above its last printed row) | Q39's junction at the pack's protection currents | E11-29 |
+| A11-21 | The board's transient shape for every candidate taken from AOS Figure 14 over its steady 55 C/W (a 5 x 6 mm class on a 1 in2 2 oz board) | the bars of 15c for events under 60 s | E11-29 |
+| A11-22 | ISM derated linearly from 25 C to the 175 C rating at the inside air | the docking pulse's hot share, 0.848 | E11-30 |
 | A11-20 | The docking inrush taken as the dependency round's model (the discharge FET at once, no diode drop credited) | Q39's peak, an overstatement if the gauge's DSG rise limits it | E11-30 |
 
 
@@ -682,16 +698,16 @@ the window (only the gauge's window acts until the firmware writes the flag's bi
 
 | Row | The missing statement (the held sheet, its page) | The claim it affects (this record) | What a maker's answer would establish | What one bench sample could establish, and what it cannot | The bench method | If the answer is negative |
 |---|---|---|---|---|---|---|
-| D1, N1a | VSYS's DC regulation with no battery current: VBAT_REG_ACC +-0.5 % is a charge-voltage row at 0 to 85 C (SLUSE66A p.9); section 11 (p.92) says only that the system is powered through the charger; Figures 10-4 and 10-5 (p.89) are typical power-up curves without battery | line 133: section 2's "absent, or both FETs open: VSYS at ChargeVoltage", and every S4 figure of 3g and 3h | that the loop holds VSYS at ChargeVoltage with no battery current, the +-0.5 % row applying: production-wide if stated as a limit | **can:** that one unit enters and holds the mode at the conditions tried; the mode is a design behaviour, and VSYS needs only 12.3 V against ChargeVoltage's floor 16.716 V, a 4.416 V margin, large against any plausible spread once the mode is shown. **Cannot:** that every unit and silicon revision enters the mode, or the accuracy below 0 C | pack absent, P1's load and the envelope's maximum on VSYS, VBUS20 19.1 to 21 V, VSYS on a calibrated meter at -20, 25 and 62 C ambient | (A) cannot run S4: (B), a charger whose battery FET regulates VSYS by design (an architecture change; five records reopen) |
-| D2, N1b | VSYS's load-step response with no battery: no load-transient figure or limit for the system output (Figure 10-17, p.91, is the OTG output's) | line 387: R-c and 3g's S4 operation through the kit's load steps, up to 48.39 W | a characterised deviation and recovery, or a minimum loop bandwidth; production-wide only if TI states a limit | **can:** one unit's deviation and recovery; with the bank sized for 1 ms, a measured recovery of 0.2 ms or less is a five-fold engineering margin against a loop's plausible spread. **Cannot:** a recovery time bounded for every unit | pack absent, an electronic load stepping VSYS by each declared step with a 1 us edge, VSYS and the inductor current on a scope, at three ambients | the bank of out 10 carries the worst admitted step for 1.117 ms with no help from the charger; longer needs more cans (8 for 2 ms) or (B) |
-| D3, N2 (Q-TI-3) | VSYS with CHRG_INHIBIT = 1 or ChargeCurrent 0 and no battery current: 9.4.1 (p.35) lets the host end a charge either way; 9.3.21.5 (p.34) keeps the converter operating with charge disabled only in the BATOVP paragraph | line 354: R-a's S2 row, and REQ-077's hold in every state: the charger still carrying the kit while the charge is held | the control mode with charge inhibited, production-wide (a design behaviour) | **can:** one unit's mode with the bit set and with ChargeCurrent 0, pack absent and in S2: a deterministic logic behaviour, so strong evidence for that silicon revision. **Cannot:** that no later revision changes the mode, nor a temperature-dependent comparator's effect | the pack emulated in S2 (a supply behind a diode), the bit set and cleared under P1's load, VSYS and the switch node recorded | REQ-077's hold cannot use the bit with this charger; ChargeCurrent 0 is tried; if both fail, (B) or a change to REQ-077's acceptance (the owner's) |
-| D4, N3 (Q-TI-2) | whether it charges before any host write: 9.6.3 says on a host write; the reset value encodes 256 mA; TI's expert on E2E (held): the POR value is 256 mA, 9.6.3 not addressed | line 120: section 2's ChargeCurrent at POR, R-a's persistence after a charger POR, CONOPS's hostless 256 mA | a datasheet erratum: production-wide (a forum answer is TI's word, not a revised document) | **can:** one unit's SRP-SRN current after POR with no host: a logic behaviour, strong for that revision. **Cannot:** other revisions | no host, the pack at 3.6 V a cell, SRP-SRN read for 200 s after POR | a hostless 256 mA charge is safe (inside the gauge's window; Q2's diode 0.256 W); no hostless charge leaves a hostless kit's dead pack uncharged: a stated limitation |
-| D5, N4 | VSYS's effective capacitance at 16.884 V against TI's 50 uF (10.1, p.83): the fitted MLCCs' DC-bias capacitance is not printed in the held Yageo CC sheet (a capacitor maker's item) | line 586: N1's premise and E11-07 | the capacitor makers' DC-bias curves: typical per part number, not limits | **can:** one board's VSYS capacitance at 16.8 V of bias. **Cannot:** lot-to-lot spread | an LCR meter with DC bias on the populated node | none needed: the direct EEHZK1V181P gives 90.72 uF at its stacked worst, no DC-bias dependence, over 50 uF by design |
-| D6, Q-TI-7 | 0-V charging before the gauge's SUV check: SLUUAQ3A 4.9 enables the 0-V circuit with PCHG_COMM = 1; its timing against 3.2.1's SUV check is not stated | line 391: R-d: no cell below 1.0 V charged (Samsung) | the gauge's sequence, production-wide | **can:** one gauge with a cell simulator: a logic sequence, strong for that firmware. **Cannot:** other firmware revisions | a cell simulator at 0.8 V a cell, the charger enabled, the stack current logged from wake | ZVCHG Exit Threshold set to stop 0-V charging, or a precharge FET with PCHG_COMM 0 (arrangement (C)'s part) |
-| D7 | the clamp's maximum under VSYS_MIN: 384 mA typical only (SLUSE66A 8.5, p.10) | line 378: R-b's case (iii), Q2's diode below VSYS_MIN | a maximum, production-wide | **can:** one unit's clamp current; Q2 reaches 150 C only at 1.758 A on its 50 C/W, 4.58 times the typical clamp, so a sample near typical is a large engineering margin. **Cannot:** a maximum | SRN held at 11 V by a sink, 0x0200 set, the current read at three temperatures | a maximum over 1.758 A: Q2's copper improved, or arrangement (C) |
-| D8 | ChargeCurrent's accuracy at 0x0200 outside 0 to 85 C, and under 0x0200 (p.10) | line 377: R-b's case (ii), Q2's 124.9 C (CONDITIONAL) | limits outside the range, production-wide | **can:** one unit at -20 and 62 C; Q2's limit 1.758 A is 1.4 times R-b's 1.2567 A, so a sample within about 1.3 A is an engineering margin. **Cannot:** production limits | as D7 with SRN at 13 V | the charger's temperature bounded inside the row by layout (E11-22), or Q2's copper improved |
-| D9 | the TPS48110-Q1's overcurrent delay at CTMR 22 nF: 370 us typical only (SLUSEE5E p.10) | line 191: V-A08's 0.247 ms and the fault scan's 0.49 ms (A11-11) | a minimum and a maximum over temperature, production-wide | **can:** one unit's delay; the scan's worst fault ends on the short-circuit trip, so the maximum does not decide it; the minimum sets V-A08. **Cannot:** the spread | a current step over the threshold at three temperatures, sense to PD timed | V-A08's allowance re-derived on TI's minimum, or CTMR raised |
-| D10 | the CSD19536KTT's transconductance: 329 S typical only (SLPS540C p.3) | line 209: the start into a hard short, 0.743 of the derated chart | a maximum, or the transfer curve's spread | **can:** one unit's transfer curve; the 1.346-fold headroom is not large against a plausible spread, so **no** margin. **Cannot:** a bound across units | a pulsed transfer curve at VDS 10 V, 10 to 100 A | a slower gate slew for the start, or a power-limiting controller |
+| D1, N1a | VSYS's DC regulation with no battery current: VBAT_REG_ACC +-0.5 % is a charge-voltage row at 0 to 85 C (SLUSE66A p.9); section 11 (p.92) says only that the system is powered through the charger; Figures 10-4 and 10-5 (p.89) are typical power-up curves without battery | line 142: section 2's "absent, or both FETs open: VSYS at ChargeVoltage", and every S4 figure of 3g and 3h | that the loop holds VSYS at ChargeVoltage with no battery current, the +-0.5 % row applying: production-wide if stated as a limit | **can:** that one unit enters and holds the mode at the conditions tried; the mode is a design behaviour, and VSYS needs only 12.3 V against ChargeVoltage's floor 16.716 V, a 4.416 V margin, large against any plausible spread once the mode is shown. **Cannot:** that every unit and silicon revision enters the mode, or the accuracy below 0 C | pack absent, P1's load and the envelope's maximum on VSYS, VBUS20 19.1 to 21 V, VSYS on a calibrated meter at -20, 25 and 62 C ambient | (A) cannot run S4: (B), a charger whose battery FET regulates VSYS by design (an architecture change; five records reopen) |
+| D2, N1b | VSYS's load-step response with no battery: no load-transient figure or limit for the system output (Figure 10-17, p.91, is the OTG output's) | line 396: R-c and 3g's S4 operation through the kit's load steps, up to 48.39 W | a characterised deviation and recovery, or a minimum loop bandwidth; production-wide only if TI states a limit | **can:** one unit's deviation and recovery; with the bank sized for 1 ms, a measured recovery of 0.2 ms or less is a five-fold engineering margin against a loop's plausible spread. **Cannot:** a recovery time bounded for every unit | pack absent, an electronic load stepping VSYS by each declared step with a 1 us edge, VSYS and the inductor current on a scope, at three ambients | the bank of out 10 carries the worst admitted step for 1.117 ms with no help from the charger; longer needs more cans (8 for 2 ms) or (B) |
+| D3, N2 (Q-TI-3) | VSYS with CHRG_INHIBIT = 1 or ChargeCurrent 0 and no battery current: 9.4.1 (p.35) lets the host end a charge either way; 9.3.21.5 (p.34) keeps the converter operating with charge disabled only in the BATOVP paragraph | line 363: R-a's S2 row, and REQ-077's hold in every state: the charger still carrying the kit while the charge is held | the control mode with charge inhibited, production-wide (a design behaviour) | **can:** one unit's mode with the bit set and with ChargeCurrent 0, pack absent and in S2: a deterministic logic behaviour, so strong evidence for that silicon revision. **Cannot:** that no later revision changes the mode, nor a temperature-dependent comparator's effect | the pack emulated in S2 (a supply behind a diode), the bit set and cleared under P1's load, VSYS and the switch node recorded | REQ-077's hold cannot use the bit with this charger; ChargeCurrent 0 is tried; if both fail, (B) or a change to REQ-077's acceptance (the owner's) |
+| D4, N3 (Q-TI-2) | whether it charges before any host write: 9.6.3 says on a host write; the reset value encodes 256 mA; TI's expert on E2E (held): the POR value is 256 mA, 9.6.3 not addressed | line 129: section 2's ChargeCurrent at POR, R-a's persistence after a charger POR, CONOPS's hostless 256 mA | a datasheet erratum: production-wide (a forum answer is TI's word, not a revised document) | **can:** one unit's SRP-SRN current after POR with no host: a logic behaviour, strong for that revision. **Cannot:** other revisions | no host, the pack at 3.6 V a cell, SRP-SRN read for 200 s after POR | a hostless 256 mA charge is safe (inside the gauge's window; Q2's diode 0.256 W); no hostless charge leaves a hostless kit's dead pack uncharged: a stated limitation |
+| D5, N4 | VSYS's effective capacitance at 16.884 V against TI's 50 uF (10.1, p.83): the fitted MLCCs' DC-bias capacitance is not printed in the held Yageo CC sheet (a capacitor maker's item) | line 595: N1's premise and E11-07 | the capacitor makers' DC-bias curves: typical per part number, not limits | **can:** one board's VSYS capacitance at 16.8 V of bias. **Cannot:** lot-to-lot spread | an LCR meter with DC bias on the populated node | none needed: the direct EEHZK1V181P gives 90.72 uF at its stacked worst, no DC-bias dependence, over 50 uF by design |
+| D6, Q-TI-7 | 0-V charging before the gauge's SUV check: SLUUAQ3A 4.9 enables the 0-V circuit with PCHG_COMM = 1; its timing against 3.2.1's SUV check is not stated | line 400: R-d: no cell below 1.0 V charged (Samsung) | the gauge's sequence, production-wide | **can:** one gauge with a cell simulator: a logic sequence, strong for that firmware. **Cannot:** other firmware revisions | a cell simulator at 0.8 V a cell, the charger enabled, the stack current logged from wake | ZVCHG Exit Threshold set to stop 0-V charging, or a precharge FET with PCHG_COMM 0 (arrangement (C)'s part) |
+| D7 | the clamp's maximum under VSYS_MIN: 384 mA typical only (SLUSE66A 8.5, p.10) | line 387: R-b's case (iii), Q2's diode below VSYS_MIN | a maximum, production-wide | **can:** one unit's clamp current; Q2 reaches 150 C only at 1.758 A on its 50 C/W, 4.58 times the typical clamp, so a sample near typical is a large engineering margin. **Cannot:** a maximum | SRN held at 11 V by a sink, 0x0200 set, the current read at three temperatures | a maximum over 1.758 A: Q2's copper improved, or arrangement (C) |
+| D8 | ChargeCurrent's accuracy at 0x0200 outside 0 to 85 C, and under 0x0200 (p.10) | line 386: R-b's case (ii), Q2's 124.9 C (CONDITIONAL) | limits outside the range, production-wide | **can:** one unit at -20 and 62 C; Q2's limit 1.758 A is 1.4 times R-b's 1.2567 A, so a sample within about 1.3 A is an engineering margin. **Cannot:** production limits | as D7 with SRN at 13 V | the charger's temperature bounded inside the row by layout (E11-22), or Q2's copper improved |
+| D9 | the TPS48110-Q1's overcurrent delay at CTMR 22 nF: 370 us typical only (SLUSEE5E p.10) | line 200: V-A08's 0.247 ms and the fault scan's 0.49 ms (A11-11) | a minimum and a maximum over temperature, production-wide | **can:** one unit's delay; the scan's worst fault ends on the short-circuit trip, so the maximum does not decide it; the minimum sets V-A08. **Cannot:** the spread | a current step over the threshold at three temperatures, sense to PD timed | V-A08's allowance re-derived on TI's minimum, or CTMR raised |
+| D10 | the CSD19536KTT's transconductance: 329 S typical only (SLPS540C p.3) | line 218: the start into a hard short, 0.743 of the derated chart | a maximum, or the transfer curve's spread | **can:** one unit's transfer curve; the 1.346-fold headroom is not large against a plausible spread, so **no** margin. **Cannot:** a bound across units | a pulsed transfer curve at VDS 10 V, 10 to 100 A | a slower gate slew for the start, or a power-limiting controller |
 
 ### 11a. The bounded fallback: VSYS's hold-up with no battery that does not lean on the charger's transient response (out 10)
 
@@ -841,7 +857,7 @@ are stated and their accuracy is not).
 | Mode | The maker's statement (page) | VSYS | Startup (page) | The exact gap |
 |---|---|---|---|---|
 | (1) battery present, source on | "system voltage is regulated 150 mV above battery voltage when BATFET is turned off"; the BATFET fully on while charging or supplementing; VSYS_MIN the floor (p.38) | 12.054 V (the floor), or with the source overloaded the pack less Q39's drop (9.786 V at the CUV stack and OCD1's 20 A, as (A)'s pack sits on VSYS less R17's drop), up to 17.375 V (the pack at 16.884 V plus 150 mV, +2 %, VSYSMAX_ACC p.9): **BOUNDED** | from VBUS: the registers, the cell count, then "Converter powers up" (p.27); with only the battery above VVBAT_UVLOZ (2.35 to 2.8 V), "charger wakes up and the BATFET is turned on" (p.27); no charge until ChargeCurrent is written (p.49) | none for VSYS |
-| (2) battery absent, or both of the pack's FETs open, source on | "independent system voltage instant-on with no battery or depleted battery" (p.1); below VSYS_MIN "the BATFET operates in linear mode (LDO mode), and the system is regulated at VSYS_MIN" (p.38); VSYS_MIN_REG_ACC 12.3 V, minimum -2 % (p.10) | at least **12.054 V at TJ -40 to 125 C**; at most 17.375 V by the VSYS pin's maximum limit (p.7) and VSYSMAX_ACC (p.9): **BOUNDED** | the same power-up (p.27); VSYS_UVP clamps the input to 0.5 A under 2.4 V and after 2 ms shuts the converter for 500 ms, retrying for 10 ms, latching after 7 failures in 90 s (p.38); VSYS's capacitance (at most 489 uF) reaches 2.4 V in 2.347 ms even at 0.5 A delivered: at most one retry, the start bounded at 502.3 ms, never a latch (INFERRED; the BQ25731 allowed 3 min) | VSYS_MIN_REG_ACC prints -2 % in its maximum column as well (p.10), so its upper side is not printed; no claim rests on it (the floor decides each), and where a figure needs it 12.546 V is taken (A11-18) |
+| (2) battery absent, or both of the pack's FETs open, source on | "independent system voltage instant-on with no battery or depleted battery" (p.1); below VSYS_MIN "the BATFET operates in linear mode (LDO mode), and the system is regulated at VSYS_MIN" (p.38); VSYS_MIN_REG_ACC 12.3 V, minimum -2 % (p.10) | at least **12.054 V at TJ -40 to 125 C**; at most 17.375 V by the VSYS pin's maximum limit (p.7) and VSYSMAX_ACC (p.9): **BOUNDED** | the same power-up (p.27); VSYS_UVP clamps the input to 0.5 A under 2.4 V and after 2 ms shuts the converter for 500 ms, retrying for 10 ms, latching after 7 failures in 90 s (p.38); the start time is bounded in 15b (the earlier "502.3 ms" withdrawn: the 0.5 A is an input clamp, not a delivered current) | VSYS_MIN_REG_ACC prints -2 % in its maximum column as well (p.10), so its upper side is not printed; no claim rests on it (the floor decides each), and where a figure needs it 12.546 V is taken (A11-18) |
 | (3) battery present, charging inhibited | CHRG_INHIBIT 1 inhibits the charge (p.48); VSYSMAX_ACC with charge disabled: VSRN + 150 mV within +-2 % (p.9); the BATFET off, so no battery current unless the load exceeds the source (supplement, p.5) | VSRN + 150 mV within 2 %, and at least 12.054 V with the pack at its CUV stack: **BOUNDED** | as (1); the bit is 0 at POR and is written from the hold flag | none for VSYS |
 
 **So each mode has the maker's printed bound on VSYS: D1 and D3 are removed.** The margin from the floor to A-14's assumed 10.0 V
@@ -859,6 +875,10 @@ is never written (SESSION). For a pack under VSYS_MIN with the source overloaded
 one meant "when ... battery is removed" (p.33).
 
 ### 12e. The affected budgets
+
+**Superseded by section 15c for the battery FET** (BATDRV drives 8.5 V at least, where AONS21357 prints no hot maximum; the
+selected FETs are two BUK6Y10-30P, and the fallback "OCD1 set to the installed path" is withdrawn). The figures below are the first
+selection's, kept as history.
 
 - **The inductor L2.** With the pack at its CUV supplementing at the gauge's OCD1 20 A, VSYS is 9.786 V (Q39's drop), so S-117's
   11.8 A at 10 V becomes **12.057 A** and its worst peak **14.41 A** against Isat 25.4 A (S-117: 14.1 A): re-derived, 2.19 % up.
@@ -903,6 +923,9 @@ CONDITIONAL). The fallback: the gauge's OCD1 set to what the installed path carr
 
 ## 13. Three approaches compared (out 13)
 
+*The battery FET's figures in this section are the first selection's (one AONS21357); section 15c supersedes them with the pair of
+BUK6Y10-30P, and section 15a adds board E's VSYS feed. The comparison of (A), (B1) and (B2) stands.*
+
 **(B2), one other implementation whose maker's sheet states the property that removes D1 and D3: none found.** Looked at, all
 held: the BQ25798 and BQ25792 (NVDC, both statements, but an integrated battery FET of 6 A RMS and 10 A for 1 s, BQ25798 p.7 and
 BQ25792 p.8, under the pack's 18 A); the LM74700-Q1 (an ideal-diode controller, p.1: it blocks reverse current and regulates no
@@ -931,32 +954,211 @@ external-FET NVDC parts are the BQ25730's family and architecture, not a differe
 
 ## 14. The selection, the draft and U-04's class (out 14)
 
-**SELECTED (SESSION): (B1), TI's BQ25730 in U3's land with the battery FET Q39.** *Why:* it is the only option whose maker prints
+**SELECTED (SESSION): (B1), TI's BQ25730 in U3's land with the battery FET Q39** (the fix round: Q39 and Q40, two BUK6Y10-30P,
+section 15c; board E on VSYS, 15a). *Why:* it is the only option whose maker prints
 a bound on VSYS in all three modes (12c), removing D1, D3 and D4 and bounding D7 inside 0 to 85 C, where (A) leaves D1 and D3 to
 TI and holds D2 with compensating parts on an assumed 1 ms; every setting L4-E4 to L4-E8 drafted rests on rows the two sheets
 print alike (12b), so that work carries over; it costs less and removes the bank. *Its costs, named and bounded:* Q39's thermal bar
 (E11-29), the docking pulse (E11-30), 0.221 % of the pack's output at PS-IDLE-SPEC, and the BQ25730's stock (E11-32). No line a
 class in `reserved.json` protects changes, and no money beyond parts is spent, so the choice is the session's. *Reversed by:* a
-layout that cannot reach E11-29's bar with OCD1 kept at 20 A and no acceptable OCD1 below it, or E11-30 showing Q39 cannot take
-the docking pulse with no workable slower turn-on; then (A) with its dependency round stands and TI's answers on D1 and D3 decide.
+layout that cannot reach E11-29's bar (15c: 34.42 C/W per FET at +70 C air) even with the pair's drain copper tied into the plate,
+or E11-30 showing the pair cannot take the docking pulse with no matched layout or workable slower turn-on; then (A) with its dependency round stands and TI's answers on D1 and D3 decide.
 
 **The draft:** `apply_gen_sch_a_charger.py` (release-guarded, never applied here): U3 BQ25730RSNR (C5219071) with pin 21 on
-CH_BATDRV; Q39 AONS21357 (C404364) between VBAT and CH_BATQ; R17 and R149 moved to CH_BATQ; C236 EEHZK1V181P (C242139) on VBAT
+CH_BATDRV; Q39 and Q40, two BUK6Y10-30PX (C3278350; the first draft's AONS21357 superseded, 15c), between VBAT and CH_BATQ;
+J_DOCK pin 1 on VBAT for board E's VSYS_E (15a); R17 and R149 moved to CH_BATQ; C236 EEHZK1V181P (C242139) on VBAT
 with its land key; CH_BATQ declared a segment of the pack path; the charger's sheet group renamed. It composes with
 `apply_gen_sch_a_guard.py` in either order.
 
-**What it changes downstream (for the consolidation):** E11-27 to E11-32 are added; E11-24 is withdrawn and E11-05 is no longer
+**What it changes downstream (for the consolidation):** E11-27 to E11-32 are added (E11-33 to E11-35 by the fix round, 15); E11-24 is withdrawn and E11-05 is no longer
 needed once E11-27 is applied; E11-22's case (iii) is bounded inside 0 to 85 C by R-b'; in `clarification/TI-QUESTIONS.md`,
 Q-TI-11's D1 part and Q-TI-3's addendum fall away while D2's question stays, and Q-TI-15, Q-TI-16 and Q-AOS-1 are drafted for (B1); R-a's S4 exception is withdrawn (the CHRG_INHIBIT bit
 follows the hold flag in every state); E11-04's firmware rules gain E11-28's; section 3 (REQ-015 at the plug) is unchanged.
 
 **U-04's claims still open with (B1):** D2 (load steps in S2 and S4 against the 2.054 V margin: bench E11-31, R-c's step rule the
-fallback); Q39's thermal bar (E11-29) and docking pulse (E11-30); D6; D8 (R-b's case (ii)); REQ-015 at 9.00 V at the plug as
+fallback); the pair's thermal bar (E11-29) and the docking pulse's split (E11-30); the start's first window and the held pack
+current (E11-31); the fans' supply rating (E11-35); D6; D8 (R-b's case (ii)); REQ-015 at 9.00 V at the plug as
 section 3g (E11-06, E11-09, E11-23); and on board E, D9 and D10.
 
 **U-04 by the owner's exit definition: A DOWNSTREAM QUALIFICATION TEST WITH BOUNDED EVIDENCE AND A WORKABLE FALLBACK**, once E11-27
 is applied. The three modes rest on the maker's printed rows; each open claim has a test or an analysis that bounds it and a
-fallback that needs no new architecture (R-c's step rule; OCD1 set to the installed path; a slower DSG turn-on on board P). On the
+fallback that needs no new architecture (R-c's step rule; the pair's drain copper tied into the plate; a matched layout of the two
+diode paths or a slower DSG turn-on on board P; no protection lowered, section 15c). On the
 drawn board, arrangement (A), it stays the architecture-level choice of section 11.
+
+## 15. The fix round for the consolidation review (cx36, NOT YET on set 27's `8fbb68b6`; out 15)
+
+The owner's one authorised review of the consolidation (`records/l4close/checks/astra-check-l4close-1.md` in set 27) found two
+blocking discrepancies in this record's selection, B1 and B2, and four charger minors (its E1). This round answers them; a targeted
+recheck follows. Sections 12 to 14 stand where this section does not supersede them, and every superseded passage says so.
+
+### 15a. B1: board E's auxiliary domain on a source-capable feed
+
+**The finding holds (NETLIST, MAKER).** Board E's U12 (the AP63205 that feeds the sensor controller, the Geiger supply and the
+fans' logic: its VIN and EN), C31 and both mixer fans with D7 and D8 sit on CELL_F, the pack node before board A's R17 and the
+battery FET; CELL_F declares them at 1 A (U12 0.8 A, the fans 0.1 A each). With the charge inhibited the battery FET is off
+(SLUSE65A p.38) and they still drained the pack; with the pack absent nothing fed them.
+
+**The feed (SESSION): VSYS alone, over the dock.** Board A's J_DOCK pin 1 goes from GND to VBAT (VSYS), board E's J_BLK pin 1 to a
+new net VSYS_E, and U12's VIN and EN, C31, the fans' supply pins and D7 and D8 move to VSYS_E. CELL_F keeps the pack path to board A,
+D3, C1 and the pack monitor R42 and R43. *Why VSYS and no OR:* VSYS exists whenever the pack or a source does (the battery FETs are
+on with the battery alone, p.27, and their body diodes conduct under any fault of the drive), while a diode or ideal-diode OR with
+CELL_F would take the pack whenever VSYS sits under it, which the +-2 % row allows in the held state.
+
+**The contact (SESSION): one 813 on pin 1**, 1 A declared, 28.6 % of its 3.5 A, 4.9 K by w3de's assumed rise. The ground return keeps
+seven 813 contacts. At the 32.1 A coincidence with every Mill-Max pin at 20 mOhm (w3de's model, pinned):
+
+| 813 ground contacts | Each carries | Of 3.5 A | At the 51 C inside air | At the margin's 65 C |
+|---|---|---|---|---|
+| 8 (as drawn) | 2.092 A | 59.8 % | 72.4 C | 86.4 C |
+| 8, one open | 2.238 A | 63.9 % | 75.5 C | 89.5 C |
+| 7 (this round) | 2.238 A | 63.9 % | 75.5 C | 89.5 C |
+| 7, one open | 2.406 A | 68.7 % | 79.3 C | 93.3 C |
+
+One contact moves W3DE-DOCK-R1's residual by one contact's step and keeps the 51 C envelope under the 813's 85 C with one open; a
+second supply contact would leave six, 84.1 C with one open at 51 C. A lost pin 1 unpowers board E's controller, which board A
+reads on HOT-R1 as the detector lost (IF-AE-DOCK `hot_r1`): a detected state.
+
+**VSYS_E's range:** the supplement floor 9.688 V to 17.375 V (15d). The AP63205 takes 3.8 to 32 V (Diodes DS41326 p.1). The fans,
+rated as a 12 V class on CELL_F's 16.884 V, now see up to 17.375 V: their maximum supply voltage is owed (**E11-35**).
+
+**No unintended pack discharge with the charge inhibited.** With an adequate source the battery FETs are off with no charging or
+supplement current (p.38) and board E runs on VSYS_E from the source. What the pack still feeds:
+
+| Element | The drain | Basis |
+|---|---|---|
+| the pack monitor R42 + R43 (122 kOhm, at -1 %) | 0.1398 mA at 16.884 V, intended (the controller's own pack reading) | NETLIST |
+| D3, SMCJ18A | IR at most 1 uA at 18 V and 25 C; hot leakage not printed | Littelfuse SMC series (held) |
+| the battery FETs' body diodes | VSYSMAX_ACC's -2 % lets VSYS sit up to 0.191 V under the pack at 16.884 V; no current printed at that bias (VSD only at 80 A) | not bounded on held evidence |
+| the charger's SRN pin | its leakage row prints a mismatch only | not bounded on held evidence |
+
+So no kit load is fed from the pack while the source carries it; the bounded drains total 0.1408 mA, and the bench reads the held
+pack current at **at most 1 mA** (E11-31's acceptance; board E's domain drew about 0.5 to 1.5 W from the pack before). The pack still
+supplements when the source cannot carry the load, which is NVDC's intended behaviour and R-c's case.
+
+**The sequences.** *Source only* (the pack absent or both its FETs open): the source and the entry (3c); the front end to VBUS20;
+U3's POR (p.27) with ChargeCurrent 0 A; the converter up; VSYS through VSYS_UVP's start (15b) to VSYS_MIN; board A's always-on and
+board E's U12 on VSYS_E; E's controller up and driving HOT-R1; firmware writes EN_OOA 0, IIN_HOST 4.70 A and CHRG_INHIBIT from the
+hold flag. *Held:* the flag set writes CHRG_INHIBIT 1; the battery FETs turn off as the charge stops (p.38); VSYS moves to VSRN + 150
+mV; nothing on either board moves; the flag cleared writes 0 and ChargeCurrent by R-b'.
+
+**The drafts:** board A's half joins `apply_gen_sch_a_charger.py` (J_DOCK pin 1 on VBAT, VBAT's loads gain J_DOCK's 1.0 A); board
+E's half is **`apply_gen_sch_e_aux.py`** (17 edits: J_BLK pin 1, U12, C31, the fans and their diodes on VSYS_E; VSYS_E declared;
+CELL_F's loads the pack path alone; E6_SW, E6_BST and the fans' switched returns to 17.4 V; a power flag); the interface is
+**`apply_pcb_interfaces_dock.py`** (IF-AE-DOCK: the alias, pin 1, pins_history, BAT-F06's charge share reversed, an `aux_feed`
+entry with the figures above, the findings list; and check_contracts.py's alias table). All three are release-guarded and applied
+together (E11-27, E11-33, E11-34).
+
+### 15b. The start, bounded where the held sheets bound it
+
+**Withdrawn:** section 12c's "the start bounded at 502.3 ms, never a latch". The 0.5 A is VSYS_UVP's input clamp, a ceiling, not a
+delivered current, so no start time follows from it.
+
+- **The input limits (MAKER, p.38):** under 2.4 V of VSYS (VSYS_UVLO; rising 2.3 / 2.5 / 2.65 V, p.13) the input is clamped to 0.5
+  A, at most 10.48 W from VBUS20's 20.96 V top. The sheet prints no minimum delivered current below that voltage.
+- **The loads below 2.65 V:** the converters on VSYS are held off by their enables or their UVLOs (the LM5176 stages by logic, U12
+  under its 3.8 V start, the heater buck by its divider). The resistors on VBAT (R2 100 k, R92 143 k, R96 143 k) draw at most 0.0636
+  mA at 2.65 V. The ICs' currents under UVLO are not all held. Bringing VSYS's 489 uF to 2.65 V takes 1.717 mJ.
+- **The retries (MAKER):** each failed start shuts the converter for 500 ms and retries for 10 ms; the 7th failure inside 90 s
+  latches it, at most 3.062 s after the first window. With no pack only a POR clears it (VBUS re-plugged: "5 ms after either VBUS or
+  VBAT becomes valid, the charger resets all the registers", p.27); with a pack the host does, running on the pack through the
+  battery FETs.
+
+So on held evidence the start ends in VSYS_MIN or in a latch within 3.062 s, never undefined. Whether the first window succeeds is
+not bounded (no minimum delivered current is printed): **bench E11-31**, acceptance: from cold, at VBUS20 19.15 and 20.96 V, with
+VSYS's maximum capacitance and the declared always-on loads (board E on VSYS_E), at -20, 25 and 62.1 C, VSYS reaches 12.054 V with
+Fault VSYS_UVP clear; the hiccup's 500 / 10 ms and the latch shown on a shorted VSYS and cleared by a re-plug.
+
+### 15c. B2: the battery FET, three options on one basis
+
+**The finding holds.** BATDRV may drive only 8.5 V (SLUSE65A p.17), and AONS21357's hot maximum is printed at -10 V only. The 18 A
+service for 60 s (pcb_interfaces.yaml, PWR-F12) stays, and no protection is lowered to meet it: section 12e's fallback "the gauge's
+OCD1 set to what the installed path carries" is withdrawn.
+
+**The basis (INFERRED from MAKER rows only, `fet_bound`).** RDS(on) at BATDRV's least drive (8.5 V) is bounded by the chord between
+the printed maxima at -4.5 V and -10 V at 25 C: each unit's RDS(on) is convex and falling in |VGS|, and so is their pointwise
+maximum. The temperature factor is bounded by the chord between the printed -10 V maxima bracketing the junction limit. The gate
+ratio is taken from 25 C, where the threshold sits highest; it falls with temperature, so the hot ratio is no larger. No option is
+judged above its last printed temperature.
+
+**The air and the events.** The air is the consolidation's +70 C mixed-air line for the parts that must work in the heat stage
+(L4-POWER-ARCHITECTURE K9, E3-O at +55 C ambient; K3 at +40 C); it covers L4-E9's 62.1 C. The board's transient shape comes from
+AOS Figure 14 over its steady 55 C/W, applied to every option (A11-21): z(244 us) 0.00608, z(20 ms) 0.0525, z(1 s) 0.2266, z(60 s)
+0.7766. The events each start from a hot state; per FET, the even split bounds each FET's power for any split of the RDS(on) spread:
+- 10 A held;
+- 18 A for 60 s after 10 A held (the service);
+- 20 A held, under the gauge's OCD1, which never trips below it;
+- from 20 A held: OCD2's 24 A for 1 s, the AFE's AOLD 30 A for 20 ms, and the image's ASCD 55.6 A for 244 us.
+
+The bar is the installed junction-to-air resistance per FET at which every event keeps TJ at the limit or under.
+
+| | (Q-a) AOS AONS21357, one | (Q-b) Vishay SQJ403EP, one | (Q-c) Nexperia BUK6Y10-30P, two in parallel |
+|---|---|---|---|
+| Printed RDS(on) maxima | 7.8 mOhm at -10 V and 25 C; 10.7 at 125 C; 12.3 at -4.5 V | 8.5 at -10 V and 25 C; 13.0 at 125 C; 15.0 at 175 C; 20.0 at -4.5 V | 10 at -10 V and 25 C; 16 at 175 C; 25 at -4.5 V |
+| Junction limit | 125 C (its last printed row; rated 150 C) | 150 C (25 K under its 175 C) | 150 C (25 K under its 175 C) |
+| Bound at 8.5 V and the limit | gate factor 1.1573: **12.384 mOhm** | 1.369: **19.166 mOhm** | 1.4091: **21.136 mOhm each** |
+| Ciss against TI's 5 nF | 2.83 nF typical: MEETS | 4.5 nF maximum: MEETS | 4.72 nF typical for the two: MEETS |
+| The bar per FET at +70 C (at 62.1 C) | **10.1 C/W** (11.55), set by OCD2 after 20 A held | **9.49 C/W** (10.43), the same | **34.42 C/W** (37.82), the same |
+| Against the maker's board | 55 C/W: the bar is 0.184 of it | 68 C/W: 0.14 of it | none printed (LFPAK56, Rth(j-mb) 1.4 K/W); 0.626 of AOS's 1 in2 figure for the class |
+| The docking pulse, 242.9 A | IDM 144 A; no body-diode pulse rating | ISM 84 A | ISM 320 A each |
+| Part cost, LCSC 10-piece | 0.4238 USD | 3.5497 USD | 2 x 1.7386 USD |
+
+**SELECTED (SESSION): (Q-c), two Nexperia BUK6Y10-30P in parallel, Q39 and Q40** (LCSC C3278350, 67 in stock; the sheet of 17
+April 2020, held back). *Why:* it is the only option inside TI's Ciss whose bar is of the order a board pour gives (34.42 C/W per
+FET at +70 C air, 0.626 of AOS's 1 in2 figure for the same 5 x 6 mm class). (Q-a) would need 10.1 C/W and (Q-b) 9.49 C/W, a fifth
+and a seventh of their makers' own board figures, which a pour does not give one part. It also has a printed RDS(on) maximum to
+175 C, a 175 C rating, and a printed body-diode pulse rating over the docking pulse. A third FET would put Ciss at 7.08 nF, over
+TI's rule.
+
+**Its envelope at the bar, +70 C air:** TJ at most 150 C for every event above; 18 A for 60 s after 10 A held reaches 119.8 C
+(CONDITIONAL on E11-29, the installed path).
+
+**The docking pulse:**
+- *All of it in one FET at 25 C:* 242.9 A against ISM 320 A, and 0.9977 A2s against the ISM rectangle's 1.024 A2s (MEETS).
+- *From the +70 C air,* with ISM derated linearly to the 175 C rating (x0.7, A11-22): 224 A and 0.7168 A2s. This is met if one FET
+  takes at most 0.848 of the pulse.
+- *Open:* the split between two body diodes is not printed (E11-30: the bench pulse on the pair, or a layout matching the two
+  paths).
+
+**The drive:** BATDRV's 6 kOhm at most into 4.72 nF gives a 28.32 us time constant.
+
+**The precharge in LDO mode, with R17's tolerance (the review's minor):**
+- The current: 0.256 x 1.30 / 0.99 = **0.33616 A** at most, all of it in one FET (linear-mode sharing is not assumed).
+- The junction reaches 150 C at the bar and +70 C air with SRN at 5.632 V.
+- **R-b' (SESSION, revised):** no charge under **5.7 V** on SRN (the cells' 1.0 V a cell floor is 4 V). Q2's diode then carries
+  0.3362 W, TJ 86.8 C. R17's drift with temperature is not held.
+
+**On battery:** 0.0934 W in the pair at PS-IDLE-SPEC (0.218 % of the pack's output) and 0.2023 W at PS-TYP (0.321 %).
+
+**L2:** VSYS in supplement is 9.688 V (CELL_FUSED's 10.0 V less R17 and the pair at OCD1's 20 A), giving 12.179 A and a peak of 14.55
+A against Isat 25.4 A.
+
+### 15d. The charger minors (E1)
+
+- **The inhibited acceptance, piecewise** (VBAT_VSYS_MIN_RISE, 98 to 102 % of VSYS_MIN, p.14):
+  - SRN under 12.054 V: LDO mode, VSYS at least 12.054 V.
+  - SRN over 12.546 V: VSRN + 150 mV within +-2 %.
+  - Between the two: either mode, so at least **11.96 V**.
+  - The review's case, SRN at 10 V, is the LDO region; (10 + 0.15) x 1.02 = 10.353 V belongs to no region.
+- **The LDO region's upper side, 12.546 V,** is an assumed reading of TI's malformed maximum column (A11-18), not a printed limit.
+- **Every floor above holds with adequate input power.** With the source overloaded, VSYS follows the pack through the battery FETs
+  and R17: 9.688 V at CELL_FUSED's 10.0 V and OCD1's 20 A. With no pack and an overloaded source there is no floor; R-c sheds.
+- **EN_OOA resets to 1 (p.47):** the printed accuracy covers VSYS only after the firmware writes 0. The pre-firmware start has no
+  printed accuracy, and E11-31 records it.
+- **"No battery FET":** this record's section 2 describes the drawn BQ25731 and stays. L4-E9's texts are drafted below for their
+  owner (E11-34).
+
+### 15e. The texts drafted for L4-E9's record (E11-34; this record edits no other record)
+
+| Where | Now | Drafted |
+|---|---|---|
+| L4-POWER-ARCHITECTURE.md 4a, "plug out" | the pack carries VBAT with no break (no battery FET) | the pack carries VBAT with no break, through the battery FETs Q39 and Q40 (ideal-diode supplement, SLUSE65A p.38; their body diodes conduct first) |
+| L4-POWER-ARCHITECTURE.md 4a, "pack connected" | the always-on comes up on CELL_F | board E's always-on comes up on VSYS_E (board A's VSYS over the dock's pin 1, L4-E11 15a); the inrush passes the pair's body diodes (E11-30) |
+| L4-POWER-ARCHITECTURE.md 4a, "pack disconnected, or both FETs open, with a source" | (B1): the BQ25730 regulates VSYS at VSYS_MIN through Q39 in LDO mode | (B1): the BQ25730 regulates VSYS at VSYS_MIN (at least 12.054 V with adequate input); board E's auxiliary domain runs on VSYS_E from the source (L4-E11 15a) |
+| L4-POWER-ARCHITECTURE.md 4a, "the charge inhibited, the pack present" | (B1): Q39 off, VSYS at the pack plus 150 mV, no battery current | (B1): Q39 and Q40 off, VSYS piecewise (VSRN + 150 mV within 2 % over 12.546 V, VSYS_MIN under 12.054 V, at least 11.96 V between); board E on VSYS_E; the pack feeds no kit load, its monitor 0.14 mA (L4-E11 15a, 15d) |
+| L4-POWER-ARCHITECTURE.md Appendix B2, "A source leaving" (kept history: a note, or the text) | VBAT is the system node with no battery FET | VBAT is the system node behind the battery FETs Q39 and Q40, which the charger turns on as an ideal diode when the source leaves (p.38) |
+| L4-POWER-ARCHITECTURE.md IF rows of VBAT (IF-09 to IF-14) | VBAT 10.0 to 16.884 V | VBAT 9.688 to 17.375 V (the supplement floor at OCD1's 20 A; the held top), 12.054 V with no pack and adequate input (L4-E11 15d) |
+| L4-POWER-ARCHITECTURE.md IF-06 (the dock) | VIN_RAW over the dock | VIN_RAW over the dock, and VSYS to board E's VSYS_E on the 813 pin 1, 1.0 A (L4-E11 15a) |
+| L4-POWER-DIAGRAM.svg, the system node | 10.0 to 16.884 V | 9.688 to 17.375 V |
 
 Not claimed: nothing here is verified, built or measured; software tests establish this record's own behaviour only.
