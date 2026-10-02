@@ -269,7 +269,12 @@ def t_each_verdict_agrees_with_its_rows_states():
         for k in keys:
             assert k in states, "item %d names %s, which the ledger does not have" % (n, k)
             if v == "DIFFERS":
-                assert states[k] == "STILL OPEN", "item %d DIFFERS but %s reads %s" % (n, k, states[k])
+                # a DIFFERS keeps its rows STILL OPEN, unless its section records the correction as applied (a marked
+                # "RESOLVED by correction" note naming where), and then only CLOSED AS CONDITIONAL on the corrected item
+                if "RESOLVED by correction" in secs[n]:
+                    assert states[k] == "CLOSED AS CONDITIONAL", "item %d resolved by correction but %s reads %s" % (n, k, states[k])
+                else:
+                    assert states[k] == "STILL OPEN", "item %d DIFFERS but %s reads %s" % (n, k, states[k])
             if v == "CONFIRMED":
                 assert states[k] != "STILL OPEN", "item %d is CONFIRMED but %s still reads STILL OPEN" % (n, k)
 

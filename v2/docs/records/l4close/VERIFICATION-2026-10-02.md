@@ -177,6 +177,12 @@ the bench, from the TMP117's reading crossing 54.0 C to the part's off state, at
 
 Printed figures: `0.254167 K`, `54.095833 C`, `54.904167 C`, `49.095833 C`, `49.904167 C`, `83.0 s`, `71.0 s`, `about 1 s of the 61 s`
 
+
+**RESOLVED by correction at set 27 (the coordinator, 2 October 2026).** The DIFFERS above stands as filed. Its correction is applied:
+R-139 in L4-E9's register (`DOWNSTREAM-REGISTER.md`, the round at `42f3a98e`) now reads "the TMP117 reading's lag behind a reference
+thermocouple at the SGP41, on a ramp of at least 15 K/h, at most 0.254167 K at 54.0 C", which tests the sensor's time constant this
+item found untested. The coordinator read the restated row against this item's specification. The ledger's rows L4-E12:1.3 and 2.2
+are therefore CLOSED AS CONDITIONAL on that bench test.
 ## Item 6
 
 **Verdict:** CONFIRMED
