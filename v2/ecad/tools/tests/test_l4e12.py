@@ -13,7 +13,10 @@ local +55 C and its output is used only under Table 4's +50 C, on a reference wi
 holds it inside its maker's conditions in the envelope, so the owner question is raised for it and for nothing at the
 margins; the two 3.3 V regulators are part of the route; every line with no range held carries an evidence obligation and
 the fans are architecture-level; the page carries the .out's figures; the committed .out is what the script prints; the
-record's own files carry no long dashes and no claim words; both checks are filed and listed. Nothing here writes into the
+record's own files carry no long dashes and no claim words; both checks are filed and listed. The dependency round of 2
+October 2026 (the record's section 13, the .out's section 8): the lines' basis and sensitivities; the configuration and the
+fans-off case; the fans counted in the power budget, the profile and its replay; T-H1's owner, method, steady-state times
+and pass line, with its draft procedure; a failed reading's cases and the session's fallbacks. Nothing here writes into the
 tree.
 """
 import hashlib
@@ -239,7 +242,10 @@ def t_the_page_carries_the_out_figures():
     for fig in ("%.3f" % c["gmax"], "%.3f" % a["gmax"], "%.3f" % c["g_e3o"], "%.2f" % T["air"]["E3-O"], "%.2f" % T["air"]["E5"], "%.3f" % T["q_m"],
                 "%.3f" % T["q_hs"], "%.4f" % T["g_floor_ballast"], "%.2f" % c["L"]["E3-O"]["mixed"], "%.6f" % tr["e_allow"], "%.2f" % tr["width"],
                 "%.6f" % sg["t_off_x"], "%.6f" % sg["t_on_x"], "%.3f" % sg["locs"][1]["g_need"], "%.2f" % sg["loc_max"], "%.2f" % tr["trip_mid"],
-                "%.3f" % tr["g_plume"], "%.3f" % R["g2"]["e3o"], "%.3f" % R["g2"]["e5"]):
+                "%.3f" % tr["g_plume"], "%.3f" % R["g2"]["e3o"], "%.3f" % R["g2"]["e5"],
+                "%.3f" % R["dep"]["th1"]["ub"][10.0]["pass"], "%.3f" % R["dep"]["deep"]["line"], "%.3f" % R["dep"]["plate"]["e5_floor"],
+                "%.3f" % R["dep"]["plate"]["e3o_floor"], "%.3f" % R["dep"]["plate"]["e5_deep_floor"], "%.3f" % R["dep"]["fan_sens"]["g_lo"],
+                "%.3f" % R["dep"]["fan_sens"]["g_hi"], "%.3f" % R["dep"]["fan_sens"]["prof_hi"], "%.2f" % R["dep"]["fans_off"]["e5_plate_max"]):
         assert fig in page and fig in out, "the figure %s is not on both the page and the .out" % fig
 
 
@@ -266,6 +272,78 @@ def t_the_record_carries_no_long_dashes_and_no_claim_words():
         assert not re.search(dash, t), "a long dash in %s" % p
         bad = [m.group(0) for m in claim.finditer(t) if not re.search(r"[\w-]*CERTIFIED\.tsv", t[max(0, m.start() - 8):m.end() + 4])]
         assert not bad or p == os.path.abspath(__file__), "claim words %s in %s" % (bad, p)
+
+
+def t_the_basis_of_the_lines_is_the_heat_over_the_room_to_the_limit():
+    R = _R()
+    d, T, c, a = R["dep"], R["T"], R["ap"]["c"], R["ap"]["a"]
+    rw = d["rows"]
+    assert abs(rw["E5, the hold"]["G"] - c["gmax"]) < 1e-12 and abs(rw["E3-O, the heat stage"]["G"] - c["g_e3o"]) < 1e-12
+    assert abs(rw["E5, no hold"]["G"] - a["gmax"]) < 1e-12
+    for r in rw.values():
+        assert abs(r["Q"] - (r["q"] + T["qb"])) < 1e-12 and abs(r["dGdW"] - 1.0 / r["dT"]) < 1e-12 and abs(r["dGdK"] + r["Q"] / r["dT"] ** 2) < 1e-12
+        assert r["w"][0] < r["G"] < r["w"][1] and r["k"][0] < r["G"] < r["k"][1]
+    h = d["hold"]
+    assert abs(h["p_load"] + h["loss"] + h["dist"] + h["front"] - T["q_m"]) < 1e-9 and abs(sum(h["place"].values()) - T["q_m"]) < 1e-9
+    assert R["A"]["l4e8_ballast"] == T["qb"] and R["A"]["l4e10_floor"] == 1.6664 and R["A"]["m507"]["dwell_h"] == 6.0
+    assert d["hold_action"] and all(b < a_ for _k, a_, b in d["hold_action"]), "the hold only lowers loads"
+    assert ("H5007NL", "on", 70.0, "operating") in d["setters"], "the class the hold leaves powered in the air"
+
+
+def t_the_configuration_and_the_fans_off_case():
+    R = _R()
+    d = R["dep"]
+    assert [n for n, _w in d["fans_running"]["E5"]] == ["two mixer fans", "cooler fan slot 3"]
+    fo = d["fans_off"]
+    assert fo["e5_air"][0] > 70.0 and fo["g_needed_e5"] > R["T"]["w4_open_still"][1], "the fans-off case is past +70 C on W4's still values"
+    assert fo["e5_plate_max"] <= 70.0, "the plate-coupled parts stay at the plate with the fans stopped"
+    for case in ("low", "high"):
+        tot, walls, face = d["conf"][case]["open_fans"]
+        assert abs(tot - walls - face) < 1e-12
+
+
+def t_the_fans_are_counted_in_the_energy_budget():
+    R = _R()
+    d, A = R["dep"], R["A"]
+    assert len(A["trace_fans"]) == 4 and all(t == "R" for _w, t, _n in A["trace_fans"])
+    assert A["replay_profile"] == (42.8, 39) and A["trace_total"][1] == 42.8
+    assert not any("fan" in n for _w, n in A["replay_undoc"][1]) and len(A["replay_undoc"][1]) == 3
+    fp = dict((r["label"], r) for r in d["fan_power"])
+    assert abs(fp["PS-IDLE-SPEC (the profile)"]["plan"]["state"] - 42.8) < 0.05 and fp["E5's hold"]["plan"]["n"] == 2
+    fs = d["fan_sens"]
+    assert fs["g_lo"] < R["ap"]["c"]["gmax"] < fs["g_hi"] and fs["runtime_factor"] < 1.0
+    out = open(OUT, encoding="utf-8").read()
+    assert "Register row drafted for L4-E9's downstream register" in out
+
+
+def t_t_h1_has_an_owner_a_method_and_a_pass_line():
+    R = _R()
+    t1, c = R["dep"]["th1"], R["ap"]["c"]
+    assert t1["ub"][10.0]["pass"] > t1["ub"][20.0]["pass"] > c["gmax"]
+    assert 0 < t1["taus"][0] < t1["tau_line"] < t1["taus"][1] and t1["points"] == 8
+    assert abs(t1["rise_line"][0] - R["A"]["rta_heater"][2] / c["gmax"]) < 1e-12
+    assert t1["rad"]["low"] > 1.0 and t1["rad"]["high"] > 1.0
+    proc = os.path.join(REC, "T-H1-PROCEDURE-DRAFT.md")
+    need(proc, "the T-H1 procedure draft")
+    t = open(proc, encoding="utf-8").read()
+    for fig in ("%.3f" % c["gmax"], "%.3f" % t1["ub"][10.0]["pass"], "%.3f" % t1["ub"][20.0]["pass"], "%.1f" % t1["heater"][2],
+                "%.1f to %.1f h" % t1["t_ss"], "%.0f to %.0f h" % t1["total_h"], "%.6f" % c["trip"]["e_allow"],
+                "%.3f" % R["dep"]["plate"]["e5_floor"], "%.3f" % R["dep"]["plate"]["e3o_floor"], "%.2f" % R["dep"]["fans_off"]["e5_plate_max"]):
+        assert fig in t, "the procedure draft lacks %s" % fig
+    assert "prototype bench" in t and "Layer 9" in t and "owner authorises" in t
+
+
+def t_a_failed_reading_has_a_fallback_inside_the_rulings():
+    R = _R()
+    d, c = R["dep"], R["ap"]["c"]
+    for g, a3, a5 in d["fail"]:
+        assert (a3 <= 70.0 + 1e-9) == (g >= c["g_e3o"] - 1e-9) and a5 > 70.0
+    pl = d["plate"]
+    assert pl["e5_deep_floor"] < pl["e5_floor"] < c["g_e3o"] and pl["e3o_floor_out"] <= pl["e3o_floor"] < c["g_e3o"]
+    assert d["deep"]["q"] < R["T"]["q_m"] and d["deep"]["line"] < c["g_e3o"]
+    fn = d["fins"]
+    assert fn["ratio"]["both2"][0] > fn["ratio"]["out2"][1] > 1.0 and fn["low_cap_out"] < c["gmax"]
+    assert all(a > b > 0 for _g, a, b, _e in d["cond"])
 
 
 def t_both_checks_are_filed_and_listed():
