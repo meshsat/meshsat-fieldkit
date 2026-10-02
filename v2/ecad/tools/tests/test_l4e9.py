@@ -1279,7 +1279,7 @@ def t_consolidation_the_panel_lead_surge():
     rm = sv["rm"]
     for key in ("l4e7chk5", "l4e7md", "e7guard"):
         assert key in m.PINS and m.PINS[key][1][:16] in _C["text"].split("1. THE MAKERS")[0], key
-    assert m.FROM_COMMIT["l4e7r"] == "573fd5b8" and "check 5" in m.COMMIT_LABEL["573fd5b8"]
+    assert m.FROM_COMMIT["l4e7r"] == "11339ec7" and "B6" in m.COMMIT_LABEL["11339ec7"] and "check 5" in m.COMMIT_LABEL["573fd5b8"]
     # the derivation's figures as L4-E7 printed them, against REQ-016's criterion
     assert sv["lim_drawn"] < sv["d1"][0] <= sv["lim"] and sv["lim_drawn"] < sv["d2"][0] <= sv["lim"], "CS116 and CS115 inside the drafted 50 V, over the drawn 35 V"
     assert all(pw > sv["d4_cap"][0] for _n, _v, _i, pw in sv["d4_rows"]) and len(sv["d4_rows"]) == 4, "without the guard a 36 V source is over D4's capability"
@@ -1288,7 +1288,7 @@ def t_consolidation_the_panel_lead_surge():
     assert F["cs101_pv"] < rm["rise"][0] < rm["rise"][1] < rm["s30"][3] < sv["src"][1] and rm["fall"][0] > F["pv"]["v_max"]
     # the margins as printed from the unrounded band: within the two-decimal figures' rounding
     assert abs(rm["rise"][0] - F["cs101_pv"] - rm["marg"][0]) < 0.006 and abs(rm["s30"][3] - rm["rise"][1] - rm["marg"][1]) < 0.006
-    assert max(rm["d1d2"]) < sv["lim"] and rm["static"] == (93.5954, 93.5521) and rm["static"][0] <= 100.0
+    assert max(rm["d1d2"]) < sv["lim"] and rm["static"] == (93.5957, 93.5521) and rm["static"][0] <= 100.0
     assert rm["cs101"][0] < rm["cs101"][2] and rm["chkb"][0] > rm["chkb"][1] and rm["resid"] == 116.5 and rm["loss"][0] == 0.217
     # IF-01: no longer NOT MET; the faults as drawn stay visible; the guard's checks MEET
     st1 = st["IF-01"]
@@ -1298,9 +1298,9 @@ def t_consolidation_the_panel_lead_surge():
     assert all(c.met for c in sel if c.met is not None) and any("D-10" in c.what for c in sel) and any("D-11" in c.what and c.cls == "CONDITIONAL" for c in sel)
     # the defects: D-10 and D-11 addressed in drafts, D-11 conditional; D-12 with the SMCJ30A
     de = {d["id"]: d for d in m.DEFECTS}
-    assert de["D-10"]["state"] == "ADDRESSED IN DRAFTS (a selected remedy, drafted, not applied)" and "R-173" in de["D-10"]["resolution"]
+    assert de["D-10"]["state"].startswith("ADDRESSED IN DRAFTS (a selected remedy, drafted, not applied)") and "R-173" in de["D-10"]["resolution"]
     assert de["D-11"]["state"].startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL on Q13's leakage above +25 C" in de["D-11"]["state"]
-    assert de["D-12"]["state"] == "RESOLVED (drafted)" and "41.91" in de["D-12"]["options"] and "SMCJ30A" in de["D-12"]["options"]
+    assert de["D-12"]["state"].startswith("RESOLVED (drafted)") and "41.91" in de["D-12"]["options"] and "SMCJ30A" in de["D-12"]["options"]
     g2 = [g for g in m.GATE if g["n"] == 2][0]
     assert g2["verdict"] != "PASS" and "no material defect is open" in g2["constraint"] and "R-175" in g2["constraint"]
     # the register and the change list: R-173 the drafted guard after the hot swap and the entry draft; R-175 the residual band at layer 8
@@ -1331,7 +1331,7 @@ def t_consolidation_the_panel_lead_surge():
     v = {x[0]: x for x in verdicts}
     assert v["D4"][3].startswith("MEETS with the guard") and v["D5"][3].startswith("MEETS with Q13") and v["D4"][4] == "NOT MET" and "R-175" in v["the residual band"][5]
     assert [r[0] for r in remedies] == ["(1)", "(2)", "(3)", "TVS only"] and remedies[2][4].startswith("SELECTED by L4-E7")
-    assert "selected and drafted, not applied" in sel and "R-175" in sel and "93.5954" in sel
+    assert "selected and drafted, not applied" in sel and "R-175" in sel and "93.5957" in sel
     page = open(PAGE, encoding="utf-8").read()
     for head, lines in m.cons_surge_tables(F, D, st).items():
         assert m.md_table(page, head) == [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in lines[2:]], head
@@ -1432,6 +1432,47 @@ def t_fix_round_the_layer4_review_integrated():
     for w in ("binding line", "1.627 to 1.977", "46.859 W with", "20.54 C/W", "with option C (the SGP41 kept powered)"):
         assert w not in cur, w
     assert "25. THE FIX ROUND OF THE LAYER 4 REVIEW" in text and "25l WITHDRAWN IN THIS RECORD" in text
+
+
+def t_b6_the_solar_guard_already_on():
+    """B6 of the Layer 4 review (L4-E7 at 11339ec7): the guard as first drafted fails four ratings when a 36 V source steps on with
+    it on; four drafted parts fix them; every rating MEETS, CONDITIONAL on the panel lead's loop inductance at least 2.47 uH; the
+    re-runs; R-176's seven rows; D-12's text exactly as L4-E7 gives it; the lead a Layer 7 harness row."""
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    rm = F["sv"]["rm"]
+    b6 = rm["b6"]
+    assert b6["l_uh"] == 2.47 and b6["mm"] == 4.21 and b6["bind"] == "U5's CSPIN to CSNIN, positive"
+    assert all(w <= lim for n_, w, lim, mg, h in b6["rows"] if lim > 0) and all(mg >= 0 for n_, w, lim, mg, h in b6["rows"]), "every rating MEETS at 2.47 uH"
+    assert b6["drafted"] == (102.1, 397.7, 29.07, 0.4218) and b6["drafted"][0] > 100 and b6["drafted"][1] > 60 and b6["drafted"][2] > 20 and b6["drafted"][3] > 0.3
+    assert b6["start"] == (6.109, 6.364) and rm["cs101"][0] == 0.0591 and rm["chkb"][0] == 0.67 and rm["static"][0] == 93.5957
+    assert len(b6["r176"]) == 7 and "2.47 uH" in b6["r176"][1] and "4.21 mm" in b6["r176"][1]
+    want = ("CS116 MEETS with the block on and off; CS115 MEETS with the block off and, with it on, is CONDITIONAL on R-174 (the cable's "
+            "recorded loop current under 15.68 A, or U5's differential measured under 0.3 V).")
+    assert b6["d12"] == want
+    de = {d["id"]: d for d in m.DEFECTS}
+    assert want in de["D-12"]["options"] and "2.47 uH" in de["D-10"]["state"] and "R-180" in de["D-10"]["resolution"]
+    for part in ("C131 and C132", "C133 and C134", "C126 330 pF", "R97 30.0k"):
+        assert part in de["D-10"]["options"], part
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    for part in ("C131 and C132, two 10 uF 100 V", "C133 and C134, two 10 uF 50 V", "R97 30.0k", "C126 330 pF"):
+        assert part in reg["R-173"][2], part
+    for i, row in enumerate(b6["r176"], 1):
+        assert "(%d) %s" % (i, row) in reg["R-176"][2], i
+    assert reg["R-180"][4] == "Layer 7 mechanical" and "2.47 uH" in reg["R-180"][2] and "4.21 mm" in reg["R-180"][2]
+    ch = {c[2]: c for c in m.cons_changes(list(reg.values()))}
+    assert ch["R-180"][1] == "8"
+    rows = {r["id"]: r for r in _C["R"]}
+    b6c = [c for c in rows["IF-01"]["checks"] if "already on" in c.what][0]
+    assert b6c.cls == "CONDITIONAL" and b6c.met and b6c.a == 0.2991
+    exd = {d[0]: d for d in m.cons_exit_defects(F)}
+    assert "2.47 uH" in exd["D-10"][2] and exd["D-12"][2].endswith(want)
+    beh = " ".join(" ".join(r) for r in m.cons_behaviour(F, D, st)["4e"])
+    assert "already on" in beh and want in beh
+    page = open(PAGE, encoding="utf-8").read()
+    short = page.split("## In short\n")[1].split("\n## 1. ")[0]
+    assert want in short and "2.47 uH" in short
+    assert "25m B6" in _C["text"] and "MEETS with the block on and off (R-174" not in page
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
