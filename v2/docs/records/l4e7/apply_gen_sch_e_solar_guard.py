@@ -14,12 +14,16 @@ forward (DECISION-31's note E-N1). The selected remedies, one for each fault, bo
   - for the reversed panel, Q13, a CSD19532Q5B in the panel's return (J_SOLAR.2 becomes PV_RTN), its gate from PV_F through R101
     100k over R102 100k and clamped by D12 BZT52C12-7-F (Diodes DS18004): it blocks a reversal with its 100 V rating and no
     controller, and when on the path is linear;
-  - D11 SMCJ40CA (the vehicle entry's D10 part) across the port, the clamp for the port when the cut-off is off, and C131 and
-    C132, two 10 uF 100 V X7R 1210 on PV_F, which hold the high side to GND when Q13 is off and take the lead's current when the
-    cut-off opens with the source already on (B6 of the consolidation review; THE GUARD ALREADY ON in section 10 of the .out);
-  - B6's other changes: C133 and C134, two 10 uF 50 V ceramics on PV_P beside the bulk; U21's CSCP C126 330 pF (1 nF in L4-E11's
-    network: the short-circuit trip's filter shorter, CS116's filtered sense still under the trip's least); INP's bottom resistor
-    R97 30.0k (39k there: INP under its 20 V for PV_F up to 85 V; INP high from 8.80 V, under the stage's own enable).
+  - D11 SMCJ40CA (the vehicle entry's D10 part) across the port, the clamp for the port when the cut-off is off, and the port
+    bank C131, C132, C135 and C136, four Samsung CL32B225KCJSNNE (2.2 uF 100 V X7R 1210), on PV_F, which hold the high side to
+    GND when Q13 is off and take the lead's current when the cut-off opens with the source already on (B6 of the consolidation
+    review, round 2 after the external review's L4-F01: THE GUARD ALREADY ON in section 10 of the .out);
+  - B6's other changes: C133 and C134 on PV_P beside the bulk and C71 to C74 on TRK_VS (the backstop draft's, edited here), all
+    Samsung CL32B106KBJNNNE (10 uF 50 V X7R 1210), the parts whose DC-bias curves the record bounds; U21's CSCP C126 330 pF (1 nF
+    in L4-E11's network: the short-circuit trip's filter shorter, CS116's filtered sense still under the trip's least); INP's
+    bottom resistor R97 28.0k (39k there: INP 10 % under its 20 V for PV_F up to 81 V; INP high from 9.29 V, under the stage's
+    own enable). The LCSC codes of the Samsung parts are owed (no catalogue reading of them is filed). B6 is NOT CLOSED: these
+    parts hold U5's margin only for a source loop over the floor the record prints (the engineer's row B6-ENG-1).
 What it changes in v2/ecad/tools/gen_sch_e.py, and nothing else: J_SOLAR's pin 2; F2's pin 2 and the new parts after it; PV_P's
 declaration (its source is now Q12, switched by U21 through PV_UVLO); the new rails PV_F, PV_SNS and PV_RTN; D4's value and code;
 the panel tracker's schematic section.
@@ -45,15 +49,15 @@ OV_TOP_A, OV_TOP_B, OV_BOT = ("90.9k", "C728600"), ("95.3k", "C861605"), ("7.68k
 BLOCK = (
     '# L4-E7, THE SOLAR-FAULT REMEDIES (MESHSAT-1357, v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md, "The solar-fault remedies"): a\n'
     '# stiff 36 V source on the panel port and a reversed panel were open defects (L4-E9\'s D-10 and D-11). D11 SMCJ40CA across the\n'
-    '# port and C131, C132 on PV_F; U21, the TPS48110-Q1 over-voltage cut-off in TI\'s own topology with the vehicle entry\'s network\n'
+    '# port and the port bank (C131, C132, C135, C136) on PV_F; U21, the TPS48110-Q1 over-voltage cut-off in TI\'s own topology with the vehicle entry\'s network\n'
     '# (L4-E11) but its OV divider (R98 + R99 over R100: off above 28.55 to 31.06 V aged, back under 27.07 V at the least, so a\n'
     '# panel inside the window is never locked out), R97 and C126 (B6: the source arriving with the cut-off on, C133 and C134 on\n'
     '# PV_P with it; THE GUARD ALREADY ON in the .out), R87 and Q12 from PV_F to PV_P; Q13 in the return (J_SOLAR.2 is PV_RTN), its\n'
     '# gate from PV_F through R101 over R102, clamped by D12: it blocks a reversed panel with its 100 V rating and no controller.\n'
     'part("D11", "Device", "D_TVS", "SMCJ40CA (bidirectional, Littelfuse SMCJ40 row: 40 V standoff and 44.4 V minimum breakdown each way, clamping 64.5 V at 23.3 A; the panel port\'s clamp, the cut-off\'s input when it is off)", "TVS", {"1": "PV_F", "2": "PV_RTN"}, "C80273")\n'
-    'c("C131", "10u 100V X7R 1210 (panel port: holds PV_F to GND while Q13 is off; with C132 takes the lead\'s current when the cut-off opens)", "PV_F", "GND", "C1210")\n'
-    'c("C132", "10u 100V X7R 1210 (panel port, with C131)", "PV_F", "GND", "C1210")\n'
-    'ic("U21", 20, "TPS48110AQDGXRQ1 high-side driver with protection (panel port cut-off): on by 8.80 V, off above 28.55 to 31.06 V, back under 27.07 V at the least, auto-retry", "DGX19", '
+    'c("C131", "2.2u 100V X7R 1210 Samsung CL32B225KCJSNNE (panel port: holds PV_F to GND while Q13 is off; with C132, C135 and C136 takes the lead\'s current when the cut-off opens; LCSC code owed)", "PV_F", "GND", "C1210")\n'
+    'for _cf in ("C132", "C135", "C136"): c(_cf, "2.2u 100V X7R 1210 Samsung CL32B225KCJSNNE (panel port, with C131)", "PV_F", "GND", "C1210")\n'
+    'ic("U21", 20, "TPS48110AQDGXRQ1 high-side driver with protection (panel port cut-off): on by 9.29 V, off above 28.55 to 31.06 V, back under 27.07 V at the least, auto-retry", "DGX19", '
     '{"1": "PV_UVLO", "2": "PV_OVLO", "3": "PV_INP", "4": "NC", "5": "NC", "6": "GND", "7": "GND", "8": "PV_IWRN", "9": "PV_TMR", "10": "GND", "11": "NC", '
     '"12": "PV_BST", "13": "PV_P", "14": "PV_GATE", "15": "PV_PU", "16": "NC", "17": "PV_SNS", "18": "PV_CSP", "19": "PV_ISCP", "20": "PV_VS"}, "C17556513")\n'
     'r("R87", "4.5mOhm 1% 2512 3W 50ppm (panel cut-off sense: its breaker at 6.36 to 7.14 A, over the panel\'s 6.8 A)", "PV_F", "PV_SNS", "RS2512", lcsc="C2985708")\n'
@@ -64,14 +68,14 @@ BLOCK = (
     'c("C129", "22n C0G 5% 50V 1206 (CTMR)", "PV_TMR", "GND", "C10u50", lcsc="C97929"); r("R92", "39.7k 0.1% (RIWRN)", "PV_IWRN", "GND", lcsc="C861872")\n'
     'r("R93", "100R 1% (VS filter, SLUSEE5E 9.5)", "PV_F", "PV_VS"); c("C130", "100n 100V", "PV_VS", "GND", "C0805")\n'
     'r("R94", "59.0k 1%", "PV_F", "PV_UVLO"); r("R95", "10.0k 1% (UVLO: on by 8.44 V, under the stage\'s own enable)", "PV_UVLO", "GND")\n'
-    'r("R96", "100k 1%", "PV_F", "PV_INP"); r("R97", "30.0k 1% (INP: high from 8.80 V, under 20 V to 85 V on PV_F)", "PV_INP", "GND")\n'
+    'r("R96", "100k 1%", "PV_F", "PV_INP"); r("R97", "28.0k 1% (INP: high from 9.29 V, 10 % under 20 V to 81 V on PV_F)", "PV_INP", "GND")\n'
     + ('r("R98", "%s 0.1%% 25ppm (OV top)", "PV_F", "PV_OVM", "R", "%s"); r("R99", "%s 0.1%% 25ppm (OV top)", "PV_OVM", "PV_OVLO", "R", "%s"); '
        'r("R100", "%s 0.1%% 25ppm (OV bottom: off above 28.55 to 31.06 V, L4-E7)", "PV_OVLO", "GND", "R", "%s")\n'
        % (OV_TOP_A[0], OV_TOP_A[1], OV_TOP_B[0], OV_TOP_B[1], OV_BOT[0], OV_BOT[1])) +
     'nfet("Q13", "CSD19532Q5B 100 V N-FET, panel return switch: on with the panel\'s polarity, blocks a reversed panel", "PV_RG", "PV_RTN", "GND", lcsc="C473333")\n'
     'r("R101", "100k 1%", "PV_F", "PV_RG"); r("R102", "100k 1% (Q13: VGS at least 8.2 V at the hold\'s least)", "PV_RG", "GND")\n'
     'part("D12", "Device", "D_Zener", "BZT52C12-7-F zener, Q13\'s gate clamp (11.4 to 12.7 V, Diodes DS18004)", "SOD123", {"1": "PV_RG", "2": "GND"}, "C124196")\n'
-    'c("C133", "10u 50V (PV_P, with C134 beside the bulk: the source arriving with the cut-off on)", "PV_P", "GND", "C10u50"); c("C134", "10u 50V", "PV_P", "GND", "C10u50")\n'
+    'c("C133", "10u 50V X7R 1210 Samsung CL32B106KBJNNNE (PV_P, with C134 beside the bulk: the source arriving with the cut-off on; LCSC code owed)", "PV_P", "GND", "C1210"); c("C134", "10u 50V X7R 1210 Samsung CL32B106KBJNNNE", "PV_P", "GND", "C1210")\n'
 )
 EDITS = [
     ('"VH2", {"1": "PV_IN", "2": "GND"}, "C274411")',
@@ -104,7 +108,9 @@ EDITS = [
      'part("D4", "Device", "D_Zener", "SMCJ30A (panel surge: 30 V standoff, over CS101\'s 27.82 V and the cut-off\'s band; clamping at up to 48.4 V at its rated 10/1000 us pulse, under the 50 V bulk; unidirectional, cathode on TRK_VS; LCSC code owed, L4-E7)", "TVS", {"1": "TRK_VS", "2": "GND"}, "")'),
     ('["J_SOLAR", "F2", "D4", ',
      '["J_SOLAR", "F2", "D11", "C131", "U21", "R87", "Q12", "R88", "R89", "C126", "R90", "R91", "C127", "C128", "C129", "R92", "R93", "C130", '
-     '"R94", "R95", "R96", "R97", "R98", "R99", "R100", "Q13", "R101", "R102", "D12", "C132", "C133", "C134", "D4", '),
+     '"R94", "R95", "R96", "R97", "R98", "R99", "R100", "Q13", "R101", "R102", "D12", "C132", "C133", "C134", "C135", "C136", "D4", '),
+    ('for _ca in range(4): c("C7%d" % (_ca + 1), "10u 50V", "TRK_VS", "GND", "C10u50")   # L4-E7R: ahead of RSENSE1 at its pad\n',
+     'for _ca in range(4): c("C7%d" % (_ca + 1), "10u 50V X7R 1210 Samsung CL32B106KBJNNNE (LCSC code owed)", "TRK_VS", "GND", "C1210")   # L4-E7R: ahead of RSENSE1 at its pad; B6 round 2: the part whose curve the record bounds\n'),
 ]
 NEEDS = ('"DGX19": "meshsat:TI_DGX0019A_VSSOP-19_3x5.1mm_P0.5mm"', 'part("C69", ', '"36": "TRK_SWEN"')
 
