@@ -1248,3 +1248,44 @@ generator.
 - U-02: authorise T-H1 on a bench: an empty Peli 1450 with the frame, a plate blank, dummy heaters and the picked fans (`records/l4e12/T-H1-PROCEDURE-DRAFT.md`).
 - Send the other clarification drafts.
 - When convenient, buy one SPR-E-Flex-100 for PANEL-ACC; it is off the gate's path.
+
+### Plan, 2 October 2026 11:27 CEST: the bounded power-architecture closure (the owner's instruction of 11:25)
+
+**Fixed:** battery and solar mandatory; HF and the tablet kept; storage internal to the Peli; no external battery; D-06's pack
+arrangement the baseline (alternatives proposals); REQ-016 and every mandatory requirement preserved; Layer 3 closed. 48 to
+72 h is an endurance objective: battery-only and solar-assisted runtime reported separately, tablet charging shown as a cost.
+Electrical feasibility and endurance are separate questions.
+
+**The steps, at most two workers:**
+1. *Running:* L4-E9 round 5 (the dependency rounds re-pinned, the register's new rows) and the independent verifier of the
+   findings ledger's risks.
+2. *Three specific questions, one worker at a time,* each answering the consolidation's need:
+   - U-02: does T-H1 confirm an already-supported design or decide feasibility (a conservative lower bound on the conductance
+     against the lines and the session's fallback)?
+   - U-04: at most three approaches: the BQ25731 with the hold-up bank, TI's BQ25730 (the same family's NVDC charger with an
+     external battery FET; TI states the system keeps operating with the battery removed), one other if better documented.
+     Selected on margin, interacting controls, power, heat, space, cost and endurance.
+   - U-01: published specifications sufficient, or a vendor answer genuinely necessary; at most three candidates within the
+     approved arrangement; else the exact missing fact and the smallest experiment.
+   Then the panel lead's surge derivation (L4-E7).
+3. *The consolidation,* one Claude author in L4-E9:
+   - one connected diagram, one budget, one circuit-change list;
+   - the operating behaviour (source changes, simultaneous operation, startup, shutdown, faults, thermal management, control
+     dependencies);
+   - the implementation handover by layer, drafted against applied;
+   - the exit statement per U against the owner's definition.
+4. *One Astra engineering review* of the consolidation, with at most one targeted recheck: the decision-critical electrical and
+   thermal bounds and interactions, primary sources and counterexamples. The findings ledger is mapped on the exact candidate.
+   If a material uncertainty survives the recheck: a component or topology change, or the specific experiment or engineer
+   handoff.
+5. The coordinator's closing check, set 27, the box suite, promotion.
+
+**Estimated engineering time** (estimates; the dependency rounds measured 17 to 22 min each):
+- the questions about 1.5 to 2.5 h on one slot, with the consolidation about 2 to 3 h in parallel;
+- the review, fix and recheck about 2 h;
+- set 27 about 1.2 h (measured).
+- In all about 5 to 7 h of wall-clock.
+
+**External, not estimable:** Topwell's signed specification, TI's statements (unless U-04's selection removes them), T-H1 on a
+bench, the CFL-002 choice. Purchases and outside contacts stay with the owner.
+
