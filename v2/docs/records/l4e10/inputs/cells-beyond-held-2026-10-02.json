@@ -1,0 +1,49 @@
+{
+ "what": "Cells read beyond the held set by task L4-E10 (MESHSAT-1357, the owner's instruction of 2 October 2026: compatible alternative cells, other chemistries if they fit). Each entry quotes the maker's own published lines; none is a signed product specification.",
+ "readings": [
+  {
+   "id": "APR18650M1B",
+   "maker": "Lithium Werks (formerly Valence; the A123 18650 line)",
+   "chemistry": "LiFePO4",
+   "url": "https://lithiumwerks.com/products/lithium-ion-18650-cells/",
+   "fetched_utc": "2026-10-01T23:48Z",
+   "bytes": 268493,
+   "sha256": "e9ef892a102030de4f13b44e3a7766aec4135170e19d53f6198c84557ebe0219",
+   "class": "MAKER product page (the data sheet sits behind a registration form and was not fetched)",
+   "verbatim": "Specifications Nominal Ratings Voltage 3.3 V Capacity @ 23°C Typical (Min) 1.2 Ah (1.15 Ah) Energy @ 23°C 3.96 Wh Impedance (1kHz AC) <16 mΩ Cycle Life at 1C/1C, 100% DOD > 4000 cycles Discharging Max. Continuous Discharge Current 30A (25C rate) Max. Pulse Discharge Current (10s) 50A (42C rate) Minimum Voltage / HPPC Pulse 2 V / 1.6 V Temperature -30°C to 60°C Charging Recommended Charge Current 1.5 A (1C rate) Max. Continuous Charge Current 4A (3C rate) Max. Pulse Charge Current (10s) 10A (8C rate) Recommended Charge Voltage 3.6 V Terminate Charge @ 3.6V <50 mA HPPC Pulse Voltage 3.8 V Float Voltage 3.5 V Temperature Range (Charging current at <40mA when under 0 ºC for some applications) 0 ºC to 60 ºC Storage Storage Temperature -40 ºC to 70 ºC Mechanical Diameter Ø18.5 +/- 0.1mm Length 64.95 +/- 0.2mm Mass 41.5 +/- 1.0g Certifications Transportation UN 3480 (UN38.3), CIQ Safety UL 1642, IEC 62133-2 Quality System ISO-9001, TS-16949, IATF-16949 Environmental ISO-14001, REACH, RoHS Transportation Shipped @ 30% SOC Part Number 300949-001",
+   "publication": "HELD BACK: the page's HTML is not filed (its terms are not stated); this reading quotes its specification lines only"
+  },
+  {
+   "id": "SCiB",
+   "maker": "Toshiba Infrastructure Systems & Solutions",
+   "chemistry": "lithium titanate (LTO)",
+   "url": "https://www.global.toshiba/content/dam/toshiba/ww/outline/infrastructure/business-introduction/defense/pdf/BatterySCiB.pdf",
+   "fetched_utc": "2026-10-01T23:48Z",
+   "bytes": 1096263,
+   "sha256": "acc8f192c54fb287f9ef66d5e26c440601fa795c87f46dba881dce747ef07df3",
+   "file": "v2/vendor/battery/held/toshiba-scib-brochure-2020.pdf",
+   "class": "MAKER brochure",
+   "verbatim": "Low Temperature Operation Can be used at temperature as low as -30°C | Product Name 2.9Ah cell 10Ah cell | Nominal Capacity 2.9Ah 10Ah | Nominal Voltage 2.4V 2.4V | Dimensions W63 × D14 × H97mm W116 × D22 × H106mm | Weight Approx. 150g Approx. 510g | 20Ah cell 23Ah cell Nominal Voltage 2.3V 2.3V Dimensions W116 × D22 × H106mm Weight Approx. 515g Approx. 550g | ©Toshiba Infrastructure Systems & Solutions Corporation 2020 all rights reserved.",
+   "publication": "HELD BACK: 'all rights reserved'; v2/docs/records/l4e10/fetch_held_back.py fetches it into the ignored held/ folder and checks the sha256"
+  },
+  {
+   "id": "HL18650T",
+   "maker": "UltraXel (the HL18650 family also listed by Yichun Topwell Power; the relation is not stated)",
+   "chemistry": "lithium ion (NMC per UltraXel's own family page)",
+   "url": "https://www.ultraxel.com/wp-content/uploads/2025/03/HL18650T-Ultraxel-Flyer-1.pdf",
+   "fetched_utc": "2026-10-01T23:45Z",
+   "bytes": 6773584,
+   "sha256": "f95db57fa9bef536a0abcab0a8a979db8593ebd528736c53590a35eb853f80c0",
+   "file": "v2/vendor/battery/held/ultraxel-hl18650t-flyer-2025.pdf",
+   "class": "MAKER flyer (images only; read by eye from its rendered pages, INFERRED as a reading)",
+   "verbatim": "Product Specifications HL18650T | Diameter 18.3±0.2mm Height 64.9 ± 0.3 mm | Min capacity (0.2C) 1950 mAh Typical capacity (0.2C) 2000 mAh | Nominal voltage 3.60V Working voltage 2.75V-4.20V | Max charge / discharge current 1.95A / 10A | Working temperature Charge -20~60℃ Discharge -40~85℃ | Cycle life > 300 | -40℃ capacity (0.2C) ≈ 60% | Recovery capacity after 1000h 80℃ aging > 90%",
+   "chart_read": {
+    "title": "Capacity after 80°C & 4.1V aging 1120h",
+    "initial_Ah": 2.07,
+    "recovery_Ah": 1.51,
+    "how": "read by eye from page 3 rendered at 150 dpi; the end of each curve at 2.75 V"
+   },
+   "publication": "HELD BACK: no reproduction terms stated; fetched by fetch_held_back.py into the ignored held/ folder"
+  }
+ ]
+}
