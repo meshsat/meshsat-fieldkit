@@ -83,12 +83,18 @@ PINS = {
     "tps1663": ("v2/vendor/ti/held/ti-tps1663-slvset9g.pdf", "8f91a0db2daf2da35abd335420ff9f8b4ac9a99c93dac93e215e0a75e9a866fe"),
     "red2_py": ("v2/docs/records/hc2/pwr_red2.py", "5790bc7e444bebc4b6b7b6616c4641dfe602185631992d19aeb223eb51e9feec"),
     "budget_py": ("v2/docs/records/rv-pwr/pwr_budget.py", "469d0820b046ef6ff5aceadf422b4166de3d6a02bc50fa5b0c3644704f0f9556"),
+    "loopdesign": ("v2/docs/records/l4e8/inputs/recovered/loop_design-r4a-fixup-A-1024.py", "fe0d946bc020d4b68c3a4e417b4c2e7dfd98eeabd2352ff849de4ef0d781d7da"),
+    "zk": ("v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf", "5455014606c0b676ca1df345f1969ee1b056403b8ee424bb29245115facda389"),
+    "b540c": ("v2/vendor/power/held/diodes-b520c-b560c-ds13012-rev18-2.pdf", "1b1de94df0a7729f4a69a885edd54213594acdce3cd6d4fa072961431ddf71ff"),
+    "yageo_rc": ("v2/vendor/passives/yageo-rc-l-series-v12.pdf", "e7dbabb0611925227ccfc429c14c8833a7b1f2c755684444124446f20b22a229"),
+    "e2e_por": ("v2/vendor/ti/ti-e2e-1316778-bq25731-chargecurrent-por.html", "96c511cf238d00182bcd82c5e7bdce3d25571c49cbd77f6b57a9171159f0d8c4"),
 }
 INPUTS = ["lcsc-C907944-2026-10-02.json", "lcsc-C3847777-2026-10-02.json", "lcsc-C363929-2026-10-02.json",
           "lcsc-C3873338-2026-10-02.json", "jlc-search-c0g-150nf-2026-10-02.json", "murata-reference-sheets-2026-10-02.json",
           "ia-littelfuse-997-mini58v-20251210045250.json",
           "lcsc-C17556513-2026-10-02.json", "lcsc-C2687963-2026-10-02.json", "lcsc-C2985708-2026-10-02.json", "lcsc-C7084461-2026-10-02.json",
-          "lcsc-C861872-2026-10-02.json", "lcsc-C97929-2026-10-02.json", "lcsc-C184799-2026-10-02.json", "lcsc-C23107-2026-10-02.json"]
+          "lcsc-C861872-2026-10-02.json", "lcsc-C97929-2026-10-02.json", "lcsc-C184799-2026-10-02.json", "lcsc-C23107-2026-10-02.json",
+          "lcsc-C242138-2026-10-02.json", "lcsc-C242139-2026-10-02.json", "lcsc-C72264-2026-10-02.json", "lcsc-C137025-2026-10-02.json"]
 L4E9_COMMIT = "3c09b3daaa48d0a9f16b833b949d7d9ab8ecd496"
 GIT_PINS = {
     "l4e9": ("v2/docs/records/l4e9/l4e9_power_path.out", "07d8fb6e828cb15b5589f13983a76bde97c9048ab46ea193c528a28d59a7bbd3"),
@@ -115,6 +121,12 @@ I_PF_TARGET = 900.0          # A, SESSION (D-06, final round): the specified wor
 U_MEAS = 0.02                # SESSION (D-06): the loop measurement's instrument and fixture uncertainty, of reading
 DT_MEAS = 2.0                # K, SESSION (D-06): the conductor temperature's uncertainty when the loop is measured
 LOOP_CEIL20 = 0.066          # ohm, SESSION (D-06): the measured loop's actual ceiling at 20 C (copper, the D38999 pair, J_DCIN)
+T_RESP = 1.0e-3             # s, ASSUMPTION (dependency round): the time the charger could take to restore VSYS after a step, no battery
+K_COLD_HYB = 0.90            # ASSUMPTION: a hybrid polymer can's capacitance at -20 C over its 20 C value (the ZK sheet prints none)
+VF_COLD_ADD = 0.10           # V, ASSUMPTION: a Schottky's forward drop at -20 C over its 25 C maximum
+BANK_N = 4                   # SESSION (dependency round): the hold-up bank's cans (EEHZK1E471P)
+R_CH = 330.0                 # ohm, SESSION: the hold-up bank's charge resistor (RC2512 1 W)
+S2_ETA = 0.90                # ASSUMPTION: the slot rail's efficiency (gen_sch_a.py declares 0.90 for +5V_DEV and none for +5V_S2)
 SHED_OFF = ("two mixer fans", "QMX USB and HDMI 5 V", "Geiger module", "5G RM520N-GL")   # SESSION (B3): held in the warm-up
 HOLDER_R = 0.0010            # ohm, F1's holder (two clips): the 3568 prints nothing (ASSUMPTION)
 BOARD_R = 0.0050             # ohm, board E's and board A's copper and the dock's VIN_RAW pins in the loop (ASSUMPTION)
@@ -776,6 +788,7 @@ def compute():
     T9["dc_hot"] = idc * T9["derate"]
     R["T9"] = T9
     R["N"] = entry_round(R, T, L9)
+    R["G"] = dependency_round(R, T)
     return R
 
 
@@ -1286,6 +1299,295 @@ def entry_round(R, T, L9):
     return N
 
 
+# ============================================================================================ the dependency round (2 October 2026)
+def dependency_round(R, T):
+    """The owner's instruction of 2 October 2026 (the coordinator's dependency round): each missing specification apart, the
+    claim it affects, what a maker's answer and what a bench sample could establish; and the bounded fallback for VSYS's
+    hold-up with no battery (E11-07, VSYS's capacitance first), sized so it does not lean on the charger's transient response."""
+    B, P, E, F, N = R["B"], R["P"], R["E"], R["F"], R["N"]
+    G = {}
+    ga = T["gen_a"]
+    # ---- the charger's regulation rows and the POR answer
+    bq9 = flat(pdf_pages("bq25731", True)[8])
+    need(bq9, r"REG0x05/04\(\) = 0x41A0H \S0\.5% 0\.5%", "the 16.8 V ChargeVoltage accuracy row")
+    need(bq9, r"VBAT_REG_ACC regulation accuracy REG0x05/04\(\) = 0x5208H \(0°C to 85°C\)", "the ChargeVoltage rows' temperature condition")
+    G["cv_acc"] = 0.005
+    G["cv_min"] = B["cv4s"] * (1 - G["cv_acc"])
+    G["v_floor"] = B["vsysmin4s"]
+    G["heat_en_v"] = f(need(ga, r"it starts at about ([\d.]+) V \(VEN_RISE", "the heater buck's enable divider"))
+    for st_ in ("SLOT_EN2", "DEV_EN", "PA_EN", "HF_EN", "POE_EN", "PD_EN"):
+        need(ga, r'lm5176\("\w+", "U\d+", "VBAT", "[^"]+", "%s"' % st_, "the VBAT stage enabled by %s" % st_)
+    e2e = re.sub(r"<[^>]+>", " ", open(read("e2e_por"), encoding="utf-8", errors="replace").read())
+    e2e = flat(e2e)
+    G["por_ma"] = f(need(e2e, r"Looks like there is a mistake in the description\. The POR value is indeed (\d+)mA", "TI's E2E answer on the POR value"))
+    need(flat("".join(pdf_pages("bq25731", True))), r"Upon POR, ChargeCurrent\(\) is 0 A", "the register description's POR text")
+    # ---- the kit's declared load steps (r4a's loop design, recovered by L4-E8; session targets, INFERRED there)
+    ld = text("loopdesign")
+    eff = lambda net: f(need(ga, r'_intent\.rail\("%s",(?:(?!_intent\.rail\().){0,600}?efficiency=([\d.]+)' % re.escape(net), "%s's declared efficiency" % net, re.S))
+    steps = []
+    m = need(ld, r"# S2: VBAT 10 to 16\.8 V -> ([\d.]+) V .*?29\.5 W; step (\d+) A \(a 5G burst, INFERRED\)", "the S2 step", re.S)
+    steps.append(("S2 slot rail (+5V_S2, a 5G burst)", f(m, 2), f(m, 1), S2_ETA, "ASSUMPTION (+5V_DEV's declared 0.90)"))
+    m2 = need(ld, r"35 W; step (\d+) A\.", "the SD step")
+    steps.append(("SD device rail (+5V_DEV)", f(m2, 1), f(m, 1), eff("+5V_DEV"), "NETLIST"))
+    m = need(ld, r"# PA: VBAT -> ([\d.]+) V .*?step ([\d.]+) A \(key-up of a 30 W carrier at 40 percent\)", "the PA step", re.S)
+    steps.append(("PA rail (+13V8_PA, a 30 W carrier keyed)", f(m, 2), f(m, 1), eff("+13V8_PA"), "NETLIST"))
+    m = need(ld, r"# HF: VBAT -> ([\d.]+) V .*?24 W; step (\d+) A\.", "the HF step", re.S)
+    steps.append(("HF rail (+12V_HF)", f(m, 2), f(m, 1), eff("+12V_HF"), "NETLIST"))
+    m = need(ld, r"# POE: VBAT -> ([\d.]+) V .*?step ([\d.]+) A\.", "the PoE step", re.S)
+    steps.append(("PoE rail (+54V_POE)", f(m, 2), f(m, 1), eff("+54V_POE"), "NETLIST"))
+    m = need(ld, r"45 W at 15 V, 15 W at 5 V; step (\d+) A\.", "the PD step")
+    steps.append(("USB-C PD outlet at 15 V (PD_VPWR)", f(m, 1), 15.0, eff("PD_VPWR"), "NETLIST"))
+    heat = f(need(text("red2_py"), r'HEAT_REG = same\(([\d.]+), "S"\)', "the regulated mat"))
+    G["steps"] = [(nm, i, v, eta, i * v / eta, cl) for nm, i, v, eta, cl in steps] + [("the pack heater mat, regulated (on)", None, None, None, heat, "RECORD")]
+    base = N["shed"][1]
+    env36, env9 = N["env"][36.0]["w_lo"], N["env"][9.0]["w_lo"]
+    G["admit"] = [(nm, dp, base + dp <= env36) for nm, _i, _v, _e, dp, _c in G["steps"]]
+    adm = [(nm, dp) for nm, dp, ok in G["admit"] if ok]
+    G["worst"] = max(adm, key=lambda x: x[1])
+    # ---- the hybrid polymer parts (Panasonic ZK sheet), the diode (Diodes DS13012), the resistor (Yageo RC_L V.12)
+    z1, z2 = flat(pdf_pages("zk", True)[0]), flat(pdf_pages("zk", True)[1])
+    m = need(z2, r"470\s+10\.0\s+10\.2\s+10\.5\s+G\s+(\d+)\s+(\d+)\s+([\d.]+)\s+EEHZK1E471P", "the ZK 471P row")
+    G["c471"], G["esr471"] = 470e-6, f(m, 2) * 1e-3
+    m = need(z2, r"180\s+8\.0\s+10\.2\s+10\.5\s+F\s+(\d+)\s+(\d+)\s+([\d.]+)\s+EEHZK1V181P", "the ZK 181P row")
+    G["c181"], G["esr181"] = 180e-6, f(m, 2) * 1e-3
+    G["zk_tol"] = f(need(z1, r"Capacitance tolerance\s+±(\d+) %", "the ZK tolerance")) / 100.0
+    G["zk_end"] = f(need(z1, r"\+125 ℃ ± 2 ℃, 4000 h, apply the rated ripple current without exceeding the rated voltage\. Capacitance change Within ±(\d+)% of the initial value", "the ZK endurance row")) / 100.0
+    need(z1, r"I ≦ 0\.01 CV \(μA\)", "the ZK leakage row")
+    G["zk_leak"] = 0.01 * 470 * 25 * 1e-6
+    need(z1, r"Characteristics dependencies in frequency and low temperature are as small as polymer type", "the ZK low-temperature sentence")
+    G["k_eff"] = (1 - G["zk_tol"]) * (1 - G["zk_end"]) * K_COLD_HYB
+    dz = flat("".join(pdf_pages("b540c", True)))
+    m = need(dz, r"B520C, B530C, B540C \S ([\d.]+) ([\d.]+) Forward Voltage Drop VF", "B540C VF")
+    G["vf25"] = f(m, 2)
+    need(dz, r"IF = 5\.0A, TA = \+25°C", "B540C VF condition")
+    G["io"] = f(need(dz, r"Average Rectified Output Current IO ([\d.]+)", "B540C IO"))
+    G["vf"] = G["vf25"] + VF_COLD_ADD
+    yr = flat("".join(pdf_pages("yageo_rc", True)))
+    need(yr, r"Each type rated power at 70", "RC_L rated at 70 C")
+    G["p_rc2512"] = f(need(yr, r"RC2512=(\d)W, 2W", "RC2512's rating"))
+    # ---- the hold-up arithmetic (no battery, the charger delivering only its pre-step power for T_RESP)
+    G["c_can_eff"] = G["c471"] * G["k_eff"]
+    G["c_bank_eff"] = BANK_N * G["c_can_eff"]
+    G["v1b"] = G["cv_min"] - BANK_N * G["zk_leak"] * R_CH
+    v2b = G["v_floor"] + G["vf"]
+    G["v2b"] = v2b
+    per = 0.5 * (G["v1b"] ** 2 - v2b ** 2) - G["vf"] * (G["v1b"] - v2b)          # J per farad delivered into VSYS
+    G["e_bank"] = G["c_bank_eff"] * per
+    G["c_dir_eff"] = G["c181"] * G["k_eff"]
+    G["e_dir"] = 0.5 * G["c_dir_eff"] * (G["cv_min"] ** 2 - G["v_floor"] ** 2)
+    G["e_tot"] = G["e_bank"] + G["e_dir"]
+    G["hold"] = [(nm, dp, G["e_tot"] / dp, ok) for nm, dp, ok in G["admit"]]
+    G["worst_hold"] = G["e_tot"] / G["worst"][1]
+    G["cans_for"] = [(t, max(0, math.ceil((G["worst"][1] * t - G["e_dir"]) / (G["c_can_eff"] * per)))) for t in (0.25e-3, 0.5e-3, 1e-3, 2e-3, 5e-3)]
+    G["i_step_floor"] = G["worst"][1] / G["v_floor"]
+    # ---- inrush and placement
+    G["i_ch_pk"] = R["cv_max"] / R_CH
+    G["p_ch_pk"] = R["cv_max"] ** 2 / R_CH
+    G["c_bank_max"] = BANK_N * G["c471"] * (1 + G["zk_tol"])
+    G["tau_ch"] = R_CH * G["c_bank_max"]
+    G["e_ch"] = 0.5 * G["c_bank_max"] * R["cv_max"] ** 2
+    na = T["net_a"]
+    def nom_uf(net):
+        s = 0.0
+        for ref, _p in netlist_nodes(na, net):
+            if ref.startswith("C"):
+                v = netlist_value(na, ref)
+                mm = re.match(r"([\d.]+)(u|n)", v)
+                if mm:
+                    s += float(mm.group(1)) * (1.0 if mm.group(2) == "u" else 1e-3)
+        return s * 1e-6
+    G["c_ceramic_nom"] = nom_uf("VBAT") + nom_uf("CELL_FUSED")
+    G["c_pack_side_max"] = G["c_ceramic_nom"] * 1.1 + G["c181"] * (1 + G["zk_tol"])
+    pc = flat(T["primcfg"])
+    m = need(pc, r"about ([\d.]+) or ([\d.]+) A \(RSNS = 1 steps of 22\.2 mV over 2 mOhm\) at about (\d+) to (\d+) us", "the image's ASCD")
+    G["ascd_a"], G["ascd_us"] = f(m, 1), f(m, 3) * 1e-6
+    M2 = red2_model()
+    G["r_loop"] = 4 * M2.pb.R_CELL["lo"] / 3 + M2.pb.R_DIST
+    G["i_conn_pk"] = 4 * 4.2 / G["r_loop"]
+    G["tau_conn"] = G["r_loop"] * G["c_pack_side_max"]
+    G["t_over_ascd"] = G["tau_conn"] * math.log(G["i_conn_pk"] / G["ascd_a"])
+    G["t_to_1v6"] = G["c_pack_side_max"] * 1.6 / 0.5
+    # ---- the 9 V plug and the warm-CUV state
+    s2 = [dp for nm, _i, _v, _e, dp, _c in G["steps"] if nm.startswith("S2")][0]
+    G["s9_deficit"] = base + s2 - env9
+    G["s9_time"] = G["e_tot"] / G["s9_deficit"] if G["s9_deficit"] > 0 else None
+    G["s2_vsys"] = P["vsys_cuv"]
+    # ---- the dependency rows' figures
+    G["q2_i_lim"] = (P["tj_max"] - F["air_hot"]) / (P["vsd_max"] * P["rja"])
+    G["clamp_x"] = N["rb_max"] / B["iclamp"]
+    G["gfs_x"] = 1.0 / N["hs_start"][2]
+    G["por_w"] = G["por_ma"] * 1e-3 * P["vsd_max"]
+    return G
+
+
+def dep_rows(R):
+    """The dependency table: one row per specification the record leaves to a maker (TI for every row but N4), with what a
+    maker's answer and what a bench sample can establish. The figures are this record's; the record's table repeats the rows."""
+    B, P, N, G = R["B"], R["P"], R["N"], R["G"]
+    return [
+        dict(id="D1", name="N1a, VSYS's DC regulation with no battery",
+             missing="no row gives VSYS's regulation with no battery current: VBAT_REG_ACC +-%s %% holds for a charge voltage at 0 to 85 C (p.9); section 11 (p.92) says the system is powered through the charger; Figures 10-4 and 10-5 (p.89) are typical power-up curves of a 2-cell system without battery" % fmt(G["cv_acc"] * 100, 1),
+             claim="section 2's row 'absent, or both FETs open: VSYS at ChargeVoltage' and every S4 figure of 3g and 3h (U-04 in S4 at all)",
+             maker="that the voltage loop holds VSYS at ChargeVoltage with no battery current, with the +-%s %% row applying: production-wide if TI states it as a limit" % fmt(G["cv_acc"] * 100, 1),
+             bench="that one unit enters and holds the mode at the conditions tried; the mode is a design behaviour, and VSYS needs only %s V against ChargeVoltage's floor %s V, a %s V margin that is large against any plausible unit spread once the mode is shown (an engineering margin)" % (fmt(G["v_floor"], 1), fmt(G["cv_min"], 3), fmt(G["cv_min"] - G["v_floor"], 3)),
+             cannot="that every unit and silicon revision enters the mode, or the accuracy below 0 C, where the +-%s %% row stops" % fmt(G["cv_acc"] * 100, 1),
+             method="pack absent, P1's load and the envelope's maximum on VSYS, VBUS20 from 19.1 to 21 V, VSYS on a calibrated meter at -20, 25 and 62 C ambient",
+             negative="arrangement (A) does not run S4: (B), a charger with a battery FET that regulates VSYS by design (an architecture change; five records reopen)"),
+        dict(id="D2", name="N1b, VSYS's load-step response with no battery",
+             missing="no load-transient figure or limit for the system output (Figure 10-17, p.91, is the OTG output's)",
+             claim="S4 operation through the kit's load steps (3g, R-c): the declared steps of section 10, up to %s W" % fmt(G["worst"][1], 2),
+             maker="a characterised deviation and recovery, or a minimum loop bandwidth; production-wide only if TI states a limit",
+             bench="one unit's deviation and recovery at the steps tried; with the bank sized for %s ms, a measured recovery of %s ms or less is a five-fold margin, large against a loop's plausible spread (L, C and gain tolerances): an engineering margin" % (fmt(T_RESP * 1e3, 1), fmt(T_RESP * 1e3 / 5, 1)),
+             cannot="a recovery time bounded for every unit",
+             method="pack absent, an electronic load stepping VSYS by each declared step with a 1 us edge, VSYS and the inductor current on a scope, at the three ambients",
+             negative="the bank of section 10 carries the step for %s ms with no help from the charger; a longer recovery needs more cans (%s for 2 ms) or (B)" % (fmt(G["worst_hold"] * 1e3, 3), [n for t, n in G["cans_for"] if abs(t - 2e-3) < 1e-9][0])),
+        dict(id="D3", name="N2 (Q-TI-3), VSYS with CHRG_INHIBIT = 1 or ChargeCurrent 0 and no battery current",
+             missing="9.4.1 (p.35) lets the host end a charge by CHRG_INHIBIT or ChargeCurrent 0; 9.3.21.5 (p.34) keeps the converter operating with charge disabled only in the BATOVP paragraph; nothing states what VSYS does in either state with no battery current",
+             claim="R-a's S2 row and REQ-077's hold in every state (section 4): the charger still carrying the kit while the charge is held",
+             maker="the control mode with charge inhibited, production-wide (a design behaviour)",
+             bench="one unit's mode with the bit set and with ChargeCurrent 0, pack absent and in S2: a deterministic logic behaviour, so one sample is strong evidence for that silicon revision",
+             cannot="that no later revision changes the mode, nor how a temperature-dependent comparator moves it",
+             method="the pack emulated in S2 (a supply behind a diode), the bit set and cleared under P1's load, VSYS and the switch node recorded",
+             negative="REQ-077's hold cannot use the bit with this charger; ChargeCurrent 0 is tried; if both fail, (B) or a requirement change to REQ-077's acceptance (the owner's)"),
+        dict(id="D4", name="N3 (Q-TI-2), whether the charger charges before any host write",
+             missing="9.6.3 says the charge starts when the host writes ChargeCurrent(); the register's reset value encodes 256 mA and its description says 0 A at POR. TI's expert on E2E thread 1316778 (held) answers: the POR value is %s mA, the description is in error; 9.6.3 is not addressed" % fmt(G["por_ma"], 0),
+             claim="section 2's ChargeCurrent at POR (corrected in this round), R-a's persistence after a charger POR, CONOPS's hostless %s mA" % fmt(G["por_ma"], 0),
+             maker="a datasheet erratum: production-wide (a forum answer is TI's word but not a revised document)",
+             bench="one unit's SRP-SRN current after POR with no host: a logic behaviour, strong for that revision",
+             cannot="other revisions",
+             method="no host, the pack at 3.6 V a cell, the SRP-SRN current read for 200 s after POR",
+             negative="a hostless charge at %s mA is safe (inside the gauge's window; Q2's diode %s W); no hostless charge leaves a hostless kit's dead pack uncharged: a stated limitation, no change" % (fmt(G["por_ma"], 0), fmt(G["por_w"], 3))),
+        dict(id="D5", name="N4, VSYS's effective capacitance at 16.884 V against TI's 50 uF",
+             missing="TI states %s uF effective necessary (10.1, p.83); the fitted MLCCs' capacitance at 16.9 V of DC bias is not printed in the held Yageo CC sheet (a capacitor maker's item, not TI's)" % fmt(B["csys_uf"], 0),
+             claim="N1's premise (stable regulation) and E11-07",
+             maker="the capacitor makers' DC-bias curves: typical per part number, not limits",
+             bench="one board's VSYS capacitance at 16.8 V of bias: a sample",
+             cannot="lot-to-lot spread",
+             method="an LCR meter with DC bias on the populated node, or each part number on a bias fixture",
+             negative="none needed: one EEHZK1V181P on VSYS gives %s uF at its stacked worst, with no DC-bias dependence, over %s uF by design" % (fmt(G["c_dir_eff"] * 1e6, 2), fmt(B["csys_uf"], 0))),
+        dict(id="D6", name="Q-TI-7, 0-V charging before the gauge's SUV check",
+             missing="SLUUAQ3A 4.9: with PCHG_COMM = 1 the hardware 0-V charging circuit is enabled below the minimum operation voltage; nothing states its timing against the SUV check of 3.2.1",
+             claim="R-d (the image keeps PCHG_COMM 1 and the SUV check): no cell below 1.0 V charged (Samsung)",
+             maker="the gauge's sequence, production-wide",
+             bench="one gauge with a cell simulator: a logic sequence, strong for that firmware and revision",
+             cannot="other firmware revisions",
+             method="a cell simulator at 0.8 V a cell, the charger enabled, the stack current logged from the gauge's wake",
+             negative="ZVCHG Exit Threshold set to stop 0-V charging, or a precharge FET (arrangement (C)'s part) with PCHG_COMM 0"),
+        dict(id="D7", name="the clamp's maximum under VSYS_MIN",
+             missing="8.5 (p.10) prints the clamp under VSYS_MIN, %s mA, as typical only" % fmt(B["iclamp"] * 1000, 0),
+             claim="R-b's case (iii) and Q2's diode below VSYS_MIN (section 4)",
+             maker="a maximum, production-wide",
+             bench="one unit's clamp current; Q2 reaches %s C only at %s A on its %s C/W, %s times the typical clamp, so a sample near typical is a large engineering margin" % (fmt(P["tj_max"], 0), fmt(G["q2_i_lim"], 3), fmt(P["rja"], 0), fmt(G["q2_i_lim"] / B["iclamp"], 2)),
+             cannot="a maximum for every unit",
+             method="SRN held at 11 V by a sink, ChargeCurrent 0x0200, the current read at -20, 25 and 62 C",
+             negative="a maximum over %s A: Q2's copper improved, or arrangement (C)" % fmt(G["q2_i_lim"], 3)),
+        dict(id="D8", name="ChargeCurrent's accuracy at 0x0200 outside 0 to 85 C, and under 0x0200",
+             missing="p.10's rows hold for VBAT above VSYS_MIN at %s to %s C; no accuracy outside that range, nor for any setting under 0x0200" % (fmt(N["rb_temp"][0], 0), fmt(N["rb_temp"][1], 0)),
+             claim="R-b's case (ii) and Q2's %s C (section 4, CONDITIONAL)" % fmt(N["q2_tj"], 1),
+             maker="limits outside the range, production-wide",
+             bench="one unit at -20 and 62 C ambient: a sample; Q2's limit %s A is %s times R-b's %s A, so a sample within about 1.3 A is an engineering margin" % (fmt(G["q2_i_lim"], 3), fmt(G["q2_i_lim"] / N["rb_max"], 2), fmt(N["rb_max"], 4)),
+             cannot="production limits",
+             method="as D7 with SRN at 13 V",
+             negative="the charger's temperature bounded inside the row by layout (E11-22), or Q2's copper improved"),
+        dict(id="D9", name="the TPS48110-Q1's overcurrent delay at CTMR 22 nF",
+             missing="SLUSEE5E p.10 prints %s us typical only" % fmt(N["t48_toc22"] * 1e6, 0),
+             claim="V-A08's %s ms (the nuisance margin) and the fault scan's %s ms (A11-11)" % (fmt(N["toc"][0] * 1e3, 3), fmt(N["toc"][2] * 1e3, 3)),
+             maker="a minimum and a maximum over temperature, production-wide",
+             bench="one unit's delay: a sample; the scan's worst fault ends on the short-circuit trip (3c), so the delay's maximum does not decide it; its minimum sets V-A08",
+             cannot="the spread across units",
+             method="a current step over the threshold at three temperatures, the sense step to PD timed",
+             negative="V-A08's allowance re-derived on TI's minimum, or CTMR raised"),
+        dict(id="D10", name="the CSD19536KTT's transconductance bound",
+             missing="SLPS540C p.3 prints gfs %s S typical only" % fmt(N["gfs"], 0),
+             claim="the start into a hard short (3c, %s of the derated chart)" % fmt(N["hs_start"][2], 3),
+             maker="a maximum, or the transfer curve's spread",
+             bench="one unit's transfer curve; the headroom (%s times) is not large against a plausible transconductance spread, so a sample is no margin" % fmt(G["gfs_x"], 3),
+             cannot="a bound across units",
+             method="a pulsed transfer curve at VDS 10 V, 10 to 100 A",
+             negative="a slower gate slew for the start (C1 larger) or a power-limiting controller"),
+    ]
+
+
+def render_dependency(R, p):
+    G, N, E, P, B = R["G"], R["N"], R["E"], R["P"], R["B"]
+    p("9. THE DEPENDENCY ROUND: EACH MISSING SPECIFICATION, THE CLAIM IT DECIDES, WHO CAN SETTLE IT (2 October 2026)")
+    p("   the held answer on the POR value: TI's expert on E2E thread 1316778: \"The POR value is indeed %smA\" (the register description's 0 A is in error) (MAKER, forum)" % fmt(G["por_ma"], 0))
+    for r in dep_rows(R):
+        p("   %s %s (MAKER, INFERRED)" % (r["id"], r["name"]))
+        for k, lab in (("missing", "missing"), ("claim", "the claim"), ("maker", "a maker's answer would establish"), ("bench", "a bench sample could establish"),
+                       ("cannot", "a bench sample cannot establish"), ("method", "the bench method"), ("negative", "if the answer is negative")):
+            p("     %s: %s" % (lab, r[k]))
+    p("")
+    p("10. THE BOUNDED FALLBACK (E11-07, VSYS's capacitance first): A HOLD-UP THAT DOES NOT LEAN ON THE CHARGER'S TRANSIENT RESPONSE")
+    p("   the criterion: with no battery (S4) VSYS sits at ChargeVoltage, at least %s V (16.8 V less TI's %s %%, p.9, MAKER), and must stay above VSYS_MIN %s V"
+      % (fmt(G["cv_min"], 3), fmt(G["cv_acc"] * 100, 1), fmt(G["v_floor"], 1)))
+    p("     through a step while the charger delivers only its pre-step power for %s ms (ASSUMPTION: the time the charger could take to respond;" % fmt(T_RESP * 1e3, 1))
+    p("     D2's bench reading turns it into a margin); the VBAT stages' EN/UVLO pins are driven by logic (the slot, device, PA, HF, PoE and PD stages)")
+    p("     and the heater buck's divider starts it at about %s V, so no VSYS divider sets a line above VSYS_MIN; A-14's assumed 10.0 V converter floor" % fmt(G["heat_en_v"], 1))
+    p("     is under it too (NETLIST, INFERRED)")
+    p("   the kit's declared steps (r4a's loop design, INFERRED there; efficiencies from gen_sch_a.py; the mat from hc2) at VSYS, and whether R-c's envelope")
+    p("     admits each on top of P1's plan %s W at the widest source (36 V, %s W) (INFERRED):" % (fmt(N["shed"][1], 2), fmt(N["env"][36.0]["w_lo"], 2)))
+    for nm, i, v, eta, dp, cl in G["steps"]:
+        adm = [ok for n2, d2, ok in G["admit"] if n2 == nm][0]
+        hold = [h for n2, d2, h, ok in G["hold"] if n2 == nm][0]
+        src = ("%s A at %s V over %s (%s)" % (fmt(i, 1), fmt(v, 2), fmt(eta, 2), cl)) if i is not None else "%s W (%s)" % (fmt(dp, 2), cl)
+        p("     %-44s %s: %s W at VSYS; %s; the fallback holds it %s ms (INFERRED)" % (nm, src, fmt(dp, 2), "admitted in S4" if adm else "not admitted in S4 (R-c holds it)", fmt(hold * 1e3, 3)))
+    p("   the worst admitted step: %s, %s W, %s A at the floor (INFERRED)" % (G["worst"][0], fmt(G["worst"][1], 2), fmt(G["i_step_floor"], 3)))
+    p("   THE FALLBACK (SESSION; a register row, E11-24, never applied):")
+    p("     a direct can on VSYS: one Panasonic EEHZK1V181P (180 uF 35 V, F size 8.0 x 10.2 mm, ESR %s mOhm; LCSC C242139); and a hold-up bank: %d x EEHZK1E471P"
+      % (fmt(G["esr181"] * 1e3, 0), BANK_N))
+    p("     (470 uF 25 V, G size 10.0 x 10.2 mm, ESR %s mOhm; C242138), charged from VSYS through R_CH %s Ohm (Yageo RC2512FK-07330RL, %s W at 70 C, C137025) and"
+      % (fmt(G["esr471"] * 1e3, 0), fmt(R_CH, 0), fmt(G["p_rc2512"], 0)))
+    p("     discharging into VSYS through D_H, a Diodes B540C-13-F (40 V, %s A, VF at most %s V at 5 A and 25 C; C72264) (MAKER, CATALOGUE)" % (fmt(G["io"], 1), fmt(G["vf25"], 2)))
+    p("   the capacitance's derating (Panasonic ZK sheet): +-%s %% tolerance, endurance within +-%s %%, no DC-bias dependence (an aluminium hybrid polymer part, its class),"
+      % (fmt(G["zk_tol"] * 100, 0), fmt(G["zk_end"] * 100, 0)))
+    p("     the low-temperature change not printed (\"as small as polymer type\"): %s at -20 C (ASSUMPTION); so %s of nominal at the stacked worst (MAKER, ASSUMPTION)"
+      % (fmt(K_COLD_HYB, 2), fmt(G["k_eff"], 3)))
+    p("   the bank: %s uF effective; it sits at %s V (the leakage, 0.01 CV uA a can, across R_CH) and gives into VSYS down to %s V (VSYS_MIN plus D_H's"
+      % (fmt(G["c_bank_eff"] * 1e6, 1), fmt(G["v1b"], 3), fmt(G["v2b"], 2)))
+    p("     %s V: its 25 C maximum plus %s V at -20 C, ASSUMPTION): %s mJ net of the diode; the direct can %s uF effective from %s to %s V: %s mJ;"
+      % (fmt(G["vf"], 2), fmt(VF_COLD_ADD, 2), fmt(G["e_bank"] * 1e3, 2), fmt(G["c_dir_eff"] * 1e6, 2), fmt(G["cv_min"], 3), fmt(G["v_floor"], 1), fmt(G["e_dir"] * 1e3, 2)))
+    p("     %s mJ in all, the MLCCs not counted (N4) (INFERRED)" % fmt(G["e_tot"] * 1e3, 2))
+    p("   against the worst admitted step: %s ms of hold, over the %s ms assumed (MEETS, CONDITIONAL on T_RESP); the least cans for a hold of: %s (INFERRED)"
+      % (fmt(G["worst_hold"] * 1e3, 3), fmt(T_RESP * 1e3, 1), ", ".join("%s ms %d" % (fmt(t * 1e3, 2), n) for t, n in G["cans_for"])))
+    p("   size: four G cans (10.3 mm square lands, 10.5 mm tall at most), one F can, an SMC diode and a 2512: about 5.5 cm2 of board A (INFERRED)")
+    p("   placement: board A, on VBAT (the charger's VSYS); board P is behind the pack's FETs, which are open in S4, so it cannot hold VSYS there (NETLIST, INFERRED);")
+    p("     the height and the zone are Layer 9's (L4-E8 placed six G cans on board A's VBUS20, so the class fits the board) (INFERRED)")
+    p("   inrush, the entry and F1: the bank charges through R_CH at %s mA at most, %s W at most against the resistor's %s W at 70 C (the inside air %s C), with"
+      % (fmt(G["i_ch_pk"] * 1e3, 1), fmt(G["p_ch_pk"], 3), fmt(G["p_rc2512"], 0), fmt(R["F"]["air_hot"], 1)))
+    p("     a time constant of %s s and %s J per full charge; the direct can charges with VSYS under the charger's own start (0.5 A until 1.6 V, 3 min allowed,"
+      % (fmt(G["tau_ch"], 3), fmt(G["e_ch"], 3)))
+    p("     9.3.21.8; %s ms to 1.6 V at that current); the entry's start ends before U34 releases the front end (79 ms at least), so neither the entry's"
+      % fmt(G["t_to_1v6"] * 1e3, 2))
+    p("     inrush nor F1's I2t changes (MEETS, INFERRED)")
+    p("   inrush from the pack (S1 from cold, VSYS discharged, the discharge FET switching at once): the direct can and the MLCCs (%s uF nominal, %s uF at"
+      % (fmt(G["c_ceramic_nom"] * 1e6, 1), fmt(G["c_pack_side_max"] * 1e6, 1)))
+    p("     most) through the pack's least loop %s mOhm (four cells at %s mOhm over three, and pwr_budget's distribution): %s A peak, over the image's ASCD"
+      % (fmt(G["r_loop"] * 1e3, 2), fmt(0.035 * 1e3, 0), fmt(G["i_conn_pk"], 1)))
+    p("     %s A for %s us against its %s us delay (MEETS, INFERRED); the bank behind R_CH adds %s mA, so it cannot trip ASCD (INFERRED)"
+      % (fmt(G["ascd_a"], 1), fmt(G["t_over_ascd"] * 1e6, 1), fmt(G["ascd_us"] * 1e6, 0), fmt(G["i_ch_pk"] * 1e3, 1)))
+    p("   what it does not do (INFERRED):")
+    p("     a step beyond the source's headroom is a deficit, not a transient: at a 9.00 V plug the slot rail's step on P1's plan leaves %s W short, which the"
+      % fmt(G["s9_deficit"], 2))
+    p("       fallback only delays by %s ms; R-c's measured headroom must therefore count the largest uncontrolled step of the loads P1 keeps (E11-06 measures P1's peaks)"
+      % fmt(G["s9_time"] * 1e3, 2))
+    p("     in S2 (a warm CUV) VSYS is the stack plus Q2's diode, %s to %s V, at A-14's assumed 10.0 V floor: no droop is left to hold, so S2 still rests on"
+      % (fmt(G["s2_vsys"][0], 1), fmt(G["s2_vsys"][1], 1)))
+    p("       the charger's response (D2 for S2) and on the converters' real minimum inputs (E11-08)")
+    p("     it settles neither D1 (the steady mode) nor D3 (the inhibited mode): no capacitance answers what the converter regulates")
+    p("")
+    p("11. WHAT CHANGES FOR U-04'S CLASSIFICATION (INFERRED)")
+    p("   made independent of TI by the fallback: D2 for every admitted step in S4 within the bank's %s ms (with D2's bench margin), and D5 (VSYS's" % fmt(G["worst_hold"] * 1e3, 3))
+    p("     effective capacitance) by the direct can")
+    p("   still depending on TI: D1 (S4 at all), D3 (REQ-077's hold and R-a's S2), D4 (low consequence), D6 (the image's 0-V charging), D7 and D8 (R-b's")
+    p("     cases (iii) and (ii)); and on the entry's makers: D9 and D10")
+    p("   negative answers with a remedy inside arrangement (A): D4, D5, D6, D7, D8, D9, D10; with none: D1 and D3, whose negative answers return (B)")
+    p("   so U-04 STAYS AN ARCHITECTURE-LEVEL CHOICE: the fallback narrows the architecture's dependence on TI from four statements (D1, D2, D3, D5) to two")
+    p("     (D1, D3), but those two decide whether arrangement (A) can run on a source with no usable pack and hold a charge while carried, and no part,")
+    p("     rule or capacitance inside (A) answers them; one bench sample can show the mode on that silicon revision, not a production-wide behaviour")
+    p("")
+
+
 # ============================================================================================ the output
 def render(R):
     out = []
@@ -1341,7 +1643,10 @@ def render(R):
       % (fmt(B["csys_uf"]), B["csys_p"], B["inhibit_p"], B["term_p"]))
     p("     AUTO_WAKEUP_EN, 0 at POR: with it set, a battery under VSYS_MIN gets %s mA for %s min with no further host write (p.%d) (MAKER); it needs a host write first, so it does not answer N3"
       % (fmt(B["wake_ma"]), fmt(B["wake_min"]), B["wake_p"]))
-    p("     ChargeCurrent with the 5 mOhm RSR: 128 mA steps, 0 A at POR (9.6); REG0x03/02 = 0x0200 (1024 mA) regulates within -%s %% to +%s %%, a row printed for VBAT above VSYS_MIN (8.5, p.10) (MAKER)"
+    p("     ChargeCurrent at POR: the register description says 0 A, its reset value encodes 256 mA, and TI's expert on E2E thread 1316778 (held) states %s mA,"
+      % fmt(R["G"]["por_ma"], 0))
+    p("       the description being in error (the dependency round, D4) (MAKER)")
+    p("     ChargeCurrent with the 5 mOhm RSR: 128 mA steps; REG0x03/02 = 0x0200 (1024 mA) regulates within -%s %% to +%s %%, a row printed for VBAT above VSYS_MIN (8.5, p.10) (MAKER)"
       % (fmt(N["rb_err"][0] * 100, 0), fmt(N["rb_err"][1] * 100, 1)))
     p("   board A and E as generated: the strap R26 %sk over R27 %sk, %s %% of VDDA, so U3 never sees \"battery removal\"; R17 between VBAT"
       % (fmt(R["strap"][0], 1), fmt(R["strap"][1], 1), fmt(R["strap"][2], 1)))
@@ -1415,7 +1720,9 @@ def render(R):
     p("     THE HOLD PERSISTS ACROSS STATES: it is a flag in the firmware, set and cleared only by its own condition (the cold hold above 3 C with hysteresis,")
     p("        the operator, REQ-077's hold), never by a state change; in S1, S2 and S3 the bit follows the flag; on leaving S4 (a FET closing, a pack fitted)")
     p("        the bit is written from the flag at once, and in the firmware's reaction time only the gauge's window acts, which keeps the cells inside their")
-    p("        charge window; after a charger POR ChargeCurrent() is 0 A (9.6, MAKER) and the firmware writes it only after reading the flag (INFERRED)")
+    p("        charge window; after a charger POR ChargeCurrent() is %s mA by TI's E2E answer (D4), so a charge at %s mA can begin before the firmware writes the"
+      % (fmt(R["G"]["por_ma"], 0), fmt(R["G"]["por_ma"], 0)))
+    p("        flag's bit: in that window too only the gauge's window acts, and %s mA is under R-b's bound (INFERRED)" % fmt(R["G"]["por_ma"], 0))
     p("     in S2 and S4 the CHG_INHIBIT line (HIZ, 9.3.8) and SHORE_INHIBIT each remove the kit's only supply: neither is ever a charge hold (rule R-a)")
     p("")
     p("3. U-04, THE ENTRY AT A 9.00 V PLUG, THE KIT'S OWN LOSSES AND THE SOURCE ENVELOPE (the focused check's B1 and B3)")
@@ -1758,6 +2065,7 @@ def render(R):
     for it in downstream(R):
         p("   %s | %s | %s | %s" % (it[0], it[1], it[2], it[3]))
     p("")
+    render_dependency(R, p)
     p("END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c), apply_gen_sch_a_guard.py (R14, 3f),")
     p("apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays); the first round's apply_gen_sch_e_uvlo.py is withdrawn; the")
     p("knee is a specification (3f); the interface and firmware texts are drafts for Layer 5 in the record. Software tests establish this record's")
@@ -1776,7 +2084,7 @@ def downstream(R):
     ("E11-04", "FIRMWARE", "firmware owner", "rules R-a to R-d implemented (section 7a): R-a's state table with its S4 exception and the hold's persistence across states; R-b's two settings (ChargeCurrent() 0x0000 or 0x0200, no other) while U3's SRN reading is under %s V or the gauge reports XDSG or PRECHARGE; R-c's shed to the envelope at the measured input and the VSYS_UVP recovery; R-d; checked on the bench (E11-06)" % fmt(RULE_SRN_V, 1)),
     ("E11-05", "EVIDENCE", "Layer 6 components", "TI's answers filed: Q-TI-3 restated as N2 for state S2 (VSYS's regulation with CHRG_INHIBIT = 1 while the pack can take charge but cannot discharge, under a 5 A load step) and N1, and Q-TI-2; U-04's N1 to N3 re-judged on them"),
     ("E11-06", "TEST", "prototype bench", "R-85 extended: at 9.00 V at the plug with the interconnect at its resistance ceiling, and at 12 and 24 V: the shedding sequence of section 3g (P0 to P3) with the pack cold-soaked (S4), at a warm CUV (S2, the charge held by the bit: VSYS stays up) and absent; P1's load measured at most %s W at VBAT; the front end's efficiency at the operating point at least %s; U3's board current at the knee's flat target inside its band; the entry's current over the kit's load steps and source changes above the breaker's lowest %s A for less than %s ms and its filtered short-circuit sense under %s A; VSYS's step response; Q2's case at R-b's current; the latch recovery by a re-plug" % (fmt(N["shed_room"], 2), fmt(N["eta_floor"], 4), fmt(N["ioc"][0], 2), fmt(N["toc"][0] * 1e3, 3), fmt(N["isc"][0], 2))),
-    ("E11-07", "ANALYSIS", "Layer 9 pre-layout analysis", "VSYS's effective capacitance at 16.884 V from the makers' DC-bias curves at least 50 uF (SLUSE66A 10.1), else a polymer capacitor added (TI prefers POSCAP)"),
+    ("E11-07", "ANALYSIS", "Layer 9 pre-layout analysis", "VSYS's effective capacitance at 16.884 V from the makers' DC-bias curves at least 50 uF (SLUSE66A 10.1), or the direct EEHZK1V181P of E11-24, which gives it by design (TI prefers POSCAP)"),
     ("E11-08", "EVIDENCE", "Layer 9 pre-layout analysis", "every load converter's and the controllers' minimum input read from their sheets against 10.0 V (A-14, R-49) and against 8.0 V for a pack at its Shutdown Voltage"),
     ("E11-09", "ANALYSIS", "Layer 4 coordinator", "L4-E5's undrawn H3 network drawn to section 3f's specification (flat %s A from VIN_RAW %s V to %s V, the knee slope kept, zero %s V, HIZ certain below %s V) with E11-02's guard; L4-E5's low-light settle, the solar line and its V-A09 sweep re-run on it" % (fmt(KNEE_IT, 2), fmt(KNEE_TOP, 2), fmt(N["v_join"], 3), fmt(N["v_zero"], 3), fmt(N["hiz_certain"], 3))),
     ("E11-10", "IMPLEMENTATION", "Layer 7 mechanical", "the DC receptacle and plug on MIL-DTL-38999 size 12 contacts (shell 17, insert 17-6: DC and solar pairs on four contacts, two unassigned between power and return; or 13-26 with the solar pair on rated contacts elsewhere), with the insert's installed continuous rating of at least 20 A at the case's air from the maker's derating, or a measured rise at 20 A, filed; the plate cut-out checked against CASE-MARGINS 3.3"),
@@ -1793,6 +2101,9 @@ def downstream(R):
     ("E11-21", "INTERFACE", "Layer 4 coordinator", "L4-E5's V-A08 and its source-change transient row restated as the record's section 7a draft: the entry's breaker never trips (its current over %s A for less than %s ms, its filtered short-circuit sense under %s A) and VIN_RAW never under %s V (the guard's highest fall plus 0.1 V), in place of the LM5069's 3.13 ms timer and 8.41 V" % (fmt(N["ioc"][0], 2), fmt(N["toc"][0] * 1e3, 3), fmt(N["isc"][0], 2), fmt(N["guard_new"][0][2] + 0.1, 2))),
     ("E11-22", "EVIDENCE", "Layer 6 components", "R-b's cases (ii) and (iii) closed: the charger's temperature while R-b holds bounded inside %s to %s C (Layer 9 thermal), or TI's 0x0200 accuracy outside it and the clamp's maximum under VSYS_MIN (Q-TI), or the bench's current at 0x0200 and under VSYS_MIN at the inside air's ends; board P's copper under Q2 for TI's %s C/W" % (fmt(N["rb_temp"][0], 0), fmt(N["rb_temp"][1], 0), fmt(R["P"]["rja"]))),
     ("E11-23", "TEST", "prototype bench", "TEST-PLAN E4-O at the plug: the kit cold-soaked at -20 C with the pack inside, started from 9.00 V at the plug through the interconnect at its ceiling; the shedding sequence of section 3g runs, the mat on measured headroom: the cells reach 3 C, the hold clears and the charge begins; the time recorded and accepted against CONOPS's warm-up"),
+    ("E11-24", "IMPLEMENTATION", "Layer 8 board A generator owner", "the dependency round's fallback on VBAT (a register row, never applied by this record): one EEHZK1V181P direct (C242139) and a hold-up bank of %d EEHZK1E471P (C242138) charged through R_CH %s Ohm RC2512FK-07330RL (C137025) and discharging through D_H B540C-13-F (C72264); the regenerated netlist carries them; the bank's hold recomputed from the fitted parts reads at least %s ms for the worst admitted step (%s W)" % (BANK_N, fmt(R_CH, 0), fmt(R["G"]["worst_hold"] * 1e3, 3), fmt(R["G"]["worst"][1], 2))),
+    ("E11-25", "EVIDENCE", "Layer 6 components", "the clarification questions of clarification/TI-QUESTIONS.md (Q-TI-11 to Q-TI-14 and the addendum to Q-TI-3) sent by the owner and answered, each answer filed against its dependency row D1 to D10 and judged: a limit closes a row production-wide, a typical figure does not"),
+    ("E11-26", "TEST", "prototype bench", "the bench methods of rows D1 to D10 run on one unit each, every reading filed as a sample with its uncertainty and conditions, never as a limit; D2's recovery at most %s ms against the bank's %s ms assumption gives the engineering margin the record names" % (fmt(T_RESP * 1e3 / 5, 1), fmt(T_RESP * 1e3, 1))),
 ]
 
 
