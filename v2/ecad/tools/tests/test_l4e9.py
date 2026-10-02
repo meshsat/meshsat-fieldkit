@@ -899,7 +899,7 @@ def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
     m = _M()
     F = _C["F"]
     r5 = F["r5"]
-    for key, commit in (("l4e10", "e464ff88"), ("l4e10md", "e464ff88"), ("cl_topwell", "e464ff88"), ("l4e11", "5aa18a69"),
+    for key, commit in (("l4e10", "1c321773"), ("l4e10md", "1c321773"), ("cl_topwell", "e464ff88"), ("l4e11", "5aa18a69"),
                         ("l4e11md", "5aa18a69"), ("l4e12", "7f41632d"), ("l4e12md", "7f41632d")):
         assert m.FROM_COMMIT[key] == commit, key
         rel, sha = m.PINS[key]
@@ -1083,7 +1083,7 @@ def t_consolidation_the_handover_the_exit_and_the_status():
     ex = m.cons_exit(F)
     assert [e[0] for e in ex] == [c["id"] for c in m.CHOICES if c["class"] == m.ARCH]
     for e in ex:
-        assert e[1] in (m.QUALIFICATION, m.CONDITION, m.QUALIFICATION_ONCE) and all(x.strip() for x in e[2:]), e[0]
+        assert e[1] in (m.QUALIFICATION, m.CONDITION, m.QUALIFICATION_ONCE, m.SUPPORTED) and all(x.strip() for x in e[2:]), e[0]
     assert m.OWNER_DEFINITION in page.replace("\n", " ").replace("  ", " ") or m.OWNER_DEFINITION[:80] in page.replace("\n", " ")
     assert "**Status: %s.**" % m.STATUS in page and m.STATUS in _C["text"].split("20. THE EXIT")[1]
     if any(e[1] == m.CONDITION for e in ex):
@@ -1117,7 +1117,7 @@ def t_consolidation_the_charger_selection_and_the_thermal_verdict_are_carried():
     assert all(len(h) == 6 and h[5].strip() for h in heat), "each mode against the conservative bound"
     assert "%s C" % tb["air_e3o"][0] in [h for h in heat if h[0] == "H3"][0][5] and "%.3f W/K" % tb["all_e3o"][3] in [h for h in heat if h[0] == "H3"][0][5]
     ex = {e[0]: e for e in m.cons_exit(F)}
-    assert ex["U-04"][1] == m.QUALIFICATION_ONCE and ex["U-02"][1] == m.CONDITION and ex["U-01"][1] == m.CONDITION
+    assert ex["U-04"][1] == m.QUALIFICATION_ONCE and ex["U-02"][1] == m.CONDITION and ex["U-01"][1] == m.SUPPORTED
     for a, _rise, _t, _w in (tb["bands"][0], tb["bands"][1], tb["bands"][4]):
         assert a in ex["U-02"][3], a
     assert "%s W/K" % tb["e5"][0] in ex["U-02"][2] and "%s V" % b1["vsys_min"] in ex["U-04"][4]
@@ -1127,6 +1127,38 @@ def t_consolidation_the_charger_selection_and_the_thermal_verdict_are_carried():
     assert {"2.416", "2.462", "1.22", "0.566", "0000h"} <= named
     page = open(PAGE, encoding="utf-8").read()
     assert "T-H1 decides" in page and "(B1)" in page and "**Status: %s.**" % m.STATUS in page
+
+
+def t_consolidation_the_cell_route_and_normal_operation():
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    cb = F["cb"]
+    u1, tb = cb["u1"], cb["tb"]
+    for key in ("l4e10chk5", "cl_saft"):
+        assert key in m.PINS and m.PINS[key][1][:16] in _C["text"].split("1. THE MAKERS")[0], key
+    assert m.FROM_COMMIT["l4e10"] == "1c321773"
+    modes, energy, ef, heat = m.cons_budget(F, st)
+    e = {x[0]: x for x in energy}
+    assert "PROPOSAL" in e["P4"][1] and "%s to %s h" % (m.fmt(u1["energy"][3]), m.fmt(u1["energy"][4])) in e["P4"][4], "the Saft route beside the ruled pack"
+    assert e["B1"][1].startswith("ruled 35E") and "S4" in e and "CONDITIONAL on T-H1" in e["S4"][6]
+    ex = {x[0]: x for x in m.cons_exit(F)}
+    assert ex["U-01"][1] == m.SUPPORTED and "mock-up" in ex["U-01"][3] and "18 A for 60 s" in ex["U-01"][3] and "T-H1" in ex["U-01"][3]
+    assert "UNSUITABLE" in ex["U-01"][2]
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    for rid in ("R-167", "R-168", "R-169"):
+        assert reg[rid][7] == "U-01" and "Saft route" in reg[rid][2], rid
+    rows, ceil, cols, stmt = m.cons_normal_op(F)
+    assert [r[0] for r in rows] == ["N1", "N2", "N3", "N4", "N5"]
+    q, ta = cb["idle_heat"], cb["env_top"]
+    assert "%.3f W/K" % (q / (F["parts_hot"] - ta)) in stmt[1] and "deciding fact" in stmt[1]
+    assert abs((float(F["r5"]["thr"][5]) - q / tb["env"][0]) - u1["charge_start"]) < 0.05, "the charge start on the bound reproduces L4-E10's"
+    page = open(PAGE, encoding="utf-8").read()
+    for head, lines in m.cons_normal_tables(F, D, st).items():
+        assert m.md_table(page, head) == [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in lines[2:]], head
+    for name, lines in (("normal", stmt), ("deciding", m.cons_deciding(F))):
+        blk = page.split("<!-- gen:%s:begin -->" % name)[1].split("<!-- gen:%s:end -->" % name)[0].strip()
+        assert blk == "\n\n".join(lines), name
+    assert page.index("<!-- gen:deciding:begin -->") < page.index("**The owner's definition**"), "the deciding experiment heads the exit statement"
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
