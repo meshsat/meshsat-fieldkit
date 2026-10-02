@@ -56,7 +56,9 @@ table carries each approach's conductance beside the bound. Set 27 adds L4-E7's 
 read from L4-E7's output; IF-01 reads NOT MET only on the two known single faults D-10 and D-11, open defects whose remedy is
 pending L4-E7's round (the owner's amendment of 14:20: no remedy selected here); R-173 holds the remedy's place in board E's round
 after the drafted entry (a list putting it first is refused); R-156 is restated and OWED, the CS116 and CS115 test is a layer 8
-row; the exit carries the open defects beside U-01, U-02 and U-04. The owner's amendment of 14:20: L4-E12's reconciliation (check 7)
+row; the exit carries the defects beside U-01, U-02 and U-04. L4-E7's remedies (check 5): the guard's figures are read from L4-E7's
+output; IF-01 no longer reads NOT MET, the faults staying visible as drawn; D-10 and D-11 read ADDRESSED IN DRAFTS; R-173 is the
+drafted guard after the hot swap and the entry draft (a list putting it first is refused); the residual band is a layer 8 row. The owner's amendment of 14:20: L4-E12's reconciliation (check 7)
 is read condition by condition and the framing of the profile at +40 C is withdrawn everywhere it stood (the exit's top, the heat
 table, normal operation, the T-H1 points in the procedure's order, R-104 and the route's rows); L4-E10's comparison is the
 budget's cell row as filed; the ledger's totals and its four still-open rows are in the exit; R-139 measures the reading's lag.
@@ -589,8 +591,9 @@ def t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register():
     for r, d in zip(de, m.DEFECTS):
         assert r[1] == d["title"] and r[2] == d["constraint"] and r[3] == d["options"], d["id"]
         assert r[4].split(":")[0].split(",")[0].split(" ")[0] == d["state"].split(" ")[0], d["id"]
-    # the update round left no material defect open; since set 27 D-10 and D-11 are the known open defects, their remedy pending L4-E7's round
-    assert [d["id"] for d in m.DEFECTS if d["state"] == "OPEN"] == ["D-10", "D-11"], "only the solar faults are open"
+    # no material defect is open: D-10 and D-11, open in set 27, are addressed in drafts since L4-E7's remedies (check 5)
+    assert [d["id"] for d in m.DEFECTS if d["state"] == "OPEN"] == [], "no material defect is open"
+    assert all(d["state"].startswith("ADDRESSED IN DRAFTS") for d in m.DEFECTS if d["id"] in ("D-10", "D-11"))
     st = {d["id"]: d["state"] for d in m.DEFECTS}
     assert st["D-06"].startswith("RESOLVED") and st["D-07"].startswith("SUPERSEDED") and st["D-09"].startswith("SUPERSEDED")
 
@@ -761,10 +764,9 @@ def t_e11_19_the_selected_entry_is_rejudged_and_no_defect_is_open():
     starts = [c for c in sel if "of the chart" == c.unit]
     assert len(starts) == 3 and all(c.met and c.b == 1.0 for c in starts)
     assert _C["st"]["IF-05"][1] == "CONDITIONAL" and _C["st"]["IF-11"][1] == "CONDITIONAL"
-    # the update round left no row NOT MET; since set 27 IF-01 reads NOT MET on the two known single faults D-10 and D-11 only
-    assert [k for k, v in _C["st"].items() if v[1] == "NOT MET"] == ["IF-01"], "only IF-01 reads NOT MET"
-    bad = [c for c in rows["IF-01"]["checks"] if c.scope == "selected" and c.met is False]
-    assert len(bad) == 2 and "D-10" in bad[0].what and "D-11" in bad[1].what, "IF-01 fails only on D-10 and D-11"
+    assert not [k for k, v in _C["st"].items() if v[1] == "NOT MET"], "no interface row reads NOT MET (D-10 and D-11 addressed in drafts)"
+    drawn = [c for c in rows["IF-01"]["checks"] if c.scope == "drawn" and c.met is False]
+    assert any("D-10" in c.src for c in drawn) and any("D-11" in c.src for c in drawn), "the faults stay visible as drawn"
     sec = _C["text"].split("12. THE UPDATE ROUND")[1]
     assert "new material defects from E11-19: none" in sec and "E11-20" in sec
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
@@ -1261,62 +1263,83 @@ def t_consolidation_the_panel_lead_surge():
     m = _M()
     F, D, st = _C["F"], _C["D"], _C["st"]
     sv = F["sv"]
-    # the verdicts as L4-E7 printed them, against REQ-016's criterion
+    rm = sv["rm"]
+    for key in ("l4e7chk5", "l4e7md", "e7guard"):
+        assert key in m.PINS and m.PINS[key][1][:16] in _C["text"].split("1. THE MAKERS")[0], key
+    assert m.FROM_COMMIT["l4e7r"] == "573fd5b8" and "check 5" in m.COMMIT_LABEL["573fd5b8"]
+    # the derivation's figures as L4-E7 printed them, against REQ-016's criterion
     assert sv["lim_drawn"] < sv["d1"][0] <= sv["lim"] and sv["lim_drawn"] < sv["d2"][0] <= sv["lim"], "CS116 and CS115 inside the drafted 50 V, over the drawn 35 V"
-    assert all(pw > sv["d4_cap"][0] for _n, _v, _i, pw in sv["d4_rows"]) and len(sv["d4_rows"]) == 4, "a 36 V source over D4's capability at every breakdown"
-    assert sv["d5"][2] < 0.2 and sv["d4_cold"] < sv["src"][1] and sv["u18"] == (40.0, F["u18_vin"])
-    # the known open defects and IF-01
+    assert all(pw > sv["d4_cap"][0] for _n, _v, _i, pw in sv["d4_rows"]) and len(sv["d4_rows"]) == 4, "without the guard a 36 V source is over D4's capability"
+    assert sv["u18"] == (40.0, F["u18_vin"])
+    # the remedies: the cut-off's band between CS101's peak and the SMCJ30A's cold breakdown, falling back over 25 V; the clamps under 50 V
+    assert F["cs101_pv"] < rm["rise"][0] < rm["rise"][1] < rm["s30"][3] < sv["src"][1] and rm["fall"][0] > F["pv"]["v_max"]
+    # the margins as printed from the unrounded band: within the two-decimal figures' rounding
+    assert abs(rm["rise"][0] - F["cs101_pv"] - rm["marg"][0]) < 0.006 and abs(rm["s30"][3] - rm["rise"][1] - rm["marg"][1]) < 0.006
+    assert max(rm["d1d2"]) < sv["lim"] and rm["static"] == (93.5954, 93.5521) and rm["static"][0] <= 100.0
+    assert rm["cs101"][0] < rm["cs101"][2] and rm["chkb"][0] > rm["chkb"][1] and rm["resid"] == 116.5 and rm["loss"][0] == 0.217
+    # IF-01: no longer NOT MET; the faults as drawn stay visible; the guard's checks MEET
+    st1 = st["IF-01"]
+    assert st1[1] == "CONDITIONAL"
+    rows = {r["id"]: r for r in _C["R"]}
+    sel = [c for c in rows["IF-01"]["checks"] if c.scope == "selected"]
+    assert all(c.met for c in sel if c.met is not None) and any("D-10" in c.what for c in sel) and any("D-11" in c.what and c.cls == "CONDITIONAL" for c in sel)
+    # the defects: D-10 and D-11 addressed in drafts, D-11 conditional; D-12 with the SMCJ30A
     de = {d["id"]: d for d in m.DEFECTS}
-    for did in ("D-10", "D-11"):
-        assert de[did]["state"] == "OPEN" and "pending" in de[did]["resolution"] and "R-173" in de[did]["resolution"] and de[did]["rows"] == ["IF-01"]
-    assert de["D-12"]["state"].startswith("RESOLVED") and "R-21" in de["D-12"]["resolution"]
-    assert st["IF-01"][1] == "NOT MET"
+    assert de["D-10"]["state"] == "ADDRESSED IN DRAFTS (a selected remedy, drafted, not applied)" and "R-173" in de["D-10"]["resolution"]
+    assert de["D-11"]["state"].startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL on Q13's leakage above +25 C" in de["D-11"]["state"]
+    assert de["D-12"]["state"] == "RESOLVED (drafted)" and "41.91" in de["D-12"]["options"] and "SMCJ30A" in de["D-12"]["options"]
     g2 = [g for g in m.GATE if g["n"] == 2][0]
-    assert g2["verdict"] != "PASS" and all(x in g2["constraint"] for x in ("D-10", "D-11", "R-173", "no remedy selected here"))
-    # the register and the change list
+    assert g2["verdict"] != "PASS" and "no material defect is open" in g2["constraint"] and "R-175" in g2["constraint"]
+    # the register and the change list: R-173 the drafted guard after the hot swap and the entry draft; R-175 the residual band at layer 8
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
-    r156, r173, r174 = reg["R-156"], reg["R-173"], reg["R-174"]
-    assert r156[6] == "OWED" and "INA169" in r156[5] and "75 V" in r156[5] and "INA250" not in r156[5], "R-156's U18 corrected"
-    assert r173[1] == "IMPLEMENTATION" and r173[4] == "Layer 8 board E generator owner" and r173[6] == "PENDING" and r173[7] == "4d"
-    assert "No remedy is selected here" in r173[2] and "SMCJ36A" in r173[2] and "disconnect" in r173[2]
-    assert r174[1] == "TEST" and m.LAYER_OF[r174[4]] == "8" and "CS116" in r174[2] and "CS115" in r174[2] and "M1 to M5" in r174[2]
+    r156, r173, r174, r175, r176 = (reg[x] for x in ("R-156", "R-173", "R-174", "R-175", "R-176"))
+    assert r156[6] == "OWED" and "INA169" in r156[5] and "75 V" in r156[5] and "INA250" not in r156[5] and "drafted guard" in r156[5]
+    assert r173[1] == "IMPLEMENTATION" and r173[6] == "DRAFTED" and r173[7] == "4e" and "apply_gen_sch_e_solar_guard.py" in r173[2] and r173[4] == "Layer 8 board E generator owner"
+    assert r174[1] == "TEST" and m.LAYER_OF[r174[4]] == "8" and "CS116" in r174[2] and "CS115" in r174[2]
+    assert m.LAYER_OF[r175[4]] == "8" and "116.5 W" in r175[2] and "TRN-001" in r175[5] and r176[4] == "prototype bench" and "Q13's leakage" in r176[2]
     ch = m.cons_changes(list(reg.values()))
     pos = {c[2]: c[0] for c in ch}
-    assert pos["R-21"] < pos["R-173"] < pos["R-22"] and pos["R-98"] < pos["R-173"]
+    assert pos["R-21"] < pos["R-173"] and pos["R-94"] < pos["R-173"] and pos["R-123"] < pos["R-173"] < pos["R-22"]
+    assert [c for c in ch if c[2] == "R-173"][0][4] == "apply_gen_sch_e_solar_guard.py"
     saved = m.CHANGE_ORDER
     try:
         order = [c for c in saved if c[1] != "R-173"]
-        i = [k for k, c in enumerate(order) if c[1] == "R-21"][0]
+        i = [k for k, c in enumerate(order) if c[1] == "R-94"][0]
         m.CHANGE_ORDER = order[:i] + [c for c in saved if c[1] == "R-173"] + order[i:]
         try:
             m.cons_changes(list(reg.values()))
-            raise AssertionError("the remedy's place before the drafted entry must be refused")
+            raise AssertionError("the guard before the hot swap must be refused")
         except SystemExit:
             pass
     finally:
         m.CHANGE_ORDER = saved
-    # the verdicts and the two remedies as L4-E7 names them; none selected
+    # the verdicts and the remedies as L4-E7 compared them; the selection L4-E7's
     verdicts, remedies, sel = m.cons_surge(F)
-    assert [v[0] for v in verdicts][:5] == ["D1", "D2", "D3", "D4", "D5"]
-    assert [r[0] for r in remedies] == ["(i)", "(ii)"] and remedies[0][3] == "not closed" and remedies[1][3] == "closed"
-    assert "pending" in sel and "selects neither" in sel and "SELECTED" not in " ".join(" ".join(r) for r in remedies)
-    text = _C["text"].split("23. THE PANEL LEAD'S SURGE")[1]
-    assert "SELECTED" not in text and "decision 19" not in text
+    v = {x[0]: x for x in verdicts}
+    assert v["D4"][3].startswith("MEETS with the guard") and v["D5"][3].startswith("MEETS with Q13") and v["D4"][4] == "NOT MET" and "R-175" in v["the residual band"][5]
+    assert [r[0] for r in remedies] == ["(1)", "(2)", "(3)", "TVS only"] and remedies[2][4].startswith("SELECTED by L4-E7")
+    assert "selected and drafted, not applied" in sel and "R-175" in sel and "93.5954" in sel
     page = open(PAGE, encoding="utf-8").read()
-    assert "decision 19" not in page and "selected direction" not in page
     for head, lines in m.cons_surge_tables(F, D, st).items():
         assert m.md_table(page, head) == [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in lines[2:]], head
-    blk = page.split("<!-- gen:surge:begin -->")[1].split("<!-- gen:surge:end -->")[0].strip()
-    assert blk == sel
-    # the exit carries the open defects beside U-01, U-02 and U-04
-    exd = m.cons_exit_defects(F)
-    assert [d[0] for d in exd] == ["D-10", "D-11", "D-12"] and all(d[2].startswith("OPEN") and "pending" in d[2] and "not yet a draft" in d[2] for d in exd[:2])
+    assert page.split("<!-- gen:surge:begin -->")[1].split("<!-- gen:surge:end -->")[0].strip() == sel
+    # the diagram, the budget, the behaviour, the handover and the exit carry the guard
+    N, E, C, NP = m.cons_diagram(F, st)
+    blk = {n[0]: " ".join(n[4]) for n in N}
+    assert "U21/Q12" in blk["SOL_IN"] and "Q13" in blk["SOL_IN"] and "SMCJ30A" in blk["SOL_IN"] and "guard" in [e for e in E if e[0] == "P01"][0][4]
+    modes, energy, ef, heat = m.cons_budget(F, st)
+    assert "%s Wh" % m.fmt(rm["day"][0]) in {x[0]: x for x in energy}["S2"][3]
+    beh = " ".join(" ".join(r) for r in m.cons_behaviour(F, D, st)["4e"])
+    assert "over-voltage cut-off" in beh and "Q13" in beh and "R-175" in beh
+    parts = {p_[0]: p_ for p_ in m.cons_parts(F)}
+    assert "U21, Q12 (board E)" in parts and "Q13 (board E)" in parts and "D4 (board E)" in parts
+    exd = {d[0]: d for d in m.cons_exit_defects(F)}
+    assert exd["D-10"][2].startswith("ADDRESSED IN DRAFTS") and "CONDITIONAL" in exd["D-11"][2] and "residual" in exd
     assert m.md_table(page, "| Defect | Its fault |") == [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in m.cons_exit_table(F, D, st)["| Defect | Its fault |"][2:]]
-    sec6 = page.split("## 6. The exit statement")[1].split("## 7. ")[0]
-    assert sec6.index("| U | Class |") < sec6.index("| Defect | Its fault |")
-    assert "their remedy pending L4-E7's round" in _C["text"].split("20. THE EXIT")[1].split("21. IN SHORT")[0]
+    assert "addressed in drafts" in _C["text"].split("20. THE EXIT")[1].split("21. IN SHORT")[0]
     short = page.split("## In short\n")[1].split("\n## 1. ")[0]
-    assert "KNOWN OPEN DEFECTS" in short and "R-173" in short and "pending" in short and "**Status: %s.**" % m.STATUS in short
+    assert "ADDRESSED IN DRAFTS" in short and "R-175" in short and "0 NOT MET" in short and "**Status: %s.**" % m.STATUS in short
+    assert "remedy selected and checked, check-l4e7r-5" in m.cons_ledger(F)
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)

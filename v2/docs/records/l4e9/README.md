@@ -53,7 +53,12 @@ stage, 27.086 W, and the owner's CFL-002 decides its line, K1 at 1.806 W/K with 
 profile's own line is K6 at +20 C; T-H1's points run in the order K1, K5, K10, K6, K7 and K8); L4-E10's battery comparison (check
 6) is the budget's cell row (the 35E 144.72 Wh nominal, 107.9 Wh, 2.52 h against the Saft's 81.76 Wh, 53.5 to 58.8 Wh, 1.25 to
 1.37 h MODELLED; adoption not supported yet, the owner's approval required); the findings ledger's 58 rows (24 CLOSED, 19 CLOSED
-AS CONDITIONAL, 11 OPEN DOWNSTREAM, 4 STILL OPEN) are cited in the exit; R-139's lag test is restated. Status: known defects
+AS CONDITIONAL, 11 OPEN DOWNSTREAM, 4 STILL OPEN) are cited in the exit; R-139's lag test is restated. L4-E7's solar-fault
+remedies (check 5 at `573fd5b8`): D-10 and D-11 are addressed in drafts by the guard, the TPS48110-Q1 over-voltage cut-off U21 with
+Q12 (rising 28.55 to 31.06 V, falling 27.07 V or more) and the return switch Q13, with D4 the SMCJ30A, D11 and C131, drafted in
+L4-E7's `apply_gen_sch_e_solar_guard.py` (R-173, in board E's round after the hot swap and the entry draft), not applied; D-11
+is CONDITIONAL on Q13's leakage above +25 C; the band between 25 V and the cut-off is a residual for layer 8 (R-175); the
+guard's bench rows are R-176; the register at 166 items. Status: known defects
 addressed in drafts; feasibility conditions remain open.
 
 | File | What it is |
