@@ -105,6 +105,7 @@ PINS = {
     "ap63200": ("v2/vendor/diodes/diodes-ap63200-series-buck.pdf", "ef99daa3789d835bc025dfcb4c605c5c2e6d3e7223e86d40b33e6b497ea5a722"),
     "smcj": ("v2/vendor/power/littelfuse-smcj-series-tvs.pdf", "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea"),
     "dock_py": ("v2/docs/records/w3de/dock_contacts.py", "acd932cbb9e31f8f0fd4563fc97d7ece21e0ce531e133040afb911da3c513b41"),
+    "msmf": ("v2/vendor/power/bourns-mf-msmf-pptc.pdf", "a84b990157dd1d755b5c7a413156ddf8792a3a95cff56f09a95d10754e9e49ed"),
     "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "0978b101bb4fc5721e217642338fcd3d3f3be5f37dcf7a88cfa9221118cffb6f"),
 }
 INPUTS = ["lcsc-C907944-2026-10-02.json", "lcsc-C3847777-2026-10-02.json", "lcsc-C363929-2026-10-02.json",
@@ -117,7 +118,7 @@ CONS_INPUTS = ["lcsc-C5219071-2026-10-02.json", "lcsc-C2871872-2026-10-02.json",
                "lcsc-C242138-price-2026-10-02.json", "lcsc-C242139-price-2026-10-02.json", "lcsc-C72264-price-2026-10-02.json",
                "lcsc-C137025-price-2026-10-02.json"]          # the consolidation round's catalogue readings (with prices)
 FIX_INPUTS = ["lcsc-C3278350-2026-10-02.json", "lcsc-C3289491-2026-10-02.json"]   # the fix round's FET candidates (with prices)
-INPUTS = INPUTS + CONS_INPUTS + FIX_INPUTS
+INPUTS = INPUTS + CONS_INPUTS + FIX_INPUTS + ["nexperia-buk6y10-30p-figure-readings-2026-10-02.json"]
 L4E9_COMMIT = "3c09b3daaa48d0a9f16b833b949d7d9ab8ecd496"
 GIT_PINS = {
     "l4e9": ("v2/docs/records/l4e9/l4e9_power_path.out", "07d8fb6e828cb15b5589f13983a76bde97c9048ab46ea193c528a28d59a7bbd3"),
@@ -315,7 +316,7 @@ def compute():
                               "net_e", "packprot", "primcfg", "chain", "l4e5", "budget", "red2", "ecss")}
     for k in ("bq25731", "sluuaq3a", "csd17570", "cell", "lm5069", "csd19532", "d38999", "vh", "xt60", "keystone", "lapp",
               "alpha", "lm5176", "srf1260", "yageo", "fuse997", "mur104", "mur683", "bq25798", "lm74700", "tps4811", "csd19536", "tps1663",
-              "bq25730", "aons21357", "bq4050", "bq25792", "sqj403", "buk6y10", "ap63200", "smcj", "dock_py", "arch"):
+              "bq25730", "aons21357", "bq4050", "bq25792", "sqj403", "buk6y10", "ap63200", "smcj", "dock_py", "arch", "msmf"):
         read(k)
     L9 = git_text("l4e9")
     R["inputs"] = [(k, PINS[k][0], sha_file(os.path.join(TOP, PINS[k][0]))) for k in PINS]
@@ -816,6 +817,7 @@ def compute():
     R["H"] = consolidation_round(R, T)
     T["arch"] = text("arch")
     R["K"] = fix_round(R, T)
+    R["L"] = fix16_round(R, T)
     return R
 
 
@@ -2467,6 +2469,8 @@ def render_fix(R, p):
     p("       the latch shown on a shorted VSYS and cleared by a re-plug (SESSION)")
     p("   15c. B2: THE BATTERY FET, THREE OPTIONS ON ONE BASIS (the drive BATDRV gives at its least, %s V, p.17; RDS(on) from the makers' printed"
       % fmt(H["drv"][0], 1))
+    p("     [SUPERSEDED IN PART by section 16: fet_bound's figure is an allowance, not a bound; AOS's shape, the Ciss reading and the docking I2t")
+    p("     are replaced; the selection of the pair stands] (SESSION)")
     p("     maxima only, bounded by fet_bound: the gate chord between -4.5 and -10 V, the temperature chord between the printed -10 V rows) (MAKER, INFERRED)")
     p("     the inside air: the consolidation's +%s C mixed-air line for the parts that must work in the heat stage (L4-POWER-ARCHITECTURE K9, E3-O"
       % fmt(K["air"]["route"], 0))
@@ -2554,6 +2558,335 @@ def sel_tj_18(K):
     sel, z60 = K["sel"], K["z"][60.0]
     r = sel["bar"]["route"]
     return K["air"]["route"] + r * (sel["p"]["p10"] + (sel["p"]["p18"] - sel["p"]["p10"]) * z60)
+
+# ============================================================================================ the review of the provisional fixes (L4-F02, L4-F03)
+F16_RA = 21.136e-3      # ohm per FET, SESSION: the RDS(on) ALLOWANCE at BATDRV's least 8.5 V and the 150 C limit the design is sized to;
+                        # section 15c's figure, no longer called a bound (no sheet prints a maximum there); confirmed by E11-36 or reversed
+F16_RA_ALT = 25.0e-3    # ohm, the sheet's largest printed maximum (-4.5 V, 25 C): the sensitivity printed beside the allowance
+F16_TJ_HELD = 140.0     # C, SESSION: the held fault's (20 A under OCD1) junction ceiling, 10 K under the limit kept for the pulses from it
+F16_READ = "nexperia-buk6y10-30p-figure-readings-2026-10-02.json"
+F16_RILIM_K = 11.0      # kOhm 0.1 %, SESSION: the eFuse's ILIM resistor
+F16_RILIM_TOL = 0.001
+F16_CDVDT = 22e-9       # F, SESSION: the eFuse's dVdT capacitor (TI's characterised 22 nF row)
+F16_CDVDT_TOL = 0.10
+F16_OVL = (5.0, 14.4)   # the review's counterexample: 5 A drawn from 14.4 V (2.88 Ohm) on VSYS_E
+F16_SPREAD = 2.0        # w3de's assumed 2:1 spread of a contact's static resistance (dock_contacts.py)
+
+
+def zjmb_table(J):
+    """BUK6Y10-30P Fig. 4 (the duty-cycle 0.01 curve, above any single pulse), read on the rendered page (inputs/F16_READ), scaled so
+    its plateau is Table 6's maximum Rth(j-mb); log-log interpolation; below the first point it is held at the first point's value
+    (Z rises with the pulse, so this bounds it from above)."""
+    pts, top = [], 0.0
+    for t, z in J["fig4"]["points_s_kw"]:
+        top = max(top, float(z))                      # Z never falls with a longer pulse: the reading's dips past the plateau are not used
+        pts.append((float(t), top))
+    return pts
+
+
+def zjmb_at(pts, scale, rmax, t):
+    if t <= pts[0][0]:
+        return pts[0][1] * scale
+    if t >= pts[-1][0]:
+        return rmax
+    for (t0, z0), (t1, z1) in zip(pts, pts[1:]):
+        if t0 <= t <= t1:
+            fr = (math.log(t) - math.log(t0)) / (math.log(t1) - math.log(t0))
+            return min(rmax, scale * math.exp(math.log(z0) + fr * (math.log(z1) - math.log(z0))))
+    return rmax
+
+
+def dock_rise(zf, i0, tau, vsd, is_t, k, dt=0.2e-6, span=300e-6):
+    """The junction rise of ONE FET carrying the whole docking pulse i0 exp(-t/tau) through its body diode (no sharing assumed),
+    P = k VF(i) i with VF(i) at most max(VSD, VSD i / IS_test): VF is concave in i through the origin, so VF(i)/i does not rise with
+    i above the printed point (INFERRED); k scales the printed 25 C point for a hot junction. Superposition on zf. Returns the
+    largest rise, the energy and the peak power."""
+    n = int(span / dt)
+    P = []
+    for j in range(n):
+        i = i0 * math.exp(-j * dt / tau)
+        P.append(k * max(vsd, vsd * i / is_t) * i)
+    zg = [zf((j + 1) * dt) for j in range(n)]
+    dP = [P[0]] + [P[j] - P[j - 1] for j in range(1, n)]
+    best = 0.0
+    for m in range(n):
+        s = 0.0
+        for j in range(m + 1):
+            s += dP[j] * zg[m - j]
+        best = max(best, s)
+    return best, sum(P) * dt, P[0]
+
+
+def fix16_round(R, T):
+    """The review of the provisional fixes (2 October 2026): L4-F02 keeps B2 open (RDS(on) at 8.5 V inferred, the transient shape
+    borrowed from AOS, Ciss typical against TI's 5 nF, the docking pulse converted into an I2t the sheet does not print) and
+    L4-F03 finds the dock's new VSYS contact without branch protection."""
+    H, Q0, K = R["H"], R["H"]["Q"], R["K"]
+    sel = K["sel"]
+    nxp = sel["rdef"]
+    L = {}
+    J = json.load(open(os.path.join(TOP, REC, "inputs", F16_READ), encoding="utf-8"))
+    if J["sha256"] != PINS["buk6y10"][1]:
+        refuse(4, "the figure readings name another BUK6Y10-30P sheet")
+    nx = "\n".join(pdf_pages("buk6y10", True))
+    L["rthmb"] = nxp["rthmb"]
+    m = need(nx, r"VSD\s+source-drain voltage\s+IS = -(\d+) A; VGS = 0 V; Tj = 25 °C\s+-\s+-([\d.]+)\s+-([\d.]+)\s+V", "BUK6Y10-30P's VSD")
+    L["vsd_is"], L["vsd_max"] = f(m, 1), f(m, 3)
+    m = need(nx, r"IS\s+source current\s+Tmb = 25 °C\s+-\s+-(\d+)\s+A", "BUK6Y10-30P's IS")
+    L["is_dc"] = f(m)
+    need(nx, r"Fig\. 4\.\s+Transient thermal impedance from junction to mounting base as a function of pulse duration", "Fig. 4")
+    need(nx, r"Fig\. 12\. Input, output and reverse transfer capacitances", "Fig. 12")
+    pts = zjmb_table(J)
+    L["plateau"] = float(J["fig4"]["plateau_kw"])
+    if abs(max(z for _t, z in pts) - L["plateau"]) > 1e-9 or not all(a[1] <= b[1] + 1e-9 for a, b in zip(pts, pts[1:9])):
+        refuse(4, "the Fig. 4 reading is not a rising curve with the stated plateau")
+    L["zscale"] = L["rthmb"] / L["plateau"]
+    zf = lambda t: zjmb_at(pts, L["zscale"], L["rthmb"], t)
+    L["zf"] = zf
+    L["z"] = {t: zf(t) for t in (2.44e-4, 0.02, 1.0, 60.0)}
+    # ---- objection 1: what the sheet prints, and the allowance
+    L["r10_hot"], L["r45_25"], L["r10_25"] = nxp["r10_hot"] * 1e-3, nxp["r45_25"] * 1e-3, nxp["r10_25"] * 1e-3
+    L["ra"] = F16_RA
+    if abs(F16_RA - sel["rb"]) > 1e-6:
+        refuse(4, "the allowance is not section 15c's figure")
+    # ---- objection 2: the events on the device's own Zth(j-mb) and the installed pair's self and mutual impedance
+    ocd1 = Q0["ocd1"]
+    ocd2 = [(i_, t_) for lab, i_, t_, _v, _a, _h in Q0["prot"] if lab == "the image's OCD2"][0]
+    aold = [(i_, t_) for lab, i_, t_, _v, _a, _h in Q0["prot"] if lab == "the AFE's AOLD"][0]
+    ascd = [(i_, t_) for lab, i_, t_, _v, _a, _h in Q0["prot"] if lab == "the image's ASCD"][0]
+    air = K["air"]["route"]
+
+    def plan(ra, zsum=None):
+        pb = lambda i: (i / 2.0) ** 2 * ra                     # per FET: the even split bounds each FET's power (section 15c)
+        if zsum is None:
+            zsum = (F16_TJ_HELD - air) / pb(ocd1[0])            # (Zself + Zmut) steady: 20 A held reaches the held ceiling
+        pre10 = air + pb(10.0) * zsum
+        tj18 = pre10 + (pb(Q0["i_peak"]) - pb(10.0)) * zsum     # no transient credit at 60 s
+        ev = []
+        for lab, (i_, t_) in (("OCD2 %s A for %s s" % (fmt(ocd2[0], 0), fmt(ocd2[1], 0)), ocd2), ("AOLD %s A for %s ms" % (fmt(aold[0], 0), fmt(aold[1] * 1e3, 0)), aold),
+                              ("ASCD %s A for %s us" % (fmt(ascd[0], 1), fmt(ascd[1] * 1e6, 0)), ascd)):
+            dp = pb(i_) - pb(ocd1[0])
+            allow = (150.0 - F16_TJ_HELD) / dp
+            ev.append((lab, i_, t_, pb(i_), allow, zf(t_), allow - zf(t_)))
+        return dict(pb10=pb(10.0), pb18=pb(Q0["i_peak"]), pb20=pb(ocd1[0]), zsum=zsum, pre10=pre10, tj18=tj18, ev=ev,
+                    tj20=air + pb(ocd1[0]) * zsum,
+                    pre_ldo=(150.0 - air) / zsum / K["i_pre"])
+    L["plan"] = plan(F16_RA)
+    L["plan_alt"] = plan(F16_RA_ALT)
+    L["plan_miss"] = plan(F16_RA_ALT, L["plan"]["zsum"])       # parts at 25 mOhm on a board built to the allowance's sum
+    L["ldo_floor16"] = H["smin_hi"] - L["plan"]["pre_ldo"]
+    # ---- objection 3: Ciss
+    L["ciss_t"] = nxp["ciss"]
+    L["ciss_0"] = float(J["fig12"]["ciss_typ_pf_at_vds_minus_0v1"]) * 1e-12
+    m = find("bq25730", r"RBATDRV_OFF\s+10 µA current from\s+([\d.]+)\s+([\d.]+)\s+kΩ", "RBATDRV_OFF", layout=True)
+    L["roff"] = (f(m[1], 1) * 1e3, f(m[1], 2) * 1e3)
+    L["ciss_p"] = find("bq25730", r"the Ciss of\s+P-channel MOSFET should be chosen less than 5 nF\.", "TI's Ciss rule", layout=True)[0]
+    L["tau_on"] = (H["rdrv"][1] * 2 * L["ciss_t"], H["rdrv"][1] * 2 * L["ciss_0"])
+    L["tau_off"] = L["roff"][1] * 2 * L["ciss_0"]
+    L["one_rja"] = (F16_TJ_HELD - air) / (ocd1[0] ** 2 * F16_RA)
+    # ---- objection 4: the docking pulse, the whole of it in one FET, from the hot air
+    L["dock_k1"] = dock_rise(zf, Q0["i_dock"], Q0["tau"], L["vsd_max"], L["vsd_is"], 1.0)
+    L["k_max"] = (150.0 - air) / L["dock_k1"][0]
+    L["vf_pk_bound"] = L["vsd_max"] * Q0["i_dock"] / L["vsd_is"]
+    L["t_over_is"] = Q0["tau"] * math.log(Q0["i_dock"] / L["is_dc"])
+    L["i_at_tp"] = Q0["i_dock"] * math.exp(-nxp["ism_tp"] / Q0["tau"])
+    # ---- L4-F03: the branch protection for the dock's VSYS contact
+    tp = "\n".join(pdf_pages("tps1663", True))
+    m = need(tp, r"R\(ILIM\) = 30kΩ, V\(IN\) \u2013 V\(OUT\) = 1V\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+A", "I(OL) at 30 kOhm")
+    r30 = (f(m, 1), f(m, 2), f(m, 3))
+    m = need(tp, r"R\(ILIM\) = 9kΩ, V\(IN\) \u2013 V\(OUT\) = 1V\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+A", "I(OL) at 9 kOhm")
+    r9 = (f(m, 1), f(m, 2), f(m, 3))
+    need(tp, r"IOL = R 18", "Equation 6")
+    m = need(tp, r"IN to OUT total ON resistance\s+(\d+)\s+([\d.]+)\s+(\d+)\s+mΩ", "RON over temperature")
+    L["ron"] = (f(m, 1) * 1e-3, f(m, 2) * 1e-3, f(m, 3) * 1e-3)
+    m = need(tp, r"tCL_PLIM\(dly\)\s+(\d+)\s+(\d+)\s+(\d+)\s+ms", "tCL_PLIM(dly)")
+    L["tcl"] = (f(m, 1) * 1e-3, f(m, 3) * 1e-3)
+    m = need(tp, r"t\(TSD_retry\)\s+Retry delay in TSD\s+MODE = GND\s+(\d+)\s+(\d+)\s+(\d+)\s+ms", "t(TSD_retry)")
+    L["tretry"] = (f(m, 1) * 1e-3, f(m, 3) * 1e-3)
+    m = need(tp, r"Soft short response\s+I\(FASTTRIP\) < I\(OUT\) < I\(SCP\)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+µs", "the soft-short response")
+    L["tsoft"] = f(m, 3) * 1e-6
+    L["iscp"] = f(need(tp, r"I\(SCP\)\s+Short Circuit Protect current\s+(\d+)\s+A", "I(SCP)"))
+    L["thot"] = f(need(tp, r"Hot-short response time\s+I\(OUT\) > I\(SCP\)\s+(\d+)\s+µs", "the hot-short response")) * 1e-6
+    L["iq"] = f(need(tp, r"Enabled: V\(SHDN\) = 2V\s+([\d.]+)\s+([\d.]+)\s+mA", "IQ(ON)"), 2) * 1e-3
+    m = need(tp, r"T\(J_REG\)\s+Thermal regulation set point\s+(\d+)\s+(\d+)\s+(\d+)", "T(J_REG)")
+    L["tjreg"] = (f(m, 1), f(m, 3))
+    need(tp, r"tdVdT = 20\.8 × 103 × V IN × C dVdT", "Equation 2")
+    need(tp, r"auto-retries after a\s.*?delay of t\(TSD_retry\)", "Table 8-1, MODE to GND", re.S)
+    need(tp, r"UL 2367 recognized", "UL 2367")
+    L["ilim_typ"] = 18.0 / F16_RILIM_K
+    rel = max(r9[2] / r9[1] - 1, r30[2] / r30[1] - 1, 1 - r9[0] / r9[1], 1 - r30[0] / r30[1])
+    L["ilim_rel"] = rel
+    L["ilim"] = (L["ilim_typ"] * (1 - rel) / (1 + F16_RILIM_TOL), L["ilim_typ"] * (1 + rel) / (1 - F16_RILIM_TOL))
+    sp = importlib.util.spec_from_file_location("dock_contacts_pinned16", read("dock_py"))
+    dc = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(dc)
+    L["c813"] = dc.PD_MAX
+    L["r813"] = dc.R_813_PATH * 1e-3
+    L["rise_lim"] = dc.rise_813(L["ilim"][1])
+    L["t_lim"] = {k: a + L["rise_lim"] for k, a in dc.AIR.items()}
+    L["duty"] = L["tcl"][1] / (L["tcl"][1] + L["tretry"][0])
+    vt, it = F16_OVL[1], F16_OVL[0]
+    L["ovl_r"] = vt / it
+    L["ovl_p"] = (vt - L["ilim"][1] * L["ovl_r"]) * L["ilim"][1]
+    L["soft_i2t"] = L["iscp"] ** 2 * L["tsoft"]
+    L["soft_eq"] = L["soft_i2t"] / L["c813"] ** 2
+    L["c_e"] = 10e-6                                  # C31 10 uF 25 V 1210 (gen_sch_e.py; the only capacitor on VSYS_E)
+    L["t_ramp"] = (20.8e3 * K["vsys_sup"] * F16_CDVDT * (1 - F16_CDVDT_TOL), 20.8e3 * H["vsys_top"] * F16_CDVDT * (1 + F16_CDVDT_TOL))
+    L["i_inrush"] = L["c_e"] / (20.8e3 * F16_CDVDT * (1 - F16_CDVDT_TOL))
+    # the 2 A MINI 58 V fuse (0997, held) and the PTC MF-MSMF150/24X (Bourns, held) on their printed rows
+    fz = flat(text_pdf("fuse997"))
+    m = need(fz, r"0997002_ 2 0\.5 (\d+) ([\d.]+) ([\d.]+)", "the 0997 2 A row")
+    L["fuse_r"], L["fuse_i2t"] = f(m, 2) * 1e-3, f(m, 3)
+    m = need(fz, r"110 360 000 / - 135 ([\d.]+) / (\d+) 200 ([\d.]+) / (\d+) 350 ([\d.]+) / ([\d.]+)", "the 0997 time-current rows")
+    L["fuse_tc"] = dict(t135=f(m, 2), t200=f(m, 4), t350=f(m, 6))
+    m = need(fz, r"2A 2\.0 2\.0 2\.0 1\.9 1\.7 (1\.6) (1\.4) 1\.3", "the 0997 2 A derating row")
+    L["fuse_der"] = (f(m, 1), f(m, 2))
+    pt = flat(text_pdf("msmf"))
+    m = need(pt, r"MF-MSMF150/24X (\d+) (\d+) ([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+)", "MF-MSMF150/24X's row")
+    L["ptc"] = dict(vmax=f(m, 1), imax=f(m, 2), ihold=f(m, 3), itrip=f(m, 4), r1max=f(m, 6))
+    m = need(pt, r"MF-MSMF150/24X ([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+) MF", "MF-MSMF150/24X's derating")
+    L["ptc_h"] = {-40: f(m, 1), 70: f(m, 8)}
+    L["ptc_trip_cold"] = L["ptc"]["itrip"] * L["ptc_h"][-40] / L["ptc"]["ihold"]
+    # the feed's drop at the supplement floor: the eFuse, the 813 path at w3de's 2:1 spread, and the ground return's shift
+    i_g = K["ret"][3][2]
+    L["drop"] = K["aux_a"] * (L["ron"][2] + L["r813"] * F16_SPREAD) + i_g * L["r813"]
+    L["vsys_e_min"] = K["vsys_sup"] - L["drop"]
+    L["vsys_e_start"] = H["floor"] - L["drop"]
+    return L
+
+
+def text_pdf(key):
+    return "\n".join(pdf_pages(key, True))
+
+
+def render_fix16(R, p):
+    K, H, Q0, L = R["K"], R["H"], R["H"]["Q"], R["L"]
+    sel, pl, pa = K["sel"], R["L"]["plan"], R["L"]["plan_alt"]
+    air = K["air"]["route"]
+    p("16. THE FIX ROUND FOR THE REVIEW OF THE PROVISIONAL FIXES (L4-F02 and L4-F03; a qualification gap, not a demonstrated failure)")
+    p("   16a. L4-F02 OBJECTION 1: RDS(on) AT BATDRV'S LEAST DRIVE (BATDRV %s / %s / %s V, SLUSE65A p.17; the source on VSYS, so VGS is minus that)"
+      % (fmt(H["drv"][0], 1), fmt(H["drv"][1], 0), fmt(H["drv"][2], 1)))
+    p("     printed by the BUK6Y10-30P (17 April 2020, Table 7, p.6): at most %s mOhm at -10 V and 25 C, %s mOhm at -10 V and 175 C, %s mOhm at -4.5 V"
+      % (fmt(L["r10_25"] * 1e3, 0), fmt(L["r10_hot"] * 1e3, 0), fmt(L["r45_25"] * 1e3, 0)))
+    p("       and 25 C; no maximum at a gate drive under 10 V above 25 C, so no printed point bounds the operating point (-8.5 V, hot) (MAKER)")
+    p("     the %s mOhm of 15c is WITHDRAWN AS A BOUND: it is kept as the ALLOWANCE each FET is sized to (SESSION), and E11-36 confirms it on"
+      % fmt(L["ra"] * 1e3, 3))
+    p("       parts (RDS(on) at -8.5 V and 150 C, at most %s mOhm) or reverses it; at the sheet's largest printed maximum, %s mOhm, every figure below"
+      % (fmt(L["ra"] * 1e3, 3), fmt(F16_RA_ALT * 1e3, 0)))
+    p("       scales by %s (printed beside it); parts at %s mOhm on a board built to the allowance would take 20 A held to %s C and the service to"
+      % (fmt(F16_RA_ALT / L["ra"], 4), fmt(F16_RA_ALT * 1e3, 0), fmt(L["plan_miss"]["tj20"], 1)))
+    p("       %s C, so E11-36 gates E11-29 (SESSION, CONDITIONAL)" % fmt(L["plan_miss"]["tj18"], 1))
+    p("     searched: SQJ403EP (held), AONS21357 (held), SQJ407EP (Vishay 62806 Rev. B, filed held) and PXP9R1-30QL (Nexperia, 5 January 2021, filed")
+    p("       held) print their hot maxima at -10 V only; no part read prints one at |VGS| of 8.5 V or less above 25 C (MAKER)")
+    p("     STATUS: CONDITIONAL on E11-36 (the measurement, or Nexperia's maximum at the point, filed) (SESSION)")
+    p("   16b. L4-F02 OBJECTION 2: THE DEVICE'S OWN TRANSIENT IMPEDANCE AND THE TWO FETS' COUPLING")
+    p("     Fig. 4 (p.5), the duty-cycle 0.01 curve (above any single pulse), read on the rendered page (inputs/%s): its plateau %s K/W, scaled by"
+      % (F16_READ, fmt(L["plateau"], 4)))
+    p("       %s to Table 6's maximum Rth(j-mb) %s K/W: Zth(j-mb) %s K/W at 244 us, %s at 20 ms, %s at 1 s, %s at 60 s (MAKER, read; INFERRED scale)"
+      % (fmt(L["zscale"], 4), fmt(L["rthmb"], 1), fmt(L["z"][2.44e-4], 4), fmt(L["z"][0.02], 4), fmt(L["z"][1.0], 4), fmt(L["z"][60.0], 4)))
+    p("     AOS's Figure 14 shape is no longer used for these FETs. The installed path is stated as what a bench reads: each FET's self impedance")
+    p("       Zself(t) (heat one, read its own junction) and the mutual Zmut(t) (heat one, read the other); then for any split of the pair's current")
+    p("       TJ <= air + Pb x (Zself + Zmut)(t), Pb the even split's per-FET power at the allowance (it bounds each FET's power, 15c); Zself >= Zth(j-mb)")
+    p("       of the device itself; the coupling is in the sum, not assumed away (INFERRED)")
+    p("     the plan at the +%s C mixed air (SESSION): 20 A held under OCD1 reaches %s C at most (10 K under the 150 C limit kept for the pulses), so"
+      % (fmt(air, 0), fmt(F16_TJ_HELD, 0)))
+    p("       the installed (Zself + Zmut) at steady state at most %s K/W (%s at %s mOhm); per-FET power %s W at 10 A, %s W at 18 A, %s W at 20 A (INFERRED)"
+      % (fmt(pl["zsum"], 2), fmt(pa["zsum"], 2), fmt(F16_RA_ALT * 1e3, 0), fmt(pl["pb10"], 4), fmt(pl["pb18"], 4), fmt(pl["pb20"], 4)))
+    p("     THE SERVICE, 18 A FOR 60 S FROM THE HOT STATE (10 A held at the +%s C air, no board capacity credited, so 60 s counts as steady): TJ %s C,"
+      % (fmt(air, 0), fmt(pl["tj18"], 1)))
+    p("       from %s C at 10 A held, %s K under the limit; the 18 A for 60 s is kept and no protection is lowered (INFERRED, CONDITIONAL on E11-29, E11-36)"
+      % (fmt(pl["pre10"], 1), fmt(150.0 - pl["tj18"], 1)))
+    p("     the fault histories from the held 20 A (each a step from the %s C ceiling to the 150 C limit): the allowance on the installed sum at the" % fmt(F16_TJ_HELD, 0))
+    p("       event's width, against the device's own Zth(j-mb) at that width (INFERRED):")
+    for (lab, i_, t_, pb, allow, zd, room), alt in zip(pl["ev"], pa["ev"]):
+        p("       %s: per FET %s W; (Zself + Zmut) at %s s at most %s K/W (%s at %s mOhm), the device alone %s K/W, so %s K/W for the board and the coupling"
+          % (lab, fmt(pb, 3), fmt(t_, 6), fmt(allow, 3), fmt(alt[4], 3), fmt(F16_RA_ALT * 1e3, 0), fmt(zd, 4), fmt(room, 3)))
+    p("     the LDO-mode precharge, one FET linear with %s A: under the plan's steady sum it stays at 150 C down to SRN %s V, so R-b' (no charge under"
+      % (fmt(K["i_pre"], 5), fmt(L["ldo_floor16"], 3)))
+    p("       %s V) keeps its margin (INFERRED)" % fmt(K["rb_floor"], 1))
+    p("     STATUS: the analysis basis is the device's own and the coupling explicit; the qualification is CONDITIONAL on E11-29's measured Zself and")
+    p("       Zmut at the five widths (SESSION)")
+    p("   16c. L4-F02 OBJECTION 3: Ciss AGAINST TI'S 5 nF (SLUSE65A p.%d), FROM PRINTED DATA" % L["ciss_p"])
+    p("     the BUK6Y10-30P prints Ciss as a typical only: %s nF at -15 V (Table 7), no maximum, no spread; Fig. 12 (typical) reads about %s nF at -0.1 V,"
+      % (fmt(L["ciss_t"] * 1e9, 2), fmt(L["ciss_0"] * 1e9, 2)))
+    p("       the battery FET's working point (on, or an ideal diode at 30 mV): the pair %s nF at -15 V and about %s nF near 0 V (MAKER, read)"
+      % (fmt(2 * L["ciss_t"] * 1e9, 2), fmt(2 * L["ciss_0"] * 1e9, 2)))
+    p("     TI states the drive, not the requirement behind 5 nF: RBATDRV_ON at most %s kOhm, RBATDRV_OFF at most %s kOhm; into the pair's typical"
+      % (fmt(H["rdrv"][1] / 1e3, 0), fmt(L["roff"][1] / 1e3, 1)))
+    p("       Ciss the turn-on time constant is %s us at -15 V and %s us near 0 V, the turn-off %s us; no printed limit to compare them with (MAKER, INFERRED)"
+      % (fmt(L["tau_on"][0] * 1e6, 2), fmt(L["tau_on"][1] * 1e6, 2), fmt(L["tau_off"] * 1e6, 2)))
+    p("     so the pair's 4.72 nF meets TI's figure only at the maker's test point and as a typical; near 0 V the typical curve is over it: NOT SHOWN")
+    p("       on printed data (MAKER, INFERRED)")
+    p("     the three approaches (at most three): (S1) the pair, kept: Ciss open (E11-37); (S2) one BUK6Y10-30P, Ciss about %s nF near 0 V (%s %% of 5 nF,"
+      % (fmt(L["ciss_0"] * 1e9, 2), fmt(100 * L["ciss_0"] / H["bf_ciss"], 0)))
+    p("       typical), but its installed junction-to-air at most %s K/W for 20 A held at the allowance, a path through the case rather than a board"
+      % fmt(L["one_rja"], 2))
+    p("       pour, with the docking pulse unchanged; (S3) a part whose sheet prints both: none found among the parts read (16a) (INFERRED)")
+    p("     STATUS: OPEN; the pair stays selected (SESSION, it is the only arrangement whose heat a board can carry); E11-37: TI's statement of what")
+    p("       5 nF bounds (Q-TI-17, drafted, not sent) or the bench's BATDRV behaviour with the pair, and an engineer's decision on (S1) or (S2) (SESSION)")
+    p("   16d. L4-F02 OBJECTION 4: THE DOCKING PULSE (15c's reading of ISM's 320 A for 10 us as an I2t of 1.024 A2s is WITHDRAWN)")
+    p("     the waveform: %s A peak, time constant %s us (the dependency round's pack loop, the discharge FET at once); it is over the continuous IS"
+      % (fmt(Q0["i_dock"], 1), fmt(Q0["tau"] * 1e6, 1)))
+    p("       %s A (Tmb 25 C) for %s us and still %s A when ISM's 10 us ends (MAKER, INFERRED)" % (fmt(L["is_dc"], 0), fmt(L["t_over_is"] * 1e6, 1), fmt(L["i_at_tp"], 1)))
+    p("     no sharing is credited: the whole pulse in one FET (the sheet prints VSD's maximum, no minimum, so the split is not bounded) (SESSION)")
+    p("     its junction from the +%s C air: P = VF x i with VF at most max(%s V, %s V x i / %s A), the printed 25 C maximum carried up by VF's"
+      % (fmt(air, 0), fmt(L["vsd_max"], 1), fmt(L["vsd_max"], 1), fmt(L["vsd_is"], 0)))
+    p("       concavity (%s V at the peak); superposed on Fig. 4 (scaled), the board not credited: a rise of %s K, TJ %s C, %s mJ, %s W at the peak (INFERRED)"
+      % (fmt(L["vf_pk_bound"], 3), fmt(L["dock_k1"][0], 2), fmt(air + L["dock_k1"][0], 1), fmt(L["dock_k1"][1] * 1e3, 2), fmt(L["dock_k1"][2], 0)))
+    p("     what the sheet does not print: VF above %s A or at a hot junction (TJ stays under 150 C while VF is at most %s times that bound), and ISM"
+      % (fmt(L["vsd_is"], 0), fmt(L["k_max"], 3)))
+    p("       at a mounting base over 25 C (the pulse's %s A peak is %s %% of 320 A at 25 C) (MAKER, INFERRED)" % (fmt(Q0["i_dock"], 1), fmt(100 * Q0["i_dock"] / sel["rdef"]["ism"], 1)))
+    p("     STATUS: CONDITIONAL on E11-30 (VF at the docking current from +70 C and ISM's amplitude at a hot mounting base, from Nexperia or the")
+    p("       bench); the constraint that would remove both, a slower discharge-FET turn-on on board P, interacts with the pack's ASCD turn-off and")
+    p("       belongs to board P's owner (E11-30) (SESSION)")
+    p("   16e. L4-F03: THE DOCK'S VSYS CONTACT, ITS BRANCH PROTECTION")
+    p("     the branch: VSYS (VBAT) on board A to J_DOCK pin 1, one Preci-Dip 813 (%s A operating maximum; 85 C with its music-wire spring), 24 AWG"
+      % fmt(L["c813"], 1))
+    p("       and board E's copper to VSYS_E; 1.0 A declared; the review's counterexample %s A from %s V (%s Ohm) is over the contact and under every"
+      % (fmt(F16_OVL[0], 0), fmt(F16_OVL[1], 1), fmt(L["ovl_r"], 2)))
+    p("       upstream threshold, in source-only and battery operation alike (RECORD, INFERRED)")
+    p("     (F) a fuse, Littelfuse 0997 MINI 2 A 58 V (held, rev. 11/18/2025): %s mOhm cold, I2t %s A2s; 110 %% never opens (360000 s minimum), 135 %%"
+      % (fmt(L["fuse_r"] * 1e3, 2), fmt(L["fuse_i2t"], 1)))
+    p("       within %s s, 200 %% within %s s, 350 %% within %s s; load allowed %s A at 60 C and %s A at 80 C: from 3.5 A (175 %%) to 4 A it may carry for up to"
+      % (fmt(L["fuse_tc"]["t135"], 0), fmt(L["fuse_tc"]["t200"], 0), fmt(L["fuse_tc"]["t350"], 1), fmt(L["fuse_der"][0], 1), fmt(L["fuse_der"][1], 1)))
+    p("       %s s (the 135 %% row's maximum) over the contact's 3.5 A, and under 2.7 A it need never open: it does not protect the contact (MAKER, INFERRED)"
+      % fmt(L["fuse_tc"]["t135"], 0))
+    p("     (P) a PTC, Bourns MF-MSMF150/24X (held): Vmax %s V, Imax %s A, hold %s A and trip %s A at 23 C; hold %s A at 70 C, under the 1.0 A load;"
+      % (fmt(L["ptc"]["vmax"], 0), fmt(L["ptc"]["imax"], 0), fmt(L["ptc"]["ihold"], 2), fmt(L["ptc"]["itrip"], 2), fmt(L["ptc_h"][70], 2)))
+    p("       hold %s A at -40 C, so trip about %s A there, over 3.5 A; and its %s A interrupt is under the pack's prospective current (MAKER, INFERRED)"
+      % (fmt(L["ptc_h"][-40], 2), fmt(L["ptc_trip_cold"], 2), fmt(L["ptc"]["imax"], 0)))
+    p("     (E) an eFuse, TI TPS16630 (SLVSET9G, held; 60 V, 31 mOhm, UL 2367 recognized): I(OL) = 18 / R(ILIM) (Equation 6, p.20); with R(ILIM)")
+    p("       %s kOhm %s %%, %s A typical and, at the wider of the printed rows' spreads (9 and 30 kOhm, +-%s %% over TJ -40 to 125 C), %s to %s A"
+      % (fmt(F16_RILIM_K, 1), fmt(F16_RILIM_TOL * 100, 1), fmt(L["ilim_typ"], 4), fmt(L["ilim_rel"] * 100, 1), fmt(L["ilim"][0], 4), fmt(L["ilim"][1], 4)))
+    p("       (MAKER, INFERRED between rows); RON at most %s mOhm over TJ; current limiting for at most %s ms, then auto-retry after %s to %s ms (MODE"
+      % (fmt(L["ron"][2] * 1e3, 0), fmt(L["tcl"][1] * 1e3, 0), fmt(L["tretry"][0] * 1e3, 0), fmt(L["tretry"][1] * 1e3, 0)))
+    p("       to GND, Table 8-1); thermal regulation %s to %s C; a soft short off within %s us, a hot short (over %s A typical) in %s us typical (MAKER)"
+      % (fmt(L["tjreg"][0], 0), fmt(L["tjreg"][1], 0), fmt(L["tsoft"] * 1e6, 1), fmt(L["iscp"], 0), fmt(L["thot"] * 1e6, 0)))
+    p("     SELECTED (SESSION): (E) on board A between VBAT and J_DOCK pin 1 (a new net VSYS_DOCK; drafted in apply_gen_sch_a_charger.py); the contact,")
+    p("       the 24 AWG and the copper downstream see at most %s A (%s %% of 3.5 A); by w3de's assumed I2 rise, %s C at the 51 C air and %s C at the"
+      % (fmt(L["ilim"][1], 3), fmt(100 * L["ilim"][1] / L["c813"], 1), fmt(L["t_lim"]["envelope 51 C"], 1), fmt(L["t_lim"]["margin 65 C"], 1)))
+    p("       65 C margin, under the spring's 85 C; the load's 1.0 A is %s %% of the least limit (INFERRED, ASSUMPTION w3de)" % fmt(100 * 1.0 / L["ilim"][0], 1))
+    p("     the cases, source-only and battery alike (the eFuse limits whatever feeds VSYS): overload (the 2.88 Ohm counterexample) held at %s A at most,"
+      % fmt(L["ilim"][1], 3))
+    p("       %s W in the eFuse until its timer, then off for at least %s ms: a duty of at most %s; a soft short: at most %s A for %s us, %s A2s, what"
+      % (fmt(L["ovl_p"], 1), fmt(L["tretry"][0] * 1e3, 0), fmt(L["duty"], 3), fmt(L["iscp"], 0), fmt(L["tsoft"] * 1e6, 1), fmt(L["soft_i2t"], 4)))
+    p("       3.5 A gives in %s ms; a hot short: the peak is set by the loop's inductance in about 1 us (typical), CONDITIONAL on E11-38's bench short;"
+      % fmt(L["soft_eq"] * 1e3, 3))
+    p("       inrush with C(dVdT) %s nF +-%s %%: %s to %s ms ramps (Equation 2), %s mA into C31's %s uF; recovery: auto-retry, board A reads"
+      % (fmt(F16_CDVDT * 1e9, 0), fmt(F16_CDVDT_TOL * 100, 0), fmt(L["t_ramp"][0] * 1e3, 2), fmt(L["t_ramp"][1] * 1e3, 2), fmt(L["i_inrush"] * 1e3, 1), fmt(L["c_e"] * 1e6, 0)))
+    p("       HOT-R1 lost meanwhile; the eFuse draws %s mA from VSYS, not from the held pack (MAKER, INFERRED)" % fmt(L["iq"] * 1e3, 1))
+    p("     the drop at the supplement floor %s V with 1.0 A: the eFuse %s mOhm, the 813 path %s mOhm at w3de's 2:1 spread, and the return's shift"
+      % (fmt(K["vsys_sup"], 3), fmt(L["ron"][2] * 1e3, 0), fmt(L["r813"] * F16_SPREAD * 1e3, 1)))
+    p("       (%s A on an 813 ground contact with one open): %s V, so VSYS_E at least %s V (%s V at VSYS_MIN's start); the AP63205 takes %s V and up;"
+      % (fmt(K["ret"][3][2], 3), fmt(L["drop"], 4), fmt(L["vsys_e_min"], 3), fmt(L["vsys_e_start"], 3), fmt(K["ap_vin"][0], 1)))
+    p("       the fans' least operating voltage is owed with their maximum (E11-35) (INFERRED, ASSUMPTION w3de)")
+    p("     the held-pack drain (15a corrected): %s mA is the QUANTIFIED SUBSET (the monitor and D3 at 25 C); D3's hot leakage and the body diodes'"
+      % fmt(K["held_bounded_a"] * 1e3, 4))
+    p("       current are not bounded on held evidence; the bench acceptance stays at most %s mA (E11-31) (SESSION, CONDITIONAL)" % fmt(FIX_HELD_ACC * 1e3, 1))
+    p("     check_contracts.py, the interface draft's second target, is in this tree (v2/ecad/tools/check_contracts.py) and the alias edit applies")
+    p("       to it; the alias is now VSYS_DOCK and VSYS_E (RECORD)")
+    p("     STATUS: CLOSED in design for the overload, soft short, inrush and recovery; the hot short's peak CONDITIONAL on E11-38 (SESSION)")
+    p("")
 
 # ============================================================================================ the output
 def render(R):
@@ -3035,6 +3368,7 @@ def render(R):
     render_dependency(R, p)
     render_consolidation(R, p)
     render_fix(R, p)
+    render_fix16(R, p)
     p("END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c), apply_gen_sch_a_guard.py (R14, 3f),")
     p("apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays), apply_gen_sch_a_charger.py (the BQ25730, its two")
     p("battery FETs and the dock's VSYS contact, 14 and 15), apply_gen_sch_e_aux.py and apply_pcb_interfaces_dock.py (board E's VSYS feed, 15a); the")
@@ -3074,15 +3408,18 @@ def downstream(R):
     ("E11-24", "IMPLEMENTATION", "Layer 8 board A generator owner", "the dependency round's fallback on VBAT (a register row, never applied by this record): one EEHZK1V181P direct (C242139) and a hold-up bank of %d EEHZK1E471P (C242138) charged through R_CH %s Ohm RC2512FK-07330RL (C137025) and discharging through D_H B540C-13-F (C72264); the regenerated netlist carries them; the bank's hold recomputed from the fitted parts reads at least %s ms for the worst admitted step (%s W); withdrawn once E11-27 is applied (section 14: B1 carries the direct can, and the bank is not drawn)" % (BANK_N, fmt(R_CH, 0), fmt(R["G"]["worst_hold"] * 1e3, 3), fmt(R["G"]["worst"][1], 2))),
     ("E11-25", "EVIDENCE", "Layer 6 components", "the clarification questions of clarification/TI-QUESTIONS.md (Q-TI-11 to Q-TI-14 and the addendum to Q-TI-3) sent by the owner and answered, each answer filed against its dependency row D1 to D10 and judged: a limit closes a row production-wide, a typical figure does not"),
     ("E11-26", "TEST", "prototype bench", "the bench methods of rows D1 to D10 run on one unit each, every reading filed as a sample with its uncertainty and conditions, never as a limit; D2's recovery at most %s ms against the bank's %s ms assumption gives the engineering margin the record names" % (fmt(T_RESP * 1e3 / 5, 1), fmt(T_RESP * 1e3, 1))),
-    ("E11-27", "IMPLEMENTATION", "Layer 8 board A generator owner", "apply_gen_sch_a_charger.py applied (sections 14 and 15): U3 BQ25730RSNR (%s) with pin 21 on CH_BATDRV; Q39 and Q40, two Nexperia BUK6Y10-30PX (%s) in parallel, sources on VBAT, drains on CH_BATQ, gates on CH_BATDRV; R17 and R149 on CH_BATQ; C236 EEHZK1V181P (C242139) on VBAT; J_DOCK pin 1 on VBAT for board E's VSYS_E; CH_BATQ declared a segment of the pack path; the LFPAK56 lands checked against Nexperia's SOT669 drawing, seated by R17 with matched paths; the regenerated netlist reads each" % (R["H"]["cat"]["BQ25730RSNR"][0], R["K"]["cat"]["BUK6Y10-30PX"][0])),
+    ("E11-27", "IMPLEMENTATION", "Layer 8 board A generator owner", "apply_gen_sch_a_charger.py applied (sections 14 and 15): U3 BQ25730RSNR (%s) with pin 21 on CH_BATDRV; Q39 and Q40, two Nexperia BUK6Y10-30PX (%s) in parallel, sources on VBAT, drains on CH_BATQ, gates on CH_BATDRV; R17 and R149 on CH_BATQ; C236 EEHZK1V181P (C242139) on VBAT; U42 TPS16630PWPR from VBAT to VSYS_DOCK with R221 %sk 0.1 %%, C237 %s nF and MODE to GND, J_DOCK pin 1 on VSYS_DOCK for board E's VSYS_E (section 16e), the HTSSOP-20 land checked against TI's PWP0020 drawing; CH_BATQ declared a segment of the pack path; the LFPAK56 lands checked against Nexperia's SOT669 drawing, seated by R17 with matched paths; the regenerated netlist reads each" % (R["H"]["cat"]["BQ25730RSNR"][0], R["K"]["cat"]["BUK6Y10-30PX"][0], fmt(F16_RILIM_K, 1), fmt(F16_CDVDT * 1e9, 0))),
     ("E11-28", "FIRMWARE", "firmware owner", "the BQ25730's register rules (section 14): EN_OOA 0 at boot; ChargeCurrent written for any charge (0 A at POR and after the watchdog's %s s), the watchdog serviced or WDTMR_ADJ 00; VSYS_MIN, EN_LDO, EN_PORT_CTRL, BATFET_ENZ and BATFETOFF_HIZ never written from their power-on values; the device ID %sh checked; R-a's bit following the hold flag in every state (S4's exception withdrawn); R-b' under VSYS_MIN: 0x0080 only, and no charge under %s V on SRN (section 15c)" % (fmt(R["H"]["wd_s"], 0), R["H"]["devid"], fmt(R["K"]["rb_floor"], 1))),
-    ("E11-29", "LAYOUT", "Layer 9 pre-layout analysis", "the installed thermal path of each of Q39 and Q40: junction to air at most %s C/W at the +%s C mixed air (set by %s, RDS(on) bounded at BATDRV's %s V and %s C, section 15c), from the layout's copper with Nexperia's Rth(j-mb); the service's 18 A for 60 s and 10 A continuous kept, no protection lowered; read on the bench as each FET's case rise at 10 A" % (fmt(R["K"]["sel"]["bar"]["route"], 2), fmt(R["K"]["air"]["route"], 0), R["K"]["sel"]["bind"]["route"], fmt(R["H"]["drv"][0], 1), fmt(R["K"]["sel"]["tjlim"], 0))),
-    ("E11-30", "EVIDENCE", "Layer 6 components", "the docking inrush through the pair's body diodes (%s A peak, time constant %s us): at 25 C it sits under one FET's printed ISM rectangle; from the +%s C air the share one FET takes at most %s (ISM derated linearly, A11-22): the split measured on the pair at the docking waveform, or Nexperia's hot ISM filed, or the two diode paths matched by layout and read" % (fmt(R["H"]["Q"]["i_dock"], 1), fmt(R["H"]["Q"]["tau"] * 1e6, 1), fmt(R["K"]["air"]["route"], 0), fmt(R["K"]["dock"]["s_max"], 3))),
+    ("E11-29", "LAYOUT", "Layer 9 pre-layout analysis", "the installed pair Q39 and Q40 (section 16b): each FET's self impedance and the mutual one, junction to air by the body diode's VSD method on the built board, at the +%s C mixed air or referred to it: (Zself + Zmut) at most %s K/W steady and at 60 s, %s at 1 s, %s at 20 ms and %s K/W at 244 us (at the allowance of E11-36); the 18 A for 60 s and 10 A continuous kept, no protection lowered; the case-rise reading at 10 A alone does not close it" % (fmt(R["K"]["air"]["route"], 0), fmt(R["L"]["plan"]["zsum"], 2), fmt(R["L"]["plan"]["ev"][0][4], 3), fmt(R["L"]["plan"]["ev"][1][4], 3), fmt(R["L"]["plan"]["ev"][2][4], 3))),
+    ("E11-30", "EVIDENCE", "Layer 6 components", "the docking pulse through one FET's body diode with no sharing credited (section 16d, %s A peak, time constant %s us, from +%s C): VF at the pulse's currents at a +%s C mounting base at most %s times max(1.2 V, 1.2 V x i / 80 A) (pulsed VSD on parts from the lot, or Nexperia's curve), and ISM's 320 A amplitude at a mounting base of +%s C from Nexperia or a pulse test on parts; or board P's owner constrains the pulse with a slower discharge-FET turn-on whose turn-off under ASCD is shown unchanged" % (fmt(R["H"]["Q"]["i_dock"], 1), fmt(R["H"]["Q"]["tau"] * 1e6, 1), fmt(R["K"]["air"]["route"], 0), fmt(R["K"]["air"]["route"], 0), fmt(R["L"]["k_max"], 3), fmt(R["K"]["air"]["route"], 0))),
     ("E11-31", "TEST", "prototype bench", "the three modes on the BQ25730 build (EN_OOA 0), piecewise (section 15d): pack absent, VSYS at least %s V; CHRG_INHIBIT 1 with SRN over %s V, VSRN plus 150 mV within 2 percent, under %s V at least %s V, between at least %s V; the held pack current at most %s mA with board E on VSYS_E; the start from cold at VBUS20 %s and %s V, VSYS's maximum capacitance and the always-on loads, at -20, 25 and %s C, with Fault VSYS_UVP clear, the hiccup and latch on a shorted VSYS and the re-plug; VSYS before EN_OOA's write recorded; VSYS's step response in S2 and S4 for each declared step against the converters' floor (D2, %s V of margin), the outlets held by R-c where a step uses more" % (fmt(R["H"]["floor"], 3), fmt(R["K"]["hi_v"], 3), fmt(R["K"]["lo_v"], 3), fmt(R["H"]["floor"], 3), fmt(R["K"]["inh_floor"], 3), fmt(FIX_HELD_ACC * 1e3, 1), fmt(R["E"]["vb_low"], 2), fmt(R["E"]["vb_top"], 2), fmt(R["F"]["air_hot"], 1), fmt(R["H"]["margin_floor"], 3))),
     ("E11-32", "EVIDENCE", "Layer 6 components", "the BQ25730RSNR's supply for the build quantity from an authorised source, filed (LCSC stock %d on 2 October 2026), and the two battery FETs' (BUK6Y10-30PX, LCSC stock %d)" % (R["H"]["cat"]["BQ25730RSNR"][1], R["K"]["cat"]["BUK6Y10-30PX"][1])),
-    ("E11-33", "IMPLEMENTATION", "Layer 8 board E generator owner", "apply_gen_sch_e_aux.py applied with E11-27 (section 15a): J_BLK pin 1 on VSYS_E; U12's VIN and EN, C31, J_FAN1 and J_FAN2 pin 1 and D7 and D8 on VSYS_E; VSYS_E declared (source J_BLK, %s A: U12 %s, the fans %s each, always on); CELL_F's loads the pack path alone; E6_SW, E6_BST and the fans' switched returns re-declared to VSYS's %s V; the regenerated netlist and check_contracts read the dock's pin 1 as VBAT and VSYS_E" % (fmt(R["K"]["aux_a"], 2), fmt(R["K"]["aux"]["U12"], 2), fmt(R["K"]["aux"]["J_FAN1"], 2), fmt(R["H"]["vsys_top"], 3))),
-    ("E11-34", "INTERFACE", "Layer 4 coordinator", "apply_pcb_interfaces_dock.py applied (IF-AE-DOCK: pin 1 VBAT and VSYS_E, the alias, BAT-F06's charge_share replaced by the VSYS feed, the ground return with seven 813 contacts) and section 15e's texts for L4-E9's record: the IF rows of VBAT and the dock, the source-change rows, the two sentences that say no battery FET and the diagram's system-node label (%s to %s V)" % (fmt(R["K"]["vsys_sup"], 3), fmt(R["H"]["vsys_top"], 3))),
-    ("E11-35", "EVIDENCE", "Layer 6 components", "the mixer fans' maximum supply voltage from their maker at least %s V (VSYS_E's top; CELL_F reached %s V), or a fan of that rating named" % (fmt(R["H"]["vsys_top"], 3), fmt(R["cv_max"], 3))),
+    ("E11-33", "IMPLEMENTATION", "Layer 8 board E generator owner", "apply_gen_sch_e_aux.py applied with E11-27 (section 15a): J_BLK pin 1 on VSYS_E; U12's VIN and EN, C31, J_FAN1 and J_FAN2 pin 1 and D7 and D8 on VSYS_E; VSYS_E declared (source J_BLK, %s A: U12 %s, the fans %s each, always on); CELL_F's loads the pack path alone; E6_SW, E6_BST and the fans' switched returns re-declared to VSYS's %s V; the regenerated netlist and check_contracts read the dock's pin 1 as VSYS_DOCK and VSYS_E" % (fmt(R["K"]["aux_a"], 2), fmt(R["K"]["aux"]["U12"], 2), fmt(R["K"]["aux"]["J_FAN1"], 2), fmt(R["H"]["vsys_top"], 3))),
+    ("E11-34", "INTERFACE", "Layer 4 coordinator", "apply_pcb_interfaces_dock.py applied (IF-AE-DOCK: pin 1 VSYS_DOCK and VSYS_E behind U42's eFuse, the alias, BAT-F06's charge_share replaced by the VSYS feed, the ground return with seven 813 contacts) and section 15e's texts for L4-E9's record: the IF rows of VBAT and the dock, the source-change rows, the two sentences that say no battery FET and the diagram's system-node label (%s to %s V)" % (fmt(R["K"]["vsys_sup"], 3), fmt(R["H"]["vsys_top"], 3))),
+    ("E11-35", "EVIDENCE", "Layer 6 components", "the mixer fans' supply range from their maker: at least %s V at the top (VSYS_E's top; CELL_F reached %s V) and running at %s V or less at the bottom (VSYS_E's least with 1.0 A, section 16e), or a fan of that range named" % (fmt(R["H"]["vsys_top"], 3), fmt(R["cv_max"], 3), fmt(R["L"]["vsys_e_min"], 3))),
+    ("E11-36", "EVIDENCE", "Layer 6 components", "the battery FETs' RDS(on) at VGS -8.5 V and a 150 C junction at most %s mOhm (the allowance of section 16a): Nexperia's maximum at that point filed, or a pulsed Kelvin reading on parts from the build lot in an oven at 150 C; a reading over it reverses the allowance and E11-29 is re-sized before layout" % fmt(F16_RA * 1e3, 3)),
+    ("E11-37", "EVIDENCE", "Layer 6 components", "TI's statement of what the BATFET's 5 nF bounds (Ciss at which VDS, or a gate charge; Q-TI-17, drafted in clarification/TI-QUESTIONS.md, not sent), or the bench's BATDRV behaviour with the pair at -20, 25 and 70 C: supplement entry, the ideal diode's 30 mV regulation without oscillation and LDO mode at VSYS_MIN within its printed band; on a negative answer the engineer chooses between the pair and one FET with a heat path through the case (section 16c)"),
+    ("E11-38", "TEST", "prototype bench", "the dock's VSYS branch (section 16e): U42's limit read on a slow ramp between %s and %s A at -20, 25 and 70 C; the 2.88 Ohm overload and a hard short at board E's VSYS_E, the peak through J_DOCK pin 1 recorded and the auto-retry seen; the contact's resistance unchanged after the shorts; VSYS_E at least %s V at 1.0 A with VSYS at %s V" % (fmt(R["L"]["ilim"][0], 3), fmt(R["L"]["ilim"][1], 3), fmt(R["L"]["vsys_e_min"], 3), fmt(R["K"]["vsys_sup"], 3))),
 ]
 
 

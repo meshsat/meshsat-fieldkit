@@ -64,3 +64,15 @@ bullet (D8) stays, now for the BQ25730's identical row. What (B1) asks instead, 
 Q-AOS-1 is withdrawn: the fix round selects two Nexperia BUK6Y10-30P, whose sheet prints a body-diode pulse rating (ISM 320 A
 each, tp at most 10 us). What remains for the docking pulse is the split between the two body diodes and the rating hot (E11-30), a
 bench or layout item; a question to Nexperia on ISM above 25 C is optional and is not drafted. Q-TI-15 and Q-TI-16 stand.
+
+## After the review of the provisional fixes (2 October 2026, record section 16)
+
+The external review asked for margin on TI's BATFET rule (SLUSE65A p.92) from printed data. The BUK6Y10-30P prints Ciss as a
+typical only (2.36 nF at -15 V; its Fig. 12 reads about 2.87 nF near 0 V), so the pair is 4.72 nF at the maker's test point and about
+5.74 nF near 0 V. Drafted, not sent:
+
+- **Q-TI-17 (E11-37, BQ25730).** SLUSE65A p.92: "the Ciss of P-channel MOSFET should be chosen less than 5 nF". At which
+  drain-source voltage is that Ciss meant (the maker's test point or near 0 V, where the battery FET works), and what does the 5 nF
+  protect: the ideal diode's regulation at VBATDRV_DIODE 30 mV, LDO mode at VSYS_MIN, or the supplement entry time? Is a total gate
+  charge limit at VGS -10 V the better statement, and if so, what is it? Two BUK6Y10-30P in parallel (QG(tot) at most 64 nC each at
+  -10 V) are the case in hand.

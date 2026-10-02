@@ -11,7 +11,9 @@ IMPORTANT NOTICE as stream s117 held its FET sheets. The dependency round (2 Oct
 B560C sheet (DS13012 Rev. 18-2, the hold-up bank's diode). The consolidation round (2 October 2026) adds TI's BQ25730 (SLUSE65A,
 February 2021, revised January 2024, 111 pages) and AOS's AONS21357 (Rev 2.1, November 2023, the first battery FET). The fix round (2 October 2026)
 adds Vishay's SQJ403EP (document 67109, S15-2089 Rev. A, 31 August 2015) and Nexperia's BUK6Y10-30P (product data sheet of 17
-April 2020, the selected battery FETs Q39 and Q40). All eleven carry their makers' copyright and no grant to redistribute, so they
+April 2020, the selected battery FETs Q39 and Q40). The fix round for the review of the provisional fixes (2 October 2026) adds two
+sheets read in the search for a P-channel part printing RDS(on) at a low gate drive hot (section 16a): Vishay's SQJ407EP (document
+62806, S22-0224 Rev. B, 7 March 2022) and Nexperia's PXP9R1-30QL (product data sheet of 5 January 2021). All thirteen carry their makers' copyright and no grant to redistribute, so they
 are held back from the public tree under the owner's rule of 27 September 2026: this script downloads each into an ignored
 held/ folder, checks the sha256 l4e11_power.py pins, and refuses to keep a file that differs (Murata generates its sheets on
 request, and TI serves the current revision, so a later fetch may differ: the refusal says so). It is never run by a test.
@@ -51,6 +53,10 @@ DOCS = [
      "6005efe139fc94e3e855c2beeef8fcaaa5dc71d3c4a6e82f8e8ce82c5506961c"),
     ("v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf", "https://assets.nexperia.com/documents/data-sheet/BUK6Y10-30P.pdf",
      "ba928dfe6a85134423562bd378bdfafafb26d857ba08b50560ce5aacb956da40"),
+    ("v2/vendor/power/held/vishay-sqj407ep-62806-revb.pdf", "https://www.vishay.com/docs/62806/sqj407ep.pdf",
+     "1c1038b032b5bf378878473ba170cdbbd640ce1597fbb9c23be20adeaea663e8"),
+    ("v2/vendor/nexperia/held/nexperia-pxp9r1-30ql.pdf", "https://assets.nexperia.com/documents/data-sheet/PXP9R1-30QL.pdf",
+     "88a7b67bfcec9ba7dbf4619be60cfaa883f61b7c9a93a19affc3a5278d91513f"),
 ]
 
 

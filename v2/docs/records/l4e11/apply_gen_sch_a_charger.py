@@ -20,11 +20,15 @@ What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else:
           Figure 9-1 draws the battery FET between VSYS and RSR.
   C236    added: Panasonic EEHZK1V181P (C242139) on VBAT, VSYS's effective capacitance by design (SLUSE65A 9.1: 50 uF), with its
           land key CPOL8 (KiCad's CP_Elec_8x10).
-  J_DOCK  pin 1 from GND to VBAT: board E's auxiliary domain (U12, both mixer fans) fed from VSYS (board E's VSYS_E); VBAT's
-          declared loads gain J_DOCK's 1.0 A.
+  J_DOCK  pin 1 from GND to VSYS_DOCK: board E's auxiliary domain (U12, both mixer fans) fed from VSYS (board E's VSYS_E)
+          through U42's eFuse (the review of the provisional fixes, L4-F03; section 16e).
+  U42     added: TI TPS16630PWPR eFuse (SLVSET9G, held back), IN, P_IN and UVLO on VBAT, OUT on VSYS_DOCK, OVP and MODE to GND
+          (OVP off; auto-retry), R221 11.0k 0.1 % on ILIM (I(OL) = 18 / R(ILIM): 1.47 to 1.80 A), C237 22 nF on dVdT, SHDN, IMON,
+          FLT and PGOOD open as TI allows; the land key HTSSOP20 (KiCad's HTSSOP-20-1EP, checked against TI's PWP0020 drawing
+          by the parts stream); VBAT's declared loads gain U42's 1.0 A; VSYS_DOCK declared (source U42, J_DOCK's 1.0 A).
   intent  CH_BATQ declared a segment of the pack path (source R17, loads Q39 and Q40, 10 A typical, 18 A peak); VBAT's source
           becomes Q39 (the pair), fed from CH_BATQ; the charger's sheet group names Q39, Q40 and C236.
-The designators Q39, Q40 and C236 are free in gen_sch_a.py as pinned by l4e11_power.py; if another draft takes them first, renumber.
+The designators Q39, Q40, C236, C237, R221 and U42 are free in gen_sch_a.py as pinned by l4e11_power.py; if another draft takes them first, renumber.
 
 ORDER: independent of apply_gen_sch_a_guard.py (either order); apply with apply_gen_sch_e_aux.py (the dock's pin 1 on both
 boards at once) and apply_pcb_interfaces_dock.py. It withdraws E11-24's register row (the bank is not drawn). Firmware rules come
@@ -49,13 +53,24 @@ _PAIR = ("# L4-E11 (MESHSAT-1357, the U-04 question for the consolidation and it
          "# mOhm at -10 V and 25 C, 16 at 175 C, 25 at -4.5 V; Ciss 2.36 nF typical each, 4.72 for the two; ISM 320 A each. At BATDRV's\n"
          "# 8.5 V and 150 C each is bounded at 21.1 mOhm (l4e11_power.py fet_bound); each FET's installed junction-to-air is E11-29's\n"
          "# bar (34.4 C/W at +70 C air); the docking pulse's split between their body diodes is E11-30.\n"
+         "# L4-E11 (the review of the provisional fixes, L4-F03, 2 October 2026): THE DOCK'S VSYS BRANCH. J_DOCK pin 1 carries VSYS to\n"
+         "# board E's auxiliary domain over one Preci-Dip 813 (3.5 A operating maximum); U42 limits the branch to 1.47 to 1.80 A over TJ\n"
+         "# -40 to 125 C (SLVSET9G pp.8 and 20, R221 11.0k), limits for at most 202 ms and retries after 500 to 800 ms (Table 8-1, MODE\n"
+         "# to GND), and ramps VSYS_DOCK over 4 to 8.8 ms (C237, Equation 2).\n"
+         "ic(\"U42\", 21, \"TPS16630PWPR 60 V 6 A eFuse: the dock's VSYS branch to board E (I(OL) 18 / 11.0k)\", \"HTSSOP20\", {\"1\": \"VBAT\", \"2\": \"VBAT\", \"3\": \"VBAT\", \"4\": \"NC\", \"5\": \"NC\", \"6\": \"VBAT\", \"7\": \"VBAT\", \"8\": \"GND\", \"9\": \"GND\", \"10\": \"EF_DVDT\", \"11\": \"EF_ILIM\", \"12\": \"GND\", \"13\": \"NC\", \"14\": \"NC\", \"15\": \"NC\", \"16\": \"NC\", \"17\": \"NC\", \"18\": \"VSYS_DOCK\", \"19\": \"VSYS_DOCK\", \"20\": \"VSYS_DOCK\", \"21\": \"GND\"})\n"
+         "r(\"R221\", \"11k 0.1%\", \"EF_ILIM\", \"GND\")    # U42's overload limit, 18 / 11.0 = 1.64 A typical\n"
+         "c(\"C237\", \"22n 50V C0G\", \"EF_DVDT\", \"GND\")   # U42's output slew, TI's characterised 22 nF\n"
          "for _qb in (\"Q39\", \"Q40\"): nfet(_qb, \"BUK6Y10-30PX 30 V P-FET (the BQ25730's battery FET, one of two in parallel: S on VSYS, D toward RSR)\", \"CH_BATDRV\", \"CH_BATQ\", \"VBAT\", fp=\"LFPAK56\", lcsc=\"C3278350\")")
 _BATQ = ('\n# L4-E11 (the U-04 question for the consolidation): CH_BATQ, the copper between the BQ25730\'s battery FETs Q39 and Q40 and the\n'
          '# RSR shunt R17. The pack current crosses it in both directions, charge and discharge, so it is declared a segment of the pack\n'
          '# path as CELL_FUSED is, with the same 10 A typical and 18 A peak.\n'
          '_intent.rail("CH_BATQ", 14.4, 10.0, 18.0, "R17", v_work=16.8, converted=False, series_of="CELL+", loads={"Q39": 5.0, "Q40": 5.0},\n'
          '             note="L4-E11: the node between the battery FETs Q39 and Q40 (drains) and the RSR shunt R17, SRP through R149; the "\n'
-         '                  "pack\'s charge and discharge current, 10.0 A typical and 18.0 A peak, counted once as a segment of CELL+")')
+         '                  "pack\'s charge and discharge current, 10.0 A typical and 18.0 A peak, counted once as a segment of CELL+")\n'
+         '_intent.rail("VSYS_DOCK", 14.4, 1.0, 1.0, "U42", always_on=True, v_work=17.4, converted=False, fed_from="VBAT",\n'
+         '             always_on_why="VSYS through the eFuse U42, which opens only on its own overload, short or thermal fault and retries; nothing switches it",\n'
+         '             loads={"J_DOCK": 1.0},\n'
+         '             note="L4-E11 (L4-F03): U42\'s output to J_DOCK pin 1, board E\'s VSYS_E; limited to 1.47 to 1.80 A")')
 EDITS = [
     ("# --- charger BQ25731 (bq25731-datasheet.pdf, QFN-32 RSN; no BATFET, so the system sits on VSYS and the pack on the far side of RSR, SLUSE66A Figure 10-1): 4S from VBUS20 at up to 8 A, I2C 0x6B on the kit bus,",
      "# --- charger BQ25730 (SLUSE65A, held back; QFN-32 RSN; an NVDC charger: the system on VSYS, the battery FETs Q39 and Q40 and RSR between it and the pack, SLUSE65A Figure 9-1; L4-E11): 4S from VBUS20 at up to 8 A, I2C 0x6B on the kit bus,"),
@@ -73,20 +88,20 @@ EDITS = [
      'for k in range(3): c("C%d" % (23 + k), "22u 25V 1210", "VBAT", "GND", "C1210")   # the charger\'s VSYS capacitors, at Q10\'s drain (S-04, 26 Sep 2026)\n'
      'c("C236", "180u 35V Panasonic EEHZK1V181P hybrid polymer (10.2 mm)", "VBAT", "GND", "CPOL8", lcsc="C242139")   # VSYS\'s 50 uF effective by design (SLUSE65A 9.1; L4-E11 D5)'),
     ('"CPOL63": "Capacitor_SMD:CP_Elec_6.3x7.7", "CPOL10": "Capacitor_SMD:CP_Elec_10x10",',
-     '"CPOL63": "Capacitor_SMD:CP_Elec_6.3x7.7", "CPOL10": "Capacitor_SMD:CP_Elec_10x10", "CPOL8": "Capacitor_SMD:CP_Elec_8x10", "LFPAK56": "Package_TO_SOT_SMD:LFPAK56",'),
+     '"CPOL63": "Capacitor_SMD:CP_Elec_6.3x7.7", "CPOL10": "Capacitor_SMD:CP_Elec_10x10", "CPOL8": "Capacitor_SMD:CP_Elec_8x10", "LFPAK56": "Package_TO_SOT_SMD:LFPAK56", "HTSSOP20": "Package_SO:HTSSOP-20-1EP_4.4x6.5mm_P0.65mm_EP3.4x6.5mm",'),
     ('("CHARGER BQ25731: 4S FROM THE 20 V BUS, SYSTEM ON VSYS (VBAT), PACK BEYOND RSR, I2C 0x6B", ["U3", "Q7", "Q8", "Q9", "Q10", "L2", "R16", "R17", "C16",',
-     '("CHARGER BQ25730: 4S FROM THE 20 V BUS, SYSTEM ON VSYS (VBAT), BATTERY FETS Q39 AND Q40 AND RSR TO THE PACK, I2C 0x6B", ["U3", "Q7", "Q8", "Q9", "Q10", "L2", "R16", "R17", "Q39", "Q40", "C236", "C16",'),
+     '("CHARGER BQ25730: 4S FROM THE 20 V BUS, SYSTEM ON VSYS (VBAT), BATTERY FETS Q39 AND Q40 AND RSR TO THE PACK, THE DOCK VSYS EFUSE U42, I2C 0x6B", ["U3", "Q7", "Q8", "Q9", "Q10", "L2", "R16", "R17", "Q39", "Q40", "C236", "U42", "R221", "C237", "C16",'),
     ('_intent.rail("VBAT", 14.4, 10.0, 18.0, "R17", always_on=True, v_work=16.8, converted=False, fed_from="CELL_FUSED",',
      '_intent.rail("VBAT", 14.4, 10.0, 18.0, "Q39", always_on=True, v_work=16.8, converted=False, fed_from="CH_BATQ",'),
-    ('loads={"U4": 2.0, "Q28": 2.22,', 'loads={"J_DOCK": 1.0, "U4": 2.0, "Q28": 2.22,'),
+    ('loads={"U4": 2.0, "Q28": 2.22,', 'loads={"U42": 1.0, "U4": 2.0, "Q28": 2.22,'),
     ('"10.0 A typical and 18.0 A peak, and is counted once as a segment of CELL+")',
      '"10.0 A typical and 18.0 A peak, and is counted once as a segment of CELL+")' + _BATQ),
     ('spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT,',
-     'spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1 VBAT to board E\'s VSYS_E, the auxiliary domain\'s feed (L4-E11), 2-7 GND, 8 SHORE_INHIBIT,'),
+     'spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1 VSYS_DOCK (VBAT through the eFuse U42) to board E\'s VSYS_E, the auxiliary domain\'s feed (L4-E11), 2-7 GND, 8 SHORE_INHIBIT,'),
     ('The pack reaches it through the 25 A blade F1 and the RSR shunt R17, opened only by the pack\'s own BQ4050 FETs and the blade;',
      'The pack reaches it through the 25 A blade F1, the RSR shunt R17 and the battery FETs Q39 and Q40 (on with the battery alone, SLUSE65A p.27; their body diodes otherwise; L4-E11), opened only by the pack\'s own BQ4050 FETs and the blade;'),
     ('{"1": "GND", "2": "GND", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "DOCK_SPARE"})',
-     '{"1": "VBAT", "2": "GND", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "DOCK_SPARE"})'),
+     '{"1": "VSYS_DOCK", "2": "GND", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "DOCK_SPARE"})'),
 ]
 
 def refuse(msg):

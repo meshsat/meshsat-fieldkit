@@ -1,0 +1,24 @@
+{
+  "document": "Nexperia BUK6Y10-30P product data sheet, 17 April 2020 (held back by its terms: v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf)",
+  "sha256": "ba928dfe6a85134423562bd378bdfafafb26d857ba08b50560ce5aacb956da40",
+  "read_on": "2026-10-02",
+  "read_by": "L4-E11 (MESHSAT-1357), the fix round for the review of the provisional fixes (L4-F02)",
+  "fig4": {
+    "title": "Fig. 4. Transient thermal impedance from junction to mounting base as a function of pulse duration (page 5)",
+    "curve": "the lowest curve, labelled duty cycle 0.01 (the figure prints no single-pulse curve; a duty-cycle curve lies above the single pulse, so reading it bounds a single pulse from above)",
+    "method": "page 5 rendered at 400 dpi in grey (pdftoppm -r 400 -gray); the axes located on the rendered page by the printed grid: the decade lines 1e-5 s at x 519.5 px and 1 s at x 2786 px (453.3 px a decade), 10 K/W at y 1126.4 px and 0.01 K/W at y 2014.4 px (296 px a decade, the minor lines 9 to 2 at the expected log offsets); at each pulse width the centre of the lowest dark run at least 4 px thick, a column clear of the vertical grid; one pixel is 0.0078 of a decade in Z (1.8 percent)",
+    "points_s_kw": [[1.2e-5, 0.0569], [1.69e-5, 0.0659], [2.0e-5, 0.0704], [3.0e-5, 0.0846], [3.38e-5, 0.0900], [5.0e-5, 0.1077],
+                    [1.0e-4, 0.1539], [2.44e-4, 0.2446], [5.0e-4, 0.3608], [1.0e-3, 0.5021], [2.0e-3, 0.6907], [5.0e-3, 1.0151],
+                    [1.0e-2, 1.1769], [2.0e-2, 1.2820], [5.0e-2, 1.3225], [1.0e-1, 1.3225], [2.0e-1, 1.3071], [5.0e-1, 1.2920],
+                    [9.5e-1, 1.3021]],
+    "plateau_kw": 1.3225,
+    "note": "the curve's plateau (1.3225 K/W) lies between Table 6's Rth(j-mb) typical 1.1 and maximum 1.4 K/W; the record scales the curve so that its plateau is the maximum 1.4 K/W"
+  },
+  "fig12": {
+    "title": "Fig. 12. Input, output and reverse transfer capacitances as a function of drain-source voltage; typical values (page 8)",
+    "method": "page 8 rendered at 150 dpi, the decade lines 100 pF and 1000 pF located on the page (164 px a decade); the Ciss curve read at the left end of the axis",
+    "ciss_typ_pf_at_vds_minus_0v1": 2870,
+    "ciss_typ_pf_at_vds_minus_15v_table7": 2360,
+    "note": "typical values only; the sheet prints no maximum Ciss and no variation; the curve rises as |VDS| falls"
+  }
+}
