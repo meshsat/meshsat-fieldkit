@@ -105,7 +105,7 @@ PINS = {
     "ap63200": ("v2/vendor/diodes/diodes-ap63200-series-buck.pdf", "ef99daa3789d835bc025dfcb4c605c5c2e6d3e7223e86d40b33e6b497ea5a722"),
     "smcj": ("v2/vendor/power/littelfuse-smcj-series-tvs.pdf", "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea"),
     "dock_py": ("v2/docs/records/w3de/dock_contacts.py", "acd932cbb9e31f8f0fd4563fc97d7ece21e0ce531e133040afb911da3c513b41"),
-    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "c81557f54dbf6cec46933b69d6989b3992b0dfb8f770576949952409f2f9ecce"),
+    "arch": ("v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md", "0978b101bb4fc5721e217642338fcd3d3f3be5f37dcf7a88cfa9221118cffb6f"),
 }
 INPUTS = ["lcsc-C907944-2026-10-02.json", "lcsc-C3847777-2026-10-02.json", "lcsc-C363929-2026-10-02.json",
           "lcsc-C3873338-2026-10-02.json", "jlc-search-c0g-150nf-2026-10-02.json", "murata-reference-sheets-2026-10-02.json",
