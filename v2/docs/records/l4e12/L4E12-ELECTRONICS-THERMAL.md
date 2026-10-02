@@ -71,6 +71,11 @@ brackets point to the `.out`.
   every session measure, E5 holds and E3-O is short by 0.212 W/K (the module reaches 92.61 C against +85 C). The smallest
   experiment is one lid-open, fans-on point at 21.2 W: 2.462 W/K or more keeps the design as stated, 1.516 W/K or more keeps
   it with the fallback, 0.951 W/K or more keeps E3-O with every session measure, and below that the owner decides.
+- **Heat rejection for the approved profile (section 15): no approach reaches the need on bounded evidence.** The profile's 43.4 W
+  at +40 C needs 1.447 W/K, and charging on the design day needs 1.507 to 1.832 W/K. Fins on the plate, leading the large loads
+  into the plate, and the lid as a radiator, assembled, reach 1.384 W/K: 1.252 W short. The remaining options are the owner's:
+  PS-IDLE as a labelled alternative at +40 C (40.2 W fits that route), or a requirement change. U-02 stays a closure condition
+  on T-H1's reading; one point at two heaters (42.4 W) decides it at 1.509 W/K.
 
 ## 2. The acceptance, read first [1]
 
@@ -727,3 +732,121 @@ still counts their heat inside the case, so nothing in 13.3 changes.
 | The bound credits the fans' flow, the stack's radiation and the floor's support at zero | no held document bounds them; each is shown as a credit | T-H1's reading |
 | The class follows the bound: CONFIRMS only if the bound, with every session measure, clears both margins | the owner's question, read literally | T-H1 |
 | The smallest experiment is one lid-open, fans-on point at one heater's power | it settles the class; the rest of T-H1 characterises | the bench |
+
+## 15. The heat-rejection question (the consolidation, 2 October 2026) [10]
+
+The owner: "For any function still failing after repeated corrections, compare at most three credible approaches ...
+Quantify the consequences for power, heat, space, cost and endurance. Select the best-supported route", and "If no supported
+alternative exists, name the exact missing fact and the smallest practical experiment." The question asked of this record: if
+T-H1 reads under what the approved profile needs, what change inside the rulings restores the profile at REQ-024's +40 C, and
+charging on the design day? **Answer: none of the three reaches the need on bounded evidence.** The best route, built from
+all three, falls 1.252 W (0.063 W/K) short at +40 C. U-02 stays a closure condition, and its exact missing fact is T-H1's
+reading.
+
+### 15.1 The need [10a]
+
+- **The profile's heat:** PS-IDLE-SPEC puts 43.413 W into the case with the lid open (MODELED: 42.824 W at the pack plus the
+  pack's own I2R; L4-E9's 43.4 W at `a0212d9e`).
+- **The +70 C class at +40 C:** it needs **1.447 W/K**.
+- **Charging with the profile running:** a charge starts only while the gauge reads at or under 42 C (TEST-PLAN, T3). On SC-37's
+  design day, with the air at 13.2 to 18.3 C (the replay), that needs **1.507 to 1.832 W/K**.
+- **The rulings:** no vent or opening anywhere (32.53); the Peli 1450 kept at any cost; the face a 3 mm aluminium plate carrying
+  the UI (32.40).
+- **The model:** every figure is on section 14's bound (the inside air moves by natural convection only, the coefficients sit at
+  their conservative ends, still air), extended to two nodes, the inside air and the plate.
+
+### 15.2 The three approaches compared [10b]
+
+**(a) Fins on the face's free strips.**
+- The free area is 0.0552 m2: the plate's 0.0912 m2 less the monitor window (0.0288 m2) and the e-paper lens (0.0071 m2).
+- The fins are fixed under M3's space beneath the QMX tray (19.92 mm nominal, 14.11 mm with the unstated allowances doubled), or
+  a clip-on exchanger is fitted when deployed.
+- The effective area multiplier is 2 to 3 (ASSUMPTION; a vendor's heat-sink datasheet gives the real one).
+
+**(b) The large loads led into the plate** by heat pipes, bars and gap pads, so the plate rejects them at its own temperature and
+the air keeps only the rest. They total 23.641 W at their pins:
+- the Xenarc, 6.0 W;
+- the live WiFi card, 4.0 W;
+- the three modules, 6.0 W;
+- panel board C, 1.5 W;
+- the switch chip, 2.541 W;
+- the three NVMe, 2.7 W;
+- the PA, 0.9 W.
+
+**(c) The open lid as a second radiator.**
+- An aluminium skin on the lid's flat ceiling (0.0803 m2, an upper bound, since the QMX tray and the tablet bracket share it),
+  0.329 m tall when open.
+- A copper braid from the plate's edge runs inside the seal line: 0.20 m, 200 mm2, so 2.56 K/W (ASSUMPTION).
+
+| Approach (MODELED on the bound, the profile's 43.413 W) | +40 C: the air / the plate / G | Design day 13.2 C: the air / G | 18.3 C: the air / G |
+|---|---|---|---|
+| none: the bound | 96.61 C / 62.34 C / 0.767 W/K | 70.77 C / 0.754 | 75.70 C / 0.756 |
+| (a) fins, k 2 | 92.89 / 56.15 / 0.821 | 66.82 / 0.810 | 71.79 / 0.812 |
+| (a) fins, k 3 | 90.84 / 52.78 / 0.854 | 64.62 / 0.844 | 69.62 / 0.846 |
+| (b) the large loads into the plate | 79.59 / 70.08 / 1.096 | 53.98 / 1.065 | 58.86 / 1.070 |
+| (b) with (a)'s fins, k 3 | 72.41 / 56.96 / 1.339 | 46.40 / 1.307 | 51.36 / 1.313 |
+| (c) the lid's skin on a strap | 94.17 / 58.27 / 0.801 | 68.10 / 0.791 | 73.07 / 0.793 |
+| **(b) + (a) + (c), the best route** | **71.36 / 55.12 / 1.384** | 45.25 / 1.355 | 50.22 / 1.360 |
+| need | the air at 70 C: 1.447 W/K | the air at 42 C: 1.507 | 1.832 |
+
+**Why (a) alone barely helps:** the plate's inner film limits it. **Why (b) helps most:** it bypasses that film entirely. **What
+(c) adds:** the strap carries 4.37 W in the best route.
+
+### 15.3 Consequences [10c]
+
+All three are passive: no power, no change to endurance, and the heat into the case unchanged. Costs are TBD; no quote is
+held.
+
+| | Space and mass | The UI | The rulings | Confirmed by |
+|---|---|---|---|---|
+| (a) | about 0.39 kg of 1.5 mm fins at an 8 mm pitch to the worst M3 height (ASSUMPTION); no inside space; a clip-on exchanger needs stowage | the strips between the monitor, the e-paper and the switches; the light guides kept clear | bonded fins keep the face a 3 mm plate (a SESSION reading); an extruded, thicker face would change 32.40's ruling (the owner's) | a vendor's heat-sink datasheet with its natural-convection resistance, or a T-H1 point with the fins |
+| (b) | spreaders and pads in the 11.9 to 22.9 mm between board B's tall parts and the face parts; mass TBD | the plate runs at 55.12 C (70.08 C without fins): the face's touch temperature rises (no held limit; an evaluation is owed), the e-paper's +60 C is passed without fins, the switches go to +85 C parts | all inside the seal | the heat pipes' or pads' datasheets, and a T-H1 point with the conduction kit |
+| (c) | about 0.58 kg (a 1 mm skin 0.22 kg, the braid 0.36 kg); the braid's fatigue over the hinge cycles; the lid tray's layout | none | inside the seal line, no penetration | a T-H1 point with the lid open and the skin fitted |
+
+In (b) each led part sits at the plate's temperature plus its own path's drop. The WiFi card's +70 C limit caps that drop at
+about 15 K in the best route.
+
+### 15.4 The selection, the shortfall, and the owner's options [10d]
+
+**None of the three reaches the need on bounded evidence.**
+- **At +40 C:** the best route (b with (a)'s fins and (c)) keeps the air at 71.36 C. It rejects 42.161 W with the air at +70 C
+  against the profile's 43.413 W: **short by 1.252 W (0.063 W/K)**.
+- **Charging with the profile running:** stays **0.153 and 0.472 W/K** short on the design day's cold and warm ends.
+- **On the bound alone:** the case rejects 20.449 W at +40 C, 22.964 W short.
+- **What would carry the route over:** the inside film the fans make (credited at zero in section 14), and the fins' and the
+  paths' real resistances. Each is a measurement or a maker's datasheet, and none is held.
+
+The remaining options are the owner's:
+- **An ALTERNATIVE duty cycle at +40 C, labelled as such:** PS-IDLE (the monitor dimmed, no beacon) puts 40.242 W into the case,
+  1.919 W under the best route's 42.161 W. Nothing fits on the bound alone.
+- **A requirement change:** the profile's ambient ceiling, or charging with the profile running on the design day.
+
+### 15.5 U-02 by the owner's exit definition [10e]
+
+**U-02 is a CLOSURE CONDITION.** Its exact fact: the sealed case's conductance with the lid open and the fans running, as T-H1
+reads it. The fans' inside film is the part no document bounds.
+
+**The smallest experiment:**
+- one T-H1 point, lid open;
+- the fans at full duty;
+- two heaters (42.4 W, about the profile's heat), spread as the boards dissipate;
+- room air, run to steady state.
+
+**Its acceptance**, each threshold being the target plus its expanded uncertainty:
+
+| Reading | Settles |
+|---|---|
+| at least **1.509 W/K** (28.1 K rise) | meets 1.447 W/K: the profile at +40 C, with no route needed |
+| at least **1.575 W/K** (26.9 K rise) | meets 1.507 W/K: charging with the profile on the design day's cold end |
+| at least **1.930 W/K** (22.0 K rise) | meets 1.832 W/K: charging with the profile on the design day's warm end |
+
+Under 1.509 W/K, the route of 15.4 is built and its kit measured at the same bench point; if it still reads short, the owner
+chooses among 15.4's options.
+
+### 15.6 Decisions taken by the session in this round (authority: SESSION)
+
+| Decision | Why the session's | Reversed by |
+|---|---|---|
+| The three approaches compared on the same bound and model, each alone and assembled | the owner's rule: at most three, quantified | T-H1 and the makers' datasheets |
+| The fins' multiplier 2 to 3, the braid 0.20 m by 200 mm2, the set of loads led into the plate | no held datasheet or layout gives them; each is printed with its effect | a vendor's datasheet; Layer 7's layout |
+| No route selected: none reaches the need on bounded evidence | the owner's exit definition, read literally | T-H1's reading |

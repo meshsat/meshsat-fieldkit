@@ -2,7 +2,8 @@ l4e12_thermal.py: layer 4 task L4-E12 (MESHSAT-1478 under MESHSAT-1357). The kit
 D-02a's +55 C operating margin (E3-O) and E5's +60 C dwell in the sealed Peli 1450. Prototype design, desk arithmetic: nothing
 is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMPTION, CONDITIONAL. Revised after the focused
 check astra-check-l4e12-1 and the targeted recheck astra-check-l4e12-2 (the record's section 12 maps each item to its change);
-section 8 is the dependency round of 2 October 2026 on U-02 (the record's section 13), section 9 the conservative bound (section 14).
+section 8 is the dependency round of 2 October 2026 on U-02 (the record's section 13), section 9 the conservative bound (section 14),
+section 10 the heat-rejection question (section 15).
 
 0 Reproductions and inputs
 0a pwr_budget.py re-run in a child: pwr_budget.out and pwr_budget.json byte for byte: yes
@@ -970,7 +971,64 @@ section 8 is the dependency round of 2 October 2026 on U-02 (the record's sectio
    the hold, 3.1 W in the profile), not among the 8.4 W with no document. The bound credits their flow at zero and still counts
    their heat inside the case: nothing in 8c changes.
 
-10 Predicates
+10 THE HEAT-REJECTION QUESTION (the consolidation, 2 October 2026: if T-H1 reads under what the approved profile needs, what
+   change inside the rulings restores it at REQ-024's +40 C, and charging on the design day?)
+10a THE NEED. The approved profile PS-IDLE-SPEC puts 43.413 W into the case lid open (MODELED: its 42.824 W at the pack plus the
+   pack's own I2R; L4-E9's 43.4 W at a0212d9e). Its +70 C class at REQ-024's +40 C needs 1.447 W/K; a charge starts only while
+   the gauge reads at or under 42 C (TEST-PLAN, T3), so on SC-37's design day (the air 13.2 to 18.3 C, the replay) charging with
+   the profile running needs 1.507 to 1.832 W/K. The rulings: no vent or opening anywhere (32.53), the Peli 1450 at any cost,
+   the face a 3 mm aluminium plate carrying the UI (32.40). Every figure below is on section 9's bound: the inside by natural
+   convection only, the coefficients' conservative ends, still air; a two-node model, the inside air and the plate.
+10b THE THREE APPROACHES. (a) Fins on the face's free strips (the plate 0.0912 m2 less the monitor window 0.0288 m2 and the
+   e-paper lens 0.0071 m2: 0.0552 m2), fixed under M3's space beneath the QMX tray (19.92 mm nominal, 14.11 mm with the unstated
+   allowances doubled) or a clip-on exchanger when deployed; effective area multiplier 2 to 3 (ASSUMPTION; a vendor's heat-sink
+   datasheet gives the real one). (b) The large loads led into the plate by heat pipes, bars and gap pads, 23.641 W at their
+   pins (Xenarc 709GNK 6.000, WiFi link card 1 (live) 4.000, CM5 slot 1 2.000, CM5 slot 2 2.000, CM5 slot 3 2.000, panel board C
+   1.500, KSZ9897R AVDDL+DVDDL 1.2 V 1.452, KSZ9897R AVDDH 2.5 V 0.825, KSZ9897R VDDIO 3.3 V 0.264, NVMe slot 1 0.900, NVMe slot
+   2 0.900, NVMe slot 3 0.900, VHF PA 30 W 0.900), so the plate rejects them at its own temperature and the air keeps the rest;
+   with (a)'s fins. (c) The open lid as a second radiator: an aluminium skin on the lid's flat ceiling (0.0803 m2, an upper
+   bound: the QMX tray and the tablet bracket share it), 0.329 m tall when open, on a copper braid from the plate's edge inside
+   the seal line (0.20 m, 200 mm2: 2.56 K/W, ASSUMPTION; copper 390 W/mK). At the profile's heat (MODELED on the bound):
+      approach                                 | +40 C: air, plate, G      | design day 13.2 C: air, G | 18.3 C: air, G
+      none: the bound                          |  96.61 C  62.34 C  0.767 W/K |  70.77 C  0.754 W/K      |  75.70 C  0.756 W/K
+      (a) fins on the free strips, k 2         |  92.89 C  56.15 C  0.821 W/K |  66.82 C  0.810 W/K      |  71.79 C  0.812 W/K
+      (a) fins on the free strips, k 3         |  90.84 C  52.78 C  0.854 W/K |  64.62 C  0.844 W/K      |  69.62 C  0.846 W/K
+      (b) the large loads led into the plate   |  79.59 C  70.08 C  1.096 W/K |  53.98 C  1.065 W/K      |  58.86 C  1.070 W/K
+      (b) with (a)'s fins, k 3                 |  72.41 C  56.96 C  1.339 W/K |  46.40 C  1.307 W/K      |  51.36 C  1.313 W/K
+      (c) the open lid's skin on a strap       |  94.17 C  58.27 C  0.801 W/K |  68.10 C  0.791 W/K      |  73.07 C  0.793 W/K
+      (b) + (a) + (c): the best route          |  71.36 C  55.12 C  1.384 W/K |  45.25 C  1.355 W/K      |  50.22 C  1.360 W/K
+   Needs: 1.447 W/K at +40 C (the air at 70 C); 1.507 and 1.832 W/K for charging (the air at 42 C). The open lid's strap carries
+   4.37 W at +40 C in the best route.
+10c CONSEQUENCES (all three passive: no power, no endurance change, the heat unchanged; costs TBD, no quote held). (a): about
+   0.39 kg of 1.5 mm fins at an 8 mm pitch to the worst M3 height (ASSUMPTION), no inside space; the UI's strips between the
+   monitor, the e-paper and the switches, the light guides kept clear; bonded fins keep the face a 3 mm plate (a SESSION
+   reading), an extruded thicker face would change the ruling of 32.40 (the owner's); a clip-on exchanger needs stowage. (b):
+   spreaders and pads under the plate in the 11.9 to 22.9 mm between board B's tall parts and the face parts (W4), their mass
+   and cost TBD; the plate runs at 55.12 C (70.08 C without fins): the face's touch temperature rises (no held limit: an
+   evaluation owed), the e-paper's +60 C operation is passed without fins, the switches go to +85 C parts, and each led part
+   sits at the plate plus its path's drop (the WiFi card's +70 C bounds that drop); all inside the seal. (c): about 0.58 kg (a 1
+   mm skin 0.22 kg, the braid 0.36 kg), the braid's fatigue over the hinge's cycles, the lid tray's layout; inside the seal
+   line, no penetration.
+10d THE SELECTION: NONE REACHES THE NEED ON BOUNDED EVIDENCE. The best route assembled from the three, (b) with (a)'s fins and
+   (c), keeps the air at 71.36 C at +40 C: it rejects 42.161 W with the air at +70 C against the profile's 43.413 W, SHORT BY
+   1.252 W (0.063 W/K). Charging with the profile running stays out of reach: 0.153 and 0.472 W/K short on the design day's cold
+   and warm ends. On the bound alone the case rejects 20.449 W at +40 C (22.964 W short). What would carry the route over: the
+   inside film the fans make (section 9: credited at zero), and the fins' and the path's real resistances; each is a measurement
+   or a maker's datasheet, not held. The remaining options are the owner's: an ALTERNATIVE duty cycle at +40 C, labelled as such
+   (PS-IDLE, the monitor dimmed and no beacon: 40.242 W into the case, under the best route's 42.161 W by 1.919 W, and nothing
+   fits on the bound alone), or a requirement change (the profile's ambient ceiling, or charging with the profile running on the
+   design day).
+10e U-02 by the owner's exit definition: a CLOSURE CONDITION, with its exact fact: the sealed case's conductance lid open with
+   the fans, as T-H1 reads it (the fans' inside film is what no document bounds). The smallest experiment: one point of T-H1,
+   lid open, the fans at full duty, two heaters (42.4 W, about the profile's heat) spread as the boards dissipate, room air, to
+   steady state (section 9f's duration). The readings that settle it (each the target plus its expanded uncertainty):
+      a reading of at least 1.509 W/K (28.1 K rise) meets 1.447 W/K: the profile at +40 C, the +70 C class, no route
+      a reading of at least 1.575 W/K (26.9 K rise) meets 1.507 W/K: charging with the profile on the design day's cold end
+      a reading of at least 1.930 W/K (22.0 K rise) meets 1.832 W/K: charging with the profile on the design day's warm end
+   Under the first, the route of 10d applies with its kit on the same bench point, and an owner's choice of 10d's options if it
+   still reads short.
+
+11 Predicates
    P1 pwr_budget and pwr_red2 reproduced byte for byte before any figure: PASS
    P2 T-H1's floor and the inside air reproduce L4-E10's 1.6664 W/K, 70.00 and 75.00 C: PASS
    P3 the acceptance is read: survive and recover, the CM5 not shut down, the monitor and radios on, C1's shedding recorded, E5 logging: PASS
@@ -991,6 +1049,7 @@ section 8 is the dependency round of 2 October 2026 on U-02 (the record's sectio
    P18 the plate coupling holds E5 and E3-O below E3-O's line, and the deeper hold lowers E5's heat (the session's fallbacks): PASS
    P19 the conservative bound comes from held geometry at the coefficients' conservative ends, under W4's low case, and the reconciliation ends at it: PASS
    P20 U-02's class follows from the bound: the lines over the outside films' cap, E3-O's gap positive with every session measure, so T-H1 decides: PASS
+   P21 heat rejection on the bound: no approach reaches the profile at +40 C (the best short by a positive margin) nor charging on the design day; U-02 stays a closure condition: PASS
 
 Pinned inputs (sha256):
    55244f94aace54ca09d98c100b9830cba75c70a4774c3ba375a14903fcaf6376 v2/docs/CASE-MARGINS.md
