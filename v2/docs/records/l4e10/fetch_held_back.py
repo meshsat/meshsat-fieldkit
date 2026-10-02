@@ -5,7 +5,7 @@ Samsung SDI's INR18650-30Q specifications (Version No. V1.0 of the 30Q6 producti
 German distributor's copy; Version No. 1.0 of February 2015 and the customer draft V0.1 of 2024/01/23, both posted to TI's
 E2E forum) carry "SAMSUNG SDI Confidential Proprietary" on every page; LG Chem's INR18650HG2 product specification
 (BCY-PS-HG2-Rev0, 13 October 2014) is a distributor's copy with no grant to reproduce it; Saft's LSH 20 sheets (Document
-31015-2-0426 of April 2026 and the LSH 20 HTS sheet 31057-2-0710) carry "Photo credits: (c) Saft". All six are held back from the
+31015-2-0426 of April 2026 and the LSH 20 HTS sheet 31057-2-0710) carry "Photo credits: (c) Saft". Toshiba's SCiB brochure reads 'all rights reserved' and UltraXel's HL18650T flyer states no terms. All eight are held back from the
 public tree by the conservative reading of their terms (the owner's rule of 27 September 2026), as the l3batt, a1solar and
 l4e7 records do: this script downloads each from the address its line in v2/vendor/sources.txt records into the ignored
 v2/vendor/battery/held/ folder, checks the sha256 l4e10_cell_thermal.py pins, and refuses to keep a file that differs.
@@ -39,6 +39,13 @@ DOCS = [
     ("v2/vendor/battery/held/saft-lsh20hts-31057-2-0710.pdf",
      "https://saft4u.saft.com/en/download_file/eb00fd7f-30d7-4ad5-89e0-85f59f4f74d3/English",
      "5befce3a37ab89fad4826488793008f71d5c4ba4a36eacbfadd9dacfa5339d55"),
+    # the cells read beyond the held set (the owner's instruction of 2 October 2026): Toshiba's SCiB brochure, UltraXel's HL18650T flyer
+    ("v2/vendor/battery/held/toshiba-scib-brochure-2020.pdf",
+     "https://www.global.toshiba/content/dam/toshiba/ww/outline/infrastructure/business-introduction/defense/pdf/BatterySCiB.pdf",
+     "acc8f192c54fb287f9ef66d5e26c440601fa795c87f46dba881dce747ef07df3"),
+    ("v2/vendor/battery/held/ultraxel-hl18650t-flyer-2025.pdf",
+     "https://www.ultraxel.com/wp-content/uploads/2025/03/HL18650T-Ultraxel-Flyer-1.pdf",
+     "f95db57fa9bef536a0abcab0a8a979db8593ebd528736c53590a35eb853f80c0"),
 ]
 
 

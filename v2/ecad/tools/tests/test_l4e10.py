@@ -9,9 +9,13 @@ approval; an owner decision is recorded only where every route of a row is rejec
 not; the collisions are recomputed here in closed form and agree with Layer 3's table; LO-01a's three thresholds (the
 rating, FEA-008's +59 C abort, the complete pass line) are recomputed here and ordered; the coupling measure's figures
 are recomputed from the W4 constants and shown not to meet the air criteria; LO-01g's pack-only heating and the two-node
-storage lag are recomputed in closed form; the screen covers every row and every TEST-PLAN exposure it maps; the check is
-filed byte for byte from its result; the page's figures are the .out's; the held files are ignored by git and pinned
-alike in the script and the fetcher; no dash or claim word is written. Nothing here writes into the tree.
+storage lag are recomputed in closed form; the screen covers every row and every TEST-PLAN exposure it maps; the cooler's
+balance conserves energy at every equilibrium it reports; the comparison holds at most three complete approaches judged
+on every row, recommends the least complex one with no row rejected and no added energy storage, and its conditioned
+corner, margins and U2 shift are recomputed here; the primary battery stays a proposal under D-06; E5's profile is Method
+507.6's; both checks are filed byte for byte from their results; the page's figures are the .out's; the held files are
+ignored by git and pinned alike in the script and the fetcher; no dash or claim word is written. Nothing here writes
+into the tree.
 """
 import ast
 import hashlib
@@ -35,7 +39,9 @@ from harness import need, Skip  # noqa: E402
 
 _CACHE = {}
 HELD = ("v2/vendor/battery/held/samsung-inr18650-30q6-v1.0-2020.pdf", "v2/vendor/battery/held/samsung-inr18650-30q-v1.0-2015.pdf",
-        "v2/vendor/battery/held/samsung-inr18650-30q6-draft-v0.1-2024.pdf", "v2/vendor/battery/held/lg-inr18650hg2-rev0-2014.pdf")
+        "v2/vendor/battery/held/samsung-inr18650-30q6-draft-v0.1-2024.pdf", "v2/vendor/battery/held/lg-inr18650hg2-rev0-2014.pdf",
+        "v2/vendor/battery/held/saft-lsh20-31015-2-0426.pdf", "v2/vendor/battery/held/saft-lsh20hts-31057-2-0710.pdf",
+        "v2/vendor/battery/held/toshiba-scib-brochure-2020.pdf", "v2/vendor/battery/held/ultraxel-hl18650t-flyer-2025.pdf")
 
 
 def _load(name, path):
@@ -186,7 +192,7 @@ def t_no_owner_decision_unless_every_route_is_rejected():
                     assert r["missing"] and r["missing"] != "none", "%s: an INCONCLUSIVE route names no missing input" % k
     lines = _CACHE["M"].later_lines(R)
     assert sum(1 for l in lines if re.match(r"^[A-Z]\. ", l)) <= 3
-    assert any("existing state" in l for l in lines)
+    assert any("requirement change" in l for l in lines) and any("fallback" in l for l in lines)
     out = open(OUT, encoding="utf-8").read()
     assert "OWNER DECISION: none is forced" in out
     assert "contradiction" not in open(PAGE, encoding="utf-8").read().replace("not a contradiction between owner requirements", "")
@@ -237,48 +243,105 @@ def t_lo01g_three_cases_on_usable_energy():
     assert "WITHDRAWN as a feasibility basis" in open(OUT, encoding="utf-8").read()
     assert "**withdrawn** as a feasibility basis" in open(PAGE, encoding="utf-8").read()
     # the separately fed heater stays INCONCLUSIVE with its missing facts named
-    rt = [r for r in R["dec"]["LO-01g"]["routes"] if "separate primary" in r["route"]][0]
-    assert rt["status"] == "INCONCLUSIVE" and "usable energy at -33 C" in rt["missing"]
+    rt = [r for r in R["dec"]["LO-01g"]["routes"] if "primary battery" in r["route"]][0]
+    assert rt["status"] == "INCONCLUSIVE" and "not adopted" in rt["route"] and "D-06" in rt["missing"] and "minimum capacity at -33 C" in rt["missing"]
     assert abs(H["resid2_hot"] - 0.351) < 0.001 and abs(H["resid2_cold"] - 0.301) < 0.001
     for k in ("LO-01f", "LO-01g"):
         assert R["passive"][k]["ins_mm"] > 2.66, "%s's passive route fits the pocket after all" % k
 
 
-def t_shortlist_selects_an_approach_that_keeps_the_constraints():
+def t_cooler_balance_conserves_energy():
     R = _R()
-    lines = " ".join(_CACHE["M"].shortlist_lines(R))
-    assert lines.count("A1 ") == 1 and "SELECTED" in lines and lines.count("A3 ") == 1 and "A4 " not in lines
-    assert "Constraints kept" in lines and "changes an approved constraint" in lines
+    # the air gains the kit's heat plus only the cooler's input Q_c/COP: G_e a = q + G_b (a - d)/COP at every reported equilibrium
+    cc = R["condc"]
+    gb = R["Gblk"][1]
+    for (key, cop), v in cc["cool"].items():
+        t_amb = 55.0 if key == "E3-O" else R["e"]["amb"]
+        a, d = v["air"] - t_amb, R["hot"]["H1"] - t_amb
+        assert abs(cc["G_e"] * a - (R["shore_heat"] + gb * (a - d) / cop)) < 1e-9, (key, cop)
+        assert abs(v["p_in"] - gb * (a - d) / cop) < 1e-9 and v["air"] > 60.0, "the conditioned corner's cooler keeps the air inside F2's +60 C"
+    for key in ("E3-O", "E5"):
+        for (cn, cop), v in R["cool"][key]["inside"].items():
+            if v:
+                assert abs(v["p_in"] - v["qc"] / cop) < 1e-12
+
+
+def t_comparison_recommends_the_least_complex_qualifying_approach():
+    R = _R()
+    cm = R["cmp"]
+    ap = cm["apr"]
+    assert sorted(ap) == ["I", "II", "III"] and all(sorted(a["rows"]) == sorted(R["dec"]) for a in ap.values())
+    lines = "\n".join(_CACHE["M"].comparison_lines(R))
+    for attr in ("maker limits", "usable energy", "thermal demand", "mass and volume", "maintenance", "implementation", "constraints changed", "remaining"):
+        assert lines.count("   " + attr) == 3, "%s is not shown for each approach" % attr
+    assert cm["rec"] == "II" and ap["II"]["qualifies"] and not ap["I"]["qualifies"] and not ap["III"]["qualifies"]
+    assert len(ap["II"]["added"]) == 0 < len(ap["III"]["added"]) < len(ap["I"]["added"])
+    # the conditioned corner: LO-01a's governing conductance with the worst heat; the E3-O air settles 15 K over the chamber
+    g = R["gov"]["all"][4]
+    assert abs(R["condc"]["G_e"] - g) < 1e-12 and abs(R["condc"]["e3o_air_ss"] - (55.0 + R["shore_heat"] / g)) < 1e-9
+    assert abs(R["shore_heat"] / g - 15.0) < 1e-9, "the SGP41's +55 C at +40 C is a 15 K rise"
+    # (II)'s first-cut ladder keeps today's offsets under the page's 30-day row; U2's lowest trip shifts by the BQ7720700's
+    hl = R["S"]["HL18650V"]
+    assert cm["lim2"] == hl["st_30d"][1] == 80.0
+    h1n = cm["lim2"] - (60.0 - R["hot"]["H1"]) - R["hot"]["terms"]["thermistor interchangeability"]
+    assert abs(cm["h1n2"] - h1n) < 1e-12
+    shift = 70.0 - R["ladder"]["U2_trip_lo"]
+    assert abs(cm["u2lo"]["BQ7720704"] - (83.0 - shift)) < 1e-9 and cm["u2_pick"] == "BQ7720704"
+    assert cm["u2lo"]["BQ7720701"] < cm["clear"] < cm["u2lo"]["BQ7720704"], "the 80 C variant would clear every level after all"
+    m2 = cm["m2"]
+    assert abs(m2["LO-01d"]["m_h1"] - (h1n - R["condc"]["e3o_peak"])) < 1e-9 and abs(m2["LO-01e"]["m_h1"] - (h1n - R["condc"]["e5_peak"])) < 1e-9
+    assert m2["LO-01f"]["m_limit"] == 80.0 - 71.0 and m2["LO-01g"]["m_limit"] == -33.0 - (-40.0)
+    assert all(v[k] > 0 for v in m2.values() for k in ("m_limit", "m_h1", "m_u2") if k in v)
+    # at the bound's worst corner E5 passes the re-derived H1: (II) carries T-H1's condition
+    assert cm["m2_unc"]["e5_peak"] > h1n
+    # the primary battery is added energy storage, several times the pack, and stays a proposal
+    ii = cm["iii"]
+    psel = R["prim"]["configs"]["5S, -40 C curve (lower)"]
+    assert ii["wh_nom"] == (psel["slow"]["cells"] * 47.0, psel["fast"]["cells"] * 47.0) and ii["x_pack"][0] > 3.0
+    assert ii["st_max"] == 30.0 < ii["st_env"] and ii["no_recharge"]
+    assert psel["fast"]["duty"] < 1.0 < R["prim"]["configs"]["4S, -40 C curve (lower)"]["fast"]["duty"], "5S is chosen for the fast corner's demand"
     out = open(OUT, encoding="utf-8").read()
-    assert "SELECTION: A1" in out and "A1 changes no approved constraint" in out
+    page = open(PAGE, encoding="utf-8").read()
+    assert "RECOMMENDATION (4d): (II)" in out and "not met by this record" in out
+    assert "(II) RECOMMENDED" in page and "not met by this record" in page and "ADDED ENERGY STORAGE" in page
+    # E5's profile is Method 507.6 Procedure II's, recomputed from its table
+    ep = R["e5_profile"]
+    assert ep["knots"] == [(0.0, 30.0), (2.0, 60.0), (8.0, 60.0), (16.0, 30.0), (24.0, 30.0)] and ep["cond"] == 23.0
+    assert abs(ep["mean"] - (2 * 45 + 6 * 60 + 8 * 45 + 8 * 30) / 24.0) < 1e-12
 
 
 def t_check_filed_byte_for_byte():
     import json
-    p = os.path.join(REC, "checks", "astra-check-l4e10-1.md")
-    need(p, "the filed check")
-    t = open(p, encoding="utf-8").read()
-    assert t.startswith("accepted: no\n")
-    res = os.path.join(os.path.dirname(ROOT), "_runs", "codex", "cx26-l4e10-check", "20261001T223709Z-4184732", "result.json")
-    if not os.path.exists(res):
-        return
-    d = json.load(open(res, encoding="utf-8"))
-    for b in d["blockers"]:
-        assert "- " + b in t, "a blocker is not filed verbatim"
-    assert d["summary"] in t and d["closure_criterion"] in t and d["smallest_next_action"] in t
+    for name, job, run in (("astra-check-l4e10-1.md", "cx26-l4e10-check", "20261001T223709Z-4184732"),
+                           ("astra-check-l4e10-2.md", "cx27-l4e10-recheck", "20261001T231603Z-57210")):
+        p = os.path.join(REC, "checks", name)
+        need(p, "the filed check")
+        t = open(p, encoding="utf-8").read()
+        assert t.startswith("accepted: no\n"), name
+        res = os.path.join(os.path.dirname(ROOT), "_runs", "codex", job, run, "result.json")
+        if not os.path.exists(res):
+            continue
+        d = json.load(open(res, encoding="utf-8"))
+        for b in d["blockers"]:
+            assert "- " + b in t, "a blocker of %s is not filed verbatim" % name
+        assert d["summary"] in t and d["closure_criterion"] in t and d["smallest_next_action"] in t, name
 
 
 def t_page_figures_are_the_outs():
     R = _R()
     out = open(OUT, encoding="utf-8").read()
     page = open(PAGE, encoding="utf-8").read()
-    figs = ["63.29", "62.12", "56.22", "60.39", "60.49", "1.2455", "1.3154", "1.5300", "1.6043", "1.6664", "58.64", "61.94",
+    figs = ["63.29", "62.12", "56.22", "60.39", "60.49", "1.2455", "1.3154", "1.5300", "1.6043", "1.6664", "58.64", "59.30", "63.42",
             "0.824", "0.485", "-10.24", "-5.52", "12.44", "12.84", "0.38 W", "0.44 W", "0.351 K", "0.301 K", "24.6 mm", "30.3 mm",
-            "38.1 to 106.1", "42.2 to 116.6", "2.93 to 8.16", "3.37 to 9.30", "11.9 to 28.9", "1.3 to 8.6", "4.9 to 32.6",
-            "-211.2 to -51.9", "-8.14", "0.30 to 1.09", "1.57 to 4.57", "2.58 to 7.27", "-30.7 to -30.0", "0.133 to 0.183",
-            "40.78", "53.37", "5.68 h", "14.4 to 21.2", "0.76 to 7.87", "1.50 to 10.09", "1.60 to 4.44", "144.7", "127.4", "121.0",
-            "108.1", "95.2", "90.4", "2.52", "2.22", "2.11", "1.37 to 3.24", "56.37 to 58.24", "4.67 to 8.00", "10.5 to 54.0",
-            "52.04", "53.29", "1.725"]
+            "38.1 to 106.1", "3.37 to 9.30", "8.20 W", "11.9 to 28.9", "1.3 to 8.6", "-8.14", "0.30 to 1.09", "1.57 to 4.57",
+            "2.58 to 7.27", "0.133 to 0.183", "86.4 to 144.8", "0.86 to 3.44", "0.70 to 1.48", "0.051 to 0.525", "0.150 to 1.009", "38 to 213", "0.054 to 0.090",
+            "2.34 to 2.47", "1.39 to 2.12", "68.86", "74.73", "70.00", "58.75", "8.18 to 25.69", "11.21 to 35.21", "74.9 to 96.1",
+            "0.162", "1.489", "3.30 W/K", "11.14", "6.93", "6.84", "5.27", "1.06", "0.97", "9.00", "4.70", "7.00", "55.25", "29.75",
+            "20.54", "79.63", "75.7", "470 to 940", "3.2 to 6.5", "38 to 76", "0.54 to 1.07", "25.8 to 35.9", "12.5 to 24.9",
+            "-5.0 to 44.8", "4.9 to 21.1", "75.00", "0.092", "0.102", "7.12", "0.011", "0.012", "0.183", "0.203", "0.79 K", "0.248", "0.275", "1.057",
+            "1.175", "52 to 117", "58.7 to 163.2", "47.5", "84.2", "1.51", "2.07", "50.82", "64.24", "66.72", "61.26", "72.42",
+            "144.7", "127.4", "121.0", "108.1", "95.2", "90.4", "2.52", "2.22", "2.11", "1.37 to 3.24", "56.37 to 58.24",
+            "4.67 to 8.00", "10.5 to 54.0", "52.04", "53.29", "1.725", "0.056", "0.121"]
     for f in figs:
         assert f in out, "%s not in the .out" % f
         assert f in page, "%s not on the page" % f
