@@ -87,7 +87,7 @@ PINS = {
     "dec31": ("v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md", "094817023210d1b09d92e62716ba550d0fb5b11affc75fe18986bfc6ebae3609"),
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
     "keystone": ("v2/vendor/keystone/M65p42.pdf", "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"),
-    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "b0d0953e965a983c9b16271bcf476f1f6b3f88ad9fc995cd8436edeb8f5dd055"),
+    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "b32b61b77c0510e2f638f4956a19d27b2b566003958e385b871351e48602721f"),
     "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "0eb554285580b8f20f05440f2810300cf5c65e9b8b2ea93830474f0d83df2283"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "b624ac495650a3592c45a37610375fb05bf7b775042cf3de7ec8979bc46a6e50"),
@@ -98,17 +98,17 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "93de40df68d0b88e1eb281db133c240bdbfe81762056f62a72a6b3b1a0f25c59"),
-    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "f8d214548f24be8f3fe66f505caedb8de946f95e9c712d5865a891a701c52ced"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "e287cbffb247de4ab96a9cde4e046fb891f22b7d8425146efd08dee766ea84ef"),
+    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "188ac85879346be5f896e6f8212abf853f4751cc25ec6a6ee4b495ee3b705cbd"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "a240910031996ab9260f6f09672cc7df3dfe515350d40079a2e2e1bc4b80fe45"),
-    "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "f7b568e072b8a7b33396900e12f304b30858da6d79ac9fedf0879539508cbf08"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "1696fd424b48a8ca4e3d8ff4ab09a7dc42ebdd65bc3eab51133bab962477a84f"),
+    "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "30cc35d8adbdbc77f7279792d3e71242b4586dab85a592309fc57f8c6cf8af36"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
     "cl_eaton": ("v2/docs/records/l4e10/clarification/eaton-scf9550.txt", "9dffb95e8b4874fc0d08824b39d6174372a64e0cbda066241900d6ffdcdc5cb2"),
     "cl_pdi": ("v2/docs/records/l4e12/clarification/pervasive-displays-e2370ks0c1.txt", "4f7db1348cc0b4aca473c17f010085ca9095bf538f580c48804be5602418c117"),
     "cl_sensirion": ("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt", "43c47549235fe6e8162b200324cedd7b34a342bb2a1cb0abf97311f39a48da83"),
-    "cl_adi": ("v2/docs/records/l4e7/clarification/analog-devices-lt8705a.txt", "97d8217092eae7ac41cc7c3a7303696cf9494bfc8df14171fcc69c6862f86cfa"),
+    "cl_adi": ("v2/docs/records/l4e7/clarification/analog-devices-lt8705a.txt", "3f9ad500cdeff4071f77cfe12867c48cbc7652498acb38cc76ca667f97bf1f59"),
     "cl_milliohm": ("v2/docs/records/l4e7/clarification/milliohm-hojlr2512.txt", "e920420419a677e0b723f8c09b26dc817efcc29124dc742fc4e813c4279ff8f6"),
     "cl_vishay": ("v2/docs/records/l4e7/clarification/vishay-wsl2512.txt", "5d96017a5051257bff5571e27ece120240d8710383a400a6acfed59cd3726b08"),
     "cl_ti": ("v2/docs/records/l4e7/clarification/texas-instruments-ina169.txt", "405fb3988f41d8ac98dce3d5ec1cb4af1a0b5d635b109cf71772557c25ab3854"),
@@ -130,15 +130,15 @@ PINS = {
     "l4e10chk4": ("v2/docs/records/l4e10/checks/check-l4e10-4.md", "eb1fe2846e37cf52db8dc1475c0064bb1b37112e669ba3667ca0e0c8c05f4fc1"),
     "l4e12chk4": ("v2/docs/records/l4e12/checks/check-l4e12-4.md", "2c4607d59756da7967ac4b68b6870a8e89f972469135b33deaf0ae634ceacb6b"),
     "l4e11chk4": ("v2/docs/records/l4e11/checks/check-l4e11-4.md", "b0a03440a9bb9a75806a7ba692fde8bc6e72ec4d419b39e8fe92f1ad469f6e65"),
-    "th1proc": ("v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md", "c537143762940314a2693c6bc06c0537e7b1c8cab99d7610e3c980312288cfc3"),
-    "cl_tiq": ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "a01be397bb01642386c074aedc4c8a69e16bea14f6441e2909d6c599b3e065fd"),
+    "th1proc": ("v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md", "61fa23a04f592a9fe97ed4f92972e2451cb212e7495f5c46194dcb8e1e2e85e7"),
+    "cl_tiq": ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "9e26dfae5fd7962f23dd22bd125b5e4dd2c38401cd5d6dae08f296d5e8cf490b"),
     # the consolidation: the tablet's service budget (a PROPOSAL, l3batt), the one budget input not read above
     "tablet": ("v2/docs/records/l3batt/tablet.out", "d71429a9bd6d60a51662f1a4826db398c629cb3675b8c6668e3aba1fb60a8194"),
     # the consolidation's results: L4-E11's charger selection (B1), check 5 at 5aa18a69, and L4-E12's thermal verdict (T-H1
     # decides), check 5 at 7f41632d; read from the tree
     "l4e11chk5": ("v2/docs/records/l4e11/checks/check-l4e11-5.md", "46f993e88a7622221d0c321ea6bb206e20070d82def06dc82620fdd3d5b8c337"),
     "l4e12chk5": ("v2/docs/records/l4e12/checks/check-l4e12-5.md", "12f3ceb053d6e6b5b27912943688ae03c7718dc04bcc752c7d45a4f6191eaeaf"),
-    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "8adf97ade0cf11ec5b292527cbd2733adaf3b7a60292644a686bd5c4d2782620"),
+    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "b46a1987bc136d459524028c8b31be83d698446ebbbda33351cedc91c6ba846d"),
     # the third result: L4-E10's cell route (U-01), checks 4 and 5 at 1c321773, with its drafted request to Saft; read from the tree
     "l4e10chk5": ("v2/docs/records/l4e10/checks/check-l4e10-5.md", "cdaa7429e99b6c71235fd21d16431f76cb8533751c575a25909b5f96821b7e67"),
     "cl_saft": ("v2/docs/records/l4e10/clarification/saft-mp176065xtd.txt", "6a47b9b803041549bbde1f8de1915f4289bfd5720fab4c61aaa79393fb36752d"),
@@ -152,12 +152,12 @@ PINS = {
     "ledger": ("v2/docs/records/l4close/FINDINGS-LEDGER.md", "9ed580a8dd2f35c80ca86fbebf0ef6ff1cb5617f48e730a68ecfed16094666d1"),
     "verify": ("v2/docs/records/l4close/verify_risks.out", "fd2dc6b2c1e723be2316052ec0dc76127605e2334fb80d5dc4e587b387df257c"),
     # the last add-on: L4-E7's solar-fault remedies (check 5 at 573fd5b8), its page and its drafted guard; read from the tree
-    "l4e7md": ("v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md", "3928e30da2d008a55aa64eaf91b65d55b34d22b16d2b9e93cbc8fec33b9ac308"),
-    "e7guard": ("v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py", "c383718b93c0efadcf6251b2e87fc41eb81a573069b0ce7cb64e185446233469"),
+    "l4e7md": ("v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md", "887ae50ff42ef569caeab5f33b9c1c205db9fede3b2da46f8c46453cbee9772f"),
+    "e7guard": ("v2/docs/records/l4e7/apply_gen_sch_e_solar_guard.py", "d6f10ce7bde8f348ca7547a10d9d4d0837853278b325530b84179454751be621"),
     "l4e7chk5": ("v2/docs/records/l4e7/checks/check-l4e7r-5.md", "eec75531f82ced65b7c082e7ffc0c2037a55c24b38104d63bb92c866d3eeaeaf"),
     # the review's fix round (Astra's cx36 on set 27's 8fbb68b6, B1 to B7): L4-E11's two new drafts; read from the tree
-    "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "16fe449358e0b009294158a133b3a2c18e774971bc27e516741b1cf884eee71a"),
-    "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "d9a128c469cd7674530a107cd9708c208300cbcf9e4f3092f0d12f51929b038e"),
+    "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "0c747d8d6b29ac1e61a2076d3f79388263d02a5cd48c4031573966f82c8ab1e5"),
+    "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "422452e5c9af125ebbf73198a72dba3b5ca6963b8db35c0416d4581e95f7d507"),
 }
 # Read from the tree when the tree's file is the pinned one, else from the named commit: L4-E7R's selected solution (fnd/l4e7,
 # accepted, check 4 at 91e9a4b5), L4-E10's final record (fnd/l4e10, closing check 573c8b8f), L4-E11's (fnd/l4e11, accepted,
@@ -170,11 +170,14 @@ COMMIT_LABEL = {"675b8068": "fnd/l4e7, accepted, closing check 91e9a4b5", "79b2f
                 "589f18ac": "fnd/l4e12, the heat-rejection comparison, check 6", "6f8fd652": "fnd/l4e12, the thermal reconciliation, check 7",
                 "e2d20bf2": "fnd/l4e10, the battery comparison, check 6", "573fd5b8": "fnd/l4e7, the solar-fault remedies, check 5",
                 "656fc540": "fnd/l4e11, the review's fix round (B1, B2)", "b1cd32ba": "fnd/l4e12, the review's fix round (B3, B4, B7)",
-                "ee09aa09": "fnd/l4e10, the review's fix round (B5)", "11339ec7": "fnd/l4e7, the review's fix round (B6)"}
-FROM_COMMIT = {"l4e7r": "11339ec7", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "656fc540", "l4e11md": "656fc540",
+                "ee09aa09": "fnd/l4e10, the review's fix round (B5)", "11339ec7": "fnd/l4e7, the review's fix round (B6)",
+                "d2a59468": "fnd/l4e11, the fix round for the review of the provisional fixes (L4-F02, L4-F03)",
+                "68bc3bad": "fnd/l4e7, round 2 for the review of the provisional fixes (L4-F01)",
+                "1a4245c3": "fnd/l4e11, round 3 for the second review (L4-CP01 to L4-CP03) and the evidence specimens"}
+FROM_COMMIT = {"l4e7r": "68bc3bad", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "1a4245c3", "l4e11md": "1a4245c3",
                "e11entry": "3298d1f1", "l4e12": "b1cd32ba", "l4e12md": "b1cd32ba", "cl_topwell": "e464ff88", "cl_eaton": "79b2f568",
                "cl_pdi": "a86be47b", "cl_sensirion": "a86be47b", "cl_gc": "a86be47b", "cl_nicerf": "a86be47b", "cl_bulgin": "a86be47b",
-               "cl_adi": "675b8068", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
+               "cl_adi": "68bc3bad", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
 FROM_LABEL = {k: COMMIT_LABEL[c] for k, c in FROM_COMMIT.items()}
 FROM_L4E8 = {"l4e8"}       # read from L4E8_COMMIT when the path is not in the tree
 
@@ -199,6 +202,19 @@ PWRLIM_SPREAD = 31.0 / 25.0  # LM5069 PWRLIM-1 row 19 / 25 / 31 mV carried as th
 
 
 _C_TEXT = {}     # the pinned text inputs of the last compute(), for part A's readers
+
+# The categories of a thermal line over the modelled capacity, as L4-E12 12e names them after the review of the provisional fixes
+# (L4-F04, 2 October 2026): the capacity is a model figure on named coefficient ends, not a physical bound; only a DEMONSTRATED
+# CONFLICT (a measured local temperature over a mandatory limit with the route fitted) justifies asking the owner to change a
+# requirement or a ruling; the other two are bounded engineering or evidence tasks.
+CAT_MODEL = "MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT"
+CAT_STORE = "MISSING STORAGE QUALIFICATION"
+CAT_CONFLICT = "DEMONSTRATED CONFLICT"
+CATEGORIES = (CAT_MODEL, CAT_STORE, CAT_CONFLICT)
+# The second external review (of the 22:30 checkpoint): L4-F03's status until L4-E11's CP01 says otherwise, and the solar guard's
+# +-0.240 V margin read as a design target unless L4-E7's uncertainty budget supports its reserve
+L4F03_STATUS = "sustained-overload remedy drafted; fault qualification open"
+RESERVE_NOTE = "a DESIGN TARGET until L4-E7's uncertainty budget shows what its 0.060 V reserve covers"
 
 
 def refuse(code, msg):
@@ -822,8 +838,8 @@ def compute():
     F["alt_soa"], F["alt_pulse"] = f(m, 1), f(m, 2)
     F["alt_f1_i2t"] = f(need(t, r"F1 during the longest start: ([\d.]+) A2s against", "the alternative's start I2t"))
     F["e11_items"] = re.findall(r"^\s+(E11-\d\d) \| ([A-Z]+) \| ([^|]+?) \|", t, re.M)
-    if [x[0] for x in F["e11_items"]] != ["E11-%02d" % i for i in range(1, 36)]:
-        refuse(3, "L4-E11's downstream items are not E11-01 to E11-35")
+    if [x[0] for x in F["e11_items"]] != ["E11-%02d" % i for i in range(1, len(F["e11_items"]) + 1)] or len(F["e11_items"]) < 39:
+        refuse(3, "L4-E11's downstream items are not E11-01 to E11-39 or beyond, without a gap")
     t = T["e11entry"]
     m = need(t, r'"CSD19536KTT (\d+) V N-FET', "the selected Q7's voltage in the entry draft")
     F["e_q7_sel_v"] = f(m)
@@ -1348,6 +1364,8 @@ def compute():
     F["sv"] = surge_inputs(F, T)
     F["rc"] = reconciliation_inputs(F, T)
     F["fx"] = fixround_inputs(F, T)
+    F["f02"] = f02_inputs(F, T)
+    F["cp"] = cp_inputs(F, T)
     return F, where
 
 
@@ -1566,42 +1584,58 @@ def fixround_inputs(F, T):
     s12e = one(s12.split("\n12e THE OUTSIDE CAPACITY")[1])
     m = need(s12e, r"CORRECTION: section 9's 'cap' \(([\d.]+) W/K at E5's rise, ([\d.]+) at E3-O's\) is the bound with a 50 m/s inside flow, whose film is near 45 W/m2K; the capacity proper at those rises is ([\d.]+) and ([\d.]+) W/K on the conservative ends\.", "the capacity's correction (12e)")
     fx["capfix"] = tuple(f(m, i) for i in range(1, 5))
+    # the review of the provisional fixes (L4-F04): the capacity is a model figure, and a line over it is put in a named category
+    need(s12e, r"The capacity is a MODEL FIGURE on the coefficient ends named here and the analysed heat paths, not a physical upper bound", "the capacity as a model figure (12e)")
+    need(s12e, r"is not a proof that no measurement can pass it \(the review of the provisional fixes, L4-F04\)", "no impossibility claimed (12e)")
+    cats = "|".join(re.escape(c) for c in CATEGORIES)
     cls = []
-    for row in re.findall(r"(M\d), lid (open|closed), \+?(-?[\d.]+) C(?:, rise ([\d.]+) K)?: (.*?)(?= M\d, lid | The class \(iii\) lines)", s12e):
-        mm = re.match(r"(.*?) needs ([\d.]+) W/K; capacity bare ([\d.]+) / ([\d.]+), with the route ([\d.]+) / ([\d.]+) W/K \(conservative / optimistic\): class \((i+)\)(.*)$", row[4])
+    for row in re.findall(r"(M\d), lid (open|closed), \+?(-?[\d.]+) C(?:, rise ([\d.]+) K)?: (.*?)(?= M\d, lid | The lines over the modelled capacity, by category)", s12e):
+        mm = re.match(r"(.*?) needs ([\d.]+) W/K; capacity bare ([\d.]+) / ([\d.]+), with the route ([\d.]+) / ([\d.]+) W/K \(conservative / optimistic\): (?:class \((i+)\)|SHORT by ([\d.]+) W/K, ([\d.]+) W, of the model's optimistic capacity with the route)(.*)$", row[4])
         if mm:
-            short = re.search(r"SHORT by ([\d.]+) W/K, ([\d.]+) W", mm.group(8))
-            cons = re.search(r"\((i+)\) at the conservative ends", mm.group(8))
+            over = mm.group(7) is None
+            cat = re.search(r": a (%s)$" % cats, mm.group(10)) if over else None
+            if over and not cat:
+                refuse(3, "L4-E12 12e's row over the model without its category: %r" % row[4][:60])
+            cons = re.search(r", \((i+)\) at the conservative ends", mm.group(10))
+            cons_over = ", over the modelled capacity at the conservative ends" in mm.group(10)
+            c_ = "over" if over else mm.group(7)
             cls.append({"mode": row[0], "lid": row[1], "amb": float(row[2]), "rise": row[3], "line": mm.group(1).strip(), "need": mm.group(2),
-                        "bare": (mm.group(3), mm.group(4)), "route": (mm.group(5), mm.group(6)), "cls": mm.group(7), "cons": cons.group(1) if cons else mm.group(7),
-                        "short": (short.group(1), short.group(2)) if short else None})
+                        "bare": (mm.group(3), mm.group(4)), "route": (mm.group(5), mm.group(6)), "cls": c_,
+                        "cons": cons.group(1) if cons else ("over" if cons_over else c_), "cat": cat.group(1) if cat else None,
+                        "short": (mm.group(8), mm.group(9)) if over else None})
         else:
-            mm = re.match(r"(.*?) at or under the ambient: no capacity at a zero rise; class \((i+)\), the whole ([\d.]+) W short$", row[4])
+            mm = re.match(r"(.*?) at or under the ambient: no modelled capacity at a zero rise; (%s), the whole ([\d.]+) W on that row$" % cats, row[4])
             if not mm:
                 refuse(3, "L4-E12 12e's class row %r" % row[4][:40])
             cls.append({"mode": row[0], "lid": row[1], "amb": float(row[2]), "rise": None, "line": mm.group(1).strip(), "need": None, "bare": None, "route": None,
-                        "cls": mm.group(2), "cons": mm.group(2), "short": (None, mm.group(3))})
+                        "cls": "over", "cons": "over", "cat": mm.group(2), "short": (None, mm.group(3))})
     if len(cls) != 17:
         refuse(3, "L4-E12 12e's seventeen class rows")
     fx["cls"] = cls
-    iii = [c for c in cls if c["cls"] == "iii"]
-    if [c["mode"] for c in iii] != ["M3", "M4", "M6", "M7"]:
-        refuse(3, "L4-E12 12e's class (iii) lines")
-    fx["iii"] = iii
+    over = [c for c in cls if c["cls"] == "over"]
+    if [c["mode"] for c in over] != ["M3", "M4", "M6", "M7"]:
+        refuse(3, "L4-E12 12e's lines over the modelled capacity")
+    if [c["cat"] for c in over] != [CAT_MODEL, CAT_MODEL, CAT_STORE, CAT_STORE]:
+        refuse(3, "L4-E12 12e's categories of the lines over the model")
+    fx["over"] = over
     m = need(s12e, r"the bay air holds Table 4's \+50 C lid closed only to an ambient of \+([\d.]+) to \+([\d.]+) C on the pack and \+([\d.]+) to \+([\d.]+) C on shore", "the VOC ceilings (12e)")
     fx["voc_ceil"] = tuple(f(m, i) for i in range(1, 5))
     m = need(s12e, r"at the bound's plate fraction ([\d.]+) it needs ([\d.]+) W/K and at W4's high fraction ([\d.]+) it needs ([\d.]+) W/K, both under the route's optimistic capacity, so the measured fraction decides", "the e-paper's window (12e)")
     fx["plate"] = tuple(f(m, i) for i in range(1, 5))
     m = need(s12e, r"charging only in the heat stage \(([\d.]+) W into the case\) would need ([\d.]+) and ([\d.]+) W/K at T4's line, class \(i\) at both ends", "charging in the heat stage (12e)")
     fx["chg_hs"] = (f(m, 1), f(m, 2), f(m, 3))
-    for pat in (r"\(1\) E3-L at \+40 C with the lid closed as ruled \(M3 on the pack, M4 on shore\)", r"Options: CFL-002's C, A or B \(the owner's\)",
-                r"a closed-lid ceiling on REQ-042's VOC channel \(a requirement change, the owner's", r"D-02b's closed-lid test at \+40 C restated \(a ruling change, the owner's\)",
-                r"a closed-lid conduction path from the plate to the lid's inner face inside the seal \(the session's to develop at Layer 7; not modelled here, so it closes nothing yet\)",
-                r"\(2\) E3-O at \+55 C \(M6\)", r"Options: PDi's storage statement \(the request is drafted in clarification/pervasive-displays-e2370ks0c1\.txt; sending it is the owner's\)",
-                r"an e-paper with a held range at or over \+70 C \(CHO-001, the owner's\)", r"E3-O run with the e-paper's state as a recorded deviation \(TEST-PLAN's owner\)",
-                r"\(3\) E5's \+60 C dwell \(M7\)", r"a different e-paper \(CHO-001, the owner's\)", r"E5 run with the e-paper out as a recorded deviation \(TEST-PLAN's owner\)",
-                r"Charging \(M8, M9\) is not class \(iii\)"):
-        need(s12e, pat, "12e's class (iii) options")
+    for pat in (r"MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT: \(1\) E3-L at \+40 C with the lid closed as ruled \(M3 on the pack, M4 on shore\)",
+                r"a closed-lid conduction path from the plate to the lid's inner face inside the seal, the combined route R-170 to R-172 carried to the closed lid",
+                r"the SGP41's local air measured at its port, apart from the mixed-air screen",
+                r"The options that change a requirement or a ruling stay the owner's and go to him only when a measurement demonstrates the conflict: CFL-002's C, A or B",
+                r"a closed-lid ceiling on REQ-042's VOC channel \(a requirement change", r"D-02b's closed-lid test at \+40 C restated \(a ruling change\)",
+                r"MISSING STORAGE QUALIFICATION: \(2\) E3-O at \+55 C \(M6\) and \(3\) E5's \+60 C dwell \(M7\)",
+                r"PDi's storage statement \(the request is drafted in clarification/pervasive-displays-e2370ks0c1\.txt; sending it is the owner's\)",
+                r"a storage soak of a sample at the mode's temperature with its function read back after it \(evidence for that lot\)",
+                r"Options that stay the owner's, only if the conflict is demonstrated: an e-paper with a held range at or over \+70 C \(CHO-001\)",
+                r"DEMONSTRATED CONFLICT: none at present; a line enters it only on a measured local temperature over a mandatory limit with the route fitted",
+                r"Charging \(M8, M9\) lies under the modelled capacity \(class \(i\)\)"):
+        need(s12e, pat, "12e's categories and their resolutions")
     # L4-E11's section 15
     t = T["l4e11"]
     if t.count("\n15. THE FIX ROUND FOR THE CONSOLIDATION REVIEW") != 1:
@@ -1662,6 +1696,138 @@ def fixround_inputs(F, T):
     if len(fx["e15"]) != 8:
         refuse(3, "L4-E11 15e's drafted texts")
     return fx
+
+
+def f02_inputs(F, T):
+    """The review of the provisional fixes (2 October 2026): L4-F02 (B2, the battery FETs) and L4-F03 (the dock's VSYS contact's branch
+    protection) as L4-E11's round answers them (its output section 16, its page's 16f and 16g). Read, never recomputed; each figure this
+    record cites is a match in that section, and the section's statuses are read as printed."""
+    one = lambda s: " ".join(s.split())
+    t = T["l4e11"]
+    if t.count("\n16. THE FIX ROUND FOR THE REVIEW OF THE PROVISIONAL FIXES") != 1:
+        refuse(3, "L4-E11's section 16")
+    s16 = t.split("\n16. THE FIX ROUND FOR THE REVIEW OF THE PROVISIONAL FIXES")[1].split("\nEND.")[0]
+    if "\n17. THE SECOND REVIEW" in s16:
+        s16 = s16.split("\n17. THE SECOND REVIEW")[0]
+    need(one(s16.split("\n")[0]), r"\(L4-F02 and L4-F03; a qualification gap, not a demonstrated failure\)", "section 16's framing")
+    sub = {}
+    for k in "abcde":
+        if s16.count("\n   16%s. " % k) != 1:
+            refuse(3, "L4-E11 16%s" % k)
+    for k, nxt in (("a", "b"), ("b", "c"), ("c", "d"), ("d", "e"), ("e", None)):
+        x = s16.split("\n   16%s. " % k)[1]
+        sub[k] = one(x.split("\n   16%s. " % nxt)[0] if nxt else x)
+    g = {}
+    m = need(sub["a"], r"the ([\d.]+) mOhm of 15c is WITHDRAWN AS A BOUND: it is kept as the ALLOWANCE each FET is sized to", "the RDS(on) allowance (16a)")
+    g["allow"] = f(m)
+    m = need(sub["a"], r"at the sheet's largest printed maximum, ([\d.]+) mOhm, .*? would take 20 A held to ([\d.]+) C and the service to ([\d.]+) C", "the allowance's sensitivity (16a)")
+    g["rds_max"] = (f(m, 1), f(m, 2), f(m, 3))
+    g["st_a"] = need(sub["a"], r"STATUS: (CONDITIONAL on E11-36)", "16a's status").group(1)
+    m = need(sub["b"], r"Zth\(j-mb\) ([\d.]+) K/W at 244 us, ([\d.]+) at 20 ms, ([\d.]+) at 1 s", "Fig. 4 as scaled (16b)")
+    g["zth"] = (f(m, 1), f(m, 2), f(m, 3))
+    g["z_steady"] = f(need(sub["b"], r"the installed \(Zself \+ Zmut\) at steady state at most ([\d.]+) K/W", "the steady sum (16b)"))
+    ev = re.findall(r"(OCD2 24 A for 1 s|AOLD 30 A for 20 ms|ASCD 55\.6 A for 244 us): per FET ([\d.]+) W; \(Zself \+ Zmut\) at [\d.]+ s at most ([\d.]+) K/W", sub["b"])
+    if [e[0] for e in ev] != ["OCD2 24 A for 1 s", "AOLD 30 A for 20 ms", "ASCD 55.6 A for 244 us"]:
+        refuse(3, "L4-E11 16b's three fault histories")
+    g["z_ev"] = [(e[0], float(e[1]), float(e[2])) for e in ev]
+    m = need(sub["b"], r"THE SERVICE, 18 A FOR 60 S FROM THE HOT STATE .*?: TJ ([\d.]+) C, from ([\d.]+) C at 10 A held", "the service from the hot state (16b)")
+    g["svc"] = (f(m, 1), f(m, 2))
+    need(sub["b"], r"STATUS: the analysis basis is the device's own and the coupling explicit; the qualification is CONDITIONAL on E11-29", "16b's status")
+    m = need(sub["c"], r"the pair ([\d.]+) nF at -15 V and about ([\d.]+) nF near 0 V", "the pair's Ciss (16c)")
+    g["ciss"] = (f(m, 1), f(m, 2))
+    need(sub["c"], r"NOT SHOWN on printed data", "16c's reading")
+    need(sub["c"], r"STATUS: OPEN; the pair stays selected", "16c's status")
+    m = need(sub["d"], r"the waveform: ([\d.]+) A peak, time constant ([\d.]+) us", "the docking waveform (16d)")
+    g["dock"] = (f(m, 1), f(m, 2))
+    need(sub["d"], r"no sharing is credited: the whole pulse in one FET", "the docking pulse unshared (16d)")
+    m = need(sub["d"], r"a rise of ([\d.]+) K, TJ ([\d.]+) C", "the docking pulse's junction (16d)")
+    g["dock_tj"] = (f(m, 1), f(m, 2))
+    g["vf_x"] = f(need(sub["d"], r"TJ stays under 150 C while VF is at most ([\d.]+) times that bound", "VF's allowance (16d)"))
+    need(sub["d"], r"STATUS: CONDITIONAL on E11-30", "16d's status")
+    m = need(sub["e"], r"the review's counterexample ([\d.]+) A from ([\d.]+) V \(([\d.]+) Ohm\)", "the review's counterexample (16e)")
+    g["cex"] = (f(m, 1), f(m, 2), f(m, 3))
+    m = need(sub["e"], r"SELECTED \(SESSION\): \(E\) on board A between VBAT and J_DOCK pin 1 \(a new net VSYS_DOCK; drafted in apply_gen_sch_a_charger\.py\)", "the eFuse selected (16e)")
+    m = need(sub["e"], r"with R\(ILIM\) 11 kOhm 0\.1 %, ([\d.]+) A typical and, .*?, ([\d.]+) to ([\d.]+) A", "the eFuse's band (16e)")
+    g["ef"] = (f(m, 1), f(m, 2), f(m, 3))
+    m = need(sub["e"], r"see at most ([\d.]+) A \(([\d.]+) % of ([\d.]+) A\)", "the contact's share (16e)")
+    g["ef_c"] = (f(m, 1), f(m, 2), f(m, 3))
+    g["vsyse"] = f(need(sub["e"], r"so VSYS_E at least ([\d.]+) V", "VSYS_E's least (16e)"))
+    m = need(sub["e"], r"current limiting for at most ([\d.]+) ms, then auto-retry after ([\d.]+) to ([\d.]+) ms", "the eFuse's timer and retry (16e)")
+    g["ef_t"] = (f(m, 1), f(m, 2), f(m, 3))
+    g["duty"] = f(need(sub["e"], r"a duty of at most ([\d.]+);", "the overload's duty (16e)"))
+    need(T["cl_tiq"], r"\*\*Q-TI-17 \(E11-37, BQ25730\)\.\*\*", "Q-TI-17 (L4-E11 16c)")
+    m = need(sub["e"], r"the held-pack drain \(15a corrected\): ([\d.]+) mA is the QUANTIFIED SUBSET \(the monitor and D3 at 25 C\); D3's hot leakage and the body diodes' current are not bounded on held evidence; the bench acceptance stays at most (\d+) mA", "the held drain corrected (16e)")
+    g["held"] = (f(m, 1), f(m, 2))
+    need(sub["e"], r"STATUS: sustained-overload remedy drafted; fault qualification open \(section 17a, E11-38\)", "16e's status (the second review)")
+    if g["held"][0] != F["fx"]["held"][0] or g["held"][1] != F["fx"]["held"][1] or g["ef"][1] >= g["ef"][2] or g["ef_c"][0] > g["ef_c"][2]:
+        refuse(3, "L4-E11 16e's figures disagree with 15a or with themselves")
+    md = T["l4e11md"]
+    s16f = md.split("### 16f. Text drafted for L4-E9's record")[1].split("### 16g.")[0]
+    g["f16"] = [tuple(x.strip() for x in r) for r in md_table(s16f, "| Where | Now | Drafted |")]
+    s16g = md.split("### 16g. What stays for the engineer (handoff rows)")[1].split("\nNot claimed:")[0]
+    g["g16"] = [tuple(x.strip() for x in r) for r in md_table(s16g, "| Affected circuit or function |")]
+    if len(g["f16"]) != 4 or len(g["g16"]) != 5:
+        refuse(3, "L4-E11 16f's four drafted texts and 16g's five handoff rows")
+    g["text"] = " ".join(sub[k] for k in "abcde")
+    # every decimal figure the resolutions of D-13 to D-15 cite (their options, state and resolution; D-15's constraint too) is printed
+    # by L4-E11's output (sections 15 and 16) or its page's section 16; D-13's and D-14's constraints are the earlier defects' history
+    src = one(t.split("\n15. THE FIX ROUND FOR THE CONSOLIDATION REVIEW")[1].split("\nEND.")[0]) + " " + one(md.split("## 16. The fix round for the review of the provisional fixes")[1])
+    for d in DEFECTS:
+        if d["id"] in ("D-13", "D-14", "D-15"):
+            for x in re.findall(r"(?<![\d.])\d+\.\d+(?![\d])", " ".join([d["constraint"] if d["id"] == "D-15" else "", d["options"], d["state"], d["resolution"]])):
+                if not re.search(r"(?<![\d.])%s(?![\d])" % re.escape(x), src):
+                    refuse(4, "%s cites %s, which L4-E11 does not print" % (d["id"], x))
+    return g
+
+
+def cp_inputs(F, T):
+    """L4-E11's round 3 for the second external review (L4-CP01 to L4-CP03) and its evidence specimens (its output section 17, its page's
+    17d). Read, never recomputed; the specimen, transfer and blocks-only columns of the qualification route come from 17d."""
+    one = lambda s: " ".join(s.split())
+    t = T["l4e11"]
+    if t.count("\n17. THE SECOND REVIEW") != 1:
+        refuse(3, "L4-E11's section 17")
+    s17 = t.split("\n17. THE SECOND REVIEW")[1].split("\nEND.")[0]
+    g = {}
+    a = one(s17.split("\n   17a. ")[1].split("\n   17b. ")[0])
+    need(a, r"a regulated, steady setting, NOT an instantaneous ceiling; the fast-trip threshold 2 x I\(OL\) and I\(SCP\) 45 A are T only", "17a's setting")
+    m = need(a, r"Bound \(I\): at most ([\d.]+) A, VSYS's ([\d.]+) V over RON's printed least (\d+) mOhm and the path's ([\d.]+) mOhm with the contact at 0 and no inductance credited, for at most ([\d.]+) us: ([\d.]+) A2s", "17a's hard-short ceiling")
+    g["short"] = (f(m, 1), f(m, 5), f(m, 6))
+    m = need(a, r"IN at most ([\d.]+) V by TI's Equation 14 at that bound with U42 within (\d+) nH of C236", "17a's IN spike")
+    g["in_v"], g["nh"] = f(m, 1), f(m, 2)
+    m = need(a, r"both together at most ([\d.]+) A each, one at a time at most ([\d.]+) A .*?; VSYS_E at that current at least ([\d.]+) V at the supplement floor", "17a's fan start")
+    g["fan"] = (f(m, 1), f(m, 2), f(m, 3))
+    need(a, r"STATUS: sustained-overload remedy drafted; fault qualification open \(E11-38\); not evidence of a failure", "17a's status")
+    g["st_a"] = L4F03_STATUS
+    b = one(s17.split("\n   17b. ")[1].split("\n   17c. ")[0])
+    m = need(b, r"\(D2\) a defined pulse qualification on parts: ([\d.]+) A peak and ([\d.]+) us \(x1\.1\), mounting base (\d+) C, (\d+) pulses 10 s apart on each of (\d+) parts", "17b's pulse qualification")
+    g["pulse"] = (f(m, 1), f(m, 2), f(m, 3), int(m.group(4)), int(m.group(5)))
+    need(b, r"SELECTED \(SESSION\): \(D2\), with \(D1\) asked in parallel; \(D3\) only if \(D2\) fails, as E11-30 states; STATUS: CONDITIONAL on E11-30", "17b's selection")
+    c = one(s17.split("\n   17c. ")[1])
+    need(c, r"the three withdrawn statements are absent from the text it writes \(tested\)", "17c")
+    for w in ("bounded at 21.1", "34.4 C/W per FET", "34.4 \xb0C/W"):
+        if w in T["e11charger"]:
+            refuse(4, "the charger draft still writes a withdrawn statement: %r" % w)
+    md = T["l4e11md"]
+    s17d = md.split("### 17d. The evidence specimens")[1].split("\nNot claimed:")[0]
+    need(one(s17d), r"The evidence builds proceed under their own scope; \*\*only the final design or production release stays held\*\* until the measurements pass", "17d's rule")
+    rows = md_table(s17d, "| Row | Specimen |")
+    g["spec"] = {r[0].replace("Row ", ""): {"specimen": r[1], "represents": r[2], "transfers": r[3], "blocks": r[4]} for r in rows}
+    if sorted(g["spec"]) != ["E11-29", "E11-30", "E11-35", "E11-36", "E11-37", "E11-38"]:
+        refuse(3, "17d's six specimen rows")
+    e39 = [x for x in F["e11_items"] if x[0] == "E11-39"]
+    if not e39 or e39[0][1] != "FIRMWARE":
+        refuse(3, "E11-39, the fans' staggered start")
+    need(T["cl_tiq"], r"\*\*Q-TI-18 \(E11-38, TPS16630\)\.\*\*", "Q-TI-18")
+    need(T["cl_tiq"], r"\*\*Q-NXP-1 \(E11-30, BUK6Y10-30P\)\.\*\*", "Q-NXP-1")
+    return g
+
+
+def held_txt(F):
+    """The held pack's drain as L4-E11 16e corrects it (the review's L4-F03, its related claim)."""
+    g = F["f02"]
+    return ("%s mA is the quantified subset (the monitor and D3 at 25 C); hot clamp leakage and body-diode current are not bounded by a "
+            "printed figure; the bench acceptance at most %s mA stands (E11-31)" % (fmt(g["held"][0]), fmt(g["held"][1])))
 
 
 def surge_inputs(F, T):
@@ -1747,11 +1913,11 @@ def surge_inputs(F, T):
     m = need(rs, sp(r"the SMCJ30A clamps D1's 10 A plateau at ([\d.]+) V at the hot end and D2's 5 A at ([\d.]+) V"), "the SMCJ30A under CS116 and CS115")
     rm["d1d2"] = (f(m, 1), f(m, 2))
     for pat in (r"J_SOLAR\.2 becomes PV_RTN", r"D11 SMCJ40CA \(C80273\) across PV_F and PV_RTN",
-                r"C131 and C132, two 10 uF 100 V X7R 1210 \(board E's C8 part text\), on PV_F", r"RISCP R89 3\.01k with C126 330 pF C0G 100 V",
-                r"INP R96 100k over R97 30\.0k", r"C133 and C134, two 10 uF 50 V ceramics \(C13's part text and land\), on PV_P beside the bulk \(B6\)",
+                r"C131, C132, C135 and C136, four Samsung CL32B225KCJSNNE \(2\.2 uF 100 V X7R 1210, LCSC code owed\), on PV_F", r"RISCP R89 3\.01k with C126 330 pF C0G 100 V",
+                r"INP R96 100k over R97 28\.0k", r"C133 and C134, two Samsung CL32B106KBJNNNE \(10 uF 50 V X7R 1210, code owed\), on PV_P beside the bulk, and C71 to C74 \(the backstop draft's\) moved to the same part \(B6 round 2\)",
                 r"U21 TPS48110AQDGXRQ1 \(C17556513\) with R87 4\.5 mOhm", r"Q12 CSD19532Q5B \(C473333\) from PV_SNS to PV_P",
                 r"the OV divider R98, R99 and R100", r"Q13 CSD19532Q5B \(C473333\) from PV_RTN to GND", r"D12 BZT52C12-7-F \(C124196\)",
-                r"D4 to SMCJ30A, its LCSC code owed", r"\(this record's hold, input limit and backstop, L4-E9's hot swap, L4-E11's entry\): 7 edits",
+                r"D4 to SMCJ30A, its LCSC code owed", r"\(this record's hold, input limit and backstop, L4-E9's hot swap, L4-E11's entry\): 8 edits",
                 r"Q12 holds 36 V of 100 V", r"MEETS, CONDITIONAL on Q13's leakage above 25 C",
                 r"note E-N1 is closed", r"no protection here extends the permitted range"):
         need(rs, sp(pat), "the remedies' text")
@@ -1761,7 +1927,7 @@ def surge_inputs(F, T):
     rm["loss"] = tuple(f(m, i) for i in range(1, 5))
     m = need(rs, sp(r"on SC-37's day ([\d.]+) Wh of ([\d.]+) Wh \(([\d.]+) %\), on the bright day ([\d.]+) Wh of ([\d.]+) Wh"), "the block's energy")
     rm["day"] = tuple(f(m, i) for i in range(1, 6))
-    m = need(rs, sp(r"U21 turns on at ([\d.]+) V at the most \(INP through R96 over R97 30\.0k .*?\) and off at ([\d.]+) V at the least"), "U21's UVLO", re.S)
+    m = need(rs, sp(r"U21 turns on at ([\d.]+) V at the most \(INP through R96 over R97 28\.0k .*?\) and off at ([\d.]+) V at the least"), "U21's UVLO", re.S)
     rm["uvlo"] = (f(m, 1), f(m, 2))
     m = need(rs, sp(r"([\d.]+) W \(([\d.]+) W without it\)"), "the static bound with the block")
     rm["static"] = (f(m, 1), f(m, 2))
@@ -1776,54 +1942,79 @@ def surge_inputs(F, T):
                 r"CS116/115 on\s+CS116 and CS115 with the block on\s+MEETS", r"CS116/115 off\s+CS116 and CS115 with the block off\s+MEETS",
                 r"window\s+the window kept\s+MEETS"):
         need(rs, pat, "the remedies' verdicts")
-    need(rs, sp(r"already on\s+a stiff 36 V source with the guard on \(B6\)\s+MEETS \(CONDITIONAL on the lead's loop inductance at least 2\.47 uH, R-176\)"), "B6's verdict")
+    need(rs, sp(r"already on\s+a stiff 36 V source with the guard on \(B6\)\s+NOT MET \(round 2: every rating with its margin for a source loop of at least 3\.30 uH, NOT MET below it; no approach within the makers' printed rules removes that floor: the engineer's row B6-ENG-1\)"), "B6's verdict (round 2)")
     need(rs, sp(r"CS116/115 on\s+CS116 and CS115 with the block on\s+MEETS \(CS115 CONDITIONAL on R-174"), "CS115's condition with the block on")
-    # B6 of the consolidation review: the guard already on (L4-E7 at 11339ec7, its output's THE GUARD ALREADY ON)
-    if rs.count("- THE GUARD ALREADY ON (B6") != 1:
-        refuse(3, "L4-E7's B6 section")
-    ga = rs.split("- THE GUARD ALREADY ON (B6")[1].split("THE VERDICTS, with the remedies:")[0]
+    # B6, round 2 (the external review of the provisional fixes, L4-F01; L4-E7 at 68bc3bad, its output's THE GUARD ALREADY ON, ROUND 2)
+    if rs.count("- THE GUARD ALREADY ON, ROUND 2 (") != 1:
+        refuse(3, "L4-E7's B6 round 2 section")
+    ga = rs.split("- THE GUARD ALREADY ON, ROUND 2 (")[1].split("THE VERDICTS, with the remedies:")[0]
     one = lambda x: " ".join(x.split())
+    g1 = one(ga)
     b6 = {}
-    b6["l_uh"] = f(need(ga, sp(r"AT ([\d.]+) uH, the worst over every start and corner"), "B6's inductance"))
+    m = need(g1, r"THE MARGIN, decided before any value \(SESSION\): U5's CSPIN to CSNIN differential within \+-([\d.]+) V, (\d+) % under its \+-([\d.]+) V absolute maximum", "B6's margin")
+    b6["margin"], b6["u5_abs"] = f(m, 1), f(m, 3)
+    b6["err"] = f(need(g1, r"the error bound added to U5 is twice the largest difference from the 0\.5 ns value at 20 ns or less, ([\d.]+) V", "B6's numerical error"))
+    m = need(g1, r"its loop from ([\d.]+) to ([\d.]+) uH \((\d+) values, 10 % apart, the floor bisected\)", "B6's envelope")
+    b6["env"] = (f(m, 1), f(m, 2))
+    b6["l_uh"] = f(need(g1, r"THE SELECTED NETWORK \(A\) AT ([\d.]+) uH, the worst over every start and corner", "B6's floor"))
     rat = re.findall(r"^\s+- (.+?)\s{2,}(-?[\d.]+) (of|against)\s+(-?[\d.]+), margin\s+([\d.]+); holds from (under )?([\d.]+) uH", ga, re.M)
     if len(rat) != 11:
-        refuse(3, "B6's rating rows")
+        refuse(3, "B6's rating rows (round 2)")
     b6["rows"] = [(n.strip(), float(w), float(l), float(mg), ("under " if u else "") + h) for n, w, _o, l, mg, u, h in rat]
     need(ga, r"D4's current, A \(SMCJ30A, least, cold end\)\s+none", "B6's D4 row")
-    g1 = one(ga)
-    m = need(g1, r"THE BINDING RATING: (.*?), at ([\d.]+) uH: two conductors whose centres stay at least ([\d.]+) mm apart over the (\d+) m", "B6's binding rating")
-    b6["bind"], b6["mm"], b6["len_m"] = m.group(1), f(m, 3), f(m, 4)
-    if f(m, 2) != b6["l_uh"]:
-        refuse(3, "B6's binding inductance")
-    m = need(g1, r"Below it the guard does not hold: at ([\d.]+) uH \(([\d.]+) mm apart\) .*? \(NOT MET\)", "B6's NOT MET below it")
-    b6["below"] = (f(m, 1), f(m, 2))
-    m = need(g1, r"at most ([\d.]+) of it, ([\d.]+) A at the turn-off", "Q12 in B6")
+    b6["bind"] = "U5's CSPIN to CSNIN, positive (+ numerical error)"
+    u5 = [r for r in b6["rows"] if r[0] == b6["bind"]]
+    if len(u5) != 1 or u5[0][2] != b6["margin"]:
+        refuse(3, "B6's binding row against its margin")
+    m = need(g1, r"\(A\) SELECTED, the round-1 guard with parts a maker characterises, bounded bank by bank: every rating with its margin for a loop of at least ([\d.]+) uH \(two conductors ([\d.]+) mm apart over (\d+) m\); the floor stays", "approach (A)")
+    if f(m, 1) != b6["l_uh"]:
+        refuse(3, "B6's floor differs between its sections")
+    b6["mm"], b6["len_m"] = f(m, 2), f(m, 3)
+    need(g1, r"16 of 16 hold every rating with its margin", "the corner search")
+    m = need(g1, r"at 1\.00 uH .*?\(U5 ([\d.]+) V\), at 0\.30 uH U5 ([\d.]+) V and PV_F ([\d.]+) V", "B6 under the floor")
+    b6["at1"], b6["at03"] = f(m, 1), (f(m, 2), f(m, 3))
+    m = need(g1, r"Q12 while it conducts: ([\d.]+) of its derated chart .*?, ([\d.]+) A at the turn-off", "Q12 in B6")
     b6["q12"] = (f(m, 1), f(m, 2))
-    m = need(g1, r"Q13 in the third quadrant carries the lead's ([\d.]+) A at most, ([\d.]+) of its derated chart", "Q13 in B6")
+    m = need(g1, r"Q13 in the third quadrant ([\d.]+) A, ([\d.]+) of its derated chart", "Q13 in B6")
     b6["q13"] = (f(m, 1), f(m, 2))
-    m = need(g1, r"D11 at most ([\d.]+) A and ([\d.]+) mJ against ([\d.]+) mJ", "D11 in B6")
+    m = need(g1, r"D11 ([\d.]+) A and ([\d.]+) mJ against ([\d.]+) mJ", "D11 in B6")
     b6["d11"] = (f(m, 1), f(m, 2), f(m, 3))
-    m = need(g1, r"the closest TRK_VS comes to D4 is ([\d.]+) V at ([\d.]+) V/us .*?, ([\d.]+) V under its least breakdown at the cold end; D4 carries no current at any rate; U5 at most ([\d.]+) V", "B6's ramps")
+    m = need(g1, r"the closest TRK_VS comes to D4 is ([\d.]+) V at ([\d.]+) V/us .*?, ([\d.]+) V under it; D4 never conducts; U5 at most ([\d.]+) V", "B6's ramps")
     b6["ramp"] = (f(m, 1), f(m, 2), f(m, 3), f(m, 4))
-    m = need(g1, r"THE COLD CONNECTION .*?: PV_F at most ([\d.]+) V, its slew ([\d.]+) V/us, INP ([\d.]+) V, EN/UVLO ([\d.]+) V; the ring through Q13's body diode at most ([\d.]+) A", "B6's cold connection")
+    m = need(g1, r"THE COLD CONNECTION over the whole grid .*?: PV_F at most ([\d.]+) V, its slew ([\d.]+) V/us, INP ([\d.]+) V; Q13's body diode at most ([\d.]+) A; D11 at most ([\d.]+) mJ", "B6's cold connection")
     b6["cold"] = tuple(f(m, i) for i in range(1, 6))
-    m = need(g1, r"as drafted in the remedies round \(C131 1 uF, R97 39k, CSCP 1 nF, no C133 and C134\): PV_F .*? ([\d.]+) of 100, PV_F's slew .*? ([\d.]+) of 60, U21's INP .*? ([\d.]+) of 20, U5's CSPIN to CSNIN, positive ([\d.]+) of 0\.3;", "the guard as drafted (B6)")
-    b6["drafted"] = tuple(f(m, i) for i in range(1, 5))
-    m = need(g1, r"The start: Q12 carries at most ([\d.]+) A into every capacitor behind it at the gate's fastest slew, under U21's overcurrent least ([\d.]+) A", "the start (B6)")
+    m = need(g1, r"THE START: Q12 carries at most ([\d.]+) A into the capacitors behind it at the gate's fastest slew, under U21's overcurrent least ([\d.]+) A", "the start (B6)")
     b6["start"] = (f(m, 1), f(m, 2))
-    m = need(one(rs), r"Q12 turns off at most ([\d.]+) A within ([\d.]+) us, PV_F reaches at most ([\d.]+) V \(slew ([\d.]+) V/us of 60\), PV_P ([\d.]+) V, TRK_VS ([\d.]+) V", "B6 in the bounded analysis")
+    need(g1, r"\(B\) A pin-level limiter .*?: NOT TAKEN on the LT8705A's printed statements\. 8705af p\.30: \"all four of the current sense pins can draw bias current under normal operating conditions\. As such, do not place resistors in series with any of the CSxIN or CSxOUT pins\"", "approach (B) not taken")
+    m = need(g1, r"\(D\) The TPS48111-Q1, .*?: the floor falls to ([\d.]+) uH .*?: not taken\. At 1\.00 uH \(D\) still reads U5 ([\d.]+) V", "approach (D) not taken")
+    b6["d"] = (f(m, 1), f(m, 2))
+    eng = g1.split("THE ENGINEER'S ROW B6-ENG-1 (")[1]
+    labels = ("affected circuit", "evidence and failed condition", "decision or measurement needed", "pass criterion", "consequence of failure", "work blocked")
+    pat = r"\): " + r"; ".join(r"%s: (.*?)" % re.escape(l_) for l_ in labels) + r"$"
+    m = need(eng, pat, "B6-ENG-1's six fields")
+    b6["eng"] = [(l_, m.group(k + 1).strip()) for k, l_ in enumerate(labels)]
+    m = need(one(rs), r"Q12 turns off at most ([\d.]+) A within ([\d.]+) us, PV_F at most ([\d.]+) V \(slew ([\d.]+) V/us\), PV_P ([\d.]+) V, TRK_VS ([\d.]+) V", "B6 in the bounded analysis")
     b6["sum"] = tuple(f(m, i) for i in range(1, 7))
     reg = one(rs.split("FOR L4-E9'S REGISTER")[1])
-    m = need(reg, r"D-12: (CS116 MEETS with the block on and off; CS115 MEETS with the block off and, with it on, is CONDITIONAL on R-174 \(the cable's recorded loop current under [\d.]+ A, or U5's differential measured under [\d.]+ V); U5 reads ([\d.]+) V at CS115's 5 A calibration level", "D-12's text for L4-E9")
+    m = need(reg, r"D-12: (CS116 MEETS with the block on and off; CS115 MEETS with the block off and, with it on, is CONDITIONAL on R-174 \(the cable's recorded loop current under [\d.]+ A, or U5's differential measured under [\d.]+ V); U5 reads ([\d.]+) V at CS115's 5 A calibration level\)", "D-12's text for L4-E9")
     b6["d12"] = m.group(1) + ")."
     b6["u5_cs115"] = f(m, 2)
+    m = need(reg, r"D-10 and D-11 have a selected remedy, drafted \(not applied\): (.*?)\. D-10's source arriving with the guard on is NOT CLOSED \(B6 round 2\)", "D-10 and D-11's text for L4-E9")
+    b6["remedy"] = m.group(1)
     rows = re.findall(r"\((\d)\) (.*?)(?= \(\d\) |$)", reg.split("R-176's bench rows, REVISED: ")[1])
-    if [r[0] for r in rows] != [str(i) for i in range(1, 8)]:
-        refuse(3, "R-176's seven rows")
+    if [r[0] for r in rows] != [str(i) for i in range(1, 7)]:
+        refuse(3, "R-176's six rows")
     b6["r176"] = [r[1].rstrip(";").strip() for r in rows]
-    need(reg, r"D-10's source arriving with the guard on is bounded \(B6\) and CONDITIONAL on the lead's loop inductance at least 2\.47 uH", "D-10's condition (B6)")
+    if "a pass only for a loop at or over %.2f uH until B6-ENG-1 is decided" % b6["l_uh"] not in b6["r176"][2]:
+        refuse(3, "R-176's step row without its floor")
     rm["b6"] = b6
-    need(rs, sp(r"Owed with it: D4's LCSC code, U21's DGX-19 land, the regeneration and its gates, and R-176's bench rows, REVISED"), "what is owed")
+    src7 = one(T["l4e7r"]) + " " + one(T["l4e7md"])
+    for d in DEFECTS:
+        if d["id"] in ("D-10", "D-11"):
+            for x in re.findall(r"(?<![\d.])\d+\.\d+(?![\d])", " ".join([d["options"], d["state"], d["resolution"]])):
+                if not re.search(r"(?<![\d.])%s(?![\d])" % re.escape(x), src7):
+                    refuse(4, "%s cites %s, which L4-E7 does not print" % (d["id"], x))
+    need(rs, sp(r"Owed with it: the LCSC codes of D4 and of the Samsung parts, U21's DGX-19 land, the regeneration and its gates, and R-176's bench rows, REVISED"), "what is owed")
     if not os.path.exists(os.path.join(TOP, PINS["e7guard"][0])):
         refuse(3, "the drafted guard is not in the tree")
     need(T["e7guard"], r"RELEASE", "the guard's release record")
@@ -2682,7 +2873,7 @@ def fx_u02_expect(F):
     """U-02's figures as L4-E12's fix round printed them (12a to 12e; the review's B3, B4 and B7)."""
     fx, rc = F["fx"], F["rc"]
     M = fx["modes"]
-    sh = {c["mode"]: c["short"] for c in fx["iii"]}
+    sh = {c["mode"]: c["short"] for c in fx["over"]}
     k = fx["k78"]
     return ["%s W/K on the pack (M1 lid open, M3 lid closed; a reading of at least %s W/K)" % M["M1"]["ruled"][1:],
             "%s W/K on shore (M2, M4; at least %s W/K)" % M["M2"]["ruled"][1:],
@@ -2693,7 +2884,9 @@ def fx_u02_expect(F):
             "%s and %s W/K (at least %s and %s W/K)" % (M["M8"]["ruled"][1], M["M9"]["ruled"][1], M["M8"]["ruled"][2], M["M9"]["ruled"][2]),
             "above a %.1f C reading and switches the sensor off at %.1f C" % (fx["c_cover"], fx["c_off"]),
             "%s W/K at K1's rise, correcting %s to %s W/K" % ("%.3f" % rc["capk1"][0], "%.3f" % rc["cap"][0], "%.3f" % fx["capfix"][1]),
-            "short by %s W/K, %s W; M4" % sh["M3"], "short by %s W/K, %s W; M6" % sh["M4"], "short by %s W/K, %s W; M7" % sh["M6"], "the whole %s W" % sh["M7"][1],
+            "short by %s W/K, %s W, and M4" % sh["M3"], "short by %s W/K, %s W, a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT" % sh["M4"],
+            "short by %s W/K, %s W, and M7" % sh["M6"], "the whole %s W on that row, a MISSING STORAGE QUALIFICATION" % sh["M7"][1],
+            "no DEMONSTRATED CONFLICT",
             "%.3f W in less %.3f W stored = %.3f W, %.3f W with" % (fx["bal"][0], fx["bal"][1], fx["bal"][3], fx["bal_b"][1]),
             "needs %s and %s W/K (readings %s and %s W/K)" % (k[1][2], k[3][2], k[1][3], k[3][3]),
             "at %s to %s h on the bound, the run with the shed states %s to %s h" % tuple(fmt(x) for x in fx["c1"][:4]),
@@ -2708,9 +2901,12 @@ def fx_u04_expect(F):
     fx, b1 = F["fx"], F["cb"]["b1"]
     return ["at least %s V (LDO mode)" % b1["vsys_min"], "SRN under %s V at least %s V, over %s V VSRN + %d mV within +-%d %%" % (fmt(fx["pw"][0]), fmt(fx["pw"][1]), fmt(fx["pw"][2]), b1["inhib"][0], b1["inhib"][1]),
             "between at least %s V" % fmt(fx["pw"][3]), "down to %s V: the system node %s to %s V" % (fmt(fx["supp"][0]), fmt(fx["vsys_rng"][0]), fmt(fx["vsys_rng"][1])),
-            "drains total %s mA, the bench reads the held pack current at most %s mA" % (fmt(fx["held"][0]), fmt(fx["held"][1])),
-            "a latch within %s s" % fmt(fx["latch_s"]), "at the %s C/W bar" % fmt(fx["bar"][0]), "at %s C (R-159's fallback" % fmt(fx["svc_tj"]),
-            "%s A against each FET's ISM %s A" % (fmt(fx["dock"][0]), fmt(fx["dock"][1])), "a share of at most %s" % fmt(fx["dock"][2]),
+            "%s mA is the quantified subset of its drains" % fmt(F["f02"]["held"][0]), "the bench acceptance at most %s mA" % fmt(F["f02"]["held"][1]),
+            "a latch within %s s" % fmt(fx["latch_s"]), "an RDS(on) allowance of %s mOhm per FET" % fmt(F["f02"]["allow"]),
+            "(Zself + Zmut) at most %s K/W steady" % fmt(F["f02"]["z_steady"]), "from the hot state kept, at %s C" % fmt(F["f02"]["svc"][0]),
+            "Ciss %s nF typical at -15 V and about %s nF near 0 V" % tuple(fmt(x) for x in F["f02"]["ciss"]),
+            "the docking pulse %s A whole in one FET, TJ %s C" % (fmt(F["f02"]["dock"][0]), fmt(F["f02"]["dock_tj"][1])),
+            "behind U42, %s to %s A" % (fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2])), "VSYS_E at least %s V" % fmt(F["f02"]["vsyse"]),
             "at most %.5f A, no charge under %s V on SRN" % (fx["pre"][0], fmt(fx["pre"][1])),
             "%s W in the pair at PS-IDLE-SPEC (%s %% of the pack's output)" % (fmt(fx["pair_idle"][1]), fmt(fx["pair_idle"][2])),
             "L2 at %s A peak against Isat %s A" % (fmt(fx["l2"][2]), fmt(fx["l2"][3])), "%d of the %d row blocks" % b1["rows_same"],
@@ -2892,11 +3088,11 @@ def rows(F, D, A, E):
                 F["sv"]["rm"]["d1d2"][1], "<=", F["sv"]["lim"], "V", "INFERRED", "L4-E7 out (the remedies; the loop current recorded by R-174)"),
             Chk("CS115 with the block on: U5's differential at the generator's %s A calibration level, not a bound on the cable's current" % fmt(F["sv"]["d2"][1]),
                 F["sv"]["rm"]["b6"]["u5_cs115"], "<=", F["u5_diff_lim"], "V", "CONDITIONAL", "L4-E7 out (B6's round): R-174, the cable's recorded loop current under 15.68 A, or U5's differential measured under 0.3 V; D-12"),
-            Chk("a stiff %s V source stepping onto the port with the guard already on (the review's B6; D-10): U5's positive differential, the binding rating, at the lead's %s uH"
-                % (fmt(F["sv"]["src"][1]), fmt(F["sv"]["rm"]["b6"]["l_uh"])),
-                [r[1] for r in F["sv"]["rm"]["b6"]["rows"] if r[0] == F["sv"]["rm"]["b6"]["bind"]][0], "<=", F["u5_diff_lim"], "V", "CONDITIONAL",
-                "L4-E7 out (THE GUARD ALREADY ON, MODELED): every rating MEETS from %s uH, NOT MET at %s uH; the lead's loop inductance is printed nowhere (R-176 row 2, R-180); D-10"
-                % (fmt(F["sv"]["rm"]["b6"]["l_uh"]), fmt(F["sv"]["rm"]["b6"]["below"][0]))),
+            Chk("a stiff %s V source stepping onto the port with the guard already on (B6, round 2; D-10): U5's positive differential plus the numerical error at the floor's %.2f uH loop, against the chosen +-%s V margin (%s); a pass only from that loop, which nothing in the design bounds (B6-ENG-1)"
+                % (fmt(F["sv"]["src"][1]), F["sv"]["rm"]["b6"]["l_uh"], ("%.3f" % F["sv"]["rm"]["b6"]["margin"]), RESERVE_NOTE),
+                [r[1] for r in F["sv"]["rm"]["b6"]["rows"] if r[0] == F["sv"]["rm"]["b6"]["bind"]][0], "<=", F["sv"]["rm"]["b6"]["margin"], "V", "CONDITIONAL",
+                "L4-E7 out (THE GUARD ALREADY ON, ROUND 2, MODELED): every rating with its margin from %.2f uH; under it NOT MET (at 1.00 uH U5 %s V, over its %s V absolute maximum); the guard-on case of D-10 NOT CLOSED, B6-ENG-1; R-176 row 3"
+                % (F["sv"]["rm"]["b6"]["l_uh"], fmt(F["sv"]["rm"]["b6"]["at1"]), fmt(F["sv"]["rm"]["b6"]["u5_abs"]))),
             Chk("a stiff %s V source on the port (L4-E7's D4; D-10) with the guard: the cut-off's highest rising threshold under the source, so the block never turns on" % fmt(F["sv"]["src"][1]),
                 F["sv"]["rm"]["rise"][1], "<", F["sv"]["src"][1], "V", "INFERRED", "L4-E7 out (the remedies; TPS48110-Q1 SLUSEE5E 6.5, the divider aged); D-10, R-173 drafted"),
             Chk("the cut-off's highest rising threshold under D4's (the SMCJ30A's) least breakdown at the cold end", F["sv"]["rm"]["rise"][1], "<", F["sv"]["rm"]["s30"][3], "V", "INFERRED", "L4-E7 out (the remedies)"),
@@ -3133,7 +3329,7 @@ def rows(F, D, A, E):
             Chk("E5's mixed inside air under the hold at M7's maker-stated line (%s W/K lid open with the fans) under the +%s C parts, a screen at the mixed air (their local air, the cooler's exhaust included, is the line: T-H2)" % (fmt(F["gc"]), fmt(F["parts_hot"])),
                 F["e5_line"], "<=", F["parts_hot"], "C", "CONDITIONAL", "L4-E12 out 4c, 4d (MODELED): T-H1 at or over the line, the hold's reference within +-%s K, the fans' rating, the parts out of the exhaust; unresolved choice U-02" % "%s" % F["hold_ref"]),
             Chk("E3-O's mixed inside air with every radio on at that line under the +%s C parts (a screen)" % fmt(F["parts_hot"]), F["e3o_line"], "<=", F["parts_hot"], "C", "CONDITIONAL", "L4-E12 out 4d (MODELED; E3-O alone needs %s W/K); unresolved choice U-02" % fmt(F["g_e3o"])),
-            Chk("the required modes' governing local limits (L4-E12 12a, 12e): T-H1's points decide every class (i) and (ii) line; four class (iii) lines (E3-L lid closed as ruled; E3-O and E5 on the e-paper's operating row read to cover it unpowered) no reading can pass", None, "<=", None, "a thermal decision", "CONDITIONAL", "L4-E12 out 12a, 12e; unresolved choice U-02; the owner's options OW-10"),
+            Chk("the required modes' governing local limits (L4-E12 12a, 12e): T-H1's points decide every class (i) and (ii) line; four lines lie over the modelled capacity, none shown impossible: E3-L lid closed as ruled a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, E3-O and E5 on the e-paper's operating row read to cover it unpowered a MISSING STORAGE QUALIFICATION; no DEMONSTRATED CONFLICT", None, "<=", None, "a thermal decision", "CONDITIONAL", "L4-E12 out 12a, 12e; unresolved choice U-02; OW-10 only on a demonstrated conflict"),
             Chk("the inside air at LO-01a's floor (%s W/K) with no hold, E5's +60 C dwell, under the +%s C parts" % (fmt(F["th1"]), fmt(F["parts_hot"])),
                 F["floor_air"][1], "<=", F["parts_hot"], "C", "MODELED", "L4-E12 out 2c (L4-E10's corner plus the ballasts, MESHSAT-1478 as found)", scope="drawn"),
             Chk("every load converter runs to the 3.00 V line (10.0 V stack)", None, "<=", None, "a record", "ASSUMPTION", "SHORTLIST.md 2: no record"),
@@ -3207,13 +3403,17 @@ GATE = [
                    "check 5 at 5aa18a69, selects (B1), the BQ25730 with the battery FET pair Q39 and Q40 and board E on VSYS_E after its "
                    "fix round, drafted: once applied U-04 is a downstream qualification test, on the board as drawn TI's D1 and D3 decide "
                    "it); thermal feasibility per required mode is U-02's (L4-E12's fix round: each mode's governing local limit, T-H1 "
-                   "deciding every class (i) and (ii) line, four class (iii) lines (E3-L lid closed as ruled, E3-O and E5 on the e-paper's "
-                   "row) the owner's, OW-10); the battery path's thermal design is FEA-008's (U-01; the Saft supported for the temperature "
+                   "deciding every class (i) and (ii) line; four lines over the modelled capacity, none shown impossible: E3-L lid closed "
+                   "as ruled a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, E3-O and E5 on the e-paper's row a MISSING STORAGE "
+                   "QUALIFICATION, no DEMONSTRATED CONFLICT, so no requirement question goes to the owner, OW-10 held for a measured "
+                   "conflict); the battery path's thermal design is FEA-008's (U-01; the Saft supported for the temperature "
                    "windows, not yet adoptable: current at temperature and the storage dwell AWAITING, L4-E10 10g); PS-ALLTX's chain at "
                    "18 A for 60 s (PWR-F12) is an open obligation",
      "overturn": "possibly, on named evidence only: U-01 on Saft's answer or the sample qualification and on the HL18650V's signed "
-                 "specification (D-06's pack energy, protection settings and charge ranges), U-02 on its four class (iii) lines (the "
-                 "rulings against E3-L lid closed, E3-O and E5: the owner's) and on a class (i) or (ii) point read short with the route "
+                 "specification (D-06's pack energy, protection settings and charge ranges), U-02 only on a DEMONSTRATED CONFLICT (a "
+                 "measured local temperature over a mandatory limit with the route fitted; none at present: its four lines over the "
+                 "modelled capacity are a modelled shortfall and a missing storage qualification, engineering and evidence tasks) and "
+                 "on a class (i) or (ii) point read short with the route "
                  "also short, U-04 on the board as drawn on TI's D1 or D3 (none once (B1) is applied); the rest, the panel unit included, "
                  "resolves by a value, a part or a measurement on the same topology"},
     {"n": 2, "criterion": "material power-path defects have engineering resolutions and bounded supporting calculations",
@@ -3221,10 +3421,13 @@ GATE = [
      "constraint": "no material defect is open: the review's B1 and B2 on (B1)'s draft, D-13 (board E's auxiliary domain on the pack's side of "
                    "the battery FET) and D-14 (the FET bounded at an unprinted corner, a fallback lowering 18 A for 60 s), are addressed "
                    "in drafts by L4-E11's fix round (board E on VSYS_E, R-177 and R-178; the pair Q39 and Q40, R-157), CONDITIONAL on the "
-                   "installed path (E11-29), the docking split (E11-30) and the bench rows (E11-31); the known defects at the solar entry, D-10 (a stiff 36 V source on the port) and D-11 (a reversed "
+                   "installed (Zself + Zmut) (E11-29), the docking pulse in one FET (E11-30), the RDS(on) allowance (E11-36) and the bench rows (E11-31), "
+                   "with Ciss against TI's 5 nF OPEN (E11-37); D-15 (the dock's new VSYS contact without branch protection, the review of "
+                   "the provisional fixes' L4-F03) is addressed in drafts by the eFuse U42 (R-181): " + L4F03_STATUS + " (E11-38); the known defects at the solar entry, D-10 (a stiff 36 V source on the port) and D-11 (a reversed "
                    "panel), single faults, are addressed in drafts, a selected remedy each (L4-E7, check 5 at 573fd5b8: the over-voltage cut-off U21 "
-                   "with Q12 and the return switch Q13, R-173, drafted, not applied), D-10 CONDITIONAL on the panel lead's loop inductance at least 2.47 uH "
-                   "with the guard already on (the review's B6, L4-E7 at 11339ec7: four parts added, every rating MEETS from it; R-176, R-180), D-11 "
+                   "with Q12 and the return switch Q13, R-173, drafted, not applied), D-10's source arriving with the guard already on NOT CLOSED "
+                   "(L4-E7's round 2 at 68bc3bad for the review's B6 and L4-F01: every rating with its margin only from a 3.30 uH source loop, NOT "
+                   "MET under it; the engineer's row B6-ENG-1: R-180, R-186 or R-187; R-176 row 3), D-11 "
                    "CONDITIONAL on Q13's leakage above +25 C; the band between "
                    "25 V and the cut-off, where a stiff source still runs the stage, is a residual for layer 8 (R-175); D-12 (CS116 and CS115 on the drawn entry) is resolved in the drafted entry, CS115 CONDITIONAL on the cable's loop "
                    "current (L4-E7's derivation, set 27); D-01 to D-05 and D-08 are resolved in design (drafted or bounded), D-06 is resolved in design by "
@@ -3235,8 +3438,8 @@ GATE = [
                    "entry's delay and transconductance rows already CONDITIONAL here, and E11-24 is U-04's fallback, a register row (R-152), "
                    "not a defect's resolution",
      "overturn": "no: each resolves by a part, a rating or a measurement at the vehicle or the solar entry or on (B1)'s draft; D-10 and D-11 by "
-                 "the drafted guard, which adds protection at the solar entry and changes no topology; D-13 and D-14 by a feed and a part "
-                 "inside (B1)"},
+                 "the drafted guard, which adds protection at the solar entry and changes no topology; D-13, D-14 and D-15 by a feed, a "
+                 "part and a branch protection inside (B1)"},
     {"n": 3, "criterion": "remaining assumptions explicit, with their impact and verification method",
      "rows": [], "choices": [], "verdict": "PASS", "constraint": "", "overturn": ""},
     {"n": 4, "criterion": "downstream implementation changes, layout constraints and tests have named owners and acceptance criteria",
@@ -3248,14 +3451,15 @@ GATE = [
                    "items; L4-E10, check 4 at e464ff88; its fix round: the Saft supported for the temperature windows, not yet adoptable), U-02 "
                    "(MESHSAT-1478: each required mode against its governing local limit, L4-E12's fix round at b1cd32ba; T-H1's points of "
                    "12d decide every class (i) and (ii) line, as ruled the heat stage at +40 C against the SGP41's Table 4, 2.905 W/K on the "
-                   "pack and 3.081 W/K on shore, under CFL-002's C the cells' hot stop, 1.804 and 1.767 W/K; four class (iii) lines no "
-                   "reading can pass, the owner's), U-04 ((B1) selected and drafted with the pair and board E on VSYS_E, a downstream "
+                   "pack and 3.081 W/K on shore, under CFL-002's C the cells' hot stop, 1.804 and 1.767 W/K; four lines over the modelled "
+                   "capacity, a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT (M3, M4) and a MISSING STORAGE QUALIFICATION (M6, M7), no "
+                   "DEMONSTRATED CONFLICT), U-04 ((B1) selected and drafted with the pair and board E on VSYS_E, a downstream "
                    "qualification test once applied; on the board as drawn TI's D1 and D3; L4-E11, check 5 at 5aa18a69, fix round at "
                    "656fc540); an "
                    "owner and an acceptance criterion do not close them. U-03 "
                    "left this category with L4-E13's acceptance: a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC, R-35) that decides which "
                    "unit, not the topology or the source class",
-     "overturn": "yes, on named evidence only: U-01 (D-06's pack energy and settings), U-02 (its four class (iii) lines, and any line read short "
+     "overturn": "yes, on named evidence only: U-01 (D-06's pack energy and settings), U-02 (a DEMONSTRATED CONFLICT on a measured local temperature, and any line read short "
                  "with the route also short: CFL-002, REQ-042's coverage, D-02b, the sealed case's thermal design or the device set, the "
                  "owner's), U-04 (on the board as drawn only, TI's D1 or D3: the charger's power path); U-03 no "
                  "longer can, unless route 2 proves infeasible with route 1 still closed (L4E13-06)"},
@@ -3319,7 +3523,7 @@ CHOICES = [
                   "idle limit and no requirement change, (I)'s powered cooling (up to 35.21 W into the sealed case) would reopen U-02's heat "
                   "budget, and a narrower storage floor would add 470 to 940 Wh of primary storage under D-06",
      "rows": ["IF-10"]},
-    {"id": "U-02", "title": "MESHSAT-1478: the sealed case's heat rejection in each required mode against its governing local limit, and four class (iii) lines (L4-E12, the fix round)", "class": ARCH,
+    {"id": "U-02", "title": "MESHSAT-1478: the sealed case's heat rejection in each required mode against its governing local limit; four lines over the modelled capacity, a modelled shortfall and a missing storage qualification (L4-E12, the fix round; its categories after the review's L4-F04)", "class": ARCH,
      "question": "what conductance does the sealed Peli 1450 with its 3 mm plate give, lid open and lid closed with the fans, in each required "
                  "mode of L4-E12 12a against that mode's governing local limit? As ruled (CFL-002 open: REQ-042's VOC channel sensing across "
                  "the envelope) the SGP41's Table 4 +50 C governs the heat stage at REQ-024's +40 C: 2.554 W/K on the pack (M1 lid open, M3 "
@@ -3329,7 +3533,8 @@ CHOICES = [
                  "operating row read to cover it unpowered (INFERRED), 5.417 W/K (at least 7.758 W/K), the maker-stated alternative the "
                  "RB9704's +70 C, 1.806 W/K (at least 1.958 W/K); M7, E5's +60 C dwell, the e-paper with no conductance, the alternative the "
                  "LimeSDR's +70 C storage row, 2.159 W/K (at least 2.455 W/K); M8 and M9, charging on the design day, T4 on the charging "
-                 "cells, 2.025 and 2.525 W/K (at least 2.123 and 2.677 W/K). A dummy-load mixed-air point closes only the conductance it reads",
+                 "cells, 2.025 and 2.525 W/K (at least 2.123 and 2.677 W/K). A dummy-load mixed-air point closes only the conductance it reads; "
+                 "a part's local temperature (the SGP41 at its port, the e-paper at its window) is read apart from the mixed-air screen",
      "constraint": "L4-E12's fix round for the review's B3, B4 and B7 (12a to 12e at b1cd32ba): the SGP41's sensing is supported to +50 C "
                    "only (Table 4); its +55 C (Table 5) is an absolute rating, a screen, never a line; option C reports the VOC channel not "
                    "covered above a 49.0 C reading and switches the sensor off at 54.0 C, so section 11's K1 and K5 are screens, withdrawn as "
@@ -3337,9 +3542,12 @@ CHOICES = [
                    "a mode, the parts at their LOCAL air with the cooler's exhaust, the junctions, the unpowered parts' storage rows), absolute "
                    "ratings listed as screens. The outside capacity with the inside resistance at zero (12e; 1.810 W/K at K1's rise, "
                    "correcting 1.504 to 1.571 W/K, which were a bound with a 50 m/s inside flow): every line is class (i) or (ii), T-H1 "
-                   "deciding bare or with the route, except four class (iii) lines, over the capacity even with the route at the optimistic "
-                   "ends: M3 (E3-L lid closed on the pack, as ruled) short by 0.275 W/K, 2.749 W; M4 (on shore) short by 0.430 W/K, 4.300 W; "
-                   "M6 (E3-O, the e-paper) short by 0.955 W/K, 4.775 W; M7 (E5's dwell, the e-paper) the whole 21.587 W. The charging heat as "
+                   "deciding bare or with the route, except four lines over the MODELLED capacity even with the route at the optimistic "
+                   "ends (a model figure on named coefficient ends, not a physical bound; none shown impossible): M3 (E3-L lid closed on the "
+                   "pack, as ruled) short by 0.275 W/K, 2.749 W, and M4 (on shore) short by 0.430 W/K, 4.300 W, a MODELLED SHORTFALL OF THE "
+                   "ANALYSED ARRANGEMENT (the SGP41's Table 4 on the mixed air); M6 (E3-O, the e-paper) short by 0.955 W/K, 4.775 W, and M7 "
+                   "(E5's dwell, the e-paper) the whole 21.587 W on that row, a MISSING STORAGE QUALIFICATION (an operating row INFERRED to "
+                   "cover the part unpowered); no DEMONSTRATED CONFLICT (no local temperature measured). The charging heat as "
                    "a balance (B4): 95.944 W in less 45.900 W stored = 50.044 W, 52.134 W with L4-E8's ballasts; T3's start (K7, K8) needs "
                    "1.8102 and 2.1997 W/K (readings 1.8892 and 2.3150 W/K). The battery-only run coupled to C1 (B7): C1 sheds the profile at "
                    "2.01 to 2.51 h on the bound, the run with the shed states 2.52 to 2.95 h (energy and thermal); 2.52 h unshed is energy "
@@ -3353,26 +3561,34 @@ CHOICES = [
                   "21.587 W, M5 at 43.413 W, M8 and M9 at 52.134 W, each read against its governing line as ruled and under C; then the "
                   "fans-off case and 12c's transient point; under a class (ii) line the combined route (R-170 to R-172) read at the same "
                   "point; the e-paper's own temperature at its window (a T-H1 channel: a plate fraction of 0.362 needs 1.963 W/K, 0.725 "
-                  "needs 3.926 W/K); the cells' rise in the pocket (U-01), the parts' local air in the built kit (T-H2), the junctions "
+                  "needs 3.926 W/K); the SGP41's local air at its port lid closed (a channel apart from the mixed air); a storage soak of an "
+                  "e-paper sample at E3-O's and E5's temperatures with its function read back (evidence for that lot); the cells' rise in "
+                  "the pocket (U-01), the parts' local air in the built kit (T-H2), the junctions "
                   "(THM-001); on the built kit the battery-only run from a 24 h soak at +20 C (12c)",
-                  "CFL-002 (OW-1); for the four class (iii) lines, one option each (OW-10): E3-L lid closed, CFL-002's C, A or B, a "
-                  "closed-lid ceiling on REQ-042's VOC channel (an ambient of +31.3 to +38.8 C on the pack, +30.2 to +38.2 C on shore) or "
-                  "D-02b's closed-lid test restated; E3-O and E5, PDi's statement sent (OW-4), a different e-paper (CHO-001) or a recorded "
-                  "deviation (TEST-PLAN); authorise T-H1's bench (OW-8)"),
+                  "send PDi's storage request (OW-4) and authorise T-H1's bench (OW-8); CFL-002 (OW-1) and the requirement or ruling "
+                  "options for the four lines (OW-10: CFL-002's C, A or B; a closed-lid ceiling on REQ-042's VOC channel, on the model an "
+                  "ambient of +31.3 to +38.8 C on the pack, +30.2 to +38.2 C on shore; D-02b's closed-lid test restated; a different "
+                  "e-paper, CHO-001; a recorded deviation, TEST-PLAN) stay the owner's and go to him only when a measurement "
+                  "demonstrates the conflict"),
      "supplier": "the prototype bench, as Layer 9's physical verification, once the owner authorises it (the session cannot run it); Layer 6 "
                  "components for D-18's pick and the fans' rating (R-142, R-150, E11-35); Layer 7 mechanical for the combined route "
-                 "(R-170 to R-172) and a closed-lid conduction path; the makers (Sensirion, PDi), through the owner",
+                 "(R-170 to R-172) and a closed-lid conduction path; the prototype bench for an e-paper storage soak; the makers "
+                 "(Sensirion, PDi), through the owner",
      "fallback": "under a class (i) or (ii) line's point, the combined route inside the rulings (R-170 to R-172, passive: no power, no "
-                 "endurance change) read at the same point; for a class (iii) line no measurement passes it: the session develops two "
-                 "options, the e-paper's window temperature measured (the plate fraction decides) and a closed-lid conduction path from "
-                 "the plate to the lid's inner face inside the seal (Layer 7; not modelled, it closes nothing yet); the rest are the "
-                 "owner's (CFL-002, a requirement or ruling change, CHO-001, a recorded deviation). Charging is not class (iii): charging "
+                 "endurance change) read at the same point; for the MODELLED SHORTFALL (M3, M4) the session develops a closed-lid "
+                 "conduction path from the plate to the lid's inner face inside the seal (the combined route carried to the closed lid; "
+                 "Layer 7, not modelled, it closes nothing yet) and reads the SGP41's local air at its port; for the MISSING STORAGE "
+                 "QUALIFICATION (M6, M7) PDi's storage statement or a storage soak of a sample with its function read back, and at M6 "
+                 "the e-paper's window temperature measured (the plate fraction decides); only a DEMONSTRATED CONFLICT (a measured local "
+                 "temperature over a mandatory limit with the route fitted) goes to the owner (CFL-002, a requirement or ruling change, "
+                 "CHO-001, a recorded deviation). Charging lies under the modelled capacity (class (i)): charging "
                  "only in the heat stage (31.133 W into the case) needs 1.209 and 1.508 W/K, class (i), at the cost of the profile while "
                  "charging (an owner's duty-cycle choice, not taken)",
-     "overturns": "the sealed case's thermal design against four mode requirements (class (iii)): the rulings (no vent, the Peli 1450, the "
-                  "device set) and E3-L lid closed, E3-O and E5 as stated cannot all stand; which gives way is the owner's (CFL-002, "
-                  "REQ-042's coverage, D-02b, CHO-001, TEST-PLAN), never the power path's topology; a class (i) or (ii) line read short "
-                  "with the route also short would join them",
+     "overturns": "the sealed case's thermal design, only on a DEMONSTRATED CONFLICT: a measured local temperature over a mandatory limit "
+                  "with the route fitted (none at present) would set the rulings (no vent, the Peli 1450, the device set) against that "
+                  "mode's requirement, and which gives way is then the owner's (CFL-002, REQ-042's coverage, D-02b, CHO-001, TEST-PLAN), "
+                  "never the power path's topology; a modelled shortfall or a missing storage qualification is an engineering or evidence "
+                  "task, not a conflict; a class (i) or (ii) line read short with the route also short is judged the same way",
      "rows": ["IF-11"]},
     {"id": "U-03", "title": "O-1: the solar panel inside REQ-016's window (L4-E13, accepted)", "class": DOWNSTREAM,
      "question": "which physical unit is inside REQ-016's window: a unit measured to PANEL-ACC and accepted on A-1 (Vm20 plus U_V at most "
@@ -3399,46 +3615,62 @@ CHOICES = [
                   "route 1 still closed (L4E13-06)",
      "rows": ["IF-01"]},
     {"id": "U-04", "title": "source-only and dead-pack operation (L4-E11: (B1) selected, the BQ25730 with the battery FET pair Q39 and Q40 and board E on VSYS_E, drafted; the drawn board is arrangement (A))", "class": ARCH,
-     "question": "with (B1) selected and drafted, does the BQ25730's VSYS hold the kit's load steps inside the 2.054 V margin (D2), does each "
-                 "FET of the pair meet its bar (junction to air at most 34.42 C/W at the +70 C mixed air, E11-29), does the docking pulse "
-                 "split between the two body diodes within a share of 0.848 (E11-30), does the start from cold reach VSYS_MIN (E11-31), "
-                 "and is the BQ25730 obtainable? On the board as drawn (arrangement (A)) D1 and D3 stay TI's",
-     "constraint": "L4-E11's consolidation (check 5 at 5aa18a69) and its fix round for the review's B1 and B2 (section 15 at 656fc540): "
-                   "(B1), TI's BQ25730 with two Nexperia BUK6Y10-30P in parallel as the battery FET (Q39, Q40; LCSC C3278350), drafted in "
-                   "apply_gen_sch_a_charger.py, and board E's auxiliary domain (U12, its controller, the two mixer fans) moved from CELL_F "
-                   "to VSYS_E over the dock's pin 1 (J_DOCK.1 to VBAT; apply_gen_sch_e_aux.py, apply_pcb_interfaces_dock.py; E11-33, E11-34), "
+     "question": "with (B1) selected and drafted, does the BQ25730's VSYS hold the kit's load steps inside the 2.054 V margin (D2), does the "
+                 "pair's installed (Zself + Zmut) meet its allowances at the RDS(on) allowance (E11-29, E11-36), does BATDRV run the pair's "
+                 "Ciss against TI's 5 nF (E11-37), does the docking pulse stay inside one FET's hot VF and ISM (E11-30), does the start "
+                 "from cold reach VSYS_MIN (E11-31), does the dock's VSYS branch hold its limit and a hard short (E11-38), and is the "
+                 "BQ25730 obtainable? On the board as drawn (arrangement (A)) D1 and D3 stay TI's",
+     "constraint": "L4-E11's consolidation (check 5 at 5aa18a69), its fix round for the review's B1 and B2 (section 15 at 656fc540) and "
+                   "its fix round for the review of the provisional fixes, L4-F02 and L4-F03 (section 16 at d2a59468): (B1), TI's BQ25730 "
+                   "with two Nexperia BUK6Y10-30P in parallel as the battery FET (Q39, Q40; LCSC C3278350) and the eFuse U42 on the dock's "
+                   "VSYS contact, drafted in apply_gen_sch_a_charger.py, and board E's auxiliary domain (U12, its controller, the two mixer "
+                   "fans) moved from CELL_F to VSYS_E over the dock's pin 1 (J_DOCK.1 to VSYS_DOCK behind U42; apply_gen_sch_e_aux.py, "
+                   "apply_pcb_interfaces_dock.py; E11-33, E11-34), "
                    "none applied. SLUSE65A bounds VSYS: no pack, at least 12.054 V (LDO mode); the charge inhibited, piecewise: SRN under "
                    "12.054 V at least 12.054 V, over 12.546 V VSRN + 150 mV within +-2 % (12.546 V an assumed reading of TI's malformed "
                    "column, A11-18), between at least 11.96 V; with the source overloaded VSYS follows the pack through the pair and R17 "
-                   "down to 9.688 V: the system node 9.688 to 17.375 V. In the held state no kit load is fed from the pack: its bounded "
-                   "drains total 0.1408 mA, the bench reads the held pack current at most 1 mA (E11-31). The start is bounded on held "
+                   "down to 9.688 V: the system node 9.688 to 17.375 V. In the held state no kit load is fed from the pack: 0.1408 mA is "
+                   "the quantified subset of its drains (the monitor and D3 at 25 C; hot clamp leakage and body-diode current are not "
+                   "bounded by a printed figure), the bench acceptance at most 1 mA (E11-31). The start is bounded on held "
                    "evidence to VSYS_MIN or a latch within 3.062 s (the earlier 502.3 ms withdrawn: 0.5 A is an input ceiling, not a "
-                   "delivered current). The pair at the +70 C mixed air: every protection event at TJ 150 C or under at the 34.42 C/W bar "
-                   "(E11-29), 18 A for 60 s kept, at 119.8 C (R-159's fallback, which lowered it, withdrawn); the docking pulse 242.9 A "
-                   "against each FET's ISM 320 A at 25 C, met hot for a share of at most 0.848 (E11-30); the precharge at most 0.33616 A, "
+                   "delivered current). The pair at the +70 C mixed air, sized to an RDS(on) allowance of 21.136 mOhm per FET that no "
+                   "printed point bounds at -8.5 V hot (E11-36): every protection event from the held 20 A at TJ 150 C or under for an "
+                   "installed (Zself + Zmut) at most 33.12 K/W steady, 10.753 at 1 s, 3.785 at 20 ms and 0.703 at 244 us (E11-29), the "
+                   "device's own Fig. 4 with the coupling in the measured sum; 18 A for 60 s from the hot state kept, at 126.7 C (R-159's "
+                   "fallback, which lowered it, withdrawn); Ciss 4.72 nF typical at -15 V and about 5.74 nF near 0 V, not shown under TI's "
+                   "5 nF (E11-37, OPEN); the docking pulse 242.9 A whole in one FET, TJ 123.3 C from +70 C on the stated VF bound, VF and "
+                   "ISM hot not printed (E11-30); the dock's VSYS branch behind U42, 1.4713 to 1.8018 A, the contact at 51.5 % of its 3.5 A, "
+                   "VSYS_E at least 9.539 V at 1.0 A, the hard short's peak open (E11-38); the precharge at most 0.33616 A, "
                    "no charge under 5.7 V on SRN; 0.0934 W in the pair at PS-IDLE-SPEC (0.218 % of the pack's output); L2 at 14.55 A peak "
                    "against Isat 25.4 A; 98 of the 107 row blocks identical, so L4-E4 to L4-E8 carry over; still open: D2 against the "
-                   "2.054 V margin, D6, D8, D9, D10, the BQ25730's supply (LCSC stock 0), the fans' rating to 17.375 V (E11-35), and "
+                   "2.054 V margin, D6, D8, D9, D10, the BQ25730's supply (LCSC stock 0), the fans' range, 17.375 V at the top and "
+                   "running at 9.539 V (E11-35), and "
                    "REQ-015 at 9.00 V at the plug, a CONDITIONAL CANDIDATE (P1 at most 20.51 W, the shed warm-up 28.12 W carried with 0.98 "
                    "W in hand; the source's least 29.09 W at VBAT does not sustain the 42.8 W profile without the pack or shedding; at the "
                    "load's hi corner P1 (35.24 W) exceeds the source's least); on the board as drawn the BQ25731 leaves D1 and D3 "
                    "(Q-TI-3) to TI",
-     "evidence": ("TI's SLUSE65A (held) bounds the three modes; Q-TI-15 (D2) and Q-TI-16 (VSYS_MIN's maximum) to TI, drafted in "
-                  "clarification/TI-QUESTIONS.md (Q-AOS-1 withdrawn: Nexperia prints the pair's ISM); the BQ25730's supply from an "
-                  "authorised source (R-162); the fans' maximum supply voltage (E11-35)",
+     "evidence": ("TI's SLUSE65A (held) bounds the three modes; Q-TI-15 (D2), Q-TI-16 (VSYS_MIN's maximum) and Q-TI-17 (what TI's "
+                  "5 nF bounds, E11-37) to TI, drafted in clarification/TI-QUESTIONS.md (Q-AOS-1 withdrawn); Nexperia's RDS(on) maximum at "
+                  "-8.5 V and 150 C (E11-36), VF above 80 A and hot and ISM at a hot mounting base (E11-30); TI's TPS16630 sheet (held) "
+                  "bounds U42's limit; the BQ25730's supply from an authorised source (R-162); the fans' supply range (E11-35)",
                   "the three modes, the held pack current, the start from cold and D2 on one BQ25730 build (E11-31, R-161), every step's "
-                  "minimum over the converters' floor; each FET's installed path at most 34.42 C/W from the layout, read as its case rise "
-                  "at 10 A (E11-29, R-159); the docking pulse's split on the pair (E11-30, R-160); R-85 extended at the plug (E11-06) and "
-                  "E4-O's warm-up (E11-23, R-137)",
+                  "minimum over the converters' floor; Zself and Zmut at 244 us, 20 ms, 1 s, 60 s and steady on the built board by the "
+                  "body diode's VSD (E11-29, R-159); a pulsed Kelvin RDS(on) at -8.5 V and 150 C on parts from the lot (E11-36, R-182); "
+                  "BATDRV with the pair at -20, 25 and 70 C (E11-37, R-183); the docking pulse's VF and ISM hot by a pulse test (E11-30, "
+                  "R-160); the dock branch's limit, its overload and a hard short at VSYS_E (E11-38, R-184); R-85 extended at the plug "
+                  "(E11-06) and E4-O's warm-up (E11-23, R-137)",
                   "send TI's questions (OW-7); the BQ25730 and the pair bought for the build (money, the owner's)"),
-     "supplier": "Layer 8 board A applies R-157 and board E E11-33 under L4-E11's release record (R-147); the Layer 4 coordinator applies "
-                 "E11-34's interface draft; the prototype bench (R-161); Layer 9 (R-159); Layer 6 (R-160, R-162, E11-35); TI through the "
-                 "owner",
-     "fallback": "inside (B1): R-c's step rule for D2; the pair's copper and Nexperia's Rth(j-mb) for the bar, never a lowered protection "
-                 "or service (18 A for 60 s and 10 A continuous kept); the two diode paths matched by layout, or Nexperia's hot ISM, for "
-                 "the docking pulse; if (B1) fails on these or on supply, arrangement (A) with its dependency round stands: E11-24's "
+     "supplier": "Layer 8 board A applies R-157 with R-181 and board E E11-33 under L4-E11's release record (R-147); the Layer 4 "
+                 "coordinator applies E11-34's interface draft; the prototype bench (R-161, R-184); Layer 9 (R-159); Layer 6 (R-160, R-162, "
+                 "R-182, R-183, E11-35); TI and Nexperia through the owner",
+     "fallback": "inside (B1): R-c's step rule for D2; more copper or a heat path for the pair's installed sum, never a lowered "
+                 "protection or service (18 A for 60 s and 10 A continuous kept); a reading over the RDS(on) allowance re-sizes the "
+                 "installed path before layout (E11-36); on a negative Ciss answer one BUK6Y10-30P with a heat path through the case "
+                 "(L4-E11 16c's (S2), the engineer's choice); a slower discharge-FET turn-on on board P for the docking pulse (board P's "
+                 "owner, with ASCD's turn-off shown unchanged); a series inductance or a second contact for the dock branch's hard short; "
+                 "if (B1) fails on these or on supply, arrangement (A) with its dependency round stands: E11-24's "
                  "hold-up (54.07 mJ, 1.117 ms for the worst admitted step, R-152) for D2 and D5, with TI's D1 and D3 deciding",
-     "overturns": "once R-157, E11-33 and E11-34 are applied, nothing of the architecture: each open claim has a test or an analysis that "
+     "overturns": "once R-157 (with U42, R-181), E11-33 and E11-34 are applied, nothing of the architecture: each open claim has a test or an analysis that "
                   "bounds it and a fallback inside (B1), so U-04 becomes a downstream qualification test (L4-E11 check 5); on the board as "
                   "drawn a negative D1 or D3 from TI changes the charger's power path, which (B1) already is; the efficiency, the pin's "
                   "band or P1's load move the knee or F1, not the topology",
@@ -3508,21 +3740,29 @@ DEFECTS = [
                 "recomputed 3.062 ms start (34 uF)",
      "resolution": "superseded by E11-01's entry (R-123); R-119 only if the LM5069 is kept", "rows": ["IF-05"]},
     {"id": "D-10", "title": "a stiff 36 V source on the solar port (a single fault: a vehicle or shore lead in the panel's receptacle)",
-     "state": "ADDRESSED IN DRAFTS (a selected remedy, drafted, not applied), CONDITIONAL on the panel lead's loop inductance at least 2.47 uH",
+     "state": "ADDRESSED IN DRAFTS (a selected remedy, drafted, not applied); the source arriving with the guard already on NOT CLOSED: every "
+              "rating with its margin only for a source loop of at least 3.30 uH, the floor the engineer's row B6-ENG-1",
      "constraint": "without the guard D4, the drafted SMCJ28A, conducts 2.67 to 16.63 A and takes 95.9 to 585.8 W against its 1.17 W on the board at the hot end's air; "
                    "the largest sustained source the drafted entry holds is 29.70 V (L4-E7's D4)",
      "options": "L4-E7's three, each on its held sheet: the TPS48110-Q1 alone on back-to-back FETs (its -1 V input pins on a reversal: not taken); the "
                 "LM74700-Q1 ahead of the TPS48110-Q1 (76.21 V across CATHODE to ANODE under CS116 against 75 V: not taken); SELECTED, U21 TPS48110-Q1 "
                 "with Q12 CSD19532Q5B as an over-voltage cut-off, rising at 28.55 to 31.06 V and falling at 27.07 V or more, with D4 the SMCJ30A: the "
-                "block never turns on and Q12 holds 36 of 100 V (the TVS-only change, SMCJ36A with the 63 V class, evaluated and not taken); with the "
-                "guard already on (the review's B6, L4-E7 at 11339ec7) the network as first drafted failed four ratings when a 36 V source steps on "
-                "(PV_F 102.1 V of 100, its slew 397.7 V/us of 60, INP 29.07 V of 20, U5 0.4218 V of 0.3), so C131 and C132 become two 10 uF 100 V, "
-                "C133 and C134 two 10 uF 50 V on PV_P, C126 330 pF and R97 30.0k: every rating MEETS from a lead of 2.47 uH (U5's 0.2991 of 0.3 V "
-                "binding; Q12 off at most 75.3 A within 10.1 us, D4 carrying nothing)",
-     "resolution": "R-173: apply_gen_sch_e_solar_guard.py (7 edits, release-guarded), drafted, not applied (L4-E7, check 5 at 573fd5b8, B6 at "
-                   "11339ec7); owed: the SMCJ30A's LCSC code, U21's DGX-19 land, the regeneration, R-176's seven bench rows, the panel lead's loop "
-                   "inductance at least 2.47 uH measured or its conductors' centres at least 4.21 mm apart (R-180, Layer 7); the band 25 V to the "
-                   "cut-off a layer 8 row (R-175)",
+                "block never turns on and Q12 holds 36 of 100 V (the TVS-only change, SMCJ36A with the 63 V class, evaluated and not taken). With the "
+                "guard already on (the review's B6; the external review's L4-F01; L4-E7's round 2 at 68bc3bad): the margin chosen first, U5's CSPIN "
+                "to CSNIN within +-0.240 V with the numerical error 0.000882 V added on top (a DESIGN TARGET until L4-E7's uncertainty budget "
+                "shows what its 0.060 V reserve covers); each ceramic bank bounded on its own from Samsung's "
+                "curves (the port bank four CL32B225KCJSNNE, PV_P and TRK_VS CL32B106KBJNNNE, TRK_VIN the drawn CL31B106KBHNNNE), the 16 corners "
+                "searched; R97 28.0k, C126 330 pF: for a stiff 36 V source whose loop lies anywhere from 0.30 to 10.20 uH, every rating holds with "
+                "its margin only from a 3.30 uH loop (U5 0.2396 V; Q12 off at most 60.3 A within 11.4 us, D4 carrying nothing), NOT under it (at "
+                "1.00 uH U5 0.5287 V, over its 0.3 V absolute maximum); a pin-level limiter (B) not taken (8705af p.30 forbids series resistors on "
+                "the CSxIN and CSxOUT pins; Analog Devices' question 6 drafted); the TPS48111-Q1 (D) not taken (its floor 1.57 uH, at 1.00 uH U5 "
+                "still 0.3132 V)",
+     "resolution": "R-173: apply_gen_sch_e_solar_guard.py (8 edits, release-guarded), drafted, not applied (L4-E7, check 5 at 573fd5b8, round 2 at "
+                   "68bc3bad); owed: the LCSC codes of D4 and of the Samsung parts, U21's DGX-19 land, the regeneration and its gates, R-176's six "
+                   "bench rows (row 3 the layer 9 acceptance at +-0.240 V, a pass only from a 3.30 uH loop until B6-ENG-1 is decided); the guard-on "
+                   "case closes only by B6-ENG-1: Analog Devices permits a sense-pin filter (R-186), or the kit's rules bound a stiff source's loop "
+                   "at J_SOLAR to at least 3.30 uH, measured (R-180), or the input current sense moves off the stage's input capacitance (R-187); "
+                   "the band 25 V to the cut-off a layer 8 row (R-175)",
      "rows": ["IF-01"]},
     {"id": "D-11", "title": "a reversed panel (DECISION-31's E-N1, a single fault)",
      "state": "ADDRESSED IN DRAFTS (a selected remedy, drafted, not applied), CONDITIONAL on Q13's leakage above +25 C",
@@ -3530,7 +3770,7 @@ DEFECTS = [
                    "drop, which no silicon junction has at that current (INFERRED); the keyed receptacle was the only barrier (L4-E7's D5)",
      "options": "SELECTED, Q13 CSD19532Q5B in the panel's return (J_SOLAR.2 becomes PV_RTN), its gate from R101 and R102 with a D12 BZT52C12 clamp: "
                 "it blocks a reversal with its 100 V rating and no controller; the high side's pins stay within 1 V of GND while Q13 leaks under "
-                "32.0 uA, its sheet printing 1 uA at 25 C only (DECISION-31's E-N1 closed by it)",
+                "32.1 uA, its sheet printing 1 uA at 25 C only (DECISION-31's E-N1 closed by it)",
      "resolution": "R-173 with D-10 (the same draft, not applied); Q13's hot leakage a bench row (R-176)", "rows": ["IF-01"]},
     {"id": "D-12", "title": "the panel lead's CS116 and CS115 (MIL-STD-461G under REQ-063) on the drawn entry", "state": "RESOLVED (drafted); CS115 with the block on CONDITIONAL on R-174",
      "constraint": "D4 clamps at 39.00 V at CS116's 10 A and 37.34 V at CS115's 5 A (hot end), over the drawn C11 and C12's 35 V (L4-E7's D1, D2)",
@@ -3546,21 +3786,58 @@ DEFECTS = [
      "options": "SELECTED (L4-E11 15a): VSYS alone over the dock, J_DOCK pin 1 from GND to VBAT and board E's J_BLK pin 1 to VSYS_E, U12, C31, "
                 "the fans and D7, D8 on VSYS_E (1 A on one 813 contact, the ground return on seven, 79.3 C at the 51 C air with one open); "
                 "a diode or ideal-diode OR with CELL_F not taken (it takes the pack whenever VSYS sits under it, which the +-2 % row allows); "
-                "the held pack's drains bounded at 0.1408 mA; the start bounded to VSYS_MIN or a latch within 3.062 s",
+                "the held pack's drains: 0.1408 mA is the quantified subset (the monitor and D3 at 25 C), hot clamp leakage and body-diode "
+                "current are not bounded by a printed figure, the bench acceptance at most 1 mA stands (L4-E11 16e); the start bounded to "
+                "VSYS_MIN or a latch within 3.062 s; since L4-F03 the dock's pin 1 is VSYS_DOCK behind the eFuse U42 (D-15)",
      "resolution": "R-177 (apply_gen_sch_e_aux.py, E11-33) and R-178 (apply_pcb_interfaces_dock.py, E11-34), not applied; the bench rows of "
-                   "E11-31 (R-161: the held pack current at most 1 mA, the start from cold); the fans' rating to 17.375 V (R-179, E11-35)",
+                   "E11-31 (R-161: the held pack current at most 1 mA, the start from cold); the fans' range, 17.375 V at the top and "
+                   "running at 9.539 V (R-179, E11-35)",
      "rows": ["IF-06", "IF-09", "IF-11"]},
     {"id": "D-14", "title": "(B1)'s battery FET bounded at a drive and temperature corner the sheets do not print, and a fallback that lowered the 18 A for 60 s service (the review's B2)",
-     "state": "ADDRESSED IN DRAFTS (L4-E11's fix round, drafted, not applied), CONDITIONAL on the installed path and the docking split",
+     "state": "ADDRESSED IN DRAFTS (L4-E11's fix rounds, drafted, not applied), CONDITIONAL on E11-29, E11-30 and E11-36, with E11-37 (Ciss) OPEN",
      "constraint": "Q39 (AONS21357) was bounded at 10.7 mOhm at VGS -10 V and 125 C while BATDRV gives 8.5 V at its least; 12 mOhm at the "
-                   "real corner, the review's counterexample, puts TJ over 150 C; R-159's fallback limited 18 A to 0.916 s after 10 A held against IF-AE-DOCK's 18 A for 60 s",
+                   "real corner, the review's counterexample, puts TJ over 150 C; R-159's fallback limited 18 A to 0.916 s after 10 A held against IF-AE-DOCK's 18 A for 60 s; "
+                   "the review of the provisional fixes (L4-F02) found the replacement's qualification overstated: an RDS(on) inferred at "
+                   "-8.5 V and 150 C that no printed point bounds, AOS's transient shape borrowed for the new FETs, Ciss typical taken as "
+                   "meeting TI's 5 nF, and the docking pulse judged by an I2t the sheet does not print",
      "options": "L4-E11's three on one basis (RDS(on) from the printed maxima at BATDRV's 8.5 V and the hot junction): (Q-a) one AONS21357, "
-                "a bar of 10.1 C/W; (Q-b) one SQJ403EP, 9.49 C/W; SELECTED (Q-c) two Nexperia BUK6Y10-30P in parallel (Q39, Q40), 34.42 "
-                "C/W per FET at the +70 C mixed air, every protection event at TJ 150 C or under, 18 A for 60 s at 119.8 C, ISM 320 A each "
-                "over the 242.9 A docking pulse, Ciss 4.72 nF typical inside TI's 5 nF; R-159's fallback withdrawn",
-     "resolution": "R-157 (apply_gen_sch_a_charger.py, the pair), not applied; E11-29 (R-159: each FET's installed path at most 34.42 C/W), "
-                   "E11-30 (R-160: the docking split at most 0.848 hot), E11-32 (R-162: the parts' supply)",
+                "a bar of 10.1 C/W; (Q-b) one SQJ403EP, 9.49 C/W; SELECTED (Q-c) two Nexperia BUK6Y10-30P in parallel (Q39, Q40); after "
+                "L4-F02 (L4-E11 16): sized to an RDS(on) ALLOWANCE of 21.136 mOhm per FET, no printed point bounding -8.5 V hot (E11-36); "
+                "the device's own Fig. 4 with the two FETs' coupling in the measured sum Zself + Zmut, at most 33.12 K/W steady, 10.753 at "
+                "1 s, 3.785 at 20 ms and 0.703 at 244 us for every protection event from the held 20 A at TJ 150 C or under (E11-29); 18 A "
+                "for 60 s from the hot state at 126.7 C, kept; Ciss 4.72 nF typical at -15 V and about 5.74 nF near 0 V, not shown under "
+                "TI's 5 nF (E11-37, OPEN; one FET with a heat path through the case the engineer's fallback); the docking pulse whole in "
+                "one FET, TJ 123.3 C from +70 C on the stated VF bound, VF and ISM hot not printed (E11-30); R-159's fallback withdrawn; "
+                "after the second review's L4-CP02 (L4-E11 17b) a junction temperature does not extend ISM's printed 10 us: the WHOLE hot "
+                "waveform is accepted by a defined pulse qualification, SELECTED (D2): 6 parts, each 2000 pulses 10 s apart at 267.2 A peak "
+                "and 37.2 us (1.1 times the waveform), the mounting base at 75 C, with Nexperia's Q-NXP-1 asked in parallel (D1) and board "
+                "P's inrush bound (D3) only if (D2) fails; L4-CP03: the charger draft no longer writes the withdrawn claims (tested)",
+     "resolution": "R-157 (apply_gen_sch_a_charger.py, the pair), not applied; E11-29 (R-159: the installed Zself + Zmut), E11-30 (R-160: "
+                   "the docking pulse in one FET), E11-36 (R-182: RDS(on) at -8.5 V and 150 C), E11-37 (R-183: Ciss, OPEN), E11-32 "
+                   "(R-162: the parts' supply)",
      "rows": ["IF-09", "IF-10"]},
+    {"id": "D-15", "title": "the dock's new VSYS contact without branch protection (the review of the provisional fixes, L4-F03)",
+     "state": "ADDRESSED IN DRAFTS (L4-E11's fix round for L4-F03, drafted, not applied): %s (E11-38)" % L4F03_STATUS,
+     "constraint": "D-13's feed put board A's VSYS, designed for 10 A continuous and 18 A pulses with far higher upstream thresholds, on one "
+                   "Preci-Dip 813 contact of 3.5 A with only a 1 A load declaration, which limits nothing; the review's counterexample, "
+                   "5 A from 14.4 V (2.88 Ohm) on VSYS_E, is over the contact and under every upstream threshold, in source-only and "
+                   "battery operation alike",
+     "options": "L4-E11's three on maker-printed rows over temperature and time: (F) a Littelfuse 0997 MINI 2 A fuse, which may carry 3.5 to "
+                "4 A for up to 600 s (not taken); (P) a Bourns MF-MSMF150/24X PTC, hold 0.88 A at 70 C under the 1.0 A load and a trip "
+                "near 4.2 A at -40 C (not taken); SELECTED (E) U42 TI TPS16630PWPR on board A between VBAT and a new net VSYS_DOCK on "
+                "J_DOCK pin 1, R221 11.0 kOhm 0.1 % on ILIM (1.4713 to 1.8018 A over TJ), C237 22 nF on dVdT, MODE to GND (auto-retry): "
+                "the contact at most 1.802 A, 51.5 % of 3.5 A, once the limit settles (a regulated setting, not an instantaneous ceiling; "
+                "the second review's L4-CP01): an operating overload held, then off, at a duty of at most 0.288; a short applied while on at "
+                "most 566 A for at most 4.5 us (1.441 A2s, INFERRED: VSYS over RON's printed least and the path, no inductance credited; "
+                "the typical 45 A threshold and the 0.0091125 A2s built on it withdrawn), IN at most 41.1 V with U42 within 20 nH of C236 (a "
+                "layout requirement), OUT's negative spike clamped by D23; a start into a pre-existing short limited at the setting for at "
+                "most 1.5 s then off; repeated retry at a duty of at most 0.75; the fans' start at most 0.3356 A each together or 0.5713 A one "
+                "at a time (E11-39), VSYS_E at least 9.494 V; C238 1 uF at IN, C239 0.1 uF at OUT and D23 B540C-13-F added to the draft "
+                "(L4-E11 17a); VSYS_E at least 9.539 V at 1.0 A from the 9.688 V floor",
+     "resolution": "R-181 (apply_gen_sch_a_charger.py, with R-157; C238, C239, D23; U42 within 20 nH of C236), not applied; E11-38 (R-184: the "
+                   "whole fault envelope of L4-E11 17a, (a) to (f), with pass limits); E11-35 (R-179: the fans' range and their start under U42's "
+                   "least limit); E11-39 (R-188: the fans started one at a time with a PWM ramp)",
+     "rows": ["IF-06", "IF-11"]},
 ]
 OWNERS = ["Layer 4 coordinator", "Layer 5 interfaces", "Layer 6 components", "Layer 7 mechanical", "Layer 8 board A generator owner",
           "Layer 8 board E generator owner", "Layer 8 board P generator owner", "Layer 9 pre-layout analysis", "prototype bench",
@@ -3573,8 +3850,9 @@ OWNER_ITEMS = [
                            "sensor in its place (L4-E12's recommendation); B, the VOC channel dropped; C, the SGP41 kept, its channel reported as "
                            "not covered above a 49.0 C reading and after storage outside 5 to 30 C, the sensor off from a 54.0 C reading; it also sets "
                            "the governing line at REQ-024's +40 C (L4-E12 12a): with no option taken, the SGP41's Table 4 +50 C, 2.554 W/K on the "
-                           "pack and 2.709 W/K on shore, class (iii) with the lid closed; under C, A or B the cells' hot stop H1, 1.666 and "
-                           "1.642 W/K",
+                           "pack and 2.709 W/K on shore, over the modelled capacity with the lid closed (a MODELLED SHORTFALL OF THE ANALYSED "
+                           "ARRANGEMENT, M3 and M4); under C, A or B the cells' hot stop H1, 1.666 and 1.642 W/K; held in reserve, not a forced "
+                           "question: the options stay the owner's and the request goes to him only when a measurement demonstrates a conflict",
      "docs": [("l4e12md", "L4-E12's page, section 8")]},
     {"id": "OW-2", "what": "U-01, item 1: send the drafted request for the HL18650V's signed product specification (Yichun Topwell Power), "
                            "ten questions since L4-E10's dependency round (7 to 10 added: the cold charge band and termination, the pulse "
@@ -3589,7 +3867,7 @@ OWNER_ITEMS = [
     {"id": "OW-4", "what": "the other outside-contact drafts to send (the owner chooses the channel; Topwell's is OW-2, TI's OW-7)",
      "docs": [("cl_pdi", "Pervasive Displays: the E2370KS0C1's storage and operation (U-02)"),
               ("cl_sensirion", "Sensirion: the SGP41's duration, recovery and storage (U-02, CFL-002)"),
-              ("cl_adi", "Analog Devices: the LT8705A's IMON_IN limits (the 100 W bound; R-33, R-101)"),
+              ("cl_adi", "Analog Devices: the LT8705A's IMON_IN limits (the 100 W bound; R-33, R-101) and question 6, a sense-pin filter on CSPIN and CSNIN (B6-ENG-1, R-186)"),
               ("cl_milliohm", "Milliohm: the HoJLR2512's temperature coefficient below +25 C (R-101)"),
               ("cl_vishay", "Vishay: the WSL2512's pulse capability (R-101)"),
               ("cl_ti", "Texas Instruments: the INA169's error envelope (R-101)"),
@@ -3603,7 +3881,7 @@ OWNER_ITEMS = [
                            "specification (M1 to M3 and A-2's reading); actions under the owner's authority (money), not questions",
      "docs": [("l4e13md", "L4-E13's page, PANEL-ACC")]},
     {"id": "OW-7", "what": "U-04: send TI the battery packet's questions (REVIEW-REQUEST.md section 4) with L4-E11's TI-QUESTIONS.md: under (B1) "
-                           "Q-TI-15 (D2) and Q-TI-16 (VSYS_MIN's maximum) to TI (Q-AOS-1 withdrawn in L4-E11's fix round: the pair's ISM is printed); on the board as "
+                           "Q-TI-15 (D2), Q-TI-16 (VSYS_MIN's maximum), Q-TI-17 (what TI's 5 nF bounds, E11-37, R-183) and Q-TI-18 (U42's OUT undershoot and I(OL) at 17 V, E11-38, R-184) to TI, and Q-NXP-1 (the body diode's acceptance of the docking waveform, E11-30, R-160) to Nexperia, all in TI-QUESTIONS.md (Q-AOS-1 withdrawn in L4-E11's fix round: the pair's ISM is printed); on the board as "
                            "drawn Q-TI-11 to Q-TI-14 and the addendum to Q-TI-3 (D1 and D3 decide U-04 there; E11-05, E11-25; R-114, R-160); "
                            "an action, not a question",
      "docs": [("ti_review", "Texas Instruments: the battery packet"), ("cl_tiq", "Texas Instruments and AOS: the dependency rounds' questions")]},
@@ -3622,14 +3900,17 @@ OWNER_ITEMS = [
                            "10g: one cell, NZ$ 238.72, a chamber from -40 to +85 C and a 25 A load, about two weeks) and the printed mock-up of "
                            "four cells in the pocket (no purchase); actions, not questions",
      "docs": [("cl_saft", "Saft: the MP 176065 xtd in a 4S1P pack")]},
-    {"id": "OW-10", "what": "U-02's four class (iii) lines (L4-E12 12e; no measurement can pass them): one option each, none lowering a "
-                            "requirement silently; (1) E3-L at +40 C lid closed (M3, M4): CFL-002's C, A or B (OW-1), a closed-lid ceiling "
-                            "on REQ-042's VOC channel (an ambient of +31.3 to +38.8 C on the pack, +30.2 to +38.2 C on shore), or D-02b's "
-                            "closed-lid test at +40 C restated; (2) E3-O at +55 C (M6): PDi's statement (OW-4), an e-paper with a held range "
-                            "at or over +70 C (CHO-001), or E3-O with the e-paper's state recorded as a deviation (TEST-PLAN); (3) E5's +60 C "
-                            "dwell (M7): PDi's statement, a different e-paper (CHO-001), or E5 with the e-paper out as a recorded deviation; "
-                            "the session's two options (the e-paper's window temperature measured, a closed-lid conduction path at Layer 7) "
-                            "are engineering work, not his; decisions",
+    {"id": "OW-10", "what": "U-02's four lines over the modelled capacity (L4-E12 12e, its categories after the review's L4-F04): NOT a "
+                            "forced owner question. M3 and M4 (E3-L at +40 C lid closed) are a MODELLED SHORTFALL OF THE ANALYSED "
+                            "ARRANGEMENT and M6 and M7 (E3-O and E5, the unpowered e-paper) a MISSING STORAGE QUALIFICATION: engineering and "
+                            "evidence tasks (a closed-lid conduction path at Layer 7, the SGP41's local air at its port, PDi's storage "
+                            "statement sent under OW-4 or a storage soak, the e-paper's window temperature), not his. The request reaches "
+                            "him only on a DEMONSTRATED CONFLICT (a measured local temperature over a mandatory limit with the route fitted; "
+                            "none at present); his options then, none lowering a requirement silently: (1) E3-L: CFL-002's C, A or B (OW-1), "
+                            "a closed-lid ceiling on REQ-042's VOC channel (on the model an ambient of +31.3 to +38.8 C on the pack, +30.2 to "
+                            "+38.2 C on shore), or D-02b's closed-lid test at +40 C restated; (2) E3-O: an e-paper with a held range at or "
+                            "over +70 C (CHO-001), or E3-O with the e-paper's state recorded as a deviation (TEST-PLAN); (3) E5: a different "
+                            "e-paper (CHO-001), or E5 with the e-paper out as a recorded deviation; held in reserve",
      "docs": [("l4e12md", "L4-E12's page, section 17.9")]},
 ]
 OWNER_NOT_DRAFTED = ("not yet drafted (engineering work first, then the owner sends): Littelfuse, F1's total clearing I2t at 900 A and 58 V DC "
@@ -4045,6 +4326,10 @@ def main():
                 refuse(4, "%s does not quote the round's figure: %r" % (cid, " ".join(s.split())))
     closed = all(g["verdict"] == "PASS" for g in GATE)
     p("   Layer 4's power architecture closes: %s" % ("YES" if closed else "NO, criteria %s are not PASS" % ", ".join(str(g["n"]) for g in GATE if g["verdict"] != "PASS")))
+    for what, verdict, why in DECISIONS:
+        p("   %s: %s (%s)" % (what, verdict, why))
+    if closed != all(v != "BLOCKED" for w, v, _ in DECISIONS if w == "the power-design closure gate"):
+        refuse(4, "the closure gate's decision does not follow the gate")
     opn = [d["id"] for d in DEFECTS if d["state"] == "OPEN"]
     adr = [d["id"] for d in DEFECTS if d["state"].startswith("ADDRESSED IN DRAFTS")]
     p("   MATERIAL POWER-PATH DEFECTS (criterion 2): %d, %d open; %d addressed in drafts (%s: a selected remedy, drafted, not applied)" % (len(DEFECTS), len(opn), len(adr), ", ".join(adr)))
@@ -4112,7 +4397,7 @@ def main():
                     refuse(4, "%s's %s maps to %s, not in the register" % (nm, owner, x))
                 if x.startswith("OW-") and x not in {o["id"] for o in OWNER_ITEMS}:
                     refuse(4, "%s's %s maps to %s, not an owner item" % (nm, owner, x))
-    p("     the accepted records' items, deduplicated: L4-E11's E11-01 to E11-35 each named in a row's From column (E11-19 answered here, out 12);")
+    p("     the accepted records' items, deduplicated: L4-E11's E11-01 to %s each named in a row's From column (E11-19 answered here, out 12);" % F["e11_items"][-1][0])
     p("       L4-E10 by owner: %s" % "; ".join("%s -> %s" % (k, ", ".join(v)) for k, v in E10_MAP.items()))
     p("       L4-E12 by owner: %s" % "; ".join("%s -> %s" % (k, ", ".join(v)) for k, v in E12_MAP.items()))
     h_text = open(os.path.join(HERE, "LAYER5-HANDOVER.md"), encoding="utf-8").read() if os.path.exists(os.path.join(HERE, "LAYER5-HANDOVER.md")) else ""
@@ -4177,6 +4462,12 @@ def main():
     for ln in cons_fix_lines(F):
         p(ln)
     p("")
+    for ln in cons_review_lines(F):
+        p(ln)
+    p("")
+    for ln in cons_qual_lines(F):
+        p(ln)
+    p("")
     p("END. Desk arithmetic on read figures; nothing is measured.")
     return "\n".join(out) + "\n", F, D, R, st
 
@@ -4186,6 +4477,38 @@ def main():
 # table below is built from figures this script read above; the page's tables are these, and test_l4e9.py holds them equal.
 STATUS = "known defects addressed in drafts; feasibility conditions remain open"
 SVG_NAME = "L4-POWER-DIAGRAM.svg"
+# The second external review (of the 22:30 checkpoint, 2 October 2026) separates the decisions this page states: "conditional candidate" and
+# "closure gate blocked" describe different decisions, and an unresolved material protection or feasibility condition is sufficient to keep a
+# release gate blocked; no mandatory-requirement contradiction is needed. Each decision below names what decides it.
+HANDOFF_OMITTED = ("L4-E7's round 3 (the reserve's uncertainty budget), its tip not yet taken here (L4-E11's round 3 is in: out 26e); the held-back documents (Littelfuse's 0997 sheet under v2/vendor/power/held/, Samsung's characteristic "
+                   "data under v2/vendor/passives/held/, Saft's MP 176065 xtd sheet), fetched by each record's fetch script, never published; the "
+                   "generators, netlists and configuration files of the repository that the drafts apply to; the findings ledger "
+                   "(records/l4close/, the coordinator's file); no board of this set has a layout")
+DECISIONS = [
+    ("the architecture candidate", "CONDITIONAL",
+     "A1 under D-06 is selected and connected (section 1); its feasibility basis rests on the unresolved choices U-01, U-02 and U-04 and on the "
+     "CONDITIONAL interface rows of 1d; nothing measured"),
+    ("the power-design closure gate", "BLOCKED",
+     "an unresolved material protection or feasibility condition keeps it blocked, and no requirement conflict is needed for that: D-10's "
+     "source arriving with the guard already on is NOT CLOSED (B6-ENG-1), D-14 is CONDITIONAL with Ciss OPEN, D-15 reads %s, U-02 waits on "
+     "T-H1 and the storage evidence, U-01 is not adoptable, U-04 is a closure condition on the board as drawn; criteria 1, 2 and 5 CONDITIONAL" % L4F03_STATUS),
+    ("fabrication release", "BLOCKED",
+     "no circuit change is applied (every change in section 3 is a draft, APPLIED 0), no board of the set has a layout, and the closure gate is blocked"),
+    ("the engineer handoff", "READY TO START, PROVISIONAL",
+     "sections 3 and 5 with the register are the packet an engineer's review can start on now; it is provisional, and its omitted dependencies "
+     "are named: %s" % HANDOFF_OMITTED),
+]
+
+
+def cons_decisions(F):
+    """The decisions this page states, kept apart (the second review): one line each, the status phrase last."""
+    L = ["**The decisions, kept apart** (the second external review, of the 22:30 checkpoint): \"conditional candidate\" and \"closure gate "
+         "blocked\" are different decisions, and an unresolved material protection or feasibility condition is enough to keep a release gate "
+         "blocked."]
+    for what, verdict, why in DECISIONS:
+        L.append("- **%s: %s.** %s." % (what[0].upper() + what[1:], verdict, why))
+    L.append("**Status: %s.**" % STATUS)
+    return L
 
 
 def cons_diagram(F, st):
@@ -4225,7 +4548,8 @@ def cons_diagram(F, st):
                                                 "ChargeCurrent at most %.1f A" % F["chg_set"], "BATOVP %s V; the 4S strap fixed" % fmt(F["batovp"])]),
         ("VBAT", 5, 395, "VBAT = VSYS node", ["%s to %s V (B1)" % (fmt(F["fx"]["vsys_rng"][0]), fmt(F["fx"]["vsys_rng"][1])), "D1 SMCJ18A clamp",
                                               "no pack: at least %s V;" % fmt(F["fx"]["pw"][1]), "inhibited: piecewise (15d)",
-                                              "Q39, Q40 BUK6Y10-30P", "to CH_BATQ (drafted;", "%s W at the profile)" % fmt(F["fx"]["pair_idle"][1])]),
+                                              "Q39, Q40 BUK6Y10-30P", "to CH_BATQ (drafted;", "%s W at the profile)" % fmt(F["fx"]["pair_idle"][1]),
+                                              "U42 eFuse to the dock's pin 1,", "%s to %s A (drafted)" % (fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2]))]),
         ("PACK", 6, 60, "Pack, board P (D-06 4S3P; U-01)", ["Samsung 35E x 12 (ruled cell)", "BQ4050 gauge and its FETs",
                                                             "BQ7720700 -> F2 SCF9550", "F1 %s A; OCD1 %s A for %s s" % (fmt(F["a_f1"]), fmt(F["ocd1"][0]), fmt(F["ocd1"][1])),
                                                             "usable %s Wh at +20 C" % fmt(F["a1_bat"][0])]),
@@ -4256,7 +4580,8 @@ def cons_diagram(F, st):
         ("P13", "VBAT", "USBC", ["IF-12"], "U19's input, R138"),
         ("P14", "VBAT", "POE", ["IF-13"], "R227 to POE_VIN"),
         ("P15", "VBAT", "PA", ["IF-14"], "U13's and U15's inputs"),
-        ("P16", "VBAT", "CTL_SENS", ["IF-06", "IF-11"], "(B1) VSYS over the dock's pin 1 to board E's VSYS_E: U12, the controller, the mixer fans (drafted, L4-E11 15a)"),
+        ("P16", "VBAT", "CTL_SENS", ["IF-06", "IF-11"], "(B1) VSYS through the eFuse U42 (TPS16630, %s to %s A, auto-retry) over the dock's pin 1 to board E's VSYS_E: U12, the controller, the mixer fans (drafted, L4-E11 15a, 16e)"
+         % ("%.2f" % F["f02"]["ef"][1], "%.2f" % F["f02"]["ef"][2])),
     ]
     C = [
         ("C01", "CTL_PANEL", "CHG", "FW-A01 to A03, A16, A17: RSNS_RAC, IIN_HOST %.2f A, ChargeCurrent at most %.1f A, the charger's 175 s watchdog; CHG_INHIBIT (FW-A14) and rules R-a to R-d (R-126); under (B1) EN_OOA 0 at boot, ChargeCurrent 0 A at POR, R-b' (R-158)" % (F["iin_host"], F["chg_set"]), "firmware"),
@@ -4601,11 +4926,12 @@ def cons_heat_modes(F):
         for c in fx["cls"]:
             if c["mode"] != k:
                 continue
-            t = "%s: (%s)" % (c["line"], c["cls"])
+            lab = lambda c_: "over the model" if c_ == "over" else "(%s)" % c_
+            t = "%s: %s" % (c["line"], c["cat"] if c["cls"] == "over" else lab(c["cls"]))
             if c["cons"] != c["cls"]:
-                t += ", (%s) at the conservative ends" % c["cons"]
+                t += ", %s at the conservative ends" % lab(c["cons"])
             if c["short"]:
-                t += ", SHORT by %s" % ("%s W/K, %s W" % c["short"] if c["short"][0] else "the whole %s W" % c["short"][1])
+                t += ", SHORT of the model by %s" % ("%s W/K, %s W" % c["short"] if c["short"][0] else "the whole %s W" % c["short"][1])
             cl.append(t)
         rem = md["remaining"].split("; the parts' local air in the built kit")[0]
         rows.append((k, md["what"], md["q"], "lid %s, %+.1f C" % (md["lid"], md["amb"]), ruled, cab, stated, "; ".join(cl),
@@ -4714,7 +5040,7 @@ RECON = [
      "both", "PANEL-ACC accepts any unit inside the window; the unserved energy grows toward the floor's unit"),
     ("R20", "T-H1's pass reading for E5's +70 C line (M7's maker-stated alternative)", [("2.416", "l4e12", "the eight-point procedure at a 10 K rise, one heater's 21.2 W"), ("2.462", "l4e12", "9f's point at its 8.6 K rise"),
                                                          ("2.455", "l4e12", "K10: E5's own heat, 21.587 W with the fans counted (11e)")],
-     "2.455 W/K", "the same 2.159 W/K plus the expanded uncertainty; M7's point at E5's own heat replaces the 21.2 W lines (L4-E12 16.8, 12d); the e-paper's row governs E5 with no conductance (class (iii))"),
+     "2.455 W/K", "the same 2.159 W/K plus the expanded uncertainty; M7's point at E5's own heat replaces the 21.2 W lines (L4-E12 16.8, 12d); the e-paper's row governs E5 with no conductance (a MISSING STORAGE QUALIFICATION)"),
     ("R22", "the Saft pack's nominal energy", [("81.6", "l4e10", "four times the sheet's 20.4 Wh"), ("81.8", "l4e10chk5", "4 x 3.65 V x 5.6 Ah"),
                                                ("81.76", "l4e10", "the comparison: 4 x 5.60 Ah x 3.65 V (11b)")],
      "81.76 Wh", "three roundings of the sheet's typical figures; the usable 53.5 to 58.8 Wh (MODELLED) is what the budget uses"),
@@ -4748,7 +5074,7 @@ RECON = [
     ("R28", "the case's outside capacity", [("1.540", "l4e12", "9b: at E5's rise, a bound with a 50 m/s inside flow (12e), not the capacity"), ("1.571", "l4e12", "9b: at E3-O's rise, the same"),
                                             ("1.504", "l4e12", "11d: at K1's rise, the same 50 m/s figure"), ("1.856", "l4e12", "12e: the capacity proper at E5's rise, conservative ends"),
                                             ("1.906", "l4e12", "12e: at E3-O's rise"), ("1.810", "l4e12", "12e: at K1's rise")],
-     "12e's capacity (the inside resistance at zero), per line in its class table", "the earlier 'cap' figures were the bound with a 50 m/s inside flow (L4-E12 12e's correction); the classes (i) to (iii) are read against the capacity with the route at the optimistic ends"),
+     "12e's capacity (the inside resistance at zero), per line in its class table", "the earlier 'cap' figures were the bound with a 50 m/s inside flow (L4-E12 12e's correction); the classes (i) and (ii), and the lines over the model with their categories, are read against the modelled capacity with the route at the optimistic ends"),
     ("R30", "D4's clamp at CS116's 10 A at the hot end", [("39.00", "l4e7r", "the drafted SMCJ28A (D1)"), ("41.91", "l4e7r", "the SMCJ30A with the guard (the remedies)")],
      "41.91 V", "D4 changes to the SMCJ30A with the guard; both under the drafted entry's 50 V"),
     ("R31", "the solar cut-off's rising band", [("29.11", "l4e7r", "new parts"), ("28.55", "l4e7r", "aged by the divider's printed load-life, with the pin's leakage")],
@@ -4840,8 +5166,10 @@ CHANGE_ORDER = [
     ("3a", "R-02", "board A, lcsc_fill.py", "with R-01", "none"),
     ("3a", "R-03", GA, "with R-01 and R-124 (the corrected knee)", "no draft yet"),
     ("3a", "R-124", GA, "with R-03 (the guard under the corrected knee)", G_L4E11),
-    ("3a", "R-157", GA, "U-04's selected charger (B1): the BQ25730 and the battery FET pair Q39 and Q40 in U3's land, J_DOCK pin 1 on VBAT, with R-124 in either order; the strap kept fixed", G_L4E11 + " and its check 5 at 5aa18a69 (the pair: its fix round at 656fc540)"),
-    ("3a", "R-178", "pcb_interfaces.yaml (IF-AE-DOCK; the Layer 4 coordinator)", "with R-157 and R-177: the dock's pin 1 VBAT and VSYS_E, seven ground contacts", G_L4E11),
+    ("3a", "R-157", GA, "U-04's selected charger (B1): the BQ25730 and the battery FET pair Q39 and Q40 in U3's land, J_DOCK pin 1 on VSYS_DOCK behind U42 (R-181), with R-124 in either order; the strap kept fixed", G_L4E11 + " and its check 5 at 5aa18a69 (the pair: its fix round at 656fc540)"),
+    ("3a", "R-181", GA, "with R-157 (the same draft): U42 from VBAT to the new net VSYS_DOCK on J_DOCK pin 1; before board E's VSYS_E feed (R-177)",
+     G_L4E11 + " and its fix round at d2a59468 (L4-F03)"),
+    ("3a", "R-178", "pcb_interfaces.yaml (IF-AE-DOCK; the Layer 4 coordinator)", "with R-157 and R-177: the dock's pin 1 VSYS_DOCK (behind U42) and VSYS_E, seven ground contacts", G_L4E11),
     ("3b", "R-04", GA, "after R-01: R11 never before R12", G_L4E4),
     ("3c", "R-07", GA, "after R-01: the ballasts and Cc2 only with R12", G_L4E8),
     ("3c", "R-08", "board A, lcsc_fill.py", "with R-07", "no draft yet"),
@@ -4870,7 +5198,7 @@ CHANGE_ORDER = [
     ("4e", "R-116", "board E, lcsc_fill.py", "with R-123", "no draft yet"),
     ("4e", "R-173", GE, "AFTER L4-E7's three drafts (R-19, R-20, R-21), L4-E9's hot swap (R-94) and L4-E11's entry draft (R-123): it uses their texts and the DGX19 land, and refuses a generator without them",
      G_L4E7 + " and its check 5 at 573fd5b8"),
-    ("4e", "R-177", GE, "with R-157 (board A's J_DOCK pin 1 on VBAT) and in the same release: J_BLK pin 1 on VSYS_E, U12, C31 and the fans off CELL_F", G_L4E11),
+    ("4e", "R-177", GE, "with R-157 and R-181 (board A's J_DOCK pin 1 on VSYS_DOCK behind U42) and in the same release: J_BLK pin 1 on VSYS_E, U12, C31 and the fans off CELL_F", G_L4E11),
     ("4f", "R-22", "board E, regenerated on the box", "after 4a to 4e", "the gates and the evidence re-taken"),
     ("B", "R-107", GB, "board B's round", "no draft yet"),
     ("B", "R-163", GB, "U-02's F3: board B's round", "no draft yet"),
@@ -4884,11 +5212,12 @@ CHANGE_ORDER = [
     ("5", "R-139", "firmware", "with R-138", "firmware"),
     ("5", "R-158", "firmware", "only on a board A carrying R-157 (the BQ25730's register rules)", "firmware"),
     ("5", "R-164", "firmware", "with R-163 (F3's switches)", "firmware"),
+    ("5", "R-188", "firmware", "with R-177 and R-158: board E's fans started one at a time with a PWM ramp, never while U12 starts (E11-39)", "firmware"),
     ("8", "R-129", "Layer 7, the DC receptacle and plug", "before the harness is built", "no draft yet"),
     ("8", "R-130", "Layer 7, the interconnect", "with R-129", "no draft yet"),
     ("8", "R-131", "Layer 7, the inside lead and J_DCIN", "with R-129", "no draft yet"),
     ("8", "R-111", "Layer 7, the enclosure", "U-02: to T-H1's line", "no draft yet"),
-    ("8", "R-180", "Layer 7, the panel lead (the harness)", "before the harness is built; with R-176's row 2 (the lead's measured loop inductance)", "no draft yet"),
+    ("8", "R-180", "Layer 7, a stiff source's loop at J_SOLAR (the harness rules)", "only if B6-ENG-1 selects route (2); before the harness is built; with R-176's row 3 (the loop measured first)", "no draft yet"),
     ("8", "R-170", "Layer 7, the face plate's fins", "U-02's combined route, only under a T-H1 point reading under its line (R-104); with R-171 and R-172, read together at the same point",
      "no draft yet; conditional on T-H1's reading (R-104)"),
     ("8", "R-171", "Layer 7, the plate's conduction kit (heat pipes, bars and pads from board B's and the face's parts)", "with R-170 (the plate the kit loads carries the fins)",
@@ -4897,6 +5226,7 @@ CHANGE_ORDER = [
     ("U-01", "R-105", GP, "only under U-01's approach (II), after the owner's approval", "no draft yet"),
     ("U-01", "R-106", "firmware, the gauge image", "only under (II)", "firmware"),
     ("U-01", "R-154", "firmware, the gauge image and the host", "only under (II), with R-106", "a text draft"),
+    ("B6-ENG-1", "R-187", GE, "only if B6-ENG-1 selects route (3), instead of R-180 and R-186: the input current sense moved off the stage's input capacitance", "no draft yet"),
     ("ALT", "R-119", GE, "the LM5069 alternative only: refuses once the selected entry (R-123) has run", G_L4E11),
     ("ALT", "R-152", GA, "arrangement (A) only: withdrawn once R-157 is applied (its zone and height Layer 9's)", "no draft yet"),
 ]
@@ -4917,7 +5247,9 @@ ORDER_CONSTRAINTS = [
     ("the hot-swap settings (R-94) before the solar guard (R-173)", "R-94", "R-173"),
     ("L4-E11's entry draft (R-123) before the solar guard (R-173)", "R-123", "R-173"),
     ("the solar guard (R-173) before board E's regeneration (R-22)", "R-173", "R-22"),
-    ("board A's dock pin on VBAT (R-157) before board E's VSYS_E feed (R-177)", "R-157", "R-177"),
+    ("board A's dock pin on VSYS (R-157) before board E's VSYS_E feed (R-177)", "R-157", "R-177"),
+    ("the dock's eFuse U42 (R-181) before board E's VSYS_E feed (R-177)", "R-181", "R-177"),
+    ("board A regenerated (R-11) after the dock's eFuse (R-181)", "R-181", "R-11"),
     ("board E's VSYS_E feed (R-177) before board E's regeneration (R-22)", "R-177", "R-22"),
 ]
 CHANGE_SCRIPTS = ["l4e4/apply_gen_sch_a_r11.py", "l4e4/apply_gen_sch_a_r138.py", "l4e5/apply_fw_a16.py", "l4e6/apply_gen_sch_a_r12.py", "l4e6/apply_lcsc_fill_r12.py",
@@ -5013,16 +5345,16 @@ def cons_behaviour(F, D, st):
         ("panel at dusk", "the panel falls under the hold and the stage stops delivering; U4/Q2 blocks VIN_RAW from TRK_OUT; with no other source VIN_RAW falls into the knee's HIZ",
          "HIZ below %s V; the guard %s to %s V" % (fmt(F["knee_hiz"]), fmt(F["guard_sel"][0]), fmt(F["guard_sel"][2])), "L4-E7R, L4-E11 3f"),
         ("pack connected", "the gauge's FETs close onto VBAT; under (B1) board E's always-on comes up on VSYS_E (board A's VSYS over the dock's pin 1, L4-E11 15a), as drawn on CELL_F; the inrush into VBAT's capacitors, under (B1) through the pair's body diodes (E11-30)",
-         "%s A peak, over ASCD's %s A for %s us against its %s us delay (with E11-24's direct can; the drawn VBAT holds less); under (B1) %s A against each FET's ISM %s A at 25 C, met from the +70 C air for a share of at most %s in one FET (E11-30)"
-         % (fmt(bh["inrush"][0]), fmt(bh["inrush"][1]), fmt(bh["inrush"][2]), fmt(bh["inrush"][3]), fmt(F["fx"]["dock"][0]), fmt(F["fx"]["dock"][1]), fmt(F["fx"]["dock"][2])),
-         "L4-E11 out 10, 15c"),
+         "%s A peak, over ASCD's %s A for %s us against its %s us delay (with E11-24's direct can; the drawn VBAT holds less); under (B1) the whole %s A pulse in one FET (no sharing credited), TJ %s C from the +70 C air on the stated VF bound, CONDITIONAL on VF and ISM hot (E11-30)"
+         % (fmt(bh["inrush"][0]), fmt(bh["inrush"][1]), fmt(bh["inrush"][2]), fmt(bh["inrush"][3]), fmt(F["f02"]["dock"][0]), fmt(F["f02"]["dock_tj"][1])),
+         "L4-E11 out 10, 16d"),
         ("pack disconnected, or both FETs open, with a source", "(B1): the BQ25730 regulates VSYS at VSYS_MIN (at least %s V with adequate input); board E's auxiliary domain runs on VSYS_E from the source (L4-E11 15a); as drawn (A): U3 holds VBAT at ChargeVoltage, CONDITIONAL on TI's D1" % b1["vsys_min"],
          "(B1) at least %s V (SLUSE65A p.10, printed; EN_OOA written 0 first); with no pack and an overloaded source no floor, R-c sheds; as drawn VSYS at least %s V against VSYS_MIN %s V once the mode is shown" % (b1["vsys_min"], r5["d1"][1], r5["d1"][0]),
          "L4-E11 12c, 15a, 15d, 9 (D1)"),
         ("the charge inhibited (the hold's flag), the pack present", "(B1): Q39 and Q40 off, VSYS piecewise; board E on VSYS_E; the pack feeds no kit load, its monitor %s mA (L4-E11 15a, 15d); as drawn (A): D3 open" % fmt(F["fx"]["mon"][0]),
-         "(B1) SRN under %s V: VSYS at least %s V; SRN over %s V: VSRN + %d mV within +-%d %% (the upper side an assumed reading of TI's column, A11-18); between: at least %s V; the held pack current at most %s mA on the bench (the bounded drains %s mA; E11-31)"
-         % (fmt(F["fx"]["pw"][0]), fmt(F["fx"]["pw"][1]), fmt(F["fx"]["pw"][2]), b1["inhib"][0], b1["inhib"][1], fmt(F["fx"]["pw"][3]), fmt(F["fx"]["held"][1]), fmt(F["fx"]["held"][0])),
-         "L4-E11 15a, 15d"),
+         "(B1) SRN under %s V: VSYS at least %s V; SRN over %s V: VSRN + %d mV within +-%d %% (the upper side an assumed reading of TI's column, A11-18); between: at least %s V; the held pack current at most %s mA on the bench (%s mA the quantified subset; hot clamp leakage and body-diode current not bounded by a printed figure; E11-31)"
+         % (fmt(F["fx"]["pw"][0]), fmt(F["fx"]["pw"][1]), fmt(F["fx"]["pw"][2]), b1["inhib"][0], b1["inhib"][1], fmt(F["fx"]["pw"][3]), fmt(F["f02"]["held"][1]), fmt(F["f02"]["held"][0])),
+         "L4-E11 15a, 15d, 16e"),
         ("the pack present, the source on", "(B1): the battery FETs fully on while charging or supplementing; VSYS_MIN the floor with adequate input; with the source overloaded VSYS follows the pack through the pair and R17",
          "VSYS from %s V to %s V with adequate input; down to %s V in supplement at CELL_FUSED's %s V and OCD1's %s A" % (b1["vsys_min"], b1["vsys_max"], fmt(F["fx"]["supp"][0]), fmt(F["fx"]["supp"][1]), fmt(F["fx"]["supp"][2])),
          "L4-E11 12c, 15d"),
@@ -5043,8 +5375,8 @@ def cons_behaviour(F, D, st):
         ("cold start on the pack", "MAIN brings up board A's +3V3; DEV_EN on by its pull-up; the panel controller runs FW-C01's order: PI_KILL low, the expanders' outputs before their configuration, the charger with FW-A01 first, then SLOT_EN one at a time",
          "before the host writes IIN_HOST the input limit gives about 31 W into VSYS (INFERRED)", "ARCHITECTURE.md 4.3, HW-FW-CONTRACT, CHARGER-STATE-SEQUENCE.md"),
         ("power-on under (B1)", "ChargeCurrent 0 A until firmware writes it; EN_OOA resets to 1 and is written 0 at boot (the printed VSYS accuracy holds only after that write, E11-31); CELL_BATPRESZ a fixed 4S strap, never wired to battery presence; the docking inrush through the pair's body diodes",
-         "the strap %s %% of VDDA; %s A against each FET's ISM %s A at 25 C, met from the +70 C air for a share of at most %s in one FET (E11-30)" % (b1["strap"], fmt(F["fx"]["dock"][0]), fmt(F["fx"]["dock"][1]), fmt(F["fx"]["dock"][2])),
-         "L4-E11 12a, 15c, 15d (R-157, R-160)"),
+         "the strap %s %% of VDDA; the whole %s A pulse in one FET, TJ %s C from the +70 C air on the stated VF bound, CONDITIONAL on VF and ISM hot (E11-30)" % (b1["strap"], fmt(F["f02"]["dock"][0]), fmt(F["f02"]["dock_tj"][1])),
+         "L4-E11 12a, 15d, 16d (R-157, R-160)"),
         ("a source-only start under (B1) (no pack, or both FETs open)", "the source and the entry; the front end to VBUS20; U3's POR, ChargeCurrent 0 A; the converter up; VSYS through VSYS_UVP's start to VSYS_MIN; board A's always-on and board E's U12 on VSYS_E; board E's controller up and driving HOT-R1; firmware: EN_OOA 0, IIN_HOST %.2f A, CHRG_INHIBIT from the hold flag" % F["iin_host"],
          "on held evidence the start ends in VSYS_MIN or in a latch within %s s (the hiccup's 500 ms off and 10 ms retries; the 7th failure inside 90 s latches; a re-plug clears it); whether the first window succeeds is not bounded: 0.5 A is an input ceiling, not a delivered current (the earlier 502.3 ms withdrawn); E11-31 at -20, 25 and 62.1 C" % fmt(F["fx"]["latch_s"]),
          "L4-E11 15a, 15b (R-161)"),
@@ -5101,14 +5433,14 @@ def cons_behaviour(F, D, st):
          "U21 (TPS48110-Q1) holds Q12 off: rising %s to %s V, falling %s V or more (aged); its UVLO on at %s V at most, under the stage's enable" % (fmt(F["sv"]["rm"]["rise"][0]), fmt(F["sv"]["rm"]["rise"][1]), fmt(F["sv"]["rm"]["fall"][0]), fmt(F["sv"]["rm"]["uvlo"][0])),
          "the panel port from PV_P: the block never turns on, Q12 holds %s of 100 V, D4 and the bulk see nothing" % fmt(F["sv"]["src"][1]),
          "on again once the input falls under the falling threshold (drafted, R-173, not applied)", "L4-E7 (the remedies, check 5)"),
-        ("a stiff %s V source stepping onto the port with the guard already on (the review's B6; D-10)" % fmt(F["sv"]["src"][1]),
-         "the short-circuit trip (C126 330 pF) or the OV path turns Q12 off: at most %s A within %s us; C131 and C132 (2 x 10 uF 100 V) take the lead's current, C133 and C134 (2 x 10 uF 50 V) the turn-off's charge on PV_P"
+        ("a stiff %s V source stepping onto the port with the guard already on (B6, round 2; D-10)" % fmt(F["sv"]["src"][1]),
+         "the short-circuit trip (C126 330 pF) or the OV path turns Q12 off: at most %s A within %s us; the port bank (C131, C132, C135, C136, Samsung CL32B225KCJSNNE) takes the source's current, C133 and C134 (CL32B106KBJNNNE) the turn-off's charge on PV_P"
          % (fmt(F["sv"]["rm"]["b6"]["sum"][0]), fmt(F["sv"]["rm"]["b6"]["sum"][1])),
-         "the port from PV_P: PV_F at most %s V (slew %s V/us), PV_P %s V, TRK_VS %s V: D4 carries nothing; U5 at most %s of 0.3 V"
-         % (fmt(F["sv"]["rm"]["b6"]["sum"][2]), fmt(F["sv"]["rm"]["b6"]["sum"][3]), fmt(F["sv"]["rm"]["b6"]["sum"][4]), fmt(F["sv"]["rm"]["b6"]["sum"][5]),
-            fmt([r[1] for r in F["sv"]["rm"]["b6"]["rows"] if r[0] == F["sv"]["rm"]["b6"]["bind"]][0])),
-         "on again under the falling threshold; CONDITIONAL on the panel lead's loop inductance at least %s uH (R-176 row 2, R-180), NOT MET at %s uH"
-         % (fmt(F["sv"]["rm"]["b6"]["l_uh"]), fmt(F["sv"]["rm"]["b6"]["below"][0])), "L4-E7 (THE GUARD ALREADY ON, B6)"),
+         "at a %.2f uH loop: PV_F at most %s V (slew %s V/us), PV_P %s V, TRK_VS %s V, D4 carrying nothing; U5 %s V against the chosen +-%s V (the numerical error added; the margin %s); under that loop NOT MET (at 1.00 uH U5 %s V)"
+         % (F["sv"]["rm"]["b6"]["l_uh"], fmt(F["sv"]["rm"]["b6"]["sum"][2]), fmt(F["sv"]["rm"]["b6"]["sum"][3]), fmt(F["sv"]["rm"]["b6"]["sum"][4]), fmt(F["sv"]["rm"]["b6"]["sum"][5]),
+            fmt([r[1] for r in F["sv"]["rm"]["b6"]["rows"] if r[0] == F["sv"]["rm"]["b6"]["bind"]][0]), ("%.3f" % F["sv"]["rm"]["b6"]["margin"]), RESERVE_NOTE, fmt(F["sv"]["rm"]["b6"]["at1"])),
+         "on again under the falling threshold; NOT CLOSED: a pass only from a source loop of at least %.2f uH, which nothing in the design bounds (B6-ENG-1; R-176 row 3)"
+         % F["sv"]["rm"]["b6"]["l_uh"], "L4-E7 (THE GUARD ALREADY ON, ROUND 2)"),
         ("a reversed panel (D-11, a single fault)", "Q13 in the return stays off, its body diode reverse biased", "the reversed panel: no current; the high side within 1 V of GND",
          "none needed (drafted, R-173; CONDITIONAL on Q13's leakage above +25 C)", "L4-E7 (the remedies); DECISION-31 E-N1 closed"),
         ("a stiff source between %s V and the cut-off (the residual band, R-175)" % fmt(F["pv"]["v_max"]), "nothing at the entry: the backstop's current trip only",
@@ -5176,7 +5508,9 @@ PARTS = [
     ("U3 (board A)", "BQ25731", "the charger onto VBAT = VSYS, as drawn", "SLUSE66A", "bq25731", "as drawn; replaced in (B1) by the BQ25730 (R-157)"),
     ("U3 (board A), (B1)", "BQ25730RSNR", "the selected charger: VSYS bounded in all three modes; BATDRV on pin 21", "SLUSE65A", "l4e11", "DRAFTED (R-157), not applied; LCSC stock 0 (R-162)"),
     ("Q39, Q40 (board A), (B1)", "Nexperia BUK6Y10-30PX, two in parallel", "the battery FET pair between VBAT and CH_BATQ (L4-E11's fix round; the AONS21357 replaced)", "2020-04-17", "l4e11",
-     "DRAFTED (R-157); each FET's installed path R-159 (at most 34.42 C/W), the docking split R-160, the supply R-162"),
+     "DRAFTED (R-157); sized to the RDS(on) allowance 21.136 mOhm (R-182); the installed Zself + Zmut R-159, the docking pulse R-160, Ciss R-183 (OPEN), the supply R-162"),
+    ("U42 (board A), (B1)", "TI TPS16630PWPR", "the eFuse on the dock's VSYS contact to board E's VSYS_E (L4-E11 16e): R221 11.0k 0.1 % on ILIM, 1.47 to 1.80 A; C237 22 nF on dVdT; MODE to GND, auto-retry",
+     "SLVSET9G", "l4e11", "DRAFTED (R-181), not applied; the hard short's peak R-184"),
     ("U17 and five more", "INA226", "the rail monitors; U17 moved onto R227", "SBOS547C", "ina226", "DRAFTED (R-06)"),
     ("eFuses", "TPS2596", "the load converters' inputs, 21 V absolute", "SLVSET8A", "tps2596", "as drawn"),
     ("U1 (board P)", "BQ4050", "the pack's gauge and its FETs", "SLUUAQ3A", "l4e11", "as drawn; U-01's (II) re-derives it (R-106)"),
@@ -5243,13 +5577,13 @@ def cons_th1(F):
                      "L4-E12 12d, 12a"))
     rows += [
         ("the route, only under a class (ii) line", "the same point with the combined route fitted (R-170 to R-172; lid open only)", "the point's own line",
-         "the route's effect at that heat; still short, the line joins the owner's (OW-10)", "L4-E12 12e, 15"),
+         "the route's effect at that heat; still short with the part's local temperature over its limit, a DEMONSTRATED CONFLICT (OW-10)", "L4-E12 12e, 15"),
         ("the fans-off case", "at M2's heat, the fans stopped", "no pass line (the failure case)", "what a stopped fan costs (L4-E12 8e)", "L4-E12 12d"),
         ("the transient point (12c)", "the empty case soaked at room temperature; the heaters stepped to %s W, then, once the mixed air has risen %d K, to %s W, logged to the run's end"
          % (fmt(fx["trans"][0]), int(fx["trans"][1]), fmt(fx["trans"][2])), "the time to C1 and the air after it",
          "the battery-only run's shed point on the bench (the empty case's thermal mass under the kit's: the conservative side); then the built kit's run (Layer 9)", "L4-E12 12c"),
         ("open after the points", "none on this bench", "none",
-         "the four class (iii) lines (no reading passes them: OW-10); the cells' rise in the pocket (U-01), the parts' local air (T-H2), the junctions (THM-001), the fans' rating (D-18), full sun (D-02e)", "L4-E12 12a, 12e"),
+         "the four lines over the modelled capacity: M3 and M4 a modelled shortfall (the SGP41's local air at its port, a closed-lid path), M6 and M7 a missing storage qualification (PDi's statement or a storage soak); the cells' rise in the pocket (U-01), the parts' local air (T-H2), the junctions (THM-001), the fans' rating (D-18), full sun (D-02e)", "L4-E12 12a, 12e"),
     ]
     note = ("**T-H1 at Layer 9 (the bench, R-104): the points of L4-E12 12d, one per mode's heat and lid state** (the fix round; "
             "the order K1, K5, K10, K6, K7 and K8 of section 11 superseded). Each point runs at its mode's heat with the heaters set to it "
@@ -5292,11 +5626,13 @@ QUALIFICATION_ONCE = "(i) once R-157, R-177 and R-178 are applied ((B1) with the
 SUPPORTED = ("(ii) as ruled (the 35E unsuitable on its own published evidence); a route supported on published evidence for the temperature windows "
              "(the Saft MP 176065 xtd), NOT YET ADOPTABLE: current at temperature and the storage dwell and recovery await Saft or the limited sample "
              "qualification, the fit the mock-up; the owner's approval required")
-CONDITION_U02 = ("(ii) a closure condition for every class (i) and (ii) line, T-H1 deciding; four class (iii) lines (E3-L lid closed as ruled, E3-O "
-                 "and E5 on the e-paper's row) are a contradiction between the rulings and those requirements that no measurement resolves: the owner's (OW-10)")
+CONDITION_U02 = ("(ii) a closure condition decided by T-H1 plus the storage evidence: T-H1 decides every class (i) and (ii) line; four lines over "
+                 "the modelled capacity, none shown impossible: E3-L lid closed as ruled a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT (an "
+                 "engineering task), E3-O and E5 on the e-paper's row a MISSING STORAGE QUALIFICATION (an evidence task); no DEMONSTRATED "
+                 "CONFLICT, so no requirement question goes to the owner (OW-10 held for a measured conflict)")
 EXIT_PENDING = {"U-01": "integrated: L4-E10's cell route (checks 4 and 5 at 1c321773) and its fix round for the review's B5 (ee09aa09: the temperature windows supported, not yet adoptable)",
                 "U-02": "integrated: L4-E12's verdict, heat-rejection comparison and reconciliation (checks 5 to 7) and its fix round for the review's B3, B4 and B7 (b1cd32ba: each mode's governing local limit, the classes of 12e)",
-                "U-04": "integrated: L4-E11's charger selection (check 5 at 5aa18a69) and its fix round for the review's B1 and B2 (656fc540: the battery FET pair, board E on VSYS_E)"}
+                "U-04": "integrated: L4-E11's charger selection (check 5 at 5aa18a69), its fix round for the review's B1 and B2 (656fc540: the battery FET pair, board E on VSYS_E) and its fix round for the review of the provisional fixes (d2a59468: L4-F02, the pair's qualification basis; L4-F03, the eFuse U42)"}
 
 
 def cons_exit(F):
@@ -5306,7 +5642,7 @@ def cons_exit(F):
     tb, b1, u1 = cb["tb"], cb["b1"], cb["u1"]
     rc = F["rc"]
     M = fx["modes"]
-    sh = {c["mode"]: c["short"] for c in fx["iii"]}
+    sh = {c["mode"]: c["short"] for c in fx["over"]}
     c40 = [c for c in fx["cls"] if c["mode"] == "M1"][0]
     c40c = [c for c in fx["cls"] if c["mode"] == "M3"][0]
     return [
@@ -5321,25 +5657,26 @@ def cons_exit(F):
          "the owner's adoption of D-06's cell, energy (%s to %s Wh nominal) and spend (NZ$ %s for four), NOT YET ADOPTABLE: current at temperature, the storage dwell and recovery, the fit, the gauge data and T-H1 awaited, the owner's approval required; the topology stays; missing evidence is not proof that no cell meets the rows"
          % (fmt(rc["e35_nom"]), fmt(rc["saft_nom"]), fmt(u1["cost"][1]))),
         ("U-02", CONDITION_U02,
-         "the sealed case's conductance with the fans, lid open and lid closed, at each required mode's heat against that mode's governing local limit (L4-E12 12a): as ruled the SGP41's Table 4 in the heat stage at +40 C (%s W/K on the pack, %s W/K on shore), under CFL-002's C, A or B the cells' hot stop H1 (%s and %s W/K); M5, C1's air trigger, %s W/K; M8 and M9, T4 on the charging cells, %s and %s W/K; the four class (iii) lines need a decision, not a reading"
+         "the sealed case's conductance with the fans, lid open and lid closed, at each required mode's heat against that mode's governing local limit (L4-E12 12a): as ruled the SGP41's Table 4 in the heat stage at +40 C (%s W/K on the pack, %s W/K on shore), under CFL-002's C, A or B the cells' hot stop H1 (%s and %s W/K); M5, C1's air trigger, %s W/K; M8 and M9, T4 on the charging cells, %s and %s W/K; the four lines over the modelled capacity need the SGP41's local air at its port, a closed-lid path, and PDi's storage statement or a storage soak, not an owner's decision"
          % (M["M1"]["ruled"][1], M["M2"]["ruled"][1], M["M1"]["cab"][1], M["M2"]["cab"][1], M["M5"]["ruled"][1], M["M8"]["ruled"][1], M["M9"]["ruled"][1]),
-         "T-H1's points of L4-E12 12d (R-104, R-151): M2 and M6 at %s W lid open first (the heaters %s W plus the fans), then M1, M4 and M3 lid closed, M7, M5, M8 and M9, the fans-off case and the transient point; under a class (ii) line the combined route (R-170 to R-172) read at the same point; the e-paper's window temperature as a T-H1 channel; PDi's and Sensirion's statements (OW-4); CFL-002 (OW-1); one option per class (iii) line (OW-10); OW-8 authorises the bench"
+         "T-H1's points of L4-E12 12d (R-104, R-151): M2 and M6 at %s W lid open first (the heaters %s W plus the fans), then M1, M4 and M3 lid closed, M7, M5, M8 and M9, the fans-off case and the transient point; under a class (ii) line the combined route (R-170 to R-172) read at the same point; the SGP41's local air at its port and the e-paper's window temperature as T-H1 channels apart from the mixed air; PDi's and Sensirion's statements (OW-4); an e-paper storage soak with its function read back; OW-8 authorises the bench; CFL-002 (OW-1) and OW-10 only on a demonstrated conflict"
          % (fmt(M["M2"]["q"]), fmt(rc["H"]["M2"][1])),
-         "the conservative bound (%s to %s W/K at K1's rise; the fans' film at zero); the outside capacity with the inside resistance at zero (12e; %s W/K at K1's rise): at +40 C lid open bare %s / %s, with the route %s / %s W/K, lid closed %s / %s W/K (conservative / optimistic): every line class (i) or (ii) but four, M3 short by %s W/K (%s W), M4 by %s W/K (%s W), M6 by %s W/K (%s W), M7 the whole %s W; the charging heat %s W (12b, the balance); the battery-only run sheds at C1 at %s to %s h on the bound (12c)"
+         "the conservative bound (%s to %s W/K at K1's rise; the fans' film at zero); the outside capacity with the inside resistance at zero (12e; %s W/K at K1's rise): at +40 C lid open bare %s / %s, with the route %s / %s W/K, lid closed %s / %s W/K (conservative / optimistic): every line class (i) or (ii) but four over the modelled capacity (a model figure, not a physical bound): M3 short by %s W/K (%s W) and M4 by %s W/K (%s W), a modelled shortfall of the analysed arrangement; M6 by %s W/K (%s W) and M7 the whole %s W on its row, a missing storage qualification; the charging heat %s W (12b, the balance); the battery-only run sheds at C1 at %s to %s h on the bound (12c)"
          % (fmt(rc["bound"][0]), fmt(rc["bound"][1]), "%.3f" % rc["capk1"][0], c40["bare"][0], c40["bare"][1], c40["route"][0], c40["route"][1], c40c["bare"][0], c40c["bare"][1],
             sh["M3"][0], sh["M3"][1], sh["M4"][0], sh["M4"][1], sh["M6"][0], sh["M6"][1], sh["M7"][1], fmt(fx["bal_b"][1]), fmt(fx["c1"][0]), fmt(fx["c1"][1])),
-         "under a class (i) or (ii) line, the combined route (R-170 to R-172, passive); for the class (iii) lines the session's two options (the e-paper's window temperature: a plate fraction of %s needs %s W/K, %s needs %s W/K; a closed-lid conduction path at Layer 7, not modelled, closing nothing yet) and the owner's (CFL-002's C, A or B; a closed-lid ceiling on REQ-042's VOC channel, +%s to +%s C on the pack and +%s to +%s C on shore; D-02b restated; PDi's statement; CHO-001; a recorded deviation)"
+         "under a class (i) or (ii) line, the combined route (R-170 to R-172, passive); for the modelled shortfall, a closed-lid conduction path at Layer 7 (not modelled, closing nothing yet) and the SGP41's local air at its port; for the missing storage qualification, PDi's statement or a storage soak, and the e-paper's window temperature (a plate fraction of %s needs %s W/K, %s needs %s W/K); only on a demonstrated conflict the owner's options (CFL-002's C, A or B; a closed-lid ceiling on REQ-042's VOC channel, on the model +%s to +%s C on the pack and +%s to +%s C on shore; D-02b restated; CHO-001; a recorded deviation)"
          % (tuple(fmt(x) for x in fx["plate"]) + tuple(fmt(x) for x in fx["voc_ceil"])),
-         "at or over each class (i) or (ii) line's reading the architecture stands for that mode (with the route where needed); the class (iii) lines are a contradiction between the rulings (no vent, the Peli 1450, the device set) and E3-L lid closed, E3-O and E5 as stated, the owner's to resolve (OW-10); never the power path's topology; T-H1 decides, it does not merely confirm; missing evidence is not proof of a shortfall"),
+         "at or over each class (i) or (ii) line's reading the architecture stands for that mode (with the route where needed); the four lines over the modelled capacity are not shown impossible and set no ruling against a requirement until a measured local temperature demonstrates a conflict (then the owner's, OW-10); never the power path's topology; T-H1 and the storage evidence decide, they do not merely confirm; missing evidence is not proof of a shortfall"),
         ("U-04", QUALIFICATION_ONCE,
-         "with (B1): D2 (load steps against the %s V margin), each FET's installed path (at most %s C/W at the +70 C mixed air, E11-29), the docking pulse's split on the pair (a share of at most %s hot, E11-30), the start from cold into VSYS_MIN and the held pack current (E11-31), the fans' rating to %s V (E11-35), D6, D8, D9, D10 and the BQ25730's supply; on the board as drawn, TI's D1 and D3"
-         % (b1["margin"], fmt(fx["bar"][0]), fmt(fx["dock"][2]), fmt(fx["vsys_rng"][1])),
-         "apply R-157, R-177 and R-178 (after L4-E11's release record); then the three modes, the held pack current, the start and D2 on one build (R-161), each FET's case rise at 10 A against the layout's path (R-159), the docking split on the pair (R-160); Q-TI-15 and Q-TI-16 sent (OW-7; Q-AOS-1 withdrawn)",
-         "SLUSE65A bounds VSYS: at least %s V with no pack; inhibited, piecewise (VSRN + %d mV within +-%d %% over %s V, at least %s V under %s V, at least %s V between); the system node %s to %s V; the pair %s W at the profile, every protection event at TJ 150 C or under at the bar, 18 A for 60 s at %s C; the start bounded to VSYS_MIN or a latch within %s s; the held pack's drains %s mA"
+         "with (B1): D2 (load steps against the %s V margin), the pair's installed Zself + Zmut (%s K/W steady, %s at 1 s, %s at 20 ms, %s at 244 us, E11-29) at the RDS(on) allowance (E11-36); Ciss against TI's 5 nF (E11-37, open); the docking pulse whole in one FET, VF and ISM hot (E11-30); the start from cold into VSYS_MIN and the held pack current (E11-31); the fans' range to %s V and running at %s V (E11-35); the dock branch's hard short (E11-38); D6, D8, D9, D10 and the BQ25730's supply; on the board as drawn, TI's D1 and D3"
+         % ((b1["margin"], fmt(F["f02"]["z_steady"])) + tuple(fmt(e_[2]) for e_ in F["f02"]["z_ev"]) + (fmt(fx["vsys_rng"][1]), fmt(F["f02"]["vsyse"]))),
+         "apply R-157 with R-181, R-177 and R-178 (after L4-E11's release record); then the three modes, the held pack current, the start and D2 on one build (R-161), Zself and Zmut at the five widths on the built board (R-159), Nexperia's maximum or a Kelvin reading at -8.5 V and 150 C (R-182), TI's answer or the bench's BATDRV behaviour with the pair (R-183), VF and ISM hot or a pulse test (R-160), the branch's limit and shorts (R-184); Q-TI-15 to Q-TI-17 sent (OW-7; Q-AOS-1 withdrawn)",
+         "SLUSE65A bounds VSYS: at least %s V with no pack; inhibited, piecewise (VSRN + %d mV within +-%d %% over %s V, at least %s V under %s V, at least %s V between); the system node %s to %s V; the pair %s W at the profile; at the RDS(on) allowance %s mOhm every protection event from the held 20 A at TJ 150 C or under for (Zself + Zmut) at most %s K/W steady, 18 A for 60 s from the hot state at %s C; the docking pulse whole in one FET at TJ %s C on the stated VF bound; the dock's VSYS branch limited by U42 to %s to %s A (%s %% of the contact's %s A), VSYS_E at least %s V; the start bounded to VSYS_MIN or a latch within %s s; the held pack: %s"
          % (b1["vsys_min"], b1["inhib"][0], b1["inhib"][1], fmt(fx["pw"][2]), fmt(fx["pw"][1]), fmt(fx["pw"][0]), fmt(fx["pw"][3]), fmt(fx["vsys_rng"][0]), fmt(fx["vsys_rng"][1]),
-            fmt(fx["pair_idle"][1]), fmt(fx["svc_tj"]), fmt(fx["latch_s"]), fmt(fx["held"][0])),
-         "R-c's step rule (D2); the pair's copper for the bar, never a lowered protection or service; the diode paths matched by layout or Nexperia's hot ISM (the docking pulse); arrangement (A) with E11-24's hold-up if (B1) fails",
-         "once R-157, R-177 and R-178 are applied, nothing of the architecture (L4-E11 check 5 and its fix round); on the board as drawn TI's D1 and D3 decide the charger's power path"),
+            fmt(fx["pair_idle"][1]), fmt(F["f02"]["allow"]), fmt(F["f02"]["z_steady"]), fmt(F["f02"]["svc"][0]), fmt(F["f02"]["dock_tj"][1]),
+            fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2]), fmt(F["f02"]["ef_c"][1]), fmt(F["f02"]["ef_c"][2]), fmt(F["f02"]["vsyse"]), fmt(fx["latch_s"]), held_txt(F)),
+         "R-c's step rule (D2); more copper or a heat path for the pair, never a lowered protection or service; on a negative Ciss answer one BUK6Y10-30P with a heat path through the case (L4-E11 16c's (S2), the engineer's); a slower discharge-FET turn-on on board P for the docking pulse (board P's owner); a series inductance or a second contact for the branch's hard short; arrangement (A) with E11-24's hold-up if (B1) fails",
+         "once R-157 (with R-181), R-177 and R-178 are applied, nothing of the architecture (L4-E11 check 5 and its fix rounds); on the board as drawn TI's D1 and D3 decide the charger's power path"),
     ]
 
 
@@ -5349,7 +5686,7 @@ def cons_deciding(F):
     framings (the profile at +40 C; K1, the SGP41's +55 C, deciding under option C) are withdrawn."""
     fx, rc = F["fx"], F["rc"]
     M = fx["modes"]
-    sh = {c["mode"]: c["short"] for c in fx["iii"]}
+    sh = {c["mode"]: c["short"] for c in fx["over"]}
     g = lambda k, w: "%s W/K (a reading of at least %s W/K)" % M[k][w][1:]
     return [
         "**The thermal question (U-02), restated by L4-E12's fix round for the review's B3, B4 and B7 (`b1cd32ba`).** The SGP41's "
@@ -5373,18 +5710,24 @@ def cons_deciding(F):
            "%s W/K (a reading of at least %s W/K)" % M["M7"]["stated"][1:], fmt(M["M8"]["q"]), g("M8", "ruled"), g("M9", "ruled")),
         "**Which lines a reading can pass at all** (12e: the outside capacity with the inside resistance at zero, %s W/K at K1's "
         "rise, correcting the %s to %s W/K that were a bound with a 50 m/s inside flow). Every line is class (i) (reachable bare: T-H1 "
-        "decides) or (ii) (reachable with the combined route R-170 to R-172: T-H1 with the route decides), except **four class (iii) "
-        "lines**, over the capacity even with the route at the optimistic ends: **M3**, E3-L lid closed on the pack as ruled, short by "
-        "%s W/K (%s W); **M4**, on shore, %s W/K (%s W); **M6**, E3-O on the e-paper's row, %s W/K (%s W); **M7**, E5's dwell on the "
-        "e-paper's row, the whole %s W. No measurement can pass them: each is a contradiction between the rulings (no vent, the Peli "
-        "1450, the device set) and that mode's requirement, with its options (OW-10): E3-L, CFL-002's C, A or B (the line moves to H1, "
-        "class (i)), a closed-lid ceiling on REQ-042's VOC channel (+%s to +%s C ambient on the pack, +%s to +%s C on shore) or D-02b "
-        "restated; E3-O, PDi's statement (the +70 C class, class (i)), the e-paper's window temperature measured (a plate fraction of "
-        "%s needs %s W/K, %s needs %s W/K), CHO-001 or a recorded deviation; E5, PDi's statement (%s W/K, class (i)), a different e-paper "
-        "or a recorded deviation. **Its executable resolution path:** the owner rules CFL-002 (OW-1), picks an option per class (iii) "
-        "line (OW-10) and authorises T-H1 (OW-8); the bench runs 12d's points (R-104, 5c)."
+        "decides) or (ii) (reachable with the combined route R-170 to R-172: T-H1 with the route decides), except **four lines over the "
+        "modelled capacity** even with the route at the optimistic ends; the capacity is a model figure on named coefficient ends, not "
+        "a physical bound, so none of them is shown impossible (the review of the provisional fixes, L4-F04). **A MODELLED SHORTFALL OF "
+        "THE ANALYSED ARRANGEMENT:** **M3**, E3-L lid closed on the pack as ruled, short by %s W/K (%s W), and **M4**, on shore, %s W/K "
+        "(%s W), the SGP41's Table 4 on the mixed air; what could change it is engineering: a closed-lid conduction path (the combined "
+        "route carried to the closed lid, Layer 7) and the SGP41's local air measured at its port, apart from the mixed-air screen. **A "
+        "MISSING STORAGE QUALIFICATION:** **M6**, E3-O on the e-paper's row, %s W/K (%s W), and **M7**, E5's dwell on that row, the "
+        "whole %s W; the unpowered e-paper is judged on its operating row read to cover storage (INFERRED); what resolves it is "
+        "evidence: PDi's storage statement (the +70 C class, class (i); at E5 %s W/K, class (i)) or a storage soak of a sample with its "
+        "function read back, and at E3-O the e-paper's window temperature measured (a plate fraction of %s needs %s W/K, %s needs %s "
+        "W/K). **A DEMONSTRATED CONFLICT: none at present**; only a measured local temperature over a mandatory limit with the route "
+        "fitted makes one, and only then does a requirement or ruling option go to the owner (OW-10: CFL-002's C, A or B, a closed-lid "
+        "ceiling on REQ-042's VOC channel, on the model +%s to +%s C ambient on the pack and +%s to +%s C on shore, or D-02b restated; "
+        "CHO-001 or a recorded deviation). **Its executable resolution path:** T-H1 (OW-8 authorises it; the bench runs 12d's points, "
+        "R-104, 5c, with the SGP41's port and the e-paper's window as local channels) and the storage evidence (PDi's statement, OW-4, "
+        "or the soak)."
         % ("%.3f" % rc["capk1"][0], "%.3f" % rc["cap"][0], "%.3f" % fx["capfix"][1], sh["M3"][0], sh["M3"][1], sh["M4"][0], sh["M4"][1], sh["M6"][0], sh["M6"][1],
-           sh["M7"][1], *[fmt(x) for x in fx["voc_ceil"]], *[fmt(x) for x in fx["plate"]], M["M7"]["stated"][1]),
+           sh["M7"][1], M["M7"]["stated"][1], *[fmt(x) for x in fx["plate"]], *[fmt(x) for x in fx["voc_ceil"]]),
     ]
 
 
@@ -5402,10 +5745,14 @@ def cons_exit_lines(F):
         L.append("      %s %s: %s; the missing step: %s; the evidence still needed: %s; what it decides: %s" % d)
     L.append("   " + cons_ledger(F).replace("**", "").replace("`", ""))
     n = [e[0] for e in cons_exit(F) if e[1] != QUALIFICATION]
+    for s in cons_decisions(F):
+        L.append("   " + s.replace("**", ""))
+    L.append("   " + cons_stop(F).replace("**", ""))
     L.append("   the exit: Layer 4 power closure is NOT reached on this reading: closure conditions on the board as drawn %s (U-04 becomes a qualification test once R-157, R-177"
-             " and R-178 are applied; U-02's four class (iii) lines are the owner's); the review's B1 and B2 on (B1)'s draft, D-13 and D-14, and the known defects D-10 and"
-             " D-11 at the solar entry are addressed in drafts (R-157, R-177, R-178 and R-173, not applied; D-11 CONDITIONAL on Q13's hot leakage), the band"
-             " between 25 V and the cut-off a residual for layer 8 (R-175); status: %s" % (", ".join(n), STATUS))
+             " and R-178 are applied; U-02 decided by T-H1 plus the storage evidence, its four lines over the modelled capacity a modelled shortfall and a missing storage qualification, no demonstrated conflict); the review's B1 and B2 on (B1)'s draft, D-13 and D-14, the provisional fixes' L4-F03, D-15,"
+             " and the known defects D-10 and D-11 at the solar entry are addressed in drafts (R-157, R-181, R-177, R-178 and R-173, not applied; D-14"
+             " CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss OPEN (E11-37), D-15 %s, E11-38; D-11 CONDITIONAL on Q13's hot leakage), the band"
+             " between 25 V and the cut-off a residual for layer 8 (R-175); status: %s" % (", ".join(n), L4F03_STATUS, STATUS))
     return L
 
 
@@ -5536,31 +5883,33 @@ def cons_surge(F):
         ("(2)", "the LM74700-Q1 ideal diode ahead of the TPS48110-Q1 (the vehicle entry's pair)", "closed", "closed",
          "not taken: CATHODE to ANODE 76.21 V under CS116's negative lobes against 75 V, and CS101's ripple rectified inside M2's band (L4-E7)"),
         ("(3)", "U21 TPS48110AQDGXRQ1 with Q12 CSD19532Q5B and R87 4.5 mOhm (L4-E11's network but the OV divider, %s); Q13 CSD19532Q5B in the return (PV_RTN) "
-         "with R101, R102 and D12 BZT52C12; D11 SMCJ40CA across the port; C131 and C132, two 10 uF 100 V, on PV_F; C133 and C134, two 10 uF 50 V, on PV_P; R97 30.0k; C126 330 pF; D4 to SMCJ30A" % rm["divider"],
+         "with R101, R102 and D12 BZT52C12; D11 SMCJ40CA across the port; the port bank C131, C132, C135 and C136 (Samsung CL32B225KCJSNNE) on PV_F; C133 and C134 on PV_P and C71 to C74 on TRK_VS (Samsung CL32B106KBJNNNE); R97 28.0k; C126 330 pF; D4 to SMCJ30A" % rm["divider"],
          "closed: off above %s to %s V rising, back under %s V or more" % (fmt(rm["rise"][0]), fmt(rm["rise"][1]), fmt(rm["fall"][0])),
          "closed, CONDITIONAL on Q13's leakage above +25 C",
-         "SELECTED by L4-E7 (SESSION; check 5): the path linear when on, no control on a reverse current; drafted in apply_gen_sch_e_solar_guard.py (7 edits), not applied"),
+         "SELECTED by L4-E7 (SESSION; check 5): the path linear when on, no control on a reverse current; drafted in apply_gen_sch_e_solar_guard.py (8 edits), not applied; the guard-on case NOT CLOSED (B6-ENG-1)"),
         ("TVS only", "SMCJ36A with the entry's 50 V parts at the 63 V class", "closed at D4", "not closed",
          "evaluated and not taken: it re-opens the CS101 correction and runs the stage at %s to %s W from 36 V" % (fmt(sv["stage36"][0]), fmt(sv["stage36"][1]))),
     ]
     if rm["b6"]["d12"] not in [d for d in DEFECTS if d["id"] == "D-12"][0]["options"]:
         refuse(4, "D-12's row does not carry L4-E7's text")
-    sel = ("**The remedies are selected and drafted, not applied** (L4-E7, its check 5 at `573fd5b8`, B6 at `11339ec7`). D-10: the over-voltage cut-off, "
+    sel = ("**The remedies are selected and drafted, not applied** (L4-E7, its check 5 at `573fd5b8`, round 2 at `68bc3bad`). D-10: the over-voltage cut-off, "
            "U21 with Q12, rises at %s to %s V and falls back at %s V or more (aged), %s V over CS101's peak at the input, %s V under the "
            "SMCJ30A's least breakdown at the cold end and %s V over 25 V on the fall, so it never trips inside REQ-016's window and the "
            "block never turns on under a %s V source. D-11: Q13 in the return blocks a reversed panel, CONDITIONAL on its leakage above "
-           "+25 C (printed at 25 C only). %s **With the guard already on** (the review's B6, L4-E7 at `11339ec7`) a 36 V source "
-           "stepping on is cut, Q12 off at most %s A within %s us and D4 carrying nothing, once B6's four drafted parts are in (C131 and "
-           "C132 two 10 uF 100 V, C133 and C134 two 10 uF 50 V on PV_P, C126 330 pF, R97 30.0k): every rating MEETS, CONDITIONAL on the "
-           "panel lead's loop inductance at least %s uH (its conductors' centres at least %s mm apart over its length), which no document "
-           "gives (R-176 row 2, R-180). Re-run: the start's inrush %s A under U21's %s A; CS101's worst ripple %s A "
+           "+25 C (printed at 25 C only). %s **With the guard already on** (the review's B6 and the external review's L4-F01, L4-E7's "
+           "round 2 at `68bc3bad`) a 36 V source stepping on is cut, Q12 off at most %s A within %s us and D4 carrying nothing, with the "
+           "margin chosen first (U5 within +-%s V, the numerical error %s V added on top; the margin is %s) and each ceramic bank bounded on its own (the "
+           "port bank four Samsung CL32B225KCJSNNE, C133, C134 and C71 to C74 CL32B106KBJNNNE, R97 28.0k, C126 330 pF): every rating holds "
+           "with its margin only for a stiff source's loop of at least %.2f uH (two conductors %s mm apart over 5 m), NOT under it (at 1.00 uH "
+           "U5 %s V, over its 0.3 V absolute maximum); the guard-on case is **NOT CLOSED** and goes to the engineer as B6-ENG-1 (R-176 row 3, "
+           "R-180, R-186, R-187). Re-run: the start's inrush %s A under U21's %s A; CS101's worst ripple %s A "
            "against the %s A margin; check (b)'s allowance %s ms (the accepted %s ms); the static bound %s W (%s W without it). The "
            "block's loss: %s W at the regulation's highest current, %s Wh on SC-37's day (%s %%). **Named for layer 8:** a stiff source "
            "between 25 V and the cut-off is outside the window but still runs the stage, at most %s W under the backstop's current "
-           "trip (R-175); the cut-off cannot go below CS101's %s V input peak without a different immunity basis. Owed: the SMCJ30A's "
-           "LCSC code, U21's DGX-19 land, the regeneration and the bench rows (R-176). The guard adds protection and changes no topology."
+           "trip (R-175); the cut-off cannot go below CS101's %s V input peak without a different immunity basis. Owed: the LCSC codes of "
+           "D4 and of the Samsung parts, U21's DGX-19 land, the regeneration and the bench rows (R-176). The guard adds protection and changes no topology."
            % (fmt(rm["rise"][0]), fmt(rm["rise"][1]), fmt(rm["fall"][0]), fmt(rm["marg"][0]), fmt(rm["marg"][1]), fmt(rm["marg"][2]), fmt(sv["src"][1]),
-              rm["b6"]["d12"], fmt(rm["b6"]["sum"][0]), fmt(rm["b6"]["sum"][1]), fmt(rm["b6"]["l_uh"]), fmt(rm["b6"]["mm"]),
+              rm["b6"]["d12"], fmt(rm["b6"]["sum"][0]), fmt(rm["b6"]["sum"][1]), ("%.3f" % rm["b6"]["margin"]), ("%.6f" % rm["b6"]["err"]), RESERVE_NOTE, rm["b6"]["l_uh"], fmt(rm["b6"]["mm"]), fmt(rm["b6"]["at1"]),
               fmt(rm["b6"]["start"][0]), fmt(rm["b6"]["start"][1]),
               fmt(rm["cs101"][0]), fmt(rm["cs101"][2]), fmt(rm["chkb"][0]), fmt(rm["chkb"][2]), fmt(rm["static"][0]), fmt(rm["static"][1]),
               fmt(rm["loss"][0]), fmt(rm["day"][0]), fmt(rm["day"][2]), fmt(rm["resid"]), fmt(F["cs101_pv"])))
@@ -5590,24 +5939,26 @@ def cons_surge_lines(F):
     p("     %s Wh of %s Wh on SC-37's day (%s %%), %s Wh of %s Wh on the bright day; CS101 re-run %s A at %d Hz; Q13's leakage bound %s uA (%s uA printed at 25 C)"
       % (fmt(rm["day"][0]), fmt(rm["day"][1]), fmt(rm["day"][2]), fmt(rm["day"][3]), fmt(rm["day"][4]), fmt(rm["cs101"][0]), rm["cs101"][1], fmt(rm["q13"][0]), fmt(rm["q13"][1])))
     b6 = rm["b6"]
-    p("   THE GUARD ALREADY ON (the review's B6; L4-E7 at 11339ec7, MODELED): a stiff %s V source stepping or rising onto the port through the lead; at %s uH, the"
-      % (fmt(sv["src"][1]), fmt(b6["l_uh"])))
-    p("     worst over every start and corner, against each printed rating (and the least inductance it holds at):")
+    p("   THE GUARD ALREADY ON, ROUND 2 (the review's B6 and the external review's L4-F01; L4-E7 at 68bc3bad, MODELED): a stiff %s V source stepping or rising"
+      % fmt(sv["src"][1]))
+    p("     onto the port, its loop %s to %s uH; the margin chosen first, U5 within +-%s V (the numerical error %s V added on top), every other rating 10 %% clear;"
+      % (("%.2f" % b6["env"][0]), ("%.2f" % b6["env"][1]), ("%.3f" % b6["margin"]), ("%.6f" % b6["err"])))
+    p("     each ceramic bank bounded on its own (Samsung's curves), the 16 combinations searched; at %.2f uH, the worst over every start and corner, against each" % b6["l_uh"])
+    p("     limit with its margin (and the least loop it holds from):")
     for nm, w, lim_, mg, hold in b6["rows"]:
         p("       %s: %s of %s, margin %s; holds from %s uH" % (nm, fmt(w), fmt(lim_), fmt(mg), hold))
-    p("     D4's current: none. The binding rating: %s; the lead qualifies at %s uH, its conductors' centres at least %s mm apart over its %s m; at %s uH (%s mm)"
-      % (b6["bind"], fmt(b6["l_uh"]), fmt(b6["mm"]), fmt(b6["len_m"]), fmt(b6["below"][0]), fmt(b6["below"][1])))
-    p("     the guard does not hold (NOT MET). Q12 at most %s of its derated chart, %s A at the turn-off; Q13 %s A, %s of its chart; D11 %s A and %s mJ against %s mJ"
-      % (fmt(b6["q12"][0]), fmt(b6["q12"][1]), fmt(b6["q13"][0]), fmt(b6["q13"][1]), fmt(b6["d11"][0]), fmt(b6["d11"][1]), fmt(b6["d11"][2])))
-    p("     ramps: TRK_VS at most %s V at %s V/us, %s V under D4's least breakdown, U5 at most %s V; the cold connection: PV_F at most %s V, slew %s V/us, INP %s V,"
-      % (fmt(b6["ramp"][0]), fmt(b6["ramp"][1]), fmt(b6["ramp"][2]), fmt(b6["ramp"][3]), fmt(b6["cold"][0]), fmt(b6["cold"][1]), fmt(b6["cold"][2])))
-    p("     EN/UVLO %s V, Q13's body diode %s A; as first drafted (C131 1 uF, R97 39k, CSCP 1 nF, no C133 and C134) PV_F %s of 100 V, its slew %s of 60 V/us,"
-      % (fmt(b6["cold"][3]), fmt(b6["cold"][4]), fmt(b6["drafted"][0]), fmt(b6["drafted"][1])))
-    p("     INP %s of 20 V, U5 %s of 0.3 V: four ratings failed, fixed by C131 and C132 (two 10 uF 100 V), C133 and C134 (two 10 uF 50 V on PV_P), C126 330 pF"
-      % (fmt(b6["drafted"][2]), fmt(b6["drafted"][3])))
-    p("     and R97 30.0k; the start %s A under U21's %s A; the static bound %s W" % (fmt(b6["start"][0]), fmt(b6["start"][1]), fmt(rm["static"][0])))
-    p("     D-12 corrected (L4-E7's text): %s" % b6["d12"])
-    p("     R-176's acceptance, seven rows: %s" % "; ".join("(%d) %s" % (i, r) for i, r in enumerate(b6["r176"], 1)))
+    p("     D4's current: none. The floor: %.2f uH (two conductors %s mm apart over %s m); under it NOT MET: at 1.00 uH U5 %s V, over its %s V absolute maximum;"
+      % (b6["l_uh"], fmt(b6["mm"]), fmt(b6["len_m"]), fmt(b6["at1"]), fmt(b6["u5_abs"])))
+    p("     at 0.30 uH U5 %s V and PV_F %s V. Q12 at most %s of its derated chart, %s A at the turn-off; Q13 %s A, %s of its chart; D11 %s A and %s mJ against %s mJ"
+      % (fmt(b6["at03"][0]), fmt(b6["at03"][1]), fmt(b6["q12"][0]), fmt(b6["q12"][1]), fmt(b6["q13"][0]), fmt(b6["q13"][1]), fmt(b6["d11"][0]), fmt(b6["d11"][1]), fmt(b6["d11"][2])))
+    p("     ramps: TRK_VS at most %s V at %s V/us, %s V under D4's least breakdown, U5 at most %s V; the cold connection over the envelope: PV_F at most %s V,"
+      % (fmt(b6["ramp"][0]), fmt(b6["ramp"][1]), fmt(b6["ramp"][2]), fmt(b6["ramp"][3]), fmt(b6["cold"][0])))
+    p("     slew %s V/us, INP %s V, Q13's body diode %s A, D11 %s mJ; the start %s A under U21's %s A; the static bound %s W"
+      % (fmt(b6["cold"][1]), fmt(b6["cold"][2]), fmt(b6["cold"][3]), fmt(b6["cold"][4]), fmt(b6["start"][0]), fmt(b6["start"][1]), fmt(rm["static"][0])))
+    p("     the approaches: (A) SELECTED, the floor stays; (B) a pin-level limiter NOT TAKEN (8705af p.30 forbids series resistors on the CSxIN and CSxOUT pins;")
+    p("     Analog Devices' question 6 drafted); (D) the TPS48111-Q1 not taken (its floor %s uH, at 1.00 uH U5 still %s V)" % (fmt(b6["d"][0]), fmt(b6["d"][1])))
+    p("     D-12 (L4-E7's text): %s" % b6["d12"])
+    p("     R-176's acceptance, six rows: %s" % "; ".join("(%d) %s" % (i, r) for i, r in enumerate(b6["r176"], 1)))
     p("   the remedies as L4-E7 compared them:")
     for r in remedies:
         p("   %s %s; D-10 %s; D-11 %s; %s" % r)
@@ -5629,30 +5980,360 @@ def cons_exit_defects(F):
     sv = F["sv"]
     rm = sv["rm"]
     adr = "ADDRESSED IN DRAFTS: a selected remedy (L4-E7, check 5), drafted in apply_gen_sch_e_solar_guard.py (R-173), not applied"
-    owed = "the SMCJ30A's LCSC code, U21's DGX-19 land, the regeneration and its gates, the bench rows (R-176)"
+    owed = "the LCSC codes of D4 and of the Samsung parts, U21's DGX-19 land, the regeneration and its gates, the bench rows (R-176)"
     topo = "nothing of the topology: protection added at the solar entry"
     fx = F["fx"]
     return [
         ("D-13", "(B1)'s draft left board E's auxiliary domain on the pack's side of the battery FET (the review's B1)",
-         "ADDRESSED IN DRAFTS: board E on VSYS_E over the dock's pin 1 (L4-E11 15a; R-177, R-178), not applied; the held pack's drains %s mA, the start bounded to VSYS_MIN or a latch within %s s"
-         % (fmt(fx["held"][0]), fmt(fx["latch_s"])),
-         "the drafts applied with R-157 under L4-E11's release record", "the held pack current at most %s mA and the start from cold (R-161); the fans' rating to %s V (R-179)" % (fmt(fx["held"][1]), fmt(fx["vsys_rng"][1])),
+         "ADDRESSED IN DRAFTS: board E on VSYS_E over the dock's pin 1 (L4-E11 15a; R-177, R-178), not applied; the held pack's drains: %s; the start bounded to VSYS_MIN or a latch within %s s"
+         % (held_txt(F), fmt(fx["latch_s"])),
+         "the drafts applied with R-157 under L4-E11's release record", "the held pack current at most %s mA and the start from cold (R-161); the fans' range to %s V and running at %s V (R-179)" % (fmt(F["f02"]["held"][1]), fmt(fx["vsys_rng"][1]), fmt(F["f02"]["vsyse"])),
          "nothing of the topology: a feed inside (B1)"),
         ("D-14", "(B1)'s battery FET bounded at an unprinted corner and a fallback lowering 18 A for 60 s (the review's B2)",
-         "ADDRESSED IN DRAFTS: the pair Q39 and Q40 (two BUK6Y10-30P; L4-E11 15c; R-157), not applied; every protection event at TJ 150 C or under at %s C/W per FET, 18 A for 60 s at %s C"
-         % (fmt(fx["bar"][0]), fmt(fx["svc_tj"])),
-         "the draft applied (R-157)", "each FET's installed path at most %s C/W (R-159), the docking split at most %s hot (R-160)" % (fmt(fx["bar"][0]), fmt(fx["dock"][2])),
-         "nothing of the topology: a part inside (B1)"),
+         "ADDRESSED IN DRAFTS: the pair Q39 and Q40 (two BUK6Y10-30P; L4-E11 15c, 16; R-157), not applied; CONDITIONAL on E11-29, E11-30 and E11-36, with E11-37 (Ciss against TI's 5 nF) OPEN: sized to an RDS(on) allowance of %s mOhm, every protection event from the held 20 A at TJ 150 C or under for an installed (Zself + Zmut) at most %s K/W steady, 18 A for 60 s from the hot state at %s C, the docking pulse whole in one FET at TJ %s C"
+         % (fmt(F["f02"]["allow"]), fmt(F["f02"]["z_steady"]), fmt(F["f02"]["svc"][0]), fmt(F["f02"]["dock_tj"][1])),
+         "the draft applied (R-157)", "Zself and Zmut on the built board (R-159); RDS(on) at -8.5 V and 150 C at most %s mOhm (R-182); TI's answer on Ciss or BATDRV with the pair on the bench (R-183); VF and ISM hot (R-160)" % fmt(F["f02"]["allow"]),
+         "nothing of the topology: a part inside (B1); on a negative Ciss answer the engineer chooses one FET with a heat path through the case"),
+        ("D-15", "the dock's new VSYS contact without branch protection (L4-F03)",
+         "ADDRESSED IN DRAFTS: the eFuse U42 (TPS16630, R221 11.0k, C237 22 nF; L4-E11 16e; R-181), not applied; the contact at most %s A (%s %% of %s A) once the limit settles, VSYS_E at least %s V; %s (E11-38)"
+         % (fmt(F["f02"]["ef_c"][0]), fmt(F["f02"]["ef_c"][1]), fmt(F["f02"]["ef_c"][2]), fmt(F["f02"]["vsyse"]), L4F03_STATUS),
+         "the draft applied with R-157 (R-181)", "the limit read at -20, 25 and 70 C, the overload and a hard short at VSYS_E, the contact's resistance after (R-184)",
+         "nothing of the topology: a branch protection inside (B1)"),
         ("D-10", "a stiff %s V source on the solar port (a single fault)" % fmt(sv["src"][1]),
-         adr + "; the cut-off rises at %s to %s V, falls back at %s V or more; with the guard already on (B6) every rating MEETS with its four added parts, CONDITIONAL on the panel lead's loop inductance at least %s uH"
-         % (fmt(rm["rise"][0]), fmt(rm["rise"][1]), fmt(rm["fall"][0]), fmt(rm["b6"]["l_uh"])),
-         "the draft applied after its release record (R-92's L4-E7 RELEASE.md)", owed + "; the lead's inductance measured, or its conductors' centres at least %s mm apart (R-176 row 2, R-180)" % fmt(rm["b6"]["mm"]), topo),
+         adr + "; the cut-off rises at %s to %s V, falls back at %s V or more; the source arriving with the guard already on NOT CLOSED: every rating with its margin only from a %.2f uH source loop (U5 %s V of +-%s V, the margin %s), NOT under it (at 1.00 uH U5 %s V)"
+         % (fmt(rm["rise"][0]), fmt(rm["rise"][1]), fmt(rm["fall"][0]), rm["b6"]["l_uh"], fmt([r[1] for r in rm["b6"]["rows"] if r[0] == rm["b6"]["bind"]][0]), ("%.3f" % rm["b6"]["margin"]), RESERVE_NOTE, fmt(rm["b6"]["at1"])),
+         "the draft applied after its release record (R-92's L4-E7 RELEASE.md); the guard-on case decided by B6-ENG-1", owed + "; B6-ENG-1: Analog Devices' sense-pin filter (R-186), a stiff source's loop at J_SOLAR at least %.2f uH, measured (R-180), or the input sense moved (R-187)" % rm["b6"]["l_uh"], topo),
         ("D-11", "a reversed panel (E-N1, a single fault)", adr + "; CONDITIONAL on Q13's leakage above +25 C", "the same draft", "Q13's leakage at the hot end (R-176)", topo),
         ("D-12", "CS116 and CS115 on the panel lead, as drawn", "RESOLVED in the drafted entry (R-21, R-173): %s" % rm["b6"]["d12"],
          "the loop current recorded (R-174)", "the test of R-174 at layer 8", "nothing: the drafted entry's parts"),
         ("residual", "a stiff source between %s V and the cut-off (outside the window)" % fmt(F["pv"]["v_max"]), "a residual named for layer 8: the stage runs, at most %s W under the backstop's trip" % fmt(rm["resid"]),
          "TRN-001's judgement whether the single fault needs more (R-175)", "the cut-off cannot go below CS101's %s V input peak without a different immunity basis" % fmt(F["cs101_pv"]), "not the topology"),
     ]
+
+
+def cons_b6eng(F):
+    """The engineer's row B6-ENG-1 (L4-E7's round 2 for the review's B6 and L4-F01), as L4-E7 prints it: the page's handoff block."""
+    b6 = F["sv"]["rm"]["b6"]
+    rows = ["| Field | Entry |", "|---|---|"] + ["| %s | %s |" % (lab[0].upper() + lab[1:], txt) for lab, txt in b6["eng"]]
+    return ("**The engineer's row B6-ENG-1** (L4-E7's round 2 at `68bc3bad`, as it prints it; the handoff, with its routes in the register "
+            "as R-186 (1), R-180 (2) and R-187 (3)):\n\n" + "\n".join(rows))
+
+
+def cons_review_lines(F):
+    """Section 26: the external engineering review of the provisional fixes (2 October 2026, on 8fbb68b6, 516d43fe and 11339ec7), as the
+    records answer it and this record carries it: L4-F02 and L4-F03 (L4-E11 at d2a59468), L4-F04 (the thermal classes), L4-F01 (L4-E7).
+    Read, not recomputed."""
+    g, fx = F["f02"], F["fx"]
+    L = ["26. THE REVIEW OF THE PROVISIONAL FIXES (an external engineering review of 2 October 2026 on 8fbb68b6, 516d43fe and 11339ec7; a"
+         " qualification review of drafts, not a fabrication approval): L4-F01 (B6) with L4-E7, L4-F02 and L4-F03 with L4-E11 (d2a59468), L4-F04 here"]
+    p = L.append
+    p("   kept as the review found them (not reopened): B4's charging balance as L4-E12 12b prints it, %s W of heat (the reviewer's figure reproduced),"
+      % fmt(fx["bal"][3]))
+    p("     %s W with the %s W of ballasts; B7's constant-conductance check as 12c prints it, %s W/K reaching C1 at %s h and, unshed, %s C at %s h;"
+      % (fmt(fx["bal_b"][1]), fmt(fx["bal_b"][0]), fmt(fx["cg"][0]), fmt(fx["cg"][1]), fmt(fx["cg"][2]), fmt(fx["cg"][3])))
+    p("     B5's qualification language (U-01: the temperature windows only, current at temperature and the dwell awaited); B1's topology (25a)")
+    p("26a L4-F02, THE BATTERY FETS (the review's B2; L4-E11 16a to 16d; D-14): a qualification gap, not a demonstrated failure")
+    p("   RDS(on): %s mOhm per FET is an ALLOWANCE, not a bound (no printed point at -8.5 V hot); at the sheet's largest printed %s mOhm the held 20 A"
+      % (fmt(g["allow"]), fmt(g["rds_max"][0])))
+    p("     reaches %s C and the service %s C on the planned board: %s (R-182)" % (fmt(g["rds_max"][1]), fmt(g["rds_max"][2]), g["st_a"]))
+    p("   the installed path: the device's own Fig. 4 scaled to Table 6 (%s K/W at 244 us, %s at 20 ms, %s at 1 s), the coupling in the measured sum Zself + Zmut;"
+      % tuple(fmt(x) for x in g["zth"]))
+    p("     (Zself + Zmut) at most %s K/W steady, %s; 18 A for 60 s from the hot state at %s C (from %s C at 10 A held): CONDITIONAL on E11-29 (R-159)"
+      % (fmt(g["z_steady"]), ", ".join("%s at most %s K/W (%s W per FET)" % (e[0], fmt(e[2]), fmt(e[1])) for e in g["z_ev"]), fmt(g["svc"][0]), fmt(g["svc"][1])))
+    p("   Ciss: the pair %s nF typical at -15 V, about %s nF near 0 V, no maximum: not shown under TI's 5 nF; OPEN on E11-37 (R-183, Q-TI-17; OW-7)"
+      % tuple(fmt(x) for x in g["ciss"]))
+    p("   the docking pulse: %s A peak, %s us, whole in one FET (no sharing credited), TJ %s C (a rise of %s K) on the stated VF bound; VF hot and ISM hot"
+      % (fmt(g["dock"][0]), fmt(g["dock"][1]), fmt(g["dock_tj"][1]), fmt(g["dock_tj"][0])))
+    p("     not printed (TJ under 150 C while VF is at most %s times the bound): CONDITIONAL on E11-30 (R-160)" % fmt(g["vf_x"]))
+    p("   D-14: ADDRESSED IN DRAFTS, CONDITIONAL on E11-29, E11-30 and E11-36, with E11-37 OPEN; the pair stays selected (L4-E11's SESSION choice); 18 A")
+    p("     for 60 s and 10 A continuous kept; no protection lowered")
+    p("26b L4-F03, THE DOCK'S VSYS CONTACT (L4-E11 16e; D-15, new)")
+    p("   the review's counterexample: %s A from %s V (%s Ohm) on VSYS_E, over the contact's 3.5 A and under every upstream threshold"
+      % tuple(fmt(x) for x in g["cex"]))
+    p("   SELECTED by L4-E11: U42 TI TPS16630PWPR on board A from VBAT to the new net VSYS_DOCK on J_DOCK pin 1, R221 11.0k 0.1 %, C237 22 nF, MODE to GND;")
+    p("     the limit %s to %s A (%s A typical), timer at most %s ms, auto-retry after %s to %s ms; the contact at most %s A, %s %% of %s A;"
+      % (fmt(g["ef"][1]), fmt(g["ef"][2]), fmt(g["ef"][0]), fmt(g["ef_t"][0]), fmt(g["ef_t"][1]), fmt(g["ef_t"][2]), fmt(g["ef_c"][0]), fmt(g["ef_c"][1]), fmt(g["ef_c"][2])))
+    p("     the overload at a duty of at most %s; VSYS_E at least %s V at 1.0 A" % (fmt(g["duty"]), fmt(g["vsyse"])))
+    p("   D-15: ADDRESSED IN DRAFTS (R-181, apply_gen_sch_a_charger.py, not applied): %s (E11-38, R-184); E11-35 extended (R-179)" % L4F03_STATUS)
+    p("   the held pack's drain, corrected: %s" % held_txt(F))
+    p("   L4-E11 16f's four drafted texts, carried: %s" % "; ".join(r[0] for r in g["f16"]))
+    p("   L4-E11 16g's five engineer's rows, each in the register: Q39, Q40 RDS(on) R-182; the installed path R-159; Ciss R-183; the docking pulse R-160;")
+    p("     the dock's VSYS branch R-184")
+    sh = {c["mode"]: c for c in fx["over"]}
+    p("26c L4-F04, THE THERMAL CATEGORIES (L4-E12 12e restated in this round; U-02): the capacity is a MODEL FIGURE on named coefficient ends, not a")
+    p("     physical bound, and a line over it is not shown impossible; three named categories in place of the earlier third class:")
+    p("   %s: M3 and M4, E3-L lid closed as ruled, the SGP41's Table 4 on the mixed air, short by %s and %s W/K of the model;"
+      % (CAT_MODEL, sh["M3"]["short"][0], sh["M4"]["short"][0]))
+    p("     an engineering task: a closed-lid conduction path (the combined route carried to the closed lid, Layer 7) and the SGP41's local air at its port")
+    p("   %s: M6 and M7, the unpowered e-paper judged on its +60 C operating row read to cover storage (INFERRED), M6 short by %s W/K,"
+      % (CAT_STORE, sh["M6"]["short"][0]))
+    p("     M7 the whole %s W on that row; an evidence task: PDi's storage statement (OW-4) or a storage soak of a sample with its function read back" % sh["M7"]["short"][1])
+    p("   %s: none at present; only a measured local temperature over a mandatory limit with the route fitted makes one" % CAT_CONFLICT)
+    p("   OW-10 is no longer a forced owner question: CFL-002's options (OW-1) and the requirement or ruling options stay the owner's, sent to him only on a")
+    p("     demonstrated conflict; U-02 stays a closure condition decided by T-H1 plus the storage evidence; local part temperatures kept apart from the")
+    p("     mixed-air screens; every figure as L4-E12 prints it, none changed by the classification")
+    b6 = F["sv"]["rm"]["b6"]
+    p("26d L4-F01, THE SOLAR GUARD ALREADY ON (the review's B6; L4-E7's round 2 at 68bc3bad; section 23 carries its figures): NOT CLOSED")
+    p("   the margin chosen first (SESSION): U5's CSPIN to CSNIN within +-%s V, the numerical error %s V added on top (the margin %s); each ceramic bank bounded on its"
+      % (("%.3f" % b6["margin"]), ("%.6f" % b6["err"]), RESERVE_NOTE))
+    p("     own from Samsung's curves, the 16 corners searched; the envelope a stiff %s V source with a loop of %s to %s uH"
+      % (fmt(F["sv"]["src"][1]), ("%.2f" % b6["env"][0]), ("%.2f" % b6["env"][1])))
+    p("   every rating holds with its margin only from a %.2f uH loop (U5 %s V); under it NOT MET (at 1.00 uH U5 %s V, over its %s V absolute maximum)"
+      % (b6["l_uh"], fmt([r[1] for r in b6["rows"] if r[0] == b6["bind"]][0]), fmt(b6["at1"]), fmt(b6["u5_abs"])))
+    p("   (A) selected; (B) the pin-level limiter not taken (8705af p.30; Analog Devices' question 6 drafted); (D) the TPS48111-Q1 not taken (floor %s uH,"
+      % fmt(b6["d"][0]))
+    p("     at 1.00 uH U5 %s V)" % fmt(b6["d"][1]))
+    p("   D-10 and D-11: the remedy selected and drafted (R-173, 8 edits, R97 28.0k, U21 on by %s V at the most); the guard-on case NOT CLOSED; D-12 as L4-E7"
+      % fmt(F["sv"]["rm"]["uvlo"][0]))
+    p("     gives it; R-176 six rows, row 3 the layer 9 acceptance at +-%s V, a pass only for a loop of at least %.2f uH until B6-ENG-1 is decided"
+      % (("%.3f" % b6["margin"]), b6["l_uh"]))
+    p("   the engineer's row B6-ENG-1 (the handoff; register R-180, R-186, R-187):")
+    for lab, txt in b6["eng"]:
+        p("     %s: %s" % (lab, txt))
+    cp = F["cp"]
+    p("26e THE SECOND REVIEW'S L4-CP01 TO L4-CP03 (L4-E11's round 3 at 1a4245c3; its section 17): CP01, U42's fault envelope case by case, printed, inferred and typical")
+    p("     apart: a short applied while on at most %s A for %s us (%s A2s, inferred, the typical 45 A threshold and the figure built on it withdrawn), IN at most %s V"
+      % (fmt(cp["short"][0]), fmt(cp["short"][1]), fmt(cp["short"][2]), fmt(cp["in_v"])))
+    p("     with U42 within %s nH of C236 (a layout requirement), the fans' start %s A each together or %s A one at a time (E11-39), VSYS_E at least %s V; C238, C239 and"
+      % (fmt(cp["nh"]), fmt(cp["fan"][0]), fmt(cp["fan"][1]), fmt(cp["fan"][2])))
+    p("     D23 added to the draft; D-15 reads %s (E11-38, R-184; R-188). CP02: the whole hot docking waveform by a defined pulse qualification," % cp["st_a"])
+    p("     SELECTED (D2): %d parts, %d pulses each at %s A and %s us, the mounting base %s C, Q-NXP-1 asked in parallel (R-160). CP03: the charger draft no longer"
+      % (cp["pulse"][4], cp["pulse"][3], fmt(cp["pulse"][0]), fmt(cp["pulse"][1]), fmt(cp["pulse"][2])))
+    p("     writes the withdrawn claims (tested). 17d's specimens enter the qualification route (section 27) as written")
+    p("   status: %s" % STATUS)
+    return L
+
+
+# ====================================================================================== THE PROTOTYPE QUALIFICATION ROUTE
+# The second external review's next milestone: "a coherent power-design package with a defined prototype qualification route". One table
+# over every measurement row of the register that decides a Layer 4 condition, with the specimen, what it represents, what transfers to the
+# final board, the decision it resolves, what it blocks, who performs it, whose authorisation it needs, what to buy and what to send.
+# Prices are the ones this tree has READ and filed (each checked against its source file here); an item whose price was not read says so.
+# Nothing is bought, nothing is sent: purchases and outside contact are the owner's.
+PRICES = {
+    "buk": {"what": "BUK6Y10-30PX (the samples of E11-29's two coupons, E11-30's six pulsed parts, E11-36's Kelvin coupon, E11-37's pair, four spare)",
+            "maker": "Nexperia", "qty": 20, "cur": "USD", "unit": 1.7386, "src": "v2/docs/records/l4e11/inputs/lcsc-C3278350-2026-10-02.json",
+            "key": ("price_usd", "10"), "note": "the 10-piece tier, LCSC C3278350, stock 67 on 2 October 2026"},
+    "d23": {"what": "B540C-13-F (D23 on E11-38's specimen)", "maker": "Diodes", "qty": 5, "cur": "USD", "unit": 0.2332,
+            "src": "v2/docs/records/l4e11/inputs/lcsc-C72264-price-2026-10-02.json", "key": ("price_usd", "5"), "note": "the 5-piece tier, LCSC C72264"},
+    "c236": {"what": "EEHZK1V181P (C236 on E11-38's specimen)", "maker": "Panasonic", "qty": 2, "cur": "USD", "unit": 1.1407,
+             "src": "v2/docs/records/l4e11/inputs/lcsc-C242139-price-2026-10-02.json", "key": ("price_usd", "1"), "note": "the 1-piece tier, LCSC C242139"},
+    "saft": {"what": "MP 176065 xtd, one cell for the limited sample qualification (three if the owner prefers a spread)", "maker": "Saft", "qty": 1,
+             "cur": "NZD", "unit": 238.72, "src": "v2/docs/records/l4e10/inputs/prices-2026-10-02.json", "key": ("verbatim", "$ 238.72"),
+             "note": "SIMPOWER's listing archived 16 January 2025, a price indicator and not a quote"},
+    "hl": {"what": "HL18650V, a lot soak of ten (route (II) only)", "maker": "Yichun Topwell Power (the listing is a marketplace seller's, not Topwell's)",
+           "qty": 10, "cur": "USD", "unit": 3.50, "src": "v2/docs/records/l4e10/inputs/prices-2026-10-01.json", "key": ("verbatim", "US$3.50"),
+           "note": "the 10 to 4,999 pieces tier"},
+}
+UNPRICED = [
+    ("T-H1", "a current-moulding Peli 1450, the 1450PF frame, a 3 mm aluminium plate blank, resistive heaters to 52.134 W, sixteen thermocouple channels and a logger"),
+    ("T-H1, E11-35", "the fans: nothing to buy until D-18 names them"),
+    ("E11-38", "TPS16630PWPR (U42); one Preci-Dip 813 contact and 24 AWG; the coupon's fabrication"),
+    ("E11-29, E11-36", "the power-stage and Kelvin coupons' fabrication; an oven to 150 C"),
+    ("E11-30", "a capacitor-discharge rig and a heated mounting base"),
+    ("E11-31, E11-37", "TI's BQ25730 evaluation hardware, whether TI offers one; BQ25730RSNR (LCSC C5219071, 2.8553 USD at 1 but stock 0 on 2 October 2026: an authorised source, its price not read)"),
+    ("the guard bench", "TPS48110AQDGXRQ1 (U21; LCSC C17556513, stock 326 on 2 October 2026, price not filed), CSD19532Q5B (Q12, Q13; LCSC C473333), the Samsung CL32B225KCJSNNE and CL32B106KBJNNNE and the SMCJ30A (codes owed); the controlled first prototype of board E"),
+    ("the cell qualification, the lot soak", "a chamber from -40 to +85 C, a 25 A load, a CC/CV source and a logger (a laboratory's service)"),
+    ("R-185", "E2370KS0C1, Pervasive Displays, one sample; an oven or chamber to +60 C"),
+]
+SENDS = [
+    ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "Texas Instruments: Q-TI-15 (D2), Q-TI-16 (VSYS_MIN's maximum), Q-TI-17 (the 5 nF), Q-TI-18 (U42's OUT undershoot, I(OL) at 17 V); Nexperia: Q-NXP-1 (the docking waveform)", "OW-7", "E11-31, E11-37, E11-38, E11-30"),
+    ("v2/docs/review-packets/battery/REVIEW-REQUEST.md", "Texas Instruments: the battery packet's questions (section 4)", "OW-7", "U-04 on the board as drawn"),
+    ("v2/docs/records/l4e10/clarification/saft-mp176065xtd.txt", "Saft: the currents at the cells' temperatures, the storage dwell and recovery, the termination and the life thickness", "OW-9", "R-168"),
+    ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "Yichun Topwell Power: the HL18650V's signed specification, ten questions", "OW-2", "R-103"),
+    ("v2/docs/records/l4e10/clarification/eaton-scf9550.txt", "Eaton: F2's rating above +60 C and below -20 C, the storage questions", "OW-4", "R-103"),
+    ("v2/docs/records/l4e12/clarification/pervasive-displays-e2370ks0c1.txt", "Pervasive Displays: the E2370KS0C1's storage temperature and an unpowered hot exposure", "OW-4", "R-185"),
+    ("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt", "Sensirion: the SGP41's storage and operation outside Table 4", "OW-4", "T-H1's screens"),
+    ("v2/docs/records/l4e7/clarification/analog-devices-lt8705a.txt", "Analog Devices: the LT8705A's IMON_IN limits and question 6, a sense-pin filter on CSPIN and CSNIN", "OW-4", "R-186, R-33"),
+]
+QUAL_RULE = ("**The rule.** An evidence build proceeds under its own scope; the design and production release stays held until the measurements "
+             "pass; a row is not closed because it has an owner and a future test. A sample result is evidence for that lot and that sample, "
+             "never a production limit; only a maker's printed limit closes a row for every lot. Purchases and outside contact are the owner's: "
+             "nothing here is bought or sent.")
+
+
+def _price_check():
+    import json
+    for k, pr in PRICES.items():
+        path = os.path.join(TOP, pr["src"])
+        if not os.path.exists(path):
+            refuse(3, "the price source %s is missing" % pr["src"])
+        d = json.load(open(path, encoding="utf-8"))
+        kind, key = pr["key"]
+        if kind == "price_usd":
+            if abs(float(d["price_usd"][key]) - pr["unit"]) > 1e-9:
+                refuse(3, "%s: the filed price at the %s tier is not %s" % (pr["src"], key, pr["unit"]))
+        else:
+            blob = json.dumps(d)
+            if key not in blob:
+                refuse(3, "%s does not carry the reading %r" % (pr["src"], key))
+    for rel, _what, _ow, _rows in SENDS:
+        path = os.path.join(TOP, rel)
+        if not os.path.exists(path) or "draft" not in open(path, encoding="utf-8").read().lower():
+            refuse(3, "the send list names %s, which is not a draft in the tree" % rel)
+
+
+def cons_qual(F):
+    """The prototype qualification route: one row per measurement that decides a Layer 4 condition, the documentary alternatives last.
+    The specimen, what it represents, what transfers and what it blocks come from L4-E11's 17d for its rows; the others are this record's
+    (SESSION), each citing the record that defines the measurement."""
+    _price_check()
+    sp = F["cp"]["spec"]
+    b6 = F["sv"]["rm"]["b6"]
+    pl = F["cp"]["pulse"]
+    pr = lambda k, n=None: "%s, %s: %s at %s %s each (%s; %s)" % (PRICES[k]["what"], PRICES[k]["maker"], ("%d of the %d" % (n, PRICES[k]["qty"])) if n else PRICES[k]["qty"],
+                                                                  fmt(PRICES[k]["unit"]), PRICES[k]["cur"], PRICES[k]["note"], PRICES[k]["src"])
+    un = lambda k: "price not read: %s" % dict(UNPRICED)[k]
+    sd = lambda rel: "%s (%s)" % (rel, [s for s in SENDS if s[0] == rel][0][2])
+    OWN = "the owner's: "
+    rows = [
+        ("T-H1 (R-104, R-151; T-H1-PROCEDURE-DRAFT.md)",
+         "an empty current-moulding Peli 1450 with the 1450PF frame and a 3 mm aluminium plate blank; the heaters at each mode's heat less the fans' measured draw; the picked fans; sixteen thermocouple channels and a logger; room air, no chamber",
+         "the sealed case's conductance per required mode and lid state at the mixed air with the fans running, the loads as dummies; the SGP41's port and the e-paper's window as local channels",
+         "the conductance of the case, frame, plate and fans as built, fully; the kit's own heat sources and local temperatures do not (T-H2, THM-001 and the cells' rise keep their own evidence)",
+         "U-02: each class (i) and (ii) line per mode (as ruled and under CFL-002's C); the four lines over the modelled capacity read, not expected to pass; the combined route R-170 to R-172 at the same point where a line reads short",
+         "U-02's closure (criteria 1 and 5) and the combined route's rows; no board draft is blocked",
+         "an engineer, on a bench", OWN + "the case, frame, plate blank, heaters, fans and loggers (OW-8 authorises the bench)",
+         un("T-H1") + "; " + un("T-H1, E11-35"), sd("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt") + ", beside it"),
+        ("E11-29 (R-159)", sp["E11-29"]["specimen"], sp["E11-29"]["represents"], sp["E11-29"]["transfers"],
+         "D-14's installed path: (Zself + Zmut) at most %s K/W steady, %s at 1 s, %s at 20 ms, %s at 244 us at the RDS(on) allowance" % ((fmt(F["f02"]["z_steady"]),) + tuple(fmt(e[2]) for e in F["f02"]["z_ev"])),
+         sp["E11-29"]["blocks"], "an engineer, on a bench (the body diode's VSD method)", OWN + "the coupon's fabrication and parts",
+         pr("buk", 4) + "; " + un("E11-29, E11-36"), "none"),
+        ("E11-30 (R-160)", sp["E11-30"]["specimen"], sp["E11-30"]["represents"], sp["E11-30"]["transfers"],
+         "D-14's docking pulse: the whole hot waveform (%s A peak, %s us) accepted by %d parts at %d pulses each, %s A and %s us at a %s C mounting base (L4-E11 17b, D2)"
+         % (fmt(F["f02"]["dock"][0]), fmt(F["f02"]["dock"][1]), pl[4], pl[3], fmt(pl[0]), fmt(pl[1]), fmt(pl[2])),
+         sp["E11-30"]["blocks"], "an engineer, on a bench (a capacitor-discharge rig)", OWN + "the parts and the rig; Q-NXP-1 to Nexperia",
+         pr("buk", 6) + "; " + un("E11-30"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-NXP-1, in parallel (D1)"),
+        ("E11-36 (R-182)", sp["E11-36"]["specimen"], sp["E11-36"]["represents"], sp["E11-36"]["transfers"],
+         "D-14's RDS(on) allowance: at most %s mOhm at VGS -8.5 V and a 150 C junction; over it R-159 is re-sized before layout" % fmt(F["f02"]["allow"]),
+         sp["E11-36"]["blocks"], "an engineer, on a bench (an oven to 150 C, a pulsed Kelvin reading)", OWN + "the parts and the coupon",
+         pr("buk", 4) + "; " + un("E11-29, E11-36"), "none drafted: Nexperia's maximum at -8.5 V and 150 C would close it for every lot (a draft is owed to L4-E11)"),
+        ("E11-37 (R-183)", sp["E11-37"]["specimen"], sp["E11-37"]["represents"], sp["E11-37"]["transfers"],
+         "D-14's Ciss against TI's 5 nF: the pair (S1) or one FET with a heat path through the case (S2)",
+         sp["E11-37"]["blocks"], "an engineer, on a bench", OWN + "the evaluation hardware and parts; Q-TI-17 to TI",
+         pr("buk", 2) + "; " + un("E11-31, E11-37"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-17"),
+        ("E11-31 (R-161)",
+         "E11-37's specimen (TI's BQ25730 evaluation hardware set as drafted, or the controlled first prototype of board A) with a board E stub on VSYS_E (U12, C31, the fans' connectors) and the pack or a pack simulator",
+         "the charger's three modes under (B1): the pack absent, the charge inhibited with the pack present, the held pack current, the start from cold at -20, 25 and 62.1 C, D2's step response",
+         "the charger's register behaviour and VSYS's modes (device properties) fully; the start's first window and D2's recovery only where VSYS's capacitance and the always-on loads are the draft's; otherwise re-read on the first prototype",
+         "U-04: its move from a closure condition to a downstream qualification test once R-157, R-177 and R-178 are applied; the held pack current at most %s mA; D2 against the 2.054 V margin" % fmt(F["f02"]["held"][1]),
+         "board A's final release; the charger's firmware rules (R-158) are written to the draft meanwhile", "an engineer, on a bench",
+         OWN + "the evaluation hardware; Q-TI-15 and Q-TI-16 to TI", un("E11-31, E11-37"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-15, Q-TI-16; " + sd("v2/docs/review-packets/battery/REVIEW-REQUEST.md")),
+        ("E11-38 (R-184)", sp["E11-38"]["specimen"], sp["E11-38"]["represents"], sp["E11-38"]["transfers"],
+         "D-15 (L4-F03): the dock's VSYS branch through the whole fault envelope of L4-E11 17a, cases (1) to (4), the pins and the fans' start; until then %s" % L4F03_STATUS,
+         sp["E11-38"]["blocks"], "an engineer, on a bench", OWN + "the parts and the coupon; Q-TI-18 to TI",
+         un("E11-38") + "; " + pr("d23") + "; " + pr("c236"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-18"),
+        ("E11-35 (R-179)", sp["E11-35"]["specimen"], sp["E11-35"]["represents"], sp["E11-35"]["transfers"],
+         "the fans' selection (D-18) against VSYS_E's %s V floor and U42's %s A least limit; the staggered start (E11-39, R-188)" % (fmt(F["cp"]["fan"][2]), fmt(F["f02"]["ef"][1])),
+         sp["E11-35"]["blocks"], "an engineer, on a bench", OWN + "the fans, once named", un("T-H1, E11-35"), "none"),
+        ("The solar guard's bench (R-176 rows 1 to 6; R-174 at layer 8)",
+         "the controlled first prototype of board E with the drafted guard applied (U21, Q12, Q13, D11, the port bank, C133, C134, C71 to C74, D4, the bulk, the sense bank and U5's input), or a coupon of that solar entry on the intended stack-up; a stiff 36 V supply stepped on through a loop measured first, and a ramped supply",
+         "the cut-off's thresholds, the cold connection, the reversed panel's leakage, and the guard-on case through the measured loop",
+         "the cut-off's thresholds and Q13's leakage (device properties) fully; the guard-on waveforms only for a source loop at or over the measured one and only where the specimen's input-loop inductance is the final layout's",
+         "D-10 (the cut-off and the cold connection; the guard-on case only for a loop at or over %.2f uH until B6-ENG-1 is decided, U5 within +-%s V, %s), D-11 (Q13's leakage above +25 C), D-12's CS115 with R-174"
+         % (b6["l_uh"], "%.3f" % b6["margin"], RESERVE_NOTE),
+         "D-10's closure and R-176's step row; board E's other drafts are not blocked (B6-ENG-1)",
+         "an engineer, on a bench; R-174's CS116 and CS115 a MIL-STD-461 laboratory", OWN + "the parts and the prototype; Analog Devices' question 6",
+         un("the guard bench"), sd("v2/docs/records/l4e7/clarification/analog-devices-lt8705a.txt") + ": question 6 (R-186)"),
+        ("The limited sample qualification of one cell (R-168, R-169; L4-E10 15g)",
+         "one Saft MP 176065 xtd cell of the lot to be fitted (three if the owner prefers a spread), never fitted afterwards, a thermocouple on its surface, soaked to each temperature first",
+         "the cell's current at temperature (10 A continuous, 18 A for 60 s, 20 A for 2 s at -20 to +80 C), the charge from 0 C, the storage dwell and recovery (24 h at +71 C and -33 C at 30 %, E5's rest), the lot's capacity at receipt",
+         "to the pack as evidence for that lot and sample only; Saft's statement closes the rows for every lot",
+         "U-01's Saft route: adoptable or not (with the fit mock-up R-167 and T-H1); the owner's approval (OW-3) follows the evidence",
+         "U-01's adoption and board P's cell rows under route (II); nothing else",
+         "a laboratory (a chamber from -40 to +85 C, a 25 A load, a CC/CV source and a logger; about two weeks)", OWN + "the cell(s) and the laboratory; Saft's request",
+         pr("saft") + "; " + un("the cell qualification, the lot soak"), sd("v2/docs/records/l4e10/clarification/saft-mp176065xtd.txt")),
+        ("The HL18650V lot soak (R-103, R-47; route (II) only)",
+         "ten HL18650V cells of one lot, soaked at +71 C and -33 C for 24 h at 30 % and rested at full charge (E5), their capacity read before and after",
+         "the cells' storage rows LO-01e to LO-01g for that lot, which their maker's page states and no signed specification yet does",
+         "to the pack as evidence for that lot only; Topwell's signed specification closes the rows for every lot",
+         "U-01's HL18650V alternative (route (II)); L4-E10's margins re-run on the specification", "route (II)'s drafts (R-105, R-106, R-154); nothing of A1",
+         "a laboratory (a chamber)", OWN + "the cells and the laboratory; Topwell's request",
+         pr("hl") + "; " + un("the cell qualification, the lot soak"), sd("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt") + "; " + sd("v2/docs/records/l4e10/clarification/eaton-scf9550.txt")),
+        ("The fit mock-up (R-167)", "a printed mock-up of four MP 176065 xtd cells at the sheet's maximum dimensions in D-06's pocket at the built stack",
+         "the cells' fit along the pocket's axis with at most 1.40 mm of wrap", "fully (a geometry)", "U-01's fit", "nothing", "an engineer (Layer 7)",
+         "none beyond the print", "nothing (a print)", "none"),
+        ("The e-paper's storage soak (R-185)",
+         "one PDi E2370KS0C1 sample held unpowered at E3-O's +55 C and E5's +60 C for the modes' durations in an oven or chamber, its function read back after each soak (an image written, refreshed and read)",
+         "the unpowered part's survival of the modes' temperatures, for that lot", "to the kit as evidence for that lot only; PDi's storage statement governs once filed",
+         "U-02's MISSING STORAGE QUALIFICATION (M6, M7): the e-paper's line replaced by the +70 C class once a storage limit at or over it is shown",
+         "M6's and M7's lines; nothing of the boards", "an engineer with an oven, or a laboratory", OWN + "the sample; PDi's request",
+         un("R-185"), sd("v2/docs/records/l4e12/clarification/pervasive-displays-e2370ks0c1.txt")),
+        ("The documentary alternatives (the makers' statements)", "none: a maker's written statement",
+         "a limit for every lot where the maker prints one; a typical figure closes nothing", "fully, production-wide, where the answer is a limit",
+         "the same decisions as the experiments above, row by row: TI (U-04, D-14's Ciss, D-15), Nexperia (D-14's docking pulse), Saft and Topwell (U-01), PDi and Sensirion (U-02), Analog Devices (D-10's B6-ENG-1 route (1))",
+         "nothing by itself", "the maker, through the owner", OWN + "sending each draft (OW-2, OW-4, OW-7, OW-9)", "nothing",
+         "; ".join(sd(s[0]) for s in SENDS)),
+    ]
+    for r in rows:
+        if len(r) != 10 or not all(str(c).strip() for c in r):
+            refuse(4, "a qualification row with an empty cell: %s" % r[0])
+    return rows
+
+
+def cons_qual_lists(F):
+    """The owner's two lists: the purchases with their total of the prices read (and the items with no price read), and the drafts to send."""
+    tot = {}
+    buy = []
+    for k in ("buk", "d23", "c236", "hl", "saft"):
+        pr = PRICES[k]
+        line = pr["qty"] * pr["unit"]
+        tot[pr["cur"]] = tot.get(pr["cur"], 0.0) + line
+        buy.append("%s, %s: %d at %s %s (%s) = %s %s; %s" % (pr["what"], pr["maker"], pr["qty"], fmt(pr["unit"]), pr["cur"], pr["note"], "%.2f" % line, pr["cur"], pr["src"]))
+    total = "; ".join("%s %.2f" % (c, tot[c]) for c in sorted(tot))
+    return buy, total, [("%s: %s" % x) for x in UNPRICED], ["%s: %s (%s; for %s)" % (rel, what, ow, rows) for rel, what, ow, rows in SENDS]
+
+
+def cons_qual_block(F):
+    buy, total, unp, send = cons_qual_lists(F)
+    L = [QUAL_RULE, "",
+         "**The purchase list** (the owner's, in one sitting; the prices read and filed in this tree, each an indicator at the tier named, none a quote; nothing is bought):"]
+    L += ["- %s" % b for b in buy]
+    L.append("- **Total of the prices read: %s.** Items with no price read (%d), each owed a quote before the owner buys:" % (total, len(unp)))
+    L += ["  - %s" % u for u in unp]
+    L.append("")
+    L.append("**The send list** (the owner's, in one sitting; each a drafted request in this tree, the owner chooses the channel; nothing is sent):")
+    L += ["- %s" % s for s in send]
+    return L
+
+
+def cons_qual_lines(F):
+    rows = cons_qual(F)
+    buy, total, unp, send = cons_qual_lists(F)
+    L = ["27. THE PROTOTYPE QUALIFICATION ROUTE (the second review's next milestone: every measurement row of the register that decides a Layer 4 condition,"
+         " its specimen, what it represents and transfers, the decision, what it blocks, who performs it, whose authorisation it needs, what to buy and what to send)"]
+    L.append("   " + QUAL_RULE.replace("**", ""))
+    for r in rows:
+        L.append("   %s" % r[0])
+        for lab, x in zip(("specimen", "represents", "transfers", "decides", "blocks only", "performer", "authorisation", "what to buy", "what to send"), r[1:]):
+            L.append("      %s: %s" % (lab, x))
+    L.append("   the purchase list (the prices read in this tree, checked against their files; total %s; %d items with no price read):" % (total, len(unp)))
+    for b in buy:
+        L.append("     - %s" % b)
+    for u in unp:
+        L.append("     - no price read: %s" % u)
+    L.append("   the send list (%d drafts, the owner's to send):" % len(send))
+    for s in send:
+        L.append("     - %s" % s)
+    L.append("   desk work on these items stops here: %s" % cons_stop(F).replace("**", ""))
+    return L
+
+
+def cons_qual_tables(F, D, st):
+    return {"| Experiment | Specimen |": ["| Experiment | Specimen | What it represents | What transfers to the final board | The decision it resolves | Blocks only | Performer | Authorisation | What to buy | What to send |",
+                                        "|---|---|---|---|---|---|---|---|---|---|"] + ["| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |" % r for r in cons_qual(F)]}
+
+
+def cons_stop(F):
+    buy, total, unp, send = cons_qual_lists(F)
+    return ("**Desk work on these items stops here.** The open items are physical questions (a source loop's inductance, a hot FET's resistance, "
+            "the case's conductance in W/K, the e-paper's storage limit) that desk analysis cannot settle, and the acceptance standard refuses "
+            "closure on unprinted figures. They advance only by the measurements and answers of 5d (%d experiment rows; the purchase list %s of "
+            "prices read, %d items unpriced; the send list %d drafts), or by a design change that removes the dependency, one candidate named "
+            "for each and none selected here: for the solar guard already on, B6-ENG-1's route (3), the input current sense moved off the "
+            "stage's input capacitance (R-187); for U-04, the hold-up bank of arrangement (A) on VBAT (R-152, E11-24); for M6 and M7, an e-paper "
+            "with a storage range at or over +70 C (CHO-001, the owner's); for U-02, a case heat-rejection route (the combined route R-170 to "
+            "R-172 and a closed-lid conduction path at Layer 7)." % (len(cons_qual(F)) - 1, total, len(unp), len(send)))
 
 
 def cons_cell_rows(F):
@@ -5673,9 +6354,9 @@ def cons_ledger(F):
             "collaborator findings, %d CLOSED, %d CLOSED AS CONDITIONAL, %d OPEN DOWNSTREAM and %d STILL OPEN." % lg)
     e6 = (" The Layer 4 review of set 27's candidate (astra-check-l4close-1, its E6) found L4-E12:2.1 and L4-E12:1.2 REGRESSED (the "
           "SGP41's absolute +55 C line used again for a powered option C; restated in the fix round, L4-E12 12a and U-02 here), and "
-          "L4-E7R:1.6 and L4-E7R:2.4 needing B6's condition (the solar guard's already-on over-voltage transient), which L4-E7's B6 round "
-          "now bounds, CONDITIONAL on the panel lead's loop inductance at least 2.47 uH (11339ec7); this record does not claim those four "
-          "rows closed, and updating the ledger is the coordinator's.")
+          "L4-E7R:1.6 and L4-E7R:2.4 needing B6's condition (the solar guard's already-on over-voltage transient), which L4-E7's round 2 "
+          "(68bc3bad) bounds only from a 3.30 uH source loop, NOT CLOSED and sent to the engineer as B6-ENG-1; this record does not claim "
+          "those four rows closed, and updating the ledger is the coordinator's.")
     if lg[4] == 0:
         return head + (" As filed, L4-E12:1.3 and 2.2 close on R-139's restated bench test (item 5's DIFFERS resolved by that correction, "
                        "recorded in VERIFICATION-2026-10-02.md).") + e6
@@ -5735,14 +6416,16 @@ def cons_fix_lines(F):
       % fmt(fx["aux_a"]))
     p("     contact; the ground return on seven, %s A each with one open, %s %% of 3.5 A, %s C at the 51 C air); VSYS_E %s to %s V (the fans' rating owed, E11-35)"
       % (fmt(fx["gnd7"][0]), fmt(fx["gnd7"][1]), fmt(fx["gnd7"][2]), fmt(fx["vsys_rng"][0]), fmt(fx["vsys_rng"][1])))
-    p("   the held state (the charge inhibited, a source, the pack present): no kit load fed from the pack; its bounded drains %s mA (the monitor %s mA at"
-      % (fmt(fx["held"][0]), fmt(fx["mon"][0])))
+    p("   the held state (the charge inhibited, a source, the pack present): no kit load fed from the pack; its bounded drains %s mA [SUPERSEDED: a"
+      % fmt(fx["held"][0]))
+    p("     quantified subset, section 26b] (the monitor %s mA at"
+      % fmt(fx["mon"][0]))
     p("     %s V); the bench reads the held pack current at most %s mA (E11-31, R-161)" % (fmt(fx["mon"][1]), fmt(fx["held"][1])))
     p("   the start: the 502.3 ms withdrawn (0.5 A is an input ceiling, not a delivered current); on held evidence VSYS_MIN or a latch within %s s; the first"
       % fmt(fx["latch_s"]))
     p("     window's success not bounded: E11-31 at -20, 25 and 62.1 C (the source-only and held sequences: 4a, 4c)")
     p("   the register: R-177 (apply_gen_sch_e_aux.py, E11-33), R-178 (apply_pcb_interfaces_dock.py, E11-34), R-179 (E11-35); R-161 restated")
-    p("25b B2, THE BATTERY FET (L4-E11 15c; D-14)")
+    p("25b B2, THE BATTERY FET (L4-E11 15c; D-14) [SUPERSEDED IN PART by section 26a: the bound an allowance, the bar a measured sum, the docking share withdrawn]")
     p("   SELECTED: two Nexperia BUK6Y10-30P in parallel, Q39 and Q40 (LCSC %s, %d in stock, %s USD each at 10); RDS(on) bounded at BATDRV's 8.5 V and the"
       % (fx["pair"][0], fx["pair"][1], fmt(fx["pair"][2])))
     p("     hot junction, %s mOhm per FET; the bar %s C/W per FET at the +70 C mixed air (%s C/W at 62.1 C), every protection event at TJ 150 C or under"
@@ -5791,17 +6474,20 @@ def cons_fix_lines(F):
         p("   %s at %s W, lid %s: tau %s h, steady at %s h, the fit %s h" % (name, fmt(q), lid, tau, steady, fit))
     p("25h WHICH LINES A READING CAN PASS (L4-E12 12e; the capacity proper %s W/K at K1's rise; 9's %s and %s W/K were a 50 m/s inside-flow bound)"
       % ("%.3f" % rc["capk1"][0], "%.3f" % fx["capfix"][0], "%.3f" % fx["capfix"][1]))
+    p("   [the categories of the lines over the model restated by the review of the provisional fixes, L4-F04: section 26c]")
+    lab = lambda c_: "over the model" if c_ == "over" else "class (%s)" % c_
     for c in fx["cls"]:
         if c["need"] is None:
-            p("   %s %s: no capacity at a zero rise; class (iii), the whole %s W" % (c["mode"], c["line"], c["short"][1]))
+            p("   %s %s: no modelled capacity at a zero rise; %s, the whole %s W" % (c["mode"], c["line"], c["cat"], c["short"][1]))
         else:
-            p("   %s %s: needs %s W/K; bare %s / %s, route %s / %s; class (%s)%s%s" % (c["mode"], c["line"], c["need"], c["bare"][0], c["bare"][1], c["route"][0], c["route"][1], c["cls"],
-                                                                             ", (%s) conservative" % c["cons"] if c["cons"] != c["cls"] else "", ", SHORT by %s W/K, %s W" % c["short"] if c["short"] else ""))
-    p("   the class (iii) options (OW-10): E3-L, CFL-002's C, A or B, a closed-lid VOC ceiling (+%s to +%s C on the pack, +%s to +%s C on shore) or D-02b restated;"
-      % tuple(fmt(x) for x in fx["voc_ceil"]))
-    p("     E3-O, PDi's statement, the e-paper's window temperature (plate fraction %s: %s W/K; %s: %s W/K), CHO-001 or a deviation; E5, PDi's statement, a"
-      % tuple(fmt(x) for x in fx["plate"]))
-    p("     different e-paper or a deviation; charging is not class (iii) (in the heat stage alone %s W, %s and %s W/K, class (i))" % tuple(fmt(x) for x in fx["chg_hs"]))
+            p("   %s %s: needs %s W/K; bare %s / %s, route %s / %s; %s%s%s" % (c["mode"], c["line"], c["need"], c["bare"][0], c["bare"][1], c["route"][0], c["route"][1], lab(c["cls"]),
+                                                                       ", %s conservative" % lab(c["cons"]) if c["cons"] != c["cls"] else "",
+                                                                       ", SHORT by %s W/K, %s W: %s" % (c["short"] + (c["cat"],)) if c["short"] else ""))
+    p("   the requirement or ruling options, held for a DEMONSTRATED CONFLICT (OW-10): E3-L, CFL-002's C, A or B, a closed-lid VOC ceiling (+%s to +%s C on the"
+      % tuple(fmt(x) for x in fx["voc_ceil"][:2]))
+    p("     pack, +%s to +%s C on shore) or D-02b restated; the e-paper's window temperature (plate fraction %s: %s W/K; %s: %s W/K) and PDi's statement are"
+      % (tuple(fmt(x) for x in fx["voc_ceil"][2:]) + tuple(fmt(x) for x in fx["plate"])))
+    p("     the session's evidence; charging lies under the modelled capacity (in the heat stage alone %s W, %s and %s W/K, class (i))" % tuple(fmt(x) for x in fx["chg_hs"]))
     p("25i B5, THE SAFT'S CURRENT AT TEMPERATURE (L4-E10 10f, 10g)")
     p("   supported on published evidence for the temperature windows; current and temperature together, the storage dwell and recovery AWAIT Saft (the request")
     p("     expanded) or the limited sample qualification (one cell, a chamber from -40 to +85 C, a 25 A load, about two weeks, NZ$ %s); NOT YET ADOPTABLE;"
@@ -5818,13 +6504,8 @@ def cons_fix_lines(F):
     p("     10.0 to 16.884 V under (B1);")
     p("     the 502.3 ms start; R-159's fallback; Q39 as one AONS21357; the charging heat 46.859 W; 2.52 h as an unshed endurance; the Saft as covering every")
     p("     cell-limit row")
-    b6 = F["sv"]["rm"]["b6"]
-    p("25m B6, THE SOLAR GUARD ALREADY ON (L4-E7 at 11339ec7; section 23 carries its figures): as first drafted the guard failed four ratings when a")
-    p("     36 V source steps on with it on; C131 and C132 become two 10 uF 100 V, C133 and C134 two 10 uF 50 V on PV_P, C126 330 pF, R97 30.0k (R-173):")
-    p("     every rating MEETS, CONDITIONAL on the panel lead's loop inductance at least %s uH (its conductors' centres at least %s mm apart; R-176 row 2, R-180,"
-      % (fmt(b6["l_uh"]), fmt(b6["mm"])))
-    p("     Layer 7); re-run: the start %s A, CS101 %s A, check (b) %s ms, the static bound %s W; D-12's text and R-176's seven rows as L4-E7 gives them"
-      % (fmt(b6["start"][0]), fmt(F["sv"]["rm"]["cs101"][0]), fmt(F["sv"]["rm"]["chkb"][0]), fmt(F["sv"]["rm"]["static"][0])))
+    p("25m B6, THE SOLAR GUARD ALREADY ON (L4-E7's round 1 at 11339ec7): four parts added, every rating then read as met from a lead of 2.47 uH on one")
+    p("     shared bias factor; SUPERSEDED by L4-E7's round 2 (68bc3bad) after the external review's L4-F01: section 26d and section 23 carry its figures")
     return L
 
 
@@ -5842,7 +6523,7 @@ def cons_in_short(F, D, st, reg):
     tab = F["cb"]["tab_wh"]
     fx = F["fx"]
     M = fx["modes"]
-    sh = {c["mode"]: c["short"] for c in fx["iii"]}
+    sh = {c["mode"]: c["short"] for c in fx["over"]}
     bat20, batc, h20, hc = F["a1_bat"]
     prof = F["idle"][1]
     cand = F["a1_cand"]
@@ -5857,18 +6538,24 @@ def cons_in_short(F, D, st, reg):
         % (fmt(fx["vsys_rng"][0]), fmt(fx["vsys_rng"][1])),
         "**Electrical feasibility** (apart from thermal feasibility and endurance): %d interfaces, %d MEET, %d CONDITIONAL, %d NOT MET, %d "
         "PENDING (1d). The review's B1 and B2 on (B1)'s draft are D-13 (board E's auxiliary domain on the pack's side of the battery FET) "
-        "and D-14 (the FET bounded at an unprinted corner, a fallback lowering 18 A for 60 s), ADDRESSED IN DRAFTS by L4-E11's fix round "
-        "(board E on VSYS_E, R-177 and R-178; the pair, R-157; the held pack current at most %s mA, the start bounded to VSYS_MIN or a "
-        "latch within %s s; every protection event at TJ 150 C or under at %s C/W per FET, 18 A for 60 s kept). IF-01 carries the "
+        "and D-14 (the FET bounded at an unprinted corner, a fallback lowering 18 A for 60 s), and the review of the provisional fixes "
+        "adds D-15 (the dock's new VSYS contact without branch protection, L4-F03); all three are ADDRESSED IN DRAFTS by L4-E11's fix "
+        "rounds (board E on VSYS_E, R-177 and R-178; the pair, R-157, sized to an RDS(on) allowance of %s mOhm, every protection event "
+        "from the held 20 A at TJ 150 C or under for an installed (Zself + Zmut) at most %s K/W steady, 18 A for 60 s kept, D-14 "
+        "CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss against TI's 5 nF OPEN, E11-37; the eFuse U42, R-181, %s to %s A, %s, "
+        "E11-38; the held pack current at most %s mA on the bench, %s mA its quantified subset; the start "
+        "bounded to VSYS_MIN or a latch within %s s). IF-01 carries the "
         "KNOWN DEFECTS at the solar entry, single faults from L4-E7's panel-lead derivation: D-10, a stiff %s V source on the port, and "
         "D-11, a reversed panel, ADDRESSED IN DRAFTS by L4-E7's selected remedies (the over-voltage cut-off U21 with Q12, the return "
-        "switch Q13, and for the guard already on, the review's B6, C131 and C132, C133 and C134, C126 and R97; R-173, "
-        "apply_gen_sch_e_solar_guard.py, not applied; D-10 CONDITIONAL on the panel lead's loop inductance at least %s uH, D-11 on Q13's "
+        "switch Q13, and for the guard already on the port bank C131, C132, C135 and C136, C133 and C134, C71 to C74, C126 and R97 28.0k; "
+        "R-173, apply_gen_sch_e_solar_guard.py, not applied; D-10's source arriving with the guard already on NOT CLOSED: every rating "
+        "with its margin (U5 within +-0.240 V, %s) only from a %.2f uH source loop, the floor the engineer's row B6-ENG-1 (L4-F01, L4-E7's round 2), D-11 on Q13's "
         "leakage above +25 C), and a residual band between 25 V and the cut-off named for layer 8 (R-175); D-12, CS116 and CS115 on the "
         "panel lead, is resolved in the drafted entry with the guard: %s D-01 to D-05 and D-08 are resolved in design, D-06 by L4-E11, "
         "D-07 and D-09 superseded (8a); every resolution is a DRAFT or a register row, none applied."
-        % (len(st), cnt.get("MEETS", 0), cnt.get("CONDITIONAL", 0), cnt.get("NOT MET", 0), cnt.get("PENDING", 0), fmt(fx["held"][1]), fmt(fx["latch_s"]),
-           fmt(fx["bar"][0]), fmt(F["sv"]["src"][1]), fmt(F["sv"]["rm"]["b6"]["l_uh"]), F["sv"]["rm"]["b6"]["d12"]),
+        % (len(st), cnt.get("MEETS", 0), cnt.get("CONDITIONAL", 0), cnt.get("NOT MET", 0), cnt.get("PENDING", 0), fmt(F["f02"]["allow"]),
+           fmt(F["f02"]["z_steady"]), fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2]), L4F03_STATUS, fmt(F["f02"]["held"][1]), fmt(F["f02"]["held"][0]), fmt(fx["latch_s"]),
+           fmt(F["sv"]["src"][1]), RESERVE_NOTE, F["sv"]["rm"]["b6"]["l_uh"], F["sv"]["rm"]["b6"]["d12"]),
         "**Endurance** (apart from feasibility; the approved profile %s W kept): battery-only %s h ENERGY ONLY (%.3f h with (B1)'s pair; "
         "%s with the tablet's window at the start) at room temperature and %s h with the cells at -10 C (energy only); ENERGY AND "
         "THERMAL (L4-E12 12c): on the conservative bound C1 sheds the profile at %s to %s h and the run with the shed states lasts %s "
@@ -5886,25 +6573,34 @@ def cons_in_short(F, D, st, reg):
         "governs it, %s W/K on the pack and %s W/K on shore; under CFL-002's C, A or B the cells' hot stop H1, %s and %s W/K (the "
         "SGP41's +55 C is an absolute rating, a screen, never a line). The profile's own line is M5, C1's air trigger at REQ-014's +20 C, "
         "%s W/K; charging on the design day (%s W, a balance) is governed by T4 on the charging cells, %s and %s W/K. T-H1 decides "
-        "every class (i) and (ii) line; **four class (iii) lines no reading can pass**: E3-L lid closed as ruled (M3 short by %s W/K, "
-        "M4 by %s W/K) and E3-O and E5 on the e-paper's operating row read to cover it unpowered (M6 short by %s W/K, M7 the whole "
-        "%s W), each with its options for the owner (OW-10; 2c, section 6)."
+        "every class (i) and (ii) line; **four lines lie over the modelled capacity, none shown impossible** (a model figure on named "
+        "coefficient ends, not a physical bound): E3-L lid closed as ruled, a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT (M3 short "
+        "by %s W/K, M4 by %s W/K), and E3-O and E5 on the e-paper's operating row read to cover it unpowered, a MISSING STORAGE "
+        "QUALIFICATION (M6 short by %s W/K, M7 the whole %s W); no DEMONSTRATED CONFLICT, so no requirement question goes to the owner "
+        "(OW-10 held for a measured local temperature over a mandatory limit with the route fitted; 2c, section 6)."
         % (M["M1"]["ruled"][1], M["M2"]["ruled"][1], M["M1"]["cab"][1], M["M2"]["cab"][1], M["M5"]["ruled"][1], fmt(fx["bal_b"][1]),
            M["M8"]["ruled"][1], M["M9"]["ruled"][1], sh["M3"][0], sh["M4"][0], sh["M6"][0], sh["M7"][1]),
-        "**The exit** (section 6, the owner's definition): Layer 4 power closure is not reached on this reading. U-02 is a closure "
+        "**The exit** (section 6, the owner's definition): three decisions, kept apart: the architecture candidate CONDITIONAL; the "
+        "power-design closure gate BLOCKED (an unresolved material protection or feasibility condition is enough for that); fabrication "
+        "release BLOCKED; the engineer handoff READY TO START, PROVISIONAL, its omitted dependencies named. Desk work on the open items "
+        "stops here: they advance only by the prototype qualification route (5d: %d experiment rows, the purchase list %s of prices read "
+        "with %d items unpriced, the send list %d drafts) or by a design change that removes the dependency (5d names one for each). "
+        "Layer 4 power closure is not reached on this reading. U-02 is a closure "
         "condition T-H1's points decide for every class (i) and (ii) line (as ruled at +40 C a reading of at least %s W/K on the pack "
-        "and %s W/K on shore; under C %s and %s W/K), its four class (iii) lines the owner's (OW-10); U-04 becomes a downstream "
+        "and %s W/K on shore; under C %s and %s W/K) plus the storage evidence (its four lines over the modelled capacity a "
+        "modelled shortfall and a missing storage qualification, no demonstrated conflict); U-04 becomes a downstream "
         "qualification test once R-157, R-177 and R-178 are applied and stays a closure condition on the board as drawn; U-01 has a "
         "route supported on published evidence for the temperature windows (the Saft MP 176065 xtd), NOT YET ADOPTABLE (current at "
         "temperature and the storage dwell await Saft or the limited sample qualification; the owner's approval required), and the "
-        "ruled 35E is unsuitable on its own published evidence for the margins. Beside them D-13 and D-14 (the review's B1 and B2) and "
-        "the solar faults D-10 and D-11 are addressed in drafts, none applied (D-10 CONDITIONAL on the panel lead's loop inductance at "
-        "least 2.47 uH, measured or specified by its conductors' spacing, R-180; D-11 on Q13's hot leakage), the band between "
+        "ruled 35E is unsuitable on its own published evidence for the margins. Beside them D-13, D-14 and D-15 (the review's B1 and "
+        "B2 and the provisional fixes' L4-F03; D-14 CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss OPEN; D-15 %s, E11-38) and "
+        "the solar faults D-10 and D-11 are addressed in drafts, none applied (D-10's source arriving with the guard already on NOT "
+        "CLOSED: every rating with its margin only from a 3.30 uH source loop, B6-ENG-1 to the engineer; D-11 on Q13's hot leakage), the band between "
         "25 V and the cut-off a residual for layer 8 (R-175). Each has its exact missing fact and the smallest experiment or "
         "manufacturer clarification that resolves it. The findings ledger, as filed: %d rows, %d CLOSED, %d CLOSED AS CONDITIONAL, %d "
         "OPEN DOWNSTREAM, %d STILL OPEN; the review's E6 found L4-E12:2.1 and 1.2 regressed and L4-E7R:1.6 and 2.4 needing B6's "
         "condition, and this record does not claim them closed. **Status: %s.**"
-        % ((M["M1"]["ruled"][2], M["M2"]["ruled"][2], M["M1"]["cab"][2], M["M2"]["cab"][2]) + F["rc"]["ledger"] + (STATUS,)),
+        % ((len(cons_qual(F)) - 1, cons_qual_lists(F)[1], len(cons_qual_lists(F)[2]), len(SENDS), M["M1"]["ruled"][2], M["M2"]["ruled"][2], M["M1"]["cab"][2], M["M2"]["cab"][2], L4F03_STATUS) + F["rc"]["ledger"] + (STATUS,)),
     ]
 
 
@@ -5917,10 +6613,10 @@ def cons_normal_op(F):
     M = fx["modes"]
     gov = {"K1": "a SCREEN (the SGP41's Table 5, absolute; option C switches it off at %.1f C)" % fx["c_off"],
            "K2": "M2's governing line as ruled (CFL-002 open)", "K3": "a component SCREEN at the mixed air (the parts' local air is the line, T-H2)",
-           "K4": "a SCREEN (the module's intake)", "K5": "a SCREEN, lid closed (M4's governing line as ruled is K2's, class (iii))",
+           "K4": "a SCREEN (the module's intake)", "K5": "a SCREEN, lid closed (M4's governing line as ruled is K2's, over the modelled capacity lid closed: a modelled shortfall)",
            "K6": "M5's governing line (REQ-014 at +20 C)", "K7": "T3's start under M8 (T4 governs a running charge, 12a)",
            "K8": "T3's start under M9", "K9": "a SCREEN at the mixed air (M6: the e-paper's row governs; the RB9704's +70 C once PDi states)",
-           "K10": "M7's maker-stated alternative (the e-paper's row governs E5, class (iii))",
+           "K10": "M7's maker-stated alternative (the e-paper's row governs E5: a missing storage qualification)",
            "X1": "no requirement: C1 sheds the profile", "X2": "no requirement: the withdrawn framing", "X3": "no requirement's mode"}
     rows = []
     for k in ["K%d" % i for i in range(1, 11)] + ["X1", "X2", "X3"]:
@@ -5953,9 +6649,10 @@ def cons_normal_op(F):
         % (fx["bal"][0], fx["bal"][1], fmt(fx["bal"][2]), fmt(fx["bal"][3]), fmt(fx["bal"][4]), fmt(fx["bal"][5]), fmt(fx["bal"][6]), fmt(fx["bal"][7]),
            fmt(fx["bal_b"][1]), fx["k78"][1][2], fx["k78"][3][2], fx["k78"][1][3], fx["k78"][3][3], M["M8"]["ruled"][1], M["M9"]["ruled"][1],
            M["M8"]["ruled"][2], M["M9"]["ruled"][2], fmt(cb["u1"]["charge_start"])),
-        "**Electrical feasibility is a separate question** (1d, 8a): every interface row MEETS or is CONDITIONAL; D-10 to D-14 "
-        "addressed in drafts or resolved. Thermal feasibility in normal operation is U-02's, decided per mode by T-H1's points, with "
-        "four class (iii) lines the owner's.",
+        "**Electrical feasibility is a separate question** (1d, 8a): every interface row MEETS or is CONDITIONAL; D-10 to D-15 "
+        "addressed in drafts or resolved. Thermal feasibility in normal operation is U-02's, decided per mode by T-H1's points and the "
+        "storage evidence; its four lines over the modelled capacity are a modelled shortfall and a missing storage qualification, "
+        "no demonstrated conflict.",
     ]
     return rows, stmt
 

@@ -557,8 +557,11 @@ def t_the_fix_round_of_the_layer4_review():
 
 
 def t_the_outside_capacity_and_the_three_classes():
-    """The addendum to the fix round (the record's 17.9, the .out's 12e): every line against the outside capacity with a zero inside
-    resistance, bare and with the combined route; class (iii) only where no coefficient in the held ranges carries the line."""
+    """The addendum to the fix round (the record's 17.9, the .out's 12e): every line against the MODELLED outside capacity with a zero
+    inside resistance, bare and with the combined route; a line is over the model only where no coefficient end in the held ranges
+    carries it, and then it is put in a named category by its own property (the review of the provisional fixes, L4-F04): a MISSING
+    STORAGE QUALIFICATION when its limit is an operating row INFERRED to cover the part unpowered, a DEMONSTRATED CONFLICT only on a
+    measured local temperature over the limit with the route fitted, else a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT."""
     import math
     R = _R()
     m = _CACHE["M"]
@@ -574,16 +577,29 @@ def t_the_outside_capacity_and_the_three_classes():
     for e in cp["lines"]:
         assert e["route"][0] >= e["bare"][0] - 1e-9 and e["bare"][1] >= e["bare"][0] and e["route"][1] >= e["route"][0]
         need = e["line"]["g"]
-        if e["cls"] == "iii":
+        if e["cls"] == "over":
             assert (not math.isfinite(need)) or (need > e["route"][1] and abs(e["short_w"] - (e["Q"] - e["route"][1] * e["rise"])) < 1e-9)
-        elif e["cls"] == "ii":
-            assert e["bare"][1] < need <= e["route"][1]
+            want = m.CAT_STORE if "INFERRED to cover it unpowered" in e["line"]["cat"] else m.CAT_MODEL
+            assert e["cat_over"] == want, (e["mode"], e["cat_over"])
         else:
+            assert e["cat_over"] is None
+        if e["cls"] == "ii":
+            assert e["bare"][1] < need <= e["route"][1]
+        elif e["cls"] == "i":
             assert need <= e["bare"][1]
         if e["lid"] == "closed":
             assert e["route"] == e["bare"], "the route is not credited with the lid closed"
-    three = sorted(set((e["mode"], e["line"]["short"]) for e in cp["lines"] if e["cls"] == "iii"))
-    assert three == [("M3", "the SGP41's Table 4"), ("M4", "the SGP41's Table 4"), ("M6", "the EPAPER's +60 C"), ("M7", "the EPAPER's +60 C")]
+    over = sorted(set((e["mode"], e["line"]["short"], e["cat_over"]) for e in cp["lines"] if e["cls"] == "over"))
+    assert over == [("M3", "the SGP41's Table 4", m.CAT_MODEL), ("M4", "the SGP41's Table 4", m.CAT_MODEL),
+                    ("M6", "the EPAPER's +60 C", m.CAT_STORE), ("M7", "the EPAPER's +60 C", m.CAT_STORE)]
+    # no conflict is demonstrated while nothing is measured; a measured local temperature over the limit with the route fitted
+    # makes one, and neither a reading under the limit nor one without the route does
+    assert m.MEASURED_LOCAL == () and cp["conflict"] == []
+    e3 = [e for e in cp["lines"] if e["mode"] == "M3" and e["cls"] == "over"][0]
+    lim = e3["line"]["t"]
+    assert m.over_category(e3, [("M3", e3["line"]["short"], lim + 1.0, True)]) == m.CAT_CONFLICT
+    assert m.over_category(e3, [("M3", e3["line"]["short"], lim - 1.0, True)]) == m.CAT_MODEL
+    assert m.over_category(e3, [("M3", e3["line"]["short"], lim + 1.0, False)]) == m.CAT_MODEL
     assert all(e["cls"] == "i" for e in cp["lines"] if "hot stop H1" in e["line"]["short"])
     assert all(a_ < b_ < 40.0 for a_, b_ in cp["ceil_sgp"].values()), "the SGP41's closed-lid ceilings lie under +40 C at both ends"
     assert cp["epaper"]["M7"]["need"] is None and cp["epaper"]["M6"]["need"] < cp["epaper"]["M6"]["need_hi"] < 5.417
@@ -593,7 +609,7 @@ def t_the_outside_capacity_and_the_three_classes():
     assert "12e THE OUTSIDE CAPACITY" in out and "### 17.9 The outside capacity" in page and "What a reading can pass at all" in proc
     figs = ["%.3f" % cp["check9"][0], "%.3f" % cp["check9"][2], "%.3f W/K" % cp["k1"][0]]
     for e in cp["lines"]:
-        if e["cls"] == "iii" and math.isfinite(e["short_g"]):
+        if e["cls"] == "over" and math.isfinite(e["short_g"]):
             figs += ["%.3f W/K" % e["short_g"], "%.3f W" % e["short_w"]]
     figs += ["+%.1f" % x for v in cp["ceil_sgp"].values() for x in v] + ["%.3f W/K" % cp["epaper"]["M6"]["need"], "%.3f W/K" % cp["epaper"]["M6"]["need_hi"]]
     for fig in figs:
@@ -601,6 +617,12 @@ def t_the_outside_capacity_and_the_three_classes():
     for e in cp["lines"]:
         if math.isfinite(e["line"]["g"]):
             assert "%.3f / %.3f" % e["bare"] in page, "the page lacks %s's bare capacity" % e["mode"]
+    # the categories are named on both, the old category is gone and no line is called one no reading can pass
+    for f_ in (page, out, proc):
+        assert "class (iii)" not in f_ and "(iii)" not in f_, "the withdrawn category"
+        assert "no measurement can pass it:" not in f_ and "no point here can pass" not in f_
+    for name in (m.CAT_MODEL, m.CAT_STORE, m.CAT_CONFLICT):
+        assert name in page and name in out, name
 
 
 def t_both_checks_are_filed_and_listed():
