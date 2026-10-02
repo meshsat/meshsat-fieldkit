@@ -25,7 +25,10 @@ question (section 15, the .out's section 10): three approaches on the same bound
 uncertainty and stands for no requirement's mode; every condition's heat, ambient, limit and need from the texts; the +55 C
 inside-air limit is the heat stage's (1.806 W/K, LO-01a with the ballasts); the heat counted once with P = the heaters + the
 fans; the relationship QS = A k dT on the case's own films; the room reading conservative; each point's threshold, setting,
-spread and duration; the page and the procedure carry the figures. Nothing here writes into the tree.
+spread and duration; the page and the procedure carry the figures. The fix round of the Layer 4 review (section 17, the .out's
+section 12, astra-check-l4close-1's B3, B4 and B7): no absolute rating decides a line and each mode's governing line is its
+tightest correctly categorised local limit, per CFL-002 option with C as defined; the charging heat is input less stored less
+exported; the battery-only run is coupled to C1 and 2.52 h stays energy-only. Nothing here writes into the tree.
 """
 import hashlib
 import importlib.util
@@ -390,7 +393,8 @@ def t_the_heat_rejection_approaches_and_the_shortfall():
     assert abs(hr["q_prof"] - 43.4) < 0.02, "the profile's heat into the case is L4-E9's 43.4 W"
     assert abs(hr["need_g"] - hr["q_prof"] / (R["ap"]["c"]["trip"]["need_by"] - T["t_use"])) < 1e-12
     assert hr["t3"] == 42.0 and hr["day"] == (13.2, 18.3)
-    assert abs(hr["need_ch"][0] - hr["q_prof"] / (42.0 - 13.2)) < 1e-12 and abs(hr["need_ch"][1] - hr["q_prof"] / (42.0 - 18.3)) < 1e-12
+    assert abs(hr["need_ch"][0] - hr["q_chg"] / (42.0 - 13.2)) < 1e-12 and abs(hr["need_ch"][1] - hr["q_chg"] / (42.0 - 18.3)) < 1e-12
+    assert abs(hr["q_chg"] - T["chg_prof"]["heat"] - T["qb"]) < 1e-12, "the charging heat is the balance plus the solar stage's ballasts"
     rows = hr["rows"]
     assert len(rows) == 7 and rows[-1]["use"]["g"] == max(r["use"]["g"] for r in rows) and rows[0]["use"]["g"] == min(r["use"]["g"] for r in rows)
     for r in rows:
@@ -419,7 +423,7 @@ def t_the_thermal_reconciliation():
     assert k["K5"][6] == "lid closed" and k["K5"][7] == k["K1"][7] and k["K9"][3] == A["e3o_t"] and abs(k["K9"][7] - k["K1"][7]) < 1e-9
     assert k["K6"][3] == 20.0 and k["K6"][5] == 50.0 and abs(k["K6"][7] - hr["need_g"]) < 1e-12 and k["K6"][7] == k["X2"][7]
     assert k["K7"][5] == k["K8"][5] == hr["t3"] and (k["K7"][3], k["K8"][3]) == hr["day"]
-    assert abs(k["K7"][2] - (hr["q_prof"] + T["charge_extra"])) < 1e-12 and k["K7"][7] > hr["need_ch"][0] and k["K8"][7] > hr["need_ch"][1]
+    assert abs(k["K7"][2] - hr["q_chg"]) < 1e-12 and abs(k["K7"][7] - hr["need_ch"][0]) < 1e-12 and abs(k["K8"][7] - hr["need_ch"][1]) < 1e-12
     assert abs(k["X3"][7] - 42.4 / 15.0) < 1e-9 and k["X1"][7] > k["X3"][7] > k["K1"][7], "the owner's 2.83 W/K is no requirement's mode"
     assert abs(k["K10"][2] - (T["q_m"] + T["qb"])) < 1e-12 and abs(k["K10"][7] - R["ap"]["c"]["gmax"]) < 1e-9
     lm = rc["lim"]
@@ -429,12 +433,12 @@ def t_the_thermal_reconciliation():
     q = rc["q"]
     assert abs(q["prof"]["loads"] + q["prof"]["conv"] + q["prof"]["i2r"] - q["prof"]["total"]) < 1e-9
     assert abs(q["hs"]["loads"] + q["hs"]["conv"] + q["hs"]["front"] + q["hs"]["ballast"] - q["hs"]["total"]) < 1e-9
-    assert abs(q["charge"]["total"] - q["prof"]["total"] - T["charge_extra"]) < 1e-12
+    assert abs(q["charge"]["total"] - hr["q_chg"]) < 1e-12 and abs(q["charge"]["total"] - q["prof"]["total"] - q["charge"]["extra"]) < 1e-12
     assert abs(q["bench"]["prof_heaters"] + q["prof"]["fans"] - q["prof"]["total"]) < 1e-12 and abs(q["bench"]["hs_heaters"] + q["hs"]["fans"] - q["hs"]["total"]) < 1e-12
     for s in q["settings"]:
         assert abs(s["heaters"] + s["fans"] - s["Q"]) < 1e-12 and abs(sum(v for _k, v in s["spread"]) - s["heaters"]) < 1e-6
         assert abs(s["v"] ** 2 / q["bench"]["r"] * s["n"] - s["heaters"]) < 1e-9 and not any(p_.startswith("fans") for p_, _v in s["spread"])
-    assert [s["n"] for s in q["settings"]] == [1, 1, 2, 2]
+    assert [s["n"] for s in q["settings"]] == [1, 1, 1, 2, 2]
     for row in rc["trans"]:
         for rise, g_room, g_op, ratio in row[1:]:
             assert 1.0 <= ratio < 1.05 and g_op > g_room, "the room reading is the conservative side, and not by much"
@@ -450,8 +454,8 @@ def t_the_thermal_reconciliation():
     page = open(PAGE, encoding="utf-8").read()
     proc = open(os.path.join(REC, "T-H1-PROCEDURE-DRAFT.md"), encoding="utf-8").read()
     for h in ("11 THE THERMAL RECONCILIATION", "11a THE CLAIM, CHECKED.", "11b THE HEAT, COUNTED ONCE", "11c THE NODES AND THE LIMITS.",
-              "11d THE RELATIONSHIP AND THE TRANSLATION.", "11e THE MARGIN.", "11f WHAT ONE POINT CLOSES, AND WHAT REMAINS.",
-              "11g THE PROCEDURE", "\n12 Predicates\n"):
+              "11d THE RELATIONSHIP AND THE TRANSLATION.", "11e THE MARGIN.", "11f WHAT ONE POINT CLOSES, AND WHAT REMAINS (CORRECTED by 12a",
+              "11g THE PROCEDURE", "\n13 Predicates\n"):
         assert h in out, "the .out lacks %r" % h
     assert "## 16. The thermal reconciliation" in page and all("### 16.%d " % i in page for i in range(1, 10))
     figs = ["%.3f W/K" % k[x][7] for x in ("K1", "K2", "K3", "K4", "K6", "K7", "K8", "K10", "X1", "X3")]
@@ -464,14 +468,139 @@ def t_the_thermal_reconciliation():
     for s in q["settings"]:
         for fig in ("%.3f W" % s["Q"], "%.3f W" % s["heaters"], "%.2f V" % s["v"]):
             assert fig in proc and fig in out and fig in page, "the setting %s is not in the procedure, the .out and the page" % fig
-    for x in rc["times"]:
-        assert "%.2f h" % x[1] in proc and "%.1f h" % x[2] in proc and "%.1f h" % x[2] in out
-    for fig in ["%.3f W/K" % x[3] for x in rc["marg"] if x[0] != "K9"] + ["%.1f h" % rc["t_bound"], "%.1f K/h" % m.DRIFT_K_H, "0.05 K RMS"]:
+    for pt in R["pm"]["points"]:
+        assert "%.2f h" % pt["tau"] in proc and "%.1f h" % pt["steady"] in proc and "%.1f h" % pt["steady"] in out
+    for fig in ["%.3f W/K" % x[3] for x in rc["marg"] if x[0] in ("K2", "K6", "K7", "K8", "K10")] + ["%.1f h" % rc["t_bound"], "%.1f K/h" % m.DRIFT_K_H, "0.05 K RMS"]:
         assert fig in proc, "the procedure lacks %s" % fig
     for words in ("P = the heaters + the fans", "Authorisation to perform", "coordinator's check", "**inconclusive**", "No temperature requirement is relaxed"):
         assert words in proc, "the procedure lacks %r" % words
     readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
-    assert "section 11 the thermal reconciliation, section 12 prints the predicates" in readme and "v2/vendor/rittal/held/" in readme
+    assert "section 11 the thermal reconciliation, section 12 the fix round" in readme and "section 13 prints the predicates" in readme
+    assert "v2/vendor/rittal/held/" in readme
+
+
+def t_the_fix_round_of_the_layer4_review():
+    """astra-check-l4close-1's B3, B4 and B7 (the record's section 17, the .out's section 12)."""
+    import math
+    R = _R()
+    m = _CACHE["M"]
+    pm, br, T, hr, rc = R["pm"], R["br"], R["T"], R["hr"], R["rc"]
+    for key in ("P23 ", "P24 ", "P25 "):
+        assert R["pred"][[p_ for p_ in R["pred"] if p_.startswith(key)][0]], key
+    md = {m_["id"]: m_ for m_ in pm["modes"]}
+    assert list(md) == ["M%d" % i for i in range(1, 10)]
+    k = {x[0]: x for x in rc["conds"]}
+    # B3: no absolute rating decides a line; the governing line is the tightest; option C moves the heat stage to the hot stop
+    for m_ in pm["modes"]:
+        assert abs(m_["Q"] - sum(v for _k, v in m_["heat"])) < 1e-12
+        for o in m.OPTIONS:
+            b = m_["by"][o]
+            assert all("ABSOLUTE" not in x["cat"] for x in b["lines"]) and all("ABSOLUTE" in s[1] for s in b["screens"])
+            assert b["gov"]["g"] == max(x["g"] for x in b["lines"]) and b["stated"]["g"] <= b["gov"]["g"]
+    th = pm["th"]
+    assert (th["h1"], th["c1_air"], th["c1_cell"], th["t3"], th["t4"], th["otc"], th["chg"], th["dis"]) == (56.5, 50.0, 55.0, 42.0, 43.0, 44.0, 45.0, 60.0)
+    assert (th["sgp4"], th["sgp5"]) == (50.0, 55.0)
+    for i_ in ("M1", "M2", "M3", "M4"):
+        assert md[i_]["by"]["as ruled"]["gov"]["short"] == "the SGP41's Table 4" and abs(md[i_]["by"]["as ruled"]["gov"]["t"] - 50.0) < 1e-12
+        for o in ("C", "A", "B"):
+            assert "hot stop H1" in md[i_]["by"][o]["gov"]["short"]
+            assert not any("SGP41's sensing" in x["name"] for x in md[i_]["by"][o]["lines"])
+    assert abs(md["M2"]["by"]["as ruled"]["gov"]["g"] - k["K2"][7]) < 1e-9 and abs(md["M2"]["Q"] - k["K1"][2]) < 1e-12
+    assert abs(md["M1"]["by"]["C"]["gov"]["t"] - (56.5 - md["M1"]["pack"][1] / pm["gb"])) < 1e-12
+    assert md["M5"]["by"]["C"]["gov"]["short"] == "C1's air trigger" and abs(md["M5"]["by"]["C"]["gov"]["g"] - k["K6"][7]) < 1e-9
+    assert "INFERRED" in md["M6"]["by"]["C"]["gov"]["cat"] and abs(md["M6"]["by"]["C"]["stated"]["g"] - k["K9"][7]) < 1e-9
+    assert math.isinf(md["M7"]["by"]["C"]["gov"]["g"]) and abs(md["M7"]["by"]["C"]["stated"]["g"] - k["K10"][7]) < 1e-9
+    for i_ in ("M8", "M9"):
+        assert md[i_]["by"]["C"]["gov"]["short"] == "T4 on the charging cells" and md[i_]["by"]["C"]["gov"]["g"] > md[i_]["Q"] / (42.0 - md[i_]["amb"])
+    assert [p_["ids"] for p_ in pm["points"]] == [("M2", "M6"), ("M1",), ("M4",), ("M3",), ("M7",), ("M5",), ("M8", "M9")]
+    # B4: input less stored less exported is the case heat; the reviewer's boundary reproduced
+    cb = T["chg_prof"]
+    assert abs(cb["p_in"] - cb["stored"] - cb["exported"] - cb["heat"]) < 1e-12 and abs(sum(cb["parts"].values()) - cb["heat"]) < 1e-12
+    assert abs(cb["heat"] - 50.04367) < 5e-5 and abs(cb["parts"]["supply"] - 3.17382) < 5e-5 and abs(cb["parts"]["charge"] - 3.44629) < 5e-5
+    rows = pm["b4"]["rows"]
+    assert abs(rows[0][2] - 1.7376) < 5e-5 and abs(rows[2][2] - 2.1115) < 5e-5 and abs(rows[0][3] - 1.8135) < 5e-4 and abs(rows[2][3] - 2.2222) < 5e-4
+    assert abs(T["charge_extra"] - cb["parts"]["charge"]) < 1e-12, "E3-O's charge with the pack outside: the charge path only"
+    assert abs(md["M8"]["Q"] - hr["q_chg"]) < 1e-12 and abs(k["K7"][2] - hr["q_chg"]) < 1e-12
+    # B7: the run coupled to C1
+    assert abs(br["rev"][0][1] - 2.063) < 5e-3 and abs(br["rev"][1][1] - 2.151) < 5e-3 and abs(br["rev"][0][2] - 54.47) < 0.02
+    b0 = br["runs"][0]
+    assert b0["t_c1"] < br["t_energy"] < b0["t_end"] and not any(r_["hot_stop"] for r_ in br["runs"])
+    assert br["g_full"][0][1] > br["g_full"][1][1] and abs(br["t_energy"] - 2.52) < 5e-3
+    out = open(OUT, encoding="utf-8").read()
+    page = open(PAGE, encoding="utf-8").read()
+    proc = open(os.path.join(REC, "T-H1-PROCEDURE-DRAFT.md"), encoding="utf-8").read()
+    for h in ("12 THE FIX ROUND OF THE LAYER 4 REVIEW", "12a B3, THE SGP41 AND OPTION C, RESTATED.", "12b B4, THE CHARGING HEAT AS A BALANCE",
+              "12c B7, THE BATTERY-ONLY RUN COUPLED TO C1", "12d THE BENCH POINTS", "CORRECTED in the fix round (12a"):
+        assert h in out, "the .out lacks %r" % h
+    assert "A +55 C inside-air limit EXISTS" not in out and "switches the sensor off at a 54.0 C reading" in out
+    assert "## 17. The fix round of the Layer 4 review" in page and all("### 17.%d " % i in page for i in range(1, 9))
+    figs = []
+    for m_ in pm["modes"]:
+        for o in ("as ruled", "C"):
+            b = m_["by"][o]
+            if math.isfinite(b["gov"]["g"]):
+                figs.append("%.3f W/K" % b["gov"]["g"])
+                figs.append("%.3f W/K" % b["read"])
+    figs += ["%.3f" % cb["p_in"], "%.3f" % cb["stored"], "%.3f W" % cb["heat"], "%.3f W" % hr["q_chg"]]
+    figs += ["%.4f W/K" % r_[2] for r_ in rows] + ["%.4f W/K" % r_[3] for r_ in rows]
+    figs += ["%.3f h" % br["rev"][0][1], "%.3f h" % br["rev"][1][1], "%.2f C" % br["rev"][0][2], "%.2f h" % b0["t_c1"], "%.2f h" % b0["t_end"],
+             "%.3f W/K" % br["g_full"][0][1], "%.3f W/K" % br["g_full"][1][1]]
+    for fig in figs:
+        assert fig in page and fig in out, "the figure %s is not on both the page and the .out" % fig
+    for pt in pm["points"]:
+        for i_, o, sh, g_, rd, sh2, g2, rd2 in pt["reads"]:
+            if math.isfinite(rd):
+                assert "%.3f W/K" % rd in proc, "the procedure lacks %s's reading %.3f" % (i_, rd)
+    for words in ("### 4a. The transient point", "energy-equivalent end of the run", "M3 and M4, closed for them", "What this test closes"):
+        assert words in proc, "the procedure lacks %r" % words
+    assert "energy-only" in page and "2.52 to 2.95 h" in page
+
+
+def t_the_outside_capacity_and_the_three_classes():
+    """The addendum to the fix round (the record's 17.9, the .out's 12e): every line against the outside capacity with a zero inside
+    resistance, bare and with the combined route; class (iii) only where no coefficient in the held ranges carries the line."""
+    import math
+    R = _R()
+    m = _CACHE["M"]
+    cp, cb = R["cap"], R["cb"]
+    assert R["pred"][[p_ for p_ in R["pred"] if p_.startswith("P26 ")][0]]
+    geo = cb["geo"]
+    # a zero inside resistance passes more than the 50 m/s inside flow section 9 had called the cap
+    assert cp["check9"][0] > cb["cap"]["E3-O"] + 0.2 and cp["check9"][2] > cb["cap"]["E5"] + 0.2
+    assert cp["check9"][0] > R["ap"]["c"]["g_e3o"] > cb["cap"]["E3-O"], "E3-O's line lies under the capacity proper"
+    # the capacity grows with the route, the optimistic ends and the rise; the closed case passes less than the open one
+    c1 = m.outside_cap(40.0, 10.0, cb["cons"], geo, "open")["g"]
+    assert c1 < m.outside_cap(40.0, 20.0, cb["cons"], geo, "open")["g"] and c1 > m.outside_cap(40.0, 10.0, cb["cons"], geo, "closed")["g"]
+    for e in cp["lines"]:
+        assert e["route"][0] >= e["bare"][0] - 1e-9 and e["bare"][1] >= e["bare"][0] and e["route"][1] >= e["route"][0]
+        need = e["line"]["g"]
+        if e["cls"] == "iii":
+            assert (not math.isfinite(need)) or (need > e["route"][1] and abs(e["short_w"] - (e["Q"] - e["route"][1] * e["rise"])) < 1e-9)
+        elif e["cls"] == "ii":
+            assert e["bare"][1] < need <= e["route"][1]
+        else:
+            assert need <= e["bare"][1]
+        if e["lid"] == "closed":
+            assert e["route"] == e["bare"], "the route is not credited with the lid closed"
+    three = sorted(set((e["mode"], e["line"]["short"]) for e in cp["lines"] if e["cls"] == "iii"))
+    assert three == [("M3", "the SGP41's Table 4"), ("M4", "the SGP41's Table 4"), ("M6", "the EPAPER's +60 C"), ("M7", "the EPAPER's +60 C")]
+    assert all(e["cls"] == "i" for e in cp["lines"] if "hot stop H1" in e["line"]["short"])
+    assert all(a_ < b_ < 40.0 for a_, b_ in cp["ceil_sgp"].values()), "the SGP41's closed-lid ceilings lie under +40 C at both ends"
+    assert cp["epaper"]["M7"]["need"] is None and cp["epaper"]["M6"]["need"] < cp["epaper"]["M6"]["need_hi"] < 5.417
+    out = open(OUT, encoding="utf-8").read()
+    page = open(PAGE, encoding="utf-8").read()
+    proc = open(os.path.join(REC, "T-H1-PROCEDURE-DRAFT.md"), encoding="utf-8").read()
+    assert "12e THE OUTSIDE CAPACITY" in out and "### 17.9 The outside capacity" in page and "What a reading can pass at all" in proc
+    figs = ["%.3f" % cp["check9"][0], "%.3f" % cp["check9"][2], "%.3f W/K" % cp["k1"][0]]
+    for e in cp["lines"]:
+        if e["cls"] == "iii" and math.isfinite(e["short_g"]):
+            figs += ["%.3f W/K" % e["short_g"], "%.3f W" % e["short_w"]]
+    figs += ["+%.1f" % x for v in cp["ceil_sgp"].values() for x in v] + ["%.3f W/K" % cp["epaper"]["M6"]["need"], "%.3f W/K" % cp["epaper"]["M6"]["need_hi"]]
+    for fig in figs:
+        assert fig in page and fig in out, "the figure %s is not on both the page and the .out" % fig
+    for e in cp["lines"]:
+        if math.isfinite(e["line"]["g"]):
+            assert "%.3f / %.3f" % e["bare"] in page, "the page lacks %s's bare capacity" % e["mode"]
 
 
 def t_both_checks_are_filed_and_listed():

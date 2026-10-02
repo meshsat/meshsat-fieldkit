@@ -3,7 +3,8 @@ D-02a's +55 C operating margin (E3-O) and E5's +60 C dwell in the sealed Peli 14
 is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMPTION, CONDITIONAL. Revised after the focused
 check astra-check-l4e12-1 and the targeted recheck astra-check-l4e12-2 (the record's section 12 maps each item to its change);
 section 8 is the dependency round of 2 October 2026 on U-02 (the record's section 13), section 9 the conservative bound (section 14),
-section 10 the heat-rejection question (section 15), section 11 the thermal reconciliation (section 16).
+section 10 the heat-rejection question (section 15), section 11 the thermal reconciliation (section 16), section 12 the fix round of
+the Layer 4 review (B3, B4, B7; section 17).
 
 0 Reproductions and inputs
 0a pwr_budget.py re-run in a child: pwr_budget.out and pwr_budget.json byte for byte: yes
@@ -901,10 +902,10 @@ section 10 the heat-rejection question (section 15), section 11 the thermal reco
 9b THE BOUND (W/K; lid open with the fans, their flow credited at zero; MODELED on INFERRED coefficients):
    E5    60 C, the air 10 K up: lid open 0.566 (the other coefficient ends 0.626), lid closed 0.505; plate fraction 0.348
          credits: the fans' flow 0.2 / 0.5 / 1.0 m/s 0.608 / 0.690 / 0.799; the stack's radiation 0.654, with 0.5 m/s 0.767; the floor 0.697; all the
-         favourable ends with 1.0 m/s 1.145; ANY inside film (a 50 m/s flow) 1.540, the outside films' cap
+         favourable ends with 1.0 m/s 1.145; a 50 m/s inside flow (a film near 45 W/m2K, not a zero inside resistance: 12e) 1.540
    E3-O  55 C, the air 15 K up: lid open 0.607 (the other coefficient ends 0.673), lid closed 0.537; plate fraction 0.362
          credits: the fans' flow 0.2 / 0.5 / 1.0 m/s 0.641 / 0.712 / 0.813; the stack's radiation 0.692, with 0.5 m/s 0.788; the floor 0.747; all the
-         favourable ends with 1.0 m/s 1.168; ANY inside film (a 50 m/s flow) 1.571, the outside films' cap
+         favourable ends with 1.0 m/s 1.168; a 50 m/s inside flow (a film near 45 W/m2K, not a zero inside resistance: 12e) 1.571
    The envelope's +40 C, the air 15 K up: lid open 0.598, lid closed 0.524 (LO-01a's and E3-L's state; U-01's, not this record's).
    The bound's films at E5 (W/m2K): inside, the plate 4.13 and the walls 3.85; outside, the face 7.72 and the walls 10.03.
 9c W4'S 1.22 W/K RECONCILED. The budget's 1.22 to 2.85 W/K (lid open, fans) and 1.06 to 2.49 W/K (lid closed) are W4's lumped
@@ -921,10 +922,12 @@ section 10 the heat-rejection question (section 15), section 11 the thermal reco
       the inside film: natural convection only, no fan flow and no internal radiation credited             0.566 W/K
    The decisive term is the inside film: W4's low case takes 10 W/m2K with the fans; natural convection gives 3.85 to 4.13
    W/m2K, and no held document gives the fans' flow at the inner faces.
-9d AGAINST THE LINES AND THE FALLBACK. The lines (2.159 W/K in E5, 1.806 W/K in E3-O) lie over the outside films' cap (1.540 and
-   1.571 W/K with any inside film): on the bound's outside no inside measure reaches them. Section 8's floors (E5 1.125 W/K with
-   F4 and F3; E3-O 1.399, or 1.309 with the connectors out of the exhaust) lie over the bound by 0.559 and 0.792 W/K. Where the
-   air settles on the bound (MODELED, lid open, its own rise):
+9d AGAINST THE LINES AND THE FALLBACK. The lines (2.159 W/K in E5, 1.806 W/K in E3-O) lie over the bound with a 50 m/s inside
+   flow (1.540 and 1.571 W/K; CORRECTED in 12e: that flow's film is near 45 W/m2K, not a zero inside resistance, and the outside
+   capacity proper at these rises is 1.856 and 1.906 W/K on the conservative ends, so E3-O's line lies under it and E5's over
+   it, both under it at the optimistic ends). Section 8's floors (E5 1.125 W/K with F4 and F3; E3-O 1.399, or 1.309 with the
+   connectors out of the exhaust) lie over the bound by 0.559 and 0.792 W/K. Where the air settles on the bound (MODELED, lid
+   open, its own rise):
       E5, the hold: the air 90.93 C (0.698 W/K at 30.9 K), the plate 71.48 C; the +70 C class on the plate (F4) 71.48 C, PAST
          +70 C; the +80 C connectors in the exhaust 93.71 C, PAST +80 C; the +80 C connectors out of it 90.93 C, PAST +80 C; the
          module, +85 C at its intake (device set) 90.93 C, PAST +85 C.
@@ -976,9 +979,10 @@ section 10 the heat-rejection question (section 15), section 11 the thermal reco
 10a THE NEED. The approved profile PS-IDLE-SPEC puts 43.413 W into the case lid open (MODELED: its 42.824 W at the pack plus the
    pack's own I2R; L4-E9's 43.4 W at a0212d9e). Its +70 C class at REQ-024's +40 C needs 1.447 W/K; a charge starts only while
    the gauge reads at or under 42 C (TEST-PLAN, T3), so on SC-37's design day (the air 13.2 to 18.3 C, the replay) charging with
-   the profile running needs 1.507 to 1.832 W/K. The rulings: no vent or opening anywhere (32.53), the Peli 1450 at any cost,
-   the face a 3 mm aluminium plate carrying the UI (32.40). Every figure below is on section 9's bound: the inside by natural
-   convection only, the coefficients' conservative ends, still air; a two-node model, the inside air and the plate.
+   the profile running (52.134 W into the case, the balance of 12b) needs 1.810 to 2.200 W/K. The rulings: no vent or opening
+   anywhere (32.53), the Peli 1450 at any cost, the face a 3 mm aluminium plate carrying the UI (32.40). Every figure below is
+   on section 9's bound: the inside by natural convection only, the coefficients' conservative ends, still air; a two-node
+   model, the inside air and the plate.
 10b THE THREE APPROACHES. (a) Fins on the face's free strips (the plate 0.0912 m2 less the monitor window 0.0288 m2 and the
    e-paper lens 0.0071 m2: 0.0552 m2), fixed under M3's space beneath the QMX tray (19.92 mm nominal, 14.11 mm with the unstated
    allowances doubled) or a clip-on exchanger when deployed; effective area multiplier 2 to 3 (ASSUMPTION; a vendor's heat-sink
@@ -988,16 +992,17 @@ section 10 the heat-rejection question (section 15), section 11 the thermal reco
    2 0.900, NVMe slot 3 0.900, VHF PA 30 W 0.900), so the plate rejects them at its own temperature and the air keeps the rest;
    with (a)'s fins. (c) The open lid as a second radiator: an aluminium skin on the lid's flat ceiling (0.0803 m2, an upper
    bound: the QMX tray and the tablet bracket share it), 0.329 m tall when open, on a copper braid from the plate's edge inside
-   the seal line (0.20 m, 200 mm2: 2.56 K/W, ASSUMPTION; copper 390 W/mK). At the profile's heat (MODELED on the bound):
+   the seal line (0.20 m, 200 mm2: 2.56 K/W, ASSUMPTION; copper 390 W/mK). At the profile's heat at +40 C and the charging heat
+   (52.134 W, 12b) on the design day (MODELED on the bound):
       approach                                 | +40 C: air, plate, G      | design day 13.2 C: air, G | 18.3 C: air, G
-      none: the bound                          |  96.61 C  62.34 C  0.767 W/K |  70.77 C  0.754 W/K      |  75.70 C  0.756 W/K
-      (a) fins on the free strips, k 2         |  92.89 C  56.15 C  0.821 W/K |  66.82 C  0.810 W/K      |  71.79 C  0.812 W/K
-      (a) fins on the free strips, k 3         |  90.84 C  52.78 C  0.854 W/K |  64.62 C  0.844 W/K      |  69.62 C  0.846 W/K
-      (b) the large loads led into the plate   |  79.59 C  70.08 C  1.096 W/K |  53.98 C  1.065 W/K      |  58.86 C  1.070 W/K
-      (b) with (a)'s fins, k 3                 |  72.41 C  56.96 C  1.339 W/K |  46.40 C  1.307 W/K      |  51.36 C  1.313 W/K
-      (c) the open lid's skin on a strap       |  94.17 C  58.27 C  0.801 W/K |  68.10 C  0.791 W/K      |  73.07 C  0.793 W/K
-      (b) + (a) + (c): the best route          |  71.36 C  55.12 C  1.384 W/K |  45.25 C  1.355 W/K      |  50.22 C  1.360 W/K
-   Needs: 1.447 W/K at +40 C (the air at 70 C); 1.507 and 1.832 W/K for charging (the air at 42 C). The open lid's strap carries
+      none: the bound                          |  96.61 C  62.34 C  0.767 W/K |  80.37 C  0.776 W/K      |  85.28 C  0.778 W/K
+      (a) fins on the free strips, k 2         |  92.89 C  56.15 C  0.821 W/K |  75.74 C  0.834 W/K      |  80.69 C  0.836 W/K
+      (a) fins on the free strips, k 3         |  90.84 C  52.78 C  0.854 W/K |  73.16 C  0.869 W/K      |  78.15 C  0.871 W/K
+      (b) the large loads led into the plate   |  79.59 C  70.08 C  1.096 W/K |  64.43 C  1.018 W/K      |  69.29 C  1.022 W/K
+      (b) with (a)'s fins, k 3                 |  72.41 C  56.96 C  1.339 W/K |  55.76 C  1.225 W/K      |  60.71 C  1.229 W/K
+      (c) the open lid's skin on a strap       |  94.17 C  58.27 C  0.801 W/K |  77.31 C  0.813 W/K      |  82.26 C  0.815 W/K
+      (b) + (a) + (c): the best route          |  71.36 C  55.12 C  1.384 W/K |  54.46 C  1.263 W/K      |  59.43 C  1.268 W/K
+   Needs: 1.447 W/K at +40 C (the air at 70 C); 1.810 and 2.200 W/K for charging (the air at 42 C). The open lid's strap carries
    4.37 W at +40 C in the best route.
 10c CONSEQUENCES (all three passive: no power, no endurance change, the heat unchanged; costs TBD, no quote held). (a): about
    0.39 kg of 1.5 mm fins at an 8 mm pitch to the worst M3 height (ASSUMPTION), no inside space; the UI's strips between the
@@ -1011,7 +1016,7 @@ section 10 the heat-rejection question (section 15), section 11 the thermal reco
    line, no penetration.
 10d THE SELECTION: NONE REACHES THE NEED ON BOUNDED EVIDENCE. The best route assembled from the three, (b) with (a)'s fins and
    (c), keeps the air at 71.36 C at +40 C: it rejects 42.161 W with the air at +70 C against the profile's 43.413 W, SHORT BY
-   1.252 W (0.063 W/K). Charging with the profile running stays out of reach: 0.153 and 0.472 W/K short on the design day's cold
+   1.252 W (0.063 W/K). Charging with the profile running stays out of reach: 0.547 and 0.932 W/K short on the design day's cold
    and warm ends. On the bound alone the case rejects 20.449 W at +40 C (22.964 W short). What would carry the route over: the
    inside film the fans make (section 9: credited at zero), and the fins' and the path's real resistances; each is a measurement
    or a maker's datasheet, not held. The remaining options are the owner's: an ALTERNATIVE duty cycle at +40 C, labelled as such
@@ -1023,10 +1028,11 @@ section 10 the heat-rejection question (section 15), section 11 the thermal reco
    lid open, the fans at full duty, two heaters (42.4 W, about the profile's heat) spread as the boards dissipate, room air, to
    steady state (section 9f's duration). The readings that settle it (each the target plus its expanded uncertainty):
       a reading of at least 1.509 W/K (28.1 K rise) meets 1.447 W/K: the profile's +70 C class at +40 C (the consolidation's framing; section 11 reconciles it)
-      a reading of at least 1.575 W/K (26.9 K rise) meets 1.507 W/K: charging with the profile on the design day's cold end
-      a reading of at least 1.930 W/K (22.0 K rise) meets 1.832 W/K: charging with the profile on the design day's warm end
+      a reading of at least 1.906 W/K (22.2 K rise) meets 1.810 W/K: charging with the profile on the design day's cold end
+      a reading of at least 2.342 W/K (18.1 K rise) meets 2.200 W/K: charging with the profile on the design day's warm end
    Under the first, the route of 10d applies with its kit on the same bench point, and an owner's choice of 10d's options if it
-   still reads short.
+   still reads short. (These readings take the 42.4 W of two heaters for every line and are superseded: 11a and 12d read each
+   mode at its own heat, the fans counted, and 12a names each mode's governing line.)
 
 11 THE THERMAL RECONCILIATION (the owner's amendment of 2 October 2026, 14:20, item 1)
 11a THE CLAIM, CHECKED. Section 10e's line read: a reading of at least 1.509 W/K at 42.4 W meets 1.447 W/K. Its arithmetic: 42.4
@@ -1042,15 +1048,15 @@ section 10 the heat-rejection question (section 15), section 11 the thermal reco
    them: the three modules' coolers and the two mixers), 6.376 W lost in the converters and the distribution, 0.590 W in the
    pack's own resistance: 43.413 W into the case. Not in it: L4-E8's ballasts (0.0093 W at its nominal illustration, at most
    2.09 W at the bound's worst corner, and only while the solar stage runs), the solar entry's sense bank (solar current only),
-   Q39's 0.0945 W with L4-E11's (B1) (L4-E9 at a0212d9e). A charge on shore adds 3.446 W in the charger and the front end:
-   46.859 W. The heat stage on shore: 19.378 W at the pins (fans 1.95 W: slot 3's cooler and the two mixers), 3.893 W in the
-   converters and the distribution, 1.725 W in the front end and the charger, the ballasts 2.09 W (counted at the worst corner,
-   the margins' rule): 27.086 W. The bench: READY-TO-ACT's heater is 6.8 ohm at 12.0 V, 21.176 W of heat (all of its electrical
-   power stays inside); two give 42.353 W. The fans run from the bench supply, their measured draw is heat inside and is added
-   to the heaters: P = the heaters + the fans, never the heaters alone (section 10e's 42.4 W left the fans out and is restated
-   here). To stand for a mode the heaters are set to its heat less the fans' measured draw: the profile 40.443 W (two heaters at
-   11.73 V), the heat stage 25.136 W (one heater at 13.07 V); the fans' draw replaces their modeled share, so nothing is counted
-   twice.
+   Q39's 0.0945 W with L4-E11's (B1) (L4-E9 at a0212d9e). Charging with the profile running on the design day (the balance of
+   12b, CORRECTED: the source path's loss on the profile's power was left out) adds 8.721 W: 52.134 W. The heat stage on shore:
+   19.378 W at the pins (fans 1.95 W: slot 3's cooler and the two mixers), 3.893 W in the converters and the distribution, 1.725
+   W in the front end and the charger, the ballasts 2.09 W (counted at the worst corner, the margins' rule): 27.086 W. The
+   bench: READY-TO-ACT's heater is 6.8 ohm at 12.0 V, 21.176 W of heat (all of its electrical power stays inside); two give
+   42.353 W. The fans run from the bench supply, their measured draw is heat inside and is added to the heaters: P = the heaters
+   + the fans, never the heaters alone (section 10e's 42.4 W left the fans out and is restated here). To stand for a mode the
+   heaters are set to its heat less the fans' measured draw: the profile 40.443 W (two heaters at 11.73 V), the heat stage
+   25.136 W (one heater at 13.07 V); the fans' draw replaces their modeled share, so nothing is counted twice.
 11c THE NODES AND THE LIMITS. The conductance is between two nodes: the mixed inside air (the mean of the air channels, the
    hold's reference placed in it, 4d) and the ambient air (shaded channels about 0.5 m from the case). The bench ambient is the
    room (+22 C taken); the operational ambient is REQ-024's "The kit operates at -20 to +40 C ambient". The limits and their
@@ -1067,21 +1073,23 @@ section 10 the heat-rejection question (section 15), section 11 the thermal reco
    C use and -20 to +45 C storage envelope, with two pass lines: operate to specification inside the envelope; survive and
    recover at the margin."
    Each condition: requirement and mode, heat into the case, ambient, the limit at the node, and the conductance it needs (Q / room):
-      K1   REQ-024 and E3-A at +40 C: C1's end state, the heat stage on shore with the ballasts; lid open; 27.086 W at +40.0 C;
-           the SGP41's +55 C (REQ-024's acceptance, every part in its range; REQ-052's and E3-L's line; its Table 5); needs
-           1.806 W/K
+      K1   REQ-024 and E3-A at +40 C: C1's end state, the heat stage on shore with the ballasts; a SCREEN, not a closure line
+           (12a); lid open; 27.086 W at +40.0 C; the SGP41's Table 5 +55 C, an ABSOLUTE rating (REQ-052's and E3-L's fail line
+           reads it): an exclusion screen, never the sensor's function; needs 1.806 W/K
       K2   the same, the SGP41 judged on its Table 4 +50 C (this record's corrected rule; the owner's CFL-002 open); lid open;
            27.086 W at +40.0 C; the SGP41's +50 C (Table 4); needs 2.709 W/K
-      K3   the same, the +70 C class in the heat stage (the H5007NL, the ATP16, the PXP4043/C and the radios C1 leaves on); lid
-           open; 27.086 W at +40.0 C; +70 C (the makers' sheets of section 4); needs 0.903 W/K
+      K3   the same, the +70 C class in the heat stage (the H5007NL, the ATP16, the PXP4043/C and the radios C1 leaves on) at
+           the MIXED air; a component screen (the exhaust, the cells and the junctions are 12a's); lid open; 27.086 W at +40.0
+           C; +70 C (the makers' sheets of section 4); needs 0.903 W/K
       K4   the same, the module's intake; lid open; 27.086 W at +40.0 C; the module's +85 C (CM5 4.4); needs 0.602 W/K
-      K5   REQ-052 and E3-L at +40 C: the heat stage; lid closed; 27.086 W at +40.0 C; the SGP41's +55 C (E3-L's line); needs
-           1.806 W/K
+      K5   REQ-052 and E3-L at +40 C: the heat stage; a SCREEN (12a); lid closed; 27.086 W at +40.0 C; the SGP41's Table 5 +55 C
+           (E3-L's fail line; ABSOLUTE, a screen); needs 1.806 W/K
       K6   REQ-014 at +20 C: the profile on the pack, not shed by C1; lid open; 43.413 W at +20.0 C; C1's inside-air trigger +50
            C (REQ-024); needs 1.447 W/K
-      K7   charging on SC-37's design day, the profile running and the charge path counted (on shore), cold end; lid open;
-           46.859 W at +13.2 C; the gauge's charge start T3 42 C (E3-A; the cells at the air); needs 1.627 W/K
-      K8   the same, warm end; lid open; 46.859 W at +18.3 C; T3 42 C; needs 1.977 W/K
+      K7   charging on SC-37's design day, the profile running, the balance of 12b (the source path, the charge path, the
+           charging cells, the solar stage's ballasts), cold end; lid open; 52.134 W at +13.2 C; the gauge's charge start T3 42
+           C (E3-A; the idle cells at the air; the running charge's T4 with the cells' own rise is 12a's); needs 1.810 W/K
+      K8   the same, warm end; lid open; 52.134 W at +18.3 C; T3 42 C; needs 2.200 W/K
       K9   E3-O, D-02a's +55 C AMBIENT margin: the heat stage, every radio C1 leaves on; lid open; 27.086 W at +55.0 C; +70 C
            (U-02); needs 1.806 W/K
       K10  E5's +60 C dwell under the hold; lid open; 21.587 W at +60.0 C; +70 C (U-02); needs 2.159 W/K
@@ -1091,10 +1099,13 @@ section 10 the heat-rejection question (section 15), section 11 the thermal reco
            C; needs 1.447 W/K
       X3   the owner's conditional check: 42.4 W under a +55 C inside-air limit at +40 C; lid open; 42.400 W at +40.0 C; +55 C;
            needs 2.827 W/K
-   A +55 C inside-air limit EXISTS, for the heat stage at +40 C (REQ-052's acceptance and E3-L's line with the lid closed;
-   REQ-024's acceptance with the lid open, the SGP41 being a part with that published range; LO-01a on shore; K1 and K5): it
-   needs 1.806 W/K, LO-01a's floor with the ballasts. It does not apply to the profile, which C1 sheds at +50 C inside air; the
-   owner's conditional 2.83 W/K (X3) belongs to no requirement's mode. The analogous figure for the heat stage is K1's.
+   CORRECTED in the fix round (12a, astra-check-l4close-1 B3): a +55 C inside-air line exists only as REQ-052's and E3-L's fail
+   line, read from the SGP41's Table 5 ABSOLUTE row; it is an exclusion screen, not a functional limit, and K1 and K5 (1.806
+   W/K) are screens, not closure lines. The SGP41's sensing ends at Table 4's +50 C (K2, 2.709 W/K at the heat stage on shore).
+   Option C keeps the part, reports its channel not covered above a 49.0 C reading and switches it off at 54.0 C; it never keeps
+   it powered on +55 C. The governing line of each required mode is the tightest correctly categorised local limit (12a): the
+   cells, the parts at their local air with the cooler's exhaust, the junctions and the unpowered parts' storage rows. The
+   owner's conditional 2.83 W/K (X3) belongs to no requirement's mode.
    Part-level hot spots: limits on a part's junction or case, not on the air: the TLV75533 regulators' +125 C recommended
    junction (3c, 5c), the converters' junctions (3c), the module's SoC (its own throttle), the PA's flange on the plate
    (CONOPS's key-down window and C4, PWR-F15; not this section's K conditions), the parts in a cooler's exhaust (2h, +5.64 K)
@@ -1114,13 +1125,14 @@ section 10 the heat-rejection question (section 15), section 11 the thermal reco
       the bound                      k plate 2.85, walls 2.34, whole 2.54 W/m2K: A k = 0.598 W/K
       the coefficients' other ends   k plate 3.22, walls 2.54, whole 2.81 W/m2K: A k = 0.661 W/K
    Sheet steel's 5.5 W/m2K on the same area would read 1.296 W/K; K1's 1.806 W/K needs k = 7.66 W/m2K over it, 2.7 to 3.0 times
-   what the bound's films give. With any inside film (a 50 m/s flow) the outside films cap A k at 1.504 W/K (1.859 at the
-   coefficients' other ends), still air and the floor adiabatic: K1's need lies over the cap at the conservative ends and under
-   it, by 0.053 W/K, at the other ends, so on the bound's outside no inside measure reaches it while all the heat passes through
-   the inside air. The tree's other conductance evidence spans the need: W4's lumped estimate 1.22 to 2.85 W/K (fixed films with
-   the fans, the floor counted), 32.53's 3.0 to 3.3 W/K. The bound under the need leaves feasibility unestablished, not refuted:
-   the floor's support, the outside's real films and air movement, the fans' film and heat led into the plate past the air
-   (section 10b) are what it does not credit, and only a measured G decides (T-H1). The translation from the bench to the
+   what the bound's films give. With a 50 m/s inside flow (a film near 45 W/m2K) A k reaches 1.504 W/K (1.859 at the
+   coefficients' other ends), still air and the floor adiabatic: K1's need lies over it at the conservative ends and under it,
+   by 0.053 W/K, at the other ends. CORRECTED in 12e: that is not the outside capacity; with the inside resistance at zero it is
+   1.810 W/K at K1's rise (2.963 at the optimistic ends with the floor), over K1's need, so no physics bars it and the
+   measurement decides. The tree's other conductance evidence spans the need: W4's lumped estimate 1.22 to 2.85 W/K (fixed films
+   with the fans, the floor counted), 32.53's 3.0 to 3.3 W/K. The bound under the need leaves feasibility unestablished, not
+   refuted: the floor's support, the outside's real films and air movement, the fans' film and heat led into the plate past the
+   air (section 10b) are what it does not credit, and only a measured G decides (T-H1). The translation from the bench to the
    operating ambient on the same model, the bench's +22 C against +40 C (G = Q / rise; radiation grows with the absolute
    temperatures, natural convection with the rise and falls slightly with the air's properties):
       the bound                      rise 15 K: 0.588 -> 0.598 W/K, x 1.018; rise 30 K: 0.671 -> 0.682 W/K, x 1.016
@@ -1145,36 +1157,34 @@ section 10 the heat-rejection question (section 15), section 11 the thermal reco
       K4   at 27.086 W: needs 0.602 W/K; a reading of at least 0.620 W/K (rise 43.7 K, U 3.0 %)
       K5   at 27.086 W: needs 1.806 W/K; a reading of at least 1.958 W/K (rise 13.8 K, U 7.8 %)
       K6   at 43.413 W: needs 1.447 W/K; a reading of at least 1.508 W/K (rise 28.8 K, U 4.0 %)
-      K7   at 46.859 W: needs 1.627 W/K; a reading of at least 1.698 W/K (rise 27.6 K, U 4.2 %)
-      K8   at 46.859 W: needs 1.977 W/K; a reading of at least 2.081 W/K (rise 22.5 K, U 5.0 %)
+      K7   at 52.134 W: needs 1.810 W/K; a reading of at least 1.889 W/K (rise 27.6 K, U 4.2 %)
+      K8   at 52.134 W: needs 2.200 W/K; a reading of at least 2.315 W/K (rise 22.5 K, U 5.0 %)
       K9   at 27.086 W: needs 1.806 W/K; a reading of at least 1.958 W/K (rise 13.8 K, U 7.8 %)
       K10  at 21.587 W: needs 2.159 W/K; a reading of at least 2.455 W/K (rise 8.8 K, U 12.1 %)
-11f WHAT ONE POINT CLOSES, AND WHAT REMAINS. One passing point lid open, the fans on, at the heat stage's heat (the heaters at
-   25.136 W plus the fans), reading at least 1.958 W/K, closes K1, K3, K4 (REQ-024 and E3-A at +40 C: the heat stage's air under
-   the SGP41's +55 C, the +70 C class and the module's intake) and K9 (E3-O's +70 C class at +55 C, the same heat and room; its
-   translation is conservative). Closed only by a further measured point: K5 (lid closed, the same heat, reading at least 1.958
-   W/K lid closed), K6 (the profile's heat, REQ-014 at +20 C, at least 1.508), K7 and K8 (the profile with the charge, at least
-   1.698 and 2.081, and the cells' own rise over the air, U-01's), K10 (the hold's heat in E5, at least 2.455). Open: K2 (the
-   SGP41 on Table 4, the owner's CFL-002), the part-level hot spots (T-H2, THM-001), the fans' rating (D-18, REQ-043), full sun
-   (D-02e, a later qualification item), the cells on the pack at +40 C (U-01, L4-E10).
-11g THE PROCEDURE (T-H1-PROCEDURE-DRAFT.md, revised): the points of 11e in the order K1, K5, K10, K6, K7 and K8, each with its
+11f WHAT ONE POINT CLOSES, AND WHAT REMAINS (CORRECTED by 12a: a dummy-load mixed-air point closes only the conductance it
+   measures, for its lid state, fan state, heat and heat placement; no mode's functionality). One passing point lid open, the
+   fans on, at the heat stage's heat (the heaters at 25.136 W plus the fans), reading at least 1.958 W/K, meets the conductance
+   SCREENS K1, K3, K4 and K9 at the mixed air; it does not close REQ-024, E3-A or E3-O, whose governing lines are 12a's. Screens
+   met only by a further measured point: K5 (lid closed, the same heat, reading at least 1.958 W/K lid closed), K6 (the
+   profile's heat, REQ-014 at +20 C, at least 1.508), K7 and K8 (the profile with the charge, at least 1.889 and 2.315, and the
+   cells' own rise over the air, U-01's), K10 (the hold's heat in E5, at least 2.455). Open: K2 (the SGP41 on Table 4, the
+   owner's CFL-002), the part-level hot spots (T-H2, THM-001), the fans' rating (D-18, REQ-043), full sun (D-02e, a later
+   qualification item), the cells on the pack at +40 C (U-01, L4-E10).
+11g THE PROCEDURE (T-H1-PROCEDURE-DRAFT.md, revised): the points of 12d (one per mode's heat and lid state), each with its
    heaters (READY-TO-ACT's 6.8 ohm, the nearest whole number of them) set to the mode's heat less the fans' measured draw (the
    model's draw shown here) and spread over the places in proportion (W, plan; the fans excluded, being real):
-      K1, K5, K9  27.086 W: the heaters 25.136 W (the fans 1.950 W), one at 13.07 V; board B 14.972; board A 4.284; the front
-                  end and the charger 1.725; board C and the face 1.500; board D and the PA 1.500; board E 1.155
-      K10         21.587 W: the heaters 19.637 W (the fans 1.950 W), one at 11.56 V; board B 12.057; board A 3.903; board C and
+      M2, M4, M6 (K1, K5, K9) 27.086 W: the heaters 25.136 W (the fans 1.950 W), one at 13.07 V; board B 14.972; board A 4.284;
+                  the front end and the charger 1.725; board C and the face 1.500; board D and the PA 1.500; board E 1.155
+      M1, M3      25.536 W: the heaters 23.586 W (the fans 1.950 W), one at 12.66 V; board B 14.972; board A 4.284; board C and
+                  the face 1.500; board D and the PA 1.500; board E 1.155; the pack 0.174
+      M7 (K10)    21.587 W: the heaters 19.637 W (the fans 1.950 W), one at 11.56 V; board B 12.057; board A 3.903; board C and
                   the face 1.500; the front end and the charger 1.345; board E 0.832
-      K6          43.413 W: the heaters 40.443 W (the fans 2.970 W), two at 11.73 V each; board B 26.234; board C and the face
+      M5 (K6)     43.413 W: the heaters 40.443 W (the fans 2.970 W), two at 11.73 V each; board B 26.234; board C and the face
                   7.500; board A 3.464; board D and the PA 1.500; board E 1.155; the pack 0.590
-      K7, K8      46.859 W: the heaters 43.889 W (the fans 2.970 W), two at 12.22 V each; board B 26.234; board C and the face
-                  7.500; board A 3.464; the front end and the charger 3.446; board D and the PA 1.500; board E 1.155; the pack
-                  0.590
-   Each point's duration at its pass line (tau = C / G, C 10 kJ/K, 32.53's upper bound for the kit and so for the empty case;
-   steady within 1 % of its rise at ln(100) tau, then an hour averaged): K1 tau 1.42 h, steady at 6.5 h (the fit's three time
-   constants 4.3 h); K5 tau 1.42 h, steady at 6.5 h (the fit's three time constants 4.3 h); K10 tau 1.13 h, steady at 5.2 h (the
-   fit's three time constants 3.4 h); K6 tau 1.84 h, steady at 8.5 h (the fit's three time constants 5.5 h); K7 tau 1.64 h,
-   steady at 7.5 h (the fit's three time constants 4.9 h); K7 and K8 are one point (one heat, two needs). A case as poor as the
-   bound takes up to 21.1 h a point (9f).
+      M8, M9 (K7, K8) 52.134 W: the heaters 49.164 W (the fans 2.970 W), two at 12.93 V each; board B 26.234; board C and the
+                  face 7.500; the front end and the charger 6.620; board A 3.464; board E 3.245; board D and the PA 1.500; the
+                  pack 0.600
+   Each point's readings and duration: 12d. A case as poor as the bound takes up to 21.1 h a point (9f).
    The endpoint is steady state, the mixed air drifting at most 0.1 K/h over an hour, or a first-order fit theta(t) = theta_ss +
    (theta_0 - theta_ss) exp(-t/tau) over at least three time constants with residuals at most 0.05 K RMS and tau within a factor
    2 of C/G; theta_ss's fitted standard error joins the rise's uncertainty. Pass: the reading less its expanded uncertainty at
@@ -1183,7 +1193,351 @@ section 10 the heat-rejection question (section 15), section 11 the thermal reco
    owner's; accepting its result goes through the coordinator's check against this section; no temperature requirement is
    relaxed to make a point pass.
 
-12 Predicates
+12 THE FIX ROUND OF THE LAYER 4 REVIEW (astra-check-l4close-1 at 8fbb68b6, the owner's one authorised review: B3, B4 and B7)
+12a B3, THE SGP41 AND OPTION C, RESTATED. Sensirion's SGP41 sheet: Table 4, the recommended conditions, operation to +50 C and
+   storage 5 to 30 C (p.6; its gas sensing specifications hold only when the sensor is stored and operated under them, p.6);
+   Table 5, the absolute ratings, operation to +55 C and short-term storage to +70 C (p.7; "Stress levels beyond those listed in
+   Table 5 may cause permanent damage to the device"). Sensing is supported to +50 C only; the +55 C row is an exclusion screen
+   and never stands in for the sensor's function. Option C of CFL-002 (section 6) keeps the part and reports its channel as not
+   covered while its reference reads over 49.0 C and after storage outside 5 to 30 C until Sensirion states otherwise; it
+   switches the sensor off at a 54.0 C reading, so it is never powered on the +55 C line, and unpowered its survival rests on
+   Table 5's short-term storage row (absolute: INCONCLUSIVE until Sensirion, the clarification drafted). Section 11's K1 and K5
+   used the +55 C row as a line: withdrawn, they are screens (11c, 11f). Every required mode below: its heat balance, its
+   ambient and every correctly categorised LOCAL limit (the cells at the air plus their own I2R over the pack block's lowest
+   film, 0.1481 W/K; the control thresholds whose firing ends or sheds the mode; the parts at their local air, the cooler's
+   exhaust included; the junctions; the unpowered parts' storage rows, or their operating rows read to cover them unpowered
+   where no storage row is held), each with the mixed air it allows and the conductance it needs (Q / room); the governing line
+   is the tightest; absolute ratings are listed as screens, never as lines. With the route's measures (5b, 5c: the +70 C parts
+   out of the running cooler's exhaust, the two regulators changed, the pushbuttons to an +85 C part); MODELED on the plan heat.
+   M1 REQ-024 and E3-A at +40 C, lid open, shaded: C1's end state, the heat stage on the pack (the required set, REQ-052). Heat
+      25.536 W (the heat stage at the pack 23.272, the cells' discharge I2R 0.174, L4-E8's ballasts 2.090); +40.0 C; lid open.
+      2.554  W/K  the air to  50.00 C  the SGP41's sensing at its bay air to Table 4's +50 C [MAKER recommended (Table 4)]
+      1.666  W/K  the air to  55.32 C  the cells: the hot stop H1 at a +56.5 C reading (CONOPS 4c; a hot stop inside the
+                envelope ends the mode) [CONTROL, ends the mode]
+      1.357  W/K  the air to  58.82 C  the cells: the 35E's discharge to +60 C at the surface [MAKER operating]
+      1.277  W/K  the air to  60.00 C  EPAPER, off, at the face (at most the mixed air) [operating, INFERRED to cover it
+                unpowered]
+      0.851  W/K  the air to  70.00 C  RB9704, work, at its local air [operating]
+      0.851  W/K  the air to  70.00 C  LIME, off, at its local air [storage]
+      every other line needs at most 0.851 W/K
+      screens (absolute, never lines): the SGP41 unpowered above its 54.0 C reading (its protective shutdown): Table 5's
+      short-term storage to +70 C (ABSOLUTE: a screen, survival INCONCLUSIVE until Sensirion states it)
+      GOVERNING (the route's measures): as ruled: the SGP41's Table 4, 2.554 W/K, a reading of at least 2.905 W/K; C, A and B:
+      the cells' hot stop H1, 1.666 W/K, a reading of at least 1.804 W/K.
+      As designed (no route measure; the SGP41 as ruled): the SGP41's Table 4, 2.554 W/K.
+      REMAINING: T-H1's lid-open point at this heat; the cells' own rise in the pocket (the block's film 5 to 15 W/m2K, the
+      lowest taken; L4-E10, U-01) and the gauge's reading error at H1 (records/hc2/hotstop_bounds.out; the thresholds
+      PROVISIONAL, HOT-R1 owed on boards A and E, CONOPS 4c); the parts' local air in the built kit (T-H2), the junctions'
+      modeled rise (THM-001), the 33 lines cleared only by an absolute rating (section 7), the fans' rating (D-18); CFL-002 is
+      the owner's
+   M2 the same on shore (E3-A's 2 h): the pack idle, no charge starting above T3. Heat 27.086 W (the heat stage at the pack
+      23.272, the source path (on shore) 1.725, L4-E8's ballasts 2.090); +40.0 C; lid open.
+      2.709  W/K  the air to  50.00 C  the SGP41's sensing at its bay air to Table 4's +50 C [MAKER recommended (Table 4)]
+      1.642  W/K  the air to  56.50 C  the cells idle at the air: the hot stop H1 at +56.5 C [CONTROL, ends the mode]
+      1.354  W/K  the air to  60.00 C  the cells idle: E3-A's every cell surface at most +60 C (the 35E's one-month storage to
+                +60 C) [MAKER storage; E3-A's pass line]
+      1.354  W/K  the air to  60.00 C  EPAPER, off, at the face (at most the mixed air) [operating, INFERRED to cover it
+                unpowered]
+      0.903  W/K  the air to  70.00 C  RB9704, work, at its local air [operating]
+      0.903  W/K  the air to  70.00 C  LIME, off, at its local air [storage]
+      every other line needs at most 0.903 W/K
+      screens (absolute, never lines): the SGP41 unpowered above its 54.0 C reading (its protective shutdown): Table 5's
+      short-term storage to +70 C (ABSOLUTE: a screen, survival INCONCLUSIVE until Sensirion states it)
+      GOVERNING (the route's measures): as ruled: the SGP41's Table 4, 2.709 W/K, a reading of at least 3.081 W/K; C, A and B:
+      the idle cells' hot stop H1, 1.642 W/K, a reading of at least 1.767 W/K.
+      As designed (no route measure; the SGP41 as ruled): the SGP41's Table 4, 2.709 W/K.
+      REMAINING: T-H1's lid-open point at this heat; the idle cells at the air (no own heat) and the gauge's reading error at
+      H1; the parts' local air in the built kit (T-H2), the junctions' modeled rise (THM-001), the 33 lines cleared only by an
+      absolute rating (section 7), the fans' rating (D-18); CFL-002 is the owner's
+   M3 REQ-024 and E3-L at +40 C, lid closed: the heat stage on the pack. Heat 25.536 W (the heat stage at the pack 23.272, the
+      cells' discharge I2R 0.174, L4-E8's ballasts 2.090); +40.0 C; lid closed.
+      2.554  W/K  the air to  50.00 C  the SGP41's sensing at its bay air to Table 4's +50 C [MAKER recommended (Table 4)]
+      1.666  W/K  the air to  55.32 C  the cells: the hot stop H1 at a +56.5 C reading (CONOPS 4c; a hot stop inside the
+                envelope ends the mode) [CONTROL, ends the mode]
+      1.357  W/K  the air to  58.82 C  the cells: the 35E's discharge to +60 C at the surface [MAKER operating]
+      1.277  W/K  the air to  60.00 C  EPAPER, off, at the face (at most the mixed air) [operating, INFERRED to cover it
+                unpowered]
+      0.851  W/K  the air to  70.00 C  RB9704, work, at its local air [operating]
+      0.851  W/K  the air to  70.00 C  LIME, off, at its local air [storage]
+      every other line needs at most 0.851 W/K
+      screens (absolute, never lines): the SGP41 unpowered above its 54.0 C reading (its protective shutdown): Table 5's
+      short-term storage to +70 C (ABSOLUTE: a screen, survival INCONCLUSIVE until Sensirion states it)
+      GOVERNING (the route's measures): as ruled: the SGP41's Table 4, 2.554 W/K, a reading of at least 2.905 W/K; C, A and B:
+      the cells' hot stop H1, 1.666 W/K, a reading of at least 1.804 W/K.
+      As designed (no route measure; the SGP41 as ruled): the SGP41's Table 4, 2.554 W/K.
+      REMAINING: T-H1's lid-closed point at this heat; the cells' own rise in the pocket (the block's film 5 to 15 W/m2K, the
+      lowest taken; L4-E10, U-01) and the gauge's reading error at H1 (records/hc2/hotstop_bounds.out; the thresholds
+      PROVISIONAL, HOT-R1 owed on boards A and E, CONOPS 4c); the parts' local air in the built kit (T-H2), the junctions'
+      modeled rise (THM-001), the 33 lines cleared only by an absolute rating (section 7), the fans' rating (D-18); CFL-002 is
+      the owner's
+   M4 the same on shore, lid closed (E3-L's second half). Heat 27.086 W (the heat stage at the pack 23.272, the source path (on
+      shore) 1.725, L4-E8's ballasts 2.090); +40.0 C; lid closed.
+      2.709  W/K  the air to  50.00 C  the SGP41's sensing at its bay air to Table 4's +50 C [MAKER recommended (Table 4)]
+      1.642  W/K  the air to  56.50 C  the cells idle at the air: the hot stop H1 at +56.5 C [CONTROL, ends the mode]
+      1.354  W/K  the air to  60.00 C  the cells idle: E3-A's every cell surface at most +60 C (the 35E's one-month storage to
+                +60 C) [MAKER storage; E3-A's pass line]
+      1.354  W/K  the air to  60.00 C  EPAPER, off, at the face (at most the mixed air) [operating, INFERRED to cover it
+                unpowered]
+      0.903  W/K  the air to  70.00 C  RB9704, work, at its local air [operating]
+      0.903  W/K  the air to  70.00 C  LIME, off, at its local air [storage]
+      every other line needs at most 0.903 W/K
+      screens (absolute, never lines): the SGP41 unpowered above its 54.0 C reading (its protective shutdown): Table 5's
+      short-term storage to +70 C (ABSOLUTE: a screen, survival INCONCLUSIVE until Sensirion states it)
+      GOVERNING (the route's measures): as ruled: the SGP41's Table 4, 2.709 W/K, a reading of at least 3.081 W/K; C, A and B:
+      the idle cells' hot stop H1, 1.642 W/K, a reading of at least 1.767 W/K.
+      As designed (no route measure; the SGP41 as ruled): the SGP41's Table 4, 2.709 W/K.
+      REMAINING: T-H1's lid-closed point at this heat; the idle cells at the air and the gauge's reading error at H1; the parts'
+      local air in the built kit (T-H2), the junctions' modeled rise (THM-001), the 33 lines cleared only by an absolute rating
+      (section 7), the fans' rating (D-18); CFL-002 is the owner's
+   M5 REQ-014 at +20 C: PS-IDLE-SPEC on the pack, battery-only, unshed by C1. Heat 43.413 W (the profile at the pack 42.824, the
+      cells' discharge I2R 0.590); +20.0 C; lid open.
+      1.447  W/K  the air to  50.00 C  the inside air: C1's trigger +50 C (CONOPS 4) [CONTROL, sheds the profile]
+      1.447  W/K  the air to  50.00 C  the SGP41's sensing at its bay air to Table 4's +50 C [MAKER recommended (Table 4)]
+      1.400  W/K  the air to  51.02 C  the cells: C1's cell trigger +55 C (the profile unshed) [CONTROL, sheds the profile]
+      1.335  W/K  the air to  52.52 C  the cells: the hot stop H1 at a +56.5 C reading (CONOPS 4c; a hot stop inside the
+                envelope ends the mode) [CONTROL, ends the mode]
+      1.205  W/K  the air to  56.02 C  the cells: the 35E's discharge to +60 C at the surface [MAKER operating]
+      1.085  W/K  the air to  60.00 C  EPAPER, work, at the face (at most the mixed air) [operating]
+      every other line needs at most 0.868 W/K
+      screens (absolute, never lines): the SGP41 unpowered above its 54.0 C reading (its protective shutdown): Table 5's
+      short-term storage to +70 C (ABSOLUTE: a screen, survival INCONCLUSIVE until Sensirion states it)
+      GOVERNING (the route's measures): every option: C1's air trigger, 1.447 W/K, a reading of at least 1.508 W/K.
+      As designed (no route measure; the SGP41 as ruled): C1's air trigger, 1.447 W/K.
+      REMAINING: T-H1's point at the profile's heat; the cells' own rise in the pocket (the block's film 5 to 15 W/m2K, the
+      lowest taken; L4-E10, U-01) and the gauge's reading error at H1 (records/hc2/hotstop_bounds.out; the thresholds
+      PROVISIONAL, HOT-R1 owed on boards A and E, CONOPS 4c); the battery-only run's transient (12c): on the bound C1 sheds the
+      profile before its energy ends; the parts' local air in the built kit (T-H2), the junctions' modeled rise (THM-001), the
+      33 lines cleared only by an absolute rating (section 7), the fans' rating (D-18); CFL-002 is the owner's
+   M6 E3-O at D-02a's +55 C margin, 4 h: the heat stage, every radio C1 leaves on, on shore, the cells kept out (TEST-PLAN's
+      deviation). Heat 27.086 W (the heat stage at the pack 23.272, the source path (on shore) 1.725, L4-E8's ballasts 2.090);
+      +55.0 C; lid open.
+      5.417  W/K  the air to  60.00 C  EPAPER, off, at the face (at most the mixed air) [operating, INFERRED to cover it
+                unpowered]
+      1.806  W/K  the air to  70.00 C  RB9704, work, at its local air [operating]
+      1.806  W/K  the air to  70.00 C  LIME, off, at its local air [storage]
+      1.806  W/K  the air to  70.00 C  SA868, work, at its local air [operating]
+      1.806  W/K  the air to  70.00 C  PCM2912A, work, at its local air [recommended]
+      1.806  W/K  the air to  70.00 C  G6K, work, at its local air [operating]
+      every other line needs at most 1.806 W/K
+      screens (absolute, never lines): the SGP41 unpowered above its 54.0 C reading (its protective shutdown): Table 5's
+      short-term storage to +70 C (ABSOLUTE: a screen, survival INCONCLUSIVE until Sensirion states it)
+      GOVERNING (the route's measures): every option: the EPAPER's +60 C, 5.417 W/K, a reading of at least 7.758 W/K.
+      Without the INFERRED reading (once the maker states the unpowered range at or over its operating top): the RB9704's +70 C
+      (operating), 1.806 W/K, a reading of at least 1.958 W/K.
+      As designed (no route measure; the SGP41 as ruled): the ATP19's +55 C, no conductance.
+      REMAINING: the e-paper's unpowered range (PDi's storage statement, the clarification drafted; only its operating row is
+      held); E3-O runs with the cells kept out (TEST-PLAN's deviation): the fitted pack at the margin is U-01's (BAT-F19,
+      CFL-017); the unpowered SGP41's short-term storage duration (Sensirion); T-H1's lid-open point at the heat stage's heat;
+      the parts' local air in the built kit (T-H2), the junctions' modeled rise (THM-001), the 33 lines cleared only by an
+      absolute rating (section 7), the fans' rating (D-18); CFL-002 is the owner's
+   M7 E5's +60 C dwell: the hold, logging, on shore, the cells kept out (TEST-PLAN's deviation). Heat 21.587 W (the hold at the
+      pack 18.152, the source path (on shore) 1.345, L4-E8's ballasts 2.090); +60.0 C; lid open.
+      inf    W/K  the air to  60.00 C  EPAPER, off, at the face (at most the mixed air) [operating, INFERRED to cover it
+                unpowered]
+      2.159  W/K  the air to  70.00 C  RB9704, off, at its local air [operating, INFERRED to cover it unpowered]
+      2.159  W/K  the air to  70.00 C  LIME, off, at its local air [storage]
+      2.159  W/K  the air to  70.00 C  SA868, off, at its local air [operating, INFERRED to cover it unpowered]
+      2.159  W/K  the air to  70.00 C  PCM2912A, off, at its local air [recommended, INFERRED to cover it unpowered]
+      2.159  W/K  the air to  70.00 C  G6K, off, at its local air [operating, INFERRED to cover it unpowered]
+      every other line needs at most 2.159 W/K
+      screens (absolute, never lines): the SGP41 unpowered above its 54.0 C reading (its protective shutdown): Table 5's
+      short-term storage to +70 C (ABSOLUTE: a screen, survival INCONCLUSIVE until Sensirion states it)
+      GOVERNING (the route's measures): every option: the EPAPER's +60 C, no conductance (the limit at or under the ambient).
+      Without the INFERRED reading (once the maker states the unpowered range at or over its operating top): the LIME's +70 C
+      (storage), 2.159 W/K, a reading of at least 2.455 W/K.
+      As designed (no route measure; the SGP41 as ruled): the ATP19's +55 C, no conductance.
+      REMAINING: the e-paper's unpowered range as in M6, with no conductance meeting its operating row at E5's +60 C; the cells
+      kept out (TEST-PLAN's deviation; U-01, BAT-F19); the parts the hold turns off on their operating rows read to cover them
+      unpowered until their makers state storage; T-H1's point at the hold's heat; the parts' local air in the built kit (T-H2),
+      the junctions' modeled rise (THM-001), the 33 lines cleared only by an absolute rating (section 7), the fans' rating
+      (D-18); CFL-002 is the owner's
+   M8 charging on SC-37's design day, cold end: PS-IDLE-SPEC running, the solar stage charging the pack. Heat 52.134 W (the
+      profile at the battery node 42.824, the source path 3.174, the charge path 3.446, the charging cells' I2R 0.600, L4-E8's
+      ballasts 2.090); +13.2 C; lid open.
+      2.025  W/K  the air to  38.95 C  the cells charging: T4's stop above 43 C [CONTROL, a running charge stops]
+      1.949  W/K  the air to  39.95 C  the cells charging: OTC at 44.0 C [CONTROL, the charge held off]
+      1.879  W/K  the air to  40.95 C  the cells charging: the 35E's charge to +45 C at the surface [MAKER operating]
+      1.810  W/K  the air to  42.00 C  the cells idle at the air before the charge: T3's start at 42 C [CONTROL, no charge
+                starts]
+      1.417  W/K  the air to  50.00 C  the inside air: C1's trigger +50 C (CONOPS 4) [CONTROL, sheds the profile]
+      1.417  W/K  the air to  50.00 C  the SGP41's sensing at its bay air to Table 4's +50 C [MAKER recommended (Table 4)]
+      every other line needs at most 1.114 W/K
+      screens (absolute, never lines): the SGP41 unpowered above its 54.0 C reading (its protective shutdown): Table 5's
+      short-term storage to +70 C (ABSOLUTE: a screen, survival INCONCLUSIVE until Sensirion states it)
+      GOVERNING (the route's measures): every option: T4 on the charging cells, 2.025 W/K, a reading of at least 2.123 W/K.
+      As designed (no route measure; the SGP41 as ruled): T4 on the charging cells, 2.025 W/K.
+      REMAINING: T-H1's point at the charging heat; the charging cells' rise over the air (U-01); the source path's efficiency
+      (the model's 0.95 front end taken for the solar stage, INFERRED); a charge started under T3 cycles on T4 once the cells
+      pass it; the parts' local air in the built kit (T-H2), the junctions' modeled rise (THM-001), the 33 lines cleared only by
+      an absolute rating (section 7), the fans' rating (D-18); CFL-002 is the owner's
+   M9 the same, warm end. Heat 52.134 W (the profile at the battery node 42.824, the source path 3.174, the charge path 3.446,
+      the charging cells' I2R 0.600, L4-E8's ballasts 2.090); +18.3 C; lid open.
+      2.525  W/K  the air to  38.95 C  the cells charging: T4's stop above 43 C [CONTROL, a running charge stops]
+      2.408  W/K  the air to  39.95 C  the cells charging: OTC at 44.0 C [CONTROL, the charge held off]
+      2.302  W/K  the air to  40.95 C  the cells charging: the 35E's charge to +45 C at the surface [MAKER operating]
+      2.200  W/K  the air to  42.00 C  the cells idle at the air before the charge: T3's start at 42 C [CONTROL, no charge
+                starts]
+      1.645  W/K  the air to  50.00 C  the inside air: C1's trigger +50 C (CONOPS 4) [CONTROL, sheds the profile]
+      1.645  W/K  the air to  50.00 C  the SGP41's sensing at its bay air to Table 4's +50 C [MAKER recommended (Table 4)]
+      every other line needs at most 1.250 W/K
+      screens (absolute, never lines): the SGP41 unpowered above its 54.0 C reading (its protective shutdown): Table 5's
+      short-term storage to +70 C (ABSOLUTE: a screen, survival INCONCLUSIVE until Sensirion states it)
+      GOVERNING (the route's measures): every option: T4 on the charging cells, 2.525 W/K, a reading of at least 2.677 W/K.
+      As designed (no route measure; the SGP41 as ruled): T4 on the charging cells, 2.525 W/K.
+      REMAINING: as M8, at the design day's warm end
+   CFL-002, restated with C as defined: as ruled today (no option taken; REQ-042's VOC channel sensing across the envelope) the
+   SGP41's Table 4 +50 C governs the heat stage at +40 C, 2.554 W/K on the pack and 2.709 W/K on shore (M1, M2, and lid closed
+   M3, M4); under C the channel is reported not covered above its 49.0 C reading and the sensor is off from 54.0 C, so the
+   governing line moves to the cells' hot stop H1, 1.666 W/K on the pack and 1.642 W/K on shore, with the unpowered SGP41's
+   survival a screen until Sensirion states its short-term storage duration; under A (a BME688 in its place, operable to +85 C)
+   and B (the channel dropped) the line is H1's as under C, A owing the BME688's gas performance above +40 C. C restricts
+   REQ-042's channel inside the envelope, which D-02a does not grant today: CFL-002 stays the owner's.
+   What a bench point closes. T-H1 is a dummy-load, mixed-air measurement: one passing point establishes the conductance between
+   the mixed air and the ambient for its own configuration (lid state, fan state and supply, heat, heat placement, room air),
+   and the temperature offsets it records. It closes no mode's functionality: the cells' rise in the pack, the parts' local air
+   in the built kit, the junctions, the hot stop's thresholds and every functional check of E3-A, E3-L, E3-O and E5 stay with
+   their own evidence (U-01, T-H2, THM-001, E3-H). Lid-closed and fans-off states need their own points; the room-to-operating
+   translation of 11d is a model, not a validation of other fans, flow restrictions, lid states or heat placements.
+12b B4, THE CHARGING HEAT AS A BALANCE (CORRECTED: section 11 added only the charge increment to the battery profile's heat and
+   left out the source path's loss on the profile's own power). On the model's boundary (pwr_budget: the charge path at 0.98 x
+   0.95 = 0.931, ICHG 3.0 A into the pack at 15.5 V): input 95.944 W less stored 45.900 W less exported 0.000 W = 50.044 W of
+   heat, which is the profile's 42.824 W at the battery node, the source path's 3.17382 W, the charge path's 3.44629 W and the
+   charging cells' 0.600 W; the reviewer's 50.04367 W reproduced. On SC-37's design day the charge comes through the solar
+   stage, so L4-E8's ballasts add 2.09 W at their worst corner (the margins' rule): 52.134 W, used in sections 10, 11 and 12a.
+   K7 and K8 (T3's start, the idle cells at the air), each with its bench reading:
+      +13.2 C at 50.044 W: needs 1.7376 W/K, a reading of at least 1.8135 W/K
+      +13.2 C at 52.134 W: needs 1.8102 W/K, a reading of at least 1.8892 W/K
+      +18.3 C at 50.044 W: needs 2.1115 W/K, a reading of at least 2.2221 W/K
+      +18.3 C at 52.134 W: needs 2.1997 W/K, a reading of at least 2.3150 W/K
+   A running charge is governed by T4 on the charging cells, their own 0.600 W over the block's film adding 1.35 to 4.05 K (12a,
+   M8 and M9). Section 2d's charge in E3-O keeps the charge path's 3.446 W only: the pack is outside the case there, its cells'
+   I2R with it.
+12c B7, THE BATTERY-ONLY RUN COUPLED TO C1 (MODELED, energy-and-thermal). The run: PS-IDLE-SPEC on the pack (42.824 W at the
+   pack, 43.413 W into the case) from a kit soaked at +20 C, lid open, shaded, still air; C1 moves the kit to the reduced mode
+   at the inside air's +50 C and, its trigger still holding at the next reading, to the heat stage (23.272 W at the pack, 23.446
+   W into the case; CONOPS states no dwell between the two, the model takes none); the reduced mode's restore, 5 K under the
+   trigger, is not reached; the run ends on the 35E's usable 107.9 Wh at the profile's rate (the shed states' slightly larger
+   usable energy, energy_budget's PS-SURV-R row, not credited); the cells quasi-steady over the air by their own I2R over the
+   block's lowest film; one node, C the kit's 8 to 10 kJ/K (32.53). The reviewer's constant-G check reproduced (C 8 kJ/K): G
+   0.6711 W/K reaches C1 at 2.063 h and, unshed, the air 54.46 C at 2.52 h; G 0.7404 W/K reaches C1 at 2.151 h and, unshed, the
+   air 53.31 C at 2.52 h.
+   The enclosure model's own G(rise) (section 9, lid open), integrated in 10 s steps:
+      the bound                      C  8.0 kJ/K: C1 at 2.01 h, then the heat stage for 0.94 h; the run 2.95 h; the air at most 51.21 C, the cells at most 53.99 C (H1 at 56.5 C not reached)
+      the bound                      C 10.0 kJ/K: C1 at 2.51 h, then the heat stage for 0.01 h; the run 2.52 h; the air at most 50.02 C, the cells at most 53.99 C (H1 at 56.5 C not reached)
+      the coefficients' other ends   C  8.0 kJ/K: C1 at 2.09 h, then the heat stage for 0.79 h; the run 2.88 h; the air at most 50.41 C, the cells at most 54.00 C (H1 at 56.5 C not reached)
+      the coefficients' other ends   C 10.0 kJ/K: C1 not reached; the run 2.52 h; the air at most 49.33 C, the cells at most 53.31 C (H1 at 56.5 C not reached)
+   So, ENERGY-AND-THERMAL (MODELED, on the bound and its other ends): C1 sheds the profile from 2.01 to 2.51 h where it acts,
+   and the runtime with the shed states is 2.52 to 2.95 h, of which 2.01 to 2.51 h unshed; where C1 does not act, the profile
+   runs its 2.52 h. The profile runs its whole energy unshed only from a constant 0.960 W/K at C 8 kJ/K (0.630 W/K at 10 kJ/K),
+   and for any duration from K6's 1.447 W/K. ENERGY ONLY: 2.52 h (107.9 Wh at 42.8 W) stays labelled energy-only; it is not an
+   established unshed PS-IDLE-SPEC endurance. No hot stop on the bound. The bench runs that would show it: on T-H1's bench, a
+   transient point, the empty case soaked at room temperature, the heaters stepped to the profile's heat less the fans' draw
+   (40.443 W) and, when the mixed air has risen 30 K, to the heat stage's battery-only heat less the fans' draw (21.496 W),
+   logged to the run's end: the time to C1 and the air after it (the empty case's thermal mass is under the kit's: the
+   conservative side); then, on the built kit (Layer 9), a battery-only PS-IDLE-SPEC run from a 24 h soak at +20 C, lid open,
+   shaded, still air, logging the inside air at the hold's reference, the four cell thermistors, the gauge's energy and every C1
+   transition to the graceful shutdown: the runtime with its shed states, and the cells under H1. Authorisation is the owner's,
+   acceptance the coordinator's check.
+12d THE BENCH POINTS (T-H1-PROCEDURE-DRAFT.md): one per heat and lid state, the fans on, each reading the conductance its
+   configuration has and nothing else; each mode's governing reading as ruled and under C (12a), and where the governing line is
+   an operating row read to cover an unpowered part, the maker-stated line beside it; the duration at the lowest reading (tau =
+   C / G, C 10 kJ/K; steady within 1 % of the rise at ln(100) tau, then an hour averaged; a first-order fit needs three time
+   constants):
+      M2 and M6 at 27.086 W, lid open: M2 as ruled: the SGP41's Table 4 2.709 W/K read at 3.081; M2 C: the idle cells' hot stop
+         H1 1.642 W/K read at 1.767; M6 as ruled: the EPAPER's +60 C 5.417 W/K read at 7.758 (stated: the RB9704's +70 C 1.806
+         W/K read at 1.958); M6 C: the EPAPER's +60 C 5.417 W/K read at 7.758 (stated: the RB9704's +70 C 1.806 W/K read at
+         1.958); tau 1.57 h, steady at 7.2 h, the fit's three time constants 4.7 h
+      M1 at 25.536 W, lid open: M1 as ruled: the SGP41's Table 4 2.554 W/K read at 2.905; M1 C: the cells' hot stop H1 1.666 W/K
+         read at 1.804; tau 1.54 h, steady at 7.1 h, the fit's three time constants 4.6 h
+      M4 at 27.086 W, lid closed: M4 as ruled: the SGP41's Table 4 2.709 W/K read at 3.081; M4 C: the idle cells' hot stop H1
+         1.642 W/K read at 1.767; tau 1.57 h, steady at 7.2 h, the fit's three time constants 4.7 h
+      M3 at 25.536 W, lid closed: M3 as ruled: the SGP41's Table 4 2.554 W/K read at 2.905; M3 C: the cells' hot stop H1 1.666
+         W/K read at 1.804; tau 1.54 h, steady at 7.1 h, the fit's three time constants 4.6 h
+      M7 at 21.587 W, lid open: M7 as ruled: the EPAPER's +60 C no conductance (stated: the LIME's +70 C 2.159 W/K read at
+         2.455); M7 C: the EPAPER's +60 C no conductance (stated: the LIME's +70 C 2.159 W/K read at 2.455); tau 1.13 h, steady
+         at 5.2 h, the fit's three time constants 3.4 h
+      M5 at 43.413 W, lid open: M5 as ruled: C1's air trigger 1.447 W/K read at 1.508; M5 C: C1's air trigger 1.447 W/K read at
+         1.508; tau 1.84 h, steady at 8.5 h, the fit's three time constants 5.5 h
+      M8 and M9 at 52.134 W, lid open: M8 as ruled: T4 on the charging cells 2.025 W/K read at 2.123; M8 C: T4 on the charging
+         cells 2.025 W/K read at 2.123; M9 as ruled: T4 on the charging cells 2.525 W/K read at 2.677; M9 C: T4 on the charging
+         cells 2.525 W/K read at 2.677; tau 1.31 h, steady at 6.0 h, the fit's three time constants 3.9 h
+   Then the fans-off case at M2's heat (no pass line: the failure case) and 12c's transient point. A point passes for a mode and
+   option when its reading meets that line; it closes that conductance only.
+12e THE OUTSIDE CAPACITY (the addendum to the fix round, the coordinator's question of 2 October 2026: which lines a reading can
+   pass at all). The outside surfaces' capacity with the inside resistance at zero (every inner face at the inside air, the 3 mm
+   aluminium plate isothermal), at each line's own ambient and rise, still air: bare (the plate's outer face and the walls
+   through the PP shell; lid closed, the enclosed layer, the lid's shell and its outside films; the floor credited only at the
+   optimistic ends, its feet over a support at the ambient) and with the combined route of 10b (R-170, fins of multiplier 2 at
+   the conservative end and 3 at the optimistic on the free strips' 0.0552 m2, adding 0.0552 to 0.1105 m2 of effective outside
+   area; R-171, the large loads led into the plate, which adds nothing once the inner faces sit at the air; R-172, the open
+   lid's skin, 0.0803 m2 on its 2.56 K/W strap; the route acts with the lid open only, so lid closed it is the bare case).
+   Conservative coefficient ends (the plate's emissivity 0.70, the shell's 0.85, PP at 0.12 W/mK, the plate's view 0.70) and
+   optimistic ends (0.90, 0.95, 0.22, 1.00, the floor credited). CORRECTION: section 9's 'cap' (1.540 W/K at E5's rise, 1.571 at
+   E3-O's) is the bound with a 50 m/s inside flow, whose film is near 45 W/m2K; the capacity proper at those rises is 1.856 and
+   1.906 W/K on the conservative ends. Class (i): reachable bare, T-H1 decides; (ii): reachable only with the route fitted, T-H1
+   with the route decides; (iii): over the capacity even with the route and the optimistic ends, so no measurement can pass it:
+   a contradiction between the rulings (no vent, the Peli 1450, the device set) and that mode's requirement, the owner's. Each
+   class is read at the optimistic ends (what physics may allow); the class at the conservative ends is printed beside it.
+      M1, lid open, +40.0 C, rise 10.00 K: the SGP41's Table 4 (governing, as ruled) needs 2.554 W/K; capacity bare 1.725 /
+         2.849, with the route 2.468 / 4.391 W/K (conservative / optimistic): class (i), (iii) at the conservative ends
+      M1, lid open, +40.0 C, rise 15.32 K: the cells' hot stop H1 (governing, C) needs 1.666 W/K; capacity bare 1.815 / 2.969,
+         with the route 2.594 / 4.589 W/K (conservative / optimistic): class (i)
+      M2, lid open, +40.0 C, rise 10.00 K: the SGP41's Table 4 (governing, as ruled) needs 2.709 W/K; capacity bare 1.725 /
+         2.849, with the route 2.468 / 4.391 W/K (conservative / optimistic): class (i), (iii) at the conservative ends
+      M2, lid open, +40.0 C, rise 16.50 K: the idle cells' hot stop H1 (governing, C) needs 1.642 W/K; capacity bare 1.832 /
+         2.993, with the route 2.617 / 4.627 W/K (conservative / optimistic): class (i)
+      M3, lid closed, +40.0 C, rise 10.00 K: the SGP41's Table 4 (governing, as ruled) needs 2.554 W/K; capacity bare 1.335 /
+         2.279, with the route 1.335 / 2.279 W/K (conservative / optimistic): class (iii); SHORT by 0.275 W/K, 2.749 W, of the
+         route's optimistic capacity
+      M3, lid closed, +40.0 C, rise 15.32 K: the cells' hot stop H1 (governing, C) needs 1.666 W/K; capacity bare 1.385 / 2.356,
+         with the route 1.385 / 2.356 W/K (conservative / optimistic): class (i), (iii) at the conservative ends
+      M4, lid closed, +40.0 C, rise 10.00 K: the SGP41's Table 4 (governing, as ruled) needs 2.709 W/K; capacity bare 1.335 /
+         2.279, with the route 1.335 / 2.279 W/K (conservative / optimistic): class (iii); SHORT by 0.430 W/K, 4.300 W, of the
+         route's optimistic capacity
+      M4, lid closed, +40.0 C, rise 16.50 K: the idle cells' hot stop H1 (governing, C) needs 1.642 W/K; capacity bare 1.395 /
+         2.371, with the route 1.395 / 2.371 W/K (conservative / optimistic): class (i), (iii) at the conservative ends
+      M5, lid open, +20.0 C, rise 30.00 K: C1's air trigger (governing, as ruled) needs 1.447 W/K; capacity bare 1.875 / 2.950,
+         with the route 2.686 / 4.596 W/K (conservative / optimistic): class (i)
+      M6, lid open, +55.0 C, rise 5.00 K: the EPAPER's +60 C (governing, as ruled) needs 5.417 W/K; capacity bare 1.704 / 2.915,
+         with the route 2.429 / 4.462 W/K (conservative / optimistic): class (iii); SHORT by 0.955 W/K, 4.775 W, of the route's
+         optimistic capacity
+      M6, lid open, +55.0 C, rise 15.00 K: the RB9704's +70 C (maker-stated, as ruled) needs 1.806 W/K; capacity bare 1.906 /
+         3.181, with the route 2.714 / 4.904 W/K (conservative / optimistic): class (i)
+      M7, lid open, +60.0 C: the EPAPER's +60 C (governing, as ruled) at or under the ambient: no capacity at a zero rise; class
+         (iii), the whole 21.587 W short
+      M7, lid open, +60.0 C, rise 10.00 K: the LIME's +70 C (maker-stated, as ruled) needs 2.159 W/K; capacity bare 1.856 /
+         3.144, with the route 2.642 / 4.831 W/K (conservative / optimistic): class (i), (ii) at the conservative ends
+      M8, lid open, +13.2 C, rise 25.75 K: T4 on the charging cells (governing, as ruled) needs 2.025 W/K; capacity bare 1.797 /
+         2.803, with the route 2.578 / 4.369 W/K (conservative / optimistic): class (i), (ii) at the conservative ends
+      M8, lid open, +13.2 C, rise 28.80 K: T3's charge start (the start line (K7, K8)) needs 1.810 W/K; capacity bare 1.829 /
+         2.849, with the route 2.623 / 4.443 W/K (conservative / optimistic): class (i)
+      M9, lid open, +18.3 C, rise 20.65 K: T4 on the charging cells (governing, as ruled) needs 2.525 W/K; capacity bare 1.764 /
+         2.782, with the route 2.531 / 4.326 W/K (conservative / optimistic): class (i), (ii) at the conservative ends
+      M9, lid open, +18.3 C, rise 23.70 K: T3's charge start (the start line (K7, K8)) needs 2.200 W/K; capacity bare 1.800 /
+         2.833, with the route 2.581 / 4.409 W/K (conservative / optimistic): class (i), (ii) at the conservative ends
+   The class (iii) lines and their options (none lowers a requirement silently; each names its owner): (1) E3-L at +40 C with
+   the lid closed as ruled (M3 on the pack, M4 on shore): the SGP41's Table 4 +50 C lies over the closed case's capacity.
+   Options: CFL-002's C, A or B (the owner's), which move the line to the cells' hot stop H1, 1.666 and 1.642 W/K, under the
+   closed capacity's optimistic end and over its conservative one, so T-H1's lid-closed point decides; a closed-lid ceiling on
+   REQ-042's VOC channel (a requirement change, the owner's: the bay air holds Table 4's +50 C lid closed only to an ambient of
+   +31.3 to +38.8 C on the pack and +30.2 to +38.2 C on shore, conservative to optimistic); D-02b's closed-lid test at +40 C
+   restated (a ruling change, the owner's); a closed-lid conduction path from the plate to the lid's inner face inside the seal
+   (the session's to develop at Layer 7; not modelled here, so it closes nothing yet). (2) E3-O at +55 C (M6): the e-paper,
+   unpowered, judged on its +60 C operating row read to cover it (INFERRED), lies over the route's capacity. Options: PDi's
+   storage statement (the request is drafted in clarification/pervasive-displays-e2370ks0c1.txt; sending it is the owner's),
+   with a range at or over +70 C the line becomes the +70 C class, 1.806 W/K, class (i); the e-paper's own temperature at its
+   window in the plate rather than the mixed air (the session's: a T-H1 channel at the window), at the bound's plate fraction
+   0.362 it needs 1.963 W/K and at W4's high fraction 0.725 it needs 3.926 W/K, both under the route's optimistic capacity, so
+   the measured fraction decides; an e-paper with a held range at or over +70 C (CHO-001, the owner's); E3-O run with the
+   e-paper's state as a recorded deviation (TEST-PLAN's owner). (3) E5's +60 C dwell (M7): the same e-paper at an ambient equal
+   to its operating top: no capacity and no plate fraction carries it. Options: PDi's statement (then the LimeSDR's +70 C
+   storage row, 2.159 W/K, class (i) at the optimistic ends); a different e-paper (CHO-001, the owner's); E5 run with the
+   e-paper out as a recorded deviation (TEST-PLAN's owner). Charging (M8, M9) is not class (iii); for scale, charging only in
+   the heat stage (31.133 W into the case) would need 1.209 and 1.508 W/K at T4's line, class (i) at both ends, at the cost of
+   the profile while charging (the 48 to 72 h DESIGN OBJECTIVE, already NOT MET, would lose the profile's service during the
+   charge: an owner's choice of duty cycle, not taken).
+
+13 Predicates
    P1 pwr_budget and pwr_red2 reproduced byte for byte before any figure: PASS
    P2 T-H1's floor and the inside air reproduce L4-E10's 1.6664 W/K, 70.00 and 75.00 C: PASS
    P3 the acceptance is read: survive and recover, the CM5 not shut down, the monitor and radios on, C1's shedding recorded, E5 logging: PASS
@@ -1203,9 +1557,13 @@ section 10 the heat-rejection question (section 15), section 11 the thermal reco
    P17 T-H1's pass line lies over 2.159 W/K by its expanded uncertainty and every point reaches steady state in a stated time: PASS
    P18 the plate coupling holds E5 and E3-O below E3-O's line, and the deeper hold lowers E5's heat (the session's fallbacks): PASS
    P19 the conservative bound comes from held geometry at the coefficients' conservative ends, under W4's low case, and the reconciliation ends at it: PASS
-   P20 U-02's class follows from the bound: the lines over the outside films' cap, E3-O's gap positive with every session measure, so T-H1 decides: PASS
+   P20 U-02's class follows from the bound: the lines over the bound with a 50 m/s inside flow, E3-O's gap positive with every session measure, so T-H1 decides: PASS
    P21 heat rejection on the bound: no approach reaches the profile at +40 C (the best short by a positive margin) nor charging on the design day; U-02 stays a closure condition: PASS
-   P22 the reconciliation: 1.509 W/K at 42.4 W is 1.447 W/K after its uncertainty, the +55 C inside-air limit is the heat stage's (1.806 W/K, LO-01a with the ballasts), the room reading conservative, every heater spread summing to its setting, A k on the case's own films under steel's and the need, the need between the bound's cap and W4's high case: PASS
+   P22 the reconciliation: 1.509 W/K at 42.4 W is 1.447 W/K after its uncertainty, K1's screen (Table 5's +55 C, not a line) at LO-01a's floor with the ballasts (1.806 W/K), the room reading conservative, every heater spread summing to its setting, A k on the case's own films under steel's and the need, the need between the bound's cap and W4's high case: PASS
+   P23 B3: no absolute rating is a line; the SGP41's sensing is Table 4's (as ruled), C moves the heat stage's line to the cells' hot stop, and every mode's governing line is its tightest local line: PASS
+   P24 B4: the charging heat is input less stored less exported, the reviewer's 50.044 W on the model's boundary, and K7 and K8 carry it with the ballasts: PASS
+   P25 B7: the battery-only run reaches C1 before its energy ends on the bound at C 8 kJ/K, the reviewer's constant-G figures reproduced, no hot stop, 2.52 h energy-only: PASS
+   P26 the addendum: every line classed against the outside capacity with a zero inside resistance (bare and with the route); class (iii) is E3-L lid closed as ruled and the e-paper at E3-O and E5, no other: PASS
 
 Pinned inputs (sha256):
    55244f94aace54ca09d98c100b9830cba75c70a4774c3ba375a14903fcaf6376 v2/docs/CASE-MARGINS.md
