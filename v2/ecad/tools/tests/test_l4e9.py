@@ -19,6 +19,11 @@ part A) are in the rows and only L4-E7R's CS101 follow-up (D-01) stays PENDING; 
 choices, never as register tasks, and a gate that PASSes on one is refused; the page's defect and choice tables are the
 script's; every figure a choice or a defect states is printed by the reconciliation outside the gate. These are software
 predicates on the record's own text and arithmetic: they establish no electrical or thermal property.
+
+Fix round (2 October 2026, the focused check's B1 to B4): the hot-swap draft applies once and composes; the drawn power limit
+is under TI's 5 mV and the selected one at or above it, the complete pulse sits inside Figure 10 at the same voltage and the
+derived case temperature, and IF-05 reads CONDITIONAL; no file cites ASM-001 as an exemption and D-06 stays open; R227's
+transients stay inside the INA226's limits for every required event; U-04 is a choice in criteria 1 and 5; the check is filed.
 """
 import ast
 import copy
@@ -41,6 +46,7 @@ OUT = os.path.join(REC, "l4e9_power_path.out")
 Q1 = os.path.join(REC, "apply_gen_sch_e_q1.py")
 F1 = os.path.join(REC, "apply_gen_sch_e_f1.py")
 U17 = os.path.join(REC, "apply_gen_sch_a_u17.py")
+HS = os.path.join(REC, "apply_gen_sch_e_hotswap.py")
 GEN_A = os.path.join(ROOT, "v2", "ecad", "tools", "gen_sch_a.py")
 GEN_E = os.path.join(ROOT, "v2", "ecad", "tools", "gen_sch_e.py")
 NET_E = os.path.join(ROOT, "v2", "ecad", "pcb-e1-dock-e7", "out", "pcb-e1-dock.net")
@@ -186,7 +192,7 @@ def t_every_draft_of_l4e4_to_l4e8_is_registered_and_the_missing_ones_are_marked(
     miss = [r for r in rows if r[6] == "MISSING DRAFT"]
     assert any("ILIM_HIZ" in r[2] for r in miss), "L4-E5's ILIM_HIZ network is not marked MISSING DRAFT"
     assert any("R10" in r[2] for r in miss), "L4-E5's R10 is not marked MISSING DRAFT"
-    for n in ("apply_gen_sch_e_q1.py", "apply_gen_sch_e_f1.py", "apply_gen_sch_a_u17.py"):
+    for n in ("apply_gen_sch_e_q1.py", "apply_gen_sch_e_f1.py", "apply_gen_sch_a_u17.py", "apply_gen_sch_e_hotswap.py"):
         assert any("`%s`" % n in r[3] for r in rows), "this record's own draft %s is not registered" % n
 
 
@@ -442,7 +448,8 @@ def t_the_part_a_page_agrees_with_the_output():
     page = open(os.path.join(REC, "L4E9-ENTRY-PROPOSALS.md"), encoding="utf-8").read()
     sec = _C["text"].split("11. PART A")[1]
     for fig in ("66.15", "0.361", "80.2", "38.83", "30.83", "569.8", "7.3 A", "0.309", "85.9", "18.59", "72.38", "1.037", "16.384", "2048", "1.475",
-                "6.346", "6.458", "39.04", "43.92", "39.71", "43.18", "42.4 V"):
+                "6.346", "6.458", "39.04", "43.92", "39.71", "43.18", "42.4 V",
+                "4.7429", "5.06", "0.913", "0.675", "94.3", "29.14", "2.05", "17.77", "33.77", "2.879", "1.731", "3.025", "623.9", "22.412"):
         assert fig in sec, "the output lacks %s" % fig
         assert fig in page, "the part A page lacks %s" % fig
     for part in ("CSD19532Q5B", "0997010.WXN", "C2903482", "R227"):
@@ -464,7 +471,7 @@ def t_the_ovlo_band_selected_clears_cs101_and_stays_under_d10():
     assert abs(A["ovlo_new"][0] - lo) < 1e-9 and abs(A["ovlo_new"][1] - hi) < 1e-9, "part A and the rows use one band"
     for r in _C["R"]:
         for c in r["checks"]:
-            if c.scope == "selected" and "OVLO maximum" in c.what and isinstance(c.a, float):
+            if c.scope == "selected" and "OVLO maximum" in c.what and c.unit == "V" and isinstance(c.a, float):
                 assert abs(c.a - round(hi, 2)) < 1e-9, "%s: a selected check on the drawn OVLO maximum" % r["id"]
 
 
@@ -505,7 +512,7 @@ def t_l4e10_and_meshsat_1478_enter_as_choices_not_tasks():
     c10 = [c for c in rows["IF-10"]["checks"] if "FEA-008" in c.what][0]
     assert c10.met is None and c10.cls == "CONDITIONAL" and "U-01" in c10.src
     ids = [c["id"] for c in m.CHOICES]
-    assert ids == ["U-01", "U-02", "U-03"]
+    assert ids == ["U-01", "U-02", "U-03", "U-04"]
     assert "FEA-008" in m.CHOICES[0]["title"] and "MESHSAT-1478" in m.CHOICES[1]["title"]
     for g in m.GATE:
         if g["n"] in (1, 5):
@@ -543,7 +550,7 @@ def t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register():
     for r, d in zip(de, m.DEFECTS):
         assert r[1] == d["title"] and r[2] == d["constraint"] and r[3] == d["options"], d["id"]
         assert r[4].split(":")[0].split(",")[0].split(" ")[0] == d["state"].split(" ")[0], d["id"]
-    assert [d["id"] for d in m.DEFECTS if d["state"] == "OPEN"] == ["D-01"]
+    assert [d["id"] for d in m.DEFECTS if d["state"] == "OPEN"] == ["D-01", "D-06"]
 
 
 def t_choice_and_defect_figures_are_printed_by_the_reconciliation():
@@ -557,6 +564,110 @@ def t_choice_and_defect_figures_are_printed_by_the_reconciliation():
     for d in m.DEFECTS:
         for fig in re.findall(r"\d+\.\d+", d["constraint"]):
             assert fig in body, "%s's figure %s is not printed outside the gate" % (d["id"], fig)
+
+
+def t_the_hotswap_draft_applies_once_refuses_the_tree_and_composes():
+    need(HS, "the hot-swap draft")
+    need(GEN_E, "board E's generator")
+    after = _check_write_once_refuse(HS, GEN_E, "hot swap")
+    calls = [n for n in ast.walk(ast.parse(after)) if isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id == "r"]
+    val = {c.args[0].value: c.args[1].value for c in calls if len(c.args) > 1 and isinstance(c.args[0], ast.Constant) and isinstance(c.args[1], ast.Constant)}
+    assert val["R22"].startswith("100k 0.1%") and val["R23"].startswith("%sk 0.1%%" % ("%g" % _M().R23_NEW_K)) and val["R24"].startswith("%gk 1%%" % _M().R24_NEW_K)
+    assert val["R20"] == "100k 1%" and val["R21"].startswith("38.3k 1%"), "the UVLO divider is untouched"
+    cin = os.path.join(ROOT, "v2", "docs", "records", "d8dec31", "apply_gen_sch_e_cin.py")
+    need(cin, "d8dec31's input capacitor draft")
+    with tempfile.TemporaryDirectory() as td:
+        e7r = []
+        for n in ("apply_gen_sch_e_u5_grade.py", "apply_gen_sch_e_hold.py", "apply_gen_sch_e_input_limit.py", "apply_gen_sch_e_backstop.py"):
+            rb = subprocess.run(["git", "-C", ROOT, "show", "%s:v2/docs/records/l4e7/%s" % (_M().FROM_COMMIT["l4e7r"], n)], capture_output=True)
+            if rb.returncode != 0:
+                raise Skip("L4-E7R's drafts are not in this checkout")
+            e7r.append(os.path.join(td, n))
+            open(e7r[-1], "wb").write(rb.stdout)
+        x, y = os.path.join(td, "x.py"), os.path.join(td, "y.py")
+        shutil.copy(GEN_E, x)
+        shutil.copy(GEN_E, y)
+        assert subprocess.run([sys.executable, "-B", cin, x, NET_E], capture_output=True).returncode == 0
+        for p in [Q1, F1] + e7r + [HS]:
+            r = _run(p, x, "--write")
+            assert r.returncode == 0, "%s: %s" % (os.path.basename(p), r.stderr)
+        assert _run(HS, y, "--write").returncode == 0
+        assert subprocess.run([sys.executable, "-B", cin, y, NET_E], capture_output=True).returncode == 0
+        for p in [Q1, F1] + e7r:
+            r = _run(p, y, "--write")
+            assert r.returncode == 0, "%s after the hot-swap draft: %s" % (os.path.basename(p), r.stderr)
+        assert ast.dump(ast.parse(open(x).read())) == ast.dump(ast.parse(open(y).read())), "the hot-swap draft first and last differ"
+
+
+def t_b1_the_power_limit_and_the_complete_pulse_at_one_voltage_and_temperature():
+    m = _M()
+    F, D = _C["F"], _C["D"]
+    A = m.partA(F, D, m._C_TEXT)
+    assert A["vsns_drawn"] < A["vsns_min"] <= A["vsns_new_low"] < A["vsns_new_nom"], "drawn under 5 mV; the selected low corner at or above it"
+    assert A["rpwr_min"] <= m.R24_NEW_K * 1e3 * (1 - m.R24_TOL), "R24's low corner above Equation 9's least RPWR"
+    assert abs(A["pulse_w"] - m.TI_SOA_MARGIN * A["plim_new_hi"]) < 1e-9 and abs(A["pulse_a"] * F["ovlo_sel"][2] - A["pulse_w"]) < 1e-9
+    assert {"10ms", "1ms", "10us"} <= set(A["soa_labels"]) and A["soa_1ms"] > A["soa_tflt_25"] > A["soa_10ms"] > 0, "the pulse lies between the 1 and 10 ms lines"
+    assert 0 < A["soa_m"] < 1
+    assert abs(A["tc_max"] - (A["t_hot"] + A["q1_p"] * A["rja"])) < 1e-9 and A["t_hot"] >= F["air"][1]
+    assert A["pulse_a"] <= A["soa_tflt_hot"] and A["cb_a"] <= A["cb_10us_hot"]
+    sel = {c.what: c for c in [c for r in _C["R"] if r["id"] == "IF-05" for c in r["checks"]]}
+    pulse = [c for w, c in sel.items() if "complete hot-short pulse" in w][0]
+    assert pulse.cls == "CONDITIONAL" and _C["st"]["IF-05"][1] == "CONDITIONAL", "IF-05 does not read MEETS on an unresolved board assumption"
+    assert any(c.scope == "drawn" and c.met is False and "20k" in w for w, c in sel.items()), "the drawn setting's shortfall stays visible"
+
+
+def t_b2_no_exemption_is_claimed_and_the_weak_source_band_is_open():
+    m = _M()
+    files = [OUT, PAGE, REG, HAND, os.path.join(REC, "L4E9-ENTRY-PROPOSALS.md")]
+    for p in files:
+        t = open(p, encoding="utf-8").read()
+        for bad in ("(ASM-001)", "fault, ASM-001", "requirement (ASM-001)"):
+            assert bad not in t, "%s still cites ASM-001 as an exemption (%s)" % (os.path.basename(p), bad)
+    d6 = [d for d in m.DEFECTS if d["id"] == "D-06"][0]
+    assert d6["state"] == "OPEN" and "IF-04" in d6["rows"]
+    rows = {r["id"]: r for r in _C["R"]}
+    assert any("D-06" in c.src and c.met is None for c in rows["IF-04"]["checks"])
+    assert any("R-115" in c.src for c in rows["IF-04"]["checks"]), "F1's let-through is CONDITIONAL on the maker's figure"
+    A = m.partA(_C["F"], _C["D"], m._C_TEXT)
+    assert A["f_rating"] < A["f_i2"] < A["f_200"] and max(a for _n, a in A["wk"]) < A["f_200"], "the weak elements sit inside the fuse's long-time band"
+    assert A["f1_ipf_awg16"] < A["f_int"]
+
+
+def t_b3_r227_transients_are_bounded_for_every_required_event():
+    m = _M()
+    F, D = _C["F"], _C["D"]
+    A = m.partA(F, D, m._C_TEXT)
+    req = [t for t in A["tr"] if t[6]]
+    assert len(req) >= 2
+    for nm, v0, v1, dv, ring, e_mj, _r in req:
+        assert dv <= A["ina_diff_abs"] and ring <= F["ina_abs"], nm
+        assert abs(e_mj - 0.5 * A["poe_c_uf"] * 1e-6 * dv ** 2 * 1e3) < 1e-9
+    assert A["buck_p"] <= A["hojlr_avail"] and A["buck_peak_steady"] < A["l10_isat"]
+    assert A["short_peak"] > A["l10_isat"], "the hard short's lower bound is past Isat and is carried as CONDITIONAL"
+    rows = {r["id"]: r for r in _C["R"]}
+    assert _C["st"]["IF-13"][1] == "CONDITIONAL" and any("R-101" in c.src for c in rows["IF-13"]["checks"])
+
+
+def t_b4_source_only_operation_is_an_unresolved_choice():
+    m = _M()
+    u4 = [c for c in m.CHOICES if c["id"] == "U-04"][0]
+    assert "Q-TI-3" in u4["constraint"] and u4["alternatives"] and u4["overturns"]
+    for g in m.GATE:
+        if g["n"] in (1, 5):
+            assert "U-04" in g["choices"]
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    assert "12 V and 24 V" in reg["R-85"][5] and "does not settle U-04" in reg["R-85"][2]
+    assert "SOURCE-ONLY AND DEAD-PACK OPERATION" in _C["text"]
+
+
+def t_the_check_is_filed_with_its_blockers():
+    p = os.path.join(REC, "checks", "astra-check-l4e9-1.md")
+    need(p, "the filed check")
+    t = open(p, encoding="utf-8").read()
+    assert t.splitlines()[0] == "accepted: no"
+    for b in ("B1, G1/G5", "B2, G1/G2/G5", "B3, G3/G5", "B4, G5"):
+        assert b in t, b
+    assert "astra-check-l4e9-1.md" in open(os.path.join(REC, "README.md"), encoding="utf-8").read()
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)

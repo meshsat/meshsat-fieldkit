@@ -8,7 +8,9 @@ downstream register and the Layer 5 handover. It edits no generator, registry re
 `HW-FW-CONTRACT.md` or other record. Round 2 (2 October 2026) checked Q1, F1 and U17 against their makers' sheets (part A),
 put the selected solutions (L4-E7R, L4-E8, part A) into every row, and split the closure gate into the material defects, the
 unresolved choices that could overturn the architecture (U-01 FEA-008's cell, U-02 MESHSAT-1478, U-03 O-1; no owner closes
-them) and the downstream tasks (the register).
+them) and the downstream tasks (the register). Its fix round (the same day) answers the collaborator's focused check: Q7's
+power limit and the complete hot-short pulse (B1), what F1 protects traced with no exemption (B2, open defect D-06), R227's
+transients bounded (B3), and source-only operation added as U-04 (B4).
 
 | File | What it is |
 |---|---|
@@ -21,6 +23,8 @@ them) and the downstream tasks (the register).
 | `L4E9-ENTRY-PROPOSALS.md` | Round 2, part A: Q1, F1 and U17 as datasheet-backed proposals, each checked against its normal, reverse, transient and fault conditions, the drive, land or holder and (U17) the monitor's common-mode and differential limits; the makers' documents read with their addresses and sha256 |
 | `apply_gen_sch_e_f1.py` | DRAFT for board E's generator owner: F1 to the Littelfuse 0997010.WXN (MINI, 58 V DC, 1000 A at 58 V DC) in the same 3568 holder. Same guards as the Q1 draft; composes with it, d8dec31's input capacitor and L4-E7R's four drafts in either order. Never applied to the tree |
 | `apply_gen_sch_a_u17.py` | DRAFT for board A's generator owner: U17 (INA226) moved off the 54 V rail onto R227, 5 mOhm (C2903482) in the PoE stage's input, with U16's VIN and BIAS on the new POE_VIN rail. Same guards; composes with L4-E6's R12, L4-E4's R11 and R138 and L4-E8's bank in either order. Never applied to the tree |
+| `apply_gen_sch_e_hotswap.py` | DRAFT for board E's generator owner (the fix round): R22 100k and R23 6.42k at 0.1 % (the OVLO at 39.71 / 41.44 / 43.18 V, clear of CS101 at 36 V) and R24 22k 1 % (the power limit's sense at least 5.06 mV at 43.18 V), with U6's value text. Same guards; composes with the Q1 and F1 drafts, d8dec31's input capacitor and L4-E7R's four drafts in either order. Never applied to the tree |
+| `checks/astra-check-l4e9-1.md` | The collaborator's focused check of round 2 (job cx28-l4e9-check, run 20261002T004904Z-179094, on `6097922a`), filed as returned: NOT YET, blockers B1 to B4 and the minors; the fix round answers it |
 | `fetch_held_back.py` | Fetches the Littelfuse 0997 sheet the record read but did not file (held back by its terms, the owner's rule of 27 September 2026) into the ignored `v2/vendor/power/held/` and checks its sha256. Never run by a test; the tests skip when the sheet is absent |
 | `inputs/` | The provenance of the makers' documents read in round 2 (the addresses, revisions and sha256; the three TI sheets compared byte for byte with ti.com) |
 | `README.md` | This list |
@@ -30,4 +34,4 @@ ripple-shunt capacitor ahead of the sense bank, `fnd/l4e7` after its closing che
 items that wait on it read PENDING and are re-run when it lands.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 25 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 31 tests.
