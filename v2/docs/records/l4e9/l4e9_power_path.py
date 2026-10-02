@@ -22,7 +22,8 @@ Update round (2 October 2026, the coordinator's instruction): the architecture a
 results of L4-E10 (FEA-008, final), L4-E11 (the vehicle entry replaced by a TPS48110-Q1 breaker with a CSD19536KTT, D-06's
 interconnect, U-04's arrangement) and L4-E12 (the electronics against the inside air, T-H1's binding line); E11-19, every finding
 that rested on the LM5069's power limit, re-judged for the selected entry (section 12); L4-E13 (U-03) was then pending.
-Update round 3 (2 October 2026): L4-E13 accepted (check 3 at fae419d1, read from the tree): U-03 becomes a CONDITIONAL
+Update round 3 (2 October 2026): L4-E13 accepted (check 3 at fae419d1, its update after set 25 by check 4 at 33b6b7be, read
+from the tree): U-03 becomes a CONDITIONAL
 DOWNSTREAM UNIT SELECTION (PANEL-ACC), leaves the choices that could overturn the architecture and enters the register
 (section 13).
 
@@ -114,10 +115,12 @@ PINS = {
     "cl_gc": ("v2/docs/records/l4e12/clarification/ground-control-rockblock-9704.txt", "738245875bec70c55d1ec105fb566248c98351095a268ffcd25d2b76e3bea85f"),
     "cl_nicerf": ("v2/docs/records/l4e12/clarification/nicerf-sa868.txt", "92324668c17d4f6c7b45b6f9528d08a7c2ae4df1c1839fc82fb6eeb9f7a585b7"),
     "cl_bulgin": ("v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt", "c7accd3dd6dc1d8993de6ffc37e4febba71302e878b3cdf0f3f2f30bc2a4457e"),
-    # update round 3: L4-E13 (U-03), accepted by the coordinator's check 3 at fae419d1, read from the tree
-    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "36d7c1ac0f7bdb5d9484192b5c04b17a9efade5ef6032f621ddb8a583a584224"),
-    "l4e13md": ("v2/docs/records/l4e13/L4E13-PANEL.md", "5dfedffb9bc723aa803e8dfa14c3270f84b32704ad7fced06230a78b3e47eb14"),
+    # update rounds 3 and 4: L4-E13 (U-03), accepted by the coordinator's check 3 at fae419d1 and, after set 25 (L4-E7R
+    # accepted), check 4 at 33b6b7be; read from the tree
+    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "436344ef3c00df7d09509b01a27e4bd3b4ff42825b180d8dcbe14bc1bfb6773a"),
+    "l4e13md": ("v2/docs/records/l4e13/L4E13-PANEL.md", "1c7f11716db4c2f2d1fa31327050afac8eb225c8ed8552091845cbdb090bf191"),
     "l4e13chk": ("v2/docs/records/l4e13/checks/check-l4e13-3.md", "88539c7aeaf2f99d8ed0364ac86f0cb312b9322eeeb6ac860ffa3d35e53ec306"),
+    "l4e13chk4": ("v2/docs/records/l4e13/checks/check-l4e13-4.md", "5a08480af4695e61752d04852d8647e0276f292771596281968acf8903bc73e8"),
     "cl_sunpower": ("v2/docs/records/l4e13/clarification/sunpower-spr-e-flex-100.txt", "453a5a957648a322dc6b011c4c0a601c4af7a41d527f7ef4ab3cd0b79538e08c"),
     "cl_solbian": ("v2/docs/records/l4e13/clarification/solbian-sx-156.txt", "fb66bfb76e7e252ce9df361cd59dcc756be2764a1dcfbd5ef8632346b7a36b1f"),
 }
@@ -852,10 +855,28 @@ def compute():
     F["e13_spec"] = tuple(f(m, i) for i in range(1, 6))
     if abs(F["e13_day"][1] - F["a1_cand"][0]) > 0.05:
         refuse(3, "L4-E13's rated unit does not reproduce the energy record's day")
+    # update round 4: A-3(a) and A-4 on L4-E7R's two layers as L4-E13 states them, and the nominal hold's day under them
+    m = need(t, r"The primary limit REGULATES it: the LT8705A at RIMON_IN 31\.6k \(C705766\), ([\d.]+) A nominal, at\s+most ([\d.]+) A at 25 V", "A-3(a)'s regulation")
+    F["e13_reg"] = (f(m, 1), f(m, 2))
+    m = need(t, r"The backstop does NOT limit: it turns the stage off \(SWEN low\) when the input current reaches its trip, at most\s+([\d.]+) A at 25 V \(([\d.]+) A at its lowest\)", "A-3(a)'s backstop")
+    F["e13_trip"] = (f(m, 2), f(m, 1))
+    F["e13_corner"] = f(need(t, r"LT8705A's regulation at RIMON_IN 31\.6k, its own 25 V corner ([\d.]+) W", "A-4's regulation corner"))
+    m = need(t, r"static bound ([\d.]+) W, margin ([\d.]+) W, CONDITIONAL on G_CM \(break-even (\d+) %\) and U18's VIN\+ bias \(break-even (\d+) mA\)", "A-4's backstop")
+    F["e13_static"] = (f(m, 1), f(m, 2))
+    need(t, r"leaves the conditioned upper corner's rows unchanged: yes", "the upper corner unchanged")
+    F["e13_day_e7r"] = f(need(t, r"it moves the nominal hold's\s+day to ([\d.]+) Wh \(L4-E7 out 10", "the nominal hold's day under L4-E7R"))
+    if (F["e13_reg"][0], F["e13_trip"], F["e13_corner"], F["e13_static"][0], F["e13_day_e7r"]) != (F["reg"][0], F["bs_trip"], F["reg_corner"], F["static_bound"], F["e7r_day"][1]):
+        refuse(3, "L4-E13's citation of L4-E7R does not read L4-E7R's own figures")
+    if not (F["e13_reg"][0] < F["e13_reg"][1] < F["e13_trip"][1] < F["e13_a3"][0] <= 10.0):
+        refuse(3, "A-3(a)'s ordering")
     t = T["l4e13chk"]
     if not t.startswith("accepted: yes\n"):
         refuse(3, "L4-E13's check 3 is not accepted")
     need(t, r"\*\*Owner decision required:\*\* none", "no owner decision")
+    t = T["l4e13chk4"]
+    if not t.startswith("accepted: yes\n"):
+        refuse(3, "L4-E13's check 4 is not accepted")
+    need(t, r"carry\s+336\.6 Wh in place of 350\.0 Wh where it cites the nominal hold under the accepted stage", "check 4's instruction")
     need(T["l4e13md"], r"\*\*U-03: CONDITIONAL DOWNSTREAM UNIT SELECTION \(PANEL-ACC\)\.\*\*", "U-03's class on the page")
 
     t = T["s120"]
@@ -1759,7 +1780,8 @@ def round3_lines(F, D, A, E, st):
     p = L.append
     a3, win, sp = F["e13_a3"], F["e13_win"], F["e13_spec"]
     p("13. UPDATE ROUND 3 (2 October 2026): L4-E13 ACCEPTED; U-03 A CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC)")
-    p("   the input: L4-E13 at fae419d1 (accepted by the coordinator's check 3, 'Owner decision required: none'), read from the tree and pinned")
+    p("   the input: L4-E13 at fae419d1 (accepted by the coordinator's check 3, 'Owner decision required: none'), updated after set 25 at")
+    p("     33b6b7be (check 4: A-3(a) and A-4 on L4-E7R's regulation and backstop, the nominal hold's day 336.6 Wh); read from the tree and pinned")
     p("   route 1 (a maker's warranted band in the window, the hold inside the curve, portable), none qualifies today: %s"
       % "; ".join("%s bounded %s, hold %s" % x for x in F["e13_route1"]))
     p("     the drafts to SunPower and Solbian ask for a warranted band (OW-4); the owner sends them")
@@ -1767,21 +1789,29 @@ def round3_lines(F, D, A, E, st):
     p("     A-1 the window: Vm20 + U_V %s V against %s V at -20 C and 1000 W/m2, margin %s V; the window Voc25 %s to %s V, Vm20 at most %s V"
       % ("%s" % F["e13_a1"], "%.3f" % F["e13_a1_lim"], "%s" % F["e13_a1_margin"], "%s" % win[0], "%s" % win[1], "%.3f" % win[2]))
     p("     A-2 useful charging, measured on the conservative side: lower bound %s W above %s W" % ("%s" % F["e13_a2"], "%s" % F["e13_a2_line"]))
-    p("     A-3 the entry: (a) %s A in operation under L4-E7's drafted limit; (b) %s A in a sustained input fault, inside F2's and J_SOLAR's 10 A;"
-      % ("%s" % a3[0], "%s" % a3[1]))
+    p("     A-3 the entry: (a) %s A, the conservative bound kept, over L4-E7R's two layers as L4-E13 states them: the regulation (RIMON_IN 31.6k)"
+      % ("%s" % a3[0]))
+    p("       %s A nominal, at most %s A at 25 V under the joint assumptions; the backstop turns the stage off at its trip, at most %s A at 25 V"
+      % ("%s" % F["e13_reg"][0], "%s" % F["e13_reg"][1], "%s" % F["e13_trip"][1]))
+    p("       (%s A at its lowest); (b) %s A in a sustained input fault, inside F2's and J_SOLAR's 10 A;" % ("%s" % F["e13_trip"][0], "%s" % a3[1]))
     p("       (c) %s A in a double contingency at the design level %s W/m2, a COMPONENT_LIMITATION on J_SOLAR and PV_IN (a 20 A part covers it to"
       % ("%s" % a3[2], fmt(F["e13_gt"])))
     p("       %s W/m2, %s x E0)" % (fmt(F["e13_20a"][0]), fmt(F["e13_20a"][1])))
-    p("     A-4 CONDITIONAL on L4-E7's drafted input limit (%s W at -20 C and 1000 W/m2 with no limit)" % fmt(F["e13_a4_w"]))
+    p("     A-4 the 100 W on L4-E7R's two layers, both drafted: the regulation's own 25 V corner %s W, CONDITIONAL on its unprinted values; the"
+      % ("%s" % F["e13_corner"]))
+    p("       backstop's static bound %s W, margin %s W, CONDITIONAL on G_CM and the VIN+ bias (%s W at -20 C and 1000 W/m2 with no limit)"
+      % ("%s" % F["e13_static"][0], "%s" % F["e13_static"][1], fmt(F["e13_a4_w"])))
     p("     the specification (k = 2): U_V %s V, U_A %s %%, U_I %s %%, U_G %s %%, U_TC %s K" % tuple(fmt(x) for x in sp))
     p("   the disturbance check, apart (TRN-001): a unit at A-1's ceiling reaches D4's %s V standoff at %s W/m2 (%s x E0) at n 2, a MODELLING_ASSUMPTION"
       % (fmt(F["e13_vr"]), fmt(F["e13_thr"][0]), fmt(F["e13_thr"][1])))
     p("     verified by M3's n (the typical unit's fit %s, %s with U_A); the irradiance below the threshold an ASSUMPTION" % (fmt(F["e13_n"][0]), fmt(F["e13_n"][1])))
-    p("   the energy: the rated unit %s Wh a day at the nominal hold (the endurance rows of section 8) and %s Wh at the conditioned upper corner;"
+    p("   the energy, each with its basis: the rated unit's nominal hold %s Wh a day under L4-E7R's accepted regulation (L4-E13 cites L4-E7 out"
+      % ("%.1f" % F["e13_day_e7r"]))
+    p("     10), %s Wh at L4-E7's first-round limit (the replay's basis, section 8's solar rows); the conditioned upper corner %s Wh on both"
       % ("%.1f" % F["e13_day"][1], "%.1f" % F["e13_day"][0]))
-    p("     a unit at A-2's floor %s Wh there; no figure is a measured unit's (R-52)" % ("%.1f" % F["e13_day"][2]))
+    p("     (the unit's current there under the regulation); a unit at A-2's floor %s Wh there; no figure is a measured unit's (R-52)" % ("%.1f" % F["e13_day"][2]))
     p("   what changes: U-03 leaves the choices that could overturn the architecture; criteria 1 and 5 name U-01, U-02 and U-04. It decides")
-    p("     which unit, not the topology and not the source class: REQ-016's window, the stage, its hold and the drafted limit stay. It returns to")
+    p("     which unit, not the topology and not the source class: REQ-016's window, the stage, its hold and its 100 W control stay. It returns to")
     p("     an architecture-level choice only if route 2 proves infeasible with route 1 still closed (L4-E13's decision L4E13-06)")
     p("   IF-01 (%s): A-1 on the typical rows, A-3(b) inside F2 and inside J_SOLAR's VH at AWG 16 (R-29), A-3(c) OPEN (R-148), the disturbance" % st["IF-01"][1])
     p("     check CONDITIONAL on n (R-149)")
@@ -1807,7 +1837,7 @@ def rows(F, D, A, E):
         "v": "panel: open circuit at most %s V at -20 C (REQ-016, gen PV_P v_max); PANEL-ACC's A-1 Vm20 + U_V at -20 C and 1000 W/m2 at most %s V, %s V on the typical rows (margin %s V), the window Voc25 %s to %s V; held at %s V nominal | entry: D4 %s standoff %s V on TRK_VS, reached by a unit at A-1's ceiling only above %s W/m2 at n 2; under CS101 the input at most %s V; TRK_VS at most %s V and PV_P %s V at the capability scenario"
              % (fmt(pv["v_max"]), "%.3f" % F["e13_a1_lim"], "%s" % F["e13_a1"], "%s" % F["e13_a1_margin"], "%s" % F["e13_win"][0], "%s" % F["e13_win"][1], fmt(F["hold"][1]), "SMCJ28A",
                 fmt(sm28["vr"]), fmt(F["e13_thr"][0]), fmt(F["cs101_pv"]), fmt(F["trk_vs_max"]), fmt(F["pv_p_max"])),
-        "i": "panel hot short circuit %s A with the sheet's power tolerance (L4-E7R; %s A nominal sheet); PANEL-ACC's A-3: (a) %s A in operation under L4-E7's limit, (b) %s A in a sustained input fault (SunPower's 1.25), (c) %s A in a double contingency at the design level %s W/m2 | F2 %s A blade, J_SOLAR VH (%s A at AWG 16, standard header; %s A at AWG 18, shrouded only; the lead is AWG 18 on a standard header: no stated rating); under CS101 the filtered ripple at the trip input at most %s A at %d Hz against the %s A margin"
+        "i": "panel hot short circuit %s A with the sheet's power tolerance (L4-E7R; %s A nominal sheet); PANEL-ACC's A-3: (a) %s A in operation, the bound over L4-E7R's regulation and backstop, (b) %s A in a sustained input fault (SunPower's 1.25), (c) %s A in a double contingency at the design level %s W/m2 | F2 %s A blade, J_SOLAR VH (%s A at AWG 16, standard header; %s A at AWG 18, shrouded only; the lead is AWG 18 on a standard header: no stated rating); under CS101 the filtered ripple at the trip input at most %s A at %d Hz against the %s A margin"
              % (fmt(F["isc_hot_tol"]), fmt(F["cand_isc_hot"]), "%s" % F["e13_a3"][0], "%s" % F["e13_a3"][1], "%s" % F["e13_a3"][2], fmt(F["e13_gt"]), fmt(amps_in(F["e_f2"], "F2")), fmt(F["vh_16"]), fmt(F["vh_18"]),
                 fmt(F["m2_ripple"]), F["m2_hz"], fmt(F["m2_margin"])),
         "loss": "the 5 m lead about 0.0465 Ohm (the replay's ESTIMATE); the sense bank %s Wh on SC-37's day, %s Wh on the bright day (L4-E7R)" % (fmt(F["bank_wh"][0]), fmt(F["bank_wh"][1])),
@@ -2188,19 +2218,21 @@ CHOICES = [
                   "path's topology",
      "rows": ["IF-11"]},
     {"id": "U-03", "title": "O-1: the solar panel inside REQ-016's window (L4-E13, accepted)", "class": DOWNSTREAM,
-     "constraint": "L4-E13 (accepted, check 3 at fae419d1): route 1, a maker's warranted band, closes nothing today; route 2, one identified "
+     "constraint": "L4-E13 (accepted, checks 3 and 4 at fae419d1 and 33b6b7be): route 1, a maker's warranted band, closes nothing today; route 2, one identified "
                    "SunPower SPR-E-Flex-100 measured against A-1 to A-3, is feasible on a unit equal to the typical rows: A-1 Vm20 + U_V 24.1505 V "
                    "against 25.000 V at -20 C and 1000 W/m2 (margin 0.8495 V), the window Voc25 20.315 to 22.156 V; A-2 27.0849 W above "
-                   "1.365591 W; A-3 (a) 3.987 A, (b) 8.1817 A, (c) 13.82 A, a COMPONENT_LIMITATION on J_SOLAR and PV_IN; A-4 CONDITIONAL on "
-                   "L4-E7's limit; no physical unit accepted",
+                   "1.365591 W; A-3 (a) 3.987 A, the conservative bound over L4-E7R's regulation (2.5485 A nominal, at most 2.9337 A at 25 V) "
+                   "and backstop (trip at most 3.7408 A), (b) 8.1817 A, (c) 13.82 A, a COMPONENT_LIMITATION on J_SOLAR and PV_IN; A-4 on "
+                   "L4-E7R's two layers (the regulation's 25 V corner 73.3436 W; the backstop's static bound 93.5521 W, CONDITIONAL on G_CM and "
+                   "the VIN+ bias); no physical unit accepted",
      "settles": "one unit bought and measured (M1 to M3 and A-2's reading at the specification) and accepted on A-1, A-2 and A-3(b) (R-35); its "
                 "trace rerun (R-52); J_SOLAR and PV_IN with a rating that covers A-3(c) (R-148); M3's n at or under 2 for the disturbance check (R-149); "
-                "L4-E7's drafted input limit applied for A-3(a) and A-4",
+                "L4-E7R's regulation and backstop applied (drafted) for A-3(a) and A-4",
      "alternatives": "route 1, a maker's warranted band inside the window (the drafts to SunPower and Solbian, OW-4); another unit of the same "
                      "curve shape inside the window; REQ-016's window restated (the owner's; not needed)",
      "owner": "the purchase and the measurement of one unit (OW-6) and sending the two route-1 drafts (OW-4): actions, not questions",
      "overturns": "nothing of the architecture: it decides which unit, not the topology and not the source class; REQ-016's window, the stage, "
-                  "its hold and the drafted limit stay; it returns to an architecture-level choice only if route 2 proves infeasible with "
+                  "its hold and its 100 W control stay; it returns to an architecture-level choice only if route 2 proves infeasible with "
                   "route 1 still closed (L4E13-06)",
      "rows": ["IF-01"]},
     {"id": "U-04", "title": "source-only and dead-pack operation (L4-E11: arrangement (A), a CONDITIONAL CANDIDATE)", "class": ARCH,
@@ -2415,7 +2447,7 @@ def main():
         w, h = where[key]
         p("   %-9s %s  %s%s" % (key, h[:16], rel, "" if w == "tree" else "  (" + w + (", fnd/l4e8 accepted)" if key in FROM_L4E8 else ", " + FROM_LABEL[key] + ")")))
     p("   pending: %s" % L4E7R)
-    p("   L4-E13 (U-03, the panel) accepted by the coordinator's check 3 at fae419d1: update round 3, section 13")
+    p("   L4-E13 (U-03, the panel) accepted by the coordinator's check 3 at fae419d1 and, after set 25, check 4 at 33b6b7be: section 13")
     p("   this record's own figures: copper %s ohm mm2/m at 20 C and %s /K, 18 AWG %s mm2 (ASSUMPTION, constants); the cold end %s C (REQ-024);"
       % (fmt(CU_RHO_20C), fmt(CU_ALPHA), fmt(AWG18_MM2), fmt(T_COLD)))
     p("     capacitance kept under bias %s (ASSUMPTION; the bound states the fraction it needs); the back-feed diode's drop %s V (an upper bound);"
@@ -2696,8 +2728,10 @@ def main():
       % (fmt(F["cell_usable"][1]), fmt(F["cell_usable"][0]), fmt(F["cell_less_pct"]), fmt(F["cell_hours"][1]), fmt(F["cell_hours"][0])))
     p("     about %s Wh nominal; every storage shortfall above grows by at most the usable energy lost, %s Wh (INFERRED)"
       % (fmt(F["cell_nom"][1]), fmt(round(F["cell_usable"][0] - F["cell_usable"][1], 1))))
-    p("   the panel (U-03, L4-E13): the solar rows above are the rated unit's (%s Wh a day at the nominal hold, L4-E7's row); PANEL-ACC accepts"
+    p("   the panel (U-03, L4-E13): the solar rows above are the rated unit's at L4-E7's first-round limit (%s Wh a day at the nominal hold);"
       % ("%.1f" % F["e13_day"][1]))
+    p("     under L4-E7R's accepted regulation its nominal hold gives %s Wh (the L4-E7R lines above carry the difference); PANEL-ACC accepts"
+      % ("%.1f" % F["e13_day_e7r"]))
     p("     any unit inside the window down to A-2's floor, whose day at the conditioned upper corner is %s Wh (the rated unit's %s Wh): the"
       % ("%.1f" % F["e13_day"][2], "%.1f" % F["e13_day"][0]))
     p("     unserved energy then grows; no figure here is a measured unit's (R-52)")

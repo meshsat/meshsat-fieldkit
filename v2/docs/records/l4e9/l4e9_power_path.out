@@ -65,13 +65,14 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    cl_gc     738245875bec70c5  v2/docs/records/l4e12/clarification/ground-control-rockblock-9704.txt
    cl_nicerf 92324668c17d4f6c  v2/docs/records/l4e12/clarification/nicerf-sa868.txt
    cl_bulgin c7accd3dd6dc1d89  v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt
-   l4e13     36d7c1ac0f7bdb5d  v2/docs/records/l4e13/l4e13_panel.out
-   l4e13md   5dfedffb9bc723aa  v2/docs/records/l4e13/L4E13-PANEL.md
+   l4e13     436344ef3c00df7d  v2/docs/records/l4e13/l4e13_panel.out
+   l4e13md   1c7f11716db4c2f2  v2/docs/records/l4e13/L4E13-PANEL.md
    l4e13chk  88539c7aeaf2f99d  v2/docs/records/l4e13/checks/check-l4e13-3.md
+   l4e13chk4 5a08480af4695e61  v2/docs/records/l4e13/checks/check-l4e13-4.md
    cl_sunpower 453a5a957648a322  v2/docs/records/l4e13/clarification/sunpower-spr-e-flex-100.txt
    cl_solbian fb66bfb76e7e252c  v2/docs/records/l4e13/clarification/solbian-sx-156.txt
    pending: none: L4-E7R is accepted (the coordinator's check 4, fnd/l4e7 91e9a4b5; its figures at 675b8068): the CS101 correction moved the bulk ahead of the sense bank and filtered the trip input, so defect D-01 is resolved in design (drafted, not applied)
-   L4-E13 (U-03, the panel) accepted by the coordinator's check 3 at fae419d1: update round 3, section 13
+   L4-E13 (U-03, the panel) accepted by the coordinator's check 3 at fae419d1 and, after set 25, check 4 at 33b6b7be: section 13
    this record's own figures: copper 0.0172 ohm mm2/m at 20 C and 0.0039 /K, 18 AWG 0.823 mm2 (ASSUMPTION, constants); the cold end -20 C (REQ-024);
      capacitance kept under bias 0.2 (ASSUMPTION; the bound states the fraction it needs); the back-feed diode's drop 0 V (an upper bound);
      the charger's L2 +-20 % (Coilcraft XAL family)
@@ -147,7 +148,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    IF-01  the panel to board E's solar entry (J_SOLAR, F2, the sense bank, D4, C71 to C74, PV_IN, PV_P and TRK_VS)  [CONDITIONAL, CONDITIONAL]
      sides: the panel (PANEL-ACC: one SunPower SPR-E-Flex-100 by serial number, a CONDITIONAL DOWNSTREAM UNIT SELECTION, L4-E13; no unit bought or measured) | board E, PV_IN, PV_P and TRK_VS (L4-E7R's corrected entry)
      voltage: panel: open circuit at most 25 V at -20 C (REQ-016, gen PV_P v_max); PANEL-ACC's A-1 Vm20 + U_V at -20 C and 1000 W/m2 at most 25.000 V, 24.1505 V on the typical rows (margin 0.8495 V), the window Voc25 20.315 to 22.156 V; held at 17.593 V nominal | entry: D4 SMCJ28A standoff 28 V on TRK_VS, reached by a unit at A-1's ceiling only above 8574 W/m2 at n 2; under CS101 the input at most 27.82 V; TRK_VS at most 44.25 V and PV_P 44.74 V at the capability scenario
-     current: panel hot short circuit 6.802 A with the sheet's power tolerance (L4-E7R; 6.42 A nominal sheet); PANEL-ACC's A-3: (a) 3.987 A in operation under L4-E7's limit, (b) 8.1817 A in a sustained input fault (SunPower's 1.25), (c) 13.82 A in a double contingency at the design level 2111.4 W/m2 | F2 10 A blade, J_SOLAR VH (10 A at AWG 16, standard header; 7 A at AWG 18, shrouded only; the lead is AWG 18 on a standard header: no stated rating); under CS101 the filtered ripple at the trip input at most 0.0585 A at 2121 Hz against the 0.113 A margin
+     current: panel hot short circuit 6.802 A with the sheet's power tolerance (L4-E7R; 6.42 A nominal sheet); PANEL-ACC's A-3: (a) 3.987 A in operation, the bound over L4-E7R's regulation and backstop, (b) 8.1817 A in a sustained input fault (SunPower's 1.25), (c) 13.82 A in a double contingency at the design level 2111.4 W/m2 | F2 10 A blade, J_SOLAR VH (10 A at AWG 16, standard header; 7 A at AWG 18, shrouded only; the lead is AWG 18 on a standard header: no stated rating); under CS101 the filtered ripple at the trip input at most 0.0585 A at 2121 Hz against the 0.113 A margin
      losses: the 5 m lead about 0.0465 Ohm (the replay's ESTIMATE); the sense bank 0.5262 Wh on SC-37's day, 0.7978 Wh on the bright day (L4-E7R); thermal: the entry at the worst inside air 62.1 C (envelope, lid closed); the bulk cans' heating under CS101's bounding case, up to 4.45 times their ripple rating, CONDITIONAL (M2 records it)
      protection: none (a bare panel) | F2; the 50 V bulk on PV_P ahead of the sense bank; D4 one-way clamp and C71 to C74 on TRK_VS; the INB filter, 5 x 100 nF C0G across R66 8.45k (3.96 to 4.496 ms) (L4-E7R, drafted in apply_gen_sch_e_backstop.py)
      settled by: l4e (O-1), L4-E7R at 675b8068 (accepted, check 4 at 91e9a4b5), L4-E13 at fae419d1 (accepted, check 3; PANEL-ACC)
@@ -476,7 +477,8 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    the cell under L4-E10's recommendation (U-01, CONDITIONAL on the signed specification and the owner's approval; not taken here): usable
      90.4 Wh against the 35E's 108.1 Wh (16.4 % less), 2.11 h against 2.52 h battery-only at PS-IDLE-SPEC (L4-E10's own basis); D-06's about 145 Wh becomes
      about 121 Wh nominal; every storage shortfall above grows by at most the usable energy lost, 17.7 Wh (INFERRED)
-   the panel (U-03, L4-E13): the solar rows above are the rated unit's (350.0 Wh a day at the nominal hold, L4-E7's row); PANEL-ACC accepts
+   the panel (U-03, L4-E13): the solar rows above are the rated unit's at L4-E7's first-round limit (350.0 Wh a day at the nominal hold);
+     under L4-E7R's accepted regulation its nominal hold gives 336.6 Wh (the L4-E7R lines above carry the difference); PANEL-ACC accepts
      any unit inside the window down to A-2's floor, whose day at the conditioned upper corner is 52.3 Wh (the rated unit's 240.0 Wh): the
      unserved energy then grows; no figure here is a measured unit's (R-52)
    the objective of 48 to 72 h is unmet by A1 on every trace (DR-01); no mandatory function is reduced to narrow it
@@ -537,11 +539,11 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
         the owner's items: CFL-002, the SGP41 in the envelope: A (a BME688-class sensor in its place, L4-E12's recommendation), B (the VOC channel dropped) or C (the SGP41 kept, its channel reported as not covered); send PDi's and Sensirion's requests (OW-1, OW-4); later, only on T-H1's reading, a re-pick or a deviation
         what it could overturn: on T-H1's reading and the fans: under 2.159 W/K E5 fails for the +70 C class unless the plate coupling holds, under 1.806 W/K E3-O too, so the sealed case's thermal design (no vent, the ruling of 7 September 2026) or the device set (CHO-001) could change; a stopped fan takes the enclosure to its fans-off conductance; CFL-002 changes a sensor, not the architecture; never the power path's topology
      U-03 O-1: the solar panel inside REQ-016's window (L4-E13, accepted) [CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC)]; rows IF-01 CONDITIONAL
-        the exact constraint: L4-E13 (accepted, check 3 at fae419d1): route 1, a maker's warranted band, closes nothing today; route 2, one identified SunPower SPR-E-Flex-100 measured against A-1 to A-3, is feasible on a unit equal to the typical rows: A-1 Vm20 + U_V 24.1505 V against 25.000 V at -20 C and 1000 W/m2 (margin 0.8495 V), the window Voc25 20.315 to 22.156 V; A-2 27.0849 W above 1.365591 W; A-3 (a) 3.987 A, (b) 8.1817 A, (c) 13.82 A, a COMPONENT_LIMITATION on J_SOLAR and PV_IN; A-4 CONDITIONAL on L4-E7's limit; no physical unit accepted
-        the evidence that settles it: one unit bought and measured (M1 to M3 and A-2's reading at the specification) and accepted on A-1, A-2 and A-3(b) (R-35); its trace rerun (R-52); J_SOLAR and PV_IN with a rating that covers A-3(c) (R-148); M3's n at or under 2 for the disturbance check (R-149); L4-E7's drafted input limit applied for A-3(a) and A-4
+        the exact constraint: L4-E13 (accepted, checks 3 and 4 at fae419d1 and 33b6b7be): route 1, a maker's warranted band, closes nothing today; route 2, one identified SunPower SPR-E-Flex-100 measured against A-1 to A-3, is feasible on a unit equal to the typical rows: A-1 Vm20 + U_V 24.1505 V against 25.000 V at -20 C and 1000 W/m2 (margin 0.8495 V), the window Voc25 20.315 to 22.156 V; A-2 27.0849 W above 1.365591 W; A-3 (a) 3.987 A, the conservative bound over L4-E7R's regulation (2.5485 A nominal, at most 2.9337 A at 25 V) and backstop (trip at most 3.7408 A), (b) 8.1817 A, (c) 13.82 A, a COMPONENT_LIMITATION on J_SOLAR and PV_IN; A-4 on L4-E7R's two layers (the regulation's 25 V corner 73.3436 W; the backstop's static bound 93.5521 W, CONDITIONAL on G_CM and the VIN+ bias); no physical unit accepted
+        the evidence that settles it: one unit bought and measured (M1 to M3 and A-2's reading at the specification) and accepted on A-1, A-2 and A-3(b) (R-35); its trace rerun (R-52); J_SOLAR and PV_IN with a rating that covers A-3(c) (R-148); M3's n at or under 2 for the disturbance check (R-149); L4-E7R's regulation and backstop applied (drafted) for A-3(a) and A-4
         the alternatives: route 1, a maker's warranted band inside the window (the drafts to SunPower and Solbian, OW-4); another unit of the same curve shape inside the window; REQ-016's window restated (the owner's; not needed)
         the owner's items: the purchase and the measurement of one unit (OW-6) and sending the two route-1 drafts (OW-4): actions, not questions
-        what it could overturn: nothing of the architecture: it decides which unit, not the topology and not the source class; REQ-016's window, the stage, its hold and the drafted limit stay; it returns to an architecture-level choice only if route 2 proves infeasible with route 1 still closed (L4E13-06)
+        what it could overturn: nothing of the architecture: it decides which unit, not the topology and not the source class; REQ-016's window, the stage, its hold and its 100 W control stay; it returns to an architecture-level choice only if route 2 proves infeasible with route 1 still closed (L4E13-06)
      U-04 source-only and dead-pack operation (L4-E11: arrangement (A), a CONDITIONAL CANDIDATE) [ARCHITECTURE-LEVEL CHOICE]; rows IF-09 CONDITIONAL, IF-10 CONDITIONAL
         the exact constraint: L4-E11 selects arrangement (A), the drawn charger with no battery FET, with rules R-a to R-d and the replaced entry: at a 9.00 V plug the source delivers 29.09 to 42.52 W at VBAT and the shed warm-up (28.12 W plan) is carried with 0.98 W in hand while P1 stays at most 20.51 W; REQ-015 at 9.00 V at the plug is a CONDITIONAL CANDIDATE, not closed: at the load's hi corner P1 (35.24 W) exceeds the source's least, TI states neither VSYS's regulation with no battery under load steps (N1) nor what it regulates with charge inhibited in state S2 (N2, Q-TI-3), the cells' warming time has no held model, and R-b's cases (ii) and (iii) are INCONCLUSIVE
         the evidence that settles it: E11-05 (TI's answers: N1, N2 for S2, Q-TI-2), E11-06 (R-85 extended: P1 at most 20.51 W, the front end at least 0.88021, the pin's band, the breaker never tripped, VSYS's step response), E11-09 (the knee drawn), E11-22 (R-b's cases), E11-23 (the warm-up time at the plug)
@@ -574,7 +576,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
         NiceRF: the SA868: v2/docs/records/l4e12/clarification/nicerf-sa868.txt, in the tree, sha256 92324668c17d4f6c
         Bulgin: the PXP4043C: v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt, in the tree, sha256 c7accd3dd6dc1d89
      OW-6 PANEL-ACC (U-03, L4-E13): buy one SunPower SPR-E-Flex-100, recorded by serial number, and have it measured to the specification (M1 to M3 and A-2's reading); actions under the owner's authority (money), not questions
-        L4-E13's page, PANEL-ACC: v2/docs/records/l4e13/L4E13-PANEL.md, in the tree, sha256 5dfedffb9bc723aa
+        L4-E13's page, PANEL-ACC: v2/docs/records/l4e13/L4E13-PANEL.md, in the tree, sha256 1c7f11716db4c2f2
      not yet drafted (engineering work first, then the owner sends): Littelfuse, F1's total clearing I2t at 900 A and 58 V DC (R-115, E11-16); Coilcraft, L10's inductance against current at temperature (R-120) and L1's Isat at 85 C (R-31); Milliohm, R227's single-pulse rating (R-101)
 
 10. THE REGISTERS (this folder's DOWNSTREAM-REGISTER.md and LAYER5-HANDOVER.md, read and checked)
@@ -782,23 +784,28 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    12f. U-01 (L4-E10): unchanged; LO-01a's floor with the ballasts, 1.8058 W/K (L4-E12), lies under the binding line. U-03: section 13 (L4-E13)
 
 13. UPDATE ROUND 3 (2 October 2026): L4-E13 ACCEPTED; U-03 A CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC)
-   the input: L4-E13 at fae419d1 (accepted by the coordinator's check 3, 'Owner decision required: none'), read from the tree and pinned
+   the input: L4-E13 at fae419d1 (accepted by the coordinator's check 3, 'Owner decision required: none'), updated after set 25 at
+     33b6b7be (check 4: A-3(a) and A-4 on L4-E7R's regulation and backstop, the nominal hold's day 336.6 Wh); read from the tree and pinned
    route 1 (a maker's warranted band in the window, the hold inside the curve, portable), none qualifies today: SunPower SPR-E-Flex-100 bounded NO, hold NO; BougeRV 100W N-Type Fiberglass Foldable bounded yes, hold NO; Solbian SX 156 bounded NO, hold yes
      the drafts to SunPower and Solbian ask for a warranted band (OW-4); the owner sends them
    route 2 (one identified SunPower SPR-E-Flex-100, recorded by serial number, measured), feasible on a unit equal to the typical rows:
      A-1 the window: Vm20 + U_V 24.1505 V against 25.000 V at -20 C and 1000 W/m2, margin 0.8495 V; the window Voc25 20.315 to 22.156 V, Vm20 at most 24.900 V
      A-2 useful charging, measured on the conservative side: lower bound 27.0849 W above 1.365591 W
-     A-3 the entry: (a) 3.987 A in operation under L4-E7's drafted limit; (b) 8.1817 A in a sustained input fault, inside F2's and J_SOLAR's 10 A;
+     A-3 the entry: (a) 3.987 A, the conservative bound kept, over L4-E7R's two layers as L4-E13 states them: the regulation (RIMON_IN 31.6k)
+       2.5485 A nominal, at most 2.9337 A at 25 V under the joint assumptions; the backstop turns the stage off at its trip, at most 3.7408 A at 25 V
+       (3.0468 A at its lowest); (b) 8.1817 A in a sustained input fault, inside F2's and J_SOLAR's 10 A;
        (c) 13.82 A in a double contingency at the design level 2111.4 W/m2, a COMPONENT_LIMITATION on J_SOLAR and PV_IN (a 20 A part covers it to
        3056 W/m2, 2.17 x E0)
-     A-4 CONDITIONAL on L4-E7's drafted input limit (117.4 W at -20 C and 1000 W/m2 with no limit)
+     A-4 the 100 W on L4-E7R's two layers, both drafted: the regulation's own 25 V corner 73.3436 W, CONDITIONAL on its unprinted values; the
+       backstop's static bound 93.5521 W, margin 6.4479 W, CONDITIONAL on G_CM and the VIN+ bias (117.4 W at -20 C and 1000 W/m2 with no limit)
      the specification (k = 2): U_V 0.1 V, U_A 10 %, U_I 2 %, U_G 2 %, U_TC 1 K
    the disturbance check, apart (TRN-001): a unit at A-1's ceiling reaches D4's 28 V standoff at 8574 W/m2 (6.09 x E0) at n 2, a MODELLING_ASSUMPTION
      verified by M3's n (the typical unit's fit 1.2981, 1.4279 with U_A); the irradiance below the threshold an ASSUMPTION
-   the energy: the rated unit 350.0 Wh a day at the nominal hold (the endurance rows of section 8) and 240.0 Wh at the conditioned upper corner;
-     a unit at A-2's floor 52.3 Wh there; no figure is a measured unit's (R-52)
+   the energy, each with its basis: the rated unit's nominal hold 336.6 Wh a day under L4-E7R's accepted regulation (L4-E13 cites L4-E7 out
+     10), 350.0 Wh at L4-E7's first-round limit (the replay's basis, section 8's solar rows); the conditioned upper corner 240.0 Wh on both
+     (the unit's current there under the regulation); a unit at A-2's floor 52.3 Wh there; no figure is a measured unit's (R-52)
    what changes: U-03 leaves the choices that could overturn the architecture; criteria 1 and 5 name U-01, U-02 and U-04. It decides
-     which unit, not the topology and not the source class: REQ-016's window, the stage, its hold and the drafted limit stay. It returns to
+     which unit, not the topology and not the source class: REQ-016's window, the stage, its hold and its 100 W control stay. It returns to
      an architecture-level choice only if route 2 proves infeasible with route 1 still closed (L4-E13's decision L4E13-06)
    IF-01 (CONDITIONAL): A-1 on the typical rows, A-3(b) inside F2 and inside J_SOLAR's VH at AWG 16 (R-29), A-3(c) OPEN (R-148), the disturbance
      check CONDITIONAL on n (R-149)
