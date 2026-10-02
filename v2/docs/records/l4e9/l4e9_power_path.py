@@ -88,7 +88,7 @@ PINS = {
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
     "keystone": ("v2/vendor/keystone/M65p42.pdf", "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"),
     "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "5d60b54aa8ce88534f24dbd71389db53be2f55d9af030b6005853e5076bbc18b"),
-    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "edabc7c135c864c64551407d785cd15e8e5516bb24c4047e80b98b2f8e2be089"),
+    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "fbc94b19dafbbb3814dddfa513c67dba0d008bfcc1c05cdcb207a91f369e81e1"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "b624ac495650a3592c45a37610375fb05bf7b775042cf3de7ec8979bc46a6e50"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
@@ -101,7 +101,7 @@ PINS = {
     "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "726ba21012cb90d9a4d0f1a8a5a9a17aad2b543405c01c13f8249fea705fb170"),
     "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "7c72cedbffd342f46afb8b1817ffcd65ead02fe3e9cdf98b93fc7c99d72f8ae0"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "0774e4a6bec59f54054979649884d891c510df7202d05e7df7df7163f9ea08f9"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "7729f87ded1b3c2992874546398886916016b0f25dc61148d61535e95e3b3ed2"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "9117ee17ca8c98d0b6da8e3914c9487073e6f9ce0f7e2f94c3749e2e6f63b948"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
@@ -118,7 +118,7 @@ PINS = {
     "cl_bulgin": ("v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt", "c7accd3dd6dc1d8993de6ffc37e4febba71302e878b3cdf0f3f2f30bc2a4457e"),
     # update rounds 3 and 4: L4-E13 (U-03), accepted by the coordinator's check 3 at fae419d1 and, after set 25 (L4-E7R
     # accepted), check 4 at 33b6b7be; read from the tree
-    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "37381202685fcf9a744d7b460dda0abc618d7b45d2aca5015acd255545284e8d"),
+    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "68cbe4f68cbb60f7a74389df1d3ebdabd944bcc592b1c3b6a32ed4229aab21c1"),
     "l4e13md": ("v2/docs/records/l4e13/L4E13-PANEL.md", "1c7f11716db4c2f2d1fa31327050afac8eb225c8ed8552091845cbdb090bf191"),
     "l4e13chk": ("v2/docs/records/l4e13/checks/check-l4e13-3.md", "88539c7aeaf2f99d8ed0364ac86f0cb312b9322eeeb6ac860ffa3d35e53ec306"),
     "l4e13chk4": ("v2/docs/records/l4e13/checks/check-l4e13-4.md", "5a08480af4695e61752d04852d8647e0276f292771596281968acf8903bc73e8"),
@@ -149,7 +149,7 @@ PINS = {
     # comparison (check 6 at e2d20bf2) and the findings ledger's resumed verification (fnd/l4close at 65be2c2c); read from the tree
     "l4e12chk7": ("v2/docs/records/l4e12/checks/check-l4e12-7.md", "ec5ee21523560a719a0e2ff79d98b0bf84f9277629590757f66b4bd8c722906d"),
     "l4e10chk6": ("v2/docs/records/l4e10/checks/check-l4e10-6.md", "2bd4287f3736da75a0dd3d730666362f62b6371aa5d305c99781ef1679c7697e"),
-    "ledger": ("v2/docs/records/l4close/FINDINGS-LEDGER.md", "4b46d045b5b25c595b03e2fd275c93fdd504c2b479ac7974dcbb7bfbc8154baa"),
+    "ledger": ("v2/docs/records/l4close/FINDINGS-LEDGER.md", "385b1cdd4636c0f07f6b682d9260968a48eb5627f30b317ac171398281b39a27"),
     "verify": ("v2/docs/records/l4close/verify_risks.out", "fd2dc6b2c1e723be2316052ec0dc76127605e2334fb80d5dc4e587b387df257c"),
     # the last add-on: L4-E7's solar-fault remedies (check 5 at 573fd5b8), its page and its drafted guard; read from the tree
     "l4e7md": ("v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md", "5c56212cd9d3accd1bfa69689563446f2cee770eed89b64e95e701c383152e35"),
@@ -5141,11 +5141,13 @@ def cons_cell_tables(F, D, st):
 def cons_ledger(F):
     """The findings ledger's totals and its still-open rows, for the exit statement."""
     lg = F["rc"]["ledger"]
-    return ("**The findings ledger** (`records/l4close/FINDINGS-LEDGER.md` at `fnd/l4close` `65be2c2c`): %d rows of rejected "
-            "collaborator findings, %d CLOSED, %d CLOSED AS CONDITIONAL, %d OPEN DOWNSTREAM and %d STILL OPEN. The four still open are "
-            "two findings: L4-E12:1.3 and 2.2 (item 5, the SGP41's shutdown bound: its lag's carrier R-139 measured the wrong interval "
-            "and is restated in this round) and L4-E7R:1.6 and 2.4 (the panel lead's surge: derived by L4-E7, its remedy selected and "
-            "checked, check-l4e7r-5; the ledger itself not yet re-read)." % lg)
+    head = ("**The findings ledger** (`records/l4close/FINDINGS-LEDGER.md`, set 27's integration): %d rows of rejected "
+            "collaborator findings, %d CLOSED, %d CLOSED AS CONDITIONAL, %d OPEN DOWNSTREAM and %d STILL OPEN." % lg)
+    if lg[4] == 0:
+        return head + (" The four rows that were still open (two findings) are CLOSED AS CONDITIONAL: L4-E12:1.3 and 2.2 on R-139's "
+                       "restated bench test (item 5's DIFFERS resolved by that correction, recorded in VERIFICATION-2026-10-02.md), "
+                       "and L4-E7R:1.6 and 2.4 on L4-E7's drafted, checked remedies (check-l4e7r-5), Q13's hot leakage and R-175.")
+    return head + (" The still-open rows are named in the ledger's count section; this record does not restate them.")
 
 
 def cons_amend_lines(F):
