@@ -1,16 +1,17 @@
 """Layer 4 task L4-E12 (MESHSAT-1478 under MESHSAT-1357, 2 October 2026; v2/docs/records/l4e12/): the kit's electronics against
 the inside air at D-02a's +55 C operating margin (E3-O) and E5's +60 C dwell, held as predicates on what l4e12_thermal.py
-computes.
+computes, revised after the focused check astra-check-l4e12-1.
 
 The predicates: the power model and the reduced-mode model are reproduced byte for byte before any figure is used, and
 T-H1's floor and L4-E10's inside air are reproduced from them; the acceptance is read from the texts, not typed; every
 fitted line, module and undeclared line is screened and every part the first pass finds within reach is read one by one;
-the ratings rule takes an absolute maximum or a storage range only where its maker states one; approach (a) needs more than
-the sealed case's outer films give at W4's low coefficients; the hold lowers the enclosure line, acts nowhere inside the
-envelope, stays engaged once entered, closes E3-O at T-H1's floor and holds every part it routes by the air at the selected
-line; no owner question is forced and the e-paper's route waits on its maker; the record's page carries the .out's figures;
-the committed .out is what the script prints; the record's files carry no long dashes and no claim words. Nothing here
-writes into the tree.
+the corrected rule judges a powered part on its recommended or operating range and uses an absolute maximum only as an
+exclusion screen; approach (a)'s line lies between the low case's outer-film cap and W4's high case; the selected route keeps
+E3-O as TEST-PLAN states it (every radio C1 leaves on stays on) and lets the hold act only in E5, inside a trigger window
+that exists only with a calibrated reference; the SGP41's own shutdown acts before its local +55 C; the two 3.3 V regulators
+are part of the route; every line with no range held carries an evidence obligation and the fans are architecture-level; no
+owner question is forced; the page carries the .out's figures; the committed .out is what the script prints; the record's
+own files carry no long dashes and no claim words; the check is filed and listed. Nothing here writes into the tree.
 """
 import hashlib
 import importlib.util
@@ -64,7 +65,6 @@ def t_models_reproduced_and_the_floor_and_air_from_them():
     T = R["T"]
     assert abs(T["g_floor"] - 1.6664) < 5e-5 and T["agree_g"], "T-H1's floor is not LO-01a's 1.6664 W/K"
     assert abs(T["air_uncond"][0] - 70.00) < 5e-3 and abs(T["air_uncond"][1] - 75.00) < 5e-3, T["air_uncond"]
-    # the floor is the SGP41's line by construction: the same heat over the same conductance gives the same 15 K rise
     assert abs((T["air_uncond"][1] - 60.0) - (T["sgp55"] - T["t_use"])) < 1e-9
     assert abs(T["ballast_k"] * T["g_floor"] - 2.09) < 1e-9
 
@@ -89,47 +89,86 @@ def t_every_line_is_screened_and_the_reached_ones_are_read():
     assert R["gc"]["rows"] >= 140 and R["gc"]["mods"] >= 15, R["gc"]
     for r in scr:
         if "OUT OF SCOPE" in r["verdict"].values():
-            only_p = list(r.get("refs", {}).keys()) in (["P"], ["module"])
-            assert only_p, "a line outside board P and the cells is out of scope: %s" % r["part"]
+            assert list(r.get("refs", {}).keys()) in (["P"], ["module"]), "a line outside board P and the cells is out of scope: %s" % r["part"]
     assert not R["unread"], "lines within reach that no one read: %s" % R["unread"]
 
 
-def t_the_ratings_rule_takes_wider_statements_only_where_stated():
+def t_the_corrected_rule_judges_powered_parts_on_their_operating_ranges():
     R = _R()
     m = _CACHE["M"]
     S = R["S"]
     P = {p["k"]: p for p in m.PARTS}
-    assert m.govern(P["PCM2912A"], "powered", S)[0] == 125.0, "the PCM2912A's absolute ambient under bias"
-    assert m.govern(P["SGP41"], "powered", S)[0] == 55.0 and m.govern(P["SGP41"], "unpowered", S)[0] == 70.0
-    assert m.govern(P["LIME"], "unpowered", S)[0] == 70.0 and m.govern(P["AW7915"], "unpowered", S)[0] == 90.0
-    assert m.govern(P["RM520N"], "powered", S)[0] == 85.0 and m.govern(P["RM520N"], "unpowered", S)[0] == 90.0
-    # with no storage range stated, an unpowered part is judged on its operating range
+    lim, basis, key, absv = m.govern(P["PCM2912A"], "work", S)
+    assert lim == 70.0 and absv == 125.0 and key == "pcm_rec", "a powered PCM2912A is judged on its recommended +70 C, its +125 C a screen"
+    assert m.verdict(70.0, 76.0, 78.0, "on", 125.0) == "INCONCLUSIVE" and m.verdict(70.0, 76.0, 78.0, "work", 125.0) == "REACHED"
+    assert m.govern(P["SGP41"], "work", S)[0] == 55.0 and m.govern(P["SGP41"], "off", S)[0] == 70.0
+    assert m.govern(P["LIME"], "off", S)[0] == 70.0 and m.govern(P["AW7915"], "off", S)[0] == 90.0
+    assert m.govern(P["RM520N"], "work", S)[0] == 75.0 and m.govern(P["RM520N"], "off", S)[0] == 90.0
     for k in ("RB9704", "SA868", "G6K", "EPAPER"):
-        lim, basis, _key = m.govern(P[k], "unpowered", S)
+        lim, basis, _key, _a = m.govern(P[k], "off", S)
         assert "operating" in basis and lim == S[P[k]["op"]]["v"][-1], k
     assert S["pdi_storage_stated"]["v"] is False, "the e-paper's flyer now states a storage range: re-read it"
+    assert S["pcm_absnote"]["v"] is True and S["tlv755_absnote"]["v"] is True and S["rm_recover"]["v"] is True
 
 
-def t_approach_a_passes_the_sealed_case_cap():
+def t_approach_a_sits_between_the_low_case_cap_and_the_high_case():
     R = _R()
     a, T = R["ap"]["a"], R["T"]
     assert abs(a["gmax"] - (T["q_hs"] + T["qb"]) / 10.0) < 1e-9, "(a)'s line is not the +70 C class at E5"
-    assert a["gmax"] > T["cap"][0] and a["g_m"][1] > T["w4_open"][1]
-    assert set(k for k, _w in a["open"]) == {"SGP41", "ATP19", "EPAPER"}
+    assert T["cap"][0] < a["gmax"] < T["w4_open"][1] < T["cap"][1]
+    assert abs(a["g_e3o"] - (T["q_hs"] + T["qb"]) / 15.0) < 1e-9
+    assert set(k for k, _w in a["open"]) == {"ATP19", "EPAPER"}
 
 
-def t_the_hold_lowers_the_line_and_closes_e3o_at_the_floor():
+def t_the_route_keeps_e3o_as_stated_and_the_hold_acts_only_in_e5():
     R = _R()
+    m = _CACHE["M"]
     c, a, T = R["ap"]["c"], R["ap"]["a"], R["T"]
-    assert c["gmax"] < a["gmax"] and T["q_m"] < T["q_hs"]
-    assert abs(c["L"]["E5"]["mixed"] - 70.0) < 1e-9, "the selected line does not put E5's mixed air at the +70 C class"
-    assert c["L_floor"]["E3-O"]["mixed"] < 70.0
+    route = {p["k"]: p["route"] for p in m.PARTS}
+    for k in ("RB9704", "SA868", "PCM2912A", "G6K"):
+        assert route[k][0] == "work" and route[k][1] == "off", k
+    assert c["gmax"] < a["gmax"] and abs(c["gmax"] - c["g_e5"]) < 1e-12 and c["g_e3o"] < c["g_e5"]
+    assert abs(c["L"]["E3-O"]["mixed"] - (55.0 + (T["q_hs"] + T["qb"]) / c["gmax"])) < 1e-9, "E3-O at the line is not the heat stage"
+    assert abs(c["L"]["E5"]["mixed"] - 70.0) < 1e-9
     for pr in c["parts"]:
         if pr["k"] in c["g"]:
-            assert pr["temps"]["E5"][0] <= pr["lim"] + 1e-9 and pr["temps"]["E3-O"][0] <= pr["lim"] + 1e-9, pr["k"]
+            for mg in ("E3-O", "E5"):
+                assert pr["temps"][mg][0] <= pr["lim"][mg] + 1e-9, (pr["k"], mg)
     assert {k for k, _w in c["open"]} == {"ATP19", "EPAPER"}
-    t = c["trip"]
-    assert t["never_in_env"] and t["stays"] and t["before_trip_hi"] <= 70.0 and t["e5_low"] < t["trip"]
+    tr = c["trip"]
+    assert abs(tr["width"] - (15.0 - (T["q_hs"] + T["qb"]) / c["gmax"])) < 1e-9
+    assert tr["e_allow"] > 0 and tr["plume_window"] < 0 and tr["g_plume"] > T["w4_open"][1]
+    assert tr["env_mix"] < tr["e3o_mix"] < tr["trip_mid"] < tr["need_by"]
+
+
+def t_the_sgp41_shutdown_acts_before_its_local_55_c():
+    R = _R()
+    sg, S = R["ap"]["sgp"], R["S"]
+    assert sg["t_off"] + sg["err"] + sg["grad"] + sg["lag"] <= S["sgp_op"]["v"][1] + 1e-9
+    assert sg["t_on"] == S["sgp_rec"]["v"][1] == 50.0 and sg["t_on"] < sg["t_off"]
+    assert sg["env_margin"] > 0, "the SGP41 would be off inside the envelope at the line"
+    assert sg["env_air_floor"] > sg["kept_to"], "at T-H1's floor the function is lost at the hot edge; the record says so"
+
+
+def t_the_regulators_are_part_of_the_route():
+    R = _R()
+    rg = R["ap"]["reg"]["rows"]
+    rec = R["decl"]["rec755"]
+    plan = rg["E U13 at the model's plan"]
+    assert all(plan["DBV"][mg] > rec for mg in ("E3-O", "E5")) and all(plan["DRV"][mg] < rec for mg in ("E3-O", "E5"))
+    assert rg["E U13 at its rail's declared typical"]["DRV"]["E5"] > rec, "the declared 0.35 A needs more than the DRV package"
+    assert all(rg["C U5 at its rail's declared typical"]["DRV"][mg] < rec for mg in ("E3-O", "E5"))
+
+
+def t_the_unrated_lines_are_named_and_the_fans_are_architecture_level():
+    R = _R()
+    m = _CACHE["M"]
+    names = [u[0] for u in m.UNRATED]
+    assert dict((u[0], u[1]) for u in m.UNRATED)["IP68 fans"] == "ARCHITECTURE"
+    open_rows = [r for r in R["ap"]["c"]["screen"] if r["max"] is None and "INCONCLUSIVE" in r["verdict"].values()]
+    assert len(open_rows) == 11, len(open_rows)
+    for r in open_rows:
+        assert any(n_.split(" ")[0] in r["part"] for n_ in names), "an unrated line without an evidence obligation: %s" % r["part"]
 
 
 def t_no_owner_question_is_forced():
@@ -146,14 +185,11 @@ def t_the_page_carries_the_out_figures():
     page = open(PAGE, encoding="utf-8").read()
     out = open(OUT, encoding="utf-8").read()
     T, a, c = R["T"], R["ap"]["a"], R["ap"]["c"]
-    for fig in ("%.3f" % c["gmax"], "%.3f" % a["gmax"], "%.2f" % T["air"]["E3-O"], "%.2f" % T["air"]["E5"], "%.3f" % T["q_m"],
-                "%.3f" % T["q_hs"], "%.4f" % T["g_floor_ballast"], "%.2f" % c["L_floor"]["E3-O"]["mixed"], "%.1f" % m_trip()):
+    sg, tr = R["ap"]["sgp"], c["trip"]
+    for fig in ("%.3f" % c["gmax"], "%.3f" % a["gmax"], "%.3f" % c["g_e3o"], "%.2f" % T["air"]["E3-O"], "%.2f" % T["air"]["E5"], "%.3f" % T["q_m"],
+                "%.3f" % T["q_hs"], "%.4f" % T["g_floor_ballast"], "%.2f" % c["L"]["E3-O"]["mixed"], "%.2f" % tr["e_allow"], "%.2f" % tr["width"],
+                "%.2f" % sg["t_off"], "%.2f" % tr["trip_mid"], "%.3f" % tr["g_plume"]):
         assert fig in page and fig in out, "the figure %s is not on both the page and the .out" % fig
-
-
-def m_trip():
-    _R()
-    return _CACHE["M"].HOLD_TRIP_C
 
 
 def t_out_is_what_the_script_prints():
@@ -171,10 +207,19 @@ def t_nothing_written_into_the_tree():
 
 def t_the_record_carries_no_long_dashes_and_no_claim_words():
     files = [os.path.join(dp, f) for dp, _dn, fs in os.walk(REC) for f in fs
-             if f.endswith((".md", ".py", ".out", ".txt")) and "__pycache__" not in dp] + [os.path.abspath(__file__)]
+             if f.endswith((".md", ".py", ".out", ".txt")) and "__pycache__" not in dp and os.sep + "checks" not in dp] + [os.path.abspath(__file__)]
     claim = re.compile(r"(?i)\b(certified|compliant|qualified|proven|guaranteed|withstands|survives|rated for)\b")
+    dash = "[%s%s]" % (chr(0x2013), chr(0x2014))
     for p in files:
         t = open(p, encoding="utf-8").read()
-        assert not re.search("[%s%s]" % (chr(0x2013), chr(0x2014)), t), "a long dash in %s" % p
+        assert not re.search(dash, t), "a long dash in %s" % p
         bad = [m.group(0) for m in claim.finditer(t) if not re.search(r"[\w-]*CERTIFIED\.tsv", t[max(0, m.start() - 8):m.end() + 4])]
         assert not bad or p == os.path.abspath(__file__), "claim words %s in %s" % (bad, p)
+
+
+def t_the_check_is_filed_and_listed():
+    p = os.path.join(REC, "checks", "astra-check-l4e12-1.md")
+    need(p, "the filed check")
+    t = open(p, encoding="utf-8").read()
+    assert t.startswith("accepted: no\n") and "`cx31-l4e12-check`" in t and "## Blocking discrepancies" in t
+    assert "checks/astra-check-l4e12-1.md" in open(os.path.join(REC, "README.md"), encoding="utf-8").read()
