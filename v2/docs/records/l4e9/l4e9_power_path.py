@@ -131,6 +131,8 @@ PINS = {
     "l4e11chk4": ("v2/docs/records/l4e11/checks/check-l4e11-4.md", "b0a03440a9bb9a75806a7ba692fde8bc6e72ec4d419b39e8fe92f1ad469f6e65"),
     "th1proc": ("v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md", "07b94e2ff18647a16118784672b5df414097cbbfc84bd7532cb0c75eab79b9d8"),
     "cl_tiq": ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "2789ce47a4e81fb6b152687016e84f635a85f6006874d22180cc210f2c23d006"),
+    # the consolidation: the tablet's service budget (a PROPOSAL, l3batt), the one budget input not read above
+    "tablet": ("v2/docs/records/l3batt/tablet.out", "d71429a9bd6d60a51662f1a4826db398c629cb3675b8c6668e3aba1fb60a8194"),
 }
 # Read from the tree when the tree's file is the pinned one, else from the named commit: L4-E7R's selected solution (fnd/l4e7,
 # accepted, check 4 at 91e9a4b5), L4-E10's final record (fnd/l4e10, closing check 573c8b8f), L4-E11's (fnd/l4e11, accepted,
@@ -1073,6 +1075,45 @@ def compute():
         refuse(3, "TI-QUESTIONS.md's questions")
     need(T["cl_tiq"], r"\*\*Drafts for the owner to send\*\*", "the TI questions as the owner's drafts")
     F["r5"] = r5
+
+    # ============================================= the consolidation (the owner's instruction of 2 October 2026, 11:25): the budget's
+    # inputs not read above, each from its pinned file
+    cb = {}
+    t = T["budget"]
+    m = need(t, r"^PS-IDLE-SPEC load\s+([\d.]+) \| battery\s+([\d.]+) /\s+([\d.]+) /\s+([\d.]+)", "PS-IDLE-SPEC's split")
+    cb["idle_pins"] = f(m, 1)
+    if (f(m, 2), f(m, 3), f(m, 4)) != F["idle"]:
+        refuse(3, "pwr_budget.out's PS-IDLE-SPEC split is not the profile read above")
+    m = need(t, r'^PS-IDLE-SPEC open_fans \{.*?"heat_plan_W": ([\d.]+), "heat_high_W": ([\d.]+), "pack_I2R_plan_W": ([\d.]+)', "PS-IDLE-SPEC's heat")
+    cb["idle_heat"], cb["idle_heat_hi"], cb["idle_i2r"] = f(m, 1), f(m, 2), f(m, 3)
+    m = need(t, r'^PS-IDLE-SPEC open_fans \{"enclosure": "open_fans", "G_bound": \[([\d.]+), ([\d.]+)\]', "W4's lid-open bound")
+    cb["w4"] = (f(m, 1), f(m, 2))
+    t = T["tablet"]
+    cb["tab_cap"] = f(need(t, r"P_CAP, PEAK OUTPUT POWER: ([\d.]+) W at the outlet", "the outlet's cap"))
+    cb["tab_out"] = f(need(t, r"E_OUT, ENERGY DELIVERED AT THE OUTLET: at most ([\d.]+) Wh a day", "the outlet's daily energy"))
+    m = need(t, r"in a 2 h window: [\d.]+ / ([\d.]+) = ([\d.]+) Wh \(([\d.]+) W for 2 h\)", "the window's energy at VBAT")
+    cb["tab_eta"], cb["tab_wh"], cb["tab_w"] = f(m, 1), f(m, 2), f(m, 3)
+    cb["tab_any"] = f(need(t, r"ANY, the same Wh with the converter on all day: .*? = ([\d.]+) Wh", "the converter on all day"))
+    m = need(t, r"IDLE DRAW, ENABLED AND NOT LOADED: ([\d.]+) W typ, ([\d.]+) W max", "the outlet converter's idle draw")
+    cb["tab_idle"] = (f(m, 1), f(m, 2))
+    m = need(t, r"the case is W13 \((\d+) to\s+(\d+) UTC\)", "the window's hours")
+    cb["tab_win"] = (int(m.group(1)), int(m.group(2)))
+    t = T["l4e12"]
+    m = need(t, r"The heat stage after BANK-R1 \(PS-SURV-R\) on shore, plan: ([\d.]+) W at the pack, ([\d.]+) W into the case", "the heat stage")
+    cb["stage_pack"], cb["stage_case"] = f(m, 1), f(m, 2)
+    m = need(t, r"([\d.]+) W at the load\s+pins, ([\d.]+) W lost in the converters, ([\d.]+) W in the distribution \(fuses, FETs, shunt, leads\): ([\d.]+) W at the pack; on shore\s+the front end's and the charger's loss on it adds ([\d.]+) W",
+             "E5's hold built up")
+    cb["e5"] = tuple(f(m, i) for i in range(1, 6))
+    m = need(t, r"PS-IDLE-SPEC \(the profile\)\s+(\d) fans: ([\d.]+) W at the pack of ([\d.]+) W", "the profile's fans")
+    cb["fans_idle"] = (int(m.group(1)), f(m, 2), f(m, 3))
+    cb["fans_stage"] = f(need(t, r"the heat stage \(PS-SURV-R\)\s+\d fans: ([\d.]+) W at the pack", "the heat stage's fans"))
+    cb["fans_e5"] = f(need(t, r"E5's hold\s+\d fans: ([\d.]+) W at the pack", "E5's fans"))
+    cb["chg_heat"] = f(need(t, r"A charge running on shore \(the pack outside, at room temperature, inside its window\): \+([\d.]+) W", "a charge's heat"))
+    m = need(t, r"C1, module shedding \| inside air \+(\d+) C or any cell \+(\d+) C", "C1's trigger")
+    cb["c1_air"], cb["c1_cell"] = f(m, 1), f(m, 2)
+    m = need(T["l4e13"], r"the stage draws its own drive and quiescent power, ([\d.]+) mA, ([\d.]+) W", "the stage's own power")
+    cb["stage_q"] = (f(m, 1), f(m, 2))
+    F["cb"] = cb
     return F, where
 
 
@@ -3153,8 +3194,237 @@ def main():
     for ln in round5_lines(F, st, reg):
         p(ln)
     p("")
+    N, Ed, Cd, NP = cons_diagram(F, st)
+    svg = cons_svg(N, Ed, Cd, NP, st)
+    svg_path = os.path.join(HERE, SVG_NAME)
+    if "--write-svg" in sys.argv:
+        open(svg_path, "w", encoding="utf-8").write(svg)
+    if not os.path.exists(svg_path) or open(svg_path, encoding="utf-8").read() != svg:
+        refuse(4, "the committed %s is not the script's (run it with --write-svg)" % SVG_NAME)
+    for ln in cons_diagram_lines(N, Ed, Cd, NP, st, hashlib.sha256(svg.encode("utf-8")).hexdigest()):
+        p(ln)
+    p("")
     p("END. Desk arithmetic on read figures; nothing is measured.")
     return "\n".join(out) + "\n", F, D, R, st
+
+
+# ======================================================================================================== THE CONSOLIDATION
+# The owner's instruction of 2 October 2026 (11:25 and his corrections of 12:00): one connected, implementable design. Every
+# table below is built from figures this script read above; the page's tables are these, and test_l4e9.py holds them equal.
+STATUS = "known defects addressed in drafts; feasibility conditions remain open"
+SVG_NAME = "L4-POWER-DIAGRAM.svg"
+
+
+def cons_diagram(F, st):
+    """The one connected figure: nodes (blocks with their settings and limits), power edges (each with its IF row), the
+    control edges (who acts on which element) and the path the figure notes but does not carry power on."""
+    hs = F["hold"]
+    N = [
+        ("SRC_PV", 0, 70, "Panel (REQ-016)", ["Voc at most 25 V at -20 C", "at most 100 W into the stage", "PANEL-ACC unit: none accepted (U-03)"]),
+        ("SRC_DC", 0, 380, "Vehicle or shore DC (REQ-015)", ["9 to 36 V at the plug, -36 V reversed", "D38999 size 12, loop >= %s mOhm" % fmt(F["loop_floor"]),
+                                                             "XT60-class J_DCIN (drafted, R-131)"]),
+        ("SRC_USB", 0, 620, "USB-C input: none (D-12)", ["the USB-C port is an outlet only"]),
+        ("SOL_IN", 1, 70, "Solar entry, board E", ["J_SOLAR VH %s A, F2 %s A" % (fmt(F["vh_16"]), fmt(F["vh_16"])), "D4 SMCJ28A; the 50 V bulk",
+                                                   "ahead of the sense bank", "(L4-E7R, drafted)", "R59 15 mOhm on TRK_VIN"]),
+        ("DC_IN", 1, 380, "Vehicle entry, board E", ["F1 0997010.WXN 58 V DC (drafted)", "D10 SMCJ40CA, D1 SMCJ40A",
+                                                     "Q1 CSD19532Q5B 100 V (drafted)", "U3/Q1 LM74700-Q1 ideal diode"]),
+        ("U5", 2, 70, "U5 LT8705AI stage", ["hold %s / %s / %s V" % ("%.3f" % hs[0], "%.3f" % hs[1], "%.3f" % hs[2]),
+                                            "regulation RIMON_IN %s" % F["rimon"], "%s A nominal, %s A highest" % (fmt(F["reg"][0]), fmt(F["reg"][1])),
+                                            "backstop on SWEN %s to %s A" % (fmt(F["bs_trip"][0]), fmt(F["bs_trip"][1])),
+                                            "TRK_OUT ceiling %s to %s V" % (fmt(F["trk_ceiling"][0]), fmt(F["trk_ceiling"][2])), "U4/Q2 ideal diode out"]),
+        ("ENTRY", 2, 380, "Entry breaker (L4-E11, drafted)", ["U6 TPS48110-Q1, Q7 CSD19536KTT",
+                                                              "UVLO on %s to %s V" % (fmt(F["e_uv_on"][0]), fmt(F["e_uv_on"][2])),
+                                                              "OV off %s to %s V" % (fmt(F["e_ov_off"][0]), fmt(F["e_ov_off"][2])),
+                                                              "%s to %s A after %s to %s ms" % (fmt(F["e_oc"][0]), fmt(F["e_oc"][2]), fmt(F["e_oc_ms"][0]), fmt(F["e_oc_ms"][2])),
+                                                              "short %s to %s A, retry %s s" % (fmt(F["e_sc"][0]), fmt(F["e_sc"][2]), fmt(F["e_retry_s"])),
+                                                              "R19 4.5 mOhm, L2 SRF1260-1R0Y"]),
+        ("VINRAW", 3, 240, "VIN_RAW (board E to A)", ["D2 SMCJ40A clamp", "four Mill-Max %s A dock pins" % fmt(F["millmax_a"]),
+                                                      "declared %.2f A" % F["vin_raw_a"]["typ"], "basis %s V maximum" % fmt(F["e_basis_v"])]),
+        ("FE", 4, 70, "U2 LM5176 front end, board A", ["R11 8 mOhm, R12 12 mOhm (drafted)", "U34 guard R14 76.8k (drafted)",
+                                                       "VBUS20 %s to %s V" % (fmt(F["vbus_band"][0]), fmt(F["vbus_band"][1])),
+                                                       "efficiency 0.93 declared (C-8)"]),
+        ("BANK", 4, 245, "VBUS20 bank (L4-E8, drafted)", ["six EEHZK1V331P, 45 mOhm each", "every can at most %s A" % fmt(F["can8"][0]),
+                                                           "rule %s A; Cc2 3.3 nF" % fmt(F["can8"][1])]),
+        ("CHG", 4, 395, "U3 BQ25731 charger, board A", ["R16 10 mOhm; IIN_HOST %.2f A" % F["iin_host"],
+                                                        "H3 line: flat %s A, HIZ < %s V" % (fmt(F["knee"][0]), fmt(F["knee_hiz"])),
+                                                        "ChargeCurrent at most %.1f A" % F["chg_set"], "BATOVP %s V; no battery FET" % fmt(F["batovp"])]),
+        ("VBAT", 5, 395, "VBAT = VSYS node", ["10.0 to %s V" % fmt(F["chg_v_max"]), "D1 SMCJ18A clamp", "U-04: VSYS with no battery"]),
+        ("PACK", 6, 60, "Pack, board P (D-06 4S3P; U-01)", ["Samsung 35E x 12 (ruled cell)", "BQ4050 gauge and its FETs",
+                                                            "BQ7720700 -> F2 SCF9550", "F1 %s A; OCD1 %s A for %s s" % (fmt(F["a_f1"]), fmt(F["ocd1"][0]), fmt(F["ocd1"][1])),
+                                                            "usable %s Wh at +20 C" % fmt(F["a1_bat"][0])]),
+        ("LOADS", 6, 225, "Load converters", ["PS-IDLE-SPEC %s W at the pack" % fmt(F["idle"][1]), "slot, device, logic, monitor",
+                                              "heater U22/U33 12.0 V 7.5 W", "eFuses TPS2596 %s V" % fmt(F["tps2596_abs"])]),
+        ("USBC", 6, 370, "USB-C outlet U19 + U18", ["5 / 9 / 15 V at %s A" % fmt(F["pdo_a"]), "OCP %s to %s A" % (fmt(F["trip"][0]), fmt(F["trip"][1])),
+                                                    "tablet budget %s W cap (proposal)" % fmt(F["cb"]["tab_cap"])]),
+        ("POE", 6, 500, "PoE stage", ["R227 5 mOhm, U17 on it (drafted)", "U16 boost %s V at %s A" % (fmt(F["poe"]["volts"]), fmt(F["poe"]["peak"]))]),
+        ("PA", 6, 600, "PA and HF rails", ["U13 %s V; key-down at most 60 s" % fmt(F["pa"]["volts"]), "U15 %s V to the QMX" % fmt(F["hf"]["volts"]),
+                                           "outlets off while the PA keys"]),
+        ("CTL_PANEL", 1, 690, "Panel controller C:U3 RP2040", ["the kit I2C: the charger,", "the expanders, the INA226s", "and the key-down rules"]),
+        ("CTL_SENS", 3, 690, "Sensor controller E:U10 RP2040", ["the gauge's SMBus, the mixer", "fans, VIN_MON; always on"]),
+        ("CTL_HW", 5, 690, "Hardware, no firmware", ["comparators, the gauge, the", "breaker, the knee, OUTLET_OK"]),
+    ]
+    E = [
+        ("P01", "SRC_PV", "SOL_IN", ["IF-01"], "J_SOLAR, F2, D4, the bulk, the sense bank"),
+        ("P02", "SOL_IN", "U5", ["IF-02"], "PV_P to TRK_VIN, U5's input"),
+        ("P03", "U5", "VINRAW", ["IF-03"], "TRK_OUT through U4/Q2"),
+        ("P04", "SRC_DC", "DC_IN", ["IF-04"], "the plug, the interconnect, J_DCIN, F1, Q1"),
+        ("P05", "DC_IN", "ENTRY", ["IF-05"], "DC_P into U6/Q7"),
+        ("P06", "ENTRY", "VINRAW", ["IF-05"], "R19, L2 to VIN_RAW"),
+        ("P07", "VINRAW", "FE", ["IF-06", "IF-07"], "the dock's pins, U2's input"),
+        ("P08", "FE", "BANK", ["IF-07"], "VBUS20"),
+        ("P09", "BANK", "CHG", ["IF-08", "IF-09"], "VBUS20 through R16 into U3"),
+        ("P10", "CHG", "VBAT", ["IF-09"], "U3's output, VSYS"),
+        ("P11", "VBAT", "PACK", ["IF-10"], "R17, A F1, the pack pins, board P"),
+        ("P12", "VBAT", "LOADS", ["IF-11"], "the converters' inputs"),
+        ("P13", "VBAT", "USBC", ["IF-12"], "U19's input, R138"),
+        ("P14", "VBAT", "POE", ["IF-13"], "R227 to POE_VIN"),
+        ("P15", "VBAT", "PA", ["IF-14"], "U13's and U15's inputs"),
+    ]
+    C = [
+        ("C01", "CTL_PANEL", "CHG", "FW-A01 to A03, A16, A17: RSNS_RAC, IIN_HOST %.2f A, ChargeCurrent at most %.1f A, the charger's 175 s watchdog; CHG_INHIBIT (FW-A14) and rules R-a to R-d (R-126)" % (F["iin_host"], F["chg_set"]), "firmware"),
+        ("C02", "CTL_PANEL", "LOADS", "the expanders (FW-A08): SLOT_EN, DEV_EN, HEAT_EN; the margin hold (R-138, R-139); MAIN and PI_KILL (FW-A10 to A12)", "firmware"),
+        ("C03", "CTL_PANEL", "USBC", "PD_SW_EN AND OUTLET_OK (FW-A06); the tablet's window (a proposal)", "firmware and hardware"),
+        ("C04", "CTL_PANEL", "POE", "POE_SW_EN AND OUTLET_OK (FW-A06); U17 read on R227 (FW-A09, R-27)", "firmware and hardware"),
+        ("C05", "CTL_PANEL", "PA", "the key-down rules K1 to K5 and C4 (FW-A05, D-11): at most 60 s, the rest floors %s and %s V" % (fmt(F["d11_floor"]), fmt(F["pa_floor"])), "firmware"),
+        ("C06", "CTL_SENS", "PACK", "the gauge's SMBus (FW-E01): its ranges relayed to the charger by the host; SHUTDOWN for storage (FW-E09); HWD 10 s", "firmware"),
+        ("C07", "CTL_SENS", "LOADS", "the mixer fans (FW-E07), the Geiger supply (FW-E08), VIN_MON for FW-A16 (FW-E04)", "firmware"),
+        ("C08", "CTL_HW", "U5", "the hold (FBIN divider R8, R9 at 0.1 %%), the regulation (IMON_IN, RIMON_IN %s), the backstop comparators on SWEN, off below %s V of TRK_LDO33" % (F["rimon"], fmt(F["swen_v"])), "hardware"),
+        ("C09", "CTL_HW", "ENTRY", "the TPS48110-Q1's own UVLO, OV, breaker and short-circuit trip; the LM74700-Q1 blocks reverse current", "hardware"),
+        ("C10", "CTL_HW", "FE", "U34's restart guard (R14 76.8k: %s to %s V); R11's average and R12's cycle-by-cycle limits" % (fmt(F["guard_sel"][0]), fmt(F["guard_sel"][2])), "hardware"),
+        ("C11", "CTL_HW", "CHG", "the H3 line on ILIM_HIZ (the corrected knee), the charger's VINDPM, ACOV, BATOVP and SYSOVP", "hardware"),
+        ("C12", "CTL_HW", "PACK", "the BQ4050's protections on its FETs (COV, CUV, OCC %s A, OCD, SCD %s A, UTC, OTC); the BQ7720700 drives F2" % (fmt(F["occ"]), fmt(F["scd"])), "hardware (the gauge's own firmware)"),
+        ("C13", "CTL_HW", "USBC", "OUTLET_OK = NOT (TR_APRS AND PA_EN), A:U30, drops both outlets while the PA keys; U18's OCP", "hardware"),
+    ]
+    NOPOWER = [("N01", "VINRAW", "DC_IN", "the tracker back-feeds DC_P through Q7's body diode (no power is delivered this way)")]
+    ids = {n[0] for n in N}
+    for e in E + [(c[0], c[1], c[2]) for c in C] + [(x[0], x[1], x[2]) for x in NOPOWER]:
+        if e[1] not in ids or e[2] not in ids:
+            refuse(4, "diagram edge %s names an unknown block" % e[0])
+    covered = sorted({r for e in E for r in e[3]})
+    if covered != sorted(st):
+        refuse(4, "the diagram's power edges cover %s, not every interface row %s" % (covered, sorted(st)))
+    return N, E, C, NOPOWER
+
+
+def _esc(s):
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def cons_svg(N, E, C, NOPOWER, st):
+    """The diagram as an SVG, generated here and committed beside the page (deterministic text). Power edges are solid and
+    carry their interface rows; the control edges are the blue tags on the blocks a controller acts on, listed on each
+    controller's block (the page's control table gives each in full)."""
+    CW, X0, BW, LH, WIDTH, HEIGHT = 276, 20, 206, 13, 1900, 840
+    box = {}
+    out = ['<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" font-family="DejaVu Sans, Arial, sans-serif">'
+           % (WIDTH, HEIGHT, WIDTH, HEIGHT),
+           '<rect x="0" y="0" width="%d" height="%d" fill="#ffffff"/>' % (WIDTH, HEIGHT),
+           '<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">'
+           '<path d="M0,0 L10,5 L0,10 z" fill="#1f2937"/></marker></defs>',
+           '<text x="20" y="24" font-size="15" font-weight="bold" fill="#111827">L4-E9: the connected power design (A1 under D-06). '
+           'Solid lines carry power, each labelled with its interface row; blue tags C01 to C13 are the controls (the page\'s table).</text>',
+           '<text x="20" y="42" font-size="12" fill="#b91c1c">Status: %s.</text>' % _esc(STATUS)]
+    ctl = {}
+    for cid, a, b, _w, _k in C:
+        ctl.setdefault(b, []).append(cid)
+        ctl.setdefault(a + "#acts", []).append(cid)
+    for nid, col, y, title, lines in N:
+        x = X0 + col * CW
+        extra = []
+        if nid.startswith("CTL"):
+            ids = ctl.get(nid + "#acts", [])
+            extra = ["acts through " + ", ".join(ids[i:i + 4]) if i == 0 else "  " + ", ".join(ids[i:i + 4]) for i in range(0, len(ids), 4)]
+        lines = list(lines) + extra
+        h = 24 + LH * len(lines) + 8
+        box[nid] = (x, y + 10, BW, h)
+        fill = "#eef2ff" if nid.startswith("CTL") else ("#f3f4f6" if nid == "SRC_USB" else "#ffffff")
+        out.append('<rect x="%d" y="%d" width="%d" height="%d" rx="6" fill="%s" stroke="#374151" stroke-width="1.2"/>' % (x, y + 10, BW, h, fill))
+        out.append('<text x="%d" y="%d" font-size="12" font-weight="bold" fill="#111827">%s</text>' % (x + 7, y + 28, _esc(title)))
+        for i, ln in enumerate(lines):
+            out.append('<text x="%d" y="%d" font-size="10.5" fill="#1f2937">%s</text>' % (x + 7, y + 44 + i * LH, _esc(ln)))
+        tags = ctl.get(nid, [])
+        if tags:
+            t = " ".join(tags)
+            tw = int(6.2 * len(t)) + 8
+            out.append('<rect x="%d" y="%d" width="%d" height="13" rx="3" fill="#2563eb"/>' % (x + BW - tw, y - 4, tw))
+            out.append('<text x="%d" y="%d" font-size="9.5" font-weight="bold" fill="#ffffff">%s</text>' % (x + BW - tw + 4, y + 6, t))
+
+    def label(x, y, text):
+        w = int(6.0 * len(text)) + 6
+        out.append('<rect x="%d" y="%d" width="%d" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>' % (x - w // 2, y - 10, w))
+        out.append('<text x="%d" y="%d" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">%s</text>' % (x, y, _esc(text)))
+
+    def rows_text(rows):
+        return "/".join([rows[0]] + [r[3:] for r in rows[1:]])
+    vertical = {"P08", "P09"}
+    into = {"P03": 22, "P06": -22}
+    bus_x = None
+    for eid, a, b, rows, _via in E:
+        xa, ya, wa, ha = box[a]
+        xb, yb, wb, hb = box[b]
+        if eid in vertical:
+            x = xa + wa // 2
+            out.append('<path d="M%d,%d L%d,%d" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>' % (x, ya + ha, x, yb))
+            label(x + 40, (ya + ha + yb) // 2 + 4, rows_text(rows))
+            continue
+        y1 = ya + ha // 2
+        if a == "VBAT":
+            bus_x = xa + wa + 16
+            y2 = yb + hb // 2
+            mk = ' marker-start="url(#a)"' if eid == "P11" else ""
+            out.append('<path d="M%d,%d L%d,%d" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"%s/>' % (bus_x, y2, xb, y2, mk))
+            label((bus_x + xb) // 2, y2 - 4, rows_text(rows))
+            continue
+        off = into.get(eid, 0)
+        y2 = yb + (hb // 2 if off == 0 else (off if off > 0 else hb + off))
+        x1, x2 = xa + wa, xb
+        xm = (x1 + x2) // 2
+        if abs(y2 - y1) < 3:
+            out.append('<path d="M%d,%d L%d,%d" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>' % (x1, y1, x2, y1))
+            label(xm, y1 - 5, rows_text(rows))
+        else:
+            out.append('<path d="M%d,%d L%d,%d L%d,%d L%d,%d" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>'
+                       % (x1, y1, xm, y1, xm, y2, x2, y2))
+            label(xm, (y1 + y2) // 2 + 4, rows_text(rows))
+    if bus_x is not None:
+        ys = [box[b][1] + box[b][3] // 2 for _e, a, b, _r, _v in E if a == "VBAT"]
+        xv, yv, wv, hv = box["VBAT"]
+        yvm = yv + hv // 2
+        out.append('<path d="M%d,%d L%d,%d" fill="none" stroke="#1f2937" stroke-width="1.6"/>' % (xv + wv, yvm, bus_x, yvm))
+        out.append('<path d="M%d,%d L%d,%d" fill="none" stroke="#1f2937" stroke-width="2.2"/>' % (bus_x, min(ys), bus_x, max(ys)))
+    for nid, a, b, _what in NOPOWER:
+        xa, ya, wa, ha = box[a]
+        xn, yn, wn, hn = box["ENTRY"]
+        yl = ya + ha + 18
+        xe = xn + wn - 40
+        out.append('<path d="M%d,%d L%d,%d L%d,%d L%d,%d" fill="none" stroke="#9ca3af" stroke-width="1.2" stroke-dasharray="2,3"/>'
+                   % (xa + wa // 2, ya + ha, xa + wa // 2, yl, xe, yl, xe, yn - 6))
+        out.append('<text x="%d" y="%d" font-size="9.5" fill="#6b7280">%s: back-feed into DC_P through Q7\'s body diode (no power delivered)</text>'
+                   % (X0 + CW + 10, yl - 4, nid))
+    out.append('<text x="20" y="%d" font-size="10" fill="#374151">Every figure is printed by l4e9_power_path.py (out 15) from its pinned inputs; '
+               'prototype design: nothing bought, built, powered or measured; the drafted changes are not applied.</text>' % (HEIGHT - 12))
+    out.append("</svg>")
+    return "\n".join(out) + "\n"
+
+
+def cons_diagram_lines(N, E, C, NOPOWER, st, svg_sha):
+    L = []
+    p = L.append
+    p("15. THE CONNECTED DESIGN: ONE DIAGRAM (the consolidation; %s, sha256 %s, generated here and committed beside the page)" % (SVG_NAME, svg_sha[:16]))
+    p("   blocks (settings and limits as read above):")
+    for nid, _c, _y, title, lines in N:
+        p("     %-9s %s: %s" % (nid, title, "; ".join(lines)))
+    p("   power edges (each with its interface row and the row's status):")
+    for eid, a, b, rows, via in E:
+        p("     %s %s -> %s (%s): %s" % (eid, a, b, via, ", ".join("%s %s" % (r, st[r][1]) for r in rows)))
+    covered = sorted({r for e in E for r in e[3]})
+    p("     every interface row is on an edge: %s (%s)" % ("yes" if covered == sorted(st) else "NO", ", ".join(covered)))
+    p("   control edges (who acts on which block):")
+    for cid, a, b, what, kind in C:
+        p("     %s %s -> %s [%s]: %s" % (cid, a, b, kind, what))
+    for nid, a, b, what in NOPOWER:
+        p("     %s %s -> %s: %s" % (nid, a, b, what))
+    return L
 
 
 def poe_v(F):

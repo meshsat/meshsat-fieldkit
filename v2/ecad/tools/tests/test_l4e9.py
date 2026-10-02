@@ -962,6 +962,35 @@ def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
         "the bullet L4-E10 reads back keeps its first chain's figures"
 
 
+def t_consolidation_the_one_diagram_covers_every_interface_row():
+    m = _M()
+    F, st = _C["F"], _C["st"]
+    N, E, C, NP = m.cons_diagram(F, st)
+    svg = m.cons_svg(N, E, C, NP, st)
+    path = os.path.join(REC, m.SVG_NAME)
+    assert open(path, encoding="utf-8").read() == svg, "the committed diagram is not the script's"
+    assert hashlib.sha256(svg.encode("utf-8")).hexdigest()[:16] in _C["text"].split("15. THE CONNECTED DESIGN")[1].split("\n")[0]
+    assert sorted({r for e in E for r in e[3]}) == sorted(st), "a power edge for every interface row"
+    blocks = {n[0] for n in N}
+    assert all(e[1] in blocks and e[2] in blocks for e in E) and all(c[1] in blocks and c[2] in blocks for c in C)
+    for src in ("SRC_PV", "SRC_DC", "SRC_USB"):
+        assert src in blocks, "every source is in the figure, %s" % src
+    for e in E:
+        assert ">%s<" % e[3][0] in svg or ">%s/" % e[3][0] in svg or e[3][0] in svg, "%s's row is drawn on its edge" % e[0]
+    for c in C:
+        assert c[0] in svg and c[4] in ("firmware", "hardware", "firmware and hardware", "hardware (the gauge's own firmware)"), c[0]
+    page = open(PAGE, encoding="utf-8").read()
+    assert "](%s)" % m.SVG_NAME in page, "the page shows the one figure"
+    edges = m.md_table(page, "| Edge |")
+    assert [r[0] for r in edges] == [e[0] for e in E] + [x[0] for x in NP]
+    for r, e in zip(edges, E):
+        assert r[1:4] == [e[1], e[2], e[4]] and r[4] == ", ".join("%s (%s)" % (x, st[x][1]) for x in e[3]), e[0]
+    ctl = m.md_table(page, "| Control |")
+    assert [tuple(r) for r in ctl] == [tuple(c) for c in C], "the page's control table is the script's"
+    blk = m.md_table(page, "| Block |")
+    assert [r[0] for r in blk] == [n[0] for n in N] and all(r[2] == "; ".join(n[4]) for r, n in zip(blk, N))
+
+
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
 
 

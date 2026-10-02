@@ -76,6 +76,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    l4e11chk4 b0a03440a9bb9a75  v2/docs/records/l4e11/checks/check-l4e11-4.md
    th1proc   07b94e2ff18647a1  v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md
    cl_tiq    2789ce47a4e81fb6  v2/docs/records/l4e11/clarification/TI-QUESTIONS.md
+   tablet    d71429a9bd6d60a5  v2/docs/records/l3batt/tablet.out
    pending: none: L4-E7R is accepted (the coordinator's check 4, fnd/l4e7 91e9a4b5; its figures at 675b8068): the CS101 correction moved the bulk ahead of the sense bank and filtered the trip input, so defect D-01 is resolved in design (drafted, not applied)
    L4-E13 (U-03, the panel) accepted by the coordinator's check 3 at fae419d1 and, after set 25, check 4 at 33b6b7be: section 13
    this record's own figures: copper 0.0172 ohm mm2/m at 20 C and 0.0039 /K, 18 AWG 0.823 mm2 (ASSUMPTION, constants); the cold end -20 C (REQ-024);
@@ -878,5 +879,60 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    the register: R-150 to R-154 new, R-114 restated (E11-25); from the findings ledger: R-102 (item 8), R-139 (item 5), R-155 (item 10)
      and R-156 (item 1, PENDING L4-E7's surge round); 146 items
    the owner's items: OW-2 (ten questions), OW-7 (the TI request), OW-8 (T-H1's bench), OW-4 the other drafts: actions, not questions
+
+15. THE CONNECTED DESIGN: ONE DIAGRAM (the consolidation; L4-POWER-DIAGRAM.svg, sha256 0642900642fdee8a, generated here and committed beside the page)
+   blocks (settings and limits as read above):
+     SRC_PV    Panel (REQ-016): Voc at most 25 V at -20 C; at most 100 W into the stage; PANEL-ACC unit: none accepted (U-03)
+     SRC_DC    Vehicle or shore DC (REQ-015): 9 to 36 V at the plug, -36 V reversed; D38999 size 12, loop >= 56.93 mOhm; XT60-class J_DCIN (drafted, R-131)
+     SRC_USB   USB-C input: none (D-12): the USB-C port is an outlet only
+     SOL_IN    Solar entry, board E: J_SOLAR VH 10 A, F2 10 A; D4 SMCJ28A; the 50 V bulk; ahead of the sense bank; (L4-E7R, drafted); R59 15 mOhm on TRK_VIN
+     DC_IN     Vehicle entry, board E: F1 0997010.WXN 58 V DC (drafted); D10 SMCJ40CA, D1 SMCJ40A; Q1 CSD19532Q5B 100 V (drafted); U3/Q1 LM74700-Q1 ideal diode
+     U5        U5 LT8705AI stage: hold 16.970 / 17.593 / 18.221 V; regulation RIMON_IN 31.6k; 2.5485 A nominal, 2.9318 A highest; backstop on SWEN 3.0468 to 3.7408 A; TRK_OUT ceiling 28.28 to 30.15 V; U4/Q2 ideal diode out
+     ENTRY     Entry breaker (L4-E11, drafted): U6 TPS48110-Q1, Q7 CSD19536KTT; UVLO on 7.87 to 8.44 V; OV off 39.6 to 41.22 V; 6.364 to 7.136 A after 0.247 to 0.49 ms; short 10.36 to 13.87 A, retry 0.5 s; R19 4.5 mOhm, L2 SRF1260-1R0Y
+     VINRAW    VIN_RAW (board E to A): D2 SMCJ40A clamp; four Mill-Max 9 A dock pins; declared 14.10 A; basis 43.18 V maximum
+     FE        U2 LM5176 front end, board A: R11 8 mOhm, R12 12 mOhm (drafted); U34 guard R14 76.8k (drafted); VBUS20 19.08 to 20.96 V; efficiency 0.93 declared (C-8)
+     BANK      VBUS20 bank (L4-E8, drafted): six EEHZK1V331P, 45 mOhm each; every can at most 2.4096 A; rule 2.7745 A; Cc2 3.3 nF
+     CHG       U3 BQ25731 charger, board A: R16 10 mOhm; IIN_HOST 4.70 A; H3 line: flat 1.82 A, HIZ < 7.378 V; ChargeCurrent at most 3.0 A; BATOVP 17.64 V; no battery FET
+     VBAT      VBAT = VSYS node: 10.0 to 16.884 V; D1 SMCJ18A clamp; U-04: VSYS with no battery
+     PACK      Pack, board P (D-06 4S3P; U-01): Samsung 35E x 12 (ruled cell); BQ4050 gauge and its FETs; BQ7720700 -> F2 SCF9550; F1 25 A; OCD1 20 A for 2 s; usable 107.9 Wh at +20 C
+     LOADS     Load converters: PS-IDLE-SPEC 42.8 W at the pack; slot, device, logic, monitor; heater U22/U33 12.0 V 7.5 W; eFuses TPS2596 21 V
+     USBC      USB-C outlet U19 + U18: 5 / 9 / 15 V at 3 A; OCP 3.793 to 4.576 A; tablet budget 18 W cap (proposal)
+     POE       PoE stage: R227 5 mOhm, U17 on it (drafted); U16 boost 54 V at 0.6 A
+     PA        PA and HF rails: U13 13.8 V; key-down at most 60 s; U15 12 V to the QMX; outlets off while the PA keys
+     CTL_PANEL Panel controller C:U3 RP2040: the kit I2C: the charger,; the expanders, the INA226s; and the key-down rules
+     CTL_SENS  Sensor controller E:U10 RP2040: the gauge's SMBus, the mixer; fans, VIN_MON; always on
+     CTL_HW    Hardware, no firmware: comparators, the gauge, the; breaker, the knee, OUTLET_OK
+   power edges (each with its interface row and the row's status):
+     P01 SRC_PV -> SOL_IN (J_SOLAR, F2, D4, the bulk, the sense bank): IF-01 CONDITIONAL
+     P02 SOL_IN -> U5 (PV_P to TRK_VIN, U5's input): IF-02 CONDITIONAL
+     P03 U5 -> VINRAW (TRK_OUT through U4/Q2): IF-03 MEETS
+     P04 SRC_DC -> DC_IN (the plug, the interconnect, J_DCIN, F1, Q1): IF-04 CONDITIONAL
+     P05 DC_IN -> ENTRY (DC_P into U6/Q7): IF-05 CONDITIONAL
+     P06 ENTRY -> VINRAW (R19, L2 to VIN_RAW): IF-05 CONDITIONAL
+     P07 VINRAW -> FE (the dock's pins, U2's input): IF-06 MEETS, IF-07 CONDITIONAL
+     P08 FE -> BANK (VBUS20): IF-07 CONDITIONAL
+     P09 BANK -> CHG (VBUS20 through R16 into U3): IF-08 CONDITIONAL, IF-09 CONDITIONAL
+     P10 CHG -> VBAT (U3's output, VSYS): IF-09 CONDITIONAL
+     P11 VBAT -> PACK (R17, A F1, the pack pins, board P): IF-10 CONDITIONAL
+     P12 VBAT -> LOADS (the converters' inputs): IF-11 CONDITIONAL
+     P13 VBAT -> USBC (U19's input, R138): IF-12 CONDITIONAL
+     P14 VBAT -> POE (R227 to POE_VIN): IF-13 CONDITIONAL
+     P15 VBAT -> PA (U13's and U15's inputs): IF-14 CONDITIONAL
+     every interface row is on an edge: yes (IF-01, IF-02, IF-03, IF-04, IF-05, IF-06, IF-07, IF-08, IF-09, IF-10, IF-11, IF-12, IF-13, IF-14)
+   control edges (who acts on which block):
+     C01 CTL_PANEL -> CHG [firmware]: FW-A01 to A03, A16, A17: RSNS_RAC, IIN_HOST 4.70 A, ChargeCurrent at most 3.0 A, the charger's 175 s watchdog; CHG_INHIBIT (FW-A14) and rules R-a to R-d (R-126)
+     C02 CTL_PANEL -> LOADS [firmware]: the expanders (FW-A08): SLOT_EN, DEV_EN, HEAT_EN; the margin hold (R-138, R-139); MAIN and PI_KILL (FW-A10 to A12)
+     C03 CTL_PANEL -> USBC [firmware and hardware]: PD_SW_EN AND OUTLET_OK (FW-A06); the tablet's window (a proposal)
+     C04 CTL_PANEL -> POE [firmware and hardware]: POE_SW_EN AND OUTLET_OK (FW-A06); U17 read on R227 (FW-A09, R-27)
+     C05 CTL_PANEL -> PA [firmware]: the key-down rules K1 to K5 and C4 (FW-A05, D-11): at most 60 s, the rest floors 15.5 and 12.4 V
+     C06 CTL_SENS -> PACK [firmware]: the gauge's SMBus (FW-E01): its ranges relayed to the charger by the host; SHUTDOWN for storage (FW-E09); HWD 10 s
+     C07 CTL_SENS -> LOADS [firmware]: the mixer fans (FW-E07), the Geiger supply (FW-E08), VIN_MON for FW-A16 (FW-E04)
+     C08 CTL_HW -> U5 [hardware]: the hold (FBIN divider R8, R9 at 0.1 %), the regulation (IMON_IN, RIMON_IN 31.6k), the backstop comparators on SWEN, off below 2.662 V of TRK_LDO33
+     C09 CTL_HW -> ENTRY [hardware]: the TPS48110-Q1's own UVLO, OV, breaker and short-circuit trip; the LM74700-Q1 blocks reverse current
+     C10 CTL_HW -> FE [hardware]: U34's restart guard (R14 76.8k: 6.754 to 7.139 V); R11's average and R12's cycle-by-cycle limits
+     C11 CTL_HW -> CHG [hardware]: the H3 line on ILIM_HIZ (the corrected knee), the charger's VINDPM, ACOV, BATOVP and SYSOVP
+     C12 CTL_HW -> PACK [hardware (the gauge's own firmware)]: the BQ4050's protections on its FETs (COV, CUV, OCC 5 A, OCD, SCD 60 A, UTC, OTC); the BQ7720700 drives F2
+     C13 CTL_HW -> USBC [hardware]: OUTLET_OK = NOT (TR_APRS AND PA_EN), A:U30, drops both outlets while the PA keys; U18's OCP
+     N01 VINRAW -> DC_IN: the tracker back-feeds DC_P through Q7's body diode (no power is delivered this way)
 
 END. Desk arithmetic on read figures; nothing is measured.
