@@ -168,6 +168,15 @@ governs the heat stage at +40 C; under option C (the channel reported not covere
 | fans off, M2's heat | none | none | the failure case: the coupled parts' plate at most 69.82 C on W4's still values; the controls act on the air in any case |
 | channel 5 less channel 6 within +-0.899099 K | | | the hold's trigger window exists with the reference where it is; otherwise the reference moves to the mixed air |
 
+**What a reading can pass at all (the record's 17.9).** No reading exceeds the outside surfaces' capacity with a zero inside
+resistance. Four lines lie over it even with the combined route and the optimistic coefficient ends, so no point here can pass
+them and none is run to close them: E3-L at +40 C lid closed as ruled (M3 and M4 on the SGP41's Table 4) and the e-paper's
+unpowered +60 C row at E3-O (M6) and E5 (M7). They are the owner's (the record's 17.9 names the options). Every other line is
+reachable bare at the optimistic ends; where it is reachable only with the route at the conservative ends (M1 and M2 as ruled, M3
+and M4 under C, M7's stated line, M8 and M9), a bare reading under the line is followed by the same point with the route fitted
+(the fins on the free strips, the large loads led into the plate, the lid skin on its strap), lid open; a reading with the route
+closes that conductance with the route as built, and the route then becomes part of the design under test.
+
 **If M7 fails its stated line** (under 2.455 W/K): the session's fallbacks of the record's section 13 apply (the plate coupling F4,
 holding E5 to 1.564 W/K; the deeper hold F3, to 1.552 W/K; both together to 1.125 W/K; fins F1 sized from the measured split).
 **If M2 or M1 fails under C:** the hot stop would act inside the envelope at +40 C, which fails REQ-024's operation; the routes of
