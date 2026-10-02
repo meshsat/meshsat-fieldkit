@@ -76,8 +76,12 @@ eFuse U42 (R-181, step 3a with R-157), its hard short CONDITIONAL on E11-38 (R-1
 L4-E12 12e restated in this round, output section 26c): the four lines over the modelled capacity are a MODELLED SHORTFALL OF THE
 ANALYSED ARRANGEMENT (M3, M4) and a MISSING STORAGE QUALIFICATION (M6, M7), no DEMONSTRATED CONFLICT; the capacity a model figure,
 not a physical bound; OW-10 and CFL-002 (OW-1) no longer forced owner questions; U-02 a closure condition decided by T-H1 plus the
-storage evidence; R-185 new (the e-paper's storage soak); the register at 175 items. Status: known defects addressed in drafts;
-feasibility conditions remain open.
+storage evidence; R-185 new (the e-paper's storage soak); the register at 175 items. L4-F01 (L4-E7 at `68bc3bad`, output section 26d): D-10's
+source arriving with the guard already on is NOT CLOSED: with the margin chosen first (U5 within +-0.240 V, the numerical error
+added) and each ceramic bank bounded on its own, every rating holds only from a stiff source's 3.30 uH loop, and the floor goes to
+the engineer as B6-ENG-1 (the page's 8a); R-173 carries the Samsung parts, R97 28.0k and 8 edits; R-176 six rows; R-180 restated as
+B6-ENG-1's route (2), R-186 and R-187 new; the register at 177 items. Status: known defects addressed in drafts; feasibility
+conditions remain open.
 
 | File | What it is |
 |---|---|
@@ -110,4 +114,4 @@ storage qualification, no demonstrated conflict; OW-10 held for a measured confl
 unit selection (PANEL-ACC), no unit bought or measured.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 52 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 51 tests.
