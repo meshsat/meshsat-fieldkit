@@ -1,21 +1,31 @@
-DRAFT for the owner to send (task L4-E10, MESHSAT-1357, 2 October 2026). The session contacts no outside party.
+DRAFT for the owner to send (task L4-E10, MESHSAT-1357, 2 October 2026; expanded the same day after Astra's review B5: the
+currents at the cells' actual temperatures). The session contacts no outside party.
 To: Saft, through the contact form of https://www.saft.com or its distributor (product MP 176065 xtd, Doc. n 31109-2-0625)
 
-Subject: MP 176065 xtd in a 4S1P pack: four clarifications
+Subject: MP 176065 xtd in a 4S1P pack: currents at temperature, storage dwell, and four further questions
 
 Dear Saft team,
 
 We are evaluating your MP 176065 xtd for a non-commercial prototype: a 4S1P pack of four cells inside a sealed field case
 (prototype framing: nothing has been bought or built). Your datasheet (Doc. n 31109-2-0625, June 2025) states charge from
--30 to +85 C, discharge from -40 to +85 C and an allowable storage range of -40 to +85 C. Could you confirm the following?
+-30 to +85 C, discharge from -40 to +85 C and an allowable storage range of -40 to +85 C, and notes that the recommended
+maximum discharge currents "Can vary depending on temperatures. Consult Saft". In our pack one cell carries the whole pack
+current. Could you state the following?
 
-1. Pulse discharge: may one cell deliver 18 A for 60 seconds, at a cell temperature between -20 and +60 C? The datasheet
-   gives 22 A pulses without a duration.
-2. Storage: does the allowable range of -40 to +85 C hold for 24 hours at +71 C and for 24 hours at -33 C at a 30 % state
-   of charge, and what capacity recovery do you expect after each?
-3. Capacity: the minimum capacity at C/5 and +25 C to 2.5 V (the datasheet gives a typical 5.6 Ah), and the capacity at
-   -20 C at about 3 A.
-4. Thickness: the maximum thickness of a sleeved cell over its life and at +85 C (the datasheet's 18.65 mm is at the
+1. Continuous discharge: may one cell deliver 10 A continuously at cell temperatures of -20, -10, +45, +60, +70 and +80 C,
+   from full charge and from 30 % state of charge, down to 3.0 V under load? If not, the continuous current you recommend
+   at each of those temperatures.
+2. Pulse discharge: may one cell deliver 18 A for 60 seconds, and 20 A for 2 seconds (our pack protection's trip pulse), at
+   the same temperatures and states of charge? The minimum rest you require between such pulses.
+3. Charging below 0 C (your footnote 4): the current and voltage you permit between -30 and 0 C; and whether 3.0 A to 4.2 V
+   at +45 C is within your recommendation.
+4. Storage dwell and recovery: does the allowable range hold for 24 hours at +71 C and for 24 hours at -33 C at a 30 % state
+   of charge, and what capacity recovery do you expect after each? The same for a rest at full charge through ten 24-hour
+   cycles between +30 and +60 C at 95 % relative humidity.
+5. Capacity: the minimum capacity at C/5 and +25 C to 2.5 V (the datasheet gives a typical 5.6 Ah), and the discharge
+   curves by temperature (at about 3 A), down to -20 C.
+6. Thickness: the maximum thickness of a sleeved cell over its life and at +85 C (the datasheet's 18.65 mm is at the
    beginning of life and full charge, "can increase with temperature and during battery life").
+7. Charge termination: the end-of-charge current you recommend at 4.2 V.
 
 Thank you. We will treat any document under the terms you state.

@@ -412,12 +412,22 @@ def t_u01c_room_read_in_the_chosen_column():
 def t_u01c_suitability_and_conductance_needs():
     R = _R()
     c = R["u01c"]
-    allowed = {"SUITABLE ON PUBLISHED EVIDENCE", "SUITABLE ONLY WITH A VENDOR ANSWER", "UNSUITABLE ON PUBLISHED EVIDENCE"}
+    allowed = {"SUITABLE ON PUBLISHED EVIDENCE", "SUITABLE ONLY WITH A VENDOR ANSWER", "UNSUITABLE ON PUBLISHED EVIDENCE",
+               "AWAITING SAFT OR THE LIMITED SAMPLE QUALIFICATION"}
     for cell, d in c["suit"].items():
-        assert d["charge"][0] in allowed and all(v in allowed for v, _ in d["discharge"] + d["storage"]), cell
+        assert all(v in allowed for v, _ in d["charge"] + d["discharge"] + d["storage"]), cell
     s35 = " ".join(w for v, w in c["suit"]["35E"]["storage"] if v.startswith("UNSUITABLE"))
     assert "LO-01f" in s35 and "LO-01g" in s35 and "LO-01e" in s35
-    assert all(v == "SUITABLE ON PUBLISHED EVIDENCE" for v, _ in c["suit"]["MP 176065 xtd"]["storage"])
+    # Astra's B5: the Saft's windows are published, its current at temperature and storage dwell are awaited
+    sx = c["suit"]["MP 176065 xtd"]
+    for m in ("charge", "discharge", "storage"):
+        assert [v for v, _ in sx[m]] == ["SUITABLE ON PUBLISHED EVIDENCE", "AWAITING SAFT OR THE LIMITED SAMPLE QUALIFICATION"], m
+    for v, why in sx["charge"] + sx["discharge"] + sx["storage"]:
+        if v == "SUITABLE ON PUBLISHED EVIDENCE":
+            assert not any(k in why for k in ("A continuous", "for 60 s", "for 2 s", "recovery")), why[:60]
+    dis_await = sx["discharge"][1][1]
+    for k in ("10 A continuous", "18 A for 60 s", "20 A for 2 s", "-20, -10, +45, +60, +70, +80 C", "Can vary depending on temperatures"):
+        assert k in dis_await, k
     assert all(v.startswith("SUITABLE ONLY") for v, _ in c["suit"]["HL18650V"]["storage"] + c["suit"]["HL18650V"]["discharge"])
     # LO-01a in closed form; E3-O and E5 by the two-node runs: the need puts the peak at the limit
     qR, pR = R["heat"]["SURVR"]
@@ -454,9 +464,18 @@ def t_u01c_candidates_and_class():
     out = open(OUT, encoding="utf-8").read()
     page = open(PAGE, encoding="utf-8").read()
     for t_ in (out, page):
-        assert "A SUPPORTED ROUTE EXISTS ON PUBLISHED MANUFACTURER EVIDENCE" in t_ and "ADOPTION PENDING" in t_
+        assert "A SUPPORTED ROUTE EXISTS ON PUBLISHED MANUFACTURER EVIDENCE FOR THE TEMPERATURE WINDOWS" in t_ and "NOT YET ADOPTABLE" in t_
     q = open(os.path.join(REC, "clarification", "saft-mp176065xtd.txt"), encoding="utf-8").read()
-    assert re.findall(r"^(\d)\. ", q, re.M) == ["1", "2", "3", "4"] and "18 A for 60 seconds" in q
+    assert re.findall(r"^(\d+)\. ", q, re.M) == [str(k) for k in range(1, 8)] and "18 A for 60 seconds" in q
+    for k in ("10 A continuously", "-20, -10, +45, +60, +70 and +80 C", "20 A for 2 seconds", "between -30 and 0 C", "24 hours at +71 C",
+              "24 hours at -33 C", "capacity recovery"):
+        assert k in q, k
+    # the limited sample qualification is defined with its steps, pass criteria and limits
+    out = open(OUT, encoding="utf-8").read()
+    sq = out[out.index("10g The limited sample qualification"):out.index("== 11.")]
+    for k in ("D1 10 A continuous", "D2 18 A for 60 s", "D3 20 A for 2 s", "S1 24 h at +71 C", "Pass, every step", "not a production guarantee"):
+        assert k in sq, k
+    assert "### 15g. The limited sample qualification" in page and "NOT YET ADOPTABLE" in page
 
 
 def t_packcmp_one_boundary_and_the_table():
