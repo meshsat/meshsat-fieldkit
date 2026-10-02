@@ -1119,6 +1119,27 @@ def compute():
     if (f(m, 1), f(m, 3), f(m, 2), f(m, 4)) != F["a1_bat"]:
         refuse(3, "L4-E10's chain does not reproduce the replay's battery-only figures")
     cb["e35_552"] = f(m, 5)
+    bh = {}
+    bh["iin_reset"] = f(need(T["chgseq"], r"([\d.]+) A at each adapter removal", "IIN_HOST's reset"))
+    m = need(T["l4e8"], r"the bleed ([\d.]+) to ([\d.]+) s to release", "the bank's bleed")
+    bh["bleed"] = (f(m, 1), f(m, 2))
+    bh["hold_trig"] = f(need(T["l4e12"], r"The trigger then sits at the window's middle, ([\d.]+) C of mixed air", "the hold's trigger"))
+    m = need(T["l4e12"], r"restore (\d+) K under it after (\d+) minutes", "the hold's restore")
+    bh["hold_restore"] = (f(m, 1), f(m, 2))
+    bh["clamp_ma"] = f(need(T["l4e11"], r"(\d+) mA typical with no maximum printed", "the charger's clamp"))
+    hw = T["hwfw"]
+    bh["hwd"] = f(need(hw, r"host watchdog HWD (\d+) s", "the gauge's host watchdog"))
+    bh["chg_wd"] = f(need(hw, r"its own (\d+) s watchdog", "the charger's watchdog"))
+    m = need(hw, r"Holding MAIN about ([\d.]+) s \(([\d.]+) to ([\d.]+) s\)", "MAIN's forced off")
+    bh["main"] = (f(m, 1), f(m, 2), f(m, 3))
+    bh["fan_rep"] = f(need(hw, r"a stalled fan reported within (\d+) s", "a stalled fan's report"))
+    bh["heat_below"] = f(need(hw, r"warm before charge below (-\d+) C at the cell", "the heater's policy"))
+    m = need(hw, r"at most (\d+) s per key-down, (\d+) s apart; gates at \+(\d+) C cells, \+(\d+) C air, \+(\d+) C flange", "the key-down rules")
+    bh["key"] = tuple(f(m, i) for i in range(1, 6))
+    bh["graceful"] = f(need(T["l4e10"], r"graceful line at ([\d.]+) V under load", "the graceful line"))
+    m = need(T["l4e11"], r"([\d.]+) A peak, over the image's ASCD\s+([\d.]+) A for ([\d.]+) us against its (\d+) us delay", "the pack's inrush")
+    bh["inrush"] = (f(m, 1), f(m, 2), f(m, 3), f(m, 4))
+    cb["bh"] = bh
     F["cb"] = cb
     return F, where
 
@@ -3217,6 +3238,9 @@ def main():
     for ln in cons_change_lines(reg):
         p(ln)
     p("")
+    for ln in cons_behaviour_lines(F, D, st):
+        p(ln)
+    p("")
     p("END. Desk arithmetic on read figures; nothing is measured.")
     return "\n".join(out) + "\n", F, D, R, st
 
@@ -3237,7 +3261,7 @@ def cons_diagram(F, st):
         ("SRC_DC", 0, 380, "Vehicle or shore DC (REQ-015)", ["9 to 36 V at the plug, -36 V reversed", "D38999 size 12, loop >= %s mOhm" % fmt(F["loop_floor"]),
                                                              "XT60-class J_DCIN (drafted, R-131)"]),
         ("SRC_USB", 0, 620, "USB-C input: none (D-12)", ["the USB-C port is an outlet only"]),
-        ("SOL_IN", 1, 70, "Solar entry, board E", ["J_SOLAR VH %s A, F2 %s A" % (fmt(F["vh_16"]), fmt(F["vh_16"])), "D4 SMCJ28A; the 50 V bulk",
+        ("SOL_IN", 1, 70, "Solar entry, board E", ["J_SOLAR VH %s A; F2 %s" % (fmt(F["vh_16"]), F["e_f2"].split(" (")[0]), "D4 SMCJ28A; the 50 V bulk",
                                                    "ahead of the sense bank", "(L4-E7R, drafted)", "R59 15 mOhm on TRK_VIN"]),
         ("DC_IN", 1, 380, "Vehicle entry, board E", ["F1 0997010.WXN 58 V DC (drafted)", "D10 SMCJ40CA, D1 SMCJ40A",
                                                      "Q1 CSD19532Q5B 100 V (drafted)", "U3/Q1 LM74700-Q1 ideal diode"]),
@@ -3802,6 +3826,144 @@ def cons_change_table(F, D, st):
     ch = cons_changes(reg)
     return {"| # | Step | Row | ": ["| # | Step | Row | Board and generator | Apply script | Depends on | Release guard | What it changes (the register's item) | State |",
                                 "|---|---|---|---|---|---|---|---|---|"] + ["| %d | %s | %s | %s | %s | %s | %s | %s | %s |" % c for c in ch]}
+
+
+BEH_HEAD = [("4a", "| Source change |", "| Source change | What acts | The figure | Record |"),
+            ("4b", "| Together |", "| Together | What acts | The figure | Record |"),
+            ("4c", "| Start |", "| Start | What acts | The figure | Record |"),
+            ("4d", "| Stop |", "| Stop | What acts | The figure | Record |"),
+            ("4e", "| Trip |", "| Trip | What acts, its threshold and time | What it isolates | The recovery | Record |"),
+            ("4f", "| Thermal |", "| Thermal | What acts | The figure | Record |"),
+            ("4g", "| If it stalls |", "| If it stalls | What still acts with no firmware | What does not (not fail-safe) | Record |")]
+
+
+def cons_behaviour(F, D, st):
+    """THE OPERATING BEHAVIOUR, one table per item; every row tied to a record and a figure read above."""
+    bh, cb, r5 = F["cb"]["bh"], F["cb"], F["r5"]
+    B = {}
+    B["4a"] = [
+        ("plug in (vehicle or shore)", "the entry's UVLO, then its slewed start; U3 in HIZ under the knee; the H3 line from the first cycle; U34 releases the front end",
+         "on at %s / %s / %s V of DC_P; %s to %s A for at most %s ms; HIZ certain below %s V; the flat %s A from %s V" % (fmt(F["e_uv_on"][0]), fmt(F["e_uv_on"][1]), fmt(F["e_uv_on"][2]),
+                                                                                                                     fmt(F["e_inrush"][0]), fmt(F["e_inrush"][1]), fmt(F["e_start_ms"]),
+                                                                                                                     fmt(F["knee_hiz"]), fmt(F["knee"][0]), fmt(F["knee"][1])), "L4-E11 3c, 3f"),
+        ("plug out", "the LM74700-Q1 blocks; the pack carries VBAT with no break (no battery FET); U3 resets IIN_HOST and firmware rewrites it; U34's guard stops the front end; the bank bleeds",
+         "IIN_HOST %s A at removal, %.2f A rewritten (FW-A16); the guard %s to %s V; the bleed %s to %s s" % (fmt(bh["iin_reset"]), F["iin_host"], fmt(F["guard_sel"][0]), fmt(F["guard_sel"][2]),
+                                                                                                         fmt(bh["bleed"][0]), fmt(bh["bleed"][1])), "CHARGER-STATE-SEQUENCE.md, L4-E11, L4-E8"),
+        ("panel at dawn", "U5's own UVLO and soft start; SWEN off while TRK_LDO33 is low; the hold; the regulation",
+         "SWEN off below %s V; the hold %s V; %s A nominal, at most %s A (%s / %s W in)" % (fmt(F["swen_v"]), "%.3f" % F["hold"][1], fmt(F["reg"][0]), fmt(F["reg"][1]), fmt(F["reg_w"][0]), fmt(F["reg_w"][1])),
+         "L4-E7R"),
+        ("panel at dusk", "the panel falls under the hold and the stage stops delivering; U4/Q2 blocks VIN_RAW from TRK_OUT; with no other source VIN_RAW falls into the knee's HIZ",
+         "HIZ below %s V; the guard %s to %s V" % (fmt(F["knee_hiz"]), fmt(F["guard_sel"][0]), fmt(F["guard_sel"][2])), "L4-E7R, L4-E11 3f"),
+        ("pack connected", "the gauge's FETs close onto VBAT; the always-on comes up on CELL_F; the inrush into VBAT's capacitors",
+         "%s A peak, over ASCD's %s A for %s us against its %s us delay (with E11-24's direct can; the drawn VBAT holds less)" % (fmt(bh["inrush"][0]), fmt(bh["inrush"][1]), fmt(bh["inrush"][2]), fmt(bh["inrush"][3])),
+         "L4-E11 out 10"),
+        ("pack disconnected, or both FETs open, with a source", "U3 holds VBAT at ChargeVoltage with no battery current (state S4), CONDITIONAL on TI's D1 (U-04)",
+         "VSYS at least %s V against VSYS_MIN %s V (a %s V margin, once the mode is shown)" % (r5["d1"][1], r5["d1"][0], r5["d1"][2]), "L4-E11 9 (D1)"),
+    ]
+    rows = [("the profile with solar at the window and a 24 V vehicle", "the tracker's ceiling above 24 V: the panel carries the bus first; the H3 line at VIN_RAW",
+             "at most %s A at 24 V, %s %% of the breaker's lowest %s A" % (fmt(F["h3"][24.0][1]), fmt(round(F["h3"][24.0][1] / F["e_oc"][0] * 100, 1)), fmt(F["e_oc"][0])), "L4-E5, L4-E11"),
+            ("what reaches VBAT from the sources", "U3 between its minimum at the lowest bus and its board-current maximum",
+             "%s to %s W" % (fmt(round(D["vbat_avail_min"], 1)), fmt(round(D["vbat_avail_max"], 1))), "this record out 5")]
+    for nm, w in (("PS-IDLE-SPEC", F["idle"][1]), ("PS-TYP with the USB-C outlet at 45 W", F["typ_usbc"][0]), ("the PA keyed alone at 113 W", F["pa113"][0]), ("PS-ALLTX (plan)", F["alltx"][1])):
+        short = w - D["vbat_avail_min"]
+        rows.append(("%s, %s W" % (nm, fmt(w)), "the loads take the sources first, the pack the rest; the outlets drop while the PA keys (OUTLET_OK)",
+                     ("up to %s W left to charge, at most %.1f A" % (fmt(round(-short, 1)), F["chg_set"])) if short <= 0 else ("the pack supplies at least %s W" % fmt(round(short, 1))),
+                     "this record out 5"))
+    rows.append(("a 9.00 V plug with the profile", "the pack supplements; it charges only while the kit draws under the source's least",
+                 "%s to %s W at VBAT from the plug" % (fmt(F["e_env"][9][1]), fmt(F["e_env"][9][2])), "L4-E11 3h"))
+    B["4b"] = rows
+    B["4c"] = [
+        ("cold start on the pack", "MAIN brings up board A's +3V3; DEV_EN on by its pull-up; the panel controller runs FW-C01's order: PI_KILL low, the expanders' outputs before their configuration, the charger with FW-A01 first, then SLOT_EN one at a time",
+         "before the host writes IIN_HOST the input limit gives about 31 W into VSYS (INFERRED)", "ARCHITECTURE.md 4.3, HW-FW-CONTRACT, CHARGER-STATE-SEQUENCE.md"),
+        ("a dead pack (at or under CUV)", "the gauge's CUV holds; U3 charges through the open discharge FET's body diode at its clamp; rules R-a to R-d; the image's pre-charge",
+         "CUV %.2f V a cell; the clamp %s mA typical (no maximum printed: D7); ChargeCurrent %s mA at POR" % (F["cuv"], fmt(bh["clamp_ma"]), r5["por"]), "L4-E11 2, 4, 9"),
+        ("a cold pack", "UTC holds the charge FET; the mat warms the block first (FW-A13); under U-01's (II) the kit's hold moves to %s C" % r5["hold"],
+         "warm before charge below %s C at the cell; the mat 12.0 V, 7.5 W" % fmt(bh["heat_below"]), "HW-FW-CONTRACT FW-A13, L4-E10 14b"),
+        ("source-only at a 9.00 V plug", "the shedding sequence P0 to P3 (L4-E11 3g): P1 kept, the warm-up P2 on the source's headroom",
+         "P1 at most %s W; P2 %s W plan carried with %s W in hand; the source %s to %s W at VBAT" % (fmt(F["e_p1_max"]), fmt(F["e_p2"][1]), fmt(F["e_p2_hand"]), fmt(F["e_env"][9][1]), fmt(F["e_env"][9][2])),
+         "L4-E11 3g, 3h (U-04)"),
+    ]
+    B["4d"] = [
+        ("graceful, on battery", "the firmware's graceful line ends the run before either cell's end voltage", "%.2f V a cell under load" % bh["graceful"], "L4-E10 9b, 9c"),
+        ("the gauge's under-voltage", "CUV opens the discharge FET", "%.2f V a cell (%s V under U-01's (II))" % (F["cuv"], r5["cuv"][1]), "pcb_pack_protection.yaml, L4-E10 14b"),
+        ("MAIN pressed", "an ordinary press asks the modules to shut down (PI_SHDN_REQ), then PI_KILL; held, the LTC2954 forces the kit off",
+         "forced off after about %.1f s (%.1f to %.1f s)" % bh["main"], "HW-FW-CONTRACT FW-A10 to A12"),
+        ("C1 at the inside air", "module shedding: normal to the reduced mode, then the heat stage; restores 5 K below",
+         "inside air +%s C or any cell +%s C" % (fmt(cb["c1_air"]), fmt(cb["c1_cell"])), "CONOPS 4 via L4-E12 1f"),
+    ]
+    B["4e"] = [
+        ("the vehicle entry's breaker", "%s / %s / %s A after %s / %s / %s ms" % (fmt(F["e_oc"][0]), fmt(F["e_oc"][1]), fmt(F["e_oc"][2]), fmt(F["e_oc_ms"][0]), fmt(F["e_oc_ms"][1]), fmt(F["e_oc_ms"][2])),
+         "the vehicle source from VIN_RAW (Q7 off)", "retry every %s s" % fmt(F["e_retry_s"]), "L4-E11 3c"),
+        ("the entry's short-circuit trip", "%s / %s / %s A filtered" % (fmt(F["e_sc"][0]), fmt(F["e_sc"][1]), fmt(F["e_sc"][2])), "the same", "retry every %s s; a hard short in service inside Q7's derated %s A only with the loop's inductance at least %s uH (OPEN, R-134)" % (fmt(F["e_retry_s"]), fmt(F["e_hs_svc"]["lim"]), fmt(F["e_hs_svc"]["l_uh"])), "L4-E11, out 12"),
+        ("the entry's OV and UVLO", "off above %s / %s / %s V; off under %s / %s / %s V" % (fmt(F["e_ov_off"][0]), fmt(F["e_ov_off"][1]), fmt(F["e_ov_off"][2]), fmt(F["e_uv_off"][0]), fmt(F["e_uv_off"][1]), fmt(F["e_uv_off"][2])),
+         "the vehicle source", "on again inside the window", "L4-E11 3c"),
+        ("F1, the vehicle fuse", "the 0997010.WXN (58 V DC, drafted); a stiff source's fault at most %s A by the specified loop" % fmt(F["ipf_spec"]), "the vehicle lead", "replace the fuse", "part A, L4-E11 6"),
+        ("the solar backstop", "trips at %s to %s A, inside %s ms after the filter" % (fmt(F["bs_trip"][0]), fmt(F["bs_trip"][1]), fmt(F["bs_allow_ms"])), "the panel (SWEN off)",
+         "restarts through the stage's soft start", "L4-E7R"),
+        ("F2, the panel fuse", F["e_f2"].split(":")[0], "the panel lead", "replace the fuse", "board E as drawn"),
+        ("the front end's limits", "R11's average and R12's cycle-by-cycle limit (peak %s A, L1 at most %s A)" % (fmt(F["r12_peak"][0]), fmt(F["l1_peak"])), "nothing: they limit, no hiccup",
+         "U34 cycles the front end when VIN_RAW falls", "L4-E4, L4-E6"),
+        ("U18's outlet OCP", "%s to %s A" % (fmt(F["trip"][0]), fmt(F["trip"][1])), "the USB-C outlet", "the PD contract renegotiated", "L4-E4"),
+        ("OUTLET_OK", "while the PA keys (a key-down at most %s s)" % fmt(bh["key"][0]), "both outlets", "on again when the key ends", "HW-FW-CONTRACT FW-A05, FW-A06"),
+        ("the gauge's SCD and OCD", "SCD %s A; OCD1 %s A for %s s" % (fmt(F["scd"]), fmt(F["ocd1"][0]), fmt(F["ocd1"][1])), "the pack from VBAT (its FETs)", "the gauge's own recovery", "pcb_pack_protection.yaml"),
+        ("the gauge's OCC", "%s A" % fmt(F["occ"]), "the charge path", "the gauge's own recovery", "pcb_pack_protection.yaml"),
+        ("A F1, the pack fuse", "%s A" % fmt(F["a_f1"]), "the pack from VBAT", "replace the fuse", "board A as drawn"),
+        ("F2 SCF9550, the BQ7720700", "the second level drives %s" % F["p_f2"].split(":")[0], "the pack, for good (a chemical fuse)", "none: the pack is replaced", "pcb_pack_protection.yaml"),
+        ("BATOVP and SYSOVP", "BATOVP %s V; SYSOVP %.1f to %.1f V" % (fmt(F["batovp"]), F["sysovp"][0], F["sysovp"][2]), "U3's switching", "U3 resumes", "SLUSE66A via this record"),
+        ("the charge FET opening mid-charge (a designed event)", "U3's voltage loop holds VBAT; BATOVP stops switching", "nothing: VBAT reaches %.3f V at a fifth of the capacitance (ASSUMPTION), under the TPS2596's %s V" % (D["pack_open"]["v_end"], fmt(F["tps2596_abs"])),
+         "the charge resumes when the FET closes", "this record out 7"),
+        ("the vehicle input reversed (-36 V)", "D10 does not conduct; the LM74700-Q1 and Q1 block", "Q1 sees %s V (the raised ceiling plus the reversed input) against the CSD19532Q5B's %s V (the drawn 60 V part fails: NOT MET as drawn)" % (fmt(D["q1_rev"]), fmt(F["csd19532_vds"])),
+         "none needed", "part A (R-17, drafted)"),
+        ("a disturbance (M2 CS101, M3 CS114, M7)", "the entry's OV stays off above CS101's peak at 36 V; the solar input stays under D4", "the OV minimum %s V; the solar input at most %s V; the backstop's filtered ripple %s A against %s A" % (fmt(F["e_ov_off"][0]), fmt(F["cs101_pv"]), fmt(F["m2_ripple"]), fmt(F["m2_margin"])),
+         "no trip, no upset (CONDITIONAL on the loop's typical rows)", "part A, L4-E7R (D-01, D-02)"),
+        ("a short behind F1 from a weak source", "F1's long-time band", "every element of the interconnect at least %s A continuous where installed (D-06, CONDITIONAL on the makers' ratings)" % fmt(F["d06_oblig"][0]),
+         "replace the fuse", "L4-E11 6 (R-129 to R-132)"),
+        ("U2's single faults (Q2 short, FB open)", "nothing: VBUS20 follows VIN_RAW past U3's %s V" % fmt(F["u3_abs"]), "no clamp on VBUS20", "S-111's decision is open (R-48)", "s120 11"),
+        ("U5's regulation failing", "the backstop on SWEN", "trip at most %s A" % fmt(F["bs_trip"][1]), "the stage restarts; a fault defeating both is Layer 8's analysis (R-100)", "L4-E7R"),
+    ]
+    B["4f"] = [
+        ("the margin hold (E5)", "off board D, the PA rail, the RockBLOCK, the LoRa module, both E72 and the Geiger module; the running module idled; the charge held",
+         "trigger %s C of mixed air plus the calibrated offset (the reference within +-%s K); restore %s K under after %s minutes (PROVISIONAL)" % ("%.2f" % bh["hold_trig"], F["hold_ref"], fmt(bh["hold_restore"][0]), fmt(bh["hold_restore"][1])),
+         "L4-E12 6 (R-138, R-139)"),
+        ("C1, module shedding", "normal to the reduced mode, reached again to the heat stage", "inside air +%s C or any cell +%s C; restores 5 K below" % (fmt(cb["c1_air"]), fmt(cb["c1_cell"])), "CONOPS 4"),
+        ("the SGP41's own shutdown", "its load switch from board E's controller", "off at %.1f C on the TMP117, used at or under %.1f C; the lag assumed 61 s (R-139)" % (F["sgp_off"], F["sgp_on"]), "L4-E12 6"),
+        ("the pack heater", "the mat on U22/U33 at 12.0 V; UTC holds the charge FET until the block warms", "warm before charge below %s C at the cell; %s Wh to T1 from -20 C (the HL18650V class)" % (fmt(bh["heat_below"]), r5["warm"][0][3]),
+         "FW-A13, L4-E10 14b"),
+        ("the fans", "two mixers on board E from the inside climate; each running slot's cooler; a stalled fan reported", "the hold's 2 fans %.3f W; a stall reported within %s s; with the fans stopped E5's air %s to %s C" % (cb["fans_e5"], fmt(bh["fan_rep"]), r5["stop"][0], r5["stop"][1]),
+         "FW-E07, V-E07, L4-E12 8b"),
+        ("the PA's key-down", "the K rules and OUTLET_OK", "at most %s s a key-down, %s s apart; gates at +%s C cells, +%s C air, +%s C flange" % tuple(fmt(x) for x in bh["key"]), "FW-A05, D-11 (PROVISIONAL)"),
+    ]
+    B["4g"] = [
+        ("the panel controller (C:U3)", "the charger falls back to 256 mA after its %s s watchdog; the H3 line, U34, the entry, the backstop, OUTLET_OK, the eFuses, BATOVP and SYSOVP; the RP2040's own watchdog restarts it" % fmt(bh["chg_wd"]),
+         "the margin hold (E5's +70 C class goes unprotected); the key-down time limit (OUTLET_OK still drops the outlets); the expanders keep their last outputs", "HW-FW-CONTRACT FW-A03, FW-A05, FW-A08; L4-E12"),
+        ("the sensor controller (E:U10)", "the gauge stops charging after its host watchdog's %s s; the gauge's protections and the second level act alone; the RP2040's watchdog restarts it" % fmt(bh["hwd"]),
+         "the mixer fans' control (a stopped fan is the fans-off case, %s to %s C in E5); VIN_MON for FW-A16's diagnostic; the SGP41's switch" % (r5["stop"][0], r5["stop"][1]), "HW-FW-CONTRACT FW-E01, FW-E07, FW-E09"),
+        ("both controllers", "every hardware limit of 4e acts; the source bound holds with no firmware (the H3 line and the knee)", "the charge ranges relayed from the gauge (UTC still holds the charge FET); the hold; the heater's policy",
+         "this record out 7"),
+        ("the gauge's own firmware", "the BQ7720700 and F2 (hardware)", "COV, CUV, OCD, SCD and the temperature limits, which are the gauge's", "pcb_pack_protection.yaml"),
+    ]
+    return B
+
+
+def cons_behaviour_lines(F, D, st):
+    B = cons_behaviour(F, D, st)
+    L = ["18. THE OPERATING BEHAVIOUR (one table per item; each row tied to a record and a figure read above)"]
+    names = {"4a": "source changes", "4b": "simultaneous operation", "4c": "startup", "4d": "shutdown", "4e": "faults: each trip, what it isolates, the recovery",
+             "4f": "thermal management", "4g": "control dependencies: what still acts if the firmware stalls"}
+    for key, _h, _hh in BEH_HEAD:
+        L.append("%s %s" % (key, names[key].upper()))
+        for r in B[key]:
+            L.append("   %s: %s" % (r[0], " | ".join(r[1:])))
+    return L
+
+
+def cons_behaviour_tables(F, D, st):
+    B = cons_behaviour(F, D, st)
+    T = {}
+    for key, start, head in BEH_HEAD:
+        n = head.count("|") - 1
+        T[start] = [head, "|" + "---|" * n] + ["| %s |" % " | ".join(r) for r in B[key]]
+    return T
 
 
 def poe_v(F):

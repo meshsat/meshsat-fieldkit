@@ -1049,6 +1049,26 @@ def t_consolidation_the_change_list_covers_every_apply_script_in_order():
         m.CHANGE_ORDER = saved
 
 
+def t_consolidation_the_operating_behaviour_ties_each_row_to_a_record_and_a_figure():
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    B = m.cons_behaviour(F, D, st)
+    assert sorted(B) == ["4a", "4b", "4c", "4d", "4e", "4f", "4g"]
+    for key, rows in B.items():
+        assert rows, key
+        for r in rows:
+            assert r[-1].strip(), "%s %s names no record" % (key, r[0])
+            assert re.search(r"\d", " ".join(r[1:-1])), "%s %s carries no figure" % (key, r[0])
+    page = open(PAGE, encoding="utf-8").read()
+    for head, lines in m.cons_behaviour_tables(F, D, st).items():
+        assert m.md_table(page, head) == [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in lines[2:]], head
+    a = " ".join(r[0] for r in B["4a"])
+    for ev in ("plug in", "plug out", "dawn", "dusk", "pack connected", "pack disconnected"):
+        assert ev in a, ev
+    assert any("graceful" in r[0] and "%.2f V" % F["cb"]["bh"]["graceful"] in r[2] for r in B["4d"])
+    assert any("stalls" not in r[0] and "watchdog" in r[1] for r in B["4g"])
+
+
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
 
 

@@ -880,12 +880,12 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      and R-156 (item 1, PENDING L4-E7's surge round); 146 items
    the owner's items: OW-2 (ten questions), OW-7 (the TI request), OW-8 (T-H1's bench), OW-4 the other drafts: actions, not questions
 
-15. THE CONNECTED DESIGN: ONE DIAGRAM (the consolidation; L4-POWER-DIAGRAM.svg, sha256 0642900642fdee8a, generated here and committed beside the page)
+15. THE CONNECTED DESIGN: ONE DIAGRAM (the consolidation; L4-POWER-DIAGRAM.svg, sha256 7a180c67f3189ddb, generated here and committed beside the page)
    blocks (settings and limits as read above):
      SRC_PV    Panel (REQ-016): Voc at most 25 V at -20 C; at most 100 W into the stage; PANEL-ACC unit: none accepted (U-03)
      SRC_DC    Vehicle or shore DC (REQ-015): 9 to 36 V at the plug, -36 V reversed; D38999 size 12, loop >= 56.93 mOhm; XT60-class J_DCIN (drafted, R-131)
      SRC_USB   USB-C input: none (D-12): the USB-C port is an outlet only
-     SOL_IN    Solar entry, board E: J_SOLAR VH 10 A, F2 10 A; D4 SMCJ28A; the 50 V bulk; ahead of the sense bank; (L4-E7R, drafted); R59 15 mOhm on TRK_VIN
+     SOL_IN    Solar entry, board E: J_SOLAR VH 10 A; F2 10 A mini blade; D4 SMCJ28A; the 50 V bulk; ahead of the sense bank; (L4-E7R, drafted); R59 15 mOhm on TRK_VIN
      DC_IN     Vehicle entry, board E: F1 0997010.WXN 58 V DC (drafted); D10 SMCJ40CA, D1 SMCJ40A; Q1 CSD19532Q5B 100 V (drafted); U3/Q1 LM74700-Q1 ideal diode
      U5        U5 LT8705AI stage: hold 16.970 / 17.593 / 18.221 V; regulation RIMON_IN 31.6k; 2.5485 A nominal, 2.9318 A highest; backstop on SWEN 3.0468 to 3.7408 A; TRK_OUT ceiling 28.28 to 30.15 V; U4/Q2 ideal diode out
      ENTRY     Entry breaker (L4-E11, drafted): U6 TPS48110-Q1, Q7 CSD19536KTT; UVLO on 7.87 to 8.44 V; OV off 39.6 to 41.22 V; 6.364 to 7.136 A after 0.247 to 0.49 ms; short 10.36 to 13.87 A, retry 0.5 s; R19 4.5 mOhm, L2 SRF1260-1R0Y
@@ -1154,5 +1154,65 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      board A regenerated (R-11) after its circuit changes: holds
      board E regenerated (R-22) after its circuit changes: holds
    by state: DRAFTED 26; MISSING DRAFT 17; OWED 11; APPLIED 0
+
+18. THE OPERATING BEHAVIOUR (one table per item; each row tied to a record and a figure read above)
+4a SOURCE CHANGES
+   plug in (vehicle or shore): the entry's UVLO, then its slewed start; U3 in HIZ under the knee; the H3 line from the first cycle; U34 releases the front end | on at 7.87 / 8.14 / 8.44 V of DC_P; 0.382 to 1.219 A for at most 2.5 ms; HIZ certain below 7.378 V; the flat 1.82 A from 7.95 V | L4-E11 3c, 3f
+   plug out: the LM74700-Q1 blocks; the pack carries VBAT with no break (no battery FET); U3 resets IIN_HOST and firmware rewrites it; U34's guard stops the front end; the bank bleeds | IIN_HOST 3.25 A at removal, 4.70 A rewritten (FW-A16); the guard 6.754 to 7.139 V; the bleed 0.455 to 1.494 s | CHARGER-STATE-SEQUENCE.md, L4-E11, L4-E8
+   panel at dawn: U5's own UVLO and soft start; SWEN off while TRK_LDO33 is low; the hold; the regulation | SWEN off below 2.662 V; the hold 17.593 V; 2.5485 A nominal, at most 2.9318 A (44.84 / 53.42 W in) | L4-E7R
+   panel at dusk: the panel falls under the hold and the stage stops delivering; U4/Q2 blocks VIN_RAW from TRK_OUT; with no other source VIN_RAW falls into the knee's HIZ | HIZ below 7.378 V; the guard 6.754 to 7.139 V | L4-E7R, L4-E11 3f
+   pack connected: the gauge's FETs close onto VBAT; the always-on comes up on CELL_F; the inrush into VBAT's capacitors | 242.9 A peak, over ASCD's 55.6 A for 61.5 us against its 183 us delay (with E11-24's direct can; the drawn VBAT holds less) | L4-E11 out 10
+   pack disconnected, or both FETs open, with a source: U3 holds VBAT at ChargeVoltage with no battery current (state S4), CONDITIONAL on TI's D1 (U-04) | VSYS at least 16.716 V against VSYS_MIN 12.3 V (a 4.416 V margin, once the mode is shown) | L4-E11 9 (D1)
+4b SIMULTANEOUS OPERATION
+   the profile with solar at the window and a 24 V vehicle: the tracker's ceiling above 24 V: the panel carries the bus first; the H3 line at VIN_RAW | at most 4.194 A at 24 V, 65.9 % of the breaker's lowest 6.364 A | L4-E5, L4-E11
+   what reaches VBAT from the sources: U3 between its minimum at the lowest bus and its board-current maximum | 84.5 to 99.6 W | this record out 5
+   PS-IDLE-SPEC, 42.8 W: the loads take the sources first, the pack the rest; the outlets drop while the PA keys (OUTLET_OK) | up to 41.7 W left to charge, at most 3.0 A | this record out 5
+   PS-TYP with the USB-C outlet at 45 W, 112.3 W: the loads take the sources first, the pack the rest; the outlets drop while the PA keys (OUTLET_OK) | the pack supplies at least 27.8 W | this record out 5
+   the PA keyed alone at 113 W, 162.3 W: the loads take the sources first, the pack the rest; the outlets drop while the PA keys (OUTLET_OK) | the pack supplies at least 77.8 W | this record out 5
+   PS-ALLTX (plan), 203.8 W: the loads take the sources first, the pack the rest; the outlets drop while the PA keys (OUTLET_OK) | the pack supplies at least 119.3 W | this record out 5
+   a 9.00 V plug with the profile: the pack supplements; it charges only while the kit draws under the source's least | 29.09 to 42.52 W at VBAT from the plug | L4-E11 3h
+4c STARTUP
+   cold start on the pack: MAIN brings up board A's +3V3; DEV_EN on by its pull-up; the panel controller runs FW-C01's order: PI_KILL low, the expanders' outputs before their configuration, the charger with FW-A01 first, then SLOT_EN one at a time | before the host writes IIN_HOST the input limit gives about 31 W into VSYS (INFERRED) | ARCHITECTURE.md 4.3, HW-FW-CONTRACT, CHARGER-STATE-SEQUENCE.md
+   a dead pack (at or under CUV): the gauge's CUV holds; U3 charges through the open discharge FET's body diode at its clamp; rules R-a to R-d; the image's pre-charge | CUV 2.50 V a cell; the clamp 384 mA typical (no maximum printed: D7); ChargeCurrent 256 mA at POR | L4-E11 2, 4, 9
+   a cold pack: UTC holds the charge FET; the mat warms the block first (FW-A13); under U-01's (II) the kit's hold moves to -7 C | warm before charge below -10 C at the cell; the mat 12.0 V, 7.5 W | HW-FW-CONTRACT FW-A13, L4-E10 14b
+   source-only at a 9.00 V plug: the shedding sequence P0 to P3 (L4-E11 3g): P1 kept, the warm-up P2 on the source's headroom | P1 at most 20.51 W; P2 28.12 W plan carried with 0.98 W in hand; the source 29.09 to 42.52 W at VBAT | L4-E11 3g, 3h (U-04)
+4d SHUTDOWN
+   graceful, on battery: the firmware's graceful line ends the run before either cell's end voltage | 3.00 V a cell under load | L4-E10 9b, 9c
+   the gauge's under-voltage: CUV opens the discharge FET | 2.50 V a cell (2.75 V under U-01's (II)) | pcb_pack_protection.yaml, L4-E10 14b
+   MAIN pressed: an ordinary press asks the modules to shut down (PI_SHDN_REQ), then PI_KILL; held, the LTC2954 forces the kit off | forced off after about 4.4 s (3.3 to 6.0 s) | HW-FW-CONTRACT FW-A10 to A12
+   C1 at the inside air: module shedding: normal to the reduced mode, then the heat stage; restores 5 K below | inside air +50 C or any cell +55 C | CONOPS 4 via L4-E12 1f
+4e FAULTS: EACH TRIP, WHAT IT ISOLATES, THE RECOVERY
+   the vehicle entry's breaker: 6.364 / 6.8 / 7.136 A after 0.247 / 0.37 / 0.49 ms | the vehicle source from VIN_RAW (Q7 off) | retry every 0.5 s | L4-E11 3c
+   the entry's short-circuit trip: 10.36 / 12.04 / 13.87 A filtered | the same | retry every 0.5 s; a hard short in service inside Q7's derated 178.2 A only with the loop's inductance at least 2.08 uH (OPEN, R-134) | L4-E11, out 12
+   the entry's OV and UVLO: off above 39.6 / 40.36 / 41.22 V; off under 7.46 / 7.66 / 7.95 V | the vehicle source | on again inside the window | L4-E11 3c
+   F1, the vehicle fuse: the 0997010.WXN (58 V DC, drafted); a stiff source's fault at most 900 A by the specified loop | the vehicle lead | replace the fuse | part A, L4-E11 6
+   the solar backstop: trips at 3.0468 to 3.7408 A, inside 1.087 ms after the filter | the panel (SWEN off) | restarts through the stage's soft start | L4-E7R
+   F2, the panel fuse: 10 A mini blade (Keystone 3568 holder) | the panel lead | replace the fuse | board E as drawn
+   the front end's limits: R11's average and R12's cycle-by-cycle limit (peak 8.06 A, L1 at most 12.6 A) | nothing: they limit, no hiccup | U34 cycles the front end when VIN_RAW falls | L4-E4, L4-E6
+   U18's outlet OCP: 3.793 to 4.576 A | the USB-C outlet | the PD contract renegotiated | L4-E4
+   OUTLET_OK: while the PA keys (a key-down at most 60 s) | both outlets | on again when the key ends | HW-FW-CONTRACT FW-A05, FW-A06
+   the gauge's SCD and OCD: SCD 60 A; OCD1 20 A for 2 s | the pack from VBAT (its FETs) | the gauge's own recovery | pcb_pack_protection.yaml
+   the gauge's OCC: 5 A | the charge path | the gauge's own recovery | pcb_pack_protection.yaml
+   A F1, the pack fuse: 25 A | the pack from VBAT | replace the fuse | board A as drawn
+   F2 SCF9550, the BQ7720700: the second level drives SCF9550-30-05 self-control fuse (Eaton, 30 A, 4-5 cells) | the pack, for good (a chemical fuse) | none: the pack is replaced | pcb_pack_protection.yaml
+   BATOVP and SYSOVP: BATOVP 17.64 V; SYSOVP 19.0 to 20.0 V | U3's switching | U3 resumes | SLUSE66A via this record
+   the charge FET opening mid-charge (a designed event): U3's voltage loop holds VBAT; BATOVP stops switching | nothing: VBAT reaches 20.135 V at a fifth of the capacitance (ASSUMPTION), under the TPS2596's 21 V | the charge resumes when the FET closes | this record out 7
+   the vehicle input reversed (-36 V): D10 does not conduct; the LM74700-Q1 and Q1 block | Q1 sees 66.15 V (the raised ceiling plus the reversed input) against the CSD19532Q5B's 100 V (the drawn 60 V part fails: NOT MET as drawn) | none needed | part A (R-17, drafted)
+   a disturbance (M2 CS101, M3 CS114, M7): the entry's OV stays off above CS101's peak at 36 V; the solar input stays under D4 | the OV minimum 39.6 V; the solar input at most 27.82 V; the backstop's filtered ripple 0.0585 A against 0.113 A | no trip, no upset (CONDITIONAL on the loop's typical rows) | part A, L4-E7R (D-01, D-02)
+   a short behind F1 from a weak source: F1's long-time band | every element of the interconnect at least 20 A continuous where installed (D-06, CONDITIONAL on the makers' ratings) | replace the fuse | L4-E11 6 (R-129 to R-132)
+   U2's single faults (Q2 short, FB open): nothing: VBUS20 follows VIN_RAW past U3's 32 V | no clamp on VBUS20 | S-111's decision is open (R-48) | s120 11
+   U5's regulation failing: the backstop on SWEN | trip at most 3.7408 A | the stage restarts; a fault defeating both is Layer 8's analysis (R-100) | L4-E7R
+4f THERMAL MANAGEMENT
+   the margin hold (E5): off board D, the PA rail, the RockBLOCK, the LoRa module, both E72 and the Geiger module; the running module idled; the charge held | trigger 68.65 C of mixed air plus the calibrated offset (the reference within +-0.899099 K); restore 5 K under after 30 minutes (PROVISIONAL) | L4-E12 6 (R-138, R-139)
+   C1, module shedding: normal to the reduced mode, reached again to the heat stage | inside air +50 C or any cell +55 C; restores 5 K below | CONOPS 4
+   the SGP41's own shutdown: its load switch from board E's controller | off at 54.0 C on the TMP117, used at or under 49.0 C; the lag assumed 61 s (R-139) | L4-E12 6
+   the pack heater: the mat on U22/U33 at 12.0 V; UTC holds the charge FET until the block warms | warm before charge below -10 C at the cell; 1.6 Wh to T1 from -20 C (the HL18650V class) | FW-A13, L4-E10 14b
+   the fans: two mixers on board E from the inside climate; each running slot's cooler; a stalled fan reported | the hold's 2 fans 2.010 W; a stall reported within 5 s; with the fans stopped E5's air 72.38 to 85.36 C | FW-E07, V-E07, L4-E12 8b
+   the PA's key-down: the K rules and OUTLET_OK | at most 60 s a key-down, 2 s apart; gates at +55 C cells, +50 C air, +75 C flange | FW-A05, D-11 (PROVISIONAL)
+4g CONTROL DEPENDENCIES: WHAT STILL ACTS IF THE FIRMWARE STALLS
+   the panel controller (C:U3): the charger falls back to 256 mA after its 175 s watchdog; the H3 line, U34, the entry, the backstop, OUTLET_OK, the eFuses, BATOVP and SYSOVP; the RP2040's own watchdog restarts it | the margin hold (E5's +70 C class goes unprotected); the key-down time limit (OUTLET_OK still drops the outlets); the expanders keep their last outputs | HW-FW-CONTRACT FW-A03, FW-A05, FW-A08; L4-E12
+   the sensor controller (E:U10): the gauge stops charging after its host watchdog's 10 s; the gauge's protections and the second level act alone; the RP2040's watchdog restarts it | the mixer fans' control (a stopped fan is the fans-off case, 72.38 to 85.36 C in E5); VIN_MON for FW-A16's diagnostic; the SGP41's switch | HW-FW-CONTRACT FW-E01, FW-E07, FW-E09
+   both controllers: every hardware limit of 4e acts; the source bound holds with no firmware (the H3 line and the knee) | the charge ranges relayed from the gauge (UTC still holds the charge FET); the hold; the heater's policy | this record out 7
+   the gauge's own firmware: the BQ7720700 and F2 (hardware) | COV, CUV, OCD, SCD and the temperature limits, which are the gauge's | pcb_pack_protection.yaml
 
 END. Desk arithmetic on read figures; nothing is measured.

@@ -112,7 +112,7 @@ marked drafted are not applied to any generator.
 | SRC_PV | Panel (REQ-016) | Voc at most 25 V at -20 C; at most 100 W into the stage; PANEL-ACC unit: none accepted (U-03) |
 | SRC_DC | Vehicle or shore DC (REQ-015) | 9 to 36 V at the plug, -36 V reversed; D38999 size 12, loop >= 56.93 mOhm; XT60-class J_DCIN (drafted, R-131) |
 | SRC_USB | USB-C input: none (D-12) | the USB-C port is an outlet only |
-| SOL_IN | Solar entry, board E | J_SOLAR VH 10 A, F2 10 A; D4 SMCJ28A; the 50 V bulk; ahead of the sense bank; (L4-E7R, drafted); R59 15 mOhm on TRK_VIN |
+| SOL_IN | Solar entry, board E | J_SOLAR VH 10 A; F2 10 A mini blade; D4 SMCJ28A; the 50 V bulk; ahead of the sense bank; (L4-E7R, drafted); R59 15 mOhm on TRK_VIN |
 | DC_IN | Vehicle entry, board E | F1 0997010.WXN 58 V DC (drafted); D10 SMCJ40CA, D1 SMCJ40A; Q1 CSD19532Q5B 100 V (drafted); U3/Q1 LM74700-Q1 ideal diode |
 | U5 | U5 LT8705AI stage | hold 16.970 / 17.593 / 18.221 V; regulation RIMON_IN 31.6k; 2.5485 A nominal, 2.9318 A highest; backstop on SWEN 3.0468 to 3.7408 A; TRK_OUT ceiling 28.28 to 30.15 V; U4/Q2 ideal diode out |
 | ENTRY | Entry breaker (L4-E11, drafted) | U6 TPS48110-Q1, Q7 CSD19536KTT; UVLO on 7.87 to 8.44 V; OV off 39.6 to 41.22 V; 6.364 to 7.136 A after 0.247 to 0.49 ms; short 10.36 to 13.87 A, retry 0.5 s; R19 4.5 mOhm, L2 SRF1260-1R0Y |
@@ -369,82 +369,96 @@ yet.
 | 53 | U-01 | R-154 | firmware, the gauge image and the host | a text draft (L4-E10 section 14b (out 9b)) | only under (II), with R-106 | a text draft | Under U-01's approach (II) only: L4-E10 section 14b's charge drafts in the gauge image, relayed by the host to the charger: Low Temp T1 -9 C to T2 1 C at 0.84 A to 16.40 V (BATOVP 17.06 V); Standard Temp low T2 1 C to T5 11 C at 1.68 A to 16.80 V; T5 11 C to T3 42 C at the drawn 3.00 A to 16.80 V (BATOVP 17.47 V); UTC -9.0 C (recovery -5.0 C); T3 42 C, T4 43 C and OTC 44.0 C kept; the kit's charge hold below -7 C (from +3 C), the mat warming the block first; CUV 2.50 to 2.75 V a cell; the termination current 250 mA (TI's default, ASSUMPTION) | DRAFTED (not applied) |
 | 54 | ALT | R-119 | board E, gen_sch_e.py | apply_gen_sch_e_timer.py | the LM5069 alternative only: refuses once the selected entry (R-123) has run | L4-E11's RELEASE.md (R-147: check-l4e11-3.md at a15ab384) | D-09, only if the LM5069 is kept (the selected entry has no fault timer against a power limit): L4-E11's `apply_gen_sch_e_timer.py` (C5 GRM3195C1H104GA05 with C121 GRM3195C1H683JA05), ITIMER and VTMRH at temperature, tFAULT and the 2 mA turn-off with Q7's gate charge, the start into VIN_RAW (34 uF) with the front end held off by U34 | DRAFTED, the alternative only (not applied) |
 
-## 3. Simultaneous operation (out 5)
+## 4. The operating behaviour (out 18)
 
-Solar at the window, a vehicle at 24 V, the full load and charging together:
-- **The sources share.** The tracker's ceiling (28.28 V at its lowest) sits above a 24 V vehicle, so the panel carries the bus
-  first and the vehicle's ideal diode conducts only for what the panel does not give. The front end's input is H3's line at
-  whatever VIN_RAW the sources settle at: at most 4.194 A at 24 V, 65.9 % of the selected breaker's lowest 6.364 A.
-- **What reaches VBAT** is U3's: 84.5 to 99.6 W (its minimum at the lowest bus to its board-current maximum at the bus's top).
-- **The loads take it first, the pack the rest.** PS-IDLE-SPEC (42.8 W) leaves up to 41.7 W to charge at most 3.0 A; PS-TYP with
-  the tablet (112.3 W) draws at least 27.8 W from the pack; the PA keyed alone at 113 W draws at least 77.8 W; PS-ALLTX at least
-  119.3 W (plan) and 187.5 W (high). With a source the pack's current is lower than on the pack alone, so D-11's floors hold as
-  they do on the pack alone, and the outlets drop while the PA keys (OUTLET_OK).
-- **No stage is pushed past its limit:** the entry under its minimum limit, R11 at 4.964 A at most, every can at most 2.4096 A,
-  the charge at most 3.0 A against the gauge's OCC 5 A.
-- **Per source at the plug (an envelope to state, not a defect; L4-E11 3h, the losses hot, the corrected knee).** At a 9.00 V
-  plug the source delivers 29.09 to 42.52 W at VBAT; at 12 V 32.22 to 47.72 W; at 24 V 69.97 to 90.81 W; at 36 V 84.55 to
-  99.64 W (round 2's figures at VIN_RAW with no loss: 19.9 to 36.6 W at 9 V). So a 9 V vehicle runs PS-IDLE-SPEC (42.8 W) with
-  the pack supplementing, and charges only while the kit draws under 29.09 W. REQ-015's acceptance ("operates and charges
-  across 9 to 36 V") is met in both of its parts with a working pack; with no usable pack it is U-04's CONDITIONAL CANDIDATE.
+One table per item; every row names the record it rests on and a figure the script read. The traces as first written
+(rounds 1 to 4) are kept in Appendix B for their narrative.
 
-## 4. Startup (out 6)
+### 4a. Source changes
 
-- **Cold start on the pack** (`ARCHITECTURE.md` 4.3): with the pack connected the LTC2954 holds RAIL_EN low and board E's
-  sensor controller runs on CELL_F; MAIN brings up board A's +3V3; DEV_EN is on by R42, so +5V_DEV and then the panel
-  controller start; the panel runs FW-C01's order (PI_KILL low, ZEROIZE read, the expanders' outputs before their configuration,
-  the charger with FW-A01 first, then SLOT_EN one at a time); each stage soft-starts on VBAT. The pack's precharge pin J_PRE1
-  (10 Ohm, 2 W) mates first when the stack is seated.
-- **A source arriving:** the selected entry (L4-E11) turns on at 8.44 V of DC_P at the most and slews the bus up, 0.382 to
-  1.219 A for at most 2.5 ms (the drawn LM5069 cannot start from a 9.00 V plug: 8.987 V against POREN's 9 V); U3 is in HIZ below
-  the corrected knee's certain 7.378 V, and the H3 line bounds its input from its first switching cycle with no host. The panel:
-  the stage's own UVLO and soft start, then the hold at 17.593 V; SWEN stays off while TRK_LDO33 is under 2.662 V whatever the
-  ramp (L4-E7R), and each backstop trip restarts the stage through its soft start.
-- **A source leaving:** VBAT is the system node with no battery FET, so the pack carries the loads without a break; U3 resets
-  IIN_HOST to 3.25 A and firmware writes 4.70 A again (FW-A16 restated); VIN_RAW falls through the restart guard (7.139 V at its
-  highest with R14 76.8k, R-124; 8.31 V as drawn, above a 9.00 V plug's operating point) and the front end stops; the bank
-  bleeds in 0.455 to 1.494 s (L4-E8).
-- **Source-only and dead-pack operation (the fix round, B4; U-04).** What SLUSE66A establishes: after VBUS qualification
-  "Converter powers up" (9.3.1) with no battery condition, and its power-up figures are drawn "2-cell without battery"
-  (Figures 10-4, 10-5); DPM gives the system priority and past the input's limit "the system voltage starts to drop" (9.3.17);
-  below VSYS_MIN the charge is clamped at 384 mA (9.6.2.1). Board A straps CELL_BATPRESZ for 4S, so U3 never sees "battery
-  removal": with the pack absent it holds VBAT at ChargeVoltage (at most 16.884 V; INFERRED), and with the pack's discharge FET
-  open at CUV it charges through that FET's body diode at the clamp, VBAT near the pack's 10 V (INFERRED). **The source
-  envelope with no usable pack**, at VBAT: 9 V 19.9 to 36.6 W, 12 V up to 47.4 W, 24 V up to 90.6 W, against PS-IDLE-SPEC's
-  42.8 W; so at 9 V the kit cannot run its profile on the source alone, and at 12 and 24 V the line's maximum is above it (no
-  minimum is printed there: CONDITIONAL). Before the host writes IIN_HOST the input limit gives about 1.6 to 1.7 A at the 20 V
-  bus, about 31 W into VSYS (`CHARGER-STATE-SEQUENCE.md`, INFERRED); FW-C01's order puts the charger before any slot, which no
-  record measures. **Not resolvable from the held documents:** whether the converter keeps VSYS up with charge inhibited and no
-  battery FET (Q-TI-3), whether the gauge lets a pack at CUV take charge with no precharge FET, and whether every load converter
-  runs at the dead pack's VBAT (A-14). It is U-04 (section 7b), not later testing; R-85 is its verification at 12 and 24 V and
-  does not settle it alone. Board E's always-on comes up on CELL_F from VBAT. **L4-E11 (accepted) answers it as far as the held
-  documents allow:** arrangement (A), the drawn charger with rules R-a to R-d (the holds as a state table with S4's exception,
-  R-b's two charge settings, the shedding sequence, the image's pre-charge); at a 9.00 V plug the shed warm-up (28.12 W at the
-  plan figure) is carried with 0.98 W in hand while P1 stays at most 20.51 W; REQ-015 at 9.00 V at the plug is a CONDITIONAL
-  CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23 (section 7b).
+| Source change | What acts | The figure | Record |
+|---|---|---|---|
+| plug in (vehicle or shore) | the entry's UVLO, then its slewed start; U3 in HIZ under the knee; the H3 line from the first cycle; U34 releases the front end | on at 7.87 / 8.14 / 8.44 V of DC_P; 0.382 to 1.219 A for at most 2.5 ms; HIZ certain below 7.378 V; the flat 1.82 A from 7.95 V | L4-E11 3c, 3f |
+| plug out | the LM74700-Q1 blocks; the pack carries VBAT with no break (no battery FET); U3 resets IIN_HOST and firmware rewrites it; U34's guard stops the front end; the bank bleeds | IIN_HOST 3.25 A at removal, 4.70 A rewritten (FW-A16); the guard 6.754 to 7.139 V; the bleed 0.455 to 1.494 s | CHARGER-STATE-SEQUENCE.md, L4-E11, L4-E8 |
+| panel at dawn | U5's own UVLO and soft start; SWEN off while TRK_LDO33 is low; the hold; the regulation | SWEN off below 2.662 V; the hold 17.593 V; 2.5485 A nominal, at most 2.9318 A (44.84 / 53.42 W in) | L4-E7R |
+| panel at dusk | the panel falls under the hold and the stage stops delivering; U4/Q2 blocks VIN_RAW from TRK_OUT; with no other source VIN_RAW falls into the knee's HIZ | HIZ below 7.378 V; the guard 6.754 to 7.139 V | L4-E7R, L4-E11 3f |
+| pack connected | the gauge's FETs close onto VBAT; the always-on comes up on CELL_F; the inrush into VBAT's capacitors | 242.9 A peak, over ASCD's 55.6 A for 61.5 us against its 183 us delay (with E11-24's direct can; the drawn VBAT holds less) | L4-E11 out 10 |
+| pack disconnected, or both FETs open, with a source | U3 holds VBAT at ChargeVoltage with no battery current (state S4), CONDITIONAL on TI's D1 (U-04) | VSYS at least 16.716 V against VSYS_MIN 12.3 V (a 4.416 V margin, once the mode is shown) | L4-E11 9 (D1) |
 
-## 5. Faults, traced across the stages (out 7, out 11)
+### 4b. Simultaneous operation
 
-| Fault | What acts, stage by stage | Bound, and its class |
-|---|---|---|
-| **Source short**, the vehicle lead shorted while the tracker holds the bus | U3/Q1 blocks the reverse current at DC_F; DC_P stays back-fed from VIN_RAW | Q1 stands off DC_P, at most 30.15 V (INFERRED) |
-| **Source short**, the panel lead | U4/Q2 blocks VIN_RAW into TRK_OUT; U5's input falls through its UVLO; SWEN off by default | INFERRED (L4-E7R) |
-| **Output short**, VBUS20 | R12 holds the front end's output at 4.57 A at 9 V, R11 at 7.262 A above 14 V; VIN_RAW carries at most 11.65 A; the vehicle entry's breaker opens on overcurrent (6.364 to 7.136 A) after 0.247 to 0.49 ms, or on its filtered short-circuit sense (10.36 to 13.87 A), and retries every 0.5 s (the drawn LM5069 limited at 4.85 to 6.15 A for 3.13 to 8.16 ms); the panel's stage regulates at 2.9318 A at most and its backstop trips at 3.7408 A at most, inside 1.087 ms after the INB filter's held charge; U34 cycles the front end | L1 at most 12.60 A, FETs at most 130 C on the assumed 50 C/W (CONDITIONAL, C-3, C-5) |
-| **Output short**, behind the vehicle entry (E11-19) | the selected breaker (TPS48110-Q1): at the start, a resistive fault (0.1 to 1000 Ohm) ends on the short-circuit trip with Q7 at 0.704 of its derated chart (1.21 Ohm, 0.954 ms), a hard short at 73.4 A after 9.04 us (0.743 of the derated 100 us line); in service the current rises at VIN / L until the filtered sense (2.74 to 3.31 us) and PD (5 us) turn Q7 off, then a retry every 0.5 s. The LM5069's power-limit pulse, its 5 mV floor and its fault time (D-07, D-09) exist only for the LM5069 alternative | the starts inside Q7's derated chart (CONDITIONAL on the derating and the transconductance bound, E11-17); the hard short in service inside Q7's derated 178.2 A only with the loop's inductance at least 2.08 uH: OPEN (E11-20, R-134); F1's I2t at most 6.7311 A2s, 7.24 % of its typical melting I2t |
-| **Output short**, VBAT | the gauge's SCD (60 A in 0.2 ms), OCD2, the 25 A blades, F2, against 240 to 480 A prospective; U3 at its input limit | MAKER thresholds (pcb_pack_protection.yaml) |
-| **Output short**, an outlet | USB-C: U18's OCP at 3.793 to 4.576 A in 15 us, U19's own limit; PoE: U16 leaves boost and its buck valley limit holds the input under the boost bound, board B's port limit; PA: U13's loop; monitor and heater: their eFuses | CONDITIONAL (VI(TRIP)'s row, bench (a)); U17 reads the PoE fault inside its full scale (INFERRED) |
-| **Reverse**, the vehicle input at -36 V (REQ-015) | D10 (two-way, 44.4 V breakdown) does not conduct; U3/Q1 block; DC_P back-fed from the raised ceiling through Q7's body diode | **Q1 at 66.15 V: NOT MET on the drawn 60 V part, MEETS on the CSD19532Q5B (100 V)**; the LM74700-Q1 under its 70 V recommended, 75 V absolute, its ANODE at -36 V against -65 V (INFERRED, MAKER) |
-| **Reverse**, the panel | D4 forward at the panel's short circuit (DECISION-31 E-N1) | recorded by DECISION-31; F2 above the panel's 6.802 A |
-| **Disturbance**, TEST-PLAN M2 (CS101), M3 (CS114), M7 (decision 34's 8 kV contact and 15 kV air); no surge level is ruled (D-16, CHO-003) | Vehicle entry: CS101's 2.83 V peak at 36 V reaches 38.83 V, past the drawn OVLO minimum, under the selected entry's OV minimum 39.6 V (D-02; the alternative's 39.71 V); CS114 holds DC_F to 3.17 V; E-F1's 1 uF holds a negative discharge to 2.25 V. Solar entry: CS101 keeps the input at 27.82 V under D4's 28 V; U5's differential at most 0.2094 V against 0.3 V; the backstop's filtered ripple 0.0585 A against its 0.1130 A margin (D-01, resolved in design) | INFERRED (part A), MODELED (L4-E7R, CONDITIONAL on the loop's typical rows); A-N1 a recorded residual |
-| **Capability scenario**, D10 at its rated pulse (not a requirement) | negative: Q1 at 100.5 V with DC_P at 36 V, avalanche energy at most 83.6 mJ against EAS 274 mJ; the LM74700-Q1's 75 V passed once DC_P exceeds 10.5 V | NOT MET, outside every requirement (D-16; DECISION-31) |
-| **A short behind F1, a stiff source** (it needs a prior short of D10, D1, E-F1's capacitor or C4) | F1 alone clears it, at up to the 43.18 V basis (the selected OV maximum 41.22 V); with the selected interconnect at most 900 A (its specified loop floor, 56.93 mOhm at 20 C; the construction 871 A; the drawn cable 569.8 A) | the 0997010.WXN: 58 V DC, 1000 A at 58 V DC: MEETS (MAKER), CONDITIONAL on the four-wire acceptance (R-130); the drawn 297 MINI's 32 V: NOT MET as drawn; the conductors' short-time capability against F1's clearing I2t at 900 A CONDITIONAL (R-113, R-115); Q1 in the path is not shown to hold it and is not a conductor or connector of REQ-045 (no exemption claimed) |
-| **A short behind F1, a weak source** (under ECSS 6.17.3c's 30 A) | F1's long-time band: 10 to 11 A with no opening, 13.5 A up to 600 s, 20 A up to 5 s | D-06 resolved in design (L4-E11): every element of the interconnect at least 20 A continuous where installed, 35 A for 5 s, 60 A for 0.5 s; CONDITIONAL on the makers' installed and short-time ratings (R-113, R-129 to R-132); the drawn VH, size 16 contacts and cable stay NOT MET as drawn |
-| **Pack fault**, the charge FET opening mid-charge (a designed event, REQ-046) | U3's voltage loop holds VBAT at 16.884 V at most; BATOVP stops switching at 17.64 V, SYSOVP at 20.0 V; L2's 0.1341 mJ goes into VBAT's 34 capacitors (248.2 uF nominal) | 20.135 V at a fifth of the nominal capacitance (ASSUMPTION), under the TPS2596's 21 V and U17's 36 V |
-| **Pack fault**, the discharge FET opening under load | on battery the kit stops (the hot stop REQ-077 acts first on temperature); with a source U3 carries up to 84.5 to 99.6 W | as section 3 |
-| **Pack fault**, a cell or the block | BQ7720700's second level drives F2 (the chemical fuse); F1 25 A; under U-01's approach (II) U2 becomes the BQ7720704 (R-105) | MAKER thresholds |
-| **Controller fault**, the host crashed | U3's watchdog falls back to 256 mA after 175 s (FW-A03); the H3 line is hardware and needs no host; the gauge's HWD stops charging in 10 s (FW-E01); the solar backstop is hardware on SWEN | the source bound holds with no firmware |
-| **Controller fault**, U2 (Q2 short, FB open) | VBUS20 follows VIN_RAW; U3's 32 V passed; no clamp on VBUS20 | a single fault with no exemption claimed: S-111's options, R-48's engineering decision (open) |
-| **Controller fault**, U5 (the LT8705A) | the backstop on SWEN acts while the regulation fails; L4-E7R lists the single faults that defeat the backstop or stop charging | Layer 8's fault analysis (R-100): no single fault both defeats the backstop and removes U5's own limit |
+| Together | What acts | The figure | Record |
+|---|---|---|---|
+| the profile with solar at the window and a 24 V vehicle | the tracker's ceiling above 24 V: the panel carries the bus first; the H3 line at VIN_RAW | at most 4.194 A at 24 V, 65.9 % of the breaker's lowest 6.364 A | L4-E5, L4-E11 |
+| what reaches VBAT from the sources | U3 between its minimum at the lowest bus and its board-current maximum | 84.5 to 99.6 W | this record out 5 |
+| PS-IDLE-SPEC, 42.8 W | the loads take the sources first, the pack the rest; the outlets drop while the PA keys (OUTLET_OK) | up to 41.7 W left to charge, at most 3.0 A | this record out 5 |
+| PS-TYP with the USB-C outlet at 45 W, 112.3 W | the loads take the sources first, the pack the rest; the outlets drop while the PA keys (OUTLET_OK) | the pack supplies at least 27.8 W | this record out 5 |
+| the PA keyed alone at 113 W, 162.3 W | the loads take the sources first, the pack the rest; the outlets drop while the PA keys (OUTLET_OK) | the pack supplies at least 77.8 W | this record out 5 |
+| PS-ALLTX (plan), 203.8 W | the loads take the sources first, the pack the rest; the outlets drop while the PA keys (OUTLET_OK) | the pack supplies at least 119.3 W | this record out 5 |
+| a 9.00 V plug with the profile | the pack supplements; it charges only while the kit draws under the source's least | 29.09 to 42.52 W at VBAT from the plug | L4-E11 3h |
+
+### 4c. Startup: cold, dead pack, source-only
+
+| Start | What acts | The figure | Record |
+|---|---|---|---|
+| cold start on the pack | MAIN brings up board A's +3V3; DEV_EN on by its pull-up; the panel controller runs FW-C01's order: PI_KILL low, the expanders' outputs before their configuration, the charger with FW-A01 first, then SLOT_EN one at a time | before the host writes IIN_HOST the input limit gives about 31 W into VSYS (INFERRED) | ARCHITECTURE.md 4.3, HW-FW-CONTRACT, CHARGER-STATE-SEQUENCE.md |
+| a dead pack (at or under CUV) | the gauge's CUV holds; U3 charges through the open discharge FET's body diode at its clamp; rules R-a to R-d; the image's pre-charge | CUV 2.50 V a cell; the clamp 384 mA typical (no maximum printed: D7); ChargeCurrent 256 mA at POR | L4-E11 2, 4, 9 |
+| a cold pack | UTC holds the charge FET; the mat warms the block first (FW-A13); under U-01's (II) the kit's hold moves to -7 C | warm before charge below -10 C at the cell; the mat 12.0 V, 7.5 W | HW-FW-CONTRACT FW-A13, L4-E10 14b |
+| source-only at a 9.00 V plug | the shedding sequence P0 to P3 (L4-E11 3g): P1 kept, the warm-up P2 on the source's headroom | P1 at most 20.51 W; P2 28.12 W plan carried with 0.98 W in hand; the source 29.09 to 42.52 W at VBAT | L4-E11 3g, 3h (U-04) |
+
+### 4d. Shutdown
+
+| Stop | What acts | The figure | Record |
+|---|---|---|---|
+| graceful, on battery | the firmware's graceful line ends the run before either cell's end voltage | 3.00 V a cell under load | L4-E10 9b, 9c |
+| the gauge's under-voltage | CUV opens the discharge FET | 2.50 V a cell (2.75 V under U-01's (II)) | pcb_pack_protection.yaml, L4-E10 14b |
+| MAIN pressed | an ordinary press asks the modules to shut down (PI_SHDN_REQ), then PI_KILL; held, the LTC2954 forces the kit off | forced off after about 4.4 s (3.3 to 6.0 s) | HW-FW-CONTRACT FW-A10 to A12 |
+| C1 at the inside air | module shedding: normal to the reduced mode, then the heat stage; restores 5 K below | inside air +50 C or any cell +55 C | CONOPS 4 via L4-E12 1f |
+
+### 4e. Faults: each trip, what it isolates, the recovery
+
+| Trip | What acts, its threshold and time | What it isolates | The recovery | Record |
+|---|---|---|---|---|
+| the vehicle entry's breaker | 6.364 / 6.8 / 7.136 A after 0.247 / 0.37 / 0.49 ms | the vehicle source from VIN_RAW (Q7 off) | retry every 0.5 s | L4-E11 3c |
+| the entry's short-circuit trip | 10.36 / 12.04 / 13.87 A filtered | the same | retry every 0.5 s; a hard short in service inside Q7's derated 178.2 A only with the loop's inductance at least 2.08 uH (OPEN, R-134) | L4-E11, out 12 |
+| the entry's OV and UVLO | off above 39.6 / 40.36 / 41.22 V; off under 7.46 / 7.66 / 7.95 V | the vehicle source | on again inside the window | L4-E11 3c |
+| F1, the vehicle fuse | the 0997010.WXN (58 V DC, drafted); a stiff source's fault at most 900 A by the specified loop | the vehicle lead | replace the fuse | part A, L4-E11 6 |
+| the solar backstop | trips at 3.0468 to 3.7408 A, inside 1.087 ms after the filter | the panel (SWEN off) | restarts through the stage's soft start | L4-E7R |
+| F2, the panel fuse | 10 A mini blade (Keystone 3568 holder) | the panel lead | replace the fuse | board E as drawn |
+| the front end's limits | R11's average and R12's cycle-by-cycle limit (peak 8.06 A, L1 at most 12.6 A) | nothing: they limit, no hiccup | U34 cycles the front end when VIN_RAW falls | L4-E4, L4-E6 |
+| U18's outlet OCP | 3.793 to 4.576 A | the USB-C outlet | the PD contract renegotiated | L4-E4 |
+| OUTLET_OK | while the PA keys (a key-down at most 60 s) | both outlets | on again when the key ends | HW-FW-CONTRACT FW-A05, FW-A06 |
+| the gauge's SCD and OCD | SCD 60 A; OCD1 20 A for 2 s | the pack from VBAT (its FETs) | the gauge's own recovery | pcb_pack_protection.yaml |
+| the gauge's OCC | 5 A | the charge path | the gauge's own recovery | pcb_pack_protection.yaml |
+| A F1, the pack fuse | 25 A | the pack from VBAT | replace the fuse | board A as drawn |
+| F2 SCF9550, the BQ7720700 | the second level drives SCF9550-30-05 self-control fuse (Eaton, 30 A, 4-5 cells) | the pack, for good (a chemical fuse) | none: the pack is replaced | pcb_pack_protection.yaml |
+| BATOVP and SYSOVP | BATOVP 17.64 V; SYSOVP 19.0 to 20.0 V | U3's switching | U3 resumes | SLUSE66A via this record |
+| the charge FET opening mid-charge (a designed event) | U3's voltage loop holds VBAT; BATOVP stops switching | nothing: VBAT reaches 20.135 V at a fifth of the capacitance (ASSUMPTION), under the TPS2596's 21 V | the charge resumes when the FET closes | this record out 7 |
+| the vehicle input reversed (-36 V) | D10 does not conduct; the LM74700-Q1 and Q1 block | Q1 sees 66.15 V (the raised ceiling plus the reversed input) against the CSD19532Q5B's 100 V (the drawn 60 V part fails: NOT MET as drawn) | none needed | part A (R-17, drafted) |
+| a disturbance (M2 CS101, M3 CS114, M7) | the entry's OV stays off above CS101's peak at 36 V; the solar input stays under D4 | the OV minimum 39.6 V; the solar input at most 27.82 V; the backstop's filtered ripple 0.0585 A against 0.113 A | no trip, no upset (CONDITIONAL on the loop's typical rows) | part A, L4-E7R (D-01, D-02) |
+| a short behind F1 from a weak source | F1's long-time band | every element of the interconnect at least 20 A continuous where installed (D-06, CONDITIONAL on the makers' ratings) | replace the fuse | L4-E11 6 (R-129 to R-132) |
+| U2's single faults (Q2 short, FB open) | nothing: VBUS20 follows VIN_RAW past U3's 32 V | no clamp on VBUS20 | S-111's decision is open (R-48) | s120 11 |
+| U5's regulation failing | the backstop on SWEN | trip at most 3.7408 A | the stage restarts; a fault defeating both is Layer 8's analysis (R-100) | L4-E7R |
+
+### 4f. Thermal management: the hold, the heater, the fans
+
+| Thermal | What acts | The figure | Record |
+|---|---|---|---|
+| the margin hold (E5) | off board D, the PA rail, the RockBLOCK, the LoRa module, both E72 and the Geiger module; the running module idled; the charge held | trigger 68.65 C of mixed air plus the calibrated offset (the reference within +-0.899099 K); restore 5 K under after 30 minutes (PROVISIONAL) | L4-E12 6 (R-138, R-139) |
+| C1, module shedding | normal to the reduced mode, reached again to the heat stage | inside air +50 C or any cell +55 C; restores 5 K below | CONOPS 4 |
+| the SGP41's own shutdown | its load switch from board E's controller | off at 54.0 C on the TMP117, used at or under 49.0 C; the lag assumed 61 s (R-139) | L4-E12 6 |
+| the pack heater | the mat on U22/U33 at 12.0 V; UTC holds the charge FET until the block warms | warm before charge below -10 C at the cell; 1.6 Wh to T1 from -20 C (the HL18650V class) | FW-A13, L4-E10 14b |
+| the fans | two mixers on board E from the inside climate; each running slot's cooler; a stalled fan reported | the hold's 2 fans 2.010 W; a stall reported within 5 s; with the fans stopped E5's air 72.38 to 85.36 C | FW-E07, V-E07, L4-E12 8b |
+| the PA's key-down | the K rules and OUTLET_OK | at most 60 s a key-down, 2 s apart; gates at +55 C cells, +50 C air, +75 C flange | FW-A05, D-11 (PROVISIONAL) |
+
+### 4g. Control dependencies: what still acts if the firmware stalls
+
+| If it stalls | What still acts with no firmware | What does not (not fail-safe) | Record |
+|---|---|---|---|
+| the panel controller (C:U3) | the charger falls back to 256 mA after its 175 s watchdog; the H3 line, U34, the entry, the backstop, OUTLET_OK, the eFuses, BATOVP and SYSOVP; the RP2040's own watchdog restarts it | the margin hold (E5's +70 C class goes unprotected); the key-down time limit (OUTLET_OK still drops the outlets); the expanders keep their last outputs | HW-FW-CONTRACT FW-A03, FW-A05, FW-A08; L4-E12 |
+| the sensor controller (E:U10) | the gauge stops charging after its host watchdog's 10 s; the gauge's protections and the second level act alone; the RP2040's watchdog restarts it | the mixer fans' control (a stopped fan is the fans-off case, 72.38 to 85.36 C in E5); VIN_MON for FW-A16's diagnostic; the SGP41's switch | HW-FW-CONTRACT FW-E01, FW-E07, FW-E09 |
+| both controllers | every hardware limit of 4e acts; the source bound holds with no firmware (the H3 line and the knee) | the charge ranges relayed from the gauge (UTC still holds the charge FET); the hold; the heater's policy | this record out 7 |
+| the gauge's own firmware | the BQ7720700 and F2 (hardware) | COV, CUV, OCD, SCD and the temperature limits, which are the gauge's | pcb_pack_protection.yaml |
 
 ## 6. Decisions this record takes (SESSION, under the owner's standing rule of 26 September 2026 and his ruling of 21 September 2026 that engineering decisions are the session's)
 
@@ -779,3 +793,82 @@ owner's purchase. The items under U-01's approach (II)
   single faults) is an engineering decision still open (R-48), with no exemption claimed; the short at DC_P and the weak-source
   band behind F1 are traced in section 5 (F1's let-through R-115, D-06), not exempted.
 - **Not claimed:** nothing is verified, built or measured; every row is a desk reading of documents and records.
+
+## Appendix B. The traces as first written (rounds 1 to 4; superseded in presentation by section 4)
+
+### B1. Simultaneous operation (out 5)
+
+Solar at the window, a vehicle at 24 V, the full load and charging together:
+- **The sources share.** The tracker's ceiling (28.28 V at its lowest) sits above a 24 V vehicle, so the panel carries the bus
+  first and the vehicle's ideal diode conducts only for what the panel does not give. The front end's input is H3's line at
+  whatever VIN_RAW the sources settle at: at most 4.194 A at 24 V, 65.9 % of the selected breaker's lowest 6.364 A.
+- **What reaches VBAT** is U3's: 84.5 to 99.6 W (its minimum at the lowest bus to its board-current maximum at the bus's top).
+- **The loads take it first, the pack the rest.** PS-IDLE-SPEC (42.8 W) leaves up to 41.7 W to charge at most 3.0 A; PS-TYP with
+  the tablet (112.3 W) draws at least 27.8 W from the pack; the PA keyed alone at 113 W draws at least 77.8 W; PS-ALLTX at least
+  119.3 W (plan) and 187.5 W (high). With a source the pack's current is lower than on the pack alone, so D-11's floors hold as
+  they do on the pack alone, and the outlets drop while the PA keys (OUTLET_OK).
+- **No stage is pushed past its limit:** the entry under its minimum limit, R11 at 4.964 A at most, every can at most 2.4096 A,
+  the charge at most 3.0 A against the gauge's OCC 5 A.
+- **Per source at the plug (an envelope to state, not a defect; L4-E11 3h, the losses hot, the corrected knee).** At a 9.00 V
+  plug the source delivers 29.09 to 42.52 W at VBAT; at 12 V 32.22 to 47.72 W; at 24 V 69.97 to 90.81 W; at 36 V 84.55 to
+  99.64 W (round 2's figures at VIN_RAW with no loss: 19.9 to 36.6 W at 9 V). So a 9 V vehicle runs PS-IDLE-SPEC (42.8 W) with
+  the pack supplementing, and charges only while the kit draws under 29.09 W. REQ-015's acceptance ("operates and charges
+  across 9 to 36 V") is met in both of its parts with a working pack; with no usable pack it is U-04's CONDITIONAL CANDIDATE.
+
+### B2. Startup (out 6)
+
+- **Cold start on the pack** (`ARCHITECTURE.md` 4.3): with the pack connected the LTC2954 holds RAIL_EN low and board E's
+  sensor controller runs on CELL_F; MAIN brings up board A's +3V3; DEV_EN is on by R42, so +5V_DEV and then the panel
+  controller start; the panel runs FW-C01's order (PI_KILL low, ZEROIZE read, the expanders' outputs before their configuration,
+  the charger with FW-A01 first, then SLOT_EN one at a time); each stage soft-starts on VBAT. The pack's precharge pin J_PRE1
+  (10 Ohm, 2 W) mates first when the stack is seated.
+- **A source arriving:** the selected entry (L4-E11) turns on at 8.44 V of DC_P at the most and slews the bus up, 0.382 to
+  1.219 A for at most 2.5 ms (the drawn LM5069 cannot start from a 9.00 V plug: 8.987 V against POREN's 9 V); U3 is in HIZ below
+  the corrected knee's certain 7.378 V, and the H3 line bounds its input from its first switching cycle with no host. The panel:
+  the stage's own UVLO and soft start, then the hold at 17.593 V; SWEN stays off while TRK_LDO33 is under 2.662 V whatever the
+  ramp (L4-E7R), and each backstop trip restarts the stage through its soft start.
+- **A source leaving:** VBAT is the system node with no battery FET, so the pack carries the loads without a break; U3 resets
+  IIN_HOST to 3.25 A and firmware writes 4.70 A again (FW-A16 restated); VIN_RAW falls through the restart guard (7.139 V at its
+  highest with R14 76.8k, R-124; 8.31 V as drawn, above a 9.00 V plug's operating point) and the front end stops; the bank
+  bleeds in 0.455 to 1.494 s (L4-E8).
+- **Source-only and dead-pack operation (the fix round, B4; U-04).** What SLUSE66A establishes: after VBUS qualification
+  "Converter powers up" (9.3.1) with no battery condition, and its power-up figures are drawn "2-cell without battery"
+  (Figures 10-4, 10-5); DPM gives the system priority and past the input's limit "the system voltage starts to drop" (9.3.17);
+  below VSYS_MIN the charge is clamped at 384 mA (9.6.2.1). Board A straps CELL_BATPRESZ for 4S, so U3 never sees "battery
+  removal": with the pack absent it holds VBAT at ChargeVoltage (at most 16.884 V; INFERRED), and with the pack's discharge FET
+  open at CUV it charges through that FET's body diode at the clamp, VBAT near the pack's 10 V (INFERRED). **The source
+  envelope with no usable pack**, at VBAT: 9 V 19.9 to 36.6 W, 12 V up to 47.4 W, 24 V up to 90.6 W, against PS-IDLE-SPEC's
+  42.8 W; so at 9 V the kit cannot run its profile on the source alone, and at 12 and 24 V the line's maximum is above it (no
+  minimum is printed there: CONDITIONAL). Before the host writes IIN_HOST the input limit gives about 1.6 to 1.7 A at the 20 V
+  bus, about 31 W into VSYS (`CHARGER-STATE-SEQUENCE.md`, INFERRED); FW-C01's order puts the charger before any slot, which no
+  record measures. **Not resolvable from the held documents:** whether the converter keeps VSYS up with charge inhibited and no
+  battery FET (Q-TI-3), whether the gauge lets a pack at CUV take charge with no precharge FET, and whether every load converter
+  runs at the dead pack's VBAT (A-14). It is U-04 (section 7b), not later testing; R-85 is its verification at 12 and 24 V and
+  does not settle it alone. Board E's always-on comes up on CELL_F from VBAT. **L4-E11 (accepted) answers it as far as the held
+  documents allow:** arrangement (A), the drawn charger with rules R-a to R-d (the holds as a state table with S4's exception,
+  R-b's two charge settings, the shedding sequence, the image's pre-charge); at a 9.00 V plug the shed warm-up (28.12 W at the
+  plan figure) is carried with 0.98 W in hand while P1 stays at most 20.51 W; REQ-015 at 9.00 V at the plug is a CONDITIONAL
+  CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23 (section 7b).
+
+### B3. Faults, traced across the stages (out 7, out 11)
+
+| Fault as first traced | What acts, stage by stage | Bound, and its class |
+|---|---|---|
+| **Source short**, the vehicle lead shorted while the tracker holds the bus | U3/Q1 blocks the reverse current at DC_F; DC_P stays back-fed from VIN_RAW | Q1 stands off DC_P, at most 30.15 V (INFERRED) |
+| **Source short**, the panel lead | U4/Q2 blocks VIN_RAW into TRK_OUT; U5's input falls through its UVLO; SWEN off by default | INFERRED (L4-E7R) |
+| **Output short**, VBUS20 | R12 holds the front end's output at 4.57 A at 9 V, R11 at 7.262 A above 14 V; VIN_RAW carries at most 11.65 A; the vehicle entry's breaker opens on overcurrent (6.364 to 7.136 A) after 0.247 to 0.49 ms, or on its filtered short-circuit sense (10.36 to 13.87 A), and retries every 0.5 s (the drawn LM5069 limited at 4.85 to 6.15 A for 3.13 to 8.16 ms); the panel's stage regulates at 2.9318 A at most and its backstop trips at 3.7408 A at most, inside 1.087 ms after the INB filter's held charge; U34 cycles the front end | L1 at most 12.60 A, FETs at most 130 C on the assumed 50 C/W (CONDITIONAL, C-3, C-5) |
+| **Output short**, behind the vehicle entry (E11-19) | the selected breaker (TPS48110-Q1): at the start, a resistive fault (0.1 to 1000 Ohm) ends on the short-circuit trip with Q7 at 0.704 of its derated chart (1.21 Ohm, 0.954 ms), a hard short at 73.4 A after 9.04 us (0.743 of the derated 100 us line); in service the current rises at VIN / L until the filtered sense (2.74 to 3.31 us) and PD (5 us) turn Q7 off, then a retry every 0.5 s. The LM5069's power-limit pulse, its 5 mV floor and its fault time (D-07, D-09) exist only for the LM5069 alternative | the starts inside Q7's derated chart (CONDITIONAL on the derating and the transconductance bound, E11-17); the hard short in service inside Q7's derated 178.2 A only with the loop's inductance at least 2.08 uH: OPEN (E11-20, R-134); F1's I2t at most 6.7311 A2s, 7.24 % of its typical melting I2t |
+| **Output short**, VBAT | the gauge's SCD (60 A in 0.2 ms), OCD2, the 25 A blades, F2, against 240 to 480 A prospective; U3 at its input limit | MAKER thresholds (pcb_pack_protection.yaml) |
+| **Output short**, an outlet | USB-C: U18's OCP at 3.793 to 4.576 A in 15 us, U19's own limit; PoE: U16 leaves boost and its buck valley limit holds the input under the boost bound, board B's port limit; PA: U13's loop; monitor and heater: their eFuses | CONDITIONAL (VI(TRIP)'s row, bench (a)); U17 reads the PoE fault inside its full scale (INFERRED) |
+| **Reverse**, the vehicle input at -36 V (REQ-015) | D10 (two-way, 44.4 V breakdown) does not conduct; U3/Q1 block; DC_P back-fed from the raised ceiling through Q7's body diode | **Q1 at 66.15 V: NOT MET on the drawn 60 V part, MEETS on the CSD19532Q5B (100 V)**; the LM74700-Q1 under its 70 V recommended, 75 V absolute, its ANODE at -36 V against -65 V (INFERRED, MAKER) |
+| **Reverse**, the panel | D4 forward at the panel's short circuit (DECISION-31 E-N1) | recorded by DECISION-31; F2 above the panel's 6.802 A |
+| **Disturbance**, TEST-PLAN M2 (CS101), M3 (CS114), M7 (decision 34's 8 kV contact and 15 kV air); no surge level is ruled (D-16, CHO-003) | Vehicle entry: CS101's 2.83 V peak at 36 V reaches 38.83 V, past the drawn OVLO minimum, under the selected entry's OV minimum 39.6 V (D-02; the alternative's 39.71 V); CS114 holds DC_F to 3.17 V; E-F1's 1 uF holds a negative discharge to 2.25 V. Solar entry: CS101 keeps the input at 27.82 V under D4's 28 V; U5's differential at most 0.2094 V against 0.3 V; the backstop's filtered ripple 0.0585 A against its 0.1130 A margin (D-01, resolved in design) | INFERRED (part A), MODELED (L4-E7R, CONDITIONAL on the loop's typical rows); A-N1 a recorded residual |
+| **Capability scenario**, D10 at its rated pulse (not a requirement) | negative: Q1 at 100.5 V with DC_P at 36 V, avalanche energy at most 83.6 mJ against EAS 274 mJ; the LM74700-Q1's 75 V passed once DC_P exceeds 10.5 V | NOT MET, outside every requirement (D-16; DECISION-31) |
+| **A short behind F1, a stiff source** (it needs a prior short of D10, D1, E-F1's capacitor or C4) | F1 alone clears it, at up to the 43.18 V basis (the selected OV maximum 41.22 V); with the selected interconnect at most 900 A (its specified loop floor, 56.93 mOhm at 20 C; the construction 871 A; the drawn cable 569.8 A) | the 0997010.WXN: 58 V DC, 1000 A at 58 V DC: MEETS (MAKER), CONDITIONAL on the four-wire acceptance (R-130); the drawn 297 MINI's 32 V: NOT MET as drawn; the conductors' short-time capability against F1's clearing I2t at 900 A CONDITIONAL (R-113, R-115); Q1 in the path is not shown to hold it and is not a conductor or connector of REQ-045 (no exemption claimed) |
+| **A short behind F1, a weak source** (under ECSS 6.17.3c's 30 A) | F1's long-time band: 10 to 11 A with no opening, 13.5 A up to 600 s, 20 A up to 5 s | D-06 resolved in design (L4-E11): every element of the interconnect at least 20 A continuous where installed, 35 A for 5 s, 60 A for 0.5 s; CONDITIONAL on the makers' installed and short-time ratings (R-113, R-129 to R-132); the drawn VH, size 16 contacts and cable stay NOT MET as drawn |
+| **Pack fault**, the charge FET opening mid-charge (a designed event, REQ-046) | U3's voltage loop holds VBAT at 16.884 V at most; BATOVP stops switching at 17.64 V, SYSOVP at 20.0 V; L2's 0.1341 mJ goes into VBAT's 34 capacitors (248.2 uF nominal) | 20.135 V at a fifth of the nominal capacitance (ASSUMPTION), under the TPS2596's 21 V and U17's 36 V |
+| **Pack fault**, the discharge FET opening under load | on battery the kit stops (the hot stop REQ-077 acts first on temperature); with a source U3 carries up to 84.5 to 99.6 W | as section 3 |
+| **Pack fault**, a cell or the block | BQ7720700's second level drives F2 (the chemical fuse); F1 25 A; under U-01's approach (II) U2 becomes the BQ7720704 (R-105) | MAKER thresholds |
+| **Controller fault**, the host crashed | U3's watchdog falls back to 256 mA after 175 s (FW-A03); the H3 line is hardware and needs no host; the gauge's HWD stops charging in 10 s (FW-E01); the solar backstop is hardware on SWEN | the source bound holds with no firmware |
+| **Controller fault**, U2 (Q2 short, FB open) | VBUS20 follows VIN_RAW; U3's 32 V passed; no clamp on VBUS20 | a single fault with no exemption claimed: S-111's options, R-48's engineering decision (open) |
+| **Controller fault**, U5 (the LT8705A) | the backstop on SWEN acts while the regulation fails; L4-E7R lists the single faults that defeat the backstop or stop charging | Layer 8's fault analysis (R-100): no single fault both defeats the backstop and removes U5's own limit |
