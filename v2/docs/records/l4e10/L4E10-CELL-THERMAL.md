@@ -43,11 +43,13 @@ stated), ASSUMPTION (a figure no held document gives), CONDITIONAL (holds only o
   state or recovery stated); the drafted charge ranges for the 4S3P (0.84 A to 16.40 V from -9 C, 1.68 A from 1 C, the
   drawn 3.00 A from 11 C); usable energy 90.2 Wh at +25 C against the 35E's 107.9 Wh, the cold end a bracket; the threshold
   of each row at which the architecture moves.
-- **U-01 consolidated (section 15, 2 October 2026):** a supported route exists on published manufacturer evidence, the
-  Saft MP 176065 xtd as a 4S1P pack in D-06's pocket (charge -30 to +85 C, discharge -40 to +85 C, storage allowable -40
-  to +85 C), adoption pending the owner's approval (about 82 Wh nominal, 53.5 to 55.1 Wh usable) and CONDITIONAL on its fit
-  along the axis and its 18 A peak; with it LO-01d holds on U-02's conservative bound, while LO-01a's complete pass and
-  LO-01e rest on T-H1 for every cell. The pocket's room is corrected to 0.0865 L (section 15a).
+- **U-01 consolidated (section 15, 2 October 2026; restated after Astra's B5):** the Saft MP 176065 xtd as a 4S1P pack in
+  D-06's pocket is supported on published manufacturer evidence for its TEMPERATURE WINDOWS (charge -30 to +85 C,
+  discharge -40 to +85 C, storage allowable -40 to +85 C). Current and temperature together (10 A continuous, 18 A for
+  60 s, the protection's 20 A for 2 s at the modelled cell temperatures; charge below 0 C) and the storage dwell and
+  recovery are AWAITING Saft or a limited sample qualification (section 15g). The route is not yet adoptable: those, the
+  fit along the axis and the owner's approval (about 82 Wh nominal, 53.5 to 55.1 Wh usable) remain. LO-01a's complete
+  pass and LO-01e rest on T-H1 for every cell. The pocket's room is corrected to 0.0865 L (section 15a).
 - **The battery comparison (section 16, the owner's amendment of 2 October 2026):** on one boundary the approved 35E pack
   gives 144.72 Wh nominal and 107.9 Wh usable (2.52 h); the Saft route 81.76 Wh nominal and 53.5 to 58.8 Wh usable (1.25 to
   1.37 h). The 43.5 % cut compares the 35E's minimum with the Saft's typical; like for like it is 45.1 %. The evidence
@@ -533,7 +535,7 @@ still fits; E3-S, E5's other corners and the primary cells were already outside.
 |---|---|---|---|
 | Samsung INR18650-35E, Ver. 1.1 (D-06's ruled cell; MAKER) | **suitable on published evidence**: LO-01c (REQ-046's 0 to 45 C) and the cold charge (REQ-046: the mat warms the pack below 0 C; C09) | **suitable** for LO-01a (+40 C, D-02) and LO-01b (-20 C once warm, D-02d); **unsuitable on published evidence** for LO-01d (+55 C, D-02a, E3-O: the cells 61.26 to 72.42 C against +60 C) | **suitable** for LO-01h (D-02, REQ-025) and E3-T's +58 C; **unsuitable on published evidence** for LO-01f (+71 C, D-02a, E3-S), LO-01g (-33 C, D-02a, E4-S) and LO-01e (E5's dwell, SC-03: the idle pack at 74.73 C at the conditioned corner) |
 | HL18650V (the proposal of section 6; MAKER-PAGE) | **suitable only with a vendor answer** (the page's rows; the coldest garbled; no termination); the cold charge served by the mat as for the 35E | **suitable only with a vendor answer** (LO-01a, LO-01b, LO-01d: -40 to +85 C, no basis, no pulse, no cold capacity) | **suitable only with a vendor answer** (LO-01e to LO-01h: the page's rows, no state of charge, no recovery) |
-| Saft MP 176065 xtd (Doc. n 31109-2-0625, June 2025; MAKER, held back) | **suitable on published evidence**: LO-01c (charge -30 to +85 C, CC/CV 4.2 V, 5.6 A at most; the drawn 3.0 A inside); the cold charge by the mat | **suitable on published evidence** for LO-01a, LO-01b, LO-01d (-40 to +85 C, 11 A continuous against the kit's 10 A); PS-ALLTX's 18 A for 60 s on one string **only with a vendor answer** (22 A pulses, no duration) | **suitable on published evidence** for LO-01e to LO-01h: the allowable -40 to +85 C states no time or charge restriction (INFERRED: it covers 24 h at the stored charge) |
+| Saft MP 176065 xtd (Doc. n 31109-2-0625, June 2025; MAKER, held back) | **window suitable on published evidence**: LO-01c (-30 to +85 C, CC/CV 4.2 V); the drawn 3.0 A from 0 C to T3's 42 C under the printed 5.6 A (the sheet qualifies it only below 0 C, its footnote 4); the cold charge by the mat. **Charge current below 0 C AWAITING Saft or the sample qualification** | **window suitable on published evidence**: -40 to +85 C for LO-01a, LO-01b, LO-01d. **Current and temperature together AWAITING Saft or the sample qualification**: 10 A continuous, 18 A for 60 s and the gauge's 20 A for 2 s on one cell, at -20, -10, +45, +60, +70 and +80 C (the sheet: "Can vary depending on temperatures. Consult Saft", footnote 2) | **window suitable on published evidence**: allowable -40 to +85 C covers +71 C, -33 C, E5's dwell and the envelope. **Dwell and recovery AWAITING Saft or the sample qualification**: 24 h at +71 C and at -33 C at 30 %, E5's rest at full charge, the capacity after each |
 
 The cell limits are the cell's; whether the cells stay inside them in LO-01a, LO-01d and LO-01e is the enclosure's.
 
@@ -571,32 +573,63 @@ Candidates within the arrangement (a 4S Li-ion pack at the 14.4 V class in D-06'
 
 | Candidate | Rows covered on published evidence | Usable energy in the pocket | Fit | Cost | What it changes downstream |
 |---|---|---|---|---|---|
-| **Saft MP 176065 xtd**, prismatic Li-ion, 4S1P (MAKER datasheet, held back) | every cell limit row: charge -30 to +85 C, discharge -40 to +85 C, storage allowable -40 to +85 C | 81.6 Wh nominal (typical); **53.5 to 55.1 Wh usable, 1.25 to 1.29 h** (the tree's chain, aged 0.80, the 35E's curve shapes ASSUMPTION; Saft publishes no minimum capacity) | growth +6.90 / +4.85 / +0.20 mm (axis, across, height) against 5.30 / 9.68 / 3.42 as designed and 0.77 / 6.38 / 2.66 at the worst stack: not with the 35E block's 3.00 mm of wrap; **CONDITIONAL on at most 1.40 mm of wrap along the axis** and M5's chosen placement (OPEN: T4); failing it the pocket changes, a proposal for the owner | NZ$ 238.72 a cell (a distributor's listing archived in January 2025), NZ$ 954.88 for four | D-06 restated (the cell, 4S1P prismatic, about 82 Wh nominal); REQ-046 and REQ-077's cell-derived numbers; U2 and the ladder under +85 C; the gauge's 1P data; a prismatic holder; the charger's 16.8 V and the CUV's 2.50 V unchanged (its cut-off is 2.5 V) |
+| **Saft MP 176065 xtd**, prismatic Li-ion, 4S1P (MAKER datasheet, held back) | the temperature windows of every cell limit row (charge -30 to +85 C, discharge -40 to +85 C, storage allowable -40 to +85 C); current and temperature together, and the storage dwell and recovery, AWAITING Saft or the sample qualification (15g) | 81.6 Wh nominal (typical); **53.5 to 55.1 Wh usable, 1.25 to 1.29 h** (the tree's chain, aged 0.80, the 35E's curve shapes ASSUMPTION; Saft publishes no minimum capacity) | growth +6.90 / +4.85 / +0.20 mm (axis, across, height) against 5.30 / 9.68 / 3.42 as designed and 0.77 / 6.38 / 2.66 at the worst stack: not with the 35E block's 3.00 mm of wrap; **CONDITIONAL on at most 1.40 mm of wrap along the axis** and M5's chosen placement (OPEN: T4); failing it the pocket changes, a proposal for the owner | NZ$ 238.72 a cell (a distributor's listing archived in January 2025), NZ$ 954.88 for four | D-06 restated (the cell, 4S1P prismatic, about 82 Wh nominal); REQ-046 and REQ-077's cell-derived numbers; U2 and the ladder under +85 C; the gauge's 1P data; a prismatic holder; the charger's 16.8 V and the CUV's 2.50 V unchanged (its cut-off is 2.5 V) |
 | Yichun Topwell Power HL18650V, 18650 Li-ion, 4S3P (MAKER-PAGE) | every row on the page, none on a specification | 121.0 Wh nominal; 90.2 Wh usable, 2.11 h | +0.50 mm along the axis against 0.77 mm at the worst stack | USD 3.50 a cell (a marketplace seller), about USD 42 a pack | section 9: D-06 restated (about 121 Wh), REQ-046 and REQ-077, U2, the ladder, the gauge's data and cold ranges |
 | Lithium Werks APR18650M1B, 18650 LiFePO4, 4S3P (MAKER product page) | LO-01g only (storage -40 to 70 C); not +71 C, not E3-O or E5 (discharge to 60 C) | 47.5 Wh nominal | the 18650 block | not read | a 13.2 V class pack: outside the 14.4 V class, a proposal, not a candidate |
 
-**Verdict: published specifications suffice for every cell limit row with the Saft MP 176065 xtd.** A vendor answer is not
-necessary for the temperature rows on that route; it is necessary for the HL18650V's rows (or a lot soak in its place).
+**Verdict, restated after Astra's B5: published specifications suffice for the TEMPERATURE WINDOWS of every cell limit row
+with the Saft MP 176065 xtd, not for current and temperature together.** Saft's recommended currents "Can vary depending
+on temperatures" (its footnote 2), so the kit's 10 A continuous, 18 A for 60 s and 20 A for 2 s at the modelled cell
+temperatures, charge below 0 C, and the storage dwell and recovery need Saft's answer or the limited sample qualification
+of 15g. The HL18650V's rows need a vendor answer (or a lot soak in its place).
 
 ### 15e. The missing facts and their smallest resolution
 
 | Route | The exact missing fact (row, condition) | Vendor answer or experiment | Cost and duration |
 |---|---|---|---|
 | Saft MP 176065 xtd | every row, D-06's pocket: whether four cells fit along the axis with at most 1.40 mm of wrap and spacers as designed | a dimensional mock-up of four cells at the sheet's maximum dimensions in the pocket at the built stack | printed blocks; hours; no purchase |
-| Saft MP 176065 xtd | LO-01a's mission states with PS-ALLTX: whether one cell carries 18 A for 60 s at its temperature in use (22 A pulses, no duration) | Saft's statement (drafted: `clarification/saft-mp176065xtd.txt`), or a bench pulse of one cell at +25 C and at the cold end, surface temperature and voltage logged | one cell (NZ$ 238.72) and a 20 A load; a day |
+| Saft MP 176065 xtd | every discharge row (LO-01a, LO-01b, LO-01d): one cell carrying 10 A continuously, 18 A for 60 s and 20 A for 2 s at -20, -10, +45, +60, +70 and +80 C, from full charge and 30 % | Saft's statement (expanded draft: `clarification/saft-mp176065xtd.txt`), or the limited sample qualification of 15g | one cell (NZ$ 238.72), a chamber, a 25 A load; about two weeks |
+| Saft MP 176065 xtd | the storage rows (LO-01e, LO-01f, LO-01g): the dwell and recovery at +71 C and -33 C for 24 h at 30 %, and E5's rest at full charge | the same | within the same qualification |
 | Saft MP 176065 xtd | usable energy: the minimum capacity (the sheet gives a typical 5.6 Ah) | measured on the lot at receipt | with the purchase |
 | HL18650V | LO-01f at +71 C and LO-01g at -33 C, both 24 h at the stored 30 %; LO-01e's rest at full charge; the page's +80 C idle row | the signed specification (drafted), or a lot soak: sample cells 24 h at +71 C and 24 h at -33 C at 30 %, ten 507.6 cycles at full charge, capacity before and after at 0.2C and +25 C | about ten cells (USD 35.00), an oven, a -40 C freezer and a capacity tester; about 4 days for the soaks and 12 for the cycles; evidence for that lot, not a production guarantee |
 | every route | LO-01a's complete pass and LO-01e (and LO-01d unless the MP 176065 xtd): the enclosure's conductance | T-H1 (U-02's experiment) | L4-E12 section 14.6 |
 
 ### 15f. U-01's class
 
-**A SUPPORTED ROUTE EXISTS ON PUBLISHED MANUFACTURER EVIDENCE:** the Saft MP 176065 xtd as a 4S1P pack in D-06's pocket,
-every cell limit row (charge, discharge, storage) covered by its datasheet. **ADOPTION PENDING the owner's approval**
-(D-06's cell and energy, about 82 Wh nominal against about 145 Wh, and the spend). It is **CONDITIONAL** on two named
-facts with their smallest checks: the fit along the axis and the 18 A peak's duration. With it LO-01d holds on the
-conservative bound; LO-01a's complete pass and LO-01e rest on T-H1 for every cell. The HL18650V stays the higher-energy
+**A SUPPORTED ROUTE EXISTS ON PUBLISHED MANUFACTURER EVIDENCE FOR THE TEMPERATURE WINDOWS:** the Saft MP 176065 xtd as a
+4S1P pack in D-06's pocket, every cell limit row's window printed by its maker. **NOT YET ADOPTABLE:** current and
+temperature together and the storage dwell and recovery AWAIT Saft or the limited sample qualification (15g), the fit
+awaits the mock-up, and the adoption awaits the owner's approval (D-06's cell and energy, about 82 Wh nominal against
+about 145 Wh, and the spend). With it LO-01d's cells stay inside the temperature window on the conservative bound (the
+current at that temperature awaiting 15g); LO-01a's complete pass and LO-01e rest on T-H1 for every cell. The HL18650V stays the higher-energy
 alternative (90.2 against 55.1 Wh usable), resting on its vendor answer or a lot soak. Missing evidence is not shown to be
 impossible: each missing fact has its check above. FEA-008 stays open until the adoption, the fit and T-H1.
+
+### 15g. The limited sample qualification (a definition; the owner's purchase; nothing is bought here)
+
+It substitutes for Saft's answer on the current-at-temperature and storage rows only, as evidence for that lot.
+
+- **Sample:** one cell of the lot to be fitted (three if the owner prefers a spread), never fitted afterwards.
+- **Before and after every step:** the capacity at +25 C, C/5 to 2.5 V after CC/CV 4.2 V (its own baseline); the 1 kHz
+  impedance; the thickness at full charge; the open-circuit voltage after 24 h.
+- **Steps** (a thermocouple on the surface, the cell soaked to temperature first):
+  - D1: 10 A continuous from full charge to the kit's graceful 3.00 V under load, at -20, -10, +45, +60, +70 and +80 C;
+  - D2: 18 A for 60 s at full charge and at 30 %, at the same temperatures;
+  - D3: 20 A for 2 s (the gauge's OCD) at -20 C and at +80 C, at 30 %;
+  - C1: the drawn 3.0 A from 0 C and at +45 C to 4.2 V (0.1C at -10 and -20 C only if charging below 0 C is wanted);
+  - S1, S2: 24 h at +71 C and 24 h at -33 C, each at 30 %; S3: ten 24 h cycles of Method 507.6 Procedure II at full
+    charge (E5's rest).
+- **Pass, every step:**
+  - the surface at or under +85 C;
+  - the voltage at or over the CUV's 2.50 V under load;
+  - no venting or leak;
+  - after the step, the capacity at least 95 % of the cell's own before, the impedance at most 1.20 times its own before,
+    and the thickness at most 1.0 mm over its own before.
+  - These thresholds are SESSION choices: TEST-PLAN's 5 % recovery line, an impedance margin, and the pocket's height
+    allowance for wrap.
+- **Its limits:** evidence for that lot and that sample only, at the temperatures and currents run; not a production
+  guarantee, not Saft's derating, and not a substitute for E3-O, E5, E3-S and E4-S with the pack fitted.
+- **Equipment and time:** a chamber from -40 to +85 C, a 25 A load, a CC/CV source and a logger; about two weeks.
 
 **The owner's items for this route:** approval of the cell change inside D-06's pocket (4S1P prismatic, about 82 Wh
 nominal; REQ-046 and REQ-077's cell-derived numbers with it) and its spend; sending Saft's drafted questions if the
@@ -615,12 +648,12 @@ purchase: both stay the owner's.**
 | Arrangement | 4S3P, 12 cylindrical 18650 cells (D-06; the cell sizes GUARANTEED) | 4S1P, 4 prismatic cells (the sizes GUARANTEED; the pack's fit MODELLED, AWAITING the mock-up) |
 | Nominal energy | 12 x 3.35 Ah (the minimum, 0.2C to 2.65 V) x 3.60 V = **144.72 Wh**, D-06's "about 145 Wh" (GUARANTEED inputs); 149.04 Wh on the typical 3.45 Ah | 4 x 5.60 Ah (typical, C/5 to 2.5 V) x 3.65 V = **81.76 Wh** (GUARANTEED as typical); 79.39 Wh on an assumed minimum (ASSUMPTION: Saft prints none) |
 | Usable energy, one boundary | **107.9 Wh, 2.52 h** at +20 C; 44.5 Wh, 1.04 h with the cells at -10 C (MODELLED) | **53.5 to 55.1 Wh, 1.25 to 1.29 h** on the 35E's curves at the same current; 57.0 to 58.8 Wh, 1.33 to 1.37 h at the same C-rate; 22.1 to 24.3 Wh at -10 C (MODELLED; no Saft discharge or cold curve: AWAITING Saft) |
-| Charge limits | 0 to 45 C at the surface; CC-CV 4.2 V; 1.70 A standard, 1.02 A for cycle life, 2.00 A at most a cell; ends at 0.02C (GUARANTEED) | -30 to +85 C; CC/CV 4.2 V; 5.6 A at most; under 0 C "consult Saft"; termination not printed (GUARANTEED; the termination AWAITING Saft) |
-| Discharge limits | -10 to 60 C at the surface; 8 A continuous, 13 A not continuous (no duration); cut-off 2.65 V (GUARANTEED) | -40 to +85 C; 11 A continuous, 22 A pulses (no duration); cut-off 2.5 V (GUARANTEED); 18 A for 60 s on one cell AWAITING (Saft's answer or a bench pulse) |
-| Storage limits | 1 month -20 to 60 C, 3 months -20 to 45 C, 1 year -20 to 25 C at 30 %, recovery over 80 % (GUARANTEED) | allowable -40 to +85 C, recommended +15 to +30 C; no time, charge or recovery printed (GUARANTEED range; its use for 24 h at the stored charge INFERRED, AWAITING Saft's confirmation) |
+| Charge limits | 0 to 45 C at the surface; CC-CV 4.2 V; 1.70 A standard, 1.02 A for cycle life, 2.00 A at most a cell; ends at 0.02C (GUARANTEED) | the window -30 to +85 C and CC/CV 4.2 V; 5.6 A at most, with Saft's note only below 0 C (GUARANTEED); the drawn 3.0 A from 0 C to 42 C under it; any current below 0 C AWAITING Saft or the sample qualification; the termination AWAITING Saft |
+| Discharge limits | -10 to 60 C at the surface; 8 A continuous, 13 A not continuous (no duration); cut-off 2.65 V (GUARANTEED) | the window -40 to +85 C and the cut-off 2.5 V (GUARANTEED); 11 A continuous and 22 A pulses, which "Can vary depending on temperatures" (footnote 2): the kit's 10 A continuous, 18 A for 60 s and 20 A for 2 s on one cell at -20 to +80 C AWAITING Saft or the sample qualification |
+| Storage limits | 1 month -20 to 60 C, 3 months -20 to 45 C, 1 year -20 to 25 C at 30 %, recovery over 80 % (GUARANTEED) | the window: allowable -40 to +85 C, recommended +15 to +30 C (GUARANTEED); the dwell (24 h at +71 C and at -33 C at 30 %, E5's rest) and the recovery, none printed: AWAITING Saft or the sample qualification |
 | Physical fit | the ruled block, 56.65 x 133.5 x 38.1 mm, 0.2881 L (GUARANTEED cell sizes) | four cells 0.308 L with terminals; along the axis +6.90 mm against 5.30 mm as designed, so at most 1.40 mm of wrap and spacers (the 35E block uses 3.00 mm); the room round the block 0.0865 L as designed, 0.0559 L at the worst stack; thickness at the beginning of life and full charge, "can increase with temperature and during battery life" (MODELLED fit; AWAITING the mock-up, the session and Layer 7, and Saft's life thickness) |
 | Charger (the drawn BQ25731) | strap 16.800 V = 4 x 4.20 V; set 3.0 A = 1.00 A a cell; BATOVP 17.47 V; the gauge's taper 250 mA = 0.083 A a cell; the CUV 2.50 V (the 35E's pack guideline terminates at 2.50 V) (GUARANTEED settings, compatible) | the same 16.800 V; 3.0 A a cell against 5.6 A; BATOVP 17.47 V; taper 0.250 A a cell against no printed termination; the CUV 2.50 V against the 2.5 V cut-off (compatible; the termination AWAITING Saft) |
-| Protection | U2 BQ7720700 (OVP 4.325 V, UVP 2.25 V, OT 70 C); the gauge's UTC 1.0, T3 42, OTC 44.0, OTD 57.5, UTD -9.0 C; F2 Eaton SCF9550-30-05, 30 A for 4 to 5 cells (compatible as drawn) | the same parts protect it as drawn, the gauge's thresholds inside its windows; using its +85 C needs U2's 83 C variant and a re-derived network and the ladder (drafts); the pack's 10 / 18 A fall on one cell; the gauge's capacity and chemistry data AWAITING (TI's list or a learning cycle, the firmware owner) |
+| Protection | U2 BQ7720700 (OVP 4.325 V, UVP 2.25 V, OT 70 C); the gauge's UTC 1.0, T3 42, OTC 44.0, OTD 57.5, UTD -9.0 C; F2 Eaton SCF9550-30-05, 30 A for 4 to 5 cells (compatible as drawn) | the same parts protect it as drawn, the gauge's thresholds inside its windows; using its +85 C needs U2's 83 C variant and a re-derived network and the ladder (drafts); the pack's 10 A, 18 A and the gauge's 20 A trip pulse fall on one cell, at temperature AWAITING Saft or the sample qualification; the gauge's capacity and chemistry data AWAITING (TI's list or a learning cycle, the firmware owner) |
 | Cost | USD 8.25 a cell, USD 99.00 for 12 (the l3batt reading; a quote AWAITING the purchase) | NZ$ 238.72 a cell, NZ$ 954.88 for 4 (a distributor's listing archived in January 2025; a quote AWAITING the owner's purchase) |
 
 ### 16a. 145 Wh to 82 Wh, step by step
@@ -668,8 +701,10 @@ LO-01h (REQ-046, REQ-077, D-02, D-02a).
 
 ### 16c. The recommendation, as far as the evidence goes
 
-- **What the Saft route resolves:** every cell-limit row on its maker's published datasheet: the +55 C and E5 rows' cell
-  limits, +71 C and -33 C storage, the cold charge. With it, LO-01d also holds on U-02's conservative bound (section 15c).
+- **What the Saft route resolves:** the temperature windows of every cell-limit row on its maker's published datasheet:
+  the +55 C and E5 rows' cell temperatures, +71 C and -33 C storage, the cold charge by the mat. With it, LO-01d's cells
+  stay inside the window on U-02's conservative bound (section 15c). It does not yet resolve current and temperature
+  together, nor the storage dwell and recovery (Astra's B5).
 - **What it costs:**
   - energy, 81.76 against 144.72 Wh nominal (45.1 % less like for like);
   - runtime, 1.25 to 1.37 h against 2.52 h on battery alone (modelled);
@@ -678,13 +713,16 @@ LO-01h (REQ-046, REQ-077, D-02, D-02a).
     data, and a prismatic holder.
 - **What stays awaited:**
   - the fit mock-up (the session and Layer 7; no purchase);
-  - 18 A for 60 s on one cell (Saft's answer, drafted, or a bench pulse: the owner's purchase of one cell);
+  - current and temperature together: 10 A continuous, 18 A for 60 s and 20 A for 2 s on one cell at -20 to +80 C,
+    charge below 0 C, and the storage dwell and recovery (Saft's answer, the expanded draft, or the limited sample
+    qualification of 15g: the owner's purchase of one cell);
   - the termination current, the life thickness, the minimum and cold capacity (Saft);
   - the gauge's data (TI or a learning cycle);
   - T-H1 for LO-01a's complete pass and LO-01e, for every cell (U-02).
 - **The recommendation:** the evidence supports the Saft route as the one cell route whose limits are printed by its
-  maker for every margin row. It does **not yet** support adoption: the fit and the 18 A peak are unproven, and T-H1
-  decides the hot rows for any cell. Next, with no purchase, the mock-up; then the pulse question (Saft or one cell).
+  maker for every margin row's temperature window. It does **not yet** support adoption: current and temperature together,
+  the storage dwell and recovery and the fit are unproven, and T-H1 decides the hot rows for any cell. Next, with no
+  purchase, the mock-up; then Saft's answer or the sample qualification.
   Adoption is then the owner's call, weighing the energy and runtime above.
 - **The alternatives' standing:**
   - The HL18650V route keeps more energy (90.2 Wh usable, 2.11 h) but rests on its maker's page until the signed
