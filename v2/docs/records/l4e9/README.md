@@ -21,7 +21,9 @@ records' downstream items into the register (137 items), and lists the owner's i
 defect is open. Update round 3 (the same day) takes the accepted L4-E13 (merged into this line from `fnd/l4e13` at `fae419d1`):
 U-03 becomes a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC) and moves into the register (R-35, R-52, R-148, R-149; 139
 items), the panel unit's purchase and measurement and SunPower's and Solbian's drafts join the owner's items, LH-02 is amended
-(no new handover row), and the gate stays NOT CLOSED on U-01, U-02 and U-04 (output section 13).
+(no new handover row), and the gate stays NOT CLOSED on U-01, U-02 and U-04 (output section 13). Update round 4 merges L4-E13's update after set 25
+(check 4 at `33b6b7be`): its files re-pinned, A-3(a) and A-4 cited on L4-E7R's regulation and backstop, and the nominal hold's day
+carried as 336.6 Wh under the accepted stage (350.0 Wh stays the replay's first-round basis).
 
 | File | What it is |
 |---|---|
@@ -40,6 +42,7 @@ items), the panel unit's purchase and measurement and SunPower's and Solbian's d
 | `checks/check-l4e9-3.md` | Claude's (the coordinator's) closing check at `3c09b3da`: the output reproduced, D-09's start and margin and the hot short's derated SOA at the timer's maximum recomputed; the record accepted as a correct statement of the gate, which reads NOT CLOSED (D-06, D-09, U-01 to U-04); not a model review and not an Astra check |
 | `checks/check-l4e9-4.md` | Claude's (the coordinator's) closing check of the update at `170f5daf`: the output reproduced, E11-19's I2t and the over-voltage margin recomputed; the record accepted as the current statement, the gate NOT CLOSED on U-01, U-02, U-04 and U-03 (pending L4-E13); not a model review and not an Astra check |
 | `checks/check-l4e9-5.md` | Claude's (the coordinator's) closing check of update round 3 at `fc0f23ef`: the output reproduced, the gate rows, U-03's row, the register (139 rows) and R-29 against the JST VH catalogue read; U-03 a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC), the gate NOT CLOSED on U-01, U-02 and U-04; not a model review and not an Astra check |
+| `checks/check-l4e9-6.md` | Claude's (the coordinator's) check of update round 4 at `2661c1ef`: the output reproduced, L4-E13 re-pinned after its update on L4-E7R, the changed lines' figures located, the two energy bases (336.6 Wh accepted stage, 350.0 Wh the replay's first round) kept apart; the gate unchanged, NOT CLOSED on U-01, U-02 and U-04; not a model review and not an Astra check |
 | `fetch_held_back.py` | Fetches the Littelfuse 0997 sheet the record read but did not file (held back by its terms, the owner's rule of 27 September 2026) into the ignored `v2/vendor/power/held/` and checks its sha256. Never run by a test; the tests skip when the sheet is absent |
 | `inputs/` | The provenance of the makers' documents read in round 2 (the addresses, revisions and sha256; the three TI sheets compared byte for byte with ti.com) |
 | `README.md` | This list |
