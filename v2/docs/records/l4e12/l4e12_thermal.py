@@ -15,7 +15,9 @@ thermal state at the margins (section 2); a FEASIBILITY SCREEN of every fitted p
 margins and what stays conditional (section 5); the owner-question test (section 6); the downstream items (section 7); U-02 in
 depth (section 8: the dependency round, the basis of the lines, the configuration, the fans' power, T-H1, a failed reading and
 its fallbacks); the conservative lower bound and U-02's class (section 9); the heat-rejection approaches (section 10); the thermal
-reconciliation of the owner's amendment (section 11); the predicates (section 12).
+reconciliation of the owner's amendment (section 11); the fix round of the Layer 4 review, astra-check-l4close-1's B3, B4 and B7
+(section 12: every required mode with its local limits and governing line, the charging heat as a balance, the battery-only run
+coupled to C1, the bench points); the predicates (section 13).
 
 Revised twice on 2 October 2026: after the focused check (checks/astra-check-l4e12-1.md) and after the targeted recheck
 (checks/astra-check-l4e12-2.md). Every judged limit names its rating category (recommended or operating, storage, absolute);
@@ -213,6 +215,7 @@ LEAD_U_REL = 0.005           # heat carried in or out by the heater and thermoco
 EPS_OUT = 0.85               # the outside surfaces' emissivity (W4's 0.85 to 0.9, the low end)
 SIGMA = 5.670e-8             # W/m2K4
 ROOM_C, SURF_DK = 22.0, 5.0  # the bench's room and the mean surface-to-air offset for the linearised radiation (INFERRED)
+CHG_V = 15.5                 # the pack's voltage while charging in pwr_budget.charge_heat (p_into = ICHG x 15.5 V), the same boundary
 # The heat-balance relationship of the owner's amendment of 2 October 2026 (item 1): Rittal's calculation basis for enclosure
 # climate control, read on its public page (fetched 2026-10-02T12:39Z, HTTP 200, 2522 bytes); held back by its copyright and
 # fetched by fetch_held_back.py, never pinned: only the relationship and the steel figure are cited, quoted here.
@@ -756,9 +759,27 @@ def base():
     e3o_t = A["e3o_t"]
     e5_t = A["e5"][4]
     e5_lo = A["e5"][3]
-    charge_extra = pb.charge_heat(pb_hs, eta_fe) - (q_hs - q_hs_pack)
+    # B4 (astra-check-l4close-1): the heat while charging is a balance on the model's boundary: the input power less the power
+    # stored in the cells and the power exported by the outlets (pwr_red2.heat(charging=True)'s terms: the loads' power through
+    # the source path, the charge path's loss on the power into the pack, the charging cells' own I2R)
+    def charge_balance(st_, ov_):
+        f_ = pb.state_full(st_, "plan", ov_)
+        p_into = pb.ICHG * CHG_V
+        cells = 12 * (pb.ICHG / 3) ** 2 * pb.R_CELL["plan"]
+        eta = pb.ETA_CHG * eta_fe
+        p_in = (f_["pb"] + p_into) / eta
+        stored, exported = p_into - cells, f_["outside"]
+        parts = {"loads": f_["pb"] - exported, "supply": f_["pb"] / eta - f_["pb"], "charge": p_into / eta - p_into, "cells": cells}
+        heat = p_in - stored - exported
+        if abs(sum(parts.values()) - heat) > 1e-9 or abs(pb.charge_heat(f_["pb"], eta_fe) - parts["supply"] - parts["charge"]) > 1e-9:
+            refuse(4, "the charging balance does not close on pwr_budget.charge_heat's terms")
+        return {"p_in": p_in, "stored": stored, "exported": exported, "heat": heat, "parts": parts, "eta": eta, "p_into": p_into, "pb": f_["pb"]}
+    chg_hs, chg_prof = charge_balance("RED", red2.SURVR), charge_balance("IDLESPEC", None)
+    # E3-O's charge (2d) runs with the pack outside the case (the deviation): the charge path's loss only; the cells' I2R is outside
+    charge_extra = chg_hs["heat"] - q_hs - chg_hs["parts"]["cells"]
     T = {"q_m_gen": q_m_gen, "q_hs": q_hs, "q_hs_pack": q_hs_pack, "q_hs_hi": q_hs_hi, "q_gen": q_gen, "q_m": q_m, "q_m_pack": q_m_pack, "q_m_hi": q_m_hi,
-         "q_m45": q_m45, "g_floor": g_floor, "qb": qb, "charge_extra": charge_extra, "sgp55": sgp55, "t_use": t_use}
+         "q_m45": q_m45, "g_floor": g_floor, "qb": qb, "charge_extra": charge_extra, "sgp55": sgp55, "t_use": t_use,
+         "chg_hs": chg_hs, "chg_prof": chg_prof, "eta_fe": eta_fe}
     T["agree_g"] = abs(g_floor - L4E10_G_FLOOR) < 5e-5
     T["air_uncond"] = (e3o_t + q_hs / g_floor, e5_t + q_hs / g_floor)
     T["agree_air"] = all(abs(a - b) < 5e-3 for a, b in zip(T["air_uncond"], L4E10_AIR))
@@ -1479,7 +1500,10 @@ def heat_rejection(C, R):
     r_strap = STRAP_L / (K_CU * STRAP_A)
     lid = (r_strap, geo["a_lid_top"], lid_h)
     need_g = q_prof / (lim - t_use)
-    need_ch = (q_prof / (t3 - day[0]), q_prof / (t3 - day[1]))
+    # B4: charging with the profile running on the design day: the balance (T["chg_prof"]) plus L4-E8's ballasts, the solar stage
+    # running on SC-37's day (their worst corner, the margins' rule)
+    q_chg = T["chg_prof"]["heat"] + T["qb"]
+    need_ch = (q_chg / (t3 - day[0]), q_chg / (t3 - day[1]))
     rows = [("none: the bound", 0.0, 1.0, None), ("(a) fins on the free strips, k %.0f" % K_FIN[0], 0.0, K_FIN[0], None),
             ("(a) fins on the free strips, k %.0f" % K_FIN[1], 0.0, K_FIN[1], None), ("(b) the large loads led into the plate", q_c, 1.0, None),
             ("(b) with (a)'s fins, k %.0f" % K_FIN[1], q_c, K_FIN[1], None), ("(c) the open lid's skin on a strap", 0.0, 1.0, lid),
@@ -1488,8 +1512,9 @@ def heat_rejection(C, R):
     for lbl, qc, kf, ld in rows:
         r_ = {"label": lbl, "q_c": qc, "k": kf}
         for key, amb in (("use", t_use), ("day_cold", day[0]), ("day_warm", day[1])):
-            o = two_node(amb, q_prof - qc, qc, cons, geo, kf, a_free, ld)
-            o["air"], o["plate"], o["g"] = amb + o["th_a"], amb + o["th_p"], q_prof / o["th_a"]
+            q_ = q_prof if key == "use" else q_chg
+            o = two_node(amb, q_ - qc, qc, cons, geo, kf, a_free, ld)
+            o["air"], o["plate"], o["g"] = amb + o["th_a"], amb + o["th_p"], q_ / o["th_a"]
             r_[key] = o
         out.append(r_)
     best = out[-1]
@@ -1518,14 +1543,14 @@ def heat_rejection(C, R):
         return _inv(lambda g_: g_ * (1.0 - u_rel(ph / g_)), tg, 0.3, 20.0)
     exp2 = [(lbl, tg, reading_for(tg), ph / reading_for(tg)) for lbl, tg in (
         ("the profile's +70 C class at +40 C (the consolidation's framing; section 11 reconciles it)", need_g),
-        ("charging with the profile on the design day's cold end", q_prof / (t3 - day[0])),
-        ("charging with the profile on the design day's warm end", q_prof / (t3 - day[1])))]
-    return {"q_prof": q_prof, "q_c": q_c, "coupled": [(n_, pins[n_]) for n_ in COUPLED], "a_free": a_free, "mon": mon, "epd": epd,
+        ("charging with the profile on the design day's cold end", q_chg / (t3 - day[0])),
+        ("charging with the profile on the design day's warm end", q_chg / (t3 - day[1])))]
+    return {"q_prof": q_prof, "q_chg": q_chg, "q_c": q_c, "coupled": [(n_, pins[n_]) for n_ in COUPLED], "a_free": a_free, "mon": mon, "epd": epd,
             "m3": tuple(float(x) for x in m3.groups()), "lid_h": lid_h, "r_strap": r_strap, "t3": t3, "day": day, "lim": lim,
             "need_g": need_g, "need_ch": need_ch, "rows": out, "q_max_best": q_max_best, "q_max_bare": q_max_bare,
             "short_w": q_prof - q_max_best, "short_g": need_g - best["use"]["g"], "short_w_bare": q_prof - q_max_bare,
             "reaches": best["use"]["air"] <= lim + 1e-9, "charges": best["day_warm"]["air"] <= t3 + 1e-9 and best["day_cold"]["air"] <= t3 + 1e-9,
-            "short_ch": (q_prof / (t3 - day[0]) - best["day_cold"]["g"], q_prof / (t3 - day[1]) - best["day_warm"]["g"]),
+            "short_ch": (q_chg / (t3 - day[0]) - best["day_cold"]["g"], q_chg / (t3 - day[1]) - best["day_warm"]["g"]),
             "q_idle": q_idle, "exp2": exp2, "exp_power": ph, "fin_mass": a_free * (1.5 / 8.0) * float(m3.group(4)) / 1000.0 * 2700.0,
             "skin_mass": geo["a_lid_top"] * 0.001 * 2700.0, "strap_mass": STRAP_L * STRAP_A * 8960.0}
 
@@ -1535,6 +1560,7 @@ def reconcile(C, R):
     reference, the translation from the bench to the operating ambient, the margin, what one point closes, the procedure."""
     import math
     T, A, S, pb, cb, hr, dep = C["T"], C["A"], C["S"], C["pb"], R["cb"], R["hr"], R["dep"]
+    red2 = C["red2"]
     geo, cons = cb["geo"], cb["cons"]
     tp, cn = text(TP), text(CONOPS)
     import yaml
@@ -1550,7 +1576,7 @@ def reconcile(C, R):
     fans_hs = sum(p_ for n_, p_, _s in hs["loads"] if "fan" in n_)
     q["hs"] = {"loads": hs["p_load"], "fans": fans_hs, "conv": hs["loss"] + hs["dist"], "front": hs["front"], "ballast": T["qb"],
                "total": T["q_hs"] + T["qb"]}
-    q["charge"] = {"extra": T["charge_extra"], "total": hr["q_prof"] + T["charge_extra"]}
+    q["charge"] = {"bal": T["chg_prof"], "qb": T["qb"], "total": hr["q_chg"], "extra": hr["q_chg"] - hr["q_prof"]}
     nom = float(need(text(L4E8_OUT), r"fch 400 kHz: (\d\.\d+) W", "L4-E8's nominal ballast sum").group(1))
     v_h, r_h = A["rta_heater"][1], A["rta_heater"][0]
     p_heater = v_h ** 2 / r_h
@@ -1578,11 +1604,18 @@ def reconcile(C, R):
     pl["board A"] = pl.get("board A", 0.0) + f["pb"] - f["p_vbat"]
     fans_hold = sum(p_ for n_, p_, _s in dep["hold"]["loads"] if "fan" in n_)
     prof_sp = no_fans(pl, [("the pack (its own I2R)", q["prof"]["i2r"])])
-    chg_sp = no_fans(pl, [("the pack (its own I2R)", q["prof"]["i2r"]), ("the front end and the charger (boards E and A, on shore)", T["charge_extra"])])
+    cb_ = T["chg_prof"]["parts"]
+    chg_sp = no_fans(pl, [("the pack (its own I2R)", cb_["cells"]), ("the front end and the charger (boards E and A, on shore)", cb_["supply"] + cb_["charge"]),
+                          ("board E", T["qb"])])
     q["settings"] = []
-    for k_, Q_, fans_, sp in (("K1, K5, K9", T["q_hs"] + T["qb"], fans_hs, no_fans(hs["place"], [("board A", T["qb"])])),
-                              ("K10", T["q_m"] + T["qb"], fans_hold, no_fans(dep["hold"]["place"], [("board A", T["qb"])])),
-                              ("K6", hr["q_prof"], fans_prof, prof_sp), ("K7, K8", hr["q_prof"] + T["charge_extra"], fans_prof, chg_sp)):
+    f_hs_ = pb.state_full("RED", "plan", red2.SURVR)
+    i_hs_ = pb.pack_i2r(f_hs_["pb"])
+    hs_pack_sp = {k_: v_ for k_, v_ in hs["place"].items() if not k_.startswith("the front end")}
+    q_hs_onpack = f_hs_["pb"] - f_hs_["outside"] + i_hs_ + T["qb"]
+    for k_, Q_, fans_, sp in (("M2, M4, M6 (K1, K5, K9)", T["q_hs"] + T["qb"], fans_hs, no_fans(hs["place"], [("board A", T["qb"])])),
+                              ("M1, M3", q_hs_onpack, fans_hs, no_fans(hs_pack_sp, [("board A", T["qb"]), ("the pack (its own I2R)", i_hs_)])),
+                              ("M7 (K10)", T["q_m"] + T["qb"], fans_hold, no_fans(dep["hold"]["place"], [("board A", T["qb"])])),
+                              ("M5 (K6)", hr["q_prof"], fans_prof, prof_sp), ("M8, M9 (K7, K8)", hr["q_chg"], fans_prof, chg_sp)):
         heaters = Q_ - fans_
         n_h = max(1, int(round(heaters / p_heater)))
         q["settings"].append({"k": k_, "Q": Q_, "fans": fans_, "heaters": heaters, "n": n_h, "v": math.sqrt(heaters / n_h * r_h),
@@ -1605,16 +1638,16 @@ def reconcile(C, R):
     lim["no505"] = not re.search(r"\b505\b", tp)
     nb = c_need = R["ap"]["c"]["trip"]["need_by"]
     t_use, e3o, e5 = T["t_use"], A["e3o_t"], A["e5"][4]
-    qp, qh, qc = hr["q_prof"], q["hs"]["total"], q["charge"]["total"]
+    qp, qh, qc = hr["q_prof"], q["hs"]["total"], hr["q_chg"]
     t3, day = hr["t3"], hr["day"]
     conds = [
-        ("K1", "REQ-024 and E3-A at +40 C: C1's end state, the heat stage on shore with the ballasts", qh, t_use, "the SGP41's +55 C (REQ-024's acceptance, every part in its range; REQ-052's and E3-L's line; its Table 5)", 55.0, "lid open"),
+        ("K1", "REQ-024 and E3-A at +40 C: C1's end state, the heat stage on shore with the ballasts; a SCREEN, not a closure line (12a)", qh, t_use, "the SGP41's Table 5 +55 C, an ABSOLUTE rating (REQ-052's and E3-L's fail line reads it): an exclusion screen, never the sensor's function", 55.0, "lid open"),
         ("K2", "the same, the SGP41 judged on its Table 4 +50 C (this record's corrected rule; the owner's CFL-002 open)", qh, t_use, "the SGP41's +50 C (Table 4)", S["sgp_rec"]["v"][1], "lid open"),
-        ("K3", "the same, the +70 C class in the heat stage (the H5007NL, the ATP16, the PXP4043/C and the radios C1 leaves on)", qh, t_use, "+70 C (the makers' sheets of section 4)", nb, "lid open"),
+        ("K3", "the same, the +70 C class in the heat stage (the H5007NL, the ATP16, the PXP4043/C and the radios C1 leaves on) at the MIXED air; a component screen (the exhaust, the cells and the junctions are 12a's)", qh, t_use, "+70 C (the makers' sheets of section 4)", nb, "lid open"),
         ("K4", "the same, the module's intake", qh, t_use, "the module's +85 C (CM5 4.4)", S["cm5_op"]["v"][1], "lid open"),
-        ("K5", "REQ-052 and E3-L at +40 C: the heat stage", qh, t_use, "the SGP41's +55 C (E3-L's line)", 55.0, "lid closed"),
+        ("K5", "REQ-052 and E3-L at +40 C: the heat stage; a SCREEN (12a)", qh, t_use, "the SGP41's Table 5 +55 C (E3-L's fail line; ABSOLUTE, a screen)", 55.0, "lid closed"),
         ("K6", "REQ-014 at +20 C: the profile on the pack, not shed by C1", qp, 20.0, "C1's inside-air trigger +50 C (REQ-024)", 50.0, "lid open"),
-        ("K7", "charging on SC-37's design day, the profile running and the charge path counted (on shore), cold end", qc, day[0], "the gauge's charge start T3 42 C (E3-A; the cells at the air)", t3, "lid open"),
+        ("K7", "charging on SC-37's design day, the profile running, the balance of 12b (the source path, the charge path, the charging cells, the solar stage's ballasts), cold end", qc, day[0], "the gauge's charge start T3 42 C (E3-A; the idle cells at the air; the running charge's T4 with the cells' own rise is 12a's)", t3, "lid open"),
         ("K8", "the same, warm end", qc, day[1], "T3 42 C", t3, "lid open"),
         ("K9", "E3-O, D-02a's +55 C AMBIENT margin: the heat stage, every radio C1 leaves on", qh, e3o, "+70 C (U-02)", nb, "lid open"),
         ("K10", "E5's +60 C dwell under the hold", T["q_m"] + T["qb"], e5, "+70 C (U-02)", nb, "lid open"),
@@ -1670,8 +1703,278 @@ def reconcile(C, R):
         m_ = next(x for x in marg if x[0] == k_)
         tau = max(T["kJ"]) * 1000.0 / m_[3] / 3600.0
         times.append((k_, tau, math.log(100.0) * tau, 3.0 * tau))
+    # B3's points take their own readings (12a); their durations are printed there
     return {"q": q, "lim": lim, "conds": rc_conds, "trans": trans, "taus": taus, "e3a_h": e3a_h, "marg": marg, "check509": check509,
             "rit": rit, "times": times, "t_bound": cb["exp"]["t_bound"], "kj_hi": max(T["kJ"])}
+
+
+# ------------------------------------------------------------------------------------------------ section 12: the fix round
+# The parts read one by one in the battery profile PS-IDLE-SPEC (pwr_budget's IDLESPEC loads: a part is powered where its load is
+# over 0 W): every module powered but the LimeSDR (0 W), the outlets off; the e-paper refreshed on events, taken as working.
+PROFILE_STATES = {"CM5": "work", "RB9704": "work", "LIME": "off", "AW7915": "work", "RM520N": "work", "XENARC": "work", "SA868": "work",
+                  "PCM2912A": "work", "G6K": "work", "H5007NL": "on", "ATP19": "on", "ATP16": "on", "SOUNDER": "off", "EPAPER": "work",
+                  "PXP4043C": "off", "NVME": "on"}
+ROUTE_P85 = ("ATP16", "ATP19")      # the route's pushbuttons to an +85 C part (5b, the session's pick, NKK MBN)
+OPTIONS = ("as ruled", "C", "A", "B")
+_R_PACK = ("the cells' own rise in the pocket (the block's film 5 to 15 W/m2K, the lowest taken; L4-E10, U-01) and the gauge's reading "
+           "error at H1 (records/hc2/hotstop_bounds.out; the thresholds PROVISIONAL, HOT-R1 owed on boards A and E, CONOPS 4c)")
+_R_COMMON = ("the parts' local air in the built kit (T-H2), the junctions' modeled rise (THM-001), the 33 lines cleared only by an absolute "
+             "rating (section 7), the fans' rating (D-18); CFL-002 is the owner's")
+REMAIN = {   # the evidence each mode still needs, beyond its conductance (SESSION reading of the review's B3)
+    "M1": "T-H1's lid-open point at this heat; " + _R_PACK + "; " + _R_COMMON,
+    "M2": "T-H1's lid-open point at this heat; the idle cells at the air (no own heat) and the gauge's reading error at H1; " + _R_COMMON,
+    "M3": "T-H1's lid-closed point at this heat; " + _R_PACK + "; " + _R_COMMON,
+    "M4": "T-H1's lid-closed point at this heat; the idle cells at the air and the gauge's reading error at H1; " + _R_COMMON,
+    "M5": ("T-H1's point at the profile's heat; " + _R_PACK + "; the battery-only run's transient (12c): on the bound C1 sheds the profile before "
+           "its energy ends; " + _R_COMMON),
+    "M6": ("the e-paper's unpowered range (PDi's storage statement, the clarification drafted; only its operating row is held); E3-O "
+           "runs with the cells kept out (TEST-PLAN's deviation): the fitted pack at the margin is U-01's (BAT-F19, CFL-017); the "
+           "unpowered SGP41's short-term storage duration (Sensirion); T-H1's lid-open point at the heat stage's heat; " + _R_COMMON),
+    "M7": ("the e-paper's unpowered range as in M6, with no conductance meeting its operating row at E5's +60 C; the cells kept out "
+           "(TEST-PLAN's deviation; U-01, BAT-F19); the parts the hold turns off on their operating rows read to cover them unpowered "
+           "until their makers state storage; T-H1's point at the hold's heat; " + _R_COMMON),
+    "M8": ("T-H1's point at the charging heat; the charging cells' rise over the air (U-01); the source path's efficiency (the model's "
+           "0.95 front end taken for the solar stage, INFERRED); a charge started under T3 cycles on T4 once the cells pass it; " + _R_COMMON),
+    "M9": "as M8, at the design day's warm end",
+}
+
+
+def per_mode(C, R):
+    """Section 12a (astra-check-l4close-1 B3): every required mode with its heat balance, ambient and every correctly categorised
+    LOCAL limit (the cells with their own rise, the control thresholds whose firing ends the mode, the parts at their local air with
+    the cooler's exhaust, the junctions, the unpowered parts' storage rows); the governing line is the tightest; an absolute rating
+    is an exclusion screen only and never a line; per CFL-002 option."""
+    import math
+    T, A, S, pb, red2 = C["T"], C["A"], C["S"], C["pb"], C["red2"]
+    hr, dep = R["hr"], R["dep"]
+    qb, t_use, gb = T["qb"], T["t_use"], pb.G_BLK[0]
+    cn, tp, t10 = sq(text(CONOPS)), sq(text(TP)), text(L4E10_OUT)
+    th = {}
+    th["h1"] = float(need(cn, r"the hottest of the gauge's four cell thermistors at \+(\d+\.\d) C in two readings a second apart \(H1", "H1").group(1))
+    m = need(cn, r"C1 \(inside air \+(\d+) C, or any cell \+(\d+) C on the gauge's thermistors\)", "C1's triggers")
+    th["c1_air"], th["c1_cell"] = float(m.group(1)), float(m.group(2))
+    th["t3"] = hr["t3"]
+    th["t4"] = float(need(tp, r"a running charge stops once it reads above (\d+) C \(T4\)", "T4").group(1))
+    th["otc"] = float(need(tp, r"held off by OTC whenever it reads (\d+\.\d) C or more", "OTC").group(1))
+    m = need(t10, r"charge (\d+) to (\d+) C, discharge (-\d+) to (\d+) C at the cell surface temperature; storage 1 month (-\d+) to (\d+) C", "the 35E's rows")
+    th["chg"], th["dis"], th["st1m"] = float(m.group(2)), float(m.group(4)), float(m.group(6))
+    th["sgp4"], th["sgp5"], th["sgp_st5"], th["bme"] = S["sgp_rec"]["v"][1], S["sgp_op"]["v"][1], hi_of(S, "sgp_st"), hi_of(S, "bme_gas")
+    th["other"] = 80.0
+    f_hs = pb.state_full("RED", "plan", red2.SURVR)
+    q_hsp, i_hs = f_hs["pb"] - f_hs["outside"], pb.pack_i2r(f_hs["pb"])
+    f_p = pb.state_full("IDLESPEC", "plan")
+    q_pp, i_p = f_p["pb"] - f_p["outside"], pb.pack_i2r(f_p["pb"])
+    cbal = T["chg_prof"]
+    ov_prof = {n_: v["IDLESPEC"] for n_, _nd, v, _s in pb.LOADS}
+    D = {"hs": diss_table(C, red2.SURVR)[0], "hold": diss_table(C, C["hold_ov"])[0], "prof": diss_table(C, ov_prof)[0]}
+    day = hr["day"]
+    hs_heat = [("the heat stage at the pack", q_hsp), ("the source path (on shore)", T["q_hs"] - q_hsp), ("L4-E8's ballasts", qb)]
+    modes = [
+        dict(id="M1", label="REQ-024 and E3-A at +40 C, lid open, shaded: C1's end state, the heat stage on the pack (the required set, REQ-052)",
+             amb=t_use, lid="open", heat=[("the heat stage at the pack", q_hsp), ("the cells' discharge I2R", i_hs), ("L4-E8's ballasts", qb)],
+             pack=("dis", i_hs), D="hs", col=0, d=T["d_hs"], c1=False, env=True),
+        dict(id="M2", label="the same on shore (E3-A's 2 h): the pack idle, no charge starting above T3",
+             amb=t_use, lid="open", heat=hs_heat, pack=("idle", 0.0), D="hs", col=0, d=T["d_hs"], c1=False, env=True),
+        dict(id="M3", label="REQ-024 and E3-L at +40 C, lid closed: the heat stage on the pack", amb=t_use, lid="closed",
+             heat=[("the heat stage at the pack", q_hsp), ("the cells' discharge I2R", i_hs), ("L4-E8's ballasts", qb)], pack=("dis", i_hs), D="hs",
+             col=0, d=T["d_hs"], c1=False, env=True),
+        dict(id="M4", label="the same on shore, lid closed (E3-L's second half)", amb=t_use, lid="closed", heat=hs_heat, pack=("idle", 0.0), D="hs",
+             col=0, d=T["d_hs"], c1=False, env=True),
+        dict(id="M5", label="REQ-014 at +20 C: PS-IDLE-SPEC on the pack, battery-only, unshed by C1", amb=rc_amb(R, "K6"), lid="open",
+             heat=[("the profile at the pack", q_pp), ("the cells' discharge I2R", i_p)], pack=("dis", i_p), D="prof", col=None, d=T["d_hold"],
+             c1=True, env=True),
+        dict(id="M6", label="E3-O at D-02a's +55 C margin, 4 h: the heat stage, every radio C1 leaves on, on shore, the cells kept out (TEST-PLAN's deviation)",
+             amb=A["e3o_t"], lid="open", heat=hs_heat, pack=("out", 0.0), D="hs", col=0, d=T["d_hs"], c1=False, env=False),
+        dict(id="M7", label="E5's +60 C dwell: the hold, logging, on shore, the cells kept out (TEST-PLAN's deviation)", amb=A["e5"][4], lid="open",
+             heat=[("the hold at the pack", T["q_m_pack"]), ("the source path (on shore)", T["q_m"] - T["q_m_pack"]), ("L4-E8's ballasts", qb)],
+             pack=("out", 0.0), D="hold", col=1, d=T["d_hold"], c1=False, env=False),
+        dict(id="M8", label="charging on SC-37's design day, cold end: PS-IDLE-SPEC running, the solar stage charging the pack", amb=day[0], lid="open",
+             heat=[("the profile at the battery node", cbal["parts"]["loads"]), ("the source path", cbal["parts"]["supply"]),
+                   ("the charge path", cbal["parts"]["charge"]), ("the charging cells' I2R", cbal["parts"]["cells"]), ("L4-E8's ballasts", qb)],
+             pack=("chg", cbal["parts"]["cells"]), D="prof", col=None, d=T["d_hold"], c1=True, env=True),
+        dict(id="M9", label="the same, warm end", amb=day[1], lid="open", heat=None, pack=("chg", cbal["parts"]["cells"]), D="prof", col=None,
+             d=T["d_hold"], c1=True, env=True)]
+    modes[-1]["heat"] = modes[-2]["heat"]
+    for m_ in modes:
+        m_["Q"] = sum(v for _k, v in m_["heat"])
+
+    def lines(m_, option, route):
+        L, scr = [], []
+        kind, p_ = m_["pack"]
+        rise = p_ / gb
+        if kind == "dis":
+            L.append(("the cells: the hot stop H1 at a +%.1f C reading (CONOPS 4c; a hot stop inside the envelope ends the mode)" % th["h1"],
+                      "CONTROL, ends the mode", th["h1"] - rise, "the cells' hot stop H1"))
+            L.append(("the cells: the 35E's discharge to +%.0f C at the surface" % th["dis"], "MAKER operating", th["dis"] - rise, "the cells' discharge +%.0f C" % th["dis"]))
+            if m_["c1"]:
+                L.append(("the cells: C1's cell trigger +%.0f C (the profile unshed)" % th["c1_cell"], "CONTROL, sheds the profile", th["c1_cell"] - rise, "C1's cell trigger"))
+        elif kind == "idle":
+            L.append(("the cells idle at the air: the hot stop H1 at +%.1f C" % th["h1"], "CONTROL, ends the mode", th["h1"], "the idle cells' hot stop H1"))
+            L.append(("the cells idle: E3-A's every cell surface at most +%.0f C (the 35E's one-month storage to +%.0f C)" % (th["st1m"], th["st1m"]),
+                      "MAKER storage; E3-A's pass line", th["st1m"], "the idle cells' +%.0f C" % th["st1m"]))
+        elif kind == "chg":
+            L.append(("the cells idle at the air before the charge: T3's start at %.0f C" % th["t3"], "CONTROL, no charge starts", th["t3"], "T3's charge start"))
+            L.append(("the cells charging: T4's stop above %.0f C" % th["t4"], "CONTROL, a running charge stops", th["t4"] - rise, "T4 on the charging cells"))
+            L.append(("the cells charging: OTC at %.1f C" % th["otc"], "CONTROL, the charge held off", th["otc"] - rise, "OTC"))
+            L.append(("the cells charging: the 35E's charge to +%.0f C at the surface" % th["chg"], "MAKER operating", th["chg"] - rise, "the cells' charge +%.0f C" % th["chg"]))
+        if m_["c1"]:
+            L.append(("the inside air: C1's trigger +%.0f C (CONOPS 4)" % th["c1_air"], "CONTROL, sheds the profile", th["c1_air"], "C1's air trigger"))
+        if m_["env"] and option == "as ruled":
+            L.append(("the SGP41's sensing at its bay air to Table 4's +%.0f C" % th["sgp4"], "MAKER recommended (Table 4)", th["sgp4"], "the SGP41's Table 4"))
+        if m_["env"] and option == "A":
+            L.append(("the BME688 in the SGP41's place: gas sensing electrically operable to +%.0f C" % th["bme"],
+                      "MAKER operating (\"actual performance may vary\")", th["bme"], "the BME688's +%.0f C" % th["bme"]))
+        if option in ("as ruled", "C") or not m_["env"]:
+            scr.append(("the SGP41 unpowered above its 54.0 C reading (its protective shutdown): Table 5's short-term storage to +%.0f C" % th["sgp_st5"],
+                        "ABSOLUTE: a screen, survival INCONCLUSIVE until Sensirion states it", th["sgp_st5"]))
+        for p in PARTS:
+            if p["k"] == "SGP41":
+                continue
+            st = PROFILE_STATES[p["k"]] if m_["col"] is None else (p.get("route") or p["now"])[m_["col"]]
+            gv = govern(p, st, S)
+            lim, cat = gv["lim"], gv["cat"]
+            if route and p["k"] in ROUTE_P85:
+                lim, cat = hi_of(S, "nkk_mbn"), CAT["nkk_mbn"] + " (the route's pick)"
+            off = m_["d"] if p["where"] == "inside" else 0.0
+            if route and p["where"] == "inside" and lim is not None and lim <= 70.0 + 1e-9:
+                off = 0.0
+            where = {"inside": "its local air%s" % (" (the exhaust, +%.2f K)" % off if off else ""), "face": "the face (at most the mixed air)",
+                     "wall": "the wall (at most the mixed air)"}[p["where"]]
+            if lim is not None:
+                L.append(("%s, %s, at %s" % (p["k"], st, where), "%s%s" % (cat, ", INFERRED to cover it unpowered" if "INFERRED" in gv["basis"] else ""),
+                          lim - off, "the %s's +%.0f C" % (p["k"], lim)))
+            elif gv["absv"] is not None:
+                scr.append(("%s, %s" % (p["k"], st), "ABSOLUTE: a screen", gv["absv"] - off))
+        for (b, ref), dd in sorted(D[m_["D"]].items()):
+            if dd["rec"] is None or (route and dd["part"].startswith("TLV75533")):
+                continue
+            L.append(("%s %s %s: its recommended junction +%.0f C, own rise %.1f K at the mixed air" % (dd["part"], b, ref, dd["rec"], dd["p"] * dd["th"]),
+                      "MAKER recommended junction, MODELED rise", dd["rec"] - dd["p"] * dd["th"], "%s %s's junction" % (b, ref)))
+        L.append(("every other fitted line, rated +%.0f C or more at its local air (section 3, P5)" % th["other"], "MAKER operating or recommended",
+                  th["other"] - m_["d"], "every other line"))
+        out = []
+        for name, cat, tmax, short in L:
+            room = tmax - m_["amb"]
+            out.append({"name": name, "short": short, "cat": cat, "t": tmax, "g": m_["Q"] / room if room > 1e-9 else math.inf})
+        out.sort(key=lambda x: -x["g"])
+        return out, scr
+    t1 = dep["th1"]
+
+    def u_rel(dt):
+        return 2.0 * math.sqrt((t1["u_dt"] / dt) ** 2 + P_U_REL ** 2 + LEAD_U_REL ** 2)
+
+    def reading_for(tg, p_):
+        # g (1 - U(rise)) rises and then falls as the rise shrinks: bisect below its peak; none if the peak is under the target
+        f = lambda g_: g_ * (1.0 - u_rel(p_ / g_))
+        gs = [0.3 + 0.05 * i for i in range(800)]
+        g_pk = max(gs, key=f)
+        if not math.isfinite(tg) or f(g_pk) < tg:
+            return math.inf
+        return _inv(f, tg, 0.3, g_pk)
+    for m_ in modes:
+        m_["by"] = {}
+        for opt in OPTIONS:
+            ln, scr = lines(m_, opt, True)
+            gov = ln[0]
+            stated = [x for x in ln if "INFERRED" not in x["cat"]][0]
+            m_["by"][opt] = {"lines": ln, "screens": scr, "gov": gov, "read": reading_for(gov["g"], m_["Q"]), "stated": stated,
+                             "read_stated": reading_for(stated["g"], m_["Q"])}
+        ln, _ = lines(m_, "as ruled", False)
+        m_["designed"] = {"lines": ln, "gov": ln[0]}
+    # B4's figures: K7 and K8 (T3's start) on the model's boundary and with the solar stage's ballasts, with their bench readings
+    b4 = {"rows": [], "eta_chg": pb.ETA_CHG, "ichg": pb.ICHG, "rise": (cbal["parts"]["cells"] / pb.G_BLK[1], cbal["parts"]["cells"] / pb.G_BLK[0])}
+    for amb_ in day:
+        for q_ in (cbal["heat"], hr["q_chg"]):
+            g_ = q_ / (th["t3"] - amb_)
+            b4["rows"].append((amb_, q_, g_, reading_for(g_, q_)))
+    # the bench points (12d): one per heat and lid state; M6 shares M2's point (the same heat and lid), M9 shares M8's
+    by_id = {m_["id"]: m_ for m_ in modes}
+    points = []
+    for ids in (("M2", "M6"), ("M1",), ("M4",), ("M3",), ("M7",), ("M5",), ("M8", "M9")):
+        m0 = by_id[ids[0]]
+        reads = []
+        for i_ in ids:
+            for opt in ("as ruled", "C"):
+                b = by_id[i_]["by"][opt]
+                reads.append((i_, opt, b["gov"]["short"], b["gov"]["g"], b["read"], b["stated"]["short"], b["stated"]["g"], b["read_stated"]))
+        finite = [r_[4] for r_ in reads if math.isfinite(r_[4])] + [r_[7] for r_ in reads if math.isfinite(r_[7])]
+        g_lo = min(finite)
+        tau = max(T["kJ"]) * 1000.0 / g_lo / 3600.0
+        points.append({"ids": ids, "Q": m0["Q"], "lid": m0["lid"], "reads": reads, "tau": tau, "steady": math.log(100.0) * tau, "fit": 3.0 * tau})
+    return {"th": th, "modes": modes, "gb": gb, "b4": b4, "points": points, "rise_hi": [m_["pack"][1] / pb.G_BLK[1] for m_ in modes]}
+
+
+def rc_amb(R, key):
+    return [x for x in R["rc"]["conds"] if x[0] == key][0][3]
+
+
+def battery_run(C, R):
+    """Section 12c (astra-check-l4close-1 B7): the battery-only PS-IDLE-SPEC run from +20 C coupled to C1: the inside air on the
+    enclosure model integrated in time (one node, C the kit's thermal mass), C1 moving the kit to the heat stage on the inside air's
+    +50 C, the run ending on the usable energy; the hot stop on the cells checked throughout."""
+    import math
+    T, pb, red2, cb = C["T"], C["pb"], C["red2"], R["cb"]
+    pm = R["pm"]
+    th = pm["th"]
+    amb = rc_amb(R, "K6")
+    f_p = pb.state_full("IDLESPEC", "plan")
+    f_hs = pb.state_full("RED", "plan", red2.SURVR)
+    p1, p2 = f_p["pb"], f_hs["pb"]
+    q1 = f_p["pb"] - f_p["outside"] + pb.pack_i2r(f_p["pb"])
+    q2 = f_hs["pb"] - f_hs["outside"] + pb.pack_i2r(f_hs["pb"])
+    r1, r2 = pb.pack_i2r(p1) / pm["gb"], pb.pack_i2r(p2) / pm["gb"]
+    m_ = need(text(L4E10_OUT), r"35E 4S3P\s+[^\n]*?-> (\d+\.\d) Wh, (\d\.\d\d) h at \+20 C", "the 35E's usable energy at +20 C")
+    e_use, h_energy = float(m_.group(1)), float(m_.group(2))
+    t_energy = e_use / p1
+    rise_c1 = th["c1_air"] - amb
+    # the reviewer's check reproduced: a constant G, C 8 kJ/K
+    def t_const(g, c_kj, q, theta):
+        x = 1.0 - theta * g / q
+        return None if x <= 0 else -c_kj * 1000.0 / g * math.log(x) / 3600.0
+    rev = []
+    for g in (0.6711, 0.7404):
+        rev.append((g, t_const(g, 8.0, q1, rise_c1), amb + q1 / g * (1.0 - math.exp(-t_energy * 3600.0 * g / 8000.0))))
+    # the enclosure model's own G(rise) (section 9's, lid open, still air outside, at +20 C), tabulated and integrated
+    grid = [1.0 + 1.0 * i for i in range(0, 60)]
+    qo = {}
+    for lbl, cfg in (("the bound", cb["cons"]), ("the coefficients' other ends", cb["opt"])):
+        qo[lbl] = [enclosure_g(amb, th_, "open", cfg, cb["geo"])["g"] * th_ for th_ in grid]
+
+    def q_out(lbl, theta):
+        if theta <= grid[0]:
+            return qo[lbl][0] * theta / grid[0]
+        for i in range(1, len(grid)):
+            if theta <= grid[i]:
+                f = (theta - grid[i - 1]) / (grid[i] - grid[i - 1])
+                return qo[lbl][i - 1] + f * (qo[lbl][i] - qo[lbl][i - 1])
+        return qo[lbl][-1] * theta / grid[-1]
+    runs = []
+    dt = 10.0
+    for lbl in qo:
+        for c_kj in T["kJ"]:
+            c_ = c_kj * 1000.0
+            theta, t, e, mode, t_c1, cell_max, air_max = 0.0, 0.0, 0.0, "profile", None, amb, amb
+            while e < e_use * 3600.0:
+                p_, q_, r_ = (p1, q1, r1) if mode == "profile" else (p2, q2, r2)
+                theta += (q_ - q_out(lbl, theta)) / c_ * dt
+                t += dt
+                e += p_ * dt
+                cell_max = max(cell_max, amb + theta + r_)
+                air_max = max(air_max, amb + theta)
+                if mode == "profile" and amb + theta >= th["c1_air"]:
+                    mode, t_c1 = "heat stage", t
+                if amb + theta + r_ >= th["h1"]:
+                    break
+            runs.append({"label": lbl, "c": c_kj, "t_c1": None if t_c1 is None else t_c1 / 3600.0, "t_end": t / 3600.0, "cell_max": cell_max,
+                         "air_max": air_max, "hot_stop": amb + theta + r_ >= th["h1"], "e_profile": (t_c1 if t_c1 else t) * p1 / 3600.0})
+    # the constant-G line at which the profile never reaches C1 (K6's line, the steady state at C1), and the one at which it reaches
+    # C1 just as its energy ends (one node, C at each end of 32.53's range)
+    g_never = q1 / rise_c1
+    g_full = []
+    for c_kj in T["kJ"]:
+        g_full.append((c_kj, _inv(lambda g: -(amb + q1 / g * (1.0 - math.exp(-t_energy * 3600.0 * g / (c_kj * 1000.0)))), -th["c1_air"], 0.05, 5.0)))
+    return {"amb": amb, "p1": p1, "p2": p2, "q1": q1, "q2": q2, "r1": r1, "r2": r2, "e_use": e_use, "h_energy": h_energy, "t_energy": t_energy,
+            "rev": rev, "runs": runs, "g_never": g_never, "g_full": g_full, "rise_c1": rise_c1, "dt": dt}
 
 
 def hr_q(R):
@@ -2118,6 +2421,8 @@ def compute():
     R["cb"] = conservative_bound(C, R, ap, dep)
     R["hr"] = heat_rejection(C, R)
     R["rc"] = reconcile(C, R)
+    R["pm"] = per_mode(C, R)
+    R["br"] = battery_run(C, R)
     # ======================================================== 8: the predicates
     p = {}
     p["P1 pwr_budget and pwr_red2 reproduced byte for byte before any figure"] = R["r0a"] and R["r0b"] and R["r0c"]
@@ -2195,13 +2500,29 @@ def compute():
         not hr["reaches"] and not hr["charges"] and hr["short_w"] > 0 and hr["short_g"] > 0 and all(x > 0 for x in hr["short_ch"])
         and hr["rows"][-1]["use"]["g"] == max(r_["use"]["g"] for r_ in hr["rows"]) and hr["q_idle"] < hr["q_max_best"] < hr["q_prof"])
     rc = R["rc"]
-    p["P22 the reconciliation: 1.509 W/K at 42.4 W is 1.447 W/K after its uncertainty, the +55 C inside-air limit is the heat stage's (1.806 W/K, LO-01a with the ballasts), the room reading conservative, every heater spread summing to its setting, A k on the case's own films under steel's and the need, the need between the bound's cap and W4's high case"] = (
+    p["P22 the reconciliation: 1.509 W/K at 42.4 W is 1.447 W/K after its uncertainty, K1's screen (Table 5's +55 C, not a line) at LO-01a's floor with the ballasts (1.806 W/K), the room reading conservative, every heater spread summing to its setting, A k on the case's own films under steel's and the need, the need between the bound's cap and W4's high case"] = (
         abs(rc["check509"]["after"] - rc["check509"]["target"]) < 1e-6 and abs(rc["conds"][0][7] - T["g_floor_ballast"]) < 1e-9
         and all(x[3] >= 1.0 for row in rc["trans"] for x in row[1:]) and rc["conds"][10][7] > R["cb"]["cap"]["E5"]
         and rc["lim"]["no505"] and abs(rc["q"]["prof"]["loads"] + rc["q"]["prof"]["conv"] + rc["q"]["prof"]["i2r"] - rc["q"]["prof"]["total"]) < 1e-9
         and abs(rc["rit"]["rows"][0][4] - rc["trans"][0][1][2]) < 1e-6 and rc["rit"]["rows"][0][4] < rc["rit"]["steel_g"] < rc["conds"][0][7]
         and rc["rit"]["cap"][0] < rc["conds"][0][7] < rc["rit"]["w4"][1]
         and all(abs(sum(v_ for _k, v_ in s_["spread"]) - s_["heaters"]) < 1e-6 for s_ in rc["q"]["settings"]))
+    pm, br = R["pm"], R["br"]
+    md = {m_["id"]: m_ for m_ in pm["modes"]}
+    p["P23 B3: no absolute rating is a line; the SGP41's sensing is Table 4's (as ruled), C moves the heat stage's line to the cells' hot stop, and every mode's governing line is its tightest local line"] = (
+        all(all("ABSOLUTE" not in x["cat"] for x in m_["by"][o]["lines"]) for m_ in pm["modes"] for o in OPTIONS)
+        and all(m_["by"][o]["gov"]["g"] == max(x["g"] for x in m_["by"][o]["lines"]) for m_ in pm["modes"] for o in OPTIONS)
+        and all(md[i_]["by"]["as ruled"]["gov"]["short"] == "the SGP41's Table 4" for i_ in ("M1", "M2", "M3", "M4"))
+        and all("hot stop H1" in md[i_]["by"]["C"]["gov"]["short"] for i_ in ("M1", "M2", "M3", "M4"))
+        and abs(md["M2"]["by"]["as ruled"]["gov"]["g"] - R["rc"]["conds"][1][7]) < 1e-9 and abs(md["M5"]["by"]["C"]["gov"]["g"] - R["rc"]["conds"][5][7]) < 1e-9)
+    cbal = R["T"]["chg_prof"]
+    p["P24 B4: the charging heat is input less stored less exported, the reviewer's 50.044 W on the model's boundary, and K7 and K8 carry it with the ballasts"] = (
+        abs(cbal["p_in"] - cbal["stored"] - cbal["exported"] - cbal["heat"]) < 1e-9 and abs(cbal["heat"] - 50.04367) < 5e-5
+        and abs(R["hr"]["q_chg"] - cbal["heat"] - R["T"]["qb"]) < 1e-12 and abs(R["rc"]["conds"][6][2] - R["hr"]["q_chg"]) < 1e-12
+        and abs(md["M8"]["Q"] - R["hr"]["q_chg"]) < 1e-9)
+    p["P25 B7: the battery-only run reaches C1 before its energy ends on the bound at C 8 kJ/K, the reviewer's constant-G figures reproduced, no hot stop, 2.52 h energy-only"] = (
+        br["runs"][0]["t_c1"] is not None and br["runs"][0]["t_c1"] < br["t_energy"] and abs(br["rev"][0][1] - 2.063) < 5e-3
+        and abs(br["rev"][1][1] - 2.151) < 5e-3 and not any(r_["hot_stop"] for r_ in br["runs"]) and abs(br["t_energy"] - br["h_energy"]) < 5e-3)
     R["pred"] = p
     return R
 
@@ -2269,7 +2590,8 @@ def render(R):
     w("is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMPTION, CONDITIONAL. Revised after the focused")
     w("check astra-check-l4e12-1 and the targeted recheck astra-check-l4e12-2 (the record's section 12 maps each item to its change);")
     w("section 8 is the dependency round of 2 October 2026 on U-02 (the record's section 13), section 9 the conservative bound (section 14),")
-    w("section 10 the heat-rejection question (section 15), section 11 the thermal reconciliation (section 16).")
+    w("section 10 the heat-rejection question (section 15), section 11 the thermal reconciliation (section 16), section 12 the fix round of")
+    w("the Layer 4 review (B3, B4, B7; section 17).")
     w("")
     w("0 Reproductions and inputs")
     w("0a pwr_budget.py re-run in a child: pwr_budget.out and pwr_budget.json byte for byte: %s" % ("yes" if R["r0a"] else "NO"))
@@ -2859,10 +3181,10 @@ def render(R):
     para("10a THE NEED. The approved profile PS-IDLE-SPEC puts %.3f W into the case lid open (MODELED: its %.3f W at the pack plus the "
          "pack's own I2R; L4-E9's 43.4 W at a0212d9e). Its +70 C class at REQ-024's +%.0f C needs %.3f W/K; a charge starts only while "
          "the gauge reads at or under %.0f C (TEST-PLAN, T3), so on SC-37's design day (the air %.1f to %.1f C, the replay) charging "
-         "with the profile running needs %.3f to %.3f W/K. The rulings: no vent or opening anywhere (32.53), the Peli 1450 at any cost, "
+         "with the profile running (%.3f W into the case, the balance of 12b) needs %.3f to %.3f W/K. The rulings: no vent or opening anywhere (32.53), the Peli 1450 at any cost, "
          "the face a 3 mm aluminium plate carrying the UI (32.40). Every figure below is on section 9's bound: the inside by natural "
          "convection only, the coefficients' conservative ends, still air; a two-node model, the inside air and the plate." % (
-             hr["q_prof"], C_["prof_pb"], t_use_(R), hr["need_g"], hr["t3"], hr["day"][0], hr["day"][1],
+             hr["q_prof"], C_["prof_pb"], t_use_(R), hr["need_g"], hr["t3"], hr["day"][0], hr["day"][1], hr["q_chg"],
              hr["need_ch"][0], hr["need_ch"][1]), first="")
     para("10b THE THREE APPROACHES. (a) Fins on the face's free strips (the plate %.4f m2 less the monitor window %.4f m2 and the "
          "e-paper lens %.4f m2: %.4f m2), fixed under M3's space beneath the QMX tray (%.2f mm nominal, %.2f mm with the unstated allowances doubled) or a "
@@ -2871,9 +3193,10 @@ def render(R):
          "rejects them at its own temperature and the air keeps the rest; with (a)'s fins. (c) The open lid as a second radiator: an "
          "aluminium skin on the lid's flat ceiling (%.4f m2, an upper bound: the QMX tray and the tablet bracket share it), %.3f m tall "
          "when open, on a copper braid from the plate's edge inside the seal line (%.2f m, %.0f mm2: %.2f K/W, ASSUMPTION; copper %.0f "
-         "W/mK). At the profile's heat (MODELED on the bound):" % (
+         "W/mK). At the profile's heat at +%.0f C and the charging heat (%.3f W, 12b) on the design day (MODELED on the bound):" % (
              R["cb"]["geo"]["a_plate"], hr["mon"], hr["epd"], hr["a_free"], hr["m3"][0], hr["m3"][3], K_FIN[0], K_FIN[1], hr["q_c"],
-             ", ".join("%s %.3f" % x for x in hr["coupled"]), R["cb"]["geo"]["a_lid_top"], hr["lid_h"], STRAP_L, STRAP_A * 1e6, hr["r_strap"], K_CU),
+             ", ".join("%s %.3f" % x for x in hr["coupled"]), R["cb"]["geo"]["a_lid_top"], hr["lid_h"], STRAP_L, STRAP_A * 1e6, hr["r_strap"], K_CU,
+             t_use_(R), hr["q_chg"]),
          first="")
     w("      %-40s | +%.0f C: air, plate, G      | design day %.1f C: air, G | %.1f C: air, G" % ("approach", t_use_(R), hr["day"][0], hr["day"][1]))
     for r_ in hr["rows"]:
@@ -2913,7 +3236,8 @@ def render(R):
     for lbl, tg, rd, rs in hr["exp2"]:
         w("      a reading of at least %.3f W/K (%.1f K rise) meets %.3f W/K: %s" % (rd, rs, tg, lbl))
     para("Under the first, the route of 10d applies with its kit on the same bench point, and an owner's choice of 10d's options if it "
-         "still reads short.", first="   ")
+         "still reads short. (These readings take the 42.4 W of two heaters for every line and are superseded: 11a and 12d read each "
+         "mode at its own heat, the fans counted, and 12a names each mode's governing line.)", first="   ")
     w("")
     rc = R["rc"]
     qq, lm, ck = rc["q"], rc["lim"], rc["check509"]
@@ -2931,8 +3255,9 @@ def render(R):
     para("11b THE HEAT, COUNTED ONCE (MODELED, plan). The profile PS-IDLE-SPEC: %.3f W at the load pins (the five fans' own %.2f W among "
          "them: the three modules' coolers and the two mixers), %.3f W lost in the converters and the distribution, %.3f W in the pack's own resistance: %.3f W into the case. Not in it: "
          "L4-E8's ballasts (%.4f W at its nominal illustration, at most %.2f W at the bound's worst corner, and only while the solar stage "
-         "runs), the solar entry's sense bank (solar current only), Q39's 0.0945 W with L4-E11's (B1) (L4-E9 at a0212d9e). A charge on "
-         "shore adds %.3f W in the charger and the front end: %.3f W. The heat stage on shore: %.3f W at the pins (fans %.2f W: slot 3's cooler and the two mixers), %.3f W in "
+         "runs), the solar entry's sense bank (solar current only), Q39's 0.0945 W with L4-E11's (B1) (L4-E9 at a0212d9e). Charging "
+         "with the profile running on the design day (the balance of 12b, CORRECTED: the source path's loss on the profile's power was "
+         "left out) adds %.3f W: %.3f W. The heat stage on shore: %.3f W at the pins (fans %.2f W: slot 3's cooler and the two mixers), %.3f W in "
          "the converters and the distribution, %.3f W in the front end and the charger, the ballasts %.2f W (counted at the worst corner, "
          "the margins' rule): %.3f W. The bench: READY-TO-ACT's heater is %.1f ohm at %.1f V, %.3f W of heat (all of its electrical power "
          "stays inside); two give %.3f W. The fans run from the bench supply, their measured draw is heat inside and is added to the "
@@ -2956,10 +3281,14 @@ def render(R):
     w("   Each condition: requirement and mode, heat into the case, ambient, the limit at the node, and the conductance it needs (Q / room):")
     for k_, lbl, Q_, amb, lim_txt, L_, lid, gneed in rc["conds"]:
         para("%-4s %s; %s; %.3f W at +%.1f C; %s; needs %.3f W/K" % (k_, lbl, lid, Q_, amb, lim_txt, gneed), first="      ", rest="           ")
-    para("A +55 C inside-air limit EXISTS, for the heat stage at +40 C (REQ-052's acceptance and E3-L's line with the lid closed; "
-         "REQ-024's acceptance with the lid open, the SGP41 being a part with that published range; LO-01a on shore; K1 and K5): it needs %.3f W/K, LO-01a's floor with the ballasts. It does not apply to the profile, which C1 sheds at +50 C inside "
-         "air; the owner's conditional %.2f W/K (X3) belongs to no requirement's mode. The analogous figure for the heat stage is K1's." % (
-             rc["conds"][0][7], rc["conds"][-1][7]), first="   ")
+    para("CORRECTED in the fix round (12a, astra-check-l4close-1 B3): a +55 C inside-air line exists only as REQ-052's and E3-L's fail "
+         "line, read from the SGP41's Table 5 ABSOLUTE row; it is an exclusion screen, not a functional limit, and K1 and K5 (%.3f W/K) are "
+         "screens, not closure lines. The SGP41's sensing ends at Table 4's +%.0f C (K2, %.3f W/K at the heat stage on shore). Option C "
+         "keeps the part, reports its channel not covered above a 49.0 C reading and switches it off at 54.0 C; it never keeps it powered "
+         "on +55 C. The governing line of each required mode is the tightest correctly categorised local limit (12a): the cells, the parts "
+         "at their local air with the cooler's exhaust, the junctions and the unpowered parts' storage rows. The owner's conditional "
+         "%.2f W/K (X3) belongs to no requirement's mode." % (rc["conds"][0][7], S["sgp_rec"]["v"][1], rc["conds"][1][7], rc["conds"][-1][7]),
+         first="   ")
     para("Part-level hot spots: limits on a part's junction or case, not on the air: the TLV75533 regulators' +%.0f C recommended junction "
          "(3c, 5c), the converters' junctions (3c), the module's SoC (its own throttle), the PA's flange on the plate (CONOPS's key-down window and C4, PWR-F15; not this section's K conditions), "
          "the parts in a cooler's exhaust (2h, +%.2f K) and the plate-mounted face parts (the plate's own temperature). T-H1's air reading "
@@ -3011,17 +3340,18 @@ def render(R):
          "uncertainty at that rise (the budget of 8d); the room-to-operating credit of 11d is kept as margin, not taken:", first="")
     for k_, Q_, gneed, rd, rise_, ur in rc["marg"]:
         w("      %-4s at %.3f W: needs %.3f W/K; a reading of at least %.3f W/K (rise %.1f K, U %.1f %%)" % (k_, Q_, gneed, rd, rise_, 100.0 * ur))
-    para("11f WHAT ONE POINT CLOSES, AND WHAT REMAINS. One passing point lid open, the fans on, at the heat stage's heat (the heaters at "
-         "%.3f W plus the fans), reading at least %.3f W/K, closes K1, K3, K4 (REQ-024 and E3-A at +40 C: the heat stage's air under the "
-         "SGP41's +55 C, the +70 C class and the module's intake) and K9 (E3-O's +70 C class at +55 C, the same heat and room; its "
-         "translation is conservative). Closed only by a further measured point: K5 (lid closed, the same heat, reading at least %.3f "
+    para("11f WHAT ONE POINT CLOSES, AND WHAT REMAINS (CORRECTED by 12a: a dummy-load mixed-air point closes only the conductance it "
+         "measures, for its lid state, fan state, heat and heat placement; no mode's functionality). One passing point lid open, the fans "
+         "on, at the heat stage's heat (the heaters at %.3f W plus the fans), reading at least %.3f W/K, meets the conductance SCREENS K1, "
+         "K3, K4 and K9 at the mixed air; it does not close REQ-024, E3-A or E3-O, whose governing lines are 12a's. Screens met only by a "
+         "further measured point: K5 (lid closed, the same heat, reading at least %.3f "
          "W/K lid closed), K6 (the profile's heat, REQ-014 at +20 C, at least %.3f), K7 and K8 (the profile with the charge, at least "
          "%.3f and %.3f, and the cells' own rise over the air, U-01's), K10 (the hold's heat in E5, at least %.3f). Open: K2 (the SGP41 on "
          "Table 4, the owner's CFL-002), the part-level hot spots (T-H2, THM-001), the fans' rating (D-18, REQ-043), full sun (D-02e, a later "
          "qualification item), the cells on the pack at +%.0f C (U-01, L4-E10)." % (
              qq["bench"]["hs_heaters"], rc["marg"][0][3], rc["marg"][4][3], rc["marg"][5][3], rc["marg"][6][3], rc["marg"][7][3],
              rc["marg"][9][3], t_use_(R)), first="")
-    para("11g THE PROCEDURE (T-H1-PROCEDURE-DRAFT.md, revised): the points of 11e in the order K1, K5, K10, K6, K7 and K8, each with its "
+    para("11g THE PROCEDURE (T-H1-PROCEDURE-DRAFT.md, revised): the points of 12d (one per mode's heat and lid state), each with its "
          "heaters (READY-TO-ACT's %.1f ohm, the nearest whole number of them) set to the mode's heat less the fans' measured draw (the "
          "model's draw shown here) and spread over the places in proportion (W, plan; the fans excluded, being real):" % qq["bench"]["r"], first="")
     short = {"board B (slot 3, its switch, hubs, supervisors, the device rail)": "board B", "the pack (its own I2R)": "the pack",
@@ -3031,11 +3361,7 @@ def render(R):
             s_["k"], s_["Q"], s_["heaters"], s_["fans"], "one" if s_["n"] == 1 else "two" if s_["n"] == 2 else str(s_["n"]), s_["v"],
             "" if s_["n"] == 1 else " each",
             "; ".join("%s %.3f" % (short.get(k_, k_), v_) for k_, v_ in s_["spread"])), first="      ", rest="                  ")
-    para("Each point's duration at its pass line (tau = C / G, C %.0f kJ/K, 32.53's upper bound for the kit and so for the empty case; "
-         "steady within 1 %% of its rise at ln(100) tau, then an hour averaged): %s; K7 and K8 are one point (one heat, two needs). A "
-         "case as poor as the bound takes up to %.1f h a point (9f)." % (
-             rc["kj_hi"], "; ".join("%s tau %.2f h, steady at %.1f h (the fit's three time constants %.1f h)" % x for x in rc["times"]), rc["t_bound"]),
-         first="   ")
+    para("Each point's readings and duration: 12d. A case as poor as the bound takes up to %.1f h a point (9f)." % rc["t_bound"], first="   ")
     para("The endpoint is steady state, the mixed air drifting at most %.1f "
          "K/h over an hour, or a first-order fit theta(t) = theta_ss + (theta_0 - theta_ss) exp(-t/tau) over at least three time constants "
          "with residuals at most 0.05 K RMS and tau within a factor 2 of C/G; theta_ss's fitted standard error joins the rise's "
@@ -3043,8 +3369,146 @@ def render(R):
          "endpoint not met, or the supply or a fan's draw moving more than 1 %% or the ambient more than 1 K in the averaging hour (the "
          "point is repeated). Authorisation to perform it is the owner's; accepting its result goes through the coordinator's check against "
          "this section; no temperature requirement is relaxed to make a point pass." % DRIFT_K_H, first="   ")
+    # ======================================================== 12: the fix round of the Layer 4 review
+    pm, br = R["pm"], R["br"]
+    th_ = pm["th"]
     w("")
-    w("12 Predicates")
+    w("12 THE FIX ROUND OF THE LAYER 4 REVIEW (astra-check-l4close-1 at 8fbb68b6, the owner's one authorised review: B3, B4 and B7)")
+    para("12a B3, THE SGP41 AND OPTION C, RESTATED. Sensirion's SGP41 sheet: Table 4, the recommended conditions, operation to +%.0f C "
+         "and storage %.0f to %.0f C (%s; its gas sensing specifications hold only when the sensor is stored and operated under them, "
+         "%s); Table 5, the absolute ratings, operation to +%.0f C and short-term storage to +%.0f C "
+         "(%s; \"%s\"). Sensing is supported to +%.0f C only; the +%.0f C row is an exclusion screen and never stands in for the "
+         "sensor's function. Option C of CFL-002 (section 6) keeps the part and reports its channel as not covered while its reference "
+         "reads over 49.0 C and after storage outside %.0f to %.0f C until Sensirion states otherwise; it switches the sensor off at a 54.0 "
+         "C reading, so it is never powered on the +%.0f C line, and unpowered its survival rests on Table 5's short-term storage row "
+         "(absolute: INCONCLUSIVE until Sensirion, the clarification drafted). Section 11's K1 and K5 used the +%.0f C row as a line: "
+         "withdrawn, they are screens (11c, 11f). Every required mode below: its heat balance, its ambient and every correctly "
+         "categorised LOCAL limit (the cells at the air plus their own I2R over the pack block's lowest film, %.4f W/K; the control "
+         "thresholds whose firing ends or sheds the mode; the parts at their local air, the cooler's exhaust included; the junctions; the "
+         "unpowered parts' storage rows, or their operating rows read to cover them unpowered where no storage row is held), each "
+         "with the mixed air it allows and the conductance it needs (Q / room); the governing line is the tightest; absolute ratings "
+         "are listed as screens, never as lines. With the route's measures (5b, 5c: the +70 C parts out of the running cooler's "
+         "exhaust, the two regulators changed, the pushbuttons to an +85 C part); MODELED on the plan heat." % (
+             S["sgp_rec"]["v"][1], S["sgp_rec_st"]["v"][0], S["sgp_rec_st"]["v"][1], S["sgp_rec"]["where"], S["sgp_guar"]["where"],
+             S["sgp_op"]["v"][1], hi_of(S, "sgp_st"), S["sgp_op"]["where"], S["sgp_abs"]["quote"][:90], S["sgp_rec"]["v"][1], S["sgp_op"]["v"][1],
+             S["sgp_rec_st"]["v"][0], S["sgp_rec_st"]["v"][1], S["sgp_op"]["v"][1], S["sgp_op"]["v"][1], pm["gb"]), first="")
+    for m_ in pm["modes"]:
+        para("%s %s. Heat %.3f W (%s); +%.1f C; lid %s." % (m_["id"], m_["label"], m_["Q"], ", ".join("%s %.3f" % x for x in m_["heat"]),
+                                                             m_["amb"], m_["lid"]), first="   ", rest="      ")
+        ln = m_["by"]["as ruled"]["lines"]
+        shown = [x for x in ln[:6]]
+        for x in shown:
+            para("%-6s W/K  the air to %6.2f C  %s [%s]" % ("inf" if x["g"] == float("inf") else "%.3f" % x["g"], x["t"], x["name"], x["cat"]),
+                 first="      ", rest="                ")
+        rest_ = [x for x in ln[6:]]
+        if rest_:
+            w("      every other line needs at most %.3f W/K" % rest_[0]["g"])
+        scr = m_["by"]["as ruled"]["screens"] + [x for x in m_["by"]["C"]["screens"] if x not in m_["by"]["as ruled"]["screens"]]
+        if scr:
+            para("screens (absolute, never lines): %s" % "; ".join("%s (%s)" % (a_, b_) for a_, b_, _c in scr),
+                 first="      ", rest="      ")
+        govs, seen = [], {}
+        for opt in OPTIONS:
+            b = m_["by"][opt]
+            g_ = b["gov"]
+            txt_ = "%s, %s" % (g_["short"], "no conductance (the limit at or under the ambient)" if g_["g"] == float("inf") else
+                               "%.3f W/K, %s" % (g_["g"], "no bench reading suffices (its rise is too small for the budget)"
+                                                 if b["read"] == float("inf") else "a reading of at least %.3f W/K" % b["read"]))
+            seen.setdefault(txt_, []).append(opt)
+        for txt_, opts in seen.items():
+            who = opts[0] if len(opts) == 1 else ("every option" if len(opts) == len(OPTIONS) else ", ".join(opts[:-1]) + " and " + opts[-1])
+            govs.append("%s: %s" % (who, txt_))
+        para("GOVERNING (the route's measures): %s." % "; ".join(govs), first="      ", rest="      ")
+        b = m_["by"]["C"]
+        if b["stated"] is not b["gov"]:
+            para("Without the INFERRED reading (once the maker states the unpowered range at or over its operating top): %s (%s), %.3f W/K, a "
+                 "reading of at least %.3f W/K." % (b["stated"]["short"], b["stated"]["cat"], b["stated"]["g"], b["read_stated"]), first="      ", rest="      ")
+        dg = m_["designed"]["gov"]
+        para("As designed (no route measure; the SGP41 as ruled): %s, %s." % (dg["short"], "no conductance" if dg["g"] == float("inf") else "%.3f W/K" % dg["g"]),
+             first="      ", rest="      ")
+        para("REMAINING: %s" % REMAIN[m_["id"]], first="      ", rest="      ")
+    para("CFL-002, restated with C as defined: as ruled today (no option taken; REQ-042's VOC channel sensing across the envelope) the "
+         "SGP41's Table 4 +%.0f C governs the heat stage at +40 C, %.3f W/K on the pack and %.3f W/K on shore (M1, M2, and lid closed M3, "
+         "M4); under C the channel is reported not covered above its 49.0 C reading and the sensor is off from 54.0 C, so the governing "
+         "line moves to the cells' hot stop H1, %.3f W/K on the pack and %.3f W/K on shore, with the unpowered SGP41's survival a "
+         "screen until Sensirion states its short-term storage duration; under A (a BME688 in its place, operable to +%.0f C) and B "
+         "(the channel dropped) the line is H1's as under C, A owing the BME688's gas performance above +40 C. C restricts REQ-042's "
+         "channel inside the envelope, which D-02a does not grant today: CFL-002 stays the owner's." % (
+             th_["sgp4"], pm["modes"][0]["by"]["as ruled"]["gov"]["g"], pm["modes"][1]["by"]["as ruled"]["gov"]["g"],
+             pm["modes"][0]["by"]["C"]["gov"]["g"], pm["modes"][1]["by"]["C"]["gov"]["g"], th_["bme"]), first="   ")
+    para("What a bench point closes. T-H1 is a dummy-load, mixed-air measurement: one passing point establishes the conductance "
+         "between the mixed air and the ambient for its own configuration (lid state, fan state and supply, heat, heat placement, room "
+         "air), and the temperature offsets it records. It closes no mode's functionality: the cells' rise in the pack, the parts' "
+         "local air in the built kit, the junctions, the hot stop's thresholds and every functional check of E3-A, E3-L, E3-O and E5 "
+         "stay with their own evidence (U-01, T-H2, THM-001, E3-H). Lid-closed and fans-off states need their own points; the room-to-"
+         "operating translation of 11d is a model, not a validation of other fans, flow restrictions, lid states or heat placements.",
+         first="   ")
+    b4 = pm["b4"]
+    cbal = T["chg_prof"]
+    para("12b B4, THE CHARGING HEAT AS A BALANCE (CORRECTED: section 11 added only the charge increment to the battery profile's heat "
+         "and left out the source path's loss on the profile's own power). On the model's boundary (pwr_budget: the charge path at %.2f "
+         "x %.2f = %.3f, ICHG %.1f A into the pack at %.1f V): input %.3f W less stored %.3f W less exported %.3f W = %.3f W of heat, which "
+         "is the profile's %.3f W at the battery node, the source path's %.5f W, the charge path's %.5f W and the charging cells' %.3f W; "
+         "the reviewer's 50.04367 W reproduced. On SC-37's design day the charge comes through the solar stage, so L4-E8's ballasts add "
+         "%.2f W at their worst corner (the margins' rule): %.3f W, used in sections 10, 11 and 12a. K7 and K8 (T3's start, the idle "
+         "cells at the air), each with its bench reading:" % (
+             b4["eta_chg"], T["eta_fe"], cbal["eta"], b4["ichg"], CHG_V, cbal["p_in"], cbal["stored"], cbal["exported"], cbal["heat"],
+             cbal["parts"]["loads"], cbal["parts"]["supply"], cbal["parts"]["charge"], cbal["parts"]["cells"], T["qb"], R["hr"]["q_chg"]), first="")
+    for amb_, q_, g_, rd_ in b4["rows"]:
+        w("      +%.1f C at %.3f W: needs %.4f W/K, a reading of at least %.4f W/K" % (amb_, q_, g_, rd_))
+    para("A running charge is governed by T4 on the charging cells, their own %.3f W over the block's film adding %.2f to %.2f K "
+         "(12a, M8 and M9). Section 2d's charge in E3-O keeps the charge path's %.3f W only: the pack is outside the case there, its "
+         "cells' I2R with it." % (cbal["parts"]["cells"], b4["rise"][0], b4["rise"][1], T["charge_extra"]), first="   ")
+    para("12c B7, THE BATTERY-ONLY RUN COUPLED TO C1 (MODELED, energy-and-thermal). The run: PS-IDLE-SPEC on the pack (%.3f W at the "
+         "pack, %.3f W into the case) from a kit soaked at +%.0f C, lid open, shaded, still air; C1 moves the kit to the reduced mode at "
+         "the inside air's +%.0f C and, its trigger still holding at the next reading, to the heat stage (%.3f W at the pack, %.3f W into "
+         "the case; CONOPS states no dwell between the two, the model takes none); the reduced mode's restore, 5 K under the trigger, "
+         "is not reached; the run ends on the 35E's usable %.1f Wh at the profile's rate (the shed states' slightly larger usable "
+         "energy, energy_budget's PS-SURV-R row, not credited); the cells quasi-steady over the air by their own I2R over the block's "
+         "lowest film; one node, C the kit's %.0f to %.0f kJ/K (32.53). The reviewer's constant-G check reproduced (C %.0f kJ/K): %s." % (
+             br["p1"], br["q1"], br["amb"], th_["c1_air"], br["p2"], br["q2"], br["e_use"], T["kJ"][0], T["kJ"][1], T["kJ"][0],
+             "; ".join("G %.4f W/K reaches C1 at %.3f h and, unshed, the air %.2f C at %.2f h" % (g, t_, a_, br["t_energy"]) for g, t_, a_ in br["rev"])),
+         first="")
+    w("   The enclosure model's own G(rise) (section 9, lid open), integrated in %.0f s steps:" % br["dt"])
+    for r_ in br["runs"]:
+        w("      %-30s C %4.1f kJ/K: %s; the run %.2f h; the air at most %.2f C, the cells at most %.2f C (H1 at %.1f C %s)" % (
+            r_["label"], r_["c"], "C1 at %.2f h, then the heat stage for %.2f h" % (r_["t_c1"], r_["t_end"] - r_["t_c1"]) if r_["t_c1"] else "C1 not reached",
+            r_["t_end"], r_["air_max"], r_["cell_max"], th_["h1"], "REACHED" if r_["hot_stop"] else "not reached"))
+    ts_ = [r_["t_c1"] for r_ in br["runs"] if r_["t_c1"]]
+    te_ = [r_["t_end"] for r_ in br["runs"] if r_["t_c1"]]
+    para("So, ENERGY-AND-THERMAL (MODELED, on the bound and its other ends): C1 sheds the profile from %.2f to %.2f h where it acts, "
+         "and the runtime with the shed states is %.2f to %.2f h, of which %.2f to %.2f h unshed; where C1 does not act, the profile "
+         "runs its %.2f h. The profile runs its whole energy unshed only from a constant %.3f W/K at C %.0f kJ/K (%.3f W/K at %.0f kJ/K), and for "
+         "any duration from K6's %.3f W/K. ENERGY ONLY: %.2f h (%.1f Wh at %.1f W) stays labelled energy-only; it is not an established "
+         "unshed PS-IDLE-SPEC endurance. No hot stop on the bound. The bench runs that would show it: on T-H1's bench, a transient point, "
+         "the empty case soaked at room temperature, the heaters stepped to the profile's heat less the fans' draw (%.3f W) and, when the "
+         "mixed air has risen %.0f K, to the heat stage's battery-only heat less the fans' draw (%.3f W), logged to the run's end: the "
+         "time to C1 and the air after it (the empty case's thermal mass is under the kit's: the conservative side); then, on the built "
+         "kit (Layer 9), a battery-only PS-IDLE-SPEC run from a 24 h soak at +%.0f C, lid open, shaded, still air, logging the inside air "
+         "at the hold's reference, the four cell thermistors, the gauge's energy and every C1 transition to the graceful shutdown: the "
+         "runtime with its shed states, and the cells under H1. Authorisation is the owner's, acceptance the coordinator's check." % (
+             min(ts_), max(ts_), min(te_), max(te_), min(ts_), max(ts_), br["t_energy"], br["g_full"][0][1], br["g_full"][0][0],
+             br["g_full"][1][1], br["g_full"][1][0], br["g_never"], br["t_energy"], br["e_use"], br["p1"], br["q1"] - qq["prof"]["fans"],
+             br["rise_c1"], br["q2"] - qq["hs"]["fans"], br["amb"]), first="   ")
+    para("12d THE BENCH POINTS (T-H1-PROCEDURE-DRAFT.md): one per heat and lid state, the fans on, each reading the conductance its "
+         "configuration has and nothing else; each mode's governing reading as ruled and under C (12a), and where the governing line is "
+         "an operating row read to cover an unpowered part, the maker-stated line beside it; the duration at the lowest reading (tau = "
+         "C / G, C %.0f kJ/K; steady within 1 %% of the rise at ln(100) tau, then an hour averaged; a first-order fit needs three time "
+         "constants):" % rc["kj_hi"], first="")
+    for pt in pm["points"]:
+        rd_txt = []
+        for i_, opt, sh, g_, rd, sh2, g2, rd2 in pt["reads"]:
+            s_ = "%s %s: %s %s" % (i_, opt, sh, "no conductance" if not math.isfinite(g_) else "%.3f W/K read at %s" % (
+                g_, "none" if not math.isfinite(rd) else "%.3f" % rd))
+            if sh2 != sh:
+                s_ += " (stated: %s %.3f W/K read at %.3f)" % (sh2, g2, rd2)
+            rd_txt.append(s_)
+        para("%s at %.3f W, lid %s: %s; tau %.2f h, steady at %.1f h, the fit's three time constants %.1f h" % (
+            " and ".join(pt["ids"]), pt["Q"], pt["lid"], "; ".join(rd_txt), pt["tau"], pt["steady"], pt["fit"]), first="      ", rest="         ")
+    para("Then the fans-off case at M2's heat (no pass line: the failure case) and 12c's transient point. A point passes for a mode and "
+         "option when its reading meets that line; it closes that conductance only.", first="   ")
+    w("")
+    w("13 Predicates")
     for k, v in R["pred"].items():
         w("   %s: %s" % (k, "PASS" if v else "FAIL"))
     w("")
