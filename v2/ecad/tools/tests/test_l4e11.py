@@ -18,7 +18,10 @@ owner and an acceptance; no em or en dash and no claim word. The final round add
 and the voltage and reproduces the check's 6.36376 A at 0.908691; the breaker's delay is TI's loaded row and the scan carries the
 short-circuit filter and the delays; REQ-015 at the plug is a CONDITIONAL CANDIDATE on a bounded shedding sequence; the
 specified resistance floor keeps a stiff source at 900 A and the last interval and the obligations reach it; R-b permits two
-settings and its bound holds only inside TI's row condition. Nothing here writes into the tree: drafts run on temporary copies.
+settings and its bound holds only inside TI's row condition. The dependency round adds: one row per specification left to a
+maker (D1 to D10) with all seven columns and its cited record lines; the bounded fallback holds the worst admitted step for at
+least the assumed response and keeps the pack's inrush under ASCD; U-04 stays an architecture-level choice resting on D1 and D3;
+the POR value is TI's 256 mA; the TI draft asks only what REVIEW-REQUEST.md does not. Nothing here writes into the tree: drafts run on temporary copies.
 Software tests establish this record's own behaviour only.
 """
 import hashlib
@@ -441,3 +444,72 @@ def t_no_dashes_and_no_claim_words():
                 flat = flat.replace(q, "")      # a quoted approved requirement is the owner's text, not this record's claim
             m = CLAIM.search(flat)
             assert not m, "%s carries a claim word: %r" % (os.path.relpath(p, ROOT), m.group(0))
+
+
+DEP_PHRASES = {"D1": "| absent, or both FETs open", "D2": "**R-c.**", "D3": "| S2 | on | off |", "D4": "**ChargeCurrent() at POR.**",
+               "D5": "| E11-07 |", "D6": "**R-d.**", "D7": "| (iii) |", "D8": "| (ii) |", "D9": "| overcurrent delay |",
+               "D10": "| a start into a hard short"}
+
+
+def t_the_dependency_table_has_one_row_per_missing_specification_with_its_claim_lines():
+    R = _R()
+    m = _M()
+    rows = m.dep_rows(R)
+    assert [r["id"] for r in rows] == ["D%d" % k for k in range(1, 11)]
+    for r in rows:
+        for k in ("name", "missing", "claim", "maker", "bench", "cannot", "method", "negative"):
+            assert len(r[k]) > 10, "%s lacks %s" % (r["id"], k)
+    lines = open(PAGE, encoding="utf-8").read().split("\n")
+    table = [l for l in lines if re.match(r"^\| D\d+", l)]
+    assert [re.match(r"^\| (D\d+)", l).group(1) for l in table] == ["D%d" % k for k in range(1, 11)]
+    for l in table:
+        assert l.count("|") == 8, "a dependency row does not carry the seven columns: %s" % l[:40]
+        rid = re.match(r"^\| (D\d+)", l).group(1)
+        cites = re.findall(r"line (\d+):", l)
+        assert len(cites) == 1, "%s cites no record line" % rid
+        assert DEP_PHRASES[rid] in lines[int(cites[0]) - 1], "%s's cited line does not hold its claim" % rid
+        assert "**can:**" in l and "**Cannot:**" in l, "%s does not separate what a sample can and cannot establish" % rid
+
+
+def t_the_fallback_holds_the_worst_admitted_step_and_keeps_the_pack_under_ascd():
+    R = _R()
+    m = _M()
+    G = R["G"]
+    assert G["worst"][0].startswith("USB-C PD") and abs(G["worst"][1] - 3.0 * 15.0 / 0.93) < 1e-9
+    pa = [ok for nm, dp, ok in G["admit"] if nm.startswith("PA rail")][0]
+    assert pa is False, "the PA's step is admitted in S4: the worst step would be another"
+    k = 0.8 * 0.7 * 0.9
+    c_bank = 4 * 470e-6 * k
+    v1 = 16.8 * 0.995 - 4 * 0.01 * 470 * 25e-6 * 330.0
+    v2 = 12.3 + 0.55 + 0.10
+    e = c_bank * (0.5 * (v1 ** 2 - v2 ** 2) - 0.65 * (v1 - v2)) + 0.5 * 180e-6 * k * ((16.8 * 0.995) ** 2 - 12.3 ** 2)
+    assert abs(e - G["e_tot"]) < 1e-12
+    assert G["worst_hold"] >= m.T_RESP, "the fallback does not hold the worst admitted step for the assumed response"
+    assert dict(G["cans_for"])[1e-3] == m.BANK_N, "the bank is not the least that meets 1 ms"
+    assert G["c_dir_eff"] * 1e6 >= R["B"]["csys_uf"], "the direct can does not give TI's 50 uF by itself"
+    assert G["t_over_ascd"] < G["ascd_us"], "the pack's inrush stays over ASCD longer than its delay"
+    assert G["p_ch_pk"] <= G["p_rc2512"] and R["F"]["air_hot"] <= 70.0, "R_CH runs over its rating"
+    direct4 = G["r_loop"] * (G["c_pack_side_max"] + 4 * 470e-6 * 1.2) * math.log(G["i_conn_pk"] / G["ascd_a"])
+    assert direct4 > G["ascd_us"], "four cans directly on VSYS would not trip ASCD: the isolation's reason would be wrong"
+    assert G["s9_deficit"] > 0 and G["s2_vsys"][0] <= 10.0 + 1e-9
+
+
+def t_u04_stays_an_architecture_level_choice_resting_on_d1_and_d3():
+    out = open(OUT, encoding="utf-8").read()
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
+    assert "U-04 STAYS AN ARCHITECTURE-LEVEL CHOICE" in out and "U-04 stays an ARCHITECTURE-LEVEL CHOICE" in page
+    assert "with none: D1 and D3, whose negative answers return (B)" in out
+    assert "**With none:** D1 and D3" in page
+
+
+def t_the_por_value_is_tis_256_ma_and_the_ti_draft_asks_only_what_is_missing():
+    R = _R()
+    assert R["G"]["por_ma"] == 256.0
+    page = open(PAGE, encoding="utf-8").read()
+    assert "ChargeCurrent() is 0 A" not in page and "0 A at POR, and at" not in page, "the POR error is still stated as fact"
+    assert "ChargeCurrent() is 256 mA" in page.replace("\n", " ")
+    draft = open(os.path.join(REC, "clarification", "TI-QUESTIONS.md"), encoding="utf-8").read()
+    review = open(os.path.join(ROOT, "v2", "docs", "review-packets", "battery", "REVIEW-REQUEST.md"), encoding="utf-8").read()
+    for q in ("Q-TI-11", "Q-TI-12", "Q-TI-13", "Q-TI-14"):
+        assert ("**%s" % q) in draft and q not in review, "%s is not a question REVIEW-REQUEST.md lacks" % q
+    assert "Q-TI-3, addendum" in draft and "not sent" in draft
