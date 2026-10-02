@@ -76,7 +76,7 @@ the inside air (its rear).
 |---|---|---|
 | The heat stage after BANK-R1 on shore, plan, into the case | 24.996 W (23.272 W at the pack); as generated 23.345 W; HIGH 50.423 W, not covered (as L4-E10 and LO-01a) | MODELED |
 | T-H1's floor: the SGP41's +55 C (Table 5, p.7) at +40 C on shore | 1.6664 W/K; L4-E10's 1.6664 W/K, 70.00 and 75.00 C reproduced | MAKER, MODELED |
-| L4-E8's ballasts at the bound's worst corner | 2.09 W, +1.254 K | cited (L4-E9 IF-08) |
+| L4-E8's ballasts at the bound's worst corner | 2.09 W, +1.254 K | MODELED by L4-E8, cited from L4-E9 IF-08 |
 | Mixed inside air at the floor, E3-O / E5's dwell | 71.25 / 76.25 C (steady; E3-O's 4 h from a kit at +55 C reaches 69.78 to 70.44 C at 32.53's 10 to 8 kJ/K) | MODELED |
 | A charge running on shore (the pack at room temperature) | +3.446 W, +2.07 K (the hold holds the charge) | MODELED |
 | The plate at the ambient plus, of the rise | 0.465 to 0.725 (W4's films: inside 10 to 25, face 9.5 to 11.5 W/m2K) | INFERRED |
@@ -133,8 +133,8 @@ The same margins, the same floor, the same ballasts, the plan heat.
 | Enclosure line for E5 (MODELED) | 2.709 W/K (3.010 at 1 K, 3.386 at 2 K); plate coupling alone 1.963 W/K for the coupled parts, the rest still 2.709 | the floor, 1.6664 W/K | **2.159 W/K** (2.399 at 1 K, 2.698 at 2 K); 2.443 with the module at its typical 4.5 W; 4.304 at HIGH |
 | E3-O | needs 1.806 W/K for the +70 C parts | at the floor | **at the floor: mixed air 67.95 C** |
 | Against the physics | beyond the outer-film cap at W4's low coefficients (2.10) and W4's top (2.85); cannot cool below the ambient, so the SGP41, ATP19 and e-paper stay open | the inside air at 76.25 C (81.89 in the exhaust) leaves +85 C parts 3.1 to 8.8 K | 0.06 W/K over the cap at W4's low outer films, inside W4's range and under 32.53's |
-| Changes | mechanical; the session's picks for the three ambient-limited parts anyway | five device-set re-picks (the owner's, CHO-001), four with no candidate held; the session's picks | firmware on existing enables (RB_SW_EN, LORA_ON, ZB_ON, GEIGER_EN, board D and the PA as H1 does); one board E circuit item (the SGP41's switch and bus); the session's picks (MAIN, PI, TEST) |
-| Cost | inside fins and fan flow (no sheet held) | candidates unknown | three pushbuttons, one load switch, two resistors and two capacitors on board E; firmware |
+| Changes | mechanical; the ambient-limited parts left open (ATP19 by the session's pick; the SGP41 and the e-paper only by the owner's re-pick or a mode) | five device-set re-picks (the owner's, CHO-001), four with no candidate held; the session's picks | firmware on existing enables (RB_SW_EN, LORA_ON, ZB_ON, GEIGER_EN, board D and the PA as H1 does); one board E circuit item (the SGP41's switch and bus); the session's picks (MAIN, PI, TEST) |
+| Cost | inside fins and fan flow (no sheet held) | candidates unknown | three pushbuttons; one load switch, three resistors and two capacitors on board E; firmware |
 | Evidence owed | T-H1 at 2.709 W/K or more | makers' sheets for four device-set parts | T-H1 at 2.159 W/K or more; PDi's storage statement; the hold's forced test |
 | Verdict | REJECTED as a design basis | not selectable by the session (outside authority; INCONCLUSIVE) | SELECTED, CONDITIONAL |
 
@@ -148,13 +148,18 @@ held). No part has every route rejected.
 **The hold (SESSION, PROVISIONAL).** Trigger: board B's TMP117 (C1's own sensor, under the coolers) at +64.0 C in two
 readings. Inside the envelope the heat stage's air at +40 C at T-H1's floor, read in the exhaust, is 61.89 C; 2.0 K of
 allowance gives the trigger, so the hold acts nowhere inside the envelope at or over the floor. Before it acts the air is at
-most 69.6 C even in the exhaust; once in it the mixed air (67.95 C in E3-O, 70.0 C in E5) stays over the restore; in E5's
-30 C phase the heat stage reads at most 51.89 C, so the kit cycles back as C1 designs. Actions: the charger's charge-inhibit
-bit and board D and the PA rail off through board A's expanders (as H1 does); the RockBLOCK, the LoRa module and both E72
-off through their software enables (`lvc1g08` U503 RB_SW_EN, U504 LORA_ON, U505 ZB_ON); the Geiger module off (U16,
-GEIGER_EN); the running module asked to idle (no shutdown, its throttling logged); the SGP41 off (below); no e-paper refresh
-and the sounder muted while it holds; an SOS raised meanwhile is queued as under EMCON (D-10) and the operator told. Restore
-at +59.0 C after 30 minutes, to the heat stage. Every enable but the SGP41's exists in the generators (read in [7b]). At E3-O's start the kit stands at +55 C, over C1's +50 C, so C1 sheds at once: the monitor, the WiFi link cards, the 5G module and the SDR run only at the chamber's +55 C, inside their operating ranges (+70 C, +75 C). As board B is generated (PS-SURV, slot 2 alone, 23.345 W against PS-SURV-R's 24.996 W) the same hold applies with the 5G module's socket supply dropped through its existing EMCON AND PCIE_PWR_EN2 gate (U216); its heat in the hold is the same 19.497 W (MODELED, [4c]), so the line found here covers it.
+most 69.6 C even in the exhaust; once in it the mixed air (67.95 C in E3-O, 70.0 C in E5) stays over the restore; in E5's 30
+C phase the heat stage reads at most 51.89 C, so the kit cycles back as C1 designs. Actions: the charger's charge-inhibit bit
+and board D and the PA rail off through board A's expanders (as H1 does); the RockBLOCK, the LoRa module and both E72 off
+through their software enables (`lvc1g08` U503 RB_SW_EN, U504 LORA_ON, U505 ZB_ON); the Geiger module off (U16, GEIGER_EN);
+the running module asked to idle (no shutdown, its throttling logged); the SGP41 off (below); no e-paper refresh and the
+sounder muted while it holds; an SOS raised meanwhile is queued as under EMCON (D-10) and the operator told. Restore at +59.0
+C after 30 minutes, to the heat stage. Every enable but the SGP41's exists in the generators (read in [7b]). At E3-O's start
+the kit stands at +55 C, over C1's +50 C, so C1 sheds at once: the monitor, the WiFi link cards, the 5G module and the SDR
+run only at the chamber's +55 C, inside their operating ranges (+70 C, +75 C). As board B is generated (PS-SURV, slot 2
+alone, 23.345 W against PS-SURV-R's 24.996 W) the same hold applies with the 5G module's socket supply dropped through its
+existing EMCON AND PCIE_PWR_EN2 gate (U216); its heat in the hold is the same 19.497 W (MODELED, [4c]), so the line found
+here covers it.
 
 **The SGP41 (board E, owed to its generator owner, no draft: the generator needs KiCad's libraries to run).** A TPS22810
 load switch (the part board E already uses for the Geiger, `kisch.tps22810`) feeding a new +3V3_SGP from +3V3_E6, enabled

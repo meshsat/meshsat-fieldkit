@@ -1048,7 +1048,8 @@ def render(R):
     w("2b T-H1's floor (LO-01a): the inside air at or under the SGP41's +%.0f C (MAKER, %s Table 5) at +%.0f C on shore: %.4f W/K;" % (
         T["sgp55"], S["sgp_op"]["where"], T["t_use"], T["g_floor"]))
     w("   L4-E10's printed 1.6664 W/K, 70.00 and 75.00 C agree: %s (%.2f, %.2f C uncond.)" % ("yes" if T["agree_g"] and T["agree_air"] else "NO", *T["air_uncond"]))
-    w("2c L4-E8's ballasts, %.2f W at the bound's worst corner (cited, L4-E9 IF-08): +%.3f K. The inside air (mixed) at the floor:" % (T["qb"], T["ballast_k"]))
+    w("2c L4-E8's ballasts, %.2f W at the bound's worst corner (MODELED by L4-E8, cited from L4-E9 IF-08): +%.3f K. The inside air" % (T["qb"], T["ballast_k"]))
+    w("   (mixed) at the floor:")
     w("   E3-O %.2f C, E5's dwell %.2f C (steady; a 4 h E3-O from a kit at +55 C reaches %.2f to %.2f C at 32.53's %.0f to %.0f kJ/K," % (
         T["air"]["E3-O"], T["air"]["E5"], T["e3o_4h"][1], T["e3o_4h"][0], T["kJ"][1], T["kJ"][0]))
     w("   so the steady air is the bound; E5's 6 h dwell reaches it). At HIGH heat E5's air would be %.1f C." % T["air_hi"])
