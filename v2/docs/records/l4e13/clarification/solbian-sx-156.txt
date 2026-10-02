@@ -9,8 +9,9 @@ We are evaluating one SX 156 as the solar input of a portable unit whose charger
 voltage stays at or below 25.0 V with the cells at -20 C, and holds the panel at 16.4 to 18.8 V. Your SX series datasheet
 (English, February 2023) gives the SX 156 as 156 W, Vmp 17.6 V, Imp 8.9 A, Voc 21.3 V, Isc 9.4 A at STC, NOCT 45 +- 2 C,
 a Voc temperature coefficient of -0.32 %/C, and a positive power tolerance of (0%, +5%). It gives no tolerance for Voc. On
-the typical values the open-circuit voltage at -20 C is 24.37 V, so a unit more than 2.6 % above the typical Voc would
-exceed our limit.
+the typical values the open-circuit voltage at -20 C is 24.37 V at 1000 W/m2; because it also rises with irradiance, we
+evaluate it up to 2111 W/m2 (cloud enhancement on the extraterrestrial irradiance), where the typical value gives about
+24.96 V, so a unit only slightly above the typical Voc would exceed our limit.
 
 1. What tolerance on the open-circuit voltage at STC do you warrant for production SX 156 panels (for example the
    flash-test acceptance band, or the tolerance printed on the nameplate), above and below 21.3 V?
@@ -23,5 +24,5 @@ exceed our limit.
    sample size and the number of lots)? We would take it as supporting evidence only.
 
 What we need is a tolerance you warrant on Voc at STC for the panels shipped, and the conditions under which it applies;
-characterization data alone we cannot treat as a production guarantee. A warranted Voc at STC between 20.10 V and 21.85 V
+characterization data alone we cannot treat as a production guarantee. A warranted Voc at STC between 20.10 V and 21.33 V
 would meet both of our limits. Thank you.

@@ -11,7 +11,8 @@ open-circuit voltage stays at or below 25.0 V with the cells at -20 C. Your data
 typical electrical data at STC, Voc 21.4 V and a voltage temperature coefficient of -58.9 mV/C. Your safety and
 installation guide 524958 Rev F (Table 1 and its note, page 2) states that rated electrical characteristics are within 10%
 of measured values at STC. Taken at 10 %, the open-circuit voltage at -20 C could reach about 26.2 to 26.7 V, above our
-limit; the typical value gives 24.05 V.
+limit; the typical value gives 24.05 V. Because the open-circuit voltage also rises with irradiance, we evaluate it up to
+2111 W/m2 (cloud enhancement on the extraterrestrial irradiance), where the typical value gives about 24.73 V.
 
 1. For production SPR-E-Flex-100 modules, what upper limit on the open-circuit voltage at STC do you warrant (for example
    the flash-test acceptance limit, or a tolerance printed on the nameplate)? Is the 10 % of the guide's note that limit
@@ -25,6 +26,6 @@ limit; the typical value gives 24.05 V.
    sample size and the number of lots)? We would take it as supporting evidence only.
 
 What we need is a limit you warrant on Voc at STC for the modules shipped, and the conditions under which it applies;
-characterization data alone we cannot treat as a production guarantee. A warranted Voc at STC between 20.08 V and 22.24 V
-(the -58.9 mV/C coefficient taken at its relative value) would meet both of our limits: the upper one for the open
-circuit at -20 C, the lower one because our charger holds the panel at up to 18.8 V. Thank you.
+characterization data alone we cannot treat as a production guarantee. A warranted Voc at STC between 20.12 V and 21.63 V
+would meet both of our limits: the upper one for the open circuit at -20 C and 2111 W/m2, the lower one because our
+charger holds the panel at up to 18.8 V (the lower limit with the -58.9 mV/C coefficient as printed). Thank you.
