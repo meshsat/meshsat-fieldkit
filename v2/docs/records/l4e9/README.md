@@ -13,11 +13,17 @@ power limit and the complete hot-short pulse (B1), what F1 protects traced with 
 transients bounded (B3), and source-only operation added as U-04 (B4). Its final round answers the targeted recheck: the
 breaker's event and the timer's components stated as open evidence (new open defect D-09, the fault time against the start),
 R227's energy as nominal with its maximum unresolved, L10's own assignment, and L4-E7R's acceptance (D-01 resolved in design).
+The update round (2 October 2026, the coordinator's instruction) brings the architecture and its gate up to date with the
+accepted L4-E10 (FEA-008, final), L4-E11 (the vehicle entry replaced by a TPS48110-Q1 breaker with a CSD19536KTT, D-06's
+interconnect, U-04's arrangement) and L4-E12 (the electronics at the margins, T-H1's binding line 2.159 W/K); it answers E11-19
+(every finding that rested on the LM5069's power limit re-judged for the selected entry, out 12), deduplicates the three
+records' downstream items into the register (137 items), and lists the owner's items apart (the page's section 7d). No material
+defect is open; U-01 to U-04 stand, U-03 as it stood while L4-E13 is pending.
 
 | File | What it is |
 |---|---|
 | `L4-POWER-ARCHITECTURE.md` | The page: the selected architecture and its block diagram, the interface table, simultaneous operation, startup, faults, the decisions this record takes (SESSION), the closure gate with its material defects (7a), unresolved choices (7b) and downstream tasks (7c), the assumptions register, the register's summary and release order, the endurance statement, what stays PENDING or CONDITIONAL |
-| `l4e9_power_path.py` | The executable reconciliation. It reads every figure from the generators (syntax tree), board A's netlist, the records' committed outputs (L4-E4 to L4-E8, the energy replay, s120, the power budget, the load trace), the makers' documents (pdftotext) and the tree's configuration and contract files, each pinned by sha256; L4-E8's output is read from the tree or from `fnd/l4e8` at `3c8f7a1f` (accepted), L4-E7R's from the tree when it matches or from `fnd/l4e7` at `675b8068` (accepted, check 4 at `91e9a4b5`), L4-E10's likewise from `fnd/l4e10` at `79b2f568` (final), the held-back 0997 sheet from `v2/vendor/power/held/`. It prints each interface row with its checks and their evidence classes, the computed traces, the endurance statement and the gate, and refuses (exit 4) a row without both sides, a gate whose PASS rests on a conditional row, or a register row without an owner and an acceptance. Run from the repository root: `python3 v2/docs/records/l4e9/l4e9_power_path.py > v2/docs/records/l4e9/l4e9_power_path.out`. A few seconds; needs pdftotext and PyYAML |
+| `l4e9_power_path.py` | The executable reconciliation. It reads every figure from the generators (syntax tree), board A's netlist, the records' committed outputs (L4-E4 to L4-E8, the energy replay, s120, the power budget, the load trace), the makers' documents (pdftotext) and the tree's configuration and contract files, each pinned by sha256; L4-E8's output is read from the tree or from `fnd/l4e8` at `3c8f7a1f` (accepted), L4-E7R's from the tree when it matches or from `fnd/l4e7` at `675b8068` (accepted, check 4 at `91e9a4b5`), L4-E10's likewise from `fnd/l4e10` at `79b2f568` (final), L4-E11's from `fnd/l4e11` at `3298d1f1` (accepted, check `a15ab384`), L4-E12's from `fnd/l4e12` at `a86be47b` (accepted, check `db41c95d`), the outside-contact drafts the owner's list names from those commits, the held-back 0997 sheet from `v2/vendor/power/held/`. It prints each interface row with its checks and their evidence classes, the computed traces, the endurance statement and the gate, and refuses (exit 4) a row without both sides, a gate whose PASS rests on a conditional row, or a register row without an owner and an acceptance. Run from the repository root: `python3 v2/docs/records/l4e9/l4e9_power_path.py > v2/docs/records/l4e9/l4e9_power_path.out`. A few seconds; needs pdftotext and PyYAML |
 | `l4e9_power_path.out` | Its output, committed; the script reproduces it byte for byte |
 | `DOWNSTREAM-REGISTER.md` | Every implementation change, layout constraint, test, piece of evidence and release record the architecture hands downstream, each with one named owner, an acceptance, a state and its step in the release order |
 | `LAYER5-HANDOVER.md` | The interfaces this architecture creates or changes, each with the text proposed for `pcb_interfaces.yaml` or `HW-FW-CONTRACT.md` (drafts for Layer 5; neither file is edited) |
@@ -33,8 +39,9 @@ R227's energy as nominal with its maximum unresolved, L10's own assignment, and 
 | `inputs/` | The provenance of the makers' documents read in round 2 (the addresses, revisions and sha256; the three TI sheets compared byte for byte with ti.com) |
 | `README.md` | This list |
 
-**PENDING:** none. L4-E7R is accepted (the coordinator's check 4, `fnd/l4e7` `91e9a4b5`, its figures at `675b8068`); D-01 is
-resolved in design (drafted, not applied). D-06 and U-04 stand as they are while L4-E11 (`fnd/l4e11`) works on them.
+**PENDING:** none in the rows. L4-E7R is accepted (the coordinator's check 4, `fnd/l4e7` `91e9a4b5`, its figures at
+`675b8068`); D-01 is resolved in design (drafted, not applied). L4-E11 resolved D-06 in design and made U-04 a CONDITIONAL
+CANDIDATE; L4-E12 made U-02 CONDITIONAL on T-H1 with CFL-002 the owner's question; L4-E13 (U-03) is pending.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 31 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 37 tests.
