@@ -14,7 +14,8 @@ thermal state at the margins (section 2); a FEASIBILITY SCREEN of every fitted p
 (section 3); at most three complete approaches compared for the parts that collide (section 4); the selection with its
 margins and what stays conditional (section 5); the owner-question test (section 6); the downstream items (section 7); U-02 in
 depth (section 8: the dependency round, the basis of the lines, the configuration, the fans' power, T-H1, a failed reading and
-its fallbacks); the conservative lower bound and U-02's class (section 9); the predicates (section 10).
+its fallbacks); the conservative lower bound and U-02's class (section 9); the heat-rejection approaches (section 10); the
+predicates (section 11).
 
 Revised twice on 2 October 2026: after the focused check (checks/astra-check-l4e12-1.md) and after the targeted recheck
 (checks/astra-check-l4e12-2.md). Every judged limit names its rating category (recommended or operating, storage, absolute);
@@ -28,7 +29,7 @@ pinned by sha256 (exit 2 if a file differs or is missing). One held document (v2
 by fetch_held_back.py beside this file.
 
 Run from the repository root:  python3 v2/docs/records/l4e12/l4e12_thermal.py > v2/docs/records/l4e12/l4e12_thermal.out
-Needs pdftotext and PyYAML. About ten seconds. Exit 2: a pinned file differs or is missing; 3: an input cannot be parsed;
+Needs pdftotext and PyYAML. About fifteen seconds. Exit 2: a pinned file differs or is missing; 3: an input cannot be parsed;
 4: a reproduction or a predicate failed."""
 import contextlib
 import hashlib
@@ -1389,6 +1390,147 @@ def dependency(C, R, ap, gc_all, parts_c):
     return dep
 
 
+# ------------------------------------------------------------------------------------------------ section 10: heat rejection
+K_FIN = (2.0, 3.0)           # ASSUMPTION: the effective area multiplier of fins on the face's free strips (fixed fins under M3's
+                             # space, or a clip-on exchanger when deployed); only a vendor's heat-sink datasheet or a bench point confirms it
+K_CU = 390.0                 # W/mK, copper (textbook)
+STRAP_L, STRAP_A = 0.20, 200e-6   # ASSUMPTION: a flexible copper braid from the plate's edge to the lid, 0.20 m long, 200 mm2
+COUPLED = ("Xenarc 709GNK", "WiFi link card 1 (live)", "CM5 slot 1", "CM5 slot 2", "CM5 slot 3", "panel board C",
+           "KSZ9897R AVDDL+DVDDL 1.2 V", "KSZ9897R AVDDH 2.5 V", "KSZ9897R VDDIO 3.3 V", "NVMe slot 1", "NVMe slot 2", "NVMe slot 3",
+           "VHF PA 30 W")    # approach (b): the profile's loads that sit at or under the plate and can be led into it (INFERRED)
+
+
+def two_node(amb_c, q_air, q_plate, cfg, geo, k_fin=1.0, a_free=0.0, lid=None, n=45):
+    """The inside air and the plate as two nodes: the air takes q_air and loses it through the walls and the plate's inner face;
+    the plate takes q_plate (heat led into it by conduction) and the air's share, and rejects through its outer face (fins of
+    effective multiplier k_fin on a_free) and, with lid = (R_strap, A_skin, H), through a strap to an aluminium skin on the open
+    lid's inside. Natural convection inside (the fans' flow at zero), the bound's coefficients. Returns the rises and flows."""
+    ta = amb_c + 273.15
+    ep, es, kpp, fo = cfg["eps_plate"], cfg["eps_shell"], cfg["k_pp"], cfg["f_open"]
+    tk = geo["t_wall"] / kpp
+    a, aw, awo = geo["a_plate"], geo["a_wall"], geo["a_wall_out"]
+
+    def walls_theta(q):
+        th_wo = _inv(lambda th: awo * (h_vert(th, geo["h_out"], ta + th / 2) + h_rad(es, 1.0, ta + th, ta)) * th, q, 0.0, 500.0, n)
+        th_wi = th_wo + q * tk / (0.5 * (aw + awo))
+        return th_wi + _inv(lambda d: aw * h_vert(d, geo["h_in"], ta + th_wi + d / 2) * d, q, 0.0, 500.0, n)
+
+    def q_pi(th_a, th_p):
+        d, tf = th_a - th_p, ta + 0.5 * (th_a + th_p)
+        if d >= 0:
+            return a * h_up(d, geo["l_plate"], tf) * d
+        ra, k, _pr = _ra(-d, geo["l_plate"], tf)
+        return a * 0.27 * ra ** 0.25 * k / geo["l_plate"] * d   # a warm plate over cooler air: a stable layer (eq 9.32)
+
+    def q_po(th):
+        return ((a - a_free) + a_free * k_fin) * (h_up(th, geo["l_plate"], ta + th / 2) + h_rad(ep, fo, ta + th, ta)) * th
+
+    def q_lid(th_p):
+        if not lid or th_p <= 0:
+            return 0.0
+        r_s, a_s, h_s = lid
+
+        def h_skin(th):
+            front = h_vert(th, h_s, ta + th / 2) + h_rad(ep, 1.0, ta + th, ta)
+            back = 1.0 / (tk + 1.0 / (h_vert(th, h_s, ta + th / 2) + h_rad(es, 1.0, ta + th, ta)))
+            return front + back
+        th_s = _inv(lambda th: a_s * h_skin(th) * th - (th_p - th) / r_s, 0.0, 0.0, th_p, n)
+        return (th_p - th_s) / r_s
+
+    def air(th_p):
+        qw = _inv(lambda qw_: qw_ + q_pi(walls_theta(qw_), th_p), q_air, 0.0, 300.0, n)
+        return walls_theta(qw), qw
+    th_p = _inv(lambda th: q_po(th) + q_lid(th) - q_pi(air(th)[0], th), q_plate, 0.0, 300.0, n)
+    th_a, qw = air(th_p)
+    return {"th_a": th_a, "th_p": th_p, "walls": qw, "plate_in": q_pi(th_a, th_p), "plate_out": q_po(th_p), "lid": q_lid(th_p)}
+
+
+def heat_rejection(C, R):
+    """Section 10: the profile at REQ-024's +40 C and charging on the design day, against three approaches inside the rulings."""
+    T, A, pb, cb = C["T"], C["A"], C["pb"], R["cb"]
+    geo, cons = cb["geo"], cb["cons"]
+    f = pb.state_full("IDLESPEC", "plan")
+    q_prof = f["pb"] + pb.pack_i2r(f["pb"])
+    sh, _ = pb.load_battery_share("IDLESPEC", "plan")
+    pins = dict((n_, p_) for n_, p_, _s, _t in sh)
+    for n_ in COUPLED:
+        if n_ not in pins:
+            refuse(3, "the model has no load named %s" % n_)
+    q_c = sum(pins[n_] for n_ in COUPLED)
+    w4t = text(W4_PY)
+    m_ = need(w4t, r"the monitor window (\d+\.\d+) x (\d+\.\d+) \(glass level with the plate\) and the e-paper lens (\d+\.\d+) x (\d+\.\d+)", "the face's windows")
+    mon, epd = float(m_.group(1)) * float(m_.group(2)) / 1e6, float(m_.group(3)) * float(m_.group(4)) / 1e6
+    a_free = geo["a_plate"] - mon - epd
+    cmt = text(CM)
+    m3 = need(cmt, r"\| M3 \| Space under the QMX tray[^\n]*?\| MET \| \+([\d.]+) \| \+([\d.]+) \| \+([\d.]+) \| \+([\d.]+) \|", "CASE-MARGINS M3")
+    ext = need(cmt, r"\| Exterior \| (\d+) x (\d+) \|", "the exterior")
+    lid_h = float(ext.group(2)) / 1000.0
+    t3 = float(need(text(TP), r"no charge starts while the gauge reads above (\d+) C \(T3\)", "T3").group(1))
+    day = need(text(REPLAY), r"over SC-37's hourly air \((\d+\.\d) to (\d+\.\d) C\)", "SC-37's air")
+    day = (float(day.group(1)), float(day.group(2)))
+    lim, t_use = ap_need_by(R), T["t_use"]
+    r_strap = STRAP_L / (K_CU * STRAP_A)
+    lid = (r_strap, geo["a_lid_top"], lid_h)
+    need_g = q_prof / (lim - t_use)
+    need_ch = (q_prof / (t3 - day[0]), q_prof / (t3 - day[1]))
+    rows = [("none: the bound", 0.0, 1.0, None), ("(a) fins on the free strips, k %.0f" % K_FIN[0], 0.0, K_FIN[0], None),
+            ("(a) fins on the free strips, k %.0f" % K_FIN[1], 0.0, K_FIN[1], None), ("(b) the large loads led into the plate", q_c, 1.0, None),
+            ("(b) with (a)'s fins, k %.0f" % K_FIN[1], q_c, K_FIN[1], None), ("(c) the open lid's skin on a strap", 0.0, 1.0, lid),
+            ("(b) + (a) + (c): the best route", q_c, K_FIN[1], lid)]
+    out = []
+    for lbl, qc, kf, ld in rows:
+        r_ = {"label": lbl, "q_c": qc, "k": kf}
+        for key, amb in (("use", t_use), ("day_cold", day[0]), ("day_warm", day[1])):
+            o = two_node(amb, q_prof - qc, qc, cons, geo, kf, a_free, ld)
+            o["air"], o["plate"], o["g"] = amb + o["th_a"], amb + o["th_p"], q_prof / o["th_a"]
+            r_[key] = o
+        out.append(r_)
+    best = out[-1]
+    # the heat the best route rejects with the air at the +70 C class at +40 C: a secant on the air's own share
+    qa_lo, qa_hi = 0.5 * (q_prof - q_c), q_prof - q_c
+    th_lo = two_node(t_use, qa_lo, q_c, cons, geo, K_FIN[1], a_free, lid)["th_a"]
+    th_hi = best["use"]["th_a"]
+    target = lim - t_use
+    for _ in range(4):
+        qa_x = qa_lo + (target - th_lo) * (qa_hi - qa_lo) / (th_hi - th_lo)
+        th_x = two_node(t_use, qa_x, q_c, cons, geo, K_FIN[1], a_free, lid)["th_a"]
+        qa_lo, th_lo, qa_hi, th_hi = qa_hi, th_hi, qa_x, th_x
+    q_max_best = qa_x + q_c
+    q_max_bare = enclosure_g(t_use, target, "open", cons, geo)["g"] * target
+    fi = pb.state_full("IDLE", "plan")
+    q_idle = fi["pb"] + pb.pack_i2r(fi["pb"])
+    # the smallest experiment for this question: one lid-open, fans-on point at two heaters, about the profile's heat
+    import math
+    t1 = R["dep"]["th1"]
+    ph = 2.0 * A["rta_heater"][2]
+
+    def u_rel(dt):
+        return 2.0 * math.sqrt((t1["u_dt"] / dt) ** 2 + P_U_REL ** 2 + LEAD_U_REL ** 2)
+
+    def reading_for(tg):
+        return _inv(lambda g_: g_ * (1.0 - u_rel(ph / g_)), tg, 0.3, 20.0)
+    exp2 = [(lbl, tg, reading_for(tg), ph / reading_for(tg)) for lbl, tg in (
+        ("the profile at +40 C, the +70 C class, no route", need_g),
+        ("charging with the profile on the design day's cold end", q_prof / (t3 - day[0])),
+        ("charging with the profile on the design day's warm end", q_prof / (t3 - day[1])))]
+    return {"q_prof": q_prof, "q_c": q_c, "coupled": [(n_, pins[n_]) for n_ in COUPLED], "a_free": a_free, "mon": mon, "epd": epd,
+            "m3": tuple(float(x) for x in m3.groups()), "lid_h": lid_h, "r_strap": r_strap, "t3": t3, "day": day, "lim": lim,
+            "need_g": need_g, "need_ch": need_ch, "rows": out, "q_max_best": q_max_best, "q_max_bare": q_max_bare,
+            "short_w": q_prof - q_max_best, "short_g": need_g - best["use"]["g"], "short_w_bare": q_prof - q_max_bare,
+            "reaches": best["use"]["air"] <= lim + 1e-9, "charges": best["day_warm"]["air"] <= t3 + 1e-9 and best["day_cold"]["air"] <= t3 + 1e-9,
+            "short_ch": (q_prof / (t3 - day[0]) - best["day_cold"]["g"], q_prof / (t3 - day[1]) - best["day_warm"]["g"]),
+            "q_idle": q_idle, "exp2": exp2, "exp_power": ph, "fin_mass": a_free * (1.5 / 8.0) * float(m3.group(4)) / 1000.0 * 2700.0,
+            "skin_mass": geo["a_lid_top"] * 0.001 * 2700.0, "strap_mass": STRAP_L * STRAP_A * 8960.0}
+
+
+def t_use_(R):
+    return R["T"]["t_use"]
+
+
+def ap_need_by(R):
+    return R["ap"]["c"]["trip"]["need_by"]
+
+
 def conservative_bound(C, R, ap, dep):
     """Section 9: a first-principles conservative lower bound on the conductance in each lid state with the fans, against the
     lines and the session's fallback; U-02's class (CONFIRMS or DECIDES) and the smallest experiment."""
@@ -1819,6 +1961,7 @@ def compute():
     R["g2"] = {"g": 2.0, "e3o": e3o_t + q_env / 2.0, "e5": e5_t + (T["q_m"] + qb) / 2.0}
     R["dep"] = dep = dependency(C, R, ap, gc_all, parts_c)
     R["cb"] = conservative_bound(C, R, ap, dep)
+    R["hr"] = heat_rejection(C, R)
     # ======================================================== 8: the predicates
     p = {}
     p["P1 pwr_budget and pwr_red2 reproduced byte for byte before any figure"] = R["r0a"] and R["r0b"] and R["r0c"]
@@ -1891,6 +2034,10 @@ def compute():
     p["P20 U-02's class follows from the bound: the lines over the outside films' cap, E3-O's gap positive with every session measure, so T-H1 decides"] = (
         cb["cap"]["E5"] < cb["lines"]["E5"] and cb["cap"]["E3-O"] < cb["lines"]["E3-O"] and cb["gap_w"]["E3-O"] > 0 and cb["gap_w"]["E5"] <= 0
         and cb["klass"] == "DECIDES")
+    hr = R["hr"]
+    p["P21 heat rejection on the bound: no approach reaches the profile at +40 C (the best short by a positive margin) nor charging on the design day; U-02 stays a closure condition"] = (
+        not hr["reaches"] and not hr["charges"] and hr["short_w"] > 0 and hr["short_g"] > 0 and all(x > 0 for x in hr["short_ch"])
+        and hr["rows"][-1]["use"]["g"] == max(r_["use"]["g"] for r_ in hr["rows"]) and hr["q_idle"] < hr["q_max_best"] < hr["q_prof"])
     R["pred"] = p
     return R
 
@@ -1944,7 +2091,7 @@ def render(R):
     S, T, A, ap = R["S"], R["T"], R["A"], R["ap"]
     out = []
     w = out.append
-    C_ = {"hin_still": tuple(R["w4"]["hin_still"]), "a_side": tuple(R["w4"]["a_side"])}
+    C_ = {"hin_still": tuple(R["w4"]["hin_still"]), "a_side": tuple(R["w4"]["a_side"]), "prof_pb": R["dep"]["fan_power"][0]["plan"]["state"]}
     import math
     math_log100 = math.log(100.0)
 
@@ -1956,7 +2103,8 @@ def render(R):
     w("D-02a's +55 C operating margin (E3-O) and E5's +60 C dwell in the sealed Peli 1450. Prototype design, desk arithmetic: nothing")
     w("is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMPTION, CONDITIONAL. Revised after the focused")
     w("check astra-check-l4e12-1 and the targeted recheck astra-check-l4e12-2 (the record's section 12 maps each item to its change);")
-    w("section 8 is the dependency round of 2 October 2026 on U-02 (the record's section 13), section 9 the conservative bound (section 14).")
+    w("section 8 is the dependency round of 2 October 2026 on U-02 (the record's section 13), section 9 the conservative bound (section 14),")
+    w("section 10 the heat-rejection question (section 15).")
     w("")
     w("0 Reproductions and inputs")
     w("0a pwr_budget.py re-run in a child: pwr_budget.out and pwr_budget.json byte for byte: %s" % ("yes" if R["r0a"] else "NO"))
@@ -2540,7 +2688,69 @@ def render(R):
          "the hold, 3.1 W in the profile), not among the 8.4 W with no document. The bound credits their flow at zero and still counts "
          "their heat inside the case: nothing in 8c changes.", first="")
     w("")
-    w("10 Predicates")
+    hr = R["hr"]
+    w("10 THE HEAT-REJECTION QUESTION (the consolidation, 2 October 2026: if T-H1 reads under what the approved profile needs, what")
+    w("   change inside the rulings restores it at REQ-024's +40 C, and charging on the design day?)")
+    para("10a THE NEED. The approved profile PS-IDLE-SPEC puts %.3f W into the case lid open (MODELED: its %.3f W at the pack plus the "
+         "pack's own I2R; L4-E9's 43.4 W at a0212d9e). Its +70 C class at REQ-024's +%.0f C needs %.3f W/K; a charge starts only while "
+         "the gauge reads at or under %.0f C (TEST-PLAN, T3), so on SC-37's design day (the air %.1f to %.1f C, the replay) charging "
+         "with the profile running needs %.3f to %.3f W/K. The rulings: no vent or opening anywhere (32.53), the Peli 1450 at any cost, "
+         "the face a 3 mm aluminium plate carrying the UI (32.40). Every figure below is on section 9's bound: the inside by natural "
+         "convection only, the coefficients' conservative ends, still air; a two-node model, the inside air and the plate." % (
+             hr["q_prof"], C_["prof_pb"], t_use_(R), hr["need_g"], hr["t3"], hr["day"][0], hr["day"][1],
+             hr["need_ch"][0], hr["need_ch"][1]), first="")
+    para("10b THE THREE APPROACHES. (a) Fins on the face's free strips (the plate %.4f m2 less the monitor window %.4f m2 and the "
+         "e-paper lens %.4f m2: %.4f m2), fixed under M3's space beneath the QMX tray (%.2f mm nominal, %.2f mm with the unstated allowances doubled) or a "
+         "clip-on exchanger when deployed; effective area multiplier %.0f to %.0f (ASSUMPTION; a vendor's heat-sink datasheet gives the "
+         "real one). (b) The large loads led into the plate by heat pipes, bars and gap pads, %.3f W at their pins (%s), so the plate "
+         "rejects them at its own temperature and the air keeps the rest; with (a)'s fins. (c) The open lid as a second radiator: an "
+         "aluminium skin on the lid's flat ceiling (%.4f m2, an upper bound: the QMX tray and the tablet bracket share it), %.3f m tall "
+         "when open, on a copper braid from the plate's edge inside the seal line (%.2f m, %.0f mm2: %.2f K/W, ASSUMPTION; copper %.0f "
+         "W/mK). At the profile's heat (MODELED on the bound):" % (
+             R["cb"]["geo"]["a_plate"], hr["mon"], hr["epd"], hr["a_free"], hr["m3"][0], hr["m3"][3], K_FIN[0], K_FIN[1], hr["q_c"],
+             ", ".join("%s %.3f" % x for x in hr["coupled"]), R["cb"]["geo"]["a_lid_top"], hr["lid_h"], STRAP_L, STRAP_A * 1e6, hr["r_strap"], K_CU),
+         first="")
+    w("      %-40s | +%.0f C: air, plate, G      | design day %.1f C: air, G | %.1f C: air, G" % ("approach", t_use_(R), hr["day"][0], hr["day"][1]))
+    for r_ in hr["rows"]:
+        w("      %-40s | %6.2f C %6.2f C %6.3f W/K | %6.2f C %6.3f W/K      | %6.2f C %6.3f W/K" % (
+            r_["label"], r_["use"]["air"], r_["use"]["plate"], r_["use"]["g"], r_["day_cold"]["air"], r_["day_cold"]["g"],
+            r_["day_warm"]["air"], r_["day_warm"]["g"]))
+    para("Needs: %.3f W/K at +%.0f C (the air at %.0f C); %.3f and %.3f W/K for charging (the air at %.0f C). The open lid's strap carries "
+         "%.2f W at +%.0f C in the best route." % (hr["need_g"], t_use_(R), hr["lim"], hr["need_ch"][0], hr["need_ch"][1], hr["t3"],
+                                                  hr["rows"][-1]["use"]["lid"], t_use_(R)), first="   ")
+    para("10c CONSEQUENCES (all three passive: no power, no endurance change, the heat unchanged; costs TBD, no quote held). (a): about "
+         "%.2f kg of 1.5 mm fins at an 8 mm pitch to the worst M3 height (ASSUMPTION), no inside space; the UI's strips between the "
+         "monitor, the e-paper and the switches, the light guides kept clear; bonded fins keep the face a 3 mm plate (a SESSION reading), "
+         "an extruded thicker face would change the ruling of 32.40 (the owner's); a clip-on exchanger needs stowage. (b): spreaders and "
+         "pads under the plate in the 11.9 to 22.9 mm between board B's tall parts and the face parts (W4), their mass and cost TBD; the "
+         "plate runs at %.2f C (%.2f C without fins): the face's touch temperature rises (no held limit: an evaluation owed), the e-paper's "
+         "+60 C operation is passed without fins, the switches go to +85 C parts, and each led part sits at the plate plus its path's drop "
+         "(the WiFi card's +70 C bounds that drop); all inside the seal. (c): about %.2f kg (a 1 mm skin %.2f kg, the braid %.2f kg), the "
+         "braid's fatigue over the hinge's cycles, the lid tray's layout; inside the seal line, no penetration." % (
+             hr["fin_mass"], hr["rows"][-1]["use"]["plate"], hr["rows"][3]["use"]["plate"], hr["skin_mass"] + hr["strap_mass"], hr["skin_mass"],
+             hr["strap_mass"]), first="")
+    para("10d THE SELECTION: NONE REACHES THE NEED ON BOUNDED EVIDENCE. The best route assembled from the three, (b) with (a)'s fins and "
+         "(c), keeps the air at %.2f C at +%.0f C: it rejects %.3f W with the air at +%.0f C against the profile's %.3f W, SHORT BY %.3f W "
+         "(%.3f W/K). Charging with the profile running stays out of reach: %.3f and %.3f W/K short on the design day's cold and warm ends. "
+         "On the bound alone the case rejects %.3f W at +%.0f C (%.3f W short). What would carry the route over: the inside film the "
+         "fans make (section 9: credited at zero), and the fins' and the path's real resistances; each is a measurement or a maker's "
+         "datasheet, not held. The remaining options are the owner's: an ALTERNATIVE duty cycle at +%.0f C, labelled as such (PS-IDLE, "
+         "the monitor dimmed and no beacon: %.3f W into the case, under the best route's %.3f W by %.3f W, and nothing fits on the bound "
+         "alone), or a requirement change (the profile's ambient ceiling, or charging with the profile running on the design day)." % (
+             hr["rows"][-1]["use"]["air"], t_use_(R), hr["q_max_best"], hr["lim"], hr["q_prof"], hr["short_w"], hr["short_g"],
+             hr["short_ch"][0], hr["short_ch"][1], hr["q_max_bare"], t_use_(R), hr["short_w_bare"], t_use_(R), hr["q_idle"],
+             hr["q_max_best"], hr["q_max_best"] - hr["q_idle"]), first="")
+    para("10e U-02 by the owner's exit definition: a CLOSURE CONDITION, with its exact fact: the sealed case's conductance lid open with "
+         "the fans, as T-H1 reads it (the fans' inside film is what no document bounds). The smallest experiment: one point of T-H1, lid "
+         "open, the fans at full duty, two heaters (%.1f W, about the profile's heat) spread as the boards dissipate, room air, to steady "
+         "state (section 9f's duration). The readings that settle it (each the target plus its expanded uncertainty):" % hr["exp_power"],
+         first="")
+    for lbl, tg, rd, rs in hr["exp2"]:
+        w("      a reading of at least %.3f W/K (%.1f K rise) meets %.3f W/K: %s" % (rd, rs, tg, lbl))
+    para("Under the first, the route of 10d applies with its kit on the same bench point, and an owner's choice of 10d's options if it "
+         "still reads short.", first="   ")
+    w("")
+    w("11 Predicates")
     for k, v in R["pred"].items():
         w("   %s: %s" % (k, "PASS" if v else "FAIL"))
     w("")
