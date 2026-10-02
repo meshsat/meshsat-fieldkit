@@ -12,8 +12,10 @@ figure no held document gives, named where it is used), CONDITIONAL (a result th
 Order of the work (the owner's rules of 1 and 2 October 2026): the acceptance read first and quoted (section 1); the
 thermal state at the margins (section 2); a FEASIBILITY SCREEN of every fitted part on every board and of the bought modules
 (section 3); at most three complete approaches compared for the parts that collide (section 4); the selection with its
-margins and what stays conditional (section 5); the owner-question test (section 6); the downstream items (section 7); the
-predicates (section 8).
+margins and what stays conditional (section 5); the owner-question test (section 6); the downstream items (section 7); U-02 in
+depth (section 8: the dependency round, the basis of the lines, the configuration, the fans' power, T-H1, a failed reading and
+its fallbacks); the conservative lower bound and U-02's class (section 9); the heat-rejection approaches (section 10); the
+predicates (section 11).
 
 Revised twice on 2 October 2026: after the focused check (checks/astra-check-l4e12-1.md) and after the targeted recheck
 (checks/astra-check-l4e12-2.md). Every judged limit names its rating category (recommended or operating, storage, absolute);
@@ -27,7 +29,7 @@ pinned by sha256 (exit 2 if a file differs or is missing). One held document (v2
 by fetch_held_back.py beside this file.
 
 Run from the repository root:  python3 v2/docs/records/l4e12/l4e12_thermal.py > v2/docs/records/l4e12/l4e12_thermal.out
-Needs pdftotext and PyYAML. A few seconds. Exit 2: a pinned file differs or is missing; 3: an input cannot be parsed;
+Needs pdftotext and PyYAML. About fifteen seconds. Exit 2: a pinned file differs or is missing; 3: an input cannot be parsed;
 4: a reproduction or a predicate failed."""
 import contextlib
 import hashlib
@@ -108,7 +110,21 @@ LV1T08_PDF = "v2/vendor/ti/ti-sn74lv1t08.pdf"
 CSD77_PDF = "v2/vendor/ti/held/ti-csd17577q5a-slps516.pdf"
 CSD78_PDF = "v2/vendor/ti/held/ti-csd17578q5a-slps526.pdf"
 TMP117_PDF = "v2/vendor/ti/ti-tmp117-temperature.pdf"
+# the dependency round's inputs (2 October 2026): the records whose figures U-02's line carries, the profile's trace and its
+# replay, Method 507.6's cycle as transcribed in the tree, and the T-H1 hardware list
+L4E8_OUT = "v2/docs/records/l4e8/ripple_dense.out"
+L4E10_OUT = "v2/docs/records/l4e10/l4e10_cell_thermal.out"
+M507 = "v2/vendor/standards/mil-std-810h-method-507-6.md"
+TRACE = "v2/docs/records/l3batt/load_trace.out"
+REPLAY = "v2/docs/records/l4e/l4e_replay.out"
+RTA = "v2/docs/reviews/READY-TO-ACT.md"
 PINS = {
+    L4E8_OUT: "3b751989b8b70345469f2fdc14640fe041415b7333d669b205d2c675b046ab84",
+    L4E10_OUT: "ce2d11f11eecfceef696eac1d6cda66d448cdfb3703d2fc69062e3a1a3f2aeac",
+    M507: "aab749c1b6d149c8dddedce99fcc0d505339723300df36a62a257b4ace380d80",
+    TRACE: "e35e62483b67fbe71bf89b819f6be46173ce708a8a62c683905d55a37ad4c218",
+    REPLAY: "59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d",
+    RTA: "bdaf61a4991afb8ca1c45d0c1f71330dd8954e493af357503e01e350b8ed8fff",
     CM: "55244f94aace54ca09d98c100b9830cba75c70a4774c3ba375a14903fcaf6376",
     CONOPS: "6cb7b241cb84d7290caffa74df2622c64222dd66a2de66693e480e3a18e44281",
     APPX: "852736b661a805e36305ca6c2c91ebb76794e883a2ccd75dc3274c25d65212f1",
@@ -175,11 +191,10 @@ PINS = {
 }
 
 # ------------------------------------------------------------------------------------------------ the figures this record sets
-# Cited from records not on this branch's base (read at their commits, carried as inputs and named where used):
+# The figures of other records this one carries; since set 26 each is read back from its pinned output in base() and checked:
 L4E8_BALLAST_W = 2.09        # L4-E8's ballasts at the bound's worst corner, in the thermal budget once (L4-E9 IF-08 and A-20, fnd/l4e9)
 L4E10_G_FLOOR = 1.6664       # L4-E10 section 4, LO-01a's governing line: the inside air at or under the SGP41's +55 C on shore (fnd/l4e10 79b2f568)
 L4E10_AIR = (70.00, 75.00)   # L4-E10 section 4c: E3-O's air settles at 70.00 C, E5's dwell tends to 75.00 C at that floor
-E5_RAMP_H = 2.0              # Method 507.6 Table 507.6-IX, 30 C at 0000 to 60 C at 0200, as L4-E10 transcribed it (fnd/l4e10)
 # ASSUMPTION (each used in one place, its effect printed):
 FLOW_SHARE = 0.5             # the share of the representative cooler fan's free-air flow that passes a module's heatsink
 CP_AIR = 1007.0              # J/kgK, air (textbook; INFERRED)
@@ -188,6 +203,16 @@ P_ATM = 101325.0             # Pa
 SIG_P_W, SIG_THETA = 0.02, 250.0     # a signal, logic or protection part in normal operation: at most 20 mW, at most 250 C/W
 CTRL_P_W = 0.5                       # a controller driving external FETs: at most 0.5 W of its own (gate drive and bias)
 PASS_P_W, PASS_THETA = 0.25, 60.0    # a pass element on a rail (eFuse, load switch, power FET): at most 0.25 W at 60 C/W
+# T-H1's uncertainty budget (ASSUMPTION, each a standard uncertainty k = 1 unless named; replaced by the bench's own):
+TC_U_K = 0.2                 # a thermocouple channel after an isothermal comparison of all junctions before the run, offsets subtracted
+MIX_U_K = 0.3                # the mixed air's spatial spread, as the standard deviation of the mean of the air channels
+AMB_U_K = 0.3                # the ambient's drift over the averaging hour (a room, or a chamber's controller)
+DRIFT_K_H = 0.1              # the steady-state criterion: the mixed air drifting at most 0.1 K/h over the last hour
+P_U_REL = 0.007              # the heater power from the supply's V and I read on 0.5 % class meters
+LEAD_U_REL = 0.005           # heat carried in or out by the heater and thermocouple leads
+EPS_OUT = 0.85               # the outside surfaces' emissivity (W4's 0.85 to 0.9, the low end)
+SIGMA = 5.670e-8             # W/m2K4
+ROOM_C, SURF_DK = 22.0, 5.0  # the bench's room and the mean surface-to-air offset for the linearised radiation (INFERRED)
 # The sensing allowances of the SGP41's own shutdown and of the hold's trigger window (ASSUMPTION, each printed where used):
 READ_S, TAU_S = 1.0, 60.0    # a reading every second; a sensor's thermal time constant in the case's moving air
 SGP_GRAD_K = 0.5             # a TMP117 on the SGP41's carrier to the SGP41, its own heating included (a placement rule, measured at the bench)
@@ -372,6 +397,10 @@ def read_statements():
     put("bme_iaq_test", BME_PDF, r"(Tested with 0\.6\u201390 ppm of EtOH at 5\u201340 °C)", lambda m: True, "BME688 note 5", 1)
     put("tps62933_tjrec", TPS62933_PDF, r"8\.3 Recommended Operating Conditions\s+Over the recommended operating junction temperature range of \u2013(\d+)°C to \+(\d+)°C",
         lambda m: (-float(m.group(1)), float(m.group(2))), "TPS62933 recommended TJ")
+    put("mix_cfm_lo", SUNON_PDF, r"GF60151B9-1E000-AE9\s+12\s+32\s+0\.39\s+2300\s+(\d+\.\d)", n(1), "Sunon GF60151B9 flow")
+    put("mix_cfm_hi", SUNON_PDF, r"GF60151B6-1E000-AE9\s+12\s+125\s+1\.50\s+4500\s+(\d+\.\d)", n(1), "Sunon GF60151B6 flow")
+    put("mix_ip68", SUNON_PDF, r"(60x60x15 mm \(IP68\))", lambda m: True, "Sunon 60 mm IP68 heading", 1)
+    put("fan_v1", SUNON_PDF, r"MF30060V1-10000-A99\s+5\s+112\s+(\d\.\d+)\s+9100\s+(\d\.\d)", n(1, 2), "Sunon MF30060V1 power and flow")
     put("tusb2046_ta", TUSB2046_PDF, r"7\.3 Recommended Operating Conditions[\s\S]{0,3000}?TA\s+Operating free-air temperature\s+°C\s+TUSB2046BI, TUSB2046I\s+\u2013(\d+)\s+(\d+)",
         lambda m: (-float(m.group(1)), float(m.group(2))), "TUSB2046I recommended TA")
     v = S["lime"]["v"]
@@ -624,13 +653,66 @@ def base():
         "U10 free pins": sq(need(ge, r'("30": "HOT_R1_G", "31": "NC", "32": "NC", "33": "\+3V3_E6", "34": "NC")', "U10's free GPIO20 to GPIO22").group(1)),
     }
     A["px0833"] = sq(need(text(CM), r"(The recommended PX0833 does not fit this plate)", "CASE-MARGINS' PX0833 refusal").group(1))
+    cmt = text(CM)
+    geo_m = {"mid": tuple(float(x) / 1000.0 for x in need(cmt, r"\| Z 54\.5, mid-height \| \| (\d+\.\d+) x (\d+\.\d+) \|", "the base at mid-height").groups()),
+             "shoulder": float(need(cmt, r"\| Z (101\.04), shoulder \|", "the shoulder").group(1)) / 1000.0,
+             "tangent": float(need(cmt, r"\| Z (15\.32), fillet tangent \|", "the fillet tangent").group(1)) / 1000.0,
+             "t_wall": float(need(cmt, r"\*\*(5\.34)\*\* on the end walls", "the wall thickness").group(1)) / 1000.0,
+             "depth": float(need(cmt, r"\*\*(108\.97)\*\* \(#1321", "the base depth").group(1)) / 1000.0,
+             "ceiling": tuple(float(x) / 1000.0 for x in need(cmt, r"\| Lid, flat ceiling \| \| (\d+\.\d+) x (\d+\.\d+) \(#736\)", "the lid ceiling").groups()),
+             "parting": tuple(float(x) / 1000.0 for x in need(cmt, r"\| Lid, at the parting plane \| \| (\d+\.\d+) x (\d+\.\d+)", "the lid at the parting plane").groups()),
+             "lid_depth": float(need(cmt, r"(45\.47) \(#712 to #736\)", "the lid depth").group(1)) / 1000.0,
+             "floor": tuple(float(x) / 1000.0 for x in need(cmt, r"flat floor (\d+\.\d+) x (\d+\.\d+) \(#1321", "the flat floor").groups()),
+             "feet": float(need(cmt, r"feet line at sheet y 227\.815 = Z -(\d+\.\d+)", "the feet").group(1))}
+    A["geo_m"] = geo_m
     A["pack_wall_mm"] = need(text(CM), r"\| M4b \| Pack block's east face to the east wall \|[^\n]*?\| MET \| \+[\d.]+ \| \+([\d.]+) \|", "CASE-MARGINS M4b").group(1)
     A["req042"] = sq(recs["REQ-042"]["statement"])
     acc42 = sq(recs["REQ-042"]["acceptance"])
     A["req042_voc"] = need(acc42, r"(the SGP41's own clean-air baseline as its datasheet defines the VOC index)", "REQ-042's VOC level").group(1)
     A["req042_range"] = need(acc42, r"(a state outside a sensing part's published range is reported as not covered by that channel, never assumed)", "REQ-042's range clause").group(1)
     A["cfl002"] = sq(recs["CFL-002"]["acceptance"])
+    A["req043"] = sq(recs["REQ-043"]["acceptance"])
+    A["hold_ref"] = sq(need(cn, r"(board B's\s+TMP117 under the coolers, on the kit bus through the panel controller)", "the heat stage's reading").group(1))
     A["c1"] = sq(need(cn, r"\| (C1, module shedding \| inside air \+50 C or any cell \+55 C \| normal to the reduced mode; reached again in the reduced mode, to the heat stage; restores 5 K below)", "C1").group(1))
+    # the cited records and documents, read (the dependency round): L4-E8's ballasts, L4-E10's floor and air, Method 507.6's
+    # cycle as transcribed in the tree, T-H1's row and its hardware list, the profile's trace and its replay
+    t8 = text(L4E8_OUT)
+    A["l4e8_ballast"] = float(need(t8, r"Upper\s+sum at the bound's worst corner (\d\.\d+) W", "L4-E8's ballast sum").group(1))
+    t10 = text(L4E10_OUT)
+    A["l4e10_floor"] = float(need(t10, r"The complete E3-A and E3-L pass line: (\d\.\d+) W/K", "L4-E10's floor").group(1))
+    A["l4e10_air"] = (float(need(t10, r"E3-O's air settles at (\d+\.\d+) C", "L4-E10's E3-O air").group(1)),
+                      float(need(t10, r"tends to (\d+\.\d+) C in E5's 60 C dwell", "L4-E10's E5 air").group(1)))
+    if abs(A["l4e8_ballast"] - L4E8_BALLAST_W) > 1e-9 or abs(A["l4e10_floor"] - L4E10_G_FLOOR) > 1e-9 or A["l4e10_air"] != L4E10_AIR:
+        refuse(4, "a cited record's figure moved (L4-E8 %s, L4-E10 %s %s)" % (A["l4e8_ballast"], A["l4e10_floor"], A["l4e10_air"]))
+    tm = text(M507)
+    cyc = {int(h): float(c) for h, c in re.findall(r"(?m)^\| (\d{4}) \| (\d+) \|", tm)}
+    if not (0 in cyc and 200 in cyc and 800 in cyc and 1600 in cyc):
+        refuse(3, "Table 507.6-IX's rows not found")
+    A["m507"] = {"lo": cyc[0], "hi": cyc[200], "ramp_h": (200 - 0) / 100.0, "dwell_h": (800 - 200) / 100.0, "down_h": (1600 - 800) / 100.0,
+                 "checks": sq(need(tm, r"> (3\. Perform operational checks near the end of the fifth and tenth cycles\.)", "507.6 note 3").group(1))}
+    if (A["m507"]["lo"], A["m507"]["hi"]) != (A["e5"][3], A["e5"][4]) or cyc[800] != cyc[200]:
+        refuse(4, "TEST-PLAN E5's levels are not Table 507.6-IX's")
+    A["th1_row"] = sq(need(tp, r"\| T-H1 \| the empty-case heat-balance test[^|]*\| (a current-moulding Peli 1450 with the 1450PF frame and a 3 mm aluminium plate blank; 20, 40 and 60 W of resistive heat on a dummy stack, the fans running and stopped, lid open and closed, thermocouples on the air, the plate, the walls and a dummy pack block)", "T-H1's row").group(1))
+    A["th1_who"] = sq(need(tp, r"(it needs no\s+built kit, and its purchase is the owner's to authorise)", "T-H1's authorisation").group(1))
+    rta = text(RTA)
+    m = need(rta, r"three of (\d+\.\d) ohm at (\d+\.\d) V give (\d+\.\d) W each", "T-H1's stack heaters")
+    A["rta_heater"] = (float(m.group(1)), float(m.group(2)), float(m.group(3)))
+    A["rta_logger"] = sq(need(rta, r"(Pico Technology PicoLog TC-08, SKU PP222), (\d) thermocouple inputs", "T-H1's logger").group(0))
+    A["rta_channels"] = sq(need(rta, r"(eight channels per run \(air 2, plate 2, walls 2, pack block 1, outside air 1\))", "T-H1's channels").group(1))
+    A["rta_mixers"] = sq(need(rta, r"(Same Sky CFM-6025BG68, 12 V, the -22 variant \(tachometer and PWM\))", "T-H1's mixer fans").group(1))
+    A["rta_who"] = sq(need(rta, r"(who runs the test and where \(the session cannot\))", "T-H1's missing authorisation").group(1))
+    tr_ = text(TRACE)
+    m = need(tr_, r"LOW (\d+\.\d) /\s+PLAN (\d+\.\d) / HIGH (\d+\.\d) W", "the profile's totals")
+    A["trace_total"] = tuple(float(x) for x in m.groups())
+    m = need(tr_, r"S (\d+\.\d), R (\d+\.\d), D (\d+\.\d), T (\d+\.\d)", "the profile's tiers")
+    A["trace_tiers"] = dict(zip("SRDT", (float(x) for x in m.groups())))
+    A["trace_fans"] = [(float(w_), tier, name) for w_, tier, name in re.findall(r"(?m)^\s+(\d+\.\d\d)\s+([SRDT])\s+(two mixer fans|cooler fan slot \d)", tr_)]
+    rp = text(REPLAY)
+    m = need(rp, r"PS-IDLE-SPEC (\d+\.\d) W at the pack terminals over its (\d+) loads \(REQ-072's objective_profile\)", "the replay's profile")
+    A["replay_profile"] = (float(m.group(1)), int(m.group(2)))
+    i13 = need(rp, r"13\. THE LOADS OF PS-IDLE-SPEC WITH NO DOCUMENT[^\n]*?(\d+\.\d+) W at the pack", "the replay's section 13")
+    blk = rp[i13.start():rp.index("END.", i13.start())] if "END." in rp[i13.start():] else rp[i13.start():]
+    A["replay_undoc"] = (float(i13.group(1)), [(float(w_), nm.strip()) for w_, nm in re.findall(r"(?m)^\s+(\d+\.\d\d) W  (\S[^\n]*)$", blk)])
     R["A"] = A
 
     # ======================================================== 2: the thermal state at the margins (MODELED)
@@ -703,7 +785,7 @@ def base():
     T["g_low_out_high_in"] = g_at(0, hin[1])
     T["g_high_out_low_in"] = g_at(1, hin[0])
     T["g_3253_open"] = tuple(pb.G_3253["open_fans"])
-    R["w4"] = {"hin": tuple(hin), "hof": tuple(hof), "how": tuple(how), "hfl": tuple(hfl), "tk": tk}
+    R["w4"] = {"hin": tuple(hin), "hof": tuple(hof), "how": tuple(how), "hfl": tuple(hfl), "tk": tk, "hin_still": tuple(w4.H_IN_STILL), "a_side": tuple(w4.A_SIDE)}
     # the running module's cooler exhaust over the mixed air (MODELED; FLOW_SHARE an ASSUMPTION)
     vdot = S["fan_cfm"]["v"][0] * 0.3048 ** 3 / 60.0 * FLOW_SHARE
 
@@ -738,7 +820,7 @@ def base():
         return L["amb"], L["amb"]
     R["locs_now"] = {"E3-O": locs(e3o_t, q_hs, g_floor, T["d_hs"]), "E5": locs(e5_t, q_hs, g_floor, T["d_hs"])}
     return {"R": R, "pb": pb, "red2": red2, "S": S, "T": T, "A": A, "rows": rows, "mods": mods, "undeclared": undeclared,
-            "locs": locs, "bounds": bounds, "shore": shore, "hold_ov": hold_ov, "gc": gc}
+            "locs": locs, "bounds": bounds, "shore": shore, "hold_ov": hold_ov, "gc": gc, "w4": w4}
 
 
 # ------------------------------------------------------------------------------------------------ section 3: the screen
@@ -1111,6 +1193,626 @@ def floor1(x):
     return math.floor(round(x * 10.0, 6)) / 10.0
 
 
+# ------------------------------------------------------------------------------------------------ section 8: U-02 in depth
+LOSS_ON_A = ("S1", "S2", "S3", "DEV", "A3V3", "PA", "HF", "POE", "PDO", "HEAT")   # board A's converters (gen_sch_a.py, the node notes)
+LOSS_ON_E = ("E5V", "E3V3")
+
+
+def place_of(name):
+    """Where a load's heat sits, for T-H1's dummy heaters (INFERRED from the load's name and node)."""
+    if "fan" in name:
+        return "fans (the real fans, run from the bench supply)"
+    if name == "panel board C" or name.startswith("Xenarc"):
+        return "board C and the face"
+    if name in ("board E controller and sensors", "Geiger module"):
+        return "board E"
+    if name == "board A logic":
+        return "board A"
+    if name.startswith("board D") or name.startswith("VHF PA"):
+        return "board D and the PA"
+    return "board B (slot 3, its switch, hubs, supervisors, the device rail)"
+
+
+DEEP_OFF = ("KSZ9897R AVDDL+DVDDL 1.2 V", "KSZ9897R AVDDH 2.5 V", "KSZ9897R VDDIO 3.3 V", "NVMe slot 3", "PCIe switch 3.3 V slot 3",
+            "PCIe switch 1.0 V slot 3", "LG290P GNSS")   # E5's deeper hold: loads the logging of E5 does not need (SESSION, CONDITIONAL)
+
+
+def dependency(C, R, ap, gc_all, parts_c):
+    """The dependency round of 2 October 2026 (the owner's point on U-02): the basis of the lines, the configuration they
+    assume, the fans in the energy budget, T-H1 and what a failed reading changes."""
+    import math
+    T, A, S, pb, red2, w4 = C["T"], C["A"], C["S"], C["pb"], C["red2"], C["w4"]
+    shore, hold_ov = C["shore"], C["hold_ov"]
+    qb, e3o_t, e5_t = T["qb"], A["e3o_t"], A["e5"][4]
+    c = ap["c"]
+    need_by = c["trip"]["need_by"]
+    dep = {}
+
+    def comp(ov):
+        saved = pb.with_overrides("RED", ov)
+        try:
+            sh, _pbat = pb.load_battery_share("RED", "plan")
+            f = pb.state_full("RED", "plan")
+        finally:
+            pb.restore(saved)
+        loss = node_losses(pb, ov)
+        q_pack, q_case, _ = shore(ov)
+        loads = sorted([(n_, p_, s_) for n_, p_, s_, _t in sh if p_ > 0], key=lambda x: -x[1])
+        out = {"loads": loads, "p_load": f["p_load"], "loss": sum(loss.values()), "loss_by": loss, "dist": f["pb"] - f["p_vbat"],
+               "pack": q_pack, "case": q_case, "front": q_case - q_pack}
+        place = {}
+        for n_, p_, _s in loads:
+            place[place_of(n_)] = place.get(place_of(n_), 0.0) + p_
+        for nd, v in loss.items():
+            k = "board A" if nd in LOSS_ON_A else ("board E" if nd in LOSS_ON_E else "board B (slot 3, its switch, hubs, supervisors, the device rail)")
+            place[k] = place.get(k, 0.0) + v
+        place["board A"] = place.get("board A", 0.0) + out["dist"]
+        place["the front end and the charger (boards E and A, on shore)"] = out["front"]
+        out["place"] = place
+        return out
+    hs, hold = comp(red2.SURVR), comp(hold_ov)
+    dep["hs"], dep["hold"] = hs, hold
+    # 8a the basis of each line
+    rows = {}
+    for key, q, amb in (("E5, the hold", T["q_m"], e5_t), ("E3-O, the heat stage", T["q_hs"], e3o_t), ("E5, no hold", T["q_hs"], e5_t)):
+        Q, dT = q + qb, need_by - amb
+        rows[key] = {"q": q, "Q": Q, "amb": amb, "lim": need_by, "dT": dT, "G": Q / dT, "dGdW": 1.0 / dT, "dGdK": -Q / dT ** 2,
+                     "w": ((Q - 1.0) / dT, (Q + 1.0) / dT), "k": (Q / (dT + 1.0), Q / (dT - 1.0))}
+    dep["rows"] = rows
+    hs_v = dict((n_, p_) for n_, p_, _s in hs["loads"])
+    hold_v = dict((n_, p_) for n_, p_, _s in hold["loads"])
+    dep["hold_action"] = sorted([(k, hs_v.get(k, 0.0), hold_v.get(k, 0.0)) for k in hold_ov if hs_v.get(k, 0.0) != hold_v.get(k, 0.0)],
+                                key=lambda x: -(x[1] - x[2]))
+    dep["setters"] = [(pr["k"], pr["state"]["E5"], pr["lim"]["E5"] if pr["lim"]["E5"] is not None else pr["abs"]["E5"],
+                       pr["cat"]["E5"] or CAT[pr["abs_key"]["E5"]]) for pr in parts_c
+                      if pr["k"] in gc_all and abs(gc_all[pr["k"]]["E5"] - c["gmax"]) < 1e-9]
+    # 8b the configuration
+    conf = {}
+    for case in ("low", "high"):
+        conf[case] = {"open_fans": w4.conductance(True, True, case), "open_still": w4.conductance(False, True, case),
+                      "closed_fans": w4.conductance(True, False, case), "closed_still": w4.conductance(False, False, case)}
+    dep["conf"] = conf
+    dep["areas"] = {"face": w4.A_FACE, "side": tuple(w4.A_SIDE), "floor": tuple(w4.A_FLOOR)}
+    dep["fans_running"] = {"E3-O": [(n_, p_) for n_, p_, _s in hs["loads"] if "fan" in n_],
+                           "E5": [(n_, p_) for n_, p_, _s in hold["loads"] if "fan" in n_]}
+    fans_pack_hold = sum(s_ for n_, p_, s_ in hold["loads"] if "fan" in n_)
+    fans_pack_hs = sum(s_ for n_, p_, s_ in hs["loads"] if "fan" in n_)
+    fans_case_hold = fans_pack_hold * hold["case"] / hold["pack"]
+    fans_case_hs = fans_pack_hs * hs["case"] / hs["pack"]
+    hin_s, hof = w4.H_IN_STILL, w4.H_OUT_FACE
+    f_still = [hi_ / (hi_ + ho_) for hi_ in hin_s for ho_ in hof]
+    still = T["w4_open_still"]
+    q5s, q3s = T["q_m"] + qb - fans_case_hold, T["q_hs"] + qb - fans_case_hs
+    dep["fans_off"] = {"fans_case_hold": fans_case_hold, "fans_case_hs": fans_case_hs, "still": still, "f_still": (min(f_still), max(f_still)),
+                       "e5_air": (e5_t + q5s / still[1], e5_t + q5s / still[0]), "e3o_air": (e3o_t + q3s / still[1], e3o_t + q3s / still[0]),
+                       "e5_plate_max": e5_t + max(f_still) * q5s / still[0], "e3o_plate_max": e3o_t + max(f_still) * q3s / still[0],
+                       "g_needed_e5": q5s / (need_by - e5_t), "g_3253_still": pb.G_3253["open_still"][0]}
+    # 8c the fans in the energy budget
+    fp = []
+    for label, st, ov in (("PS-IDLE-SPEC (the profile)", "IDLESPEC", None), ("PS-TYP", "TYP", None), ("PS-RED, lid closed", "RED", None),
+                          ("the heat stage (PS-SURV-R)", "RED", red2.SURVR), ("E5's hold", "RED", hold_ov)):
+        row = {"label": label}
+        for scen in ("lo", "plan", "hi"):
+            saved = pb.with_overrides(st, ov or {})
+            try:
+                sh, pbat = pb.load_battery_share(st, scen)
+            finally:
+                pb.restore(saved)
+            fl = [(n_, p_, s_) for n_, p_, s_, _t in sh if "fan" in n_ and p_ > 0]
+            row[scen] = {"load": sum(p_ for _n, p_, _s in fl), "pack": sum(s_ for _n, _p, s_ in fl), "state": pbat, "n": len(fl)}
+        row["wh_day"] = 24.0 * row["plan"]["pack"]
+        row["share"] = row["plan"]["pack"] / row["plan"]["state"]
+        fp.append(row)
+    dep["fan_power"] = fp
+    fan_rows = [(n_, v) for n_, _nd, v, _s in pb.LOADS if "fan" in n_]
+
+    def fan_ov(base_ov, st, idx):
+        o = dict(base_ov or {})
+        for n_, v in fan_rows:
+            cur = o.get(n_, v[st])
+            if cur[1] > 0:
+                o[n_] = pb.same(v[st][idx] if v[st][1] > 0 else v["IDLESPEC"][idx], "R")
+        return o
+    q_hold_flo = shore(fan_ov(hold_ov, "RED", 0))[1]
+    q_hold_fhi = shore(fan_ov(hold_ov, "RED", 2))[1]
+    prof = pb.state_full("IDLESPEC", "plan")["pb"]
+    prof_hi = pb.state_full("IDLESPEC", "plan", fan_ov(None, "IDLESPEC", 2))["pb"]
+    dep["fan_sens"] = {"q_lo": q_hold_flo, "q_hi": q_hold_fhi, "g_lo": (q_hold_flo + qb) / (need_by - e5_t), "g_hi": (q_hold_fhi + qb) / (need_by - e5_t),
+                       "prof": prof, "prof_hi": prof_hi, "runtime_factor": prof / prof_hi}
+    # 8d T-H1
+    kJ, gop = T["kJ"], T["w4_open"]
+    taus = [k_ * 1000.0 / g_ / 3600.0 for k_ in kJ for g_ in gop]
+    tau_line = max(kJ) * 1000.0 / c["gmax"] / 3600.0
+    t_ss = (math.log(100.0) * min(taus), math.log(100.0) * max(taus))
+    u_ss = DRIFT_K_H * tau_line
+    u_dt = math.sqrt(2 * TC_U_K ** 2 + MIX_U_K ** 2 + AMB_U_K ** 2 + u_ss ** 2)
+    ub = {}
+    for dT in (10.0, 20.0):
+        ur = math.sqrt((u_dt / dT) ** 2 + P_U_REL ** 2 + LEAD_U_REL ** 2)
+        ub[dT] = {"u_rel": ur, "U_rel": 2.0 * ur, "pass": c["gmax"] / (1.0 - 2.0 * ur)}
+    ph = A["rta_heater"][2]
+
+    def hrad(t_c):
+        return 4.0 * EPS_OUT * SIGMA * (t_c + 273.15 + SURF_DK) ** 3
+    d_room, d_margin = hrad(ROOM_C) - hrad(310.0 - 273.15 - SURF_DK), hrad(e5_t) - hrad(310.0 - 273.15 - SURF_DK)
+
+    def g_shift(case, dh):
+        i = 0 if case == "low" else 1
+        h_in = w4.H_IN_FANS[i]
+        return (w4.A_SIDE[i] / (1.0 / h_in + w4.T_OVER_K_WALL + 1.0 / (w4.H_OUT_WALL[i] + dh))
+                + w4.A_FLOOR[i] / (1.0 / h_in + w4.T_OVER_K_WALL + 1.0 / (w4.H_OUT_FLOOR[i] + dh))
+                + w4.series(w4.A_FACE * h_in, w4.A_FACE * (w4.H_OUT_FACE[i] + dh)))
+    rad = {case: g_shift(case, d_margin) / g_shift(case, d_room) for case in ("low", "high")}
+    dep["th1"] = {"taus": (min(taus), max(taus)), "tau_line": tau_line, "t_ss": t_ss, "points": 8, "total_h": (8 * t_ss[0], 8 * t_ss[1]),
+                  "u_ss": u_ss, "u_dt": u_dt, "ub": ub, "heater": A["rta_heater"], "powers": (ph, 2 * ph, 3 * ph),
+                  "rise_line": (ph / c["gmax"], 2 * ph / c["gmax"]), "rad": rad, "h_room": hrad(ROOM_C), "h_margin": hrad(e5_t)}
+    # 8e a failed reading and the fallbacks
+    Q5, Q3 = T["q_m"] + qb, T["q_hs"] + qb
+    f_lo, f_hi = T["f_plate"]
+    gs = (T["cap"][0], 2.0, 1.9, c["g_e3o"], T["g_floor"], 1.5)
+    dep["fail"] = [(g_, e3o_t + Q3 / g_, e5_t + Q5 / g_) for g_ in gs]
+    fins = {}
+    for case in ("low", "high"):
+        i = 0 if case == "low" else 1
+        walls = w4.conductance(True, True, case)[1]
+        gi, go = w4.A_FACE * w4.H_IN_FANS[i], w4.A_FACE * w4.H_OUT_FACE[i]
+        fins[case] = [(ki, ko, walls + w4.series(gi * ki, go * ko)) for ki, ko in ((1, 1), (1, 1.5), (1, 2), (1, 3), (2, 2), (3, 3))]
+        fins[case + "_cap_out"] = walls + gi
+    rr = {"out2": [], "both2": []}
+    for case in ("low", "high"):
+        g11 = dict(((a_, b_), g_) for a_, b_, g_ in fins[case])
+        rr["out2"].append(g11[(1, 2)] / g11[(1, 1)])
+        rr["both2"].append(g11[(2, 2)] / g11[(1, 1)])
+    fins["ratio"] = {k: (min(v), max(v)) for k, v in rr.items()}
+    fins["applied"] = {k: (c["g_e3o"] * v[0], c["g_e3o"] * v[1]) for k, v in fins["ratio"].items()}
+    dep["fins"] = fins
+    dep["cond"] = [(g_, (Q5 - (need_by - e5_t) * g_) / (1.0 - f_hi), (Q5 - (need_by - e5_t) * g_) / (1.0 - f_lo),
+                    max(0.0, (Q3 - (need_by - e3o_t) * g_) / (1.0 - f_hi))) for g_ in (2.0, 1.9, c["g_e3o"])]
+    deep_ov = dict(hold_ov)
+    for n_ in DEEP_OFF:
+        if n_ not in [x for x, _nd, _v, _s in pb.LOADS]:
+            refuse(3, "the model has no load named %s" % n_)
+        deep_ov[n_] = pb.OFF
+    deep = comp(deep_ov)
+    q_deep = deep["case"]
+    dep["deep"] = {"q": q_deep, "shed": [(n_, hold_v.get(n_, 0.0)) for n_ in DEEP_OFF], "line": (q_deep + qb) / (need_by - e5_t),
+                   "allow": [(g_, (need_by - e5_t) * g_ - qb) for g_ in gs]}
+    conn80 = sorted(set(r_["part"] for r_ in R["screen"] if r_.get("max") == 80.0 and r_.get("where") == "inside"))
+    d_hs, d_hold = T["d_hs"], T["d_hold"]
+    dep["plate"] = {"f_hi": f_hi, "conn80": conn80,
+                    "e5": (f_hi * Q5 / (need_by - e5_t), Q5 / (80.0 - e5_t - d_hold)),
+                    "e3o": (f_hi * Q3 / (need_by - e3o_t), Q3 / (80.0 - e3o_t - d_hs), Q3 / (80.0 - e3o_t)),
+                    "e5_deep": (f_hi * (q_deep + qb) / (need_by - e5_t), (q_deep + qb) / (80.0 - e5_t - d_hold))}
+    dep["plate"]["e5_floor"] = max(dep["plate"]["e5"])
+    dep["plate"]["e3o_floor"] = max(dep["plate"]["e3o"][:2])
+    dep["plate"]["e3o_floor_out"] = max(dep["plate"]["e3o"][0], dep["plate"]["e3o"][2])
+    dep["plate"]["e5_deep_floor"] = max(dep["plate"]["e5_deep"])
+    return dep
+
+
+# ------------------------------------------------------------------------------------------------ section 10: heat rejection
+K_FIN = (2.0, 3.0)           # ASSUMPTION: the effective area multiplier of fins on the face's free strips (fixed fins under M3's
+                             # space, or a clip-on exchanger when deployed); only a vendor's heat-sink datasheet or a bench point confirms it
+K_CU = 390.0                 # W/mK, copper (textbook)
+STRAP_L, STRAP_A = 0.20, 200e-6   # ASSUMPTION: a flexible copper braid from the plate's edge to the lid, 0.20 m long, 200 mm2
+COUPLED = ("Xenarc 709GNK", "WiFi link card 1 (live)", "CM5 slot 1", "CM5 slot 2", "CM5 slot 3", "panel board C",
+           "KSZ9897R AVDDL+DVDDL 1.2 V", "KSZ9897R AVDDH 2.5 V", "KSZ9897R VDDIO 3.3 V", "NVMe slot 1", "NVMe slot 2", "NVMe slot 3",
+           "VHF PA 30 W")    # approach (b): the profile's loads that sit at or under the plate and can be led into it (INFERRED)
+
+
+def two_node(amb_c, q_air, q_plate, cfg, geo, k_fin=1.0, a_free=0.0, lid=None, n=45):
+    """The inside air and the plate as two nodes: the air takes q_air and loses it through the walls and the plate's inner face;
+    the plate takes q_plate (heat led into it by conduction) and the air's share, and rejects through its outer face (fins of
+    effective multiplier k_fin on a_free) and, with lid = (R_strap, A_skin, H), through a strap to an aluminium skin on the open
+    lid's inside. Natural convection inside (the fans' flow at zero), the bound's coefficients. Returns the rises and flows."""
+    ta = amb_c + 273.15
+    ep, es, kpp, fo = cfg["eps_plate"], cfg["eps_shell"], cfg["k_pp"], cfg["f_open"]
+    tk = geo["t_wall"] / kpp
+    a, aw, awo = geo["a_plate"], geo["a_wall"], geo["a_wall_out"]
+
+    def walls_theta(q):
+        th_wo = _inv(lambda th: awo * (h_vert(th, geo["h_out"], ta + th / 2) + h_rad(es, 1.0, ta + th, ta)) * th, q, 0.0, 500.0, n)
+        th_wi = th_wo + q * tk / (0.5 * (aw + awo))
+        return th_wi + _inv(lambda d: aw * h_vert(d, geo["h_in"], ta + th_wi + d / 2) * d, q, 0.0, 500.0, n)
+
+    def q_pi(th_a, th_p):
+        d, tf = th_a - th_p, ta + 0.5 * (th_a + th_p)
+        if d >= 0:
+            return a * h_up(d, geo["l_plate"], tf) * d
+        ra, k, _pr = _ra(-d, geo["l_plate"], tf)
+        return a * 0.27 * ra ** 0.25 * k / geo["l_plate"] * d   # a warm plate over cooler air: a stable layer (eq 9.32)
+
+    def q_po(th):
+        return ((a - a_free) + a_free * k_fin) * (h_up(th, geo["l_plate"], ta + th / 2) + h_rad(ep, fo, ta + th, ta)) * th
+
+    def q_lid(th_p):
+        if not lid or th_p <= 0:
+            return 0.0
+        r_s, a_s, h_s = lid
+
+        def h_skin(th):
+            front = h_vert(th, h_s, ta + th / 2) + h_rad(ep, 1.0, ta + th, ta)
+            back = 1.0 / (tk + 1.0 / (h_vert(th, h_s, ta + th / 2) + h_rad(es, 1.0, ta + th, ta)))
+            return front + back
+        th_s = _inv(lambda th: a_s * h_skin(th) * th - (th_p - th) / r_s, 0.0, 0.0, th_p, n)
+        return (th_p - th_s) / r_s
+
+    def air(th_p):
+        qw = _inv(lambda qw_: qw_ + q_pi(walls_theta(qw_), th_p), q_air, 0.0, 300.0, n)
+        return walls_theta(qw), qw
+    th_p = _inv(lambda th: q_po(th) + q_lid(th) - q_pi(air(th)[0], th), q_plate, 0.0, 300.0, n)
+    th_a, qw = air(th_p)
+    return {"th_a": th_a, "th_p": th_p, "walls": qw, "plate_in": q_pi(th_a, th_p), "plate_out": q_po(th_p), "lid": q_lid(th_p)}
+
+
+def heat_rejection(C, R):
+    """Section 10: the profile at REQ-024's +40 C and charging on the design day, against three approaches inside the rulings."""
+    T, A, pb, cb = C["T"], C["A"], C["pb"], R["cb"]
+    geo, cons = cb["geo"], cb["cons"]
+    f = pb.state_full("IDLESPEC", "plan")
+    q_prof = f["pb"] + pb.pack_i2r(f["pb"])
+    sh, _ = pb.load_battery_share("IDLESPEC", "plan")
+    pins = dict((n_, p_) for n_, p_, _s, _t in sh)
+    for n_ in COUPLED:
+        if n_ not in pins:
+            refuse(3, "the model has no load named %s" % n_)
+    q_c = sum(pins[n_] for n_ in COUPLED)
+    w4t = text(W4_PY)
+    m_ = need(w4t, r"the monitor window (\d+\.\d+) x (\d+\.\d+) \(glass level with the plate\) and the e-paper lens (\d+\.\d+) x (\d+\.\d+)", "the face's windows")
+    mon, epd = float(m_.group(1)) * float(m_.group(2)) / 1e6, float(m_.group(3)) * float(m_.group(4)) / 1e6
+    a_free = geo["a_plate"] - mon - epd
+    cmt = text(CM)
+    m3 = need(cmt, r"\| M3 \| Space under the QMX tray[^\n]*?\| MET \| \+([\d.]+) \| \+([\d.]+) \| \+([\d.]+) \| \+([\d.]+) \|", "CASE-MARGINS M3")
+    ext = need(cmt, r"\| Exterior \| (\d+) x (\d+) \|", "the exterior")
+    lid_h = float(ext.group(2)) / 1000.0
+    t3 = float(need(text(TP), r"no charge starts while the gauge reads above (\d+) C \(T3\)", "T3").group(1))
+    day = need(text(REPLAY), r"over SC-37's hourly air \((\d+\.\d) to (\d+\.\d) C\)", "SC-37's air")
+    day = (float(day.group(1)), float(day.group(2)))
+    lim, t_use = ap_need_by(R), T["t_use"]
+    r_strap = STRAP_L / (K_CU * STRAP_A)
+    lid = (r_strap, geo["a_lid_top"], lid_h)
+    need_g = q_prof / (lim - t_use)
+    need_ch = (q_prof / (t3 - day[0]), q_prof / (t3 - day[1]))
+    rows = [("none: the bound", 0.0, 1.0, None), ("(a) fins on the free strips, k %.0f" % K_FIN[0], 0.0, K_FIN[0], None),
+            ("(a) fins on the free strips, k %.0f" % K_FIN[1], 0.0, K_FIN[1], None), ("(b) the large loads led into the plate", q_c, 1.0, None),
+            ("(b) with (a)'s fins, k %.0f" % K_FIN[1], q_c, K_FIN[1], None), ("(c) the open lid's skin on a strap", 0.0, 1.0, lid),
+            ("(b) + (a) + (c): the best route", q_c, K_FIN[1], lid)]
+    out = []
+    for lbl, qc, kf, ld in rows:
+        r_ = {"label": lbl, "q_c": qc, "k": kf}
+        for key, amb in (("use", t_use), ("day_cold", day[0]), ("day_warm", day[1])):
+            o = two_node(amb, q_prof - qc, qc, cons, geo, kf, a_free, ld)
+            o["air"], o["plate"], o["g"] = amb + o["th_a"], amb + o["th_p"], q_prof / o["th_a"]
+            r_[key] = o
+        out.append(r_)
+    best = out[-1]
+    # the heat the best route rejects with the air at the +70 C class at +40 C: a secant on the air's own share
+    qa_lo, qa_hi = 0.5 * (q_prof - q_c), q_prof - q_c
+    th_lo = two_node(t_use, qa_lo, q_c, cons, geo, K_FIN[1], a_free, lid)["th_a"]
+    th_hi = best["use"]["th_a"]
+    target = lim - t_use
+    for _ in range(4):
+        qa_x = qa_lo + (target - th_lo) * (qa_hi - qa_lo) / (th_hi - th_lo)
+        th_x = two_node(t_use, qa_x, q_c, cons, geo, K_FIN[1], a_free, lid)["th_a"]
+        qa_lo, th_lo, qa_hi, th_hi = qa_hi, th_hi, qa_x, th_x
+    q_max_best = qa_x + q_c
+    q_max_bare = enclosure_g(t_use, target, "open", cons, geo)["g"] * target
+    fi = pb.state_full("IDLE", "plan")
+    q_idle = fi["pb"] + pb.pack_i2r(fi["pb"])
+    # the smallest experiment for this question: one lid-open, fans-on point at two heaters, about the profile's heat
+    import math
+    t1 = R["dep"]["th1"]
+    ph = 2.0 * A["rta_heater"][2]
+
+    def u_rel(dt):
+        return 2.0 * math.sqrt((t1["u_dt"] / dt) ** 2 + P_U_REL ** 2 + LEAD_U_REL ** 2)
+
+    def reading_for(tg):
+        return _inv(lambda g_: g_ * (1.0 - u_rel(ph / g_)), tg, 0.3, 20.0)
+    exp2 = [(lbl, tg, reading_for(tg), ph / reading_for(tg)) for lbl, tg in (
+        ("the profile at +40 C, the +70 C class, no route", need_g),
+        ("charging with the profile on the design day's cold end", q_prof / (t3 - day[0])),
+        ("charging with the profile on the design day's warm end", q_prof / (t3 - day[1])))]
+    return {"q_prof": q_prof, "q_c": q_c, "coupled": [(n_, pins[n_]) for n_ in COUPLED], "a_free": a_free, "mon": mon, "epd": epd,
+            "m3": tuple(float(x) for x in m3.groups()), "lid_h": lid_h, "r_strap": r_strap, "t3": t3, "day": day, "lim": lim,
+            "need_g": need_g, "need_ch": need_ch, "rows": out, "q_max_best": q_max_best, "q_max_bare": q_max_bare,
+            "short_w": q_prof - q_max_best, "short_g": need_g - best["use"]["g"], "short_w_bare": q_prof - q_max_bare,
+            "reaches": best["use"]["air"] <= lim + 1e-9, "charges": best["day_warm"]["air"] <= t3 + 1e-9 and best["day_cold"]["air"] <= t3 + 1e-9,
+            "short_ch": (q_prof / (t3 - day[0]) - best["day_cold"]["g"], q_prof / (t3 - day[1]) - best["day_warm"]["g"]),
+            "q_idle": q_idle, "exp2": exp2, "exp_power": ph, "fin_mass": a_free * (1.5 / 8.0) * float(m3.group(4)) / 1000.0 * 2700.0,
+            "skin_mass": geo["a_lid_top"] * 0.001 * 2700.0, "strap_mass": STRAP_L * STRAP_A * 8960.0}
+
+
+def t_use_(R):
+    return R["T"]["t_use"]
+
+
+def ap_need_by(R):
+    return R["ap"]["c"]["trip"]["need_by"]
+
+
+def conservative_bound(C, R, ap, dep):
+    """Section 9: a first-principles conservative lower bound on the conductance in each lid state with the fans, against the
+    lines and the session's fallback; U-02's class (CONFIRMS or DECIDES) and the smallest experiment."""
+    import math
+    T, A, w4 = C["T"], C["A"], C["w4"]
+    gm = A["geo_m"]
+    gap = [float(x) / 1000.0 for x in need(text(W4_PY), r"the (\d+\.\d+) to (\d+\.\d+) mm enclosed gap", "W4's lid gap").groups()]
+    geo = {"a_plate": w4.A_FACE, "l_plate": w4.A_FACE / (2.0 * (0.3655 + 0.2495)),
+           "a_wall": 2.0 * (gm["mid"][0] + gm["mid"][1]) * gm["shoulder"], "h_in": gm["shoulder"], "h_out": gm["depth"],
+           "a_wall_out": 2.0 * (gm["mid"][0] + gm["mid"][1] + 4.0 * gm["t_wall"]) * gm["depth"], "feet": gm["feet"] / 1000.0,
+           "l_floor": gm["floor"][0] * gm["floor"][1] / (2.0 * (gm["floor"][0] + gm["floor"][1])),
+           "t_wall": gm["t_wall"], "l_flow": gm["mid"][0],
+           "a_lid_top": gm["ceiling"][0] * gm["ceiling"][1], "l_lid": gm["ceiling"][0] * gm["ceiling"][1] / (2.0 * (gm["ceiling"][0] + gm["ceiling"][1])),
+           "a_lid_skirt": 2.0 * (gm["parting"][0] + gm["parting"][1]) * gm["lid_depth"], "lid_depth": gm["lid_depth"],
+           "gap": max(gap), "a_floor": gm["floor"][0] * gm["floor"][1]}
+    cons = {"eps_plate": EPS_PLATE[0], "eps_shell": EPS_SHELL[0], "k_pp": K_PP[0], "f_open": F_OPEN[0], "v": 0.0, "rad_in": False}
+    opt = {"eps_plate": EPS_PLATE[1], "eps_shell": EPS_SHELL[1], "k_pp": K_PP[1], "f_open": F_OPEN[1], "v": 0.0, "rad_in": False}
+    c = ap["c"]
+    marg = {"E5": (A["e5"][4], c["trip"]["need_by"] - A["e5"][4]), "E3-O": (A["e3o_t"], c["trip"]["need_by"] - A["e3o_t"])}
+    cb = {"geo": geo, "cons": cons, "opt": opt, "gap": gap}
+    for mg, (amb, rise) in marg.items():
+        r_ = {"amb": amb, "rise": rise, "open": enclosure_g(amb, rise, "open", cons, geo), "open_opt": enclosure_g(amb, rise, "open", opt, geo),
+              "closed": enclosure_g(amb, rise, "closed", cons, geo)}
+        r_["v"] = [(v_, enclosure_g(amb, rise, "open", dict(cons, v=v_), geo)["g"]) for v_ in V_SENS]
+        r_["rad"] = enclosure_g(amb, rise, "open", dict(cons, rad_in=True), geo)["g"]
+        r_["rad_v"] = enclosure_g(amb, rise, "open", dict(cons, rad_in=True, v=0.5), geo)["g"]
+        r_["floor"] = enclosure_g(amb, rise, "open", dict(cons, floor=True), geo)["g"]
+        r_["cap"] = enclosure_g(amb, rise, "open", dict(cons, v=50.0), geo)["g"]
+        r_["opt_all"] = enclosure_g(amb, rise, "open", dict(opt, floor=True, rad_in=True, v=1.0), geo)["g"]
+        cb[mg] = r_
+    cb["env_closed"] = enclosure_g(T["t_use"], 15.0, "closed", cons, geo)
+    cb["env_open"] = enclosure_g(T["t_use"], 15.0, "open", cons, geo)
+    # the floors the bound is compared with: section 8's (W4's plate fraction) and the same recomputed on the bound's own films
+    qd, q5, q3 = dep["deep"]["q"] + T["qb"], T["q_m"] + T["qb"], T["q_hs"] + T["qb"]
+    d5, d3 = T["d_hold"], T["d_hs"]
+    fb5, fb3 = cb["E5"]["open"]["f_plate"], cb["E3-O"]["open"]["f_plate"]
+    lim70, lim80, lim85 = c["trip"]["need_by"], 80.0, 85.0
+    a5, a3 = marg["E5"][0], marg["E3-O"][0]
+    fl = {
+        "E5": {"section 8 (W4's plate fraction), F4 with F3": dep["plate"]["e5_deep_floor"],
+               "the bound's plate fraction, F4 with F3, the +80 C connectors in the exhaust": max(fb5 * qd / (lim70 - a5), qd / (lim80 - a5 - d5)),
+               "the same, the connectors out of the exhaust": max(fb5 * qd / (lim70 - a5), qd / (lim80 - a5)),
+               "the same, the +80 C connectors replaced by +85 C parts (the module's +85 C binds)": max(fb5 * qd / (lim70 - a5), qd / (lim85 - a5))},
+        "E3-O": {"section 8 (W4's plate fraction), F4": dep["plate"]["e3o_floor"],
+                 "section 8, F4, the connectors out of the exhaust": dep["plate"]["e3o_floor_out"],
+                 "the bound's plate fraction, F4, the +80 C connectors in the exhaust": max(fb3 * q3 / (lim70 - a3), q3 / (lim80 - a3 - d3)),
+                 "the same, the connectors out of the exhaust": max(fb3 * q3 / (lim70 - a3), q3 / (lim80 - a3)),
+                 "the same, the +80 C connectors replaced by +85 C parts (the module's +85 C binds)": max(fb3 * q3 / (lim70 - a3), q3 / (lim85 - a3))}}
+    cb["floors"] = fl
+    cb["lines"] = {"E5": c["gmax"], "E3-O": c["g_e3o"]}
+
+    def settle(amb, q):
+        r = _inv(lambda r_: enclosure_g(amb, r_, "open", cons, geo)["g"] * r_, q, 0.05, 400.0)
+        e = enclosure_g(amb, r, "open", cons, geo)
+        return {"rise": r, "air": amb + r, "plate": amb + e["f_plate"] * r, "g": e["g"]}
+    ops = {"E5, the hold": (a5, q5, d5), "E5, the deeper hold (F3)": (a5, qd, d5), "E3-O, the heat stage": (a3, q3, d3)}
+    cb["ops"] = {}
+    for k_, (amb, q, dpl) in ops.items():
+        o = settle(amb, q)
+        o["checks"] = [("the +70 C class on the plate (F4)", o["plate"], lim70), ("the +80 C connectors in the exhaust", o["air"] + dpl, lim80),
+                       ("the +80 C connectors out of it", o["air"], lim80), ("the module, +85 C at its intake (device set)", o["air"], lim85)]
+        cb["ops"][k_] = o
+    # with every session measure (F4, F3 in E5, the connectors to +85 C parts, the HX magnetics and the wider buttons) the
+    # module's +85 C binds: the conductance it needs against the bound's at the same rise
+    cb["bind"] = {}
+    for k_, amb, q in (("E5 with F4 and F3", a5, qd), ("E3-O with F4", a3, q3)):
+        need_g = q / (lim85 - amb)
+        have = enclosure_g(amb, lim85 - amb, "open", cons, geo)["g"]
+        cr = {"internal radiation credited": dict(cons, rad_in=True), "the floor credited": dict(cons, floor=True),
+              "internal radiation and the floor credited": dict(cons, rad_in=True, floor=True)}
+        credits = [(lbl, enclosure_g(amb, lim85 - amb, "open", cfg_, geo)["g"]) for lbl, cfg_ in cr.items()]
+        gv = lambda v_: enclosure_g(amb, lim85 - amb, "open", dict(cons, v=v_), geo)["g"]
+        v_need = _inv(gv, need_g, 0.0, 20.0) if need_g > have and gv(20.0) >= need_g else (0.0 if need_g <= have else None)
+        gvr = lambda v_: enclosure_g(amb, lim85 - amb, "open", dict(cons, v=v_, rad_in=True, floor=True), geo)["g"]
+        v_need_cr = _inv(gvr, need_g, 0.0, 20.0) if need_g > credits[-1][1] and gvr(20.0) >= need_g else (0.0 if need_g <= credits[-1][1] else None)
+        cb["bind"][k_] = {"need": need_g, "have": have, "gap": need_g - have, "rise": lim85 - amb, "credits": credits, "v_need": v_need,
+                          "v_need_cr": v_need_cr}
+    # the lines need more than any inside film can give on the bound's outside: the cap with an unbounded inside film
+    cb["cap"] = {mg: enclosure_g(marg[mg][0], marg[mg][1], "open", dict(cons, v=50.0), geo)["g"] for mg in marg}
+    cb["air_at_bound"] = {"E5": a5 + q5 / cb["E5"]["open"]["g"], "E5_deep": a5 + qd / cb["E5"]["open"]["g"], "E3-O": a3 + q3 / cb["E3-O"]["open"]["g"]}
+    best = {mg: max(cb[mg]["open"]["g"], 0.0) for mg in marg}
+    cb["clears"] = {"E5": cb["bind"]["E5 with F4 and F3"]["gap"] <= 0, "E3-O": cb["bind"]["E3-O with F4"]["gap"] <= 0}
+    cb["gap_w"] = {"E5": cb["bind"]["E5 with F4 and F3"]["gap"], "E3-O": cb["bind"]["E3-O with F4"]["gap"]}
+    cb["gap_s8"] = {"E5": fl["E5"]["section 8 (W4's plate fraction), F4 with F3"] - best["E5"],
+                    "E3-O": fl["E3-O"]["section 8 (W4's plate fraction), F4"] - best["E3-O"]}
+    cb["klass"] = "CONFIRMS" if all(cb["clears"].values()) else "DECIDES"
+    # W4's 1.22 W/K reconciled: W4's low case, then one assumption at a time replaced by the bound's
+    hin, hof, how, hfl, tk = w4.H_IN_FANS[0], w4.H_OUT_FACE[0], w4.H_OUT_WALL[0], w4.H_OUT_FLOOR[0], w4.T_OVER_K_WALL
+    e5o = cb["E5"]["open"]
+    ta = marg["E5"][0] + 273.15
+    # the bound's converged films, from its paths: back-calculate effective per-area conductances
+    def w4lin(a_side, a_floor, h_in_, h_out_face, h_out_wall, h_floor, tk_):
+        g_ = a_side / (1.0 / h_in_ + tk_ + 1.0 / h_out_wall) + w4.series(w4.A_FACE * h_in_, w4.A_FACE * h_out_face)
+        if h_floor:
+            g_ += a_floor / (1.0 / h_in_ + tk_ + 1.0 / h_floor)
+        return g_
+    # the bound's films at E5 (lid open), evaluated at its own solution
+    th_a = marg["E5"][1]
+    qp, qw = e5o["q"]["plate"], e5o["q"]["walls"]
+    th_p = e5o["f_plate"] * th_a
+    hin_b = qp / (w4.A_FACE * (th_a - th_p))
+    hout_face_b = qp / (w4.A_FACE * th_p)
+    a_w = geo["a_wall"]
+    th_wo = _inv(lambda th: a_w * (h_vert(th, geo["h_out"], ta + th / 2) + h_rad(cons["eps_shell"], 1.0, ta + th, ta)) * th, qw, 0.0, 500.0)
+    tk_b = geo["t_wall"] / cons["k_pp"]
+    th_wi = th_wo + qw * tk_b / a_w
+    hin_w = qw / (a_w * (th_a - th_wi))
+    hout_w = qw / (a_w * th_wo)
+    steps = [("W4's low case (lid open, fans)", w4lin(w4.A_SIDE[0], w4.A_FLOOR[0], hin, hof, how, hfl, tk))]
+    steps.append(("the floor adiabatic (the case on its feet)", w4lin(w4.A_SIDE[0], w4.A_FLOOR[0], hin, hof, how, None, tk)))
+    steps.append(("the walls' inner area to the plate (CASE-MARGINS)", w4lin(a_w, 0, hin, hof, how, None, tk)))
+    steps.append(("the wall 5.34 mm of PP at 0.12 W/mK", w4lin(a_w, 0, hin, hof, how, None, tk_b)))
+    steps.append(("the outer films at +60 C with the conservative emissivities and the lid's view", w4lin(a_w, 0, hin, hout_face_b, hout_w, None, tk_b)))
+    steps.append(("the inside film: natural convection only, no fan flow and no internal radiation credited",
+                  a_w / (1.0 / hin_w + tk_b + 1.0 / hout_w) + w4.series(w4.A_FACE * hin_b, w4.A_FACE * hout_face_b)))
+    cb["recon"] = steps
+    cb["films"] = {"hin_plate": hin_b, "hin_wall": hin_w, "hout_face": hout_face_b, "hout_wall": hout_w}
+    # the smallest experiment: one lid-open, fans-on point at one heater's power; reading thresholds with the expanded uncertainty
+    t1 = dep["th1"]
+    ph = A["rta_heater"][2]
+
+    def u_rel(dt):
+        return 2.0 * math.sqrt((t1["u_dt"] / dt) ** 2 + P_U_REL ** 2 + LEAD_U_REL ** 2)
+
+    def reading_for(target):
+        return _inv(lambda g_: g_ * (1.0 - u_rel(ph / g_)), target, 0.3, 20.0)
+    targets = [("E5's line, the design as stated (route (c))", c["gmax"]),
+               ("E3-O with F4, the connectors in the exhaust (section 8)", fl["E3-O"]["section 8 (W4's plate fraction), F4"]),
+               ("E3-O with F4, the connectors out of the exhaust (section 8)", fl["E3-O"]["section 8, F4, the connectors out of the exhaust"]),
+               ("E5 with F4 and F3 (section 8)", fl["E5"]["section 8 (W4's plate fraction), F4 with F3"]),
+               ("E3-O with every session measure (the module's +85 C binds)", cb["bind"]["E3-O with F4"]["need"]),
+               ("E5 with every session measure (the module's +85 C binds)", cb["bind"]["E5 with F4 and F3"]["need"])]
+    cb["exp"] = {"power": ph, "targets": [(lbl, tg, reading_for(tg), ph / reading_for(tg)) for lbl, tg in targets],
+                 "tau_bound": max(T["kJ"]) * 1000.0 / best["E3-O"] / 3600.0, "tau_line": t1["tau_line"],
+                 "rise_bound": ph / best["E5"]}
+    cb["exp"]["t_bound"] = math.log(100.0) * cb["exp"]["tau_bound"]
+    return cb
+
+
+# ------------------------------------------------------------------------------------------------ section 9: the conservative bound
+# Coefficients of the first-principles lower bound (the consolidation's question of 2 October 2026). Each range is a textbook one
+# (INFERRED: no held sheet gives it); the bound takes the end that lowers the conductance, the other end is printed beside it.
+EPS_PLATE = (0.70, 0.90)     # anodised aluminium (32.53: the plate is anodised), clear to black anodise, textbook emissivity tables
+EPS_SHELL = (0.85, 0.95)     # pigmented polypropylene, textbook emissivity tables; Peli publishes none
+EPS_BOARD = 0.85             # solder-masked boards facing the plate (textbook 0.85 to 0.95), for the internal radiation credit only
+K_PP = (0.12, 0.22)          # W/mK, polypropylene copolymer, textbook polymer tables; Peli publishes none
+F_OPEN = (0.70, 1.00)        # ASSUMPTION: the plate's view of the surroundings past the open lid (the lid taken as reradiating)
+F_VIEW_IN = 0.5              # ASSUMPTION: the plate's view of the dissipating stack beneath it, for the internal radiation credit only
+V_SENS = (0.2, 0.5, 1.0)     # m/s across the inner faces, the fans' forced flow as a sensitivity (no held placement or pick)
+G_N = 9.81
+
+
+def air_props(t_k):
+    """Dry air at t_k: Sutherland's laws for the viscosity and the conductivity (White, Viscous Fluid Flow), the ideal gas,
+    cp 1007 J/kgK. Returns k, nu, alpha, Pr, beta (INFERRED, textbook)."""
+    mu = 1.716e-5 * (t_k / 273.15) ** 1.5 * (273.15 + 110.4) / (t_k + 110.4)
+    k = 0.0241 * (t_k / 273.15) ** 1.5 * (273.15 + 194.0) / (t_k + 194.0)
+    rho = P_ATM / (R_AIR * t_k)
+    return k, mu / rho, k / (rho * CP_AIR), mu * CP_AIR / k, 1.0 / t_k
+
+
+def _ra(dt, length, t_film):
+    k, nu, al, pr, be = air_props(t_film)
+    return G_N * be * abs(dt) * length ** 3 / (nu * al), k, pr
+
+
+def h_up(dt, length, t_film):
+    """A heated plate facing up, or a cooled one facing down: Nu = 0.54 Ra^(1/4) (Ra up to 1e7), 0.15 Ra^(1/3) above,
+    L = A/P (McAdams; Lloyd and Moran; Incropera and DeWitt eqs 9.30 and 9.31)."""
+    if dt <= 0:
+        return 0.0
+    ra, k, _pr = _ra(dt, length, t_film)
+    nu_ = 0.54 * ra ** 0.25 if ra < 1e7 else 0.15 * ra ** (1.0 / 3.0)
+    return nu_ * k / length
+
+
+def h_vert(dt, length, t_film):
+    """A vertical plate: Churchill and Chu, Nu = {0.825 + 0.387 Ra^(1/6) / [1 + (0.492/Pr)^(9/16)]^(8/27)}^2, L = height."""
+    if dt <= 0:
+        return 0.0
+    ra, k, pr = _ra(dt, length, t_film)
+    nu_ = (0.825 + 0.387 * ra ** (1.0 / 6.0) / (1.0 + (0.492 / pr) ** (9.0 / 16.0)) ** (8.0 / 27.0)) ** 2
+    return nu_ * k / length
+
+
+def h_gap(dt, gap, t_mean):
+    """A horizontal air layer heated from below: Hollands et al. (1975), Nu = 1 + 1.44 [1 - 1708/Ra]+ + [(Ra/5830)^(1/3) - 1]+."""
+    if dt <= 0:
+        return air_props(t_mean)[0] / gap
+    ra, k, _pr = _ra(dt, gap, t_mean)
+    nu_ = 1.0 + 1.44 * max(0.0, 1.0 - 1708.0 / ra) + max(0.0, (ra / 5830.0) ** (1.0 / 3.0) - 1.0)
+    return nu_ * k / gap
+
+
+def h_forced(v, length, t_film):
+    """Forced laminar flow along a flat plate, average: Nu = 0.664 Re^(1/2) Pr^(1/3) (Re under 5e5)."""
+    k, nu, _al, pr, _be = air_props(t_film)
+    return 0.664 * (v * length / nu) ** 0.5 * pr ** (1.0 / 3.0) * k / length
+
+
+def h_rad(eps, view, t1_k, t2_k):
+    return eps * view * SIGMA * (t1_k ** 2 + t2_k ** 2) * (t1_k + t2_k)
+
+
+def _inv(fun, target, lo, hi, n=60):
+    for _ in range(n):
+        mid = 0.5 * (lo + hi)
+        if fun(mid) < target:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
+
+
+def enclosure_g(amb_c, rise, lid, cfg, geo):
+    """The inside air's conductance to the ambient at a stated air rise (K), lid 'open' or 'closed', from the plate and wall
+    paths in parallel (the floor adiabatic unless cfg names a film). Each path is solved for its heat q at the rise."""
+    ta = amb_c + 273.15
+    ep, es, kpp, f_open = cfg["eps_plate"], cfg["eps_shell"], cfg["k_pp"], cfg["f_open"]
+    tk = geo["t_wall"] / kpp
+
+    def h_in(face, d, t_surf_k, t_air_k):
+        tf = 0.5 * (t_surf_k + t_air_k)
+        hn = h_up(d, geo["l_plate"], tf) if face == "plate" else h_vert(d, geo["h_in"], tf)
+        hf = h_forced(cfg["v"], geo["l_flow"], tf) if cfg["v"] > 0 else 0.0
+        h = (hn ** 3 + hf ** 3) ** (1.0 / 3.0)
+        if face == "plate" and cfg["rad_in"]:
+            h += h_rad(1.0 / (1.0 / EPS_BOARD + 1.0 / ep - 1.0), F_VIEW_IN, t_air_k, t_surf_k)
+        return h
+
+    def rise_inside(q, area, face, th_s):
+        ts = ta + th_s
+        return _inv(lambda d: area * h_in(face, d, ts, ts + d) * d, q, 0.0, 500.0)
+
+    def plate_open(q):
+        a = geo["a_plate"]
+        th_p = _inv(lambda th: a * (h_up(th, geo["l_plate"], ta + th / 2) + h_rad(ep, f_open, ta + th, ta)) * th, q, 0.0, 500.0)
+        return th_p + rise_inside(q, a, "plate", th_p)
+
+    def plate_closed(q):
+        a, at, ask = geo["a_plate"], geo["a_lid_top"], geo["a_lid_skirt"]
+        th_lo = _inv(lambda th: (at * (h_up(th, geo["l_lid"], ta + th / 2) + h_rad(es, 1.0, ta + th, ta))
+                                 + ask * (h_vert(th, geo["lid_depth"], ta + th / 2) + h_rad(es, 1.0, ta + th, ta))) * th, q, 0.0, 500.0)
+        th_li = th_lo + q * tk / (at + ask)
+        e_gap = 1.0 / (1.0 / ep + 1.0 / es - 1.0)
+        tli = ta + th_li
+        d_gap = _inv(lambda d: a * (h_gap(d, geo["gap"], tli + d / 2) + h_rad(e_gap, 1.0, tli + d, tli)) * d, q, 0.0, 500.0)
+        th_p = th_li + d_gap
+        return th_p + rise_inside(q, a, "plate", th_p)
+
+    def walls(q):
+        a, ao = geo["a_wall"], geo["a_wall_out"]
+        th_wo = _inv(lambda th: ao * (h_vert(th, geo["h_out"], ta + th / 2) + h_rad(es, 1.0, ta + th, ta)) * th, q, 0.0, 500.0)
+        th_wi = th_wo + q * tk / (0.5 * (a + ao))
+        return th_wi + rise_inside(q, a, "wall", th_wi)
+
+    def floor(q):
+        a = geo["a_floor"]
+        # under the floor: the feet's air gap to a support at the ambient, conduction across it and radiation (INFERRED)
+        th_fo = _inv(lambda th: a * (air_props(ta + th / 2)[0] / geo["feet"] + h_rad(1.0 / (1.0 / es + 1.0 / 0.9 - 1.0), 1.0, ta + th, ta)) * th,
+                     q, 0.0, 500.0)
+        th_fi = th_fo + q * tk / a
+        tfi = ta + th_fi
+        # above it: the warmer air over a cooler floor, a stable layer, Nu = 0.27 Ra^(1/4) (Incropera and DeWitt eq 9.32)
+        d_in = _inv(lambda d: a * (0.27 * _ra(d, geo["l_floor"], tfi + d / 2)[0] ** 0.25 * air_props(tfi + d / 2)[0] / geo["l_floor"]
+                                   if d > 0 else 0.0) * d, q, 0.0, 500.0)
+        return th_fi + d_in
+    paths = {"plate": plate_open if lid == "open" else plate_closed, "walls": walls}
+    if cfg.get("floor"):
+        paths["floor"] = floor
+    out = {}
+    for name, fn in paths.items():
+        out[name] = _inv(lambda q: fn(q), rise, 0.0, 2000.0)
+    g = sum(out.values()) / rise
+    plate_th = None
+    if lid == "open":
+        a = geo["a_plate"]
+        q = out["plate"]
+        plate_th = _inv(lambda th: a * (h_up(th, geo["l_plate"], ta + th / 2) + h_rad(ep, f_open, ta + th, ta)) * th, q, 0.0, 500.0)
+    return {"g": g, "q": out, "f_plate": None if plate_th is None else plate_th / rise}
+
+
 def compute():
     C = base()
     R, S, T, A, pb, red2 = C["R"], C["S"], C["T"], C["A"], C["pb"], C["red2"]
@@ -1155,7 +1857,7 @@ def compute():
     e3o_mix = L_c["E3-O"]["mixed"]
     need_by = min(pr["lim"]["E5"] for pr in R["parts_now"] if pr["k"] in HOLD_OFF)
     tol = S["tmp117_acc"]["v"][0]
-    rate = (e5_t - e5_lo) / E5_RAMP_H / 3600.0
+    rate = (e5_t - e5_lo) / A["m507"]["ramp_h"] / 3600.0
     lag = rate * (READ_S + TAU_S)
     width = need_by - e3o_mix
     e_allow = (width - 2.0 * tol - lag) / 2.0
@@ -1257,6 +1959,9 @@ def compute():
     R["sgp_forced"] = (not sgp["held_closed"]) or sgp["stor_out"]
     R["forced"] = R["forced_margin"] + (["SGP41 in the envelope"] if R["sgp_forced"] else [])
     R["g2"] = {"g": 2.0, "e3o": e3o_t + q_env / 2.0, "e5": e5_t + (T["q_m"] + qb) / 2.0}
+    R["dep"] = dep = dependency(C, R, ap, gc_all, parts_c)
+    R["cb"] = conservative_bound(C, R, ap, dep)
+    R["hr"] = heat_rejection(C, R)
     # ======================================================== 8: the predicates
     p = {}
     p["P1 pwr_budget and pwr_red2 reproduced byte for byte before any figure"] = R["r0a"] and R["r0b"] and R["r0c"]
@@ -1308,6 +2013,31 @@ def compute():
         e_allow > 0 and ap["c"]["trip"]["plume_window"] < 0)
     p["P14 no location holds the SGP41 to Table 4 in the envelope: the coolest skin's line over every lid-closed conductance held, storage outside Table 4"] = (
         not sgp["held_closed"] and sgp["held_open"] and sgp["stor_out"] and sgp["stop_bind"])
+    d = R["dep"]
+    rw = d["rows"]
+    p["P15 the lines' basis: Q over the room to +70 C gives 2.159, 1.806 and 2.709 W/K, and E5's heat is its loads, losses and shore loss summed"] = (
+        abs(rw["E5, the hold"]["G"] - gmax_c) < 1e-9 and abs(rw["E3-O, the heat stage"]["G"] - gc_e3o) < 1e-9 and abs(rw["E5, no hold"]["G"] - gmax_a) < 1e-9
+        and abs(d["hold"]["p_load"] + d["hold"]["loss"] + d["hold"]["dist"] + d["hold"]["front"] - T["q_m"]) < 1e-9
+        and abs(sum(d["hold"]["place"].values()) - T["q_m"]) < 1e-9)
+    p["P16 the fans' power is counted: rv-pwr's rows, load_trace's tier-R rows in the 42.8 W profile the replay carries, none among its W with no document"] = (
+        len(d["fans_running"]["E5"]) == 2 and len(A["trace_fans"]) == 4 and all(t_ == "R" for _w, t_, _n in A["trace_fans"])
+        and A["replay_profile"][0] == A["trace_total"][1] and not any("fan" in nm for _w, nm in A["replay_undoc"][1])
+        and abs(sum(w_ for w_, _n in A["replay_undoc"][1]) - A["replay_undoc"][0]) < 0.011 and abs(d["fan_power"][0]["plan"]["state"] - A["trace_total"][1]) < 0.05)
+    p["P17 T-H1's pass line lies over 2.159 W/K by its expanded uncertainty and every point reaches steady state in a stated time"] = (
+        all(v_["pass"] > gmax_c for v_ in d["th1"]["ub"].values()) and 0 < d["th1"]["t_ss"][0] < d["th1"]["t_ss"][1])
+    p["P18 the plate coupling holds E5 and E3-O below E3-O's line, and the deeper hold lowers E5's heat (the session's fallbacks)"] = (
+        d["plate"]["e5_floor"] < gc_e3o and d["plate"]["e3o_floor"] < gc_e3o and d["deep"]["q"] < T["q_m"] and d["plate"]["e5_deep_floor"] < d["plate"]["e5_floor"])
+    cb = R["cb"]
+    p["P19 the conservative bound comes from held geometry at the coefficients' conservative ends, under W4's low case, and the reconciliation ends at it"] = (
+        abs(cb["recon"][0][1] - T["w4_open"][0]) < 1e-9 and abs(cb["recon"][-1][1] - cb["E5"]["open"]["g"]) < 1e-6
+        and cb["E5"]["open"]["g"] < cb["E5"]["open_opt"]["g"] < T["w4_open"][0] and cb["E3-O"]["open"]["g"] < cb["E3-O"]["open_opt"]["g"])
+    p["P20 U-02's class follows from the bound: the lines over the outside films' cap, E3-O's gap positive with every session measure, so T-H1 decides"] = (
+        cb["cap"]["E5"] < cb["lines"]["E5"] and cb["cap"]["E3-O"] < cb["lines"]["E3-O"] and cb["gap_w"]["E3-O"] > 0 and cb["gap_w"]["E5"] <= 0
+        and cb["klass"] == "DECIDES")
+    hr = R["hr"]
+    p["P21 heat rejection on the bound: no approach reaches the profile at +40 C (the best short by a positive margin) nor charging on the design day; U-02 stays a closure condition"] = (
+        not hr["reaches"] and not hr["charges"] and hr["short_w"] > 0 and hr["short_g"] > 0 and all(x > 0 for x in hr["short_ch"])
+        and hr["rows"][-1]["use"]["g"] == max(r_["use"]["g"] for r_ in hr["rows"]) and hr["q_idle"] < hr["q_max_best"] < hr["q_prof"])
     R["pred"] = p
     return R
 
@@ -1361,6 +2091,9 @@ def render(R):
     S, T, A, ap = R["S"], R["T"], R["A"], R["ap"]
     out = []
     w = out.append
+    C_ = {"hin_still": tuple(R["w4"]["hin_still"]), "a_side": tuple(R["w4"]["a_side"]), "prof_pb": R["dep"]["fan_power"][0]["plan"]["state"]}
+    import math
+    math_log100 = math.log(100.0)
 
     def para(text_, first="   ", rest="   "):
         for ln in textwrap.wrap(text_, width=128, initial_indent=first, subsequent_indent=rest, break_on_hyphens=False):
@@ -1369,7 +2102,9 @@ def render(R):
     w("l4e12_thermal.py: layer 4 task L4-E12 (MESHSAT-1478 under MESHSAT-1357). The kit's electronics against the inside air at")
     w("D-02a's +55 C operating margin (E3-O) and E5's +60 C dwell in the sealed Peli 1450. Prototype design, desk arithmetic: nothing")
     w("is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMPTION, CONDITIONAL. Revised after the focused")
-    w("check astra-check-l4e12-1 and the targeted recheck astra-check-l4e12-2 (the record's section 12 maps each item to its change).")
+    w("check astra-check-l4e12-1 and the targeted recheck astra-check-l4e12-2 (the record's section 12 maps each item to its change);")
+    w("section 8 is the dependency round of 2 October 2026 on U-02 (the record's section 13), section 9 the conservative bound (section 14),")
+    w("section 10 the heat-rejection question (section 15).")
     w("")
     w("0 Reproductions and inputs")
     w("0a pwr_budget.py re-run in a child: pwr_budget.out and pwr_budget.json byte for byte: %s" % ("yes" if R["r0a"] else "NO"))
@@ -1430,8 +2165,9 @@ def render(R):
         T["t_use"], T["g_floor"], S["sgp_rec"]["v"][1]))
     w("   %.3f W/K with the ballasts (a finding for LO-01a's owner and for E3-L's \"+55 C\" line; the record's downstream table);" % (
         (T["q_hs"] + T["qb"]) / (S["sgp_rec"]["v"][1] - T["t_use"])))
-    w("   L4-E10's printed 1.6664 W/K, 70.00 and 75.00 C agree: %s (%.2f, %.2f C uncond.)" % ("yes" if T["agree_g"] and T["agree_air"] else "NO", *T["air_uncond"]))
-    w("2c L4-E8's ballasts, %.2f W at the bound's worst corner (MODELED by L4-E8, cited from L4-E9 IF-08): +%.3f K. The inside air" % (T["qb"], T["ballast_k"]))
+    w("   L4-E10's %.4f W/K, %.2f and %.2f C (read from %s) agree: %s (%.2f, %.2f C uncond.)" % (
+        A["l4e10_floor"], A["l4e10_air"][0], A["l4e10_air"][1], L4E10_OUT.split("/")[-1], "yes" if T["agree_g"] and T["agree_air"] else "NO", *T["air_uncond"]))
+    w("2c L4-E8's ballasts, %.2f W at the bound's worst corner (MODELED by L4-E8, read from %s): +%.3f K. The inside air" % (T["qb"], L4E8_OUT.split("/")[-1], T["ballast_k"]))
     w("   (mixed) at the floor:")
     w("   E3-O %.2f C, E5's dwell %.2f C (steady; a 4 h E3-O from a kit at +55 C reaches %.2f to %.2f C at 32.53's %.0f to %.0f kJ/K," % (
         T["air"]["E3-O"], T["air"]["E5"], T["e3o_4h"][1], T["e3o_4h"][0], T["kJ"][1], T["kJ"][0]))
@@ -1567,7 +2303,7 @@ def render(R):
     w("   Taken from it: the reference's error twice (board B's TMP117, +-%.1f C to 100 C, MAKER %s), E5's fastest rise %.1f K/h (the" % (
         tr["tol"], S["tmp117_acc"]["where"], tr["rate_k_h"]))
     w("   chamber's %d to %d C in %.0f h, Method 507.6 as L4-E10 transcribed it) times a %.0f s reading and response lag (ASSUMPTION):" % (
-        R["A"]["e5"][3], R["A"]["e5"][4], E5_RAMP_H, READ_S + TAU_S))
+        R["A"]["e5"][3], R["A"]["e5"][4], R["A"]["m507"]["ramp_h"], READ_S + TAU_S))
     w("   %.6f K. What is left bounds the reference's offset to the air at the +70 C parts: at most +-%.6f K (INFERRED). The TMP117 is" % (
         tr["lag"], tr["e_allow"]))
     w("   a board sensor under the coolers: across the exhaust's 0 to %.2f K the window is %.2f K, so it DOES NOT EXIST unless the" % (
@@ -1701,7 +2437,320 @@ def render(R):
          "over) or the parts discipline's derating rule (Layer 6): %s." % (len(ab), min(ab)[0], min(ab)[1], ", ".join(sorted(set(p_ for _k, p_ in ab)))),
          first="")
     w("")
-    w("8 Predicates")
+    d = R["dep"]
+    rw = d["rows"]
+    w("8 U-02 IN DEPTH (the dependency round of 2 October 2026: the owner's question on the 2.159 W/K line, its configuration, the")
+    w("  fans' power, T-H1, and what a failed reading changes)")
+    para("8a THE BASIS OF THE LINES. Each line is the heat into the sealed case divided by the room between the ambient and the limit of "
+         "the parts the air must hold, G = Q / (T_limit - T_ambient) (the mixed air at the limit, 0 K of margin):", first="")
+    for key, r_ in rw.items():
+        w("   %-22s Q %.3f W (%.3f W + the ballasts %.2f W) / (%.0f - %.0f) K = %.3f W/K; dG/dQ %.4f W/K per W, dG/dT_limit %.4f W/K per K" % (
+            key, r_["Q"], r_["q"], T["qb"], r_["lim"], r_["amb"], r_["G"], r_["dGdW"], r_["dGdK"]))
+        w("   %-22s +-1 W: %.3f to %.3f W/K; the limit +-1 K (or the ambient -+1 K): %.3f to %.3f W/K" % ("", r_["w"][0], r_["w"][1], r_["k"][0], r_["k"][1]))
+    h = d["hold"]
+    para("E5's heat under the hold, built up (MODELED, pwr_budget.py and pwr_red2.py as reproduced in 0, plan): %.3f W at the load pins, %.3f W "
+         "lost in the converters, %.3f W in the distribution (fuses, FETs, shunt, leads): %.3f W at the pack; on shore the front end's and "
+         "the charger's loss on it adds %.3f W: %.3f W into the case; L4-E8's ballasts add %.2f W at the bound's worst corner (MODELED by "
+         "L4-E8, %s, read): %.3f W. The ambient %.0f C is E5's dwell (Table 507.6-IX, %.0f to %.0f C, the dwell from 0200 to 0800, %.0f h, "
+         "transcribed in %s). The limit +%.0f C is the class the hold leaves in the air at E5 (each at its limit by 1j):" % (
+             h["p_load"], h["loss"], h["dist"], h["pack"], h["front"], h["case"], T["qb"], L4E8_OUT.split("/")[-1], rw["E5, the hold"]["Q"],
+             rw["E5, the hold"]["amb"], A["m507"]["lo"], A["m507"]["hi"], A["m507"]["dwell_h"], M507.split("/")[-1], rw["E5, the hold"]["lim"]))
+    w("      %s" % "; ".join("%s %s +%.0f C (%s)" % (k_, st_, lim_, cat_) for k_, st_, lim_, cat_ in d["setters"]))
+    para("The loads the hold changes, heat stage -> hold at the load pins (W): %s; into the case %.3f -> %.3f W. The loads of E5's hold, "
+         "largest first (W at the load pins / at the pack): %s." % (
+             ", ".join("%s %.3f -> %.3f" % a_ for a_ in d["hold_action"]), T["q_hs"], T["q_m"],
+             "; ".join("%s %.3f / %.3f" % (n_, p_, s_) for n_, p_, s_ in h["loads"])))
+    para("E3-O's 1.806 W/K: the heat stage's %.3f W into the case with every radio C1 leaves on, plus the ballasts, over E5's same +70 C limit "
+         "from E3-O's +55 C (TEST-PLAN E3-O); it equals LO-01a's floor with the ballasts (%.4f W/K) only because both rooms are 15 K. The "
+         "2.709 W/K: the heat stage's heat in E5 with no hold. Classes: the heat MODELED (the model's figures carry their own tiers: S sheet, "
+         "R representative, D declared, T placeholder); the ballasts MODELED by L4-E8; the ambient and the limit MAKER and TEST-PLAN as read; "
+         "the line itself MODELED, and CONDITIONAL as a requirement on T-H1." % (T["q_hs"], T["g_floor_ballast"]))
+    para("8b THE CONFIGURATION IT ASSUMES. Lid open, deployed, on shore (TEST-PLAN E3-O and E5); every conductance here is W4's lid-open "
+         "fans-on value or a T-H1 reading in that state. The fans of 32.53 item 2 (REQ-043): three cooler fans, one per CM5 cooler on its "
+         "slot's fan header, and two mixer fans under the plate on board E's sensor controller, their speed set from the inside climate "
+         "reading. In both margins three run: %s (W at the load pins; slots 1 and 2 and their coolers are off in the heat stage and the "
+         "hold). D-18 is OPEN: no fan is picked. The model carries representatives (Sunon, %s): the cooler fan MF30060V2, 30 mm, %.2f W, "
+         "%.1f CFM (MF30060V1 %.2f W, %.1f CFM), not IP68; the mixers GF60151B9 to B6, \"%s\", %.2f to %.2f W, %.1f to %.1f CFM. No held "
+         "sheet gives a fan's operating temperature: REQ-043's acceptance asks for \"%s\", and the fans are 7c's ARCHITECTURE "
+         "line. T-H1's hardware list names Same Sky's CFM-6025BG68 for the mixers (%s)." % (
+             ", ".join("%s %.2f" % x for x in d["fans_running"]["E5"]), "catalogue extract " + S["fan_cfm"]["where"] + " and " + S["mix_cfm_lo"]["where"],
+             0.36, S["fan_cfm"]["v"][0], S["fan_v1"]["v"][0], S["fan_v1"]["v"][1], S["mix_ip68"]["full"], 0.39, 1.50, S["mix_cfm_lo"]["v"][0],
+             S["mix_cfm_hi"]["v"][0], need(A["req043"], r"(a published operating range covering -20 C to the inside-air bar part_temps\.py computes from pcb_envelope\.yaml)", "REQ-043's range").group(1),
+             RTA.split("/")[-1] + " 5.2"), first="")
+    cf = d["conf"]
+    para("The heat path under the no-vent ruling (32.53 item 1): the 3 mm aluminium plate (%.4f m2) and the PP walls (%.4f to %.4f m2) "
+         "and floor (%.4f to %.4f m2) only. W4's split, lid open with the fans (W/K, the walls and floor together / the plate): low case "
+         "%.3f / %.3f, high case %.3f / %.3f; lid closed %.3f / %.3f and %.3f / %.3f. The mixers stir the air under the plate across the "
+         "boards and onto the plate and the walls: the inside film W4 takes as %g to %g W/m2K with them and %g to %g W/m2K without. The "
+         "hold's reference: today %s (CONOPS 4c), a board sensor in the coolers' air; 4d requires it in the mixed air by the +70 C parts or "
+         "calibrated to +-%.6f K." % (
+             d["areas"]["face"], d["areas"]["side"][0], d["areas"]["side"][1], d["areas"]["floor"][0], d["areas"]["floor"][1],
+             cf["low"]["open_fans"][1], cf["low"]["open_fans"][2], cf["high"]["open_fans"][1], cf["high"]["open_fans"][2],
+             cf["low"]["closed_fans"][1], cf["low"]["closed_fans"][2], cf["high"]["closed_fans"][1], cf["high"]["closed_fans"][2],
+             R["w4"]["hin"][0], R["w4"]["hin"][1], C_["hin_still"][0], C_["hin_still"][1], A["hold_ref"], tr["e_allow"]), first="   ")
+    fo = d["fans_off"]
+    para("If the fans stop (W4 lid open, fans off: %.2f to %.2f W/K; 32.53 says about %.1f W/K still): the hold's heat less the fans' own "
+         "%.2f W (into the case) puts E5's mixed air at %.2f to %.2f C (it needs %.3f W/K to stay at +70 C) and E3-O's at %.2f to %.2f C: the +70 C class "
+         "is past its limit on W4's still values. One mixer of two stopping lies between the two states (no model). Parts coupled to the plate "
+         "(8e, F4) stay at the plate: with the still film's plate fraction %.3f to %.3f, at most %.2f C (E5) and %.2f C (E3-O). The cooler "
+         "fan of slot 3 stopping leaves the module to its own throttling (CM5 4.4: it \"reduces its clock speed to keep the SoC temperature "
+         "below %.0f C\"), which E3-O's pass line allows (\"CM5 throttling logged but no shutdown\"). The controls act on the measured air "
+         "whatever the cause (C1, the hold); a stopped fan is seen by its tachometer only where the picked fan has one." % (
+             fo["still"][0], fo["still"][1], fo["g_3253_still"], fo["fans_case_hold"], fo["e5_air"][0], fo["e5_air"][1], fo["g_needed_e5"],
+             fo["e3o_air"][0], fo["e3o_air"][1], fo["f_still"][0], fo["f_still"][1], fo["e5_plate_max"], fo["e3o_plate_max"],
+             S["cm5_soc"]["v"][0]), first="   ")
+    para("8c THE FANS IN THE ENERGY BUDGET. They are counted, not left in the undocumented share: pwr_budget.py carries \"cooler fan slot "
+         "1..3\" in every state where its slot runs and \"two mixer fans\" in every state, tier R (representatives, D-18 open; the mixers' "
+         "PWM duty TBD); load_trace.out lists them in the profile (%s; its tiers S %.1f, R %.1f, D %.1f, T %.1f W of %.1f W); the replay "
+         "carries that profile (\"PS-IDLE-SPEC %.1f W at the pack terminals over its %d loads\", %s), and L4-E9's endurance the same "
+         "42.8 W (l4e9_power_path.out at aa897e38, not pinned here: that output quotes this record). The %.2f W with no document are %s, "
+         "no fan among them. Their heat is inside the case and inside every heat figure of 8a. Per mode (MODELED, battery side, plan; "
+         "low..high at the load pins):" % (
+             "; ".join("%s %.2f W %s" % (nm, w_, t_) for w_, t_, nm in A["trace_fans"]), A["trace_tiers"]["S"], A["trace_tiers"]["R"],
+             A["trace_tiers"]["D"], A["trace_tiers"]["T"], A["trace_total"][1], A["replay_profile"][0], A["replay_profile"][1],
+             REPLAY.split("/")[-1], A["replay_undoc"][0], ", ".join("%s %.2f W" % (nm, w_) for w_, nm in A["replay_undoc"][1])), first="")
+    for fr in d["fan_power"]:
+        w("      %-28s %d fans: %.3f W at the pack of %.3f W (%.1f %%), %.1f Wh a day; at the loads %.2f .. %.2f .. %.2f W" % (
+            fr["label"], fr["plan"]["n"], fr["plan"]["pack"], fr["plan"]["state"], 100.0 * fr["share"], fr["wh_day"],
+            fr["lo"]["load"], fr["plan"]["load"], fr["hi"]["load"]))
+    fs = d["fan_sens"]
+    para("The picked fans' power moves both budgets: at the representatives' low and high figures E5's hold carries %.3f to %.3f W into the "
+         "case and its line is %.3f to %.3f W/K (0.100 W/K per W); the profile at the fans' high figures is %.3f W against %.3f W, so a "
+         "runtime falls to %.3f of its value (MODELED). Register row drafted for L4-E9's downstream register (its owner inserts it): "
+         "\"R-new | EVIDENCE | The five fans' power (D-18, REQ-043): the picked fans' maker's figures at the duty the controls set replace "
+         "pwr_budget.py's representative rows; E5's line moves 0.100 W/K per W into the case and the profile by the fans' battery-side "
+         "watts | L4-E12 8c | Layer 6 components with D-18 | a held sheet; T-H1 logs the fans' drawn power\"." % (
+             fs["q_lo"], fs["q_hi"], fs["g_lo"], fs["g_hi"], fs["prof_hi"], fs["prof"], fs["runtime_factor"]), first="   ")
+    t1 = d["th1"]
+    para("8d T-H1: WHO AND HOW. TEST-PLAN section 8's row: \"%s\"; \"%s\". Hardware (%s 5.2): the Peli 1450 with the 1450PF frame and a "
+         "3 mm plate blank, stack heaters of %.1f ohm at %.1f V giving %.1f W each, %s, \"%s\". No electronics are needed. Who: the "
+         "prototype bench, as Layer 9's physical verification, once the owner authorises it (READY-TO-ACT lists what is missing: \"%s\"); a "
+         "laboratory only for a chamber run at E5's +60 C (the owner's spend). The draft procedure is T-H1-PROCEDURE-DRAFT.md beside this "
+         "record." % (A["th1_row"], A["th1_who"], RTA.split("/")[-1], t1["heater"][0], t1["heater"][1], t1["heater"][2], A["rta_logger"],
+                      A["rta_mixers"], A["rta_who"]), first="")
+    para("Method: the dummy heaters spread as the model spreads E5's hold (W, plan): %s, plus the ballasts' %.2f W on board A; one "
+         "heater's %.1f W puts the line's %.1f K rise on the air (two: %.1f K). Points: two powers (%.1f and %.1f W), lid open and closed, "
+         "fans on and off: %d points. Steady state: the time constant C/G is %.2f to %.2f h (32.53's %.0f to %.0f kJ/K, the kit's mass, an "
+         "upper bound for an empty case, over W4's lid-open %.2f to %.2f W/K); within 1 %% of the rise after %.1f to %.1f h a point, %.0f to "
+         "%.0f h in all; a point ends when the mixed air drifts at most %.1f K/h over an hour (ASSUMPTION)." % (
+             "; ".join("%s %.2f" % (k_, v_) for k_, v_ in sorted(d["hold"]["place"].items(), key=lambda x: -x[1])), T["qb"],
+             t1["heater"][2], t1["rise_line"][0], t1["rise_line"][1], t1["powers"][0], t1["powers"][1], t1["points"], t1["taus"][0],
+             t1["taus"][1], T["kJ"][0], T["kJ"][1], T["w4_open"][0], T["w4_open"][1], t1["t_ss"][0], t1["t_ss"][1], t1["total_h"][0],
+             t1["total_h"][1], DRIFT_K_H), first="   ")
+    para("Uncertainty (ASSUMPTION, standard, k = 1): each thermocouple +-%.1f K after an isothermal comparison, the mixed air's spread "
+         "+-%.1f K, the ambient's drift +-%.1f K, the steady-state residual %.3f K (the drift times the line's %.2f h), so the rise +-%.3f K; "
+         "the power +-%.1f %%, the leads +-%.1f %%. Expanded (k = 2): %.1f %% at a 10 K rise and %.1f %% at 20 K. PASS LINE: the measured "
+         "conductance, lid open with the fans, less its expanded uncertainty, at or over %.3f W/K, so a reading of at least %.3f W/K at a "
+         "10 K rise (%.3f W/K at 20 K). A room reading under-reads the margin: the outside films' radiation is %.2f W/m2K at the room's "
+         "%.0f C and %.2f W/m2K at E5's %.0f C, so on W4's films the margin's conductance is %.2f to %.2f times the room's (INFERRED, a "
+         "credit the pass line does not take)." % (
+             TC_U_K, MIX_U_K, AMB_U_K, t1["u_ss"], t1["tau_line"], t1["u_dt"], 100 * P_U_REL, 100 * LEAD_U_REL,
+             100 * t1["ub"][10.0]["U_rel"], 100 * t1["ub"][20.0]["U_rel"], c["gmax"], t1["ub"][10.0]["pass"], t1["ub"][20.0]["pass"],
+             t1["h_room"], ROOM_C, t1["h_margin"], A["e5"][4], t1["rad"]["high"], t1["rad"]["low"]), first="   ")
+    para("8e A FAILED READING AND THE FALLBACKS. Mixed air at a lid-open, fans-on reading G (MODELED; E3-O the heat stage, E5 the hold):",
+         first="")
+    for g_, a3, a5 in d["fail"]:
+        w("      G %.3f W/K: E3-O %.2f C (%s), E5 %.2f C (%s)" % (g_, a3, "holds" if a3 <= 70.0 + 1e-9 else "past +70 C",
+                                                             a5, "holds" if a5 <= 70.0 + 1e-9 else "past +70 C"))
+    para("A reading in (%.3f, %.3f) W/K: E3-O holds as stated, E5 under the hold passes +70 C for the class of 8a. A reading under %.3f W/K: "
+         "E3-O passes it too. The fallbacks inside the rulings (no vent, the Peli 1450 kept), each with what it buys:" % (
+             c["g_e3o"], c["gmax"], c["g_e3o"]), first="   ")
+    fn = d["fins"]
+    para("F1 FINS ON THE PLATE (no penetration; bonded or machined; INFERRED from W4's films, k the effective area multiplier): G for "
+         "(inside k, outside k) = %s in the low case and %s in the high case; outside fins alone saturate at the inside film (%.3f and %.3f "
+         "W/K with an endless outside area). Applied to a reading through W4's split, outside fins of twice the area multiply it by %.3f to "
+         "%.3f and fins of twice the area on both faces by %.3f to %.3f: a reading of %.3f W/K would read %.3f to %.3f W/K (both faces). "
+         "T-H1's plate and wall readings give the split the reading actually has. Feasibility: CONDITIONAL on "
+         "the face's free area (the monitor, the e-paper, the switches) and the lid's clearance (CASE-MARGINS M3); the session's (Layer 7)." % (
+             ", ".join("(%g, %g) %.3f" % x for x in fn["low"]), ", ".join("(%g, %g) %.3f" % x for x in fn["high"]), fn["low_cap_out"],
+             fn["high_cap_out"], fn["ratio"]["out2"][0], fn["ratio"]["out2"][1], fn["ratio"]["both2"][0], fn["ratio"]["both2"][1], c["g_e3o"],
+             fn["applied"]["both2"][0], fn["applied"]["both2"][1]), first="   ", rest="      ")
+    para("F2 CONDUCTION FROM THE HOT BOARDS TO THE PLATE: heat Q_c led into the plate leaves the air's balance by Q_c (1 - f), f the plate's "
+         "fraction, so E5 at +70 C needs Q_c = (Q - 10 G) / (1 - f): %s (W at f %.3f / %.3f). Board B carries %.2f W of the hold's heat "
+         "(the module, its switch, the supervisors, the hubs). Feasibility: CONDITIONAL on a pad path from those parts to the plate (Layer "
+         "7); the session's." % ("; ".join("G %.3f: %.2f / %.2f" % (g_, a_, b_) for g_, a_, b_, _e in d["cond"]), T["f_plate"][1],
+                                  T["f_plate"][0], d["hold"]["place"]["board B (slot 3, its switch, hubs, supervisors, the device rail)"]),
+         first="   ", rest="      ")
+    dp = d["deep"]
+    para("F3 SHEDDING IN E5 (E5 requires logging only): the heat a reading allows, 10 G - %.2f W: %s. A deeper hold that keeps the logging "
+         "(the module idle on its own storage, board E's controller and sensors, the fans, the panel for the SOS, the supervisors and hubs "
+         "on the logging path) and turns off %s takes E5's heat to %.3f W and its line to %.3f W/K. The session's (E5's stated "
+         "configuration); CONDITIONAL on a supply switch for each (none read for the switch chip: a Layer 8 item) and on the logging path." % (
+             T["qb"], "; ".join("G %.3f: %.2f W" % x for x in dp["allow"]), ", ".join("%s %.3f W" % x for x in dp["shed"]), dp["q"], dp["line"]),
+         first="   ", rest="      ")
+    pl = d["plate"]
+    para("F4 THE PLATE COUPLING (4e): the RockBLOCK, board D (SA868, PCM2912A, G6K) and the LimeSDR on pads to the plate sit at the plate, "
+         "at most the ambient plus %.3f of the rise: E5 holds them to %.3f W/K and E3-O to %.3f W/K. The parts left in the mixed air then set "
+         "the floor: the +80 C connectors (%s) in the exhaust need %.3f W/K in E5 and %.3f W/K in E3-O (%.3f out of the exhaust); the H5007NL, "
+         "the ATP16 and the PXP4043/C take section 6's wider parts or statements. So F4 holds E5 down to %.3f W/K and E3-O down to %.3f W/K "
+         "(%.3f with the connectors out of the exhaust); with F3, E5 down to %.3f W/K. With the fans stopped the coupled parts stay at most "
+         "%.2f C (8b). Feasibility: the pads' own rise and their mechanical path (Layer 7); the session's." % (
+             pl["f_hi"], pl["e5"][0], pl["e3o"][0], ", ".join(pl["conn80"]), pl["e5"][1], pl["e3o"][1], pl["e3o"][2], pl["e5_floor"],
+             pl["e3o_floor"], pl["e3o_floor_out"], pl["e5_deep_floor"], fo["e5_plate_max"]), first="   ", rest="      ")
+    para("THE BEST FALLBACK: F4, the plate coupling, with F3 in E5: no owner ruling, no change to E3-O. What needs the owner: a reading under "
+         "E3-O's F4 floor (%.3f W/K, or %.3f W/K with the connectors out of the exhaust) leaves a deviation of E3-O's configuration (the "
+         "hold in E3-O) or a device-set re-pick (CHO-001); the SGP41 is 6b's question already." % (pl["e3o_floor"], pl["e3o_floor_out"]),
+         first="   ")
+    w("")
+    cb = R["cb"]
+    geo, gmm = cb["geo"], A["geo_m"]
+    w("9 THE CONSERVATIVE LOWER BOUND, AND U-02'S CLASS (the consolidation's question of 2 October 2026: does T-H1 confirm a design")
+    w("  the evidence already supports, or decide whether it can work?)")
+    para("9a THE MODEL. The inside air to the ambient through two paths in parallel, each solved for its heat at a stated air rise: the "
+         "plate (the inside film, the 3 mm aluminium, the outside films; lid closed, the enclosed layer to the lid and the lid's shell) "
+         "and the walls (the inside film, the PP shell, the outside films); the floor adiabatic (the case on its feet, %.2f mm over a "
+         "support whose temperature no document gives). Held geometry (CASE-MARGINS, Peli's drawing and STEP as read there; W4's plate "
+         "outline): the plate %.4f m2 (L = A/P %.4f m); the walls %.4f m2 inside (the perimeter %.2f x %.2f mm at mid-height, floor to the "
+         "shoulder at %.2f mm) and %.4f m2 outside (the outer perimeter over the base's %.2f mm), %.2f mm thick; lid closed, the flat "
+         "ceiling %.4f m2, the skirt %.4f m2, the layer %.1f mm (W4's %.1f to %.1f); the floor %.4f m2. Correlations (textbook, INFERRED): "
+         "a plate facing up hot or down cold, Nu = 0.54 Ra^(1/4) (0.15 Ra^(1/3) over 1e7), L = A/P; a vertical wall, Churchill and Chu, "
+         "Nu = {0.825 + 0.387 Ra^(1/6)/[1 + (0.492/Pr)^(9/16)]^(8/27)}^2; the enclosed layer, Hollands et al., Nu = 1 + 1.44[1 - "
+         "1708/Ra]+ + [(Ra/5830)^(1/3) - 1]+; radiation eps F sigma (T1^2 + T2^2)(T1 + T2) to surroundings at the ambient; air by "
+         "Sutherland's laws. Coefficients, the end the bound takes first: the plate's emissivity %.2f (%.2f to %.2f, anodised), the "
+         "shell's %.2f (%.2f to %.2f, pigmented PP), the PP's conductivity %.2f W/mK (%.2f to %.2f), the plate's view past the open "
+         "lid %.2f (%.2f to %.2f, ASSUMPTION); still air at the margin's ambient (a chamber's circulation not credited); inside, natural "
+         "convection only: the fans' flow and the stack's radiation to the plate are credited at zero (no held document places or picks "
+         "the fans), each shown below as a credit." % (
+             gmm["feet"], geo["a_plate"], geo["l_plate"], geo["a_wall"], gmm["mid"][0] * 1000, gmm["mid"][1] * 1000, gmm["shoulder"] * 1000,
+             geo["a_wall_out"], gmm["depth"] * 1000, gmm["t_wall"] * 1000, geo["a_lid_top"], geo["a_lid_skirt"], geo["gap"] * 1000,
+             cb["gap"][0] * 1000, cb["gap"][1] * 1000, geo["a_floor"], EPS_PLATE[0], EPS_PLATE[0], EPS_PLATE[1], EPS_SHELL[0], EPS_SHELL[0],
+             EPS_SHELL[1], K_PP[0], K_PP[0], K_PP[1], F_OPEN[0], F_OPEN[0], F_OPEN[1]), first="")
+    w("9b THE BOUND (W/K; lid open with the fans, their flow credited at zero; MODELED on INFERRED coefficients):")
+    for mg in ("E5", "E3-O"):
+        r_ = cb[mg]
+        w("   %-5s %.0f C, the air %.0f K up: lid open %.3f (the other coefficient ends %.3f), lid closed %.3f; plate fraction %.3f" % (
+            mg, r_["amb"], r_["rise"], r_["open"]["g"], r_["open_opt"]["g"], r_["closed"]["g"], r_["open"]["f_plate"]))
+        w("         credits: the fans' flow 0.2 / 0.5 / 1.0 m/s %s; the stack's radiation %.3f, with 0.5 m/s %.3f; the floor %.3f; all the" % (
+            " / ".join("%.3f" % g_ for _v, g_ in r_["v"]), r_["rad"], r_["rad_v"], r_["floor"]))
+        w("         favourable ends with 1.0 m/s %.3f; ANY inside film (a 50 m/s flow) %.3f, the outside films' cap" % (r_["opt_all"], r_["cap"]))
+    w("   The envelope's +40 C, the air 15 K up: lid open %.3f, lid closed %.3f (LO-01a's and E3-L's state; U-01's, not this record's)." % (
+        cb["env_open"]["g"], cb["env_closed"]["g"]))
+    fl_ = cb["films"]
+    w("   The bound's films at E5 (W/m2K): inside, the plate %.2f and the walls %.2f; outside, the face %.2f and the walls %.2f." % (
+        fl_["hin_plate"], fl_["hin_wall"], fl_["hout_face"], fl_["hout_wall"]))
+    para("9c W4'S 1.22 W/K RECONCILED. The budget's 1.22 to 2.85 W/K (lid open, fans) and 1.06 to 2.49 W/K (lid closed) are W4's lumped "
+         "estimate (records/w4/w4-scratch-thermal.py, pwr_budget.py's G): fixed films, inside %g to %g W/m2K for \"low-velocity forced "
+         "flow from the mixer and cooler fans, plus internal radiation\", outside %g to %g (the face), %g to %g (the walls), %g to %g "
+         "(the floor) at about 310 K with emissivities 0.85 to 0.9, the base's walls %.4f to %.4f m2, PP at %.3f m2K/W. It is a "
+         "sensitivity estimate, not a lower bound: its low end already assumes the fans' film. One assumption at a time, W4's low case "
+         "to the bound (E5):" % (R["w4"]["hin"][0], R["w4"]["hin"][1], R["w4"]["hof"][0], R["w4"]["hof"][1], R["w4"]["how"][0], R["w4"]["how"][1],
+                                  R["w4"]["hfl"][0], R["w4"]["hfl"][1], C_["a_side"][0], C_["a_side"][1], R["w4"]["tk"]), first="")
+    for lbl, g_ in cb["recon"]:
+        w("      %-100s %.3f W/K" % (lbl, g_))
+    para("The decisive term is the inside film: W4's low case takes 10 W/m2K with the fans; natural convection gives %.2f to %.2f W/m2K, "
+         "and no held document gives the fans' flow at the inner faces." % (fl_["hin_wall"], fl_["hin_plate"]))
+    para("9d AGAINST THE LINES AND THE FALLBACK. The lines (%.3f W/K in E5, %.3f W/K in E3-O) lie over the outside films' cap (%.3f and "
+         "%.3f W/K with any inside film): on the bound's outside no inside measure reaches them. Section 8's floors (E5 %.3f W/K with F4 "
+         "and F3; E3-O %.3f, or %.3f with the connectors out of the exhaust) lie over the bound by %.3f and %.3f W/K. Where the air "
+         "settles on the bound (MODELED, lid open, its own rise):" % (
+             cb["lines"]["E5"], cb["lines"]["E3-O"], cb["cap"]["E5"], cb["cap"]["E3-O"], cb["floors"]["E5"]["section 8 (W4's plate fraction), F4 with F3"],
+             cb["floors"]["E3-O"]["section 8 (W4's plate fraction), F4"], cb["floors"]["E3-O"]["section 8, F4, the connectors out of the exhaust"],
+             cb["gap_s8"]["E5"], cb["gap_s8"]["E3-O"]), first="")
+    for k_, o in cb["ops"].items():
+        para("%s: the air %.2f C (%.3f W/K at %.1f K), the plate %.2f C; %s." % (
+            k_, o["air"], o["g"], o["rise"], o["plate"], "; ".join("%s %.2f C, %s" % (lbl, t_, "inside" if t_ <= lim + 1e-9 else "PAST +%.0f C" % lim)
+                                                                 for lbl, t_, lim in o["checks"])), first="      ", rest="         ")
+    for k_, b in cb["bind"].items():
+        para("%s, with every session measure (F4, F3 in E5, the +80 C connectors to +85 C parts, the HX magnetics, the wider buttons): "
+             "the module's +85 C binds, needing %.3f W/K at its %.0f K; the bound gives %.3f W/K: %s. Credits no held evidence bounds: %s; a "
+             "forced flow across the inner faces %s." % (
+                 k_, b["need"], b["rise"], b["have"], ("clears by %.3f W/K" % -b["gap"]) if b["gap"] <= 0 else ("GAP %.3f W/K" % b["gap"]),
+                 "; ".join("%s %.3f" % x for x in b["credits"]),
+                 "is not needed" if b["v_need"] == 0.0 else ("of %.2f m/s alone would close it" % b["v_need"] if b["v_need"] else "cannot close it")),
+             first="   ")
+    para("9e U-02'S CLASS: T-H1 %s. On held geometry and conservative coefficients the sealed case does not hold E3-O as stated: with "
+         "every measure inside the session's authority the module's intake reaches %.2f C against its +85 C (a gap of %.3f W/K); E5 holds "
+         "with them (%.3f W/K to spare). What could close the gap: the fans' flow at the inner faces (%.2f m/s, Layer 7's mixer placement) "
+         "or the stack's radiation and the floor's support (with both credited the bound reads %.3f W/K), all of which T-H1 measures; leading the module's "
+         "heat into the plate, which competes with F4 for the plate's outside (%.3f W/K at the bound's face film) and needs a finned "
+         "plate the face's layout has not been shown to carry (Layer 7, unbounded); a deeper hold in E3-O (a deviation of E3-O's "
+         "configuration) or a device-set re-pick (CHO-001), both the owner's. U-02 stays a closure condition of L4-E9's gate." % (
+             "DECIDES" if cb["klass"] == "DECIDES" else "CONFIRMS", cb["ops"]["E3-O, the heat stage"]["air"], cb["gap_w"]["E3-O"],
+             -cb["gap_w"]["E5"], cb["bind"]["E3-O with F4"]["v_need"] or 0.0, cb["bind"]["E3-O with F4"]["credits"][-1][1],
+             geo["a_plate"] * fl_["hout_face"]), first="")
+    ex = cb["exp"]
+    para("9f THE SMALLEST EXPERIMENT THAT RESOLVES IT: one point of T-H1, lid open, the fans running at full duty (the two mixers and slot "
+         "3's cooler fan, stand-ins until D-18), one heater's %.1f W spread as the hold spreads it (8d), at room temperature in still "
+         "air; channels: the mixed air (four), the ambient (two), the plate's inner face, a wall's inner face (one logger). It runs to "
+         "steady state, the mixed air drifting at most %.1f K/h over an hour: %.1f h at the line's conductance, up to %.1f h if the case "
+         "is as poor as the bound (time constant %.2f h). G = P / rise; the readings that settle it, each the target plus its expanded "
+         "uncertainty at that point's rise:" % (ex["power"], DRIFT_K_H, math_log100 * ex["tau_line"], ex["t_bound"], ex["tau_bound"]), first="")
+    for lbl, tg, rd, rs in ex["targets"]:
+        w("      a reading of at least %.3f W/K (%.1f K rise) meets %.3f W/K: %s" % (rd, rs, tg, lbl))
+    para("ACCEPTANCE: at or over %.3f W/K the design holds as stated (route (c)); at or over %.3f W/K section 8's fallback holds; at or "
+         "over %.3f W/K E3-O holds with every session measure, provided the measured plate fraction keeps the plate-coupled +70 C class "
+         "inside (the plate fraction times %.3f W over the reading, at most %.0f K); under %.3f W/K E3-O as stated cannot hold on the "
+         "session's means and the owner decides (a deviation of E3-O or a re-pick). The room reading is the conservative side of the "
+         "margin's (8d). The full T-H1 (eight points) follows for the fans-off case, the lid-closed state and the fractions." % (
+             ex["targets"][0][2], ex["targets"][1][2], ex["targets"][4][2], T["q_hs"] + T["qb"], c["trip"]["need_by"] - A["e3o_t"],
+             ex["targets"][4][2]), first="   ")
+    para("9g THE FANS' POWER (13.3 confirmed): counted in pwr_budget.py, the 42.8 W profile, its replay and L4-E9's endurance (2.0 W in "
+         "the hold, 3.1 W in the profile), not among the 8.4 W with no document. The bound credits their flow at zero and still counts "
+         "their heat inside the case: nothing in 8c changes.", first="")
+    w("")
+    hr = R["hr"]
+    w("10 THE HEAT-REJECTION QUESTION (the consolidation, 2 October 2026: if T-H1 reads under what the approved profile needs, what")
+    w("   change inside the rulings restores it at REQ-024's +40 C, and charging on the design day?)")
+    para("10a THE NEED. The approved profile PS-IDLE-SPEC puts %.3f W into the case lid open (MODELED: its %.3f W at the pack plus the "
+         "pack's own I2R; L4-E9's 43.4 W at a0212d9e). Its +70 C class at REQ-024's +%.0f C needs %.3f W/K; a charge starts only while "
+         "the gauge reads at or under %.0f C (TEST-PLAN, T3), so on SC-37's design day (the air %.1f to %.1f C, the replay) charging "
+         "with the profile running needs %.3f to %.3f W/K. The rulings: no vent or opening anywhere (32.53), the Peli 1450 at any cost, "
+         "the face a 3 mm aluminium plate carrying the UI (32.40). Every figure below is on section 9's bound: the inside by natural "
+         "convection only, the coefficients' conservative ends, still air; a two-node model, the inside air and the plate." % (
+             hr["q_prof"], C_["prof_pb"], t_use_(R), hr["need_g"], hr["t3"], hr["day"][0], hr["day"][1],
+             hr["need_ch"][0], hr["need_ch"][1]), first="")
+    para("10b THE THREE APPROACHES. (a) Fins on the face's free strips (the plate %.4f m2 less the monitor window %.4f m2 and the "
+         "e-paper lens %.4f m2: %.4f m2), fixed under M3's space beneath the QMX tray (%.2f mm nominal, %.2f mm with the unstated allowances doubled) or a "
+         "clip-on exchanger when deployed; effective area multiplier %.0f to %.0f (ASSUMPTION; a vendor's heat-sink datasheet gives the "
+         "real one). (b) The large loads led into the plate by heat pipes, bars and gap pads, %.3f W at their pins (%s), so the plate "
+         "rejects them at its own temperature and the air keeps the rest; with (a)'s fins. (c) The open lid as a second radiator: an "
+         "aluminium skin on the lid's flat ceiling (%.4f m2, an upper bound: the QMX tray and the tablet bracket share it), %.3f m tall "
+         "when open, on a copper braid from the plate's edge inside the seal line (%.2f m, %.0f mm2: %.2f K/W, ASSUMPTION; copper %.0f "
+         "W/mK). At the profile's heat (MODELED on the bound):" % (
+             R["cb"]["geo"]["a_plate"], hr["mon"], hr["epd"], hr["a_free"], hr["m3"][0], hr["m3"][3], K_FIN[0], K_FIN[1], hr["q_c"],
+             ", ".join("%s %.3f" % x for x in hr["coupled"]), R["cb"]["geo"]["a_lid_top"], hr["lid_h"], STRAP_L, STRAP_A * 1e6, hr["r_strap"], K_CU),
+         first="")
+    w("      %-40s | +%.0f C: air, plate, G      | design day %.1f C: air, G | %.1f C: air, G" % ("approach", t_use_(R), hr["day"][0], hr["day"][1]))
+    for r_ in hr["rows"]:
+        w("      %-40s | %6.2f C %6.2f C %6.3f W/K | %6.2f C %6.3f W/K      | %6.2f C %6.3f W/K" % (
+            r_["label"], r_["use"]["air"], r_["use"]["plate"], r_["use"]["g"], r_["day_cold"]["air"], r_["day_cold"]["g"],
+            r_["day_warm"]["air"], r_["day_warm"]["g"]))
+    para("Needs: %.3f W/K at +%.0f C (the air at %.0f C); %.3f and %.3f W/K for charging (the air at %.0f C). The open lid's strap carries "
+         "%.2f W at +%.0f C in the best route." % (hr["need_g"], t_use_(R), hr["lim"], hr["need_ch"][0], hr["need_ch"][1], hr["t3"],
+                                                  hr["rows"][-1]["use"]["lid"], t_use_(R)), first="   ")
+    para("10c CONSEQUENCES (all three passive: no power, no endurance change, the heat unchanged; costs TBD, no quote held). (a): about "
+         "%.2f kg of 1.5 mm fins at an 8 mm pitch to the worst M3 height (ASSUMPTION), no inside space; the UI's strips between the "
+         "monitor, the e-paper and the switches, the light guides kept clear; bonded fins keep the face a 3 mm plate (a SESSION reading), "
+         "an extruded thicker face would change the ruling of 32.40 (the owner's); a clip-on exchanger needs stowage. (b): spreaders and "
+         "pads under the plate in the 11.9 to 22.9 mm between board B's tall parts and the face parts (W4), their mass and cost TBD; the "
+         "plate runs at %.2f C (%.2f C without fins): the face's touch temperature rises (no held limit: an evaluation owed), the e-paper's "
+         "+60 C operation is passed without fins, the switches go to +85 C parts, and each led part sits at the plate plus its path's drop "
+         "(the WiFi card's +70 C bounds that drop); all inside the seal. (c): about %.2f kg (a 1 mm skin %.2f kg, the braid %.2f kg), the "
+         "braid's fatigue over the hinge's cycles, the lid tray's layout; inside the seal line, no penetration." % (
+             hr["fin_mass"], hr["rows"][-1]["use"]["plate"], hr["rows"][3]["use"]["plate"], hr["skin_mass"] + hr["strap_mass"], hr["skin_mass"],
+             hr["strap_mass"]), first="")
+    para("10d THE SELECTION: NONE REACHES THE NEED ON BOUNDED EVIDENCE. The best route assembled from the three, (b) with (a)'s fins and "
+         "(c), keeps the air at %.2f C at +%.0f C: it rejects %.3f W with the air at +%.0f C against the profile's %.3f W, SHORT BY %.3f W "
+         "(%.3f W/K). Charging with the profile running stays out of reach: %.3f and %.3f W/K short on the design day's cold and warm ends. "
+         "On the bound alone the case rejects %.3f W at +%.0f C (%.3f W short). What would carry the route over: the inside film the "
+         "fans make (section 9: credited at zero), and the fins' and the path's real resistances; each is a measurement or a maker's "
+         "datasheet, not held. The remaining options are the owner's: an ALTERNATIVE duty cycle at +%.0f C, labelled as such (PS-IDLE, "
+         "the monitor dimmed and no beacon: %.3f W into the case, under the best route's %.3f W by %.3f W, and nothing fits on the bound "
+         "alone), or a requirement change (the profile's ambient ceiling, or charging with the profile running on the design day)." % (
+             hr["rows"][-1]["use"]["air"], t_use_(R), hr["q_max_best"], hr["lim"], hr["q_prof"], hr["short_w"], hr["short_g"],
+             hr["short_ch"][0], hr["short_ch"][1], hr["q_max_bare"], t_use_(R), hr["short_w_bare"], t_use_(R), hr["q_idle"],
+             hr["q_max_best"], hr["q_max_best"] - hr["q_idle"]), first="")
+    para("10e U-02 by the owner's exit definition: a CLOSURE CONDITION, with its exact fact: the sealed case's conductance lid open with "
+         "the fans, as T-H1 reads it (the fans' inside film is what no document bounds). The smallest experiment: one point of T-H1, lid "
+         "open, the fans at full duty, two heaters (%.1f W, about the profile's heat) spread as the boards dissipate, room air, to steady "
+         "state (section 9f's duration). The readings that settle it (each the target plus its expanded uncertainty):" % hr["exp_power"],
+         first="")
+    for lbl, tg, rd, rs in hr["exp2"]:
+        w("      a reading of at least %.3f W/K (%.1f K rise) meets %.3f W/K: %s" % (rd, rs, tg, lbl))
+    para("Under the first, the route of 10d applies with its kit on the same bench point, and an owner's choice of 10d's options if it "
+         "still reads short.", first="   ")
+    w("")
+    w("11 Predicates")
     for k, v in R["pred"].items():
         w("   %s: %s" % (k, "PASS" if v else "FAIL"))
     w("")

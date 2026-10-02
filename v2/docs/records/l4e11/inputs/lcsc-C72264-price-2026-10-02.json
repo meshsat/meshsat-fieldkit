@@ -1,0 +1,29 @@
+{
+ "what": "LCSC public product-detail answer for C72264 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C72264), no login; kept fields only, with the price ladder in USD",
+ "read_utc": "2026-10-02T09:58Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), the U-04 question for the consolidation",
+ "role": "option (A)'s bank diode B540C-13-F (price for the comparison)",
+ "code": "C72264",
+ "brand": "DIODES",
+ "model": "B540C-13-F",
+ "package": "SMC(DO-214AB)",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/0b35057a5705662aaaaf16ec2990df33.pdf?productCode=C72264",
+ "stock": 52520,
+ "price_usd": {
+  "5": 0.2332,
+  "50": 0.1868,
+  "150": 0.1642,
+  "500": 0.144,
+  "3000": 0.1384,
+  "6000": 0.1351
+ },
+ "params": {
+  "Diode Configuration": "1 Independent",
+  "Operating Junction Temperature Range": "-55℃~+150℃",
+  "Voltage - DC Reverse (Vr) (Max)": "40V",
+  "Voltage - Forward(Vf@If)": "550mV@5A",
+  "Reverse Leakage Current (Ir)": "500uA@40V",
+  "Non-Repetitive Peak Forward Surge Current": "100A",
+  "Current - Rectified": "5A"
+ }
+}

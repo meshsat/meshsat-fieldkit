@@ -4,7 +4,7 @@ MESHSAT-1478 under MESHSAT-1357, layer 4 task L4-E12, 2 October 2026, revised th
 check (`checks/astra-check-l4e12-1.md`, NOT YET on B1 to B3) and again after its targeted recheck
 (`checks/astra-check-l4e12-2.md`, NOT YET on B2 and B3); section 12 maps each item to its change. **Prototype design, desk
 arithmetic: nothing has been bought, built, powered or measured, and no kit has been field deployed.** Every figure comes from
-`l4e12_thermal.out` (the script `l4e12_thermal.py` reproduces it byte for byte, pins 63 inputs by sha256 and reproduces
+`l4e12_thermal.out` (the script `l4e12_thermal.py` reproduces it byte for byte, pins 69 inputs by sha256 and reproduces
 `records/rv-pwr/pwr_budget.out` and `records/hc2/pwr_red2.out` before any figure) and carries its class: MAKER (a maker's
 document, page named), MODELED (the tree's power and thermal model and W4's lumped film coefficients), INFERRED (method
 stated), ASSUMPTION (a figure no held document gives), CONDITIONAL (holds only on a stated condition). Section numbers in
@@ -57,6 +57,25 @@ brackets point to the `.out`.
   storage statement; the two 3.3 V regulators changed; the +70 C parts out of the running cooler's exhaust; the fans' rating
   (architecture-level), ten other lines with no range held and the 33 lines cleared only by an absolute rating (downstream).
   The sealed case and the power path's topology stay.
+- **U-02 in depth (section 13, the dependency round of 2 October 2026).** The 2.159 W/K is E5's heat under the hold (19.497 W
+  into the case plus L4-E8's 2.09 W) over the 10 K from E5's +60 C dwell to the +70 C class, at 0 K of margin; it moves
+  0.100 W/K per watt and 0.216 W/K per kelvin of limit. It assumes the lid open, the fans running (slot 3's cooler fan and the
+  two mixers; D-18 not picked, no fan's rating held) and the plate and walls as the only path out. The fans' power is counted
+  in the power budget, the profile, the replay and L4-E9's endurance (2.0 W in the hold, 3.1 W in the profile), not in the
+  8.4 W with no document. T-H1 runs on the prototype bench at Layer 9 once the owner authorises it, with dummy heaters in an
+  empty Peli 1450 (draft procedure beside this record); it passes at a reading of 2.416 W/K or more. If it reads short, the
+  plate coupling and a deeper hold in E5 (the session's) hold E5 to 1.125 W/K and E3-O to 1.399 W/K; under that only a
+  deviation of E3-O or a re-pick remains, the owner's.
+- **U-02's class (section 14, the consolidation): T-H1 DECIDES.** A first-principles conservative bound gives 0.566 W/K (E5)
+  and 0.607 W/K (E3-O) with the fans' flow credited at zero. The budget's 1.22 W/K already assumes the fans' inside film. With
+  every session measure, E5 holds and E3-O is short by 0.212 W/K (the module reaches 92.61 C against +85 C). The smallest
+  experiment is one lid-open, fans-on point at 21.2 W: 2.462 W/K or more keeps the design as stated, 1.516 W/K or more keeps
+  it with the fallback, 0.951 W/K or more keeps E3-O with every session measure, and below that the owner decides.
+- **Heat rejection for the approved profile (section 15): no approach reaches the need on bounded evidence.** The profile's 43.4 W
+  at +40 C needs 1.447 W/K, and charging on the design day needs 1.507 to 1.832 W/K. Fins on the plate, leading the large loads
+  into the plate, and the lid as a radiator, assembled, reach 1.384 W/K: 1.252 W short. The remaining options are the owner's:
+  PS-IDLE as a labelled alternative at +40 C (40.2 W fits that route), or a requirement change. U-02 stays a closure condition
+  on T-H1's reading; one point at two heaters (42.4 W) decides it at 1.509 W/K.
 
 ## 2. The acceptance, read first [1]
 
@@ -380,7 +399,7 @@ CM5 not shut down and logging, no damage, recovery kept), each reported as such.
 
 `l4e12_thermal.py` and `.out`; `fetch_held_back.py` (TI's TLV755P sheet into the ignored `v2/vendor/ti/held/`, sha256
 44ac688d7e51f852...); `clarification/` (PDi, Sensirion, Ground Control, NiceRF, Bulgin; drafts for the owner to send);
-`checks/astra-check-l4e12-1.md` and `checks/astra-check-l4e12-2.md`; `README.md`. The tests: `env -C v2/ecad/tools/tests python3 run.py test_l4e12
+`checks/astra-check-l4e12-1.md` and `checks/astra-check-l4e12-2.md`; `T-H1-PROCEDURE-DRAFT.md` (section 13); `README.md`. The tests: `env -C v2/ecad/tools/tests python3 run.py test_l4e12
 test_public_hygiene`. No generator, BOM, registry, interface or Layer 3 file is changed.
 
 ## 12. The two checks, and what each item changed
@@ -398,3 +417,436 @@ test_public_hygiene`. No generator, BOM, registry, interface or Layer 3 file is 
 | Recheck B3 (in-envelope sensing and recovery) | the claim that its function was kept at the line withdrawn; the one engineering route bounded first: its location at or under 48.35 C at +40 C in every state; the coolest place, the east wall's skin, needs 2.535 W/K, inside the lid-open range and over every lid-closed conductance the record carries; warm start and recovery met where it holds (2.98 to 3.73 h); the envelope's storage lies outside Table 4's 5 to 30 C. No location holds: one owner question (section 8: A, B or C, A recommended). Material |
 | Recheck minor: the exclusive owner condition | replaced by an escalation after the routes are assessed (section 8), with the recheck's example reproduced: at 2.000 W/K E3-O's air is 68.543 C and E5's under the hold 70.793 C |
 | Recheck minor: rounding | the hold's offset allowance printed +-0.899099 K; the SGP41's thresholds printed exact and rounded down (54.0 and 49.0 C) |
+
+## 13. Update: U-02 in depth (the dependency round of 2 October 2026) [8]
+
+The owner's point, relayed by the coordinator: "explain what supports the 2.159 W/K threshold, the enclosure/fan
+configuration it assumes, and where fan power enters the energy budget. Name who would perform T-H1 and the practical test
+method. Establish what a failed measurement would change and whether a feasible fallback exists." The branch was brought to
+set 26's candidate `aa897e38` first (a fast-forward); the record reproduces there unchanged before this section. L4-E8's
+ballasts and L4-E10's floor and air are now read from their pinned outputs (`records/l4e8/ripple_dense.out`,
+`records/l4e10/l4e10_cell_thermal.out`), and E5's cycle from the tree's transcription of Method 507.6
+(`v2/vendor/standards/mil-std-810h-method-507-6.md`); 69 inputs are pinned.
+
+### 13.1 What supports the line [8a]
+
+Each line is the heat into the sealed case over the room between the ambient and the limit of the parts the air must hold,
+G = Q / (T_limit - T_ambient), at 0 K of margin:
+
+| Line | Heat Q | Ambient | Limit | G | per +-1 W | per +-1 K of limit (ambient -+1 K) |
+|---|---|---|---|---|---|---|
+| E5 under the hold | 21.587 W (19.497 W + the ballasts' 2.09 W) | 60 C | +70 C | **2.159 W/K** | 0.100 W/K: 2.059 to 2.259 | -0.216 W/K: 1.962 to 2.399 |
+| E3-O, the heat stage | 27.086 W (24.996 W + 2.09 W) | 55 C | +70 C | 1.806 W/K | 0.067 W/K: 1.739 to 1.872 | -0.120 W/K: 1.693 to 1.935 |
+| E5 with no hold | 27.086 W | 60 C | +70 C | 2.709 W/K | 0.100 W/K: 2.609 to 2.809 | -0.271 W/K: 2.462 to 3.010 |
+
+- **E5's heat, built up (MODELED, plan):** 14.671 W at the load pins, 3.445 W in the converters, 0.036 W in the
+  distribution: 18.152 W at the pack; on shore the front end's and the charger's loss adds 1.345 W: 19.497 W into the case;
+  L4-E8's ballasts at the bound's worst corner add 2.09 W (MODELED by L4-E8): 21.587 W. Its largest loads: the running
+  module idle 2.000 W, panel board C 1.500 W, the switch chip's 1.2 V 1.452 W, the two mixer fans 1.440 W, the device rail's
+  logic 1.300 W, the three supervisors 1.297 W (the `.out` lists all nineteen with their battery-side shares).
+- **The hold's action:** the running module 4.500 to 2.000 W, the PA 0.900, board D 0.600, the LoRa module 0.300, the
+  Geiger module 0.300, the RockBLOCK 0.060 and both E72 0.048 W to nothing: 24.996 W to 19.497 W into the case.
+- **The ambient** is E5's dwell, 60 C from 0200 to 0800 (6 h) of Table 507.6-IX (TEST-PLAN E5, read). **The limit** is the
+  +70 C class the hold leaves in the air, each at its limit by the rule of section 2: the RockBLOCK, the SA868, the G6K and
+  the PCM2912A (off; their operating or recommended +70 C taken to cover them unpowered), the LimeSDR (off; its +70 C
+  storage), the H5007NL (on, +70 C operating), the ATP16 and the PXP4043/C (at the plate to the air). **The margin** is 0 K at
+  the line; 1 K needs 2.399 W/K, 2 K 2.698 W/K.
+- **Classes:** the heat MODELED (the model's rows carry their own tiers: S a sheet's figure, R representative, D declared, T a
+  placeholder); the ballasts MODELED by L4-E8; the ambient and the limits as read (TEST-PLAN, Method 507.6, the makers'
+  sheets); the line MODELED, and as a requirement on T-H1 CONDITIONAL. E3-O's 1.806 W/K equals LO-01a's floor with the
+  ballasts (1.8058 W/K) only because both rooms are 15 K.
+
+### 13.2 The configuration it assumes [8b]
+
+- **Lid open, deployed, on shore** (TEST-PLAN E3-O and E5): every conductance is W4's lid-open value with the fans, or a T-H1
+  reading in that state.
+- **The fans (32.53 item 2, REQ-043):** five, three cooler fans (one per module's cooler on its slot's header) and two mixer
+  fans under the plate on board E's sensor controller, speed set from the inside climate reading. In both margins three run:
+  slot 3's cooler fan (0.51 W) and the two mixers (1.44 W). **D-18 is OPEN, no fan is picked.** The model's representatives:
+  Sunon MF30060V2 (30 mm, 0.36 W, 3.7 CFM; not IP68) for the coolers and GF60151B9 to B6 (60 mm, IP68, 0.39 to 1.50 W, 10.6
+  to 21.3 CFM) for the mixers; READY-TO-ACT names Same Sky's CFM-6025BG68 for the mixers. **No held sheet gives a fan's
+  operating temperature**; REQ-043's acceptance asks for "a published operating range covering -20 C to the inside-air bar
+  part_temps.py computes from pcb_envelope.yaml" (section 7's ARCHITECTURE line).
+- **The heat path under the no-vent ruling:** the 3 mm aluminium plate (0.0912 m2) and the PP walls (0.137 to 0.220 m2) and
+  floor (0.096 to 0.135 m2) only. W4's split, lid open with the fans: low case 0.778 W/K through the walls and floor and
+  0.444 W/K through the plate, high case 2.131 and 0.718 W/K. The mixers stir the air under the plate across the boards and
+  onto the plate and walls: W4's inside film is 10 to 25 W/m2K with them and 4 to 6 W/m2K without.
+- **The hold's reference:** today board B's TMP117 under the coolers (CONOPS 4c), in the coolers' air; section 6 requires it in
+  the mixed air by the +70 C parts or calibrated to +-0.899099 K.
+- **If the fans stop** (W4 lid open, fans off: 0.77 to 1.57 W/K; 32.53 says about 2.1 W/K still): without the fans' own
+  heat (2.16 W into the case), E5's mixed air is 72.38 to 85.36 C (it would need 1.943 W/K to stay at +70 C) and E3-O's 70.89 to 87.56 C, so the
+  +70 C class passes its limit on W4's still values. Parts coupled to the plate (F4 below) stay at the plate: at most 69.82 C
+  in E5 and 67.60 C in E3-O with the still film's plate fraction (0.258 to 0.387). One mixer of two stopping lies between the
+  two states (no model). Slot 3's cooler fan stopping leaves the module to its own throttling (CM5 4.4, below 85 C), which
+  E3-O's pass line allows. The controls act on the measured air whatever the cause; a stopped fan is seen by its tachometer
+  only where the picked fan has one.
+
+### 13.3 The fans in the energy budget [8c]
+
+**They are counted, and not in the undocumented share.** `records/rv-pwr/pwr_budget.py` carries "cooler fan slot 1..3" in
+every state where its slot runs and "two mixer fans" in every state, tier R (representatives, D-18 open, the mixers' PWM duty
+TBD); `records/l3batt/load_trace.out` lists them in the 42.8 W profile (the mixers 1.45 W, the coolers 0.57, 0.56 and 0.55 W,
+tier R; its tiers S 16.8, R 11.3, D 6.3, T 8.4 W); the replay carries that profile ("PS-IDLE-SPEC 42.8 W at the pack
+terminals over its 39 loads", `records/l4e/l4e_replay.out`), and L4-E9's endurance the same 42.8 W (`l4e9_power_path.out`
+at `aa897e38`, cited and not pinned, because that output quotes this record). The 8.40 W with no document are the Xenarc
+(6.03 W), WiFi link card 2 in standby (1.30 W) and the PA (1.07 W); no fan is among them. The fans' heat is inside the case
+and inside every heat figure of 13.1.
+
+| Mode (MODELED, plan) | Fans running | Fans at the pack | Of the mode | Per day | At the loads, low .. plan .. high |
+|---|---|---|---|---|---|
+| PS-IDLE-SPEC (the profile) | 4 | 3.128 W | 7.3 % of 42.824 W | 75.1 Wh | 1.86 .. 2.97 .. 4.68 W |
+| PS-TYP | 4 | 3.112 W | 4.9 % of 62.958 W | 74.7 Wh | 1.86 .. 2.97 .. 4.68 W |
+| PS-RED, lid closed | 2 | 2.000 W | 9.0 % of 22.205 W | 48.0 Wh | 1.14 .. 1.95 .. 3.56 W |
+| the heat stage | 2 | 2.000 W | 8.6 % of 23.272 W | 48.0 Wh | 1.14 .. 1.95 .. 3.56 W |
+| E5's hold | 2 | 2.010 W | 11.1 % of 18.152 W | 48.2 Wh | 1.14 .. 1.95 .. 3.56 W |
+
+The picked fans' power moves both budgets: at the representatives' low and high figures E5's hold carries 18.616 to
+21.236 W into the case and its line is **2.071 to 2.333 W/K**; the profile at the fans' high figures is 44.557 W against
+42.824 W, so a runtime falls to 0.961 of its value. **Register row drafted** for L4-E9's downstream register (its owner
+inserts it; this record edits no other record): "R-new | EVIDENCE | The five fans' power (D-18, REQ-043): the picked fans'
+maker's figures at the duty the controls set replace pwr_budget.py's representative rows; E5's line moves 0.100 W/K per W
+into the case and the profile by the fans' battery-side watts | L4-E12 8c | Layer 6 components with D-18 | a held sheet;
+T-H1 logs the fans' drawn power".
+
+### 13.4 T-H1: who and how [8d]
+
+- **Who:** the prototype bench, as Layer 9's physical verification, once the owner authorises it (TEST-PLAN section 8: "it
+  needs no built kit, and its purchase is the owner's to authorise"; READY-TO-ACT 5.3 lists "who runs the test and where (the
+  session cannot)" as missing). A laboratory only for a chamber run at E5's +60 C, the owner's spend.
+- **Hardware:** a current-moulding Peli 1450 with the 1450PF frame and a 3 mm aluminium plate blank, resistive heaters (6.8
+  ohm at 12.0 V, 21.2 W each), the fans (stand-ins until D-18), a PicoLog TC-08 (READY-TO-ACT 5.2) plus a second for sixteen
+  channels, a supply with its voltage and current logged. No electronics.
+- **Method:** heaters spread as the model spreads E5's hold (board B 12.06 W, board A 1.81 W plus the ballasts' 2.09 W, board C
+  and the face 1.50 W, the front end and charger 1.35 W, board E 0.83 W, the fans 1.95 W themselves); one heater's 21.2 W puts
+  about 9.8 K on the air at the line, two 19.6 K. Eight points: two powers, lid open and closed, fans on and off. The time
+  constant C/G is 0.78 to 2.27 h (32.53's 8 to 10 kJ/K over W4's 1.22 to 2.85 W/K), so a point takes 3.6 to 10.5 h to
+  come within 1 % and the eight 29 to 84 h; a point ends when the mixed air drifts at most 0.1 K/h over an hour.
+- **Uncertainty (ASSUMPTION, k = 1):** each channel 0.2 K after an isothermal comparison, the mixed air's spread 0.3 K, the
+  ambient's drift 0.3 K, the steady-state residual 0.129 K, so the rise 0.526 K; the power 0.7 %, the leads 0.5 %. Expanded
+  (k = 2): 10.7 % at a 10 K rise and 5.5 % at 20 K.
+- **Pass line:** the measured conductance, lid open with the fans, less its expanded uncertainty, at or over 2.159 W/K: **a
+  reading of at least 2.416 W/K at a 10 K rise** (2.285 W/K at 20 K). The room reading under-reads the margin (the outside
+  films' radiation grows from the room to +60 C; on W4's films the margin's conductance is 1.15 to 1.20 times the room's,
+  INFERRED); the pass line does not take that credit.
+- **The procedure:** `T-H1-PROCEDURE-DRAFT.md` beside this record (channels, run order, data reduction, the pass lines and what
+  each result decides).
+
+### 13.5 A failed reading, and the fallback [8e]
+
+| Reading, lid open with the fans | E3-O's mixed air | E5's under the hold |
+|---|---|---|
+| 2.100 W/K (the low case's cap) | 67.90 C | 70.28 C, past +70 C |
+| 2.000 W/K | 68.54 C | 70.79 C, past |
+| 1.900 W/K | 69.26 C | 71.36 C, past |
+| 1.806 W/K | 70.00 C | 71.95 C, past |
+| 1.666 W/K (LO-01a's floor) | 71.25 C, past | 72.95 C, past |
+| 1.500 W/K | 73.06 C, past | 74.39 C, past |
+
+A reading in (1.806, 2.159) W/K: E3-O holds as stated, E5 under the hold passes +70 C for the class of 13.1. Under 1.806
+W/K E3-O passes it too. The fallbacks inside the rulings (no vent, the Peli 1450 kept):
+
+| Fallback | What it buys (MODELED or INFERRED) | Feasibility | Whose |
+|---|---|---|---|
+| F1 fins on the plate (no penetration) | on W4's films, outside fins of twice the area multiply a reading by 1.125 to 1.131, fins of twice the area on both faces by 1.252 to 1.363 (a reading of 1.806 W/K would read 2.261 to 2.462 W/K); outside fins alone saturate at the inside film (1.690 W/K in the low case) | CONDITIONAL on the face's free area (the monitor, the e-paper, the switches) and the lid's clearance (CASE-MARGINS M3); the reading's own split from T-H1 | the session's (Layer 7) |
+| F2 conduction from the hot boards to the plate | the air's balance loses (1 - f) of the heat led into the plate: E5 needs 5.76 W led (2.97 W at the low plate fraction) at a 2.000 W/K reading, 12.82 (6.60) W at 1.806 W/K; board B carries 12.06 W of the hold's heat | CONDITIONAL on a pad path from those parts to the plate | the session's (Layer 7) |
+| F3 a deeper hold in E5 (E5 requires logging only) | turning off the switch chip (2.541 W), the NVMe (0.900 W), the PCIe switch (0.625 W) and the GNSS (0.327 W) while the module logs on its own storage takes E5's heat to 13.429 W and its line to **1.552 W/K**; a reading G allows 10 G - 2.09 W (17.91 W at 2.000 W/K) | CONDITIONAL on a supply switch for each (none read for the switch chip: Layer 8) and on E5's logging path | the session's (E5's stated configuration); never in E3-O |
+| **F4 the plate coupling** (section 7) | the RockBLOCK, board D and the LimeSDR on pads to the plate sit at the plate: E5 holds them to **1.564 W/K**, E3-O to 1.309 W/K; the +80 C connectors in the exhaust then set E3-O's floor at **1.399 W/K** (1.309 out of the exhaust); with F3, E5 to **1.125 W/K**; with the fans stopped the coupled parts stay at most 69.82 C | CONDITIONAL on the pads' own rise and path; the H5007NL, ATP16 and PXP4043/C take section 6's wider parts or statements | the session's (Layer 7) |
+
+**The best fallback is F4 with F3 in E5:** no owner ruling and no change to E3-O; E5 holds down to 1.125 W/K and E3-O down
+to 1.399 W/K (1.309 W/K with the connectors out of the exhaust). **What needs the owner:** a reading under E3-O's F4 floor
+leaves a deviation of E3-O's configuration (the hold in E3-O) or a device-set re-pick (CHO-001); the SGP41 is section 8's
+question already.
+
+### 13.6 What stays CONDITIONAL after this round
+
+T-H1 lid open with the fans reading at least 2.416 W/K (2.159 W/K after its expanded uncertainty), with the picked fans; D-18's
+pick with its maker's power (the line moves 0.100 W/K per W) and its operating range (REQ-043); the hold's reference placed or
+calibrated; and, if the reading falls short, F4 (the pads) and F3 (the switches, the logging path). The uncertainty budget is
+the bench's to replace with its own instruments' figures.
+
+### 13.7 Decisions taken by the session in this round (authority: SESSION)
+
+| Decision | Why the session's | Reversed by |
+|---|---|---|
+| T-H1's pass line is the reading less its expanded uncertainty (k = 2) against 2.159 W/K; the radiation credit is not taken | a measured requirement is met only beyond its uncertainty | the bench's own budget, or a chamber run at +60 C |
+| F4 with F3 is the fallback; F3's list keeps the logging path | both inside the rulings and E5's stated configuration; F4 holds E3-O unchanged | T-H1's split and the generator owners' switches |
+| L4-E9's output is cited, not pinned | it quotes this record; a pin would bind the two records in a cycle | the coordinator |
+| L4-E8's and L4-E10's figures and E5's cycle read from their pinned files | they are on the base since set 26 | the coordinator |
+
+## 14. The conservative lower bound, and U-02's class (the consolidation, 2 October 2026) [9]
+
+The owner's question: "Thermal: finish the conservative feasibility bound and fallback. State whether T-H1 confirms the
+design or determines whether it can work. Give the test configuration and acceptance condition if measurement remains
+necessary." **Answer: T-H1 DECIDES. U-02 stays a closure condition.** On held geometry and conservative coefficients the
+sealed case does not hold E3-O as stated, even with every measure inside the session's authority; E5 holds with them.
+
+### 14.1 The model and its coefficients [9a]
+
+The inside air reaches the ambient by two paths in parallel, each solved for its heat at the stated air rise (natural
+convection is not linear, so the bound is computed at each condition's own rise):
+
+- **the plate:** the inside film, the 3 mm aluminium (no resistance to speak of), then the outside films (lid open), or the
+  enclosed layer to the lid and the lid's shell (lid closed);
+- **the walls:** the inside film, the PP shell, the outside films;
+- **the floor:** adiabatic, because the case stands on its feet 8.38 mm over a support whose temperature no document gives.
+
+| Quantity | Value the bound takes | Range | Source and class |
+|---|---|---|---|
+| The plate's area, outside | 0.0912 m2, L = A/P 0.0741 m | | W4's plate outline (`panel1450.py` PLATE), pinned |
+| The walls, inside / outside | 0.1296 / 0.1444 m2 | | CASE-MARGINS 2.1 and 2.2: the perimeter 377.75 x 263.45 mm at mid-height, floor to the shoulder at 101.04 mm; the outer perimeter over the base's 108.97 mm |
+| The shell's thickness | 5.34 mm | | CASE-MARGINS 2.3 (Peli's drawing, VERIFIED there) |
+| Lid closed: the ceiling, the skirt, the layer | 0.0803 m2, 0.0578 m2, 53.5 mm | the layer 46.5 to 53.5 mm | CASE-MARGINS 2.1 and 2.2; W4 |
+| The plate's emissivity | 0.70 | 0.70 to 0.90 (anodised, 32.53) | textbook emissivity tables, INFERRED |
+| The shell's emissivity | 0.85 | 0.85 to 0.95 (pigmented PP) | textbook, INFERRED; Peli publishes none |
+| The PP's conductivity | 0.12 W/mK | 0.12 to 0.22 W/mK | textbook polymer tables, INFERRED |
+| The plate's view past the open lid | 0.70 | 0.70 to 1.00 | ASSUMPTION (the lid taken as reradiating) |
+| Outside convection | still air at the margin's ambient | a chamber's circulation would add | natural convection: a plate facing up, Nu = 0.54 Ra^(1/4) (0.15 Ra^(1/3) over 1e7), L = A/P (McAdams; Lloyd and Moran); a vertical wall, Churchill and Chu, Nu = {0.825 + 0.387 Ra^(1/6)/[1 + (0.492/Pr)^(9/16)]^(8/27)}^2; textbook, INFERRED |
+| The enclosed layer, lid closed | | | Hollands et al., Nu = 1 + 1.44[1 - 1708/Ra]+ + [(Ra/5830)^(1/3) - 1]+, plus radiation between the plate and the lid |
+| Radiation | to surroundings at the ambient | | eps F sigma (T1^2 + T2^2)(T1 + T2) |
+| The inside film | natural convection only | the fans' flow and the stack's radiation credited separately below | no held document places or picks the fans (D-18 open), so their flow is credited at zero |
+
+### 14.2 The bound [9b]
+
+| Condition | Lid open, with the fans (their flow credited at zero) | The coefficients' other ends | Lid closed | The outside films' cap (any inside film) |
+|---|---|---|---|---|
+| E5: +60 C, the air 10 K up | **0.566 W/K** | 0.626 | 0.505 | 1.540 |
+| E3-O: +55 C, the air 15 K up | **0.607 W/K** | 0.673 | 0.537 | 1.571 |
+| the envelope's +40 C, the air 15 K up | 0.598 W/K | | 0.524 | |
+
+Credits that no held evidence bounds, at E5 (lid open):
+
+| Credit | Bound with it |
+|---|---|
+| the fans' flow across the inner faces, 0.2 m/s | 0.608 W/K |
+| the fans' flow, 0.5 m/s | 0.690 W/K |
+| the fans' flow, 1.0 m/s | 0.799 W/K |
+| the stack's radiation to the plate | 0.654 W/K (0.767 with 0.5 m/s) |
+| the floor on its feet, over a support at the ambient | 0.697 W/K |
+| all the favourable ends together, with 1.0 m/s | 1.145 W/K |
+
+The bound's films at E5 are 4.13 W/m2K inside at the plate and 3.85 at the walls, and outside 7.72 at the face and 10.03 at
+the walls. The lid-closed and envelope figures belong to U-01 and LO-01a, not to this record; they are recorded because the
+same bound lies far under LO-01a's 1.6664 W/K.
+
+### 14.3 The budget's 1.22 W/K reconciled [9c]
+
+The budget's 1.22 to 2.85 W/K (lid open, fans) and 1.06 to 2.49 W/K (lid closed) are W4's lumped estimate, as pwr_budget.py
+carries them. W4 uses fixed films:
+
+- inside, 10 to 25 W/m2K, for "low-velocity forced flow from the mixer and cooler fans, plus internal radiation";
+- outside, 9.5 to 11.5 at the face, 8 to 10 at the walls and 3 to 8 at the floor, at about 310 K with emissivities of 0.85
+  to 0.9;
+- the base's walls at 0.137 to 0.220 m2, and PP at 0.018 m2K/W.
+
+**It is a sensitivity estimate, not a lower bound: its low end already assumes the fans' film.** Changing one assumption at a
+time, from W4's low case to the bound (E5):
+
+| Step | Conductance |
+|---|---|
+| W4's low case | 1.222 W/K |
+| the floor adiabatic | 1.009 |
+| the walls' inner area to the plate | 0.977 |
+| the wall 5.34 mm of PP at 0.12 W/mK | 0.925 |
+| the outer films at +60 C with the conservative emissivities and the lid's view | 0.928 |
+| the inside film: natural convection only | **0.566** |
+
+The decisive term is the inside film. W4's low case takes 10 W/m2K with the fans; natural convection gives 3.85 to 4.13 W/m2K.
+**The consolidation's statement holds, and the gap is wider:** the model's low bound of 1.22 W/K lies under E3-O's floor of
+1.399 W/K, and the conservative bound, 0.566 to 0.607 W/K, lies further under it.
+
+### 14.4 Against the lines and the fallback [9d]
+
+- **The lines lie over what any inside film can reach on the bound's outside.** E5's 2.159 W/K and E3-O's 1.806 W/K are both
+  above the outside films' cap of 1.540 to 1.571 W/K.
+- **Section 8's floors lie over the bound.** E5's 1.125 W/K (F4 with F3) is 0.559 W/K above it; E3-O's 1.399 W/K (1.309 with
+  the connectors out of the exhaust) is 0.792 W/K above it.
+- **Where the air settles on the bound** (lid open, at its own rise):
+
+| State | Mixed air | Plate | The +70 C class on the plate (F4) | The +80 C connectors | The module's +85 C at its intake (device set) |
+|---|---|---|---|---|---|
+| E5, the hold | 90.93 C | 71.48 C | past +70 C | past | past |
+| E5, the deeper hold (F3) | 83.41 C | 68.58 C | inside | past (in or out of the exhaust) | inside |
+| E3-O, the heat stage | 92.61 C | 69.22 C | inside | past | **past** |
+
+**With every session measure** (F4; F3 in E5; the +80 C connectors on board B replaced by +85 C parts, Layer 6; the HX
+magnetics; the wider buttons), the module's +85 C at its intake binds:
+
+| Margin | Conductance needed | Bound at the same rise | Result | What would close it |
+|---|---|---|---|---|
+| E5 | 0.621 W/K at 25 K | 0.671 W/K | holds, 0.050 W/K to spare | nothing further needed |
+| E3-O | 0.903 W/K at 30 K | 0.691 W/K | **gap of 0.212 W/K** | the fans' flow across the inner faces, 1.28 m/s on its own; or the stack's radiation and the floor's support, which together raise the bound to 0.938 W/K |
+
+### 14.5 U-02's class, and what closes the gap [9e]
+
+**T-H1 DECIDES feasibility; it does not confirm an already-supported design.** On bounded evidence E3-O, with every radio on
+at +55 C in still air, puts the module's intake at 92.61 C against its +85 C. Each route to the missing 0.212 W/K, and whose
+it is:
+
+| Route | Status |
+|---|---|
+| The mixers' flow at the inner faces (1.28 m/s; their placement is Layer 7's) | T-H1 measures it |
+| The stack's radiation and the floor's support | T-H1 measures them |
+| Leading the module's heat into the plate | competes with F4 for the plate's outside (0.704 W/K at the bound's face film) and needs a finned plate the face's layout has not been shown to carry: Layer 7's, unbounded |
+| A deeper hold in E3-O | a deviation of E3-O's configuration: the owner's |
+| A device-set re-pick (CHO-001) | the owner's |
+
+None closes the gap on held evidence within the session's authority without the measurement.
+
+### 14.6 The smallest experiment, and its acceptance [9f]
+
+**One point of T-H1:**
+- lid open;
+- the fans at full duty: the two mixers and slot 3's cooler fan (stand-ins until D-18);
+- one heater's 21.2 W, spread as E5's hold spreads it (section 13.4);
+- room temperature, still air;
+- four mixed-air channels, two ambient, the plate's inner face and a wall's inner face: one PicoLog TC-08.
+
+It runs until the mixed air drifts at most 0.1 K/h over an hour: about 5.9 h at the line's conductance, and up to 21.1 h if
+the case is as poor as the bound (time constant 4.57 h). G = P / rise; each threshold is the target plus its expanded
+uncertainty at that point's rise:
+
+| A reading of at least | Its rise | Meets | Settles |
+|---|---|---|---|
+| **2.462 W/K** | 8.6 K | 2.159 W/K | the design as stated (route (c)), no fallback |
+| **1.516 W/K** | 14.0 K | 1.399 W/K | section 8's fallback (F4, F3); 1.410 W/K reaches 1.309 with the connectors out of the exhaust |
+| 1.199 W/K | 17.7 K | 1.125 W/K | E5 with F4 and F3 |
+| **0.951 W/K** | 22.3 K | 0.903 W/K | E3-O with every session measure, provided the measured plate fraction keeps the plate-coupled +70 C class inside (the fraction times 27.086 W over the reading, at most 15 K) |
+| 0.644 W/K | 32.9 K | 0.621 W/K | E5 with every session measure |
+
+**Acceptance condition:** read lid open with the fans at one power, **2.462 W/K or more** keeps the design as stated;
+**1.516 W/K or more** keeps it with the session's fallback; **0.951 W/K or more** keeps E3-O with every session measure;
+**under 0.951 W/K** E3-O as stated cannot hold on the session's means, and the owner decides (a deviation of E3-O or a
+re-pick). The room reading is the conservative side of the margin's (section 13.4). The full eight-point T-H1 follows, for
+the fans-off case, the lid-closed state and the fractions (`T-H1-PROCEDURE-DRAFT.md`).
+
+### 14.7 The fans' power [9g]
+
+Section 13.3 stands. The fans' power is counted in pwr_budget.py, the 42.8 W profile, its replay and L4-E9's endurance: 2.0 W
+in the hold and 3.1 W in the profile. It is not among the 8.4 W with no document. The bound credits the fans' flow at zero but
+still counts their heat inside the case, so nothing in 13.3 changes.
+
+### 14.8 Decisions taken by the session in this round (authority: SESSION)
+
+| Decision | Why the session's | Reversed by |
+|---|---|---|
+| The bound credits the fans' flow, the stack's radiation and the floor's support at zero | no held document bounds them; each is shown as a credit | T-H1's reading |
+| The class follows the bound: CONFIRMS only if the bound, with every session measure, clears both margins | the owner's question, read literally | T-H1 |
+| The smallest experiment is one lid-open, fans-on point at one heater's power | it settles the class; the rest of T-H1 characterises | the bench |
+
+## 15. The heat-rejection question (the consolidation, 2 October 2026) [10]
+
+The owner: "For any function still failing after repeated corrections, compare at most three credible approaches ...
+Quantify the consequences for power, heat, space, cost and endurance. Select the best-supported route", and "If no supported
+alternative exists, name the exact missing fact and the smallest practical experiment." The question asked of this record: if
+T-H1 reads under what the approved profile needs, what change inside the rulings restores the profile at REQ-024's +40 C, and
+charging on the design day? **Answer: none of the three reaches the need on bounded evidence.** The best route, built from
+all three, falls 1.252 W (0.063 W/K) short at +40 C. U-02 stays a closure condition, and its exact missing fact is T-H1's
+reading.
+
+### 15.1 The need [10a]
+
+- **The profile's heat:** PS-IDLE-SPEC puts 43.413 W into the case with the lid open (MODELED: 42.824 W at the pack plus the
+  pack's own I2R; L4-E9's 43.4 W at `a0212d9e`).
+- **The +70 C class at +40 C:** it needs **1.447 W/K**.
+- **Charging with the profile running:** a charge starts only while the gauge reads at or under 42 C (TEST-PLAN, T3). On SC-37's
+  design day, with the air at 13.2 to 18.3 C (the replay), that needs **1.507 to 1.832 W/K**.
+- **The rulings:** no vent or opening anywhere (32.53); the Peli 1450 kept at any cost; the face a 3 mm aluminium plate carrying
+  the UI (32.40).
+- **The model:** every figure is on section 14's bound (the inside air moves by natural convection only, the coefficients sit at
+  their conservative ends, still air), extended to two nodes, the inside air and the plate.
+
+### 15.2 The three approaches compared [10b]
+
+**(a) Fins on the face's free strips.**
+- The free area is 0.0552 m2: the plate's 0.0912 m2 less the monitor window (0.0288 m2) and the e-paper lens (0.0071 m2).
+- The fins are fixed under M3's space beneath the QMX tray (19.92 mm nominal, 14.11 mm with the unstated allowances doubled), or
+  a clip-on exchanger is fitted when deployed.
+- The effective area multiplier is 2 to 3 (ASSUMPTION; a vendor's heat-sink datasheet gives the real one).
+
+**(b) The large loads led into the plate** by heat pipes, bars and gap pads, so the plate rejects them at its own temperature and
+the air keeps only the rest. They total 23.641 W at their pins:
+- the Xenarc, 6.0 W;
+- the live WiFi card, 4.0 W;
+- the three modules, 6.0 W;
+- panel board C, 1.5 W;
+- the switch chip, 2.541 W;
+- the three NVMe, 2.7 W;
+- the PA, 0.9 W.
+
+**(c) The open lid as a second radiator.**
+- An aluminium skin on the lid's flat ceiling (0.0803 m2, an upper bound, since the QMX tray and the tablet bracket share it),
+  0.329 m tall when open.
+- A copper braid from the plate's edge runs inside the seal line: 0.20 m, 200 mm2, so 2.56 K/W (ASSUMPTION).
+
+| Approach (MODELED on the bound, the profile's 43.413 W) | +40 C: the air / the plate / G | Design day 13.2 C: the air / G | 18.3 C: the air / G |
+|---|---|---|---|
+| none: the bound | 96.61 C / 62.34 C / 0.767 W/K | 70.77 C / 0.754 | 75.70 C / 0.756 |
+| (a) fins, k 2 | 92.89 / 56.15 / 0.821 | 66.82 / 0.810 | 71.79 / 0.812 |
+| (a) fins, k 3 | 90.84 / 52.78 / 0.854 | 64.62 / 0.844 | 69.62 / 0.846 |
+| (b) the large loads into the plate | 79.59 / 70.08 / 1.096 | 53.98 / 1.065 | 58.86 / 1.070 |
+| (b) with (a)'s fins, k 3 | 72.41 / 56.96 / 1.339 | 46.40 / 1.307 | 51.36 / 1.313 |
+| (c) the lid's skin on a strap | 94.17 / 58.27 / 0.801 | 68.10 / 0.791 | 73.07 / 0.793 |
+| **(b) + (a) + (c), the best route** | **71.36 / 55.12 / 1.384** | 45.25 / 1.355 | 50.22 / 1.360 |
+| need | the air at 70 C: 1.447 W/K | the air at 42 C: 1.507 | 1.832 |
+
+**Why (a) alone barely helps:** the plate's inner film limits it. **Why (b) helps most:** it bypasses that film entirely. **What
+(c) adds:** the strap carries 4.37 W in the best route.
+
+### 15.3 Consequences [10c]
+
+All three are passive: no power, no change to endurance, and the heat into the case unchanged. Costs are TBD; no quote is
+held.
+
+| | Space and mass | The UI | The rulings | Confirmed by |
+|---|---|---|---|---|
+| (a) | about 0.39 kg of 1.5 mm fins at an 8 mm pitch to the worst M3 height (ASSUMPTION); no inside space; a clip-on exchanger needs stowage | the strips between the monitor, the e-paper and the switches; the light guides kept clear | bonded fins keep the face a 3 mm plate (a SESSION reading); an extruded, thicker face would change 32.40's ruling (the owner's) | a vendor's heat-sink datasheet with its natural-convection resistance, or a T-H1 point with the fins |
+| (b) | spreaders and pads in the 11.9 to 22.9 mm between board B's tall parts and the face parts; mass TBD | the plate runs at 55.12 C (70.08 C without fins): the face's touch temperature rises (no held limit; an evaluation is owed), the e-paper's +60 C is passed without fins, the switches go to +85 C parts | all inside the seal | the heat pipes' or pads' datasheets, and a T-H1 point with the conduction kit |
+| (c) | about 0.58 kg (a 1 mm skin 0.22 kg, the braid 0.36 kg); the braid's fatigue over the hinge cycles; the lid tray's layout | none | inside the seal line, no penetration | a T-H1 point with the lid open and the skin fitted |
+
+In (b) each led part sits at the plate's temperature plus its own path's drop. The WiFi card's +70 C limit caps that drop at
+about 15 K in the best route.
+
+### 15.4 The selection, the shortfall, and the owner's options [10d]
+
+**None of the three reaches the need on bounded evidence.**
+- **At +40 C:** the best route (b with (a)'s fins and (c)) keeps the air at 71.36 C. It rejects 42.161 W with the air at +70 C
+  against the profile's 43.413 W: **short by 1.252 W (0.063 W/K)**.
+- **Charging with the profile running:** stays **0.153 and 0.472 W/K** short on the design day's cold and warm ends.
+- **On the bound alone:** the case rejects 20.449 W at +40 C, 22.964 W short.
+- **What would carry the route over:** the inside film the fans make (credited at zero in section 14), and the fins' and the
+  paths' real resistances. Each is a measurement or a maker's datasheet, and none is held.
+
+The remaining options are the owner's:
+- **An ALTERNATIVE duty cycle at +40 C, labelled as such:** PS-IDLE (the monitor dimmed, no beacon) puts 40.242 W into the case,
+  1.919 W under the best route's 42.161 W. Nothing fits on the bound alone.
+- **A requirement change:** the profile's ambient ceiling, or charging with the profile running on the design day.
+
+### 15.5 U-02 by the owner's exit definition [10e]
+
+**U-02 is a CLOSURE CONDITION.** Its exact fact: the sealed case's conductance with the lid open and the fans running, as T-H1
+reads it. The fans' inside film is the part no document bounds.
+
+**The smallest experiment:**
+- one T-H1 point, lid open;
+- the fans at full duty;
+- two heaters (42.4 W, about the profile's heat), spread as the boards dissipate;
+- room air, run to steady state.
+
+**Its acceptance**, each threshold being the target plus its expanded uncertainty:
+
+| Reading | Settles |
+|---|---|
+| at least **1.509 W/K** (28.1 K rise) | meets 1.447 W/K: the profile at +40 C, with no route needed |
+| at least **1.575 W/K** (26.9 K rise) | meets 1.507 W/K: charging with the profile on the design day's cold end |
+| at least **1.930 W/K** (22.0 K rise) | meets 1.832 W/K: charging with the profile on the design day's warm end |
+
+Under 1.509 W/K, the route of 15.4 is built and its kit measured at the same bench point; if it still reads short, the owner
+chooses among 15.4's options.
+
+### 15.6 Decisions taken by the session in this round (authority: SESSION)
+
+| Decision | Why the session's | Reversed by |
+|---|---|---|
+| The three approaches compared on the same bound and model, each alone and assembled | the owner's rule: at most three, quantified | T-H1 and the makers' datasheets |
+| The fins' multiplier 2 to 3, the braid 0.20 m by 200 mm2, the set of loads led into the plate | no held datasheet or layout gives them; each is printed with its effect | a vendor's datasheet; Layer 7's layout |
+| No route selected: none reaches the need on bounded evidence | the owner's exit definition, read literally | T-H1's reading |
