@@ -19,6 +19,10 @@ verdict (CONFIRMED, DIFFERS, CANNOT VERIFY, or NOT YET VERIFIED (paused) at a ch
 every ledger row that cites one of its items cites a section that exists and is settled, and every settled item is cited by
 a ledger row; every figure a settled section lists as printed appears in verify_risks.out; and the three files carry no em
 or en dash. Again predicates on text: the verification's engineering content is the page's, not this module's.
+
+Added on set 27 (the verification resumed): each item's verdict agrees with the ledger state of the rows its table names (a
+DIFFERS item leaves its rows STILL OPEN; a CONFIRMED item leaves none of them STILL OPEN); and verify_risks.py loads no record
+it checks as code (its one loaded module is Layer 3's records/hc2/pwr_red2.py, an input) and runs no Python child.
 """
 import importlib.util
 import os
@@ -252,6 +256,43 @@ def t_every_printed_figure_is_in_the_output():
         assert figs, "settled item %d lists no printed figure" % n
         for f in figs:
             assert f in out, "item %d: %r is not in verify_risks.out" % (n, f)
+
+
+def t_each_verdict_agrees_with_its_rows_states():
+    text, secs, _t = _verif()
+    states = dict((r["key"], r["state"]) for r in _rows())
+    rows_of = dict((int(a), [k.strip() for k in b.split(",")]) for a, b in re.findall(r"^\| (\d+) \| ([^|]+) \| [^|]+ \|$", text, re.M))
+    for n in VERIF_ITEMS:
+        v = _verdict(secs[n])
+        keys = rows_of.get(n)
+        assert keys, "item %d's table row names no ledger row" % n
+        for k in keys:
+            assert k in states, "item %d names %s, which the ledger does not have" % (n, k)
+            if v == "DIFFERS":
+                # a DIFFERS keeps its rows STILL OPEN, unless its section records the correction as applied (a marked
+                # "RESOLVED by correction" note naming where), and then only CLOSED AS CONDITIONAL on the corrected item
+                if "RESOLVED by correction" in secs[n]:
+                    assert states[k] == "CLOSED AS CONDITIONAL", "item %d resolved by correction but %s reads %s" % (n, k, states[k])
+                else:
+                    assert states[k] == "STILL OPEN", "item %d DIFFERS but %s reads %s" % (n, k, states[k])
+            if v == "CONFIRMED":
+                assert states[k] != "STILL OPEN", "item %d is CONFIRMED but %s still reads STILL OPEN" % (n, k)
+
+
+def t_the_verifier_loads_no_record_it_checks():
+    import ast
+    need(VERIF_PY, "the verification's code")
+    with open(VERIF_PY, encoding="utf-8") as fh:
+        tree = ast.parse(fh.read())
+    loaded = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call) and getattr(node.func, "attr", None) == "spec_from_file_location":
+            loaded.extend(c.value for c in ast.walk(node) if isinstance(c, ast.Constant) and isinstance(c.value, str) and c.value.endswith(".py"))
+        if isinstance(node, ast.Call) and getattr(node.func, "attr", None) == "run" and node.args and isinstance(node.args[0], ast.List):
+            first = node.args[0].elts[0] if node.args[0].elts else None
+            assert not (isinstance(first, ast.Attribute) and first.attr == "executable"), "verify_risks.py runs a Python child"
+            assert not (isinstance(first, ast.Constant) and str(first.value).startswith("python")), "verify_risks.py runs a Python child"
+    assert loaded == ["v2/docs/records/hc2/pwr_red2.py"], "verify_risks.py loads %s as code, not only Layer 3's model" % loaded
 
 
 def t_no_em_or_en_dash():
