@@ -228,8 +228,10 @@ def soa_lines():
     tr = "matrix(0.097966,0,0,-0.097966,64.4,445.1)"
     paths = []
     for m in re.finditer(r"<path[^>]*>", svg):
-        t = m.group(0)
-        st = re.search(r"stroke:(rgb\([^)]*\))", t)
+        # poppler 22 writes the stroke as a style property and "rgb(0%,0%,0%)", "matrix(a,b,...)"; poppler 24 writes a stroke
+        # attribute and puts a space after each comma: the reader takes both, the path coordinates being the same
+        t = re.sub(r",\s+", ",", m.group(0))
+        st = re.search(r'stroke(?::|=")(rgb\([^)]*\))', t)
         if tr not in t or not st:
             continue
         pts = [(float(a), float(b)) for a, b in re.findall(r"[ML] ([-\d.]+) ([-\d.]+)", re.search(r' d="([^"]*)"', t).group(1))]
@@ -787,8 +789,10 @@ def soa_lines_ktt():
     tr = "matrix(0.0972764,0,0,-0.09741,67.961,231.544)"
     paths = []
     for m in re.finditer(r"<path[^>]*>", svg):
-        t = m.group(0)
-        st = re.search(r"stroke:(rgb\([^)]*\))", t)
+        # poppler 22 writes the stroke as a style property and "rgb(0%,0%,0%)", "matrix(a,b,...)"; poppler 24 writes a stroke
+        # attribute and puts a space after each comma: the reader takes both, the path coordinates being the same
+        t = re.sub(r",\s+", ",", m.group(0))
+        st = re.search(r'stroke(?::|=")(rgb\([^)]*\))', t)
         if tr not in t or not st:
             continue
         pts = [(float(a), float(b)) for a, b in re.findall(r"[ML] ([-\d.]+) ([-\d.]+)", re.search(r' d="([^"]*)"', t).group(1))]
