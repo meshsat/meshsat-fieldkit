@@ -47,7 +47,13 @@ same point, then the owner's options; the point at E5's hold (21.2 W) kept after
 L4-E7's panel-lead surge derivation (MIL-STD-461G CS116 and CS115 under REQ-063; output section 23, the page's 7a): CS116
 meets on the drafted entry and CS115 is conditional on the loop current; a stiff 36 V source on the solar port (D-10) and a
 reversed panel (D-11) are known open engineering defects of the candidate, single faults, whose remedy L4-E7's author
-designs in a separate round (pending; R-173 holds its place, no remedy selected here); R-156 is restated and the CS116 and CS115 test is R-174; the register at 164 items. Status: known defects
+designs in a separate round (pending; R-173 holds its place, no remedy selected here); R-156 is restated and the CS116 and CS115 test is R-174; the register at 164 items. The owner's amendment of 2 October 2026, 14:20 (output section 24): L4-E12's
+thermal reconciliation (check 7) withdraws this record's framing of the profile at +40 C (at +40 C the required state is the heat
+stage, 27.086 W, and the owner's CFL-002 decides its line, K1 at 1.806 W/K with option C or K3 at 0.903 W/K with A or B; the
+profile's own line is K6 at +20 C; T-H1's points run in the order K1, K5, K10, K6, K7 and K8); L4-E10's battery comparison (check
+6) is the budget's cell row (the 35E 144.72 Wh nominal, 107.9 Wh, 2.52 h against the Saft's 81.76 Wh, 53.5 to 58.8 Wh, 1.25 to
+1.37 h MODELLED; adoption not supported yet, the owner's approval required); the findings ledger's 58 rows (24 CLOSED, 19 CLOSED
+AS CONDITIONAL, 11 OPEN DOWNSTREAM, 4 STILL OPEN) are cited in the exit; R-139's lag test is restated. Status: known defects
 addressed in drafts; feasibility conditions remain open.
 
 | File | What it is |
