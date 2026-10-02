@@ -389,9 +389,11 @@ class Chk:
     that must hold, the evidence class of its weakest figure and the scope: 'selected' (the selected architecture, the
     Layer 4 decisions applied) or 'drawn' (the committed netlist, shown where a defect is found and resolved)."""
 
-    def __init__(self, what, a, rel, b, unit, cls, src, scope="selected"):
+    def __init__(self, what, a, rel, b, unit, cls, src, scope="selected", verdict=None):
         self.what, self.a, self.rel, self.b, self.unit, self.cls, self.src, self.scope = what, a, rel, b, unit, cls, src, scope
-        if cls == "PENDING" or a is None or b is None:
+        if verdict is not None:
+            self.met = verdict      # a verdict the source record states on figures with no numeric pair (D-11's forward drop)
+        elif cls == "PENDING" or a is None or b is None:
             self.met = None
         else:
             self.met = {"<=": a <= b, "<": a < b, ">=": a >= b, ">": a > b}[rel]
@@ -403,7 +405,7 @@ class Chk:
             v = "PENDING" if self.cls == "PENDING" else "OPEN"
         else:
             v = "MEETS" if self.met else "NOT MET"
-        ab = "%s %s %s %s" % (fmt(self.a), self.rel, fmt(self.b), self.unit) if self.met is not None else "(%s)" % self.unit
+        ab = "%s %s %s %s" % (fmt(self.a), self.rel, fmt(self.b), self.unit) if self.met is not None and self.a is not None and self.b is not None else "(%s)" % self.unit
         tag = {"drawn": " [as drawn]", "alternative": " [the alternative: the LM5069 kept]"}.get(self.scope, "")
         return "%s: %s: %s; %s (%s)%s" % (v, self.what, ab, self.cls, self.src, tag)
 
@@ -452,7 +454,7 @@ def compute():
     t = pdf_text("bsc039", 1)
     F["bsc039_vds"] = f(need(t, r"VDS\s+(\d+)\s+V", "BSC039N06NS VDS"))
     t = pdf_text("smcj")
-    for part in ("SMCJ18A", "SMCJ22A", "SMCJ28A", "SMCJ40A"):
+    for part in ("SMCJ18A", "SMCJ22A", "SMCJ28A", "SMCJ36A", "SMCJ40A"):
         m = need(t, r"%s\s+\S+\s+\S+\s+\S+\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+\d+\s+([\d.]+)\s+([\d.]+)" % part, part + " row")
         F[part] = {"vr": f(m, 1), "vbr_min": f(m, 2), "vbr_max": f(m, 3), "vc": f(m, 4), "ipp": f(m, 5)}
     t = pdf_text("tps2596")
@@ -1319,7 +1321,74 @@ def compute():
     if cb["hr"]["day"] != cb["day_air"] or abs(cb["hr"]["q"] - cb["idle_heat"]) > 0.05:
         refuse(3, "L4-E12's heat-rejection need is not on this record's design day and profile")
     F["cb"] = cb
+    F["sv"] = surge_inputs(F, T)
     return F, where
+
+
+def surge_inputs(F, T):
+    """L4-E7's derivation of the panel lead's surge and sustained over-voltage (L4E7-CONTROL-DECISION.md, 'The panel lead's
+    surge and sustained over-voltage, derived'; its output's section THE PANEL LEAD'S DISTURBANCES, DERIVED), set 27 at
+    6d76453e; its SMCJ36A row checked against the held sheet. The remedies are L4-E7's to design (the owner's amendment of
+    2 October 2026, 14:20): this record reads them as named and selects neither."""
+    t = T["l4e7r"]
+    if t.count("THE PANEL LEAD'S DISTURBANCES, DERIVED") != 1 or t.count("\n   THE BACKSTOP UNDER CS101 (") != 1:
+        refuse(3, "L4-E7's panel-lead derivation is not in its output")
+    s = t.split("THE PANEL LEAD'S DISTURBANCES, DERIVED")[1].split("\n   THE BACKSTOP UNDER CS101 (")[0]
+    sp = lambda pat: pat.replace(" ", r"\s+")
+    sv = {}
+    for pat in (r"REQ-063 commits the kit's EMC characterisation to MIL-STD-461G \(11 December 2015\) and the 'Ground, Army' row of its Table V",
+                r"CS116 A \(5\.14,", r"CS115 A \(5\.13,", r"CS117 S \(5\.15,", r"TEST-PLAN\.md runs M1 to M5 and no row runs CS115, CS116 or CS117",
+                r"The alternative that also closes D5 is an input over-voltage and reverse disconnect ahead of PV_P",
+                r"the residual beyond the basis: a direct or nearer strike", r"the kit's posture there is REQ-041's mast-down alarm",
+                r"the sheet's typical failure mode is a short, which F2 then clears"):
+        need(s, sp(pat), "L4-E7's basis")
+    m = need(s, sp(r"a1solar's (\d+) m one way of (\d+) mm2 copper \(array_calc\.py, ESTIMATE\), ([\d.]+) Ohm in loop"), "the lead")
+    sv["lead"] = (f(m, 1), f(m, 2), f(m, 3))
+    sv["qwave"] = f(need(s, sp(r"The lead's quarter wave is ([\d.]+) MHz in free space"), "the lead's quarter wave"))
+    m = need(s, sp(r"THE VERDICTS \(each against REQ-016's criterion on the drafted entry, (\d+) V; as drawn the lowest limit on PV_P is C11 and C12, (\d+) V\)"), "the limits")
+    sv["lim"], sv["lim_drawn"] = f(m, 1), f(m, 2)
+    m = need(s, sp(r"- D1, CS116, PV_IN and the cable: D4 at the disturbance's current ([\d.]+) V \((\d+) A, hot end\), D4 off in the loaded network: MEETS; as drawn, NOT MET"), "D1's verdict")
+    sv["d1"] = (f(m, 1), f(m, 2))
+    m = need(s, sp(r"- D2, CS115, the cable: D4 at the disturbance's current ([\d.]+) V \((\d+) A, hot end\), D4 off in the loaded network: CONDITIONAL: the loop current under ([\d.]+) A \(U5's bound\); as drawn, NOT MET"), "D2's verdict")
+    sv["d2"] = (f(m, 1), f(m, 2), f(m, 3))
+    m = need(s, sp(r"U5's rating is reached at ([\d.]+) A with the whole current through R59 \(the bound\) and at (\d+) A in the loaded network; D4's clamp reaches the drafted entry's (\d+) V at ([\d.]+) A"), "D2's currents")
+    sv["d2_i"] = (f(m, 1), f(m, 2), f(m, 4))
+    m = need(s, sp(r"- D3, the panel's cold open circuit: (\d+) V, under D4's (\d+) V standoff: MEETS \(CONDITIONAL on PANEL-ACC\)"), "D3's verdict")
+    sv["d3"] = (f(m, 1), f(m, 2))
+    rows = re.findall(r"the (least|highest) part (at the cold end|at 25 C|at the junction's maximum)\s+breakdown ([\d.]+) V:\s+([\d.]+) A,\s+([\d.]+) W", s)
+    if len(rows) != 4:
+        refuse(3, "L4-E7's 36 V rows")
+    sv["d4_rows"] = [("the %s part %s" % (a, b), float(v), float(i), float(w)) for a, b, v, i, w in rows]
+    m = need(s, sp(r"is ([\d.]+) W at the hot end's air and ([\d.]+) W at the cold end's"), "D4's capability on the board")
+    sv["d4_cap"] = (f(m, 1), f(m, 2))
+    m = need(s, sp(r"- D4, a 36 V source on the port: D4 conducts ([\d.]+) to ([\d.]+) A: NOT MET: SMCJ36A with the 63 V class \(register row\); as drawn, NOT MET"), "D4's verdict")
+    sv["d4_a"] = (f(m, 1), f(m, 2))
+    sv["d4_cold"] = f(need(s, sp(r"The largest sustained source the drafted entry holds is D4's least breakdown at the cold end, ([\d.]+) V"), "the largest sustained source"))
+    m = need(s, sp(r"the kit's declared source range, (\d+) to (\d+) V \(V2-SPEC line 21\)"), "the declared source range")
+    sv["src"] = (f(m, 1), f(m, 2))
+    m = need(s, sp(r"D5: D4's forward path carries ([\d.]+) A held; on the board it can dissipate ([\d.]+) W at the hot end, so it holds only below a forward drop of ([\d.]+) V"), "D5")
+    sv["d5"] = (f(m, 1), f(m, 2), f(m, 3))
+    need(s, sp(r"- D5, a reversed panel \(E-N1\): D4 forward, [\d.]+ A held: NOT MET as recorded \(E-N1\); as drawn, NOT MET"), "D5's verdict")
+    m = need(s, sp(r"SMCJ36A \(VR ([\d.]+) V, VBR ([\d.]+) to ([\d.]+) V, ([\d.]+) V at the cold end; VC ([\d.]+) V at ([\d.]+) A\)"), "SMCJ36A")
+    sv["s36"] = tuple(f(m, i) for i in range(1, 7))
+    sm = F["SMCJ36A"]
+    if (sm["vr"], sm["vbr_min"], sm["vbr_max"], sm["vc"], sm["ipp"]) != (sv["s36"][0], sv["s36"][1], sv["s36"][2], sv["s36"][4], sv["s36"][5]):
+        refuse(3, "L4-E7's SMCJ36A row is not the held sheet's")
+    m = need(s, sp(r"plateau puts its clamp at ([\d.]+) V at 25 C and ([\d.]+) V at the hot end"), "SMCJ36A's clamp at CS116's plateau")
+    sv["s36_clamp"] = (f(m, 1), f(m, 2))
+    m = need(s, sp(r"the 50 V parts are reached at ([\d.]+) A \(25 C\) and ([\d.]+) A \(hot end\), Q3's (\d+) V at ([\d.]+) A"), "the 50 V parts under SMCJ36A")
+    sv["s36_50"] = (f(m, 1), f(m, 2), f(m, 3), f(m, 4))
+    m = need(s, sp(r"EEHZA1J220XP \((\d+) uF (\d+) V in the same .*?\), which takes the bulk ahead of the bank from (\d+) uF to (\d+) uF and so re-opens the CS101 correction"), "(i)'s bulk", re.S)
+    sv["bulk"] = (f(m, 1), f(m, 2), f(m, 3), f(m, 4))
+    m = need(s, sp(r"the regulation's ([\d.]+) W to the trip's ([\d.]+) W at 36 V, outside REQ-016's window \(a single fault for layer 8\)"), "(i)'s stage at 36 V")
+    sv["stage36"] = (f(m, 1), f(m, 2))
+    m = need(s, sp(r"R-156's text names the INA250's (\d+) V, and the drafted U18 is the INA169 \((\d+) V\)"), "R-156's correction")
+    sv["u18"] = (f(m, 1), f(m, 2))
+    need(s, sp(r"a TEST row owed at layer 8: CS116 on PV_IN alone and on the J_SOLAR cable at the six frequencies and the lead's 15\.0 MHz, and CS115 on the cable, recording the cable's peak current"), "the test row")
+    need(s, sp(r"at 0\.01, 0\.1, 1, 10, 30 and 100 MHz and the lead's 15\.0 MHz"), "CS116's frequencies")
+    if sv["u18"][1] != F["u18_vin"]:
+        refuse(3, "L4-E7's U18 rating is not this record's")
+    return sv
 
 
 # ----------------------------------------------------------------------------------------------- the derived figures
@@ -2261,7 +2330,7 @@ def round5_lines(F, st, reg):
     p("   the gate: %s: criteria 1 and 5 on %s; criterion 2 %s with %d defects open (the rounds add none)"
       % ("CLOSED" if closed else "NOT CLOSED", ", ".join(arch), [g for g in GATE if g["n"] == 2][0]["verdict"], sum(1 for d in DEFECTS if d["state"] == "OPEN")))
     p("   the register: R-150 to R-154 new, R-114 restated (E11-25); from the findings ledger: R-102 (item 8), R-139 (item 5), R-155 (item 10)")
-    p("     and R-156 (item 1, PENDING L4-E7's surge round); %d items" % len(reg))
+    p("     and R-156 (item 1, then PENDING L4-E7's surge round; restated in set 27, section 23); %d items" % len(reg))
     p("   the owner's items: OW-2 (ten questions), OW-7 (the TI request), OW-8 (T-H1's bench), OW-4 the other drafts: actions, not questions")
     return L
 
@@ -2306,6 +2375,8 @@ def round3_lines(F, D, A, E, st):
     p("     an architecture-level choice only if route 2 proves infeasible with route 1 still closed (L4-E13's decision L4E13-06)")
     p("   IF-01 (%s): A-1 on the typical rows, A-3(b) inside F2 and inside J_SOLAR's VH at AWG 16 (R-29), A-3(c) OPEN (R-148), the disturbance" % st["IF-01"][1])
     p("     check CONDITIONAL on n (R-149)")
+    if st["IF-01"][1] == "NOT MET":
+        p("     (since set 27 IF-01 also carries the known defects D-10 and D-11 at the solar entry: section 23)")
     p("   the register: R-35 restated as PANEL-ACC, R-52 the unit's trace rerun, R-29 J_SOLAR's lead at A-3(b)'s current, R-148 A-3(c)'s rating")
     p("     for J_SOLAR and PV_IN (Layer 6; its interface text amends LH-02, no new handover row), R-149 M3's n at or under 2; the owner's items")
     p("     OW-6 (the purchase and the measurement) and the two route-1 drafts in OW-4")
@@ -2313,7 +2384,8 @@ def round3_lines(F, D, A, E, st):
     arch = [c["id"] for c in CHOICES if c["class"] == ARCH]
     p("   the gate: NOT CLOSED (criteria %s): criteria 1 and 5 on %s, each still able to overturn the architecture on named evidence;"
       % (", ".join(str(n) for n in held), ", ".join(arch)))
-    p("     criterion 2 CONDITIONAL with no material defect open, on its rows' named evidence; criteria 3 and 4 PASS")
+    p("     criterion 2 CONDITIONAL on its rows' named evidence (no material defect open in this round; since set 27 the known defects D-10 and D-11,")
+    p("     section 23); criteria 3 and 4 PASS")
     return L
 
 
@@ -2334,7 +2406,7 @@ def rows(F, D, A, E):
         "loss": "the 5 m lead about 0.0465 Ohm (the replay's ESTIMATE); the sense bank %s Wh on SC-37's day, %s Wh on the bright day (L4-E7R)" % (fmt(F["bank_wh"][0]), fmt(F["bank_wh"][1])),
         "therm": "the entry at the worst inside air %s C (envelope, lid closed); the bulk cans' heating under CS101's bounding case, up to %s times their ripple rating, CONDITIONAL (M2 records it)" % (fmt(F["air"][1]), fmt(F["bulk_ripple_x"])),
         "prot_a": "none (a bare panel)", "prot_b": "F2; the 50 V bulk on PV_P ahead of the sense bank; D4 one-way clamp and C71 to C74 on TRK_VS; the INB filter, %d x 100 nF C0G across R66 %s (%s to %s ms) (L4-E7R, drafted in apply_gen_sch_e_backstop.py)" % (F["filt_n"], F["r66"], fmt(F["tau_min_ms"]), fmt(F["tau_max_ms"])),
-        "settled": "l4e (O-1), L4-E7R at 675b8068 (accepted, check 4 at 91e9a4b5), L4-E13 at fae419d1 (accepted, check 3; PANEL-ACC)", "checks": [
+        "settled": "l4e (O-1), L4-E7R at 675b8068 (accepted, check 4 at 91e9a4b5), L4-E13 at fae419d1 (accepted, check 3; PANEL-ACC), L4-E7's panel-lead derivation at 6d76453e (set 27)", "checks": [
             Chk("PANEL-ACC A-1, the window: Vm20 + U_V at -20 C and 1000 W/m2 on a unit equal to the typical rows, within REQ-016's 25 V", F["e13_a1"], "<=", F["e13_a1_lim"], "V", "CONDITIONAL", "L4-E13 out 10 (INFERRED on the typical rows): the bought unit's own measurement M2 decides (R-35)"),
             Chk("D4's standoff above the window's 25 V", pv["v_max"], "<=", sm28["vr"], "V", "MAKER", "Littelfuse SMCJ row"),
             Chk("the panel's hot short circuit with the sheet's power tolerance inside F2", F["isc_hot_tol"], "<=", amps_in(F["e_f2"], "F2"), "A", "INFERRED", "L4-E7R out; gen F2"),
@@ -2349,6 +2421,16 @@ def rows(F, D, A, E):
             Chk("the backstop does not trip under TEST-PLAN M2 (CS101): the filtered ripple at its worst frequency under the margin (the trip's lowest less the regulation's highest)", F["m2_ripple"], "<=", F["m2_margin"], "A", "CONDITIONAL", "L4-E7R out (MODELED; the IMON_IN loop on typical rows, break-even %s times; M2 reads it)" % fmt(F["loop_breakeven"])),
             Chk("the 50 V bulk's heating under CS101's bounding case (up to %s times its ripple rating)" % fmt(F["bulk_ripple_x"]), None, "<=", None, "a measured temperature", "CONDITIONAL", "L4-E7R out; M2 records the cans' case temperature (R-122)"),
             Chk("the sense bank's pulse capability in the capability scenario", None, "<=", None, "a maker's pulse rating", "CONDITIONAL", "L4-E7R out; Vishay clarification (R-101)"),
+            Chk("CS116 on PV_IN and the J_SOLAR cable (MIL-STD-461G 5.14 under REQ-063, L4-E7's D1): D4's clamp at %s A at the hot end at or under the drafted entry's %s V parts" % (fmt(F["sv"]["d1"][1]), fmt(F["sv"]["lim"])),
+                F["sv"]["d1"][0], "<=", F["sv"]["lim"], "V", "INFERRED", "L4-E7 out (D1: Figure CS116-2 read by eye, D4 on a straight line at the printed slope); D-12, R-156, R-174"),
+            Chk("the same on the drawn entry's C11 and C12", F["sv"]["d1"][0], "<=", F["sv"]["lim_drawn"], "V", "INFERRED", "L4-E7 out (D1); D-12, resolved in the drafted entry (R-21)", scope="drawn"),
+            Chk("CS115 on the J_SOLAR cable (5.13, L4-E7's D2): D4's clamp at %s A at the hot end at or under %s V, with the cable's loop current under U5's %s A bound" % (fmt(F["sv"]["d2"][1]), fmt(F["sv"]["lim"]), fmt(F["sv"]["d2"][2])),
+                F["sv"]["d2"][0], "<=", F["sv"]["lim"], "V", "CONDITIONAL", "L4-E7 out (D2: the standard records the loop current and does not limit it; R-174 records it)"),
+            Chk("a stiff %s V source on the port (L4-E7's D4, a single fault; D-10): D4's dissipation at the least it reaches (%s) inside its %s W on the board at the hot end's air" % (fmt(F["sv"]["src"][1]), F["sv"]["d4_rows"][3][0], fmt(F["sv"]["d4_cap"][0])),
+                F["sv"]["d4_rows"][3][3], "<=", F["sv"]["d4_cap"][0], "W", "INFERRED", "L4-E7 out (D4); D-10, a known open defect: its remedy pending L4-E7's round (R-173)"),
+            Chk("a reversed panel (E-N1, L4-E7's D5, a single fault; D-11): D4 forward at the panel's %s A held inside its %s W on the board, which needs a forward drop under %s V" % (fmt(F["sv"]["d5"][0]), fmt(F["sv"]["d5"][1]), fmt(F["sv"]["d5"][2])),
+                None, "<=", None, "no silicon junction drops under %s V at that current" % fmt(F["sv"]["d5"][2]), "INFERRED",
+                "L4-E7 out (D5; the sheet prints the forward drop at 100 A only); D-11, a known open defect: its remedy pending L4-E7's round (R-173)", verdict=False),
         ]})
     R.append({
         "id": "IF-02", "title": "PV_P to the LT8705A stage U5 (the hold, the regulation and the backstop on SWEN) to TRK_OUT",
@@ -2655,14 +2737,18 @@ GATE = [
                  "included, resolves by a value, a part or a measurement on the same topology"},
     {"n": 2, "criterion": "material power-path defects have engineering resolutions and bounded supporting calculations",
      "rows": ["IF-01", "IF-02", "IF-04", "IF-05", "IF-13"], "choices": [], "verdict": "CONDITIONAL",
-     "constraint": "no material defect is open: D-01 to D-05 and D-08 are resolved in design (drafted or bounded), D-06 is resolved in design by "
+     "constraint": "two known open defects at the solar entry, D-10 (a stiff 36 V source on the port) and D-11 (a reversed panel), single faults "
+                   "of the candidate whose remedy is pending: L4-E7's author designs each with its circuit changes and a bounded analysis in a separate "
+                   "round (the owner's amendment of 2 October 2026, 14:20; R-173 PENDING), no remedy selected here; D-12 (CS116 and CS115 on the drawn entry) is resolved in the drafted entry, CS115 CONDITIONAL on the cable's loop "
+                   "current (L4-E7's derivation, set 27); D-01 to D-05 and D-08 are resolved in design (drafted or bounded), D-06 is resolved in design by "
                    "L4-E11's interconnect with its evidence items (E11-10 to E11-16), D-07 and D-09 are superseded by the replacement of the LM5069 "
                    "(E11-19 finds no new one); the resolutions rest on CONDITIONAL rows (the loop's typical rows, the makers' installed and "
                    "short-time ratings, R227's pulse rating, the start into a hard short's transconductance bound) and the hot short in service "
                    "on open evidence (the loop's inductance, E11-20); the dependency rounds add no defect: L4-E11's D9 and D10 are the "
                    "entry's delay and transconductance rows already CONDITIONAL here, and E11-24 is U-04's fallback, a register row (R-152), "
                    "not a defect's resolution",
-     "overturn": "no: each resolves by a part, a rating or a measurement at the vehicle or the solar entry"},
+     "overturn": "no: each resolves by a part, a rating or a measurement at the vehicle or the solar entry; D-10 and D-11 by the remedy L4-E7's round "
+                 "selects, and neither remedy L4-E7 names changes the topology"},
     {"n": 3, "criterion": "remaining assumptions explicit, with their impact and verification method",
      "rows": [], "choices": [], "verdict": "PASS", "constraint": "", "overturn": ""},
     {"n": 4, "criterion": "downstream implementation changes, layout constraints and tests have named owners and acceptance criteria",
@@ -2910,6 +2996,25 @@ DEFECTS = [
                 "L4-E11's C5 GRM3195C1H104GA05 with C121 GRM3195C1H683JA05 (apply_gen_sch_e_timer.py): 4.927 to 14.653 ms against 4.593 ms on a "
                 "recomputed 3.062 ms start (34 uF)",
      "resolution": "superseded by E11-01's entry (R-123); R-119 only if the LM5069 is kept", "rows": ["IF-05"]},
+    {"id": "D-10", "title": "a stiff 36 V source on the solar port (a single fault: a vehicle or shore lead in the panel's receptacle)", "state": "OPEN",
+     "constraint": "D4, the drafted SMCJ28A, conducts 2.67 to 16.63 A and takes 95.9 to 585.8 W against its 1.17 W on the board at the hot end's air; "
+                   "the largest sustained source the drafted entry holds is 29.70 V (L4-E7's D4)",
+     "options": "L4-E7 names two (its register item (c)): (i) SMCJ36A with the entry's 50 V parts at the 63 V class, the bulk ahead of the bank from 99 uF to "
+                "66 uF, which re-opens the accepted CS101 correction, a 36 V source then running the stage at 105.73 to 135.26 W outside REQ-016's window; "
+                "(ii) an over-voltage and reverse disconnect ahead of PV_P, which also closes D-11. The selection, its circuit changes and its bounded "
+                "analysis are L4-E7's round (pending)",
+     "resolution": "a known open defect of the candidate, its remedy pending L4-E7's round (R-173 PENDING); TRN-001's judgement R-156 on L4-E7's derivation (set 27, 6d76453e)",
+     "rows": ["IF-01"]},
+    {"id": "D-11", "title": "a reversed panel (DECISION-31's E-N1, a single fault)", "state": "OPEN",
+     "constraint": "D4 carries the panel's 6.802 A forward, held, and holds inside its 1.17 W on the board only below a 0.172 V drop, which no silicon "
+                   "junction has at that current (INFERRED); the keyed receptacle is the only barrier (L4-E7's D5)",
+     "options": "L4-E7's remedy (ii) closes it with D-10; (i) does not. The selection is L4-E7's round (pending)",
+     "resolution": "a known open defect of the candidate, its remedy pending L4-E7's round (R-173 PENDING)", "rows": ["IF-01"]},
+    {"id": "D-12", "title": "the panel lead's CS116 and CS115 (MIL-STD-461G under REQ-063) on the drawn entry", "state": "RESOLVED (drafted), CS115 CONDITIONAL",
+     "constraint": "D4 clamps at 39.00 V at CS116's 10 A and 37.34 V at CS115's 5 A (hot end), over the drawn C11 and C12's 35 V (L4-E7's D1, D2)",
+     "options": "the drafted entry's 50 V parts (L4-E7R): CS116 MEETS; CS115 CONDITIONAL on the cable's loop current under 15.7 A (U5's bound with the whole "
+                "current through R59; 64 A in the loaded network)",
+     "resolution": "R-21 (apply_gen_sch_e_backstop.py); R-174 records the loop current; R-156 judges under TRN-001", "rows": ["IF-01"]},
 ]
 OWNERS = ["Layer 4 coordinator", "Layer 5 interfaces", "Layer 6 components", "Layer 7 mechanical", "Layer 8 board A generator owner",
           "Layer 8 board E generator owner", "Layer 8 board P generator owner", "Layer 9 pre-layout analysis", "prototype bench",
@@ -3082,7 +3187,7 @@ def main():
       % (fmt(F["u2_vin_abs"]), fmt(F["ld_ca_abs"])))
     p("     CATHODE -%s V recommended, ANODE %s V. CSD19532Q5B %s V; BSC039N06NS %s V. LM5069 (SNVS452G 7.1, 7.5): VIN %s V absolute, VCL %s / %s / %s mV."
       % (fmt(F["ld_ac_rec"]), fmt(F["ld_anode_abs"]), fmt(F["csd19532_vds"]), fmt(F["bsc039_vds"]), fmt(F["lm5069_vin_abs"]), fmt(F["vcl"][0]), fmt(F["vcl"][1]), fmt(F["vcl"][2])))
-    for part in ("SMCJ18A", "SMCJ22A", "SMCJ28A", "SMCJ40A"):
+    for part in ("SMCJ18A", "SMCJ22A", "SMCJ28A", "SMCJ36A", "SMCJ40A"):
         q = F[part]
         p("   Littelfuse %s: VR %s V, VBR %s to %s V at 1 mA, VC %s V at %s A" % (part, fmt(q["vr"]), fmt(q["vbr_min"]), fmt(q["vbr_max"]), fmt(q["vc"]), fmt(q["ipp"])))
     p("   TPS2596 (7.1): VIN %s V absolute. INA226 (SBOS547 5.1): VBUS, IN+ and IN- %s V absolute; common mode %s V (CMRR row); full scale %s mV."
@@ -3378,7 +3483,8 @@ def main():
                 refuse(4, "%s does not quote the round's figure: %r" % (cid, " ".join(s.split())))
     closed = all(g["verdict"] == "PASS" for g in GATE)
     p("   Layer 4's power architecture closes: %s" % ("YES" if closed else "NO, criteria %s are not PASS" % ", ".join(str(g["n"]) for g in GATE if g["verdict"] != "PASS")))
-    p("   MATERIAL POWER-PATH DEFECTS (criterion 2): %d, %d open" % (len(DEFECTS), sum(1 for d in DEFECTS if d["state"] == "OPEN")))
+    opn = [d["id"] for d in DEFECTS if d["state"] == "OPEN"]
+    p("   MATERIAL POWER-PATH DEFECTS (criterion 2): %d, %d open%s" % (len(DEFECTS), len(opn), " (%s: known, the remedy pending L4-E7's round, R-173)" % ", ".join(opn) if opn else ""))
     for d in DEFECTS:
         p("     %s %s [%s]; rows %s" % (d["id"], d["title"], d["state"], ", ".join("%s %s" % (r, st[r][1]) for r in d["rows"])))
         p("        the constraint: %s" % d["constraint"])
@@ -3497,6 +3603,9 @@ def main():
         p("   - %s" % b.replace("**", ""))
     p("")
     for ln in cons_results_lines(F):
+        p(ln)
+    p("")
+    for ln in cons_surge_lines(F):
         p(ln)
     p("")
     p("END. Desk arithmetic on read figures; nothing is measured.")
@@ -4109,6 +4218,8 @@ CHANGE_ORDER = [
     ("4c", "R-144", GE, "U-02's board E changes", "no draft yet"),
     ("4d", "R-21", GE, "on the texts R-19 and R-20 leave", G_L4E7),
     ("4d", "R-98", GE, "with R-21 (the same draft)", G_L4E7),
+    ("4d", "R-173", GE, "after R-21 and R-98 (D-12's 50 V parts and D4 are that draft's); the remedy L4-E7's round selects and drafts for D-10 and D-11",
+     "PENDING: L4-E7's solar-remedy round; no remedy selected here"),
     ("4e", "R-18", GE, "after 4c and 4d", G_L4E9),
     ("4e", "R-95", "board E, pcb_energy_chain.yaml", "with R-18", "no draft yet"),
     ("4e", "R-96", "pcb_fuse_derating.yaml", "with R-18", "no draft yet"),
@@ -4157,6 +4268,8 @@ ORDER_CONSTRAINTS = [
     ("board A regenerated (R-11) after its circuit changes, the charger (R-157) among them", "R-157", "R-11"),
     ("the BQ25730's firmware rules (R-158) after the charger (R-157)", "R-157", "R-158"),
     ("board E regenerated (R-22) after its circuit changes", "R-116", "R-22"),
+    ("the drafted solar entry (R-21) before the solar faults' remedy (R-173)", "R-21", "R-173"),
+    ("the solar faults' remedy (R-173) before board E's regeneration (R-22)", "R-173", "R-22"),
 ]
 CHANGE_SCRIPTS = ["l4e4/apply_gen_sch_a_r11.py", "l4e4/apply_gen_sch_a_r138.py", "l4e5/apply_fw_a16.py", "l4e6/apply_gen_sch_a_r12.py", "l4e6/apply_lcsc_fill_r12.py",
                   "l4e7/apply_gen_sch_e_backstop.py", "l4e7/apply_gen_sch_e_hold.py", "l4e7/apply_gen_sch_e_input_limit.py", "l4e7/apply_gen_sch_e_u5_grade.py",
@@ -4320,6 +4433,14 @@ def cons_behaviour(F, D, st):
          "replace the fuse", "L4-E11 6 (R-129 to R-132)"),
         ("U2's single faults (Q2 short, FB open)", "nothing: VBUS20 follows VIN_RAW past U3's %s V" % fmt(F["u3_abs"]), "no clamp on VBUS20", "S-111's decision is open (R-48)", "s120 11"),
         ("U5's regulation failing", "the backstop on SWEN", "trip at most %s A" % fmt(F["bs_trip"][1]), "the stage restarts; a fault defeating both is Layer 8's analysis (R-100)", "L4-E7R"),
+        ("the panel lead's surge (CS116, CS115; D-12)", "D4 on PV_P under the drafted entry's %s V parts; in the loaded network the entry's capacitors take the pulse" % fmt(F["sv"]["lim"]),
+         "D4 at most %s V at CS116's %s A and %s V at CS115's %s A (hot end)" % ("%.2f" % F["sv"]["d1"][0], fmt(F["sv"]["d1"][1]), fmt(F["sv"]["d2"][0]), fmt(F["sv"]["d2"][1])),
+         "no trip; CS115 CONDITIONAL on the loop current under %s A (R-174)" % fmt(F["sv"]["d2"][2]), "L4-E7 (D1, D2)"),
+        ("a stiff %s V source on the solar port (D-10, a single fault)" % fmt(F["sv"]["src"][1]), "nothing disconnects on the drafted entry: D4 conducts",
+         "D4 %s to %s A against its %s W on the board; its typical failure a short, which F2 clears" % (fmt(F["sv"]["d4_a"][0]), fmt(F["sv"]["d4_a"][1]), fmt(F["sv"]["d4_cap"][0])),
+         "replace D4 and F2; the remedy pending L4-E7's round (R-173)", "L4-E7 (D4)"),
+        ("a reversed panel (D-11, a single fault)", "D4 forward, the panel's current held", "%s A through D4 against its %s W" % (fmt(F["sv"]["d5"][0]), fmt(F["sv"]["d5"][1])),
+         "the keyed receptacle the only barrier; the remedy pending L4-E7's round (R-173)", "L4-E7 (D5), DECISION-31 E-N1"),
     ]
     B["4f"] = [
         ("the margin hold (E5)", "off board D, the PA rail, the RockBLOCK, the LoRa module, both E72 and the Geiger module; the running module idled; the charge held",
@@ -4580,14 +4701,20 @@ def cons_exit_lines(F):
         L.append("   %s: %s (%s)" % (u, cls, EXIT_PENDING[u]))
         for lab, x in (("the exact missing fact", fact), ("the smallest resolution", exp), ("the bounded evidence today", ev), ("the fallback", fb), ("what it decides", ov)):
             L.append("      %s: %s" % (lab, x))
+    L.append("   the known defects beside them (L4-E7's derivation, set 27):")
+    for d in cons_exit_defects(F):
+        L.append("      %s %s: %s; the missing step: %s; the evidence still needed: %s; what it decides: %s" % d)
     n = [e[0] for e in cons_exit(F) if e[1] != QUALIFICATION]
-    L.append("   the exit: Layer 4 power closure is NOT reached on this reading: closure conditions on the board as drawn %s (U-04 becomes a qualification test once R-157 is applied); status: %s" % (", ".join(n), STATUS))
+    L.append("   the exit: Layer 4 power closure is NOT reached on this reading: closure conditions on the board as drawn %s (U-04 becomes a qualification test once R-157 is applied);"
+             " the known open defects D-10 and D-11 at the solar entry, their remedy pending L4-E7's round (R-173); status: %s" % (", ".join(n), STATUS))
     return L
 
 
 def cons_exit_table(F, D, st):
     return {"| U | Class |": ["| U | Class | The exact missing fact | The smallest experiment or manufacturer clarification | The bounded evidence today | The fallback | What it decides | The result |",
-                              "|---|---|---|---|---|---|---|---|"] + ["| %s | %s | %s | %s | %s | %s | %s | %s |" % (e + (EXIT_PENDING[e[0]],)) for e in cons_exit(F)]}
+                              "|---|---|---|---|---|---|---|---|"] + ["| %s | %s | %s | %s | %s | %s | %s | %s |" % (e + (EXIT_PENDING[e[0]],)) for e in cons_exit(F)],
+            "| Defect | Its fault |": ["| Defect | Its fault | State | The missing step | The evidence still needed | What it decides |", "|---|---|---|---|---|---|"]
+            + ["| %s | %s | %s | %s | %s | %s |" % d for d in cons_exit_defects(F)]}
 
 
 def cons_results_lines(F):
@@ -4664,6 +4791,94 @@ def cons_results_lines(F):
     return L
 
 
+SURGE_HEAD = ("| Disturbance |", "| Disturbance | Source, waveform and duration | D4 at its current | The drafted entry | As drawn | Defect and register |")
+REMEDY_HEAD = ("| Remedy |", "| Remedy | What it changes (as L4-E7 names it) | D-10, a 36 V source | D-11, a reversed panel | What L4-E7 records against it |")
+
+
+def cons_surge(F):
+    """L4-E7's verdicts on the panel lead (set 27) and the two remedies it names, read from its output; no remedy is selected
+    here (the owner's amendment of 2 October 2026, 14:20: L4-E7's author designs them in a separate round)."""
+    sv = F["sv"]
+    lim, ld = fmt(sv["lim"]), fmt(sv["lim_drawn"])
+    r4 = sv["d4_rows"]
+    verdicts = [
+        ("D1", "CS116 on PV_IN alone and on the J_SOLAR cable (MIL-STD-461G 5.14): damped sinusoids, Ip to %s A from 1 to 30 MHz, the lead's %s MHz added; five minutes"
+         % (fmt(sv["d1"][1]), "%.1f" % sv["qwave"]), "%.2f V (%s A, hot end); off in the loaded network" % (sv["d1"][0], fmt(sv["d1"][1])),
+         "MEETS (its %s V parts)" % lim, "NOT MET (%.2f > %s V)" % (sv["d1"][0], ld), "D-12 (R-21); R-174"),
+        ("D2", "CS115 on the cable (5.13): %s A, 30 ns, 30 Hz for one minute; the loop current recorded, not limited" % fmt(sv["d2"][1]),
+         "%.2f V (%s A, hot end); off in the loaded network" % (sv["d2"][0], fmt(sv["d2"][1])),
+         "CONDITIONAL: the loop current under %s A (U5's bound; %s A in the loaded network)" % (fmt(sv["d2_i"][0]), fmt(sv["d2_i"][1])),
+         "NOT MET (%.2f > %s V)" % (sv["d2"][0], ld), "D-12; R-174"),
+        ("D3", "the panel's cold open circuit, %s V at most at -20 C, held" % fmt(sv["d3"][0]), "%s V, under its %s V standoff" % (fmt(sv["d3"][0]), fmt(sv["d3"][1])),
+         "MEETS (CONDITIONAL on PANEL-ACC)", "MEETS", "R-35"),
+        ("D4", "a stiff source on the port (the declared %s to %s V) through the lead's %s Ohm loop and F2, held" % (fmt(sv["src"][0]), fmt(sv["src"][1]), fmt(sv["lead"][2])),
+         "conducts %s to %s A, %s to %s W against %s W on the board" % (fmt(sv["d4_a"][0]), fmt(sv["d4_a"][1]), fmt(r4[3][3]), fmt(r4[0][3]), fmt(sv["d4_cap"][0])),
+         "NOT MET", "NOT MET", "D-10; R-173"),
+        ("D5", "a reversed panel (DECISION-31's E-N1), the panel's %s A forward, held" % fmt(sv["d5"][0]),
+         "forward; inside %s W only below a %s V drop" % (fmt(sv["d5"][1]), fmt(sv["d5"][2])), "NOT MET", "NOT MET", "D-11; R-173"),
+        ("beyond the basis", "a direct strike, or one nearer than MIL-STD-464's nearby lightning (CS117 S, not taken)", "its own rating (L4-E7R's check (c))",
+         "a residual outside every requirement", "the same", "R-156; REQ-041's mast-down alarm"),
+    ]
+    remedies = [
+        ("(i)", "D4 to SMCJ36A (VR %s V; %.2f V breakdown at the cold end) and the entry's %s V parts to the %s V class: the bulk C11, C12 and C69 to EEHZA1J220XP "
+         "(%s uF %s V), C71 to C74 at %s V or more" % (fmt(sv["s36"][0]), sv["s36"][3], lim, fmt(sv["bulk"][1]), fmt(sv["bulk"][0]), fmt(sv["bulk"][1]), fmt(sv["bulk"][1])),
+         "closed at D4", "not closed",
+         "the bulk ahead of the bank from %s to %s uF re-opens the accepted CS101 correction (re-run with it); a %s V source then runs the stage at %s to %s W, outside "
+         "REQ-016's window, a further layer 8 single fault; the clamp at CS116's %s A reaches %s V at the hot end" % (fmt(sv["bulk"][2]), fmt(sv["bulk"][3]), fmt(sv["src"][1]),
+                                                                                                      fmt(sv["stage36"][0]), fmt(sv["stage36"][1]), fmt(sv["d1"][1]), fmt(sv["s36_clamp"][1]))),
+        ("(ii)", "an over-voltage and reverse disconnect ahead of PV_P (a series FET with its controller)", "closed", "closed", "more parts, and no sheet for one is held (L4-E7)"),
+    ]
+    sel = ("**The remedy is pending.** Each solar fault's remedy, with its circuit changes and a bounded analysis, is designed by L4-E7's author "
+           "in a separate round (the owner's amendment of 2 October 2026, 14:20); this record selects neither of the two L4-E7 names and "
+           "integrates the result when it lands. Until then D-10 and D-11 are known open engineering defects of the candidate, IF-01 reads NOT "
+           "MET on them, and R-173 holds the remedy's place in the change list (PENDING). Neither remedy named changes the topology.")
+    return verdicts, remedies, sel
+
+
+def cons_surge_lines(F):
+    verdicts, remedies, sel = cons_surge(F)
+    sv = F["sv"]
+    L = ["23. THE PANEL LEAD'S SURGE (L4-E7's derivation, set 27 at 6d76453e: MIL-STD-461G CS116 and CS115 under REQ-063, the 'Ground, Army' row, both A;"
+         " the sustained over-voltage and the reversed panel): the verdicts, the known open defects D-10 and D-11 and D-12, the remedies as named, none selected"]
+    p = L.append
+    p("   the lead: %s m one way of %s mm2, %s Ohm in loop, unshielded, the kit floating; its quarter wave %.1f MHz added to CS116's frequencies; TEST-PLAN runs M1 to M5 only"
+      % (fmt(sv["lead"][0]), fmt(sv["lead"][1]), fmt(sv["lead"][2]), sv["qwave"]))
+    p("   the criterion (REQ-016's): D4's clamp at the disturbance's current, with its tolerance, at or under the lowest limit on PV_P: %s V drafted, %s V as drawn"
+      % (fmt(sv["lim"]), fmt(sv["lim_drawn"])))
+    for v in verdicts:
+        p("   %s %s; D4: %s; the drafted entry %s; as drawn %s; %s" % v)
+    p("   D4 under a stiff %s V source (L4-E7's rows, INFERRED straight line from each breakdown at the printed slope):" % fmt(sv["src"][1]))
+    for nm, vb, ia, pw in sv["d4_rows"]:
+        p("     %s: breakdown %.2f V, %.2f A, %.1f W" % (nm, vb, ia, pw))
+    p("   the remedies L4-E7 names (its register item (c)), not selected here:")
+    for r in remedies:
+        p("   %s %s; D-10 %s; D-11 %s; recorded against it: %s" % r)
+    p("   " + sel.replace("**", ""))
+    p("   the register: R-156 restated (its input is this derivation; U18 the INA169 at %s V, not the INA250's %s V), R-173 the remedy's place (PENDING L4-E7's round),"
+      " R-174 the CS116 and CS115 test at layer 8" % (fmt(sv["u18"][1]), fmt(sv["u18"][0])))
+    return L
+
+
+def cons_surge_tables(F, D, st):
+    verdicts, remedies, sel = cons_surge(F)
+    return {SURGE_HEAD[0]: [SURGE_HEAD[1], "|---|---|---|---|---|---|"] + ["| %s |" % " | ".join(v) for v in verdicts],
+            REMEDY_HEAD[0]: [REMEDY_HEAD[1], "|---|---|---|---|---|"] + ["| %s |" % " | ".join(r) for r in remedies]}
+
+
+def cons_exit_defects(F):
+    """The known open defects beside U-01, U-02 and U-04 in the exit statement (L4-E7's derivation, set 27), their remedy pending."""
+    sv = F["sv"]
+    pend = "OPEN: a known engineering defect of the candidate, its remedy pending (L4-E7's round; R-173, a register row, not yet a draft)"
+    step = "L4-E7's selected remedy, with its circuit changes and a bounded analysis (the owner's amendment of 14:20)"
+    return [
+        ("D-10", "a stiff %s V source on the solar port (a single fault)" % fmt(sv["src"][1]), pend, step,
+         "as L4-E7's round names it; R-156's judgement and R-174's test on the result", "neither remedy L4-E7 names changes the topology"),
+        ("D-11", "a reversed panel (E-N1, a single fault)", pend, step, "the same", "the same"),
+        ("D-12", "CS116 and CS115 on the panel lead, as drawn", "RESOLVED in the drafted entry (R-21); CS115 CONDITIONAL on the loop current",
+         "the loop current recorded (R-174)", "the test of R-174 at layer 8", "nothing: the drafted entry's parts"),
+    ]
+
+
 def cons_in_short(F, D, st, reg):
     """The page's 'In short', generated: electrical feasibility and endurance apart, the change list and the exit."""
     cnt = {}
@@ -4683,10 +4898,13 @@ def cons_in_short(F, D, st, reg):
         "VBUS20 by board A's LM5176 and once more by the charger onto VBAT, from which every load converter and both outlets run "
         "(section 1). The charger is (B1), TI's BQ25730 with the battery FET Q39, drafted (the board as drawn carries the BQ25731). "
         "A2 stays a proposal. There is no USB-C input.",
-        "**Electrical feasibility** (apart from endurance): %d interfaces, %d MEET, %d CONDITIONAL, %d NOT MET, %d PENDING (1d); no "
-        "material defect is open: D-01 to D-05 and D-08 resolved in design, D-06 resolved in design by L4-E11, D-07 and D-09 "
-        "superseded (8a); every resolution is a DRAFT, none applied; the heat into the case per mode against T-H1's binding %s W/K (2c)."
-        % (len(st), cnt.get("MEETS", 0), cnt.get("CONDITIONAL", 0), cnt.get("NOT MET", 0), cnt.get("PENDING", 0), fmt(F["gc"])),
+        "**Electrical feasibility** (apart from endurance): %d interfaces, %d MEET, %d CONDITIONAL, %d NOT MET, %d PENDING (1d). IF-01 "
+        "reads NOT MET on two KNOWN OPEN DEFECTS at the solar entry, single faults from L4-E7's panel-lead derivation: D-10, a stiff %s V "
+        "source on the port, and D-11, a reversed panel; their remedy is pending (L4-E7's round, R-173), no remedy selected here; D-12, CS116 and CS115 on the panel lead, is resolved in the drafted "
+        "entry (CS115 CONDITIONAL on the loop current). D-01 to D-05 and D-08 are resolved in design, D-06 by L4-E11, D-07 and D-09 "
+        "superseded (8a); every resolution is a DRAFT or a register row, none applied; the heat into the case per mode against T-H1's "
+        "binding %s W/K (2c)."
+        % (len(st), cnt.get("MEETS", 0), cnt.get("CONDITIONAL", 0), cnt.get("NOT MET", 0), cnt.get("PENDING", 0), fmt(F["sv"]["src"][1]), fmt(F["gc"])),
         "**Endurance** (apart from electrical feasibility; the approved profile %s W kept): battery-only %s (%s with the tablet's "
         "window at the start) at room temperature and %s with the cells at -10 C; solar-assisted on the candidate panel's day: %s, "
         "%s; the steady load carried %s. The objective of 48 to 72 h is NOT MET: a deficit of %.1f W against the profile, "
@@ -4708,7 +4926,8 @@ def cons_in_short(F, D, st, reg):
         "**The exit** (section 6, the owner's definition): Layer 4 power closure is not reached on this reading. U-02 is the closure "
         "condition one T-H1 point at the profile's heat decides (%s W/K; under it the combined route read at the same point, then the owner's options); U-04 becomes a downstream qualification test once (B1) is applied and stays a closure "
         "condition on the board as drawn; U-01 has a supported route on published evidence (the Saft MP 176065 xtd), pending the "
-        "owner's adoption and three conditions, and the ruled 35E is unsuitable on its own published evidence for the margins. Each "
+        "owner's adoption and three conditions, and the ruled 35E is unsuitable on its own published evidence for the margins. Beside "
+        "them, the solar faults D-10 and D-11 are known open defects, their remedy pending L4-E7's round (R-173). Each "
         "has its exact missing fact and the smallest experiment or manufacturer clarification that resolves it. **Status: %s.**" % (F["cb"]["hr"]["thr"][0][0], STATUS),
     ]
 

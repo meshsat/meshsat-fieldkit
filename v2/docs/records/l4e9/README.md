@@ -43,8 +43,12 @@ the heat-rejection result (L4-E12 check 6 at `589f18ac`): no passive approach in
 the conservative bound (fins, the large loads led into the plate and the open lid as a radiator, all three 1.384 against
 1.447 W/K), so U-02 is a closure condition with one precise bounded question at the top of the exit: T-H1's point at the
 profile's heat (42.4 W; 1.509, 1.575 and 1.930 W/K), under its first threshold the combined route (R-170 to R-172) read at the
-same point, then the owner's options; the point at E5's hold (21.2 W) kept after it for E5's and E3-O's lines; the register at
-162 items. Status: known defects addressed in drafts; feasibility conditions remain open.
+same point, then the owner's options; the point at E5's hold (21.2 W) kept after it for E5's and E3-O's lines. Set 27 brings
+L4-E7's panel-lead surge derivation (MIL-STD-461G CS116 and CS115 under REQ-063; output section 23, the page's 7a): CS116
+meets on the drafted entry and CS115 is conditional on the loop current; a stiff 36 V source on the solar port (D-10) and a
+reversed panel (D-11) are known open engineering defects of the candidate, single faults, whose remedy L4-E7's author
+designs in a separate round (pending; R-173 holds its place, no remedy selected here); R-156 is restated and the CS116 and CS115 test is R-174; the register at 164 items. Status: known defects
+addressed in drafts; feasibility conditions remain open.
 
 | File | What it is |
 |---|---|
