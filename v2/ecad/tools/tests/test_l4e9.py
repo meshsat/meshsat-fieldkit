@@ -899,8 +899,8 @@ def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
     m = _M()
     F = _C["F"]
     r5 = F["r5"]
-    for key, commit in (("l4e10", "e464ff88"), ("l4e10md", "e464ff88"), ("cl_topwell", "e464ff88"), ("l4e11", "f1856bfd"),
-                        ("l4e11md", "f1856bfd"), ("l4e12", "c933724e"), ("l4e12md", "c933724e")):
+    for key, commit in (("l4e10", "e464ff88"), ("l4e10md", "e464ff88"), ("cl_topwell", "e464ff88"), ("l4e11", "5aa18a69"),
+                        ("l4e11md", "5aa18a69"), ("l4e12", "7f41632d"), ("l4e12md", "7f41632d")):
         assert m.FROM_COMMIT[key] == commit, key
         rel, sha = m.PINS[key]
         rb = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (commit, rel)], capture_output=True)
@@ -923,7 +923,7 @@ def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
     assert abs(float(r5["e35"][0]) - float(r5["hl"][0]) - float(r5["growth"])) < 1e-9
     assert "session's" in u2["fallback"] and "down to %s" % r5["f4"][3] in u2["fallback"] and "the remaining option is the owner's" in u2["fallback"]
     assert float(r5["f4"][3]) < float(r5["f4"][1]) < F["gc"] < float(r5["pass"][0])
-    assert "For D1 and D3 there is none inside (A)" in u4["fallback"] and r5["remedy"][1:] == ("D1", "D3")
+    assert "arrangement (A) with its dependency round stands" in u4["fallback"] and r5["remedy"][1:] == ("D1", "D3")
     assert "CFL-002" in u2["evidence"][2] and "OW-8" in u2["evidence"][2] and "OW-7" in u4["evidence"][2]
     bad = copy.deepcopy(m.CHOICES)
     for c in bad:
@@ -940,7 +940,7 @@ def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
     finally:
         m.CHOICES = saved
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
-    assert len(reg) == 146 and [x for x in reg if int(x[2:]) >= 150] == ["R-150", "R-151", "R-152", "R-153", "R-154", "R-155", "R-156"]
+    assert len(reg) >= 146 and [x for x in reg if 150 <= int(x[2:]) <= 156] == ["R-150", "R-151", "R-152", "R-153", "R-154", "R-155", "R-156"]
     k, what, frm, own, acc = r5["fanrow"]
     assert reg["R-150"][1] == k and what in reg["R-150"][2] and own.startswith(reg["R-150"][4]) and acc.lower() in reg["R-150"][5].lower()
     assert "T-H1-PROCEDURE-DRAFT.md" in reg["R-151"][2] and "%s W/K" % r5["pass"][0] in reg["R-151"][5] and reg["R-151"][4] == "TEST-PLAN owner"
@@ -957,7 +957,7 @@ def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
     assert "ten questions" in ow["OW-2"]["what"] and r5["tw_q"] == list(range(1, 11))
     assert not any(k in ("cl_topwell", "ti_review") for k, _ in ow["OW-4"]["docs"]), "Topwell's and TI's requests are their own items"
     sec = _C["text"].split("14. UPDATE ROUND 5")[1]
-    assert "the gate: NOT CLOSED" in sec and "146 items" in sec and "Layer 4's power architecture closes: NO" in _C["text"]
+    assert "the gate: NOT CLOSED" in sec and "%d items" % len(reg) in sec and "Layer 4's power architecture closes: NO" in _C["text"]
     page = open(PAGE, encoding="utf-8").read()
     assert "**Under U-01's recommended cell** (CONDITIONAL, not taken): usable %s Wh against the 35E's %s Wh" % (m.fmt(F["cell_usable"][1]), m.fmt(F["cell_usable"][0])) in page, \
         "the bullet L4-E10 reads back keeps its first chain's figures"
@@ -1083,7 +1083,7 @@ def t_consolidation_the_handover_the_exit_and_the_status():
     ex = m.cons_exit(F)
     assert [e[0] for e in ex] == [c["id"] for c in m.CHOICES if c["class"] == m.ARCH]
     for e in ex:
-        assert e[1] in (m.QUALIFICATION, m.CONDITION) and all(x.strip() for x in e[2:]), e[0]
+        assert e[1] in (m.QUALIFICATION, m.CONDITION, m.QUALIFICATION_ONCE) and all(x.strip() for x in e[2:]), e[0]
     assert m.OWNER_DEFINITION in page.replace("\n", " ").replace("  ", " ") or m.OWNER_DEFINITION[:80] in page.replace("\n", " ")
     assert "**Status: %s.**" % m.STATUS in page and m.STATUS in _C["text"].split("20. THE EXIT")[1]
     if any(e[1] == m.CONDITION for e in ex):
@@ -1091,6 +1091,42 @@ def t_consolidation_the_handover_the_exit_and_the_status():
     short = page.split("## In short\n")[1].split("\n## 1. ")[0].strip().split("\n")
     assert [s[2:] for s in short] == m.cons_in_short(F, D, st, reg), "the page's In short is the script's"
     assert "**Under U-01's recommended cell** (CONDITIONAL, not taken)" in page.split("## Appendix A.")[1], "the bullet L4-E10 reads stays, in the history"
+
+
+def t_consolidation_the_charger_selection_and_the_thermal_verdict_are_carried():
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    b1, tb = F["cb"]["b1"], F["cb"]["tb"]
+    for key in ("l4e11chk5", "l4e12chk5", "e11charger"):
+        assert key in m.PINS and m.PINS[key][1][:16] in _C["text"].split("1. THE MAKERS")[0], key
+    assert m.FROM_COMMIT["l4e11"] == "5aa18a69" and m.FROM_COMMIT["l4e12"] == "7f41632d"
+    N, E, C, NP = m.cons_diagram(F, st)
+    blk = {n[0]: " ".join(n[4]) for n in N}
+    assert "BQ25730" in blk["CHG"] and "Q39" in blk["VBAT"] and "%s" % b1["vsys_min"] in blk["VBAT"], "(B1) is in the figure"
+    assert "Q39" in [e for e in E if e[0] == "P11"][0][4]
+    reg = _md_rows(REG, "| ID | Kind |")
+    ch = m.cons_changes(reg)
+    pos = {c[2]: (c[0], c[1]) for c in ch}
+    assert pos["R-157"][1] == "3a" and pos["R-157"][0] < pos["R-11"][0] and pos["R-157"][0] < pos["R-158"][0], "the charger in board A's round"
+    assert pos["R-152"][1] == "ALT" and "apply_gen_sch_a_charger.py" in [c for c in ch if c[2] == "R-157"][0][4]
+    for rid in ("R-163", "R-164", "R-165", "R-166", "R-111", "R-141"):
+        assert rid in {r[0] for r in reg}, rid
+    modes, energy, ef, heat = m.cons_budget(F, st)
+    assert "%s W more on battery" % b1["q39_idle"][1] in modes[0][4]
+    assert "%.3f h with (B1)'s Q39" % (F["a1_bat"][0] / (F["idle"][1] + b1["q39_idle"][1])) in energy[0][4]
+    assert all(len(h) == 6 and h[5].strip() for h in heat), "each mode against the conservative bound"
+    assert "%s C" % tb["air_e3o"][0] in [h for h in heat if h[0] == "H3"][0][5] and "%.3f W/K" % tb["all_e3o"][3] in [h for h in heat if h[0] == "H3"][0][5]
+    ex = {e[0]: e for e in m.cons_exit(F)}
+    assert ex["U-04"][1] == m.QUALIFICATION_ONCE and ex["U-02"][1] == m.CONDITION and ex["U-01"][1] == m.CONDITION
+    for a, _rise, _t, _w in (tb["bands"][0], tb["bands"][1], tb["bands"][4]):
+        assert a in ex["U-02"][3], a
+    assert "%s W/K" % tb["e5"][0] in ex["U-02"][2] and "%s V" % b1["vsys_min"] in ex["U-04"][4]
+    u4 = [c for c in m.CHOICES if c["id"] == "U-04"][0]
+    assert "(B1)" in u4["constraint"] and "arrangement (A) with its dependency round stands" in u4["fallback"]
+    named = {v for _r, _q, figs, _k, _w in m.RECON for v, _k2, _b in figs}
+    assert {"2.416", "2.462", "1.22", "0.566", "0000h"} <= named
+    page = open(PAGE, encoding="utf-8").read()
+    assert "T-H1 decides" in page and "(B1)" in page and "**Status: %s.**" % m.STATUS in page
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
