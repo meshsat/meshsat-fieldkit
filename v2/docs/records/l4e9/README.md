@@ -65,7 +65,10 @@ node 9.688 to 17.375 V; the start bounded to VSYS_MIN or a latch within 3.062 s)
 question per required mode against its governing local limit (the SGP41's +55 C a screen; four class (iii) lines no reading can
 pass, the owner's, OW-10), the charging heat as a balance (52.134 W) and the battery-only run coupled to C1 (2.52 h energy only;
 the shed states 2.52 to 2.95 h); L4-E10 at `ee09aa09` finds the Saft supported for the temperature windows and not yet
-adoptable; the register at 169 items. Status: known defects addressed in drafts; feasibility conditions remain open.
+adoptable; the register at 169 items. B6, the last fix (L4-E7 at `11339ec7`, output section 25m): the solar guard already on
+takes four drafted parts (C131 and C132 two 10 uF 100 V, C133 and C134 two 10 uF 50 V, C126 330 pF, R97 30.0k), and D-10 is
+CONDITIONAL on the panel lead's loop inductance at least 2.47 uH (R-176's seven rows; R-180, the lead's spacing at Layer 7); D-12's
+text is L4-E7's; the register at 170 items. Status: known defects addressed in drafts; feasibility conditions remain open.
 
 | File | What it is |
 |---|---|
