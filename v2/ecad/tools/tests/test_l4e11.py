@@ -36,7 +36,10 @@ fixes (L4-F02, L4-F03) adds: the battery FET's RDS(on) figure is an allowance th
 the thermal basis is the device's own Zth(j-mb) with the two FETs' coupling inside the measured sum, and the service and every fault
 history from the hot state fit it; Ciss is not shown under TI's 5 nF near 0 V; the docking pulse is taken whole in one FET with no
 I2t conversion; the dock's VSYS branch sits behind an eFuse whose printed limit keeps the contact inside its rating, the fuse and the
-PTC fail on their printed rows, and the feed's drop clears U12; the record states each item's status. Nothing here writes into the tree:
+PTC fail on their printed rows, and the feed's drop clears U12; the record states each item's status. The second review (L4-CP01 to
+L4-CP03) adds: U42's fault envelope rests only on printed limits and states its inferred ceiling; the fans' start fits U42's least limit;
+the docking waveform's qualification exceeds the waveform; the charger draft writes none of the withdrawn statements; each measurement
+row names its specimen and blocks only the final release. Nothing here writes into the tree:
 drafts run on temporary copies.
 Software tests establish this record's own behaviour only.
 """
@@ -444,7 +447,7 @@ def t_the_record_carries_the_outputs_numbers():
               "0.916", "10.44", "120.9", "107.8", "170.3", "184.4", "0.302",
               "34.42", "21.136", "0.33616", "5.632", "11.96", "3.062", "0.848", "119.8", "9.688", "12.179", "0.1408", "2.406", "28.32",
               "33.12", "126.7", "0.2589", "1.3571", "10.753", "3.785", "0.703", "5.74", "123.3", "1.501", "1.8018", "1.4713", "9.539",
-              "0.1486", "152.8", "51.5", "80.9"):
+              "0.1486", "152.8", "51.5", "80.9", "566", "1.441", "41.1", "0.3356", "0.5713", "9.494", "267.2", "37.2", "11.93"):
         assert s in page and s in out, "%s is not in both the record and the output" % s
 
 
@@ -635,7 +638,7 @@ def t_the_charger_draft_composes_with_the_guard_in_either_order():
                      '"CH_BATDRV", "CH_BATQ", "VBAT", fp="LFPAK56", lcsc="C3278350")', '"LFPAK56": "Package_TO_SOT_SMD:LFPAK56"',
                      '"CH_BATQ", "CELL_FUSED", "RS2512")', 'r("R149", "10R", "CH_BATQ", "CH_SRP_F")', 'c("C236", ',
                      '_intent.rail("CH_BATQ", 14.4, 10.0, 18.0, "R17"', '"Q39", always_on=True', 'fed_from="CH_BATQ"',
-                     '"R17", "Q39", "Q40", "C236", "U42", "R221", "C237", "C16"', '{"1": "VSYS_DOCK", "2": "GND", "3": "GND"', 'loads={"U42": 1.0, "U4": 2.0'):
+                     '"R17", "Q39", "Q40", "C236", "U42", "R221", "C237", "C238", "C239", "D23", "C16"', '{"1": "VSYS_DOCK", "2": "GND", "3": "GND"', 'loads={"U42": 1.0, "U4": 2.0'):
             assert txt.count(want) == 1, want
         assert '"21": "NC"' not in txt and "C2871872" not in txt
 
@@ -896,7 +899,60 @@ def t_the_record_states_each_review_items_status():
     page = open(PAGE, encoding="utf-8").read()
     sec = page[page.index("## 16. The fix round for the review of the provisional fixes"):]
     for item, status in (("objection 1", "**CONDITIONAL**"), ("objection 2", "**CLOSED as an analysis basis"), ("objection 3", "**OPEN**"),
-                         ("objection 4", "**CONDITIONAL**"), ("service from the hot state", "**CONDITIONAL**"), ("L4-F03", "**CLOSED in design**")):
+                         ("objection 4", "**CONDITIONAL**"), ("service from the hot state", "**CONDITIONAL**"),
+                         ("L4-F03", "**sustained-overload remedy drafted; fault qualification open**")):
         rows = [l for l in sec.splitlines() if l.startswith("|") and item in l]
         assert rows and status in rows[0], "%s has no status row" % item
     assert sec.count("| Affected circuit or function |") == 1
+
+
+def t_cp01_u42s_envelope_rests_on_printed_limits_and_states_its_inferred_ceiling():
+    R = _R()
+    m = _M()
+    L, M, K, H = R["L"], R["M"], R["K"], R["H"]
+    assert abs(M["i_pk"] - H["vsys_top"] / (L["ron"][0] + M["r_path_min"])) < 1e-9 and L["ron"][0] < L["ron"][2]
+    assert abs(M["i2t_pk"] - M["i_pk"] ** 2 * L["tsoft"]) < 1e-12
+    assert M["treg"][1] > L["tcl"][1], "the start into a short does not time out later than the overload timer"
+    assert abs(M["duty_start"] - M["treg"][1] / (M["treg"][1] + L["tretry"][0])) < 1e-12 and M["rise_retry"] < M["rise_steady"]
+    assert M["v_in_pk"] < M["abs_in"], "the input spike at the ceiling passes U42's absolute maximum"
+    assert 2 * M["fan_simul"] + K["aux"]["U12"] <= L["ilim"][0] + 1e-12 and M["fan_stag"] > M["fan_simul"] > K["aux"]["J_FAN1"]
+    assert M["vsys_e_lim"] < L["vsys_e_min"] and M["vsys_e_lim"] > K["ap_vin"][0]
+    out = open(OUT, encoding="utf-8").read()
+    assert "NOT an instantaneous ceiling" in out and "0.0091" not in out.split("16e. ")[1], "the typical 45 A still bounds a pulse"
+    assert "STATUS: sustained-overload remedy drafted; fault qualification open" in out
+    row = [x for x in m.downstream(R) if x[0] == "E11-38"][0][3]
+    for case in ("(b) an operating overload", "(c) a 10 mOhm short applied", "(d) a start into that short", "(e) one hour of retry", "(f) both fans"):
+        assert case in row, case
+
+
+def t_cp02_the_docking_qualification_exceeds_the_whole_waveform():
+    R = _R()
+    m = _M()
+    M, Q0 = R["M"], R["H"]["Q"]
+    assert M["dock_q"][0] > Q0["i_dock"] and M["dock_q"][1] > Q0["tau"] and m.F17_TMB > R["K"]["air"]["route"]
+    assert M["dock_q_t80"] > R["L"]["t_over_is"]
+    row = [x for x in m.downstream(R) if x[0] == "E11-30"][0][3]
+    assert "WHOLE hot docking waveform" in row and "Q-NXP-1" in row and "board P" in row
+    assert "judged on TJ alone" not in row
+
+
+def t_cp03_the_charger_draft_writes_none_of_the_withdrawn_statements():
+    R = _R()
+    with tempfile.TemporaryDirectory() as d:
+        a = os.path.join(d, "gen_sch_a.py")
+        shutil.copy(GEN_A, a)
+        _apply("apply_gen_sch_a_charger.py", a)
+        txt = open(a, encoding="utf-8").read()
+    for w in R["M"]["withdrawn"]:
+        assert w not in txt, "the draft still writes %r" % w
+    assert "SIZED to an RDS(on) allowance" in txt and "33.12 K/W" in txt and "no sharing credited" in txt
+
+
+def t_every_measurement_row_names_its_specimen_and_blocks_only_the_final_release():
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page[page.index("### 17d. "):]
+    assert "| Row | Specimen | Represents | Transfers | Blocks only |" in sec
+    for iid in ("E11-29", "E11-30", "E11-36", "E11-37", "E11-38", "E11-35"):
+        rows = [l for l in sec.splitlines() if l.startswith("| Row %s |" % iid)]
+        assert len(rows) == 1 and rows[0].count("|") == 6, iid
+        assert "release" in rows[0].split("|")[5] or "selection" in rows[0].split("|")[5] or "choice" in rows[0].split("|")[5], iid

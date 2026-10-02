@@ -76,3 +76,19 @@ typical only (2.36 nF at -15 V; its Fig. 12 reads about 2.87 nF near 0 V), so th
   protect: the ideal diode's regulation at VBATDRV_DIODE 30 mV, LDO mode at VSYS_MIN, or the supplement entry time? Is a total gate
   charge limit at VGS -10 V the better statement, and if so, what is it? Two BUK6Y10-30P in parallel (QG(tot) at most 64 nC each at
   -10 V) are the case in hand.
+
+## After the second review (2 October 2026, record section 17)
+
+Drafted, not sent:
+
+- **Q-TI-18 (E11-38, TPS16630).** SLVSET9G 6.1 (p.7) prints OUT at -0.3 V minimum, and 9.4.1 and 9.5.1 recommend a Schottky diode from
+  OUT to GND for the negative spike when the device interrupts a short. With a B540C-13-F at OUT and an output loop of 60 mm of 24 AWG
+  and a spring contact, interrupting up to a few hundred amperes: what negative excursion at OUT does TI accept, for how long, and
+  does the hot-short response (1 us typical, p.10) have a maximum? Is I(OL) at 11.0 kOhm specified at VIN - VOUT of 17 V?
+
+## Not for TI: the battery FETs' maker (drafted, not sent)
+
+- **Q-NXP-1 (E11-30, BUK6Y10-30P).** The body diode's acceptance of a single exponential pulse of 242.9 A peak with a 33.8 us time
+  constant (over IS's 80 A for about 38 us), from a mounting base at +70 C, about 1000 times over the part's life at most once per 10 s;
+  Table 5 (p.3) prints ISM 320 A for tp at most 10 us at Tmb 25 C only. Is the pulse inside the part's capability, and what VSD does
+  the part show at 80 A and 240 A at a 70 C and a 150 C junction?

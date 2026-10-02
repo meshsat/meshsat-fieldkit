@@ -818,6 +818,7 @@ def compute():
     T["arch"] = text("arch")
     R["K"] = fix_round(R, T)
     R["L"] = fix16_round(R, T)
+    R["M"] = fix17_round(R, T)
     return R
 
 
@@ -2729,8 +2730,6 @@ def fix16_round(R, T):
     vt, it = F16_OVL[1], F16_OVL[0]
     L["ovl_r"] = vt / it
     L["ovl_p"] = (vt - L["ilim"][1] * L["ovl_r"]) * L["ilim"][1]
-    L["soft_i2t"] = L["iscp"] ** 2 * L["tsoft"]
-    L["soft_eq"] = L["soft_i2t"] / L["c813"] ** 2
     L["c_e"] = 10e-6                                  # C31 10 uF 25 V 1210 (gen_sch_e.py; the only capacitor on VSYS_E)
     L["t_ramp"] = (20.8e3 * K["vsys_sup"] * F16_CDVDT * (1 - F16_CDVDT_TOL), 20.8e3 * H["vsys_top"] * F16_CDVDT * (1 + F16_CDVDT_TOL))
     L["i_inrush"] = L["c_e"] / (20.8e3 * F16_CDVDT * (1 - F16_CDVDT_TOL))
@@ -2868,16 +2867,15 @@ def render_fix16(R, p):
       % (fmt(L["ron"][2] * 1e3, 0), fmt(L["tcl"][1] * 1e3, 0), fmt(L["tretry"][0] * 1e3, 0), fmt(L["tretry"][1] * 1e3, 0)))
     p("       to GND, Table 8-1); thermal regulation %s to %s C; a soft short off within %s us, a hot short (over %s A typical) in %s us typical (MAKER)"
       % (fmt(L["tjreg"][0], 0), fmt(L["tjreg"][1], 0), fmt(L["tsoft"] * 1e6, 1), fmt(L["iscp"], 0), fmt(L["thot"] * 1e6, 0)))
-    p("     SELECTED (SESSION): (E) on board A between VBAT and J_DOCK pin 1 (a new net VSYS_DOCK; drafted in apply_gen_sch_a_charger.py); the contact,")
-    p("       the 24 AWG and the copper downstream see at most %s A (%s %% of 3.5 A); by w3de's assumed I2 rise, %s C at the 51 C air and %s C at the"
+    p("     SELECTED (SESSION): (E) on board A between VBAT and J_DOCK pin 1 (a new net VSYS_DOCK; drafted in apply_gen_sch_a_charger.py); in a")
+    p("       sustained overload the contact, the 24 AWG and the copper downstream see at most %s A (%s %% of 3.5 A); by w3de's assumed I2 rise, %s C at the 51 C air and %s C at the"
       % (fmt(L["ilim"][1], 3), fmt(100 * L["ilim"][1] / L["c813"], 1), fmt(L["t_lim"]["envelope 51 C"], 1), fmt(L["t_lim"]["margin 65 C"], 1)))
     p("       65 C margin, under the spring's 85 C; the load's 1.0 A is %s %% of the least limit (INFERRED, ASSUMPTION w3de)" % fmt(100 * 1.0 / L["ilim"][0], 1))
     p("     the cases, source-only and battery alike (the eFuse limits whatever feeds VSYS): overload (the 2.88 Ohm counterexample) held at %s A at most,"
       % fmt(L["ilim"][1], 3))
-    p("       %s W in the eFuse until its timer, then off for at least %s ms: a duty of at most %s; a soft short: at most %s A for %s us, %s A2s, what"
-      % (fmt(L["ovl_p"], 1), fmt(L["tretry"][0] * 1e3, 0), fmt(L["duty"], 3), fmt(L["iscp"], 0), fmt(L["tsoft"] * 1e6, 1), fmt(L["soft_i2t"], 4)))
-    p("       3.5 A gives in %s ms; a hot short: the peak is set by the loop's inductance in about 1 us (typical), CONDITIONAL on E11-38's bench short;"
-      % fmt(L["soft_eq"] * 1e3, 3))
+    p("       %s W in the eFuse until its timer, then off for at least %s ms: a duty of at most %s; a short, applied while on or present at the"
+      % (fmt(L["ovl_p"], 1), fmt(L["tretry"][0] * 1e3, 0), fmt(L["duty"], 3)))
+    p("       start, and the retry: section 17a (the first version's soft-short figure, built on the typical 45 A, is WITHDRAWN);")
     p("       inrush with C(dVdT) %s nF +-%s %%: %s to %s ms ramps (Equation 2), %s mA into C31's %s uF; recovery: auto-retry, board A reads"
       % (fmt(F16_CDVDT * 1e9, 0), fmt(F16_CDVDT_TOL * 100, 0), fmt(L["t_ramp"][0] * 1e3, 2), fmt(L["t_ramp"][1] * 1e3, 2), fmt(L["i_inrush"] * 1e3, 1), fmt(L["c_e"] * 1e6, 0)))
     p("       HOT-R1 lost meanwhile; the eFuse draws at most %s mA from VSYS: on the source while one carries the kit, on the pack otherwise, an"
@@ -2893,7 +2891,120 @@ def render_fix16(R, p):
     p("       current are not bounded on held evidence; the bench acceptance stays at most %s mA (E11-31) (SESSION, CONDITIONAL)" % fmt(FIX_HELD_ACC * 1e3, 1))
     p("     check_contracts.py, the interface draft's second target, is in this tree (v2/ecad/tools/check_contracts.py) and the alias edit applies")
     p("       to it; the alias is now VSYS_DOCK and VSYS_E (RECORD)")
-    p("     STATUS: CLOSED in design for the overload, soft short, inrush and recovery; the hot short's peak CONDITIONAL on E11-38 (SESSION)")
+    p("     STATUS: sustained-overload remedy drafted; fault qualification open (section 17a, E11-38) (SESSION)")
+    p("")
+
+# ============================================================================================ the second review (L4-CP01 to L4-CP03) and the specimens
+F17_L_IN = 20e-9        # H, SESSION (a layout requirement): U42's IN within 20 nH of C236 and C23 to C25
+F17_FAN_RUN = 0.1       # A, each fan running (CELL_F's declaration, now VSYS_E's)
+F17_DOCK_MARGIN = 1.1   # SESSION: the pulse qualification's margin on the docking waveform's peak and time constant
+F17_DOCK_N = (2000, 6, 10.0)   # SESSION: pulses per part (a lifetime allowance of 1000 docking events, twice), parts, seconds apart
+F17_TMB = 75.0          # C, SESSION: the qualification's mounting base, 5 K over the +70 C mixed air
+
+
+def fix17_round(R, T):
+    """The second external review (of the 22:30 checkpoint): L4-CP01 (U42's fault envelope: TI's 45 A is typical, a limiter's steady
+    setting is no instantaneous ceiling, and the start into a short times out at 1.5 s, not 202 ms), L4-CP02 (a junction temperature
+    does not extend a printed pulse rating: the whole hot docking waveform needs an applicable basis) and L4-CP03 (the charger draft's
+    text); and the specimens for the measurement rows."""
+    H, K, L, G = R["H"], R["K"], R["L"], R["G"]
+    M = {}
+    tp = "\n".join(pdf_pages("tps1663", True))
+    m = need(tp, r"Hot-short response time\s+I\(OUT\) > I\(SCP\)\s+(\d+)\s+µs", "the hot-short response")
+    M["hot_typ_only"] = True
+    need(tp, r"I\(FASTRIP\)\s+Fast-trip comparator threshold\s+2xI\(OL\)\s+A", "I(FASTTRIP), a typical only")
+    need(tp, r"I\(SCP\)\s+Short Circuit Protect current\s+45\s+A", "I(SCP), a typical only")
+    m = need(tp, r"t\(Treg_timeout\)\s+Thermal Regulation Timeout\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+s", "t(Treg_timeout)")
+    M["treg"] = (f(m, 1), f(m, 3))
+    need(tp, r"When the device is started with short-circuit on the output, the current begins to limit at I\(OL\)\.", "8.3.4.2.1")
+    need(tp, r"The fast-trip circuit holds the internal FET off for only a few microseconds, after which the device\s+turns back on slowly, allowing the current-limit loop to regulate the output current to I\(OL\)\.", "8.3.4.2")
+    need(tp, r"Using a Schottky diode across the output and GND to absorb negative spikes", "9.4.1")
+    need(tp, r"IN, P_IN, OUT\s+0\.1\s+µF", "the 0.1 uF minimum at IN, P_IN and OUT")
+    m = need(tp, r"IN, P_IN, OUT, UVLO, FLT, PGOOD\s+\u20130\.3\s+(\d+)", "the absolute maximum at IN and OUT")
+    M["abs_in"] = f(m)
+    # case 2, a short applied while on: the resistive bound (no inductance credited, the contact's own resistance taken as 0)
+    sp = importlib.util.spec_from_file_location("dock_contacts_pinned17", read("dock_py"))
+    dc = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(dc)
+    M["r_path_min"] = (dc.R_813_PATH - dc.PD_R) * 1e-3
+    M["i_pk"] = H["vsys_top"] / (L["ron"][0] + M["r_path_min"])
+    M["i2t_pk"] = M["i_pk"] ** 2 * L["tsoft"]
+    M["fast_typ"] = 2.0 * L["ilim"][1]
+    # the input spike (TI's Equation 14) at the bound, with C236's stacked effective capacitance and printed ESR next to U42
+    M["c_in"], M["esr_in"] = G["c_dir_eff"], G["esr181"]
+    M["v_in_pk"] = H["vsys_top"] + M["i_pk"] * (math.sqrt(F17_L_IN / M["c_in"]) + M["esr_in"])
+    # case 3, a start into a short, and case 4, the retry: the duty and the contact's average heating
+    M["duty_start"] = M["treg"][1] / (M["treg"][1] + L["tretry"][0])
+    M["duty_ovl"] = L["duty"]
+    M["rise_retry"] = dc.rise_813(L["ilim"][1]) * max(M["duty_start"], M["duty_ovl"])
+    M["rise_steady"] = dc.rise_813(L["ilim"][1])
+    # the fans' start against U42's least limit and VSYS_E's floor at that current
+    i_u12 = K["aux"]["U12"]
+    M["fan_simul"] = (L["ilim"][0] - i_u12) / 2.0
+    M["fan_stag"] = L["ilim"][0] - i_u12 - F17_FAN_RUN
+    i_g = K["ret"][3][2]
+    M["vsys_e_lim"] = K["vsys_sup"] - (L["ilim"][0] * (L["ron"][2] + L["r813"] * F16_SPREAD) + i_g * L["r813"])
+    # CP02: the docking waveform's qualification envelope
+    Q0 = H["Q"]
+    M["dock_q"] = (Q0["i_dock"] * F17_DOCK_MARGIN, Q0["tau"] * F17_DOCK_MARGIN)
+    M["dock_q_t80"] = M["dock_q"][1] * math.log(M["dock_q"][0] / L["is_dc"])
+    # CP03: the claims the charger draft must no longer write
+    M["withdrawn"] = ("bounded at 21.1", "34.4 C/W", "split between their body diodes")
+    return M
+
+
+def render_fix17(R, p):
+    K, H, L, M = R["K"], R["H"], R["L"], R["M"]
+    Q0 = H["Q"]
+    p("17. THE SECOND REVIEW (L4-CP01 TO L4-CP03, of the 22:30 checkpoint) AND THE EVIDENCE SPECIMENS")
+    p("   17a. L4-CP01: U42'S FAULT ENVELOPE BY CASE (G = printed limit, I = inferred, T = typical only; SLVSET9G pp.7 to 10, 20 to 22, 26, 30, 31)")
+    p("     the setting: I(OL) %s to %s A at R(ILIM) %s kOhm (I: between the printed 9 and 30 kOhm rows, each G over TJ -40 to 125 C at VIN - VOUT"
+      % (fmt(L["ilim"][0], 4), fmt(L["ilim"][1], 4), fmt(F16_RILIM_K, 1)))
+    p("       1 V); a regulated, steady setting, NOT an instantaneous ceiling; the fast-trip threshold 2 x I(OL) and I(SCP) 45 A are T only (MAKER)")
+    p("     (1) operating overload, I(OL) < I < I(FASTTRIP): held at the setting once the loop settles (the settling's peak is not printed); limiting for")
+    p("       at most %s ms (G), then off %s to %s ms (G) and a retry; a duty of at most %s; the contact at most %s A steady, %s K by w3de's rise (I)"
+      % (fmt(L["tcl"][1] * 1e3, 0), fmt(L["tretry"][0] * 1e3, 0), fmt(L["tretry"][1] * 1e3, 0), fmt(M["duty_ovl"], 3), fmt(L["ilim"][1], 3), fmt(M["rise_steady"], 2)))
+    p("     (2) a short applied while on: the current rises from VSYS's local capacitance (C236 and C23 to C25, the source's impedance behind them)")
+    p("       until the fast trip; turn-off %s to %s us under I(SCP) (G, from a threshold that is T), about 1 us over it (T); then the device turns back"
+      % (fmt(2.2, 1), fmt(L["tsoft"] * 1e6, 1)))
+    p("       on slowly into case (1) (p.21). Bound (I): at most %s A, VSYS's %s V over RON's printed least %s mOhm and the path's %s mOhm with the"
+      % (fmt(M["i_pk"], 1), fmt(H["vsys_top"], 3), fmt(L["ron"][0] * 1e3, 0), fmt(M["r_path_min"] * 1e3, 1)))
+    p("       contact at 0 and no inductance credited, for at most %s us: %s A2s (I, resting on the %s us row holding above I(SCP)); the 813 prints no"
+      % (fmt(L["tsoft"] * 1e6, 1), fmt(M["i2t_pk"], 3), fmt(L["tsoft"] * 1e6, 1)))
+    p("       pulse rating, so the contact, the 24 AWG and the clamp are left to the bench's qualification (E11-38), not bounded (MAKER, INFERRED)")
+    p("     the pins: IN at most %s V by TI's Equation 14 at that bound with U42 within %s nH of C236 (%s uF effective, ESR %s mOhm printed) against"
+      % (fmt(M["v_in_pk"], 1), fmt(F17_L_IN * 1e9, 0), fmt(M["c_in"] * 1e6, 1), fmt(M["esr_in"] * 1e3, 0)))
+    p("       the absolute %s V (I; the 20 nH a layout requirement, SESSION); OUT's negative spike through the output loop's inductance clamped by a"
+      % fmt(M["abs_in"], 0))
+    p("       Schottky D23 at OUT (TI 9.4.1, 9.5.1); OUT's -0.3 V absolute minimum is not shown under a clamp at hundreds of amperes: left to the bench (E11-38,")
+    p("       Q-TI-18) (MAKER, INFERRED)")
+    p("     (3) a start into a pre-existing short: limited at I(OL) from the start, then thermal regulation at %s to %s C for %s to %s s (G), then off"
+      % (fmt(L["tjreg"][0], 0), fmt(L["tjreg"][1], 0), fmt(M["treg"][0], 2), fmt(M["treg"][1], 1)))
+    p("       (p.22); the setting's row is printed at VIN - VOUT 1 V, not at the %s V a short puts across U42: the current at that bias is left to the bench"
+      % fmt(H["vsys_top"], 1))
+    p("       (E11-38) (MAKER, INFERRED)")
+    p("     (4) repeated retry into a persistent short: each cycle is case (3) for at most %s s and off at least %s ms (G): a duty of at most %s; the"
+      % (fmt(M["treg"][1], 1), fmt(L["tretry"][0] * 1e3, 0), fmt(M["duty_start"], 3)))
+    p("       contact's average heating at most %s K by w3de's rise, under the steady case's %s K; an intermittent short re-applied faster than the"
+      % (fmt(M["rise_retry"], 2), fmt(M["rise_steady"], 2)))
+    p("       retry is not bounded by the device's timers: its count is the bench's (E11-38) (INFERRED)")
+    p("     the fans' start, against U42's least limit %s A with U12's %s A: both together at most %s A each, one at a time at most %s A (one other"
+      % (fmt(L["ilim"][0], 3), fmt(K["aux"]["U12"], 1), fmt(M["fan_simul"], 4), fmt(M["fan_stag"], 4)))
+    p("       running at %s A); VSYS_E at that current at least %s V at the supplement floor: the fans must start at or under it (E11-35, E11-39) (INFERRED)"
+      % (fmt(F17_FAN_RUN, 1), fmt(M["vsys_e_lim"], 3)))
+    p("     STATUS: sustained-overload remedy drafted; fault qualification open (E11-38); not evidence of a failure (SESSION)")
+    p("   17b. L4-CP02: THE WHOLE HOT DOCKING WAVEFORM (a junction temperature does not extend ISM's printed 10 us at Tmb 25 C)")
+    p("     the waveform to accept: %s A peak, time constant %s us, over IS's %s A for %s us, from a +%s C mounting base, once per docking event"
+      % (fmt(Q0["i_dock"], 1), fmt(Q0["tau"] * 1e6, 1), fmt(L["is_dc"], 0), fmt(L["t_over_is"] * 1e6, 1), fmt(K["air"]["route"], 0)))
+    p("     (D1) Nexperia's written acceptance of that waveform (Q-NXP-1, drafted, not sent): no circuit change; outside this project's control")
+    p("     (D2) a defined pulse qualification on parts: %s A peak and %s us (x%s), mounting base %s C, %d pulses %s s apart on each of %d parts"
+      % (fmt(M["dock_q"][0], 1), fmt(M["dock_q"][1] * 1e6, 1), fmt(F17_DOCK_MARGIN, 1), fmt(F17_TMB, 0), F17_DOCK_N[0], fmt(F17_DOCK_N[2], 0), F17_DOCK_N[1]))
+    p("       (over IS for %s us); no circuit change; within its stated scope (a sample, not a production limit) (SESSION)" % fmt(M["dock_q_t80"] * 1e6, 1))
+    p("     (D3) board P bounds the inrush (a slower discharge-FET turn-on or a precharge path): changes the pack's protection path, whose ASCD")
+    p("       turn-off and normal charging must be re-shown; board P's owner, a draft for board P's generator (INFERRED)")
+    p("     SELECTED (SESSION): (D2), with (D1) asked in parallel; (D3) only if (D2) fails, as E11-30 states; STATUS: CONDITIONAL on E11-30 (SESSION)")
+    p("   17c. L4-CP03: apply_gen_sch_a_charger.py's text now writes the allowance, the 33.12 K/W self-plus-mutual target and no sharing credited;")
+    p("     the three withdrawn statements are absent from the text it writes (tested) (RECORD)")
     p("")
 
 # ============================================================================================ the output
@@ -3377,6 +3488,7 @@ def render(R):
     render_consolidation(R, p)
     render_fix(R, p)
     render_fix16(R, p)
+    render_fix17(R, p)
     p("END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c), apply_gen_sch_a_guard.py (R14, 3f),")
     p("apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays), apply_gen_sch_a_charger.py (the BQ25730, its two")
     p("battery FETs and the dock's VSYS contact, 14 and 15), apply_gen_sch_e_aux.py and apply_pcb_interfaces_dock.py (board E's VSYS feed, 15a); the")
@@ -3416,10 +3528,10 @@ def downstream(R):
     ("E11-24", "IMPLEMENTATION", "Layer 8 board A generator owner", "the dependency round's fallback on VBAT (a register row, never applied by this record): one EEHZK1V181P direct (C242139) and a hold-up bank of %d EEHZK1E471P (C242138) charged through R_CH %s Ohm RC2512FK-07330RL (C137025) and discharging through D_H B540C-13-F (C72264); the regenerated netlist carries them; the bank's hold recomputed from the fitted parts reads at least %s ms for the worst admitted step (%s W); withdrawn once E11-27 is applied (section 14: B1 carries the direct can, and the bank is not drawn)" % (BANK_N, fmt(R_CH, 0), fmt(R["G"]["worst_hold"] * 1e3, 3), fmt(R["G"]["worst"][1], 2))),
     ("E11-25", "EVIDENCE", "Layer 6 components", "the clarification questions of clarification/TI-QUESTIONS.md (Q-TI-11 to Q-TI-14 and the addendum to Q-TI-3) sent by the owner and answered, each answer filed against its dependency row D1 to D10 and judged: a limit closes a row production-wide, a typical figure does not"),
     ("E11-26", "TEST", "prototype bench", "the bench methods of rows D1 to D10 run on one unit each, every reading filed as a sample with its uncertainty and conditions, never as a limit; D2's recovery at most %s ms against the bank's %s ms assumption gives the engineering margin the record names" % (fmt(T_RESP * 1e3 / 5, 1), fmt(T_RESP * 1e3, 1))),
-    ("E11-27", "IMPLEMENTATION", "Layer 8 board A generator owner", "apply_gen_sch_a_charger.py applied (sections 14 and 15): U3 BQ25730RSNR (%s) with pin 21 on CH_BATDRV; Q39 and Q40, two Nexperia BUK6Y10-30PX (%s) in parallel, sources on VBAT, drains on CH_BATQ, gates on CH_BATDRV; R17 and R149 on CH_BATQ; C236 EEHZK1V181P (C242139) on VBAT; U42 TPS16630PWPR from VBAT to VSYS_DOCK with R221 %sk 0.1 %%, C237 %s nF and MODE to GND, J_DOCK pin 1 on VSYS_DOCK for board E's VSYS_E (section 16e), the HTSSOP-20 land checked against TI's PWP0020 drawing; CH_BATQ declared a segment of the pack path; the LFPAK56 lands checked against Nexperia's SOT669 drawing, seated by R17 with matched paths; the regenerated netlist reads each" % (R["H"]["cat"]["BQ25730RSNR"][0], R["K"]["cat"]["BUK6Y10-30PX"][0], fmt(F16_RILIM_K, 1), fmt(F16_CDVDT * 1e9, 0))),
+    ("E11-27", "IMPLEMENTATION", "Layer 8 board A generator owner", "apply_gen_sch_a_charger.py applied (sections 14 and 15): U3 BQ25730RSNR (%s) with pin 21 on CH_BATDRV; Q39 and Q40, two Nexperia BUK6Y10-30PX (%s) in parallel, sources on VBAT, drains on CH_BATQ, gates on CH_BATDRV; R17 and R149 on CH_BATQ; C236 EEHZK1V181P (C242139) on VBAT; U42 TPS16630PWPR from VBAT to VSYS_DOCK with R221 %sk 0.1 %%, C237 %s nF, MODE to GND, C238 1 uF at IN, C239 0.1 uF at OUT and D23 B540C from GND to OUT, within 20 nH of C236, J_DOCK pin 1 on VSYS_DOCK for board E's VSYS_E (section 16e), the HTSSOP-20 land checked against TI's PWP0020 drawing; CH_BATQ declared a segment of the pack path; the LFPAK56 lands checked against Nexperia's SOT669 drawing, seated by R17 with matched paths; the regenerated netlist reads each" % (R["H"]["cat"]["BQ25730RSNR"][0], R["K"]["cat"]["BUK6Y10-30PX"][0], fmt(F16_RILIM_K, 1), fmt(F16_CDVDT * 1e9, 0))),
     ("E11-28", "FIRMWARE", "firmware owner", "the BQ25730's register rules (section 14): EN_OOA 0 at boot; ChargeCurrent written for any charge (0 A at POR and after the watchdog's %s s), the watchdog serviced or WDTMR_ADJ 00; VSYS_MIN, EN_LDO, EN_PORT_CTRL, BATFET_ENZ and BATFETOFF_HIZ never written from their power-on values; the device ID %sh checked; R-a's bit following the hold flag in every state (S4's exception withdrawn); R-b' under VSYS_MIN: 0x0080 only, and no charge under %s V on SRN (section 15c)" % (fmt(R["H"]["wd_s"], 0), R["H"]["devid"], fmt(R["K"]["rb_floor"], 1))),
-    ("E11-29", "LAYOUT", "Layer 9 pre-layout analysis", "the installed pair Q39 and Q40 (section 16b): each FET's self impedance and the mutual one, junction to air by the body diode's VSD method on the built board, at the +%s C mixed air or referred to it: (Zself + Zmut) at most %s K/W steady and at 60 s, %s at 1 s, %s at 20 ms and %s K/W at 244 us (at the allowance of E11-36); the 18 A for 60 s and 10 A continuous kept, no protection lowered; the case-rise reading at 10 A alone does not close it" % (fmt(R["K"]["air"]["route"], 0), fmt(R["L"]["plan"]["zsum"], 2), fmt(R["L"]["plan"]["ev"][0][4], 3), fmt(R["L"]["plan"]["ev"][1][4], 3), fmt(R["L"]["plan"]["ev"][2][4], 3))),
-    ("E11-30", "EVIDENCE", "Layer 6 components", "the docking pulse through one FET's body diode with no sharing credited (section 16d, %s A peak, time constant %s us, from +%s C): VF at the pulse's currents at a +%s C mounting base at most %s times max(1.2 V, 1.2 V x i / 80 A) (pulsed VSD on parts from the lot, or Nexperia's curve), and ISM's 320 A amplitude at a mounting base of +%s C, with the waveform past ISM's 10 us judged on TJ alone, from Nexperia or a pulse test on parts; or board P's owner constrains the pulse with a slower discharge-FET turn-on whose turn-off under ASCD is shown unchanged" % (fmt(R["H"]["Q"]["i_dock"], 1), fmt(R["H"]["Q"]["tau"] * 1e6, 1), fmt(R["K"]["air"]["route"], 0), fmt(R["K"]["air"]["route"], 0), fmt(R["L"]["k_max"], 3), fmt(R["K"]["air"]["route"], 0))),
+    ("E11-29", "LAYOUT", "Layer 9 pre-layout analysis", "the pair's copper sized before layout to the target below, and measured on the specimen of section 17 (a coupon or the controlled first prototype; it blocks only the final release): the installed pair Q39 and Q40 (section 16b), each FET's self impedance and the mutual one, junction to air by the body diode's VSD method on that specimen, at the +%s C mixed air or referred to it: (Zself + Zmut) at most %s K/W steady and at 60 s, %s at 1 s, %s at 20 ms and %s K/W at 244 us (at the allowance of E11-36); the 18 A for 60 s and 10 A continuous kept, no protection lowered; the case-rise reading at 10 A alone does not close it" % (fmt(R["K"]["air"]["route"], 0), fmt(R["L"]["plan"]["zsum"], 2), fmt(R["L"]["plan"]["ev"][0][4], 3), fmt(R["L"]["plan"]["ev"][1][4], 3), fmt(R["L"]["plan"]["ev"][2][4], 3))),
+    ("E11-30", "EVIDENCE", "Layer 6 components", "the WHOLE hot docking waveform accepted (sections 16d and 17b): %s A peak, time constant %s us, from a +%s C mounting base, once per docking event, taken whole in one FET's body diode; by the pulse qualification selected in 17b: %d parts, each %d pulses %s s apart at %s A peak and %s us (x%s), mounting base %s C, every part passing VSD at 80 A pulsed within +5 %% of its first reading, IDSS at -30 V and 25 C at most the printed 1 uA, RDS(on) at -10 V and 25 C within +5 %% and at most the printed 10 mOhm, IGSS at most the printed 100 nA; or Nexperia's written acceptance of the same waveform (Q-NXP-1); a sample result is not a production limit; on a failure board P's owner bounds the inrush (a slower discharge-FET turn-on or a precharge path, its normal charging and its ASCD turn-off re-shown)" % (fmt(R["H"]["Q"]["i_dock"], 1), fmt(R["H"]["Q"]["tau"] * 1e6, 1), fmt(R["K"]["air"]["route"], 0), F17_DOCK_N[1], F17_DOCK_N[0], fmt(F17_DOCK_N[2], 0), fmt(R["M"]["dock_q"][0], 1), fmt(R["M"]["dock_q"][1] * 1e6, 1), fmt(F17_DOCK_MARGIN, 1), fmt(F17_TMB, 0))),
     ("E11-31", "TEST", "prototype bench", "the three modes on the BQ25730 build (EN_OOA 0), piecewise (section 15d): pack absent, VSYS at least %s V; CHRG_INHIBIT 1 with SRN over %s V, VSRN plus 150 mV within 2 percent, under %s V at least %s V, between at least %s V; the held pack current at most %s mA with board E on VSYS_E; the start from cold at VBUS20 %s and %s V, VSYS's maximum capacitance and the always-on loads, at -20, 25 and %s C, with Fault VSYS_UVP clear, the hiccup and latch on a shorted VSYS and the re-plug; VSYS before EN_OOA's write recorded; VSYS's step response in S2 and S4 for each declared step against the converters' floor (D2, %s V of margin), the outlets held by R-c where a step uses more" % (fmt(R["H"]["floor"], 3), fmt(R["K"]["hi_v"], 3), fmt(R["K"]["lo_v"], 3), fmt(R["H"]["floor"], 3), fmt(R["K"]["inh_floor"], 3), fmt(FIX_HELD_ACC * 1e3, 1), fmt(R["E"]["vb_low"], 2), fmt(R["E"]["vb_top"], 2), fmt(R["F"]["air_hot"], 1), fmt(R["H"]["margin_floor"], 3))),
     ("E11-32", "EVIDENCE", "Layer 6 components", "the BQ25730RSNR's supply for the build quantity from an authorised source, filed (LCSC stock %d on 2 October 2026), and the two battery FETs' (BUK6Y10-30PX, LCSC stock %d)" % (R["H"]["cat"]["BQ25730RSNR"][1], R["K"]["cat"]["BUK6Y10-30PX"][1])),
     ("E11-33", "IMPLEMENTATION", "Layer 8 board E generator owner", "apply_gen_sch_e_aux.py applied with E11-27 (section 15a): J_BLK pin 1 on VSYS_E; U12's VIN and EN, C31, J_FAN1 and J_FAN2 pin 1 and D7 and D8 on VSYS_E; VSYS_E declared (source J_BLK, %s A: U12 %s, the fans %s each, always on); CELL_F's loads the pack path alone; E6_SW, E6_BST and the fans' switched returns re-declared to VSYS's %s V; the regenerated netlist and check_contracts read the dock's pin 1 as VSYS_DOCK and VSYS_E" % (fmt(R["K"]["aux_a"], 2), fmt(R["K"]["aux"]["U12"], 2), fmt(R["K"]["aux"]["J_FAN1"], 2), fmt(R["H"]["vsys_top"], 3))),
@@ -3427,7 +3539,8 @@ def downstream(R):
     ("E11-35", "EVIDENCE", "Layer 6 components", "the mixer fans' supply range from their maker: at least %s V at the top (VSYS_E's top; CELL_F reached %s V) and running at %s V or less at the bottom (VSYS_E's least with 1.0 A, section 16e), and their starting current, with U12's 0.8 A, under U42's least limit %s A; or a fan of that range named" % (fmt(R["H"]["vsys_top"], 3), fmt(R["cv_max"], 3), fmt(R["L"]["vsys_e_min"], 3), fmt(R["L"]["ilim"][0], 3))),
     ("E11-36", "EVIDENCE", "Layer 6 components", "the battery FETs' RDS(on) at VGS -8.5 V and a 150 C junction at most %s mOhm (the allowance of section 16a): Nexperia's maximum at that point filed, or a pulsed Kelvin reading on parts from the build lot in an oven at 150 C (a sample, not a production limit: only the maker's maximum closes it for every part); a reading over it reverses the allowance and E11-29 is re-sized before layout" % fmt(F16_RA * 1e3, 3)),
     ("E11-37", "EVIDENCE", "Layer 6 components", "TI's statement of what the BATFET's 5 nF bounds (Ciss at which VDS, or a gate charge; Q-TI-17, drafted in clarification/TI-QUESTIONS.md, not sent), or the bench's BATDRV behaviour with the pair at -20, 25 and 70 C: supplement entry, the ideal diode's 30 mV regulation without oscillation and LDO mode at VSYS_MIN within its printed band; on a negative answer the engineer chooses between the pair and one FET with a heat path through the case (section 16c)"),
-    ("E11-38", "TEST", "prototype bench", "the dock's VSYS branch (section 16e): U42's limit read on a slow ramp between %s and %s A at -20, 25 and 70 C; the 2.88 Ohm overload and a hard short at board E's VSYS_E, the peak through J_DOCK pin 1 recorded and the auto-retry seen; the contact's resistance unchanged after the shorts; VSYS_E at least %s V at 1.0 A with VSYS at %s V" % (fmt(R["L"]["ilim"][0], 3), fmt(R["L"]["ilim"][1], 3), fmt(R["L"]["vsys_e_min"], 3), fmt(R["K"]["vsys_sup"], 3))),
+    ("E11-38", "TEST", "prototype bench", "the dock's VSYS branch, the whole fault envelope (sections 16e and 17a), at -20, 25 and 70 C and at VSYS 9.688 and 17.375 V, ten times each: (a) U42's limit on a slow ramp at VIN - VOUT 1 V between %s and %s A, and recorded at 17 V; (b) an operating overload (2.88 Ohm, and a load just under 2 x I(OL)): settled at or under %s A within 1 ms, off within %s ms, retry after %s to %s ms; (c) a 10 mOhm short applied at board E's VSYS_E while on: the peak through J_DOCK pin 1 at most %s A and over %s A for at most %s us, U42's IN at most 60 V, OUT's least recorded against -0.3 V (Q-TI-18); (d) a start into that short: at most %s A after the first 100 us, off within %s s; (e) one hour of retry into it at 70 C: the 813's body at most 85 C; for every case the 813's resistance at 1 A four-wire within +10 %% of its first reading and at most 20 mOhm, the plunger free, the 24 AWG's insulation and D23 (VF at 5 A within +5 %%) unchanged; (f) both fans and U12 started together and one at a time at VSYS 9.688 V: no limiting (FLT high), VSYS_E at least %s V" % (fmt(R["L"]["ilim"][0], 3), fmt(R["L"]["ilim"][1], 3), fmt(R["L"]["ilim"][1], 3), fmt(R["L"]["tcl"][1] * 1e3, 0), fmt(R["L"]["tretry"][0] * 1e3, 0), fmt(R["L"]["tretry"][1] * 1e3, 0), fmt(R["M"]["i_pk"], 0), fmt(R["M"]["fast_typ"], 1), fmt(R["L"]["tsoft"] * 1e6, 1), fmt(R["L"]["ilim"][1], 3), fmt(R["M"]["treg"][1], 1), fmt(R["M"]["vsys_e_lim"], 3))),
+    ("E11-39", "FIRMWARE", "firmware owner", "board E's mixer fans started one at a time, each with a PWM ramp, never both within 1 s and never while U12 starts (section 17a: one fan's start at most %s A beside U12 and the other fan running, under U42's least limit %s A)" % (fmt(R["M"]["fan_stag"], 4), fmt(R["L"]["ilim"][0], 3))),
 ]
 
 
