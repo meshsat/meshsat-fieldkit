@@ -219,6 +219,31 @@ def t_a3_is_split_three_ways():
     assert "COMPONENT_LIMITATION" in out and "A-3(c)" in out and "a design level, not a claimed maximum" in out
 
 
+def t_a3a_and_a4_rest_on_l4e7r_regulation_and_backstop():
+    m = _M()
+    R = _C["R"]
+    r7 = R["l4e7r"]
+    rel, _sha = m.PINS["l4e7_out"]
+    o7 = " ".join(open(os.path.join(ROOT, rel), encoding="utf-8").read().split())
+    # the figures are read from L4-E7R's accepted output, not typed
+    for v in (r7["reg"][0], r7["reg"][2], r7["coord"][1], r7["coord"][2], r7["trip"][0], r7["own"][0], r7["dec"][0],
+              r7["dec"][1], r7["resp"][0], r7["crit"][0]):
+        assert v in o7, v
+    # the kept 3.9870 A stays the conservative upper bound: above the backstop's highest trip and the regulation's highest
+    assert R["i_reg_nom"] < R["i_reg_hi"] < R["i_trip_max"] < R["i_norm_max"] < 10.0
+    assert R["i_trip_min"] < R["i_trip_max"] and R["i_reg_hi"] < R["i_trip_min"]
+    # the conditioned upper corner's energy rows are below every limit L4-E7R draws, so they do not move
+    assert R["corner_unmoved"] and R["corner_i"][0] < R["i_reg_nom"]
+    out = " ".join(_C["text"].split())
+    page = " ".join(open(PAGE, encoding="utf-8").read().split())
+    for s in ("RIMON_IN %s" % r7["reg"][0], "%.4f A" % R["i_reg_hi"], "%.4f A" % R["i_trip_max"], "%.4f A" % R["i_trip_min"],
+              "%.4f A" % R["i_norm_max"], "%s W" % r7["own"][0], "%s W" % r7["dec"][0], "margin %s W" % r7["dec"][1],
+              "CONDITIONAL on G_CM (break-even %s %%)" % r7["dec"][2], "(break-even %s mA)" % r7["dec"][3], r7["crit"][0],
+              "The backstop does not limit", "turns the stage off"):
+        assert s.lower() in out.lower() and s.lower() in page.lower(), s
+    assert "%s Wh" % r7["energy"][1] in out and "%s Wh" % r7["energy"][1] in page
+
+
 def t_the_classification_admits_both_routes():
     m = _M()
     R = _C["R"]
