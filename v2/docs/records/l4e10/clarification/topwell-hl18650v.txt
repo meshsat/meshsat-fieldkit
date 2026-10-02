@@ -1,4 +1,4 @@
-DRAFT for the owner to send (task L4-E10, MESHSAT-1357, 2 October 2026). The session contacts no outside party.
+DRAFT for the owner to send (task L4-E10, MESHSAT-1357, 2 October 2026; questions 7 to 10 added the same day, U-01 by mode). The session contacts no outside party.
 To: Yichun Topwell Power Co., Ltd, through the contact form of https://www.topwellpower.com (product TWE0388, model HL18650V)
 
 Subject: HL18650V wide-temperature 18650 cell: request for the signed product specification
@@ -18,5 +18,15 @@ Before any purchase we need the maker's signed product specification. Could you 
 4. The minimum capacity, the maximum dimensions with tolerances, and the maximum mass.
 5. The UN 38.3 test summary and the IEC 62133 report for this model, and whether you are the cell's manufacturer.
 6. The open-circuit voltage against state of charge at 25 C, so that a fuel gauge can be configured.
+7. Charging by temperature: your page prints the coldest charge row as "-20 -10<T<=0 C: 0.1C to 4.1V". May a cell be charged
+   between -20 and -10 C, and if so at what current and to what voltage? Is each charge row's temperature the cell surface or
+   the ambient? What is the termination current at 4.2 V and at 4.1 V, and is there any limit on charging or holding a cell at
+   4.2 V above 45 C?
+8. Discharge current: the pulse current and its duration, and whether the 10 A continuous current is derated toward -40 C or
+   toward +85 C.
+9. Capacity in the cold: the discharge capacity at -20 C and at -40 C, at 0.2C and at 0.5C, to the end voltages your page
+   states (2.5 V and 2.0 V), or the discharge curves by temperature.
+10. Ageing: the capacity a cell keeps after the "at least 500 cycles" (the end-of-life criterion), and the self-discharge per
+    month at 25 C and at 60 C.
 
 Thank you. We will treat the document under the terms you state.
