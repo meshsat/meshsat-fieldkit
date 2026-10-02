@@ -14,6 +14,7 @@ arithmetic: nothing is bought, built, powered or measured, and nothing here is a
 | `inputs/` | the filed catalogue readings (LCSC, the JLCPCB search for 150 nF C0G) and the held sheets' provenance |
 | `checks/astra-check-l4e11-1.md` | The collaborator's focused check of round 1 (job cx30-l4e11-check, run 20261002T024127Z-317909, on `3f9cf283`), filed as returned: NOT YET, blockers B1 (the UVLO's equations and POREN), B2 (the charge holds), B3 (the source bounds and a functional acceptance), B4 (the weak-source envelope), B5 (the charge bounds) and three minors; the fix round answers it |
 | `checks/astra-check-l4e11-2.md` | The collaborator's targeted recheck of the fix round (job cx33-l4e11-recheck, run 20261002T040500Z-397469, on `cbf8bcb9`), filed as returned: NOT YET, the efficiency floor, the protection timing, the functional closure, the prospective fault current, the charge-current bound and four minors; the final round answers it |
+| `checks/check-l4e11-3.md` | Claude's (the coordinator's) closing check at `3298d1f1`: the output reproduced, the prospective fault current (899.9 A), the trip margin (6.37 %) and the coupled efficiency floor recomputed; the record accepted, REQ-015 at 9.00 V at the plug a CONDITIONAL CANDIDATE; not a model review and not an Astra check |
 
 The first round's `apply_gen_sch_e_uvlo.py` (R21 42.2k) is withdrawn by the fix round: it placed the LM5069's UVLO hysteresis
 on the wrong edge, and no divider can make the LM5069 start from a 9.00 V plug (section 3a). The tests are
