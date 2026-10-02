@@ -18,7 +18,10 @@ accepted L4-E10 (FEA-008, final), L4-E11 (the vehicle entry replaced by a TPS481
 interconnect, U-04's arrangement) and L4-E12 (the electronics at the margins, T-H1's binding line 2.159 W/K); it answers E11-19
 (every finding that rested on the LM5069's power limit re-judged for the selected entry, out 12), deduplicates the three
 records' downstream items into the register (137 items), and lists the owner's items apart (the page's section 7d). No material
-defect is open; U-01 to U-04 stand, U-03 as it stood while L4-E13 is pending.
+defect is open. Update round 3 (the same day) takes the accepted L4-E13 (merged into this line from `fnd/l4e13` at `fae419d1`):
+U-03 becomes a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC) and moves into the register (R-35, R-52, R-148, R-149; 139
+items), the panel unit's purchase and measurement and SunPower's and Solbian's drafts join the owner's items, LH-02 is amended
+(no new handover row), and the gate stays NOT CLOSED on U-01, U-02 and U-04 (output section 13).
 
 | File | What it is |
 |---|---|
@@ -36,13 +39,15 @@ defect is open; U-01 to U-04 stand, U-03 as it stood while L4-E13 is pending.
 | `checks/astra-check-l4e9-2.md` | The collaborator's targeted recheck of the fix round (job cx29-l4e9-recheck, run 20261002T013531Z-225982, on `71486686`), filed as returned: NOT YET, B1 (the breaker's event and the timer's components), B3 (R227's energy at nominal capacitance; L10's assignment) and the minors; the final round answers it |
 | `checks/check-l4e9-3.md` | Claude's (the coordinator's) closing check at `3c09b3da`: the output reproduced, D-09's start and margin and the hot short's derated SOA at the timer's maximum recomputed; the record accepted as a correct statement of the gate, which reads NOT CLOSED (D-06, D-09, U-01 to U-04); not a model review and not an Astra check |
 | `checks/check-l4e9-4.md` | Claude's (the coordinator's) closing check of the update at `170f5daf`: the output reproduced, E11-19's I2t and the over-voltage margin recomputed; the record accepted as the current statement, the gate NOT CLOSED on U-01, U-02, U-04 and U-03 (pending L4-E13); not a model review and not an Astra check |
+| `checks/check-l4e9-5.md` | Claude's (the coordinator's) closing check of update round 3 at `fc0f23ef`: the output reproduced, the gate rows, U-03's row, the register (139 rows) and R-29 against the JST VH catalogue read; U-03 a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC), the gate NOT CLOSED on U-01, U-02 and U-04; not a model review and not an Astra check |
 | `fetch_held_back.py` | Fetches the Littelfuse 0997 sheet the record read but did not file (held back by its terms, the owner's rule of 27 September 2026) into the ignored `v2/vendor/power/held/` and checks its sha256. Never run by a test; the tests skip when the sheet is absent |
 | `inputs/` | The provenance of the makers' documents read in round 2 (the addresses, revisions and sha256; the three TI sheets compared byte for byte with ti.com) |
 | `README.md` | This list |
 
 **PENDING:** none in the rows. L4-E7R is accepted (the coordinator's check 4, `fnd/l4e7` `91e9a4b5`, its figures at
 `675b8068`); D-01 is resolved in design (drafted, not applied). L4-E11 resolved D-06 in design and made U-04 a CONDITIONAL
-CANDIDATE; L4-E12 made U-02 CONDITIONAL on T-H1 with CFL-002 the owner's question; L4-E13 (U-03) is pending.
+CANDIDATE; L4-E12 made U-02 CONDITIONAL on T-H1 with CFL-002 the owner's question; L4-E13 made U-03 a conditional downstream
+unit selection (PANEL-ACC), no unit bought or measured.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
 `env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 37 tests.

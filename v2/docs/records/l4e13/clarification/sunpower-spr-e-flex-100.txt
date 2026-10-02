@@ -1,0 +1,31 @@
+DRAFT FOR THE OWNER TO SEND. The MeshSat session contacts no outside party; it prepared this text only.
+Addressee: the maker of the SunPower SPR-E-Flex-100 flexible module, technical support (SunPower's safety and installation
+guide 524958 Rev F names "SunPower technical support"; the datasheet issue held is a distributor's). The owner chooses the
+channel.
+Prepared 2 October 2026, task L4-E13 (MESHSAT-1357).
+
+Subject: SPR-E-Flex-100: the warranted limit of the open-circuit voltage at STC, and the temperature coefficient
+
+We are evaluating one SPR-E-Flex-100 as the solar input of a portable unit whose charger accepts a panel only if its
+open-circuit voltage stays at or below 25.0 V with the cells at -20 C. Your datasheet (Document 523809 Rev D) gives, as
+typical electrical data at STC, Voc 21.4 V and a voltage temperature coefficient of -58.9 mV/C. Your safety and
+installation guide 524958 Rev F (Table 1 and its note, page 2) states that rated electrical characteristics are within 10%
+of measured values at STC. Taken at 10 %, the open-circuit voltage at -20 C could reach about 26.2 to 26.7 V, above our
+limit; the typical value gives 24.05 V. Our limit applies to the rated open-circuit voltage, that is at 1000 W/m2, with the
+cells at -20 C.
+
+1. For production SPR-E-Flex-100 modules, what upper limit on the open-circuit voltage at STC do you warrant (for example
+   the flash-test acceptance limit, or a tolerance printed on the nameplate)? Is the 10 % of the guide's note that limit
+   for Voc, and does it mean |rated - measured| <= 10 % of the measured value?
+2. Is the -58.9 mV/C coefficient a typical value? What limits apply to it, and over which temperature range (down to
+   -40 C)?
+3. Which datasheet and guide revisions are current? Revision A of the guide gave Voc 21 V and Vmp 17.5 V where Revision F
+   gives 21.4 V and 17.1 V: which applies to modules shipped today?
+4. Can a flash-test report (Voc, Isc, Vmp, Imp at STC) be supplied for each module by serial number with the delivery?
+5. If no limit is part of the specification, can you provide the distribution of Voc at STC over production lots (the
+   sample size and the number of lots)? We would take it as supporting evidence only.
+
+What we need is a limit you warrant on Voc at STC for the modules shipped, and the conditions under which it applies;
+characterization data alone we cannot treat as a production guarantee. A warranted Voc at STC between 20.12 V and 22.24 V
+would meet both of our limits: the upper one for the open circuit at -20 C and 1000 W/m2, the lower one because our
+charger holds the panel at up to 18.8 V (the lower limit with the -58.9 mV/C coefficient as printed). Thank you.

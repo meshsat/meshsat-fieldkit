@@ -21,8 +21,10 @@ tree when the tree's file is the pinned one and otherwise from their named commi
 Update round (2 October 2026, the coordinator's instruction): the architecture and its gate brought up to date with the accepted
 results of L4-E10 (FEA-008, final), L4-E11 (the vehicle entry replaced by a TPS48110-Q1 breaker with a CSD19536KTT, D-06's
 interconnect, U-04's arrangement) and L4-E12 (the electronics against the inside air, T-H1's binding line); E11-19, every finding
-that rested on the LM5069's power limit, re-judged for the selected entry (section 12); L4-E13 (U-03) is pending and U-03 stays
-as it was.
+that rested on the LM5069's power limit, re-judged for the selected entry (section 12); L4-E13 (U-03) was then pending.
+Update round 3 (2 October 2026): L4-E13 accepted (check 3 at fae419d1, read from the tree): U-03 becomes a CONDITIONAL
+DOWNSTREAM UNIT SELECTION (PANEL-ACC), leaves the choices that could overturn the architecture and enters the register
+(section 13).
 
 The few figures this record sets itself are named where they are used (the copper constants of the F1 bound, the
 capacitance retained under bias in the pack-open bound, the back-feed diode's drop taken as zero). Evidence classes, from
@@ -112,6 +114,12 @@ PINS = {
     "cl_gc": ("v2/docs/records/l4e12/clarification/ground-control-rockblock-9704.txt", "738245875bec70c55d1ec105fb566248c98351095a268ffcd25d2b76e3bea85f"),
     "cl_nicerf": ("v2/docs/records/l4e12/clarification/nicerf-sa868.txt", "92324668c17d4f6c7b45b6f9528d08a7c2ae4df1c1839fc82fb6eeb9f7a585b7"),
     "cl_bulgin": ("v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt", "c7accd3dd6dc1d8993de6ffc37e4febba71302e878b3cdf0f3f2f30bc2a4457e"),
+    # update round 3: L4-E13 (U-03), accepted by the coordinator's check 3 at fae419d1, read from the tree
+    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "36d7c1ac0f7bdb5d9484192b5c04b17a9efade5ef6032f621ddb8a583a584224"),
+    "l4e13md": ("v2/docs/records/l4e13/L4E13-PANEL.md", "5dfedffb9bc723aa803e8dfa14c3270f84b32704ad7fced06230a78b3e47eb14"),
+    "l4e13chk": ("v2/docs/records/l4e13/checks/check-l4e13-3.md", "88539c7aeaf2f99d8ed0364ac86f0cb312b9322eeeb6ac860ffa3d35e53ec306"),
+    "cl_sunpower": ("v2/docs/records/l4e13/clarification/sunpower-spr-e-flex-100.txt", "453a5a957648a322dc6b011c4c0a601c4af7a41d527f7ef4ab3cd0b79538e08c"),
+    "cl_solbian": ("v2/docs/records/l4e13/clarification/solbian-sx-156.txt", "fb66bfb76e7e252ce9df361cd59dcc756be2764a1dcfbd5ef8632346b7a36b1f"),
 }
 # Read from the tree when the tree's file is the pinned one, else from the named commit: L4-E7R's selected solution (fnd/l4e7,
 # accepted, check 4 at 91e9a4b5), L4-E10's final record (fnd/l4e10, closing check 573c8b8f), L4-E11's (fnd/l4e11, accepted,
@@ -808,6 +816,47 @@ def compute():
     m = need(t, r"\*\*Owner question: which of these three\?\*\*\s+- \*\*A\. (.*?)\*\*.*?- \*\*B\. (.*?)\*\*.*?- \*\*C\. (.*?)\*\*", "CFL-002's options", re.S)
     F["cfl002"] = (m.group(1), m.group(2), m.group(3))
     need(t, r"The session's recommendation: \*\*A\*\*", "L4-E12's recommendation")
+
+    t = T["l4e13"]      # L4-E13's accepted record: U-03 a conditional downstream unit selection (PANEL-ACC)
+    need(t, r"U-03: CONDITIONAL DOWNSTREAM UNIT SELECTION \(PANEL-ACC\)\.", "U-03's class")
+    need(t, r"Route 2, a controlled unit: .*?A-3\(b\) met at the specification: yes", "route 2 feasible", re.S)
+    need(t, r"NO PHYSICAL UNIT IS ACCEPTED: none is bought or measured; the purchase and the measurement are the owner's actions", "no unit accepted")
+    r1 = re.findall(r"^\s+(SunPower SPR-E-Flex-100|BougeRV [^\n]*?|Solbian SX 156)\s+bounded (yes|NO); hold (yes|NO); portable (yes|no) -> (does not qualify|qualifies)", t, re.M)
+    if len(r1) != 3 or any(x[4] != "does not qualify" for x in r1):
+        refuse(3, "route 1's three rows")
+    F["e13_route1"] = [(x[0].split(" (")[0], x[1], x[2]) for x in r1]
+    F["e13_unit"] = need(t, r"THE UNIT \(SESSION\): one (SunPower SPR-E-Flex-100), recorded by serial number", "PANEL-ACC's unit").group(1)
+    F["e13_a1_lim"] = f(need(t, r"A-1 THE WINDOW: Vm20 \+ U_V <= ([\d.]+) V", "A-1's limit"))
+    m = need(t, r"A-1 ([\d.]+) V: PASS, margin ([\d.]+) V", "A-1 on the typical rows")
+    F["e13_a1"], F["e13_a1_margin"] = f(m, 1), f(m, 2)
+    m = need(t, r"lower bound ([\d.]+) W: PASS \(above ([\d.]+) W\)", "A-2 on the typical rows")
+    F["e13_a2"], F["e13_a2_line"] = f(m, 1), f(m, 2)
+    m = need(t, r"A-3 \(a\) ([\d.]+) A: PASS; \(b\) ([\d.]+) A .*?: PASS; \(c\) ([\d.]+) A at G_T", "A-3's three cases")
+    F["e13_a3"] = (f(m, 1), f(m, 2), f(m, 3))
+    F["e13_gt"] = f(need(t, r"G_T = ([\d.]+) W/m2 is a\s+SESSION design level", "A-3(c)'s design level"))
+    m = need(t, r"a 20 A part would cover the double contingency up to (\d+) W/m2, ([\d.]+) x E0", "a 20 A part's coverage")
+    F["e13_20a"] = (f(m, 1), f(m, 2))
+    m = need(t, r"Voc25 from ([\d.]+) V \(A-2's floor: [\d.]+ x rated\) to ([\d.]+) V \(A-1's ceiling: [\d.]+ x rated\); Vm20 at most ([\d.]+) V", "the route 2 window")
+    F["e13_win"] = (f(m, 1), f(m, 2), f(m, 3))
+    F["e13_vr"] = f(need(t, r"the SMCJ28A's\s+VR ([\d.]+) V", "D4's standoff"))
+    m = need(t, r"n_max = 2 \(MODELLING_ASSUMPTION\): the decision row\s+n 2\.0000: [\d.]+ V per unit of ln G; (\d+) W/m2, ([\d.]+) x E0", "the disturbance threshold")
+    F["e13_thr"] = (f(m, 1), f(m, 2))
+    m = need(t, r"the typical unit's fit: n ([\d.]+), ([\d.]+) with U_A", "M3's n on the typical unit")
+    F["e13_n"] = (f(m, 1), f(m, 2))
+    F["e13_a4_w"] = f(need(t, r"the unit's\s+maximum at -20 C, 1000 W/m2 is ([\d.]+) W", "A-4's maximum with no limit"))
+    m1 = need(t, r"the rated unit \(the typical rows\), the conditioned upper corner \(18\.813 V\): ([\d.]+) Wh a day", "the rated unit at the upper corner")
+    m2 = need(t, r"the rated unit \(the typical rows\), the nominal hold \(17\.593 V\): ([\d.]+) Wh a day", "the rated unit at the nominal hold")
+    m3 = need(t, r"the floor unit \(A-2's lower bound on the line\), the conditioned upper corner \(18\.813 V\): ([\d.]+) Wh a day", "the floor unit")
+    F["e13_day"] = (f(m1), f(m2), f(m3))
+    m = need(t, r"U_V ([\d.]+) V on each voltage .*?U_A (\d+) % of A25; U_I (\d+) % of a current; U_G (\d+) % of A-2's\s+irradiance setting; U_TC ([\d.]+) K", "the specification", re.S)
+    F["e13_spec"] = tuple(f(m, i) for i in range(1, 6))
+    if abs(F["e13_day"][1] - F["a1_cand"][0]) > 0.05:
+        refuse(3, "L4-E13's rated unit does not reproduce the energy record's day")
+    t = T["l4e13chk"]
+    if not t.startswith("accepted: yes\n"):
+        refuse(3, "L4-E13's check 3 is not accepted")
+    need(t, r"\*\*Owner decision required:\*\* none", "no owner decision")
+    need(T["l4e13md"], r"\*\*U-03: CONDITIONAL DOWNSTREAM UNIT SELECTION \(PANEL-ACC\)\.\*\*", "U-03's class on the page")
 
     t = T["s120"]
     m = need(t, r"with 100 ppm/K over 65 K \(INFERRED\).*?\s+([\d.]+) to ([\d.]+) V\s+<- the DC band", "VBUS20 DC band")
@@ -1605,7 +1654,7 @@ def rejudge_lines(F, D, A, E):
     p("12. THE UPDATE ROUND (2 October 2026): E11-19, THE SELECTED ENTRY, AND THE ACCEPTED RESULTS OF L4-E10, L4-E11 AND L4-E12")
     p("   the inputs: L4-E10 (79b2f568, closing check 573c8b8f: FEA-008 not closed, approach (II) CONDITIONAL); L4-E11 (3298d1f1, closing check")
     p("     a15ab384: the vehicle entry replaced, D-06 resolved in design, U-04's arrangement (A), REQ-015 at 9.00 V at the plug a CONDITIONAL CANDIDATE);")
-    p("     L4-E12 (a86be47b, closing check db41c95d: U-02 CONDITIONAL, CFL-002 an owner question); L4-E13 (U-03) pending: U-03 stays as it stood")
+    p("     L4-E12 (a86be47b, closing check db41c95d: U-02 CONDITIONAL, CFL-002 an owner question); L4-E13 (U-03) then pending, since accepted (section 13)")
     p("   12a. E11-19: THE FINDINGS THAT RESTED ON THE LM5069'S POWER LIMIT, RE-JUDGED FOR THE SELECTED ENTRY (TPS48110-Q1 with a CSD19536KTT,")
     p("     R19 4.5 mOhm, L2 SRF1260-1R0Y; L4-E11 3c, its fault scan and Q7's Figure 4-10 read from TI's vector drawing)")
     p("     what changes: the selected entry limits no power. It is a breaker: a timed overcurrent at %s / %s / %s A after %s / %s / %s ms and a"
@@ -1700,8 +1749,50 @@ def rejudge_lines(F, D, A, E):
       % ("%.1f" % F["sgp_on"], F["abs_only"][0], fmt(F["abs_only"][1])))
     low = lambda s: s[0].lower() + s[1:]
     p("     (A, B or C: %s; %s; %s)" % (low(F["cfl002"][0]), low(F["cfl002"][1].rstrip(".")), low(F["cfl002"][2])))
-    p("   12f. U-01 (L4-E10): unchanged; LO-01a's floor with the ballasts, %s W/K (L4-E12), lies under the binding line. U-03: unchanged, pending L4-E13"
+    p("   12f. U-01 (L4-E10): unchanged; LO-01a's floor with the ballasts, %s W/K (L4-E12), lies under the binding line. U-03: section 13 (L4-E13)"
       % fmt(F["lo01a_ball"]))
+    return L
+
+
+def round3_lines(F, D, A, E, st):
+    L = []
+    p = L.append
+    a3, win, sp = F["e13_a3"], F["e13_win"], F["e13_spec"]
+    p("13. UPDATE ROUND 3 (2 October 2026): L4-E13 ACCEPTED; U-03 A CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC)")
+    p("   the input: L4-E13 at fae419d1 (accepted by the coordinator's check 3, 'Owner decision required: none'), read from the tree and pinned")
+    p("   route 1 (a maker's warranted band in the window, the hold inside the curve, portable), none qualifies today: %s"
+      % "; ".join("%s bounded %s, hold %s" % x for x in F["e13_route1"]))
+    p("     the drafts to SunPower and Solbian ask for a warranted band (OW-4); the owner sends them")
+    p("   route 2 (one identified %s, recorded by serial number, measured), feasible on a unit equal to the typical rows:" % F["e13_unit"])
+    p("     A-1 the window: Vm20 + U_V %s V against %s V at -20 C and 1000 W/m2, margin %s V; the window Voc25 %s to %s V, Vm20 at most %s V"
+      % ("%s" % F["e13_a1"], "%.3f" % F["e13_a1_lim"], "%s" % F["e13_a1_margin"], "%s" % win[0], "%s" % win[1], "%.3f" % win[2]))
+    p("     A-2 useful charging, measured on the conservative side: lower bound %s W above %s W" % ("%s" % F["e13_a2"], "%s" % F["e13_a2_line"]))
+    p("     A-3 the entry: (a) %s A in operation under L4-E7's drafted limit; (b) %s A in a sustained input fault, inside F2's and J_SOLAR's 10 A;"
+      % ("%s" % a3[0], "%s" % a3[1]))
+    p("       (c) %s A in a double contingency at the design level %s W/m2, a COMPONENT_LIMITATION on J_SOLAR and PV_IN (a 20 A part covers it to"
+      % ("%s" % a3[2], fmt(F["e13_gt"])))
+    p("       %s W/m2, %s x E0)" % (fmt(F["e13_20a"][0]), fmt(F["e13_20a"][1])))
+    p("     A-4 CONDITIONAL on L4-E7's drafted input limit (%s W at -20 C and 1000 W/m2 with no limit)" % fmt(F["e13_a4_w"]))
+    p("     the specification (k = 2): U_V %s V, U_A %s %%, U_I %s %%, U_G %s %%, U_TC %s K" % tuple(fmt(x) for x in sp))
+    p("   the disturbance check, apart (TRN-001): a unit at A-1's ceiling reaches D4's %s V standoff at %s W/m2 (%s x E0) at n 2, a MODELLING_ASSUMPTION"
+      % (fmt(F["e13_vr"]), fmt(F["e13_thr"][0]), fmt(F["e13_thr"][1])))
+    p("     verified by M3's n (the typical unit's fit %s, %s with U_A); the irradiance below the threshold an ASSUMPTION" % (fmt(F["e13_n"][0]), fmt(F["e13_n"][1])))
+    p("   the energy: the rated unit %s Wh a day at the nominal hold (the endurance rows of section 8) and %s Wh at the conditioned upper corner;"
+      % ("%.1f" % F["e13_day"][1], "%.1f" % F["e13_day"][0]))
+    p("     a unit at A-2's floor %s Wh there; no figure is a measured unit's (R-52)" % ("%.1f" % F["e13_day"][2]))
+    p("   what changes: U-03 leaves the choices that could overturn the architecture; criteria 1 and 5 name U-01, U-02 and U-04. It decides")
+    p("     which unit, not the topology and not the source class: REQ-016's window, the stage, its hold and the drafted limit stay. It returns to")
+    p("     an architecture-level choice only if route 2 proves infeasible with route 1 still closed (L4-E13's decision L4E13-06)")
+    p("   IF-01 (%s): A-1 on the typical rows, A-3(b) inside F2 and inside J_SOLAR's VH at AWG 16 (R-29), A-3(c) OPEN (R-148), the disturbance" % st["IF-01"][1])
+    p("     check CONDITIONAL on n (R-149)")
+    p("   the register: R-35 restated as PANEL-ACC, R-52 the unit's trace rerun, R-29 J_SOLAR's lead at A-3(b)'s current, R-148 A-3(c)'s rating")
+    p("     for J_SOLAR and PV_IN (Layer 6; its interface text amends LH-02, no new handover row), R-149 M3's n at or under 2; the owner's items")
+    p("     OW-6 (the purchase and the measurement) and the two route-1 drafts in OW-4")
+    held = [g["n"] for g in GATE if g["verdict"] != "PASS"]
+    arch = [c["id"] for c in CHOICES if c["class"] == ARCH]
+    p("   the gate: NOT CLOSED (criteria %s): criteria 1 and 5 on %s, each still able to overturn the architecture on named evidence;"
+      % (", ".join(str(n) for n in held), ", ".join(arch)))
+    p("     criterion 2 CONDITIONAL with no material defect open, on its rows' named evidence; criteria 3 and 4 PASS")
     return L
 
 
@@ -1712,19 +1803,24 @@ def rows(F, D, A, E):
     pv = F["pv"]
     R.append({
         "id": "IF-01", "title": "the panel to board E's solar entry (J_SOLAR, F2, the sense bank, D4, C71 to C74, PV_IN, PV_P and TRK_VS)",
-        "a": "the panel (SPR-E-Flex-100 candidate, O-1, source compliance INCONCLUSIVE)", "b": "board E, PV_IN, PV_P and TRK_VS (L4-E7R's corrected entry)",
-        "v": "panel: open circuit at most %s V at -20 C (REQ-016, gen PV_P v_max); candidate %s V nominal at -20 C; held at %s V nominal | entry: D4 %s standoff %s V on TRK_VS; under CS101 the input at most %s V; TRK_VS at most %s V and PV_P %s V at the capability scenario"
-             % (fmt(pv["v_max"]), fmt(F["cand_voc_cold"]), fmt(F["hold"][1]), "SMCJ28A", fmt(sm28["vr"]), fmt(F["cs101_pv"]), fmt(F["trk_vs_max"]), fmt(F["pv_p_max"])),
-        "i": "panel hot short circuit %s A with the sheet's power tolerance (L4-E7R; %s A nominal sheet) | F2 %s A blade, J_SOLAR VH (%s A at AWG 16, standard header; %s A at AWG 18, shrouded only; the lead is AWG 18 on a standard header: no stated rating); under CS101 the filtered ripple at the trip input at most %s A at %d Hz against the %s A margin"
-             % (fmt(F["isc_hot_tol"]), fmt(F["cand_isc_hot"]), fmt(amps_in(F["e_f2"], "F2")), fmt(F["vh_16"]), fmt(F["vh_18"]), fmt(F["m2_ripple"]), F["m2_hz"], fmt(F["m2_margin"])),
+        "a": "the panel (PANEL-ACC: one %s by serial number, a CONDITIONAL DOWNSTREAM UNIT SELECTION, L4-E13; no unit bought or measured)" % F["e13_unit"], "b": "board E, PV_IN, PV_P and TRK_VS (L4-E7R's corrected entry)",
+        "v": "panel: open circuit at most %s V at -20 C (REQ-016, gen PV_P v_max); PANEL-ACC's A-1 Vm20 + U_V at -20 C and 1000 W/m2 at most %s V, %s V on the typical rows (margin %s V), the window Voc25 %s to %s V; held at %s V nominal | entry: D4 %s standoff %s V on TRK_VS, reached by a unit at A-1's ceiling only above %s W/m2 at n 2; under CS101 the input at most %s V; TRK_VS at most %s V and PV_P %s V at the capability scenario"
+             % (fmt(pv["v_max"]), "%.3f" % F["e13_a1_lim"], "%s" % F["e13_a1"], "%s" % F["e13_a1_margin"], "%s" % F["e13_win"][0], "%s" % F["e13_win"][1], fmt(F["hold"][1]), "SMCJ28A",
+                fmt(sm28["vr"]), fmt(F["e13_thr"][0]), fmt(F["cs101_pv"]), fmt(F["trk_vs_max"]), fmt(F["pv_p_max"])),
+        "i": "panel hot short circuit %s A with the sheet's power tolerance (L4-E7R; %s A nominal sheet); PANEL-ACC's A-3: (a) %s A in operation under L4-E7's limit, (b) %s A in a sustained input fault (SunPower's 1.25), (c) %s A in a double contingency at the design level %s W/m2 | F2 %s A blade, J_SOLAR VH (%s A at AWG 16, standard header; %s A at AWG 18, shrouded only; the lead is AWG 18 on a standard header: no stated rating); under CS101 the filtered ripple at the trip input at most %s A at %d Hz against the %s A margin"
+             % (fmt(F["isc_hot_tol"]), fmt(F["cand_isc_hot"]), "%s" % F["e13_a3"][0], "%s" % F["e13_a3"][1], "%s" % F["e13_a3"][2], fmt(F["e13_gt"]), fmt(amps_in(F["e_f2"], "F2")), fmt(F["vh_16"]), fmt(F["vh_18"]),
+                fmt(F["m2_ripple"]), F["m2_hz"], fmt(F["m2_margin"])),
         "loss": "the 5 m lead about 0.0465 Ohm (the replay's ESTIMATE); the sense bank %s Wh on SC-37's day, %s Wh on the bright day (L4-E7R)" % (fmt(F["bank_wh"][0]), fmt(F["bank_wh"][1])),
         "therm": "the entry at the worst inside air %s C (envelope, lid closed); the bulk cans' heating under CS101's bounding case, up to %s times their ripple rating, CONDITIONAL (M2 records it)" % (fmt(F["air"][1]), fmt(F["bulk_ripple_x"])),
         "prot_a": "none (a bare panel)", "prot_b": "F2; the 50 V bulk on PV_P ahead of the sense bank; D4 one-way clamp and C71 to C74 on TRK_VS; the INB filter, %d x 100 nF C0G across R66 %s (%s to %s ms) (L4-E7R, drafted in apply_gen_sch_e_backstop.py)" % (F["filt_n"], F["r66"], fmt(F["tau_min_ms"]), fmt(F["tau_max_ms"])),
-        "settled": "l4e (O-1), L4-E7R at 675b8068 (accepted, check 4 at 91e9a4b5)", "checks": [
-            Chk("the candidate's nominal cold open circuit within REQ-016's 25 V", F["cand_voc_cold"], "<=", pv["v_max"], "V", "CONDITIONAL", "replay out 12; source compliance needs a supported maximum (O-1)"),
+        "settled": "l4e (O-1), L4-E7R at 675b8068 (accepted, check 4 at 91e9a4b5), L4-E13 at fae419d1 (accepted, check 3; PANEL-ACC)", "checks": [
+            Chk("PANEL-ACC A-1, the window: Vm20 + U_V at -20 C and 1000 W/m2 on a unit equal to the typical rows, within REQ-016's 25 V", F["e13_a1"], "<=", F["e13_a1_lim"], "V", "CONDITIONAL", "L4-E13 out 10 (INFERRED on the typical rows): the bought unit's own measurement M2 decides (R-35)"),
             Chk("D4's standoff above the window's 25 V", pv["v_max"], "<=", sm28["vr"], "V", "MAKER", "Littelfuse SMCJ row"),
             Chk("the panel's hot short circuit with the sheet's power tolerance inside F2", F["isc_hot_tol"], "<=", amps_in(F["e_f2"], "F2"), "A", "INFERRED", "L4-E7R out; gen F2"),
-            Chk("the panel's hot short circuit with tolerance inside J_SOLAR's nearest stated VH rating (AWG 18, shrouded header)", F["isc_hot_tol"], "<=", F["vh_18"], "A", "ASSUMPTION", "JST VH catalogue p.1; the fitted standard header with AWG 18 is not rated"),
+            Chk("PANEL-ACC A-3(b): a sustained input fault's current (Isc at +70 C, + U_I, x SunPower's 1.25) inside F2", F["e13_a3"][1], "<=", amps_in(F["e_f2"], "F2"), "A", "INFERRED", "L4-E13 out 10; gen F2"),
+            Chk("A-3(b) inside J_SOLAR's VH rating with the lead at AWG 16 on the standard header (R-29's change; the drawn AWG 18 has no stated rating, the shrouded AWG 18 row's 7 A falls short)", F["e13_a3"][1], "<=", F["vh_16"], "A", "CONDITIONAL", "JST VH catalogue p.1; R-29"),
+            Chk("PANEL-ACC A-3(c), a COMPONENT_LIMITATION: J_SOLAR and PV_IN carry %s A for a double contingency at the design level %s W/m2" % ("%s" % F["e13_a3"][2], fmt(F["e13_gt"])), None, "<=", None, "a rating or a bench row", "CONDITIONAL", "L4-E13 out 10 (JST VH prints 10 A, no short-time overload): R-148"),
+            Chk("the disturbance check (TRN-001, apart from the window): A-3(c)'s design level, context and not a maximum, under the irradiance at which a unit at A-1's ceiling reaches D4's standoff at n 2", F["e13_gt"], "<", F["e13_thr"][0], "W/m2", "CONDITIONAL", "L4-E13 out 11: n <= 2 a MODELLING_ASSUMPTION verified by M3 (R-149); the irradiance below the threshold an ASSUMPTION"),
             Chk("D4 does not conduct under CS101 (the input's peak under its standoff)", F["cs101_pv"], "<", sm28["vr"], "V", "MODELED", "L4-E7R out (lumped model)"),
             Chk("TRK_VS at the capability scenario under the bulk's and the ceramics' 50 V", F["trk_vs_max"], "<=", 50.0, "V", "MODELED", "L4-E7R out (capability, not a requirement)"),
             Chk("PV_P at the capability scenario under U18's VIN+ %s V" % fmt(F["u18_vin"]), F["pv_p_max"], "<=", F["u18_vin"], "V", "MODELED", "L4-E7R out"),
@@ -2019,14 +2115,15 @@ def rows(F, D, A, E):
 # ------------------------------------------------------------------------------------------------------- the gate
 GATE = [
     {"n": 1, "criterion": "one architecture selected, its mandatory functions with a defensible feasibility basis",
-     "rows": ["IF-02", "IF-04", "IF-05", "IF-07", "IF-09", "IF-10", "IF-11", "IF-12", "IF-13"], "choices": ["U-01", "U-02", "U-03", "U-04"], "verdict": "CONDITIONAL",
-     "constraint": "the solar function's 100 W bound is CONDITIONAL on G_CM and U18's VIN+ bias (L4-E7R) and its source on O-1 (U-03); REQ-015 at "
+     "rows": ["IF-02", "IF-04", "IF-05", "IF-07", "IF-09", "IF-10", "IF-11", "IF-12", "IF-13"], "choices": ["U-01", "U-02", "U-04"], "verdict": "CONDITIONAL",
+     "constraint": "the solar function's 100 W bound is CONDITIONAL on G_CM and U18's VIN+ bias (L4-E7R) and its panel on PANEL-ACC (U-03, a CONDITIONAL "
+                   "DOWNSTREAM UNIT SELECTION since L4-E13: no unit bought or measured, R-35); REQ-015 at "
                    "9.00 V at the plug is a CONDITIONAL CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23 (U-04); the electronics at the margins "
                    "are CONDITIONAL on T-H1 at or over 2.159 W/K and L4-E12's conditions (U-02); the battery path's thermal design is FEA-008's (U-01); "
                    "PS-ALLTX's chain at 18 A for 60 s (PWR-F12) is an open obligation",
      "overturn": "possibly, on named evidence only: U-01 on the HL18650V's specification (D-06's pack energy and protection settings), U-02 on "
                  "T-H1's reading and the fans (the sealed case's thermal design or a device-set re-pick), U-04 on TI's N1 and the bench's VSYS "
-                 "(the charger's power path); the rest resolves by a value, a part or a measurement on the same topology"},
+                 "(the charger's power path); the rest, the panel unit included, resolves by a value, a part or a measurement on the same topology"},
     {"n": 2, "criterion": "material power-path defects have engineering resolutions and bounded supporting calculations",
      "rows": ["IF-01", "IF-02", "IF-04", "IF-05", "IF-13"], "choices": [], "verdict": "CONDITIONAL",
      "constraint": "no material defect is open: D-01 to D-05 and D-08 are resolved in design (drafted or bounded), D-06 is resolved in design by "
@@ -2040,19 +2137,23 @@ GATE = [
     {"n": 4, "criterion": "downstream implementation changes, layout constraints and tests have named owners and acceptance criteria",
      "rows": [], "choices": [], "verdict": "PASS", "constraint": "", "overturn": ""},
     {"n": 5, "criterion": "no unresolved uncertainty could overturn the selected architecture while described as routine later testing",
-     "rows": ["IF-01", "IF-09", "IF-10", "IF-11"], "choices": ["U-01", "U-02", "U-03", "U-04"], "verdict": "CONDITIONAL",
-     "constraint": "four unresolved choices could overturn it and are named as such, not as later testing: U-01 (FEA-008's cell; the owner's two "
+     "rows": ["IF-09", "IF-10", "IF-11"], "choices": ["U-01", "U-02", "U-04"], "verdict": "CONDITIONAL",
+     "constraint": "three unresolved choices could overturn it and are named as such, not as later testing: U-01 (FEA-008's cell; the owner's two "
                    "items), U-02 (MESHSAT-1478; CONDITIONAL on T-H1 at or over 2.159 W/K and L4-E12's conditions, CFL-002 the owner's question), "
-                   "U-03 (O-1, pending L4-E13), U-04 (a CONDITIONAL CANDIDATE with the evidence that closes it); an owner and an acceptance "
-                   "criterion do not close them",
+                   "U-04 (a CONDITIONAL CANDIDATE with the evidence that closes it); an owner and an acceptance criterion do not close them. U-03 "
+                   "left this category with L4-E13's acceptance: a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC, R-35) that decides which "
+                   "unit, not the topology or the source class",
      "overturn": "yes, on named evidence only: U-01 (D-06's pack energy and settings), U-02 (the sealed case's thermal design, the fans, the "
-                 "device set), U-04 (the charger's power path); U-03 decides the solar source, not the topology"},
+                 "device set), U-04 (the charger's power path); U-03 no longer can, unless route 2 proves infeasible with route 1 still "
+                 "closed (L4E13-06)"},
 ]
 
-# The unresolved choices that could overturn the architecture (category b). An owner and an acceptance criterion close an
+ARCH = "ARCHITECTURE-LEVEL CHOICE"                              # could overturn the architecture: named by criteria 1 and 5
+DOWNSTREAM = "CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC)"  # U-03 since L4-E13: decides a unit, in the register as R-35
+# The unresolved choices that could overturn the architecture (category b), and U-03, which left it with L4-E13's acceptance. An owner and an acceptance criterion close an
 # assignment, never one of these: each stays open, and keeps every criterion that names it from PASS, until its evidence lands.
 CHOICES = [
-    {"id": "U-01", "title": "FEA-008: the battery path's cell and thermal design (L4-E10, final)",
+    {"id": "U-01", "title": "FEA-008: the battery path's cell and thermal design (L4-E10, final)", "class": ARCH,
      "constraint": "LO-01d to LO-01g (E3-O, E5, E3-S, E4-S with the pack fitted) have no route that holds on held evidence; LO-01a holds only with "
                    "T-H1 at least 1.666 W/K in both lid states (1.8058 W/K with L4-E8's ballasts counted, L4-E12)",
      "settles": "the HL18650V's signed specification confirming storage at +71 C and -33 C at the stored charge and the +80 C idle limit, then L4-E10's "
@@ -2066,7 +2167,7 @@ CHOICES = [
                   "negative answer and no requirement change LO-01d to g keep no route on held evidence, and (I)'s powered cooling (up to 35 W into "
                   "the sealed case) would reopen U-02's heat budget; the power path's topology stays",
      "rows": ["IF-10"]},
-    {"id": "U-02", "title": "MESHSAT-1478: the electronics against the inside air at D-02a's +55 C margin and E5's +60 C dwell (L4-E12)",
+    {"id": "U-02", "title": "MESHSAT-1478: the electronics against the inside air at D-02a's +55 C margin and E5's +60 C dwell (L4-E12)", "class": ARCH,
      "constraint": "L4-E12's route (c), E3-O as stated and the hold in E5 only, is CONDITIONAL on T-H1 lid open with the fans at or over 2.159 W/K "
                    "(E3-O alone 1.806 W/K; 2.709 W/K with no hold), the hold's reference within +-0.899099 K of the mixed air, the parts out of the "
                    "cooler's exhaust, the fans' rating (D-18), the pushbuttons and two regulators changed and PDi's statement; at the line E3-O's air "
@@ -2086,15 +2187,23 @@ CHOICES = [
                   "stopped fan takes the enclosure to its fans-off conductance; CFL-002 changes a sensor, not the architecture; never the power "
                   "path's topology",
      "rows": ["IF-11"]},
-    {"id": "U-03", "title": "O-1: a solar panel with a supported maximum open circuit inside REQ-016's window",
-     "constraint": "REQ-016 admits a panel only with an open circuit at or below 25 V at -20 C; the candidate's nominal sheet gives 24.05 V and no "
-                   "supported maximum (source compliance INCONCLUSIVE)",
-     "settles": "a panel maker's stated maximum, or a measured lot, at -20 C at or under 25 V",
-     "alternatives": "the SPR-E-Flex-100 with the maker's tolerance; another panel inside the window; REQ-016's window restated (the owner's)",
-     "owner": "none until a panel is pinned",
-     "overturns": "which panel the mandatory solar function uses; the stage and the window stay",
+    {"id": "U-03", "title": "O-1: the solar panel inside REQ-016's window (L4-E13, accepted)", "class": DOWNSTREAM,
+     "constraint": "L4-E13 (accepted, check 3 at fae419d1): route 1, a maker's warranted band, closes nothing today; route 2, one identified "
+                   "SunPower SPR-E-Flex-100 measured against A-1 to A-3, is feasible on a unit equal to the typical rows: A-1 Vm20 + U_V 24.1505 V "
+                   "against 25.000 V at -20 C and 1000 W/m2 (margin 0.8495 V), the window Voc25 20.315 to 22.156 V; A-2 27.0849 W above "
+                   "1.365591 W; A-3 (a) 3.987 A, (b) 8.1817 A, (c) 13.82 A, a COMPONENT_LIMITATION on J_SOLAR and PV_IN; A-4 CONDITIONAL on "
+                   "L4-E7's limit; no physical unit accepted",
+     "settles": "one unit bought and measured (M1 to M3 and A-2's reading at the specification) and accepted on A-1, A-2 and A-3(b) (R-35); its "
+                "trace rerun (R-52); J_SOLAR and PV_IN with a rating that covers A-3(c) (R-148); M3's n at or under 2 for the disturbance check (R-149); "
+                "L4-E7's drafted input limit applied for A-3(a) and A-4",
+     "alternatives": "route 1, a maker's warranted band inside the window (the drafts to SunPower and Solbian, OW-4); another unit of the same "
+                     "curve shape inside the window; REQ-016's window restated (the owner's; not needed)",
+     "owner": "the purchase and the measurement of one unit (OW-6) and sending the two route-1 drafts (OW-4): actions, not questions",
+     "overturns": "nothing of the architecture: it decides which unit, not the topology and not the source class; REQ-016's window, the stage, "
+                  "its hold and the drafted limit stay; it returns to an architecture-level choice only if route 2 proves infeasible with "
+                  "route 1 still closed (L4E13-06)",
      "rows": ["IF-01"]},
-    {"id": "U-04", "title": "source-only and dead-pack operation (L4-E11: arrangement (A), a CONDITIONAL CANDIDATE)",
+    {"id": "U-04", "title": "source-only and dead-pack operation (L4-E11: arrangement (A), a CONDITIONAL CANDIDATE)", "class": ARCH,
      "constraint": "L4-E11 selects arrangement (A), the drawn charger with no battery FET, with rules R-a to R-d and the replaced entry: at a 9.00 V "
                    "plug the source delivers 29.09 to 42.52 W at VBAT and the shed warm-up (28.12 W plan) is carried with 0.98 W in hand while P1 "
                    "stays at most 20.51 W; REQ-015 at 9.00 V at the plug is a CONDITIONAL CANDIDATE, not closed: at the load's hi corner P1 "
@@ -2196,15 +2305,20 @@ OWNER_ITEMS = [
               ("cl_vishay", "Vishay: the WSL2512's pulse capability (R-101)"),
               ("cl_ti", "Texas Instruments: the INA169's error envelope (R-101)"),
               ("ti_review", "Texas Instruments: the battery packet's Q-TI-2 and Q-TI-3, with L4-E11's N1 and N2 for S2 added before sending (U-04; E11-05, R-114)"),
-              ("cl_eaton", "Eaton: the SCF9550 above +60 C and in storage (PWR-F12; R-103)")]},
+              ("cl_eaton", "Eaton: the SCF9550 above +60 C and in storage (PWR-F12; R-103)"),
+              ("cl_sunpower", "SunPower (the module's maker): a warranted Voc band at STC for the SPR-E-Flex-100 (U-03's route 1)"),
+              ("cl_solbian", "Solbian: a warranted Voc band for the SX 156 (U-03's route 1)")]},
     {"id": "OW-5", "what": "the fallbacks, to send only if T-H1 reads under 2.159 W/K (L4-E12)",
      "docs": [("cl_gc", "Ground Control: the RockBLOCK 9704"), ("cl_nicerf", "NiceRF: the SA868"), ("cl_bulgin", "Bulgin: the PXP4043C")]},
+    {"id": "OW-6", "what": "PANEL-ACC (U-03, L4-E13): buy one SunPower SPR-E-Flex-100, recorded by serial number, and have it measured to the "
+                           "specification (M1 to M3 and A-2's reading); actions under the owner's authority (money), not questions",
+     "docs": [("l4e13md", "L4-E13's page, PANEL-ACC")]},
 ]
 OWNER_NOT_DRAFTED = ("not yet drafted (engineering work first, then the owner sends): Littelfuse, F1's total clearing I2t at 900 A and 58 V DC "
                      "(R-115, E11-16); Coilcraft, L10's inductance against current at temperature (R-120) and L1's Isat at 85 C (R-31); Milliohm, "
                      "R227's single-pulse rating (R-101)")
 OWNER_MARK = {"l4e12md": r"\*\*Owner question: which of these three\?\*\*", "l4e10md": r"The recommendation needs the owner for exactly two things",
-              "ti_review": r"Nothing in this file has been sent to anyone"}
+              "ti_review": r"Nothing in this file has been sent to anyone", "l4e13md": r"the purchase and the measurement are the owner's\s+actions"}
 
 # The accepted records' downstream items mapped onto this register (deduplicated): L4-E11's E11-NN by its From column (every
 # one but E11-19, which this record answers, out 12); L4-E10's and L4-E12's owner rows by these maps.
@@ -2247,8 +2361,16 @@ def gate_violations(gate, st):
         if g["n"] == 2 and g["verdict"] == "PASS" and any(d["state"] == "OPEN" for d in DEFECTS):
             bad.append((2, "PASS while a material defect is open"))
     for c in CHOICES:
-        if not all(c.get(k) for k in ("constraint", "settles", "alternatives", "owner", "overturns", "rows")):
+        if not all(c.get(k) for k in ("constraint", "settles", "alternatives", "owner", "overturns", "rows", "class")):
             bad.append((0, "choice %s lacks a field" % c["id"]))
+    klass = {c["id"]: c.get("class") for c in CHOICES}
+    arch = {c["id"] for c in CHOICES if c.get("class") == ARCH}
+    for g in gate:
+        for cid in g.get("choices", []):
+            if cid in klass and klass[cid] != ARCH:
+                bad.append((g["n"], "%s, a downstream selection, named as a choice that could overturn the architecture" % cid))
+        if g["n"] in (1, 5) and set(g.get("choices", [])) != arch:
+            bad.append((g["n"], "criterion %d does not name exactly the architecture-level choices %s" % (g["n"], sorted(arch))))
     return bad
 
 
@@ -2293,7 +2415,7 @@ def main():
         w, h = where[key]
         p("   %-9s %s  %s%s" % (key, h[:16], rel, "" if w == "tree" else "  (" + w + (", fnd/l4e8 accepted)" if key in FROM_L4E8 else ", " + FROM_LABEL[key] + ")")))
     p("   pending: %s" % L4E7R)
-    p("   pending: L4-E13 (U-03, the panel's supported open circuit): U-03 stays as it stood until it lands")
+    p("   L4-E13 (U-03, the panel) accepted by the coordinator's check 3 at fae419d1: update round 3, section 13")
     p("   this record's own figures: copper %s ohm mm2/m at 20 C and %s /K, 18 AWG %s mm2 (ASSUMPTION, constants); the cold end %s C (REQ-024);"
       % (fmt(CU_RHO_20C), fmt(CU_ALPHA), fmt(AWG18_MM2), fmt(T_COLD)))
     p("     capacitance kept under bias %s (ASSUMPTION; the bound states the fraction it needs); the back-feed diode's drop %s V (an upper bound);"
@@ -2529,7 +2651,7 @@ def main():
     p("   battery only: A1 %s Wh usable at +20 C, %s Wh at -10 C: %s h and %s h (short of 48 h by %s h, of 72 h by %s h); A2 %s h and %s h"
       % (fmt(a1b[0]), fmt(a1b[1]), fmt(a1b[2]), fmt(a1b[3]), fmt(sh[0]), fmt(sh[2]), fmt(a2b[2]), fmt(a2b[3])))
     c1, c2 = F["a1_cand"], F["a2_cand"]
-    p("   solar-assisted on the candidate panel (nominal sheet, source compliance INCONCLUSIVE; L4-E7's settings, %s Wh a day): A1 first interruption"
+    p("   solar-assisted on the panel at its typical rows (PANEL-ACC's unit, none measured; L4-E7's settings, %s Wh a day): A1 first interruption"
       % fmt(c1[0]))
     p("     h %d / %d (06 / 18 UTC starts); unserved %s / %s Wh at 48 h, %s / %s Wh at 72 h; least storage to add +%s / +%s Wh"
       % (int(c1[1]), int(c1[2]), *[fmt(x) for x in c1[3:9]]))
@@ -2574,6 +2696,11 @@ def main():
       % (fmt(F["cell_usable"][1]), fmt(F["cell_usable"][0]), fmt(F["cell_less_pct"]), fmt(F["cell_hours"][1]), fmt(F["cell_hours"][0])))
     p("     about %s Wh nominal; every storage shortfall above grows by at most the usable energy lost, %s Wh (INFERRED)"
       % (fmt(F["cell_nom"][1]), fmt(round(F["cell_usable"][0] - F["cell_usable"][1], 1))))
+    p("   the panel (U-03, L4-E13): the solar rows above are the rated unit's (%s Wh a day at the nominal hold, L4-E7's row); PANEL-ACC accepts"
+      % ("%.1f" % F["e13_day"][1]))
+    p("     any unit inside the window down to A-2's floor, whose day at the conditioned upper corner is %s Wh (the rated unit's %s Wh): the"
+      % ("%.1f" % F["e13_day"][2], "%.1f" % F["e13_day"][0]))
+    p("     unserved energy then grows; no figure here is a measured unit's (R-52)")
     p("   the objective of 48 to 72 h is unmet by A1 on every trace (DR-01); no mandatory function is reduced to narrow it")
     p("")
     p("9. THE CLOSURE GATE (a criterion reads PASS only on rows that read MEETS; ASSUMPTION, CONDITIONAL and PENDING rows cannot carry a PASS)")
@@ -2593,10 +2720,12 @@ def main():
         p("     %s %s [%s]; rows %s" % (d["id"], d["title"], d["state"], ", ".join("%s %s" % (r, st[r][1]) for r in d["rows"])))
         p("        the constraint: %s" % d["constraint"])
         p("        the options: %s; resolution: %s" % (d["options"], d["resolution"]))
-    p("   (b) UNRESOLVED CHOICES THAT COULD OVERTURN THE ARCHITECTURE: %d (no owner or acceptance criterion closes one; each keeps every" % len(CHOICES))
-    p("       criterion that names it from PASS until its evidence lands)")
+    p("   (b) UNRESOLVED CHOICES THAT COULD OVERTURN THE ARCHITECTURE: %d (no owner or acceptance criterion closes one; each keeps every"
+      % sum(1 for c in CHOICES if c["class"] == ARCH))
+    p("       criterion that names it from PASS until its evidence lands); %s moved downstream (class printed with each)"
+      % ", ".join(c["id"] for c in CHOICES if c["class"] != ARCH))
     for c in CHOICES:
-        p("     %s %s; rows %s" % (c["id"], c["title"], ", ".join("%s %s" % (r, st[r][1]) for r in c["rows"])))
+        p("     %s %s [%s]; rows %s" % (c["id"], c["title"], c["class"], ", ".join("%s %s" % (r, st[r][1]) for r in c["rows"])))
         for k, lab in (("constraint", "the exact constraint"), ("settles", "the evidence that settles it"), ("alternatives", "the alternatives"),
                        ("owner", "the owner's items"), ("overturns", "what it could overturn")):
             p("        %s: %s" % (lab, c[k]))
@@ -2659,6 +2788,9 @@ def main():
         p(ln)
     p("")
     for ln in rejudge_lines(F, D, A, E):
+        p(ln)
+    p("")
+    for ln in round3_lines(F, D, A, E, st):
         p(ln)
     p("")
     p("END. Desk arithmetic on read figures; nothing is measured.")
