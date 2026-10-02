@@ -101,6 +101,7 @@ LVC2G07_PDF = "v2/vendor/ti/ti-sn74lvc2g07.pdf"
 LV1T08_PDF = "v2/vendor/ti/ti-sn74lv1t08.pdf"
 CSD77_PDF = "v2/vendor/ti/held/ti-csd17577q5a-slps516.pdf"
 CSD78_PDF = "v2/vendor/ti/held/ti-csd17578q5a-slps526.pdf"
+TMP117_PDF = "v2/vendor/ti/ti-tmp117-temperature.pdf"
 PINS = {
     CM: "55244f94aace54ca09d98c100b9830cba75c70a4774c3ba375a14903fcaf6376",
     CONOPS: "6cb7b241cb84d7290caffa74df2622c64222dd66a2de66693e480e3a18e44281",
@@ -158,6 +159,7 @@ PINS = {
     PCM_PDF: "61d048c255190975933032c6ff712c6b780d8390cbc40821a54fd29b62adbf32",
     LV1T08_PDF: "cb0644caef3b0dedec65c793a2c19707208e377caf39a12098263fe237a49a94",
     LVC2G07_PDF: "71bbb2fc452e2949b332c030b004b094ba679ac8cce27123f806a0a6b1fde660",
+    TMP117_PDF: "b33614678dd46e7997f813ccefb118796dcbcc97c9ba264806703ee453a3d555",
     TLV758_PDF: "4a86306d6734f1f4212e897c29787a93b56724c06adf87d926cc7b603a694d12",
     TPS62933_PDF: "16ec2eac43c7374eb9e7edd7df7bdb24de6862f695e1582c68716ced4820e5f6",
     TUSB2046_PDF: "d02d0b8af5cbdb1b8186f890efdb214cb8edc50d55b9df5eed0650933a08d3db",
@@ -171,6 +173,7 @@ PINS = {
 L4E8_BALLAST_W = 2.09        # L4-E8's ballasts at the bound's worst corner, in the thermal budget once (L4-E9 IF-08 and A-20, fnd/l4e9)
 L4E10_G_FLOOR = 1.6664       # L4-E10 section 4, LO-01a's governing line: the inside air at or under the SGP41's +55 C on shore (fnd/l4e10 79b2f568)
 L4E10_AIR = (70.00, 75.00)   # L4-E10 section 4c: E3-O's air settles at 70.00 C, E5's dwell tends to 75.00 C at that floor
+E5_RAMP_H = 2.0              # Method 507.6 Table 507.6-IX, 30 C at 0000 to 60 C at 0200, as L4-E10 transcribed it (fnd/l4e10)
 # ASSUMPTION (each used in one place, its effect printed):
 FLOW_SHARE = 0.5             # the share of the representative cooler fan's free-air flow that passes a module's heatsink
 CP_AIR = 1007.0              # J/kgK, air (textbook; INFERRED)
@@ -179,8 +182,9 @@ P_ATM = 101325.0             # Pa
 SIG_P_W, SIG_THETA = 0.02, 250.0     # a signal, logic or protection part in normal operation: at most 20 mW, at most 250 C/W
 CTRL_P_W = 0.5                       # a controller driving external FETs: at most 0.5 W of its own (gate drive and bias)
 PASS_P_W, PASS_THETA = 0.25, 60.0    # a pass element on a rail (eFuse, load switch, power FET): at most 0.25 W at 60 C/W
-# The session's settings of the margin hold (SESSION, PROVISIONAL; section 5):
-HOLD_TRIP_C, HOLD_RESTORE_C, HOLD_ALLOW_K = 64.0, 59.0, 2.0
+# The sensing allowances of the SGP41's own shutdown and of the hold's trigger window (ASSUMPTION, each printed where used):
+READ_S, TAU_S = 1.0, 60.0    # a reading every second; a sensor's thermal time constant in the case's moving air
+SGP_GRAD_K = 0.5             # the reference sensor (board E's BME688) to the SGP41, both at the bay end of board E (a placement rule)
 CLASSES = ("MAKER", "MODELED", "INFERRED", "ASSUMPTION", "CONDITIONAL")
 
 
@@ -332,6 +336,16 @@ def read_statements():
     put("tlv758_tjabs", TLV758_PDF, r"Operating junction, TJ\s+\u2013(\d+)\s+(\d+)", lambda m: (-float(m.group(1)), float(m.group(2))), "TLV758P TJ absolute")
     put("tusb8041_th", TUSB8041_PDF, r"RθJA\s+Junction-to-ambient thermal resistance \(2\)\s+(\d+)", n(1), "TUSB8041 thetaJA")
     put("tusb8041_tj", TUSB8041_PDF, r"TJ\s+Operating junction temperature\s+\u2013(\d+)\s+(\d+)", lambda m: (-float(m.group(1)), float(m.group(2))), "TUSB8041 TJ")
+    put("tmp117_acc", TMP117_PDF, r"±(0\.\d+) °C \(maximum\) from \u201340 °C to 100 °C", n(1), "TMP117 accuracy to 100 C")
+    put("bme_t_acc", BME_PDF, r"AT\s+0 - 65 °C\s+±(\d\.\d)", n(1), "BME688 temperature accuracy")
+    put("sgp_rec", SGP_PDF, r"Operating conditions\s+Relative humidity\s+0\s+90\s+% RH\s+Temperature\s+\u2212(\d+)\s+(\d+)\s+°C", lambda m: (-float(m.group(1)), float(m.group(2))), "SGP41 recommended operating (Table 4)")
+    put("ap64500_tjop", AP64500_PDF, r"Operating Junction Temperature Range\s+-(\d+)\s+\+(\d+)", lambda m: (-float(m.group(1)), float(m.group(2))), "AP64500 recommended TJ")
+    put("ap6320_tjrec", AP6320_PDF, r"should not\s+exceed the absolute maximum junction temperature of \+(\d+)°C", n(1), "AP6320x design junction ceiling")
+    put("tlv758_tjrec", TLV758_PDF, r"TJ\s+Junction temperature\s+\u2013(\d+)\s+(\d+)\s+°C", lambda m: (-float(m.group(1)), float(m.group(2))), "TLV758P TJ recommended")
+    put("tlv755_drv", TLV755_PDF, r"RθJA\s+Junction-to-ambient thermal resistance\s+\d+\.\d\s+\d+\.\d\s+(\d+\.\d)", n(1), "TLV755P DRV thetaJA")
+    put("tlv755_absnote", TLV755_PDF, r"(Stresses beyond those listed under Absolute Maximum Ratings may cause permanent damage to the device\. These are stress ratings\s+only)", lambda m: True, "TLV755P abs note")
+    put("pcm_absnote", PCM_PDF, r"(Stresses beyond those listed under Absolute Maximum Ratings may cause permanent damage to the device\. These are stress ratings\s+only, and functional operation of the device at these or any other conditions beyond those indicated under Recommended Operating\s+Conditions is not implied)", lambda m: True, "PCM2912A abs note")
+    put("rm_recover", RM_PDF, r"(without any unrecoverable malfunction\.[\s\S]{0,260}?When the temperature returns to the normal operating temperature level, the\s+module will meet 3GPP specifications again)", lambda m: True, "RM520N recovery statement")
     put("tusb2046_th", TUSB2046_PDF, r"RθJA\s+Junction-to-ambient thermal resistance\s+(\d+\.\d)", n(1), "TUSB2046 thetaJA")
     put("lm5176_th", LM5176_PDF, r"RθJA\s+Junction-to-ambient thermal resistance\s+(\d+\.\d)\s+(\d+\.\d)", n(1, 2), "LM5176 thetaJA")
     put("bq25731_th", BQ25731_PDF, r"RθJA\s+Junction-to-ambient thermal resistance \(JEDEC\(1\)\)\s+(\d+\.\d)", n(1), "BQ25731 thetaJA")
@@ -350,74 +364,88 @@ def read_statements():
 
 
 # ------------------------------------------------------------------------------------------------ the parts read one by one
-# Every bought module and every board part whose maker's range the screen's first pass finds within reach (section 3b),
-# with its state in the heat stage (CONOPS 4c, after BANK-R1) and in the margin hold this record proposes (section 5).
+# Every bought module and every board part whose maker's range the screen's first pass finds within reach (section 3b).
+# Each carries its state at E3-O and at E5 in two scenarios: "now", the design as it stands (the heat stage, C1's shedding
+# the only control action, the radios on at both margins), and "route", the selected route (section 5: E3-O exactly as
+# TEST-PLAN states it, radios on; E5 under the hold, radios off; the SGP41 off at both by its own shutdown). A state is
+# "work" (powered and required to work during the exposure), "on" (powered, not required) or "off" (unpowered).
 # op / st / abs / ext name statements of read_statements(); a part with neither op nor st has no maker's range held.
 PARTS = [
-    dict(k="CM5", label="Raspberry Pi CM5, slot 3 (running) and slots 1, 2 (off)", where="inside", hs="powered", hold="powered",
+    dict(k="CM5", label="Raspberry Pi CM5, slot 3 (running) and slots 1, 2 (off)", where="inside", now=("work", "work"), route=("work", "work"),
          op="cm5_op", dev=True, match=("Compute Module 5",)),
-    dict(k="RB9704", label="Ground Control RockBLOCK 9704 SMA (board B J_RB9704)", where="inside", hs="powered", hold="unpowered",
+    dict(k="RB9704", label="Ground Control RockBLOCK 9704 SMA (board B J_RB9704)", where="inside", now=("work", "on"), route=("work", "off"),
          op="rb_op", dev=True, match=("RockBLOCK 9704",)),
-    dict(k="LIME", label="LimeSDR Mini 2.4 (board B J_LIME)", where="inside", hs="unpowered", hold="unpowered",
+    dict(k="LIME", label="LimeSDR Mini 2.4 (board B J_LIME; off by C1)", where="inside", now=("off", "off"), route=("off", "off"),
          op="lime", st="lime", dev=True, match=("LimeSDR",)),
-    dict(k="AW7915", label="AsiaRF AW7915-AED, two (board B J_M2C1, J_M2C3)", where="inside", hs="unpowered", hold="unpowered",
+    dict(k="AW7915", label="AsiaRF AW7915-AED, two (board B J_M2C1, J_M2C3; off by C1)", where="inside", now=("off", "off"), route=("off", "off"),
          op="aw_op", st="aw_st", dev=True, match=("AW7915",)),
-    dict(k="RM520N", label="Quectel RM520N-GL (board B J_M2C2; off after BANK-R1)", where="inside", hs="unpowered", hold="unpowered",
+    dict(k="RM520N", label="Quectel RM520N-GL (board B J_M2C2; off by C1 after BANK-R1)", where="inside", now=("off", "off"), route=("off", "off"),
          op="rm_op", st="rm_st", ext="rm_ext", dev=True, match=("RM520N",)),
-    dict(k="XENARC", label="Xenarc 709GNK monitor (in the plate)", where="face", hs="unpowered", hold="unpowered",
+    dict(k="XENARC", label="Xenarc 709GNK monitor (in the plate; off by C1)", where="face", now=("off", "off"), route=("off", "off"),
          op="xen_op", st="xen_st", dev=True, match=("Xenarc",)),
-    dict(k="SA868", label="NiceRF SA868 (board D U2)", where="inside", hs="powered", hold="unpowered",
+    dict(k="SA868", label="NiceRF SA868 (board D U2)", where="inside", now=("work", "on"), route=("work", "off"),
          op="sa_op", dev=True, match=("SA868",)),
-    dict(k="PCM2912A", label="TI PCM2912A USB audio codec (board D U6)", where="inside", hs="powered", hold="unpowered",
+    dict(k="PCM2912A", label="TI PCM2912A USB audio codec (board D U6, the APRS radio's audio)", where="inside", now=("work", "on"), route=("work", "off"),
          op="pcm_rec", st="pcm_st", abs="pcm_bias", dev=False, match=("PCM2912A",)),
-    dict(k="G6K", label="Omron G6K-2F-Y T/R relay (board D K1)", where="inside", hs="powered", hold="unpowered",
+    dict(k="G6K", label="Omron G6K-2F-Y T/R relay (board D K1, in the radio's RF path)", where="inside", now=("work", "on"), route=("work", "off"),
          op="g6k_op", dev=False, match=("G6K",)),
-    dict(k="SGP41", label="Sensirion SGP41 battery-bay gas sensor (board E U17)", where="inside", hs="powered", hold="unpowered",
-         op="sgp_op", st="sgp_st", abs="sgp_op", dev=True, match=("SGP41",)),
-    dict(k="H5007NL", label="Pulse H5007NL Ethernet magnetics (board B T1)", where="inside", hs="powered", hold="powered",
+    dict(k="SGP41", label="Sensirion SGP41 battery-bay gas sensor (board E U17)", where="inside", now=("on", "on"), route=("off", "off"), a=("off", "off"),
+         op="sgp_op", st="sgp_st", dev=True, match=("SGP41",)),
+    dict(k="H5007NL", label="Pulse H5007NL Ethernet magnetics (board B T1, in circuit)", where="inside", now=("on", "on"), route=("on", "on"),
          op="h5007", dev=False, match=("H5007NL",)),
-    dict(k="ATP19", label="C&K ATP19 MAIN pushbutton (board C SW_MAIN)", where="face", hs="powered", hold="powered",
+    dict(k="ATP19", label="C&K ATP19 MAIN pushbutton (board C SW_MAIN, in circuit)", where="face", now=("on", "on"), route=("on", "on"),
          op="atp19", dev=False, match=("ATP19",)),
-    dict(k="ATP16", label="C&K ATP16 PI and TEST pushbuttons (board C)", where="face", hs="powered", hold="powered",
+    dict(k="ATP16", label="C&K ATP16 PI and TEST pushbuttons (board C, in circuit)", where="face", now=("on", "on"), route=("on", "on"),
          op="atp16", dev=False, match=("ATP16",)),
-    dict(k="SOUNDER", label="Floyd Bell MC-09-530-Q sounder (board C BZ1)", where="face", hs="event", hold="unpowered",
+    dict(k="SOUNDER", label="Floyd Bell MC-09-530-Q sounder (board C BZ1; sounds only for SOS)", where="face", now=("off", "off"), route=("off", "off"),
          op="fb_op", st="fb_st", dev=False, match=("Floyd Bell",)),
-    dict(k="EPAPER", label="PDi E2370KS0C1 e-paper (board C)", where="face", hs="event", hold="unpowered",
+    dict(k="EPAPER", label="PDi E2370KS0C1 e-paper (board C; refreshed on events)", where="face", now=("off", "off"), route=("off", "off"),
          op="pdi_op", dev=True, match=("E2370KS0C1",)),
-    dict(k="PXP4043C", label="Bulgin PXP4043/C sealed USB-C (connector plate)", where="wall", hs="unpowered", hold="unpowered",
+    dict(k="PXP4043C", label="Bulgin PXP4043/C sealed USB-C (connector plate; the outlets are off)", where="wall", now=("off", "off"), route=("off", "off"),
          op="pxpc_hi", dev=False, match=("PXP4043/C",)),
-    dict(k="NVME", label="NVMe 2242, slot 3 (not picked)", where="inside", hs="powered", hold="powered",
+    dict(k="NVME", label="NVMe 2242, slot 3 (not picked)", where="inside", now=("on", "on"), route=("on", "on"),
          op=None, dev=False, pick="cervoz_wide", match=()),
 ]
 DEVICE_SET_NOTE = "CHO-001: the owner's device set of 6 September 2026 binds the pick (the owner brief)"
 
 
 def govern(p, state, S):
-    """The maker's widest statement of no damage that covers the part in this state (the rule of section 1)."""
-    if state == "powered":
-        for key, basis in (("abs", "absolute maximum"), ("ext", "extended range with recovery"), ("op", "operating range")):
-            if p.get(key):
-                v = S[p[key]]["v"]
-                return v[-1] if key != "op" or p["op"] != "lime" else v[1], basis, p[key]
-        return None, "no maker's range held", None
+    """The limit the corrected rule judges a part by (section 1j): a powered part, its maker's recommended or operating
+    range (a part required to work and one merely powered alike), an absolute maximum only as an exclusion screen; an
+    unpowered part, its storage range, else its operating range, the only statement held. Returns (limit, basis, key, abs)."""
+    absv = S[p["abs"]]["v"][-1] if p.get("abs") else None
+    if p.get("pick"):
+        return S[p["pick"]]["v"][1], "the pick's line (a wide grade, e.g. Cervoz -40 to +85 C)", p["pick"], None
+    if state in ("work", "on"):
+        if p.get("op"):
+            v = S[p["op"]]["v"]
+            hi = v[1] if p["op"] == "lime" else v[-1]
+            basis = "operating range (Table 5, its only powered statement)" if p["op"] == "sgp_op" else "operating range"
+            return hi, basis, p["op"], absv
+        return None, "no maker's range held", None, absv
     if p.get("st"):
         v = S[p["st"]]["v"]
         hi = v[3] if p["st"] == "lime" else v[-1]
-        return hi, ("short-term storage (absolute)" if p["st"] == "sgp_st" else "storage range"), p["st"]
+        return hi, ("short-term storage (Table 5, duration not stated)" if p["st"] == "sgp_st" else "storage range"), p["st"], absv
     if p.get("op"):
         v = S[p["op"]]["v"]
-        return (v[1] if p["op"] == "lime" else v[-1]), "operating range (the only statement held)", p["op"]
-    return None, "no maker's range held", None
+        return (v[1] if p["op"] == "lime" else v[-1]), "operating range (the only statement held)", p["op"], absv
+    return None, "no maker's range held", None, absv
 
 
-def verdict(lim, lo, hi):
+def verdict(lim, lo, hi, state="work", absv=None):
+    """NOT REACHED: inside the governing statement at the upper local bound; PLACEMENT: only at the lower; REACHED: past it
+    at the lower bound, for a part required to work or past every statement held; INCONCLUSIVE: no statement held, or a
+    part powered but not required that is past its operating range and under its absolute maximum (survival not stated)."""
     if lim is None:
         return "INCONCLUSIVE"
-    if lim < lo - 1e-9:
-        return "REACHED"
-    if lim < hi - 1e-9:
+    if lim >= hi - 1e-9:
+        return "NOT REACHED"
+    if lim >= lo - 1e-9:
         return "PLACEMENT"
-    return "NOT REACHED"
+    if state == "on" and absv is not None and absv >= hi:
+        return "INCONCLUSIVE"
+    return "REACHED"
 
 
 # ------------------------------------------------------------------------------------------------ the computation
@@ -604,6 +632,7 @@ PASS_PARTS = ("TPS259631", "TPS22810", "BSC028N06NS", "BSC039N06NS", "AO3400A", 
 OFF_IN_MARGIN = ("LT8705A",)           # board E's solar stage: no solar input in E3-O or E5 (on shore or vehicle input)
 WALL_PARTS = ("PXP4043/C", "PX0833", "MIL-DTL-38999")
 NOT_FITTED = {"PX0833": "CASE-MARGINS.md refuses it for the 54 V PoE feed and for fit; the sealed RJ45 is a MIL-DTL-38999 shell 15 class part"}
+MARGINS = ("E3-O", "E5")
 
 
 def node_losses(pb, ov, scen="plan"):
@@ -621,10 +650,10 @@ def node_losses(pb, ov, scen="plan"):
 
 
 def diss_table(C, ov):
-    """The parts whose own dissipation the model gives (MODELED) with the maker's thetaJA and junction limit (MAKER)."""
+    """The parts whose own dissipation the model gives (MODELED) with the maker's thetaJA, its recommended junction limit
+    (the judged limit) and its absolute maximum (an exclusion screen only) (MAKER)."""
     S, pb = C["S"], C["pb"]
     L = node_losses(pb, ov)
-    loads = {n_: v["RED"][1] for n_, _nd, v, _s in pb.LOADS}
     saved = pb.with_overrides("RED", ov)
     try:
         loads = {n_: v["RED"][1] for n_, _nd, v, _s in pb.LOADS}
@@ -640,43 +669,60 @@ def diss_table(C, ov):
     d_typ, d_pk = float(m.group(1)), float(m.group(2))
     m = need(gd, r"U17 dissipates at most\s+#?\s*\((\d\.\d+) - (\d\.\d+)\) V x (\d+) mA = (\d+) mW", "board D U17")
     d17 = float(m.group(4)) / 1000.0
-    th755 = S["tlv755_th"]["v"][1]
-    tj755 = S["tlv755_tjabs"]["v"][1]
+    th755, abs755, rec755 = S["tlv755_th"]["v"][1], S["tlv755_tjabs"]["v"][1], S["tlv755_tjrec"]["v"][1]
     hubp = (loads["three TUSB8041 hubs VDD33"] + loads["three TUSB8041 hubs VDD 1.1 V"]) / 3.0
     D = {}
 
-    def add(b, refs, part, p, p_src, th, th_key, tj, tj_key, rated="TJ"):
+    def add(b, refs, part, p, p_src, th, th_key, rec, rec_key, absv, abs_key, rated="TJ"):
         for r_ in refs:
-            D[(b, r_)] = {"part": part, "p": p, "p_src": p_src, "th": th, "th_key": th_key, "tj": tj, "tj_key": tj_key, "rated": rated}
-    add("A", ["U6"], "AP64500 (slot 3's 5.1 V)", L["S3"], "MODELED node S3", S["ap64500_th"]["v"][0], "ap64500_th", S["ap64500_tj"]["v"][0], "ap64500_tj", "TA")
-    add("B", ["U304"], "AP64500 (slot 3's 3.3 V B)", L["S3B"], "MODELED node S3B", S["ap64500_th"]["v"][0], "ap64500_th", S["ap64500_tj"]["v"][0], "ap64500_tj", "TA")
-    add("B", ["U25"], "AP63203 (+3V3_DEV)", L["D3V3"], "MODELED node D3V3", S["ap6320_th"]["v"][0], "ap6320_th", S["ap6320_tj"]["v"][0], "ap6320_tj", "TA")
-    add("E", ["U12"], "AP63205 (+5V_E6)", L["E5V"], "MODELED node E5V", S["ap6320_th"]["v"][0], "ap6320_th", S["ap6320_tj"]["v"][0], "ap6320_tj", "TA")
-    add("B", ["U27"], "AP2112K-2.5 (KSZ AVDDH)", L["KSZ2V5"], "MODELED node KSZ2V5", S["ap2112_th"]["v"][0], "ap2112_th", S["ap2112_tj"]["v"][0], "ap2112_tj", "TA")
-    add("B", ["U40", "U50", "U60"], "AP2112K-3.3 (a supervisor's 3.3 V)", L["IOC"] / 3.0, "MODELED node IOC / 3", S["ap2112_th"]["v"][0], "ap2112_th", S["ap2112_tj"]["v"][0], "ap2112_tj", "TA")
-    add("B", ["U26"], "TPS62933 (KSZ 1.2 V)", L["KSZ1V2"], "MODELED node KSZ1V2", S["tps62933_th"]["v"][0], "tps62933_th", S["tps62933_tj"]["v"][1], "tps62933_tj")
-    add("A", ["U12"], "TPS62933 (board A 3.3 V)", L["A3V3"], "MODELED node A3V3", S["tps62933_th"]["v"][0], "tps62933_th", S["tps62933_tj"]["v"][1], "tps62933_tj")
-    add("B", ["U106", "U206", "U306"], "TPS62933 (a hub core)", L["HUB1V1"] / 3.0, "MODELED node HUB1V1 / 3", S["tps62933_th"]["v"][0], "tps62933_th", S["tps62933_tj"]["v"][1], "tps62933_tj")
-    add("B", ["U305"], "TPS62933 (slot 3's switch core)", L["S3C"], "MODELED node S3C", S["tps62933_th"]["v"][0], "tps62933_th", S["tps62933_tj"]["v"][1], "tps62933_tj")
-    add("E", ["U13"], "TLV75533 DBV (+3V3_E6), at the model's plan", L["E3V3"], "MODELED node E3V3", th755, "tlv755_th", tj755, "tlv755_tjabs")
-    add("C", ["U5"], "TLV75533 DBV (board C +3V3), at the declared typical", (5.0 - 3.3) * c_typ, "INFERRED from gen_sch_c's declared %.3f A" % c_typ, th755, "tlv755_th", tj755, "tlv755_tjabs")
-    add("D", ["U1"], "TLV75533 DBV (+3V3_D8), at the declared typical", (5.0 - 3.3) * d_typ, "INFERRED from gen_sch_d's declared %.3f A" % d_typ, th755, "tlv755_th", tj755, "tlv755_tjabs")
-    add("D", ["U17"], "TLV75801 DBV (+3V4_HUB)", d17, "gen_sch_d's own bound", S["tlv758_th"]["v"][0], "tlv758_th", S["tlv758_tjabs"]["v"][1], "tlv758_tjabs")
-    add("B", ["U102", "U202", "U302"], "TUSB8041I (a hub)", hubp, "MODELED the three hubs / 3", S["tusb8041_th"]["v"][0], "tusb8041_th", S["tusb8041_tj"]["v"][1], "tusb8041_tj")
-    add("D", ["U4"], "TUSB2046 (board D hub)", 3.44 * 0.040, "INFERRED from gen_sch_d's +3V4_HUB 0.040 A", S["tusb2046_th"]["v"][0], "tusb2046_th", 115.0, "grade-sources TJ row")
-    add("B", ["U1"], "KSZ9897RTXI", S["ksz_th"]["v"][1], "POWER-THERMAL 9.2", S["ksz_th"]["v"][0], "ksz_th", None, None, "TA")
-    add("B", ["U301"], "PI7C9X2G404SL (slot 3)", loads["PCIe switch 3.3 V slot 3"] + loads["PCIe switch 1.0 V slot 3"], "MODELED slot 3's switch rails", S["pi7c_th"]["v"][0], "pi7c_th", S["pi7c_th"]["v"][1], "pi7c_th", "TA")
+            D[(b, r_)] = {"part": part, "p": p, "p_src": p_src, "th": th, "th_key": th_key, "rec": rec, "rec_key": rec_key,
+                          "abs": absv, "abs_key": abs_key, "rated": rated}
+    a64 = (S["ap64500_th"]["v"][0], "ap64500_th", S["ap64500_tjop"]["v"][1], "ap64500_tjop", S["ap64500_tj"]["v"][0], "ap64500_tj")
+    a63 = (S["ap6320_th"]["v"][0], "ap6320_th", S["ap6320_tjrec"]["v"][0], "ap6320_tjrec", S["ap6320_tj"]["v"][0], "ap6320_tj")
+    a21 = (S["ap2112_th"]["v"][0], "ap2112_th", None, None, S["ap2112_tj"]["v"][0], "ap2112_tj")
+    t62 = (S["tps62933_th"]["v"][0], "tps62933_th", S["tps62933_tj"]["v"][1], "tps62933_tj", S["tps62933_tj"]["v"][1], "tps62933_tj")
+    t75 = (th755, "tlv755_th", rec755, "tlv755_tjrec", abs755, "tlv755_tjabs")
+    add("A", ["U6"], "AP64500 (slot 3's 5.1 V)", L["S3"], "MODELED node S3", *a64, rated="TA")
+    add("B", ["U304"], "AP64500 (slot 3's 3.3 V B)", L["S3B"], "MODELED node S3B", *a64, rated="TA")
+    add("B", ["U25"], "AP63203 (+3V3_DEV)", L["D3V3"], "MODELED node D3V3", *a63, rated="TA")
+    add("E", ["U12"], "AP63205 (+5V_E6)", L["E5V"], "MODELED node E5V", *a63, rated="TA")
+    add("B", ["U27"], "AP2112K-2.5 (KSZ AVDDH)", L["KSZ2V5"], "MODELED node KSZ2V5", *a21, rated="TA")
+    add("B", ["U40", "U50", "U60"], "AP2112K-3.3 (a supervisor's 3.3 V)", L["IOC"] / 3.0, "MODELED node IOC / 3", *a21, rated="TA")
+    add("B", ["U26"], "TPS62933 (KSZ 1.2 V)", L["KSZ1V2"], "MODELED node KSZ1V2", *t62)
+    add("A", ["U12"], "TPS62933 (board A 3.3 V)", L["A3V3"], "MODELED node A3V3", *t62)
+    add("B", ["U106", "U206", "U306"], "TPS62933 (a hub core)", L["HUB1V1"] / 3.0, "MODELED node HUB1V1 / 3", *t62)
+    add("B", ["U305"], "TPS62933 (slot 3's switch core)", L["S3C"], "MODELED node S3C", *t62)
+    add("E", ["U13"], "TLV75533 DBV (+3V3_E6), at the model's plan", L["E3V3"], "MODELED node E3V3", *t75)
+    add("C", ["U5"], "TLV75533 DBV (board C +3V3), at the declared typical", (5.0 - 3.3) * c_typ, "INFERRED from gen_sch_c's declared %.3f A" % c_typ, *t75)
+    add("D", ["U1"], "TLV75533 DBV (+3V3_D8), at the declared typical", (5.0 - 3.3) * d_typ, "INFERRED from gen_sch_d's declared %.3f A" % d_typ, *t75)
+    add("D", ["U17"], "TLV75801 DBV (+3V4_HUB)", d17, "gen_sch_d's own bound", S["tlv758_th"]["v"][0], "tlv758_th", S["tlv758_tjrec"]["v"][1], "tlv758_tjrec",
+        S["tlv758_tjabs"]["v"][1], "tlv758_tjabs")
+    add("B", ["U102", "U202", "U302"], "TUSB8041I (a hub)", hubp, "MODELED the three hubs / 3", S["tusb8041_th"]["v"][0], "tusb8041_th",
+        S["tusb8041_tj"]["v"][1], "tusb8041_tj", None, None)
+    add("D", ["U4"], "TUSB2046 (board D hub)", 3.44 * 0.040, "INFERRED from gen_sch_d's +3V4_HUB 0.040 A", S["tusb2046_th"]["v"][0], "tusb2046_th",
+        115.0, "grade-sources TJ row", None, None)
+    add("B", ["U1"], "KSZ9897RTXI", S["ksz_th"]["v"][1], "POWER-THERMAL 9.2", S["ksz_th"]["v"][0], "ksz_th", None, None, None, None, rated="TA")
+    add("B", ["U301"], "PI7C9X2G404SL (slot 3)", loads["PCIe switch 3.3 V slot 3"] + loads["PCIe switch 1.0 V slot 3"], "MODELED slot 3's switch rails",
+        S["pi7c_th"]["v"][0], "pi7c_th", S["pi7c_th"]["v"][1], "pi7c_th", None, None, rated="TA")
     decl = {"e": (e_typ, e_pk), "c": (c_typ, c_pk), "d": (d_typ, d_pk), "iout": S["tlv755_iout"]["v"][0] / 1000.0,
-            "e_decl_p": (5.0 - 3.3) * e_typ, "th755": th755, "tj755": tj755}
+            "e_decl_p": (5.0 - 3.3) * e_typ, "c_decl_p": (5.0 - 3.3) * c_typ, "e_plan_p": L["E3V3"],
+            "th755": th755, "tj755": abs755, "rec755": rec755, "drv755": S["tlv755_drv"]["v"][0]}
     return D, decl
 
 
-def screen_rows(C, Lmap, D, scen_label, p2=None):
-    """Every fitted line (grade_check), every module and every undeclared line: its limit, its local bounds, its rise and
-    verdict for the scenario's locations Lmap = {'E3-O': locs, 'E5': locs}."""
+def _bounds(where, L):
+    if where == "inside":
+        return L["mixed"], L["plume"]
+    if where in ("face", "wall"):
+        return L["plate"][0], L["mixed"]
+    return L["amb"], L["amb"]
+
+
+def screen_rows(C, Lmap, Dmap, p2=None):
+    """Every fitted line (grade_check), every module and every undeclared line: its limit, its local bounds, its own rise and
+    its verdict per margin. Lmap and Dmap are per margin; p2, the parts read one by one, replaces the first pass's verdict."""
     S = C["S"]
     out = []
-    covered = set()
     for kind, code, r, lns, v, why in C["rows"]:
         part = (r.get("part") or "")
         boards = sorted(set(ln["board"] for ln in lns))
@@ -686,69 +732,56 @@ def screen_rows(C, Lmap, D, scen_label, p2=None):
         if pk:
             row["level2"] = pk[0]
         if r.get("not_a_component"):
-            row["verdict"] = {"E3-O": "NO PART", "E5": "NO PART"}
+            row["verdict"] = {m_: "NO PART" for m_ in MARGINS}
             out.append(row)
             continue
         if boards == ["P"]:
-            row["verdict"] = {"E3-O": "OUT OF SCOPE", "E5": "OUT OF SCOPE"}
+            row["verdict"] = {m_: "OUT OF SCOPE" for m_ in MARGINS}
             out.append(row)
             continue
         if "P" in refs:
             row["pack_refs_out"] = refs.pop("P")
-            row["refs"] = refs
         where = {"outside_face": "face", "plate": "face", "pack": "inside"}.get(row["where_gs"], row["where_gs"])
         if where == "outside":
             where = "wall" if any(w in part for w in WALL_PARTS) else "outside"
         row["where"] = where
-        rise, cls, rsrc = 0.0, "MAKER (an ambient rating: the part's own rise is inside it)", ""
-        if row["kind"] == "TJ" or any(d in refs for d in []):
+        row["verdict"], row["temps"], row["rise"], row["rise_cls"] = {}, {}, {}, {}
+        for mg in MARGINS:
+            D = Dmap[mg]
             hits = [D[(b, x)] for b in refs for x in refs[b] if (b, x) in D]
-            if hits:
-                h = max(hits, key=lambda d: d["p"] * d["th"])
-                rise, cls, rsrc = h["p"] * h["th"], "MODELED dissipation x MAKER thetaJA", "%s: %.3f W x %.1f C/W" % (h["part"], h["p"], h["th"])
-                if h["tj"] is not None and h["tj"] > (row["max"] or 0):
-                    row["rec_max"], row["max"] = row["max"], h["tj"]
-                    row["max_basis"] = "absolute maximum junction (%s)" % h["tj_key"]
-            elif any(c_ in part for c_ in CTRL_PARTS):
-                th = S["lm5176_th"]["v"][1] if "LM5176" in part else S["bq25731_th"]["v"][0]
-                rise, cls, rsrc = CTRL_P_W * th, "ASSUMPTION (controller at %.2f W) x MAKER thetaJA" % CTRL_P_W, "%.2f W x %.1f C/W" % (CTRL_P_W, th)
-            elif any(c_ in part for c_ in PASS_PARTS):
-                rise, cls, rsrc = PASS_P_W * PASS_THETA, "ASSUMPTION (pass element %.2f W at %.0f C/W)" % (PASS_P_W, PASS_THETA), ""
-            elif any(c_ in part for c_ in OFF_IN_MARGIN):
-                rise, cls, rsrc = 0.0, "INFERRED (no solar input in E3-O or E5: unpowered)", ""
-            else:
-                rise, cls, rsrc = SIG_P_W * SIG_THETA, "ASSUMPTION (signal or protection part %.2f W at %.0f C/W)" % (SIG_P_W, SIG_THETA), ""
-        else:
-            hits = [D[(b, x)] for b in refs for x in refs[b] if (b, x) in D]
-            if hits:
-                h = max(hits, key=lambda d: d["p"] * d["th"])
-                row["tj_info"] = {"rise": h["p"] * h["th"], "tj": h["tj"], "src": "%s: %.3f W x %.1f C/W" % (h["part"], h["p"], h["th"])}
-        row.update({"rise": rise, "rise_cls": cls, "rise_src": rsrc})
-        row["verdict"], row["temps"] = {}, {}
-        for mg, L in Lmap.items():
-            if where == "inside":
-                lo, hi = L["mixed"], L["plume"]
-            elif where in ("face", "wall"):
-                lo, hi = L["plate"][0], L["mixed"]
-            else:
-                lo, hi = L["amb"], L["amb"]
+            h = max(hits, key=lambda d: d["p"] * d["th"]) if hits else None
+            rise, cls, lim = 0.0, "MAKER (an ambient rating: the part's own rise is inside it)", row["max"]
+            tj_chk = None
+            if row["kind"] == "TJ":
+                if h:
+                    rise, cls = h["p"] * h["th"], "MODELED %.3f W x MAKER %.1f C/W" % (h["p"], h["th"])
+                elif any(c_ in part for c_ in CTRL_PARTS):
+                    th = S["lm5176_th"]["v"][1] if "LM5176" in part else S["bq25731_th"]["v"][0]
+                    rise, cls = CTRL_P_W * th, "ASSUMPTION (controller at %.2f W) x MAKER %.1f C/W" % (CTRL_P_W, th)
+                elif any(c_ in part for c_ in PASS_PARTS):
+                    rise, cls = PASS_P_W * PASS_THETA, "ASSUMPTION (pass element %.2f W at %.0f C/W)" % (PASS_P_W, PASS_THETA)
+                elif any(c_ in part for c_ in OFF_IN_MARGIN):
+                    rise, cls = 0.0, "INFERRED (no solar input in E3-O or E5: unpowered)"
+                else:
+                    rise, cls = SIG_P_W * SIG_THETA, "ASSUMPTION (signal or protection part %.2f W at %.0f C/W)" % (SIG_P_W, SIG_THETA)
+            elif h:
+                tj_chk = (h["p"] * h["th"], h["rec"] if h["rec"] is not None else h["abs"], "recommended" if h["rec"] is not None else "absolute (exclusion only)")
+            lo, hi = _bounds(where, Lmap[mg])
             lo, hi = lo + rise, hi + rise
-            row["temps"][mg] = (lo, hi)
-            vd = verdict(row["max"], lo, hi)
-            if "tj_info" in row and row["tj_info"]["tj"] is not None and vd == "NOT REACHED":
-                vd = verdict(row["tj_info"]["tj"], lo + row["tj_info"]["rise"], hi + row["tj_info"]["rise"])
-            row["verdict"][mg] = vd
-        if any(n_ in part for n_ in NOT_FITTED):
-            row["verdict"] = {k: "NOT FITTED" for k in row["verdict"]}
+            vd = verdict(lim, lo, hi)
+            if tj_chk and tj_chk[1] is not None and vd == "NOT REACHED":
+                vd = verdict(tj_chk[1], lo + tj_chk[0], hi + tj_chk[0])
+            if any(n_ in part for n_ in NOT_FITTED):
+                vd = "NOT FITTED"
+            row["temps"][mg], row["verdict"][mg], row["rise"][mg], row["rise_cls"][mg] = (lo, hi), vd, rise, cls
         if p2 and row.get("level2") in p2:
             row["verdict_l1"] = dict(row["verdict"])
             row["verdict"] = dict(p2[row["level2"]]["verdict"])
         out.append(row)
-        covered.add(part)
     for r, v, why in C["mods"]:
         part = r.get("part", "")
         row = {"part": part, "code": "", "refs": {"module": [r.get("maker", "")]}, "kind": r.get("kind"), "max": r.get("max_c"),
-               "where_gs": r.get("where", "inside"), "module": True}
+               "where_gs": r.get("where", "inside"), "module": True, "rise": {m_: 0.0 for m_ in MARGINS}, "rise_cls": {m_: "MAKER" for m_ in MARGINS}}
         pk = [p["k"] for p in PARTS if any(s in part for s in p["match"])]
         if pk:
             row["level2"] = pk[0]
@@ -758,22 +791,15 @@ def screen_rows(C, Lmap, D, scen_label, p2=None):
         if where == "outside":
             where = "wall" if any(w in part for w in WALL_PARTS) else "outside"
         row["where"] = where
-        row["verdict"], row["temps"] = {}, {}
         if where == "pack":
-            row["verdict"] = {"E3-O": "OUT OF SCOPE", "E5": "OUT OF SCOPE"}
+            row["verdict"] = {m_: "OUT OF SCOPE" for m_ in MARGINS}
             out.append(row)
             continue
-        for mg, L in Lmap.items():
-            if where == "inside":
-                lo, hi = L["mixed"], L["plume"]
-            elif where in ("face", "wall"):
-                lo, hi = L["plate"][0], L["mixed"]
-            else:
-                lo, hi = L["amb"], L["amb"]
+        row["verdict"], row["temps"] = {}, {}
+        for mg in MARGINS:
+            lo, hi = _bounds(where, Lmap[mg])
             row["temps"][mg] = (lo, hi)
-            row["verdict"][mg] = verdict(row["max"], lo, hi)
-        if any(n_ in part for n_ in NOT_FITTED):
-            row["verdict"] = {k: "NOT FITTED" for k in row["verdict"]}
+            row["verdict"][mg] = "NOT FITTED" if any(n_ in part for n_ in NOT_FITTED) else verdict(row["max"], lo, hi)
         if p2 and row.get("level2") in p2:
             row["verdict_l1"] = dict(row["verdict"])
             row["verdict"] = dict(p2[row["level2"]]["verdict"])
@@ -782,48 +808,41 @@ def screen_rows(C, Lmap, D, scen_label, p2=None):
         val = ln["value"]
         if "CSD17577" in val or "CSD17578" in val:
             key = "csd77" if "CSD17577" in val else "csd78"
-            row = {"part": val.split(" ")[0], "kind": "TJ", "max": S[key + "_tj"]["v"][1], "src": key + "_tj"}
-            rise, cls = PASS_P_W * S[key + "_th"]["v"][0], "ASSUMPTION (pass element %.2f W) x MAKER thetaJA %.0f C/W" % (PASS_P_W, S[key + "_th"]["v"][0])
+            row = {"part": val.split(" ")[0], "kind": "TJ", "max": S[key + "_tj"]["v"][1]}
+            rise, cls = PASS_P_W * S[key + "_th"]["v"][0], "ASSUMPTION (pass element %.2f W) x MAKER %.0f C/W" % (PASS_P_W, S[key + "_th"]["v"][0])
         elif "SN74LVC2G07" in val:
-            row = {"part": "SN74LVC2G07DBVR", "kind": "TA", "max": S["lvc2g07_ta"]["v"][1], "src": "lvc2g07_ta"}
-            rise, cls = 0.0, "MAKER (an ambient rating)"
+            row, rise, cls = {"part": "SN74LVC2G07DBVR", "kind": "TA", "max": S["lvc2g07_ta"]["v"][1]}, 0.0, "MAKER (an ambient rating)"
         elif "SN74LV1T08" in val:
-            row = {"part": "SN74LV1T08DBVR", "kind": "TA", "max": S["lv1t08_ta"]["v"][1], "src": "lv1t08_ta"}
-            rise, cls = 0.0, "MAKER (an ambient rating)"
+            row, rise, cls = {"part": "SN74LV1T08DBVR", "kind": "TA", "max": S["lv1t08_ta"]["v"][1]}, 0.0, "MAKER (an ambient rating)"
         else:
-            row = {"part": val[:40], "kind": None, "max": None, "src": None}
-            rise, cls = 0.0, ""
+            row, rise, cls = {"part": val[:40], "kind": None, "max": None}, 0.0, ""
         row.update({"code": ln["code"], "refs": {ln["board"]: ln["refs"]}, "where": "inside", "where_gs": "inside", "undeclared": True,
-                    "rise": rise, "rise_cls": cls, "rise_src": ""})
+                    "rise": {m_: rise for m_ in MARGINS}, "rise_cls": {m_: cls for m_ in MARGINS}})
         row["verdict"], row["temps"] = {}, {}
-        for mg, L in Lmap.items():
-            lo, hi = L["mixed"] + rise, L["plume"] + rise
+        for mg in MARGINS:
+            lo, hi = Lmap[mg]["mixed"] + rise, Lmap[mg]["plume"] + rise
             row["temps"][mg] = (lo, hi)
             row["verdict"][mg] = verdict(row["max"], lo, hi)
         out.append(row)
     return out
 
 
-def parts_eval(C, Lmap, state_key):
-    """The parts read one by one (PARTS) in a scenario: the governing limit for the part's state and the verdict."""
+def parts_eval(C, Lmap, scen):
+    """The parts read one by one in a scenario ('now', 'a' or 'route'): per margin, the part's state, its governing limit
+    by the corrected rule, its local bounds and its verdict."""
     S = C["S"]
     out = []
     for p in PARTS:
-        st = p[state_key]
-        lim, basis, key = govern(p, "powered" if st == "powered" else "unpowered", S)
-        if p.get("pick"):
-            lim, basis, key = S[p["pick"]]["v"][1], "the pick's line (a wide grade, e.g. Cervoz -40 to +85 C)", p["pick"]
-        row = {"k": p["k"], "label": p["label"], "state": st, "lim": lim, "basis": basis, "key": key, "where": p["where"], "dev": p.get("dev", False)}
-        row["temps"], row["verdict"], row["gap"] = {}, {}, {}
-        for mg, L in Lmap.items():
-            if p["where"] == "inside":
-                lo, hi = L["mixed"], L["plume"]
-            elif p["where"] in ("face", "wall"):
-                lo, hi = L["plate"][0], L["mixed"]
-            else:
-                lo, hi = L["amb"], L["amb"]
+        states = p.get(scen) or p["now"]
+        row = {"k": p["k"], "label": p["label"], "where": p["where"], "dev": p.get("dev", False), "state": {}, "lim": {}, "basis": {},
+               "key": {}, "abs": {}, "temps": {}, "verdict": {}, "gap": {}}
+        for i, mg in enumerate(MARGINS):
+            st = states[i]
+            lim, basis, key, absv = govern(p, st, S)
+            lo, hi = _bounds(p["where"], Lmap[mg])
+            row["state"][mg], row["lim"][mg], row["basis"][mg], row["key"][mg], row["abs"][mg] = st, lim, basis, key, absv
             row["temps"][mg] = (lo, hi)
-            row["verdict"][mg] = verdict(lim, lo, hi)
+            row["verdict"][mg] = verdict(lim, lo, hi, st, absv)
             row["gap"][mg] = (None if lim is None else lo - lim, None if lim is None else hi - lim)
         out.append(row)
     return out
@@ -841,10 +860,24 @@ CANDIDATES = {   # approach (b): the wider-rated part for each colliding part, i
     "H5007NL": ("hx", "SESSION", "the maker's HX (extended temperature) version, -40 to +85 C; pin compatibility not claimed"),
     "G6K": (None, "SESSION", "no signal relay rated past +70 C held; an +85 C part is a Layer 6 pick"),
     "PXP4043C": ("b4000", "SESSION", "the same maker's 4000 series sheet states -40 to +80 C for the series; the C-type's own sheet says +70 C"),
-    "PCM2912A": ("pcm_bias", "SESSION", "no change: its absolute maximum ambient under bias is +125 C"),
+    "PCM2912A": (None, "SESSION", "its recommended range ends at +70 C; no wider-rated USB audio codec held"),
     "SOUNDER": ("fb_st", "SESSION", "no change: muted, its storage range reaches +85 C"),
     "NVME": ("cervoz_wide", "SESSION", "the pick: a wide grade (Cervoz -40 to +85 C), not the 0 to +70 C standard grade"),
 }
+HOLD_OFF = ("RB9704", "SA868", "PCM2912A", "G6K")   # the parts read one by one that the hold turns off (with LoRa, both E72, Geiger)
+UNRATED = [   # the lines with no maker's range held: the evidence each owes, its owner, and whether it can overturn the architecture
+    ("IP68 fans", "ARCHITECTURE", "Layer 6 (D-18's pick)", "they carry the inside film every conductance here assumes (fans on); a fan that stops at the margin takes the enclosure to W4's fans-off values (lid open 0.77 to 1.57 W/K) and every margin with it: a maker's operating range reaching the mixed air at the line"),
+    ("CR2032 coin cell", "downstream", "Layer 6", "a lithium coin cell's maker's range at or over the mixed air at the line (a +80 C class cell exists in the market; none held)"),
+    ("Keystone 3034 CR2032 holder", "downstream", "Layer 6", "the holder's sheet"),
+    ("QRP Labs QMX", "downstream", "Layer 6, the owner's device set", "the unit's range at the ambient (it sits in the lid, outside the sealed volume with the lid open); an owner item only if its maker states less than the ambient"),
+    ("sensor and receiver modules on headers", "downstream", "Layer 6", "each module's range (Geiger, lightning, DCF77, pod, camera); the Geiger is unpowered in the hold"),
+    ("3 mm panel LEDs", "downstream", "Layer 6", "the LEDs' sheet, at the plate to the inside air"),
+    ("U-174/U headset jack", "downstream", "Layer 6", "the jack's drawing"),
+    ("2086581001", "downstream", "Layer 6", "J_HDMI's sheet"),
+    ("2.54 mm pin header", "downstream", "Layer 6", "the headers' and jumper lands' sheet"),
+    ("Keystone 3568 mini blade fuse holder", "downstream", "Layer 6", "the holders' sheet"),
+    ("pre-charge pin", "downstream", "Layer 6", "the pin's sheet once named"),
+]
 
 
 def g_req(q, qb, lim, amb, margin=0.0):
@@ -852,103 +885,127 @@ def g_req(q, qb, lim, amb, margin=0.0):
     return None if room <= 0 else (q + qb) / room
 
 
+def g_needs(parts, q_by, amb_by, qb, margin=0.0):
+    """Per part, the conductance at which its governing limit holds at the mixed air (the lower bound inside, the rear at the
+    face and wall) at both margins; parts whose limit is at or under a margin's ambient cannot be routed by the air."""
+    need, opened = {}, []
+    for pr in parts:
+        gs = []
+        for mg in MARGINS:
+            lim = pr["lim"][mg]
+            if lim is None:
+                gs = None
+                opened.append((pr["k"], "no maker's range held"))
+                break
+            g = g_req(q_by[mg], qb, lim, amb_by[mg], margin)
+            if g is None:
+                gs = None
+                opened.append((pr["k"], "its limit %.0f C (%s) is at or under %s's ambient" % (lim, pr["basis"][mg], mg)))
+                break
+            gs.append(g)
+        if gs is not None:
+            need[pr["k"]] = {"E3-O": gs[0], "E5": gs[1]}
+    return need, opened
+
+
 def compute():
     C = base()
     R, S, T, A, pb, red2 = C["R"], C["S"], C["T"], C["A"], C["pb"], C["red2"]
     locs, hold_ov = C["locs"], C["hold_ov"]
-    e3o_t, e5_t, g_floor, qb = A["e3o_t"], A["e5"][4], T["g_floor"], T["qb"]
-    # ======================================================== 3: the screen of the design as it stands (the heat stage at T-H1's floor)
+    e3o_t, e5_t, e5_lo, g_floor, qb = A["e3o_t"], A["e5"][4], A["e5"][3], T["g_floor"], T["qb"]
+    amb = {"E3-O": e3o_t, "E5": e5_t}
+    # ======================================================== 3: the design as it stands (the heat stage at T-H1's floor)
     D_hs, decl = diss_table(C, red2.SURVR)
-    R["decl"] = decl
+    D_hold, _ = diss_table(C, hold_ov)
+    R["decl"], R["diss_now"] = decl, D_hs
     Lnow = R["locs_now"]
-    R["parts_now"] = parts_eval(C, Lnow, "hs")
-    R["screen"] = screen_rows(C, Lnow, D_hs, "now", {p_["k"]: p_ for p_ in R["parts_now"]})
-    R["diss_now"] = D_hs
+    R["parts_now"] = parts_eval(C, Lnow, "now")
+    R["screen"] = screen_rows(C, Lnow, {"E3-O": D_hs, "E5": D_hs}, {p_["k"]: p_ for p_ in R["parts_now"]})
     # ======================================================== 4: three complete approaches
     ap = {}
-    # (a) the heat path and the enclosure, the parts and the mode unchanged
-    ga, a_open = {}, []
-    for pr in R["parts_now"]:
-        if pr["lim"] is None:
-            a_open.append((pr["k"], "no maker's range held"))
-            continue
-        need_g = [g_req(T["q_hs"], qb, pr["lim"], amb) for amb in (e3o_t, e5_t)]
-        if any(g is None for g in need_g):
-            a_open.append((pr["k"], "its limit %.0f C is at or under the margin's ambient: the air cannot be cooled below it" % pr["lim"]))
-        else:
-            ga[pr["k"]] = max(need_g)
-    gmax_a = max(ga.values())
-    ga_e3o = max(g_req(T["q_hs"], qb, pr["lim"], e3o_t) for pr in R["parts_now"] if pr["k"] in ga)
-    ap["a"] = {"g": ga, "gmax": gmax_a, "open": a_open, "g_e3o": ga_e3o,
-               "g_m": [max(g_req(T["q_hs"], qb, R["parts_now"][[x["k"] for x in R["parts_now"]].index(k)]["lim"], e5_t, mm) or 0 for k in ga) for mm in (1.0, 2.0)],
+    # (a) the heat path and the enclosure, no new mode: the heat stage at both margins, the radios on at both, the SGP41 off
+    pa_floor = parts_eval(C, Lnow, "a")
+    q_a = {"E3-O": T["q_hs"], "E5": T["q_hs"]}
+    ga, a_open = g_needs(pa_floor, q_a, amb, qb)
+    gmax_a = max(max(v.values()) for v in ga.values())
+    ga_e3o = max(v["E3-O"] for v in ga.values())
+    ap["a"] = {"g": ga, "gmax": gmax_a, "g_e3o": ga_e3o, "open": a_open,
+               "g_m": [max(max(v.values()) for v in g_needs(pa_floor, q_a, amb, qb, mm)[0].values()) for mm in (1.0, 2.0)],
                "plate_floor_e5": Lnow["E5"]["plate"], "g_plate": T["f_plate"][1] * (T["q_hs"] + qb) / 10.0}
-    # (c) the margin hold: beyond the heat stage, on the inside air, it powers off what C1 left that is not needed to survive
-    L_c_floor = {"E3-O": locs(e3o_t, T["q_m"], g_floor, T["d_hold"]), "E5": locs(e5_t, T["q_m"], g_floor, T["d_hold"])}
-    parts_hold_floor = parts_eval(C, L_c_floor, "hold")
-    gc_, c_open = {}, []
-    for pr in parts_hold_floor:
-        if pr["lim"] is None:
-            c_open.append((pr["k"], "no maker's range held"))
-            continue
-        need_g = [g_req(T["q_m"], qb, pr["lim"], amb) for amb in (e3o_t, e5_t)]
-        if any(g is None for g in need_g):
-            c_open.append((pr["k"], "its limit %.0f C (%s) is at or under the margin's ambient" % (pr["lim"], pr["basis"])))
-        else:
-            gc_[pr["k"]] = max(need_g)
-    gmax_c = max(gc_.values())
-    L_c = {"E3-O": locs(e3o_t, T["q_m"], g_floor, T["d_hold"]), "E5": locs(e5_t, T["q_m"], gmax_c, T["d_hold"])}
-    parts_c = parts_eval(C, L_c, "hold")
-    D_hold, _ = diss_table(C, hold_ov)
-    screen_c = screen_rows(C, L_c, D_hold, "hold", {p_["k"]: p_ for p_ in parts_c})
-    ap["c"] = {"g": gc_, "gmax": gmax_c, "open": c_open, "L": L_c, "L_floor": L_c_floor, "parts": parts_c, "parts_floor": parts_hold_floor,
-               "screen": screen_c,
-               "g_m": [max(g_req(T["q_m"], qb, parts_hold_floor[[x["k"] for x in parts_hold_floor].index(k)]["lim"], e5_t, mm) or 0 for k in gc_) for mm in (1.0, 2.0)],
+    # (c) the route: E3-O exactly as stated (the heat stage, radios on, no hold); E5 under the hold (radios off)
+    L_c_floor = {"E3-O": locs(e3o_t, T["q_hs"], g_floor, T["d_hs"]), "E5": locs(e5_t, T["q_m"], g_floor, T["d_hold"])}
+    pc_floor = parts_eval(C, L_c_floor, "route")
+    q_c = {"E3-O": T["q_hs"], "E5": T["q_m"]}
+    gc_, c_open = g_needs(pc_floor, q_c, amb, qb)
+    gmax_c = max(max(v.values()) for v in gc_.values())
+    gc_e3o = max(v["E3-O"] for v in gc_.values())
+    gc_e5 = max(v["E5"] for v in gc_.values())
+    L_c = {"E3-O": locs(e3o_t, T["q_hs"], gmax_c, T["d_hs"]), "E5": locs(e5_t, T["q_m"], gmax_c, T["d_hold"])}
+    parts_c = parts_eval(C, L_c, "route")
+    screen_c = screen_rows(C, L_c, {"E3-O": D_hs, "E5": D_hold}, {p_["k"]: p_ for p_ in parts_c})
+    ap["c"] = {"g": gc_, "gmax": gmax_c, "g_e3o": gc_e3o, "g_e5": gc_e5, "open": c_open, "L": L_c, "parts": parts_c, "screen": screen_c,
+               "g_m": [max(max(v.values()) for v in g_needs(pc_floor, q_c, amb, qb, mm)[0].values()) for mm in (1.0, 2.0)],
                "g_cm45": (T["q_m45"] + qb) / 10.0, "g_hi": (T["q_m_hi"] + qb) / 10.0}
-    # the hold's trigger against the envelope: the heat stage's inside air at +40 C at T-H1's floor, the sensor in the exhaust
-    env_tmp = T["in_env"] + T["d_hs"]
-    ap["c"]["trip"] = {"env_tmp": env_tmp, "trip": HOLD_TRIP_C, "restore": HOLD_RESTORE_C, "allow": HOLD_ALLOW_K,
-                       "never_in_env": HOLD_TRIP_C >= env_tmp + HOLD_ALLOW_K - 1e-9,
-                       "before_trip_hi": HOLD_TRIP_C + T["d_hs"],
-                       "stays": min(L_c["E3-O"]["mixed"], L_c["E5"]["mixed"], L_c_floor["E3-O"]["mixed"]) > HOLD_RESTORE_C,
-                       "e5_low": A["e5"][3] + (T["q_hs"] + qb) / g_floor + T["d_hs"]}
-    # the fallback at T-H1's floor: the hold, the +70 C modules coupled to the plate
-    ap["c"]["fallback"] = {"plate": L_c_floor["E5"]["plate"], "mixed": L_c_floor["E5"]["mixed"],
-                           "margin": 70.0 - L_c_floor["E5"]["plate"][1]}
-    # (b) wider-rated parts, the mode and the enclosure unchanged
+    # the hold's trigger window at the line: E3-O's steady mixed air (no hold there) against the point E5 needs the hold by
+    e3o_mix = L_c["E3-O"]["mixed"]
+    need_by = min(pr["lim"]["E5"] for pr in R["parts_now"] if pr["k"] in HOLD_OFF)
+    tol = S["tmp117_acc"]["v"][0]
+    rate = (e5_t - e5_lo) / E5_RAMP_H / 3600.0
+    lag = rate * (READ_S + TAU_S)
+    width = need_by - e3o_mix
+    e_allow = (width - 2.0 * tol - lag) / 2.0
+    g_plume = (T["q_hs"] + qb) / ((need_by - e3o_t) - T["d_hs"] - 2.0 * tol - lag)
+    ap["c"]["trip"] = {"e3o_mix": e3o_mix, "need_by": need_by, "width": width, "tol": tol, "lag": lag, "rate_k_h": rate * 3600.0,
+                       "e_allow": e_allow, "plume_window": width - T["d_hs"] - 2.0 * tol - lag, "g_plume": g_plume,
+                       "trip_mid": (e3o_mix + tol + need_by - tol - lag) / 2.0,
+                       "env_mix": T["t_use"] + (T["q_hs"] + qb) / gmax_c,
+                       "e5_hold_mix": L_c["E5"]["mixed"],
+                       "widths": [(g_, (need_by - e3o_t) - (T["q_hs"] + qb) / g_) for g_ in (gmax_c, 2.5, gmax_a)]}
+    # the SGP41's own shutdown, apart from the hold (B3)
+    err_ref = S["bme_t_acc"]["v"][0]
+    sgp55, sgp_rec = S["sgp_op"]["v"][1], S["sgp_rec"]["v"][1]
+    t_off = sgp55 - err_ref - SGP_GRAD_K - lag
+    kept_to = t_off - err_ref - SGP_GRAD_K
+    env_air = T["t_use"] + (T["q_hs"] + qb) / gmax_c
+    ap["sgp"] = {"err": err_ref, "grad": SGP_GRAD_K, "lag": lag, "t_off": t_off, "t_on": sgp_rec, "kept_to": kept_to, "env_air": env_air,
+                 "env_margin": kept_to - env_air, "env_air_floor": T["in_env"],
+                 "stor": {mg: (L_c[mg]["mixed"], L_c[mg]["plume"]) for mg in MARGINS}, "stor_lim": S["sgp_st"]["v"][1]}
+    # the two TLV75533 regulators the corrected rule finds past their recommended junction (B2)
+    reg = {}
+    for name, p_w, src in (("E U13 at the model's plan", decl["e_plan_p"], "MODELED"), ("E U13 at its rail's declared typical", decl["e_decl_p"], "INFERRED"),
+                           ("C U5 at its rail's declared typical", decl["c_decl_p"], "INFERRED")):
+        reg[name] = {"p": p_w, "src": src}
+        for pkg, th in (("DBV", decl["th755"]), ("DRV", decl["drv755"])):
+            reg[name][pkg] = {mg: L_c[mg]["mixed"] + p_w * th for mg in MARGINS}
+    reg_imax_drv = (decl["rec755"] - L_c["E5"]["mixed"]) / decl["drv755"] / (5.0 - 3.3)
+    ap["reg"] = {"rows": reg, "imax_drv": reg_imax_drv}
+    # the fallback below the line (the hold in E5; the +70 C modules coupled to the plate)
+    L_fb = locs(e5_t, T["q_m"], g_floor, T["d_hold"])
+    ap["c"]["fallback"] = {"plate": L_fb["plate"], "mixed": L_fb["mixed"], "margin": 70.0 - L_fb["plate"][1],
+                           "e3o_plate": Lnow["E3-O"]["plate"], "e3o_margin": 70.0 - Lnow["E3-O"]["plate"][1]}
+    # (b) wider-rated parts
     bl = []
     for pr in R["parts_now"]:
         if pr["k"] not in CANDIDATES:
             continue
         key, who, note = CANDIDATES[pr["k"]]
-        cand = None if key is None else S[key]["v"][-1] if key not in ("bme_gas",) else S[key]["v"][1]
-        lo, hi = pr["temps"]["E5"]
+        cand = None if key is None else (S[key]["v"][1] if key == "bme_gas" else S[key]["v"][-1])
         bl.append({"k": pr["k"], "who": who, "note": note, "cand": cand, "key": key,
-                   "margin_e5": None if cand is None else cand - hi, "now": pr["verdict"]})
+                   "margin_e5": None if cand is None else cand - pr["temps"]["E5"][1]})
     ap["b"] = {"rows": bl}
     R["ap"] = ap
-    # ======================================================== 5 and 6: the selection and the owner-question test
+    # ======================================================== 5 and 6: routes per colliding part; the owner-question test
     route = {}
-    vc = {p["k"]: p for p in parts_c}
-    vn = {p["k"]: p for p in R["parts_now"]}
-    collide = [k for k, p in vn.items() if any(v_ in ("REACHED", "PLACEMENT", "INCONCLUSIVE") for v_ in p["verdict"].values())]
+    vc = {p_["k"]: p_ for p_ in parts_c}
+    va = {p_["k"]: p_ for p_ in pa_floor}
+    collide = [k for k, p_ in ((p_["k"], p_) for p_ in R["parts_now"]) if any(v_ != "NOT REACHED" for v_ in p_["verdict"].values())]
     for k in collide:
-        r_ = {}
-        r_["a"] = "CONDITIONAL" if k in ga else "REJECTED"
+        r_ = {"a": "CONDITIONAL" if k in ga else ("INCONCLUSIVE" if va[k]["lim"]["E5"] is None or k == "EPAPER" else "REJECTED")}
         cb = CANDIDATES.get(k)
-        if cb is None:
-            r_["b"] = "INCONCLUSIVE"
-        elif cb[1].startswith("OWNER"):
-            r_["b"] = "OUTSIDE AUTHORITY"
-        else:
-            r_["b"] = "CLOSES" if cb[0] is not None else "INCONCLUSIVE"
-        pc = vc[k]
-        if pc["lim"] is None:
-            r_["c"] = "INCONCLUSIVE"
-        elif all(v_ == "NOT REACHED" for v_ in pc["verdict"].values()):
-            r_["c"] = "CLOSES"
-        elif all(v_ in ("NOT REACHED", "PLACEMENT") for v_ in pc["verdict"].values()):
+        r_["b"] = "INCONCLUSIVE" if cb is None else ("OUTSIDE AUTHORITY" if cb[1].startswith("OWNER") else ("CLOSES" if cb[0] else "INCONCLUSIVE"))
+        if k in gc_:
             r_["c"] = "CONDITIONAL"
-        elif k == "EPAPER":
+        elif k == "EPAPER" or vc[k]["lim"]["E5"] is None:
             r_["c"] = "INCONCLUSIVE"
         else:
             r_["c"] = "REJECTED"
@@ -960,24 +1017,29 @@ def compute():
     p = {}
     p["P1 pwr_budget and pwr_red2 reproduced byte for byte before any figure"] = R["r0a"] and R["r0b"] and R["r0c"]
     p["P2 T-H1's floor and the inside air reproduce L4-E10's 1.6664 W/K, 70.00 and 75.00 C"] = T["agree_g"] and T["agree_air"]
-    p["P3 the acceptance is read: survive and recover, the CM5 not shut down, C1's shedding recorded, E5 logging"] = (
-        "survive and recover" in A["e3o_pass"] and "no shutdown" in A["e3o_pass"] and "C1's inside-air trigger" in A["controls"]
-        and "logging" in A["e5_config"] and "survive and recover at the margin" in A["d02a"])
+    p["P3 the acceptance is read: survive and recover, the CM5 not shut down, the monitor and radios on, C1's shedding recorded, E5 logging"] = (
+        "survive and recover" in A["e3o_pass"] and "no shutdown" in A["e3o_pass"] and A["e3o_config"].startswith("deployed with the monitor and radios on")
+        and "C1's inside-air trigger" in A["controls"] and "logging" in A["e5_config"] and "survive and recover at the margin" in A["d02a"])
     scr = R["screen"]
     p["P4 every fitted line, module and undeclared line is screened"] = len(scr) == R["gc"]["rows"] + R["gc"]["mods"] + R["gc"]["undeclared"]
     lvl1 = [r_ for r_ in scr if any(v_ in ("REACHED", "PLACEMENT") for v_ in r_.get("verdict_l1", r_["verdict"]).values())]
-    unread = [r_["part"] for r_ in lvl1 if "level2" not in r_ and not (r_["kind"] == "TA" and r_["max"] is not None and r_["max"] >= 80.0)]
+    unread = [r_["part"] for r_ in lvl1 if "level2" not in r_ and not (r_["kind"] == "TA" and r_["max"] is not None and r_["max"] >= 80.0)
+              and not r_["part"].startswith("TLV75533")]
     R["unread"] = unread
-    p["P5 every part the first pass finds within reach is read one by one, or is rated to +80 C or more and over it only in the exhaust"] = not unread
-    p["P6 approach (a) needs more conductance than the sealed case's outer films give at W4's low coefficients"] = gmax_a > T["cap"][0]
-    p["P7 the hold never acts inside the envelope (its trigger over the heat stage's air at +40 C, the sensor in the exhaust, plus the allowance)"] = ap["c"]["trip"]["never_in_env"]
-    p["P8 at the selected line every part routed by the air is inside its governing limit at the mixed air, E3-O at T-H1's floor"] = all(
-        pr["lim"] is None or pr["k"] not in gc_ or (pr["temps"]["E5"][0] <= pr["lim"] + 1e-9 and pr["temps"]["E3-O"][0] <= pr["lim"] + 1e-9) for pr in parts_c)
+    p["P5 every line the first pass finds within reach is read one by one, rated to +80 C or more and over only in the exhaust, or the regulators of 5c"] = not unread
+    p["P6 approach (a)'s line is over the low-case outer-film cap and under W4's high case"] = T["cap"][0] < gmax_a < T["w4_open"][1]
+    p["P7 the route keeps E3-O as stated: every radio on (work) at E3-O, no hold there"] = all(
+        dict((p_["k"], p_["route"][0]) for p_ in PARTS)[k] == "work" for k in ("RB9704", "SA868", "PCM2912A", "G6K")) and q_c["E3-O"] == T["q_hs"]
+    p["P8 at the line every part routed by the air is inside its governing limit at the mixed air at both margins"] = all(
+        pr["k"] not in gc_ or all(pr["temps"][mg][0] <= pr["lim"][mg] + 1e-9 for mg in MARGINS) for pr in parts_c)
     p["P9 the hold lowers the enclosure line: G_c under G_a"] = gmax_c < gmax_a
     p["P10 no part has every route rejected or outside authority on held evidence: no owner question is forced"] = not R["forced"]
-    p["P11 every part read one by one has a governing statement or is named INCONCLUSIVE"] = all(
-        (pr["lim"] is not None) or all(v_ == "INCONCLUSIVE" for v_ in pr["verdict"].values()) for pr in R["parts_now"])
-    p["P12 the hold stays engaged once entered at both margins (the mixed air over its restore)"] = ap["c"]["trip"]["stays"]
+    p["P11 the corrected rule: no powered part is judged on an absolute maximum"] = all(
+        (pr["key"][mg] not in ("pcm_bias", "tlv755_tjabs", "ap2112_tj", "ap64500_tj", "ap6320_tj")) for pr in R["parts_now"] for mg in MARGINS)
+    p["P12 the SGP41's own shutdown acts before its local +55 C with the error, gradient and lag, and keeps it on to the envelope's edge at the line"] = (
+        ap["sgp"]["t_off"] + err_ref + SGP_GRAD_K + lag <= sgp55 + 1e-9 and ap["sgp"]["env_margin"] > 0)
+    p["P13 the hold's window exists at the line only with a calibrated reference (e_allow over 0) and not across the whole exhaust spread"] = (
+        e_allow > 0 and ap["c"]["trip"]["plume_window"] < 0)
     R["pred"] = p
     return R
 
@@ -997,13 +1059,42 @@ def _rng(lo, hi):
     return "%s..%s" % (f1(lo), f1(hi))
 
 
+def _counts(rows):
+    cnt = {}
+    for r_ in rows:
+        for mg in MARGINS:
+            cnt[(mg, r_["verdict"][mg])] = cnt.get((mg, r_["verdict"][mg]), 0) + 1
+    return "; ".join("%s: %s" % (mg, ", ".join("%s %d" % (v_, cnt[(m_, v_)]) for (m_, v_) in sorted(cnt) if m_ == mg)) for mg in MARGINS)
+
+
+def _parts_lines(w, S, parts):
+    for pr in parts:
+        w("   %-9s %s%s" % (pr["k"], pr["label"], "; device set (CHO-001)" if pr["dev"] else ""))
+        for mg in MARGINS:
+            key, lim = pr["key"][mg], pr["lim"][mg]
+            src = "" if key is None else "%s %s \"%s\"" % (S[key]["doc"].split("/")[-1], S[key]["where"], S[key]["quote"][:60])
+            lo, hi = pr["temps"][mg]
+            g = pr["gap"][mg]
+            if g[0] is None:
+                gap = ""
+            elif g[1] > 1e-9:
+                gap = ", over by %s K" % _rng(max(g[0], 0.0), g[1])
+            else:
+                gap = ", %.2f K inside" % max(0.0, -g[1])
+            w("     %-4s %-4s limit %-6s (%s) MAKER: %s" % (mg, pr["state"][mg], "none" if lim is None else "+%.0f" % lim, pr["basis"][mg], src))
+            w("          local %s C (%s), %s%s%s" % (_rng(lo, hi), "MODELED" if pr["where"] == "inside" else "INFERRED", pr["verdict"][mg], gap,
+                                               "" if pr["abs"][mg] is None else "; absolute maximum +%.0f C, an exclusion screen only" % pr["abs"][mg]))
+
+
 def render(R):
     S, T, A, ap = R["S"], R["T"], R["A"], R["ap"]
     out = []
     w = out.append
+    a, c, tr, sg, rg = ap["a"], ap["c"], ap["c"]["trip"], ap["sgp"], ap["reg"]
     w("l4e12_thermal.py: layer 4 task L4-E12 (MESHSAT-1478 under MESHSAT-1357). The kit's electronics against the inside air at")
     w("D-02a's +55 C operating margin (E3-O) and E5's +60 C dwell in the sealed Peli 1450. Prototype design, desk arithmetic: nothing")
-    w("is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMPTION, CONDITIONAL.")
+    w("is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMPTION, CONDITIONAL. Revised after the focused")
+    w("check astra-check-l4e12-1 (B1 to B3 and the minors; the record's section 12 maps each item to its change).")
     w("")
     w("0 Reproductions and inputs")
     w("0a pwr_budget.py re-run in a child: pwr_budget.out and pwr_budget.json byte for byte: %s" % ("yes" if R["r0a"] else "NO"))
@@ -1027,20 +1118,24 @@ def render(R):
     w("1f CONOPS 4: \"%s\"; the heat stage (after BANK-R1) runs %s; it turns off \"%s\"" % (A["c1"], A["heat_on"].strip("*"), A["heat_off"]))
     w("1g D-02b (owner ruling): \"%s\"" % A["d02b"])
     w("1h REQ-051's acceptance: \"%s\"" % A["req051_acc"])
-    w("1i What it requires (INFERRED from 1a to 1h): at E3-O and E5 the kit is to survive and recover; operation to specification is")
-    w("   required only inside the envelope. Required during the margin: E3-O's running module is not shut down (its throttling")
-    w("   is logged), and E5's kit logs. The configuration is fixed by the rows: deployed, lid open, on shore or vehicle input,")
-    w("   E3-O started with the monitor and radios on. The kit's own controls act during both runs and the rows record it")
-    w("   (1e): C1 takes the kit to the heat stage on the inside air, which already turns off the monitor, both WiFi link cards,")
-    w("   the 5G module and bank 1 (1f). The lid-closed reduced mode is not permitted (it changes the deployed configuration);")
-    w("   EMCON is not permitted (\"%s\" contradicts E3-O's radios on). A further step of the kit's own controls beyond" % A["emcon"])
-    w("   the envelope (section 5's hold) is permitted by the pass lines, which require no function during the margin but the")
-    w("   running module; it is recorded as the session's reading and named for TEST-PLAN's owner (section 7).")
-    w("1j Which ratings apply (SESSION, the rule this record judges by): a part powered during the margin, the maker's widest")
-    w("   statement of no damage for an energised part (its absolute maximum where the sheet gives one, else a stated extended")
-    w("   range with recovery, else its operating range); a part unpowered, its storage range, else its operating range (the only")
-    w("   statement held covers it); no statement held: INCONCLUSIVE. A part straddling the plate or the wall is bounded by the")
-    w("   plate (favourable) and the inside air (its rear). Operation to specification at the margin is not required (1a, 1h).")
+    w("1i What it requires (INFERRED from 1a to 1h): at both margins the kit is to survive and recover; operation to specification")
+    w("   is required only inside the envelope. E3-O runs four hours at +55 C deployed with the monitor and radios on; the one")
+    w("   control action its arrangement records is C1's inside-air shedding of modules (1e), which takes the kit to the heat stage")
+    w("   (1f). Nothing else may turn a radio off in E3-O: the radios C1 leaves on (Iridium, the LoRa mesh, APRS, both E72, GNSS)")
+    w("   stay on for the four hours, and a further shedding would change E3-O's configuration (no authority: withdrawn from the")
+    w("   first revision). E5 requires logging, not the radios (1d), so a step of the kit's controls that turns radios off may act")
+    w("   in E5 and must not act in E3-O. The SGP41 is neither the monitor nor a radio and E3-O's row does not name it; its own")
+    w("   protective shutdown is inside E3-O's stated configuration (SESSION reading, named for TEST-PLAN's owner). The lid-closed")
+    w("   mode and EMCON (\"%s\") change the configuration and are not used. E3-O is taken to start from a kit stabilised at" % A["emcon"])
+    w("   the chamber's +55 C, as L4-E10 took it; started straight from E3-S's +71 C soak, the radios would be past +70 C at power-on")
+    w("   (a sequence item for TEST-PLAN's owner, section 7 of the record).")
+    w("1j Which limits apply (the corrected rule, SESSION): a powered part, its maker's recommended or operating range, whether it")
+    w("   must work in the exposure (the CM5, the logging chain, the fans, the radios in E3-O) or is merely powered; an absolute")
+    w("   maximum is a stress rating only (TLV755P p.4 and PCM2912A p.5, read: \"%s\" ...) and serves as an" % S["pcm_absnote"]["quote"][:80])
+    w("   exclusion screen, never as a statement of no damage; a powered part past its operating range and under its absolute")
+    w("   maximum is INCONCLUSIVE unless a maker states recovery (Quectel RM520N p.19: \"%s\")." % S["rm_recover"]["quote"][:70])
+    w("   An unpowered part, its storage range where stated, else its operating range, the only statement held; a duration the maker")
+    w("   does not state stays open (the SGP41's \"short-term\"). A part through the plate or the wall: the plate to the inside air.")
     w("")
     w("2 The thermal state at the margins (MODELED unless marked)")
     w("2a The heat stage after BANK-R1 (PS-SURV-R) on shore, plan: %.3f W at the pack, %.3f W into the case with the front end's and" % (T["q_hs_pack"], T["q_hs"]))
@@ -1053,183 +1148,182 @@ def render(R):
     w("   E3-O %.2f C, E5's dwell %.2f C (steady; a 4 h E3-O from a kit at +55 C reaches %.2f to %.2f C at 32.53's %.0f to %.0f kJ/K," % (
         T["air"]["E3-O"], T["air"]["E5"], T["e3o_4h"][1], T["e3o_4h"][0], T["kJ"][1], T["kJ"][0]))
     w("   so the steady air is the bound; E5's 6 h dwell reaches it). At HIGH heat E5's air would be %.1f C." % T["air_hi"])
-    w("2d A charge running on shore (the pack outside, at room temperature, inside its window): +%.3f W, +%.2f K (sensitivity; the" % (T["charge_extra"], T["charge_k"]))
-    w("   hold of section 5 holds the charge, as H1 does).")
+    w("2d A charge running on shore (the pack outside, at room temperature, inside its window): +%.3f W, +%.2f K. E3-O states no" % (T["charge_extra"], T["charge_k"]))
+    w("   charge state; the route below keeps E3-O as stated and counts no charge (TEST-PLAN's owner records the pack's state, 7).")
     w("2e Inside the envelope at the floor (+40 C, heat stage, ballasts): %.2f C, over the SGP41's +55 C line of E3-L (REQ-052);" % T["in_env"])
     w("   LO-01a's floor with the ballasts counted is %.4f W/K (a finding for L4-E9 and L4-E10, section 7)." % T["g_floor_ballast"])
     w("2f The plate and the walls (INFERRED from W4's film coefficients, inside %s, outside face %s, wall %s W/m2K, wall t/k %.3f):" % (
         "%g to %g" % tuple(R["w4"]["hin"]), "%g to %g" % tuple(R["w4"]["hof"]), "%g to %g" % tuple(R["w4"]["how"]), R["w4"]["tk"]))
     w("   the plate sits at the ambient plus %.3f to %.3f of the rise, a PP wall's inner face at %.3f to %.3f of it." % (T["f_plate"] + T["f_wall"]))
-    w("2g The enclosure (INFERRED, W4): lid open with fans %.2f to %.2f W/K (32.53: %.1f to %.1f); with the inside film taken as" % (T["w4_open"] + T["g_3253_open"]))
-    w("   infinite the outer films alone give %.2f W/K (low coefficients) to %.2f W/K (high): the physical cap of the sealed case." % T["cap"])
-    w("   Low outer films with W4's high inside film: %.2f W/K; high outer films with its low inside film: %.2f W/K." % (T["g_low_out_high_in"], T["g_high_out_low_in"]))
+    w("2g The enclosure (INFERRED, W4, a sensitivity estimate and not a model of the kit): lid open with fans %.2f (low case) to %.2f" % T["w4_open"])
+    w("   W/K (high case); 32.53 gives %.1f to %.1f. With the inside film taken as infinite the outer films give %.2f W/K in the low" % (T["g_3253_open"] + (T["cap"][0],)))
+    w("   case and %.2f W/K in the high case: a cap of the low case's coefficients and areas, not a universal bound. Low outer films" % T["cap"][1])
+    w("   with W4's high inside film: %.2f W/K; high outer films with its low inside film: %.2f W/K." % (T["g_low_out_high_in"], T["g_high_out_low_in"]))
     w("2h The running module's cooler exhaust (MODELED): the representative 30 mm fan's %.1f CFM free-air (MAKER, Sunon %s) at %.0f %%" % (
         S["fan_cfm"]["v"][0], S["fan_cfm"]["where"], FLOW_SHARE * 100))
     w("   through the heatsink (ASSUMPTION), %.3f l/s: the CM5's 4.5 W and the fan's %.2f W lift the exhaust %.2f K over the mixed air in" % (T["vdot_l_s"], T["fan_w"], T["d_hs"]))
     w("   the heat stage, and the idle module's 2.0 W %.2f K in the hold. A part outside the exhaust sits at the mixed air." % T["d_hold"])
-    w("2i The present design's locations (the heat stage at T-H1's floor, the ballasts on):")
-    for mg in ("E3-O", "E5"):
+    w("2i The design as it stands (the heat stage at T-H1's floor, the ballasts on):")
+    for mg in MARGINS:
         L = R["locs_now"][mg]
         w("   %-4s ambient %.1f C; mixed air %.2f C; in the exhaust %.2f C; plate %s C; PP wall's inner face %s C" % (
             mg, L["amb"], L["mixed"], L["plume"], _rng(*L["plate"]), _rng(*L["wall_in"])))
     w("")
-    w("3 The feasibility screen of the design as it stands (the heat stage at T-H1's floor)")
-    w("3a The parts read one by one: state in the heat stage; governing limit by 1j (MAKER, document and page); local bounds")
-    w("   (MODELED/INFERRED: inside, mixed air .. exhaust; face and wall, plate .. inside air); verdict per margin. REACHED: past the")
-    w("   limit at the favourable bound; PLACEMENT: past it only at the upper bound; NOT REACHED; INCONCLUSIVE: no range held.")
-    for pr in R["parts_now"]:
-        key = pr["key"]
-        src = "" if key is None else "%s %s \"%s\"" % (S[key]["doc"].split("/")[-1], S[key]["where"], S[key]["quote"][:70])
-        w("   %-9s %s; %s%s" % (pr["k"], pr["label"], pr["state"], "; device set (CHO-001)" if pr["dev"] else ""))
-        w("             limit %s (%s) MAKER: %s" % ("none held" if pr["lim"] is None else "+%.0f C" % pr["lim"], pr["basis"], src))
-        for mg in ("E3-O", "E5"):
-            lo, hi = pr["temps"][mg]
-            g = pr["gap"][mg]
-            if g[0] is None:
-                gap = ""
-            elif g[1] > 0:
-                gap = ", over by %s K" % _rng(max(g[0], 0.0), g[1])
-            else:
-                gap = ", %.2f K inside" % (-g[1])
-            w("             %-4s local %s C (%s), %s%s" % (mg, _rng(lo, hi), "MODELED" if pr["where"] == "inside" else "INFERRED", pr["verdict"][mg], gap))
+    w("3 The feasibility screen of the design as it stands (the heat stage at T-H1's floor, the radios on at both margins), by 1j")
+    w("3a The parts read one by one: per margin, its state (work: powered and required; on: powered; off), its limit by 1j (MAKER,")
+    w("   document and page) and its local bounds (inside, the mixed air .. the exhaust; face and wall, the plate .. the inside air).")
+    w("   REACHED: past the limit at the lower bound; PLACEMENT: past it only at the upper; INCONCLUSIVE: no statement, or past the")
+    w("   operating range of a part merely powered and under its absolute maximum; NOT REACHED.")
+    _parts_lines(w, S, R["parts_now"])
     w("3b Every fitted line on boards A to E (grade_check), every module and every line no grade row covers. Rating: the grade row's")
-    w("   maker's range (MAKER); rise: the part's own over its local air for a junction rating (class named); E3-O and E5 local")
-    w("   bounds with the rise. Board P and the cells are out of the heat in E3-O and E5 (TEST-PLAN section 6): FEA-008's, not here.")
-    counts = {}
-    for r_ in R["screen"]:
-        for mg in ("E3-O", "E5"):
-            counts[(mg, r_["verdict"][mg])] = counts.get((mg, r_["verdict"][mg]), 0) + 1
-    for mg in ("E3-O", "E5"):
-        w("   %s: %s" % (mg, ", ".join("%s %d" % (v_, counts[(m_, v_)]) for (m_, v_) in sorted(counts) if m_ == mg)))
+    w("   maker's range (MAKER; for a junction rating its recommended row, the absolute maximum an exclusion screen only); rise: the")
+    w("   part's own over its local air (class named); local bounds with the rise. Board P and the cells are outside the chamber in")
+    w("   E3-O and E5 (TEST-PLAN section 6): FEA-008's, not here. Lines read one by one carry 3a's verdict.")
+    w("   %s" % _counts(R["screen"]))
     for r_ in sorted(R["screen"], key=lambda x: (x["verdict"]["E5"] != "REACHED", x["verdict"]["E5"] != "PLACEMENT", x["part"])):
         t3, t5 = r_.get("temps", {}).get("E3-O"), r_.get("temps", {}).get("E5")
-        rating = "none read" if r_["max"] is None else "%s %s%s" % (f1(r_["max"]), r_.get("kind") or "", " abs (rec %s)" % f1(r_["rec_max"]) if r_.get("rec_max") else "")
-        rise = r_.get("rise", 0.0)
+        rating = "none read" if r_["max"] is None else "%s %s" % (f1(r_["max"]), r_.get("kind") or "")
+        rise = r_.get("rise", {}).get("E5", 0.0) if isinstance(r_.get("rise"), dict) else 0.0
+        rcls = (r_.get("rise_cls", {}).get("E5") or "MAKER") if isinstance(r_.get("rise_cls"), dict) else "MAKER"
         tag = "level 2: %s" % r_["level2"] if "level2" in r_ else ("undeclared line" if r_.get("undeclared") else ("module" if r_.get("module") else ""))
         w("   %-34.34s | %-26.26s | %-10s | %-7s | +%5.1f K %-10.10s | E3-O %-11s %-12s | E5 %-11s %-12s | %s" % (
-            r_["part"], _refs(r_["refs"]), rating, r_.get("where", r_.get("where_gs")), rise, (r_.get("rise_cls") or "MAKER").split(" ")[0],
+            r_["part"], _refs(r_["refs"]), rating, r_.get("where", r_.get("where_gs")), rise, rcls.split(" ")[0],
             "-" if t3 is None else _rng(*t3), r_["verdict"]["E3-O"], "-" if t5 is None else _rng(*t5), r_["verdict"]["E5"], tag))
     w("   NOT FITTED: the Bulgin PX0833 (CASE-MARGINS: \"%s\"); the sealed RJ45 is a MIL-DTL-38999 shell 15 class part." % A["px0833"])
-    w("3c The junction figures (MODELED dissipation in the heat stage x MAKER thetaJA on its JEDEC board; local air the mixed air):")
+    w("3c The junction figures (MODELED dissipation in the heat stage x MAKER thetaJA on its JEDEC board; local air the mixed air at E5):")
     seen = set()
     for (b, ref), d in sorted(R["diss_now"].items()):
         if d["part"] in seen:
             continue
         seen.add(d["part"])
         tj5 = R["locs_now"]["E5"]["mixed"] + d["p"] * d["th"]
-        w("   %-48s %s %-5s %.3f W (%s) x %.1f C/W = +%.1f K; TJ at E5's mixed air %.1f C against %s" % (
-            d["part"], b, ref, d["p"], d["p_src"], d["th"], d["p"] * d["th"], tj5,
-            "its ambient rating (TJ not read)" if d["tj"] is None else "%.0f C (%s)" % (d["tj"], d["tj_key"])))
+        lim = ("recommended %.0f C (%s)" % (d["rec"], d["rec_key"])) if d["rec"] is not None else "its ambient rating (no recommended junction read)"
+        absn = "" if d["abs"] is None else "; absolute %.0f C (exclusion)" % d["abs"]
+        w("   %-48s %s %-5s %.3f W (%s) x %.1f C/W = +%.1f K; TJ %.1f C against %s%s" % (
+            d["part"], b, ref, d["p"], d["p_src"], d["th"], d["p"] * d["th"], tj5, lim, absn))
     dc = R["decl"]
-    w("3d FINDING outside U-02 (in the envelope, at the generators' own declarations): board E's U13 is a TLV75533 in SOT-23-5 (DBV,")
-    w("   %.1f C/W, absolute junction +%.0f C, MAKER, TLV755P sheet, held back) on a rail declared at %.2f A typical and %.2f A peak from" % (dc["th755"], dc["tj755"], dc["e"][0], dc["e"][1]))
-    w("   5.0 V: %.3f W, +%.1f K, past +%.0f C at any local air above %.1f C; the declared peak exceeds its %.0f mA output. Board C's U5" % (
-        dc["e_decl_p"], dc["e_decl_p"] * dc["th755"], dc["tj755"], dc["tj755"] - dc["e_decl_p"] * dc["th755"], dc["iout"] * 1000))
-    w("   (the same part) is declared %.3f A typical and %.3f A peak, the peak past %.0f mA. At the power model's plan load U13 holds" % (dc["c"][0], dc["c"][1], dc["iout"] * 1000))
-    w("   (3c). Named for boards E and C's generator owners and Layer 9 (section 7); it does not change U-02.")
+    w("3d FINDING, in the envelope as well (the generators' own declarations): board E's U13 is a TLV75533 in SOT-23-5 (DBV, %.1f C/W," % dc["th755"])
+    w("   recommended junction +%.0f C, absolute +%.0f C, MAKER, TLV755P sheet, held back) on a rail declared at %.2f A typical and %.2f A" % (
+        dc["rec755"], dc["tj755"], dc["e"][0], dc["e"][1]))
+    w("   peak from 5.0 V: %.3f W, +%.1f K, past its recommended +%.0f C at any local air above %.1f C; the declared peak exceeds its %.0f mA" % (
+        dc["e_decl_p"], dc["e_decl_p"] * dc["th755"], dc["rec755"], dc["rec755"] - dc["e_decl_p"] * dc["th755"], dc["iout"] * 1000))
+    w("   output. Board C's U5 (the same part) is declared %.3f A typical and %.3f A peak, the peak past %.0f mA. Even at the model's plan" % (
+        dc["c"][0], dc["c"][1], dc["iout"] * 1000))
+    w("   load U13 passes its recommended junction at both margins (3c): the regulators are part of the route (5c).")
     w("")
-    w("4 Three complete approaches for the parts that collide (the same margins, the same floor, the same ballasts)")
-    a = ap["a"]
-    w("4a (a) THE HEAT PATH AND THE ENCLOSURE, the parts and the mode unchanged. Each part routed by the air needs, at E5's dwell:")
-    for k in sorted(a["g"], key=lambda k: -a["g"][k]):
-        w("      %-9s %.3f W/K (MODELED)" % (k, a["g"][k]))
-    w("   so the line is %.3f W/K (0 K margin), %.3f with 1 K and %.3f with 2 K (E3-O alone %.3f W/K), against the outer-film cap %.2f" % (
-        a["gmax"], a["g_m"][0], a["g_m"][1], a["g_e3o"], T["cap"][0]))
-    w("   (low) to %.2f W/K (high)" % T["cap"][1])
-    w("   and W4's %.2f to %.2f W/K. Not routed by the air (physics: the air cannot be cooled below the ambient without a cooler," % T["w4_open"])
-    w("   and a cooler in the sealed case returns its input to the air, L4-E10's corrected balance):")
+    w("4 Three complete approaches for the parts that collide (the same margins, the same floor, the same ballasts, the plan heat)")
+    w("   Common to all three (none can be done by the air, the physics of 4a): the SGP41's own shutdown (5d); the MAIN, PI and TEST")
+    w("   pushbuttons to a +85 C part; PDi's storage statement for the e-paper; board E's and board C's 3.3 V regulators (5c); the")
+    w("   +70 C parts out of the running cooler's exhaust; the fans and the other lines with no range held (7).")
+    w("4a (a) THE HEAT PATH AND THE ENCLOSURE, no new mode: the heat stage at both margins, the radios on at both. Each part routed by")
+    w("   the air needs (MODELED, E3-O / E5):")
+    for k in sorted(a["g"], key=lambda k: -max(a["g"][k].values())):
+        w("      %-9s %.3f / %.3f W/K" % (k, a["g"][k]["E3-O"], a["g"][k]["E5"]))
+    w("   so the line is %.3f W/K (0 K margin), %.3f with 1 K and %.3f with 2 K; E3-O alone %.3f W/K. It lies over the low case's" % (
+        a["gmax"], a["g_m"][0], a["g_m"][1], a["g_e3o"]))
+    w("   outer-film cap (%.2f W/K) and under W4's high case (%.2f W/K finite inside film, %.2f infinite); 32.53 gives %.1f to %.1f." % (
+        T["cap"][0], T["w4_open"][1], T["cap"][1], T["g_3253_open"][0], T["g_3253_open"][1]))
+    w("   Not routed by the air (the air cannot be cooled below the ambient without a cooler, and a cooler in the sealed case returns")
+    w("   its input to the air, L4-E10's corrected balance):")
     for k, why in a["open"]:
         w("      %-9s %s" % (k, why))
-    w("   Coupling the +70 C modules to the plate instead: the plate at E5 is %s C at the floor, so it needs %.3f W/K at the" % (_rng(*a["plate_floor_e5"]), a["g_plate"]))
-    w("   plate's upper fraction, and the parts that cannot be coupled (magnetics, relay, connectors) still need the line above.")
-    w("   Cost: mechanical (inside fins, mixing) and a T-H1 line at the top of the bound. VERDICT: REJECTED as a design basis (beyond")
-    w("   the cap at the low outer films and at W4's top; incomplete for the parts limited at or under the ambient).")
+    w("   Coupling the +70 C modules to the plate instead: the plate at E5 is %s C at the floor; it needs %.3f W/K at the plate's" % (_rng(*a["plate_floor_e5"]), a["g_plate"]))
+    w("   upper fraction, and the parts that cannot be coupled still need the line above. VERDICT: CONDITIONAL on T-H1 at or over")
+    w("   %.3f W/K; not selected (0.55 W/K over (c)); it is what applies, with no hold, if T-H1 reads at or over it." % a["gmax"])
     w("4b (b) WIDER-RATED PARTS, the mode and the enclosure unchanged (the inside air %.2f C at E5, %.2f C in the exhaust):" % (
         R["locs_now"]["E5"]["mixed"], R["locs_now"]["E5"]["plume"]))
     for b_ in ap["b"]["rows"]:
         w("      %-9s %-17s %s%s" % (b_["k"], b_["who"], b_["note"], "" if b_["margin_e5"] is None else "; at E5 %.2f K inside the candidate's +%.0f C (MAKER)" % (b_["margin_e5"], b_["cand"])))
-    w("   Cost: a re-pick of five device-set parts (CHO-001: the owner's) with no candidate held for four of them, and the session's")
-    w("   picks. VERDICT: not selectable by the session (outside its authority for the device set; INCONCLUSIVE without candidates).")
-    c = ap["c"]
-    w("4c (c) THE MARGIN HOLD (a mode the acceptance permits, 1i): beyond the heat stage, on board B's TMP117 (C1's sensor), at +%.1f C" % HOLD_TRIP_C)
-    w("   in two readings, the panel controller holds the charge (as H1), takes the running module to idle (no shutdown), and")
-    w("   powers off board D (APRS: SA868, PCM2912A, K1, as H1 does), the PA rail (as H1), the RockBLOCK (RB_SW_EN), the LoRa")
-    w("   module (LORA_ON), both E72 (ZB_ON), the Geiger module (GEIGER_EN) and the SGP41 (a switch owed on board E, section 5);")
-    w("   no e-paper refresh and the sounder muted while it holds; restored at or under +%.1f C after 30 minutes. Existing enables," % HOLD_RESTORE_C)
-    w("   firmware, except the SGP41's switch. Heat into the case on shore: %.3f W (MODELED, plan; %.3f W at the pack), against the heat" % (T["q_m"], T["q_m_pack"]))
-    w("   stage's %.3f W. H1's own actions, which the hold reuses (CONOPS 4c): \"%s\"." % (T["q_hs"], A["h1_actions"]))
-    w("   Each part routed by the air then needs, at E5's dwell:")
-    for k in sorted(c["g"], key=lambda k: -c["g"][k]):
-        w("      %-9s %.3f W/K (MODELED)" % (k, c["g"][k]))
-    w("   so the line is G_c = %.3f W/K (0 K margin; %.3f with 1 K, %.3f with 2 K); with the module at its typical 4.5 W instead of" % (c["gmax"], c["g_m"][0], c["g_m"][1]))
-    w("   idle %.3f W/K; at HIGH heat %.3f W/K (not covered). As board B is generated (slot 2 alone, the 5G socket's supply dropped" % (c["g_cm45"], c["g_hi"]))
-    w("   too) the hold's heat is %.3f W (MODELED), so the same line covers it. E3-O closes at T-H1's floor (mixed air %.2f C)." % (
-        T["q_m_gen"], c["L_floor"]["E3-O"]["mixed"]))
-    w("   Not routed by the air:")
+    w("   VERDICT: not selectable by the session (five device-set parts are the owner's, CHO-001, four with no candidate held).")
+    w("4c (c) E3-O AS STATED, THE HOLD IN E5 ONLY: in E3-O the heat stage runs with every radio C1 leaves on (no hold); in E5 a step")
+    w("   of the kit's controls beyond the heat stage holds the charge (as H1), idles the running module (no shutdown) and powers off")
+    w("   board D (APRS), the PA rail, the RockBLOCK (RB_SW_EN), the LoRa module (LORA_ON), both E72 (ZB_ON) and the Geiger module")
+    w("   (GEIGER_EN). H1's own actions, which it reuses (CONOPS 4c): \"%s\". Heat in E5 under it: %.3f W (MODELED," % (A["h1_actions"], T["q_m"]))
+    w("   plan; %.3f W at the pack); as board B is generated, the 5G socket's supply dropped too, %.3f W. Each part routed by the" % (T["q_m_pack"], T["q_m_gen"]))
+    w("   air needs (MODELED, E3-O with the heat stage / E5 with the hold):")
+    for k in sorted(c["g"], key=lambda k: -max(c["g"][k].values())):
+        w("      %-9s %.3f / %.3f W/K" % (k, c["g"][k]["E3-O"], c["g"][k]["E5"]))
+    w("   so the line is G_c = %.3f W/K, set by E5 (E3-O alone %.3f W/K); %.3f with 1 K and %.3f with 2 K of margin; with the module" % (
+        c["gmax"], c["g_e3o"], c["g_m"][0], c["g_m"][1]))
+    w("   at its typical 4.5 W in the hold %.3f W/K; at HIGH heat %.3f W/K (not covered). Over the low case's cap by %.3f W/K, inside" % (
+        c["g_cm45"], c["g_hi"], c["gmax"] - T["cap"][0]))
+    w("   W4's range and under 32.53's: CONDITIONAL on T-H1. Not routed by the air:")
     for k, why in c["open"]:
         w("      %-9s %s" % (k, why))
-    t_ = c["trip"]
-    w("   The trigger (SESSION, PROVISIONAL): the heat stage's air at +40 C at the floor, read in the exhaust, is %.2f C; +%.1f K of" % (t_["env_tmp"], t_["allow"]))
-    w("   allowance gives the +%.1f C trigger, so the hold never acts inside the envelope at or over the floor: %s. Before it acts the" % (t_["trip"], "yes" if t_["never_in_env"] else "NO"))
-    w("   air is at most +%.1f C even in the exhaust. Once in it, the mixed air (%.2f, %.2f C) stays over the restore: %s. In E5's 30 C" % (
-        t_["before_trip_hi"], c["L"]["E3-O"]["mixed"], c["L"]["E5"]["mixed"], "yes" if t_["stays"] else "NO"))
-    w("   phase the heat stage reads at most %.2f C in the exhaust: no hold." % t_["e5_low"])
+    w("4d THE HOLD'S TRIGGER WINDOW at the line (it must not act in E3-O, and must act in E5 before the radios it turns off pass")
+    w("   their +%.0f C): E3-O's steady mixed air with the radios on %.2f C; the mixed air by which E5 needs the hold %.2f C; window %.2f K." % (
+        tr["need_by"], tr["e3o_mix"], tr["need_by"], tr["width"]))
+    w("   Taken from it: the reference's error twice (board B's TMP117, +-%.1f C to 100 C, MAKER %s), E5's fastest rise %.1f K/h (the" % (
+        tr["tol"], S["tmp117_acc"]["where"], tr["rate_k_h"]))
+    w("   chamber's %d to %d C in %.0f h, Method 507.6 as L4-E10 transcribed it) times a %.0f s reading and response lag (ASSUMPTION):" % (
+        R["A"]["e5"][3], R["A"]["e5"][4], E5_RAMP_H, READ_S + TAU_S))
+    w("   %.2f K. What is left bounds the reference's offset to the air at the +70 C parts: at most +-%.2f K (INFERRED). The TMP117 is" % (
+        tr["lag"], tr["e_allow"]))
+    w("   a board sensor under the coolers: across the exhaust's 0 to %.2f K the window is %.2f K, so it DOES NOT EXIST unless the" % (
+        R["T"]["d_hs"], tr["plume_window"]))
+    w("   reference is placed in the mixed air near those parts or its offset is calibrated at T-H1 to +-%.2f K (CONDITIONAL); with the" % tr["e_allow"])
+    w("   whole spread it would need %.3f W/K. The trigger then sits at the window's middle, %.2f C of mixed air plus the calibrated" % (
+        tr["g_plume"], tr["trip_mid"]))
+    w("   offset; restore 5 K under it after 30 minutes (PROVISIONAL). The window grows with the conductance: %s." % "; ".join(
+        "%.2f K at %.3f W/K" % (wd, g_) for g_, wd in tr["widths"]))
+    w("   Inside the envelope the air is %.2f C at the line, far under it. In E5 under the hold the mixed air settles at %.2f C." % (
+        tr["env_mix"], tr["e5_hold_mix"]))
     fb = c["fallback"]
-    w("   If T-H1 reads between the floor and G_c: the hold with the +70 C modules (LimeSDR, RockBLOCK, board D) coupled to the plate")
-    w("   holds them at the plate's %s C at E5 (%.2f K inside +70 C at the upper fraction), the mixed air then %.2f C (INFERRED)." % (
-        _rng(*fb["plate"]), fb["margin"], fb["mixed"]))
-    w("   Cost: firmware on existing enables, one board E circuit item, the session's picks for the parts limited at or under the")
-    w("   ambient, a T-H1 line %.0f %% over LO-01a's floor (%.3f W/K over the outer-film cap at W4's low coefficients). VERDICT:" % (
-        100.0 * (c["gmax"] / T["g_floor"] - 1.0), c["gmax"] - T["cap"][0]))
-    w("   SELECTED, CONDITIONAL (section 5).")
-    w("4d Per colliding part, the three routes (CLOSES, CONDITIONAL, REJECTED, OUTSIDE AUTHORITY, INCONCLUSIVE):")
+    w("4e If T-H1 reads under the line: the radio modules (RockBLOCK, board D) and the LimeSDR coupled to the plate hold E3-O at the")
+    w("   plate's %s C at the floor (%.2f K inside +70 C at its upper fraction) and E5 under the hold at %s C (%.2f K) (INFERRED);" % (
+        _rng(*fb["e3o_plate"]), fb["e3o_margin"], _rng(*fb["plate"]), fb["margin"]))
+    w("   the SGP41 in the bay air (%.2f C in E5) is then past its +70 C storage: that branch needs the owner's re-pick (CHO-001)." % fb["mixed"])
+    w("4f Per colliding part, the three routes (CLOSES, CONDITIONAL, REJECTED, OUTSIDE AUTHORITY, INCONCLUSIVE):")
     for k, r_ in sorted(R["route"].items()):
         w("      %-9s (a) %-17s (b) %-17s (c) %-17s every route rejected: %s" % (k, r_["a"], r_["b"], r_["c"], "YES" if r_["forced"] else "no"))
     w("")
-    w("5 The selection: (c), the margin hold, with the line on T-H1 and the session's picks")
-    w("5a The parts at the selected line (E5 at G_c = %.3f W/K, E3-O at T-H1's floor), in the hold's states:" % c["gmax"])
-    for pr in c["parts"]:
-        mg5 = "" if pr["lim"] is None else "%+.2f/%+.2f" % (pr["lim"] - pr["temps"]["E5"][0], pr["lim"] - pr["temps"]["E5"][1])
-        mg3 = "" if pr["lim"] is None else "%+.2f/%+.2f" % (pr["lim"] - pr["temps"]["E3-O"][0], pr["lim"] - pr["temps"]["E3-O"][1])
-        w("   %-9s %-10s limit %-6s %-40s E3-O %-11s %-11s %-13s E5 %-11s %-11s %-13s (MAKER limit; MODELED air)" % (
-            pr["k"], pr["state"], "none" if pr["lim"] is None else "+%.0f" % pr["lim"], pr["basis"][:40],
-            _rng(*pr["temps"]["E3-O"]), pr["verdict"]["E3-O"], mg3, _rng(*pr["temps"]["E5"]), pr["verdict"]["E5"], mg5))
-    w("   (margins in K to the lower / the upper bound of each span: inside, the mixed air / the exhaust; face and wall, the plate /")
-    w("   the inside air)")
-    cnt = {}
-    for r_ in c["screen"]:
-        for mg in ("E3-O", "E5"):
-            cnt[(mg, r_["verdict"][mg])] = cnt.get((mg, r_["verdict"][mg]), 0) + 1
-    w("5b Every fitted line, module and undeclared line at the selected line: %s" % "; ".join(
-        "%s: %s" % (mg, ", ".join("%s %d" % (v_, cnt[(m_, v_)]) for (m_, v_) in sorted(cnt) if m_ == mg)) for mg in ("E3-O", "E5")))
+    w("5 The selection: (c), E3-O as stated and the hold in E5 only, at the line G_c = %.3f W/K, with the common items" % c["gmax"])
+    w("5a The parts at the line (E3-O: the heat stage, radios on; E5: the hold), by 1j:")
+    _parts_lines(w, S, c["parts"])
+    w("5b Every fitted line, module and undeclared line at the line: %s" % _counts(c["screen"]))
     for r_ in sorted(c["screen"], key=lambda x: x["part"]):
         if any(v_ not in ("NOT REACHED", "OUT OF SCOPE", "NO PART", "NOT FITTED") for v_ in r_["verdict"].values()):
             w("   %-40.40s %-26.26s E3-O %-12s E5 %-12s%s" % (r_["part"], _refs(r_["refs"]), r_["verdict"]["E3-O"], r_["verdict"]["E5"],
                                                          "  (read in 5a)" if "level2" in r_ else ""))
-    w("5c What stays CONDITIONAL: T-H1 lid open with fans at or over %.3f W/K (E5); the hold implemented and forced at room" % c["gmax"])
-    w("   temperature; the SGP41 on its own switched supply and bus (board E, owed); the MAIN, PI and TEST pushbuttons picked to")
-    w("   +85 C (NKK MBN class, owed); PDi's storage statement for the e-paper (drafted); the +70 C parts placed out of the running")
-    w("   cooler's exhaust (Layer 9); the picks not yet made (fans, NVMe wide grade, coin cell, header modules) reaching at least the")
-    w("   hold's air at E5 in their place (%.1f C in the exhaust); the parts with no range held (5b's INCONCLUSIVE lines)." % c["L"]["E5"]["plume"])
+    w("5c The two 3.3 V regulators at the line (recommended junction +%.0f C, MAKER; DBV %.1f C/W, DRV %.1f C/W, TLV755P p.4):" % (
+        R["decl"]["rec755"], R["decl"]["th755"], R["decl"]["drv755"]))
+    for name, row in rg["rows"].items():
+        w("   %-38s %.3f W (%s): DBV E3-O %.1f C, E5 %.1f C; DRV E3-O %.1f C, E5 %.1f C" % (
+            name, row["p"], row["src"], row["DBV"]["E3-O"], row["DBV"]["E5"], row["DRV"]["E3-O"], row["DRV"]["E5"]))
+    w("   The DRV package holds U13 at the plan load and U5 at its declared typical; at U13's declared %.2f A neither package holds" % R["decl"]["e"][0])
+    w("   (a DRV part takes at most %.3f A at E5's air): a buck, or the rail's load re-derived. Owed to boards E and C's owners." % rg["imax_drv"])
+    w("5d The SGP41's own shutdown, apart from the hold: board E's BME688 (U14, +-%.1f C from 0 to 65 C, MAKER %s) beside it within" % (
+        sg["err"], S["bme_t_acc"]["where"]))
+    w("   %.1f K (ASSUMPTION, a placement rule) switches it off at %.2f C (its +55 C less the error, the gradient and %.2f K of lag) and" % (
+        sg["grad"], sg["t_off"], sg["lag"]))
+    w("   back on at %.0f C (Table 4's recommended maximum, MAKER %s); off at every start until a reading at or under %.0f C, so" % (
+        sg["t_on"], S["sgp_rec"]["where"], sg["t_on"]))
+    w("   E3-O, which starts from a kit at +55 C, never powers it. Its function is kept for any bay air up to %.2f C; inside the envelope" % sg["kept_to"])
+    w("   at the line the air is %.2f C (%.2f K to spare); at T-H1's floor it would be %.2f C, so there the function is lost at the hot" % (
+        sg["env_air"], sg["env_margin"], sg["env_air_floor"]))
+    w("   edge (finding 1 already fails that floor). Unpowered at the line it sits at %s C in E3-O and %s C in E5 against its +%.0f C" % (
+        _rng(*sg["stor"]["E3-O"]), _rng(*sg["stor"]["E5"]), sg["stor_lim"]))
+    w("   short-term storage, whose duration Sensirion does not state: CONDITIONAL on its answer, and on a supply switch and a bus of")
+    w("   its own so that no live pin feeds it.")
+    w("5e What stays CONDITIONAL: T-H1 lid open with fans at or over %.3f W/K; the hold's reference calibrated to +-%.2f K or placed" % (
+        c["gmax"], tr["e_allow"]))
+    w("   in the mixed air; the SGP41's shutdown (placement, switch, bus, Sensirion's duration); the pushbuttons' pick; PDi's statement;")
+    w("   the regulators; the +70 C parts out of the exhaust; the fans' rating and the other lines with no range held.")
     w("")
     w("6 The owner-question test: a part with every route rejected or outside authority on held evidence: %s." % (", ".join(R["forced"]) or "none"))
-    w("   The e-paper's (c) rests on a statement its maker has not published in a held document (a component limitation, not a")
-    w("   requirements conflict); the conditional owner item is named in the record, not asked.")
+    w("   A route that conforms to the stated acceptance exists (5), CONDITIONAL on evidence and T-H1; no owner question is forced.")
+    w("   It would be forced only if T-H1 read under %.3f W/K and the plate coupling of 4e did not hold the radios in E3-O (section" % c["g_e3o"])
+    w("   8 of the record).")
     w("")
-    w("7 Downstream (the record's section 7 carries each item's owner by layer and its acceptance)")
-    w("7a T-H1 (prototype bench; Layer 7 designs for it): lid open with fans at or over %.3f W/K for E5 with the hold (LO-01a's own" % c["gmax"])
-    w("   floor %.4f W/K, %.4f W/K once L4-E8's ballasts are counted, 2e); the plate and wall thermocouples give the fractions of 2f." % (T["g_floor"], T["g_floor_ballast"]))
-    w("7b The hold (firmware owner, CONOPS 4 and HW-FW-CONTRACT's integrators, TEST-PLAN's owner): trigger +%.1f C, restore +%.1f C" % (HOLD_TRIP_C, HOLD_RESTORE_C))
-    w("   after 30 minutes, on board B's TMP117; actions as 4c; enables read in the generators:")
+    w("7 Downstream (the record's section 9 carries each item's owner by layer and its acceptance)")
+    w("7a T-H1 (prototype bench; Layer 7 designs for it): lid open with fans at or over %.3f W/K (E5 with the hold); %.3f W/K with no" % (c["gmax"], a["gmax"]))
+    w("   hold; E3-O alone %.3f W/K (LO-01a's own floor %.4f W/K, %.4f W/K with L4-E8's ballasts, 2e)." % (c["g_e3o"], T["g_floor"], T["g_floor_ballast"]))
+    w("7b The hold (firmware owner, CONOPS 4 and HW-FW-CONTRACT's integrators, TEST-PLAN's owner); enables read in the generators:")
     for k_, v_ in sorted(A["enables"].items()):
         w("      %-13s %s" % (k_, v_))
-    w("7c Board E (its generator owner): the SGP41 on a switched supply and a bus of its own, so the hold can power it off without the")
-    w("   live I2C bus feeding it through its pins; U10's free GPIO20 to GPIO22 serve (the line read above). Board C: the MAIN, PI and")
-    w("   TEST pushbuttons (Layer 6 pick, Layer 7 cutouts). Board B: the H5007NL's HX version once its pinout is confirmed (Layer 6).")
-    w("7d Layer 9: the parts limited at +70 C and the SGP41 out of the running cooler's exhaust (+%.2f K in the hold, 2h); the class" % T["d_hold"])
-    w("   bounds of 3b replaced by laid-out figures. Boards E and C: U13 and U5 (3d).")
-    w("7e The owner (outside contacts the session does not make): send the PDi clarification; the fallback evidence requests to")
-    w("   Ground Control, NiceRF and Bulgin are drafted beside it.")
+    w("7c The lines with no range held, as evidence obligations:")
+    for name, cls, owner, what in UNRATED:
+        w("      %-38s %-12s %-28s %s" % (name, cls, owner, what))
     w("")
     w("8 Predicates")
     for k, v in R["pred"].items():
