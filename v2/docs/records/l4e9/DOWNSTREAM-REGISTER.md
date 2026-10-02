@@ -41,7 +41,9 @@ panel lead's surge, PENDING L4-E7's surge round): 146 items.
 battery FET Q39, enters as R-157 to R-162 (E11-27 to E11-32); R-152 (E11-24) is withdrawn once R-157 is applied and stands only
 for arrangement (A); R-114's D1 and D3 answers are no longer needed then; R-147 names check 5 for the charger's draft. L4-E12's
 thermal verdict (check 5 at `7f41632d`): T-H1 decides; R-104 starts with the deciding point and its bands; the session measures
-not yet carried enter as R-163 to R-166 (F3's switches and firmware, board B's +85 C connectors and HX magnetics): 156 items.
+not yet carried enter as R-163 to R-166 (F3's switches and firmware, board B's +85 C connectors and HX magnetics). L4-E10's cell
+route (checks 4 and 5 at `1c321773`): the Saft MP 176065 xtd as 4S1P, a PROPOSAL pending the owner's approval, enters with its
+three checks R-167 to R-169 (the mock-up, the 18 A pulse, the lot's capacity): 159 items.
 
 **Owners** (by layer and role): Layer 4 coordinator (release records and assignment), Layer 5 interfaces, Layer 6 components,
 Layer 7 mechanical, Layer 8 board A / board B / board C / board E / board P generator owner, Layer 9 pre-layout analysis, prototype
@@ -243,3 +245,6 @@ that is not a draft: evidence, analysis, layout, a test).
 | R-164 | IMPLEMENTATION | Firmware for F3: E5's deeper hold (the switch chip, NVMe slot 3, the PCIe switch and the GNSS off, the module logging on its own storage) | L4-E12 section 13.5 | firmware owner | A forced deeper hold at room temperature turns them off and keeps the logging | OWED | 5 |
 | R-165 | EVIDENCE | U-02's session measure on parts (L4-E12 14.4): +85 C replacements for board B's +80 C connectors (2199119-3, 2199230-4, MDT420M02001, TYPE-C-31-M-12) | L4-E12 sections 6 and 14.4 | Layer 6 components | Each pick's maker's range at or over +85 C, at the same footprint or with the land change drawn | OWED | 2 |
 | R-166 | IMPLEMENTATION | Board B for U-02: R-165's +85 C connectors and the H5007NL's HX version (R-141) fitted | L4-E12 section 14.4 | Layer 8 board B generator owner | Board B's suite with the new parts | MISSING DRAFT | B |
+| R-167 | TEST | Under U-01's Saft route only: a printed mock-up of four MP 176065 xtd cells at the sheet's maximum dimensions in D-06's pocket at the built stack (the sheet's thickness grows with temperature and life) | L4-E10 section 15 (out 10d, 10e) | Layer 7 mechanical | Four cells fit along the pocket's axis with at most 1.40 mm of wrap and spacers, at CASE-MARGINS M5's chosen placement; else the pocket changes and the route returns to the owner | OWED | U-01 |
+| R-168 | EVIDENCE | Under U-01's Saft route only: one cell carrying 18 A for 60 s (PS-ALLTX on one string; the sheet's 22 A pulses state no duration) | L4-E10 section 15 (out 10e); `clarification/saft-mp176065xtd.txt` | Layer 6 components | Saft's statement filed, or one cell pulsed at 18 A for 60 s at +25 C and at the cold end with its surface temperature and voltage logged (NZ$ 238.72, a day), inside its limits | OWED | U-01 |
+| R-169 | TEST | Under U-01's Saft route only: the lot's capacity at receipt (the sheet prints a typical 5.6 Ah only) | L4-E10 section 15 (out 10e) | prototype bench | Each cell's capacity at C/5 to 2.5 V at +25 C filed; the pack's usable energy recomputed from the lot's least (the budget takes 53.5 Wh at an assumed minimum) | OWED | U-01 |
