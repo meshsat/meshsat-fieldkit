@@ -7,7 +7,7 @@ design, desk arithmetic: nothing bought, built, powered or measured; no physical
    env        v2/ecad/tools/pcb_envelope.yaml  sha256 35cf43a2b7098a76
    replay_py  v2/docs/records/l4e/l4e_replay.py  sha256 3de985e2e3e06453
    replay_out v2/docs/records/l4e/l4e_replay.out  sha256 59c6eeab16da98f8
-   l4e7_out   v2/docs/records/l4e7/l4e7_stage_settings.out  sha256 66fb58ef99fe7e81
+   l4e7_out   v2/docs/records/l4e7/l4e7_stage_settings.out  sha256 a0ec073de05abe91
    array_calc v2/docs/records/a1solar/array_calc.py  sha256 fdeaf63f525f1d7f
    spr_ds     v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf  sha256 da06e5e2d9bca625
    spr_guide  v2/vendor/solar/held/sunpower-flex-safety-installation-524958-revf.pdf  sha256 b8ebdfb7019a399a
@@ -180,8 +180,8 @@ design, desk arithmetic: nothing bought, built, powered or measured; no physical
      band bottom  1000 W/m2, cells at -20 C   as drawn  104.9 W | with the limit   70.5 W (at 20.30 V) | the panel's maximum  106.7 W
      band top     STC                         as drawn  108.0 W | with the limit   75.6 W (at 21.78 V) | the panel's maximum  112.1 W
      band top     1000 W/m2, cells at -20 C   as drawn  108.7 W | with the limit   86.2 W (at 24.84 V) | the panel's maximum  130.4 W
-     as drawn the stage would take up to 108.7 W (over 100 W); with the drafted limit at most 86.2 W here (L4-E7 bounds the limit
-     at 96.25 W to 25 V, CONDITIONAL on five unprinted values): the 100 W rests on the drafted limit, as for every candidate
+     as drawn the stage would take up to 108.7 W (over 100 W); with L4-E7's first-round limit at most 86.2 W here; the 100 W rests
+     on L4-E7R's regulation and backstop (A-4, section 10), as for every candidate
      hot short circuit (+70 C cells, 1000 W/m2, the band's top) 7.12 A against the entry's 10 A; x 1.25 (SunPower's rating
      clause, a1solar's convention) 8.90 A: inside 10 A
    BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA):
@@ -191,15 +191,15 @@ design, desk arithmetic: nothing bought, built, powered or measured; no physical
      band bottom  1000 W/m2, cells at -20 C   as drawn  110.1 W | with the limit   70.2 W (at 20.23 V) | the panel's maximum  113.4 W
      band top     STC                         as drawn  110.8 W | with the limit   71.0 W (at 20.45 V) | the panel's maximum  113.3 W
      band top     1000 W/m2, cells at -20 C   as drawn  111.5 W | with the limit   81.4 W (at 23.45 V) | the panel's maximum  131.3 W
-     as drawn the stage would take up to 111.5 W (over 100 W); with the drafted limit at most 81.4 W here (L4-E7 bounds the limit
-     at 96.25 W to 25 V, CONDITIONAL on five unprinted values): the 100 W rests on the drafted limit, as for every candidate
+     as drawn the stage would take up to 111.5 W (over 100 W); with L4-E7's first-round limit at most 81.4 W here; the 100 W rests
+     on L4-E7R's regulation and backstop (A-4, section 10), as for every candidate
      hot short circuit (+70 C cells, 1000 W/m2, the band's top) 7.28 A against the entry's 10 A; x 1.25 (SunPower's rating
      clause, a1solar's convention; transferred, not this maker's instruction) 9.10 A: inside 10 A
    Solbian SX 156:
      nominal      STC                         as drawn  152.3 W | with the limit   70.6 W (at 20.33 V) | the panel's maximum  156.6 W
      nominal      1000 W/m2, cells at -20 C   as drawn  161.5 W | with the limit   81.4 W (at 23.46 V) | the panel's maximum  184.0 W
-     as drawn the stage would take up to 161.5 W (over 100 W); with the drafted limit at most 81.4 W here (L4-E7 bounds the limit
-     at 96.25 W to 25 V, CONDITIONAL on five unprinted values): the 100 W rests on the drafted limit, as for every candidate
+     as drawn the stage would take up to 161.5 W (over 100 W); with L4-E7's first-round limit at most 81.4 W here; the 100 W rests
+     on L4-E7R's regulation and backstop (A-4, section 10), as for every candidate
      hot short circuit (+70 C cells, 1000 W/m2) 9.61 A NOMINAL (no Isc band printed) against the entry's 10 A; x 1.25, a factor
      transferred from SunPower's guide (a1solar's convention), not this maker's instruction: 12.01 A: OVER the entry's 10 A
 
@@ -287,9 +287,17 @@ design, desk arithmetic: nothing bought, built, powered or measured; no physical
          per W/m2 (less light, less current); dI/dT -0.06749 / -0.09478 A/K (warmer cells, less current); the hold 18.813 V lies above Vmp
          there, 16.267 / 15.442 V (16.339 / 15.511 V at the unshifted noon)
      A-3 THE ENTRY, THREE CASES:
-       (a) normal operation: the entry carries the stage's input current, bounded by L4-E7's drafted limit and independent of
-           irradiance: at most 99.6739 W / 25.000 V = 3.9870 A at the design floor's worst corner (stack C, L4-E7 out 4), under 10 A;
-           CONDITIONAL with A-4
+       (a) normal operation: the entry carries the stage's input current, independent of irradiance. L4-E7R (accepted, checks 3
+           and 4) holds it two ways. The primary limit REGULATES it: the LT8705A at RIMON_IN 31.6k (C705766), 2.5485 A nominal, at
+           most 2.9337 A at 25 V under the joint assumptions:
+             EA2 and EA3 at half gain, the line at twice, RSENSE1's cold TCR at 100 ppm/K, the drifts, each resistor at its worst end
+           The backstop does NOT limit: it turns the stage off (SWEN low) when the input current reaches its trip, at most
+           3.7408 A at 25 V (3.0468 A at its lowest), so no steady entry current exceeds
+           3.7408 A even if the regulation's unprinted values pass their assumptions (the overlap is then a hiccup); during a trip's
+           response (at most 1.087 ms) the source's own current flows, at most A-3(b)'s. The bound kept here,
+           99.6739 W / 25.000 V = 3.9870 A
+           (L4-E7's first-round stack C corner at RIMON_IN 23.2k, L4-E7 out 4), stays the conservative upper bound, above the
+           backstop's 3.7408 A and the regulation's 2.9337 A, under 10 A; CONDITIONAL with A-4
        (b) a sustained input fault (a short downstream of F2, D4 failing short for example): the panel's Isc for hours, hot cells
            +70 C, (1 + U_I), x 1.25, the maker's own sizing allowance, at or under 10 A. SunPower 524958 Rev F prints it in
            section 3.0 (PDF p.2; the coordinator's direction named section 5.1, which holds the operating temperature), verbatim:
@@ -299,8 +307,13 @@ design, desk arithmetic: nothing bought, built, powered or measured; no physical
            SESSION design level for this case only (the source's enhancement on E0; a design level, not a claimed maximum).
            J_SOLAR's held catalogue (JST VH, p.1) prints 'Current rating: 10 A AC/DC' and 'Temperature range: -40℃ to +105℃' and no short-time overload: COMPONENT_LIMITATION,
            carried as PANEL-ACC row A-3(c): J_SOLAR and PV_IN rated at least that current at their maximum ambient, or a bench row
-     A-4 the 100 W into the stage: CONDITIONAL on L4-E7's drafted input limit applied on board E and its bench rows (the unit's
-         maximum at -20 C, 1000 W/m2 is 117.4 W, over 100 W as drawn; section 5); not a measured condition of the unit
+     A-4 the 100 W into the stage rests on two layers, as L4-E7R states them (accepted, checks 3 and 4): the primary limit, the
+         LT8705A's regulation at RIMON_IN 31.6k, its own 25 V corner 73.3436 W, CONDITIONAL on its unprinted values staying inside the
+         joint assumptions above; and the backstop (approach C: the WSL2512 sense bank, the INA169, the TPS3701 and the TPS3808
+         holding SWEN low, SWEN off by default, with the CS101 correction: the bulk ahead of the bank and the INB filter), its
+         static bound 93.5521 W, margin 6.4479 W, CONDITIONAL on G_CM (break-even 169 %) and U18's VIN+ bias (break-even 22 mA):
+         "L4-E7R's architecture criterion: MET, CONDITIONAL on the named items" (L4-E7 out 10). Both are drafted, not applied; the unit's
+         maximum at -20 C, 1000 W/m2 is 117.4 W, over 100 W as drawn (section 5). Not a measured condition of the unit
    THE DEMONSTRATION ON A UNIT EQUAL TO THE TYPICAL ROWS (INFERRED: the sheet's coefficient, the larger of its two readings, gives
    Vm20; the energy record's fit gives the curve; a real unit replaces each by its measurement):
      Voc25 21.400 V, Vm20 24.0505 V, Isc 6.30 A
@@ -313,7 +326,11 @@ design, desk arithmetic: nothing bought, built, powered or measured; no physical
      the rated 21.400 V lies inside it: yes; the window is not empty: yes
      information: a laboratory without a cold chamber could extrapolate Vm20 from M1 with a coefficient measured to within 27.7 %
      for the rated unit; the contract keeps M2 measured
-   THE ENERGY (the drafted limit 3.4713 A; the replay's A1 and A2):
+   THE ENERGY (the replay's A1 and A2), computed at L4-E7's first-round limit 3.4713 A as section 0 reproduces it. L4-E7R's accepted
+   regulation (RIMON_IN 31.6k, 2.5485 A nominal) leaves the conditioned upper corner's rows unchanged: yes (the SunPower's highest
+   current there on SC-37's day 1.6914 A, under the regulation's nominal and C's lowest trip 3.0468 A); it moves the nominal hold's
+   day to 336.6 Wh (L4-E7 out 10, 5 h bound; 344.0 / 307.9 Wh at the lower and upper corners) against the 350.0 Wh below (the panel's
+   highest current at the nominal hold 2.6099 A, over the regulation's nominal)
      the rated unit (the typical rows), the conditioned upper corner (18.813 V): 240.0 Wh a day; at noon 30.54 W; [0 limited, 1 daylight hours with no input]
        A1: first interruption h 3/2; unserved 1559.2 / 1595.8 at 48 h, 2424.8 / 2381.5 at 72 h; least addition +1546.7 / +2371.8 Wh
        A2: first interruption h 16/11; unserved 1352.7 / 1255.3 at 48 h, 1997.8 / 2200.2 at 72 h; least addition +1166.1 / +2000.1 Wh
@@ -362,10 +379,11 @@ design, desk arithmetic: nothing bought, built, powered or measured; no physical
    Route 2, a controlled unit: PANEL-ACC's contract (section 10) has a non-empty window that holds the identified panel's typical
    rows, with A-1, A-2, A-3(a) and A-3(b) met at the specification: yes
    U-03: CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC).
-   It is not an architecture-level choice: REQ-016's window, the stage, its hold and the drafted limit stay, and the panel is
+   It is not an architecture-level choice: REQ-016's window, the stage, its hold and its 100 W control stay, and the panel is
    selected downstream by measurement. It is CONDITIONAL on: a bought unit passing A-1, A-2 and A-3(b) by its own measurement
-   (M1 to M3 and A-2's reading at the specification); L4-E7's drafted input limit applied (A-3(a) and A-4, its 96.25 W
-   CONDITIONAL); A-3(c)'s connector and conductor rating at Layer 5/6; the disturbance check's assumption (section 11) and M3's n;
+   (M1 to M3 and A-2's reading at the specification); L4-E7R's regulation and backstop applied (A-3(a) and A-4, the backstop's
+   93.5521 W CONDITIONAL on G_CM and the VIN+ bias); A-3(c)'s connector and conductor rating at Layer 5/6; the disturbance check's
+   assumption (section 11) and M3's n;
    the unit's trace rerun (A1, A2). None of these can overturn the architecture: A-3(c) is a connector rating (REQ-016's 'rated
    10 A' is a minimum), and the rest decide a unit, not the topology.
    NO PHYSICAL UNIT IS ACCEPTED: none is bought or measured; the purchase and the measurement are the owner's actions (money).
