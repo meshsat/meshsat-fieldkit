@@ -21,6 +21,7 @@ below are the qualified human reviews wanted before costly fabrication.
 | R-EMC | EMC pre-compliance of the built kit | approved by D-09: once a prototype exists | the built prototype and its test plan | after the first build |
 | **R-PWR** | **the corrected complex power design (board A, board E's input stage, and board B's PoE PSE that board A's 54 V stage feeds)** | **NOT approved: needs the owner's spending approval** (D-09 covered three routes, not this one) | after round 6 merges board A; board E packet ready | before board A enters layout |
 | **R-HSD** | **the high-speed digital design: board B's PCIe and USB 3 fabric** | **NOT approved: needs the owner's spending approval** (D-09 covered three routes, not this one) | after round 6 merges board B and the eight-layer escape trial reports | before a board B layout is committed or any board B order |
+| R-VOL | a volunteer read of the whole design, power and thermal first (Layer 4), then the layout (SI/PI and DFM) | no spend: the owner posted the first volunteer listing on 2 October 2026 | the public repository at a named commit, entry pages below | now, beside the paid routes; never in place of R-BAT, R-EMC or certification |
 
 The two new routes are recorded here as needing the owner's decision on spending, which only the owner can give. Under
 the owner's standing rule of 26 September 2026 the session asks no question; the need is stated in this page and in the
@@ -63,6 +64,30 @@ Provider types common to several routes:
 - a university or applied-research group in the field (slower, independent);
 - the part makers' application support, for questions about their own parts (free and public, for example the TI E2E
   forum already cited in `v2/vendor/SOURCES.yaml`); a complement to a design review, never a substitute.
+
+## R-VOL: a volunteer read of the whole design (added 2 October 2026)
+
+**Why.** The owner posted a volunteer listing on 2 October 2026, "Hardware Design Review Engineer (power and thermal)",
+remote, in the Netherlands; a second, "PCB Layout Verification Engineer, SI/PI and DFM (volunteer)", is planned after it.
+The scope follows where the design is hardest today: Layer 4's power architecture and the sealed case's heat. Taken by the
+session under the owner's standing rule of 26 September 2026: R-BAT (the pack's protection), R-EMC and any certification
+stay paid routes and are never offered as volunteer work, because a volunteer cannot be held to a quote, a date or a
+liability; a volunteer's read may come before R-PWR and narrow it, it does not replace it unless the owner judges the
+reviewer's qualification sufficient.
+
+**What the reviewer receives.** The public repository (CERN-OHL-S-2.0) at one named commit, given by the owner when the
+first applicant is accepted, and these entry pages: `v2/docs/handover/START-HERE.md` (the layers and their status);
+`v2/docs/handover/layer3/REQUIREMENTS-L3-R2.md` and `v2/docs/OPERATING-ENVELOPE.md` (requirements and envelope);
+`v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md` (the architecture, its connected diagram, the power and heat budget, the
+circuit-change list and the exit statement); `v2/docs/records/l4close/FINDINGS-LEDGER.md` (every finding and its state);
+`v2/ecad/` (the KiCad 9 sources and netlists); `v2/docs/reviews/` (the earlier reviews). Held third-party sheets are not
+in the repository; the records list them by source and sha256.
+
+**Deliverable asked.** Written findings per layer: each a defect, a missing piece of evidence or an assumption, with a
+severity, the smallest fix and the check that closes it, and a go or no-go at each gate.
+
+**Engagement.** Steps 1, 2, 4 and 5 of the section above apply; step 3 does not (no quote, no payment). The findings are
+recorded verbatim under `v2/docs/reviews/` and enter the same loop as any reviewer's: closed only on fresh evidence.
 
 ## R-BAT: battery pack protection (approved in principle, D-09)
 
