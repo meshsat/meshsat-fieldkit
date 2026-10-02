@@ -1,0 +1,23 @@
+{
+ "what": "LCSC public product-detail answer for C728595 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C728595), no login; kept fields only",
+ "read_utc": "2026-10-01T23:11Z",
+ "read_by": "task L4-E7R (MESHSAT-1357), third round",
+ "role": "board E R71, SWEN's pull-down and the bottom of its supply guard (6.04k), L4-E7R third round",
+ "code": "C728595",
+ "brand": "YAGEO",
+ "model": "RT0603BRD076K04L",
+ "package": "0603",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/46d7760c582640714d605308a25a220a.pdf?productCode=C728595",
+ "pdf_sha256": "0a729d144519a7021c82a0ef242b064e467c70d44afcf9eabd6c7ffdc4b673a3",
+ "pdf_note": "fetched at read_utc; YAGEO RT series product specification V.16, May 06 2025; held back (v2/vendor/passives/held/, fetched by ../fetch_held_back.py)",
+ "stock": 3590,
+ "params": {
+  "Power(Watts)": "100mW",
+  "Resistance": "6.04kΩ",
+  "Voltage Rating": "75V",
+  "Operating Temperature": "-55℃~+155℃",
+  "Type": "Thin Film Resistor",
+  "Temperature Coefficient": "±25ppm/℃",
+  "Tolerance": "±0.1%"
+ }
+}

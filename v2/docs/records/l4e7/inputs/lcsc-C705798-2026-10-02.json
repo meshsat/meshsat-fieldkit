@@ -1,0 +1,23 @@
+{
+ "what": "LCSC public product-detail answer for C705798 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C705798), no login; kept fields only",
+ "read_utc": "2026-10-01T23:31Z",
+ "read_by": "task L4-E7R (MESHSAT-1357), third round",
+ "role": "board E R66, the backstop's trip divider bottom into U19 INB (8.25k), the third round's setting",
+ "code": "C705798",
+ "brand": "YAGEO",
+ "model": "RT0603BRD078K25L",
+ "package": "0603",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/46d7760c582640714d605308a25a220a.pdf?productCode=C705798",
+ "pdf_sha256": "0a729d144519a7021c82a0ef242b064e467c70d44afcf9eabd6c7ffdc4b673a3",
+ "pdf_note": "fetched at read_utc; YAGEO RT series product specification V.16, May 06 2025; held back (v2/vendor/passives/held/, fetched by ../fetch_held_back.py)",
+ "stock": 16700,
+ "params": {
+  "Resistance": "8.25kΩ",
+  "Power(Watts)": "100mW",
+  "Voltage Rating": "75V",
+  "Operating Temperature": "-55℃~+155℃",
+  "Type": "Thin Film Resistor",
+  "Temperature Coefficient": "±25ppm/℃",
+  "Tolerance": "±0.1%"
+ }
+}
