@@ -14,7 +14,9 @@ limit names the unwarranted values it rests on; what REQ-016 bounds is read from
 the comparison holds at most three approaches, each quantified on both days, none called unconditional; one error budget
 names its two assumptions and the bound reproduces in separate arithmetic; the setting is the least-cost one carrying both
 assumptions past their meaning; check (b) counts the capacitor input energy, the panel's own current and the events; SWEN
-is off by default on printed rows; the disturbances come from the approved test plan and every part holds; the backstop's
+is off by default on printed rows; the disturbances come from the approved test plan and every part holds; the panel lead's
+surge and sustained over-voltage are derived from the lead the records give and the row REQ-063 commits to, each judged by
+REQ-016's own criterion, the clamp and the source figures reproduced in closed form; the backstop's
 draft applies only after the hold and input limit drafts; the drafts to the makers follow the decision and quote its
 figures; L4-E9's figures are named. Nothing here writes into the tree.
 """
@@ -593,6 +595,52 @@ def t_the_disturbances_come_from_the_approved_plan_and_every_part_holds():
     s = _s10(R)
     assert "CAPABILITY SCENARIO, labelled" in s and "nothing in series with CSPIN or CSNIN" in s and "the Vishay draft asks" in s
     assert "M2 records the cans' temperature" in s and "a long outdoor lead" in s
+
+
+def t_the_panel_lead_is_derived_from_the_committed_row_and_judged_per_disturbance():
+    """The surge round (the findings ledger's item 1, R-156): the exposure is the lead the records give, the basis is the row REQ-063
+    commits to, each disturbance is judged by REQ-016's own criterion, and the clamp and source figures reproduce in closed form."""
+    R = _R()
+    ld, d = R["lead"], R["decision"]
+    le_, rw, sg = ld["lead"], d["rows"], d["surge"]
+    assert (le_["m"], le_["mm2"]) == (5.0, 4.0) and abs(le_["r"] - 0.0465) < 5e-4 and abs(le_["f_q"] - 299792458.0 / 20.0) < 1e-6
+    assert [ld["tv"][k] for k in ("CS101", "CS114", "CS115", "CS116", "CS117")] == ["A", "A", "A", "A", "S"]
+    assert "CS115" not in open(os.path.join(ROOT, "v2", "docs", "TEST-PLAN.md"), encoding="utf-8").read()
+    # Figure CS116-2 as drawn, at the six frequencies and the lead's quarter wave
+    ips = {round(r_["f"]): r_["ip"] for r_ in ld["r116"]}
+    want = {10000: 0.1, 100000: 1.0, 1000000: 10.0, 10000000: 10.0, round(le_["f_q"]): 10.0, 30000000: 10.0, 100000000: 3.0}
+    assert set(ips) == set(want) and all(abs(ips[k] - want[k]) < 1e-12 for k in want), ips
+    # REQ-016's criterion in closed form: the highest part's breakdown at the hot end (the sheet's typical 0.1 %/C), the printed slope
+    d4 = rw["d4"]
+    rd = (d4["vc"] - d4["vbr"][1]) / d4["ipp"]
+    v10 = d4["vbr"][1] * (1 + 0.001 * (rw["t_air"] - 25.0)) + rd * 10.0
+    assert abs(ld["aT"] - 0.001) < 1e-15 and abs(ld["v116"] - v10) < 1e-9 and v10 <= ld["lim_draft"] == 50.0 and v10 > ld["lim_drawn"] == 35.0
+    # the loaded network: D4 never conducts under CS116 or CS115, TRK_VS stays under the least breakdown at the cold end
+    vbr_cold = d4["vbr"][0] * (1 + 0.001 * (rw["t_cold"] - 25.0))
+    assert abs(ld["vbr_cold"] - vbr_cold) < 1e-12 and abs(vbr_cold - 29.70) < 0.005
+    assert ld["peak_v"] < vbr_cold and all(r_["id4"] == 0.0 and r_["e_d4"] == 0.0 for r_ in ld["r116"] if r_["lumped"]) and ld["r115"]["id4"] == 0.0
+    assert all(r_["d59_b"] < sg["rating"]["csd"] and r_["y_trip"] < ld["m_trip"] for r_ in ld["r116"])
+    assert ld["r115"]["be_b"] > ld["r115"]["a"] and ld["r115"]["be_l"] > ld["r115"]["be_b"]
+    # the stiff source: the least part at the cold end through the lead's loop, against D4's continuous capability on the board
+    i_ = (ld["v_src"] - vbr_cold) / (rd + le_["r"])
+    src = {lab_: (i2, p2) for lab_, _v, i2, p2 in ld["src"]}
+    assert ld["v_src"] == 36.0 and abs(src["the least part at the cold end"][0] - i_) < 1e-9
+    assert min(p_ for _i, p_ in src.values()) > 10 * ld["p_ok"][1] and abs(ld["p_ok"][0] - (150.0 - rw["t_air"]) / 75.0) < 1e-12
+    # the smallest change: the least held row that stands off 36 V and does not break down at the cold end, and why it is not enough alone
+    r36 = ld["r36"]
+    assert r36["n"] == 36 and r36["vbr_cold"] > ld["v_src"] and r36["vc116_25"] <= 50.0 < r36["vc116_h"]
+    assert [(v_["id"], v_["ok"], v_["drawn"]) for v_ in ld["verd"]] == [("D1", True, False), ("D2", True, False), ("D3", True, True),
+                                                                      ("D4", False, False), ("D5", False, False)]
+    s = _s10(R)
+    for k in ("THE PANEL LEAD'S DISTURBANCES, DERIVED", "nearby lightning called out in MIL-STD-464", "FOR L4-E9'S REGISTER",
+              "the entry's margin beyond that derived basis", "SMCJ36A WITH the entry's 50 V parts", "NOT COVERED"):
+        assert k in s, k
+    assert "no level is ruled (REQ-016, DECISION-31 section 3), so D4" not in s
+    page = " ".join(open(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), encoding="utf-8").read().split())
+    for fig in ("%.2f V" % ld["v116"], "%.2f V" % vbr_cold, "%.2f V" % r36["vc116_h"], "%.1f A" % ld["r115"]["be_b"], "SMCJ36A", "CS116", "CS115",
+                "%.2f W" % ld["p_ok"][0]):
+        assert fig in page, fig
+    assert "no level is ruled (REQ-016, DECISION-31 section 3), so D4's own" not in page
 
 
 def t_the_backstop_holds_through_cs101_and_the_failing_case_is_kept():
