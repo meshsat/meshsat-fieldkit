@@ -1,4 +1,4 @@
-# L4-E9 round 2, part A: Q1, F1 and U17 as datasheet-backed circuit proposals (with the fix round's B1 to B3)
+# L4-E9 round 2, part A: Q1, F1 and U17 as datasheet-backed circuit proposals (with the fix round's B1 to B3 and the update round)
 
 MESHSAT-1357, Layer 4 task L4-E9, round 2, 2 October 2026. **Prototype design, desk arithmetic: nothing has been bought,
 built, powered or measured, and no kit has been field deployed.** Round 1 named three entry parts by their headline
@@ -155,3 +155,26 @@ Round 1 carried Q1 and U17 as session choices on a headline figure and F1 as a s
 now datasheet-backed proposals with drafts; IF-04, IF-05 and IF-13 read them (section 4 of the output), and the register
 carries their drafts, the stale configuration, the CS101 finding (D-02), the hot-swap settings (D-07), the open interconnect
 question (D-06) and the transient conditions (D-08). Nothing here is applied to the tree.
+
+## 5. The update round (2 October 2026): what L4-E11's replacement of the LM5069 leaves of this part
+
+L4-E11 (accepted, closing check `a15ab384`) replaced the vehicle entry's LM5069 hot swap by a TPS48110-Q1 breaker with a
+CSD19536KTT, R19 4.5 mOhm and L2 SRF1260-1R0Y, because the LM5069 cannot start from a 9.00 V plug (8.987 V at its VIN against
+POREN's 9 V maximum). `l4e9_power_path.out` section 12 re-judges this part against it (E11-19):
+
+- **Q1 stands** (the CSD19532Q5B on Q7's former PPAK land; the selected Q7 moves to a D2PAK). It now carries up to the breaker's
+  7.136 A continuously: 0.487 W, its junction at most 86.4 C in 62.1 C air (INFERRED); its reverse, transient and gate-drive
+  checks above are unchanged.
+- **F1 stands** (the 0997010.WXN), with two changes from L4-E11: its holder must be one whose maker prints at least 20 A (the
+  3568 prints none; register R-132, E11-13), and the stiff-source current it interrupts is set by the interconnect's specified
+  loop floor, at most 900 A against its 1000 A at 58 V DC (CONDITIONAL on the four-wire acceptance, R-130). Its 80 C column (7.3
+  A) holds the breaker's highest 7.136 A. Every start and fault pulse through it is at most 6.7311 A2s, 7.24 % of its typical
+  melting I2t.
+- **U17 stands** unchanged (board A).
+- **The fix round's B1 (Q7's power limit, R24 22k, the pulse at 0.675 A against 0.777 A, the fault time 2.035 to 11.871 ms)**
+  and the final round's D-09 apply only if the LM5069 is kept: there L4-E11 recomputed the start (3.062 ms at the corners on 34
+  uF) and resolved D-09 with C5 and C121 (4.927 to 14.653 ms against 4.593 ms, the pulse 0.675 A against 0.71 A). For the selected
+  entry they are superseded: it limits no power, its starts sit inside Q7's derated chart (0.704 into a resistive fault, 0.743
+  into a hard short), and its hard short in service is OPEN evidence on the loop's inductance (at least 2.08 uH; E11-20).
+- **D-02 (CS101 at 36 V)** is carried by the selected entry's OV (off above 39.6 / 40.36 / 41.22 V): 38.83 V is 0.77 V under its
+  minimum, and its maximum stays under D10's breakdown at 25 C and, on the typical coefficient, at -20 C.

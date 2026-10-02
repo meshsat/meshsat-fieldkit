@@ -14,9 +14,15 @@ Layer 3 file, pcb_interfaces.yaml, HW-FW-CONTRACT.md or other record is edited. 
   - from the makers' documents by pdftotext on the cited page;
   - from pcb_pack_protection.yaml, pcb_envelope.yaml, pcb_interfaces.yaml and HW-FW-CONTRACT.md by their text.
 Each input is pinned by sha256 (exit 2 otherwise). L4-E8's record is read from the tree if it is there and otherwise from
-the accepted commit L4E8_COMMIT on fnd/l4e8 (the coordinator's check 3); the bytes are pinned either way. L4-E7R (the 100 W
-control decision on board E and the solar entry's surge protection, in its fix round on fnd/l4e7) is not read: its rows are
-PENDING.
+the accepted commit L4E8_COMMIT on fnd/l4e8 (the coordinator's check 3); the bytes are pinned either way. The accepted records
+of L4-E7R, L4-E10, L4-E11 and L4-E12 (and the drafts and outside-contact texts this record cites from them) are read from the
+tree when the tree's file is the pinned one and otherwise from their named commits (FROM_COMMIT).
+
+Update round (2 October 2026, the coordinator's instruction): the architecture and its gate brought up to date with the accepted
+results of L4-E10 (FEA-008, final), L4-E11 (the vehicle entry replaced by a TPS48110-Q1 breaker with a CSD19536KTT, D-06's
+interconnect, U-04's arrangement) and L4-E12 (the electronics against the inside air, T-H1's binding line); E11-19, every finding
+that rested on the LM5069's power limit, re-judged for the selected entry (section 12); L4-E13 (U-03) is pending and U-03 stays
+as it was.
 
 The few figures this record sets itself are named where they are used (the copper constants of the F1 bound, the
 capacitance retained under bias in the pack-open bound, the back-feed diode's drop taken as zero). Evidence classes, from
@@ -86,11 +92,37 @@ PINS = {
     "lcsc": ("v2/ecad/tools/lcsc_fill.py", "6888362e4a3295d0e1d595f65c03d5c13353d4785d7821c86e91f470a1cf6410"),
     "ecss": ("v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md", "576256819950c4432b48769e5f642ee5bfb0eed4f025c03fb9727de7dbeabeea"),
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
+    # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
+    "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "e7d09066c77b6a84cc7870cb3acdf2acd0a768cdb8e7cc1a4fc169d0193b7642"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "7af3ab81b3e5a12ed54972ec77fe552fd80fd43e225b53e5e5040b030ce1e8ef"),
+    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "ccf3e8a87b49ad87d19ef61305a62aa845c9c7a9b29230b1c18a1334db514eaa"),
+    "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "a73d0c7f73280c7a869b46ea1a78119590fa5db70a34a7671273f448fab976a0"),
+    "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "d6f501457675091c65b50fe4d3fbf4943986848b444c317db09057fd792e3336"),
+    # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
+    "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "5e81a4a215bcc7e66fd98d7756d3a1f6f6a5a4984b910f268ca8289e14451d56"),
+    "cl_eaton": ("v2/docs/records/l4e10/clarification/eaton-scf9550.txt", "9dffb95e8b4874fc0d08824b39d6174372a64e0cbda066241900d6ffdcdc5cb2"),
+    "cl_pdi": ("v2/docs/records/l4e12/clarification/pervasive-displays-e2370ks0c1.txt", "4f7db1348cc0b4aca473c17f010085ca9095bf538f580c48804be5602418c117"),
+    "cl_sensirion": ("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt", "43c47549235fe6e8162b200324cedd7b34a342bb2a1cb0abf97311f39a48da83"),
+    "cl_adi": ("v2/docs/records/l4e7/clarification/analog-devices-lt8705a.txt", "97d8217092eae7ac41cc7c3a7303696cf9494bfc8df14171fcc69c6862f86cfa"),
+    "cl_milliohm": ("v2/docs/records/l4e7/clarification/milliohm-hojlr2512.txt", "e920420419a677e0b723f8c09b26dc817efcc29124dc742fc4e813c4279ff8f6"),
+    "cl_vishay": ("v2/docs/records/l4e7/clarification/vishay-wsl2512.txt", "0d91a42dfa59432b71ee5bd0f7abf707f28459a1197dc3c599ea9dce451ab11c"),
+    "cl_ti": ("v2/docs/records/l4e7/clarification/texas-instruments-ina169.txt", "405fb3988f41d8ac98dce3d5ec1cb4af1a0b5d635b109cf71772557c25ab3854"),
+    "ti_review": ("v2/docs/review-packets/battery/REVIEW-REQUEST.md", "91a257430cbeb53a672ca57592bb75092a98a761d1c8ee7bbaefa95e339b102e"),
+    "cl_gc": ("v2/docs/records/l4e12/clarification/ground-control-rockblock-9704.txt", "738245875bec70c55d1ec105fb566248c98351095a268ffcd25d2b76e3bea85f"),
+    "cl_nicerf": ("v2/docs/records/l4e12/clarification/nicerf-sa868.txt", "92324668c17d4f6c7b45b6f9528d08a7c2ae4df1c1839fc82fb6eeb9f7a585b7"),
+    "cl_bulgin": ("v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt", "c7accd3dd6dc1d8993de6ffc37e4febba71302e878b3cdf0f3f2f30bc2a4457e"),
 }
 # Read from the tree when the tree's file is the pinned one, else from the named commit: L4-E7R's selected solution (fnd/l4e7,
-# the coordinator's closing check 42fe879f confirmed its figures) and L4-E10's final record (fnd/l4e10, closing check 573c8b8f)
-FROM_COMMIT = {"l4e7r": "675b8068", "l4e10": "79b2f568"}
-FROM_LABEL = {"l4e7r": "fnd/l4e7, accepted, closing check 91e9a4b5", "l4e10": "fnd/l4e10, final, closing check 573c8b8f"}
+# accepted, check 4 at 91e9a4b5), L4-E10's final record (fnd/l4e10, closing check 573c8b8f), L4-E11's (fnd/l4e11, accepted,
+# closing check a15ab384) and L4-E12's (fnd/l4e12, accepted, closing check db41c95d)
+COMMIT_LABEL = {"675b8068": "fnd/l4e7, accepted, closing check 91e9a4b5", "79b2f568": "fnd/l4e10, final, closing check 573c8b8f",
+                "3298d1f1": "fnd/l4e11, accepted, closing check a15ab384", "a86be47b": "fnd/l4e12, accepted, closing check db41c95d"}
+FROM_COMMIT = {"l4e7r": "675b8068", "l4e10": "79b2f568", "l4e10md": "79b2f568", "l4e11": "3298d1f1", "l4e11md": "3298d1f1",
+               "e11entry": "3298d1f1", "l4e12": "a86be47b", "l4e12md": "a86be47b", "cl_topwell": "79b2f568", "cl_eaton": "79b2f568",
+               "cl_pdi": "a86be47b", "cl_sensirion": "a86be47b", "cl_gc": "a86be47b", "cl_nicerf": "a86be47b", "cl_bulgin": "a86be47b",
+               "cl_adi": "675b8068", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
+FROM_LABEL = {k: COMMIT_LABEL[c] for k, c in FROM_COMMIT.items()}
 FROM_L4E8 = {"l4e8"}       # read from L4E8_COMMIT when the path is not in the tree
 
 # The few figures this record sets itself (each an input, named where it is used)
@@ -335,7 +367,7 @@ class Chk:
         else:
             v = "MEETS" if self.met else "NOT MET"
         ab = "%s %s %s %s" % (fmt(self.a), self.rel, fmt(self.b), self.unit) if self.met is not None else "(%s)" % self.unit
-        tag = " [as drawn]" if self.scope == "drawn" else ""
+        tag = {"drawn": " [as drawn]", "alternative": " [the alternative: the LM5069 kept]"}.get(self.scope, "")
         return "%s: %s: %s; %s (%s)%s" % (v, self.what, ab, self.cls, self.src, tag)
 
 
@@ -654,6 +686,128 @@ def compute():
     m = need(t, r"LO-01e ([\d.]+) C: ([\d.]+), ([\d.]+) and ([\d.]+) K;", "LO-01e's margins")
     F["lo01e"] = (f(m, 1), f(m, 2), f(m, 3), f(m, 4))
     F["cell_usd"] = f(need(t, r"USD ([\d.]+) \(a marketplace seller, not the maker", "the cell's price"))
+
+    t = T["l4e11"]      # L4-E11's accepted record: the selected vehicle entry, D-06's interconnect, U-04's arrangement
+    m = need(t, r"UVLO: on at ([\d.]+) / ([\d.]+) / ([\d.]+) V, off at ([\d.]+) / ([\d.]+) / ([\d.]+) V of DC_P; OV: off above ([\d.]+) / ([\d.]+) / ([\d.]+) V, on again under ([\d.]+) / ([\d.]+) / ([\d.]+) V", "the selected entry's UVLO and OV")
+    F["e_uv_on"], F["e_uv_off"] = tuple(f(m, i) for i in (1, 2, 3)), tuple(f(m, i) for i in (4, 5, 6))
+    F["e_ov_off"], F["e_ov_on"] = tuple(f(m, i) for i in (7, 8, 9)), tuple(f(m, i) for i in (10, 11, 12))
+    m = need(t, r"overcurrent ([\d.]+) / ([\d.]+) / ([\d.]+) A \(the printed row.*?; short circuit ([\d.]+) / ([\d.]+) / ([\d.]+) A;", "the breaker's thresholds")
+    F["e_oc"], F["e_sc"] = tuple(f(m, i) for i in (1, 2, 3)), tuple(f(m, i) for i in (4, 5, 6))
+    m = need(t, r"the delay is taken as ([\d.]+) ms at least \(Equation 7's, the row's excess over it not counted\), ([\d.]+) ms typical \(the row\) and ([\d.]+) ms at most \(Equation 7's\s+maximum scaled by the row's ([\d.]+) over Equation 7\), retry ([\d.]+) s", "the breaker's delay")
+    F["e_oc_ms"], F["e_retry_s"] = (f(m, 1), f(m, 2), f(m, 3)), f(m, 5)
+    m = need(t, r"a first-order filter of ([\d.]+) / ([\d.]+) / ([\d.]+) us .*?then PD within (\d+) / (\d+) us", "the short-circuit filter", re.S)
+    F["e_tau_us"], F["e_tsc_us"] = (f(m, 1), f(m, 2), f(m, 3)), (f(m, 4), f(m, 5))
+    m = need(t, r"the start: slew ([\d.]+) / ([\d.]+) / ([\d.]+) V/ms \(.*?\); inrush ([\d.]+) to ([\d.]+) A into ([\d.]+) to ([\d.]+) uF; at most ([\d.]+) ms to ([\d.]+) V", "the start")
+    F["e_slew"], F["e_inrush"], F["e_start_c"] = (f(m, 1), f(m, 2), f(m, 3)), (f(m, 4), f(m, 5)), (f(m, 6), f(m, 7))
+    F["e_start_ms"], F["e_basis_v"] = f(m, 8), f(m, 9)
+    m = need(t, r"at the clamps' ([\d.]+) V the pins see INP ([\d.]+) V, EN/UVLO ([\d.]+) V, OV ([\d.]+) V, under (\d+) V", "the pins at the clamp")
+    F["e_pins"] = tuple(f(m, i) for i in range(1, 6))
+    m = need(t, r"TPS4811-Q1 \(SLUSEE5E, held back\): VS 3\.5 to (\d+) V, (\d+) V absolute", "the TPS4811's VS")
+    F["e_vs"] = (f(m, 1), f(m, 2))
+    m = need(t, r"CSD19536KTT Figure 4-10 .*?at ([\d.]+) V 100 us ([\d.]+) A, 1 ms ([\d.]+) A, 10 ms ([\d.]+) A \(MAKER\);\s+derated by L4-E9's ([\d.]+) .*?this part's TJ is (\d+) C", "Q7's chart", re.S)
+    F["e_q7_chart"], F["e_derate"], F["e_q7_tj"] = (f(m, 1), f(m, 2), f(m, 3), f(m, 4)), f(m, 5), f(m, 6)
+    m = need(t, r"Rf ([\d.]+) to (\d+) Ohm on VIN_RAW", "the fault scan's range")
+    F["e_rf_range"] = (f(m, 1), f(m, 2))
+    m = need(t, r"CSD19536KTT \(selected\)\s+worst ([\d.]+) of the derated chart at Rf ([\d.]+) Ohm, ([\d.]+) ms, ended by the short-circuit trip .*?; the start itself ([\d.]+): MEETS", "the selected FET's resistive fault start")
+    F["e_rf"] = tuple(f(m, i) for i in range(1, 5))
+    m = need(t, r"CSD19532Q5B \(as drawn\)\s+worst ([\d.]+) of the derated chart at Rf ([\d.]+) Ohm, ([\d.]+) ms", "the drawn FET's resistive fault start")
+    F["e_rf_drawn"] = tuple(f(m, i) for i in range(1, 4))
+    m = need(t, r"at most ([\d.]+) A/us \(gfs (\d+) S.*?a peak of ([\d.]+) A after ([\d.]+) us, ([\d.]+) of the derated 100 us line", "the start into a hard short", re.S)
+    F["e_hs_start"] = tuple(f(m, i) for i in range(1, 6))
+    m = need(t, r"add at most tau \+ tSC = ([\d.]+) us.*?Q7's IDM (\d+) A derated by ([\d.]+) gives ([\d.]+) A; at the entry's highest on-voltage\s+\(the OV rise's ([\d.]+) V\) that holds for a loop inductance of ([\d.]+) uH or more", "the hard short in service", re.S)
+    F["e_hs_svc"] = {"t_us": f(m, 1), "idm": f(m, 2), "der": f(m, 3), "lim": f(m, 4), "v": f(m, 5), "l_uh": f(m, 6)}
+    m = need(t, r"the plug to DC_P ([\d.]+) mOhm, DC_P to VIN_RAW ([\d.]+) mOhm, ([\d.]+) mOhm in all", "the kit's series resistance")
+    F["e_loop_mohm"] = (f(m, 1), f(m, 2), f(m, 3))
+    m = need(t, r"VIN_RAW ([\d.]+) V, ([\d.]+) A from the plug, DC_P ([\d.]+) V; against the selected entry", "the in-service maximum")
+    F["e_svc"] = (f(m, 1), f(m, 2), f(m, 3))
+    F["e_dcp_noload"] = f(need(t, r"against DC_P at ([\d.]+) V or more before any current flows", "DC_P before any current"))
+    F["e_margin_pct"] = f(need(t, r"overcurrent: [\d.]+ A at its lowest against [\d.]+ A, ([\d.]+) % in hand", "the breaker's margin"))
+    F["e_eta_floor"] = f(need(t, r"\] = (0\.\d+); the front end's efficiency at the\s+operating point must be at least that", "the efficiency floor"))
+    m = need(t, r"F1: the breaker's highest ([\d.]+) A against its 80 C column ([\d.]+) A \(MEETS, MAKER\); L2 at ([\d.]+) A: ([\d.]+) K over the ([\d.]+) C air, ([\d.]+) C under its (\d+) C", "F1 and L2 at the breaker")
+    F["e_l2"] = (f(m, 3), f(m, 4), f(m, 6), f(m, 7))
+    F["e_q7_w"] = f(need(t, r"Q7 at [\d.]+ A: ([\d.]+) W", "Q7's dissipation"))
+    m = need(t, r"= ([\d.]+) V, under POREN's (\d+) V maximum", "the drawn LM5069 at a 9.00 V plug")
+    F["lm_vin_9"], F["lm_poren"] = f(m, 1), f(m, 2)
+    m = need(t, r"flat target ([\d.]+) A of board current \(the pin at [\d.]+ V\) from VIN_RAW ([\d.]+) V up to ([\d.]+) V", "the corrected knee")
+    F["knee"] = (f(m, 1), f(m, 2), f(m, 3))
+    F["knee_hiz"] = f(need(t, r"HIZ is certain below ([\d.]+) V", "the corrected knee's certain HIZ"))
+    m = need(t, r"R14 91k over R15 10k as drawn falls at ([\d.]+) / ([\d.]+) / ([\d.]+) V; R14 76\.8k: falls at ([\d.]+) / ([\d.]+) / ([\d.]+) V", "the restart guard")
+    F["guard_drawn"], F["guard_sel"] = (f(m, 1), f(m, 2), f(m, 3)), (f(m, 4), f(m, 5), f(m, 6))
+    F["e_env"] = {}
+    for v in (9, 12, 24, 36):
+        m = need(t, r"^\s+%d V \| ([\d.]+) V \| ([\d.]+) to ([\d.]+) \| ([\d.]+) to ([\d.]+) \|" % v, "the source envelope at %d V" % v)
+        F["e_env"][v] = (f(m, 1), f(m, 4), f(m, 5))
+    F["e_p1"] = tuple(float(x) for x in need(t, r"P1 shed: [^\n]*?\s([\d.]+) / ([\d.]+) / ([\d.]+) \|", "P1").groups())
+    F["e_p2"] = tuple(float(x) for x in need(t, r"P2 warm-up: P1 with the regulated mat on\s+([\d.]+) / ([\d.]+) / ([\d.]+) \|", "P2").groups())
+    F["e_p2_hand"] = f(need(t, r"the warm-up with ([\d.]+) W in hand", "the warm-up's margin"))
+    m = need(t, r"while P1's load is at most ([\d.]+) W \(the source's least\s+([\d.]+) W less the mat\)", "P1's bound")
+    F["e_p1_max"], F["e_src_least"] = f(m, 1), f(m, 2)
+    need(t, r"REQ-015 at 9\.00 V at the plug: CONDITIONAL CANDIDATE, on E11-06", "REQ-015 at 9 V a conditional candidate")
+    m = need(t, r"in case \(i\) the charge power is at most ([\d.]+) A x ([\d.]+) V = ([\d.]+) W", "R-b's charge power")
+    F["rb_w"] = f(m, 3)
+    F["rb_q2_tj"] = f(need(t, r"so TJ ([\d.]+) C at the 62\.1 C inside air against 150 C \(CONDITIONAL", "Q2 under R-b"))
+    m = need(t, r"at least ([\d.]+) mOhm \(([\d.]+) mOhm at -20 C\) and at most ([\d.]+) mOhm", "the loop's floor and ceiling")
+    F["loop_floor"], F["loop_floor_cold"], F["loop_ceil"] = f(m, 1), f(m, 2), f(m, 3)
+    m = need(t, r"corrected to 20 C: ([\d.]+) to ([\d.]+) mOhm", "the loop's acceptance")
+    F["loop_acc"] = (f(m, 1), f(m, 2))
+    m = need(t, r"the worst case stays (\d+) A, 10 % under F1's (\d+) A", "the specified worst stiff-source current")
+    F["ipf_spec"] = f(m, 1)
+    F["ipf_spec_ov"] = f(need(t, r"which would give ([\d.]+) A on the same floor", "the floor at the OV maximum"))
+    m = need(t, r"AWG 14, 3\.05 m cable, 0\.5 m lead \(SELECTED\)\s+([\d.]+) ohm, ([\d.]+) A", "the selected construction")
+    F["ipf_constr"] = f(m, 2)
+    m = need(t, r"each carries (\d+) A continuous \(which covers the envelope to \d+ A\), (\d+) A for (\d+) s and\s+(\d+) A for ([\d.]+) s", "the withstand obligations")
+    F["d06_oblig"] = tuple(f(m, i) for i in range(1, 6))
+    m = need(t, r"J_DCIN, the board connector\s+a (\d+) A class \(Amass XT60 family", "J_DCIN's selected class")
+    F["jdcin_sel_a"] = f(m)
+    m = need(t, r"VCL's minimum: ([\d.]+) ms .*?TI's margin: the fault time's minimum at least ([\d.]+) ms", "the LM5069 alternative's start", re.S)
+    F["alt_start"], F["alt_need"] = f(m, 1), f(m, 2)
+    m = need(t, r"168 nF; fault time ([\d.]+) ms nominal, ([\d.]+) to ([\d.]+) ms stacked", "the alternative's timer")
+    F["alt_tflt"] = (f(m, 2), f(m, 3))
+    m = need(t, r"Figure 10: ([\d.]+) A against ([\d.]+) A at ([\d.]+) ms", "the alternative's pulse")
+    F["alt_soa"], F["alt_pulse"] = f(m, 1), f(m, 2)
+    F["alt_f1_i2t"] = f(need(t, r"F1 during the longest start: ([\d.]+) A2s against", "the alternative's start I2t"))
+    F["e11_items"] = re.findall(r"^\s+(E11-\d\d) \| ([A-Z]+) \| ([^|]+?) \|", t, re.M)
+    if [x[0] for x in F["e11_items"]] != ["E11-%02d" % i for i in range(1, 24)]:
+        refuse(3, "L4-E11's downstream items are not E11-01 to E11-23")
+    t = T["e11entry"]
+    m = need(t, r'"CSD19536KTT (\d+) V N-FET', "the selected Q7's voltage in the entry draft")
+    F["e_q7_sel_v"] = f(m)
+    need(t, r"ORDER: apply it AFTER L4-E9's apply_gen_sch_e_hotswap\.py", "the entry draft's order")
+    t = T["l4e11md"]
+    need(t, r"\*\*Selected \(SESSION\): \(A\)\.\*\*", "U-04's arrangement (A)")
+    need(t, r"\*\*D-06 is resolved in design\*\*", "D-06 resolved in design")
+    need(t, r"\*\*D-09 is resolved in design for the LM5069\*\*", "D-09 for the LM5069")
+
+    t = T["l4e12"]      # L4-E12's accepted record: the electronics against the inside air (U-02, MESHSAT-1478)
+    m = need(t, r"so the line is G_c = ([\d.]+) W/K, set by E5 \(E3-O alone ([\d.]+) W/K\)", "T-H1's binding line")
+    F["gc"], F["g_e3o"] = f(m, 1), f(m, 2)
+    F["g_a"] = f(need(t, r"so the line is ([\d.]+) W/K \(0 K margin\)", "approach (a)'s line"))
+    m = need(t, r"E3-O's steady mixed air with the radios on ([\d.]+) C; the mixed air by which E5 needs the hold ([\d.]+) C; window ([\d.]+) K", "the air at the line")
+    F["e3o_line"], F["e5_line"], F["hold_win"] = f(m, 1), f(m, 2), f(m, 3)
+    F["hold_ref"] = f(need(t, r"at most \+-([\d.]+) K \(INFERRED\)", "the hold reference's offset"))
+    F["e5_hold_w"] = f(need(t, r"Heat in E5 under it: ([\d.]+) W", "E5's heat under the hold"))
+    F["e3o_stage_w"] = f(need(t, r"([\d.]+) W into the case with the front end's and\s+charger's loss", "the heat stage"))
+    m = need(t, r"E3-O ([\d.]+) C, E5's dwell ([\d.]+) C \(steady", "the air at the floor")
+    F["floor_air"] = (f(m, 1), f(m, 2))
+    F["lo01a_ball"] = f(need(t, r"LO-01a's floor with the ballasts counted is ([\d.]+) W/K", "LO-01a with the ballasts"))
+    F["e3o_amb12"] = f(need(t, r"E3-O ambient ([\d.]+) C; mixed air", "E3-O's ambient"))
+    F["e5_amb"] = f(need(t, r"E5   ambient ([\d.]+) C; mixed air", "E5's ambient"))
+    m = need(t, r"set at ([\d.]+) C \(rounded down\).*?set at ([\d.]+) C: at most", "the SGP41's thresholds", re.S)
+    F["sgp_off"], F["sgp_on"] = f(m, 1), f(m, 2)
+    need(t, r"6a At the margins, a part with every route rejected or outside authority on held evidence: none\.", "no part forces a question at the margins")
+    need(t, r"idles the running module \(no shutdown\) and powers off\s+board D \(APRS\), the PA rail, the RockBLOCK \(RB_SW_EN\), the LoRa module \(LORA_ON\), both E72 \(ZB_ON\) and the Geiger module\s+\(GEIGER_EN\)", "the hold's actions")
+    need(t, r"6b Inside the envelope: the SGP41 \(5d\), RAISED\. The conflict is CFL-002's", "CFL-002 raised")
+    m = need(t, r"7d The lines cleared only by an absolute rating .*?: (\d+); the least\s+clearance ([\d.]+) K", "the absolute-only lines", re.S)
+    F["abs_only"] = (int(m.group(1)), f(m, 2))
+    # L4-E12's line reproduced from its own heat and L4-E8's ballasts (counted once, inside its figures)
+    F["e5_hold_wb"] = F["e5_hold_w"] + F["ballast_w"]
+    F["e3o_wb"] = F["e3o_stage_w"] + F["ballast_w"]
+    if abs(F["e5_hold_wb"] / (F["e5_line"] - F["e5_amb"]) - F["gc"]) > 0.0005 or abs(F["e3o_wb"] / (F["e5_line"] - F["e3o_amb12"]) - F["g_e3o"]) > 0.0005:
+        refuse(3, "L4-E12's line does not reproduce from its heat, the ballasts and its ambients")
+    t = T["l4e12md"]
+    m = need(t, r"\*\*Owner question: which of these three\?\*\*\s+- \*\*A\. (.*?)\*\*.*?- \*\*B\. (.*?)\*\*.*?- \*\*C\. (.*?)\*\*", "CFL-002's options", re.S)
+    F["cfl002"] = (m.group(1), m.group(2), m.group(3))
+    need(t, r"The session's recommendation: \*\*A\*\*", "L4-E12's recommendation")
 
     t = T["s120"]
     m = need(t, r"with 100 ppm/K over 65 K \(INFERRED\).*?\s+([\d.]+) to ([\d.]+) V\s+<- the DC band", "VBUS20 DC band")
@@ -1393,8 +1547,164 @@ def partA_lines(F, D, A):
     return L
 
 
+# ------------------------------------------------------------------------- the update round: E11-19, the selected entry
+def rejudge(F, D, A):
+    """E11-19: every finding that rested on the LM5069's power limit, re-judged for the selected TPS48110-Q1 entry from L4-E11's
+    fault scan and charts (read, never retyped), with the start's I2t through F1 and the hot short's inductance bound reproduced."""
+    E = {}
+    oc, sc, tau, tsc = F["e_oc"], F["e_sc"], F["e_tau_us"], F["e_tsc_us"]
+    t_add = tau[2] + tsc[1]                                              # us, the filter's largest time constant and PD's maximum
+    if abs(t_add - F["e_hs_svc"]["t_us"]) > 1e-6:
+        refuse(4, "the hot short's added time does not reproduce L4-E11's")
+    hs = F["e_hs_svc"]
+    E["l_min_uh"] = hs["v"] * t_add / (hs["lim"] - sc[2])
+    if abs(E["l_min_uh"] - hs["l_uh"]) > 0.005:
+        refuse(4, "the hot short's inductance bound does not reproduce L4-E11's %s uH" % hs["l_uh"])
+    if abs(hs["idm"] * hs["der"] - hs["lim"]) > 0.05 or abs(hs["der"] - F["e_derate"]) > 1e-9 or abs(F["e_derate"] - round(A["soa_derate"], 4)) > 1e-9:
+        refuse(4, "Q7's derated IDM is not L4-E9's derating times the IDM")
+    # Q7's chart derating carried from the CSD19532Q5B's case to the CSD19536KTT's 175 C rating: the case at which it stays conservative
+    E["tc_break"] = F["e_q7_tj"] - F["e_derate"] * (F["e_q7_tj"] - 25.0)
+    E["rja_break"] = (E["tc_break"] - A["t_hot"]) / F["e_q7_w"]
+    # the start's I2t through F1 (rectangles: the largest current for the longest time of each pulse)
+    rf_min = F["e_rf_range"][0]
+    pk_rf = sc[2] + F["e_slew"][2] / rf_min * t_add * 1e-3             # A: the filtered threshold plus the ramp over the filter and PD
+    E["i2t"] = [
+        ("the start's inrush, %s A for %s ms" % (fmt(F["e_inrush"][1]), fmt(F["e_start_ms"])), F["e_inrush"][1] ** 2 * F["e_start_ms"] * 1e-3),
+        ("an overcurrent pulse, %s A for %s ms" % (fmt(oc[2]), fmt(F["e_oc_ms"][2])), oc[2] ** 2 * F["e_oc_ms"][2] * 1e-3),
+        ("a start into a resistive fault, at most %s A (the breaker's highest) for the start's %s ms, then at most %s A (%s A plus %s V/ms over %s Ohm"
+         " for %s us) for %s ms" % (fmt(oc[2]), fmt(F["e_start_ms"]), fmt(round(pk_rf, 2)), fmt(sc[2]), fmt(F["e_slew"][2]), fmt(rf_min), fmt(t_add),
+                                   fmt(round(F["e_oc_ms"][2] + t_add * 1e-3, 3))),
+         oc[2] ** 2 * F["e_start_ms"] * 1e-3 + pk_rf ** 2 * (F["e_oc_ms"][2] + t_add * 1e-3) * 1e-3),
+        ("a start into a hard short, %s A for %s us" % (fmt(F["e_hs_start"][2]), fmt(round(F["e_hs_start"][3] + tsc[1], 2))),
+         F["e_hs_start"][2] ** 2 * (F["e_hs_start"][3] + tsc[1]) * 1e-6),
+        ("a hard short in service, at most %s A (the specified loop floor at %s V) for %s us" % (fmt(F["ipf_spec"]), fmt(F["e_basis_v"]), fmt(t_add)),
+         F["ipf_spec"] ** 2 * t_add * 1e-6),
+    ]
+    E["pk_rf"] = pk_rf
+    E["i2t_max"] = max(x for _n, x in E["i2t"])
+    E["i2t_pct"] = E["i2t_max"] / A["f_i2t"] * 100.0
+    # Q1 at the selected breaker's highest current (the largest current it carries continuously)
+    E["q1_p_sel"] = oc[2] ** 2 * A["rds10"][1] * 1e-3 * CSD_RDS_NORM_150C
+    E["q1_tj_sel"] = F["air"][1] + E["q1_p_sel"] * A["rja"]
+    # the entry's losses from a 9.00 V plug at the in-service maximum (L4-E11's hot loop), on the source's side
+    i = F["e_svc"][1]
+    E["loss_dcp"], E["loss_vr"] = i ** 2 * F["e_loop_mohm"][0] * 1e-3, i ** 2 * F["e_loop_mohm"][1] * 1e-3
+    # D-02 on the selected over-voltage lockout, and D10 at its maximum
+    E["cs101_margin"] = F["e_ov_off"][0] - A["cs101_top"]
+    E["d10_margin"] = (F["SMCJ40A"]["vbr_min"] - F["e_ov_off"][2], A["d10_cold_vbr"] - F["e_ov_off"][2])
+    E["guard_gap"] = F["knee_hiz"] - F["guard_sel"][2]
+    return E
+
+
+def rejudge_lines(F, D, A, E):
+    L = []
+    p = L.append
+    hs, oc, sc = F["e_hs_svc"], F["e_oc"], F["e_sc"]
+    p("12. THE UPDATE ROUND (2 October 2026): E11-19, THE SELECTED ENTRY, AND THE ACCEPTED RESULTS OF L4-E10, L4-E11 AND L4-E12")
+    p("   the inputs: L4-E10 (79b2f568, closing check 573c8b8f: FEA-008 not closed, approach (II) CONDITIONAL); L4-E11 (3298d1f1, closing check")
+    p("     a15ab384: the vehicle entry replaced, D-06 resolved in design, U-04's arrangement (A), REQ-015 at 9.00 V at the plug a CONDITIONAL CANDIDATE);")
+    p("     L4-E12 (a86be47b, closing check db41c95d: U-02 CONDITIONAL, CFL-002 an owner question); L4-E13 (U-03) pending: U-03 stays as it stood")
+    p("   12a. E11-19: THE FINDINGS THAT RESTED ON THE LM5069'S POWER LIMIT, RE-JUDGED FOR THE SELECTED ENTRY (TPS48110-Q1 with a CSD19536KTT,")
+    p("     R19 4.5 mOhm, L2 SRF1260-1R0Y; L4-E11 3c, its fault scan and Q7's Figure 4-10 read from TI's vector drawing)")
+    p("     what changes: the selected entry limits no power. It is a breaker: a timed overcurrent at %s / %s / %s A after %s / %s / %s ms and a"
+      % (*[fmt(x) for x in oc], *[fmt(x) for x in F["e_oc_ms"]]))
+    p("       short-circuit trip at %s / %s / %s A on a sense filtered at %s to %s us, then %s / %s us; retry %s s; the start is slew-limited"
+      % (*[fmt(x) for x in sc], fmt(F["e_tau_us"][0]), fmt(F["e_tau_us"][2]), fmt(F["e_tsc_us"][0]), fmt(F["e_tsc_us"][1]), fmt(F["e_retry_s"])))
+    p("       (%s to %s A for at most %s ms). So the LM5069's power-limit pulse (%s A at %s V for the fault time), its 5 mV sense floor (D-07), its fault"
+      % (fmt(F["e_inrush"][0]), fmt(F["e_inrush"][1]), fmt(F["e_start_ms"]), fmt(round(A["pulse_a"], 3)), fmt(round(F["ovlo_sel"][2], 2))))
+    p("       time against the start (D-09) and its breaker's event (VCB's %s A) do not exist in the selected entry; they stand only for the" % fmt(round(A["cb_thr"], 3)))
+    p("       alternative while the LM5069 stays (R24 22k with C5 and C121, L4-E11's apply_gen_sch_e_timer.py)")
+    p("     (1) the hot short at the start: a start into a resistive fault (%s to %s Ohm, the breaker at its slowest) reaches %s of Q7's derated chart"
+      % (fmt(F["e_rf_range"][0]), fmt(F["e_rf_range"][1]), fmt(F["e_rf"][0])))
+    p("       at %s Ohm, ended by the short-circuit trip at %s ms (the drawn CSD19532Q5B %s: NOT MET); the ordinary start %s; a start into a hard short"
+      % (fmt(F["e_rf"][1]), fmt(F["e_rf"][2]), fmt(F["e_rf_drawn"][0]), fmt(F["e_rf"][3])))
+    p("       %s A after %s us, %s of the derated 100 us line (CONDITIONAL on TI's typical %s S taken as the bound, A11-10): MEETS (INFERRED, L4-E11)"
+      % (fmt(F["e_hs_start"][2]), fmt(F["e_hs_start"][3]), fmt(F["e_hs_start"][4]), fmt(F["e_hs_start"][1])))
+    p("     (2) the hot short in service (Q7 on): the peak is at most %s A plus VIN x %s us / L and never more than VIN over the loop's resistance;"
+      % (fmt(sc[2]), fmt(hs["t_us"])))
+    p("       Q7's IDM %s A derated by %s is %s A, which at the OV maximum %s V holds for L at least %s uH (this record: %s V x %s us / (%s - %s) A;"
+      % (fmt(hs["idm"]), fmt(hs["der"]), fmt(hs["lim"]), fmt(hs["v"]), fmt(round(E["l_min_uh"], 3)), fmt(hs["v"]), fmt(hs["t_us"]), fmt(hs["lim"]), fmt(sc[2])))
+    p("       L4-E11 %s uH). No held document gives the loop's inductance, and the specified loop floor bounds only its resistance (%s A at %s V):"
+      % (fmt(hs["l_uh"]), fmt(F["ipf_spec"]), fmt(F["e_basis_v"])))
+    p("       OPEN, carried as E11-20 (R-134): the inductance at least %s uH, or the peak through Q7 measured at most %s A" % (fmt(hs["l_uh"]), fmt(round(hs["lim"]))))
+    p("     (3) Q7's chart derating: L4-E9's %s (a %s C case on a 150 C part) applied to the CSD19536KTT (TJ %s C) stays conservative while its case is"
+      % (fmt(F["e_derate"]), fmt(round(A["tc_max"], 1)), fmt(F["e_q7_tj"])))
+    p("       at or under %s C, which at its %s W in the hottest inside air the record holds (%s C) needs a junction-to-air resistance under %s C/W (INFERRED)"
+      % (fmt(round(E["tc_break"], 2)), fmt(F["e_q7_w"]), fmt(round(A["t_hot"], 2)), fmt(round(E["rja_break"], 1))))
+    p("     (4) D-07 (the LM5069's power limit under TI's 5 mV): SUPERSEDED for the selected entry, which has no power limit; R24 22k stays the alternative's")
+    p("     (5) R-118 (the breaker's event and the power limit on the bench): SUPERSEDED by E11-17, R-118 restated: the selected entry at 43 V, the trip")
+    p("       thresholds apart from the peak currents, a start into a resistive fault near %s Ohm and into a hard short (at most %s A); D-09's rows only if"
+      % (fmt(F["e_rf"][1]), fmt(round(F["e_hs_start"][2]))))
+    p("       the LM5069 is kept")
+    p("     (6) the start's I2t through F1 (the 0997's typical melting %s A2s, arcing excluded; rectangles, conservative):" % fmt(A["f_i2t"]))
+    for nm, x in E["i2t"]:
+        p("       %s: %s A2s" % (nm, fmt(round(x, 4))))
+    p("       the largest is %s %% of %s A2s: F1 does not open first (INFERRED; the retry's repetition every %s s is not judged against a pulse-cycle"
+      % (fmt(round(E["i2t_pct"], 2)), fmt(A["f_i2t"]), fmt(F["e_retry_s"])))
+    p("       curve, none held); continuous currents up to the breaker's %s A sit under F1's 80 C column %s A (IF-04); the alternative's longest start %s A2s (L4-E11)"
+      % (fmt(oc[2]), fmt(A["f_allow"]), fmt(F["alt_f1_i2t"])))
+    p("     (7) IF-05: NOT MET (D-09 at C5's printed corners) becomes CONDITIONAL: every start inside Q7's derated chart, the in-service hard short OPEN (E11-20)")
+    p("     (8) D-09 (the LM5069's fault time against its start): SUPERSEDED by the replacement; it applies only if the LM5069 is kept, where L4-E11")
+    p("       resolved it with C5 GRM3195C1H104GA05 and C121 GRM3195C1H683JA05: %s to %s ms against %s ms (its start %s ms at the corners, 34 uF), the pulse"
+      % (fmt(F["alt_tflt"][0]), fmt(F["alt_tflt"][1]), fmt(F["alt_need"]), fmt(F["alt_start"])))
+    p("       %s A against %s A at the maximum (CONDITIONAL on the power law past 10 ms); this record's round-two figures (section 11) are that alternative's first reading"
+      % (fmt(F["alt_pulse"]), fmt(F["alt_soa"])))
+    p("     (9) D-02 (CS101 at 36 V against the over-voltage lockout): carried by the selected entry's OV, off above %s / %s / %s V: %s V under its %s V"
+      % (*[fmt(x) for x in F["e_ov_off"]], fmt(round(A["cs101_top"], 2)), fmt(F["e_ov_off"][0])))
+    p("       minimum, %s V in hand; its maximum %s V stays %s V under D10's %s V and %s V under its typical %s V at -20 C, so a steady input does not reach"
+      % (fmt(round(E["cs101_margin"], 2)), fmt(F["e_ov_off"][2]), fmt(round(E["d10_margin"][0], 2)), fmt(F["SMCJ40A"]["vbr_min"]), fmt(round(E["d10_margin"][1], 2)), fmt(round(A["d10_cold_vbr"], 2))))
+    p("       D10 cold (the alternative's %s V did); the prospective-current basis stays %s V (L4-E11 keeps it, conservative)" % (fmt(round(F["ovlo_sel"][2], 2)), fmt(F["e_basis_v"])))
+    p("     new material defects from E11-19: none. Open evidence it leaves: the loop's inductance (E11-20), the transconductance bound of the start into")
+    p("       a hard short (A11-10, E11-17) and the input current's transients against the breaker's %s ms (E11-06, E11-21)" % fmt(F["e_oc_ms"][0]))
+    p("   12b. the selected entry's other figures (L4-E11 3c, 3e): UVLO on at %s / %s / %s V, off at %s / %s / %s V of DC_P; from a 9.00 V plug DC_P is %s V"
+      % (*[fmt(x) for x in F["e_uv_on"]], *[fmt(x) for x in F["e_uv_off"]], fmt(F["e_dcp_noload"])))
+    p("     before any current and %s V at %s A (VIN_RAW %s V), %s %% under the breaker's lowest, with the front end at least %s (CONDITIONAL, E11-06);"
+      % (fmt(F["e_svc"][2]), fmt(F["e_svc"][1]), fmt(F["e_svc"][0]), fmt(F["e_margin_pct"]), "%s" % F["e_eta_floor"]))
+    p("     the drawn LM5069 sees %s V there, under POREN's %s V maximum, so it cannot start (NOT MET as drawn); the losses from the plug at %s A: %s W to"
+      % (fmt(F["lm_vin_9"]), fmt(F["lm_poren"]), fmt(F["e_svc"][1]), fmt(round(E["loss_dcp"], 3))))
+    p("     DC_P (%s mOhm hot) and %s W on to VIN_RAW (%s mOhm), %s W, on the source's side; Q1 at the breaker's highest %s A: %s W, its junction at most"
+      % (fmt(F["e_loop_mohm"][0]), fmt(round(E["loss_vr"], 3)), fmt(F["e_loop_mohm"][1]), fmt(round(E["loss_dcp"] + E["loss_vr"], 3)), fmt(oc[2]), fmt(round(E["q1_p_sel"], 3))))
+    p("     %s C in %s C air (INFERRED); U6's VS at the clamps' %s V against %s V (%s V absolute), its pins at most %s V against %s V; Q7 (CSD19536KTT) %s V"
+      % (fmt(round(E["q1_tj_sel"], 1)), fmt(F["air"][1]), fmt(F["e_pins"][0]), fmt(F["e_vs"][0]), fmt(F["e_vs"][1]), fmt(F["e_pins"][1]), fmt(F["e_pins"][4]), fmt(F["e_q7_sel_v"])))
+    p("     the corrected knee (E11-09, a specification): a flat %s A of board current from VIN_RAW %s V to %s V, HIZ certain below %s V; the restart"
+      % (fmt(F["knee"][0]), fmt(F["knee"][1]), fmt(F["knee"][2]), fmt(F["knee_hiz"])))
+    p("     guard with R14 76.8k (E11-02) falls at %s / %s / %s V, %s V under it (as drawn %s / %s / %s V, over the 9.00 V plug's %s V: NOT MET as drawn)"
+      % (*[fmt(x) for x in F["guard_sel"]], fmt(round(E["guard_gap"], 3)), *[fmt(x) for x in F["guard_drawn"]], fmt(F["e_svc"][0])))
+    o = F["d06_oblig"]
+    p("   12c. D-06 resolved in design (L4-E11 6): every element of the interconnect at least %s A continuous where installed, %s A for %s s and %s A"
+      % (fmt(o[0]), fmt(o[1]), fmt(o[2]), fmt(o[3])))
+    p("     for %s s, and from %s A to %s A at least F1's total clearing I2t at %s A and 58 V DC (not printed); the loop specified by its resistance, at least"
+      % (fmt(o[4]), fmt(o[3]), fmt(F["ipf_spec"]), fmt(F["ipf_spec"])))
+    p("     %s mOhm at 20 C (%s mOhm at -20 C: %s A at %s V, %s A at the OV maximum), at most %s mOhm, accepted four-wire at %s to %s mOhm (the"
+      % (fmt(F["loop_floor"]), fmt(F["loop_floor_cold"]), fmt(F["ipf_spec"]), fmt(F["e_basis_v"]), fmt(F["ipf_spec_ov"]), fmt(F["loop_ceil"]), fmt(F["loop_acc"][0]), fmt(F["loop_acc"][1])))
+    p("     construction, 3.05 m of AWG 14 and the 0.5 m lead, %s A); J_DCIN a %s A class; its evidence items E11-10 to E11-16 (R-129 to R-132, R-43, R-95,"
+      % (fmt(F["ipf_constr"]), fmt(F["jdcin_sel_a"])))
+    p("     R-113, R-115); the drawn interconnect (VH with AWG 18, size 16 contacts, the cable) stays NOT MET as drawn")
+    env = F["e_env"]
+    p("   12d. U-04 (L4-E11): arrangement (A) selected with rules R-a to R-d; at a 9.00 V plug the source delivers %s to %s W at VBAT (%s to %s W at"
+      % (fmt(env[9][1]), fmt(env[9][2]), fmt(env[12][1]), fmt(env[12][2])))
+    p("     12 V, %s to %s W at 24 V, %s to %s W at 36 V); the shedding sequence carries the warm-up (%s W at the plan figure) with %s W in hand while"
+      % (fmt(env[24][1]), fmt(env[24][2]), fmt(env[36][1]), fmt(env[36][2]), fmt(F["e_p2"][1]), fmt(F["e_p2_hand"])))
+    p("     P1 stays at most %s W (P1 %s / %s / %s W); R-b's dead-pack charge at most %s W from DPM's surplus, Q2's diode at most %s C (CONDITIONAL, E11-22);"
+      % (fmt(F["e_p1_max"]), *[fmt(x) for x in F["e_p1"]], fmt(F["rb_w"]), fmt(F["rb_q2_tj"])))
+    p("     REQ-015 at 9.00 V at the plug a CONDITIONAL CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23")
+    p("   12e. U-02 (L4-E12): T-H1's binding line %s W/K lid open with the fans (E5 under the hold, %s W plus the ballasts' %s W = %s W over %s K);"
+      % (fmt(F["gc"]), fmt(F["e5_hold_w"]), fmt(F["ballast_w"]), fmt(round(F["e5_hold_wb"], 3)), fmt(F["e5_line"] - F["e5_amb"])))
+    p("     E3-O alone %s W/K (%s W plus %s W = %s W over %s K); %s W/K with no hold; at the line E3-O's mixed air %s C and E5's %s C; the hold's reference"
+      % (fmt(F["g_e3o"]), fmt(F["e3o_stage_w"]), fmt(F["ballast_w"]), fmt(round(F["e3o_wb"], 3)), fmt(F["e5_line"] - F["e3o_amb12"]), fmt(F["g_a"]), "%.2f" % F["e3o_line"], "%.2f" % F["e5_line"]))
+    p("     within +-%s K; LO-01a's floor %s W/K with the ballasts; at the floor with no hold %s / %s C (the design as it stands); the SGP41 off at %s C"
+      % ("%s" % F["hold_ref"], fmt(F["lo01a_ball"]), "%.2f" % F["floor_air"][0], "%.2f" % F["floor_air"][1], "%.1f" % F["sgp_off"]))
+    p("     and used at or under %s C on a TMP117; %d lines cleared only by an absolute rating (least clearance %s K); CFL-002 raised to the owner"
+      % ("%.1f" % F["sgp_on"], F["abs_only"][0], fmt(F["abs_only"][1])))
+    low = lambda s: s[0].lower() + s[1:]
+    p("     (A, B or C: %s; %s; %s)" % (low(F["cfl002"][0]), low(F["cfl002"][1].rstrip(".")), low(F["cfl002"][2])))
+    p("   12f. U-01 (L4-E10): unchanged; LO-01a's floor with the ballasts, %s W/K (L4-E12), lies under the binding line. U-03: unchanged, pending L4-E13"
+      % fmt(F["lo01a_ball"]))
+    return L
+
+
 # ------------------------------------------------------------------------------------------------------- the rows
-def rows(F, D, A):
+def rows(F, D, A, E):
     R = []
     sm40, sm28, sm18 = F["SMCJ40A"], F["SMCJ28A"], F["SMCJ18A"]
     pv = F["pv"]
@@ -1444,7 +1754,7 @@ def rows(F, D, A):
     R.append({
         "id": "IF-03", "title": "TRK_OUT through U4/Q2 (ideal diode) onto VIN_RAW",
         "a": "TRK_OUT (C24, C25 35 V polymer; C26, C27 10u 25 V)", "b": "VIN_RAW (board E)",
-        "v": "TRK_OUT at most %s V (raised ceiling) | VIN_RAW up to the vehicle's OVLO maximum %s V with TRK_OUT at 0 (R23 6.42k at 0.1 %%; %s V as drawn)" % (fmt(F["trk_ceiling"][2]), fmt(round(F["ovlo_sel"][2], 2)), fmt(F["ovlo"][2])),
+        "v": "TRK_OUT at most %s V (raised ceiling) | VIN_RAW up to the vehicle's %s V basis with TRK_OUT at 0 (the selected OV maximum %s V; %s V as drawn)" % (fmt(F["trk_ceiling"][2]), fmt(round(F["ovlo_sel"][2], 2)), fmt(F["e_ov_off"][2]), fmt(F["ovlo"][2])),
         "i": "asked: at the window %s W out, at H3's lowest settle point (%s V) %s A | available: the declared _TRK_A %s A" % (fmt(D["trk_out_w"]), fmt(F["settle_865"][1]), fmt(round(D["trk_i_settle"], 3)), fmt(F["trk"]["typ"])),
         "loss": "Q2's RDS(on) (milliohms)", "therm": "inside air %s C" % fmt(F["air"][1]),
         "prot_a": "the stage's own limit", "prot_b": "U4 blocks VIN_RAW into TRK_OUT",
@@ -1452,72 +1762,99 @@ def rows(F, D, A):
             Chk("C26 and C27 (10u 25 V) at the raised ceiling", F["c26_pct"], "<=", 100.0, "% of rating", "NETLIST", "l4e5 out 3", scope="drawn"),
             Chk("C26 and C27 re-rated to a 50 V part (the drawn C13's 10u 50V) at the raised ceiling", F["trk_ceiling"][2], "<=", 50.0, "V", "NETLIST", "the owed re-rate, register R-14"),
             Chk("C24 and C25 (35 V polymer) at the raised ceiling, for the derating gate", F["c24_pct"], "<=", 100.0, "% of rating", "NETLIST", "l4e5 out 3"),
-            Chk("Q2 (BSC039N06NS, 60 V) blocking the vehicle bus at its OVLO maximum with TRK_OUT at 0", round(F["ovlo_sel"][2], 2), "<=", F["bsc039_vds"], "V", "MAKER", "this record out 11 (R23 6.42k); Infineon p.1"),
-            Chk("U4 (LM74700-Q1) cathode to anode at the OVLO maximum", round(F["ovlo_sel"][2], 2), "<=", F["ld_ca_abs"], "V", "MAKER", "TI SNOSD17G 6.1"),
+            Chk("Q2 (BSC039N06NS, 60 V) blocking the vehicle bus at the %s V basis (over the selected OV maximum) with TRK_OUT at 0" % fmt(round(F["ovlo_sel"][2], 2)), round(F["ovlo_sel"][2], 2), "<=", F["bsc039_vds"], "V", "MAKER", "out 11, out 12; Infineon p.1"),
+            Chk("U4 (LM74700-Q1) cathode to anode at the %s V basis" % fmt(round(F["ovlo_sel"][2], 2)), round(F["ovlo_sel"][2], 2), "<=", F["ld_ca_abs"], "V", "MAKER", "TI SNOSD17G 6.1"),
         ]})
+    E11 = "L4-E11 at 3298d1f1 (accepted, check a15ab384)"
+    ovs = F["e_ov_off"]
     R.append({
-        "id": "IF-04", "title": "the vehicle and shore input to board E's entry (J_DCIN, F1, D10, U3/Q1 LM74700 ideal diode) to DC_P",
-        "a": "a vehicle or shore supply, 9 to 36 V (REQ-015), reversed or at an over-voltage to 40 V", "b": "board E, DC_F and DC_P",
-        "v": "9 to %s V in service, CS101's %s V peak on it under M2; reversed to -%s V | OVLO %s / %s / %s V selected (R23 6.42k, R22 100k, both 0.1 %%; %s / %s / %s V as drawn); D10 SMCJ40CA breakdown %s V minimum either way at 25 C, %s V at -20 C (typical coefficient)"
-             % (fmt(D["vrev"]), fmt(round(A["cs101_pk"], 2)), fmt(D["vrev"]), fmt(round(F["ovlo_sel"][0], 2)), fmt(round(F["ovlo_sel"][1], 2)), fmt(round(F["ovlo_sel"][2], 2)),
-                fmt(F["ovlo"][0]), fmt(F["ovlo"][1]), fmt(F["ovlo"][2]), fmt(sm40["vbr_min"]), fmt(round(A["d10_cold_vbr"], 2))),
-        "i": "asked: the entry limits at %s to %s A (LM5069, R19 10 mOhm, VCL %s / %s / %s mV); a stiff source's fault at most %s A (the kit's cable at -20 C) | available: F1 Littelfuse 0997010.WXN 10 A (%s A at its %s C column), %s A at 58 V DC; Q1 CSD19532Q5B %s A; J_DCIN VH, the lead AWG %d (no stated rating at it)"
-             % (fmt(F["entry_lim"][0]), fmt(F["entry_lim"][1]), fmt(F["vcl"][0]), fmt(F["vcl"][1]), fmt(F["vcl"][2]), fmt(round(D["f1_ipf"], 1)), fmt(A["f_allow"]), fmt(A["f_col"]), fmt(A["f_int"]), fmt(A["id_cont"]), int(F["lead_awg"])),
-        "loss": "F1, Q1, R19, Q7 and L2 in series (about 0.2 V, the generator's note); Q1 at most %s W" % fmt(round(A["q1_p"], 3)),
-        "therm": "R19 and Q7 at 6.15 A continuous, 32 K rise (gen_sch_e.py); Q1's junction at most %s C in %s C air (INFERRED)" % (fmt(round(A["q1_tj"], 1)), fmt(F["air"][1])),
-        "prot_a": "the supply's own", "prot_b": "F1 (0997 blade); D10 (two-way, at the entry); U3/Q1 reverse block (CSD19532Q5B); D1 at DC_P; the LM5069 (UVLO 9 V, OVLO, current limit and its timer)",
-        "settled": "d8dec31 (E-F1, E-F2), this record (part A: Q1, F1 and the OVLO), l4e5", "checks": [
-            Chk("D10 does not conduct up to the selected OVLO maximum (25 C)", round(F["ovlo_sel"][2], 2), "<", sm40["vbr_min"], "V", "MAKER", "this record out 11; Littelfuse SMCJ40A row"),
-            Chk("D10 does not conduct at REQ-015's 40 V at -20 C (the breakdown's typical coefficient, not a warranted bound)", 40.0, "<", round(A["d10_cold_vbr"], 2), "V", "CONDITIONAL", "Littelfuse SMCJ sheet p.1, VBR at TJ, typical 0.1 %/K"),
+        "id": "IF-04", "title": "the vehicle and shore input to board E's entry (the D38999 receptacle, J_DCIN, F1, D10, U3/Q1 LM74700 ideal diode) to DC_P",
+        "a": "a vehicle or shore supply, 9 to 36 V at the kit's plug (REQ-015, the design basis L4-E11 took), reversed or at an over-voltage to 40 V", "b": "board E, DC_F and DC_P",
+        "v": "9 to %s V in service, CS101's %s V peak on it under M2; reversed to -%s V | the selected entry's OV off above %s / %s / %s V (as drawn the LM5069's OVLO %s / %s / %s V; the alternative's %s / %s / %s V); D10 SMCJ40CA breakdown %s V minimum either way at 25 C, %s V at -20 C (typical coefficient)"
+             % (fmt(D["vrev"]), fmt(round(A["cs101_pk"], 2)), fmt(D["vrev"]), *[fmt(x) for x in ovs], fmt(F["ovlo"][0]), fmt(F["ovlo"][1]), fmt(F["ovlo"][2]),
+                *[fmt(round(x, 2)) for x in F["ovlo_sel"]], fmt(sm40["vbr_min"]), fmt(round(A["d10_cold_vbr"], 2))),
+        "i": "asked: in service at most %s A from a 9.00 V plug; the breaker %s / %s / %s A; a stiff source's fault at most %s A (the specified loop floor, %s V basis; %s A with the drawn cable) | available: F1 Littelfuse 0997010.WXN 10 A (%s A at its %s C column), %s A at 58 V DC; Q1 CSD19532Q5B %s A; J_DCIN a %s A class (XT60 family) and the interconnect at least %s A continuous (D-06 resolved in design; the drawn VH with AWG %d has no stated rating)"
+             % (fmt(F["e_svc"][1]), *[fmt(x) for x in F["e_oc"]], fmt(F["ipf_spec"]), fmt(F["e_basis_v"]), fmt(round(D["f1_ipf"], 1)), fmt(A["f_allow"]), fmt(A["f_col"]), fmt(A["f_int"]),
+                fmt(A["id_cont"]), fmt(F["jdcin_sel_a"]), fmt(F["d06_oblig"][0]), int(F["lead_awg"])),
+        "loss": "the plug to DC_P %s mOhm hot, %s W at %s A (L4-E11 3d); Q1 at most %s W at the breaker's %s A" % (fmt(F["e_loop_mohm"][0]), fmt(round(E["loss_dcp"], 3)), fmt(F["e_svc"][1]), fmt(round(E["q1_p_sel"], 3)), fmt(F["e_oc"][2])),
+        "therm": "Q1's junction at most %s C in %s C air at %s A (INFERRED); the interconnect's elements at %s A continuous where installed (D-06; E11-10 to E11-14)" % (fmt(round(E["q1_tj_sel"], 1)), fmt(F["air"][1]), fmt(F["e_oc"][2]), fmt(F["d06_oblig"][0])),
+        "prot_a": "the supply's own", "prot_b": "F1 (0997 blade, in a holder rated at least 20 A, E11-13); D10 (two-way, at the entry); U3/Q1 reverse block (CSD19532Q5B); D1 at DC_P; the selected entry's UVLO and OV (IF-05)",
+        "settled": "d8dec31 (E-F1, E-F2), this record (part A: Q1, F1; out 12), %s, l4e5" % E11, "checks": [
+            Chk("D10 does not conduct up to the selected OV maximum (25 C)", ovs[2], "<", sm40["vbr_min"], "V", "MAKER", "L4-E11 3c; Littelfuse SMCJ40A row"),
+            Chk("D10 does not conduct up to the selected OV maximum at -20 C (the breakdown's typical coefficient, not a warranted bound)", ovs[2], "<", round(A["d10_cold_vbr"], 2), "V", "CONDITIONAL", "Littelfuse SMCJ sheet p.1, VBR at TJ, typical 0.1 %/K"),
+            Chk("D10 does not conduct at REQ-015's 40 V at -20 C (the breakdown's typical coefficient)", 40.0, "<", round(A["d10_cold_vbr"], 2), "V", "CONDITIONAL", "Littelfuse SMCJ sheet p.1, VBR at TJ, typical 0.1 %/K"),
             Chk("D10 does not conduct on a reversed 36 V input (two-way part)", D["vrev"], "<", sm40["vbr_min"], "V", "MAKER", "Littelfuse SMCJ40CA row"),
             Chk("Q1 in reverse, DC_P back-fed from the drawn tracker ceiling (Q1 BSC039N06NS)", D["q1_rev_drawn"], "<=", F["bsc039_vds"], "V", "INFERRED", "l4e5 out 2, Q7's body diode; Infineon p.1", scope="drawn"),
             Chk("Q1 in reverse with L4-E5's raised ceiling, Q1 as drawn (BSC039N06NS)", D["q1_rev"], "<=", F["bsc039_vds"], "V", "INFERRED", "l4e5 ceiling; Infineon p.1", scope="drawn"),
             Chk("Q1 in reverse with the raised ceiling, Q1 the CSD19532Q5B (part A; register R-17)", D["q1_rev"], "<=", F["csd19532_vds"], "V", "INFERRED", "TI CSD19532Q5B p.1"),
             Chk("U3 (LM74700-Q1) cathode to anode in that reverse", D["q1_rev"], "<=", F["ld_ac_rec"], "V", "MAKER", "TI SNOSD17G 6.3, recommended; 75 V absolute"),
-            Chk("Q1's junction at the entry's highest limit", round(A["q1_tj"], 1), "<=", A["tj_max"], "C", "INFERRED", "part A (Figure 8; RthetaJA on 1 in2 2 oz)"),
+            Chk("Q1's junction at the selected breaker's highest current (%s A)" % fmt(F["e_oc"][2]), round(E["q1_tj_sel"], 1), "<=", A["tj_max"], "C", "INFERRED", "out 12 (Figure 8; RthetaJA on 1 in2 2 oz)"),
             Chk("F1's voltage rating (Littelfuse 297, the series the holder takes) against the highest steady input the drawn entry admits", F["ovlo"][2], "<=", F["f297_v"], "V", "MAKER", "Littelfuse 297 sheet; s120 OVLO", scope="drawn"),
-            Chk("F1 (0997010.WXN) DC voltage rating against the selected OVLO maximum", round(D["f1_v"], 2), "<=", A["f_v"], "V", "MAKER", "Littelfuse 0997 sheet (held back), DC rating"),
-            Chk("F1's interrupting rating against the kit cable's prospective current at -20 C from a stiff source", round(D["f1_ipf"], 1), "<=", A["f_int"], "A", "MAKER", "Littelfuse 0997 sheet; this record out 7"),
-            Chk("F1 at its derating table's next higher column above the inside air (%s C), against the entry's highest limit" % fmt(A["f_col"]), F["entry_lim"][1], "<=", A["f_allow"], "A", "MAKER", "Littelfuse 0997 derating table, never interpolated"),
-            Chk("the entry's limit inside F1 (10 A blade)", F["entry_lim"][1], "<=", amps_in(F["e_f1"], "F1"), "A", "MAKER", "LM5069 VCL / R19; gen F1"),
-            Chk("the entry's limit inside J_DCIN's nearest stated VH rating (AWG 18, shrouded header)", F["entry_lim"][1], "<=", F["vh_18"], "A", "ASSUMPTION", "JST VH catalogue p.1; the fitted header and gauge are not rated"),
-            Chk("the conductors' short-time withstand against F1's let-through at the stiff-source current (the sheet prints melting I2t only)", None, "<=", None, "a total clearing I2t", "CONDITIONAL", "Littelfuse clarification R-115; REQ-045"),
-            Chk("the interconnect F1 protects, in F1's long-time band from a weak source (below 13.5 A no maximum clearing time, 11 A with no opening for 100 h; 13.5 A up to 600 s; 20 A up to 5 s; contacts stated at 10 and 13 A)", None, "<=", None, "time-current limits", "CONDITIONAL", "OPEN engineering question D-06 (REQ-045, PWR-003, ECSS 6.17.3c); R-113"),
+            Chk("F1 (0997010.WXN) DC voltage rating against the %s V basis (over the selected OV maximum %s V)" % (fmt(F["e_basis_v"]), fmt(ovs[2])), F["e_basis_v"], "<=", A["f_v"], "V", "MAKER", "Littelfuse 0997 sheet (held back), DC rating; L4-E11 6"),
+            Chk("F1's interrupting rating against the drawn cable's prospective current at -20 C from a stiff source", round(D["f1_ipf"], 1), "<=", A["f_int"], "A", "MAKER", "Littelfuse 0997 sheet; this record out 7", scope="drawn"),
+            Chk("F1's interrupting rating against the specified worst stiff-source current (the loop's floor, %s mOhm at 20 C, at %s V)" % (fmt(F["loop_floor"]), fmt(F["e_basis_v"])), F["ipf_spec"], "<=", A["f_int"], "A", "CONDITIONAL", "L4-E11 6: the four-wire acceptance %s to %s mOhm on every assembly (E11-11, R-130)" % (fmt(F["loop_acc"][0]), fmt(F["loop_acc"][1]))),
+            Chk("F1 at its derating table's next higher column above the inside air (%s C), against the selected breaker's highest" % fmt(A["f_col"]), F["e_oc"][2], "<=", A["f_allow"], "A", "INFERRED", "Littelfuse 0997 derating table, never interpolated; L4-E11 3c"),
+            Chk("the selected breaker's highest inside F1 (10 A blade)", F["e_oc"][2], "<=", amps_in(F["e_f1"], "F1"), "A", "INFERRED", "L4-E11 3c; gen F1"),
+            Chk("the entry's limit inside J_DCIN's nearest stated VH rating (AWG 18, shrouded header)", F["entry_lim"][1], "<=", F["vh_18"], "A", "ASSUMPTION", "JST VH catalogue p.1; the fitted header and gauge are not rated", scope="drawn"),
+            Chk("the selected breaker's highest inside J_DCIN's selected class (an XT60-family board connector, %s A)" % fmt(F["jdcin_sel_a"]), F["e_oc"][2], "<=", F["jdcin_sel_a"], "A", "CONDITIONAL", "L4-E11 6 (Amass V1.2); the part named by E11-12 (R-131)"),
+            Chk("the interconnect in F1's long-time band: every element at least %s A continuous where installed, against F1's %s A point (no maximum clearing time up to 13.5 A, 600 s to %s A)" % (fmt(F["d06_oblig"][0]), fmt(A["f_200"]), fmt(A["f_200"])), A["f_200"], "<=", F["d06_oblig"][0], "A", "CONDITIONAL", "L4-E11 6 (D-06 resolved in design): the makers' installed ratings filed (E11-10 to E11-14; R-129 to R-132, R-43)"),
+            Chk("the interconnect's short-time capability above %s A (%s A for %s s, %s A for %s s, and F1's total clearing I2t at %s A and 58 V DC from 60 A to %s A)" % (fmt(F["d06_oblig"][0]), fmt(F["d06_oblig"][1]), fmt(F["d06_oblig"][2]), fmt(F["d06_oblig"][3]), fmt(F["d06_oblig"][4]), fmt(F["ipf_spec"]), fmt(F["ipf_spec"])), None, "<=", None, "the makers' short-time data and F1's clearing I2t", "CONDITIONAL", "L4-E11 6; E11-16 (R-113, R-115)"),
+            Chk("the drawn interconnect in F1's long-time band (13.5 A with no time limit) against the D38999 size 16 contact's 13 A test current", 13.5, "<=", A["c16_a"], "A", "MAKER", "Amphenol D38999 contact table; L4-E11 6: NOT MET as drawn", scope="drawn"),
             Chk("the negative discharge at the ruled level (15 kV) with E-F1's 1 uF input capacitor: DC_F's rise against D10's breakdown", F["ef1_dv"][1], "<", sm40["vbr_min"], "V", "INFERRED", "DECISION-31 6.3 (d8dec31 apply_gen_sch_e_cin.py, register R-16)"),
             Chk("CS101 (M2) at REQ-015's 36 V: the input's peak under the drawn OVLO minimum", round(A["cs101_top"], 2), "<", F["ovlo"][0], "V", "INFERRED", "part A (L4-E7R's CS101 level)", scope="drawn"),
-            Chk("CS101 (M2) at REQ-015's 36 V: the input's peak under the selected OVLO minimum (R23 6.42k, 0.1 %; register R-94)", round(A["cs101_top"], 2), "<", round(F["ovlo_sel"][0], 2), "V", "INFERRED", "part A"),
+            Chk("CS101 (M2) at REQ-015's 36 V: the input's peak under the selected OV minimum (D-02)", round(A["cs101_top"], 2), "<", ovs[0], "V", "INFERRED", "part A; L4-E11 3c"),
+            Chk("CS101 (M2) at REQ-015's 36 V: the input's peak under the alternative's OVLO minimum (R23 6.42k, 0.1 %; register R-94)", round(A["cs101_top"], 2), "<", round(F["ovlo_sel"][0], 2), "V", "INFERRED", "part A", scope="alternative"),
         ]})
+    hs = F["e_hs_svc"]
     R.append({
-        "id": "IF-05", "title": "DC_P through the hot swap U6/Q7 (LM5069) and the choke L2 to VIN_RAW",
+        "id": "IF-05", "title": "DC_P through the selected entry U6/Q7 (TPS48110-Q1 breaker, CSD19536KTT, R19 4.5 mOhm) and the choke L2 (SRF1260-1R0Y) to VIN_RAW",
         "a": "DC_P", "b": "VIN_RAW (board E)",
-        "v": "DC_P up to D1's clamping %s V at %s A; the hot-short at the OVLO maximum %s V | LM5069 VIN %s V absolute; Q7 %s V" % (fmt(sm40["vc"]), fmt(sm40["ipp"]), fmt(round(F["ovlo_sel"][2], 2)), fmt(F["lm5069_vin_abs"]), fmt(F["e_q7_v"])),
-        "i": "asked: the limit %s to %s A, fault timer %s / %s / %s ms at C5's nominal (%s to %s ms with its printed rows stacked) then off and retry (-2); the power limit with R24 %s k: %s W nominal, %s W at its corners, %s W with TI's %s margin, %s A at %s V; the breaker's event OPEN | available: L2 %s; Q7's Figure 10 at %s V and %s ms derated to its %s C case %s A"
-             % (fmt(F["entry_lim"][0]), fmt(F["entry_lim"][1]), fmt(F["timer_ms"][0]), fmt(F["timer_ms"][1]), fmt(F["timer_ms"][2]), fmt(round(A["tflt_env"][0], 3)), fmt(round(A["tflt_env"][1], 3)), fmt(R24_NEW_K), fmt(round(A["plim_new_nom"], 2)),
-                fmt(round(A["plim_new_hi"], 2)), fmt(round(A["pulse_w"], 2)), fmt(TI_SOA_MARGIN), fmt(round(A["pulse_a"], 3)), fmt(round(F["ovlo_sel"][2], 2)), "6.89 A Irms, 9.15 A Isat (its value text)",
-                fmt(round(F["ovlo_sel"][2], 2)), fmt(round(A["tflt_env"][1], 3)), fmt(round(A["tc_max"], 1)), fmt(round(A["soa_tenv_hot"], 3))),
-        "loss": "R19 0.38 W at 6.15 A", "therm": "inside air %s C; Q7's case at most %s C in the hottest air the record holds (%s C)" % (fmt(F["air"][1]), fmt(round(A["tc_max"], 1)), fmt(round(A["t_hot"], 2))),
-        "prot_a": "D1 SMCJ40A at DC_P", "prot_b": "D2 SMCJ40A on VIN_RAW; the LM5069's current and power limits and its timer (R24 22k, this record's draft)",
-        "settled": "gen_sch_e.py (F-IN-02), l4e5, this record (the fix round's B1, apply_gen_sch_e_hotswap.py)", "checks": [
+        "v": "DC_P up to D1's clamping %s V at %s A; %s V before any current and %s V at %s A from a 9.00 V plug | U6 VS 3.5 to %s V (%s V absolute), its pins at most %s V at the clamp against %s V; Q7 %s V; the UVLO on at %s / %s / %s V, off at %s / %s / %s V of DC_P"
+             % (fmt(sm40["vc"]), fmt(sm40["ipp"]), fmt(F["e_dcp_noload"]), fmt(F["e_svc"][2]), fmt(F["e_svc"][1]), fmt(F["e_vs"][0]), fmt(F["e_vs"][1]), fmt(F["e_pins"][1]), fmt(F["e_pins"][4]),
+                fmt(F["e_q7_sel_v"]), *[fmt(x) for x in F["e_uv_on"]], *[fmt(x) for x in F["e_uv_off"]]),
+        "i": "asked: in service at most %s A (a 9.00 V plug), up to %s A continuous under the breaker; the start %s to %s A for at most %s ms; a start into a resistive fault (worst at %s Ohm, %s ms); a start into a hard short (%s A after %s us); a hard short in service (%s A plus VIN x %s us / L) | available: the breaker %s / %s / %s A after %s / %s / %s ms, the short circuit %s / %s / %s A filtered %s to %s us then %s us, retry %s s; Q7's Figure 4-10 at %s V (100 us %s A, 1 ms %s A, 10 ms %s A) derated by %s, its IDM %s A derated %s A; L2 at %s A %s C against %s C"
+             % (fmt(F["e_svc"][1]), fmt(F["e_oc"][2]), fmt(F["e_inrush"][0]), fmt(F["e_inrush"][1]), fmt(F["e_start_ms"]), fmt(F["e_rf"][1]), fmt(F["e_rf"][2]), fmt(F["e_hs_start"][2]), fmt(F["e_hs_start"][3]),
+                fmt(F["e_sc"][2]), fmt(hs["t_us"]), *[fmt(x) for x in F["e_oc"]], *[fmt(x) for x in F["e_oc_ms"]], *[fmt(x) for x in F["e_sc"]], fmt(F["e_tau_us"][0]), fmt(F["e_tau_us"][2]), fmt(F["e_tsc_us"][1]),
+                fmt(F["e_retry_s"]), *[fmt(x) for x in F["e_q7_chart"]], fmt(F["e_derate"]), fmt(hs["idm"]), fmt(hs["lim"]), fmt(F["e_l2"][0]), fmt(F["e_l2"][2]), fmt(F["e_l2"][3])),
+        "loss": "DC_P to VIN_RAW %s mOhm hot, %s W at %s A; Q7 %s W at %s A (L4-E11)" % (fmt(F["e_loop_mohm"][1]), fmt(round(E["loss_vr"], 3)), fmt(F["e_svc"][1]), fmt(F["e_q7_w"]), fmt(F["e_l2"][0])),
+        "therm": "L2 %s K over the %s C air at %s A; Q7's chart derating (%s) conservative while its case stays under %s C on its %s C rating (out 12)" % (fmt(F["e_l2"][1]), fmt(F["air"][1]), fmt(F["e_l2"][0]), fmt(F["e_derate"]), fmt(round(E["tc_break"], 2)), fmt(F["e_q7_tj"])),
+        "prot_a": "D1 SMCJ40A at DC_P", "prot_b": "D2 SMCJ40A on VIN_RAW; the breaker (timed overcurrent, filtered short circuit, auto-retry), the UVLO and OV, the gate-slew start (L4-E11, apply_gen_sch_e_entry.py, E11-01)",
+        "settled": "%s, this record (E11-19, out 12); the LM5069 drawn and as the alternative: gen_sch_e.py, l4e5, part A" % E11, "checks": [
+            Chk("the UVLO's highest rise under DC_P before any current from a 9.00 V plug", F["e_uv_on"][2], "<", F["e_dcp_noload"], "V", "INFERRED", "L4-E11 3c, 3e"),
+            Chk("the UVLO's highest fall under DC_P in service (%s A from a 9.00 V plug)" % fmt(F["e_svc"][1]), F["e_uv_off"][2], "<", F["e_svc"][2], "V", "INFERRED", "L4-E11 3e"),
+            Chk("the in-service maximum from a 9.00 V plug under the breaker's lowest", F["e_svc"][1], "<", F["e_oc"][0], "A", "CONDITIONAL", "L4-E11 3e: the front end at least %s at 8.1 V, the pin's band and the transients measured (E11-06, R-85)" % "%s" % F["e_eta_floor"]),
+            Chk("a start into a resistive fault (%s to %s Ohm) inside Q7's derated chart (the fraction of the chart used)" % (fmt(F["e_rf_range"][0]), fmt(F["e_rf_range"][1])), F["e_rf"][0], "<=", 1.0, "of the chart", "CONDITIONAL", "L4-E11 3c (every point held for the whole pulse); the derating's case and board E's copper (E11-14); E11-17"),
+            Chk("the ordinary start inside Q7's derated chart", F["e_rf"][3], "<=", 1.0, "of the chart", "INFERRED", "L4-E11 3c"),
+            Chk("a start into a hard short inside Q7's derated 100 us line", F["e_hs_start"][4], "<=", 1.0, "of the chart", "CONDITIONAL", "L4-E11 3c: TI's typical %s S taken as the bound (A11-10); E11-17" % fmt(F["e_hs_start"][1])),
+            Chk("a hard short in service: the peak through Q7 inside its derated IDM (%s A), which needs the loop's inductance at least %s uH" % (fmt(hs["lim"]), fmt(hs["l_uh"])), None, "<=", None, "the loop's inductance", "CONDITIONAL", "OPEN evidence: L4-E11 3c, out 12 (E11-20, R-134)"),
+            Chk("every start and fault pulse's I2t through F1 under its typical melting I2t (the largest, a hard short in service)", round(E["i2t_max"], 4), "<=", A["f_i2t"], "A2s", "INFERRED", "out 12 (rectangles); Littelfuse 0997 sheet"),
+            Chk("U6's VS at D1's clamping voltage inside its operating range", sm40["vc"], "<=", F["e_vs"][0], "V", "MAKER", "TI SLUSEE5E (held back), through L4-E11 3b"),
+            Chk("U6's input pins at D1's clamping voltage (INP the highest) inside their absolute rating", F["e_pins"][1], "<=", F["e_pins"][4], "V", "INFERRED", "L4-E11 3c"),
+            Chk("Q7 (CSD19536KTT) at D1's clamping voltage", sm40["vc"], "<=", F["e_q7_sel_v"], "V", "NETLIST", "L4-E11 apply_gen_sch_e_entry.py, Q7's value text"),
+            Chk("L2 (SRF1260-1R0Y) at the breaker's highest current under its temperature limit", F["e_l2"][2], "<=", F["e_l2"][3], "C", "INFERRED", "L4-E11 3e (Bourns' rows)"),
+            Chk("the drawn LM5069 starting from a 9.00 V plug: its VIN before any current at least POREN's maximum", F["lm_vin_9"], ">=", F["lm_poren"], "V", "MAKER", "SNVS452G p.5; L4-E11 3a", scope="drawn"),
             Chk("the power limit's sense voltage at the OVLO maximum with the drawn R24 20k, against SNVS452G's 5 mV", round(A["vsns_drawn"] * 1e3, 4), ">=", A["vsns_min"] * 1e3, "mV", "MAKER", "SNVS452G 9.2.1.2.3, Equations 7 and 9", scope="drawn"),
-            Chk("the power limit's sense voltage at the OVLO maximum with R24 22k at its low corner", round(A["vsns_new_low"] * 1e3, 3), ">=", A["vsns_min"] * 1e3, "mV", "MAKER", "SNVS452G 9.2.1.2.3, Equations 7 and 9"),
-            Chk("the hot short's power-limit part (the limit at its corners times TI's 1.3) for the fault time's maximum with C5's printed rows stacked (%s ms) inside Figure 10 at the same voltage, derated to Q7's case" % fmt(round(A["tflt_env"][1], 3)), round(A["pulse_a"], 3), "<=", round(A["soa_tenv_hot"], 3), "A", "CONDITIONAL", "SLPS414B Figure 10 (vector read; TI's power law %s %% past 10 ms), SNVS452G 9.2.1.2.5 Equations 15 to 19; RthetaJA an ASSUMPTION" % fmt(round(A["soa_extrap"] * 100, 1))),
-            Chk("the breaker's event: its peak current and Q7's loaded turn-off (VCB's %s A is a threshold; tCB is measured with no GATE load)" % fmt(round(A["cb_thr"], 3)), None, "<=", None, "the source's and the gate's dynamics", "CONDITIONAL", "OPEN evidence, a bounded investigation: R-118"),
-            Chk("the fault time's minimum at C5's printed rows stacked against TI's half-again margin over the start into VIN_RAW at the OVLO maximum (D-09)", round(A["tflt_env"][0], 3), ">=", round(A["start_need"], 3), "ms", "CONDITIONAL", "SNVS452G 9.2.1.2.4, Equation 12; Yageo V.26; the front end's load not included; R-119"),
-            Chk("the LM5069's VIN at D1's clamping voltage", sm40["vc"], "<=", F["lm5069_vin_abs"], "V", "MAKER", "TI SNVS452G 7.1"),
-            Chk("Q7 at D1's clamping voltage", sm40["vc"], "<=", F["e_q7_v"], "V", "MAKER", "TI CSD19532Q5B p.1"),
-            Chk("the entry's limit inside L2's Irms (its value text)", F["entry_lim"][1], "<=", 6.89, "A", "NETLIST", "gen_sch_e.py L2"),
+            Chk("the LM5069's VIN at D1's clamping voltage", sm40["vc"], "<=", F["lm5069_vin_abs"], "V", "MAKER", "TI SNVS452G 7.1", scope="drawn"),
+            Chk("Q7 (CSD19532Q5B) at D1's clamping voltage", sm40["vc"], "<=", F["e_q7_v"], "V", "MAKER", "TI CSD19532Q5B p.1", scope="drawn"),
+            Chk("the entry's limit inside L2's Irms (SRF1260-1R5Y, its value text)", F["entry_lim"][1], "<=", 6.89, "A", "NETLIST", "gen_sch_e.py L2", scope="drawn"),
+            Chk("the power limit's sense voltage at the OVLO maximum with R24 22k at its low corner", round(A["vsns_new_low"] * 1e3, 3), ">=", A["vsns_min"] * 1e3, "mV", "MAKER", "SNVS452G 9.2.1.2.3, Equations 7 and 9", scope="alternative"),
+            Chk("the power-limit part (the limit at its corners times TI's 1.3) at the fault time's maximum with C5 and C121 (%s ms) inside Figure 10 derated to Q7's case" % fmt(F["alt_tflt"][1]), F["alt_pulse"], "<=", F["alt_soa"], "A", "CONDITIONAL", "L4-E11 7 (TI's power law past 10 ms)", scope="alternative"),
+            Chk("the fault time's minimum with C5 and C121 against TI's half-again margin over the start into VIN_RAW at %s V" % fmt(round(F["ovlo_sel"][2], 2)), F["alt_tflt"][0], ">=", F["alt_need"], "ms", "INFERRED", "L4-E11 7 (34 uF, the front end held off by U34)", scope="alternative"),
+            Chk("the breaker's event: its peak current and Q7's loaded turn-off (VCB's %s A is a threshold; tCB is measured with no GATE load)" % fmt(round(A["cb_thr"], 3)), None, "<=", None, "the source's and the gate's dynamics", "CONDITIONAL", "OPEN evidence, the alternative's bench rows (E11-17, R-118)", scope="alternative"),
         ]})
     R.append({
         "id": "IF-06", "title": "VIN_RAW over the dock (board E, E5, board A J_VR1 to J_VR4)",
         "a": "VIN_RAW (board E)", "b": "VIN_RAW (board A, U2's input)",
-        "v": "solar: H3's knee (HIZ certain below %s V, out of HIZ above %s V, regulation from %s V) to the ceiling %s V; vehicle 9 to %s V; OVLO maximum %s V | U2 VIN %s V absolute"
-             % (fmt(F["hiz_below"]), fmt(F["hiz_out_above"]), fmt(F["pin_reg_from"]), fmt(F["trk_ceiling"][2]), fmt(D["vrev"]), fmt(round(F["ovlo_sel"][2], 2)), fmt(F["u2_vin_abs"])),
-        "i": "in service at most %s A (H3, 9 V vehicle); at the window %s A from the tracker; the front end's fault current at most %s A (R11 8 mOhm, R12 12 mOhm; %s A at 7 mOhm) | declared %s A; four Mill-Max pins at %s A each"
-             % (fmt(F["h3"][9.0][1]), fmt(round(D["trk_i_settle"], 2)), fmt(round(D["vin_fault"], 3)), fmt(round(D["vin_fault_7"], 3)), fmt(F["vin_raw_a"]["typ"]), fmt(F["millmax_a"])),
+        "v": "solar: the corrected knee (HIZ certain below %s V, a flat %s A from %s V to %s V, L4-E11 E11-09; L4-E5's drawn-line figures %s / %s / %s V) to the ceiling %s V; vehicle 9 to %s V at the plug (VIN_RAW %s V at %s A from 9.00 V); at most %s V (the selected OV maximum; %s V the basis) | U2 VIN %s V absolute"
+             % (fmt(F["knee_hiz"]), fmt(F["knee"][0]), fmt(F["knee"][1]), fmt(F["knee"][2]), fmt(F["hiz_below"]), fmt(F["hiz_out_above"]), fmt(F["pin_reg_from"]), fmt(F["trk_ceiling"][2]), fmt(D["vrev"]), fmt(F["e_svc"][0]), fmt(F["e_svc"][1]),
+                fmt(F["e_ov_off"][2]), fmt(round(F["ovlo_sel"][2], 2)), fmt(F["u2_vin_abs"])),
+        "i": "in service at most %s A from a 9.00 V plug (L4-E11 3e; %s A at VIN_RAW 9 V under L4-E5's line); at the window %s A from the tracker; the front end's fault current at most %s A (R11 8 mOhm, R12 12 mOhm; %s A at 7 mOhm) | declared %s A; four Mill-Max pins at %s A each"
+             % (fmt(F["e_svc"][1]), fmt(F["h3"][9.0][1]), fmt(round(D["trk_i_settle"], 2)), fmt(round(D["vin_fault"], 3)), fmt(round(D["vin_fault_7"], 3)), fmt(F["vin_raw_a"]["typ"]), fmt(F["millmax_a"])),
         "loss": "the dock's contacts and 12 AWG wires (IF-AE-DOCK)", "therm": "about 6 K rise of the pins at 14.10 A (IF-AE-DOCK, INFERRED)",
         "prot_a": "the entry (IF-04, IF-05); D2 on board E", "prot_b": "D2 SMCJ40A on board A; U34's restart guard",
-        "settled": "l4e5, l4e6, IF-AE-DOCK, DECISION-31 (A-N1)", "checks": [
-            Chk("the highest steady VIN_RAW (the selected OVLO maximum) inside U2's absolute rating", round(F["ovlo_sel"][2], 2), "<=", F["u2_vin_abs"], "V", "MAKER", "this record out 11; TI SNVSAI1D 6.1"),
+        "settled": "l4e5, l4e6, IF-AE-DOCK, DECISION-31 (A-N1), L4-E11 (3e, 3f)", "checks": [
+            Chk("the highest steady VIN_RAW (the %s V basis, over the selected OV maximum) inside U2's absolute rating" % fmt(round(F["ovlo_sel"][2], 2)), round(F["ovlo_sel"][2], 2), "<=", F["u2_vin_abs"], "V", "MAKER", "out 11, out 12; TI SNVSAI1D 6.1"),
+            Chk("the in-service maximum from a 9.00 V plug inside the declared VIN_RAW current", F["e_svc"][1], "<=", F["vin_raw_a"]["typ"], "A", "INFERRED", "L4-E11 3e"),
             Chk("the front end's fault current at the onset of its average limit inside the declared VIN_RAW current", D["vin_fault"], "<=", F["vin_raw_a"]["typ"], "A", "INFERRED", "l4e6 out 5 (R11 band, 20.887 V, 0.93, %s V)" % fmt(F["avg_from"])),
             Chk("one Mill-Max pin with one of four open at that fault current", D["vin_fault"] / 3.0, "<=", F["millmax_a"], "A", "INFERRED", "Mill-Max p.28 (the 0850 to 0853 sibling figure)"),
             Chk("the clamp D2 at its rated pulse against U2's 60 V (no surge level is ruled, D-16; at the ruled discharge the bus's capacitance holds it to 0.11 V)", sm40["vc"], "<=", F["u2_vin_abs"], "V", "MAKER", "DECISION-31 A-N1, S-111: a recorded residual outside the requirements", scope="drawn"),
@@ -1526,12 +1863,12 @@ def rows(F, D, A):
     R.append({
         "id": "IF-07", "title": "VIN_RAW through the front end U2 (LM5176), R11 and R12, to VBUS20",
         "a": "VIN_RAW (board A)", "b": "VBUS20",
-        "v": "in %s to %s V | out %s to %s V DC band, %s V bound (the typical-only OVP)" % (fmt(F["hiz_below"]), fmt(round(F["ovlo_sel"][2], 2)), fmt(F["vbus_band"][0]), fmt(F["vbus_band"][1]), fmt(F["vbus_bound"])),
+        "v": "in %s V (the corrected knee's certain HIZ; %s V on L4-E5's drawn line) to %s V | out %s to %s V DC band, %s V bound (the typical-only OVP)" % (fmt(F["knee_hiz"]), fmt(F["hiz_below"]), fmt(round(F["ovlo_sel"][2], 2)), fmt(F["vbus_band"][0]), fmt(F["vbus_band"][1]), fmt(F["vbus_bound"])),
         "i": "asked in service %s A through R11 (U3 at %s A, %s A board current, plus 0.079 A) | R11 8 mOhm stacked minimum %s A at 62.1 C with C-1's taps; highest permitted %s A; R12 peak limit %s / %s / %s A"
              % (fmt(F["r11_need"]), fmt(F["iin_host"]), fmt(F["u3_max_board"]), fmt(F["r11_min_62_full"]), fmt(r11_8[2]), fmt(F["r12_peak"][0]), fmt(F["r12_peak"][1]), fmt(F["r12_peak"][2])),
         "loss": "front end %s DECLARED (C-8)" % fmt(F["eta_fe"]),
         "therm": "FETs at most %s C on the ASSUMED 50 C/W (C-3); L1 at most %s C (qualifying), its Isat there INCONCLUSIVE (C-5)" % (fmt(F["fet_tj"]), fmt(F["l1_qual"])),
-        "prot_a": "U34 restart guard (UV %s / %s / %s V falling); the clamp D2" % (fmt(F["latch"][0]), fmt(F["latch"][1]), fmt(F["latch"][2])),
+        "prot_a": "U34 restart guard, R14 76.8k (E11-02): UV %s / %s / %s V falling (as drawn %s / %s / %s V); the clamp D2" % (*[fmt(x) for x in F["guard_sel"]], fmt(F["latch"][0]), fmt(F["latch"][1]), fmt(F["latch"][2])),
         "prot_b": "the average limit (R11), the cycle-by-cycle limit (R12), no hiccup; OVP on FB; no clamp on VBUS20 (S-111)",
         "settled": "l4e4, l4e5, l4e6, r11dep, s120", "checks": [
             Chk("R11's stacked minimum (8 mOhm, C-1's full taps, 62.1 C) above what U3 and the other loads ask", F["r11_need"], "<=", F["r11_min_62_full"], "A", "CONDITIONAL", "l4e4 out 2; U3's minimum rests on C-7"),
@@ -1542,6 +1879,8 @@ def rows(F, D, A):
             Chk("L1's Isat at %s C at least %s A, so its peak bound stays at 90 %% of it (C-5: Coilcraft's derating or the L-versus-current sweep)" % (fmt(F["l1_qual"]), fmt(F["l1_need"])), None, "<=", None, "a maker figure or a measurement", "CONDITIONAL", "l4e6 out 5"),
             Chk("every FET's junction at the highest permitted current on the ASSUMED 50 C/W", F["fet_tj"], "<=", 150.0, "C", "CONDITIONAL", "l4e6 out 5: C-3"),
             Chk("U2's VIN at the highest steady input", round(F["ovlo_sel"][2], 2), "<=", F["u2_vin_abs"], "V", "MAKER", "TI SNVSAI1D 6.1"),
+            Chk("the restart guard's highest fall, with L4-E5's 0.1 V, under the corrected knee's certain HIZ (R14 76.8k)", round(F["guard_sel"][2] + 0.1, 3), "<=", F["knee_hiz"], "V", "INFERRED", "L4-E11 3f (E11-02, E11-09; the knee drawn to its specification, R-03, R-128)"),
+            Chk("the drawn restart guard's highest fall under VIN_RAW from a 9.00 V plug in service", F["guard_drawn"][2], "<", F["e_svc"][0], "V", "INFERRED", "L4-E11 3f", scope="drawn"),
         ]})
     R.append({
         "id": "IF-08", "title": "VBUS20's bulk bank (six EEHZK1V331P, each behind a 45 mOhm ballast; Cc2 3.3 nF)",
@@ -1549,7 +1888,7 @@ def rows(F, D, A):
         "v": "VBUS20 at most %s V | the cans' 35 V" % fmt(F["vbus_bound"]),
         "i": "every can at most %s A (R11 8 mOhm, 7.262 A); %s A at 7 mOhm | the rule's %s A; %s A at 7 mOhm" % (fmt(F["can8"][0]), fmt(F["can7"][0]), fmt(F["can8"][1]), fmt(F["can7"][1])),
         "loss": "the ballasts at most %s W at the bound's worst corner, %s W at L4-E8's nominal illustration: an operating-point term carried in the energy and thermal budgets (out 8), never added again once a measured efficiency includes it" % (fmt(F["ballast_w"]), fmt(F["ballast_nom_w"])),
-        "therm": "the can's rise is a bench reading (lifetime CONDITIONAL); the cold ESR envelope INFERRED; the ballasts' heat at most %s K on the inside air at T-H1's floor (out 8)" % fmt(round(F["ballast_w"] / F["th1"], 2)), "prot_a": "R12's peak limit and R11's average limit", "prot_b": "the ballasts",
+        "therm": "the can's rise is a bench reading (lifetime CONDITIONAL); the cold ESR envelope INFERRED; the ballasts' heat at most %s K on the inside air at T-H1's floor, %s K at its binding line, inside L4-E12's figures (out 8)" % (fmt(round(F["ballast_w"] / F["th1"], 2)), fmt(round(F["ballast_w"] / F["gc"], 3))), "prot_a": "R12's peak limit and R11's average limit", "prot_b": "the ballasts",
         "settled": "l4e8 (accepted, check 3)", "checks": [
             Chk("every can at R11 8 mOhm (a conservative bound)", F["can8"][0], "<=", F["can8"][1], "A", "INFERRED", "l4e8 out 6"),
             Chk("every can at R11 7 mOhm (only if V-A07 fails; VIN and VBAT sampled)", F["can7"][0], "<=", F["can7"][1], "A", "CONDITIONAL", "l4e8 out 6; check 3"),
@@ -1565,13 +1904,14 @@ def rows(F, D, A):
              % (fmt(F["iin_host"]), fmt(F["u3_min"]), fmt(F["u3_max_board"]), fmt(F["win_need"]), fmt(F["bus_low"]), fmt(round(D["vbat_avail_min"], 1)), fmt(round(D["vbat_avail_max"], 1)), fmt(F["chg_set"])),
         "loss": "U3 %s (INFERRED)" % fmt(F["eta_u3"]), "therm": "the charger's own; inside air %s C" % fmt(F["air"][1]),
         "prot_a": "the H3 line on ILIM_HIZ (hardware), IIN_HOST, VINDPM about 18.5 V, ACOV", "prot_b": "BATOVP %s V, SYSOVP; the pack's OCC %s A" % (fmt(F["batovp"]), fmt(F["occ"])),
-        "settled": "l4e4, l4e5, s120, FW-A02", "checks": [
+        "settled": "l4e4, l4e5, s120, FW-A02, L4-E11 (U-04, 3g and 3h)", "checks": [
             Chk("U3's minimum covers the window at the lowest bus (C-7: the 0.1 A is INFERRED)", F["win_need"], "<=", F["u3_min"], "A", "CONDITIONAL", "l4e4 out 1"),
             Chk("U3's VBUS at the bus's bound", F["vbus_bound"], "<=", F["u3_abs"], "V", "INFERRED", "s120 out 9; TI SLUSE66A p.8"),
             Chk("ACOV not reached at the bus's bound", F["vbus_bound"], "<", F["acov_min"], "V", "INFERRED", "s120 out 9"),
             Chk("ChargeCurrent inside REQ-075's 3.06 A", F["chg_set"], "<=", 3.06, "A", "NETLIST", "FW-A02"),
             Chk("ChargeCurrent inside the pack's OCC", F["chg_set"], "<", F["occ"], "A", "NETLIST", "pcb_pack_protection.yaml"),
             Chk("the charge per cell inside the cell maker's maximum charge current", F["chg_set"] / 3.0 * 1000.0, "<=", F["cell_chg_ma"], "mA", "MAKER", "Samsung 35E 3.7"),
+            Chk("with no usable pack at a 9.00 V plug, the shed warm-up (P2 at its plan figure) under the least the source delivers at VBAT", F["e_p2"][1], "<=", F["e_src_least"], "W", "CONDITIONAL", "L4-E11 3g, 3h: arrangement (A), rules R-a to R-d; P1 at most %s W, E11-05, E11-06, E11-09, E11-22, E11-23; unresolved choice U-04" % fmt(F["e_p1_max"])),
         ]})
     R.append({
         "id": "IF-10", "title": "VBAT and the pack (board A F1 and R17, the dock's pack pins, board E F3, the XT60 lead, board P's chain)",
@@ -1583,7 +1923,7 @@ def rows(F, D, A):
                 fmt(F["pack_pin_share"][0]), fmt(F["pack_pin_share"][1]), fmt(F["xt60_a"])),
         "loss": "R17, F1, the pins, F3, the lead, the pack's FETs and F2 (POWER-THERMAL 7.3's 22.5 mOhm)", "therm": "the cells' windows 0 to 45 C charge, -10 to 60 C discharge (REQ-046); FEA-008 not closed (L4-E10: approach (II) recommended, CONDITIONAL)",
         "prot_a": "D1 SMCJ18A on VBAT; A F1 25 A", "prot_b": "BQ4050 (COV %s V, CUV %s V, OCC, OCD1, SCD, temperatures); BQ7720700; F1 25 A; F2 SCF9550 30 A" % (fmt(F["cov"]), fmt(F["cuv"])),
-        "settled": "pcb_pack_protection.yaml, POWER-THERMAL 7, FEA-004 (PWR-F12), L4-E10 (FEA-008, final at 79b2f568)", "checks": [
+        "settled": "pcb_pack_protection.yaml, POWER-THERMAL 7, FEA-004 (PWR-F12), L4-E10 (FEA-008, final at 79b2f568), L4-E11 (R-b)", "checks": [
             Chk("D1's standoff above VBAT's regulated maximum", F["chg_v_max"], "<=", sm18["vr"], "V", "MAKER", "Littelfuse SMCJ18A row; s120 out 7"),
             Chk("D1 not conducting at the SYSOVP maximum", F["sysovp"][2], "<=", sm18["vbr_min"], "V", "MAKER", "TI SLUSE66A p.14; Littelfuse"),
             Chk("the PA keyed alone at 113 W from the %s V rest floor, at a 10.0 V stack, inside the declared peak" % fmt(F["pa_floor"]), F["pa113"][4], "<=", F["pp_peak"], "A", "MODELED", "pwr_budget.out; FW-A05"),
@@ -1592,6 +1932,7 @@ def rows(F, D, A):
             Chk("the chain's short-time rating at 18 A for 60 s with F2 near +60 C (PWR-F12)", None, "<=", None, "a rating", "CONDITIONAL", "FEA-004: re-declaration and Eaton's answer or the bench owed"),
             Chk("the peak per pack pin with one of four open", F["pack_pin_share"][1], "<=", F["millmax_a"], "A", "MAKER", "IF-AE-DOCK; Mill-Max p.28"),
             Chk("the peak inside the XT60's rating", F["pp_peak"], "<=", F["xt60_a"], "A", "MAKER", "Amass XT60 sheet"),
+            Chk("board P's charge FET Q2's body diode under rule R-b's case (i) (a dead pack's charge through it)", F["rb_q2_tj"], "<=", 150.0, "C", "CONDITIONAL", "L4-E11 2: R-b's case (i) and board P's copper (E11-22, R-136)"),
             Chk("the cells' temperature design against REQ-046 with the pack fitted (FEA-008, DR-06): L4-E10 recommends a wide-temperature 18650 in D-06's 4S3P, CONDITIONAL on its signed specification and the owner's approval (D-06 to about %s Wh nominal)" % fmt(F["cell_nom"][1]),
                 None, "<=", None, "a design and the owner's two items", "CONDITIONAL", "L4-E10 out 5 (closing check 573c8b8f): FEA-008 not closed; LO-01a CONDITIONAL on T-H1 at least %s W/K, LO-01d to g OPEN; unresolved choice U-01" % fmt(F["th1"])),
         ]})
@@ -1602,12 +1943,16 @@ def rows(F, D, A):
         "i": "asked: PS-IDLE-SPEC %s / %s / %s W; PS-ALLTX %s / %s / %s W (low / plan / high at the pack terminals); %s W of PS-IDLE-SPEC has no document | available: each converter's own rating (pwr_budget.py)"
              % (fmt(F["idle"][0]), fmt(F["idle"][1]), fmt(F["idle"][2]), fmt(F["alltx"][0]), fmt(F["alltx"][1]), fmt(F["alltx"][2]), fmt(F["undoc_w"])),
         "loss": "the converters' makers' floors (pwr_budget.py)",
-        "therm": "the heat per state, POWER-THERMAL 9 (conductance unmeasured, FEA-004); at L4-E10's conditioned corner the inside air %.2f C (E3-O) and %.2f C (E5), plus at most %s K from L4-E8's ballasts" % (F["corner_air"][0], F["corner_air"][1], fmt(round(F["ballast_w"] / F["th1"], 2))),
+        "therm": "the heat per state, POWER-THERMAL 9; at T-H1's binding line %s W/K (lid open, fans; L4-E12) E3-O's mixed air %.2f C (%s W with the ballasts) and E5's %.2f C under the hold (%s W); at LO-01a's floor with no hold %.2f C and %.2f C (the design as it stands)"
+             % (fmt(F["gc"]), F["e3o_line"], fmt(round(F["e3o_wb"], 3)), F["e5_line"], fmt(round(F["e5_hold_wb"], 3)), F["floor_air"][0], F["floor_air"][1]),
         "prot_a": "the eFuses (monitor %s A peak declared, heater) and the stages' limits" % fmt(F["vmon"]["peak"]), "prot_b": "each converter's own",
-        "settled": "pwr_budget.out, load_trace.out, POWER-THERMAL", "checks": [
+        "settled": "pwr_budget.out, load_trace.out, POWER-THERMAL, L4-E12 at a86be47b (accepted, check db41c95d)", "checks": [
             Chk("the profile's %s W with no document measured or bounded by a maker" % fmt(F["undoc_w"]), None, "<=", None, "a measurement", "ASSUMPTION", "load_trace.out; replay out 13"),
-            Chk("the inside air at L4-E10's conditioned corner (T-H1 at %s W/K, E5's +60 C dwell) under the +%s C parts (SA868, AW7915-AED, LimeSDR, Xenarc; MESHSAT-1478)" % (fmt(F["th1"]), fmt(F["parts_hot"])),
-                F["corner_air"][1], "<=", F["parts_hot"], "C", "CONDITIONAL", "L4-E10 out 3o (MODELED at the enclosure's floor; E3-O %.2f C); unresolved choice U-02" % F["corner_air"][0]),
+            Chk("E5's mixed inside air under the hold at T-H1's binding line (%s W/K lid open with the fans) under the +%s C parts (MESHSAT-1478)" % (fmt(F["gc"]), fmt(F["parts_hot"])),
+                F["e5_line"], "<=", F["parts_hot"], "C", "CONDITIONAL", "L4-E12 out 4c, 4d (MODELED): T-H1 at or over the line, the hold's reference within +-%s K, the fans' rating, the parts out of the exhaust; unresolved choice U-02" % "%s" % F["hold_ref"]),
+            Chk("E3-O's mixed inside air with every radio on at that line under the +%s C parts" % fmt(F["parts_hot"]), F["e3o_line"], "<=", F["parts_hot"], "C", "CONDITIONAL", "L4-E12 out 4d (MODELED; E3-O alone needs %s W/K); unresolved choice U-02" % fmt(F["g_e3o"])),
+            Chk("the inside air at LO-01a's floor (%s W/K) with no hold, E5's +60 C dwell, under the +%s C parts" % (fmt(F["th1"]), fmt(F["parts_hot"])),
+                F["floor_air"][1], "<=", F["parts_hot"], "C", "MODELED", "L4-E12 out 2c (L4-E10's corner plus the ballasts, MESHSAT-1478 as found)", scope="drawn"),
             Chk("every load converter runs to the 3.00 V line (10.0 V stack)", None, "<=", None, "a record", "ASSUMPTION", "SHORTLIST.md 2: no record"),
             Chk("TPS2596 eFuses (U21, U22) on VBAT at the SYSOVP maximum", F["sysovp"][2], "<=", F["tps2596_abs"], "V", "MAKER", "TI TPS2596 7.1"),
         ]})
@@ -1673,29 +2018,33 @@ def rows(F, D, A):
 GATE = [
     {"n": 1, "criterion": "one architecture selected, its mandatory functions with a defensible feasibility basis",
      "rows": ["IF-02", "IF-04", "IF-05", "IF-07", "IF-09", "IF-10", "IF-11", "IF-12", "IF-13"], "choices": ["U-01", "U-02", "U-03", "U-04"], "verdict": "CONDITIONAL",
-     "constraint": "the solar function's 100 W bound is CONDITIONAL on G_CM and U18's VIN+ bias (L4-E7R) and its source on O-1 (U-03); PS-ALLTX's chain "
-                   "at 18 A for 60 s (PWR-F12) is an open obligation; the battery path's thermal design (FEA-008, U-01), the electronics' inside air at "
-                   "the enclosure's floor (MESHSAT-1478, U-02) and source-only operation with a dead or absent pack (U-04) are unresolved choices",
-     "overturn": "possibly: U-01, U-02 and U-04 could change D-06's pack, the sealed case's thermal design or the charger's power path; the rest "
-                 "resolves by a value, a part or a measurement on the same topology"},
+     "constraint": "the solar function's 100 W bound is CONDITIONAL on G_CM and U18's VIN+ bias (L4-E7R) and its source on O-1 (U-03); REQ-015 at "
+                   "9.00 V at the plug is a CONDITIONAL CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23 (U-04); the electronics at the margins "
+                   "are CONDITIONAL on T-H1 at or over 2.159 W/K and L4-E12's conditions (U-02); the battery path's thermal design is FEA-008's (U-01); "
+                   "PS-ALLTX's chain at 18 A for 60 s (PWR-F12) is an open obligation",
+     "overturn": "possibly, on named evidence only: U-01 on the HL18650V's specification (D-06's pack energy and protection settings), U-02 on "
+                 "T-H1's reading and the fans (the sealed case's thermal design or a device-set re-pick), U-04 on TI's N1 and the bench's VSYS "
+                 "(the charger's power path); the rest resolves by a value, a part or a measurement on the same topology"},
     {"n": 2, "criterion": "material power-path defects have engineering resolutions and bounded supporting calculations",
      "rows": ["IF-01", "IF-02", "IF-04", "IF-05", "IF-13"], "choices": [], "verdict": "CONDITIONAL",
-     "constraint": "two material defects are open: D-06, the vehicle entry's interconnect in F1's long-time band from a weak source, where no "
-                   "maker's time-current limit is held for the contacts and the cable; D-09, the hot swap's fault time against the start into "
-                   "VIN_RAW at C5's printed corners; both open engineering questions with alternatives. D-01 is resolved in design (L4-E7R "
-                   "accepted, drafted, not applied)",
-     "overturn": "no: an interconnect, a cable or a stated source capability, and a timer capacitor, at the vehicle entry"},
+     "constraint": "no material defect is open: D-01 to D-05 and D-08 are resolved in design (drafted or bounded), D-06 is resolved in design by "
+                   "L4-E11's interconnect with its evidence items (E11-10 to E11-16), D-07 and D-09 are superseded by the replacement of the LM5069 "
+                   "(E11-19 finds no new one); the resolutions rest on CONDITIONAL rows (the loop's typical rows, the makers' installed and "
+                   "short-time ratings, R227's pulse rating, the start into a hard short's transconductance bound) and the hot short in service "
+                   "on open evidence (the loop's inductance, E11-20)",
+     "overturn": "no: each resolves by a part, a rating or a measurement at the vehicle or the solar entry"},
     {"n": 3, "criterion": "remaining assumptions explicit, with their impact and verification method",
      "rows": [], "choices": [], "verdict": "PASS", "constraint": "", "overturn": ""},
     {"n": 4, "criterion": "downstream implementation changes, layout constraints and tests have named owners and acceptance criteria",
      "rows": [], "choices": [], "verdict": "PASS", "constraint": "", "overturn": ""},
     {"n": 5, "criterion": "no unresolved uncertainty could overturn the selected architecture while described as routine later testing",
-     "rows": ["IF-01", "IF-10", "IF-11"], "choices": ["U-01", "U-02", "U-03", "U-04"], "verdict": "CONDITIONAL",
-     "constraint": "four unresolved choices could overturn it and are named as such, not as later testing: U-01 (FEA-008's cell), U-02 "
-                   "(MESHSAT-1478, the inside air against the +70 C parts), U-03 (O-1, a panel with a supported cold open circuit), U-04 (source-only "
-                   "operation with a dead or absent pack); an owner and an acceptance criterion do not close them",
-     "overturn": "yes for U-01, U-02 and U-04 (D-06's pack, the sealed case's thermal design, the charger's power path); U-03 decides the solar "
-                 "source, not the topology"},
+     "rows": ["IF-01", "IF-09", "IF-10", "IF-11"], "choices": ["U-01", "U-02", "U-03", "U-04"], "verdict": "CONDITIONAL",
+     "constraint": "four unresolved choices could overturn it and are named as such, not as later testing: U-01 (FEA-008's cell; the owner's two "
+                   "items), U-02 (MESHSAT-1478; CONDITIONAL on T-H1 at or over 2.159 W/K and L4-E12's conditions, CFL-002 the owner's question), "
+                   "U-03 (O-1, pending L4-E13), U-04 (a CONDITIONAL CANDIDATE with the evidence that closes it); an owner and an acceptance "
+                   "criterion do not close them",
+     "overturn": "yes, on named evidence only: U-01 (D-06's pack energy and settings), U-02 (the sealed case's thermal design, the fans, the "
+                 "device set), U-04 (the charger's power path); U-03 decides the solar source, not the topology"},
 ]
 
 # The unresolved choices that could overturn the architecture (category b). An owner and an acceptance criterion close an
@@ -1703,25 +2052,37 @@ GATE = [
 CHOICES = [
     {"id": "U-01", "title": "FEA-008: the battery path's cell and thermal design (L4-E10, final)",
      "constraint": "LO-01d to LO-01g (E3-O, E5, E3-S, E4-S with the pack fitted) have no route that holds on held evidence; LO-01a holds only with "
-                   "T-H1 at least 1.666 W/K in both lid states",
+                   "T-H1 at least 1.666 W/K in both lid states (1.8058 W/K with L4-E8's ballasts counted, L4-E12)",
      "settles": "the HL18650V's signed specification confirming storage at +71 C and -33 C at the stored charge and the +80 C idle limit, then L4-E10's "
                 "margins re-run (1.06 K under H1 and 0.97 K under U2's INFERRED trip at LO-01e); T-H1 measured in both lid states",
      "alternatives": "(II) a wide-temperature 18650 in D-06's 4S3P (recommended, CONDITIONAL); (I) the 35E with powered cooling (INCONCLUSIVE: up to "
                      "35 W into the sealed case); (III) latent storage and a primary-fed heater (rejected at LO-01d to f; added energy storage under D-06); "
                      "a requirement change (the owner's, D-29)",
      "owner": "(1) send the drafted request for the specification; (2) once it confirms, approve the cell change (D-06's about 145 Wh to about 121 Wh "
-              "nominal, REQ-046 and REQ-077 restated with the cell, about USD 42 a pack); if declined, LO-01d to g stay a release gate",
-     "overturns": "D-06's pack energy (16.4 % less usable) and the pack's protection settings; the power path's topology stays",
+              "nominal, REQ-046 and REQ-077 restated with the cell, about USD 42 a pack); if declined, LO-01d to g stay a release gate (OW-2, OW-3)",
+     "overturns": "on the specification's answer: D-06's pack energy (16.4 % less usable) and the pack's protection settings under (II); with a "
+                  "negative answer and no requirement change LO-01d to g keep no route on held evidence, and (I)'s powered cooling (up to 35 W into "
+                  "the sealed case) would reopen U-02's heat budget; the power path's topology stays",
      "rows": ["IF-10"]},
-    {"id": "U-02", "title": "MESHSAT-1478: the inside air at the enclosure's floor against the +70 C parts",
-     "constraint": "at T-H1's 1.666 W/K floor the uncooled inside air is 70.00 C in E3-O and tends to 75.00 C in E5's +60 C dwell (L4-E10, MODELED), "
-                   "plus up to 1.25 K from L4-E8's ballasts, at or past the +70 C ratings of the SA868, the AW7915-AED cards, the LimeSDR and the Xenarc",
-     "settles": "T-H1 measured in both lid states and the parts' temperatures in E3-O and E5 on the prototype, or a thermal design whose modelled inside "
-                "air stays under +70 C at those levels",
-     "alternatives": "an enclosure conductance above LO-01a's floor (the plate, the fans, the case); parts rated past +70 C; D-02a's +55 C margin and E5 "
-                     "restated (the owner's, D-29); a reduced mode at those levels",
-     "owner": "none yet: an architecture-level thermal question for the kit's thermal owner (MESHSAT-1478); a requirement change would be the owner's",
-     "overturns": "the sealed case's thermal design (no vent, the ruling of 7 September 2026) or D-02a's margin; not the power path's topology",
+    {"id": "U-02", "title": "MESHSAT-1478: the electronics against the inside air at D-02a's +55 C margin and E5's +60 C dwell (L4-E12)",
+     "constraint": "L4-E12's route (c), E3-O as stated and the hold in E5 only, is CONDITIONAL on T-H1 lid open with the fans at or over 2.159 W/K "
+                   "(E3-O alone 1.806 W/K; 2.709 W/K with no hold), the hold's reference within +-0.899099 K of the mixed air, the parts out of the "
+                   "cooler's exhaust, the fans' rating (D-18), the pushbuttons and two regulators changed and PDi's statement; at the line E3-O's air "
+                   "is 67.55 C and E5's 70.00 C, while the design as it stands (LO-01a's floor, no hold) reaches 76.25 C in E5; inside the envelope "
+                   "no location holds the SGP41 to its maker's conditions (CFL-002)",
+     "settles": "T-H1 measured in both lid states at or over 2.159 W/K with the picked fans; the forced hold and the SGP41's shutdown at room "
+                "temperature; E3-O and E5 with thermocouples on the +70 C parts (R-104, R-109); PDi's and Sensirion's answers; the owner's answer "
+                "to CFL-002",
+     "alternatives": "(a) the enclosure alone at 2.709 W/K with no hold; (b) wider-rated parts (five are device-set parts, the owner's, CHO-001); "
+                     "the plate coupling if T-H1 reads between 1.806 and 2.159 W/K; a device-set re-pick or a stated deviation of E3-O's "
+                     "configuration (the owner's)",
+     "owner": "CFL-002, the SGP41 in the envelope: A (a BME688-class sensor in its place, L4-E12's recommendation), B (the VOC channel dropped) or C "
+              "(the SGP41 kept, its channel reported as not covered); send PDi's and Sensirion's requests (OW-1, OW-4); later, only on T-H1's "
+              "reading, a re-pick or a deviation",
+     "overturns": "on T-H1's reading and the fans: under 2.159 W/K E5 fails for the +70 C class unless the plate coupling holds, under 1.806 W/K E3-O "
+                  "too, so the sealed case's thermal design (no vent, the ruling of 7 September 2026) or the device set (CHO-001) could change; a "
+                  "stopped fan takes the enclosure to its fans-off conductance; CFL-002 changes a sensor, not the architecture; never the power "
+                  "path's topology",
      "rows": ["IF-11"]},
     {"id": "U-03", "title": "O-1: a solar panel with a supported maximum open circuit inside REQ-016's window",
      "constraint": "REQ-016 admits a panel only with an open circuit at or below 25 V at -20 C; the candidate's nominal sheet gives 24.05 V and no "
@@ -1731,25 +2092,27 @@ CHOICES = [
      "owner": "none until a panel is pinned",
      "overturns": "which panel the mandatory solar function uses; the stage and the window stay",
      "rows": ["IF-01"]},
-    {"id": "U-04", "title": "source-only and dead-pack operation (the focused check's B4)",
-     "constraint": "U3 has no battery FET: with the pack absent it holds VBAT at ChargeVoltage and with the pack's discharge FET open at CUV it "
-                   "charges at the 384 mA clamp, VBAT near the pack's 10 V (INFERRED from SLUSE66A 9.3.1, 9.3.17, 9.6.2.1); at a 9 V source the "
-                   "line gives 19.9 to 36.6 W against PS-IDLE-SPEC's 42.8 W, and before the host writes IIN_HOST about 31 W; whether the converter "
-                   "keeps VSYS up with charge inhibited (Q-TI-3), whether the gauge lets a pack at CUV take charge with no precharge FET, and whether "
-                   "every load converter runs at the dead pack's VBAT (A-14) are not in any held document",
-     "settles": "TI's answer to Q-TI-3 and O-CHG-2, the gauge's FET states at and below CUV read in SLUUAQ3A for this image, the load converters' "
-                "minimum input read from their sheets, then R-85 run at 12 V and 24 V with the pack's discharge FET open and with the pack absent",
-     "alternatives": "a charger with a battery FET power path, so VSYS is regulated apart from the pack; a source-fed keep-alive rail for the "
-                     "controllers and the gauge's host; a precharge path on board P for a pack at or below CUV; REQ-015's acceptance restated to a "
-                     "pack above CUV (the owner's)",
-     "owner": "none unless the answer is negative and REQ-015 is restated; sending Q-TI-3 is an outside contact the owner makes (the request is "
-              "prepared in REVIEW-REQUEST.md)",
-     "overturns": "the charger's power path (a battery FET or an added rail) if the converter cannot carry the loads without a pack; with a "
-                  "negative answer the kit with a dead or absent pack does not run from a source and a dead pack is not recovered in the kit",
+    {"id": "U-04", "title": "source-only and dead-pack operation (L4-E11: arrangement (A), a CONDITIONAL CANDIDATE)",
+     "constraint": "L4-E11 selects arrangement (A), the drawn charger with no battery FET, with rules R-a to R-d and the replaced entry: at a 9.00 V "
+                   "plug the source delivers 29.09 to 42.52 W at VBAT and the shed warm-up (28.12 W plan) is carried with 0.98 W in hand while P1 "
+                   "stays at most 20.51 W; REQ-015 at 9.00 V at the plug is a CONDITIONAL CANDIDATE, not closed: at the load's hi corner P1 "
+                   "(35.24 W) exceeds the source's least, TI states neither VSYS's regulation with no battery under load steps (N1) nor what it "
+                   "regulates with charge inhibited in state S2 (N2, Q-TI-3), the cells' warming time has no held model, and R-b's cases (ii) "
+                   "and (iii) are INCONCLUSIVE",
+     "settles": "E11-05 (TI's answers: N1, N2 for S2, Q-TI-2), E11-06 (R-85 extended: P1 at most 20.51 W, the front end at least 0.88021, the pin's "
+                "band, the breaker never tripped, VSYS's step response), E11-09 (the knee drawn), E11-22 (R-b's cases), E11-23 (the warm-up time "
+                "at the plug)",
+     "alternatives": "(B) a charger with a battery FET power path (it reopens L4-E4 to L4-E8's settings on a part whose sheet is not held); (C) a "
+                     "pre-charge path on board P (its resistor's heat in the sealed case); VSYS's capacitance first (E11-07); REQ-015's acceptance "
+                     "restated (the owner's; not needed while (A) stands)",
+     "owner": "none unless the evidence is negative and REQ-015 is restated; TI's questions are an outside contact the owner makes (REVIEW-REQUEST.md, "
+              "Q-TI-3 restated as N2 with N1 added; OW-4)",
+     "overturns": "on TI's N1 or the bench's VSYS under the kit's load steps with no battery: the charger's power path, VSYS's capacitance first "
+                  "(E11-07) and only then (B); on the efficiency, the pin's band or P1's load, the knee or F1, not the topology",
      "rows": ["IF-09", "IF-10"]},
 ]
 
-# The material power-path defects (criterion 2), open or resolved this round.
+# The material power-path defects (criterion 2), with their state after the update round.
 DEFECTS = [
     {"id": "D-01", "title": "the solar backstop trips under TEST-PLAN M2 (CS101)", "state": "RESOLVED (drafted)",
      "constraint": "CS101's injected current crossed the sense bank and its peaks over the trip less the operating current stopped the stage for "
@@ -1759,50 +2122,100 @@ DEFECTS = [
                 "CONDITIONAL on the loop's typical rows (break-even 2.51 times), the bulk's temperature, the bank's pulse capability, the 0.1 s window",
      "resolution": "L4-E7R accepted (check 4, fnd/l4e7 91e9a4b5, figures at 675b8068); register R-21 and R-98, apply_gen_sch_e_backstop.py; M2, R-122",
      "rows": ["IF-01", "IF-02"]},
-    {"id": "D-02", "title": "the vehicle entry's hot swap opens under TEST-PLAN M2 (CS101) at REQ-015's 36 V", "state": "RESOLVED (drafted)",
+    {"id": "D-02", "title": "the vehicle entry's over-voltage lockout opens under TEST-PLAN M2 (CS101) at REQ-015's 36 V", "state": "RESOLVED (drafted)",
      "constraint": "36 V plus CS101's 2.83 V peak reaches 38.83 V, past the drawn OVLO minimum 37.78 V",
-     "options": "R22 100k and R23 6.42k, both 0.1 %: OVLO 39.71 / 41.44 / 43.18 V (selected, SESSION); M2 at the source's nominal (not taken)",
-     "resolution": "register R-94, apply_gen_sch_e_hotswap.py", "rows": ["IF-04"]},
+     "options": "the selected entry's OV (TPS48110-Q1, R22 332k over R23 10.0k at 0.1 %): off above 39.6 / 40.36 / 41.22 V, 0.77 V over the peak "
+                "and 3.18 V under D10's breakdown minimum (L4-E11, selected); for the LM5069 alternative R22 100k and R23 6.42k at 0.1 %: 39.71 / "
+                "41.44 / 43.18 V; M2 at the source's nominal (not taken)",
+     "resolution": "apply_gen_sch_e_entry.py (E11-01, R-123) after apply_gen_sch_e_hotswap.py (R-94)", "rows": ["IF-04"]},
     {"id": "D-03", "title": "Q1 over its rating on a reversed input with the raised ceiling", "state": "RESOLVED (drafted)",
      "constraint": "66.15 V across the drawn 60 V BSC039N06NS", "options": "the CSD19532Q5B (100 V)",
      "resolution": "register R-17, apply_gen_sch_e_q1.py", "rows": ["IF-04"]},
     {"id": "D-04", "title": "F1 cannot interrupt at the entry's highest steady input", "state": "RESOLVED (drafted)",
-     "constraint": "the drawn 32 V DC MINI against 43.18 V", "options": "the Littelfuse 0997010.WXN (58 V DC, 1000 A at 58 V DC)",
-     "resolution": "register R-18, apply_gen_sch_e_f1.py", "rows": ["IF-04"]},
+     "constraint": "the drawn 32 V DC MINI against 43.18 V", "options": "the Littelfuse 0997010.WXN (58 V DC, 1000 A at 58 V DC), in a holder "
+                                                                         "rated at least 20 A (E11-13)",
+     "resolution": "register R-18 and R-132, apply_gen_sch_e_f1.py", "rows": ["IF-04"]},
     {"id": "D-05", "title": "U17 on the 54 V rail (HF-F02)", "state": "RESOLVED (drafted)",
      "constraint": "54 V on the INA226's IN+ and IN- against its 40 V absolute", "options": "U17 on R227, 5 mOhm in the PoE stage's input",
      "resolution": "register R-06, apply_gen_sch_a_u17.py", "rows": ["IF-13"]},
-    {"id": "D-06", "title": "the vehicle entry's interconnect in F1's long-time band from a weak source", "state": "OPEN",
+    {"id": "D-06", "title": "the vehicle entry's interconnect in F1's long-time band from a weak source", "state": "RESOLVED (in design)",
      "constraint": "a source under 30 A (ECSS 6.17.3c's three times) can leave 10 to 11 A flowing indefinitely, 13.5 A for up to 600 s and 20 A for "
                    "up to 5 s through J_DCIN's VH contact (10 A), the D38999 size 16 contacts (13 A test current) and the kit's cable and lead, "
                    "whose held sheets print no current or time-current rating",
-     "options": "an interconnect rated to the fuse's 20 A point (size 12 contacts at 23 A, a 30 A board connector, a cable whose maker rates it, with "
-                "the stiff-source current re-checked against 1000 A); the source's capability stated in REQ-015 (the owner's); the makers' overload "
-                "data obtained (Lapp, JST, Amphenol)",
-     "resolution": "an open engineering question (R-113)", "rows": ["IF-04"]},
-    {"id": "D-07", "title": "the hot swap's power limit under the sense voltage TI recommends", "state": "RESOLVED (drafted)",
+     "options": "L4-E11's option (i), selected: every element at least 20 A continuous where installed, 35 A for 5 s, 60 A for 0.5 s and F1's total "
+                "clearing I2t at 900 A; size 12 contacts (insert 17-6), J_DCIN an XT60-class connector, a holder rated at least 20 A, AWG 14 cores, "
+                "the loop specified by its resistance (at least 56.93 mOhm at 20 C, accepted four-wire at 58.51 to 64.21 mOhm) so a stiff source "
+                "stays at 900 A against F1's 1000 A; (ii) a smaller fuse rejected (it fails 9 V); (iii) the source's capability in REQ-015 not needed",
+     "resolution": "L4-E11 (accepted, check a15ab384), CONDITIONAL on its evidence items E11-10 to E11-16 (R-129 to R-132, R-43, R-95, R-113, R-115)",
+     "rows": ["IF-04"]},
+    {"id": "D-07", "title": "the hot swap's power limit under the sense voltage TI recommends", "state": "SUPERSEDED (the LM5069 alternative only)",
      "constraint": "R24 20k gives 4.7429 mV at 43.18 V, under SNVS452G's 5 mV, and the hot-short pulse was compared at 36 V with a by-eye reading",
-     "options": "R24 22k 1 %: 5.06 mV at its low corner; the power-limit part at 43.18 V and the timer's stacked maximum inside Figure 10 "
-                "derated to Q7's case; the breaker's event and the timer's components stay open (R-118, R-119, D-09)",
-     "resolution": "register R-94, apply_gen_sch_e_hotswap.py", "rows": ["IF-05"]},
+     "options": "the selected entry limits no power (E11-19, out 12): its starts sit inside Q7's derated chart (0.704 into a resistive fault, 0.743 "
+                "into a hard short); for the alternative R24 22k 1 %: 5.06 mV at its low corner",
+     "resolution": "superseded by E11-01's entry (R-123); R-94's R24 stands only if the LM5069 is kept", "rows": ["IF-05"]},
     {"id": "D-08", "title": "R227's transients bypass U16's current control", "state": "RESOLVED (bounded, conditions named)",
      "constraint": "the capacitors behind R227 (20.2 uF) charge outside U16's cycle limit, so 72.38 mV did not bound every transient",
      "options": "bounded in part A: the differential at most the VBAT step, POE_VIN under 40 V in every required event, a saturated sample "
                 "distinguished from damage; R227's pulse energy 2.879 mJ nominal, the maximum unresolved until a capacitance envelope and the "
                 "pulse's shape meet Milliohm's rating; moving the capacitors ahead of R227 not taken (they close U16's input loop)",
      "resolution": "IF-13's checks; R-101 (Milliohm's pulse rating), R-117 (the loop's inductance), R-120 and R-121 (L10)", "rows": ["IF-13"]},
-    {"id": "D-09", "title": "the hot swap's fault time against the start into VIN_RAW", "state": "OPEN",
+    {"id": "D-09", "title": "the hot swap's fault time against the start into VIN_RAW", "state": "SUPERSEDED (the LM5069 alternative only)",
      "constraint": "with C5 (100 nF, K, X7R) at its printed rows stacked the fault time's minimum is 2.035 ms, under TI's half-again margin over "
                    "the start into VIN_RAW at 43.18 V (3.814 ms; the start alone 2.542 ms at the corners, 1.324 ms nominal), the front end's own "
                    "load during the start not included",
-     "options": "C5's real envelope read and the start re-run with the front end's load; a C5 with a tighter envelope (150 nF C0G at 5 % gives "
-                "4.46 to 12.852 ms, inside both the start margin and Figure 10's power law derated, no part read); a higher power limit (a "
-                "larger pulse against the SOA)",
-     "resolution": "an open engineering question (R-119)", "rows": ["IF-05"]},
+     "options": "the replacement has no fault timer against a power limit (its start 0.382 to 1.219 A for at most 2.5 ms); with the LM5069 kept, "
+                "L4-E11's C5 GRM3195C1H104GA05 with C121 GRM3195C1H683JA05 (apply_gen_sch_e_timer.py): 4.927 to 14.653 ms against 4.593 ms on a "
+                "recomputed 3.062 ms start (34 uF)",
+     "resolution": "superseded by E11-01's entry (R-123); R-119 only if the LM5069 is kept", "rows": ["IF-05"]},
 ]
 OWNERS = ["Layer 4 coordinator", "Layer 5 interfaces", "Layer 6 components", "Layer 7 mechanical", "Layer 8 board A generator owner",
           "Layer 8 board E generator owner", "Layer 8 board P generator owner", "Layer 9 pre-layout analysis", "prototype bench",
-          "firmware owner", "TEST-PLAN owner", "Layer 8 board B generator owner"]
+          "firmware owner", "TEST-PLAN owner", "Layer 8 board B generator owner", "Layer 8 board C generator owner", "CONOPS owner"]
+
+# The owner's items: decisions and outside contacts only, kept apart from the engineering work (the register). Each names the
+# pinned document it rests on; the session contacts no outside party, it prepares the texts.
+OWNER_ITEMS = [
+    {"id": "OW-1", "what": "CFL-002 (U-02): the SGP41 in the battery bay against REQ-042's VOC channel inside the envelope: A, a BME688-class "
+                           "sensor in its place (L4-E12's recommendation); B, the VOC channel dropped; C, the SGP41 kept, its channel reported as "
+                           "not covered above a 49.0 C reading and after storage outside 5 to 30 C",
+     "docs": [("l4e12md", "L4-E12's page, section 8")]},
+    {"id": "OW-2", "what": "U-01, item 1: send the drafted request for the HL18650V's signed product specification (Yichun Topwell Power)",
+     "docs": [("cl_topwell", "the request")]},
+    {"id": "OW-3", "what": "U-01, item 2, once that specification confirms L4-E10's rows: approve the cell change inside D-06's 4S3P (about 145 Wh "
+                           "to about 121 Wh nominal, REQ-046 and REQ-077 restated with the cell, about USD 42 a pack); if declined, LO-01d to g stay a "
+                           "release gate",
+     "docs": [("l4e10md", "L4-E10's page, section 8")]},
+    {"id": "OW-4", "what": "the outside-contact drafts to send (the owner chooses the channel)",
+     "docs": [("cl_topwell", "Yichun Topwell Power: the HL18650V's signed specification (U-01)"),
+              ("cl_pdi", "Pervasive Displays: the E2370KS0C1's storage and operation (U-02)"),
+              ("cl_sensirion", "Sensirion: the SGP41's duration, recovery and storage (U-02, CFL-002)"),
+              ("cl_adi", "Analog Devices: the LT8705A's IMON_IN limits (the 100 W bound; R-33, R-101)"),
+              ("cl_milliohm", "Milliohm: the HoJLR2512's temperature coefficient below +25 C (R-101)"),
+              ("cl_vishay", "Vishay: the WSL2512's pulse capability (R-101)"),
+              ("cl_ti", "Texas Instruments: the INA169's error envelope (R-101)"),
+              ("ti_review", "Texas Instruments: the battery packet's Q-TI-2 and Q-TI-3, with L4-E11's N1 and N2 for S2 added before sending (U-04; E11-05, R-114)"),
+              ("cl_eaton", "Eaton: the SCF9550 above +60 C and in storage (PWR-F12; R-103)")]},
+    {"id": "OW-5", "what": "the fallbacks, to send only if T-H1 reads under 2.159 W/K (L4-E12)",
+     "docs": [("cl_gc", "Ground Control: the RockBLOCK 9704"), ("cl_nicerf", "NiceRF: the SA868"), ("cl_bulgin", "Bulgin: the PXP4043C")]},
+]
+OWNER_NOT_DRAFTED = ("not yet drafted (engineering work first, then the owner sends): Littelfuse, F1's total clearing I2t at 900 A and 58 V DC "
+                     "(R-115, E11-16); Coilcraft, L10's inductance against current at temperature (R-120) and L1's Isat at 85 C (R-31); Milliohm, "
+                     "R227's single-pulse rating (R-101)")
+OWNER_MARK = {"l4e12md": r"\*\*Owner question: which of these three\?\*\*", "l4e10md": r"The recommendation needs the owner for exactly two things",
+              "ti_review": r"Nothing in this file has been sent to anyone"}
+
+# The accepted records' downstream items mapped onto this register (deduplicated): L4-E11's E11-NN by its From column (every
+# one but E11-19, which this record answers, out 12); L4-E10's and L4-E12's owner rows by these maps.
+E11_ANSWERED_HERE = {"E11-19"}
+E10_MAP = {"Session (layer 4)": ["R-103", "R-47"], "Layer 6, components": ["R-103"], "Layer 7, mechanical": ["R-111"],
+           "Layer 8, generator owners": ["R-105"], "Layer 9, pre-layout": ["R-108"], "Prototype bench": ["R-104", "R-109"],
+           "TEST-PLAN's owner": ["R-110"], "Firmware owner": ["R-106"], "Board B's owner": ["R-107"],
+           "The kit's thermal owner (outside FEA-008)": ["R-111"], "Owner": ["OW-2", "OW-3"]}
+E12_MAP = {"Owner": ["OW-1"], "Layer 4 coordinator": ["this record (IF-11, U-02, out 12e)"],
+           "Layer 2 and 5 integrators, firmware owner": ["R-138", "R-139"], "TEST-PLAN's owner": ["R-140"],
+           "Layer 6 components": ["R-141"], "Layer 6, architecture-level": ["R-142"], "Layer 6, downstream": ["R-143"],
+           "Layer 7 mechanical": ["R-111"], "Layer 8, board E's generator owner": ["R-144"], "Layer 8, board C's generator owner": ["R-145"],
+           "Layer 9 pre-layout": ["R-146"], "Prototype bench": ["R-104", "R-109"], "Owner (outside contacts)": ["OW-4", "OW-5"]}
 
 
 def gate_violations(gate, st):
@@ -1855,7 +2268,8 @@ def main():
     F, where = compute()
     D = derived(F)
     A = partA(F, D, _C_TEXT)
-    R = rows(F, D, A)
+    E = rejudge(F, D, A)
+    R = rows(F, D, A, E)
     st = {r["id"]: row_status(r) for r in R}
     for r in R:
         for k in ("v", "i"):
@@ -1865,7 +2279,8 @@ def main():
             refuse(4, "%s has no settling record, check or side" % r["id"])
     out = []
     p = out.append
-    p("L4-E9: THE CONNECTED POWER ARCHITECTURE AND LAYER 4'S CLOSURE GATE (MESHSAT-1357, 1 October 2026; round 2, 2 October 2026). Prototype")
+    p("L4-E9: THE CONNECTED POWER ARCHITECTURE AND LAYER 4'S CLOSURE GATE (MESHSAT-1357, 1 October 2026; round 2 and the update round, 2 October")
+    p("2026). Prototype")
     p("design, desk arithmetic:")
     p("nothing is bought, built, powered or measured. Every figure is read from a generator, a committed netlist, a record's committed")
     p("output or a maker's document, each pinned by sha256; the few this record sets itself are named. Classes: MAKER, NETLIST, MODELED,")
@@ -1876,6 +2291,7 @@ def main():
         w, h = where[key]
         p("   %-9s %s  %s%s" % (key, h[:16], rel, "" if w == "tree" else "  (" + w + (", fnd/l4e8 accepted)" if key in FROM_L4E8 else ", " + FROM_LABEL[key] + ")")))
     p("   pending: %s" % L4E7R)
+    p("   pending: L4-E13 (U-03, the panel's supported open circuit): U-03 stays as it stood until it lands")
     p("   this record's own figures: copper %s ohm mm2/m at 20 C and %s /K, 18 AWG %s mm2 (ASSUMPTION, constants); the cold end %s C (REQ-024);"
       % (fmt(CU_RHO_20C), fmt(CU_ALPHA), fmt(AWG18_MM2), fmt(T_COLD)))
     p("     capacitance kept under bias %s (ASSUMPTION; the bound states the fraction it needs); the back-feed diode's drop %s V (an upper bound);"
@@ -1947,6 +2363,18 @@ def main():
     p("     LO-01e under (II): the cells %s C, %s K under the page's limit, %s K under the re-derived H1 and %s K under U2's INFERRED trip;"
       % (fmt(F["lo01e"][0]), fmt(F["lo01e"][1]), fmt(F["lo01e"][2]), fmt(F["lo01e"][3])))
     p("     USD %s a cell, so about USD %s a 4S3P pack of 12 (a marketplace price)" % (fmt(F["cell_usd"]), fmt(round(F["cell_usd"] * 12))))
+    p("   L4-E11 (3298d1f1, accepted): the entry TPS48110-Q1 with a CSD19536KTT, R19 4.5 mOhm, L2 SRF1260-1R0Y: UVLO on %s / %s / %s V, off %s / %s / %s V;"
+      % (*[fmt(x) for x in F["e_uv_on"]], *[fmt(x) for x in F["e_uv_off"]]))
+    p("     OV off above %s / %s / %s V, on under %s / %s / %s V; overcurrent %s / %s / %s A after %s / %s / %s ms; short circuit %s / %s / %s A; retry %s s"
+      % (*[fmt(x) for x in F["e_ov_off"]], *[fmt(x) for x in F["e_ov_on"]], *[fmt(x) for x in F["e_oc"]], *[fmt(x) for x in F["e_oc_ms"]], *[fmt(x) for x in F["e_sc"]], fmt(F["e_retry_s"])))
+    p("     the loop %s / %s / %s mOhm (plug to DC_P, on to VIN_RAW, in all, hot); in service %s A at a 9.00 V plug, %s %% under the trip, front end at least %s;"
+      % (*[fmt(x) for x in F["e_loop_mohm"]], fmt(F["e_svc"][1]), fmt(F["e_margin_pct"]), "%s" % F["e_eta_floor"]))
+    p("     the knee %s A flat from %s V, HIZ certain below %s V; the guard falls at %s to %s V (R14 76.8k); D-06: the loop's floor %s mOhm, %s A at %s V"
+      % (fmt(F["knee"][0]), fmt(F["knee"][1]), fmt(F["knee_hiz"]), fmt(F["guard_sel"][0]), fmt(F["guard_sel"][2]), fmt(F["loop_floor"]), fmt(F["ipf_spec"]), fmt(F["e_basis_v"])))
+    p("   L4-E12 (a86be47b, accepted): T-H1's binding line %s W/K (E3-O alone %s, no hold %s); at the line %s C (E3-O) and %s C (E5, hold); hold reference"
+      % (fmt(F["gc"]), fmt(F["g_e3o"]), fmt(F["g_a"]), "%.2f" % F["e3o_line"], "%.2f" % F["e5_line"]))
+    p("     +-%s K; E5's heat under the hold %s W, the heat stage %s W into the case; at the floor %s / %s C; LO-01a with the ballasts %s W/K"
+      % ("%s" % F["hold_ref"], fmt(F["e5_hold_w"]), fmt(F["e3o_stage_w"]), "%.2f" % F["floor_air"][0], "%.2f" % F["floor_air"][1], fmt(F["lo01a_ball"])))
     p("   L4-E8: every can at most %s A against %s A (8 mOhm), %s against %s A (7 mOhm); ballasts at most %s W (%s W at the nominal illustration)"
       % (fmt(F["can8"][0]), fmt(F["can8"][1]), fmt(F["can7"][0]), fmt(F["can7"][1]), fmt(F["ballast_w"]), fmt(F["ballast_nom_w"])))
     p("   s120: VBUS20 %s to %s V, bound %s V; OVLO %s / %s / %s V; ChargeVoltage at most %s V; BATOVP %s V; ACOV %s V minimum"
@@ -1957,8 +2385,9 @@ def main():
     p("   the pack: %s A continuous, %s A peak; prospective %s to %s A; OCD1 %s A for %s s; OCC %s A; SCD %s A; COV %s V, CUV %s V; inside air %s / %s C (lid open / closed)"
       % (fmt(F["pp_cont"]), fmt(F["pp_peak"]), fmt(F["pp_fault"][0]), fmt(F["pp_fault"][1]), fmt(F["ocd1"][0]), fmt(F["ocd1"][1]), fmt(F["occ"]), fmt(F["scd"]), fmt(F["cov"]), fmt(F["cuv"]), fmt(F["air"][0]), fmt(F["air"][1])))
     p("")
-    p("4. THE INTERFACE ROWS (the selected architecture: A1, with L4-E4 to L4-E8 applied and this record's changes; 'as drawn' checks show a defect")
-    p("   the selected design resolves). Each row: both sides' ranges, the currents at the modes, losses, thermal, protection, the record that settles it.")
+    p("4. THE INTERFACE ROWS (the selected architecture: A1, with L4-E4 to L4-E8, L4-E11 and L4-E12 applied and this record's changes; 'as drawn' checks show a defect")
+    p("   the selected design resolves, 'the alternative' checks the LM5069 kept instead of L4-E11's entry). Each row: both sides' ranges, the currents at the")
+    p("   modes, losses, thermal, protection, the record that settles it.")
     for r in R:
         cls, s = st[r["id"]]
         p("   %s  %s  [%s, %s]" % (r["id"], r["title"], s, cls))
@@ -1976,8 +2405,8 @@ def main():
     p("   rows: %d; %s" % (len(R), ", ".join("%s %d" % (k, counts[k]) for k in sorted(counts))))
     p("")
     p("5. SIMULTANEOUS OPERATION (solar at the window, a vehicle at 24 V, the full load, charging)")
-    p("   the front end's input is the H3 line's at VIN_RAW whatever the sources share: at 24 V at most %s A, %s %% of the entry's basis; the tracker's"
-      % (fmt(F["h3"][24.0][1]), fmt(F["h3"][24.0][2])))
+    p("   the front end's input is the H3 line's at VIN_RAW whatever the sources share: at 24 V at most %s A, %s %% of the breaker's lowest %s A; the tracker's"
+      % (fmt(F["h3"][24.0][1]), fmt(round(F["h3"][24.0][1] / F["e_oc"][0] * 100, 1)), fmt(F["e_oc"][0])))
     p("   ceiling (%s V minimum) is above 24 V, so the panel carries the bus first and the vehicle supplies only what the panel does not give"
       % fmt(F["trk_ceiling"][0]))
     p("   delivered at VBAT: %s to %s W (U3 between its minimum at the lowest bus and its board-current maximum at the bus's top, U3 %s)"
@@ -1988,22 +2417,29 @@ def main():
             p("   %-34s %6s W: carried by the sources, up to %s W left to charge (at most %s A ChargeCurrent)" % (nm, fmt(w), fmt(round(-short, 1)), fmt(F["chg_set"])))
         else:
             p("   %-34s %6s W: the pack supplies at least %s W, %s A at a 14.4 V stack; no charge" % (nm, fmt(w), fmt(round(short, 1)), fmt(round(short / 14.4, 2))))
-    p("   no stage is pushed past its limit: the entry stays under its minimum limit (H3), R11 carries at most %s A, every can at most %s A, the pack's"
+    p("   no stage is pushed past its limit: the entry stays under its breaker's lowest (H3), R11 carries at most %s A, every can at most %s A, the pack's"
       % (fmt(F["r11_need"]), fmt(F["can8"][0])))
     p("   current falls by what the sources give (PS-ALLTX's floors of D-11 hold as on the pack alone), and the outlets drop while the PA keys")
-    p("   per source at VBAT (U3 %s, VBUS20 %s V top, %s V lowest): vehicle at 9 V %s to %s W (the entry itself bounds 9 V at %s W); at 12 V up to %s W; at 24 V up to %s W"
-      % (fmt(F["eta_u3"]), fmt(F["vbus_band"][1]), fmt(F["bus_low"]), fmt(round(D["vbat_at_9"][0], 1)), fmt(round(D["vbat_at_9"][1], 1)), fmt(round(D["entry_9v_vbat"], 1)), fmt(round(D["vbat_at_12"], 1)), fmt(round(D["vbat_at_24"], 1))))
-    p("   so at the 9 V floor the vehicle runs PS-IDLE-SPEC (%s W) with the pack supplementing, and charges only while the kit draws under %s W"
-      % (fmt(F["idle"][1]), fmt(round(D["vbat_at_9"][0], 1))))
+    env = F["e_env"]
+    p("   per source at VBAT, L4-E11's envelope at the plug (the losses hot, the corrected knee): 9 V %s to %s W; 12 V %s to %s W; 24 V %s to %s W;"
+      % (fmt(env[9][1]), fmt(env[9][2]), fmt(env[12][1]), fmt(env[12][2]), fmt(env[24][1]), fmt(env[24][2])))
+    p("     36 V %s to %s W (round 2's figures at VIN_RAW with no loss and L4-E5's drawn knee: 9 V %s to %s W, 12 V up to %s W, 24 V up to %s W)"
+      % (fmt(env[36][1]), fmt(env[36][2]), fmt(round(D["vbat_at_9"][0], 1)), fmt(round(D["vbat_at_9"][1], 1)), fmt(round(D["vbat_at_12"], 1)), fmt(round(D["vbat_at_24"], 1))))
+    p("   so at a 9.00 V plug the vehicle runs PS-IDLE-SPEC (%s W) with the pack supplementing, and charges only while the kit draws under %s W"
+      % (fmt(F["idle"][1]), fmt(env[9][1])))
     p("")
     p("6. STARTUP")
-    p("   source arriving: the LM5069 starts at 9 V (UVLO, R21 '%s'), its timer bounds inrush; U3 is in HIZ below %s V and out above %s V; the H3 line"
-      % (F["e_r21"], fmt(F["hiz_below"]), fmt(F["hiz_out_above"])))
+    p("   source arriving: the selected entry (L4-E11) turns on at %s V of DC_P at the most and slews the bus up (%s to %s A for at most %s ms; the drawn"
+      % (fmt(F["e_uv_on"][2]), fmt(F["e_inrush"][0]), fmt(F["e_inrush"][1]), fmt(F["e_start_ms"])))
+    p("     LM5069, R21 '%s', cannot start from a 9.00 V plug); U3 is in HIZ below %s V (certain, the corrected knee; %s V on L4-E5's drawn line); the H3 line"
+      % (F["e_r21"], fmt(F["knee_hiz"]), fmt(F["hiz_below"])))
     p("     bounds U3 from its first cycle with no host; the panel: the stage's own UVLO and soft start, the hold at %s V; SWEN stays off while"
       % fmt(F["hold"][1]))
     p("     TRK_LDO33 is under %s V, whatever the ramp (L4-E7R), and each backstop trip restarts through the soft start" % fmt(F["swen_v"]))
     p("   source leaving: VBAT is the system node with no battery FET, so the pack carries the loads without a break; IIN_HOST resets to 3.25 A")
-    p("     and firmware writes %s A again (FW-A16 restated); VIN_RAW falls through the restart guard (%s V at the highest) and the front end stops" % (fmt(F["iin_host"]), fmt(F["latch"][2])))
+    p("     and firmware writes %s A again (FW-A16 restated); VIN_RAW falls through the restart guard (%s V at the highest with R14 76.8k; %s V as drawn)"
+      % (fmt(F["iin_host"]), fmt(F["guard_sel"][2]), fmt(F["latch"][2])))
+    p("     and the front end stops")
     B4 = source_only(F, D)
     p("   SOURCE-ONLY AND DEAD-PACK OPERATION (the focused check's B4; U-04)")
     p("     what the maker's sheet establishes (SLUSE66A): after VBUS qualification '%s' (9.3.1), with no battery condition, and its power-up"
@@ -2016,7 +2452,7 @@ def main():
     p("       (INFERRED: no current in R17, so the voltage loop sets VSRN); with the pack's discharge FET open at CUV it charges through that FET's")
     p("       body diode at the clamp, and VBAT sits at the pack's %s V or so plus the diode (INFERRED), against the converters' assumed %s V floor (A-14)"
       % (fmt(D["vbat_low"]), fmt(D["vbat_low"])))
-    p("     the source envelope with no usable pack (section 5's figures at VBAT): 9 V %s to %s W, 12 V up to %s W, 24 V up to %s W, against PS-IDLE-SPEC"
+    p("     the source envelope with no usable pack (round 2, at VIN_RAW with no loss; L4-E11's at the plug in section 5): 9 V %s to %s W, 12 V up to %s W, 24 V up to %s W, against PS-IDLE-SPEC"
       % (fmt(round(D["vbat_at_9"][0], 1)), fmt(round(D["vbat_at_9"][1], 1)), fmt(round(D["vbat_at_12"], 1)), fmt(round(D["vbat_at_24"], 1))))
     p("       %s W: at 9 V the kit cannot run its profile on the source alone (it sheds or stops); at 12 V and 24 V the line's maximum is above it"
       % fmt(F["idle"][1]))
@@ -2024,24 +2460,37 @@ def main():
     p("       IIN_HOST the input limit gives %s (CHARGER-STATE-SEQUENCE.md, INFERRED), so the boot load must stay under it until FW-A16, which"
       % B4["hostfree"])
     p("       FW-C01's order (the charger before any slot) intends but no record measures")
-    p("     not resolvable from the held documents, so U-04, an unresolved architecture question: whether the converter keeps VSYS up with charge")
-    p("       inhibited and no battery FET (Q-TI-3, %s); whether the gauge lets a pack at or below CUV take charge through its FETs with no" % B4["qti3"])
-    p("       precharge FET; whether every load converter runs at the dead pack's VBAT (A-14). Board E's always-on comes up on CELL_F from VBAT")
+    p("     not resolvable from the held documents in round 2: whether the converter keeps VSYS up with charge inhibited and no battery FET (Q-TI-3,")
+    p("       %s); whether the gauge lets a pack at or below CUV take charge through its FETs with no precharge FET; whether every load" % B4["qti3"])
+    p("       converter runs at the dead pack's VBAT (A-14). Board E's always-on comes up on CELL_F from VBAT")
+    p("     L4-E11 (accepted) selects arrangement (A), the drawn charger with rules R-a to R-d (the holds as a state table, R-b's two charge settings,")
+    p("       the shedding sequence, the image's pre-charge); at a 9.00 V plug the shed warm-up (%s W plan) is carried with %s W in hand while P1 stays"
+      % (fmt(F["e_p2"][1]), fmt(F["e_p2_hand"])))
+    p("       at most %s W; REQ-015 at 9.00 V at the plug is a CONDITIONAL CANDIDATE (E11-05, E11-06, E11-09, E11-22, E11-23): U-04 stays an unresolved"
+      % fmt(F["e_p1_max"]))
+    p("       choice until that evidence lands (section 12d)")
     p("")
     p("7. FAULTS, TRACED ACROSS THE STAGES")
     p("   reversed vehicle input (REQ-015): DC_P is back-fed from VIN_RAW through Q7's body diode (L4-E5's finding), so Q1 holds DC_P plus the")
     p("     reversed input: %s V with the drawn ceiling, %s V with L4-E5's raised ceiling, against BSC039N06NS %s V; a CSD19532Q5B (%s V) holds it,"
       % (fmt(D["q1_rev_drawn"]), fmt(D["q1_rev"]), fmt(F["bsc039_vds"]), fmt(F["csd19532_vds"])))
     p("     and U3's cathode to anode stays under its %s V recommended and %s V absolute" % (fmt(F["ld_ac_rec"]), fmt(F["ld_ca_abs"])))
-    p("   a short behind F1: F1 must interrupt at up to %s V (the selected OVLO maximum); the kit's cable (%s m of %s mm2 a way) and lead (%s mm of AWG %d)"
-      % (fmt(round(D["f1_v"], 2)), fmt(F["cable_m"]), fmt(F["cable_mm2"]), fmt(F["lead_mm"]), int(F["lead_awg"])))
+    p("   a short behind F1: F1 must interrupt at up to %s V (the basis L4-E11 keeps; the selected OV maximum %s V); the drawn cable (%s m of %s mm2 a way)"
+      % (fmt(round(D["f1_v"], 2)), fmt(F["e_ov_off"][2]), fmt(F["cable_m"]), fmt(F["cable_mm2"])))
+    p("     and lead (%s mm of AWG %d)" % (fmt(F["lead_mm"]), int(F["lead_awg"])))
     p("     give %s Ohm at 20 C and %s Ohm at %s C, so a stiff source drives at most %s A (copper alone); the drawn 297 is rated %s V DC: NOT MET"
       % (fmt(round(D["f1_r20"], 5)), fmt(round(D["f1_rcold"], 5)), fmt(T_COLD), fmt(round(D["f1_ipf"], 1)), fmt(F["f297_v"])))
-    p("     as drawn; the selected 0997010.WXN is rated %s V DC and %s A at 58 V DC: MEETS (part A, section 11)" % (fmt(A["f_v"]), fmt(A["f_int"])))
+    p("     as drawn; the selected 0997010.WXN is rated %s V DC and %s A at 58 V DC: MEETS (part A, section 11); the selected interconnect (D-06) is"
+      % (fmt(A["f_v"]), fmt(A["f_int"])))
+    p("     specified by its loop's floor, %s mOhm at 20 C, so a stiff source drives at most %s A (L4-E11 6; the construction %s A): MEETS, CONDITIONAL"
+      % (fmt(F["loop_floor"]), fmt(F["ipf_spec"]), fmt(F["ipf_constr"])))
+    p("     on the four-wire acceptance (E11-11)")
     p("   VBUS20 shorted: the front end holds the output at %s A at 9 V (R12) and %s A above %s V (R11 8 mOhm); VIN_RAW then carries at most %s A;"
       % (fmt(F["fe_out_9v"]), fmt(F["r11_8"][2]), fmt(F["avg_from"]), fmt(round(D["vin_fault"], 3))))
-    p("     the vehicle entry limits at %s to %s A and opens after %s to %s ms; the panel's stage regulates at %s A at most and its backstop trips"
-      % (fmt(F["entry_lim"][0]), fmt(F["entry_lim"][1]), fmt(F["timer_ms"][0]), fmt(F["timer_ms"][2]), fmt(F["reg"][1])))
+    p("     the vehicle entry's breaker opens on overcurrent (%s to %s A) after %s to %s ms, or on its filtered short-circuit sense (%s to %s A), and"
+      % (fmt(F["e_oc"][0]), fmt(F["e_oc"][2]), fmt(F["e_oc_ms"][0]), fmt(F["e_oc_ms"][2]), fmt(F["e_sc"][0]), fmt(F["e_sc"][2])))
+    p("     retries every %s s (the drawn LM5069 limited at %s to %s A for %s to %s ms); the panel's stage regulates at %s A at most and its backstop trips"
+      % (fmt(F["e_retry_s"]), fmt(F["entry_lim"][0]), fmt(F["entry_lim"][1]), fmt(F["timer_ms"][0]), fmt(F["timer_ms"][2]), fmt(F["reg"][1])))
     p("     at %s A at most (SWEN, inside %s ms); the restart guard cycles the front end" % (fmt(F["bs_trip"][1]), fmt(F["bs_allow_ms"])))
     p("   VBAT shorted: the pack's SCD (%s A in 0.2 ms), OCD2, the 25 A blades and F2 against %s to %s A prospective; U3 at its input limit"
       % (fmt(F["scd"]), fmt(F["pp_fault"][0]), fmt(F["pp_fault"][1])))
@@ -2066,8 +2515,12 @@ def main():
     p("     defeats the backstop); under CS101 the filtered ripple, %s A, stays under the %s A margin (D-01, resolved in design, CONDITIONAL on the loop's"
       % (fmt(F["m2_ripple"]), fmt(F["m2_margin"])))
     p("     typical rows)")
-    p("   the vehicle entry under CS101 (M2) at REQ-015's 36 V: %s V against the drawn OVLO minimum %s V (NOT MET as drawn), the selected %s V: MEETS"
-      % (fmt(round(A["cs101_top"], 2)), fmt(F["ovlo"][0]), fmt(round(F["ovlo_sel"][0], 2))))
+    p("   the vehicle entry under CS101 (M2) at REQ-015's 36 V: %s V against the drawn OVLO minimum %s V (NOT MET as drawn), the selected OV minimum %s V:"
+      % (fmt(round(A["cs101_top"], 2)), fmt(F["ovlo"][0]), fmt(F["e_ov_off"][0])))
+    p("     MEETS (the alternative's %s V likewise)" % fmt(round(F["ovlo_sel"][0], 2)))
+    p("   a hot short behind the selected entry: the breaker's short-circuit trip; at the start every fault inside Q7's derated chart; in service the")
+    p("     peak OPEN on the loop's inductance (E11-20); F1's I2t at most %s A2s, %s %% of its typical melting I2t (section 12a)"
+      % (fmt(round(E["i2t_max"], 4)), fmt(round(E["i2t_pct"], 2))))
     p("")
     p("8. THE ENDURANCE STATEMENT (A1 selected; A2 a proposal; DR-01)")
     a1b, a2b, sh = F["a1_bat"], F["a2_bat"], F["short"]
@@ -2101,7 +2554,19 @@ def main():
       % (fmt(F["ballast_w"]), fmt(round(F["ballast_w"] / F["th1"], 2))))
     p("     at T-H1's %s W/K floor (INFERRED: the same conductance), on top of L4-E10's conditioned corner (%s / %s C; about %s W of the kit's heat at"
       % (fmt(F["th1"]), "%.2f" % F["corner_air"][0], "%.2f" % F["corner_air"][1], fmt(round(F["corner_heat"], 1))))
-    p("     E3-O, which predates the ballasts): it narrows U-02 (MESHSAT-1478)")
+    p("     E3-O, which predates the ballasts); L4-E12 counts them once inside its own figures (below)")
+    p("   THE THERMAL BUDGET (L4-E12, the update round): T-H1's binding line is %s W/K lid open with the fans, set by E5 under the hold: %s W of"
+      % (fmt(F["gc"]), fmt(F["e5_hold_w"])))
+    p("     heat plus the ballasts' %s W, %s W, over E5's %s K to the +70 C parts; E3-O with every radio on carries %s W (%s W plus %s W) over %s K,"
+      % (fmt(F["ballast_w"]), fmt(round(F["e5_hold_wb"], 3)), fmt(F["e5_line"] - F["e5_amb"]), fmt(round(F["e3o_wb"], 3)), fmt(F["e3o_stage_w"]), fmt(F["ballast_w"]), fmt(F["e5_line"] - F["e3o_amb12"])))
+    p("     %s W/K; with no hold %s W/K. At the line the mixed air is %s C in E3-O and %s C in E5, the ballasts %s K of it; the hold powers off board"
+      % (fmt(F["g_e3o"]), fmt(F["g_a"]), "%.2f" % F["e3o_line"], "%.2f" % F["e5_line"], fmt(round(F["ballast_w"] / F["gc"], 3))))
+    p("     D, the PA rail, the RockBLOCK, the LoRa module, both E72 and the Geiger module, idles the running module and holds the charge (L4-E12 4c),")
+    p("     on a reference within +-%s K of the mixed air; it narrows U-02 to T-H1 and its conditions (section 9)" % "%s" % F["hold_ref"])
+    p("   THE ENERGY BUDGET (the update round): the battery-only and solar figures above are unchanged by L4-E10 to L4-E12; the vehicle entry's loop")
+    p("     costs %s W at a 9.00 V plug (%s A through %s mOhm hot), on the source's side; a dead pack's charge under R-b takes at most %s W, and only"
+      % (fmt(round(E["loss_dcp"] + E["loss_vr"], 3)), fmt(F["e_svc"][1]), fmt(F["e_loop_mohm"][2]), fmt(F["rb_w"])))
+    p("     from DPM's surplus; L4-E12's hold is a state at the margins (E5), not an endurance state")
     p("   the cell under L4-E10's recommendation (U-01, CONDITIONAL on the signed specification and the owner's approval; not taken here): usable")
     p("     %s Wh against the 35E's %s Wh (%s %% less), %s h against %s h battery-only at PS-IDLE-SPEC (L4-E10's own basis); D-06's about 145 Wh becomes"
       % (fmt(F["cell_usable"][1]), fmt(F["cell_usable"][0]), fmt(F["cell_less_pct"]), fmt(F["cell_hours"][1]), fmt(F["cell_hours"][0])))
@@ -2135,6 +2600,18 @@ def main():
             p("        %s: %s" % (lab, c[k]))
     p("   (a) DOWNSTREAM IMPLEMENTATION AND VERIFICATION TASKS: the register of section 10; an owner and an acceptance criterion close the")
     p("       ASSIGNMENT, not the item: each stays OWED, DRAFTED, MISSING DRAFT or PENDING until its acceptance is met on the built prototype")
+    p("   (c) THE OWNER'S ITEMS (decisions and outside contacts only, kept apart from the engineering work; the session contacts no outside party)")
+    for o in OWNER_ITEMS:
+        p("     %s %s" % (o["id"], o["what"]))
+        for key, label in o["docs"]:
+            rel = PINS[key][0]
+            txt = _C_TEXT[key]
+            mark = OWNER_MARK.get(key, r"(?i)draft for the owner to send")
+            if not re.search(mark, txt):
+                refuse(4, "%s does not read as %s" % (rel, "a draft for the owner" if key not in OWNER_MARK else "the owner's item"))
+            src = "in the tree" if where[key][0] == "tree" else "at %s (%s)" % (FROM_COMMIT[key], COMMIT_LABEL[FROM_COMMIT[key]].split(",")[0])
+            p("        %s: %s, %s, sha256 %s" % (label, rel, src, where[key][1][:16]))
+    p("     %s" % OWNER_NOT_DRAFTED)
     p("")
     p("10. THE REGISTERS (this folder's DOWNSTREAM-REGISTER.md and LAYER5-HANDOVER.md, read and checked)")
     reg_text = open(os.path.join(HERE, "DOWNSTREAM-REGISTER.md"), encoding="utf-8").read() if os.path.exists(os.path.join(HERE, "DOWNSTREAM-REGISTER.md")) else ""
@@ -2152,6 +2629,22 @@ def main():
         if r[1] == "IMPLEMENTATION":
             by_state[r[6]] = by_state.get(r[6], 0) + 1
     p("     implementation changes by state: %s" % "; ".join("%s %d" % (k, by_state[k]) for k in sorted(by_state)))
+    ids = {r[0] for r in reg}
+    for eid, kind, owner in F["e11_items"]:
+        if eid in E11_ANSWERED_HERE:
+            continue
+        if not any(re.search(r"\b%s\b" % eid, r[3]) for r in reg):
+            refuse(4, "L4-E11's %s is not in the register's From column" % eid)
+    for nm, mp in (("L4-E10", E10_MAP), ("L4-E12", E12_MAP)):
+        for owner, refs in mp.items():
+            for x in refs:
+                if x.startswith("R-") and x not in ids:
+                    refuse(4, "%s's %s maps to %s, not in the register" % (nm, owner, x))
+                if x.startswith("OW-") and x not in {o["id"] for o in OWNER_ITEMS}:
+                    refuse(4, "%s's %s maps to %s, not an owner item" % (nm, owner, x))
+    p("     the accepted records' items, deduplicated: L4-E11's E11-01 to E11-23 each named in a row's From column (E11-19 answered here, out 12);")
+    p("       L4-E10 by owner: %s" % "; ".join("%s -> %s" % (k, ", ".join(v)) for k, v in E10_MAP.items()))
+    p("       L4-E12 by owner: %s" % "; ".join("%s -> %s" % (k, ", ".join(v)) for k, v in E12_MAP.items()))
     h_text = open(os.path.join(HERE, "LAYER5-HANDOVER.md"), encoding="utf-8").read() if os.path.exists(os.path.join(HERE, "LAYER5-HANDOVER.md")) else ""
     ho = md_table(h_text, "| ID | Target |")
     for r in ho:
@@ -2161,6 +2654,9 @@ def main():
     p("   Layer 5 handover: %d interface entries drafted (pcb_interfaces.yaml and HW-FW-CONTRACT.md, drafts only)" % len(ho))
     p("")
     for ln in partA_lines(F, D, A):
+        p(ln)
+    p("")
+    for ln in rejudge_lines(F, D, A, E):
         p(ln)
     p("")
     p("END. Desk arithmetic on read figures; nothing is measured.")

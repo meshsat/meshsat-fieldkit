@@ -24,6 +24,13 @@ Fix round (2 October 2026, the focused check's B1 to B4): the hot-swap draft app
 is under TI's 5 mV and the selected one at or above it, the complete pulse sits inside Figure 10 at the same voltage and the
 derived case temperature, and IF-05 reads CONDITIONAL; no file cites ASM-001 as an exemption and D-06 stays open; R227's
 transients stay inside the INA226's limits for every required event; U-04 is a choice in criteria 1 and 5; the check is filed.
+
+Update round (2 October 2026, the accepted L4-E10, L4-E11 and L4-E12): the selected entry's figures are L4-E11's, read from its
+output; E11-19's inductance bound reproduces L4-E11's and every start and fault pulse sits far under F1's melting I2t; the LM5069's
+checks print only as drawn or as the alternative, IF-05 reads CONDITIONAL and no material defect is open (D-06 resolved in
+design, D-07 and D-09 superseded); IF-11 carries L4-E12's binding line; every E11 item, every L4-E10 and L4-E12 owner row is in
+the register or the owner's list; the owner's items are kept apart with their documents pinned; L4-E11's entry draft applies on
+this record's hot-swap draft and not before it; U-03 stays as it stood.
 """
 import ast
 import copy
@@ -507,7 +514,9 @@ def t_l4e10_and_meshsat_1478_enter_as_choices_not_tasks():
     F = _C["F"]
     rows = {r["id"]: r for r in _C["R"]}
     c11 = [c for c in rows["IF-11"]["checks"] if "MESHSAT-1478" in c.what][0]
-    assert c11.a == F["corner_air"][1] and c11.b == F["parts_hot"] and c11.met is False and "U-02" in c11.src
+    assert c11.a == F["e5_line"] and c11.b == F["parts_hot"] and c11.met and c11.cls == "CONDITIONAL" and "U-02" in c11.src
+    floor = [c for c in rows["IF-11"]["checks"] if "LO-01a's floor" in c.what][0]
+    assert floor.scope == "drawn" and floor.met is False and floor.a == F["floor_air"][1], "the design as it stands stays visible"
     c10 = [c for c in rows["IF-10"]["checks"] if "FEA-008" in c.what][0]
     assert c10.met is None and c10.cls == "CONDITIONAL" and "U-01" in c10.src
     ids = [c["id"] for c in m.CHOICES]
@@ -523,7 +532,7 @@ def t_l4e10_and_meshsat_1478_enter_as_choices_not_tasks():
     bad = copy.deepcopy(m.GATE)
     bad[1]["verdict"] = "PASS"
     bad[1]["rows"] = ["IF-13"]
-    assert m.gate_violations(bad, _C["st"]), "criterion 2 PASS while D-01 is open must be refused"
+    assert m.gate_violations(bad, _C["st"]), "criterion 2 PASS on a CONDITIONAL row must be refused"
     assert abs(F["corner_heat"] - (F["corner_air"][0] - F["e3o_amb"]) * F["th1"]) < 1e-9
     assert "%s K on the inside air" % m.fmt(round(F["ballast_w"] / F["th1"], 2)) in _C["text"], "the ballasts' heat at T-H1's floor"
 
@@ -549,7 +558,9 @@ def t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register():
     for r, d in zip(de, m.DEFECTS):
         assert r[1] == d["title"] and r[2] == d["constraint"] and r[3] == d["options"], d["id"]
         assert r[4].split(":")[0].split(",")[0].split(" ")[0] == d["state"].split(" ")[0], d["id"]
-    assert [d["id"] for d in m.DEFECTS if d["state"] == "OPEN"] == ["D-06", "D-09"]
+    assert [d["id"] for d in m.DEFECTS if d["state"] == "OPEN"] == [], "the update round leaves no material defect open"
+    st = {d["id"]: d["state"] for d in m.DEFECTS}
+    assert st["D-06"].startswith("RESOLVED") and st["D-07"].startswith("SUPERSEDED") and st["D-09"].startswith("SUPERSEDED")
 
 
 def t_choice_and_defect_figures_are_printed_by_the_reconciliation():
@@ -615,15 +626,16 @@ def t_b1_the_power_limit_and_the_complete_pulse_at_one_voltage_and_temperature()
     rows = {r["id"]: r for r in _C["R"]}
     sel = {c.what: c for c in rows["IF-05"]["checks"]}
     part = [c for w, c in sel.items() if "power-limit part" in w][0]
-    assert part.cls == "CONDITIONAL" and part.met
+    assert part.scope == "alternative" and part.cls == "CONDITIONAL" and part.met and part.a == F["alt_pulse"] and part.b == F["alt_soa"]
     cb = [c for w, c in sel.items() if "breaker's event" in w][0]
-    assert cb.met is None and "R-118" in cb.src, "the breaker's event stays OPEN evidence"
+    assert cb.scope == "alternative" and cb.met is None and "R-118" in cb.src, "the LM5069's breaker event stays OPEN evidence for the alternative"
     stt = [c for w, c in sel.items() if "fault time's minimum" in w][0]
-    assert stt.a == round(A["tflt_env"][0], 3) and stt.met is False and "D-09" in stt.what, "the start margin at the corners is shown NOT MET"
-    assert _C["st"]["IF-05"][1] == "NOT MET", "IF-05 does not read MEETS while the start margin fails at the corners"
+    assert stt.scope == "alternative" and stt.met and stt.a == F["alt_tflt"][0] and stt.b == F["alt_need"], "D-09 resolved for the LM5069 by L4-E11's C5 and C121"
+    assert A["tflt_env"][0] < A["start_need"], "this record's round-two reading of C5 alone stays printed as found"
+    assert _C["st"]["IF-05"][1] == "CONDITIONAL", "IF-05 reads CONDITIONAL on the selected entry"
     assert any(c.scope == "drawn" and c.met is False and "20k" in w for w, c in sel.items()), "the drawn setting's shortfall stays visible"
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
-    assert "13.131" in reg["R-118"][2] and "R-119" in reg["R-118"][5] and "C5" in reg["R-119"][2]
+    assert "E11-17" in reg["R-118"][3] and "R-119" in reg["R-118"][5] and "C5" in reg["R-119"][2] and reg["R-119"][7] == "LM5069 alternative"
 
 
 def t_b2_no_exemption_is_claimed_and_the_weak_source_band_is_open():
@@ -634,9 +646,12 @@ def t_b2_no_exemption_is_claimed_and_the_weak_source_band_is_open():
         for bad in ("(ASM-001)", "fault, ASM-001", "requirement (ASM-001)"):
             assert bad not in t, "%s still cites ASM-001 as an exemption (%s)" % (os.path.basename(p), bad)
     d6 = [d for d in m.DEFECTS if d["id"] == "D-06"][0]
-    assert d6["state"] == "OPEN" and "IF-04" in d6["rows"]
+    assert d6["state"].startswith("RESOLVED") and "IF-04" in d6["rows"] and "E11-10 to E11-16" in d6["resolution"]
     rows = {r["id"]: r for r in _C["R"]}
-    assert any("D-06" in c.src and c.met is None for c in rows["IF-04"]["checks"])
+    sel = [c for c in rows["IF-04"]["checks"] if c.scope == "selected"]
+    assert any("E11-16" in c.src and c.met is None and c.cls == "CONDITIONAL" for c in sel), "the interconnect's short-time evidence stays OPEN"
+    assert any("D-06" in c.src and c.met and c.cls == "CONDITIONAL" for c in sel), "D-06 resolved in design, CONDITIONAL on the makers' ratings"
+    assert any(c.scope == "drawn" and c.met is False and "13 A test current" in c.what for c in rows["IF-04"]["checks"]), "the drawn interconnect stays visible"
     assert any("R-115" in c.src for c in rows["IF-04"]["checks"]), "F1's let-through is CONDITIONAL on the maker's figure"
     A = m.partA(_C["F"], _C["D"], m._C_TEXT)
     assert A["f_rating"] < A["f_i2"] < A["f_200"] and max(a for _n, a in A["wk"]) < A["f_200"], "the weak elements sit inside the fuse's long-time band"
@@ -691,6 +706,133 @@ def t_the_checks_are_filed_with_their_blockers():
         for b in blockers:
             assert b in t, (name, b)
         assert name in readme
+
+
+def t_e11_19_the_selected_entry_is_rejudged_and_no_defect_is_open():
+    m = _M()
+    F, D = _C["F"], _C["D"]
+    A = m.partA(F, D, m._C_TEXT)
+    E = m.rejudge(F, D, A)
+    hs = F["e_hs_svc"]
+    assert abs(E["l_min_uh"] - hs["l_uh"]) < 0.005, "the hot short's inductance bound reproduces L4-E11's"
+    assert abs(hs["v"] - F["e_ov_off"][2]) < 1e-9 and abs(hs["lim"] - hs["idm"] * F["e_derate"]) < 0.05
+    assert E["i2t_max"] < 0.1 * A["f_i2t"] and len(E["i2t"]) == 5, "every start and fault pulse far under F1's melting I2t"
+    assert E["tc_break"] > A["tc_max"] and F["e_q7_tj"] > A["tj_max"], "the derating carried to a part rated hotter stays conservative"
+    assert F["e_ov_off"][0] > A["cs101_top"] and F["e_ov_off"][2] < A["d10_cold_vbr"] < F["SMCJ40A"]["vbr_min"], "D-02 on the selected OV"
+    assert F["e_oc"][2] <= A["f_allow"] and F["e_svc"][1] < F["e_oc"][0], "the breaker under F1's column, the service under the breaker"
+    rows = {r["id"]: r for r in _C["R"]}
+    sel = [c for c in rows["IF-05"]["checks"] if c.scope == "selected"]
+    assert not any("LM5069" in c.what or "R24" in c.what for c in sel), "no LM5069 check counts toward the selected entry"
+    hot = [c for c in sel if "hard short in service" in c.what][0]
+    assert hot.met is None and hot.cls == "CONDITIONAL" and "E11-20" in hot.src
+    starts = [c for c in sel if "of the chart" == c.unit]
+    assert len(starts) == 3 and all(c.met and c.b == 1.0 for c in starts)
+    assert _C["st"]["IF-05"][1] == "CONDITIONAL" and _C["st"]["IF-11"][1] == "CONDITIONAL"
+    assert not [k for k, v in _C["st"].items() if v[1] == "NOT MET"], "no interface row reads NOT MET after the update round"
+    sec = _C["text"].split("12. THE UPDATE ROUND")[1]
+    assert "new material defects from E11-19: none" in sec and "E11-20" in sec
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    assert "E11-20" in reg["R-134"][3] and "2.08" in reg["R-134"][2]
+
+
+def _rows_of(commit, path, header):
+    r = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (commit, path)], capture_output=True)
+    if r.returncode != 0:
+        raise Skip("%s is not at %s in this checkout" % (path, commit))
+    return _M().md_table(r.stdout.decode("utf-8"), header)
+
+
+def t_the_register_carries_the_accepted_records_items():
+    m = _M()
+    reg = _md_rows(REG, "| ID | Kind |")
+    ids = {r[0] for r in reg}
+    for eid, _kind, _owner in _C["F"]["e11_items"]:
+        if eid in m.E11_ANSWERED_HERE:
+            assert eid in _C["text"].split("12. THE UPDATE ROUND")[1], "%s is not answered in out 12" % eid
+            continue
+        assert any(re.search(r"\b%s\b" % eid, r[3]) for r in reg), "%s is not in the register's From column" % eid
+    ow = {o["id"] for o in m.OWNER_ITEMS}
+    for commit, path, header, mp in (("79b2f568", "v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "| Owner | Item |", m.E10_MAP),
+                                     ("a86be47b", "v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "| Owner | Item |", m.E12_MAP)):
+        owners = [r[0] for r in _rows_of(commit, path, header)]
+        assert owners and set(owners) == set(mp), "%s: its owner rows %s are not the map's" % (path, sorted(set(owners) ^ set(mp)))
+        for refs in mp.values():
+            for x in refs:
+                assert (x in ids) if x.startswith("R-") else (x in ow) if x.startswith("OW-") else x.startswith("this record"), x
+    assert len(reg) == len(ids) >= 137
+
+
+def t_the_thermal_line_is_l4e12s_binding_line():
+    m = _M()
+    F = _C["F"]
+    assert abs(F["e5_hold_wb"] / (F["e5_line"] - F["e5_amb"]) - F["gc"]) < 0.0005, "the line from E5's heat under the hold and the ballasts"
+    assert abs(F["e3o_wb"] / (F["e5_line"] - F["e3o_amb12"]) - F["g_e3o"]) < 0.0005, "E3-O's line from the heat stage and the ballasts"
+    assert F["g_e3o"] < F["gc"] < F["g_a"] and F["th1"] < F["lo01a_ball"] < F["gc"]
+    text = _C["text"]
+    bud = text.split("8. THE ENDURANCE")[1].split("9. THE CLOSURE")[0]
+    assert "THE THERMAL BUDGET" in bud and "%s W/K" % m.fmt(F["gc"]) in bud and "%s W" % m.fmt(round(F["e5_hold_wb"], 3)) in bud
+    assert "THE ENERGY BUDGET" in bud
+    u2 = [c for c in m.CHOICES if c["id"] == "U-02"][0]
+    assert m.fmt(F["gc"]) in u2["constraint"] and "CFL-002" in u2["owner"]
+
+
+def t_the_owner_items_are_kept_apart_with_their_documents_pinned():
+    m = _M()
+    reg = _md_rows(REG, "| ID | Kind |")
+    assert not any(r[0].startswith("OW-") for r in reg), "an owner item is not a register task"
+    labels = " ".join(lab for o in m.OWNER_ITEMS for _k, lab in o["docs"])
+    for name in ("Topwell", "Pervasive Displays", "Sensirion", "Analog Devices", "Milliohm", "Vishay", "Texas Instruments", "Eaton",
+                 "Ground Control", "NiceRF", "Bulgin"):
+        assert name in labels, "the owner's list misses %s" % name
+    for o in m.OWNER_ITEMS:
+        for key, _lab in o["docs"]:
+            assert key in m.PINS and re.fullmatch(r"[0-9a-f]{64}", m.PINS[key][1]), key
+            assert m.PINS[key][1][:16] in _C["text"], "the output does not print %s's pin" % key
+    assert "CFL-002" in m.OWNER_ITEMS[0]["what"] and all(x in m.OWNER_ITEMS[0]["what"] for x in ("A, ", "B, ", "C, "))
+    page = _md_rows(PAGE, "| Item | The decision or action |")
+    assert [r[0] for r in page] == [o["id"] for o in m.OWNER_ITEMS] and all(r[1] == o["what"] for r, o in zip(page, m.OWNER_ITEMS))
+
+
+def t_u03_stays_as_it_stood():
+    m = _M()
+    u3 = [c for c in m.CHOICES if c["id"] == "U-03"][0]
+    assert u3["title"] == "O-1: a solar panel with a supported maximum open circuit inside REQ-016's window"
+    assert u3["owner"] == "none until a panel is pinned" and u3["rows"] == ["IF-01"]
+    assert "24.05 V" in u3["constraint"] and "L4-E13" in _C["text"].split("1. THE MAKERS")[0]
+
+
+def t_the_entry_draft_applies_on_the_hotswap_draft_and_not_before_it():
+    m = _M()
+    need(HS, "the hot-swap draft")
+    need(GEN_E, "board E's generator")
+    cin = os.path.join(ROOT, "v2", "docs", "records", "d8dec31", "apply_gen_sch_e_cin.py")
+    need(cin, "d8dec31's input capacitor draft")
+    need(NET_E, "board E's netlist")
+    with tempfile.TemporaryDirectory() as td:
+        got = {}
+        for commit, rel in ((m.FROM_COMMIT["l4e7r"], "v2/docs/records/l4e7/apply_gen_sch_e_u5_grade.py"),
+                            (m.FROM_COMMIT["l4e7r"], "v2/docs/records/l4e7/apply_gen_sch_e_hold.py"),
+                            (m.FROM_COMMIT["l4e7r"], "v2/docs/records/l4e7/apply_gen_sch_e_input_limit.py"),
+                            (m.FROM_COMMIT["l4e7r"], "v2/docs/records/l4e7/apply_gen_sch_e_backstop.py"),
+                            (m.FROM_COMMIT["e11entry"], "v2/docs/records/l4e11/apply_gen_sch_e_entry.py"),
+                            (m.FROM_COMMIT["e11entry"], "v2/docs/records/l4e11/apply_gen_sch_e_timer.py")):
+            rb = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (commit, rel)], capture_output=True)
+            if rb.returncode != 0:
+                raise Skip("%s is not at %s in this checkout" % (rel, commit))
+            got[os.path.basename(rel)] = os.path.join(td, os.path.basename(rel))
+            open(got[os.path.basename(rel)], "wb").write(rb.stdout)
+        entry, timer = got.pop("apply_gen_sch_e_entry.py"), got.pop("apply_gen_sch_e_timer.py")
+        x, y = os.path.join(td, "x.py"), os.path.join(td, "y.py")
+        shutil.copy(GEN_E, x)
+        shutil.copy(GEN_E, y)
+        assert _run(entry, y, "--write").returncode == 3, "the entry draft must refuse a generator without the hot-swap draft"
+        assert subprocess.run([sys.executable, "-B", cin, x, NET_E], capture_output=True).returncode == 0
+        for p in [Q1, F1] + list(got.values()) + [HS, entry]:
+            r = _run(p, x, "--write")
+            assert r.returncode == 0, "%s in the release order: %s" % (os.path.basename(p), r.stderr)
+        assert _run(timer, x, "--write").returncode == 3, "the LM5069's timer draft must refuse the selected entry"
+        after = open(x, encoding="utf-8").read()
+        assert "TPS48110AQDGXRQ1" in after and "CSD19536KTT" in after and "LM5069MM-2 hot-swap controller" not in after
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
