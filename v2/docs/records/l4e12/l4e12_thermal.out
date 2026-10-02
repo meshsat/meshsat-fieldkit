@@ -902,10 +902,10 @@ the Layer 4 review (B3, B4, B7; section 17).
 9b THE BOUND (W/K; lid open with the fans, their flow credited at zero; MODELED on INFERRED coefficients):
    E5    60 C, the air 10 K up: lid open 0.566 (the other coefficient ends 0.626), lid closed 0.505; plate fraction 0.348
          credits: the fans' flow 0.2 / 0.5 / 1.0 m/s 0.608 / 0.690 / 0.799; the stack's radiation 0.654, with 0.5 m/s 0.767; the floor 0.697; all the
-         favourable ends with 1.0 m/s 1.145; ANY inside film (a 50 m/s flow) 1.540, the outside films' cap
+         favourable ends with 1.0 m/s 1.145; a 50 m/s inside flow (a film near 45 W/m2K, not a zero inside resistance: 12e) 1.540
    E3-O  55 C, the air 15 K up: lid open 0.607 (the other coefficient ends 0.673), lid closed 0.537; plate fraction 0.362
          credits: the fans' flow 0.2 / 0.5 / 1.0 m/s 0.641 / 0.712 / 0.813; the stack's radiation 0.692, with 0.5 m/s 0.788; the floor 0.747; all the
-         favourable ends with 1.0 m/s 1.168; ANY inside film (a 50 m/s flow) 1.571, the outside films' cap
+         favourable ends with 1.0 m/s 1.168; a 50 m/s inside flow (a film near 45 W/m2K, not a zero inside resistance: 12e) 1.571
    The envelope's +40 C, the air 15 K up: lid open 0.598, lid closed 0.524 (LO-01a's and E3-L's state; U-01's, not this record's).
    The bound's films at E5 (W/m2K): inside, the plate 4.13 and the walls 3.85; outside, the face 7.72 and the walls 10.03.
 9c W4'S 1.22 W/K RECONCILED. The budget's 1.22 to 2.85 W/K (lid open, fans) and 1.06 to 2.49 W/K (lid closed) are W4's lumped
@@ -922,10 +922,12 @@ the Layer 4 review (B3, B4, B7; section 17).
       the inside film: natural convection only, no fan flow and no internal radiation credited             0.566 W/K
    The decisive term is the inside film: W4's low case takes 10 W/m2K with the fans; natural convection gives 3.85 to 4.13
    W/m2K, and no held document gives the fans' flow at the inner faces.
-9d AGAINST THE LINES AND THE FALLBACK. The lines (2.159 W/K in E5, 1.806 W/K in E3-O) lie over the outside films' cap (1.540 and
-   1.571 W/K with any inside film): on the bound's outside no inside measure reaches them. Section 8's floors (E5 1.125 W/K with
-   F4 and F3; E3-O 1.399, or 1.309 with the connectors out of the exhaust) lie over the bound by 0.559 and 0.792 W/K. Where the
-   air settles on the bound (MODELED, lid open, its own rise):
+9d AGAINST THE LINES AND THE FALLBACK. The lines (2.159 W/K in E5, 1.806 W/K in E3-O) lie over the bound with a 50 m/s inside
+   flow (1.540 and 1.571 W/K; CORRECTED in 12e: that flow's film is near 45 W/m2K, not a zero inside resistance, and the outside
+   capacity proper at these rises is 1.856 and 1.906 W/K on the conservative ends, so E3-O's line lies under it and E5's over
+   it, both under it at the optimistic ends). Section 8's floors (E5 1.125 W/K with F4 and F3; E3-O 1.399, or 1.309 with the
+   connectors out of the exhaust) lie over the bound by 0.559 and 0.792 W/K. Where the air settles on the bound (MODELED, lid
+   open, its own rise):
       E5, the hold: the air 90.93 C (0.698 W/K at 30.9 K), the plate 71.48 C; the +70 C class on the plate (F4) 71.48 C, PAST
          +70 C; the +80 C connectors in the exhaust 93.71 C, PAST +80 C; the +80 C connectors out of it 90.93 C, PAST +80 C; the
          module, +85 C at its intake (device set) 90.93 C, PAST +85 C.
@@ -1123,13 +1125,14 @@ the Layer 4 review (B3, B4, B7; section 17).
       the bound                      k plate 2.85, walls 2.34, whole 2.54 W/m2K: A k = 0.598 W/K
       the coefficients' other ends   k plate 3.22, walls 2.54, whole 2.81 W/m2K: A k = 0.661 W/K
    Sheet steel's 5.5 W/m2K on the same area would read 1.296 W/K; K1's 1.806 W/K needs k = 7.66 W/m2K over it, 2.7 to 3.0 times
-   what the bound's films give. With any inside film (a 50 m/s flow) the outside films cap A k at 1.504 W/K (1.859 at the
-   coefficients' other ends), still air and the floor adiabatic: K1's need lies over the cap at the conservative ends and under
-   it, by 0.053 W/K, at the other ends, so on the bound's outside no inside measure reaches it while all the heat passes through
-   the inside air. The tree's other conductance evidence spans the need: W4's lumped estimate 1.22 to 2.85 W/K (fixed films with
-   the fans, the floor counted), 32.53's 3.0 to 3.3 W/K. The bound under the need leaves feasibility unestablished, not refuted:
-   the floor's support, the outside's real films and air movement, the fans' film and heat led into the plate past the air
-   (section 10b) are what it does not credit, and only a measured G decides (T-H1). The translation from the bench to the
+   what the bound's films give. With a 50 m/s inside flow (a film near 45 W/m2K) A k reaches 1.504 W/K (1.859 at the
+   coefficients' other ends), still air and the floor adiabatic: K1's need lies over it at the conservative ends and under it,
+   by 0.053 W/K, at the other ends. CORRECTED in 12e: that is not the outside capacity; with the inside resistance at zero it is
+   1.810 W/K at K1's rise (2.963 at the optimistic ends with the floor), over K1's need, so no physics bars it and the
+   measurement decides. The tree's other conductance evidence spans the need: W4's lumped estimate 1.22 to 2.85 W/K (fixed films
+   with the fans, the floor counted), 32.53's 3.0 to 3.3 W/K. The bound under the need leaves feasibility unestablished, not
+   refuted: the floor's support, the outside's real films and air movement, the fans' film and heat led into the plate past the
+   air (section 10b) are what it does not credit, and only a measured G decides (T-H1). The translation from the bench to the
    operating ambient on the same model, the bench's +22 C against +40 C (G = Q / rise; radiation grows with the absolute
    temperatures, natural convection with the rise and falls slightly with the air's properties):
       the bound                      rise 15 K: 0.588 -> 0.598 W/K, x 1.018; rise 30 K: 0.671 -> 0.682 W/K, x 1.016
@@ -1460,6 +1463,79 @@ the Layer 4 review (B3, B4, B7; section 17).
          cells 2.525 W/K read at 2.677; tau 1.31 h, steady at 6.0 h, the fit's three time constants 3.9 h
    Then the fans-off case at M2's heat (no pass line: the failure case) and 12c's transient point. A point passes for a mode and
    option when its reading meets that line; it closes that conductance only.
+12e THE OUTSIDE CAPACITY (the addendum to the fix round, the coordinator's question of 2 October 2026: which lines a reading can
+   pass at all). The outside surfaces' capacity with the inside resistance at zero (every inner face at the inside air, the 3 mm
+   aluminium plate isothermal), at each line's own ambient and rise, still air: bare (the plate's outer face and the walls
+   through the PP shell; lid closed, the enclosed layer, the lid's shell and its outside films; the floor credited only at the
+   optimistic ends, its feet over a support at the ambient) and with the combined route of 10b (R-170, fins of multiplier 2 at
+   the conservative end and 3 at the optimistic on the free strips' 0.0552 m2, adding 0.0552 to 0.1105 m2 of effective outside
+   area; R-171, the large loads led into the plate, which adds nothing once the inner faces sit at the air; R-172, the open
+   lid's skin, 0.0803 m2 on its 2.56 K/W strap; the route acts with the lid open only, so lid closed it is the bare case).
+   Conservative coefficient ends (the plate's emissivity 0.70, the shell's 0.85, PP at 0.12 W/mK, the plate's view 0.70) and
+   optimistic ends (0.90, 0.95, 0.22, 1.00, the floor credited). CORRECTION: section 9's 'cap' (1.540 W/K at E5's rise, 1.571 at
+   E3-O's) is the bound with a 50 m/s inside flow, whose film is near 45 W/m2K; the capacity proper at those rises is 1.856 and
+   1.906 W/K on the conservative ends. Class (i): reachable bare, T-H1 decides; (ii): reachable only with the route fitted, T-H1
+   with the route decides; (iii): over the capacity even with the route and the optimistic ends, so no measurement can pass it:
+   a contradiction between the rulings (no vent, the Peli 1450, the device set) and that mode's requirement, the owner's. Each
+   class is read at the optimistic ends (what physics may allow); the class at the conservative ends is printed beside it.
+      M1, lid open, +40.0 C, rise 10.00 K: the SGP41's Table 4 (governing, as ruled) needs 2.554 W/K; capacity bare 1.725 /
+         2.849, with the route 2.468 / 4.391 W/K (conservative / optimistic): class (i), (iii) at the conservative ends
+      M1, lid open, +40.0 C, rise 15.32 K: the cells' hot stop H1 (governing, C) needs 1.666 W/K; capacity bare 1.815 / 2.969,
+         with the route 2.594 / 4.589 W/K (conservative / optimistic): class (i)
+      M2, lid open, +40.0 C, rise 10.00 K: the SGP41's Table 4 (governing, as ruled) needs 2.709 W/K; capacity bare 1.725 /
+         2.849, with the route 2.468 / 4.391 W/K (conservative / optimistic): class (i), (iii) at the conservative ends
+      M2, lid open, +40.0 C, rise 16.50 K: the idle cells' hot stop H1 (governing, C) needs 1.642 W/K; capacity bare 1.832 /
+         2.993, with the route 2.617 / 4.627 W/K (conservative / optimistic): class (i)
+      M3, lid closed, +40.0 C, rise 10.00 K: the SGP41's Table 4 (governing, as ruled) needs 2.554 W/K; capacity bare 1.335 /
+         2.279, with the route 1.335 / 2.279 W/K (conservative / optimistic): class (iii); SHORT by 0.275 W/K, 2.749 W, of the
+         route's optimistic capacity
+      M3, lid closed, +40.0 C, rise 15.32 K: the cells' hot stop H1 (governing, C) needs 1.666 W/K; capacity bare 1.385 / 2.356,
+         with the route 1.385 / 2.356 W/K (conservative / optimistic): class (i), (iii) at the conservative ends
+      M4, lid closed, +40.0 C, rise 10.00 K: the SGP41's Table 4 (governing, as ruled) needs 2.709 W/K; capacity bare 1.335 /
+         2.279, with the route 1.335 / 2.279 W/K (conservative / optimistic): class (iii); SHORT by 0.430 W/K, 4.300 W, of the
+         route's optimistic capacity
+      M4, lid closed, +40.0 C, rise 16.50 K: the idle cells' hot stop H1 (governing, C) needs 1.642 W/K; capacity bare 1.395 /
+         2.371, with the route 1.395 / 2.371 W/K (conservative / optimistic): class (i), (iii) at the conservative ends
+      M5, lid open, +20.0 C, rise 30.00 K: C1's air trigger (governing, as ruled) needs 1.447 W/K; capacity bare 1.875 / 2.950,
+         with the route 2.686 / 4.596 W/K (conservative / optimistic): class (i)
+      M6, lid open, +55.0 C, rise 5.00 K: the EPAPER's +60 C (governing, as ruled) needs 5.417 W/K; capacity bare 1.704 / 2.915,
+         with the route 2.429 / 4.462 W/K (conservative / optimistic): class (iii); SHORT by 0.955 W/K, 4.775 W, of the route's
+         optimistic capacity
+      M6, lid open, +55.0 C, rise 15.00 K: the RB9704's +70 C (maker-stated, as ruled) needs 1.806 W/K; capacity bare 1.906 /
+         3.181, with the route 2.714 / 4.904 W/K (conservative / optimistic): class (i)
+      M7, lid open, +60.0 C: the EPAPER's +60 C (governing, as ruled) at or under the ambient: no capacity at a zero rise; class
+         (iii), the whole 21.587 W short
+      M7, lid open, +60.0 C, rise 10.00 K: the LIME's +70 C (maker-stated, as ruled) needs 2.159 W/K; capacity bare 1.856 /
+         3.144, with the route 2.642 / 4.831 W/K (conservative / optimistic): class (i), (ii) at the conservative ends
+      M8, lid open, +13.2 C, rise 25.75 K: T4 on the charging cells (governing, as ruled) needs 2.025 W/K; capacity bare 1.797 /
+         2.803, with the route 2.578 / 4.369 W/K (conservative / optimistic): class (i), (ii) at the conservative ends
+      M8, lid open, +13.2 C, rise 28.80 K: T3's charge start (the start line (K7, K8)) needs 1.810 W/K; capacity bare 1.829 /
+         2.849, with the route 2.623 / 4.443 W/K (conservative / optimistic): class (i)
+      M9, lid open, +18.3 C, rise 20.65 K: T4 on the charging cells (governing, as ruled) needs 2.525 W/K; capacity bare 1.764 /
+         2.782, with the route 2.531 / 4.326 W/K (conservative / optimistic): class (i), (ii) at the conservative ends
+      M9, lid open, +18.3 C, rise 23.70 K: T3's charge start (the start line (K7, K8)) needs 2.200 W/K; capacity bare 1.800 /
+         2.833, with the route 2.581 / 4.409 W/K (conservative / optimistic): class (i), (ii) at the conservative ends
+   The class (iii) lines and their options (none lowers a requirement silently; each names its owner): (1) E3-L at +40 C with
+   the lid closed as ruled (M3 on the pack, M4 on shore): the SGP41's Table 4 +50 C lies over the closed case's capacity.
+   Options: CFL-002's C, A or B (the owner's), which move the line to the cells' hot stop H1, 1.666 and 1.642 W/K, under the
+   closed capacity's optimistic end and over its conservative one, so T-H1's lid-closed point decides; a closed-lid ceiling on
+   REQ-042's VOC channel (a requirement change, the owner's: the bay air holds Table 4's +50 C lid closed only to an ambient of
+   +31.3 to +38.8 C on the pack and +30.2 to +38.2 C on shore, conservative to optimistic); D-02b's closed-lid test at +40 C
+   restated (a ruling change, the owner's); a closed-lid conduction path from the plate to the lid's inner face inside the seal
+   (the session's to develop at Layer 7; not modelled here, so it closes nothing yet). (2) E3-O at +55 C (M6): the e-paper,
+   unpowered, judged on its +60 C operating row read to cover it (INFERRED), lies over the route's capacity. Options: PDi's
+   storage statement (the request is drafted in clarification/pervasive-displays-e2370ks0c1.txt; sending it is the owner's),
+   with a range at or over +70 C the line becomes the +70 C class, 1.806 W/K, class (i); the e-paper's own temperature at its
+   window in the plate rather than the mixed air (the session's: a T-H1 channel at the window), at the bound's plate fraction
+   0.362 it needs 1.963 W/K and at W4's high fraction 0.725 it needs 3.926 W/K, both under the route's optimistic capacity, so
+   the measured fraction decides; an e-paper with a held range at or over +70 C (CHO-001, the owner's); E3-O run with the
+   e-paper's state as a recorded deviation (TEST-PLAN's owner). (3) E5's +60 C dwell (M7): the same e-paper at an ambient equal
+   to its operating top: no capacity and no plate fraction carries it. Options: PDi's statement (then the LimeSDR's +70 C
+   storage row, 2.159 W/K, class (i) at the optimistic ends); a different e-paper (CHO-001, the owner's); E5 run with the
+   e-paper out as a recorded deviation (TEST-PLAN's owner). Charging (M8, M9) is not class (iii); for scale, charging only in
+   the heat stage (31.133 W into the case) would need 1.209 and 1.508 W/K at T4's line, class (i) at both ends, at the cost of
+   the profile while charging (the 48 to 72 h DESIGN OBJECTIVE, already NOT MET, would lose the profile's service during the
+   charge: an owner's choice of duty cycle, not taken).
 
 13 Predicates
    P1 pwr_budget and pwr_red2 reproduced byte for byte before any figure: PASS
@@ -1481,12 +1557,13 @@ the Layer 4 review (B3, B4, B7; section 17).
    P17 T-H1's pass line lies over 2.159 W/K by its expanded uncertainty and every point reaches steady state in a stated time: PASS
    P18 the plate coupling holds E5 and E3-O below E3-O's line, and the deeper hold lowers E5's heat (the session's fallbacks): PASS
    P19 the conservative bound comes from held geometry at the coefficients' conservative ends, under W4's low case, and the reconciliation ends at it: PASS
-   P20 U-02's class follows from the bound: the lines over the outside films' cap, E3-O's gap positive with every session measure, so T-H1 decides: PASS
+   P20 U-02's class follows from the bound: the lines over the bound with a 50 m/s inside flow, E3-O's gap positive with every session measure, so T-H1 decides: PASS
    P21 heat rejection on the bound: no approach reaches the profile at +40 C (the best short by a positive margin) nor charging on the design day; U-02 stays a closure condition: PASS
    P22 the reconciliation: 1.509 W/K at 42.4 W is 1.447 W/K after its uncertainty, K1's screen (Table 5's +55 C, not a line) at LO-01a's floor with the ballasts (1.806 W/K), the room reading conservative, every heater spread summing to its setting, A k on the case's own films under steel's and the need, the need between the bound's cap and W4's high case: PASS
    P23 B3: no absolute rating is a line; the SGP41's sensing is Table 4's (as ruled), C moves the heat stage's line to the cells' hot stop, and every mode's governing line is its tightest local line: PASS
    P24 B4: the charging heat is input less stored less exported, the reviewer's 50.044 W on the model's boundary, and K7 and K8 carry it with the ballasts: PASS
    P25 B7: the battery-only run reaches C1 before its energy ends on the bound at C 8 kJ/K, the reviewer's constant-G figures reproduced, no hot stop, 2.52 h energy-only: PASS
+   P26 the addendum: every line classed against the outside capacity with a zero inside resistance (bare and with the route); class (iii) is E3-L lid closed as ruled and the e-paper at E3-O and E5, no other: PASS
 
 Pinned inputs (sha256):
    55244f94aace54ca09d98c100b9830cba75c70a4774c3ba375a14903fcaf6376 v2/docs/CASE-MARGINS.md

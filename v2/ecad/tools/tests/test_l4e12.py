@@ -556,6 +556,53 @@ def t_the_fix_round_of_the_layer4_review():
     assert "energy-only" in page and "2.52 to 2.95 h" in page
 
 
+def t_the_outside_capacity_and_the_three_classes():
+    """The addendum to the fix round (the record's 17.9, the .out's 12e): every line against the outside capacity with a zero inside
+    resistance, bare and with the combined route; class (iii) only where no coefficient in the held ranges carries the line."""
+    import math
+    R = _R()
+    m = _CACHE["M"]
+    cp, cb = R["cap"], R["cb"]
+    assert R["pred"][[p_ for p_ in R["pred"] if p_.startswith("P26 ")][0]]
+    geo = cb["geo"]
+    # a zero inside resistance passes more than the 50 m/s inside flow section 9 had called the cap
+    assert cp["check9"][0] > cb["cap"]["E3-O"] + 0.2 and cp["check9"][2] > cb["cap"]["E5"] + 0.2
+    assert cp["check9"][0] > R["ap"]["c"]["g_e3o"] > cb["cap"]["E3-O"], "E3-O's line lies under the capacity proper"
+    # the capacity grows with the route, the optimistic ends and the rise; the closed case passes less than the open one
+    c1 = m.outside_cap(40.0, 10.0, cb["cons"], geo, "open")["g"]
+    assert c1 < m.outside_cap(40.0, 20.0, cb["cons"], geo, "open")["g"] and c1 > m.outside_cap(40.0, 10.0, cb["cons"], geo, "closed")["g"]
+    for e in cp["lines"]:
+        assert e["route"][0] >= e["bare"][0] - 1e-9 and e["bare"][1] >= e["bare"][0] and e["route"][1] >= e["route"][0]
+        need = e["line"]["g"]
+        if e["cls"] == "iii":
+            assert (not math.isfinite(need)) or (need > e["route"][1] and abs(e["short_w"] - (e["Q"] - e["route"][1] * e["rise"])) < 1e-9)
+        elif e["cls"] == "ii":
+            assert e["bare"][1] < need <= e["route"][1]
+        else:
+            assert need <= e["bare"][1]
+        if e["lid"] == "closed":
+            assert e["route"] == e["bare"], "the route is not credited with the lid closed"
+    three = sorted(set((e["mode"], e["line"]["short"]) for e in cp["lines"] if e["cls"] == "iii"))
+    assert three == [("M3", "the SGP41's Table 4"), ("M4", "the SGP41's Table 4"), ("M6", "the EPAPER's +60 C"), ("M7", "the EPAPER's +60 C")]
+    assert all(e["cls"] == "i" for e in cp["lines"] if "hot stop H1" in e["line"]["short"])
+    assert all(a_ < b_ < 40.0 for a_, b_ in cp["ceil_sgp"].values()), "the SGP41's closed-lid ceilings lie under +40 C at both ends"
+    assert cp["epaper"]["M7"]["need"] is None and cp["epaper"]["M6"]["need"] < cp["epaper"]["M6"]["need_hi"] < 5.417
+    out = open(OUT, encoding="utf-8").read()
+    page = open(PAGE, encoding="utf-8").read()
+    proc = open(os.path.join(REC, "T-H1-PROCEDURE-DRAFT.md"), encoding="utf-8").read()
+    assert "12e THE OUTSIDE CAPACITY" in out and "### 17.9 The outside capacity" in page and "What a reading can pass at all" in proc
+    figs = ["%.3f" % cp["check9"][0], "%.3f" % cp["check9"][2], "%.3f W/K" % cp["k1"][0]]
+    for e in cp["lines"]:
+        if e["cls"] == "iii" and math.isfinite(e["short_g"]):
+            figs += ["%.3f W/K" % e["short_g"], "%.3f W" % e["short_w"]]
+    figs += ["+%.1f" % x for v in cp["ceil_sgp"].values() for x in v] + ["%.3f W/K" % cp["epaper"]["M6"]["need"], "%.3f W/K" % cp["epaper"]["M6"]["need_hi"]]
+    for fig in figs:
+        assert fig in page and fig in out, "the figure %s is not on both the page and the .out" % fig
+    for e in cp["lines"]:
+        if math.isfinite(e["line"]["g"]):
+            assert "%.3f / %.3f" % e["bare"] in page, "the page lacks %s's bare capacity" % e["mode"]
+
+
 def t_both_checks_are_filed_and_listed():
     readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
     for n_, job in ((1, "cx31-l4e12-check"), (2, "cx32-l4e12-recheck")):

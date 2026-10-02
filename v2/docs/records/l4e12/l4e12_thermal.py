@@ -17,7 +17,8 @@ depth (section 8: the dependency round, the basis of the lines, the configuratio
 its fallbacks); the conservative lower bound and U-02's class (section 9); the heat-rejection approaches (section 10); the thermal
 reconciliation of the owner's amendment (section 11); the fix round of the Layer 4 review, astra-check-l4close-1's B3, B4 and B7
 (section 12: every required mode with its local limits and governing line, the charging heat as a balance, the battery-only run
-coupled to C1, the bench points); the predicates (section 13).
+coupled to C1, the bench points, and the addendum's outside capacity with a zero inside resistance and the three classes); the
+predicates (section 13).
 
 Revised twice on 2 October 2026: after the focused check (checks/astra-check-l4e12-1.md) and after the targeted recheck
 (checks/astra-check-l4e12-2.md). Every judged limit names its rating category (recommended or operating, storage, absolute);
@@ -1977,6 +1978,141 @@ def battery_run(C, R):
             "rev": rev, "runs": runs, "g_never": g_never, "g_full": g_full, "rise_c1": rise_c1, "dt": dt}
 
 
+def outside_cap(amb, rise, cfg, geo, lid_state, k_fin=1.0, a_free=0.0, skin=None, floor=False, n=50):
+    """The outside surfaces' capacity (W/K) at a rise with the inside resistance at zero: every inner face at the inside air
+    (the plate's 3 mm aluminium taken as isothermal); lid open, the plate's outer face (fins of multiplier k_fin on a_free) and,
+    with skin = (R_strap, A_skin, H), the strap to the open lid's skin; lid closed, the enclosed layer, the lid's shell and its
+    outside films; the walls through the PP shell; the floor only when credited (its feet over a support at the ambient)."""
+    ta = amb + 273.15
+    ep, es, kpp, fo = cfg["eps_plate"], cfg["eps_shell"], cfg["k_pp"], cfg["f_open"]
+    tk = geo["t_wall"] / kpp
+    a, aw, awo = geo["a_plate"], geo["a_wall"], geo["a_wall_out"]
+    am = 0.5 * (aw + awo)
+    q = {}
+    th_wo = _inv(lambda th: awo * (h_vert(th, geo["h_out"], ta + th / 2) + h_rad(es, 1.0, ta + th, ta)) * th - (rise - th) * am / tk,
+                 0.0, 0.0, rise, n)
+    q["walls"] = (rise - th_wo) * am / tk
+    if lid_state == "open":
+        q["plate"] = ((a - a_free) + a_free * k_fin) * (h_up(rise, geo["l_plate"], ta + rise / 2) + h_rad(ep, fo, ta + rise, ta)) * rise
+        if skin:
+            r_s, a_s, h_s = skin
+
+            def h_skin(th):
+                front = h_vert(th, h_s, ta + th / 2) + h_rad(ep, 1.0, ta + th, ta)
+                back = 1.0 / (tk + 1.0 / (h_vert(th, h_s, ta + th / 2) + h_rad(es, 1.0, ta + th, ta)))
+                return front + back
+            th_s = _inv(lambda th: a_s * h_skin(th) * th - (rise - th) / r_s, 0.0, 0.0, rise, n)
+            q["lid skin"] = (rise - th_s) / r_s
+    else:
+        at, ask = geo["a_lid_top"], geo["a_lid_skirt"]
+        e_gap = 1.0 / (1.0 / ep + 1.0 / es - 1.0)
+
+        def total(qq):
+            th_lo = _inv(lambda th: (at * (h_up(th, geo["l_lid"], ta + th / 2) + h_rad(es, 1.0, ta + th, ta))
+                                     + ask * (h_vert(th, geo["lid_depth"], ta + th / 2) + h_rad(es, 1.0, ta + th, ta))) * th, qq, 0.0, 500.0, n)
+            th_li = th_lo + qq * tk / (at + ask)
+            tli = ta + th_li
+            d_gap = _inv(lambda d: a * (h_gap(d, geo["gap"], tli + d / 2) + h_rad(e_gap, 1.0, tli + d, tli)) * d, qq, 0.0, 500.0, n)
+            return th_li + d_gap
+        q["plate, through the closed lid"] = _inv(total, rise, 0.0, 500.0, n)
+    if floor:
+        af = geo["a_floor"]
+        e_fl = 1.0 / (1.0 / es + 1.0 / 0.9 - 1.0)
+        th_fo = _inv(lambda th: af * (air_props(ta + th / 2)[0] / geo["feet"] + h_rad(e_fl, 1.0, ta + th, ta)) * th - (rise - th) * af / tk,
+                     0.0, 0.0, rise, n)
+        q["floor"] = (rise - th_fo) * af / tk
+    return {"g": sum(q.values()) / rise, "q": q}
+
+
+def caps(C, R):
+    """Section 12e (the addendum to the fix round): every governing and stated line of 12a against the outside surfaces'
+    capacity with a perfect inside film, bare and with the combined heat-rejection route (10b: R-170 fins, R-171 loads into the
+    plate, R-172 the lid skin), at each mode's own ambient and rise; class (i) reachable bare, T-H1 decides; (ii) reachable only
+    with the route, T-H1 with the route decides; (iii) over the capacity even with the route: no measurement passes it."""
+    import math
+    T, pb, red2 = C["T"], C["pb"], C["red2"]
+    cb, hr, pm = R["cb"], R["hr"], R["pm"]
+    geo, cons, opt = cb["geo"], cb["cons"], cb["opt"]
+    skin = (hr["r_strap"], geo["a_lid_top"], hr["lid_h"])
+    md = {m_["id"]: m_ for m_ in pm["modes"]}
+    lines = []
+    for m_ in pm["modes"]:
+        seen = set()
+        for opt_ in ("as ruled", "C"):
+            b = m_["by"][opt_]
+            for ln, tag in ((b["gov"], "governing, %s" % opt_), (b["stated"], "maker-stated, %s" % opt_)):
+                key = (ln["short"], round(ln["t"], 6))
+                if key in seen:
+                    continue
+                seen.add(key)
+                lines.append({"mode": m_["id"], "lid": m_["lid"], "amb": m_["amb"], "Q": m_["Q"], "line": ln, "tag": tag})
+        if m_["id"] in ("M8", "M9"):   # T3's start, K7 and K8
+            t3l = [x for x in m_["by"]["C"]["lines"] if x["short"] == "T3's charge start"][0]
+            lines.append({"mode": m_["id"], "lid": m_["lid"], "amb": m_["amb"], "Q": m_["Q"], "line": t3l, "tag": "the start line (K7, K8)"})
+    for e in lines:
+        rise = e["line"]["t"] - e["amb"]
+        e["rise"] = rise
+        if rise <= 1e-9:
+            e.update(bare=(0.0, 0.0), route=(0.0, 0.0), cls="iii", short_g=math.inf, short_w=e["Q"], route_q={})
+            continue
+        bare = (outside_cap(e["amb"], rise, cons, geo, e["lid"]), outside_cap(e["amb"], rise, opt, geo, e["lid"], floor=True))
+        if e["lid"] == "open":
+            route = (outside_cap(e["amb"], rise, cons, geo, "open", K_FIN[0], hr["a_free"], skin),
+                     outside_cap(e["amb"], rise, opt, geo, "open", K_FIN[1], hr["a_free"], skin, floor=True))
+        else:
+            route = bare   # the route acts with the lid open: closed, the fins sit in the enclosed layer and the skin faces the plate
+        need = e["line"]["g"]
+        e["bare"], e["route"] = (bare[0]["g"], bare[1]["g"]), (route[0]["g"], route[1]["g"])
+        e["route_q"] = route[0]["q"]
+        if need <= e["bare"][1] + 1e-12:
+            e["cls"] = "i"
+        elif need <= e["route"][1] + 1e-12:
+            e["cls"] = "ii"
+        else:
+            e["cls"] = "iii"
+        e["only_opt"] = (e["cls"] == "i" and need > e["bare"][0]) or (e["cls"] == "ii" and need > e["route"][0])
+        e["short_g"] = need - e["route"][1] if e["cls"] == "iii" else 0.0
+        e["short_w"] = e["Q"] - e["route"][1] * rise if e["cls"] == "iii" else 0.0
+    # the options' figures: charging only in a shed state (the heat stage charging on the design day, its balance plus the ballasts)
+    q_hs_chg = T["chg_hs"]["heat"] + T["qb"]
+    t4l = {m_: [x for x in md[m_]["by"]["C"]["lines"] if x["short"] == "T4 on the charging cells"][0] for m_ in ("M8", "M9")}
+    shed = []
+    for mid in ("M8", "M9"):
+        amb = md[mid]["amb"]
+        rise = t4l[mid]["t"] - amb + (md[mid]["pack"][1] - T["chg_hs"]["parts"]["cells"]) / pm["gb"]
+        need = q_hs_chg / rise
+        shed.append({"mode": mid, "amb": amb, "Q": q_hs_chg, "rise": rise, "need": need,
+                     "bare": outside_cap(amb, rise, cons, geo, "open")["g"], "bare_opt": outside_cap(amb, rise, opt, geo, "open", floor=True)["g"]})
+    # the e-paper at the plate rather than at the mixed air: the plate's fraction of the rise on the bound (section 9) and W4's high end
+    ep_ = {}
+    for mid in ("M6", "M7"):
+        m_ = md[mid]
+        f_b = cb["E3-O" if mid == "M6" else "E5"]["open"]["f_plate"]
+        lim_ep = [x for x in m_["by"]["C"]["lines"] if x["short"].startswith("the EPAPER")][0]["t"]
+        room = lim_ep - m_["amb"]
+        ep_[mid] = {"f": f_b, "f_hi": T["f_plate"][1], "need": (None if room <= 0 else f_b * m_["Q"] / room),
+                    "need_hi": (None if room <= 0 else T["f_plate"][1] * m_["Q"] / room)}
+    ceil_sgp = {}
+    for mid in ("M3", "M4"):
+        m_ = md[mid]
+        ceil_sgp[mid] = tuple(_inv(lambda a_: a_ + m_["Q"] / outside_cap(a_, max(50.0 - a_, 0.05), cf, geo, "closed", floor=fl)["g"], 50.0, -20.0, 49.95)
+                              for cf, fl in ((cons, False), (opt, True)))
+    k1 = (outside_cap(T["t_use"], 15.0, cons, geo, "open")["g"], outside_cap(T["t_use"], 15.0, opt, geo, "open", floor=True)["g"])
+    fin_add = ((K_FIN[0] - 1.0) * hr["a_free"], (K_FIN[1] - 1.0) * hr["a_free"])
+    return {"ceil_sgp": ceil_sgp, "k1": k1, "fin_add": fin_add, "lines": lines, "shed": shed, "q_hs_chg": q_hs_chg, "epaper": ep_, "skin": skin,
+            "check9": (outside_cap(A_e3o(C), cb["E3-O"]["rise"], cons, geo, "open")["g"], cb["E3-O"]["cap"],
+                       outside_cap(C["A"]["e5"][4], cb["E5"]["rise"], cons, geo, "open")["g"], cb["E5"]["cap"])}
+
+
+def md_cap(mid, R, opt, stated=False):
+    m_ = [x for x in R["pm"]["modes"] if x["id"] == mid][0]
+    return m_["by"][opt]["stated" if stated else "gov"]["g"]
+
+
+def A_e3o(C):
+    return C["A"]["e3o_t"]
+
+
 def hr_q(R):
     return R["hr"]["q_prof"]
 
@@ -2423,6 +2559,7 @@ def compute():
     R["rc"] = reconcile(C, R)
     R["pm"] = per_mode(C, R)
     R["br"] = battery_run(C, R)
+    R["cap"] = caps(C, R)
     # ======================================================== 8: the predicates
     p = {}
     p["P1 pwr_budget and pwr_red2 reproduced byte for byte before any figure"] = R["r0a"] and R["r0b"] and R["r0c"]
@@ -2492,7 +2629,7 @@ def compute():
     p["P19 the conservative bound comes from held geometry at the coefficients' conservative ends, under W4's low case, and the reconciliation ends at it"] = (
         abs(cb["recon"][0][1] - T["w4_open"][0]) < 1e-9 and abs(cb["recon"][-1][1] - cb["E5"]["open"]["g"]) < 1e-6
         and cb["E5"]["open"]["g"] < cb["E5"]["open_opt"]["g"] < T["w4_open"][0] and cb["E3-O"]["open"]["g"] < cb["E3-O"]["open_opt"]["g"])
-    p["P20 U-02's class follows from the bound: the lines over the outside films' cap, E3-O's gap positive with every session measure, so T-H1 decides"] = (
+    p["P20 U-02's class follows from the bound: the lines over the bound with a 50 m/s inside flow, E3-O's gap positive with every session measure, so T-H1 decides"] = (
         cb["cap"]["E5"] < cb["lines"]["E5"] and cb["cap"]["E3-O"] < cb["lines"]["E3-O"] and cb["gap_w"]["E3-O"] > 0 and cb["gap_w"]["E5"] <= 0
         and cb["klass"] == "DECIDES")
     hr = R["hr"]
@@ -2523,6 +2660,13 @@ def compute():
     p["P25 B7: the battery-only run reaches C1 before its energy ends on the bound at C 8 kJ/K, the reviewer's constant-G figures reproduced, no hot stop, 2.52 h energy-only"] = (
         br["runs"][0]["t_c1"] is not None and br["runs"][0]["t_c1"] < br["t_energy"] and abs(br["rev"][0][1] - 2.063) < 5e-3
         and abs(br["rev"][1][1] - 2.151) < 5e-3 and not any(r_["hot_stop"] for r_ in br["runs"]) and abs(br["t_energy"] - br["h_energy"]) < 5e-3)
+    cp = R["cap"]
+    cls3 = sorted(set((e["mode"], e["line"]["short"]) for e in cp["lines"] if e["cls"] == "iii"))
+    p["P26 the addendum: every line classed against the outside capacity with a zero inside resistance (bare and with the route); class (iii) is E3-L lid closed as ruled and the e-paper at E3-O and E5, no other"] = (
+        cls3 == [("M3", "the SGP41's Table 4"), ("M4", "the SGP41's Table 4"), ("M6", "the EPAPER's +60 C"), ("M7", "the EPAPER's +60 C")]
+        and all(e["route"][0] >= e["bare"][0] - 1e-9 and e["route"][1] >= e["bare"][1] - 1e-9 for e in cp["lines"])
+        and cp["check9"][0] > R["cb"]["cap"]["E3-O"] and cp["check9"][2] > R["cb"]["cap"]["E5"]
+        and all(e["short_g"] > 0 for e in cp["lines"] if e["cls"] == "iii"))
     R["pred"] = p
     return R
 
@@ -3109,7 +3253,7 @@ def render(R):
             mg, r_["amb"], r_["rise"], r_["open"]["g"], r_["open_opt"]["g"], r_["closed"]["g"], r_["open"]["f_plate"]))
         w("         credits: the fans' flow 0.2 / 0.5 / 1.0 m/s %s; the stack's radiation %.3f, with 0.5 m/s %.3f; the floor %.3f; all the" % (
             " / ".join("%.3f" % g_ for _v, g_ in r_["v"]), r_["rad"], r_["rad_v"], r_["floor"]))
-        w("         favourable ends with 1.0 m/s %.3f; ANY inside film (a 50 m/s flow) %.3f, the outside films' cap" % (r_["opt_all"], r_["cap"]))
+        w("         favourable ends with 1.0 m/s %.3f; a 50 m/s inside flow (a film near 45 W/m2K, not a zero inside resistance: 12e) %.3f" % (r_["opt_all"], r_["cap"]))
     w("   The envelope's +40 C, the air 15 K up: lid open %.3f, lid closed %.3f (LO-01a's and E3-L's state; U-01's, not this record's)." % (
         cb["env_open"]["g"], cb["env_closed"]["g"]))
     fl_ = cb["films"]
@@ -3126,11 +3270,14 @@ def render(R):
         w("      %-100s %.3f W/K" % (lbl, g_))
     para("The decisive term is the inside film: W4's low case takes 10 W/m2K with the fans; natural convection gives %.2f to %.2f W/m2K, "
          "and no held document gives the fans' flow at the inner faces." % (fl_["hin_wall"], fl_["hin_plate"]))
-    para("9d AGAINST THE LINES AND THE FALLBACK. The lines (%.3f W/K in E5, %.3f W/K in E3-O) lie over the outside films' cap (%.3f and "
-         "%.3f W/K with any inside film): on the bound's outside no inside measure reaches them. Section 8's floors (E5 %.3f W/K with F4 "
+    para("9d AGAINST THE LINES AND THE FALLBACK. The lines (%.3f W/K in E5, %.3f W/K in E3-O) lie over the bound with a 50 m/s inside "
+         "flow (%.3f and %.3f W/K; CORRECTED in 12e: that flow's film is near 45 W/m2K, not a zero inside resistance, and the outside "
+         "capacity proper at these rises is %.3f and %.3f W/K on the conservative ends, so E3-O's line lies under it and E5's over it, "
+         "both under it at the optimistic ends). Section 8's floors (E5 %.3f W/K with F4 "
          "and F3; E3-O %.3f, or %.3f with the connectors out of the exhaust) lie over the bound by %.3f and %.3f W/K. Where the air "
          "settles on the bound (MODELED, lid open, its own rise):" % (
-             cb["lines"]["E5"], cb["lines"]["E3-O"], cb["cap"]["E5"], cb["cap"]["E3-O"], cb["floors"]["E5"]["section 8 (W4's plate fraction), F4 with F3"],
+             cb["lines"]["E5"], cb["lines"]["E3-O"], cb["cap"]["E5"], cb["cap"]["E3-O"], R["cap"]["check9"][2], R["cap"]["check9"][0],
+             cb["floors"]["E5"]["section 8 (W4's plate fraction), F4 with F3"],
              cb["floors"]["E3-O"]["section 8 (W4's plate fraction), F4"], cb["floors"]["E3-O"]["section 8, F4, the connectors out of the exhaust"],
              cb["gap_s8"]["E5"], cb["gap_s8"]["E3-O"]), first="")
     for k_, o in cb["ops"].items():
@@ -3308,9 +3455,10 @@ def render(R):
     for lbl, kp, kw, kk, gg in rt["rows"]:
         w("      %-30s k plate %.2f, walls %.2f, whole %.2f W/m2K: A k = %.3f W/K" % (lbl, kp, kw, kk, gg))
     para("Sheet steel's %.1f W/m2K on the same area would read %.3f W/K; K1's %.3f W/K needs k = %.2f W/m2K over it, %.1f to %.1f times "
-         "what the bound's films give. With any inside film (a 50 m/s flow) the outside films cap A k at %.3f W/K (%.3f at the "
-         "coefficients' other ends), still air and the floor adiabatic: K1's need lies %s, so on the bound's outside no inside measure "
-         "reaches it while all the heat passes through the inside air. The tree's other conductance evidence spans "
+         "what the bound's films give. With a 50 m/s inside flow (a film near 45 W/m2K) A k reaches %.3f W/K (%.3f at the "
+         "coefficients' other ends), still air and the floor adiabatic: K1's need lies %s. CORRECTED in 12e: that is not the outside "
+         "capacity; with the inside resistance at zero it is %.3f W/K at K1's rise (%.3f at the optimistic ends with the floor), over "
+         "K1's need, so no physics bars it and the measurement decides. The tree's other conductance evidence spans "
          "the need: W4's lumped estimate %.2f to %.2f W/K (fixed films with the fans, the floor counted), 32.53's %.1f to %.1f W/K. "
          "The bound under the need leaves feasibility unestablished, not refuted: the floor's support, the outside's real films and "
          "air movement, the fans' film and heat led into the plate past the air (section 10b) are what it does not credit, and only "
@@ -3319,8 +3467,8 @@ def render(R):
          "slightly with the air's properties):" % (
              RITTAL_K_STEEL, rt["steel_g"], rc["conds"][0][7], rt["k_need"], rt["k_need"] / max(r_[3] for r_ in rt["rows"]),
              rt["k_need"] / min(r_[3] for r_ in rt["rows"]), rt["cap"][0], rt["cap"][1],
-             ("over the cap at the conservative ends and under it, by %.3f W/K, at the other ends" % (rt["cap"][1] - rc["conds"][0][7])
-              if rt["cap"][1] > rc["conds"][0][7] else "over the cap at both ends"), rt["w4"][0], rt["w4"][1], rt["s3253"][0],
+             ("over it at the conservative ends and under it, by %.3f W/K, at the other ends" % (rt["cap"][1] - rc["conds"][0][7])
+              if rt["cap"][1] > rc["conds"][0][7] else "over it at both ends"), R["cap"]["k1"][0], R["cap"]["k1"][1], rt["w4"][0], rt["w4"][1], rt["s3253"][0],
              rt["s3253"][1], ROOM_C, t_use_(R)), first="   ")
     for row in rc["trans"]:
         w("      %-30s %s" % (row[0], "; ".join("rise %.0f K: %.3f -> %.3f W/K, x %.3f" % x for x in row[1:])))
@@ -3507,6 +3655,70 @@ def render(R):
             " and ".join(pt["ids"]), pt["Q"], pt["lid"], "; ".join(rd_txt), pt["tau"], pt["steady"], pt["fit"]), first="      ", rest="         ")
     para("Then the fans-off case at M2's heat (no pass line: the failure case) and 12c's transient point. A point passes for a mode and "
          "option when its reading meets that line; it closes that conductance only.", first="   ")
+    cp = R["cap"]
+    para("12e THE OUTSIDE CAPACITY (the addendum to the fix round, the coordinator's question of 2 October 2026: which lines a reading "
+         "can pass at all). The outside surfaces' capacity with the inside resistance at zero (every inner face at the inside air, the "
+         "3 mm aluminium plate isothermal), at each line's own ambient and rise, still air: bare (the plate's outer face and the walls "
+         "through the PP shell; lid closed, the enclosed layer, the lid's shell and its outside films; the floor credited only at the "
+         "optimistic ends, its feet over a support at the ambient) and with the combined route of 10b (R-170, fins of multiplier %.0f at the "
+         "conservative end and %.0f at the optimistic on the free strips' %.4f m2, adding %.4f to %.4f m2 of effective outside area; R-171, "
+         "the large loads led into the plate, which adds nothing once the inner faces sit at the air; R-172, the open lid's skin, %.4f m2 "
+         "on its %.2f K/W strap; the route acts with the lid open only, so lid closed it is the bare case). Conservative coefficient ends "
+         "(the plate's emissivity %.2f, the shell's %.2f, PP at %.2f W/mK, the plate's view %.2f) and optimistic ends (%.2f, %.2f, %.2f, "
+         "%.2f, the floor credited). CORRECTION: section 9's 'cap' (%.3f W/K at E5's rise, %.3f at E3-O's) is the bound with a 50 m/s "
+         "inside flow, whose film is near 45 W/m2K; the capacity proper at those rises is %.3f and %.3f W/K on the conservative ends. "
+         "Class (i): reachable bare, T-H1 decides; (ii): reachable only with the route fitted, T-H1 with the route decides; (iii): over "
+         "the capacity even with the route and the optimistic ends, so no measurement can pass it: a contradiction between the rulings "
+         "(no vent, the Peli 1450, the device set) and that mode's requirement, the owner's. Each class is read at the optimistic ends "
+         "(what physics may allow); the class at the conservative ends is printed beside it." % (
+             K_FIN[0], K_FIN[1], R["hr"]["a_free"], cp["fin_add"][0], cp["fin_add"][1], cp["skin"][1], cp["skin"][0],
+             R["cb"]["cons"]["eps_plate"], R["cb"]["cons"]["eps_shell"], R["cb"]["cons"]["k_pp"], R["cb"]["cons"]["f_open"],
+             R["cb"]["opt"]["eps_plate"], R["cb"]["opt"]["eps_shell"], R["cb"]["opt"]["k_pp"], R["cb"]["opt"]["f_open"],
+             R["cb"]["cap"]["E5"], R["cb"]["cap"]["E3-O"], cp["check9"][2], cp["check9"][0]), first="")
+
+    def cls_at(e, i):
+        need = e["line"]["g"]
+        if not math.isfinite(need):
+            return "iii"
+        return "i" if need <= e["bare"][i] + 1e-12 else ("ii" if need <= e["route"][i] + 1e-12 else "iii")
+    for e in cp["lines"]:
+        ln = e["line"]
+        if not math.isfinite(ln["g"]):
+            para("%s, lid %s, +%.1f C: %s (%s) at or under the ambient: no capacity at a zero rise; class (iii), the whole %.3f W short" % (
+                e["mode"], e["lid"], e["amb"], ln["short"], e["tag"], e["Q"]), first="      ", rest="         ")
+            continue
+        para("%s, lid %s, +%.1f C, rise %.2f K: %s (%s) needs %.3f W/K; capacity bare %.3f / %.3f, with the route %.3f / %.3f W/K "
+             "(conservative / optimistic): class (%s)%s%s" % (
+                 e["mode"], e["lid"], e["amb"], e["rise"], ln["short"], e["tag"], ln["g"], e["bare"][0], e["bare"][1], e["route"][0], e["route"][1],
+                 e["cls"], "" if cls_at(e, 0) == e["cls"] else ", (%s) at the conservative ends" % cls_at(e, 0),
+                 "; SHORT by %.3f W/K, %.3f W, of the route's optimistic capacity" % (e["short_g"], e["short_w"]) if e["cls"] == "iii" else ""),
+             first="      ", rest="         ")
+    sh_ = cp["shed"]
+    ep_ = cp["epaper"]
+    para("The class (iii) lines and their options (none lowers a requirement silently; each names its owner): (1) E3-L at +40 C with "
+         "the lid closed as ruled (M3 on the pack, M4 on shore): the SGP41's Table 4 +50 C lies over the closed case's capacity. "
+         "Options: CFL-002's C, A or B (the owner's), which move the line to the cells' hot stop H1, %.3f and %.3f W/K, under the closed "
+         "capacity's optimistic end and over its conservative one, so T-H1's lid-closed point decides; a closed-lid ceiling on REQ-042's "
+         "VOC channel (a requirement change, the owner's: the bay air holds Table 4's +50 C lid closed only to an ambient of +%.1f to "
+         "+%.1f C on the pack and +%.1f to +%.1f C on shore, conservative to optimistic); D-02b's closed-lid test at +40 C restated (a "
+         "ruling change, the owner's); a closed-lid conduction path from the plate to the lid's inner face inside the seal (the "
+         "session's to develop at Layer 7; not modelled here, so it closes nothing yet). (2) E3-O at +55 C (M6): the e-paper, unpowered, "
+         "judged on its +60 C operating row read to cover it (INFERRED), lies over the route's capacity. Options: PDi's storage "
+         "statement (the request is drafted in clarification/pervasive-displays-e2370ks0c1.txt; sending it is the owner's), with a range "
+         "at or over +70 C the line becomes the +70 C class, %.3f W/K, class (i); the e-paper's own temperature at its window in the "
+         "plate rather than the mixed air (the session's: a T-H1 channel at the window), at the bound's plate fraction %.3f it needs "
+         "%.3f W/K and at W4's high fraction %.3f it needs %.3f W/K, both under the route's optimistic capacity, so the measured "
+         "fraction decides; an e-paper with a held range at or over +70 C (CHO-001, the owner's); E3-O run with the e-paper's state as "
+         "a recorded deviation (TEST-PLAN's owner). (3) E5's +60 C dwell (M7): the same e-paper at an ambient equal to its operating "
+         "top: no capacity and no plate fraction carries it. Options: PDi's statement (then the LimeSDR's +70 C storage row, %.3f W/K, "
+         "class (i) at the optimistic ends); a different e-paper (CHO-001, the owner's); E5 run with the e-paper out as a recorded "
+         "deviation (TEST-PLAN's owner). Charging (M8, M9) is not class (iii); for scale, charging only in the heat stage (%.3f W into "
+         "the case) would need %.3f and %.3f W/K at T4's line, class (i) at both ends, at the cost of the profile while charging (the "
+         "48 to 72 h DESIGN OBJECTIVE, already NOT MET, would lose the profile's service during the charge: an owner's choice of "
+         "duty cycle, not taken)." % (
+             md_cap("M3", R, "C"), md_cap("M4", R, "C"), cp["ceil_sgp"]["M3"][0], cp["ceil_sgp"]["M3"][1], cp["ceil_sgp"]["M4"][0],
+             cp["ceil_sgp"]["M4"][1], md_cap("M6", R, "C", stated=True), ep_["M6"]["f"], ep_["M6"]["need"], ep_["M6"]["f_hi"],
+             ep_["M6"]["need_hi"], md_cap("M7", R, "C", stated=True), cp["q_hs_chg"], sh_[0]["need"], sh_[1]["need"]), first="   ")
     w("")
     w("13 Predicates")
     for k, v in R["pred"].items():
