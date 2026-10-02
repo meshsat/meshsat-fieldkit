@@ -546,7 +546,7 @@ def t_l4e10_and_meshsat_1478_enter_as_choices_not_tasks():
     m = _M()
     F = _C["F"]
     rows = {r["id"]: r for r in _C["R"]}
-    c11 = [c for c in rows["IF-11"]["checks"] if "MESHSAT-1478" in c.what][0]
+    c11 = [c for c in rows["IF-11"]["checks"] if "M7's maker-stated line" in c.what][0]
     assert c11.a == F["e5_line"] and c11.b == F["parts_hot"] and c11.met and c11.cls == "CONDITIONAL" and "U-02" in c11.src
     floor = [c for c in rows["IF-11"]["checks"] if "LO-01a's floor" in c.what][0]
     assert floor.scope == "drawn" and floor.met is False and floor.a == F["floor_air"][1], "the design as it stands stays visible"
@@ -811,7 +811,9 @@ def t_the_thermal_line_is_l4e12s_binding_line():
     assert "THE THERMAL BUDGET" in bud and "%s W/K" % m.fmt(F["gc"]) in bud and "%s W" % m.fmt(round(F["e5_hold_wb"], 3)) in bud
     assert "THE ENERGY BUDGET" in bud
     u2 = [c for c in m.CHOICES if c["id"] == "U-02"][0]
-    assert m.fmt(F["gc"]) in u2["constraint"] and "CFL-002" in u2["evidence"][2]
+    # since L4-E12's fix round 2.159 W/K is M7's maker-stated line (the e-paper's row governs E5, class (iii))
+    assert "%s W/K (at least" % m.fmt(F["gc"]) in u2["question"] and "CFL-002" in u2["evidence"][2]
+    assert F["fx"]["modes"]["M7"]["stated"][1] == m.fmt(F["gc"]) and F["fx"]["modes"]["M7"]["ruled"][1] is None
 
 
 def t_the_owner_items_are_kept_apart_with_their_documents_pinned():
@@ -920,8 +922,8 @@ def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
     m = _M()
     F = _C["F"]
     r5 = F["r5"]
-    for key, commit in (("l4e10", "e2d20bf2"), ("l4e10md", "e2d20bf2"), ("cl_topwell", "e464ff88"), ("l4e11", "5aa18a69"),
-                        ("l4e11md", "5aa18a69"), ("l4e12", "6f8fd652"), ("l4e12md", "6f8fd652")):
+    for key, commit in (("l4e10", "ee09aa09"), ("l4e10md", "ee09aa09"), ("cl_topwell", "e464ff88"), ("l4e11", "656fc540"),
+                        ("l4e11md", "656fc540"), ("l4e12", "b1cd32ba"), ("l4e12md", "b1cd32ba")):
         assert m.FROM_COMMIT[key] == commit, key
         rel, sha = m.PINS[key]
         rb = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (commit, rel)], capture_output=True)
@@ -945,14 +947,14 @@ def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
     u1, u2, u4 = arch
     assert "%s Wh (%s h) against the 35E's %s Wh" % (r5["hl"] + (r5["e35"][0],)) in u1["constraint"]
     assert abs(float(r5["e35"][0]) - float(r5["hl"][0]) - float(r5["growth"])) < 1e-9
-    assert "session's" in u2["fallback"] and "down to %s" % r5["f4"][3] in u2["fallback"] and "the remaining option is the owner's" in u2["fallback"]
+    assert "the session develops two options" in u2["fallback"] and "class (iii)" in u2["fallback"] and "the owner's" in u2["fallback"]
     assert float(r5["f4"][3]) < float(r5["f4"][1]) < F["gc"] < float(r5["pass"][0])
     assert "arrangement (A) with its dependency round stands" in u4["fallback"] and r5["remedy"][1:] == ("D1", "D3")
     assert "CFL-002" in u2["evidence"][2] and "OW-8" in u2["evidence"][2] and "OW-7" in u4["evidence"][2]
     bad = copy.deepcopy(m.CHOICES)
     for c in bad:
         if c["id"] == "U-02":
-            c["fallback"] = c["fallback"].replace(r5["f4"][3], "1.000")
+            c["question"] = c["question"].replace(F["fx"]["modes"]["M1"]["ruled"][2], "1.000")
     whole = " ".join(" ".join([c["question"], c["constraint"], m.evidence_text(c), c["supplier"], c["fallback"], c["overturns"]]) for c in bad if c["id"] == "U-02")
     assert any(" ".join(s.split()) not in whole for s in exp["U-02"]), "a choice quoting another fallback figure must be caught"
     bad = copy.deepcopy(m.CHOICES)
@@ -1039,7 +1041,11 @@ def t_consolidation_one_budget_with_pinned_inputs_and_the_reconciliation():
     assert ef["steady"] == F["steady"][2] and abs(ef["deficit"] - (F["idle"][1] - F["steady"][2])) < 1e-9
     assert [mm[0] for mm in modes] == ["M1", "M2", "M3", "M4", "M5", "M6"]
     assert "NOT MET" in _C["text"].split("16b ENERGY")[1] and "A charger change does not close it" in _C["text"]
-    assert any(h[2] == F["e5_hold_wb"] and "BINDING" in h[3] for h in heat), "the binding line in the heat budget"
+    # each required mode against its governing local limit (L4-E12's fix round): E5's heat under the hold is M7's, its maker-stated
+    # alternative the +70 C line 2.159 W/K, the e-paper's row governing with no conductance
+    assert [h[0] for h in heat] == ["M%d" % i for i in range(1, 10)] + ["A1", "A2", "A3"]
+    h7 = [h for h in heat if h[0] == "M7"][0]
+    assert abs(h7[2] - F["e5_hold_wb"]) < 1e-6 and "no conductance" in h7[4] and "%s W/K" % m.fmt(F["gc"]) in h7[6], "M7 in the heat budget"
 
 
 def t_consolidation_the_change_list_covers_every_apply_script_in_order():
@@ -1107,10 +1113,10 @@ def t_consolidation_the_handover_the_exit_and_the_status():
     ex = m.cons_exit(F)
     assert [e[0] for e in ex] == [c["id"] for c in m.CHOICES if c["class"] == m.ARCH]
     for e in ex:
-        assert e[1] in (m.QUALIFICATION, m.CONDITION, m.QUALIFICATION_ONCE, m.SUPPORTED) and all(x.strip() for x in e[2:]), e[0]
+        assert e[1] in (m.QUALIFICATION, m.CONDITION, m.CONDITION_U02, m.QUALIFICATION_ONCE, m.SUPPORTED) and all(x.strip() for x in e[2:]), e[0]
     assert m.OWNER_DEFINITION in page.replace("\n", " ").replace("  ", " ") or m.OWNER_DEFINITION[:80] in page.replace("\n", " ")
     assert "**Status: %s.**" % m.STATUS in page and m.STATUS in _C["text"].split("20. THE EXIT")[1]
-    if any(e[1] == m.CONDITION for e in ex):
+    if any(e[1] in (m.CONDITION, m.CONDITION_U02) for e in ex):
         assert "power closure is not reached" in page and "NOT reached" in _C["text"]
     short = page.split("## In short\n")[1].split("\n## 1. ")[0].strip().split("\n")
     assert [s[2:] for s in short] == m.cons_in_short(F, D, st, reg), "the page's In short is the script's"
@@ -1123,7 +1129,7 @@ def t_consolidation_the_charger_selection_and_the_thermal_verdict_are_carried():
     b1, tb = F["cb"]["b1"], F["cb"]["tb"]
     for key in ("l4e11chk5", "l4e12chk5", "e11charger"):
         assert key in m.PINS and m.PINS[key][1][:16] in _C["text"].split("1. THE MAKERS")[0], key
-    assert m.FROM_COMMIT["l4e11"] == "5aa18a69" and m.FROM_COMMIT["l4e12"] == "6f8fd652"
+    assert m.FROM_COMMIT["l4e11"] == "656fc540" and m.FROM_COMMIT["l4e12"] == "b1cd32ba"
     N, E, C, NP = m.cons_diagram(F, st)
     blk = {n[0]: " ".join(n[4]) for n in N}
     assert "BQ25730" in blk["CHG"] and "Q39" in blk["VBAT"] and "%s" % b1["vsys_min"] in blk["VBAT"], "(B1) is in the figure"
@@ -1136,15 +1142,15 @@ def t_consolidation_the_charger_selection_and_the_thermal_verdict_are_carried():
     for rid in ("R-163", "R-164", "R-165", "R-166", "R-111", "R-141"):
         assert rid in {r[0] for r in reg}, rid
     modes, energy, ef, heat = m.cons_budget(F, st)
-    assert "%s W more on battery" % b1["q39_idle"][1] in modes[0][4]
-    assert "%.3f h with (B1)'s Q39" % (F["a1_bat"][0] / (F["idle"][1] + b1["q39_idle"][1])) in energy[0][4]
-    assert all(len(h) == 7 and h[5].strip() and h[6].strip() for h in heat), "each mode against the conservative bound and the approaches"
-    assert "%s C" % tb["air_e3o"][0] in [h for h in heat if h[0] == "H3"][0][5] and "%.3f W/K" % tb["all_e3o"][3] in [h for h in heat if h[0] == "H3"][0][5]
+    fx = F["fx"]
+    assert "%s W more on battery" % m.fmt(fx["pair_idle"][1]) in modes[0][4]
+    assert "%.3f h with (B1)'s pair" % (F["a1_bat"][0] / (F["idle"][1] + fx["pair_idle"][1])) in energy[0][4]
+    assert all(len(h) == 9 and all(x.strip() for x in h[3:]) for h in heat), "each mode with its lines, class and what remains"
     ex = {e[0]: e for e in m.cons_exit(F)}
-    assert ex["U-04"][1] == m.QUALIFICATION_ONCE and ex["U-02"][1] == m.CONDITION and ex["U-01"][1] == m.SUPPORTED
-    for k in ("K1", "K3", "K5", "K10", "K6", "K7", "K8"):
-        assert F["rc"]["R"][k]["read"] in ex["U-02"][3], k
-    assert "%s W/K at E5" % tb["e5"][0] in ex["U-02"][2] and "%s V" % b1["vsys_min"] in ex["U-04"][4]
+    assert ex["U-04"][1] == m.QUALIFICATION_ONCE and ex["U-02"][1] == m.CONDITION_U02 and ex["U-01"][1] == m.SUPPORTED
+    for p_ in ("M2 and M6", "M1, M4 and M3", "M7, M5, M8 and M9", "OW-10"):
+        assert p_ in ex["U-02"][3], p_
+    assert "%.3f W/K at K1's rise" % F["rc"]["capk1"][0] in ex["U-02"][4] and "%s V" % b1["vsys_min"] in ex["U-04"][4]
     u4 = [c for c in m.CHOICES if c["id"] == "U-04"][0]
     assert "(B1)" in u4["constraint"] and "arrangement (A) with its dependency round stands" in u4["fallback"]
     named = {v for _r, _q, figs, _k, _w in m.RECON for v, _k2, _b in figs}
@@ -1160,7 +1166,7 @@ def t_consolidation_the_cell_route_and_normal_operation():
     u1, tb = cb["u1"], cb["tb"]
     for key in ("l4e10chk5", "l4e10chk6", "cl_saft"):
         assert key in m.PINS and m.PINS[key][1][:16] in _C["text"].split("1. THE MAKERS")[0], key
-    assert m.FROM_COMMIT["l4e10"] == "e2d20bf2"
+    assert m.FROM_COMMIT["l4e10"] == "ee09aa09"
     # the battery comparison as the budget's and the handover's cell row
     modes, energy, ef, heat = m.cons_budget(F, st)
     e = {x[0]: x for x in energy}
@@ -1172,10 +1178,11 @@ def t_consolidation_the_cell_route_and_normal_operation():
     page = open(PAGE, encoding="utf-8").read()
     assert m.md_table(page, "| Item | Approved pack (D-06) |") == [list(r) for r in cells], "the page carries L4-E10's table as filed"
     parts = {p_[0]: p_ for p_ in m.cons_parts(F)}
-    assert "81.76 Wh" in parts["the cells"][5] and "not supported yet" in parts["the cells"][5] and "owner's approval" in parts["the cells"][5]
+    assert "81.76 Wh" in parts["the cells"][5] and "not yet adoptable" in parts["the cells"][5] and "owner's approval" in parts["the cells"][5]
     ex = {x[0]: x for x in m.cons_exit(F)}
-    assert ex["U-01"][1] == m.SUPPORTED and "not supported yet" in m.SUPPORTED and "mock-up" in ex["U-01"][3] and "18 A for 60 s" in ex["U-01"][3]
-    assert "UNSUITABLE" in ex["U-01"][2] and "AWAITING" not in ex["U-01"][5] and "not yet supported" in ex["U-01"][6]
+    assert ex["U-01"][1] == m.SUPPORTED and "NOT YET ADOPTABLE" in m.SUPPORTED and "mock-up" in ex["U-01"][3] and "18 A for 60 s" in ex["U-01"][2]
+    assert "limited sample qualification" in ex["U-01"][3] and "temperature windows" in ex["U-01"][4]
+    assert "UNSUITABLE" in ex["U-01"][2] and "AWAITING" not in ex["U-01"][5] and "NOT YET ADOPTABLE" in ex["U-01"][6]
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
     for rid in ("R-167", "R-168", "R-169"):
         assert reg[rid][7] == "U-01" and "Saft route" in reg[rid][2], rid
@@ -1183,8 +1190,8 @@ def t_consolidation_the_cell_route_and_normal_operation():
     rows, stmt = m.cons_normal_op(F)
     assert [r[0] for r in rows] == ["K%d" % i for i in range(1, 11)] + ["X1", "X2", "X3"]
     assert stmt[0].startswith("**The 42.8 W profile is not a required state at +40 C**") and "withdrawn" in stmt[0]
-    assert "CFL-002" in stmt[1] and rc["K"]["K1"]["need"] in stmt[1] and rc["K"]["K3"]["need"] in stmt[1]
-    assert rc["K"]["K6"]["need"] in stmt[2] and rc["K"]["K7"]["need"] in stmt[3] and "CONDITIONAL" in stmt[3]
+    assert "screens" in stmt[1] and "K1 and K5" in stmt[1] and "LOCAL air" in stmt[1]
+    assert rc["K"]["K6"]["need"] in stmt[2] and "ENERGY ONLY" in stmt[2] and rc["K"]["K7"]["need"] in stmt[3] and "CONDITIONAL" in stmt[3]
     assert "deciding fact" not in " ".join(stmt) and "not thermally feasible" not in " ".join(stmt)
     q = cb["idle_heat"]
     assert abs((float(F["r5"]["thr"][5]) - q / tb["env"][0]) - u1["charge_start"]) < 0.05, "the charge start on the bound reproduces L4-E10's"
@@ -1203,36 +1210,33 @@ def t_consolidation_the_amendment_of_14_20():
     K, R, H = rc["K"], rc["R"], rc["H"]
     for key in ("l4e12chk7", "l4e10chk6", "ledger", "verify"):
         assert key in m.PINS and m.PINS[key][1][:16] in _C["text"].split("1. THE MAKERS")[0], key
-    assert m.FROM_COMMIT["l4e12"] == "6f8fd652" and "check 7" in m.COMMIT_LABEL["6f8fd652"]
-    # 1. the thermal correction: the lines read, the required state the heat stage, CFL-002 deciding
-    assert (K["K1"]["need"], K["K2"]["need"], K["K3"]["need"], K["K6"]["need"], K["K7"]["need"], K["K8"]["need"]) == ("1.806", "2.709", "0.903", "1.447", "1.627", "1.977")
-    assert (R["K1"]["read"], R["K3"]["read"], R["K6"]["read"], R["K10"]["read"]) == ("1.958", "0.941", "1.508", "2.455") and H["K1"][1] == 25.136
+    assert "check 7" in m.COMMIT_LABEL["6f8fd652"] and m.FROM_COMMIT["l4e12"] == "b1cd32ba"
+    # 1. the thermal correction of check 7, as the fix round restates it: section 11's conditions read, K1 and K5 screens since 12a
+    assert (K["K1"]["need"], K["K2"]["need"], K["K3"]["need"], K["K6"]["need"], K["K7"]["need"], K["K8"]["need"]) == ("1.806", "2.709", "0.903", "1.447", "1.810", "2.200")
+    assert (R["K1"]["read"], R["K3"]["read"], R["K6"]["read"], R["K10"]["read"]) == ("1.958", "0.941", "1.508", "2.455") and H["M2"][1] == 25.136
     assert abs(K["K1"]["q"] - F["e3o_wb"]) < 1e-3 and K["X2"]["need"] == K["K6"]["need"] and rc["cap"][0] < float(K["K1"]["need"]) < rc["cap"][1]
     assert all(float(R[k]["read"]) > float(K[k]["need"]) for k in R), "each reading is its need plus its uncertainty"
+    assert "SCREEN" in K["K1"]["what"] and "SCREEN" in K["K5"]["what"], "the SGP41's +55 C is a screen, never a line"
     dec = m.cons_deciding(F)
-    assert "WITHDRAWN" in dec[0] and "heat stage" in dec[0] and K["K1"]["need"] in dec[0] and K["K3"]["need"] in dec[0]
-    assert dec[1].startswith("**The owner's CFL-002 decides which line governs.**") and "option C" in dec[1] and "option A" in dec[1]
-    order = [dec[2].index(x) for x in ("K1,", "K5,", "K10,", "K6,", "K7 and K8")]
-    assert order == sorted(order), "the procedure's order K1, K5, K10, K6, K7 and K8"
+    assert "WITHDRAWN" in dec[0] and "heat stage" in dec[0] and K["K1"]["need"] in dec[0] and "screens" in dec[0]
+    assert dec[1].startswith("**The governing lines**") and "Table 4" in dec[1] and "hot stop H1" in dec[1]
+    assert dec[2].startswith("**Which lines a reading can pass at all**") and "four class (iii)" in dec[2] and "OW-10" in dec[2]
     text = _C["text"]
     exit_sec = text.split("20. THE EXIT")[1].split("21. IN SHORT")[0]
     assert "1.509 W/K" not in exit_sec.split("U-02:")[0], "the withdrawn reading heads nothing"
-    modes, energy, ef, heat = m.cons_budget(F, st)
-    h = {x[0]: x for x in heat}
-    assert "H9" in h and abs(h["H9"][2] - K["K1"]["q"]) < 1e-9 and K["K1"]["need"] in h["H9"][3] and K["K3"]["need"] in h["H9"][3]
-    assert "not a required state at +40 C" in h["H1"][6] and K["K6"]["need"] in h["H1"][6] and K["K7"]["need"] in h["H7"][6] and R["K10"]["read"] in h["H4"][4]
+    sec24 = text.split("24. THE OWNER'S AMENDMENT")[1].split("25. THE FIX ROUND")[0]
+    assert "CORRECTED by the fix round" in sec24 and "WITHDRAWN" in sec24, "the amendment's statement kept as dated history, marked"
     rows, note = m.cons_th1(F)
-    assert [r[0].split(",")[0].split(":")[0] for r in rows[:5]] == ["K1", "K5", "K10", "K6", "K7"] and "supersedes" in note
+    assert [r[0] for r in rows[:7]] == [p_[0] for p_ in F["fx"]["pts"]] and "superseded" in note
     page = open(PAGE, encoding="utf-8").read()
     assert page.split("<!-- gen:th1:begin -->")[1].split("<!-- gen:th1:end -->")[0].strip() == note
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
     acc = reg["R-104"][5]
-    assert [acc.index(x) for x in ("K1,", "K5 ", "K10 ", "K6,", "K7 and K8")] == sorted(acc.index(x) for x in ("K1,", "K5 ", "K10 ", "K6,", "K7 and K8"))
-    assert "CFL-002" in acc and "1.509" not in acc and "P1" not in acc
+    assert "12d" in acc and "CFL-002" in acc and "1.509" not in acc and "P1" not in acc and "class (iii)" in acc
     for rid in ("R-170", "R-171", "R-172"):
-        assert "1.509" not in reg[rid][2] + reg[rid][5] and "its line" in reg[rid][2], rid
+        assert "1.509" not in reg[rid][2] + reg[rid][5] and "class (ii) line" in reg[rid][2], rid
     short = page.split("## In short\n")[1].split("\n## 1. ")[0]
-    assert "CFL-002 decides its line" in short and "not thermally feasible" not in short and "deciding fact" not in short
+    assert "four class (iii) lines no reading can pass" in short and "not thermally feasible" not in short and "deciding fact" not in short
     # 3. the ledger in the exit
     # the counts are the ledger's own (its "All" row), and the four states sum to its rows; set 27's integration moved them
     # from (58, 24, 19, 11, 4) to (58, 24, 23, 11, 0), so the value itself is not pinned here
@@ -1245,7 +1249,7 @@ def t_consolidation_the_amendment_of_14_20():
     for x in ("%d CLOSED," % want[1], "%d CLOSED AS CONDITIONAL" % want[2], "%d OPEN DOWNSTREAM" % want[3], "%d STILL OPEN" % want[4]):
         assert x in led, x
     if want[4] == 0:
-        assert "L4-E12:1.3 and 2.2" in led and "L4-E7R:1.6 and 2.4" in led
+        assert "L4-E12:1.3 and 2.2" in led and "L4-E7R:1.6 and L4-E7R:2.4" in led
     assert page.split("<!-- gen:ledger:begin -->")[1].split("<!-- gen:ledger:end -->")[0].strip() == led
     assert page.index("<!-- gen:ledger:begin -->") < page.index("**The exit: Layer 4 power closure is not reached")
     # 4. R-139's lag test
@@ -1256,6 +1260,7 @@ def t_consolidation_the_amendment_of_14_20():
     # the heat-rejection approaches stay beside the bound, their need now K6 (and K7, K8 corrected); the route's rows in the change list
     apr = m.cons_approaches(F)
     assert [r[0] for r in apr] == ["none", "a2", "a3", "b", "ba", "c", "all", "need"] and K["K6"]["need"] in apr[-1][2] and K["K7"]["need"] in apr[-1][3]
+    assert all(F["fx"]["modes"]["M8"]["ruled"][1] in r[5] for r in apr[:-1]), "the approaches against T4's line too"
     for head in ("| Approach | ", "| Heat | ", "| Condition |"):
         tabs = dict(m.cons_budget_tables(F, D, st), **m.cons_normal_tables(F, D, st))
         assert m.md_table(page, head) == [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in tabs[head][2:]], head
@@ -1263,7 +1268,7 @@ def t_consolidation_the_amendment_of_14_20():
     assert all(ch[r][1] == "8" and reg[r][6] == "OWED" for r in ("R-170", "R-171", "R-172"))
     # the reconciliation names the figures that differ
     named = {v for _r, _q, figs, _k, _w in m.RECON for v, _k2, _b in figs}
-    assert {"1.508", "1.509", "1.627", "1.507", "0.941", "0.98", "1.504", "2.455", "144.72", "81.76"} <= named
+    assert {"1.508", "1.509", "1.8102", "2.1997", "50.044", "52.134", "0.941", "0.98", "1.504", "1.856", "1.810", "2.455", "144.72", "81.76"} <= named
     assert m.STATUS == "known defects addressed in drafts; feasibility conditions remain open" and "**Status: %s.**" % m.STATUS in short
 
 
@@ -1347,7 +1352,86 @@ def t_consolidation_the_panel_lead_surge():
     assert "addressed in drafts" in _C["text"].split("20. THE EXIT")[1].split("21. IN SHORT")[0]
     short = page.split("## In short\n")[1].split("\n## 1. ")[0]
     assert "ADDRESSED IN DRAFTS" in short and "R-175" in short and "0 NOT MET" in short and "**Status: %s.**" % m.STATUS in short
-    assert "check-l4e7r-5" in m.cons_ledger(F) and "L4-E7R:1.6 and 2.4" in m.cons_ledger(F)  # the surge remedy's check is cited
+    led = m.cons_ledger(F)   # the review's E6 cited; the four rows not claimed closed (the ledger file is the coordinator's)
+    assert "L4-E7R:1.6 and L4-E7R:2.4 needing B6's condition" in led and "REGRESSED" in led and "does not claim those four rows closed" in led
+
+
+def t_fix_round_the_layer4_review_integrated():
+    """The Layer 4 review (astra-check-l4close-1, NOT YET on B1 to B7) as L4-E10, L4-E11 and L4-E12 answered it, carried here: B1 and
+    B2 (board E on VSYS_E, the battery FET pair, the start bounded, the inhibited acceptance piecewise), B3, B4 and B7 (each required
+    mode's governing local limit, the charging heat as a balance, the runtimes labelled, the four class (iii) lines), B5 (the Saft
+    not yet adoptable), E2 and E4's corrections, the ledger's E6; the withdrawn statements gone from the current sections."""
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    fx = F["fx"]
+    text = _C["text"]
+    page = open(PAGE, encoding="utf-8").read()
+    for key, commit in (("l4e10", "ee09aa09"), ("l4e11", "656fc540"), ("l4e12", "b1cd32ba")):
+        assert m.FROM_COMMIT[key] == commit, key
+    for key in ("e11aux", "e11dock"):
+        assert key in m.PINS and m.PINS[key][1][:16] in text.split("1. THE MAKERS")[0], key
+    # B1: board E's auxiliary domain on VSYS_E; the held pack's drains; the start bounded; the system node
+    assert fx["vsys_rng"] == (9.688, 17.375) and fx["held"] == (0.1408, 1.0) and fx["latch_s"] == 3.062 and fx["pw"] == (12.054, 12.054, 12.546, 11.96)
+    N, E, C, NP = m.cons_diagram(F, st)
+    blk = {n[0]: " ".join(n[4]) for n in N}
+    assert "9.688 to 17.375 V" in blk["VBAT"] and "Q40" in blk["VBAT"] and "VSYS_E" in blk["CTL_SENS"]
+    p16 = [e for e in E if e[0] == "P16"][0]
+    assert p16[1:3] == ("VBAT", "CTL_SENS") and "VSYS_E" in p16[4]
+    svg = open(os.path.join(REC, m.SVG_NAME), encoding="utf-8").read()
+    assert "9.688 to 17.375 V (B1)" in svg and "VSYS_E" in svg
+    beh = m.cons_behaviour(F, D, st)
+    a4 = " ".join(" ".join(r) for r in beh["4a"])
+    assert "piecewise" in a4 and "at most 1 mA" in a4 and "VSYS_E" in a4 and "Q39 and Q40" in a4
+    c4 = " ".join(" ".join(r) for r in beh["4c"])
+    assert "a latch within 3.062 s" in c4 and "502.3 ms withdrawn" in c4 and "0.5 A is an input ceiling" in c4
+    for f_ in (page, text, svg, open(REG, encoding="utf-8").read(), open(os.path.join(REC, "README.md"), encoding="utf-8").read()):
+        assert "no battery FET" not in f_, "the statement withdrawn by L4-E11's fix round"
+    # B2: the pair; R-159's fallback withdrawn; the service kept
+    parts = {p_[0]: p_ for p_ in m.cons_parts(F)}
+    assert "Q39, Q40 (board A), (B1)" in parts and "BUK6Y10-30PX" in parts["Q39, Q40 (board A), (B1)"][1]
+    assert fx["bar"][0] == 34.42 and fx["svc_tj"] == 119.8 and fx["dock"] == (242.9, 320.0, 0.848) and fx["pre"] == (0.33616, 5.7)
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    assert "34.42 C/W" in reg["R-159"][2] and "withdrawn" in reg["R-159"][5] and "18 A for 60 s" in reg["R-159"][5]
+    for rid, item, script in (("R-177", "E11-33", "apply_gen_sch_e_aux.py"), ("R-178", "E11-34", "apply_pcb_interfaces_dock.py"), ("R-179", "E11-35", None)):
+        assert item in reg[rid][3] and (script is None or script in reg[rid][3]), rid
+    ch = {c[2]: c for c in m.cons_changes(list(reg.values()))}
+    assert ch["R-157"][0] < ch["R-177"][0] < ch["R-22"][0] and ch["R-178"][1] == "3a"
+    de = {d["id"]: d for d in m.DEFECTS}
+    assert de["D-13"]["state"].startswith("ADDRESSED IN DRAFTS") and de["D-14"]["state"].startswith("ADDRESSED IN DRAFTS")
+    assert not [d for d in m.DEFECTS if d["state"] == "OPEN"]
+    # B3: each required mode's governing local limit; the SGP41's +55 C a screen; four class (iii) lines, the owner's
+    modes, energy, ef, heat = m.cons_budget(F, st)
+    hm = [h for h in heat if h[0].startswith("M")]
+    assert len(hm) == 9 and not any("Table 5" in h[4] or "Table 5" in h[5] for h in hm), "no absolute rating stands as a line"
+    assert [c["mode"] for c in fx["iii"]] == ["M3", "M4", "M6", "M7"]
+    u2 = [c for c in m.CHOICES if c["id"] == "U-02"][0]
+    for c in fx["iii"]:
+        assert (c["short"][0] or "the whole") in u2["constraint"], c["mode"]
+    ow = {o["id"]: o for o in m.OWNER_ITEMS}
+    assert "OW-10" in ow and [k for k, _ in ow["OW-10"]["docs"]] == ["l4e12md"] and "class (iii)" in ow["OW-10"]["what"]
+    ex = {e[0]: e for e in m.cons_exit(F)}
+    assert "four class (iii) lines" in ex["U-02"][1] and "OW-10" in ex["U-02"][1]
+    # B4: the charging heat a balance on one boundary
+    b = fx["bal"]
+    assert abs(b[0] - b[1] - b[2] - b[3]) < 1.5e-3 and fx["bal_b"][1] == 52.134 and fx["modes"]["M8"]["q"] == 52.134
+    # B7: every battery-only runtime labelled
+    e = {x[0]: x for x in energy}
+    for k in ("B1", "B2", "B3", "P1", "P2", "P4"):
+        assert "ENERGY ONLY" in e[k][4], k
+    assert "ENERGY AND THERMAL" in e["B1"][4] and "%s to %s h" % (m.fmt(fx["c1"][2]), m.fmt(fx["c1"][3])) in e["B1"][4]
+    # B5: the Saft supported for the temperature windows, not yet adoptable; the qualification its evidence
+    assert "NOT YET ADOPTABLE" in m.SUPPORTED and "limited sample qualification" in reg["R-168"][5]
+    # E2 and E4: the shared charger limit; the 9 V source under the profile; the local air
+    b4 = " ".join(" ".join(r) for r in beh["4b"])
+    assert "ONE shared charger input limit" in b4 and "not two additive charger capacities" in b4 and "cannot sustain" in b4
+    assert "LOCAL air" in " ".join(m.cons_normal_op(F)[1])
+    # E6: the ledger's four rows cited, not claimed closed
+    assert "REGRESSED" in m.cons_ledger(F) and "CLOSED AS CONDITIONAL: L4-E12" not in m.cons_ledger(F)
+    # the withdrawn statements gone from the current sections (1 to 6 of the page; 15 to 21 and 25 of the output)
+    cur = page.split("## 7. Standalone analyses")[0]
+    for w in ("binding line", "1.627 to 1.977", "46.859 W with", "20.54 C/W", "with option C (the SGP41 kept powered)"):
+        assert w not in cur, w
+    assert "25. THE FIX ROUND OF THE LAYER 4 REVIEW" in text and "25l WITHDRAWN IN THIS RECORD" in text
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)

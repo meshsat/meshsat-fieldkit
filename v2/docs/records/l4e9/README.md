@@ -58,8 +58,14 @@ remedies (check 5 at `573fd5b8`): D-10 and D-11 are addressed in drafts by the g
 Q12 (rising 28.55 to 31.06 V, falling 27.07 V or more) and the return switch Q13, with D4 the SMCJ30A, D11 and C131, drafted in
 L4-E7's `apply_gen_sch_e_solar_guard.py` (R-173, in board E's round after the hot swap and the entry draft), not applied; D-11
 is CONDITIONAL on Q13's leakage above +25 C; the band between 25 V and the cut-off is a residual for layer 8 (R-175); the
-guard's bench rows are R-176; the register at 166 items. Status: known defects
-addressed in drafts; feasibility conditions remain open.
+guard's bench rows are R-176; the register at 166 items. The fix round of the Layer 4 review (astra-check-l4close-1, NOT YET on
+set 27's `8fbb68b6`; output section 25): L4-E11 at `656fc540` moves board E's auxiliary domain to VSYS_E over the dock's pin 1
+and selects two BUK6Y10-30P as the battery FET pair Q39 and Q40 (D-13 and D-14, addressed in drafts; R-177 to R-179; the system
+node 9.688 to 17.375 V; the start bounded to VSYS_MIN or a latch within 3.062 s); L4-E12 at `b1cd32ba` restates the thermal
+question per required mode against its governing local limit (the SGP41's +55 C a screen; four class (iii) lines no reading can
+pass, the owner's, OW-10), the charging heat as a balance (52.134 W) and the battery-only run coupled to C1 (2.52 h energy only;
+the shed states 2.52 to 2.95 h); L4-E10 at `ee09aa09` finds the Saft supported for the temperature windows and not yet
+adoptable; the register at 169 items. Status: known defects addressed in drafts; feasibility conditions remain open.
 
 | File | What it is |
 |---|---|
@@ -86,8 +92,9 @@ addressed in drafts; feasibility conditions remain open.
 
 **PENDING:** none in the rows. L4-E7R is accepted (the coordinator's check 4, `fnd/l4e7` `91e9a4b5`, its figures at
 `675b8068`); D-01 is resolved in design (drafted, not applied). L4-E11 resolved D-06 in design and made U-04 a CONDITIONAL
-CANDIDATE; L4-E12 made U-02 CONDITIONAL on T-H1 with CFL-002 the owner's question; L4-E13 made U-03 a conditional downstream
+CANDIDATE; L4-E12 made U-02 CONDITIONAL on T-H1 with CFL-002 the owner's question, and its fix round named four class (iii)
+lines no reading can pass (the owner's, OW-10); L4-E13 made U-03 a conditional downstream
 unit selection (PANEL-ACC), no unit bought or measured.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 38 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 48 tests.
