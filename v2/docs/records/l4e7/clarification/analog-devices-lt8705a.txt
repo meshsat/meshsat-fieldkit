@@ -42,6 +42,18 @@ production test covers, for each:
    guaranteed least falling threshold? With SWEN driven below its threshold, what delay to the last switching edge do you
    guarantee, and does every return through the initialize state of Figure 2 (page 15) restart with SS pulled low?
 
+6. The CSPIN and CSNIN pins during an input transient (added 2 October 2026, task L4-E7, B6 round 2). Page 2 rates
+   VCSPIN - VCSNIN at -0.3 V to 0.3 V, and page 30 asks for no resistors in series with any CSxIN or CSxOUT pin because the
+   pins draw bias current, CSNIN also for the boost capacitor charge control. In our circuit a fault that steps the panel
+   input from about 7.5 V to 36 V with the input switch already closed charges the input capacitors behind RSENSE1 so fast
+   that the differential across RSENSE1 can pass 0.3 V for some microseconds unless the source's loop inductance is large.
+   (a) What maximum bias current do you guarantee into each of CSPIN and CSNIN separately (page 4 prints only a typical
+   sum, 31 uA), over 1.5 V to 80 V common mode, -100 mV to +100 mV differential and -40 to 125 C junction, and what does
+   the boost capacitor charge control draw from CSNIN at most? (b) Do you permit a filter on CSPIN and CSNIN of equal
+   resistors (for example 10 Ohm each) and a capacitor across the pins, and with what added error in the input current
+   monitor and limit? (c) Is the -0.3 V to 0.3 V rating an internal clamp's limit, and what current can the pins carry
+   beyond it for 10 us without damage?
+
 For each item we ask for a limit Analog Devices warrants, and the conditions under which it applies. Characterization
 over production lots is welcome as supporting evidence, but on its own we cannot treat it as a production guarantee;
 typical curves are not sufficient for our purpose. Thank you.
