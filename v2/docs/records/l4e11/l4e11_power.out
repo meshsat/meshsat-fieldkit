@@ -959,7 +959,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      STATUS: sustained-overload remedy drafted; fault qualification open (section 17a, E11-38) (SESSION)
 
 17. THE SECOND REVIEW (L4-CP01 TO L4-CP03, of the 22:30 checkpoint) AND THE EVIDENCE SPECIMENS
-   17a. L4-CP01: U42'S FAULT ENVELOPE BY CASE (G = printed limit, I = inferred, T = typical only; SLVSET9G pp.8 to 10, 21, 22, 26, 30, 31)
+   17a. L4-CP01: U42'S FAULT ENVELOPE BY CASE (G = printed limit, I = inferred, T = typical only; SLVSET9G pp.7 to 10, 20 to 22, 26, 30, 31)
      the setting: I(OL) 1.4713 to 1.8018 A at R(ILIM) 11 kOhm (I: between the printed 9 and 30 kOhm rows, each G over TJ -40 to 125 C at VIN - VOUT
        1 V); a regulated, steady setting, NOT an instantaneous ceiling; the fast-trip threshold 2 x I(OL) and I(SCP) 45 A are T only (MAKER)
      (1) operating overload, I(OL) < I < I(FASTTRIP): held at the setting once the loop settles (the settling's peak is not printed); limiting for
