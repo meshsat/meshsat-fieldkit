@@ -1,15 +1,20 @@
 Draft for the owner to send (the session contacts no outside party). MESHSAT-1478 under MESHSAT-1357, task L4-E12,
-2 October 2026. To: Sensirion, technical support.
+2 October 2026, revised the same day (questions 3 and 4 added). To: Sensirion, technical support.
 
-Subject: SGP41: the duration the short-term storage range covers
+Subject: SGP41: storage and operating conditions outside Table 4
 
-The SGP41 data sheet version 1.0 (December 2021), Table 5, gives a short-term storage temperature range of -40 to +70 C
-("Short-term storage refers to temporary conditions during, e.g., transport") and an operating range of -20 to +55 C.
-Could you confirm:
+The SGP41 data sheet version 1.0 (December 2021), section 2.3, ties the gas sensing specifications of Table 1 to storage and
+operation under the recommended conditions of Table 4 (operation -10 to +50 C, storage 5 to 30 C). Table 5 gives a
+short-term storage temperature range of -40 to +70 C ("Short-term storage refers to temporary conditions during, e.g.,
+transport") and an operating range of -20 to +55 C as absolute ratings. Could you confirm:
 
 1. The duration the short-term storage range covers.
 2. Whether an unpowered SGP41 (its supply removed and its I2C pins not driven) may sit at up to +70 C for 4 hours, and at
    up to +70 C for about 6 hours a day on 10 consecutive days, at a non-condensing humidity, and then meet its gas
-   specification after its conditioning once back inside its operating range.
+   specification after its conditioning once back inside its recommended conditions.
+3. Whether the gas specification holds, or by how much it changes, after an unpowered SGP41 is stored at -20 to +45 C for up
+   to three months, or at -20 to +25 C for up to a year, and then conditioned and operated inside Table 4's conditions.
+4. What gas specification applies while the SGP41 is operated between +50 and +55 C, and whether operation there leaves a
+   lasting change once it is back under +50 C.
 
 Thank you.
