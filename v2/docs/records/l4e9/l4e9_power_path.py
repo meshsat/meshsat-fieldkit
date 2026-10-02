@@ -98,8 +98,8 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "6037a585dd1c7b8c99c661ccbc62d25cd0c42860d620cb66a52eea9f2d5ed55d"),
-    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "bf323d17ec8760a114d5abe4894c98a864ef9680b8523f81e804f245d514def4"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "e287cbffb247de4ab96a9cde4e046fb891f22b7d8425146efd08dee766ea84ef"),
+    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "188ac85879346be5f896e6f8212abf853f4751cc25ec6a6ee4b495ee3b705cbd"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
     "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "1696fd424b48a8ca4e3d8ff4ab09a7dc42ebdd65bc3eab51133bab962477a84f"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "30cc35d8adbdbc77f7279792d3e71242b4586dab85a592309fc57f8c6cf8af36"),
@@ -131,14 +131,14 @@ PINS = {
     "l4e12chk4": ("v2/docs/records/l4e12/checks/check-l4e12-4.md", "2c4607d59756da7967ac4b68b6870a8e89f972469135b33deaf0ae634ceacb6b"),
     "l4e11chk4": ("v2/docs/records/l4e11/checks/check-l4e11-4.md", "b0a03440a9bb9a75806a7ba692fde8bc6e72ec4d419b39e8fe92f1ad469f6e65"),
     "th1proc": ("v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md", "61fa23a04f592a9fe97ed4f92972e2451cb212e7495f5c46194dcb8e1e2e85e7"),
-    "cl_tiq": ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "2ca714846bcefe704eb0f04cb4a8fdc6dc56af71f7c56d7d9b8da43f71f6fdbc"),
+    "cl_tiq": ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "9e26dfae5fd7962f23dd22bd125b5e4dd2c38401cd5d6dae08f296d5e8cf490b"),
     # the consolidation: the tablet's service budget (a PROPOSAL, l3batt), the one budget input not read above
     "tablet": ("v2/docs/records/l3batt/tablet.out", "d71429a9bd6d60a51662f1a4826db398c629cb3675b8c6668e3aba1fb60a8194"),
     # the consolidation's results: L4-E11's charger selection (B1), check 5 at 5aa18a69, and L4-E12's thermal verdict (T-H1
     # decides), check 5 at 7f41632d; read from the tree
     "l4e11chk5": ("v2/docs/records/l4e11/checks/check-l4e11-5.md", "46f993e88a7622221d0c321ea6bb206e20070d82def06dc82620fdd3d5b8c337"),
     "l4e12chk5": ("v2/docs/records/l4e12/checks/check-l4e12-5.md", "12f3ceb053d6e6b5b27912943688ae03c7718dc04bcc752c7d45a4f6191eaeaf"),
-    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "39479ccfc5df395a1dc94bea962b7adfdfe36110be4453ce11a56330a7a8e337"),
+    "e11charger": ("v2/docs/records/l4e11/apply_gen_sch_a_charger.py", "b46a1987bc136d459524028c8b31be83d698446ebbbda33351cedc91c6ba846d"),
     # the third result: L4-E10's cell route (U-01), checks 4 and 5 at 1c321773, with its drafted request to Saft; read from the tree
     "l4e10chk5": ("v2/docs/records/l4e10/checks/check-l4e10-5.md", "cdaa7429e99b6c71235fd21d16431f76cb8533751c575a25909b5f96821b7e67"),
     "cl_saft": ("v2/docs/records/l4e10/clarification/saft-mp176065xtd.txt", "6a47b9b803041549bbde1f8de1915f4289bfd5720fab4c61aaa79393fb36752d"),
@@ -157,7 +157,7 @@ PINS = {
     "l4e7chk5": ("v2/docs/records/l4e7/checks/check-l4e7r-5.md", "eec75531f82ced65b7c082e7ffc0c2037a55c24b38104d63bb92c866d3eeaeaf"),
     # the review's fix round (Astra's cx36 on set 27's 8fbb68b6, B1 to B7): L4-E11's two new drafts; read from the tree
     "e11aux": ("v2/docs/records/l4e11/apply_gen_sch_e_aux.py", "0c747d8d6b29ac1e61a2076d3f79388263d02a5cd48c4031573966f82c8ab1e5"),
-    "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "2dea7c5bd638bf95117e4cef40456308724c7c80d349ca7bf239fee1c114dfa3"),
+    "e11dock": ("v2/docs/records/l4e11/apply_pcb_interfaces_dock.py", "422452e5c9af125ebbf73198a72dba3b5ca6963b8db35c0416d4581e95f7d507"),
 }
 # Read from the tree when the tree's file is the pinned one, else from the named commit: L4-E7R's selected solution (fnd/l4e7,
 # accepted, check 4 at 91e9a4b5), L4-E10's final record (fnd/l4e10, closing check 573c8b8f), L4-E11's (fnd/l4e11, accepted,
@@ -172,8 +172,9 @@ COMMIT_LABEL = {"675b8068": "fnd/l4e7, accepted, closing check 91e9a4b5", "79b2f
                 "656fc540": "fnd/l4e11, the review's fix round (B1, B2)", "b1cd32ba": "fnd/l4e12, the review's fix round (B3, B4, B7)",
                 "ee09aa09": "fnd/l4e10, the review's fix round (B5)", "11339ec7": "fnd/l4e7, the review's fix round (B6)",
                 "d2a59468": "fnd/l4e11, the fix round for the review of the provisional fixes (L4-F02, L4-F03)",
-                "68bc3bad": "fnd/l4e7, round 2 for the review of the provisional fixes (L4-F01)"}
-FROM_COMMIT = {"l4e7r": "68bc3bad", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "d2a59468", "l4e11md": "d2a59468",
+                "68bc3bad": "fnd/l4e7, round 2 for the review of the provisional fixes (L4-F01)",
+                "1a4245c3": "fnd/l4e11, round 3 for the second review (L4-CP01 to L4-CP03) and the evidence specimens"}
+FROM_COMMIT = {"l4e7r": "68bc3bad", "l4e10": "ee09aa09", "l4e10md": "ee09aa09", "l4e11": "1a4245c3", "l4e11md": "1a4245c3",
                "e11entry": "3298d1f1", "l4e12": "b1cd32ba", "l4e12md": "b1cd32ba", "cl_topwell": "e464ff88", "cl_eaton": "79b2f568",
                "cl_pdi": "a86be47b", "cl_sensirion": "a86be47b", "cl_gc": "a86be47b", "cl_nicerf": "a86be47b", "cl_bulgin": "a86be47b",
                "cl_adi": "68bc3bad", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
@@ -837,8 +838,8 @@ def compute():
     F["alt_soa"], F["alt_pulse"] = f(m, 1), f(m, 2)
     F["alt_f1_i2t"] = f(need(t, r"F1 during the longest start: ([\d.]+) A2s against", "the alternative's start I2t"))
     F["e11_items"] = re.findall(r"^\s+(E11-\d\d) \| ([A-Z]+) \| ([^|]+?) \|", t, re.M)
-    if [x[0] for x in F["e11_items"]] != ["E11-%02d" % i for i in range(1, len(F["e11_items"]) + 1)] or len(F["e11_items"]) < 38:
-        refuse(3, "L4-E11's downstream items are not E11-01 to E11-38 or beyond, without a gap")
+    if [x[0] for x in F["e11_items"]] != ["E11-%02d" % i for i in range(1, len(F["e11_items"]) + 1)] or len(F["e11_items"]) < 39:
+        refuse(3, "L4-E11's downstream items are not E11-01 to E11-39 or beyond, without a gap")
     t = T["e11entry"]
     m = need(t, r'"CSD19536KTT (\d+) V N-FET', "the selected Q7's voltage in the entry draft")
     F["e_q7_sel_v"] = f(m)
@@ -1364,6 +1365,7 @@ def compute():
     F["rc"] = reconciliation_inputs(F, T)
     F["fx"] = fixround_inputs(F, T)
     F["f02"] = f02_inputs(F, T)
+    F["cp"] = cp_inputs(F, T)
     return F, where
 
 
@@ -1705,6 +1707,8 @@ def f02_inputs(F, T):
     if t.count("\n16. THE FIX ROUND FOR THE REVIEW OF THE PROVISIONAL FIXES") != 1:
         refuse(3, "L4-E11's section 16")
     s16 = t.split("\n16. THE FIX ROUND FOR THE REVIEW OF THE PROVISIONAL FIXES")[1].split("\nEND.")[0]
+    if "\n17. THE SECOND REVIEW" in s16:
+        s16 = s16.split("\n17. THE SECOND REVIEW")[0]
     need(one(s16.split("\n")[0]), r"\(L4-F02 and L4-F03; a qualification gap, not a demonstrated failure\)", "section 16's framing")
     sub = {}
     for k in "abcde":
@@ -1754,7 +1758,7 @@ def f02_inputs(F, T):
     need(T["cl_tiq"], r"\*\*Q-TI-17 \(E11-37, BQ25730\)\.\*\*", "Q-TI-17 (L4-E11 16c)")
     m = need(sub["e"], r"the held-pack drain \(15a corrected\): ([\d.]+) mA is the QUANTIFIED SUBSET \(the monitor and D3 at 25 C\); D3's hot leakage and the body diodes' current are not bounded on held evidence; the bench acceptance stays at most (\d+) mA", "the held drain corrected (16e)")
     g["held"] = (f(m, 1), f(m, 2))
-    need(sub["e"], r"STATUS: CLOSED in design for the overload, soft short, inrush and recovery; the hot short's peak CONDITIONAL on E11-38", "16e's status")
+    need(sub["e"], r"STATUS: sustained-overload remedy drafted; fault qualification open \(section 17a, E11-38\)", "16e's status (the second review)")
     if g["held"][0] != F["fx"]["held"][0] or g["held"][1] != F["fx"]["held"][1] or g["ef"][1] >= g["ef"][2] or g["ef_c"][0] > g["ef_c"][2]:
         refuse(3, "L4-E11 16e's figures disagree with 15a or with themselves")
     md = T["l4e11md"]
@@ -1773,6 +1777,49 @@ def f02_inputs(F, T):
             for x in re.findall(r"(?<![\d.])\d+\.\d+(?![\d])", " ".join([d["constraint"] if d["id"] == "D-15" else "", d["options"], d["state"], d["resolution"]])):
                 if not re.search(r"(?<![\d.])%s(?![\d])" % re.escape(x), src):
                     refuse(4, "%s cites %s, which L4-E11 does not print" % (d["id"], x))
+    return g
+
+
+def cp_inputs(F, T):
+    """L4-E11's round 3 for the second external review (L4-CP01 to L4-CP03) and its evidence specimens (its output section 17, its page's
+    17d). Read, never recomputed; the specimen, transfer and blocks-only columns of the qualification route come from 17d."""
+    one = lambda s: " ".join(s.split())
+    t = T["l4e11"]
+    if t.count("\n17. THE SECOND REVIEW") != 1:
+        refuse(3, "L4-E11's section 17")
+    s17 = t.split("\n17. THE SECOND REVIEW")[1].split("\nEND.")[0]
+    g = {}
+    a = one(s17.split("\n   17a. ")[1].split("\n   17b. ")[0])
+    need(a, r"a regulated, steady setting, NOT an instantaneous ceiling; the fast-trip threshold 2 x I\(OL\) and I\(SCP\) 45 A are T only", "17a's setting")
+    m = need(a, r"Bound \(I\): at most ([\d.]+) A, VSYS's ([\d.]+) V over RON's printed least (\d+) mOhm and the path's ([\d.]+) mOhm with the contact at 0 and no inductance credited, for at most ([\d.]+) us: ([\d.]+) A2s", "17a's hard-short ceiling")
+    g["short"] = (f(m, 1), f(m, 5), f(m, 6))
+    m = need(a, r"IN at most ([\d.]+) V by TI's Equation 14 at that bound with U42 within (\d+) nH of C236", "17a's IN spike")
+    g["in_v"], g["nh"] = f(m, 1), f(m, 2)
+    m = need(a, r"both together at most ([\d.]+) A each, one at a time at most ([\d.]+) A .*?; VSYS_E at that current at least ([\d.]+) V at the supplement floor", "17a's fan start")
+    g["fan"] = (f(m, 1), f(m, 2), f(m, 3))
+    need(a, r"STATUS: sustained-overload remedy drafted; fault qualification open \(E11-38\); not evidence of a failure", "17a's status")
+    g["st_a"] = L4F03_STATUS
+    b = one(s17.split("\n   17b. ")[1].split("\n   17c. ")[0])
+    m = need(b, r"\(D2\) a defined pulse qualification on parts: ([\d.]+) A peak and ([\d.]+) us \(x1\.1\), mounting base (\d+) C, (\d+) pulses 10 s apart on each of (\d+) parts", "17b's pulse qualification")
+    g["pulse"] = (f(m, 1), f(m, 2), f(m, 3), int(m.group(4)), int(m.group(5)))
+    need(b, r"SELECTED \(SESSION\): \(D2\), with \(D1\) asked in parallel; \(D3\) only if \(D2\) fails, as E11-30 states; STATUS: CONDITIONAL on E11-30", "17b's selection")
+    c = one(s17.split("\n   17c. ")[1])
+    need(c, r"the three withdrawn statements are absent from the text it writes \(tested\)", "17c")
+    for w in ("bounded at 21.1", "34.4 C/W per FET", "34.4 \xb0C/W"):
+        if w in T["e11charger"]:
+            refuse(4, "the charger draft still writes a withdrawn statement: %r" % w)
+    md = T["l4e11md"]
+    s17d = md.split("### 17d. The evidence specimens")[1].split("\nNot claimed:")[0]
+    need(one(s17d), r"The evidence builds proceed under their own scope; \*\*only the final design or production release stays held\*\* until the measurements pass", "17d's rule")
+    rows = md_table(s17d, "| Row | Specimen |")
+    g["spec"] = {r[0].replace("Row ", ""): {"specimen": r[1], "represents": r[2], "transfers": r[3], "blocks": r[4]} for r in rows}
+    if sorted(g["spec"]) != ["E11-29", "E11-30", "E11-35", "E11-36", "E11-37", "E11-38"]:
+        refuse(3, "17d's six specimen rows")
+    e39 = [x for x in F["e11_items"] if x[0] == "E11-39"]
+    if not e39 or e39[0][1] != "FIRMWARE":
+        refuse(3, "E11-39, the fans' staggered start")
+    need(T["cl_tiq"], r"\*\*Q-TI-18 \(E11-38, TPS16630\)\.\*\*", "Q-TI-18")
+    need(T["cl_tiq"], r"\*\*Q-NXP-1 \(E11-30, BUK6Y10-30P\)\.\*\*", "Q-NXP-1")
     return g
 
 
@@ -3760,7 +3807,11 @@ DEFECTS = [
                 "1 s, 3.785 at 20 ms and 0.703 at 244 us for every protection event from the held 20 A at TJ 150 C or under (E11-29); 18 A "
                 "for 60 s from the hot state at 126.7 C, kept; Ciss 4.72 nF typical at -15 V and about 5.74 nF near 0 V, not shown under "
                 "TI's 5 nF (E11-37, OPEN; one FET with a heat path through the case the engineer's fallback); the docking pulse whole in "
-                "one FET, TJ 123.3 C from +70 C on the stated VF bound, VF and ISM hot not printed (E11-30); R-159's fallback withdrawn",
+                "one FET, TJ 123.3 C from +70 C on the stated VF bound, VF and ISM hot not printed (E11-30); R-159's fallback withdrawn; "
+                "after the second review's L4-CP02 (L4-E11 17b) a junction temperature does not extend ISM's printed 10 us: the WHOLE hot "
+                "waveform is accepted by a defined pulse qualification, SELECTED (D2): 6 parts, each 2000 pulses 10 s apart at 267.2 A peak "
+                "and 37.2 us (1.1 times the waveform), the mounting base at 75 C, with Nexperia's Q-NXP-1 asked in parallel (D1) and board "
+                "P's inrush bound (D3) only if (D2) fails; L4-CP03: the charger draft no longer writes the withdrawn claims (tested)",
      "resolution": "R-157 (apply_gen_sch_a_charger.py, the pair), not applied; E11-29 (R-159: the installed Zself + Zmut), E11-30 (R-160: "
                    "the docking pulse in one FET), E11-36 (R-182: RDS(on) at -8.5 V and 150 C), E11-37 (R-183: Ciss, OPEN), E11-32 "
                    "(R-162: the parts' supply)",
@@ -3775,10 +3826,17 @@ DEFECTS = [
                 "4 A for up to 600 s (not taken); (P) a Bourns MF-MSMF150/24X PTC, hold 0.88 A at 70 C under the 1.0 A load and a trip "
                 "near 4.2 A at -40 C (not taken); SELECTED (E) U42 TI TPS16630PWPR on board A between VBAT and a new net VSYS_DOCK on "
                 "J_DOCK pin 1, R221 11.0 kOhm 0.1 % on ILIM (1.4713 to 1.8018 A over TJ), C237 22 nF on dVdT, MODE to GND (auto-retry): "
-                "the contact at most 1.802 A, 51.5 % of 3.5 A; an overload held, then off, at a duty of at most 0.288; a soft short off "
-                "within 4.5 us; VSYS_E at least 9.539 V at 1.0 A from the 9.688 V floor",
-     "resolution": "R-181 (apply_gen_sch_a_charger.py, with R-157), not applied; E11-38 (R-184: the limit at -20, 25 and 70 C, the overload "
-                   "and a hard short at VSYS_E with the peak through J_DOCK pin 1 recorded); E11-35 (R-179: the fans running at 9.539 V)",
+                "the contact at most 1.802 A, 51.5 % of 3.5 A, once the limit settles (a regulated setting, not an instantaneous ceiling; "
+                "the second review's L4-CP01): an operating overload held, then off, at a duty of at most 0.288; a short applied while on at "
+                "most 566 A for at most 4.5 us (1.441 A2s, INFERRED: VSYS over RON's printed least and the path, no inductance credited; "
+                "the typical 45 A threshold and the 0.0091125 A2s built on it withdrawn), IN at most 41.1 V with U42 within 20 nH of C236 (a "
+                "layout requirement), OUT's negative spike clamped by D23; a start into a pre-existing short limited at the setting for at "
+                "most 1.5 s then off; repeated retry at a duty of at most 0.75; the fans' start at most 0.3356 A each together or 0.5713 A one "
+                "at a time (E11-39), VSYS_E at least 9.494 V; C238 1 uF at IN, C239 0.1 uF at OUT and D23 B540C-13-F added to the draft "
+                "(L4-E11 17a); VSYS_E at least 9.539 V at 1.0 A from the 9.688 V floor",
+     "resolution": "R-181 (apply_gen_sch_a_charger.py, with R-157; C238, C239, D23; U42 within 20 nH of C236), not applied; E11-38 (R-184: the "
+                   "whole fault envelope of L4-E11 17a, (a) to (f), with pass limits); E11-35 (R-179: the fans' range and their start under U42's "
+                   "least limit); E11-39 (R-188: the fans started one at a time with a PWM ramp)",
      "rows": ["IF-06", "IF-11"]},
 ]
 OWNERS = ["Layer 4 coordinator", "Layer 5 interfaces", "Layer 6 components", "Layer 7 mechanical", "Layer 8 board A generator owner",
@@ -3823,7 +3881,7 @@ OWNER_ITEMS = [
                            "specification (M1 to M3 and A-2's reading); actions under the owner's authority (money), not questions",
      "docs": [("l4e13md", "L4-E13's page, PANEL-ACC")]},
     {"id": "OW-7", "what": "U-04: send TI the battery packet's questions (REVIEW-REQUEST.md section 4) with L4-E11's TI-QUESTIONS.md: under (B1) "
-                           "Q-TI-15 (D2), Q-TI-16 (VSYS_MIN's maximum) and Q-TI-17 (what TI's 5 nF bounds, E11-37, R-183) to TI (Q-AOS-1 withdrawn in L4-E11's fix round: the pair's ISM is printed); on the board as "
+                           "Q-TI-15 (D2), Q-TI-16 (VSYS_MIN's maximum), Q-TI-17 (what TI's 5 nF bounds, E11-37, R-183) and Q-TI-18 (U42's OUT undershoot and I(OL) at 17 V, E11-38, R-184) to TI, and Q-NXP-1 (the body diode's acceptance of the docking waveform, E11-30, R-160) to Nexperia, all in TI-QUESTIONS.md (Q-AOS-1 withdrawn in L4-E11's fix round: the pair's ISM is printed); on the board as "
                            "drawn Q-TI-11 to Q-TI-14 and the addendum to Q-TI-3 (D1 and D3 decide U-04 there; E11-05, E11-25; R-114, R-160); "
                            "an action, not a question",
      "docs": [("ti_review", "Texas Instruments: the battery packet"), ("cl_tiq", "Texas Instruments and AOS: the dependency rounds' questions")]},
@@ -4339,7 +4397,7 @@ def main():
                     refuse(4, "%s's %s maps to %s, not in the register" % (nm, owner, x))
                 if x.startswith("OW-") and x not in {o["id"] for o in OWNER_ITEMS}:
                     refuse(4, "%s's %s maps to %s, not an owner item" % (nm, owner, x))
-    p("     the accepted records' items, deduplicated: L4-E11's E11-01 to E11-35 each named in a row's From column (E11-19 answered here, out 12);")
+    p("     the accepted records' items, deduplicated: L4-E11's E11-01 to %s each named in a row's From column (E11-19 answered here, out 12);" % F["e11_items"][-1][0])
     p("       L4-E10 by owner: %s" % "; ".join("%s -> %s" % (k, ", ".join(v)) for k, v in E10_MAP.items()))
     p("       L4-E12 by owner: %s" % "; ".join("%s -> %s" % (k, ", ".join(v)) for k, v in E12_MAP.items()))
     h_text = open(os.path.join(HERE, "LAYER5-HANDOVER.md"), encoding="utf-8").read() if os.path.exists(os.path.join(HERE, "LAYER5-HANDOVER.md")) else ""
@@ -4407,6 +4465,9 @@ def main():
     for ln in cons_review_lines(F):
         p(ln)
     p("")
+    for ln in cons_qual_lines(F):
+        p(ln)
+    p("")
     p("END. Desk arithmetic on read figures; nothing is measured.")
     return "\n".join(out) + "\n", F, D, R, st
 
@@ -4419,8 +4480,7 @@ SVG_NAME = "L4-POWER-DIAGRAM.svg"
 # The second external review (of the 22:30 checkpoint, 2 October 2026) separates the decisions this page states: "conditional candidate" and
 # "closure gate blocked" describe different decisions, and an unresolved material protection or feasibility condition is sufficient to keep a
 # release gate blocked; no mandatory-requirement contradiction is needed. Each decision below names what decides it.
-HANDOFF_OMITTED = ("L4-E11's round 3 (the second review's L4-CP01 to L4-CP03) and L4-E7's round 3 (the reserve's uncertainty budget), their tips "
-                   "not yet taken here; the held-back documents (Littelfuse's 0997 sheet under v2/vendor/power/held/, Samsung's characteristic "
+HANDOFF_OMITTED = ("L4-E7's round 3 (the reserve's uncertainty budget), its tip not yet taken here (L4-E11's round 3 is in: out 26e); the held-back documents (Littelfuse's 0997 sheet under v2/vendor/power/held/, Samsung's characteristic "
                    "data under v2/vendor/passives/held/, Saft's MP 176065 xtd sheet), fetched by each record's fetch script, never published; the "
                    "generators, netlists and configuration files of the repository that the drafts apply to; the findings ledger "
                    "(records/l4close/, the coordinator's file); no board of this set has a layout")
@@ -5152,6 +5212,7 @@ CHANGE_ORDER = [
     ("5", "R-139", "firmware", "with R-138", "firmware"),
     ("5", "R-158", "firmware", "only on a board A carrying R-157 (the BQ25730's register rules)", "firmware"),
     ("5", "R-164", "firmware", "with R-163 (F3's switches)", "firmware"),
+    ("5", "R-188", "firmware", "with R-177 and R-158: board E's fans started one at a time with a PWM ramp, never while U12 starts (E11-39)", "firmware"),
     ("8", "R-129", "Layer 7, the DC receptacle and plug", "before the harness is built", "no draft yet"),
     ("8", "R-130", "Layer 7, the interconnect", "with R-129", "no draft yet"),
     ("8", "R-131", "Layer 7, the inside lead and J_DCIN", "with R-129", "no draft yet"),
@@ -5686,6 +5747,7 @@ def cons_exit_lines(F):
     n = [e[0] for e in cons_exit(F) if e[1] != QUALIFICATION]
     for s in cons_decisions(F):
         L.append("   " + s.replace("**", ""))
+    L.append("   " + cons_stop(F).replace("**", ""))
     L.append("   the exit: Layer 4 power closure is NOT reached on this reading: closure conditions on the board as drawn %s (U-04 becomes a qualification test once R-157, R-177"
              " and R-178 are applied; U-02 decided by T-H1 plus the storage evidence, its four lines over the modelled capacity a modelled shortfall and a missing storage qualification, no demonstrated conflict); the review's B1 and B2 on (B1)'s draft, D-13 and D-14, the provisional fixes' L4-F03, D-15,"
              " and the known defects D-10 and D-11 at the solar entry are addressed in drafts (R-157, R-181, R-177, R-178 and R-173, not applied; D-14"
@@ -6028,8 +6090,250 @@ def cons_review_lines(F):
     p("   the engineer's row B6-ENG-1 (the handoff; register R-180, R-186, R-187):")
     for lab, txt in b6["eng"]:
         p("     %s: %s" % (lab, txt))
+    cp = F["cp"]
+    p("26e THE SECOND REVIEW'S L4-CP01 TO L4-CP03 (L4-E11's round 3 at 1a4245c3; its section 17): CP01, U42's fault envelope case by case, printed, inferred and typical")
+    p("     apart: a short applied while on at most %s A for %s us (%s A2s, inferred, the typical 45 A threshold and the figure built on it withdrawn), IN at most %s V"
+      % (fmt(cp["short"][0]), fmt(cp["short"][1]), fmt(cp["short"][2]), fmt(cp["in_v"])))
+    p("     with U42 within %s nH of C236 (a layout requirement), the fans' start %s A each together or %s A one at a time (E11-39), VSYS_E at least %s V; C238, C239 and"
+      % (fmt(cp["nh"]), fmt(cp["fan"][0]), fmt(cp["fan"][1]), fmt(cp["fan"][2])))
+    p("     D23 added to the draft; D-15 reads %s (E11-38, R-184; R-188). CP02: the whole hot docking waveform by a defined pulse qualification," % cp["st_a"])
+    p("     SELECTED (D2): %d parts, %d pulses each at %s A and %s us, the mounting base %s C, Q-NXP-1 asked in parallel (R-160). CP03: the charger draft no longer"
+      % (cp["pulse"][4], cp["pulse"][3], fmt(cp["pulse"][0]), fmt(cp["pulse"][1]), fmt(cp["pulse"][2])))
+    p("     writes the withdrawn claims (tested). 17d's specimens enter the qualification route (section 27) as written")
     p("   status: %s" % STATUS)
     return L
+
+
+# ====================================================================================== THE PROTOTYPE QUALIFICATION ROUTE
+# The second external review's next milestone: "a coherent power-design package with a defined prototype qualification route". One table
+# over every measurement row of the register that decides a Layer 4 condition, with the specimen, what it represents, what transfers to the
+# final board, the decision it resolves, what it blocks, who performs it, whose authorisation it needs, what to buy and what to send.
+# Prices are the ones this tree has READ and filed (each checked against its source file here); an item whose price was not read says so.
+# Nothing is bought, nothing is sent: purchases and outside contact are the owner's.
+PRICES = {
+    "buk": {"what": "BUK6Y10-30PX (the samples of E11-29's two coupons, E11-30's six pulsed parts, E11-36's Kelvin coupon, E11-37's pair, four spare)",
+            "maker": "Nexperia", "qty": 20, "cur": "USD", "unit": 1.7386, "src": "v2/docs/records/l4e11/inputs/lcsc-C3278350-2026-10-02.json",
+            "key": ("price_usd", "10"), "note": "the 10-piece tier, LCSC C3278350, stock 67 on 2 October 2026"},
+    "d23": {"what": "B540C-13-F (D23 on E11-38's specimen)", "maker": "Diodes", "qty": 5, "cur": "USD", "unit": 0.2332,
+            "src": "v2/docs/records/l4e11/inputs/lcsc-C72264-price-2026-10-02.json", "key": ("price_usd", "5"), "note": "the 5-piece tier, LCSC C72264"},
+    "c236": {"what": "EEHZK1V181P (C236 on E11-38's specimen)", "maker": "Panasonic", "qty": 2, "cur": "USD", "unit": 1.1407,
+             "src": "v2/docs/records/l4e11/inputs/lcsc-C242139-price-2026-10-02.json", "key": ("price_usd", "1"), "note": "the 1-piece tier, LCSC C242139"},
+    "saft": {"what": "MP 176065 xtd, one cell for the limited sample qualification (three if the owner prefers a spread)", "maker": "Saft", "qty": 1,
+             "cur": "NZD", "unit": 238.72, "src": "v2/docs/records/l4e10/inputs/prices-2026-10-02.json", "key": ("verbatim", "$ 238.72"),
+             "note": "SIMPOWER's listing archived 16 January 2025, a price indicator and not a quote"},
+    "hl": {"what": "HL18650V, a lot soak of ten (route (II) only)", "maker": "Yichun Topwell Power (the listing is a marketplace seller's, not Topwell's)",
+           "qty": 10, "cur": "USD", "unit": 3.50, "src": "v2/docs/records/l4e10/inputs/prices-2026-10-01.json", "key": ("verbatim", "US$3.50"),
+           "note": "the 10 to 4,999 pieces tier"},
+}
+UNPRICED = [
+    ("T-H1", "a current-moulding Peli 1450, the 1450PF frame, a 3 mm aluminium plate blank, resistive heaters to 52.134 W, sixteen thermocouple channels and a logger"),
+    ("T-H1, E11-35", "the fans: nothing to buy until D-18 names them"),
+    ("E11-38", "TPS16630PWPR (U42); one Preci-Dip 813 contact and 24 AWG; the coupon's fabrication"),
+    ("E11-29, E11-36", "the power-stage and Kelvin coupons' fabrication; an oven to 150 C"),
+    ("E11-30", "a capacitor-discharge rig and a heated mounting base"),
+    ("E11-31, E11-37", "TI's BQ25730 evaluation hardware, whether TI offers one; BQ25730RSNR (LCSC C5219071, 2.8553 USD at 1 but stock 0 on 2 October 2026: an authorised source, its price not read)"),
+    ("the guard bench", "TPS48110AQDGXRQ1 (U21; LCSC C17556513, stock 326 on 2 October 2026, price not filed), CSD19532Q5B (Q12, Q13; LCSC C473333), the Samsung CL32B225KCJSNNE and CL32B106KBJNNNE and the SMCJ30A (codes owed); the controlled first prototype of board E"),
+    ("the cell qualification, the lot soak", "a chamber from -40 to +85 C, a 25 A load, a CC/CV source and a logger (a laboratory's service)"),
+    ("R-185", "E2370KS0C1, Pervasive Displays, one sample; an oven or chamber to +60 C"),
+]
+SENDS = [
+    ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "Texas Instruments: Q-TI-15 (D2), Q-TI-16 (VSYS_MIN's maximum), Q-TI-17 (the 5 nF), Q-TI-18 (U42's OUT undershoot, I(OL) at 17 V); Nexperia: Q-NXP-1 (the docking waveform)", "OW-7", "E11-31, E11-37, E11-38, E11-30"),
+    ("v2/docs/review-packets/battery/REVIEW-REQUEST.md", "Texas Instruments: the battery packet's questions (section 4)", "OW-7", "U-04 on the board as drawn"),
+    ("v2/docs/records/l4e10/clarification/saft-mp176065xtd.txt", "Saft: the currents at the cells' temperatures, the storage dwell and recovery, the termination and the life thickness", "OW-9", "R-168"),
+    ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "Yichun Topwell Power: the HL18650V's signed specification, ten questions", "OW-2", "R-103"),
+    ("v2/docs/records/l4e10/clarification/eaton-scf9550.txt", "Eaton: F2's rating above +60 C and below -20 C, the storage questions", "OW-4", "R-103"),
+    ("v2/docs/records/l4e12/clarification/pervasive-displays-e2370ks0c1.txt", "Pervasive Displays: the E2370KS0C1's storage temperature and an unpowered hot exposure", "OW-4", "R-185"),
+    ("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt", "Sensirion: the SGP41's storage and operation outside Table 4", "OW-4", "T-H1's screens"),
+    ("v2/docs/records/l4e7/clarification/analog-devices-lt8705a.txt", "Analog Devices: the LT8705A's IMON_IN limits and question 6, a sense-pin filter on CSPIN and CSNIN", "OW-4", "R-186, R-33"),
+]
+QUAL_RULE = ("**The rule.** An evidence build proceeds under its own scope; the design and production release stays held until the measurements "
+             "pass; a row is not closed because it has an owner and a future test. A sample result is evidence for that lot and that sample, "
+             "never a production limit; only a maker's printed limit closes a row for every lot. Purchases and outside contact are the owner's: "
+             "nothing here is bought or sent.")
+
+
+def _price_check():
+    import json
+    for k, pr in PRICES.items():
+        path = os.path.join(TOP, pr["src"])
+        if not os.path.exists(path):
+            refuse(3, "the price source %s is missing" % pr["src"])
+        d = json.load(open(path, encoding="utf-8"))
+        kind, key = pr["key"]
+        if kind == "price_usd":
+            if abs(float(d["price_usd"][key]) - pr["unit"]) > 1e-9:
+                refuse(3, "%s: the filed price at the %s tier is not %s" % (pr["src"], key, pr["unit"]))
+        else:
+            blob = json.dumps(d)
+            if key not in blob:
+                refuse(3, "%s does not carry the reading %r" % (pr["src"], key))
+    for rel, _what, _ow, _rows in SENDS:
+        path = os.path.join(TOP, rel)
+        if not os.path.exists(path) or "draft" not in open(path, encoding="utf-8").read().lower():
+            refuse(3, "the send list names %s, which is not a draft in the tree" % rel)
+
+
+def cons_qual(F):
+    """The prototype qualification route: one row per measurement that decides a Layer 4 condition, the documentary alternatives last.
+    The specimen, what it represents, what transfers and what it blocks come from L4-E11's 17d for its rows; the others are this record's
+    (SESSION), each citing the record that defines the measurement."""
+    _price_check()
+    sp = F["cp"]["spec"]
+    b6 = F["sv"]["rm"]["b6"]
+    pl = F["cp"]["pulse"]
+    pr = lambda k, n=None: "%s, %s: %s at %s %s each (%s; %s)" % (PRICES[k]["what"], PRICES[k]["maker"], ("%d of the %d" % (n, PRICES[k]["qty"])) if n else PRICES[k]["qty"],
+                                                                  fmt(PRICES[k]["unit"]), PRICES[k]["cur"], PRICES[k]["note"], PRICES[k]["src"])
+    un = lambda k: "price not read: %s" % dict(UNPRICED)[k]
+    sd = lambda rel: "%s (%s)" % (rel, [s for s in SENDS if s[0] == rel][0][2])
+    OWN = "the owner's: "
+    rows = [
+        ("T-H1 (R-104, R-151; T-H1-PROCEDURE-DRAFT.md)",
+         "an empty current-moulding Peli 1450 with the 1450PF frame and a 3 mm aluminium plate blank; the heaters at each mode's heat less the fans' measured draw; the picked fans; sixteen thermocouple channels and a logger; room air, no chamber",
+         "the sealed case's conductance per required mode and lid state at the mixed air with the fans running, the loads as dummies; the SGP41's port and the e-paper's window as local channels",
+         "the conductance of the case, frame, plate and fans as built, fully; the kit's own heat sources and local temperatures do not (T-H2, THM-001 and the cells' rise keep their own evidence)",
+         "U-02: each class (i) and (ii) line per mode (as ruled and under CFL-002's C); the four lines over the modelled capacity read, not expected to pass; the combined route R-170 to R-172 at the same point where a line reads short",
+         "U-02's closure (criteria 1 and 5) and the combined route's rows; no board draft is blocked",
+         "an engineer, on a bench", OWN + "the case, frame, plate blank, heaters, fans and loggers (OW-8 authorises the bench)",
+         un("T-H1") + "; " + un("T-H1, E11-35"), sd("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt") + ", beside it"),
+        ("E11-29 (R-159)", sp["E11-29"]["specimen"], sp["E11-29"]["represents"], sp["E11-29"]["transfers"],
+         "D-14's installed path: (Zself + Zmut) at most %s K/W steady, %s at 1 s, %s at 20 ms, %s at 244 us at the RDS(on) allowance" % ((fmt(F["f02"]["z_steady"]),) + tuple(fmt(e[2]) for e in F["f02"]["z_ev"])),
+         sp["E11-29"]["blocks"], "an engineer, on a bench (the body diode's VSD method)", OWN + "the coupon's fabrication and parts",
+         pr("buk", 4) + "; " + un("E11-29, E11-36"), "none"),
+        ("E11-30 (R-160)", sp["E11-30"]["specimen"], sp["E11-30"]["represents"], sp["E11-30"]["transfers"],
+         "D-14's docking pulse: the whole hot waveform (%s A peak, %s us) accepted by %d parts at %d pulses each, %s A and %s us at a %s C mounting base (L4-E11 17b, D2)"
+         % (fmt(F["f02"]["dock"][0]), fmt(F["f02"]["dock"][1]), pl[4], pl[3], fmt(pl[0]), fmt(pl[1]), fmt(pl[2])),
+         sp["E11-30"]["blocks"], "an engineer, on a bench (a capacitor-discharge rig)", OWN + "the parts and the rig; Q-NXP-1 to Nexperia",
+         pr("buk", 6) + "; " + un("E11-30"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-NXP-1, in parallel (D1)"),
+        ("E11-36 (R-182)", sp["E11-36"]["specimen"], sp["E11-36"]["represents"], sp["E11-36"]["transfers"],
+         "D-14's RDS(on) allowance: at most %s mOhm at VGS -8.5 V and a 150 C junction; over it R-159 is re-sized before layout" % fmt(F["f02"]["allow"]),
+         sp["E11-36"]["blocks"], "an engineer, on a bench (an oven to 150 C, a pulsed Kelvin reading)", OWN + "the parts and the coupon",
+         pr("buk", 4) + "; " + un("E11-29, E11-36"), "none drafted: Nexperia's maximum at -8.5 V and 150 C would close it for every lot (a draft is owed to L4-E11)"),
+        ("E11-37 (R-183)", sp["E11-37"]["specimen"], sp["E11-37"]["represents"], sp["E11-37"]["transfers"],
+         "D-14's Ciss against TI's 5 nF: the pair (S1) or one FET with a heat path through the case (S2)",
+         sp["E11-37"]["blocks"], "an engineer, on a bench", OWN + "the evaluation hardware and parts; Q-TI-17 to TI",
+         pr("buk", 2) + "; " + un("E11-31, E11-37"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-17"),
+        ("E11-31 (R-161)",
+         "E11-37's specimen (TI's BQ25730 evaluation hardware set as drafted, or the controlled first prototype of board A) with a board E stub on VSYS_E (U12, C31, the fans' connectors) and the pack or a pack simulator",
+         "the charger's three modes under (B1): the pack absent, the charge inhibited with the pack present, the held pack current, the start from cold at -20, 25 and 62.1 C, D2's step response",
+         "the charger's register behaviour and VSYS's modes (device properties) fully; the start's first window and D2's recovery only where VSYS's capacitance and the always-on loads are the draft's; otherwise re-read on the first prototype",
+         "U-04: its move from a closure condition to a downstream qualification test once R-157, R-177 and R-178 are applied; the held pack current at most %s mA; D2 against the 2.054 V margin" % fmt(F["f02"]["held"][1]),
+         "board A's final release; the charger's firmware rules (R-158) are written to the draft meanwhile", "an engineer, on a bench",
+         OWN + "the evaluation hardware; Q-TI-15 and Q-TI-16 to TI", un("E11-31, E11-37"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-15, Q-TI-16; " + sd("v2/docs/review-packets/battery/REVIEW-REQUEST.md")),
+        ("E11-38 (R-184)", sp["E11-38"]["specimen"], sp["E11-38"]["represents"], sp["E11-38"]["transfers"],
+         "D-15 (L4-F03): the dock's VSYS branch through the whole fault envelope of L4-E11 17a, cases (1) to (4), the pins and the fans' start; until then %s" % L4F03_STATUS,
+         sp["E11-38"]["blocks"], "an engineer, on a bench", OWN + "the parts and the coupon; Q-TI-18 to TI",
+         un("E11-38") + "; " + pr("d23") + "; " + pr("c236"), sd("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md") + ": Q-TI-18"),
+        ("E11-35 (R-179)", sp["E11-35"]["specimen"], sp["E11-35"]["represents"], sp["E11-35"]["transfers"],
+         "the fans' selection (D-18) against VSYS_E's %s V floor and U42's %s A least limit; the staggered start (E11-39, R-188)" % (fmt(F["cp"]["fan"][2]), fmt(F["f02"]["ef"][1])),
+         sp["E11-35"]["blocks"], "an engineer, on a bench", OWN + "the fans, once named", un("T-H1, E11-35"), "none"),
+        ("The solar guard's bench (R-176 rows 1 to 6; R-174 at layer 8)",
+         "the controlled first prototype of board E with the drafted guard applied (U21, Q12, Q13, D11, the port bank, C133, C134, C71 to C74, D4, the bulk, the sense bank and U5's input), or a coupon of that solar entry on the intended stack-up; a stiff 36 V supply stepped on through a loop measured first, and a ramped supply",
+         "the cut-off's thresholds, the cold connection, the reversed panel's leakage, and the guard-on case through the measured loop",
+         "the cut-off's thresholds and Q13's leakage (device properties) fully; the guard-on waveforms only for a source loop at or over the measured one and only where the specimen's input-loop inductance is the final layout's",
+         "D-10 (the cut-off and the cold connection; the guard-on case only for a loop at or over %.2f uH until B6-ENG-1 is decided, U5 within +-%s V, %s), D-11 (Q13's leakage above +25 C), D-12's CS115 with R-174"
+         % (b6["l_uh"], "%.3f" % b6["margin"], RESERVE_NOTE),
+         "D-10's closure and R-176's step row; board E's other drafts are not blocked (B6-ENG-1)",
+         "an engineer, on a bench; R-174's CS116 and CS115 a MIL-STD-461 laboratory", OWN + "the parts and the prototype; Analog Devices' question 6",
+         un("the guard bench"), sd("v2/docs/records/l4e7/clarification/analog-devices-lt8705a.txt") + ": question 6 (R-186)"),
+        ("The limited sample qualification of one cell (R-168, R-169; L4-E10 15g)",
+         "one Saft MP 176065 xtd cell of the lot to be fitted (three if the owner prefers a spread), never fitted afterwards, a thermocouple on its surface, soaked to each temperature first",
+         "the cell's current at temperature (10 A continuous, 18 A for 60 s, 20 A for 2 s at -20 to +80 C), the charge from 0 C, the storage dwell and recovery (24 h at +71 C and -33 C at 30 %, E5's rest), the lot's capacity at receipt",
+         "to the pack as evidence for that lot and sample only; Saft's statement closes the rows for every lot",
+         "U-01's Saft route: adoptable or not (with the fit mock-up R-167 and T-H1); the owner's approval (OW-3) follows the evidence",
+         "U-01's adoption and board P's cell rows under route (II); nothing else",
+         "a laboratory (a chamber from -40 to +85 C, a 25 A load, a CC/CV source and a logger; about two weeks)", OWN + "the cell(s) and the laboratory; Saft's request",
+         pr("saft") + "; " + un("the cell qualification, the lot soak"), sd("v2/docs/records/l4e10/clarification/saft-mp176065xtd.txt")),
+        ("The HL18650V lot soak (R-103, R-47; route (II) only)",
+         "ten HL18650V cells of one lot, soaked at +71 C and -33 C for 24 h at 30 % and rested at full charge (E5), their capacity read before and after",
+         "the cells' storage rows LO-01e to LO-01g for that lot, which their maker's page states and no signed specification yet does",
+         "to the pack as evidence for that lot only; Topwell's signed specification closes the rows for every lot",
+         "U-01's HL18650V alternative (route (II)); L4-E10's margins re-run on the specification", "route (II)'s drafts (R-105, R-106, R-154); nothing of A1",
+         "a laboratory (a chamber)", OWN + "the cells and the laboratory; Topwell's request",
+         pr("hl") + "; " + un("the cell qualification, the lot soak"), sd("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt") + "; " + sd("v2/docs/records/l4e10/clarification/eaton-scf9550.txt")),
+        ("The fit mock-up (R-167)", "a printed mock-up of four MP 176065 xtd cells at the sheet's maximum dimensions in D-06's pocket at the built stack",
+         "the cells' fit along the pocket's axis with at most 1.40 mm of wrap", "fully (a geometry)", "U-01's fit", "nothing", "an engineer (Layer 7)",
+         "none beyond the print", "nothing (a print)", "none"),
+        ("The e-paper's storage soak (R-185)",
+         "one PDi E2370KS0C1 sample held unpowered at E3-O's +55 C and E5's +60 C for the modes' durations in an oven or chamber, its function read back after each soak (an image written, refreshed and read)",
+         "the unpowered part's survival of the modes' temperatures, for that lot", "to the kit as evidence for that lot only; PDi's storage statement governs once filed",
+         "U-02's MISSING STORAGE QUALIFICATION (M6, M7): the e-paper's line replaced by the +70 C class once a storage limit at or over it is shown",
+         "M6's and M7's lines; nothing of the boards", "an engineer with an oven, or a laboratory", OWN + "the sample; PDi's request",
+         un("R-185"), sd("v2/docs/records/l4e12/clarification/pervasive-displays-e2370ks0c1.txt")),
+        ("The documentary alternatives (the makers' statements)", "none: a maker's written statement",
+         "a limit for every lot where the maker prints one; a typical figure closes nothing", "fully, production-wide, where the answer is a limit",
+         "the same decisions as the experiments above, row by row: TI (U-04, D-14's Ciss, D-15), Nexperia (D-14's docking pulse), Saft and Topwell (U-01), PDi and Sensirion (U-02), Analog Devices (D-10's B6-ENG-1 route (1))",
+         "nothing by itself", "the maker, through the owner", OWN + "sending each draft (OW-2, OW-4, OW-7, OW-9)", "nothing",
+         "; ".join(sd(s[0]) for s in SENDS)),
+    ]
+    for r in rows:
+        if len(r) != 10 or not all(str(c).strip() for c in r):
+            refuse(4, "a qualification row with an empty cell: %s" % r[0])
+    return rows
+
+
+def cons_qual_lists(F):
+    """The owner's two lists: the purchases with their total of the prices read (and the items with no price read), and the drafts to send."""
+    tot = {}
+    buy = []
+    for k in ("buk", "d23", "c236", "hl", "saft"):
+        pr = PRICES[k]
+        line = pr["qty"] * pr["unit"]
+        tot[pr["cur"]] = tot.get(pr["cur"], 0.0) + line
+        buy.append("%s, %s: %d at %s %s (%s) = %s %s; %s" % (pr["what"], pr["maker"], pr["qty"], fmt(pr["unit"]), pr["cur"], pr["note"], "%.2f" % line, pr["cur"], pr["src"]))
+    total = "; ".join("%s %.2f" % (c, tot[c]) for c in sorted(tot))
+    return buy, total, [("%s: %s" % x) for x in UNPRICED], ["%s: %s (%s; for %s)" % (rel, what, ow, rows) for rel, what, ow, rows in SENDS]
+
+
+def cons_qual_block(F):
+    buy, total, unp, send = cons_qual_lists(F)
+    L = [QUAL_RULE, "",
+         "**The purchase list** (the owner's, in one sitting; the prices read and filed in this tree, each an indicator at the tier named, none a quote; nothing is bought):"]
+    L += ["- %s" % b for b in buy]
+    L.append("- **Total of the prices read: %s.** Items with no price read (%d), each owed a quote before the owner buys:" % (total, len(unp)))
+    L += ["  - %s" % u for u in unp]
+    L.append("")
+    L.append("**The send list** (the owner's, in one sitting; each a drafted request in this tree, the owner chooses the channel; nothing is sent):")
+    L += ["- %s" % s for s in send]
+    return L
+
+
+def cons_qual_lines(F):
+    rows = cons_qual(F)
+    buy, total, unp, send = cons_qual_lists(F)
+    L = ["27. THE PROTOTYPE QUALIFICATION ROUTE (the second review's next milestone: every measurement row of the register that decides a Layer 4 condition,"
+         " its specimen, what it represents and transfers, the decision, what it blocks, who performs it, whose authorisation it needs, what to buy and what to send)"]
+    L.append("   " + QUAL_RULE.replace("**", ""))
+    for r in rows:
+        L.append("   %s" % r[0])
+        for lab, x in zip(("specimen", "represents", "transfers", "decides", "blocks only", "performer", "authorisation", "what to buy", "what to send"), r[1:]):
+            L.append("      %s: %s" % (lab, x))
+    L.append("   the purchase list (the prices read in this tree, checked against their files; total %s; %d items with no price read):" % (total, len(unp)))
+    for b in buy:
+        L.append("     - %s" % b)
+    for u in unp:
+        L.append("     - no price read: %s" % u)
+    L.append("   the send list (%d drafts, the owner's to send):" % len(send))
+    for s in send:
+        L.append("     - %s" % s)
+    L.append("   desk work on these items stops here: %s" % cons_stop(F).replace("**", ""))
+    return L
+
+
+def cons_qual_tables(F, D, st):
+    return {"| Experiment | Specimen |": ["| Experiment | Specimen | What it represents | What transfers to the final board | The decision it resolves | Blocks only | Performer | Authorisation | What to buy | What to send |",
+                                        "|---|---|---|---|---|---|---|---|---|---|"] + ["| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |" % r for r in cons_qual(F)]}
+
+
+def cons_stop(F):
+    buy, total, unp, send = cons_qual_lists(F)
+    return ("**Desk work on these items stops here.** The open items are physical questions (a source loop's inductance, a hot FET's resistance, "
+            "the case's conductance in W/K, the e-paper's storage limit) that desk analysis cannot settle, and the acceptance standard refuses "
+            "closure on unprinted figures. They advance only by the measurements and answers of 5d (%d experiment rows; the purchase list %s of "
+            "prices read, %d items unpriced; the send list %d drafts), or by a design change that removes the dependency, one candidate named "
+            "for each and none selected here: for the solar guard already on, B6-ENG-1's route (3), the input current sense moved off the "
+            "stage's input capacitance (R-187); for U-04, the hold-up bank of arrangement (A) on VBAT (R-152, E11-24); for M6 and M7, an e-paper "
+            "with a storage range at or over +70 C (CHO-001, the owner's); for U-02, a case heat-rejection route (the combined route R-170 to "
+            "R-172 and a closed-lid conduction path at Layer 7)." % (len(cons_qual(F)) - 1, total, len(unp), len(send)))
 
 
 def cons_cell_rows(F):
@@ -6278,8 +6582,10 @@ def cons_in_short(F, D, st, reg):
            M["M8"]["ruled"][1], M["M9"]["ruled"][1], sh["M3"][0], sh["M4"][0], sh["M6"][0], sh["M7"][1]),
         "**The exit** (section 6, the owner's definition): three decisions, kept apart: the architecture candidate CONDITIONAL; the "
         "power-design closure gate BLOCKED (an unresolved material protection or feasibility condition is enough for that); fabrication "
-        "release BLOCKED; the engineer handoff READY TO START, PROVISIONAL, its omitted dependencies named. Layer 4 power closure is not "
-        "reached on this reading. U-02 is a closure "
+        "release BLOCKED; the engineer handoff READY TO START, PROVISIONAL, its omitted dependencies named. Desk work on the open items "
+        "stops here: they advance only by the prototype qualification route (5d: %d experiment rows, the purchase list %s of prices read "
+        "with %d items unpriced, the send list %d drafts) or by a design change that removes the dependency (5d names one for each). "
+        "Layer 4 power closure is not reached on this reading. U-02 is a closure "
         "condition T-H1's points decide for every class (i) and (ii) line (as ruled at +40 C a reading of at least %s W/K on the pack "
         "and %s W/K on shore; under C %s and %s W/K) plus the storage evidence (its four lines over the modelled capacity a "
         "modelled shortfall and a missing storage qualification, no demonstrated conflict); U-04 becomes a downstream "
@@ -6294,7 +6600,7 @@ def cons_in_short(F, D, st, reg):
         "manufacturer clarification that resolves it. The findings ledger, as filed: %d rows, %d CLOSED, %d CLOSED AS CONDITIONAL, %d "
         "OPEN DOWNSTREAM, %d STILL OPEN; the review's E6 found L4-E12:2.1 and 1.2 regressed and L4-E7R:1.6 and 2.4 needing B6's "
         "condition, and this record does not claim them closed. **Status: %s.**"
-        % ((M["M1"]["ruled"][2], M["M2"]["ruled"][2], M["M1"]["cab"][2], M["M2"]["cab"][2], L4F03_STATUS) + F["rc"]["ledger"] + (STATUS,)),
+        % ((len(cons_qual(F)) - 1, cons_qual_lists(F)[1], len(cons_qual_lists(F)[2]), len(SENDS), M["M1"]["ruled"][2], M["M2"]["ruled"][2], M["M1"]["cab"][2], M["M2"]["cab"][2], L4F03_STATUS) + F["rc"]["ledger"] + (STATUS,)),
     ]
 
 

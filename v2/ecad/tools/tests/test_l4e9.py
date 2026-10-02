@@ -1540,6 +1540,69 @@ def t_the_review_of_the_provisional_fixes_l4f04_the_thermal_categories():
     assert rows["R-185"][1] == "TEST" and "function read back" in rows["R-185"][2] and "for that lot" in rows["R-185"][5]
 
 
+def t_the_prototype_qualification_route():
+    """The second review's next milestone, held as properties: every row of the route has its ten cells; the register rows it names exist
+    and are TEST or EVIDENCE rows (or the mock-up); L4-E11's rows carry 17d's specimen, transfer and blocks-only text as written there;
+    every priced item's figure is in its filed source and the totals are the sums; every send path exists and reads as a draft; the page's
+    table and blocks are the script's; the exit names the stop and the four design-change candidates; nothing says bought or sent."""
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    rows = m.cons_qual(F)
+    assert len(rows) >= 13 and all(len(r) == 10 and all(c.strip() for c in r) for r in rows)
+    assert rows[-1][0].startswith("The documentary alternatives") and rows[-1][1].startswith("none")
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    named = set()
+    for r in rows[:-1]:
+        for rid in re.findall(r"R-\d{3}", r[0]):
+            assert rid in reg, rid
+            named.add(rid)
+            assert reg[rid][1] in ("TEST", "EVIDENCE", "LAYOUT") or rid == "R-151", (rid, reg[rid][1])
+    for rid in ("R-104", "R-159", "R-160", "R-161", "R-168", "R-176", "R-179", "R-182", "R-183", "R-184", "R-185"):
+        assert rid in named, rid
+    sp = F["cp"]["spec"]
+    by = {r[0].split(" ")[0]: r for r in rows}
+    for eid in ("E11-29", "E11-30", "E11-35", "E11-36", "E11-37", "E11-38"):
+        r = by[eid]
+        assert r[1] == sp[eid]["specimen"] and r[2] == sp[eid]["represents"] and r[3] == sp[eid]["transfers"] and r[5] == sp[eid]["blocks"], eid
+    md = open(os.path.join(ROOT, m.PINS["l4e11md"][0]), encoding="utf-8").read()
+    t17 = {x[0].replace("Row ", ""): x for x in m.md_table(md.split("### 17d.")[1], "| Row | Specimen |")}
+    assert t17["E11-29"][1] == sp["E11-29"]["specimen"], "17d is read from L4-E11's page, not restated"
+    for r in rows:
+        assert r[6].startswith(("an engineer", "a laboratory", "the maker")), r[6]
+        assert r[7].startswith(("the owner's", "none")), r[7]
+    import json
+    buy, total, unp, send = m.cons_qual_lists(F)
+    tot = {}
+    for k, pr in m.PRICES.items():
+        d = json.load(open(os.path.join(ROOT, pr["src"]), encoding="utf-8"))
+        kind, key = pr["key"]
+        if kind == "price_usd":
+            assert abs(float(d["price_usd"][key]) - pr["unit"]) < 1e-9, k
+        else:
+            assert key in json.dumps(d), k
+        tot[pr["cur"]] = tot.get(pr["cur"], 0.0) + pr["qty"] * pr["unit"]
+    assert total == "; ".join("%s %.2f" % (c, tot[c]) for c in sorted(tot)) and "USD" in total and "NZD" in total
+    assert len(buy) == len(m.PRICES) and len(unp) == len(m.UNPRICED) and len(send) == len(m.SENDS)
+    for rel, _w, ow, _r in m.SENDS:
+        assert os.path.exists(os.path.join(ROOT, rel)) and ow.startswith("OW-"), rel
+    page = open(PAGE, encoding="utf-8").read()
+    head = "| Experiment | Specimen |"
+    assert m.md_table(page, head) == [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in m.cons_qual_tables(F, D, st)[head][2:]]
+    assert page.split("<!-- gen:qual:begin -->")[1].split("<!-- gen:qual:end -->")[0].strip() == "\n".join(m.cons_qual_block(F))
+    assert page.split("<!-- gen:stop:begin -->")[1].split("<!-- gen:stop:end -->")[0].strip() == m.cons_stop(F)
+    assert page.index("### 5d. The prototype qualification route") < page.index("## 6. The exit statement")
+    stop = m.cons_stop(F)
+    for w in ("stops here", "R-187", "R-152", "CHO-001", "R-170 to R-172"):
+        assert w in stop, w
+    short = page.split("## In short\n")[1].split("\n## 1. ")[0]
+    assert "stops here" in short and "5d" in short
+    txt = _C["text"]
+    assert "27. THE PROTOTYPE QUALIFICATION ROUTE" in txt and "26e THE SECOND REVIEW'S L4-CP01" in txt
+    low = (page + txt).lower()
+    for mm in re.finditer(r"\b(is|was|has been) (bought|sent)\b", low):
+        assert "nothing" in low[max(0, mm.start() - 40):mm.start()], low[max(0, mm.start() - 60):mm.end()]
+
+
 def t_the_decisions_are_kept_apart():
     """The second external review (of the 22:30 checkpoint): the page states three separate decisions and the handoff, each with what
     decides it; the closure gate's decision follows the gate's verdicts (BLOCKED while any criterion is not PASS); the status phrase is
@@ -1600,7 +1663,7 @@ def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
     assert de["D-15"]["state"].startswith("ADDRESSED IN DRAFTS") and "E11-38" in de["D-15"]["state"] and "R-181" in de["D-15"]["resolution"]
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
     owner_of = {i: o.strip() for i, _k, o in F["e11_items"]}
-    for item in ("E11-35", "E11-36", "E11-37", "E11-38"):
+    for item in ("E11-35", "E11-36", "E11-37", "E11-38", "E11-39"):
         rows = [r for r in reg.values() if re.search(r"\b%s\b" % item, r[3])]
         assert rows and all(r[4] == owner_of[item] for r in rows), item
     r181 = reg["R-181"]
