@@ -5,7 +5,7 @@ Samsung SDI's INR18650-30Q specifications (Version No. V1.0 of the 30Q6 producti
 German distributor's copy; Version No. 1.0 of February 2015 and the customer draft V0.1 of 2024/01/23, both posted to TI's
 E2E forum) carry "SAMSUNG SDI Confidential Proprietary" on every page; LG Chem's INR18650HG2 product specification
 (BCY-PS-HG2-Rev0, 13 October 2014) is a distributor's copy with no grant to reproduce it; Saft's LSH 20 sheets (Document
-31015-2-0426 of April 2026 and the LSH 20 HTS sheet 31057-2-0710) carry "Photo credits: (c) Saft". Toshiba's SCiB brochure reads 'all rights reserved' and UltraXel's HL18650T flyer states no terms. All eight are held back from the
+31015-2-0426 of April 2026 and the LSH 20 HTS sheet 31057-2-0710) carry "Photo credits: (c) Saft". Toshiba's SCiB brochure reads 'all rights reserved' and UltraXel's HL18650T flyer states no terms. Saft's MP 176065 xtd sheet forbids reproduction without Saft's authorization. All nine are held back from the
 public tree by the conservative reading of their terms (the owner's rule of 27 September 2026), as the l3batt, a1solar and
 l4e7 records do: this script downloads each from the address its line in v2/vendor/sources.txt records into the ignored
 v2/vendor/battery/held/ folder, checks the sha256 l4e10_cell_thermal.py pins, and refuses to keep a file that differs.
@@ -46,6 +46,10 @@ DOCS = [
     ("v2/vendor/battery/held/ultraxel-hl18650t-flyer-2025.pdf",
      "https://www.ultraxel.com/wp-content/uploads/2025/03/HL18650T-Ultraxel-Flyer-1.pdf",
      "f95db57fa9bef536a0abcab0a8a979db8593ebd528736c53590a35eb853f80c0"),
+    # the consolidation of 2 October 2026: Saft's MP 176065 xtd datasheet from its own portal (the chain check skipped, the sha256 decides)
+    ("v2/vendor/battery/held/saft-mp176065xtd-31109-2-0625.pdf",
+     "https://saft4u.saft.com/en/download_file/58d1fabc-9a46-4c07-8df1-0a00d3a1e7a9/English",
+     "8ca0a3e09997a4a30567a4313cf83c2b6cf165543baf424e0ff788d5a8d27f8e"),
 ]
 
 

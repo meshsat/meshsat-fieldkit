@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""fetch_held_back.py: fetch the eight documents task L4-E7 read but did not file (MESHSAT-1357, 1 and 2 October 2026).
+"""fetch_held_back.py: fetch the nine documents task L4-E7 read but did not file (MESHSAT-1357, 1 and 2 October 2026).
 
 YAGEO's RT series product specification V.16 (May 06, 2025; the sheet LCSC links for C861244, C861068, C861589 and
 C136968) gives the tolerance and TCR codes of RIMON_IN, R8 and R9. Infineon's BSC028N06NS data sheet Rev.2.1
@@ -8,9 +8,10 @@ sheet (Document Number 30100, Revision 23-Nov-2023; LCSC's link for C844695) is 
 qualification evaluates. TI's INA250 (SBOS511C, September 2023), INA169 (SBOS181F, February 2017) and TPS3701 (SBVS240C,
 February 2019), and Panasonic's ZA series (07 Nov. 2017; LCSC's link for C178637), are the control decision's;
 MIL-STD-461G (11 December 2015, the copy NASA's S3VI knowledge base serves) gives the third round's CS101, CS114 and CS118
-levels. All eight are held back from the public tree by the conservative reading of their terms (the owner's rule of 27 September 2026),
+levels; TI's TPS4811-Q1 (SLUSEE5E, revised April 2026; the sheet L4-E11 holds back under the same pin) is the solar-fault
+remedies' cut-off. All nine are held back from the public tree by the conservative reading of their terms (the owner's rule of 27 September 2026),
 as the a1solar, s117 and w5identc records do: this script downloads each from the address its catalogue reading in
-inputs/ records (TI's three from ti.com, the standard from NASA's knowledge base) into an ignored held/ folder, checks the sha256 l4e7_stage_settings.py pins,
+inputs/ records (TI's four from ti.com, the standard from NASA's knowledge base) into an ignored held/ folder, checks the sha256 l4e7_stage_settings.py pins,
 and refuses to keep a file that differs. It is never run by a test.
 Usage: fetch_held_back.py [--root DIR]   (default: this repository's root)"""
 import argparse
@@ -42,6 +43,8 @@ DOCS = [
      "43628e509458b8995a5c5e1ade2334286c5acfddf859bf9aa4daf59d5653258a"),
     ("v2/vendor/power/held/mil-std-461g-2015-12-11.pdf", "https://s3vi.ndc.nasa.gov/ssri-kb/static/resources/MIL-STD-461G.pdf",
      "491f015e386136b58af90e86066533ca073d31210913a766cb236cf05a876bb8"),
+    ("v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf", "https://www.ti.com/lit/ds/symlink/tps4811-q1.pdf",
+     "3cfe41fef1407b85abaaee1e27a95ac3cf2cb1bdf218209b8578a835c4c9497f"),
 ]
 
 

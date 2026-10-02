@@ -81,6 +81,15 @@ HEATER = "v2/vendor/battery/heater/rs-pro-245-556-heater-mat-sheet.pdf"
 TOPWELL = "v2/docs/records/l4e10/inputs/topwell-hl18650v-page-2026-10-01.json"
 PRICES = "v2/docs/records/l4e10/inputs/prices-2026-10-01.json"
 BEYOND = "v2/docs/records/l4e10/inputs/cells-beyond-held-2026-10-02.json"
+EB_PY = "v2/docs/records/energy/energy_budget.py"
+EB_IN = "v2/docs/records/energy/energy_inputs.yaml"
+REPLAY = "v2/docs/records/l4e/l4e_replay.out"
+CSS = "v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md"
+L4E9 = "v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md"
+CL_TW = "v2/docs/records/l4e10/clarification/topwell-hl18650v.txt"
+SAFT_MP = "v2/vendor/battery/held/saft-mp176065xtd-31109-2-0625.pdf"
+PRICES2 = "v2/docs/records/l4e10/inputs/prices-2026-10-02.json"
+L4E12 = "aab69775@v2/docs/records/l4e12/l4e12_thermal.out"     # U-02's record at its commit (fnd/l4e12, the consolidation)
 PINS = {
     CM: "55244f94aace54ca09d98c100b9830cba75c70a4774c3ba375a14903fcaf6376",
     APPX: "852736b661a805e36305ca6c2c91ebb76794e883a2ccd75dc3274c25d65212f1",
@@ -119,6 +128,15 @@ PINS = {
     LSH20HTS: "5befce3a37ab89fad4826488793008f71d5c4ba4a36eacbfadd9dacfa5339d55",
     LSHCURVES: "cc5ad871143dda6c90b07f9ddf6334301dc4c1001bd80783dbf53d5a328a7a68",
     BEYOND: "40d68c77cec82869fe3d1fad9b4c1e8cb067e8ac577e6fd722b487db3660c1ec",
+    EB_PY: "6a8ac4642bd2aaf35d5ad6b75c5004c24d3e11ed1ede09a4b7a1041cd103235c",
+    EB_IN: "74a6e4ab0074648ed459cc62daf7000798ae6247cd5056e19cae5e4d56f55aed",
+    REPLAY: "59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d",
+    CSS: "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f",
+    L4E9: "16b0d3c01e81930f51174a30d23a8014e0cbf4bd3ced5b393bf94b8723048ec6",
+    SAFT_MP: "8ca0a3e09997a4a30567a4313cf83c2b6cf165543baf424e0ff788d5a8d27f8e",
+    PRICES2: "eac0fc1807e7e4989801aa3448c13f4b2870de06f23cb1084059aae518b2c7f0",
+    L4E12: "88d7b84179b407533bdf4a542c93487c1fa6ca8f95a742518f529517995f9637",
+    CL_TW: "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9",
     "v2/vendor/battery/held/toshiba-scib-brochure-2020.pdf": "acc8f192c54fb287f9ef66d5e26c440601fa795c87f46dba881dce747ef07df3",
     "v2/vendor/battery/held/ultraxel-hl18650t-flyer-2025.pdf": "f95db57fa9bef536a0abcab0a8a979db8593ebd528736c53590a35eb853f80c0",
     M507: "aab749c1b6d149c8dddedce99fcc0d505339723300df36a62a257b4ace380d80",
@@ -148,15 +166,25 @@ def path(rel):
     return os.path.join(TOP, rel)
 
 
-def sha(rel):
+def raw(rel):
+    if "@" in rel:                       # a file read at its commit: "commit@path"
+        c, r = rel.split("@", 1)
+        ch = subprocess.run(["git", "show", "%s:%s" % (c, r)], cwd=TOP, capture_output=True)
+        if ch.returncode != 0:
+            refuse(2, "%s is not at %s" % (r, c))
+        return ch.stdout
     p = path(rel)
     if not os.path.exists(p):
         refuse(2, "%s is missing (held documents: fetch_held_back.py)" % rel)
-    return hashlib.sha256(open(p, "rb").read()).hexdigest()
+    return open(p, "rb").read()
+
+
+def sha(rel):
+    return hashlib.sha256(raw(rel)).hexdigest()
 
 
 def text(rel):
-    return open(path(rel), encoding="utf-8").read()
+    return raw(rel).decode("utf-8")
 
 
 _PDF = {}
@@ -214,6 +242,12 @@ def f2(x):
 
 def floor1(x):
     return math.floor(x * 10.0 + 1e-9) / 10.0
+
+
+def md_cells(line):
+    """The cells of a markdown table row, split on unescaped pipes only (a cell may carry '\\|')."""
+    cells = [c.strip() for c in re.split(r"(?<!\\)\|", line.strip())]
+    return cells[1:-1]
 
 
 def nums(s):
@@ -889,13 +923,24 @@ def compute():
     # the pocket's spare volume round the block beyond the 1.0 mm minimums: at the worst stack (SHORTLIST's rooms) and as designed
     # (CASE-MARGINS' largest printed gaps less the minimum), INFERRED; the west face is 2.0 mm from board A's edge
     rooms_w = {"east": room["across"], "top": room["height"], "ends": room["axis"]}
-    rows_cm = {}
+    rows_cm, rows_cm_old = {}, {}
+    hdr = md_cells(need(cmt, r"^\| # \| Margin \|.*$", "CASE-MARGINS' table header").group(0))
+    col = hdr.index("Chosen: nominal")
     for key in ("M4b", "M5", "M6"):
-        rows_cm[key] = max(nums(need(cmt, r"^\| %s \|(.*)$" % key, "CASE-MARGINS " + key).group(1).split("|", 3)[3]))
+        line = need(cmt, r"^\| %s \|.*$" % key, "CASE-MARGINS " + key).group(0)
+        cells = md_cells(line)
+        if len(cells) != len(hdr):
+            refuse(4, "CASE-MARGINS row %s has %d cells against the header's %d" % (key, len(cells), len(hdr)))
+        rows_cm[key] = float(nums(cells[col])[0])
+        # the earlier reading (fix round of 2 October 2026, the verifier's item 3): a plain split on every pipe, kept to show what moved
+        rows_cm_old[key] = max(nums(line[len("| %s |" % key):].split("|", 3)[3]))
+    R["rows_cm"], R["rows_cm_old"] = rows_cm, rows_cm_old
     A_E, A_B, A_end = Y * Z, X * Y, X * Z
     spare_worst = A_E * rooms_w["east"] / 1000.0 + A_B * rooms_w["top"] / 1000.0 + 2 * A_end * rooms_w["ends"] / 1000.0
     spare_design = (A_E * (rows_cm["M4b"] - 1.0) + A_B * (rows_cm["M6"] - 1.0) + 2 * A_end * (rows_cm["M5"] - 1.0) + A_E * (2.0 - 1.0)) / 1000.0
     R["spare_L"] = (spare_worst * 1000.0, spare_design * 1000.0)          # litres
+    spare_old = (A_E * (rows_cm_old["M4b"] - 1.0) + A_B * (rows_cm_old["M6"] - 1.0) + 2 * A_end * (rows_cm_old["M5"] - 1.0) + A_E * (2.0 - 1.0)) / 1000.0
+    R["spare_L_old"] = spare_old * 1000.0
     # the phase-change material (MAKER, Rubitherm RT57HC): melting area, capacity (latent and sensible over its range), density
     tr = pdf(RT57)
     pcm = {"melt": tuple(float(v) for v in need(tr, r"Melting area\s+(\d+) - (\d+) \[°C\]", "RT57HC melting").groups()),
@@ -1016,6 +1061,19 @@ def compute():
             qc_ = gb_ * (a_ - d_)
             condc["cool"][(key, cop)] = {"air": t_amb + a_, "qc": qc_, "p_in": qc_ / cop}
     condc["g_best"] = op["best"]["G_e"]
+    _cache3, _cache5 = {}, {}
+
+    def run3g(g):
+        if g not in _cache3:
+            _cache3[g] = sim(lambda t: e3o_t, e3o_h, wc["q"], wc["C_k"], g, wc["C_cells"], wc["G_b"], 0.0, e3o_t, e3o_t)
+        return _cache3[g]
+
+    def run5g(g):
+        if g not in _cache5:
+            s0g = cond_c + wc["q"] / g
+            _cache5[g] = sim(e5_chamber, 24.0 * (n_cyc + 1), wc["q"], wc["C_k"], g, wc["C_cells"], wc["G_b"], 0.0, s0g, s0g, dt=60.0)
+        return _cache5[g]
+    R["run3g"], R["run5g"] = run3g, run5g
     condc["air_unc"] = {"E3-O": e3o_t + rise_c, "E5": R["e"]["amb"] + rise_c}
     condc["lift"] = {k: v["air"] - condc["air_unc"][k[0]] for k, v in condc["cool"].items()}
     R["condc"] = condc
@@ -1309,7 +1367,7 @@ def compute():
                      "gap": "(II): the signed specification and T-H1; (I) stands only near the best corner, with a cooler's sheet; F2 (Eaton). Next: the owner sends the drafted request; T-H1"}
     dec["LO-01e"] = {"decision": "OPEN", "evidence": ["MAKER", "MODELED", "INFERRED", "ASSUMPTION"], "bounded": True,
                      "cell_change": {"candidate": "HL18650V class", "taken": False, "owner_approval_required": True},
-                     "routes": [{"route": "(III) added latent storage over Method 507.6's aggravated cycle (RT57HC, favourable figures)", "status": "INCONCLUSIVE",
+                     "routes": [{"route": "(III) added latent storage over Method 507.6's aggravated cycle (RT57HC, favourable figures)", "status": "INCONCLUSIVE" if pr_["best"]["e5_L"] <= spare[1] else "REJECTED",
                                  "basis": "the air's cycle mean is %.2f C (best) to %.2f C (worst); the cells stay under +60 C through the conditioning and ten cycles with %.3f kg (%.3f L) at the best corner, against %s, and need %.3f kg (%.3f L) at the conditioned corner and %.2f kg (%.2f L) at the worst" % (pr_["best"]["e5_mean_air"], pr_["worst"]["e5_mean_air"], pr_["best"]["e5_m"], pr_["best"]["e5_L"], room_txt, R["condc"]["e5_m"], R["condc"]["e5_L"], pr_["worst"]["e5_m"], pr_["worst"]["e5_L"]),
                                  "missing": "the enclosure's conductance (which corner holds), the pocket's actual room at the built stack, the plan owner's confirmation that E5 is Procedure II of Method 507.6 (MIL-STD-810H)"},
                                 {"route": "(I) powered cooling on the input", "status": "INCONCLUSIVE",
@@ -1358,6 +1416,11 @@ def compute():
     R["forced_rows"] = sorted(k for k, d in dec.items() if d["decision"] == "OPEN" and d["routes"] and all(r["status"] == "REJECTED" for r in d["routes"]))
     R["owner_decision_required"] = bool(R["forced_rows"])
     R["classes"] = CLASSES
+    R["u01"] = u01(R, pb)
+    R["saft"] = saft_sheet()
+    R["u01c"] = u01c(R, pb)
+    R["packcmp"] = packcmp(R, pb)
+    R["u01_classes"] = ("MAKER", "MAKER-PAGE", "INFERRED", "ASSUMPTION", "SESSION")
     return R
 
 
@@ -1593,7 +1656,10 @@ def render(R):
         r_ = pr_[cname]
         w("      %-5s corner (the heat stage on shore, lid open): air mean %.2f C; without storage the cells peak at %.2f C; they stay under +60 C with %s"
           % (cname, r_["e5_mean_air"], r_["e5_peak_none"], "no storage" if r_["e5_m"] == 0 else ("more than 20 kg" if r_["e5_m"] is None else "%.3f kg (%.3f L)" % (r_["e5_m"], r_["e5_L"]))))
-    w("      So: at the best corner a marginal fit (between the worst-stack and the designed room); at the worst no fit. INCONCLUSIVE on the conductance and the built room.")
+    if pr_["best"]["e5_L"] <= sp_[1]:
+        w("      So: at the best corner a fit inside the designed room (%.3f L); at the worst no fit. INCONCLUSIVE on the conductance and the built room." % sp_[1])
+    else:
+        w("      So: no fit at any corner, the best corner's %.3f L over the designed room's %.3f L: rejected within the pocket on figures favourable to the material." % (pr_["best"]["e5_L"], sp_[1]))
     hw = R["h1_window"]
     w("   (c) LO-01d, E3-O's 4 h at +%.0f C from a kit stabilised at the chamber: without storage the cells peak at %.2f C (best) and %.2f C (worst); under +60 C with"
       % (R["d"]["amb"], pr_["best"]["e3o_peak_none"], pr_["worst"]["e3o_peak_none"]))
@@ -1783,6 +1849,8 @@ def render(R):
       % (R["cand"]["HL18650V"]["usable_wh"], -100.0 * (R["cand"]["HL18650V"]["usable_wh"] / R["cand"]["35E"]["usable_wh"] - 1.0)))
     w("   its spend (USD %.2f a cell at the marketplace price, about USD %.0f a pack). A missing cell rating is a component limitation plus" % (R["price_hl"], 12 * R["price_hl"]))
     w("   missing feasibility evidence, not a contradiction between owner requirements (D-29, D-36, cell_provenance).")
+    w("CONSOLIDATED (section 10, 2 October 2026): the route resting on published makers' evidence is (II) with the Saft MP 176065 xtd as a 4S1P pack; the HL18650V")
+    w("   stays its higher-energy alternative on a vendor answer; the owner's items there replace the two above for that route.")
     w("THE THERMAL ARCHITECTURE CRITERION (criterion 1, a defensible feasibility basis for every mandatory function): not met by this record. Every LO row now has a route that is")
     w("   not rejected, and LO-01d to LO-01g rest on a maker's product page until the signed specification arrives; FEA-008 stays open as the session's engineering obligation.")
     w("Possible later changes (none proposed now; each would be the owner's only once every route of a row within the requirements is shown unavailable on bounded evidence):")
@@ -1818,6 +1886,15 @@ def render(R):
         w("%s: %s" % (k, pr[k]))
     if not all(pr.values()):
         refuse(4, "a predicate failed: %s" % [k for k, v in pr.items() if not v])
+    w("")
+    for line in u01_lines(R):
+        w(line)
+    w("")
+    for line in u01c_lines(R):
+        w(line)
+    w("")
+    for line in packcmp_lines(R):
+        w(line)
     return L
 
 
@@ -1900,11 +1977,12 @@ def screen_rows(R):
          "cfg": "deployed, logging, on shore or vehicle input, pack fitted (FEA-008)", "limit": "+%.0f C" % lim["discharge"][1], "power": "the input",
          "gap": "at least %.2f K at the +%.0f C dwell" % (G2["LO-01e"], e["amb"]),
          "approaches": [fans, "the profile mapped from Method 507.6 Procedure II (3n): a 23 C conditioning, ten 24 h cycles 30-60-60-30-30 C, a return to 23 C; operational checks near the ends of the fifth and tenth cycles",
-                        "added latent storage over that profile (3n, 3o): a marginal fit at the best corner, none at the conditioned and the worst: INCONCLUSIVE",
+                        ("added latent storage over that profile (3n, 3o): a fit at the best corner only, none at the conditioned and the worst: INCONCLUSIVE" if R["pcm_res"]["best"]["e5_L"] <= R["spare_L"][1]
+                         else "added latent storage over that profile (3n, 3o): %.3f L at the best corner against the designed room's %.3f L, none at any corner: rejected within the pocket" % (R["pcm_res"]["best"]["e5_L"], R["spare_L"][1])),
                         "powered cooling: cold side %.2f to %.2f W; rejected into the sealed case at the worst corner, INCONCLUSIVE at the conditioned corner (the air lifted onto the +70 C parts) and near the best (3i, 3o)" % co["E5"]["qc"],
                         "(II) a wide-temperature cell: CONDITIONAL, the cells %.2f K under the re-derived H1's no-act limit at the conditioned corner (4d)" % R["cmp"]["m2"]["LO-01e"]["m_h1"],
                         "charge state: the pack's charge in E5 is not stated by TEST-PLAN (a named missing input)"],
-         "result": "OPEN: (II) recommended, CONDITIONAL; latent storage and cooling INCONCLUSIVE with their limits named"},
+         "result": "OPEN: (II) recommended, CONDITIONAL; latent storage rejected within the pocket (10a); cooling INCONCLUSIVE with its limits named"},
         {"id": "C12", "lo": "LO-01f", "cond": "D-02a's +%.0f C storage margin (E3-S)" % R["f"]["amb"], "zero_power": True,
          "amb": "+%.0f C" % R["f"]["amb"], "dur": "%.0f h" % R["f"]["hours"], "cfg": "stored: closed, latched, every input unplugged, pack fitted at %s in its gauge's shutdown (REQ-025, SC-19)" % lim["soc"],
          "limit": "storage 1 month %.0f to %.0f C at %s (35E Ver. 1.1 3.13)" % (lim["st_1m"][0], lim["st_1m"][1], lim["soc"]),
@@ -2066,7 +2144,8 @@ def correction_lines(R):
         "R2, the mappings (C04, C05, C16, C17, C18): the lid-closed start, E3-H's hold and its repeat with the sensor controller in reset (TMP117 at +55.0 and +56.0 C, released at",
         "   +45.0 C), the restart at +46.5 C after 30 minutes, the return to 25 C with capacity within 5 %, and OTD's recovery at +52.5 C change no thermal figure: every row's result and",
         "   margin unchanged; the unstated charge states are named missing inputs: minor.",
-        "E5's profile (R3's E5 item): was INCONCLUSIVE on a missing profile; now Method 507.6 Procedure II (mapped, its owner to confirm): latent storage a marginal fit at the best corner",
+        "E5's profile (R3's E5 item): was INCONCLUSIVE on a missing profile; now Method 507.6 Procedure II (mapped, its owner to confirm): latent storage %.3f L at the best corner"
+        % pr_["best"]["e5_L"],
         "   (%.3f L), none at the conditioned (%.3f L) and worst (%.2f L) corners. Material for (III)." % (pr_["best"]["e5_L"], cc["e5_L"], pr_["worst"]["e5_L"]),
         "MINOR R1, the coupling on shore: the cells reach %.2f C, past the +59 C abort, the air %.2f C (was: the cell criteria met). The measure now serves the pack only; LO-01a's decision,"
         % (R["meas"]["a_input_worst"][1], R["meas"]["a_input_worst"][0]),
@@ -2138,8 +2217,772 @@ def predicates(R):
     p["P15 U2's chosen variant's lowest trip clears every required level's peak"] = cm["u2lo"][cm["u2_pick"]] > cm["clear"]
     p["P16 the recommended margins are positive at the conditioned corner"] = all(v[k] > 0 for v in cm["m2"].values() for k in ("m_limit", "m_h1", "m_u2") if k in v)
     p["P17 the primary battery is a proposal, not adopted"] = all("not adopted" in r["route"] for d in dec.values() for r in d["routes"] if "primary battery" in r["route"])
+    u = R["u01"]
+    p["P18 U-01: every charge row's set current is within the page's band and the drawn limit"] = all(r["i_set"] <= min(r["i_page_pack"], u["i_draw"]) + 1e-12 for r in u["rows_chg"])
+    p["P19 U-01: each drafted charge threshold sits inside its band's edge by today's margin"] = (u["draft"]["UTC"] > u["hp"]["bands"][0][0] and u["draft"]["T2"] > u["hp"]["bands"][1][0]
+        and u["draft"]["T5"] > u["hp"]["bands"][2][0] and u["draft"]["OTC"] < u["hp"]["bands"][2][1])
+    p["P20 U-01: the energy chain reproduces the replay's 35E figures before it is applied to the proposed cell"] = (round(u["e35"]["25"], 1) == u["rep"][0] and round(u["e35"]["m10"], 1) == u["rep"][1])
+    p["P21 U-01: the idle-limit thresholds order E3-O's cells, E3-S, E5's cells and E5 with H1 idle"] = u["thr"]["e3o_cells"] < u["thr"]["e3s"] < u["thr"]["e5_cells"] < u["thr"]["e5_noact"]
+    c = R["u01c"]
+    verdicts = [d["charge"][0] for d in c["suit"].values()] + [v for d in c["suit"].values() for v, _ in d["discharge"] + d["storage"]]
+    p["P22 U-01: every mode's verdict is one of the three"] = all(v in (SUIT_PUB, SUIT_VENDOR, UNSUIT) for v in verdicts)
+    p["P23 U-01: the room is read in the chosen column and moved down"] = R["rows_cm"]["M5"] < R["rows_cm_old"]["M5"] and R["spare_L"][1] < R["spare_L_old"]
+    p["P24 U-01: the 35E holds no hot row on the bound, LO-01a's complete pass and LO-01e lie over it for every cell"] = (
+        not any(v for row in c["holds"]["35E"].values() for v in row.values())
+        and all(not c["holds"][cell]["LO-01a"]["complete pass (the SGP41's air, common)"] for cell in c["holds"])
+        and all(not v for cell in c["holds"] for v in c["holds"][cell]["LO-01e"].values()))
+    p["P26 U-01: with the MP 176065 xtd LO-01d's cell limit and no-hot-stop line hold on the bound"] = (c["holds"]["MP 176065 xtd"]["LO-01d"]["cell limit"]
+        and c["holds"]["MP 176065 xtd"]["LO-01d"]["no hot stop"])
+    p["P25 U-01: the Saft cells' growth along the axis needs a thinner wrap than the 35E block's"] = 0 < c["fit"]["wrap_left"] < c["fit"]["wrap_35"]
+    pc = R["packcmp"]
+    p["P27 the comparison: one chain reproduces the replay's 35E figures and section 10's Saft figure"] = (round(pc["e"]["35E"][20.0]["wh"], 1) == pc["rep"][0]
+        and abs(pc["e"]["Saft a typ"][20.0]["wh"] - R["u01c"]["e_sx"]["typical"]["wh"]) < 1e-9)
+    p["P28 the comparison: the nominal steps multiply to the nominal ratio"] = abs(pc["steps"]["count"] * pc["steps"]["capacity"] * pc["steps"]["voltage"] - pc["nomsx"] / pc["nom35"]) < 1e-12
+    p["P29 the comparison: the same-C-rate mapping gives the Saft no less than the same-current mapping"] = all(
+        pc["e"]["Saft b %s" % k][20.0]["wh"] >= pc["e"]["Saft a %s" % k][20.0]["wh"] for k in ("typ", "min"))
     p["P12 the screen maps every TEST-PLAN exposure of sections 6 and 7 it covers"] = all(any(t in (r["cond"] + r["dur"]) for r in R["screen"]) for t in ("E3-A", "E3-L", "E3-H", "E3-O", "E3-S", "E3-T", "E3-P", "E4-O", "E4-S", "E4-T", "E4-P", "E5", "P13"))
     return p
+
+
+# ------------------------------------------------------------------------------------------------ 9: U-01 by mode (2 October 2026)
+def u01(R, pb):
+    """The dependency round of 2 October 2026 (the owner: charging, discharging and storage limits established separately
+    with their conditions; usable energy and charging constraints for the proposed cell). Nothing here is adopted."""
+    S = R["S"]
+    lim = S["35E_11"]
+    tw = json.load(open(path(TOPWELL), encoding="utf-8"))
+    t = tw["specification_table_verbatim"]
+    hp = {}
+    m = need(t, r"Nominal Capacity (\d+)mAh \(Min\. (\d+)mAh\) @0\.2C standard charge&discharge", "HL18650V capacity")
+    hp["c_typ"], hp["c_min"] = float(m.group(1)) / 1000.0, float(m.group(2)) / 1000.0
+    hp["std_chg"] = float(need(t, r"Standard Charge Current (\d\.\d+)A", "HL18650V standard charge").group(1))
+    hp["max_chg"] = float(need(t, r"Max Continuous Charge Current (\d\.\d+)A", "HL18650V charge current").group(1))
+    hp["max_dis"] = float(need(t, r"Max Continuous Discharge Current (\d+)A", "HL18650V discharge current").group(1))
+    hp["v_chg"] = float(need(t, r"Charge Cut-off Voltage (\d\.\d+)V", "HL18650V charge voltage").group(1))
+    hp["v_cut"] = float(need(t, r"Discharge Cut-off Voltage (\d\.\d+)V", "HL18650V end voltage").group(1))
+    hp["method"] = need(t, r"Charge Method (CC/CV)", "HL18650V charge method").group(1)
+    hp["ir"] = float(need(t, r"Internal Resistance ≤(\d+)mΩ", "HL18650V resistance").group(1))
+    hp["g"] = float(need(t, r"Weight Approx\. (\d+)g", "HL18650V mass").group(1))
+    hp["cycles"] = int(need(t, r"Cycle Life ≥(\d+) times", "HL18650V cycles").group(1))
+    hp["chg_head"] = tuple(float(v) for v in need(t, r"Charge: (-\d+) ~(\d+)℃", "HL18650V charge headline").groups())
+    g = need(t, r"Charge: -\d+ ~\d+℃ (-\d+) (-\d+)＜T≤", "HL18650V cold charge row")
+    hp["garbled"] = (float(g.group(1)), float(g.group(2)))      # the row as printed: "-20 -10＜T≤0℃"
+    hp["bands"] = [(float(a), float(b), float(c), float(v)) for a, b, c, v in
+                   re.findall(r"(-?\d+)＜T[≤＜](-?\d+)℃: (\d\.\d)C to (\d\.\d)V", t)]
+    hp["dis_head"] = tuple(float(v) for v in need(t, r"Discharge: (-\d+)~(\d+)℃", "HL18650V discharge headline").groups())
+    hp["ends"] = [(float(a), float(b), float(v)) for a, b, v in re.findall(r"(-?\d+)[＜≤]T[≤＜](-?\d+)℃: (\d\.\d+)V", t)]
+    hp["storage"] = [(float(a), float(b), (int(mo) * 30 if mo else int(dd)), ("%s months" % mo) if mo else ("within %s days" % dd))
+                     for a, b, mo, dd in re.findall(r"(-\d+)~(\d+) ?℃ (?:0 - (\d+) months|Within (\d+) days)", t)]
+    if [b[:2] for b in hp["bands"]] != [(-10.0, 0.0), (0.0, 10.0), (10.0, 60.0)] or len(hp["ends"]) != 3 or len(hp["storage"]) != 4:
+        refuse(4, "the HL18650V page's rows did not read as expected: %s %s %s" % (hp["bands"], hp["ends"], hp["storage"]))
+    hp["c_basis"] = hp["std_chg"] / 0.2
+    if abs(hp["c_basis"] - hp["c_min"]) > 1e-9 or abs(hp["max_chg"] / 0.5 - hp["c_min"]) > 1e-9:
+        refuse(4, "the page's C basis is not its minimum capacity")
+    n_s, n_p = 4, 3
+    # signed comparables (context only): Samsung's 30Q6 (2020) and 30Q (2015) specifications, Molicel's P28A data sheet
+    s6t = pdf(S30Q6)
+    cmp6 = {"cold": dict((float(k), float(v) / 100.0) for k, v in zip(
+                re.search(r"23°C\s+(-20)℃\s+(-10)℃\s+(0)℃\s+(23)℃\s+(60)℃", s6t).groups(),
+                need(s6t, r"Relative Capacity\s+(\d+)%\s+(\d+)%\s+(\d+)%\s+(\d+)%\s+(\d+)%", "30Q6 7.6").groups())),
+            "full_storage": (int(need(s6t, r"Storage : (\d+) days \(@ (\d+)℃\)", "30Q6 3.11").group(1)), float(need(s6t, r"Storage : (\d+) days \(@ (\d+)℃\)", "30Q6 3.11").group(2)),
+                             need(s6t, r"Capacity recovery\(after the storage\) ≥ ([\d,]+)mAh\s+\((\d+)% of the rated capacity", "30Q6 recovery").groups()),
+            "release": need(s6t, r"\(must re-discharge release < (\d+)℃\)", "30Q6 release").group(1)}
+    s15t = pdf(S30Q)
+    cmp15 = {"rec": need(s15t, r"Recovery (\d+)% after storage", "30Q 2015 recovery").group(1)}
+    mp = S["P28A"]
+    mpt = pdf(MP28A)
+    comps = {"30Q6": {"doc": S["30Q6"]["doc"], "kind": "MAKER, signed specification", "surf_dis": S["30Q6"]["surf_discharge"], "amb_chg": S["30Q6"]["amb_charge"],
+                      "st_1m": S["30Q6"]["st_1m"], "soc": S["30Q6"]["soc"], "cold": cmp6["cold"], "full": cmp6["full_storage"], "release": cmp6["release"]},
+             "30Q_2015": {"doc": S["30Q_2015"]["doc"], "kind": "MAKER, signed specification", "surf_dis": S["30Q_2015"]["surf_discharge"],
+                          "st_1m": S["30Q_2015"]["st_1m"], "soc": S["30Q_2015"]["soc"], "rec": cmp15["rec"]},
+             "P28A": {"doc": mp["doc"], "kind": "MAKER, a data sheet 'for reference only', not signed", "charge": mp["charge"], "discharge": mp["discharge"],
+                      "ref_only": bool(re.search(r"for reference only", mpt))}}
+    # what no signed comparable reaches: charge below 0 C, storage above +60 C, storage below -30 C
+    signed_st_top = max(comps["30Q6"]["st_1m"][1], comps["30Q_2015"]["st_1m"][1])
+    signed_st_floor = min(comps["30Q6"]["st_1m"][0], comps["30Q_2015"]["st_1m"][0])
+    signed_chg_floor = min(comps["30Q6"]["amb_chg"][0], comps["P28A"]["charge"][0])
+    beyond = {"charge below %.0f C" % signed_chg_floor: hp["bands"][0][0] < signed_chg_floor,
+              "storage above %+.0f C" % signed_st_top: max(r[1] for r in hp["storage"]) > signed_st_top,
+              "storage below %.0f C" % signed_st_floor: min(r[0] for r in hp["storage"]) < signed_st_floor}
+
+    # ---- 2. charging constraints with the drawn charger (BQ25731) and the pack's gauge (BQ4050): drafts, never applied
+    css = text(CSS)
+    chg = {"strap_v": float(need(css, r"4S defaults \| ChargeVoltage (\d+\.\d+) V", "BQ25731 4S default").group(1)),
+           "batovp_pct": float(need(css, r"BATOVP at (\d+) % of ChargeVoltage", "BQ25731 BATOVP").group(1)),
+           "clamp": (float(need(css, r"below VSYS_MIN \((\d+\.\d) V for 4S\) charge current is clamped at (\d+) mA", "BQ25731 clamp").group(1)),
+                     float(need(css, r"below VSYS_MIN \((\d+\.\d) V for 4S\) charge current is clamped at (\d+) mA", "BQ25731 clamp").group(2)) / 1000.0),
+           "no_ts": bool(re.search(r"no cell temperature input", css)),
+           "host_term": bool(re.search(r"host terminates charge by setting CHRG_INHIBIT", css))}
+    tc = text(TC)
+    lad = R["ladder"]
+    lad_now = {"UTC": lad["UTC"], "UTC_rec": float(need(tc, r"1\.0 C, 2 s, recovery (\d+\.\d) C; T1 (\d+) C", "UTC recovery").group(1)),
+               "T1": float(need(tc, r"1\.0 C, 2 s, recovery (\d+\.\d) C; T1 (\d+) C", "T1").group(2)),
+               "T3": float(need(tc, r"charge inhibit at T3 .*?\| (\d+) C \(integer\)", "T3", re.M).group(1)),
+               "T4": float(need(tc, r"charge suspend at T4 .*?\| (\d+) C \(integer\)", "T4", re.M).group(1)),
+               "OTC": lad["OTC"], "L3": float(need(tc, r"panel and bridge hold on charge below \+(\d+) C", "L3 hold").group(1))}
+    trm = pdf(TRM)
+    taper_default = float(need(trm, r"Charge Term Taper Current\s+0\s+32767\s+(\d+)\s+mA", "Charge Term Taper Current").group(1))
+    ranges_ok = all(re.search(r"14\.4\.1\.\d %s Temp" % k, trm) for k in ("T1", "T2", "T5", "T6", "T3", "T4"))
+    floor_leg = hp["bands"][0][0]                     # the legible lower bound of the coldest charge row
+    off_utc = lad_now["UTC"] - lim["charge"][0]       # today's UTC sits this far inside the 35E's 0 C
+    draft = {"UTC": floor_leg + off_utc, "UTC_rec": floor_leg + off_utc + (lad_now["UTC_rec"] - lad_now["UTC"]),
+             "T1": floor_leg + off_utc, "T2": hp["bands"][1][0] + off_utc, "T5": hp["bands"][2][0] + off_utc,
+             "T3": lad_now["T3"], "T4": lad_now["T4"], "OTC": lad_now["OTC"],
+             "L3": floor_leg + lad_now["L3"], "CUV": hp["v_cut"]}
+    i_draw = pb.ICHG
+    rows_chg = []
+    for (lo, hi, crate, v), rng in zip(hp["bands"], ("Low Temp (T1 to T2)", "Standard Temp low (T2 to T5)", "Recommended and Standard Temp high (T5 to T3)")):
+        i_pack = crate * hp["c_basis"] * n_p
+        rows_chg.append({"band": (lo, hi), "range": rng, "crate": crate, "v_cell": v, "v_pack": v * n_s, "i_page_pack": i_pack,
+                         "i_set": min(i_pack, i_draw), "batovp": v * n_s * chg["batovp_pct"] / 100.0})
+    crate_drawn = i_draw / n_p / hp["c_basis"]
+    # ---- 3. usable energy, not nameplate: the tree's energy chain (records/energy, the chain behind L4-E9's 107.9 Wh)
+    sp = importlib.util.spec_from_file_location("energy_budget_l4e10", path(EB_PY))
+    eb = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(eb)
+    import yaml
+    d_in = yaml.safe_load(open(path(EB_IN), encoding="utf-8"))
+    pk = eb.Pack(d_in)
+    p = float(d_in["model_states"]["PS-IDLE-SPEC"]["plan"])
+    rp = need(text(REPLAY), r"A1 D-06's 4S3P: usable ([\d.]+) Wh at \+20 C, ([\d.]+) Wh at -10 C: ([\d.]+) h and ([\d.]+) h", "the replay's A1 line")
+    rep = tuple(float(v) for v in rp.groups())
+    cell_warm = R["b"]["cell"]
+    e35 = {"25": pk.usable_wh(p, 25.0, pk.age80)[0], "m10": pk.usable_wh(p, -10.0, pk.age80)[0], "warm": pk.usable_wh(p, cell_warm, pk.age80)[0]}
+    if round(e35["25"], 1) != rep[0] or round(e35["m10"], 1) != rep[1]:
+        refuse(4, "the energy chain does not reproduce the replay's A1 line: %.2f and %.2f against %s" % (e35["25"], e35["m10"], rep[:2]))
+    pkh = eb.Pack(d_in)
+    pkh.c_min = hp["c_min"]
+    e_hl25, k_hl = pkh.usable_wh(p, 25.0, pkh.age80)
+    f35m10 = eb.interp(pk.temp, -10.0)
+    c6 = comps["30Q6"]["cold"]
+    f6_warm = c6[-10.0] + (c6[0.0] - c6[-10.0]) * (cell_warm - (-10.0)) / 10.0
+    brackets = {"warm": (eb.interp(pk.temp, cell_warm), f6_warm), "cold": (f35m10, c6[-20.0])}
+    e_hl = {"25": e_hl25, "warm": tuple(e_hl25 * f for f in brackets["warm"]), "cold": tuple(e_hl25 * f for f in brackets["cold"])}
+    # the heater at the cold end: the 35E needs it only to stay above its discharge floor; the HL18650V's rows need none, and
+    # a warm-up of a cold-soaked block toward its charge bands comes out of usable energy when the pack feeds it
+    sh = R["selfheat"]
+    c_hl = tuple(c * cm_w for c, cm_w in zip(R["blk"]["C"], (R["cmp"]["whl"] / R["cmp"]["w35"],) * 2))
+    p_cells, p_loss = R["mat_split"]
+    p_pack = R["heat_reg"]
+    t_amb = float(R["env"]["in_use"]["min"])
+    warm = {}
+    for tgt_name, tgt in (("T1", draft["T1"]), ("T2", draft["T2"]), ("T5", draft["T5"])):
+        for corner, (cc_, gg) in (("low", (c_hl[0], sh["g_series"][0])), ("high", (c_hl[1], sh["g_series"][1]))):
+            dT = tgt - t_amb
+            if dT * gg < p_cells:
+                t_s = -(cc_ / gg) * math.log(1.0 - dT * gg / p_cells)
+                warm[(tgt_name, corner)] = {"h": t_s / 3600.0, "wh": p_pack * t_s / 3600.0, "reach": True}
+            else:
+                warm[(tgt_name, corner)] = {"h": None, "wh": None, "reach": False, "ceiling": t_amb + p_cells / gg}
+    h35 = {"p_coupled": R["cold"]["p_h_batt"], "wh_coupled": R["cold"]["p_h_batt"] * e35["m10"] / (p + R["cold"]["p_h_batt"])}
+    objective = (48.0 * p, 72.0 * p)
+    l9 = text(L4E9)
+    l9m = need(l9, r"\*\*Under U-01's recommended cell\*\* \(CONDITIONAL, not taken\): usable ([\d.]+) Wh against the 35E's ([\d.]+) Wh \(([\d.]+) % less\), ([\d.]+) h\s+against ([\d.]+) h battery-only", "L4-E9's U-01 bullet", re.M)
+    l9g = need(l9, r"storage shortfall above grows by at most ([\d.]+) Wh", "L4-E9's shortfall growth")
+    l9_fig = {"usable": float(l9m.group(1)), "e35": float(l9m.group(2)), "pct": float(l9m.group(3)), "h": float(l9m.group(4)), "h35": float(l9m.group(5)),
+              "grow": float(l9g.group(1))}
+    # ---- 4. what the signed specification would change: thresholds from the conditioned corner (3o, 4d)
+    cc = R["condc"]
+    off_h1 = lim["discharge"][1] - R["hot"]["H1"] + R["hot"]["terms"]["thermistor interchangeability"]
+    thr = {"e5_noact": cc["e5_peak"] + off_h1, "e5_cells": cc["e5_peak"], "e3o_noshut": cc["e3o_peak"] + off_h1, "e3s": R["f"]["amb"],
+           "e3o_cells": cc["e3o_peak"], "floor": R["g"]["amb"], "crate": crate_drawn, "i_cell": R["kd"]["i_cell"], "graceful": d_in["pack"]["end_of_discharge"]["graceful"]["cell_v_under_load"],
+           "per_100mah": e_hl25 / hp["c_min"] * 0.1}
+    return {"hp": hp, "comps": comps, "beyond": beyond, "chg": chg, "lad_now": lad_now, "taper_default": taper_default, "ranges_ok": ranges_ok,
+            "draft": draft, "rows_chg": rows_chg, "crate_drawn": crate_drawn, "i_draw": i_draw, "p": p, "rep": rep, "e35": e35, "e_hl": e_hl,
+            "k_hl": k_hl, "brackets": brackets, "cell_warm": cell_warm, "c_hl": c_hl, "warm": warm, "h35": h35, "objective": objective,
+            "l9": l9_fig, "thr": thr, "age": pk.age80, "n": (n_s, n_p), "p_pack_heat": p_pack, "p_cells_heat": p_cells, "t_amb": t_amb,
+            "graceful": thr["graceful"], "cuv_now": d_in["pack"]["end_of_discharge"]["protection_cuv_v"]["value"],
+            "draft_q": [int(n) for n in re.findall(r"^(\d+)\. ", text(CL_TW), re.M)]}
+
+
+def u01_lines(R):
+    u = R["u01"]
+    hp, cm_, dr, ln = u["hp"], u["comps"], u["draft"], u["lad_now"]
+    n_s, n_p = u["n"]
+    L = []
+    w = L.append
+    w("== 9. U-01 BY MODE: the HL18650V class's limits established separately, the charging constraints, usable energy (the dependency round of 2 October 2026)")
+    w("Classes here: MAKER (a maker's signed document or a maker's datasheet), MAKER-PAGE (a maker's product page: no signature, no test conditions), INFERRED")
+    w("(computed, method stated), ASSUMPTION (a figure no held document gives), SESSION (a draft setting chosen here). No cell is adopted; every setting is a draft.")
+    w("")
+    w("9a The limits by mode (the HL18650V's own rows: Yichun Topwell Power's product page, MAKER-PAGE, `inputs/topwell-hl18650v-page-2026-10-01.json`):")
+    b0, b1, b2 = hp["bands"]
+    e0, e1, e2 = hp["ends"]
+    rows = [
+        ("CHARGE window", "%.0f to %.0f C" % hp["chg_head"], "basis (cell surface or ambient) not stated; no state of charge", "MAKER-PAGE (headline)",
+         "the basis, and whether the window's low end holds at every state of charge"),
+        ("CHARGE, coldest row", "%.1fC (%.2f A a cell) to %.1f V" % (b0[2], b0[2] * hp["c_basis"], b0[3]),
+         "printed '%.0f %.0f<T<=%.0f C': legible from %.0f C; whether %.0f to %.0f C may charge is not legible" % (hp["garbled"][0], hp["garbled"][1], b0[1], b0[0], hp["garbled"][0], b0[0]),
+         "MAKER-PAGE (row garbled)", "the band's lower edge, its current and voltage"),
+        ("CHARGE, middle row", "%.1fC (%.2f A a cell) to %.1f V" % (b1[2], b1[2] * hp["c_basis"], b1[3]), "%.0f < T <= %.0f C; C taken on the %.2f Ah minimum (%.2f A = 0.2C)" % (b1[0], b1[1], hp["c_min"], hp["std_chg"]),
+         "MAKER-PAGE", "the temperature basis"),
+        ("CHARGE, warm row", "%.1fC (%.2f A a cell, the page's maximum continuous charge) to %.1f V" % (b2[2], hp["max_chg"], b2[3]), "%.0f < T < %.0f C; no derating toward the hot end stated" % (b2[0], b2[1]),
+         "MAKER-PAGE", "any derating or time limit at 4.2 V above 45 C"),
+        ("CHARGE method and end", "%s to %.1f V; termination current not stated; standard charge %.2f A" % (hp["method"], hp["v_chg"], hp["std_chg"]), "none stated", "MAKER-PAGE (termination absent)",
+         "the termination current at 4.2 V and at 4.1 V"),
+        ("DISCHARGE window", "%.0f to %.0f C" % hp["dis_head"], "basis not stated; no current stated with it", "MAKER-PAGE (headline)", "the basis, and the current at which the ends of the window hold"),
+        ("DISCHARGE end voltage", "%.2f V (%.0f to %.0f C), %.2f V (%.0f to %.0f C), %.2f V (%.0f to %.0f C)" % (e0[2], e0[0], e0[1], e1[2], e1[0], e1[1], e2[2], e2[0], e2[1]),
+         "by temperature; the current not stated", "MAKER-PAGE", "the current behind each end voltage"),
+        ("DISCHARGE current", "%.0f A continuous; pulse not stated" % hp["max_dis"], "no temperature or duration stated", "MAKER-PAGE (pulse absent)",
+         "the pulse current and duration; any derating with temperature"),
+        ("DISCHARGE capacity", "%.2f Ah typical, %.2f Ah minimum at 0.2C" % (hp["c_typ"], hp["c_min"]), "temperature not stated (taken as the standard condition); none at the cold end", "MAKER-PAGE (cold capacity absent)",
+         "the capacity at -20 and -40 C at 0.2C and 0.5C to the stated end voltages"),
+        ("STORAGE", "; ".join("%.0f to %.0f C %s" % (a, b, lab) for a, b, _, lab in hp["storage"]), "state of charge, recovery and self-discharge not stated", "MAKER-PAGE",
+         "the state of charge of each row, the recovery after it, the self-discharge rate"),
+        ("REST at high charge, hot", "not stated", "the kit on an input in E3-O and E5 holds the pack up to its charge", "none (not on the page)",
+         "the recovery after E5's ten cycles and E3-O's 4 h at the kit's state of charge"),
+        ("OTHER", "internal resistance at most %.0f mOhm; about %.0f g; at least %d cycles (25 C, 0.5C / 1C), no end-of-life capacity" % (hp["ir"], hp["g"], hp["cycles"]), "the page's own figures, conditions as printed", "MAKER-PAGE",
+         "the end-of-life capacity after the stated cycles"),
+    ]
+    for r in rows:
+        w("   %-26s %s" % (r[0], r[1]))
+        w("   %-26s condition: %s; class %s; the signed specification must confirm: %s" % ("", r[2], r[3], r[4]))
+    w("   Comparable 18650s with makers' own sheets (context only, never a substitute for the HL18650V's figures):")
+    c6, c15, c28 = cm_["30Q6"], cm_["30Q_2015"], cm_["P28A"]
+    w("   - %s (%s): surface discharge %.0f to %.0f C (released under %s C), ambient charge %.0f to %.0f C, storage 1 month %.0f to %.0f C at %s;"
+      % (c6["doc"].split(",")[0], c6["kind"], c6["surf_dis"][0], c6["surf_dis"][1], c6["release"], c6["amb_chg"][0], c6["amb_chg"][1], c6["st_1m"][0], c6["st_1m"][1], c6["soc"]))
+    w("     capacity at 10 A: %s; full charge stored %d days at %.0f C, recovery at least %s mAh (%s %% of rated)."
+      % (", ".join("%.0f %% at %.0f C" % (100 * v, k) for k, v in sorted(c6["cold"].items())), c6["full"][0], c6["full"][1], c6["full"][2][0], c6["full"][2][1]))
+    w("   - %s (%s): surface discharge %.0f to %.0f C; storage 1 month %.0f to %.0f C at %s, recovery %s %%."
+      % (c15["doc"].split(",")[0], c15["kind"], c15["surf_dis"][0], c15["surf_dis"][1], c15["st_1m"][0], c15["st_1m"][1], c15["soc"], c15["rec"]))
+    w("   - %s (%s: %s): ambient charge %.0f to %.0f C, discharge %.0f to %.0f C; no storage clause."
+      % (c28["doc"].split(",")[0], c28["kind"], c28["ref_only"], c28["charge"][0], c28["charge"][1], c28["discharge"][0], c28["discharge"][1]))
+    w("   So signed sheets reach a surface discharge of +80 C, storage to -30 C and a cold discharge to -40 C; the page's rows beyond every comparable: %s."
+      % ", ".join("%s (%s)" % (k, v) for k, v in u["beyond"].items()))
+    w("   Those rows are the ones most exposed to a narrower signed figure.")
+    w("")
+    w("9b The charging constraints in D-06's 4S3P with the drawn charger and the pack's gauge (drafts, never applied):")
+    ch = u["chg"]
+    w("   The BQ25731 has no cell temperature input (%s) and ends a charge only on the host's word (%s); its 4S strap is %.3f V and BATOVP is %.0f %% of"
+      % (ch["no_ts"], ch["host_term"], ch["strap_v"], ch["batovp_pct"]))
+    w("   ChargeVoltage (MAKER, SLUSE66A via `review-packets/battery/CHARGER-STATE-SEQUENCE.md`). The windows are the gauge's: the BQ4050's ranges T1, T2, T5, T6, T3, T4 (%s)"
+      % u["ranges_ok"])
+    w("   set ChargingCurrent() and ChargingVoltage() per range and hold the charge FET off below UTC (MAKER, SLUUAQ3A 14.4, 2.11); the host relays them to the charger.")
+    w("   Today: UTC %.1f C (recovery %.1f C), T1 %.0f C, T3 %.0f C, T4 %.0f C, OTC %.1f C, the kit's hold below %+.0f C (THERMAL-COORDINATION.md section 4)."
+      % (ln["UTC"], ln["UTC_rec"], ln["T1"], ln["T3"], ln["T4"], ln["OTC"], ln["L3"]))
+    w("   Draft for the HL18650V class (SESSION; each threshold kept today's %.1f K inside its band edge, as UTC sits inside the 35E's 0 C):" % (ln["UTC"] - 0.0))
+    for r in u["rows_chg"]:
+        w("   CH %-46s %.0f to %.0f C (page): %.1fC = %.2f A for the pack, set %.2f A; %.2f V a cell = %.2f V (BATOVP %.2f V)"
+          % (r["range"], r["band"][0], r["band"][1], r["crate"], r["i_page_pack"], r["i_set"], r["v_cell"], r["v_pack"], r["batovp"]))
+    w("   CH thresholds: UTC %.1f C (recovery %.1f C), T1 %.0f C, T2 %.0f C, T5 %.0f C; T3 %.0f C, T4 %.0f C and OTC %.1f C kept (SESSION: inside the page's +60 C, for cell"
+      % (dr["UTC"], dr["UTC_rec"], dr["T1"], dr["T2"], dr["T5"], dr["T3"], dr["T4"], dr["OTC"]))
+    w("      life; reversed by the signed charge rows); the kit's hold below %+.0f C; the gauge's CUV from %.2f V to %.2f V a cell (the page's end above 0 C; the"
+      % (dr["L3"], u["cuv_now"], dr["CUV"]))
+    w("      kit's graceful line at %.2f V under load acts first); the termination current: none on the page, TI's default %.0f mA kept (ASSUMPTION)."
+      % (u["graceful"], u["taper_default"]))
+    w("   The drawn %.1f A is %.3fC a cell, inside the page's 0.5C from %+.0f C; below it the gauge's range must lower the set current as above." % (u["i_draw"], u["crate_drawn"], u["rows_chg"][2]["band"][0]))
+    w("   Below the cold charge limit no charge starts (UTC holds the charge FET; the host starts none). The mat (U22 on VBAT = VSYS) warms the block first:")
+    w("   on battery it is a discharge load under the cells' discharge rows, so its energy comes out of usable energy (9c); with an input and the charge FET")
+    w("   off it is fed through VSYS by the source, CONDITIONAL on U-04's VSYS regulation (L4-E11). The 35E cannot feed it below UTD's %.1f C reading" % R["ladder"]["UTD"])
+    w("   (its discharge FET is off); the HL18650V's page lets the pack feed it down to %.0f C." % hp["dis_head"][0])
+    w("")
+    w("9c Usable energy, not nameplate (the tree's energy chain `records/energy/energy_budget.py`, the chain behind L4-E9's battery-only figure; PS-IDLE-SPEC %.1f W," % u["p"])
+    w("   the run ending at the graceful line of %.2f V a cell under load, which acts before either cell's end voltage; ageing %.2f):" % (u["graceful"], u["age"]))
+    e35, eh = u["e35"], u["e_hl"]
+    w("   Ageing %.2f (ASSUMPTION for the HL18650V): REQ-014 and SC-23's replacement point, the basis of the 35E's figure, so the two compare; the page gives %d cycles"
+      % (u["age"], hp["cycles"]))
+    w("   and no end-of-life capacity, and its hot rest at high charge is unstated (the 30Q6's signed full-charge row loses up to 20 % in 30 days at 60 C).")
+    w("   35E (D-06; the chain's inputs MAKER): %.1f Wh at +25 C (%.2f h), %.1f Wh with the cells at -10 C (%.2f h, the replay's %.1f / %.1f Wh reproduced), %.1f Wh at %.2f C"
+      % (e35["25"], e35["25"] / u["p"], e35["m10"], e35["m10"] / u["p"], u["rep"][0], u["rep"][1], e35["warm"], u["cell_warm"]))
+    w("      (LO-01b's cells at -20 C ambient with the kit's heat). Its heater: none at that corner; with the coupling fitted %.2f W from the pack (%.2f Wh over the run);"
+      % (u["h35"]["p_coupled"], u["h35"]["wh_coupled"]))
+    w("      a cold-soaked start is out of scope (D-02d): the pack cannot discharge below its floor.")
+    w("   HL18650V (II): %.1f Wh at +25 C (%.2f h; the chain with its %.2f Ah minimum and the 35E's rate, mean-voltage and end-fraction curves, ASSUMPTION:"
+      % (eh["25"], eh["25"] / u["p"], hp["c_min"]))
+    w("      the page gives none), %.1f %% less than the 35E. At the cold end the page states no capacity; context brackets (ASSUMPTION): with the cells at %.2f C,"
+      % (100 * (1 - eh["25"] / e35["25"]), u["cell_warm"]))
+    w("      %.1f to %.1f Wh (factor %.3f, the 35E's own at that temperature on the chain's line, to %.3f, the 30Q6's signed points at 10 A); a cold start at -20 C,"
+      % (eh["warm"][0], eh["warm"][1], u["brackets"]["warm"][0], u["brackets"]["warm"][1]))
+    w("      %.1f to %.1f Wh (%.4f, the 35E's own -10 C point taken as a floor, to %.3f, the 30Q6's at -20 C)."
+      % (eh["cold"][0], eh["cold"][1], u["brackets"]["cold"][0], u["brackets"]["cold"][1]))
+    w("      Its heater: none required by its rows. A warm-up of a cold-soaked block from %.0f C, the mat %.1f W into the cells and %.1f W at the pack, block %.0f to %.0f J/K"
+      % (u["t_amb"], u["p_cells_heat"], u["p_pack_heat"], u["c_hl"][0], u["c_hl"][1]))
+    w("      (the 35E's scaled by mass, ASSUMPTION), series path %.4f / %.4f W/K, taken from the pack and so out of usable energy:"
+      % R["selfheat"]["g_series"])
+    for tg in ("T1", "T2", "T5"):
+        lo_, hi_ = u["warm"][(tg, "low")], u["warm"][(tg, "high")]
+        f = lambda x: ("%.2f h, %.1f Wh" % (x["h"], x["wh"])) if x["reach"] else ("not reached (the mat alone stops at %.1f C)" % x["ceiling"])
+        w("      to %s (%+.0f C): %s at the low corner; %s at the high corner" % (tg, dr[tg], f(lo_), f(hi_)))
+    w("   The objective (REQ-072, 48 to 72 h at %.1f W): %.0f to %.0f Wh; both packs stay far under it (DR-01 FAIL either way)." % ((u["p"],) + u["objective"]))
+    l9 = u["l9"]
+    w("   Where they enter: L4-E9 section 10's U-01 bullet reads %.1f Wh against %.1f Wh (%.1f %% less), %.2f h against %.2f h (this record's first chain), and every"
+      % (l9["usable"], l9["e35"], l9["pct"], l9["h"], l9["h35"]))
+    w("      shortfall growing by at most %.1f Wh; this chain gives %.1f Wh, %.1f Wh less than the 35E's %.1f Wh, the same growth. REQ-014 takes the aged figure;"
+      % (l9["grow"], eh["25"], e35["25"] - eh["25"], e35["25"]))
+    w("      REQ-046 the charge rows of 9b and the discharge window with its end voltages; REQ-077 the idle limit of 9d (+80 C on the page). None is applied.")
+    w("")
+    w("9d What the signed specification would change (each row: confirmed / a narrower figure and the threshold where the architecture moves / no answer):")
+    th = u["thr"]
+    w("   Idle hot limit (the 30-day storage row, +80 C): confirmed, 4d's margins stand. Narrower: under %.2f C H1 acts in E5's dwell at the conditioned corner (E5's"
+      % th["e5_noact"])
+    w("      acceptance does not require it idle; INFERRED); under %.2f C E5's cells pass the limit; under %.2f C E3-O loses 'no shutdown'; under %.2f C E3-S fails;"
+      % (th["e5_cells"], th["e3o_noshut"], th["e3s"]))
+    w("      under %.2f C E3-O's cells pass it." % th["e3o_cells"])
+    w("      Fallback: E3-O and E5 to (I)'s cooler (8.18 to 35.21 W at the conditioned corner, INCONCLUSIVE); E3-S has no route within D-06's pocket: requirement change A")
+    w("      (the owner's: the margins shown with the pack out of the exposure; no spend, the kit not claimed at that level with its own pack).")
+    w("   Storage floor (the -40 C rows): confirmed to %.0f C or lower, LO-01g closes on the cell. Narrower than %.0f C: LO-01g falls back to (III)'s primary-fed heater"
+      % (th["floor"], th["floor"]))
+    w("      (added energy storage, 470 to 940 Wh, an owner's ruling under D-06) or requirement change A.")
+    w("   State of charge of the storage rows: at or above REQ-025's stored charge (%s), no change; only below it, the stored charge is restated (REQ-025, the owner's)"
+      % R["S"]["35E_11"]["soc"])
+    w("      or the row falls back as above.")
+    w("   Rest at high charge, hot: a loss within TEST-PLAN's recovery line, no change; beyond it, a High Temp range charging to 4.1 V a cell above T3 (SESSION lever,")
+    w("      the stored energy lower in the hot) or L4-E12's hold of the charge; not architecture-level.")
+    w("   Charge below 0 C: confirmed, the drafts of 9b; refused, T1 returns to +1 C and the mat comes first, as for the 35E today: no architecture effect.")
+    w("   Charge current from +10 C: at or above %.3fC, the drawn %.1f A stands; under it the set current falls and the solar day's stored energy with it (L4-E9's replay)."
+      % (th["crate"], u["i_draw"]))
+    w("   Continuous discharge: at or above %.1f A a cell (PS-ALLTX's 18 A), no change; under it D-06's 4S3P cannot carry PS-ALLTX with this cell: back to (I)." % th["i_cell"])
+    w("   End voltage: at or under the graceful %.2f V under load, no energy change; above it usable energy falls with the end fraction." % th["graceful"])
+    w("   Minimum capacity: %.2f Wh of usable energy per 100 mAh a cell (INFERRED); not architecture-level (DR-01 already FAIL)." % th["per_100mah"])
+    w("   Cold capacity, cycle life, basis: they move 9c's figures and the ageing allowance, not the architecture.")
+    w("   No answer: every row stays CONDITIONAL, the owner's second item cannot proceed, and U-01 stays a release gate (the existing state, needing no ruling).")
+    w("   The drafted request (`clarification/topwell-hl18650v.txt`, questions %s) gained 7 to 10 this round: the cold charge band and termination, the pulse"
+      % ", ".join(str(q) for q in u["draft_q"]))
+    w("      current, the cold capacity, the end-of-life capacity and self-discharge; 1, 2 and 6 already ask for the storage rows with their charge and recovery,")
+    w("      the basis with the rest at high charge, and the gauge's data.")
+    return L
+
+
+# ------------------------------------------------------------------------------------------------ 10: U-01, the consolidation (2 October 2026)
+SUIT_PUB, SUIT_VENDOR, UNSUIT = "SUITABLE ON PUBLISHED EVIDENCE", "SUITABLE ONLY WITH A VENDOR ANSWER", "UNSUITABLE ON PUBLISHED EVIDENCE"
+
+
+def u01c(R, pb):
+    """The owner's U-01 question of 2 October 2026: charge, discharge and storage suitability evaluated separately, usable
+    energy, whether published makers' specifications suffice, and the exact missing fact. Nothing is adopted."""
+    S, u = R["S"], R["u01"]
+    lim = S["35E_11"]
+    # ---- the conservative bound on the sealed case's conductance (U-02, L4-E12 at aab69775, read at its commit)
+    t12 = text(L4E12)
+    m5 = need(t12, r"E5\s+60 C, the air 10 K up: lid open (\d\.\d+) \(the other coefficient ends (\d\.\d+)\), lid closed (\d\.\d+)", "L4-E12 E5 bound")
+    m3 = need(t12, r"E3-O\s+55 C, the air 15 K up: lid open (\d\.\d+) \(the other coefficient ends (\d\.\d+)\), lid closed (\d\.\d+)", "L4-E12 E3-O bound")
+    me = need(t12, r"The envelope's \+40 C, the air 15 K up: lid open (\d\.\d+), lid closed (\d\.\d+)", "L4-E12 +40 C bound")
+    bound = {"E5": tuple(float(v) for v in m5.groups()), "E3-O": tuple(float(v) for v in m3.groups()), "+40": tuple(float(v) for v in me.groups())}
+    bands = [(float(a), float(r_), float(tg), lab.strip()) for a, r_, tg, lab in
+             re.findall(r"a reading of at least (\d\.\d+) W/K \((\d+\.\d) K rise\) meets (\d\.\d+) W/K: (.+)", t12)]
+    if len(bands) != 6:
+        refuse(4, "L4-E12's acceptance bands did not read as six rows: %s" % bands)
+    # ---- the conductance each row needs, per cell (lid open with the fans for E3-O and E5; LO-01a in both lid states)
+    qR, pR = R["heat"]["SURVR"]
+    gblk = pb.G_BLK[0]
+    t_use = float(R["env"]["in_use"]["max"])
+    hl = S["HL18650V"]
+    sx = R["saft"]
+    u2lo = R["cmp"]["u2lo"]["BQ7720704"]
+    off_h1 = lim["discharge"][1] - R["hot"]["H1"] + R["hot"]["terms"]["thermistor interchangeability"]
+    limits = {"35E": {"limit": lim["discharge"][1], "noact": lim["discharge"][1] - off_h1, "u2": None},
+              "HL18650V": {"limit": hl["st_30d"][1], "noact": hl["st_30d"][1] - off_h1, "u2": u2lo},
+              "MP 176065 xtd": {"limit": sx["st"][1], "noact": sx["st"][1] - off_h1, "u2": u2lo}}
+
+    def g_for(runf, limit, lo=0.2, hi=6.0):
+        if runf(hi) > limit:
+            return None
+        if runf(lo) <= limit:
+            return lo
+        for _ in range(26):
+            mid = (lo + hi) / 2.0
+            if runf(mid) > limit:
+                lo = mid
+            else:
+                hi = mid
+        return hi
+
+    need_g = {}
+    for cell, L_ in limits.items():
+        rows = {}
+        # LO-01a, steady on the pack at +40 C: the cells' own criterion, the binding protector, and the complete pass (the air's, common)
+        g_cell = lambda tl: (qR + pR) / (tl - t_use - pR / gblk)
+        rows["LO-01a"] = {"cell limit": g_cell(L_["limit"]), "no hot stop": g_cell(L_["noact"]),
+                          "U2 at today's network": (g_cell(L_["u2"]) if L_["u2"] else None), "complete pass (the SGP41's air, common)": R["gov"]["all"][4]}
+        for row, runf in (("LO-01d", R["run3g"]), ("LO-01e", R["run5g"])):
+            rows[row] = {"cell limit": g_for(runf, L_["limit"]), "no hot stop": g_for(runf, L_["noact"]),
+                         "U2 at today's network": (g_for(runf, L_["u2"]) if L_["u2"] else None)}
+        need_g[cell] = rows
+    peaks_bound = {"E3-O": R["run3g"](bound["E3-O"][0]), "E5": R["run5g"](bound["E5"][0])}
+    row_bound = {"LO-01a": (bound["+40"][1], "+40 C lid closed"), "LO-01d": (bound["E3-O"][0], "E3-O lid open"), "LO-01e": (bound["E5"][0], "E5 lid open")}
+    holds = {cell: {row: {k: (g is not None and g <= row_bound[row][0]) for k, g in crit.items()} for row, crit in rows.items()} for cell, rows in need_g.items()}
+    lid_open_a = {cell: {k: (g is not None and g <= bound["+40"][0]) for k, g in rows["LO-01a"].items()} for cell, rows in need_g.items()}
+    heat_I = sum(R["heat"]["IDLESPEC"])
+    cold_bound = -20.0 + heat_I / bound["+40"][0]
+    # the charge window at the bound: the highest ambient at which a running kit's cells sit under T3 (42 C) at PS-IDLE-SPEC
+    chg_ceiling = R["u01"]["lad_now"]["T3"] - heat_I / bound["+40"][0]
+    tau_kit_h = (R["C_kit"][1] / bound["E5"][2]) / 3600.0
+    lag24 = math.exp(-24.0 / tau_kit_h)
+    # ---- the candidates within the arrangement (a 4S pack in D-06's pocket, Li-ion at the 14.4 V class)
+    room = R["room"]
+    rc = R["rows_cm"]
+    design_room = {"axis": 2 * (rc["M5"] - 1.0), "across": (rc["M4b"] - 1.0) + (2.0 - 1.0), "height": rc["M6"] - 1.0}
+    base = (lim["dims"][1], lim["dims"][0])              # the 35E's length and diameter
+    fitA = {"axis": 2 * sx["h"] - 2 * base[0], "across": sx["w"] - 3 * base[1], "height": 2 * sx["t"] - 2 * base[1]}
+    fitB = {"axis": 2 * sx["w"] - 2 * base[0], "across": sx["h"] - 3 * base[1], "height": 2 * sx["t"] - 2 * base[1]}
+    wrap_35 = R["blk"]["Y"] * 1000.0 - 2 * base[0] if R["blk"]["Y"] < 1 else R["blk"]["Y"] - 2 * base[0]
+    wrap_left = (R["blk"]["Y"] * 1000.0 if R["blk"]["Y"] < 1 else R["blk"]["Y"]) + design_room["axis"] - 2 * sx["h"]
+    fit = {"A": fitA, "B": fitB, "design_room": design_room, "worst_room": dict(room), "wrap_35": wrap_35, "wrap_left": wrap_left,
+           "A_design": all(fitA[k] <= design_room[k] for k in fitA), "A_worst": all(fitA[k] <= room[k] for k in ("axis", "across", "height")),
+           "B_design": all(fitB[k] <= design_room[k] for k in fitB)}
+    # usable energy on the tree's chain: 4S1P at the sheet's typical capacity, and at an assumed minimum (the 35E's own minimum over typical)
+    import yaml
+    sp_ = importlib.util.spec_from_file_location("energy_budget_l4e10c", path(EB_PY))
+    eb = importlib.util.module_from_spec(sp_)
+    sp_.loader.exec_module(eb)
+    d_in = yaml.safe_load(open(path(EB_IN), encoding="utf-8"))
+    p = float(d_in["model_states"]["PS-IDLE-SPEC"]["plan"])
+    pks = eb.Pack(d_in)
+    typ_over = d_in["pack"]["capacity_min_ah"]["value"] / d_in["pack"]["capacity_typ_ah"]["value"]
+    e_sx = {}
+    for lab, c_ in (("typical", sx["c_typ"]), ("assumed minimum", sx["c_typ"] * typ_over)):
+        pks.c_min = c_
+        e_, k_ = pks.usable_wh(p, 25.0, pks.age80, n_p=1)
+        e_sx[lab] = {"c": c_, "wh": e_, "h": e_ / p, "i_cell": k_["i_cell"]}
+    i_alltx = pb.I_PEAK
+    price = json.load(open(path(PRICES2), encoding="utf-8"))
+    nz = float(need(price["verbatim"], r"\$ (\d+\.\d\d)", "Saft price").group(1))
+    cands = [
+        {"name": "Saft MP 176065 xtd (prismatic Li-ion, 4S1P)", "class": "MAKER datasheet (Doc. n 31109-2-0625, June 2025), held back",
+         "rows": "every cell limit row: charge -30 to +85 C, discharge -40 to +85 C, storage allowable -40 to +85 C",
+         "energy": "%.1f Wh nominal (typical); %.1f to %.1f Wh usable, %.2f to %.2f h" % (4 * sx["e_nom"], e_sx["assumed minimum"]["wh"], e_sx["typical"]["wh"], e_sx["assumed minimum"]["h"], e_sx["typical"]["h"]),
+         "fit": "not as the 35E block is built: along the axis +%.2f mm against %.2f mm as designed; only with at most %.2f mm of wrap and spacers there (the 35E block uses %.2f mm)" % (fitA["axis"], design_room["axis"], wrap_left, wrap_35),
+         "cost": "NZ$ %.2f a cell (a distributor's listing archived in January 2025), NZ$ %.2f for four" % (nz, 4 * nz),
+         "downstream": "D-06 restated (the cell, 4S1P prismatic, about %.0f Wh nominal); REQ-046 and REQ-077's cell-derived numbers; U2 to the 83 C variant and the ladder under +85 C; the gauge's 1P data; a prismatic holder; the charger's 16.8 V and the CUV's 2.50 V unchanged" % (4 * sx["e_nom"])},
+        {"name": "Yichun Topwell Power HL18650V (18650 Li-ion, 4S3P)", "class": "MAKER-PAGE (a product page)",
+         "rows": "every row on the page, none on a specification", "energy": "121.0 Wh nominal; %.1f Wh usable, %.2f h" % (u["e_hl"]["25"], u["e_hl"]["25"] / p),
+         "fit": "+0.50 mm along the axis against 0.77 mm at the worst stack", "cost": "USD %.2f a cell (a marketplace seller), about USD %.0f a pack" % (R["price_hl"], 12 * R["price_hl"]),
+         "downstream": "D-06 restated (about 121 Wh); REQ-046 and REQ-077; U2, the ladder, the gauge's data and cold ranges (section 9)"},
+        {"name": "Lithium Werks APR18650M1B (18650 LiFePO4, 4S3P)", "class": "MAKER product page",
+         "rows": "LO-01g only (storage -40 to 70 C); not +71 C, not E3-O or E5 (discharge to 60 C)", "energy": "%.1f Wh nominal" % R["beyond"]["lfp"]["pack_wh_nom"],
+         "fit": "the 18650 block", "cost": "not read", "downstream": "a 13.2 V class pack: the charger, the gauge and U2 changed (outside the 14.4 V class: a proposal, not a candidate)"},
+    ]
+    # ---- suitability by mode
+    suit = {
+        "35E": {"doc": "Samsung INR18650-35E Ver. 1.1 (MAKER, filed)",
+                "charge": (SUIT_PUB, "LO-01c (REQ-046's 0 to 45 C at the surface, Ver. 1.1 3.12) and the cold charge (REQ-046: below 0 C the mat warms the pack first; C09, the cells to 12.44 C)"),
+                "discharge": [(SUIT_PUB, "LO-01a (+40 C in use, D-02) and LO-01b (-20 C once warm, D-02d) against -10 to +60 C"),
+                              (UNSUIT, "LO-01d (+55 C, D-02a, TEST-PLAN E3-O): the cells reach %.2f to %.2f C, over +60 C at every corner" % (R["pcm_res"]["best"]["e3o_peak_none"], R["pcm_res"]["worst"]["e3o_peak_none"]))],
+                "storage": [(SUIT_PUB, "LO-01h (D-02, REQ-025: 3 months -20 to +45 C, a year -20 to +25 C) and E3-T's +58 C (1 month to 60 C at 30 %)"),
+                            (UNSUIT, "LO-01f (+71 C, D-02a, E3-S), LO-01g (-33 C, D-02a, E4-S) and LO-01e (E5's dwell, SC-03: the idle pack %.2f C at the conditioned corner) against 1 month -20 to +60 C" % R["condc"]["e5_peak"])]},
+        "HL18650V": {"doc": "Yichun Topwell Power's product page (MAKER-PAGE)",
+                     "charge": (SUIT_VENDOR, "LO-01c and the cold charge: the page's rows, its coldest garbled, no termination (section 9a); the mat route serves the cold charge as for the 35E"),
+                     "discharge": [(SUIT_VENDOR, "LO-01a, LO-01b, LO-01d: the page's -40 to +85 C, no basis, no pulse, no cold capacity")],
+                     "storage": [(SUIT_VENDOR, "LO-01e, LO-01f, LO-01g, LO-01h: the page's rows, no state of charge and no recovery")]},
+        "MP 176065 xtd": {"doc": "Saft MP 176065 xtd, Doc. n 31109-2-0625 (MAKER datasheet)",
+                          "charge": (SUIT_PUB, "LO-01c (charge %.0f to +%.0f C, CC/CV %.1f V, %.1f A at most; the drawn %.1f A inside) and the cold charge by the mat (the sheet asks Saft only for charging under 0 C)" % (sx["chg"][0], sx["chg"][1], sx["v_chg"], sx["i_chg"], pb.ICHG)),
+                          "discharge": [(SUIT_PUB, "LO-01a, LO-01b, LO-01d against %.0f to +%.0f C and %.0f A continuous (the kit's %.0f A)" % (sx["dis"][0], sx["dis"][1], sx["i_cont"], pb.I_CONT)),
+                                        (SUIT_VENDOR, "PS-ALLTX's %.0f A for 60 s on one string: the sheet's %.0f A pulses state no duration" % (i_alltx, sx["i_pulse"]))],
+                          "storage": [(SUIT_PUB, "LO-01e, LO-01f, LO-01g, LO-01h against the allowable %.0f to +%.0f C, which states no time or charge restriction (INFERRED: it covers 24 h at the stored charge); recommended +%.0f to +%.0f C" % (sx["st"][0], sx["st"][1], sx["st_rec"][0], sx["st_rec"][1]))]}}
+    return {"bound": bound, "bands": bands, "limits": limits, "need": need_g, "peaks_bound": peaks_bound, "cold_bound": cold_bound,
+            "chg_ceiling": chg_ceiling, "tau_kit_h": tau_kit_h, "lag24": lag24, "fit": fit, "e_sx": e_sx, "nz": nz, "cands": cands, "suit": suit,
+            "i_alltx": i_alltx, "p": p, "design_room": design_room, "row_bound": row_bound, "holds": holds, "lid_open_a": lid_open_a}
+
+
+def band_for(bands, g):
+    """The acceptance band of L4-E12's one-point experiment whose target covers a need of g W/K (None if above every target)."""
+    ok = [b for b in bands if b[2] >= g]
+    return min(ok, key=lambda b: b[2]) if ok else None
+
+
+def u01c_lines(R):
+    c, u = R["u01c"], R["u01"]
+    sx = R["saft"]
+    L = []
+    w = L.append
+    w("== 10. U-01 CONSOLIDATED (the owner's question of 2 October 2026): suitability by mode, the conductance bound, published specifications, the missing fact")
+    w("No cell is adopted; the adoption stays the owner's (D-06's cell and energy, the spend). Classes as section 9.")
+    w("")
+    rc, ro = R["rows_cm"], R["rows_cm_old"]
+    w("10a The pocket's room, corrected (the independent verifier's item 3): CASE-MARGINS' rows are now split on unescaped pipes and read in the 'Chosen: nominal'")
+    w("   column by its header. M4b %.2f, M5 %.2f, M6 %.2f mm (the earlier reading took M5 at %.2f mm, the superseded flat-floor figure, because its margin text"
+      % (rc["M4b"], rc["M5"], rc["M6"], ro["M5"]))
+    w("   carries escaped pipes). The room as designed moves from %.4f L to %.4f L; at the worst stack %.4f L, unchanged. What moved: E5's latent storage at the best"
+      % (R["spare_L_old"], R["spare_L"][1], R["spare_L"][0]))
+    w("   corner (%.3f L) no longer fits, so (III)'s E5 route is REJECTED within the pocket (it was INCONCLUSIVE, a marginal fit); every other fit and rejection"
+      % R["pcm_res"]["best"]["e5_L"])
+    w("   stands (E3-O's best corner %.3f L still inside; E3-S, E5's other corners and the primary cells still outside)." % R["pcm_res"]["best"]["e3o_L"])
+    w("")
+    w("10b Suitability by mode (per cell; the rows each mode serves, with their sources):")
+    for cell, d in c["suit"].items():
+        w("   %s (%s):" % (cell, d["doc"]))
+        w("      CHARGE     %s: %s" % d["charge"])
+        for v, why in d["discharge"]:
+            w("      DISCHARGE  %s: %s" % (v, why))
+        for v, why in d["storage"]:
+            w("      STORAGE    %s: %s" % (v, why))
+    w("   The cell limits are the cell's; whether the cells stay inside them in LO-01a, LO-01d and LO-01e is the enclosure's (10c).")
+    w("")
+    b = c["bound"]
+    w("10c The conductance bound carried into the thermal routes (U-02, L4-E12 at aab69775, MODELED on INFERRED coefficients, the fans' flow credited at zero):")
+    w("   E3-O: lid open %.3f W/K (the coefficients' other ends %.3f), lid closed %.3f; E5: lid open %.3f (%.3f), lid closed %.3f; +40 C: lid open %.3f, lid closed %.3f."
+      % (b["E3-O"] + b["E5"] + b["+40"]))
+    w("   T-H1's one-point acceptance (lid open, the fans on): " + "; ".join("%.3f W/K (target %.3f)" % (r_[0], r_[2]) for r_ in c["bands"]) + ".")
+    w("   On the bound, at the conditioned corner's other parameters: E3-O's cells peak at %.2f C and E5's at %.2f C." % (c["peaks_bound"]["E3-O"], c["peaks_bound"]["E5"]))
+    w("   The conductance each row needs (W/K; E3-O and E5 lid open with the fans, the corner's other parameters at their worst; LO-01a steady on the pack, judged")
+    w("   on the lid-closed bound since E3-L runs lid closed). 'U2 at today's network' is the 83 C variant on today's thermistor network (INFERRED), a design choice that")
+    w("   a re-derived network can move; the cell limit and the no-hot-stop line are the rows' own:")
+    for cell, rows in c["need"].items():
+        for row, crit in rows.items():
+            parts = []
+            for k, g in crit.items():
+                if g is None and k == "U2 at today's network":
+                    continue
+                if g is None:
+                    parts.append("%s: none suffices (over 6 W/K)" % k)
+                    continue
+                bnd = band_for(c["bands"], g)
+                if c["holds"][cell][row][k]:
+                    parts.append("%s %.3f, HOLDS on the bound" % (k, g))
+                else:
+                    parts.append("%s %.3f, %s" % (k, g, ("T-H1 to read at least %.3f" % bnd[0]) if bnd else "over every band of the one-point experiment"))
+            w("   %-14s %-7s %s" % (cell, row, "; ".join(parts)))
+    w("   LO-01a's readings are lid closed (E3-L): the one-point experiment is lid open, so the full T-H1 gives them (`l4e12/T-H1-PROCEDURE-DRAFT.md`).")
+    w("   The bound per row: LO-01a %.3f (%s), LO-01d %.3f (%s), LO-01e %.3f (%s); LO-01a lid open on the bound %.3f W/K."
+      % (c["row_bound"]["LO-01a"] + c["row_bound"]["LO-01d"] + c["row_bound"]["LO-01e"] + (c["bound"]["+40"][0],)))
+    lo = c["lid_open_a"]
+    w("   Lid open at +40 C on the bound: the cell limit holds for %s; the no-hot-stop line for %s."
+      % (", ".join(k for k, v in lo.items() if v["cell limit"]) or "none", ", ".join(k for k, v in lo.items() if v["no hot stop"]) or "none"))
+    w("   So, carried into the routes: LO-01a's complete pass (the SGP41's air, %.3f W/K) and LO-01e lie over the bound for every cell: T-H1 decides them."
+      % R["gov"]["all"][4])
+    w("   LO-01d holds on the bound only with the MP 176065 xtd (cell limit and no hot stop, with U2's network re-derived above the hot stop); the HL18650V needs")
+    w("   %.3f W/K and the 35E %.3f W/K (cell limit), the 35E's no-hot-stop line none." % (c["need"]["HL18650V"]["LO-01d"]["cell limit"], c["need"]["35E"]["LO-01d"]["cell limit"]))
+    w("   Rows that hold on the bound for every cell: LO-01b (the cells at about %+.0f C at -20 C ambient: warmer, not colder); LO-01c (the gauge holds charging off;"
+      % c["cold_bound"])
+    w("   a running kit at PS-IDLE-SPEC reaches T3's %.0f C window only below %+.1f C ambient on the bound, an energy consequence for L4-E9, not a cell limit; a"
+      % (u["lad_now"]["T3"], c["chg_ceiling"]))
+    w("   wide-temperature cell's charge rows would move that ceiling only with a re-derived T3);")
+    w("   LO-01f, LO-01g and LO-01h (zero power: the kit's time constant rises to %.1f h and the cells still follow the ambient within %.3f of the step in 24 h, so"
+      % (c["tau_kit_h"], c["lag24"]))
+    w("   these rows are the cell's rating alone).")
+    w("")
+    w("10d Do published specifications suffice? Candidates within the arrangement (a 4S Li-ion pack at the 14.4 V class in D-06's pocket), at most three:")
+    w("   Saft MP 176065 xtd (MAKER, %s): %.1f Ah typical at C/5 to %.1f V at +25 C, %.2f V, %.1f Wh; %.0f A continuous, %.0f A pulses (no duration); %.2f x %.1f x %.1f mm"
+      % (sx["doc"], sx["c_typ"], sx["cut"], sx["v_nom"], sx["e_nom"], sx["i_cont"], sx["i_pulse"], sx["t"], sx["w"], sx["h"]))
+    w("   (sleeved, the thickness at 100 %% charge and beginning of life, growing with temperature and life), %.0f g; charge %.0f to +%.0f C, discharge %.0f to +%.0f C,"
+      % (sx["g"], sx["chg"][0], sx["chg"][1], sx["dis"][0], sx["dis"][1]))
+    w("   storage recommended +%.0f to +%.0f C, allowable %.0f to +%.0f C; CC/CV to %.1f V at %.1f A at most (under 0 C 'consult Saft'). As 4S1P: %.2f V nominal, %.1f V full, %.1f V cut-off."
+      % (sx["st_rec"] + sx["st"] + (sx["v_chg"], sx["i_chg"], 4 * sx["v_nom"], 4 * sx["v_chg"], 4 * sx["cut"])))
+    f = c["fit"]
+    w("   Fit in D-06's pocket (orientation A, two cells along the axis, two high): growth +%.2f / +%.2f / +%.2f mm (axis, across, height) against %.2f / %.2f / %.2f as designed"
+      % (f["A"]["axis"], f["A"]["across"], f["A"]["height"], f["design_room"]["axis"], f["design_room"]["across"], f["design_room"]["height"]))
+    w("      and %.2f / %.2f / %.2f at the worst stack. With the 35E block's own wrap it fits neither as designed (%s) nor at the worst stack (%s); orientation B (the"
+      % (f["worst_room"]["axis"], f["worst_room"]["across"], f["worst_room"]["height"], f["A_design"], f["A_worst"]))
+    w("      width along the axis) not as designed either (%s). Along the axis %.2f mm would remain for wrap and spacers where the 35E block uses %.2f mm (INFERRED from the"
+      % (f["B_design"], f["wrap_left"], f["wrap_35"]))
+    w("      block's 133.5 mm): the fit is CONDITIONAL on a wrap of at most that and on M5's chosen placement (CASE-MARGINS M5, OPEN: T4); failing it, the pocket")
+    w("      changes and the candidate becomes a proposal for the owner (D-06's pocket).")
+    es = c["e_sx"]
+    w("   Usable energy (the tree's chain, 4S1P, PS-IDLE-SPEC %.1f W, aged 0.80, the 35E's curve shapes, ASSUMPTION): %.1f Wh at the typical %.2f Ah (%.2f h, %.2f A a cell),"
+      % (c["p"], es["typical"]["wh"], es["typical"]["c"], es["typical"]["h"], es["typical"]["i_cell"]))
+    w("      %.1f Wh at an assumed minimum of %.2f Ah (the 35E's minimum over typical; Saft publishes none); against the 35E's %.1f Wh and the HL18650V's %.1f Wh."
+      % (es["assumed minimum"]["wh"], es["assumed minimum"]["c"], u["e35"]["25"], u["e_hl"]["25"]))
+    for k, cd in enumerate(c["cands"], 1):
+        w("   %d. %s [%s]" % (k, cd["name"], cd["class"]))
+        w("      rows covered: %s" % cd["rows"])
+        w("      energy: %s; fit: %s" % (cd["energy"], cd["fit"]))
+        w("      cost: %s; downstream: %s" % (cd["cost"], cd["downstream"]))
+    w("   Verdict: Saft's published datasheet covers every cell limit row (charge, discharge and storage) for the MP 176065 xtd; the HL18650V's need a vendor answer;")
+    w("   the LiFePO4 cell fails the hot rows on its own page and leaves the 14.4 V class.")
+    w("")
+    w("10e The missing facts, each with its smallest resolution (no outside party is contacted; each experiment is the owner's purchase):")
+    w("   Saft MP 176065 xtd route: (1) D-06's pocket (every row): whether four cells fit along the axis with at most %.2f mm of wrap and spacers as designed: a"
+      % f["wrap_left"])
+    w("      dimensional mock-up of four cells at the sheet's maximum dimensions in the pocket at the built stack (printed blocks; hours; no purchase); (2) LO-01a's")
+    w("      mission states with PS-ALLTX: whether one cell carries %.0f A for 60 s at its temperature in use (PS-ALLTX on one"
+      % c["i_alltx"])
+    w("      string; the sheet's %.0f A pulses state no duration): Saft's statement (drafted: `clarification/saft-mp176065xtd.txt`), or a bench pulse of one cell at +25 C"
+      % sx["i_pulse"])
+    w("      and at the cold end with its surface temperature and voltage logged (one cell, NZ$ %.2f, and a 20 A load; a day); (3) the minimum capacity (the sheet" % c["nz"])
+    w("      gives a typical one): measured on the lot at receipt.")
+    w("   HL18650V route (LO-01f at +71 C, LO-01g at -33 C, both 24 h at the stored 30 %; LO-01e's rest at full charge; the page's +80 C idle row): the signed")
+    w("      specification (the drafted request), or the smallest experiment: sample cells of the lot soaked 24 h at +71 C and 24 h at -33 C at")
+    w("      the stored 30 % charge, and ten 507.6 cycles at full charge, each followed by a capacity measurement at 0.2C and +25 C against the cells' own before")
+    w("      (about ten cells, USD %.2f, an oven, a -40 C freezer and a capacity tester; about 4 days for the soaks and 12 for the cycles): evidence for that lot," % (10 * R["price_hl"]))
+    w("      not a production guarantee.")
+    w("   Every route: T-H1 (U-02's experiment) for LO-01a's complete pass and for LO-01e, and for LO-01d unless the MP 176065 xtd is the cell; the cell moves the")
+    w("      need, not the enclosure.")
+    w("")
+    w("10f U-01's class by the owner's exit definition: A SUPPORTED ROUTE EXISTS ON PUBLISHED MANUFACTURER EVIDENCE (the Saft MP 176065 xtd as a 4S1P pack in")
+    w("   D-06's pocket, every cell limit row covered by its datasheet), ADOPTION PENDING the owner's approval (D-06's cell and energy, about %.0f Wh nominal, and the" % (4 * sx["e_nom"]))
+    w("   spend). It is CONDITIONAL on two named facts with their smallest checks (the fit along the axis; the %.0f A peak's duration). With it LO-01d holds on the"
+      % c["i_alltx"])
+    w("   conservative bound (U2's network re-derived); LO-01a's complete pass and LO-01e rest on T-H1 for every cell. The HL18650V stays the higher-energy")
+    w("   alternative (%.1f against %.1f Wh usable), resting on its vendor answer or a lot soak. Missing evidence is not shown to be impossible: each missing fact"
+      % (u["e_hl"]["25"], c["e_sx"]["typical"]["wh"]))
+    w("   has its check above.")
+    return L
+
+
+# ------------------------------------------------------------------------------------------------ 11: the battery comparison (2 October 2026, 14:20)
+def packcmp(R, pb):
+    """The owner's amendment of 2 October 2026, item 2: the approved pack against the Saft route on one boundary. Nothing is
+    approved here: the cell change and any purchase stay the owner's."""
+    import yaml
+    S, sx, u = R["S"], R["saft"], R["u01"]
+    lim = S["35E_11"]
+    t35 = pdf(S35E11)
+    s35 = {"part": need(t35, r"Model name : (INR18650-35E)", "35E model").group(1),
+           "rev": need(t35, r"Version No\.\s+(Ver\. 1\.1)", "35E version").group(1),
+           "date": need(t35, r"Ver\. 1\.1\s+.(\d\d-\d\d-\d\d)", "35E date").group(1),
+           "kind": need(t35, r"2\.1 Description\s+Cell \((lithium-ion rechargeable cell)\)", "35E description").group(1),
+           "c_min": lim["c_min"], "v_nom": float(need(t35, r"3\.3 Nominal Voltage\s+(\d\.\d+)V", "35E nominal").group(1)),
+           "v_chg": float(need(t35, r"3\.2 Charging Voltage\s+(\d\.\d)V", "35E charge voltage").group(1)),
+           "i_chg_std": float(need(t35, r"Standard charge: ([\d,]+)mA", "35E standard charge").group(1).replace(",", "")) / 1000.0,
+           "i_chg_cyc": float(need(t35, r"For cycle life : ([\d,]+)mA", "35E cycle-life charge").group(1).replace(",", "")) / 1000.0,
+           "i_chg_max": float(need(t35, r"3\.7 Max\. Charge Current\s+([\d,]+)mA", "35E max charge").group(1).replace(",", "")) / 1000.0,
+           "i_cont": lim["i_cont"], "i_pulse": float(need(t35, r"([\d,]+)mA \(not for continuous discharge\)", "35E pulse").group(1).replace(",", "")) / 1000.0,
+           "cut": float(need(t35, r"3\.9 Discharge Cut-off Voltage\s+(\d\.\d+)V", "35E cut-off").group(1)),
+           "term": float(need(t35, r"0\.02C\((\d+)mA\) cut-off", "35E termination").group(1)) / 1000.0}
+    d_in = yaml.safe_load(open(path(EB_IN), encoding="utf-8"))
+    c_typ35 = d_in["pack"]["capacity_typ_ah"]["value"]
+    sp_ = importlib.util.spec_from_file_location("energy_budget_l4e10p", path(EB_PY))
+    eb = importlib.util.module_from_spec(sp_)
+    sp_.loader.exec_module(eb)
+    pk = eb.Pack(d_in)
+    p = float(d_in["model_states"]["PS-IDLE-SPEC"]["plan"])
+    rsoc = pk.rsoc
+
+    def chain(n_p, c, t_c, i_map=1.0, v_scale=1.0):
+        """The tree's chain (energy_budget.Pack.usable_wh) with the curve current mapped by i_map and the mean voltage scaled."""
+        i = pk.cell_current(p, n_p)
+        ic = i * i_map
+        f_rate = eb.interp(pk.rate, ic)
+        f_t = eb.interp(pk.temp, t_c)
+        v_mean = eb.interp(pk.vmean, ic) * v_scale
+        f_v = eb.interp(pk.f300, ic)
+        f_dod = min(f_v, 1.0 - rsoc)
+        wh = pk.n_s * n_p * c * f_rate * f_t * v_mean * f_dod * pk.age80
+        return {"i": i, "ic": ic, "f_rate": f_rate, "f_t": f_t, "v_mean": v_mean, "f_dod": f_dod, "age": pk.age80, "wh": wh, "h": wh / p}
+
+    t_cold = -10.0          # the 35E's discharge floor at the cells, L4-E9's cold point
+    nom35 = 12 * s35["c_min"] * s35["v_nom"]
+    nom35_typ = 12 * c_typ35 * s35["v_nom"]
+    nomsx = 4 * sx["c_typ"] * sx["v_nom"]
+    c_minsx = sx["c_typ"] * s35["c_min"] / c_typ35
+    nomsx_min = 4 * c_minsx * sx["v_nom"]
+    e = {"35E": {t: chain(3, s35["c_min"], t) for t in (20.0, t_cold)}}
+    # the Saft has no published discharge curve: the 35E's curves (a) at the same absolute current per cell, the mean voltage
+    # as the 35E's (the conservative end, section 10's figure), and (b) at the same C-rate, the mean voltage scaled by the
+    # nominal voltages (INFERRED); each at the typical capacity and at an assumed minimum (the 35E's minimum over typical)
+    maps = {"a": (1.0, 1.0), "b": (s35["c_min"] / sx["c_typ"], sx["v_nom"] / s35["v_nom"])}
+    for mk, (im, vs) in maps.items():
+        for ck, c_ in (("typ", sx["c_typ"]), ("min", c_minsx)):
+            e["Saft %s %s" % (mk, ck)] = {t: chain(1, c_, t, (s35["c_min"] / c_) if mk == "b" else 1.0, vs) for t in (20.0, t_cold)}
+    rep_ = need(text(REPLAY), r"A1 D-06's 4S3P: usable ([\d.]+) Wh at \+20 C, ([\d.]+) Wh at -10 C: ([\d.]+) h and ([\d.]+) h", "the replay's A1 line")
+    rep = tuple(float(v) for v in rep_.groups())
+    if round(e["35E"][20.0]["wh"], 1) != rep[0] or round(e["35E"][t_cold]["wh"], 1) != rep[1]:
+        refuse(4, "the chain does not reproduce the replay's A1 line")
+    if abs(e["Saft a typ"][20.0]["wh"] - R["u01c"]["e_sx"]["typical"]["wh"]) > 1e-9:
+        refuse(4, "the comparison's Saft figure is not section 10's")
+    fr35 = e["35E"][20.0]["wh"] / nom35
+    frsx = e["Saft a typ"][20.0]["wh"] / nomsx
+    steps = {"count": 4.0 / 12.0, "capacity": sx["c_typ"] / s35["c_min"], "voltage": sx["v_nom"] / s35["v_nom"]}
+    split = {"f_rate": e["Saft a typ"][20.0]["f_rate"] / e["35E"][20.0]["f_rate"],
+             "v_mean over nominal": (e["Saft a typ"][20.0]["v_mean"] / sx["v_nom"]) / (e["35E"][20.0]["v_mean"] / s35["v_nom"]),
+             "f_dod": e["Saft a typ"][20.0]["f_dod"] / e["35E"][20.0]["f_dod"]}
+    b = R["u01c"]
+    return {"s35": s35, "c_typ35": c_typ35, "nom35": nom35, "nom35_typ": nom35_typ, "nom35_35": 12 * 3.5 * s35["v_nom"], "nomsx": nomsx, "nomsx_min": nomsx_min,
+            "c_minsx": c_minsx, "e": e, "p": p, "t_cold": t_cold, "rep": rep, "fr35": fr35, "frsx": frsx, "steps": steps, "split": split,
+            "objective": (48.0 * p, 72.0 * p), "price35": R["price_35e"], "nz": b["nz"], "fit": b["fit"], "room": R["spare_L"], "vol_sx": 4 * 0.077,
+            "vol_35": R["blk"]["X"] * R["blk"]["Y"] * R["blk"]["Z"] * 1000.0, "rsoc": rsoc, "graceful": d_in["pack"]["end_of_discharge"]["graceful"]["cell_v_under_load"],
+            "cuv": d_in["pack"]["end_of_discharge"]["protection_cuv_v"]["value"], "ichg": pb.ICHG, "i_cont_kit": pb.I_CONT, "i_peak": pb.I_PEAK,
+            "strap": u["chg"]["strap_v"], "batovp": u["chg"]["batovp_pct"], "taper": u["taper_default"], "u2": S["U2"]["rows"]["BQ7720700"]}
+
+
+def packcmp_lines(R):
+    c = R["packcmp"]
+    s35, sx, e = c["s35"], R["saft"], c["e"]
+    L = []
+    w = L.append
+    w("== 11. THE BATTERY COMPARISON (the owner's amendment of 2 October 2026, 14:20, item 2): the approved pack against the Saft route, one boundary")
+    w("Classes: GUARANTEED (a maker's printed limit), MODELLED (this record's model, assumptions named), AWAITING (evidence owed, and by whom).")
+    w("Nothing here approves the cell change or a purchase: both stay the owner's.")
+    w("")
+    w("11a Identity:")
+    w("   approved: Samsung SDI %s, product specification %s of 20%s (%s; GUARANTEED, filed); 4S3P, 12 cells (D-06)" % (s35["part"], s35["rev"], s35["date"], s35["kind"]))
+    w("   Saft route: Saft MP 176065 xtd, datasheet %s, June 2025 (rechargeable Li-ion cell; GUARANTEED, held back); 4S1P, 4 cells (a proposal)" % sx["doc"])
+    w("11b Nominal energy (cell capacity x nominal voltage x cell count):")
+    w("   D-06's 'about 145 Wh' = 12 x %.2f Ah (Ver. 1.1's minimum, 0.2C to %.2f V) x %.2f V = %.2f Wh (GUARANTEED inputs). The 35E's typical %.2f Ah (Samsung's Technical"
+      % (s35["c_min"], s35["cut"], s35["v_nom"], c["nom35"], c["c_typ35"]))
+    w("   Report) gives %.2f Wh; a 3.5 Ah label gives %.2f Wh, a figure Ver. 1.1 does not print." % (c["nom35_typ"], c["nom35_35"]))
+    w("   Saft: 4 x %.2f Ah (typical, C/5 to %.1f V at +25 C) x %.2f V = %.2f Wh (GUARANTEED as typical; Saft prints no minimum; with the 35E's minimum over typical"
+      % (sx["c_typ"], sx["cut"], sx["v_nom"], c["nomsx"]))
+    w("   applied, %.2f Ah and %.2f Wh, ASSUMPTION)." % (c["c_minsx"], c["nomsx_min"]))
+    st = c["steps"]
+    w("   Step by step, %.2f to %.2f Wh: the count x%.4f (12 to 4), the capacity a cell x%.4f (%.2f to %.2f Ah), the voltage x%.4f (%.2f to %.2f V): x%.4f in all,"
+      % (c["nom35"], c["nomsx"], st["count"], st["capacity"], s35["c_min"], sx["c_typ"], st["voltage"], s35["v_nom"], sx["v_nom"], st["count"] * st["capacity"] * st["voltage"]))
+    w("   %.1f %% less. That compares the 35E's minimum with the Saft's typical; like for like it is %.1f %% less on typicals (%.2f against %.2f Wh) and %.1f %% on minimums"
+      % (100 * (1 - c["nomsx"] / c["nom35"]), 100 * (1 - c["nomsx"] / c["nom35_typ"]), c["nom35_typ"], c["nomsx"], 100 * (1 - c["nomsx_min"] / c["nom35"])))
+    w("   (%.2f against %.2f Wh, the Saft's assumed)." % (c["nom35"], c["nomsx_min"]))
+    w("11c Usable energy on one boundary (MODELLED, the tree's chain `records/energy/energy_budget.py`): PS-IDLE-SPEC %.1f W at the pack; the run ending at the kit's"
+      % c["p"])
+    w("   graceful line, %.2f V a cell under load (CONOPS 4c), or the %.0f %% RSOC reserve, whichever first (the voltage line, for both); ageing %.2f (REQ-014, SC-23);"
+      % (c["graceful"], 100 * c["rsoc"], e["35E"][20.0]["age"]))
+    w("   +20 C and the cells at %.0f C (the 35E's discharge floor, L4-E9's cold point; its cold factor taken for the Saft too, ASSUMPTION: Saft prints no cold capacity)." % c["t_cold"])
+    w("   The Saft has no published discharge curve: the 35E's rate, mean-voltage and end-fraction curves stand in, (a) at the same current a cell (section 10's figure,")
+    w("   the conservative end) or (b) at the same C-rate with the mean voltage scaled by %.2f / %.2f V (INFERRED)." % (sx["v_nom"], s35["v_nom"]))
+    rows = [("35E 4S3P", e["35E"])] + [("Saft 4S1P, %s, %s" % ({"a": "(a) same current", "b": "(b) same C-rate"}[k.split()[1]], {"typ": "typical", "min": "assumed minimum"}[k.split()[2]]), e[k])
+                                       for k in ("Saft a min", "Saft a typ", "Saft b min", "Saft b typ")]
+    for lab, d_ in rows:
+        a, cld = d_[20.0], d_[c["t_cold"]]
+        w("   %-40s %.2f A a cell (curves at %.2f A): f_rate %.4f, V_mean %.3f V, f_end %.3f -> %.1f Wh, %.2f h at +20 C; %.1f Wh, %.2f h at %.0f C"
+          % (lab, a["i"], a["ic"], a["f_rate"], a["v_mean"], a["f_dod"], a["wh"], a["h"], cld["wh"], cld["h"], c["t_cold"]))
+    sp = c["split"]
+    w("   The usable fractions differ: %.1f / %.1f = %.4f for the 35E against %.1f / %.1f = %.4f for the Saft at (a). The 1P cell carries the whole pack current, %.2f A"
+      % (e["35E"][20.0]["wh"], c["nom35"], c["fr35"], e["Saft a typ"][20.0]["wh"], c["nomsx"], c["frsx"], e["Saft a typ"][20.0]["i"]))
+    w("   against %.2f A, so on the 35E's curves it loses x%.4f in rate factor, x%.4f in mean voltage over nominal and x%.4f in end fraction (x%.4f in all); at the same"
+      % (e["35E"][20.0]["i"], sp["f_rate"], sp["v_mean over nominal"], sp["f_dod"], sp["f_rate"] * sp["v_mean over nominal"] * sp["f_dod"]))
+    w("   C-rate (b) most of that loss goes, since the Saft's %.2f A is %.2fC of its typical capacity. So 2.52 h to %.2f to %.2f h at (a) and up to %.2f h at (b):"
+      % (e["Saft a typ"][20.0]["i"], e["Saft a typ"][20.0]["i"] / sx["c_typ"], e["Saft a min"][20.0]["h"], e["Saft a typ"][20.0]["h"], e["Saft b typ"][20.0]["h"]))
+    w("   the energy ratio (x%.4f nominal: %.2f h if the usable fraction stayed the 35E's) and, at (a), the 1P current's penalty on borrowed curves."
+      % (c["nomsx"] / c["nom35"], e["35E"][20.0]["h"] * c["nomsx"] / c["nom35"]))
+    w("   Earlier figures on other boundaries, reconciled: the 35E's 108.1 Wh (pwr_budget.py's chain: rate factor, a 0.05 ohm sag and the 5 % reserve, section 4) against")
+    w("   this chain's %.1f Wh (the 3.00 V line); 44.3 Wh at -10 C (section 4, the 1C point) against %.1f Wh here; the Saft's 53.5 to 55.1 Wh (section 10) is (a) here."
+      % (e["35E"][20.0]["wh"], e["35E"][c["t_cold"]]["wh"]))
+    w("   The objective (REQ-072, 48 to 72 h, D-28): %.0f to %.0f Wh; both packs far under it, battery-only (DR-01). It is an objective, not a mandatory row." % c["objective"])
+    w("11d Limits, fit, compatibility and cost: section 16 of the page tabulates them from sections 4, 9, 10 and the sheets; the figures:")
+    w("   charge: 35E %.0f to %.0f C surface, CC-CV %.1f V, standard %.2f A, cycle-life %.2f A, at most %.2f A a cell, termination 0.02C (%.3f A); Saft %.0f to +%.0f C, CC/CV %.1f V,"
+      % (R["S"]["35E_11"]["charge"][0], R["S"]["35E_11"]["charge"][1], s35["v_chg"], s35["i_chg_std"], s35["i_chg_cyc"], s35["i_chg_max"], s35["term"], sx["chg"][0], sx["chg"][1], sx["v_chg"]))
+    w("   at most %.1f A, termination not printed." % sx["i_chg"])
+    w("   discharge: 35E %.0f to %.0f C surface, %.0f A continuous, %.0f A not continuous (no duration), cut-off %.2f V; Saft %.0f to +%.0f C, %.0f A continuous, %.0f A pulses"
+      % (tuple(R["S"]["35E_11"]["discharge"]) + (s35["i_cont"], s35["i_pulse"], s35["cut"], sx["dis"][0], sx["dis"][1], sx["i_cont"], sx["i_pulse"])))
+    w("   (no duration), cut-off %.1f V." % sx["cut"])
+    w("   storage: 35E 1 month %.0f to %.0f C, 3 months %.0f to %.0f C, 1 year %.0f to %.0f C at 30 %% (recovery over 80 %%); Saft allowable %.0f to +%.0f C, recommended +%.0f to +%.0f C"
+      % (tuple(R["S"]["35E_11"]["st_1m"]) + tuple(R["S"]["35E_11"]["st_3m"]) + tuple(R["S"]["35E_11"]["st_1y"]) + tuple(sx["st"]) + tuple(sx["st_rec"])))
+    w("   (no time, charge or recovery printed).")
+    f = c["fit"]
+    w("   fit: the 35E block %.4f L (56.65 x 133.5 x 38.1 mm); four Saft cells %.3f L with terminals; the room as designed %.4f L, at the worst stack %.4f L; along the axis"
+      % (c["vol_35"], c["vol_sx"], c["room"][1], c["room"][0]))
+    w("   %.2f mm left for wrap and spacers as designed (the 35E block's %.2f mm); thickness at the beginning of life and full charge, growing with temperature and life." % (f["wrap_left"], f["wrap_35"]))
+    w("   charger (the drawn BQ25731): strap %.3f V = 4 x %.2f V for both; set %.1f A = %.2f A a cell on 4S3P (against %.2f A cycle-life, %.2f A maximum) and %.2f A on 4S1P (against"
+      % (c["strap"], 4.2, c["ichg"], c["ichg"] / 3, s35["i_chg_cyc"], s35["i_chg_max"], c["ichg"], ))
+    w("   %.1f A); BATOVP %.2f V; the gauge's taper %.0f mA = %.3f A a cell (3P) or %.3f A (1P); the CUV %.2f V against cut-offs of %.2f V (35E; its pack guideline terminates"
+      % (sx["i_chg"], c["strap"] * c["batovp"] / 100.0, c["taper"], c["taper"] / 3000.0, c["taper"] / 1000.0, c["cuv"], s35["cut"]))
+    w("   at 2.50 V) and %.1f V (Saft)." % sx["cut"])
+    w("   protection: U2 BQ7720700 OVP %.3f V over both cells' 4.2 V, UVP %s under both cut-offs (a backstop behind the gauge), OT %.0f C: it protects either cell as drawn;"
+      % (c["u2"]["ovp"], c["u2"]["uvp"], c["u2"]["ot"]))
+    w("   with the Saft it caps the hot margins, so using its +85 C needs the 83 C variant and a re-derived network; the gauge's thresholds (UTC %.1f, T3 %.0f, OTC %.1f,"
+      % (R["u01"]["lad_now"]["UTC"], R["u01"]["lad_now"]["T3"], R["u01"]["lad_now"]["OTC"]))
+    w("   OTD %.1f, UTD %.1f C) sit inside both cells' windows as drawn; the gauge's design capacity and chemistry data change with the cell (the Saft's owed by TI's list or a"
+      % (R["ladder"]["OTD"], R["ladder"]["UTD"]))
+    w("   learning cycle); F2 Eaton SCF9550-30-05, 30 A for 4 to 5 cells: unchanged; the pack's %.0f A continuous and %.0f A peak: %.1f / %.1f A a cell (3P) or %.1f / %.1f A (1P)."
+      % (c["i_cont_kit"], c["i_peak"], c["i_cont_kit"] / 3, c["i_peak"] / 3, c["i_cont_kit"], c["i_peak"]))
+    w("   cost: 35E USD %.2f a cell, USD %.2f for 12 (the l3batt reading); Saft NZ$ %.2f a cell, NZ$ %.2f for 4 (a distributor's listing archived in January 2025; no quote)."
+      % (c["price35"], 12 * c["price35"], c["nz"], 4 * c["nz"]))
+    return L
+
+
+def saft_sheet():
+    t = pdf(SAFT_MP)
+    f = lambda pat, what: float(need(t, pat, what).group(1))
+    rng = lambda lab: tuple(float(v) for v in need(t, r"%s\s+([-+]\d+)°C to \+(\d+)°C" % lab, "Saft " + lab).groups())
+    return {"doc": "Doc. n %s" % need(t, r"Doc\. n° (\d+-\d+-\d+)", "Saft document number").group(1),
+            "c_typ": f(r"Typical capacity \(at C/5 rate, \+25°C, 2\.5V cut-off\)1\s+(\d\.\d) Ah", "Saft capacity"),
+            "v_nom": f(r"Nominal voltage\s+(\d\.\d+) V", "Saft voltage"), "e_nom": f(r"Nominal energy\s+(\d+\.\d) Wh", "Saft energy"),
+            "i_cont": f(r"Continuous\s+(\d+) A \(~2C rate\)", "Saft continuous"), "i_pulse": f(r"Pulses\s+(\d+) A \(~4C rate\)", "Saft pulses"),
+            "t": f(r"Thickness³\s+(\d+\.\d+) mm", "Saft thickness"), "w": f(r"Width\s+(\d+\.\d) mm", "Saft width"),
+            "h": f(r"Height \(including terminals\)\s+(\d+\.\d) mm", "Saft height"), "g": f(r"Typical weight\s+(\d+) g", "Saft mass"),
+            "cut": f(r"Typical cut-off voltage\s+(\d\.\d) V", "Saft cut-off"), "v_chg": f(r"Charging voltage\s+(\d\.\d) V", "Saft charge voltage"),
+            "i_chg": f(r"Maximum continuous charge current4\s+(\d\.\d) A", "Saft charge current"),
+            "chg": rng("Charge"), "dis": rng("Discharge"), "st_rec": rng("Recommended"), "st": rng("Allowable"),
+            "proprietary": bool(re.search(r"Any duplication or reproduction without authorization of Saft is strictly prohibited", t)),
+            "swell": bool(re.search(r"Can increase with temperature and during battery life", t))}
 
 
 def main():

@@ -46,6 +46,9 @@ v2/vendor/solar/held/
 # fetched by v2/docs/records/s117/fetch_held_back.py and checked by sha256, never committed.
 v2/vendor/ti/held/
 v2/vendor/nexperia/held/
+# Rittal's catalogue page of its enclosure climate-control calculation basis, cited by task L4-E12's section 11 (2 October
+# 2026), held back by its copyright: fetched by v2/docs/records/l4e12/fetch_held_back.py and checked by sha256, never committed.
+v2/vendor/rittal/held/
 # PANJIT's SS2020FL series sheet (board C's D19 to D21), held back by its terms from integration set 15 (29 September
 # 2026; its page 4: "Reproducing and modifying information of the document is prohibited without permission"):
 # fetched by v2/docs/records/int16/fetch_held_back.py and checked by sha256, never committed.

@@ -14,7 +14,11 @@ limit names the unwarranted values it rests on; what REQ-016 bounds is read from
 the comparison holds at most three approaches, each quantified on both days, none called unconditional; one error budget
 names its two assumptions and the bound reproduces in separate arithmetic; the setting is the least-cost one carrying both
 assumptions past their meaning; check (b) counts the capacitor input energy, the panel's own current and the events; SWEN
-is off by default on printed rows; the disturbances come from the approved test plan and every part holds; the backstop's
+is off by default on printed rows; the disturbances come from the approved test plan and every part holds; the panel lead's
+surge and sustained over-voltage are derived from the lead the records give and the row REQ-063 commits to, each judged by
+REQ-016's own criterion, the clamp and the source figures reproduced in closed form; the solar-fault remedies select one
+remedy for each fault on held sheets, the cut-off's band recomputed here, the window kept and the re-runs named, and their
+draft applies once after the five drafts it follows; the backstop's
 draft applies only after the hold and input limit drafts; the drafts to the makers follow the decision and quote its
 figures; L4-E9's figures are named. Nothing here writes into the tree.
 """
@@ -49,7 +53,8 @@ def _R():
                     "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net", "v2/vendor/ti/held/ti-ina250-sbos511c.pdf",
                     "v2/vendor/ti/held/ti-tps3701-sbvs240c.pdf", "v2/vendor/power/littelfuse-smcj-series-tvs.pdf",
                     "v2/vendor/ti/held/ti-ina169-sbos181f.pdf", "v2/vendor/power/held/panasonic-za-eehza1h330xp-2017-11-07.pdf",
-                    "v2/vendor/power/held/mil-std-461g-2015-12-11.pdf", "v2/vendor/passives/held/vishay-wsl-30100-2023-11-23.pdf"):
+                    "v2/vendor/power/held/mil-std-461g-2015-12-11.pdf", "v2/vendor/passives/held/vishay-wsl-30100-2023-11-23.pdf",
+                    "v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf"):
             need(os.path.join(ROOT, rel), "an input of the L4-E7 record (held documents: its fetch_held_back.py)")
         if shutil.which("pdftotext") is None:
             raise Skip("pdftotext is needed")
@@ -595,6 +600,52 @@ def t_the_disturbances_come_from_the_approved_plan_and_every_part_holds():
     assert "M2 records the cans' temperature" in s and "a long outdoor lead" in s
 
 
+def t_the_panel_lead_is_derived_from_the_committed_row_and_judged_per_disturbance():
+    """The surge round (the findings ledger's item 1, R-156): the exposure is the lead the records give, the basis is the row REQ-063
+    commits to, each disturbance is judged by REQ-016's own criterion, and the clamp and source figures reproduce in closed form."""
+    R = _R()
+    ld, d = R["lead"], R["decision"]
+    le_, rw, sg = ld["lead"], d["rows"], d["surge"]
+    assert (le_["m"], le_["mm2"]) == (5.0, 4.0) and abs(le_["r"] - 0.0465) < 5e-4 and abs(le_["f_q"] - 299792458.0 / 20.0) < 1e-6
+    assert [ld["tv"][k] for k in ("CS101", "CS114", "CS115", "CS116", "CS117")] == ["A", "A", "A", "A", "S"]
+    assert "CS115" not in open(os.path.join(ROOT, "v2", "docs", "TEST-PLAN.md"), encoding="utf-8").read()
+    # Figure CS116-2 as drawn, at the six frequencies and the lead's quarter wave
+    ips = {round(r_["f"]): r_["ip"] for r_ in ld["r116"]}
+    want = {10000: 0.1, 100000: 1.0, 1000000: 10.0, 10000000: 10.0, round(le_["f_q"]): 10.0, 30000000: 10.0, 100000000: 3.0}
+    assert set(ips) == set(want) and all(abs(ips[k] - want[k]) < 1e-12 for k in want), ips
+    # REQ-016's criterion in closed form: the highest part's breakdown at the hot end (the sheet's typical 0.1 %/C), the printed slope
+    d4 = rw["d4"]
+    rd = (d4["vc"] - d4["vbr"][1]) / d4["ipp"]
+    v10 = d4["vbr"][1] * (1 + 0.001 * (rw["t_air"] - 25.0)) + rd * 10.0
+    assert abs(ld["aT"] - 0.001) < 1e-15 and abs(ld["v116"] - v10) < 1e-9 and v10 <= ld["lim_draft"] == 50.0 and v10 > ld["lim_drawn"] == 35.0
+    # the loaded network: D4 never conducts under CS116 or CS115, TRK_VS stays under the least breakdown at the cold end
+    vbr_cold = d4["vbr"][0] * (1 + 0.001 * (rw["t_cold"] - 25.0))
+    assert abs(ld["vbr_cold"] - vbr_cold) < 1e-12 and abs(vbr_cold - 29.70) < 0.005
+    assert ld["peak_v"] < vbr_cold and all(r_["id4"] == 0.0 and r_["e_d4"] == 0.0 for r_ in ld["r116"] if r_["lumped"]) and ld["r115"]["id4"] == 0.0
+    assert all(r_["d59_b"] < sg["rating"]["csd"] and r_["y_trip"] < ld["m_trip"] for r_ in ld["r116"])
+    assert ld["r115"]["be_b"] > ld["r115"]["a"] and ld["r115"]["be_l"] > ld["r115"]["be_b"]
+    # the stiff source: the least part at the cold end through the lead's loop, against D4's continuous capability on the board
+    i_ = (ld["v_src"] - vbr_cold) / (rd + le_["r"])
+    src = {lab_: (i2, p2) for lab_, _v, i2, p2 in ld["src"]}
+    assert ld["v_src"] == 36.0 and abs(src["the least part at the cold end"][0] - i_) < 1e-9
+    assert min(p_ for _i, p_ in src.values()) > 10 * ld["p_ok"][1] and abs(ld["p_ok"][0] - (150.0 - rw["t_air"]) / 75.0) < 1e-12
+    # the smallest change: the least held row that stands off 36 V and does not break down at the cold end, and why it is not enough alone
+    r36 = ld["r36"]
+    assert r36["n"] == 36 and r36["vbr_cold"] > ld["v_src"] and r36["vc116_25"] <= 50.0 < r36["vc116_h"]
+    assert [(v_["id"], v_["ok"], v_["drawn"]) for v_ in ld["verd"]] == [("D1", True, False), ("D2", True, False), ("D3", True, True),
+                                                                      ("D4", False, False), ("D5", False, False)]
+    s = _s10(R)
+    for k in ("THE PANEL LEAD'S DISTURBANCES, DERIVED", "nearby lightning called out in MIL-STD-464", "FOR L4-E9'S REGISTER",
+              "the entry's margin beyond that derived basis", "SMCJ36A WITH the entry's 50 V parts", "NOT COVERED"):
+        assert k in s, k
+    assert "no level is ruled (REQ-016, DECISION-31 section 3), so D4" not in s
+    page = " ".join(open(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), encoding="utf-8").read().split())
+    for fig in ("%.2f V" % ld["v116"], "%.2f V" % vbr_cold, "%.2f V" % r36["vc116_h"], "%.1f A" % ld["r115"]["be_b"], "SMCJ36A", "CS116", "CS115",
+                "%.2f W" % ld["p_ok"][0]):
+        assert fig in page, fig
+    assert "no level is ruled (REQ-016, DECISION-31 section 3), so D4's own" not in page
+
+
 def t_the_backstop_holds_through_cs101_and_the_failing_case_is_kept():
     R = _R()
     cs = R["cs101"]
@@ -660,6 +711,107 @@ def t_the_backstop_draft_follows_the_hold_and_input_limit_drafts_on_a_copy():
     R = _R()
     assert all(R["backstop_draft"].values()), R["backstop_draft"]
     assert R["drafts"][BACKSTOP][3]
+    assert _sha(GEN_E) == before, "the tree's gen_sch_e.py changed"
+
+
+GUARD = "apply_gen_sch_e_solar_guard.py"
+
+
+def _run_any(path, target, *flags):
+    return subprocess.run([sys.executable, "-B", path, target] + list(flags), capture_output=True, text=True, cwd=os.path.dirname(target))
+
+
+def t_the_solar_fault_remedies_select_one_for_each_fault_and_keep_the_window():
+    """The owner's amendment of 2 October 2026, item 3: three implementations compared on held sheets, the selected cut-off and
+    return switch each meeting its fault, the cut-off's band recomputed here from the comparator's rows and the divider, the
+    window kept, CS101 and check (b) re-run, and the draft applying once after the five drafts it follows."""
+    R = _R()
+    rm, d = R["remedy"], R["decision"]
+    T4, ovs, bA = rm["T48"], rm["ovs"], rm["bandA"]
+    assert T4["ovr"] == (1.16, 1.18, 1.2) and T4["ovf"] == (1.1, 1.11, 1.13) and abs(T4["ovleak"] - 300e-9) < 1e-15
+    # implementation 1 fails on its own pins, implementation 2 on its CATHODE-to-ANODE rating at the hot end
+    assert rm["i1"]["pins"] < rm["i1"]["pins_abs"] and rm["i1"]["ring"] < rm["i1"]["src_abs"] < rm["i1"]["src_rev"]
+    assert rm["i2"]["ca36_hot"] > rm["LM"]["ca"] > rm["i2"]["ca36_25"] and 500.0 < rm["i2"]["f_rect"] < 2121.0
+    # the band in closed form: the stocked divider aged by the RT sheet's printed limits, the comparator's rows, the leakage
+    rws = d["rows"]
+    lead = R["lead"]
+    k = lambda r, s: (1 + s * 0.001) * (1 + s * 25e-6 * 45.0) * (1 + s * (0.005 + 0.05 / r)) * (1 + s * (0.005 + 0.05 / r))
+    a, b, rb = ovs["a"], ovs["b"], ovs["rb"]
+    rt_hi = a * k(a, 1) + b * k(b, 1)
+    k_lo = (a * k(a, -1) + b * k(b, -1) + rb * k(rb, 1)) / (rb * k(rb, 1))
+    k_hi = (rt_hi + rb * k(rb, -1)) / (rb * k(rb, -1))
+    assert abs(bA["rise"][0] - (1.16 * k_lo - 300e-9 * rt_hi)) < 1e-9 and abs(bA["rise"][1] - (1.20 * k_hi + 300e-9 * rt_hi)) < 1e-9
+    cs101_pk = 25.0 + 2 ** 0.5 * 10 ** (126.0 / 20.0) * 1e-6
+    assert abs(rm["cs101_pk"] - cs101_pk) < 1e-6
+    d4n = rm["D4N"]
+    assert d4n["n"] == 30 and abs(d4n["vbr_cold"] - 33.30 * (1 - 0.001 * 45.0)) < 1e-9
+    assert bA["rise"][0] > cs101_pk and bA["rise"][1] < d4n["vbr_cold"] and bA["fall"][0] > 25.0
+    assert min(rm["ov28"]["aged"]["m"]) < 0 < min(rm["ov28"]["new"]["m"]), "the SMCJ28A band: fits new, fails aged"
+    assert abs(d4n["v116"] - (36.8 * (1 + 0.001 * (rws["t_air"] - 25.0)) + (48.4 - 36.8) / 31.0 * 10.0)) < 1e-9 and d4n["v116"] <= 50.0
+    # each fault and disturbance
+    assert [(v["id"], v["ok"]) for v in rm["verd"]] == [("D4", True), ("D5", True), ("CS116/115 on", True), ("CS116/115 off", True),
+                                                        ("turn-off", True), ("window", True)]
+    assert rm["f36"]["st_min"] > 0.04 and rm["f36"]["cut_hi"] < lead["v_src"] and rm["f36"]["ring"] < rm["QF"]["vds"]
+    assert rm["rev"]["vds"] < rm["QF"]["vds"] and rm["rev"]["i_be"] > 10 * rm["rev"]["idss"]
+    assert rm["scp_f"] < rm["scp_lo"] and rm["v_tmr"] < T4["tmr_v"][0] and rm["ov_in116"] < bA["rise"][0]
+    assert rm["off116"]["v"] < rm["QF"]["vds"] and rm["off116"]["inp"] < T4["pin_abs"] and rm["off116"]["floor"] > -1.0
+    # the window, the static bound and the re-runs
+    c = d["c"]
+    assert c["p_static"] < rm["p_static_blk"] < 100.0 and rm["t_allow_blk"] >= rm["t_fac"] * rm["t_resp_typ"] and rm["t_allow_blk"] < c["t_allow"]
+    assert rm["L11"]["uv"][2] < rm["shdn"] and rm["i_bank_slew"] < c["i_lo_aged"]
+    cr = rm["cs_re"]
+    assert abs(cr["none"]["worst"][2] - R["cs101"]["best"]["worst"][2]) < 1e-9
+    assert cr["none"]["worst"][2] <= cr["least"]["worst"][2] <= cr["most"]["worst"][2] < rm["margin"]
+    assert rm["gap"][0] == 25.0 and rm["gap"][1] == bA["rise"][1] and rm["gap"][2] > 100.0
+    assert 0 < rm["e_blk"][0] < 0.01 * rm["e_day"][0]
+    assert all(R["guard_draft"].values()), R["guard_draft"]
+    assert R["drafts"][GUARD][3] and not R["drafts"][GUARD][1] and R["drafts"][GUARD][2]
+    s = _s10(R)
+    for k_ in ("THE SOLAR-FAULT REMEDIES (the owner's amendment of 2 October 2026", "NOT TAKEN. (2) The LM74700-Q1", "SELECTED (SESSION)",
+               "THE WINDOW KEPT", "NOT CLAIMED, a residual named for layer 8", "RE-RUN with the block's series resistance",
+               "STAYING VALID UNCHANGED", "THE TVS-ONLY CHANGE for D4, evaluated and not taken"):
+        assert k_ in s, k_
+    page = " ".join(open(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), encoding="utf-8").read().split())
+    for fig in ("%.2f to %.2f V" % (bA["rise"][0], bA["rise"][1]), "%.3f V over CS101's peak" % ovs["m"][0], "%.3f V under the clamp" % ovs["m"][1],
+                "%.4f W" % rm["p_static_blk"], "%.3f ms" % (1e3 * rm["t_allow_blk"]), "%.4f A" % cr["most"]["worst"][2],
+                "%.1f W" % rm["gap"][2], "%.2f Wh of %.1f Wh" % (rm["e_blk"][0], rm["e_day"][0]), "%.3f V" % min(rm["ov28"]["aged"]["m"]),
+                "SMCJ30A", "apply_gen_sch_e_solar_guard.py", "## The solar-fault remedies"):
+        assert fig in page, fig
+
+
+def t_the_solar_guard_draft_follows_the_five_drafts_on_a_copy():
+    need(GEN_E, "board E's generator")
+    before = _sha(GEN_E)
+    src = open(GEN_E, encoding="utf-8").read()
+    chain = [os.path.join(REC, n) for n in ("apply_gen_sch_e_hold.py", "apply_gen_sch_e_input_limit.py", BACKSTOP)] + [
+        os.path.join(ROOT, "v2", "docs", "records", "l4e9", "apply_gen_sch_e_hotswap.py"),
+        os.path.join(ROOT, "v2", "docs", "records", "l4e11", "apply_gen_sch_e_entry.py")]
+    g = os.path.join(REC, GUARD)
+    dd = tempfile.mkdtemp(prefix="l4e7-sg-")
+    try:
+        cp = os.path.join(dd, "gen_sch_e.py")
+        open(cp, "w", encoding="utf-8").write(src)
+        r = _run_any(g, cp, "--check")
+        assert r.returncode == 3 and "a draft this one follows is not applied" in r.stderr, (r.returncode, r.stderr)
+        for path in chain:
+            assert _run_any(path, cp, "--write").returncode == 0, path
+        orig = _sha(cp)
+        r = _run_any(g, cp, "--check")
+        assert r.returncode == 0 and "CHECK OK" in r.stdout and _sha(cp) == orig, (r.returncode, r.stderr)
+        r = _run_any(g, cp, "--write")
+        assert r.returncode == 0 and _sha(cp) != orig, r.stderr
+        r = _run_any(g, cp, "--write")
+        assert r.returncode == 3 and "already applied" in r.stderr, r.stderr
+        out = open(cp, encoding="utf-8").read()
+        for want in ('"VH2", {"1": "PV_IN", "2": "PV_RTN"}, "C274411")', '"FUSE", {"1": "PV_IN", "2": "PV_F"})', 'ic("U21", 20, "TPS48110AQDGXRQ1', 'r("R87", "4.5mOhm 1% 2512 3W 50ppm',
+                     '{"1": "PV_F", "2": "PV_RTN"}, "C80273")', '"PV_RG", "PV_RTN", "GND", lcsc="C473333")', '"C124196")',
+                     '{"switch": "U21", "enable_net": "PV_UVLO"}),', '_intent.rail("PV_RTN"', 'part("D4", "Device", "D_Zener", "SMCJ30A'):
+            assert out.count(want) == 1, want
+        assert '"SMCJ28A (panel surge' not in out and out.count('r("R10", "115k 1% (RFBOUT1: 15.1 V)"') == 1
+    finally:
+        shutil.rmtree(dd)
+    r = _run_any(g, GEN_E, "--write")
+    assert r.returncode == 3 and ("NOT RELEASED" in r.stderr or "not applied" in r.stderr), r.stderr
     assert _sha(GEN_E) == before, "the tree's gen_sch_e.py changed"
 
 
