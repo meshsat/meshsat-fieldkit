@@ -55,6 +55,10 @@ HOJ = "v2/vendor/passives/milliohm-hojlr2512-series.pdf"
 RT = "v2/vendor/passives/held/yageo-rt-series-v16-2025-05-06.pdf"
 BSC039 = "v2/vendor/infineon/infineon-bsc039n06ns-rev2.4-c534330.pdf"
 BSC028 = "v2/vendor/power/held/infineon-bsc028n06ns-rev2.1-c148250.pdf"
+TPS48 = "v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf"      # the solar-fault remedy's controller (held back; fetch_held_back.py)
+LM747 = "v2/vendor/ti/ti-lm74700-q1.pdf"
+CSD32 = "v2/vendor/power/ti-csd19532q5b-n-fet.pdf"
+BZT = "v2/vendor/diodes/diodes-bzt52c-ds18004.pdf"
 INP = "v2/docs/records/l4e7/inputs"
 CLAR = "v2/docs/records/l4e7/clarification"
 INP_L4E4 = "v2/docs/records/l4e4/inputs/jlc-search-hojlr2512-3w-2026-10-01.json"
@@ -71,6 +75,10 @@ PINS = {
     RT: "0a729d144519a7021c82a0ef242b064e467c70d44afcf9eabd6c7ffdc4b673a3",
     BSC039: "8d95c1da9c78b3afb037e1f80c3bea1ed0f874f689e3a0c96d926dafe6a437b9",
     BSC028: "2959653166e981f9de24cd9c141c44490ecc62acba5971ec8c0b263eca9708e0",
+    TPS48: "3cfe41fef1407b85abaaee1e27a95ac3cf2cb1bdf218209b8578a835c4c9497f",
+    LM747: "e16b3a8c0023201fafa5825436f5f2dd6f885b92b84e65602b3f50d741c58b6f",
+    CSD32: "353ce937cff0b719e730010829720d25c2ece3637ed92fb7ad8cc370438559d1",
+    BZT: "0fbd7d137524820f0160594065cbceb8c6b3188757c328416d08fceb7418202f",
     INP_L4E4: None,             # read only; its codes are checked against the filed LCSC answer below
 }
 # The figures this record sets itself (each SESSION or ASSUMPTION, named where it is used):
@@ -2057,6 +2065,247 @@ def compute():
                      peak_v=peak_v, peak_vp=peak_vp, v116=v116, verd=verd, m_trip=best["m"], tau_lo=best["tau"][0],
                      smcj=sorted(smcj), i_op=i_op, v_oc=v_oc, n_runs=sum(1 for r_ in r116 if r_["lumped"]) * len(Q116) * 2 * 8 + len(runs115),
                      e_rating=e_rating)
+    # ---- THE SOLAR-FAULT REMEDIES (the owner's amendment of 2 October 2026, 14:20, item 3: the 36 V source and the reversed panel are
+    # open engineering defects; a selected remedy for each, its circuit changes and a bounded analysis against the approved fault
+    # exposure and the parts' ratings; the interfaces and calculations re-checked; the normal window kept, fault protection never
+    # extending the operating range). Three implementations on held sheets are compared; every figure is printed in section 10
+    t48 = flat(subprocess.run(["pdftotext", "-layout", os.path.join(TOP, TPS48), "-"], capture_output=True).stdout.decode("utf-8", "replace"))
+
+    def g3(t_, pat_, what_):
+        return tuple(float(x_.replace(chr(0x2013), "-")) for x_ in need(t_, pat_, what_).groups())
+    need(t48, r"VS, CS\+, CS., ISCP to GND .1 100", "TPS4811 6.1: VS, CS+, CS- and ISCP to GND")
+    need(t48, r"SRC to GND .30 100", "TPS4811 6.1: SRC to GND")
+    need(t48, r"VS, CS\+, CS. to GND 0 80 Input Pins EN/UVLO, OV to GND 0 15", "TPS4811 6.2")
+    need(t48, r"Drives external back-to-back N-channel MOSFETs", "TPS4811 p.1: back-to-back FETs")
+    need(t48, r"The TPS4811x-Q1 withstands output reverse voltages down to -30V\. With INP low, PD is pulled low to SRC", "TPS4811 8.3.7")
+    need(t48, r"TI recommends RVS value around 100", "TPS4811 9.5: the VS filter")
+    T48 = dict(ovr=g3(t48, r"V\(OVR\) Overvoltage threshold input, ris[Ii]ng ([\d.]+) ([\d.]+) ([\d.]+) V", "TPS4811 OVR"),
+               ovf=g3(t48, r"V\(OVF\) Overvoltage threshold input, falling ([\d.]+) ([\d.]+) ([\d.]+) V", "TPS4811 OVF"),
+               ovleak=g3(t48, r"I\(OV\) OV Input leakage current 0V < V\(OV\) < 5V (\d+) (\d+) nA", "TPS4811 OV leakage")[1] * 1e-9,
+               iq=g3(t48, r"I\(Q\) Total System Quiescent current, I\(GND\) V\(EN/UVLO\) = 2V (\d+) (\d+) .A", "TPS4811 IQ")[1] * 1e-6,
+               ics=g3(t48, r"I\(CS.\) CS. Input Bias current (\d+) (\d+) (\d+) .A", "TPS4811 CS- bias")[2] * 1e-6,
+               iscp=g3(t48, r"I\(ISCP\) SCP Input Bias current ([\d.]+) ([\d.]+) ([\d.]+) .A", "TPS4811 ISCP bias")[2] * 1e-6,
+               enleak=g3(t48, r"I\(EN/UVLO\) Enable input leakage current V\(EN/UVLO\) = 12V (\d+) (\d+) nA", "TPS4811 EN leakage")[1] * 1e-9,
+               bst_i=g3(t48, r"I\(BST\) Charge Pump Supply current V\(BST . SRC\) = 10V (\d+) (\d+) (\d+) .A", "TPS4811 BST current"),
+               bst_uv=g3(t48, r"UVLO voltage threshold, V\(BST_UVLOR\) ([\d.]+) ([\d.]+) ([\d.]+) V rising", "TPS4811 BST UVLO rising"),
+               t_ov=g3(t48, r"tPD\(OV_OFF\) OV Turn Off propagation Delay OV . to PD ., CL = 47nF ([\d.]+) ([\d.]+) .s", "TPS4811 tPD(OV_OFF)"),
+               wrn=g3(t48, r"RSET = 100 ., RIWRN = 39\.7k. ([\d.]+) ([\d.]+) ([\d.]+) mV", "TPS4811 OCP at 39.7k"),
+               tmr_i=g3(t48, r"I\(TMR_SRC_CB\) TMR source current ([\d.]+) ([\d.]+) ([\d.]+) .A", "TPS4811 TMR source"),
+               tmr_v=g3(t48, r"V\(TMR_OC\) ([\d.]+) ([\d.]+) ([\d.]+) V", "TPS4811 TMR threshold"),
+               pin_abs=g3(t48, r"Input Pins OV, EN/UVLO, INP, INP_G, FLT_I , FLT_T to GND \S1 (\d+)", "TPS4811 input pins' maximum")[0])
+    T48["cl"] = 47e-9
+    lm5, lm6 = flat(pg(LM747, 5)), flat(pg(LM747, 6))
+    need(lm5, r"ANODE to GND .65 65 V", "LM74700 6.1 ANODE")
+    need(lm5, r"CATHODE to ANODE .5 75 V", "LM74700 6.1 CATHODE to ANODE")
+    LM = dict(anode=-65.0, ca=75.0, vrev=g3(lm6, r"V\(AK REV\) (.\d+) (.\d+) (.\d+) mV", "LM74700 V(AK REV)"))
+    q1_, q3_ = flat(pg(CSD32, 1)), flat(pg(CSD32, 3))
+    QF = dict(vds=float(need(q1_, r"VDS Drain-to-Source Voltage (\d+) V", "CSD19532Q5B VDS").group(1)),
+              vgs=float(need(q1_, r"VGS Gate-to-Source Voltage .(\d+) V", "CSD19532Q5B VGS").group(1)),
+              idm=float(need(q1_, r"IDM Pulsed Drain Current\S* (\d+) A", "CSD19532Q5B IDM").group(1)),
+              eas=float(need(q1_, r"Avalanche Energy, single pulse (\d+) mJ", "CSD19532Q5B EAS").group(1)) * 1e-3,
+              idss=g3(q3_, r"IDSS Drain-to-Source Leakage Current VGS = 0 V, VDS = (\d+) V (\d+) .A", "CSD19532Q5B IDSS"),
+              rds=g3(q3_, r"VGS = 6 V, ID = 17 A ([\d.]+) ([\d.]+) m. RDS\(on\) Drain-to-Source On Resistance VGS = 10 V, ID = 17 A ([\d.]+) ([\d.]+) m", "CSD19532Q5B RDS(on)"),
+              ciss=g3(q3_, r"Ciss Input Capacitance (\d+) (\d+) pF", "CSD19532Q5B Ciss")[1] * 1e-12,
+              coss=g3(q3_, r"Coss Output Capacitance VGS = 0 V, VDS = 50 V, . = 1 MHz (\d+) (\d+) pF", "CSD19532Q5B Coss")[1] * 1e-12)
+    QF["rds_norm"] = 1.95        # Figure 8, normalized RDS(on) at 150 C, VGS 10 V (typical), L4-E9's reading (INFERRED from the figure)
+    bz1 = flat(pg(BZT, 2))
+    BZ = dict(vz=g3(bz1, r"BZT52C12 \w+ 12 ([\d.]+) ([\d.]+) 5", "BZT52C12 row"),
+              pd=g3(bz1, r"Power Dissipation \(Note 8\) @TA = \+25.C PD (\d+) mW", "BZT52C PD")[0] * 1e-3)
+    # the vehicle entry's TPS48110 network (L4-E11, accepted): the same values, so the same printed figures
+    e11 = open(os.path.join(TOP, "v2/docs/records/l4e11/apply_gen_sch_e_entry.py"), encoding="utf-8").read()
+    for pat_, what_ in ((r'TPS48110AQDGXRQ1 high-side driver with protection', "U6"), (r'"4\.5mOhm 1% 2512 3W 50ppm', "R19"),
+                        (r'"59\.0k 1%".*?"10\.0k 1% \(UVLO', "the UVLO divider"), (r'"100k 1%", "DC_P", "HS_INP"\); r\("R85", "39k 1%', "the INP divider"),
+                        (r'"100R 1% \(VS filter', "RVS"), (r'"22n C0G 5% 50V 1206 \(CTMR', "CTMR"), (r'"39\.7k 0\.1% \(RIWRN', "RIWRN"),
+                        (r'"100R 0\.1% \(RSET\)"', "RSET"), (r'"3\.01k 1% \(RISCP', "RISCP"), (r'"1n C0G 100V \(CSCP', "CSCP"),
+                        (r'"36\.5k 1% \(R1: gate slew\)"', "R1"), (r'"10R 1% \(R2: damping\)"', "R2"), (r'"10n C0G 5% 100V 1206 \(C1: gate slew', "C1"),
+                        (r'"1u 25V X7R \(CBST', "CBST")):
+        if not re.search(pat_, e11, re.S):
+            refuse(3, "L4-E11's entry draft no longer carries %s" % what_)
+    o11 = flat(open(os.path.join(TOP, "v2/docs/records/l4e11/l4e11_power.out"), encoding="utf-8").read())
+    L11 = dict(uv=g3(o11, r"UVLO: on at ([\d.]+) / ([\d.]+) / ([\d.]+) V, off at", "L4-E11's UVLO"),
+               uvf=g3(o11, r"UVLO: on at [\d.]+ / [\d.]+ / [\d.]+ V, off at ([\d.]+) / ([\d.]+) / ([\d.]+) V of DC_P", "L4-E11's UVLO falling"),
+               slew=g3(o11, r"the start: slew ([\d.]+) / ([\d.]+) / ([\d.]+) V/ms", "L4-E11's slew"),
+               inp=g3(o11, r"INP high from DC_P ([\d.]+) V", "L4-E11's INP")[0],
+               cin_uv=(59.0e3, 10.0e3), inp_div=(100e3, 39e3), rsns=4.5e-3, rsns_tol=0.01, rsns_tcr=50e-6, cbst=1e-6, cbst_tol=0.10, ctmr=22e-9, ctmr_tol=0.05,
+               riscp=3.01e3, cscp=1e-9, rvs=100.0, cvs=100e-9)
+    # the stage's own enable (R14 and R15 on TRK_VS), as the generator draws it
+    shdn_txt = need(gse, r'r\("R15", "15\.0k 1% \(SHDN: enable above about ([\d.]+) V\)"', "gen_sch_e.py R15").group(1)
+    # (1) the comparison of three implementations (each on its held sheet)
+    cs101_pk = c101_["v_pk"]
+    vbr_cold_r = lambda row_: row_["vbr"][0] * (1 + aT * (t_cold - 25.0))
+    rows_rt = {}
+    for f_ in ("jlc-search-rt0603brd07-2026-10-01.json", "jlc-search-rt0603brd07-10k-2026-10-01.json", "jlc-search-rt0603brd07-30k-2026-10-01.json"):
+        for r_ in json.load(open(os.path.join(TOP, INP, f_), encoding="utf-8"))["rows"]:
+            v_ = rvalue(r_["model"])
+            if v_ and r_["stock"] >= STOCK_MIN:
+                rows_rt[v_] = (r_["code"], r_["stock"])
+
+    def ov_band(a_, b_, rb_, aged):
+        """The OV cut-off referred to the input: R_top = a_ + b_ in series over rb_ (RT 0.1 %, 25 ppm/K over the envelope, aged:
+        the printed load-life and solder-heat limits), the comparator's printed rows, the pin's leakage either way through R_top."""
+        rt_lo = a_ * rtf(a_, -1, aged) + b_ * rtf(b_, -1, aged)
+        rt_hi = a_ * rtf(a_, 1, aged) + b_ * rtf(b_, 1, aged)
+        k_lo = (rt_lo + rb_ * rtf(rb_, 1, aged)) / (rb_ * rtf(rb_, 1, aged))
+        k_hi = (rt_hi + rb_ * rtf(rb_, -1, aged)) / (rb_ * rtf(rb_, -1, aged))
+        lk_ = T48["ovleak"] * rt_hi
+        return dict(rise=(T48["ovr"][0] * k_lo - lk_, T48["ovr"][2] * k_hi + lk_), fall=(T48["ovf"][0] * k_lo - lk_, T48["ovf"][2] * k_hi + lk_),
+                    k=(k_lo, k_hi), rt=(rt_lo, rt_hi), cur=1.0 / (rt_hi + rb_ * rtf(rb_, 1, aged)))
+
+    def ov_pick(d4row_, aged):
+        """The stocked divider that leaves the most room on its worst side: over CS101's peak at the input (M2 never trips it), under
+        the clamp's least breakdown at the cold end (a sustained source never reaches the clamp) and its falling threshold over 25 V
+        (a panel inside the window is never locked out after a cut)."""
+        tops = sorted(v_ for v_ in rows_rt if v_ >= 90e3)
+        best_ = None
+        for a_, b_ in itertools.combinations_with_replacement(tops, 2):
+            for rb_ in sorted(v_ for v_ in rows_rt if v_ < 90e3):
+                bd_ = ov_band(a_, b_, rb_, aged)
+                m_ = (bd_["rise"][0] - cs101_pk, vbr_cold_r(d4row_) - bd_["rise"][1], bd_["fall"][0] - v_oc)
+                key_ = (round(min(m_), 6), -a_ - b_, rb_)
+                if best_ is None or key_ > best_[0]:
+                    best_ = (key_, a_, b_, rb_, bd_, m_)
+        return dict(a=best_[1], b=best_[2], rb=best_[3], band=best_[4], m=best_[5])
+    ov28 = dict(new=ov_pick(d4, False), aged=ov_pick(d4, True))
+    # the clamp D4 the cut-off needs: the least held SMCJ row whose aged band has room and whose clamp at the derived disturbances'
+    # currents (D1's 10 A plateau, D2's 5 A) stays under the drafted entry's 50 V parts at the hot end (REQ-016's criterion)
+    d4n = None
+    for n_ in sorted(k_ for k_ in smcj if k_ >= 28):
+        pk_ = ov_pick(smcj[n_], True)
+        if min(pk_["m"]) > 0 and clamp(smcj[n_], 10.0, t_air) <= lim_draft and clamp(smcj[n_], A115, t_air) <= lim_draft:
+            d4n, ovs = n_, pk_
+            break
+    if d4n is None:
+        refuse(4, "BLOCKER: no held SMCJ row leaves the over-voltage cut-off room under REQ-016's criterion")
+    D4N = dict(smcj[d4n], n=d4n, vbr_cold=vbr_cold_r(smcj[d4n]), v116=clamp(smcj[d4n], 10.0, t_air), v115=clamp(smcj[d4n], A115, t_air),
+               v116_25=clamp(smcj[d4n], 10.0, 25.0), cap=min(smcj[d4n]["ipp"], be_clamp(smcj[d4n], lim_draft, 25.0)))
+    bandN, bandA = ov_band(ovs["a"], ovs["b"], ovs["rb"], False), ovs["band"]
+    D11 = dict(smcj[40], n=40, vbr_cold=vbr_cold_r(smcj[40]))
+    # implementation 1: the TPS48110-Q1 alone on back-to-back FETs. As TI draws it (Figure 9-14) VS, CS+ and ISCP sit on the input,
+    # rated -1 V to GND (6.1): a reversed panel takes them to minus its open circuit. Rearranged (VS behind a diode, the sense behind
+    # the pair) SRC carries the reversal, -30 V at most (6.1, 8.3.7): the reversed panel itself, and the reversed connection's ring,
+    # which only the input clamp bounds, at no less than its least breakdown at the cold end; the diode's drop (no minimum printed)
+    # also sits inside the OV reference
+    vf_diode = 0.715                                   # 1N4148W VF at 1 mA, the sheet's maximum (st-semtech-1n4148w-c81598.pdf)
+    i1 = dict(pins=-v_oc, pins_abs=-1.0, src_rev=-v_oc, src_abs=-30.0, ring=-D11["vbr_cold"], ov_vf=vf_diode,
+              ov_room=vbr_cold - cs101_pk)
+    # implementation 2: the LM74700-Q1 ideal diode ahead of the TPS48110-Q1 (the vehicle entry's pair). Its reverse comparator
+    # (V(AK REV) -17 to -2 mV) blocks every reverse current: CS116's negative lobes then find only the input clamp, and the
+    # CATHODE-to-ANODE rating (75 V) carries the clamp's voltage plus what PV_R holds (up to the window's 25 V); and CS101's ripple
+    # is rectified wherever the input falls faster than the stage drains the capacitance behind the diode
+    i2 = dict(ca36_25=v_oc + clamp(smcj[36], 10.0, 25.0), ca36_hot=v_oc + clamp(smcj[36], 10.0, t_air), ca40_hot=v_oc + clamp(smcj[40], 10.0, t_air),
+              c_total=c_bulk_max + c_a_max + c66_ + c_b_max, i_reg=max(reg_hi(rc_[0], v_) for v_ in v_ops))
+    i2["f_rect"] = i2["i_reg"] / (i2["c_total"] * 2 * math.pi * (cs101_pk - v_oc))   # where the input falls faster than the stage drains C
+    # (2) the selected block, implementation 3 (SESSION): U21, the TPS48110-Q1 over-voltage cut-off on the high side (TI's own
+    # topology, the vehicle entry's network) with one CSD19532Q5B (Q12) behind R87, and a CSD19532Q5B return switch (Q13) in the
+    # panel's return, its gate from PV_F through R101 100k over R102 100k, clamped by D12 BZT52C12-7-F; D11 SMCJ40CA across the
+    # connector; C131 1 uF 100 V on PV_F; D4 to the SMCJ row the cut-off needs
+    rq11 = QF["rds"][3] * 1e-3 * QF["rds_norm"]        # VGS from the charge pump, at least 11 V: the 10 V row's maximum, at 150 C
+    rq12 = QF["rds"][1] * 1e-3 * QF["rds_norm"]        # VGS at least 6 V in operation (below): the 6 V row's maximum, at 150 C
+    rsn_hi = L11["rsns"] * (1 + L11["rsns_tol"]) * (1 + L11["rsns_tcr"] * dt_end)
+    r_blk = rq11 + rq12 + rsn_hi
+    R101, R102 = 100e3, 100e3
+    vgs12_min = lo_h * R102 / (R101 + R102)                # at the hold's least corner, the stage's lowest operating input
+    if vgs12_min < 6.0:
+        refuse(4, "the return switch's gate is under 6 V at the hold's least corner")
+    i_reg_hi, i_trip_hi = max(reg_hi(rc_[0], v_) for v_ in v_ops), c["i_hi25"]
+    # what the block draws from the panel around the bank (at the window's top, every resistor at its least)
+    i_uv = v_oc / (sum(L11["cin_uv"]) * 0.99)
+    i_inp = v_oc / (sum(L11["inp_div"]) * 0.99)
+    i_ovd = v_oc * ovs["band"]["cur"]
+    i_g12 = v_oc / ((R101 + R102) * 0.99) + max(0.0, (v_oc * R102 / (R101 + R102) - BZ["vz"][0]) / R101)
+    i_byp = T48["iq"] + T48["ics"] + T48["iscp"] + T48["enleak"] + T48["ovleak"] + i_uv + i_inp + i_ovd + i_g12 + 1e-6
+    p_byp = v_oc * i_byp
+    p_cond = (i_reg_hi ** 2 * r_blk, i_trip_hi ** 2 * r_blk)
+    # the energy budget's entry: the block's conduction and bypass on SC-37's day and on the bright day at the selected setting
+    tr_sel, _nl = energy(nom_h, lim_of(c["inom"], rc_[0], "lo"))
+    br_sel, _nb = bright(nom_h, lim_of(c["inom"], rc_[0], "lo"))
+    e_blk = tuple(sum(((w_ / nom_h) ** 2 * r_blk + nom_h * i_byp) for w_ in day_ if w_ > 0.0) for day_ in (tr_sel, br_sel))
+    e_day = (sum(tr_sel), sum(br_sel))
+    # the static bound and check (b) with the block at the panel entry: the boundary voltage stays at most 25 V (REQ-016's window),
+    # so the block's series drop moves the bank's voltage, not the boundary's (the trip read at both), and its own currents around
+    # the bank add at the boundary
+    dv_blk = i_trip_hi * r_blk
+    p_static_blk = max(v_ * max(i_trip_c(v_, rpb, nb, 1, True, R66), i_trip_c(max(v_ - dv_blk, grid[0]), rpb, nb, 1, True, R66)) + pb_c(v_, R66)
+                       for v_ in grid) + p_byp
+    c_in = 1e-6
+    e_cap_blk = e_cap + (c_in * 1.10 + L11["cvs"] * 1.10 + QF["coss"] + L11["cscp"]) * v_oc ** 2
+    t_allow_blk = ((p_win - p_static_blk) * W_AVG - e_cap_blk - c["e_f"]) / (p_src - p_static_blk)
+    slew_hi = L11["slew"][2] * 1e3                      # V/s
+    c_behind_max = c_a_max + c66_ + c_b_max
+    i_bank_slew = c_behind_max * slew_hi
+    t_slew = v_oc / (L11["slew"][0] * 1e3)
+    # the CS101 immunity re-run with the block in the path: its series resistance ahead of the bulk (S1 and S2), C_in across the input
+    def cs101_blk(f_, i_, vin_, r_ser, cin_):
+        w_ = 2 * math.pi * f_
+        z_b = rbank + 1.0 / y_behind(f_, LAYOUT, rc_[0], i_, vin_)
+        y_a = 3.0 / (za["esr"] + 1.0 / (1j * w_ * c_can_max))
+        z_eut = 1.0 / (1.0 / z_b + y_a)
+        h_ = abs(z_eut / (z_eut + r_ser))
+        z_in = 1.0 / (1.0 / (z_eut + r_ser) + 1j * w_ * cin_)
+        e_ = math.sqrt(p101(f_) * 0.5)
+        v2 = max(min(v101(f_), e_ * abs(z_in / (z_in + z_ret(f_, zp_)))) for zp_ in (1e-3, None))
+        return v101(f_) * math.sqrt(2) * h_ / abs(z_b), v2 * math.sqrt(2) * abs(z_eut / (z_eut + r_ser)) / abs(z_b), h_
+    tau_lo = best["tau"][0]
+    cs_re = {}
+    for lab_, r_, cin_ in (("none", 0.0, 0.0), ("least", QF["rds"][2] * 1e-3 * 2 + L11["rsns"] * (1 - L11["rsns_tol"]), c_in),
+                           ("most", r_blk, c_in)):
+        wr_ = []
+        for f_ in freqs:
+            hf_ = 1.0 / abs(1 + 1j * 2 * math.pi * f_ * tau_lo)
+            s_ = max(max(cs101_blk(f_, i_reg_hi, v_, r_, cin_)[:2]) for v_ in v_ops)
+            wr_.append((f_, s_, s_ * hf_, max(cs101_blk(f_, i_reg_hi, v_, r_, cin_)[2] for v_ in v_ops)))
+        cs_re[lab_] = dict(worst=max(wr_, key=lambda x_: x_[2]), hmax=max(x_[3] for x_ in wr_), r=r_)
+    if abs(cs_re["none"]["worst"][2] - best["worst"][2]) > 1e-9:
+        refuse(4, "the CS101 re-run with no series resistance does not reproduce the accepted immunity")
+    # the faults (D4 and D5 of the derivation) with the block
+    st_min = L11["cbst"] * (1 - L11["cbst_tol"]) * T48["bst_uv"][0] / (T48["bst_i"][2] * 1e-6)   # the gate cannot rise before BST is charged
+    f36 = dict(v=v_src, vds=v_src, vs=v_src, en=v_src * L11["cin_uv"][1] * 1.01 / (L11["cin_uv"][0] * 0.99 + L11["cin_uv"][1] * 1.01),
+               inp=v_src * L11["inp_div"][1] * 1.01 / (L11["inp_div"][0] * 0.99 + L11["inp_div"][1] * 1.01),
+               ov=v_src / bandA["k"][0], ring=D11["vc"], st_min=st_min, cut_hi=bandA["rise"][1], d4_room=D4N["vbr_cold"] - bandA["rise"][1])
+    g_hs = 1.0 / (sum(L11["cin_uv"]) * 1.01) + 1.0 / (sum(L11["inp_div"]) * 1.01) + 1.0 / (bandA["rt"][1] + ovs["rb"] * rtf(ovs["rb"], 1, True)) + 1.0 / ((R101 + R102) * 1.01)
+    rev = dict(v=v_oc, vds=v_oc, i_be=g_hs * 1.0, idss=QF["idss"][1] * 1e-6, idss_v=QF["idss"][0], q12_vds=QF["vds"], ring=D11["vc"],
+               floor_c=-D11["vc"] * QF["coss"] / (c_in * 0.9))
+    # CS116 and CS115 with the block on (in the path) and off (night, after a cut)
+    t_rc = L11["riscp"] * 1.01 * L11["cscp"] * 1.05
+    scp_lo = g3(o11, r"short circuit ([\d.]+) / ([\d.]+) / ([\d.]+) A;", "L4-E11's short-circuit threshold")[0]   # the same RISCP, CSCP and RSNS
+    ocp11 = g3(o11, r"overcurrent ([\d.]+) / ([\d.]+) / ([\d.]+) A \(the printed row", "L4-E11's overcurrent threshold")
+    scp_f = max(i_op + r_["ip"] * min(1.0, 1.0 / (math.pi * r_["f"] * t_rc)) for r_ in r116)
+    ocp_lo = ocp11[0]
+    t_over = max((max(Q116) / (math.pi * r_["f"])) * math.log(r_["ip"] / (ocp_lo - i_op)) for r_ in r116 if r_["ip"] > ocp_lo - i_op)
+    v_tmr = T48["tmr_i"][2] * 1e-6 * t_over / (L11["ctmr"] * (1 - L11["ctmr_tol"]))
+    ov_in116 = max(r_["vp"] for r_ in r116 if r_["lumped"]) + (i_op + 10.0) * r_blk
+    def dv_hi(div_):
+        """A 1 % divider's output fraction at its highest (top at -1 %, bottom at +1 %)."""
+        return div_[1] * 1.01 / (div_[0] * 0.99 + div_[1] * 1.01)
+    off116 = dict(v=clamp(D11, 10.0, t_air), en=clamp(D11, 10.0, t_air) * dv_hi(L11["cin_uv"]), inp=clamp(D11, 10.0, t_air) * dv_hi(L11["inp_div"]),
+                  floor=-clamp(D11, 10.0, t_air) * QF["coss"] / (c_in * 0.9), v115=clamp(D11, A115, t_air),
+                  e=clamp(D11, 10.0, t_air) * 10.0 * max(Q116) / (math.pi * 1e6))
+    t_gate = T48["t_ov"][1] * 1e-6
+    gate_load = QF["ciss"] + 10e-9 * 1.05
+    rem = dict(T48=T48, LM=LM, QF=QF, BZ=BZ, L11=L11, shdn=float(shdn_txt), i1=i1, i2=i2, ov28=ov28, ovs=ovs, bandN=bandN, bandA=bandA, D4N=D4N, D11=D11,
+               rq11=rq11, rq12=rq12, rsn_hi=rsn_hi, r_blk=r_blk, vgs12_min=vgs12_min, i_byp=i_byp, p_byp=p_byp, p_cond=p_cond, e_blk=e_blk, e_day=e_day,
+               p_static_blk=p_static_blk, e_cap_blk=e_cap_blk, t_allow_blk=t_allow_blk, i_bank_slew=i_bank_slew, t_slew=t_slew, cs_re=cs_re,
+               f36=f36, rev=rev, scp_f=scp_f, scp_lo=scp_lo, ocp_lo=ocp_lo, t_over=t_over, v_tmr=v_tmr, ov_in116=ov_in116, off116=off116,
+               t_gate=t_gate, gate_load=gate_load, ocp11=ocp11, ring_en=D11["vc"] * dv_hi(L11["cin_uv"]), ring_inp=D11["vc"] * dv_hi(L11["inp_div"]), cs101_pk=cs101_pk, c_in=c_in, i_reg_hi=i_reg_hi, i_trip_hi=i_trip_hi,
+               gap=(v_oc, bandA["rise"][1], bandA["rise"][1] * i_trip_c(bandA["rise"][1], rpb, nb, 1, True, R66)),
+               hold_shift=i_reg_hi * r_blk, dv_blk=dv_blk, t_fac=T_FAC, t_resp_typ=c["t_resp_typ"], tau_lo=tau_lo, margin=best["m"], R101=R101, R102=R102,
+               ov_codes=(rows_rt[ovs["a"]][0], rows_rt[ovs["b"]][0], rows_rt[ovs["rb"]][0]))
+    verd2 = [
+        dict(id="D4", name="a stiff 36 V source", ok=st_min > 1e-3 and f36["cut_hi"] < v_src and f36["d4_room"] > 0 and v_src < D11["vr"]
+             and f36["ring"] < min(QF["vds"], 100.0) and f36["en"] <= 15.0 and f36["inp"] < T48["pin_abs"]),
+        dict(id="D5", name="a reversed panel", note=" (CONDITIONAL on Q13's leakage above 25 C)", ok=rev["vds"] < QF["vds"] and rev["i_be"] > rev["idss"] and rev["ring"] < QF["vds"]),
+        dict(id="CS116/115 on", name="CS116 and CS115 with the block on", ok=scp_f < scp_lo and v_tmr < T48["tmr_v"][0] and ov_in116 < bandA["rise"][0] and D4N["v116"] <= lim_draft),
+        dict(id="CS116/115 off", name="CS116 and CS115 with the block off", ok=off116["v"] < QF["vds"] and off116["en"] <= 15.0 and off116["inp"] < T48["pin_abs"] and off116["floor"] > -1.0),
+        dict(id="turn-off", name="the turn-off against D4 and the bulk", ok=gate_load < T48["cl"] and f36["d4_room"] > 0 and bandA["rise"][1] < za["v"]),
+        dict(id="window", name="the window kept", ok=bandA["rise"][0] > cs101_pk and bandA["fall"][0] > v_oc and L11["uv"][2] < float(shdn_txt)
+             and p_static_blk < p_win and t_allow_blk >= T_FAC * c["t_resp_typ"] and i_bank_slew < c["i_lo_aged"]
+             and max(cs_re[k_]["worst"][2] for k_ in ("least", "most")) < best["m"]),
+    ]
+    if not all(v_["ok"] for v_ in verd2) or min(ov28["aged"]["m"]) >= 0 or d4n != 30:
+        refuse(4, "the remedy's verdicts are not the ones the record states: %s, SMCJ28A aged %.3f, D4 SMCJ%dA" % (
+            [(v_["id"], v_["ok"]) for v_ in verd2], min(ov28["aged"]["m"]), d4n))
+    rem["verd"] = verd2
+    R["remedy"] = rem
     # ---- the single faults (for layer 8's fault analysis; this record assigns them, it does not close them)
     faults = dict(
         defeat=["U18's output stuck low or open, or R65 open (no current reaches R66)", "R66 shorted", "U19's OUTB stuck open (high impedance)",
@@ -2211,6 +2460,25 @@ def compute():
                                guard='r("R70", "8.06k 0.1% 25ppm (SWEN supply guard top)", "TRK_LDO33", "TRK_SWEN", "R", "C861587")' in new
                                and 'r("R71", "6.04k 0.1% 25ppm (SWEN pull-down, the guard bottom)", "TRK_SWEN", "GND", "R", "C728595")' in new,
                                no_series=new.count('"33": "TRK_VS"') == 1 and new.count('"32": "TRK_VIN"') == 1 and "CSPF" not in new)
+    # the solar-fault remedies' draft, read back on top of the backstop's, L4-E9's hotswap and L4-E11's entry drafts (the order its
+    # docstring names); its codes and its OV divider and clamp the remedy's own
+    nm = "apply_gen_sch_e_solar_guard.py"
+    m = load(nm[:-3] + "_for_l4e7", "v2/docs/records/l4e7/" + nm)
+    base2 = load("hotswap_for_l4e7", "v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py").patched(new)
+    base2 = load("entry_for_l4e7", "v2/docs/records/l4e11/apply_gen_sch_e_entry.py").patched(base2)
+    new2 = m.patched(base2)
+    rm_ = R["remedy"]
+    want = ["C17556513", "C473333", "C2985708", "C80273", "C124196", "C184799", "C97929", "C861872"] + list(rm_["ov_codes"])
+    R["drafts"][nm] = (len(m.EDITS), "R10" in "".join(o_ for o_, _r in m.EDITS), new2.count('r("R10", "115k 1% (RFBOUT1: 15.1 V)"') == 1,
+                       all(new2.count('"%s")' % c_) > base2.count('"%s")' % c_) for c_ in want), want)
+    ovv = (rm_["ovs"]["a"], rm_["ovs"]["b"], rm_["ovs"]["rb"])
+    R["guard_draft"] = dict(rtn='"VH2", {"1": "PV_IN", "2": "PV_RTN"}, "C274411")' in new2, f2='"FUSE", {"1": "PV_IN", "2": "PV_F"})' in new2,
+                            ov=[m.OV_TOP_A, m.OV_TOP_B, m.OV_BOT] == [("%gk" % (v_ / 1e3), c_) for v_, c_ in zip(ovv, rm_["ov_codes"])],
+                            d4=('"SMCJ%dA (panel surge' % rm_["D4N"]["n"]) in new2 and 'part("D4", "Device", "D_Zener", "SMCJ28A' not in new2,
+                            switch='{"switch": "U21", "enable_net": "PV_UVLO"}),' in new2 and new2.count('"always_on_why": "a photovoltaic panel') == 0,
+                            q13='"PV_RG", "PV_RTN", "GND", lcsc="C473333")' in new2, d11='{"1": "PV_F", "2": "PV_RTN"}, "C80273")' in new2,
+                            rails=all(('_intent.rail("%s"' % n_) in new2 for n_ in ("PV_F", "PV_SNS", "PV_RTN")),
+                            u21='"13": "PV_P", "14": "PV_GATE", "15": "PV_PU"' in new2 and '"2": "PV_OVLO"' in new2)
     return R
 
 
@@ -2850,7 +3118,8 @@ def render(R):
           "sustained source the drafted entry holds is D4's least breakdown at the cold end, %.2f V (under it D4 carries less than its 1 mA "
           "test current)" % (ld["v_src"], ld["lim_draft"], R["decision"]["surge"]["rating"]["vs169"], R["decision"]["surge"]["rating"]["vin"],
                               R["decision"]["surge"]["rating"]["q3"], ld["lim_drawn"], ld["vbr_cold"]))
-    wrapP("     ", "     ", "THE SMALLEST CHANGE for D4 (SESSION), read from the held series (Littelfuse SMCJ p.2): the least row that stands off %.0f V "
+    wrapP("     ", "     ", "THE TVS-ONLY CHANGE for D4, evaluated and not taken (superseded by THE SOLAR-FAULT REMEDIES below), read from "
+          "the held series (Littelfuse SMCJ p.2): the least row that stands off %.0f V "
           "and does not break down at the cold end is SMCJ%dA (VR %.1f V, VBR %.2f to %.2f V, %.2f V at the cold end; VC %.1f V at %.1f A). "
           "Alone it does not hold the derived set on the drafted entry: under REQ-016's criterion D1's 10 A plateau puts its clamp at "
           "%.2f V at 25 C and %.2f V at the hot end (typical coefficient), against the %.0f V parts; the %.0f V parts are reached at %.2f A "
@@ -2877,19 +3146,168 @@ def render(R):
                "NOT MET (%.2f > %.0f V)" % (r115["vch"], ld["lim_drawn"])),
               ("D3", "the panel's cold open circuit", "%.0f V, under D4's %.0f V standoff" % (ld["v_oc"], R["decision"]["rows"]["d4"]["vr"]), "MEETS (CONDITIONAL on PANEL-ACC)", "MEETS"),
               ("D4", "a %.0f V source on the port" % ld["v_src"], "D4 conducts %.1f to %.1f A" % (min(i_ for _l, _v, i_, _p in ld["src"]), max(i_ for _l, _v, i_, _p in ld["src"])),
-               "NOT MET: SMCJ%dA with the 63 V class (register row)" % r36["n"], "NOT MET"),
-              ("D5", "a reversed panel (E-N1)", "D4 forward, %.3f A held" % ld["rev"]["i"], "NOT MET as recorded (E-N1)", "NOT MET"))
+               "NOT MET on the drafted entry: remedied below (the over-voltage cut-off)", "NOT MET"),
+              ("D5", "a reversed panel (E-N1)", "D4 forward, %.3f A held" % ld["rev"]["i"], "NOT MET on the drafted entry: remedied below (the "
+               "return switch)", "NOT MET"))
     for r_ in rows_v:
         wrapP("       - ", "         ", "%s, %s: %s: %s; as drawn, %s" % r_)
     wrapP("     ", "     ", "FOR L4-E9'S REGISTER (R-156 and its companions; the register is L4-E9's to write): (a) R-156's input is this "
           "derivation: D1 and D3 MEET, D2 CONDITIONAL on the recorded loop current, D4 and D5 NOT MET; R-156's text names the INA250's "
           "40 V, and the drafted U18 is the INA169 (%.0f V); (b) a TEST row owed at layer 8: CS116 on PV_IN alone and on the J_SOLAR "
           "cable at the six frequencies and the lead's %.1f MHz, and CS115 on the cable, recording the cable's peak current (TEST-PLAN "
-          "runs M1 to M5 only, though the row REQ-063 commits to marks both A); (c) a CHANGE row for D4: SMCJ%dA with the entry's 63 V "
-          "class parts (EEHZA1J220XP for the bulk, C71 to C74 at 63 V or more) and the CS101 correction re-run, or the over-voltage and reverse disconnect that also closes D5, catalogue rows and "
-          "sheets owed (no catalogue reading is filed and this round contacts no one); (d) the residual beyond the basis: a direct or "
-          "nearer strike, with the entry's margin there D4's own rating (check (c)'s capability rows)" % (
-              R["decision"]["surge"]["rating"]["vs169"], le_["f_q"] / 1e6, r36["n"]))
+          "runs M1 to M5 only, though the row REQ-063 commits to marks both A); (c) the remedies for D4 and D5: THE SOLAR-FAULT "
+          "REMEDIES below; (d) the residual beyond the basis: a direct or nearer strike, the entry's margin there the port clamp's own "
+          "rating with the remedies (D4's without them, check (c)'s capability rows)" % (
+              R["decision"]["surge"]["rating"]["vs169"], le_["f_q"] / 1e6))
+    # ---- the solar-fault remedies (the owner's amendment of 2 October 2026, item 3)
+    rm = R["remedy"]
+    T4, QF, L11, ovs, bA, bN, DN, D11 = rm["T48"], rm["QF"], rm["L11"], rm["ovs"], rm["bandA"], rm["bandN"], rm["D4N"], rm["D11"]
+    rw10 = R["decision"]["rows"]
+    wrapP("   ", "     ", "THE SOLAR-FAULT REMEDIES (the owner's amendment of 2 October 2026, 14:20, item 3: the 36 V source and the reversed "
+          "panel are open engineering defects; a selected remedy for each, its circuit changes, a bounded analysis against the approved "
+          "fault exposure and the parts' ratings, the interfaces and calculations re-checked; the normal window kept, fault protection "
+          "never extending the operating range). D4 and D5 of the panel lead's derivation above; L4-E9's D-10, D-11 and R-173")
+    wrapP("     - ", "       ", "THE COMPARISON, three implementations, each on its held sheet. (1) The TPS48110-Q1 alone driving back-to-back "
+          "FETs: TI draws it (SLUSEE5E Figure 9-14) with VS, CS+ and ISCP on the input, and rates them %.0f V to GND (6.1): a reversed "
+          "panel takes them to %.0f V. Rearranged (VS behind a diode, the sense behind the pair), the reversal lands on SRC, rated %.0f V "
+          "(6.1; 8.3.7 prints that state, VIN 0 V, SRC pulled negative, INP low): the reversed panel's %.0f V fits with %.0f V to spare, "
+          "but a reversed connection's ring is bounded only by the input clamp, which must stand off 36 V both ways and so breaks down "
+          "no lower than %.1f V at the cold end; and the diode's drop, at most %.3f V and no minimum printed, enters the cut-off's "
+          "reference, inside a room of %.2f V. NOT TAKEN. (2) The LM74700-Q1 ideal diode ahead of the TPS48110-Q1 (the vehicle "
+          "entry's pair, L4-E9's suggestion): its reverse comparator (V(AK REV) %.0f to %.0f mV) blocks every reverse current, so "
+          "CS116's negative lobes find only the input clamp, and CATHODE to ANODE (%.0f V, 6.1) then carries the clamp's voltage "
+          "plus up to the window's 25 V held behind it: with the SMCJ36CA at 10 A, %.2f V at 25 C and %.2f V at the hot end; with "
+          "the SMCJ40CA %.2f V; and it rectifies CS101's ripple wherever the input falls faster than the stage drains the %.0f uF "
+          "behind it, above about %.0f Hz at the regulation's highest current, inside the band (2 to 5 kHz) where the accepted M2 "
+          "immunity is decided, so the accepted linear analysis would no longer describe it. NOT TAKEN. (3) SELECTED (SESSION): one "
+          "remedy for each fault, both from parts already in the design, the path linear when on, no control acting on a reverse "
+          "current: for D4 the TPS48110-Q1 over-voltage cut-off on the high side in TI's own topology with the vehicle entry's "
+          "network (L4-E11) and one CSD19532Q5B; for D5 a CSD19532Q5B in the panel's return, its gate from the input through a "
+          "divider and a BZT52C12 clamp, which blocks a reversal with its %.0f V rating and no controller" % (
+              rm["i1"]["pins_abs"], rm["i1"]["pins"], rm["i1"]["src_abs"], rm["i1"]["src_rev"], rm["i1"]["src_rev"] - rm["i1"]["src_abs"],
+              rm["i1"]["ring"], rm["i1"]["ov_vf"], rm["i1"]["ov_room"], rm["LM"]["vrev"][0], rm["LM"]["vrev"][2], rm["LM"]["ca"],
+              rm["i2"]["ca36_25"], rm["i2"]["ca36_hot"], rm["i2"]["ca40_hot"], 1e6 * rm["i2"]["c_total"], rm["i2"]["f_rect"], QF["vds"]))
+    wrapP("     - ", "       ", "THE CUT-OFF'S BAND decides the clamp D4. It must sit over CS101's peak at the input, %.2f V (M2 never trips "
+          "it), under D4's least breakdown at the cold end (a sustained source never reaches the clamp), and fall back over 25 V (a "
+          "panel inside the window is never locked out after a cut). TPS48110 OV %.2f / %.2f / %.2f V rising and %.2f / %.2f / %.2f "
+          "V falling (SLUSEE5E 6.5), the pin's leakage up to %.0f nA either way through the top resistor; the divider of stocked "
+          "YAGEO RT 0.1 %% 25 ppm/K parts, aged by their printed load-life and solder-heat limits, the record's convention for a "
+          "protection threshold. With D4 the drafted SMCJ28A (%.2f V at the cold end): new parts leave %.3f V on the worst side "
+          "(L4-E9's 'about 0.4 V each side' less the leakage and the drift), aged parts %.3f V: NOT MET. So D4 becomes the next held "
+          "row, SMCJ%dA (VR %.1f V, VBR %.2f to %.2f V, %.2f V at the cold end; VC %.1f V at %.1f A), and the divider R98 %gk + R99 "
+          "%gk over R100 %gk (%s, %s, %s) puts the cut-off at %.2f to %.2f V rising and %.2f to %.2f V falling, aged (%.2f to %.2f V "
+          "new): %.3f V over CS101's peak, %.3f V under the clamp, %.2f V over 25 V on the fall. Under REQ-016's criterion the "
+          "SMCJ%dA clamps D1's 10 A plateau at %.2f V at the hot end and D2's 5 A at %.2f V, under the drafted entry's %.0f V parts "
+          "(over the drawn %.0f V, as before), and stands off CS101's peak by %.2f V where the SMCJ28A did by %.2f V" % (
+              rm["cs101_pk"], T4["ovr"][0], T4["ovr"][1], T4["ovr"][2], T4["ovf"][0], T4["ovf"][1], T4["ovf"][2], 1e9 * T4["ovleak"],
+              R["lead"]["vbr_cold"], min(rm["ov28"]["new"]["m"]), min(rm["ov28"]["aged"]["m"]), DN["n"], DN["vr"], DN["vbr"][0], DN["vbr"][1],
+              DN["vbr_cold"], DN["vc"], DN["ipp"], ovs["a"] / 1e3, ovs["b"] / 1e3, ovs["rb"] / 1e3, rm["ov_codes"][0], rm["ov_codes"][1],
+              rm["ov_codes"][2], bA["rise"][0], bA["rise"][1], bA["fall"][0], bA["fall"][1], bN["rise"][0], bN["rise"][1], ovs["m"][0],
+              ovs["m"][1], ovs["m"][2], DN["n"], DN["v116"], DN["v115"], R["lead"]["lim_draft"], R["lead"]["lim_drawn"],
+              DN["vr"] - rm["cs101_pk"], rw10["d4"]["vr"] - rm["cs101_pk"]))
+    wrapP("     - ", "       ", "THE CIRCUIT CHANGES (drafted in apply_gen_sch_e_solar_guard.py, never applied): J_SOLAR.2 becomes PV_RTN "
+          "and F2 feeds PV_F; D11 SMCJ40CA (C80273) across PV_F and PV_RTN at the connector; C131 1 uF 100 V on PV_F; U21 "
+          "TPS48110AQDGXRQ1 (C17556513) with R87 %.1f mOhm (C2985708) from PV_F to PV_SNS, Q12 CSD19532Q5B (C473333) from PV_SNS to "
+          "PV_P, RSET R88 100R 0.1 %%, RISCP R89 3.01k with C126 1 nF C0G 100 V, the gate slew R90 36.5k, R91 10R and C127 10 nF "
+          "C0G 100 V (C184799), CBST C128 1 uF, CTMR C129 22 nF C0G (C97929) with RIWRN R92 39.7k 0.1 %% (C861872), the VS filter "
+          "R93 100R and C130 100 nF 100 V, UVLO R94 59.0k over R95 10.0k, INP R96 100k over R97 39k, the OV divider R98, R99 and "
+          "R100 above (all L4-E11's vehicle-entry values but the OV divider); Q13 CSD19532Q5B (C473333) from PV_RTN to GND, its gate "
+          "PV_RG from PV_F through R101 %.0fk and to GND through R102 %.0fk, D12 BZT52C12-7-F (C124196) gate to source; D4 to "
+          "SMCJ%dA, its LCSC code owed (no catalogue reading of it is filed). Placement on board E: at J_SOLAR, ahead of F2's load, the "
+          "bulk, the sense bank and D4; Q13 in the return pin's copper. Owed with it: U21's DGX-19 land (as L4-E11's E11-01), the "
+          "regeneration and its gates. Read back here on a scratch copy after the five drafts it follows (this record's hold, input "
+          "limit and backstop, L4-E9's hot swap, L4-E11's entry): %d edits; the return, F2, the OV divider and its codes, D4, PV_P's "
+          "switch, Q13, D11, the rails and U21's pins: %s; R10 untouched: %s" % (
+              1e3 * L11["rsns"], rm["R101"] / 1e3, rm["R102"] / 1e3, DN["n"], R["drafts"]["apply_gen_sch_e_solar_guard.py"][0],
+              "yes" if all(R["guard_draft"].values()) else "NO", "yes" if R["drafts"]["apply_gen_sch_e_solar_guard.py"][2] else "NO"))
+    vd = {v_["id"]: v_ for v_ in rm["verd"]}
+    P("     THE BOUNDED ANALYSIS (the drafted entry with the block and D4 SMCJ%dA; each against the parts' printed ratings):" % DN["n"])
+    rows_r = (
+        ("D4, a stiff %.0f V source through the %.4f Ohm lead" % (R["lead"]["v_src"], R["lead"]["lead"]["r"]),
+         "the block never turns on: the gate cannot rise before BST charges, at least %.1f ms (1 uF -10 %% to %.1f V at %.0f uA), while "
+         "the OV pin follows the input at once; the cut-off's highest %.2f V is %.2f V under the source; Q12 holds %.0f V of %.0f V; "
+         "U21's VS %.0f V of 80 V, EN/UVLO %.2f V of 15 V, INP %.2f V of %.0f V; D11 at %.0f V under its %.0f V standoff; a "
+         "connection's ring bounded by D11 at %.1f V at its rated current (EN/UVLO %.2f V, INP %.2f V); D4 and the bulk see nothing; a "
+         "source rising with the block on is cut at %.2f V at most, %.3f V under D4" % (
+             1e3 * rm["f36"]["st_min"], T4["bst_uv"][0], T4["bst_i"][2], rm["f36"]["cut_hi"], R["lead"]["v_src"] - rm["f36"]["cut_hi"],
+             rm["f36"]["vds"], QF["vds"], rm["f36"]["vs"], rm["f36"]["en"], rm["f36"]["inp"], T4["pin_abs"], R["lead"]["v_src"], D11["vr"],
+             rm["f36"]["ring"], rm["ring_en"], rm["ring_inp"], rm["f36"]["cut_hi"], rm["f36"]["d4_room"]), "MEETS"),
+        ("D5, a reversed panel (%.3f A short circuit with tolerance, %.0f V open circuit)" % (R["lead"]["rev"]["i"], rm["rev"]["v"]),
+         "Q13 off (its gate at or under its source), its body diode reverse biased: no current; it holds %.0f V of %.0f V, and a "
+         "reversed connection's ring at most D11's %.1f V; the high side's pins stay within 1 V of GND while Q13 leaks under %.1f uA "
+         "(the dividers' conductance), against %.0f uA printed at %.0f V and 25 C; on a fast ring C131 holds them within %.3f V; D4 and "
+         "the stage see no reversal" % (rm["rev"]["vds"], QF["vds"], rm["rev"]["ring"], 1e6 * rm["rev"]["i_be"], 1e6 * rm["rev"]["idss"],
+                                         rm["rev"]["idss_v"], abs(rm["rev"]["floor_c"])),
+         "MEETS, CONDITIONAL on Q13's leakage above 25 C (no row; %.0f times the printed one)" % (rm["rev"]["i_be"] / rm["rev"]["idss"])),
+        ("CS116 and CS115, the block on (in the path)",
+         "the short-circuit trip's sense, filtered by RISCP x CSCP, at most %.2f A against its least %.2f A; the overcurrent timer at "
+         "most %.3f V against %.3f V (the time over its least %.3f A, %.1f us at most); the input at most %.2f V against the cut-off's "
+         "least %.2f V; Q12 and Q13 carry at most %.2f A against %.0f A; D4 (SMCJ%dA) at the disturbance's current %.2f V, under %.0f V; "
+         "D4 off in the loaded network" % (rm["scp_f"], rm["scp_lo"], rm["v_tmr"], T4["tmr_v"][0], rm["ocp_lo"], 1e6 * rm["t_over"],
+                                           rm["ov_in116"], bA["rise"][0], rm["i_trip_hi"] + 10.0, QF["idm"], DN["n"], DN["v116"],
+                                           R["lead"]["lim_draft"]), "MEETS"),
+        ("CS116 and CS115, the block off (night, or after a cut)",
+         "D11 clamps the port: at 10 A at the hot end %.2f V (5 A, %.2f V): Q12 holds it against %.0f V, U21's VS against 80 V, "
+         "EN/UVLO %.2f V, INP %.2f V; D11 takes at most %.1f mJ a pulse; C131 holds PV_F within %.3f V of GND against Q13's %.0f pF" % (
+             rm["off116"]["v"], rm["off116"]["v115"], QF["vds"], rm["off116"]["en"], rm["off116"]["inp"], 1e3 * rm["off116"]["e"],
+             abs(rm["off116"]["floor"]), 1e12 * QF["coss"]), "MEETS"),
+        ("the turn-off against D4's and the bulk's exposure",
+         "OV to PD %.1f us at most at 47 nF, the gate's load %.1f nF; a rising source is cut at %.2f V at most, %.3f V under D4's least "
+         "breakdown at the cold end and %.1f V under the bulk's %.0f V; D4 never conducts" % (
+             1e6 * rm["t_gate"], 1e9 * rm["gate_load"], bA["rise"][1], rm["f36"]["d4_room"], R["decision"]["surge"]["rating"]["za_v"] - bA["rise"][1],
+             R["decision"]["surge"]["rating"]["za_v"]), "MEETS"),
+        ("the quiescent and conduction loss in normal operation",
+         "the series path at most %.2f mOhm (Q12 %.2f, Q13 %.2f at VGS %.1f V or more, R87 %.2f; the FETs at their 150 C reading); "
+         "%.3f W at the regulation's highest %.3f A and %.3f W at the trip's highest %.3f A; %.2f mA around the bank at 25 V (IQ, "
+         "CS- and ISCP bias, the dividers, the gate network), %.1f mW; on SC-37's day %.2f Wh of %.1f Wh (%.2f %%), on the bright day "
+         "%.2f Wh of %.1f Wh" % (1e3 * rm["r_blk"], 1e3 * rm["rq11"], 1e3 * rm["rq12"], rm["vgs12_min"], 1e3 * rm["rsn_hi"],
+                                  rm["p_cond"][0], rm["i_reg_hi"], rm["p_cond"][1], rm["i_trip_hi"], 1e3 * rm["i_byp"], 1e3 * rm["p_byp"],
+                                  rm["e_blk"][0], rm["e_day"][0], 100 * rm["e_blk"][0] / rm["e_day"][0], rm["e_blk"][1], rm["e_day"][1]),
+         "an endurance cost (the energy budget's entry)"),
+    )
+    for lab_, txt_, v_ in rows_r:
+        wrapP("       - ", "         ", "%s: %s: %s" % (lab_, txt_, v_))
+    wrapP("     - ", "       ", "THE WINDOW KEPT. REQ-016's normal window is unchanged: open circuit at most 25 V at the panel's coldest, the "
+          "hold at 17.6 V, at most 100 W. The cut-off rises at %.2f V at the least and falls back at %.2f V at the least, both over 25 "
+          "V with their tolerance and drift, and its highest, %.2f V, is under every rating on the entry; above it the stage is off, "
+          "not running. U21 turns on at %.2f V at the most and off at %.2f V at the least (L4-E11's figures for the same divider), "
+          "under the stage's own enable (R14 and R15, about %.1f V as drawn), so it narrows nothing. The hold: the panel sits at most "
+          "%.3f V above PV_P at the regulation's highest current. 100 W: the static bound at the panel entry with the block's own "
+          "currents around the bank and the trip read at both ends of its %.3f V drop, %.4f W (%.4f W without it). NOT CLAIMED, a "
+          "residual named for layer 8: a stiff source between 25 V and the cut-off (outside the window, so a fault) runs the stage "
+          "under the backstop's current trip, at most %.1f W at the cut-off's highest; no protection here extends the permitted "
+          "range" % (bA["rise"][0], bA["fall"][0], bA["rise"][1], L11["uv"][2], L11["uvf"][0], rm["shdn"], rm["hold_shift"], rm["dv_blk"],
+                     rm["p_static_blk"], R["decision"]["c"]["p_static"], rm["gap"][2]))
+    cr_ = rm["cs_re"]
+    wrapP("     - ", "       ", "THE INTERACTIONS, AND WHAT WAS RE-RUN. The backstop: the sense bank, U18, U19, U20 and SWEN are behind the "
+          "block and see its cut as the panel's absence (as at dusk); a connection now rises at the gate's slew, %.2f to %.2f V/ms "
+          "(L4-E11), so the bank carries at most %.3f A into the capacitors behind it, under the trip's least %.4f A, and U20 holds "
+          "SWEN low 180 ms anyway. CS101 (M2), RE-RUN with the block's series resistance ahead of the bulk and C131 across the input: "
+          "the filtered peak %.4f A at %.0f Hz (least resistance %.4f A; the accepted %.4f A reproduced with none), against the margin "
+          "%.4f A: the series element lifts the bank's share by at most %.2f %% where the entry's impedance has a negative real part (the converter's "
+          "constant power), and the "
+          "loop branch's room is read at M2 as accepted. Check (b), RE-RUN: the capacitors at the entry %.1f mJ (C131 and U21's filter "
+          "added), the response allowance %.3f ms against %.0f times the typical sum (%.3f ms), the accepted %.3f ms. The LT8705A: "
+          "its own enable, the hold (FBIN on PV_P) and the IMON_IN regulation (R59 behind the block) are unchanged. The BQ25730 on "
+          "VBUS20: no path couples; the stage's output reaches it only through U4 and Q2 into VIN_RAW and board A's front end, and the "
+          "block's cut is the panel's absence. TRN-001's port table: J_SOLAR's pin 2 becomes PV_RTN (switched by Q13), the first "
+          "parts at the port are D11 and C131, and note E-N1 is closed. STAYING VALID UNCHANGED: check (a)'s chain and its 93.5521 "
+          "W at the stage; the supply sequencing; check (c)'s loaded network (D4 off, its breakdown now higher); the M7 figures (C131 "
+          "ahead takes a discharge's 2.25 uC as about 2.3 V); L4-E13's standoff check (now 30 V). CHANGED: D1 and D2 under REQ-016's "
+          "criterion (SMCJ%dA, %.2f and %.2f V); the margin beyond the basis is now D11's own rating, %.1f A at 10/1000 us, since a "
+          "pulse over the cut-off turns the block off within %.0f us" % (
+              L11["slew"][0], L11["slew"][2], rm["i_bank_slew"] if False else rm["i_bank_slew"], R["decision"]["c"]["i_lo_aged"],
+              cr_["most"]["worst"][2], cr_["most"]["worst"][0], cr_["least"]["worst"][2], cr_["none"]["worst"][2], rm["margin"],
+              100 * (cr_["most"]["hmax"] - 1.0), 1e3 * rm["e_cap_blk"], 1e3 * rm["t_allow_blk"], rm["t_fac"], 1e3 * rm["t_fac"] * rm["t_resp_typ"],
+              1e3 * R["decision"]["c"]["t_allow"], DN["n"], DN["v116"], DN["v115"], D11["ipp"], 1e6 * rm["t_gate"]))
+    P("     THE VERDICTS, with the remedies:")
+    for v_ in rm["verd"]:
+        P("       %-14s %-44s %s" % (v_["id"], v_["name"], ("MEETS" if v_["ok"] else "NOT MET") + v_.get("note", "")))
+    wrapP("     ", "     ", "FOR L4-E9'S REGISTER (its D-10, D-11 and R-173): D-10 and D-11 have a selected remedy, drafted (not applied): "
+          "the cut-off U21 with Q12 and the return switch Q13, D11, C131, D4 to SMCJ%dA; owed with it: D4's LCSC code, U21's DGX-19 "
+          "land, the regeneration and its gates, and the bench rows: the cut-off's rise and fall on a ramped supply, a 36 V supply "
+          "connected live (Q12 never conducts, D4 carries nothing), a reversed bench panel curve (no current; the high side's pins "
+          "against GND), CS116 and CS115 on the port with the block on and off (R-174), and Q13's leakage at the hot end" % DN["n"])
     # ---- sequencing
     # ---- the backstop under CS101 (the closing check's defect and its correction)
     cs, tb = R["cs101"], R["cs101"]["tab"]
@@ -3075,7 +3493,8 @@ def render(R):
           "differential at most %.4f V, CONDITIONAL on the lumped model (layout, M3, M7, 7b.18), the bulk's heating under CS101's bounding "
           "case (M2) and the bank's pulse capability in the capability scenario (Vishay); the panel lead's derived disturbances: CS116 "
           "MEETS, CS115 CONDITIONAL on the loop current, the panel's cold open circuit MEETS, a stiff source of the kit's range on the "
-          "port and a reversed panel NOT MET (register rows, the change named). Drafted: the board E edits above and four "
+          "port and a reversed panel NOT MET on the drafted entry and remedied (the over-voltage cut-off U21 with Q12, D4 to the "
+          "SMCJ30A, and the return switch Q13; THE SOLAR-FAULT REMEDIES). Drafted: the board E edits above and four "
           "clarification texts; implemented: nothing in the tree. L4-E7R's architecture criterion: MET, CONDITIONAL on the named "
           "items, none of which can overturn the architecture (each resolves by a stocked setting or a part on the same topology). If "
           "the coordinator's closing check finds otherwise, the engineering alternative is the next stocked RIMON_IN for M2's margin and "

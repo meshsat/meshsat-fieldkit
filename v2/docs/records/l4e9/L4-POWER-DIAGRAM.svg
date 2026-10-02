@@ -16,13 +16,16 @@
 <rect x="20" y="630" width="206" height="45" rx="6" fill="#f3f4f6" stroke="#374151" stroke-width="1.2"/>
 <text x="27" y="648" font-size="12" font-weight="bold" fill="#111827">USB-C input: none (D-12)</text>
 <text x="27" y="664" font-size="10.5" fill="#1f2937">the USB-C port is an outlet only</text>
-<rect x="296" y="80" width="206" height="97" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
+<rect x="296" y="80" width="206" height="136" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
 <text x="303" y="98" font-size="12" font-weight="bold" fill="#111827">Solar entry, board E</text>
 <text x="303" y="114" font-size="10.5" fill="#1f2937">J_SOLAR VH 10 A; F2 10 A mini blade</text>
-<text x="303" y="127" font-size="10.5" fill="#1f2937">D4 SMCJ28A; the 50 V bulk</text>
-<text x="303" y="140" font-size="10.5" fill="#1f2937">ahead of the sense bank</text>
-<text x="303" y="153" font-size="10.5" fill="#1f2937">(L4-E7R, drafted)</text>
-<text x="303" y="166" font-size="10.5" fill="#1f2937">R59 15 mOhm on TRK_VIN</text>
+<text x="303" y="127" font-size="10.5" fill="#1f2937">D11 SMCJ40CA across the port</text>
+<text x="303" y="140" font-size="10.5" fill="#1f2937">guard U21/Q12 off 28.55 to 31.06 V</text>
+<text x="303" y="153" font-size="10.5" fill="#1f2937">Q13 in the return (drafted)</text>
+<text x="303" y="166" font-size="10.5" fill="#1f2937">D4 SMCJ30A; the 50 V bulk</text>
+<text x="303" y="179" font-size="10.5" fill="#1f2937">ahead of the sense bank</text>
+<text x="303" y="192" font-size="10.5" fill="#1f2937">(L4-E7R, L4-E7: drafted)</text>
+<text x="303" y="205" font-size="10.5" fill="#1f2937">R59 15 mOhm on TRK_VIN</text>
 <rect x="296" y="390" width="206" height="84" rx="6" fill="#ffffff" stroke="#374151" stroke-width="1.2"/>
 <text x="303" y="408" font-size="12" font-weight="bold" fill="#111827">Vehicle entry, board E</text>
 <text x="303" y="424" font-size="10.5" fill="#1f2937">F1 0997010.WXN 58 V DC (drafted)</text>
@@ -141,12 +144,12 @@
 <text x="1407" y="747" font-size="10.5" fill="#1f2937">breaker, the knee, OUTLET_OK</text>
 <text x="1407" y="760" font-size="10.5" fill="#1f2937">acts through C08, C09, C10, C11</text>
 <text x="1407" y="773" font-size="10.5" fill="#1f2937">  C12, C13</text>
-<path d="M226,115 L261,115 L261,128 L296,128" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
-<rect x="243" y="115" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
-<text x="261" y="125" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-01</text>
-<path d="M502,128 L537,128 L537,135 L572,135" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
-<rect x="519" y="125" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
-<text x="537" y="135" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-02</text>
+<path d="M226,115 L261,115 L261,148 L296,148" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="243" y="125" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="261" y="135" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-01</text>
+<path d="M502,148 L537,148 L537,135 L572,135" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
+<rect x="519" y="135" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
+<text x="537" y="145" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-02</text>
 <path d="M778,135 L813,135 L813,272 L848,272" fill="none" stroke="#1f2937" stroke-width="1.6" marker-end="url(#a)"/>
 <rect x="795" y="197" width="36" height="13" fill="#ffffff" stroke="#b91c1c" stroke-width="0.6"/>
 <text x="813" y="207" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">IF-03</text>
