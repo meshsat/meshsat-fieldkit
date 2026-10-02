@@ -1,4 +1,8 @@
-# L4-E9: the connected power architecture and Layer 4's closure gate for it (MESHSAT-1357, 1 October 2026; round 2, its fix rounds and the update rounds, 2 October 2026)
+# L4-E9: Layer 4's connected power design and its closure statement (MESHSAT-1357; consolidated 2 October 2026)
+
+**Status: known defects addressed in drafts; feasibility conditions remain open.** By the owner's corrections of 2 October
+2026 (12:00) this is the status phrase while architecture-critical uncertainties remain, never "complete" or "closed"; an
+unavailable measurement is never counted as done work.
 
 **Prototype design, desk arithmetic.** Nothing is bought, built, powered or measured, and no board of this set has a layout.
 This page edits no generator, registry record, Layer 3 file, `pcb_interfaces.yaml`, `HW-FW-CONTRACT.md` or other record; its
@@ -10,90 +14,28 @@ committed output or a maker's document, each pinned by sha256, and never retypes
 MAKER, NETLIST, MODELED, INFERRED, CONDITIONAL (a calculated result on an unwarranted assumption or an open measurement),
 ASSUMPTION, PENDING, and SESSION for a choice this record takes.
 
-**Inputs.** The Layer 4 records on main: `../l4e/` (the energy architecture, A1 against A2, the findings A-1, A-2, B-1 to B-5,
-C-1 to C-9, R138, O-1, O-2; the review L4-R01 to L4-R04), `../l4e4/` (current limits, PROVISIONAL), `../l4e5/` (source control,
-H3), `../l4e6/` (fault handling), `../l4e7/` (the solar stage's settings), `../r11dep/`, `../s120/`, the power budget and load
-trace, `HW-FW-CONTRACT.md`, `pcb_interfaces.yaml`, `DECISION-31-PROTECTION-TOPOLOGY.md`. Read from their branches, pinned:
-**L4-E8** (the VBUS20 bank) at `fnd/l4e8` `3c8f7a1f`, accepted by the coordinator's check 3; **L4-E7R** (the solar stage's
-control and entry, the selected solution (C) at R66 8.45k and RIMON_IN 31.6k with its CS101 correction) at `fnd/l4e7`
-`675b8068`, ACCEPTED by the coordinator's check 4 at `91e9a4b5` with named conditions (D-01 resolved in design);
-**L4-E10** (FEA-008, the cell and thermal design) at `fnd/l4e10` `79b2f568`, final, accepted by the closing check `573c8b8f`
-as a decision-ready comparison that does not close FEA-008; **L4-E11** (source-only operation U-04, the vehicle-entry
-interconnect D-06 and the entry's fault timer D-09) at `fnd/l4e11` `3298d1f1`, accepted by the closing check `a15ab384`; **L4-E12**
-(MESHSAT-1478, the electronics against the inside air, U-02) at `fnd/l4e12` `a86be47b`, accepted by the closing check `db41c95d`.
-**L4-E13** (U-03, the panel) at `fnd/l4e13` `fae419d1`, accepted by the closing check 3 there, and its update after set 25 at
-`33b6b7be` (check 4: A-3(a) and A-4 on L4-E7R's regulation and backstop, the nominal hold's day 336.6 Wh), read from the tree
-after its merge into this line. Part A of round 2 (`L4E9-ENTRY-PROPOSALS.md`,
-out 11) checks Q1, F1 and U17 against their makers' sheets. The fix round answered the collaborator's focused check
-(`checks/astra-check-l4e9-1.md`, NOT YET) and the final round its targeted recheck (`checks/astra-check-l4e9-2.md`, NOT YET);
-the coordinator's closing check (`checks/check-l4e9-3.md`) read the gate as not closed on D-06, D-09 and U-01 to U-04.
-**The update round** (the coordinator's instruction of 2 October 2026, out 12) brings the architecture and its gate up to date
-with the accepted results of L4-E10, L4-E11 and L4-E12, and answers L4-E11's E11-19: every finding that rested on the LM5069's
-power limit re-judged for the TPS48110-Q1 entry L4-E11 selected. **Update round 3** (out 13) takes L4-E13's acceptance: U-03
-becomes a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC) and moves from the choices that could overturn the architecture into
-the register. **Update round 5** (out 14; the owner's instruction of 2 October 2026 to resolve Layer 4's remaining dependencies)
-takes the dependency rounds of L4-E10 (`e464ff88`), L4-E12 (`c933724e`) and L4-E11 (`f1856bfd`), each accepted by the
-coordinator's check 4 and merged into this line: U-01, U-02 and U-04 now carry their exact question, their evidence by vendor,
-physical and owner, who supplies it, their fallback with its numbers and what each could overturn (7b), and stay
-architecture-level choices; the register takes the rounds' rows and four items of the findings ledger
-(`records/l4close/FINDINGS-LEDGER.md` at `fnd/l4close` `e1e99c4f`).
-
-**The owner's frame** (the Current owner brief, `OWNER-INSTRUCTION-2026-09-30.md`; his instructions of 1 and 2 October 2026):
-battery and solar both required; the store inside the Peli 1450, no external battery; HF and the tablet kept; D-06's single 4S3P
-stands; 48 to 72 hours an objective, tablet charging optional consumption; A2, the lid pack, the 16.340 V hold and P-03's 200 W
-stay proposals. The applicable normal, reverse-input, transient and fault conditions are verified, not only headline ratings;
-downstream tasks are kept apart from unresolved choices that could overturn the architecture, and an owner does not close a
+**Fixed by the owner** (2 October 2026, 11:25; the frame of `OWNER-INSTRUCTION-2026-09-30.md`): battery and solar are
+mandatory; HF and the tablet stay; the store is internal to the Peli 1450, no external battery; D-06's 4S3P with the ruled cell
+is the baseline and every alternative (A2, the lid pack, the 16.340 V hold, P-03's 200 W, the proposed cell) stays a proposal;
+REQ-016 and every other mandatory requirement are preserved; Layer 3 stays closed; 48 to 72 h is an endurance OBJECTIVE,
+reported battery-only and solar-assisted separately, with what the tablet's optional charging takes; electrical feasibility
+and endurance are separate questions; the approved profile is preserved and any other duty cycle is labelled as such.
+Downstream tasks are kept apart from unresolved choices that could overturn the architecture, and an owner does not close a
 choice. Layer 4 selects the power architecture and establishes its feasibility; Layer 5 writes the interfaces it creates.
+
+**How the page is built.** Sections 1 to 6 are the consolidated design: one connected diagram, one budget, one change list,
+the operating behaviour, the implementation handover and the exit statement against the owner's definition. Sections 7 to 12
+carry the analyses and registers they rest on. The inputs of each round and the record's history are in Appendix A; the
+traces as first written in Appendix B. Every table of sections 1 to 6 is printed by `l4e9_power_path.py` (out 15 to 21) and
+held equal to it by `test_l4e9.py`.
 
 ## In short
 
-- **Selected: A1**, D-06's one 4S3P pack inside the case, fed by two sources ORed onto one raw bus (the panel through board E's
-  LT8705A stage, the vehicle or shore supply through its ideal diode and, since L4-E11, a TPS48110-Q1 breaker in place of the
-  LM5069 hot swap), converted once to a regulated 20 V charge bus by board A's LM5176 front end and once more by the BQ25731
-  charger onto the system node VBAT, from which every load converter and both outlets run. **A2** (base 4S6P plus a separately
-  protected lid 4S9P) stays a proposal to change D-06.
-- **The selected solutions are in the rows** (out 4): L4-E7R's regulation at RIMON_IN 31.6k (2.5485 A nominal, 2.9318 A highest)
-  with its backstop on SWEN (static bound 93.5521 W, CONDITIONAL), corrected entry and CS101 correction (accepted); L4-E8's bank
-  with its losses carried into the energy and thermal budgets; Q1 the CSD19532Q5B, F1 the Littelfuse 0997010.WXN and U17 on R227
-  (part A); **L4-E11's vehicle entry**: UVLO on at 7.87 / 8.14 / 8.44 V of DC_P, OV off above 39.6 / 40.36 / 41.22 V, a breaker at
-  6.364 / 6.8 / 7.136 A after 0.247 / 0.37 / 0.49 ms and a filtered short-circuit trip at 10.36 / 12.04 / 13.87 A, Q7 a CSD19536KTT,
-  the interconnect at least 20 A continuous with its loop specified by resistance (900 A at most from a stiff source), the
-  corrected knee (a flat 1.82 A from 7.95 V) and the guard's R14 76.8k; **L4-E12's route**: the hold in E5 only, T-H1's binding
-  line 2.159 W/K lid open with the fans.
-- **Fourteen interfaces: 2 MEET, 12 are CONDITIONAL, none NOT MET, none PENDING.** IF-05 moves from NOT MET (D-09) to CONDITIONAL
-  (every start inside Q7's derated chart, the in-service hard short OPEN on the loop's inductance); IF-11 moves from NOT MET (75.00
-  C at the floor) to CONDITIONAL (70.00 C in E5 under the hold at the binding line, U-02). The as-drawn defects stay visible as
-  "as drawn" checks: the LM5069 cannot start from a 9.00 V plug (8.987 V against POREN's 9 V), its power limit at 4.7429 mV, the
-  drawn restart guard above the plug's operating point, the drawn interconnect at 13.5 A against a 13 A contact.
-- **E11-19 (out 12a):** the selected entry limits no power, so the LM5069's power-limit pulse, its 5 mV floor (D-07), its fault
-  time against the start (D-09) and its breaker's event exist only for the LM5069 alternative. A start into a resistive fault uses
-  0.704 of Q7's derated chart, the ordinary start 0.182, a start into a hard short 0.743 (CONDITIONAL on the transconductance
-  bound); a hard short in service stays inside Q7's derated 178.2 A only with the loop's inductance at least 2.08 uH (2.084 uH
-  reproduced here): OPEN, E11-20 (R-134). F1's I2t over every start and fault pulse is at most 6.7311 A2s, 7.24 % of its typical
-  melting 93 A2s. R-118 is restated as E11-17. **No new material defect.**
-- **The closure gate (section 7): NOT CLOSED.** Criteria 3 and 4 PASS; 1, 2 and 5 are CONDITIONAL. Kept apart:
-  - **material defects: none open.** D-01 to D-05 and D-08 resolved (drafted or bounded), D-06 resolved in design by L4-E11's
-    interconnect with its evidence items E11-10 to E11-16, D-07 and D-09 superseded by the replacement (they apply only if the
-    LM5069 is kept, where L4-E11 resolved D-09 with C5 and C121);
-  - **three unresolved choices that could overturn the architecture**, which no owner closes: U-01 FEA-008's cell (the signed
-    specification and the owner's two items; with the proposed cell 90.2 Wh usable against the 35E's 107.9 Wh at +25 C); U-02
-    MESHSAT-1478, CONDITIONAL on T-H1 at or over 2.159 W/K (a reading of at least 2.416 W/K by the drafted procedure), with the
-    session's fallbacks down to 1.125 W/K in E5 and 1.399 W/K in E3-O and the owner's below that, and CFL-002 the owner's
-    question; U-04 source-only operation, a CONDITIONAL CANDIDATE that turns on TI's D1 and D3 (E11-24's hold-up takes D2 and D5
-    off TI);
-  - **U-03 moved downstream (update round 3):** L4-E13 makes it a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC): route 2,
-    one identified SunPower SPR-E-Flex-100 measured against A-1 to A-3, is feasible on a unit equal to the typical rows (A-1
-    24.1505 V against 25.000 V at -20 C and 1000 W/m2); route 1 closes nothing today; no unit is bought or measured. It decides
-    which unit, not the topology or the source class (register R-35, R-52, R-148, R-149);
-  - **the downstream tasks**, 146 register items, each with one owner and an acceptance that close the assignment, not the item;
-  - **the owner's items** (section 7d): CFL-002 (A, B or C), U-01's specification request (ten questions) and then the cell
-    change, the TI request (REVIEW-REQUEST.md with TI-QUESTIONS.md), T-H1's bench authorisation, the panel unit's purchase and
-    measurement, and the other outside-contact drafts with their paths (SunPower's and Solbian's among them): actions, not
-    questions.
-- **Endurance (section 10):** A1 runs 2.52 h on battery at +20 C and first interrupts at hour 6 or 2 on the panel at its typical rows; it
-  needs +1361.5 / +2094.1 Wh more storage for 48 / 72 h, plus at most 13.4 Wh a day at L4-E7R's accepted regulation and 17.7 Wh if U-01's
-  cell is adopted; none of L4-E10 to L4-E12 moves these figures. DR-01 stands; every mandatory function is intended to be
-  delivered, subject to the open conditions named here, and no service is reduced to narrow the gap.
+- **The design.** A1 under D-06: one 4S3P pack inside the case, fed by the panel through board E's LT8705A stage and by the vehicle or shore supply through its ideal diode and the TPS48110-Q1 breaker, ORed onto VIN_RAW, converted once to VBUS20 by board A's LM5176 and once more by the BQ25731 onto VBAT, from which every load converter and both outlets run (section 1). A2 stays a proposal. There is no USB-C input.
+- **Electrical feasibility** (apart from endurance): 14 interfaces, 2 MEET, 12 CONDITIONAL, 0 NOT MET, 0 PENDING (1d); no material defect is open: D-01 to D-05 and D-08 resolved in design, D-06 resolved in design by L4-E11, D-07 and D-09 superseded (8a); every resolution is a DRAFT, none applied; the heat into the case per mode against T-H1's binding 2.159 W/K (2c).
+- **Endurance** (apart from electrical feasibility; the approved profile 42.8 W kept): battery-only 2.52 h (1.73 h with the tablet's window at the start) at room temperature and 1.04 h with the cells at -10 C; solar-assisted on the candidate panel's day: first stop at h 6 (06 UTC start) / h 2 (18 UTC start), unserved 1367.4 / 1368.1 Wh at 48 h; the steady load carried 8.0 W at both horizons; with the tablet at most 1.61 W lower (6.4 to 8.0 W). The objective of 48 to 72 h is NOT MET: a deficit of 34.8 W against the profile, +1361.5 / +2094.1 Wh of storage to add; a charger change does not close it. The tablet's optional charging takes at most 38.7 Wh a day. The cold end's solar case is not computed. The proposed cell (a PROPOSAL): 2.11 h battery-only (2b).
+- **The change list:** 54 changes in application order, none APPLIED (DRAFTED 26; MISSING DRAFT 17; OWED 11), each with its board, generator, apply script, dependency and release guard; the release records first (section 3).
+- **The exit** (section 6, the owner's definition): Layer 4 power closure is not reached on this reading. U-01, U-02 and U-04 are closure conditions, each with its exact missing fact and the smallest experiment or manufacturer clarification that resolves it, and each pending a forwarded result. **Status: known defects addressed in drafts; feasibility conditions remain open.**
 
 ## 1. The selected architecture as one connected design
 
@@ -101,7 +43,7 @@ choice. Layer 4 selects the power architecture and establishes its feasibility; 
 
 **The one figure**, `L4-POWER-DIAGRAM.svg`, generated by `l4e9_power_path.py --write-svg` (the script refuses to run when the
 committed file is not what it generates; out 15). Every source is traced through protection, conversion, charging and
-storage to the loads; each power edge carries its interface row (section 2), each block its settings and limits, and the blue
+storage to the loads; each power edge carries its interface row (1d), each block its settings and limits, and the blue
 tags are the control edges of 1c: which controller, gauge, comparator or firmware rule acts on which block. Parts and settings
 marked drafted are not applied to any generator.
 
@@ -204,7 +146,7 @@ closed (59.2 C lid open); at the margins L4-E12's route: at T-H1's binding line 
   26.50 to 27.24 V source) holds on R11 alone and needs V-A07 for the full taps (else 7 mOhm, which changes nothing else).
 - R12 12 mOhm (L4-E6) bounds L1 and the FETs at the highest permitted current, 1.56 A over H3's 6.50 A service peak.
 - The bank (L4-E8) holds every can at the same highest permitted current, and goes in only with R12; its ballasts are a loss on
-  the charge path, counted once in the energy and thermal budgets (section 10).
+  the charge path, counted once in the energy and thermal budgets (section 2).
 - L4-E7R's regulation (2.9318 A at its highest) sits under its backstop's lowest trip (3.0468 A at 25 V) when the regulation's
   unprinted values are inside the joint assumptions, and the filtered CS101 ripple (0.0585 A) under that 0.1130 A margin; the
   stage takes at most 53.42 W in at the hold, so the 93 W out at the
@@ -460,7 +402,189 @@ One table per item; every row names the record it rests on and a figure the scri
 | both controllers | every hardware limit of 4e acts; the source bound holds with no firmware (the H3 line and the knee) | the charge ranges relayed from the gauge (UTC still holds the charge FET); the hold; the heater's policy | this record out 7 |
 | the gauge's own firmware | the BQ7720700 and F2 (hardware) | COV, CUV, OCD, SCD and the temperature limits, which are the gauge's | pcb_pack_protection.yaml |
 
-## 6. Decisions this record takes (SESSION, under the owner's standing rule of 26 September 2026 and his ruling of 21 September 2026 that engineering decisions are the session's)
+## 5. The implementation handover (out 19)
+
+The selected topology is section 1's; its settings are the blocks of 1a and the change list of section 3; its interface limits
+are the rows of 1d, drafted for Layer 5 in `LAYER5-HANDOVER.md` (LH-01 to LH-11; `pcb_interfaces.yaml` and `HW-FW-CONTRACT.md`
+are not edited); its control behaviour is 1c and section 4. Every item reaches its later layer as a register row with one
+owner and an acceptance (`DOWNSTREAM-REGISTER.md`, section 11). **Drafted, not applied:** no row is applied; a DRAFTED row has
+a script or a text that refuses the tree until its release record reads "released: yes".
+
+### 5a. The selected parts and their document revisions
+
+| Ref | Part | Role | Document revision | Read from | State |
+|---|---|---|---|---|---|
+| U5 | LT8705AIUHF#PBF | the solar stage: hold, regulation RIMON_IN 31.6k, backstop on SWEN | 8705af | l4e7_stage_settings.out | DRAFTED (R-12, R-19 to R-21, R-98) |
+| U6, Q7 | TPS48110-Q1 with CSD19536KTT | the vehicle entry's breaker and its pass FET | SLUSEE5E | l4e11_power.out | DRAFTED (R-123) |
+| Q7's sheet | CSD19536KTT | the pass FET's safe operating area | SLPS540C | l4e11_power.out | DRAFTED (R-123) |
+| Q1 | CSD19532Q5B | the ideal diode's FET, 100 V | SLPS414B | ti-csd19532q5b-n-fet.pdf | DRAFTED (R-17) |
+| U3 (board E) | LM74700-Q1 | the vehicle entry's ideal-diode controller | SNOSD17G | ti-lm74700-q1.pdf | as drawn |
+| U2 | LM5176 | the front end to VBUS20 | SNVSAI1D | lm5176-datasheet.pdf | as drawn; R11, R12 DRAFTED (R-04, R-01) |
+| U3 (board A) | BQ25731 | the charger onto VBAT = VSYS | SLUSE66A | bq25731-datasheet.pdf | as drawn; U-04 open on D1, D3 |
+| U17 and five more | INA226 | the rail monitors; U17 moved onto R227 | SBOS547C | ti-ina226.pdf | DRAFTED (R-06) |
+| eFuses | TPS2596 | the load converters' inputs, 21 V absolute | SLVSET8A | tps2596.pdf | as drawn |
+| U1 (board P) | BQ4050 | the pack's gauge and its FETs | SLUUAQ3A | l4e11_power.out | as drawn; U-01's (II) re-derives it (R-106) |
+| U2 (board P) | BQ7720700 | the second-level protector | BQ7720700 | gen_sch_p.py | as drawn; BQ7720704 under U-01's (II) (R-105) |
+| F2 (board P) | SCF9550-30-05 | the self-control fuse | SCF9550-30-05 | gen_sch_p.py | as drawn; Eaton's statement owed (R-103) |
+| F1 (board E) | Littelfuse 0997010.WXN | the vehicle fuse, 58 V DC | rev2025-11-18 | littelfuse-997-mini58v-rev2025-11-18.pdf | DRAFTED (R-18), its 20 A holder owed (R-132) |
+| the bank | Panasonic EEHZK1V331P with HoJLR2512 45 mOhm | VBUS20's six cans and their ballasts | EEHZK1V331P | ripple_dense.out | DRAFTED (R-07) |
+| the cells | Samsung INR18650-35E, 4S3P | D-06's ruled cell | INR18650-35E | pcb_pack_protection.yaml | as ruled; the HL18650V a PROPOSAL (U-01) |
+| the alternative only | LM5069 | the drawn hot swap, kept only as the alternative | SNVS452G | ti-lm5069.pdf | superseded by R-123 |
+
+### 5b. Every register row by the later layer that receives it
+
+| Layer | Owners | Register rows | By kind | By state |
+|---|---|---|---|---|
+| 4 (release records) | Layer 4 coordinator | 9: R-47, R-90, R-91, R-92, R-93, R-128, R-135, R-147, R-155 | EVIDENCE 3; IMPLEMENTATION 1; RELEASE 5 | DRAFTED 1; OWED 8; APPLIED 0 |
+| 5 | Layer 5 interfaces, CONOPS owner | 5: R-23, R-24, R-125, R-133, R-138 | IMPLEMENTATION 5 | DRAFTED 5; APPLIED 0 |
+| 5 (firmware, by the contract) | firmware owner | 8: R-25, R-26, R-27, R-28, R-106, R-126, R-139, R-154 | IMPLEMENTATION 8 | DRAFTED 1; OWED 7; APPLIED 0 |
+| 6 | Layer 6 components | 20: R-30, R-31, R-32, R-33, R-34, R-35, R-36, R-101, R-102, R-103, R-113, R-114, R-115, R-136, R-141, R-142, R-143, R-148, R-149, R-150 | EVIDENCE 19; TEST 1 | OWED 20; APPLIED 0 |
+| 7 | Layer 7 mechanical | 5: R-29, R-111, R-129, R-130, R-131 | EVIDENCE 1; IMPLEMENTATION 4 | MISSING DRAFT 3; OWED 2; APPLIED 0 |
+| 8 | Layer 8 board A generator owner, Layer 8 board E generator owner, Layer 8 board P generator owner, Layer 8 board B generator owner, Layer 8 board C generator owner | 37: R-01, R-02, R-03, R-04, R-05, R-06, R-07, R-08, R-09, R-10, R-11, R-12, R-13, R-14, R-15, R-16, R-17, R-18, R-19, R-20, R-21, R-22, R-94, R-95, R-96, R-98, R-100, R-105, R-107, R-116, R-123, R-124, R-132, R-144, R-145, R-152, R-156 | EVIDENCE 2; IMPLEMENTATION 35 | DRAFTED 18; MISSING DRAFT 14; OWED 4; PENDING 1; APPLIED 0 |
+| 9 | Layer 9 pre-layout analysis | 23: R-37, R-38, R-39, R-40, R-41, R-42, R-43, R-44, R-45, R-46, R-48, R-49, R-50, R-51, R-52, R-97, R-108, R-117, R-119, R-120, R-127, R-134, R-146 | EVIDENCE 10; LAYOUT 13 | OWED 23; APPLIED 0 |
+| 9 (the bench) | prototype bench | 36: R-60, R-61, R-62, R-63, R-64, R-65, R-66, R-67, R-68, R-69, R-70, R-71, R-72, R-73, R-74, R-75, R-76, R-77, R-78, R-79, R-80, R-81, R-82, R-83, R-84, R-85, R-86, R-99, R-104, R-109, R-112, R-118, R-121, R-122, R-137, R-153 | TEST 36 | OWED 36; APPLIED 0 |
+| 9 (the test plan) | TEST-PLAN owner | 3: R-110, R-140, R-151 | EVIDENCE 2; TEST 1 | DRAFTED 1; OWED 2; APPLIED 0 |
+
+## 6. The exit statement (out 20)
+
+**The owner's definition** (2 October 2026): "Layer 4 power closure requires a selected architecture whose mandatory operating
+requirements have a defensible feasibility basis, consistent interfaces, and explicit implementation obligations. A downstream
+qualification test may remain open where the design already has bounded supporting evidence and a workable fallback. An unknown
+that could invalidate the selected architecture stays a closure condition."
+
+**Against it, on this record's present reading:** the architecture is selected (section 1), its interfaces are consistent and
+stated (1d, with no row NOT MET or PENDING), and its implementation obligations are explicit (sections 3 and 5). What is not
+met is the feasibility basis of three mandatory operating cases, each an architecture-level choice:
+
+| U | Class | The exact missing fact | The smallest experiment or manufacturer clarification | The bounded evidence today | The fallback | What it decides | Pending |
+|---|---|---|---|---|---|---|---|
+| U-01 | (ii) a closure condition | the HL18650V class's signed limits (idle at +80 C for 30 days; storage at -33 C at REQ-025's stored charge, with the recovery); with the ruled 35E, LO-01d to LO-01g have no route on held evidence | the maker's signed specification answering the drafted request's ten questions (OW-2); a cell sample's storage test is evidence for that lot only, not for production | the maker's product page only (MAKER-PAGE); L4-E10's margins 1.06 K under H1 and 0.97 K under U2's INFERRED trip at LO-01e | none workable on held evidence: (I) the 35E with powered cooling is INCONCLUSIVE (8.18 to 35.21 W into the sealed case); E3-S has no route in D-06's pocket without requirement change A (the owner's) | a narrower signed figure moves D-06's pack (usable 90.2 against 107.9 Wh) or, with no requirement change, keeps LO-01d to g a release gate; missing evidence is not proof that no cell meets them | the coordinator's U-01 question (published specifications, and alternatives within the arrangement) |
+| U-02 | (ii) a closure condition | the sealed case's conductance lid open with the fans, against the binding 2.159 W/K (E5 under the hold), with fans whose power and range are known (D-18) | T-H1 on the bench by the drafted procedure: a reading of at least 2.416 W/K at a 10 K rise passes; 29 to 84 h on an empty case, no electronics; the owner's authorisation (OW-8) | W4's lumped model bounds the reading at 1.22 to 2.85 W/K lid open with the fans; the line lies inside that range | the session's F4 with F3 holds E5 down to 1.125 W/K and E3-O down to 1.399 W/K (1.309 with the connectors out of the exhaust); W4's low bound 1.22 W/K lies under E3-O's floor, where the remaining option is the owner's (a deviation of E3-O or a device-set re-pick) | a reading under E3-O's floor changes the sealed case's thermal design or the device set; a reading at or over the line confirms the route; missing evidence is not proof of a shortfall | the coordinator's U-02 question (does T-H1 confirm or decide) |
+| U-04 | (ii) a closure condition | whether the BQ25731 regulates VSYS with no battery current (D1) and what it regulates with the charge inhibited and no battery current (D3) | TI's statement of D1 and D3 as behaviours of the part (Q-TI-11 and the addendum to Q-TI-3, OW-7); one bench sample per row shows the mode on that silicon revision only | the held datasheet states neither; VSYS needs 12.3 V against ChargeVoltage's floor 16.716 V once the mode is shown (a 4.416 V margin) | for D2 and D5, E11-24's hold-up (54.07 mJ, 1.117 ms for the worst admitted step); for D1 and D3 none inside arrangement (A): (B), a charger with a battery FET, is an architecture change | a negative D1 or D3 changes the charger's power path; missing evidence is not proof that the BQ25731 lacks the mode | the coordinator's U-04 question (the BQ25731 with its hold-up against TI's BQ25730 against one other) |
+
+**The exit: Layer 4 power closure is not reached on this reading.** U-01, U-02 and U-04 are closure conditions (ii). Each is
+pending a result the coordinator forwards (the U-01 cell question, the U-02 question whether T-H1 confirms or decides, the
+U-04 charger comparison), and each row changes when its result is accepted. **Missing evidence is not proof of impossibility:**
+every missing fact above has a named experiment or manufacturer clarification that settles it, and none of them is counted as
+done.
+
+## 7. Standalone analyses, each answering a named question
+
+| Analysis | The question it answers | Where |
+|---|---|---|
+| Part A | Do Q1, F1 and U17 hold their normal, reverse, transient and fault conditions with the raised ceiling? | `L4E9-ENTRY-PROPOSALS.md`, out 11 |
+| E11-19 | Does any finding that rested on the LM5069's power limit survive the selected TPS48110-Q1 entry? | out 12 |
+| The budget's bounds | What do L4-E7R's accepted stage, the tablet's window and a cold store do to the replay's endurance figures, without re-running it? | 2b, out 16 (INFERRED bounds, the method stated) |
+| The profile's heat at T-H1's line | At which ambient does the approved profile reach C1's shedding trigger at the binding line? | 2c (H1), out 16 |
+
+No other analysis is added by the consolidation: every other figure is read from its record.
+
+## 8. The closure gate in detail (criteria 1 to 5)
+
+The gate's rule, held by the script (out 9) and by `test_l4e9.py`: a criterion reads PASS only on interface rows that read
+MEETS, never on an ASSUMPTION, CONDITIONAL or PENDING row; never while an unresolved choice it names stands; and criterion 2
+never while a material defect is open. Every feasibility claim below cites its evidence by class; the software tests establish
+tested behaviour of the record's own scripts and drafts only, never an electrical or thermal property.
+
+| Criterion | Evidence | Verdict | The exact constraint (if not PASS) | Could it overturn the architecture? |
+|---|---|---|---|---|
+| 1. One architecture selected; its mandatory functions have a defensible feasibility basis | A1 under D-06 (section 1); rows IF-02, IF-04, IF-05, IF-07, IF-09, IF-10, IF-11, IF-12, IF-13: REQ-014 (the pack), REQ-015 (IF-04 to IF-06, MAKER and INFERRED; at 9.00 V at the plug with no usable pack U-04's CONDITIONAL CANDIDATE), REQ-016 (IF-01, IF-02, CONDITIONAL and MODELED; the panel PANEL-ACC, L4-E13), REQ-017 (IF-12, IF-13), REQ-018 (IF-10, IF-14), REQ-045 (4e, D-06 resolved in design), REQ-046 and REQ-077 (IF-10, L4-E10), REQ-075 (IF-09); the electronics at the margins (IF-11, L4-E12); choices U-01, U-02 and U-04 (U-03 moved downstream, update round 3), each restated by its dependency round (L4-E10, L4-E12 and L4-E11, update round 5, out 14) | CONDITIONAL | the solar function's 100 W bound is CONDITIONAL on G_CM and U18's VIN+ bias (L4-E7R) and its panel on PANEL-ACC (U-03, a CONDITIONAL DOWNSTREAM UNIT SELECTION since L4-E13: no unit bought or measured, R-35); REQ-015 at 9.00 V at the plug is a CONDITIONAL CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23 (U-04; L4-E11's dependency round, check 4 at f1856bfd, leaves TI's D1 and D3 deciding it); the electronics at the margins are CONDITIONAL on T-H1 at or over 2.159 W/K and L4-E12's conditions (U-02; L4-E12's round, check 4 at c933724e, states the basis, the fans and T-H1's procedure); the battery path's thermal design is FEA-008's (U-01; L4-E10's round, check 4 at e464ff88, states the limits by mode, the charge drafts and the usable energy); PS-ALLTX's chain at 18 A for 60 s (PWR-F12) is an open obligation | possibly, on named evidence only: U-01 on the HL18650V's signed specification (D-06's pack energy, protection settings and charge ranges), U-02 only on a T-H1 reading under E3-O's floor with the session's fallbacks (1.399 W/K: the sealed case's thermal design or a device-set re-pick, the owner's), U-04 on TI's D1 or D3 (the charger's power path); the rest, the panel unit included, resolves by a value, a part or a measurement on the same topology |
+| 2. Material power-path defects have engineering resolutions and bounded supporting calculations | rows IF-01, IF-02, IF-04, IF-05, IF-13; defects D-01 to D-09 below (none open: D-06 resolved in design by L4-E11, D-07 and D-09 superseded by the replacement of the LM5069, the rest drafted or bounded with their conditions named); E11-19 in out 12a; the dependency rounds add none (out 14) | CONDITIONAL | no material defect is open: D-01 to D-05 and D-08 are resolved in design (drafted or bounded), D-06 is resolved in design by L4-E11's interconnect with its evidence items (E11-10 to E11-16), D-07 and D-09 are superseded by the replacement of the LM5069 (E11-19 finds no new one); the resolutions rest on CONDITIONAL rows (the loop's typical rows, the makers' installed and short-time ratings, R227's pulse rating, the start into a hard short's transconductance bound) and the hot short in service on open evidence (the loop's inductance, E11-20); the dependency rounds add no defect: L4-E11's D9 and D10 are the entry's delay and transconductance rows already CONDITIONAL here, and E11-24 is U-04's fallback, a register row (R-152), not a defect's resolution | no: each resolves by a part, a rating or a measurement at the vehicle or the solar entry |
+| 3. Remaining assumptions are explicit, with their impact and verification method | section 10's register A-01 to A-30 | PASS |  |  |
+| 4. Downstream implementation changes, layout constraints and tests have named owners and acceptance criteria | `DOWNSTREAM-REGISTER.md`: 146 items, each with one owner and an acceptance, among them L4-E11's E11-01 to E11-26 (deduplicated), L4-E10's and L4-E12's items, PANEL-ACC (R-35, R-52, R-148, R-149), L10's own assignment (R-120, R-121), M2 (R-122), the dependency rounds' rows (R-150 to R-154) and the findings ledger's (R-155, R-156; R-102 and R-139 extended); the release order (L4-E6's R12 before L4-E8's ballasts; L4-E11's entry draft after this record's hot-swap draft); `LAYER5-HANDOVER.md` LH-01 to LH-11 | PASS |  |  |
+| 5. No unresolved uncertainty could overturn the selected architecture while described merely as routine later testing | rows IF-09, IF-10, IF-11; choices U-01, U-02 and U-04 below, each with its exact question, its evidence by vendor, physical and owner, who supplies it, its fallback with its numbers and what it could overturn (update round 5, out 14); U-03 a downstream unit selection since L4-E13 | CONDITIONAL | three unresolved choices could overturn it and are named as such, not as later testing, each with its question, evidence, supplier and fallback stated by its dependency round: U-01 (FEA-008's cell: the signed specification and the owner's two items; L4-E10, check 4 at e464ff88), U-02 (MESHSAT-1478: T-H1 at or over 2.159 W/K by the drafted procedure, the session's fallbacks down to 1.125 W/K in E5 and 1.399 W/K in E3-O, the owner's below E3-O's floor; CFL-002 the owner's question; L4-E12, check 4 at c933724e), U-04 (TI's D1 and D3; E11-24 takes D2 and D5 off TI; L4-E11, check 4 at f1856bfd); an owner and an acceptance criterion do not close them. U-03 left this category with L4-E13's acceptance: a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC, R-35) that decides which unit, not the topology or the source class | yes, on named evidence only: U-01 (D-06's pack energy and settings), U-02 (only below E3-O's floor: the sealed case's thermal design or the device set), U-04 (TI's D1 or D3: the charger's power path); U-03 no longer can, unless route 2 proves infeasible with route 1 still closed (L4E13-06) |
+
+**Layer 4's power architecture closes: NO** (criteria 1, 2 and 5). Two categories, kept apart below: the material defects (8a,
+none open since the update round) and the unresolved choices that could overturn the architecture (8b, three since update round
+3: U-01, U-02, U-04; U-03 moved downstream as PANEL-ACC); the downstream tasks (8c) and the owner's items (8d) are neither.
+**The reason it stays not closed, on this record's own reading:** criteria 1 and 5 cannot read PASS while U-01, U-02 and U-04
+stand, and each can still overturn part of the architecture on named evidence (8b); criterion 2 has no open defect but its
+resolutions rest on CONDITIONAL rows with named evidence, so it reads CONDITIONAL, not PASS; nothing L4-E13 settled changes
+either reading, since U-03 was never what held criterion 2 and its move leaves three architecture-level choices in place.
+**Update round 5 leaves the reading as it was:** the dependency rounds state each choice's question, evidence, supplier and
+fallback, and none is yet answered by a held document or a measurement (U-01 waits on the signed specification, U-02 on T-H1,
+U-04 on TI's D1 and D3); they add no material defect (out 14).
+
+### 8a. The material power-path defects (criterion 2)
+
+| Defect | What | The constraint | The options | State |
+|---|---|---|---|---|
+| D-01 | the solar backstop trips under TEST-PLAN M2 (CS101) | CS101's injected current crossed the sense bank and its peaks over the trip less the operating current stopped the stage for td each time, so solar charging stopped for the test, against M2's 'no upset' line (L4-E7R's check 3) | the bulk moved ahead of the sense bank, five 100 nF C0G across R66 (3.960 to 4.496 ms), R66 8.45k and RIMON_IN 31.6k: the filtered ripple at most 0.0585 A against the 0.1130 A margin, the response allowance 1.087 ms after the filter's 0.4205 J; CONDITIONAL on the loop's typical rows (break-even 2.51 times), the bulk's temperature, the bank's pulse capability, the 0.1 s window | RESOLVED (drafted): L4-E7R accepted (check 4, fnd/l4e7 91e9a4b5, figures at 675b8068); register R-21 and R-98, apply_gen_sch_e_backstop.py; M2, R-122 |
+| D-02 | the vehicle entry's over-voltage lockout opens under TEST-PLAN M2 (CS101) at REQ-015's 36 V | 36 V plus CS101's 2.83 V peak reaches 38.83 V, past the drawn OVLO minimum 37.78 V | the selected entry's OV (TPS48110-Q1, R22 332k over R23 10.0k at 0.1 %): off above 39.6 / 40.36 / 41.22 V, 0.77 V over the peak and 3.18 V under D10's breakdown minimum (L4-E11, selected); for the LM5069 alternative R22 100k and R23 6.42k at 0.1 %: 39.71 / 41.44 / 43.18 V; M2 at the source's nominal (not taken) | RESOLVED (drafted): apply_gen_sch_e_entry.py (E11-01, R-123) after apply_gen_sch_e_hotswap.py (R-94) |
+| D-03 | Q1 over its rating on a reversed input with the raised ceiling | 66.15 V across the drawn 60 V BSC039N06NS | the CSD19532Q5B (100 V) | RESOLVED (drafted): register R-17, apply_gen_sch_e_q1.py |
+| D-04 | F1 cannot interrupt at the entry's highest steady input | the drawn 32 V DC MINI against 43.18 V | the Littelfuse 0997010.WXN (58 V DC, 1000 A at 58 V DC), in a holder rated at least 20 A (E11-13) | RESOLVED (drafted): register R-18 and R-132, apply_gen_sch_e_f1.py |
+| D-05 | U17 on the 54 V rail (HF-F02) | 54 V on the INA226's IN+ and IN- against its 40 V absolute | U17 on R227, 5 mOhm in the PoE stage's input | RESOLVED (drafted): register R-06, apply_gen_sch_a_u17.py |
+| D-06 | the vehicle entry's interconnect in F1's long-time band from a weak source | a source under 30 A (ECSS 6.17.3c's three times) can leave 10 to 11 A flowing indefinitely, 13.5 A for up to 600 s and 20 A for up to 5 s through J_DCIN's VH contact (10 A), the D38999 size 16 contacts (13 A test current) and the kit's cable and lead, whose held sheets print no current or time-current rating | L4-E11's option (i), selected: every element at least 20 A continuous where installed, 35 A for 5 s, 60 A for 0.5 s and F1's total clearing I2t at 900 A; size 12 contacts (insert 17-6), J_DCIN an XT60-class connector, a holder rated at least 20 A, AWG 14 cores, the loop specified by its resistance (at least 56.93 mOhm at 20 C, accepted four-wire at 58.51 to 64.21 mOhm) so a stiff source stays at 900 A against F1's 1000 A; (ii) a smaller fuse rejected (it fails 9 V); (iii) the source's capability in REQ-015 not needed | RESOLVED (in design): L4-E11 (accepted, check a15ab384), CONDITIONAL on its evidence items E11-10 to E11-16 (R-129 to R-132, R-43, R-95, R-113, R-115) |
+| D-07 | the hot swap's power limit under the sense voltage TI recommends | R24 20k gives 4.7429 mV at 43.18 V, under SNVS452G's 5 mV, and the hot-short pulse was compared at 36 V with a by-eye reading | the selected entry limits no power (E11-19, out 12): its starts sit inside Q7's derated chart (0.704 into a resistive fault, 0.743 into a hard short); for the alternative R24 22k 1 %: 5.06 mV at its low corner | SUPERSEDED (the LM5069 alternative only): superseded by E11-01's entry (R-123); R-94's R24 stands only if the LM5069 is kept |
+| D-08 | R227's transients bypass U16's current control | the capacitors behind R227 (20.2 uF) charge outside U16's cycle limit, so 72.38 mV did not bound every transient | bounded in part A: the differential at most the VBAT step, POE_VIN under 40 V in every required event, a saturated sample distinguished from damage; R227's pulse energy 2.879 mJ nominal, the maximum unresolved until a capacitance envelope and the pulse's shape meet Milliohm's rating; moving the capacitors ahead of R227 not taken (they close U16's input loop) | RESOLVED (bounded, conditions named): IF-13's checks; R-101 (Milliohm's pulse rating), R-117 (the loop's inductance), R-120 and R-121 (L10) |
+| D-09 | the hot swap's fault time against the start into VIN_RAW | with C5 (100 nF, K, X7R) at its printed rows stacked the fault time's minimum is 2.035 ms, under TI's half-again margin over the start into VIN_RAW at 43.18 V (3.814 ms; the start alone 2.542 ms at the corners, 1.324 ms nominal), the front end's own load during the start not included | the replacement has no fault timer against a power limit (its start 0.382 to 1.219 A for at most 2.5 ms); with the LM5069 kept, L4-E11's C5 GRM3195C1H104GA05 with C121 GRM3195C1H683JA05 (apply_gen_sch_e_timer.py): 4.927 to 14.653 ms against 4.593 ms on a recomputed 3.062 ms start (34 uF) | SUPERSEDED (the LM5069 alternative only): superseded by E11-01's entry (R-123); R-119 only if the LM5069 is kept |
+
+**E11-19 adds no material defect** (out 12a, decision 13). What it leaves open is evidence, not a defect: the loop's inductance
+for a hard short in service (E11-20, R-134), the transconductance bound of a start into a hard short (A11-10, E11-17), and the
+input current's transients against the breaker's 0.247 ms (E11-06, E11-21).
+
+### 8b. The unresolved choices that could overturn the architecture (no owner closes them), and U-03 moved downstream
+
+| Choice | Class | What | The exact unresolved question | The present state (the exact constraint) | The evidence: (vendor) / (physical) / (owner) | Who supplies it | The fallback, with its numbers | What it could overturn |
+|---|---|---|---|---|---|---|---|---|
+| U-01 | ARCHITECTURE-LEVEL CHOICE | FEA-008: the battery path's cell and thermal design (L4-E10, final) | does the HL18650V class's signed product specification confirm the rows D-06's pack needs, which L4-E10 holds only on the maker's product page (MAKER-PAGE: unsigned, no test conditions): the idle hot limit (+80 C, the 30-day storage row), storage at -33 C, each storage row's state of charge and recovery, charge below 0 C, the charge current from +10 C (at least 0.357C), continuous discharge (at least 6.0 A a cell for PS-ALLTX), the end voltages and the minimum capacity? | LO-01d to LO-01g (E3-O, E5, E3-S, E4-S with the pack fitted) have no route that holds on held evidence; LO-01a holds only with T-H1 at least 1.666 W/K in both lid states (1.8058 W/K with L4-E8's ballasts counted, L4-E12). L4-E10's dependency round (check 4 at e464ff88) states the limits by mode and drafts the charge for the 4S3P, never applied: 0.84 A to 16.40 V from T1 -9 C, 1.68 A to 16.80 V from T2 1 C, the drawn 3.00 A to 16.80 V from T5 11 C to T3 42 C, UTC -9.0 C, the kit's hold below -7 C; usable energy 90.2 Wh (2.11 h) against the 35E's 107.9 Wh (2.52 h) at +25 C, 16.4 % less; at the cold end only brackets (45.1 to 69.6 Wh with the cells at -5.52 C, 37.2 to 54.1 Wh from a cold start at -20 C, ASSUMPTION) | (vendor) Yichun Topwell Power's signed product specification answering the drafted request's ten questions (the storage rows with their charge and recovery, the basis with the rest at high charge, the gauge's data, the cold charge band and termination, the pulse current, the cold capacity, the end-of-life capacity and self-discharge); Eaton's statement on F2 above +60 C and in storage (R-103); (physical) T-H1 in both lid states (R-104, R-151); with the cell chosen, L4-E10's margins re-run on the signed rows (1.06 K under H1 and 0.97 K under U2's INFERRED trip at LO-01e) and each LO row's TEST-PLAN run with the pack fitted (R-47, R-109); (owner) send the request (OW-2); once the specification confirms, approve the cell change inside D-06's 4S3P (about 145 Wh to about 121 Wh nominal, REQ-046 and REQ-077 restated with the cell, about USD 42 a pack; OW-3); if declined, LO-01d to g stay a release gate | the maker, through the owner, who sends the request; Layer 6 components files it (R-103); the session re-runs L4-E10's margins (R-47); the prototype bench runs T-H1 and the LO rows; the owner approves the cell | with no answer, U-01 stays a release gate and every row CONDITIONAL (no ruling needed). With a narrower signed figure, at L4-E10's thresholds: an idle limit under 78.94 C makes H1 act in E5's dwell, under 74.73 C E5's cells pass it, under 73.07 C E3-O loses its 'no shutdown', under 71.00 C E3-S fails, under 68.86 C E3-O's cells pass it; E3-O and E5 then fall back to (I)'s cooler (8.18 to 35.21 W into the sealed case, INCONCLUSIVE) and E3-S to requirement change A (the owner's); storage warmer than -33 C to (III)'s primary-fed heater (470 to 940 Wh of added storage, an owner's ruling under D-06) or requirement change A; continuous discharge under 6.0 A a cell back to (I); the charge current, the end voltage and the capacity (3.22 Wh per 100 mAh a cell) move energy, not the architecture; or the 35E kept with (I), or a requirement change (the owner's, D-29) | on the specification's answer: D-06's pack energy (16.4 % less usable, 90.2 against 107.9 Wh at +25 C) and the pack's protection settings and charge ranges under (II); with a narrower idle limit and no requirement change, (I)'s powered cooling (up to 35.21 W into the sealed case) would reopen U-02's heat budget, and a narrower storage floor would add 470 to 940 Wh of primary storage under D-06; the power path's topology stays |
+| U-02 | ARCHITECTURE-LEVEL CHOICE | MESHSAT-1478: the electronics against the inside air at D-02a's +55 C margin and E5's +60 C dwell (L4-E12) | does the sealed Peli 1450 with its 3 mm plate, lid open with the fans, conduct at least 2.159 W/K: E5 under the hold puts 21.587 W into the case (19.497 W and L4-E8's 2.09 W of ballasts) across the 10 K from E5's +60 C dwell to the +70 C class, at 0 K of margin, with fans whose power and operating range are not yet known (D-18 open)? | L4-E12's route (c), E3-O as stated and the hold in E5 only, is CONDITIONAL on T-H1 lid open with the fans at or over 2.159 W/K (E3-O alone 1.806 W/K; 2.709 W/K with no hold), the hold's reference within +-0.899099 K of the mixed air, the parts out of the cooler's exhaust, the fans' rating (D-18), the pushbuttons and two regulators changed and PDi's statement; at the line E3-O's air is 67.55 C and E5's 70.00 C, while the design as it stands (LO-01a's floor, no hold) reaches 76.25 C in E5; L4-E12's dependency round (check 4 at c933724e) counts the fans in the energy budget (pwr_budget.py's rows, tier R), and their picked power moves the line 0.100 W/K per W (2.071 to 2.333 W/K over the representatives); inside the envelope no location holds the SGP41 to its maker's conditions (CFL-002) | (vendor) D-18's picked fans: the maker's power at the duty the controls set and an operating range covering -20 C to the inside air (REQ-043; no held sheet gives a fan's operating temperature; R-142, R-150); PDi's and Sensirion's answers; (physical) T-H1 by the drafted procedure (T-H1-PROCEDURE-DRAFT.md, R-151): an empty Peli 1450 with the 1450PF frame and a plate blank, heaters spread as E5's hold, eight points (two powers, both lid states, fans on and off), 29 to 84 h; it passes only if the reading less its expanded uncertainty (k = 2, 10.7 % at a 10 K rise) reaches 2.159 W/K, so a reading of at least 2.416 W/K at a 10 K rise (2.285 W/K at 20 K) on the assumed budget, which the bench replaces with its own; the forced hold and the SGP41's shutdown at room temperature, its lag measured (R-138, R-139); then E3-O and E5 with thermocouples on the +70 C parts (R-104, R-109); (owner) authorise T-H1's bench (its purchase; a chamber run at +60 C only if wanted, his spend; OW-8); CFL-002 (OW-1); send PDi's and Sensirion's requests (OW-4) | the prototype bench, as Layer 9's physical verification, once the owner authorises it (the session cannot run it); Layer 6 components for D-18's pick (R-142, R-150); the makers, through the owner | the session's, inside the rulings (no vent, the Peli 1450 kept): F4, the RockBLOCK, board D and the LimeSDR on pads to the plate, holds E5 down to 1.564 W/K and E3-O down to 1.399 W/K (1.309 W/K with the +80 C connectors out of the exhaust); F3, a deeper hold in E5 that keeps the logging (13.429 W into the case), holds E5 to 1.552 W/K; F4 with F3 holds E5 down to 1.125 W/K, with no owner ruling and no change to E3-O; F1, fins on the plate, multiplies a reading by 1.125 to 1.131 (outside, twice the area) or 1.252 to 1.363 (both faces); the H5007NL, the ATP16 and the PXP4043/C take wider parts or makers' statements (R-141). Below E3-O's floor (1.399 W/K) the remaining option is the owner's: a deviation of E3-O's configuration (the hold in E3-O) or a device-set re-pick (CHO-001) | on T-H1's reading and the fans: from 2.159 W/K down to E5's 1.125 W/K and E3-O's 1.399 W/K the session's fallbacks hold and the architecture stays; under E3-O's floor the sealed case's thermal design (no vent, the ruling of 7 September 2026) or the device set (CHO-001) could change, the owner's; a stopped fan puts E5's mixed air at 72.38 to 85.36 C on W4's still values, the parts coupled to the plate at most 69.82 C; CFL-002 changes a sensor, not the architecture; never the power path's topology |
+| U-03 | CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC) | O-1: the solar panel inside REQ-016's window (L4-E13, accepted) | which physical unit is inside REQ-016's window: a unit measured to PANEL-ACC and accepted on A-1 (Vm20 plus U_V at most 25.000 V at -20 C and 1000 W/m2), A-2 (at least 1.365591 W) and A-3(b); not whether the window can be met, which L4-E13 shows on a unit equal to the typical rows | L4-E13 (accepted, checks 3 and 4 at fae419d1 and 33b6b7be): route 1, a maker's warranted band, closes nothing today; route 2, one identified SunPower SPR-E-Flex-100 measured against A-1 to A-3, is feasible on a unit equal to the typical rows: A-1 Vm20 + U_V 24.1505 V against 25.000 V at -20 C and 1000 W/m2 (margin 0.8495 V), the window Voc25 20.315 to 22.156 V; A-2 27.0849 W above 1.365591 W; A-3 (a) 3.987 A, the conservative bound over L4-E7R's regulation (2.5485 A nominal, at most 2.9337 A at 25 V) and backstop (trip at most 3.7408 A), (b) 8.1817 A, (c) 13.82 A, a COMPONENT_LIMITATION on J_SOLAR and PV_IN; A-4 on L4-E7R's two layers (the regulation's 25 V corner 73.3436 W; the backstop's static bound 93.5521 W, CONDITIONAL on G_CM and the VIN+ bias); no physical unit accepted | (vendor) route 1, a maker's warranted Voc band inside the window (the drafts to SunPower and Solbian, OW-4); it closes nothing today; (physical) one unit bought, recorded by serial number and measured (M1 to M3 and A-2's reading at the specification) and accepted on A-1, A-2 and A-3(b) (R-35); its trace rerun (R-52); J_SOLAR and PV_IN with a rating that covers A-3(c) (R-148); M3's n at or under 2 for the disturbance check (R-149); L4-E7R's regulation and backstop applied (drafted) for A-3(a) and A-4; (owner) the purchase and the measurement of one unit (OW-6) and sending the two route-1 drafts (OW-4): actions, not questions | the owner (the purchase, the two drafts sent); the measurement to the specification under his authority; Layer 6 components (PANEL-ACC's acceptance R-35, J_SOLAR and PV_IN R-148, M3's n R-149); the makers, if they answer | another unit of the same curve shape inside the window; route 1 if a maker warrants a band; REQ-016's window restated (the owner's; not needed) | nothing of the architecture: it decides which unit, not the topology and not the source class; REQ-016's window, the stage, its hold and its 100 W control stay; it returns to an architecture-level choice only if route 2 proves infeasible with route 1 still closed (L4E13-06) |
+| U-04 | ARCHITECTURE-LEVEL CHOICE | source-only and dead-pack operation (L4-E11: arrangement (A), a CONDITIONAL CANDIDATE) | does the BQ25731 regulate VSYS at ChargeVoltage with no battery current (D1: without it arrangement (A) cannot run state S4), and what does it regulate with the charge inhibited (CHRG_INHIBIT = 1 or ChargeCurrent 0) and no battery current (D3: REQ-077's hold in every state and R-a's S2)? The held datasheet (SLUSE66A) states neither as a behaviour of the part | L4-E11 selects arrangement (A), the drawn charger with no battery FET, with rules R-a to R-d and the replaced entry: at a 9.00 V plug the source delivers 29.09 to 42.52 W at VBAT and the shed warm-up (28.12 W plan) is carried with 0.98 W in hand while P1 stays at most 20.51 W; REQ-015 at 9.00 V at the plug is a CONDITIONAL CANDIDATE, not closed: at the load's hi corner P1 (35.24 W) exceeds the source's least, TI states neither VSYS's regulation with no battery current (D1) nor what it regulates with the charge inhibited (D3, Q-TI-3), the cells' warming time has no held model, and R-b's cases (ii) and (iii) are INCONCLUSIVE (D8, D7); L4-E11's dependency round (check 4 at f1856bfd) maps every specification left to a maker to its claim (D1 to D10) and narrows the dependence on TI from D1, D2, D3, D5 to D1, D3; ChargeCurrent at POR is 256 mA (TI's E2E answer), under R-b's bound | (vendor) TI's statements of D1 and D3 as behaviours of the part, or a datasheet revision (Q-TI-11 and the addendum to Q-TI-3 in clarification/TI-QUESTIONS.md, with REVIEW-REQUEST.md's Q-TI-2 and Q-TI-3); D2, D4 and D6 to D8 from TI too, D9 and D10 from the entry's makers (Q-TI-12 to Q-TI-14); an answer stated as a limit settles a row production-wide, a typical figure does not (R-114); (physical) one bench sample per row (R-153): for D1 the mode on that silicon revision, where VSYS needs 12.3 V against ChargeVoltage's floor 16.716 V (a 4.416 V margin once the mode is shown); for D3 the mode with the bit set and with ChargeCurrent 0; evidence for that unit and revision, never a production-wide bound; R-85 extended at the plug (E11-06) and E4-O's warm-up (E11-23, R-137); (owner) send TI's questions (REVIEW-REQUEST.md with TI-QUESTIONS.md; OW-7); a change to REQ-077's acceptance only if both the bit and ChargeCurrent 0 fail D3 | Texas Instruments, through the owner (E2E or TI support); Layer 6 components files and judges the answers (R-114); the prototype bench runs the one-sample methods (R-153) and R-85 | for D2 and D5, E11-24 (the session's, a register row, R-152): one EEHZK1V181P directly on VSYS and a hold-up bank of four EEHZK1E471P charged through R_CH 330 Ohm and discharging through D_H, a B540C-13-F: 54.07 mJ, 1.117 ms of hold for the worst admitted step (the USB-C PD outlet, 48.39 W) over the 1 ms assumed, the bank charging at 51.2 mA at most (0.864 W in a 1 W part); D4 and D6 to D10 have remedies inside (A). For D1 and D3 there is none inside (A): a negative answer returns (B), a charger whose battery FET regulates VSYS by design (an architecture change; five records reopen); for D3 alone, a change to REQ-077's acceptance (the owner's); (C), a precharge path, answers D6 only | on TI's D1 or D3, or a bench sample showing the mode absent: the charger's power path, to (B) with a battery FET; D2 no longer can once E11-24 is fitted, within its 1.117 ms and CONDITIONAL on the 1 ms that D2's bench reading turns into a margin; the efficiency, the pin's band or P1's load move the knee or F1, not the topology |
+
+**Whether each can still overturn the architecture, and on exactly what (update round 5):** U-01 yes, on the HL18650V's signed
+specification (D-06's pack energy, its protection settings and charge ranges; a narrower idle limit or storage floor with no
+requirement change would bring (I)'s powered cooling, up to 35.21 W into the sealed case, or (III)'s 470 to 940 Wh of primary
+storage); U-02 yes, but only on a T-H1 reading under E3-O's floor of 1.399 W/K: from 2.159 W/K down to E5's 1.125 W/K and
+E3-O's 1.399 W/K the session's fallbacks F4 and F3 hold with no owner ruling, and below it a deviation of E3-O's configuration or
+a device-set re-pick is the owner's, while CFL-002 changes a sensor and not the architecture; U-04 yes, only on TI's D1 or D3
+(the charger's power path, arrangement (B)), since E11-24's hold-up takes D2 and D5 off TI and D4 and D6 to D10 have remedies
+inside (A), while the efficiency, the pin's band or P1's load move the knee or F1 and not the topology. **U-03 no longer can** (update round 3): L4-E13 makes it a CONDITIONAL DOWNSTREAM
+UNIT SELECTION (PANEL-ACC) that decides which unit, not the topology and not the source class; REQ-016's window, the stage, its
+hold and its 100 W control stay; it would return to this category only if route 2 proved infeasible with route 1 still closed
+(L4E13-06). Its row stays in the table, with its class, so the move is visible; criteria 1 and 5 no longer name it.
+
+### 8c. The downstream implementation and verification tasks (criterion 4)
+
+`DOWNSTREAM-REGISTER.md` (section 9): an owner and an acceptance criterion close the ASSIGNMENT, not the item. The items that
+exist only under a choice's outcome are marked there (Order "U-01"), and the items that carry a choice's evidence say so
+("U-02"); none stands in for a choice.
+
+**What closure needs, exactly:** U-04 settled by TI's D1 and D3 (R-114 with TI-QUESTIONS.md, E11-05, E11-25), with E11-06
+(R-85 extended), E11-09 (the knee drawn), E11-22 (R-b's cases), E11-23 (the warm-up time), the one-sample bench rows (R-153)
+and E11-24's hold-up for D2 (R-152); U-02 settled by T-H1 by its drafted procedure (R-151, R-104) at or over 2.159 W/K with the
+picked fans (R-142, R-150), the forced hold and the SGP41's shutdown with its lag (R-138, R-139), the parts' readings in E3-O
+and E5 (R-109) and the owner's answer to CFL-002, or by the session's fallbacks down to 1.125 W/K in E5 and 1.399 W/K in E3-O;
+U-01 settled by its evidence (the signed specification, R-103, R-47) and the owner's two items (or held open as a release
+gate), its charge drafts applied only under (II) (R-154); D-06's CONDITIONAL parts by the makers' ratings and F1's clearing I2t (R-113, R-115, R-129 to R-132) and the
+four-wire loop (R-130); the hot short in service by the loop's inductance (R-134); and for criterion 1 the CONDITIONAL inputs
+with their named evidence (G_CM and U18's VIN+ bias R-101, PWR-F12 R-46 and R-83, C-7, C-3, C-5, V-A07). The coordinator decides
+whether a CONDITIONAL criterion with these named is acceptable for Layer 4's closure; this record does not.
+
+### 8d. The owner's items (decisions and outside contacts only; the session contacts no outside party)
+
+Kept apart from the engineering work above: each is a decision only the owner takes, a text only the owner sends or an
+action under his authority (a purchase, a bench's authorisation): actions, not questions. The script reads each document at its
+pinned sha256 (out 9 (c)). Update round 5 adds OW-7 (the TI request: REVIEW-REQUEST.md with TI-QUESTIONS.md) and OW-8 (T-H1's
+bench authorisation), and OW-2's request carries ten questions.
+
+| Item | The decision or action | The document (path, where, sha256/16) |
+|---|---|---|
+| OW-1 | CFL-002 (U-02): the SGP41 in the battery bay against REQ-042's VOC channel inside the envelope: A, a BME688-class sensor in its place (L4-E12's recommendation); B, the VOC channel dropped; C, the SGP41 kept, its channel reported as not covered above a 49.0 C reading and after storage outside 5 to 30 C | L4-E12's page, section 8: `v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md`, at `c933724e`, e1aaf1c4562cecb6 |
+| OW-2 | U-01, item 1: send the drafted request for the HL18650V's signed product specification (Yichun Topwell Power), ten questions since L4-E10's dependency round (7 to 10 added: the cold charge band and termination, the pulse current, the cold capacity, the end-of-life capacity and self-discharge) | Yichun Topwell Power: the HL18650V's signed specification, ten questions (U-01): `v2/docs/records/l4e10/clarification/topwell-hl18650v.txt`, at `e464ff88`, 1ca762d83bbb58b2 |
+| OW-3 | U-01, item 2, once that specification confirms L4-E10's rows: approve the cell change inside D-06's 4S3P (about 145 Wh to about 121 Wh nominal, REQ-046 and REQ-077 restated with the cell, about USD 42 a pack); if declined, LO-01d to g stay a release gate | L4-E10's page, section 8: `v2/docs/records/l4e10/L4E10-CELL-THERMAL.md`, at `e464ff88`, 576dbf0ac06bcd7a |
+| OW-4 | the other outside-contact drafts to send (the owner chooses the channel; Topwell's is OW-2, TI's OW-7) | Pervasive Displays: the E2370KS0C1's storage and operation (U-02): `v2/docs/records/l4e12/clarification/pervasive-displays-e2370ks0c1.txt`, at `a86be47b`, 4f7db1348cc0b4ac; Sensirion: the SGP41's duration, recovery and storage (U-02, CFL-002): `v2/docs/records/l4e12/clarification/sensirion-sgp41.txt`, at `a86be47b`, 43c47549235fe6e8; Analog Devices: the LT8705A's IMON_IN limits (the 100 W bound; R-33, R-101): `v2/docs/records/l4e7/clarification/analog-devices-lt8705a.txt`, at `675b8068`, 97d8217092eae7ac; Milliohm: the HoJLR2512's temperature coefficient below +25 C (R-101): `v2/docs/records/l4e7/clarification/milliohm-hojlr2512.txt`, at `675b8068`, e920420419a677e0; Vishay: the WSL2512's pulse capability (R-101): `v2/docs/records/l4e7/clarification/vishay-wsl2512.txt`, at `675b8068`, 0d91a42dfa59432b; Texas Instruments: the INA169's error envelope (R-101): `v2/docs/records/l4e7/clarification/texas-instruments-ina169.txt`, at `675b8068`, 405fb3988f41d8ac; Eaton: the SCF9550 above +60 C and in storage (PWR-F12; R-103): `v2/docs/records/l4e10/clarification/eaton-scf9550.txt`, at `79b2f568`, 9dffb95e8b4874fc; SunPower (the module's maker): a warranted Voc band at STC for the SPR-E-Flex-100 (U-03's route 1): `v2/docs/records/l4e13/clarification/sunpower-spr-e-flex-100.txt`, in the tree, 453a5a957648a322; Solbian: a warranted Voc band for the SX 156 (U-03's route 1): `v2/docs/records/l4e13/clarification/solbian-sx-156.txt`, in the tree, fb66bfb76e7e252c |
+| OW-5 | the fallbacks, to send only if T-H1 reads under 2.159 W/K (L4-E12) | Ground Control: the RockBLOCK 9704: `v2/docs/records/l4e12/clarification/ground-control-rockblock-9704.txt`, at `a86be47b`, 738245875bec70c5; NiceRF: the SA868: `v2/docs/records/l4e12/clarification/nicerf-sa868.txt`, at `a86be47b`, 92324668c17d4f6c; Bulgin: the PXP4043C: `v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt`, at `a86be47b`, c7accd3dd6dc1d89 |
+| OW-6 | PANEL-ACC (U-03, L4-E13): buy one SunPower SPR-E-Flex-100, recorded by serial number, and have it measured to the specification (M1 to M3 and A-2's reading); actions under the owner's authority (money), not questions | L4-E13's page, PANEL-ACC: `v2/docs/records/l4e13/L4E13-PANEL.md`, in the tree, 1c7f11716db4c2f2 |
+| OW-7 | U-04: send TI the battery packet's questions (REVIEW-REQUEST.md section 4, Q-TI-2 and Q-TI-3 above all) with L4-E11's TI-QUESTIONS.md (Q-TI-11 to Q-TI-14 and the addendum to Q-TI-3, each tied to its row D1 to D10; Q-TI-2 partly answered on E2E, the POR value 256 mA); D1 and D3 decide U-04 (E11-05, E11-25; R-114); an action, not a question | Texas Instruments: the battery packet: `v2/docs/review-packets/battery/REVIEW-REQUEST.md`, in the tree, 91a257430cbeb53a; Texas Instruments: the dependency round's questions: `v2/docs/records/l4e11/clarification/TI-QUESTIONS.md`, in the tree, 2789ce47a4e81fb6 |
+| OW-8 | U-02: authorise T-H1 on the bench, its purchase (a current-moulding Peli 1450 with the 1450PF frame, a 3 mm plate blank, the heaters, the fans as stand-ins until D-18, a second PicoLog TC-08) and who runs it; a chamber run at +60 C only if wanted, at a laboratory, his spend; the procedure is drafted and the session cannot run it (R-104, R-151); an action, not a question | T-H1's procedure, drafted: `v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md`, in the tree, 07b94e2ff18647a1 |
+
+
+Not yet drafted (engineering work first, then the owner sends): Littelfuse, F1's total clearing I2t at 900 A and 58 V DC
+(R-115, E11-16); Coilcraft, L10's inductance against current at temperature (R-120) and L1's Isat at 85 C (R-31); Milliohm,
+R227's single-pulse rating (R-101).
+
+## 9. Decisions this record takes (SESSION, under the owner's standing rule of 26 September 2026 and his ruling of 21 September 2026 that engineering decisions are the session's)
 
 1. **Q1 to the CSD19532Q5B (100 V, C473333)**, on Q7's PPAK land. *Why:* L4-E5's raised ceiling makes the reversed vehicle input
    of REQ-015's acceptance put 66.15 V across Q1 (the back-feed diode's drop taken as zero), over the BSC039N06NS's 60 V. Round 2
@@ -485,7 +609,7 @@ One table per item; every row names the record it rests on and a figure the scri
    was not taken: a test condition is not changed to fit the design. *Draft:* `apply_gen_sch_e_hotswap.py` (R-94, with R24). *Reversed by:* a measured OVLO
    threshold spread that leaves the band outside that window, or TEST-PLAN stating an M2 source voltage at which the drawn band clears the peak.
 5. **B-3 at R11 8 mOhm needs no declaration raised on board A** (R-10), as round 1.
-6. **The 9 V envelope is stated, not corrected** (section 3), as round 1.
+6. **The 9 V envelope is stated, not corrected** (4b), as round 1.
 8. **R24 22k 1 %** (D-07, the fix round's B1). *Why:* the drawn 20k gives the power limit 4.7429 mV of sense at the selected
    OVLO maximum, under the 5 mV TI does not recommend; 22k is the next standard value over Equation 9's 21443 Ohm at its low
    corner (5.06 mV), and the power-limit part of the hot short with TI's 1.3 margin fits Figure 10 at 43.18 V derated to Q7's
@@ -530,112 +654,7 @@ One table per item; every row names the record it rests on and a figure the scri
    standard header (10 A). *Reversed by:* route 2 found infeasible with route 1 still closed (L4E13-06), which returns U-03 to an
    architecture-level choice.
 
-## 7. The closure gate
-
-The gate's rule, held by the script (out 9) and by `test_l4e9.py`: a criterion reads PASS only on interface rows that read
-MEETS, never on an ASSUMPTION, CONDITIONAL or PENDING row; never while an unresolved choice it names stands; and criterion 2
-never while a material defect is open. Every feasibility claim below cites its evidence by class; the software tests establish
-tested behaviour of the record's own scripts and drafts only, never an electrical or thermal property.
-
-| Criterion | Evidence | Verdict | The exact constraint (if not PASS) | Could it overturn the architecture? |
-|---|---|---|---|---|
-| 1. One architecture selected; its mandatory functions have a defensible feasibility basis | A1 under D-06 (section 1); rows IF-02, IF-04, IF-05, IF-07, IF-09, IF-10, IF-11, IF-12, IF-13: REQ-014 (the pack), REQ-015 (IF-04 to IF-06, MAKER and INFERRED; at 9.00 V at the plug with no usable pack U-04's CONDITIONAL CANDIDATE), REQ-016 (IF-01, IF-02, CONDITIONAL and MODELED; the panel PANEL-ACC, L4-E13), REQ-017 (IF-12, IF-13), REQ-018 (IF-10, IF-14), REQ-045 (section 5, D-06 resolved in design), REQ-046 and REQ-077 (IF-10, L4-E10), REQ-075 (IF-09); the electronics at the margins (IF-11, L4-E12); choices U-01, U-02 and U-04 (U-03 moved downstream, update round 3), each restated by its dependency round (L4-E10, L4-E12 and L4-E11, update round 5, out 14) | CONDITIONAL | the solar function's 100 W bound is CONDITIONAL on G_CM and U18's VIN+ bias (L4-E7R) and its panel on PANEL-ACC (U-03, a CONDITIONAL DOWNSTREAM UNIT SELECTION since L4-E13: no unit bought or measured, R-35); REQ-015 at 9.00 V at the plug is a CONDITIONAL CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23 (U-04; L4-E11's dependency round, check 4 at f1856bfd, leaves TI's D1 and D3 deciding it); the electronics at the margins are CONDITIONAL on T-H1 at or over 2.159 W/K and L4-E12's conditions (U-02; L4-E12's round, check 4 at c933724e, states the basis, the fans and T-H1's procedure); the battery path's thermal design is FEA-008's (U-01; L4-E10's round, check 4 at e464ff88, states the limits by mode, the charge drafts and the usable energy); PS-ALLTX's chain at 18 A for 60 s (PWR-F12) is an open obligation | possibly, on named evidence only: U-01 on the HL18650V's signed specification (D-06's pack energy, protection settings and charge ranges), U-02 only on a T-H1 reading under E3-O's floor with the session's fallbacks (1.399 W/K: the sealed case's thermal design or a device-set re-pick, the owner's), U-04 on TI's D1 or D3 (the charger's power path); the rest, the panel unit included, resolves by a value, a part or a measurement on the same topology |
-| 2. Material power-path defects have engineering resolutions and bounded supporting calculations | rows IF-01, IF-02, IF-04, IF-05, IF-13; defects D-01 to D-09 below (none open: D-06 resolved in design by L4-E11, D-07 and D-09 superseded by the replacement of the LM5069, the rest drafted or bounded with their conditions named); E11-19 in out 12a; the dependency rounds add none (out 14) | CONDITIONAL | no material defect is open: D-01 to D-05 and D-08 are resolved in design (drafted or bounded), D-06 is resolved in design by L4-E11's interconnect with its evidence items (E11-10 to E11-16), D-07 and D-09 are superseded by the replacement of the LM5069 (E11-19 finds no new one); the resolutions rest on CONDITIONAL rows (the loop's typical rows, the makers' installed and short-time ratings, R227's pulse rating, the start into a hard short's transconductance bound) and the hot short in service on open evidence (the loop's inductance, E11-20); the dependency rounds add no defect: L4-E11's D9 and D10 are the entry's delay and transconductance rows already CONDITIONAL here, and E11-24 is U-04's fallback, a register row (R-152), not a defect's resolution | no: each resolves by a part, a rating or a measurement at the vehicle or the solar entry |
-| 3. Remaining assumptions are explicit, with their impact and verification method | section 8's register A-01 to A-30 | PASS |  |  |
-| 4. Downstream implementation changes, layout constraints and tests have named owners and acceptance criteria | `DOWNSTREAM-REGISTER.md`: 146 items, each with one owner and an acceptance, among them L4-E11's E11-01 to E11-26 (deduplicated), L4-E10's and L4-E12's items, PANEL-ACC (R-35, R-52, R-148, R-149), L10's own assignment (R-120, R-121), M2 (R-122), the dependency rounds' rows (R-150 to R-154) and the findings ledger's (R-155, R-156; R-102 and R-139 extended); the release order (L4-E6's R12 before L4-E8's ballasts; L4-E11's entry draft after this record's hot-swap draft); `LAYER5-HANDOVER.md` LH-01 to LH-11 | PASS |  |  |
-| 5. No unresolved uncertainty could overturn the selected architecture while described merely as routine later testing | rows IF-09, IF-10, IF-11; choices U-01, U-02 and U-04 below, each with its exact question, its evidence by vendor, physical and owner, who supplies it, its fallback with its numbers and what it could overturn (update round 5, out 14); U-03 a downstream unit selection since L4-E13 | CONDITIONAL | three unresolved choices could overturn it and are named as such, not as later testing, each with its question, evidence, supplier and fallback stated by its dependency round: U-01 (FEA-008's cell: the signed specification and the owner's two items; L4-E10, check 4 at e464ff88), U-02 (MESHSAT-1478: T-H1 at or over 2.159 W/K by the drafted procedure, the session's fallbacks down to 1.125 W/K in E5 and 1.399 W/K in E3-O, the owner's below E3-O's floor; CFL-002 the owner's question; L4-E12, check 4 at c933724e), U-04 (TI's D1 and D3; E11-24 takes D2 and D5 off TI; L4-E11, check 4 at f1856bfd); an owner and an acceptance criterion do not close them. U-03 left this category with L4-E13's acceptance: a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC, R-35) that decides which unit, not the topology or the source class | yes, on named evidence only: U-01 (D-06's pack energy and settings), U-02 (only below E3-O's floor: the sealed case's thermal design or the device set), U-04 (TI's D1 or D3: the charger's power path); U-03 no longer can, unless route 2 proves infeasible with route 1 still closed (L4E13-06) |
-
-**Layer 4's power architecture closes: NO** (criteria 1, 2 and 5). Two categories, kept apart below: the material defects (7a,
-none open since the update round) and the unresolved choices that could overturn the architecture (7b, three since update round
-3: U-01, U-02, U-04; U-03 moved downstream as PANEL-ACC); the downstream tasks (7c) and the owner's items (7d) are neither.
-**The reason it stays not closed, on this record's own reading:** criteria 1 and 5 cannot read PASS while U-01, U-02 and U-04
-stand, and each can still overturn part of the architecture on named evidence (7b); criterion 2 has no open defect but its
-resolutions rest on CONDITIONAL rows with named evidence, so it reads CONDITIONAL, not PASS; nothing L4-E13 settled changes
-either reading, since U-03 was never what held criterion 2 and its move leaves three architecture-level choices in place.
-**Update round 5 leaves the reading as it was:** the dependency rounds state each choice's question, evidence, supplier and
-fallback, and none is yet answered by a held document or a measurement (U-01 waits on the signed specification, U-02 on T-H1,
-U-04 on TI's D1 and D3); they add no material defect (out 14).
-
-### 7a. The material power-path defects (criterion 2)
-
-| Defect | What | The constraint | The options | State |
-|---|---|---|---|---|
-| D-01 | the solar backstop trips under TEST-PLAN M2 (CS101) | CS101's injected current crossed the sense bank and its peaks over the trip less the operating current stopped the stage for td each time, so solar charging stopped for the test, against M2's 'no upset' line (L4-E7R's check 3) | the bulk moved ahead of the sense bank, five 100 nF C0G across R66 (3.960 to 4.496 ms), R66 8.45k and RIMON_IN 31.6k: the filtered ripple at most 0.0585 A against the 0.1130 A margin, the response allowance 1.087 ms after the filter's 0.4205 J; CONDITIONAL on the loop's typical rows (break-even 2.51 times), the bulk's temperature, the bank's pulse capability, the 0.1 s window | RESOLVED (drafted): L4-E7R accepted (check 4, fnd/l4e7 91e9a4b5, figures at 675b8068); register R-21 and R-98, apply_gen_sch_e_backstop.py; M2, R-122 |
-| D-02 | the vehicle entry's over-voltage lockout opens under TEST-PLAN M2 (CS101) at REQ-015's 36 V | 36 V plus CS101's 2.83 V peak reaches 38.83 V, past the drawn OVLO minimum 37.78 V | the selected entry's OV (TPS48110-Q1, R22 332k over R23 10.0k at 0.1 %): off above 39.6 / 40.36 / 41.22 V, 0.77 V over the peak and 3.18 V under D10's breakdown minimum (L4-E11, selected); for the LM5069 alternative R22 100k and R23 6.42k at 0.1 %: 39.71 / 41.44 / 43.18 V; M2 at the source's nominal (not taken) | RESOLVED (drafted): apply_gen_sch_e_entry.py (E11-01, R-123) after apply_gen_sch_e_hotswap.py (R-94) |
-| D-03 | Q1 over its rating on a reversed input with the raised ceiling | 66.15 V across the drawn 60 V BSC039N06NS | the CSD19532Q5B (100 V) | RESOLVED (drafted): register R-17, apply_gen_sch_e_q1.py |
-| D-04 | F1 cannot interrupt at the entry's highest steady input | the drawn 32 V DC MINI against 43.18 V | the Littelfuse 0997010.WXN (58 V DC, 1000 A at 58 V DC), in a holder rated at least 20 A (E11-13) | RESOLVED (drafted): register R-18 and R-132, apply_gen_sch_e_f1.py |
-| D-05 | U17 on the 54 V rail (HF-F02) | 54 V on the INA226's IN+ and IN- against its 40 V absolute | U17 on R227, 5 mOhm in the PoE stage's input | RESOLVED (drafted): register R-06, apply_gen_sch_a_u17.py |
-| D-06 | the vehicle entry's interconnect in F1's long-time band from a weak source | a source under 30 A (ECSS 6.17.3c's three times) can leave 10 to 11 A flowing indefinitely, 13.5 A for up to 600 s and 20 A for up to 5 s through J_DCIN's VH contact (10 A), the D38999 size 16 contacts (13 A test current) and the kit's cable and lead, whose held sheets print no current or time-current rating | L4-E11's option (i), selected: every element at least 20 A continuous where installed, 35 A for 5 s, 60 A for 0.5 s and F1's total clearing I2t at 900 A; size 12 contacts (insert 17-6), J_DCIN an XT60-class connector, a holder rated at least 20 A, AWG 14 cores, the loop specified by its resistance (at least 56.93 mOhm at 20 C, accepted four-wire at 58.51 to 64.21 mOhm) so a stiff source stays at 900 A against F1's 1000 A; (ii) a smaller fuse rejected (it fails 9 V); (iii) the source's capability in REQ-015 not needed | RESOLVED (in design): L4-E11 (accepted, check a15ab384), CONDITIONAL on its evidence items E11-10 to E11-16 (R-129 to R-132, R-43, R-95, R-113, R-115) |
-| D-07 | the hot swap's power limit under the sense voltage TI recommends | R24 20k gives 4.7429 mV at 43.18 V, under SNVS452G's 5 mV, and the hot-short pulse was compared at 36 V with a by-eye reading | the selected entry limits no power (E11-19, out 12): its starts sit inside Q7's derated chart (0.704 into a resistive fault, 0.743 into a hard short); for the alternative R24 22k 1 %: 5.06 mV at its low corner | SUPERSEDED (the LM5069 alternative only): superseded by E11-01's entry (R-123); R-94's R24 stands only if the LM5069 is kept |
-| D-08 | R227's transients bypass U16's current control | the capacitors behind R227 (20.2 uF) charge outside U16's cycle limit, so 72.38 mV did not bound every transient | bounded in part A: the differential at most the VBAT step, POE_VIN under 40 V in every required event, a saturated sample distinguished from damage; R227's pulse energy 2.879 mJ nominal, the maximum unresolved until a capacitance envelope and the pulse's shape meet Milliohm's rating; moving the capacitors ahead of R227 not taken (they close U16's input loop) | RESOLVED (bounded, conditions named): IF-13's checks; R-101 (Milliohm's pulse rating), R-117 (the loop's inductance), R-120 and R-121 (L10) |
-| D-09 | the hot swap's fault time against the start into VIN_RAW | with C5 (100 nF, K, X7R) at its printed rows stacked the fault time's minimum is 2.035 ms, under TI's half-again margin over the start into VIN_RAW at 43.18 V (3.814 ms; the start alone 2.542 ms at the corners, 1.324 ms nominal), the front end's own load during the start not included | the replacement has no fault timer against a power limit (its start 0.382 to 1.219 A for at most 2.5 ms); with the LM5069 kept, L4-E11's C5 GRM3195C1H104GA05 with C121 GRM3195C1H683JA05 (apply_gen_sch_e_timer.py): 4.927 to 14.653 ms against 4.593 ms on a recomputed 3.062 ms start (34 uF) | SUPERSEDED (the LM5069 alternative only): superseded by E11-01's entry (R-123); R-119 only if the LM5069 is kept |
-
-**E11-19 adds no material defect** (out 12a, decision 13). What it leaves open is evidence, not a defect: the loop's inductance
-for a hard short in service (E11-20, R-134), the transconductance bound of a start into a hard short (A11-10, E11-17), and the
-input current's transients against the breaker's 0.247 ms (E11-06, E11-21).
-
-### 7b. The unresolved choices that could overturn the architecture (no owner closes them), and U-03 moved downstream
-
-| Choice | Class | What | The exact unresolved question | The present state (the exact constraint) | The evidence: (vendor) / (physical) / (owner) | Who supplies it | The fallback, with its numbers | What it could overturn |
-|---|---|---|---|---|---|---|---|---|
-| U-01 | ARCHITECTURE-LEVEL CHOICE | FEA-008: the battery path's cell and thermal design (L4-E10, final) | does the HL18650V class's signed product specification confirm the rows D-06's pack needs, which L4-E10 holds only on the maker's product page (MAKER-PAGE: unsigned, no test conditions): the idle hot limit (+80 C, the 30-day storage row), storage at -33 C, each storage row's state of charge and recovery, charge below 0 C, the charge current from +10 C (at least 0.357C), continuous discharge (at least 6.0 A a cell for PS-ALLTX), the end voltages and the minimum capacity? | LO-01d to LO-01g (E3-O, E5, E3-S, E4-S with the pack fitted) have no route that holds on held evidence; LO-01a holds only with T-H1 at least 1.666 W/K in both lid states (1.8058 W/K with L4-E8's ballasts counted, L4-E12). L4-E10's dependency round (check 4 at e464ff88) states the limits by mode and drafts the charge for the 4S3P, never applied: 0.84 A to 16.40 V from T1 -9 C, 1.68 A to 16.80 V from T2 1 C, the drawn 3.00 A to 16.80 V from T5 11 C to T3 42 C, UTC -9.0 C, the kit's hold below -7 C; usable energy 90.2 Wh (2.11 h) against the 35E's 107.9 Wh (2.52 h) at +25 C, 16.4 % less; at the cold end only brackets (45.1 to 69.6 Wh with the cells at -5.52 C, 37.2 to 54.1 Wh from a cold start at -20 C, ASSUMPTION) | (vendor) Yichun Topwell Power's signed product specification answering the drafted request's ten questions (the storage rows with their charge and recovery, the basis with the rest at high charge, the gauge's data, the cold charge band and termination, the pulse current, the cold capacity, the end-of-life capacity and self-discharge); Eaton's statement on F2 above +60 C and in storage (R-103); (physical) T-H1 in both lid states (R-104, R-151); with the cell chosen, L4-E10's margins re-run on the signed rows (1.06 K under H1 and 0.97 K under U2's INFERRED trip at LO-01e) and each LO row's TEST-PLAN run with the pack fitted (R-47, R-109); (owner) send the request (OW-2); once the specification confirms, approve the cell change inside D-06's 4S3P (about 145 Wh to about 121 Wh nominal, REQ-046 and REQ-077 restated with the cell, about USD 42 a pack; OW-3); if declined, LO-01d to g stay a release gate | the maker, through the owner, who sends the request; Layer 6 components files it (R-103); the session re-runs L4-E10's margins (R-47); the prototype bench runs T-H1 and the LO rows; the owner approves the cell | with no answer, U-01 stays a release gate and every row CONDITIONAL (no ruling needed). With a narrower signed figure, at L4-E10's thresholds: an idle limit under 78.94 C makes H1 act in E5's dwell, under 74.73 C E5's cells pass it, under 73.07 C E3-O loses its 'no shutdown', under 71.00 C E3-S fails, under 68.86 C E3-O's cells pass it; E3-O and E5 then fall back to (I)'s cooler (8.18 to 35.21 W into the sealed case, INCONCLUSIVE) and E3-S to requirement change A (the owner's); storage warmer than -33 C to (III)'s primary-fed heater (470 to 940 Wh of added storage, an owner's ruling under D-06) or requirement change A; continuous discharge under 6.0 A a cell back to (I); the charge current, the end voltage and the capacity (3.22 Wh per 100 mAh a cell) move energy, not the architecture; or the 35E kept with (I), or a requirement change (the owner's, D-29) | on the specification's answer: D-06's pack energy (16.4 % less usable, 90.2 against 107.9 Wh at +25 C) and the pack's protection settings and charge ranges under (II); with a narrower idle limit and no requirement change, (I)'s powered cooling (up to 35.21 W into the sealed case) would reopen U-02's heat budget, and a narrower storage floor would add 470 to 940 Wh of primary storage under D-06; the power path's topology stays |
-| U-02 | ARCHITECTURE-LEVEL CHOICE | MESHSAT-1478: the electronics against the inside air at D-02a's +55 C margin and E5's +60 C dwell (L4-E12) | does the sealed Peli 1450 with its 3 mm plate, lid open with the fans, conduct at least 2.159 W/K: E5 under the hold puts 21.587 W into the case (19.497 W and L4-E8's 2.09 W of ballasts) across the 10 K from E5's +60 C dwell to the +70 C class, at 0 K of margin, with fans whose power and operating range are not yet known (D-18 open)? | L4-E12's route (c), E3-O as stated and the hold in E5 only, is CONDITIONAL on T-H1 lid open with the fans at or over 2.159 W/K (E3-O alone 1.806 W/K; 2.709 W/K with no hold), the hold's reference within +-0.899099 K of the mixed air, the parts out of the cooler's exhaust, the fans' rating (D-18), the pushbuttons and two regulators changed and PDi's statement; at the line E3-O's air is 67.55 C and E5's 70.00 C, while the design as it stands (LO-01a's floor, no hold) reaches 76.25 C in E5; L4-E12's dependency round (check 4 at c933724e) counts the fans in the energy budget (pwr_budget.py's rows, tier R), and their picked power moves the line 0.100 W/K per W (2.071 to 2.333 W/K over the representatives); inside the envelope no location holds the SGP41 to its maker's conditions (CFL-002) | (vendor) D-18's picked fans: the maker's power at the duty the controls set and an operating range covering -20 C to the inside air (REQ-043; no held sheet gives a fan's operating temperature; R-142, R-150); PDi's and Sensirion's answers; (physical) T-H1 by the drafted procedure (T-H1-PROCEDURE-DRAFT.md, R-151): an empty Peli 1450 with the 1450PF frame and a plate blank, heaters spread as E5's hold, eight points (two powers, both lid states, fans on and off), 29 to 84 h; it passes only if the reading less its expanded uncertainty (k = 2, 10.7 % at a 10 K rise) reaches 2.159 W/K, so a reading of at least 2.416 W/K at a 10 K rise (2.285 W/K at 20 K) on the assumed budget, which the bench replaces with its own; the forced hold and the SGP41's shutdown at room temperature, its lag measured (R-138, R-139); then E3-O and E5 with thermocouples on the +70 C parts (R-104, R-109); (owner) authorise T-H1's bench (its purchase; a chamber run at +60 C only if wanted, his spend; OW-8); CFL-002 (OW-1); send PDi's and Sensirion's requests (OW-4) | the prototype bench, as Layer 9's physical verification, once the owner authorises it (the session cannot run it); Layer 6 components for D-18's pick (R-142, R-150); the makers, through the owner | the session's, inside the rulings (no vent, the Peli 1450 kept): F4, the RockBLOCK, board D and the LimeSDR on pads to the plate, holds E5 down to 1.564 W/K and E3-O down to 1.399 W/K (1.309 W/K with the +80 C connectors out of the exhaust); F3, a deeper hold in E5 that keeps the logging (13.429 W into the case), holds E5 to 1.552 W/K; F4 with F3 holds E5 down to 1.125 W/K, with no owner ruling and no change to E3-O; F1, fins on the plate, multiplies a reading by 1.125 to 1.131 (outside, twice the area) or 1.252 to 1.363 (both faces); the H5007NL, the ATP16 and the PXP4043/C take wider parts or makers' statements (R-141). Below E3-O's floor (1.399 W/K) the remaining option is the owner's: a deviation of E3-O's configuration (the hold in E3-O) or a device-set re-pick (CHO-001) | on T-H1's reading and the fans: from 2.159 W/K down to E5's 1.125 W/K and E3-O's 1.399 W/K the session's fallbacks hold and the architecture stays; under E3-O's floor the sealed case's thermal design (no vent, the ruling of 7 September 2026) or the device set (CHO-001) could change, the owner's; a stopped fan puts E5's mixed air at 72.38 to 85.36 C on W4's still values, the parts coupled to the plate at most 69.82 C; CFL-002 changes a sensor, not the architecture; never the power path's topology |
-| U-03 | CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC) | O-1: the solar panel inside REQ-016's window (L4-E13, accepted) | which physical unit is inside REQ-016's window: a unit measured to PANEL-ACC and accepted on A-1 (Vm20 plus U_V at most 25.000 V at -20 C and 1000 W/m2), A-2 (at least 1.365591 W) and A-3(b); not whether the window can be met, which L4-E13 shows on a unit equal to the typical rows | L4-E13 (accepted, checks 3 and 4 at fae419d1 and 33b6b7be): route 1, a maker's warranted band, closes nothing today; route 2, one identified SunPower SPR-E-Flex-100 measured against A-1 to A-3, is feasible on a unit equal to the typical rows: A-1 Vm20 + U_V 24.1505 V against 25.000 V at -20 C and 1000 W/m2 (margin 0.8495 V), the window Voc25 20.315 to 22.156 V; A-2 27.0849 W above 1.365591 W; A-3 (a) 3.987 A, the conservative bound over L4-E7R's regulation (2.5485 A nominal, at most 2.9337 A at 25 V) and backstop (trip at most 3.7408 A), (b) 8.1817 A, (c) 13.82 A, a COMPONENT_LIMITATION on J_SOLAR and PV_IN; A-4 on L4-E7R's two layers (the regulation's 25 V corner 73.3436 W; the backstop's static bound 93.5521 W, CONDITIONAL on G_CM and the VIN+ bias); no physical unit accepted | (vendor) route 1, a maker's warranted Voc band inside the window (the drafts to SunPower and Solbian, OW-4); it closes nothing today; (physical) one unit bought, recorded by serial number and measured (M1 to M3 and A-2's reading at the specification) and accepted on A-1, A-2 and A-3(b) (R-35); its trace rerun (R-52); J_SOLAR and PV_IN with a rating that covers A-3(c) (R-148); M3's n at or under 2 for the disturbance check (R-149); L4-E7R's regulation and backstop applied (drafted) for A-3(a) and A-4; (owner) the purchase and the measurement of one unit (OW-6) and sending the two route-1 drafts (OW-4): actions, not questions | the owner (the purchase, the two drafts sent); the measurement to the specification under his authority; Layer 6 components (PANEL-ACC's acceptance R-35, J_SOLAR and PV_IN R-148, M3's n R-149); the makers, if they answer | another unit of the same curve shape inside the window; route 1 if a maker warrants a band; REQ-016's window restated (the owner's; not needed) | nothing of the architecture: it decides which unit, not the topology and not the source class; REQ-016's window, the stage, its hold and its 100 W control stay; it returns to an architecture-level choice only if route 2 proves infeasible with route 1 still closed (L4E13-06) |
-| U-04 | ARCHITECTURE-LEVEL CHOICE | source-only and dead-pack operation (L4-E11: arrangement (A), a CONDITIONAL CANDIDATE) | does the BQ25731 regulate VSYS at ChargeVoltage with no battery current (D1: without it arrangement (A) cannot run state S4), and what does it regulate with the charge inhibited (CHRG_INHIBIT = 1 or ChargeCurrent 0) and no battery current (D3: REQ-077's hold in every state and R-a's S2)? The held datasheet (SLUSE66A) states neither as a behaviour of the part | L4-E11 selects arrangement (A), the drawn charger with no battery FET, with rules R-a to R-d and the replaced entry: at a 9.00 V plug the source delivers 29.09 to 42.52 W at VBAT and the shed warm-up (28.12 W plan) is carried with 0.98 W in hand while P1 stays at most 20.51 W; REQ-015 at 9.00 V at the plug is a CONDITIONAL CANDIDATE, not closed: at the load's hi corner P1 (35.24 W) exceeds the source's least, TI states neither VSYS's regulation with no battery current (D1) nor what it regulates with the charge inhibited (D3, Q-TI-3), the cells' warming time has no held model, and R-b's cases (ii) and (iii) are INCONCLUSIVE (D8, D7); L4-E11's dependency round (check 4 at f1856bfd) maps every specification left to a maker to its claim (D1 to D10) and narrows the dependence on TI from D1, D2, D3, D5 to D1, D3; ChargeCurrent at POR is 256 mA (TI's E2E answer), under R-b's bound | (vendor) TI's statements of D1 and D3 as behaviours of the part, or a datasheet revision (Q-TI-11 and the addendum to Q-TI-3 in clarification/TI-QUESTIONS.md, with REVIEW-REQUEST.md's Q-TI-2 and Q-TI-3); D2, D4 and D6 to D8 from TI too, D9 and D10 from the entry's makers (Q-TI-12 to Q-TI-14); an answer stated as a limit settles a row production-wide, a typical figure does not (R-114); (physical) one bench sample per row (R-153): for D1 the mode on that silicon revision, where VSYS needs 12.3 V against ChargeVoltage's floor 16.716 V (a 4.416 V margin once the mode is shown); for D3 the mode with the bit set and with ChargeCurrent 0; evidence for that unit and revision, never a production-wide bound; R-85 extended at the plug (E11-06) and E4-O's warm-up (E11-23, R-137); (owner) send TI's questions (REVIEW-REQUEST.md with TI-QUESTIONS.md; OW-7); a change to REQ-077's acceptance only if both the bit and ChargeCurrent 0 fail D3 | Texas Instruments, through the owner (E2E or TI support); Layer 6 components files and judges the answers (R-114); the prototype bench runs the one-sample methods (R-153) and R-85 | for D2 and D5, E11-24 (the session's, a register row, R-152): one EEHZK1V181P directly on VSYS and a hold-up bank of four EEHZK1E471P charged through R_CH 330 Ohm and discharging through D_H, a B540C-13-F: 54.07 mJ, 1.117 ms of hold for the worst admitted step (the USB-C PD outlet, 48.39 W) over the 1 ms assumed, the bank charging at 51.2 mA at most (0.864 W in a 1 W part); D4 and D6 to D10 have remedies inside (A). For D1 and D3 there is none inside (A): a negative answer returns (B), a charger whose battery FET regulates VSYS by design (an architecture change; five records reopen); for D3 alone, a change to REQ-077's acceptance (the owner's); (C), a precharge path, answers D6 only | on TI's D1 or D3, or a bench sample showing the mode absent: the charger's power path, to (B) with a battery FET; D2 no longer can once E11-24 is fitted, within its 1.117 ms and CONDITIONAL on the 1 ms that D2's bench reading turns into a margin; the efficiency, the pin's band or P1's load move the knee or F1, not the topology |
-
-**Whether each can still overturn the architecture, and on exactly what (update round 5):** U-01 yes, on the HL18650V's signed
-specification (D-06's pack energy, its protection settings and charge ranges; a narrower idle limit or storage floor with no
-requirement change would bring (I)'s powered cooling, up to 35.21 W into the sealed case, or (III)'s 470 to 940 Wh of primary
-storage); U-02 yes, but only on a T-H1 reading under E3-O's floor of 1.399 W/K: from 2.159 W/K down to E5's 1.125 W/K and
-E3-O's 1.399 W/K the session's fallbacks F4 and F3 hold with no owner ruling, and below it a deviation of E3-O's configuration or
-a device-set re-pick is the owner's, while CFL-002 changes a sensor and not the architecture; U-04 yes, only on TI's D1 or D3
-(the charger's power path, arrangement (B)), since E11-24's hold-up takes D2 and D5 off TI and D4 and D6 to D10 have remedies
-inside (A), while the efficiency, the pin's band or P1's load move the knee or F1 and not the topology. **U-03 no longer can** (update round 3): L4-E13 makes it a CONDITIONAL DOWNSTREAM
-UNIT SELECTION (PANEL-ACC) that decides which unit, not the topology and not the source class; REQ-016's window, the stage, its
-hold and its 100 W control stay; it would return to this category only if route 2 proved infeasible with route 1 still closed
-(L4E13-06). Its row stays in the table, with its class, so the move is visible; criteria 1 and 5 no longer name it.
-
-### 7c. The downstream implementation and verification tasks (criterion 4)
-
-`DOWNSTREAM-REGISTER.md` (section 9): an owner and an acceptance criterion close the ASSIGNMENT, not the item. The items that
-exist only under a choice's outcome are marked there (Order "U-01"), and the items that carry a choice's evidence say so
-("U-02"); none stands in for a choice.
-
-**What closure needs, exactly:** U-04 settled by TI's D1 and D3 (R-114 with TI-QUESTIONS.md, E11-05, E11-25), with E11-06
-(R-85 extended), E11-09 (the knee drawn), E11-22 (R-b's cases), E11-23 (the warm-up time), the one-sample bench rows (R-153)
-and E11-24's hold-up for D2 (R-152); U-02 settled by T-H1 by its drafted procedure (R-151, R-104) at or over 2.159 W/K with the
-picked fans (R-142, R-150), the forced hold and the SGP41's shutdown with its lag (R-138, R-139), the parts' readings in E3-O
-and E5 (R-109) and the owner's answer to CFL-002, or by the session's fallbacks down to 1.125 W/K in E5 and 1.399 W/K in E3-O;
-U-01 settled by its evidence (the signed specification, R-103, R-47) and the owner's two items (or held open as a release
-gate), its charge drafts applied only under (II) (R-154); D-06's CONDITIONAL parts by the makers' ratings and F1's clearing I2t (R-113, R-115, R-129 to R-132) and the
-four-wire loop (R-130); the hot short in service by the loop's inductance (R-134); and for criterion 1 the CONDITIONAL inputs
-with their named evidence (G_CM and U18's VIN+ bias R-101, PWR-F12 R-46 and R-83, C-7, C-3, C-5, V-A07). The coordinator decides
-whether a CONDITIONAL criterion with these named is acceptable for Layer 4's closure; this record does not.
-
-### 7d. The owner's items (decisions and outside contacts only; the session contacts no outside party)
-
-Kept apart from the engineering work above: each is a decision only the owner takes, a text only the owner sends or an
-action under his authority (a purchase, a bench's authorisation): actions, not questions. The script reads each document at its
-pinned sha256 (out 9 (c)). Update round 5 adds OW-7 (the TI request: REVIEW-REQUEST.md with TI-QUESTIONS.md) and OW-8 (T-H1's
-bench authorisation), and OW-2's request carries ten questions.
-
-| Item | The decision or action | The document (path, where, sha256/16) |
-|---|---|---|
-| OW-1 | CFL-002 (U-02): the SGP41 in the battery bay against REQ-042's VOC channel inside the envelope: A, a BME688-class sensor in its place (L4-E12's recommendation); B, the VOC channel dropped; C, the SGP41 kept, its channel reported as not covered above a 49.0 C reading and after storage outside 5 to 30 C | L4-E12's page, section 8: `v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md`, at `c933724e`, e1aaf1c4562cecb6 |
-| OW-2 | U-01, item 1: send the drafted request for the HL18650V's signed product specification (Yichun Topwell Power), ten questions since L4-E10's dependency round (7 to 10 added: the cold charge band and termination, the pulse current, the cold capacity, the end-of-life capacity and self-discharge) | Yichun Topwell Power: the HL18650V's signed specification, ten questions (U-01): `v2/docs/records/l4e10/clarification/topwell-hl18650v.txt`, at `e464ff88`, 1ca762d83bbb58b2 |
-| OW-3 | U-01, item 2, once that specification confirms L4-E10's rows: approve the cell change inside D-06's 4S3P (about 145 Wh to about 121 Wh nominal, REQ-046 and REQ-077 restated with the cell, about USD 42 a pack); if declined, LO-01d to g stay a release gate | L4-E10's page, section 8: `v2/docs/records/l4e10/L4E10-CELL-THERMAL.md`, at `e464ff88`, 576dbf0ac06bcd7a |
-| OW-4 | the other outside-contact drafts to send (the owner chooses the channel; Topwell's is OW-2, TI's OW-7) | Pervasive Displays: the E2370KS0C1's storage and operation (U-02): `v2/docs/records/l4e12/clarification/pervasive-displays-e2370ks0c1.txt`, at `a86be47b`, 4f7db1348cc0b4ac; Sensirion: the SGP41's duration, recovery and storage (U-02, CFL-002): `v2/docs/records/l4e12/clarification/sensirion-sgp41.txt`, at `a86be47b`, 43c47549235fe6e8; Analog Devices: the LT8705A's IMON_IN limits (the 100 W bound; R-33, R-101): `v2/docs/records/l4e7/clarification/analog-devices-lt8705a.txt`, at `675b8068`, 97d8217092eae7ac; Milliohm: the HoJLR2512's temperature coefficient below +25 C (R-101): `v2/docs/records/l4e7/clarification/milliohm-hojlr2512.txt`, at `675b8068`, e920420419a677e0; Vishay: the WSL2512's pulse capability (R-101): `v2/docs/records/l4e7/clarification/vishay-wsl2512.txt`, at `675b8068`, 0d91a42dfa59432b; Texas Instruments: the INA169's error envelope (R-101): `v2/docs/records/l4e7/clarification/texas-instruments-ina169.txt`, at `675b8068`, 405fb3988f41d8ac; Eaton: the SCF9550 above +60 C and in storage (PWR-F12; R-103): `v2/docs/records/l4e10/clarification/eaton-scf9550.txt`, at `79b2f568`, 9dffb95e8b4874fc; SunPower (the module's maker): a warranted Voc band at STC for the SPR-E-Flex-100 (U-03's route 1): `v2/docs/records/l4e13/clarification/sunpower-spr-e-flex-100.txt`, in the tree, 453a5a957648a322; Solbian: a warranted Voc band for the SX 156 (U-03's route 1): `v2/docs/records/l4e13/clarification/solbian-sx-156.txt`, in the tree, fb66bfb76e7e252c |
-| OW-5 | the fallbacks, to send only if T-H1 reads under 2.159 W/K (L4-E12) | Ground Control: the RockBLOCK 9704: `v2/docs/records/l4e12/clarification/ground-control-rockblock-9704.txt`, at `a86be47b`, 738245875bec70c5; NiceRF: the SA868: `v2/docs/records/l4e12/clarification/nicerf-sa868.txt`, at `a86be47b`, 92324668c17d4f6c; Bulgin: the PXP4043C: `v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt`, at `a86be47b`, c7accd3dd6dc1d89 |
-| OW-6 | PANEL-ACC (U-03, L4-E13): buy one SunPower SPR-E-Flex-100, recorded by serial number, and have it measured to the specification (M1 to M3 and A-2's reading); actions under the owner's authority (money), not questions | L4-E13's page, PANEL-ACC: `v2/docs/records/l4e13/L4E13-PANEL.md`, in the tree, 1c7f11716db4c2f2 |
-| OW-7 | U-04: send TI the battery packet's questions (REVIEW-REQUEST.md section 4, Q-TI-2 and Q-TI-3 above all) with L4-E11's TI-QUESTIONS.md (Q-TI-11 to Q-TI-14 and the addendum to Q-TI-3, each tied to its row D1 to D10; Q-TI-2 partly answered on E2E, the POR value 256 mA); D1 and D3 decide U-04 (E11-05, E11-25; R-114); an action, not a question | Texas Instruments: the battery packet: `v2/docs/review-packets/battery/REVIEW-REQUEST.md`, in the tree, 91a257430cbeb53a; Texas Instruments: the dependency round's questions: `v2/docs/records/l4e11/clarification/TI-QUESTIONS.md`, in the tree, 2789ce47a4e81fb6 |
-| OW-8 | U-02: authorise T-H1 on the bench, its purchase (a current-moulding Peli 1450 with the 1450PF frame, a 3 mm plate blank, the heaters, the fans as stand-ins until D-18, a second PicoLog TC-08) and who runs it; a chamber run at +60 C only if wanted, at a laboratory, his spend; the procedure is drafted and the session cannot run it (R-104, R-151); an action, not a question | T-H1's procedure, drafted: `v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md`, in the tree, 07b94e2ff18647a1 |
-
-
-Not yet drafted (engineering work first, then the owner sends): Littelfuse, F1's total clearing I2t at 900 A and 58 V DC
-(R-115, E11-16); Coilcraft, L10's inductance against current at temperature (R-120) and L1's Isat at 85 C (R-31); Milliohm,
-R227's single-pulse rating (R-101).
-
-## 8. The assumptions register (criterion 3)
+## 10. The assumptions register (criterion 3)
 
 | ID | Assumption | Where it enters | Impact if wrong | Verification method |
 |---|---|---|---|---|
@@ -670,7 +689,7 @@ R227's single-pulse rating (R-101).
 | A-29 | L4-E12's model: W4's lumped film coefficients, the plan heat (24.996 W into the case, 19.497 W under the hold), the hold's reference within +-0.899099 K, E5's 15 K/h with a 61 s lag | IF-11, U-02 | the binding line 2.159 W/K and the hold's window | R-104 (T-H1), R-109, R-139 |
 | A-30 | L4-E13's disturbance check: the junction's ideality at most 2 (a MODELLING_ASSUMPTION) and the plane-of-array irradiance below the threshold, 8574 W/m2 at n 2 (an ASSUMPTION); A-3(c)'s design level 2111.4 W/m2 a SESSION level for a double contingency, not a claimed maximum | IF-01 | above the threshold D4 rises over its 28 V standoff and conducts under 1 mA up to its breakdown; A-3(c)'s current scales with the level | R-149 (M3's n), R-148 |
 
-## 9. The downstream register and the release order (criterion 4)
+## 11. The downstream register and the release order (criterion 4)
 
 `DOWNSTREAM-REGISTER.md` holds 146 items, each with one owner, an acceptance, a state and a step in the release order (out 10):
 Layer 4 coordinator 9, Layer 5 interfaces 4, Layer 6 components 20, Layer 7 mechanical 5, Layer 8 board A generator owner 13,
@@ -715,7 +734,122 @@ R11; Layer 7's interconnect and enclosure before the harness and the case are bu
 owner's purchase. The items under U-01's approach (II)
 (R-105, R-106, R-110) wait on the owner's approval.
 
-## 10. The endurance statement (out 8; DR-01)
+## 12. What stays PENDING, CONDITIONAL or open
+
+- **PENDING:** none in the rows. L4-E7R is accepted (check 4 at `91e9a4b5`); IF-01, IF-02, LH-02, R-21, R-92 and R-98 carry its
+  figures. L4-E13 (U-03) is accepted (check 3 at `fae419d1`, check 4 at `33b6b7be` after set 25). In the register, R-156
+  (TRN-001's judgement of the panel lead's surge) waits on L4-E7's surge round (the findings ledger's item 1).
+- **Unresolved choices (no owner closes them):** U-01 (FEA-008's cell: the signed specification, with the owner's two items),
+  U-02 (MESHSAT-1478, CONDITIONAL on T-H1 at or over 2.159 W/K and L4-E12's conditions, the session's fallbacks down to
+  1.125 W/K in E5 and 1.399 W/K in E3-O; CFL-002 the owner's question), U-04 (source-only and dead-pack operation, a
+  CONDITIONAL CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23, turning on TI's D1 and D3).
+- **U-03, a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC):** no unit bought or measured (MISSING_EVIDENCE, the owner's
+  purchase, OW-6); n at or under 2 a MODELLING_ASSUMPTION (R-149); the irradiance below the disturbance threshold an ASSUMPTION;
+  J_SOLAR and PV_IN for A-3(c) a COMPONENT_LIMITATION (R-148); A-3(a) and A-4 on L4-E7R's regulation and backstop (drafted; the backstop's 93.5521 W CONDITIONAL on G_CM and the VIN+ bias); route 1's
+  drafts for SunPower and Solbian unsent (OW-4).
+- **Open material defects:** none since the update round. D-06 is resolved in design by L4-E11, CONDITIONAL on its evidence
+  items (E11-10 to E11-16); D-07 and D-09 are superseded by the replacement of the LM5069 and stand only for the LM5069
+  alternative.
+- **Open evidence (not defects):** the hot short in service against Q7's derated 178.2 A on the loop's inductance (E11-20,
+  R-134); the start into a hard short on the transconductance bound (A11-10, E11-17); the input current's transients against
+  the breaker's 0.247 ms (E11-06, E11-21).
+- **CONDITIONAL:** the backstop's static bound on G_CM and U18's VIN+ bias, the 0.1 s interpretation (layer 8), C-7, C-3, C-5,
+  V-A07, the bank's lifetime and cold envelope, PWR-F12, U18's trip row, D10's cold breakdown (a typical coefficient), the
+  entry's in-service margin on the front end's efficiency at 8.1 V (0.88021, E11-06), the fault starts on Q7's derating
+  (E11-14, E11-17), the interconnect's makers' ratings and F1's clearing I2t at 900 A (R-113, R-115, R-129 to R-132), the
+  four-wire loop (R-130), R-b's case (i) and board P's copper (E11-22), R227's pulse rating and capacitance envelope (R-101),
+  L10's L(I) at temperature (R-120, R-121), L4-E7R's loop on typical rows, the bulk's temperature under CS101 and the bank's
+  pulse capability (R-122, R-101), and U-02's conditions (T-H1, the hold's reference, the fans, the parts out of the exhaust,
+  the pushbuttons and regulators, PDi's statement, the 33 lines cleared only by an absolute rating).
+- **Recorded residuals outside every requirement:** A-N1 (the VIN_RAW clamps' 64.5 V against U2's 60 V at their rated pulse; no
+  surge level is ruled, D-16) and the capability scenario on Q1, the LM74700-Q1 and U17's POE_VIN (part A). S-111 (VBUS20's
+  single faults) is an engineering decision still open (R-48), with no exemption claimed; the short at DC_P and the weak-source
+  band behind F1 are traced in section 5 (F1's let-through R-115, D-06), not exempted.
+- **Not claimed:** nothing is verified, built or measured; every row is a desk reading of documents and records.
+
+## Appendix A. History: the inputs of each round, the earlier summary and the endurance statement
+
+### A1. The inputs and the rounds
+
+**Inputs.** The Layer 4 records on main: `../l4e/` (the energy architecture, A1 against A2, the findings A-1, A-2, B-1 to B-5,
+C-1 to C-9, R138, O-1, O-2; the review L4-R01 to L4-R04), `../l4e4/` (current limits, PROVISIONAL), `../l4e5/` (source control,
+H3), `../l4e6/` (fault handling), `../l4e7/` (the solar stage's settings), `../r11dep/`, `../s120/`, the power budget and load
+trace, `HW-FW-CONTRACT.md`, `pcb_interfaces.yaml`, `DECISION-31-PROTECTION-TOPOLOGY.md`. Read from their branches, pinned:
+**L4-E8** (the VBUS20 bank) at `fnd/l4e8` `3c8f7a1f`, accepted by the coordinator's check 3; **L4-E7R** (the solar stage's
+control and entry, the selected solution (C) at R66 8.45k and RIMON_IN 31.6k with its CS101 correction) at `fnd/l4e7`
+`675b8068`, ACCEPTED by the coordinator's check 4 at `91e9a4b5` with named conditions (D-01 resolved in design);
+**L4-E10** (FEA-008, the cell and thermal design) at `fnd/l4e10` `79b2f568`, final, accepted by the closing check `573c8b8f`
+as a decision-ready comparison that does not close FEA-008; **L4-E11** (source-only operation U-04, the vehicle-entry
+interconnect D-06 and the entry's fault timer D-09) at `fnd/l4e11` `3298d1f1`, accepted by the closing check `a15ab384`; **L4-E12**
+(MESHSAT-1478, the electronics against the inside air, U-02) at `fnd/l4e12` `a86be47b`, accepted by the closing check `db41c95d`.
+**L4-E13** (U-03, the panel) at `fnd/l4e13` `fae419d1`, accepted by the closing check 3 there, and its update after set 25 at
+`33b6b7be` (check 4: A-3(a) and A-4 on L4-E7R's regulation and backstop, the nominal hold's day 336.6 Wh), read from the tree
+after its merge into this line. Part A of round 2 (`L4E9-ENTRY-PROPOSALS.md`,
+out 11) checks Q1, F1 and U17 against their makers' sheets. The fix round answered the collaborator's focused check
+(`checks/astra-check-l4e9-1.md`, NOT YET) and the final round its targeted recheck (`checks/astra-check-l4e9-2.md`, NOT YET);
+the coordinator's closing check (`checks/check-l4e9-3.md`) read the gate as not closed on D-06, D-09 and U-01 to U-04.
+**The update round** (the coordinator's instruction of 2 October 2026, out 12) brings the architecture and its gate up to date
+with the accepted results of L4-E10, L4-E11 and L4-E12, and answers L4-E11's E11-19: every finding that rested on the LM5069's
+power limit re-judged for the TPS48110-Q1 entry L4-E11 selected. **Update round 3** (out 13) takes L4-E13's acceptance: U-03
+becomes a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC) and moves from the choices that could overturn the architecture into
+the register. **Update round 5** (out 14; the owner's instruction of 2 October 2026 to resolve Layer 4's remaining dependencies)
+takes the dependency rounds of L4-E10 (`e464ff88`), L4-E12 (`c933724e`) and L4-E11 (`f1856bfd`), each accepted by the
+coordinator's check 4 and merged into this line: U-01, U-02 and U-04 now carry their exact question, their evidence by vendor,
+physical and owner, who supplies it, their fallback with its numbers and what each could overturn (8b), and stay
+architecture-level choices; the register takes the rounds' rows and four items of the findings ledger
+(`records/l4close/FINDINGS-LEDGER.md` at `fnd/l4close` `e1e99c4f`).
+
+### A2. The summary as written in rounds 2 to 5
+
+- **Selected: A1**, D-06's one 4S3P pack inside the case, fed by two sources ORed onto one raw bus (the panel through board E's
+  LT8705A stage, the vehicle or shore supply through its ideal diode and, since L4-E11, a TPS48110-Q1 breaker in place of the
+  LM5069 hot swap), converted once to a regulated 20 V charge bus by board A's LM5176 front end and once more by the BQ25731
+  charger onto the system node VBAT, from which every load converter and both outlets run. **A2** (base 4S6P plus a separately
+  protected lid 4S9P) stays a proposal to change D-06.
+- **The selected solutions are in the rows** (out 4): L4-E7R's regulation at RIMON_IN 31.6k (2.5485 A nominal, 2.9318 A highest)
+  with its backstop on SWEN (static bound 93.5521 W, CONDITIONAL), corrected entry and CS101 correction (accepted); L4-E8's bank
+  with its losses carried into the energy and thermal budgets; Q1 the CSD19532Q5B, F1 the Littelfuse 0997010.WXN and U17 on R227
+  (part A); **L4-E11's vehicle entry**: UVLO on at 7.87 / 8.14 / 8.44 V of DC_P, OV off above 39.6 / 40.36 / 41.22 V, a breaker at
+  6.364 / 6.8 / 7.136 A after 0.247 / 0.37 / 0.49 ms and a filtered short-circuit trip at 10.36 / 12.04 / 13.87 A, Q7 a CSD19536KTT,
+  the interconnect at least 20 A continuous with its loop specified by resistance (900 A at most from a stiff source), the
+  corrected knee (a flat 1.82 A from 7.95 V) and the guard's R14 76.8k; **L4-E12's route**: the hold in E5 only, T-H1's binding
+  line 2.159 W/K lid open with the fans.
+- **Fourteen interfaces: 2 MEET, 12 are CONDITIONAL, none NOT MET, none PENDING.** IF-05 moves from NOT MET (D-09) to CONDITIONAL
+  (every start inside Q7's derated chart, the in-service hard short OPEN on the loop's inductance); IF-11 moves from NOT MET (75.00
+  C at the floor) to CONDITIONAL (70.00 C in E5 under the hold at the binding line, U-02). The as-drawn defects stay visible as
+  "as drawn" checks: the LM5069 cannot start from a 9.00 V plug (8.987 V against POREN's 9 V), its power limit at 4.7429 mV, the
+  drawn restart guard above the plug's operating point, the drawn interconnect at 13.5 A against a 13 A contact.
+- **E11-19 (out 12a):** the selected entry limits no power, so the LM5069's power-limit pulse, its 5 mV floor (D-07), its fault
+  time against the start (D-09) and its breaker's event exist only for the LM5069 alternative. A start into a resistive fault uses
+  0.704 of Q7's derated chart, the ordinary start 0.182, a start into a hard short 0.743 (CONDITIONAL on the transconductance
+  bound); a hard short in service stays inside Q7's derated 178.2 A only with the loop's inductance at least 2.08 uH (2.084 uH
+  reproduced here): OPEN, E11-20 (R-134). F1's I2t over every start and fault pulse is at most 6.7311 A2s, 7.24 % of its typical
+  melting 93 A2s. R-118 is restated as E11-17. **No new material defect.**
+- **The closure gate (section 7): NOT CLOSED.** Criteria 3 and 4 PASS; 1, 2 and 5 are CONDITIONAL. Kept apart:
+  - **material defects: none open.** D-01 to D-05 and D-08 resolved (drafted or bounded), D-06 resolved in design by L4-E11's
+    interconnect with its evidence items E11-10 to E11-16, D-07 and D-09 superseded by the replacement (they apply only if the
+    LM5069 is kept, where L4-E11 resolved D-09 with C5 and C121);
+  - **three unresolved choices that could overturn the architecture**, which no owner closes: U-01 FEA-008's cell (the signed
+    specification and the owner's two items; with the proposed cell 90.2 Wh usable against the 35E's 107.9 Wh at +25 C); U-02
+    MESHSAT-1478, CONDITIONAL on T-H1 at or over 2.159 W/K (a reading of at least 2.416 W/K by the drafted procedure), with the
+    session's fallbacks down to 1.125 W/K in E5 and 1.399 W/K in E3-O and the owner's below that, and CFL-002 the owner's
+    question; U-04 source-only operation, a CONDITIONAL CANDIDATE that turns on TI's D1 and D3 (E11-24's hold-up takes D2 and D5
+    off TI);
+  - **U-03 moved downstream (update round 3):** L4-E13 makes it a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC): route 2,
+    one identified SunPower SPR-E-Flex-100 measured against A-1 to A-3, is feasible on a unit equal to the typical rows (A-1
+    24.1505 V against 25.000 V at -20 C and 1000 W/m2); route 1 closes nothing today; no unit is bought or measured. It decides
+    which unit, not the topology or the source class (register R-35, R-52, R-148, R-149);
+  - **the downstream tasks**, 146 register items, each with one owner and an acceptance that close the assignment, not the item;
+  - **the owner's items** (section 7d): CFL-002 (A, B or C), U-01's specification request (ten questions) and then the cell
+    change, the TI request (REVIEW-REQUEST.md with TI-QUESTIONS.md), T-H1's bench authorisation, the panel unit's purchase and
+    measurement, and the other outside-contact drafts with their paths (SunPower's and Solbian's among them): actions, not
+    questions.
+- **Endurance (section 10):** A1 runs 2.52 h on battery at +20 C and first interrupts at hour 6 or 2 on the panel at its typical rows; it
+  needs +1361.5 / +2094.1 Wh more storage for 48 / 72 h, plus at most 13.4 Wh a day at L4-E7R's accepted regulation and 17.7 Wh if U-01's
+  cell is adopted; none of L4-E10 to L4-E12 moves these figures. DR-01 stands; every mandatory function is intended to be
+  delivered, subject to the open conditions named here, and no service is reduced to narrow the gap.
+
+### A3. The endurance statement as written in rounds 2 to 5 (out 8; superseded in presentation by 2b)
 
 - **Battery only, A1 (the ruled pack):** 107.9 Wh usable at +20 C and 44.5 Wh at -10 C (aged to 80 %): **2.52 h and 1.04 h**,
   short of 48 h by 45.5 h and of 72 h by 69.5 h.
@@ -760,39 +894,6 @@ owner's purchase. The items under U-01's approach (II)
   with a working pack (section 3; without one, U-04); PS-ALLTX runs under D-11's floors; both outlets deliver their contracts
   within their protection. No service is reduced to narrow the gap. Software tests establish the record's own behaviour, not
   these properties.
-
-## 11. What stays PENDING, CONDITIONAL or open
-
-- **PENDING:** none in the rows. L4-E7R is accepted (check 4 at `91e9a4b5`); IF-01, IF-02, LH-02, R-21, R-92 and R-98 carry its
-  figures. L4-E13 (U-03) is accepted (check 3 at `fae419d1`, check 4 at `33b6b7be` after set 25). In the register, R-156
-  (TRN-001's judgement of the panel lead's surge) waits on L4-E7's surge round (the findings ledger's item 1).
-- **Unresolved choices (no owner closes them):** U-01 (FEA-008's cell: the signed specification, with the owner's two items),
-  U-02 (MESHSAT-1478, CONDITIONAL on T-H1 at or over 2.159 W/K and L4-E12's conditions, the session's fallbacks down to
-  1.125 W/K in E5 and 1.399 W/K in E3-O; CFL-002 the owner's question), U-04 (source-only and dead-pack operation, a
-  CONDITIONAL CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23, turning on TI's D1 and D3).
-- **U-03, a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC):** no unit bought or measured (MISSING_EVIDENCE, the owner's
-  purchase, OW-6); n at or under 2 a MODELLING_ASSUMPTION (R-149); the irradiance below the disturbance threshold an ASSUMPTION;
-  J_SOLAR and PV_IN for A-3(c) a COMPONENT_LIMITATION (R-148); A-3(a) and A-4 on L4-E7R's regulation and backstop (drafted; the backstop's 93.5521 W CONDITIONAL on G_CM and the VIN+ bias); route 1's
-  drafts for SunPower and Solbian unsent (OW-4).
-- **Open material defects:** none since the update round. D-06 is resolved in design by L4-E11, CONDITIONAL on its evidence
-  items (E11-10 to E11-16); D-07 and D-09 are superseded by the replacement of the LM5069 and stand only for the LM5069
-  alternative.
-- **Open evidence (not defects):** the hot short in service against Q7's derated 178.2 A on the loop's inductance (E11-20,
-  R-134); the start into a hard short on the transconductance bound (A11-10, E11-17); the input current's transients against
-  the breaker's 0.247 ms (E11-06, E11-21).
-- **CONDITIONAL:** the backstop's static bound on G_CM and U18's VIN+ bias, the 0.1 s interpretation (layer 8), C-7, C-3, C-5,
-  V-A07, the bank's lifetime and cold envelope, PWR-F12, U18's trip row, D10's cold breakdown (a typical coefficient), the
-  entry's in-service margin on the front end's efficiency at 8.1 V (0.88021, E11-06), the fault starts on Q7's derating
-  (E11-14, E11-17), the interconnect's makers' ratings and F1's clearing I2t at 900 A (R-113, R-115, R-129 to R-132), the
-  four-wire loop (R-130), R-b's case (i) and board P's copper (E11-22), R227's pulse rating and capacitance envelope (R-101),
-  L10's L(I) at temperature (R-120, R-121), L4-E7R's loop on typical rows, the bulk's temperature under CS101 and the bank's
-  pulse capability (R-122, R-101), and U-02's conditions (T-H1, the hold's reference, the fans, the parts out of the exhaust,
-  the pushbuttons and regulators, PDi's statement, the 33 lines cleared only by an absolute rating).
-- **Recorded residuals outside every requirement:** A-N1 (the VIN_RAW clamps' 64.5 V against U2's 60 V at their rated pulse; no
-  surge level is ruled, D-16) and the capability scenario on Q1, the LM74700-Q1 and U17's POE_VIN (part A). S-111 (VBUS20's
-  single faults) is an engineering decision still open (R-48), with no exemption claimed; the short at DC_P and the weak-source
-  band behind F1 are traced in section 5 (F1's let-through R-115, D-06), not exempted.
-- **Not claimed:** nothing is verified, built or measured; every row is a desk reading of documents and records.
 
 ## Appendix B. The traces as first written (rounds 1 to 4; superseded in presentation by section 4)
 
@@ -843,12 +944,12 @@ Solar at the window, a vehicle at 24 V, the full load and charging together:
   bus, about 31 W into VSYS (`CHARGER-STATE-SEQUENCE.md`, INFERRED); FW-C01's order puts the charger before any slot, which no
   record measures. **Not resolvable from the held documents:** whether the converter keeps VSYS up with charge inhibited and no
   battery FET (Q-TI-3), whether the gauge lets a pack at CUV take charge with no precharge FET, and whether every load converter
-  runs at the dead pack's VBAT (A-14). It is U-04 (section 7b), not later testing; R-85 is its verification at 12 and 24 V and
+  runs at the dead pack's VBAT (A-14). It is U-04 (section 8b), not later testing; R-85 is its verification at 12 and 24 V and
   does not settle it alone. Board E's always-on comes up on CELL_F from VBAT. **L4-E11 (accepted) answers it as far as the held
   documents allow:** arrangement (A), the drawn charger with rules R-a to R-d (the holds as a state table with S4's exception,
   R-b's two charge settings, the shedding sequence, the image's pre-charge); at a 9.00 V plug the shed warm-up (28.12 W at the
   plan figure) is carried with 0.98 W in hand while P1 stays at most 20.51 W; REQ-015 at 9.00 V at the plug is a CONDITIONAL
-  CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23 (section 7b).
+  CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23 (section 8b).
 
 ### B3. Faults, traced across the stages (out 7, out 11)
 
@@ -867,7 +968,7 @@ Solar at the window, a vehicle at 24 V, the full load and charging together:
 | **A short behind F1, a stiff source** (it needs a prior short of D10, D1, E-F1's capacitor or C4) | F1 alone clears it, at up to the 43.18 V basis (the selected OV maximum 41.22 V); with the selected interconnect at most 900 A (its specified loop floor, 56.93 mOhm at 20 C; the construction 871 A; the drawn cable 569.8 A) | the 0997010.WXN: 58 V DC, 1000 A at 58 V DC: MEETS (MAKER), CONDITIONAL on the four-wire acceptance (R-130); the drawn 297 MINI's 32 V: NOT MET as drawn; the conductors' short-time capability against F1's clearing I2t at 900 A CONDITIONAL (R-113, R-115); Q1 in the path is not shown to hold it and is not a conductor or connector of REQ-045 (no exemption claimed) |
 | **A short behind F1, a weak source** (under ECSS 6.17.3c's 30 A) | F1's long-time band: 10 to 11 A with no opening, 13.5 A up to 600 s, 20 A up to 5 s | D-06 resolved in design (L4-E11): every element of the interconnect at least 20 A continuous where installed, 35 A for 5 s, 60 A for 0.5 s; CONDITIONAL on the makers' installed and short-time ratings (R-113, R-129 to R-132); the drawn VH, size 16 contacts and cable stay NOT MET as drawn |
 | **Pack fault**, the charge FET opening mid-charge (a designed event, REQ-046) | U3's voltage loop holds VBAT at 16.884 V at most; BATOVP stops switching at 17.64 V, SYSOVP at 20.0 V; L2's 0.1341 mJ goes into VBAT's 34 capacitors (248.2 uF nominal) | 20.135 V at a fifth of the nominal capacitance (ASSUMPTION), under the TPS2596's 21 V and U17's 36 V |
-| **Pack fault**, the discharge FET opening under load | on battery the kit stops (the hot stop REQ-077 acts first on temperature); with a source U3 carries up to 84.5 to 99.6 W | as section 3 |
+| **Pack fault**, the discharge FET opening under load | on battery the kit stops (the hot stop REQ-077 acts first on temperature); with a source U3 carries up to 84.5 to 99.6 W | as B1 |
 | **Pack fault**, a cell or the block | BQ7720700's second level drives F2 (the chemical fuse); F1 25 A; under U-01's approach (II) U2 becomes the BQ7720704 (R-105) | MAKER thresholds |
 | **Controller fault**, the host crashed | U3's watchdog falls back to 256 mA after 175 s (FW-A03); the H3 line is hardware and needs no host; the gauge's HWD stops charging in 10 s (FW-E01); the solar backstop is hardware on SWEN | the source bound holds with no firmware |
 | **Controller fault**, U2 (Q2 short, FB open) | VBUS20 follows VIN_RAW; U3's 32 V passed; no clamp on VBUS20 | a single fault with no exemption claimed: S-111's options, R-48's engineering decision (open) |

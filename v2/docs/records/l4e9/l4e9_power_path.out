@@ -849,7 +849,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        brackets only (ASSUMPTION): 45.1 to 69.6 Wh with the cells at -5.52 C, 37.2 to 54.1 Wh from a cold start at -20 C
      the warm-up of a cold-soaked block from -20 C, out of usable energy: to T1 1.6 to 2.8 Wh; to T2 3.4 to 12.3 Wh; to T5 5.7 Wh, or not reached
        at the high corner (the mat alone stops at 2.1 C)
-     this record keeps L4-E10's first chain in out 8 and the page's section 10 (90.4 against 108.1 Wh, which L4-E10 reads back from the page); the
+     this record keeps L4-E10's first chain in out 8 and the page's Appendix A (90.4 against 108.1 Wh, which L4-E10 reads back from the page); the
        round's chain gives 90.2 against 107.9 Wh, the same 17.7 Wh of growth in every shortfall: no figure of this record moves
      what the signed specification would change: an idle hot limit under 78.94, 74.73, 73.07, 71.00 or 68.86 C (H1 acting in E5's dwell, E5's cells, E3-O's
        'no shutdown', E3-S, E3-O's cells); (I)'s cooler 8.18 to 35.21 W into the sealed case; (III) 470 to 940 Wh of added storage; continuous
@@ -1214,5 +1214,62 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    the sensor controller (E:U10): the gauge stops charging after its host watchdog's 10 s; the gauge's protections and the second level act alone; the RP2040's watchdog restarts it | the mixer fans' control (a stopped fan is the fans-off case, 72.38 to 85.36 C in E5); VIN_MON for FW-A16's diagnostic; the SGP41's switch | HW-FW-CONTRACT FW-E01, FW-E07, FW-E09
    both controllers: every hardware limit of 4e acts; the source bound holds with no firmware (the H3 line and the knee) | the charge ranges relayed from the gauge (UTC still holds the charge FET); the hold; the heater's policy | this record out 7
    the gauge's own firmware: the BQ7720700 and F2 (hardware) | COV, CUV, OCD, SCD and the temperature limits, which are the gauge's | pcb_pack_protection.yaml
+
+19. THE IMPLEMENTATION HANDOVER (the selected parts with their revisions; every register row by the later layer that receives it)
+   U5: LT8705AIUHF#PBF, the solar stage: hold, regulation RIMON_IN 31.6k, backstop on SWEN; document 8705af (l4e7_stage_settings.out); DRAFTED (R-12, R-19 to R-21, R-98)
+   U6, Q7: TPS48110-Q1 with CSD19536KTT, the vehicle entry's breaker and its pass FET; document SLUSEE5E (l4e11_power.out); DRAFTED (R-123)
+   Q7's sheet: CSD19536KTT, the pass FET's safe operating area; document SLPS540C (l4e11_power.out); DRAFTED (R-123)
+   Q1: CSD19532Q5B, the ideal diode's FET, 100 V; document SLPS414B (ti-csd19532q5b-n-fet.pdf); DRAFTED (R-17)
+   U3 (board E): LM74700-Q1, the vehicle entry's ideal-diode controller; document SNOSD17G (ti-lm74700-q1.pdf); as drawn
+   U2: LM5176, the front end to VBUS20; document SNVSAI1D (lm5176-datasheet.pdf); as drawn; R11, R12 DRAFTED (R-04, R-01)
+   U3 (board A): BQ25731, the charger onto VBAT = VSYS; document SLUSE66A (bq25731-datasheet.pdf); as drawn; U-04 open on D1, D3
+   U17 and five more: INA226, the rail monitors; U17 moved onto R227; document SBOS547C (ti-ina226.pdf); DRAFTED (R-06)
+   eFuses: TPS2596, the load converters' inputs, 21 V absolute; document SLVSET8A (tps2596.pdf); as drawn
+   U1 (board P): BQ4050, the pack's gauge and its FETs; document SLUUAQ3A (l4e11_power.out); as drawn; U-01's (II) re-derives it (R-106)
+   U2 (board P): BQ7720700, the second-level protector; document BQ7720700 (gen_sch_p.py); as drawn; BQ7720704 under U-01's (II) (R-105)
+   F2 (board P): SCF9550-30-05, the self-control fuse; document SCF9550-30-05 (gen_sch_p.py); as drawn; Eaton's statement owed (R-103)
+   F1 (board E): Littelfuse 0997010.WXN, the vehicle fuse, 58 V DC; document rev2025-11-18 (littelfuse-997-mini58v-rev2025-11-18.pdf); DRAFTED (R-18), its 20 A holder owed (R-132)
+   the bank: Panasonic EEHZK1V331P with HoJLR2512 45 mOhm, VBUS20's six cans and their ballasts; document EEHZK1V331P (ripple_dense.out); DRAFTED (R-07)
+   the cells: Samsung INR18650-35E, 4S3P, D-06's ruled cell; document INR18650-35E (pcb_pack_protection.yaml); as ruled; the HL18650V a PROPOSAL (U-01)
+   the alternative only: LM5069, the drawn hot swap, kept only as the alternative; document SNVS452G (ti-lm5069.pdf); superseded by R-123
+   layer 4 (release records) (Layer 4 coordinator): 9: R-47, R-90, R-91, R-92, R-93, R-128, R-135, R-147, R-155; by kind EVIDENCE 3; IMPLEMENTATION 1; RELEASE 5; by state DRAFTED 1; OWED 8; APPLIED 0
+   layer 5 (Layer 5 interfaces, CONOPS owner): 5: R-23, R-24, R-125, R-133, R-138; by kind IMPLEMENTATION 5; by state DRAFTED 5; APPLIED 0
+   layer 5 (firmware, by the contract) (firmware owner): 8: R-25, R-26, R-27, R-28, R-106, R-126, R-139, R-154; by kind IMPLEMENTATION 8; by state DRAFTED 1; OWED 7; APPLIED 0
+   layer 6 (Layer 6 components): 20: R-30, R-31, R-32, R-33, R-34, R-35, R-36, R-101, R-102, R-103, R-113, R-114, R-115, R-136, R-141, R-142, R-143, R-148, R-149, R-150; by kind EVIDENCE 19; TEST 1; by state OWED 20; APPLIED 0
+   layer 7 (Layer 7 mechanical): 5: R-29, R-111, R-129, R-130, R-131; by kind EVIDENCE 1; IMPLEMENTATION 4; by state MISSING DRAFT 3; OWED 2; APPLIED 0
+   layer 8 (Layer 8 board A generator owner, Layer 8 board E generator owner, Layer 8 board P generator owner, Layer 8 board B generator owner, Layer 8 board C generator owner): 37: R-01, R-02, R-03, R-04, R-05, R-06, R-07, R-08, R-09, R-10, R-11, R-12, R-13, R-14, R-15, R-16, R-17, R-18, R-19, R-20, R-21, R-22, R-94, R-95, R-96, R-98, R-100, R-105, R-107, R-116, R-123, R-124, R-132, R-144, R-145, R-152, R-156; by kind EVIDENCE 2; IMPLEMENTATION 35; by state DRAFTED 18; MISSING DRAFT 14; OWED 4; PENDING 1; APPLIED 0
+   layer 9 (Layer 9 pre-layout analysis): 23: R-37, R-38, R-39, R-40, R-41, R-42, R-43, R-44, R-45, R-46, R-48, R-49, R-50, R-51, R-52, R-97, R-108, R-117, R-119, R-120, R-127, R-134, R-146; by kind EVIDENCE 10; LAYOUT 13; by state OWED 23; APPLIED 0
+   layer 9 (the bench) (prototype bench): 36: R-60, R-61, R-62, R-63, R-64, R-65, R-66, R-67, R-68, R-69, R-70, R-71, R-72, R-73, R-74, R-75, R-76, R-77, R-78, R-79, R-80, R-81, R-82, R-83, R-84, R-85, R-86, R-99, R-104, R-109, R-112, R-118, R-121, R-122, R-137, R-153; by kind TEST 36; by state OWED 36; APPLIED 0
+   layer 9 (the test plan) (TEST-PLAN owner): 3: R-110, R-140, R-151; by kind EVIDENCE 2; TEST 1; by state DRAFTED 1; OWED 2; APPLIED 0
+   the interface limits for Layer 5: LAYER5-HANDOVER.md LH-01 to LH-11 (drafts; pcb_interfaces.yaml and HW-FW-CONTRACT.md are not edited)
+
+20. THE EXIT STATEMENT (the owner's definition, quoted; each U on this record's present reading, pending its forwarded result)
+   the definition: Layer 4 power closure requires a selected architecture whose mandatory operating requirements have a defensible feasibility basis, consistent interfaces, and explicit implementation obligations. A downstream qualification test may remain open where the design already has bounded supporting evidence and a workable fallback. An unknown that could invalidate the selected architecture stays a closure condition.
+   U-01: (ii) a closure condition (pending the coordinator's U-01 question (published specifications, and alternatives within the arrangement))
+      the exact missing fact: the HL18650V class's signed limits (idle at +80 C for 30 days; storage at -33 C at REQ-025's stored charge, with the recovery); with the ruled 35E, LO-01d to LO-01g have no route on held evidence
+      the smallest resolution: the maker's signed specification answering the drafted request's ten questions (OW-2); a cell sample's storage test is evidence for that lot only, not for production
+      the bounded evidence today: the maker's product page only (MAKER-PAGE); L4-E10's margins 1.06 K under H1 and 0.97 K under U2's INFERRED trip at LO-01e
+      the fallback: none workable on held evidence: (I) the 35E with powered cooling is INCONCLUSIVE (8.18 to 35.21 W into the sealed case); E3-S has no route in D-06's pocket without requirement change A (the owner's)
+      what it decides: a narrower signed figure moves D-06's pack (usable 90.2 against 107.9 Wh) or, with no requirement change, keeps LO-01d to g a release gate; missing evidence is not proof that no cell meets them
+   U-02: (ii) a closure condition (pending the coordinator's U-02 question (does T-H1 confirm or decide))
+      the exact missing fact: the sealed case's conductance lid open with the fans, against the binding 2.159 W/K (E5 under the hold), with fans whose power and range are known (D-18)
+      the smallest resolution: T-H1 on the bench by the drafted procedure: a reading of at least 2.416 W/K at a 10 K rise passes; 29 to 84 h on an empty case, no electronics; the owner's authorisation (OW-8)
+      the bounded evidence today: W4's lumped model bounds the reading at 1.22 to 2.85 W/K lid open with the fans; the line lies inside that range
+      the fallback: the session's F4 with F3 holds E5 down to 1.125 W/K and E3-O down to 1.399 W/K (1.309 with the connectors out of the exhaust); W4's low bound 1.22 W/K lies under E3-O's floor, where the remaining option is the owner's (a deviation of E3-O or a device-set re-pick)
+      what it decides: a reading under E3-O's floor changes the sealed case's thermal design or the device set; a reading at or over the line confirms the route; missing evidence is not proof of a shortfall
+   U-04: (ii) a closure condition (pending the coordinator's U-04 question (the BQ25731 with its hold-up against TI's BQ25730 against one other))
+      the exact missing fact: whether the BQ25731 regulates VSYS with no battery current (D1) and what it regulates with the charge inhibited and no battery current (D3)
+      the smallest resolution: TI's statement of D1 and D3 as behaviours of the part (Q-TI-11 and the addendum to Q-TI-3, OW-7); one bench sample per row shows the mode on that silicon revision only
+      the bounded evidence today: the held datasheet states neither; VSYS needs 12.3 V against ChargeVoltage's floor 16.716 V once the mode is shown (a 4.416 V margin)
+      the fallback: for D2 and D5, E11-24's hold-up (54.07 mJ, 1.117 ms for the worst admitted step); for D1 and D3 none inside arrangement (A): (B), a charger with a battery FET, is an architecture change
+      what it decides: a negative D1 or D3 changes the charger's power path; missing evidence is not proof that the BQ25731 lacks the mode
+   the exit: Layer 4 power closure is NOT reached on this reading: 3 closure conditions (U-01, U-02, U-04); status: known defects addressed in drafts; feasibility conditions remain open
+
+21. IN SHORT (the page's summary, generated)
+   - The design. A1 under D-06: one 4S3P pack inside the case, fed by the panel through board E's LT8705A stage and by the vehicle or shore supply through its ideal diode and the TPS48110-Q1 breaker, ORed onto VIN_RAW, converted once to VBUS20 by board A's LM5176 and once more by the BQ25731 onto VBAT, from which every load converter and both outlets run (section 1). A2 stays a proposal. There is no USB-C input.
+   - Electrical feasibility (apart from endurance): 14 interfaces, 2 MEET, 12 CONDITIONAL, 0 NOT MET, 0 PENDING (1d); no material defect is open: D-01 to D-05 and D-08 resolved in design, D-06 resolved in design by L4-E11, D-07 and D-09 superseded (8a); every resolution is a DRAFT, none applied; the heat into the case per mode against T-H1's binding 2.159 W/K (2c).
+   - Endurance (apart from electrical feasibility; the approved profile 42.8 W kept): battery-only 2.52 h (1.73 h with the tablet's window at the start) at room temperature and 1.04 h with the cells at -10 C; solar-assisted on the candidate panel's day: first stop at h 6 (06 UTC start) / h 2 (18 UTC start), unserved 1367.4 / 1368.1 Wh at 48 h; the steady load carried 8.0 W at both horizons; with the tablet at most 1.61 W lower (6.4 to 8.0 W). The objective of 48 to 72 h is NOT MET: a deficit of 34.8 W against the profile, +1361.5 / +2094.1 Wh of storage to add; a charger change does not close it. The tablet's optional charging takes at most 38.7 Wh a day. The cold end's solar case is not computed. The proposed cell (a PROPOSAL): 2.11 h battery-only (2b).
+   - The change list: 54 changes in application order, none APPLIED (DRAFTED 26; MISSING DRAFT 17; OWED 11), each with its board, generator, apply script, dependency and release guard; the release records first (section 3).
+   - The exit (section 6, the owner's definition): Layer 4 power closure is not reached on this reading. U-01, U-02 and U-04 are closure conditions, each with its exact missing fact and the smallest experiment or manufacturer clarification that resolves it, and each pending a forwarded result. Status: known defects addressed in drafts; feasibility conditions remain open.
 
 END. Desk arithmetic on read figures; nothing is measured.
