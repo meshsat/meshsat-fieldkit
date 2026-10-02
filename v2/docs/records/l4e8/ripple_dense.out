@@ -1,0 +1,339 @@
+L4-E8: BOARD A'S VBUS20 BULK BANK RE-SIZED ON A DERIVED DENSE NODE ANALYSIS, FIX ROUND (ripple_dense.py, MESHSAT-1357, 1 October 2026).
+PROTOTYPE DESIGN: nothing bought, built, powered or measured; no generator, registry, rendered page or L4-E4 to L4-E7 record edited.
+Labels: MAKER, NETLIST, GENERATOR, RECORD, INFERRED, ASSUMPTION, SESSION, MODELED, INCONCLUSIVE.
+
+0. INPUTS AND REPRODUCTIONS
+   v2/ecad/tools/gen_sch_a.py                       sha256 6a136feec6c9cf4e (pinned)
+   v2/ecad/pcb-a-power-a23/out/pcb-a-power.net      sha256 6c40250c47195ebb (pinned)
+   v2/docs/records/r4a/r4-decisions.md              sha256 2e5a0c20fc9d4f25 (pinned)
+   v2/vendor/ti/lm5176-datasheet.pdf                sha256 98191bec36d43771 (pinned)
+   v2/vendor/ti/bq25731-datasheet.pdf               sha256 3e5e927fdf63cf6a (pinned)
+   v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf  sha256 5455014606c0b676 (pinned)
+   v2/docs/records/l4e4/l4e4_limits.py              sha256 d4a484439a7b5303 (pinned)
+   v2/docs/records/l4e4/l4e4_limits.out             sha256 f68bf6951a6361ca (pinned)
+   v2/docs/records/r11dep/r11_dep.py                sha256 c5e9d5713abfcb07 (pinned)
+   v2/docs/records/r11dep/r11_dep.out               sha256 f9d2c6f23fab3edc (pinned)
+   v2/docs/records/l4e6/l4e6_fault_handling.py      sha256 5f97b5b34fb1d0e5 (pinned)
+   v2/docs/records/l4e6/l4e6_fault_handling.out     sha256 4f7cefb270f326d1 (pinned)
+   v2/ecad/tools/pcb_envelope.yaml                  sha256 35cf43a2b7098a76 (pinned)
+   v2/ecad/tools/lcsc_fill.py                       sha256 6888362e4a3295d0 (pinned)
+   v2/vendor/passives/held/uniroyal-series-11cd644d.pdf sha256 11cd644d5d8a34a6 (pinned)
+   v2/vendor/passives/milliohm-hojlr2512-series.pdf sha256 3224518dbc8bdc85 (pinned)
+   v2/docs/records/l4e4/inputs/jlc-search-hojlr2512-3w-2026-10-01.json sha256 98f9d91eea739772 (pinned)
+   v2/docs/records/l4e8/inputs/recovered/bulk_ripple-r4a-fixup-A-1136.py sha256 c6b55794a762ecee (pinned)
+   v2/docs/records/l4e8/inputs/recovered/loop_design-r4a-fixup-A-1024.py sha256 fe0d946bc020d4b6 (pinned)
+   (the two recovered drafts are pinned as cited inputs; their code is not run here)
+   L4-E4's l4e4_limits.compute(), run in this process (it reproduces r11_dep.out in a child and prints nothing): band(r)[2], the
+     highest permitted current, which l4e6_fault_handling.py takes as o['hi'] for its two R11 values (its source parsed):
+     R11 8 mOhm (C2904240): 7.2621 A; L4-E6 prints 7.262 A: equal
+     R11 7 mOhm (C2904239): 8.2995 A; L4-E6 prints 8.300 A: equal
+   r11_dep.py's linear scaling rebuilt from gen_sch_a.py's recorded figures (the larger of the 5.7 A and 5.0 A points per ampere):
+     0.3700 / 0.3720 / 0.4280 A per A (matched / 1.5:1 / 2:1); it prints L4-E6's B-4 lines:
+     R11 8 mOhm, 7.262 A: 2.69 / 2.70 / 3.11 A (L4-E6: the same)
+     R11 7 mOhm, 8.300 A: 3.07 / 3.09 / 3.55 A (L4-E6: the same)
+
+1. THE NODE AS THE GENERATOR DRAWS IT (GENERATOR: gen_sch_a.py parsed; NETLIST: v2/ecad/pcb-a-power-a23/out/pcb-a-power.net agrees)
+   cans on VBUS20: 6 x '330u 35V Panasonic EEHZK1V331P hybrid polymer (10.2 mm)' (bulk=C163, C178, C179, C180, C199, C200, bulk_part V331)
+   ceramics on VBUS20: 18 x '10u 50V X7R 1210' (C181, C182, C183, C184, C185, C186, C187, C188, C189, C201, C202, C203, C204, C205, C206; the charger's C20, C21, C22)
+   ceramics on FE_OUT, before R11: 3 (cout_pre C13, C14, C15)
+   R11 10 mOhm (FE_OUT to VBUS20), R16 10 mOhm (VBUS20 to CH_ACN); CH_ACN: C190 '10n', C191 '1n'; L1 10.0 uH, L2 4.7 uH; RT '40.2k (206 kHz)'
+   VBUS20 20.0 V (its rail declaration); compensation Rc1 15k, Cc1 220n, Cc2 680p; R12 '5m' (the lm5176() default); CSS '4.7u'
+   NETLIST: the cans on VBUS20 are the front end's bulk=6, each '330u 35V Panasonic EEHZK1V331P hybrid polymer (10.2 mm)': holds
+   NETLIST: the VBUS20 ceramics are the stage's C13 to C15 and cout_extra less cout_pre, with the charger's C20/C21/C22, each '10u 50V X7R 1210': holds
+   NETLIST: the FE_OUT ceramics are cout_pre, before R11: holds
+   NETLIST: CH_ACN carries C190 '10n' and C191 '1n' and no other capacitor: holds
+   NETLIST: R11 '10mOhm 1% 2512 (ISNS)' FE_OUT to VBUS20; R16 '10mOhm 1% 2512 (RAC, input current sense)' VBUS20 to CH_ACN: holds
+   NETLIST: L1 '10uH XAL1010-103ME (Isat 17.5 A)', L2 '4.7uH XAL1010-472ME (Isat 25.4 A)': holds
+   not modelled (38 parts on VBUS20 in all): C192 '100n', under 0.01 % of the ceramic bank
+
+2. THE MAKERS' ROWS
+   MAKER Panasonic ZK series sheet (v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf, 01-Apr-22): EEHZK1V331P 330 uF +-20 % (p.1), ESR 20 mOhm max at 100 kHz and +20 C,
+     ripple 2.8 A rms at 100 kHz and +125 C (p.2); frequency correction 1.00 and 1.00 from 100 to 500 kHz and above (p.2), so every
+     harmonic here (the lowest 171.8 kHz, B3's envelope) counts at the full rating; ESR after endurance at most 200 % of the initial
+     limit (p.1), and at most 300 mOhm at -40 C after endurance for size G (p.1, the 331P's size code on p.2);
+     parallel parts: 'use capacitors with the same part number' (p.7)
+   MAKER TI SNVSAI1D rev. D (v2/vendor/ti/lm5176-datasheet.pdf): fSW(1) 175 / 200 / 225 kHz at RT 40 k (p.6), Equation 5's 116 pF and 190 ns (p.17),
+     so RT 40.2k sets 206.05 kHz; the first round's band 180.29 to 231.81 kHz (sections 3 and 4 only; B3's envelope, section 5); gmEA 1.31 mS, ROUT 20 MOhm, VREF 0.800 V,
+     ISS 3.75 / 5.00 / 6.35 uA (p.6); ACS 5 (p.24, Equation 26); Equation 19, ICOUT(RMS) (p.23); 9.1, 'divide the overall
+     capacitor (CIN or COUT) between the two sides of the sense resistor' (p.30); the loop's Equations 38 to 44 (p.27)
+   MAKER TI SLUSE66A (v2/vendor/ti/bq25731-datasheet.pdf): FSW 680 / 800 / 920 kHz (Reg0x01[1] = 0) and 340 / 400 / 460 kHz (= 1) (p.16); Equation 4,
+     ICIN = ICHG x sqrt(D (1 - D)), the input capacitor 'in front of RAC' (p.85); 4.7 uH 'recommended for 400 kHz' (p.27, Table
+     9-4); PWM_FREQ is R/W, 400 kHz at power-on (p.43): a host can write 800 kHz, so both bands are judged (SESSION)
+   the model's own totals at 9 V and 5.7 A: the front end's 6.30 A against Equation 19's 6.30 A; the charger's 5.73 A against
+     Equation 4's 5.70 A at a 10 V pack (the waveform's own rms with its ripple, against the equations' ripple-free forms)
+
+3. THE MODEL, ITS BANDS AND THE SEARCH
+   MODELED: three nodes, FE_OUT (the front end injects), R11 + L11, VBUS20, R16 + L16, CH_ACN (the charger draws); each part
+     ESR + jwESL + 1/(jwC); 60 harmonics by a 4096-point midpoint DFT; the FE's mean square at its worst (VIN, fsw) plus the
+     charger's at its worst (VBAT, fch), per part (the two are not synchronised): the record's rule, used in sections 4 and 4b;
+     section 5b adds the coincident harmonics at the worst phase (B1)
+   RECORD (r4-decisions.md section 6 B3, the lost analysis's bands; each INFERRED there, no maker figure held):
+     polymer ESL 1.50 to 3.50 nH in 41 steps; ceramic effective C 4.000 to 7.000 uF in 25 steps (the 10u 50V X7R 1210 at 20 V: no
+     DC-bias curve for it is held); ceramic ESL 0.80 / 1.15 / 1.50 nH, ESR 2 / 5 mOhm; L16 5 / 20 nH; L11 1 / 3 / 5 nH (the record gives 1 to 5 nH;
+     three points, ASSUMPTION, from its 332,100 sets); can C x0.8 / 1.0 / 1.2 (MAKER +-20 %), ESR x0.3 / 1.0 / 2.0 (1.0 the sheet's maximum, 2.0 its
+     endurance limit, 0.3 a good part, the lost analysis's least-damping corner)
+   the grids: VIN_RAW 9, 10, 12, 13.8, 16, 24, 36 V (RECORD, REQ-015's 9 to 36 V); fsw 11 points over the carried row; VBAT 10 points over 10.0 to 16.8 V
+     (RECORD; 16.8 V the VBAT rail's v_work, 4S full); fch 7 points over each SLUSE66A row; the spacing of fsw, VBAT, fch and L11
+     even (ASSUMPTION: the record gives the counts and the ends only)
+   ASSUMPTION (the predecessor's values; no maker figure held): C190 and C191 at 20 and 50 mOhm, 0.5 nH; the ceramic bank's 0.4
+     mOhm and the light load 0.25 A in the loop; the loop's corners (Q 0.4 / 0.8, gm x0.8 / 1.2, cans C x0.8 / 1.2, ESR x0.3 / 2.0)
+   the spread (RECORD): one can at the corner's ESR, its siblings at s times it; 'worst can' is the larger of the two
+   SESSION search: stage 1 bounds every set of the coarse grid (ESL indices 0,10,20,30,40, C indices 0,8,16,24, every other band at all its
+     corners); stage 2 climbs the 6 best-bounded sets (one per corner of the other bands) on the dense grid; stage 3 bounds the
+     whole dense ESL x C slice at the best and evaluates every set whose bound exceeds it (validation and evaluation runs)
+
+4. CONSISTENCY WITH THE RECORD (a check on the derivation, not its acceptance; tolerances fixed before the run: 0.02 A on the
+   dense figures, 0.0005 A on the re-review's point; the derivation's own acceptance is its convergence, section 4b)
+   | node | spread | current | recorded | derived | difference | within |
+   | drawn (third fix-up) | 1:1 | 5.7 A | 2.10 A | 2.1014 A | +0.0014 A | yes |
+   | drawn (third fix-up) | 1.5:1 | 5.7 A | 2.11 A | 2.1128 A | +0.0028 A | yes |
+   | drawn (third fix-up) | 2:1 | 5.7 A | 2.43 A | 2.4306 A | +0.0006 A | yes |
+   | drawn (third fix-up) | 1:1 | 5.0 A | 1.85 A | 1.8446 A | -0.0054 A | yes |
+   | drawn (third fix-up) | 1.5:1 | 5.0 A | 1.86 A | 1.8548 A | -0.0052 A | yes |
+   | drawn (third fix-up) | 2:1 | 5.0 A | 2.14 A | 2.1357 A | -0.0043 A | yes |
+   | second fix-up | 1:1 | 5.7 A | 3.43 A | 3.4267 A | -0.0033 A | yes |
+   | second fix-up | 2:1 | 5.7 A | 3.31 A | 3.3051 A | -0.0049 A | yes |
+   | second fix-up | 1:1 | 5.0 A | 3.01 A | 3.0078 A | -0.0022 A | yes |
+   | re-review's point | 1:1 | 5.7 A | 2.968 A | 2.9683 A | +0.0003 A | yes |
+   the re-review's point (ESL 2.6 nH, ceramic 4.0 uF, C x1.2, 5.7 A, 9 V, fsw 231.8 kHz, a 10 V pack, the charger at 800 kHz):
+     the record does not state its damping corners; of the 36 (can ESR, ceramic ESL, ceramic ESR, L16), 1 gives 2.968 A to 0.0005 A:
+     ESR x0.3, ceramic ESL 0.80 nH, ESR 2 mOhm, L16 20 nH: 2.9683 A (the least damping corner of each band); the next 2.9566 A
+   the drawn node's worst can at 5.7 A, matched, rebuilt at: ESL 3.50 nH, ceramic 4.000 uF, can C x1.2, ESR x0.3, ceramic ESL 0.80 nH / ESR 2 mOhm, L16 20 nH, L11 5 nH; VIN 9.0 V, fsw 195.7 kHz, VBAT 10.00 V, fch 800 kHz; the front end's share 1.38 A, the charger's 1.58 A
+     RECORD: ESL 3.5 nH, ceramic 4.0 uF, VIN 9 V, fsw 196 kHz, VBAT 10 V, the charger at 800 kHz, shares 1.38 and 1.58 A
+   at 2:1, rebuilt at: ESL 1.80 nH, ceramic 4.000 uF, can C x1.2, ESR x0.3, ceramic ESL 0.80 nH / ESR 2 mOhm, L16 20 nH, L11 5 nH; VIN 9.0 V, fsw 206.0 kHz, VBAT 10.00 V, fch 340 kHz; the front end's share 1.92 A, the charger's 1.49 A
+     RECORD: ESL 1.8 nH, the charger at 340 kHz
+   the second fix-up's node at 5.7 A, rebuilt at: ESL 3.50 nH, ceramic 4.000 uF, can C x1.2, ESR x0.3, ceramic ESL 0.80 nH / ESR 2 mOhm, L16 20 nH, L11 1 nH; VIN 9.0 V, fsw 221.5 kHz, VBAT 10.00 V, fch 680 kHz; the front end's share 1.82 A, the charger's 2.90 A
+     RECORD: ESL 3.5 nH, ceramic 4.0 uF, the charger at 680 kHz, VIN 9 V, VBAT 10 V
+   the second fix-up's node ENUMERATED IN FULL (110700 sets, 5.7 A, matched): 4450 over 2.8 A (RECORD: 4450 of 110700); its maximum 3.4267 A,
+     the search's: the same
+   the drawn node's six runs: 0 of the record's 332100 sets over 2.8 A in any of them (RECORD); the search's stage 3 re-climbed in
+     0 of its 24 validation runs (0 round(s) in all); every maximum of this section holds its whole dense ESL x C slice under it
+   the worst ceramic at 5.7 A, matched: VBUS20 1.15 A (RECORD 1.09 A, +0.06 A: DIFFERS, reconciled in 4b), FE_OUT 1.55 A (RECORD
+     1.55 A, +0.00 A). The VBUS20 figure sits at an interior VBAT point: ESL 3.50 nH, ceramic 4.000 uF, can C x1.2, ESR x0.3, ceramic ESL 0.80 nH / ESR 2 mOhm, L16 20 nH, L11 5 nH; VIN 9.0 V, fsw 231.8 kHz, VBAT 10.76 V, fch 880 kHz; the front end's share 0.23 A, the charger's 1.12 A
+     No MLCC ripple rating is held, so no ceramic figure is judged against one
+   the loop (FE stage, six cans, 21 ceramics counted local, Rc1 15k, Cc1 220n, Cc2 680p, R12 5m):
+   | figure | recorded | derived on the record's grid | tolerance | within |
+   | pm | 73.1 | 73.102 | 0.1 | yes |
+   | gm | 15.7 | 15.645 | 0.1 | yes |
+   | mm | 0.79 | 0.785 | 0.01 | yes |
+   | fc_lo | 0.71 | 0.712 | 0.01 | yes |
+   | fc_hi | 3.6 | 3.592 | 0.05 | yes |
+   | z | 89 | 88.890 | 1 | yes |
+   | wide pm | 72.9 | 72.936 | 0.1 | yes |
+   | wide gm | 14 | 14.000 | 0.1 | yes |
+   | wide mm | 0.76 | 0.760 | 0.01 | yes |
+   the same loop with each crossing interpolated (log |T| over log f), the derivation's figure: PM 73.02 deg, GM 15.68 dB, crossover
+     0.713 to 3.594 kHz; widened PM 72.79 deg, GM 14.00 dB (the record's and the grid's figures are the grid point below each crossing)
+   CONSISTENCY: every can figure, the re-review's point and the loop within tolerance; the VBUS20 ceramic differs (4b)
+
+4b. THE DERIVATION'S CONVERGENCE (the drawn node as recorded, L2 3.3 uH; each reported maximum re-taken on finer source grids,
+   VBAT every 0.05 V, fSW every 0.5 kHz, the charger every 2 kHz, then climbed on the dense passive grid; and with 120 harmonics)
+   | figure | record's grids | same set, finer grids | finer grids, climbed | 120 harmonics | where the climbed maximum sits |
+   | worst can, 1:1, 5.7 A | 2.1014 A | 2.1122 A | 2.1141 A | 2.1014 A | VBAT 10.00 V, fch 816 kHz, fsw 198.8 kHz, ESL 3.40 nH, C 4.000 uF |
+   | worst can, 1.5:1, 5.7 A | 2.1128 A | 2.1228 A | 2.1247 A | 2.1128 A | VBAT 10.00 V, fch 816 kHz, fsw 194.3 kHz, ESL 3.15 nH, C 4.000 uF |
+   | worst can, 2:1, 5.7 A | 2.4306 A | 2.4312 A | 2.4312 A | 2.4306 A | VBAT 10.00 V, fch 342 kHz, fsw 205.8 kHz, ESL 1.75 nH, C 4.000 uF |
+   | worst can, 1:1, 5.0 A | 1.8446 A | 1.8541 A | 1.8558 A | 1.8446 A | VBAT 10.00 V, fch 816 kHz, fsw 198.8 kHz, ESL 3.40 nH, C 4.000 uF |
+   | worst can, 1.5:1, 5.0 A | 1.8548 A | 1.8636 A | 1.8652 A | 1.8548 A | VBAT 10.00 V, fch 816 kHz, fsw 193.8 kHz, ESL 3.15 nH, C 4.000 uF |
+   | worst can, 2:1, 5.0 A | 2.1357 A | 2.1362 A | 2.1362 A | 2.1357 A | VBAT 10.00 V, fch 342 kHz, fsw 205.3 kHz, ESL 1.75 nH, C 4.000 uF |
+   | VBUS20 ceramic, 1:1, 5.7 A | 1.1475 A | 1.2314 A | 1.2380 A | 1.1475 A | VBAT 10.00 V, fch 816 kHz, fsw 231.8 kHz, ESL 3.50 nH, C 4.250 uF |
+   | FE_OUT ceramic, 1:1, 5.7 A | 1.5505 A | 1.5505 A | 1.5505 A | 1.5550 A | VBAT 10.00 V, fch 460 kHz, fsw 231.8 kHz, ESL 3.50 nH, C 7.000 uF |
+   the cans' figures move by at most 0.0128 A on the finer grids (the rule's margin is 0.0035 A per A); the harmonics beyond the
+     60th add under 0.0044 A anywhere
+   the finer grids themselves converged: on VBAT every 0.02 V, fSW every 0.25 kHz and the charger every 1 kHz the climbed sets
+     read worst can 1:1 2.1141 A (+0.0000 A); worst can 2:1 2.4312 A (+0.0000 A); VBUS20 ceramic 1:1 1.2380 A (+0.0000 A)
+
+5. THE DRAWN BANK ON THE CORRECTED MODEL
+   B3, the front end's frequency envelope: SNVSAI1D p.6's fSW(1) 175 / 200 / 225 kHz at RT 40 k, carried by Equation 5 (p.17) to RT
+     40.2k at 1 % (UNI-ROYAL 0603WAF4022T5E, C12447, lcsc_fill.py) and 100 ppm/K over 45.0 K (UNI-ROYAL sheet p.6, 0603 above 10 Ohm; -20 C in use to 62.1 C
+     inside air): 171.76 / 199.04 / 227.08 kHz (INFERRED: the row's spread kept, Equation 5 scaling each end; nominal RT's factor 0.99522).
+     The first round's 180.29 to 231.81 kHz recentred the row on Equation 5's 206.05 kHz, as the lost loop script did (INFERRED from
+     its recovered draft); section 4 keeps that band only to compare with the record
+   the record's sharing (one can at the corner's ESR, its siblings at s times it), at 7.262 A, step by step (RSS until the last row):
+   | step | matched | 1.5:1 | 2:1 |
+   | r11_dep.py's linear scaling of the recorded figures | 2.687 A | 2.701 A | 3.108 A |
+   | the record's network (L2 3.3 uH, R11 10 mOhm) on the record's grids | 2.675 A | 2.689 A | 3.090 A |
+   | with L2 4.7 uH, as drawn since S-117 | 2.674 A | 2.689 A | 3.086 A |
+   | with R11 8 mOhm in the network | 2.781 A | 2.774 A | 3.160 A |
+   | on converged source grids (4b's) | 2.794 A | 2.788 A | 3.161 A |
+   | on B3's envelope (converged) | 2.794 A | 2.788 A | 3.161 A |
+   | with the coincidences at worst phase (B1) | 3.037 A | 3.022 A | 3.392 A |
+   R11 8 mOhm, 7.262 A, corrected: 3.037 / 3.022 / 3.392 A (matched / 1.5:1 / 2:1; mean square 2.794 / 2.788 / 3.161 A) against 2.8 A: NOT MET at 2:1
+     2:1's worst coincidence: fch / fsw = 2 at 196.18 / 392.36 kHz, VIN 9 V, VBAT 10.00 V
+   R11 7 mOhm, 8.300 A, corrected: 3.563 / 3.489 / 3.931 A (matched / 1.5:1 / 2:1; mean square 3.278 / 3.251 / 3.667 A) against 2.8 A: NOT MET at 2:1
+     2:1's worst coincidence: fch / fsw = 2 at 196.68 / 393.36 kHz, VIN 9 V, VBAT 10.00 V
+   B2, every can independent over the sheet's bands (C 0.56 to 1.56 x 330 uF, ESR 0 to 40 mOhm with NO floor, ESL 1.5 to 3.5 nH;
+     no ballast), at 7.262 A:
+     6 cans: 56.5 A, the target at ESR 0 mOhm, the siblings at 0 mOhm: with no resistance floor the node is undamped
+     8 cans: 59.2 A, the target at ESR 0 mOhm, the siblings at 0 mOhm: with no resistance floor the node is undamped
+     and no number of cans bounds a can's current; screening the ESR before fitting does not bound it over life (p.1's 200 %)
+   the check's B2 counterexample (the eight-can corner printed in 5b, with the siblings' own ESL at the band's 3.5 nH plus the
+     layout's 0.5 nH, ESR still 2:1): 3.5869 A in mean square at 198.8 / 816 kHz (the check: 3.586976). Section 6's box spans that
+     corner's can parameters, every branch adding its ballast's own inductance
+
+5b. B1, THE COMBINATION RULE (SESSION, from what the rating is)
+   The 2.8 A is a thermal rating (MAKER p.1: 4000 h at 125 C with the rated ripple applied). Two harmonics at f1 and f2 heat as
+   i^2: their cross term beats at |f1 - f2|, and the can's temperature follows a beat slower than its thermal time constant and
+   averages a faster one. The sheet prints no time constant; 1 s is taken as its shortest (ASSUMPTION), so a beat under
+   1 / (2 pi tau) = 0.16 Hz heats as coherent at the worst relative phase, and a faster one in mean square. Both converters'
+   frequencies are continuous bands and the two oscillators are independent, so EXACT coincidence p fsw = q fch is permitted:
+   the worst case sits on it, whatever the time constant. The rule: on every permitted ratio p / q with p <= 20, fsw along the
+   line every 0.5 kHz inside both bands, every VIN and VBAT, the coincident pairs (p m, q m) add with one common time shift
+   maximised, the rest in mean square (section 5's drawn bank); section 6's bound takes every order, p > 20 by Cauchy-Schwarz
+   the check's counterexample (eight cans, 396 uF, the low-ESR can 6 mOhm and 1.5 nH, its siblings 12.5 mOhm and 2.0 nH, ceramics
+     4 uF, 2 mOhm, 1.5 nH; VIN 9 V, VBAT 10 V, 7.2621 A): 2.7387 A in mean square at 198.8 / 816 kHz (the check: 2.738774); 2.8547 A at
+     204 / 816 kHz, the front end's 4th harmonic on the charger's fundamental (the check: 2.854635); 2.8138 A at 204 / 408 kHz
+     (the check: 2.813686). The rule puts both inside: exact coincidences, coherent at the worst phase; that bank fails
+
+6. THE BOUND (the recheck's R1/R2): EVERY CAN OVER ARBITRARY INDEPENDENT SIBLINGS, NO SAMPLING DECIDES IT
+   The regions, every branch independent of every other (each harmonic may take its own worst set: only an overstatement):
+   - each can: R 44.38 to 346.12 mOhm (its ballast at either end of 1.38 %, its ESR 0 to size G's 300 mOhm, the layout's 0.5 mOhm),
+     L 2.0 to 5.5 nH (the can's INFERRED band, the ballast's, the layout's 0.5 nH), C 184.8 to 514.8 uF (MAKER, +-20 % and +-30 %)
+   - each ceramic, 18 on VBUS20 and 3 on FE_OUT: C 4.0 to 7.0 uF, ESR 2 to 5 mOhm, ESL 0.80 to 1.50 nH (RECORD, INFERRED)
+   - C190 8.0 to 11.0 nF, 20 to 80 mOhm; C191 0.80 to 1.10 nF, 50 to 200 mOhm; both 0.5 to 1.0 nH (ASSUMPTION: no maker figure
+     held for C57112 or C1588; the predecessor's ESR the least damping end)
+   - L11 1 to 5 nH and L16 5 to 20 nH (RECORD, INFERRED); R11 and R16 at +-1.38 % (the HoJLR2512's 1 % and 50 ppm/K over 75 K)
+   The method, per bin of frequency (927 bins from 170 kHz to 3.2 GHz, 0.5 % wide to 3 MHz, 1 % to 30 MHz, 4 % above):
+   - a branch's impedance R + jX lies in a rectangle (X = wL - 1/(wC) rises with w, L and C, each over its interval, the bin's w
+     taken branch by branch); its admittance in the image under 1/z, bounded by arcs of circles through the origin, enclosed by
+     the hull of arc samples grown by their largest sagitta (sagitta at most 1e-04 of the image's largest modulus)
+   - sums of independent branches in the Minkowski sum of their enclosures (n alike: n times one); the sources' links in
+     rectangles; a source side's shunt Y_s = 1/(Z_link + 1/Y_shunt) in the hull of the inverted sum
+   - the can's current per ampere of a source: k Y / (Y + Y_rest); |k| = 1 / |1 + Z_link Y_shunt| bounded by a branch and bound
+     over the link's rectangle (exact distance to the shunt's polygon, the sub-rectangle's radius by the triangle inequality);
+     |Y| / |Y + Y_rest| bounded by a branch and bound over the can's rectangle (each sub-rectangle's disk inverted exactly)
+   - the source sides' resonances are not decoupled across harmonics: L11 in 21 cells, (L16, C190) in 105 cells, each cell's
+     bound per bin, the worst cell taken (the charger side's factor exceeds 1.05 from 2.2 to 176.7 MHz: the L16 and C190 series
+     resonance and C191's above it)
+   - the sources: closed-form Fourier coefficients to the 120th harmonic; fSW in 0.5 kHz intervals over B3's envelope and fCH in 2 kHz
+     intervals over both rows, each harmonic at the larger of its ends (convex in the ripple, which is 1/f) and at the largest bin
+     bound over its frequency interval; VIN 9 to 36 V on 26 points (every 0.5 V of the boost range) and VBAT every 0.05 V (the
+     operating grid: sampled, not bounded); exact coincidences fch / fsw = p / q, p <= 20, added coherently (|a| + |c| at every
+     coincident frequency, any phase), every higher order by Cauchy-Schwarz; above the 120th harmonic |c_m| <= J/(2 pi m) +
+     K/(2 pi m)^2 (J the waveform's jumps, K its slope jumps) at the bins' bound, and |T| <= 1 above 3.2 GHz (every branch inductive
+     there, so no sum of them is smaller than one of them)
+   The decision (SESSION): catalogue values ascending from 38 mOhm, the binding 7 mOhm outcome first; the first whose bound meets
+   the rule at both outcomes is taken. Below 38 mOhm one feasible configuration (feasible() in the source) is over the limit at
+   7 mOhm, so no bound can meet it:
+   | ballast | 7 mOhm, 8.300 A: bound | feasible | 8 mOhm, 7.262 A: bound | feasible | outcome |
+   | 10 mOhm (C2903468) | - | 7.6401 A | - | - | excluded: feasible over 2.7709 A |
+   | 12 mOhm (C2904242) | - | 6.7780 A | - | - | excluded: feasible over 2.7709 A |
+   | 15 mOhm (C2903494) | - | 5.7927 A | - | - | excluded: feasible over 2.7709 A |
+   | 17 mOhm (C2904243) | - | 5.2769 A | - | - | excluded: feasible over 2.7709 A |
+   | 18 mOhm (C2903490) | - | 5.0508 A | - | - | excluded: feasible over 2.7709 A |
+   | 20 mOhm (C2903469) | - | 4.6505 A | - | - | excluded: feasible over 2.7709 A |
+   | 22 mOhm (C2903487) | - | 4.3072 A | - | - | excluded: feasible over 2.7709 A |
+   | 24 mOhm (C2904244) | - | 4.0099 A | - | - | excluded: feasible over 2.7709 A |
+   | 25 mOhm (C2903480) | - | 3.8758 A | - | - | excluded: feasible over 2.7709 A |
+   | 26 mOhm (C2903479) | - | 3.7502 A | - | - | excluded: feasible over 2.7709 A |
+   | 27 mOhm (C2904245) | - | 3.6323 A | - | - | excluded: feasible over 2.7709 A |
+   | 33 mOhm (C2903495) | - | 3.0548 A | - | - | excluded: feasible over 2.7709 A |
+   | 35 mOhm (C2904246) | - | 2.9008 A | - | - | excluded: feasible over 2.7709 A |
+   | 36 mOhm (C2904247) | - | 2.8296 A | - | - | excluded: feasible over 2.7709 A |
+   | 38 mOhm (C2903481) | 3.1249 A | 2.6970 A | - | 2.3546 A | the bound does not meet the rule at 7 mOhm |
+   | 40 mOhm (C2904248) | 3.0037 A | 2.5765 A | - | 2.2494 A | the bound does not meet the rule at 7 mOhm |
+   | 45 mOhm (C2903491) | 2.7661 A | 2.3179 A | 2.4096 A | 2.0239 A | TAKEN |
+   CHOSEN: six EEHZK1V331P as drawn, each in series with a 45 mOhm 1 % 2512 ballast, Milliohm HoJLR2512-3W-45mR-1%, LCSC C2903491
+     (in stock in L4-E4's catalogue reading); the ceramics as drawn
+   R11 8 mOhm, 7.262 A: every can at most 2.4096 A against 2.7745 A (meets); the FE's part 3.950 A^2, the charger's 1.504 A^2 (each at its
+     worst interval), harmonics above the 120th 0.0038 / 0.0127 A^2; the worst: no coincidence of order p <= 20
+     the FE's worst interval at VIN 9 V, fsw from 172.3 kHz; the charger's at fch 894 to 896 kHz
+   R11 7 mOhm, 8.300 A: every can at most 2.7661 A against 2.7709 A (meets); the FE's part 5.221 A^2, the charger's 1.969 A^2 (each at its
+     worst interval), harmonics above the 120th 0.0050 / 0.0166 A^2; the worst: no coincidence of order p <= 20
+     the FE's worst interval at VIN 9 V, fsw from 172.3 kHz; the charger's at fch 894 to 896 kHz
+   CONSERVATIVE, CHECKED: 4800 seeded random fully independent configurations per bin at 8 bins read at most 0.8443 of the bin's bound;
+     240 end-to-end configurations and operating points (half with the L16 and C190 resonance on a charger harmonic, half at an
+     exact coincidence) read at most 0.4426 of the figure
+   WHERE THE BOUND IS LOOSE: from the first round's 38 mOhm up to the chosen value the feasible worst is under the limit and the
+     bound over it. The gap is each harmonic taking its own worst passive set (the can's own parameters, its siblings', the
+     ceramics') and each source harmonic the larger end of its frequency interval; the bound is not claimed tight
+
+6b. THE CHOSEN BANK: THE RATING AT FREQUENCY AND TEMPERATURE, THE BALLAST, THE ENERGY TERM
+   FREQUENCY (MAKER p.2): every harmonic at or above 171.8 kHz; the correction for 100 uF and more is 1.00 from 100 kHz up, so
+     the current referred to the rating's 100 kHz is the rms itself: no derating applies
+   TEMPERATURE AND LIFE: CONDITIONAL (B4). The rating is the sheet's at 125 C with no uplift taken. The sheet's 20 mOhm is a maximum
+     at +20 C, not the can's ESR in service, and its rated rise is not printed, so the can's own rise is not established here.
+     p.6: L2 = L1 x 2^((T1 - (T2 + dT)) / 10), T1 the category temperature plus the rated rise; taking the rated rise as zero
+     bounds L2 from below for the can's MEASURED rise dT (capped at the sheet's 15 years):
+   | dT | at 62.1 C inside air | at 85 C (L1's temperature at the fault, a can beside it) |
+   | 0 K | 131400 h | 64000 h |
+   | 5 K | 131400 h | 45255 h |
+   | 10 K | 131400 h | 32000 h |
+   | 20 K | 78249 h | 16000 h |
+   | 30 K | 39124 h | 8000 h |
+     the obligation: the can's top temperature at the worst ripple (bench 7b.8), which gives dT
+   THE BALLAST (MAKER, the HoJLR2512 sheet p.2): 3 W, derated from 70 C to zero at 170 C, operating range -50 to +170 C. At the
+     bound's worst can each resistor dissipates at most 0.349 W, against 3.00 W at 62.1 C, 2.55 W at 85.0 C, 2.10 W at 100.0 C.
+     Its temperature envelope: -20 C in use up to its own surface temperature, which the sheet does not give (a bench reading,
+     7b.8); its tolerance carries 50 ppm/K over 75 K from 25 C (ASSUMPTION: to 100 C)
+   THE ENERGY MODEL'S TERM (REQ-072's owner): the six ballasts dissipate sum I_k^2 R_k, which depends on the operating point. Upper
+     sum at the bound's worst corner 2.09 W (six resistors at the worst can's bound); an illustration at nominal parts (cans 330 uF,
+     20 mOhm, 3.5 nH; ceramics 5.5 uF; L11 3 nH, L16 12.5 nH) at VIN 13.8 V, 3.0 A, VBAT 14.4 V, fsw 199.04 kHz, fch 400 kHz: 0.0093 W
+     (not a measurement). Not to be counted twice once a measured converter efficiency includes it
+
+7. THE LOOP WITH THE BALLAST OVER THE COLD ENVELOPE (the recheck's R4), B3's envelope, R12 12 mOhm (L4-E6), loads 8.300 / 7.262 / 5.700 / 0.250 A
+   (Middlebrook's bound at 166 W); the bank's corners C 0.56 / 1.56 x 330 uF, each branch the ballast at either end of its
+   tolerance plus the can's intrinsic ESR e, e from 0 to size G's 300 mOhm (the -40 C endurance limit taken down to -20 C, INFERRED)
+   the drawn compensation (Rc1 15 k, Cc1 220 nF, Cc2 680 pF) with the ballast:
+   | e | PM | GM | abs(1+T) min | crossover | widened PM | widened GM | widened abs(1+T) | every margin |
+   | 0 mOhm | 79.3 deg | 18.2 dB | 0.86 | 0.23 to 2.08 kHz | 79.3 deg | 16.7 dB | 0.83 | yes |
+   | 300 mOhm | 92.3 deg | 5.0 dB | 0.44 | 0.23 to 3.50 kHz | 92.3 deg | 3.1 dB | 0.30 | NO |
+   the compensation (SESSION): Cc2 ascending through lcsc_fill.py's 0603 capacitors, Rc1 and Cc1 kept (the smallest change: one
+   part); the ends of the envelope first: 1n fails; 3.3n meets
+   CHOSEN: Cc2 3.3n (C1613, lcsc_fill.py), over the whole envelope in 20 mOhm steps:
+   | e | PM | GM | abs(1+T) min | crossover | widened PM | widened GM | widened abs(1+T) | every margin |
+   | 0 mOhm | 61.4 deg | 19.7 dB | 0.77 | 0.23 to 1.81 kHz | 61.4 deg | 17.9 dB | 0.76 | yes |
+   | 20 mOhm | 63.6 deg | 20.9 dB | 0.79 | 0.23 to 1.82 kHz | 63.6 deg | 19.0 dB | 0.78 | yes |
+   | 40 mOhm | 65.7 deg | 21.8 dB | 0.81 | 0.23 to 1.83 kHz | 65.7 deg | 19.8 dB | 0.79 | yes |
+   | 60 mOhm | 67.8 deg | 22.1 dB | 0.82 | 0.23 to 1.84 kHz | 67.8 deg | 20.3 dB | 0.80 | yes |
+   | 80 mOhm | 69.7 deg | 21.9 dB | 0.83 | 0.23 to 1.86 kHz | 69.7 deg | 20.2 dB | 0.81 | yes |
+   | 100 mOhm | 71.5 deg | 21.5 dB | 0.84 | 0.23 to 1.88 kHz | 71.5 deg | 19.8 dB | 0.82 | yes |
+   | 120 mOhm | 73.3 deg | 20.8 dB | 0.85 | 0.23 to 1.90 kHz | 73.3 deg | 19.3 dB | 0.83 | yes |
+   | 140 mOhm | 75.0 deg | 20.2 dB | 0.86 | 0.23 to 1.93 kHz | 75.0 deg | 18.6 dB | 0.84 | yes |
+   | 160 mOhm | 76.7 deg | 19.5 dB | 0.86 | 0.23 to 1.95 kHz | 76.7 deg | 18.0 dB | 0.84 | yes |
+   | 180 mOhm | 78.4 deg | 18.9 dB | 0.86 | 0.23 to 1.99 kHz | 78.4 deg | 17.4 dB | 0.84 | yes |
+   | 200 mOhm | 80.0 deg | 18.3 dB | 0.86 | 0.23 to 2.02 kHz | 80.0 deg | 16.8 dB | 0.84 | yes |
+   | 220 mOhm | 81.5 deg | 17.7 dB | 0.85 | 0.23 to 2.07 kHz | 81.5 deg | 16.3 dB | 0.83 | yes |
+   | 240 mOhm | 83.0 deg | 17.2 dB | 0.85 | 0.23 to 2.11 kHz | 83.0 deg | 15.8 dB | 0.82 | yes |
+   | 260 mOhm | 84.4 deg | 16.7 dB | 0.84 | 0.23 to 2.17 kHz | 84.4 deg | 15.3 dB | 0.82 | yes |
+   | 280 mOhm | 85.4 deg | 16.2 dB | 0.83 | 0.23 to 2.23 kHz | 85.4 deg | 14.8 dB | 0.81 | yes |
+   | 300 mOhm | 86.1 deg | 15.8 dB | 0.83 | 0.23 to 2.29 kHz | 86.1 deg | 14.4 dB | 0.80 | yes |
+   Cc2 x0.75 (its tolerance and temperature), e 0 mOhm: PM 66.9 / 66.9 deg, GM 19.5 / 17.8 dB, abs(1+T) 0.80 / 0.78 (default / widened)
+   Cc2 x0.75 (its tolerance and temperature), e 300 mOhm: PM 88.7 / 88.7 deg, GM 13.7 / 12.3 dB, abs(1+T) 0.79 / 0.75 (default / widened)
+   Cc2 x1.25 (its tolerance and temperature), e 0 mOhm: PM 57.0 / 57.0 deg, GM 19.8 / 18.1 dB, abs(1+T) 0.74 / 0.74 (default / widened)
+   Cc2 x1.25 (its tolerance and temperature), e 300 mOhm: PM 81.5 / 81.5 deg, GM 17.4 / 16.0 dB, abs(1+T) 0.85 / 0.83 (default / widened)
+   20 mixed banks (1 to 5 cans at the ballast's low end and no ESR, the rest at its high end and 300 mOhm, C at either extreme):
+     PM 64.5 / 64.5 deg, GM 17.2 / 15.7 dB, abs(1+T) 0.79 / 0.77
+   with the drawn R12 (5 mOhm) and the record's loads: e 0 mOhm GM 15.7 / 13.9 dB, PM 46.3 / 46.3 deg; e 300 mOhm GM 10.9 / 9.5 dB, PM 72.1 / 72.1 deg
+   ORDER: on the drawn R12 the ballast and Cc2 miss a margin (above), so they go in with L4-E6's R12, where the loop is verified;
+   the draft refuses the tree without it. MODELED;
+   the bench loop row owed. The cold-ESR reading then confirms the envelope: the bank's ESR envelope at -20 C over service life at
+   or below the modelled envelope (every can at most 300 mOhm at 100 kHz)
+
+8. WHAT THE BANK'S CAPACITANCE MOVES: THE SIX CANS KEPT (INFERRED, first order: lossless, constant inductance, not saturation aware)
+   INITIAL CAPACITANCE ONLY (the cans at their +-20 %, as the generator's record took them): largest 2.61 mF, smallest 1.67 mF; the
+   soft start's own draw 8.6 / 6.5 / 5.6 % of 4.80 A at 9 / 12 / 13.8 V; the bleed's tau 0.20 to 0.35 s, 0.64 to 1.17 s to release; the
+   restart ring 14.3 A (82 % of L1's 17.5 A typical Isat at 25 C), 0.82 mJ: as recorded
+   OVER ENDURANCE (the cans at 0.56 to 1.56 x 330 uF, the bound's range): 1.1928 to 3.3198 mF; the soft start's own draw 10.2748 % at 9 V;
+   the bleed 0.455 to 1.494 s to release; the restart ring 16.1338 A (92 % of L1's typical Isat), 1.0412 mJ. These carry the restart
+   obligation (L4-E6's C-5 sweep, saturation aware, to 16.1 A); the ballasts' damping is not credited
+
+9. PREDICATES
+   consistency: the derivation meets every recorded dense can figure within 0.02 A and the re-review's point within 0.0005 A: yes
+   consistency: the loop model meets the recorded margins within the stated tolerances: yes
+   convergence: on the finer source grids every can figure of the drawn node moves by less than the rule's margin: yes
+   the full enumeration of the second fix-up's node equals the search's maximum and counts the record's sets over the rating: yes
+   B1: the check's counterexample reproduces, 2.8546 A on its 204 / 816 kHz coincidence against its 2.7375 A in mean square: yes
+   B2: the check's ESL counterexample reproduces, 3.5870 A with the siblings at 3.5 nH plus the layout's 0.5 nH: yes
+   B3: the envelope covers the specified row's low corner carried to RT, under the record's 180.3 kHz: yes
+   the drawn bank does NOT meet 2.8 A at the 2:1 spread at either outcome on the corrected model: yes
+   B2: without a resistance floor no can count bounds the per-can current (the drawn six and eight cans both read over 10 A): yes
+   R1/R2: the BOUND over arbitrary independent branches meets the rule at both outcomes with the chosen ballast: yes
+   R1/R2: no smaller catalogue value can be shown to meet it: below 38 mOhm a feasible configuration is over the limit at 7 mOhm, from it to the chosen value the bound is over it: yes
+   R1/R2: the bound is conservative against the seeded brute-force sample, per bin and end to end: yes
+   the rating applies unmodified in frequency: every harmonic at or above 172 kHz, where the sheet's correction is 1.00: yes
+   the ballast's own loss is under a fifth of its derated rating at 100 C: yes
+   R4: with the chosen Cc2 the loop meets PM >= 50 deg, GM >= 10 dB, |1+T| >= 0.5, every crossover ceiling and the impedance bound over the whole cold envelope, Cc2's tolerance and the mixed banks, at R12 12 mOhm, loads to the highest permitted current, default and widened bands: yes
+   R4: the drawn compensation with the ballast misses GM >= 10 dB at the cold end of the envelope: yes
+   the first-order consequences reproduce the generator's recorded soft-start draw, bleed tau, node maximum and restart ring: yes
+   the consequences over endurance reproduce the recheck's 1.1928 to 3.3198 mF, 16.1338 A, 1.0412 mJ, 10.2748 % and 0.455 to 1.494 s: yes
+   ORDER: on the drawn R12 the ballast with the chosen Cc2 misses a margin at an end of the envelope (so they go in with L4-E6's R12): yes
