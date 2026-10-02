@@ -231,10 +231,11 @@ def guard_event(g, v0, i0, L, bulk, k, cold=False, ramp=None, dt=20e-9, t_end=60
     the samples of Q12's (VDS, ID) while it conducts and the lead current's slope at the turn-off command."""
     E, rl = g["E"], g["r_lead"]
     esr_b, cb = bulk
-    ca, ra = g["n_ca"] * 10e-6 * 0.9 * k, g["esr_cer"] / g["n_ca"]
-    cc = (20e-6 * k + 4.8e-6) * 1.10
+    kp_, ka_, kc_ = k if isinstance(k, tuple) else (k, k, k)     # PV_P, TRK_VS and TRK_VIN bias factors (one, or one per bank)
+    ca, ra = g["n_ca"] * 10e-6 * 0.9 * ka_, g["esr_cer"] / g["n_ca"]
+    cc = (20e-6 * kc_ + 4.8e-6) * 1.10
     npc = g["n_pc"]
-    cpc, rpc = npc * 10e-6 * 0.9 * k, (g["esr_cer"] / npc if npc else 0.0)
+    cpc, rpc = npc * 10e-6 * 0.9 * kp_, (g["esr_cer"] / npc if npc else 0.0)
     rb, r59, ron = g["rb"], g["r59"], g["r_on"]
     vb4, rd4 = g["d4"]
     vb11, rd11 = g["d11"]
@@ -2652,7 +2653,7 @@ def compute():
     s_star6 = 2 * math.sqrt(lead["mm2"] * 1e-6 / math.pi) * math.cosh(Lb6 / (4e-7 * lead["m"]))
     s_lo6 = 2 * math.sqrt(lead["mm2"] * 1e-6 / math.pi) * math.cosh(grid6[0] / (4e-7 * lead["m"]))
     rsns_v = W6["iQ"] * L11["rsns"] * (1 + L11["rsns_tol"]) * (1 + L11["rsns_tcr"] * dt_end)
-    b6 = dict(Lb=Lb6, r_lead=r_lead6, t_lead=AC_.T_LEAD, s_star=s_star6, s_lo=s_lo6, lstar=lstar6, bind=bind6, W=W6, W25=W25, Wlo=W6lo, fail_lo=fail_lo, cold=(Wc6, Wc6h), cold_ok=cold_ok,
+    b6 = dict(G6=dict(G6), bulk_cold=bulks["cold_aged"], uvf_lo=L11["uvf"][0], Lb=Lb6, r_lead=r_lead6, t_lead=AC_.T_LEAD, s_star=s_star6, s_lo=s_lo6, lstar=lstar6, bind=bind6, W=W6, W25=W25, Wlo=W6lo, fail_lo=fail_lo, cold=(Wc6, Wc6h), cold_ok=cold_ok,
               ramp=ramp6, ramp_ok=ramp_ok, i_start=i_start6, var=var6, e11=e11_6, e11_cap=e11_cap, e11_room=e11_room, t11=t11_6,
               rsns_v=rsns_v, i_cs=rsns_v / (100.0 * 0.999), ics_abs=ics_abs, cspm=cspm, cold_lo=[(L_, c_["vF"], c_["slew"], c_["iL"]) for L_, c_ in zip(grid6, cold6)][0],
               slew_abs=slew_abs, vsrc_ab=vsrc_ab, tsc=tsc6, inph=inph, inp_on=inp_on6, rja=rja_q, tjm=tjm_q, tc=tc_q, der=der_q,

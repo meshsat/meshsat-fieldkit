@@ -876,6 +876,22 @@ def t_the_guard_already_on_is_bounded_in_the_loaded_network():
         assert fig in page, fig
 
 
+def t_the_external_reviews_witnesses_reproduce_on_the_record_function():
+    """L4-F01 (the external review of the provisional fixes, 2 October 2026): its four witnesses rebuilt with the record's own
+    function and parameters (36 V step from U21's least turn-off, no load, 2.47 uH, the aged bulk at -40 C), the bias factor
+    per bank (PV_P, TRK_VS, TRK_VIN). They show the drafted network's 0.3 V margin is not robust: the finer step and an
+    independent TRK_VS factor each move U5 by more than the margin."""
+    R = _R()
+    m = _CACHE["M"]
+    b6 = R["remedy"]["b6"]
+    g = dict(b6["G6"])
+    u = lambda k, dt: m.guard_event(g, b6["uvf_lo"], 0.0, 2.47e-6, b6["bulk_cold"], k, dt=dt, t_end=60e-6)["u5"]
+    w20, w1 = u(1.0, 20e-9), u(1.0, 1e-9)
+    w99, w95 = u((1.0, 0.99, 1.0), 20e-9), u((1.0, 0.95, 1.0), 20e-9)
+    assert u((1.0, 1.0, 1.0), 20e-9) == w20
+    assert 0.2985 < w20 < 0.3 and 0 < w1 - w20 < 0.001 and w99 > w20 and w95 > 0.303, (w20, w1, w99, w95)
+
+
 def t_the_clarification_drafts_follow_the_decision():
     R = _R()
     assert R["decision"]["clar"] == ["analog-devices-lt8705a.txt", "milliohm-hojlr2512.txt", "texas-instruments-ina169.txt", "vishay-wsl2512.txt"]
