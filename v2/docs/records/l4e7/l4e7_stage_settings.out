@@ -583,17 +583,18 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        bounds how often a panel's open circuit swings in 0.1 s (it follows irradiance and cell temperature, which change over
        seconds): CONDITIONAL, bench row 7b.16 steps the bench supply's curve with SWEN held low
    CHECK (c), THE PARTS' RATINGS DURING THE SPECIFIED DISTURBANCES. The derivation (B6): TRN-001's port table
-     (DECISION-31) lists J_SOLAR as EXTERNAL, a long outdoor lead; no document of the tree states its length or routing (a
-     search of v2/docs and the registries finds none), so the levels are the approved test plan's for power leads, which do
-     not depend on them: M2, MIL-STD-461G CS101 on DC input power leads, curve 2 (sources of 28 V or below): 126 dBuV, 2.00
-     V rms, at the EUT's input to the knee (read from Figure CS101-1 at 5 kHz), then the straight line to 96.5 dBuV at 150
-     kHz, or the source set to Figure CS101-2's 80 W into 0.5 Ohm, with the 10 uF return capacitor of Figure CS101-4; M3,
-     CS114, the current induced on the lead at most curve 4's 103 dBuA (141 mA rms; Table VI, ground, Army: curves 3 and
-     4); M7, the discharge at decision 34's level, 8 kV contact and 15 kV air, through CS118's 150 pF and 330 Ohm (Table
-     IX's +30 % on the contact current, the air level scaled from it). Surge and sustained over-voltage: no level is ruled
-     (REQ-016, DECISION-31 section 3), so D4's own 10/1000 us rating stays a CAPABILITY SCENARIO, labelled: 33.1 A at an
-     initial junction of 25 C or below, derated to 88.1 % (29.2 A) at the hot end's 62.1 C (Figure 3 as drawn, INFERRED
-     from the figure)
+     (DECISION-31) lists J_SOLAR as EXTERNAL, a long outdoor lead; the records give a 5 m lead (a1solar's array record,
+     ESTIMATE, the panel lead's derivation below), and the approved test plan's levels for power leads do not depend on its
+     length: M2, MIL-STD-461G CS101 on DC input power leads, curve 2 (sources of 28 V or below): 126 dBuV, 2.00 V rms, at
+     the EUT's input to the knee (read from Figure CS101-1 at 5 kHz), then the straight line to 96.5 dBuV at 150 kHz, or
+     the source set to Figure CS101-2's 80 W into 0.5 Ohm, with the 10 uF return capacitor of Figure CS101-4; M3, CS114,
+     the current induced on the lead at most curve 4's 103 dBuA (141 mA rms; Table VI, ground, Army: curves 3 and 4); M7,
+     the discharge at decision 34's level, 8 kV contact and 15 kV air, through CS118's 150 pF and 330 Ohm (Table IX's +30 %
+     on the contact current, the air level scaled from it). Surge and sustained over-voltage on the panel lead: derived
+     below (THE PANEL LEAD'S DISTURBANCES: MIL-STD-461G CS116 and CS115, the row REQ-063 commits to, and the sustained
+     sources); D4's own 10/1000 us rating stays here as a CAPABILITY SCENARIO, labelled, the entry's margin beyond that
+     derived basis: 33.1 A at an initial junction of 25 C or below, derated to 88.1 % (29.2 A) at the hot end's 62.1 C
+     (Figure 3 as drawn, INFERRED from the figure)
      - the corrected network: four 10 uF 50 V ceramics, C71 to C74 (the value text and land of C13 and C14), on TRK_VS at
        RSENSE1's pad, so a fast edge reaches R59 only through C13 to C15's share; nothing in series with CSPIN or CSNIN,
        which the maker forbids (8705af p.30: all four sense pins draw bias current); the INB filter across R66; the bulk
@@ -635,6 +636,118 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
        at any frequency in either setup). Above the lumped model's reach (the discharge's first nanoseconds, CS114 at MHz)
        the board's parasitics decide, a layout matter: C71 to C74 at R59's pad and R59's Kelvin taps, M3 and M7 at layer 8. A
        reversed panel conducts through D4 as DECISION-31's note E-N1 records
+   THE PANEL LEAD'S DISTURBANCES, DERIVED (REQ-016's acceptance gives layer 4 the disturbance, its source impedance or
+     current, its duration and the limit, and layer 8 the judgement under TRN-001; the findings ledger's item 1, L4-E7R's
+     checks 1.6 and 2.4, L4-E9's register row R-156). The criterion is REQ-016's own: a disturbance passes only when D4's
+     clamping voltage at that disturbance's current, with the part's tolerance, is at or below the lowest limit on PV_P
+     - the exposure: J_SOLAR (PV_IN on pin 1, the return on pin 2, board E's GND) is EXTERNAL in TRN-001's port table, a long
+       outdoor lead by definition. The lead the records give: a1solar's 5 m one way of 4 mm2 copper (array_calc.py,
+       ESTIMATE), 0.0465 Ohm in loop (the replay's own figure); unshielded and laid on the ground from the panel to the case
+       (SESSION reading: a panel's own leads and an extension of their class carry no shield); no earth bond: the case is
+       plastic and no board has a chassis net (GROUNDING-AND-SHIELDS.md), so the kit floats and a common-mode transient on
+       the lead closes only through stray capacitance, while the high side lead against its return, through the entry, is the
+       path that loads D4. The lead's quarter wave is 15.0 MHz in free space (half wave 30.0 MHz), lower on soil: inside
+       CS116's flat band, so it is added to the test frequencies as 5.14.2's installation resonance
+     - THE BASIS (SESSION, the reading of what the requirements commit to): REQ-063 commits the kit's EMC characterisation to
+       MIL-STD-461G (11 December 2015) and the 'Ground, Army' row of its Table V (held; transcribed in
+       v2/vendor/standards/mil-std-461g-requirement-matrix.md, the same file). That row marks CS116 A (5.14, damped sinusoids
+       from 10 kHz to 100 MHz on every interconnecting cable, power cables included, and on each individual high side power
+       lead) and CS115 A (5.13, an impulse on every interconnecting cable), and CS117 S (5.15, lightning induced, for the
+       procuring activity to specify). TEST-PLAN.md runs M1 to M5 and no row runs CS115, CS116 or CS117. The derivation takes
+       CS116 and CS115 as the panel lead's surge: (1) they are the transients of the one edition and row the requirements
+       commit to; (2) the standard's appendix says that 'for most equipment, testing with some combination of CS116 and CS115
+       may provide sufficient coverage to address the environment for nearby lightning called out in MIL-STD-464' (A.5.15),
+       which is the exposure an outdoor lead adds; (3) IEC 61000-4-5 is neither held in this tree nor freely published, and
+       the envelope's surge row (decision 34) and CHO-003 decline to constrain the long leads to it; (4) CS117 is not taken:
+       its levels 'were derived from general and civil aviation experience' for aircraft equipment (A.5.15), it applies to
+       safety-critical equipment (5.15.1), and the row leaves it to the procuring activity. NOT COVERED, a residual for layer
+       8 and the register: a direct strike, or one nearer than MIL-STD-464's nearby lightning (CS117 covers neither, and
+       CS116 with CS115 only 'may'); the kit's posture there is REQ-041's mast-down alarm
+     - D1, CS116 on PV_IN alone and on the J_SOLAR cable: each pulse e^(-pi f t / Q) sin(2 pi f t), Q 15 +- 5 (both ends, 10
+       and 20, run), at 0.01, 0.1, 1, 10, 30 and 100 MHz and the lead's 15.0 MHz; its peak Ip from Figure CS116-2 as drawn
+       (INFERRED from the figure: 0.1 A at 10 kHz rising 20 dB a decade to 10 A at 1 MHz, flat to 30 MHz, 3 A at 100 MHz);
+       one pulse every 1 to 2 s for five minutes; the source a generator of at most 100 Ohm through the injection probe, and
+       the current is the test's controlled quantity ('Reduce the signal, if necessary, to produce the required current',
+       5.14.3.4c(3)): the port sees a current source of Ip
+     - D2, CS115 on the J_SOLAR cable: 5 A, 30 ns at least, edges at most 2 ns (Figure CS115-1), 30 Hz for one minute; a 50
+       Ohm charged-line generator through the probe, set at least to the calibration's drive (5.13.3.4c(2)(a)), 500 V across
+       the calibration fixture's 100 Ohm loop (A.5.13); the cable's peak current is recorded (5.13.3.4c(2)(e)), not limited
+     - D3, the panel's own cold open circuit: REQ-016's window, 25 V at most at -20 C, current-limited, held for hours
+       (L4-E13's disturbance check against D4's standoff holds for every plane-of-array irradiance below 8574 W/m2)
+     - D4, a stiff source on the port by mistake (a vehicle or shore lead wired to the panel's receptacle): the kit's
+       declared source range, 9 to 36 V (V2-SPEC line 21), through the lead's 0.0465 Ohm loop and F2 (10 A), held
+     - D5, a reversed panel: DECISION-31's note E-N1, the panel's short-circuit current 6.802 A (check (b)'s, with the
+       sheet's power tolerance) forward through D4
+     D1 frequency by frequency. The bound puts the disturbance's whole current in D4 (REQ-016's criterion) and in R59 and
+     the bank on top of the operating current 3.7408 A (no capacitor credited); the loaded network is check (c)'s corrected
+     entry (MODELED, lumped, to 1 MHz; above it the board's parasitics decide), from two starts, operating at the hold and
+     open at 25 V cold with the stage off, each bulk and bias factor, both polarities and both Q ends; the trip's filter
+     excursion is the bound 2 x Ip / (pi f) / tau (the first half cycle's charge over the filter's least time constant,
+     3.960 ms):
+     f MHz    Ip A   D4 at Ip V      U5 bnd   U18 bnd  U5 V     U18 V    TRK_VS V  PV_P V   D4 A   trip A    D4 energy bound
+     0.01     0.10   34.43 / 35.71   0.0593   0.0561   0.0582   0.0555   25.05     25.05    0.00   0.00161   2.27 mJ (0.13 % of its scaled rating)
+     0.1      1.00   34.73 / 36.01   0.0732   0.0692   0.0648   0.0672   25.10     25.11    0.00   0.00161   2.29 mJ (0.41 % of its scaled rating)
+     1        10.00  37.72 / 39.00   0.2123   0.2007   0.1238   0.1860   25.16     25.24    0.00   0.00161   2.48 mJ (1.42 % of its scaled rating)
+     10       10.00  37.72 / 39.00   0.2123   0.2007   -        -        -         -        -      0.00016   0.25 mJ (0.45 % of its scaled rating)
+     14.9896  10.00  37.72 / 39.00   0.2123   0.2007   -        -        -         -        -      0.00011   0.17 mJ (0.37 % of its scaled rating)
+     30       10.00  37.72 / 39.00   0.2123   0.2007   -        -        -         -        -      0.00005   0.08 mJ (0.26 % of its scaled rating)
+     100      3.00   35.40 / 36.67   0.1041   0.0985   -        -        -         -        -      0.00000   0.01 mJ (0.04 % of its scaled rating)
+     (D4 at Ip: the highest part at 25 C and at the hot end's 62.1 C with the sheet's typical coefficient 0.1 %/C; U5 bnd
+     and U18 bnd: R59's and the bank's differential with the whole current in them, against 0.3 V and 2 V; U5 V, U18 V,
+     TRK_VS V, PV_P V and D4 A: the loaded network, worst case; the loaded network's D4 current is 0.00 A at every lumped
+     frequency: the entry's capacitors take the pulse and TRK_VS peaks at 25.16 V, under D4's least breakdown at the cold
+     end, 29.70 V)
+     D2: D4 at 5 A 36.06 V (25 C) and 37.34 V (hot end); the bound U5 0.1350 V and U18 0.1277 V; the loaded network U5
+     0.0766 V, TRK_VS 25.02 V, PV_P 25.08 V, D4 0.00 A; the pulse's charge 0.160 uC, the trip filter's excursion at most
+     0.000081 A; D4's energy with the whole pulse in it 0.0060 mJ. The loop current the test may drive is not limited by
+     the standard: U5's rating is reached at 15.7 A with the whole current through R59 (the bound) and at 64 A in the
+     loaded network; D4's clamp reaches the drafted entry's 50 V at 43.1 A
+     D4 with the drafted SMCJ28A: a stiff 36 V through the lead into the clamp (INFERRED straight line from each breakdown
+     at the printed slope); D4's continuous capability on the board, from TJ 150 C and RthJA 75 C/W (typical, 8 x 8 mm
+     pads), is 1.17 W at the hot end's air and 2.27 W at the cold end's (the sheet's 6.5 W is on an infinite heat sink):
+       the least part at the cold end               breakdown 29.70 V:  16.63 A,   585.8 W
+       the least part at 25 C                       breakdown 31.10 V:  12.94 A,   457.9 W
+       the highest part at 25 C                     breakdown 34.40 V:   4.22 A,   151.2 W
+       the least part at the junction's maximum     breakdown 34.99 V:   2.67 A,    95.9 W
+     so D4 conducts amps at any junction temperature it can reach and is over its rating by two orders of magnitude; the
+     sheet's typical failure mode is a short, which F2 then clears; every other part of the drafted entry is rated above 36
+     V (the bulk and C71 to C74 50 V, U18 75 V, U5 80 V, Q3 60 V); as drawn, C11 and C12 are 35 V, under it. The largest
+     sustained source the drafted entry holds is D4's least breakdown at the cold end, 29.70 V (under it D4 carries less
+     than its 1 mA test current)
+     THE SMALLEST CHANGE for D4 (SESSION), read from the held series (Littelfuse SMCJ p.2): the least row that stands off
+     36 V and does not break down at the cold end is SMCJ36A (VR 36.0 V, VBR 40.00 to 44.20 V, 38.20 V at the cold end; VC
+     58.1 V at 25.9 A). Alone it does not hold the derived set on the drafted entry: under REQ-016's criterion D1's 10 A
+     plateau puts its clamp at 49.57 V at 25 C and 51.21 V at the hot end (typical coefficient), against the 50 V parts;
+     the 50 V parts are reached at 10.81 A (25 C) and 7.75 A (hot end), Q3's 60 V at 29.4 A. So the change that holds every
+     derived disturbance is SMCJ36A WITH the entry's 50 V parts at the 63 V class: the bulk C11, C12 and C69 to
+     EEHZA1J220XP (22 uF 63 V in the same 6.3 x 7.7 mm D8 land, ESR 80 mOhm against 40, ZA p.2), which takes the bulk ahead
+     of the bank from 99 uF to 66 uF and so re-opens the CS101 correction (re-run with it), and C71 to C74 at 63 V or more
+     (no ceramic's sheet is held); and with it a 36 V source runs the stage, whose input is then the regulation's 105.73 W
+     to the trip's 135.26 W at 36 V, outside REQ-016's window (a single fault for layer 8). The alternative that also
+     closes D5 is an input over-voltage and reverse disconnect ahead of PV_P (a series FET with its controller): more
+     parts, and no sheet for one is held
+     D5: D4's forward path carries 6.802 A held; on the board it can dissipate 1.17 W at the hot end, so it holds only
+     below a forward drop of 0.172 V, which no silicon junction has at that current (INFERRED; the sheet prints the forward
+     drop at 100 A only): NOT MET as DECISION-31 recorded (E-N1, board E's owner); the keyed receptacle is the barrier
+     against it
+     THE VERDICTS (each against REQ-016's criterion on the drafted entry, 50 V; as drawn the lowest limit on PV_P is C11 and C12, 35 V):
+       - D1, CS116, PV_IN and the cable: D4 at the disturbance's current 39.00 V (10 A, hot end), D4 off in the loaded network:
+         MEETS; as drawn, NOT MET (39.00 > 35 V)
+       - D2, CS115, the cable: D4 at the disturbance's current 37.34 V (5 A, hot end), D4 off in the loaded network:
+         CONDITIONAL: the loop current under 15.7 A (U5's bound); as drawn, NOT MET (37.34 > 35 V)
+       - D3, the panel's cold open circuit: 25 V, under D4's 28 V standoff: MEETS (CONDITIONAL on PANEL-ACC); as drawn, MEETS
+       - D4, a 36 V source on the port: D4 conducts 2.7 to 16.6 A: NOT MET: SMCJ36A with the 63 V class (register row); as
+         drawn, NOT MET
+       - D5, a reversed panel (E-N1): D4 forward, 6.802 A held: NOT MET as recorded (E-N1); as drawn, NOT MET
+     FOR L4-E9'S REGISTER (R-156 and its companions; the register is L4-E9's to write): (a) R-156's input is this
+     derivation: D1 and D3 MEET, D2 CONDITIONAL on the recorded loop current, D4 and D5 NOT MET; R-156's text names the
+     INA250's 40 V, and the drafted U18 is the INA169 (75 V); (b) a TEST row owed at layer 8: CS116 on PV_IN alone and on
+     the J_SOLAR cable at the six frequencies and the lead's 15.0 MHz, and CS115 on the cable, recording the cable's peak
+     current (TEST-PLAN runs M1 to M5 only, though the row REQ-063 commits to marks both A); (c) a CHANGE row for D4:
+     SMCJ36A with the entry's 63 V class parts (EEHZA1J220XP for the bulk, C71 to C74 at 63 V or more) and the CS101
+     correction re-run, or the over-voltage and reverse disconnect that also closes D5, catalogue rows and sheets owed (no
+     catalogue reading is filed and this round contacts no one); (d) the residual beyond the basis: a direct or nearer
+     strike, with the entry's margin there D4's own rating (check (c)'s capability rows)
    THE BACKSTOP UNDER CS101 (checks/check-l4e7r-3.md; the owner's instruction of 2 October 2026). The exposure is M2's
      own: MIL-STD-461G CS101 on the DC input power leads, curve 2, its Figure CS101-4 setup (the coupling transformer in
      the high lead, the 10 uF across the leads, the LISNs of Figure 6), the kit charging from the panel lead with the
@@ -803,11 +916,13 @@ INFERRED, ASSUMPTION, SESSION, as named on each line
      panel's swing rate with SWEN low (3.6 full swings per window); (c) the disturbances: every part inside its rating at
      the approved levels and in the capability scenario, U5's differential at most 0.2094 V, CONDITIONAL on the lumped
      model (layout, M3, M7, 7b.18), the bulk's heating under CS101's bounding case (M2) and the bank's pulse capability in
-     the capability scenario (Vishay). Drafted: the board E edits above and four clarification texts; implemented: nothing
-     in the tree. L4-E7R's architecture criterion: MET, CONDITIONAL on the named items, none of which can overturn the
-     architecture (each resolves by a stocked setting or a part on the same topology). If the coordinator's closing check
-     finds otherwise, the engineering alternative is the next stocked RIMON_IN for M2's margin and the next R66 for (a) and
-     (b) (the search's costs), and a larger or added bulk can for (c)'s heating, before any change of arrangement
+     the capability scenario (Vishay); the panel lead's derived disturbances: CS116 MEETS, CS115 CONDITIONAL on the loop
+     current, the panel's cold open circuit MEETS, a stiff source of the kit's range on the port and a reversed panel NOT
+     MET (register rows, the change named). Drafted: the board E edits above and four clarification texts; implemented:
+     nothing in the tree. L4-E7R's architecture criterion: MET, CONDITIONAL on the named items, none of which can overturn
+     the architecture (each resolves by a stocked setting or a part on the same topology). If the coordinator's closing
+     check finds otherwise, the engineering alternative is the next stocked RIMON_IN for M2's margin and the next R66 for
+     (a) and (b) (the search's costs), and a larger or added bulk can for (c)'s heating, before any change of arrangement
    THE CLARIFICATION DRAFTS (text for the owner to send, the session contacts no one): no answer moves C's bound into or
      out of 100 W. Texas Instruments: the warranted error envelope at V+ = VIN+ of 9 V to 25 V and the trip's sense
      voltage, the VIN+ current, the output past 150 mV (retiring both assumptions); Analog Devices: the coordination's and
