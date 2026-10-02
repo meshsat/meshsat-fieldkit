@@ -39,7 +39,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    fuse997   437b1fd2c8cb3ef1  v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf
    keystone  caa141ea51ac68cf  v2/vendor/keystone/M65p42.pdf
    l4e7r     a0ec073de05abe91  v2/docs/records/l4e7/l4e7_stage_settings.out
-   l4e10     4e92fde24f124e6e  v2/docs/records/l4e10/l4e10_cell_thermal.out
+   l4e10     c99baceb74d25bbf  v2/docs/records/l4e10/l4e10_cell_thermal.out
    d38999    13a19268ba5939d9  v2/vendor/d38999/amphenol-d38999-iii-federal.pdf
    reqs      b624ac495650a359  v2/ecad/tools/pcb_requirements.yaml
    chgseq    44fdf9a022c49337  v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md
@@ -51,7 +51,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    l4e11     726ba21012cb90d9  v2/docs/records/l4e11/l4e11_power.out
    l4e11md   7c72cedbffd342f4  v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md
    e11entry  418ea548a833b49f  v2/docs/records/l4e11/apply_gen_sch_e_entry.py
-   l4e12     987b003c42e80033  v2/docs/records/l4e12/l4e12_thermal.out
+   l4e12     bfd8c7271095cd4f  v2/docs/records/l4e12/l4e12_thermal.out
    l4e12md   4dfc6358f779fcd0  v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md
    cl_topwell 1ca762d83bbb58b2  v2/docs/records/l4e10/clarification/topwell-hl18650v.txt
    cl_eaton  9dffb95e8b4874fc  v2/docs/records/l4e10/clarification/eaton-scf9550.txt
