@@ -276,7 +276,10 @@ def t_each_verdict_agrees_with_its_rows_states():
                 else:
                     assert states[k] == "STILL OPEN", "item %d DIFFERS but %s reads %s" % (n, k, states[k])
             if v == "CONFIRMED":
-                assert states[k] != "STILL OPEN", "item %d is CONFIRMED but %s still reads STILL OPEN" % (n, k)
+                # a CONFIRMED item's row may be STILL OPEN only when a later review found it REGRESSED (marked so in the row)
+                if states[k] == "STILL OPEN":
+                    row = [r for r in _rows() if r["key"] == k][0]
+                    assert "REGRESSED" in str(row), "item %d is CONFIRMED but %s still reads STILL OPEN" % (n, k)
 
 
 def t_the_verifier_loads_no_record_it_checks():

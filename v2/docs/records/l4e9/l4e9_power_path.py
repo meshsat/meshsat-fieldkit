@@ -88,7 +88,7 @@ PINS = {
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
     "keystone": ("v2/vendor/keystone/M65p42.pdf", "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"),
     "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "5d60b54aa8ce88534f24dbd71389db53be2f55d9af030b6005853e5076bbc18b"),
-    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "0d623af30e36978d1c531fb3c47e5304f31e731629d7c190d98ab5c46a08d3d9"),
+    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "8c6ad9d5b57a2d0015359b46843efd3335565ae18bd00d374b24055cea316962"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "b624ac495650a3592c45a37610375fb05bf7b775042cf3de7ec8979bc46a6e50"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
@@ -98,10 +98,10 @@ PINS = {
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
     "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "0be7bf53a380b58d109623ce96176e6d24601cd2e180c9fd1a04b5a2cfaa6a2c"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "ff0fbb72aee4bc5f87b419e7ea91f257e1ec2f31723af8dde4d801f710cf6dd2"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "97dc32044b1aaef97fcf4aacfaf930fba45af9cf5cbe5b0266cee425b9125855"),
     "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "f8d214548f24be8f3fe66f505caedb8de946f95e9c712d5865a891a701c52ced"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "c671371d7ae0712513bd6db1f2eabf8538ac6df5ee3d62a77cafa8d7359214e9"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "21897a4338348fc7f1a8d8fe0b06eb827e741fc6265fb94cea952fd752055d37"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "f7b568e072b8a7b33396900e12f304b30858da6d79ac9fedf0879539508cbf08"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
@@ -149,7 +149,7 @@ PINS = {
     # comparison (check 6 at e2d20bf2) and the findings ledger's resumed verification (fnd/l4close at 65be2c2c); read from the tree
     "l4e12chk7": ("v2/docs/records/l4e12/checks/check-l4e12-7.md", "ec5ee21523560a719a0e2ff79d98b0bf84f9277629590757f66b4bd8c722906d"),
     "l4e10chk6": ("v2/docs/records/l4e10/checks/check-l4e10-6.md", "2bd4287f3736da75a0dd3d730666362f62b6371aa5d305c99781ef1679c7697e"),
-    "ledger": ("v2/docs/records/l4close/FINDINGS-LEDGER.md", "385b1cdd4636c0f07f6b682d9260968a48eb5627f30b317ac171398281b39a27"),
+    "ledger": ("v2/docs/records/l4close/FINDINGS-LEDGER.md", "9ed580a8dd2f35c80ca86fbebf0ef6ff1cb5617f48e730a68ecfed16094666d1"),
     "verify": ("v2/docs/records/l4close/verify_risks.out", "fd2dc6b2c1e723be2316052ec0dc76127605e2334fb80d5dc4e587b387df257c"),
     # the last add-on: L4-E7's solar-fault remedies (check 5 at 573fd5b8), its page and its drafted guard; read from the tree
     "l4e7md": ("v2/docs/records/l4e7/L4E7-CONTROL-DECISION.md", "5c56212cd9d3accd1bfa69689563446f2cee770eed89b64e95e701c383152e35"),
