@@ -225,3 +225,48 @@ records their URLs: `wifi/asiarf-AW7915-AED-datasheet.pdf` (AsiaRF's 260505 one-
 per-part data sheets and the Glenair sheets (both makers answered HTTP 403) and the Xenarc manual and drawing (served
 through a script); the Internet Archive was offline at 03:57Z, so their currency stays unconfirmed. The sources.txt and vendor-status.txt lines for these files are drafts
 (`drafts/hc6/vendor-lines.patch`), because both files are shared.
+
+## 8. The power parts Layer 4 selected (Layer 6 record l6pwr, 3 October 2026)
+
+The parts L4-E5 to L4-E11 selected exist only in release-guarded drafts (`apply_*.py` under `v2/docs/records/l4e*/`), on no
+committed netlist; this section carries their procurement readings so that Layer 8 applies the drafts with the codes and stock in
+view. Every figure is a public reading of 2 October 2026, 23:20 UTC (`v2/docs/records/l6pwr/inputs/lcsc-2026-10-02.json`, LCSC's
+product detail; `jlc-search-2026-10-02.json`, JLCPCB's parts search), true at that time only. Need = per kit x 5. The identities,
+documents, grades and findings are in `v2/docs/records/l6pwr/L6-POWER-PARTS.md` (`l6pwr_parts.out`); this page orders nothing.
+
+| Part (code) | Board, refs | Need | LCSC stock (JLCPCB assembly) | Price USD (at qty) | Constraint | Alternative and its state |
+|---|---|---|---|---|---|---|
+| TI BQ25730RSNR (C5219071) | A U3 (L4-E11 draft) | 5 | **0** | 2.8553 (1), 2.7966 (10) | **no LCSC stock** (E11-32, R-162); the drawn BQ25731RSNR C2871872 reads 1125 | BQ25731RSNR, the same land: no battery FET, arrangement (A) with E11-24's bank |
+| Nexperia BUK6Y10-30PX (C3278350) | A Q39, Q40 (L4-E11 draft) | 10 | 67 (67) | 2.0603 (1), 1.7386 (10) | thin; the PX suffix is not printed by the sheet (L6P-F02); the suffix-less C2846047 reads 0 | Vishay SQJ403EP: another land drawing, one FET with a case heat path: not a drop-in |
+| TI TPS16630PWPR (C1849461, this reading; the draft carries none) | A U42 (L4-E11 draft) | 5 | 1141 | 2.8002 (1), 2.3521 (10) | none; R221 collides with L4-E8's ballast designators (L6P-F01) | none on the PWP land (p.36 lists TPS16630 alone in HTSSOP-20) |
+| Diodes B540C-13-F (C72264) | A D23 (L4-E11 draft) | 5 | 52515 | no ladder at 1 (min buy 5) | none | B550C-13-F, the same sheet and land: VF 0.70 V |
+| Milliohm HoJLR2512-3W-8mR-1% (C2904240) | A R11 (L4-E4, kept by L4-E5) | 5 | 9600 | 0.0832 (10) | the 7 mOhm fallback C2904239 reads 1830 (R-155) | WSL2512 at 8 mOhm: 1 W at 70 C against 3 W |
+| Milliohm HoJLR2512-3W-12mR-1% (C2904242) | A R12 (L4-E6) | 5 | 3405 | no ladder at 1 (min buy 5) | none | as above |
+| Milliohm HoJLR2512-3W-5mR-1% (C2903482) | A R227 (L4-E9); R138 (L4-E4) | 10 | 106575 | no ladder at 1 (min buy 5) | none | a WSL2512 at 5 mOhm cannot carry R227's 1.037 W fault bound at 1 W |
+| Milliohm HoJLR2512-3W-45mR-1% (C2903491) | A R221 to R226 (L4-E8) | 30 | 15860 | 0.0621 (10) | the designator collision L6P-F01 | a WSL2512 at 45 mOhm fits (0.35 W) |
+| Panasonic EEHZK1V331P (C278516) | A C163, C178, C179, C180, C199, C200 (drawn, kept by L4-E8) | 30 | 6246 (6246) | 0.8074 (1), 0.6449 (10) | the rated temperature rise is not printed (L4-E8 B4) | EEHZK1V331V (vibration-proof, the same row) |
+| Panasonic EEHZK1V181P (C242139) | A C236 (L4-E11 draft) | 5 | 2843 | 1.1407 (1), 0.9588 (10) | none | EEHZK1V181V |
+| Samsung CL10B332KB8NNNC (C1613) | A C6 (L4-E8: Cc2 3.3 nF) | 5 | 32760 | no ladder at 1 (min buy 20) | no maker page read (DOCUMENT_OWED) | any 3.3 nF 50 V X7R 0603 (the loop check judges it) |
+| TI TPS48110AQDGXRQ1 (C17556513) | E U6 (L4-E11 entry), U21 (L4-E7 guard) | 10 | 326 | 4.4674 (1), 4.0004 (10) | the DGX-19 land is owed (E11-01); the guard's instance PROVISIONAL (L4-E7 round 3); the rating basis L6P-F10 | TPS48111AQDGXRQ1: no OV pin, latch-off: the guard loses its function |
+| TI CSD19536KTT (C2687963) | E Q7 (L4-E11 entry) | 5 | 611 | 4.4897 (1), 3.9324 (10) | none | NOT READ (the family's SOA figures decide E11-17) |
+| TI CSD19532Q5B (C473333) | E Q1 (L4-E9), Q12, Q13 (L4-E7 guard) | 15 | 2522 | 2.1572 (1), 1.8436 (10) | Q13's hot leakage: D-11 CONDITIONAL | NOT READ |
+| Littelfuse SMCJ30A (C224048, this reading; the draft carries none) | E D4 (L4-E7 guard) | 5 | 15670 | 0.2982 (5), 0.2375 (50) | PROVISIONAL (the guard) | Diodes SMCJ30A-13-F C135160 (1417): another maker, condition 1 |
+| Littelfuse SMCJ40CA (C80273) | E D11 (L4-E7 guard); D10 (entry, on main) | 10 | 4925 | no ladder at 1 (min buy 5) | PROVISIONAL (the guard) | SMCJ40A (unidirectional): not equivalent for D-11 |
+| Samsung CL32B225KCJSNNE (C55151, this reading; the draft carries none) | E C131, C132, C135, C136 (L4-E7 guard) | 20 | **0** (4654) | 0.1599 (1), 0.1352 (10) | **no LCSC retail stock**, JLCPCB's assembly pool holds it; no temperature range on the maker's page (L6P-F08); PROVISIONAL | another maker's 2.2 uF 100 V X7R 1210, re-bounded on its own curves |
+| Samsung CL32B106KBJNNNE (C138687, this reading) | E C133, C134, C71 to C74 (L4-E7 guard and backstop) | 30 | 16710 (30940) | 0.3288 (1), 0.2609 (10) | as above | as above |
+| Samsung CL31B106KBHNNNE (C89632) | E C13, C14 (drawn) | 10 | **0** (109264) | no ladder at 1 (min buy 5) | **no LCSC retail stock**, JLCPCB's assembly pool holds it | as above |
+| Vishay WSL2512R0700FEA (C2076144) | E R60 to R64 (L4-E7R backstop) | 25 | 1970 | 0.8059 (1), 0.6645 (10) | none | WSL2512R0700DEA (0.5 percent) halves the trip's resistor error |
+| Milliohm HoLLR2512-3W-4.5mR-1% (C2985708) | E R19 (entry), R87 (guard) | 10 | 4225 | no ladder at 1 (min buy 5) | the HoLLR series sheet is not held (L6P-F09) | a HoJLR2512 4.5 mOhm code, if one exists: the held sheet would apply |
+| TI INA169NA/3K (C44322) | E U18 (L4-E7R backstop) | 5 | 61868 | 1.138 (1), 0.8704 (10) | none | INA139NA/3K (40 V, the same land) |
+| TI TPS3701DDCR (C132788) | E U19 (L4-E7R backstop) | 5 | 26813 | 0.6932 (1), 0.5536 (10) | none | TPS3700DDCR (18 V, the same land) |
+| TI TPS3808G33DBVR (C43698) | E U20 (L4-E7R backstop) | 5 | 36030 | 0.4435 (1), 0.3466 (10) | none | TPS3808G33DBVT (the same part, small reel) |
+| Samsung SDI INR18650-35E (no code) | P, the 4S3P pack (D-06) | 60 | owner-side purchase | USD 8.25 a cell (the l3batt reading, an indicator) | the qualification margins are outside every printed row (L4-E10, U-01) | the Saft MP 176065 xtd is the labelled PROPOSAL (below); a cell change is the owner's |
+| Saft MP 176065 xtd (no code; PROPOSAL only) | P, a 4S1P (not adopted) | 4 | owner-side (Saft's distributors) | NZ$ 238.72 a cell (SIMPOWER listing archived 2025-01-16) | current at temperature and the storage dwell AWAITING Saft (R-168); the pocket's fit (R-167) | none (it is the alternative) |
+
+**Readings of two stock pools.** LCSC's product detail reports LCSC's retail stock; JLCPCB's parts search reports the assembly
+pool. Three Samsung ceramics read 0 at LCSC and thousands at JLCPCB on the same minute; an order for assembly is judged on JLCPCB's
+figure at its time, a consigned purchase on LCSC's or a franchised distributor's.
+
+**Codes the drafts owe (L6P-F06).** TPS16630PWPR C1849461, Littelfuse SMCJ30A C224048, CL32B225KCJSNNE C55151 and CL32B106KBJNNNE
+C138687 are this record's readings for drafts that carry no LCSC code; the generator edit is Layer 8's with the draft.
+**Reselected: nothing.** The findings L6P-F01 to L6P-F11 are in the record's output with the Layer 4 row each affects.
