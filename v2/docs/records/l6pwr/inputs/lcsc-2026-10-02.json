@@ -1,0 +1,1512 @@
+{
+ "what": "LCSC public product-detail answers (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=<code>), no login, no cart; the codes the Layer 4 power drafts carry, the drawn parts they replace and the codes the keyword searches found for the uncoded rows",
+ "read_by": "MESHSAT-1357 Layer 6 record l6pwr",
+ "rows": [
+  {
+   "code": "C5219071",
+   "read_utc": "2026-10-02T23:20:31Z",
+   "model": "BQ25730RSNR",
+   "brand": "TI",
+   "package": "QFN-32(4x4)",
+   "stock": 0,
+   "min_buy": 1,
+   "reel": 3000,
+   "price_usd": [
+    [
+     1,
+     2.8553
+    ],
+    [
+     10,
+     2.7966
+    ],
+    [
+     30,
+     2.7558
+    ],
+    [
+     100,
+     2.7166
+    ]
+   ],
+   "pdf": "https://www.ti.com/cn/lit/ds/symlink/bq25730.pdf",
+   "desc": "Battery Charging IC Lithium-ion/Polymer Nickel-Metal Hydride QFN-32(4x4)",
+   "params": {
+    "End-Off Voltage": "-",
+    "Interface": "I2C",
+    "Features": "Programmable charging current;Overcurrent Protection;Overvoltage protection;Soft-start;Under-voltage lockout",
+    "Voltage - Supply": "3.5V~26V",
+    "Quiescent Current": "22uA",
+    "Operating Temperature": "-40℃~+85℃",
+    "Type of Battery": "-",
+    "The Chip Type": "Charging IC",
+    "Number of Cells": "1~5",
+    "Charge Current - Max": "16.2A",
+    "Charging Saturation Voltage": "21V"
+   }
+  },
+  {
+   "code": "C2871872",
+   "read_utc": "2026-10-02T23:20:31Z",
+   "model": "BQ25731RSNR",
+   "brand": "TI",
+   "package": "QFN-32(4x4)",
+   "stock": 1125,
+   "min_buy": 1,
+   "reel": 3000,
+   "price_usd": [
+    [
+     1,
+     3.0564
+    ],
+    [
+     10,
+     2.6918
+    ],
+    [
+     30,
+     2.5046
+    ],
+    [
+     100,
+     2.2549
+    ],
+    [
+     500,
+     2.1646
+    ],
+    [
+     1000,
+     2.1268
+    ]
+   ],
+   "pdf": "https://www.ti.com/cn/lit/ds/symlink/bq25731.pdf",
+   "desc": "Battery Charging IC Multi-Chemistry QFN-32(4x4)",
+   "params": {
+    "Interface": "I2C",
+    "Features": "Constant current charging;Programmable charging current;Overcurrent Protection;Overvoltage protection;Soft-start;Under-voltage lockout",
+    "Voltage - Supply": "26V",
+    "Quiescent Current": "22uA",
+    "0V Battery Charge": "Not supported",
+    "Operating Temperature": "-40℃~+85℃",
+    "Type of Battery": "-",
+    "The Chip Type": "Charging IC",
+    "Number of Cells": "1~5",
+    "Charge Current - Max": "16.2A"
+   }
+  },
+  {
+   "code": "C3278350",
+   "read_utc": "2026-10-02T23:20:31Z",
+   "model": "BUK6Y10-30PX",
+   "brand": "Nexperia",
+   "package": "LFPAK-56",
+   "stock": 67,
+   "min_buy": 1,
+   "reel": 1500,
+   "price_usd": [
+    [
+     1,
+     2.0603
+    ],
+    [
+     10,
+     1.7386
+    ],
+    [
+     30,
+     1.5383
+    ],
+    [
+     100,
+     1.3314
+    ],
+    [
+     500,
+     1.2379
+    ],
+    [
+     1500,
+     1.1985
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/56e61b1de5a1ad25e58195e7a960c4f3.pdf?productCode=C3278350",
+   "desc": "P-Channel 30V 80A 110W Surface Mount LFPAK-56",
+   "params": {
+    "Output Capacitance(Coss)": "470pF",
+    "Ciss-Input Capacitance": "2.36nF",
+    "Pd - Power Dissipation": "110W",
+    "Configuration": "-",
+    "Operating Temperature": "-55℃~+175℃",
+    "Drain to Source Voltage": "30V",
+    "Current - Continuous Drain(Id)": "80A",
+    "Reverse Transfer Capacitance (Crss)": "270pF",
+    "RDS(on)": "10mΩ@10V",
+    "Number": "1 P-Channel",
+    "Gate Charge(Qg)": "64nC@10V",
+    "Vgs": "±20V",
+    "Gate Threshold Voltage (Vgs(th))": "3V",
+    "Type": "P-Channel"
+   }
+  },
+  {
+   "code": "C2846047",
+   "read_utc": "2026-10-02T23:20:31Z",
+   "model": "BUK6Y10-30P",
+   "brand": "Nexperia",
+   "package": "SOT-669",
+   "stock": 0,
+   "min_buy": 1,
+   "reel": 1500,
+   "price_usd": [],
+   "pdf": null,
+   "desc": null,
+   "params": {}
+  },
+  {
+   "code": "C1849461",
+   "read_utc": "2026-10-02T23:20:32Z",
+   "model": "TPS16630PWPR",
+   "brand": "TI",
+   "package": "HTSSOP-20",
+   "stock": 1141,
+   "min_buy": 1,
+   "reel": 2000,
+   "price_usd": [
+    [
+     1,
+     2.8002
+    ],
+    [
+     10,
+     2.3521
+    ],
+    [
+     30,
+     2.0714
+    ],
+    [
+     100,
+     1.7825
+    ],
+    [
+     500,
+     1.6529
+    ],
+    [
+     1000,
+     1.5971
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/2b50753da5dfb862a8b844fadf89b87b.pdf?productCode=C1849461",
+   "desc": "Surge Protection IC 4.5V~60V HTSSOP-20",
+   "params": {
+    "Features": "Overcurrent Protection;Short-Circuit  Protection;Overvoltage clamping protection;Under-voltage lockout;Thermal Protection;Overload protection",
+    "Voltage - Supply": "4.5V~60V",
+    "Operating Temperature": "-40℃~+125℃",
+    "Trigger Current": "600mA~6A",
+    "FET Type": "Integrated FET",
+    "Width": "4.4mm",
+    "Threshold Voltage": "-",
+    "Length": "6.5mm",
+    "Height": "1.2mm",
+    "Peak Output Current(Source)": "-",
+    "Number of Channels": "1",
+    "RDS(on)": "30.44mΩ",
+    "Peak Output Current(Sink)": "-"
+   }
+  },
+  {
+   "code": "C72264",
+   "read_utc": "2026-10-02T23:20:32Z",
+   "model": "B540C-13-F",
+   "brand": "DIODES",
+   "package": "SMC(DO-214AB)",
+   "stock": 52515,
+   "min_buy": 5,
+   "reel": 3000,
+   "price_usd": [
+    [
+     5,
+     0.2332
+    ],
+    [
+     50,
+     0.1868
+    ],
+    [
+     150,
+     0.1642
+    ],
+    [
+     500,
+     0.144
+    ],
+    [
+     3000,
+     0.1384
+    ],
+    [
+     6000,
+     0.1351
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/0b35057a5705662aaaaf16ec2990df33.pdf?productCode=C72264",
+   "desc": null,
+   "params": {
+    "Diode Configuration": "1 Independent",
+    "Operating Junction Temperature Range": "-55℃~+150℃",
+    "Voltage - DC Reverse (Vr) (Max)": "40V",
+    "Voltage - Forward(Vf@If)": "550mV@5A",
+    "Reverse Leakage Current (Ir)": "500uA@40V",
+    "Non-Repetitive Peak Forward Surge Current": "100A",
+    "Current - Rectified": "5A"
+   }
+  },
+  {
+   "code": "C17556513",
+   "read_utc": "2026-10-02T23:20:32Z",
+   "model": "TPS48110AQDGXRQ1",
+   "brand": "TI",
+   "package": "VSSOP-19",
+   "stock": 326,
+   "min_buy": 1,
+   "reel": 5000,
+   "price_usd": [
+    [
+     1,
+     4.4674
+    ],
+    [
+     10,
+     4.0004
+    ],
+    [
+     30,
+     3.7628
+    ],
+    [
+     100,
+     3.4432
+    ],
+    [
+     500,
+     3.3285
+    ],
+    [
+     1000,
+     3.2809
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/4963d9d254229c76d0cc05d20b34b2bd.pdf?productCode=C17556513",
+   "desc": null,
+   "params": {
+    "Operating Temperature": "-40℃~+125℃",
+    "Features": "Overcurrent Protection;Short-Circuit  Protection;Over temperature protection;Overvoltage protection;Under-voltage lockout;Reverse voltage protection;Integrated charge pump",
+    "number of channels": "-",
+    "Control Input Logic": "-",
+    "Maximum Continuous Current": "-",
+    "RDS(on)": "-",
+    "Operating Voltage": "3.5V~80V",
+    "Type": "High Side Switch"
+   }
+  },
+  {
+   "code": "C2687963",
+   "read_utc": "2026-10-02T23:20:32Z",
+   "model": "CSD19536KTT",
+   "brand": "TI",
+   "package": "TO-263-3",
+   "stock": 611,
+   "min_buy": 1,
+   "reel": 500,
+   "price_usd": [
+    [
+     1,
+     4.4897
+    ],
+    [
+     10,
+     3.9324
+    ],
+    [
+     30,
+     3.6004
+    ],
+    [
+     100,
+     3.2666
+    ],
+    [
+     500,
+     3.1121
+    ],
+    [
+     1000,
+     3.0414
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/54e3fe821bc5d0bded987a99857ef523.pdf?productCode=C2687963",
+   "desc": "N-Channel 100V 200A 375W Surface Mount TO-263-3",
+   "params": {
+    "Output Capacitance(Coss)": "2.37nF",
+    "Ciss-Input Capacitance": "12nF",
+    "Pd - Power Dissipation": "375W",
+    "Configuration": "-",
+    "Operating Temperature": "-55℃~+175℃",
+    "Drain to Source Voltage": "100V",
+    "Current - Continuous Drain(Id)": "200A",
+    "Reverse Transfer Capacitance (Crss)": "61pF",
+    "RDS(on)": "2.2mΩ@6V",
+    "Number": "1 N-channel",
+    "Gate Charge(Qg)": "153nC@10V",
+    "Vgs": "±20V",
+    "Gate Threshold Voltage (Vgs(th))": "3.2V",
+    "Type": "N-Channel"
+   }
+  },
+  {
+   "code": "C473333",
+   "read_utc": "2026-10-02T23:20:32Z",
+   "model": "CSD19532Q5B",
+   "brand": "TI",
+   "package": "SON-8(5x6)",
+   "stock": 2522,
+   "min_buy": 1,
+   "reel": 2500,
+   "price_usd": [
+    [
+     1,
+     2.1572
+    ],
+    [
+     10,
+     1.8436
+    ],
+    [
+     30,
+     1.6483
+    ],
+    [
+     100,
+     1.3626
+    ],
+    [
+     500,
+     1.2707
+    ],
+    [
+     1000,
+     1.2313
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/39b01006ad3e36302e39a97f5f98b1a8.pdf?productCode=C473333",
+   "desc": "N-Channel 100V 17A 195W Surface Mount SON-8(5x6)",
+   "params": {
+    "Output Capacitance(Coss)": "706pF",
+    "Ciss-Input Capacitance": "4.81nF",
+    "Pd - Power Dissipation": "195W",
+    "Configuration": "-",
+    "Operating Temperature": "-55℃~+150℃",
+    "Drain to Source Voltage": "100V",
+    "Current - Continuous Drain(Id)": "100A",
+    "Reverse Transfer Capacitance (Crss)": "18pF",
+    "RDS(on)": "4.6mΩ@6V",
+    "Number": "1 N-channel",
+    "Gate Charge(Qg)": "48nC@10V",
+    "Vgs": "±20V",
+    "Gate Threshold Voltage (Vgs(th))": "2.6V",
+    "Type": "N-Channel"
+   }
+  },
+  {
+   "code": "C224048",
+   "read_utc": "2026-10-02T23:20:32Z",
+   "model": "SMCJ30A",
+   "brand": "Littelfuse",
+   "package": "DO-214AB",
+   "stock": 15670,
+   "min_buy": 5,
+   "reel": 3000,
+   "price_usd": [
+    [
+     5,
+     0.2982
+    ],
+    [
+     50,
+     0.2375
+    ],
+    [
+     150,
+     0.2115
+    ],
+    [
+     500,
+     0.1791
+    ],
+    [
+     3000,
+     0.1411
+    ],
+    [
+     6000,
+     0.1324
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224048",
+   "desc": "48.4VC Clamp 31A@10/1000us Ipp TVS DIODE DO-214AB",
+   "params": {
+    "Clamping Voltage": "48.4V",
+    "Operating Temperature": "-65℃~+150℃",
+    "Peak Pulse Current (Ipp)": "31A@10/1000us",
+    "Peak Pulse Power Dissipation (Ppp)": "1.5kW@10/1000us",
+    "Number of Channels": "1",
+    "Voltage - Breakdown": "36.8V",
+    "type": "TVS",
+    "Polarity": "Unidirectional",
+    "Reverse Leakage Current (Ir)": "1uA",
+    "Reverse Stand-Off Voltage (Vrwm)": "30V"
+   }
+  },
+  {
+   "code": "C135160",
+   "read_utc": "2026-10-02T23:20:32Z",
+   "model": "SMCJ30A-13-F",
+   "brand": "DIODES",
+   "package": "SMC",
+   "stock": 1417,
+   "min_buy": 1,
+   "reel": 3000,
+   "price_usd": [
+    [
+     1,
+     0.5217
+    ],
+    [
+     10,
+     0.4151
+    ],
+    [
+     30,
+     0.3626
+    ],
+    [
+     100,
+     0.3101
+    ],
+    [
+     500,
+     0.2789
+    ],
+    [
+     1000,
+     0.2625
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/792cdbbd0eff5e2d1d0c3d5ab468e84c.pdf?productCode=C135160",
+   "desc": "48.4VC Clamp 31A Ipp TVS DIODE SMC",
+   "params": {
+    "Clamping Voltage": "48.4V",
+    "Operating Temperature": "-55℃~+150℃",
+    "Peak Pulse Current (Ipp)": "31A",
+    "Peak Pulse Power Dissipation (Ppp)": "1.5kW",
+    "Number of Channels": "1",
+    "Voltage - Breakdown": "36.8V",
+    "type": "TVS",
+    "Polarity": "Unidirectional",
+    "Reverse Leakage Current (Ir)": "5uA",
+    "Reverse Stand-Off Voltage (Vrwm)": "30V"
+   }
+  },
+  {
+   "code": "C80273",
+   "read_utc": "2026-10-02T23:20:32Z",
+   "model": "SMCJ40CA",
+   "brand": "Littelfuse",
+   "package": "DO-214AB",
+   "stock": 4925,
+   "min_buy": 5,
+   "reel": 3000,
+   "price_usd": [
+    [
+     5,
+     0.3544
+    ],
+    [
+     50,
+     0.2933
+    ],
+    [
+     150,
+     0.2672
+    ],
+    [
+     500,
+     0.2345
+    ],
+    [
+     3000,
+     0.22
+    ],
+    [
+     6000,
+     0.2112
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C80273",
+   "desc": "64.5VC Clamp 23.3A Ipp TVS DIODE DO-214AB",
+   "params": {
+    "Clamping Voltage": "64.5V",
+    "Operating Temperature": "-65℃~+150℃",
+    "Peak Pulse Current (Ipp)": "23.3A",
+    "Peak Pulse Power Dissipation (Ppp)": "1.5kW@10/1000us",
+    "Number of Channels": "1",
+    "Voltage - Breakdown": "44.4V",
+    "type": "TVS",
+    "Polarity": "Bidirectional",
+    "Reverse Stand-Off Voltage (Vrwm)": "40V"
+   }
+  },
+  {
+   "code": "C224047",
+   "read_utc": "2026-10-02T23:20:32Z",
+   "model": "SMCJ28A",
+   "brand": "Littelfuse",
+   "package": "DO-214AB",
+   "stock": 5845,
+   "min_buy": 5,
+   "reel": 3000,
+   "price_usd": [
+    [
+     5,
+     0.3024
+    ],
+    [
+     50,
+     0.241
+    ],
+    [
+     150,
+     0.2147
+    ],
+    [
+     500,
+     0.1818
+    ],
+    [
+     3000,
+     0.1672
+    ],
+    [
+     6000,
+     0.1584
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224047",
+   "desc": "45.4VC Clamp 33.1A Ipp TVS DIODE DO-214AB",
+   "params": {
+    "Clamping Voltage": "45.4V",
+    "Operating Temperature": "-65℃~+150℃",
+    "Peak Pulse Current (Ipp)": "33.1A",
+    "Peak Pulse Power Dissipation (Ppp)": "1.5kW@10/1000us",
+    "Number of Channels": "1",
+    "Voltage - Breakdown": "34.4V",
+    "type": "TVS",
+    "Polarity": "Unidirectional",
+    "Reverse Leakage Current (Ir)": "1uA",
+    "Reverse Stand-Off Voltage (Vrwm)": "28V"
+   }
+  },
+  {
+   "code": "C55151",
+   "read_utc": "2026-10-02T23:20:33Z",
+   "model": "CL32B225KCJSNNE",
+   "brand": "Samsung Electro-Mechanics",
+   "package": "1210",
+   "stock": 0,
+   "min_buy": 1,
+   "reel": 1000,
+   "price_usd": [
+    [
+     1,
+     0.1599
+    ],
+    [
+     10,
+     0.1352
+    ],
+    [
+     30,
+     0.1225
+    ],
+    [
+     100,
+     0.1121
+    ],
+    [
+     500,
+     0.1084
+    ],
+    [
+     1000,
+     0.106
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/02336ea48ea44ca18c72517dd3cb7b47.pdf?productCode=C55151",
+   "desc": "2.2uF ±10% 100V Ceramic Capacitor X7R 1210",
+   "params": {
+    "Capacitance": "2.2uF",
+    "Temperature Coefficient": "X7R",
+    "Tolerance": "±10%",
+    "Voltage Rating": "100V"
+   }
+  },
+  {
+   "code": "C138687",
+   "read_utc": "2026-10-02T23:20:33Z",
+   "model": "CL32B106KBJNNNE",
+   "brand": "Samsung Electro-Mechanics",
+   "package": "1210",
+   "stock": 16710,
+   "min_buy": 1,
+   "reel": 1000,
+   "price_usd": [
+    [
+     1,
+     0.3288
+    ],
+    [
+     10,
+     0.2609
+    ],
+    [
+     30,
+     0.2277
+    ],
+    [
+     100,
+     0.1982
+    ],
+    [
+     500,
+     0.19
+    ],
+    [
+     1000,
+     0.1599
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/e42a32c717cc8f47823b44fed272ab10.pdf?productCode=C138687",
+   "desc": "10uF ±10% 50V Ceramic Capacitor X7R 1210",
+   "params": {
+    "Capacitance": "10uF",
+    "Temperature Coefficient": "X7R",
+    "Tolerance": "±10%",
+    "Voltage Rating": "50V"
+   }
+  },
+  {
+   "code": "C89632",
+   "read_utc": "2026-10-02T23:20:33Z",
+   "model": "CL31B106KBHNNNE",
+   "brand": "Samsung Electro-Mechanics",
+   "package": "1206",
+   "stock": 0,
+   "min_buy": 5,
+   "reel": 2000,
+   "price_usd": [
+    [
+     5,
+     0.2829
+    ],
+    [
+     50,
+     0.2237
+    ],
+    [
+     150,
+     0.1947
+    ],
+    [
+     500,
+     0.1689
+    ],
+    [
+     2000,
+     0.1618
+    ],
+    [
+     4000,
+     0.1576
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/a1390a51092e4f3c84866ab492516a00.pdf?productCode=C89632",
+   "desc": "10uF ±10% 50V Ceramic Capacitor X7R 1206",
+   "params": {
+    "Capacitance": "10uF",
+    "Temperature Coefficient": "X7R",
+    "Tolerance": "±10%",
+    "Voltage Rating": "50V"
+   }
+  },
+  {
+   "code": "C2076144",
+   "read_utc": "2026-10-02T23:20:33Z",
+   "model": "WSL2512R0700FEA",
+   "brand": "VISHAY",
+   "package": "2512",
+   "stock": 1970,
+   "min_buy": 1,
+   "reel": 2000,
+   "price_usd": [
+    [
+     1,
+     0.8059
+    ],
+    [
+     10,
+     0.6645
+    ],
+    [
+     30,
+     0.5938
+    ],
+    [
+     100,
+     0.5231
+    ],
+    [
+     500,
+     0.403
+    ],
+    [
+     1000,
+     0.38
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/4d4bf60fad50a44c856878f2a415848b.pdf?productCode=C2076144",
+   "desc": null,
+   "params": {
+    "Power(Watts)": "1W",
+    "Resistance": "70mΩ",
+    "Voltage Rating": "-",
+    "Type": "Current Sense Resistor",
+    "Tolerance": "±1%",
+    "Temperature Coefficient": "±75ppm/℃"
+   }
+  },
+  {
+   "code": "C844695",
+   "read_utc": "2026-10-02T23:20:33Z",
+   "model": "WSL2512R0150FEA",
+   "brand": "VISHAY",
+   "package": "2512",
+   "stock": 13410,
+   "min_buy": 5,
+   "reel": 2000,
+   "price_usd": [
+    [
+     5,
+     0.2753
+    ],
+    [
+     50,
+     0.2171
+    ],
+    [
+     150,
+     0.1921
+    ],
+    [
+     500,
+     0.161
+    ],
+    [
+     2000,
+     0.1471
+    ],
+    [
+     4000,
+     0.1388
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/548f4c1b2301e9c8a8b168347d5344c1.pdf?productCode=C844695",
+   "desc": null,
+   "params": {
+    "Power(Watts)": "1W",
+    "Resistance": "15mΩ",
+    "Type": "Current Sense Resistor",
+    "Tolerance": "±1%",
+    "Temperature Coefficient": "±75ppm/℃"
+   }
+  },
+  {
+   "code": "C44322",
+   "read_utc": "2026-10-02T23:20:33Z",
+   "model": "INA169NA/3K",
+   "brand": "TI",
+   "package": "SOT-23-5",
+   "stock": 61868,
+   "min_buy": 1,
+   "reel": 3000,
+   "price_usd": [
+    [
+     1,
+     1.138
+    ],
+    [
+     10,
+     0.8704
+    ],
+    [
+     30,
+     0.7357
+    ],
+    [
+     100,
+     0.6027
+    ],
+    [
+     500,
+     0.5239
+    ],
+    [
+     1000,
+     0.4828
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/e9ca75f84a404aafa6728ca8748beab6.pdf?productCode=C44322",
+   "desc": null,
+   "params": {
+    "Features": "High-side detection;Analog output interface",
+    "Vcm - Common Mode Voltage": "2.7V~60V",
+    "Output Current": "-",
+    "Bandwidth": "440kHz",
+    "Input Voltage (Vin)": "2.7V~60V",
+    "Operating Temperature": "-40℃~+85℃",
+    "Gain": "1000V/V",
+    "Common Mode Rejection Ratio(CMRR)": "120dB",
+    "Quiescent Current": "60uA",
+    "Vos - Input Offset Voltage": "1mV",
+    "Ib - Input Bias Current": "100nA",
+    "Number of Channels": "-",
+    "Differential Voltage": "-40V~2V",
+    "Input Offset Voltage Drift(Vos TC)": "0.5uV/℃"
+   }
+  },
+  {
+   "code": "C132788",
+   "read_utc": "2026-10-02T23:20:33Z",
+   "model": "TPS3701DDCR",
+   "brand": "TI",
+   "package": "SOT-23-Thin-6",
+   "stock": 26813,
+   "min_buy": 1,
+   "reel": 3000,
+   "price_usd": [
+    [
+     1,
+     0.6932
+    ],
+    [
+     10,
+     0.5536
+    ],
+    [
+     30,
+     0.4829
+    ],
+    [
+     100,
+     0.4123
+    ],
+    [
+     500,
+     0.3696
+    ],
+    [
+     1000,
+     0.3483
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/70c280196e80c334a7bad819e8aae670.pdf?productCode=C132788",
+   "desc": null,
+   "params": {
+    "Number of Channels": "2",
+    "Output Mode": "CMOS;TTL",
+    "Operating Temperature": "-40℃~+125℃",
+    "Features": "-",
+    "Ib - Input Bias Current": "1nA",
+    "Output Type": "Open-drain",
+    "Propagation Delay(tpd)": "9.9us",
+    "Common Mode Rejection Ratio(CMRR)": "-",
+    "Input Hysteresis Voltage (Vhys)": "5.5mV",
+    "Quiescent Current(Iq)": "7uA",
+    "Vos - Input Offset Voltage": "-",
+    "Maximum Power Supply Range (Vdd-Vss)": "40V",
+    "Response Time (tr)": "2.7us",
+    "Single Supply": "1.8V~36V"
+   }
+  },
+  {
+   "code": "C43698",
+   "read_utc": "2026-10-02T23:20:33Z",
+   "model": "TPS3808G33DBVR",
+   "brand": "TI",
+   "package": "SOT-23-6",
+   "stock": 36030,
+   "min_buy": 1,
+   "reel": 3000,
+   "price_usd": [
+    [
+     1,
+     0.4435
+    ],
+    [
+     10,
+     0.3466
+    ],
+    [
+     30,
+     0.3039
+    ],
+    [
+     100,
+     0.253
+    ],
+    [
+     500,
+     0.2037
+    ],
+    [
+     1000,
+     0.1906
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/11f32af539b24342abd293a76f2241d9.pdf?productCode=C43698",
+   "desc": null,
+   "params": {
+    "Reset Timeout": "20ms",
+    "Operating Temperature": "-40℃~+125℃",
+    "output type": "Open-drain",
+    "Function": "Manual reset input",
+    "Reset Active Level": "Active Low",
+    "standby current": "2.4uA",
+    "Voltage - Supply": "1.7V~6.5V",
+    "ChipType": "Voltage monitor",
+    "Threshold Voltage": "3.07V",
+    "Number of Voltages Monitored": "1"
+   }
+  },
+  {
+   "code": "C189211",
+   "read_utc": "2026-10-02T23:20:33Z",
+   "model": "TPS3808G30DBVR",
+   "brand": "TI",
+   "package": "SOT-23-6",
+   "stock": 2472,
+   "min_buy": 1,
+   "reel": 3000,
+   "price_usd": [
+    [
+     1,
+     0.8555
+    ],
+    [
+     10,
+     0.6959
+    ],
+    [
+     30,
+     0.6153
+    ],
+    [
+     100,
+     0.4985
+    ],
+    [
+     500,
+     0.4525
+    ],
+    [
+     1000,
+     0.4278
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/a7299ec3719c41a0956a4602d75148a1.pdf?productCode=C189211",
+   "desc": "Supervisor Open Drain 1 Channel SOT-23-6",
+   "params": {
+    "Reset Timeout": "20ms",
+    "Operating Temperature": "-40℃~+125℃",
+    "output type": "Open-drain",
+    "Function": "Manual reset input",
+    "Reset Active Level": "Active Low",
+    "standby current": "2.4uA",
+    "Voltage - Supply": "1.7V~6.5V",
+    "ChipType": "Voltage monitor",
+    "Threshold Voltage": "3.07V",
+    "Number of Voltages Monitored": "1"
+   }
+  },
+  {
+   "code": "C2904240",
+   "read_utc": "2026-10-02T23:20:34Z",
+   "model": "HoJLR2512-3W-8mR-1%",
+   "brand": "Milliohm",
+   "package": "2512",
+   "stock": 9600,
+   "min_buy": 10,
+   "reel": 4000,
+   "price_usd": [
+    [
+     10,
+     0.0832
+    ],
+    [
+     100,
+     0.0691
+    ],
+    [
+     300,
+     0.062
+    ],
+    [
+     1000,
+     0.0567
+    ],
+    [
+     4000,
+     0.0458
+    ],
+    [
+     8000,
+     0.0437
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/bf6eace094b76bcd756cc1a79c576936.pdf?productCode=C2904240",
+   "desc": null,
+   "params": {
+    "Resistance": "8mΩ",
+    "Power(Watts)": "3W",
+    "Voltage Rating": "-",
+    "Type": "Current Sense Resistor",
+    "Temperature Coefficient": "±50ppm/℃",
+    "Tolerance": "±1%"
+   }
+  },
+  {
+   "code": "C2904239",
+   "read_utc": "2026-10-02T23:20:34Z",
+   "model": "HoJLR2512-3W-7mR-1%",
+   "brand": "Milliohm",
+   "package": "2512",
+   "stock": 1830,
+   "min_buy": 5,
+   "reel": 4000,
+   "price_usd": [
+    [
+     5,
+     0.1022
+    ],
+    [
+     50,
+     0.0843
+    ],
+    [
+     150,
+     0.0753
+    ],
+    [
+     500,
+     0.0686
+    ],
+    [
+     2500,
+     0.0543
+    ],
+    [
+     4000,
+     0.0516
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/bf6eace094b76bcd756cc1a79c576936.pdf?productCode=C2904239",
+   "desc": null,
+   "params": {
+    "Resistance": "7mΩ",
+    "Power(Watts)": "3W",
+    "Type": "Current Sense Resistor",
+    "Tolerance": "±1%"
+   }
+  },
+  {
+   "code": "C2904242",
+   "read_utc": "2026-10-02T23:20:34Z",
+   "model": "HoJLR2512-3W-12mR-1%",
+   "brand": "Milliohm",
+   "package": "2512",
+   "stock": 3405,
+   "min_buy": 5,
+   "reel": 4000,
+   "price_usd": [
+    [
+     5,
+     0.0949
+    ],
+    [
+     50,
+     0.0766
+    ],
+    [
+     150,
+     0.0675
+    ],
+    [
+     500,
+     0.0606
+    ],
+    [
+     2500,
+     0.0552
+    ],
+    [
+     4000,
+     0.0524
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/bf6eace094b76bcd756cc1a79c576936.pdf?productCode=C2904242",
+   "desc": null,
+   "params": {
+    "Resistance": "12mΩ",
+    "Power(Watts)": "3W",
+    "Type": "Current Sense Resistor",
+    "Tolerance": "±1%"
+   }
+  },
+  {
+   "code": "C2903491",
+   "read_utc": "2026-10-02T23:20:34Z",
+   "model": "HoJLR2512-3W-45mR-1%",
+   "brand": "Milliohm",
+   "package": "2512",
+   "stock": 15860,
+   "min_buy": 10,
+   "reel": 4000,
+   "price_usd": [
+    [
+     10,
+     0.0621
+    ],
+    [
+     100,
+     0.0562
+    ],
+    [
+     300,
+     0.0533
+    ],
+    [
+     1000,
+     0.051
+    ],
+    [
+     4000,
+     0.043
+    ],
+    [
+     8000,
+     0.0421
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/bf6eace094b76bcd756cc1a79c576936.pdf?productCode=C2903491",
+   "desc": null,
+   "params": {
+    "Resistance": "45mΩ",
+    "Power(Watts)": "3W",
+    "Type": "Current Sense Resistor",
+    "Tolerance": "±1%"
+   }
+  },
+  {
+   "code": "C2903482",
+   "read_utc": "2026-10-02T23:20:34Z",
+   "model": "HoJLR2512-3W-5mR-1%",
+   "brand": "Milliohm",
+   "package": "2512",
+   "stock": 106575,
+   "min_buy": 5,
+   "reel": 4000,
+   "price_usd": [
+    [
+     5,
+     0.1023
+    ],
+    [
+     50,
+     0.0859
+    ],
+    [
+     150,
+     0.0776
+    ],
+    [
+     500,
+     0.0715
+    ],
+    [
+     2500,
+     0.0538
+    ],
+    [
+     4000,
+     0.0513
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/bf6eace094b76bcd756cc1a79c576936.pdf?productCode=C2903482",
+   "desc": null,
+   "params": {
+    "Resistance": "5mΩ",
+    "Power(Watts)": "3W",
+    "Type": "Current Sense Resistor",
+    "Tolerance": "±1%"
+   }
+  },
+  {
+   "code": "C500739",
+   "read_utc": "2026-10-02T23:20:34Z",
+   "model": "LR2512D-3W-5mR-1%",
+   "brand": "Milliohm",
+   "package": "2512",
+   "stock": 14730,
+   "min_buy": 5,
+   "reel": 4000,
+   "price_usd": [
+    [
+     5,
+     0.1208
+    ],
+    [
+     50,
+     0.1012
+    ],
+    [
+     150,
+     0.0913
+    ],
+    [
+     500,
+     0.084
+    ],
+    [
+     2500,
+     0.0632
+    ],
+    [
+     4000,
+     0.0603
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/af008bf05bd6536b39b0bb7d67e56045.pdf?productCode=C500739",
+   "desc": null,
+   "params": {
+    "Resistance": "5mΩ",
+    "Power(Watts)": "3W",
+    "Type": "Current Sense Resistor",
+    "Tolerance": "±1%",
+    "Temperature Coefficient": "25ppm/℃~+50ppm/℃"
+   }
+  },
+  {
+   "code": "C2985708",
+   "read_utc": "2026-10-02T23:20:34Z",
+   "model": "HoLLR2512-3W-4.5mR-1%",
+   "brand": "Milliohm",
+   "package": "2512",
+   "stock": 4225,
+   "min_buy": 5,
+   "reel": 4000,
+   "price_usd": [
+    [
+     5,
+     0.0865
+    ],
+    [
+     50,
+     0.0701
+    ],
+    [
+     150,
+     0.0619
+    ],
+    [
+     500,
+     0.0558
+    ],
+    [
+     2500,
+     0.0496
+    ],
+    [
+     4000,
+     0.0471
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/a6c04b348627a06d1c2e9d73fb46c6ff.pdf?productCode=C2985708",
+   "desc": null,
+   "params": {
+    "Resistance": "4.5mΩ",
+    "Power(Watts)": "3W",
+    "Voltage Rating": "-",
+    "Type": "Current Sense Resistor",
+    "Tolerance": "±1%",
+    "Temperature Coefficient": "±50ppm/℃"
+   }
+  },
+  {
+   "code": "C278516",
+   "read_utc": "2026-10-02T23:20:34Z",
+   "model": "EEHZK1V331P",
+   "brand": "PANASONIC",
+   "package": "SMD,D10xL10.2mm",
+   "stock": 6246,
+   "min_buy": 1,
+   "reel": 500,
+   "price_usd": [
+    [
+     1,
+     0.8074
+    ],
+    [
+     10,
+     0.6449
+    ],
+    [
+     30,
+     0.5645
+    ],
+    [
+     100,
+     0.4858
+    ],
+    [
+     500,
+     0.4382
+    ],
+    [
+     1000,
+     0.4136
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/be536f5c3a062da57ac492c500a646a3.pdf?productCode=C278516",
+   "desc": "330uF 35V Aluminum - Polymer Capacitors 4000hrs@125℃ Surface Mount D10xL10.2mm",
+   "params": {
+    "Lifetime": "4000hrs@125℃",
+    "Capacitance": "330uF",
+    "Height - Seated (Max)": "10.2mm",
+    "Polarity type": "Polarized",
+    "Voltage Rating": "35V",
+    "Mounting Type": "SMD",
+    "Diameter": "10mm",
+    "Operating Temperature": "-55℃~+125℃",
+    "Equivalent Series Resistance(ESR)": "20mΩ",
+    "Ripple Current": "420mA@100Hz",
+    "Tolerance": "±20%"
+   }
+  },
+  {
+   "code": "C242139",
+   "read_utc": "2026-10-02T23:20:34Z",
+   "model": "EEHZK1V181P",
+   "brand": "PANASONIC",
+   "package": "SMD,D8xL10.2mm",
+   "stock": 2843,
+   "min_buy": 1,
+   "reel": 500,
+   "price_usd": [
+    [
+     1,
+     1.1407
+    ],
+    [
+     10,
+     0.9588
+    ],
+    [
+     30,
+     0.8686
+    ],
+    [
+     100,
+     0.7785
+    ],
+    [
+     500,
+     0.6621
+    ],
+    [
+     1000,
+     0.6359
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/aad518e45aac6db154ff8e08c50569f1.pdf?productCode=C242139",
+   "desc": "180uF 35V Aluminum - Polymer Capacitors 4000hrs@125℃ Surface Mount D8xL10.2mm",
+   "params": {
+    "Lifetime": "4000hrs@125℃",
+    "Capacitance": "180uF",
+    "Height - Seated (Max)": "10.2mm",
+    "Polarity type": "Polarized",
+    "Voltage Rating": "35V",
+    "Mounting Type": "SMD",
+    "Diameter": "8mm",
+    "Operating Temperature": "-55℃~+125℃",
+    "Ripple Current": "300mA@100Hz",
+    "Equivalent Series Resistance(ESR)": "27mΩ",
+    "Tolerance": "±20%"
+   }
+  },
+  {
+   "code": "C1613",
+   "read_utc": "2026-10-02T23:20:35Z",
+   "model": "CL10B332KB8NNNC",
+   "brand": "Samsung Electro-Mechanics",
+   "package": "0603",
+   "stock": 32760,
+   "min_buy": 20,
+   "reel": 4000,
+   "price_usd": [
+    [
+     20,
+     0.0084
+    ],
+    [
+     200,
+     0.007
+    ],
+    [
+     600,
+     0.0062
+    ],
+    [
+     4000,
+     0.0057
+    ],
+    [
+     8000,
+     0.0053
+    ],
+    [
+     20000,
+     0.0051
+    ]
+   ],
+   "pdf": "https://datasheet.lcsc.com/datasheet/pdf/02336ea48ea44ca18c72517dd3cb7b47.pdf?productCode=C1613",
+   "desc": "3.3nF ±10% 50V Ceramic Capacitor X7R 0603",
+   "params": {
+    "Capacitance": "3.3nF",
+    "Temperature Coefficient": "X7R",
+    "Tolerance": "±10%",
+    "Voltage Rating": "50V"
+   }
+  }
+ ]
+}

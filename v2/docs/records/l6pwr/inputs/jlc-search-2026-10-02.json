@@ -1,0 +1,398 @@
+{
+ "what": "JLCPCB public parts search (POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList; keyword, page 1, 20 a page), no login; code, model, brand, package, stock and the catalogue's description kept",
+ "read_by": "MESHSAT-1357 Layer 6 record l6pwr",
+ "searches": [
+  {
+   "keyword": "TPS16630",
+   "read_utc": "2026-10-02T23:20:35Z",
+   "count": 4,
+   "rows": [
+    {
+     "code": "C1849461",
+     "model": "TPS16630PWPR",
+     "brand": "Texas Instruments",
+     "package": "HTSSOP-20",
+     "stock": 1141,
+     "describe": "-40℃~+125℃@(Tj) 1 1.2mm 30.44mΩ 4.4mm 4.5V~60V 6.5mm Integrated FET Surface Mount HTSSOP-20 Surge Protection Devices (SPDs) ROHS"
+    },
+    {
+     "code": "C1849462",
+     "model": "TPS16630PWPT",
+     "brand": "Texas Instruments",
+     "package": "HTSSOP-20",
+     "stock": 7,
+     "describe": "-40℃~+125℃ 1 30.44mΩ 4.4mm 4.5V~60V 6.5mm 600mA~6A Integrated FET Overcurrent Protection、Short-Circuit  Protection、Under-voltage lockout、Thermal Protection、Over"
+    },
+    {
+     "code": "C1850279",
+     "model": "TPS16630RGER",
+     "brand": "Texas Instruments",
+     "package": "VQFN-24(4x4)",
+     "stock": 1,
+     "describe": "-40℃~+125℃@(Tj) 1 1mm 30.44mΩ 4.5V~60V 4mm 4mm Integrated FET Surface Mount VQFN-24(4x4) Surge Protection Devices (SPDs) ROHS"
+    },
+    {
+     "code": "C2155684",
+     "model": "TPS16630RGET",
+     "brand": "Texas Instruments",
+     "package": "VQFN-24(4x4)",
+     "stock": 16,
+     "describe": "-40℃~+125℃ 1 30.44mΩ 4.5V~60V 4mm 4mm 600mA~6A Integrated FET Overcurrent Protection、Short-Circuit  Protection、Under-voltage lockout、Thermal Protection、Overvolt"
+    }
+   ]
+  },
+  {
+   "keyword": "SMCJ30A",
+   "read_utc": "2026-10-02T23:20:35Z",
+   "count": 20,
+   "rows": [
+    {
+     "code": "C135160",
+     "model": "SMCJ30A-13-F",
+     "brand": "Diodes Incorporated",
+     "package": "SMC",
+     "stock": 1417,
+     "describe": "-55℃~+150℃ 1.5kW 30V 31A 36.8V 48.4V 5uA TVS Unidirectional SMC ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C224048",
+     "model": "SMCJ30A",
+     "brand": "Littelfuse",
+     "package": "DO-214AB",
+     "stock": 18349,
+     "describe": "-65℃~+150℃ 1.5kW@10/1000us 1uA 30V 31A@10/1000us 36.8V 48.4V IEC 61000-4-2、IEC 61000-4-4 TVS Unidirectional DO-214AB ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C310046",
+     "model": "SMCJ30A/TR13",
+     "brand": "Brightking",
+     "package": "SMC(DO-214AB)",
+     "stock": 5658,
+     "describe": "1.5kW 1uA 30V 31A 33.3V 48.4V TVS Unidirectional SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C320561",
+     "model": "SMCJ30A",
+     "brand": "LGE",
+     "package": "SMC(DO-214AB)",
+     "stock": 3190,
+     "describe": "-55℃~+150℃ 1.5kW@10/1000us 1uA 30.99A 30V 33.3V 48.4V TVS Unidirectional SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C340696",
+     "model": "SMCJ30A",
+     "brand": "Yangzhou Yangjie Elec Tech",
+     "package": "DO-214AB(SMC)",
+     "stock": 2976,
+     "describe": "-55℃~+150℃ 1.5kW@10/1000us 30V 31A@10/1000us 36.8V 48.4V 5uA TVS DO-214AB(SMC) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C406701",
+     "model": "SMCJ30A",
+     "brand": "DOWO",
+     "package": "SMC(DO-214AB)",
+     "stock": 581,
+     "describe": "-55℃~+150℃ 1.5kW@10/1000us 1uA 30.99A 30V 33.3V 48.4V IEC 61000-4-2 TVS Unidirectional SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C408374",
+     "model": "SMCJ30A",
+     "brand": "MDD(Microdiode Semiconductor)",
+     "package": "DO-214AB(SMC)",
+     "stock": 8655,
+     "describe": "-65℃~+150℃ 1.5kW 1uA 30V 31A 36.8V 48.4V TVS Unidirectional DO-214AB(SMC) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C438108",
+     "model": "SMCJ30A",
+     "brand": "Shandong Jingdao Microelectronics",
+     "package": "SMC",
+     "stock": 1649,
+     "describe": "-55℃~+150℃ 1.5kW@10/1000us 1uA 30V 31A@10/1000us 36.8V 48.4V TVS SMC ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C523396",
+     "model": "SMCJ30A-AT/TR13",
+     "brand": "Brightking",
+     "package": "SMC(DO-214AB)",
+     "stock": 4,
+     "describe": "1.5kW 1uA 30V 31A 33.3V 48.4V TVS Unidirectional SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C693620",
+     "model": "SMCJ30A",
+     "brand": "FTR",
+     "package": "DO-214AB(SMC)",
+     "stock": 4612,
+     "describe": "1.5kW@10/1000us 1uA 30V 31A 33.3V 48.4V TVS Unidirectional DO-214AB(SMC) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C880724",
+     "model": "SMCJ30A",
+     "brand": "Slkor(SLKORMICRO Elec.)",
+     "package": "SMC",
+     "stock": 205,
+     "describe": "-55℃~+150℃ 1.5kW@10/1000us 30V 31uA 36.8V 48.4A@10/1000us 48.4V TVS SMC ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C1975324",
+     "model": "SMCJ30A-E3/9AT",
+     "brand": "Vishay Intertech",
+     "package": "SMC(DO-214AB)",
+     "stock": 2,
+     "describe": "-55℃~+150℃ 1.5kW@10/1000us 1uA 31A 33.3V 33V 48.4V TVS Unidirectional SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C1975473",
+     "model": "SMCJ30A-TR",
+     "brand": "STMicroelectronics",
+     "package": "SMC",
+     "stock": 2414,
+     "describe": "-55℃~+150℃ 1.5kW@10/1000us 200nA 30V 32A@8/20us 35.1V 64.3V IEC 61000-4-2、IEC 61000-4-4 TVS Unidirectional SMC ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C1975564",
+     "model": "SMCJ30A-Q",
+     "brand": "BOURNS",
+     "package": "SMC(DO-214AB)",
+     "stock": 80,
+     "describe": "-55℃~+150℃ 1.5kW 155A@8/20us 1uA 30V 36.8V 63V TVS SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C2688190",
+     "model": "SMCJ30A",
+     "brand": "WPMtek(Wei Pan Microelectronics)",
+     "package": "SMC(DO-214AB)",
+     "stock": 1005,
+     "describe": "-55℃~+150℃ 1 1.5kW 1uA 30V 31A@10/1000us 36.8V 48.4V TVS Unidirectional SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C2925497",
+     "model": "SMCJ30A",
+     "brand": "Liown",
+     "package": "SMC(DO-214AB)",
+     "stock": 2175,
+     "describe": "-55℃~+150℃ 1.5kW 1uA 30V 31A 33.3V 48.4V IEC 61000-4-2 TVS Unidirectional SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C2943840",
+     "model": "SMCJ30A",
+     "brand": "GOODWORK",
+     "package": "DO-214AB(SMC)",
+     "stock": 8562,
+     "describe": "-55℃~+150℃ 1 1.5kW 30V 31A 33.3V 48.4V 5uA TVS Unidirectional DO-214AB(SMC) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C3009248",
+     "model": "SMCJ30AHE3_A/H",
+     "brand": "Vishay Intertech",
+     "package": "SMC(DO-214AB)",
+     "stock": 73,
+     "describe": "-55℃~+150℃ 1.5kW 1uA 30V 31A 33.3V 48.4V TVS Unidirectional SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C3012580",
+     "model": "SMCJ30A",
+     "brand": "PAKER",
+     "package": "SMC(DO-214AB)",
+     "stock": 1793,
+     "describe": "-55℃~+150℃ 1 1.5kW@10/1000us 1uA 30V 31A 33.3V 48.4V TVS Unidirectional SMC(DO-214AB) ESD and Surge Protection (TVS/ESD) ROHS"
+    },
+    {
+     "code": "C3712791",
+     "model": "SMCJ30AQ-13-F",
+     "brand": "Diodes Incorporated",
+     "package": "SMC",
+     "stock": 20,
+     "describe": "-55℃~+150℃ 1.5kW 30V 31A 33.3V 48.4V 5uA TVS Unidirectional SMC ESD and Surge Protection (TVS/ESD) ROHS"
+    }
+   ]
+  },
+  {
+   "keyword": "CL32B225KCJSNNE",
+   "read_utc": "2026-10-02T23:20:35Z",
+   "count": 1,
+   "rows": [
+    {
+     "code": "C55151",
+     "model": "CL32B225KCJSNNE",
+     "brand": "Samsung Electro-Mechanics",
+     "package": "1210",
+     "stock": 4654,
+     "describe": "100V 2.2uF X7R ±10% 1210 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
+    }
+   ]
+  },
+  {
+   "keyword": "CL32B106KBJNNNE",
+   "read_utc": "2026-10-02T23:20:36Z",
+   "count": 1,
+   "rows": [
+    {
+     "code": "C138687",
+     "model": "CL32B106KBJNNNE",
+     "brand": "Samsung Electro-Mechanics",
+     "package": "1210",
+     "stock": 30940,
+     "describe": "10uF 50V X7R ±10% 1210 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
+    }
+   ]
+  },
+  {
+   "keyword": "CL31B106KBHNNNE",
+   "read_utc": "2026-10-02T23:20:36Z",
+   "count": 2,
+   "rows": [
+    {
+     "code": "C89632",
+     "model": "CL31B106KBHNNNE",
+     "brand": "Samsung Electro-Mechanics",
+     "package": "1206",
+     "stock": 109264,
+     "describe": "10uF 50V X7R ±10% 1206 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"
+    },
+    {
+     "code": "C9900233295",
+     "model": "CL31B106KBHNNNE",
+     "brand": "JLCPCB Assembly",
+     "package": "1206",
+     "stock": 0,
+     "describe": "1206 SMT ROHS"
+    }
+   ]
+  },
+  {
+   "keyword": "BUK6Y10-30P",
+   "read_utc": "2026-10-02T23:20:36Z",
+   "count": 2,
+   "rows": [
+    {
+     "code": "C2846047",
+     "model": "BUK6Y10-30P",
+     "brand": "Nexperia",
+     "package": "SOT-669",
+     "stock": 0,
+     "describe": "-55℃~+175℃ 10mΩ@10V 110W 2.36nF 270pF 30V 3V 470pF 64nC@10V 80A P-Channel SOT-669 MOSFETs ROHS"
+    },
+    {
+     "code": "C3278350",
+     "model": "BUK6Y10-30PX",
+     "brand": "Nexperia",
+     "package": "LFPAK-56",
+     "stock": 67,
+     "describe": "-55℃~+175℃ 1 P-Channel 10mΩ@10V 110W 2.36nF 270pF 30V 3V 470pF 64nC@10V 80A P-Channel LFPAK-56 MOSFETs ROHS"
+    }
+   ]
+  },
+  {
+   "keyword": "TPS3808G33",
+   "read_utc": "2026-10-02T23:20:36Z",
+   "count": 11,
+   "rows": [
+    {
+     "code": "C43698",
+     "model": "TPS3808G33DBVR",
+     "brand": "Texas Instruments",
+     "package": "SOT-23-6",
+     "stock": 36030,
+     "describe": "-40℃~+125℃@(Tj) 1 1.7V~6.5V 2.4uA 20ms 3.07V Active Low Open Drain Voltage Monitor Yes SOT-23-6 Supervisor and Reset ICs ROHS"
+    },
+    {
+     "code": "C702174",
+     "model": "TPS3808G33DBVT",
+     "brand": "Texas Instruments",
+     "package": "SOT-23-6",
+     "stock": 901,
+     "describe": "-40℃~+125℃@(Tj) 1 1.7V~6.5V 2.4uA 20ms 3.07V Active Low No Open Drain Voltage Monitor Yes SOT-23-6 Supervisor and Reset ICs ROHS"
+    },
+    {
+     "code": "C702175",
+     "model": "TPS3808G33DRVR",
+     "brand": "Texas Instruments",
+     "package": "WDFN-6-EP(2x2)",
+     "stock": 5,
+     "describe": "-40℃~+125℃@(Tj) 1 1.7V~6.5V 2.4uA 20ms 3.07V Active Low No Open Drain Voltage Monitor Yes WDFN-6-EP(2x2) Supervisor and Reset ICs ROHS"
+    },
+    {
+     "code": "C702176",
+     "model": "TPS3808G33DRVT",
+     "brand": "Texas Instruments",
+     "package": "WSON-6-EP(2x2)",
+     "stock": 7,
+     "describe": "-40℃~+125℃ 1 20ms 3.07V Active Low Manual reset input Open Drain Voltage monitor WSON-6-EP(2x2) Supervisor and Reset ICs ROHS"
+    },
+    {
+     "code": "C414616",
+     "model": "TPS3808G33QDBVRQ1",
+     "brand": "Texas Instruments",
+     "package": "SOT-23-6",
+     "stock": 1281,
+     "describe": "-40℃~+125℃@(Tj) 1 1.8V~6.5V 2.4uA 20ms 3.07V Active Low Open Drain Voltage Monitor Yes SOT-23-6 Supervisor and Reset ICs ROHS"
+    },
+    {
+     "code": "C51886189",
+     "model": "TPS3808G33DBVR-TP",
+     "brand": "TECH PUBLIC",
+     "package": "SOT-23-6L",
+     "stock": 3407,
+     "describe": "-40℃~+125℃ 1 1.7V~6.5V 2.8uA 3.07V Active Low Manual reset input Open Drain Voltage monitor SOT-23-6L Supervisor and Reset ICs ROHS"
+    },
+    {
+     "code": "C51939667",
+     "model": "TPS3808G33DRVR-TP",
+     "brand": "TECH PUBLIC",
+     "package": "DFN-6L(2x2)",
+     "stock": 1387,
+     "describe": "-40℃~+125℃ 1 1.7V~6.5V 2.8uA 3.07V Active Low Open Drain Voltage Monitor Yes DFN-6L(2x2) Supervisor and Reset ICs ROHS"
+    },
+    {
+     "code": "C2067099",
+     "model": "TPS3808G33DBVRG4",
+     "brand": "Texas Instruments",
+     "package": "SOT-23-6",
+     "stock": 0,
+     "describe": "-40℃~+125℃@(TJ) 1 3.07V Active Low Open Drain SOT-23-6 Supervisor and Reset ICs ROHS"
+    },
+    {
+     "code": "C2068189",
+     "model": "TPS3808G33DBVTG4",
+     "brand": "Texas Instruments",
+     "package": "SOT-23-6",
+     "stock": 0,
+     "describe": "-40℃~+125℃@(Tj) 1 20ms 3.07V Active Low No Open Drain Voltage Monitor Yes SOT-23-6 Supervisor and Reset ICs ROHS"
+    },
+    {
+     "code": "C2872592",
+     "model": "TPS3808G33MDBVREP",
+     "brand": "Texas Instruments",
+     "package": "SOT-23-6",
+     "stock": 0,
+     "describe": "-55℃~+125℃@(TJ) 1 1.7V~6.5V 2.4uA 20ms 3.07V Active Low Open Drain Simple Reset/Power-On Reset Yes SOT-23-6 Supervisor and Reset ICs ROHS"
+    },
+    {
+     "code": "C3684598",
+     "model": "TPS3808G33QDBVRMO",
+     "brand": "Texas Instruments",
+     "package": "-",
+     "stock": 0,
+     "describe": "-40℃~+125℃@(Tj) 1 20ms Active Low No Open Drain Voltage Monitor Yes - Supervisor and Reset ICs ROHS"
+    }
+   ]
+  },
+  {
+   "keyword": "EEHZK1V331P",
+   "read_utc": "2026-10-02T23:20:36Z",
+   "count": 1,
+   "rows": [
+    {
+     "code": "C278516",
+     "model": "EEHZK1V331P",
+     "brand": "PANASONIC",
+     "package": "SMD,D10xL10.2mm",
+     "stock": 6246,
+     "describe": "-55℃~+125℃ 10.2mm 10mm 20mΩ 330uF 35V 4000hrs@125℃ 420mA@100Hz Polarized SMD ±20% SMD,D10xL10.2mm Hybrid Aluminum Electrolytic Capacitors ROHS"
+    }
+   ]
+  }
+ ]
+}
