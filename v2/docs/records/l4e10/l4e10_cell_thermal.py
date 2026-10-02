@@ -1420,6 +1420,7 @@ def compute():
     R["saft"] = saft_sheet()
     R["u01c"] = u01c(R, pb)
     R["packcmp"] = packcmp(R, pb)
+    R["pb_i"] = (pb.I_CONT, pb.I_OCD, pb.ICHG)
     R["u01_classes"] = ("MAKER", "MAKER-PAGE", "INFERRED", "ASSUMPTION", "SESSION")
     return R
 
@@ -2224,8 +2225,12 @@ def predicates(R):
     p["P20 U-01: the energy chain reproduces the replay's 35E figures before it is applied to the proposed cell"] = (round(u["e35"]["25"], 1) == u["rep"][0] and round(u["e35"]["m10"], 1) == u["rep"][1])
     p["P21 U-01: the idle-limit thresholds order E3-O's cells, E3-S, E5's cells and E5 with H1 idle"] = u["thr"]["e3o_cells"] < u["thr"]["e3s"] < u["thr"]["e5_cells"] < u["thr"]["e5_noact"]
     c = R["u01c"]
-    verdicts = [d["charge"][0] for d in c["suit"].values()] + [v for d in c["suit"].values() for v, _ in d["discharge"] + d["storage"]]
-    p["P22 U-01: every mode's verdict is one of the three"] = all(v in (SUIT_PUB, SUIT_VENDOR, UNSUIT) for v in verdicts)
+    verdicts = [v for d in c["suit"].values() for v, _ in d["charge"] + d["discharge"] + d["storage"]]
+    p["P22 U-01: every mode's verdict is one of the four"] = all(v in (SUIT_PUB, SUIT_VENDOR, UNSUIT, AWAIT_SQ) for v in verdicts)
+    sxs = c["suit"]["MP 176065 xtd"]
+    p["P30 B5: the Saft's published rows carry no current at temperature or recovery, and each mode has its awaited row"] = (
+        all(not any(k in why for k in ("A continuous", "for 60 s", "for 2 s", "recovery")) for v, why in sxs["charge"] + sxs["discharge"] + sxs["storage"] if v == SUIT_PUB)
+        and all(any(v == AWAIT_SQ for v, _ in sxs[m]) for m in ("charge", "discharge", "storage")))
     p["P23 U-01: the room is read in the chosen column and moved down"] = R["rows_cm"]["M5"] < R["rows_cm_old"]["M5"] and R["spare_L"][1] < R["spare_L_old"]
     p["P24 U-01: the 35E holds no hot row on the bound, LO-01a's complete pass and LO-01e lie over it for every cell"] = (
         not any(v for row in c["holds"]["35E"].values() for v in row.values())
@@ -2545,6 +2550,11 @@ def u01_lines(R):
 
 # ------------------------------------------------------------------------------------------------ 10: U-01, the consolidation (2 October 2026)
 SUIT_PUB, SUIT_VENDOR, UNSUIT = "SUITABLE ON PUBLISHED EVIDENCE", "SUITABLE ONLY WITH A VENDOR ANSWER", "UNSUITABLE ON PUBLISHED EVIDENCE"
+AWAIT_SQ = "AWAITING SAFT OR THE LIMITED SAMPLE QUALIFICATION"   # Astra's B5 (2 October 2026): current and temperature together
+Q_TEMPS = (-20.0, -10.0, 45.0, 60.0, 70.0, 80.0)                 # the modelled cell temperatures the current rows need (10g)
+SQ_RECOVERY = 0.95        # SESSION: the sample's capacity after each step against its own before (the 35E's 7.10 recovery; TEST-PLAN's 5 % line)
+SQ_IMPEDANCE = 1.20       # SESSION: the 1 kHz impedance after each step against its own before
+SQ_SWELL_MM = 1.0         # SESSION: thickness growth a cell, keeping the pocket's height allowance for wrap (10d)
 
 
 def u01c(R, pb):
@@ -2639,7 +2649,7 @@ def u01c(R, pb):
     nz = float(need(price["verbatim"], r"\$ (\d+\.\d\d)", "Saft price").group(1))
     cands = [
         {"name": "Saft MP 176065 xtd (prismatic Li-ion, 4S1P)", "class": "MAKER datasheet (Doc. n 31109-2-0625, June 2025), held back",
-         "rows": "every cell limit row: charge -30 to +85 C, discharge -40 to +85 C, storage allowable -40 to +85 C",
+         "rows": "the temperature windows of every cell limit row (charge -30 to +85 C, discharge -40 to +85 C, storage allowable -40 to +85 C); current and temperature together, and the storage dwell and recovery, AWAITING Saft or the sample qualification (10g)",
          "energy": "%.1f Wh nominal (typical); %.1f to %.1f Wh usable, %.2f to %.2f h" % (4 * sx["e_nom"], e_sx["assumed minimum"]["wh"], e_sx["typical"]["wh"], e_sx["assumed minimum"]["h"], e_sx["typical"]["h"]),
          "fit": "not as the 35E block is built: along the axis +%.2f mm against %.2f mm as designed; only with at most %.2f mm of wrap and spacers there (the 35E block uses %.2f mm)" % (fitA["axis"], design_room["axis"], wrap_left, wrap_35),
          "cost": "NZ$ %.2f a cell (a distributor's listing archived in January 2025), NZ$ %.2f for four" % (nz, 4 * nz),
@@ -2655,20 +2665,23 @@ def u01c(R, pb):
     # ---- suitability by mode
     suit = {
         "35E": {"doc": "Samsung INR18650-35E Ver. 1.1 (MAKER, filed)",
-                "charge": (SUIT_PUB, "LO-01c (REQ-046's 0 to 45 C at the surface, Ver. 1.1 3.12) and the cold charge (REQ-046: below 0 C the mat warms the pack first; C09, the cells to 12.44 C)"),
+                "charge": [(SUIT_PUB, "LO-01c (REQ-046's 0 to 45 C at the surface, Ver. 1.1 3.12) and the cold charge (REQ-046: below 0 C the mat warms the pack first; C09, the cells to 12.44 C)")],
                 "discharge": [(SUIT_PUB, "LO-01a (+40 C in use, D-02) and LO-01b (-20 C once warm, D-02d) against -10 to +60 C"),
                               (UNSUIT, "LO-01d (+55 C, D-02a, TEST-PLAN E3-O): the cells reach %.2f to %.2f C, over +60 C at every corner" % (R["pcm_res"]["best"]["e3o_peak_none"], R["pcm_res"]["worst"]["e3o_peak_none"]))],
                 "storage": [(SUIT_PUB, "LO-01h (D-02, REQ-025: 3 months -20 to +45 C, a year -20 to +25 C) and E3-T's +58 C (1 month to 60 C at 30 %)"),
                             (UNSUIT, "LO-01f (+71 C, D-02a, E3-S), LO-01g (-33 C, D-02a, E4-S) and LO-01e (E5's dwell, SC-03: the idle pack %.2f C at the conditioned corner) against 1 month -20 to +60 C" % R["condc"]["e5_peak"])]},
         "HL18650V": {"doc": "Yichun Topwell Power's product page (MAKER-PAGE)",
-                     "charge": (SUIT_VENDOR, "LO-01c and the cold charge: the page's rows, its coldest garbled, no termination (section 9a); the mat route serves the cold charge as for the 35E"),
+                     "charge": [(SUIT_VENDOR, "LO-01c and the cold charge: the page's rows, its coldest garbled, no termination (section 9a); the mat route serves the cold charge as for the 35E")],
                      "discharge": [(SUIT_VENDOR, "LO-01a, LO-01b, LO-01d: the page's -40 to +85 C, no basis, no pulse, no cold capacity")],
                      "storage": [(SUIT_VENDOR, "LO-01e, LO-01f, LO-01g, LO-01h: the page's rows, no state of charge and no recovery")]},
         "MP 176065 xtd": {"doc": "Saft MP 176065 xtd, Doc. n 31109-2-0625 (MAKER datasheet)",
-                          "charge": (SUIT_PUB, "LO-01c (charge %.0f to +%.0f C, CC/CV %.1f V, %.1f A at most; the drawn %.1f A inside) and the cold charge by the mat (the sheet asks Saft only for charging under 0 C)" % (sx["chg"][0], sx["chg"][1], sx["v_chg"], sx["i_chg"], pb.ICHG)),
-                          "discharge": [(SUIT_PUB, "LO-01a, LO-01b, LO-01d against %.0f to +%.0f C and %.0f A continuous (the kit's %.0f A)" % (sx["dis"][0], sx["dis"][1], sx["i_cont"], pb.I_CONT)),
-                                        (SUIT_VENDOR, "PS-ALLTX's %.0f A for 60 s on one string: the sheet's %.0f A pulses state no duration" % (i_alltx, sx["i_pulse"]))],
-                          "storage": [(SUIT_PUB, "LO-01e, LO-01f, LO-01g, LO-01h against the allowable %.0f to +%.0f C, which states no time or charge restriction (INFERRED: it covers 24 h at the stored charge); recommended +%.0f to +%.0f C" % (sx["st"][0], sx["st"][1], sx["st_rec"][0], sx["st_rec"][1]))]}}
+                          "charge": [(SUIT_PUB, "LO-01c's window (charge %.0f to +%.0f C, CC/CV %.1f V) and the drawn %.1f A from 0 C to T3's %.0f C under the printed %.1f A, which the sheet qualifies only below 0 C ('%s', its footnote 4); the cold charge by the mat, above 0 C" % (sx["chg"][0], sx["chg"][1], sx["v_chg"], pb.ICHG, u["lad_now"]["T3"], sx["i_chg"], sx["fn4"])),
+                                     (AWAIT_SQ, "any charge current below 0 C (footnote 4); not needed while the mat warms the pack first")],
+                          "discharge": [(SUIT_PUB, "the window %.0f to +%.0f C for LO-01a, LO-01b and LO-01d" % (sx["dis"][0], sx["dis"][1])),
+                                        (AWAIT_SQ, "current and temperature together: the kit's %.0f A continuous, PS-ALLTX's %.0f A for 60 s and the gauge's %.0f A for 2 s (OCD) on one string, at the modelled cells %s C (E3-O's %.2f C at the conditioned corner, %.2f C on the bound); the sheet's %.0f A continuous and %.0f A pulses '%s' (its footnote 2)"
+                                         % (pb.I_CONT, i_alltx, pb.I_OCD, ", ".join("%+.0f" % t_ for t_ in Q_TEMPS), R["condc"]["e3o_peak"], peaks_bound["E3-O"], sx["i_cont"], sx["i_pulse"], sx["fn2"]))],
+                          "storage": [(SUIT_PUB, "the allowable window %.0f to +%.0f C covers +71 C and -33 C (LO-01f, LO-01g), E5's +60 C dwell (LO-01e) and the envelope (LO-01h); recommended +%.0f to +%.0f C" % (sx["st"][0], sx["st"][1], sx["st_rec"][0], sx["st_rec"][1])),
+                                      (AWAIT_SQ, "the dwell and recovery: 24 h at +71 C and 24 h at -33 C at the stored 30 %, E5's rest at full charge, and the capacity after each; no time, charge or recovery is printed")]}}
     return {"bound": bound, "bands": bands, "limits": limits, "need": need_g, "peaks_bound": peaks_bound, "cold_bound": cold_bound,
             "chg_ceiling": chg_ceiling, "tau_kit_h": tau_kit_h, "lag24": lag24, "fit": fit, "e_sx": e_sx, "nz": nz, "cands": cands, "suit": suit,
             "i_alltx": i_alltx, "p": p, "design_room": design_room, "row_bound": row_bound, "holds": holds, "lid_open_a": lid_open_a}
@@ -2701,7 +2714,8 @@ def u01c_lines(R):
     w("10b Suitability by mode (per cell; the rows each mode serves, with their sources):")
     for cell, d in c["suit"].items():
         w("   %s (%s):" % (cell, d["doc"]))
-        w("      CHARGE     %s: %s" % d["charge"])
+        for v, why in d["charge"]:
+            w("      CHARGE     %s: %s" % (v, why))
         for v, why in d["discharge"]:
             w("      DISCHARGE  %s: %s" % (v, why))
         for v, why in d["storage"]:
@@ -2777,19 +2791,19 @@ def u01c_lines(R):
         w("      rows covered: %s" % cd["rows"])
         w("      energy: %s; fit: %s" % (cd["energy"], cd["fit"]))
         w("      cost: %s; downstream: %s" % (cd["cost"], cd["downstream"]))
-    w("   Verdict: Saft's published datasheet covers every cell limit row (charge, discharge and storage) for the MP 176065 xtd; the HL18650V's need a vendor answer;")
-    w("   the LiFePO4 cell fails the hot rows on its own page and leaves the 14.4 V class.")
+    w("   Verdict (restated after Astra's B5): Saft's published datasheet supports the TEMPERATURE WINDOWS of every cell limit row for the MP 176065 xtd; it does not")
+    w("   support current and temperature together, since its currents 'Can vary depending on temperatures' (footnote 2), nor the storage dwell and recovery: those")
+    w("   rows are AWAITING Saft or the limited sample qualification (10g). The HL18650V's rows need a vendor answer; the LiFePO4 cell fails the hot rows on its own")
+    w("   page and leaves the 14.4 V class.")
     w("")
     w("10e The missing facts, each with its smallest resolution (no outside party is contacted; each experiment is the owner's purchase):")
     w("   Saft MP 176065 xtd route: (1) D-06's pocket (every row): whether four cells fit along the axis with at most %.2f mm of wrap and spacers as designed: a"
       % f["wrap_left"])
-    w("      dimensional mock-up of four cells at the sheet's maximum dimensions in the pocket at the built stack (printed blocks; hours; no purchase); (2) LO-01a's")
-    w("      mission states with PS-ALLTX: whether one cell carries %.0f A for 60 s at its temperature in use (PS-ALLTX on one"
-      % c["i_alltx"])
-    w("      string; the sheet's %.0f A pulses state no duration): Saft's statement (drafted: `clarification/saft-mp176065xtd.txt`), or a bench pulse of one cell at +25 C"
-      % sx["i_pulse"])
-    w("      and at the cold end with its surface temperature and voltage logged (one cell, NZ$ %.2f, and a 20 A load; a day); (3) the minimum capacity (the sheet" % c["nz"])
-    w("      gives a typical one): measured on the lot at receipt.")
+    w("      dimensional mock-up of four cells at the sheet's maximum dimensions in the pocket at the built stack (printed blocks; hours; no purchase); (2) every")
+    w("      discharge row's current at its temperature (LO-01a, LO-01b, LO-01d: %.0f A continuous, %.0f A for 60 s, the gauge's %.0f A for 2 s on one string, at %s C):"
+      % (R["pb_i"][0], c["i_alltx"], R["pb_i"][1], ", ".join("%+.0f" % t_ for t_ in Q_TEMPS)))
+    w("      Saft's statement (drafted: `clarification/saft-mp176065xtd.txt`) or the limited sample qualification of 10g; (3) the storage dwell and recovery (LO-01e,")
+    w("      LO-01f, LO-01g): the same; (4) the minimum capacity (the sheet gives a typical one): measured on the lot at receipt.")
     w("   HL18650V route (LO-01f at +71 C, LO-01g at -33 C, both 24 h at the stored 30 %; LO-01e's rest at full charge; the page's +80 C idle row): the signed")
     w("      specification (the drafted request), or the smallest experiment: sample cells of the lot soaked 24 h at +71 C and 24 h at -33 C at")
     w("      the stored 30 % charge, and ten 507.6 cycles at full charge, each followed by a capacity measurement at 0.2C and +25 C against the cells' own before")
@@ -2798,14 +2812,32 @@ def u01c_lines(R):
     w("   Every route: T-H1 (U-02's experiment) for LO-01a's complete pass and for LO-01e, and for LO-01d unless the MP 176065 xtd is the cell; the cell moves the")
     w("      need, not the enclosure.")
     w("")
-    w("10f U-01's class by the owner's exit definition: A SUPPORTED ROUTE EXISTS ON PUBLISHED MANUFACTURER EVIDENCE (the Saft MP 176065 xtd as a 4S1P pack in")
-    w("   D-06's pocket, every cell limit row covered by its datasheet), ADOPTION PENDING the owner's approval (D-06's cell and energy, about %.0f Wh nominal, and the" % (4 * sx["e_nom"]))
-    w("   spend). It is CONDITIONAL on two named facts with their smallest checks (the fit along the axis; the %.0f A peak's duration). With it LO-01d holds on the"
-      % c["i_alltx"])
-    w("   conservative bound (U2's network re-derived); LO-01a's complete pass and LO-01e rest on T-H1 for every cell. The HL18650V stays the higher-energy")
+    w("10f U-01's class by the owner's exit definition: A SUPPORTED ROUTE EXISTS ON PUBLISHED MANUFACTURER EVIDENCE FOR THE TEMPERATURE WINDOWS (the Saft MP 176065")
+    w("   xtd as a 4S1P pack in D-06's pocket, every cell limit row's window printed by its maker), NOT YET ADOPTABLE: current and temperature together and the storage")
+    w("   dwell and recovery AWAIT Saft or the limited sample qualification (10g), the fit awaits the mock-up, and the adoption awaits the owner's approval (D-06's cell")
+    w("   and energy, about %.0f Wh nominal, and the spend). With it LO-01d's cells stay inside the temperature window on the conservative bound (U2's network" % (4 * sx["e_nom"]))
+    w("   re-derived; the current at that temperature awaiting 10g); LO-01a's complete pass and LO-01e rest on T-H1 for every cell. The HL18650V stays the higher-energy")
     w("   alternative (%.1f against %.1f Wh usable), resting on its vendor answer or a lot soak. Missing evidence is not shown to be impossible: each missing fact"
       % (u["e_hl"]["25"], c["e_sx"]["typical"]["wh"]))
     w("   has its check above.")
+    w("")
+    w("10g The limited sample qualification that would substitute for Saft's answer (a definition, SESSION; the owner's purchase; nothing is bought here):")
+    w("   Sample: one cell of the lot to be fitted (three if the owner prefers a spread), never fitted afterwards. Before and after every step: capacity at +25 C,")
+    w("   C/5 to %.1f V after CC/CV %.1f V (its own baseline), the 1 kHz impedance, the thickness at full charge and the open-circuit voltage after 24 h." % (sx["cut"], sx["v_chg"]))
+    w("   Steps, each with a thermocouple on the surface, the cell soaked to temperature first:")
+    w("   D1 %.0f A continuous from full charge to the kit's graceful %.2f V under load, at %s C (the chamber at each, the cell's own rise logged)."
+      % (R["pb_i"][0], R["packcmp"]["graceful"], ", ".join("%+.0f" % t_ for t_ in Q_TEMPS)))
+    w("   D2 %.0f A for 60 s at full charge and at 30 %%, at the same temperatures, the minimum voltage and the surface temperature logged." % c["i_alltx"])
+    w("   D3 %.0f A for 2 s (the gauge's OCD) at %+.0f C and at %+.0f C, at 30 %%." % (R["pb_i"][1], Q_TEMPS[0], Q_TEMPS[-1]))
+    w("   C1 the drawn %.1f A from 0 C and at +45 C to %.1f V; optional, only if charging below 0 C is wanted: 0.1C at -10 and -20 C." % (R["pb_i"][2], sx["v_chg"]))
+    w("   S1 24 h at +71 C and S2 24 h at -33 C, each at 30 %; S3 ten 24 h cycles of Method 507.6 Procedure II at full charge (E5's rest).")
+    w("   Pass, every step: the surface at or under +%.0f C, the voltage at or over the CUV's %.2f V under load, no venting or leak; after the step the capacity at least"
+      % (sx["dis"][1], R["packcmp"]["cuv"]))
+    w("   %.0f %% of the cell's own before, the impedance at most %.2f times its own before, the thickness at most %.1f mm over its own before (SESSION thresholds:"
+      % (100 * SQ_RECOVERY, SQ_IMPEDANCE, SQ_SWELL_MM))
+    w("   the recovery line of TEST-PLAN's 5 %, an impedance margin, and the pocket's height allowance for wrap).")
+    w("   Its limits: evidence for that lot and that sample only, at the temperatures and currents run; not a production guarantee, not Saft's derating, and not a")
+    w("   substitute for E3-O, E5, E3-S and E4-S with the pack fitted. Equipment: a chamber from -40 to +85 C, a 25 A load, a CC/CV source, a logger; about two weeks.")
     return L
 
 
@@ -2942,7 +2974,7 @@ def packcmp_lines(R):
     w("   at most %.1f A, termination not printed." % sx["i_chg"])
     w("   discharge: 35E %.0f to %.0f C surface, %.0f A continuous, %.0f A not continuous (no duration), cut-off %.2f V; Saft %.0f to +%.0f C, %.0f A continuous, %.0f A pulses"
       % (tuple(R["S"]["35E_11"]["discharge"]) + (s35["i_cont"], s35["i_pulse"], s35["cut"], sx["dis"][0], sx["dis"][1], sx["i_cont"], sx["i_pulse"])))
-    w("   (no duration), cut-off %.1f V." % sx["cut"])
+    w("   (no duration), cut-off %.1f V; Saft's currents 'Can vary depending on temperatures' (footnote 2): current at temperature AWAITING (10g)." % sx["cut"])
     w("   storage: 35E 1 month %.0f to %.0f C, 3 months %.0f to %.0f C, 1 year %.0f to %.0f C at 30 %% (recovery over 80 %%); Saft allowable %.0f to +%.0f C, recommended +%.0f to +%.0f C"
       % (tuple(R["S"]["35E_11"]["st_1m"]) + tuple(R["S"]["35E_11"]["st_3m"]) + tuple(R["S"]["35E_11"]["st_1y"]) + tuple(sx["st"]) + tuple(sx["st_rec"])))
     w("   (no time, charge or recovery printed).")
@@ -2982,6 +3014,8 @@ def saft_sheet():
             "i_chg": f(r"Maximum continuous charge current4\s+(\d\.\d) A", "Saft charge current"),
             "chg": rng("Charge"), "dis": rng("Discharge"), "st_rec": rng("Recommended"), "st": rng("Allowable"),
             "proprietary": bool(re.search(r"Any duplication or reproduction without authorization of Saft is strictly prohibited", t)),
+            "fn2": need(t, r"² (Can vary depending on temperatures\. Consult Saft)", "Saft footnote 2").group(1),
+            "fn4": need(t, r"4 (For optimised operation below 0°C and consult Saft)", "Saft footnote 4").group(1),
             "swell": bool(re.search(r"Can increase with temperature and during battery life", t))}
 
 
