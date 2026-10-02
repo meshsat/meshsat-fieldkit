@@ -16,8 +16,10 @@ the fans are architecture-level; the page carries the .out's figures; the commit
 record's own files carry no long dashes and no claim words; both checks are filed and listed. The dependency round of 2
 October 2026 (the record's section 13, the .out's section 8): the lines' basis and sensitivities; the configuration and the
 fans-off case; the fans counted in the power budget, the profile and its replay; T-H1's owner, method, steady-state times
-and pass line, with its draft procedure; a failed reading's cases and the session's fallbacks. Nothing here writes into the
-tree.
+and pass line, with its draft procedure; a failed reading's cases and the session's fallbacks. The consolidation (section 14, the .out's section 9): a first-principles
+conservative bound from held geometry at the coefficients' conservative ends, reconciled with W4's 1.22 W/K; U-02's class
+DECIDES because E3-O's gap stays positive with every session measure; the smallest experiment's thresholds. Nothing here
+writes into the tree.
 """
 import hashlib
 import importlib.util
@@ -245,7 +247,10 @@ def t_the_page_carries_the_out_figures():
                 "%.3f" % tr["g_plume"], "%.3f" % R["g2"]["e3o"], "%.3f" % R["g2"]["e5"],
                 "%.3f" % R["dep"]["th1"]["ub"][10.0]["pass"], "%.3f" % R["dep"]["deep"]["line"], "%.3f" % R["dep"]["plate"]["e5_floor"],
                 "%.3f" % R["dep"]["plate"]["e3o_floor"], "%.3f" % R["dep"]["plate"]["e5_deep_floor"], "%.3f" % R["dep"]["fan_sens"]["g_lo"],
-                "%.3f" % R["dep"]["fan_sens"]["g_hi"], "%.3f" % R["dep"]["fan_sens"]["prof_hi"], "%.2f" % R["dep"]["fans_off"]["e5_plate_max"]):
+                "%.3f" % R["dep"]["fan_sens"]["g_hi"], "%.3f" % R["dep"]["fan_sens"]["prof_hi"], "%.2f" % R["dep"]["fans_off"]["e5_plate_max"],
+                "%.3f" % R["cb"]["E5"]["open"]["g"], "%.3f" % R["cb"]["E3-O"]["open"]["g"], "%.3f" % R["cb"]["gap_w"]["E3-O"],
+                "%.3f" % R["cb"]["bind"]["E3-O with F4"]["need"], "%.3f" % R["cb"]["cap"]["E5"], "%.2f" % R["cb"]["ops"]["E3-O, the heat stage"]["air"],
+                "%.3f" % R["cb"]["exp"]["targets"][0][2], "%.3f" % R["cb"]["exp"]["targets"][1][2], "%.3f" % R["cb"]["exp"]["targets"][4][2]):
         assert fig in page and fig in out, "the figure %s is not on both the page and the .out" % fig
 
 
@@ -344,6 +349,31 @@ def t_a_failed_reading_has_a_fallback_inside_the_rulings():
     fn = d["fins"]
     assert fn["ratio"]["both2"][0] > fn["ratio"]["out2"][1] > 1.0 and fn["low_cap_out"] < c["gmax"]
     assert all(a > b > 0 for _g, a, b, _e in d["cond"])
+
+
+def t_the_conservative_bound_and_u02s_class():
+    R = _R()
+    m = _CACHE["M"]
+    cb, T, A = R["cb"], R["T"], R["A"]
+    gm = A["geo_m"]
+    held = ((gm["t_wall"], 0.00534), (gm["depth"], 0.10897), (gm["mid"][0], 0.37775), (gm["mid"][1], 0.26345), (gm["feet"], 8.38))
+    assert all(abs(a - b) < 1e-12 for a, b in held), "the held geometry read from CASE-MARGINS moved"
+    assert (m.EPS_PLATE[0], m.EPS_SHELL[0], m.K_PP[0], m.F_OPEN[0]) == (0.70, 0.85, 0.12, 0.70), "the bound takes the conservative ends"
+    for mg in ("E5", "E3-O"):
+        r = cb[mg]
+        assert r["open"]["g"] < r["open_opt"]["g"] and r["closed"]["g"] < r["open"]["g"] < T["w4_open"][0]
+        assert r["open"]["g"] < r["v"][0][1] < r["v"][1][1] < r["v"][2][1] < r["cap"]
+        assert r["cap"] < cb["lines"][mg], "a line under the outside films' cap would let an inside measure reach it"
+    assert abs(cb["recon"][0][1] - T["w4_open"][0]) < 1e-9 and abs(cb["recon"][-1][1] - cb["E5"]["open"]["g"]) < 1e-6
+    b3, b5 = cb["bind"]["E3-O with F4"], cb["bind"]["E5 with F4 and F3"]
+    assert abs(b3["need"] - (T["q_hs"] + T["qb"]) / 30.0) < 1e-9 and abs(b5["need"] - (R["dep"]["deep"]["q"] + T["qb"]) / 25.0) < 1e-9
+    assert b3["gap"] > 0 and b5["gap"] <= 0 and cb["klass"] == "DECIDES"
+    assert b3["credits"][-1][1] > b3["need"] > b3["credits"][0][1], "only the unbounded credits together close E3-O's gap"
+    assert cb["ops"]["E3-O, the heat stage"]["air"] > 85.0 and cb["ops"]["E5, the deeper hold (F3)"]["air"] <= 85.0
+    rd = [x[2] for x in cb["exp"]["targets"]]
+    assert all(x[2] > x[1] for x in cb["exp"]["targets"]) and rd == sorted(rd, reverse=True)
+    out = open(OUT, encoding="utf-8").read()
+    assert "9e U-02'S CLASS: T-H1 DECIDES." in out
 
 
 def t_both_checks_are_filed_and_listed():

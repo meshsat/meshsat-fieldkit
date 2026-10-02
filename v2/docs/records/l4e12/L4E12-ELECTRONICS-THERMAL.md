@@ -66,6 +66,11 @@ brackets point to the `.out`.
   empty Peli 1450 (draft procedure beside this record); it passes at a reading of 2.416 W/K or more. If it reads short, the
   plate coupling and a deeper hold in E5 (the session's) hold E5 to 1.125 W/K and E3-O to 1.399 W/K; under that only a
   deviation of E3-O or a re-pick remains, the owner's.
+- **U-02's class (section 14, the consolidation): T-H1 DECIDES.** A first-principles conservative bound gives 0.566 W/K (E5)
+  and 0.607 W/K (E3-O) with the fans' flow credited at zero. The budget's 1.22 W/K already assumes the fans' inside film. With
+  every session measure, E5 holds and E3-O is short by 0.212 W/K (the module reaches 92.61 C against +85 C). The smallest
+  experiment is one lid-open, fans-on point at 21.2 W: 2.462 W/K or more keeps the design as stated, 1.516 W/K or more keeps
+  it with the fallback, 0.951 W/K or more keeps E3-O with every session measure, and below that the owner decides.
 
 ## 2. The acceptance, read first [1]
 
@@ -562,3 +567,163 @@ the bench's to replace with its own instruments' figures.
 | F4 with F3 is the fallback; F3's list keeps the logging path | both inside the rulings and E5's stated configuration; F4 holds E3-O unchanged | T-H1's split and the generator owners' switches |
 | L4-E9's output is cited, not pinned | it quotes this record; a pin would bind the two records in a cycle | the coordinator |
 | L4-E8's and L4-E10's figures and E5's cycle read from their pinned files | they are on the base since set 26 | the coordinator |
+
+## 14. The conservative lower bound, and U-02's class (the consolidation, 2 October 2026) [9]
+
+The owner's question: "Thermal: finish the conservative feasibility bound and fallback. State whether T-H1 confirms the
+design or determines whether it can work. Give the test configuration and acceptance condition if measurement remains
+necessary." **Answer: T-H1 DECIDES. U-02 stays a closure condition.** On held geometry and conservative coefficients the
+sealed case does not hold E3-O as stated, even with every measure inside the session's authority; E5 holds with them.
+
+### 14.1 The model and its coefficients [9a]
+
+The inside air reaches the ambient by two paths in parallel, each solved for its heat at the stated air rise (natural
+convection is not linear, so the bound is computed at each condition's own rise):
+
+- **the plate:** the inside film, the 3 mm aluminium (no resistance to speak of), then the outside films (lid open), or the
+  enclosed layer to the lid and the lid's shell (lid closed);
+- **the walls:** the inside film, the PP shell, the outside films;
+- **the floor:** adiabatic, because the case stands on its feet 8.38 mm over a support whose temperature no document gives.
+
+| Quantity | Value the bound takes | Range | Source and class |
+|---|---|---|---|
+| The plate's area, outside | 0.0912 m2, L = A/P 0.0741 m | | W4's plate outline (`panel1450.py` PLATE), pinned |
+| The walls, inside / outside | 0.1296 / 0.1444 m2 | | CASE-MARGINS 2.1 and 2.2: the perimeter 377.75 x 263.45 mm at mid-height, floor to the shoulder at 101.04 mm; the outer perimeter over the base's 108.97 mm |
+| The shell's thickness | 5.34 mm | | CASE-MARGINS 2.3 (Peli's drawing, VERIFIED there) |
+| Lid closed: the ceiling, the skirt, the layer | 0.0803 m2, 0.0578 m2, 53.5 mm | the layer 46.5 to 53.5 mm | CASE-MARGINS 2.1 and 2.2; W4 |
+| The plate's emissivity | 0.70 | 0.70 to 0.90 (anodised, 32.53) | textbook emissivity tables, INFERRED |
+| The shell's emissivity | 0.85 | 0.85 to 0.95 (pigmented PP) | textbook, INFERRED; Peli publishes none |
+| The PP's conductivity | 0.12 W/mK | 0.12 to 0.22 W/mK | textbook polymer tables, INFERRED |
+| The plate's view past the open lid | 0.70 | 0.70 to 1.00 | ASSUMPTION (the lid taken as reradiating) |
+| Outside convection | still air at the margin's ambient | a chamber's circulation would add | natural convection: a plate facing up, Nu = 0.54 Ra^(1/4) (0.15 Ra^(1/3) over 1e7), L = A/P (McAdams; Lloyd and Moran); a vertical wall, Churchill and Chu, Nu = {0.825 + 0.387 Ra^(1/6)/[1 + (0.492/Pr)^(9/16)]^(8/27)}^2; textbook, INFERRED |
+| The enclosed layer, lid closed | | | Hollands et al., Nu = 1 + 1.44[1 - 1708/Ra]+ + [(Ra/5830)^(1/3) - 1]+, plus radiation between the plate and the lid |
+| Radiation | to surroundings at the ambient | | eps F sigma (T1^2 + T2^2)(T1 + T2) |
+| The inside film | natural convection only | the fans' flow and the stack's radiation credited separately below | no held document places or picks the fans (D-18 open), so their flow is credited at zero |
+
+### 14.2 The bound [9b]
+
+| Condition | Lid open, with the fans (their flow credited at zero) | The coefficients' other ends | Lid closed | The outside films' cap (any inside film) |
+|---|---|---|---|---|
+| E5: +60 C, the air 10 K up | **0.566 W/K** | 0.626 | 0.505 | 1.540 |
+| E3-O: +55 C, the air 15 K up | **0.607 W/K** | 0.673 | 0.537 | 1.571 |
+| the envelope's +40 C, the air 15 K up | 0.598 W/K | | 0.524 | |
+
+Credits that no held evidence bounds, at E5 (lid open):
+
+| Credit | Bound with it |
+|---|---|
+| the fans' flow across the inner faces, 0.2 m/s | 0.608 W/K |
+| the fans' flow, 0.5 m/s | 0.690 W/K |
+| the fans' flow, 1.0 m/s | 0.799 W/K |
+| the stack's radiation to the plate | 0.654 W/K (0.767 with 0.5 m/s) |
+| the floor on its feet, over a support at the ambient | 0.697 W/K |
+| all the favourable ends together, with 1.0 m/s | 1.145 W/K |
+
+The bound's films at E5 are 4.13 W/m2K inside at the plate and 3.85 at the walls, and outside 7.72 at the face and 10.03 at
+the walls. The lid-closed and envelope figures belong to U-01 and LO-01a, not to this record; they are recorded because the
+same bound lies far under LO-01a's 1.6664 W/K.
+
+### 14.3 The budget's 1.22 W/K reconciled [9c]
+
+The budget's 1.22 to 2.85 W/K (lid open, fans) and 1.06 to 2.49 W/K (lid closed) are W4's lumped estimate, as pwr_budget.py
+carries them. W4 uses fixed films:
+
+- inside, 10 to 25 W/m2K, for "low-velocity forced flow from the mixer and cooler fans, plus internal radiation";
+- outside, 9.5 to 11.5 at the face, 8 to 10 at the walls and 3 to 8 at the floor, at about 310 K with emissivities of 0.85
+  to 0.9;
+- the base's walls at 0.137 to 0.220 m2, and PP at 0.018 m2K/W.
+
+**It is a sensitivity estimate, not a lower bound: its low end already assumes the fans' film.** Changing one assumption at a
+time, from W4's low case to the bound (E5):
+
+| Step | Conductance |
+|---|---|
+| W4's low case | 1.222 W/K |
+| the floor adiabatic | 1.009 |
+| the walls' inner area to the plate | 0.977 |
+| the wall 5.34 mm of PP at 0.12 W/mK | 0.925 |
+| the outer films at +60 C with the conservative emissivities and the lid's view | 0.928 |
+| the inside film: natural convection only | **0.566** |
+
+The decisive term is the inside film. W4's low case takes 10 W/m2K with the fans; natural convection gives 3.85 to 4.13 W/m2K.
+**The consolidation's statement holds, and the gap is wider:** the model's low bound of 1.22 W/K lies under E3-O's floor of
+1.399 W/K, and the conservative bound, 0.566 to 0.607 W/K, lies further under it.
+
+### 14.4 Against the lines and the fallback [9d]
+
+- **The lines lie over what any inside film can reach on the bound's outside.** E5's 2.159 W/K and E3-O's 1.806 W/K are both
+  above the outside films' cap of 1.540 to 1.571 W/K.
+- **Section 8's floors lie over the bound.** E5's 1.125 W/K (F4 with F3) is 0.559 W/K above it; E3-O's 1.399 W/K (1.309 with
+  the connectors out of the exhaust) is 0.792 W/K above it.
+- **Where the air settles on the bound** (lid open, at its own rise):
+
+| State | Mixed air | Plate | The +70 C class on the plate (F4) | The +80 C connectors | The module's +85 C at its intake (device set) |
+|---|---|---|---|---|---|
+| E5, the hold | 90.93 C | 71.48 C | past +70 C | past | past |
+| E5, the deeper hold (F3) | 83.41 C | 68.58 C | inside | past (in or out of the exhaust) | inside |
+| E3-O, the heat stage | 92.61 C | 69.22 C | inside | past | **past** |
+
+**With every session measure** (F4; F3 in E5; the +80 C connectors on board B replaced by +85 C parts, Layer 6; the HX
+magnetics; the wider buttons), the module's +85 C at its intake binds:
+
+| Margin | Conductance needed | Bound at the same rise | Result | What would close it |
+|---|---|---|---|---|
+| E5 | 0.621 W/K at 25 K | 0.671 W/K | holds, 0.050 W/K to spare | nothing further needed |
+| E3-O | 0.903 W/K at 30 K | 0.691 W/K | **gap of 0.212 W/K** | the fans' flow across the inner faces, 1.28 m/s on its own; or the stack's radiation and the floor's support, which together raise the bound to 0.938 W/K |
+
+### 14.5 U-02's class, and what closes the gap [9e]
+
+**T-H1 DECIDES feasibility; it does not confirm an already-supported design.** On bounded evidence E3-O, with every radio on
+at +55 C in still air, puts the module's intake at 92.61 C against its +85 C. Each route to the missing 0.212 W/K, and whose
+it is:
+
+| Route | Status |
+|---|---|
+| The mixers' flow at the inner faces (1.28 m/s; their placement is Layer 7's) | T-H1 measures it |
+| The stack's radiation and the floor's support | T-H1 measures them |
+| Leading the module's heat into the plate | competes with F4 for the plate's outside (0.704 W/K at the bound's face film) and needs a finned plate the face's layout has not been shown to carry: Layer 7's, unbounded |
+| A deeper hold in E3-O | a deviation of E3-O's configuration: the owner's |
+| A device-set re-pick (CHO-001) | the owner's |
+
+None closes the gap on held evidence within the session's authority without the measurement.
+
+### 14.6 The smallest experiment, and its acceptance [9f]
+
+**One point of T-H1:**
+- lid open;
+- the fans at full duty: the two mixers and slot 3's cooler fan (stand-ins until D-18);
+- one heater's 21.2 W, spread as E5's hold spreads it (section 13.4);
+- room temperature, still air;
+- four mixed-air channels, two ambient, the plate's inner face and a wall's inner face: one PicoLog TC-08.
+
+It runs until the mixed air drifts at most 0.1 K/h over an hour: about 5.9 h at the line's conductance, and up to 21.1 h if
+the case is as poor as the bound (time constant 4.57 h). G = P / rise; each threshold is the target plus its expanded
+uncertainty at that point's rise:
+
+| A reading of at least | Its rise | Meets | Settles |
+|---|---|---|---|
+| **2.462 W/K** | 8.6 K | 2.159 W/K | the design as stated (route (c)), no fallback |
+| **1.516 W/K** | 14.0 K | 1.399 W/K | section 8's fallback (F4, F3); 1.410 W/K reaches 1.309 with the connectors out of the exhaust |
+| 1.199 W/K | 17.7 K | 1.125 W/K | E5 with F4 and F3 |
+| **0.951 W/K** | 22.3 K | 0.903 W/K | E3-O with every session measure, provided the measured plate fraction keeps the plate-coupled +70 C class inside (the fraction times 27.086 W over the reading, at most 15 K) |
+| 0.644 W/K | 32.9 K | 0.621 W/K | E5 with every session measure |
+
+**Acceptance condition:** read lid open with the fans at one power, **2.462 W/K or more** keeps the design as stated;
+**1.516 W/K or more** keeps it with the session's fallback; **0.951 W/K or more** keeps E3-O with every session measure;
+**under 0.951 W/K** E3-O as stated cannot hold on the session's means, and the owner decides (a deviation of E3-O or a
+re-pick). The room reading is the conservative side of the margin's (section 13.4). The full eight-point T-H1 follows, for
+the fans-off case, the lid-closed state and the fractions (`T-H1-PROCEDURE-DRAFT.md`).
+
+### 14.7 The fans' power [9g]
+
+Section 13.3 stands. The fans' power is counted in pwr_budget.py, the 42.8 W profile, its replay and L4-E9's endurance: 2.0 W
+in the hold and 3.1 W in the profile. It is not among the 8.4 W with no document. The bound credits the fans' flow at zero but
+still counts their heat inside the case, so nothing in 13.3 changes.
+
+### 14.8 Decisions taken by the session in this round (authority: SESSION)
+
+| Decision | Why the session's | Reversed by |
+|---|---|---|
+| The bound credits the fans' flow, the stack's radiation and the floor's support at zero | no held document bounds them; each is shown as a credit | T-H1's reading |
+| The class follows the bound: CONFIRMS only if the bound, with every session measure, clears both margins | the owner's question, read literally | T-H1 |
+| The smallest experiment is one lid-open, fans-on point at one heater's power | it settles the class; the rest of T-H1 characterises | the bench |
