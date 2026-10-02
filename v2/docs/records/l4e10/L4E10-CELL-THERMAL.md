@@ -48,6 +48,11 @@ stated), ASSUMPTION (a figure no held document gives), CONDITIONAL (holds only o
   to +85 C), adoption pending the owner's approval (about 82 Wh nominal, 53.5 to 55.1 Wh usable) and CONDITIONAL on its fit
   along the axis and its 18 A peak; with it LO-01d holds on U-02's conservative bound, while LO-01a's complete pass and
   LO-01e rest on T-H1 for every cell. The pocket's room is corrected to 0.0865 L (section 15a).
+- **The battery comparison (section 16, the owner's amendment of 2 October 2026):** on one boundary the approved 35E pack
+  gives 144.72 Wh nominal and 107.9 Wh usable (2.52 h); the Saft route 81.76 Wh nominal and 53.5 to 58.8 Wh usable (1.25 to
+  1.37 h). The 43.5 % cut compares the 35E's minimum with the Saft's typical; like for like it is 45.1 %. The evidence
+  supports the Saft route's cell limits, not yet its adoption: the fit mock-up, the 18 A peak and T-H1 stay awaited, and the
+  owner's approval is required.
 - **The thermal architecture criterion (criterion 1) is not met by this record.** Every LO row now has a route that is not
   rejected; LO-01a stays CONDITIONAL on T-H1 (at least 1.666 W/K in both lid states) for every approach, LO-01h on the
   lot, and LO-01d to LO-01g rest on a product page until the signed specification arrives.
@@ -402,7 +407,7 @@ energy store for LO-01g under a ruling on D-06, only if the specification leaves
 
 `l4e10_cell_thermal.py` and `.out` (section 0 reproduces `pwr_budget.out` and `.json`, `pwr_red2.out` and
 `hotstop_bounds.out` byte for byte and pins 49 inputs by sha256, L4-E12's output at its commit among them; section 8 prints
-the predicates; section 9 is U-01 by mode and section 10 its consolidation); `fetch_held_back.py`; `inputs/` (the Topwell
+the predicates; section 9 is U-01 by mode, section 10 its consolidation, section 11 the battery comparison); `fetch_held_back.py`; `inputs/` (the Topwell
 page, the prices of 1 and 2 October, Saft's curves read by eye, the cells beyond the held set); `clarification/` (Topwell,
 Eaton, Saft); `checks/`; `README.md`. The tests:
 `env -C v2/ecad/tools/tests python3 run.py test_l4e10 test_public_hygiene`. No generator, BOM, registry or Layer 3 file
@@ -596,3 +601,95 @@ impossible: each missing fact has its check above. FEA-008 stays open until the 
 **The owner's items for this route:** approval of the cell change inside D-06's pocket (4S1P prismatic, about 82 Wh
 nominal; REQ-046 and REQ-077's cell-derived numbers with it) and its spend; sending Saft's drafted questions if the
 bench pulse is not preferred. The Topwell request stays for the HL18650V alternative.
+
+## 16. The battery comparison: the approved pack against the Saft route (`.out` section 11; the owner's amendment of 2 October 2026, 14:20)
+
+One compact comparison on one boundary. **GUARANTEED** = a maker's printed limit; **MODELLED** = this record's model, its
+assumptions named; **AWAITING** = evidence owed, and by whom. **This section approves neither the cell change nor a
+purchase: both stay the owner's.**
+
+| | Approved pack (D-06) | Saft route (a proposal) |
+|---|---|---|
+| Part and specification | Samsung SDI INR18650-35E; product specification Ver. 1.1, 2015-07-09 (GUARANTEED, filed) | Saft MP 176065 xtd; datasheet Doc. n 31109-2-0625, June 2025 (GUARANTEED, held back) |
+| Chemistry, rechargeability | lithium-ion, rechargeable (GUARANTEED) | lithium-ion, rechargeable (GUARANTEED) |
+| Arrangement | 4S3P, 12 cylindrical 18650 cells (D-06; the cell sizes GUARANTEED) | 4S1P, 4 prismatic cells (the sizes GUARANTEED; the pack's fit MODELLED, AWAITING the mock-up) |
+| Nominal energy | 12 x 3.35 Ah (the minimum, 0.2C to 2.65 V) x 3.60 V = **144.72 Wh**, D-06's "about 145 Wh" (GUARANTEED inputs); 149.04 Wh on the typical 3.45 Ah | 4 x 5.60 Ah (typical, C/5 to 2.5 V) x 3.65 V = **81.76 Wh** (GUARANTEED as typical); 79.39 Wh on an assumed minimum (ASSUMPTION: Saft prints none) |
+| Usable energy, one boundary | **107.9 Wh, 2.52 h** at +20 C; 44.5 Wh, 1.04 h with the cells at -10 C (MODELLED) | **53.5 to 55.1 Wh, 1.25 to 1.29 h** on the 35E's curves at the same current; 57.0 to 58.8 Wh, 1.33 to 1.37 h at the same C-rate; 22.1 to 24.3 Wh at -10 C (MODELLED; no Saft discharge or cold curve: AWAITING Saft) |
+| Charge limits | 0 to 45 C at the surface; CC-CV 4.2 V; 1.70 A standard, 1.02 A for cycle life, 2.00 A at most a cell; ends at 0.02C (GUARANTEED) | -30 to +85 C; CC/CV 4.2 V; 5.6 A at most; under 0 C "consult Saft"; termination not printed (GUARANTEED; the termination AWAITING Saft) |
+| Discharge limits | -10 to 60 C at the surface; 8 A continuous, 13 A not continuous (no duration); cut-off 2.65 V (GUARANTEED) | -40 to +85 C; 11 A continuous, 22 A pulses (no duration); cut-off 2.5 V (GUARANTEED); 18 A for 60 s on one cell AWAITING (Saft's answer or a bench pulse) |
+| Storage limits | 1 month -20 to 60 C, 3 months -20 to 45 C, 1 year -20 to 25 C at 30 %, recovery over 80 % (GUARANTEED) | allowable -40 to +85 C, recommended +15 to +30 C; no time, charge or recovery printed (GUARANTEED range; its use for 24 h at the stored charge INFERRED, AWAITING Saft's confirmation) |
+| Physical fit | the ruled block, 56.65 x 133.5 x 38.1 mm, 0.2881 L (GUARANTEED cell sizes) | four cells 0.308 L with terminals; along the axis +6.90 mm against 5.30 mm as designed, so at most 1.40 mm of wrap and spacers (the 35E block uses 3.00 mm); the room round the block 0.0865 L as designed, 0.0559 L at the worst stack; thickness at the beginning of life and full charge, "can increase with temperature and during battery life" (MODELLED fit; AWAITING the mock-up, the session and Layer 7, and Saft's life thickness) |
+| Charger (the drawn BQ25731) | strap 16.800 V = 4 x 4.20 V; set 3.0 A = 1.00 A a cell; BATOVP 17.47 V; the gauge's taper 250 mA = 0.083 A a cell; the CUV 2.50 V (the 35E's pack guideline terminates at 2.50 V) (GUARANTEED settings, compatible) | the same 16.800 V; 3.0 A a cell against 5.6 A; BATOVP 17.47 V; taper 0.250 A a cell against no printed termination; the CUV 2.50 V against the 2.5 V cut-off (compatible; the termination AWAITING Saft) |
+| Protection | U2 BQ7720700 (OVP 4.325 V, UVP 2.25 V, OT 70 C); the gauge's UTC 1.0, T3 42, OTC 44.0, OTD 57.5, UTD -9.0 C; F2 Eaton SCF9550-30-05, 30 A for 4 to 5 cells (compatible as drawn) | the same parts protect it as drawn, the gauge's thresholds inside its windows; using its +85 C needs U2's 83 C variant and a re-derived network and the ladder (drafts); the pack's 10 / 18 A fall on one cell; the gauge's capacity and chemistry data AWAITING (TI's list or a learning cycle, the firmware owner) |
+| Cost | USD 8.25 a cell, USD 99.00 for 12 (the l3batt reading; a quote AWAITING the purchase) | NZ$ 238.72 a cell, NZ$ 954.88 for 4 (a distributor's listing archived in January 2025; a quote AWAITING the owner's purchase) |
+
+### 16a. 145 Wh to 82 Wh, step by step
+
+- **D-06's "about 145 Wh"** is 12 cells x 3.35 Ah (Ver. 1.1's printed minimum) x 3.60 V = **144.72 Wh**. A 3.5 Ah label
+  would give 151.20 Wh, a figure Ver. 1.1 does not print; the typical 3.45 Ah gives 149.04 Wh.
+- **The Saft route** is 4 cells x 5.60 Ah (typical) x 3.65 V = **81.76 Wh**.
+- **The steps:** the count x0.3333 (12 to 4), the capacity a cell x1.6716 (3.35 to 5.60 Ah), the voltage x1.0139 (3.60
+  to 3.65 V): **x0.5650 in all, 43.5 % less.**
+- That figure compares the 35E's minimum with the Saft's typical. Like for like the cut is **45.1 %**, on typicals
+  (149.04 against 81.76 Wh) and on minimums (144.72 against an assumed 79.39 Wh).
+
+### 16b. 2.52 h to 1.25 to 1.29 h, step by step
+
+One boundary for both (MODELLED, the tree's chain `records/energy/energy_budget.py`):
+- PS-IDLE-SPEC, 42.8 W at the pack;
+- the kit's graceful line, 3.00 V a cell under load, or the 5 % reserve, whichever comes first (the line, for both);
+- ageing 0.80 (REQ-014, SC-23);
+- +20 C, and the cells at -10 C as the cold point.
+
+| Pack | Current a cell | Rate factor | Mean voltage | End fraction | +20 C | -10 C cells |
+|---|---|---|---|---|---|---|
+| 35E 4S3P | 0.99 A | 0.9966 | 3.604 V | 0.934 | **107.9 Wh, 2.52 h** | 44.5 Wh, 1.04 h |
+| Saft 4S1P (a) same current, assumed minimum | 3.08 A | 0.9735 | 3.470 V | 0.910 | 53.5 Wh, 1.25 h | 22.1 Wh, 0.52 h |
+| Saft 4S1P (a) same current, typical | 3.08 A | 0.9735 | 3.470 V | 0.910 | 55.1 Wh, 1.29 h | 22.7 Wh, 0.53 h |
+| Saft 4S1P (b) same C-rate, assumed minimum | 3.08 A (curves at 1.90 A) | 0.9865 | 3.595 V | 0.923 | 57.0 Wh, 1.33 h | 23.5 Wh, 0.55 h |
+| Saft 4S1P (b) same C-rate, typical | 3.08 A (curves at 1.84 A) | 0.9872 | 3.599 V | 0.924 | 58.8 Wh, 1.37 h | 24.3 Wh, 0.57 h |
+
+- **Most of the change is the energy:** x0.5650 nominal takes 2.52 h to about 1.42 h if the usable fraction stayed the 35E's.
+- **The rest is the usable fraction:** 107.9 / 144.7 = 0.7453 for the 35E, 55.1 / 81.8 = 0.6735 for the Saft at (a).
+  - The single parallel cell carries the whole pack current, 3.08 A against 0.99 A.
+  - On the 35E's curves it loses x0.9768 in rate factor, x0.9494 in mean voltage over nominal and x0.9744 in end fraction:
+    x0.9037 in all.
+  - At the same C-rate (b) most of that penalty goes, because 3.08 A is only 0.55C of the Saft's typical capacity.
+- **The reported 1.25 to 1.29 h is the conservative end, (a).** The Saft's own discharge curve would settle where it lies
+  between 1.25 and 1.37 h (AWAITING Saft or a measurement).
+- **Earlier figures on other boundaries, reconciled:**
+  - the 35E's 108.1 Wh (pwr_budget.py's chain: a rate factor, a 0.05 ohm sag and the 5 % reserve) against 107.9 Wh here;
+  - 44.3 Wh at -10 C (the sheet's 1C point) against 44.5 Wh here;
+  - the Saft's 53.5 to 55.1 Wh of section 10 is (a) here.
+
+**The endurance objective stays apart from the mandatory rows.** REQ-072's 48 to 72 h (2054 to 3082 Wh at 42.8 W; an
+objective, D-28) is far beyond either pack on battery alone (DR-01 FAIL either way). The mandatory rows are LO-01a to
+LO-01h (REQ-046, REQ-077, D-02, D-02a).
+
+### 16c. The recommendation, as far as the evidence goes
+
+- **What the Saft route resolves:** every cell-limit row on its maker's published datasheet: the +55 C and E5 rows' cell
+  limits, +71 C and -33 C storage, the cold charge. With it, LO-01d also holds on U-02's conservative bound (section 15c).
+- **What it costs:**
+  - energy, 81.76 against 144.72 Wh nominal (45.1 % less like for like);
+  - runtime, 1.25 to 1.37 h against 2.52 h on battery alone (modelled);
+  - money, NZ$ 954.88 for four cells against USD 99.00 for twelve (indicators, not quotes);
+  - the changes downstream: D-06 restated, REQ-046 and REQ-077's cell-derived numbers, U2 and the ladder, the gauge's
+    data, and a prismatic holder.
+- **What stays awaited:**
+  - the fit mock-up (the session and Layer 7; no purchase);
+  - 18 A for 60 s on one cell (Saft's answer, drafted, or a bench pulse: the owner's purchase of one cell);
+  - the termination current, the life thickness, the minimum and cold capacity (Saft);
+  - the gauge's data (TI or a learning cycle);
+  - T-H1 for LO-01a's complete pass and LO-01e, for every cell (U-02).
+- **The recommendation:** the evidence supports the Saft route as the one cell route whose limits are printed by its
+  maker for every margin row. It does **not yet** support adoption: the fit and the 18 A peak are unproven, and T-H1
+  decides the hot rows for any cell. Next, with no purchase, the mock-up; then the pulse question (Saft or one cell).
+  Adoption is then the owner's call, weighing the energy and runtime above.
+- **The alternatives' standing:**
+  - The HL18650V route keeps more energy (90.2 Wh usable, 2.11 h) but rests on its maker's page until the signed
+    specification or a lot soak.
+  - The 35E as ruled meets the in-use rows (LO-01a to LO-01c on T-H1, LO-01h) on published evidence and fails the
+    margin rows LO-01d to LO-01g on published evidence. It stands only with a requirement change: the owner's, by D-29;
+    the margins shown with the pack out of the exposure.
+- **The owner's approval of the cell change and of any purchase is required and is not given here.**
