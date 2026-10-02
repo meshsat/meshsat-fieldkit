@@ -24,13 +24,13 @@ What it changes in v2/ecad/tools/gen_sch_a.py, and nothing else:
   J_DOCK  pin 1 from GND to VSYS_DOCK: board E's auxiliary domain (U12, both mixer fans) fed from VSYS (board E's VSYS_E)
           through U42's eFuse (the review of the provisional fixes, L4-F03; section 16e).
   U42     added: TI TPS16630PWPR eFuse (SLVSET9G, held back), IN, P_IN and UVLO on VBAT, OUT on VSYS_DOCK, OVP and MODE to GND
-          (OVP off; auto-retry), R221 11.0k 0.1 % on ILIM (I(OL) = 18 / R(ILIM): 1.47 to 1.80 A, a steady setting), C237 22 nF on
+          (OVP off; auto-retry), R228 11.0k 0.1 % on ILIM (I(OL) = 18 / R(ILIM): 1.47 to 1.80 A, a steady setting), C237 22 nF on
           dVdT, C238 1 uF at IN, C239 0.1 uF at OUT, D23 B540C-13-F (C72264) from GND to OUT, the land key SMC; SHDN, IMON,
           FLT and PGOOD open as TI allows; the land key HTSSOP20 (KiCad's HTSSOP-20-1EP, checked against TI's PWP0020 drawing
           by the parts stream); VBAT's declared loads gain U42's 1.0 A; VSYS_DOCK declared (source U42, J_DOCK's 1.0 A).
   intent  CH_BATQ declared a segment of the pack path (source R17, loads Q39 and Q40, 10 A typical, 18 A peak); VBAT's source
           becomes Q39 (the pair), fed from CH_BATQ; the charger's sheet group names Q39, Q40 and C236.
-The designators Q39, Q40, C236 to C239, R221, D23 and U42 are free in gen_sch_a.py as pinned by l4e11_power.py; if another draft takes them first, renumber.
+The designators Q39, Q40, C236 to C239, R228, D23 and U42 are free in gen_sch_a.py as pinned by l4e11_power.py; if another draft takes them first, renumber.
 
 ORDER: independent of apply_gen_sch_a_guard.py (either order); apply with apply_gen_sch_e_aux.py (the dock's pin 1 on both
 boards at once) and apply_pcb_interfaces_dock.py. It withdraws E11-24's register row (the bank is not drawn). Firmware rules come
@@ -59,13 +59,13 @@ _PAIR = ("# L4-E11 (MESHSAT-1357, the U-04 question for the consolidation and it
          "# taken whole in ONE body diode, no sharing credited, and its whole hot waveform is E11-30's (L4-E11 sections 16 and 17).\n"
          "# L4-E11 (the review of the provisional fixes, L4-F03, 2 October 2026): THE DOCK'S VSYS BRANCH. J_DOCK pin 1 carries VSYS to\n"
          "# board E's auxiliary domain over one Preci-Dip 813 (3.5 A operating maximum). U42 regulates a sustained overload to 1.47 to\n"
-         "# 1.80 A (SLVSET9G p.8 rows over TJ -40 to 125 C at VIN - VOUT 1 V, inferred at R221 11.0k by Equation 6), a steady setting and\n"
+         "# 1.80 A (SLVSET9G p.8 rows over TJ -40 to 125 C at VIN - VOUT 1 V, inferred at R228 11.0k by Equation 6), a steady setting and\n"
          "# not an instantaneous ceiling; limits for at most 202 ms and retries after 500 to 800 ms (Table 8-1, MODE to GND); a start into\n"
          "# a short regulates its junction for up to 1.5 s; a short's first microseconds, the pins' spikes and the contact's pulse are\n"
          "# E11-38's (L4-E11 section 17a). C238 at IN and C239 at OUT are TI's 0.1 uF minimum (6.3); D23 is TI's Schottky at OUT for the\n"
          "# output loop's negative spike (9.4.1, 9.5.1); U42's IN sits within 20 nH of C236 and C23 to C25 (a layout requirement).\n"
          "ic(\"U42\", 21, \"TPS16630PWPR 60 V 6 A eFuse: the dock's VSYS branch to board E (I(OL) 18 / 11.0k)\", \"HTSSOP20\", {\"1\": \"VBAT\", \"2\": \"VBAT\", \"3\": \"VBAT\", \"4\": \"NC\", \"5\": \"NC\", \"6\": \"VBAT\", \"7\": \"VBAT\", \"8\": \"GND\", \"9\": \"GND\", \"10\": \"EF_DVDT\", \"11\": \"EF_ILIM\", \"12\": \"GND\", \"13\": \"NC\", \"14\": \"NC\", \"15\": \"NC\", \"16\": \"NC\", \"17\": \"NC\", \"18\": \"VSYS_DOCK\", \"19\": \"VSYS_DOCK\", \"20\": \"VSYS_DOCK\", \"21\": \"GND\"})\n"
-         "r(\"R221\", \"11k 0.1%\", \"EF_ILIM\", \"GND\")    # U42's overload limit, 18 / 11.0 = 1.64 A typical\n"
+         "r(\"R228\", \"11k 0.1%\", \"EF_ILIM\", \"GND\")    # U42's overload limit, 18 / 11.0 = 1.64 A typical\n"
          "c(\"C237\", \"22n 50V C0G\", \"EF_DVDT\", \"GND\")   # U42's output slew, TI's characterised 22 nF\n"
          "c(\"C238\", \"1u 50V X7R\", \"VBAT\", \"GND\")      # at U42's IN (TI 9.4.1: at least 1 uF where surges reach the input)\n"
          "c(\"C239\", \"100n 50V X7R\", \"VSYS_DOCK\", \"GND\")   # at U42's OUT (TI 6.3: 0.1 uF minimum at OUT)\n"
@@ -100,7 +100,7 @@ EDITS = [
     ('"CPOL63": "Capacitor_SMD:CP_Elec_6.3x7.7", "CPOL10": "Capacitor_SMD:CP_Elec_10x10",',
      '"CPOL63": "Capacitor_SMD:CP_Elec_6.3x7.7", "CPOL10": "Capacitor_SMD:CP_Elec_10x10", "CPOL8": "Capacitor_SMD:CP_Elec_8x10", "LFPAK56": "Package_TO_SOT_SMD:LFPAK56", "HTSSOP20": "Package_SO:HTSSOP-20-1EP_4.4x6.5mm_P0.65mm_EP3.4x6.5mm", "SMC": "Diode_SMD:D_SMC",'),
     ('("CHARGER BQ25731: 4S FROM THE 20 V BUS, SYSTEM ON VSYS (VBAT), PACK BEYOND RSR, I2C 0x6B", ["U3", "Q7", "Q8", "Q9", "Q10", "L2", "R16", "R17", "C16",',
-     '("CHARGER BQ25730: 4S FROM THE 20 V BUS, SYSTEM ON VSYS (VBAT), BATTERY FETS Q39 AND Q40 AND RSR TO THE PACK, THE DOCK VSYS EFUSE U42, I2C 0x6B", ["U3", "Q7", "Q8", "Q9", "Q10", "L2", "R16", "R17", "Q39", "Q40", "C236", "U42", "R221", "C237", "C238", "C239", "D23", "C16",'),
+     '("CHARGER BQ25730: 4S FROM THE 20 V BUS, SYSTEM ON VSYS (VBAT), BATTERY FETS Q39 AND Q40 AND RSR TO THE PACK, THE DOCK VSYS EFUSE U42, I2C 0x6B", ["U3", "Q7", "Q8", "Q9", "Q10", "L2", "R16", "R17", "Q39", "Q40", "C236", "U42", "R228", "C237", "C238", "C239", "D23", "C16",'),
     ('_intent.rail("VBAT", 14.4, 10.0, 18.0, "R17", always_on=True, v_work=16.8, converted=False, fed_from="CELL_FUSED",',
      '_intent.rail("VBAT", 14.4, 10.0, 18.0, "Q39", always_on=True, v_work=16.8, converted=False, fed_from="CH_BATQ",'),
     ('loads={"U4": 2.0, "Q28": 2.22,', 'loads={"U42": 1.0, "U4": 2.0, "Q28": 2.22,'),
