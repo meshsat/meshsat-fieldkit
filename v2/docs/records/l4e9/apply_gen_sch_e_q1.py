@@ -17,7 +17,7 @@ are untouched, so it composes in either order with d8dec31's apply_gen_sch_e_cin
   2. ideal_diode() takes an optional fet=(value, lcsc) and uses _ENTRY_FET when its anode is DC_F, the vehicle entry; the
      FET is then drawn by nfet() on the PowerPAK SO-8 / 5x6 SON land ("PPAK") that Q7 already uses. Every other call is drawn
      exactly as before: the tracker's U4/Q2 keeps its BSC039N06NS, which stands off at most the vehicle's OVLO maximum,
-     42.49 V, against 60 V.
+     42.49 V as drawn and 43.18 V with L4-E9's R22 and R23 at 0.1 % (register R-94), against 60 V.
 The land changes (TDSON-8 to the PPAK map: pads 1 to 3 source, 4 gate, 5 the drain tab), so the placement and the layout
 constraints of DECISION-31 section 7 (D10 at F1's far pad, Q1 beside it) are the generator owner's to re-seat.
 
