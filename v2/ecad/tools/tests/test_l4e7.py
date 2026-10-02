@@ -514,7 +514,7 @@ def t_one_error_budget_names_its_assumptions_and_reproduces_in_closed_form():
     rp = c["rp"]
     rb = rp / c["n"] * (1 - 0.01) * (1 - rw["wtcr"] * dt) * (1 - 0.005 - 0.0005 / rp) * (1 - 0.01 - 0.0005 / rp)
     r89 = (R["r8v"] + R["r9v"]) * (1 - 0.001) * (1 - 25e-6 * dt) * (1 - 0.005 - 0.05 / R["r8v"]) ** 2
-    p = 25.0 * vs / rb + 625.0 / r89 + 25.0 * (vs * rw["gm169"][1] * (1 + rw["nl169"]) + c["i_b"])
+    p = 25.0 * vs / rb + 625.0 / r89 + 25.0 * (vs * rw["gm169"][1] * (1 + rw["nl169"]) + c["i_b"]) + (25.0 * c["leak"] if c["layout"] == "ahead" else 0.0)
     assert abs(c["v_hi"] - 25.0) < 1e-9 and abs(p - c["p_static"]) < 1e-6, (p, c["p_static"])
     bu = c["budget"]
     assert abs(bu["e_margin"] - (bu["e_tol"] - bu["e_sup"])) < 1e-12 and bu["e_margin"] > 0 and abs(bu["p_margin"] - (100.0 - c["p_static"])) < 1e-9
@@ -522,25 +522,24 @@ def t_one_error_budget_names_its_assumptions_and_reproduces_in_closed_form():
     assert c["g_cm"] == 0.01 and c["i_b"] == 1e-3
 
 
-def t_the_setting_is_the_least_cost_one_carrying_both_assumptions_past_their_meaning():
+def t_the_setting_holds_round_3s_rule_and_the_cs101_search_takes_the_least_cost():
     R = _R()
     d = R["decision"]
-    c, rw = d["c"], d["rows"]
+    c, rw, cs = d["c"], d["rows"], R["cs101"]
     st = c["settings"]
     assert [s_["r66"] for s_ in st] == sorted(s_["r66"] for s_ in st) and len(st) >= 3
-    ch = [s_ for s_ in st if s_["r66"] == c["r66"]][0]
-    assert ch["ok"] and ch["g_cm_be"] >= 1.0 and ch["i_b_be"] >= rw["ipin169"] and ch["t_allow"] >= c["t_fac"] * c["t_resp_typ"] + ch["t_rc"]
-    for s_ in st:
-        if s_["energy"][1][2] > ch["energy"][1][2] + 1e-9:
-            assert not s_["ok"], "a setting of less energy cost also meets the rule: %g" % s_["r66"]
-    first = st[0]
-    assert abs(first["r66"] - 8060.0) < 1e-6 and not first["ok"] and first["g_cm_be"] < 1.0 and first["t_allow"] >= c["t_fac"] * c["t_resp_typ"]
+    r3 = [s_ for s_ in st if abs(s_["r66"] - 8250.0) < 1e-6][0]
+    assert r3["ok"] and r3["g_cm_be"] >= 1.0 and not st[0]["ok"] and st[0]["g_cm_be"] < 1.0, "round 3's rule no longer picks 8.25k"
     assert c["t_fac"] == 10.0 and c["t_spread"] <= c["t_fac"] / 5.0
-    assert abs(c["g_cm_be_b"] - ch["g_cm_be"]) < 1e-9 and abs(c["i_b_be_b"] - ch["i_b_be"]) < 1e-9
-    assert c["g_cm_be"] > c["g_cm_be_b"] and c["i_b_be"] > c["i_b_be_b"]
-    assert c["r66_code"] == "C705798" and c["rm"][1] == "C723585"
+    b = cs["best"]
+    assert b["immune"] and b["protect"] and abs(b["r66"] - c["r66"]) < 1e-6 and b["rm"][0] == c["rm"][0] and b["layout"] == c["layout"]
+    assert c["r66_code"] == "C861590" and c["rm"][1] == "C705766" and c["layout"] == "ahead" and c["n_cf"] == 5
+    # no candidate of more energy holds the three conditions, and the filter's size balances the two unprinted rooms
+    assert cs["top_e"] == (round(b["energy"][1][2], 6), round(b["energy"][3][2], 6)) and cs["n_cands"] >= len(cs["top"]) >= 1
+    assert max(min(lb_, rr_) for *_x, lb_, _ta, rr_ in cs["top"]) == min(cs["loop_be"], cs["best"]["resp_room"])
+    assert c["g_cm_be_b"] >= 1.0 and c["i_b_be_b"] >= rw["ipin169"] and c["t_allow"] >= c["t_fac"] * c["t_resp_typ"]
     s = _s10(R)
-    assert "THE SETTING (SESSION, the margin decided by what it must absorb, no percentage)" in s and "CHOSEN" in "\n".join(_CACHE["M"].render(R))
+    assert "THE SETTING (SESSION, the margin decided by what it must absorb, no percentage)" in s and "round 3's choice" in "\n".join(_CACHE["M"].render(R))
 
 
 def t_check_b_counts_the_capacitor_input_energy_the_panels_current_and_the_events():
@@ -551,10 +550,11 @@ def t_check_b_counts_the_capacitor_input_energy_the_panels_current_and_the_event
     cmax = 3 * za["c"] * (1 + za["tol"]) * (1 + za["end_dc"]) + (0.1e-6 + 4 * 10e-6 + 24.8e-6) * 1.10
     assert abs(c["c_entry_max"] - cmax) < 1e-12 and abs(c["e_cap"] - cmax * 625.0) < 1e-12 and c["n_ca"] == 4
     assert abs(c["i_src"] - rw["isc_hot"] * (1 + rw["tol_p"])) < 1e-12 and abs(c["i_src"] - rw["amps_pk"]) > 0.05
-    assert abs(c["t_allow"] - ((100.0 - c["p_static"]) * d["w_avg"] - c["e_cap"]) / (c["p_src"] - c["p_static"])) < 1e-12
+    assert abs(c["t_allow"] - ((100.0 - c["p_static"]) * d["w_avg"] - c["e_cap"] - c["e_f"]) / (c["p_src"] - c["p_static"])) < 1e-12
+    assert abs(c["e_f"] - 25.0 * c["i_hi25"] * c["tau"][1]) < 1e-9 and c["tau"][1] > c["tau"][0] > 0
     assert c["e_window_typ"] <= 100.0 * d["w_avg"] and c["e_start"] < 1.0 and c["td_min"] > d["w_avg"]
     assert c["cycle_be"] > 1.0 and 0 < c["cycle_e"] < c["e_cap"]
-    assert abs(rw["tpd_lh"] - 28.1e-6) < 1e-12 and c["t_rc"] < 20e-6
+    assert abs(rw["tpd_lh"] - 28.1e-6) < 1e-12
     s = _s10(R)
     assert "7b.16" in s and "%.3f ms" % (1e3 * c["t_allow"]) in s and "SWEN held low" in s and "CONDITIONAL" in s
 
@@ -589,10 +589,36 @@ def t_the_disturbances_come_from_the_approved_plan_and_every_part_holds():
     assert sg["v_pk"] < min(sg["rating"]["za_v"], sg["rating"]["cer_v"], sg["rating"]["q3"]) and sg["v_pvp"] < sg["rating"]["vs169"]
     assert sg["d169"] < sg["rating"]["d169"] and sg["v_inb"] < sg["rating"]["tps_in"] and sg["v_ina"] < sg["rating"]["tps_in"]
     assert max(x_["id4"] for x_ in sg["cases"] if x_["kind"] == "capability") < rw["d4"]["ipp"]
-    assert sg["c101"]["ratio_drawn"] < 1.0 < sg["c101"]["ratio_bound"]
+    assert 0 < sg["c101"]["ratio_drawn"] <= sg["c101"]["ratio_bound"] and sg["v_bulk"] < sg["rating"]["za_v"]
     s = _s10(R)
     assert "CAPABILITY SCENARIO, labelled" in s and "nothing in series with CSPIN or CSNIN" in s and "the Vishay draft asks" in s
     assert "M2 records the cans' temperature" in s and "a long outdoor lead" in s
+
+
+def t_the_backstop_holds_through_cs101_and_the_failing_case_is_kept():
+    R = _R()
+    cs = R["cs101"]
+    fl, ra, rb, be = cs["fail"], cs["rem_a"], cs["rem_b"], cs["best"]
+    tab = cs["tab"]
+    assert len(cs["freqs"]) == 121 and abs(cs["freqs"][0] - 30.0) < 1e-9 and abs(cs["freqs"][-1] - 150e3) < 1e-6
+    # the failing case: round 3's circuit trips at every frequency; each remedy alone fails somewhere; the selection nowhere
+    assert fl["layout"] == "behind" and abs(fl["r66"] - 8250.0) < 1e-6 and fl["rm"][0] == 30000.0 and fl["n_cf"] == 0
+    assert not fl["immune"] and all(not r_[4] for r_ in tab["fail"])
+    assert not ra["immune"] and ra["t_allow"] >= 10.0 * R["decision"]["c"]["t_resp_typ"] and not tab["rem_a"][0][4], "(a) alone at 30 Hz"
+    assert not rb["immune"] and tab["rem_b"][0][4] and not all(r_[4] for r_ in tab["rem_b"]), "(b) alone"
+    assert be["immune"] and all(r_[4] for r_ in tab["best"]) and all(r_[3] <= be["m"] for r_ in tab["best"])
+    assert all(max(r_[1], r_[2]) >= r_[3] for r_ in tab["best"]), "a filtered value above its own unfiltered current"
+    # remedy (b) taken far cannot lower the voltage-limit setup at all
+    assert all(abs(a_[0] - b_[0]) < 1e-9 for _f, a_, b_ in cs["rem_b_add"]) and any(b_[1] < a_[1] - 1e-6 for _f, a_, b_ in cs["rem_b_add"])
+    # the coordinator's estimate tested; the loop branch's room; the step crossing times inside the allowance's arithmetic
+    es = cs["est"]
+    assert es["r30"] > fl["m"] and es["m_hi"] > 10 * fl["m"] and abs(1e3 * es["t_cross"] - 0.196) < 0.01
+    assert cs["loop_be"] >= 2.0 and cs["t_stepr"] < cs["t_step0"]
+    s = _s10(R)
+    for k in ("no upset of the kit's operation, no reset, no loss of a bearer", "That is an upset of the kit's operation",
+              "THE CONTROLLING TRADE-OFF", "(i) NO UPSET under M2", "(ii) PROTECTION", "(iii) RATINGS", "the coordinator's starting estimate, tested",
+              "M2 (the laboratory validation of CS101, downstream", "what it does not: the bulk's charge"):
+        assert k in s, k
 
 
 def t_the_backstop_draft_follows_the_hold_and_input_limit_drafts_on_a_copy():
@@ -619,12 +645,14 @@ def t_the_backstop_draft_follows_the_hold_and_input_limit_drafts_on_a_copy():
             out = open(cp, encoding="utf-8").read()
             outs.append(out)
             for want in ('"36": "TRK_SWEN"', '"33": "TRK_VS"', '"32": "TRK_VIN"', '"TRK_VS", "TRK_VIN", "RS2512"', '"C44322")', '"C132788")',
-                         '"C43698")', 'r("R16", "30k', 'r("R66", "8.25k', '"C705798")', 'c("C70", "1n", "TRK_BKS", "GND", "C", "C1588")',
+                         '"C43698")', 'r("R16", "31.6k', 'r("R66", "8.45k', '"C861590")',
+                         'for _cf in ("C70", "C75", "C76", "C77", "C78"): c(_cf, "100n NP0 50V", "TRK_BKS", "GND", "C10u50", "C170182")',
                          '"C728595")', 'for _ca in range(4): c("C7%d" % (_ca + 1), "10u 50V", "TRK_VS", "GND", "C10u50")',
                          '{"1": "TRK_VS", "2": "GND"}, "C224047")', 'r("R14", "100k 1%", "TRK_VS", "TRK_SHDN")', '_intent.rail("TRK_VS"',
                          'part("C69", '):
                 assert out.count(want) == 1, want
-            assert out.count('"C178637")') == 2 and '"C454360")' not in out and "CSPF" not in out and "C469656" not in out
+            assert out.count('{"1": "PV_P", "2": "GND"}, "C178637")') == 2 and '"C454360")' not in out and "CSPF" not in out and "C469656" not in out
+            assert 'c("C70", "1n", "TRK_BKS"' not in out
             assert out.count('r("R10", "115k 1% (RFBOUT1: 15.1 V)"') == 1
         finally:
             shutil.rmtree(d)

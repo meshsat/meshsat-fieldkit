@@ -12,8 +12,9 @@ minors; see the last section).
 **The control decision (L4-E7R, 1 October 2026): `L4E7-CONTROL-DECISION.md`.** The input-current limit below is not
 shown to hold 100 W on warranted manufacturer limits alone; the decision (third round, 2 October 2026) places a hardware
 trip under it (a WSL2512 sense bank, an INA169, a TPS3701 and a TPS3808 holding SWEN low, SWEN off by default), its bound
-on printed limits and two named assumptions carried past their physical meaning, moves RIMON_IN from 23.2k to 30k so the
-limit regulates under the trip, and moves D4, a 50 V bulk and four ceramics behind the sense bank. The settings on this page stand otherwise; `apply_gen_sch_e_backstop.py` applies on top of the hold and input
+on printed limits and two named assumptions carried past their physical meaning, moves RIMON_IN from 23.2k to 31.6k so
+the limit regulates under the trip with room for M2's CS101 ripple, puts the 50 V bulk ahead of the sense bank and D4 and
+four ceramics behind it, and filters the trip's input. The settings on this page stand otherwise; `apply_gen_sch_e_backstop.py` applies on top of the hold and input
 limit drafts.
 
 ## As drawn (NETLIST)
@@ -156,8 +157,8 @@ l4e_replay.py section 11, l4e5 and this record refuse by design: they record the
 L4-E7R adds `apply_gen_sch_e_backstop.py`, which applies after `apply_gen_sch_e_hold.py` and
 `apply_gen_sch_e_input_limit.py` and refuses a generator without them: the sense bank R60 to R64 ahead of R59 on the new
 net TRK_VS (R59 and U5's CSPIN move behind it), U18 INA169, U19 TPS3701, U20 TPS3808G33, U5's SWEN on TRK_SWEN, the 50 V
-bulk, C71 to C74, D4 and R14 on TRK_VS, C70 across R66, and R16 from 23.2k to 30k (C723585). The reasons and every
-figure are in
+bulk on PV_P ahead of the bank, C71 to C74, D4 and R14 on TRK_VS, five 100 nF C0G across R66, and R16 from 23.2k to
+31.6k (C705766). The reasons and every figure are in
 `L4E7-CONTROL-DECISION.md`.
 
 ## The check, and what changed
