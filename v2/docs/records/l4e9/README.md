@@ -23,7 +23,14 @@ U-03 becomes a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC) and moves into 
 items), the panel unit's purchase and measurement and SunPower's and Solbian's drafts join the owner's items, LH-02 is amended
 (no new handover row), and the gate stays NOT CLOSED on U-01, U-02 and U-04 (output section 13). Update round 4 merges L4-E13's update after set 25
 (check 4 at `33b6b7be`): its files re-pinned, A-3(a) and A-4 cited on L4-E7R's regulation and backstop, and the nominal hold's day
-carried as 336.6 Wh under the accepted stage (350.0 Wh stays the replay's first-round basis).
+carried as 336.6 Wh under the accepted stage (350.0 Wh stays the replay's first-round basis). Update round 5 (the owner's
+instruction of 2 October 2026 to resolve Layer 4's remaining dependencies) merges the dependency rounds of L4-E10 (`e464ff88`),
+L4-E12 (`c933724e`) and L4-E11 (`f1856bfd`), each accepted by the coordinator's check 4: their inputs re-pinned, U-01, U-02 and
+U-04 each restated with its exact question, its evidence by vendor, physical and owner, who supplies it, its fallback with its
+numbers and what it could overturn (all three stay architecture-level choices), the register at 146 items (L4-E12's drafted fan
+row, T-H1's procedure, E11-24's hold-up, E11-26's bench rows, L4-E10's charge drafts, and four items of the findings ledger at
+`fnd/l4close` `e1e99c4f`), the owner's items with the TI request (OW-7) and T-H1's bench authorisation (OW-8), and the gate
+still NOT CLOSED on U-01, U-02 and U-04 (output section 14).
 
 | File | What it is |
 |---|---|
@@ -53,4 +60,4 @@ CANDIDATE; L4-E12 made U-02 CONDITIONAL on T-H1 with CFL-002 the owner's questio
 unit selection (PANEL-ACC), no unit bought or measured.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 37 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 38 tests.

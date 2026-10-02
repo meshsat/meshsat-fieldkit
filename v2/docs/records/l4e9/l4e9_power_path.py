@@ -87,7 +87,7 @@ PINS = {
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
     "keystone": ("v2/vendor/keystone/M65p42.pdf", "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"),
     "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "a0ec073de05abe918e983384181f1b6538b5347d099b709ad75e15f0f74091a9"),
-    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "ce2d11f11eecfceef696eac1d6cda66d448cdfb3703d2fc69062e3a1a3f2aeac"),
+    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "df782eda41c9a5abb76229ff5161876e54e2b698869dbdc1307c242e58bbc466"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "b624ac495650a3592c45a37610375fb05bf7b775042cf3de7ec8979bc46a6e50"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
@@ -96,14 +96,14 @@ PINS = {
     "ecss": ("v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md", "576256819950c4432b48769e5f642ee5bfb0eed4f025c03fb9727de7dbeabeea"),
     "chain": ("v2/ecad/tools/pcb_energy_chain.yaml", "a09ca0293afd1f7c553cbffb5b95bc33ae58688a4c20b8de65ec47c15d45996c"),
     # the update round: L4-E10's page, L4-E11's output, page and entry draft, L4-E12's output and page
-    "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "e7d09066c77b6a84cc7870cb3acdf2acd0a768cdb8e7cc1a4fc169d0193b7642"),
-    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "7af3ab81b3e5a12ed54972ec77fe552fd80fd43e225b53e5e5040b030ce1e8ef"),
-    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "ccf3e8a87b49ad87d19ef61305a62aa845c9c7a9b29230b1c18a1334db514eaa"),
+    "l4e10md": ("v2/docs/records/l4e10/L4E10-CELL-THERMAL.md", "576dbf0ac06bcd7aed057c9392bfeef6447700f67971e5805f883df45b075687"),
+    "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "bc585c710476ccaaaedb3554100cbe4493acc539a413f18091f6ef96a4a1b208"),
+    "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "0df601b99ca5a384a4e9323174223e88a22233bae90adff877b9a4df6d081063"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "a73d0c7f73280c7a869b46ea1a78119590fa5db70a34a7671273f448fab976a0"),
-    "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "d6f501457675091c65b50fe4d3fbf4943986848b444c317db09057fd792e3336"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "820a71f9042d69d8dc5c3de2c715e1c19fefdda754a81d27690fce1dfcebca60"),
+    "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "e1aaf1c4562cecb6e60472172270c3562ee0851c57a101f0a7847be443f9cc40"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
-    "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "5e81a4a215bcc7e66fd98d7756d3a1f6f6a5a4984b910f268ca8289e14451d56"),
+    "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
     "cl_eaton": ("v2/docs/records/l4e10/clarification/eaton-scf9550.txt", "9dffb95e8b4874fc0d08824b39d6174372a64e0cbda066241900d6ffdcdc5cb2"),
     "cl_pdi": ("v2/docs/records/l4e12/clarification/pervasive-displays-e2370ks0c1.txt", "4f7db1348cc0b4aca473c17f010085ca9095bf538f580c48804be5602418c117"),
     "cl_sensirion": ("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt", "43c47549235fe6e8162b200324cedd7b34a342bb2a1cb0abf97311f39a48da83"),
@@ -123,14 +123,24 @@ PINS = {
     "l4e13chk4": ("v2/docs/records/l4e13/checks/check-l4e13-4.md", "5a08480af4695e61752d04852d8647e0276f292771596281968acf8903bc73e8"),
     "cl_sunpower": ("v2/docs/records/l4e13/clarification/sunpower-spr-e-flex-100.txt", "453a5a957648a322dc6b011c4c0a601c4af7a41d527f7ef4ab3cd0b79538e08c"),
     "cl_solbian": ("v2/docs/records/l4e13/clarification/solbian-sx-156.txt", "fb66bfb76e7e252ce9df361cd59dcc756be2764a1dcfbd5ef8632346b7a36b1f"),
+    # update round 5 (the owner's instruction of 2 October 2026, Layer 4's remaining dependencies): the three dependency rounds,
+    # each accepted by the coordinator's check 4 (L4-E10 at e464ff88, L4-E12 at c933724e, L4-E11 at f1856bfd), and the drafts they
+    # add; read from the tree
+    "l4e10chk4": ("v2/docs/records/l4e10/checks/check-l4e10-4.md", "eb1fe2846e37cf52db8dc1475c0064bb1b37112e669ba3667ca0e0c8c05f4fc1"),
+    "l4e12chk4": ("v2/docs/records/l4e12/checks/check-l4e12-4.md", "2c4607d59756da7967ac4b68b6870a8e89f972469135b33deaf0ae634ceacb6b"),
+    "l4e11chk4": ("v2/docs/records/l4e11/checks/check-l4e11-4.md", "b0a03440a9bb9a75806a7ba692fde8bc6e72ec4d419b39e8fe92f1ad469f6e65"),
+    "th1proc": ("v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md", "07b94e2ff18647a16118784672b5df414097cbbfc84bd7532cb0c75eab79b9d8"),
+    "cl_tiq": ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "2789ce47a4e81fb6b152687016e84f635a85f6006874d22180cc210f2c23d006"),
 }
 # Read from the tree when the tree's file is the pinned one, else from the named commit: L4-E7R's selected solution (fnd/l4e7,
 # accepted, check 4 at 91e9a4b5), L4-E10's final record (fnd/l4e10, closing check 573c8b8f), L4-E11's (fnd/l4e11, accepted,
 # closing check a15ab384) and L4-E12's (fnd/l4e12, accepted, closing check db41c95d)
 COMMIT_LABEL = {"675b8068": "fnd/l4e7, accepted, closing check 91e9a4b5", "79b2f568": "fnd/l4e10, final, closing check 573c8b8f",
-                "3298d1f1": "fnd/l4e11, accepted, closing check a15ab384", "a86be47b": "fnd/l4e12, accepted, closing check db41c95d"}
-FROM_COMMIT = {"l4e7r": "675b8068", "l4e10": "79b2f568", "l4e10md": "79b2f568", "l4e11": "3298d1f1", "l4e11md": "3298d1f1",
-               "e11entry": "3298d1f1", "l4e12": "a86be47b", "l4e12md": "a86be47b", "cl_topwell": "79b2f568", "cl_eaton": "79b2f568",
+                "3298d1f1": "fnd/l4e11, accepted, closing check a15ab384", "a86be47b": "fnd/l4e12, accepted, closing check db41c95d",
+                "e464ff88": "fnd/l4e10, dependency round, check 4", "c933724e": "fnd/l4e12, dependency round, check 4",
+                "f1856bfd": "fnd/l4e11, dependency round, check 4"}
+FROM_COMMIT = {"l4e7r": "675b8068", "l4e10": "e464ff88", "l4e10md": "e464ff88", "l4e11": "f1856bfd", "l4e11md": "f1856bfd",
+               "e11entry": "3298d1f1", "l4e12": "c933724e", "l4e12md": "c933724e", "cl_topwell": "e464ff88", "cl_eaton": "79b2f568",
                "cl_pdi": "a86be47b", "cl_sensirion": "a86be47b", "cl_gc": "a86be47b", "cl_nicerf": "a86be47b", "cl_bulgin": "a86be47b",
                "cl_adi": "675b8068", "cl_milliohm": "675b8068", "cl_vishay": "675b8068", "cl_ti": "675b8068"}
 FROM_LABEL = {k: COMMIT_LABEL[c] for k, c in FROM_COMMIT.items()}
@@ -778,8 +788,8 @@ def compute():
     F["alt_soa"], F["alt_pulse"] = f(m, 1), f(m, 2)
     F["alt_f1_i2t"] = f(need(t, r"F1 during the longest start: ([\d.]+) A2s against", "the alternative's start I2t"))
     F["e11_items"] = re.findall(r"^\s+(E11-\d\d) \| ([A-Z]+) \| ([^|]+?) \|", t, re.M)
-    if [x[0] for x in F["e11_items"]] != ["E11-%02d" % i for i in range(1, 24)]:
-        refuse(3, "L4-E11's downstream items are not E11-01 to E11-23")
+    if [x[0] for x in F["e11_items"]] != ["E11-%02d" % i for i in range(1, 27)]:
+        refuse(3, "L4-E11's downstream items are not E11-01 to E11-26")
     t = T["e11entry"]
     m = need(t, r'"CSD19536KTT (\d+) V N-FET', "the selected Q7's voltage in the entry draft")
     F["e_q7_sel_v"] = f(m)
@@ -948,6 +958,121 @@ def compute():
     F["lead_awg"], F["lead_mm"] = f(m, 1), f(m, 2)
     m = need(ifc, r"([\d.]+) A per pin with four sharing,\s+([\d.]+) A with one open", "pack pins")
     F["pack_pin_share"] = (f(m, 1), f(m, 2))
+
+    # ============================================= update round 5: the dependency rounds of L4-E10, L4-E12 and L4-E11 (2 October 2026)
+    # Each read from the record's pinned output (strings kept as printed there); each record's check 4 must read accepted.
+    for key, who in (("l4e10chk4", "L4-E10"), ("l4e12chk4", "L4-E12"), ("l4e11chk4", "L4-E11")):
+        if not T[key].startswith("accepted: yes\n"):
+            refuse(3, "%s's check 4 is not accepted" % who)
+    need(T["l4e11chk4"], r"U-04's class stays ARCHITECTURE-LEVEL CHOICE", "check 4's U-04 class")
+    need(T["l4e12chk4"], r"Only below E3-O's floor does\s+the remaining option become the owner's", "check 4's U-02 owner line")
+    need(T["l4e10chk4"], r"FEA-008 stays open", "check 4's FEA-008 open")
+    r5 = {}
+    t = T["l4e10"]      # out 9: U-01 by mode
+    need(t, r"^== 9\. U-01 BY MODE", "L4-E10's section 9")
+    m = need(t, r"^   HL18650V \(II\): ([\d.]+) Wh at \+25 C \(([\d.]+) h;", "the chain's HL18650V usable energy")
+    r5["hl"] = (m.group(1), m.group(2))
+    m = need(t, r"^   35E \(D-06; the chain's inputs MAKER\): ([\d.]+) Wh at \+25 C \(([\d.]+) h\)", "the chain's 35E usable energy")
+    r5["e35"] = (m.group(1), m.group(2))
+    r5["hl_pct"] = need(t, r"the page gives none\), ([\d.]+) % less than the 35E\.", "the chain's difference").group(1)
+    m = need(t, r"with the cells at -5\.52 C,\s+([\d.]+) to ([\d.]+) Wh", "the cold bracket at -5.52 C")
+    r5["cold"] = (m.group(1), m.group(2))
+    m = need(t, r"a cold start at -20 C,\s+([\d.]+) to ([\d.]+) Wh", "the cold start bracket")
+    r5["start"] = (m.group(1), m.group(2))
+    rng = re.findall(r"^   CH (Low Temp|Standard Temp low|Recommended and Standard Temp high) \((T\d) to (T\d)\)\s+(-?\d+) to (\d+) C \(page\): "
+                     r"[\d.]+C = [\d.]+ A for the pack, set ([\d.]+) A; ([\d.]+) V a cell = ([\d.]+) V \(BATOVP ([\d.]+) V\)", t, re.M)
+    if [x[0] for x in rng] != ["Low Temp", "Standard Temp low", "Recommended and Standard Temp high"]:
+        refuse(3, "L4-E10's three charge ranges")
+    r5["ranges"] = rng
+    m = need(t, r"CH thresholds: UTC (-[\d.]+) C \(recovery (-[\d.]+) C\), T1 (-\d+) C, T2 (\d+) C, T5 (\d+) C; T3 (\d+) C, T4 (\d+) C and OTC ([\d.]+) C kept",
+             "the charge thresholds")
+    r5["thr"] = m.groups()
+    r5["hold"] = need(t, r"the kit's hold below (-\d+) C;", "the kit's cold charge hold").group(1)
+    m = need(t, r"the gauge's CUV from ([\d.]+) V to ([\d.]+) V a cell", "the CUV draft")
+    r5["cuv"] = (m.group(1), m.group(2))
+    r5["term"] = need(t, r"TI's default (\d+) mA kept \(ASSUMPTION\)", "the termination current").group(1)
+    warm = re.findall(r"^      to (T\d) \(([-+]\d+) C\): ([\d.]+) h, ([\d.]+) Wh at the low corner; (?:([\d.]+) h, ([\d.]+) Wh at the high corner|not reached \(the mat alone stops at ([\d.]+) C\) at the high corner)", t, re.M)
+    if [w[0] for w in warm] != ["T1", "T2", "T5"]:
+        refuse(3, "L4-E10's warm-up rows")
+    r5["warm"] = warm
+    m = need(t, r"under ([\d.]+) C H1 acts in E5's dwell.*?under ([\d.]+) C E5's cells pass the limit; under ([\d.]+) C E3-O loses 'no shutdown'; under ([\d.]+) C E3-S fails;\s+under ([\d.]+) C E3-O's cells pass it",
+             "the idle limit's thresholds", re.S)
+    r5["idle"] = m.groups()
+    m = need(t, r"\(I\)'s cooler \(([\d.]+) to ([\d.]+) W at the conditioned corner", "(I)'s cooler")
+    r5["cooler"] = (m.group(1), m.group(2))
+    m = need(t, r"added energy storage, (\d+) to (\d+) Wh", "(III)'s added storage")
+    r5["prim"] = (m.group(1), m.group(2))
+    r5["per100"] = need(t, r"Minimum capacity: ([\d.]+) Wh of usable energy per 100 mAh", "usable energy per 100 mAh").group(1)
+    r5["dis"] = need(t, r"Continuous discharge: at or above ([\d.]+) A a cell \(PS-ALLTX's 18 A\)", "the discharge threshold").group(1)
+    r5["crate"] = need(t, r"Charge current from \+10 C: at or above ([\d.]+)C, the drawn 3\.0 A stands", "the charge-current threshold").group(1)
+    m = need(t, r"L4-E9 section 10's U-01 bullet reads ([\d.]+) Wh against ([\d.]+) Wh .*?every\s+shortfall growing by at most ([\d.]+) Wh; this chain gives ([\d.]+) Wh, ([\d.]+) Wh less than the 35E's ([\d.]+) Wh, the same growth",
+             "L4-E10's reading of this record's U-01 bullet", re.S)
+    if (float(m.group(1)), float(m.group(2))) != (F["cell_usable"][1], F["cell_usable"][0]) or (m.group(4), m.group(6)) != (r5["hl"][0], r5["e35"][0]) \
+            or m.group(3) != m.group(5):
+        refuse(3, "L4-E10's two chains: its reading of this record's figures, or the growth, differs")
+    r5["growth"] = m.group(3)
+    m = need(t, r"The drafted request \(`clarification/topwell-hl18650v\.txt`, questions ([\d, ]+)\) gained 7 to 10", "the drafted request's questions")
+    r5["tw_q"] = [int(x) for x in m.group(1).split(", ")]
+    if r5["tw_q"] != [int(x) for x in re.findall(r"^(\d+)\. ", T["cl_topwell"], re.M)] or r5["tw_q"] != list(range(1, 11)):
+        refuse(3, "the drafted request to Topwell does not carry questions 1 to 10")
+    t = T["l4e12"]      # out 8: U-02 in depth
+    need(t, r"^8 U-02 IN DEPTH", "L4-E12's section 8")
+    m = need(t, r"E5, the hold\s+Q ([\d.]+) W \(([\d.]+) W \+ the ballasts ([\d.]+) W\) / \((\d+) - (\d+)\) K = ([\d.]+) W/K", "the line's basis")
+    r5["basis"] = m.groups()
+    if float(m.group(6)) != F["gc"]:
+        refuse(3, "L4-E12's round reads another line than its record's 2.159 W/K")
+    m = need(t, r"its line is ([\d.]+) to ([\d.]+) W/K \(0\.100 W/K per W\)", "the fans' spread on the line")
+    r5["fans"] = (m.group(1), m.group(2))
+    m = need(t, r"so a reading of at least\s+([\d.]+) W/K at a 10 K rise \(([\d.]+) W/K at 20 K\)", "T-H1's pass line")
+    r5["pass"] = (m.group(1), m.group(2))
+    m = need(t, r"Expanded \(k = 2\): ([\d.]+) % at a 10 K rise and ([\d.]+) % at 20 K", "T-H1's expanded uncertainty")
+    r5["unc"] = (m.group(1), m.group(2))
+    m = need(t, r"within 1 % of the rise after ([\d.]+) to ([\d.]+) h a point, (\d+) to (\d+) h", "T-H1's duration")
+    r5["dur"] = m.groups()
+    m = need(t, r"So F4 holds E5 down to ([\d.]+) W/K and E3-O down to ([\d.]+) W/K \(([\d.]+) with the\s+connectors out of the exhaust\); with F3, E5 down to ([\d.]+) W/K",
+             "the plate coupling's floors")
+    r5["f4"] = m.groups()
+    m = need(t, r"takes E5's heat to ([\d.]+) W and its line to ([\d.]+) W/K", "the deeper hold")
+    r5["f3"] = (m.group(1), m.group(2))
+    m = need(t, r"outside fins of twice the area multiply it by ([\d.]+) to ([\d.]+) and fins of twice the area on both faces by ([\d.]+)\s+to ([\d.]+):", "the fins")
+    r5["f1"] = m.groups()
+    m = need(t, r"puts E5's mixed air at ([\d.]+) to ([\d.]+) C", "a stopped fan")
+    r5["stop"] = (m.group(1), m.group(2))
+    r5["plate_stop"] = need(t, r"With the fans stopped the coupled parts stay at most ([\d.]+)\s+C", "the coupled parts with the fans stopped").group(1)
+    need(t, r"THE BEST FALLBACK: F4, the plate coupling, with F3 in E5: no owner ruling, no change to E3-O\. What needs the owner: a reading\s+under E3-O's F4 floor",
+         "the fallback's ownership")
+    m = need(t, r"Register row drafted for L4-E9's downstream register \(its owner\s+inserts it\): \"R-new \| (\w+) \| (.+?) \| (L4-E12 8c) \| (.+?) \| (.+?)\"", "the drafted fan row", re.S)
+    r5["fanrow"] = tuple(" ".join(x.split()) for x in m.groups())
+    t = T["th1proc"]
+    need(t, r"\*\*A draft for the bench, not run; prototype design: nothing\s+has been bought, built, powered or measured\.\*\*", "T-H1's procedure as a draft")
+    if need(t, r"a reading of at least ([\d.]+) W/K at a 10 K rise", "the procedure's pass line").group(1) != r5["pass"][0]:
+        refuse(3, "T-H1's procedure and L4-E12's output give different pass lines")
+    t = T["l4e11"]      # out 9 to 11: U-04's dependency round
+    need(t, r"^9\. THE DEPENDENCY ROUND", "L4-E11's section 9")
+    r5["drows"] = re.findall(r"^   (D\d+) ", t, re.M)
+    if r5["drows"] != ["D%d" % i for i in range(1, 11)]:
+        refuse(3, "L4-E11's rows D1 to D10")
+    m = need(t, r"VSYS needs only ([\d.]+) V against ChargeVoltage's floor ([\d.]+) V, a ([\d.]+) V margin that is large against any plausible unit spread", "D1's margin")
+    r5["d1"] = m.groups()
+    r5["por"] = need(t, r"\"The POR value is indeed (\d+)mA\"", "the POR value").group(1)
+    m = need(t, r"the worst admitted step: (.+?), ([\d.]+) W, ([\d.]+) A at the floor", "the worst admitted step")
+    r5["step"] = m.groups()
+    r5["mj"] = need(t, r"([\d.]+) mJ in all, the MLCCs not counted", "the fallback's energy").group(1)
+    m = need(t, r"against the worst admitted step: ([\d.]+) ms of hold, over the (\d+) ms assumed", "the fallback's hold")
+    r5["hold_ms"] = (m.group(1), m.group(2))
+    m = need(t, r"the bank charges through R_CH at ([\d.]+) mA at most, ([\d.]+) W at most", "the bank's charge")
+    r5["chg"] = (m.group(1), m.group(2))
+    m = need(t, r"narrows the architecture's dependence on TI from four statements \(([^)]+)\) to two\s+\(([^)]+)\)", "the narrowed dependence")
+    r5["dep"] = (m.group(1), m.group(2))
+    m = need(t, r"negative answers with a remedy inside arrangement \(A\): ([^;]+); with none: (D\d) and (D\d), whose negative answers return \(B\)", "the remedies")
+    r5["remedy"] = m.groups()
+    need(t, r"so U-04 STAYS AN ARCHITECTURE-LEVEL CHOICE", "U-04's class in L4-E11")
+    need(t, r"one Panasonic EEHZK1V181P .*?4 x EEHZK1E471P.*?R_CH 330 Ohm.*?D_H, a Diodes B540C-13-F", "the fallback's parts", re.S)
+    r5["tiq"] = re.findall(r"^- \*\*(Q-TI-\d+(?:, addendum)?) \(rows? ([^)]+)\)\.\*\*", T["cl_tiq"], re.M)
+    if [q[0] for q in r5["tiq"]] != ["Q-TI-3, addendum", "Q-TI-11", "Q-TI-12", "Q-TI-13", "Q-TI-14"]:
+        refuse(3, "TI-QUESTIONS.md's questions")
+    need(T["cl_tiq"], r"\*\*Drafts for the owner to send\*\*", "the TI questions as the owner's drafts")
+    F["r5"] = r5
     return F, where
 
 
@@ -1775,6 +1900,107 @@ def rejudge_lines(F, D, A, E):
     return L
 
 
+def round5_expect(F):
+    """The round's figures each architecture-level choice must quote as its record printed them (refused otherwise, exit 4)."""
+    r = F["r5"]
+    rg = r["ranges"]
+    return {
+        "U-01": ["%s A to %s V from T1" % (rg[0][5], rg[0][7]), "%s A to %s V from T2" % (rg[1][5], rg[1][7]),
+                 "the drawn %s A to %s V from T5" % (rg[2][5], rg[2][7]), "UTC %s C" % r["thr"][0], "the kit's hold below %s C" % r["hold"],
+                 "usable energy %s Wh (%s h) against the 35E's %s Wh (%s h) at +25 C, %s %% less" % (r["hl"] + r["e35"] + (r["hl_pct"],)),
+                 "%s to %s Wh with the cells at -5.52 C" % r["cold"], "%s to %s Wh from a cold start at -20 C" % r["start"],
+                 "under %s C makes H1 act" % r["idle"][0], "under %s C E5's cells pass it" % r["idle"][1], "under %s C\nE3-O" % r["idle"][2],
+                 "under %s C E3-S fails" % r["idle"][3], "under %s C E3-O's cells pass it" % r["idle"][4], "(%s to %s W into the sealed case" % r["cooler"],
+                 "%s to %s Wh of added storage" % r["prim"], "under %s A a cell back to (I)" % r["dis"], "(%s Wh\nper 100 mAh" % r["per100"],
+                 "at least %sC" % r["crate"], "ten questions"],
+        "U-02": ["at least %s W/K" % F["r5"]["basis"][5], "puts %s W" % r["basis"][0], "(%s W and L4-E8's %s W of ballasts)" % (r["basis"][1], r["basis"][2]),
+                 "(%s to %s W/K over the representatives)" % r["fans"], "(k = 2, %s %% at a 10 K rise)" % r["unc"][0],
+                 "a reading of at least %s W/K at\na 10 K rise (%s W/K at 20 K)" % r["pass"], "%s to %s h" % r["dur"][2:],
+                 "holds E5 down to %s W/K and E3-O down to %s W/K (%s W/K with the +80 C connectors out of the exhaust)" % r["f4"][:3],
+                 "(%s W into the case), holds E5 to %s W/K" % r["f3"], "F4 with F3 holds E5 down to %s\nW/K" % r["f4"][3],
+                 "by %s to %s (outside, twice\nthe area) or %s to %s (both faces)" % r["f1"], "%s to %s C on W4's still values" % r["stop"],
+                 "at most %s C" % r["plate_stop"], "Below E3-O's floor (%s W/K) the remaining option is the owner's" % r["f4"][1]],
+        "U-04": ["(D1 to D10)", "from %s to %s" % r["dep"], "ChargeCurrent at POR is %s mA" % r["por"],
+                 "VSYS needs %s V against ChargeVoltage's\nfloor %s V (a %s V margin" % r["d1"], "%s mJ, %s ms of hold" % (r["mj"], r["hold_ms"][0]),
+                 "(the USB-C PD outlet, %s W) over the %s ms assumed" % (r["step"][1], r["hold_ms"][1]), "charging at %s mA at most (%s W" % r["chg"],
+                 "D4 and D6 to D10 have remedies inside (A)", "For D1 and D3 there is none inside (A)"],
+    }
+
+
+def round5_lines(F, st, reg):
+    r = F["r5"]
+    L = []
+    p = L.append
+    p("14. UPDATE ROUND 5: LAYER 4'S REMAINING DEPENDENCIES (the owner's instruction of 2 October 2026; L4-E10, L4-E12 and L4-E11, each")
+    p("   accepted by the coordinator's check 4: L4-E10 at e464ff88, L4-E12 at c933724e, L4-E11 at f1856bfd, merged into this line; their")
+    p("   outputs and pages re-pinned in section 0 with the three checks, T-H1-PROCEDURE-DRAFT.md and TI-QUESTIONS.md)")
+    p("   U-01, L4-E10 out 9 (the limits by mode MAKER-PAGE; the charge drafts SESSION, never applied; the energy INFERRED, its ageing an ASSUMPTION):")
+    for nm, ta, tb, lo, hi, cur, vc, vp, ovp in r["ranges"]:
+        p("     charge %s, %s to %s (%s to %s C on the page): %s A to %s V (%s V a cell; BATOVP %s V)" % (nm, ta, tb, lo, hi, cur, vp, vc, ovp))
+    th = r["thr"]
+    p("     thresholds: UTC %s C (recovery %s C), T1 %s C, T2 %s C, T5 %s C, T3 %s C, T4 %s C, OTC %s C; the kit's hold below %s C; CUV %s to %s V"
+      % (th + (r["hold"],) + r["cuv"]))
+    p("       a cell; the termination current %s mA (TI's default, ASSUMPTION)" % r["term"])
+    p("     usable energy at +25 C (PS-IDLE-SPEC, aged 0.80): the HL18650V %s Wh (%s h) against the 35E's %s Wh (%s h), %s %% less; the cold end"
+      % (r["hl"] + r["e35"] + (r["hl_pct"],)))
+    p("       brackets only (ASSUMPTION): %s to %s Wh with the cells at -5.52 C, %s to %s Wh from a cold start at -20 C" % (r["cold"] + r["start"]))
+    w = {x[0]: x for x in r["warm"]}
+    p("     the warm-up of a cold-soaked block from -20 C, out of usable energy: to T1 %s to %s Wh; to T2 %s to %s Wh; to T5 %s Wh, or not reached"
+      % (w["T1"][3], w["T1"][5], w["T2"][3], w["T2"][5], w["T5"][3]))
+    p("       at the high corner (the mat alone stops at %s C)" % w["T5"][6])
+    p("     this record keeps L4-E10's first chain in out 8 and the page's section 10 (%s against %s Wh, which L4-E10 reads back from the page); the"
+      % (fmt(F["cell_usable"][1]), fmt(F["cell_usable"][0])))
+    p("       round's chain gives %s against %s Wh, the same %s Wh of growth in every shortfall: no figure of this record moves"
+      % (r["hl"][0], r["e35"][0], r["growth"]))
+    p("     what the signed specification would change: an idle hot limit under %s, %s, %s, %s or %s C (H1 acting in E5's dwell, E5's cells, E3-O's"
+      % r["idle"])
+    p("       'no shutdown', E3-S, E3-O's cells); (I)'s cooler %s to %s W into the sealed case; (III) %s to %s Wh of added storage; continuous"
+      % (r["cooler"] + r["prim"]))
+    p("       discharge under %s A a cell back to (I); the charge current from +10 C at least %sC; %s Wh of usable energy per 100 mAh a cell"
+      % (r["dis"], r["crate"], r["per100"]))
+    p("     the request to Yichun Topwell Power: questions %d to %d (OW-2)" % (r["tw_q"][0], r["tw_q"][-1]))
+    b = r["basis"]
+    p("   U-02, L4-E12 out 8:")
+    p("     the line: %s W (%s W and the ballasts' %s W) over (%s - %s) K = %s W/K, at 0 K of margin; the fans are counted (pwr_budget.py's rows,"
+      % b)
+    p("       tier R), and the picked fans' power moves the line 0.100 W/K per W (%s to %s W/K over the representatives)" % r["fans"])
+    p("     T-H1 by the drafted procedure: a pass at a reading of at least %s W/K at a 10 K rise (%s W/K at 20 K), the expanded uncertainty %s %%"
+      % (r["pass"] + (r["unc"][0],)))
+    p("       and %s %%; a point %s to %s h, the eight %s to %s h; the bench once the owner authorises it (OW-8)" % ((r["unc"][1],) + r["dur"]))
+    f4 = r["f4"]
+    p("     the fallbacks (the session's): F4 holds E5 down to %s W/K and E3-O down to %s W/K (%s W/K out of the exhaust); F3 (%s W) holds E5 to"
+      % (f4[0], f4[1], f4[2], r["f3"][0]))
+    p("       %s W/K; F4 with F3 holds E5 down to %s W/K; F1's fins multiply a reading by %s to %s or %s to %s; below E3-O's floor (%s W/K) the"
+      % ((r["f3"][1], f4[3]) + r["f1"] + (f4[1],)))
+    p("       remaining option is the owner's (a deviation of E3-O's configuration or a device-set re-pick, CHO-001)")
+    p("     a stopped fan: E5's mixed air %s to %s C on W4's still values; the parts coupled to the plate at most %s C" % (r["stop"] + (r["plate_stop"],)))
+    fr = [x for x in reg if x[0] == "R-150"]
+    p("     L4-E12's drafted register row inserted as %s (%s, %s)" % (fr[0][0], fr[0][1], fr[0][4]))
+    p("   U-04, L4-E11 out 9 to 11:")
+    p("     rows %s to %s, each with what a maker's answer and what one bench sample can establish; ChargeCurrent at POR %s mA (TI's E2E answer)"
+      % (r["drows"][0], r["drows"][-1], r["por"]))
+    p("     D1: VSYS needs %s V against ChargeVoltage's floor %s V, a %s V margin once the mode is shown (one sample: that unit and revision)" % r["d1"])
+    p("     the fallback E11-24 (R-152): %s mJ, %s ms of hold over the %s ms assumed for the worst admitted step (%s, %s W); the bank's charge"
+      % (r["mj"], r["hold_ms"][0], r["hold_ms"][1], r["step"][0], r["step"][1]))
+    p("       at most %s mA, %s W" % r["chg"])
+    p("     the dependence on TI narrowed from %s to %s; remedies inside (A) for %s; none for %s and %s, whose negative answers return (B)"
+      % (r["dep"] + r["remedy"]))
+    p("     TI's questions (TI-QUESTIONS.md, OW-7): %s" % "; ".join("%s (%s)" % q for q in r["tiq"]))
+    arch = [c["id"] for c in CHOICES if c["class"] == ARCH]
+    p("   the choices (out 9 (b)): %s stay ARCHITECTURE-LEVEL CHOICES, each row with its question, its evidence by vendor, physical and owner,"
+      % ", ".join(arch))
+    p("     who supplies it, its fallback and what it could overturn; U-02's fallback is the session's down to %s W/K in E5 and %s W/K in E3-O,"
+      % (f4[3], f4[1]))
+    p("     the owner's below E3-O's floor; U-04 stays on %s and %s" % (r["remedy"][1], r["remedy"][2]))
+    closed = all(g["verdict"] == "PASS" for g in GATE)
+    p("   the gate: %s: criteria 1 and 5 on %s; criterion 2 %s with %d defects open (the rounds add none)"
+      % ("CLOSED" if closed else "NOT CLOSED", ", ".join(arch), [g for g in GATE if g["n"] == 2][0]["verdict"], sum(1 for d in DEFECTS if d["state"] == "OPEN")))
+    p("   the register: R-150 to R-154 new, R-114 restated (E11-25); from the findings ledger: R-102 (item 8), R-139 (item 5), R-155 (item 10)")
+    p("     and R-156 (item 1, PENDING L4-E7's surge round); %d items" % len(reg))
+    p("   the owner's items: OW-2 (ten questions), OW-7 (the TI request), OW-8 (T-H1's bench), OW-4 the other drafts: actions, not questions")
+    return L
+
+
 def round3_lines(F, D, A, E, st):
     L = []
     p = L.append
@@ -2148,19 +2374,24 @@ GATE = [
      "rows": ["IF-02", "IF-04", "IF-05", "IF-07", "IF-09", "IF-10", "IF-11", "IF-12", "IF-13"], "choices": ["U-01", "U-02", "U-04"], "verdict": "CONDITIONAL",
      "constraint": "the solar function's 100 W bound is CONDITIONAL on G_CM and U18's VIN+ bias (L4-E7R) and its panel on PANEL-ACC (U-03, a CONDITIONAL "
                    "DOWNSTREAM UNIT SELECTION since L4-E13: no unit bought or measured, R-35); REQ-015 at "
-                   "9.00 V at the plug is a CONDITIONAL CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23 (U-04); the electronics at the margins "
-                   "are CONDITIONAL on T-H1 at or over 2.159 W/K and L4-E12's conditions (U-02); the battery path's thermal design is FEA-008's (U-01); "
-                   "PS-ALLTX's chain at 18 A for 60 s (PWR-F12) is an open obligation",
-     "overturn": "possibly, on named evidence only: U-01 on the HL18650V's specification (D-06's pack energy and protection settings), U-02 on "
-                 "T-H1's reading and the fans (the sealed case's thermal design or a device-set re-pick), U-04 on TI's N1 and the bench's VSYS "
-                 "(the charger's power path); the rest, the panel unit included, resolves by a value, a part or a measurement on the same topology"},
+                   "9.00 V at the plug is a CONDITIONAL CANDIDATE on E11-05, E11-06, E11-09, E11-22 and E11-23 (U-04; L4-E11's dependency round, "
+                   "check 4 at f1856bfd, leaves TI's D1 and D3 deciding it); the electronics at the margins are CONDITIONAL on T-H1 at or over "
+                   "2.159 W/K and L4-E12's conditions (U-02; L4-E12's round, check 4 at c933724e, states the basis, the fans and T-H1's procedure); "
+                   "the battery path's thermal design is FEA-008's (U-01; L4-E10's round, check 4 at e464ff88, states the limits by mode, the "
+                   "charge drafts and the usable energy); PS-ALLTX's chain at 18 A for 60 s (PWR-F12) is an open obligation",
+     "overturn": "possibly, on named evidence only: U-01 on the HL18650V's signed specification (D-06's pack energy, protection settings and "
+                 "charge ranges), U-02 only on a T-H1 reading under E3-O's floor with the session's fallbacks (1.399 W/K: the sealed case's "
+                 "thermal design or a device-set re-pick, the owner's), U-04 on TI's D1 or D3 (the charger's power path); the rest, the panel "
+                 "unit included, resolves by a value, a part or a measurement on the same topology"},
     {"n": 2, "criterion": "material power-path defects have engineering resolutions and bounded supporting calculations",
      "rows": ["IF-01", "IF-02", "IF-04", "IF-05", "IF-13"], "choices": [], "verdict": "CONDITIONAL",
      "constraint": "no material defect is open: D-01 to D-05 and D-08 are resolved in design (drafted or bounded), D-06 is resolved in design by "
                    "L4-E11's interconnect with its evidence items (E11-10 to E11-16), D-07 and D-09 are superseded by the replacement of the LM5069 "
                    "(E11-19 finds no new one); the resolutions rest on CONDITIONAL rows (the loop's typical rows, the makers' installed and "
                    "short-time ratings, R227's pulse rating, the start into a hard short's transconductance bound) and the hot short in service "
-                   "on open evidence (the loop's inductance, E11-20)",
+                   "on open evidence (the loop's inductance, E11-20); the dependency rounds add no defect: L4-E11's D9 and D10 are the "
+                   "entry's delay and transconductance rows already CONDITIONAL here, and E11-24 is U-04's fallback, a register row (R-152), "
+                   "not a defect's resolution",
      "overturn": "no: each resolves by a part, a rating or a measurement at the vehicle or the solar entry"},
     {"n": 3, "criterion": "remaining assumptions explicit, with their impact and verification method",
      "rows": [], "choices": [], "verdict": "PASS", "constraint": "", "overturn": ""},
@@ -2168,14 +2399,17 @@ GATE = [
      "rows": [], "choices": [], "verdict": "PASS", "constraint": "", "overturn": ""},
     {"n": 5, "criterion": "no unresolved uncertainty could overturn the selected architecture while described as routine later testing",
      "rows": ["IF-09", "IF-10", "IF-11"], "choices": ["U-01", "U-02", "U-04"], "verdict": "CONDITIONAL",
-     "constraint": "three unresolved choices could overturn it and are named as such, not as later testing: U-01 (FEA-008's cell; the owner's two "
-                   "items), U-02 (MESHSAT-1478; CONDITIONAL on T-H1 at or over 2.159 W/K and L4-E12's conditions, CFL-002 the owner's question), "
-                   "U-04 (a CONDITIONAL CANDIDATE with the evidence that closes it); an owner and an acceptance criterion do not close them. U-03 "
+     "constraint": "three unresolved choices could overturn it and are named as such, not as later testing, each with its question, evidence, "
+                   "supplier and fallback stated by its dependency round: U-01 (FEA-008's cell: the signed specification and the owner's two "
+                   "items; L4-E10, check 4 at e464ff88), U-02 (MESHSAT-1478: T-H1 at or over 2.159 W/K by the drafted procedure, the session's "
+                   "fallbacks down to 1.125 W/K in E5 and 1.399 W/K in E3-O, the owner's below E3-O's floor; CFL-002 the owner's question; "
+                   "L4-E12, check 4 at c933724e), U-04 (TI's D1 and D3; E11-24 takes D2 and D5 off TI; L4-E11, check 4 at f1856bfd); an "
+                   "owner and an acceptance criterion do not close them. U-03 "
                    "left this category with L4-E13's acceptance: a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC, R-35) that decides which "
                    "unit, not the topology or the source class",
-     "overturn": "yes, on named evidence only: U-01 (D-06's pack energy and settings), U-02 (the sealed case's thermal design, the fans, the "
-                 "device set), U-04 (the charger's power path); U-03 no longer can, unless route 2 proves infeasible with route 1 still "
-                 "closed (L4E13-06)"},
+     "overturn": "yes, on named evidence only: U-01 (D-06's pack energy and settings), U-02 (only below E3-O's floor: the sealed case's "
+                 "thermal design or the device set), U-04 (TI's D1 or D3: the charger's power path); U-03 no longer can, unless route 2 proves "
+                 "infeasible with route 1 still closed (L4E13-06)"},
 ]
 
 ARCH = "ARCHITECTURE-LEVEL CHOICE"                              # could overturn the architecture: named by criteria 1 and 5
@@ -2184,40 +2418,78 @@ DOWNSTREAM = "CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC)"  # U-03 since L
 # assignment, never one of these: each stays open, and keeps every criterion that names it from PASS, until its evidence lands.
 CHOICES = [
     {"id": "U-01", "title": "FEA-008: the battery path's cell and thermal design (L4-E10, final)", "class": ARCH,
+     "question": "does the HL18650V class's signed product specification confirm the rows D-06's pack needs, which L4-E10 holds only on the "
+                 "maker's product page (MAKER-PAGE: unsigned, no test conditions): the idle hot limit (+80 C, the 30-day storage row), storage at "
+                 "-33 C, each storage row's state of charge and recovery, charge below 0 C, the charge current from +10 C (at least 0.357C), "
+                 "continuous discharge (at least 6.0 A a cell for PS-ALLTX), the end voltages and the minimum capacity?",
      "constraint": "LO-01d to LO-01g (E3-O, E5, E3-S, E4-S with the pack fitted) have no route that holds on held evidence; LO-01a holds only with "
-                   "T-H1 at least 1.666 W/K in both lid states (1.8058 W/K with L4-E8's ballasts counted, L4-E12)",
-     "settles": "the HL18650V's signed specification confirming storage at +71 C and -33 C at the stored charge and the +80 C idle limit, then L4-E10's "
-                "margins re-run (1.06 K under H1 and 0.97 K under U2's INFERRED trip at LO-01e); T-H1 measured in both lid states",
-     "alternatives": "(II) a wide-temperature 18650 in D-06's 4S3P (recommended, CONDITIONAL); (I) the 35E with powered cooling (INCONCLUSIVE: up to "
-                     "35 W into the sealed case); (III) latent storage and a primary-fed heater (rejected at LO-01d to f; added energy storage under D-06); "
-                     "a requirement change (the owner's, D-29)",
-     "owner": "(1) send the drafted request for the specification; (2) once it confirms, approve the cell change (D-06's about 145 Wh to about 121 Wh "
-              "nominal, REQ-046 and REQ-077 restated with the cell, about USD 42 a pack); if declined, LO-01d to g stay a release gate (OW-2, OW-3)",
-     "overturns": "on the specification's answer: D-06's pack energy (16.4 % less usable) and the pack's protection settings under (II); with a "
-                  "negative answer and no requirement change LO-01d to g keep no route on held evidence, and (I)'s powered cooling (up to 35 W into "
-                  "the sealed case) would reopen U-02's heat budget; the power path's topology stays",
+                   "T-H1 at least 1.666 W/K in both lid states (1.8058 W/K with L4-E8's ballasts counted, L4-E12). L4-E10's dependency round "
+                   "(check 4 at e464ff88) states the limits by mode and drafts the charge for the 4S3P, never applied: 0.84 A to 16.40 V from T1 "
+                   "-9 C, 1.68 A to 16.80 V from T2 1 C, the drawn 3.00 A to 16.80 V from T5 11 C to T3 42 C, UTC -9.0 C, the kit's hold below "
+                   "-7 C; usable energy 90.2 Wh (2.11 h) against the 35E's 107.9 Wh (2.52 h) at +25 C, 16.4 % less; at the cold end only "
+                   "brackets (45.1 to 69.6 Wh with the cells at -5.52 C, 37.2 to 54.1 Wh from a cold start at -20 C, ASSUMPTION)",
+     "evidence": ("Yichun Topwell Power's signed product specification answering the drafted request's ten questions (the storage rows with "
+                  "their charge and recovery, the basis with the rest at high charge, the gauge's data, the cold charge band and termination, "
+                  "the pulse current, the cold capacity, the end-of-life capacity and self-discharge); Eaton's statement on F2 above +60 C and "
+                  "in storage (R-103)",
+                  "T-H1 in both lid states (R-104, R-151); with the cell chosen, L4-E10's margins re-run on the signed rows (1.06 K under H1 "
+                  "and 0.97 K under U2's INFERRED trip at LO-01e) and each LO row's TEST-PLAN run with the pack fitted (R-47, R-109)",
+                  "send the request (OW-2); once the specification confirms, approve the cell change inside D-06's 4S3P (about 145 Wh to about "
+                  "121 Wh nominal, REQ-046 and REQ-077 restated with the cell, about USD 42 a pack; OW-3); if declined, LO-01d to g stay a "
+                  "release gate"),
+     "supplier": "the maker, through the owner, who sends the request; Layer 6 components files it (R-103); the session re-runs L4-E10's margins "
+                 "(R-47); the prototype bench runs T-H1 and the LO rows; the owner approves the cell",
+     "fallback": "with no answer, U-01 stays a release gate and every row CONDITIONAL (no ruling needed). With a narrower signed figure, at "
+                 "L4-E10's thresholds: an idle limit under 78.94 C makes H1 act in E5's dwell, under 74.73 C E5's cells pass it, under 73.07 C "
+                 "E3-O loses its 'no shutdown', under 71.00 C E3-S fails, under 68.86 C E3-O's cells pass it; E3-O and E5 then fall back to "
+                 "(I)'s cooler (8.18 to 35.21 W into the sealed case, INCONCLUSIVE) and E3-S to requirement change A (the owner's); storage "
+                 "warmer than -33 C to (III)'s primary-fed heater (470 to 940 Wh of added storage, an owner's ruling under D-06) or requirement "
+                 "change A; continuous discharge under 6.0 A a cell back to (I); the charge current, the end voltage and the capacity (3.22 Wh "
+                 "per 100 mAh a cell) move energy, not the architecture; or the 35E kept with (I), or a requirement change (the owner's, D-29)",
+     "overturns": "on the specification's answer: D-06's pack energy (16.4 % less usable, 90.2 against 107.9 Wh at +25 C) and the pack's protection "
+                  "settings and charge ranges under (II); with a narrower idle limit and no requirement change, (I)'s powered cooling (up to 35.21 W "
+                  "into the sealed case) would reopen U-02's heat budget, and a narrower storage floor would add 470 to 940 Wh of primary storage "
+                  "under D-06; the power path's topology stays",
      "rows": ["IF-10"]},
     {"id": "U-02", "title": "MESHSAT-1478: the electronics against the inside air at D-02a's +55 C margin and E5's +60 C dwell (L4-E12)", "class": ARCH,
+     "question": "does the sealed Peli 1450 with its 3 mm plate, lid open with the fans, conduct at least 2.159 W/K: E5 under the hold puts 21.587 W "
+                 "into the case (19.497 W and L4-E8's 2.09 W of ballasts) across the 10 K from E5's +60 C dwell to the +70 C class, at 0 K of "
+                 "margin, with fans whose power and operating range are not yet known (D-18 open)?",
      "constraint": "L4-E12's route (c), E3-O as stated and the hold in E5 only, is CONDITIONAL on T-H1 lid open with the fans at or over 2.159 W/K "
                    "(E3-O alone 1.806 W/K; 2.709 W/K with no hold), the hold's reference within +-0.899099 K of the mixed air, the parts out of the "
                    "cooler's exhaust, the fans' rating (D-18), the pushbuttons and two regulators changed and PDi's statement; at the line E3-O's air "
-                   "is 67.55 C and E5's 70.00 C, while the design as it stands (LO-01a's floor, no hold) reaches 76.25 C in E5; inside the envelope "
-                   "no location holds the SGP41 to its maker's conditions (CFL-002)",
-     "settles": "T-H1 measured in both lid states at or over 2.159 W/K with the picked fans; the forced hold and the SGP41's shutdown at room "
-                "temperature; E3-O and E5 with thermocouples on the +70 C parts (R-104, R-109); PDi's and Sensirion's answers; the owner's answer "
-                "to CFL-002",
-     "alternatives": "(a) the enclosure alone at 2.709 W/K with no hold; (b) wider-rated parts (five are device-set parts, the owner's, CHO-001); "
-                     "the plate coupling if T-H1 reads between 1.806 and 2.159 W/K; a device-set re-pick or a stated deviation of E3-O's "
-                     "configuration (the owner's)",
-     "owner": "CFL-002, the SGP41 in the envelope: A (a BME688-class sensor in its place, L4-E12's recommendation), B (the VOC channel dropped) or C "
-              "(the SGP41 kept, its channel reported as not covered); send PDi's and Sensirion's requests (OW-1, OW-4); later, only on T-H1's "
-              "reading, a re-pick or a deviation",
-     "overturns": "on T-H1's reading and the fans: under 2.159 W/K E5 fails for the +70 C class unless the plate coupling holds, under 1.806 W/K E3-O "
-                  "too, so the sealed case's thermal design (no vent, the ruling of 7 September 2026) or the device set (CHO-001) could change; a "
-                  "stopped fan takes the enclosure to its fans-off conductance; CFL-002 changes a sensor, not the architecture; never the power "
-                  "path's topology",
+                   "is 67.55 C and E5's 70.00 C, while the design as it stands (LO-01a's floor, no hold) reaches 76.25 C in E5; L4-E12's dependency "
+                   "round (check 4 at c933724e) counts the fans in the energy budget (pwr_budget.py's rows, tier R), and their picked power moves "
+                   "the line 0.100 W/K per W (2.071 to 2.333 W/K over the representatives); inside the envelope no location holds the SGP41 to its "
+                   "maker's conditions (CFL-002)",
+     "evidence": ("D-18's picked fans: the maker's power at the duty the controls set and an operating range covering -20 C to the inside air "
+                  "(REQ-043; no held sheet gives a fan's operating temperature; R-142, R-150); PDi's and Sensirion's answers",
+                  "T-H1 by the drafted procedure (T-H1-PROCEDURE-DRAFT.md, R-151): an empty Peli 1450 with the 1450PF frame and a plate blank, "
+                  "heaters spread as E5's hold, eight points (two powers, both lid states, fans on and off), 29 to 84 h; it passes only if the "
+                  "reading less its expanded uncertainty (k = 2, 10.7 % at a 10 K rise) reaches 2.159 W/K, so a reading of at least 2.416 W/K at "
+                  "a 10 K rise (2.285 W/K at 20 K) on the assumed budget, which the bench replaces with its own; the forced hold and the "
+                  "SGP41's shutdown at room temperature, its lag measured (R-138, R-139); then E3-O and E5 with thermocouples on the +70 C "
+                  "parts (R-104, R-109)",
+                  "authorise T-H1's bench (its purchase; a chamber run at +60 C only if wanted, his spend; OW-8); CFL-002 (OW-1); send PDi's and "
+                  "Sensirion's requests (OW-4)"),
+     "supplier": "the prototype bench, as Layer 9's physical verification, once the owner authorises it (the session cannot run it); Layer 6 "
+                 "components for D-18's pick (R-142, R-150); the makers, through the owner",
+     "fallback": "the session's, inside the rulings (no vent, the Peli 1450 kept): F4, the RockBLOCK, board D and the LimeSDR on pads to the "
+                 "plate, holds E5 down to 1.564 W/K and E3-O down to 1.399 W/K (1.309 W/K with the +80 C connectors out of the exhaust); F3, a "
+                 "deeper hold in E5 that keeps the logging (13.429 W into the case), holds E5 to 1.552 W/K; F4 with F3 holds E5 down to 1.125 "
+                 "W/K, with no owner ruling and no change to E3-O; F1, fins on the plate, multiplies a reading by 1.125 to 1.131 (outside, twice "
+                 "the area) or 1.252 to 1.363 (both faces); the H5007NL, the ATP16 and the PXP4043/C take wider parts or makers' statements "
+                 "(R-141). Below E3-O's floor (1.399 W/K) the remaining option is the owner's: a deviation of "
+                 "E3-O's configuration (the hold in E3-O) or a device-set re-pick (CHO-001)",
+     "overturns": "on T-H1's reading and the fans: from 2.159 W/K down to E5's 1.125 W/K and E3-O's 1.399 W/K the session's fallbacks hold and the "
+                  "architecture stays; under E3-O's floor the sealed case's thermal design (no vent, the ruling of 7 September 2026) or the device "
+                  "set (CHO-001) could change, the owner's; a stopped fan puts E5's mixed air at 72.38 to 85.36 C on W4's still values, the parts "
+                  "coupled to the plate at most 69.82 C; CFL-002 changes a sensor, not the architecture; never the power path's topology",
      "rows": ["IF-11"]},
     {"id": "U-03", "title": "O-1: the solar panel inside REQ-016's window (L4-E13, accepted)", "class": DOWNSTREAM,
+     "question": "which physical unit is inside REQ-016's window: a unit measured to PANEL-ACC and accepted on A-1 (Vm20 plus U_V at most "
+                 "25.000 V at -20 C and 1000 W/m2), A-2 (at least 1.365591 W) and A-3(b); not whether the window can be met, which L4-E13 "
+                 "shows on a unit equal to the typical rows",
      "constraint": "L4-E13 (accepted, checks 3 and 4 at fae419d1 and 33b6b7be): route 1, a maker's warranted band, closes nothing today; route 2, one identified "
                    "SunPower SPR-E-Flex-100 measured against A-1 to A-3, is feasible on a unit equal to the typical rows: A-1 Vm20 + U_V 24.1505 V "
                    "against 25.000 V at -20 C and 1000 W/m2 (margin 0.8495 V), the window Voc25 20.315 to 22.156 V; A-2 27.0849 W above "
@@ -2225,35 +2497,61 @@ CHOICES = [
                    "and backstop (trip at most 3.7408 A), (b) 8.1817 A, (c) 13.82 A, a COMPONENT_LIMITATION on J_SOLAR and PV_IN; A-4 on "
                    "L4-E7R's two layers (the regulation's 25 V corner 73.3436 W; the backstop's static bound 93.5521 W, CONDITIONAL on G_CM and "
                    "the VIN+ bias); no physical unit accepted",
-     "settles": "one unit bought and measured (M1 to M3 and A-2's reading at the specification) and accepted on A-1, A-2 and A-3(b) (R-35); its "
-                "trace rerun (R-52); J_SOLAR and PV_IN with a rating that covers A-3(c) (R-148); M3's n at or under 2 for the disturbance check (R-149); "
-                "L4-E7R's regulation and backstop applied (drafted) for A-3(a) and A-4",
-     "alternatives": "route 1, a maker's warranted band inside the window (the drafts to SunPower and Solbian, OW-4); another unit of the same "
-                     "curve shape inside the window; REQ-016's window restated (the owner's; not needed)",
-     "owner": "the purchase and the measurement of one unit (OW-6) and sending the two route-1 drafts (OW-4): actions, not questions",
+     "evidence": ("route 1, a maker's warranted Voc band inside the window (the drafts to SunPower and Solbian, OW-4); it closes nothing today",
+                  "one unit bought, recorded by serial number and measured (M1 to M3 and A-2's reading at the specification) and accepted on A-1, "
+                  "A-2 and A-3(b) (R-35); its trace rerun (R-52); J_SOLAR and PV_IN with a rating that covers A-3(c) (R-148); M3's n at or under "
+                  "2 for the disturbance check (R-149); L4-E7R's regulation and backstop applied (drafted) for A-3(a) and A-4",
+                  "the purchase and the measurement of one unit (OW-6) and sending the two route-1 drafts (OW-4): actions, not questions"),
+     "supplier": "the owner (the purchase, the two drafts sent); the measurement to the specification under his authority; Layer 6 components "
+                 "(PANEL-ACC's acceptance R-35, J_SOLAR and PV_IN R-148, M3's n R-149); the makers, if they answer",
+     "fallback": "another unit of the same curve shape inside the window; route 1 if a maker warrants a band; REQ-016's window restated (the "
+                 "owner's; not needed)",
      "overturns": "nothing of the architecture: it decides which unit, not the topology and not the source class; REQ-016's window, the stage, "
                   "its hold and its 100 W control stay; it returns to an architecture-level choice only if route 2 proves infeasible with "
                   "route 1 still closed (L4E13-06)",
      "rows": ["IF-01"]},
     {"id": "U-04", "title": "source-only and dead-pack operation (L4-E11: arrangement (A), a CONDITIONAL CANDIDATE)", "class": ARCH,
+     "question": "does the BQ25731 regulate VSYS at ChargeVoltage with no battery current (D1: without it arrangement (A) cannot run state S4), and "
+                 "what does it regulate with the charge inhibited (CHRG_INHIBIT = 1 or ChargeCurrent 0) and no battery current (D3: REQ-077's "
+                 "hold in every state and R-a's S2)? The held datasheet (SLUSE66A) states neither as a behaviour of the part",
      "constraint": "L4-E11 selects arrangement (A), the drawn charger with no battery FET, with rules R-a to R-d and the replaced entry: at a 9.00 V "
                    "plug the source delivers 29.09 to 42.52 W at VBAT and the shed warm-up (28.12 W plan) is carried with 0.98 W in hand while P1 "
                    "stays at most 20.51 W; REQ-015 at 9.00 V at the plug is a CONDITIONAL CANDIDATE, not closed: at the load's hi corner P1 "
-                   "(35.24 W) exceeds the source's least, TI states neither VSYS's regulation with no battery under load steps (N1) nor what it "
-                   "regulates with charge inhibited in state S2 (N2, Q-TI-3), the cells' warming time has no held model, and R-b's cases (ii) "
-                   "and (iii) are INCONCLUSIVE",
-     "settles": "E11-05 (TI's answers: N1, N2 for S2, Q-TI-2), E11-06 (R-85 extended: P1 at most 20.51 W, the front end at least 0.88021, the pin's "
-                "band, the breaker never tripped, VSYS's step response), E11-09 (the knee drawn), E11-22 (R-b's cases), E11-23 (the warm-up time "
-                "at the plug)",
-     "alternatives": "(B) a charger with a battery FET power path (it reopens L4-E4 to L4-E8's settings on a part whose sheet is not held); (C) a "
-                     "pre-charge path on board P (its resistor's heat in the sealed case); VSYS's capacitance first (E11-07); REQ-015's acceptance "
-                     "restated (the owner's; not needed while (A) stands)",
-     "owner": "none unless the evidence is negative and REQ-015 is restated; TI's questions are an outside contact the owner makes (REVIEW-REQUEST.md, "
-              "Q-TI-3 restated as N2 with N1 added; OW-4)",
-     "overturns": "on TI's N1 or the bench's VSYS under the kit's load steps with no battery: the charger's power path, VSYS's capacitance first "
-                  "(E11-07) and only then (B); on the efficiency, the pin's band or P1's load, the knee or F1, not the topology",
+                   "(35.24 W) exceeds the source's least, TI states neither VSYS's regulation with no battery current (D1) nor what it regulates "
+                   "with the charge inhibited (D3, Q-TI-3), the cells' warming time has no held model, and R-b's cases (ii) and (iii) are "
+                   "INCONCLUSIVE (D8, D7); L4-E11's dependency round (check 4 at f1856bfd) maps every specification left to a maker to its claim "
+                   "(D1 to D10) and narrows the dependence on TI from D1, D2, D3, D5 to D1, D3; ChargeCurrent at POR is 256 mA (TI's E2E answer), "
+                   "under R-b's bound",
+     "evidence": ("TI's statements of D1 and D3 as behaviours of the part, or a datasheet revision (Q-TI-11 and the addendum to Q-TI-3 in "
+                  "clarification/TI-QUESTIONS.md, with REVIEW-REQUEST.md's Q-TI-2 and Q-TI-3); D2, D4 and D6 to D8 from TI too, D9 and D10 from "
+                  "the entry's makers (Q-TI-12 to Q-TI-14); an answer stated as a limit settles a row production-wide, a typical figure does not "
+                  "(R-114)",
+                  "one bench sample per row (R-153): for D1 the mode on that silicon revision, where VSYS needs 12.3 V against ChargeVoltage's "
+                  "floor 16.716 V (a 4.416 V margin once the mode is shown); for D3 the mode with the bit set and with ChargeCurrent 0; evidence "
+                  "for that unit and revision, never a production-wide bound; R-85 extended at the plug (E11-06) and E4-O's warm-up (E11-23, "
+                  "R-137)",
+                  "send TI's questions (REVIEW-REQUEST.md with TI-QUESTIONS.md; OW-7); a change to REQ-077's acceptance only if both the bit and "
+                  "ChargeCurrent 0 fail D3"),
+     "supplier": "Texas Instruments, through the owner (E2E or TI support); Layer 6 components files and judges the answers (R-114); the prototype "
+                 "bench runs the one-sample methods (R-153) and R-85",
+     "fallback": "for D2 and D5, E11-24 (the session's, a register row, R-152): one EEHZK1V181P directly on VSYS and a hold-up bank of four "
+                 "EEHZK1E471P charged through R_CH 330 Ohm and discharging through D_H, a B540C-13-F: 54.07 mJ, 1.117 ms of hold for the worst "
+                 "admitted step (the USB-C PD outlet, 48.39 W) over the 1 ms assumed, the bank charging at 51.2 mA at most (0.864 W in a 1 W "
+                 "part); D4 and D6 to D10 have remedies inside (A). For D1 and D3 there is none inside (A): a negative answer returns (B), a "
+                 "charger whose battery FET regulates VSYS by design (an architecture change; five records reopen); for D3 alone, a change to "
+                 "REQ-077's acceptance (the owner's); (C), a precharge path, answers D6 only",
+     "overturns": "on TI's D1 or D3, or a bench sample showing the mode absent: the charger's power path, to (B) with a battery FET; D2 no longer can "
+                  "once E11-24 is fitted, within its 1.117 ms and CONDITIONAL on the 1 ms that D2's bench reading turns into a margin; the "
+                  "efficiency, the pin's band or P1's load move the knee or F1, not the topology",
      "rows": ["IF-09", "IF-10"]},
 ]
+EVIDENCE_LABELS = ("vendor", "physical", "owner")
+
+
+def evidence_text(c):
+    """A choice's evidence in one line, by its three sources (the page's cell and the output's line)."""
+    return "; ".join("(%s) %s" % (lab, x) for lab, x in zip(EVIDENCE_LABELS, c["evidence"]))
+
 
 # The material power-path defects (criterion 2), with their state after the update round.
 DEFECTS = [
@@ -2322,21 +2620,21 @@ OWNER_ITEMS = [
                            "sensor in its place (L4-E12's recommendation); B, the VOC channel dropped; C, the SGP41 kept, its channel reported as "
                            "not covered above a 49.0 C reading and after storage outside 5 to 30 C",
      "docs": [("l4e12md", "L4-E12's page, section 8")]},
-    {"id": "OW-2", "what": "U-01, item 1: send the drafted request for the HL18650V's signed product specification (Yichun Topwell Power)",
-     "docs": [("cl_topwell", "the request")]},
+    {"id": "OW-2", "what": "U-01, item 1: send the drafted request for the HL18650V's signed product specification (Yichun Topwell Power), "
+                           "ten questions since L4-E10's dependency round (7 to 10 added: the cold charge band and termination, the pulse "
+                           "current, the cold capacity, the end-of-life capacity and self-discharge)",
+     "docs": [("cl_topwell", "Yichun Topwell Power: the HL18650V's signed specification, ten questions (U-01)")]},
     {"id": "OW-3", "what": "U-01, item 2, once that specification confirms L4-E10's rows: approve the cell change inside D-06's 4S3P (about 145 Wh "
                            "to about 121 Wh nominal, REQ-046 and REQ-077 restated with the cell, about USD 42 a pack); if declined, LO-01d to g stay a "
                            "release gate",
      "docs": [("l4e10md", "L4-E10's page, section 8")]},
-    {"id": "OW-4", "what": "the outside-contact drafts to send (the owner chooses the channel)",
-     "docs": [("cl_topwell", "Yichun Topwell Power: the HL18650V's signed specification (U-01)"),
-              ("cl_pdi", "Pervasive Displays: the E2370KS0C1's storage and operation (U-02)"),
+    {"id": "OW-4", "what": "the other outside-contact drafts to send (the owner chooses the channel; Topwell's is OW-2, TI's OW-7)",
+     "docs": [("cl_pdi", "Pervasive Displays: the E2370KS0C1's storage and operation (U-02)"),
               ("cl_sensirion", "Sensirion: the SGP41's duration, recovery and storage (U-02, CFL-002)"),
               ("cl_adi", "Analog Devices: the LT8705A's IMON_IN limits (the 100 W bound; R-33, R-101)"),
               ("cl_milliohm", "Milliohm: the HoJLR2512's temperature coefficient below +25 C (R-101)"),
               ("cl_vishay", "Vishay: the WSL2512's pulse capability (R-101)"),
               ("cl_ti", "Texas Instruments: the INA169's error envelope (R-101)"),
-              ("ti_review", "Texas Instruments: the battery packet's Q-TI-2 and Q-TI-3, with L4-E11's N1 and N2 for S2 added before sending (U-04; E11-05, R-114)"),
               ("cl_eaton", "Eaton: the SCF9550 above +60 C and in storage (PWR-F12; R-103)"),
               ("cl_sunpower", "SunPower (the module's maker): a warranted Voc band at STC for the SPR-E-Flex-100 (U-03's route 1)"),
               ("cl_solbian", "Solbian: a warranted Voc band for the SX 156 (U-03's route 1)")]},
@@ -2345,11 +2643,21 @@ OWNER_ITEMS = [
     {"id": "OW-6", "what": "PANEL-ACC (U-03, L4-E13): buy one SunPower SPR-E-Flex-100, recorded by serial number, and have it measured to the "
                            "specification (M1 to M3 and A-2's reading); actions under the owner's authority (money), not questions",
      "docs": [("l4e13md", "L4-E13's page, PANEL-ACC")]},
+    {"id": "OW-7", "what": "U-04: send TI the battery packet's questions (REVIEW-REQUEST.md section 4, Q-TI-2 and Q-TI-3 above all) with L4-E11's "
+                           "TI-QUESTIONS.md (Q-TI-11 to Q-TI-14 and the addendum to Q-TI-3, each tied to its row D1 to D10; Q-TI-2 partly "
+                           "answered on E2E, the POR value 256 mA); D1 and D3 decide U-04 (E11-05, E11-25; R-114); an action, not a question",
+     "docs": [("ti_review", "Texas Instruments: the battery packet"), ("cl_tiq", "Texas Instruments: the dependency round's questions")]},
+    {"id": "OW-8", "what": "U-02: authorise T-H1 on the bench, its purchase (a current-moulding Peli 1450 with the 1450PF frame, a 3 mm plate "
+                           "blank, the heaters, the fans as stand-ins until D-18, a second PicoLog TC-08) and who runs it; a chamber run at +60 C "
+                           "only if wanted, at a laboratory, his spend; the procedure is drafted and the session cannot run it (R-104, R-151); "
+                           "an action, not a question",
+     "docs": [("th1proc", "T-H1's procedure, drafted")]},
 ]
 OWNER_NOT_DRAFTED = ("not yet drafted (engineering work first, then the owner sends): Littelfuse, F1's total clearing I2t at 900 A and 58 V DC "
                      "(R-115, E11-16); Coilcraft, L10's inductance against current at temperature (R-120) and L1's Isat at 85 C (R-31); Milliohm, "
                      "R227's single-pulse rating (R-101)")
 OWNER_MARK = {"l4e12md": r"\*\*Owner question: which of these three\?\*\*", "l4e10md": r"The recommendation needs the owner for exactly two things",
+              "cl_tiq": r"\*\*Drafts for the owner to send\*\*", "th1proc": r"once the owner authorises it",
               "ti_review": r"Nothing in this file has been sent to anyone", "l4e13md": r"the purchase and the measurement are the owner's\s+actions"}
 
 # The accepted records' downstream items mapped onto this register (deduplicated): L4-E11's E11-NN by its From column (every
@@ -2393,8 +2701,10 @@ def gate_violations(gate, st):
         if g["n"] == 2 and g["verdict"] == "PASS" and any(d["state"] == "OPEN" for d in DEFECTS):
             bad.append((2, "PASS while a material defect is open"))
     for c in CHOICES:
-        if not all(c.get(k) for k in ("constraint", "settles", "alternatives", "owner", "overturns", "rows", "class")):
+        if not all(c.get(k) for k in ("question", "constraint", "evidence", "supplier", "fallback", "overturns", "rows", "class")):
             bad.append((0, "choice %s lacks a field" % c["id"]))
+        elif len(c["evidence"]) != len(EVIDENCE_LABELS) or not all(c["evidence"]):
+            bad.append((0, "choice %s does not give its evidence by vendor, physical and owner" % c["id"]))
     klass = {c["id"]: c.get("class") for c in CHOICES}
     arch = {c["id"] for c in CHOICES if c.get("class") == ARCH}
     for g in gate:
@@ -2747,6 +3057,12 @@ def main():
             p("      could it overturn the architecture: %s" % g["overturn"])
     if bad:
         refuse(4, "the gate's rule fails: %s" % bad)
+    for cid, exp in round5_expect(F).items():
+        c = [x for x in CHOICES if x["id"] == cid][0]
+        whole = " ".join([c["question"], c["constraint"], evidence_text(c), c["supplier"], c["fallback"], c["overturns"]])
+        for s in exp:
+            if " ".join(s.split()) not in whole:
+                refuse(4, "%s does not quote the round's figure: %r" % (cid, " ".join(s.split())))
     closed = all(g["verdict"] == "PASS" for g in GATE)
     p("   Layer 4's power architecture closes: %s" % ("YES" if closed else "NO, criteria %s are not PASS" % ", ".join(str(g["n"]) for g in GATE if g["verdict"] != "PASS")))
     p("   MATERIAL POWER-PATH DEFECTS (criterion 2): %d, %d open" % (len(DEFECTS), sum(1 for d in DEFECTS if d["state"] == "OPEN")))
@@ -2760,8 +3076,11 @@ def main():
       % ", ".join(c["id"] for c in CHOICES if c["class"] != ARCH))
     for c in CHOICES:
         p("     %s %s [%s]; rows %s" % (c["id"], c["title"], c["class"], ", ".join("%s %s" % (r, st[r][1]) for r in c["rows"])))
-        for k, lab in (("constraint", "the exact constraint"), ("settles", "the evidence that settles it"), ("alternatives", "the alternatives"),
-                       ("owner", "the owner's items"), ("overturns", "what it could overturn")):
+        p("        the exact unresolved question: %s" % c["question"])
+        p("        the present state: %s" % c["constraint"])
+        for lab, x in zip(EVIDENCE_LABELS, c["evidence"]):
+            p("        the evidence (%s): %s" % (lab, x))
+        for k, lab in (("supplier", "who supplies it"), ("fallback", "the fallback"), ("overturns", "what it could overturn")):
             p("        %s: %s" % (lab, c[k]))
     p("   (a) DOWNSTREAM IMPLEMENTATION AND VERIFICATION TASKS: the register of section 10; an owner and an acceptance criterion close the")
     p("       ASSIGNMENT, not the item: each stays OWED, DRAFTED, MISSING DRAFT or PENDING until its acceptance is met on the built prototype")
@@ -2800,6 +3119,10 @@ def main():
             continue
         if not any(re.search(r"\b%s\b" % eid, r[3]) for r in reg):
             refuse(4, "L4-E11's %s is not in the register's From column" % eid)
+    fr = [r for r in reg if r[0] == "R-150"]
+    k, what, frm, own, acc = F["r5"]["fanrow"]
+    if not fr or fr[0][1] != k or what not in fr[0][2] or frm not in fr[0][3] or not own.startswith(fr[0][4]) or acc.lower() not in fr[0][5].lower():
+        refuse(4, "L4-E12's drafted fan row is not the register's R-150")
     for nm, mp in (("L4-E10", E10_MAP), ("L4-E12", E12_MAP)):
         for owner, refs in mp.items():
             for x in refs:
@@ -2807,7 +3130,7 @@ def main():
                     refuse(4, "%s's %s maps to %s, not in the register" % (nm, owner, x))
                 if x.startswith("OW-") and x not in {o["id"] for o in OWNER_ITEMS}:
                     refuse(4, "%s's %s maps to %s, not an owner item" % (nm, owner, x))
-    p("     the accepted records' items, deduplicated: L4-E11's E11-01 to E11-23 each named in a row's From column (E11-19 answered here, out 12);")
+    p("     the accepted records' items, deduplicated: L4-E11's E11-01 to E11-26 each named in a row's From column (E11-19 answered here, out 12);")
     p("       L4-E10 by owner: %s" % "; ".join("%s -> %s" % (k, ", ".join(v)) for k, v in E10_MAP.items()))
     p("       L4-E12 by owner: %s" % "; ".join("%s -> %s" % (k, ", ".join(v)) for k, v in E12_MAP.items()))
     h_text = open(os.path.join(HERE, "LAYER5-HANDOVER.md"), encoding="utf-8").read() if os.path.exists(os.path.join(HERE, "LAYER5-HANDOVER.md")) else ""
@@ -2825,6 +3148,9 @@ def main():
         p(ln)
     p("")
     for ln in round3_lines(F, D, A, E, st):
+        p(ln)
+    p("")
+    for ln in round5_lines(F, st, reg):
         p(ln)
     p("")
     p("END. Desk arithmetic on read figures; nothing is measured.")
