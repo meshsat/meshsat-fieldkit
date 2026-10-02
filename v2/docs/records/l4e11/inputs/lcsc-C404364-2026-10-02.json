@@ -1,0 +1,36 @@
+{
+ "what": "LCSC public product-detail answer for C404364 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C404364), no login; kept fields only, with the price ladder in USD",
+ "read_utc": "2026-10-02T09:58Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), the U-04 question for the consolidation",
+ "role": "option (B1): the battery FET Q39, AOS AONS21357 30 V P-channel (BATDRV, SLUSE65A p.92: Ciss under 5 nF)",
+ "code": "C404364",
+ "brand": "AOS",
+ "model": "AONS21357",
+ "package": "TDSON-8-EP(5x6)",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/4a8ee5129b9b922f23d175e8e4ff0748.pdf?productCode=C404364",
+ "stock": 3875,
+ "price_usd": {
+  "1": 0.5338,
+  "10": 0.4238,
+  "30": 0.3778,
+  "100": 0.2957,
+  "500": 0.2694,
+  "1000": 0.2546
+ },
+ "params": {
+  "Output Capacitance(Coss)": "430pF",
+  "Ciss-Input Capacitance": "2.83nF",
+  "Pd - Power Dissipation": "48W",
+  "Configuration": "-",
+  "Operating Temperature": "-55℃~+150℃",
+  "Drain to Source Voltage": "30V",
+  "Current - Continuous Drain(Id)": "36A",
+  "Reverse Transfer Capacitance (Crss)": "365pF",
+  "RDS(on)": "12.3mΩ@4.5V",
+  "Number": "1 P-Channel",
+  "Gate Charge(Qg)": "70nC@10V",
+  "Vgs": "±25V",
+  "Gate Threshold Voltage (Vgs(th))": "2.3V",
+  "Type": "P-Channel"
+ }
+}
