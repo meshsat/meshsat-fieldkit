@@ -1,0 +1,20 @@
+{
+ "what": "LCSC public product-detail answer for C2985708 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C2985708), no login; kept fields only",
+ "read_utc": "2026-10-02T03:41Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), fix round",
+ "role": "board E R19, the entry's sense resistor in the U-04 fix round (4.5 mOhm 1 %, 2512)",
+ "code": "C2985708",
+ "brand": "Milliohm",
+ "model": "HoLLR2512-3W-4.5mR-1%",
+ "package": "2512",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/a6c04b348627a06d1c2e9d73fb46c6ff.pdf?productCode=C2985708",
+ "stock": 4225,
+ "params": {
+  "Resistance": "4.5mΩ",
+  "Power(Watts)": "3W",
+  "Voltage Rating": "-",
+  "Type": "Current Sense Resistor",
+  "Tolerance": "±1%",
+  "Temperature Coefficient": "±50ppm/℃"
+ }
+}
