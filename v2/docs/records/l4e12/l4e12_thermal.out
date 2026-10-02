@@ -41,7 +41,8 @@ is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMP
    charger's loss on the loads; as board B is generated (PS-SURV) 23.345 W. HIGH: 50.423 W (not covered, as L4-E10 and LO-01a).
 2b T-H1's floor (LO-01a): the inside air at or under the SGP41's +55 C (MAKER, p.7 Table 5) at +40 C on shore: 1.6664 W/K;
    L4-E10's printed 1.6664 W/K, 70.00 and 75.00 C agree: yes (70.00, 75.00 C uncond.)
-2c L4-E8's ballasts, 2.09 W at the bound's worst corner (cited, L4-E9 IF-08): +1.254 K. The inside air (mixed) at the floor:
+2c L4-E8's ballasts, 2.09 W at the bound's worst corner (MODELED by L4-E8, cited from L4-E9 IF-08): +1.254 K. The inside air
+   (mixed) at the floor:
    E3-O 71.25 C, E5's dwell 76.25 C (steady; a 4 h E3-O from a kit at +55 C reaches 69.78 to 70.44 C at 32.53's 10 to 8 kJ/K,
    so the steady air is the bound; E5's 6 h dwell reaches it). At HIGH heat E5's air would be 91.5 C.
 2d A charge running on shore (the pack outside, at room temperature, inside its window): +3.446 W, +2.07 K (sensitivity; the
