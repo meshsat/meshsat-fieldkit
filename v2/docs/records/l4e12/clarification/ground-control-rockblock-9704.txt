@@ -1,0 +1,14 @@
+Draft for the owner to send (the session contacts no outside party). MESHSAT-1478 under MESHSAT-1357, task L4-E12,
+2 October 2026. To: Ground Control, technical support.
+
+Subject: RockBLOCK 9704 SMA: non-operating temperature range
+
+Your specification page gives "Operating Temperature -40C to +70C, <95% RH" for the RockBLOCK 9704, and the data sheet
+RB9704-001 gives no range. Could you confirm:
+
+1. The non-operating (storage) temperature range of the RockBLOCK 9704 SMA, its supercapacitors included.
+2. Whether an unpowered unit may sit at up to +73 C for 4 hours, and at up to +73 C for about 6 hours a day on 10
+   consecutive days, then work to specification once back inside -40 to +70 C.
+3. Which part sets the +70 C operating limit (the supercapacitors or the Iridium 9704 module).
+
+Thank you.

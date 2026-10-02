@@ -1,0 +1,824 @@
+l4e12_thermal.py: layer 4 task L4-E12 (MESHSAT-1478 under MESHSAT-1357). The kit's electronics against the inside air at
+D-02a's +55 C operating margin (E3-O) and E5's +60 C dwell in the sealed Peli 1450. Prototype design, desk arithmetic: nothing
+is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMPTION, CONDITIONAL. Revised after the focused
+check astra-check-l4e12-1 and the targeted recheck astra-check-l4e12-2 (the record's section 12 maps each item to its change).
+
+0 Reproductions and inputs
+0a pwr_budget.py re-run in a child: pwr_budget.out and pwr_budget.json byte for byte: yes
+0b pwr_red2.py re-run in a child: pwr_red2.out byte for byte: yes
+0c pwr_red2.py imported here prints pwr_red2.out byte for byte (its heat() and states are the record's): yes
+0d grade_check.build() (it writes nothing): 150 fitted lines, 19 modules, 10 lines no grade row covers; its own in-use bar 51 C
+0e 63 inputs pinned by sha256 (the list ends this output)
+0f The rating categories (1j): the heading each of 22 statements is printed under read before it on its page, with no competing
+   heading between (ap2112_tj, ap6320_tj, ap64500_tj, ap64500_tjop, bme_st, csd77_tj, csd78_tj, lv1t08_ta, lvc2g07_ta, pcm_bias,
+   pcm_rec, pcm_st, sgp_op, sgp_rec, sgp_rec_st, sgp_st, tlv755_tjabs, tlv755_tjrec, tlv758_tjabs, tlv758_tjrec, tps62933_tj,
+   tusb8041_tj): yes; the BME688's +-0.5 C read in Table 10's Typ column (p.14): yes
+
+1 The acceptance, read first (quoted)
+1a D-02a (owner ruling, 25 September 2026): "TEST-PLAN's +55 C operating, +71 C storage and -33 C storage are QUALIFICATION MARGINS over the -20 to +40 C use and -20 to +45 C storage envelope, with two pass lines: operate to specification inside the envelope; survive and recover at the margin."
+1b SC-03 (session choice under the owner's standing rule): "A qualification margin, judged like E3 and E4 under D-02a: survive and recover at the margin, and operate to specification inside the envelope."
+1c TEST-PLAN E3 (section 2): "**E3-O** operation 4 hours at +55 C deployed with the monitor and radios on, on shore or vehicle input, as a deviation with the cells kept out of the heat"
+   its pass line: "survive and recover (D-02a): no damage, no deformation, no lost data or keys, CM5 throttling logged but no shutdown, and the functional check passes once the kit is back inside the envelope with its pack refitted"
+   section 6: "**test deviation**: deployed, monitor and radios on, on shore or vehicle input, the cells kept out of the heat (the arrangement above)"; the deployed state: "deployed (open, antennas on, cables in, pack fitted, shaded, D-02e)"
+1d TEST-PLAN E5: 10 cycles of 24 h at 95 % RH, 30 to 60 C, "deployed (lid open; the case has **no vent opening**", "on shore or vehicle input with the kit logging"
+   its pass line: "survive and recover (D-02a, SC-03): no condensation inside (inside humidity log), no corrosion, functional check passes"
+1e The deviation's arrangement (section 6, E3-O and E5): "the kit's controls read room-temperature cells, so of their temperature triggers only C1's inside-air trigger sheds modules"
+1f CONOPS 4: "C1, module shedding | inside air +50 C or any cell +55 C | normal to the reduced mode; reached again in the reduced mode, to the heat stage; restores 5 K below"; the heat stage (after BANK-R1) runs one module carrying the owner's D-02b example (GNSS, the LoRa mesh, Iridium and APRS beacons) with the SOS path, the required set (REQ-052).; it turns off "after BANK-R1: slots 1 and 2, so bank 1 (the SDR, the camera, the QMX, the wall port), the 5G module (its data is slot 2's), both WiFi link cards, the monitor"
+1g D-02b (owner ruling): "Closed-lid operation in a defined REDUCED MODE (for example GNSS, the LoRa mesh, Iridium and APRS beacons, monitor off, one CM5); a closed-lid state and thermal test join TEST-PLAN; a lid sensor is an engineering item (the case-open switch can serve both). Accepted consequences: above +35 C ambient the kit runs one module; with three loaded modules charging holds off above about +25 C."
+1h REQ-051's acceptance: "Inside the envelope, the functional check (TEST-PLAN section 4) passes at the envelope's limits, the hot and humid limits with the pack fitted (TEST-PLAN E3-A, E5-A). At each margin level, in the state the row names (E3-S and E4-S stored with the pack out; E3-O and E5 as stated deviations, the pack outside the chamber): no damage, no lost data or keys, and full function resumed once the kit is back inside the envelope, with its logs intact. The exposures with the pack fitted (E3-T, E4-T) and the pack's own soaks (E3-P, E4-P) run at its cells' limits (TEST-PLAN section 6). TEST-PLAN states both pass lines, never reports a margin result as an envelope claim, and never reports a deviation's pass as the kit's margin with its pack."
+1i What it requires (INFERRED from 1a to 1h): at both margins the kit is to survive and recover; operation to specification is
+   required only inside the envelope. E3-O runs four hours at +55 C deployed with the monitor and radios on; the one control
+   action its arrangement records is C1's inside-air shedding of modules (1e), which takes the kit to the heat stage (1f).
+   Nothing else may turn a radio off in E3-O: the radios C1 leaves on (Iridium, the LoRa mesh, APRS, both E72, GNSS) stay on for
+   the four hours, and a further shedding would change E3-O's configuration (no authority: withdrawn from the first revision).
+   E5 requires logging, not the radios (1d), so a step of the kit's controls that turns radios off may act in E5 and must not
+   act in E3-O. The SGP41 is neither the monitor nor a radio and E3-O's row does not name it; its own protective shutdown is
+   inside E3-O's stated configuration (SESSION reading, named for TEST-PLAN's owner). The lid-closed mode and EMCON ("radios
+   dark (owner ruling D-05)") change the configuration and are not used. E3-O is taken to start from a kit stabilised at the
+   chamber's +55 C, as L4-E10 took it; started straight from E3-S's +71 C soak, the radios would be past +70 C at power-on (a
+   sequence item for TEST-PLAN's owner).
+1j Which limits apply (the corrected rule, SESSION). Every judged limit names its category, read where the maker prints it (0f).
+   A powered part is judged on its recommended or operating range (the range a sheet's electrical characteristics hold over
+   counts as operating), whether it must work in the exposure (the CM5, the logging chain, the fans, the radios in E3-O) or is
+   merely powered. An absolute rating (Absolute Maximum Ratings, limiting values, a junction-and-storage row) is a stress rating
+   only (PCM2912A p.5: "Stresses beyond those listed under Absolute Maximum Ratings may cause permanent damage to the device.
+   These are stress ratings only, and functional operation of the device at these or any other conditions beyond those indicated
+   under Recommended Operating Conditions is not implied") and clears a part only as an exclusion screen: past its supporting
+   range (or with none held) and under its absolute rating a part is INCONCLUSIVE, operation or survival not stated, unless its
+   maker states recovery (Quectel RM520N p.19: "without any unrecoverable malfunction. Radio spectrum and radio network are not
+   influenced, while one or more specifications, such as P out, may undergo a reduction in value, exceeding the specified
+   tolerances of 3GPP. When the temperature returns to the normal operating temperature level, the module will meet 3GPP
+   specifications again"). An unpowered part: its storage range where the maker states one outside its absolute table, else a
+   range it may operate in (INFERRED to cover it unpowered); an absolute storage row is a screen, and a duration the maker does
+   not state stays open. The SGP41 (section 2.3, p.6): its gas sensing specifications hold only when it is stored and operated
+   under Table 4's recommended conditions, operation -10 to +50 C and storage 5 to 30 C; Table 5's -20 to +55 C operating and
+   -40 to +70 C short-term storage are absolute (p.7). A part through the plate or the wall: the plate to the inside air.
+
+2 The thermal state at the margins (MODELED unless marked)
+2a The heat stage after BANK-R1 (PS-SURV-R) on shore, plan: 23.272 W at the pack, 24.996 W into the case with the front end's and
+   charger's loss on the loads; as board B is generated (PS-SURV) 23.345 W. HIGH: 50.423 W (not covered, as L4-E10 and LO-01a).
+2b T-H1's floor (LO-01a): the inside air at or under the SGP41's +55 C (MAKER, p.7 Table 5, an absolute rating; LO-01a's
+   criterion reproduced as stated) at +40 C on shore: 1.6664 W/K; by the corrected rule the bay air at Table 4's +50 C needs
+   2.709 W/K with the ballasts (a finding for LO-01a's owner and for E3-L's "+55 C" line; the record's downstream table);
+   L4-E10's printed 1.6664 W/K, 70.00 and 75.00 C agree: yes (70.00, 75.00 C uncond.)
+2c L4-E8's ballasts, 2.09 W at the bound's worst corner (MODELED by L4-E8, cited from L4-E9 IF-08): +1.254 K. The inside air
+   (mixed) at the floor:
+   E3-O 71.25 C, E5's dwell 76.25 C (steady; a 4 h E3-O from a kit at +55 C reaches 69.78 to 70.44 C at 32.53's 10 to 8 kJ/K,
+   so the steady air is the bound; E5's 6 h dwell reaches it). At HIGH heat E5's air would be 91.5 C.
+2d A charge running on shore (the pack outside, at room temperature, inside its window): +3.446 W, +2.07 K. E3-O states no
+   charge state; the route below keeps E3-O as stated and counts no charge (TEST-PLAN's owner records the pack's state, 7).
+2e Inside the envelope at the floor (+40 C, heat stage, ballasts): 56.25 C, over the SGP41's +55 C line of E3-L (REQ-052);
+   LO-01a's floor with the ballasts counted is 1.8058 W/K (a finding for L4-E9 and L4-E10, section 7).
+2f The plate and the walls (INFERRED from W4's film coefficients, inside 10 to 25, outside face 9.5 to 11.5, wall 8 to 10 W/m2K, wall t/k 0.018):
+   the plate sits at the ambient plus 0.465 to 0.725 of the rise, a PP wall's inner face at 0.541 to 0.781 of it, the floor's
+   inner face at 0.588 to 0.898 (outer film 3 to 8 W/m2K).
+2g The enclosure (INFERRED, W4, a sensitivity estimate and not a model of the kit): lid open with fans 1.22 (low case) to 2.85
+   W/K (high case); 32.53 gives 3.0 to 3.3. With the inside film taken as infinite the outer films give 2.10 W/K in the low
+   case and 3.86 W/K in the high case: a cap of the low case's coefficients and areas, not a universal bound. Low outer films
+   with W4's high inside film: 1.62 W/K; high outer films with its low inside film: 2.05 W/K. Lid closed with fans: W4 1.06 to
+   2.49 W/K, 32.53 1.5 to 2.0 W/K.
+2h The running module's cooler exhaust (MODELED): the representative 30 mm fan's 3.7 CFM free-air (MAKER, Sunon p.1) at 50 %
+   through the heatsink (ASSUMPTION), 0.873 l/s: the CM5's 4.5 W and the fan's 0.51 W lift the exhaust 5.64 K over the mixed air in
+   the heat stage, and the idle module's 2.0 W 2.78 K in the hold. A part outside the exhaust sits at the mixed air.
+2i The design as it stands (the heat stage at T-H1's floor, the ballasts on):
+   E3-O ambient 55.0 C; mixed air 71.25 C; in the exhaust 76.89 C; plate 62.6..66.8 C; PP wall's inner face 63.8..67.7 C
+   E5   ambient 60.0 C; mixed air 76.25 C; in the exhaust 81.89 C; plate 67.6..71.8 C; PP wall's inner face 68.8..72.7 C
+
+3 The feasibility screen of the design as it stands (the heat stage at T-H1's floor, the radios on at both margins), by 1j
+3a The parts read one by one: per margin, its state (work: powered and required; on: powered; off), its limit by 1j with its
+   category (MAKER, document and page) and its local bounds (inside, the mixed air .. the exhaust; face and wall, the plate ..
+   the inside air). REACHED: a part required to work past its limit at the lower bound, or anything past its absolute rating;
+   PLACEMENT: past it only at the upper bound; INCONCLUSIVE: past the supporting limit of a part not required to work (or no
+   limit held) and under its absolute rating, the screen cleared and survival or operation not stated; NOT REACHED.
+   CM5       Raspberry Pi CM5, slot 3 (running) and slots 1, 2 (off); device set (CHO-001)
+     E3-O work limit +85    operating; powered; MAKER: cm5-datasheet.pdf p.28 "CM5′s overall operating temperature range is from -20°C to +"
+          local 71.3..76.9 C (MODELED), NOT REACHED, 8.11 K inside
+     E5   work limit +85    operating; powered; MAKER: cm5-datasheet.pdf p.28 "CM5′s overall operating temperature range is from -20°C to +"
+          local 76.3..81.9 C (MODELED), NOT REACHED, 3.11 K inside
+   RB9704    Ground Control RockBLOCK 9704 SMA (board B J_RB9704); device set (CHO-001)
+     E3-O work limit +70    operating; powered; MAKER: groundcontrol-docs-rockblock-9704-specification-20260927.html the page as served "Operating Temperature -40C to +70C, <95% RH"
+          local 71.3..76.9 C (MODELED), REACHED, over by 1.3..6.9 K
+     E5   on   limit +70    operating; powered; MAKER: groundcontrol-docs-rockblock-9704-specification-20260927.html the page as served "Operating Temperature -40C to +70C, <95% RH"
+          local 76.3..81.9 C (MODELED), REACHED, over by 6.3..11.9 K
+   LIME      LimeSDR Mini 2.4 (board B J_LIME; off by C1); device set (CHO-001)
+     E3-O off  limit +70    storage; unpowered; MAKER: myriadrf-limesdr-mini-2-0-page-20260925.html the page as served "Operating Temperature 0 °C to +70 °C Commercial-grade Storag"
+          local 71.3..76.9 C (MODELED), REACHED, over by 1.3..6.9 K
+     E5   off  limit +70    storage; unpowered; MAKER: myriadrf-limesdr-mini-2-0-page-20260925.html the page as served "Operating Temperature 0 °C to +70 °C Commercial-grade Storag"
+          local 76.3..81.9 C (MODELED), REACHED, over by 6.3..11.9 K
+   AW7915    AsiaRF AW7915-AED, two (board B J_M2C1, J_M2C3; off by C1); device set (CHO-001)
+     E3-O off  limit +90    storage; unpowered; MAKER: asiarf-AW7915-AED_V1.pdf p.3 "Storage : -20°C ~ +90°C"
+          local 71.3..76.9 C (MODELED), NOT REACHED, 13.11 K inside
+     E5   off  limit +90    storage; unpowered; MAKER: asiarf-AW7915-AED_V1.pdf p.3 "Storage : -20°C ~ +90°C"
+          local 76.3..81.9 C (MODELED), NOT REACHED, 8.11 K inside
+   RM520N    Quectel RM520N-GL (board B J_M2C2; off by C1 after BANK-R1); device set (CHO-001)
+     E3-O off  limit +90    storage; unpowered; MAKER: quectel-rm520n-series-hardware-design-v1.1.pdf p.19 "Storage temperature range: -40 °C to +90°C"
+          local 71.3..76.9 C (MODELED), NOT REACHED, 13.11 K inside
+     E5   off  limit +90    storage; unpowered; MAKER: quectel-rm520n-series-hardware-design-v1.1.pdf p.19 "Storage temperature range: -40 °C to +90°C"
+          local 76.3..81.9 C (MODELED), NOT REACHED, 8.11 K inside
+   XENARC    Xenarc 709GNK monitor (in the plate; off by C1); device set (CHO-001)
+     E3-O off  limit +80    storage; unpowered; MAKER: xenarc-709gnk-product-manual-v2.pdf p.4 "Storage Temperature: -22°F ~ 176°F (-30°C ~ 80°C)"
+          local 62.6..71.3 C (INFERRED), NOT REACHED, 8.75 K inside
+     E5   off  limit +80    storage; unpowered; MAKER: xenarc-709gnk-product-manual-v2.pdf p.4 "Storage Temperature: -22°F ~ 176°F (-30°C ~ 80°C)"
+          local 67.6..76.3 C (INFERRED), NOT REACHED, 3.75 K inside
+   SA868     NiceRF SA868 (board D U2); device set (CHO-001)
+     E3-O work limit +70    operating; powered; MAKER: nicerf-sa868-datasheet-v1.3.pdf p.4 "Working Temperature range -30 25 70"
+          local 71.3..76.9 C (MODELED), REACHED, over by 1.3..6.9 K
+     E5   on   limit +70    operating; powered; MAKER: nicerf-sa868-datasheet-v1.3.pdf p.4 "Working Temperature range -30 25 70"
+          local 76.3..81.9 C (MODELED), REACHED, over by 6.3..11.9 K
+   PCM2912A  TI PCM2912A USB audio codec (board D U6, the APRS radio's audio)
+     E3-O work limit +70    recommended; powered; MAKER: ti-pcm2912a.pdf p.5 "TA Operating free-air temperature -25 70"
+          local 71.3..76.9 C (MODELED), REACHED, over by 1.3..6.9 K; absolute +125 C (ti-pcm2912a.pdf p.5), an exclusion screen only
+     E5   on   limit +70    recommended; powered; MAKER: ti-pcm2912a.pdf p.5 "TA Operating free-air temperature -25 70"
+          local 76.3..81.9 C (MODELED), INCONCLUSIVE, over by 6.3..11.9 K; absolute +125 C (ti-pcm2912a.pdf p.5), an exclusion screen only
+   G6K       Omron G6K-2F-Y T/R relay (board D K1, in the radio's RF path)
+     E3-O work limit +70    operating; powered; MAKER: omron-g6k-signal-relay.pdf p.3 "Ambient operating temperature -40 to 70°C (with no icing or "
+          local 71.3..76.9 C (MODELED), REACHED, over by 1.3..6.9 K
+     E5   on   limit +70    operating; powered; MAKER: omron-g6k-signal-relay.pdf p.3 "Ambient operating temperature -40 to 70°C (with no icing or "
+          local 76.3..81.9 C (MODELED), REACHED, over by 6.3..11.9 K
+   SGP41     Sensirion SGP41 battery-bay gas sensor (board E U17); device set (CHO-001)
+     E3-O on   limit +50    recommended (Table 4); powered; MAKER: sgp41-datasheet.pdf p.6 "Operating conditions Relative humidity 0 90 % RH Temperature"
+          local 71.3..76.9 C (MODELED), REACHED, over by 21.3..26.9 K; absolute (Table 5) +55 C (sgp41-datasheet.pdf p.7), an exclusion screen only
+     E5   on   limit +50    recommended (Table 4); powered; MAKER: sgp41-datasheet.pdf p.6 "Operating conditions Relative humidity 0 90 % RH Temperature"
+          local 76.3..81.9 C (MODELED), REACHED, over by 26.3..31.9 K; absolute (Table 5) +55 C (sgp41-datasheet.pdf p.7), an exclusion screen only
+   H5007NL   Pulse H5007NL Ethernet magnetics (board B T1, in circuit)
+     E3-O on   limit +70    operating; powered; MAKER: pulse-h5007nl.pdf p.1 "Operating Temperature 0°C to 70°C"
+          local 71.3..76.9 C (MODELED), REACHED, over by 1.3..6.9 K
+     E5   on   limit +70    operating; powered; MAKER: pulse-h5007nl.pdf p.1 "Operating Temperature 0°C to 70°C"
+          local 76.3..81.9 C (MODELED), REACHED, over by 6.3..11.9 K
+   ATP19     C&K ATP19 MAIN pushbutton (board C SW_MAIN, in circuit)
+     E3-O on   limit +55    operating; powered; MAKER: ck-atp19-series-datasheet.pdf p.1 "Operating Temperature -20ºC to 55ºC"
+          local 62.6..71.3 C (INFERRED), REACHED, over by 7.6..16.3 K
+     E5   on   limit +55    operating; powered; MAKER: ck-atp19-series-datasheet.pdf p.1 "Operating Temperature -20ºC to 55ºC"
+          local 67.6..76.3 C (INFERRED), REACHED, over by 12.6..21.3 K
+   ATP16     C&K ATP16 PI and TEST pushbuttons (board C, in circuit)
+     E3-O on   limit +70    operating; powered; MAKER: ck-atp16-series-datasheet.pdf p.1 "OPERATING TEMPERATURE: -20˚C to +70˚C"
+          local 62.6..71.3 C (INFERRED), PLACEMENT, over by 0.0..1.3 K
+     E5   on   limit +70    operating; powered; MAKER: ck-atp16-series-datasheet.pdf p.1 "OPERATING TEMPERATURE: -20˚C to +70˚C"
+          local 67.6..76.3 C (INFERRED), PLACEMENT, over by 0.0..6.3 K
+   SOUNDER   Floyd Bell MC-09-530-Q sounder (board C BZ1; sounds only for SOS)
+     E3-O off  limit +85    storage; unpowered; MAKER: floydbell-mc-09-530-q-spec.pdf p.1 "Storage Temperature -40_C to +85_C"
+          local 62.6..71.3 C (INFERRED), NOT REACHED, 13.75 K inside
+     E5   off  limit +85    storage; unpowered; MAKER: floydbell-mc-09-530-q-spec.pdf p.1 "Storage Temperature -40_C to +85_C"
+          local 67.6..76.3 C (INFERRED), NOT REACHED, 8.75 K inside
+   EPAPER    PDi E2370KS0C1 e-paper (board C; refreshed on events); device set (CHO-001)
+     E3-O off  limit +60    operating; unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: pdi-e2370ks0c1-flyer.pdf p.1 "Operation Temperature -15~60"
+          local 62.6..71.3 C (INFERRED), REACHED, over by 2.6..11.3 K
+     E5   off  limit +60    operating; unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: pdi-e2370ks0c1-flyer.pdf p.1 "Operation Temperature -15~60"
+          local 67.6..76.3 C (INFERRED), REACHED, over by 7.6..16.3 K
+   PXP4043C  Bulgin PXP4043/C sealed USB-C (connector plate; the outlets are off)
+     E3-O off  limit +70    operating; unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: bulgin-pxp4043c-usb-c-rear-panel.pdf p.1 "Max Operating Temperature: +70°C"
+          local 62.6..71.3 C (INFERRED), PLACEMENT, over by 0.0..1.3 K
+     E5   off  limit +70    operating; unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: bulgin-pxp4043c-usb-c-rear-panel.pdf p.1 "Max Operating Temperature: +70°C"
+          local 67.6..76.3 C (INFERRED), PLACEMENT, over by 0.0..6.3 K
+   NVME      NVMe 2242, slot 3 (not picked)
+     E3-O on   limit +85    operating; the pick's line, a wide grade (e.g. Cervoz -40 to +85 C); MAKER: cervoz-m2-2242-nvme-titan.pdf p.10 "Wide Temperature Operating: -40˚C~85˚C"
+          local 71.3..76.9 C (MODELED), NOT REACHED, 8.11 K inside
+     E5   on   limit +85    operating; the pick's line, a wide grade (e.g. Cervoz -40 to +85 C); MAKER: cervoz-m2-2242-nvme-titan.pdf p.10 "Wide Temperature Operating: -40˚C~85˚C"
+          local 76.3..81.9 C (MODELED), NOT REACHED, 3.11 K inside
+3b Every fitted line on boards A to E (grade_check), every module and every line no grade row covers. Rating: the grade row's
+   maker's range with its category (SESSION rule, read from the row's clause and quote: rec, recommended; ec, the range the
+   electrical characteristics hold over; op, operating as printed; dist, a distributor's parametric figure; abs, an absolute
+   rating: the clause names maximum ratings or limiting values, a junction-and-storage or power-dissipation row, a junction row
+   whose table the quote does not name (the conservative reading), or a distributor's figure for a TI power FET, whose held
+   sheets print it as the absolute junction-and-storage row; abs rows are exclusion screens: INCONCLUSIVE when cleared). Board
+   D's TUSB2046I is judged on the held TI sheet's recommended TA (p.6), its grade row's +115 C junction being its absolute row.
+   Rise: the part's own over its local air (class named); local bounds with the rise. Board P and the cells are outside the
+   chamber in E3-O and E5 (TEST-PLAN section 6): FEA-008's, not here. Lines read one by one carry 3a's verdict and category.
+   categories of the screened lines: abs 33, dist 9, ec 13, op 77, rec 31, stor 5
+   E3-O: INCONCLUSIVE 44, NO PART 3, NOT FITTED 1, NOT REACHED 112, OUT OF SCOPE 7, PLACEMENT 2, REACHED 10; E5: INCONCLUSIVE 45, NO PART 3, NOT FITTED 1, NOT REACHED 108, OUT OF SCOPE 7, PLACEMENT 6, REACHED 9
+   C&K ATP19-SL1-603-B0SA-03G         | C SW_MAIN                  | 55.0 L2 op     | face    | +  0.0 K MAKER      | E3-O 62.6..71.3  REACHED      | E5 67.6..76.3  REACHED      | level 2: ATP19
+   Ground Control RockBLOCK 9704 SMA  | module                     | 70.0 L2 op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  REACHED      | E5 76.3..81.9  REACHED      | level 2: RB9704
+   H5007NL                            | B T1                       | 70.0 L2 op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  REACHED      | E5 76.3..81.9  REACHED      | level 2: H5007NL
+   LimeSDR Mini v2 (board version v2. | module                     | 70.0 L2 stor   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  REACHED      | E5 76.3..81.9  REACHED      | level 2: LIME
+   NiceRF SA868 (VHF variant; order c | D U2                       | 70.0 L2 op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  REACHED      | E5 76.3..81.9  REACHED      | level 2: SA868
+   Omron G6K-2F-Y DC5                 | D K1                       | 70.0 L2 op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  REACHED      | E5 76.3..81.9  REACHED      | level 2: G6K
+   Pervasive Displays E2370KS0C1 e-pa | module                     | 60.0 L2 op     | face    | +  0.0 K MAKER      | E3-O 62.6..71.3  REACHED      | E5 67.6..76.3  REACHED      | level 2: EPAPER
+   Sensirion SGP41-D-R4               | E U17                      | 50.0 L2 rec    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  REACHED      | E5 76.3..81.9  REACHED      | level 2: SGP41
+   TLV75533PDBVR                      | C U5; D U1; E U13          | 125.0 TJ ec    | inside  | + 59.5 K MODELED    | E3-O 130.8..136.4 REACHED      | E5 135.8..141.4 REACHED      | 
+   2199119-3                          | B J_M2C2                   | 80.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  PLACEMENT    | 
+   2199230-4                          | B J_M2C1, J_M2C3           | 80.0 TA dist   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  PLACEMENT    | 
+   Bulgin PXP4043/C sealed USB-C (wal | module                     | 70.0 L2 op     | wall    | +  0.0 K MAKER      | E3-O 62.6..71.3  PLACEMENT    | E5 67.6..76.3  PLACEMENT    | level 2: PXP4043C
+   C&K ATP16 series (ATP16-SL1-403-M0 | C SW_PI, SW_TEST           | 70.0 L2 op     | face    | +  0.0 K MAKER      | E3-O 62.6..71.3  PLACEMENT    | E5 67.6..76.3  PLACEMENT    | level 2: ATP16
+   MDT420M02001                       | B J_M2N1, J_M2N2, J_M2N3   | 80.0 TA dist   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  PLACEMENT    | 
+   TYPE-C-31-M-12                     | B J_FLASH1, J_FLASH2, J_FL | 80.0 TA dist   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  PLACEMENT    | 
+   10164227-1004A1RLF                 | B U30A, U30B, U31A, U31B ( | 125.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   132134                             | A J_RF1, J_RF10, J_RF11, J | 165.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   19-217/GHC-YR1S2/6T                | C D18                      | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   1N4148W                            | D D2                       | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   2.54 mm pin header or bench jumper | A J_USBC_OUT; B J_CAM, J_D | none read      | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | 
+   2086581001                         | B J_HDMI                   | none read      | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | 
+   2N7002                             | A Q1, Q36, Q37, Q6; B Q10, | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   3 mm panel LEDs, sunlight viewable | C D1, D10, D11, D12 (+13)  | none read      | face    | +  0.0 K MAKER      | E3-O 62.6..71.3  INCONCLUSIVE | E5 67.6..76.3  INCONCLUSIVE | 
+   4S pack cells                      | module                     | none read      | pack    | +  0.0 K MAKER      | E3-O -           OUT OF SCOPE | E5 -           OUT OF SCOPE | module
+   6CS06000F20UCG                     | D Y1, Y2                   | 85.0 TA dist   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   74LVC1G08GV                        | D U10, U12, U14, U9        | 125.0 TA dist  | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   74LVC1G157GW,125                   | B U513, U514, U515, U516 ( | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   74LVC1G17W5-7                      | B U507, U508, U509, U510 ( | 85.0 TA ec     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   74LVC1G34W5-7                      | B U506, U544, U551, U552 ( | 85.0 TA ec     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   ABM8-272-T3                        | C Y1; E Y1                 | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   ADS1115IDGSR                       | D U22                      | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   AO3400A                            | B Q212                     | 150.0 TJ abs   | inside  | + 15.0 K ASSUMPTION | E3-O 86.3..91.9  INCONCLUSIVE | E5 91.3..96.9  INCONCLUSIVE | 
+   AO3401A                            | C Q1, Q5                   | 150.0 TJ abs   | inside  | + 15.0 K ASSUMPTION | E3-O 86.3..91.9  INCONCLUSIVE | E5 91.3..96.9  INCONCLUSIVE | 
+   AP2112K-2.5TRG1                    | B U27                      | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   AP2112K-3.3TRG1                    | B U40, U50, U60            | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   AP63203WU-7                        | B U25                      | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   AP63205WU-7                        | E U12                      | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   AP64500SP-13                       | A U4, U6; B U103, U104, U2 | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   APEM 5636ADKB-2V (5000 series)     | C SW_EMCON, SW_SOS, SW_ZER | 85.0 TA op     | face    | +  0.0 K MAKER      | E3-O 62.6..71.3  NOT REACHED  | E5 67.6..76.3  NOT REACHED  | 
+   ATECC608B-SSHDA-T                  | B U8                       | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Amphenol RJHSE-5380 (no order code | B J_ETH                    | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   AsiaRF AW7915-AED WiFi 6 card (two | module                     | 90.0 L2 stor   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | level 2: AW7915
+   B2B-PH-K-S(LF)(SN)                 | D J_VGG                    | 105.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   B2B-XH-A(LF)(SN)                   | A J_HEAT, J_MAINSW; D J_FL | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   B2P-VH-BL(LF)(SN)                  | A J_54V, J_5V_DEV, J_5V_S1 | 105.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   B4B-PH-K-S(LF)(SN)                 | A J_USBW; D J_USB3         | 105.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   B4B-XH-A(LF)(SN)                   | E J_SMB                    | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   B5B-PH-K-S(LF)(SN)                 | D J_HS1, J_HS2             | 105.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   B5B-XH-A(LF)(SN)                   | P J_CELL                   | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O -           OUT OF SCOPE | E5 -           OUT OF SCOPE | 
+   BAT46W-7-F                         | A D10, D11, D12, D13 (+13) | 125.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   BAT54W                             | C D17; E D5, D6            | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   BC857B                             | B Q101, Q201, Q301         | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   BM04B-SRSS-TB(LF)(SN)              | B J_FAN1, J_FAN2, J_FAN3   | 85.0 TA dist   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   BME688                             | E U14                      | 85.0 TA dist   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   BMI270                             | E U15                      | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   BQ25731RSNR                        | A U3                       | 125.0 TJ ec    | inside  | + 18.6 K ASSUMPTION | E3-O 89.9..95.5  NOT REACHED  | E5 94.9..100.5 NOT REACHED  | 
+   BQ4050RSMR                         | P U1                       | 85.0 TA ec     | pack    | +  0.0 K MAKER      | E3-O -           OUT OF SCOPE | E5 -           OUT OF SCOPE | 
+   BQ7720700DSSR                      | P U2                       | 85.0 TA rec    | pack    | +  0.0 K MAKER      | E3-O -           OUT OF SCOPE | E5 -           OUT OF SCOPE | 
+   BSC028N06NS                        | E Q3, Q5                   | 150.0 TJ abs   | inside  | + 15.0 K ASSUMPTION | E3-O 86.3..91.9  INCONCLUSIVE | E5 91.3..96.9  INCONCLUSIVE | 
+   BSC039N06NS                        | E Q1, Q2, Q4, Q6           | 150.0 TJ abs   | inside  | + 15.0 K ASSUMPTION | E3-O 86.3..91.9  INCONCLUSIVE | E5 91.3..96.9  INCONCLUSIVE | 
+   BZT52C12-7-F                       | A D22                      | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   Bulgin PX0833 sealed RJ45 coupler  | module                     | 70.0 TA op     | wall    | +  0.0 K MAKER      | E3-O 62.6..71.3  NOT FITTED   | E5 67.6..76.3  NOT FITTED   | module
+   CP2102N-A02-GQFN28R                | B U15, U16, U17, U18; D U3 | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   CR2032 coin cell (board B BT1)     | module                     | none read      | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | module
+   CSD17570Q5B                        | P Q1, Q2                   | 150.0 TA abs   | pack    | +  0.0 K MAKER      | E3-O -           OUT OF SCOPE | E5 -           OUT OF SCOPE | 
+   CSD17577Q5A                        | A Q10, Q8, Q9              | 150.0 TJ abs   | inside  | + 12.5 K ASSUMPTION | E3-O 83.8..89.4  INCONCLUSIVE | E5 88.8..94.4  INCONCLUSIVE | undeclared line
+   CSD17578Q5A                        | A Q7                       | 150.0 TJ abs   | inside  | + 12.5 K ASSUMPTION | E3-O 83.8..89.4  INCONCLUSIVE | E5 88.8..94.4  INCONCLUSIVE | undeclared line
+   CSD18510Q5B                        | A Q11, Q12, Q13, Q14 (+9)  | 150.0 TA abs   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | 
+   CSD19532Q5B                        | A Q17, Q18, Q19, Q2 (+13); | 150.0 TA abs   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | 
+   DS3231SN#T&R                       | B U9                       | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Ebyte E22-900M30S                  | B U12                      | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Ebyte E72-2G4M20S1E                | B U13, U14                 | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Floyd Bell MC-09-530-Q class sound | C BZ1                      | 85.0 L2 stor   | face    | +  0.0 K MAKER      | E3-O 62.6..71.3  NOT REACHED  | E5 67.6..76.3  NOT REACHED  | level 2: SOUNDER
+   Glenair and Amphenol MIL-DTL-38999 | module                     | 175.0 TA op    | wall    | +  0.0 K MAKER      | E3-O 62.6..71.3  NOT REACHED  | E5 67.6..76.3  NOT REACHED  | module
+   Hirose FH34SRJ-24S-0.5SH(50)       | C J_EPD                    | 105.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   INA226AIDGSR                       | A U10, U11, U14, U17 (+2)  | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   IP68 fans (coolers and mixers; D-1 | module                     | none read      | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | module
+   KSZ9897RTXI                        | B U1                       | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Keystone 3034 CR2032 holder        | B BT1                      | none read      | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | 
+   Keystone 3568 mini blade fuse hold | A F1; E F1, F2, F3         | none read      | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | 
+   LG290P03AAMD                       | B U11                      | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   LM5069MM-2/NOPB                    | E U6                       | 125.0 TJ ec    | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  NOT REACHED  | E5 81.3..86.9  NOT REACHED  | 
+   LM5176PWPR                         | A U13, U15, U16, U19 (+3)  | 125.0 TJ ec    | inside  | + 17.4 K ASSUMPTION | E3-O 88.6..94.2  NOT REACHED  | E5 93.6..99.2  NOT REACHED  | 
+   LM74700QDBVRQ1                     | E U3, U4                   | 125.0 TJ ec    | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  NOT REACHED  | E5 81.3..86.9  NOT REACHED  | 
+   LT8705AEUHF#TRPBF                  | E U5                       | 125.0 TJ ec    | inside  | +  0.0 K INFERRED   | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   LTC2954ITS8-1#TRPBF                | A U1                       | 85.0 TA abs    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | 
+   MF-MSMF050-2                       | B F2, F3                   | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   MF-MSMF110-2                       | B F1                       | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Maxtena M1621HCT-P-SMA helical (Ir | module                     | 85.0 TA op     | outside | +  0.0 K MAKER      | E3-O 55.0..55.0  NOT REACHED  | E5 60.0..60.0  NOT REACHED  | module
+   Mill-Max 0858-0-15-20-82-14-11-0 ( | A J_CN1, J_CN2, J_CN3, J_C | 125.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Mitsubishi RA30H1317M1 VHF PA (fac | module                     | 100.0 TCASE abs | face    | +  0.0 K MAKER      | E3-O 62.6..71.3  INCONCLUSIVE | E5 67.6..76.3  INCONCLUSIVE | module
+   NKK M2044SD3A01                    | C SW_LIGHT                 | 85.0 TA op     | face    | +  0.0 K MAKER      | E3-O 62.6..71.3  NOT REACHED  | E5 67.6..76.3  NOT REACHED  | 
+   PCA9555PWR                         | A U27, U28; B U6, U7; C U1 | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   PCM2912APJTR                       | D U6                       | 70.0 L2 rec    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  REACHED      | E5 76.3..81.9  INCONCLUSIVE | level 2: PCM2912A
+   PESD12VL1BA,115                    | D D10, D13                 | 150.0 TA abs   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | 
+   PESD5V0S1BA,115                    | D D11, D12, D14, D9        | 150.0 TA abs   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | 
+   PI7C9X2G404SLBFDEX                 | B U101, U201, U301         | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   PolyPhaser GTH-SFF-AL RF arrestor  | module                     | 85.0 TA op     | outside | +  0.0 K MAKER      | E3-O 55.0..55.0  NOT REACHED  | E5 60.0..60.0  NOT REACHED  | module
+   Preci-Dip 813-S1-012-10-016101     | A J_DOCK                   | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   QRP Labs QMX HF transceiver (lid t | module                     | none read      | lid     | +  0.0 K MAKER      | E3-O 55.0..55.0  INCONCLUSIVE | E5 60.0..60.0  INCONCLUSIVE | module
+   Quectel RM520N-GL 5G module (board | module                     | 90.0 L2 stor   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | level 2: RM520N
+   Quectel YEGD006U1A GNSS puck (and  | module                     | 85.0 TA op     | outside | +  0.0 K MAKER      | E3-O 55.0..55.0  NOT REACHED  | E5 60.0..60.0  NOT REACHED  | module
+   RP2040                             | C U3; E U10                | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Radiall R222M00720 (SMP-MAX recept | A J_BM1, J_BM10, J_BM11, J | 165.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Raspberry Pi Compute Module 5, CM5 | module                     | 85.0 L2 op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | level 2: CM5
+   SCF9550-30-05                      | P F2                       | 60.0 TA op     | pack    | +  0.0 K MAKER      | E3-O -           OUT OF SCOPE | E5 -           OUT OF SCOPE | 
+   SI2300DS-T1-GE3                    | C Q6, Q7                   | 150.0 TJ abs   | inside  | + 15.0 K ASSUMPTION | E3-O 86.3..91.9  INCONCLUSIVE | E5 91.3..96.9  INCONCLUSIVE | 
+   SIM8060-6-0-14-00-A                | B J_SIM1, J_SIM2           | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   SKY13351-378LF                     | B U82, U83                 | 85.0 TA rec    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   SMBJ18A                            | A D4                       | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   SMBJ20A                            | P D1                       | 150.0 TJ abs   | pack    | +  0.0 K MAKER      | E3-O -           OUT OF SCOPE | E5 -           OUT OF SCOPE | 
+   SMBJ5.0A                           | A D3; B D1, D520           | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   SMBJ58A-13-F                       | B D2                       | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   SMBJ6.0A                           | B D101, D201, D301; D D1   | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   SMCJ18A                            | A D1; E D3                 | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   SMCJ28A                            | E D4                       | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   SMCJ40A                            | A D2; E D1, D2             | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   SMCJ40CA                           | E D10                      | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   SN74AUP1G08DBVR                    | A U35, U36, U37, U38       | 85.0 TA rec    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   SN74LV1T08DBVR                     | B U116                     | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | undeclared line
+   SN74LV1T08DBVR                     | B U216                     | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | undeclared line
+   SN74LV1T08DBVR                     | B U316                     | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | undeclared line
+   SN74LVC08APWR                      | A U26; B U70, U71, U72, U7 | 125.0 TA abs   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | 
+   SN74LVC1G00DBVR                    | A U30                      | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   SN74LVC1G04DBVR                    | B U112, U212, U312, U533 ( | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   SN74LVC1G06DBVR                    | D U13                      | 85.0 TA rec    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   SN74LVC1G08DBVR                    | B U501, U502, U503, U504 ( | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   SN74LVC1G57DBVR                    | C U14                      | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   SN74LVC2G06DBVR                    | B U113, U114, U115, U213 ( | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   SN74LVC2G07DBVR                    | A U40                      | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | undeclared line
+   SN74LVC2G07DBVR                    | B U554                     | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | undeclared line
+   SN74LVC2G07DBVR                    | B U540                     | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | undeclared line
+   SN74LVC2G07DBVR                    | B U542                     | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | undeclared line
+   SN74LVC2G07DBVR                    | B U541                     | 125.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | undeclared line
+   SN74LVC32APWR                      | B U76, U77, U78, U79 (+2)  | 125.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   SN74LVC86APWR                      | B U80, U81                 | 125.0 TA abs   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | 
+   SS14 (Zhengxin, SMB)               | E D7, D8                   | 125.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   SS2040FL                           | C D19, D20, D21            | 150.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   STM32H743VIT6                      | B U41, U51, U61            | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TAXM24M4RFBCCT2T                   | B Y101, Y201, Y301         | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TAXM25M4RFBCCT2T                   | B Y1, Y2, Y3, Y4           | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TCAN334DR                          | B U43, U44, U53, U54 (+2)  | 150.0 TJ ec    | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  NOT REACHED  | E5 81.3..86.9  NOT REACHED  | 
+   TLV75801PDBVR                      | D U17                      | 125.0 TJ ec    | inside  | + 13.1 K MODELED    | E3-O 84.3..90.0  NOT REACHED  | E5 89.3..95.0  NOT REACHED  | 
+   TLV75801PDRVR                      | D U15                      | 125.0 TJ ec    | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  NOT REACHED  | E5 81.3..86.9  NOT REACHED  | 
+   TLV9062IDGKR                       | D U8                       | 125.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TMP117AIDRVR                       | B U10                      | 150.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TMUXHS4212IRKSR                    | B U109, U209, U309         | 105.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TPA6132A2RTER                      | D U7                       | 85.0 TA rec    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TPD2E2U06QDBZRQ1                   | A U31                      | 125.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TPD4E001DBVR                       | B U222, U223               | 85.0 TA rec    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TPS2065CDBVR                       | B U28                      | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TPS22810DRVR                       | B U21, U22; D U21; E U16   | 105.0 TA rec   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TPS23861PWR                        | B U5                       | 85.0 TA rec    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TPS25740ARGER                      | A U18                      | 125.0 TJ rec   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  NOT REACHED  | E5 81.3..86.9  NOT REACHED  | 
+   TPS259631DDAR                      | A U21, U22, U23, U32 (+1); | 125.0 TJ rec   | inside  | + 15.0 K ASSUMPTION | E3-O 86.3..91.9  NOT REACHED  | E5 91.3..96.9  NOT REACHED  | 
+   TPS37A010122DSKR                   | A U34                      | 125.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TPS3808G30DBVR                     | B U221, U543               | 125.0 TJ ec    | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  NOT REACHED  | E5 81.3..86.9  NOT REACHED  | 
+   TPS62933DRLR                       | A U12, U33, U41; B U105, U | 150.0 TJ ec    | inside  | + 28.7 K MODELED    | E3-O 100.0..105.6 NOT REACHED  | E5 105.0..110.6 NOT REACHED  | 
+   TS3DV642A0RUAR                     | B U3, U4                   | 85.0 TA rec    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TS3USB221ARSER                     | B U110, U210, U310         | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TUSB2046IBVFR                      | D U4                       | 85.0 TA rec    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   TUSB8041IRGCR                      | B U102, U202, U302         | 105.0 TJ rec   | inside  | +  6.3 K MODELED    | E3-O 77.6..83.2  NOT REACHED  | E5 82.6..88.2  NOT REACHED  | 
+   U-174/U headset jack, Amphenol Nex | C J_HSJ1, J_HSJ2           | none read      | face    | +  0.0 K MAKER      | E3-O 62.6..71.3  INCONCLUSIVE | E5 67.6..76.3  INCONCLUSIVE | 
+   U.FL-R-SMT-1(10)                   | B J_GNSS1, J_LORA1, J_W1A, | 90.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   USBLC6-2SC6                        | A U29; B U107, U207, U29,  | 125.0 TJ abs   | inside  | +  5.0 K ASSUMPTION | E3-O 76.3..81.9  INCONCLUSIVE | E5 81.3..86.9  INCONCLUSIVE | 
+   VEML7700-TR                        | C U_LIGHT                  | 85.0 TA abs    | face    | +  0.0 K MAKER      | E3-O 62.6..71.3  INCONCLUSIVE | E5 67.6..76.3  INCONCLUSIVE | 
+   W25Q16JVUXIQ                       | C U4; E U11                | 85.0 TA dist   | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Wurth 692122030100 (USB 3.0 A)     | B J_LIME                   | 85.0 TA op     | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Wurth WR-BHD 61201021621 (session  | A J_AB2; B J_AB2           | 105.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Wurth WR-BHD 61201621621 (session  | A J_MEZZ1; B J_RB9704; D J | 105.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Wurth WR-BHD 61202621621 (session  | A J_AB1; B J_AB1, J_PANEL  | 105.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   XFCN BH254VS-26P (session pick HC6 | C J_PANEL                  | 105.0 TA dist  | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   XT60-M.                            | E J_BATT                   | 120.0 TA op    | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  NOT REACHED  | E5 76.3..81.9  NOT REACHED  | 
+   Xenarc 709GNK monitor (face plate) | module                     | 80.0 L2 stor   | face    | +  0.0 K MAKER      | E3-O 62.6..71.3  NOT REACHED  | E5 67.6..76.3  NOT REACHED  | level 2: XENARC
+   pre-charge pin, longer than the 08 | A J_PRE1                   | none read      | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | 
+   sensor and receiver modules on hea | module                     | none read      | inside  | +  0.0 K MAKER      | E3-O 71.3..76.9  INCONCLUSIVE | E5 76.3..81.9  INCONCLUSIVE | module
+   solder lands (no component)        | E J_BLK                    | none read      | inside  | +  0.0 K MAKER      | E3-O -           NO PART      | E5 -           NO PART      | 
+   solder lands for a lead (no compon | C J_MAINSW, J_PIJ2         | none read      | inside  | +  0.0 K MAKER      | E3-O -           NO PART      | E5 -           NO PART      | 
+   solder pad for a 12 AWG wire (no c | E P_CN, P_CP, P_VN, P_VR   | none read      | inside  | +  0.0 K MAKER      | E3-O -           NO PART      | E5 -           NO PART      | 
+   NOT FITTED: the Bulgin PX0833 (CASE-MARGINS: "The recommended PX0833 does not fit this plate"); the sealed RJ45 is a MIL-DTL-38999 shell 15 class part.
+3c The junction figures (MODELED dissipation in the heat stage x MAKER thetaJA on its JEDEC board; local air the mixed air at E5):
+   TPS62933 (board A 3.3 V)                         A U12   0.068 W (MODELED node A3V3) x 112.2 C/W = +7.7 K; TJ 83.9 C against recommended 150 C (tps62933_tjrec); absolute 150 C (an exclusion screen)
+   AP64500 (slot 3's 5.1 V)                         A U6    0.601 W (MODELED node S3) x 45.0 C/W = +27.0 K; TJ 103.3 C against recommended 125 C (ap64500_tjop); absolute 160 C (an exclusion screen)
+   KSZ9897RTXI                                      B U1    2.540 W (POWER-THERMAL 9.2) x 11.3 C/W = +28.7 K; TJ 105.0 C against its ambient rating (no recommended junction read)
+   TUSB8041I (a hub)                                B U102  0.244 W (MODELED the three hubs / 3) x 26.0 C/W = +6.3 K; TJ 82.6 C against recommended 105 C (tusb8041_tj)
+   TPS62933 (a hub core)                            B U106  0.013 W (MODELED node HUB1V1 / 3) x 112.2 C/W = +1.5 K; TJ 77.7 C against recommended 150 C (tps62933_tjrec); absolute 150 C (an exclusion screen)
+   AP63203 (+3V3_DEV)                               B U25   0.323 W (MODELED node D3V3) x 89.0 C/W = +28.8 K; TJ 105.0 C against recommended (the sheet's thermal-design limit) 125 C (ap6320_tjrec); absolute 160 C (an exclusion screen)
+   TPS62933 (KSZ 1.2 V)                             B U26   0.256 W (MODELED node KSZ1V2) x 112.2 C/W = +28.7 K; TJ 105.0 C against recommended 150 C (tps62933_tjrec); absolute 150 C (an exclusion screen)
+   AP2112K-2.5 (KSZ AVDDH)                          B U27   0.264 W (MODELED node KSZ2V5) x 184.0 C/W = +48.6 K; TJ 124.8 C against its ambient rating (no recommended junction read); absolute 150 C (an exclusion screen)
+   PI7C9X2G404SL (slot 3)                           B U301  0.625 W (MODELED slot 3's switch rails) x 25.5 C/W = +15.9 K; TJ 92.2 C against its ambient rating (no recommended junction read); absolute 125 C (an exclusion screen)
+   AP64500 (slot 3's 3.3 V B)                       B U304  0.206 W (MODELED node S3B) x 45.0 C/W = +9.3 K; TJ 85.5 C against recommended 125 C (ap64500_tjop); absolute 160 C (an exclusion screen)
+   TPS62933 (slot 3's switch core)                  B U305  0.048 W (MODELED node S3C) x 112.2 C/W = +5.3 K; TJ 81.6 C against recommended 150 C (tps62933_tjrec); absolute 150 C (an exclusion screen)
+   AP2112K-3.3 (a supervisor's 3.3 V)               B U40   0.236 W (MODELED node IOC / 3) x 184.0 C/W = +43.4 K; TJ 119.6 C against its ambient rating (no recommended junction read); absolute 150 C (an exclusion screen)
+   TLV75533 DBV (board C +3V3), at the declared typical C U5    0.253 W (INFERRED from gen_sch_c's declared 0.149 A) x 231.1 C/W = +58.5 K; TJ 134.8 C against recommended 125 C (tlv755_tjrec); absolute 150 C (an exclusion screen)
+   TLV75533 DBV (+3V3_D8), at the declared typical  D U1    0.068 W (INFERRED from gen_sch_d's declared 0.040 A) x 231.1 C/W = +15.7 K; TJ 92.0 C against recommended 125 C (tlv755_tjrec); absolute 150 C (an exclusion screen)
+   TLV75801 DBV (+3V4_HUB)                          D U17   0.074 W (gen_sch_d's own bound) x 176.9 C/W = +13.1 K; TJ 89.3 C against recommended 125 C (tlv758_tjrec); absolute 150 C (an exclusion screen)
+   TUSB2046I (board D hub)                          D U4    0.138 W (INFERRED from gen_sch_d's +3V4_HUB 0.040 A) x 35.7 C/W = +4.9 K; TJ 81.2 C against its ambient rating (no recommended junction read); absolute 115 C (an exclusion screen)
+   AP63205 (+5V_E6)                                 E U12   0.098 W (MODELED node E5V) x 89.0 C/W = +8.7 K; TJ 84.9 C against recommended (the sheet's thermal-design limit) 125 C (ap6320_tjrec); absolute 160 C (an exclusion screen)
+   TLV75533 DBV (+3V3_E6), at the model's plan      E U13   0.258 W (MODELED node E3V3) x 231.1 C/W = +59.5 K; TJ 135.8 C against recommended 125 C (tlv755_tjrec); absolute 150 C (an exclusion screen)
+3d FINDING, in the envelope as well (the generators' own declarations): board E's U13 is a TLV75533 in SOT-23-5 (DBV, 231.1 C/W,
+   recommended junction +125 C, absolute +150 C, MAKER, TLV755P sheet, held back) on a rail declared at 0.35 A typical and 0.60 A
+   peak from 5.0 V: 0.595 W, +137.5 K, past its recommended +125 C at any local air above -12.5 C; the declared peak exceeds its 500 mA
+   output. Board C's U5 (the same part) is declared 0.149 A typical and 0.720 A peak, the peak past 500 mA. Even at the model's plan
+   load U13 passes its recommended junction at both margins (3c): the regulators are part of the route (5c).
+
+4 Three complete approaches for the parts that collide (the same margins, the same floor, the same ballasts, the plan heat)
+   Common to all three (none can be done by the air, the physics of 4a): the SGP41's own shutdown at the margins and its
+   in-envelope function (5d, the owner's question of 6); the MAIN, PI and TEST pushbuttons to a +85 C part; PDi's storage
+   statement for the e-paper; board E's and board C's 3.3 V regulators (5c); the +70 C parts out of the running cooler's
+   exhaust; the fans, the other lines with no range held and the lines cleared only by an absolute rating (7).
+4a (a) THE HEAT PATH AND THE ENCLOSURE, no new mode: the heat stage at both margins, the radios on at both. Each part routed by
+   the air needs (MODELED, E3-O / E5):
+      RB9704    1.806 / 2.709 W/K
+      LIME      1.806 / 2.709 W/K
+      SA868     1.806 / 2.709 W/K
+      PCM2912A  1.806 / 2.709 W/K
+      G6K       1.806 / 2.709 W/K
+      H5007NL   1.806 / 2.709 W/K
+      ATP16     1.806 / 2.709 W/K
+      PXP4043C  1.806 / 2.709 W/K
+      SGP41     1.806 / 2.709 W/K  (its absolute rating's screen only: survival INCONCLUSIVE)
+      XENARC    1.083 / 1.354 W/K
+      CM5       0.903 / 1.083 W/K
+      SOUNDER   0.903 / 1.083 W/K
+      NVME      0.903 / 1.083 W/K
+      AW7915    0.774 / 0.903 W/K
+      RM520N    0.774 / 0.903 W/K
+   so the line is 2.709 W/K (0 K margin), 3.010 with 1 K and 3.386 with 2 K; E3-O alone 1.806 W/K. It lies over the low case's
+   outer-film cap (2.10 W/K) and under W4's high case (2.85 W/K finite inside film, 3.86 infinite); 32.53 gives 3.0 to 3.3.
+   Not routed by the air (the air cannot be cooled below the ambient without a cooler, and a cooler in the sealed case returns
+   its input to the air, L4-E10's corrected balance):
+      ATP19     its limit 55 C (operating, powered) is at or under E3-O's ambient
+      EPAPER    its limit 60 C (operating, unpowered, inside a range it may operate in (INFERRED to cover it unpowered)) is at or under E5's ambient
+   Coupling the +70 C modules to the plate instead: the plate at E5 is 67.6..71.8 C at the floor; it needs 1.963 W/K at the plate's
+   upper fraction, and the parts that cannot be coupled still need the line above. VERDICT: CONDITIONAL on T-H1 at or over
+   2.709 W/K; not selected (0.55 W/K over (c)); it is what applies, with no hold, if T-H1 reads at or over it.
+4b (b) WIDER-RATED PARTS, the mode and the enclosure unchanged (the inside air 76.25 C at E5, 81.89 C in the exhaust):
+      RB9704    OWNER (CHO-001)   no wider-rated Iridium IMT unit in any held document
+      LIME      OWNER (CHO-001)   its maker's page offers the commercial grade only (0 to +70 C in use and in storage)
+      SA868     OWNER (CHO-001)   no VHF module rated past +70 C in any held document
+      PCM2912A  SESSION           its recommended range ends at +70 C; no wider-rated USB audio codec held
+      G6K       SESSION           no signal relay rated past +70 C held; an +85 C part is a Layer 6 pick
+      SGP41     OWNER (CHO-001)   Bosch BME688 (gas sensing electrically operable -40 to +85 C, performance may vary; storage -45 to +85 C, absolute), already on board E as U14; a second one takes I2C 0x77, which the outside pod's BME688 (32.54, deferred) then cannot use; at E5 3.11 K inside the candidate's +85 C (MAKER)
+      H5007NL   SESSION           the maker's HX (extended temperature) version, -40 to +85 C; pin compatibility not claimed; at E5 3.11 K inside the candidate's +85 C (MAKER)
+      ATP19     SESSION           NKK MBN sealed pushbutton (IP67, -30 to +85 C); its 12 mm bushing, terminals and cutout are owed; at E5 8.75 K inside the candidate's +85 C (MAKER)
+      ATP16     SESSION           NKK MBN sealed pushbutton, as ATP19; at E5 8.75 K inside the candidate's +85 C (MAKER)
+      SOUNDER   SESSION           no change: muted, its storage range reaches +85 C; at E5 8.75 K inside the candidate's +85 C (MAKER)
+      EPAPER    OWNER (CHO-001)   no e-paper rated past +60 C in any held document
+      PXP4043C  SESSION           the same maker's 4000 series sheet states -40 to +80 C for the series; the C-type's own sheet says +70 C; at E5 3.75 K inside the candidate's +80 C (MAKER)
+      NVME      SESSION           the pick: a wide grade (Cervoz -40 to +85 C), not the 0 to +70 C standard grade; at E5 3.11 K inside the candidate's +85 C (MAKER)
+   VERDICT: not selectable by the session (five device-set parts are the owner's, CHO-001, four with no candidate held).
+4c (c) E3-O AS STATED, THE HOLD IN E5 ONLY: in E3-O the heat stage runs with every radio C1 leaves on (no hold); in E5 a step
+   of the kit's controls beyond the heat stage holds the charge (as H1), idles the running module (no shutdown) and powers off
+   board D (APRS), the PA rail, the RockBLOCK (RB_SW_EN), the LoRa module (LORA_ON), both E72 (ZB_ON) and the Geiger module
+   (GEIGER_EN). H1's own actions, which it reuses (CONOPS 4c): "through board A's expanders on the kit bus it turns off the monitor, the pack heater, board D, PoE, the USB-C outlet, the wall port's VBUS and the PA and HF software holds; it holds the charge by the charger's own charge-inhibit bit". Heat in E5 under it: 19.497 W (MODELED,
+   plan; 18.152 W at the pack); as board B is generated, the 5G socket's supply dropped too, 19.497 W. Each part routed by the
+   air needs (MODELED, E3-O with the heat stage / E5 with the hold):
+      RB9704    1.806 / 2.159 W/K
+      LIME      1.806 / 2.159 W/K
+      SA868     1.806 / 2.159 W/K
+      PCM2912A  1.806 / 2.159 W/K
+      G6K       1.806 / 2.159 W/K
+      H5007NL   1.806 / 2.159 W/K
+      ATP16     1.806 / 2.159 W/K
+      PXP4043C  1.806 / 2.159 W/K
+      SGP41     1.806 / 2.159 W/K  (its absolute rating's screen only: survival INCONCLUSIVE)
+      XENARC    1.083 / 1.079 W/K
+      CM5       0.903 / 0.863 W/K
+      SOUNDER   0.903 / 0.863 W/K
+      NVME      0.903 / 0.863 W/K
+      AW7915    0.774 / 0.720 W/K
+      RM520N    0.774 / 0.720 W/K
+   so the line is G_c = 2.159 W/K, set by E5 (E3-O alone 1.806 W/K); 2.399 with 1 K and 2.698 with 2 K of margin; with the module
+   at its typical 4.5 W in the hold 2.443 W/K; at HIGH heat 4.304 W/K (not covered). Over the low case's cap by 0.058 W/K, inside
+   W4's range and under 32.53's: CONDITIONAL on T-H1. Not routed by the air:
+      ATP19     its limit 55 C (operating, powered) is at or under E3-O's ambient
+      EPAPER    its limit 60 C (operating, unpowered, inside a range it may operate in (INFERRED to cover it unpowered)) is at or under E5's ambient
+4d THE HOLD'S TRIGGER WINDOW at the line (it must not act in E3-O, and must act in E5 before the radios it turns off pass
+   their +70 C): E3-O's steady mixed air with the radios on 67.55 C; the mixed air by which E5 needs the hold 70.00 C; window 2.45 K.
+   Taken from it: the reference's error twice (board B's TMP117, +-0.2 C to 100 C, MAKER p.1), E5's fastest rise 15.0 K/h (the
+   chamber's 30 to 60 C in 2 h, Method 507.6 as L4-E10 transcribed it) times a 61 s reading and response lag (ASSUMPTION):
+   0.254167 K. What is left bounds the reference's offset to the air at the +70 C parts: at most +-0.899099 K (INFERRED). The TMP117 is
+   a board sensor under the coolers: across the exhaust's 0 to 5.64 K the window is -3.84 K, so it DOES NOT EXIST unless the
+   reference is placed in the mixed air near those parts or its offset is calibrated at T-H1 to +-0.899099 K (CONDITIONAL); with the
+   whole spread it would need 3.111 W/K. The trigger then sits at the window's middle, 68.65 C of mixed air plus the calibrated
+   offset; restore 5 K under it after 30 minutes (PROVISIONAL). The window grows with the conductance: 2.45 K at 2.159 W/K; 4.17 K at 2.500 W/K; 5.00 K at 2.709 W/K.
+   Inside the envelope the air is 52.55 C at the line, far under it. In E5 under the hold the mixed air settles at 70.00 C.
+4e If T-H1 reads under the line: the radio modules (RockBLOCK, board D) and the LimeSDR coupled to the plate hold E3-O at the
+   plate's 62.6..66.8 C at the floor (3.22 K inside +70 C at its upper fraction) and E5 under the hold at 66.0..69.4 C (0.61 K) (INFERRED);
+   the SGP41 in the bay air (72.95 C in E5) is then past Table 5's +70 C short-term storage, an absolute rating (the owner's
+   question of 6 covers it).
+4f Per colliding part, the three routes (CLOSES, CONDITIONAL, REJECTED, OUTSIDE AUTHORITY, INCONCLUSIVE):
+      ATP16     (a) CONDITIONAL       (b) CLOSES            (c) CONDITIONAL       every route rejected: no
+      ATP19     (a) REJECTED          (b) CLOSES            (c) REJECTED          every route rejected: no
+      EPAPER    (a) INCONCLUSIVE      (b) OUTSIDE AUTHORITY (c) INCONCLUSIVE      every route rejected: no
+      G6K       (a) CONDITIONAL       (b) INCONCLUSIVE      (c) CONDITIONAL       every route rejected: no
+      H5007NL   (a) CONDITIONAL       (b) CLOSES            (c) CONDITIONAL       every route rejected: no
+      LIME      (a) CONDITIONAL       (b) OUTSIDE AUTHORITY (c) CONDITIONAL       every route rejected: no
+      PCM2912A  (a) CONDITIONAL       (b) INCONCLUSIVE      (c) CONDITIONAL       every route rejected: no
+      PXP4043C  (a) CONDITIONAL       (b) CLOSES            (c) CONDITIONAL       every route rejected: no
+      RB9704    (a) CONDITIONAL       (b) OUTSIDE AUTHORITY (c) CONDITIONAL       every route rejected: no
+      SA868     (a) CONDITIONAL       (b) OUTSIDE AUTHORITY (c) CONDITIONAL       every route rejected: no
+      SGP41     (a) INCONCLUSIVE      (b) OUTSIDE AUTHORITY (c) INCONCLUSIVE      every route rejected: no
+
+5 The selection: (c), E3-O as stated and the hold in E5 only, at the line G_c = 2.159 W/K, with the common items
+5a The parts at the line (E3-O: the heat stage, radios on; E5: the hold), by 1j:
+   CM5       Raspberry Pi CM5, slot 3 (running) and slots 1, 2 (off); device set (CHO-001)
+     E3-O work limit +85    operating; powered; MAKER: cm5-datasheet.pdf p.28 "CM5′s overall operating temperature range is from -20°C to +"
+          local 67.5..73.2 C (MODELED), NOT REACHED, 11.81 K inside
+     E5   work limit +85    operating; powered; MAKER: cm5-datasheet.pdf p.28 "CM5′s overall operating temperature range is from -20°C to +"
+          local 70.0..72.8 C (MODELED), NOT REACHED, 12.22 K inside
+   RB9704    Ground Control RockBLOCK 9704 SMA (board B J_RB9704); device set (CHO-001)
+     E3-O work limit +70    operating; powered; MAKER: groundcontrol-docs-rockblock-9704-specification-20260927.html the page as served "Operating Temperature -40C to +70C, <95% RH"
+          local 67.5..73.2 C (MODELED), PLACEMENT, over by 0.0..3.2 K
+     E5   off  limit +70    operating; unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: groundcontrol-docs-rockblock-9704-specification-20260927.html the page as served "Operating Temperature -40C to +70C, <95% RH"
+          local 70.0..72.8 C (MODELED), PLACEMENT, over by 0.0..2.8 K
+   LIME      LimeSDR Mini 2.4 (board B J_LIME; off by C1); device set (CHO-001)
+     E3-O off  limit +70    storage; unpowered; MAKER: myriadrf-limesdr-mini-2-0-page-20260925.html the page as served "Operating Temperature 0 °C to +70 °C Commercial-grade Storag"
+          local 67.5..73.2 C (MODELED), PLACEMENT, over by 0.0..3.2 K
+     E5   off  limit +70    storage; unpowered; MAKER: myriadrf-limesdr-mini-2-0-page-20260925.html the page as served "Operating Temperature 0 °C to +70 °C Commercial-grade Storag"
+          local 70.0..72.8 C (MODELED), PLACEMENT, over by 0.0..2.8 K
+   AW7915    AsiaRF AW7915-AED, two (board B J_M2C1, J_M2C3; off by C1); device set (CHO-001)
+     E3-O off  limit +90    storage; unpowered; MAKER: asiarf-AW7915-AED_V1.pdf p.3 "Storage : -20°C ~ +90°C"
+          local 67.5..73.2 C (MODELED), NOT REACHED, 16.81 K inside
+     E5   off  limit +90    storage; unpowered; MAKER: asiarf-AW7915-AED_V1.pdf p.3 "Storage : -20°C ~ +90°C"
+          local 70.0..72.8 C (MODELED), NOT REACHED, 17.22 K inside
+   RM520N    Quectel RM520N-GL (board B J_M2C2; off by C1 after BANK-R1); device set (CHO-001)
+     E3-O off  limit +90    storage; unpowered; MAKER: quectel-rm520n-series-hardware-design-v1.1.pdf p.19 "Storage temperature range: -40 °C to +90°C"
+          local 67.5..73.2 C (MODELED), NOT REACHED, 16.81 K inside
+     E5   off  limit +90    storage; unpowered; MAKER: quectel-rm520n-series-hardware-design-v1.1.pdf p.19 "Storage temperature range: -40 °C to +90°C"
+          local 70.0..72.8 C (MODELED), NOT REACHED, 17.22 K inside
+   XENARC    Xenarc 709GNK monitor (in the plate; off by C1); device set (CHO-001)
+     E3-O off  limit +80    storage; unpowered; MAKER: xenarc-709gnk-product-manual-v2.pdf p.4 "Storage Temperature: -22°F ~ 176°F (-30°C ~ 80°C)"
+          local 60.8..67.5 C (INFERRED), NOT REACHED, 12.45 K inside
+     E5   off  limit +80    storage; unpowered; MAKER: xenarc-709gnk-product-manual-v2.pdf p.4 "Storage Temperature: -22°F ~ 176°F (-30°C ~ 80°C)"
+          local 64.7..70.0 C (INFERRED), NOT REACHED, 10.00 K inside
+   SA868     NiceRF SA868 (board D U2); device set (CHO-001)
+     E3-O work limit +70    operating; powered; MAKER: nicerf-sa868-datasheet-v1.3.pdf p.4 "Working Temperature range -30 25 70"
+          local 67.5..73.2 C (MODELED), PLACEMENT, over by 0.0..3.2 K
+     E5   off  limit +70    operating; unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: nicerf-sa868-datasheet-v1.3.pdf p.4 "Working Temperature range -30 25 70"
+          local 70.0..72.8 C (MODELED), PLACEMENT, over by 0.0..2.8 K
+   PCM2912A  TI PCM2912A USB audio codec (board D U6, the APRS radio's audio)
+     E3-O work limit +70    recommended; powered; MAKER: ti-pcm2912a.pdf p.5 "TA Operating free-air temperature -25 70"
+          local 67.5..73.2 C (MODELED), PLACEMENT, over by 0.0..3.2 K; absolute +125 C (ti-pcm2912a.pdf p.5), an exclusion screen only
+     E5   off  limit +70    recommended; unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: ti-pcm2912a.pdf p.5 "TA Operating free-air temperature -25 70"
+          local 70.0..72.8 C (MODELED), PLACEMENT, over by 0.0..2.8 K; absolute (storage) +150 C (ti-pcm2912a.pdf p.5), an exclusion screen only
+   G6K       Omron G6K-2F-Y T/R relay (board D K1, in the radio's RF path)
+     E3-O work limit +70    operating; powered; MAKER: omron-g6k-signal-relay.pdf p.3 "Ambient operating temperature -40 to 70°C (with no icing or "
+          local 67.5..73.2 C (MODELED), PLACEMENT, over by 0.0..3.2 K
+     E5   off  limit +70    operating; unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: omron-g6k-signal-relay.pdf p.3 "Ambient operating temperature -40 to 70°C (with no icing or "
+          local 70.0..72.8 C (MODELED), PLACEMENT, over by 0.0..2.8 K
+   SGP41     Sensirion SGP41 battery-bay gas sensor (board E U17); device set (CHO-001)
+     E3-O off  limit +50    recommended (Table 4); unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: sgp41-datasheet.pdf p.6 "Operating conditions Relative humidity 0 90 % RH Temperature"
+          local 67.5..73.2 C (MODELED), PLACEMENT, over by 17.5..23.2 K; absolute (Table 5, short-term storage) +70 C (sgp41-datasheet.pdf p.7), an exclusion screen only
+     E5   off  limit +50    recommended (Table 4); unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: sgp41-datasheet.pdf p.6 "Operating conditions Relative humidity 0 90 % RH Temperature"
+          local 70.0..72.8 C (MODELED), PLACEMENT, over by 20.0..22.8 K; absolute (Table 5, short-term storage) +70 C (sgp41-datasheet.pdf p.7), an exclusion screen only
+   H5007NL   Pulse H5007NL Ethernet magnetics (board B T1, in circuit)
+     E3-O on   limit +70    operating; powered; MAKER: pulse-h5007nl.pdf p.1 "Operating Temperature 0°C to 70°C"
+          local 67.5..73.2 C (MODELED), PLACEMENT, over by 0.0..3.2 K
+     E5   on   limit +70    operating; powered; MAKER: pulse-h5007nl.pdf p.1 "Operating Temperature 0°C to 70°C"
+          local 70.0..72.8 C (MODELED), PLACEMENT, over by 0.0..2.8 K
+   ATP19     C&K ATP19 MAIN pushbutton (board C SW_MAIN, in circuit)
+     E3-O on   limit +55    operating; powered; MAKER: ck-atp19-series-datasheet.pdf p.1 "Operating Temperature -20ºC to 55ºC"
+          local 60.8..67.5 C (INFERRED), REACHED, over by 5.8..12.5 K
+     E5   on   limit +55    operating; powered; MAKER: ck-atp19-series-datasheet.pdf p.1 "Operating Temperature -20ºC to 55ºC"
+          local 64.7..70.0 C (INFERRED), REACHED, over by 9.7..15.0 K
+   ATP16     C&K ATP16 PI and TEST pushbuttons (board C, in circuit)
+     E3-O on   limit +70    operating; powered; MAKER: ck-atp16-series-datasheet.pdf p.1 "OPERATING TEMPERATURE: -20˚C to +70˚C"
+          local 60.8..67.5 C (INFERRED), NOT REACHED, 2.45 K inside
+     E5   on   limit +70    operating; powered; MAKER: ck-atp16-series-datasheet.pdf p.1 "OPERATING TEMPERATURE: -20˚C to +70˚C"
+          local 64.7..70.0 C (INFERRED), NOT REACHED, 0.00 K inside
+   SOUNDER   Floyd Bell MC-09-530-Q sounder (board C BZ1; sounds only for SOS)
+     E3-O off  limit +85    storage; unpowered; MAKER: floydbell-mc-09-530-q-spec.pdf p.1 "Storage Temperature -40_C to +85_C"
+          local 60.8..67.5 C (INFERRED), NOT REACHED, 17.45 K inside
+     E5   off  limit +85    storage; unpowered; MAKER: floydbell-mc-09-530-q-spec.pdf p.1 "Storage Temperature -40_C to +85_C"
+          local 64.7..70.0 C (INFERRED), NOT REACHED, 15.00 K inside
+   EPAPER    PDi E2370KS0C1 e-paper (board C; refreshed on events); device set (CHO-001)
+     E3-O off  limit +60    operating; unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: pdi-e2370ks0c1-flyer.pdf p.1 "Operation Temperature -15~60"
+          local 60.8..67.5 C (INFERRED), REACHED, over by 0.8..7.5 K
+     E5   off  limit +60    operating; unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: pdi-e2370ks0c1-flyer.pdf p.1 "Operation Temperature -15~60"
+          local 64.7..70.0 C (INFERRED), REACHED, over by 4.7..10.0 K
+   PXP4043C  Bulgin PXP4043/C sealed USB-C (connector plate; the outlets are off)
+     E3-O off  limit +70    operating; unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: bulgin-pxp4043c-usb-c-rear-panel.pdf p.1 "Max Operating Temperature: +70°C"
+          local 60.8..67.5 C (INFERRED), NOT REACHED, 2.45 K inside
+     E5   off  limit +70    operating; unpowered, inside a range it may operate in (INFERRED to cover it unpowered); MAKER: bulgin-pxp4043c-usb-c-rear-panel.pdf p.1 "Max Operating Temperature: +70°C"
+          local 64.7..70.0 C (INFERRED), NOT REACHED, 0.00 K inside
+   NVME      NVMe 2242, slot 3 (not picked)
+     E3-O on   limit +85    operating; the pick's line, a wide grade (e.g. Cervoz -40 to +85 C); MAKER: cervoz-m2-2242-nvme-titan.pdf p.10 "Wide Temperature Operating: -40˚C~85˚C"
+          local 67.5..73.2 C (MODELED), NOT REACHED, 11.81 K inside
+     E5   on   limit +85    operating; the pick's line, a wide grade (e.g. Cervoz -40 to +85 C); MAKER: cervoz-m2-2242-nvme-titan.pdf p.10 "Wide Temperature Operating: -40˚C~85˚C"
+          local 70.0..72.8 C (MODELED), NOT REACHED, 12.22 K inside
+5b Every fitted line, module and undeclared line at the line: E3-O: INCONCLUSIVE 44, NO PART 3, NOT FITTED 1, NOT REACHED 114, OUT OF SCOPE 7, PLACEMENT 7, REACHED 3; E5: INCONCLUSIVE 44, NO PART 3, NOT FITTED 1, NOT REACHED 114, OUT OF SCOPE 7, PLACEMENT 7, REACHED 3
+   1N4148W                                  D D2                       E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   2.54 mm pin header or bench jumper land  A J_USBC_OUT; B J_CAM, J_D E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   2086581001                               B J_HDMI                   E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   2N7002                                   A Q1, Q36, Q37, Q6; B Q10, E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   3 mm panel LEDs, sunlight viewable (no o C D1, D10, D11, D12 (+13)  E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   AO3400A                                  B Q212                     E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   AO3401A                                  C Q1, Q5                   E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   BAT46W-7-F                               A D10, D11, D12, D13 (+13) E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   BAT54W                                   C D17; E D5, D6            E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   BC857B                                   B Q101, Q201, Q301         E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   BSC028N06NS                              E Q3, Q5                   E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   BSC039N06NS                              E Q1, Q2, Q4, Q6           E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   BZT52C12-7-F                             A D22                      E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   C&K ATP19-SL1-603-B0SA-03G               C SW_MAIN                  E3-O REACHED      E5 REACHED       (read in 5a)
+   CR2032 coin cell (board B BT1)           module                     E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   CSD17577Q5A                              A Q10, Q8, Q9              E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   CSD17578Q5A                              A Q7                       E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   CSD18510Q5B                              A Q11, Q12, Q13, Q14 (+9)  E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   CSD19532Q5B                              A Q17, Q18, Q19, Q2 (+13); E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   Ground Control RockBLOCK 9704 SMA (board module                     E3-O PLACEMENT    E5 PLACEMENT     (read in 5a)
+   H5007NL                                  B T1                       E3-O PLACEMENT    E5 PLACEMENT     (read in 5a)
+   IP68 fans (coolers and mixers; D-18 cond module                     E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   Keystone 3034 CR2032 holder              B BT1                      E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   Keystone 3568 mini blade fuse holder     A F1; E F1, F2, F3         E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   LTC2954ITS8-1#TRPBF                      A U1                       E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   LimeSDR Mini v2 (board version v2.4), in module                     E3-O PLACEMENT    E5 PLACEMENT     (read in 5a)
+   Mitsubishi RA30H1317M1 VHF PA (face plat module                     E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   NiceRF SA868 (VHF variant; order code SA D U2                       E3-O PLACEMENT    E5 PLACEMENT     (read in 5a)
+   Omron G6K-2F-Y DC5                       D K1                       E3-O PLACEMENT    E5 PLACEMENT     (read in 5a)
+   PCM2912APJTR                             D U6                       E3-O PLACEMENT    E5 PLACEMENT     (read in 5a)
+   PESD12VL1BA,115                          D D10, D13                 E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   PESD5V0S1BA,115                          D D11, D12, D14, D9        E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   Pervasive Displays E2370KS0C1 e-paper (b module                     E3-O REACHED      E5 REACHED       (read in 5a)
+   QRP Labs QMX HF transceiver (lid tray)   module                     E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   SI2300DS-T1-GE3                          C Q6, Q7                   E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   SMBJ18A                                  A D4                       E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   SMBJ5.0A                                 A D3; B D1, D520           E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   SMBJ58A-13-F                             B D2                       E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   SMBJ6.0A                                 B D101, D201, D301; D D1   E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   SMCJ18A                                  A D1; E D3                 E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   SMCJ28A                                  E D4                       E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   SMCJ40A                                  A D2; E D1, D2             E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   SMCJ40CA                                 E D10                      E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   SN74LVC08APWR                            A U26; B U70, U71, U72, U7 E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   SN74LVC86APWR                            B U80, U81                 E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   SS14 (Zhengxin, SMB)                     E D7, D8                   E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   SS2040FL                                 C D19, D20, D21            E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   Sensirion SGP41-D-R4                     E U17                      E3-O PLACEMENT    E5 PLACEMENT     (read in 5a)
+   TLV75533PDBVR                            C U5; D U1; E U13          E3-O REACHED      E5 REACHED     
+   U-174/U headset jack, Amphenol Nexus cla C J_HSJ1, J_HSJ2           E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   USBLC6-2SC6                              A U29; B U107, U207, U29,  E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   VEML7700-TR                              C U_LIGHT                  E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   pre-charge pin, longer than the 0858 (no A J_PRE1                   E3-O INCONCLUSIVE E5 INCONCLUSIVE
+   sensor and receiver modules on headers ( module                     E3-O INCONCLUSIVE E5 INCONCLUSIVE
+5c The two 3.3 V regulators at the line (recommended junction +125 C, MAKER; DBV 231.1 C/W, DRV 100.2 C/W, TLV755P p.4):
+   E U13 at the model's plan              0.258 W (MODELED): DBV E3-O 127.1 C, E5 129.5 C; DRV E3-O 93.4 C, E5 95.8 C
+   E U13 at its rail's declared typical   0.595 W (INFERRED): DBV E3-O 205.1 C, E5 207.5 C; DRV E3-O 127.2 C, E5 129.6 C
+   C U5 at its rail's declared typical    0.253 W (INFERRED): DBV E3-O 126.1 C, E5 128.5 C; DRV E3-O 92.9 C, E5 95.4 C
+   The DRV package holds U13 at the plan load and U5 at its declared typical; at U13's declared 0.35 A neither package holds
+   (a DRV part takes at most 0.323 A at E5's air): a buck, or the rail's load re-derived. Owed to boards E and C's owners.
+5d THE SGP41 (board E U17). CHO-001 picks it for the battery bay ("SGP41 in the battery bay (32.54)"); REQ-042: "Water on the
+   case floor, and hydrogen or VOC in the battery bay, raise an alarm and shut the pack down."; CFL-002's acceptance: "The SGP41
+   is fitted where the battery bay's air is sampled, or an owner ruling drops it; the envelope's hot end is not recomputed until
+   one of the two happens.".
+   Its maker's conditions (1j): its gas specifications hold only when it is stored at 5 to 30 C and operated at -10 to +50 C
+   (section 2.3 and Table 4, p.6), and "Prolonged exposure to conditions outside these conditions may reduce sensor performance"
+   (p.6); Table 5's -20 to +55 C operating and -40 to +70 C short-term storage are absolute (p.7).
+   The reference: a TMP117 on the SGP41's carrier, +-0.15 C maximum from -40 to 70 C (MAKER, TMP117 p.1); the BME688's +-0.5 C
+   sits in Table 10's Typ column (p.14), not a bound, and is not used. The gradient to the SGP41 at most 0.5 K with its own
+   heating (ASSUMPTION, a placement rule measured at the bench); the lag 0.254167 K (E5's 15.0 K/h, the fastest rise the record
+   carries, times a 61 s reading and response, ASSUMPTION).
+   Power off at a reading of 55 - 0.15 - 0.5 - 0.254167 = 54.095833 C, set at 54.0 C (rounded down): the SGP41 is at most
+   54.904167 C when switched off, 0.095833 K under Table 5's +55 C. Power on and use of its output at a reading at or under 50 -
+   0.15 - 0.5 - 0.254167 = 49.095833 C, set at 49.0 C: at most 49.904167 C while its output is used. Between the two it stays
+   powered, its output logged as outside Table 4 and not used for REQ-042; off at every start until the reading is at or under
+   49.0 C.
+   In the envelope (+40 C) its channel works only where the reference reads at or under 49.0 C in every state, with 0.5 K kept
+   for a bounded restart: the location's own temperature at or under 48.35 C. The binding state is the heat stage, 27.086 W with
+   the ballasts, lid open or closed (E3-L runs it at +40 C lid closed); C1 holds the other states' air at its +50 C on board B's
+   TMP117 plus 0.2 C and the lag, 50.454 C. The locations that still sample the bay air (fraction of the air's rise from W4's
+   films, INFERRED; local temperatures MODELED at +40 C):
+      location                                           fraction     needs      lid open, line lid closed, 32.53 2.0/1.5 C1-held
+      the bay air where board E's U17 sits (as designed) 1.000-1.000  3.244 W/K  52.55 C        53.54 / 58.06 C        50.45 C
+      the east wall's inner skin in the pack pocket      0.541-0.781  2.535 W/K  49.80 C        50.58 / 54.11 C        48.17 C
+      the floor's inner skin under the pack              0.588-0.898  2.912 W/K  51.27 C        52.16 / 56.21 C        49.39 C
+   The coolest is the east wall's inner skin in the pack pocket (the pack keeps 7.38 mm to that wall at the worst, CASE-MARGINS
+   M4b; a carrier bonded to the skin, the SGP41 sampling the bay air through a diffusion port whose response is owed to the
+   bench). It needs 2.535 W/K with the lid open, inside W4's 2.85 and under 32.53's 3.0; and the same 2.535 W/K with the lid
+   closed, over 32.53's 1.5 to 2.0 and over W4's high case 2.49: NOT HELD with the lid closed on any conductance the record
+   carries. Where it holds: the C1-held states 48.17 C (0.18 K to spare); a warm start from the envelope's +45 C storage
+   (powered at once); recovery from E3-O's end (63.35 C at the skin at 2.535 W/K) to a restart in 2.98 to 3.73 h at +40 C
+   (32.53's 8 to 10 kJ/K).
+   Storage in the envelope: -20 to +45 C for three months (-20 to +25 C for a year, pcb_envelope.yaml) against Table 4's 5 to 30
+   C storage: an unpowered kit's inside sits at the ambient, so no location changes it.
+   At the margins it is off (E3-O starts from a kit at +55 C, so it is never powered there; in E5 it is off from 54.0 C). At the
+   line, in the bay air 67.55 C (E3-O) and 70.00 C (E5), at the skin 64.80 and 67.81 C, under Table 5's +70 C short-term
+   storage, an absolute rating: INCONCLUSIVE, Sensirion's duration and recovery owed (drafted); in a cooler's exhaust it would
+   pass it (72.78 C in E5), so it stays out of it. A supply switch and a bus of its own keep a live pin from feeding it (record,
+   section 6).
+   RESULT: no location holds the SGP41 inside its maker's conditions in the envelope: not with the lid closed at the hot end (no
+   conductance the record carries reaches 2.535 W/K) and not in storage. CHO-001 binds the part: the owner's question (6b).
+5e What stays CONDITIONAL: T-H1 lid open with fans at or over 2.159 W/K; the hold's reference calibrated to +-0.899099 K or
+   placed in the mixed air; the SGP41's shutdown at the margins (a TMP117 on its carrier within 0.5 K, its switch and bus,
+   Sensirion's duration) and, inside the envelope, the owner's answer (6b); the pushbuttons' pick; PDi's statement; the
+   regulators; the +70 C parts out of the exhaust; the fans' rating, the other lines with no range held and the lines cleared
+   only by an absolute rating (7d).
+
+6 The owner-question test, after the engineering routes of 4 and 5 are assessed
+6a At the margins, a part with every route rejected or outside authority on held evidence: none.
+6b Inside the envelope: the SGP41 (5d), RAISED. The conflict is CFL-002's: CHO-001's SGP41 in the battery bay against REQ-042's
+   VOC channel under D-02a's "operate to specification inside the envelope". The options:
+   A  a BME688-class gas sensor in the bay in its place (Bosch: gas sensing -40 to +85 C, p.8, "The sensors are electrically
+      operable within this range. Actual performance may vary."; its IAQ figures "Tested with 0.6-90 ppm of EtOH at 5-40 °C",
+      p.9; storage -45 to +85 C, an absolute rating, p.15): powered with no shutdown across the envelope and both margins (bay
+      air 52.55 C at +40 C, 67.55 and 70.00 C at the line); REQ-042's VOC level set from the BME688's own baseline instead of
+      "the SGP41's own clean-air baseline as its datasheet defines the VOC index" (its acceptance restated); its performance
+      over +40 C and after storage owed to Bosch or the bench; a second BME688 takes I2C 0x77 on board E, which the deferred
+      outside pod's BME688 then cannot share.
+   B  the VOC channel dropped: REQ-042 restated to water on the floor and hydrogen (S-49's part); CHO-001's line and CFL-002
+      restated; U17 and its switch off board E.
+   C  the SGP41 kept, its channel reported as not covered (REQ-042: "a state outside a sensing part's published range is
+      reported as not covered by that channel, never assumed") while its reference reads over 49.0 C (on the east wall's skin:
+      lid closed above about +34.24 to +37.77 C ambient at 32.53's 1.5 to 2.0 W/K, lid open above about +38.55 C at the line)
+      and after storage outside 5 to 30 C until Sensirion states otherwise: a restriction of the VOC channel inside the
+      envelope, which D-02a does not grant today.
+   The session's recommendation: A, the one option that keeps a powered VOC channel across the envelope and the margins with a
+   part the kit already carries. The radios' route (5) does not depend on the answer.
+6c Escalation is not limited to 6b. If T-H1 reads under 2.159 W/K lid open, E5 fails for the +70 C class unless the plate
+   coupling of 4e holds them (at 2.000 W/K E3-O's mixed air is 68.543 C, under +70 C, while E5's under the hold is 70.793 C,
+   over it); under 1.806 W/K E3-O fails as well. Each case is assessed against the routes then left (the plate coupling's
+   evidence, wider-rated parts) before any question; what would then go to the owner is a device-set re-pick (CHO-001) or a
+   stated deviation of E3-O's configuration.
+
+7 Downstream (the record's section 9 carries each item's owner by layer and its acceptance)
+7a T-H1 (prototype bench; Layer 7 designs for it): lid open with fans at or over 2.159 W/K (E5 with the hold); 2.709 W/K with no
+   hold; E3-O alone 1.806 W/K (LO-01a's own floor 1.6664 W/K, 1.8058 W/K with L4-E8's ballasts, 2e); lid closed, the reading that
+   decides option C's restriction (6b) and E3-L's inside air.
+7b The hold (firmware owner, CONOPS 4 and HW-FW-CONTRACT's integrators, TEST-PLAN's owner); enables read in the generators:
+      GEIGER_EN     kisch.tps22810("U16", "+5V_E6", "GEIGER_EN", "+5V_GEIGER", "GEIGER_CT")
+      LORA_ON       lvc1g08("U504", "EMCON_HW", "LORA_ON", "E22_EN"
+      RB_SW_EN      lvc1g08("U503", "EMCON_HW", "RB_SW_EN", "RB_EN"
+      SGP41 supply  r("R57", "4.7R", "+3V3_E6", "SGP_VDD", "R", "C23164")
+      U10 free pins "30": "HOT_R1_G", "31": "NC", "32": "NC", "33": "+3V3_E6", "34": "NC"
+      ZB_ON         lvc1g08("U505", "EMCON_HW", "ZB_ON", "E72_EN"
+7c The lines with no range held, as evidence obligations:
+      IP68 fans                              ARCHITECTURE Layer 6 (D-18's pick)        they carry the inside film every conductance here assumes (fans on); a fan that stops at the margin takes the enclosure to W4's fans-off values (lid open 0.77 to 1.57 W/K) and every margin with it: a maker's operating range reaching the mixed air at the line
+      CR2032 coin cell                       downstream   Layer 6                      a lithium coin cell's maker's range at or over the mixed air at the line (a +80 C class cell exists in the market; none held)
+      Keystone 3034 CR2032 holder            downstream   Layer 6                      the holder's sheet
+      QRP Labs QMX                           downstream   Layer 6, the owner's device set the unit's range at the ambient (it sits in the lid, outside the sealed volume with the lid open); an owner item only if its maker states less than the ambient
+      sensor and receiver modules on headers downstream   Layer 6                      each module's range (Geiger, lightning, DCF77, pod, camera); the Geiger is unpowered in the hold
+      3 mm panel LEDs                        downstream   Layer 6                      the LEDs' sheet, at the plate to the inside air
+      U-174/U headset jack                   downstream   Layer 6                      the jack's drawing
+      2086581001                             downstream   Layer 6                      J_HDMI's sheet
+      2.54 mm pin header                     downstream   Layer 6                      the headers' and jumper lands' sheet
+      Keystone 3568 mini blade fuse holder   downstream   Layer 6                      the holders' sheet
+      pre-charge pin                         downstream   Layer 6                      the pin's sheet once named
+7d The lines cleared only by an absolute rating (INCONCLUSIVE at the line, the exclusion screen cleared): 33; the least
+   clearance 11.8 K (LTC2954ITS8-1#TRPBF). Each owes a maker's statement supporting operation (a recommended range, or the range
+   its electrical characteristics hold over) or the parts discipline's derating rule (Layer 6): 1N4148W, 2N7002, AO3400A,
+   AO3401A, BAT46W-7-F, BAT54W, BC857B, BSC028N06NS, BSC039N06NS, BZT52C12-7-F, CSD17577Q5A, CSD17578Q5A, CSD18510Q5B,
+   CSD19532Q5B, LTC2954ITS8-1#TRPBF, Mitsubishi RA30H1317M1 VHF PA (face plate), PESD12VL1BA,115, PESD5V0S1BA,115,
+   SI2300DS-T1-GE3, SMBJ18A, SMBJ5.0A, SMBJ58A-13-F, SMBJ6.0A, SMCJ18A, SMCJ28A, SMCJ40A, SMCJ40CA, SN74LVC08APWR,
+   SN74LVC86APWR, SS14 (Zhengxin, SMB), SS2040FL, USBLC6-2SC6, VEML7700-TR.
+
+8 Predicates
+   P1 pwr_budget and pwr_red2 reproduced byte for byte before any figure: PASS
+   P2 T-H1's floor and the inside air reproduce L4-E10's 1.6664 W/K, 70.00 and 75.00 C: PASS
+   P3 the acceptance is read: survive and recover, the CM5 not shut down, the monitor and radios on, C1's shedding recorded, E5 logging: PASS
+   P4 every fitted line, module and undeclared line is screened: PASS
+   P5 every line the first pass finds within reach is read one by one, rated to +80 C or more and over only in the exhaust, or the regulators of 5c: PASS
+   P6 approach (a)'s line is over the low-case outer-film cap and under W4's high case: PASS
+   P7 the route keeps E3-O as stated: every radio on (work) at E3-O, no hold there: PASS
+   P8 at the line every part routed by the air is inside its governing limit at the mixed air at both margins: PASS
+   P9 the hold lowers the enclosure line: G_c under G_a: PASS
+   P10 the owner question is raised only after the routes are assessed: for the SGP41 in the envelope, and for no part at the margins: PASS
+   P11 every judged limit names its category and none is cleared on an absolute rating alone (the SGP41 on Table 4): PASS
+   P12 the SGP41 is off before its local +55 C and its output is used only at or under Table 4's +50 C (printed error, gradient, lag, rounded down): PASS
+   P13 the hold's window exists at the line only with a calibrated reference (e_allow over 0) and not across the whole exhaust spread: PASS
+   P14 no location holds the SGP41 to Table 4 in the envelope: the coolest skin's line over every lid-closed conductance held, storage outside Table 4: PASS
+
+Pinned inputs (sha256):
+   55244f94aace54ca09d98c100b9830cba75c70a4774c3ba375a14903fcaf6376 v2/docs/CASE-MARGINS.md
+   6cb7b241cb84d7290caffa74df2622c64222dd66a2de66693e480e3a18e44281 v2/docs/CONOPS.md
+   852736b661a805e36305ca6c2c91ebb76794e883a2ccd75dc3274c25d65212f1 v2/docs/MESHSAT-709-geometry-appendix.md
+   42a3dff33442c86089a2c6c9dee841e8e2c8b9cbc1222a4adc311902b3c316f7 v2/docs/TEST-PLAN.md
+   ad3ba27cef9e0f684f28ce81815afa86d44c4114b9bc10ff474308d875ba5788 v2/docs/feasibility/POWER-THERMAL.md
+   d9329f0c451aab09ee28c2c97e4549fa4c178405319f3429f40f88221753a4f5 v2/docs/parts/grade-sources.yaml
+   3569a5fa7f24ec60f7e0ee3d893f105c019f8a02034f401bd8d75a3d85014086 v2/docs/parts/grade_check.py
+   835910e807d588c481951dc879e030b55d893453bd124872b9310a99bed46db6 v2/docs/records/hc2/pwr_red2.out
+   5790bc7e444bebc4b6b7b6616c4641dfe602185631992d19aeb223eb51e9feec v2/docs/records/hc2/pwr_red2.py
+   5a616902d2ddab82f25d34ab55d848d06011fb6fbe48c147221d6b442783e462 v2/docs/records/rv-pwr/pwr_budget.json
+   58e40cf604804cc9d70c7fbeb1012be4552563fcc8ae7ef6755003c33acb902f v2/docs/records/rv-pwr/pwr_budget.out
+   469d0820b046ef6ff5aceadf422b4166de3d6a02bc50fa5b0c3644704f0f9556 v2/docs/records/rv-pwr/pwr_budget.py
+   6c83da5f7e3e4f0f5393bfe0f609ba02c423adbadfa3661a245d0a9b778e65c3 v2/docs/records/w4/w4-scratch-thermal.py
+   6c40250c47195ebb7b2ae1388e284dc7f2fba9f2e683f654a47c98444290e8c5 v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+   3ef9b8c49a01b72834dece18a69e8637305d97bbf7342d765d28be596f0464d6 v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+   c9f7394594201045be328a07284328a7eef2c2f451e35e0828a98ac3e5510609 v2/ecad/pcb-c-display-c8/out/pcb-c-display.net
+   a2d48972d171aad19e943c6e77ae31c45d0d33ff3ac94100f02c6c8777bca001 v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net
+   2ed95a0e8069ebf8ad31f4567a14015e863182a83b6de7b3b13218488d8316d4 v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
+   20c7b0795593d761f138e69ded1a92a5832e31cf89a1fec34008d1fda87c66b5 v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net
+   3698cc04d8eaf75ba2104e6a246352ec12a092e107eee8ee554321fa95040cb8 v2/ecad/tools/gen_sch_b.py
+   55ff8ede8851304963f571874c1f0554e05bcacc8c7f977c98f259e96d5a3f40 v2/ecad/tools/gen_sch_c.py
+   54f17c8187d3bd195b2df6447a46c6bcaeb09209fe69bb3f61a7670a47585bbd v2/ecad/tools/gen_sch_d.py
+   f846e138cb53a8c63247efb3ad7b5cc44a68cb73e71699c65fd53b63c01af186 v2/ecad/tools/gen_sch_e.py
+   6888362e4a3295d0e1d595f65c03d5c13353d4785d7821c86e91f470a1cf6410 v2/ecad/tools/lcsc_fill.py
+   35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864 v2/ecad/tools/pcb_envelope.yaml
+   b624ac495650a3592c45a37610375fb05bf7b775042cf3de7ec8979bc46a6e50 v2/ecad/tools/pcb_requirements.yaml
+   8200c1c6e7c2131ab213dcc8f871b8cb3f9977e9d35bcd0541da1b6617393fbf v2/release/revA/order/JLC-CERTIFIED.tsv
+   fce73ae028a985b3265ce3dbc17ab5b7bea1ae31b7ea84c6698c7694083e2478 v2/vendor/bosch/bosch-bme688.pdf
+   bc353c794cafec7a6108fa6e8abdca3bc64d5e3f550d53c4741640e098365dea v2/vendor/bulgin/bulgin-4000-series-sealed-usb-c.pdf
+   cce556227a71f8956420e5deb3a72ed99d639d376ac75bd612d36d23fa6d1532 v2/vendor/bulgin/bulgin-pxp4043c-usb-c-rear-panel.pdf
+   80070fefd8db6e8abc6e146c8b7b5fb318ba129cc1e28826936d547fde79c863 v2/vendor/cm5/cm5-datasheet.pdf
+   ef8d376f2ec356e29172eb9e053819a0ebdcc576dba7fc9ab0505c568427920f v2/vendor/diodes/diodes-ap2112-ldo.pdf
+   ef99daa3789d835bc025dfcb4c605c5c2e6d3e7223e86d40b33e6b497ea5a722 v2/vendor/diodes/diodes-ap63200-series-buck.pdf
+   d3bcdc7dd4ca44cb36ef893d3dbfabbd1742dfc736557777868f6ead5d0a98e8 v2/vendor/diodes/diodes-ap64500.pdf
+   fae7e21365939be5c3bbf156be3522b364037a637590f5079538d63456bca63b v2/vendor/fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf
+   f1146105a3c09ebcf786d217fbf0053f8e6df3c5192efcf666e731281be4c4f1 v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html
+   938ef5ef5007df6bb8a3f2d2eb6878e3eac269e1f327c9a9164406b0f5152be1 v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf
+   25d2046127b3ffa7e7a2047b7467c67587559e8e05111347260d5a892c0bec57 v2/vendor/omron/omron-g6k-signal-relay.pdf
+   266e2b62a3c88a08038e27c151982657a8395ef447e15549b5aebcaa2368333d v2/vendor/pdi/pdi-e2370ks0c1-flyer.pdf
+   76b85b47d0bd9f46cfca2281b5e5e31eba1e82f148ffda680472e5a1995c8d65 v2/vendor/pulse/pulse-h5007nl.pdf
+   2bae882148b45172e009f88cbea08878f80e284dc6d44e93af5d67f6b9ed030a v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf
+   30bad6e0074bea49bad4023b541c7d48c70e5d73e58281e7a9e3ab4d7bddcf84 v2/vendor/rockblock/groundcontrol-docs-rockblock-9704-specification-20260927.html
+   d2dc7cd7959cdd076ef6941510c204058235744b2a87402f9746fe94daa8afc2 v2/vendor/seals/floydbell-mc-09-530-q-spec.pdf
+   1b5b8003ea7657807cac3880873f364fc09cea2c4d8bea4c60d47954b52ed60d v2/vendor/seals/nkk-ip-rated-switches-accessories.pdf
+   331f35ed1f027a74ec79b302763f7adb920759bc055b3d2ada17822bb0005bec v2/vendor/sensirion/sgp41-datasheet.pdf
+   30b3c59cd3332952f91eb825cd6bb9ebcbea3281fca4bd6a3277ddd03ce032b9 v2/vendor/storage/cervoz-m2-2242-nvme-titan.pdf
+   fce6061e05364e614da1d199b61cdfdc0a5ba50facb215690154710b824bdf11 v2/vendor/switches/ck-atp16-series-datasheet.pdf
+   ebf7ad2c6da083b2fd4805248819162cfc3cc8c4df5449901e921bc7621c2154 v2/vendor/switches/ck-atp19-series-datasheet.pdf
+   3e5e927fdf63cf6a2397630987c58e947ebc80d5a1cfc93fb1fb58d98bb58973 v2/vendor/ti/bq25731-datasheet.pdf
+   c8595fa806a99074f64592d5e36826f7b9c4b007b950344bc013316e7212348d v2/vendor/ti/held/ti-csd17577q5a-slps516.pdf
+   f1aad251830260a563a03e367f3db4c12112433fd8dde7b4ee179b22381b7834 v2/vendor/ti/held/ti-csd17578q5a-slps526.pdf
+   44ac688d7e51f85259134abcffeed6cd1ae61234dfd2b6dea2b0607d8ad0d015 v2/vendor/ti/held/ti-tlv755p-c404027.pdf
+   98191bec36d43771affa3e1540f6e1737347c19a1602747ffb4327509550a820 v2/vendor/ti/lm5176-datasheet.pdf
+   61d048c255190975933032c6ff712c6b780d8390cbc40821a54fd29b62adbf32 v2/vendor/ti/ti-pcm2912a.pdf
+   cb0644caef3b0dedec65c793a2c19707208e377caf39a12098263fe237a49a94 v2/vendor/ti/ti-sn74lv1t08.pdf
+   71bbb2fc452e2949b332c030b004b094ba679ac8cce27123f806a0a6b1fde660 v2/vendor/ti/ti-sn74lvc2g07.pdf
+   4a86306d6734f1f4212e897c29787a93b56724c06adf87d926cc7b603a694d12 v2/vendor/ti/ti-tlv758p.pdf
+   b33614678dd46e7997f813ccefb118796dcbcc97c9ba264806703ee453a3d555 v2/vendor/ti/ti-tmp117-temperature.pdf
+   16ec2eac43c7374eb9e7edd7df7bdb24de6862f695e1582c68716ced4820e5f6 v2/vendor/ti/ti-tps62933.pdf
+   d02d0b8af5cbdb1b8186f890efdb214cb8edc50d55b9df5eed0650933a08d3db v2/vendor/ti/ti-tusb2046b.pdf
+   b715bce72e988310d18dbc8eb041a05b5f15e4a0b690843a873abdc373a1ad87 v2/vendor/ti/ti-tusb8041.pdf
+   af1a93ef3b484a3da4354779f0b2a8a2537c94d71025eb68b82a4d4879f8e8db v2/vendor/wifi/asiarf-AW7915-AED_V1.pdf
+   ba3b1474406fdaf5c7cfc87f80f691cf983f44b0e19f8757511df13f5d6241be v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf
