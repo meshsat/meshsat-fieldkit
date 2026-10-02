@@ -114,4 +114,4 @@ storage qualification, no demonstrated conflict; OW-10 held for a measured confl
 unit selection (PANEL-ACC), no unit bought or measured.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
-`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 51 tests.
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 52 tests.
