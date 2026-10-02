@@ -65,7 +65,7 @@ PINS = {
     "env": ("v2/ecad/tools/pcb_envelope.yaml", "35cf43a2b7098a76abb4919685ece4d6e352331628f5f242c1492d9fcbbf2864"),
     "replay_py": ("v2/docs/records/l4e/l4e_replay.py", "3de985e2e3e06453d2c9d576311c1f39935149ac1e9b7cff0431a40933bb8734"),
     "replay_out": ("v2/docs/records/l4e/l4e_replay.out", "59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d"),
-    "l4e7_out": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "66fb58ef99fe7e816ed6f5bfe0abbd33a0c7f081641db4dbb8cca91278a331d1"),
+    "l4e7_out": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "a0ec073de05abe918e983384181f1b6538b5347d099b709ad75e15f0f74091a9"),
     "array_calc": ("v2/docs/records/a1solar/array_calc.py", "fdeaf63f525f1d7f4ca54502083369cfd4f322a41207ff0a52582c27038fd1e4"),
     "spr_ds": ("v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf",
                "da06e5e2d9bca625f54a756105e009950a2352e4764868853cb26921372ff605"),
@@ -421,11 +421,30 @@ def compute():
               "Littelfuse's VBR temperature coefficient")
     R["d4_alpha_t"] = float(at.group(1)) / 100.0
     R["d4_vbr_cold"] = R["d4_row"][1] * (1.0 + R["d4_alpha_t"] * (R["t_cold"] - 25.0))
-    # A-3(a): the stage's input current, bounded by L4-E7's drafted limit at its design floor's worst corner (stack C)
+    # A-3(a): the stage's input current; the first-round limit's design floor's worst corner (stack C) is kept as the conservative
+    # upper bound, above L4-E7R's backstop trip and regulation (read below)
     cw = need(o7, r"C\. the design floor .*?\n\s+the cold end worst ([\d.]+) W at ([\d.]+) V.*?\n\s+the hot end  worst ([\d.]+) W at ([\d.]+) V",
               "L4-E7's stack C corners", re.S).groups()
     R["i_norm_max"] = max(float(cw[0]) / float(cw[1]), float(cw[2]) / float(cw[3]))
     R["stack_c"] = tuple(float(x) for x in cw)
+    # L4-E7R (accepted at checks 3 and 4): the regulation and the backstop that now hold the 100 W (section 10 of its output)
+    f7 = flat(o7)
+    r7 = {}
+    for key, pat in (("reg", r"The LT8705A's own limit stays as the regulation, coordinated under the trip: RIMON_IN ([\d.]+k) \((C\d+)\), ([\d.]+) A"),
+                     ("coord", r"stays at or under C's lowest trip with its parts aged, at every input voltage: ([\d.]+k), ([\d.]+) A at 25 V against ([\d.]+) A"),
+                     ("joint", r"its highest under the joint assumptions \(([^)]*)\)"),
+                     ("own", r"with the regulation's own 25 V corner at ([\d.]+) W"),
+                     ("trip", r"the trip at most ([\d.]+) A at 25 V \(its sense voltage ([\d.]+) mV\), the static bound ([\d.]+) W, the margin"),
+                     ("dec", r"normal operation: ([\d.]+) W at most, margin ([\d.]+) W, CONDITIONAL on G_CM \(break-even (\d+) %\) and the VIN\+ bias \((\d+) mA\)"),
+                     ("resp", r"at most 10 J in any 0\.1 s for a response up to ([\d.]+) ms"),
+                     ("energy", r"THE ENERGY: on SC-37's day ([\d.]+) / ([\d.]+) / ([\d.]+) Wh at the lower, nominal and upper hold corners \((\d+) / (\d+) / (\d+) h bound\)"),
+                     ("crit", r"(L4-E7R's architecture criterion: MET, CONDITIONAL on the named items)")):
+        r7[key] = need(f7, pat, "L4-E7R's %s" % key).groups()
+    if r7["trip"][2] != r7["dec"][0]:
+        refuse(3, "L4-E7R's static bound reads two ways")
+    R["l4e7r"] = r7
+    R["i_trip_max"], R["i_trip_min"] = float(r7["trip"][0]), float(r7["coord"][2])
+    R["i_reg_nom"], R["i_reg_hi"] = float(r7["reg"][2]), float(r7["coord"][1])
     # A-3(b)/(c): the maker's own sizing allowance (SunPower 524958 Rev F, 3.0) and J_SOLAR's held catalogue rows
     g2 = flat(pdf_page(PINS["spr_guide"][0], 2))
     R["clause_quote"] = need(g2, r"(Under normal conditions, a photovoltaic module may experience conditions that produce more current "
@@ -805,6 +824,13 @@ def compute():
         if mine != tuple(l7c[ak]):
             refuse(4, "the rated unit's corner trace differs from L4-E7's printed row (%s: %s against %s)" % (ak, mine, l7c[ak]))
 
+    # L4-E7R moved the regulation to RIMON_IN 31.6k: the SunPower's highest model current on SC-37's day at the conditioned upper
+    # corner and at the nominal hold, against the regulation's nominal and C's lowest trip (which rows of this record move)
+    def i_day_max(vh):
+        return max(dsp.current(vh, prof0[h], AC.t_cell(TA40[h], prof0[h], noct0), rl) for h in hours)
+    R["corner_i"] = (i_day_max(vh_c), i_day_max(R["hold_typ"][1]))
+    R["corner_unmoved"] = R["corner_i"][0] < min(R["i_reg_nom"], R["i_trip_min"])
+
     # ---------------------------------------------------------------- THE DISTURBANCE CHECK (protection, apart from the window)
     ns = spr["cells"]
     tk = R["t_cold"] + 273.15
@@ -982,9 +1008,9 @@ def render(R):
         for lab, tl, drawn, lim, vlim, pmpp in c["power"]:
             P("     %-12s %-27s as drawn %6.1f W | with the limit %6.1f W (at %.2f V) | the panel's maximum %6.1f W" % (
                 lab, tl, drawn, lim, vlim, pmpp))
-        P("     as drawn the stage would take up to %.1f W (%s %.0f W); with the drafted limit at most %.1f W here (L4-E7 bounds the limit"
+        P("     as drawn the stage would take up to %.1f W (%s %.0f W); with L4-E7's first-round limit at most %.1f W here; the 100 W rests"
           % (c["p_drawn_max"], "over" if c["p_drawn_max"] > R["p_win"] else "under", R["p_win"], c["p_lim_max"]))
-        P("     at 96.25 W to 25 V, CONDITIONAL on five unprinted values): the 100 W rests on the drafted limit, as for every candidate")
+        P("     on L4-E7R's regulation and backstop (A-4, section 10), as for every candidate")
         if c["band"] is None:
             P("     hot short circuit (+%.0f C cells, 1000 W/m2) %.2f A NOMINAL (no Isc band printed) against the entry's %.0f A; x %.2f, a factor"
               % (T_ISC_HOT, c["isc_hot"], R["entry_a"], K_CLAUSE))
@@ -1078,10 +1104,20 @@ def render(R):
       % (sg["di_dt"], sf["di_dt"], R["hold_cond"][1]))
     P("         there, %.3f / %.3f V (%.3f / %.3f V at the unshifted noon)" % (sg["vmp"], sf["vmp"], sg["vmp_noon"], sf["vmp_noon"]))
     P("     A-3 THE ENTRY, THREE CASES:")
-    P("       (a) normal operation: the entry carries the stage's input current, bounded by L4-E7's drafted limit and independent of")
-    P("           irradiance: at most %.4f W / %.3f V = %.4f A at the design floor's worst corner (stack C, L4-E7 out 4), under %.0f A;"
-      % (max(R["stack_c"][0], R["stack_c"][2]), R["stack_c"][1], R["i_norm_max"], R["entry_a"]))
-    P("           CONDITIONAL with A-4")
+    r7 = R["l4e7r"]
+    P("       (a) normal operation: the entry carries the stage's input current, independent of irradiance. L4-E7R (accepted, checks 3")
+    P("           and 4) holds it two ways. The primary limit REGULATES it: the LT8705A at RIMON_IN %s (%s), %.4f A nominal, at"
+      % (r7["reg"][0], r7["reg"][1], R["i_reg_nom"]))
+    P("           most %.4f A at 25 V under the joint assumptions:" % R["i_reg_hi"])
+    P("             %s" % r7["joint"][0])
+    P("           The backstop does NOT limit: it turns the stage off (SWEN low) when the input current reaches its trip, at most")
+    P("           %.4f A at 25 V (%.4f A at its lowest), so no steady entry current exceeds" % (R["i_trip_max"], R["i_trip_min"]))
+    P("           %.4f A even if the regulation's unprinted values pass their assumptions (the overlap is then a hiccup); during a trip's"
+      % R["i_trip_max"])
+    P("           response (at most %s ms) the source's own current flows, at most A-3(b)'s. The bound kept here," % r7["resp"][0])
+    P("           %.4f W / %.3f V = %.4f A" % (max(R["stack_c"][0], R["stack_c"][2]), R["stack_c"][1], R["i_norm_max"]))
+    P("           (L4-E7's first-round stack C corner at RIMON_IN 23.2k, L4-E7 out 4), stays the conservative upper bound, above the")
+    P("           backstop's %.4f A and the regulation's %.4f A, under %.0f A; CONDITIONAL with A-4" % (R["i_trip_max"], R["i_reg_hi"], R["entry_a"]))
     P("       (b) a sustained input fault (a short downstream of F2, D4 failing short for example): the panel's Isc for hours, hot cells")
     P("           +%.0f C, (1 + U_I), x %.2f, the maker's own sizing allowance, at or under %.0f A. SunPower 524958 Rev F prints it in" % (
         T_ISC_HOT, K_CLAUSE, R["entry_a"]))
@@ -1094,8 +1130,15 @@ def render(R):
     P("           J_SOLAR's held catalogue (JST VH, p.1) prints '%s' and '%s' and %s: COMPONENT_LIMITATION," % (
         R["vh_rating"], R["vh_temp"], "a short-time overload" if R["vh_overload"] else "no short-time overload"))
     P("           carried as PANEL-ACC row A-3(c): J_SOLAR and PV_IN rated at least that current at their maximum ambient, or a bench row")
-    P("     A-4 the 100 W into the stage: CONDITIONAL on L4-E7's drafted input limit applied on board E and its bench rows (the unit's")
-    P("         maximum at -20 C, 1000 W/m2 is %.1f W, over 100 W as drawn; section 5); not a measured condition of the unit" % max(
+    P("     A-4 the 100 W into the stage rests on two layers, as L4-E7R states them (accepted, checks 3 and 4): the primary limit, the")
+    P("         LT8705A's regulation at RIMON_IN %s, its own 25 V corner %s W, CONDITIONAL on its unprinted values staying inside the"
+      % (r7["reg"][0], r7["own"][0]))
+    P("         joint assumptions above; and the backstop (approach C: the WSL2512 sense bank, the INA169, the TPS3701 and the TPS3808")
+    P("         holding SWEN low, SWEN off by default, with the CS101 correction: the bulk ahead of the bank and the INB filter), its")
+    P("         static bound %s W, margin %s W, CONDITIONAL on G_CM (break-even %s %%) and U18's VIN+ bias (break-even %s mA):"
+      % (r7["dec"][0], r7["dec"][1], r7["dec"][2], r7["dec"][3]))
+    P("         \"%s\" (L4-E7 out 10). Both are drafted, not applied; the unit's" % r7["crit"][0])
+    P("         maximum at -20 C, 1000 W/m2 is %.1f W, over 100 W as drawn (section 5). Not a measured condition of the unit" % max(
         x[5] for x in spr["power"] if x[0] == "nominal"))
     P("   THE DEMONSTRATION ON A UNIT EQUAL TO THE TYPICAL ROWS (INFERRED: the sheet's coefficient, the larger of its two readings, gives")
     P("   Vm20; the energy record's fit gives the curve; a real unit replaces each by its measurement):")
@@ -1114,7 +1157,15 @@ def render(R):
     P("     information: a laboratory without a cold chamber could extrapolate Vm20 from M1 with a coefficient measured to within %.1f %%"
       % (100 * A["ub_extrap_max"]))
     P("     for the rated unit; the contract keeps M2 measured")
-    P("   THE ENERGY (the drafted limit %.4f A; the replay's A1 and A2):" % R["i_set"])
+    P("   THE ENERGY (the replay's A1 and A2), computed at L4-E7's first-round limit %.4f A as section 0 reproduces it. L4-E7R's accepted"
+      % R["i_set"])
+    P("   regulation (RIMON_IN %s, %.4f A nominal) leaves the conditioned upper corner's rows unchanged: %s (the SunPower's highest"
+      % (r7["reg"][0], R["i_reg_nom"], "yes" if R["corner_unmoved"] else "NO"))
+    P("   current there on SC-37's day %.4f A, under the regulation's nominal and C's lowest trip %.4f A); it moves the nominal hold's"
+      % (R["corner_i"][0], R["i_trip_min"]))
+    P("   day to %s Wh (L4-E7 out 10, %s h bound; %s / %s Wh at the lower and upper corners) against the 350.0 Wh below (the panel's"
+      % (r7["energy"][1], r7["energy"][4], r7["energy"][0], r7["energy"][2]))
+    P("   highest current at the nominal hold %.4f A, over the regulation's nominal)" % R["corner_i"][1])
     for lab, vh, tot, nl, zh, noon_w, rr, tr in R["acc_runs"]:
         P("     %s (%.3f V): %.1f Wh a day; at noon %.2f W; [%d limited, %d daylight hours with no input]" % (lab, vh, tot, noon_w, nl, zh))
         for ak in ("A1", "A2"):
@@ -1174,10 +1225,12 @@ def render(R):
     P("   rows, with A-1, A-2, A-3(a) and A-3(b) met at the specification: %s" % ("yes" if R["route2"] else "NO"))
     P("   U-03: %s." % R["decision"])
     if R["decision"].startswith("CONDITIONAL"):
-        P("   It is not an architecture-level choice: REQ-016's window, the stage, its hold and the drafted limit stay, and the panel is")
+        P("   It is not an architecture-level choice: REQ-016's window, the stage, its hold and its 100 W control stay, and the panel is")
         P("   selected downstream by measurement. It is CONDITIONAL on: a bought unit passing A-1, A-2 and A-3(b) by its own measurement")
-        P("   (M1 to M3 and A-2's reading at the specification); L4-E7's drafted input limit applied (A-3(a) and A-4, its 96.25 W")
-        P("   CONDITIONAL); A-3(c)'s connector and conductor rating at Layer 5/6; the disturbance check's assumption (section 11) and M3's n;")
+        P("   (M1 to M3 and A-2's reading at the specification); L4-E7R's regulation and backstop applied (A-3(a) and A-4, the backstop's")
+        P("   %s W CONDITIONAL on G_CM and the VIN+ bias); A-3(c)'s connector and conductor rating at Layer 5/6; the disturbance check's"
+          % R["l4e7r"]["dec"][0])
+        P("   assumption (section 11) and M3's n;")
         P("   the unit's trace rerun (A1, A2). None of these can overturn the architecture: A-3(c) is a connector rating (REQ-016's 'rated")
         P("   10 A' is a minimum), and the rest decide a unit, not the topology.")
         P("   NO PHYSICAL UNIT IS ACCEPTED: none is bought or measured; the purchase and the measurement are the owner's actions (money).")

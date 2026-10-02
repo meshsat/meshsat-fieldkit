@@ -60,9 +60,10 @@ outside party). For a printed band to close route 1, its spread (top over bottom
 these three curve shapes (out 7), about +-4.2 to +-5.1 %.
 
 **Route 2 (a controlled unit) is feasible, so U-03 is a conditional downstream selection, not an architecture-level
-choice.** REQ-016's window, the stage, its hold and the drafted limit stay; the panel is selected at Layer 6 by measuring one
-identified unit against the contract below. It is CONDITIONAL on: a bought unit passing A-1, A-2 and A-3(b) by its own
-measurement; L4-E7's drafted input limit applied (A-3(a), A-4; its 96.25 W CONDITIONAL); A-3(c)'s connector and conductor
+choice.** REQ-016's window, the stage, its hold and its 100 W control stay; the panel is selected at Layer 6 by measuring
+one identified unit against the contract below. It is CONDITIONAL on: a bought unit passing A-1, A-2 and A-3(b) by its own
+measurement; L4-E7R's regulation and backstop applied (A-3(a), A-4; the backstop's 93.5521 W CONDITIONAL on G_CM and the
+VIN+ bias); A-3(c)'s connector and conductor
 rating at Layer 5/6; the disturbance check's assumption and M3's n; the unit's trace rerun. None of these can overturn the
 architecture: A-3(c) is a connector rating (REQ-016's "rated 10 A" is a minimum) and the rest decide a unit, not the
 topology. **NO PHYSICAL UNIT IS ACCEPTED**: none is bought or measured; the purchase and the measurement are the owner's
@@ -94,8 +95,15 @@ a current, U_G 2 % of A-2's irradiance setting, U_TC 1.0 K on A-2's cell tempera
   current) and dI/dT is -0.06749 A/K (warmer cells, less current) for the rated unit (+0.00361 and -0.09478 for the floor
   unit), and the hold's 18.813 V lies above Vmp there (16.267 V; 15.442 V for the floor unit).
 - **A-3, the entry, three cases:**
-  - (a) normal operation: the entry carries the stage's input current, bounded by L4-E7's drafted limit and independent of
-    irradiance, at most 99.6739 W / 25.000 V = **3.9870 A** (the design floor's worst corner, stack C), CONDITIONAL with A-4;
+  - (a) normal operation: the entry carries the stage's input current, independent of irradiance. L4-E7R (accepted, its
+    checks 3 and 4) holds it two ways. The primary limit regulates it: the LT8705A at RIMON_IN 31.6k (C705766), 2.5485 A
+    nominal, at most 2.9337 A at 25 V under the joint assumptions (EA2 and EA3 at half gain, the line at twice, RSENSE1's
+    cold TCR at 100 ppm/K, the drifts, each resistor at its worst end). The backstop does not limit: it turns the stage off
+    (SWEN low) when the input current reaches its trip, at most 3.7408 A at 25 V (3.0468 A at its lowest), so no steady entry
+    current exceeds 3.7408 A even if the regulation's unprinted values pass their assumptions (the overlap is then a hiccup);
+    during a trip's response (at most 1.087 ms) the source's own current flows, at most A-3(b)'s. The bound kept here,
+    99.6739 W / 25.000 V = **3.9870 A** (L4-E7's first-round stack C corner at RIMON_IN 23.2k), stays the conservative upper
+    bound, above the backstop's 3.7408 A and the regulation's 2.9337 A, under 10 A; CONDITIONAL with A-4;
   - (b) a sustained input fault (a short downstream of F2, D4 failing short): the panel's Isc for hours at +70 C cells,
     (1 + U_I), x 1.25, at or under 10 A: **8.1817 A** for the typical unit. The 1.25 is the maker's own sizing allowance,
     printed in section 3.0 of guide 524958 Rev F (PDF p.2; the coordinator's direction named section 5.1, which holds the
@@ -109,8 +117,13 @@ a current, U_G 2 % of A-2's irradiance setting, U_TC 1.0 K on A-2's cell tempera
     J_SOLAR's held catalogue (JST VH) prints "Current rating: 10 A AC/DC" and a -40 to +105 C range and no short-time
     overload: a COMPONENT_LIMITATION, carried as PANEL-ACC row A-3(c): J_SOLAR and PV_IN rated at least that current at their
     maximum ambient, or a bench row. A 20 A part would cover the case up to 3056 W/m2, 2.17 x E0.
-- **A-4, the 100 W into the stage:** CONDITIONAL on L4-E7's drafted input limit applied on board E and its bench rows; the
-  unit's maximum at -20 C and 1000 W/m2 is 117.4 W, over 100 W as drawn (out 5).
+- **A-4, the 100 W into the stage** rests on two layers, as L4-E7R states them: the primary limit, the LT8705A's regulation at
+  RIMON_IN 31.6k (its own 25 V corner 73.3436 W), CONDITIONAL on its unprinted values staying inside the joint assumptions
+  above; and the backstop (approach C: the WSL2512 sense bank, the INA169, the TPS3701 and the TPS3808 holding SWEN low, SWEN
+  off by default, with the CS101 correction: the bulk ahead of the bank and the INB filter), its static bound **93.5521 W**,
+  margin 6.4479 W, CONDITIONAL on G_CM (break-even 169 %) and U18's VIN+ bias (break-even 22 mA): "L4-E7R's architecture
+  criterion: MET, CONDITIONAL on the named items". Both are drafted, not applied; the unit's maximum at -20 C and 1000 W/m2
+  is 117.4 W, over 100 W as drawn (out 5).
 
 **Demonstration on a unit equal to the typical rows** (INFERRED: the sheet's coefficient, the larger of its two readings,
 gives Vm20 24.0505 V; the energy record's fit gives the curve): **A-1 24.1505 V, margin 0.8495 V**; **A-2** I 1.5508 A,
@@ -121,7 +134,10 @@ ceiling, 1.0353 x rated), and **Vm20 at most 24.900 V**. The rated 21.4 V lies i
 could extrapolate Vm20 from M1 with a coefficient measured to within 27.7 % for the rated unit; the contract keeps M2
 measured.
 
-**The energy** (the drafted limit, the replay's A1 and A2):
+**The energy** (the replay's A1 and A2, computed at L4-E7's first-round limit 3.4713 A as out 0 reproduces it). L4-E7R's
+accepted regulation (RIMON_IN 31.6k, 2.5485 A nominal) leaves the conditioned upper corner's rows unchanged (the SunPower's
+highest current there on SC-37's day is 1.6914 A, under the regulation's nominal and the backstop's lowest trip 3.0468 A),
+and moves the nominal hold's day to 336.6 Wh (L4-E7 out 10, 5 h bound) against the 350.0 Wh below.
 
 | Unit and hold | Wh a day | A1 unserved at 48 h (06 / 18 UTC) | A2 unserved at 48 h | A2 least addition 48 / 72 h |
 |---|---|---|---|---|
@@ -196,8 +212,8 @@ lowest 3.1404 A). The energy is the replay's: PVGIS's figure for the panel's Wp 
 single-diode model's operating point over its own maximum-power point (the method check reproduces the replay's 373.5 /
 350.0 / 280.6 Wh and L4-E7's 369.7 / 350.0 / 307.9 / 375.0 / 240.0 Wh, and A1 and A2 at L4-E7's nominal row, out 0). The
 noon screen (the open circuit above the hold corner) is a necessary model condition, not proof of useful power; PANEL-ACC's
-A-2 measures the power. Every panel takes over 100 W at the cold, bright corner as drawn; the window's 100 W rests on L4-E7's
-drafted limit (96.25 W to 25 V, CONDITIONAL on five unprinted values).
+A-2 measures the power. Every panel takes over 100 W at the cold, bright corner as drawn; the window's 100 W rests on
+L4-E7R's regulation and backstop (A-4: the backstop's 93.5521 W CONDITIONAL on G_CM and the VIN+ bias).
 
 ## The screen (out 9)
 
@@ -320,6 +336,7 @@ trace rerun.
 | B1, A-3's envelope | A-3 split three ways: (a) normal operation under L4-E7's limit, 3.9870 A; (b) a sustained input fault with the maker's 1.25 (its section 3.0 quoted), 8.1817 A; (c) the enhancement transient during a fault at a stated design level, 13.8200 A, a COMPONENT_LIMITATION carried as PANEL-ACC row A-3(c) for J_SOLAR and PV_IN (out 10) |
 | B2 and the minors | closed by the recheck; kept |
 | Remaining minor, 27.475 V | the band-top-over-envelope figures are removed: route 1 is read in the window only (26.723 V the scenario, 26.428 V the extrapolation) (out 3) |
+| Update after set 25 (L4-E7R accepted; no new check) | the pin of `l4e7_stage_settings.out` moved to the tree's file (L4-E7R appended its section 10; the rows read here unchanged); A-3(a) and A-4 now cite L4-E7R: the regulation at RIMON_IN 31.6k (2.9337 A at most at 25 V) and the backstop's trip (at most 3.7408 A) under the kept 3.9870 A, and the backstop's 93.5521 W CONDITIONAL on G_CM and the VIN+ bias; the energy rows stay at the first-round limit, with L4-E7R's nominal-hold day (336.6 Wh) stated beside them (out 10) |
 | Also | the route-2 window moves to Voc25 20.315 to 22.156 V and Vm20 at most 24.900 V; the typical unit's A-1 margin to 0.8495 V; the worst accepted units' energy table to the rated unit's own traces (240.0 and 350.0 Wh, L4-E7's rows) and the floor unit (52.3 Wh); the clarification drafts carry the window's bands (20.12 to 22.24 V, 20.10 to 21.85 V) |
 
 ## Reproduce
