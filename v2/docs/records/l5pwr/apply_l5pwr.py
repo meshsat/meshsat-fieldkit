@@ -58,6 +58,58 @@ board_to_board:
   schema: 1
 """
 
+Y_LINES_OLD = ('  power_up_reference: "v2/docs/ARCHITECTURE.md section 4.3 (the power-up sequence as generated at eadbe571)"\n'
+               '  contracts:\n')
+Y_LINES_NEW = '''\
+  power_up_reference: "v2/docs/ARCHITECTURE.md section 4.3 (the power-up sequence as generated at eadbe571)"
+  # THE POWER LINES' STATES (Layer 5's power pass, set 27, 3 October 2026; criteria 5.6 and 5.7): for each line L4-E9 section 4
+  # defines (4a source changes, 4c startup, 4e faults, 4f the fans), its reset, default and cable-out state and the firmware row
+  # that drives it. Marks and sources as the header above; DRAFTED lines are release-guarded Layer 4 drafts no generator carries.
+  power_line_states:
+    SLOT_EN1..3: {reset: "LOW (A R30, R34, R38 100 k to GND; the RP2040's pads reset as inputs)", default: "every slot OFF until the
+        panel's boot order raises them one at a time after ZEROIZE_SW is read (FW-C01 step 6)", cable_out: "LOW: every slot off
+        (IF-BC-PANEL, IF-AB-RIBBON)", hold: "OWED: a panel reset or update drops every module (FW-C02; ARCHITECTURE.md 4.3;
+        IF-BC-PANEL slot_power_semantics); in no generator, Layer 8's (board C or A); criterion 5.6 stays open on it", firmware:
+        "FW-C01, FW-C02, FW-C13 (H1 drops them), FW-C04 (the wipe cuts them at 3.0 s)", source: "L4-E9 4c (the cold start)"}
+    SHORE_INHIBIT: {reset: "LOW (A R118, E R26 100 k)", default: "LOW: the inputs run", cable_out: "LOW on A and E", assert: "only
+        the operator's 'inputs off' and the water-on-floor isolation; never a charge hold; a warning first while the pack cannot
+        discharge (S2, S4)", firmware: "FW-C08, FW-E03", source: "L4-E11 7a (rule R-a); IF-EXT-DC sequencing"}
+    CHG_INHIBIT: {reset: "LOW (A R21 4.7 k): the charger enabled", default: "LOW", cable_out: "n/a: a board A line (U27 to Q6), it
+        crosses no connector", assert: "never as a charge hold, never in S2 or S4 (HIZ stops the converter)", firmware: "FW-A14",
+        source: "L4-E11 7a"}
+    CHRG_INHIBIT_bit_and_ChargeCurrent: {reset: "as drawn ChargeCurrent 256 mA at POR and after the 175 s watchdog (TI's E2E answer);
+        under (B1) 0 A until written (DRAFTED R-157)", default: "the bit follows the hold's flag (as drawn in S1 to S3 and not in
+        S4; under (B1) in every state); ChargeCurrent at most 3.0 A, under 14.0 V of SRN only 0x0000 or 0x0200 (as drawn), 0x0080
+        under VSYS_MIN (B1)", cable_out: "n/a: registers over the kit bus", firmware: "FW-A19, FW-A20, FW-A23", source: "L4-E11
+        section 4 and 15a; L4-E9 4c"}
+    EN_OOA: {reset: "1b at POR (SLUSE65A; (B1) only, DRAFTED R-157)", default: "written 0 at boot before any other setting; the
+        printed VSYS accuracy holds only after that write", cable_out: "n/a: a register", firmware: "FW-A23", source: "L4-E11 15a
+        (E11-31); L4-E9 4c"}
+    DCIN_PGD: {reset: "HIGH (E R25 10 k to +3V3_E6)", default: "as drawn power good from the LM5069; on the selected entry the fault
+        flag, low on an overcurrent, a short circuit or an overtemperature, with a retry every 0.5 s (DRAFTED R-123)", cable_out:
+        "HIGH: no fault and no input, read by E's controller alone", firmware: "FW-E13", source: "L4-E11 7a"}
+    HOT_R1: {reset: "HIGH on A (R216 10 k): the detector lost", default: "1 Hz once E's controller reads the gauge; 5 Hz H1, held
+        low H2", cable_out: "HIGH on A: FW-C14's fallback on board B's TMP117", firmware: "FW-C14, FW-E10", source: "SC-70
+        (IF-AE-DOCK hot_r1)"}
+    VSYS_DOCK: {reset: "DRAFTED (R-157, R-177, R-181): U42's dVdT ramp 3.99 to 8.75 ms once VSYS is present (C237 22 nF); MODE to
+        GND, auto-retry after 500 to 800 ms", default: "on whenever VSYS is, from the source or the pack; at most 1.802 A", cable_out:
+        "open at E: board E's auxiliary domain dark, HOT-R1 held high on A (the detector lost)", firmware: "FW-E11 (the fans' start
+        under its limit), FW-C14", source: "L4-E11 16e, 17a; IF-AE-DOCK pin1_vsys_dock"}
+    FAN1_SW_FAN2_SW: {reset: "off: the gates held low by the RP2040's pad pull-downs (IF-E-FANS default_state; a discrete pull-down
+        recommended, HF-F07)", default: "off until the sensor controller boots and its thermal policy runs them", cable_out: "n/a:
+        the fans' own leads at J_FAN1 and J_FAN2", start: "one at a time with a PWM ramp, never both within 1 s and never while U12
+        starts, under U42's least limit 1.471 A (DRAFTED under (B1))", firmware: "FW-E07, FW-E11, FW-E10 (full speed in H1 and H2)",
+        source: "L4-E11 17a (E11-39); L4-E9 4f"}
+    U34_restart_guard: {threshold: "falls at 6.754 to 7.139 V of VIN_RAW (R14 76.8k, DRAFTED R-124); as drawn at up to 8.309 V",
+        default: "cycles the front end when VIN_RAW falls into the knee's HIZ", cable_out: "n/a: board A", firmware: "none
+        (hardware)", source: "L4-E9 1d IF-07 and 4a"}
+    SWEN: {reset: "off below 2.662 V on TRK_LDO33 (L4-E7R, DRAFTED R-19 to R-21)", default: "the stage's own UVLO and soft start at
+        dawn; off at dusk under the hold", backstop: "trips at 3.0468 to 3.7408 A at 25 V inside 1.087 ms after the filter, restarts
+        through the soft start; no flag line to any controller", cable_out: "n/a: board E", firmware: "none (hardware; V-E15)",
+        source: "L4-E7R; L4-E9 4a and 4e"}
+  contracts:
+'''
+
 DC_LEVELS = '''\
       levels: "DC, as drawn: 9 to 36 V in service (a vehicle or a shore supply; board E's LM5069 U6 starts at 9 V (R21 38.3 k) and
         stops above 40 V (R23 6.65 k)); as drawn the LM5069 cannot start from a 9.00 V plug (L4-E11 3a, finding U4-F2). DC, the
@@ -455,6 +507,7 @@ HEAT_SEQ_NEW = '''\
 
 YAML_EDITS = [
     ("exact", Y_HEADER_OLD, Y_HEADER_NEW),
+    ("exact", Y_LINES_OLD, Y_LINES_NEW),
     ("block", '      levels: "DC: 9 to 36 V in service', "      current:\n", DC_LEVELS),
     ("block", '        dc: "the LM5069 U6 limits at 4.85 to 6.15 A', '      sequencing: "hot-pluggable by design', DC_CURRENT_DC),
     ("block", '      sequencing: "hot-pluggable by design', '      grounding: "GND_V is board E', DC_SEQ),
@@ -888,6 +941,11 @@ def patch_yaml(t):
                 refuse("%s lacks %s after the patch" % (cid, k))
     if "monitor" not in cs["IF-AB-POWER"]["currents"][-1]:
         refuse("IF-AB-POWER's +54V_POE row lacks its monitor")
+    pls = doc["board_to_board"].get("power_line_states") or {}
+    for ln in ("SLOT_EN1..3", "SHORE_INHIBIT", "CHG_INHIBIT", "CHRG_INHIBIT_bit_and_ChargeCurrent", "EN_OOA", "DCIN_PGD", "HOT_R1",
+               "VSYS_DOCK", "FAN1_SW_FAN2_SW", "U34_restart_guard", "SWEN"):
+        if ln not in pls or not all(pls[ln].get(k) for k in ("default", "firmware", "source")):
+            refuse("power_line_states lacks %s with its default, firmware and source" % ln)
     for a in DOCK_DRAFT_ANCHORS:
         if new.count(a) != 1:
             refuse("L4-E11's dock draft anchor no longer occurs once: %r" % a[:60])
