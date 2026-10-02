@@ -1,0 +1,250 @@
+L4-E11: SOURCE-ONLY AND DEAD-PACK OPERATION (U-04), THE VEHICLE-ENTRY INTERCONNECT (D-06) AND THE HOT SWAP'S FAULT TIMER (D-09)
+MESHSAT-1357, 2 October 2026. Prototype design, desk arithmetic: nothing is bought, built, powered or measured. Classes: MAKER,
+CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESSION.
+
+0. INPUTS (sha256/16)
+   reqs      b624ac495650a359  v2/ecad/tools/pcb_requirements.yaml
+   rules     14ea032a7fdd86ac  v2/ecad/tools/pcb_rules.yaml
+   testplan  42a3dff33442c860  v2/docs/TEST-PLAN.md
+   hwfw      1c211e467d81b8b7  v2/docs/HW-FW-CONTRACT.md
+   panel     b396d028b41e880d  v2/docs/PANEL.md
+   assembly  942d562edd128759  v2/docs/ASSEMBLY.md
+   gen_a     6a136feec6c9cf4e  v2/ecad/tools/gen_sch_a.py
+   gen_e     f846e138cb53a8c6  v2/ecad/tools/gen_sch_e.py
+   gen_p     740817ada5c8e14a  v2/ecad/tools/gen_sch_p.py
+   net_a     6c40250c47195ebb  v2/ecad/pcb-a-power-a23/out/pcb-a-power.net
+   net_e     2ed95a0e8069ebf8  v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
+   packprot  ab1dbc3f3f69aa46  v2/ecad/tools/pcb_pack_protection.yaml
+   primcfg   6726f23778f48e10  v2/docs/review-packets/battery/PRIMARY-CONFIGURATION.md
+   chain     a09ca0293afd1f7c  v2/ecad/tools/pcb_energy_chain.yaml
+   l4e5      f9c98ec5c43ada0e  v2/docs/records/l4e5/l4e5_source_control.out
+   budget    58e40cf604804cc9  v2/docs/records/rv-pwr/pwr_budget.out
+   red2      835910e807d588c4  v2/docs/records/hc2/pwr_red2.out
+   ecss      576256819950c443  v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md
+   bq25731   3e5e927fdf63cf6a  v2/vendor/ti/bq25731-datasheet.pdf
+   sluuaq3a  525d16b2bdee44e5  v2/vendor/battery/ti-sluuaq3a-bq4050-trm.pdf
+   csd17570  596555c33dce1fca  v2/vendor/battery/ti-csd17570q5b.pdf
+   cell      5ec577b952b9dc51  v2/vendor/battery/samsung-35e-orbtronic.pdf
+   lm5069    d60d8106a6e81139  v2/vendor/ti/ti-lm5069.pdf
+   csd19532  353ce937cff0b719  v2/vendor/power/ti-csd19532q5b-n-fet.pdf
+   d38999    13a19268ba5939d9  v2/vendor/d38999/amphenol-d38999-iii-federal.pdf
+   vh        d51e669c597988b2  v2/vendor/connectors/jst-vh-catalogue.pdf
+   xt60      c2cbb5962c1f37da  v2/vendor/battery/amass-xt60-spec-tme.pdf
+   keystone  caa141ea51ac68cf  v2/vendor/keystone/M65p42.pdf
+   lapp      535cc7900e32bed3  v2/vendor/d38999/cables/lapp-olflex-robust-210-product-information.pdf
+   alpha     232d6661444a7e3a  v2/vendor/d38999/cables/alpha-25064-spec.pdf
+   lm5176    98191bec36d43771  v2/vendor/ti/lm5176-datasheet.pdf
+   srf1260   93b2dc7565d07e72  v2/vendor/power/bourns-srf1260-common-mode-choke.pdf
+   yageo     61a606825ab314ea  v2/vendor/passives/yageo-cc-series.pdf
+   fuse997   437b1fd2c8cb3ef1  v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf
+   mur104    4457e5ec41c25d29  v2/vendor/passives/held/murata-grm3195c1h104ga05-01a-2026-06-11.pdf
+   mur683    89cfedda1a8d61d5  v2/vendor/passives/held/murata-grm3195c1h683ja05-01a-2026-06-11.pdf
+   l4e9      07d8fb6e828cb15b  3c09b3da:v2/docs/records/l4e9/l4e9_power_path.out (L4-E9's commit, read with git show)
+   l4e9_hotswap ed22896891676446  3c09b3da:v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py (L4-E9's commit, read with git show)
+   filed     f0ff5212ae6220af  v2/docs/records/l4e11/inputs/lcsc-C907944-2026-10-02.json
+   filed     88e54cb03f614097  v2/docs/records/l4e11/inputs/lcsc-C3847777-2026-10-02.json
+   filed     304d111b09cd580f  v2/docs/records/l4e11/inputs/lcsc-C363929-2026-10-02.json
+   filed     9aec512ad837db7e  v2/docs/records/l4e11/inputs/lcsc-C3873338-2026-10-02.json
+   filed     488699f656d5bf99  v2/docs/records/l4e11/inputs/jlc-search-c0g-150nf-2026-10-02.json
+   filed     5aac7731395b274d  v2/docs/records/l4e11/inputs/murata-reference-sheets-2026-10-02.json
+   filed     29aa1eb4d0bf2e0a  v2/docs/records/l4e11/inputs/ia-littelfuse-997-mini58v-20251210045250.json
+   this record's own figures: copper 0.01724 ohm mm2/m at 20 C and 0.00393 /K, 3.45 J/cm3K (ASSUMPTION, constants); AWG 14 2.081 mm2, AWG 12 3.309 mm2,
+     AWG 18 0.823 mm2 (ASSUMPTION, constants); the cold end -20 C (REQ-024); the SESSION choices are named where they are used
+
+1. U-04, WHAT THE REQUIREMENTS DEMAND OF SOURCE-ONLY OPERATION (quoted, not reinterpreted)
+   REQ-015 statement: "A 9 to 36 V vehicle and shore input runs the kit and charges the pack, with reverse-polarity protection, under- and over-voltage limits, a line filter designed to MIL-STD-461 limits, a NATO 2-pin plug cable and the MIL-DTL-38999 receptacle. The input is not qualified against any vehicle surge standard and is not intended for 24 V military vehicle buses (D-16)." (REQUIREMENT)
+   REQ-015 acceptance: "Operates and charges across 9 to 36 V, and takes a reversed input and an over-voltage to the front end's limit (40 V, 32.55) without damage, on the prototype; CE102 under its limit line (TEST-PLAN M1)." (REQUIREMENT)
+   REQ-014: "missions longer than the pack rely on vehicle or solar input (D-06)" (REQUIREMENT)
+   REQ-024: "a pack cold-soaked below about -10 C at the cells is not started from (shore or vehicle power, or warming, first; D-02d)" (REQUIREMENT)
+   TEST-PLAN E4-O (REQ-024's acceptance): "started warm or from shore or vehicle input (D-02d: a cold start from the pack below about -10 C cell temperature is out of scope; inside the envelope, so an acceptance test)" (REQUIREMENT)
+   REQ-046: "The cells are charged only between 0 and +45 C and discharged only between -10 and +60 C at the cell surface; below 0 C the pack is warmed by its heater mat before charge."; its acceptance: "the bridge's own hold clears above 3 C (PANEL.md section 10)" (REQUIREMENT)
+   REQ-077 acceptance: "the charge held by the charger's CHRG_INHIBIT with the charger still carrying the kit on shore" (REQUIREMENT)
+   REQ-072 (obligation OBJECTIVE): "after a permitted pack cutoff the remaining supply carries the loads, D-26" (REQUIREMENT)
+   requirement | obligation | source voltage named | names a load state | the source-only content
+     REQ-015          | MANDATORY | 9 to 36 V, where measured not stated | no | operates and charges; the pack's state not named (REQUIREMENT)
+     REQ-014          | MANDATORY | none | no | missions longer than the pack rely on vehicle or solar input (REQUIREMENT)
+     REQ-024 (D-02d)  | MANDATORY | shore or vehicle (9 to 36 V by REQ-015) | no | a cold-soaked pack: both FETs open below -9 C, the kit started on the source (REQUIREMENT)
+     REQ-046          | MANDATORY | none | no | below 0 C the pack warmed by its heater before charge; the bridge's hold clears above 3 C (REQUIREMENT)
+     REQ-077          | MANDATORY | on shore | no | the charge held by CHRG_INHIBIT while the charger carries the kit (a pack present) (REQUIREMENT)
+     REQ-072          | OBJECTIVE | solar | yes | after a permitted pack cutoff the remaining supply carries the loads (PS-IDLE-SPEC is the objective's profile) (REQUIREMENT)
+   So: no mandatory requirement names a load state (a PS- profile or a wattage) for the kit on a source alone, at any
+     source voltage; REQ-015's "runs the kit and charges the pack" names neither the load nor the pack's state, and "9 V"
+     is not tied to a measuring point. PS-IDLE-SPEC enters only through REQ-072, an objective. What the mandatory text does
+     demand of a source alone: a start and a warm-up of a cold-soaked pack whose FETs are open (REQ-024, D-02d, REQ-046,
+     E4-O), and the charger carrying the kit with its charge held (REQ-077, a pack present). (INFERRED from the quotes)
+
+2. U-04, THE CHARGER AND THE PACK WITH NO USABLE PACK
+   BQ25731 (SLUSE66A), what the sheet states:
+     no battery MOSFET (p.1); from VBUS: registers, cell count, then "Converter powers up." with no battery condition (9.3.1, p.24) (MAKER)
+     power-up curves drawn "2-cell without battery", Figures 10-4 and 10-5 (p.89) (MAKER)
+     "When CHRG_OK goes HIGH, the system is powered from adapter through the charger. When adapter is removed, the system is connected to battery." (11, p.92) (MAKER)
+     CHRG_OK's conditions name VBUS and the faults, not the battery: "VBUS is above VVBUS_CONVEN VBUS is below VACOV_FALL No faults triggered such as: SYSOVP/SYSUVP/ACOC/TSHUT/BATOVP/BATOC/force converter off." (9.3.4, p.25) (MAKER)
+     DPM: the charge falls first, then "the system voltage starts to drop" and the battery supplements (9.3.17, p.29) (MAKER)
+     4S defaults: ChargeVoltage 16.8 V, SYSOVP 19.5 V, VSYS_MIN 12.3 V (Table 9-2, p.26); below VSYS_MIN at SRN the charge is clamped at 384 mA (8.5, p.10) (MAKER)
+     with charge disabled "the converter should keep operating without disturbance" (9.3.21.5, BATOVP, p.34) (MAKER)
+     HIZ: "converter shuts off" with ILIM_HIZ under 0.4 V (9.3.8, p.26) (MAKER)
+     VSYS under 1.6 V for 2 ms in steady state: "shut down and latched off" until a host write (9.3.21.8, p.34) (MAKER)
+     "Overall 50-uF effective capacitance on VSYS net is necessary" (10.1, p.83); CHRG_INHIBIT "1b: Inhibit Charge" (p.44); the host ends a charge by CHRG_INHIBIT or ChargeCurrent 0 (9.4.1, p.35) (MAKER)
+   board A and E as generated: the strap R26 13.3k over R27 40.2k, 75.1 % of VDDA, so U3 never sees "battery removal"; R17 between VBAT
+     (VSYS, every load) and CELL_FUSED (the pack); CHG_INHIBIT pulls ILIM_HIZ low through Q6 (HIZ); SHORE_INHIBIT pulls the hot
+     swap's UVLO low through Q8 (the input off); board P's gauge PCHG pin not connected; R7 1 k from PACK_P to its VCC (NETLIST)
+     FW-C08 as written: "Boot low; assert on the bridge's request when the pack reads below 0 C and clear above 3 C, or when the operator sets "no charge"" (RECORD, HW-FW-CONTRACT)
+     FW-A14 as written: "Held low (charger enabled) at power-up; asserted only by firmware" (RECORD); PANEL.md 10: "high = the shore and vehicle inputs are held off at the front end, so nothing charges." (RECORD)
+   the pack (SLUUAQ3A and this tree's image):
+     a CUV trip sets OperationStatus()[XDSG] only (2.2, p.15): the discharge FET opens, the charge FET stays (MAKER)
+     XDSG also on UTD, XCHG on UTC (4.12, p.40); the image's UTD -9 C and UTC 1 C (pcb_pack_protection.yaml): below -9 C both FETs are open (MAKER, RECORD)
+     precharge by the external FET or the CHG FET per PCHG_COMM (4.9, p.38), default 0 = PCHG FET (14.2.1.1, p.117); board P has no PCHG FET and
+     the image writes FET Options 0x3D, PCHG_COMM 1 (PRIMARY-CONFIGURATION.md); Shutdown Voltage 2000 mV; CUV 2.5 V, recovery 3 V; pre-charge 1 A (MAKER, RECORD)
+     Q2's body diode carries the charge while XDSG: VSD at most 1 V at 50 A, RthetaJA at most 50 C/W on 1 in2 2 oz, TJ 150 C (CSD17570Q5B p.3) (MAKER)
+       at 0.384 A: at most 0.384 W, 19.2 K over the air (INFERRED: VSD's row at 50 A bounds it at less current; board P's copper an ASSUMPTION)
+       at 1 A: at most 1 W, 50 K over the air (INFERRED: VSD's row at 50 A bounds it at less current; board P's copper an ASSUMPTION)
+       at 3 A: at most 3 W, 150 K over the air (INFERRED: VSD's row at 50 A bounds it at less current; board P's copper an ASSUMPTION)
+     the cell maker: pre-charge between 1 and 3 V a cell at 0.1 to 0.5 C, C = 3.4 A (Samsung 35E p.14) (MAKER); the charger's 384 mA is 0.038 C a cell,
+       under the range (a lower current; the maker states no consequence), and a 3.0 A ChargeCurrent is 0.294 C a cell, inside it (INFERRED)
+   what follows, by pack state (INFERRED from the rows above, the drawn topology and the image):
+     pack absent, or both FETs open (below -9 C, SHUTDOWN, a permanent fail): no current through R17, so the voltage loop holds
+       SRN, and VSYS with it, at ChargeVoltage (at most 16.884 V written, s120); the kit is carried up to the input limit (11, 9.3.17) (INFERRED)
+     pack at CUV, charge FET on: charge through Q2's diode; VSYS = stack + VSD, 10 to 11 V; 384 mA while SRN is under 12.3 V (CONDITIONAL on A-14's 10.0 V floor)
+     a pack self-discharged to the Shutdown Voltage: VSYS 8 to 9 V while it precharges, under the converters' assumed 10.0 V floor (A-14): the loads wait (CONDITIONAL)
+     the clamp lifts at SRN 12.3 V, a stack of 11.3 V or more (2.825 V a cell) with VSD at its maximum, before CUV recovers at 3 V a cell: in that window
+       ChargeCurrent crosses Q2's diode, so rule R-b caps it at 1 A (SESSION; 1 W at most, above) while the charger's own SRN reading is under 14 V
+       or the gauge reports XDSG or PRECHARGE: without the gauge's report it covers a cell up to 0.25 V under the stack's average (3.25 V a cell at the threshold) (INFERRED)
+     CHG_INHIBIT (HIZ) or SHORE_INHIBIT asserted while the pack cannot discharge: the converter is off, so VSYS has no source and the
+       kit stops; the controllers die, the pull-downs release the line and the kit restarts: a loop (INFERRED: 9.3.8, the UVLO, the netlists)
+     FW-C08 asserts SHORE_INHIBIT below 0 C: with a pack below -9 C the source start REQ-024 requires is cut by the hold itself (finding U4-F1, INFERRED)
+   NOT STATED in any held document (named, not inferred): N1 VSYS's regulation and transient response with no battery under the
+     kit's load steps; N2 what the converter regulates with CHRG_INHIBIT = 1 or ChargeCurrent 0 and no battery current (Q-TI-3);
+     N3 whether the charger charges before any host write (Q-TI-2); N4 VSYS's effective capacitance at 16.884 V against TI's 50 uF (RECORD, MAKER);
+     N5 every load converter's minimum input (A-14, R-49); N6 0-V charging before the gauge's SUV check (Q-TI-7)
+
+3. U-04, THE SOURCE ENVELOPE (what U3 delivers to VBAT with no pack; H3's line, L4-E5)
+   method: U3's board current at the line's low target over R16 +1 % (9 V: L4-E5's 1.068 A floor) and IIN_HOST's minimum 4.537 A, at
+     VBUS20's lowest 19.146 V; the high side L4-E5's effective maximum at 20.96 V; U3 0.9733 (RECORD: L4-E5 and L4-E9, INFERRED)
+   VIN_RAW | U3 board current, A | at VBAT, W | L4-E9's figure
+         9 V | 1.057 to 1.793 | 19.7 to 36.6 | 19.9 to 36.6 W (INFERRED)
+        12 V | 1.832 to 2.323 | 34.1 to 47.4 | up to 47.4 W (INFERRED)
+        24 V | 3.86 to 4.443 | 71.9 to 90.6 | up to 90.6 W (INFERRED)
+        36 V | 4.537 to 4.884 | 84.5 to 99.6 | (the window) (INFERRED)
+   the entry's own bound at 9 V: 4.85 A x 9 V x 0.93 x 0.9733 = 39.5 W (INFERRED)
+   the load states (battery-terminal figures taken at VBAT; the pack path's loss neglected, a small overstatement) against it:
+     PS-RED                           22.2 W | 9 V: only above the line's minimum | 12 V: carried at every corner | 24 V: carried at every corner | 36 V: carried at every corner (RECORD, INFERRED)
+     PS-IDLE-SPEC                     42.8 W | 9 V: not carried | 12 V: only above the line's minimum | 24 V: carried at every corner | 36 V: carried at every corner (RECORD, INFERRED)
+     PS-TYP                           63 W | 9 V: not carried | 12 V: not carried | 24 V: carried at every corner | 36 V: carried at every corner (RECORD, INFERRED)
+     PS-RED with the heater           33.1 W | 9 V: only above the line's minimum | 12 V: carried at every corner | 24 V: carried at every corner | 36 V: carried at every corner (RECORD, INFERRED)
+     PS-IDLE-SPEC cold, heater on     45.46 W | 9 V: not carried | 12 V: only above the line's minimum | 24 V: carried at every corner | 36 V: carried at every corner (RECORD, INFERRED)
+     the cold warm-up (CONOPS 4c)     71.06 W | 9 V: not carried | 12 V: not carried | 24 V: carried at every corner | 36 V: carried at every corner (RECORD, INFERRED)
+   a dead pack's charge on top: at most 0.384 A x 11 V = 4.22 W, which DPM gives up first (MAKER 9.3.17, INFERRED)
+   THE ENTRY'S UVLO AGAINST 9 V (finding U4-F2): UVLOTH 2.45 / 2.5 / 2.55 V, UVLOHYS 12 / 21 / 30 uA (SNVS452G p.5) (MAKER); R20 100k, R21 38.3k at 1 % (NETLIST)
+     as drawn (R21 38.3k): on at 8.72 / 9.03 / 9.34 V rising, off at 5.69 / 6.93 / 8.15 V falling (INFERRED)
+     SESSION R21 42.2k 1 %: on at 8.14 / 8.42 / 8.71 V rising, off at 5.11 / 6.32 / 7.53 V falling (INFERRED)
+     as drawn a 9.00 V source turns the entry on only below the nominal corner: at 9.34 V it never starts (NOT MET as drawn, INFERRED); with 42.2k the
+     highest rising threshold is 8.71 V, under 9.00 V by 0.29 V with no current flowing (MEETS, INFERRED); the falling band stays under the knee
+   WHERE THE 9 V IS MEASURED (finding U4-F3): REQ-015 names no point; H3's knee sits at VIN_RAW (zero at 8.75 V, the line from 9.00 V). At
+     the kit's plug the kit's own series resistance lies between: board E 0.0575 ohm (L2's series DCR 0.0302, R19 +1 %, Q1 and Q7 0.0049 each at
+     their 25 C maximum, F1's typical cold 0.00742) (MAKER, NETLIST; hot values higher, not counted) plus the cable and lead
+     drawn    interconnect 0.1474 ohm at 20 C: a 9.00 V plug settles VIN_RAW at 8.819 V, U3 0.426 A, 8.3 W at VBAT nominal (against 30.2 W at VIN_RAW 9 V);
+       the knee's top would have to sit at 8.318 V of VIN_RAW to keep the line's 9 V current at the plug (INFERRED)
+     selected interconnect 0.1155 ohm at 20 C: a 9.00 V plug settles VIN_RAW at 8.833 V, U3 0.515 A, 10 W at VBAT nominal (against 30.2 W at VIN_RAW 9 V);
+       the knee's top would have to sit at 8.465 V of VIN_RAW to keep the line's 9 V current at the plug (INFERRED)
+
+4. U-04, THE COMPARISON'S OWN FIGURES
+   (B) a battery FET in the pack path carries the pack's peak: 0.324 W per mOhm at 18 A, 8.8 mW per mOhm at PS-IDLE-SPEC's 2.97 A (INFERRED)
+   (C) a pre-charge resistor on board P from VSYS at 16.8 V into a pack at the Shutdown Voltage (8 V): for the cell maker's 0.1 C (1.02 A for 3P)
+     8.63 ohm and 8.98 W, 5.36 W at CUV; for the charger's own 384 mA, 22.9 ohm and 3.38 W (INFERRED)
+
+5. U-04, IS AN OWNER QUESTION FORCED?
+   a mandatory requirement naming a load state for source-only operation: none (section 1)
+   the kit's own caps at 9 V: F1 0997010 at its 80 C column 7.3 A (the hottest air 62.1 C): 59.5 W at VBAT; at its 0 C column 9.8 A: 79.8 W; the
+     interconnect after D-06 at 20 A: 162.9 W; the entry's limit and H3's line are settings, not capabilities (MAKER, INFERRED)
+   REQ-015 states no source current capability: every figure here takes the source as holding its voltage (named)
+   so NO owner question is forced: no approved requirement names a load REQ-015's 9 V must carry, and the fuse, the entry and the
+     interconnect do not cap the power under any state section 3 lists at its plan figure (INFERRED)
+
+6. D-06, F1'S WEAK-SOURCE BAND AND THE INTERCONNECT
+   0997010.WXN time-current (MAKER, held sheet p.3): 110 %: 360000 to - s; 135 %: 0.75 to 600 s; 200 %: 0.15 to 5 s; 350 %: 0.08 to 0.5 s; 600 %: 0.03 to 0.1 s
+   the band a source under 30 A can leave (INFERRED: no maximum time is printed under 135 %): up to 13.5 A with no stated limit; then
+     from 13.5 A at most 600 s; from 20 A at most 5 s; from 35 A at most 0.5 s; from 60 A at most 0.1 s
+   the elements in that fault loop, as drawn:
+     J_DCIN's VH contact (the lead AWG 18)                      no rating (VH prints 10 A at AWG 16 with the standard header and 7 A at AWG 18 with the shrouded one; the drawn lead is AWG 18 on the standard header: none stated; MAKER)
+     the D38999 size 16 contact, insert 13-4                    13 A (Amphenol's test current; MAKER)
+     F1's holder, Keystone 3568                                 no rating (the page prints a UL current rating for other MINI clips and holders (15, 20, 30 A) and none for the 3568; MAKER)
+     the DC lead, Lapp OLFLEX ROBUST 210 4 x 1.0 or Alpha Wire 25064 no rating (no current rating printed in either sheet; MAKER)
+     the inside lead, 500 mm of AWG 18                          no rating (no part and no rating; NETLIST)
+     board E's input bands at 2 oz                              10 A (pcb_energy_chain.yaml SHORE_INPUT; RECORD)
+   as drawn: NOT MET (every element needs at least 13.5 A with no time limit; one is 13 A, four state none) (INFERRED)
+   SELECTED (SESSION): every element of the interconnect rated at least 20 A continuous, which covers the band to 20 A for 600 s and
+     more with no time limit:
+     receptacle and plug contacts                   MIL-DTL-38999 size 12 (insert 17-6, or 13-26 with the solar pair on rated contacts elsewhere) : 23 A (Amphenol test current, MAKER) (SESSION)
+     J_DCIN, the board connector                    a 30 A class (Amass XT60 family, gender opposite J_BATT's), or soldered lead lands : 30 A (Amass V1.2: 30 A rated, 60 A instantaneous, 12 AWG recommended, MAKER) (SESSION)
+     F1's holder                                    a MINI 297/997 holder whose maker prints at least 20 A (the 3568 prints none: Layer 7/8 picks) (SESSION)
+     the DC lead and the inside lead                cores of 2.081 mm2 (AWG 14) whose maker states at least 20 A continuous each (no held sheet: an acceptance for Layer 7) (SESSION)
+     board E's copper J_DCIN to F1 to the clamps    at least 20 A continuous (a layout constraint (Layer 9)) (SESSION)
+     D38999 contact table p.28 (MAKER); shell 13's Series III arrangements 13-4, 13-8, 13-26, 13-32, 13-35 (p.5), shell 17's 17-2, 17-6, 17-8 (p.5) (MAKER)
+   the short-time points against a 2.081 mm2 core, adiabatic (INFERRED: copper's resistivity and volumetric heat):
+     20 A for 5 s: 2.308 K (INFERRED)
+     35 A for 0.5 s: 0.707 K (INFERRED)
+     60 A for 0.1 s: 0.415 K (INFERRED)
+   and against the size 12 contact's 23 A: the same I2t as 20 A for 5 s = 3.781 s at 23 A; 35 A for 0.5 s = 1.158 s at 23 A; 60 A for 0.1 s = 0.681 s at 23 A (INFERRED; its short-time limit is not printed, named)
+   THE STIFF SOURCE AGAIN (copper alone at -20 C, the source's own resistance zero, A-12; at the OVLO maximum 43.18 V):
+     as drawn: 2 m of 1 mm2 and 500 mm of AWG 18 (L4-E9) 0.07577 ohm, 569.9 A against 1000 A: MEETS (INFERRED)
+     AWG 14, 2.0 m cable, 0.5 m lead                  0.03491 ohm, 1236.9 A against 1000 A: NOT MET (INFERRED)
+     AWG 14, 3 m cable, 0.5 m lead (SELECTED)         0.04888 ohm, 883.5 A against 1000 A: MEETS (INFERRED)
+     AWG 12, 3 m cable, 0.5 m lead                    0.03074 ohm, 1404.8 A against 1000 A: NOT MET (INFERRED)
+   so a heavier interconnect needs a resistance floor: at least 0.04318 ohm of copper loop at -20 C, which AWG 14 gives from 2.59 m of cable
+     with the 0.5 m lead; SESSION: the DC pair's run at least 3 m (883.5 A); a shorter or heavier lead needs a fuse with a larger interrupting
+     rating at 58 V DC, of which no sheet is held (named)
+   F1's other checks with it: 6.15 A against its 80 C column 7.3 A (MEETS, MAKER); the lowest stiff fault at 9 V with the copper at 62.1 C,
+     133.2 A, 13.32 times the rating, inside the 600 % row's 0.1 s (MEETS, INFERRED); the start's I2t at the new timer's maximum below (MEETS)
+
+7. D-09, THE HOT SWAP'S FAULT TIME AGAINST ITS START
+   LM5069 (SNVS452G): VTMRH 3.76 / 4 / 4.16 V, ITIMER 51 / 85 / 120 uA, VCL 48.5 / 55 / 61.5 mV; Equation 9 (1.30e5, 1.18 mV); TI's half-again margin (9.2.1.2.4, p.20) (MAKER)
+   the power limit with R24 22k (L4-E9's draft) and R19 10 mOhm 1 %: 22.018 W at 43.18 V, falling with VDS (Equation 9) (MAKER, NETLIST; L4-E9 reads 22.02 W)
+   what the start charges (NETLIST): E C6 1 uF on DC_HS, E C7 1 uF on VIN_RAW, E C8 10 uF on VIN_RAW, A C11 10 uF on VIN_RAW, A C12 10 uF on VIN_RAW, A C207 1 uF on FE_VINP, A C210 1 uF on FE_GVDD = 34 uF nominal
+     (L4-E9 counted 31 uF: C6 on DC_HS, and C207 and C210 behind D19 and R196, are added); the X7R rows stacked as L4-E9: K 10 %, 15 %, 15 % (Yageo V.26, MAKER; an ASSUMPTION for parts of other makers)
+   the resistive load on VIN_RAW during the start, each path bounded by its resistor alone: E R27 2.2 k, E R40 100 k, A R14 91 k, A R200 33 k, 21.8 mA at 43.18 V, and U2's shutdown 10 uA (MAKER LM5176 IQ) (NETLIST, INFERRED)
+   THE FRONT END'S OWN LOAD: U2 is held off by U34 until its release, 79 / 127 / 201 ms after VIN_RAW passes the UV rise (gen_sch_a.py's
+     derivation from SNVSBJ1E), 25.8 times the start's maximum: the soft start never overlaps the hot swap's start, so its load during the
+     start is the bias network above (INFERRED, NETLIST)
+   the start (TI's Equation 12 with the power limit following VDS, integrated; the load included) (INFERRED):
+     nominal: 1.588 ms (Equation 12 with the limit held at its 43.18 V value: 1.452 ms; L4-E9 1.324 ms on 31 uF) (INFERRED)
+     corners: the capacitors at the stacked top, R24 -1 %, R19 +1 %, the limit over TI's 1.3, VCL's minimum: 3.062 ms (3.03 ms without the load; L4-E9 2.542 ms) (INFERRED)
+     TI's margin: the fault time's minimum at least 4.593 ms (1.5 x the corner start) (INFERRED)
+   C5 as drawn (100 nF K X7R, L4-E9's stack from the timer rows): 2.037 to 11.866 ms (L4-E9 2.035 to 11.871 ms from L4-E5's rounded times): NOT MET against 4.593 ms (INFERRED)
+   Q7's Figure 10 at 43.18 V from TI's vector drawing: 10 ms 1.879 A, 1 ms 5.055 A, DC 0.6075 A at TC 25 C; m 0.4299; derated to Q7's 94.3 C case by 0.4454 (L4-E9) (MAKER, RECORD)
+     the pulse 0.675 A (the limit at its corners times TI's 1.3, L4-E9) fits the power law carried past 10 ms up to 16.48 ms (CONDITIONAL on the law past 10 ms)
+   no single C0G part of 150 nF is stocked: 49 surface-mount 150 nF C0G or NP0 rows read, 0 with stock (CATALOGUE, inputs/jlc-search-c0g-150nf)
+   the stocked GRM3195 C0G parts read (Murata reference sheets, Jun.11,2026): GRM3195C1H104GA05 100 nF +-2 %, 50 V, 0+-30 ppm/K, Table A +0.58/-0.24 % at -55 C, endurance +-3 %, damp heat +-7.5 % (p.5); GRM3195C1H683JA05 68 nF +-5 %, 50 V, 0+-30 ppm/K, Table A +0.58/-0.24 % at -55 C, endurance +-3 %, damp heat +-7.5 % (p.5) (MAKER)
+   candidate | C nF | stacked C nF (tolerance, temperature, endurance) | fault time ms | start | Figure 10 at its maximum (CONDITIONAL)
+     one GRM3195C1H104GA05                      | 100 | 94.77 to 105.67 | 2.97 to 8.619 | NOT MET | 0.8919 A against 0.675 A: MEETS (INFERRED)
+     one GRM3195C1H683JA05                      | 68 | 62.47 to 73.97 | 1.958 to 6.034 | NOT MET | 1.0397 A against 0.675 A: MEETS (INFERRED)
+     two GRM3195C1H104GA05                      | 200 | 189.55 to 211.34 | 5.939 to 17.239 | MEETS | 0.6621 A against 0.675 A: NOT MET (INFERRED)
+     two GRM3195C1H683JA05                      | 136 | 124.95 to 147.94 | 3.915 to 12.067 | NOT MET | 0.7718 A against 0.675 A: MEETS (INFERRED)
+     GRM3195C1H104GA05 with GRM3195C1H683JA05   | 168 | 157.25 to 179.64 | 4.927 to 14.653 | MEETS | 0.71 A against 0.675 A: MEETS (INFERRED)
+   SELECTED (SESSION): C5 GRM3195C1H104GA05 (LCSC C907944) with C5B GRM3195C1H683JA05 (LCSC C3847777), both 1206 C0G 50 V, on HS_TIMER: 168 nF; fault time 7.906 ms nominal, 4.927 to 14.653 ms stacked
+     start: 4.927 ms against 4.593 ms, 0.334 ms in hand (MEETS, INFERRED); Figure 10: 0.71 A against 0.675 A at 14.653 ms, 46.5 % past the 10 ms line (MEETS, CONDITIONAL)
+     sensitivities: a steeper law past 10 ms (m 0.5) gives 0.6912 A (MEETS); the damp-heat row stacked instead of endurance: 4.699 to 15.293 ms, 0.6971 A (MEETS) (INFERRED);
+     TI's own basis (typical values, 1.5 x the typical start): 7.906 ms against 2.382 ms (MEETS, INFERRED); the DC line derated, 0.2706 A, is under the pulse:
+     the pulse is bounded by the fault time, not by a steady rating (INFERRED); F1 during the longest start: 0.554 A2s against 93 A2s (MEETS)
+
+8. THE DOWNSTREAM ITEMS (each with one owner and an acceptance; L4E11-SOURCE-ONLY-AND-ENTRY.md section 8 is the same table)
+   E11-01 | IMPLEMENTATION | Layer 8 board E generator owner | apply_gen_sch_e_uvlo.py applied after L4-E9's apply_gen_sch_e_hotswap.py: R21 42.2k 1 %, U6's label; the regenerated netlist carries R21 42.2k and the UVLO band recomputed reads 8.14 to 8.71 V rising
+   E11-02 | IMPLEMENTATION | Layer 8 board E generator owner | apply_gen_sch_e_timer.py: C5 GRM3195C1H104GA05D (C907944) and C5B GRM3195C1H683JA05D (C3847777) on HS_TIMER; the netlist carries both; the fault time recomputed from the fitted parts reads 4.927 to 14.653 ms
+   E11-03 | INTERFACE | Layer 5 interfaces | FW-C08, FW-A14 and PANEL.md section 10 restated as this record's drafts (section 7a): the cold and no-charge holds act by the gauge's window and CHRG_INHIBIT, never by SHORE_INHIBIT or CHG_INHIBIT while the pack cannot discharge; REQ-046's hold still clears above 3 C
+   E11-04 | FIRMWARE | firmware owner | rules R-a to R-d implemented (section 7a): ChargeCurrent at most 1 A while U3's SRN reading is under 14 V or the gauge reports XDSG or PRECHARGE; the source-only shed to the envelope at the measured VIN_RAW; the VSYS_UVP latch cleared by the host or by a source re-plug; checked on the bench (E11-06)
+   E11-05 | EVIDENCE | Layer 6 components | TI's answers filed: Q-TI-3 restated (VSYS's regulation with no battery current possible, under a 5 A load step, and with CHRG_INHIBIT = 1) and Q-TI-2; U-04's N1 to N3 re-judged on them
+   E11-06 | TEST | prototype bench | R-85 extended: at 9 V at the plug, 12 V and 24 V, with the pack absent, at CUV and cold-soaked (both FETs open): the kit boots and runs within the envelope; VSYS and its step response recorded; the 384 mA clamp; Q2's case at 1.0 A; the UVLO latch recovery by a re-plug
+   E11-07 | ANALYSIS | Layer 9 pre-layout analysis | VSYS's effective capacitance at 16.884 V from the makers' DC-bias curves at least 50 uF (SLUSE66A 10.1), else a polymer capacitor added (TI prefers POSCAP)
+   E11-08 | EVIDENCE | Layer 9 pre-layout analysis | every load converter's and the controllers' minimum input read from their sheets against 10.0 V (A-14, R-49) and against 8.0 V for a pack at its Shutdown Voltage
+   E11-09 | ANALYSIS | Layer 4 coordinator | L4-E5's knee and restart guard re-derived for REQ-015's 9 V at the kit's plug with the kit's own series resistance (the knee's top at 8.318 V drawn, 8.465 V with D-06's interconnect); the 9 V envelope at the plug re-run at 19.7 W or more
+   E11-10 | IMPLEMENTATION | Layer 7 mechanical | the DC receptacle and plug on MIL-DTL-38999 size 12 contacts (shell 17, insert 17-6: DC and solar pairs on four contacts, two unassigned between power and return; or 13-26 with the solar pair on rated contacts elsewhere); the plate cut-out checked against CASE-MARGINS 3.3
+   E11-11 | IMPLEMENTATION | Layer 7 mechanical | the DC lead: cores of 2.081 mm2 (AWG 14) with a maker's rating of at least 20 A each, the DC pair's run at least 3 m (copper loop at least 43.18 mOhm at -20 C with the inside lead), the NATO plug with a maker's rating of at least 20 A; the sheets filed
+   E11-12 | IMPLEMENTATION | Layer 7 mechanical | the inside lead (AWG 14, a maker's rating of at least 20 A) and J_DCIN as a board connector rated at least 20 A (XT60 class, gender opposite J_BATT's, so the pack lead cannot mate it) or soldered lands; board E's generator names the part
+   E11-13 | IMPLEMENTATION | Layer 8 board E generator owner | F1's holder: a MINI 297/997 holder whose maker prints a current rating of at least 20 A (the 3568 prints none); its sheet filed
+   E11-14 | LAYOUT | Layer 9 pre-layout analysis | board E's copper from J_DCIN through F1 to D10, C4 and Q1 sized for 20 A continuous at the rise this project judges at
+   E11-15 | IMPLEMENTATION | Layer 8 board E generator owner | pcb_energy_chain.yaml SHORE_INPUT restated with L4-E9's R-95: conductor 20 A, protects the interconnect, the prospective high the selected lead's 883.5 A; the energy chain gate reads it
+   E11-16 | EVIDENCE | Layer 6 components | the size 12 contact's and the board connector's short-time data at 35 A for 0.5 s and 60 A for 0.1 s, or F1's total clearing I2t (R-115) against them, filed
+   E11-17 | TEST | prototype bench | R-118 with the fitted C5 pair at 43 V: the fault time inside 4.927 to 14.653 ms and the start into VIN_RAW inside 3.062 ms
+   E11-18 | DOCUMENT | CONOPS owner | the source-only statement in CONOPS (section 7b's text): with no usable pack the kit runs within the source envelope; a pack below about 2.4 V a cell holds VSYS under the converters' floor while it precharges; a brown-out on the source alone may latch the charger off until the source is re-plugged
+
+END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_uvlo.py (R21), apply_gen_sch_e_timer.py (C5 and C5B); the
+interface and firmware texts are drafts for Layer 5 in the record. Software tests establish this record's own behaviour only.

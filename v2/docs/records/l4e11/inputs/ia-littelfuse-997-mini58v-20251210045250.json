@@ -1,0 +1,16 @@
+{
+  "what": "Littelfuse, MINI Series Blade Fuses - Rated 58V (the 0997 series), datasheet revised 11/18/2025, 3 pages",
+  "official_address": "https://www.littelfuse.com/assetdocs/littelfuse-datasheet-997-mini58v?assetguid=838cc4ad-f429-4185-a8e8-ccc70cd2b713",
+  "official_address_answer_2026_10_02": "an HTML page of 435 bytes, not the document (the site refuses this runner)",
+  "archive_availability_api": "https://archive.org/wayback/available?url=<the official address>",
+  "archive_snapshot": "http://web.archive.org/web/20251210045250/https://www.littelfuse.com/assetdocs/littelfuse-datasheet-997-mini58v?assetguid=838CC4AD-F429-4185-A8E8-CCC70CD2B713",
+  "fetched_with": "the id_ form of the snapshot, curl, 2 October 2026",
+  "bytes": 620797,
+  "sha256": "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e",
+  "held_at": "v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf (ignored by git; fetch_held_back.py)",
+  "terms": "the sheet carries the maker's copyright and 'See Disclaimer Notice' and no grant to redistribute: held back under the owner's rule of 27 September 2026",
+  "other_copies_read": [
+    {"address": "https://static.chipdip.ru/lib/602/DOC012602646.pdf", "note": "an earlier issue (2017, 'Downloaded from Arrow.com'), 2 pages: the same ratings, 'Fits into standard MINI fuse sockets'; not used for any figure"},
+    {"address": "http://web.archive.org/web/20240717104735id_/https://www.littelfuse.com/~/media/automotive/datasheets/fuses/passenger-car-and-commercial-vehicle/blade-fuses/littelfuse_mini_58v_datasheet.pdf", "note": "a 2021 catalogue extract, 2 pages; not used"}
+  ]
+}

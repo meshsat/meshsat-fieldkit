@@ -1,0 +1,18 @@
+{
+ "what": "LCSC public product-detail answer for C3873338 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C3873338), no login; kept fields only",
+ "read_utc": "2026-10-02T02:10Z",
+ "read_by": "task L4-E11 (MESHSAT-1357)",
+ "role": "the 47 nF C0G 5 % value in the same series, read for the scan of stocked values (not chosen)",
+ "code": "C3873338",
+ "brand": "muRata",
+ "model": "GRM3195C1H473JA05D",
+ "package": "1206",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/80f801ae2ac509efb0bd9a68cea9f951.pdf?productCode=C3873338",
+ "stock": 3935,
+ "params": {
+  "Capacitance": "47nF",
+  "Temperature Coefficient": "C0G",
+  "Tolerance": "±5%",
+  "Voltage Rating": "50V"
+ }
+}
