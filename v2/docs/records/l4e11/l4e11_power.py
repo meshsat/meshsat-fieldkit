@@ -2957,7 +2957,7 @@ def render_fix17(R, p):
     K, H, L, M = R["K"], R["H"], R["L"], R["M"]
     Q0 = H["Q"]
     p("17. THE SECOND REVIEW (L4-CP01 TO L4-CP03, of the 22:30 checkpoint) AND THE EVIDENCE SPECIMENS")
-    p("   17a. L4-CP01: U42'S FAULT ENVELOPE BY CASE (G = printed limit, I = inferred, T = typical only; SLVSET9G pp.8 to 10, 21, 22, 26, 30, 31)")
+    p("   17a. L4-CP01: U42'S FAULT ENVELOPE BY CASE (G = printed limit, I = inferred, T = typical only; SLVSET9G pp.7 to 10, 20 to 22, 26, 30, 31)")
     p("     the setting: I(OL) %s to %s A at R(ILIM) %s kOhm (I: between the printed 9 and 30 kOhm rows, each G over TJ -40 to 125 C at VIN - VOUT"
       % (fmt(L["ilim"][0], 4), fmt(L["ilim"][1], 4), fmt(F16_RILIM_K, 1)))
     p("       1 V); a regulated, steady setting, NOT an instantaneous ceiling; the fast-trip threshold 2 x I(OL) and I(SCP) 45 A are T only (MAKER)")

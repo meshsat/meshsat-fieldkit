@@ -81,7 +81,7 @@ typical only (2.36 nF at -15 V; its Fig. 12 reads about 2.87 nF near 0 V), so th
 
 Drafted, not sent:
 
-- **Q-TI-18 (E11-38, TPS16630).** SLVSET9G p.6 prints OUT at -0.3 V minimum, and 9.4.1 and 9.5.1 recommend a Schottky diode from
+- **Q-TI-18 (E11-38, TPS16630).** SLVSET9G 6.1 (p.7) prints OUT at -0.3 V minimum, and 9.4.1 and 9.5.1 recommend a Schottky diode from
   OUT to GND for the negative spike when the device interrupts a short. With a B540C-13-F at OUT and an output loop of 60 mm of 24 AWG
   and a spring contact, interrupting up to a few hundred amperes: what negative excursion at OUT does TI accept, for how long, and
   does the hot-short response (1 us typical, p.10) have a maximum? Is I(OL) at 11.0 kOhm specified at VIN - VOUT of 17 V?
