@@ -31,7 +31,12 @@ draft in either order; (B1) is selected and U-04 becomes a downstream qualificat
 review cx36 adds: board E's auxiliary domain leaves CELL_F for VSYS on the dock's pin 1 (the three drafts agree, and no kit load
 stays on the pack); the start is bounded by the input clamp, the retries and a bench acceptance, the 502.3 ms withdrawn; the
 battery FET's RDS(on) is bounded by the two chords of the makers' printed maxima at BATDRV's 8.5 V and the pair is selected on its
-bar; the inhibited acceptance is piecewise; the precharge counts R17's tolerance. Nothing here writes into the tree:
+bar; the inhibited acceptance is piecewise; the precharge counts R17's tolerance. The fix round for the review of the provisional
+fixes (L4-F02, L4-F03) adds: the battery FET's RDS(on) figure is an allowance that no printed point bounds and a measurement gates;
+the thermal basis is the device's own Zth(j-mb) with the two FETs' coupling inside the measured sum, and the service and every fault
+history from the hot state fit it; Ciss is not shown under TI's 5 nF near 0 V; the docking pulse is taken whole in one FET with no
+I2t conversion; the dock's VSYS branch sits behind an eFuse whose printed limit keeps the contact inside its rating, the fuse and the
+PTC fail on their printed rows, and the feed's drop clears U12; the record states each item's status. Nothing here writes into the tree:
 drafts run on temporary copies.
 Software tests establish this record's own behaviour only.
 """
@@ -437,7 +442,9 @@ def t_the_record_carries_the_outputs_numbers():
               "20.51", "56.93", "58.51", "64.21", "1.2567", "50.99", "69.73", "72.41", "7.378", "6.754 / 6.944 / 7.139", "0.908691", "0.88021",
               "12.054", "17.375", "20.54", "0.221", "4.1792", "6.2468", "12.057", "14.41", "7.744", "9.216", "242.9", "17.7", "502.3",
               "0.916", "10.44", "120.9", "107.8", "170.3", "184.4", "0.302",
-              "34.42", "21.136", "0.33616", "5.632", "11.96", "3.062", "0.848", "119.8", "9.688", "12.179", "0.1408", "2.406", "28.32"):
+              "34.42", "21.136", "0.33616", "5.632", "11.96", "3.062", "0.848", "119.8", "9.688", "12.179", "0.1408", "2.406", "28.32",
+              "33.12", "126.7", "0.2589", "1.3571", "10.753", "3.785", "0.703", "5.74", "123.3", "1.501", "1.8018", "1.4713", "9.539",
+              "0.1486", "152.8", "51.5", "80.9"):
         assert s in page and s in out, "%s is not in both the record and the output" % s
 
 
@@ -628,7 +635,7 @@ def t_the_charger_draft_composes_with_the_guard_in_either_order():
                      '"CH_BATDRV", "CH_BATQ", "VBAT", fp="LFPAK56", lcsc="C3278350")', '"LFPAK56": "Package_TO_SOT_SMD:LFPAK56"',
                      '"CH_BATQ", "CELL_FUSED", "RS2512")', 'r("R149", "10R", "CH_BATQ", "CH_SRP_F")', 'c("C236", ',
                      '_intent.rail("CH_BATQ", 14.4, 10.0, 18.0, "R17"', '"Q39", always_on=True', 'fed_from="CH_BATQ"',
-                     '"R17", "Q39", "Q40", "C236", "C16"', '{"1": "VBAT", "2": "GND", "3": "GND"', 'loads={"J_DOCK": 1.0, "U4": 2.0'):
+                     '"R17", "Q39", "Q40", "C236", "U42", "R221", "C237", "C16"', '{"1": "VSYS_DOCK", "2": "GND", "3": "GND"', 'loads={"U42": 1.0, "U4": 2.0'):
             assert txt.count(want) == 1, want
         assert '"21": "NC"' not in txt and "C2871872" not in txt
 
@@ -712,7 +719,9 @@ def t_board_es_aux_domain_leaves_cell_f_for_vsys_and_the_three_drafts_agree():
         _apply("apply_pcb_interfaces_dock.py", y)
         _apply("apply_pcb_interfaces_dock.py", c)
         ta, te = open(a, encoding="utf-8").read(), open(e, encoding="utf-8").read()
-        assert '"POGO12",\n     {"1": "VBAT", "2": "GND"' in ta
+        assert '"POGO12",\n     {"1": "VSYS_DOCK", "2": "GND"' in ta
+        assert '"1": "VBAT", "2": "VBAT", "3": "VBAT"' in ta and '"18": "VSYS_DOCK", "19": "VSYS_DOCK", "20": "VSYS_DOCK"' in ta, "U42 is not between VBAT and VSYS_DOCK"
+        assert 'r("R221", "11k 0.1%", "EF_ILIM", "GND")' in ta and 'loads={"J_DOCK": 1.0}' in ta and 'loads={"U42": 1.0, "U4": 2.0' in ta
         assert '"POGO_T6",\n     {"1": "VSYS_E", "2": "GND"' in te
         assert '{"1": "+5V_E6", "2": "VSYS_E", "3": "VSYS_E"' in te and 'c("C31", "10u 25V 1210", "VSYS_E", "GND", "C1210")' in te
         assert te.count('{"1": "VSYS_E", "2": "FAN%s_SW" % n') == 2 and 'loads={"P_CP": 9.0},' in te
@@ -737,9 +746,9 @@ def t_board_es_aux_domain_leaves_cell_f_for_vsys_and_the_three_drafts_agree():
                     stack.extend(o.values())
                 elif isinstance(o, list):
                     stack.extend(o)
-        assert dock["pins"][1] == "VBAT" and ["VBAT", "VSYS_E", "A's VSYS to E's auxiliary domain on pin 1 (L4-E11)"] in dock["aliases"]
+        assert dock["pins"][1] == "VSYS_DOCK" and ["VSYS_DOCK", "VSYS_E", "A's VSYS through its eFuse U42 to E's auxiliary domain on pin 1 (L4-E11)"] in dock["aliases"]
         assert "2.238 A, 2.406 A" in dock["aux_feed"] and "%s to %s V" % ("9.688", "17.375") in dock["aux_feed"]
-        assert '({"VBAT", "VSYS_E"},' in open(c, encoding="utf-8").read()
+        assert '({"VSYS_DOCK", "VSYS_E"},' in open(c, encoding="utf-8").read()
     for tree in (os.path.join(TOOLS, "pcb_interfaces.yaml"), os.path.join(TOOLS, "check_contracts.py")):
         r = _run([os.path.join(REC, "apply_pcb_interfaces_dock.py"), tree, "--write"])
         assert r.returncode == 3 and b"NOT RELEASED" in r.stderr
@@ -799,3 +808,95 @@ def t_the_inhibited_acceptance_is_piecewise_and_the_precharge_counts_r17s_tolera
     page = open(PAGE, encoding="utf-8").read()
     assert "between the two: either mode, so at least **11.96 V**" in page.replace("\n  ", " ").replace("Between", "between")
 
+
+
+def t_l4f02_the_rds_figure_is_an_allowance_no_printed_point_bounds_and_a_measurement_gates():
+    R = _R()
+    m = _M()
+    K, L = R["K"], R["L"]
+    nxp = K["sel"]["rdef"]
+    assert abs(L["ra"] - K["sel"]["rb"]) < 1e-6, "the allowance is not the figure the rest of the record is sized to"
+    # what the sheet prints: hot only at -10 V, low drive only at 25 C; BATDRV's least drive is under 10 V
+    assert nxp["t_hot"] == 175.0 and R["H"]["drv"][0] < 10.0 and nxp["r45_25"] > nxp["r10_hot"]
+    pm = L["plan_miss"]
+    assert pm["tj20"] > m.F16_TJ_HELD and abs(pm["tj20"] - (K["air"]["route"] + 100.0 * m.F16_RA_ALT * L["plan"]["zsum"])) < 1e-9
+    out = open(OUT, encoding="utf-8").read()
+    assert "WITHDRAWN AS A BOUND" in out
+    row = [x for x in m.downstream(R) if x[0] == "E11-36"][0]
+    assert "-8.5 V" in row[3] and "%s mOhm" % m.fmt(m.F16_RA * 1e3, 3) in row[3]
+
+
+def t_l4f02_the_thermal_basis_is_the_devices_own_and_every_hot_history_fits_it():
+    R = _R()
+    m = _M()
+    K, L, Q0 = R["K"], R["L"], R["H"]["Q"]
+    zf = L["zf"]
+    ts = [1e-6 * 10 ** (k / 10.0) for k in range(0, 81)]
+    zs = [zf(x) for x in ts]
+    assert all(a <= b + 1e-12 for a, b in zip(zs, zs[1:])), "Zth(j-mb) does not rise with the pulse"
+    assert abs(zf(60.0) - 1.4) < 1e-12 and max(zs) <= 1.4 + 1e-12, "the curve is not scaled to Table 6's maximum"
+    air, pl = K["air"]["route"], L["plan"]
+    pb = lambda i: (i / 2.0) ** 2 * L["ra"]
+    zsum = (m.F16_TJ_HELD - air) / pb(20.0)
+    assert abs(pl["zsum"] - zsum) < 1e-9 and abs(pl["tj20"] - m.F16_TJ_HELD) < 1e-9
+    tj18 = air + pb(10.0) * zsum + (pb(Q0["i_peak"]) - pb(10.0)) * zsum
+    assert abs(pl["tj18"] - tj18) < 1e-9 and tj18 < 150.0, "the 18 A for 60 s from the hot state passes the limit"
+    for lab, i_, t_, p_, allow, zd, room in pl["ev"]:
+        assert abs(allow - (150.0 - m.F16_TJ_HELD) / (pb(i_) - pb(20.0))) < 1e-9
+        assert room > 0, "%s: the device alone takes the whole allowance" % lab
+    assert L["ldo_floor16"] < K["rb_floor"], "R-b' no longer keeps the LDO precharge under the limit"
+    row = [x for x in m.downstream(R) if x[0] == "E11-29"][0][3]
+    assert "Zself + Zmut" in row and "case-rise reading at 10 A alone does not close it" in row
+
+
+def t_l4f02_ciss_is_not_shown_under_tis_figure_and_the_item_stays_open():
+    R = _R()
+    L, H = R["L"], R["H"]
+    assert 2 * L["ciss_t"] < H["bf_ciss"] < 2 * L["ciss_0"], "the typical Ciss near 0 V does not exceed TI's figure"
+    assert L["ciss_0"] < H["bf_ciss"] and L["one_rja"] < 0.5 * L["plan"]["zsum"]
+    out = open(OUT, encoding="utf-8").read()
+    assert "STATUS: OPEN; the pair stays selected" in out
+
+
+def t_l4f02_the_docking_pulse_is_taken_whole_in_one_fet_with_no_i2t_conversion():
+    R = _R()
+    K, L, Q0 = R["K"], R["L"], R["H"]["Q"]
+    rise, energy, ppk = L["dock_k1"]
+    assert abs(ppk - L["vsd_max"] * Q0["i_dock"] / L["vsd_is"] * Q0["i_dock"]) < 1e-6, "the peak power is not the concave VF bound's"
+    q = Q0["i_dock"] * Q0["tau"]
+    assert energy < L["vf_pk_bound"] * q and energy > L["vsd_max"] * 0.5 * q
+    assert K["air"]["route"] + rise < 150.0 and abs(L["k_max"] * rise - (150.0 - K["air"]["route"])) < 1e-9
+    assert Q0["i_dock"] < K["sel"]["rdef"]["ism"] and L["i_at_tp"] > L["is_dc"]
+    out = open(OUT, encoding="utf-8").read()
+    assert "as an I2t of 1.024 A2s is WITHDRAWN" in out and "no sharing is credited" in out
+
+
+def t_l4f03_the_efuse_keeps_the_contact_inside_its_rating_and_the_fuse_and_ptc_do_not():
+    R = _R()
+    m = _M()
+    K, L = R["K"], R["L"]
+    lo, hi = L["ilim"]
+    typ = 18.0 / m.F16_RILIM_K
+    assert abs(lo - typ * (1 - L["ilim_rel"]) / (1 + m.F16_RILIM_TOL)) < 1e-12 and abs(hi - typ * (1 + L["ilim_rel"]) / (1 - m.F16_RILIM_TOL)) < 1e-12
+    assert abs(L["ilim_rel"] - 0.1) < 1e-9, "the wider printed spread is not the 30 kOhm row's"
+    assert K["aux_a"] < lo and hi < L["c813"] and L["t_lim"]["margin 65 C"] < 85.0
+    # the fuse: 175 to 200 percent of 2 A straddles the contact's 3.5 A for up to the 135 percent row's time
+    assert 1.75 * 2.0 <= L["c813"] < 2.0 * 2.0 and L["fuse_tc"]["t135"] > 1.0
+    # the PTC: its hot hold under the load, its cold trip over the contact, its interrupt under the pack's current
+    assert L["ptc_h"][70] < K["aux_a"] and L["ptc_trip_cold"] > L["c813"] and L["ptc"]["imax"] < R["H"]["Q"]["i_dock"]
+    drop = K["aux_a"] * (L["ron"][2] + L["r813"] * 2.0) + K["ret"][3][2] * L["r813"]
+    assert abs(L["drop"] - drop) < 1e-12 and L["vsys_e_min"] > K["ap_vin"][0]
+    assert L["t_ramp"][0] < L["t_ramp"][1] and L["i_inrush"] < lo
+    page = open(PAGE, encoding="utf-8").read()
+    assert "**0.1408 mA is the quantified subset of the held-pack drain**" in page and "at most 1 mA" in page
+    assert os.path.isfile(os.path.join(TOOLS, "check_contracts.py")), "check_contracts.py is not in the tree"
+
+
+def t_the_record_states_each_review_items_status():
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page[page.index("## 16. The fix round for the review of the provisional fixes"):]
+    for item, status in (("objection 1", "**CONDITIONAL**"), ("objection 2", "**CLOSED as an analysis basis"), ("objection 3", "**OPEN**"),
+                         ("objection 4", "**CONDITIONAL**"), ("service from the hot state", "**CONDITIONAL**"), ("L4-F03", "**CLOSED in design**")):
+        rows = [l for l in sec.splitlines() if l.startswith("|") and item in l]
+        assert rows and status in rows[0], "%s has no status row" % item
+    assert sec.count("| Affected circuit or function |") == 1
