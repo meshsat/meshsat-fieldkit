@@ -17,7 +17,10 @@ corner, margins and U2 shift are recomputed here; the primary battery stays a pr
 pinned page reading with a condition, a class and what the signed specification must confirm, the charge ranges' currents,
 voltages and thresholds are recomputed, the usable energy is the tree's energy chain reproducing the replay's 35E figures
 first, the warm-up and the thresholds of section 9d are recomputed, and the drafted request carries the added questions;
-both checks are filed byte for byte from their results; the page's figures are the .out's; the held files are ignored by
+the consolidation of 2 October 2026: CASE-MARGINS' rows are split on unescaped pipes and read in the chosen column, the room
+recomputed, each cell's suitability by mode one of three verdicts, the conductance each hot row needs consistent with the
+two-node runs and with the bound, at most three candidates with the Saft sheet read back, its fit and energy recomputed, and
+U-01's class printed; both checks are filed byte for byte from their results; the page's figures are the .out's; the held files are ignored by
 git and pinned alike in the script and the fetcher; no dash or claim word is written. Nothing here writes into the tree.
 """
 import ast
@@ -44,7 +47,8 @@ _CACHE = {}
 HELD = ("v2/vendor/battery/held/samsung-inr18650-30q6-v1.0-2020.pdf", "v2/vendor/battery/held/samsung-inr18650-30q-v1.0-2015.pdf",
         "v2/vendor/battery/held/samsung-inr18650-30q6-draft-v0.1-2024.pdf", "v2/vendor/battery/held/lg-inr18650hg2-rev0-2014.pdf",
         "v2/vendor/battery/held/saft-lsh20-31015-2-0426.pdf", "v2/vendor/battery/held/saft-lsh20hts-31057-2-0710.pdf",
-        "v2/vendor/battery/held/toshiba-scib-brochure-2020.pdf", "v2/vendor/battery/held/ultraxel-hl18650t-flyer-2025.pdf")
+        "v2/vendor/battery/held/toshiba-scib-brochure-2020.pdf", "v2/vendor/battery/held/ultraxel-hl18650t-flyer-2025.pdf",
+        "v2/vendor/battery/held/saft-mp176065xtd-31109-2-0625.pdf")
 
 
 def _load(name, path):
@@ -383,6 +387,77 @@ def t_u01_usable_energy_and_thresholds():
     assert "## 14. U-01 by mode" in page and "No cell is adopted" in page
 
 
+def t_u01c_room_read_in_the_chosen_column():
+    R = _R()
+    m = _CACHE["M"]
+    assert m.md_cells(r"| M5 | a \\|Y\\| b | 1.0 | +11.74 | MET | +3.65 | x |") == ["M5", r"a \\|Y\\| b", "1.0", "+11.74", "MET", "+3.65", "x"]
+    cm = open(os.path.join(ROOT, "v2/docs/CASE-MARGINS.md"), encoding="utf-8").read()
+    hdr = [c.strip() for c in re.split(r"(?<!\\)\|", re.search(r"^\| # \| Margin \|.*$", cm, re.M).group(0).strip())][1:-1]
+    col = hdr.index("Chosen: nominal")
+    got = {}
+    for k in ("M4b", "M5", "M6"):
+        cells = [c.strip() for c in re.split(r"(?<!\\)\|", re.search(r"^\| %s \|.*$" % k, cm, re.M).group(0).strip())][1:-1]
+        got[k] = float(re.search(r"[-+]?\d+\.\d+", cells[col]).group(0))
+    assert got == R["rows_cm"] and got["M5"] == 3.65 and R["rows_cm_old"]["M5"] == 11.74
+    X, Y, Z = R["blk"]["X"], R["blk"]["Y"], R["blk"]["Z"]
+    v = (Y * Z * (got["M4b"] - 1) + X * Y * (got["M6"] - 1) + 2 * X * Z * (got["M5"] - 1) + Y * Z * 1.0)
+    assert abs(v - R["spare_L"][1]) < 1e-12 and abs(R["spare_L"][1] - 0.0865) < 0.0005 and abs(R["spare_L_old"] - 0.1215) < 0.0005
+    # what moved: E5's latent storage no longer fits at the best corner, and its route is rejected within the pocket
+    assert R["pcm_res"]["best"]["e5_L"] > R["spare_L"][1]
+    rt = [r for r in R["dec"]["LO-01e"]["routes"] if "latent storage" in r["route"]][0]
+    assert rt["status"] == "REJECTED"
+
+
+def t_u01c_suitability_and_conductance_needs():
+    R = _R()
+    c = R["u01c"]
+    allowed = {"SUITABLE ON PUBLISHED EVIDENCE", "SUITABLE ONLY WITH A VENDOR ANSWER", "UNSUITABLE ON PUBLISHED EVIDENCE"}
+    for cell, d in c["suit"].items():
+        assert d["charge"][0] in allowed and all(v in allowed for v, _ in d["discharge"] + d["storage"]), cell
+    s35 = " ".join(w for v, w in c["suit"]["35E"]["storage"] if v.startswith("UNSUITABLE"))
+    assert "LO-01f" in s35 and "LO-01g" in s35 and "LO-01e" in s35
+    assert all(v == "SUITABLE ON PUBLISHED EVIDENCE" for v, _ in c["suit"]["MP 176065 xtd"]["storage"])
+    assert all(v.startswith("SUITABLE ONLY") for v, _ in c["suit"]["HL18650V"]["storage"] + c["suit"]["HL18650V"]["discharge"])
+    # LO-01a in closed form; E3-O and E5 by the two-node runs: the need puts the peak at the limit
+    qR, pR = R["heat"]["SURVR"]
+    g = R["Gblk"][0]
+    for cell, lim_ in (("35E", 60.0), ("MP 176065 xtd", 85.0), ("HL18650V", 80.0)):
+        assert abs(c["need"][cell]["LO-01a"]["cell limit"] - (qR + pR) / (lim_ - 40.0 - pR / g)) < 1e-12
+    for cell, lim_ in (("MP 176065 xtd", 85.0), ("HL18650V", 80.0)):
+        for row, run in (("LO-01d", R["run3g"]), ("LO-01e", R["run5g"])):
+            gn = c["need"][cell][row]["cell limit"]
+            assert run(gn) <= lim_ + 1e-6 and run(gn * 0.99) > lim_, (cell, row)
+    b = c["bound"]
+    assert b["E3-O"][0] == 0.607 and b["E5"][0] == 0.566 and b["+40"] == (0.598, 0.524)
+    assert c["holds"]["MP 176065 xtd"]["LO-01d"]["cell limit"] and c["need"]["MP 176065 xtd"]["LO-01d"]["cell limit"] <= b["E3-O"][0]
+    assert not c["holds"]["HL18650V"]["LO-01d"]["cell limit"] and c["need"]["35E"]["LO-01e"]["cell limit"] is None
+    assert [x[0] for x in c["bands"]] == [2.462, 1.516, 1.41, 1.199, 0.951, 0.644]
+
+
+def t_u01c_candidates_and_class():
+    R = _R()
+    c, sx = R["u01c"], R["saft"]
+    assert len(c["cands"]) <= 3 and c["cands"][0]["name"].startswith("Saft MP 176065 xtd")
+    assert (sx["c_typ"], sx["v_nom"], sx["e_nom"], sx["i_cont"], sx["i_pulse"]) == (5.6, 3.65, 20.4, 11.0, 22.0)
+    assert (sx["t"], sx["w"], sx["h"], sx["chg"], sx["dis"], sx["st"]) == (18.65, 60.5, 68.7, (-30.0, 85.0), (-40.0, 85.0), (-40.0, 85.0))
+    assert sx["proprietary"] and sx["swell"]
+    f = c["fit"]
+    assert abs(f["A"]["axis"] - (2 * 68.7 - 2 * 65.25)) < 1e-9 and abs(f["wrap_left"] - (133.5 + 2 * (3.65 - 1.0) - 2 * 68.7)) < 1e-9
+    assert not f["A_design"] and 0 < f["wrap_left"] < f["wrap_35"] == 3.0
+    import yaml
+    eb = _load("energy_budget_c_under_test", os.path.join(ROOT, "v2/docs/records/energy/energy_budget.py"))
+    d = yaml.safe_load(open(os.path.join(ROOT, "v2/docs/records/energy/energy_inputs.yaml"), encoding="utf-8"))
+    pk = eb.Pack(d)
+    pk.c_min = 5.6
+    assert abs(pk.usable_wh(d["model_states"]["PS-IDLE-SPEC"]["plan"], 25.0, 0.8, n_p=1)[0] - c["e_sx"]["typical"]["wh"]) < 1e-9
+    out = open(OUT, encoding="utf-8").read()
+    page = open(PAGE, encoding="utf-8").read()
+    for t_ in (out, page):
+        assert "A SUPPORTED ROUTE EXISTS ON PUBLISHED MANUFACTURER EVIDENCE" in t_ and "ADOPTION PENDING" in t_
+    q = open(os.path.join(REC, "clarification", "saft-mp176065xtd.txt"), encoding="utf-8").read()
+    assert re.findall(r"^(\d)\. ", q, re.M) == ["1", "2", "3", "4"] and "18 A for 60 seconds" in q
+
+
 def t_check_filed_byte_for_byte():
     import json
     for name, job, run in (("astra-check-l4e10-1.md", "cx26-l4e10-check", "20261001T223709Z-4184732"),
@@ -414,9 +489,11 @@ def t_page_figures_are_the_outs():
             "-5.0 to 44.8", "4.9 to 21.1", "75.00", "0.092", "0.102", "7.12", "0.011", "0.012", "0.183", "0.203", "0.79 K", "0.248", "0.275", "1.057",
             "1.175", "52 to 117", "58.7 to 163.2", "47.5", "84.2", "1.51", "2.07", "50.82", "64.24", "66.72", "61.26", "72.42",
             "144.7", "127.4", "121.0", "108.1", "95.2", "90.4", "2.52", "2.22", "2.11", "1.37 to 3.24", "56.37 to 58.24",
-            "4.67 to 8.00", "10.5 to 54.0", "52.04", "53.29", "1.725", "0.056", "0.121",
+            "4.67 to 8.00", "10.5 to 54.0", "52.04", "53.29", "1.725", "0.056", "0.087",
             "0.84 A", "1.68 A", "16.40 V", "17.06 V", "17.47 V", "0.357C", "90.2 Wh", "107.9 Wh", "54.0 Wh", "45.1 to 69.6",
-            "37.2 to 54.1", "78.94", "74.73", "73.07", "71.00", "68.86", "3.22 Wh", "12.3 Wh", "2.1 C", "2054 to 3082"]
+            "37.2 to 54.1", "78.94", "74.73", "73.07", "71.00", "68.86", "3.22 Wh", "12.3 Wh", "2.1 C", "2054 to 3082",
+            "0.0865", "0.1215", "0.361", "0.578", "0.932", "1.145", "4.996", "53.5 to 55.1", "954.88", "6.90", "1.40 mm", "80.29", "99.50",
+            "-30.6", "0.607", "0.566", "0.524"]
     for f in figs:
         assert f in out, "%s not in the .out" % f
         assert f in page, "%s not on the page" % f

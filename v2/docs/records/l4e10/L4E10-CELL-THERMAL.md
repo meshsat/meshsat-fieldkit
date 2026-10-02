@@ -27,7 +27,7 @@ stated), ASSUMPTION (a figure no held document gives), CONDITIONAL (holds only o
 - **(I), the 35E with local thermal management, does not qualify:** its storage rows (E3-S, E4-S) need a second energy
   store, and with the corrected cooler balance its hot rows rest on a cooler in the sealed case of 8.18 to 35.21 W at the
   conditioned corner, lifting the inside air 4.9 to 21.1 K onto and past the +70 C parts (INCONCLUSIVE); latent storage
-  needs 0.162 L (E3-O) and 1.489 L (E5) against at most 0.121 L. **(III)**, latent storage and a primary-fed storage
+  needs 0.162 L (E3-O) and 1.489 L (E5) against at most 0.087 L. **(III)**, latent storage and a primary-fed storage
   heater, is rejected at LO-01d to LO-01f, and its primary battery (10 to 20 Saft LSH 20 cells, 470 to 940 Wh nominal,
   3.2 to 6.5 times the pack) is added energy storage whose compatibility with D-06 is the owner's.
 - **A finding outside FEA-008, common to every approach:** at the conditioned corner the uncooled inside air settles at
@@ -43,6 +43,11 @@ stated), ASSUMPTION (a figure no held document gives), CONDITIONAL (holds only o
   state or recovery stated); the drafted charge ranges for the 4S3P (0.84 A to 16.40 V from -9 C, 1.68 A from 1 C, the
   drawn 3.00 A from 11 C); usable energy 90.2 Wh at +25 C against the 35E's 107.9 Wh, the cold end a bracket; the threshold
   of each row at which the architecture moves.
+- **U-01 consolidated (section 15, 2 October 2026):** a supported route exists on published manufacturer evidence, the
+  Saft MP 176065 xtd as a 4S1P pack in D-06's pocket (charge -30 to +85 C, discharge -40 to +85 C, storage allowable -40
+  to +85 C), adoption pending the owner's approval (about 82 Wh nominal, 53.5 to 55.1 Wh usable) and CONDITIONAL on its fit
+  along the axis and its 18 A peak; with it LO-01d holds on U-02's conservative bound, while LO-01a's complete pass and
+  LO-01e rest on T-H1 for every cell. The pocket's room is corrected to 0.0865 L (section 15a).
 - **The thermal architecture criterion (criterion 1) is not met by this record.** Every LO row now has a route that is not
   rejected; LO-01a stays CONDITIONAL on T-H1 (at least 1.666 W/K in both lid states) for every approach, LO-01h on the
   lot, and LO-01d to LO-01g rest on a product page until the signed specification arrives.
@@ -84,7 +89,7 @@ charge state is a named missing input; the thermal figures do not depend on it.
 | C08 | charging, hot | -20 to +40 C | 0 to 45 C; T3 42 C | the input | none by requirement | NO GAP |
 | C09 | charging, cold (mat before charge) | -20 C, warm-up then charge | UTC 1.0 C, panel hold +3 C | the input (7.5 W into the cells, 1.0 W regulator loss into the air) | the mat lifts the idle cells to 12.44 C | CREDIBLE (existing mat) |
 | C10 | +55 C operating margin (E3-O) | +55 C, 4 h, on an input, pack fitted | +60 C; H1 +56.5 C; "no shutdown" | the input | 1.63 to 14.22 K | OPEN: (II) recommended, CONDITIONAL (6.93 K under the re-derived H1); passive design and latent storage rejected; cooling INCONCLUSIVE with its cost to other parts |
-| C11 | E5's humid cycle (Method 507.6 Procedure II: 23 C conditioning, ten 24 h cycles 30-60-60-30-30 C, return to 23 C; checks near the ends of cycles 5 and 10) | 95 % RH, on an input, the kit logging, pack fitted | +60 C | the input | at least 6.63 K | OPEN: (II) recommended, CONDITIONAL (1.06 K under the re-derived H1); latent storage and cooling INCONCLUSIVE with their limits named |
+| C11 | E5's humid cycle (Method 507.6 Procedure II: 23 C conditioning, ten 24 h cycles 30-60-60-30-30 C, return to 23 C; checks near the ends of cycles 5 and 10) | 95 % RH, on an input, the kit logging, pack fitted | +60 C | the input | at least 6.63 K | OPEN: (II) recommended, CONDITIONAL (1.06 K under the re-derived H1); latent storage rejected within the pocket (section 15a); cooling INCONCLUSIVE with its limits named |
 | C12 | +71 C storage margin (E3-S) | +71 C, 24 h, stored at 30 %, gauge in shutdown | storage 1 month to 60 C at 30 % | **zero** (a separate source only if added) | 11 K | OPEN: (II) recommended, CONDITIONAL (9.00 K under the page's +80 C); the calculated insulation and latent storage rejected within the pocket; cooling needs a second energy store |
 | C13 | -33 C storage margin (E4-S) | -33 C, 24 h, stored | floor -20 C; discharge floor -10 C | **zero** (a separate primary only if added) | 13 K; 33 K | OPEN: (II) recommended, CONDITIONAL (7.00 K inside the page's -40 C); a pack-fed heater rejected on the shutdown path; a primary-fed heater is added energy storage under D-06 |
 | C14 | storage in the envelope | -20 to +45 C 3 months; -20 to +25 C a year | Ver. 1.1 rows at 30 % | zero | none (Ver. 1.1) | CREDIBLE (procurement) |
@@ -163,7 +168,7 @@ charge state is a named missing input; the thermal figures do not depend on it.
 
 ## 4b. The open rows' bounded measures, from makers' documents and without a purchase (`.out` 3n)
 
-The block's room beyond the 1.0 mm minimums is 0.056 L at the worst stack and 0.121 L as designed (INFERRED, CASE-MARGINS
+The block's room beyond the 1.0 mm minimums is 0.056 L at the worst stack and 0.087 L as designed (0.0865 L, corrected in section 15a; INFERRED, CASE-MARGINS
 and SHORTLIST). Latent storage is Rubitherm RT57HC (MAKER, filed under `v2/vendor/battery/pcm/`): melting area 55 to 58
 C, 240 kJ/kg +-7.5 % (latent and sensible over 49 to 64 C), 0.9 kg/l solid; taken **favourable to the material** (all
 258 kJ/kg latent at 58 C, solid density, no container, perfect contact), so a "does not fit" holds and a "fits" stays
@@ -190,7 +195,7 @@ CONDITIONAL. A two-node enthalpy model (the kit and the block) runs each profile
     ("Do not mix new and used cells") every two years (ASSUMPTION). **Controls:** a thermostat on the coldest cell,
     independent of the gauge. **Unintended charging:** "Do not recharge", so the string reaches the mat only through a
     blocking path the kit's 12 V feed cannot back-drive (two series diodes, a circuit draft). **Fit:** outside the pocket
-    (0.121 L at most), so Layer 7's free volume. F2 sits at about -30 C, below its -20 C floor (Eaton).
+    (0.087 L at most), so Layer 7's free volume. F2 sits at about -30 C, below its -20 C floor (Eaton).
   - **The three cases:** (i) keeping a warm pack is its job; (ii) a pack already cold-soaked is rewarmed only from this
     store, 0.133 to 0.183 Wh per K; (iii) lost control: with the store spent or the thermostat failed open the cells pass
     -20 C 0.30 to 1.09 h later; failed closed, the mat runs at 9.5 W, the cells settle at -5.0 to 44.8 C (inside their
@@ -203,9 +208,9 @@ CONDITIONAL. A two-node enthalpy model (the kit and the block) runs each profile
   30 C, 2 h 60 C, 8 h 60 C, 16 h 30 C, 24 h 30 C) at 95 % RH, operational checks near the ends of the fifth and tenth
   cycles, then a return to 23 C until stable; the cycle's mean is 43.75 C. The air's mean is 50.82 C (best) to 64.24 C
   (worst); without storage the cells peak at 66.72 to 79.63 C. They stay under +60 C through the conditioning and ten
-  cycles with **0.092 kg (0.102 L) at the best corner** (between the worst-stack and the designed room: marginal) and
-  **6.41 kg (7.12 L) at the worst** (no fit). INCONCLUSIVE on the conductance and the built room; which procedure E5 means
-  is the plan owner's to confirm.
+  cycles with **0.092 kg (0.102 L) at the best corner**, over the designed room's 0.087 L, and **6.41 kg (7.12 L) at the
+  worst**: no fit at any corner, so latent storage is rejected for E5 within the pocket (section 15a); which procedure E5
+  means is the plan owner's to confirm.
 - **(c) LO-01d, E3-O's 4 h at +55 C from a kit stabilised at the chamber.** Without storage the cells peak at 61.26 C
   (best) and 72.42 C (worst); under +60 C with **0.011 kg (0.012 L) at the best corner, inside the room, and 0.183 kg
   (0.203 L) at the worst, outside it.** The complete E3-O pass ("no shutdown") needs the cells under H1's no-act limit of
@@ -232,7 +237,7 @@ E5's air averages 58.75 C over the cycle and the cells peak at 74.73 C. Here (I)
 the uncooled 70.00 C (E3-O) and 75.00 C (E5's 60 C dwell), onto and past the +70 C parts of OPERATING-ENVELOPE.md
 section 2 (the SA868, the AW7915-AED cards, the LimeSDR, the Xenarc) and at COP 0.5 the CM5's +85 C: INCONCLUSIVE on the
 input's spare power and on that cost to other functions. Latent storage needs 0.162 L (E3-O) and 1.489 L (E5) against
-at most 0.121 L: rejected. Near the best corner (3.30 W/K with the other parameters favourable) 0.86 to 3.44 W of input
+at most 0.087 L: rejected. Near the best corner (3.30 W/K with the other parameters favourable) 0.86 to 3.44 W of input
 holds the cells.
 
 **Outside FEA-008 and common to every approach:** at this corner the uncooled air settles at 70.00 C in E3-O and tends
@@ -277,7 +282,7 @@ E4-S as stated (24 h, stored, zero power from the pack), the storage envelope. T
 | Maker limits | Ver. 1.1: discharge -10 to 60 C, storage 1 month -20 to 60 C (MAKER) | the page: discharge -40 to 85 C, charge -20 to 60 C, storage 30 days -40 to 80 C (INFERRED) | the 35E's; RT57HC melting 55 to 58 C; LSH 20 -60 to +85 C, storage recommended at +30 C at most (MAKER) |
 | Usable energy | 108.1 Wh (2.52 h); 2.34 to 2.47 h with a pack-fed cooler at the best corner | 90.4 Wh (2.11 h), 16.4 % less; 121.0 Wh nominal | the pack's 108.1 Wh; the primary serves the heater only |
 | Thermal demand | coolers: 0.86 to 3.44 W (best corner), 8.18 to 35.21 W (conditioned); E3-S 52 to 117 Wh from a second store; E4-S 58.7 to 163.2 Wh from a second store | none added (the existing mat for charging; the cell charges from -20 C at 0.1C to 4.1 V) | none electrical for the store; the heater 2.44 to 6.80 W on average |
-| Mass and volume | a cooler (no sheet held), an E3-S store, 1.0 to 2.0 kg (0.54 to 1.07 L) of primary cells outside the pocket | the same block; 44 g a cell against 50 g at most (72 g a pack less at most); +0.50 mm against 0.77 mm | store 0.162 L (E3-O) and 1.489 L (E5) conditioned, 0.275 to 1.175 L (E3-S), against 0.121 L; the primary as (I) |
+| Mass and volume | a cooler (no sheet held), an E3-S store, 1.0 to 2.0 kg (0.54 to 1.07 L) of primary cells outside the pocket | the same block; 44 g a cell against 50 g at most (72 g a pack less at most); +0.50 mm against 0.77 mm | store 0.162 L (E3-O) and 1.489 L (E5) conditioned, 0.275 to 1.175 L (E3-S), against 0.087 L; the primary as (I) |
 | Maintenance | the primary replaced as a set every two years (ASSUMPTION); the cooler | the pack as today; at least 500 cycles at 25 C (page) | the store none; the primary as (I) |
 | Implementation | a cooler and its control, a storage-time store and cooler, a primary string with thermostat and blocking path, Layer 7 volume | the cell; U2 to BQ7720704 (83 C, OVP 4.275 V, UVP 2.0 V, COUT an open-drain active pulldown: F2's drive re-drawn); the ladder C1 75.0, H1 76.5, H2 77.0, OTD 77.5 C (first cut, today's offsets under +80 C); SOT, the PTC, the release; the gauge's data and cold cutoffs | a sealed container round the block; a primary string with thermostat and blocking path |
 | Constraints changed | D-06: a second energy store (E3-S, E4-S) | D-06's "about 145 Wh"; the spend (cell_provenance); REQ-046's windows and REQ-077's +60 C restated with the cell | D-06: a second energy store |
@@ -308,7 +313,7 @@ re-derived H1 and U2's lowest trip, so (II) carries T-H1's condition as LO-01a d
 | LO-01b | NO COLLISION | MAKER, MODELED | E4-O: every cell at or above -10 C once warm | none needed |
 | LO-01c | NO COLLISION | MAKER, MODELED | E3-A's T3, T4 and OTC lines; E4-O's floor and the panel's hold | none needed |
 | LO-01d | **OPEN** | MAKER, MODELED, INFERRED, ASSUMPTION | E3-O, pack fitted: every cell inside its limit for 4 h, no shutdown, recovery | (II) CONDITIONAL (recommended); (I) cooling INCONCLUSIVE (rejected at the worst corner); passive and latent storage REJECTED |
-| LO-01e | **OPEN** | as LO-01d | E5, pack fitted: every cell inside its limit through the cycles, operational checks, capacity recovered | (II) CONDITIONAL; latent storage and cooling INCONCLUSIVE with their limits named |
+| LO-01e | **OPEN** | as LO-01d | E5, pack fitted: every cell inside its limit through the cycles, operational checks, capacity recovered | (II) CONDITIONAL; latent storage REJECTED within the pocket (section 15a); cooling INCONCLUSIVE with its limits named |
 | LO-01f | **OPEN** | as LO-01d | E3-S, pack fitted: every cell inside its governing storage limit for 24 h at the stored charge, capacity recovered | (II) CONDITIONAL; insulation and latent storage REJECTED; cooling needs a second store (D-06) |
 | LO-01g | **OPEN** | as LO-01d | E4-S, pack fitted: every cell inside its storage row for 24 h, capacity recovered | (II) CONDITIONAL; insulation and the pack-fed heater REJECTED; latent storage INCONCLUSIVE (no sheet); the primary-fed heater a proposal under D-06 |
 | LO-01h | **CONDITIONAL** | MAKER | the lot's sheet covers -20 C for 3 months and +25 C for a year; E4-T at the floor | procurement (Ver. 1.1) |
@@ -387,7 +392,7 @@ energy store for LO-01g under a ruling on D-06, only if the specification leaves
 | Check 2, R3 (usable energy) | the pack-fed heater's 11.9 to 28.9 Wh and 1.3 to 8.6 h labelled model sensitivities; the rejection rests on the shutdown path alone: minor |
 | Check 2, R3 (passive storage) | the rejection narrowed to the calculated insulation (24.6 and 30.3 mm, unchanged); latent storage bounded on its own (4b, 4c): new routes, REJECTED or INCONCLUSIVE; each row's decision unchanged |
 | Check 2, R3 (the cooler balance) | was: the loop did not close at the worst corner for COP 0.5 (heat counted twice); now: it closes, with the air at 86.4 to 144.8 C (worst) and 74.9 to 96.1 C (conditioned): REJECTED into the sealed case at the worst corner, INCONCLUSIVE at the conditioned corner (8.18 to 35.21 W, the air lifted 4.9 to 21.1 K onto the +70 C parts); E3-S's second store: 38 to 213 Wh with the heat sent out of the case (a sealed path missing), 52 to 117 Wh into the sealed case at the best corner, no equilibrium at the worst for COP 0.5. Material: (I)'s hot rows now carry that cooler |
-| Check 2, R3 (E5) | from INCONCLUSIVE on a missing profile to Method 507.6 Procedure II: latent storage a marginal fit at the best corner (0.102 L), none at the conditioned (1.489 L) and worst (7.12 L) corners. Material for (III) |
+| Check 2, R3 (E5) | from INCONCLUSIVE on a missing profile to Method 507.6 Procedure II: latent storage 0.102 L at the best corner (over the corrected 0.087 L room, section 15a), 1.489 L at the conditioned and 7.12 L at the worst corner. Material for (III) |
 | Check 2, minor R1 | the coupling on shore: cells 59.30 C (past the +59 C abort), air 63.42 C; LO-01a's decision and 1.666 W/K unchanged: minor for the row |
 | Check 2, minor R2 | C17: OTD stops the discharge before +60 C and recovers at or below +52.5 C, no immediate refusal claimed: minor |
 | Check 2, minor R3 | the fast corner's 8.20 W against the mat's 7.5 W: a further inability of a route already rejected: minor |
@@ -396,9 +401,10 @@ energy store for LO-01g under a ruling on D-06, only if the specification leaves
 ## 13. Files
 
 `l4e10_cell_thermal.py` and `.out` (section 0 reproduces `pwr_budget.out` and `.json`, `pwr_red2.out` and
-`hotstop_bounds.out` byte for byte and pins 46 inputs by sha256; section 8 prints the predicates; section 9 is U-01 by mode); `fetch_held_back.py`;
-`inputs/` (the Topwell page, the prices, Saft's curves read by eye, the cells beyond the held set); `clarification/`
-(Topwell, Eaton); `checks/astra-check-l4e10-1.md` and `-2.md`; `README.md`. The tests:
+`hotstop_bounds.out` byte for byte and pins 49 inputs by sha256, L4-E12's output at its commit among them; section 8 prints
+the predicates; section 9 is U-01 by mode and section 10 its consolidation); `fetch_held_back.py`; `inputs/` (the Topwell
+page, the prices of 1 and 2 October, Saft's curves read by eye, the cells beyond the held set); `clarification/` (Topwell,
+Eaton, Saft); `checks/`; `README.md`. The tests:
 `env -C v2/ecad/tools/tests python3 run.py test_l4e10 test_public_hygiene`. No generator, BOM, registry or Layer 3 file
 is changed.
 
@@ -498,3 +504,95 @@ needing no ruling). **The drafted request gained questions 7 to 10** (`clarifica
 charge band and termination, the pulse current, the cold capacity, the end-of-life capacity and self-discharge;
 questions 1, 2 and 6 already asked for the storage rows with their charge and recovery, the basis with the rest at high
 charge, and the gauge's data.
+
+## 15. U-01 consolidated: suitability by mode, the conductance bound, published specifications, the missing fact (`.out` section 10; 2 October 2026)
+
+The owner's question of 2 October 2026: charge, discharge and storage suitability established separately with usable
+energy; whether published makers' specifications suffice or a vendor answer is genuinely necessary; a supported route
+within the approved arrangement, the adoption approval retained; and, where evidence is missing, exactly what it must
+establish. **No cell is adopted.**
+
+### 15a. The pocket's room, corrected
+
+The independent verifier's item 3 (`records/l4close/VERIFICATION-2026-10-02.md` at 08841dfa) was right: CASE-MARGINS row
+M5 carries escaped pipes in its margin text, so the plain split read M5 at +11.74 mm, the superseded flat-floor figure.
+The script now splits rows on unescaped pipes only and reads the "Chosen: nominal" column by its header: M4b +9.68, M5
++3.65, M6 +4.42 mm. **The room as designed moves from 0.1215 L to 0.0865 L** (0.0559 L at the worst stack, unchanged).
+What moved: E5's latent storage at the best corner (0.102 L) no longer fits, so approach (III)'s E5 route is REJECTED
+within the pocket (it was INCONCLUSIVE, a marginal fit). Every other fit and rejection stands: E3-O's best corner 0.012 L
+still fits; E3-S, E5's other corners and the primary cells were already outside.
+
+### 15b. Suitability by mode
+
+| Cell | Charge | Discharge | Storage |
+|---|---|---|---|
+| Samsung INR18650-35E, Ver. 1.1 (D-06's ruled cell; MAKER) | **suitable on published evidence**: LO-01c (REQ-046's 0 to 45 C) and the cold charge (REQ-046: the mat warms the pack below 0 C; C09) | **suitable** for LO-01a (+40 C, D-02) and LO-01b (-20 C once warm, D-02d); **unsuitable on published evidence** for LO-01d (+55 C, D-02a, E3-O: the cells 61.26 to 72.42 C against +60 C) | **suitable** for LO-01h (D-02, REQ-025) and E3-T's +58 C; **unsuitable on published evidence** for LO-01f (+71 C, D-02a, E3-S), LO-01g (-33 C, D-02a, E4-S) and LO-01e (E5's dwell, SC-03: the idle pack at 74.73 C at the conditioned corner) |
+| HL18650V (the proposal of section 6; MAKER-PAGE) | **suitable only with a vendor answer** (the page's rows; the coldest garbled; no termination); the cold charge served by the mat as for the 35E | **suitable only with a vendor answer** (LO-01a, LO-01b, LO-01d: -40 to +85 C, no basis, no pulse, no cold capacity) | **suitable only with a vendor answer** (LO-01e to LO-01h: the page's rows, no state of charge, no recovery) |
+| Saft MP 176065 xtd (Doc. n 31109-2-0625, June 2025; MAKER, held back) | **suitable on published evidence**: LO-01c (charge -30 to +85 C, CC/CV 4.2 V, 5.6 A at most; the drawn 3.0 A inside); the cold charge by the mat | **suitable on published evidence** for LO-01a, LO-01b, LO-01d (-40 to +85 C, 11 A continuous against the kit's 10 A); PS-ALLTX's 18 A for 60 s on one string **only with a vendor answer** (22 A pulses, no duration) | **suitable on published evidence** for LO-01e to LO-01h: the allowable -40 to +85 C states no time or charge restriction (INFERRED: it covers 24 h at the stored charge) |
+
+The cell limits are the cell's; whether the cells stay inside them in LO-01a, LO-01d and LO-01e is the enclosure's.
+
+### 15c. The conductance bound carried into the routes
+
+U-02's conservative bound (L4-E12 at aab69775, the fans' flow credited at zero): E3-O lid open 0.607 W/K, lid closed
+0.537; E5 lid open 0.566, lid closed 0.505; +40 C lid open 0.598, lid closed 0.524. On the bound E3-O's cells peak at
+80.29 C and E5's at 99.50 C. The conductance each row needs (W/K; LO-01a judged lid closed, so the full T-H1 gives it;
+"U2 at today's network" is the 83 C variant on today's thermistor network, INFERRED and movable by a re-derived network):
+
+| Cell | Row | Cell limit | No hot stop | U2 at today's network | The reading T-H1 must give (L4-E12's bands 2.462 / 1.516 / 1.410 / 1.199 / 0.951 / 0.644) |
+|---|---|---|---|---|---|
+| 35E | LO-01a | 1.246 | 1.604 | | 1.410 for the cell limit; 2.462 for no hot stop and the complete pass (1.666) |
+| 35E | LO-01d | 4.996 | none suffices | | over every band |
+| 35E | LO-01e | none suffices | none suffices | | none |
+| HL18650V | LO-01a | 0.604 | 0.677 | 0.679 | 0.644 and 0.951; the complete pass 2.462 |
+| HL18650V | LO-01d | 0.624 | 0.914 | 0.921 | 0.951 and 1.199 |
+| HL18650V | LO-01e | 1.195 | 1.547 | 1.557 | 1.410 and 2.462 |
+| MP 176065 xtd | LO-01a | 0.535 | 0.592 | 0.679 | 0.644 (lid open it holds on the bound's 0.598); the complete pass 2.462 |
+| MP 176065 xtd | LO-01d | 0.361 | 0.578 | 0.921 | **holds on the bound** (0.607) for the cell limit and no hot stop |
+| MP 176065 xtd | LO-01e | 0.932 | 1.145 | 1.557 | 1.199 and 1.410 |
+
+- **T-H1 decides** LO-01a's complete pass (the SGP41's air, 1.666 W/K) and LO-01e for every cell. LO-01d holds on the
+  bound only with the MP 176065 xtd (U2's network re-derived above the hot stop); the HL18650V needs 0.624 W/K and the
+  35E 4.996 W/K, which no reading in reach gives.
+- **Rows that hold on the bound for every cell:** LO-01b (the cells at about +53 C at -20 C ambient: warmer, not colder);
+  LO-01c (the gauge holds charging off; on the bound a running kit at PS-IDLE-SPEC reaches T3's 42 C window only below
+  -30.6 C ambient, an energy consequence for L4-E9, not a cell limit); LO-01f, LO-01g and LO-01h (zero power: the kit's
+  time constant rises to 5.5 h and the cells still follow the ambient within 0.013 of the step in 24 h, so these rows are
+  the cell's rating alone).
+
+### 15d. Do published specifications suffice?
+
+Candidates within the arrangement (a 4S Li-ion pack at the 14.4 V class in D-06's pocket), at most three:
+
+| Candidate | Rows covered on published evidence | Usable energy in the pocket | Fit | Cost | What it changes downstream |
+|---|---|---|---|---|---|
+| **Saft MP 176065 xtd**, prismatic Li-ion, 4S1P (MAKER datasheet, held back) | every cell limit row: charge -30 to +85 C, discharge -40 to +85 C, storage allowable -40 to +85 C | 81.6 Wh nominal (typical); **53.5 to 55.1 Wh usable, 1.25 to 1.29 h** (the tree's chain, aged 0.80, the 35E's curve shapes ASSUMPTION; Saft publishes no minimum capacity) | growth +6.90 / +4.85 / +0.20 mm (axis, across, height) against 5.30 / 9.68 / 3.42 as designed and 0.77 / 6.38 / 2.66 at the worst stack: not with the 35E block's 3.00 mm of wrap; **CONDITIONAL on at most 1.40 mm of wrap along the axis** and M5's chosen placement (OPEN: T4); failing it the pocket changes, a proposal for the owner | NZ$ 238.72 a cell (a distributor's listing archived in January 2025), NZ$ 954.88 for four | D-06 restated (the cell, 4S1P prismatic, about 82 Wh nominal); REQ-046 and REQ-077's cell-derived numbers; U2 and the ladder under +85 C; the gauge's 1P data; a prismatic holder; the charger's 16.8 V and the CUV's 2.50 V unchanged (its cut-off is 2.5 V) |
+| Yichun Topwell Power HL18650V, 18650 Li-ion, 4S3P (MAKER-PAGE) | every row on the page, none on a specification | 121.0 Wh nominal; 90.2 Wh usable, 2.11 h | +0.50 mm along the axis against 0.77 mm at the worst stack | USD 3.50 a cell (a marketplace seller), about USD 42 a pack | section 9: D-06 restated (about 121 Wh), REQ-046 and REQ-077, U2, the ladder, the gauge's data and cold ranges |
+| Lithium Werks APR18650M1B, 18650 LiFePO4, 4S3P (MAKER product page) | LO-01g only (storage -40 to 70 C); not +71 C, not E3-O or E5 (discharge to 60 C) | 47.5 Wh nominal | the 18650 block | not read | a 13.2 V class pack: outside the 14.4 V class, a proposal, not a candidate |
+
+**Verdict: published specifications suffice for every cell limit row with the Saft MP 176065 xtd.** A vendor answer is not
+necessary for the temperature rows on that route; it is necessary for the HL18650V's rows (or a lot soak in its place).
+
+### 15e. The missing facts and their smallest resolution
+
+| Route | The exact missing fact (row, condition) | Vendor answer or experiment | Cost and duration |
+|---|---|---|---|
+| Saft MP 176065 xtd | every row, D-06's pocket: whether four cells fit along the axis with at most 1.40 mm of wrap and spacers as designed | a dimensional mock-up of four cells at the sheet's maximum dimensions in the pocket at the built stack | printed blocks; hours; no purchase |
+| Saft MP 176065 xtd | LO-01a's mission states with PS-ALLTX: whether one cell carries 18 A for 60 s at its temperature in use (22 A pulses, no duration) | Saft's statement (drafted: `clarification/saft-mp176065xtd.txt`), or a bench pulse of one cell at +25 C and at the cold end, surface temperature and voltage logged | one cell (NZ$ 238.72) and a 20 A load; a day |
+| Saft MP 176065 xtd | usable energy: the minimum capacity (the sheet gives a typical 5.6 Ah) | measured on the lot at receipt | with the purchase |
+| HL18650V | LO-01f at +71 C and LO-01g at -33 C, both 24 h at the stored 30 %; LO-01e's rest at full charge; the page's +80 C idle row | the signed specification (drafted), or a lot soak: sample cells 24 h at +71 C and 24 h at -33 C at 30 %, ten 507.6 cycles at full charge, capacity before and after at 0.2C and +25 C | about ten cells (USD 35.00), an oven, a -40 C freezer and a capacity tester; about 4 days for the soaks and 12 for the cycles; evidence for that lot, not a production guarantee |
+| every route | LO-01a's complete pass and LO-01e (and LO-01d unless the MP 176065 xtd): the enclosure's conductance | T-H1 (U-02's experiment) | L4-E12 section 14.6 |
+
+### 15f. U-01's class
+
+**A SUPPORTED ROUTE EXISTS ON PUBLISHED MANUFACTURER EVIDENCE:** the Saft MP 176065 xtd as a 4S1P pack in D-06's pocket,
+every cell limit row (charge, discharge, storage) covered by its datasheet. **ADOPTION PENDING the owner's approval**
+(D-06's cell and energy, about 82 Wh nominal against about 145 Wh, and the spend). It is **CONDITIONAL** on two named
+facts with their smallest checks: the fit along the axis and the 18 A peak's duration. With it LO-01d holds on the
+conservative bound; LO-01a's complete pass and LO-01e rest on T-H1 for every cell. The HL18650V stays the higher-energy
+alternative (90.2 against 55.1 Wh usable), resting on its vendor answer or a lot soak. Missing evidence is not shown to be
+impossible: each missing fact has its check above. FEA-008 stays open until the adoption, the fit and T-H1.
+
+**The owner's items for this route:** approval of the cell change inside D-06's pocket (4S1P prismatic, about 82 Wh
+nominal; REQ-046 and REQ-077's cell-derived numbers with it) and its spend; sending Saft's drafted questions if the
+bench pulse is not preferred. The Topwell request stays for the HL18650V alternative.
