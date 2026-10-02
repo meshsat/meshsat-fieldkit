@@ -39,3 +39,22 @@ was not addressed, so Q-TI-2 stays as REVIEW-REQUEST.md words it (row D4).
 - **Row D5 (N4):** the effective capacitance at 16.9 V of DC bias of the 1210 X7R parts on VBAT is the capacitor makers'
   item (the held Yageo CC sheet prints none); the dependency round's direct EEHZK1V181P removes the question by design.
 - **Row D6 (Q-TI-7):** already in REVIEW-REQUEST.md, unchanged.
+
+## After the consolidation round (2 October 2026, record sections 12 to 14)
+
+The session selected TI's BQ25730 (SLUSE65A) with a battery FET (arrangement (B1)). Once board A carries it (E11-27), the
+addendum to Q-TI-3 (D3) and Q-TI-11's first bullet (D1) fall away: SLUSE65A prints VSYS's regulation with no battery (VSYS_MIN_REG_ACC,
+p.10) and with the charge disabled (VSYSMAX_ACC, p.9), and D4 is printed (ChargeCurrent's reset 0000h, p.49). Q-TI-12's second
+bullet (D8) stays, now for the BQ25730's identical row. What (B1) asks instead, drafted, not sent:
+
+- **Q-TI-15 (row D2, BQ25730).** SLUSE65A, 4S, no battery current, VSYS regulated at VSYS_MIN 12.3 V by the BATFET in LDO mode:
+  VSYS's deviation and recovery time for a system load step of 0 to 4 A (Figure 9-22, p.96, shows the peak power mode at 4 ms a
+  division only), and is there a minimum loop bandwidth in this mode?
+- **Q-TI-16 (row D1's upper side, BQ25730).** SLUSE65A p.10: VSYS_MIN_REG_ACC prints -2 % in both its minimum and its maximum
+  column for every setting. Is the maximum +2 %?
+
+## Not for TI: the battery FET's maker (drafted, not sent)
+
+- **Q-AOS-1 (E11-30).** AONS21357 (Rev 2.1): the body diode's non-repetitive pulse capability (peak current, or I2t) for a
+  pulse of about 240 A decaying with a 34 us time constant, at TJ 62 C; the sheet prints IS 36 A continuous and IDM 144 A for the
+  channel only.
