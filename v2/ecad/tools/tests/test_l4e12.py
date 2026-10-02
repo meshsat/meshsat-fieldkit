@@ -20,8 +20,12 @@ and pass line, with its draft procedure; a failed reading's cases and the sessio
 conservative bound from held geometry at the coefficients' conservative ends, reconciled with W4's 1.22 W/K; U-02's class
 DECIDES because E3-O's gap stays positive with every session measure; the smallest experiment's thresholds. The heat-rejection
 question (section 15, the .out's section 10): three approaches on the same bound, none reaching the approved profile's need at
-+40 C or charging on the design day, the shortfall, the owner's options and the deciding point. Nothing here writes into the
-tree.
++40 C or charging on the design day, the shortfall, the owner's options and the deciding point. The thermal reconciliation
+(section 16, the .out's section 11, the owner's amendment of 2 October 2026, 14:20): 1.509 W/K at 42.4 W is 1.447 W/K after its
+uncertainty and stands for no requirement's mode; every condition's heat, ambient, limit and need from the texts; the +55 C
+inside-air limit is the heat stage's (1.806 W/K, LO-01a with the ballasts); the heat counted once with P = the heaters + the
+fans; the relationship QS = A k dT on the case's own films; the room reading conservative; each point's threshold, setting,
+spread and duration; the page and the procedure carry the figures. Nothing here writes into the tree.
 """
 import hashlib
 import importlib.util
@@ -397,6 +401,77 @@ def t_the_heat_rejection_approaches_and_the_shortfall():
     ex = hr["exp2"]
     assert all(rd > tg for _l, tg, rd, _r in ex) and ex[0][1] == hr["need_g"]
     assert R["pred"]["P21 heat rejection on the bound: no approach reaches the profile at +40 C (the best short by a positive margin) nor charging on the design day; U-02 stays a closure condition"]
+
+
+def t_the_thermal_reconciliation():
+    R = _R()
+    m = _CACHE["M"]
+    rc, T, A, hr = R["rc"], R["T"], R["A"], R["hr"]
+    c5 = rc["check509"]
+    assert abs(c5["after"] - c5["target"]) < 1e-6 and abs(c5["target"] - hr["need_g"]) < 1e-12, "1.509 W/K is 1.447 W/K after its uncertainty"
+    assert abs(c5["p"] - 2.0 * A["rta_heater"][2]) < 1e-12 and abs(c5["air40"] - (T["t_use"] + c5["p"] / c5["reading"])) < 1e-12
+    assert 68.0 < c5["air40"] < 68.2, "the owner's +68.1 C"
+    k = {x[0]: x for x in rc["conds"]}
+    assert list(k) == ["K%d" % i for i in range(1, 11)] + ["X1", "X2", "X3"]
+    for key, x in k.items():
+        assert abs(x[7] - x[2] / (x[5] - x[3])) < 1e-12, "%s: the need is Q over the room" % key
+    assert abs(k["K1"][7] - T["g_floor_ballast"]) < 1e-9 and k["K1"][5] == 55.0 and k["K1"][3] == T["t_use"] == 40.0
+    assert k["K5"][6] == "lid closed" and k["K5"][7] == k["K1"][7] and k["K9"][3] == A["e3o_t"] and abs(k["K9"][7] - k["K1"][7]) < 1e-9
+    assert k["K6"][3] == 20.0 and k["K6"][5] == 50.0 and abs(k["K6"][7] - hr["need_g"]) < 1e-12 and k["K6"][7] == k["X2"][7]
+    assert k["K7"][5] == k["K8"][5] == hr["t3"] and (k["K7"][3], k["K8"][3]) == hr["day"]
+    assert abs(k["K7"][2] - (hr["q_prof"] + T["charge_extra"])) < 1e-12 and k["K7"][7] > hr["need_ch"][0] and k["K8"][7] > hr["need_ch"][1]
+    assert abs(k["X3"][7] - 42.4 / 15.0) < 1e-9 and k["X1"][7] > k["X3"][7] > k["K1"][7], "the owner's 2.83 W/K is no requirement's mode"
+    assert abs(k["K10"][2] - (T["q_m"] + T["qb"])) < 1e-12 and abs(k["K10"][7] - R["ap"]["c"]["gmax"]) < 1e-9
+    lm = rc["lim"]
+    assert "inside-air (+50 C)" in lm["req024_c1"] and "-20 to +40 C ambient" in lm["req024_env"] and "QUALIFICATION MARGINS" in lm["d02a"]
+    assert "SGP41 above +55 C" in lm["req052"] and "SGP41 above +55 C fails E3-L" in lm["e3l_air"] and lm["no505"]
+    assert "one module" in lm["d02b_35"] and "full-sun design is a later" in lm["d02e"] and "shaded (D-02e)" in lm["req024_shade"]
+    q = rc["q"]
+    assert abs(q["prof"]["loads"] + q["prof"]["conv"] + q["prof"]["i2r"] - q["prof"]["total"]) < 1e-9
+    assert abs(q["hs"]["loads"] + q["hs"]["conv"] + q["hs"]["front"] + q["hs"]["ballast"] - q["hs"]["total"]) < 1e-9
+    assert abs(q["charge"]["total"] - q["prof"]["total"] - T["charge_extra"]) < 1e-12
+    assert abs(q["bench"]["prof_heaters"] + q["prof"]["fans"] - q["prof"]["total"]) < 1e-12 and abs(q["bench"]["hs_heaters"] + q["hs"]["fans"] - q["hs"]["total"]) < 1e-12
+    for s in q["settings"]:
+        assert abs(s["heaters"] + s["fans"] - s["Q"]) < 1e-12 and abs(sum(v for _k, v in s["spread"]) - s["heaters"]) < 1e-6
+        assert abs(s["v"] ** 2 / q["bench"]["r"] * s["n"] - s["heaters"]) < 1e-9 and not any(p_.startswith("fans") for p_, _v in s["spread"])
+    assert [s["n"] for s in q["settings"]] == [1, 1, 2, 2]
+    for row in rc["trans"]:
+        for rise, g_room, g_op, ratio in row[1:]:
+            assert 1.0 <= ratio < 1.05 and g_op > g_room, "the room reading is the conservative side, and not by much"
+    for key, Q_, gneed, rd, rise_, ur in rc["marg"]:
+        assert rd > gneed and abs(rd * (1.0 - ur) - gneed) < 1e-6 and abs(rise_ - Q_ / rd) < 1e-12
+    rt = rc["rit"]
+    assert m.RITTAL_K_STEEL == 5.5 and len(m.RITTAL_SHA) == 64 and abs(rt["area"] - rt["a_plate"] - rt["a_wall"]) < 1e-15
+    assert rt["rows"][0][4] < rt["steel_g"] < k["K1"][7] and rt["cap"][0] < k["K1"][7] < T["w4_open"][1]
+    assert abs(rt["rows"][0][4] - rc["trans"][0][1][2]) < 1e-6, "A k at K1's rise is the bound's +40 C conductance"
+    assert [x[0] for x in rc["times"]] == ["K1", "K5", "K10", "K6", "K7"] and all(x[2] > x[3] > x[1] > 0 for x in rc["times"])
+    assert R["pred"][[p_ for p_ in R["pred"] if p_.startswith("P22 ")][0]]
+    out = open(OUT, encoding="utf-8").read()
+    page = open(PAGE, encoding="utf-8").read()
+    proc = open(os.path.join(REC, "T-H1-PROCEDURE-DRAFT.md"), encoding="utf-8").read()
+    for h in ("11 THE THERMAL RECONCILIATION", "11a THE CLAIM, CHECKED.", "11b THE HEAT, COUNTED ONCE", "11c THE NODES AND THE LIMITS.",
+              "11d THE RELATIONSHIP AND THE TRANSLATION.", "11e THE MARGIN.", "11f WHAT ONE POINT CLOSES, AND WHAT REMAINS.",
+              "11g THE PROCEDURE", "\n12 Predicates\n"):
+        assert h in out, "the .out lacks %r" % h
+    assert "## 16. The thermal reconciliation" in page and all("### 16.%d " % i in page for i in range(1, 10))
+    figs = ["%.3f W/K" % k[x][7] for x in ("K1", "K2", "K3", "K4", "K6", "K7", "K8", "K10", "X1", "X3")]
+    figs += ["%.3f W" % x for x in (q["prof"]["total"], q["charge"]["total"], q["hs"]["total"], q["bench"]["prof_heaters"], q["bench"]["hs_heaters"])]
+    figs += ["%.3f W/K" % x[3] for x in rc["marg"]] + ["%.1f to %.1f %%" % (
+        100.0 * (min(x[3] for row in rc["trans"] for x in row[1:]) - 1.0), 100.0 * (max(x[3] for row in rc["trans"] for x in row[1:]) - 1.0))]
+    figs += ["%.3f W/K" % rt["steel_g"], "%.2f W/m2K" % rt["k_need"], "%.3f W/K" % rt["cap"][0], "%.3f" % rt["rows"][0][4], m.RITTAL_SHA[:16]]
+    for fig in figs:
+        assert fig in page and fig in out, "the figure %s is not on both the page and the .out" % fig
+    for s in q["settings"]:
+        for fig in ("%.3f W" % s["Q"], "%.3f W" % s["heaters"], "%.2f V" % s["v"]):
+            assert fig in proc and fig in out and fig in page, "the setting %s is not in the procedure, the .out and the page" % fig
+    for x in rc["times"]:
+        assert "%.2f h" % x[1] in proc and "%.1f h" % x[2] in proc and "%.1f h" % x[2] in out
+    for fig in ["%.3f W/K" % x[3] for x in rc["marg"] if x[0] != "K9"] + ["%.1f h" % rc["t_bound"], "%.1f K/h" % m.DRIFT_K_H, "0.05 K RMS"]:
+        assert fig in proc, "the procedure lacks %s" % fig
+    for words in ("P = the heaters + the fans", "Authorisation to perform", "coordinator's check", "**inconclusive**", "No temperature requirement is relaxed"):
+        assert words in proc, "the procedure lacks %r" % words
+    readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+    assert "section 11 the thermal reconciliation, section 12 prints the predicates" in readme and "v2/vendor/rittal/held/" in readme
 
 
 def t_both_checks_are_filed_and_listed():

@@ -1,5 +1,5 @@
 verify_risks.py: the independent verification of the findings ledger's concrete remaining risks (MESHSAT-1357, 2 October 2026)
-PAUSED CHECKPOINT: items 2, 4 and 5 settled; item 3 an interim reading only; items 6, 7, 9 and 11 NOT YET VERIFIED (paused)
+on set 27; items 2 to 7, 9 and 11
 
 ITEM 2. L4-E10's screen rows C04, C05, C16, C17, C18 against TEST-PLAN.md (the recheck's R2 list)
    E3-H: the +40 C lid-closed level held until the hot stop acts or 4 h pass                    TEST-PLAN yes  C05 yes
@@ -23,14 +23,26 @@ ITEM 2. L4-E10's screen rows C04, C05, C16, C17, C18 against TEST-PLAN.md (the r
    observation, not on the recheck's list: E3-P: the second level does not fire             TEST-PLAN yes; restated in C17: no (C17 cites MAKER 7.10)
    observation, not on the recheck's list: E3-P: capacity recovery at least 95 % as E3-T    TEST-PLAN yes; restated in C17: no (C17 cites MAKER 7.10)
 
-ITEM 3, INTERIM READING ONLY (paused; not the item's result): the pocket's room beyond the 1.0 mm minimums
-   block 56.65 x 133.50 x 38.10 mm; east face 5086.35, top 7562.77, each end 2158.37 mm2
-   the worst stack (SHORTLIST's rooms 6.38 / 2.66 / 0.77 mm): 0.0559 L (the record: 0.056 L)
-   CASE-MARGINS 3.2, chosen nominal (C1 on the C6 legs): M4b +9.68, M5 +3.65, M6 +4.42 mm; M5 as designed on the flat floor +11.74 mm
-   as designed on the chosen column throughout: 0.0865 L
-   with M5 taken from the flat-floor 'As designed' column (the record's 0.121 L): 0.1215 L
-   why the record's reading differs: M5's margin text carries escaped pipes ('\|Y\|'), so a split on '|' that skips three
-   cells lands one cell early for M5 only and its maximum picks the flat-floor +11.74 mm (l4e10_cell_thermal.py, rows_cm)
+ITEM 3. L4-E10's latent-storage volumes (approach III), recomputed in a separate enthalpy model
+   RT57HC (Rubitherm, 2026-01-21; 'Typical Values', 'a non-binding planning aid'): melting 55 to 58 C, congealing 53 to 57 C,
+     240 kJ/kg +-7.5 % 'combination of latent and sensible heat' over 49 to 64 C, cp 2000 J/kgK, 0.9 kg/l solid
+   favourable to the material (the record's reading, kept): 258 kJ/kg all latent at 58 C, the solid density, no container;
+     the sensible heat over 49 to 64 C counted twice and the congealing hysteresis ignored (refreezing at 58 C, not 53 to 57 C)
+   inputs (Layer 3's model, read-only): the heat stage on shore 24.996383 W (SURV-R) and 23.345405 W (SURV); the T-H1 floor 1.666426 W/K (L4-E10 prints 1.6664); the kit 8000 to 10000 J/K (32.53), the cells 480 to 660 J/K, the block's film 0.148075 to 0.444225 W/K;
+     closed and still 0.70 to 1.45 W/K, lid open with fans 1.22 (W4's lowest) and 3.30 W/K (32.53's highest)
+   E3-O, the conditioned corner (4 h at +55 C from +55 C)           no store 68.85 C; 0.1459 kg, 0.1621 L (the record 0.162 L); latent 37.6 kJ (10.46 Wh)
+   E5, the conditioned corner (507.6 II: 23 C 24 h, ten cycles)     no store 74.72 C; 1.3391 kg, 1.4879 L (the record 1.489 L); latent 345.5 kJ (95.97 Wh)
+   E3-S, the best corner (24 h at +71 C from -20 C, still)          no store 70.65 C; 0.2475 kg, 0.2750 L (the record 0.275 L); latent 63.9 kJ (17.74 Wh)
+   E3-S, the worst corner                                           no store 71.00 C; 1.0561 kg, 1.1735 L (the record 1.175 L); latent 272.5 kJ (75.69 Wh)
+   E5, the best corner (32.53's 3.3 W/K, SURV on shore)             no store 66.71 C; 0.0917 kg, 0.1019 L (the record 0.102 L); latent 23.7 kJ (6.57 Wh)
+   the pocket beyond the 1.0 mm minimums: 0.0559 L at the worst stack, 0.0865 L as designed (CASE-MARGINS' chosen column: M4b +9.68, M5 +3.65, M6 +4.42 mm); L4-E10 now prints 0.056 and 0.0865 L
+     E3-O, the conditioned corner (4 h at +55 C from +55 C)           0.1621 L against 0.0865 L: does not fit
+     E5, the conditioned corner (507.6 II: 23 C 24 h, ten cycles)     1.4879 L against 0.0865 L: does not fit
+     E3-S, the best corner (24 h at +71 C from -20 C, still)          0.2750 L against 0.0865 L: does not fit
+     E3-S, the worst corner                                           1.1735 L against 0.0865 L: does not fit
+     E5, the best corner (32.53's 3.3 W/K, SURV on shore)             0.1019 L against 0.0865 L: does not fit
+   the favourable direction checked: E3-O conditioned, melting at 55 C, 222 kJ/kg 0.2513 L; E3-S best, melting at 55 C, 222 kJ/kg 0.3823 L (both larger than the record's reading)
+   the substep checked: E3-O conditioned 0.145919 kg at 10 s against 0.145919 kg at 60 s
 
 ITEM 4. L4-E11's R-b against SLUSE66A p.10 (BQ25731, v2/vendor/ti/bq25731-datasheet.pdf)
    p.10 table condition: 'TJ = -40°C to +125°C, and TJ = 25°C for typical values (unless otherwise noted)'
@@ -51,17 +63,92 @@ ITEM 4. L4-E11's R-b against SLUSE66A p.10 (BQ25731, v2/vendor/ti/bq25731-datash
    R-136 carries the clamp's maximum under VSYS_MIN                                          yes
    R-136 carries Q2's copper for 50 C/W                                                      yes
    R-136 carries acceptance: Q2 at most 124.9 C confirmed or re-derived                      yes
+   set 27 (L4-E11 section 14, drafted): the BQ25730 (SLUSE65A, revised January 2024, held, sha256 pinned) prints the same p.10 row:
+     0x0200 -18 % / +21.5 % with a 5 mOhm RSR, VBAT above VSYS_MIN (Reg0x0D/0C) at 0 to 85 C under the same TJ table; the clamp
+     under VSYS_MIN 384 mA typical only. So case (i)'s 1.2567 A and case (ii)'s gap carry over; case (iii) moves to R-b' (E11-28, R-158),
+     outside this item
 
 ITEM 5. L4-E12's SGP41 shutdown on a TMP117 (v2/vendor/ti/ti-tmp117-temperature.pdf)
    p.1: '+-0.15 C (maximum) from -40 C to 70 C' (SNOSD82D, revised September 2022; the sheet prints the minus as an en dash)
    p.6, 6.5 Electrical Characteristics, TMP117 row -40 to 70 C: MIN -0.15, TYP +-0.05, MAX 0.15 C, over free-air temperature;
      conditions: 8 averages, 1-Hz conversion cycle, thermal pad unsoldered (DRV), I2C inputs VIL <= 0.05 V+, VIH >= 0.95 V+;
      the TMP117N rows print +-0.2 C from -40 to 100 C (no +-0.15 C row); board B's part is TMP117AIDRVR (gen_sch_b.py)
+   L4-E12's lag (l4e12_thermal.py): READ_S 1 s and TAU_S 60 s, 'a reading every second; a sensor's thermal time constant in the case's moving air'
    the lag: 15.0 K/h x 61 s = 0.254167 K (the record: 0.254167 K)
    off at 55 - 0.15 - 0.5 - lag = 54.095833 C, set at 54.0 C; the SGP41 then at most 54.904167 C (the record: 54.095833, 54.904167 C)
    on and used at 50 - 0.15 - 0.5 - lag = 49.095833 C, set at 49.0 C; at most 49.904167 C while used (the record: 49.095833, 49.904167 C)
    break-even of the 54.0 C setting at +-0.15 C: the sensor-to-SGP41 time constant at most 83.0 s at 15 K/h (the record assumes 60 s); off point 54.095833 C
    break-even of the 54.0 C setting at +-0.20 C: the sensor-to-SGP41 time constant at most 71.0 s at 15 K/h (the record assumes 60 s); off point 54.045833 C
-   the register: R-146 carries the 0.5 K placement (yes); R-138 and R-139 a forced shutdown at room temperature (yes, yes); no row names the 61 s lag or its time constant (none)
+   the register (set 27): R-146 carries the 0.5 K placement (yes); R-139 now names the lag: yes
+     R-139's acceptance: 'the SGP41's shutdown lag measured on the bench, from the TMP117's reading crossing 54.0 C to the part's off
+     state, at most the 61 s assumed'
+   what that interval holds: the reading period and the firmware's and the switch's response, about 1 s of the 61 s;
+     the 60 s thermal time constant lies BEFORE the reading crosses 54.0 C (the reading lags the SGP41 by rate x TAU_S = 0.250000 K),
+     so the measurement cannot see it, and passes while the time constant it should bound goes untested
+   what would test it: the TMP117's reading against a reference thermocouple at the SGP41 on a ramp of at least 15 K/h, the reading
+     at most 0.254167 K behind it at 54.0 C (the time constant at most 60 s; the 54.0 C setting holds to 83.0 s)
 
-SUMMARY: item 2 CONFIRMED; item 4 CONFIRMED; item 5 CONFIRMED (the row and the arithmetic; the lag carried by no register row); items 3, 6, 7, 9, 11 NOT YET VERIFIED (paused)
+ITEM 6. L4-E7R's loaded solar entry: U5's sense differential (R59) in a separate network model
+   8705af p.2 (absolute maximum): VCSP-VCSN, VCSPIN-VCSNIN, VCSPOUT-VCSNOUT -0.3 V to 0.3 V
+   SMCJ28A (Littelfuse p.2): VR 28.0 V, VBR 31.10 to 34.40 V, VC 45.4 V at IPP 33.1 A; the straight line 0.3323 Ohm; Figure 3 read on the rendered page: 100 % to 25 C, then straight to 60 % at 150 C, so 0.8813 at 62.1 C
+   EEHZA1H330XP (ZA, 2017-11-07): 33 uF +-20 %, ESR 40 mOhm at 100 kHz and 20 C, after endurance C within 30 %, ESR under 200 %, 0.8 Ohm at -40 C (D8); three cans: cold aged 0.2667 Ohm with 55.44 uF, new 0.0133 Ohm with 79.20 uF
+   R59 (HoJLR2512 15 mOhm 1 %; load life 1 %, solder heat 0.5 %; TCR printed 50 ppm/K, the record's 100 ppm/K over 45.1 K): at most 0.015447 Ohm; the bank (five WSL2512 70 mOhm, 75 ppm/K over 45 K, each drift plus 0.5 mOhm): 0.013412 to 0.014606 Ohm
+   the operating current at the trip's highest 3.7408 A (L4-E7R's check (a)), the start at the hold 17.593 V; the ceramics ahead 4 x 10 uF at -10 % times k, 10 mOhm each (the record's assumption); behind, C13 and C14 at k with C15 and C64, all +10 %
+   the record's 10/1000 us shape (3.4 us, 1.44 ms): the peak at 20.61 us, 10 to 90 % 0.35 to 7.51 us (front 1.25 x that 8.95 us), half value at 1022.1 us
+   SMCJ Figure 4 (rendered page): 'tf=10usec' drawn from the start to the peak, td to 50 % at 1000 us; the same shape with its peak at 10 us: 1.447 us, 1.4262 ms (peak 9.99 us, half value 1000.0 us)
+   capability, cold end (D4 33.1 A, the bulk aged, -40 C row)   record's shape  U5 0.2094 V (k 1.00), min 0.0557 V; TRK_VS 43.91 V; D4 28.62 A
+   capability, cold end (D4 33.1 A, the bulk aged, -40 C row)   peak at 10 us   U5 0.2292 V (k 1.00), min 0.0556 V; TRK_VS 43.83 V; D4 28.36 A
+   capability, hot end (D4 derated, the bulk new)               record's shape  U5 0.1441 V (k 1.00), min 0.0564 V; TRK_VS 42.64 V; D4 24.80 A
+   capability, hot end (D4 derated, the bulk new)               peak at 10 us   U5 0.1441 V (k 1.00), min 0.0564 V; TRK_VS 42.57 V; D4 24.58 A
+   capability, hot end (D4 derated, the bulk aged)              record's shape  U5 0.1613 V (k 1.00), min 0.0557 V; TRK_VS 42.85 V; D4 25.43 A
+   capability, hot end (D4 derated, the bulk aged)              peak at 10 us   U5 0.1614 V (k 1.00), min 0.0557 V; TRK_VS 42.77 V; D4 25.20 A
+   the step checked: the cold end 0.2094 V at 5 ns against 0.2094 V at 10 ns
+   M7  8 kV (31.52 A peak): U5 0.1317 V at 0.25 ns, 0.1318 and 0.1318 V at 0.125 and 0.0625 ns, 0.1319 V extrapolated (cold_aged, k 0.25); min 0.0560 V; TRK_VS 17.64 V; D4 0.00 A
+   M7 15 kV (59.09 A peak): U5 0.1964 V at 0.25 ns, 0.1966 and 0.1966 V at 0.125 and 0.0625 ns, 0.1967 V extrapolated (cold_aged, k 0.25); min 0.0545 V; TRK_VS 17.72 V; D4 0.00 A
+   CS116 at 10 A, the bound (the whole current in R59 with the operating current, no capacitor credited): (3.7408 + 10) A x 0.015447 Ohm = 0.2123 V (the record: 0.2123 V); the bank 0.2007 V (the record's U18: 0.2007 V)
+   CS116 1 MHz, 10 A, in the network (two starts, both bulks, k, Q 10 and 20, both polarities): U5 at most 0.1235 V, least -0.0059 V (operating at the hold, cold_aged, k 0.25, Q 20); TRK_VS 17.70 V; D4 0.00 A (the record: U5 0.1238 V, TRK_VS 25.16 V, D4 0 A)
+
+ITEM 7. Q7 (CSD19536KTT) on the selected vehicle entry against Figure 4-10, derated
+   SLPS540C (rev. C, May 2025) p.6, Figure 4-10 'Single pulse, max RthJC = 0.4 C/W', read from the page's vector drawing (mutool trace): IDM line 400.1 A; at 43.18 V: 100 us 221.7 A, 1 ms 20.02 A, 10 ms 6.229 A, DC 3.177 A (the record: 221.7, 20.02, 6.228 A)
+   the derating the record carries (L4-E9's, A-25): 0.4454 = (150 - 94.32) / 125, a 94.3 C case on a 150 C part; on the CSD19536KTT's own 175 C (SLPS540C p.1) it equals (175 - 108.19) / 150, so it is conservative while Q7's case stays under 108.19 C (at 94.3 C its own would be 0.5380)
+   Equation 7 (SLUSEE5E p.23, tOC = CTMR x V(TMR_OC) / ITMR) with the TMR rows (73 / 82 / 91 uA, 1.112 / 1.2 / 1.3 V, p.9) and CTMR 22 nF in the record's band (5 %, endurance 3 %, +0.58 / -0.24 %): 0.2471 / 0.3220 / 0.4262 ms; the loaded row 370 us typical (CL 47 nF, CTMR 22 nF, p.10) is 1.1492 times Equation 7's typical; the maximum 0.4262 x 1.1492 = 0.4898 ms (the record: 0.49 ms)
+   Equation 3 (p.20): the slew 0.63 x V(BST-SRC) / (R1 C1) at 11 and 13 V, R1 36.5k 1 %, C1 10 nF in the same band: 17.28 to 24.65 V/ms (the record: 17.28 to 24.65)
+   the breaker at its slowest (the record's thresholds): overcurrent 7.136 A for 0.4898 ms; short circuit 13.87 A through 3.307 us, then tSC 5 us (TPS48110, p.10's maximum)
+   a start into a resistive fault (0.1 to 1000 Ohm, both slews, 22.1 and 49.5 uF, stepped at 0.1 us near the worst): 0.7043 of the derated chart at 1.223 Ohm, 0.9632 ms, ended by the short-circuit trip (slew 17.28 V/ms, 22.1 uF) (the record: 0.704 at 1.21 Ohm, 0.954 ms)
+   a start into a hard short: gfs 329 S (typical, at 100 A; p.3) x 24.65 V/ms = 8.111 A/us; the filtered current reaches 13.87 A at 4.044 us, then 5 us: 73.36 A at 9.044 us, 0.7429 of the derated 100 us line (the record: 73.4 A after 9.04 us, 0.743)
+   what stays conditional (unchanged): the transconductance is typical only, taken as a bound (A11-10, E11-17, R-118); a hard short in service rests on the loop's inductance (R-134); the case under 108.19 C for the derating
+
+ITEM 9. L4-E8's VBUS20 loop with Cc2 3.3 nF at the cold corner, in a separate loop model
+   SNVSAI1D (rev. D) p.6: gmEA 1.31 mS and ROUT 20 MOhm (typical only; gmEA x0.8 and x1.2 as the record), VREF 0.800 V; p.24 ACS 5; pp.26 to 28 Equations 38 to 46
+   the plant: VBUS20 20.0 V (240k over 10k), kFB 0.040; L1 10 uH; R12 12 mOhm (L4-E6); six 330 uF cans at 0.56 / 1.56 x, each behind 45 mOhm +-0.01375 with its intrinsic ESR e; 21 ceramics 84 to 142.8 uF (60 to 102 uF for fifteen, scaled), 0.4 mOhm; loads 8.300, 7.262, 5.700 and 0.250 A; boost at 9 V, buck at 24 and 36 V; Fsw 171.763 to 227.078 kHz; Q 0.4 / 0.8 (widened 0.4 / 1.5 with L x0.8 / x1.2)
+   Cc2 3.3 nF, e 0                              PM 61.4 deg, GM 19.70 dB (widened 61.4 deg, 17.94 dB), |1+T| 0.76, crossover to 1.81 kHz, |Zout| 218 mOhm against 803: every margin
+   Cc2 3.3 nF, e 300 mOhm (the cold corner)     PM 86.1 deg, GM 15.79 dB (widened 86.1 deg, 14.38 dB), |1+T| 0.80, crossover to 2.29 kHz, |Zout| 214 mOhm against 803: every margin
+   Cc2 3.3 nF x0.75, e 300 mOhm                 PM 88.7 deg, GM 13.71 dB (widened 88.7 deg, 12.28 dB), |1+T| 0.75, crossover to 2.55 kHz, |Zout| 213 mOhm against 803: every margin
+   Cc2 3.3 nF x1.25, e 300 mOhm                 PM 81.5 deg, GM 17.42 dB (widened 81.5 deg, 16.01 dB), |1+T| 0.83, crossover to 2.10 kHz, |Zout| 216 mOhm against 803: every margin
+   Cc2 3.3 nF x1.25, e 0                        PM 57.0 deg, GM 19.83 dB (widened 57.0 deg, 18.07 dB), |1+T| 0.74, crossover to 1.73 kHz, |Zout| 220 mOhm against 803: every margin
+   Cc2 3.3 nF x0.75, e 0                        PM 66.9 deg, GM 19.52 dB (widened 66.9 deg, 17.79 dB), |1+T| 0.78, crossover to 1.91 kHz, |Zout| 216 mOhm against 803: every margin
+   Cc2 680 pF (drawn), e 300 mOhm               PM 92.3 deg, GM 4.96 dB (widened 92.3 deg, 3.14 dB), |1+T| 0.30, crossover to 3.50 kHz, |Zout| 209 mOhm against 803: A MARGIN MISSED
+   the record (out 7): e 0 PM 61.4, GM 19.7 / 17.9 dB; e 300 PM 86.1, GM 15.8 / 14.4 dB; x0.75 e 300 GM 13.7 / 12.3 dB; x1.25 e 0 PM 57.0; the drawn 680 pF at e 300 GM 5.0 / 3.1 dB
+
+ITEM 11. L4-E12's rating categories: the heading each statement (other than the SGP41's four) sits under, read on its page
+   pcm_rec       PCM2912A         p.5  TA Operating free-air temperature -25 70             under 'Recommended Operating Conditions' (p.5): the sheet recommended the record recommended                  MATCHES
+   pcm_bias      PCM2912A         p.5  Ambient temperature under bias -40 125               under 'Absolute Maximum Ratings' (p.5): the sheet absolute    the record absolute                     MATCHES
+   pcm_st        PCM2912A         p.5  Storage temperature, Tstg -55 150                    under 'Absolute Maximum Ratings' (p.5): the sheet absolute    the record absolute (storage)           MATCHES
+   tlv755_tjabs  TLV755P          p.4  Operating junction temperature range, TJ -40 150     under 'Absolute Maximum Ratings' (p.4): the sheet absolute    the record absolute                     MATCHES
+   tlv755_tjrec  TLV755P          p.4  TJ Junction temperature -40 125                      under 'Recommended Operating Conditions' (p.4): the sheet recommended the record recommended                  MATCHES
+   tlv758_tjabs  TLV758P          p.4  Operating junction, TJ -40 150                       under 'Absolute Maximum Ratings' (p.4): the sheet absolute    the record absolute                     MATCHES
+   tlv758_tjrec  TLV758P          p.5  TJ Junction temperature -40 125 °C                   under 'Recommended Operating Conditions' (p.5): the sheet recommended the record recommended                  MATCHES
+   tusb8041_tj   TUSB8041         p.9  TJ Operating junction temperature -40 105            under 'Recommended Operating Conditions' (p.9): the sheet recommended the record recommended                  MATCHES
+   lvc2g07_ta    SN74LVC2G07      p.5  TA Operating free-air temperature -40 125            under 'Recommended Operating Conditions' (p.5): the sheet recommended the record recommended                  MATCHES
+   lv1t08_ta     SN74LV1T08       p.5  TA Operating free-air temperature -40 125            under 'Recommended Operating Conditions' (p.5): the sheet recommended the record recommended                  MATCHES
+   tps62933_tj   TPS62933         p.5  TJ Operating junction temperature(2) -40 150         under 'Absolute Maximum Ratings' (p.5): the sheet absolute    the record absolute                     MATCHES
+   ap64500_tjop  AP64500          p.5  Operating Junction Temperature Range -40 +125        under 'Recommended Operating Conditions' (p.5): the sheet recommended the record recommended                  MATCHES
+   ap64500_tj    AP64500          p.5  TJ Junction Temperature +160                         under 'Absolute Maximum Ratings' (p.5): the sheet absolute    the record absolute                     MATCHES
+   ap6320_tj     AP63200 series   p.4  TJ Junction Temperature +160                         under 'Absolute Maximum Ratings' (p.4): the sheet absolute    the record absolute                     MATCHES
+   ap2112_tj     AP2112           p.3  Operating Junction Temperature Range +150            under 'Absolute Maximum Ratings' (p.3): the sheet absolute    the record absolute                     MATCHES
+   csd77_tj      CSD17577Q5A      p.1  -55 to 150 °C                                        under 'Absolute Maximum Ratings' (p.1): the sheet absolute    the record absolute                     MATCHES
+   csd78_tj      CSD17578Q5A      p.1  -55 to 150 °C                                        under 'Absolute Maximum Ratings' (p.1): the sheet absolute    the record absolute                     MATCHES
+   bme_st        BME688           p.15 Storage temperature ≤ 65% r.H. -45 +85               under 'Absolute maximum ratings' (p.15): the sheet absolute    the record absolute (Table 11, storage) MATCHES
+   18 of 18 statements on 13 parts match the category of the heading they sit under
+
+SUMMARY: item 2 CONFIRMED; item 3 CONFIRMED; item 4 CONFIRMED; item 5 DIFFERS (the row and the arithmetic confirmed; R-139's lag acceptance measures the reading's response, not the 60 s time constant); item 6 CONFIRMED; item 7 CONFIRMED; item 9 CONFIRMED; item 11 CONFIRMED (18 of 18)
