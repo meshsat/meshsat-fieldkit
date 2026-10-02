@@ -1,0 +1,22 @@
+{
+ "what": "LCSC public product-detail answer for C17556513 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C17556513), no login; kept fields only",
+ "read_utc": "2026-10-02T03:41Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), fix round",
+ "role": "board E U6, the entry's controller in the U-04 fix round (TPS48110AQDGXRQ1, replacing the LM5069)",
+ "code": "C17556513",
+ "brand": "TI",
+ "model": "TPS48110AQDGXRQ1",
+ "package": "VSSOP-19",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/4963d9d254229c76d0cc05d20b34b2bd.pdf?productCode=C17556513",
+ "stock": 326,
+ "params": {
+  "Operating Temperature": "-40℃~+125℃",
+  "Features": "Overcurrent Protection;Short-Circuit  Protection;Over temperature protection;Overvoltage protection;Under-voltage lockout;Reverse voltage protection;Integrated charge pump",
+  "number of channels": "-",
+  "Control Input Logic": "-",
+  "Maximum Continuous Current": "-",
+  "RDS(on)": "-",
+  "Operating Voltage": "3.5V~80V",
+  "Type": "High Side Switch"
+ }
+}

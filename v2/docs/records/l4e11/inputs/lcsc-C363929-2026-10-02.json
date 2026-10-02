@@ -1,0 +1,18 @@
+{
+ "what": "LCSC public product-detail answer for C363929 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C363929), no login; kept fields only",
+ "read_utc": "2026-10-02T02:10Z",
+ "read_by": "task L4-E11 (MESHSAT-1357)",
+ "role": "the 100 nF C0G 5 % alternative in the same series, read for the scan of stocked values (not chosen)",
+ "code": "C363929",
+ "brand": "muRata",
+ "model": "GRM3195C1H104JA05D",
+ "package": "1206",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/a4d1e2744bd5d44ba57842651a3fd598.pdf?productCode=C363929",
+ "stock": 15675,
+ "params": {
+  "Capacitance": "100nF",
+  "Temperature Coefficient": "C0G",
+  "Tolerance": "±5%",
+  "Voltage Rating": "50V"
+ }
+}

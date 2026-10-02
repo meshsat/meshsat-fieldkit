@@ -1,0 +1,19 @@
+{
+ "what": "LCSC public product-detail answer for C7084461 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C7084461), no login; kept fields only",
+ "read_utc": "2026-10-02T03:41Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), fix round",
+ "role": "board E L2, the input choke in the U-04 fix round (SRF1260-1R0Y, replacing the 1R5Y)",
+ "code": "C7084461",
+ "brand": "BOURNS",
+ "model": "SRF1260-1R0Y",
+ "package": "SMD-4P,12.5x12.5mm",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/f8ac774e16182229de89947ae76e8799.pdf?productCode=C7084461",
+ "stock": 0,
+ "params": {
+  "Current Rating": "15A",
+  "Inductance": "1uH",
+  "Tolerance": "±30%",
+  "DC Resistance(DCR)": "6.2mΩ",
+  "Current - Saturation(Isat)": "23.6A"
+ }
+}
