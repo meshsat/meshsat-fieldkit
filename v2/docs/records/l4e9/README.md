@@ -39,7 +39,12 @@ sections 15 to 21); the history moves to the page's appendices. The consolidatio
 applied; U-02, T-H1 decides (L4-E12 check 5, the conservative bound under the lines); U-01, a supported route on published
 evidence, the Saft MP 176065 xtd as 4S1P, pending the owner's adoption (L4-E10 check 5); normal operation against the bound (the
 page's 2c'): the approved profile is thermally feasible across the in-use envelope only above a T-H1 reading, the deciding fact;
-the register at 159 items. Status: known defects addressed in drafts; feasibility conditions remain open.
+the heat-rejection result (L4-E12 check 6 at `589f18ac`): no passive approach inside the rulings restores the profile at +40 C on
+the conservative bound (fins, the large loads led into the plate and the open lid as a radiator, all three 1.384 against
+1.447 W/K), so U-02 is a closure condition with one precise bounded question at the top of the exit: T-H1's point at the
+profile's heat (42.4 W; 1.509, 1.575 and 1.930 W/K), under its first threshold the combined route (R-170 to R-172) read at the
+same point, then the owner's options; the point at E5's hold (21.2 W) kept after it for E5's and E3-O's lines; the register at
+162 items. Status: known defects addressed in drafts; feasibility conditions remain open.
 
 | File | What it is |
 |---|---|
