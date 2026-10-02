@@ -591,6 +591,30 @@ its straight line through the printed clamping point):
 - **The start** stays clear of the breaker: 6.109 A through Q12 at the gate's fastest slew, against U21's overcurrent least
   6.364 A.
 
+### L4-F01, the external review of the provisional fixes: round 2 (in progress)
+
+The external review (2 October 2026, L4-F01, P1) finds B6 not demonstrated closed: 0.2991 V against U5's 0.3 V absolute
+limit is 0.3 % headroom, one DC-bias factor is shared by three capacitor banks with no maker basis, and the margin rests on
+the harness. Its four witnesses, rebuilt on this record's own function and parameters (`guard_event`, a 36 V step from
+U21's least turn-off at 7.46 V, no load, 2.47 uH, the aged bulk at -40 C; a test pins them):
+
+| Witness | U5's positive differential |
+|---|---|
+| 20 ns, one bias factor 1 | 0.299119 V (the review: 0.299128 V) |
+| 1 ns, the same | 0.299589 V (0.299598 V) |
+| 20 ns, TRK_VS 0.99, PV_P and TRK_VIN 1.00 | 0.300209 V (0.300218 V) |
+| 20 ns, TRK_VS 0.95, PV_P and TRK_VIN 1.00 | 0.304653 V (0.304662 V) |
+
+With the PV_P and TRK_VS banks at the record's 0.25 floor and TRK_VIN at 1, the same case reads 0.5009 V. The review's rounded inputs reproduce within 9 uV. The drafted network
+is therefore NOT MET at any margin worth the name.
+
+**The margin, decided before any value (SESSION):** U5's CSPIN to CSNIN differential at most **0.240 V** in either
+direction at the bounded worst case, 0.060 V (20 %) under the 0.3 V absolute maximum. The bounded numerical error of the
+transient (a timestep study on the switched, loaded network) is added to the computed value, not taken out of the margin.
+The 0.060 V covers what the lumped model leaves out at U5's pins: the sense resistor's own inductance and the Kelvin
+traces, the ceramics' ESL, the straight-line clamp models and the parts' typical (not warranted) bias and temperature
+curves outside their bounds. The other ratings keep at least 10 % of their limits.
+
 **For L4-E9's register** (its D-10, D-11, D-12, R-173, R-174 and R-176; text for L4-E9's author, nothing of L4-E9's is edited
 here):
 - **D-10 and D-11**: a selected remedy, drafted and not applied: the cut-off U21 with Q12, the return switch Q13, D11, C131 and
