@@ -132,7 +132,7 @@ PINS = {
     EB_IN: "74a6e4ab0074648ed459cc62daf7000798ae6247cd5056e19cae5e4d56f55aed",
     REPLAY: "59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d",
     CSS: "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f",
-    L4E9: "a0e3f6f98a95254523d498441a3e6139298a751ef244e199954f067651d81d96",
+    L4E9: "16b0d3c01e81930f51174a30d23a8014e0cbf4bd3ced5b393bf94b8723048ec6",
     SAFT_MP: "8ca0a3e09997a4a30567a4313cf83c2b6cf165543baf424e0ff788d5a8d27f8e",
     PRICES2: "eac0fc1807e7e4989801aa3448c13f4b2870de06f23cb1084059aae518b2c7f0",
     L4E12: "88d7b84179b407533bdf4a542c93487c1fa6ca8f95a742518f529517995f9637",
@@ -1419,6 +1419,7 @@ def compute():
     R["u01"] = u01(R, pb)
     R["saft"] = saft_sheet()
     R["u01c"] = u01c(R, pb)
+    R["packcmp"] = packcmp(R, pb)
     R["u01_classes"] = ("MAKER", "MAKER-PAGE", "INFERRED", "ASSUMPTION", "SESSION")
     return R
 
@@ -1891,6 +1892,9 @@ def render(R):
     w("")
     for line in u01c_lines(R):
         w(line)
+    w("")
+    for line in packcmp_lines(R):
+        w(line)
     return L
 
 
@@ -2230,6 +2234,12 @@ def predicates(R):
     p["P26 U-01: with the MP 176065 xtd LO-01d's cell limit and no-hot-stop line hold on the bound"] = (c["holds"]["MP 176065 xtd"]["LO-01d"]["cell limit"]
         and c["holds"]["MP 176065 xtd"]["LO-01d"]["no hot stop"])
     p["P25 U-01: the Saft cells' growth along the axis needs a thinner wrap than the 35E block's"] = 0 < c["fit"]["wrap_left"] < c["fit"]["wrap_35"]
+    pc = R["packcmp"]
+    p["P27 the comparison: one chain reproduces the replay's 35E figures and section 10's Saft figure"] = (round(pc["e"]["35E"][20.0]["wh"], 1) == pc["rep"][0]
+        and abs(pc["e"]["Saft a typ"][20.0]["wh"] - R["u01c"]["e_sx"]["typical"]["wh"]) < 1e-9)
+    p["P28 the comparison: the nominal steps multiply to the nominal ratio"] = abs(pc["steps"]["count"] * pc["steps"]["capacity"] * pc["steps"]["voltage"] - pc["nomsx"] / pc["nom35"]) < 1e-12
+    p["P29 the comparison: the same-C-rate mapping gives the Saft no less than the same-current mapping"] = all(
+        pc["e"]["Saft b %s" % k][20.0]["wh"] >= pc["e"]["Saft a %s" % k][20.0]["wh"] for k in ("typ", "min"))
     p["P12 the screen maps every TEST-PLAN exposure of sections 6 and 7 it covers"] = all(any(t in (r["cond"] + r["dur"]) for r in R["screen"]) for t in ("E3-A", "E3-L", "E3-H", "E3-O", "E3-S", "E3-T", "E3-P", "E4-O", "E4-S", "E4-T", "E4-P", "E5", "P13"))
     return p
 
@@ -2796,6 +2806,165 @@ def u01c_lines(R):
     w("   alternative (%.1f against %.1f Wh usable), resting on its vendor answer or a lot soak. Missing evidence is not shown to be impossible: each missing fact"
       % (u["e_hl"]["25"], c["e_sx"]["typical"]["wh"]))
     w("   has its check above.")
+    return L
+
+
+# ------------------------------------------------------------------------------------------------ 11: the battery comparison (2 October 2026, 14:20)
+def packcmp(R, pb):
+    """The owner's amendment of 2 October 2026, item 2: the approved pack against the Saft route on one boundary. Nothing is
+    approved here: the cell change and any purchase stay the owner's."""
+    import yaml
+    S, sx, u = R["S"], R["saft"], R["u01"]
+    lim = S["35E_11"]
+    t35 = pdf(S35E11)
+    s35 = {"part": need(t35, r"Model name : (INR18650-35E)", "35E model").group(1),
+           "rev": need(t35, r"Version No\.\s+(Ver\. 1\.1)", "35E version").group(1),
+           "date": need(t35, r"Ver\. 1\.1\s+.(\d\d-\d\d-\d\d)", "35E date").group(1),
+           "kind": need(t35, r"2\.1 Description\s+Cell \((lithium-ion rechargeable cell)\)", "35E description").group(1),
+           "c_min": lim["c_min"], "v_nom": float(need(t35, r"3\.3 Nominal Voltage\s+(\d\.\d+)V", "35E nominal").group(1)),
+           "v_chg": float(need(t35, r"3\.2 Charging Voltage\s+(\d\.\d)V", "35E charge voltage").group(1)),
+           "i_chg_std": float(need(t35, r"Standard charge: ([\d,]+)mA", "35E standard charge").group(1).replace(",", "")) / 1000.0,
+           "i_chg_cyc": float(need(t35, r"For cycle life : ([\d,]+)mA", "35E cycle-life charge").group(1).replace(",", "")) / 1000.0,
+           "i_chg_max": float(need(t35, r"3\.7 Max\. Charge Current\s+([\d,]+)mA", "35E max charge").group(1).replace(",", "")) / 1000.0,
+           "i_cont": lim["i_cont"], "i_pulse": float(need(t35, r"([\d,]+)mA \(not for continuous discharge\)", "35E pulse").group(1).replace(",", "")) / 1000.0,
+           "cut": float(need(t35, r"3\.9 Discharge Cut-off Voltage\s+(\d\.\d+)V", "35E cut-off").group(1)),
+           "term": float(need(t35, r"0\.02C\((\d+)mA\) cut-off", "35E termination").group(1)) / 1000.0}
+    d_in = yaml.safe_load(open(path(EB_IN), encoding="utf-8"))
+    c_typ35 = d_in["pack"]["capacity_typ_ah"]["value"]
+    sp_ = importlib.util.spec_from_file_location("energy_budget_l4e10p", path(EB_PY))
+    eb = importlib.util.module_from_spec(sp_)
+    sp_.loader.exec_module(eb)
+    pk = eb.Pack(d_in)
+    p = float(d_in["model_states"]["PS-IDLE-SPEC"]["plan"])
+    rsoc = pk.rsoc
+
+    def chain(n_p, c, t_c, i_map=1.0, v_scale=1.0):
+        """The tree's chain (energy_budget.Pack.usable_wh) with the curve current mapped by i_map and the mean voltage scaled."""
+        i = pk.cell_current(p, n_p)
+        ic = i * i_map
+        f_rate = eb.interp(pk.rate, ic)
+        f_t = eb.interp(pk.temp, t_c)
+        v_mean = eb.interp(pk.vmean, ic) * v_scale
+        f_v = eb.interp(pk.f300, ic)
+        f_dod = min(f_v, 1.0 - rsoc)
+        wh = pk.n_s * n_p * c * f_rate * f_t * v_mean * f_dod * pk.age80
+        return {"i": i, "ic": ic, "f_rate": f_rate, "f_t": f_t, "v_mean": v_mean, "f_dod": f_dod, "age": pk.age80, "wh": wh, "h": wh / p}
+
+    t_cold = -10.0          # the 35E's discharge floor at the cells, L4-E9's cold point
+    nom35 = 12 * s35["c_min"] * s35["v_nom"]
+    nom35_typ = 12 * c_typ35 * s35["v_nom"]
+    nomsx = 4 * sx["c_typ"] * sx["v_nom"]
+    c_minsx = sx["c_typ"] * s35["c_min"] / c_typ35
+    nomsx_min = 4 * c_minsx * sx["v_nom"]
+    e = {"35E": {t: chain(3, s35["c_min"], t) for t in (20.0, t_cold)}}
+    # the Saft has no published discharge curve: the 35E's curves (a) at the same absolute current per cell, the mean voltage
+    # as the 35E's (the conservative end, section 10's figure), and (b) at the same C-rate, the mean voltage scaled by the
+    # nominal voltages (INFERRED); each at the typical capacity and at an assumed minimum (the 35E's minimum over typical)
+    maps = {"a": (1.0, 1.0), "b": (s35["c_min"] / sx["c_typ"], sx["v_nom"] / s35["v_nom"])}
+    for mk, (im, vs) in maps.items():
+        for ck, c_ in (("typ", sx["c_typ"]), ("min", c_minsx)):
+            e["Saft %s %s" % (mk, ck)] = {t: chain(1, c_, t, (s35["c_min"] / c_) if mk == "b" else 1.0, vs) for t in (20.0, t_cold)}
+    rep_ = need(text(REPLAY), r"A1 D-06's 4S3P: usable ([\d.]+) Wh at \+20 C, ([\d.]+) Wh at -10 C: ([\d.]+) h and ([\d.]+) h", "the replay's A1 line")
+    rep = tuple(float(v) for v in rep_.groups())
+    if round(e["35E"][20.0]["wh"], 1) != rep[0] or round(e["35E"][t_cold]["wh"], 1) != rep[1]:
+        refuse(4, "the chain does not reproduce the replay's A1 line")
+    if abs(e["Saft a typ"][20.0]["wh"] - R["u01c"]["e_sx"]["typical"]["wh"]) > 1e-9:
+        refuse(4, "the comparison's Saft figure is not section 10's")
+    fr35 = e["35E"][20.0]["wh"] / nom35
+    frsx = e["Saft a typ"][20.0]["wh"] / nomsx
+    steps = {"count": 4.0 / 12.0, "capacity": sx["c_typ"] / s35["c_min"], "voltage": sx["v_nom"] / s35["v_nom"]}
+    split = {"f_rate": e["Saft a typ"][20.0]["f_rate"] / e["35E"][20.0]["f_rate"],
+             "v_mean over nominal": (e["Saft a typ"][20.0]["v_mean"] / sx["v_nom"]) / (e["35E"][20.0]["v_mean"] / s35["v_nom"]),
+             "f_dod": e["Saft a typ"][20.0]["f_dod"] / e["35E"][20.0]["f_dod"]}
+    b = R["u01c"]
+    return {"s35": s35, "c_typ35": c_typ35, "nom35": nom35, "nom35_typ": nom35_typ, "nom35_35": 12 * 3.5 * s35["v_nom"], "nomsx": nomsx, "nomsx_min": nomsx_min,
+            "c_minsx": c_minsx, "e": e, "p": p, "t_cold": t_cold, "rep": rep, "fr35": fr35, "frsx": frsx, "steps": steps, "split": split,
+            "objective": (48.0 * p, 72.0 * p), "price35": R["price_35e"], "nz": b["nz"], "fit": b["fit"], "room": R["spare_L"], "vol_sx": 4 * 0.077,
+            "vol_35": R["blk"]["X"] * R["blk"]["Y"] * R["blk"]["Z"] * 1000.0, "rsoc": rsoc, "graceful": d_in["pack"]["end_of_discharge"]["graceful"]["cell_v_under_load"],
+            "cuv": d_in["pack"]["end_of_discharge"]["protection_cuv_v"]["value"], "ichg": pb.ICHG, "i_cont_kit": pb.I_CONT, "i_peak": pb.I_PEAK,
+            "strap": u["chg"]["strap_v"], "batovp": u["chg"]["batovp_pct"], "taper": u["taper_default"], "u2": S["U2"]["rows"]["BQ7720700"]}
+
+
+def packcmp_lines(R):
+    c = R["packcmp"]
+    s35, sx, e = c["s35"], R["saft"], c["e"]
+    L = []
+    w = L.append
+    w("== 11. THE BATTERY COMPARISON (the owner's amendment of 2 October 2026, 14:20, item 2): the approved pack against the Saft route, one boundary")
+    w("Classes: GUARANTEED (a maker's printed limit), MODELLED (this record's model, assumptions named), AWAITING (evidence owed, and by whom).")
+    w("Nothing here approves the cell change or a purchase: both stay the owner's.")
+    w("")
+    w("11a Identity:")
+    w("   approved: Samsung SDI %s, product specification %s of 20%s (%s; GUARANTEED, filed); 4S3P, 12 cells (D-06)" % (s35["part"], s35["rev"], s35["date"], s35["kind"]))
+    w("   Saft route: Saft MP 176065 xtd, datasheet %s, June 2025 (rechargeable Li-ion cell; GUARANTEED, held back); 4S1P, 4 cells (a proposal)" % sx["doc"])
+    w("11b Nominal energy (cell capacity x nominal voltage x cell count):")
+    w("   D-06's 'about 145 Wh' = 12 x %.2f Ah (Ver. 1.1's minimum, 0.2C to %.2f V) x %.2f V = %.2f Wh (GUARANTEED inputs). The 35E's typical %.2f Ah (Samsung's Technical"
+      % (s35["c_min"], s35["cut"], s35["v_nom"], c["nom35"], c["c_typ35"]))
+    w("   Report) gives %.2f Wh; a 3.5 Ah label gives %.2f Wh, a figure Ver. 1.1 does not print." % (c["nom35_typ"], c["nom35_35"]))
+    w("   Saft: 4 x %.2f Ah (typical, C/5 to %.1f V at +25 C) x %.2f V = %.2f Wh (GUARANTEED as typical; Saft prints no minimum; with the 35E's minimum over typical"
+      % (sx["c_typ"], sx["cut"], sx["v_nom"], c["nomsx"]))
+    w("   applied, %.2f Ah and %.2f Wh, ASSUMPTION)." % (c["c_minsx"], c["nomsx_min"]))
+    st = c["steps"]
+    w("   Step by step, %.2f to %.2f Wh: the count x%.4f (12 to 4), the capacity a cell x%.4f (%.2f to %.2f Ah), the voltage x%.4f (%.2f to %.2f V): x%.4f in all,"
+      % (c["nom35"], c["nomsx"], st["count"], st["capacity"], s35["c_min"], sx["c_typ"], st["voltage"], s35["v_nom"], sx["v_nom"], st["count"] * st["capacity"] * st["voltage"]))
+    w("   %.1f %% less. That compares the 35E's minimum with the Saft's typical; like for like it is %.1f %% less on typicals (%.2f against %.2f Wh) and %.1f %% on minimums"
+      % (100 * (1 - c["nomsx"] / c["nom35"]), 100 * (1 - c["nomsx"] / c["nom35_typ"]), c["nom35_typ"], c["nomsx"], 100 * (1 - c["nomsx_min"] / c["nom35"])))
+    w("   (%.2f against %.2f Wh, the Saft's assumed)." % (c["nom35"], c["nomsx_min"]))
+    w("11c Usable energy on one boundary (MODELLED, the tree's chain `records/energy/energy_budget.py`): PS-IDLE-SPEC %.1f W at the pack; the run ending at the kit's"
+      % c["p"])
+    w("   graceful line, %.2f V a cell under load (CONOPS 4c), or the %.0f %% RSOC reserve, whichever first (the voltage line, for both); ageing %.2f (REQ-014, SC-23);"
+      % (c["graceful"], 100 * c["rsoc"], e["35E"][20.0]["age"]))
+    w("   +20 C and the cells at %.0f C (the 35E's discharge floor, L4-E9's cold point; its cold factor taken for the Saft too, ASSUMPTION: Saft prints no cold capacity)." % c["t_cold"])
+    w("   The Saft has no published discharge curve: the 35E's rate, mean-voltage and end-fraction curves stand in, (a) at the same current a cell (section 10's figure,")
+    w("   the conservative end) or (b) at the same C-rate with the mean voltage scaled by %.2f / %.2f V (INFERRED)." % (sx["v_nom"], s35["v_nom"]))
+    rows = [("35E 4S3P", e["35E"])] + [("Saft 4S1P, %s, %s" % ({"a": "(a) same current", "b": "(b) same C-rate"}[k.split()[1]], {"typ": "typical", "min": "assumed minimum"}[k.split()[2]]), e[k])
+                                       for k in ("Saft a min", "Saft a typ", "Saft b min", "Saft b typ")]
+    for lab, d_ in rows:
+        a, cld = d_[20.0], d_[c["t_cold"]]
+        w("   %-40s %.2f A a cell (curves at %.2f A): f_rate %.4f, V_mean %.3f V, f_end %.3f -> %.1f Wh, %.2f h at +20 C; %.1f Wh, %.2f h at %.0f C"
+          % (lab, a["i"], a["ic"], a["f_rate"], a["v_mean"], a["f_dod"], a["wh"], a["h"], cld["wh"], cld["h"], c["t_cold"]))
+    sp = c["split"]
+    w("   The usable fractions differ: %.1f / %.1f = %.4f for the 35E against %.1f / %.1f = %.4f for the Saft at (a). The 1P cell carries the whole pack current, %.2f A"
+      % (e["35E"][20.0]["wh"], c["nom35"], c["fr35"], e["Saft a typ"][20.0]["wh"], c["nomsx"], c["frsx"], e["Saft a typ"][20.0]["i"]))
+    w("   against %.2f A, so on the 35E's curves it loses x%.4f in rate factor, x%.4f in mean voltage over nominal and x%.4f in end fraction (x%.4f in all); at the same"
+      % (e["35E"][20.0]["i"], sp["f_rate"], sp["v_mean over nominal"], sp["f_dod"], sp["f_rate"] * sp["v_mean over nominal"] * sp["f_dod"]))
+    w("   C-rate (b) most of that loss goes, since the Saft's %.2f A is %.2fC of its typical capacity. So 2.52 h to %.2f to %.2f h at (a) and up to %.2f h at (b):"
+      % (e["Saft a typ"][20.0]["i"], e["Saft a typ"][20.0]["i"] / sx["c_typ"], e["Saft a min"][20.0]["h"], e["Saft a typ"][20.0]["h"], e["Saft b typ"][20.0]["h"]))
+    w("   the energy ratio (x%.4f nominal: %.2f h if the usable fraction stayed the 35E's) and, at (a), the 1P current's penalty on borrowed curves."
+      % (c["nomsx"] / c["nom35"], e["35E"][20.0]["h"] * c["nomsx"] / c["nom35"]))
+    w("   Earlier figures on other boundaries, reconciled: the 35E's 108.1 Wh (pwr_budget.py's chain: rate factor, a 0.05 ohm sag and the 5 % reserve, section 4) against")
+    w("   this chain's %.1f Wh (the 3.00 V line); 44.3 Wh at -10 C (section 4, the 1C point) against %.1f Wh here; the Saft's 53.5 to 55.1 Wh (section 10) is (a) here."
+      % (e["35E"][20.0]["wh"], e["35E"][c["t_cold"]]["wh"]))
+    w("   The objective (REQ-072, 48 to 72 h, D-28): %.0f to %.0f Wh; both packs far under it, battery-only (DR-01). It is an objective, not a mandatory row." % c["objective"])
+    w("11d Limits, fit, compatibility and cost: section 16 of the page tabulates them from sections 4, 9, 10 and the sheets; the figures:")
+    w("   charge: 35E %.0f to %.0f C surface, CC-CV %.1f V, standard %.2f A, cycle-life %.2f A, at most %.2f A a cell, termination 0.02C (%.3f A); Saft %.0f to +%.0f C, CC/CV %.1f V,"
+      % (R["S"]["35E_11"]["charge"][0], R["S"]["35E_11"]["charge"][1], s35["v_chg"], s35["i_chg_std"], s35["i_chg_cyc"], s35["i_chg_max"], s35["term"], sx["chg"][0], sx["chg"][1], sx["v_chg"]))
+    w("   at most %.1f A, termination not printed." % sx["i_chg"])
+    w("   discharge: 35E %.0f to %.0f C surface, %.0f A continuous, %.0f A not continuous (no duration), cut-off %.2f V; Saft %.0f to +%.0f C, %.0f A continuous, %.0f A pulses"
+      % (tuple(R["S"]["35E_11"]["discharge"]) + (s35["i_cont"], s35["i_pulse"], s35["cut"], sx["dis"][0], sx["dis"][1], sx["i_cont"], sx["i_pulse"])))
+    w("   (no duration), cut-off %.1f V." % sx["cut"])
+    w("   storage: 35E 1 month %.0f to %.0f C, 3 months %.0f to %.0f C, 1 year %.0f to %.0f C at 30 %% (recovery over 80 %%); Saft allowable %.0f to +%.0f C, recommended +%.0f to +%.0f C"
+      % (tuple(R["S"]["35E_11"]["st_1m"]) + tuple(R["S"]["35E_11"]["st_3m"]) + tuple(R["S"]["35E_11"]["st_1y"]) + tuple(sx["st"]) + tuple(sx["st_rec"])))
+    w("   (no time, charge or recovery printed).")
+    f = c["fit"]
+    w("   fit: the 35E block %.4f L (56.65 x 133.5 x 38.1 mm); four Saft cells %.3f L with terminals; the room as designed %.4f L, at the worst stack %.4f L; along the axis"
+      % (c["vol_35"], c["vol_sx"], c["room"][1], c["room"][0]))
+    w("   %.2f mm left for wrap and spacers as designed (the 35E block's %.2f mm); thickness at the beginning of life and full charge, growing with temperature and life." % (f["wrap_left"], f["wrap_35"]))
+    w("   charger (the drawn BQ25731): strap %.3f V = 4 x %.2f V for both; set %.1f A = %.2f A a cell on 4S3P (against %.2f A cycle-life, %.2f A maximum) and %.2f A on 4S1P (against"
+      % (c["strap"], 4.2, c["ichg"], c["ichg"] / 3, s35["i_chg_cyc"], s35["i_chg_max"], c["ichg"], ))
+    w("   %.1f A); BATOVP %.2f V; the gauge's taper %.0f mA = %.3f A a cell (3P) or %.3f A (1P); the CUV %.2f V against cut-offs of %.2f V (35E; its pack guideline terminates"
+      % (sx["i_chg"], c["strap"] * c["batovp"] / 100.0, c["taper"], c["taper"] / 3000.0, c["taper"] / 1000.0, c["cuv"], s35["cut"]))
+    w("   at 2.50 V) and %.1f V (Saft)." % sx["cut"])
+    w("   protection: U2 BQ7720700 OVP %.3f V over both cells' 4.2 V, UVP %s under both cut-offs (a backstop behind the gauge), OT %.0f C: it protects either cell as drawn;"
+      % (c["u2"]["ovp"], c["u2"]["uvp"], c["u2"]["ot"]))
+    w("   with the Saft it caps the hot margins, so using its +85 C needs the 83 C variant and a re-derived network; the gauge's thresholds (UTC %.1f, T3 %.0f, OTC %.1f,"
+      % (R["u01"]["lad_now"]["UTC"], R["u01"]["lad_now"]["T3"], R["u01"]["lad_now"]["OTC"]))
+    w("   OTD %.1f, UTD %.1f C) sit inside both cells' windows as drawn; the gauge's design capacity and chemistry data change with the cell (the Saft's owed by TI's list or a"
+      % (R["ladder"]["OTD"], R["ladder"]["UTD"]))
+    w("   learning cycle); F2 Eaton SCF9550-30-05, 30 A for 4 to 5 cells: unchanged; the pack's %.0f A continuous and %.0f A peak: %.1f / %.1f A a cell (3P) or %.1f / %.1f A (1P)."
+      % (c["i_cont_kit"], c["i_peak"], c["i_cont_kit"] / 3, c["i_peak"] / 3, c["i_cont_kit"], c["i_peak"]))
+    w("   cost: 35E USD %.2f a cell, USD %.2f for 12 (the l3batt reading); Saft NZ$ %.2f a cell, NZ$ %.2f for 4 (a distributor's listing archived in January 2025; no quote)."
+      % (c["price35"], 12 * c["price35"], c["nz"], 4 * c["nz"]))
     return L
 
 

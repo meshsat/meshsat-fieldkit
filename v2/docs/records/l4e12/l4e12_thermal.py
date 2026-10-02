@@ -14,8 +14,8 @@ thermal state at the margins (section 2); a FEASIBILITY SCREEN of every fitted p
 (section 3); at most three complete approaches compared for the parts that collide (section 4); the selection with its
 margins and what stays conditional (section 5); the owner-question test (section 6); the downstream items (section 7); U-02 in
 depth (section 8: the dependency round, the basis of the lines, the configuration, the fans' power, T-H1, a failed reading and
-its fallbacks); the conservative lower bound and U-02's class (section 9); the heat-rejection approaches (section 10); the
-predicates (section 11).
+its fallbacks); the conservative lower bound and U-02's class (section 9); the heat-rejection approaches (section 10); the thermal
+reconciliation of the owner's amendment (section 11); the predicates (section 12).
 
 Revised twice on 2 October 2026: after the focused check (checks/astra-check-l4e12-1.md) and after the targeted recheck
 (checks/astra-check-l4e12-2.md). Every judged limit names its rating category (recommended or operating, storage, absolute);
@@ -26,7 +26,7 @@ Section 0 proves, before any figure is used (exit 4 otherwise): pwr_budget.py re
 and pwr_budget.json byte for byte; pwr_red2.py re-run in a child and imported here reproduces pwr_red2.out byte for byte;
 v2/docs/parts/grade_check.py's build() is imported and run (it writes nothing) for the list of fitted parts. Inputs are
 pinned by sha256 (exit 2 if a file differs or is missing). One held document (v2/vendor/ti/held/, ignored by git) is fetched
-by fetch_held_back.py beside this file.
+by fetch_held_back.py beside this file; it also fetches Rittal's page that section 11 cites (not an input: never read here).
 
 Run from the repository root:  python3 v2/docs/records/l4e12/l4e12_thermal.py > v2/docs/records/l4e12/l4e12_thermal.out
 Needs pdftotext and PyYAML. About fifteen seconds. Exit 2: a pinned file differs or is missing; 3: an input cannot be parsed;
@@ -120,7 +120,7 @@ REPLAY = "v2/docs/records/l4e/l4e_replay.out"
 RTA = "v2/docs/reviews/READY-TO-ACT.md"
 PINS = {
     L4E8_OUT: "3b751989b8b70345469f2fdc14640fe041415b7333d669b205d2c675b046ab84",
-    L4E10_OUT: "c99baceb74d25bbf02d72af0b8495c48a8ff5533a81a93a2169b1f9b0342c176",
+    L4E10_OUT: "fbc94b19dafbbb3814dddfa513c67dba0d008bfcc1c05cdcb207a91f369e81e1",
     M507: "aab749c1b6d149c8dddedce99fcc0d505339723300df36a62a257b4ace380d80",
     TRACE: "e35e62483b67fbe71bf89b819f6be46173ce708a8a62c683905d55a37ad4c218",
     REPLAY: "59c6eeab16da98f8ddf16880ddcdc1d2a2c910f4256be9b69aade49dd4d2726d",
@@ -213,6 +213,13 @@ LEAD_U_REL = 0.005           # heat carried in or out by the heater and thermoco
 EPS_OUT = 0.85               # the outside surfaces' emissivity (W4's 0.85 to 0.9, the low end)
 SIGMA = 5.670e-8             # W/m2K4
 ROOM_C, SURF_DK = 22.0, 5.0  # the bench's room and the mean surface-to-air offset for the linearised radiation (INFERRED)
+# The heat-balance relationship of the owner's amendment of 2 October 2026 (item 1): Rittal's calculation basis for enclosure
+# climate control, read on its public page (fetched 2026-10-02T12:39Z, HTTP 200, 2522 bytes); held back by its copyright and
+# fetched by fetch_held_back.py, never pinned: only the relationship and the steel figure are cited, quoted here.
+RITTAL_URL = "https://www.rittal.de/downloads/eBook/TSH/EN/Climate_control/pubData/SEO/Page_6.html"
+RITTAL_SHA = "fd3a31d31c88adb4a3bd5b0d7b00bb32ae9bc30f752524971c1ca3a790ade9e8"
+RITTAL_REL = "QS = A k \u0394T (watts)"
+RITTAL_K_STEEL = 5.5         # W/m2K, "for sheet steel k = 5.5 W/m2K" (the page; A per IEC 890)
 # The sensing allowances of the SGP41's own shutdown and of the hold's trigger window (ASSUMPTION, each printed where used):
 READ_S, TAU_S = 1.0, 60.0    # a reading every second; a sensor's thermal time constant in the case's moving air
 SGP_GRAD_K = 0.5             # a TMP117 on the SGP41's carrier to the SGP41, its own heating included (a placement rule, measured at the bench)
@@ -1510,7 +1517,7 @@ def heat_rejection(C, R):
     def reading_for(tg):
         return _inv(lambda g_: g_ * (1.0 - u_rel(ph / g_)), tg, 0.3, 20.0)
     exp2 = [(lbl, tg, reading_for(tg), ph / reading_for(tg)) for lbl, tg in (
-        ("the profile at +40 C, the +70 C class, no route", need_g),
+        ("the profile's +70 C class at +40 C (the consolidation's framing; section 11 reconciles it)", need_g),
         ("charging with the profile on the design day's cold end", q_prof / (t3 - day[0])),
         ("charging with the profile on the design day's warm end", q_prof / (t3 - day[1])))]
     return {"q_prof": q_prof, "q_c": q_c, "coupled": [(n_, pins[n_]) for n_ in COUPLED], "a_free": a_free, "mon": mon, "epd": epd,
@@ -1521,6 +1528,154 @@ def heat_rejection(C, R):
             "short_ch": (q_prof / (t3 - day[0]) - best["day_cold"]["g"], q_prof / (t3 - day[1]) - best["day_warm"]["g"]),
             "q_idle": q_idle, "exp2": exp2, "exp_power": ph, "fin_mass": a_free * (1.5 / 8.0) * float(m3.group(4)) / 1000.0 * 2700.0,
             "skin_mass": geo["a_lid_top"] * 0.001 * 2700.0, "strap_mass": STRAP_L * STRAP_A * 8960.0}
+
+
+def reconcile(C, R):
+    """Section 11: the owner's amendment of 2 October 2026, item 1: what the bench heat is, the nodes and every limit with its
+    reference, the translation from the bench to the operating ambient, the margin, what one point closes, the procedure."""
+    import math
+    T, A, S, pb, cb, hr, dep = C["T"], C["A"], C["S"], C["pb"], R["cb"], R["hr"], R["dep"]
+    geo, cons = cb["geo"], cb["cons"]
+    tp, cn = text(TP), text(CONOPS)
+    import yaml
+    reg = yaml.safe_load(text(REG))
+    recs = {r["id"]: r for r in reg["records"] if isinstance(r, dict) and "id" in r}
+    rul = {r["id"]: r for r in reg["owner_rulings"]}
+    q = {}
+    # 11a the heat, counted once
+    f = pb.state_full("IDLESPEC", "plan")
+    fans_prof = sum(p_ for n_, p_ in ((n_, v["IDLESPEC"][1]) for n_, _nd, v, _s in pb.LOADS) if "fan" in n_)
+    q["prof"] = {"loads": f["p_load"], "fans": fans_prof, "conv": f["pb"] - f["p_load"], "i2r": pb.pack_i2r(f["pb"]), "total": hr["q_prof"]}
+    hs = dep["hs"]
+    fans_hs = sum(p_ for n_, p_, _s in hs["loads"] if "fan" in n_)
+    q["hs"] = {"loads": hs["p_load"], "fans": fans_hs, "conv": hs["loss"] + hs["dist"], "front": hs["front"], "ballast": T["qb"],
+               "total": T["q_hs"] + T["qb"]}
+    q["charge"] = {"extra": T["charge_extra"], "total": hr["q_prof"] + T["charge_extra"]}
+    nom = float(need(text(L4E8_OUT), r"fch 400 kHz: (\d\.\d+) W", "L4-E8's nominal ballast sum").group(1))
+    v_h, r_h = A["rta_heater"][1], A["rta_heater"][0]
+    p_heater = v_h ** 2 / r_h
+    q["bench"] = {"heater": p_heater, "two": 2.0 * p_heater, "ballast_nom": nom, "r": r_h,
+                  "prof_heaters": hr["q_prof"] - fans_prof, "prof_v": math.sqrt((hr["q_prof"] - fans_prof) / 2.0 * r_h),
+                  "hs_heaters": T["q_hs"] + T["qb"] - fans_hs, "hs_v": math.sqrt((T["q_hs"] + T["qb"] - fans_hs) * r_h)}
+    # the heaters' spread per mode over the places the model puts the heat (the fans excluded: they are real on the bench)
+    B_PLACE = "board B (slot 3, its switch, hubs, supervisors, the device rail)"
+
+    def no_fans(place, extra):
+        d_ = {k_: v_ for k_, v_ in place.items() if not k_.startswith("fans")}
+        for k_, v_ in extra:
+            d_[k_] = d_.get(k_, 0.0) + v_
+        return d_
+    cache = {}
+    pb.node_power("VBAT", "IDLESPEC", "plan", cache)
+    pl = {}
+    for n_, _nd, v, _s in pb.LOADS:
+        if v["IDLESPEC"][1] > 0:
+            pl[place_of(n_)] = pl.get(place_of(n_), 0.0) + v["IDLESPEC"][1]
+    for (node, _st, _sc), (pin, _i, eta) in cache.items():
+        if pb.NODES[node][0] != "root":
+            k_ = "board A" if node in LOSS_ON_A else ("board E" if node in LOSS_ON_E else B_PLACE)
+            pl[k_] = pl.get(k_, 0.0) + pin - pin * eta
+    pl["board A"] = pl.get("board A", 0.0) + f["pb"] - f["p_vbat"]
+    fans_hold = sum(p_ for n_, p_, _s in dep["hold"]["loads"] if "fan" in n_)
+    prof_sp = no_fans(pl, [("the pack (its own I2R)", q["prof"]["i2r"])])
+    chg_sp = no_fans(pl, [("the pack (its own I2R)", q["prof"]["i2r"]), ("the front end and the charger (boards E and A, on shore)", T["charge_extra"])])
+    q["settings"] = []
+    for k_, Q_, fans_, sp in (("K1, K5, K9", T["q_hs"] + T["qb"], fans_hs, no_fans(hs["place"], [("board A", T["qb"])])),
+                              ("K10", T["q_m"] + T["qb"], fans_hold, no_fans(dep["hold"]["place"], [("board A", T["qb"])])),
+                              ("K6", hr["q_prof"], fans_prof, prof_sp), ("K7, K8", hr["q_prof"] + T["charge_extra"], fans_prof, chg_sp)):
+        heaters = Q_ - fans_
+        n_h = max(1, int(round(heaters / p_heater)))
+        q["settings"].append({"k": k_, "Q": Q_, "fans": fans_, "heaters": heaters, "n": n_h, "v": math.sqrt(heaters / n_h * r_h),
+                              "spread": sorted(sp.items(), key=lambda x: -x[1])})
+    # 11b the texts every limit rests on
+    lim = {}
+    req024 = sq(recs["REQ-024"]["statement"])
+    lim["req024_c1"] = need(req024, r"(on measured inside-air \(\+50 C\) and cell \(\+55 C\) temperatures the kit sheds to its reduced mode and then its heat stage \(C1\))", "REQ-024's C1 clause").group(1)
+    lim["req024_env"] = need(req024, r"(The kit operates at -20 to \+40 C ambient)", "REQ-024's envelope").group(1)
+    lim["req024_acc"] = need(sq(recs["REQ-024"]["acceptance"]), r"(part_temps\.py finds no part outside its range)", "REQ-024's acceptance").group(1)
+    lim["req024_shade"] = need(req024, r"(the kit is operated shaded \(D-02e\))", "REQ-024's shade").group(1)
+    lim["req052"] = need(sq(recs["REQ-052"]["acceptance"]), r"(every part inside its published range \(an SGP41 above \+55 C fails\))", "REQ-052's SGP41").group(1)
+    lim["e3l_air"] = need(tp, r"(the inside air at or under the SGP41's \+55 C; an SGP41 above \+55 C fails E3-L)", "E3-L's inside air").group(1)
+    lim["e3a_t3"] = need(tp, r"(\*\*no charge starts while the gauge reads above 42 C \(T3\))", "E3-A's T3").group(1).strip("*")
+    lim["e3a_cells"] = need(tp, r"(every cell surface at most \+60 C throughout)", "E3-A's cells").group(1)
+    lim["e3a_mode"] = sq(need(tp, r"\| E3-A \| (deployed, pack fitted, lid open, shaded; the kit in the mode its controls select)", "E3-A's mode").group(1))
+    lim["req014"] = need(sq(recs["REQ-014"]["statement"]), r"(its battery-only runtime is stated in hours in an idle and a typical mode \(PS-IDLE-SPEC and PS-TYP\) at \+20 C)", "REQ-014").group(1)
+    lim["d02a"], lim["d02b"], lim["d02e"] = A["d02a"], sq(rul["D-02b"]["ruling"]), sq(rul["D-02e"]["ruling"])
+    lim["d02b_35"] = need(lim["d02b"], r"(above \+35 C ambient the kit runs one module)", "D-02b's consequence").group(1)
+    lim["no505"] = not re.search(r"\b505\b", tp)
+    nb = c_need = R["ap"]["c"]["trip"]["need_by"]
+    t_use, e3o, e5 = T["t_use"], A["e3o_t"], A["e5"][4]
+    qp, qh, qc = hr["q_prof"], q["hs"]["total"], q["charge"]["total"]
+    t3, day = hr["t3"], hr["day"]
+    conds = [
+        ("K1", "REQ-024 and E3-A at +40 C: C1's end state, the heat stage on shore with the ballasts", qh, t_use, "the SGP41's +55 C (REQ-024's acceptance, every part in its range; REQ-052's and E3-L's line; its Table 5)", 55.0, "lid open"),
+        ("K2", "the same, the SGP41 judged on its Table 4 +50 C (this record's corrected rule; the owner's CFL-002 open)", qh, t_use, "the SGP41's +50 C (Table 4)", S["sgp_rec"]["v"][1], "lid open"),
+        ("K3", "the same, the +70 C class in the heat stage (the H5007NL, the ATP16, the PXP4043/C and the radios C1 leaves on)", qh, t_use, "+70 C (the makers' sheets of section 4)", nb, "lid open"),
+        ("K4", "the same, the module's intake", qh, t_use, "the module's +85 C (CM5 4.4)", S["cm5_op"]["v"][1], "lid open"),
+        ("K5", "REQ-052 and E3-L at +40 C: the heat stage", qh, t_use, "the SGP41's +55 C (E3-L's line)", 55.0, "lid closed"),
+        ("K6", "REQ-014 at +20 C: the profile on the pack, not shed by C1", qp, 20.0, "C1's inside-air trigger +50 C (REQ-024)", 50.0, "lid open"),
+        ("K7", "charging on SC-37's design day, the profile running and the charge path counted (on shore), cold end", qc, day[0], "the gauge's charge start T3 42 C (E3-A; the cells at the air)", t3, "lid open"),
+        ("K8", "the same, warm end", qc, day[1], "T3 42 C", t3, "lid open"),
+        ("K9", "E3-O, D-02a's +55 C AMBIENT margin: the heat stage, every radio C1 leaves on", qh, e3o, "+70 C (U-02)", nb, "lid open"),
+        ("K10", "E5's +60 C dwell under the hold", T["q_m"] + T["qb"], e5, "+70 C (U-02)", nb, "lid open"),
+        ("X1", "the profile at +40 C (no requirement: C1 sheds it, REQ-024; D-02b runs one module above +35 C)", qp, t_use, "C1's +50 C", 50.0, "lid open"),
+        ("X2", "the profile's +70 C class at +40 C (the consolidation's framing, no requirement)", qp, t_use, "+70 C", nb, "lid open"),
+        ("X3", "the owner's conditional check: 42.4 W under a +55 C inside-air limit at +40 C", 2.0 * A["rta_heater"][2], t_use, "+55 C", 55.0, "lid open")]
+    rc_conds = [(k_, lbl, Q_, amb, lim_txt, L_, lid, Q_ / (L_ - amb)) for k_, lbl, Q_, amb, lim_txt, L_, lid in conds]
+    # 11c the translation from the bench's room to the operating ambient: the bound's model at the same rise
+    trans = []
+    for lbl, cfg in (("the bound", cons), ("the coefficients' other ends", cb["opt"]), ("the fans' flow 0.5 m/s", dict(cons, v=0.5)),
+                     ("the stack's radiation", dict(cons, rad_in=True))):
+        row = [lbl]
+        for rise in (15.0, 30.0):
+            g_room = enclosure_g(ROOM_C, rise, "open", cfg, geo)["g"]
+            g_op = enclosure_g(t_use, rise, "open", cfg, geo)["g"]
+            row.append((rise, g_room, g_op, g_op / g_room))
+        trans.append(row)
+    g_k1 = rc_conds[0][7]
+    taus = (min(T["kJ"]) * 1000.0 / g_k1 / 3600.0, max(T["kJ"]) * 1000.0 / g_k1 / 3600.0)
+    # the relationship QS = A k dT on this enclosure's own surfaces and films: k per path is the bound's heat over its area and
+    # the rise, at +40 C and K1's rise (the plate's exposed face and the walls' outer skin; the floor adiabatic)
+    rise_k1 = rc_conds[0][2] / g_k1
+    area = geo["a_plate"] + geo["a_wall_out"]
+    rit = {"area": area, "a_plate": geo["a_plate"], "a_wall": geo["a_wall_out"], "rise": rise_k1, "steel_g": RITTAL_K_STEEL * area,
+           "k_need": g_k1 / area, "rows": []}
+    for lbl, cfg in (("the bound", cons), ("the coefficients' other ends", cb["opt"])):
+        e_ = enclosure_g(t_use, rise_k1, "open", cfg, geo)
+        rit["rows"].append((lbl, e_["q"]["plate"] / (geo["a_plate"] * rise_k1), e_["q"]["walls"] / (geo["a_wall_out"] * rise_k1),
+                            e_["g"] / area, e_["g"]))
+    # the outside films' cap at the same point: any inside film (a 50 m/s flow), at both ends of the coefficients
+    rit["cap"] = tuple(enclosure_g(t_use, rise_k1, "open", dict(cfg, v=50.0), geo)["g"] for cfg in (cons, cb["opt"]))
+    rit["w4"], rit["s3253"] = T["w4_open"], T["g_3253_open"]
+    e3a_h = float(need(tp, r"\| \+(\d+) C for (\d+) h on the pack, then shore applied for (\d+) h", "E3-A's levels").group(2))
+    # 11d the margin: each condition's bench reading at its own heat (heaters plus the fans), with the expanded uncertainty
+    t1 = dep["th1"]
+
+    def u_rel(dt):
+        return 2.0 * math.sqrt((t1["u_dt"] / dt) ** 2 + P_U_REL ** 2 + LEAD_U_REL ** 2)
+
+    def reading_for(tg, p_):
+        return _inv(lambda g_: g_ * (1.0 - u_rel(p_ / g_)), tg, 0.3, 20.0)
+    marg = []
+    for k_, lbl, Q_, amb, lim_txt, L_, lid, gneed in rc_conds:
+        if k_.startswith("K"):
+            rd = reading_for(gneed, Q_)
+            marg.append((k_, Q_, gneed, rd, Q_ / rd, u_rel(Q_ / rd)))
+    r509 = hr["exp2"][0]
+    check509 = {"p": 2.0 * A["rta_heater"][2], "reading": r509[2], "rise": r509[3], "u": u_rel(r509[3]), "after": r509[2] * (1.0 - u_rel(r509[3])),
+                "target": r509[1], "air40": t_use + 2.0 * A["rta_heater"][2] / r509[2]}
+    # each point's duration at its pass line: tau = C / G with 32.53's upper thermal mass; within 1 % of the rise at ln(100) tau
+    times = []
+    for k_ in ("K1", "K5", "K10", "K6", "K7"):
+        m_ = next(x for x in marg if x[0] == k_)
+        tau = max(T["kJ"]) * 1000.0 / m_[3] / 3600.0
+        times.append((k_, tau, math.log(100.0) * tau, 3.0 * tau))
+    return {"q": q, "lim": lim, "conds": rc_conds, "trans": trans, "taus": taus, "e3a_h": e3a_h, "marg": marg, "check509": check509,
+            "rit": rit, "times": times, "t_bound": cb["exp"]["t_bound"], "kj_hi": max(T["kJ"])}
+
+
+def hr_q(R):
+    return R["hr"]["q_prof"]
 
 
 def t_use_(R):
@@ -1962,6 +2117,7 @@ def compute():
     R["dep"] = dep = dependency(C, R, ap, gc_all, parts_c)
     R["cb"] = conservative_bound(C, R, ap, dep)
     R["hr"] = heat_rejection(C, R)
+    R["rc"] = reconcile(C, R)
     # ======================================================== 8: the predicates
     p = {}
     p["P1 pwr_budget and pwr_red2 reproduced byte for byte before any figure"] = R["r0a"] and R["r0b"] and R["r0c"]
@@ -2038,6 +2194,14 @@ def compute():
     p["P21 heat rejection on the bound: no approach reaches the profile at +40 C (the best short by a positive margin) nor charging on the design day; U-02 stays a closure condition"] = (
         not hr["reaches"] and not hr["charges"] and hr["short_w"] > 0 and hr["short_g"] > 0 and all(x > 0 for x in hr["short_ch"])
         and hr["rows"][-1]["use"]["g"] == max(r_["use"]["g"] for r_ in hr["rows"]) and hr["q_idle"] < hr["q_max_best"] < hr["q_prof"])
+    rc = R["rc"]
+    p["P22 the reconciliation: 1.509 W/K at 42.4 W is 1.447 W/K after its uncertainty, the +55 C inside-air limit is the heat stage's (1.806 W/K, LO-01a with the ballasts), the room reading conservative, every heater spread summing to its setting, A k on the case's own films under steel's and the need, the need between the bound's cap and W4's high case"] = (
+        abs(rc["check509"]["after"] - rc["check509"]["target"]) < 1e-6 and abs(rc["conds"][0][7] - T["g_floor_ballast"]) < 1e-9
+        and all(x[3] >= 1.0 for row in rc["trans"] for x in row[1:]) and rc["conds"][10][7] > R["cb"]["cap"]["E5"]
+        and rc["lim"]["no505"] and abs(rc["q"]["prof"]["loads"] + rc["q"]["prof"]["conv"] + rc["q"]["prof"]["i2r"] - rc["q"]["prof"]["total"]) < 1e-9
+        and abs(rc["rit"]["rows"][0][4] - rc["trans"][0][1][2]) < 1e-6 and rc["rit"]["rows"][0][4] < rc["rit"]["steel_g"] < rc["conds"][0][7]
+        and rc["rit"]["cap"][0] < rc["conds"][0][7] < rc["rit"]["w4"][1]
+        and all(abs(sum(v_ for _k, v_ in s_["spread"]) - s_["heaters"]) < 1e-6 for s_ in rc["q"]["settings"]))
     R["pred"] = p
     return R
 
@@ -2091,6 +2255,7 @@ def render(R):
     S, T, A, ap = R["S"], R["T"], R["A"], R["ap"]
     out = []
     w = out.append
+    from math import exp as math_exp
     C_ = {"hin_still": tuple(R["w4"]["hin_still"]), "a_side": tuple(R["w4"]["a_side"]), "prof_pb": R["dep"]["fan_power"][0]["plan"]["state"]}
     import math
     math_log100 = math.log(100.0)
@@ -2104,7 +2269,7 @@ def render(R):
     w("is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMPTION, CONDITIONAL. Revised after the focused")
     w("check astra-check-l4e12-1 and the targeted recheck astra-check-l4e12-2 (the record's section 12 maps each item to its change);")
     w("section 8 is the dependency round of 2 October 2026 on U-02 (the record's section 13), section 9 the conservative bound (section 14),")
-    w("section 10 the heat-rejection question (section 15).")
+    w("section 10 the heat-rejection question (section 15), section 11 the thermal reconciliation (section 16).")
     w("")
     w("0 Reproductions and inputs")
     w("0a pwr_budget.py re-run in a child: pwr_budget.out and pwr_budget.json byte for byte: %s" % ("yes" if R["r0a"] else "NO"))
@@ -2750,7 +2915,136 @@ def render(R):
     para("Under the first, the route of 10d applies with its kit on the same bench point, and an owner's choice of 10d's options if it "
          "still reads short.", first="   ")
     w("")
-    w("11 Predicates")
+    rc = R["rc"]
+    qq, lm, ck = rc["q"], rc["lim"], rc["check509"]
+    w("11 THE THERMAL RECONCILIATION (the owner's amendment of 2 October 2026, 14:20, item 1)")
+    para("11a THE CLAIM, CHECKED. Section 10e's line read: a reading of at least %.3f W/K at %.1f W meets %.3f W/K. Its arithmetic: %.1f W / "
+         "%.3f W/K = %.1f K at the bench; the expanded uncertainty at that rise is %.2f %% (k = 2), so the conductance after it is %.3f x "
+         "(1 - %.4f) = %.3f W/K, which is the profile's %.3f W over the %.0f K from +%.0f C to the +70 C class. The owner's check is right "
+         "that the same reading puts the air at %.1f C at +%.0f C. What it establishes is narrower than \"operation at +%.0f C\": the "
+         "profile's own +70 C class at +%.0f C, a condition no requirement asks for, because at +%.0f C the kit does not run the profile: "
+         "REQ-024: \"%s\"; D-02b: \"%s\". The 1.447 W/K is nonetheless the profile's own condition at REQ-014's +20 C (\"%s\"): there the "
+         "profile runs unshed only while the inside air stays under C1's +50 C, %.3f W over 30 K." % (
+             ck["reading"], ck["p"], ck["target"], ck["p"], ck["reading"], ck["rise"], 100.0 * ck["u"], ck["reading"], ck["u"], ck["after"],
+             hr_q(R), 30.0, t_use_(R), ck["air40"], t_use_(R), t_use_(R), t_use_(R), t_use_(R), lm["req024_c1"], lm["d02b_35"], lm["req014"],
+             hr_q(R)), first="")
+    para("11b THE HEAT, COUNTED ONCE (MODELED, plan). The profile PS-IDLE-SPEC: %.3f W at the load pins (the five fans' own %.2f W among "
+         "them: the three modules' coolers and the two mixers), %.3f W lost in the converters and the distribution, %.3f W in the pack's own resistance: %.3f W into the case. Not in it: "
+         "L4-E8's ballasts (%.4f W at its nominal illustration, at most %.2f W at the bound's worst corner, and only while the solar stage "
+         "runs), the solar entry's sense bank (solar current only), Q39's 0.0945 W with L4-E11's (B1) (L4-E9 at a0212d9e). A charge on "
+         "shore adds %.3f W in the charger and the front end: %.3f W. The heat stage on shore: %.3f W at the pins (fans %.2f W: slot 3's cooler and the two mixers), %.3f W in "
+         "the converters and the distribution, %.3f W in the front end and the charger, the ballasts %.2f W (counted at the worst corner, "
+         "the margins' rule): %.3f W. The bench: READY-TO-ACT's heater is %.1f ohm at %.1f V, %.3f W of heat (all of its electrical power "
+         "stays inside); two give %.3f W. The fans run from the bench supply, their measured draw is heat inside and is added to the "
+         "heaters: P = the heaters + the fans, never the heaters alone (section 10e's 42.4 W left the fans out and is restated here). "
+         "To stand for a mode the heaters are set to its heat less the fans' measured draw: the profile %.3f W (two heaters at %.2f V), "
+         "the heat stage %.3f W (one heater at %.2f V); the fans' draw replaces their modeled share, so nothing is counted twice." % (
+             qq["prof"]["loads"], qq["prof"]["fans"], qq["prof"]["conv"], qq["prof"]["i2r"], qq["prof"]["total"], qq["bench"]["ballast_nom"],
+             T["qb"], qq["charge"]["extra"], qq["charge"]["total"], qq["hs"]["loads"], qq["hs"]["fans"], qq["hs"]["conv"], qq["hs"]["front"],
+             qq["hs"]["ballast"], qq["hs"]["total"], A["rta_heater"][0], A["rta_heater"][1], qq["bench"]["heater"], qq["bench"]["two"],
+             qq["bench"]["prof_heaters"], qq["bench"]["prof_v"], qq["bench"]["hs_heaters"], qq["bench"]["hs_v"]), first="")
+    para("11c THE NODES AND THE LIMITS. The conductance is between two nodes: the mixed inside air (the mean of the air channels, the hold's "
+         "reference placed in it, 4d) and the ambient air (shaded channels about 0.5 m from the case). The bench ambient is the room "
+         "(+%.0f C taken); the operational ambient is REQ-024's \"%s\". The limits and their references: C1's inside-air trigger +50 C and "
+         "cell trigger +55 C (REQ-024, CONOPS 4: \"%s\"), control triggers that shed, not damage limits; the SGP41's +55 C inside air "
+         "(REQ-052: \"%s\"; TEST-PLAN E3-L: \"%s\"), resting on its Table 5 absolute row, and its +50 C under this record's corrected rule "
+         "(Table 4, section 5d, the owner's CFL-002); the +70 C class (the makers' sheets, section 4: RockBLOCK 9704, SA868, G6K, PCM2912A, "
+         "LimeSDR, H5007NL, ATP16, PXP4043/C; the AW7915's 0 to +70 C operating while the profile runs it); the module's +%.0f C (CM5 %s); "
+         "the cells (E3-A: \"%s\"; \"%s\"). REQ-024's acceptance: \"%s\". D-02a's +55 C is an AMBIENT qualification margin, not an inside-air limit: \"%s\"" % (
+             ROOM_C, lm["req024_env"], A["c1"], lm["req052"], lm["e3l_air"], S["cm5_op"]["v"][1], S["cm5_op"]["where"], lm["e3a_t3"],
+             lm["e3a_cells"], lm["req024_acc"], lm["d02a"]), first="")
+    w("   Each condition: requirement and mode, heat into the case, ambient, the limit at the node, and the conductance it needs (Q / room):")
+    for k_, lbl, Q_, amb, lim_txt, L_, lid, gneed in rc["conds"]:
+        para("%-4s %s; %s; %.3f W at +%.1f C; %s; needs %.3f W/K" % (k_, lbl, lid, Q_, amb, lim_txt, gneed), first="      ", rest="           ")
+    para("A +55 C inside-air limit EXISTS, for the heat stage at +40 C (REQ-052's acceptance and E3-L's line with the lid closed; "
+         "REQ-024's acceptance with the lid open, the SGP41 being a part with that published range; LO-01a on shore; K1 and K5): it needs %.3f W/K, LO-01a's floor with the ballasts. It does not apply to the profile, which C1 sheds at +50 C inside "
+         "air; the owner's conditional %.2f W/K (X3) belongs to no requirement's mode. The analogous figure for the heat stage is K1's." % (
+             rc["conds"][0][7], rc["conds"][-1][7]), first="   ")
+    para("Part-level hot spots: limits on a part's junction or case, not on the air: the TLV75533 regulators' +%.0f C recommended junction "
+         "(3c, 5c), the converters' junctions (3c), the module's SoC (its own throttle), the PA's flange on the plate (CONOPS's key-down window and C4, PWR-F15; not this section's K conditions), "
+         "the parts in a cooler's exhaust (2h, +%.2f K) and the plate-mounted face parts (the plate's own temperature). T-H1's air reading "
+         "bounds the parts rated by ambient that sit in the mixed air; it does not bound the junction-rated parts (their rise is modeled, "
+         "THM-001 at +40 C, REQ-024's acceptance) or the parts in the exhaust (placement), which T-H2 measures on the built kit; the plate "
+         "fraction it records bounds the face parts." % (R["decl"]["rec755"], T["d_hs"]), first="   ")
+    rt = rc["rit"]
+    para("11d THE RELATIONSHIP AND THE TRANSLATION. Rittal's calculation basis for enclosure climate control (%s, read 2 October 2026, "
+         "sha256 %s, held back by its copyright and fetched by fetch_held_back.py) gives the steady balance \"%s\", A the effective "
+         "heat-dissipating enclosure surface to IEC 890 and k the heat transfer coefficient, \"for sheet steel k = %.1f W/m2K\"; the "
+         "largest rise follows as Qv / (A k). The conductance of this record is that product, G = A k = Q / rise. The steel figure is "
+         "not this enclosure's: the Peli 1450 is a %.2f mm polypropylene shell with natural convection only inside (the fans' flow "
+         "credited at zero) and an aluminium face plate lid open, so its k is derived from its own films and walls (section 9's bound). "
+         "At +%.0f C and K1's rise of %.1f K, over the plate's exposed %.4f m2 and the walls' outer %.4f m2 (%.4f m2, the floor "
+         "adiabatic):" % (RITTAL_URL, RITTAL_SHA, RITTAL_REL, RITTAL_K_STEEL, cb["geo"]["t_wall"] * 1000.0,
+                         t_use_(R), rt["rise"], rt["a_plate"], rt["a_wall"], rt["area"]), first="")
+    for lbl, kp, kw, kk, gg in rt["rows"]:
+        w("      %-30s k plate %.2f, walls %.2f, whole %.2f W/m2K: A k = %.3f W/K" % (lbl, kp, kw, kk, gg))
+    para("Sheet steel's %.1f W/m2K on the same area would read %.3f W/K; K1's %.3f W/K needs k = %.2f W/m2K over it, %.1f to %.1f times "
+         "what the bound's films give. With any inside film (a 50 m/s flow) the outside films cap A k at %.3f W/K (%.3f at the "
+         "coefficients' other ends), still air and the floor adiabatic: K1's need lies %s, so on the bound's outside no inside measure "
+         "reaches it while all the heat passes through the inside air. The tree's other conductance evidence spans "
+         "the need: W4's lumped estimate %.2f to %.2f W/K (fixed films with the fans, the floor counted), 32.53's %.1f to %.1f W/K. "
+         "The bound under the need leaves feasibility unestablished, not refuted: the floor's support, the outside's real films and "
+         "air movement, the fans' film and heat led into the plate past the air (section 10b) are what it does not credit, and only "
+         "a measured G decides (T-H1). The translation from the bench to the operating ambient on the same model, the bench's +%.0f C "
+         "against +%.0f C (G = Q / rise; radiation grows with the absolute temperatures, natural convection with the rise and falls "
+         "slightly with the air's properties):" % (
+             RITTAL_K_STEEL, rt["steel_g"], rc["conds"][0][7], rt["k_need"], rt["k_need"] / max(r_[3] for r_ in rt["rows"]),
+             rt["k_need"] / min(r_[3] for r_ in rt["rows"]), rt["cap"][0], rt["cap"][1],
+             ("over the cap at the conservative ends and under it, by %.3f W/K, at the other ends" % (rt["cap"][1] - rc["conds"][0][7])
+              if rt["cap"][1] > rc["conds"][0][7] else "over the cap at both ends"), rt["w4"][0], rt["w4"][1], rt["s3253"][0],
+             rt["s3253"][1], ROOM_C, t_use_(R)), first="   ")
+    for row in rc["trans"]:
+        w("      %-30s %s" % (row[0], "; ".join("rise %.0f K: %.3f -> %.3f W/K, x %.3f" % x for x in row[1:])))
+    para("So the operating ambient's conductance is %.1f to %.1f %% above the room's at the same rise: the room reading is the conservative "
+         "side and the translation's uncertainty is not material; the procedure tests at room, with an optional confirming point in a "
+         "chamber at +%.0f C. (Section 8d's 1.15 to 1.20 was the outside films' radiation on W4's films alone; the inside film, convective, "
+         "dominates the whole.) The same reading does not give the same rise at +%.0f C: the rise there is the bench's divided by that "
+         "factor. The rise also differs with the heat: a reading at one heat bounds the same heat; another heat needs its own point "
+         "(11f). The transient: E3-A holds +%.0f C for %.0f h; the case's time constant at %.3f W/K is %.2f to %.2f h (32.53's thermal mass), so the "
+         "air reaches %.1f to %.1f %% of its steady rise and the steady state is the bound. The sun: REQ-024 \"%s\", D-02e: \"%s\"; "
+         "TEST-PLAN holds no Method 505 row: no solar load enters the derivation, and full sun stays a later qualification item." % (
+             100.0 * (min(x[3] for row in rc["trans"] for x in row[1:]) - 1.0), 100.0 * (max(x[3] for row in rc["trans"] for x in row[1:]) - 1.0),
+             t_use_(R), t_use_(R), t_use_(R), rc["e3a_h"], rc["conds"][0][7], rc["taus"][0], rc["taus"][1],
+             100.0 * (1.0 - math_exp(-rc["e3a_h"] / rc["taus"][1])), 100.0 * (1.0 - math_exp(-rc["e3a_h"] / rc["taus"][0])),
+             lm["req024_shade"], lm["d02e"]), first="   ")
+    para("11e THE MARGIN. Each condition's bench reading at its own heat (the heaters plus the fans), the target plus its expanded "
+         "uncertainty at that rise (the budget of 8d); the room-to-operating credit of 11d is kept as margin, not taken:", first="")
+    for k_, Q_, gneed, rd, rise_, ur in rc["marg"]:
+        w("      %-4s at %.3f W: needs %.3f W/K; a reading of at least %.3f W/K (rise %.1f K, U %.1f %%)" % (k_, Q_, gneed, rd, rise_, 100.0 * ur))
+    para("11f WHAT ONE POINT CLOSES, AND WHAT REMAINS. One passing point lid open, the fans on, at the heat stage's heat (the heaters at "
+         "%.3f W plus the fans), reading at least %.3f W/K, closes K1, K3, K4 (REQ-024 and E3-A at +40 C: the heat stage's air under the "
+         "SGP41's +55 C, the +70 C class and the module's intake) and K9 (E3-O's +70 C class at +55 C, the same heat and room; its "
+         "translation is conservative). Closed only by a further measured point: K5 (lid closed, the same heat, reading at least %.3f "
+         "W/K lid closed), K6 (the profile's heat, REQ-014 at +20 C, at least %.3f), K7 and K8 (the profile with the charge, at least "
+         "%.3f and %.3f, and the cells' own rise over the air, U-01's), K10 (the hold's heat in E5, at least %.3f). Open: K2 (the SGP41 on "
+         "Table 4, the owner's CFL-002), the part-level hot spots (T-H2, THM-001), the fans' rating (D-18, REQ-043), full sun (D-02e, a later "
+         "qualification item), the cells on the pack at +%.0f C (U-01, L4-E10)." % (
+             qq["bench"]["hs_heaters"], rc["marg"][0][3], rc["marg"][4][3], rc["marg"][5][3], rc["marg"][6][3], rc["marg"][7][3],
+             rc["marg"][9][3], t_use_(R)), first="")
+    para("11g THE PROCEDURE (T-H1-PROCEDURE-DRAFT.md, revised): the points of 11e in the order K1, K5, K10, K6, K7 and K8, each with its "
+         "heaters (READY-TO-ACT's %.1f ohm, the nearest whole number of them) set to the mode's heat less the fans' measured draw (the "
+         "model's draw shown here) and spread over the places in proportion (W, plan; the fans excluded, being real):" % qq["bench"]["r"], first="")
+    short = {"board B (slot 3, its switch, hubs, supervisors, the device rail)": "board B", "the pack (its own I2R)": "the pack",
+             "the front end and the charger (boards E and A, on shore)": "the front end and the charger"}
+    for s_ in qq["settings"]:
+        para("%-11s %.3f W: the heaters %.3f W (the fans %.3f W), %s at %.2f V%s; %s" % (
+            s_["k"], s_["Q"], s_["heaters"], s_["fans"], "one" if s_["n"] == 1 else "two" if s_["n"] == 2 else str(s_["n"]), s_["v"],
+            "" if s_["n"] == 1 else " each",
+            "; ".join("%s %.3f" % (short.get(k_, k_), v_) for k_, v_ in s_["spread"])), first="      ", rest="                  ")
+    para("Each point's duration at its pass line (tau = C / G, C %.0f kJ/K, 32.53's upper bound for the kit and so for the empty case; "
+         "steady within 1 %% of its rise at ln(100) tau, then an hour averaged): %s; K7 and K8 are one point (one heat, two needs). A "
+         "case as poor as the bound takes up to %.1f h a point (9f)." % (
+             rc["kj_hi"], "; ".join("%s tau %.2f h, steady at %.1f h (the fit's three time constants %.1f h)" % x for x in rc["times"]), rc["t_bound"]),
+         first="   ")
+    para("The endpoint is steady state, the mixed air drifting at most %.1f "
+         "K/h over an hour, or a first-order fit theta(t) = theta_ss + (theta_0 - theta_ss) exp(-t/tau) over at least three time constants "
+         "with residuals at most 0.05 K RMS and tau within a factor 2 of C/G; theta_ss's fitted standard error joins the rise's "
+         "uncertainty. Pass: the reading less its expanded uncertainty at or over the condition's need; fail: under it; inconclusive: the "
+         "endpoint not met, or the supply or a fan's draw moving more than 1 %% or the ambient more than 1 K in the averaging hour (the "
+         "point is repeated). Authorisation to perform it is the owner's; accepting its result goes through the coordinator's check against "
+         "this section; no temperature requirement is relaxed to make a point pass." % DRIFT_K_H, first="   ")
+    w("")
+    w("12 Predicates")
     for k, v in R["pred"].items():
         w("   %s: %s" % (k, "PASS" if v else "FAIL"))
     w("")

@@ -20,7 +20,8 @@ first, the warm-up and the thresholds of section 9d are recomputed, and the draf
 the consolidation of 2 October 2026: CASE-MARGINS' rows are split on unescaped pipes and read in the chosen column, the room
 recomputed, each cell's suitability by mode one of three verdicts, the conductance each hot row needs consistent with the
 two-node runs and with the bound, at most three candidates with the Saft sheet read back, its fit and energy recomputed, and
-U-01's class printed; both checks are filed byte for byte from their results; the page's figures are the .out's; the held files are ignored by
+U-01's class printed; the battery comparison: the nominal steps, one chain for both packs reproducing the replay and section 10, the
+usable fractions decomposed, and the page's compact table with a class in every row; both checks are filed byte for byte from their results; the page's figures are the .out's; the held files are ignored by
 git and pinned alike in the script and the fetcher; no dash or claim word is written. Nothing here writes into the tree.
 """
 import ast
@@ -458,6 +459,34 @@ def t_u01c_candidates_and_class():
     assert re.findall(r"^(\d)\. ", q, re.M) == ["1", "2", "3", "4"] and "18 A for 60 seconds" in q
 
 
+def t_packcmp_one_boundary_and_the_table():
+    R = _R()
+    c = R["packcmp"]
+    assert abs(c["nom35"] - 12 * 3.35 * 3.60) < 1e-9 and abs(c["nomsx"] - 4 * 5.6 * 3.65) < 1e-9
+    assert abs(c["steps"]["count"] * c["steps"]["capacity"] * c["steps"]["voltage"] - c["nomsx"] / c["nom35"]) < 1e-12
+    assert round(100 * (1 - c["nomsx"] / c["nom35"]), 1) == 43.5 and round(100 * (1 - c["nomsx"] / c["nom35_typ"]), 1) == 45.1
+    e = c["e"]
+    assert round(e["35E"][20.0]["wh"], 1) == 107.9 and round(e["35E"][-10.0]["wh"], 1) == 44.5
+    assert abs(e["Saft a typ"][20.0]["wh"] - R["u01c"]["e_sx"]["typical"]["wh"]) < 1e-9
+    assert all(e["Saft b %s" % k][20.0]["wh"] >= e["Saft a %s" % k][20.0]["wh"] for k in ("typ", "min"))
+    # the usable fractions' ratio is exactly the product of the three curve factors (the temperature and ageing factors equal)
+    sp = c["split"]
+    assert abs((c["frsx"] / c["fr35"]) - sp["f_rate"] * sp["v_mean over nominal"] * sp["f_dod"]) < 1e-12
+    # one boundary: same load, same line, same ageing for both
+    assert e["35E"][20.0]["age"] == e["Saft a typ"][20.0]["age"] == 0.8 and c["graceful"] == 3.0
+    page = open(PAGE, encoding="utf-8").read()
+    sec = page[page.index("## 16."):]
+    table = sec[sec.index("| | Approved pack (D-06) | Saft route (a proposal) |"):sec.index("### 16a.")]
+    rows = [l for l in table.strip().splitlines()[2:]]
+    names = [l.split("|")[1].strip() for l in rows]
+    assert names == ["Part and specification", "Chemistry, rechargeability", "Arrangement", "Nominal energy", "Usable energy, one boundary", "Charge limits",
+                     "Discharge limits", "Storage limits", "Physical fit", "Charger (the drawn BQ25731)", "Protection", "Cost"], names
+    for l in rows:
+        assert re.search(r"GUARANTEED|MODELLED|AWAITING|compatible", l), l[:60]
+    assert "does **not yet** support adoption" in sec and "is required and is not given here" in sec
+    assert "The endurance objective stays apart from the mandatory rows" in sec
+
+
 def t_check_filed_byte_for_byte():
     import json
     for name, job, run in (("astra-check-l4e10-1.md", "cx26-l4e10-check", "20261001T223709Z-4184732"),
@@ -493,7 +522,8 @@ def t_page_figures_are_the_outs():
             "0.84 A", "1.68 A", "16.40 V", "17.06 V", "17.47 V", "0.357C", "90.2 Wh", "107.9 Wh", "54.0 Wh", "45.1 to 69.6",
             "37.2 to 54.1", "78.94", "74.73", "73.07", "71.00", "68.86", "3.22 Wh", "12.3 Wh", "2.1 C", "2054 to 3082",
             "0.0865", "0.1215", "0.361", "0.578", "0.932", "1.145", "4.996", "53.5 to 55.1", "954.88", "6.90", "1.40 mm", "80.29", "99.50",
-            "-30.6", "0.607", "0.566", "0.524"]
+            "-30.6", "0.607", "0.566", "0.524", "144.72", "81.76", "151.20", "149.04", "79.39", "0.5650", "43.5", "45.1", "0.7453",
+            "0.6735", "0.9037", "57.0 Wh", "58.8 Wh", "1.37 h", "1.42 h", "0.2881", "17.47", "99.00"]
     for f in figs:
         assert f in out, "%s not in the .out" % f
         assert f in page, "%s not on the page" % f
@@ -518,6 +548,8 @@ def t_no_dash_or_claim_word():
     files += [os.path.join(REC, "clarification", f) for f in sorted(os.listdir(os.path.join(REC, "clarification")))]
     rx = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives|rated for)\b", re.I)
     for p in files:
-        t = open(p, encoding="utf-8").read()
+        # the battery comparison's class label GUARANTEED (a maker's printed limit, the owner's amendment of 2 October 2026) is a
+        # defined label in capitals, not a claim; any other spelling still fails
+        t = re.sub(r"\bGUARANTEED\b", "", open(p, encoding="utf-8").read())
         assert "–" not in t and "—" not in t, "%s carries an en or em dash" % p
         assert not rx.search(t), "%s carries a claim word: %s" % (p, rx.search(t).group(0))
