@@ -1524,6 +1524,21 @@ def t_the_review_of_the_provisional_fixes_l4f04_the_thermal_categories():
     assert rows["R-185"][1] == "TEST" and "function read back" in rows["R-185"][2] and "for that lot" in rows["R-185"][5]
 
 
+def t_l4f01_has_its_place_until_l4e7_lands():
+    """L4-F01 (the review of the provisional fixes keeps B6 open): until L4-E7's round lands, D-10's already-on rating claim is not
+    called established anywhere it is stated, and the page and the output name the place its result enters."""
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    de = {d["id"]: d for d in m.DEFECTS}
+    assert de["D-10"]["state"].startswith("ADDRESSED IN DRAFTS") and "L4-F01" in de["D-10"]["state"] and "pending" in de["D-10"]["state"]
+    exd = {d[0]: d for d in m.cons_exit_defects(F)}
+    assert "L4-F01" in exd["D-10"][2]
+    page = open(PAGE, encoding="utf-8").read()
+    short = page.split("## In short\n")[1].split("\n## 1. ")[0]
+    assert short.count("L4-F01") >= 2 and "**The review of the provisional fixes keeps B6 open (L4-F01; out 26d).**" in page
+    assert "26d L4-F01" in _C["text"] and "PENDING L4-E7's round" in _C["text"]
+
+
 def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
     """The external review of the provisional fixes (2 October 2026): L4-F02 and L4-F03 as L4-E11's round answers them, carried. Held
     as properties: D-14 reads CONDITIONAL on the three evidence rows with Ciss OPEN, D-15 is the dock branch's protection addressed in

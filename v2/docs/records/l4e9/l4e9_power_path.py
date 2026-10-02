@@ -3350,6 +3350,7 @@ GATE = [
                    "E11-38; the known defects at the solar entry, D-10 (a stiff 36 V source on the port) and D-11 (a reversed "
                    "panel), single faults, are addressed in drafts, a selected remedy each (L4-E7, check 5 at 573fd5b8: the over-voltage cut-off U21 "
                    "with Q12 and the return switch Q13, R-173, drafted, not applied), D-10 CONDITIONAL on the panel lead's loop inductance at least 2.47 uH "
+                   "(not established by that condition alone, the review of the provisional fixes' L4-F01, L4-E7's round pending) "
                    "with the guard already on (the review's B6, L4-E7 at 11339ec7: four parts added, every rating MEETS from it; R-176, R-180), D-11 "
                    "CONDITIONAL on Q13's leakage above +25 C; the band between "
                    "25 V and the cut-off, where a stiff source still runs the stage, is a residual for layer 8 (R-175); D-12 (CS116 and CS115 on the drawn entry) is resolved in the drafted entry, CS115 CONDITIONAL on the cable's loop "
@@ -3663,7 +3664,7 @@ DEFECTS = [
                 "recomputed 3.062 ms start (34 uF)",
      "resolution": "superseded by E11-01's entry (R-123); R-119 only if the LM5069 is kept", "rows": ["IF-05"]},
     {"id": "D-10", "title": "a stiff 36 V source on the solar port (a single fault: a vehicle or shore lead in the panel's receptacle)",
-     "state": "ADDRESSED IN DRAFTS (a selected remedy, drafted, not applied), CONDITIONAL on the panel lead's loop inductance at least 2.47 uH",
+     "state": "ADDRESSED IN DRAFTS (a selected remedy, drafted, not applied), CONDITIONAL on the panel lead's loop inductance at least 2.47 uH; the guard-already-on rating claim not established by that condition alone (the review of the provisional fixes' L4-F01), L4-E7's round pending",
      "constraint": "without the guard D4, the drafted SMCJ28A, conducts 2.67 to 16.63 A and takes 95.9 to 585.8 W against its 1.17 W on the board at the hot end's air; "
                    "the largest sustained source the drafted entry holds is 29.70 V (L4-E7's D4)",
      "options": "L4-E7's three, each on its held sheet: the TPS48110-Q1 alone on back-to-back FETs (its -1 V input pins on a reversal: not taken); the "
@@ -5856,7 +5857,7 @@ def cons_exit_defects(F):
          "the draft applied with R-157 (R-181)", "the limit read at -20, 25 and 70 C, the overload and a hard short at VSYS_E, the contact's resistance after (R-184)",
          "nothing of the topology: a branch protection inside (B1)"),
         ("D-10", "a stiff %s V source on the solar port (a single fault)" % fmt(sv["src"][1]),
-         adr + "; the cut-off rises at %s to %s V, falls back at %s V or more; with the guard already on (B6) every rating MEETS with its four added parts, CONDITIONAL on the panel lead's loop inductance at least %s uH"
+         adr + "; the cut-off rises at %s to %s V, falls back at %s V or more; with the guard already on (B6) every rating MEETS with its four added parts, CONDITIONAL on the panel lead's loop inductance at least %s uH, not established by that condition alone (L4-F01, L4-E7's round pending)"
          % (fmt(rm["rise"][0]), fmt(rm["rise"][1]), fmt(rm["fall"][0]), fmt(rm["b6"]["l_uh"])),
          "the draft applied after its release record (R-92's L4-E7 RELEASE.md)", owed + "; the lead's inductance measured, or its conductors' centres at least %s mm apart (R-176 row 2, R-180)" % fmt(rm["b6"]["mm"]), topo),
         ("D-11", "a reversed panel (E-N1, a single fault)", adr + "; CONDITIONAL on Q13's leakage above +25 C", "the same draft", "Q13's leakage at the hot end (R-176)", topo),
@@ -6143,7 +6144,8 @@ def cons_in_short(F, D, st, reg):
         "KNOWN DEFECTS at the solar entry, single faults from L4-E7's panel-lead derivation: D-10, a stiff %s V source on the port, and "
         "D-11, a reversed panel, ADDRESSED IN DRAFTS by L4-E7's selected remedies (the over-voltage cut-off U21 with Q12, the return "
         "switch Q13, and for the guard already on, the review's B6, C131 and C132, C133 and C134, C126 and R97; R-173, "
-        "apply_gen_sch_e_solar_guard.py, not applied; D-10 CONDITIONAL on the panel lead's loop inductance at least %s uH, D-11 on Q13's "
+        "apply_gen_sch_e_solar_guard.py, not applied; D-10 CONDITIONAL on the panel lead's loop inductance at least %s uH, not established "
+        "by that condition alone (the review of the provisional fixes' L4-F01, L4-E7's round pending), D-11 on Q13's "
         "leakage above +25 C), and a residual band between 25 V and the cut-off named for layer 8 (R-175); D-12, CS116 and CS115 on the "
         "panel lead, is resolved in the drafted entry with the guard: %s D-01 to D-05 and D-08 are resolved in design, D-06 by L4-E11, "
         "D-07 and D-09 superseded (8a); every resolution is a DRAFT or a register row, none applied."
@@ -6184,7 +6186,8 @@ def cons_in_short(F, D, st, reg):
         "ruled 35E is unsuitable on its own published evidence for the margins. Beside them D-13, D-14 and D-15 (the review's B1 and "
         "B2 and the provisional fixes' L4-F03; D-14 CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss OPEN, D-15's hard short on E11-38) and "
         "the solar faults D-10 and D-11 are addressed in drafts, none applied (D-10 CONDITIONAL on the panel lead's loop inductance at "
-        "least 2.47 uH, measured or specified by its conductors' spacing, R-180; D-11 on Q13's hot leakage), the band between "
+        "least 2.47 uH, measured or specified by its conductors' spacing, R-180, which the review of the provisional fixes (L4-F01) "
+        "finds insufficient on its own, L4-E7's round pending; D-11 on Q13's hot leakage), the band between "
         "25 V and the cut-off a residual for layer 8 (R-175). Each has its exact missing fact and the smallest experiment or "
         "manufacturer clarification that resolves it. The findings ledger, as filed: %d rows, %d CLOSED, %d CLOSED AS CONDITIONAL, %d "
         "OPEN DOWNSTREAM, %d STILL OPEN; the review's E6 found L4-E12:2.1 and 1.2 regressed and L4-E7R:1.6 and 2.4 needing B6's "
