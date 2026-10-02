@@ -35,6 +35,9 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    millmax   8ef40cd98d95c653  v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf
    xt60      c2cbb5962c1f37da  v2/vendor/battery/amass-xt60-spec-tme.pdf
    dec31     094817023210d1b0  v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md
+   fuse997   437b1fd2c8cb3ef1  v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf
+   keystone  caa141ea51ac68cf  v2/vendor/keystone/M65p42.pdf
+   l4e7r     7edcc52a88874a53  v2/docs/records/l4e7/l4e7_stage_settings.out  (commit 237cd9be, fnd/l4e7, the selected solution)
    not read: PENDING: L4-E7R, the 100 W control decision on board E and the solar entry's surge protection (fnd/l4e7, fix round)
    this record's own figures: copper 0.0172 ohm mm2/m at 20 C and 0.0039 /K, 18 AWG 0.823 mm2 (ASSUMPTION, constants); the cold end -20 C (REQ-024);
      capacitance kept under bias 0.2 (ASSUMPTION; the bound states the fraction it needs); the back-feed diode's drop 0 V (an upper bound);
@@ -326,9 +329,77 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    Layer 4's power architecture closes: NO, criteria 1, 2, 5 are not PASS
 
 10. THE REGISTERS (this folder's DOWNSTREAM-REGISTER.md and LAYER5-HANDOVER.md, read and checked)
-   register: 83 items; by owner: Layer 4 coordinator 6; Layer 5 interfaces 2; Layer 6 components 8; Layer 7 mechanical 1; Layer 8 board A generator owner 11; Layer 8 board E generator owner 9; Layer 9 pre-layout analysis 15; prototype bench 27; firmware owner 4
-     by kind: EVIDENCE 16; IMPLEMENTATION 27; LAYOUT 9; RELEASE 4; TEST 27
-     implementation changes by state: DRAFTED 13; MISSING DRAFT 7; OWED 6; PENDING 1
+   register: 87 items; by owner: Layer 4 coordinator 6; Layer 5 interfaces 2; Layer 6 components 7; Layer 7 mechanical 1; Layer 8 board A generator owner 11; Layer 8 board E generator owner 12; Layer 9 pre-layout analysis 16; prototype bench 27; firmware owner 4; TEST-PLAN owner 1
+     by kind: EVIDENCE 16; IMPLEMENTATION 30; LAYOUT 10; RELEASE 4; TEST 27
+     implementation changes by state: DRAFTED 15; MISSING DRAFT 8; OWED 6; PENDING 1
    Layer 5 handover: 9 interface entries drafted (pcb_interfaces.yaml and HW-FW-CONTRACT.md, drafts only)
+
+11. PART A: Q1, F1 AND U17 AS DATASHEET-BACKED PROPOSALS (the applicable conditions, not only the headline rating)
+   Q1, board E's vehicle-entry ideal-diode FET: TI CSD19532Q5B (SLPS414B, byte-identical to ti.com on 2 October 2026), LCSC C473333
+     maker's rows: VDS 100 V, VGS +-20 V, ID 17 A (1 in2 2 oz), IDM 400 A, EAS 274 mJ, TJ to 150 C; RDS(on) at VGS 10 V 4 / 4.9 mOhm;
+       Vth 2.2 / 2.6 / 3.2 V; VSD at most 1 V; Qg at most 62 nC; RthetaJA at most 50 C/W (1 in2 2 oz; board E's copper an ASSUMPTION)
+     normal: 6.15 A (the entry's highest) at RDS(on) 4.9 mOhm x 1.95 (Figure 8 at 150 C, read) = 0.361 W; TJ at most 80.2 C in 62.1 C air (MEETS against 150 C; INFERRED)
+       ID 6.15 A against 17 A: MEETS (MAKER); at hot plug the body diode carries the hot swap's limited current for at most 0.131 ms (ENTDLY 110 us plus Qg 62 nC at the controller's 3 mA): 0.804 mJ (INFERRED)
+       SOA: Q1 runs fully enhanced or off (the ideal diode regulates only a 20 mV forward drop): no linear dwell to judge
+     reverse (REQ-015, -36 V with DC_P back-fed from the raised tracker ceiling through Q7's body diode): VDS 66.15 V against 100 V: MEETS (INFERRED);
+       the LM74700-Q1's cathode to anode 66.15 V against 70 V recommended and 75 V absolute, its ANODE -36 V against -65 V: MEETS (MAKER)
+       the body diodes: Q1's reverse-biased (it blocks); Q7's forward at DC_P's own milliamps (the back-feed); D10 off (36 V under its 44.4 V
+       breakdown); D1 reverse-biased (cathode on DC_P); the input capacitor of E-F1 at -36 V on its 100 V rating
+     transients (TEST-PLAN M2 CS101, M3 CS114 and M7 at decision 34's level, as L4-E7R derived them for the solar entry; no surge level is
+       ruled, D-16 and CHO-003): CS101 curve 2, 2 V rms, 2.828 V peak: Q1 conducts forward and blocks at most 5.66 V when the controller opens it
+       in 0.75 us; at the range's top the input reaches 38.83 V, past the OVLO's 37.78 V minimum: the hot swap may switch off under M2 (an upset
+       against M2's line at a 36 V source, not a rating); at curve 2's own boundary, a 28 V source, the top is 30.83 V, 6.95 V under it: MEETS.
+       TEST-PLAN M2 states no source voltage, so the finding is OPEN with two resolutions on the same topology: (i) M2 run at the source's
+       nominal, stated by TEST-PLAN's owner; (ii) the OVLO moved so its minimum clears 38.83 V and its maximum stays under D10's 44.4 V breakdown
+       minimum: R23 from 6.458 k down to 6.346 k with R22 100 k at 1 % (the band re-derived: 37.78 to 42.49 V for R23 6.65 k, as s120 prints); no E96
+       value lies inside; E192's 6.42 k gives 39.04 to 43.92 V, 0.21 V and 0.48 V of margin at 25 C, and D10's breakdown falls when cold, so (ii) is the
+       fallback (SESSION: (i) recommended, register R-94); CS114 curve 4, 141 mA rms into E-F1's 1 uF at 10 kHz: at most 3.17 V peak, Q1 blocks
+       at most 6.35 V; M7 with E-F1's capacitor: DC_F moves 2.25 V, so Q1 stands off at most 38.25 V: MEETS (INFERRED)
+       the capability scenario (D10 at its rated pulse, not a requirement): negative, Q1 at 100.5 V with DC_P at 36 V, past 100 V by 0.5 V; the
+       avalanche energy on the bus behind it at most 83.6 mJ against EAS 274 mJ; the LM74700-Q1's 75 V is passed once DC_P exceeds 10.5 V, and
+       Q1's once DC_P exceeds 35.5 V: NOT MET, outside every requirement (D-16; DECISION-31 recorded it); positive: the controller's ANODE at
+       64.5 V against 65 V (E-N2)
+     faults: an output short behind the hot swap: Q7 limits at 4.85 to 6.15 A with its power limit 19.63 W at 36 V and 20.4 W at the OVLO maximum (Equation 9,
+       R24 20000 Ohm, R19 0.01 Ohm; 25.29 W with PWRLIM-1's spread) for at most 8.16 ms, then restarts at 0.5 % duty; Q7's 10 ms SOA at 36 V 108 W at TC 25 C,
+       43.2 W at a 100 C case (Figure 10, read; INFERRED): MEETS; Q1 carries at most 6.15 A, and 13 A for at most 1.2 us at the circuit breaker: MEETS
+       a short at DC_P, ahead of the hot swap (a single fault): only F1 limits, at most 560.7 A for about 0.296 ms (the 10 A part's I2t over it) against
+       IDM 400 A for 100 us: no figure shows Q1 holds it; F1 clears it inside its interrupting rating (outside every requirement, ASM-001)
+     gate drive and land: VGS 10.8 to 13.9 V (the charge pump's window) against +-20 V: MEETS; TI's guidance asks a VGS rating of 15 V: MEETS;
+       its Vth at most 3.2 V against TI's recommended 2.5 V: NOT MET as a recommendation (the drawn BSC039N06NS's 3.3 V also misses it;
+       effect: turn-on time and light-load regulation, bench R-80); RDS(on) 5.68 mOhm typical at about 80 C against TI's 4.32 to 10.8 mOhm at
+       H3's 4.629 A: MEETS (typical, INFERRED); TI recommends FETs to 60 V with this controller; the 100 V part is a deliberate departure (SESSION)
+       whose reason, the controller's own pins, is checked above; the land is Q7's PowerPAK SO-8 / 5x6 SON for the same part
+   F1, board E's vehicle-entry fuse: Littelfuse 0997010.WXN, MINI 58 V (the sheet revised 11/18/2025, held back; fetch_held_back.py)
+     DC voltage rating 58 V DC against the OVLO maximum 42.49 V: MEETS (MAKER, a DC rating); interrupting 1000 A at 58 V DC against 560.7 A: MEETS
+     the prospective current by voltage (the kit's cable and lead, copper at -20 C, the source stiff: REQ-015 states no source impedance, so
+       a vehicle battery and its wiring only lower it): 9 V 118.8 A; 12 V 158.4 A; 24 V 316.7 A; 36 V 475.1 A; 42.49 V 560.7 A
+     no nuisance opening: the sheet's derating table (-40/-20/0/20/40/60/80/100 C columns) at the next column above 62.1 C inside air, 80 C: 7.3 A against the entry's 6.15 A: MEETS
+       (the project's rule: the next higher column, never interpolated); 110 % of rating opens no sooner than 360000 s; the hot swap's start-up
+       at 6.15 A for at most 8.16 ms is 0.309 A2s against the part's typical 93 A2s (melting before arcing): MEETS (INFERRED)
+     against what it protects: the time-current rows 110 % 360000 / - s; 135 % 0.75 / 600 s; 200 % 0.15 / 5 s; 350 % 0.08 / 0.5 s; 600 % 0.03 / 0.1 s; the lowest stiff-source fault at 9 V with the copper at 62.1 C is 85.9 A, 8.6 times
+       the rating, inside the 600 % row (at most 0.1 s); a fault between 13.5 and 20 A (a single upstream fault on a weak source) may take up to
+       600 s, over J_DCIN's stated VH rating (7 A at AWG 18 shrouded, 10 A at AWG 16): the fuse protects the lead, not the contact, in that band
+       (a residual of a single fault, ASM-001; R-29's lead change narrows it); Q1 against the stiff-source bound: above
+     the holder: Keystone M65 p.42 names the 3568 'For Littelfuse Mini 297 or 997 series'; the sheet gives the same blade size and pitch:
+       MEETS; the 58 V part's rejection feature works only in a 58 V keyed holder, so the 3568 also takes a 32 V MINI: the BOM, label and
+       ASSEMBLY.md name the 0997 (R-18)
+   U17, board A's PoE monitor: the INA226 (SBOS547C, byte-identical to ti.com on 2 October 2026) moved to R227, 5 mOhm in the PoE stage's VBAT input
+     as drawn: IN+ and IN- at 54 V against 40 V absolute: NOT MET (HF-F02)
+     common mode: VBAT at most 16.884 V regulated, 20 V at SYSOVP, 20.135 V at the pack-open bound, 29.2 V at D1's rated pulse, against 36 V (CMRR row and
+       bus range) and 40 V absolute: MEETS (MAKER); VBUS on POE_VIN likewise
+     differential: the stage's input at its 0.6 A at a 10 V stack, 3.682 A, 18.59 mV; at its fault bound, U16's boost peak limit (140 + 1.9) mV over
+       R72's 10 mOhm at -1 %, 14.33 A, 72.38 mV: both inside the 81.92 mV full scale: MEETS (INFERRED); R227 then dissipates 1.037 W against 3 W at 62.1 C
+       (HoJLR2512: 3 W derated from 70 C to zero at 170 C): MEETS
+       R227 is the part L4-E4 chose for R138, HoJLR2512-3W-5mR-1%, LCSC C2903482 (Milliohm; +-1 %, TCR +-50 ppm/K, MAKER as L4-E4 read it)
+     a PoE fault (an overload or a short on +54V_POE): U16 is a four-switch buck-boost; with its output pulled under its input it runs in buck
+       operation, where the high-side current's valley is held at VCS(BUCK) 94 mV maximum over R72 (9.69 A at -1 %) and the input current is the
+       inductor's times the duty: under the boost bound above (INFERRED, SNVSAI1D 7.3.1 and 7.3.5); a port's own fault is board B's TPS23861's
+     U16's own input: its VIN and BIAS move with U17 to POE_VIN, at most 0.072 V under VBAT at the fault bound; its UVLO and BIAS window are
+       read against VBAT less that drop (the helper refuses a BIAS rail other than the input without a blocking diode, so both move)
+     startup: the sheet: 'the bus voltage can be present with the supply voltage off, and reciprocally': MEETS (MAKER)
+     a load dump: the vehicle reaches VBAT only through the front end and the charger, so VBAT's own bounds above hold: MEETS
+     accuracy: VOS 10 uV, 2 mA; gain 0.1 % with R227's 1 % and 50 ppm/K over 75 K (L4-E4's span): 1.475 % plus 2 mA (INFERRED)
+     for the firmware (FW-A09): the readings are the PoE stage's INPUT current and VBAT; full scale 16.384 A, Current_LSB 0.5 mA, CAL 2048
+       (0.00512 over Current_LSB x R); the PoE output power is inferred as the input power times the stage's efficiency (0.88, undocumented)
 
 END. Desk arithmetic on read figures; nothing is measured.

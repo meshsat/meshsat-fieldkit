@@ -32,6 +32,9 @@ HAND = os.path.join(REC, "LAYER5-HANDOVER.md")
 SCRIPT = os.path.join(REC, "l4e9_power_path.py")
 OUT = os.path.join(REC, "l4e9_power_path.out")
 Q1 = os.path.join(REC, "apply_gen_sch_e_q1.py")
+F1 = os.path.join(REC, "apply_gen_sch_e_f1.py")
+U17 = os.path.join(REC, "apply_gen_sch_a_u17.py")
+GEN_A = os.path.join(ROOT, "v2", "ecad", "tools", "gen_sch_a.py")
 GEN_E = os.path.join(ROOT, "v2", "ecad", "tools", "gen_sch_e.py")
 NET_E = os.path.join(ROOT, "v2", "ecad", "pcb-e1-dock-e7", "out", "pcb-e1-dock.net")
 sys.dont_write_bytecode = True
@@ -50,6 +53,12 @@ def _M():
         sp = importlib.util.spec_from_file_location("l4e9_power_path_under_test", SCRIPT)
         m = importlib.util.module_from_spec(sp)
         sp.loader.exec_module(m)
+        for key, (rel, _sha) in m.PINS.items():
+            if "/held/" in rel and not os.path.exists(os.path.join(ROOT, rel)):
+                raise Skip("%s is held back (fetch_held_back.py fetches it)" % rel)
+        for key, ref in m.FROM_COMMIT.items():
+            if subprocess.run(["git", "-C", ROOT, "cat-file", "-e", ref], capture_output=True).returncode != 0:
+                raise Skip("%s's selected commit %s is not in this checkout" % (key, ref))
         try:
             text, F, D, R, st = m.main()
         except SystemExit as e:
@@ -170,7 +179,8 @@ def t_every_draft_of_l4e4_to_l4e8_is_registered_and_the_missing_ones_are_marked(
     miss = [r for r in rows if r[6] == "MISSING DRAFT"]
     assert any("ILIM_HIZ" in r[2] for r in miss), "L4-E5's ILIM_HIZ network is not marked MISSING DRAFT"
     assert any("R10" in r[2] for r in miss), "L4-E5's R10 is not marked MISSING DRAFT"
-    assert any("`apply_gen_sch_e_q1.py`" in r[3] for r in rows), "this record's own draft is not registered"
+    for n in ("apply_gen_sch_e_q1.py", "apply_gen_sch_e_f1.py", "apply_gen_sch_a_u17.py"):
+        assert any("`%s`" % n in r[3] for r in rows), "this record's own draft %s is not registered" % n
 
 
 def t_the_release_order_puts_r12_before_the_ballast_and_l4e4s_release_first():
@@ -289,6 +299,149 @@ def t_q1_draft_checks_applies_once_refuses_the_tree_and_composes():
         for p in l4e7:
             r = subprocess.run([sys.executable, "-B", p, y, "--write"], capture_output=True, text=True)
             assert r.returncode == 0, "%s does not compose: %s" % (os.path.basename(p), r.stderr)
+
+
+def _run(script, *args):
+    return subprocess.run([sys.executable, "-B", script] + list(args), capture_output=True, text=True)
+
+
+def _check_write_once_refuse(script, gen, label):
+    """A draft writes nothing in check mode, applies once to a copy, refuses a second application and the tree's own
+    generator (no release record)."""
+    with tempfile.TemporaryDirectory() as td:
+        a = os.path.join(td, os.path.basename(gen))
+        shutil.copy(gen, a)
+        before = open(a, encoding="utf-8").read()
+        r = _run(script, a)
+        assert r.returncode == 0 and open(a, encoding="utf-8").read() == before, "%s: check mode must write nothing" % label
+        r = _run(script, a, "--write")
+        assert r.returncode == 0, "%s: %s" % (label, r.stderr)
+        after = open(a, encoding="utf-8").read()
+        ast.parse(after)
+        assert _run(script, a, "--write").returncode == 3, "%s: a second application must be refused" % label
+    r = _run(script, gen, "--write")
+    assert r.returncode == 3 and "NOT RELEASED" in r.stderr, "%s: the tree's generator must be refused until a release record" % label
+    return after
+
+
+def t_u17_draft_moves_the_monitor_to_the_stage_input_and_composes():
+    need(U17, "the U17 draft")
+    need(GEN_A, "board A's generator")
+    after = _check_write_once_refuse(U17, GEN_A, "U17")
+    tree = ast.parse(after)
+    calls = [n for n in ast.walk(tree) if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)]
+    first = lambda c: c.args[0].value if c.args and isinstance(c.args[0], ast.Constant) else None
+    u17 = [c for c in calls if c.func.id == "ic" and first(c) == "U17"]
+    assert len(u17) == 1
+    pins = ast.literal_eval(u17[0].args[4])
+    assert pins["10"] == "VBAT" and pins["9"] == "POE_VIN" and pins["8"] == "POE_VIN", "U17's IN+ on VBAT, IN- and VBUS on POE_VIN"
+    assert "+54V_POE" not in pins.values() and "POE_OUT" not in pins.values(), "U17 keeps no pin on the 54 V side"
+    r227 = [c for c in calls if c.func.id == "r" and first(c) == "R227"]
+    assert len(r227) == 1 and [ast.literal_eval(x) for x in r227[0].args[2:4]] == ["VBAT", "POE_VIN"]
+    assert "5mOhm" in ast.literal_eval(r227[0].args[1]), "R227 is the 5 mOhm part part A chose"
+    poe = [c for c in calls if c.func.id == "lm5176" and first(c) == "POE"]
+    assert len(poe) == 1 and ast.literal_eval(poe[0].args[2]) == "POE_VIN"
+    kw = {k.arg: k.value for k in poe[0].keywords}
+    assert ast.literal_eval(kw["bias"]) == "POE_VIN", "U16's BIAS moves with its input"
+    assert after.find('_intent.rail("POE_VIN"') < after.find('_intent.rail("+54V_POE"'), "POE_VIN declared ahead of the rail it feeds"
+    l4 = os.path.join(ROOT, "v2", "docs", "records")
+    steps = [os.path.join(l4, "l4e6", "apply_gen_sch_a_r12.py"), os.path.join(l4, "l4e4", "apply_gen_sch_a_r11.py")]
+    for p in steps:
+        need(p, os.path.basename(p))
+    with tempfile.TemporaryDirectory() as td:
+        bank = os.path.join(td, "apply_gen_sch_a_bank.py")
+        rb = subprocess.run(["git", "-C", ROOT, "show", "%s:v2/docs/records/l4e8/apply_gen_sch_a_bank.py" % _M().L4E8_COMMIT], capture_output=True)
+        if rb.returncode != 0:
+            raise Skip("L4-E8's commit is not in this checkout")
+        open(bank, "wb").write(rb.stdout)
+        x, y = os.path.join(td, "x.py"), os.path.join(td, "y.py")
+        shutil.copy(GEN_A, x)
+        shutil.copy(GEN_A, y)
+        order = steps + [bank, os.path.join(l4, "l4e4", "apply_gen_sch_a_r138.py"), U17]
+        for p in order:
+            r = _run(p, x, "--write")
+            assert r.returncode == 0, "%s in the release order: %s" % (os.path.basename(p), r.stderr)
+        assert _run(U17, y, "--write").returncode == 0
+        for p in order[:-1]:
+            r = _run(p, y, "--write")
+            assert r.returncode == 0, "%s after U17: %s" % (os.path.basename(p), r.stderr)
+        assert ast.dump(ast.parse(open(x).read())) == ast.dump(ast.parse(open(y).read())), "U17 first and U17 last differ"
+
+
+def t_f1_draft_names_the_58_v_part_and_composes():
+    need(F1, "the F1 draft")
+    need(GEN_E, "board E's generator")
+    after = _check_write_once_refuse(F1, GEN_E, "F1")
+    calls = [n for n in ast.walk(ast.parse(after)) if isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id == "part"]
+    f1 = [c for c in calls if c.args and isinstance(c.args[0], ast.Constant) and c.args[0].value == "F1"]
+    assert len(f1) == 1
+    val = ast.literal_eval(f1[0].args[3])
+    assert "0997010" in val and "58 V DC" in val and "1000 A" in val and "3568" in val
+    assert ast.literal_eval(f1[0].args[5]) == {"1": "DC_IN", "2": "DC_F"}, "F1's nets are untouched"
+    cin = os.path.join(ROOT, "v2", "docs", "records", "d8dec31", "apply_gen_sch_e_cin.py")
+    need(cin, "d8dec31's input capacitor draft")
+    need(NET_E, "board E's netlist")
+    with tempfile.TemporaryDirectory() as td:
+        e7r = []
+        for n in ("apply_gen_sch_e_u5_grade.py", "apply_gen_sch_e_hold.py", "apply_gen_sch_e_input_limit.py", "apply_gen_sch_e_backstop.py"):
+            rb = subprocess.run(["git", "-C", ROOT, "show", "%s:v2/docs/records/l4e7/%s" % (_M().FROM_COMMIT["l4e7r"], n)], capture_output=True)
+            if rb.returncode != 0:
+                raise Skip("L4-E7R's drafts are not in this checkout")
+            e7r.append(os.path.join(td, n))
+            open(e7r[-1], "wb").write(rb.stdout)
+        x, y = os.path.join(td, "x.py"), os.path.join(td, "y.py")
+        shutil.copy(GEN_E, x)
+        shutil.copy(GEN_E, y)
+        assert subprocess.run([sys.executable, "-B", cin, x, NET_E], capture_output=True).returncode == 0
+        for p in [Q1] + e7r + [F1]:
+            r = _run(p, x, "--write")
+            assert r.returncode == 0, "%s: %s" % (os.path.basename(p), r.stderr)
+        assert _run(F1, y, "--write").returncode == 0
+        assert subprocess.run([sys.executable, "-B", cin, y, NET_E], capture_output=True).returncode == 0
+        for p in [Q1] + e7r:
+            r = _run(p, y, "--write")
+            assert r.returncode == 0, "%s after F1: %s" % (os.path.basename(p), r.stderr)
+        assert ast.dump(ast.parse(open(x).read())) == ast.dump(ast.parse(open(y).read())), "F1 first and F1 last differ"
+
+
+def t_part_a_conditions_hold_on_the_read_figures():
+    m = _M()
+    F, D = _C["F"], _C["D"]
+    A = m.partA(F, D, m._C_TEXT)
+    # Q1: reverse inside the part and the controller; normal junction inside its maximum; the drive inside VGS
+    assert A["q1_rev"] <= F["csd19532_vds"] and A["q1_rev"] <= F["ld_ac_rec"] <= F["ld_ca_abs"]
+    assert A["q1_tj"] < A["tj_max"] and F["entry_lim"][1] <= A["id_cont"]
+    assert A["plim_hi"] <= A["soa_hot_w"], "the hot swap's power limit with its spread inside Q7's hot 10 ms SOA"
+    assert A["cs101_top"] > F["ovlo"][0] and A["cs101_top_src"] < F["ovlo"][0], "the CS101 finding is the range's top, not curve 2's boundary"
+    lo, hi = A["r23_win"]
+    assert lo < A["r23_e192"] < hi and A["ovlo_e192"][0] > A["cs101_top"] and A["ovlo_e192"][1] < F["SMCJ40A"]["vbr_min"]
+    assert abs(A["ovlo_check"][0] - F["ovlo"][0]) < 0.01 and abs(A["ovlo_check"][1] - F["ovlo"][2]) < 0.01, "the band re-derived as s120 prints it"
+    # F1: a DC rating at the OVLO maximum, an interrupting rating at the cold cable's current, the next higher derating column
+    assert A["f_v"] >= D["f1_v"] and A["f_int"] >= D["f1_ipf"]
+    above = [x for x in A["f_amb"] if x >= F["air"][1]]
+    assert A["f_col"] == min(above) and A["f_allow"] >= F["entry_lim"][1], "the derating column is the next higher, never interpolated"
+    assert A["f_startup_i2t"] < A["f_i2t"]
+    assert A["f_min_fault_9v"] >= 6.0 * 10.0 and A["f_tc"][600][1] is not None, "the lowest stiff fault sits in the 600 % row"
+    # U17: its common mode at the highest VBAT bound, its differential at the stage's fault bound, R227 inside its derated power
+    assert max(F["sysovp"][2], D["pack_open"]["v_end"]) <= F["ina_cm_op"] < F["ina_abs"]
+    assert A["u17_mv_norm"] < A["u17_mv_fault"] <= F["ina_fs_mv"]
+    assert A["u17_buck_valley_a"] < A["u17_fault_a"], "the buck-mode bound under the boost bound"
+    assert A["u17_p_fault"] <= A["hojlr_avail"]
+    assert abs(A["u17_cal"] - round(A["u17_cal"])) < 1e-6 and A["u17_fs_a"] > A["u17_fault_a"]
+
+
+def t_the_part_a_page_agrees_with_the_output():
+    _M()
+    page = open(os.path.join(REC, "L4E9-ENTRY-PROPOSALS.md"), encoding="utf-8").read()
+    sec = _C["text"].split("11. PART A")[1]
+    for fig in ("66.15", "0.361", "80.2", "38.83", "30.83", "560.7", "7.3 A", "0.309", "85.9", "18.59", "72.38", "1.037", "16.384", "2048", "1.475",
+                "6.346", "6.458", "39.04", "43.92"):
+        assert fig in sec, "the output lacks %s" % fig
+        assert fig in page, "the part A page lacks %s" % fig
+    for part in ("CSD19532Q5B", "0997010.WXN", "C2903482", "R227"):
+        assert part in page and part in sec
+    for sha in ("437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e", _M().PINS["csd19532"][1], _M().PINS["ina226"][1]):
+        assert sha in page, "the part A page does not pin %s" % sha[:16]
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
