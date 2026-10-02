@@ -13,9 +13,12 @@ storage lag are recomputed in closed form; the screen covers every row and every
 balance conserves energy at every equilibrium it reports; the comparison holds at most three complete approaches judged
 on every row, recommends the least complex one with no row rejected and no added energy storage, and its conditioned
 corner, margins and U2 shift are recomputed here; the primary battery stays a proposal under D-06; E5's profile is Method
-507.6's; both checks are filed byte for byte from their results; the page's figures are the .out's; the held files are
-ignored by git and pinned alike in the script and the fetcher; no dash or claim word is written. Nothing here writes
-into the tree.
+507.6's; U-01 by mode (the round of 2 October 2026): the HL18650V's charge, discharge and storage rows are read from its
+pinned page reading with a condition, a class and what the signed specification must confirm, the charge ranges' currents,
+voltages and thresholds are recomputed, the usable energy is the tree's energy chain reproducing the replay's 35E figures
+first, the warm-up and the thresholds of section 9d are recomputed, and the drafted request carries the added questions;
+both checks are filed byte for byte from their results; the page's figures are the .out's; the held files are ignored by
+git and pinned alike in the script and the fetcher; no dash or claim word is written. Nothing here writes into the tree.
 """
 import ast
 import hashlib
@@ -310,6 +313,76 @@ def t_comparison_recommends_the_least_complex_qualifying_approach():
     assert abs(ep["mean"] - (2 * 45 + 6 * 60 + 8 * 45 + 8 * 30) / 24.0) < 1e-12
 
 
+def t_u01_limits_by_mode_and_charging():
+    import json
+    R = _R()
+    u = R["u01"]
+    page = json.load(open(os.path.join(REC, "inputs", "topwell-hl18650v-page-2026-10-01.json"), encoding="utf-8"))
+    t = page["specification_table_verbatim"]
+    bands = [(float(a), float(b), float(c), float(v)) for a, b, c, v in re.findall(r"(-?\d+)＜T[≤＜](-?\d+)℃: (\d\.\d)C to (\d\.\d)V", t)]
+    assert bands == u["hp"]["bands"] and [b[:2] for b in bands] == [(-10.0, 0.0), (0.0, 10.0), (10.0, 60.0)]
+    c = float(re.search(r"Standard Charge Current (\d\.\d+)A", t).group(1)) / 0.2
+    assert abs(c - 2.8) < 1e-12 and abs(float(re.search(r"Max Continuous Charge Current (\d\.\d+)A", t).group(1)) / 0.5 - c) < 1e-12
+    for (lo, hi, crate, v), r in zip(bands, u["rows_chg"]):
+        assert abs(r["i_page_pack"] - crate * c * 3) < 1e-12 and abs(r["i_set"] - min(crate * c * 3, 3.0)) < 1e-12
+        assert abs(r["v_pack"] - 4 * v) < 1e-12 and abs(r["batovp"] - 4 * v * 1.04) < 1e-12
+    assert abs(u["crate_drawn"] - 3.0 / 3 / c) < 1e-12
+    # each drafted threshold keeps today's 1.0 K inside its band edge; the hot thresholds are kept
+    d, now = u["draft"], u["lad_now"]
+    assert now["UTC"] == 1.0 and now["T1"] == 1.0 and (now["T3"], now["T4"], now["OTC"]) == (42.0, 43.0, 44.0)
+    assert (d["UTC"], d["T1"], d["T2"], d["T5"]) == (-9.0, -9.0, 1.0, 11.0) and (d["T3"], d["T4"], d["OTC"]) == (42.0, 43.0, 44.0)
+    assert d["UTC_rec"] == -5.0 and d["CUV"] == 2.75 and d["L3"] == -7.0
+    # section 9a: every row names its condition, a class of the round's set and what the signed specification must confirm
+    out = open(OUT, encoding="utf-8").read()
+    sec = out[out.index("9a The limits by mode"):out.index("9b The charging constraints")]
+    rows = re.findall(r"condition: (.*?); class (.*?); the signed specification must confirm: (.+)", sec)
+    assert len(rows) == 12, len(rows)
+    for cond, cls, conf in rows:
+        assert cond and conf, (cond, conf)
+        assert cls.split(" ")[0] in R["u01_classes"] or cls.startswith("none (not on the page)"), cls
+    assert sum(1 for l in sec.splitlines() if l.startswith("   - ")) <= 3, "more than three comparables"
+    assert all(u["beyond"].values()), "a page row the comparables reach"
+
+
+def t_u01_usable_energy_and_thresholds():
+    import yaml
+    R = _R()
+    u = R["u01"]
+    eb = _load("energy_budget_under_test", os.path.join(ROOT, "v2/docs/records/energy/energy_budget.py"))
+    d = yaml.safe_load(open(os.path.join(ROOT, "v2/docs/records/energy/energy_inputs.yaml"), encoding="utf-8"))
+    pk = eb.Pack(d)
+    p = d["model_states"]["PS-IDLE-SPEC"]["plan"]
+    e35 = pk.usable_wh(p, 25.0, 0.8)[0]
+    assert abs(e35 - u["e35"]["25"]) < 1e-9 and round(e35, 1) == u["rep"][0] == 107.9
+    assert round(pk.usable_wh(p, -10.0, 0.8)[0], 1) == u["rep"][1] == 44.5
+    # the proposed cell on the same chain: every factor but the minimum capacity is the 35E's, so the ratio is the capacities'
+    assert abs(u["e_hl"]["25"] / e35 - 2.8 / 3.35) < 1e-12
+    assert round(e35 - u["e_hl"]["25"], 1) == u["l9"]["grow"], "the shortfall growth L4-E9 carries"
+    lo, hi = u["brackets"]["cold"]
+    assert abs(u["e_hl"]["cold"][0] - u["e_hl"]["25"] * lo) < 1e-9 and abs(u["e_hl"]["cold"][1] - u["e_hl"]["25"] * hi) < 1e-9
+    assert abs(u["objective"][0] - 48 * p) < 1e-9 and abs(u["objective"][1] - 72 * p) < 1e-9
+    # a warm-up of the cold-soaked block, closed form: the mat's power into a block over the series path
+    c_lo = R["blk"]["C"][0] * 44.0 / 50.0
+    g_lo = R["selfheat"]["g_series"][0]
+    dT = -9.0 - (-20.0)
+    t_s = -(c_lo / g_lo) * math.log(1 - dT * g_lo / 7.5)
+    assert abs(u["warm"][("T1", "low")]["wh"] - 8.5 * t_s / 3600.0) < 1e-9
+    g_hi = R["selfheat"]["g_series"][1]
+    assert not u["warm"][("T5", "high")]["reach"] and abs(u["warm"][("T5", "high")]["ceiling"] - (-20.0 + 7.5 / g_hi)) < 1e-12
+    # section 9d's thresholds from the conditioned corner: today's H1 offset and the reading-high term
+    th, cc = u["thr"], R["condc"]
+    off = 60.0 - R["hot"]["H1"] + R["hot"]["terms"]["thermistor interchangeability"]
+    assert abs(th["e5_noact"] - (cc["e5_peak"] + off)) < 1e-12 and abs(th["e3o_noshut"] - (cc["e3o_peak"] + off)) < 1e-12
+    assert th["e3o_cells"] < th["e3s"] < th["e3o_noshut"] < th["e5_cells"] < th["e5_noact"] < u["hp"]["storage"][-1][1]
+    # the drafted request carries the questions this round adds
+    q = open(os.path.join(REC, "clarification", "topwell-hl18650v.txt"), encoding="utf-8").read()
+    assert u["draft_q"] == list(range(1, 11))
+    for k in ("between -20 and -10 C", "termination current", "pulse current", "at -20 C and at -40 C", "end-of-life", "self-discharge"):
+        assert k in q, k
+    page = open(PAGE, encoding="utf-8").read()
+    assert "## 14. U-01 by mode" in page and "No cell is adopted" in page
+
+
 def t_check_filed_byte_for_byte():
     import json
     for name, job, run in (("astra-check-l4e10-1.md", "cx26-l4e10-check", "20261001T223709Z-4184732"),
@@ -341,7 +414,9 @@ def t_page_figures_are_the_outs():
             "-5.0 to 44.8", "4.9 to 21.1", "75.00", "0.092", "0.102", "7.12", "0.011", "0.012", "0.183", "0.203", "0.79 K", "0.248", "0.275", "1.057",
             "1.175", "52 to 117", "58.7 to 163.2", "47.5", "84.2", "1.51", "2.07", "50.82", "64.24", "66.72", "61.26", "72.42",
             "144.7", "127.4", "121.0", "108.1", "95.2", "90.4", "2.52", "2.22", "2.11", "1.37 to 3.24", "56.37 to 58.24",
-            "4.67 to 8.00", "10.5 to 54.0", "52.04", "53.29", "1.725", "0.056", "0.121"]
+            "4.67 to 8.00", "10.5 to 54.0", "52.04", "53.29", "1.725", "0.056", "0.121",
+            "0.84 A", "1.68 A", "16.40 V", "17.06 V", "17.47 V", "0.357C", "90.2 Wh", "107.9 Wh", "54.0 Wh", "45.1 to 69.6",
+            "37.2 to 54.1", "78.94", "74.73", "73.07", "71.00", "68.86", "3.22 Wh", "12.3 Wh", "2.1 C", "2054 to 3082"]
     for f in figs:
         assert f in out, "%s not in the .out" % f
         assert f in page, "%s not on the page" % f
