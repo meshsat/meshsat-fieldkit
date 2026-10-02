@@ -75,7 +75,17 @@ brackets point to the `.out`.
   at +40 C needs 1.447 W/K, and charging on the design day needs 1.507 to 1.832 W/K. Fins on the plate, leading the large loads
   into the plate, and the lid as a radiator, assembled, reach 1.384 W/K: 1.252 W short. The remaining options are the owner's:
   PS-IDLE as a labelled alternative at +40 C (40.2 W fits that route), or a requirement change. U-02 stays a closure condition
-  on T-H1's reading; one point at two heaters (42.4 W) decides it at 1.509 W/K.
+  on T-H1's reading. (Its closing line, one point at two heaters (42.4 W) at 1.509 W/K, is corrected by section 16.)
+- **The thermal reconciliation (section 16, the owner's amendment of 2 October 2026, 14:20).** The 1.509 W/K line established
+  only the profile's +70 C class at +40 C, which no requirement asks for (C1 sheds the profile at +50 C inside air, REQ-024;
+  D-02b runs one module above +35 C); the words "operation at +40 C" are withdrawn. A +55 C inside-air limit exists for the
+  heat stage at +40 C (REQ-024's acceptance, REQ-052, E3-L): 1.806 W/K at 27.086 W. The owner's 2.83 W/K belongs to no
+  requirement's mode. One lid-open, fans-on point at the heat stage's heat (heaters 25.136 W plus the fans) reading at least
+  1.958 W/K closes K1, K3, K4 and K9; the lid closed (K5), the profile at REQ-014's +20 C (K6, 1.508 W/K), charging (K7 and
+  K8, 1.698 and 2.081 W/K with the charge counted) and E5 (K10, 2.455 W/K) need their own points; the SGP41 on Table 4, the hot
+  spots, the fans' rating, full sun and the cells stay open. P is the heaters plus the fans; the room reading is the
+  conservative side (1.6 to 3.7 %); the endpoint is a drift of at most 0.1 K/h over an hour or a first-order fit over three
+  time constants; authorisation is the owner's, acceptance the coordinator's check.
 
 ## 2. The acceptance, read first [1]
 
@@ -399,7 +409,9 @@ CM5 not shut down and logging, no damage, recovery kept), each reported as such.
 
 `l4e12_thermal.py` and `.out`; `fetch_held_back.py` (TI's TLV755P sheet into the ignored `v2/vendor/ti/held/`, sha256
 44ac688d7e51f852...); `clarification/` (PDi, Sensirion, Ground Control, NiceRF, Bulgin; drafts for the owner to send);
-`checks/astra-check-l4e12-1.md` and `checks/astra-check-l4e12-2.md`; `T-H1-PROCEDURE-DRAFT.md` (section 13); `README.md`. The tests: `env -C v2/ecad/tools/tests python3 run.py test_l4e12
+`checks/astra-check-l4e12-1.md` and `checks/astra-check-l4e12-2.md`; `T-H1-PROCEDURE-DRAFT.md` (sections 13 and 16); `README.md`.
+`fetch_held_back.py` also fetches Rittal's page that section 16 cites into the ignored `v2/vendor/rittal/held/` (sha256
+fd3a31d31c88adb4...). The tests: `env -C v2/ecad/tools/tests python3 run.py test_l4e12
 test_public_hygiene`. No generator, BOM, registry, interface or Layer 3 file is changed.
 
 ## 12. The two checks, and what each item changed
@@ -735,6 +747,11 @@ still counts their heat inside the case, so nothing in 13.3 changes.
 
 ## 15. The heat-rejection question (the consolidation, 2 October 2026) [10]
 
+**Corrected by section 16 (the owner's amendment of 2 October 2026, 14:20):** the profile at +40 C is not a requirement (C1 sheds
+it, REQ-024; D-02b); 1.447 W/K is the profile's own condition at REQ-014's +20 C (K6); charging with the charge path counted needs
+1.627 to 1.977 W/K, not 1.507 to 1.832; and 15.5's 42.4 W left the fans out of P. The model figures below stand as figures of the
+bound.
+
 The owner: "For any function still failing after repeated corrections, compare at most three credible approaches ...
 Quantify the consequences for power, heat, space, cost and endurance. Select the best-supported route", and "If no supported
 alternative exists, name the exact missing fact and the smallest practical experiment." The question asked of this record: if
@@ -850,3 +867,317 @@ chooses among 15.4's options.
 | The three approaches compared on the same bound and model, each alone and assembled | the owner's rule: at most three, quantified | T-H1 and the makers' datasheets |
 | The fins' multiplier 2 to 3, the braid 0.20 m by 200 mm2, the set of loads led into the plate | no held datasheet or layout gives them; each is printed with its effect | a vendor's datasheet; Layer 7's layout |
 | No route selected: none reaches the need on bounded evidence | the owner's exit definition, read literally | T-H1's reading |
+
+## 16. The thermal reconciliation (the owner's amendment of 2 October 2026, 14:20, item 1) [11]
+
+The owner asked what section 15.5's line means: that a T-H1 point at 42.4 W reading at least 1.509 W/K "establishes operation
+at +40 C ambient". His check: 42.4 / 1.509 = 28.1 K, so the air would be about +68.1 C at +40 C; and if a +55 C inside-air limit
+applied to that mode, the need would be 42.4 / (55 - 40) = 2.83 W/K. This section answers him point by point. Every figure is
+printed in the `.out`'s section 11.
+
+**The answer in short:**
+- **The arithmetic of 1.509 holds, but the claim was too wide.** It establishes only the profile's +70 C class at +40 C, and
+  no requirement asks for that: at +40 C the controls shed the profile (C1 at +50 C inside air, REQ-024; D-02b runs one module
+  above +35 C). The words "operation at +40 C" are withdrawn.
+- **The owner's +68.1 C is right.** The same reading puts the air at 68.1 C at +40 C, past C1's +50 C trigger, so the kit
+  would not stay in the profile there.
+- **A +55 C inside-air limit does exist, for the heat stage at +40 C** (REQ-024's acceptance, REQ-052, E3-L). It needs
+  **1.806 W/K** at the heat stage's 27.086 W.
+- **The owner's 2.83 W/K belongs to no requirement's mode.** No requirement holds the profile's 42.4 W under +55 C at +40 C.
+- **One lid-open, fans-on point closes four conditions.** At the heat stage's heat (heaters 25.136 W plus the fans), a reading
+  of at least **1.958 W/K** closes K1, K3, K4 and K9. Every other condition needs its own measured point, or stays open.
+
+### 16.1 The claim, checked [11a]
+
+**The arithmetic.**
+- At the bench: 42.4 W / 1.509 W/K = 28.1 K.
+- The expanded uncertainty at that rise is 4.12 % (k = 2).
+- After it: 1.509 x (1 - 0.0412) = 1.447 W/K, which is the profile's 43.413 W over the 30 K from +40 C to the +70 C class.
+
+**What it establishes:** the profile's own +70 C class at +40 C. No requirement asks for that, because the kit does not run the
+profile at +40 C:
+- REQ-024: "on measured inside-air (+50 C) and cell (+55 C) temperatures the kit sheds to its reduced mode and then its heat
+  stage (C1)";
+- D-02b: "above +35 C ambient the kit runs one module".
+
+**Where 1.447 W/K does belong:** it is the profile's own condition at REQ-014's +20 C ("its battery-only runtime is stated in
+hours in an idle and a typical mode (PS-IDLE-SPEC and PS-TYP) at +20 C"). There the profile runs unshed only while the inside air
+stays under C1's +50 C: 43.413 W over 30 K (K6 below).
+
+### 16.2 The heat, counted once [11b]
+
+All MODELED, plan. Nothing is counted twice: the fans' power is among the loads at the pins, and on the bench it is measured,
+not modeled.
+
+| Mode | At the load pins (the fans among them) | Converters and distribution | Front end and charger | Pack's own I2R | L4-E8's ballasts | Into the case |
+|---|---|---|---|---|---|---|
+| The profile PS-IDLE-SPEC, on the pack | 36.448 W (2.97 W: the three modules' coolers and the two mixers) | 6.376 W | none | 0.590 W | not counted (solar stage only) | **43.413 W** |
+| The profile with a charge on shore | as above | as above | 3.446 W more | 0.590 W | not counted | **46.859 W** |
+| The heat stage on shore (C1's end state) | 19.378 W (1.95 W: slot 3's cooler and the two mixers) | 3.893 W | 1.725 W | none | 2.09 W (the worst corner, the margins' rule) | **27.086 W** |
+
+**What is not in the profile's heat:**
+- L4-E8's ballasts: 0.0093 W at its nominal illustration, at most 2.09 W at the bound's worst corner, and only while the solar
+  stage runs;
+- the solar entry's sense bank (solar current only);
+- Q39's 0.0945 W with L4-E11's (B1), as L4-E9 at `a0212d9e` states it.
+
+**The bench.**
+- **The heater:** READY-TO-ACT's heater is 6.8 ohm at 12.0 V, giving 21.176 W of heat (all of its electrical power stays
+  inside). Two give 42.353 W, the "42.4 W".
+- **The fans:** they run from the bench supply. Their measured draw is heat inside the case and is added to the heaters, so
+  **P = the heaters + the fans, never the heaters alone.** Section 15.5's 42.4 W left the fans out; 16.6 restates it.
+- **Standing for a mode:** the heaters are set to the mode's heat less the fans' measured draw:
+  - the profile, 40.443 W (two heaters at 11.73 V);
+  - the heat stage, 25.136 W (one heater at 13.07 V).
+- The fans' measured draw replaces their modeled share, so nothing is counted twice.
+
+### 16.3 The nodes and the limits [11c]
+
+**The nodes.** The conductance G = Q / rise is defined between two nodes:
+- the mixed inside air: the mean of the air channels, with the hold's reference placed in it (section 4d);
+- the ambient air: shaded channels about 0.5 m from the case.
+
+**The ambients.**
+- **On the bench:** the room, +22 C taken.
+- **In operation:** REQ-024, "The kit operates at -20 to +40 C ambient".
+
+**The limits, each with its reference:**
+
+| Limit | At the node | Reference |
+|---|---|---|
+| C1's +50 C inside-air and +55 C cell triggers | control triggers that shed, not damage limits | REQ-024; CONOPS 4: "C1, module shedding \| inside air +50 C or any cell +55 C \| normal to the reduced mode; reached again in the reduced mode, to the heat stage; restores 5 K below" |
+| The SGP41's +55 C | the inside air | REQ-052: "every part inside its published range (an SGP41 above +55 C fails)"; TEST-PLAN E3-L: "the inside air at or under the SGP41's +55 C; an SGP41 above +55 C fails E3-L"; resting on its Table 5 absolute row |
+| The SGP41's +50 C | the inside air | its Table 4, under this record's corrected rule (section 4d); the owner's CFL-002 |
+| The +70 C class | the inside air | the makers' sheets of section 4: RockBLOCK 9704, SA868, G6K, PCM2912A, LimeSDR, H5007NL, ATP16, PXP4043/C; the AW7915's 0 to +70 C operating while the profile runs it |
+| The module's +85 C | its intake | CM5 datasheet p.28 |
+| The cells | the cells, taken at the air | E3-A: "no charge starts while the gauge reads above 42 C (T3)"; "every cell surface at most +60 C throughout" |
+| Every part in its range | every part | REQ-024's acceptance: "part_temps.py finds no part outside its range" |
+
+**D-02a's +55 C is an AMBIENT qualification margin, not an inside-air limit.** In its own words: "TEST-PLAN's +55 C operating,
++71 C storage and -33 C storage are QUALIFICATION MARGINS over the -20 to +40 C use and -20 to +45 C storage envelope, with two
+pass lines: operate to specification inside the envelope; survive and recover at the margin." It is the ambient of E3-O (K9).
+
+**Each condition, and the conductance it needs** (Q over the room from the ambient to the limit):
+
+| Id | Requirement and mode | Lid | Heat into the case | Ambient | Limit at the node | Needs |
+|---|---|---|---|---|---|---|
+| K1 | REQ-024 and E3-A at +40 C: C1's end state, the heat stage on shore with the ballasts | open | 27.086 W | +40 C | the SGP41's +55 C (REQ-024's acceptance, every part in its range; REQ-052's and E3-L's line; its Table 5) | **1.806 W/K** |
+| K2 | the same, the SGP41 judged on its Table 4 +50 C (this record's corrected rule; the owner's CFL-002 open) | open | 27.086 W | +40 C | the SGP41's +50 C (Table 4) | 2.709 W/K |
+| K3 | the same, the +70 C class in the heat stage (the H5007NL, the ATP16, the PXP4043/C and the radios C1 leaves on) | open | 27.086 W | +40 C | +70 C (the makers' sheets of section 4) | 0.903 W/K |
+| K4 | the same, the module's intake | open | 27.086 W | +40 C | the module's +85 C (CM5 4.4) | 0.602 W/K |
+| K5 | REQ-052 and E3-L at +40 C: the heat stage | closed | 27.086 W | +40 C | the SGP41's +55 C (E3-L's line) | **1.806 W/K** |
+| K6 | REQ-014 at +20 C: the profile on the pack, not shed by C1 | open | 43.413 W | +20 C | C1's inside-air trigger +50 C (REQ-024) | 1.447 W/K |
+| K7 | charging on SC-37's design day, the profile running and the charge path counted (on shore), cold end | open | 46.859 W | +13.2 C | the gauge's charge start T3 42 C (E3-A; the cells at the air) | 1.627 W/K |
+| K8 | the same, warm end | open | 46.859 W | +18.3 C | T3 42 C | 1.977 W/K |
+| K9 | E3-O, D-02a's +55 C AMBIENT margin: the heat stage, every radio C1 leaves on | open | 27.086 W | +55 C | +70 C (U-02) | 1.806 W/K |
+| K10 | E5's +60 C dwell under the hold | open | 21.587 W | +60 C | +70 C (U-02) | 2.159 W/K |
+| X1 | the profile at +40 C (no requirement: C1 sheds it, REQ-024; D-02b runs one module above +35 C) | open | 43.413 W | +40 C | C1's +50 C | 4.341 W/K |
+| X2 | the profile's +70 C class at +40 C (the consolidation's framing; no requirement) | open | 43.413 W | +40 C | +70 C | 1.447 W/K |
+| X3 | the owner's conditional check: 42.4 W under a +55 C inside-air limit at +40 C | open | 42.400 W | +40 C | +55 C | 2.827 W/K |
+
+**Does a +55 C inside-air limit exist? Yes, for the heat stage at +40 C.**
+- **Where it comes from:**
+  - with the lid closed, REQ-052's acceptance and E3-L's line;
+  - with the lid open, REQ-024's acceptance, the SGP41 being a part with that published range;
+  - LO-01a, on shore.
+- **What it needs:** K1 and K5 need **1.806 W/K**, LO-01a's floor with the ballasts.
+- **It does not apply to the profile,** which C1 sheds at +50 C inside air. So the owner's conditional 2.83 W/K (X3) belongs to
+  no requirement's mode; the heat stage's analogue of his figure is K1's.
+- **No temperature requirement is relaxed:** every limit above is applied as written, and K2 keeps the SGP41 on Table 4 for the
+  owner's CFL-002.
+
+**Part-level hot spots.** These limits sit on a part's junction or case, not on the air:
+- the TLV75533 regulators' +125 C recommended junction (3c, 5c);
+- the converters' junctions (3c);
+- the module's SoC (its own throttle);
+- the PA's flange on the plate (CONOPS's key-down window and C4, PWR-F15; not this section's K conditions);
+- the parts in a cooler's exhaust (2h, +5.64 K over the mixed air);
+- the plate-mounted face parts (the plate's own temperature).
+
+**What T-H1's air reading bounds, and what it does not.**
+- **It bounds** the parts rated by ambient that sit in the mixed air.
+- **It does not bound** the junction-rated parts (their rise is modeled: THM-001 at +40 C, REQ-024's acceptance) or the parts in
+  the exhaust (placement). T-H2 measures both on the built kit.
+- **The face parts:** the plate fraction T-H1 records bounds them.
+
+### 16.4 The relationship, the evidence, and the translation [11d]
+
+**The relationship (the owner's primary reference).** Rittal's calculation basis for enclosure climate control
+(`https://www.rittal.de/downloads/eBook/TSH/EN/Climate_control/pubData/SEO/Page_6.html`) gives the steady balance:
+- "QS = A k ΔT (watts)";
+- A is the effective heat-dissipating enclosure surface (to IEC 890), and k the heat transfer coefficient, "for sheet steel
+  k = 5.5 W/m2K";
+- the largest rise follows as Qv / (A k).
+
+The page was read on 2 October 2026 (12:39Z, HTTP 200, 2522 bytes, sha256 `fd3a31d31c88adb4...`). It is held back by its
+copyright: `fetch_held_back.py` fetches it into the ignored `v2/vendor/rittal/held/` and checks the sha256.
+
+**The product A k is this record's G = Q / rise. The steel figure is not this enclosure's:**
+- the Peli 1450 is a 5.34 mm polypropylene shell;
+- only natural convection moves the air inside (the fans' flow is credited at zero);
+- the face is an aluminium plate, with the lid open.
+
+So this enclosure's k comes from its own films and walls (section 14's bound). At +40 C and K1's 15.0 K rise, the areas are the
+plate's exposed 0.0912 m2 and the walls' outer 0.1444 m2, together 0.2356 m2; the floor is taken as adiabatic.
+
+| Coefficients | k plate | k walls | k whole | A k |
+|---|---|---|---|---|
+| the bound | 2.85 W/m2K | 2.34 | 2.54 | 0.598 W/K |
+| the coefficients' other ends | 3.22 | 2.54 | 2.81 | 0.661 W/K |
+
+**Against the need:**
+- **Sheet steel's 5.5 W/m2K** on the same area would read 1.296 W/K.
+- **K1's 1.806 W/K** needs k = 7.66 W/m2K over that area, 2.7 to 3.0 times what the bound's films give.
+- **The outside films cap A k** at 1.504 W/K with any inside film (1.859 at the coefficients' other ends), in still air with the
+  floor adiabatic. K1's need lies over the cap at the conservative ends, and under it by 0.053 W/K at the other ends.
+- **The tree's other evidence spans the need:** W4's lumped estimate gives 1.22 to 2.85 W/K (fixed films with the fans, the floor
+  counted), and 32.53 gives 3.0 to 3.3 W/K.
+
+**So the bound under the need leaves feasibility unestablished, not refuted.** What the bound does not credit:
+- the floor's support;
+- the outside's real films and its air movement;
+- the fans' film inside;
+- heat led into the plate past the air (15.2 (b)).
+
+Only a measured G decides it: T-H1.
+
+**Why the simple calculation is not enough.** There are two heat paths in parallel (the plate and the walls), each through an
+inside film, a wall and an outside film. Their convection depends on the rise and their radiation on the absolute temperatures,
+so G is not one constant: it changes with the heat (a reading at one heat bounds that heat) and with the ambient.
+
+**The translation from the bench to +40 C** (the bound's model at the same rise, G = Q / rise, at +22 C against +40 C):
+
+| Case | Rise 15 K: room, then +40 C | Factor | Rise 30 K: room, then +40 C | Factor |
+|---|---|---|---|---|
+| the bound | 0.588 then 0.598 W/K | x 1.018 | 0.671 then 0.682 W/K | x 1.016 |
+| the coefficients' other ends | 0.648 then 0.661 | x 1.021 | 0.740 then 0.755 | x 1.020 |
+| the fans' flow 0.5 m/s | 0.681 then 0.697 | x 1.025 | 0.741 then 0.756 | x 1.020 |
+| the stack's radiation | 0.646 then 0.670 | x 1.037 | 0.735 then 0.759 | x 1.033 |
+
+- **The operating ambient's conductance is 1.6 to 3.7 % above the room's** at the same rise. The room reading is the conservative
+  side, and the translation's uncertainty is not material. So the procedure tests at room temperature, with an optional
+  confirming point in a chamber at +40 C.
+- **Section 13.4's 1.15 to 1.20** came from W4's outside-film radiation alone. The inside film, which is convective, dominates the
+  whole.
+- **The bench's 28.1 K is not the same 28.1 K at +40 C:** the rise there is the bench's divided by the factor above. The rise also
+  changes with the heat, so each heat needs its own point (16.6).
+
+**The transient.** E3-A holds +40 C for 4 h. At 1.806 W/K the case's time constant is 1.23 to 1.54 h (32.53's thermal mass), so
+the air reaches 92.6 to 96.1 % of its steady rise within the dwell. The steady state is the bound.
+
+**The sun.** No solar load enters the derivation:
+- REQ-024: "the kit is operated shaded (D-02e)";
+- D-02e: "'Operate shaded' is a stated operating condition, with a shade accessory (a lid sun shield or a tarp); full-sun design
+  is a later qualification item. No board change.";
+- TEST-PLAN holds no Method 505 row.
+
+Full sun stays a later qualification item.
+
+### 16.5 The margin [11e]
+
+Each condition's bench reading is taken at its own heat (the heaters plus the fans). Its threshold is the need plus the expanded
+uncertainty at that rise (the budget of 13.4). The room-to-operating credit of 16.4 is kept as margin, not taken.
+
+| Id | Heat | Needs | A reading of at least | Its rise | U (k = 2) |
+|---|---|---|---|---|---|
+| K1 | 27.086 W | 1.806 W/K | **1.958 W/K** | 13.8 K | 7.8 % |
+| K2 | 27.086 W | 2.709 W/K | 3.081 W/K | 8.8 K | 12.1 % |
+| K3 | 27.086 W | 0.903 W/K | 0.941 W/K | 28.8 K | 4.0 % |
+| K4 | 27.086 W | 0.602 W/K | 0.620 W/K | 43.7 K | 3.0 % |
+| K5 | 27.086 W | 1.806 W/K | **1.958 W/K** (lid closed) | 13.8 K | 7.8 % |
+| K6 | 43.413 W | 1.447 W/K | **1.508 W/K** | 28.8 K | 4.0 % |
+| K7 | 46.859 W | 1.627 W/K | **1.698 W/K** | 27.6 K | 4.2 % |
+| K8 | 46.859 W | 1.977 W/K | **2.081 W/K** | 22.5 K | 5.0 % |
+| K9 | 27.086 W | 1.806 W/K | 1.958 W/K | 13.8 K | 7.8 % |
+| K10 | 21.587 W | 2.159 W/K | **2.455 W/K** | 8.8 K | 12.1 % |
+
+**How 1.509 followed from 1.447 (16.1):** it is X2's need at 42.4 W of heaters, with the fans left out of P.
+
+### 16.6 What one point closes, and what remains [11f]
+
+**Closed by one passing point** (lid open, the fans on, at the heat stage's heat: the heaters at 25.136 W plus the fans; a reading
+of at least **1.958 W/K**):
+- **K1, K3, K4:** REQ-024 and E3-A at +40 C. The heat stage's air stays under the SGP41's +55 C, under the +70 C class and under
+  the module's intake limit.
+- **K9:** E3-O's +70 C class at its +55 C ambient margin. It is the same heat and the same rise, and its translation from room
+  temperature is conservative.
+
+**Closed only by a further measured point:**
+
+| Id | The point | Reading needed |
+|---|---|---|
+| K5 | lid closed, the same heat | at least 1.958 W/K, lid closed |
+| K6 | the profile's heat (REQ-014 at +20 C) | at least 1.508 W/K |
+| K7, K8 | the profile with the charge, plus the cells' own rise over the air (U-01's) | at least 1.698 and 2.081 W/K |
+| K10 | the hold's heat in E5 | at least 2.455 W/K |
+
+**Open:**
+- **K2:** the SGP41 judged on Table 4 (the owner's CFL-002).
+- **The part-level hot spots:** T-H2 and THM-001.
+- **The fans' rating:** D-18, REQ-043.
+- **Full sun:** D-02e, a later qualification item.
+- **The cells on the pack at +40 C:** U-01, L4-E10.
+
+### 16.7 The procedure [11g]
+
+`T-H1-PROCEDURE-DRAFT.md` is revised to this section. In short:
+
+**The points,** run in the order K1, K5, K10, K6, then K7 and K8 (one point, one heat, two needs). Each is set to the mode's heat
+less the fans' measured draw. The heaters are READY-TO-ACT's 6.8 ohm (the nearest whole number of them), spread over the places in
+proportion:
+
+| Point | Heat | Heaters (fans) | Setting | Spread over the places (W, plan) |
+|---|---|---|---|---|
+| K1, K5 (and K9) | 27.086 W | 25.136 W (1.950 W) | one at 13.07 V | board B 14.972; board A 4.284; the front end and the charger 1.725; board C and the face 1.500; board D and the PA 1.500; board E 1.155 |
+| K10 | 21.587 W | 19.637 W (1.950 W) | one at 11.56 V | board B 12.057; board A 3.903; board C and the face 1.500; the front end and the charger 1.345; board E 0.832 |
+| K6 | 43.413 W | 40.443 W (2.970 W) | two at 11.73 V each | board B 26.234; board C and the face 7.500; board A 3.464; board D and the PA 1.500; board E 1.155; the pack 0.590 |
+| K7, K8 | 46.859 W | 43.889 W (2.970 W) | two at 12.22 V each | as K6, plus the front end and the charger 3.446 |
+
+**Duration at each pass line.** The time constant is tau = C / G, with C = 10 kJ/K (32.53's upper bound for the kit, and so for
+the empty case). A point is steady within 1 % of its rise at ln(100) tau, then an hour is averaged:
+- K1 and K5: tau 1.42 h, steady at 6.5 h (the fit's three time constants, 4.3 h);
+- K10: tau 1.13 h, 5.2 h (3.4 h);
+- K6: tau 1.84 h, 8.5 h (5.5 h);
+- K7: tau 1.64 h, 7.5 h (4.9 h).
+
+A case as poor as the bound takes up to 21.1 h a point.
+
+**The endpoint**, either of:
+- **steady state:** the mixed air drifts at most 0.1 K/h over an hour;
+- **a transient fit:** a first-order fit theta(t) = theta_ss + (theta_0 - theta_ss) exp(-t/tau) over at least three time
+  constants, with residuals at most 0.05 K RMS and tau within a factor 2 of C/G. Theta_ss's fitted standard error joins the
+  rise's uncertainty.
+
+**The verdict per point:**
+- **Pass:** the reading less its expanded uncertainty is at or over the condition's need, i.e. the reading meets 16.5's
+  threshold.
+- **Fail:** it is under it.
+- **Inconclusive** (the point is repeated): the endpoint is not met, or in the averaging hour the supply or a fan's draw moves by
+  more than 1 %, or the ambient by more than 1 K.
+
+**Authorisation and acceptance are separate.** Authorising the physical test (the bench, the people, the spend) is the owner's.
+Accepting its result goes through the coordinator's check of the filed record against this section. No temperature requirement
+is relaxed to make a point pass.
+
+### 16.8 What this changes in sections 1, 13, 14 and 15
+
+- **Section 15.5's first line is withdrawn as worded.** "1.509 W/K meets 1.447 W/K: the profile at +40 C" established only X2.
+  Its 42.4 W left the fans out of P. The profile's own condition is K6, at REQ-014's +20 C (1.508 W/K at its own heat).
+- **Section 15.1 and 15.5's charging needs are corrected.** They took the profile's 43.413 W without the charge path. With the
+  charge counted (46.859 W), charging on the design day needs **1.627 to 1.977 W/K** (was 1.507 to 1.832), read at 1.698 and
+  2.081 W/K (was 1.575 and 1.930).
+- **The model findings of sections 14 and 15 stand.** The bound, the approaches and the shortfall are figures of the bound,
+  not of the kit. The profile's ambient ceiling at +40 C (X1, 4.341 W/K) is not a requirement, because C1 sheds the profile there.
+- **Section 13.4's E5 pass line is now read at E5's own heat.** It becomes 2.455 W/K at 21.587 W (heaters 19.637 W plus the
+  fans), which replaces 2.416 W/K at one heater's 21.2 W.
+- **Section 14.6's E3-O fallback lines were computed at 21.2 W.** Read at E3-O's own 27.086 W they are conservative: a lower heat
+  gives a smaller rise, a lower G and a larger uncertainty.
+
+### 16.9 Decisions taken by the session in this round (authority: SESSION)
+
+| Decision | Why the session's | Reversed by |
+|---|---|---|
+| Each T-H1 point at its mode's heat, the heaters set to it less the fans' measured draw, P = heaters + fans | the owner's instruction to count the fans without double counting; the model gives the modes' heat | a measured fan draw differing from the model (the setting follows the measurement) |
+| The room reading kept as the conservative side; no chamber required | the bound's model gives 1.6 to 3.7 % in its favour at +40 C, not material against U of 4 to 12 % | a chamber point at +40 C reading under the room's |
+| The heaters' count the nearest whole number of READY-TO-ACT's 21.2 W heaters, one at 13.07 V for K1 | inside the heaters' 50 W class on their blanks; the places' spread can use one resistor per place instead | the heaters' maker's derating, once bought |
+| Rittal's page cited, not filed | its copyright, read conservatively; only the relationship and the steel figure are quoted | the publisher's terms |
