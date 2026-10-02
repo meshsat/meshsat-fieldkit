@@ -1,0 +1,509 @@
+{
+ "what": "JLCPCB public parts search (POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList), no login: keywords '150nF C0G', '150nF NP0', '154 C0G 0805', '154 C0G 1206' (up to three pages of 100 each) and the series prefixes CL21C154, CL31C154, GRM21B5C1, GRM31C5C1, GRM2195C1, C2012C0G1E154, C3216C0G1H154, C3216C0G1E154, CC0805JRNPO9BN154, CC1206JRNPO9BN154, 1206CG154, 0805CG154, CG154J, CL32C154, GCM31C5C1H154, CGA5L2C0G1H154; the surface-mount 150 nF rows with a C0G or NP0 coefficient kept (code, model, package, coefficient, tolerance, voltage, JLCPCB stock); LCSC's own stock read for eight of them by the product-detail answer (all 0)",
+ "read_utc": "2026-10-02T02:05Z",
+ "read_by": "task L4-E11 (MESHSAT-1357)",
+ "lcsc_stock_checked": {
+  "C6158270": 0,
+  "C19297704": 0,
+  "C3873625": 0,
+  "C2180615": 0,
+  "C2431545": 0,
+  "C1923002": 0,
+  "C1933475": 0,
+  "C1935545": 0
+ },
+ "count": 49,
+ "stocked_count": 0,
+ "rows": [
+  {
+   "code": "C1923002",
+   "brand": "Knowles",
+   "model": "1812J0250154JCT",
+   "package": "1812",
+   "tc": "NP0",
+   "tolerance": "±5%",
+   "voltage": "25V",
+   "stock": 0
+  },
+  {
+   "code": "C19297704",
+   "brand": "TDK",
+   "model": "C4532NP01H154J250KA",
+   "package": "1812",
+   "tc": "NP0、C0G",
+   "tolerance": "±5%",
+   "voltage": "50V",
+   "stock": 0
+  },
+  {
+   "code": "C1930635",
+   "brand": "Knowles",
+   "model": "2220Y0100154JCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±5%",
+   "voltage": "10V",
+   "stock": 0
+  },
+  {
+   "code": "C1930712",
+   "brand": "Knowles",
+   "model": "1812J0250154KCT",
+   "package": "1812",
+   "tc": "NP0",
+   "tolerance": "±10%",
+   "voltage": "25V",
+   "stock": 0
+  },
+  {
+   "code": "C1930781",
+   "brand": "Knowles",
+   "model": "2220Y0250154KCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±10%",
+   "voltage": "25V",
+   "stock": 0
+  },
+  {
+   "code": "C1932105",
+   "brand": "Knowles",
+   "model": "2220J0630154KCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±10%",
+   "voltage": "63V",
+   "stock": 0
+  },
+  {
+   "code": "C1932501",
+   "brand": "Knowles",
+   "model": "2225Y0100154KCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±10%",
+   "voltage": "10V",
+   "stock": 0
+  },
+  {
+   "code": "C1933452",
+   "brand": "Knowles",
+   "model": "2220J0630154JCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±5%",
+   "voltage": "63V",
+   "stock": 0
+  },
+  {
+   "code": "C1933475",
+   "brand": "Knowles",
+   "model": "2220J0500154JCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±5%",
+   "voltage": "50V",
+   "stock": 0
+  },
+  {
+   "code": "C1934985",
+   "brand": "Knowles",
+   "model": "1825J0250154JCT",
+   "package": "1825",
+   "tc": "NP0",
+   "tolerance": "±5%",
+   "voltage": "25V",
+   "stock": 0
+  },
+  {
+   "code": "C1935115",
+   "brand": "Knowles",
+   "model": "2225J0160154KCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±10%",
+   "voltage": "16V",
+   "stock": 0
+  },
+  {
+   "code": "C1935545",
+   "brand": "Knowles",
+   "model": "2220Y0500154JCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±5%",
+   "voltage": "50V",
+   "stock": 0
+  },
+  {
+   "code": "C1935576",
+   "brand": "Knowles",
+   "model": "1825J0100154KCT",
+   "package": "1825",
+   "tc": "NP0",
+   "tolerance": "±10%",
+   "voltage": "10V",
+   "stock": 0
+  },
+  {
+   "code": "C1935712",
+   "brand": "Knowles",
+   "model": "1825J0160154KCT",
+   "package": "1825",
+   "tc": "NP0",
+   "tolerance": "±10%",
+   "voltage": "16V",
+   "stock": 0
+  },
+  {
+   "code": "C1936019",
+   "brand": "Knowles",
+   "model": "2225Y0250154KCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±10%",
+   "voltage": "25V",
+   "stock": 0
+  },
+  {
+   "code": "C1944089",
+   "brand": "Knowles",
+   "model": "2220Y0250154GCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±2%",
+   "voltage": "25V",
+   "stock": 0
+  },
+  {
+   "code": "C1944712",
+   "brand": "Knowles",
+   "model": "2220J0500154GCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±2%",
+   "voltage": "50V",
+   "stock": 0
+  },
+  {
+   "code": "C1944991",
+   "brand": "Knowles",
+   "model": "1825J0160154GCT",
+   "package": "1825",
+   "tc": "NP0",
+   "tolerance": "±2%",
+   "voltage": "16V",
+   "stock": 0
+  },
+  {
+   "code": "C1945010",
+   "brand": "Knowles",
+   "model": "1825J0250154GCT",
+   "package": "1825",
+   "tc": "NP0",
+   "tolerance": "±2%",
+   "voltage": "25V",
+   "stock": 0
+  },
+  {
+   "code": "C1946951",
+   "brand": "Knowles",
+   "model": "2225Y0100154GCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±2%",
+   "voltage": "10V",
+   "stock": 0
+  },
+  {
+   "code": "C1947264",
+   "brand": "Knowles",
+   "model": "2220Y0100154GCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±2%",
+   "voltage": "10V",
+   "stock": 0
+  },
+  {
+   "code": "C1947886",
+   "brand": "Knowles",
+   "model": "2225Y0630154GCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±2%",
+   "voltage": "63V",
+   "stock": 0
+  },
+  {
+   "code": "C1948227",
+   "brand": "Knowles",
+   "model": "2220J0160154FCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "16V",
+   "stock": 0
+  },
+  {
+   "code": "C1948236",
+   "brand": "Knowles",
+   "model": "2220J0100154FCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "10V",
+   "stock": 0
+  },
+  {
+   "code": "C1948320",
+   "brand": "Knowles",
+   "model": "2220J0250154FCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "25V",
+   "stock": 0
+  },
+  {
+   "code": "C1948731",
+   "brand": "Knowles",
+   "model": "1812J0250154FCT",
+   "package": "1812",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "25V",
+   "stock": 0
+  },
+  {
+   "code": "C1949325",
+   "brand": "Knowles",
+   "model": "2220Y0160154FCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "16V",
+   "stock": 0
+  },
+  {
+   "code": "C1949350",
+   "brand": "Knowles",
+   "model": "2220Y0100154FCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "10V",
+   "stock": 0
+  },
+  {
+   "code": "C1949725",
+   "brand": "Knowles",
+   "model": "2225Y0500154FCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "50V",
+   "stock": 0
+  },
+  {
+   "code": "C1949755",
+   "brand": "Knowles",
+   "model": "2220J0500154FCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "50V",
+   "stock": 0
+  },
+  {
+   "code": "C1949871",
+   "brand": "Knowles",
+   "model": "2225Y0630154FCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "63V",
+   "stock": 0
+  },
+  {
+   "code": "C1949887",
+   "brand": "Knowles",
+   "model": "2225Y0100154FCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "10V",
+   "stock": 0
+  },
+  {
+   "code": "C1949942",
+   "brand": "Knowles",
+   "model": "2225Y0160154FCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "16V",
+   "stock": 0
+  },
+  {
+   "code": "C1950271",
+   "brand": "Knowles",
+   "model": "2225Y0250154FCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "25V",
+   "stock": 0
+  },
+  {
+   "code": "C1950299",
+   "brand": "Knowles",
+   "model": "2220Y0500154FCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "50V",
+   "stock": 0
+  },
+  {
+   "code": "C1950308",
+   "brand": "Knowles",
+   "model": "2225J0630154FCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "63V",
+   "stock": 0
+  },
+  {
+   "code": "C1950311",
+   "brand": "Knowles",
+   "model": "2225J0500154FCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "50V",
+   "stock": 0
+  },
+  {
+   "code": "C1950640",
+   "brand": "Knowles",
+   "model": "2225J0100154GCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±2%",
+   "voltage": "10V",
+   "stock": 0
+  },
+  {
+   "code": "C1950797",
+   "brand": "Knowles",
+   "model": "2220J0250154GCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±2%",
+   "voltage": "25V",
+   "stock": 0
+  },
+  {
+   "code": "C1950811",
+   "brand": "Knowles",
+   "model": "2220Y0630154FCT",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "63V",
+   "stock": 0
+  },
+  {
+   "code": "C1950812",
+   "brand": "Knowles",
+   "model": "1812J0160154FCT",
+   "package": "1812",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "16V",
+   "stock": 0
+  },
+  {
+   "code": "C1951144",
+   "brand": "Knowles",
+   "model": "2225J0630154GCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±2%",
+   "voltage": "63V",
+   "stock": 0
+  },
+  {
+   "code": "C1951153",
+   "brand": "Knowles",
+   "model": "2225J0500154GCT",
+   "package": "2225",
+   "tc": "NP0",
+   "tolerance": "±2%",
+   "voltage": "50V",
+   "stock": 0
+  },
+  {
+   "code": "C1951424",
+   "brand": "Knowles",
+   "model": "1825J0250154FCT",
+   "package": "1825",
+   "tc": "NP0",
+   "tolerance": "±1%",
+   "voltage": "25V",
+   "stock": 0
+  },
+  {
+   "code": "C2180615",
+   "brand": "TDK",
+   "model": "CGA9N2NP02A154J230KA",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±5%",
+   "voltage": "100V",
+   "stock": 0
+  },
+  {
+   "code": "C2180822",
+   "brand": "TDK",
+   "model": "CGA9N4NP02E154J230KN",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±5%",
+   "voltage": "250V",
+   "stock": 0
+  },
+  {
+   "code": "C2431545",
+   "brand": "TDK",
+   "model": "C5750NP02E154J230KN",
+   "package": "2220",
+   "tc": "NP0",
+   "tolerance": "±5%",
+   "voltage": "250V",
+   "stock": 0
+  },
+  {
+   "code": "C3873625",
+   "brand": "TDK",
+   "model": "C5750NP02A154J230KA",
+   "package": "2220",
+   "tc": "C0G",
+   "tolerance": "±5%",
+   "voltage": "100V",
+   "stock": 0
+  },
+  {
+   "code": "C6158270",
+   "brand": "Murata Electronics",
+   "model": "GRM31C5C1E154GE02L",
+   "package": "1206",
+   "tc": "C0G",
+   "tolerance": "±2%",
+   "voltage": "25V",
+   "stock": 0
+  }
+ ]
+}
