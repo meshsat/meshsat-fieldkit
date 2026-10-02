@@ -823,7 +823,7 @@ def t_the_thermal_line_is_l4e12s_binding_line():
     assert "THE THERMAL BUDGET" in bud and "%s W/K" % m.fmt(F["gc"]) in bud and "%s W" % m.fmt(round(F["e5_hold_wb"], 3)) in bud
     assert "THE ENERGY BUDGET" in bud
     u2 = [c for c in m.CHOICES if c["id"] == "U-02"][0]
-    # since L4-E12's fix round 2.159 W/K is M7's maker-stated line (the e-paper's row governs E5, class (iii))
+    # since L4-E12's fix round 2.159 W/K is M7's maker-stated line (the e-paper's row governs E5: a missing storage qualification)
     assert "%s W/K (at least" % m.fmt(F["gc"]) in u2["question"] and "CFL-002" in u2["evidence"][2]
     assert F["fx"]["modes"]["M7"]["stated"][1] == m.fmt(F["gc"]) and F["fx"]["modes"]["M7"]["ruled"][1] is None
 
@@ -959,10 +959,12 @@ def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
     u1, u2, u4 = arch
     assert "%s Wh (%s h) against the 35E's %s Wh" % (r5["hl"] + (r5["e35"][0],)) in u1["constraint"]
     assert abs(float(r5["e35"][0]) - float(r5["hl"][0]) - float(r5["growth"])) < 1e-9
-    assert "the session develops two options" in u2["fallback"] and "class (iii)" in u2["fallback"] and "the owner's" in u2["fallback"]
+    # L4-F04: the lines over the model are engineering and evidence tasks; only a demonstrated conflict goes to the owner
+    assert m.CAT_MODEL.split(" OF ")[0] in u2["fallback"] and m.CAT_STORE in u2["fallback"] and m.CAT_CONFLICT in u2["fallback"] and "goes to the owner" in u2["fallback"]
     assert float(r5["f4"][3]) < float(r5["f4"][1]) < F["gc"] < float(r5["pass"][0])
     assert "arrangement (A) with its dependency round stands" in u4["fallback"] and r5["remedy"][1:] == ("D1", "D3")
     assert "CFL-002" in u2["evidence"][2] and "OW-8" in u2["evidence"][2] and "OW-7" in u4["evidence"][2]
+    assert "only when a measurement demonstrates the conflict" in u2["evidence"][2]
     bad = copy.deepcopy(m.CHOICES)
     for c in bad:
         if c["id"] == "U-02":
@@ -1232,7 +1234,10 @@ def t_consolidation_the_amendment_of_14_20():
     dec = m.cons_deciding(F)
     assert "WITHDRAWN" in dec[0] and "heat stage" in dec[0] and K["K1"]["need"] in dec[0] and "screens" in dec[0]
     assert dec[1].startswith("**The governing lines**") and "Table 4" in dec[1] and "hot stop H1" in dec[1]
-    assert dec[2].startswith("**Which lines a reading can pass at all**") and "four class (iii)" in dec[2] and "OW-10" in dec[2]
+    assert dec[2].startswith("**Which lines a reading can pass at all**") and "OW-10" in dec[2]
+    for name in (m.CAT_MODEL, m.CAT_STORE, m.CAT_CONFLICT):
+        assert name in dec[2], name
+    assert "none at present" in dec[2] and "class (iii)" not in dec[2] and "No measurement can pass" not in dec[2]
     text = _C["text"]
     exit_sec = text.split("20. THE EXIT")[1].split("21. IN SHORT")[0]
     assert "1.509 W/K" not in exit_sec.split("U-02:")[0], "the withdrawn reading heads nothing"
@@ -1244,11 +1249,11 @@ def t_consolidation_the_amendment_of_14_20():
     assert page.split("<!-- gen:th1:begin -->")[1].split("<!-- gen:th1:end -->")[0].strip() == note
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
     acc = reg["R-104"][5]
-    assert "12d" in acc and "CFL-002" in acc and "1.509" not in acc and "P1" not in acc and "class (iii)" in acc
+    assert "12d" in acc and "CFL-002" in acc and "1.509" not in acc and "P1" not in acc and "a demonstrated conflict" in acc and "local air at its port" in acc
     for rid in ("R-170", "R-171", "R-172"):
         assert "1.509" not in reg[rid][2] + reg[rid][5] and "class (ii) line" in reg[rid][2], rid
     short = page.split("## In short\n")[1].split("\n## 1. ")[0]
-    assert "four class (iii) lines no reading can pass" in short and "not thermally feasible" not in short and "deciding fact" not in short
+    assert "four lines lie over the modelled capacity, none shown impossible" in short and "not thermally feasible" not in short and "deciding fact" not in short
     # 3. the ledger in the exit
     # the counts are the ledger's own (its "All" row), and the four states sum to its rows; set 27's integration moved them
     # from (58, 24, 19, 11, 4) to (58, 24, 23, 11, 0), so the value itself is not pinned here
@@ -1371,7 +1376,7 @@ def t_consolidation_the_panel_lead_surge():
 def t_fix_round_the_layer4_review_integrated():
     """The Layer 4 review (astra-check-l4close-1, NOT YET on B1 to B7) as L4-E10, L4-E11 and L4-E12 answered it, carried here: B1 and
     B2 (board E on VSYS_E, the battery FET pair, the start bounded, the inhibited acceptance piecewise), B3, B4 and B7 (each required
-    mode's governing local limit, the charging heat as a balance, the runtimes labelled, the four class (iii) lines), B5 (the Saft
+    mode's governing local limit, the charging heat as a balance, the runtimes labelled, the four lines over the model), B5 (the Saft
     not yet adoptable), E2 and E4's corrections, the ledger's E6; the withdrawn statements gone from the current sections."""
     m = _M()
     F, D, st = _C["F"], _C["D"], _C["st"]
@@ -1411,18 +1416,18 @@ def t_fix_round_the_layer4_review_integrated():
     de = {d["id"]: d for d in m.DEFECTS}
     assert de["D-13"]["state"].startswith("ADDRESSED IN DRAFTS") and de["D-14"]["state"].startswith("ADDRESSED IN DRAFTS")
     assert not [d for d in m.DEFECTS if d["state"] == "OPEN"]
-    # B3: each required mode's governing local limit; the SGP41's +55 C a screen; four class (iii) lines, the owner's
+    # B3: each required mode's governing local limit; the SGP41's +55 C a screen; four lines over the modelled capacity, by category
     modes, energy, ef, heat = m.cons_budget(F, st)
     hm = [h for h in heat if h[0].startswith("M")]
     assert len(hm) == 9 and not any("Table 5" in h[4] or "Table 5" in h[5] for h in hm), "no absolute rating stands as a line"
-    assert [c["mode"] for c in fx["iii"]] == ["M3", "M4", "M6", "M7"]
+    assert [c["mode"] for c in fx["over"]] == ["M3", "M4", "M6", "M7"]
     u2 = [c for c in m.CHOICES if c["id"] == "U-02"][0]
-    for c in fx["iii"]:
+    for c in fx["over"]:
         assert (c["short"][0] or "the whole") in u2["constraint"], c["mode"]
     ow = {o["id"]: o for o in m.OWNER_ITEMS}
-    assert "OW-10" in ow and [k for k, _ in ow["OW-10"]["docs"]] == ["l4e12md"] and "class (iii)" in ow["OW-10"]["what"]
+    assert "OW-10" in ow and [k for k, _ in ow["OW-10"]["docs"]] == ["l4e12md"] and "NOT a forced owner question" in ow["OW-10"]["what"]
     ex = {e[0]: e for e in m.cons_exit(F)}
-    assert "four class (iii) lines" in ex["U-02"][1] and "OW-10" in ex["U-02"][1]
+    assert "four lines over the modelled capacity" in ex["U-02"][1] and "OW-10" in ex["U-02"][1]
     # B4: the charging heat a balance on one boundary
     b = fx["bal"]
     assert abs(b[0] - b[1] - b[2] - b[3]) < 1.5e-3 and fx["bal_b"][1] == 52.134 and fx["modes"]["M8"]["q"] == 52.134
@@ -1485,6 +1490,38 @@ def t_b6_the_solar_guard_already_on():
     short = page.split("## In short\n")[1].split("\n## 1. ")[0]
     assert want in short and "2.47 uH" in short
     assert "25m B6" in _C["text"] and "MEETS with the block on and off (R-174" not in page
+
+
+def t_the_review_of_the_provisional_fixes_l4f04_the_thermal_categories():
+    """L4-F04: the lines over the modelled capacity carried by category, never as lines no reading can pass. Held as properties: the
+    categories are L4-E12's as read from its output and match each line's property (an operating row INFERRED to cover an unpowered
+    part is a missing storage qualification, a held local limit a modelled shortfall); no demonstrated conflict while nothing is
+    measured; OW-10 and CFL-002 are not forced questions; U-02 stays a closure condition decided by T-H1 plus the storage evidence;
+    the withdrawn category is gone from the page, the register, the README and the output's current sections."""
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    fx = F["fx"]
+    assert _pin_held(m, "l4e12") and _pin_held(m, "l4e12md") and m.PINS["th1proc"][1][:16] in _C["text"].split("1. THE MAKERS")[0]
+    for c in fx["over"]:
+        want = m.CAT_STORE if "e-paper" in c["line"].lower() or "EPAPER" in c["line"] else m.CAT_MODEL
+        assert c["cat"] == want, (c["mode"], c["cat"])
+    assert not [c for c in fx["cls"] if c.get("cat") == m.CAT_CONFLICT], "no demonstrated conflict while nothing is measured"
+    assert all(c["cls"] in ("i", "ii", "over") for c in fx["cls"])
+    ow = {o["id"]: o for o in m.OWNER_ITEMS}
+    assert "only when a measurement demonstrates a conflict" in ow["OW-1"]["what"] and "NOT a forced owner question" in ow["OW-10"]["what"]
+    assert m.CONDITION_U02.startswith("(ii) a closure condition decided by T-H1 plus the storage evidence")
+    u2 = [c for c in m.CHOICES if c["id"] == "U-02"][0]
+    assert "only on a DEMONSTRATED CONFLICT" in u2["overturns"]
+    page = open(PAGE, encoding="utf-8").read()
+    reg = open(REG, encoding="utf-8").read()
+    readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+    cur_out = _C["text"].split("21. IN SHORT")[0] + _C["text"].split("26. THE REVIEW OF THE PROVISIONAL FIXES")[1]
+    for f_ in (page, reg, readme, cur_out):
+        assert "class (iii)" not in f_ and "no reading can pass" not in f_ and "No measurement can pass" not in f_
+    for name in (m.CAT_MODEL, m.CAT_STORE, m.CAT_CONFLICT):
+        assert name in page and name in _C["text"].split("26c L4-F04")[1], name
+    rows = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    assert rows["R-185"][1] == "TEST" and "function read back" in rows["R-185"][2] and "for that lot" in rows["R-185"][5]
 
 
 def t_the_review_of_the_provisional_fixes_l4f02_l4f03():

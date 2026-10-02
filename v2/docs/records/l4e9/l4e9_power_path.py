@@ -101,8 +101,8 @@ PINS = {
     "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "6037a585dd1c7b8c99c661ccbc62d25cd0c42860d620cb66a52eea9f2d5ed55d"),
     "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "bf323d17ec8760a114d5abe4894c98a864ef9680b8523f81e804f245d514def4"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "a240910031996ab9260f6f09672cc7df3dfe515350d40079a2e2e1bc4b80fe45"),
-    "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "f7b568e072b8a7b33396900e12f304b30858da6d79ac9fedf0879539508cbf08"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "1696fd424b48a8ca4e3d8ff4ab09a7dc42ebdd65bc3eab51133bab962477a84f"),
+    "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "30cc35d8adbdbc77f7279792d3e71242b4586dab85a592309fc57f8c6cf8af36"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
     "cl_eaton": ("v2/docs/records/l4e10/clarification/eaton-scf9550.txt", "9dffb95e8b4874fc0d08824b39d6174372a64e0cbda066241900d6ffdcdc5cb2"),
@@ -130,7 +130,7 @@ PINS = {
     "l4e10chk4": ("v2/docs/records/l4e10/checks/check-l4e10-4.md", "eb1fe2846e37cf52db8dc1475c0064bb1b37112e669ba3667ca0e0c8c05f4fc1"),
     "l4e12chk4": ("v2/docs/records/l4e12/checks/check-l4e12-4.md", "2c4607d59756da7967ac4b68b6870a8e89f972469135b33deaf0ae634ceacb6b"),
     "l4e11chk4": ("v2/docs/records/l4e11/checks/check-l4e11-4.md", "b0a03440a9bb9a75806a7ba692fde8bc6e72ec4d419b39e8fe92f1ad469f6e65"),
-    "th1proc": ("v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md", "c537143762940314a2693c6bc06c0537e7b1c8cab99d7610e3c980312288cfc3"),
+    "th1proc": ("v2/docs/records/l4e12/T-H1-PROCEDURE-DRAFT.md", "61fa23a04f592a9fe97ed4f92972e2451cb212e7495f5c46194dcb8e1e2e85e7"),
     "cl_tiq": ("v2/docs/records/l4e11/clarification/TI-QUESTIONS.md", "2ca714846bcefe704eb0f04cb4a8fdc6dc56af71f7c56d7d9b8da43f71f6fdbc"),
     # the consolidation: the tablet's service budget (a PROPOSAL, l3batt), the one budget input not read above
     "tablet": ("v2/docs/records/l3batt/tablet.out", "d71429a9bd6d60a51662f1a4826db398c629cb3675b8c6668e3aba1fb60a8194"),
@@ -200,6 +200,15 @@ PWRLIM_SPREAD = 31.0 / 25.0  # LM5069 PWRLIM-1 row 19 / 25 / 31 mV carried as th
 
 
 _C_TEXT = {}     # the pinned text inputs of the last compute(), for part A's readers
+
+# The categories of a thermal line over the modelled capacity, as L4-E12 12e names them after the review of the provisional fixes
+# (L4-F04, 2 October 2026): the capacity is a model figure on named coefficient ends, not a physical bound; only a DEMONSTRATED
+# CONFLICT (a measured local temperature over a mandatory limit with the route fitted) justifies asking the owner to change a
+# requirement or a ruling; the other two are bounded engineering or evidence tasks.
+CAT_MODEL = "MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT"
+CAT_STORE = "MISSING STORAGE QUALIFICATION"
+CAT_CONFLICT = "DEMONSTRATED CONFLICT"
+CATEGORIES = (CAT_MODEL, CAT_STORE, CAT_CONFLICT)
 
 
 def refuse(code, msg):
@@ -1568,42 +1577,58 @@ def fixround_inputs(F, T):
     s12e = one(s12.split("\n12e THE OUTSIDE CAPACITY")[1])
     m = need(s12e, r"CORRECTION: section 9's 'cap' \(([\d.]+) W/K at E5's rise, ([\d.]+) at E3-O's\) is the bound with a 50 m/s inside flow, whose film is near 45 W/m2K; the capacity proper at those rises is ([\d.]+) and ([\d.]+) W/K on the conservative ends\.", "the capacity's correction (12e)")
     fx["capfix"] = tuple(f(m, i) for i in range(1, 5))
+    # the review of the provisional fixes (L4-F04): the capacity is a model figure, and a line over it is put in a named category
+    need(s12e, r"The capacity is a MODEL FIGURE on the coefficient ends named here and the analysed heat paths, not a physical upper bound", "the capacity as a model figure (12e)")
+    need(s12e, r"is not a proof that no measurement can pass it \(the review of the provisional fixes, L4-F04\)", "no impossibility claimed (12e)")
+    cats = "|".join(re.escape(c) for c in CATEGORIES)
     cls = []
-    for row in re.findall(r"(M\d), lid (open|closed), \+?(-?[\d.]+) C(?:, rise ([\d.]+) K)?: (.*?)(?= M\d, lid | The class \(iii\) lines)", s12e):
-        mm = re.match(r"(.*?) needs ([\d.]+) W/K; capacity bare ([\d.]+) / ([\d.]+), with the route ([\d.]+) / ([\d.]+) W/K \(conservative / optimistic\): class \((i+)\)(.*)$", row[4])
+    for row in re.findall(r"(M\d), lid (open|closed), \+?(-?[\d.]+) C(?:, rise ([\d.]+) K)?: (.*?)(?= M\d, lid | The lines over the modelled capacity, by category)", s12e):
+        mm = re.match(r"(.*?) needs ([\d.]+) W/K; capacity bare ([\d.]+) / ([\d.]+), with the route ([\d.]+) / ([\d.]+) W/K \(conservative / optimistic\): (?:class \((i+)\)|SHORT by ([\d.]+) W/K, ([\d.]+) W, of the model's optimistic capacity with the route)(.*)$", row[4])
         if mm:
-            short = re.search(r"SHORT by ([\d.]+) W/K, ([\d.]+) W", mm.group(8))
-            cons = re.search(r"\((i+)\) at the conservative ends", mm.group(8))
+            over = mm.group(7) is None
+            cat = re.search(r": a (%s)$" % cats, mm.group(10)) if over else None
+            if over and not cat:
+                refuse(3, "L4-E12 12e's row over the model without its category: %r" % row[4][:60])
+            cons = re.search(r", \((i+)\) at the conservative ends", mm.group(10))
+            cons_over = ", over the modelled capacity at the conservative ends" in mm.group(10)
+            c_ = "over" if over else mm.group(7)
             cls.append({"mode": row[0], "lid": row[1], "amb": float(row[2]), "rise": row[3], "line": mm.group(1).strip(), "need": mm.group(2),
-                        "bare": (mm.group(3), mm.group(4)), "route": (mm.group(5), mm.group(6)), "cls": mm.group(7), "cons": cons.group(1) if cons else mm.group(7),
-                        "short": (short.group(1), short.group(2)) if short else None})
+                        "bare": (mm.group(3), mm.group(4)), "route": (mm.group(5), mm.group(6)), "cls": c_,
+                        "cons": cons.group(1) if cons else ("over" if cons_over else c_), "cat": cat.group(1) if cat else None,
+                        "short": (mm.group(8), mm.group(9)) if over else None})
         else:
-            mm = re.match(r"(.*?) at or under the ambient: no capacity at a zero rise; class \((i+)\), the whole ([\d.]+) W short$", row[4])
+            mm = re.match(r"(.*?) at or under the ambient: no modelled capacity at a zero rise; (%s), the whole ([\d.]+) W on that row$" % cats, row[4])
             if not mm:
                 refuse(3, "L4-E12 12e's class row %r" % row[4][:40])
             cls.append({"mode": row[0], "lid": row[1], "amb": float(row[2]), "rise": None, "line": mm.group(1).strip(), "need": None, "bare": None, "route": None,
-                        "cls": mm.group(2), "cons": mm.group(2), "short": (None, mm.group(3))})
+                        "cls": "over", "cons": "over", "cat": mm.group(2), "short": (None, mm.group(3))})
     if len(cls) != 17:
         refuse(3, "L4-E12 12e's seventeen class rows")
     fx["cls"] = cls
-    iii = [c for c in cls if c["cls"] == "iii"]
-    if [c["mode"] for c in iii] != ["M3", "M4", "M6", "M7"]:
-        refuse(3, "L4-E12 12e's class (iii) lines")
-    fx["iii"] = iii
+    over = [c for c in cls if c["cls"] == "over"]
+    if [c["mode"] for c in over] != ["M3", "M4", "M6", "M7"]:
+        refuse(3, "L4-E12 12e's lines over the modelled capacity")
+    if [c["cat"] for c in over] != [CAT_MODEL, CAT_MODEL, CAT_STORE, CAT_STORE]:
+        refuse(3, "L4-E12 12e's categories of the lines over the model")
+    fx["over"] = over
     m = need(s12e, r"the bay air holds Table 4's \+50 C lid closed only to an ambient of \+([\d.]+) to \+([\d.]+) C on the pack and \+([\d.]+) to \+([\d.]+) C on shore", "the VOC ceilings (12e)")
     fx["voc_ceil"] = tuple(f(m, i) for i in range(1, 5))
     m = need(s12e, r"at the bound's plate fraction ([\d.]+) it needs ([\d.]+) W/K and at W4's high fraction ([\d.]+) it needs ([\d.]+) W/K, both under the route's optimistic capacity, so the measured fraction decides", "the e-paper's window (12e)")
     fx["plate"] = tuple(f(m, i) for i in range(1, 5))
     m = need(s12e, r"charging only in the heat stage \(([\d.]+) W into the case\) would need ([\d.]+) and ([\d.]+) W/K at T4's line, class \(i\) at both ends", "charging in the heat stage (12e)")
     fx["chg_hs"] = (f(m, 1), f(m, 2), f(m, 3))
-    for pat in (r"\(1\) E3-L at \+40 C with the lid closed as ruled \(M3 on the pack, M4 on shore\)", r"Options: CFL-002's C, A or B \(the owner's\)",
-                r"a closed-lid ceiling on REQ-042's VOC channel \(a requirement change, the owner's", r"D-02b's closed-lid test at \+40 C restated \(a ruling change, the owner's\)",
-                r"a closed-lid conduction path from the plate to the lid's inner face inside the seal \(the session's to develop at Layer 7; not modelled here, so it closes nothing yet\)",
-                r"\(2\) E3-O at \+55 C \(M6\)", r"Options: PDi's storage statement \(the request is drafted in clarification/pervasive-displays-e2370ks0c1\.txt; sending it is the owner's\)",
-                r"an e-paper with a held range at or over \+70 C \(CHO-001, the owner's\)", r"E3-O run with the e-paper's state as a recorded deviation \(TEST-PLAN's owner\)",
-                r"\(3\) E5's \+60 C dwell \(M7\)", r"a different e-paper \(CHO-001, the owner's\)", r"E5 run with the e-paper out as a recorded deviation \(TEST-PLAN's owner\)",
-                r"Charging \(M8, M9\) is not class \(iii\)"):
-        need(s12e, pat, "12e's class (iii) options")
+    for pat in (r"MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT: \(1\) E3-L at \+40 C with the lid closed as ruled \(M3 on the pack, M4 on shore\)",
+                r"a closed-lid conduction path from the plate to the lid's inner face inside the seal, the combined route R-170 to R-172 carried to the closed lid",
+                r"the SGP41's local air measured at its port, apart from the mixed-air screen",
+                r"The options that change a requirement or a ruling stay the owner's and go to him only when a measurement demonstrates the conflict: CFL-002's C, A or B",
+                r"a closed-lid ceiling on REQ-042's VOC channel \(a requirement change", r"D-02b's closed-lid test at \+40 C restated \(a ruling change\)",
+                r"MISSING STORAGE QUALIFICATION: \(2\) E3-O at \+55 C \(M6\) and \(3\) E5's \+60 C dwell \(M7\)",
+                r"PDi's storage statement \(the request is drafted in clarification/pervasive-displays-e2370ks0c1\.txt; sending it is the owner's\)",
+                r"a storage soak of a sample at the mode's temperature with its function read back after it \(evidence for that lot\)",
+                r"Options that stay the owner's, only if the conflict is demonstrated: an e-paper with a held range at or over \+70 C \(CHO-001\)",
+                r"DEMONSTRATED CONFLICT: none at present; a line enters it only on a measured local temperature over a mandatory limit with the route fitted",
+                r"Charging \(M8, M9\) lies under the modelled capacity \(class \(i\)\)"):
+        need(s12e, pat, "12e's categories and their resolutions")
     # L4-E11's section 15
     t = T["l4e11"]
     if t.count("\n15. THE FIX ROUND FOR THE CONSOLIDATION REVIEW") != 1:
@@ -2771,7 +2796,7 @@ def fx_u02_expect(F):
     """U-02's figures as L4-E12's fix round printed them (12a to 12e; the review's B3, B4 and B7)."""
     fx, rc = F["fx"], F["rc"]
     M = fx["modes"]
-    sh = {c["mode"]: c["short"] for c in fx["iii"]}
+    sh = {c["mode"]: c["short"] for c in fx["over"]}
     k = fx["k78"]
     return ["%s W/K on the pack (M1 lid open, M3 lid closed; a reading of at least %s W/K)" % M["M1"]["ruled"][1:],
             "%s W/K on shore (M2, M4; at least %s W/K)" % M["M2"]["ruled"][1:],
@@ -2782,7 +2807,9 @@ def fx_u02_expect(F):
             "%s and %s W/K (at least %s and %s W/K)" % (M["M8"]["ruled"][1], M["M9"]["ruled"][1], M["M8"]["ruled"][2], M["M9"]["ruled"][2]),
             "above a %.1f C reading and switches the sensor off at %.1f C" % (fx["c_cover"], fx["c_off"]),
             "%s W/K at K1's rise, correcting %s to %s W/K" % ("%.3f" % rc["capk1"][0], "%.3f" % rc["cap"][0], "%.3f" % fx["capfix"][1]),
-            "short by %s W/K, %s W; M4" % sh["M3"], "short by %s W/K, %s W; M6" % sh["M4"], "short by %s W/K, %s W; M7" % sh["M6"], "the whole %s W" % sh["M7"][1],
+            "short by %s W/K, %s W, and M4" % sh["M3"], "short by %s W/K, %s W, a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT" % sh["M4"],
+            "short by %s W/K, %s W, and M7" % sh["M6"], "the whole %s W on that row, a MISSING STORAGE QUALIFICATION" % sh["M7"][1],
+            "no DEMONSTRATED CONFLICT",
             "%.3f W in less %.3f W stored = %.3f W, %.3f W with" % (fx["bal"][0], fx["bal"][1], fx["bal"][3], fx["bal_b"][1]),
             "needs %s and %s W/K (readings %s and %s W/K)" % (k[1][2], k[3][2], k[1][3], k[3][3]),
             "at %s to %s h on the bound, the run with the shed states %s to %s h" % tuple(fmt(x) for x in fx["c1"][:4]),
@@ -3225,7 +3252,7 @@ def rows(F, D, A, E):
             Chk("E5's mixed inside air under the hold at M7's maker-stated line (%s W/K lid open with the fans) under the +%s C parts, a screen at the mixed air (their local air, the cooler's exhaust included, is the line: T-H2)" % (fmt(F["gc"]), fmt(F["parts_hot"])),
                 F["e5_line"], "<=", F["parts_hot"], "C", "CONDITIONAL", "L4-E12 out 4c, 4d (MODELED): T-H1 at or over the line, the hold's reference within +-%s K, the fans' rating, the parts out of the exhaust; unresolved choice U-02" % "%s" % F["hold_ref"]),
             Chk("E3-O's mixed inside air with every radio on at that line under the +%s C parts (a screen)" % fmt(F["parts_hot"]), F["e3o_line"], "<=", F["parts_hot"], "C", "CONDITIONAL", "L4-E12 out 4d (MODELED; E3-O alone needs %s W/K); unresolved choice U-02" % fmt(F["g_e3o"])),
-            Chk("the required modes' governing local limits (L4-E12 12a, 12e): T-H1's points decide every class (i) and (ii) line; four class (iii) lines (E3-L lid closed as ruled; E3-O and E5 on the e-paper's operating row read to cover it unpowered) no reading can pass", None, "<=", None, "a thermal decision", "CONDITIONAL", "L4-E12 out 12a, 12e; unresolved choice U-02; the owner's options OW-10"),
+            Chk("the required modes' governing local limits (L4-E12 12a, 12e): T-H1's points decide every class (i) and (ii) line; four lines lie over the modelled capacity, none shown impossible: E3-L lid closed as ruled a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, E3-O and E5 on the e-paper's operating row read to cover it unpowered a MISSING STORAGE QUALIFICATION; no DEMONSTRATED CONFLICT", None, "<=", None, "a thermal decision", "CONDITIONAL", "L4-E12 out 12a, 12e; unresolved choice U-02; OW-10 only on a demonstrated conflict"),
             Chk("the inside air at LO-01a's floor (%s W/K) with no hold, E5's +60 C dwell, under the +%s C parts" % (fmt(F["th1"]), fmt(F["parts_hot"])),
                 F["floor_air"][1], "<=", F["parts_hot"], "C", "MODELED", "L4-E12 out 2c (L4-E10's corner plus the ballasts, MESHSAT-1478 as found)", scope="drawn"),
             Chk("every load converter runs to the 3.00 V line (10.0 V stack)", None, "<=", None, "a record", "ASSUMPTION", "SHORTLIST.md 2: no record"),
@@ -3299,13 +3326,17 @@ GATE = [
                    "check 5 at 5aa18a69, selects (B1), the BQ25730 with the battery FET pair Q39 and Q40 and board E on VSYS_E after its "
                    "fix round, drafted: once applied U-04 is a downstream qualification test, on the board as drawn TI's D1 and D3 decide "
                    "it); thermal feasibility per required mode is U-02's (L4-E12's fix round: each mode's governing local limit, T-H1 "
-                   "deciding every class (i) and (ii) line, four class (iii) lines (E3-L lid closed as ruled, E3-O and E5 on the e-paper's "
-                   "row) the owner's, OW-10); the battery path's thermal design is FEA-008's (U-01; the Saft supported for the temperature "
+                   "deciding every class (i) and (ii) line; four lines over the modelled capacity, none shown impossible: E3-L lid closed "
+                   "as ruled a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, E3-O and E5 on the e-paper's row a MISSING STORAGE "
+                   "QUALIFICATION, no DEMONSTRATED CONFLICT, so no requirement question goes to the owner, OW-10 held for a measured "
+                   "conflict); the battery path's thermal design is FEA-008's (U-01; the Saft supported for the temperature "
                    "windows, not yet adoptable: current at temperature and the storage dwell AWAITING, L4-E10 10g); PS-ALLTX's chain at "
                    "18 A for 60 s (PWR-F12) is an open obligation",
      "overturn": "possibly, on named evidence only: U-01 on Saft's answer or the sample qualification and on the HL18650V's signed "
-                 "specification (D-06's pack energy, protection settings and charge ranges), U-02 on its four class (iii) lines (the "
-                 "rulings against E3-L lid closed, E3-O and E5: the owner's) and on a class (i) or (ii) point read short with the route "
+                 "specification (D-06's pack energy, protection settings and charge ranges), U-02 only on a DEMONSTRATED CONFLICT (a "
+                 "measured local temperature over a mandatory limit with the route fitted; none at present: its four lines over the "
+                 "modelled capacity are a modelled shortfall and a missing storage qualification, engineering and evidence tasks) and "
+                 "on a class (i) or (ii) point read short with the route "
                  "also short, U-04 on the board as drawn on TI's D1 or D3 (none once (B1) is applied); the rest, the panel unit included, "
                  "resolves by a value, a part or a measurement on the same topology"},
     {"n": 2, "criterion": "material power-path defects have engineering resolutions and bounded supporting calculations",
@@ -3343,14 +3374,15 @@ GATE = [
                    "items; L4-E10, check 4 at e464ff88; its fix round: the Saft supported for the temperature windows, not yet adoptable), U-02 "
                    "(MESHSAT-1478: each required mode against its governing local limit, L4-E12's fix round at b1cd32ba; T-H1's points of "
                    "12d decide every class (i) and (ii) line, as ruled the heat stage at +40 C against the SGP41's Table 4, 2.905 W/K on the "
-                   "pack and 3.081 W/K on shore, under CFL-002's C the cells' hot stop, 1.804 and 1.767 W/K; four class (iii) lines no "
-                   "reading can pass, the owner's), U-04 ((B1) selected and drafted with the pair and board E on VSYS_E, a downstream "
+                   "pack and 3.081 W/K on shore, under CFL-002's C the cells' hot stop, 1.804 and 1.767 W/K; four lines over the modelled "
+                   "capacity, a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT (M3, M4) and a MISSING STORAGE QUALIFICATION (M6, M7), no "
+                   "DEMONSTRATED CONFLICT), U-04 ((B1) selected and drafted with the pair and board E on VSYS_E, a downstream "
                    "qualification test once applied; on the board as drawn TI's D1 and D3; L4-E11, check 5 at 5aa18a69, fix round at "
                    "656fc540); an "
                    "owner and an acceptance criterion do not close them. U-03 "
                    "left this category with L4-E13's acceptance: a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC, R-35) that decides which "
                    "unit, not the topology or the source class",
-     "overturn": "yes, on named evidence only: U-01 (D-06's pack energy and settings), U-02 (its four class (iii) lines, and any line read short "
+     "overturn": "yes, on named evidence only: U-01 (D-06's pack energy and settings), U-02 (a DEMONSTRATED CONFLICT on a measured local temperature, and any line read short "
                  "with the route also short: CFL-002, REQ-042's coverage, D-02b, the sealed case's thermal design or the device set, the "
                  "owner's), U-04 (on the board as drawn only, TI's D1 or D3: the charger's power path); U-03 no "
                  "longer can, unless route 2 proves infeasible with route 1 still closed (L4E13-06)"},
@@ -3414,7 +3446,7 @@ CHOICES = [
                   "idle limit and no requirement change, (I)'s powered cooling (up to 35.21 W into the sealed case) would reopen U-02's heat "
                   "budget, and a narrower storage floor would add 470 to 940 Wh of primary storage under D-06",
      "rows": ["IF-10"]},
-    {"id": "U-02", "title": "MESHSAT-1478: the sealed case's heat rejection in each required mode against its governing local limit, and four class (iii) lines (L4-E12, the fix round)", "class": ARCH,
+    {"id": "U-02", "title": "MESHSAT-1478: the sealed case's heat rejection in each required mode against its governing local limit; four lines over the modelled capacity, a modelled shortfall and a missing storage qualification (L4-E12, the fix round; its categories after the review's L4-F04)", "class": ARCH,
      "question": "what conductance does the sealed Peli 1450 with its 3 mm plate give, lid open and lid closed with the fans, in each required "
                  "mode of L4-E12 12a against that mode's governing local limit? As ruled (CFL-002 open: REQ-042's VOC channel sensing across "
                  "the envelope) the SGP41's Table 4 +50 C governs the heat stage at REQ-024's +40 C: 2.554 W/K on the pack (M1 lid open, M3 "
@@ -3424,7 +3456,8 @@ CHOICES = [
                  "operating row read to cover it unpowered (INFERRED), 5.417 W/K (at least 7.758 W/K), the maker-stated alternative the "
                  "RB9704's +70 C, 1.806 W/K (at least 1.958 W/K); M7, E5's +60 C dwell, the e-paper with no conductance, the alternative the "
                  "LimeSDR's +70 C storage row, 2.159 W/K (at least 2.455 W/K); M8 and M9, charging on the design day, T4 on the charging "
-                 "cells, 2.025 and 2.525 W/K (at least 2.123 and 2.677 W/K). A dummy-load mixed-air point closes only the conductance it reads",
+                 "cells, 2.025 and 2.525 W/K (at least 2.123 and 2.677 W/K). A dummy-load mixed-air point closes only the conductance it reads; "
+                 "a part's local temperature (the SGP41 at its port, the e-paper at its window) is read apart from the mixed-air screen",
      "constraint": "L4-E12's fix round for the review's B3, B4 and B7 (12a to 12e at b1cd32ba): the SGP41's sensing is supported to +50 C "
                    "only (Table 4); its +55 C (Table 5) is an absolute rating, a screen, never a line; option C reports the VOC channel not "
                    "covered above a 49.0 C reading and switches the sensor off at 54.0 C, so section 11's K1 and K5 are screens, withdrawn as "
@@ -3432,9 +3465,12 @@ CHOICES = [
                    "a mode, the parts at their LOCAL air with the cooler's exhaust, the junctions, the unpowered parts' storage rows), absolute "
                    "ratings listed as screens. The outside capacity with the inside resistance at zero (12e; 1.810 W/K at K1's rise, "
                    "correcting 1.504 to 1.571 W/K, which were a bound with a 50 m/s inside flow): every line is class (i) or (ii), T-H1 "
-                   "deciding bare or with the route, except four class (iii) lines, over the capacity even with the route at the optimistic "
-                   "ends: M3 (E3-L lid closed on the pack, as ruled) short by 0.275 W/K, 2.749 W; M4 (on shore) short by 0.430 W/K, 4.300 W; "
-                   "M6 (E3-O, the e-paper) short by 0.955 W/K, 4.775 W; M7 (E5's dwell, the e-paper) the whole 21.587 W. The charging heat as "
+                   "deciding bare or with the route, except four lines over the MODELLED capacity even with the route at the optimistic "
+                   "ends (a model figure on named coefficient ends, not a physical bound; none shown impossible): M3 (E3-L lid closed on the "
+                   "pack, as ruled) short by 0.275 W/K, 2.749 W, and M4 (on shore) short by 0.430 W/K, 4.300 W, a MODELLED SHORTFALL OF THE "
+                   "ANALYSED ARRANGEMENT (the SGP41's Table 4 on the mixed air); M6 (E3-O, the e-paper) short by 0.955 W/K, 4.775 W, and M7 "
+                   "(E5's dwell, the e-paper) the whole 21.587 W on that row, a MISSING STORAGE QUALIFICATION (an operating row INFERRED to "
+                   "cover the part unpowered); no DEMONSTRATED CONFLICT (no local temperature measured). The charging heat as "
                    "a balance (B4): 95.944 W in less 45.900 W stored = 50.044 W, 52.134 W with L4-E8's ballasts; T3's start (K7, K8) needs "
                    "1.8102 and 2.1997 W/K (readings 1.8892 and 2.3150 W/K). The battery-only run coupled to C1 (B7): C1 sheds the profile at "
                    "2.01 to 2.51 h on the bound, the run with the shed states 2.52 to 2.95 h (energy and thermal); 2.52 h unshed is energy "
@@ -3448,26 +3484,34 @@ CHOICES = [
                   "21.587 W, M5 at 43.413 W, M8 and M9 at 52.134 W, each read against its governing line as ruled and under C; then the "
                   "fans-off case and 12c's transient point; under a class (ii) line the combined route (R-170 to R-172) read at the same "
                   "point; the e-paper's own temperature at its window (a T-H1 channel: a plate fraction of 0.362 needs 1.963 W/K, 0.725 "
-                  "needs 3.926 W/K); the cells' rise in the pocket (U-01), the parts' local air in the built kit (T-H2), the junctions "
+                  "needs 3.926 W/K); the SGP41's local air at its port lid closed (a channel apart from the mixed air); a storage soak of an "
+                  "e-paper sample at E3-O's and E5's temperatures with its function read back (evidence for that lot); the cells' rise in "
+                  "the pocket (U-01), the parts' local air in the built kit (T-H2), the junctions "
                   "(THM-001); on the built kit the battery-only run from a 24 h soak at +20 C (12c)",
-                  "CFL-002 (OW-1); for the four class (iii) lines, one option each (OW-10): E3-L lid closed, CFL-002's C, A or B, a "
-                  "closed-lid ceiling on REQ-042's VOC channel (an ambient of +31.3 to +38.8 C on the pack, +30.2 to +38.2 C on shore) or "
-                  "D-02b's closed-lid test restated; E3-O and E5, PDi's statement sent (OW-4), a different e-paper (CHO-001) or a recorded "
-                  "deviation (TEST-PLAN); authorise T-H1's bench (OW-8)"),
+                  "send PDi's storage request (OW-4) and authorise T-H1's bench (OW-8); CFL-002 (OW-1) and the requirement or ruling "
+                  "options for the four lines (OW-10: CFL-002's C, A or B; a closed-lid ceiling on REQ-042's VOC channel, on the model an "
+                  "ambient of +31.3 to +38.8 C on the pack, +30.2 to +38.2 C on shore; D-02b's closed-lid test restated; a different "
+                  "e-paper, CHO-001; a recorded deviation, TEST-PLAN) stay the owner's and go to him only when a measurement "
+                  "demonstrates the conflict"),
      "supplier": "the prototype bench, as Layer 9's physical verification, once the owner authorises it (the session cannot run it); Layer 6 "
                  "components for D-18's pick and the fans' rating (R-142, R-150, E11-35); Layer 7 mechanical for the combined route "
-                 "(R-170 to R-172) and a closed-lid conduction path; the makers (Sensirion, PDi), through the owner",
+                 "(R-170 to R-172) and a closed-lid conduction path; the prototype bench for an e-paper storage soak; the makers "
+                 "(Sensirion, PDi), through the owner",
      "fallback": "under a class (i) or (ii) line's point, the combined route inside the rulings (R-170 to R-172, passive: no power, no "
-                 "endurance change) read at the same point; for a class (iii) line no measurement passes it: the session develops two "
-                 "options, the e-paper's window temperature measured (the plate fraction decides) and a closed-lid conduction path from "
-                 "the plate to the lid's inner face inside the seal (Layer 7; not modelled, it closes nothing yet); the rest are the "
-                 "owner's (CFL-002, a requirement or ruling change, CHO-001, a recorded deviation). Charging is not class (iii): charging "
+                 "endurance change) read at the same point; for the MODELLED SHORTFALL (M3, M4) the session develops a closed-lid "
+                 "conduction path from the plate to the lid's inner face inside the seal (the combined route carried to the closed lid; "
+                 "Layer 7, not modelled, it closes nothing yet) and reads the SGP41's local air at its port; for the MISSING STORAGE "
+                 "QUALIFICATION (M6, M7) PDi's storage statement or a storage soak of a sample with its function read back, and at M6 "
+                 "the e-paper's window temperature measured (the plate fraction decides); only a DEMONSTRATED CONFLICT (a measured local "
+                 "temperature over a mandatory limit with the route fitted) goes to the owner (CFL-002, a requirement or ruling change, "
+                 "CHO-001, a recorded deviation). Charging lies under the modelled capacity (class (i)): charging "
                  "only in the heat stage (31.133 W into the case) needs 1.209 and 1.508 W/K, class (i), at the cost of the profile while "
                  "charging (an owner's duty-cycle choice, not taken)",
-     "overturns": "the sealed case's thermal design against four mode requirements (class (iii)): the rulings (no vent, the Peli 1450, the "
-                  "device set) and E3-L lid closed, E3-O and E5 as stated cannot all stand; which gives way is the owner's (CFL-002, "
-                  "REQ-042's coverage, D-02b, CHO-001, TEST-PLAN), never the power path's topology; a class (i) or (ii) line read short "
-                  "with the route also short would join them",
+     "overturns": "the sealed case's thermal design, only on a DEMONSTRATED CONFLICT: a measured local temperature over a mandatory limit "
+                  "with the route fitted (none at present) would set the rulings (no vent, the Peli 1450, the device set) against that "
+                  "mode's requirement, and which gives way is then the owner's (CFL-002, REQ-042's coverage, D-02b, CHO-001, TEST-PLAN), "
+                  "never the power path's topology; a modelled shortfall or a missing storage qualification is an engineering or evidence "
+                  "task, not a conflict; a class (i) or (ii) line read short with the route also short is judged the same way",
      "rows": ["IF-11"]},
     {"id": "U-03", "title": "O-1: the solar panel inside REQ-016's window (L4-E13, accepted)", "class": DOWNSTREAM,
      "question": "which physical unit is inside REQ-016's window: a unit measured to PANEL-ACC and accepted on A-1 (Vm20 plus U_V at most "
@@ -3710,8 +3754,9 @@ OWNER_ITEMS = [
                            "sensor in its place (L4-E12's recommendation); B, the VOC channel dropped; C, the SGP41 kept, its channel reported as "
                            "not covered above a 49.0 C reading and after storage outside 5 to 30 C, the sensor off from a 54.0 C reading; it also sets "
                            "the governing line at REQ-024's +40 C (L4-E12 12a): with no option taken, the SGP41's Table 4 +50 C, 2.554 W/K on the "
-                           "pack and 2.709 W/K on shore, class (iii) with the lid closed; under C, A or B the cells' hot stop H1, 1.666 and "
-                           "1.642 W/K",
+                           "pack and 2.709 W/K on shore, over the modelled capacity with the lid closed (a MODELLED SHORTFALL OF THE ANALYSED "
+                           "ARRANGEMENT, M3 and M4); under C, A or B the cells' hot stop H1, 1.666 and 1.642 W/K; held in reserve, not a forced "
+                           "question: the options stay the owner's and the request goes to him only when a measurement demonstrates a conflict",
      "docs": [("l4e12md", "L4-E12's page, section 8")]},
     {"id": "OW-2", "what": "U-01, item 1: send the drafted request for the HL18650V's signed product specification (Yichun Topwell Power), "
                            "ten questions since L4-E10's dependency round (7 to 10 added: the cold charge band and termination, the pulse "
@@ -3759,14 +3804,17 @@ OWNER_ITEMS = [
                            "10g: one cell, NZ$ 238.72, a chamber from -40 to +85 C and a 25 A load, about two weeks) and the printed mock-up of "
                            "four cells in the pocket (no purchase); actions, not questions",
      "docs": [("cl_saft", "Saft: the MP 176065 xtd in a 4S1P pack")]},
-    {"id": "OW-10", "what": "U-02's four class (iii) lines (L4-E12 12e; no measurement can pass them): one option each, none lowering a "
-                            "requirement silently; (1) E3-L at +40 C lid closed (M3, M4): CFL-002's C, A or B (OW-1), a closed-lid ceiling "
-                            "on REQ-042's VOC channel (an ambient of +31.3 to +38.8 C on the pack, +30.2 to +38.2 C on shore), or D-02b's "
-                            "closed-lid test at +40 C restated; (2) E3-O at +55 C (M6): PDi's statement (OW-4), an e-paper with a held range "
-                            "at or over +70 C (CHO-001), or E3-O with the e-paper's state recorded as a deviation (TEST-PLAN); (3) E5's +60 C "
-                            "dwell (M7): PDi's statement, a different e-paper (CHO-001), or E5 with the e-paper out as a recorded deviation; "
-                            "the session's two options (the e-paper's window temperature measured, a closed-lid conduction path at Layer 7) "
-                            "are engineering work, not his; decisions",
+    {"id": "OW-10", "what": "U-02's four lines over the modelled capacity (L4-E12 12e, its categories after the review's L4-F04): NOT a "
+                            "forced owner question. M3 and M4 (E3-L at +40 C lid closed) are a MODELLED SHORTFALL OF THE ANALYSED "
+                            "ARRANGEMENT and M6 and M7 (E3-O and E5, the unpowered e-paper) a MISSING STORAGE QUALIFICATION: engineering and "
+                            "evidence tasks (a closed-lid conduction path at Layer 7, the SGP41's local air at its port, PDi's storage "
+                            "statement sent under OW-4 or a storage soak, the e-paper's window temperature), not his. The request reaches "
+                            "him only on a DEMONSTRATED CONFLICT (a measured local temperature over a mandatory limit with the route fitted; "
+                            "none at present); his options then, none lowering a requirement silently: (1) E3-L: CFL-002's C, A or B (OW-1), "
+                            "a closed-lid ceiling on REQ-042's VOC channel (on the model an ambient of +31.3 to +38.8 C on the pack, +30.2 to "
+                            "+38.2 C on shore), or D-02b's closed-lid test at +40 C restated; (2) E3-O: an e-paper with a held range at or "
+                            "over +70 C (CHO-001), or E3-O with the e-paper's state recorded as a deviation (TEST-PLAN); (3) E5: a different "
+                            "e-paper (CHO-001), or E5 with the e-paper out as a recorded deviation; held in reserve",
      "docs": [("l4e12md", "L4-E12's page, section 17.9")]},
 ]
 OWNER_NOT_DRAFTED = ("not yet drafted (engineering work first, then the owner sends): Littelfuse, F1's total clearing I2t at 900 A and 58 V DC "
@@ -4743,11 +4791,12 @@ def cons_heat_modes(F):
         for c in fx["cls"]:
             if c["mode"] != k:
                 continue
-            t = "%s: (%s)" % (c["line"], c["cls"])
+            lab = lambda c_: "over the model" if c_ == "over" else "(%s)" % c_
+            t = "%s: %s" % (c["line"], c["cat"] if c["cls"] == "over" else lab(c["cls"]))
             if c["cons"] != c["cls"]:
-                t += ", (%s) at the conservative ends" % c["cons"]
+                t += ", %s at the conservative ends" % lab(c["cons"])
             if c["short"]:
-                t += ", SHORT by %s" % ("%s W/K, %s W" % c["short"] if c["short"][0] else "the whole %s W" % c["short"][1])
+                t += ", SHORT of the model by %s" % ("%s W/K, %s W" % c["short"] if c["short"][0] else "the whole %s W" % c["short"][1])
             cl.append(t)
         rem = md["remaining"].split("; the parts' local air in the built kit")[0]
         rows.append((k, md["what"], md["q"], "lid %s, %+.1f C" % (md["lid"], md["amb"]), ruled, cab, stated, "; ".join(cl),
@@ -4856,7 +4905,7 @@ RECON = [
      "both", "PANEL-ACC accepts any unit inside the window; the unserved energy grows toward the floor's unit"),
     ("R20", "T-H1's pass reading for E5's +70 C line (M7's maker-stated alternative)", [("2.416", "l4e12", "the eight-point procedure at a 10 K rise, one heater's 21.2 W"), ("2.462", "l4e12", "9f's point at its 8.6 K rise"),
                                                          ("2.455", "l4e12", "K10: E5's own heat, 21.587 W with the fans counted (11e)")],
-     "2.455 W/K", "the same 2.159 W/K plus the expanded uncertainty; M7's point at E5's own heat replaces the 21.2 W lines (L4-E12 16.8, 12d); the e-paper's row governs E5 with no conductance (class (iii))"),
+     "2.455 W/K", "the same 2.159 W/K plus the expanded uncertainty; M7's point at E5's own heat replaces the 21.2 W lines (L4-E12 16.8, 12d); the e-paper's row governs E5 with no conductance (a MISSING STORAGE QUALIFICATION)"),
     ("R22", "the Saft pack's nominal energy", [("81.6", "l4e10", "four times the sheet's 20.4 Wh"), ("81.8", "l4e10chk5", "4 x 3.65 V x 5.6 Ah"),
                                                ("81.76", "l4e10", "the comparison: 4 x 5.60 Ah x 3.65 V (11b)")],
      "81.76 Wh", "three roundings of the sheet's typical figures; the usable 53.5 to 58.8 Wh (MODELLED) is what the budget uses"),
@@ -4890,7 +4939,7 @@ RECON = [
     ("R28", "the case's outside capacity", [("1.540", "l4e12", "9b: at E5's rise, a bound with a 50 m/s inside flow (12e), not the capacity"), ("1.571", "l4e12", "9b: at E3-O's rise, the same"),
                                             ("1.504", "l4e12", "11d: at K1's rise, the same 50 m/s figure"), ("1.856", "l4e12", "12e: the capacity proper at E5's rise, conservative ends"),
                                             ("1.906", "l4e12", "12e: at E3-O's rise"), ("1.810", "l4e12", "12e: at K1's rise")],
-     "12e's capacity (the inside resistance at zero), per line in its class table", "the earlier 'cap' figures were the bound with a 50 m/s inside flow (L4-E12 12e's correction); the classes (i) to (iii) are read against the capacity with the route at the optimistic ends"),
+     "12e's capacity (the inside resistance at zero), per line in its class table", "the earlier 'cap' figures were the bound with a 50 m/s inside flow (L4-E12 12e's correction); the classes (i) and (ii), and the lines over the model with their categories, are read against the modelled capacity with the route at the optimistic ends"),
     ("R30", "D4's clamp at CS116's 10 A at the hot end", [("39.00", "l4e7r", "the drafted SMCJ28A (D1)"), ("41.91", "l4e7r", "the SMCJ30A with the guard (the remedies)")],
      "41.91 V", "D4 changes to the SMCJ30A with the guard; both under the drafted entry's 50 V"),
     ("R31", "the solar cut-off's rising band", [("29.11", "l4e7r", "new parts"), ("28.55", "l4e7r", "aged by the divider's printed load-life, with the pin's leakage")],
@@ -5391,13 +5440,13 @@ def cons_th1(F):
                      "L4-E12 12d, 12a"))
     rows += [
         ("the route, only under a class (ii) line", "the same point with the combined route fitted (R-170 to R-172; lid open only)", "the point's own line",
-         "the route's effect at that heat; still short, the line joins the owner's (OW-10)", "L4-E12 12e, 15"),
+         "the route's effect at that heat; still short with the part's local temperature over its limit, a DEMONSTRATED CONFLICT (OW-10)", "L4-E12 12e, 15"),
         ("the fans-off case", "at M2's heat, the fans stopped", "no pass line (the failure case)", "what a stopped fan costs (L4-E12 8e)", "L4-E12 12d"),
         ("the transient point (12c)", "the empty case soaked at room temperature; the heaters stepped to %s W, then, once the mixed air has risen %d K, to %s W, logged to the run's end"
          % (fmt(fx["trans"][0]), int(fx["trans"][1]), fmt(fx["trans"][2])), "the time to C1 and the air after it",
          "the battery-only run's shed point on the bench (the empty case's thermal mass under the kit's: the conservative side); then the built kit's run (Layer 9)", "L4-E12 12c"),
         ("open after the points", "none on this bench", "none",
-         "the four class (iii) lines (no reading passes them: OW-10); the cells' rise in the pocket (U-01), the parts' local air (T-H2), the junctions (THM-001), the fans' rating (D-18), full sun (D-02e)", "L4-E12 12a, 12e"),
+         "the four lines over the modelled capacity: M3 and M4 a modelled shortfall (the SGP41's local air at its port, a closed-lid path), M6 and M7 a missing storage qualification (PDi's statement or a storage soak); the cells' rise in the pocket (U-01), the parts' local air (T-H2), the junctions (THM-001), the fans' rating (D-18), full sun (D-02e)", "L4-E12 12a, 12e"),
     ]
     note = ("**T-H1 at Layer 9 (the bench, R-104): the points of L4-E12 12d, one per mode's heat and lid state** (the fix round; "
             "the order K1, K5, K10, K6, K7 and K8 of section 11 superseded). Each point runs at its mode's heat with the heaters set to it "
@@ -5440,8 +5489,10 @@ QUALIFICATION_ONCE = "(i) once R-157, R-177 and R-178 are applied ((B1) with the
 SUPPORTED = ("(ii) as ruled (the 35E unsuitable on its own published evidence); a route supported on published evidence for the temperature windows "
              "(the Saft MP 176065 xtd), NOT YET ADOPTABLE: current at temperature and the storage dwell and recovery await Saft or the limited sample "
              "qualification, the fit the mock-up; the owner's approval required")
-CONDITION_U02 = ("(ii) a closure condition for every class (i) and (ii) line, T-H1 deciding; four class (iii) lines (E3-L lid closed as ruled, E3-O "
-                 "and E5 on the e-paper's row) are a contradiction between the rulings and those requirements that no measurement resolves: the owner's (OW-10)")
+CONDITION_U02 = ("(ii) a closure condition decided by T-H1 plus the storage evidence: T-H1 decides every class (i) and (ii) line; four lines over "
+                 "the modelled capacity, none shown impossible: E3-L lid closed as ruled a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT (an "
+                 "engineering task), E3-O and E5 on the e-paper's row a MISSING STORAGE QUALIFICATION (an evidence task); no DEMONSTRATED "
+                 "CONFLICT, so no requirement question goes to the owner (OW-10 held for a measured conflict)")
 EXIT_PENDING = {"U-01": "integrated: L4-E10's cell route (checks 4 and 5 at 1c321773) and its fix round for the review's B5 (ee09aa09: the temperature windows supported, not yet adoptable)",
                 "U-02": "integrated: L4-E12's verdict, heat-rejection comparison and reconciliation (checks 5 to 7) and its fix round for the review's B3, B4 and B7 (b1cd32ba: each mode's governing local limit, the classes of 12e)",
                 "U-04": "integrated: L4-E11's charger selection (check 5 at 5aa18a69), its fix round for the review's B1 and B2 (656fc540: the battery FET pair, board E on VSYS_E) and its fix round for the review of the provisional fixes (d2a59468: L4-F02, the pair's qualification basis; L4-F03, the eFuse U42)"}
@@ -5454,7 +5505,7 @@ def cons_exit(F):
     tb, b1, u1 = cb["tb"], cb["b1"], cb["u1"]
     rc = F["rc"]
     M = fx["modes"]
-    sh = {c["mode"]: c["short"] for c in fx["iii"]}
+    sh = {c["mode"]: c["short"] for c in fx["over"]}
     c40 = [c for c in fx["cls"] if c["mode"] == "M1"][0]
     c40c = [c for c in fx["cls"] if c["mode"] == "M3"][0]
     return [
@@ -5469,16 +5520,16 @@ def cons_exit(F):
          "the owner's adoption of D-06's cell, energy (%s to %s Wh nominal) and spend (NZ$ %s for four), NOT YET ADOPTABLE: current at temperature, the storage dwell and recovery, the fit, the gauge data and T-H1 awaited, the owner's approval required; the topology stays; missing evidence is not proof that no cell meets the rows"
          % (fmt(rc["e35_nom"]), fmt(rc["saft_nom"]), fmt(u1["cost"][1]))),
         ("U-02", CONDITION_U02,
-         "the sealed case's conductance with the fans, lid open and lid closed, at each required mode's heat against that mode's governing local limit (L4-E12 12a): as ruled the SGP41's Table 4 in the heat stage at +40 C (%s W/K on the pack, %s W/K on shore), under CFL-002's C, A or B the cells' hot stop H1 (%s and %s W/K); M5, C1's air trigger, %s W/K; M8 and M9, T4 on the charging cells, %s and %s W/K; the four class (iii) lines need a decision, not a reading"
+         "the sealed case's conductance with the fans, lid open and lid closed, at each required mode's heat against that mode's governing local limit (L4-E12 12a): as ruled the SGP41's Table 4 in the heat stage at +40 C (%s W/K on the pack, %s W/K on shore), under CFL-002's C, A or B the cells' hot stop H1 (%s and %s W/K); M5, C1's air trigger, %s W/K; M8 and M9, T4 on the charging cells, %s and %s W/K; the four lines over the modelled capacity need the SGP41's local air at its port, a closed-lid path, and PDi's storage statement or a storage soak, not an owner's decision"
          % (M["M1"]["ruled"][1], M["M2"]["ruled"][1], M["M1"]["cab"][1], M["M2"]["cab"][1], M["M5"]["ruled"][1], M["M8"]["ruled"][1], M["M9"]["ruled"][1]),
-         "T-H1's points of L4-E12 12d (R-104, R-151): M2 and M6 at %s W lid open first (the heaters %s W plus the fans), then M1, M4 and M3 lid closed, M7, M5, M8 and M9, the fans-off case and the transient point; under a class (ii) line the combined route (R-170 to R-172) read at the same point; the e-paper's window temperature as a T-H1 channel; PDi's and Sensirion's statements (OW-4); CFL-002 (OW-1); one option per class (iii) line (OW-10); OW-8 authorises the bench"
+         "T-H1's points of L4-E12 12d (R-104, R-151): M2 and M6 at %s W lid open first (the heaters %s W plus the fans), then M1, M4 and M3 lid closed, M7, M5, M8 and M9, the fans-off case and the transient point; under a class (ii) line the combined route (R-170 to R-172) read at the same point; the SGP41's local air at its port and the e-paper's window temperature as T-H1 channels apart from the mixed air; PDi's and Sensirion's statements (OW-4); an e-paper storage soak with its function read back; OW-8 authorises the bench; CFL-002 (OW-1) and OW-10 only on a demonstrated conflict"
          % (fmt(M["M2"]["q"]), fmt(rc["H"]["M2"][1])),
-         "the conservative bound (%s to %s W/K at K1's rise; the fans' film at zero); the outside capacity with the inside resistance at zero (12e; %s W/K at K1's rise): at +40 C lid open bare %s / %s, with the route %s / %s W/K, lid closed %s / %s W/K (conservative / optimistic): every line class (i) or (ii) but four, M3 short by %s W/K (%s W), M4 by %s W/K (%s W), M6 by %s W/K (%s W), M7 the whole %s W; the charging heat %s W (12b, the balance); the battery-only run sheds at C1 at %s to %s h on the bound (12c)"
+         "the conservative bound (%s to %s W/K at K1's rise; the fans' film at zero); the outside capacity with the inside resistance at zero (12e; %s W/K at K1's rise): at +40 C lid open bare %s / %s, with the route %s / %s W/K, lid closed %s / %s W/K (conservative / optimistic): every line class (i) or (ii) but four over the modelled capacity (a model figure, not a physical bound): M3 short by %s W/K (%s W) and M4 by %s W/K (%s W), a modelled shortfall of the analysed arrangement; M6 by %s W/K (%s W) and M7 the whole %s W on its row, a missing storage qualification; the charging heat %s W (12b, the balance); the battery-only run sheds at C1 at %s to %s h on the bound (12c)"
          % (fmt(rc["bound"][0]), fmt(rc["bound"][1]), "%.3f" % rc["capk1"][0], c40["bare"][0], c40["bare"][1], c40["route"][0], c40["route"][1], c40c["bare"][0], c40c["bare"][1],
             sh["M3"][0], sh["M3"][1], sh["M4"][0], sh["M4"][1], sh["M6"][0], sh["M6"][1], sh["M7"][1], fmt(fx["bal_b"][1]), fmt(fx["c1"][0]), fmt(fx["c1"][1])),
-         "under a class (i) or (ii) line, the combined route (R-170 to R-172, passive); for the class (iii) lines the session's two options (the e-paper's window temperature: a plate fraction of %s needs %s W/K, %s needs %s W/K; a closed-lid conduction path at Layer 7, not modelled, closing nothing yet) and the owner's (CFL-002's C, A or B; a closed-lid ceiling on REQ-042's VOC channel, +%s to +%s C on the pack and +%s to +%s C on shore; D-02b restated; PDi's statement; CHO-001; a recorded deviation)"
+         "under a class (i) or (ii) line, the combined route (R-170 to R-172, passive); for the modelled shortfall, a closed-lid conduction path at Layer 7 (not modelled, closing nothing yet) and the SGP41's local air at its port; for the missing storage qualification, PDi's statement or a storage soak, and the e-paper's window temperature (a plate fraction of %s needs %s W/K, %s needs %s W/K); only on a demonstrated conflict the owner's options (CFL-002's C, A or B; a closed-lid ceiling on REQ-042's VOC channel, on the model +%s to +%s C on the pack and +%s to +%s C on shore; D-02b restated; CHO-001; a recorded deviation)"
          % (tuple(fmt(x) for x in fx["plate"]) + tuple(fmt(x) for x in fx["voc_ceil"])),
-         "at or over each class (i) or (ii) line's reading the architecture stands for that mode (with the route where needed); the class (iii) lines are a contradiction between the rulings (no vent, the Peli 1450, the device set) and E3-L lid closed, E3-O and E5 as stated, the owner's to resolve (OW-10); never the power path's topology; T-H1 decides, it does not merely confirm; missing evidence is not proof of a shortfall"),
+         "at or over each class (i) or (ii) line's reading the architecture stands for that mode (with the route where needed); the four lines over the modelled capacity are not shown impossible and set no ruling against a requirement until a measured local temperature demonstrates a conflict (then the owner's, OW-10); never the power path's topology; T-H1 and the storage evidence decide, they do not merely confirm; missing evidence is not proof of a shortfall"),
         ("U-04", QUALIFICATION_ONCE,
          "with (B1): D2 (load steps against the %s V margin), the pair's installed Zself + Zmut (%s K/W steady, %s at 1 s, %s at 20 ms, %s at 244 us, E11-29) at the RDS(on) allowance (E11-36); Ciss against TI's 5 nF (E11-37, open); the docking pulse whole in one FET, VF and ISM hot (E11-30); the start from cold into VSYS_MIN and the held pack current (E11-31); the fans' range to %s V and running at %s V (E11-35); the dock branch's hard short (E11-38); D6, D8, D9, D10 and the BQ25730's supply; on the board as drawn, TI's D1 and D3"
          % ((b1["margin"], fmt(F["f02"]["z_steady"])) + tuple(fmt(e_[2]) for e_ in F["f02"]["z_ev"]) + (fmt(fx["vsys_rng"][1]), fmt(F["f02"]["vsyse"]))),
@@ -5498,7 +5549,7 @@ def cons_deciding(F):
     framings (the profile at +40 C; K1, the SGP41's +55 C, deciding under option C) are withdrawn."""
     fx, rc = F["fx"], F["rc"]
     M = fx["modes"]
-    sh = {c["mode"]: c["short"] for c in fx["iii"]}
+    sh = {c["mode"]: c["short"] for c in fx["over"]}
     g = lambda k, w: "%s W/K (a reading of at least %s W/K)" % M[k][w][1:]
     return [
         "**The thermal question (U-02), restated by L4-E12's fix round for the review's B3, B4 and B7 (`b1cd32ba`).** The SGP41's "
@@ -5522,18 +5573,24 @@ def cons_deciding(F):
            "%s W/K (a reading of at least %s W/K)" % M["M7"]["stated"][1:], fmt(M["M8"]["q"]), g("M8", "ruled"), g("M9", "ruled")),
         "**Which lines a reading can pass at all** (12e: the outside capacity with the inside resistance at zero, %s W/K at K1's "
         "rise, correcting the %s to %s W/K that were a bound with a 50 m/s inside flow). Every line is class (i) (reachable bare: T-H1 "
-        "decides) or (ii) (reachable with the combined route R-170 to R-172: T-H1 with the route decides), except **four class (iii) "
-        "lines**, over the capacity even with the route at the optimistic ends: **M3**, E3-L lid closed on the pack as ruled, short by "
-        "%s W/K (%s W); **M4**, on shore, %s W/K (%s W); **M6**, E3-O on the e-paper's row, %s W/K (%s W); **M7**, E5's dwell on the "
-        "e-paper's row, the whole %s W. No measurement can pass them: each is a contradiction between the rulings (no vent, the Peli "
-        "1450, the device set) and that mode's requirement, with its options (OW-10): E3-L, CFL-002's C, A or B (the line moves to H1, "
-        "class (i)), a closed-lid ceiling on REQ-042's VOC channel (+%s to +%s C ambient on the pack, +%s to +%s C on shore) or D-02b "
-        "restated; E3-O, PDi's statement (the +70 C class, class (i)), the e-paper's window temperature measured (a plate fraction of "
-        "%s needs %s W/K, %s needs %s W/K), CHO-001 or a recorded deviation; E5, PDi's statement (%s W/K, class (i)), a different e-paper "
-        "or a recorded deviation. **Its executable resolution path:** the owner rules CFL-002 (OW-1), picks an option per class (iii) "
-        "line (OW-10) and authorises T-H1 (OW-8); the bench runs 12d's points (R-104, 5c)."
+        "decides) or (ii) (reachable with the combined route R-170 to R-172: T-H1 with the route decides), except **four lines over the "
+        "modelled capacity** even with the route at the optimistic ends; the capacity is a model figure on named coefficient ends, not "
+        "a physical bound, so none of them is shown impossible (the review of the provisional fixes, L4-F04). **A MODELLED SHORTFALL OF "
+        "THE ANALYSED ARRANGEMENT:** **M3**, E3-L lid closed on the pack as ruled, short by %s W/K (%s W), and **M4**, on shore, %s W/K "
+        "(%s W), the SGP41's Table 4 on the mixed air; what could change it is engineering: a closed-lid conduction path (the combined "
+        "route carried to the closed lid, Layer 7) and the SGP41's local air measured at its port, apart from the mixed-air screen. **A "
+        "MISSING STORAGE QUALIFICATION:** **M6**, E3-O on the e-paper's row, %s W/K (%s W), and **M7**, E5's dwell on that row, the "
+        "whole %s W; the unpowered e-paper is judged on its operating row read to cover storage (INFERRED); what resolves it is "
+        "evidence: PDi's storage statement (the +70 C class, class (i); at E5 %s W/K, class (i)) or a storage soak of a sample with its "
+        "function read back, and at E3-O the e-paper's window temperature measured (a plate fraction of %s needs %s W/K, %s needs %s "
+        "W/K). **A DEMONSTRATED CONFLICT: none at present**; only a measured local temperature over a mandatory limit with the route "
+        "fitted makes one, and only then does a requirement or ruling option go to the owner (OW-10: CFL-002's C, A or B, a closed-lid "
+        "ceiling on REQ-042's VOC channel, on the model +%s to +%s C ambient on the pack and +%s to +%s C on shore, or D-02b restated; "
+        "CHO-001 or a recorded deviation). **Its executable resolution path:** T-H1 (OW-8 authorises it; the bench runs 12d's points, "
+        "R-104, 5c, with the SGP41's port and the e-paper's window as local channels) and the storage evidence (PDi's statement, OW-4, "
+        "or the soak)."
         % ("%.3f" % rc["capk1"][0], "%.3f" % rc["cap"][0], "%.3f" % fx["capfix"][1], sh["M3"][0], sh["M3"][1], sh["M4"][0], sh["M4"][1], sh["M6"][0], sh["M6"][1],
-           sh["M7"][1], *[fmt(x) for x in fx["voc_ceil"]], *[fmt(x) for x in fx["plate"]], M["M7"]["stated"][1]),
+           sh["M7"][1], M["M7"]["stated"][1], *[fmt(x) for x in fx["plate"]], *[fmt(x) for x in fx["voc_ceil"]]),
     ]
 
 
@@ -5552,7 +5609,7 @@ def cons_exit_lines(F):
     L.append("   " + cons_ledger(F).replace("**", "").replace("`", ""))
     n = [e[0] for e in cons_exit(F) if e[1] != QUALIFICATION]
     L.append("   the exit: Layer 4 power closure is NOT reached on this reading: closure conditions on the board as drawn %s (U-04 becomes a qualification test once R-157, R-177"
-             " and R-178 are applied; U-02's four class (iii) lines are the owner's); the review's B1 and B2 on (B1)'s draft, D-13 and D-14, the provisional fixes' L4-F03, D-15,"
+             " and R-178 are applied; U-02 decided by T-H1 plus the storage evidence, its four lines over the modelled capacity a modelled shortfall and a missing storage qualification, no demonstrated conflict); the review's B1 and B2 on (B1)'s draft, D-13 and D-14, the provisional fixes' L4-F03, D-15,"
              " and the known defects D-10 and D-11 at the solar entry are addressed in drafts (R-157, R-181, R-177, R-178 and R-173, not applied; D-14"
              " CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss OPEN (E11-37), D-15's hard short on E11-38; D-11 CONDITIONAL on Q13's hot leakage), the band"
              " between 25 V and the cut-off a residual for layer 8 (R-175); status: %s" % (", ".join(n), STATUS))
@@ -5850,6 +5907,19 @@ def cons_review_lines(F):
     p("   L4-E11 16f's four drafted texts, carried: %s" % "; ".join(r[0] for r in g["f16"]))
     p("   L4-E11 16g's five engineer's rows, each in the register: Q39, Q40 RDS(on) R-182; the installed path R-159; Ciss R-183; the docking pulse R-160;")
     p("     the dock's VSYS branch R-184")
+    sh = {c["mode"]: c for c in fx["over"]}
+    p("26c L4-F04, THE THERMAL CATEGORIES (L4-E12 12e restated in this round; U-02): the capacity is a MODEL FIGURE on named coefficient ends, not a")
+    p("     physical bound, and a line over it is not shown impossible; three named categories in place of the earlier third class:")
+    p("   %s: M3 and M4, E3-L lid closed as ruled, the SGP41's Table 4 on the mixed air, short by %s and %s W/K of the model;"
+      % (CAT_MODEL, sh["M3"]["short"][0], sh["M4"]["short"][0]))
+    p("     an engineering task: a closed-lid conduction path (the combined route carried to the closed lid, Layer 7) and the SGP41's local air at its port")
+    p("   %s: M6 and M7, the unpowered e-paper judged on its +60 C operating row read to cover storage (INFERRED), M6 short by %s W/K,"
+      % (CAT_STORE, sh["M6"]["short"][0]))
+    p("     M7 the whole %s W on that row; an evidence task: PDi's storage statement (OW-4) or a storage soak of a sample with its function read back" % sh["M7"]["short"][1])
+    p("   %s: none at present; only a measured local temperature over a mandatory limit with the route fitted makes one" % CAT_CONFLICT)
+    p("   OW-10 is no longer a forced owner question: CFL-002's options (OW-1) and the requirement or ruling options stay the owner's, sent to him only on a")
+    p("     demonstrated conflict; U-02 stays a closure condition decided by T-H1 plus the storage evidence; local part temperatures kept apart from the")
+    p("     mixed-air screens; every figure as L4-E12 prints it, none changed by the classification")
     p("26d L4-F01, THE SOLAR GUARD ALREADY ON (the review's B6): PENDING L4-E7's round (its author is on it); D-10 stays as 23 and 25m carry it,")
     p("     CONDITIONAL; the review found that the lead's inductance alone does not establish the rating claim; this record selects nothing for it")
     p("   status: %s" % STATUS)
@@ -5994,17 +6064,20 @@ def cons_fix_lines(F):
         p("   %s at %s W, lid %s: tau %s h, steady at %s h, the fit %s h" % (name, fmt(q), lid, tau, steady, fit))
     p("25h WHICH LINES A READING CAN PASS (L4-E12 12e; the capacity proper %s W/K at K1's rise; 9's %s and %s W/K were a 50 m/s inside-flow bound)"
       % ("%.3f" % rc["capk1"][0], "%.3f" % fx["capfix"][0], "%.3f" % fx["capfix"][1]))
+    p("   [the categories of the lines over the model restated by the review of the provisional fixes, L4-F04: section 26c]")
+    lab = lambda c_: "over the model" if c_ == "over" else "class (%s)" % c_
     for c in fx["cls"]:
         if c["need"] is None:
-            p("   %s %s: no capacity at a zero rise; class (iii), the whole %s W" % (c["mode"], c["line"], c["short"][1]))
+            p("   %s %s: no modelled capacity at a zero rise; %s, the whole %s W" % (c["mode"], c["line"], c["cat"], c["short"][1]))
         else:
-            p("   %s %s: needs %s W/K; bare %s / %s, route %s / %s; class (%s)%s%s" % (c["mode"], c["line"], c["need"], c["bare"][0], c["bare"][1], c["route"][0], c["route"][1], c["cls"],
-                                                                             ", (%s) conservative" % c["cons"] if c["cons"] != c["cls"] else "", ", SHORT by %s W/K, %s W" % c["short"] if c["short"] else ""))
-    p("   the class (iii) options (OW-10): E3-L, CFL-002's C, A or B, a closed-lid VOC ceiling (+%s to +%s C on the pack, +%s to +%s C on shore) or D-02b restated;"
-      % tuple(fmt(x) for x in fx["voc_ceil"]))
-    p("     E3-O, PDi's statement, the e-paper's window temperature (plate fraction %s: %s W/K; %s: %s W/K), CHO-001 or a deviation; E5, PDi's statement, a"
-      % tuple(fmt(x) for x in fx["plate"]))
-    p("     different e-paper or a deviation; charging is not class (iii) (in the heat stage alone %s W, %s and %s W/K, class (i))" % tuple(fmt(x) for x in fx["chg_hs"]))
+            p("   %s %s: needs %s W/K; bare %s / %s, route %s / %s; %s%s%s" % (c["mode"], c["line"], c["need"], c["bare"][0], c["bare"][1], c["route"][0], c["route"][1], lab(c["cls"]),
+                                                                       ", %s conservative" % lab(c["cons"]) if c["cons"] != c["cls"] else "",
+                                                                       ", SHORT by %s W/K, %s W: %s" % (c["short"] + (c["cat"],)) if c["short"] else ""))
+    p("   the requirement or ruling options, held for a DEMONSTRATED CONFLICT (OW-10): E3-L, CFL-002's C, A or B, a closed-lid VOC ceiling (+%s to +%s C on the"
+      % tuple(fmt(x) for x in fx["voc_ceil"][:2]))
+    p("     pack, +%s to +%s C on shore) or D-02b restated; the e-paper's window temperature (plate fraction %s: %s W/K; %s: %s W/K) and PDi's statement are"
+      % (tuple(fmt(x) for x in fx["voc_ceil"][2:]) + tuple(fmt(x) for x in fx["plate"])))
+    p("     the session's evidence; charging lies under the modelled capacity (in the heat stage alone %s W, %s and %s W/K, class (i))" % tuple(fmt(x) for x in fx["chg_hs"]))
     p("25i B5, THE SAFT'S CURRENT AT TEMPERATURE (L4-E10 10f, 10g)")
     p("   supported on published evidence for the temperature windows; current and temperature together, the storage dwell and recovery AWAIT Saft (the request")
     p("     expanded) or the limited sample qualification (one cell, a chamber from -40 to +85 C, a 25 A load, about two weeks, NZ$ %s); NOT YET ADOPTABLE;"
@@ -6045,7 +6118,7 @@ def cons_in_short(F, D, st, reg):
     tab = F["cb"]["tab_wh"]
     fx = F["fx"]
     M = fx["modes"]
-    sh = {c["mode"]: c["short"] for c in fx["iii"]}
+    sh = {c["mode"]: c["short"] for c in fx["over"]}
     bat20, batc, h20, hc = F["a1_bat"]
     prof = F["idle"][1]
     cand = F["a1_cand"]
@@ -6094,14 +6167,17 @@ def cons_in_short(F, D, st, reg):
         "governs it, %s W/K on the pack and %s W/K on shore; under CFL-002's C, A or B the cells' hot stop H1, %s and %s W/K (the "
         "SGP41's +55 C is an absolute rating, a screen, never a line). The profile's own line is M5, C1's air trigger at REQ-014's +20 C, "
         "%s W/K; charging on the design day (%s W, a balance) is governed by T4 on the charging cells, %s and %s W/K. T-H1 decides "
-        "every class (i) and (ii) line; **four class (iii) lines no reading can pass**: E3-L lid closed as ruled (M3 short by %s W/K, "
-        "M4 by %s W/K) and E3-O and E5 on the e-paper's operating row read to cover it unpowered (M6 short by %s W/K, M7 the whole "
-        "%s W), each with its options for the owner (OW-10; 2c, section 6)."
+        "every class (i) and (ii) line; **four lines lie over the modelled capacity, none shown impossible** (a model figure on named "
+        "coefficient ends, not a physical bound): E3-L lid closed as ruled, a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT (M3 short "
+        "by %s W/K, M4 by %s W/K), and E3-O and E5 on the e-paper's operating row read to cover it unpowered, a MISSING STORAGE "
+        "QUALIFICATION (M6 short by %s W/K, M7 the whole %s W); no DEMONSTRATED CONFLICT, so no requirement question goes to the owner "
+        "(OW-10 held for a measured local temperature over a mandatory limit with the route fitted; 2c, section 6)."
         % (M["M1"]["ruled"][1], M["M2"]["ruled"][1], M["M1"]["cab"][1], M["M2"]["cab"][1], M["M5"]["ruled"][1], fmt(fx["bal_b"][1]),
            M["M8"]["ruled"][1], M["M9"]["ruled"][1], sh["M3"][0], sh["M4"][0], sh["M6"][0], sh["M7"][1]),
         "**The exit** (section 6, the owner's definition): Layer 4 power closure is not reached on this reading. U-02 is a closure "
         "condition T-H1's points decide for every class (i) and (ii) line (as ruled at +40 C a reading of at least %s W/K on the pack "
-        "and %s W/K on shore; under C %s and %s W/K), its four class (iii) lines the owner's (OW-10); U-04 becomes a downstream "
+        "and %s W/K on shore; under C %s and %s W/K) plus the storage evidence (its four lines over the modelled capacity a "
+        "modelled shortfall and a missing storage qualification, no demonstrated conflict); U-04 becomes a downstream "
         "qualification test once R-157, R-177 and R-178 are applied and stays a closure condition on the board as drawn; U-01 has a "
         "route supported on published evidence for the temperature windows (the Saft MP 176065 xtd), NOT YET ADOPTABLE (current at "
         "temperature and the storage dwell await Saft or the limited sample qualification; the owner's approval required), and the "
@@ -6126,10 +6202,10 @@ def cons_normal_op(F):
     M = fx["modes"]
     gov = {"K1": "a SCREEN (the SGP41's Table 5, absolute; option C switches it off at %.1f C)" % fx["c_off"],
            "K2": "M2's governing line as ruled (CFL-002 open)", "K3": "a component SCREEN at the mixed air (the parts' local air is the line, T-H2)",
-           "K4": "a SCREEN (the module's intake)", "K5": "a SCREEN, lid closed (M4's governing line as ruled is K2's, class (iii))",
+           "K4": "a SCREEN (the module's intake)", "K5": "a SCREEN, lid closed (M4's governing line as ruled is K2's, over the modelled capacity lid closed: a modelled shortfall)",
            "K6": "M5's governing line (REQ-014 at +20 C)", "K7": "T3's start under M8 (T4 governs a running charge, 12a)",
            "K8": "T3's start under M9", "K9": "a SCREEN at the mixed air (M6: the e-paper's row governs; the RB9704's +70 C once PDi states)",
-           "K10": "M7's maker-stated alternative (the e-paper's row governs E5, class (iii))",
+           "K10": "M7's maker-stated alternative (the e-paper's row governs E5: a missing storage qualification)",
            "X1": "no requirement: C1 sheds the profile", "X2": "no requirement: the withdrawn framing", "X3": "no requirement's mode"}
     rows = []
     for k in ["K%d" % i for i in range(1, 11)] + ["X1", "X2", "X3"]:
@@ -6163,8 +6239,9 @@ def cons_normal_op(F):
            fmt(fx["bal_b"][1]), fx["k78"][1][2], fx["k78"][3][2], fx["k78"][1][3], fx["k78"][3][3], M["M8"]["ruled"][1], M["M9"]["ruled"][1],
            M["M8"]["ruled"][2], M["M9"]["ruled"][2], fmt(cb["u1"]["charge_start"])),
         "**Electrical feasibility is a separate question** (1d, 8a): every interface row MEETS or is CONDITIONAL; D-10 to D-15 "
-        "addressed in drafts or resolved. Thermal feasibility in normal operation is U-02's, decided per mode by T-H1's points, with "
-        "four class (iii) lines the owner's.",
+        "addressed in drafts or resolved. Thermal feasibility in normal operation is U-02's, decided per mode by T-H1's points and the "
+        "storage evidence; its four lines over the modelled capacity are a modelled shortfall and a missing storage qualification, "
+        "no demonstrated conflict.",
     ]
     return rows, stmt
 
