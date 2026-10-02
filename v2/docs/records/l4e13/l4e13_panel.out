@@ -1,0 +1,272 @@
+L4-E13 (MESHSAT-1357): U-03, A PANEL WHOSE MAKER'S DOCUMENT BOUNDS ITS OPEN-CIRCUIT VOLTAGE AT THE COLDEST OPERATING
+TEMPERATURE INSIDE REQ-016'S WINDOW. Prototype design, desk arithmetic: nothing bought, built, powered or measured.
+
+0. INPUTS AND REPRODUCTIONS
+   reqs       v2/ecad/tools/pcb_requirements.yaml  sha256 b624ac495650a359
+   env        v2/ecad/tools/pcb_envelope.yaml  sha256 35cf43a2b7098a76
+   replay_py  v2/docs/records/l4e/l4e_replay.py  sha256 3de985e2e3e06453
+   replay_out v2/docs/records/l4e/l4e_replay.out  sha256 59c6eeab16da98f8
+   l4e7_out   v2/docs/records/l4e7/l4e7_stage_settings.out  sha256 66fb58ef99fe7e81
+   array_calc v2/docs/records/a1solar/array_calc.py  sha256 fdeaf63f525f1d7f
+   spr_ds     v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf  sha256 da06e5e2d9bca625
+   spr_guide  v2/vendor/solar/held/sunpower-flex-safety-installation-524958-revf.pdf  sha256 b8ebdfb7019a399a
+   sbx_ds     v2/vendor/solar/held/solbian-sx-series-datasheet-eng-2023-02.pdf  sha256 da89757253556a9d
+   bgv_page   v2/vendor/solar/bougerv-sp001-100w-n-type-foldable-product-page-2026-10-02.md  sha256 fc9de44fa8149c70
+   screen     v2/docs/records/l4e13/inputs/screen-2026-10-02.json  sha256 bdf17c68de48f8f8
+   l4e_replay.main() in-process, its locals captured, prints l4e_replay.out byte for byte: yes
+   this record's trace equals the replay's trace hour for hour on the SunPower panel at its three holds: yes
+   the SunPower day (Wh, no limit) against the replay's section 12 (legacy band): 16.695 V 373.5 = 373.5; 17.593 V 350.0 = 350.0; 18.490 V 280.6 = 280.6
+   the SunPower day (Wh, no limit) against L4-E7's section 5 (the selected hold): 16.970 V 369.7 = 369.7; 17.593 V 350.0 = 350.0; 18.221 V 307.9 = 307.9; 16.420 V 375.0 = 375.0; 18.813 V 240.0 = 240.0
+   A1 on the SunPower trace at 17.593 V and 3.4713 A equals L4-E7's NEW nominal row: yes (350.0 Wh a day; h 6/2; 1367.4 / 1368.1 at 48 h, 2103.9 / 2104.6 at 72 h; +1361.5 / +2094.1 Wh)
+   A2 on the SunPower trace at 17.593 V and 3.4713 A equals L4-E7's NEW nominal row: yes (350.0 Wh a day; h 18/11; 986.9 / 1196.1 at 48 h, 1741.4 / 1950.7 at 72 h; +979.2 / +1719.7 Wh)
+
+1. THE REQUIREMENT AND THE TEMPERATURE
+   REQ-016 (v2/ecad/tools/pcb_requirements.yaml), verbatim: "The solar input charges the pack through board E's LT8705A stage from a panel inside its declared window: an open-circuit voltage of at most 25 V at the panel's coldest operating temperature, the panel held at 17.6 V by the stage's input regulation, and at most 100 W into the stage."
+   read: at most 25 V open circuit at the panel's coldest operating temperature; held at 17.6 V; at most 100 W into the stage;
+   its acceptance: F2 and J_SOLAR rated 10 A. A series diode or a clamp in place of the panel's own open circuit: NOT admitted (the statement constrains the panel's own open circuit; D4 is judged apart under TRN-001)
+   the coldest operating temperature: -20 C, REQ-024's in-use minimum (-20 to +40 C ambient; pcb_envelope.yaml in_use agrees);
+   the records settle REQ-016's reading at the kit's use boundary (L4-ENERGY-ARCHITECTURE.md, 'What stays INCONCLUSIVE'); the
+   panels' own -40 C ratings are printed for information only.
+   SESSION (the assumption the brief asks to state): with no irradiance the cells sit at the ambient; the bound puts STC
+   irradiance (1000 W/m2) on cells still at -20 C, a cold clear sunrise before the cells warm. Less irradiance only lowers Voc;
+   an edge-of-cloud 1250 W/m2 is printed beside it as a sensitivity (the fit's log term, INFERRED), not as part of the bound.
+   owner rulings in the registry naming a panel class (a class word beside 'panel' or 'array' in one sentence): none; a1solar SELECTION.md 1 (a session's criterion) prefers folding, semi-rigid or blanket for a carried kit
+
+2. THE CANDIDATES, AS THEIR MAKERS PRINT THEM
+   SunPower SPR-E-Flex-100 (SunPower Corporation) [MAKER]
+     document: v2/vendor/solar/held/sunpower-spr-e-flex-100-datasheet-523809-revd.pdf p.1 (Document 523809 Rev D, a distributor's issue of January 2023, 'Typical Electrical Data'); v2/vendor/solar/held/sunpower-flex-safety-installation-524958-revf.pdf Table 1 and its note (PDF p.3, printed p.2), 5.1 (PDF p.4)
+     Pmax 100 W (power band -3 / +6 %), Vmp 17.10 V, Imp 5.90 A, Voc 21.40 V, Isc 6.30 A
+     Voc coefficient -58.9 mV/K as printed (-0.2752 %/K of the rated Voc); Isc +2.6 mA/K; Pmax -0.35 %/K
+     the open-circuit band: MAKER (guide 524958 Rev F, Table 1's note: 'Rated electrical characteristics are within 10% of measured values at Standard Test Conditions of: 1000W/m2, 25°C cell temperature and solar spectral irradiation of AM 1.5 spectrum.')
+     test conditions: 25°C, 1000 W/m² and AM 1.5; NOCT: none printed; operating range -40.0 to 85.0 C
+     the sheet's heading over every row: 'Typical Electrical Data' (yes)
+     the model's fit (a1solar's single-diode model, imported and pinned): exact fit: dP/dV = 0 at the maker's (Vmp, Imp), Rs >= 0
+   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA) (BougeRV) [MAKER-PAGE]
+     document: v2/vendor/solar/bougerv-sp001-100w-n-type-foldable-product-page-2026-10-02.md (the maker's product page, its 'Product Specifications' table transcribed; the page's HTML sha256 ffc8cf99..., fetched 2026-10-02T04:28Z)
+     Pmax 100 W (power band -5 / +10 %), Vmp 16.70 V, Imp 6.17 A, Voc 19.60 V, Isc 6.48 A
+     Voc coefficient -0.30 %/K; Isc +0.048 %/K; Pmax -0.35 %/K
+     the open-circuit band: MAKER-PAGE (the page's Voc row: '19.6V(-5%,+10%)')
+     test conditions: NOT STATED on the page (ASSUMPTION: the rows are STC values); NOCT: none printed; operating range -20.0 to 60.0 C
+     the page's Vmp x Imp is 103.0 W against its 100 W Pmax; its 'Series Fuse Rating' row prints no number ('A')
+     the model's fit (a1solar's single-diode model, imported and pinned): exact fit: dP/dV = 0 at the maker's (Vmp, Imp), Rs >= 0
+   Solbian SX 156 (Solbian Energie Alternative Srl) [MAKER]
+     document: v2/vendor/solar/held/solbian-sx-series-datasheet-eng-2023-02.pdf p.2 (the SX table, the SX 156 column, and its STC note) and p.1 (the features list); created 7 February 2023
+     Pmax 156 W (power band +0 / +5 %), Vmp 17.60 V, Imp 8.90 A, Voc 21.30 V, Isc 9.40 A
+     Voc coefficient -0.32 %/K; Isc +0.050 %/K; Pmax -0.40 %/K
+     the open-circuit band: none printed (MAKER: the sheet's only tolerance is 'Positive power tolerance (0%, +5%)', on Pmax)
+     test conditions: Values at STC = Standard Test Conditions: (a) light Spectrum for an Air Mass of 1.5; (b) irradiance of 1000 W/m2 with perpendicular incidence and (c) cell temperature of 25 °C.; NOCT: 45 +- 2 C (MAKER); operating range -40.0 to 85.0 C
+     the STC note adds: 'Measurements carried out according to the Standard IEC 61215 requirements' (yes); a Voc tolerance printed anywhere on the sheet: no
+     the model's fit (a1solar's single-diode model, imported and pinned): exact fit: dP/dV = 0 at the maker's (Vmp, Imp), Rs >= 0
+
+3. THE BOUND: Voc AT -20 C AT THE TOP OF THE MAKER'S BAND, WITH ITS COEFFICIENT, AGAINST 25 V
+   SunPower SPR-E-Flex-100: rated Voc at -20 C 24.050 V (the typical row; 25.228 V at -40 C, information)
+     band top 1.1111 x rated, the coefficient relative to the unit's Voc                          26.723 V
+     band top 1.1111 x rated, the sheet's absolute coefficient                                    26.428 V
+     the records' reading, rated x 1.10, the absolute coefficient (L4-ENERGY O-1)                 26.190 V
+     the bound (the largest reading) 26.723 V: NOT BOUNDED: the maker's own band reaches past 25 V (margin -1.723 V); at 1250 W/m2 (sensitivity) 26.947 V
+     the largest band top the rated row allows: 3.95 % above rated (the band printed: -9.09 / +11.11 %)
+   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA): rated Voc at -20 C 22.246 V (the typical row; 23.422 V at -40 C, information)
+     band top 1.1000 x rated, the coefficient relative to the unit's Voc                          24.471 V
+     band top 1.1000 x rated, the coefficient's change taken on the rated Voc                     24.206 V
+     the bound (the largest reading) 24.471 V: BOUNDED at or under 25 V (margin +0.529 V); at 1250 W/m2 (sensitivity) 24.641 V
+     the largest band top the rated row allows: 12.38 % above rated (the band printed: -5.00 / +10.00 %)
+   Solbian SX 156: rated Voc at -20 C 24.367 V (the typical row; 25.730 V at -40 C, information)
+     NOT BOUNDED: the maker prints no open-circuit band, so no maximum exists on its document; the rated row leaves
+     0.633 V (2.53 %) to 25 V: the band's top could be at most 2.60 % above the rated Voc
+
+4. THE HOLD: board E's input regulation (L4-E7, selected, drafted and not applied; RECORD l4e7_stage_settings.out)
+   nominal 17.593 V; EA3 at its typical gain 16.970 / 18.221 V; the widest conditioned band (EA3 at half, the drifts) 16.420 / 18.813 V
+   the drafted input-current limit 3.4713 A (its lowest 3.1404 A at the nominal hold), taken flat; the 5 m lead 0.0465 Ohm (ESTIMATE)
+   SC-37's mean September day: noon is hour 12 (520.7 W/m2, air 18.08 C, cells 35.65 C at NOCT 47 C); the day's band is read over
+   hours 6 to 17 (at least 5 % of the peak, SESSION). SESSION predicate: the hold lies inside the curve when the panel's
+   open circuit at noon exceeds the hold corner, at every point of the printed band (a necessary condition: at the corner the
+   stage takes nothing); the energy below says how much it takes. The band's voltages are scaled together with the rated
+   currents kept (ASSUMPTION); the Voc coefficient as a fraction of each unit's Voc (SESSION, a1solar's coef()).
+   SunPower SPR-E-Flex-100:
+     nominal      Voc at STC 21.400 V, Vmp at STC 17.100 V; at noon Voc 20.051 V, Vmp 16.339 V; Vmp over the day 15.689 to 16.703 V
+                  the hold inside the curve at noon: 16.420 V yes; 16.970 V yes; 17.593 V yes; 18.221 V yes; 18.813 V yes
+     band bottom  Voc at STC 19.455 V, Vmp at STC 15.545 V; at noon Voc 18.228 V, Vmp 14.854 V; Vmp over the day 14.262 to 15.185 V
+                  the hold inside the curve at noon: 16.420 V yes; 16.970 V yes; 17.593 V yes; 18.221 V yes; 18.813 V NO
+     band top     Voc at STC 23.778 V, Vmp at STC 19.000 V; at noon Voc 22.279 V, Vmp 18.155 V; Vmp over the day 17.432 to 18.559 V
+                  the hold inside the curve at noon: 16.420 V yes; 16.970 V yes; 17.593 V yes; 18.221 V yes; 18.813 V yes
+     inside the curve at the conditioned upper corner over the printed band: NO; at the typical upper corner: yes
+   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA):
+     nominal      Voc at STC 19.600 V, Vmp at STC 16.700 V; at noon Voc 18.420 V, Vmp 15.698 V; Vmp over the day 15.159 to 16.001 V
+                  the hold inside the curve at noon: 16.420 V yes; 16.970 V yes; 17.593 V yes; 18.221 V yes; 18.813 V NO
+     band bottom  Voc at STC 18.620 V, Vmp at STC 15.865 V; at noon Voc 17.499 V, Vmp 14.913 V; Vmp over the day 14.401 to 15.201 V
+                  the hold inside the curve at noon: 16.420 V yes; 16.970 V yes; 17.593 V NO; 18.221 V NO; 18.813 V NO
+     band top     Voc at STC 21.560 V, Vmp at STC 18.370 V; at noon Voc 20.262 V, Vmp 17.268 V; Vmp over the day 16.675 to 17.602 V
+                  the hold inside the curve at noon: 16.420 V yes; 16.970 V yes; 17.593 V yes; 18.221 V yes; 18.813 V yes
+     inside the curve at the conditioned upper corner over the printed band: NO; at the typical upper corner: NO
+   Solbian SX 156:
+     nominal      Voc at STC 21.300 V, Vmp at STC 17.600 V; at noon Voc 19.942 V, Vmp 16.661 V; Vmp over the day 16.263 to 17.160 V
+                  the hold inside the curve at noon: 16.420 V yes; 16.970 V yes; 17.593 V yes; 18.221 V yes; 18.813 V yes
+     inside the curve at the conditioned upper corner over the printed band: yes; at the typical upper corner: yes
+   ENERGY into the stage on SC-37's day (MODELED; Wh a day; [hours the limit binds, daylight hours with no input]); columns:
+   no limit (as drawn) | the limit nominal 3.4713 A | the limit at its lowest 3.1404 A
+   SunPower SPR-E-Flex-100, nominal (100.0 Wp; 378.0 Wh a day at the maximum-power point, PVGIS):
+     hold 16.420 V    375.0 [0, 0] |   375.0 [0, 0] |   375.0 [0, 0]
+     hold 16.970 V    369.7 [0, 0] |   369.7 [0, 0] |   369.7 [0, 0]
+     hold 17.593 V    350.0 [0, 0] |   350.0 [0, 0] |   350.0 [0, 0]
+     hold 18.221 V    307.9 [0, 0] |   307.9 [0, 0] |   307.9 [0, 0]
+     hold 18.813 V    240.0 [0, 1] |   240.0 [0, 1] |   240.0 [0, 1]
+   SunPower SPR-E-Flex-100, band bottom (90.9 Wp; 343.6 Wh a day at the maximum-power point, PVGIS):
+     hold 16.420 V    291.2 [0, 0] |   291.2 [0, 0] |   291.2 [0, 0]
+     hold 16.970 V    234.7 [0, 1] |   234.7 [0, 1] |   234.7 [0, 1]
+     hold 17.593 V    137.9 [0, 2] |   137.9 [0, 2] |   137.9 [0, 2]
+     hold 18.221 V      7.9 [0, 7] |     7.9 [0, 7] |     7.9 [0, 7]
+     hold 18.813 V      0.0 [0, 12] |     0.0 [0, 12] |     0.0 [0, 12]
+   SunPower SPR-E-Flex-100, band top (111.1 Wp; 420.0 Wh a day at the maximum-power point, PVGIS):
+     hold 16.420 V    396.8 [0, 0] |   396.8 [0, 0] |   400.7 [2, 0]
+     hold 16.970 V    406.4 [0, 0] |   406.4 [0, 0] |   407.9 [2, 0]
+     hold 17.593 V    414.2 [0, 0] |   414.2 [0, 0] |   414.2 [0, 0]
+     hold 18.221 V    417.0 [0, 0] |   417.0 [0, 0] |   417.0 [0, 0]
+     hold 18.813 V    412.0 [0, 0] |   412.0 [0, 0] |   412.0 [0, 0]
+   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA), nominal (100.0 Wp; 378.0 Wh a day at the maximum-power point, PVGIS):
+     hold 16.420 V    362.9 [0, 0] |   362.9 [0, 0] |   362.9 [0, 0]
+     hold 16.970 V    329.6 [0, 0] |   329.6 [0, 0] |   329.6 [0, 0]
+     hold 17.593 V    245.0 [0, 1] |   245.0 [0, 1] |   245.0 [0, 1]
+     hold 18.221 V     87.1 [0, 2] |    87.1 [0, 2] |    87.1 [0, 2]
+     hold 18.813 V      0.0 [0, 12] |     0.0 [0, 12] |     0.0 [0, 12]
+   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA), band bottom (95.0 Wp; 359.1 Wh a day at the maximum-power point, PVGIS):
+     hold 16.420 V    279.5 [0, 0] |   279.5 [0, 0] |   279.5 [0, 0]
+     hold 16.970 V    177.3 [0, 1] |   177.3 [0, 1] |   177.3 [0, 1]
+     hold 17.593 V      4.7 [0, 9] |     4.7 [0, 9] |     4.7 [0, 9]
+     hold 18.221 V      0.0 [0, 12] |     0.0 [0, 12] |     0.0 [0, 12]
+     hold 18.813 V      0.0 [0, 12] |     0.0 [0, 12] |     0.0 [0, 12]
+   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA), band top (110.0 Wp; 415.8 Wh a day at the maximum-power point, PVGIS):
+     hold 16.420 V    405.5 [0, 0] |   405.5 [0, 0] |   407.4 [3, 0]
+     hold 16.970 V    411.7 [0, 0] |   411.7 [0, 0] |   411.5 [3, 0]
+     hold 17.593 V    410.7 [0, 0] |   410.7 [0, 0] |   410.7 [0, 0]
+     hold 18.221 V    393.3 [0, 0] |   393.3 [0, 0] |   393.3 [0, 0]
+     hold 18.813 V    349.4 [0, 0] |   349.4 [0, 0] |   349.4 [0, 0]
+   Solbian SX 156, nominal (156.0 Wp; 589.7 Wh a day at the maximum-power point, PVGIS):
+     hold 16.420 V    582.1 [0, 0] |   533.6 [6, 0] |   505.2 [6, 0]
+     hold 16.970 V    580.6 [0, 0] |   534.3 [6, 0] |   505.9 [6, 0]
+     hold 17.593 V    559.1 [0, 0] |   528.3 [5, 0] |   501.6 [6, 0]
+     hold 18.221 V    502.1 [0, 0] |   501.6 [3, 0] |   483.4 [5, 0]
+     hold 18.813 V    398.3 [0, 0] |   398.3 [0, 0] |   398.3 [0, 0]
+
+5. THE POWER INTO THE STAGE AND THE ENTRY'S CURRENT (MODELED at the terminals after the lead; the nominal hold 17.593 V)
+   SunPower SPR-E-Flex-100:
+     nominal      STC                         as drawn   97.6 W | with the limit   68.0 W (at 19.59 V) | the panel's maximum  100.9 W
+     nominal      1000 W/m2, cells at -20 C   as drawn  108.2 W | with the limit   77.6 W (at 22.34 V) | the panel's maximum  117.4 W
+     band bottom  STC                         as drawn   66.7 W | with the limit   61.8 W (at 17.79 V) | the panel's maximum   91.7 W
+     band bottom  1000 W/m2, cells at -20 C   as drawn  104.9 W | with the limit   70.5 W (at 20.30 V) | the panel's maximum  106.7 W
+     band top     STC                         as drawn  108.0 W | with the limit   75.6 W (at 21.78 V) | the panel's maximum  112.1 W
+     band top     1000 W/m2, cells at -20 C   as drawn  108.7 W | with the limit   86.2 W (at 24.84 V) | the panel's maximum  130.4 W
+     as drawn the stage would take up to 108.7 W (over 100 W); with the drafted limit at most 86.2 W here (L4-E7 bounds the limit
+     at 96.25 W to 25 V, CONDITIONAL on five unprinted values): the 100 W rests on the drafted limit, as for every candidate
+     hot short circuit (+70 C cells, 1000 W/m2, the band's top) 7.12 A against the entry's 10 A; x 1.25 (SunPower's rating
+     clause, a1solar's convention) 8.90 A: inside 10 A
+   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA):
+     nominal      STC                         as drawn   93.5 W | with the limit   64.5 W (at 18.58 V) | the panel's maximum  103.0 W
+     nominal      1000 W/m2, cells at -20 C   as drawn  111.2 W | with the limit   73.9 W (at 21.30 V) | the panel's maximum  119.4 W
+     band bottom  STC                         as drawn   63.4 W | with the limit   61.2 W (at 17.64 V) | the panel's maximum   97.9 W
+     band bottom  1000 W/m2, cells at -20 C   as drawn  110.1 W | with the limit   70.2 W (at 20.23 V) | the panel's maximum  113.4 W
+     band top     STC                         as drawn  110.8 W | with the limit   71.0 W (at 20.45 V) | the panel's maximum  113.3 W
+     band top     1000 W/m2, cells at -20 C   as drawn  111.5 W | with the limit   81.4 W (at 23.45 V) | the panel's maximum  131.3 W
+     as drawn the stage would take up to 111.5 W (over 100 W); with the drafted limit at most 81.4 W here (L4-E7 bounds the limit
+     at 96.25 W to 25 V, CONDITIONAL on five unprinted values): the 100 W rests on the drafted limit, as for every candidate
+     hot short circuit (+70 C cells, 1000 W/m2, the band's top) 7.28 A against the entry's 10 A; x 1.25 (SunPower's rating
+     clause, a1solar's convention) 9.10 A: inside 10 A
+   Solbian SX 156:
+     nominal      STC                         as drawn  152.3 W | with the limit   70.6 W (at 20.33 V) | the panel's maximum  156.6 W
+     nominal      1000 W/m2, cells at -20 C   as drawn  161.5 W | with the limit   81.4 W (at 23.46 V) | the panel's maximum  184.0 W
+     as drawn the stage would take up to 161.5 W (over 100 W); with the drafted limit at most 81.4 W here (L4-E7 bounds the limit
+     at 96.25 W to 25 V, CONDITIONAL on five unprinted values): the 100 W rests on the drafted limit, as for every candidate
+     hot short circuit (+70 C cells, 1000 W/m2, the band's top) 9.61 A against the entry's 10 A; x 1.25 (SunPower's rating
+     clause, a1solar's convention) 12.01 A: OVER the entry's 10 A
+
+6. PORTABLE CLASS (the makers' documents); SESSION: portable is a flexible or folding class at or under 2.5 kg
+   SunPower SPR-E-Flex-100                                      semi-flexible laminate (flexing up to 30 degrees), carried flat; not folding; 1153 x 556 x 20 mm with the junction box, 2 mm without; 2.00 kg; operating -40.0 to 85.0 C
+   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA)    folding (fiberglass), carried folded; 1059 x 775 x 20 mm open, 236 x 381 x 65 mm folded; 2.00 kg; operating -20.0 to 60.0 C
+   Solbian SX 156                                               flexible laminate under 2 mm (2.4 kg/m2, the sheet's p.1), carried flat or curved; not folding; 1364 x 683 x 2 mm; 2.24 kg; operating -40.0 to 85.0 C
+   BougeRV's page limits operation to -20.0 to 60.0 C: the kit's -20 C is its own lower limit, and its upper limit sits under the
+   cells' temperature in full sun at the envelope's +40 C ambient (73.8 C at 1000 W/m2 by the NOCT model at 47 C, INFERRED)
+
+7. THE WINDOW AGAINST THE PRINTED BANDS (the gap, INFERRED on the model)
+   A band's spread is its top over its bottom (as factors on the rated Voc). A panel of a given curve shape is bounded at 25 V
+   only while its band top is at most k_bound (25 V over its rated Voc at -20 C) and is held only while its band bottom is at least
+   k_reach (the hold's upper corner over its rated Voc at noon; the fit's Voc scales exactly with the voltages, checked). Both
+   hold for some rating only while the spread is at most W = k_bound / k_reach.
+   SunPower SPR-E-Flex-100                                      k_bound 1.0395; k_reach 0.9383 (18.813 V) / 0.9087 (18.221 V); W 1.1079 / 1.1439 (symmetric +-5.12 / +-6.71 %); printed spread 1.2222: WIDER than W, no rating of this shape and band fits both
+   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA)    k_bound 1.1238; k_reach 1.0213 (18.813 V) / 0.9891 (18.221 V); W 1.1003 / 1.1361 (symmetric +-4.78 / +-6.37 %); printed spread 1.1579: WIDER than W, no rating of this shape and band fits both
+   Solbian SX 156                                               k_bound 1.0260; k_reach 0.9434 (18.813 V) / 0.9137 (18.221 V); W 1.0875 / 1.1229 (symmetric +-4.19 / +-5.79 %); printed spread none printed
+   For the rated rows as they stand, the band a maker would have to print: SunPower +3.95 / -6.17 %, Solbian SX 156 +2.60 / -5.66 %
+   (the top from the bound, the bottom from the conditioned upper corner's reach; the coefficient relative).
+   BougeRV's rated row sits under its own reach floor (k_reach 1.0213 > 1): its rating, not only its band, is too low for the
+   hold's upper corner.
+
+8. THE ENERGY CONSEQUENCE: A1 AND A2 ON EACH TRACE (the replay's meanday and least, unchanged; CORRECTED, WE, TYP; the service
+   ledger; pairs 06 / 18 UTC). The 100 W screening stimulus gives 982.6 Wh a day; the SunPower nominal trace 350.0 Wh.
+   SPR nominal panel, nominal hold 17.593 V, limit nominal 3.4713 A, A1: 350.0 Wh a day; first interruption h 6/2; unserved 1367.4 / 1368.1 at 48 h, 2103.9 / 2104.6 at 72 h; least addition +1361.5 / +2094.1 Wh
+   SPR nominal panel, nominal hold 17.593 V, limit nominal 3.4713 A, A2: 350.0 Wh a day; first interruption h 18/11; unserved 986.9 / 1196.1 at 48 h, 1741.4 / 1950.7 at 72 h; least addition +979.2 / +1719.7 Wh
+     the trace (W, hours 0 to 23): 0.0 0.0 0.0 0.0 0.0 0.0 4.6 17.3 29.7 39.0 43.8 44.6 44.8 41.8 35.6 28.6 16.6 3.6 0.0 0.0 0.0 0.0 0.0 0.0
+   SPR band bottom, conditioned upper corner 18.813 V, limit at its lowest 3.1404 A, A1: 0.0 Wh a day; first interruption h 2/2; unserved 1946.5 / 1946.5 at 48 h, 2973.7 / 2973.7 at 72 h; least addition +1950.7 / +2977.9 Wh
+   SPR band bottom, conditioned upper corner 18.813 V, limit at its lowest 3.1404 A, A2: 0.0 Wh a day; first interruption h 11/11; unserved 1555.1 / 1555.1 at 48 h, 2582.9 / 2582.9 at 72 h; least addition +1576.1 / +2615.3 Wh
+     the trace (W, hours 0 to 23): 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+   BGV nominal panel, nominal hold 17.593 V, limit nominal 3.4713 A, A1: 245.0 Wh a day; first interruption h 3/2; unserved 1588.2 / 1543.7 at 48 h, 2368.6 / 2414.9 at 72 h; least addition +1538.3 / +2359.2 Wh
+   BGV nominal panel, nominal hold 17.593 V, limit nominal 3.4713 A, A2: 245.0 Wh a day; first interruption h 16/11; unserved 1348.5 / 1255.3 at 48 h, 1985.8 / 2192.4 at 72 h; least addition +1157.6 / +1987.4 Wh
+     the trace (W, hours 0 to 23): 0.0 0.0 0.0 0.0 0.0 0.0 2.1 13.5 23.2 29.2 31.2 30.8 30.3 28.5 24.9 20.3 11.1 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+   BGV nominal, conditioned upper corner 18.813 V, limit at its lowest 3.1404 A, A1: 0.0 Wh a day; first interruption h 2/2; unserved 1946.5 / 1946.5 at 48 h, 2973.7 / 2973.7 at 72 h; least addition +1950.7 / +2977.9 Wh
+   BGV nominal, conditioned upper corner 18.813 V, limit at its lowest 3.1404 A, A2: 0.0 Wh a day; first interruption h 11/11; unserved 1555.1 / 1555.1 at 48 h, 2582.9 / 2582.9 at 72 h; least addition +1576.1 / +2615.3 Wh
+     the trace (W, hours 0 to 23): 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+   SBX nominal panel, nominal hold 17.593 V, limit nominal 3.4713 A, A1: 528.3 Wh a day; first interruption h 12/2; unserved 1073.1 / 1130.0 at 48 h, 1669.0 / 1726.0 at 72 h; least addition +1066.5 / +1651.6 Wh
+   SBX nominal panel, nominal hold 17.593 V, limit nominal 3.4713 A, A2: 528.3 Wh a day; first interruption h 21/11; unserved 678.6 / 734.1 at 48 h, 1270.9 / 1326.4 at 72 h; least addition +685.6 / +1279.8 Wh
+     the trace (W, hours 0 to 23): 0.0 0.0 0.0 0.0 0.0 0.0 8.0 27.7 47.2 60.4 62.2 62.5 62.6 61.8 56.8 45.7 26.8 6.6 0.0 0.0 0.0 0.0 0.0 0.0
+   SBX nominal, conditioned upper corner 18.813 V, limit at its lowest 3.1404 A, A1: 398.3 Wh a day; first interruption h 9/2; unserved 1279.6 / 1285.3 at 48 h, 1976.2 / 1981.9 at 72 h; least addition +1280.2 / +1972.1 Wh
+   SBX nominal, conditioned upper corner 18.813 V, limit at its lowest 3.1404 A, A2: 398.3 Wh a day; first interruption h 19/11; unserved 906.6 / 1113.6 at 48 h, 1621.5 / 1828.5 at 72 h; least addition +897.3 / +1596.9 Wh
+     the trace (W, hours 0 to 23): 0.0 0.0 0.0 0.0 0.0 0.0 4.5 22.4 37.5 46.6 49.6 49.1 48.4 45.8 40.4 33.4 19.2 1.5 0.0 0.0 0.0 0.0 0.0 0.0
+
+9. THE SCREEN: 14 makers' documents read on 2 October 2026 and not taken (inputs/screen-2026-10-02.json; cited by address
+   and sha256, none filed)
+   Solbian Energie Alternative Srl, SP 32: above 25 V at -20 C on its typical values already (sha256 9b881609b0d93b63); https://www.solbian.eu/img/cms/PDF/ENG_SP_datasheet.pdf
+   Solbian (Sailectron GmbH issue), SP 104: no Voc tolerance printed; the maker's 2023 issue lists the 32-cell SP model as the SP 32 at Voc 23.3 V instead (sha256 3677cbdbb07b3611); https://www.solbian.solar/wp-content/uploads/2019/03/Datasheet-SP.pdf
+   Solbian Energie Alternative Srl, SR 32: no Voc tolerance printed; the same Voc as the SX 156 with a maximum-power voltage 0.8 V lower and a short-circuit current of 9.8 A at the entry's 10 A; the SX 156 is the better hold match of the two (sha256 d70388db16bdb0b7); https://www.solbian.eu/img/cms/PDF/ENG_SR_datasheet.pdf
+   Solbian (Sailectron GmbH issue), SX 158: the earlier issue of the SX 32-cell model; the maker's 2023 issue (the SX 156, the candidate) supersedes it (sha256 9c7bee077315b649); https://www.solbian.solar/wp-content/uploads/2019/03/Datasheet-SX.pdf
+   Solbian (a dealer's copy), SR 144: superseded by the 2023 SR series (SR 32 above); no Voc tolerance printed (sha256 c6e059a0159474eb); https://docs.emarineinc.com/docs/Solbian/SR-Series-Datasheet.pdf
+   Solbian (a dealer's copy), the manual's model tables: read for a Voc tolerance; none is printed (sha256 b5319ef272aae1f2); http://www.coastalclimatecontrol.com/images/PDF/solar/Manual_Solbian_v4_sm.pdf
+   Sunman (Hong Kong) Limited (a dealer's copy), SMF090S-4X08U: no Voc coefficient and no Voc tolerance printed (2019 issue) (sha256 858b4aaa945ada4c); https://cdn.shopify.com/s/files/1/0586/0347/0948/files/Sunman_Solarmodul_eArche_SMF175M-4X09UW_175_W_SMF_Mit_Klebeband_Ose.pdf?v=1680003824
+   Sunman (a dealer's copy), SMF100F-3X12UW, SMF175M-4X09UW, SMF215F-4X18UW: every 12 V model listed is at or near 25 V at STC already (sha256 ad02dbbddd0de183); https://www.master-instruments.com.au/files/battery_information/sunman_rv_marine_flexible_panel_installation_guide_2023.pdf
+   Merlin Solar Technologies (a dealer's copy), Panther 100: a 24 V class panel; its maker's band is 10 % (sha256 825b7bd9ad007425); https://oceanplanetenergy.com/wp-content/uploads/2023/05/Merlin-Solar-Panther-100W-170W-200W-011223.pdf
+   Rich Solar, RS-F100PB: a 24 V class panel (sha256 f7094a20e6cbb6f0); https://cdn.shopify.com/s/files/1/0058/2769/0553/files/RS-F100PB.pdf?v=1774841774
+   wattstunde (Lueneburg), SOLA Flex Mono 100 Wp and 135 Wp: above 25 V at STC (sha256 36a685b26aab7cae); https://media.wattstunde.de/mediafiles/PDF/Solarmodule/Wattstunde/SOLA/Datenblatt%20101-711xxx%20SOLAFlex_Mono%20NEW.pdf
+   Offgridtec, 3-01-010835: a 24 V class panel (sha256 257ecd58afd3ea56); https://www.offgridtec.com/media/product_attachements/Datenblatt-3-01-010835-DE-EN.pdf
+   SLD Tech (a dealer's copy), ST-100Q-12Y: no temperature coefficient and no Voc tolerance printed (sha256 e9547d9c5c8ae433); https://www.solarflexion.com/v/vspfiles/files/pdfs/SLD-Tech/ST-100Q-12Y_Data_Sheet.pdf
+   Victron Energy, the 12 V models (36 cells): above 25 V at -20 C on its typical values already (the 150W-12V row; every 12 V row higher); rigid glass (sha256 ad32cb7fe0ec45ce); https://www.victronenergy.com/upload/documents/Datasheet-BlueSolar-Monocrystalline-Panels-EN.pdf
+   in the tree already: Renogy RNG-100DB-H (Voc 22.5 V, -0.31 %/C: 25.64 V at -20 C on its typical values; no Voc tolerance), PowerFilm F16-7200 (Voc 21.9 V, -0.300 %/C: 24.86 V; no Voc tolerance, no operating range), PowerFilm 120W 30V (43.7 V), BLUETTI PV420 (44.3 V), Victron (above): a1solar SELECTION.md 2
+
+10. THE DECISION ON U-03 (SESSION, by the predicate: bounded at or under 25 V by the maker's printed band AND the hold inside
+    the curve at the conditioned upper corner over that band; portable)
+   SunPower SPR-E-Flex-100                                      bounded NO; hold NO; portable yes -> does not qualify
+   BougeRV 100W N-Type Fiberglass Foldable (SP001-BK-GRUSGA)    bounded yes; hold NO; portable yes -> does not qualify
+   Solbian SX 156                                               bounded NO; hold yes; portable yes -> does not qualify
+   on EA3's typical band (upper corner 18.221 V) instead of the conditioned one: SPR does not qualify; BGV does not qualify; SBX does not qualify
+   NO CANDIDATE QUALIFIES. U-03 stays an unresolved choice; it decides the solar source, not the topology (REQ-016's window,
+   the stage and its hold stay). REQ-016 need not change, so no owner question is raised.
+   The exact gap: no maker's document read prints an open-circuit band narrow enough for this window. SunPower's band (10 %
+   of measured) reaches 26.723 V at -20 C; BougeRV's (-5 / +10 %) is bounded at 24.471 V but its curve sits under the hold
+   (its rated Voc at noon 18.420 V against the conditioned upper corner 18.813 V); Solbian prints none. The window admits a spread
+   of at most 1.0875 to 1.1079 (the shapes above), a symmetric band of about +-4.2 to +-5.1 %; the rated rows of the two panels
+   that match the hold need a band top of at most +3.95 % (SunPower) and +2.60 % (Solbian).
+   The next bounded action: (1) the makers' written open-circuit band for the two hold-matched panels, asked by the drafts in
+   clarification/ (the owner sends them; the session contacts no outside party); (2) failing a written band, O-1's own
+   alternative closure, a controlled unit at Layer 6: the unit bought (the owner's money) is accepted only when its Voc,
+   measured at a known cell temperature and irradiance and corrected to STC with its expanded uncertainty U, lies inside
+     SunPower SPR-E-Flex-100      20.079 V + U to 22.245 V - U (its coefficient's own uncertainty inside U)
+     Solbian SX 156               20.094 V + U to 21.853 V - U (its coefficient's own uncertainty inside U)
+   (the floor is the hold's necessary condition: a unit there gives the stage nothing at the conditioned upper corner at noon;
+   the unit's own trace, rerun, decides its energy)
+   A series diode or a clamp is not a substitute (section 1).
+   THE DOWNSTREAM ITEM (Layer 6, component selection; the purchase is the owner's): PANEL-ACC. Accept the bought panel when
+   the maker's document of the bought revision, filed with its sha256, bounds Voc at -20 C at or under 25 V by section 3's rule
+   and its band keeps the hold inside the curve by section 4's rule, or, failing a printed band, when the unit itself passes the
+   window above; then rerun its trace through the replay's section 12 and L4-E7's section 5 (A1 and A2), and re-read the
+   entry's 10 A for its hot short circuit.
+
+11. EVIDENCE CLASSES: MAKER (SunPower's sheet and guide, Solbian's sheet), MAKER-PAGE (BougeRV's page, transcribed), RECORD
+    (the replay's and L4-E7's outputs), MODELED (the energy record's single-diode model and day), INFERRED (the window ratios,
+    the cell temperature at the hot end, the edge-of-cloud term), ASSUMPTION (a band's voltages scaled with its currents kept;
+    BougeRV's rows taken as STC), SESSION (the temperature reading, the 10 % sentence's reading, the coefficient as a fraction,
+    the hold predicate and the day's 5 % hours, the conditioned band as the judged band).
