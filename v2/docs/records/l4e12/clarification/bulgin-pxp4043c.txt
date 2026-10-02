@@ -1,0 +1,10 @@
+Draft for the owner to send (the session contacts no outside party). MESHSAT-1478 under MESHSAT-1357, task L4-E12,
+2 October 2026. To: Bulgin, technical support.
+
+Subject: PXP4043/C: operating temperature range
+
+The PXP4043/C product sheet gives "Max Operating Temperature: +70 C", while the 4000 series sealed USB-C sheet gives
+"Operating temperature -40 C to +80 C" for the series. Could you confirm which range applies to the PXP4043/C, and its
+storage (non-operating) range?
+
+Thank you.

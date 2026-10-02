@@ -316,6 +316,7 @@ is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMP
    solder lands (no component)        | E J_BLK                    | none read  | inside  | +  0.0 K MAKER      | E3-O -           NO PART      | E5 -           NO PART      | 
    solder lands for a lead (no compon | C J_MAINSW, J_PIJ2         | none read  | inside  | +  0.0 K MAKER      | E3-O -           NO PART      | E5 -           NO PART      | 
    solder pad for a 12 AWG wire (no c | E P_CN, P_CP, P_VN, P_VR   | none read  | inside  | +  0.0 K MAKER      | E3-O -           NO PART      | E5 -           NO PART      | 
+   NOT FITTED: the Bulgin PX0833 (CASE-MARGINS: "The recommended PX0833 does not fit this plate"); the sealed RJ45 is a MIL-DTL-38999 shell 15 class part.
 3c The junction figures (MODELED dissipation in the heat stage x MAKER thetaJA on its JEDEC board; local air the mixed air):
    TPS62933 (board A 3.3 V)                         A U12   0.068 W (MODELED node A3V3) x 112.2 C/W = +7.7 K; TJ at E5's mixed air 83.9 C against 150 C (tps62933_tj)
    AP64500 (slot 3's 5.1 V)                         A U6    0.601 W (MODELED node S3) x 45.0 C/W = +27.0 K; TJ at E5's mixed air 103.3 C against 160 C (ap64500_tj)
@@ -357,7 +358,8 @@ is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMP
       AW7915    0.903 W/K (MODELED)
       RM520N    0.903 W/K (MODELED)
       PCM2912A  0.417 W/K (MODELED)
-   so the line is 2.709 W/K (0 K margin), 3.010 with 1 K and 3.386 with 2 K, against the outer-film cap 2.10 (low) to 3.86 (high)
+   so the line is 2.709 W/K (0 K margin), 3.010 with 1 K and 3.386 with 2 K (E3-O alone 1.806 W/K), against the outer-film cap 2.10
+   (low) to 3.86 W/K (high)
    and W4's 1.22 to 2.85 W/K. Not routed by the air (physics: the air cannot be cooled below the ambient without a cooler,
    and a cooler in the sealed case returns its input to the air, L4-E10's corrected balance):
       SGP41     its limit 55 C is at or under the margin's ambient: the air cannot be cooled below it
@@ -389,7 +391,8 @@ is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMP
    module (LORA_ON), both E72 (ZB_ON), the Geiger module (GEIGER_EN) and the SGP41 (a switch owed on board E, section 5);
    no e-paper refresh and the sounder muted while it holds; restored at or under +59.0 C after 30 minutes. Existing enables,
    firmware, except the SGP41's switch. Heat into the case on shore: 19.497 W (MODELED, plan; 18.152 W at the pack), against the heat
-   stage's 24.996 W. Each part routed by the air then needs, at E5's dwell:
+   stage's 24.996 W. H1's own actions, which the hold reuses (CONOPS 4c): "through board A's expanders on the kit bus it turns off the monitor, the pack heater, board D, PoE, the USB-C outlet, the wall port's VBUS and the PA and HF software holds; it holds the charge by the charger's own charge-inhibit bit".
+   Each part routed by the air then needs, at E5's dwell:
       RB9704    2.159 W/K (MODELED)
       LIME      2.159 W/K (MODELED)
       SA868     2.159 W/K (MODELED)
@@ -416,7 +419,8 @@ is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMP
    If T-H1 reads between the floor and G_c: the hold with the +70 C modules (LimeSDR, RockBLOCK, board D) coupled to the plate
    holds them at the plate's 66.0..69.4 C at E5 (0.61 K inside +70 C at the upper fraction), the mixed air then 72.95 C (INFERRED).
    Cost: firmware on existing enables, one board E circuit item, the session's picks for the parts limited at or under the
-   ambient, a T-H1 line 30 % over LO-01a's floor. VERDICT: SELECTED, CONDITIONAL (section 5).
+   ambient, a T-H1 line 30 % over LO-01a's floor (0.058 W/K over the outer-film cap at W4's low coefficients). VERDICT:
+   SELECTED, CONDITIONAL (section 5).
 4d Per colliding part, the three routes (CLOSES, CONDITIONAL, REJECTED, OUTSIDE AUTHORITY, INCONCLUSIVE):
       ATP16     (a) CONDITIONAL       (b) CLOSES            (c) CLOSES            every route rejected: no
       ATP19     (a) REJECTED          (b) CLOSES            (c) REJECTED          every route rejected: no
@@ -431,23 +435,25 @@ is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMP
 
 5 The selection: (c), the margin hold, with the line on T-H1 and the session's picks
 5a The parts at the selected line (E5 at G_c = 2.159 W/K, E3-O at T-H1's floor), in the hold's states:
-   CM5       powered    limit +85    operating range                                E3-O 68.0..70.7  NOT REACHED  E5 70.0..72.8  NOT REACHED 
-   RB9704    unpowered  limit +70    operating range (the only statement held)      E3-O 68.0..70.7  PLACEMENT    E5 70.0..72.8  PLACEMENT   
-   LIME      unpowered  limit +70    storage range                                  E3-O 68.0..70.7  PLACEMENT    E5 70.0..72.8  PLACEMENT   
-   AW7915    unpowered  limit +90    storage range                                  E3-O 68.0..70.7  NOT REACHED  E5 70.0..72.8  NOT REACHED 
-   RM520N    unpowered  limit +90    storage range                                  E3-O 68.0..70.7  NOT REACHED  E5 70.0..72.8  NOT REACHED 
-   XENARC    unpowered  limit +80    storage range                                  E3-O 61.0..68.0  NOT REACHED  E5 64.7..70.0  NOT REACHED 
-   SA868     unpowered  limit +70    operating range (the only statement held)      E3-O 68.0..70.7  PLACEMENT    E5 70.0..72.8  PLACEMENT   
-   PCM2912A  unpowered  limit +150   storage range                                  E3-O 68.0..70.7  NOT REACHED  E5 70.0..72.8  NOT REACHED 
-   G6K       unpowered  limit +70    operating range (the only statement held)      E3-O 68.0..70.7  PLACEMENT    E5 70.0..72.8  PLACEMENT   
-   SGP41     unpowered  limit +70    short-term storage (absolute)                  E3-O 68.0..70.7  PLACEMENT    E5 70.0..72.8  PLACEMENT   
-   H5007NL   powered    limit +70    operating range                                E3-O 68.0..70.7  PLACEMENT    E5 70.0..72.8  PLACEMENT   
-   ATP19     powered    limit +55    operating range                                E3-O 61.0..68.0  REACHED      E5 64.7..70.0  REACHED     
-   ATP16     powered    limit +70    operating range                                E3-O 61.0..68.0  NOT REACHED  E5 64.7..70.0  NOT REACHED 
-   SOUNDER   unpowered  limit +85    storage range                                  E3-O 61.0..68.0  NOT REACHED  E5 64.7..70.0  NOT REACHED 
-   EPAPER    unpowered  limit +60    operating range (the only statement held)      E3-O 61.0..68.0  REACHED      E5 64.7..70.0  REACHED     
-   PXP4043C  unpowered  limit +70    operating range (the only statement held)      E3-O 61.0..68.0  NOT REACHED  E5 64.7..70.0  NOT REACHED 
-   NVME      powered    limit +85    the pick's line (a wide grade, e.g. Cervoz -40 E3-O 68.0..70.7  NOT REACHED  E5 70.0..72.8  NOT REACHED 
+   CM5       powered    limit +85    operating range                          E3-O 68.0..70.7  NOT REACHED +17.05/+14.27 E5 70.0..72.8  NOT REACHED +15.00/+12.22 (MAKER limit; MODELED air)
+   RB9704    unpowered  limit +70    operating range (the only statement held E3-O 68.0..70.7  PLACEMENT   +2.05/-0.73   E5 70.0..72.8  PLACEMENT   +0.00/-2.78   (MAKER limit; MODELED air)
+   LIME      unpowered  limit +70    storage range                            E3-O 68.0..70.7  PLACEMENT   +2.05/-0.73   E5 70.0..72.8  PLACEMENT   +0.00/-2.78   (MAKER limit; MODELED air)
+   AW7915    unpowered  limit +90    storage range                            E3-O 68.0..70.7  NOT REACHED +22.05/+19.27 E5 70.0..72.8  NOT REACHED +20.00/+17.22 (MAKER limit; MODELED air)
+   RM520N    unpowered  limit +90    storage range                            E3-O 68.0..70.7  NOT REACHED +22.05/+19.27 E5 70.0..72.8  NOT REACHED +20.00/+17.22 (MAKER limit; MODELED air)
+   XENARC    unpowered  limit +80    storage range                            E3-O 61.0..68.0  NOT REACHED +18.97/+12.05 E5 64.7..70.0  NOT REACHED +15.35/+10.00 (MAKER limit; MODELED air)
+   SA868     unpowered  limit +70    operating range (the only statement held E3-O 68.0..70.7  PLACEMENT   +2.05/-0.73   E5 70.0..72.8  PLACEMENT   +0.00/-2.78   (MAKER limit; MODELED air)
+   PCM2912A  unpowered  limit +150   storage range                            E3-O 68.0..70.7  NOT REACHED +82.05/+79.27 E5 70.0..72.8  NOT REACHED +80.00/+77.22 (MAKER limit; MODELED air)
+   G6K       unpowered  limit +70    operating range (the only statement held E3-O 68.0..70.7  PLACEMENT   +2.05/-0.73   E5 70.0..72.8  PLACEMENT   +0.00/-2.78   (MAKER limit; MODELED air)
+   SGP41     unpowered  limit +70    short-term storage (absolute)            E3-O 68.0..70.7  PLACEMENT   +2.05/-0.73   E5 70.0..72.8  PLACEMENT   +0.00/-2.78   (MAKER limit; MODELED air)
+   H5007NL   powered    limit +70    operating range                          E3-O 68.0..70.7  PLACEMENT   +2.05/-0.73   E5 70.0..72.8  PLACEMENT   +0.00/-2.78   (MAKER limit; MODELED air)
+   ATP19     powered    limit +55    operating range                          E3-O 61.0..68.0  REACHED     -6.03/-12.95  E5 64.7..70.0  REACHED     -9.65/-15.00  (MAKER limit; MODELED air)
+   ATP16     powered    limit +70    operating range                          E3-O 61.0..68.0  NOT REACHED +8.97/+2.05   E5 64.7..70.0  NOT REACHED +5.35/+0.00   (MAKER limit; MODELED air)
+   SOUNDER   unpowered  limit +85    storage range                            E3-O 61.0..68.0  NOT REACHED +23.97/+17.05 E5 64.7..70.0  NOT REACHED +20.35/+15.00 (MAKER limit; MODELED air)
+   EPAPER    unpowered  limit +60    operating range (the only statement held E3-O 61.0..68.0  REACHED     -1.03/-7.95   E5 64.7..70.0  REACHED     -4.65/-10.00  (MAKER limit; MODELED air)
+   PXP4043C  unpowered  limit +70    operating range (the only statement held E3-O 61.0..68.0  NOT REACHED +8.97/+2.05   E5 64.7..70.0  NOT REACHED +5.35/+0.00   (MAKER limit; MODELED air)
+   NVME      powered    limit +85    the pick's line (a wide grade, e.g. Cerv E3-O 68.0..70.7  NOT REACHED +17.05/+14.27 E5 70.0..72.8  NOT REACHED +15.00/+12.22 (MAKER limit; MODELED air)
+   (margins in K to the lower / the upper bound of each span: inside, the mixed air / the exhaust; face and wall, the plate /
+   the inside air)
 5b Every fitted line, module and undeclared line at the selected line: E3-O: INCONCLUSIVE 11, NO PART 3, NOT FITTED 1, NOT REACHED 149, OUT OF SCOPE 7, PLACEMENT 6, REACHED 2; E5: INCONCLUSIVE 11, NO PART 3, NOT FITTED 1, NOT REACHED 149, OUT OF SCOPE 7, PLACEMENT 6, REACHED 2
    2.54 mm pin header or bench jumper land  A J_USBC_OUT; B J_CAM, J_D E3-O INCONCLUSIVE E5 INCONCLUSIVE
    2086581001                               B J_HDMI                   E3-O INCONCLUSIVE E5 INCONCLUSIVE

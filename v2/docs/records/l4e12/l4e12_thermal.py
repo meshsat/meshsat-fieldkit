@@ -874,7 +874,8 @@ def compute():
         else:
             ga[pr["k"]] = max(need_g)
     gmax_a = max(ga.values())
-    ap["a"] = {"g": ga, "gmax": gmax_a, "open": a_open,
+    ga_e3o = max(g_req(T["q_hs"], qb, pr["lim"], e3o_t) for pr in R["parts_now"] if pr["k"] in ga)
+    ap["a"] = {"g": ga, "gmax": gmax_a, "open": a_open, "g_e3o": ga_e3o,
                "g_m": [max(g_req(T["q_hs"], qb, R["parts_now"][[x["k"] for x in R["parts_now"]].index(k)]["lim"], e5_t, mm) or 0 for k in ga) for mm in (1.0, 2.0)],
                "plate_floor_e5": Lnow["E5"]["plate"], "g_plate": T["f_plate"][1] * (T["q_hs"] + qb) / 10.0}
     # (c) the margin hold: beyond the heat stage, on the inside air, it powers off what C1 left that is not needed to survive
@@ -1103,6 +1104,7 @@ def render(R):
         w("   %-34.34s | %-26.26s | %-10s | %-7s | +%5.1f K %-10.10s | E3-O %-11s %-12s | E5 %-11s %-12s | %s" % (
             r_["part"], _refs(r_["refs"]), rating, r_.get("where", r_.get("where_gs")), rise, (r_.get("rise_cls") or "MAKER").split(" ")[0],
             "-" if t3 is None else _rng(*t3), r_["verdict"]["E3-O"], "-" if t5 is None else _rng(*t5), r_["verdict"]["E5"], tag))
+    w("   NOT FITTED: the Bulgin PX0833 (CASE-MARGINS: \"%s\"); the sealed RJ45 is a MIL-DTL-38999 shell 15 class part." % A["px0833"])
     w("3c The junction figures (MODELED dissipation in the heat stage x MAKER thetaJA on its JEDEC board; local air the mixed air):")
     seen = set()
     for (b, ref), d in sorted(R["diss_now"].items()):
@@ -1126,8 +1128,9 @@ def render(R):
     w("4a (a) THE HEAT PATH AND THE ENCLOSURE, the parts and the mode unchanged. Each part routed by the air needs, at E5's dwell:")
     for k in sorted(a["g"], key=lambda k: -a["g"][k]):
         w("      %-9s %.3f W/K (MODELED)" % (k, a["g"][k]))
-    w("   so the line is %.3f W/K (0 K margin), %.3f with 1 K and %.3f with 2 K, against the outer-film cap %.2f (low) to %.2f (high)" % (
-        a["gmax"], a["g_m"][0], a["g_m"][1], T["cap"][0], T["cap"][1]))
+    w("   so the line is %.3f W/K (0 K margin), %.3f with 1 K and %.3f with 2 K (E3-O alone %.3f W/K), against the outer-film cap %.2f" % (
+        a["gmax"], a["g_m"][0], a["g_m"][1], a["g_e3o"], T["cap"][0]))
+    w("   (low) to %.2f W/K (high)" % T["cap"][1])
     w("   and W4's %.2f to %.2f W/K. Not routed by the air (physics: the air cannot be cooled below the ambient without a cooler," % T["w4_open"])
     w("   and a cooler in the sealed case returns its input to the air, L4-E10's corrected balance):")
     for k, why in a["open"]:
@@ -1149,7 +1152,8 @@ def render(R):
     w("   module (LORA_ON), both E72 (ZB_ON), the Geiger module (GEIGER_EN) and the SGP41 (a switch owed on board E, section 5);")
     w("   no e-paper refresh and the sounder muted while it holds; restored at or under +%.1f C after 30 minutes. Existing enables," % HOLD_RESTORE_C)
     w("   firmware, except the SGP41's switch. Heat into the case on shore: %.3f W (MODELED, plan; %.3f W at the pack), against the heat" % (T["q_m"], T["q_m_pack"]))
-    w("   stage's %.3f W. Each part routed by the air then needs, at E5's dwell:" % T["q_hs"])
+    w("   stage's %.3f W. H1's own actions, which the hold reuses (CONOPS 4c): \"%s\"." % (T["q_hs"], A["h1_actions"]))
+    w("   Each part routed by the air then needs, at E5's dwell:")
     for k in sorted(c["g"], key=lambda k: -c["g"][k]):
         w("      %-9s %.3f W/K (MODELED)" % (k, c["g"][k]))
     w("   so the line is G_c = %.3f W/K (0 K margin; %.3f with 1 K, %.3f with 2 K); with the module at its typical 4.5 W instead of" % (c["gmax"], c["g_m"][0], c["g_m"][1]))
@@ -1167,7 +1171,9 @@ def render(R):
     w("   holds them at the plate's %s C at E5 (%.2f K inside +70 C at the upper fraction), the mixed air then %.2f C (INFERRED)." % (
         _rng(*fb["plate"]), fb["margin"], fb["mixed"]))
     w("   Cost: firmware on existing enables, one board E circuit item, the session's picks for the parts limited at or under the")
-    w("   ambient, a T-H1 line %.0f %% over LO-01a's floor. VERDICT: SELECTED, CONDITIONAL (section 5)." % (100.0 * (c["gmax"] / T["g_floor"] - 1.0)))
+    w("   ambient, a T-H1 line %.0f %% over LO-01a's floor (%.3f W/K over the outer-film cap at W4's low coefficients). VERDICT:" % (
+        100.0 * (c["gmax"] / T["g_floor"] - 1.0), c["gmax"] - T["cap"][0]))
+    w("   SELECTED, CONDITIONAL (section 5).")
     w("4d Per colliding part, the three routes (CLOSES, CONDITIONAL, REJECTED, OUTSIDE AUTHORITY, INCONCLUSIVE):")
     for k, r_ in sorted(R["route"].items()):
         w("      %-9s (a) %-17s (b) %-17s (c) %-17s every route rejected: %s" % (k, r_["a"], r_["b"], r_["c"], "YES" if r_["forced"] else "no"))
@@ -1175,9 +1181,13 @@ def render(R):
     w("5 The selection: (c), the margin hold, with the line on T-H1 and the session's picks")
     w("5a The parts at the selected line (E5 at G_c = %.3f W/K, E3-O at T-H1's floor), in the hold's states:" % c["gmax"])
     for pr in c["parts"]:
-        w("   %-9s %-10s limit %-6s %-46s E3-O %-11s %-12s E5 %-11s %-12s" % (
-            pr["k"], pr["state"], "none" if pr["lim"] is None else "+%.0f" % pr["lim"], pr["basis"][:46],
-            _rng(*pr["temps"]["E3-O"]), pr["verdict"]["E3-O"], _rng(*pr["temps"]["E5"]), pr["verdict"]["E5"]))
+        mg5 = "" if pr["lim"] is None else "%+.2f/%+.2f" % (pr["lim"] - pr["temps"]["E5"][0], pr["lim"] - pr["temps"]["E5"][1])
+        mg3 = "" if pr["lim"] is None else "%+.2f/%+.2f" % (pr["lim"] - pr["temps"]["E3-O"][0], pr["lim"] - pr["temps"]["E3-O"][1])
+        w("   %-9s %-10s limit %-6s %-40s E3-O %-11s %-11s %-13s E5 %-11s %-11s %-13s (MAKER limit; MODELED air)" % (
+            pr["k"], pr["state"], "none" if pr["lim"] is None else "+%.0f" % pr["lim"], pr["basis"][:40],
+            _rng(*pr["temps"]["E3-O"]), pr["verdict"]["E3-O"], mg3, _rng(*pr["temps"]["E5"]), pr["verdict"]["E5"], mg5))
+    w("   (margins in K to the lower / the upper bound of each span: inside, the mixed air / the exhaust; face and wall, the plate /")
+    w("   the inside air)")
     cnt = {}
     for r_ in c["screen"]:
         for mg in ("E3-O", "E5"):
