@@ -46,6 +46,11 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    tps1663   8f91a0db2daf2da3  v2/vendor/ti/held/ti-tps1663-slvset9g.pdf
    red2_py   5790bc7e444bebc4  v2/docs/records/hc2/pwr_red2.py
    budget_py 469d0820b046ef6f  v2/docs/records/rv-pwr/pwr_budget.py
+   loopdesign fe0d946bc020d4b6  v2/docs/records/l4e8/inputs/recovered/loop_design-r4a-fixup-A-1024.py
+   zk        5455014606c0b676  v2/vendor/power/lcsc-panasonic-eehzk1v101xp.pdf
+   b540c     1b1de94df0a7729f  v2/vendor/power/held/diodes-b520c-b560c-ds13012-rev18-2.pdf
+   yageo_rc  e7dbabb061192522  v2/vendor/passives/yageo-rc-l-series-v12.pdf
+   e2e_por   96c511cf238d0018  v2/vendor/ti/ti-e2e-1316778-bq25731-chargecurrent-por.html
    l4e9      07d8fb6e828cb15b  3c09b3da:v2/docs/records/l4e9/l4e9_power_path.out (L4-E9's commit, read with git show)
    l4e9_hotswap ed22896891676446  3c09b3da:v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py (L4-E9's commit, read with git show)
    filed     f0ff5212ae6220af  v2/docs/records/l4e11/inputs/lcsc-C907944-2026-10-02.json
@@ -63,6 +68,10 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    filed     060b5007ccc7555e  v2/docs/records/l4e11/inputs/lcsc-C97929-2026-10-02.json
    filed     2240268d690ef3b9  v2/docs/records/l4e11/inputs/lcsc-C184799-2026-10-02.json
    filed     b953f4a3510e0115  v2/docs/records/l4e11/inputs/lcsc-C23107-2026-10-02.json
+   filed     3939ea8d1d03aae6  v2/docs/records/l4e11/inputs/lcsc-C242138-2026-10-02.json
+   filed     3681ad8ef6a5c92e  v2/docs/records/l4e11/inputs/lcsc-C242139-2026-10-02.json
+   filed     f8dda3f263d0ff57  v2/docs/records/l4e11/inputs/lcsc-C72264-2026-10-02.json
+   filed     d30467fa22b96907  v2/docs/records/l4e11/inputs/lcsc-C137025-2026-10-02.json
    this record's own figures: copper 0.01724 ohm mm2/m at 20 C and 0.00393 /K, 3.45 J/cm3K (ASSUMPTION, constants); AWG 14 2.081 mm2, AWG 12 3.309 mm2,
      AWG 18 0.823 mm2 (ASSUMPTION, constants); the cold end -20 C (REQ-024); the SESSION choices are named where they are used
 
@@ -102,7 +111,9 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      VSYS under 1.6 V for 2 ms in steady state: "shut down and latched off" until a host write (9.3.21.8, p.34) (MAKER)
      "Overall 50-uF effective capacitance on VSYS net is necessary" (10.1, p.83); CHRG_INHIBIT "1b: Inhibit Charge" (p.44); the host ends a charge by CHRG_INHIBIT or ChargeCurrent 0 (9.4.1, p.35) (MAKER)
      AUTO_WAKEUP_EN, 0 at POR: with it set, a battery under VSYS_MIN gets 128 mA for 30 min with no further host write (p.61) (MAKER); it needs a host write first, so it does not answer N3
-     ChargeCurrent with the 5 mOhm RSR: 128 mA steps, 0 A at POR (9.6); REG0x03/02 = 0x0200 (1024 mA) regulates within -18 % to +21.5 %, a row printed for VBAT above VSYS_MIN (8.5, p.10) (MAKER)
+     ChargeCurrent at POR: the register description says 0 A, its reset value encodes 256 mA, and TI's expert on E2E thread 1316778 (held) states 256 mA,
+       the description being in error (the dependency round, D4) (MAKER)
+     ChargeCurrent with the 5 mOhm RSR: 128 mA steps; REG0x03/02 = 0x0200 (1024 mA) regulates within -18 % to +21.5 %, a row printed for VBAT above VSYS_MIN (8.5, p.10) (MAKER)
    board A and E as generated: the strap R26 13.3k over R27 40.2k, 75.1 % of VDDA, so U3 never sees "battery removal"; R17 between VBAT
      (VSYS, every load) and CELL_FUSED (the pack); CHG_INHIBIT pulls ILIM_HIZ low through Q6 (HIZ); SHORE_INHIBIT pulls the hot
      swap's UVLO low through Q8 (the input off); board P's gauge PCHG pin not connected; R7 1 k from PACK_P to its VCC (NETLIST)
@@ -156,7 +167,8 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      THE HOLD PERSISTS ACROSS STATES: it is a flag in the firmware, set and cleared only by its own condition (the cold hold above 3 C with hysteresis,
         the operator, REQ-077's hold), never by a state change; in S1, S2 and S3 the bit follows the flag; on leaving S4 (a FET closing, a pack fitted)
         the bit is written from the flag at once, and in the firmware's reaction time only the gauge's window acts, which keeps the cells inside their
-        charge window; after a charger POR ChargeCurrent() is 0 A (9.6, MAKER) and the firmware writes it only after reading the flag (INFERRED)
+        charge window; after a charger POR ChargeCurrent() is 256 mA by TI's E2E answer (D4), so a charge at 256 mA can begin before the firmware writes the
+        flag's bit: in that window too only the gauge's window acts, and 256 mA is under R-b's bound (INFERRED)
      in S2 and S4 the CHG_INHIBIT line (HIZ, 9.3.8) and SHORE_INHIBIT each remove the kit's only supply: neither is ever a charge hold (rule R-a)
 
 3. U-04, THE ENTRY AT A 9.00 V PLUG, THE KIT'S OWN LOSSES AND THE SOURCE ENVELOPE (the focused check's B1 and B3)
@@ -410,7 +422,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    E11-04 | FIRMWARE | firmware owner | rules R-a to R-d implemented (section 7a): R-a's state table with its S4 exception and the hold's persistence across states; R-b's two settings (ChargeCurrent() 0x0000 or 0x0200, no other) while U3's SRN reading is under 14 V or the gauge reports XDSG or PRECHARGE; R-c's shed to the envelope at the measured input and the VSYS_UVP recovery; R-d; checked on the bench (E11-06)
    E11-05 | EVIDENCE | Layer 6 components | TI's answers filed: Q-TI-3 restated as N2 for state S2 (VSYS's regulation with CHRG_INHIBIT = 1 while the pack can take charge but cannot discharge, under a 5 A load step) and N1, and Q-TI-2; U-04's N1 to N3 re-judged on them
    E11-06 | TEST | prototype bench | R-85 extended: at 9.00 V at the plug with the interconnect at its resistance ceiling, and at 12 and 24 V: the shedding sequence of section 3g (P0 to P3) with the pack cold-soaked (S4), at a warm CUV (S2, the charge held by the bit: VSYS stays up) and absent; P1's load measured at most 20.51 W at VBAT; the front end's efficiency at the operating point at least 0.8802; U3's board current at the knee's flat target inside its band; the entry's current over the kit's load steps and source changes above the breaker's lowest 6.36 A for less than 0.247 ms and its filtered short-circuit sense under 10.36 A; VSYS's step response; Q2's case at R-b's current; the latch recovery by a re-plug
-   E11-07 | ANALYSIS | Layer 9 pre-layout analysis | VSYS's effective capacitance at 16.884 V from the makers' DC-bias curves at least 50 uF (SLUSE66A 10.1), else a polymer capacitor added (TI prefers POSCAP)
+   E11-07 | ANALYSIS | Layer 9 pre-layout analysis | VSYS's effective capacitance at 16.884 V from the makers' DC-bias curves at least 50 uF (SLUSE66A 10.1), or the direct EEHZK1V181P of E11-24, which gives it by design (TI prefers POSCAP)
    E11-08 | EVIDENCE | Layer 9 pre-layout analysis | every load converter's and the controllers' minimum input read from their sheets against 10.0 V (A-14, R-49) and against 8.0 V for a pack at its Shutdown Voltage
    E11-09 | ANALYSIS | Layer 4 coordinator | L4-E5's undrawn H3 network drawn to section 3f's specification (flat 1.82 A from VIN_RAW 7.95 V to 10.549 V, the knee slope kept, zero 7.657 V, HIZ certain below 7.378 V) with E11-02's guard; L4-E5's low-light settle, the solar line and its V-A09 sweep re-run on it
    E11-10 | IMPLEMENTATION | Layer 7 mechanical | the DC receptacle and plug on MIL-DTL-38999 size 12 contacts (shell 17, insert 17-6: DC and solar pairs on four contacts, two unassigned between power and return; or 13-26 with the solar pair on rated contacts elsewhere), with the insert's installed continuous rating of at least 20 A at the case's air from the maker's derating, or a measured rise at 20 A, filed; the plate cut-out checked against CASE-MARGINS 3.3
@@ -427,6 +439,145 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    E11-21 | INTERFACE | Layer 4 coordinator | L4-E5's V-A08 and its source-change transient row restated as the record's section 7a draft: the entry's breaker never trips (its current over 6.36 A for less than 0.247 ms, its filtered short-circuit sense under 10.36 A) and VIN_RAW never under 7.24 V (the guard's highest fall plus 0.1 V), in place of the LM5069's 3.13 ms timer and 8.41 V
    E11-22 | EVIDENCE | Layer 6 components | R-b's cases (ii) and (iii) closed: the charger's temperature while R-b holds bounded inside 0 to 85 C (Layer 9 thermal), or TI's 0x0200 accuracy outside it and the clamp's maximum under VSYS_MIN (Q-TI), or the bench's current at 0x0200 and under VSYS_MIN at the inside air's ends; board P's copper under Q2 for TI's 50 C/W
    E11-23 | TEST | prototype bench | TEST-PLAN E4-O at the plug: the kit cold-soaked at -20 C with the pack inside, started from 9.00 V at the plug through the interconnect at its ceiling; the shedding sequence of section 3g runs, the mat on measured headroom: the cells reach 3 C, the hold clears and the charge begins; the time recorded and accepted against CONOPS's warm-up
+   E11-24 | IMPLEMENTATION | Layer 8 board A generator owner | the dependency round's fallback on VBAT (a register row, never applied by this record): one EEHZK1V181P direct (C242139) and a hold-up bank of 4 EEHZK1E471P (C242138) charged through R_CH 330 Ohm RC2512FK-07330RL (C137025) and discharging through D_H B540C-13-F (C72264); the regenerated netlist carries them; the bank's hold recomputed from the fitted parts reads at least 1.117 ms for the worst admitted step (48.39 W)
+   E11-25 | EVIDENCE | Layer 6 components | the clarification questions of clarification/TI-QUESTIONS.md (Q-TI-11 to Q-TI-14 and the addendum to Q-TI-3) sent by the owner and answered, each answer filed against its dependency row D1 to D10 and judged: a limit closes a row production-wide, a typical figure does not
+   E11-26 | TEST | prototype bench | the bench methods of rows D1 to D10 run on one unit each, every reading filed as a sample with its uncertainty and conditions, never as a limit; D2's recovery at most 0.2 ms against the bank's 1 ms assumption gives the engineering margin the record names
+
+9. THE DEPENDENCY ROUND: EACH MISSING SPECIFICATION, THE CLAIM IT DECIDES, WHO CAN SETTLE IT (2 October 2026)
+   the held answer on the POR value: TI's expert on E2E thread 1316778: "The POR value is indeed 256mA" (the register description's 0 A is in error) (MAKER, forum)
+   D1 N1a, VSYS's DC regulation with no battery (MAKER, INFERRED)
+     missing: no row gives VSYS's regulation with no battery current: VBAT_REG_ACC +-0.5 % holds for a charge voltage at 0 to 85 C (p.9); section 11 (p.92) says the system is powered through the charger; Figures 10-4 and 10-5 (p.89) are typical power-up curves of a 2-cell system without battery
+     the claim: section 2's row 'absent, or both FETs open: VSYS at ChargeVoltage' and every S4 figure of 3g and 3h (U-04 in S4 at all)
+     a maker's answer would establish: that the voltage loop holds VSYS at ChargeVoltage with no battery current, with the +-0.5 % row applying: production-wide if TI states it as a limit
+     a bench sample could establish: that one unit enters and holds the mode at the conditions tried; the mode is a design behaviour, and VSYS needs only 12.3 V against ChargeVoltage's floor 16.716 V, a 4.416 V margin that is large against any plausible unit spread once the mode is shown (an engineering margin)
+     a bench sample cannot establish: that every unit and silicon revision enters the mode, or the accuracy below 0 C, where the +-0.5 % row stops
+     the bench method: pack absent, P1's load and the envelope's maximum on VSYS, VBUS20 from 19.1 to 21 V, VSYS on a calibrated meter at -20, 25 and 62 C ambient
+     if the answer is negative: arrangement (A) does not run S4: (B), a charger with a battery FET that regulates VSYS by design (an architecture change; five records reopen)
+   D2 N1b, VSYS's load-step response with no battery (MAKER, INFERRED)
+     missing: no load-transient figure or limit for the system output (Figure 10-17, p.91, is the OTG output's)
+     the claim: S4 operation through the kit's load steps (3g, R-c): the declared steps of section 10, up to 48.39 W
+     a maker's answer would establish: a characterised deviation and recovery, or a minimum loop bandwidth; production-wide only if TI states a limit
+     a bench sample could establish: one unit's deviation and recovery at the steps tried; with the bank sized for 1 ms, a measured recovery of 0.2 ms or less is a five-fold margin, large against a loop's plausible spread (L, C and gain tolerances): an engineering margin
+     a bench sample cannot establish: a recovery time bounded for every unit
+     the bench method: pack absent, an electronic load stepping VSYS by each declared step with a 1 us edge, VSYS and the inductor current on a scope, at the three ambients
+     if the answer is negative: the bank of section 10 carries the step for 1.117 ms with no help from the charger; a longer recovery needs more cans (8 for 2 ms) or (B)
+   D3 N2 (Q-TI-3), VSYS with CHRG_INHIBIT = 1 or ChargeCurrent 0 and no battery current (MAKER, INFERRED)
+     missing: 9.4.1 (p.35) lets the host end a charge by CHRG_INHIBIT or ChargeCurrent 0; 9.3.21.5 (p.34) keeps the converter operating with charge disabled only in the BATOVP paragraph; nothing states what VSYS does in either state with no battery current
+     the claim: R-a's S2 row and REQ-077's hold in every state (section 4): the charger still carrying the kit while the charge is held
+     a maker's answer would establish: the control mode with charge inhibited, production-wide (a design behaviour)
+     a bench sample could establish: one unit's mode with the bit set and with ChargeCurrent 0, pack absent and in S2: a deterministic logic behaviour, so one sample is strong evidence for that silicon revision
+     a bench sample cannot establish: that no later revision changes the mode, nor how a temperature-dependent comparator moves it
+     the bench method: the pack emulated in S2 (a supply behind a diode), the bit set and cleared under P1's load, VSYS and the switch node recorded
+     if the answer is negative: REQ-077's hold cannot use the bit with this charger; ChargeCurrent 0 is tried; if both fail, (B) or a requirement change to REQ-077's acceptance (the owner's)
+   D4 N3 (Q-TI-2), whether the charger charges before any host write (MAKER, INFERRED)
+     missing: 9.6.3 says the charge starts when the host writes ChargeCurrent(); the register's reset value encodes 256 mA and its description says 0 A at POR. TI's expert on E2E thread 1316778 (held) answers: the POR value is 256 mA, the description is in error; 9.6.3 is not addressed
+     the claim: section 2's ChargeCurrent at POR (corrected in this round), R-a's persistence after a charger POR, CONOPS's hostless 256 mA
+     a maker's answer would establish: a datasheet erratum: production-wide (a forum answer is TI's word but not a revised document)
+     a bench sample could establish: one unit's SRP-SRN current after POR with no host: a logic behaviour, strong for that revision
+     a bench sample cannot establish: other revisions
+     the bench method: no host, the pack at 3.6 V a cell, the SRP-SRN current read for 200 s after POR
+     if the answer is negative: a hostless charge at 256 mA is safe (inside the gauge's window; Q2's diode 0.256 W); no hostless charge leaves a hostless kit's dead pack uncharged: a stated limitation, no change
+   D5 N4, VSYS's effective capacitance at 16.884 V against TI's 50 uF (MAKER, INFERRED)
+     missing: TI states 50 uF effective necessary (10.1, p.83); the fitted MLCCs' capacitance at 16.9 V of DC bias is not printed in the held Yageo CC sheet (a capacitor maker's item, not TI's)
+     the claim: N1's premise (stable regulation) and E11-07
+     a maker's answer would establish: the capacitor makers' DC-bias curves: typical per part number, not limits
+     a bench sample could establish: one board's VSYS capacitance at 16.8 V of bias: a sample
+     a bench sample cannot establish: lot-to-lot spread
+     the bench method: an LCR meter with DC bias on the populated node, or each part number on a bias fixture
+     if the answer is negative: none needed: one EEHZK1V181P on VSYS gives 90.72 uF at its stacked worst, with no DC-bias dependence, over 50 uF by design
+   D6 Q-TI-7, 0-V charging before the gauge's SUV check (MAKER, INFERRED)
+     missing: SLUUAQ3A 4.9: with PCHG_COMM = 1 the hardware 0-V charging circuit is enabled below the minimum operation voltage; nothing states its timing against the SUV check of 3.2.1
+     the claim: R-d (the image keeps PCHG_COMM 1 and the SUV check): no cell below 1.0 V charged (Samsung)
+     a maker's answer would establish: the gauge's sequence, production-wide
+     a bench sample could establish: one gauge with a cell simulator: a logic sequence, strong for that firmware and revision
+     a bench sample cannot establish: other firmware revisions
+     the bench method: a cell simulator at 0.8 V a cell, the charger enabled, the stack current logged from the gauge's wake
+     if the answer is negative: ZVCHG Exit Threshold set to stop 0-V charging, or a precharge FET (arrangement (C)'s part) with PCHG_COMM 0
+   D7 the clamp's maximum under VSYS_MIN (MAKER, INFERRED)
+     missing: 8.5 (p.10) prints the clamp under VSYS_MIN, 384 mA, as typical only
+     the claim: R-b's case (iii) and Q2's diode below VSYS_MIN (section 4)
+     a maker's answer would establish: a maximum, production-wide
+     a bench sample could establish: one unit's clamp current; Q2 reaches 150 C only at 1.758 A on its 50 C/W, 4.58 times the typical clamp, so a sample near typical is a large engineering margin
+     a bench sample cannot establish: a maximum for every unit
+     the bench method: SRN held at 11 V by a sink, ChargeCurrent 0x0200, the current read at -20, 25 and 62 C
+     if the answer is negative: a maximum over 1.758 A: Q2's copper improved, or arrangement (C)
+   D8 ChargeCurrent's accuracy at 0x0200 outside 0 to 85 C, and under 0x0200 (MAKER, INFERRED)
+     missing: p.10's rows hold for VBAT above VSYS_MIN at 0 to 85 C; no accuracy outside that range, nor for any setting under 0x0200
+     the claim: R-b's case (ii) and Q2's 124.9 C (section 4, CONDITIONAL)
+     a maker's answer would establish: limits outside the range, production-wide
+     a bench sample could establish: one unit at -20 and 62 C ambient: a sample; Q2's limit 1.758 A is 1.4 times R-b's 1.2567 A, so a sample within about 1.3 A is an engineering margin
+     a bench sample cannot establish: production limits
+     the bench method: as D7 with SRN at 13 V
+     if the answer is negative: the charger's temperature bounded inside the row by layout (E11-22), or Q2's copper improved
+   D9 the TPS48110-Q1's overcurrent delay at CTMR 22 nF (MAKER, INFERRED)
+     missing: SLUSEE5E p.10 prints 370 us typical only
+     the claim: V-A08's 0.247 ms (the nuisance margin) and the fault scan's 0.49 ms (A11-11)
+     a maker's answer would establish: a minimum and a maximum over temperature, production-wide
+     a bench sample could establish: one unit's delay: a sample; the scan's worst fault ends on the short-circuit trip (3c), so the delay's maximum does not decide it; its minimum sets V-A08
+     a bench sample cannot establish: the spread across units
+     the bench method: a current step over the threshold at three temperatures, the sense step to PD timed
+     if the answer is negative: V-A08's allowance re-derived on TI's minimum, or CTMR raised
+   D10 the CSD19536KTT's transconductance bound (MAKER, INFERRED)
+     missing: SLPS540C p.3 prints gfs 329 S typical only
+     the claim: the start into a hard short (3c, 0.743 of the derated chart)
+     a maker's answer would establish: a maximum, or the transfer curve's spread
+     a bench sample could establish: one unit's transfer curve; the headroom (1.346 times) is not large against a plausible transconductance spread, so a sample is no margin
+     a bench sample cannot establish: a bound across units
+     the bench method: a pulsed transfer curve at VDS 10 V, 10 to 100 A
+     if the answer is negative: a slower gate slew for the start (C1 larger) or a power-limiting controller
+
+10. THE BOUNDED FALLBACK (E11-07, VSYS's capacitance first): A HOLD-UP THAT DOES NOT LEAN ON THE CHARGER'S TRANSIENT RESPONSE
+   the criterion: with no battery (S4) VSYS sits at ChargeVoltage, at least 16.716 V (16.8 V less TI's 0.5 %, p.9, MAKER), and must stay above VSYS_MIN 12.3 V
+     through a step while the charger delivers only its pre-step power for 1 ms (ASSUMPTION: the time the charger could take to respond;
+     D2's bench reading turns it into a margin); the VBAT stages' EN/UVLO pins are driven by logic (the slot, device, PA, HF, PoE and PD stages)
+     and the heater buck's divider starts it at about 7.3 V, so no VSYS divider sets a line above VSYS_MIN; A-14's assumed 10.0 V converter floor
+     is under it too (NETLIST, INFERRED)
+   the kit's declared steps (r4a's loop design, INFERRED there; efficiencies from gen_sch_a.py; the mat from hc2) at VSYS, and whether R-c's envelope
+     admits each on top of P1's plan 19.57 W at the widest source (36 V, 84.55 W) (INFERRED):
+     S2 slot rail (+5V_S2, a 5G burst)            3 A at 5.09 V over 0.9 (ASSUMPTION (+5V_DEV's declared 0.90)): 16.97 W at VSYS; admitted in S4; the fallback holds it 3.187 ms (INFERRED)
+     SD device rail (+5V_DEV)                     3 A at 5.09 V over 0.9 (NETLIST): 16.97 W at VSYS; admitted in S4; the fallback holds it 3.187 ms (INFERRED)
+     PA rail (+13V8_PA, a 30 W carrier keyed)     5.4 A at 13.76 V over 0.93 (NETLIST): 79.9 W at VSYS; not admitted in S4 (R-c holds it); the fallback holds it 0.677 ms (INFERRED)
+     HF rail (+12V_HF)                            2 A at 12 V over 0.93 (NETLIST): 25.81 W at VSYS; admitted in S4; the fallback holds it 2.095 ms (INFERRED)
+     PoE rail (+54V_POE)                          0.6 A at 54 V over 0.88 (NETLIST): 36.82 W at VSYS; admitted in S4; the fallback holds it 1.469 ms (INFERRED)
+     USB-C PD outlet at 15 V (PD_VPWR)            3 A at 15 V over 0.93 (NETLIST): 48.39 W at VSYS; admitted in S4; the fallback holds it 1.117 ms (INFERRED)
+     the pack heater mat, regulated (on)          8.5 W (RECORD): 8.5 W at VSYS; admitted in S4; the fallback holds it 6.361 ms (INFERRED)
+   the worst admitted step: USB-C PD outlet at 15 V (PD_VPWR), 48.39 W, 3.934 A at the floor (INFERRED)
+   THE FALLBACK (SESSION; a register row, E11-24, never applied):
+     a direct can on VSYS: one Panasonic EEHZK1V181P (180 uF 35 V, F size 8.0 x 10.2 mm, ESR 27 mOhm; LCSC C242139); and a hold-up bank: 4 x EEHZK1E471P
+     (470 uF 25 V, G size 10.0 x 10.2 mm, ESR 20 mOhm; C242138), charged from VSYS through R_CH 330 Ohm (Yageo RC2512FK-07330RL, 1 W at 70 C, C137025) and
+     discharging into VSYS through D_H, a Diodes B540C-13-F (40 V, 5 A, VF at most 0.55 V at 5 A and 25 C; C72264) (MAKER, CATALOGUE)
+   the capacitance's derating (Panasonic ZK sheet): +-20 % tolerance, endurance within +-30 %, no DC-bias dependence (an aluminium hybrid polymer part, its class),
+     the low-temperature change not printed ("as small as polymer type"): 0.9 at -20 C (ASSUMPTION); so 0.504 of nominal at the stacked worst (MAKER, ASSUMPTION)
+   the bank: 947.5 uF effective; it sits at 16.561 V (the leakage, 0.01 CV uA a can, across R_CH) and gives into VSYS down to 12.95 V (VSYS_MIN plus D_H's
+     0.65 V: its 25 C maximum plus 0.1 V at -20 C, ASSUMPTION): 48.26 mJ net of the diode; the direct can 90.72 uF effective from 16.716 to 12.3 V: 5.81 mJ;
+     54.07 mJ in all, the MLCCs not counted (N4) (INFERRED)
+   against the worst admitted step: 1.117 ms of hold, over the 1 ms assumed (MEETS, CONDITIONAL on T_RESP); the least cans for a hold of: 0.25 ms 1, 0.5 ms 2, 1 ms 4, 2 ms 8, 5 ms 20 (INFERRED)
+   size: four G cans (10.3 mm square lands, 10.5 mm tall at most), one F can, an SMC diode and a 2512: about 5.5 cm2 of board A (INFERRED)
+   placement: board A, on VBAT (the charger's VSYS); board P is behind the pack's FETs, which are open in S4, so it cannot hold VSYS there (NETLIST, INFERRED);
+     the height and the zone are Layer 9's (L4-E8 placed six G cans on board A's VBUS20, so the class fits the board) (INFERRED)
+   inrush, the entry and F1: the bank charges through R_CH at 51.2 mA at most, 0.864 W at most against the resistor's 1 W at 70 C (the inside air 62.1 C), with
+     a time constant of 0.744 s and 0.322 J per full charge; the direct can charges with VSYS under the charger's own start (0.5 A until 1.6 V, 3 min allowed,
+     9.3.21.8; 1.93 ms to 1.6 V at that current); the entry's start ends before U34 releases the front end (79 ms at least), so neither the entry's
+     inrush nor F1's I2t changes (MEETS, INFERRED)
+   inrush from the pack (S1 from cold, VSYS discharged, the discharge FET switching at once): the direct can and the MLCCs (352.2 uF nominal, 603.4 uF at
+     most) through the pack's least loop 69.17 mOhm (four cells at 35 mOhm over three, and pwr_budget's distribution): 242.9 A peak, over the image's ASCD
+     55.6 A for 61.5 us against its 183 us delay (MEETS, INFERRED); the bank behind R_CH adds 51.2 mA, so it cannot trip ASCD (INFERRED)
+   what it does not do (INFERRED):
+     a step beyond the source's headroom is a deficit, not a transient: at a 9.00 V plug the slot rail's step on P1's plan leaves 7.45 W short, which the
+       fallback only delays by 7.26 ms; R-c's measured headroom must therefore count the largest uncontrolled step of the loads P1 keeps (E11-06 measures P1's peaks)
+     in S2 (a warm CUV) VSYS is the stack plus Q2's diode, 10 to 11 V, at A-14's assumed 10.0 V floor: no droop is left to hold, so S2 still rests on
+       the charger's response (D2 for S2) and on the converters' real minimum inputs (E11-08)
+     it settles neither D1 (the steady mode) nor D3 (the inhibited mode): no capacitance answers what the converter regulates
+
+11. WHAT CHANGES FOR U-04'S CLASSIFICATION (INFERRED)
+   made independent of TI by the fallback: D2 for every admitted step in S4 within the bank's 1.117 ms (with D2's bench margin), and D5 (VSYS's
+     effective capacitance) by the direct can
+   still depending on TI: D1 (S4 at all), D3 (REQ-077's hold and R-a's S2), D4 (low consequence), D6 (the image's 0-V charging), D7 and D8 (R-b's
+     cases (iii) and (ii)); and on the entry's makers: D9 and D10
+   negative answers with a remedy inside arrangement (A): D4, D5, D6, D7, D8, D9, D10; with none: D1 and D3, whose negative answers return (B)
+   so U-04 STAYS AN ARCHITECTURE-LEVEL CHOICE: the fallback narrows the architecture's dependence on TI from four statements (D1, D2, D3, D5) to two
+     (D1, D3), but those two decide whether arrangement (A) can run on a source with no usable pack and hold a charge while carried, and no part,
+     rule or capacitance inside (A) answers them; one bench sample can show the mode on that silicon revision, not a production-wide behaviour
 
 END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c), apply_gen_sch_a_guard.py (R14, 3f),
 apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays); the first round's apply_gen_sch_e_uvlo.py is withdrawn; the
