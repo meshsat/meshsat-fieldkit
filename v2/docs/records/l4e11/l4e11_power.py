@@ -65,6 +65,7 @@ PINS = {
     "lapp": ("v2/vendor/d38999/cables/lapp-olflex-robust-210-product-information.pdf", "535cc7900e32bed34ea2dcb277708650bb90e06eb39f41d7dfb4ced4660ec2ba"),
     "alpha": ("v2/vendor/d38999/cables/alpha-25064-spec.pdf", "232d6661444a7e3a75819a61d57df4a83735353c4c8ea3ac204450a59e77d300"),
     "lm5176": ("v2/vendor/ti/lm5176-datasheet.pdf", "98191bec36d43771affa3e1540f6e1737347c19a1602747ffb4327509550a820"),
+    "bq25798": ("v2/vendor/power/bq25798.pdf", "631d541679512116b5cf7ade0516000e78bc95f060b8b958e726c1b6eb74c27f"),
     "srf1260": ("v2/vendor/power/bourns-srf1260-common-mode-choke.pdf", "93b2dc7565d07e727adb658843b52ec227a2c05f1ee21e117d7057d03ba1aea6"),
     "yageo": ("v2/vendor/passives/yageo-cc-series.pdf", "61a606825ab314ea318cfb5362848a62fdffb851efa9818d642e9a541c56a648"),
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
@@ -245,7 +246,7 @@ def compute():
     T = {k: text(k) for k in ("reqs", "rules", "testplan", "hwfw", "panel", "assembly", "gen_a", "gen_e", "gen_p", "net_a",
                               "net_e", "packprot", "primcfg", "chain", "l4e5", "budget", "red2", "ecss")}
     for k in ("bq25731", "sluuaq3a", "csd17570", "cell", "lm5069", "csd19532", "d38999", "vh", "xt60", "keystone", "lapp",
-              "alpha", "lm5176", "srf1260", "yageo", "fuse997", "mur104", "mur683"):
+              "alpha", "lm5176", "srf1260", "yageo", "fuse997", "mur104", "mur683", "bq25798"):
         read(k)
     L9 = git_text("l4e9")
     R["inputs"] = [(k, PINS[k][0], sha_file(os.path.join(TOP, PINS[k][0]))) for k in PINS]
@@ -314,6 +315,10 @@ def compute():
     B["inhibit_p"] = p
     p, m = find("bq25731", r"host terminates charge by setting CHRG_INHIBIT bit to 1b, or setting ChargeCurrent\(\) to zero", "9.4.1")
     B["term_p"] = p
+    p, m = find("bq25731", r"Auto Wakeup Enable When this bit is HIGH, if the battery is below VSYS_MIN , the device should automatically enable (\d+)-mA charging current for (\d+) mins\.(.*?)0b: Disable <default at POR>", "AUTO_WAKEUP_EN")
+    if len(m.group(3)) > 400:
+        refuse(3, "AUTO_WAKEUP_EN's default is not on its own row")
+    B["wake_p"], B["wake_ma"], B["wake_min"] = p, f(m, 1), f(m, 2)
     R["B"] = B
     # the netlists' facts behind it
     ga = T["gen_a"]
@@ -492,7 +497,8 @@ def compute():
 
     # ------------------------------------------------------------------ 4. the comparison's own figures
     C = {}
-    C["batfet_w_per_mohm_18a"] = 18.0 ** 2 * 1e-3
+    C["pack_peak"] = f(need(ga, r'_intent\.rail\("VBAT", [\d.]+, [\d.]+, ([\d.]+), "R17"', "VBAT's declared peak"))
+    C["batfet_w_per_mohm_18a"] = C["pack_peak"] ** 2 * 1e-3
     C["idle_a"] = st["PS-IDLE-SPEC"][1] / 14.4
     C["batfet_w_per_mohm_idle"] = C["idle_a"] ** 2 * 1e-3
     C["pre_i_01c"] = P["pre_c"][0] * P["c_a"] * 3
@@ -501,6 +507,10 @@ def compute():
     C["pre_r_clamp"] = (B["cv4s"] - P["vsys_shut"][0]) / B["iclamp"]
     C["pre_w_clamp"] = (B["cv4s"] - P["vsys_shut"][0]) * B["iclamp"]
     C["pre_w_cuv_01c"] = (B["cv4s"] - P["vsys_cuv"][0]) ** 2 / C["pre_r_01c"]
+    C["nvdc_p"] = find("bq25798", r"It uses NVDC power path management, regulating the system not dropping below a configurable minimum system voltage\.", "BQ25798's NVDC")[0]
+    p_, m = find("bq25798", r"RMS discharge current \(continuously\)\s+(\d+)\s+A", "BQ25798's battery FET RMS", layout=True)
+    C["bq98_rms"], C["bq98_p"] = f(m), p_
+    C["bq98_pk"] = f(find("bq25798", r"Peak discharge current \(upto 1 sec\)\s+(\d+)\s+A", "BQ25798's battery FET peak", layout=True)[1])
     R["C"] = C
 
     # ------------------------------------------------------------------ 5. the owner-question test (U-04)
@@ -513,6 +523,11 @@ def compute():
     F["cap9_hot_w"] = F["f_hot_a"] * 9.0 * E["eta_fe"] * E["eta_u3"]
     F["cap9_cold_w"] = F["der"][0] * 9.0 * E["eta_fe"] * E["eta_u3"]
     F["cap9_interconnect_w"] = CONT_CLASS_A * 9.0 * E["eta_fe"] * E["eta_u3"]
+    m = need(fz, r"15A 15 15 (\d+) (\d+) (\d+) (\d+) (\d+) ([\d.]+)", "the 0997 15 A derating row")
+    F["der15_hot"] = f(m, 5)
+    F["cap9_15a_hot_w"] = F["der15_hot"] * 9.0 * E["eta_fe"] * E["eta_u3"]
+    F["over_hot"] = [(n, pl) for n, (lo, pl, hi) in st.items() if pl > F["cap9_hot_w"] and "cold" not in n and "warm-up" not in n]
+    F["cold_over"] = [(n, pl) for n, (lo, pl, hi) in st.items() if ("cold" in n or "warm-up" in n) and pl > F["cap9_cold_w"]]
     named_loads = [(rid, st_) for rid, ob, v, st_, _ in R["req_rows"] if ob != "OBJECTIVE" and st_]
     F["owner_question"] = bool(named_loads)
     R["F"] = F
@@ -793,6 +808,8 @@ def render(R):
     p("     VSYS under %s V for 2 ms in steady state: \"shut down and latched off\" until a host write (9.3.21.8, p.%d) (MAKER)" % (fmt(B["uvp_v"]), B["uvp_p"]))
     p("     \"Overall %s-uF effective capacitance on VSYS net is necessary\" (10.1, p.%d); CHRG_INHIBIT \"1b: Inhibit Charge\" (p.%d); the host ends a charge by CHRG_INHIBIT or ChargeCurrent 0 (9.4.1, p.%d) (MAKER)"
       % (fmt(B["csys_uf"]), B["csys_p"], B["inhibit_p"], B["term_p"]))
+    p("     AUTO_WAKEUP_EN, 0 at POR: with it set, a battery under VSYS_MIN gets %s mA for %s min with no further host write (p.%d) (MAKER); it needs a host write first, so it does not answer N3"
+      % (fmt(B["wake_ma"]), fmt(B["wake_min"]), B["wake_p"]))
     p("   board A and E as generated: the strap R26 %sk over R27 %sk, %s %% of VDDA, so U3 never sees \"battery removal\"; R17 between VBAT"
       % (fmt(R["strap"][0], 1), fmt(R["strap"][1], 1), fmt(R["strap"][2], 1)))
     p("     (VSYS, every load) and CELL_FUSED (the pack); CHG_INHIBIT pulls ILIM_HIZ low through Q6 (HIZ); SHORE_INHIBIT pulls the hot")
@@ -870,8 +887,11 @@ def render(R):
         p("       the knee's top would have to sit at %s V of VIN_RAW to keep the line's 9 V current at the plug (INFERRED)" % fmt(pl["knee_top"], 3))
     p("")
     p("4. U-04, THE COMPARISON'S OWN FIGURES")
-    p("   (B) a battery FET in the pack path carries the pack's peak: %s W per mOhm at 18 A, %s mW per mOhm at PS-IDLE-SPEC's %s A (INFERRED)"
-      % (fmt(C["batfet_w_per_mohm_18a"], 3), fmt(C["batfet_w_per_mohm_idle"] * 1000, 1), fmt(C["idle_a"], 2)))
+    p("   (B) a battery FET in the pack path carries the pack's peak: %s W per mOhm at %s A, %s mW per mOhm at PS-IDLE-SPEC's %s A (INFERRED)"
+      % (fmt(C["batfet_w_per_mohm_18a"], 3), fmt(C["pack_peak"]), fmt(C["batfet_w_per_mohm_idle"] * 1000, 1), fmt(C["idle_a"], 2)))
+    p("     the one NVDC charger held, TI's BQ25798, states NVDC regulation (p.%d) but its integrated battery FET carries %s A RMS and %s A for 1 s (p.%d),"
+      % (C["nvdc_p"], fmt(C["bq98_rms"]), fmt(C["bq98_pk"]), C["bq98_p"]))
+    p("     under the pack's %s A peak (the declared VBAT peak, NETLIST): (B) needs an external-FET part whose sheet is not held (MAKER, INFERRED)" % fmt(C["pack_peak"]))
     p("   (C) a pre-charge resistor on board P from VSYS at %s V into a pack at the Shutdown Voltage (%s V): for the cell maker's 0.1 C (%s A for 3P)"
       % (fmt(B["cv4s"], 1), fmt(P["vsys_shut"][0], 1), fmt(C["pre_i_01c"], 2)))
     p("     %s ohm and %s W, %s W at CUV; for the charger's own %s mA, %s ohm and %s W (INFERRED)"
@@ -883,8 +903,13 @@ def render(R):
       % (fmt(F["f_col"], 0), fmt(F["f_hot_a"], 1), fmt(F["air_hot"], 1), fmt(F["cap9_hot_w"], 1), fmt(F["der"][0], 1), fmt(F["cap9_cold_w"], 1)))
     p("     interconnect after D-06 at %s A: %s W; the entry's limit and H3's line are settings, not capabilities (MAKER, INFERRED)" % (fmt(CONT_CLASS_A, 0), fmt(F["cap9_interconnect_w"], 1)))
     p("   REQ-015 states no source current capability: every figure here takes the source as holding its voltage (named)")
-    p("   so NO owner question is forced: no approved requirement names a load REQ-015's 9 V must carry, and the fuse, the entry and the")
-    p("     interconnect do not cap the power under any state section 3 lists at its plan figure (INFERRED)")
+    p("   against section 3's states at their plan figure: in the hottest air F1's 80 C column caps a 9 V source under %s (MAKER, INFERRED);"
+      % (", ".join("%s %s W" % (n, fmt(pl, 1)) for n, pl in F["over_hot"]) or "none"))
+    p("     the cold states against its 0 C column: %s over; a 15 A MINI 58 V (its 80 C column %s A) would admit %s W, with D-06's band"
+      % (", ".join("%s %s W" % (n, fmt(pl, 1)) for n, pl in F["cold_over"]) or "none", fmt(F["der15_hot"], 0), fmt(F["cap9_15a_hot_w"], 1)))
+    p("     re-rated to it: a part choice, not the source's capability (MAKER, INFERRED)")
+    p("   so NO owner question is forced: no approved requirement names a load REQ-015's 9 V must carry, and where a part caps a named")
+    p("     state at 9 V another part lifts it, so no arrangement-independent cap exists (INFERRED)")
     p("")
     p("6. D-06, F1'S WEAK-SOURCE BAND AND THE INTERCONNECT")
     p("   0997010.WXN time-current (MAKER, held sheet p.3): " + "; ".join("%s %%: %s to %s s" % (fmt(pct * 100, 0), fmt(tmin, 2), "-" if tmax is None else fmt(tmax, 2)) for pct, tmin, tmax in D["tc"]))
@@ -958,8 +983,8 @@ def render(R):
     S = T9["sel"]
     p("   SELECTED (SESSION): C5 %s (LCSC %s) with C5B %s (LCSC %s), both 1206 C0G 50 V, on HS_TIMER: %s nF; fault time %s ms nominal, %s to %s ms stacked"
       % (S["parts"][0], T9["sel_codes"][0], S["parts"][1], T9["sel_codes"][1], fmt(S["c"] * 1e9, 0), fmt(T9["sel_nom_ms"] * 1e3, 3), fmt(S["tmin"] * 1e3, 3), fmt(S["tmax"] * 1e3, 3)))
-    p("     start: %s ms against %s ms, %s ms in hand (MEETS, INFERRED); Figure 10: %s A against %s A at %s ms, %s %% past the 10 ms line (MEETS, CONDITIONAL)"
-      % (fmt(S["tmin"] * 1e3, 3), fmt(T9["need"] * 1e3, 3), fmt((S["tmin"] - T9["need"]) * 1e3, 3), fmt(S["soa"], 4), fmt(T9["pulse_a"], 3), fmt(S["tmax"] * 1e3, 3), fmt(T9["sel_extrap"] * 100, 1)))
+    p("     start: %s ms against %s ms, %s ms in hand, so the margin holds while the start stays under %s ms (MEETS, INFERRED); Figure 10: %s A against %s A at %s ms, %s %% past the 10 ms line (MEETS, CONDITIONAL)"
+      % (fmt(S["tmin"] * 1e3, 3), fmt(T9["need"] * 1e3, 3), fmt((S["tmin"] - T9["need"]) * 1e3, 3), fmt(S["tmin"] / 1.5 * 1e3, 3), fmt(S["soa"], 4), fmt(T9["pulse_a"], 3), fmt(S["tmax"] * 1e3, 3), fmt(T9["sel_extrap"] * 100, 1)))
     p("     sensitivities: a steeper law past 10 ms (m 0.5) gives %s A (MEETS); the damp-heat row stacked instead of endurance: %s to %s ms, %s A (MEETS) (INFERRED);"
       % (fmt(T9["sel_soa_m05"], 4), fmt(T9["damp"][0] * 1e3, 3), fmt(T9["damp"][1] * 1e3, 3), fmt(T9["damp_soa"], 4)))
     p("     TI's own basis (typical values, 1.5 x the typical start): %s ms against %s ms (MEETS, INFERRED); the DC line derated, %s A, is under the pulse:"

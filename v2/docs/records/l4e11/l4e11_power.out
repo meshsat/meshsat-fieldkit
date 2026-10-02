@@ -34,6 +34,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    lapp      535cc7900e32bed3  v2/vendor/d38999/cables/lapp-olflex-robust-210-product-information.pdf
    alpha     232d6661444a7e3a  v2/vendor/d38999/cables/alpha-25064-spec.pdf
    lm5176    98191bec36d43771  v2/vendor/ti/lm5176-datasheet.pdf
+   bq25798   631d541679512116  v2/vendor/power/bq25798.pdf
    srf1260   93b2dc7565d07e72  v2/vendor/power/bourns-srf1260-common-mode-choke.pdf
    yageo     61a606825ab314ea  v2/vendor/passives/yageo-cc-series.pdf
    fuse997   437b1fd2c8cb3ef1  v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf
@@ -85,6 +86,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      HIZ: "converter shuts off" with ILIM_HIZ under 0.4 V (9.3.8, p.26) (MAKER)
      VSYS under 1.6 V for 2 ms in steady state: "shut down and latched off" until a host write (9.3.21.8, p.34) (MAKER)
      "Overall 50-uF effective capacitance on VSYS net is necessary" (10.1, p.83); CHRG_INHIBIT "1b: Inhibit Charge" (p.44); the host ends a charge by CHRG_INHIBIT or ChargeCurrent 0 (9.4.1, p.35) (MAKER)
+     AUTO_WAKEUP_EN, 0 at POR: with it set, a battery under VSYS_MIN gets 128 mA for 30 min with no further host write (p.61) (MAKER); it needs a host write first, so it does not answer N3
    board A and E as generated: the strap R26 13.3k over R27 40.2k, 75.1 % of VDDA, so U3 never sees "battery removal"; R17 between VBAT
      (VSYS, every load) and CELL_FUSED (the pack); CHG_INHIBIT pulls ILIM_HIZ low through Q6 (HIZ); SHORE_INHIBIT pulls the hot
      swap's UVLO low through Q8 (the input off); board P's gauge PCHG pin not connected; R7 1 k from PACK_P to its VCC (NETLIST)
@@ -149,6 +151,8 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
 
 4. U-04, THE COMPARISON'S OWN FIGURES
    (B) a battery FET in the pack path carries the pack's peak: 0.324 W per mOhm at 18 A, 8.8 mW per mOhm at PS-IDLE-SPEC's 2.97 A (INFERRED)
+     the one NVDC charger held, TI's BQ25798, states NVDC regulation (p.1) but its integrated battery FET carries 6 A RMS and 10 A for 1 s (p.7),
+     under the pack's 18 A peak (the declared VBAT peak, NETLIST): (B) needs an external-FET part whose sheet is not held (MAKER, INFERRED)
    (C) a pre-charge resistor on board P from VSYS at 16.8 V into a pack at the Shutdown Voltage (8 V): for the cell maker's 0.1 C (1.02 A for 3P)
      8.63 ohm and 8.98 W, 5.36 W at CUV; for the charger's own 384 mA, 22.9 ohm and 3.38 W (INFERRED)
 
@@ -157,8 +161,11 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    the kit's own caps at 9 V: F1 0997010 at its 80 C column 7.3 A (the hottest air 62.1 C): 59.5 W at VBAT; at its 0 C column 9.8 A: 79.8 W; the
      interconnect after D-06 at 20 A: 162.9 W; the entry's limit and H3's line are settings, not capabilities (MAKER, INFERRED)
    REQ-015 states no source current capability: every figure here takes the source as holding its voltage (named)
-   so NO owner question is forced: no approved requirement names a load REQ-015's 9 V must carry, and the fuse, the entry and the
-     interconnect do not cap the power under any state section 3 lists at its plan figure (INFERRED)
+   against section 3's states at their plan figure: in the hottest air F1's 80 C column caps a 9 V source under PS-TYP 63 W (MAKER, INFERRED);
+     the cold states against its 0 C column: none over; a 15 A MINI 58 V (its 80 C column 11 A) would admit 89.6 W, with D-06's band
+     re-rated to it: a part choice, not the source's capability (MAKER, INFERRED)
+   so NO owner question is forced: no approved requirement names a load REQ-015's 9 V must carry, and where a part caps a named
+     state at 9 V another part lifts it, so no arrangement-independent cap exists (INFERRED)
 
 6. D-06, F1'S WEAK-SOURCE BAND AND THE INTERCONNECT
    0997010.WXN time-current (MAKER, held sheet p.3): 110 %: 360000 to - s; 135 %: 0.75 to 600 s; 200 %: 0.15 to 5 s; 350 %: 0.08 to 0.5 s; 600 %: 0.03 to 0.1 s
@@ -221,7 +228,7 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      two GRM3195C1H683JA05                      | 136 | 124.95 to 147.94 | 3.915 to 12.067 | NOT MET | 0.7718 A against 0.675 A: MEETS (INFERRED)
      GRM3195C1H104GA05 with GRM3195C1H683JA05   | 168 | 157.25 to 179.64 | 4.927 to 14.653 | MEETS | 0.71 A against 0.675 A: MEETS (INFERRED)
    SELECTED (SESSION): C5 GRM3195C1H104GA05 (LCSC C907944) with C5B GRM3195C1H683JA05 (LCSC C3847777), both 1206 C0G 50 V, on HS_TIMER: 168 nF; fault time 7.906 ms nominal, 4.927 to 14.653 ms stacked
-     start: 4.927 ms against 4.593 ms, 0.334 ms in hand (MEETS, INFERRED); Figure 10: 0.71 A against 0.675 A at 14.653 ms, 46.5 % past the 10 ms line (MEETS, CONDITIONAL)
+     start: 4.927 ms against 4.593 ms, 0.334 ms in hand, so the margin holds while the start stays under 3.285 ms (MEETS, INFERRED); Figure 10: 0.71 A against 0.675 A at 14.653 ms, 46.5 % past the 10 ms line (MEETS, CONDITIONAL)
      sensitivities: a steeper law past 10 ms (m 0.5) gives 0.6912 A (MEETS); the damp-heat row stacked instead of endurance: 4.699 to 15.293 ms, 0.6971 A (MEETS) (INFERRED);
      TI's own basis (typical values, 1.5 x the typical start): 7.906 ms against 2.382 ms (MEETS, INFERRED); the DC line derated, 0.2706 A, is under the pulse:
      the pulse is bounded by the fault time, not by a steady rating (INFERRED); F1 during the longest start: 0.554 A2s against 93 A2s (MEETS)
