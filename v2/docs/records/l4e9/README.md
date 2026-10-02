@@ -21,7 +21,9 @@ records' downstream items into the register (137 items), and lists the owner's i
 defect is open. Update round 3 (the same day) takes the accepted L4-E13 (merged into this line from `fnd/l4e13` at `fae419d1`):
 U-03 becomes a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC) and moves into the register (R-35, R-52, R-148, R-149; 139
 items), the panel unit's purchase and measurement and SunPower's and Solbian's drafts join the owner's items, LH-02 is amended
-(no new handover row), and the gate stays NOT CLOSED on U-01, U-02 and U-04 (output section 13).
+(no new handover row), and the gate stays NOT CLOSED on U-01, U-02 and U-04 (output section 13). Update round 4 merges L4-E13's update after set 25
+(check 4 at `33b6b7be`): its files re-pinned, A-3(a) and A-4 cited on L4-E7R's regulation and backstop, and the nominal hold's day
+carried as 336.6 Wh under the accepted stage (350.0 Wh stays the replay's first-round basis).
 
 | File | What it is |
 |---|---|
