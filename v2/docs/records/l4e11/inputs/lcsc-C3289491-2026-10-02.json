@@ -1,0 +1,34 @@
+{
+ "what": "LCSC public product-detail answer for C3289491 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C3289491), no login; kept fields only, with the price ladder in USD",
+ "read_utc": "2026-10-02T16:09Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), the fix round for the consolidation review",
+ "role": "the fix round's option (Q-b): Vishay SQJ403EP-T1_GE3 (B2 of the consolidation review, compared, not selected)",
+ "code": "C3289491",
+ "brand": "VISHAY",
+ "model": "SQJ403EP-T1_GE3",
+ "package": "PowerPAK-SO-8",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/b725af5d7ded539c319ca48d1ff772ce.pdf?productCode=C3289491",
+ "stock": 47,
+ "price_usd": {
+  "1": 4.1348,
+  "10": 3.5497,
+  "30": 3.2006,
+  "100": 2.8483,
+  "500": 2.6844,
+  "1000": 2.6123
+ },
+ "params": {
+  "Operating Temperature": "-55℃~+175℃",
+  "Drain to Source Voltage": "30V",
+  "Output Capacitance(Coss)": "1nF",
+  "Current - Continuous Drain(Id)": "30A",
+  "Ciss-Input Capacitance": "4.5nF",
+  "Pd - Power Dissipation": "68W",
+  "Reverse Transfer Capacitance (Crss)": "770pF",
+  "RDS(on)": "8.5mΩ@10V",
+  "Number": "1 P-Channel",
+  "Gate Charge(Qg)": "109nC@10V",
+  "Gate Threshold Voltage (Vgs(th))": "2.5V",
+  "Type": "P-Channel"
+ }
+}

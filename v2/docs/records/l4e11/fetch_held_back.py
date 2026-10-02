@@ -9,8 +9,9 @@ heat rows. The fix round (2 October 2026) adds three TI sheets: the TPS4811-Q1 (
 CSD19536KTT (SLPS540C, its pass FET and Figure 4-10) and the TPS1663 (SLVSET9G, the rejected eFuse), held back by TI's
 IMPORTANT NOTICE as stream s117 held its FET sheets. The dependency round (2 October 2026) adds Diodes Incorporated's B520C to
 B560C sheet (DS13012 Rev. 18-2, the hold-up bank's diode). The consolidation round (2 October 2026) adds TI's BQ25730 (SLUSE65A,
-February 2021, revised January 2024, 111 pages) and AOS's AONS21357 (Rev 2.1, November 2023, the battery FET Q39). All nine
-carry their makers' copyright and no grant to redistribute, so they
+February 2021, revised January 2024, 111 pages) and AOS's AONS21357 (Rev 2.1, November 2023, the first battery FET). The fix round (2 October 2026)
+adds Vishay's SQJ403EP (document 67109, S15-2089 Rev. A, 31 August 2015) and Nexperia's BUK6Y10-30P (product data sheet of 17
+April 2020, the selected battery FETs Q39 and Q40). All eleven carry their makers' copyright and no grant to redistribute, so they
 are held back from the public tree under the owner's rule of 27 September 2026: this script downloads each into an ignored
 held/ folder, checks the sha256 l4e11_power.py pins, and refuses to keep a file that differs (Murata generates its sheets on
 request, and TI serves the current revision, so a later fetch may differ: the refusal says so). It is never run by a test.
@@ -46,6 +47,10 @@ DOCS = [
      "e41ef289ce1de377d7b92bce609177d924e149099d9c4424d88f6b21ad57153f"),
     ("v2/vendor/power/held/aos-aons21357-rev2.1-2023-11.pdf", "https://www.aosmd.com/res/datasheets/AONS21357.pdf",
      "1a6460e7c63596ca7d48fe1660ee3a3ee48c33d6e345ef41d7c94c21cd7642d9"),
+    ("v2/vendor/power/held/vishay-sqj403ep-67109-reva.pdf", "https://www.vishay.com/docs/67109/sqj403ep.pdf",
+     "6005efe139fc94e3e855c2beeef8fcaaa5dc71d3c4a6e82f8e8ce82c5506961c"),
+    ("v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf", "https://assets.nexperia.com/documents/data-sheet/BUK6Y10-30P.pdf",
+     "ba928dfe6a85134423562bd378bdfafafb26d857ba08b50560ce5aacb956da40"),
 ]
 
 

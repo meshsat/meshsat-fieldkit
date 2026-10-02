@@ -55,6 +55,12 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    aons21357 1a6460e7c63596ca  v2/vendor/power/held/aos-aons21357-rev2.1-2023-11.pdf
    bq4050    2664e33fe6d6ebed  v2/vendor/battery/ti-bq4050.pdf
    bq25792   cc451e71123d24d4  v2/vendor/power/bq25792.pdf
+   sqj403    6005efe139fc94e3  v2/vendor/power/held/vishay-sqj403ep-67109-reva.pdf
+   buk6y10   ba928dfe6a851344  v2/vendor/nexperia/held/nexperia-buk6y10-30p-2020-04-17.pdf
+   ap63200   ef99daa3789d835b  v2/vendor/diodes/diodes-ap63200-series-buck.pdf
+   smcj      6e610db955ed8763  v2/vendor/power/littelfuse-smcj-series-tvs.pdf
+   dock_py   acd932cbb9e31f8f  v2/docs/records/w3de/dock_contacts.py
+   arch      16b0d3c01e81930f  v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    l4e9      07d8fb6e828cb15b  3c09b3da:v2/docs/records/l4e9/l4e9_power_path.out (L4-E9's commit, read with git show)
    l4e9_hotswap ed22896891676446  3c09b3da:v2/docs/records/l4e9/apply_gen_sch_e_hotswap.py (L4-E9's commit, read with git show)
    filed     f0ff5212ae6220af  v2/docs/records/l4e11/inputs/lcsc-C907944-2026-10-02.json
@@ -83,6 +89,8 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    filed     a2da5153f0714dc9  v2/docs/records/l4e11/inputs/lcsc-C242139-price-2026-10-02.json
    filed     2ca0d0d19e1015df  v2/docs/records/l4e11/inputs/lcsc-C72264-price-2026-10-02.json
    filed     81823eda7e17de8d  v2/docs/records/l4e11/inputs/lcsc-C137025-price-2026-10-02.json
+   filed     3b8f2d2fceb02670  v2/docs/records/l4e11/inputs/lcsc-C3278350-2026-10-02.json
+   filed     dca792178a10c9e7  v2/docs/records/l4e11/inputs/lcsc-C3289491-2026-10-02.json
    this record's own figures: copper 0.01724 ohm mm2/m at 20 C and 0.00393 /K, 3.45 J/cm3K (ASSUMPTION, constants); AWG 14 2.081 mm2, AWG 12 3.309 mm2,
      AWG 18 0.823 mm2 (ASSUMPTION, constants); the cold end -20 C (REQ-024); the SESSION choices are named where they are used
 
@@ -453,12 +461,15 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
    E11-24 | IMPLEMENTATION | Layer 8 board A generator owner | the dependency round's fallback on VBAT (a register row, never applied by this record): one EEHZK1V181P direct (C242139) and a hold-up bank of 4 EEHZK1E471P (C242138) charged through R_CH 330 Ohm RC2512FK-07330RL (C137025) and discharging through D_H B540C-13-F (C72264); the regenerated netlist carries them; the bank's hold recomputed from the fitted parts reads at least 1.117 ms for the worst admitted step (48.39 W); withdrawn once E11-27 is applied (section 14: B1 carries the direct can, and the bank is not drawn)
    E11-25 | EVIDENCE | Layer 6 components | the clarification questions of clarification/TI-QUESTIONS.md (Q-TI-11 to Q-TI-14 and the addendum to Q-TI-3) sent by the owner and answered, each answer filed against its dependency row D1 to D10 and judged: a limit closes a row production-wide, a typical figure does not
    E11-26 | TEST | prototype bench | the bench methods of rows D1 to D10 run on one unit each, every reading filed as a sample with its uncertainty and conditions, never as a limit; D2's recovery at most 0.2 ms against the bank's 1 ms assumption gives the engineering margin the record names
-   E11-27 | IMPLEMENTATION | Layer 8 board A generator owner | apply_gen_sch_a_charger.py applied (section 14): U3 BQ25730RSNR (C5219071) with pin 21 on CH_BATDRV; Q39 AONS21357 (C404364), source on VBAT, drain on CH_BATQ; R17 and R149 on CH_BATQ; C236 EEHZK1V181P (C242139) on VBAT; CH_BATQ declared a segment of the pack path; Q39's land checked against AOS's DFN 5x6 drawing and seated by R17; the regenerated netlist reads each
-   E11-28 | FIRMWARE | firmware owner | the BQ25730's register rules (section 14): EN_OOA 0 at boot; ChargeCurrent written for any charge (0 A at POR and after the watchdog's 175 s), the watchdog serviced or WDTMR_ADJ 00; VSYS_MIN, EN_LDO, EN_PORT_CTRL, BATFET_ENZ and BATFETOFF_HIZ never written from their power-on values; the device ID D5h checked; R-a's bit following the hold flag in every state (S4's exception withdrawn); R-b' under VSYS_MIN: 0x0080 only, and no charge under 7.8 V on SRN
-   E11-29 | LAYOUT | Layer 9 pre-layout analysis | Q39's installed thermal path: RthJA at most 20.54 C/W at the 62.1 C inside air (OCD1's 20 A held, RDS(on) at its 125 C maximum), from the layout's copper with AOS's RthJC; or the gauge's OCD1 set to the current the installed path carries (board P's image), the 18 A peak kept under 0.916 s after 10 A held
-   E11-30 | EVIDENCE | Layer 6 components | the docking inrush through Q39's body diode: AOS's pulse capability for 242.9 A over 17.7 us filed, or a bench pulse on samples with its margin named; if neither, board P's discharge FET turned on through a series gate resistor sized to hold the inrush under 144 A, with Q2's SOA at that slew read on its sheet
-   E11-31 | TEST | prototype bench | the three modes on the BQ25730 build (EN_OOA 0): pack absent, VSYS 12.054 to 12.546 V; CHRG_INHIBIT 1 with the pack present, VSYS at the pack plus 150 mV within 2 percent and no battery current; the start into VSYS's capacitance without a VSYS_UVP latch; VSYS's step response in S2 and S4 for each declared step against the converters' floor (D2, 2.054 V of margin), the outlets held by R-c where a step uses more
-   E11-32 | EVIDENCE | Layer 6 components | the BQ25730RSNR's supply for the build quantity from an authorised source, filed (LCSC stock 0 on 2 October 2026), and Q39's (LCSC stock 3875)
+   E11-27 | IMPLEMENTATION | Layer 8 board A generator owner | apply_gen_sch_a_charger.py applied (sections 14 and 15): U3 BQ25730RSNR (C5219071) with pin 21 on CH_BATDRV; Q39 and Q40, two Nexperia BUK6Y10-30PX (C3278350) in parallel, sources on VBAT, drains on CH_BATQ, gates on CH_BATDRV; R17 and R149 on CH_BATQ; C236 EEHZK1V181P (C242139) on VBAT; J_DOCK pin 1 on VBAT for board E's VSYS_E; CH_BATQ declared a segment of the pack path; the LFPAK56 lands checked against Nexperia's SOT669 drawing, seated by R17 with matched paths; the regenerated netlist reads each
+   E11-28 | FIRMWARE | firmware owner | the BQ25730's register rules (section 14): EN_OOA 0 at boot; ChargeCurrent written for any charge (0 A at POR and after the watchdog's 175 s), the watchdog serviced or WDTMR_ADJ 00; VSYS_MIN, EN_LDO, EN_PORT_CTRL, BATFET_ENZ and BATFETOFF_HIZ never written from their power-on values; the device ID D5h checked; R-a's bit following the hold flag in every state (S4's exception withdrawn); R-b' under VSYS_MIN: 0x0080 only, and no charge under 5.7 V on SRN (section 15c)
+   E11-29 | LAYOUT | Layer 9 pre-layout analysis | the installed thermal path of each of Q39 and Q40: junction to air at most 34.42 C/W at the +70 C mixed air (set by OCD2 24 A for 1 s after 20 A held, RDS(on) bounded at BATDRV's 8.5 V and 150 C, section 15c), from the layout's copper with Nexperia's Rth(j-mb); the service's 18 A for 60 s and 10 A continuous kept, no protection lowered; read on the bench as each FET's case rise at 10 A
+   E11-30 | EVIDENCE | Layer 6 components | the docking inrush through the pair's body diodes (242.9 A peak, time constant 33.8 us): at 25 C it sits under one FET's printed ISM rectangle; from the +70 C air the share one FET takes at most 0.848 (ISM derated linearly, A11-22): the split measured on the pair at the docking waveform, or Nexperia's hot ISM filed, or the two diode paths matched by layout and read
+   E11-31 | TEST | prototype bench | the three modes on the BQ25730 build (EN_OOA 0), piecewise (section 15d): pack absent, VSYS at least 12.054 V; CHRG_INHIBIT 1 with SRN over 12.546 V, VSRN plus 150 mV within 2 percent, under 12.054 V at least 12.054 V, between at least 11.96 V; the held pack current at most 1 mA with board E on VSYS_E; the start from cold at VBUS20 19.15 and 20.96 V, VSYS's maximum capacitance and the always-on loads, at -20, 25 and 62.1 C, with Fault VSYS_UVP clear, the hiccup and latch on a shorted VSYS and the re-plug; VSYS before EN_OOA's write recorded; VSYS's step response in S2 and S4 for each declared step against the converters' floor (D2, 2.054 V of margin), the outlets held by R-c where a step uses more
+   E11-32 | EVIDENCE | Layer 6 components | the BQ25730RSNR's supply for the build quantity from an authorised source, filed (LCSC stock 0 on 2 October 2026), and the two battery FETs' (BUK6Y10-30PX, LCSC stock 67)
+   E11-33 | IMPLEMENTATION | Layer 8 board E generator owner | apply_gen_sch_e_aux.py applied with E11-27 (section 15a): J_BLK pin 1 on VSYS_E; U12's VIN and EN, C31, J_FAN1 and J_FAN2 pin 1 and D7 and D8 on VSYS_E; VSYS_E declared (source J_BLK, 1 A: U12 0.8, the fans 0.1 each, always on); CELL_F's loads the pack path alone; E6_SW, E6_BST and the fans' switched returns re-declared to VSYS's 17.375 V; the regenerated netlist and check_contracts read the dock's pin 1 as VBAT and VSYS_E
+   E11-34 | INTERFACE | Layer 4 coordinator | apply_pcb_interfaces_dock.py applied (IF-AE-DOCK: pin 1 VBAT and VSYS_E, the alias, BAT-F06's charge_share replaced by the VSYS feed, the ground return with seven 813 contacts) and section 15e's texts for L4-E9's record: the IF rows of VBAT and the dock, the source-change rows, the two sentences that say no battery FET and the diagram's system-node label (9.688 to 17.375 V)
+   E11-35 | EVIDENCE | Layer 6 components | the mixer fans' maximum supply voltage from their maker at least 17.375 V (VSYS_E's top; CELL_F reached 16.884 V), or a fan of that rating named
 
 9. THE DEPENDENCY ROUND: EACH MISSING SPECIFICATION, THE CLAIM IT DECIDES, WHO CAN SETTLE IT (2 October 2026)
    the held answer on the POR value: TI's expert on E2E thread 1316778: "The POR value is indeed 256mA" (the register description's 0 A is in error) (MAKER, forum)
@@ -644,8 +655,8 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
        (the floor decides every claim); where a figure needs it, 12.546 V is taken (+2 %, ASSUMPTION) (MAKER)
        startup: the same power-up from VBUS (p.27); VSYS_UVP clamps the input to 0.5 A while VSYS is under 2.4 V and, after 2 ms, shuts the
        converter for 500 ms and retries for 10 ms, latching after 7 failures in 90 s (p.38) (MAKER); VSYS's capacitance at most 489 uF (the VBAT net's
-       248.2 uF of ceramics plus 10 %, and the direct can at +20 %) reaches 2.4 V in 2.347 ms even at 0.5 A delivered: at most one retry, so the start is
-       bounded at 502.3 ms and never latches (INFERRED; the BQ25731 allowed 3 min)
+       248.2 uF of ceramics plus 10 %, and the direct can at +20 %); WITHDRAWN by the fix round: the 0.5 A is the input clamp, not a delivered
+       current, so no start time follows from it; the start is bounded in 15b (INFERRED)
      (3) battery present, charging inhibited: CHRG_INHIBIT 1 inhibits the charge (p.48); VSYSMAX_ACC with charge disabled: VSRN + 150 mV within
        +-2 % (p.9), the BATFET off, so no battery current unless the load exceeds the source (supplement, p.5); with the pack at its CUV stack VSYS
        is at least 12.054 V: BOUNDED (MAKER, INFERRED); startup as (1), the bit at 0 by POR, written from the hold flag (section 14)
@@ -662,7 +673,8 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      the inductor L2: with the pack at CUV supplementing at the gauge's OCD1 20 A, VSYS is 9.786 V (Q39's drop), so S-117's 11.8 A at 10 V becomes 12.057 A
        and its worst peak 14.41 A against Isat 25.4 A (S-117: 14.1 A): re-derived, 2.19 % up (INFERRED)
      L4-E8's bank, its ballasts, R11 and R12: on VBUS20, ahead of R16; the charger's input current and switching are the same rows: unchanged (INFERRED)
-     the battery FET Q39 (SESSION): AOS AONS21357, 30 V, VGS +-25 V, RDS(on) at -10 V at most 7.8 mOhm at 25 C and 10.7 mOhm at 125 C, Ciss 2.83 nF
+     the battery FET Q39 as first selected (SUPERSEDED by 15c: its -10 V rows do not bound BATDRV's 8.5 V drive): AOS AONS21357, 30 V,
+       VGS +-25 V, RDS(on) at -10 V at most 7.8 mOhm at 25 C and 10.7 mOhm at 125 C, Ciss 2.83 nF
        typical, IDM 144 A, IS 36 A, RthJA 25 C/W at 10 s and 55 C/W steady on a 1 in2 2 oz board (Rev 2.1, pp.1 and 2) (MAKER); LCSC C404364, stock 3875 (CATALOGUE)
        TI's selection (p.92): P-channel, 20 V or more for 1 to 4 cells, Ciss under 5 nF: 2.83 nF typical, 56.6 % of it (no maximum printed); VDS at
        SYSOVP 19.5 V is 65 % of 30 V; BATDRV's 11.5 V at most is 46 % of VGS's rating (MAKER, INFERRED)
@@ -727,7 +739,8 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      (EN_OOA 0, ChargeCurrent with the watchdog); the BATFET's registers stay at POR (SESSION, INFERRED)
 
 14. THE SELECTION, THE DRAFT AND U-04'S CLASS
-   SELECTED (SESSION): (B1), TI's BQ25730 in U3's land with Q39. Why: it is the only option whose maker prints a bound on VSYS in all three modes
+   SELECTED (SESSION): (B1), TI's BQ25730 in U3's land with Q39 (the fix round, 15c: Q39 and Q40, two BUK6Y10-30P; 15a: board E on VSYS).
+     Why: it is the only option whose maker prints a bound on VSYS in all three modes
      (12c), removing D1, D3 and D4 and bounding D7 inside 0 to 85 C, where (A) leaves D1 and D3 to TI and holds D2 with compensating parts on an
      assumed 1 ms; every setting L4-E4 to L4-E8 drafted rests on rows the two sheets print alike (12b); it costs less and removes the bank; its
      costs are named and bounded: Q39's thermal bar (E11-29), the docking pulse (E11-30), 0.221 % of the pack's output at PS-IDLE-SPEC, and
@@ -744,7 +757,112 @@ CATALOGUE, NETLIST, REQUIREMENT, RECORD, INFERRED, CONDITIONAL, ASSUMPTION, SESS
      architecture (R-c's step rule; OCD1 set to the installed path; a slower DSG turn-on on board P). On the drawn board (A) it stays the
      architecture-level choice of section 11 (INFERRED)
 
+15. THE FIX ROUND FOR THE CONSOLIDATION REVIEW (cx36, read NOT YET on set 27's 8fbb68b6: its B1, B2 and the charger minors)
+   15a. B1: BOARD E'S AUXILIARY DOMAIN ON A SOURCE-CAPABLE FEED
+     as drawn (NETLIST): U12 (the AP63205, its VIN and EN), C31 and both mixer fans (J_FAN1, J_FAN2, D7, D8) sit on CELL_F, the pack node
+       before board A's R17 and the battery FET; CELL_F declares them at 1 A (U12 0.8, fans 0.1 and 0.1); the counterexample holds: with
+       the charge inhibited the battery FET is off (p.38) and they still drain the pack, and with the pack absent nothing feeds them (NETLIST, MAKER)
+     the feed (SESSION): from VSYS alone, over the dock: board A's J_DOCK pin 1 from GND to VBAT (VSYS), board E's J_BLK pin 1 to a new net
+       VSYS_E, and U12's VIN and EN, C31, the fans' supply pins and D7 and D8 on VSYS_E; CELL_F keeps the pack path to board A, D3, C1 and
+       the pack monitor (R42 and R43). Why VSYS and no OR: VSYS exists whenever the pack or a source does (the battery FET on with the
+       battery alone, p.27, and its body diode under any fault of the drive), and a diode or ideal-diode OR with CELL_F would take the pack
+       whenever VSYS sits under it, which the +-2 % row allows in the held state (INFERRED)
+     the contact: one 813 on pin 1, 1 A declared, 28.6 % of its 3.5 A, 4.9 K by w3de's assumed I2 rise; the seven 813 ground contacts left carry,
+       at the 32.1 A coincidence with every Mill-Max pin at 20 mOhm (w3de's model, pinned):
+       8 x 813 ground: 2.092 A each, 59.8 % of 3.5 A, 72.4 C at the 51 C air and 86.4 C at the margin's 65 C (INFERRED, w3de's ASSUMPTIONS)
+       8 x 813 ground, one open: 2.238 A each, 63.9 % of 3.5 A, 75.5 C at the 51 C air and 89.5 C at the margin's 65 C (INFERRED, w3de's ASSUMPTIONS)
+       7 x 813 ground: 2.238 A each, 63.9 % of 3.5 A, 75.5 C at the 51 C air and 89.5 C at the margin's 65 C (INFERRED, w3de's ASSUMPTIONS)
+       7 x 813 ground, one open: 2.406 A each, 68.7 % of 3.5 A, 79.3 C at the 51 C air and 93.3 C at the margin's 65 C (INFERRED, w3de's ASSUMPTIONS)
+       so taking one ground contact moves W3DE-DOCK-R1's residual by one contact's step and keeps the 51 C envelope under 85 C with one open;
+       a second supply contact would leave six, 84.1 C with one open at 51 C: one contact is taken (SESSION); losing it unpowers board E's
+       controller, which board A reads on HOT-R1 as the detector lost (IF-AE-DOCK hot_r1), a detected state (INFERRED)
+     VSYS_E's range: the supplement floor 9.688 V to 17.375 V (15d); the AP63205 takes 3.8 to 32 V (Diodes DS41326 p.1); the fans, rated as 12 V class
+       on CELL_F's 16.884 V, now see up to 17.375 V: their maximum supply voltage is owed (E11-35) (MAKER, INFERRED)
+     the held state (the charge inhibited, an adequate source, the pack present): the battery FET off with no charging or supplement current
+       (p.38); board E on VSYS_E from the source; what the pack still feeds, by element (MAKER, NETLIST, INFERRED):
+       the pack monitor R42 + R43 (122 kOhm at -1 %): 0.1398 mA at 16.884 V, intended (the controller's own pack reading)
+       D3, SMCJ18A: IR at most 1 uA at 18 V and 25 C (Littelfuse SMC series, held); its hot leakage is not printed
+       the battery FETs' body diodes: VSYSMAX_ACC's -2 % lets VSYS sit up to 0.191 V under the pack at 16.884 V, a forward bias at which the sheets
+       print no current (VSD only at 80 A): not bounded on held evidence; and the charger's SRN pin, whose leakage row prints a mismatch only
+     so no kit load is fed from the pack while the source carries it; the bounded drains total 0.1408 mA, and the bench reads the held pack
+       current at most 1 mA (E11-31's acceptance; board E's aux drew about 0.5 to 1.5 W from the pack before) (SESSION, CONDITIONAL)
+     the source-only sequence (the pack absent or both its FETs open): the source and the entry (3c); the front end to VBUS20; U3's POR (p.27),
+       ChargeCurrent 0 A; the converter up; VSYS through VSYS_UVP's start (15b) to VSYS_MIN; board A's always-on and board E's U12 on VSYS_E;
+       E's controller up and driving HOT-R1; firmware: EN_OOA 0, IIN_HOST 4.70 A, CHRG_INHIBIT from the hold flag (INFERRED, MAKER)
+     the held sequence: the flag set writes CHRG_INHIBIT 1; the battery FET turns off as the charge stops (p.38); VSYS moves to VSRN + 150 mV;
+       nothing on either board moves; the flag cleared writes 0 and ChargeCurrent by R-b' (INFERRED)
+   15b. THE START, BOUNDED WHERE THE HELD SHEETS BOUND IT (the 502.3 ms of 12c withdrawn: 0.5 A is an input ceiling, not a delivered current)
+     the input limits (MAKER, p.38): under 2.4 V of VSYS (VSYS_UVLO; rising 2.3/2.5/2.65 V, p.13) the input is clamped to 0.5 A, at most 10.48 W from VBUS20's
+       20.96 V top; the sheet prints no minimum delivered current below that voltage (MAKER)
+     the loads below 2.65 V: the converters on VSYS held off by their enables or their UVLOs (the LM5176 stages by logic, U12 on board E under
+       its 3.8 V start, the heater buck by its divider); the resistors on VBAT (R2 100 k, R92 143 k, R96 143 k): at most 0.0636 mA at 2.65 V; the ICs' currents under UVLO are not
+       all held (NETLIST, INFERRED); the energy to bring VSYS's 489 uF to 2.65 V: 1.717 mJ (INFERRED)
+     the retries (MAKER): each failed start shuts the converter for 500 ms and retries for 10 ms; the 7th failure inside 90 s latches it, at
+       most 3.062 s after the first window (INFERRED); with no pack only a POR clears it (VBUS re-plugged: "5 ms after either VBUS or VBAT becomes
+       valid, the charger resets all the registers", p.27), with a pack the host does (it runs on the pack through the battery FET) (MAKER)
+     so on held evidence the start ends in VSYS_MIN or in a latch within 3.062 s, never undefined; whether the first window succeeds is not
+       bounded (no minimum delivered current): BENCH E11-31, acceptance: from cold, at VBUS20 19.15 and 20.96 V, with VSYS's maximum capacitance and the
+       declared always-on loads (board E on VSYS_E), at -20, 25 and 62.1 C, VSYS reaches 12.054 V with Fault VSYS_UVP clear; the hiccup's 500/10 ms and
+       the latch shown on a shorted VSYS and cleared by a re-plug (SESSION)
+   15c. B2: THE BATTERY FET, THREE OPTIONS ON ONE BASIS (the drive BATDRV gives at its least, 8.5 V, p.17; RDS(on) from the makers' printed
+     maxima only, bounded by fet_bound: the gate chord between -4.5 and -10 V, the temperature chord between the printed -10 V rows) (MAKER, INFERRED)
+     the inside air: the consolidation's +70 C mixed-air line for the parts that must work in the heat stage (L4-POWER-ARCHITECTURE K9, E3-O
+       at +55 C ambient; K3 at +40 C), reconciled with L4-E9's 62.1 C, which it covers; the board's transient shape from AOS Figure 14 over its
+       steady 55 C/W for every option: z(244 us) 0.00608, z(20 ms) 0.0525, z(1 s) 0.2266, z(60 s) 0.7766 (ASSUMPTION A11-21 for the other packages) (MAKER, read)
+     the events, each from a hot state, per FET (the even split bounds each FET's power for any split of the RDS(on) spread): 10 A held; 18 A
+       for 60 s after 10 A held (PWR-F12's service); 20 A held, under the gauge's OCD1, which never trips below it; from it OCD2's 24 A for 1 s,
+       the AFE's AOLD 30 A for 20 ms and the image's ASCD 55.6 A for 244 us; the bar is the installed junction-to-air resistance per FET at
+       which every event keeps TJ at the limit or under (INFERRED)
+     (Q-a) AOS AONS21357, one (MAKER, INFERRED):
+       printed maxima: 7.8 mOhm at -10 V and 25 C, 10.7 mOhm at -10 V and 125 C, 12.3 mOhm at -4.5 V and 25 C; the bound at 8.5 V and the junction
+         limit 125 C (the sheet's last printed temperature or 25 K under a 175 C rating): gate factor 1.1573, 12.384 mOhm per FET
+       Ciss 2.83 nF (typical) against TI's 5 nF: MEETS; VGS +-25 V against BATDRV's 11.5 V; VDS 30 V against SYSOVP's 19.5 V
+       the bar at 70 C air: 10.1 C/W per FET, set by OCD2 24 A for 1 s after 20 A held
+       the bar at 62.1 C air: 11.55 C/W per FET, set by OCD2 24 A for 1 s after 20 A held
+       the maker's reference board: 55 C/W, over the bar; the docking pulse, 242.9 A peak: 144 A IDM only; no body-diode pulse rating (MAKER, INFERRED)
+     (Q-b) Vishay SQJ403EP, one (MAKER, INFERRED):
+       printed maxima: 8.5 mOhm at -10 V and 25 C, 15 mOhm at -10 V and 175 C, 20 mOhm at -4.5 V and 25 C; the bound at 8.5 V and the junction
+         limit 150 C (the sheet's last printed temperature or 25 K under a 175 C rating): gate factor 1.369, 19.166 mOhm per FET
+       Ciss 4.5 nF (maximum) against TI's 5 nF: MEETS; VGS +-20 V against BATDRV's 11.5 V; VDS 30 V against SYSOVP's 19.5 V
+       the bar at 70 C air: 9.49 C/W per FET, set by OCD2 24 A for 1 s after 20 A held
+       the bar at 62.1 C air: 10.43 C/W per FET, set by OCD2 24 A for 1 s after 20 A held
+       the maker's reference board: 68 C/W, over the bar; the docking pulse, 242.9 A peak: 84 A ISM (300 us test pulse) (MAKER, INFERRED)
+     (Q-c) Nexperia BUK6Y10-30P, two in parallel (MAKER, INFERRED):
+       printed maxima: 10 mOhm at -10 V and 25 C, 16 mOhm at -10 V and 175 C, 25 mOhm at -4.5 V and 25 C; the bound at 8.5 V and the junction
+         limit 150 C (the sheet's last printed temperature or 25 K under a 175 C rating): gate factor 1.4091, 21.136 mOhm per FET
+       Ciss 4.72 nF (typical, two) against TI's 5 nF: MEETS; VGS +-20 V against BATDRV's 11.5 V; VDS 30 V against SYSOVP's 19.5 V
+       the bar at 70 C air: 34.42 C/W per FET, set by OCD2 24 A for 1 s after 20 A held
+       the bar at 62.1 C air: 37.82 C/W per FET, set by OCD2 24 A for 1 s after 20 A held
+       the maker's reference board: none printed (LFPAK56, a junction-to-mounting-base 1.4 K/W); the docking pulse, 242.9 A peak: 320 A ISM, tp at most 10 us, each (MAKER, INFERRED)
+   SELECTED (SESSION): Nexperia BUK6Y10-30P, two in parallel, Q39 and Q40 (LCSC C3278350, 67 in stock, 1.7386 USD each at 10). Why: the only option inside TI's Ciss (4.72 nF typical
+     for the two) with a bar of the order a board pour gives: 34.42 C/W per FET at +70 C air, 0.626 of AOS's 1 in2 figure for the same 5 x 6 mm class,
+       where (Q-a) needs 10.1 C/W (0.184 of its maker's board) and (Q-b) 9.49 C/W (0.14 of its maker's), which a pour does not give one part; a printed RDS(on)
+     maximum to 175 C, a 175 C rating, and a printed body-diode pulse rating (ISM 320 A each) over the docking pulse; a third FET would put
+     Ciss at 7.08 nF typical, over TI's 5 nF (SESSION, INFERRED)
+     its envelope at the bar, +70 C air: TJ at most 150 C for every event of 15c; 18 A for 60 s after 10 A held: 119.8 C (INFERRED, CONDITIONAL on E11-29)
+     the docking pulse: all of it in one FET at 25 C: 242.9 A against ISM 320 A and 0.9977 A2s against the ISM rectangle's 1.024 A2s (MEETS); from the
+       +70 C air, ISM derated linearly to the 175 C rating (x0.7, ASSUMPTION A11-22): 224 A and 0.7168 A2s, met for a share of at most 0.848 in one FET;
+       the split of two body diodes is not printed: E11-30 (the bench pulse on the pair, or a layout matching the two paths) (INFERRED)
+     the drive: BATDRV's 6 kOhm at most into 4.72 nF: a 28.32 us time constant (MAKER, INFERRED)
+     the precharge in LDO mode with R17's 1 %: 0.33616 A at most (0.256 x 1.30 / 0.99, the review's minor), all of it in one FET (linear-mode sharing
+       not assumed): TJ reaches 150 C at the bar and +70 C air with SRN at 5.632 V, so R-b' allows no charge under 5.7 V on SRN (the cells' 1.0 V a
+       cell floor is 4 V); Q2's diode then 0.3362 W, TJ 86.8 C (SESSION, INFERRED; R17's drift with temperature not held)
+     on battery at PS-IDLE-SPEC, 2.972 A: 0.0934 W in the pair, 0.218 % of the pack's output (INFERRED)
+     on battery at PS-TYP, 4.375 A: 0.2023 W in the pair, 0.321 % of the pack's output (INFERRED)
+     L2 with the pair: VSYS in supplement 9.688 V (CELL_FUSED's 10.0 V less R17 and the pair at OCD1's 20 A), 12.179 A, peak 14.55 A against Isat 25.4 A (INFERRED)
+   15d. THE CHARGER MINORS (E1)
+     the inhibited acceptance, piecewise (VBAT_VSYS_MIN_RISE 98 to 102 % of VSYS_MIN, p.14): SRN under 12.054 V: LDO mode, VSYS at least 12.054 V;
+       SRN over 12.546 V: VSRN + 150 mV within +-2 %; between, either, so at least 11.96 V; the review's case, SRN at 10 V, is the LDO region, and
+       (10 + 0.15) x 1.02 = 10.353 V belongs to no region (MAKER, INFERRED)
+     the upper side in the LDO region, 12.546 V, is an assumed reading of TI's malformed maximum column (A11-18), not a printed limit (MAKER)
+     every floor above holds with adequate input power; with the source overloaded VSYS follows the pack through the battery FETs and R17:
+       9.688 V at CELL_FUSED's 10.0 V and OCD1's 20 A; with no pack and an overloaded source there is no floor, R-c sheds (INFERRED)
+     EN_OOA resets to 1 (p.47): the printed accuracy covers VSYS only after the firmware writes 0; the pre-firmware start has no printed accuracy
+       (E11-31 records it) (MAKER)
+     the text that still says "no battery FET" in L4-E9's record and the system node's label are drafted for their owner (E11-34) (INFERRED)
+
 END. Desk arithmetic; nothing is measured. Drafts: apply_gen_sch_e_entry.py (the entry, 3c), apply_gen_sch_a_guard.py (R14, 3f),
-apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays), apply_gen_sch_a_charger.py (the BQ25730 and Q39, 14); the
+apply_gen_sch_e_timer.py (C5 and C121, the alternative while the LM5069 stays), apply_gen_sch_a_charger.py (the BQ25730, its two
+battery FETs and the dock's VSYS contact, 14 and 15), apply_gen_sch_e_aux.py and apply_pcb_interfaces_dock.py (board E's VSYS feed, 15a); the
 first round's apply_gen_sch_e_uvlo.py is withdrawn; the knee is a specification (3f); the interface and firmware texts are drafts for Layer 5
 in the record. Software tests establish this record's own behaviour only.

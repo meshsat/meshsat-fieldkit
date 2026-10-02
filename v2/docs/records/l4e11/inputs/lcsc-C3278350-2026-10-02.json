@@ -1,0 +1,36 @@
+{
+ "what": "LCSC public product-detail answer for C3278350 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C3278350), no login; kept fields only, with the price ladder in USD",
+ "read_utc": "2026-10-02T16:09Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), the fix round for the consolidation review",
+ "role": "the fix round's selected battery FETs Q39 and Q40: Nexperia BUK6Y10-30PX, two in parallel (B2 of the consolidation review)",
+ "code": "C3278350",
+ "brand": "Nexperia",
+ "model": "BUK6Y10-30PX",
+ "package": "LFPAK-56",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/56e61b1de5a1ad25e58195e7a960c4f3.pdf?productCode=C3278350",
+ "stock": 67,
+ "price_usd": {
+  "1": 2.0603,
+  "10": 1.7386,
+  "30": 1.5383,
+  "100": 1.3314,
+  "500": 1.2379,
+  "1500": 1.1985
+ },
+ "params": {
+  "Output Capacitance(Coss)": "470pF",
+  "Ciss-Input Capacitance": "2.36nF",
+  "Pd - Power Dissipation": "110W",
+  "Configuration": "-",
+  "Operating Temperature": "-55℃~+175℃",
+  "Drain to Source Voltage": "30V",
+  "Current - Continuous Drain(Id)": "80A",
+  "Reverse Transfer Capacitance (Crss)": "270pF",
+  "RDS(on)": "10mΩ@10V",
+  "Number": "1 P-Channel",
+  "Gate Charge(Qg)": "64nC@10V",
+  "Vgs": "±20V",
+  "Gate Threshold Voltage (Vgs(th))": "3V",
+  "Type": "P-Channel"
+ }
+}

@@ -58,3 +58,9 @@ bullet (D8) stays, now for the BQ25730's identical row. What (B1) asks instead, 
 - **Q-AOS-1 (E11-30).** AONS21357 (Rev 2.1): the body diode's non-repetitive pulse capability (peak current, or I2t) for a
   pulse of about 240 A decaying with a 34 us time constant, at TJ 62 C; the sheet prints IS 36 A continuous and IDM 144 A for the
   channel only.
+
+## After the fix round (2 October 2026, record section 15)
+
+Q-AOS-1 is withdrawn: the fix round selects two Nexperia BUK6Y10-30P, whose sheet prints a body-diode pulse rating (ISM 320 A
+each, tp at most 10 us). What remains for the docking pulse is the split between the two body diodes and the rating hot (E11-30), a
+bench or layout item; a question to Nexperia on ISM above 25 C is optional and is not drafted. Q-TI-15 and Q-TI-16 stand.
