@@ -1,0 +1,18 @@
+{
+ "what": "LCSC public product-detail answer for C184799 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C184799), no login; kept fields only",
+ "read_utc": "2026-10-02T03:41Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), fix round",
+ "role": "board E C122, the entry's gate slew capacitor in the U-04 fix round (10 nF C0G 100 V)",
+ "code": "C184799",
+ "brand": "muRata",
+ "model": "GCM3195C2A103JA16D",
+ "package": "1206",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/85f4a41ef4e34047da8bc0c6c562a4a2.pdf?productCode=C184799",
+ "stock": 11930,
+ "params": {
+  "Capacitance": "10nF",
+  "Temperature Coefficient": "C0G",
+  "Tolerance": "±5%",
+  "Voltage Rating": "100V"
+ }
+}

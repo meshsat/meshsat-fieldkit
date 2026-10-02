@@ -1,0 +1,18 @@
+{
+ "what": "LCSC public product-detail answer for C97929 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C97929), no login; kept fields only",
+ "read_utc": "2026-10-02T03:41Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), fix round",
+ "role": "board E C5, the entry's timer capacitor CTMR in the U-04 fix round (22 nF C0G 5 %)",
+ "code": "C97929",
+ "brand": "muRata",
+ "model": "GRM3195C1H223JA01D",
+ "package": "1206",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/ea71477160a3414a8ab92fd0d2469e0d.pdf?productCode=C97929",
+ "stock": 100550,
+ "params": {
+  "Capacitance": "22nF",
+  "Temperature Coefficient": "C0G",
+  "Tolerance": "±5%",
+  "Voltage Rating": "50V"
+ }
+}
