@@ -88,7 +88,7 @@ PINS = {
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
     "keystone": ("v2/vendor/keystone/M65p42.pdf", "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"),
     "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "a0ec073de05abe918e983384181f1b6538b5347d099b709ad75e15f0f74091a9"),
-    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "4e92fde24f124e6e054846ea6a5175d4370faf864029e3997630199d085cf425"),
+    "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "c99baceb74d25bbf02d72af0b8495c48a8ff5533a81a93a2169b1f9b0342c176"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "b624ac495650a3592c45a37610375fb05bf7b775042cf3de7ec8979bc46a6e50"),
     "chgseq": ("v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md", "44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f"),
@@ -101,7 +101,7 @@ PINS = {
     "l4e11": ("v2/docs/records/l4e11/l4e11_power.out", "726ba21012cb90d9a4d0f1a8a5a9a17aad2b543405c01c13f8249fea705fb170"),
     "l4e11md": ("v2/docs/records/l4e11/L4E11-SOURCE-ONLY-AND-ENTRY.md", "7c72cedbffd342f46afb8b1817ffcd65ead02fe3e9cdf98b93fc7c99d72f8ae0"),
     "e11entry": ("v2/docs/records/l4e11/apply_gen_sch_e_entry.py", "418ea548a833b49f2fe923cb5ff776938bf73759521df781b4716c71536c4d32"),
-    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "987b003c42e8003356c40be272491ee268a61174b9a9732931a76e59e7861911"),
+    "l4e12": ("v2/docs/records/l4e12/l4e12_thermal.out", "bfd8c7271095cd4f3a87cfa53d6ab4d8aa1c4c1a61603b81cfca17f145d0d22c"),
     "l4e12md": ("v2/docs/records/l4e12/L4E12-ELECTRONICS-THERMAL.md", "4dfc6358f779fcd0a9ef8de35f431c8f24ab1b93a60848fbc1665012d4bd0b97"),
     # the outside-contact texts the owner's list names (drafts the owner sends; the session contacts no one)
     "cl_topwell": ("v2/docs/records/l4e10/clarification/topwell-hl18650v.txt", "1ca762d83bbb58b2fa493970878970e173c23f91ce7d7bb4518dbc147a07e5e9"),
