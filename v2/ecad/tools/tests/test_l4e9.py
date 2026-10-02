@@ -52,7 +52,11 @@ held equal to the script. Its fourth result, L4-E12's heat-rejection comparison 
 profile's heat are read from its output with their targets equal to its needs; the exit opens with the precise bounded question
 and its executable path (P1, the combined route, the owner's options); the combined route's three items are register rows under
 the reading and in the change list (a list missing one is refused); T-H1's handover runs P1 first and keeps P2's bands; the heat
-table carries each approach's conductance beside the bound.
+table carries each approach's conductance beside the bound. Set 27 adds L4-E7's panel-lead surge derivation: its verdicts are
+read from L4-E7's output; IF-01 reads NOT MET only on the two known single faults D-10 and D-11, open defects whose remedy is
+pending L4-E7's round (the owner's amendment of 14:20: no remedy selected here); R-173 holds the remedy's place in board E's round
+after the drafted entry (a list putting it first is refused); R-156 is restated and OWED, the CS116 and CS115 test is a layer 8
+row; the exit carries the open defects beside U-01, U-02 and U-04.
 """
 import ast
 import copy
@@ -582,7 +586,8 @@ def t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register():
     for r, d in zip(de, m.DEFECTS):
         assert r[1] == d["title"] and r[2] == d["constraint"] and r[3] == d["options"], d["id"]
         assert r[4].split(":")[0].split(",")[0].split(" ")[0] == d["state"].split(" ")[0], d["id"]
-    assert [d["id"] for d in m.DEFECTS if d["state"] == "OPEN"] == [], "the update round leaves no material defect open"
+    # the update round left no material defect open; since set 27 D-10 and D-11 are the known open defects, their remedy pending L4-E7's round
+    assert [d["id"] for d in m.DEFECTS if d["state"] == "OPEN"] == ["D-10", "D-11"], "only the solar faults are open"
     st = {d["id"]: d["state"] for d in m.DEFECTS}
     assert st["D-06"].startswith("RESOLVED") and st["D-07"].startswith("SUPERSEDED") and st["D-09"].startswith("SUPERSEDED")
 
@@ -753,7 +758,10 @@ def t_e11_19_the_selected_entry_is_rejudged_and_no_defect_is_open():
     starts = [c for c in sel if "of the chart" == c.unit]
     assert len(starts) == 3 and all(c.met and c.b == 1.0 for c in starts)
     assert _C["st"]["IF-05"][1] == "CONDITIONAL" and _C["st"]["IF-11"][1] == "CONDITIONAL"
-    assert not [k for k, v in _C["st"].items() if v[1] == "NOT MET"], "no interface row reads NOT MET after the update round"
+    # the update round left no row NOT MET; since set 27 IF-01 reads NOT MET on the two known single faults D-10 and D-11 only
+    assert [k for k, v in _C["st"].items() if v[1] == "NOT MET"] == ["IF-01"], "only IF-01 reads NOT MET"
+    bad = [c for c in rows["IF-01"]["checks"] if c.scope == "selected" and c.met is False]
+    assert len(bad) == 2 and "D-10" in bad[0].what and "D-11" in bad[1].what, "IF-01 fails only on D-10 and D-11"
     sec = _C["text"].split("12. THE UPDATE ROUND")[1]
     assert "new material defects from E11-19: none" in sec and "E11-20" in sec
     reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
@@ -961,7 +969,7 @@ def t_round5_the_dependency_rounds_restate_the_choices_and_the_register():
     for rid, item in (("R-102", 8), ("R-139", 5), ("R-155", 10), ("R-156", 1)):
         assert "FINDINGS-LEDGER item %d" % item in reg[rid][3], (rid, item)
     assert "per-can ripple bound" in reg["R-102"][5] and "worst phase" in reg["R-102"][5]
-    assert "61 s" in reg["R-139"][5] and "intervals" in reg["R-155"][2] and reg["R-156"][6] == "PENDING" and "L4-E7's surge round" in reg["R-156"][2]
+    assert "61 s" in reg["R-139"][5] and "intervals" in reg["R-155"][2] and reg["R-156"][6] == "OWED" and "L4-E7's surge round" in reg["R-156"][2]
     assert reg["R-156"][4] == "Layer 8 board E generator owner" and "TRN-001" in reg["R-156"][5]
     ow = {o["id"]: o for o in m.OWNER_ITEMS}
     assert [k for k, _ in ow["OW-7"]["docs"]] == ["ti_review", "cl_tiq"] and [k for k, _ in ow["OW-8"]["docs"]] == ["th1proc"]
@@ -1247,6 +1255,68 @@ def t_consolidation_the_heat_rejection_result():
     assert "the +70 C class" == ceil[2][0] and ceil[2][cols.index([c for c in cols if th[0][0] in c][0]) + 2] == "40.0 C", "P1's first threshold holds the class to +40 C"
     short = page.split("## In short\n")[1].split("\n## 1. ")[0]
     assert th[0][0] in short and ap["all"][3] in short
+
+
+def t_consolidation_the_panel_lead_surge():
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    sv = F["sv"]
+    # the verdicts as L4-E7 printed them, against REQ-016's criterion
+    assert sv["lim_drawn"] < sv["d1"][0] <= sv["lim"] and sv["lim_drawn"] < sv["d2"][0] <= sv["lim"], "CS116 and CS115 inside the drafted 50 V, over the drawn 35 V"
+    assert all(pw > sv["d4_cap"][0] for _n, _v, _i, pw in sv["d4_rows"]) and len(sv["d4_rows"]) == 4, "a 36 V source over D4's capability at every breakdown"
+    assert sv["d5"][2] < 0.2 and sv["d4_cold"] < sv["src"][1] and sv["u18"] == (40.0, F["u18_vin"])
+    # the known open defects and IF-01
+    de = {d["id"]: d for d in m.DEFECTS}
+    for did in ("D-10", "D-11"):
+        assert de[did]["state"] == "OPEN" and "pending" in de[did]["resolution"] and "R-173" in de[did]["resolution"] and de[did]["rows"] == ["IF-01"]
+    assert de["D-12"]["state"].startswith("RESOLVED") and "R-21" in de["D-12"]["resolution"]
+    assert st["IF-01"][1] == "NOT MET"
+    g2 = [g for g in m.GATE if g["n"] == 2][0]
+    assert g2["verdict"] != "PASS" and all(x in g2["constraint"] for x in ("D-10", "D-11", "R-173", "no remedy selected here"))
+    # the register and the change list
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    r156, r173, r174 = reg["R-156"], reg["R-173"], reg["R-174"]
+    assert r156[6] == "OWED" and "INA169" in r156[5] and "75 V" in r156[5] and "INA250" not in r156[5], "R-156's U18 corrected"
+    assert r173[1] == "IMPLEMENTATION" and r173[4] == "Layer 8 board E generator owner" and r173[6] == "PENDING" and r173[7] == "4d"
+    assert "No remedy is selected here" in r173[2] and "SMCJ36A" in r173[2] and "disconnect" in r173[2]
+    assert r174[1] == "TEST" and m.LAYER_OF[r174[4]] == "8" and "CS116" in r174[2] and "CS115" in r174[2] and "M1 to M5" in r174[2]
+    ch = m.cons_changes(list(reg.values()))
+    pos = {c[2]: c[0] for c in ch}
+    assert pos["R-21"] < pos["R-173"] < pos["R-22"] and pos["R-98"] < pos["R-173"]
+    saved = m.CHANGE_ORDER
+    try:
+        order = [c for c in saved if c[1] != "R-173"]
+        i = [k for k, c in enumerate(order) if c[1] == "R-21"][0]
+        m.CHANGE_ORDER = order[:i] + [c for c in saved if c[1] == "R-173"] + order[i:]
+        try:
+            m.cons_changes(list(reg.values()))
+            raise AssertionError("the remedy's place before the drafted entry must be refused")
+        except SystemExit:
+            pass
+    finally:
+        m.CHANGE_ORDER = saved
+    # the verdicts and the two remedies as L4-E7 names them; none selected
+    verdicts, remedies, sel = m.cons_surge(F)
+    assert [v[0] for v in verdicts][:5] == ["D1", "D2", "D3", "D4", "D5"]
+    assert [r[0] for r in remedies] == ["(i)", "(ii)"] and remedies[0][3] == "not closed" and remedies[1][3] == "closed"
+    assert "pending" in sel and "selects neither" in sel and "SELECTED" not in " ".join(" ".join(r) for r in remedies)
+    text = _C["text"].split("23. THE PANEL LEAD'S SURGE")[1]
+    assert "SELECTED" not in text and "decision 19" not in text
+    page = open(PAGE, encoding="utf-8").read()
+    assert "decision 19" not in page and "selected direction" not in page
+    for head, lines in m.cons_surge_tables(F, D, st).items():
+        assert m.md_table(page, head) == [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in lines[2:]], head
+    blk = page.split("<!-- gen:surge:begin -->")[1].split("<!-- gen:surge:end -->")[0].strip()
+    assert blk == sel
+    # the exit carries the open defects beside U-01, U-02 and U-04
+    exd = m.cons_exit_defects(F)
+    assert [d[0] for d in exd] == ["D-10", "D-11", "D-12"] and all(d[2].startswith("OPEN") and "pending" in d[2] and "not yet a draft" in d[2] for d in exd[:2])
+    assert m.md_table(page, "| Defect | Its fault |") == [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in m.cons_exit_table(F, D, st)["| Defect | Its fault |"][2:]]
+    sec6 = page.split("## 6. The exit statement")[1].split("## 7. ")[0]
+    assert sec6.index("| U | Class |") < sec6.index("| Defect | Its fault |")
+    assert "their remedy pending L4-E7's round" in _C["text"].split("20. THE EXIT")[1].split("21. IN SHORT")[0]
+    short = page.split("## In short\n")[1].split("\n## 1. ")[0]
+    assert "KNOWN OPEN DEFECTS" in short and "R-173" in short and "pending" in short and "**Status: %s.**" % m.STATUS in short
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
