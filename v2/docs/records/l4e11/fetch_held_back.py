@@ -7,7 +7,8 @@ resistance. Murata's reference sheets for GRM3195C1H104GA05 and GRM3195C1H683JA0
 inputs/murata-reference-sheets-2026-10-02.json) give the timer capacitors' rated values, Table A and the endurance and damp
 heat rows. The fix round (2 October 2026) adds three TI sheets: the TPS4811-Q1 (SLUSEE5E, the selected entry controller), the
 CSD19536KTT (SLPS540C, its pass FET and Figure 4-10) and the TPS1663 (SLVSET9G, the rejected eFuse), held back by TI's
-IMPORTANT NOTICE as stream s117 held its FET sheets. All six carry their makers' copyright and no grant to redistribute, so they
+IMPORTANT NOTICE as stream s117 held its FET sheets. The dependency round (2 October 2026) adds Diodes Incorporated's B520C to
+B560C sheet (DS13012 Rev. 18-2, the hold-up bank's diode). All seven carry their makers' copyright and no grant to redistribute, so they
 are held back from the public tree under the owner's rule of 27 September 2026: this script downloads each into an ignored
 held/ folder, checks the sha256 l4e11_power.py pins, and refuses to keep a file that differs (Murata generates its sheets on
 request, and TI serves the current revision, so a later fetch may differ: the refusal says so). It is never run by a test.
@@ -37,6 +38,8 @@ DOCS = [
      "19e1a9660fac8577743f40acc2cdc791539afd5232bbc1fc350e15fec735d78d"),
     ("v2/vendor/ti/held/ti-tps1663-slvset9g.pdf", "https://www.ti.com/lit/ds/symlink/tps1663.pdf",
      "8f91a0db2daf2da35abd335420ff9f8b4ac9a99c93dac93e215e0a75e9a866fe"),
+    ("v2/vendor/power/held/diodes-b520c-b560c-ds13012-rev18-2.pdf", "https://www.diodes.com/assets/Datasheets/ds13012.pdf",
+     "1b1de94df0a7729f4a69a885edd54213594acdce3cd6d4fa072961431ddf71ff"),
 ]
 
 
