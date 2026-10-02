@@ -37,14 +37,16 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    dec31     094817023210d1b0  v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md
    fuse997   437b1fd2c8cb3ef1  v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf
    keystone  caa141ea51ac68cf  v2/vendor/keystone/M65p42.pdf
-   l4e7r     7edcc52a88874a53  v2/docs/records/l4e7/l4e7_stage_settings.out  (commit 237cd9be, fnd/l4e7, the selected solution)
+   l4e7r     a0ec073de05abe91  v2/docs/records/l4e7/l4e7_stage_settings.out  (commit 675b8068, fnd/l4e7, accepted, closing check 91e9a4b5)
    l4e10     ce2d11f11eecfcee  v2/docs/records/l4e10/l4e10_cell_thermal.out  (commit 79b2f568, fnd/l4e10, final, closing check 573c8b8f)
    d38999    13a19268ba5939d9  v2/vendor/d38999/amphenol-d38999-iii-federal.pdf
    reqs      b624ac495650a359  v2/ecad/tools/pcb_requirements.yaml
    chgseq    44fdf9a022c49337  v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md
+   yageo     61a606825ab314ea  v2/vendor/passives/yageo-cc-series.pdf
+   lcsc      6888362e4a3295d0  v2/ecad/tools/lcsc_fill.py
    ecss      576256819950c443  v2/vendor/standards/ecss-q-st-30-11c-rev2-2021-06-23.md
    chain     a09ca0293afd1f7c  v2/ecad/tools/pcb_energy_chain.yaml
-   pending: PENDING: L4-E7R's CS101 follow-up, the backstop's trip under TEST-PLAN M2 (an INB filter or a ripple-shunt capacitor ahead of the sense bank, on the same topology; fnd/l4e7 after its closing check 42fe879f)
+   pending: none: L4-E7R is accepted (the coordinator's check 4, fnd/l4e7 91e9a4b5; its figures at 675b8068): the CS101 correction moved the bulk ahead of the sense bank and filtered the trip input, so defect D-01 is resolved in design (drafted, not applied)
    this record's own figures: copper 0.0172 ohm mm2/m at 20 C and 0.0039 /K, 18 AWG 0.823 mm2 (ASSUMPTION, constants); the cold end -20 C (REQ-024);
      capacitance kept under bias 0.2 (ASSUMPTION; the bound states the fraction it needs); the back-feed diode's drop 0 V (an upper bound);
      the charger's L2 +-20 % (Coilcraft XAL family)
@@ -92,9 +94,11 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      on the candidate panel H3 gives up 0 to 7.1 Wh a day; A2 unserved 1196.1 to 1202.8 Wh (48 h), 1950.7 to 1963.9 Wh (72 h)
    L4-E6: R12 12 mOhm peak 8.06 / 10 / 11.99 A; service peak 6.5 A; 9 V: L1 11.4 A average, output 4.57 A; 15.1 V L1 10.8 A; average limit above 14 V;
      L1 peak bound 12.6 A (72 % of 17.5 A), Isat needed 14 A at 85 C; FETs at most 130 C; the bus 20.887 V, efficiency 0.93
-   L4-E7R (237cd9be): the regulation 2.6844 A nominal, 3.0882 A highest (47.23 / 56.27 W in at the hold); the backstop trips at 3.1238 to 3.8299 A at 25 V; static bound
-     95.7788 W (CONDITIONAL), the regulation's 25 V corner 77.2553 W; 3.783 ms allowance; SWEN off below 2.662 V; U5's differential 0.2144 V; the hot short circuit 6.802 A;
-     energy 352 / 343.4 / 307.9 Wh (SC-37), 450.1 Wh (bright day); the bank 0.5513 / 0.8705 Wh; CS101 puts 1.91 A rms across the bank; hold 16.9704 / 17.593 / 18.2205 V, conditioned
+   L4-E7R (675b8068, accepted): the regulation 2.5485 A nominal, 2.9318 A highest (44.84 / 53.42 W in at the hold); the backstop trips at 3.0468 to 3.7408 A at 25 V; static bound
+     93.5521 W (CONDITIONAL), the regulation's 25 V corner 73.3436 W; 1.087 ms allowance; SWEN off below 2.662 V; U5's differential 0.2094 V; the hot short circuit 6.802 A;
+     energy 344 / 336.6 / 307.9 Wh (SC-37), 431.9 Wh (bright day); the bank 0.5262 / 0.7978 Wh; R66 8.45k, RIMON_IN 31.6k, 5 x 100 nF C0G on INB (3.96 to 4.496 ms);
+     CS101's filtered ripple 0.0585 A at 2121 Hz against a 0.113 A margin (break-even 2.51 times); held charge 0.4205 J; the bulk up to 4.45 times its ripple rating;
+     G_CM and the VIN+ bias break-evens 169 % and 22 mA; hold 16.9704 / 17.593 / 18.2205 V, conditioned
      16.4198 to 18.8132 V; U5 about 105.4 C
    L4-E10 (79b2f568): FEA-008 not closed; (II) recommended, CONDITIONAL; T-H1 at least 1.666 W/K; the conditioned corner's air 70.00 C (E3-O), 75.00 C (E5),
      the +70 C parts; usable 108.1 Wh (35E) and 90.4 Wh (HL18650V, 16.4 % less), 121 Wh nominal against 144.7; the kit's heat at E3-O's corner 24.99 W (INFERRED)
@@ -108,35 +112,36 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
 
 4. THE INTERFACE ROWS (the selected architecture: A1, with L4-E4 to L4-E8 applied and this record's changes; 'as drawn' checks show a defect
    the selected design resolves). Each row: both sides' ranges, the currents at the modes, losses, thermal, protection, the record that settles it.
-   IF-01  the panel to board E's solar entry (J_SOLAR, F2, the sense bank, D4, C71 to C74, PV_IN, PV_P and TRK_VS)  [PENDING, PENDING]
+   IF-01  the panel to board E's solar entry (J_SOLAR, F2, the sense bank, D4, C71 to C74, PV_IN, PV_P and TRK_VS)  [CONDITIONAL, ASSUMPTION]
      sides: the panel (SPR-E-Flex-100 candidate, O-1, source compliance INCONCLUSIVE) | board E, PV_IN, PV_P and TRK_VS (L4-E7R's corrected entry)
-     voltage: panel: open circuit at most 25 V at -20 C (REQ-016, gen PV_P v_max); candidate 24.05 V nominal at -20 C; held at 17.593 V nominal | entry: D4 SMCJ28A standoff 28 V on TRK_VS; under CS101 the input at most 27.82 V; TRK_VS at most 44.26 V and PV_P 45.18 V at the capability scenario
-     current: panel hot short circuit 6.802 A with the sheet's power tolerance (L4-E7R; 6.42 A nominal sheet) | F2 10 A blade, J_SOLAR VH (10 A at AWG 16, standard header; 7 A at AWG 18, shrouded only; the lead is AWG 18 on a standard header: no stated rating); under CS101 1.91 A rms crosses the sense bank
-     losses: the 5 m lead about 0.0465 Ohm (the replay's ESTIMATE); the sense bank 0.5513 Wh on SC-37's day, 0.8705 Wh on the bright day (L4-E7R); thermal: the entry at the worst inside air 62.1 C (envelope, lid closed); the bulk cans' heating under CS101's bounding case CONDITIONAL (M2 records it)
-     protection: none (a bare panel) | F2; D4 one-way clamp on TRK_VS; the 50 V bulk and C71 to C74 on TRK_VS; C70 across R66 (L4-E7R, drafted in apply_gen_sch_e_backstop.py)
-     settled by: l4e (O-1), L4-E7R at 237cd9be (closing check 42fe879f)
+     voltage: panel: open circuit at most 25 V at -20 C (REQ-016, gen PV_P v_max); candidate 24.05 V nominal at -20 C; held at 17.593 V nominal | entry: D4 SMCJ28A standoff 28 V on TRK_VS; under CS101 the input at most 27.82 V; TRK_VS at most 44.25 V and PV_P 44.74 V at the capability scenario
+     current: panel hot short circuit 6.802 A with the sheet's power tolerance (L4-E7R; 6.42 A nominal sheet) | F2 10 A blade, J_SOLAR VH (10 A at AWG 16, standard header; 7 A at AWG 18, shrouded only; the lead is AWG 18 on a standard header: no stated rating); under CS101 the filtered ripple at the trip input at most 0.0585 A at 2121 Hz against the 0.113 A margin
+     losses: the 5 m lead about 0.0465 Ohm (the replay's ESTIMATE); the sense bank 0.5262 Wh on SC-37's day, 0.7978 Wh on the bright day (L4-E7R); thermal: the entry at the worst inside air 62.1 C (envelope, lid closed); the bulk cans' heating under CS101's bounding case, up to 4.45 times their ripple rating, CONDITIONAL (M2 records it)
+     protection: none (a bare panel) | F2; the 50 V bulk on PV_P ahead of the sense bank; D4 one-way clamp and C71 to C74 on TRK_VS; the INB filter, 5 x 100 nF C0G across R66 8.45k (3.96 to 4.496 ms) (L4-E7R, drafted in apply_gen_sch_e_backstop.py)
+     settled by: l4e (O-1), L4-E7R at 675b8068 (accepted, check 4 at 91e9a4b5)
        - MEETS: the candidate's nominal cold open circuit within REQ-016's 25 V: 24.05 <= 25 V; CONDITIONAL (replay out 12; source compliance needs a supported maximum (O-1))
        - MEETS: D4's standoff above the window's 25 V: 25 <= 28 V; MAKER (Littelfuse SMCJ row)
        - MEETS: the panel's hot short circuit with the sheet's power tolerance inside F2: 6.802 <= 10 A; INFERRED (L4-E7R out; gen F2)
        - MEETS: the panel's hot short circuit with tolerance inside J_SOLAR's nearest stated VH rating (AWG 18, shrouded header): 6.802 <= 7 A; ASSUMPTION (JST VH catalogue p.1; the fitted standard header with AWG 18 is not rated)
        - MEETS: D4 does not conduct under CS101 (the input's peak under its standoff): 27.82 < 28 V; MODELED (L4-E7R out (lumped model))
-       - MEETS: TRK_VS at the capability scenario under the bulk's and the ceramics' 50 V: 44.26 <= 50 V; MODELED (L4-E7R out (capability, not a requirement))
-       - MEETS: PV_P at the capability scenario under U18's VIN+ 75 V: 45.18 <= 75 V; MODELED (L4-E7R out)
-       - MEETS: U5's sense differential under the approved disturbances and the capability scenario: 0.2144 <= 0.3 V; CONDITIONAL (L4-E7R out: the lumped model, layout, M3, M7, bench 7b.18)
-       - PENDING: the backstop does not trip under TEST-PLAN M2 (CS101's injected current across the sense bank; 'no upset'): (the follow-up); PENDING (PENDING: L4-E7R's CS101 follow-up, the backstop's trip under TEST-PLAN M2 (an INB filter or a ripple-shunt capacitor ahead of the sense bank, on the same topology; fnd/l4e7 after its closing check 42fe879f))
-   IF-02  PV_P to the LT8705A stage U5 (the hold, the regulation and the backstop on SWEN) to TRK_OUT  [PENDING, PENDING]
+       - MEETS: TRK_VS at the capability scenario under the bulk's and the ceramics' 50 V: 44.25 <= 50 V; MODELED (L4-E7R out (capability, not a requirement))
+       - MEETS: PV_P at the capability scenario under U18's VIN+ 75 V: 44.74 <= 75 V; MODELED (L4-E7R out)
+       - MEETS: U5's sense differential under the approved disturbances and the capability scenario: 0.2094 <= 0.3 V; CONDITIONAL (L4-E7R out: the lumped model, layout, M3, M7, bench 7b.18)
+       - MEETS: the backstop does not trip under TEST-PLAN M2 (CS101): the filtered ripple at its worst frequency under the margin (the trip's lowest less the regulation's highest): 0.0585 <= 0.113 A; CONDITIONAL (L4-E7R out (MODELED; the IMON_IN loop on typical rows, break-even 2.51 times; M2 reads it))
+       - OPEN: the 50 V bulk's heating under CS101's bounding case (up to 4.45 times its ripple rating): (a measured temperature); CONDITIONAL (L4-E7R out; M2 records the cans' case temperature (R-122))
+       - OPEN: the sense bank's pulse capability in the capability scenario: (a maker's pulse rating); CONDITIONAL (L4-E7R out; Vishay clarification (R-101))
+   IF-02  PV_P to the LT8705A stage U5 (the hold, the regulation and the backstop on SWEN) to TRK_OUT  [CONDITIONAL, CONDITIONAL]
      sides: PV_P and TRK_VS (behind the sense bank, L4-E7R) | TRK_OUT
      voltage: in: hold 16.9704 / 17.593 / 18.2205 V (EA3 typical), 16.4198 to 18.8132 V conditioned (L4-E7), at most 25 V; SWEN off by default below 2.662 V on TRK_LDO33 | out: ceiling 28.28 / 29.21 / 30.15 V (L4-E5, R10 232 k; as drawn 14.62 / 15.09 / 15.56 V)
-     current: the regulation (RIMON_IN 30k) 2.6844 A nominal, 3.0882 A at its highest on the hold's corners (47.23 W and 56.27 W in); the backstop trips at 3.1238 to 3.8299 A at 25 V; the static bound 95.7788 W, the regulation's own 25 V corner 77.2553 W | out at the window 93 W (stage 0.93 DECLARED), a ceiling: the stage takes at most 56.27 W in at the hold
+     current: the regulation (RIMON_IN 31.6k) 2.5485 A nominal, 2.9318 A at its highest on the hold's corners (44.84 W and 53.42 W in); the backstop trips at 3.0468 to 3.7408 A at 25 V; the static bound 93.5521 W, the regulation's own 25 V corner 73.3436 W | out at the window 93 W (stage 0.93 DECLARED), a ceiling: the stage takes at most 53.42 W in at the hold
      losses: stage 0.93 DECLARED (C-8, undocumented); thermal: U5 junction about 105.4 C (INFERRED) in 62.1 C air against the I grade's 125 C
-     protection: the regulation (IMON_IN at RIMON_IN 30k); the backstop on SWEN (the sense bank, U18 INA169, U19 TPS3701, U20 TPS3808), its response inside 3.783 ms for 10 J in any 0.1 s | U4/Q2 ideal diode blocks the bus
-     settled by: l4e7 (hold, grade), l4e5 (ceiling), L4-E7R at 237cd9be (closing check 42fe879f)
-       - MEETS: the stage's input power at the 25 V corner, the backstop's static bound, against REQ-016's 100 W: 95.7788 <= 100 W; CONDITIONAL (L4-E7R out: CONDITIONAL on G_CM and U18's VIN+ bias (break-evens printed there))
-       - MEETS: the regulation's own 25 V corner against REQ-016's 100 W: 77.2553 <= 100 W; INFERRED (L4-E7R out)
-       - MEETS: the regulation's highest current under the backstop's lowest trip (no trip in normal operation): 3.0882 < 3.1238 A; CONDITIONAL (L4-E7R out: the regulation's unprinted values inside the joint assumptions, else a hiccup)
-       - OPEN: the response from a step over the trip inside 3.783 ms (10 J in any 0.1 s; the 0.1 s interpretation is layer 8's; bench 7b.16): (an interpretation and a bench row); CONDITIONAL (L4-E7R out, check (b))
+     protection: the regulation (IMON_IN at RIMON_IN 31.6k); the backstop on SWEN (the sense bank, U18 INA169, the INB filter, U19 TPS3701, U20 TPS3808), its response inside 1.087 ms for 10 J in any 0.1 s after the filter's 0.4205 J held charge | U4/Q2 ideal diode blocks the bus
+     settled by: l4e7 (hold, grade), l4e5 (ceiling), L4-E7R at 675b8068 (accepted, check 4 at 91e9a4b5)
+       - MEETS: the stage's input power at the 25 V corner, the backstop's static bound, against REQ-016's 100 W: 93.5521 <= 100 W; CONDITIONAL (L4-E7R out: CONDITIONAL on G_CM and U18's VIN+ bias (break-evens 169 % and 22 mA))
+       - MEETS: the regulation's own 25 V corner against REQ-016's 100 W: 73.3436 <= 100 W; INFERRED (L4-E7R out)
+       - MEETS: the regulation's highest current under the backstop's lowest trip (no trip in normal operation): 2.9318 < 3.0468 A; CONDITIONAL (L4-E7R out: the regulation's unprinted values inside the joint assumptions, else a hiccup)
+       - OPEN: the response from a step over the trip inside 1.087 ms after the INB filter's 0.4205 J held charge (10 J in any 0.1 s; the 0.1 s interpretation is layer 8's; bench 7b.16): (an interpretation and a bench row); CONDITIONAL (L4-E7R out, check (b))
        - MEETS: U5's junction inside the I grade's 125 C: 105.4 <= 125 C; INFERRED (l4e7 out 3)
-       - PENDING: the backstop's trip under TEST-PLAN M2 (CS101), the open material defect of the closing check: (the follow-up); PENDING (PENDING: L4-E7R's CS101 follow-up, the backstop's trip under TEST-PLAN M2 (an INB filter or a ripple-shunt capacitor ahead of the sense bank, on the same topology; fnd/l4e7 after its closing check 42fe879f))
    IF-03  TRK_OUT through U4/Q2 (ideal diode) onto VIN_RAW  [MEETS, MAKER/NETLIST]
      sides: TRK_OUT (C24, C25 35 V polymer; C26, C27 10u 25 V) | VIN_RAW (board E)
      voltage: TRK_OUT at most 30.15 V (raised ceiling) | VIN_RAW up to the vehicle's OVLO maximum 43.18 V with TRK_OUT at 0 (R23 6.42k at 0.1 %; 42.49 V as drawn)
@@ -171,21 +176,22 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - MEETS: the entry's limit inside F1 (10 A blade): 6.15 <= 10 A; MAKER (LM5069 VCL / R19; gen F1)
        - MEETS: the entry's limit inside J_DCIN's nearest stated VH rating (AWG 18, shrouded header): 6.15 <= 7 A; ASSUMPTION (JST VH catalogue p.1; the fitted header and gauge are not rated)
        - OPEN: the conductors' short-time withstand against F1's let-through at the stiff-source current (the sheet prints melting I2t only): (a total clearing I2t); CONDITIONAL (Littelfuse clarification R-115; REQ-045)
-       - OPEN: the interconnect F1 protects, in F1's long-time band from a weak source (10 to 20 A for up to 600 s; contacts stated at 10 and 13 A): (time-current limits); CONDITIONAL (OPEN engineering question D-06 (REQ-045, PWR-003, ECSS 6.17.3c); R-113)
+       - OPEN: the interconnect F1 protects, in F1's long-time band from a weak source (below 13.5 A no maximum clearing time, 11 A with no opening for 100 h; 13.5 A up to 600 s; 20 A up to 5 s; contacts stated at 10 and 13 A): (time-current limits); CONDITIONAL (OPEN engineering question D-06 (REQ-045, PWR-003, ECSS 6.17.3c); R-113)
        - MEETS: the negative discharge at the ruled level (15 kV) with E-F1's 1 uF input capacitor: DC_F's rise against D10's breakdown: 2.25 < 44.4 V; INFERRED (DECISION-31 6.3 (d8dec31 apply_gen_sch_e_cin.py, register R-16))
        - NOT MET: CS101 (M2) at REQ-015's 36 V: the input's peak under the drawn OVLO minimum: 38.83 < 37.78 V; INFERRED (part A (L4-E7R's CS101 level)) [as drawn]
        - MEETS: CS101 (M2) at REQ-015's 36 V: the input's peak under the selected OVLO minimum (R23 6.42k, 0.1 %; register R-94): 38.83 < 39.71 V; INFERRED (part A)
-   IF-05  DC_P through the hot swap U6/Q7 (LM5069) and the choke L2 to VIN_RAW  [CONDITIONAL, CONDITIONAL]
+   IF-05  DC_P through the hot swap U6/Q7 (LM5069) and the choke L2 to VIN_RAW  [NOT MET, CONDITIONAL]
      sides: DC_P | VIN_RAW (board E)
      voltage: DC_P up to D1's clamping 64.5 V at 23.3 A; the hot-short at the OVLO maximum 43.18 V | LM5069 VIN 100 V absolute; Q7 100 V
-     current: asked: the limit 4.85 to 6.15 A, fault timer 3.13 / 4.71 / 8.16 ms then off and retry (-2); the power limit with R24 22 k: 22.02 W nominal, 22.41 W at its corners, 29.14 W with TI's 1.3 margin, 0.675 A at 43.18 V | available: L2 6.89 A Irms, 9.15 A Isat (its value text); Q7's Figure 10 at 43.18 V and 8.16 ms derated to its 94.3 C case 0.913 A
+     current: asked: the limit 4.85 to 6.15 A, fault timer 3.13 / 4.71 / 8.16 ms at C5's nominal (2.035 to 11.871 ms with its printed rows stacked) then off and retry (-2); the power limit with R24 22 k: 22.02 W nominal, 22.41 W at its corners, 29.14 W with TI's 1.3 margin, 0.675 A at 43.18 V; the breaker's event OPEN | available: L2 6.89 A Irms, 9.15 A Isat (its value text); Q7's Figure 10 at 43.18 V and 11.871 ms derated to its 94.3 C case 0.777 A
      losses: R19 0.38 W at 6.15 A; thermal: inside air 62.1 C; Q7's case at most 94.3 C in the hottest air the record holds (76.25 C)
      protection: D1 SMCJ40A at DC_P | D2 SMCJ40A on VIN_RAW; the LM5069's current and power limits and its timer (R24 22k, this record's draft)
      settled by: gen_sch_e.py (F-IN-02), l4e5, this record (the fix round's B1, apply_gen_sch_e_hotswap.py)
        - NOT MET: the power limit's sense voltage at the OVLO maximum with the drawn R24 20k, against SNVS452G's 5 mV: 4.7429 >= 5 mV; MAKER (SNVS452G 9.2.1.2.3, Equations 7 and 9) [as drawn]
        - MEETS: the power limit's sense voltage at the OVLO maximum with R24 22k at its low corner: 5.06 >= 5 mV; MAKER (SNVS452G 9.2.1.2.3, Equations 7 and 9)
-       - MEETS: the complete hot-short pulse (the power limit at its corners times TI's 1.3, for the timer's maximum) inside Figure 10 at the same voltage, derated to Q7's case: 0.675 <= 0.913 A; CONDITIONAL (SLPS414B Figure 10 (vector read), SNVS452G 9.2.1.2.5 Equations 15 to 19; RthetaJA on board E's copper an ASSUMPTION)
-       - MEETS: the circuit breaker's event at its threshold inside Figure 10's 10 us line, derated: 13 <= 30.7 A; INFERRED (SNVS452G VCB, tCB; Figure 10)
+       - MEETS: the hot short's power-limit part (the limit at its corners times TI's 1.3) for the fault time's maximum with C5's printed rows stacked (11.871 ms) inside Figure 10 at the same voltage, derated to Q7's case: 0.675 <= 0.777 A; CONDITIONAL (SLPS414B Figure 10 (vector read; TI's power law 18.7 % past 10 ms), SNVS452G 9.2.1.2.5 Equations 15 to 19; RthetaJA an ASSUMPTION)
+       - OPEN: the breaker's event: its peak current and Q7's loaded turn-off (VCB's 13.131 A is a threshold; tCB is measured with no GATE load): (the source's and the gate's dynamics); CONDITIONAL (OPEN evidence, a bounded investigation: R-118)
+       - NOT MET: the fault time's minimum at C5's printed rows stacked against TI's half-again margin over the start into VIN_RAW at the OVLO maximum (D-09): 2.035 >= 3.814 ms; CONDITIONAL (SNVS452G 9.2.1.2.4, Equation 12; Yageo V.26; the front end's load not included; R-119)
        - MEETS: the LM5069's VIN at D1's clamping voltage: 64.5 <= 100 V; MAKER (TI SNVS452G 7.1)
        - MEETS: Q7 at D1's clamping voltage: 64.5 <= 100 V; MAKER (TI CSD19532Q5B p.1)
        - MEETS: the entry's limit inside L2's Irms (its value text): 6.15 <= 6.89 A; NETLIST (gen_sch_e.py L2)
@@ -280,7 +286,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - MEETS: PS-TYP with the outlet inside the declared continuous pack current at 14.4 V: 7.8 <= 10 A; MODELED (pwr_budget.out)
    IF-13  VBAT through R227 to the PoE stage (U16 LM5176 boost, R71, +54V_POE, J_54V to board B) and its monitor U17  [CONDITIONAL, CONDITIONAL]
      sides: VBAT | +54V_POE at 0.6 A peak (REQ-017)
-     voltage: VBAT 10 to 16.884 V regulated, 20.135 V at the pack-open bound, 29.2 V at D1's rated pulse, into R227 and U16 (POE_VIN at most 0.072 V under VBAT) | 54 V; U17 (INA226) IN+ on VBAT, IN- and VBUS on POE_VIN (part A; as drawn on POE_OUT and +54V_POE, pins 10 and 9); INA226 40 V absolute, 36 V common mode
+     voltage: VBAT 10 to 16.884 V regulated, 20.135 V at the pack-open bound, 29.2 V at D1's rated pulse, into R227 and U16 (POE_VIN at most 0.072 V under VBAT in the boost current-limit case) | 54 V; U17 (INA226) IN+ on VBAT, IN- and VBUS on POE_VIN (part A; as drawn on POE_OUT and +54V_POE, pins 10 and 9); INA226 40 V absolute, 36 V common mode
      current: asked: 0.3 / 0.6 A at 54 V, the stage's input at a 10 V stack 3.682 A (18.59 mV over R227), at its fault bound 14.33 A (72.38 mV); PS-TYP plus PoE 100.4 W plan (32.4 W outside) | available: R227 5 mOhm 3 W (3 W at 62.1 C); the INA226's 81.92 mV full scale (16.384 A); U16's limits
      losses: U16 0.88 (the generator's figure outside the maker's plots); R227 at most 0.0685 W at the stage's peak input; thermal: inside air 62.1 C
      protection: OUTLET_OK interlock | U16's average limit (R71) and cycle limit (R72); board B's TPS23861 port limit
@@ -294,8 +300,8 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        - MEETS: POE_VIN (U17's IN- and VBUS) at a hard connect of VBAT, ringing at its undamped bound, inside the pins' 40 V: 33.77 <= 40 V; INFERRED (part A, B3 (20.2 uF behind R227))
        - MEETS: the differential across R227 at that step inside the INA226's +-40 V: 16.884 <= 40 V; MAKER (SBOS547C 6.1 note 2; part A, B3)
        - MEETS: R227's RMS dissipation in steady buck operation (a PoE fault) inside its rating: 0.58 <= 3 W; INFERRED (part A, B3 (VCS(BUCK), fSW(1), L10 at -20 %))
-       - OPEN: R227's pulse energy at a hard connect (at most 2.879 mJ) inside the maker's pulse rating: (a pulse rating); CONDITIONAL (Milliohm prints none; clarification R-101)
-       - OPEN: the hard output short's peak inside L10's saturation (L above Isat): (the inductor's L(I)); CONDITIONAL (part A, B3: 17.77 A against Isat 15.5 A; R-65 extended)
+       - OPEN: R227's pulse energy at a hard connect (2.879 mJ nominal, 4.189 mJ with the printed rows stacked; the maximum unresolved) inside the maker's pulse rating: (a pulse rating and a capacitance envelope); CONDITIONAL (Milliohm prints none; R-101, R-117)
+       - OPEN: the hard output short's self-consistent peak with L10's L(I) at temperature, R227's pulse and RMS stress and U17's pins there: (the inductor's L(I)); CONDITIONAL (part A, B3: 17.77 A at a constant 12 uH against Isat 15.5 A; the L10 assignment R-120 and R-121)
    IF-14  VBAT to the PA rail (+13V8_PA, J_PA) with the PA keyed  [CONDITIONAL, ASSUMPTION]
      sides: VBAT | the RA30H1317M1 PA, 13.8 V
      voltage: VBAT 10 to 16.884 V into U13 | 13.8 V; PA_EN gated by EMCON and TX_INHIBIT_n
@@ -305,7 +311,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      settled by: POWER-THERMAL 7.2, FEA-004
        - MEETS: the PA keyed alone at 113 W within the pack's declared peak at the 10.0 V stack: 16.6 <= 18 A; MODELED (pwr_budget.out)
        - MEETS: the PA's drain current against the rail's declared peak (F-PR-02, not characterised): 8.2 <= 9.5 A; ASSUMPTION (POWER-THERMAL 7.3: the stage's loop band)
-   rows: 14; CONDITIONAL 9, MEETS 2, NOT MET 1, PENDING 2
+   rows: 14; CONDITIONAL 10, MEETS 2, NOT MET 2
 
 5. SIMULTANEOUS OPERATION (solar at the window, a vehicle at 24 V, the full load, charging)
    the front end's input is the H3 line's at VIN_RAW whatever the sources share: at 24 V at most 4.194 A, 87.4 % of the entry's basis; the tracker's
@@ -351,8 +357,8 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      give 0.0899 Ohm at 20 C and 0.0758 Ohm at -20 C, so a stiff source drives at most 569.8 A (copper alone); the drawn 297 is rated 32 V DC: NOT MET
      as drawn; the selected 0997010.WXN is rated 58 V DC and 1000 A at 58 V DC: MEETS (part A, section 11)
    VBUS20 shorted: the front end holds the output at 4.57 A at 9 V (R12) and 7.262 A above 14 V (R11 8 mOhm); VIN_RAW then carries at most 11.65 A;
-     the vehicle entry limits at 4.85 to 6.15 A and opens after 3.13 to 8.16 ms; the panel's stage regulates at 3.0882 A at most and its backstop trips
-     at 3.8299 A at most (SWEN, inside 3.783 ms); the restart guard cycles the front end
+     the vehicle entry limits at 4.85 to 6.15 A and opens after 3.13 to 8.16 ms; the panel's stage regulates at 2.9318 A at most and its backstop trips
+     at 3.7408 A at most (SWEN, inside 1.087 ms); the restart guard cycles the front end
    VBAT shorted: the pack's SCD (60 A in 0.2 ms), OCD2, the 25 A blades and F2 against 240 to 480 A prospective; U3 at its input limit
    the pack's charge FET opening mid-charge (a designed event, REQ-046): VBAT is held at ChargeVoltage (16.884 V at most), BATOVP stops switching
      at 17.64 V, SYSOVP at 20 V; L2's energy at the stop, 0.1341 mJ (peak 6.896 A, L +20 %), into VBAT's 34 capacitors (248.2 uF nominal, 49.64 uF kept at 0.2)
@@ -362,9 +368,10 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      options (an SMCJ22A on VBUS20: VR 22 V over the 20.96 V band; an independent over-voltage trip)
    PoE monitor (HF-F02): U17's inputs at 54 V against the INA226's 40 V absolute: NOT MET as drawn; on R227, 5 mOhm in the stage's input
      (part A): 3.682 A at a 10 V stack, 18.59 mV; 14.33 A at the stage's fault bound, 72.38 mV, against 81.92 mV full scale; common mode at most 20.135 V
-   the solar entry (L4-E7R): CS101 keeps the input at 27.82 V under D4's 28 V standoff; the capability scenario holds TRK_VS at 44.26 V and PV_P at 45.18 V;
-     a reversed panel conducts through D4 (DECISION-31 E-N1); the LT8705A's single faults are layer 8's list; the backstop's trip under CS101:
-     PENDING: L4-E7R's CS101 follow-up, the backstop's trip under TEST-PLAN M2 (an INB filter or a ripple-shunt capacitor ahead of the sense bank, on the same topology; fnd/l4e7 after its closing check 42fe879f)
+   the solar entry (L4-E7R): CS101 keeps the input at 27.82 V under D4's 28 V standoff; the capability scenario holds TRK_VS at 44.25 V and PV_P at 44.74 V;
+     a reversed panel conducts through D4 (DECISION-31 E-N1); the LT8705A's single faults are layer 8's list (a shorted INB filter capacitor
+     defeats the backstop); under CS101 the filtered ripple, 0.0585 A, stays under the 0.113 A margin (D-01, resolved in design, CONDITIONAL on the loop's
+     typical rows)
    the vehicle entry under CS101 (M2) at REQ-015's 36 V: 38.83 V against the drawn OVLO minimum 37.78 V (NOT MET as drawn), the selected 39.71 V: MEETS
 
 8. THE ENDURANCE STATEMENT (A1 selected; A2 a proposal; DR-01)
@@ -374,9 +381,9 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      A2: h 18 / 11; unserved 986.9 / 1196.1 and 1741.4 / 1950.7 Wh; +979.2 / +1719.7 Wh; steady load carried A1 8 W, A2 21.1 / 17.5 W (48 / 72 h)
    the 100 W screening stimulus (a conditional comparison): A1 h 13 / 2, unserved 907.4 / 923.5 and 1382.5 / 1398.6 Wh, +654.8 / +873.1 Wh; A2 h 23 / 11, +278.8 / +515.8 Wh
    what moves these: H3 gives up 0 to 7.1 Wh a day on the candidate's trace; the ballasts at most 2.09 W at the bound's worst corner; C-8
-   the selected solar control (L4-E7R): the day's energy 352 / 343.4 / 307.9 Wh on SC-37 (lower / nominal / upper hold corner) and 450.1 Wh on the
+   the selected solar control (L4-E7R): the day's energy 344 / 336.6 / 307.9 Wh on SC-37 (lower / nominal / upper hold corner) and 431.9 Wh on the
      bright day; the solar rows above are at L4-E7's 350 Wh nominal and the replay is not re-run here: at the nominal hold the unserved energy
-     grows by at most 6.6 Wh a day, 13.2 Wh at 48 h and 19.8 Wh at 72 h (INFERRED: harvest lost can at most add to it); the sense bank's 0.5513 Wh a day
+     grows by at most 13.4 Wh a day, 26.8 Wh at 48 h and 40.2 Wh at 72 h (INFERRED: harvest lost can at most add to it); the sense bank's 0.5262 Wh a day
      is carried beside it (L4-E7R prints it apart from the day's energy; if the day's figure already holds it, this counts it twice, the
      conservative side)
    L4-E8's ballasts in the budgets: at most 2.09 W while U3 runs at the bound's worst corner, 0.0093 W at L4-E8's nominal illustration; a loss on
@@ -390,22 +397,22 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    the objective of 48 to 72 h is unmet by A1 on every trace (DR-01); no mandatory function is reduced to narrow it
 
 9. THE CLOSURE GATE (a criterion reads PASS only on rows that read MEETS; ASSUMPTION, CONDITIONAL and PENDING rows cannot carry a PASS)
-   1. one architecture selected, its mandatory functions with a defensible feasibility basis: CONDITIONAL; rows IF-02 PENDING, IF-04 CONDITIONAL, IF-05 CONDITIONAL, IF-07 CONDITIONAL, IF-09 CONDITIONAL, IF-10 CONDITIONAL, IF-11 NOT MET, IF-12 CONDITIONAL, IF-13 CONDITIONAL; choices U-01, U-02, U-03, U-04
+   1. one architecture selected, its mandatory functions with a defensible feasibility basis: CONDITIONAL; rows IF-02 CONDITIONAL, IF-04 CONDITIONAL, IF-05 NOT MET, IF-07 CONDITIONAL, IF-09 CONDITIONAL, IF-10 CONDITIONAL, IF-11 NOT MET, IF-12 CONDITIONAL, IF-13 CONDITIONAL; choices U-01, U-02, U-03, U-04
       constraint: the solar function's 100 W bound is CONDITIONAL on G_CM and U18's VIN+ bias (L4-E7R) and its source on O-1 (U-03); PS-ALLTX's chain at 18 A for 60 s (PWR-F12) is an open obligation; the battery path's thermal design (FEA-008, U-01), the electronics' inside air at the enclosure's floor (MESHSAT-1478, U-02) and source-only operation with a dead or absent pack (U-04) are unresolved choices
       could it overturn the architecture: possibly: U-01, U-02 and U-04 could change D-06's pack, the sealed case's thermal design or the charger's power path; the rest resolves by a value, a part or a measurement on the same topology
-   2. material power-path defects have engineering resolutions and bounded supporting calculations: CONDITIONAL; rows IF-01 PENDING, IF-02 PENDING, IF-04 CONDITIONAL, IF-05 CONDITIONAL, IF-13 CONDITIONAL
-      constraint: two material defects are open: D-01, under TEST-PLAN M2 (CS101) the injected current crosses the solar entry's sense bank and the backstop trips, stopping solar charging against M2's 'no upset' line (an INB filter or a ripple-shunt capacitor ahead of the bank, L4-E7R's bounded follow-up, PENDING); D-06, the vehicle entry's interconnect in F1's long-time band from a weak source, where no maker's time-current limit is held for the contacts and the cable (an open engineering question with alternatives)
-      could it overturn the architecture: no: a filter or a capacitor at the solar entry; an interconnect, a cable or a stated source capability at the vehicle entry
+   2. material power-path defects have engineering resolutions and bounded supporting calculations: CONDITIONAL; rows IF-01 CONDITIONAL, IF-02 CONDITIONAL, IF-04 CONDITIONAL, IF-05 NOT MET, IF-13 CONDITIONAL
+      constraint: two material defects are open: D-06, the vehicle entry's interconnect in F1's long-time band from a weak source, where no maker's time-current limit is held for the contacts and the cable; D-09, the hot swap's fault time against the start into VIN_RAW at C5's printed corners; both open engineering questions with alternatives. D-01 is resolved in design (L4-E7R accepted, drafted, not applied)
+      could it overturn the architecture: no: an interconnect, a cable or a stated source capability, and a timer capacitor, at the vehicle entry
    3. remaining assumptions explicit, with their impact and verification method: PASS; rows none (the registers)
    4. downstream implementation changes, layout constraints and tests have named owners and acceptance criteria: PASS; rows none (the registers)
-   5. no unresolved uncertainty could overturn the selected architecture while described as routine later testing: CONDITIONAL; rows IF-01 PENDING, IF-10 CONDITIONAL, IF-11 NOT MET; choices U-01, U-02, U-03, U-04
+   5. no unresolved uncertainty could overturn the selected architecture while described as routine later testing: CONDITIONAL; rows IF-01 CONDITIONAL, IF-10 CONDITIONAL, IF-11 NOT MET; choices U-01, U-02, U-03, U-04
       constraint: four unresolved choices could overturn it and are named as such, not as later testing: U-01 (FEA-008's cell), U-02 (MESHSAT-1478, the inside air against the +70 C parts), U-03 (O-1, a panel with a supported cold open circuit), U-04 (source-only operation with a dead or absent pack); an owner and an acceptance criterion do not close them
       could it overturn the architecture: yes for U-01, U-02 and U-04 (D-06's pack, the sealed case's thermal design, the charger's power path); U-03 decides the solar source, not the topology
    Layer 4's power architecture closes: NO, criteria 1, 2, 5 are not PASS
-   MATERIAL POWER-PATH DEFECTS (criterion 2): 8, 2 open
-     D-01 the solar backstop trips under TEST-PLAN M2 (CS101) [OPEN]; rows IF-01 PENDING, IF-02 PENDING
-        the constraint: CS101's injected current, up to 1.91 A rms at 1 kHz and above, crosses the sense bank; its peaks over the trip less the operating current stop the stage for td (at least 180 ms) each time, so solar charging stops for the test, against M2's 'no upset' line
-        the options: an INB filter (the coordinator's estimate: a corner near 180 Hz, crossing the trip in about 0.2 ms on a step, inside the 3.783 ms allowance) or a ripple-shunt capacitor ahead of the bank (its charge bounded by C V squared in check (b), surge-rated); resolution: L4-E7R's bounded follow-up on fnd/l4e7 (PENDING)
+   MATERIAL POWER-PATH DEFECTS (criterion 2): 9, 2 open
+     D-01 the solar backstop trips under TEST-PLAN M2 (CS101) [RESOLVED (drafted)]; rows IF-01 CONDITIONAL, IF-02 CONDITIONAL
+        the constraint: CS101's injected current crossed the sense bank and its peaks over the trip less the operating current stopped the stage for td each time, so solar charging stopped for the test, against M2's 'no upset' line (L4-E7R's check 3)
+        the options: the bulk moved ahead of the sense bank, five 100 nF C0G across R66 (3.960 to 4.496 ms), R66 8.45k and RIMON_IN 31.6k: the filtered ripple at most 0.0585 A against the 0.1130 A margin, the response allowance 1.087 ms after the filter's 0.4205 J; CONDITIONAL on the loop's typical rows (break-even 2.51 times), the bulk's temperature, the bank's pulse capability, the 0.1 s window; resolution: L4-E7R accepted (check 4, fnd/l4e7 91e9a4b5, figures at 675b8068); register R-21 and R-98, apply_gen_sch_e_backstop.py; M2, R-122
      D-02 the vehicle entry's hot swap opens under TEST-PLAN M2 (CS101) at REQ-015's 36 V [RESOLVED (drafted)]; rows IF-04 CONDITIONAL
         the constraint: 36 V plus CS101's 2.83 V peak reaches 38.83 V, past the drawn OVLO minimum 37.78 V
         the options: R22 100k and R23 6.42k, both 0.1 %: OVLO 39.71 / 41.44 / 43.18 V (selected, SESSION); M2 at the source's nominal (not taken); resolution: register R-94, apply_gen_sch_e_hotswap.py
@@ -421,12 +428,15 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      D-06 the vehicle entry's interconnect in F1's long-time band from a weak source [OPEN]; rows IF-04 CONDITIONAL
         the constraint: a source under 30 A (ECSS 6.17.3c's three times) can leave 10 to 11 A flowing indefinitely, 13.5 A for up to 600 s and 20 A for up to 5 s through J_DCIN's VH contact (10 A), the D38999 size 16 contacts (13 A test current) and the kit's cable and lead, whose held sheets print no current or time-current rating
         the options: an interconnect rated to the fuse's 20 A point (size 12 contacts at 23 A, a 30 A board connector, a cable whose maker rates it, with the stiff-source current re-checked against 1000 A); the source's capability stated in REQ-015 (the owner's); the makers' overload data obtained (Lapp, JST, Amphenol); resolution: an open engineering question (R-113)
-     D-07 the hot swap's power limit under the sense voltage TI recommends [RESOLVED (drafted)]; rows IF-05 CONDITIONAL
+     D-07 the hot swap's power limit under the sense voltage TI recommends [RESOLVED (drafted)]; rows IF-05 NOT MET
         the constraint: R24 20k gives 4.7429 mV at 43.18 V, under SNVS452G's 5 mV, and the hot-short pulse was compared at 36 V with a by-eye reading
-        the options: R24 22k 1 %: 5.06 mV at its low corner; the complete pulse at 43.18 V inside Figure 10 derated to Q7's case; resolution: register R-94, apply_gen_sch_e_hotswap.py
+        the options: R24 22k 1 %: 5.06 mV at its low corner; the power-limit part at 43.18 V and the timer's stacked maximum inside Figure 10 derated to Q7's case; the breaker's event and the timer's components stay open (R-118, R-119, D-09); resolution: register R-94, apply_gen_sch_e_hotswap.py
      D-08 R227's transients bypass U16's current control [RESOLVED (bounded, conditions named)]; rows IF-13 CONDITIONAL
         the constraint: the capacitors behind R227 (20.2 uF) charge outside U16's cycle limit, so 72.38 mV did not bound every transient
-        the options: bounded in part A: the differential at most the VBAT step, POE_VIN under 40 V in every required event, R227's pulse energy at most 2.879 mJ, a saturated sample distinguished from damage; moving the capacitors ahead of R227 not taken (they close U16's input loop); resolution: IF-13's checks; R-101 (Milliohm's pulse rating), R-117 (the loop's inductance)
+        the options: bounded in part A: the differential at most the VBAT step, POE_VIN under 40 V in every required event, a saturated sample distinguished from damage; R227's pulse energy 2.879 mJ nominal, the maximum unresolved until a capacitance envelope and the pulse's shape meet Milliohm's rating; moving the capacitors ahead of R227 not taken (they close U16's input loop); resolution: IF-13's checks; R-101 (Milliohm's pulse rating), R-117 (the loop's inductance), R-120 and R-121 (L10)
+     D-09 the hot swap's fault time against the start into VIN_RAW [OPEN]; rows IF-05 NOT MET
+        the constraint: with C5 (100 nF, K, X7R) at its printed rows stacked the fault time's minimum is 2.035 ms, under TI's half-again margin over the start into VIN_RAW at 43.18 V (3.814 ms; the start alone 2.542 ms at the corners, 1.324 ms nominal), the front end's own load during the start not included
+        the options: C5's real envelope read and the start re-run with the front end's load; a C5 with a tighter envelope (150 nF C0G at 5 % gives 4.46 to 12.852 ms, inside both the start margin and Figure 10's power law derated, no part read); a higher power limit (a larger pulse against the SOA); resolution: an open engineering question (R-119)
    (b) UNRESOLVED CHOICES THAT COULD OVERTURN THE ARCHITECTURE: 4 (no owner or acceptance criterion closes one; each keeps every
        criterion that names it from PASS until its evidence lands)
      U-01 FEA-008: the battery path's cell and thermal design (L4-E10, final); rows IF-10 CONDITIONAL
@@ -441,7 +451,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
         the alternatives: an enclosure conductance above LO-01a's floor (the plate, the fans, the case); parts rated past +70 C; D-02a's +55 C margin and E5 restated (the owner's, D-29); a reduced mode at those levels
         the owner's items: none yet: an architecture-level thermal question for the kit's thermal owner (MESHSAT-1478); a requirement change would be the owner's
         what it could overturn: the sealed case's thermal design (no vent, the ruling of 7 September 2026) or D-02a's margin; not the power path's topology
-     U-03 O-1: a solar panel with a supported maximum open circuit inside REQ-016's window; rows IF-01 PENDING
+     U-03 O-1: a solar panel with a supported maximum open circuit inside REQ-016's window; rows IF-01 CONDITIONAL
         the exact constraint: REQ-016 admits a panel only with an open circuit at or below 25 V at -20 C; the candidate's nominal sheet gives 24.05 V and no supported maximum (source compliance INCONCLUSIVE)
         the evidence that settles it: a panel maker's stated maximum, or a measured lot, at -20 C at or under 25 V
         the alternatives: the SPR-E-Flex-100 with the maker's tolerance; another panel inside the window; REQ-016's window restated (the owner's)
@@ -457,9 +467,9 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        ASSIGNMENT, not the item: each stays OWED, DRAFTED, MISSING DRAFT or PENDING until its acceptance is met on the built prototype
 
 10. THE REGISTERS (this folder's DOWNSTREAM-REGISTER.md and LAYER5-HANDOVER.md, read and checked)
-   register: 108 items; by owner: Layer 4 coordinator 6; Layer 5 interfaces 2; Layer 6 components 13; Layer 7 mechanical 2; Layer 8 board A generator owner 11; Layer 8 board E generator owner 16; Layer 8 board P generator owner 1; Layer 9 pre-layout analysis 18; prototype bench 32; firmware owner 5; TEST-PLAN owner 1; Layer 8 board B generator owner 1
-     by kind: EVIDENCE 24; IMPLEMENTATION 36; LAYOUT 12; RELEASE 4; TEST 32
-     implementation changes by state: DRAFTED 17; MISSING DRAFT 10; OWED 8; PENDING 1
+   register: 112 items; by owner: Layer 4 coordinator 5; Layer 5 interfaces 2; Layer 6 components 13; Layer 7 mechanical 2; Layer 8 board A generator owner 11; Layer 8 board E generator owner 17; Layer 8 board P generator owner 1; Layer 9 pre-layout analysis 20; prototype bench 34; firmware owner 5; TEST-PLAN owner 1; Layer 8 board B generator owner 1
+     by kind: EVIDENCE 26; IMPLEMENTATION 36; LAYOUT 12; RELEASE 4; TEST 34
+     implementation changes by state: DRAFTED 18; MISSING DRAFT 10; OWED 8
    Layer 5 handover: 9 interface entries drafted (pcb_interfaces.yaml and HW-FW-CONTRACT.md, drafts only)
 
 11. PART A: Q1, F1 AND U17 AS DATASHEET-BACKED PROPOSALS (the applicable conditions, not only the headline rating)
@@ -494,17 +504,27 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
      faults, the hot swap's power limit (fix round, B1): with the drawn R24 20000 Ohm the limit's sense voltage at the selected OVLO maximum 43.18 V is
        4.7429 mV nominal (Equation 7 with Equation 9), under the 5 mV SNVS452G 9.2.1.2.3 does not recommend (the PWRLIM rows are tested at 48 V and
        150 kOhm, not at this setting): NOT MET as drawn. The least RPWR for 5 mV at 43.18 V is 21443 Ohm (Equation 9); SESSION: R24 22 k 1 %, whose low
-       corner reads 5.06 mV (nominal 5.099 mV): MEETS (MAKER guidance). The complete hot-short pulse at the same voltage, by TI's own procedure
-       (9.2.1.2.5): the circuit breaker's event (13 A, its VCB maximum over R19, for at most 1.2 us), then the power limit (22.018 W nominal) at
-       R24 +1 % and R19 -1 %,
-       22.412 W, times TI's margin 1.3: 29.14 W, 0.675 A at 43.18 V, for the timer's maximum 8.16 ms, then off and a retry at 0.5 % duty
-     Figure 10 read from the sheet's vector drawing at 43.18 V (lines 100us, 10ms, 10us, 1ms, DC): 10 ms 1.879 A, 1 ms 5.055 A, 10 us 69 A at TC 25 C; at 8.16 ms by
-       Equations 15 to 18 (m = 0.43) 2.05 A; Q7's case at most 94.3 C (the hottest inside air the record holds, 76.25 C, plus its own 0.361 W at 6.15 A on
-       50 C/W), so Equation 19 derates by 0.4454: 0.913 A, 39.4 W at 43.18 V against the pulse's 0.675 A: MEETS (CONDITIONAL on board E's copper under Q7,
-       RthetaJA an ASSUMPTION); the breaker's event against the 10 us line derated the same way, 30.7 A: MEETS for its threshold current (the
-       current inside its 1.2 us response depends on the source's wiring, which REQ-015 does not state). Round 2's 3 A at 36 V read by eye is
-       withdrawn: the drawing reads 2.52 A there. A higher limit only shortens the start into the bus (Equation 12), so the timer's minimum keeps
-       its margin. Q1 carries at most 6.15 A, and the breaker's event, in that pulse: MEETS
+       corner reads 5.06 mV (nominal 5.099 mV): MEETS (MAKER guidance). The hot-short pulse at the same voltage, by TI's own procedure
+       (9.2.1.2.5), in parts. THE BREAKER'S EVENT: VCB's maximum over R19 at -1 % is a threshold, 13.131 A, and tCB (1.2 us maximum) is
+       measured with GATE low and no load (SNVS452G p.6): neither bounds the event's peak current nor Q7's loaded turn-off. The current rises at
+       the source's and wiring's V / L until the 230 mA pulldown has turned Q7 off, and REQ-015 states no source inductance: OPEN evidence, with
+       a bounded investigation (R-118: the peak and the turn-off measured at a hot short from a stiff 43.18 V source through the kit's cable; the 10 us
+       line derated as below allows 30.7 A at 43.18 V for pulses of 10 us or less). THE POWER LIMIT: 22.018 W nominal, at R24 +1 % and R19 -1 %
+       22.412 W, times TI's margin 1.3: 29.14 W, 0.675 A at 43.18 V, for the fault time, then off after tFAULT (12 us typical) and the 2 mA pulldown, and a
+       retry at 0.5 % duty. The fault time: L4-E5's 3.13 / 4.71 / 8.16 ms take C5 at its nominal 100 nF; C5 is C14663 (Yageo CC0603KRX7R9BB104, K: +-10 %;
+       X7R: +-15 % over temperature and +-15 % after endurance, the Yageo sheet V.26), so +10 % alone gives 8.976 ms and the printed rows stacked
+       give 2.035 to 11.871 ms (INFERRED; DC bias only lowers it). Figure 10 read from the sheet's vector drawing at 43.18 V (lines 100us, 10ms, 10us, 1ms, DC): 10 ms 1.879 A,
+       1 ms 5.055 A, 10 us 69 A at TC 25 C; Equations 15 to 18 (m = 0.43) give 2.05 A at L4-E5's 8.16 ms and 1.745 A at the envelope's 11.871 ms (TI's power
+       law carried 18.7 % past the 10 ms line); Q7's case at most 94.3 C (the hottest inside air the record holds, 76.25 C, plus its own 0.361 W at
+       6.15 A on 50 C/W), so Equation 19 derates by 0.4454: 0.777 A at the timer's maximum against the pulse's 0.675 A: it still fits (CONDITIONAL on
+       board E's copper under Q7, RthetaJA an ASSUMPTION, and on the extrapolation). THE START: Equation 12 into VIN_RAW's 31 uF (A C11 10 u, A C12 10 u, E C7 1 u, E C8 10 u) at 43.18 V
+       takes 1.324 ms at nominal values and 2.542 ms with the capacitors at the printed rows' top (the same rows taken for board E's two, an
+       ASSUMPTION) and the limit at its low corner over TI's 1.3 (16.64 W); TI asks the minimum fault time to exceed the start by half again,
+       3.814 ms, and the stacked minimum is 2.035 ms: NOT MET at the stacked corners (the front end's own load during the start is not included
+       either), defect D-09, OPEN, the timer's component bounds an investigation (R-119). An option, not selected (no part is read): C5
+       150 nF C0G at 5 % gives 4.46 to 12.852 ms, over the start's 3.814 ms and, at 0.751 A, inside Figure 10's power law derated (carried 28.5 % past
+       the 10 ms line) against the pulse's 0.675 A. Round 2's 3 A at 36 V read by eye is withdrawn: the drawing reads 2.52 A there. Q1 carries at
+       most 6.15 A in the power-limit part; in the breaker's event it carries the same open peak
        a short at DC_P, ahead of the hot swap (it needs a prior short of D10, D1, E-F1's capacitor or C4): only F1 limits, at most 569.8 A
        from a stiff source; 0.286 ms is an illustration from the 10 A part's typical melting I2t (arcing excluded), not a clearing time. Q1 lies in
        that path and no figure shows it holds 569.8 A against its IDM 400 A for 100 us; it is not a conductor or connector of REQ-045, and the
@@ -555,21 +575,25 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
        inductor's peak 11.71 A (under its 15.5 A Isat), its RMS at most 10.71 A; R227 carries the high-side current, whose RMS is at most that: 0.58 W
        against 3 W; the peak reads 59.12 mV, inside full scale: MEETS (INFERRED). A hard short (the output near 0 V): the valley is crossed rarely
        and one on-time can last a full period: the peak reaches 17.77 A, past the inductor's Isat, so a lower bound there (INCONCLUSIVE on L above
-       Isat, R-65's sweep extended); R227 then reads 89.7 mV, past full scale: an ADC SATURATION of that sample, not damage (the differential stays
+       Isat, the L10 assignment R-120 and R-121); R227 then reads 89.7 mV, past full scale: an ADC SATURATION of that sample, not damage (the differential stays
        far under the 40 V absolute); 9.15 uJ in R227 per such period; the average output loop (VSNS 57 mV maximum over R71) then holds the
        output's average at 2.879 A at most once the soft-start capacitor discharges; a port's own fault is board B's TPS23861's
      transients behind R227 (B3): the draft puts C81, C82 (two 10 uF), U16's VIN and BIAS capacitors behind R227: 20.2 uF nominal (NETLIST). For
        a step of VBAT the differential across R227 never exceeds the step (at the current's peak the loop's inductance carries no voltage), and
        POE_VIN rings to at most its start plus twice the step (an undamped bound; any resistance only lowers it):
-       - a hard connect, 0 to the regulated maximum: step 16.884 V, differential at most 16.884 V (40 V absolute: MEETS), POE_VIN at most 33.77 V (pins 40 V: MEETS), R227 at most 2.879 mJ
-       - the pack opening mid-charge, regulated maximum to the pack-open bound: step 3.251 V, differential at most 3.251 V (40 V absolute: MEETS), POE_VIN at most 23.39 V (pins 40 V: MEETS), R227 at most 0.107 mJ
-       - D1's rated pulse on VBAT (a capability scenario, D-16): step 12.316 V, differential at most 12.316 V (40 V absolute: MEETS), POE_VIN at most 41.52 V (pins 40 V: past it in the undamped limit; outside every requirement), R227 at most 1.532 mJ
+       - a hard connect, 0 to the regulated maximum: step 16.884 V, differential at most 16.884 V (40 V absolute: MEETS), POE_VIN at most 33.77 V (pins 40 V: MEETS), R227 2.879 mJ nominal
+       - the pack opening mid-charge, regulated maximum to the pack-open bound: step 3.251 V, differential at most 3.251 V (40 V absolute: MEETS), POE_VIN at most 23.39 V (pins 40 V: MEETS), R227 0.107 mJ nominal
+       - D1's rated pulse on VBAT (a capability scenario, D-16): step 12.316 V, differential at most 12.316 V (40 V absolute: MEETS), POE_VIN at most 41.52 V (pins 40 V: past it in the undamped limit; outside every requirement), R227 1.532 mJ nominal
        the differential above 81.92 mV only saturates the ADC's sample; damage needs 40 V across the inputs or a pin outside -0.3 to 40 V, which
-       no required event reaches; R227's pulse energy (at most 2.879 mJ, the hard connect, all of 0.5 C dV2 taken by R227) is CONDITIONAL on
-       Milliohm's pulse rating, which the HoJLR2512 sheet does not print (L4-E7R's clarification to Milliohm, R-101); in service VBAT rises through
-       the pack's precharge contact and the charger's soft start, far slower than the loop's ringing; the capability pulse's 10 us rise likewise
-     U16's own input: its VIN and BIAS move with U17 to POE_VIN, at most 0.072 V under VBAT at the fault bound; its UVLO and BIAS window are
-       read against VBAT less that drop (the helper refuses a BIAS rail other than the input without a blocking diode, so both move)
+       no required event reaches. R227's pulse energy at the hard connect is 2.879 mJ NOMINAL (0.5 C dV2 at the nominal 20.2 uF, all taken by R227);
+       the capacitors are K parts (C596319, Yageo CC1210KKX7R9BB106, and C14663 for the 100 nF ones): +10 % alone gives 3.167 mJ, and the printed rows stacked (K,
+       +-15 % over temperature, +-15 % after endurance; DC bias only lowers an X7R's capacitance) 4.189 mJ. The MAXIMUM stays UNRESOLVED until a
+       supported capacitance envelope (tolerance, temperature and bias at the step's voltage) and the step's real shape and duration meet
+       Milliohm's pulse rating, which the HoJLR2512 sheet does not print (R-101, R-117); in service VBAT rises through the pack's precharge
+       contact and the charger's soft start, far slower than the loop's ringing; the capability pulse's 10 us rise likewise
+     U16's own input: its VIN and BIAS move with U17 to POE_VIN, at most 0.072 V under VBAT in the boost current-limit case (the transients above
+       exceed it while they last); its UVLO and BIAS window are read against VBAT less that drop (the helper refuses a BIAS rail other than the
+       input without a blocking diode, so both move)
      startup: the sheet: 'the bus voltage can be present with the supply voltage off, and reciprocally': MEETS (MAKER)
      a load dump: the vehicle reaches VBAT only through the front end and the charger, so VBAT's own bounds above hold: MEETS
      accuracy: VOS 10 uV, 2 mA; gain 0.1 % with R227's 1 % and 50 ppm/K over 75 K (L4-E4's span): 1.475 % plus 2 mA (INFERRED)

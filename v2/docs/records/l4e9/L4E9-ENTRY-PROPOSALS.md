@@ -8,7 +8,9 @@ Every figure is printed in `l4e9_power_path.out` section 11, which `l4e9_power_p
 pinned inputs. Classes: MAKER (a maker's row, page or table named), NETLIST, INFERRED (method stated), CONDITIONAL,
 ASSUMPTION, PENDING. The fix round (2 October 2026) answers the collaborator's focused check (`checks/astra-check-l4e9-1.md`,
 NOT YET): B1 (Q7's power limit and the complete hot-short pulse), B2 (what F1 protects, traced without an exemption) and B3
-(R227's transients), with its minors.
+(R227's transients), with its minors. The final round answers the targeted recheck (`checks/astra-check-l4e9-2.md`, NOT YET):
+the breaker's event and the timer's components are stated as open evidence, R227's energy as nominal with its maximum
+unresolved, and L10 gets its own assignment (R-120, R-121).
 
 ## The makers' documents read
 
@@ -44,7 +46,7 @@ through Q7's body diode, so Q1 holds 66.15 V, over the drawn BSC039N06NS's 60 V.
 | transient: M7 at decision 34's level | DC_F moves 2.25 V; Q1 at most 38.25 V | 100 V | MEETS | INFERRED |
 | capability scenario (D10 at its rated pulse; no surge level is ruled, D-16, CHO-003) | negative: Q1 at 100.5 V with DC_P at 36 V; avalanche energy at most 83.6 mJ | 100 V; EAS 274 mJ | NOT MET by 0.5 V, outside every requirement (DECISION-31) | INFERRED |
 | fault: the power limit's sense voltage at 43.18 V (B1) | drawn R24 20k: 4.7429 mV nominal; R24 22k 1 %: 5.06 mV at its low corner (Equation 9's least RPWR there 21443 Ohm) | SNVS452G 9.2.1.2.3: under 5 mV is not recommended (the PWRLIM rows are tested at 48 V and 150 kOhm) | NOT MET as drawn; MEETS with R24 22k | MAKER |
-| fault: the complete hot-short pulse (B1), by TI's procedure 9.2.1.2.5 | the breaker's event (13 A for at most 1.2 us), then the power limit at R24 +1 % and R19 -1 %, 22.412 W, times TI's 1.3: 29.14 W, 0.675 A at 43.18 V for the timer's maximum 8.16 ms; retry at 0.5 % duty | Figure 10 read from TI's vector drawing at 43.18 V: 10 ms 1.879 A, 1 ms 5.055 A, so 2.05 A at 8.16 ms (Equations 15 to 18); derated to Q7's case at most 94.3 C (Equation 19, 0.4454): 0.913 A; the 10 us line derated, 30.7 A, for the breaker's event | MEETS, CONDITIONAL on board E's copper under Q7 (RthetaJA an ASSUMPTION) | INFERRED |
+| fault: the hot-short pulse (B1, the final round), by TI's procedure 9.2.1.2.5 | the breaker's event: VCB's maximum over R19 at -1 % is a threshold, 13.131 A, and tCB (1.2 us) is measured with GATE low and no load, so neither bounds the event's peak or Q7's loaded turn-off (OPEN evidence, R-118); the power-limit part at R24 +1 % and R19 -1 %, 22.412 W, times TI's 1.3: 29.14 W, 0.675 A at 43.18 V for the fault time: 8.16 ms at C5's nominal, 8.976 ms at its +10 % alone, 2.035 to 11.871 ms with C5's printed rows stacked (K, X7R temperature and endurance) | Figure 10 read from TI's vector drawing at 43.18 V: 10 ms 1.879 A, 1 ms 5.055 A, so 1.745 A at 11.871 ms (Equations 15 to 18, carried 18.7 % past the 10 ms line); derated to Q7's case at most 94.3 C (Equation 19): 0.777 A | the power-limit part fits at the timer's maximum, CONDITIONAL on board E's copper under Q7 and the extrapolation; the breaker's event OPEN; the start-up margin NOT MET at the stacked corners (D-09) | INFERRED |
 | fault: a short at DC_P, ahead of the hot swap (it needs a prior short of D10, D1, E-F1's capacitor or C4) | only F1 limits: at most 569.8 A from a stiff source; 0.286 ms is an illustration from the typical melting I2t (arcing excluded), not a clearing time | IDM 400 A for 100 us | no figure shows Q1 holds it; Q1 is not a conductor or connector of REQ-045 and the entry is already failed; traced under F1 (section 2); no exemption is claimed | INFERRED |
 | gate drive | VGS 10.8 to 13.9 V (the charge pump's window) | +-20 V; TI asks a 15 V rating | MEETS | MAKER |
 | threshold | Vth at most 3.2 V | TI recommends 2.5 V | NOT MET as a recommendation (the drawn part's 3.3 V misses it too; effect on turn-on time and light-load regulation, bench R-112) | MAKER |
@@ -68,10 +70,17 @@ V, is what F1, U2, Q2, U4, C26 and C27 and D10 are checked against in the interf
 **Q7's power limit (B1, defect D-07, SESSION).** At the selected OVLO maximum the drawn R24 20k gives 4.7429 mV of sense
 voltage, under the 5 mV TI does not recommend going below, and round 2 compared the hot-short with Figure 10 at 36 V, read by
 eye (3 A; the drawing reads 2.52 A there) and with an assumed 100 C case. R24 becomes 22k 1 %: 5.06 mV at its low corner, a
-limit of 22.018 W nominal and 22.412 W at the corners. The complete pulse at 43.18 V, with TI's own 1.3 margin, is 0.675 A for
-8.16 ms against 0.913 A, Figure 10's line read from the sheet's vector drawing and derated by TI's Equation 19 to Q7's case at
-most 94.3 C (the hottest inside air the record holds, 76.25 C, plus Q7's own 0.361 W at 6.15 A on 50 C/W). A higher limit only
-shortens the start into the bus, so the timer's minimum keeps its margin. Bench R-118 measures it.
+limit of 22.018 W nominal and 22.412 W at the corners. The power-limit part of the hot short at 43.18 V, with TI's own 1.3
+margin, is 0.675 A; Figure 10's line, read from the sheet's vector drawing and derated by TI's Equation 19 to Q7's case at most
+94.3 C (the hottest inside air the record holds, 76.25 C, plus Q7's own 0.361 W at 6.15 A on 50 C/W), allows 0.913 A at L4-E5's
+8.16 ms (2.05 A at TC 25 C) and 0.777 A at the fault time's maximum with C5's printed rows stacked, 11.871 ms (TI's power law carried 18.7 % past
+the 10 ms line): it still fits, CONDITIONAL on the board's copper and that extrapolation. **What stays open (the final round):**
+the breaker's event, since VCB's 13.131 A is a threshold and tCB is measured with no GATE load, so the event's peak and Q7's
+loaded turn-off depend on the source's and wiring's inductance, which REQ-015 does not state (R-118 measures them); and the
+timer's components: at C5's printed corners the fault time's minimum, 2.035 ms, is under TI's half-again margin over the start
+into VIN_RAW at 43.18 V, 3.814 ms (the start 2.542 ms at the corners, 1.324 ms nominal; the front end's own load not included),
+defect D-09, OPEN (R-119). A 150 nF C0G at 5 % would give 4.46 to 12.852 ms, inside both, but no such part is read, so it is
+an option, not a selection.
 
 Drafts: `apply_gen_sch_e_q1.py` (round 1) and `apply_gen_sch_e_hotswap.py` (R22, R23, R24 and U6's value text); both
 release-guarded and composing with d8dec31's input capacitor and L4-E7R's drafts.
@@ -92,7 +101,7 @@ release-guarded and composing with d8dec31's input capacitor and L4-E7R's drafts
 | the rejection feature | works only in a 58 V keyed holder; the 3568 also takes a 32 V MINI | | the BOM, label and ASSEMBLY.md name the 0997 (R-18) | MAKER |
 
 Draft: `apply_gen_sch_e_f1.py` (F1's value text names the part and its ratings; release-guarded; composes with the Q1 draft,
-d8dec31's input capacitor and L4-E7R's four drafts at `237cd9be`). Stale configuration found: `pcb_energy_chain.yaml`'s
+d8dec31's input capacitor and L4-E7R's four drafts as accepted at `675b8068`). Stale configuration found: `pcb_energy_chain.yaml`'s
 SHORE_INPUT stage still names a 10 A ATOF blade on the 287 table at 56 C with a 200 A prospective current (569.8 A at the
 selected OVLO maximum, 623.9 A with an AWG 16 lead), and `pcb_fuse_derating.yaml` holds no 0997 table (register R-95, R-96).
 
@@ -100,7 +109,8 @@ selected OVLO maximum, 623.9 A with an AWG 16 lead), and `pcb_fuse_derating.yaml
 element sized for that stage's conductors and connectors, coordinated with what it protects"; PWR-003 carries the stage
 SHORE_INPUT with a 10 A conductor (board E's bands), no stage named downstream and its prospective low "not established". For
 a stiff source F1 interrupts and the conductors' withstand waits on the total clearing I2t. For a weak source the elements F1
-protects carry 10 to 20 A for up to 600 s, and no held sheet gives their time-current limit: defect D-06, an open engineering
+protects carry 10 to 13.5 A with no maximum clearing time (11 A with no opening for 100 h), 13.5 A for up to 600 s and 20 A for
+up to 5 s, and no held sheet gives their time-current limit: defect D-06, an open engineering
 question. Alternatives: an interconnect rated to the fuse's 20 A point (MIL-DTL-38999 size 12 contacts, 23 A; a 30 A board
 connector such as the Amass XT60-M board E already carries; a cable whose maker rates it, with the stiff-source current
 re-checked, since a heavier cable raises it toward the 1000 A interrupting rating); the source's capability stated in REQ-015
@@ -122,10 +132,10 @@ its fault bound is 14.33 A, which a 20 mOhm shunt would read past full scale and
 | differential, normal | the stage's input at 0.6 A out at a 10 V stack: 3.682 A, 18.59 mV | 81.92 mV full scale | MEETS | INFERRED |
 | differential, the stage's fault bound | U16's boost peak limit (140 + 1.9) mV over R72 10 mOhm at -1 %: 14.33 A, 72.38 mV | 81.92 mV | MEETS | INFERRED |
 | a PoE fault, steady buck operation (B3) | the valley at VCS(BUCK) 94 mV over R72 (9.69 A); the ripple VIN D (1 - D) T / L at most 2.02 A (D = 0.5, 16.884 V, T 5.743 us at fSW(1)'s minimum, L 12 uH at -20 %); peak 11.71 A, RMS at most 10.71 A | R227 0.58 W against 3 W; 59.12 mV against 81.92 mV; L10's Isat 15.5 A | MEETS | INFERRED |
-| a PoE fault, a hard output short (B3) | one on-time can last a full period: the peak reaches 17.77 A (past L10's Isat, so a lower bound there), R227 89.7 mV, 9.15 uJ a period; then the average output loop holds 2.879 A at most (VSNS 57 mV over R71) | the ADC's full scale: a saturated sample, not damage (40 V differential absolute) | CONDITIONAL on L10's L(I) above Isat (R-65 extended) | INFERRED |
-| transients behind R227 (B3) | the draft puts C81, C82 (10 uF each), U16's VIN and BIAS capacitors behind R227: 20.2 uF. A VBAT step: the differential is at most the step, POE_VIN rings to at most its start plus twice the step (undamped). A hard connect 0 to 16.884 V: 16.884 V and 33.77 V, 2.879 mJ; the pack opening: 3.251 V and 23.39 V, 0.107 mJ; D1's rated pulse (capability, D-16): 12.316 V and 41.52 V, 1.532 mJ | the INA226's +-40 V differential and -0.3 to 40 V pins (SBOS547C 6.1); R227's pulse rating (not printed) | MEETS for every required event; the capability pulse past 40 V only in the undamped ideal-step limit (its 10 us rise is slower than the loop's ringing; R-117); the pulse energy CONDITIONAL on Milliohm (R-101) | INFERRED |
+| a PoE fault, a hard output short (B3) | one on-time can last a full period: the peak reaches 17.77 A at a constant 12 uH, past L10's 15.5 A Isat, so a lower bound there; R227 89.7 mV, 9.15 uJ a period; then the average output loop holds 2.879 A at most (VSNS 57 mV over R71) | the ADC's full scale: a saturated sample, not damage (40 V differential absolute) | CONDITIONAL on L10's L(I) at temperature: the L10 assignment R-120 (the self-consistent peak, R227's pulse and RMS, U17's pins at temperature) and R-121 (the bench sweep through 20 A) | INFERRED |
+| transients behind R227 (B3) | the draft puts C81, C82 (10 uF each), U16's VIN and BIAS capacitors behind R227: 20.2 uF nominal. A VBAT step: the differential is at most the step, POE_VIN rings to at most its start plus twice the step (undamped). A hard connect 0 to 16.884 V: 16.884 V and 33.77 V, 2.879 mJ nominal; the pack opening: 3.251 V and 23.39 V, 0.107 mJ nominal; D1's rated pulse (capability, D-16): 12.316 V and 41.52 V, 1.532 mJ nominal. The capacitors are K parts (C596319, Yageo CC1210KKX7R9BB106; C14663): +10 % alone gives 3.167 mJ, the printed rows stacked 4.189 mJ | the INA226's +-40 V differential and -0.3 to 40 V pins (SBOS547C 6.1); R227's pulse rating (not printed) | MEETS for every required event (pins and differential); the capability pulse past 40 V only in the undamped ideal-step limit (its 10 us rise is slower than the loop's ringing; R-117); R227's maximum energy UNRESOLVED until a supported capacitance envelope (tolerance, temperature, bias) and the step's shape meet Milliohm's pulse rating (R-101) | INFERRED |
 | R227's dissipation | 1.037 W at 14.33 A | 3 W at 62.1 C (derated from 70 C) | MEETS | MAKER |
-| U16's own input | VIN and BIAS at most 0.072 V under VBAT at the fault bound | its UVLO and BIAS window read against VBAT less that drop | MEETS | INFERRED |
+| U16's own input | VIN and BIAS at most 0.072 V under VBAT in the boost current-limit case (the transients above exceed it while they last) | its UVLO and BIAS window read against VBAT less that drop | MEETS for that case | INFERRED |
 | startup | "the bus voltage can be present with the supply voltage off, and reciprocally" | | MEETS | MAKER |
 | a load dump | the vehicle reaches VBAT only through the front end and the charger | VBAT's bounds above | MEETS | INFERRED |
 | accuracy | VOS 10 uV (2 mA); gain 0.1 % with R227's 1 % and 50 ppm/K over 75 K: 1.475 % plus 2 mA at 25 C; with SBOS547C's drift rows (50 ppm/C, 0.1 uV/C) over the IC's -20 to 76.25 C: 1.731 % plus 3.025 mA (at -20 C the drift alone is 0.225 % and 0.9 mA) | | stated | INFERRED |

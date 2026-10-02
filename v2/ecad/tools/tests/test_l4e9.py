@@ -449,7 +449,8 @@ def t_the_part_a_page_agrees_with_the_output():
     sec = _C["text"].split("11. PART A")[1]
     for fig in ("66.15", "0.361", "80.2", "38.83", "30.83", "569.8", "7.3 A", "0.309", "85.9", "18.59", "72.38", "1.037", "16.384", "2048", "1.475",
                 "6.346", "6.458", "39.04", "43.92", "39.71", "43.18", "42.4 V",
-                "4.7429", "5.06", "0.913", "0.675", "94.3", "29.14", "2.05", "17.77", "33.77", "2.879", "1.731", "3.025", "623.9", "22.412"):
+                "4.7429", "5.06", "0.777", "0.675", "94.3", "29.14", "2.05", "17.77", "33.77", "2.879", "1.731", "3.025", "623.9", "22.412",
+                "13.131", "11.871", "2.035", "3.814", "3.167", "4.189", "8.976"):
         assert fig in sec, "the output lacks %s" % fig
         assert fig in page, "the part A page lacks %s" % fig
     for part in ("CSD19532Q5B", "0997010.WXN", "C2903482", "R227"):
@@ -475,32 +476,30 @@ def t_the_ovlo_band_selected_clears_cs101_and_stays_under_d10():
                 assert abs(c.a - round(hi, 2)) < 1e-9, "%s: a selected check on the drawn OVLO maximum" % r["id"]
 
 
-def t_the_selected_solutions_are_in_the_rows_and_only_d01_is_pending():
+def t_the_selected_solutions_are_in_the_rows_and_nothing_is_pending():
     _M()
     F = _C["F"]
     rows = {r["id"]: r for r in _C["R"]}
-    pend = [(r["id"], c) for r in _C["R"] for c in r["checks"] if c.cls == "PENDING"]
-    assert pend, "L4-E7R's CS101 follow-up must keep its rows PENDING until it lands"
-    for rid, c in pend:
-        assert rid in ("IF-01", "IF-02") and "CS101 follow-up" in c.src, "%s is PENDING on something other than D-01" % rid
-    st = _C["st"]
-    assert st["IF-01"][1] == "PENDING" and st["IF-02"][1] == "PENDING"
-    by_what = {c.what: c for c in rows["IF-02"]["checks"]}
+    assert not [r["id"] for r in _C["R"] for c in r["checks"] if c.cls == "PENDING"], "L4-E7R is accepted: no row waits on it"
+    assert all(st[1] != "PENDING" for st in _C["st"].values())
     sb = [c for c in rows["IF-02"]["checks"] if "static bound" in c.what][0]
     assert sb.a == F["static_bound"] and sb.b == 100.0 and sb.cls == "CONDITIONAL", "the backstop's static bound, CONDITIONAL"
     rg = [c for c in rows["IF-02"]["checks"] if "under the backstop's lowest trip" in c.what][0]
     assert rg.a == F["reg"][1] and rg.b == F["bs_trip"][0] and rg.met
+    m2 = [c for c in rows["IF-01"]["checks"] if "TEST-PLAN M2" in c.what][0]
+    assert m2.a == F["m2_ripple"] and m2.b == F["m2_margin"] and m2.met and m2.cls == "CONDITIONAL", "D-01's correction in IF-01, on the loop's typical rows"
     hot = [c for c in rows["IF-01"]["checks"] if "with the sheet's power tolerance inside F2" in c.what][0]
     assert hot.a == F["isc_hot_tol"] and hot.met
     for rid in ("IF-04", "IF-13"):
         sel = [c for c in rows[rid]["checks"] if c.scope == "selected"]
         assert all(c.met is not False for c in sel), "%s: a selected check fails" % rid
-        assert all(c.cls != "PENDING" for c in sel)
     drawn = [c for c in rows["IF-04"]["checks"] + rows["IF-13"]["checks"] if c.scope == "drawn" and c.met is False]
     assert len(drawn) >= 4, "the as-drawn defects (Q1, F1, U17, the OVLO under CS101) stay visible"
     text = _C["text"]
     assert "%s / %s / %s Wh" % tuple(_C["M"].fmt(x) for x in F["e7r_day"]) in text, "L4-E7R's energy in the endurance"
     assert "2.09 W" in text.split("8. THE ENDURANCE")[1].split("9. THE CLOSURE")[0], "L4-E8's losses in the budgets"
+    d1 = [d for d in _C["M"].DEFECTS if d["id"] == "D-01"][0]
+    assert d1["state"].startswith("RESOLVED") and "91e9a4b5" in d1["resolution"]
 
 
 def t_l4e10_and_meshsat_1478_enter_as_choices_not_tasks():
@@ -550,7 +549,7 @@ def t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register():
     for r, d in zip(de, m.DEFECTS):
         assert r[1] == d["title"] and r[2] == d["constraint"] and r[3] == d["options"], d["id"]
         assert r[4].split(":")[0].split(",")[0].split(" ")[0] == d["state"].split(" ")[0], d["id"]
-    assert [d["id"] for d in m.DEFECTS if d["state"] == "OPEN"] == ["D-01", "D-06"]
+    assert [d["id"] for d in m.DEFECTS if d["state"] == "OPEN"] == ["D-06", "D-09"]
 
 
 def t_choice_and_defect_figures_are_printed_by_the_reconciliation():
@@ -609,11 +608,22 @@ def t_b1_the_power_limit_and_the_complete_pulse_at_one_voltage_and_temperature()
     assert {"10ms", "1ms", "10us"} <= set(A["soa_labels"]) and A["soa_1ms"] > A["soa_tflt_25"] > A["soa_10ms"] > 0, "the pulse lies between the 1 and 10 ms lines"
     assert 0 < A["soa_m"] < 1
     assert abs(A["tc_max"] - (A["t_hot"] + A["q1_p"] * A["rja"])) < 1e-9 and A["t_hot"] >= F["air"][1]
-    assert A["pulse_a"] <= A["soa_tflt_hot"] and A["cb_a"] <= A["cb_10us_hot"]
-    sel = {c.what: c for c in [c for r in _C["R"] if r["id"] == "IF-05" for c in r["checks"]]}
-    pulse = [c for w, c in sel.items() if "complete hot-short pulse" in w][0]
-    assert pulse.cls == "CONDITIONAL" and _C["st"]["IF-05"][1] == "CONDITIONAL", "IF-05 does not read MEETS on an unresolved board assumption"
+    assert A["pulse_a"] <= A["soa_tenv_hot"] <= A["soa_tflt_hot"], "the power-limit part at the timer envelope's maximum, the longer time the lower line"
+    assert abs(A["tflt_env"][1] - F["timer_ms"][2] * A["c_hi_f"]) < 1e-9 and abs(A["tflt_env"][0] - F["timer_ms"][0] * A["c_lo_f"]) < 1e-9
+    assert A["c_hi_f"] > 1 + A["c_tol"], "C5's envelope carries more than its tolerance"
+    assert abs(A["cb_thr"] - A["vcb_max"] * 1e-3 / (A["rs"] * 0.99)) < 1e-9
+    rows = {r["id"]: r for r in _C["R"]}
+    sel = {c.what: c for c in rows["IF-05"]["checks"]}
+    part = [c for w, c in sel.items() if "power-limit part" in w][0]
+    assert part.cls == "CONDITIONAL" and part.met
+    cb = [c for w, c in sel.items() if "breaker's event" in w][0]
+    assert cb.met is None and "R-118" in cb.src, "the breaker's event stays OPEN evidence"
+    stt = [c for w, c in sel.items() if "fault time's minimum" in w][0]
+    assert stt.a == round(A["tflt_env"][0], 3) and stt.met is False and "D-09" in stt.what, "the start margin at the corners is shown NOT MET"
+    assert _C["st"]["IF-05"][1] == "NOT MET", "IF-05 does not read MEETS while the start margin fails at the corners"
     assert any(c.scope == "drawn" and c.met is False and "20k" in w for w, c in sel.items()), "the drawn setting's shortfall stays visible"
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    assert "13.131" in reg["R-118"][2] and "R-119" in reg["R-118"][5] and "C5" in reg["R-119"][2]
 
 
 def t_b2_no_exemption_is_claimed_and_the_weak_source_band_is_open():
@@ -646,6 +656,16 @@ def t_b3_r227_transients_are_bounded_for_every_required_event():
     assert A["short_peak"] > A["l10_isat"], "the hard short's lower bound is past Isat and is carried as CONDITIONAL"
     rows = {r["id"]: r for r in _C["R"]}
     assert _C["st"]["IF-13"][1] == "CONDITIONAL" and any("R-101" in c.src for c in rows["IF-13"]["checks"])
+    assert any("R-120" in c.src for c in rows["IF-13"]["checks"]), "L10's own assignment is named"
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    l10 = [r for r in reg.values() if "L10" in r[2]]
+    assert l10 and any("L(I)" in r[2] or "L against current" in r[2] for r in l10), "an L10 assignment with its L(I)"
+    assert any("R227" in r[2] and "temperature" in r[2] and "pins" in r[2] for r in l10), "R227's stress and U17's pins at temperature"
+    for p in (OUT, PAGE, REG, os.path.join(REC, "L4E9-ENTRY-PROPOSALS.md")):
+        t = open(p, encoding="utf-8").read()
+        assert "R-65 extended" not in t and "R-65's sweep extended" not in t, "%s still promises an R-65 extension" % os.path.basename(p)
+    assert "mJ NOMINAL" in _C["text"] and "UNRESOLVED" in _C["text"], "R227's energy labelled nominal, its maximum unresolved"
+    assert A["tr"][0][5] * A["c_hi_f"] > A["tr"][0][5] * (1 + A["c_tol"]) > A["tr"][0][5]
 
 
 def t_b4_source_only_operation_is_an_unresolved_choice():
@@ -660,14 +680,17 @@ def t_b4_source_only_operation_is_an_unresolved_choice():
     assert "SOURCE-ONLY AND DEAD-PACK OPERATION" in _C["text"]
 
 
-def t_the_check_is_filed_with_its_blockers():
-    p = os.path.join(REC, "checks", "astra-check-l4e9-1.md")
-    need(p, "the filed check")
-    t = open(p, encoding="utf-8").read()
-    assert t.splitlines()[0] == "accepted: no"
-    for b in ("B1, G1/G5", "B2, G1/G2/G5", "B3, G3/G5", "B4, G5"):
-        assert b in t, b
-    assert "astra-check-l4e9-1.md" in open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+def t_the_checks_are_filed_with_their_blockers():
+    readme = open(os.path.join(REC, "README.md"), encoding="utf-8").read()
+    for name, blockers in (("astra-check-l4e9-1.md", ("B1, G1/G5", "B2, G1/G2/G5", "B3, G3/G5", "B4, G5")),
+                           ("astra-check-l4e9-2.md", ("B1, R1/R5", "B3, R3/R5", "B3, R5"))):
+        p = os.path.join(REC, "checks", name)
+        need(p, "the filed check %s" % name)
+        t = open(p, encoding="utf-8").read()
+        assert t.splitlines()[0] == "accepted: no"
+        for b in blockers:
+            assert b in t, (name, b)
+        assert name in readme
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
