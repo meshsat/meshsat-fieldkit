@@ -87,7 +87,7 @@ PINS = {
     "dec31": ("v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md", "094817023210d1b09d92e62716ba550d0fb5b11affc75fe18986bfc6ebae3609"),
     "fuse997": ("v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf", "437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e"),
     "keystone": ("v2/vendor/keystone/M65p42.pdf", "caa141ea51ac68cf80ab6e14ad2075fcfc76206451f4bfe45330005c0deaf395"),
-    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "a0ec073de05abe918e983384181f1b6538b5347d099b709ad75e15f0f74091a9"),
+    "l4e7r": ("v2/docs/records/l4e7/l4e7_stage_settings.out", "fc8463d5bca9baba3cff5e306570f895f8ed72139869bf2e5ceda6f00760f663"),
     "l4e10": ("v2/docs/records/l4e10/l4e10_cell_thermal.out", "c99baceb74d25bbf02d72af0b8495c48a8ff5533a81a93a2169b1f9b0342c176"),
     "d38999": ("v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b"),
     "reqs": ("v2/ecad/tools/pcb_requirements.yaml", "b624ac495650a3592c45a37610375fb05bf7b775042cf3de7ec8979bc46a6e50"),
@@ -110,7 +110,7 @@ PINS = {
     "cl_sensirion": ("v2/docs/records/l4e12/clarification/sensirion-sgp41.txt", "43c47549235fe6e8162b200324cedd7b34a342bb2a1cb0abf97311f39a48da83"),
     "cl_adi": ("v2/docs/records/l4e7/clarification/analog-devices-lt8705a.txt", "97d8217092eae7ac41cc7c3a7303696cf9494bfc8df14171fcc69c6862f86cfa"),
     "cl_milliohm": ("v2/docs/records/l4e7/clarification/milliohm-hojlr2512.txt", "e920420419a677e0b723f8c09b26dc817efcc29124dc742fc4e813c4279ff8f6"),
-    "cl_vishay": ("v2/docs/records/l4e7/clarification/vishay-wsl2512.txt", "0d91a42dfa59432b71ee5bd0f7abf707f28459a1197dc3c599ea9dce451ab11c"),
+    "cl_vishay": ("v2/docs/records/l4e7/clarification/vishay-wsl2512.txt", "5d96017a5051257bff5571e27ece120240d8710383a400a6acfed59cd3726b08"),
     "cl_ti": ("v2/docs/records/l4e7/clarification/texas-instruments-ina169.txt", "405fb3988f41d8ac98dce3d5ec1cb4af1a0b5d635b109cf71772557c25ab3854"),
     "ti_review": ("v2/docs/review-packets/battery/REVIEW-REQUEST.md", "91a257430cbeb53a672ca57592bb75092a98a761d1c8ee7bbaefa95e339b102e"),
     "cl_gc": ("v2/docs/records/l4e12/clarification/ground-control-rockblock-9704.txt", "738245875bec70c55d1ec105fb566248c98351095a268ffcd25d2b76e3bea85f"),
@@ -118,7 +118,7 @@ PINS = {
     "cl_bulgin": ("v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt", "c7accd3dd6dc1d8993de6ffc37e4febba71302e878b3cdf0f3f2f30bc2a4457e"),
     # update rounds 3 and 4: L4-E13 (U-03), accepted by the coordinator's check 3 at fae419d1 and, after set 25 (L4-E7R
     # accepted), check 4 at 33b6b7be; read from the tree
-    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "436344ef3c00df7d09509b01a27e4bd3b4ff42825b180d8dcbe14bc1bfb6773a"),
+    "l4e13": ("v2/docs/records/l4e13/l4e13_panel.out", "37381202685fcf9a744d7b460dda0abc618d7b45d2aca5015acd255545284e8d"),
     "l4e13md": ("v2/docs/records/l4e13/L4E13-PANEL.md", "1c7f11716db4c2f2d1fa31327050afac8eb225c8ed8552091845cbdb090bf191"),
     "l4e13chk": ("v2/docs/records/l4e13/checks/check-l4e13-3.md", "88539c7aeaf2f99d8ed0364ac86f0cb312b9322eeeb6ac860ffa3d35e53ec306"),
     "l4e13chk4": ("v2/docs/records/l4e13/checks/check-l4e13-4.md", "5a08480af4695e61752d04852d8647e0276f292771596281968acf8903bc73e8"),

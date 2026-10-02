@@ -38,7 +38,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    dec31     094817023210d1b0  v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md
    fuse997   437b1fd2c8cb3ef1  v2/vendor/power/held/littelfuse-997-mini58v-rev2025-11-18.pdf
    keystone  caa141ea51ac68cf  v2/vendor/keystone/M65p42.pdf
-   l4e7r     a0ec073de05abe91  v2/docs/records/l4e7/l4e7_stage_settings.out
+   l4e7r     fc8463d5bca9baba  v2/docs/records/l4e7/l4e7_stage_settings.out
    l4e10     c99baceb74d25bbf  v2/docs/records/l4e10/l4e10_cell_thermal.out
    d38999    13a19268ba5939d9  v2/vendor/d38999/amphenol-d38999-iii-federal.pdf
    reqs      b624ac495650a359  v2/ecad/tools/pcb_requirements.yaml
@@ -59,13 +59,13 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
    cl_sensirion 43c47549235fe6e8  v2/docs/records/l4e12/clarification/sensirion-sgp41.txt
    cl_adi    97d8217092eae7ac  v2/docs/records/l4e7/clarification/analog-devices-lt8705a.txt
    cl_milliohm e920420419a677e0  v2/docs/records/l4e7/clarification/milliohm-hojlr2512.txt
-   cl_vishay 0d91a42dfa59432b  v2/docs/records/l4e7/clarification/vishay-wsl2512.txt
+   cl_vishay 5d96017a5051257b  v2/docs/records/l4e7/clarification/vishay-wsl2512.txt
    cl_ti     405fb3988f41d8ac  v2/docs/records/l4e7/clarification/texas-instruments-ina169.txt
    ti_review 91a257430cbeb53a  v2/docs/review-packets/battery/REVIEW-REQUEST.md
    cl_gc     738245875bec70c5  v2/docs/records/l4e12/clarification/ground-control-rockblock-9704.txt
    cl_nicerf 92324668c17d4f6c  v2/docs/records/l4e12/clarification/nicerf-sa868.txt
    cl_bulgin c7accd3dd6dc1d89  v2/docs/records/l4e12/clarification/bulgin-pxp4043c.txt
-   l4e13     436344ef3c00df7d  v2/docs/records/l4e13/l4e13_panel.out
+   l4e13     37381202685fcf9a  v2/docs/records/l4e13/l4e13_panel.out
    l4e13md   1c7f11716db4c2f2  v2/docs/records/l4e13/L4E13-PANEL.md
    l4e13chk  88539c7aeaf2f99d  v2/docs/records/l4e13/checks/check-l4e13-3.md
    l4e13chk4 5a08480af4695e61  v2/docs/records/l4e13/checks/check-l4e13-4.md
@@ -588,7 +588,7 @@ INFERRED, CONDITIONAL, ASSUMPTION, PENDING.
         Sensirion: the SGP41's duration, recovery and storage (U-02, CFL-002): v2/docs/records/l4e12/clarification/sensirion-sgp41.txt, in the tree, sha256 43c47549235fe6e8
         Analog Devices: the LT8705A's IMON_IN limits (the 100 W bound; R-33, R-101): v2/docs/records/l4e7/clarification/analog-devices-lt8705a.txt, in the tree, sha256 97d8217092eae7ac
         Milliohm: the HoJLR2512's temperature coefficient below +25 C (R-101): v2/docs/records/l4e7/clarification/milliohm-hojlr2512.txt, in the tree, sha256 e920420419a677e0
-        Vishay: the WSL2512's pulse capability (R-101): v2/docs/records/l4e7/clarification/vishay-wsl2512.txt, in the tree, sha256 0d91a42dfa59432b
+        Vishay: the WSL2512's pulse capability (R-101): v2/docs/records/l4e7/clarification/vishay-wsl2512.txt, in the tree, sha256 5d96017a5051257b
         Texas Instruments: the INA169's error envelope (R-101): v2/docs/records/l4e7/clarification/texas-instruments-ina169.txt, in the tree, sha256 405fb3988f41d8ac
         Eaton: the SCF9550 above +60 C and in storage (PWR-F12; R-103): v2/docs/records/l4e10/clarification/eaton-scf9550.txt, in the tree, sha256 9dffb95e8b4874fc
         SunPower (the module's maker): a warranted Voc band at STC for the SPR-E-Flex-100 (U-03's route 1): v2/docs/records/l4e13/clarification/sunpower-spr-e-flex-100.txt, in the tree, sha256 453a5a957648a322
