@@ -1,0 +1,29 @@
+{
+ "what": "LCSC public product-detail answer for C137025 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C137025), no login; kept fields only, with the price ladder in USD",
+ "read_utc": "2026-10-02T09:58Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), the U-04 question for the consolidation",
+ "role": "option (A)'s bank resistor RC2512FK-07330RL (price for the comparison)",
+ "code": "C137025",
+ "brand": "YAGEO",
+ "model": "RC2512FK-07330RL",
+ "package": "2512",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/b426be3ce22c6de3e0c3a2248e49159e.pdf?productCode=C137025",
+ "stock": 3420,
+ "price_usd": {
+  "10": 0.083,
+  "100": 0.0681,
+  "300": 0.0607,
+  "1000": 0.0552,
+  "4000": 0.0501,
+  "8000": 0.0479
+ },
+ "params": {
+  "Power(Watts)": "1W",
+  "Resistance": "330Ω",
+  "Voltage Rating": "200V",
+  "Operating Temperature": "-55℃~+155℃",
+  "Type": "Thick Film Resistor",
+  "Temperature Coefficient": "±100ppm/℃",
+  "Tolerance": "±1%"
+ }
+}
