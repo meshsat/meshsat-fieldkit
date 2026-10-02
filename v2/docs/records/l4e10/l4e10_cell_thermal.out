@@ -26,7 +26,7 @@ PROTOTYPE DESIGN, desk arithmetic; nothing bought, built, powered or measured. C
    pin eac0fc1807e7e4989801aa3448c13f4b2870de06f23cb1084059aae518b2c7f0 v2/docs/records/l4e10/inputs/prices-2026-10-02.json
    pin cc5ad871143dda6c90b07f9ddf6334301dc4c1001bd80783dbf53d5a328a7a68 v2/docs/records/l4e10/inputs/saft-lsh20-curves-read-2026-10-01.json
    pin 7d62d6be4368e92f5444a22c9978e32261ec761b695125edbc8124bb06e489f3 v2/docs/records/l4e10/inputs/topwell-hl18650v-page-2026-10-01.json
-   pin 16b0d3c01e81930f51174a30d23a8014e0cbf4bd3ced5b393bf94b8723048ec6 v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
+   pin c81557f54dbf6cec46933b69d6989b3992b0dfb8f770576949952409f2f9ecce v2/docs/records/l4e9/L4-POWER-ARCHITECTURE.md
    pin 5a616902d2ddab82f25d34ab55d848d06011fb6fbe48c147221d6b442783e462 v2/docs/records/rv-pwr/pwr_budget.json
    pin 58e40cf604804cc9d70c7fbeb1012be4552563fcc8ae7ef6755003c33acb902f v2/docs/records/rv-pwr/pwr_budget.out
    pin 469d0820b046ef6ff5aceadf422b4166de3d6a02bc50fa5b0c3644704f0f9556 v2/docs/records/rv-pwr/pwr_budget.py
