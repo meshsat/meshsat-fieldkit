@@ -4,14 +4,15 @@ APPLIED to the tree by L4-E9; it was run only on scratch copies (the tests write
 
 Why (finding E-F2, open item S-107). F1, the vehicle entry's fuse, is a MINI blade of the Littelfuse 297 series the record
 held: 32 V DC, 1000 A at 32 V DC (v2/vendor/keystone/littelfuse-297-ficcorp.pdf). The entry admits a steady input up to the
-hot swap's OVLO maximum, 42.49 V (s120), so a short behind F1 would ask it to interrupt above its voltage rating.
+hot swap's OVLO maximum, 42.49 V as drawn (s120) and 43.18 V with L4-E9's R22 and R23 at 0.1 % (register R-94), so a
+short behind F1 would ask it to interrupt above its voltage rating.
 
 The part: Littelfuse 0997010.WXN, the MINI series rated 58 V DC, 10 A, interrupting rating 1000 A at 58 V DC (Littelfuse's
 datasheet "MINI Series Blade Fuses - Rated 58V", revised 11/18/2025, read at the Internet Archive's snapshot 20251210045250
 of the maker's own address and held back by its terms: fetch_held_back.py). Keystone's catalogue page M65 p.42 names the
 3568 holder board E carries "For Littelfuse Mini 297 or 997 series", and the sheet gives the same blade size and pitch, so
-the land does not change. The conditions verified (l4e9_power_path.out section 11): the DC voltage rating against 42.49 V;
-the interrupting rating against the kit cable's prospective current, 561 A at 42.49 V with the copper at -20 C and the
+the land does not change. The conditions verified (l4e9_power_path.out section 11): the DC voltage rating against 43.18 V;
+the interrupting rating against the kit cable's prospective current, 569.8 A at 43.18 V with the copper at -20 C and the
 source taken stiff (REQ-015 states no source impedance); the maker's derating table at the next higher column above the
 62.1 C inside air (80 C: 7.3 A) against the entry's 6.15 A; the hot swap's start-up I2t against the part's; the
 time-current rows against the conductors behind it. The 58 V part's rejection feature works only in a 58 V keyed holder:
@@ -32,7 +33,7 @@ import sys
 NAME = "apply_gen_sch_e_f1"
 EDITS = [
     ('part("F1", "Device", "Fuse", "10 A mini blade (Keystone 3568 holder): vehicle input", "FUSE", {"1": "DC_IN", "2": "DC_F"})',
-     '# L4-E9 (MESHSAT-1357, E-F2): the 58 V DC MINI blade; the 32 V 297 series could not interrupt at the OVLO maximum 42.49 V.\n'
+     '# L4-E9 (MESHSAT-1357, E-F2): the 58 V DC MINI blade; the 32 V 297 series could not interrupt at the OVLO maximum (42.49 V drawn, 43.18 V with R22 and R23 at 0.1 %).\n'
      'part("F1", "Device", "Fuse", "Littelfuse 0997010.WXN MINI blade 10 A, 58 V DC, 1000 A at 58 V DC (Keystone 3568 holder, which takes the 997 series): vehicle input", "FUSE", {"1": "DC_IN", "2": "DC_F"})'),
 ]
 

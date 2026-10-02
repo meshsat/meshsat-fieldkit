@@ -12,6 +12,13 @@ PENDING row (a gate mutated to break the rule is refused); the page's interface 
 handover entry names rows the reconciliation prints; the Q1 draft checks without writing, applies once to a copy, refuses a
 second application and the tree's generator, and composes with d8dec31's input capacitor and L4-E7's three drafts in either
 order; no em or en dash and no claim word in the record. Nothing here writes into the tree: drafts run on temporary copies.
+
+Round 2 (2 October 2026): part A's three proposals (Q1, F1, U17) hold on the read figures and their drafts apply once, refuse
+the tree and compose; the selected OVLO band clears CS101 at 36 V and stays under D10; the selected solutions (L4-E7R, L4-E8,
+part A) are in the rows and only L4-E7R's CS101 follow-up (D-01) stays PENDING; L4-E10 and MESHSAT-1478 enter as unresolved
+choices, never as register tasks, and a gate that PASSes on one is refused; the page's defect and choice tables are the
+script's; every figure a choice or a defect states is printed by the reconciliation outside the gate. These are software
+predicates on the record's own text and arithmetic: they establish no electrical or thermal property.
 """
 import ast
 import copy
@@ -120,10 +127,10 @@ def t_the_reverse_finding_is_the_ceiling_plus_the_reversed_input():
 def t_f1_specification_follows_the_ovlo_and_the_cold_cable():
     m = _M()
     F, D = _C["F"], _C["D"]
-    assert D["f1_v"] == F["ovlo"][2] and F["f297_v"] < D["f1_v"], "the held MINI's rating against the OVLO maximum"
+    assert D["f1_v"] == F["ovlo_sel"][2] and F["f297_v"] < F["ovlo"][2] < D["f1_v"], "F1 against the selected OVLO maximum; the drawn MINI fails the drawn one"
     r20 = 2 * F["cable_m"] * m.CU_RHO_20C / F["cable_mm2"] + 2 * F["lead_mm"] / 1000.0 * m.CU_RHO_20C / m.AWG18_MM2
-    assert abs(D["f1_ipf"] - F["ovlo"][2] / (r20 * (1 + m.CU_ALPHA * (m.T_COLD - 20.0)))) < 1e-6
-    assert D["f1_ipf"] > F["ovlo"][2] / r20, "the cold copper must give the larger current"
+    assert abs(D["f1_ipf"] - F["ovlo_sel"][2] / (r20 * (1 + m.CU_ALPHA * (m.T_COLD - 20.0)))) < 1e-6
+    assert D["f1_ipf"] > F["ovlo_sel"][2] / r20, "the cold copper must give the larger current"
 
 
 def t_every_downstream_item_has_an_owner_and_an_acceptance():
@@ -135,7 +142,7 @@ def t_every_downstream_item_has_an_owner_and_an_acceptance():
     for r in rows:
         assert len(r) == 8, "%s does not have eight columns" % r[0]
         rid, kind, item, frm, owner, acc, state, order = r
-        assert re.fullmatch(r"R-\d\d", rid), rid
+        assert re.fullmatch(r"R-\d{2,3}", rid), rid
         assert kind in ("IMPLEMENTATION", "LAYOUT", "TEST", "EVIDENCE", "RELEASE"), "%s kind %s" % (rid, kind)
         assert owner in m.OWNERS, "%s's owner %r is not a named layer and role" % (rid, owner)
         assert acc.strip() and item.strip() and frm.strip() and order.strip(), "%s lacks an item, a source, an acceptance or an order" % rid
@@ -434,14 +441,122 @@ def t_the_part_a_page_agrees_with_the_output():
     _M()
     page = open(os.path.join(REC, "L4E9-ENTRY-PROPOSALS.md"), encoding="utf-8").read()
     sec = _C["text"].split("11. PART A")[1]
-    for fig in ("66.15", "0.361", "80.2", "38.83", "30.83", "560.7", "7.3 A", "0.309", "85.9", "18.59", "72.38", "1.037", "16.384", "2048", "1.475",
-                "6.346", "6.458", "39.04", "43.92"):
+    for fig in ("66.15", "0.361", "80.2", "38.83", "30.83", "569.8", "7.3 A", "0.309", "85.9", "18.59", "72.38", "1.037", "16.384", "2048", "1.475",
+                "6.346", "6.458", "39.04", "43.92", "39.71", "43.18", "42.4 V"):
         assert fig in sec, "the output lacks %s" % fig
         assert fig in page, "the part A page lacks %s" % fig
     for part in ("CSD19532Q5B", "0997010.WXN", "C2903482", "R227"):
         assert part in page and part in sec
     for sha in ("437b1fd2c8cb3ef16107ec14d096b31ef3c3cb83893325234e880deb7540393e", _M().PINS["csd19532"][1], _M().PINS["ina226"][1]):
         assert sha in page, "the part A page does not pin %s" % sha[:16]
+
+
+def t_the_ovlo_band_selected_clears_cs101_and_stays_under_d10():
+    m = _M()
+    F, D = _C["F"], _C["D"]
+    A = m.partA(F, D, m._C_TEXT)
+    lo, nom, hi = F["ovlo_sel"]
+    assert lo < nom < hi
+    assert A["cs101_top"] < lo, "the selected OVLO minimum clears 36 V plus CS101's peak"
+    assert hi < F["SMCJ40A"]["vbr_min"], "the selected OVLO maximum stays under D10's breakdown minimum at 25 C"
+    assert 40.0 < A["d10_cold_vbr"], "D10 stays off at REQ-015's 40 V when cold"
+    assert A["r23_win"][0] < m.R23_NEW_K < A["r23_win"][1], "R23 inside the window computed at 1 %"
+    assert abs(A["ovlo_new"][0] - lo) < 1e-9 and abs(A["ovlo_new"][1] - hi) < 1e-9, "part A and the rows use one band"
+    for r in _C["R"]:
+        for c in r["checks"]:
+            if c.scope == "selected" and "OVLO maximum" in c.what and isinstance(c.a, float):
+                assert abs(c.a - round(hi, 2)) < 1e-9, "%s: a selected check on the drawn OVLO maximum" % r["id"]
+
+
+def t_the_selected_solutions_are_in_the_rows_and_only_d01_is_pending():
+    _M()
+    F = _C["F"]
+    rows = {r["id"]: r for r in _C["R"]}
+    pend = [(r["id"], c) for r in _C["R"] for c in r["checks"] if c.cls == "PENDING"]
+    assert pend, "L4-E7R's CS101 follow-up must keep its rows PENDING until it lands"
+    for rid, c in pend:
+        assert rid in ("IF-01", "IF-02") and "CS101 follow-up" in c.src, "%s is PENDING on something other than D-01" % rid
+    st = _C["st"]
+    assert st["IF-01"][1] == "PENDING" and st["IF-02"][1] == "PENDING"
+    by_what = {c.what: c for c in rows["IF-02"]["checks"]}
+    sb = [c for c in rows["IF-02"]["checks"] if "static bound" in c.what][0]
+    assert sb.a == F["static_bound"] and sb.b == 100.0 and sb.cls == "CONDITIONAL", "the backstop's static bound, CONDITIONAL"
+    rg = [c for c in rows["IF-02"]["checks"] if "under the backstop's lowest trip" in c.what][0]
+    assert rg.a == F["reg"][1] and rg.b == F["bs_trip"][0] and rg.met
+    hot = [c for c in rows["IF-01"]["checks"] if "with the sheet's power tolerance inside F2" in c.what][0]
+    assert hot.a == F["isc_hot_tol"] and hot.met
+    for rid in ("IF-04", "IF-13"):
+        sel = [c for c in rows[rid]["checks"] if c.scope == "selected"]
+        assert all(c.met is not False for c in sel), "%s: a selected check fails" % rid
+        assert all(c.cls != "PENDING" for c in sel)
+    drawn = [c for c in rows["IF-04"]["checks"] + rows["IF-13"]["checks"] if c.scope == "drawn" and c.met is False]
+    assert len(drawn) >= 4, "the as-drawn defects (Q1, F1, U17, the OVLO under CS101) stay visible"
+    text = _C["text"]
+    assert "%s / %s / %s Wh" % tuple(_C["M"].fmt(x) for x in F["e7r_day"]) in text, "L4-E7R's energy in the endurance"
+    assert "2.09 W" in text.split("8. THE ENDURANCE")[1].split("9. THE CLOSURE")[0], "L4-E8's losses in the budgets"
+
+
+def t_l4e10_and_meshsat_1478_enter_as_choices_not_tasks():
+    m = _M()
+    F = _C["F"]
+    rows = {r["id"]: r for r in _C["R"]}
+    c11 = [c for c in rows["IF-11"]["checks"] if "MESHSAT-1478" in c.what][0]
+    assert c11.a == F["corner_air"][1] and c11.b == F["parts_hot"] and c11.met is False and "U-02" in c11.src
+    c10 = [c for c in rows["IF-10"]["checks"] if "FEA-008" in c.what][0]
+    assert c10.met is None and c10.cls == "CONDITIONAL" and "U-01" in c10.src
+    ids = [c["id"] for c in m.CHOICES]
+    assert ids == ["U-01", "U-02", "U-03"]
+    assert "FEA-008" in m.CHOICES[0]["title"] and "MESHSAT-1478" in m.CHOICES[1]["title"]
+    for g in m.GATE:
+        if g["n"] in (1, 5):
+            assert set(g["choices"]) == set(ids) and g["verdict"] != "PASS"
+    bad = copy.deepcopy(m.GATE)
+    bad[4]["verdict"] = "PASS"
+    bad[4]["rows"] = []
+    assert m.gate_violations(bad, _C["st"]), "a PASS while an unresolved choice stands must be refused"
+    bad = copy.deepcopy(m.GATE)
+    bad[1]["verdict"] = "PASS"
+    bad[1]["rows"] = ["IF-13"]
+    assert m.gate_violations(bad, _C["st"]), "criterion 2 PASS while D-01 is open must be refused"
+    assert abs(F["corner_heat"] - (F["corner_air"][0] - F["e3o_amb"]) * F["th1"]) < 1e-9
+    assert "%s K on the inside air" % m.fmt(round(F["ballast_w"] / F["th1"], 2)) in _C["text"], "the ballasts' heat at T-H1's floor"
+
+
+def t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register():
+    m = _M()
+    reg_rows = _md_rows(REG, "| ID | Kind |")
+    assert not any(r[0].startswith("U-") for r in reg_rows), "a choice is not a register item"
+    reg = open(REG, encoding="utf-8").read()
+    for c in m.CHOICES:
+        assert c["id"] in reg.split("## The release order")[0], "the register's category note misses %s" % c["id"]
+    for r in reg_rows:
+        if r[7] == "U-01" or "U-01" in r[7]:
+            assert "U-01" in r[2] or "U-01" in r[5] or "under U-01" in r[2].replace("U-01's", "U-01"), r[0]
+    page = open(PAGE, encoding="utf-8").read()
+    ch = m.md_table(page, "| Choice | What |")
+    assert [r[0] for r in ch] == [c["id"] for c in m.CHOICES]
+    for r, c in zip(ch, m.CHOICES):
+        assert r[1] == c["title"] and r[2] == c["constraint"] and r[3] == c["settles"] and r[4] == c["alternatives"], c["id"]
+        assert r[5] == c["owner"] and r[6] == c["overturns"], c["id"]
+    de = m.md_table(page, "| Defect | What |")
+    assert [r[0] for r in de] == [d["id"] for d in m.DEFECTS]
+    for r, d in zip(de, m.DEFECTS):
+        assert r[1] == d["title"] and r[2] == d["constraint"] and r[3] == d["options"], d["id"]
+        assert r[4].split(":")[0].split(",")[0].split(" ")[0] == d["state"].split(" ")[0], d["id"]
+    assert [d["id"] for d in m.DEFECTS if d["state"] == "OPEN"] == ["D-01"]
+
+
+def t_choice_and_defect_figures_are_printed_by_the_reconciliation():
+    m = _M()
+    text = _C["text"]
+    body = text.split("9. THE CLOSURE GATE")[0] + text.split("11. PART A")[1]
+    for c in m.CHOICES:
+        for k in ("constraint", "settles", "alternatives", "owner", "overturns"):
+            for fig in re.findall(r"\d+\.\d+", c[k]):
+                assert fig in body, "%s's %s figure %s is not printed outside the gate" % (c["id"], k, fig)
+    for d in m.DEFECTS:
+        for fig in re.findall(r"\d+\.\d+", d["constraint"]):
+            assert fig in body, "%s's figure %s is not printed outside the gate" % (d["id"], fig)
 
 
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
