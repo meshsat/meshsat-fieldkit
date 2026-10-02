@@ -35,7 +35,9 @@ this record's hot-swap draft and not before it.
 Update round 3 (2 October 2026, L4-E13 accepted): U-03 is a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC) with L4-E13's
 figures read from its pinned output; criteria 1 and 5 name exactly the architecture-level choices (a gate naming U-03 there, or
 leaving one of U-01, U-02, U-04 out, is refused); the register carries PANEL-ACC (R-35, R-52, R-148, R-149) at 139 items; the
-owner's list carries the panel's purchase and the two route-1 drafts; the gate reads NOT CLOSED.
+owner's list carries the panel's purchase and the two route-1 drafts; the gate reads NOT CLOSED. Update round 4: L4-E13's update
+after set 25 is pinned with its check 4, its citation of L4-E7R equals L4-E7R's own figures, and the nominal hold's day under the
+accepted stage is 336.6 Wh wherever this record cites it on that basis.
 """
 import ast
 import copy
@@ -801,7 +803,7 @@ def t_the_owner_items_are_kept_apart_with_their_documents_pinned():
 def t_u03_is_a_downstream_unit_selection_and_the_gate_stays_not_closed():
     m = _M()
     F = _C["F"]
-    for key in ("l4e13", "l4e13md", "l4e13chk", "cl_sunpower", "cl_solbian"):
+    for key in ("l4e13", "l4e13md", "l4e13chk", "l4e13chk4", "cl_sunpower", "cl_solbian"):
         rel, sha = m.PINS[key]
         assert rel.startswith("v2/docs/records/l4e13/") and key not in m.FROM_COMMIT and re.fullmatch(r"[0-9a-f]{64}", sha), key
         assert sha[:16] in _C["text"].split("1. THE MAKERS")[0], "%s's pin is not printed" % key
@@ -836,6 +838,14 @@ def t_u03_is_a_downstream_unit_selection_and_the_gate_stays_not_closed():
     assert "SunPower SPR-E-Flex-100" in ow["OW-6"]["what"] and ow["OW-6"]["docs"][0][0] == "l4e13md"
     sec = _C["text"].split("13. UPDATE ROUND 3")[1]
     assert "the gate: NOT CLOSED" in sec and "U-01, U-02, U-04" in sec
+    assert F["e13_day_e7r"] == F["e7r_day"][1] and F["e13_reg"][0] == F["reg"][0] and F["e13_trip"] == F["bs_trip"]
+    assert F["e13_reg"][0] < F["e13_reg"][1] < F["e13_trip"][1] < F["e13_a3"][0] <= 10.0, "A-3(a)'s ordering"
+    assert F["e13_static"][0] == F["static_bound"] and F["e13_corner"] == F["reg_corner"]
+    for fig in ("%s" % F["e13_reg"][1], "%s" % F["e13_trip"][1], "%s" % F["static_bound"]):
+        assert fig in u3["constraint"], fig
+    assert "%.1f Wh a day under L4-E7R's accepted regulation" % F["e13_day_e7r"] in sec
+    assert "336.6 Wh at the nominal hold under L4-E7R" in reg["R-52"][5] and "96.25" not in reg["R-52"][5]
+    assert "L4-E7R's regulation and backstop" in reg["R-35"][5] and "2.9337 A" in ho["LH-02"][2]
     assert "Layer 4's power architecture closes: NO" in _C["text"]
     page = open(PAGE, encoding="utf-8").read()
     assert "pending L4-E13" not in page and "L4-E13 (U-03) is pending" not in page
