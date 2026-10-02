@@ -1,0 +1,48 @@
+# l4e9: the connected power architecture and Layer 4's closure gate (layer 4 task L4-E9, MESHSAT-1357)
+
+Prototype design, desk arithmetic: nothing is bought, built, powered or measured. This folder takes the selected power
+architecture (A1 under the owner's D-06, A2 recorded as a proposal) as one connected design: every interface between its blocks
+reconciled (voltages, currents at the modes, losses, thermal basis, protection on each side, the record that settles it), the
+simultaneous-operation, startup and fault traces across the stages, Layer 4's closure gate for the power architecture, the
+downstream register and the Layer 5 handover. It edits no generator, registry record, Layer 3 file, `pcb_interfaces.yaml`,
+`HW-FW-CONTRACT.md` or other record. Round 2 (2 October 2026) checked Q1, F1 and U17 against their makers' sheets (part A),
+put the selected solutions (L4-E7R, L4-E8, part A) into every row, and split the closure gate into the material defects, the
+unresolved choices that could overturn the architecture (U-01 FEA-008's cell, U-02 MESHSAT-1478, U-03 O-1; no owner closes
+them) and the downstream tasks (the register). Its fix round (the same day) answers the collaborator's focused check: Q7's
+power limit and the complete hot-short pulse (B1), what F1 protects traced with no exemption (B2, open defect D-06), R227's
+transients bounded (B3), and source-only operation added as U-04 (B4). Its final round answers the targeted recheck: the
+breaker's event and the timer's components stated as open evidence (new open defect D-09, the fault time against the start),
+R227's energy as nominal with its maximum unresolved, L10's own assignment, and L4-E7R's acceptance (D-01 resolved in design).
+The update round (2 October 2026, the coordinator's instruction) brings the architecture and its gate up to date with the
+accepted L4-E10 (FEA-008, final), L4-E11 (the vehicle entry replaced by a TPS48110-Q1 breaker with a CSD19536KTT, D-06's
+interconnect, U-04's arrangement) and L4-E12 (the electronics at the margins, T-H1's binding line 2.159 W/K); it answers E11-19
+(every finding that rested on the LM5069's power limit re-judged for the selected entry, out 12), deduplicates the three
+records' downstream items into the register (137 items), and lists the owner's items apart (the page's section 7d). No material
+defect is open; U-01 to U-04 stand, U-03 as it stood while L4-E13 is pending.
+
+| File | What it is |
+|---|---|
+| `L4-POWER-ARCHITECTURE.md` | The page: the selected architecture and its block diagram, the interface table, simultaneous operation, startup, faults, the decisions this record takes (SESSION), the closure gate with its material defects (7a), unresolved choices (7b) and downstream tasks (7c), the assumptions register, the register's summary and release order, the endurance statement, what stays PENDING or CONDITIONAL |
+| `l4e9_power_path.py` | The executable reconciliation. It reads every figure from the generators (syntax tree), board A's netlist, the records' committed outputs (L4-E4 to L4-E8, the energy replay, s120, the power budget, the load trace), the makers' documents (pdftotext) and the tree's configuration and contract files, each pinned by sha256; L4-E8's output is read from the tree or from `fnd/l4e8` at `3c8f7a1f` (accepted), L4-E7R's from the tree when it matches or from `fnd/l4e7` at `675b8068` (accepted, check 4 at `91e9a4b5`), L4-E10's likewise from `fnd/l4e10` at `79b2f568` (final), L4-E11's from `fnd/l4e11` at `3298d1f1` (accepted, check `a15ab384`), L4-E12's from `fnd/l4e12` at `a86be47b` (accepted, check `db41c95d`), the outside-contact drafts the owner's list names from those commits, the held-back 0997 sheet from `v2/vendor/power/held/`. It prints each interface row with its checks and their evidence classes, the computed traces, the endurance statement and the gate, and refuses (exit 4) a row without both sides, a gate whose PASS rests on a conditional row, or a register row without an owner and an acceptance. Run from the repository root: `python3 v2/docs/records/l4e9/l4e9_power_path.py > v2/docs/records/l4e9/l4e9_power_path.out`. A few seconds; needs pdftotext and PyYAML |
+| `l4e9_power_path.out` | Its output, committed; the script reproduces it byte for byte |
+| `DOWNSTREAM-REGISTER.md` | Every implementation change, layout constraint, test, piece of evidence and release record the architecture hands downstream, each with one named owner, an acceptance, a state and its step in the release order |
+| `LAYER5-HANDOVER.md` | The interfaces this architecture creates or changes, each with the text proposed for `pcb_interfaces.yaml` or `HW-FW-CONTRACT.md` (drafts for Layer 5; neither file is edited) |
+| `apply_gen_sch_e_q1.py` | DRAFT for board E's generator owner: the vehicle entry's ideal-diode FET Q1 to the CSD19532Q5B (100 V, C473333) on Q7's land, because L4-E5's raised tracker ceiling puts up to 66.15 V across it on a reversed input. Default `--check`, writes only with `--write`, refuses a second application and the tree's own generator until a `RELEASE.md` here reads "released: yes" and names an accepted check. Composes with d8dec31's `apply_gen_sch_e_cin.py` and L4-E7's three drafts in either order. Never applied to the tree |
+| `L4E9-ENTRY-PROPOSALS.md` | Round 2, part A: Q1, F1 and U17 as datasheet-backed proposals, each checked against its normal, reverse, transient and fault conditions, the drive, land or holder and (U17) the monitor's common-mode and differential limits; the makers' documents read with their addresses and sha256 |
+| `apply_gen_sch_e_f1.py` | DRAFT for board E's generator owner: F1 to the Littelfuse 0997010.WXN (MINI, 58 V DC, 1000 A at 58 V DC) in the same 3568 holder. Same guards as the Q1 draft; composes with it, d8dec31's input capacitor and L4-E7R's four drafts in either order. Never applied to the tree |
+| `apply_gen_sch_a_u17.py` | DRAFT for board A's generator owner: U17 (INA226) moved off the 54 V rail onto R227, 5 mOhm (C2903482) in the PoE stage's input, with U16's VIN and BIAS on the new POE_VIN rail. Same guards; composes with L4-E6's R12, L4-E4's R11 and R138 and L4-E8's bank in either order. Never applied to the tree |
+| `apply_gen_sch_e_hotswap.py` | DRAFT for board E's generator owner (the fix round): R22 100k and R23 6.42k at 0.1 % (the OVLO at 39.71 / 41.44 / 43.18 V, clear of CS101 at 36 V) and R24 22k 1 % (the power limit's sense at least 5.06 mV at 43.18 V), with U6's value text. Same guards; composes with the Q1 and F1 drafts, d8dec31's input capacitor and L4-E7R's four drafts in either order. Never applied to the tree |
+| `checks/astra-check-l4e9-1.md` | The collaborator's focused check of round 2 (job cx28-l4e9-check, run 20261002T004904Z-179094, on `6097922a`), filed as returned: NOT YET, blockers B1 to B4 and the minors; the fix round answers it |
+| `checks/astra-check-l4e9-2.md` | The collaborator's targeted recheck of the fix round (job cx29-l4e9-recheck, run 20261002T013531Z-225982, on `71486686`), filed as returned: NOT YET, B1 (the breaker's event and the timer's components), B3 (R227's energy at nominal capacitance; L10's assignment) and the minors; the final round answers it |
+| `checks/check-l4e9-3.md` | Claude's (the coordinator's) closing check at `3c09b3da`: the output reproduced, D-09's start and margin and the hot short's derated SOA at the timer's maximum recomputed; the record accepted as a correct statement of the gate, which reads NOT CLOSED (D-06, D-09, U-01 to U-04); not a model review and not an Astra check |
+| `checks/check-l4e9-4.md` | Claude's (the coordinator's) closing check of the update at `170f5daf`: the output reproduced, E11-19's I2t and the over-voltage margin recomputed; the record accepted as the current statement, the gate NOT CLOSED on U-01, U-02, U-04 and U-03 (pending L4-E13); not a model review and not an Astra check |
+| `fetch_held_back.py` | Fetches the Littelfuse 0997 sheet the record read but did not file (held back by its terms, the owner's rule of 27 September 2026) into the ignored `v2/vendor/power/held/` and checks its sha256. Never run by a test; the tests skip when the sheet is absent |
+| `inputs/` | The provenance of the makers' documents read in round 2 (the addresses, revisions and sha256; the three TI sheets compared byte for byte with ti.com) |
+| `README.md` | This list |
+
+**PENDING:** none in the rows. L4-E7R is accepted (the coordinator's check 4, `fnd/l4e7` `91e9a4b5`, its figures at
+`675b8068`); D-01 is resolved in design (drafted, not applied). L4-E11 resolved D-06 in design and made U-04 a CONDITIONAL
+CANDIDATE; L4-E12 made U-02 CONDITIONAL on T-H1 with CFL-002 the owner's question; L4-E13 (U-03) is pending.
+
+The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
+`env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 37 tests.
