@@ -1,0 +1,23 @@
+{
+ "what": "Distributor and marketplace prices read by task L4-E10 (MESHSAT-1357) for the spend line of its cell comparison; pages not filed. The present cell's price is the l3batt reading in v2/docs/records/l3batt/SHORTLIST.md (Battery Junction, 30 September 2026).",
+ "readings": [
+  {
+   "cell": "Samsung INR18650-30Q",
+   "seller": "18650 Battery Store",
+   "url": "https://www.18650batterystore.com/products/samsung-30q",
+   "fetched_utc": "2026-10-01T22:12Z",
+   "bytes": 484594,
+   "sha256": "716977f3df634eeb3d09bf5c2ee685c42c200a9c9118bf532a8197056a1c6a59",
+   "verbatim": "30Q 18650 3000mAh 15A Battery Save 13% Samsung 1454 reviews Price: Sale price $6.99 Regular price $7.99 Stock: In stock Quantity: Add to car"
+  },
+  {
+   "cell": "HL18650V (made-in-china listing, the seller is not Topwell)",
+   "seller": "lusbattery.en.made-in-china.com",
+   "url": "https://lusbattery.en.made-in-china.com/product/BThYIubXCDcl/China-Hl18650V-2900mAh-3-7V-Battery-Hl18650t-Hl18650u-Hl18650V.html",
+   "fetched_utc": "2026-10-01T22:12Z",
+   "bytes": 240646,
+   "sha256": "6d138a8d54912bff1719f08d086a8fe4d830ec8906b836686828fbb42d45e87f",
+   "verbatim": "Pricing US$3.50 10-4,999 Pieces US$3.20 5,000-9,999 Pieces US$3.10 10,000+ Pieces Contact Supplier Send Inquiry Chat Now"
+  }
+ ]
+}
