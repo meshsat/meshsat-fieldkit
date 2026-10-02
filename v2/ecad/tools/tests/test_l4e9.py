@@ -1069,6 +1069,30 @@ def t_consolidation_the_operating_behaviour_ties_each_row_to_a_record_and_a_figu
     assert any("stalls" not in r[0] and "watchdog" in r[1] for r in B["4g"])
 
 
+def t_consolidation_the_handover_the_exit_and_the_status():
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    page = open(PAGE, encoding="utf-8").read()
+    for name in ("cons_handover_tables", "cons_exit_table"):
+        for head, lines in getattr(m, name)(F, D, st).items():
+            assert m.md_table(page, head) == [[c.strip() for c in ln.strip().strip("|").split("|")] for ln in lines[2:]], head
+    reg = _md_rows(REG, "| ID | Kind |")
+    hand = m.cons_handover(reg)
+    assert sum(int(r[2].split(":")[0]) for r in hand) == len(reg), "every register row reaches a later layer once"
+    assert all(r[4].endswith("APPLIED 0") for r in hand)
+    ex = m.cons_exit(F)
+    assert [e[0] for e in ex] == [c["id"] for c in m.CHOICES if c["class"] == m.ARCH]
+    for e in ex:
+        assert e[1] in (m.QUALIFICATION, m.CONDITION) and all(x.strip() for x in e[2:]), e[0]
+    assert m.OWNER_DEFINITION in page.replace("\n", " ").replace("  ", " ") or m.OWNER_DEFINITION[:80] in page.replace("\n", " ")
+    assert "**Status: %s.**" % m.STATUS in page and m.STATUS in _C["text"].split("20. THE EXIT")[1]
+    if any(e[1] == m.CONDITION for e in ex):
+        assert "power closure is not reached" in page and "NOT reached" in _C["text"]
+    short = page.split("## In short\n")[1].split("\n## 1. ")[0].strip().split("\n")
+    assert [s[2:] for s in short] == m.cons_in_short(F, D, st, reg), "the page's In short is the script's"
+    assert "**Under U-01's recommended cell** (CONDITIONAL, not taken)" in page.split("## Appendix A.")[1], "the bullet L4-E10 reads stays, in the history"
+
+
 CLAIM = re.compile(r"\b(certified|compliant|qualified|proven|guaranteed|withstands|survives)\b|\brated for\b", re.I)
 
 

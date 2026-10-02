@@ -2016,7 +2016,7 @@ def round5_lines(F, st, reg):
     p("     the warm-up of a cold-soaked block from -20 C, out of usable energy: to T1 %s to %s Wh; to T2 %s to %s Wh; to T5 %s Wh, or not reached"
       % (w["T1"][3], w["T1"][5], w["T2"][3], w["T2"][5], w["T5"][3]))
     p("       at the high corner (the mat alone stops at %s C)" % w["T5"][6])
-    p("     this record keeps L4-E10's first chain in out 8 and the page's section 10 (%s against %s Wh, which L4-E10 reads back from the page); the"
+    p("     this record keeps L4-E10's first chain in out 8 and the page's Appendix A (%s against %s Wh, which L4-E10 reads back from the page); the"
       % (fmt(F["cell_usable"][1]), fmt(F["cell_usable"][0])))
     p("       round's chain gives %s against %s Wh, the same %s Wh of growth in every shortfall: no figure of this record moves"
       % (r["hl"][0], r["e35"][0], r["growth"]))
@@ -3241,6 +3241,16 @@ def main():
     for ln in cons_behaviour_lines(F, D, st):
         p(ln)
     p("")
+    for ln in cons_handover_lines(F, reg):
+        p(ln)
+    p("")
+    for ln in cons_exit_lines(F):
+        p(ln)
+    p("")
+    p("21. IN SHORT (the page's summary, generated)")
+    for b in cons_in_short(F, D, st, reg):
+        p("   - %s" % b.replace("**", ""))
+    p("")
     p("END. Desk arithmetic on read figures; nothing is measured.")
     return "\n".join(out) + "\n", F, D, R, st
 
@@ -3964,6 +3974,175 @@ def cons_behaviour_tables(F, D, st):
         n = head.count("|") - 1
         T[start] = [head, "|" + "---|" * n] + ["| %s |" % " | ".join(r) for r in B[key]]
     return T
+
+
+# THE IMPLEMENTATION HANDOVER: the selected parts with their document revisions (each revision checked on the pinned file
+# that prints it), and every register row grouped by the later layer that receives it, drafted or applied.
+PARTS = [
+    ("U5", "LT8705AIUHF#PBF", "the solar stage: hold, regulation RIMON_IN 31.6k, backstop on SWEN", "8705af", "l4e7r", "DRAFTED (R-12, R-19 to R-21, R-98)"),
+    ("U6, Q7", "TPS48110-Q1 with CSD19536KTT", "the vehicle entry's breaker and its pass FET", "SLUSEE5E", "l4e11", "DRAFTED (R-123)"),
+    ("Q7's sheet", "CSD19536KTT", "the pass FET's safe operating area", "SLPS540C", "l4e11", "DRAFTED (R-123)"),
+    ("Q1", "CSD19532Q5B", "the ideal diode's FET, 100 V", "SLPS414B", "csd19532", "DRAFTED (R-17)"),
+    ("U3 (board E)", "LM74700-Q1", "the vehicle entry's ideal-diode controller", "SNOSD17G", "lm74700", "as drawn"),
+    ("U2", "LM5176", "the front end to VBUS20", "SNVSAI1D", "lm5176", "as drawn; R11, R12 DRAFTED (R-04, R-01)"),
+    ("U3 (board A)", "BQ25731", "the charger onto VBAT = VSYS", "SLUSE66A", "bq25731", "as drawn; U-04 open on D1, D3"),
+    ("U17 and five more", "INA226", "the rail monitors; U17 moved onto R227", "SBOS547C", "ina226", "DRAFTED (R-06)"),
+    ("eFuses", "TPS2596", "the load converters' inputs, 21 V absolute", "SLVSET8A", "tps2596", "as drawn"),
+    ("U1 (board P)", "BQ4050", "the pack's gauge and its FETs", "SLUUAQ3A", "l4e11", "as drawn; U-01's (II) re-derives it (R-106)"),
+    ("U2 (board P)", "BQ7720700", "the second-level protector", "BQ7720700", "gen_p", "as drawn; BQ7720704 under U-01's (II) (R-105)"),
+    ("F2 (board P)", "SCF9550-30-05", "the self-control fuse", "SCF9550-30-05", "gen_p", "as drawn; Eaton's statement owed (R-103)"),
+    ("F1 (board E)", "Littelfuse 0997010.WXN", "the vehicle fuse, 58 V DC", "rev2025-11-18", "fuse997", "DRAFTED (R-18), its 20 A holder owed (R-132)"),
+    ("the bank", "Panasonic EEHZK1V331P with HoJLR2512 45 mOhm", "VBUS20's six cans and their ballasts", "EEHZK1V331P", "l4e8", "DRAFTED (R-07)"),
+    ("the cells", "Samsung INR18650-35E, 4S3P", "D-06's ruled cell", "INR18650-35E", "packprot", "as ruled; the HL18650V a PROPOSAL (U-01)"),
+    ("the alternative only", "LM5069", "the drawn hot swap, kept only as the alternative", "SNVS452G", "lm5069", "superseded by R-123"),
+]
+LAYER_OF = {"Layer 4 coordinator": "4 (release records)", "Layer 5 interfaces": "5", "CONOPS owner": "5", "firmware owner": "5 (firmware, by the contract)",
+            "Layer 6 components": "6", "Layer 7 mechanical": "7", "Layer 8 board A generator owner": "8", "Layer 8 board B generator owner": "8",
+            "Layer 8 board C generator owner": "8", "Layer 8 board E generator owner": "8", "Layer 8 board P generator owner": "8",
+            "Layer 9 pre-layout analysis": "9", "prototype bench": "9 (the bench)", "TEST-PLAN owner": "9 (the test plan)"}
+
+
+def cons_parts(F):
+    out = []
+    for ref, part, role, rev, key, state in PARTS:
+        txt = pdf_text(key, 1, 2) if PINS[key][0].endswith(".pdf") else (_C_TEXT[key] if key in _C_TEXT else "")
+        where = PINS[key][0]
+        if key in ("fuse997",):
+            txt = where
+        if rev not in txt:
+            refuse(4, "%s's revision %s is not printed by %s" % (part, rev, where))
+        out.append((ref, part, role, rev, os.path.basename(where), state))
+    return out
+
+
+def cons_handover(reg):
+    layers = {}
+    for r in reg:
+        lay = LAYER_OF.get(r[4])
+        if lay is None:
+            refuse(4, "register owner %s has no later layer" % r[4])
+        d = layers.setdefault(lay, {"owners": [], "rows": [], "kinds": {}, "states": {}})
+        if r[4] not in d["owners"]:
+            d["owners"].append(r[4])
+        d["rows"].append(r[0])
+        d["kinds"][r[1]] = d["kinds"].get(r[1], 0) + 1
+        d["states"][r[6]] = d["states"].get(r[6], 0) + 1
+    rows = []
+    for lay in sorted(layers, key=lambda x: (x[0], x)):
+        d = layers[lay]
+        rows.append((lay, ", ".join(d["owners"]), "%d: %s" % (len(d["rows"]), ", ".join(d["rows"])),
+                     "; ".join("%s %d" % (k, d["kinds"][k]) for k in sorted(d["kinds"])),
+                     "; ".join("%s %d" % (k, d["states"][k]) for k in sorted(d["states"])) + "; APPLIED 0"))
+    return rows
+
+
+def cons_handover_lines(F, reg):
+    L = ["19. THE IMPLEMENTATION HANDOVER (the selected parts with their revisions; every register row by the later layer that receives it)"]
+    for p_ in cons_parts(F):
+        L.append("   %s: %s, %s; document %s (%s); %s" % p_)
+    for r in cons_handover(reg):
+        L.append("   layer %s (%s): %s; by kind %s; by state %s" % r)
+    L.append("   the interface limits for Layer 5: LAYER5-HANDOVER.md LH-01 to LH-11 (drafts; pcb_interfaces.yaml and HW-FW-CONTRACT.md are not edited)")
+    return L
+
+
+def cons_handover_tables(F, D, st):
+    reg = md_table(open(os.path.join(HERE, "DOWNSTREAM-REGISTER.md"), encoding="utf-8").read(), "| ID | Kind |")
+    T = {"| Ref | Part |": ["| Ref | Part | Role | Document revision | Read from | State |", "|---|---|---|---|---|---|"] + ["| %s | %s | %s | %s | %s | %s |" % p_ for p_ in cons_parts(F)],
+         "| Layer | Owners |": ["| Layer | Owners | Register rows | By kind | By state |", "|---|---|---|---|---|"] + ["| %s | %s | %s | %s | %s |" % r for r in cons_handover(reg)]}
+    return T
+
+
+OWNER_DEFINITION = ("Layer 4 power closure requires a selected architecture whose mandatory operating requirements have a defensible feasibility "
+                    "basis, consistent interfaces, and explicit implementation obligations. A downstream qualification test may remain open where the "
+                    "design already has bounded supporting evidence and a workable fallback. An unknown that could invalidate the selected "
+                    "architecture stays a closure condition.")
+QUALIFICATION = "(i) a downstream qualification test with bounded evidence and a workable fallback"
+CONDITION = "(ii) a closure condition"
+EXIT_PENDING = {"U-01": "the coordinator's U-01 question (published specifications, and alternatives within the arrangement)",
+                "U-02": "the coordinator's U-02 question (does T-H1 confirm or decide)",
+                "U-04": "the coordinator's U-04 question (the BQ25731 with its hold-up against TI's BQ25730 against one other)"}
+
+
+def cons_exit(F):
+    """The exit statement per architecture-level choice, on this record's present reading (each pending a forwarded result)."""
+    r5, cb = F["r5"], F["cb"]
+    w4 = cb["w4"]
+    f4 = r5["f4"]
+    return [
+        ("U-01", CONDITION,
+         "the HL18650V class's signed limits (idle at +80 C for 30 days; storage at -33 C at REQ-025's stored charge, with the recovery); with the ruled 35E, LO-01d to LO-01g have no route on held evidence",
+         "the maker's signed specification answering the drafted request's ten questions (OW-2); a cell sample's storage test is evidence for that lot only, not for production",
+         "the maker's product page only (MAKER-PAGE); L4-E10's margins %s K under H1 and %s K under U2's INFERRED trip at LO-01e" % (fmt(F["lo01e"][2]), fmt(F["lo01e"][3])),
+         "none workable on held evidence: (I) the 35E with powered cooling is INCONCLUSIVE (%s to %s W into the sealed case); E3-S has no route in D-06's pocket without requirement change A (the owner's)" % r5["cooler"],
+         "a narrower signed figure moves D-06's pack (usable %s against %s Wh) or, with no requirement change, keeps LO-01d to g a release gate; missing evidence is not proof that no cell meets them" % (r5["hl"][0], r5["e35"][0])),
+        ("U-02", CONDITION,
+         "the sealed case's conductance lid open with the fans, against the binding %s W/K (E5 under the hold), with fans whose power and range are known (D-18)" % fmt(F["gc"]),
+         "T-H1 on the bench by the drafted procedure: a reading of at least %s W/K at a 10 K rise passes; 29 to 84 h on an empty case, no electronics; the owner's authorisation (OW-8)" % r5["pass"][0],
+         "W4's lumped model bounds the reading at %s to %s W/K lid open with the fans; the line lies inside that range" % (fmt(w4[0]), fmt(w4[1])),
+         "the session's F4 with F3 holds E5 down to %s W/K and E3-O down to %s W/K (%s with the connectors out of the exhaust); W4's low bound %s W/K lies under E3-O's floor, where the remaining option is the owner's (a deviation of E3-O or a device-set re-pick)" % (f4[3], f4[1], f4[2], fmt(w4[0])),
+         "a reading under E3-O's floor changes the sealed case's thermal design or the device set; a reading at or over the line confirms the route; missing evidence is not proof of a shortfall"),
+        ("U-04", CONDITION,
+         "whether the BQ25731 regulates VSYS with no battery current (D1) and what it regulates with the charge inhibited and no battery current (D3)",
+         "TI's statement of D1 and D3 as behaviours of the part (Q-TI-11 and the addendum to Q-TI-3, OW-7); one bench sample per row shows the mode on that silicon revision only",
+         "the held datasheet states neither; VSYS needs %s V against ChargeVoltage's floor %s V once the mode is shown (a %s V margin)" % r5["d1"],
+         "for D2 and D5, E11-24's hold-up (%s mJ, %s ms for the worst admitted step); for D1 and D3 none inside arrangement (A): (B), a charger with a battery FET, is an architecture change" % (r5["mj"], r5["hold_ms"][0]),
+         "a negative D1 or D3 changes the charger's power path; missing evidence is not proof that the BQ25731 lacks the mode"),
+    ]
+
+
+def cons_exit_lines(F):
+    L = ["20. THE EXIT STATEMENT (the owner's definition, quoted; each U on this record's present reading, pending its forwarded result)"]
+    L.append("   the definition: %s" % OWNER_DEFINITION)
+    for u, cls, fact, exp, ev, fb, ov in cons_exit(F):
+        L.append("   %s: %s (pending %s)" % (u, cls, EXIT_PENDING[u]))
+        for lab, x in (("the exact missing fact", fact), ("the smallest resolution", exp), ("the bounded evidence today", ev), ("the fallback", fb), ("what it decides", ov)):
+            L.append("      %s: %s" % (lab, x))
+    n = sum(1 for e in cons_exit(F) if e[1] == CONDITION)
+    L.append("   the exit: Layer 4 power closure is NOT reached on this reading: %d closure conditions (U-01, U-02, U-04); status: %s" % (n, STATUS))
+    return L
+
+
+def cons_exit_table(F, D, st):
+    return {"| U | Class |": ["| U | Class | The exact missing fact | The smallest experiment or manufacturer clarification | The bounded evidence today | The fallback | What it decides | Pending |",
+                              "|---|---|---|---|---|---|---|---|"] + ["| %s | %s | %s | %s | %s | %s | %s | %s |" % (e + (EXIT_PENDING[e[0]],)) for e in cons_exit(F)]}
+
+
+def cons_in_short(F, D, st, reg):
+    """The page's 'In short', generated: electrical feasibility and endurance apart, the change list and the exit."""
+    cnt = {}
+    for r in st.values():
+        cnt[r[1]] = cnt.get(r[1], 0) + 1
+    modes, energy, ef, heat = cons_budget(F, st)
+    ch = cons_changes(reg)
+    chs = {}
+    for c in ch:
+        k = c[8].split(" (")[0].split(",")[0]
+        chs[k] = chs.get(k, 0) + 1
+    e = {x[0]: x for x in energy}
+    tab = F["cb"]["tab_wh"]
+    return [
+        "**The design.** A1 under D-06: one 4S3P pack inside the case, fed by the panel through board E's LT8705A stage and by "
+        "the vehicle or shore supply through its ideal diode and the TPS48110-Q1 breaker, ORed onto VIN_RAW, converted once to "
+        "VBUS20 by board A's LM5176 and once more by the BQ25731 onto VBAT, from which every load converter and both outlets run "
+        "(section 1). A2 stays a proposal. There is no USB-C input.",
+        "**Electrical feasibility** (apart from endurance): %d interfaces, %d MEET, %d CONDITIONAL, %d NOT MET, %d PENDING (1d); no "
+        "material defect is open: D-01 to D-05 and D-08 resolved in design, D-06 resolved in design by L4-E11, D-07 and D-09 "
+        "superseded (8a); every resolution is a DRAFT, none applied; the heat into the case per mode against T-H1's binding %s W/K (2c)."
+        % (len(st), cnt.get("MEETS", 0), cnt.get("CONDITIONAL", 0), cnt.get("NOT MET", 0), cnt.get("PENDING", 0), fmt(F["gc"])),
+        "**Endurance** (apart from electrical feasibility; the approved profile %s W kept): battery-only %s (%s with the tablet's "
+        "window at the start) at room temperature and %s with the cells at -10 C; solar-assisted on the candidate panel's day: %s, "
+        "%s; the steady load carried %s. The objective of 48 to 72 h is NOT MET: a deficit of %.1f W against the profile, "
+        "+%s / +%s Wh of storage to add; a charger change does not close it. The tablet's optional charging takes at most %s Wh a "
+        "day. The cold end's solar case is not computed. The proposed cell (a PROPOSAL): %s battery-only (2b)."
+        % (fmt(F["idle"][1]), e["B1"][4], e["B1"][5].split(" (")[0], e["B2"][4], e["S1"][3], e["S1"][4].split(" (33")[0], e["S1"][6],
+           ef["deficit"], fmt(ef["short48"]), fmt(ef["short72"]), fmt(tab), e["P1"][4]),
+        "**The change list:** %d changes in application order, none APPLIED (%s), each with its board, generator, apply "
+        "script, dependency and release guard; the release records first (section 3)." % (len(ch), "; ".join("%s %d" % (k, chs[k]) for k in sorted(chs))),
+        "**The exit** (section 6, the owner's definition): Layer 4 power closure is not reached on this reading. U-01, U-02 and "
+        "U-04 are closure conditions, each with its exact missing fact and the smallest experiment or manufacturer clarification "
+        "that resolves it, and each pending a forwarded result. **Status: %s.**" % STATUS,
+    ]
 
 
 def poe_v(F):
