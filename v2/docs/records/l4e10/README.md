@@ -1,0 +1,28 @@
+# l4e10: the cell and thermal design of the battery path (layer 4 task L4-E10, MESHSAT-1357, FEA-008)
+
+Prototype design, desk arithmetic. This folder carries FEA-008, the open Layer 4 obligation of DR-06: the present cell
+and thermal design against the temperature requirements with the pack fitted, mode by mode (LO-01a to LO-01h of
+`v2/docs/handover/layer3/REQUIREMENTS-L3-R2.md` section 2.5), worked in the order of the owner's refinement of
+2 October 2026: a feasibility screen of every condition, the thermal measures only where a route exists, the cells
+alongside, the simplest defensible selection, and the conflict with at most three options where none qualifies; then
+the owner's instruction of the same day: one bounded comparison of three complete approaches and the least complex
+one recommended (a wide-temperature 18650 in D-06's 4S3P, CONDITIONAL on its maker's signed specification).
+
+| File | What it is |
+|---|---|
+| `L4E10-CELL-THERMAL.md` | The page: the collisions restated, the feasibility screen of every condition, the thermal routes bounded (LO-01a's three thresholds, LO-01g's three cases, E5 on Method 507.6, the corrected cooler balance, latent storage, the primary battery as a proposal under D-06), the conditioned corner, the cells alongside and beyond the held set, one comparison of three complete approaches with (II) recommended, the decision per row, the two owner items, F2 and U2, the downstream items, checks 1 and 2 mapped with each correction's effect |
+| `l4e10_cell_thermal.py` | The script, run from the repository root: `python3 v2/docs/records/l4e10/l4e10_cell_thermal.py > v2/docs/records/l4e10/l4e10_cell_thermal.out`. Section 0 reproduces `../rv-pwr/pwr_budget.out` and `.json`, `../hc2/pwr_red2.out` and `../hc2/hotstop_bounds.out` byte for byte and imports the two models unchanged; 40 inputs are pinned by sha256; the makers' clauses are read back from the PDFs with pdftotext. A few seconds |
+| `l4e10_cell_thermal.out` | Its output, committed |
+| `fetch_held_back.py` | Fetches the eight documents read but held back by their terms (Samsung INR18650-30Q: the 2020 V1.0, the 2015 Version 1.0 and the 2024 draft; LG INR18650HG2; Saft LSH 20 and LSH 20 HTS; Toshiba's SCiB brochure; UltraXel's HL18650T flyer) into the ignored `v2/vendor/battery/held/`, checked by sha256; never run by a test |
+| `inputs/` | The readings of 1 and 2 October 2026: the HL18650V product page's specification lines (`topwell-hl18650v-page-2026-10-01.json`), the distributor and marketplace prices (`prices-2026-10-01.json`), Saft LSH 20's discharge curves read by eye (`saft-lsh20-curves-read-2026-10-01.json`) and the cells read beyond the held set (`cells-beyond-held-2026-10-02.json`: Lithium Werks APR18650M1B, Toshiba SCiB, UltraXel HL18650T), each with its source's sha256 |
+| `clarification/` | Drafts for the owner to send (the session contacts no outside party): Topwell for the HL18650V's signed specification, Eaton for F2's storage line and its behaviour above +60 C |
+| `checks/astra-check-l4e10-1.md` | The engineering collaborator's one check at `9fe3b632` (NOT YET: R1, LO-01a's closure condition incomplete; R2, the screen missed E3-P, E4-P, P13, E3-A's and E3-L's sequences and E3-H; R3, thermal rejections not bounded, the whole-kit heating figure presented as the pack's; R4, a missing cell rating presented as a contradiction between owner requirements; R5, option B's protection not coordinated; minors M1 to M3), filed by the coordinator's instruction byte for byte from its result, `accepted: no`. The page's section 12 maps each item to its change |
+| `checks/astra-check-l4e10-2.md` | The collaborator's targeted recheck at `2316b107` (NOT YET: R2, E3-H's hold, reset repeat, TMP117 thresholds and restart, E3-L's closed-lid start, OTD's recovery and E4-T's return criteria not mapped; R3, the heater duration's usable energy unsupported, the passive rejection wider than its insulation model, the cooler balance double-counting the recirculated heat; minors on the coupling's shore case, C17's wording and the mat's 7.5 W; R4 and R5 corrected, no owner decision forced), filed by the coordinator's instruction byte for byte from its result, `accepted: no`. The page's section 12 maps each item |
+| `checks/check-l4e10-3.md` | Claude's (the coordinator's) closing check at `79b2f568`: the output reproduced, the conditioned corner and LO-01a's threshold recomputed (25.0 W into the case; 70.0 C and 75.0 C inside air), the cooling balance and the framing read; the record accepted as a decision-ready comparison, FEA-008 NOT closed, the owner items named; the inside-air finding raised as its own issue; not a model review and not an Astra check |
+| `README.md` | This list |
+
+Filed with this task: `v2/vendor/battery/molicel-inr18650-p28a-v1.pdf` and `v2/vendor/battery/pcm/rubitherm-rt57hc-2026-01-21.pdf`
+and `rubitherm-rt55-2026-01-21.pdf` (the makers' own public sheets), `v2/vendor/standards/mil-std-810h-method-507-6.md`
+(a transcription of Method 507.6's Procedure II; the standard itself is not filed) and their lines of `v2/vendor/sources.txt`. No generator, BOM, registry or Layer 3 file is changed, so there is no draft apply script.
+The predicates are held by `v2/ecad/tools/tests/test_l4e10.py`; run them with
+`env -C v2/ecad/tools/tests python3 run.py test_l4e10 test_public_hygiene`.

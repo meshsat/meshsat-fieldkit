@@ -1,0 +1,29 @@
+{
+ "documents": [
+  {
+   "part": "GRM3195C1H104GA05",
+   "what": "Murata reference sheet GRM3195C1H104GA05-01A (Chip Multilayer Ceramic Capacitors for Consumer Electronics & Industrial Equipment), 33 pages, 'Product specifications in this catalog are as of Jun.11,2026'",
+   "official_address": "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRM3195C1H104GA05-01A.pdf",
+   "served_from": "https://pim.murata.com/asset/pim4/ceramicCapacitorSMD/GRM3195C1H104GA05-01A-EN_PDF_CERAMICCAPACITORSMD",
+   "fetched_with": "curl -L, 2 October 2026, about 02:12 UTC",
+   "bytes": 1981029,
+   "sha256": "4457e5ec41c25d29a47f9201bd903f0f4abf98c7566d84a81aae7028e2d7a188",
+   "held_at": "v2/vendor/passives/held/murata-grm3195c1h104ga05-01a-2026-06-11.pdf (ignored by git; ../fetch_held_back.py)",
+   "terms": "the sheet carries Murata's copyright notice and no grant to redistribute: held back under the owner's rule of 27 September 2026",
+   "note": "the maker serves the sheet generated on request; a later fetch may differ in bytes, and fetch_held_back.py then refuses to keep it (the pinned sha256 is the one read)"
+  },
+  {
+   "part": "GRM3195C1H683JA05",
+   "what": "Murata reference sheet GRM3195C1H683JA05-01A (Chip Multilayer Ceramic Capacitors for Consumer Electronics & Industrial Equipment), 33 pages, 'Product specifications in this catalog are as of Jun.11,2026'",
+   "official_address": "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRM3195C1H683JA05-01A.pdf",
+   "served_from": "https://pim.murata.com/asset/pim4/ceramicCapacitorSMD/GRM3195C1H683JA05-01A-EN_PDF_CERAMICCAPACITORSMD",
+   "fetched_with": "curl -L, 2 October 2026, about 02:12 UTC",
+   "bytes": 1935890,
+   "sha256": "89cfedda1a8d61d5cf5371ab274a8c033e2bd9157d959ddd27d4e8963a934fde",
+   "held_at": "v2/vendor/passives/held/murata-grm3195c1h683ja05-01a-2026-06-11.pdf (ignored by git; ../fetch_held_back.py)",
+   "terms": "the sheet carries Murata's copyright notice and no grant to redistribute: held back under the owner's rule of 27 September 2026",
+   "note": "the maker serves the sheet generated on request; a later fetch may differ in bytes, and fetch_held_back.py then refuses to keep it (the pinned sha256 is the one read)"
+  }
+ ],
+ "read_by": "task L4-E11 (MESHSAT-1357)"
+}

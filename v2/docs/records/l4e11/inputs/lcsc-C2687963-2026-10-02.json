@@ -1,0 +1,28 @@
+{
+ "what": "LCSC public product-detail answer for C2687963 (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C2687963), no login; kept fields only",
+ "read_utc": "2026-10-02T03:41Z",
+ "read_by": "task L4-E11 (MESHSAT-1357), fix round",
+ "role": "board E Q7, the entry's pass FET in the U-04 fix round (CSD19536KTT, D2PAK, replacing the CSD19532Q5B)",
+ "code": "C2687963",
+ "brand": "TI",
+ "model": "CSD19536KTT",
+ "package": "TO-263-3",
+ "pdf": "https://datasheet.lcsc.com/datasheet/pdf/54e3fe821bc5d0bded987a99857ef523.pdf?productCode=C2687963",
+ "stock": 611,
+ "params": {
+  "Output Capacitance(Coss)": "2.37nF",
+  "Ciss-Input Capacitance": "12nF",
+  "Pd - Power Dissipation": "375W",
+  "Configuration": "-",
+  "Operating Temperature": "-55℃~+175℃",
+  "Drain to Source Voltage": "100V",
+  "Current - Continuous Drain(Id)": "200A",
+  "Reverse Transfer Capacitance (Crss)": "61pF",
+  "RDS(on)": "2.2mΩ@6V",
+  "Number": "1 N-channel",
+  "Gate Charge(Qg)": "153nC@10V",
+  "Vgs": "±20V",
+  "Gate Threshold Voltage (Vgs(th))": "3.2V",
+  "Type": "N-Channel"
+ }
+}

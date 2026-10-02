@@ -1,0 +1,339 @@
+{
+ "what": "JLCPCB public parts search for the keyword WSL2512 (the same API and paging as the RT0603BRD07 searches), no login; the rows of the 1 % lead-free tape-and-reel ordering code (WSL2512R....FEA), code, model and stock kept, for the control decision's sense bank",
+ "read_utc": "2026-10-01T21:20Z",
+ "read_by": "task L4-E7R (MESHSAT-1357)",
+ "count_all": 500,
+ "count_kept": 66,
+ "rows": [
+  {
+   "code": "C844901",
+   "model": "WSL2512R0100FEA",
+   "stock": 9836
+  },
+  {
+   "code": "C4047474",
+   "model": "WSL2512R0110FEA",
+   "stock": 0
+  },
+  {
+   "code": "C1517431",
+   "model": "WSL2512R0125FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4125364",
+   "model": "WSL2512R0140FEA",
+   "stock": 0
+  },
+  {
+   "code": "C844695",
+   "model": "WSL2512R0150FEA",
+   "stock": 13414
+  },
+  {
+   "code": "C4073379",
+   "model": "WSL2512R0160FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4050978",
+   "model": "WSL2512R0180FEA",
+   "stock": 0
+  },
+  {
+   "code": "C553969",
+   "model": "WSL2512R0200FEA",
+   "stock": 4896
+  },
+  {
+   "code": "C844081",
+   "model": "WSL2512R0220FEA",
+   "stock": 1907
+  },
+  {
+   "code": "C4043891",
+   "model": "WSL2512R0240FEA",
+   "stock": 0
+  },
+  {
+   "code": "C844903",
+   "model": "WSL2512R0250FEA",
+   "stock": 1218
+  },
+  {
+   "code": "C4009290",
+   "model": "WSL2512R0260FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4336652",
+   "model": "WSL2512R0270FEA",
+   "stock": 30
+  },
+  {
+   "code": "C844697",
+   "model": "WSL2512R0300FEA",
+   "stock": 3019
+  },
+  {
+   "code": "C3920037",
+   "model": "WSL2512R0310FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4037889",
+   "model": "WSL2512R0320FEA",
+   "stock": 0
+  },
+  {
+   "code": "C3151604",
+   "model": "WSL2512R0330FEA",
+   "stock": 1789
+  },
+  {
+   "code": "C3972102",
+   "model": "WSL2512R0360FEA",
+   "stock": 0
+  },
+  {
+   "code": "C3977842",
+   "model": "WSL2512R0370FEA",
+   "stock": 0
+  },
+  {
+   "code": "C844291",
+   "model": "WSL2512R0400FEA",
+   "stock": 2164
+  },
+  {
+   "code": "C3968834",
+   "model": "WSL2512R0420FEA",
+   "stock": 0
+  },
+  {
+   "code": "C3958310",
+   "model": "WSL2512R0440FEA",
+   "stock": 0
+  },
+  {
+   "code": "C413485",
+   "model": "WSL2512R0470FEA",
+   "stock": 0
+  },
+  {
+   "code": "C413486",
+   "model": "WSL2512R0500FEA",
+   "stock": 41066
+  },
+  {
+   "code": "C4135393",
+   "model": "WSL2512R0510FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4101972",
+   "model": "WSL2512R0550FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4036878",
+   "model": "WSL2512R0580FEA",
+   "stock": 0
+  },
+  {
+   "code": "C844492",
+   "model": "WSL2512R0600FEA",
+   "stock": 45
+  },
+  {
+   "code": "C4074449",
+   "model": "WSL2512R0610FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4130278",
+   "model": "WSL2512R0660FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4125307",
+   "model": "WSL2512R0680FEA",
+   "stock": 2006
+  },
+  {
+   "code": "C4048537",
+   "model": "WSL2512R0690FEA",
+   "stock": 0
+  },
+  {
+   "code": "C2076144",
+   "model": "WSL2512R0700FEA",
+   "stock": 1971
+  },
+  {
+   "code": "C4054774",
+   "model": "WSL2512R0740FEA",
+   "stock": 0
+  },
+  {
+   "code": "C3983182",
+   "model": "WSL2512R0750FEA",
+   "stock": 10
+  },
+  {
+   "code": "C3918395",
+   "model": "WSL2512R0810FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4054932",
+   "model": "WSL2512R0830FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4078671",
+   "model": "WSL2512R0860FEA",
+   "stock": 0
+  },
+  {
+   "code": "C2073826",
+   "model": "WSL2512R0900FEA",
+   "stock": 33
+  },
+  {
+   "code": "C3941075",
+   "model": "WSL2512R0980FEA",
+   "stock": 0
+  },
+  {
+   "code": "C844904",
+   "model": "WSL2512R1000FEA",
+   "stock": 6364
+  },
+  {
+   "code": "C4075488",
+   "model": "WSL2512R1200FEA",
+   "stock": 23
+  },
+  {
+   "code": "C4062713",
+   "model": "WSL2512R1300FEA",
+   "stock": 0
+  },
+  {
+   "code": "C844083",
+   "model": "WSL2512R1500FEA",
+   "stock": 0
+  },
+  {
+   "code": "C2079852",
+   "model": "WSL2512R1510FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4032504",
+   "model": "WSL2512R1700FEA",
+   "stock": 0
+  },
+  {
+   "code": "C3925886",
+   "model": "WSL2512R1900FEA",
+   "stock": 0
+  },
+  {
+   "code": "C844905",
+   "model": "WSL2512R2000FEA",
+   "stock": 1313
+  },
+  {
+   "code": "C3919952",
+   "model": "WSL2512R2100FEA",
+   "stock": 0
+  },
+  {
+   "code": "C844292",
+   "model": "WSL2512R2200FEA",
+   "stock": 620
+  },
+  {
+   "code": "C844698",
+   "model": "WSL2512R2500FEA",
+   "stock": 1512
+  },
+  {
+   "code": "C4119672",
+   "model": "WSL2512R2600FEA",
+   "stock": 0
+  },
+  {
+   "code": "C3997280",
+   "model": "WSL2512R2700FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4037508",
+   "model": "WSL2512R2800FEA",
+   "stock": 0
+  },
+  {
+   "code": "C3917279",
+   "model": "WSL2512R2900FEA",
+   "stock": 0
+  },
+  {
+   "code": "C2076134",
+   "model": "WSL2512R3000FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4039112",
+   "model": "WSL2512R3200FEA",
+   "stock": 0
+  },
+  {
+   "code": "C2073866",
+   "model": "WSL2512R3300FEA",
+   "stock": 1246
+  },
+  {
+   "code": "C3958041",
+   "model": "WSL2512R3500FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4090168",
+   "model": "WSL2512R3700FEA",
+   "stock": 0
+  },
+  {
+   "code": "C3987615",
+   "model": "WSL2512R3900FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4101832",
+   "model": "WSL2512R4500FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4273015",
+   "model": "WSL2512R4700FEA",
+   "stock": 8
+  },
+  {
+   "code": "C3913885",
+   "model": "WSL2512R4800FEA",
+   "stock": 0
+  },
+  {
+   "code": "C4122786",
+   "model": "WSL2512R4900FEA",
+   "stock": 0
+  },
+  {
+   "code": "C511023",
+   "model": "WSL2512R5000FEA",
+   "stock": 19451
+  }
+ ]
+}

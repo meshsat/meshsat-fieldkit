@@ -32,6 +32,16 @@ production test covers, for each:
    over 1.5 V to 80 V common mode (page 5's operating range), 0 to 100 mV differential, -40 to 125 C junction and while
    switching? If the page 5 limits apply only at the test point, what limits apply at 16 V to 25 V common mode?
 
+5. The SWEN pin (added 1 October 2026, task L4-E7R; revised 2 October 2026). Under the input-current limit a fixed trip
+   holds SWEN (pin 36 of the QFN) low through a supervisor's open-drain output; SWEN is fed from LDO33 through 8.06 kOhm
+   with 6.04 kOhm to ground, so it is held low with no supply and cannot reach its threshold below about 2.66 V on LDO33.
+   Page 12 describes SWEN as a logic input ("Tie high to enable switching. Ground to disable switching. Don't float this
+   pin") and page 4 prints its rising threshold (1.156 / 1.206 / 1.256 V over the full range) and a typical 22 mV
+   hysteresis; we find no row for its input current. What input current do you guarantee at SWEN over 0 V to 3.4 V and
+   -40 to 125 C junction (our arrangement holds while it is under about 107 uA sourced and 31 uA sunk)? What is the
+   guaranteed least falling threshold? With SWEN driven below its threshold, what delay to the last switching edge do you
+   guarantee, and does every return through the initialize state of Figure 2 (page 15) restart with SS pulled low?
+
 For each item we ask for a limit Analog Devices warrants, and the conditions under which it applies. Characterization
 over production lots is welcome as supporting evidence, but on its own we cannot treat it as a production guarantee;
 typical curves are not sufficient for our purpose. Thank you.

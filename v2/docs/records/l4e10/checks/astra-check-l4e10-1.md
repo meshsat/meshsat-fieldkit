@@ -1,0 +1,65 @@
+accepted: no
+
+# Layer 4, L4-E10: the one check of the cell and thermal design of the battery path by the engineering collaborator (an AI review, read-only)
+
+Collaborator job `cx26-l4e10-check`, run `20261001T223709Z-4184732`, model `gpt-6-astra` at effort `xhigh` (the client's own
+record), on branch fnd/l4e10 at commit `9fe3b632b554`. The launcher's computed outcome is DONE_CANDIDATE. The content below is the
+collaborator's result as returned; the coordinator evaluated it before acting on it.
+
+## Summary
+
+L4-E10: NOT YET. Read-only AI review completed. The headline arithmetic mostly reproduces, but LO-01a's closure condition is insufficient, the finite-duration screen does not justify all thermal rejections, and missing component evidence does not establish a contradiction between owner requirements.
+
+## Blocking discrepancies
+
+- R1, LO-01a closure: v2/docs/records/l4e10/L4E10-CELL-THERMAL.md:17, :189 and :200 treat 1.246 W/K or the coupling fallback as sufficient. v2/docs/handover/layer3/REQUIREMENTS-L3-R2.md:97 explicitly includes the +59 C abort. At the same PLAN inputs, that boundary requires 1.315393 W/K, while staying below H1's 56.5 C reading requires 1.529988 W/K before sensor-error allowances. TEST-PLAN.md:145-146 also requires live bearers, F2 at or below 60 C and inside air at or below the SGP41's 55 C. The fallback gives 58.64 C cells and 61.94 C air, so it cannot presently close that test. Separate the cell-rating threshold from the complete acceptance condition and retain the failing dependencies.
+- R2, incomplete screen: v2/docs/records/l4e10/L4E10-CELL-THERMAL.md:54 claims every required condition, but rows C01-C13 do not explicitly screen E3-P's fully charged, armed pack followed by discharge from +58 C, E4-P's standalone pack, or P13's 10 A for 1 h at the hot limit. They also omit the full E3-A/E3-L supply sequences and levels and E3-H's stepped exposure. TEST-PLAN.md:144-153 and :171 specify them. C12's generic storage-limit statement does not establish the full-charge case; 35E Ver. 1.1 p.7 section 7.10 provides separate full-charge storage evidence. Add traceable rows or explicit mappings retaining duration, charge state, configuration and recovery criteria.
+- R3, unsupported general thermal rejection: v2/docs/records/l4e10/l4e10_cell_thermal.py:973-1001 rejects insulation/thermal storage using the existing uninsulated heat capacity and conductance. E5's ten days of cycles is not ten days continuously at +60 C; its dwell/ramp profile is missing, and possible regeneration during cooler portions is not assessed. The powered-cooling rejection gives no cold-side load, available input-power budget, heat-rejection balance or dimensional bound. Also, lines 586 and 1000 mislabel G_enclosure*13 K*24 h as cell-heating energy: heating only the pack through the existing series conductances gives approximately 38.1 to 106.1 Wh at steady hold, before transient accounting. Keep zero-power storage rejection, correct that figure, and either calculate finite-duration thermal-storage/cooling bounds or label those routes INCONCLUSIVE.
+- R4, premature owner escalation: v2/docs/records/l4e10/L4E10-CELL-THERMAL.md:143-166 and l4e10_cell_thermal.py:676-680 convert 'no held qualified candidate' into a contradiction between D-02a/SC-03 and D-06/REQ-074. D-29 and D-36 explicitly distinguish replaceable component limitations from contradictory requirements (pcb_requirements.yaml:890-903 and :1009-1014); cell_provenance at l3r2.yaml:1150-1151 agrees. The screen has not proved that every compliant engineering route is unavailable. Reclassify the result as component limitations and missing feasibility evidence, retain FEA-008, and present A/B as possible requirement/resource changes rather than a decision already forced by the evidence. C is the existing unresolved state and needs no new owner ruling.
+- R5, option B protection consequences: v2/docs/records/l4e10/L4E10-CELL-THERMAL.md:115-118, :161 and :179 do not establish a coordinated replacement. Keeping the existing H1/H2 thresholds still stops functions during the hot margins even with a wider-rated cell. TI SLUSEG7D p.3 shows that the 80 C variants also change voltage thresholds, and the 83 C BQ7720704 changes COUT to an active-low open-drain output. Neither is an established drop-in replacement. Specify the required complete protection/control redesign and recompute tolerance, nuisance-trip and permanent-trip bounds for storage and powered operation before treating B as a defensible architecture.
+
+## Classification
+
+- **OWNER_REQUIREMENT**: Required temperatures and fitted-pack configurations Evidence: v2/ecad/tools/pcb_requirements.yaml:393-400, :1009-1014 and :18761-18770 preserve the margins and require fitted-pack verification.
+- **IMPLEMENTATION_DEFECT**: R1: Insufficient LO-01a closure predicate Evidence: v2/docs/records/l4e10/l4e10_cell_thermal.py:490-492 computes separate cell-limit and H1 thresholds, but :666-668 uses the lower break-even as closure; TEST-PLAN.md:145-146 imposes additional criteria.
+- **MODELLING_ASSUMPTION**: Coupling and conductance estimates Evidence: v2/docs/records/l4e10/l4e10_cell_thermal.py:108-111 and :493-537; L4E10-CELL-THERMAL.md:82-96 labels material and local-temperature uncertainty.
+- **MISSING_EVIDENCE**: R2 and R3: Missing configurations and finite-exposure feasibility evidence Evidence: v2/docs/records/l4e10/L4E10-CELL-THERMAL.md:63-75; l4e10_cell_thermal.py:973-1001; TEST-PLAN.md:144-153 and :171.
+- **IMPLEMENTATION_DEFECT**: R3: Whole-enclosure heating presented as pack-only heating Evidence: v2/docs/records/l4e10/l4e10_cell_thermal.py:586 and :1000 omit the pack-to-air resistance from the claimed pack-heating requirement.
+- **COMPONENT_LIMITATION**: Present cells and F2 lack demonstrated margin coverage Evidence: v2/docs/records/l4e10/L4E10-CELL-THERMAL.md:34-38 and :170-175; held 35E Ver. 1.1 p.3 and Eaton ELX1135 p.4.
+- **IMPLEMENTATION_DEFECT**: R4: Claimed contradiction between owner requirements Evidence: v2/docs/records/l4e10/L4E10-CELL-THERMAL.md:151-156 is not established by the evidence and conflicts with the governing distinction at pcb_requirements.yaml:890-903 and l3r2.yaml:1150-1151.
+- **MISSING_EVIDENCE**: R5: Replacement protector and control coordination Evidence: v2/docs/records/l4e10/L4E10-CELL-THERMAL.md:115, :161 and :179; TI BQ77207 SLUSEG7D p.3 identifies materially different variants.
+- **IMPLEMENTATION_DEFECT**: M1 and M2: Heat allocation and cell-settling claims Evidence: v2/docs/records/l4e10/l4e10_cell_thermal.py:566-584; POWER-THERMAL.md:243-245; RS PRO 245-556 sheet p.2.
+- **IMPLEMENTATION_DEFECT**: M3: Guaranteed destructive trip at +71 C Evidence: v2/docs/records/l4e10/L4E10-CELL-THERMAL.md:179 overstates the tolerance interval documented at THERMAL-COORDINATION.md:152.
+- **DESIGN_OBJECTIVE**: Runtime consequences of a lower-energy cell Evidence: v2/docs/records/l4e10/L4E10-CELL-THERMAL.md:109-111 and :161 quantify reduced endurance; OWNER-INSTRUCTION-2026-09-30.md:17-21 distinguishes REQ-072's objective from mandatory requirements.
+
+## Smallest next action
+
+Correct the closure predicates and heat-network accounting using the held evidence, complete the test-condition mapping, and replace unsupported blanket rejections with bounded calculations or explicit INCONCLUSIVE findings. Do this before escalating a requirement change.
+
+## Closure criterion
+
+An amended candidate maps every cited exposure to its exact configuration, duration and charge state; reproduces corrected thermal figures; distinguishes the +60 C rating threshold from all E3 acceptance criteria; bounds finite thermal-storage/cooling proposals or names their missing inputs; and presents fully qualified protection consequences without claiming a requirements contradiction from absent component evidence. FEA-008 remains open until its documented component/model and prototype criteria are met.
+
+## Owner decision required
+
+no
+
+## Checks
+
+- Revision, input integrity and read-only scope: PASS. HEAD matches the requested base; all 29 hashes match; worktree remains clean. No verdict writer, author main program or file-writing test was run.
+- E1: Conditions and maker limits: FAIL. 35E Ver. 1.1 PDF p.3 correctly gives charge 0 to 45 C, discharge -10 to 60 C, and storage by duration at 30% charge. Version 1.0 PDF p.4 and 30Q6 V1.0 PDF pp.2-3 are also substantially transcribed correctly. Screen coverage and finite-cycle evidence are incomplete, as detailed in R2 and R3.
+- E2: Thermal arithmetic and rejection logic: FAIL. Reproduced insulation thicknesses 6.710 and 13.740 mm, whole-kit time constants 1.533 to 3.968 h, single-node residuals 0.215/0.184 K, and 218.4 to 452.4 Wh. The last figure heats the whole enclosure, not just the cells; the thermal-storage rejections do not model the proposed added storage or insulation.
+- E3: LO-01a temperatures, threshold and fallback: FAIL. Reproduced 62.1186 C air, 63.2945 C cells, 1.245515 W/K for a 60 C cell limit, and the fallback's 58.6422 C cells with 61.9422 C air. These do not establish the stated test closure; see R1.
+- E4: Requirements conflict and options: FAIL. No held candidate establishes compliance across all four margin rows. That supports an unresolved engineering obligation, not the claimed contradiction between mandatory requirements. Option B also needs explicit control and secondary-protection coordination.
+- E5: F2 and PWR-F12: PASS. F2's operating range is -20 to +60 C. The inferred 62.12 C local air exceeds it; the coupling fallback still leaves 61.94 C air. The report correctly carries F2 and P13 open. Cell adiabatic rises reproduce as 1.3745 to 3.2400 K, conditional on an actual initial cell temperature of 55 C. F2 body temperature and sensor/control effects remain unverified.
+
+## Evidence and minors
+
+- At conductance 1.06 W/K, the independently recomputed cell temperature is 63.2945 C using the lowest block conductance. At 2.49 W/K it is 49.8079 C using the highest block conductance. At appendix 32.53's 1.50/2.00 W/K and the author's middle block conductance, temperatures are 56.2184/52.3108 C. Thus the reported 56.22 C uses a middle block coefficient, not its worst bound.
+- The coupling's 58.6422 C is supported by its equations: G_inside=0.254488 W/K, G_ambient=0.054390 W/K, enclosure conductance reduction=0.037688 W/K. Filler conductivity, mat thickness/conductivity and local board temperature assumptions are identified in v2/docs/records/l4e10/L4E10-CELL-THERMAL.md:82 and :94. This is conditional model evidence, not demonstrated hardware performance.
+- LO-01b's -5.52 C and LO-01c's charge hold-off are consistent with the stated model and requirement interpretation. LO-01h remains conditional on the purchased lot's governing revision and stored state of charge; see v2/docs/records/l4e10/L4E10-CELL-THERMAL.md:34 and :137.
+- The lack of storage power is valid for the specified unplugged, gauge-shutdown configuration. Fans and spreading cannot maintain cells below ambient indefinitely. Those observations reject the existing unpowered storage design, but do not themselves quantify added insulation or finite thermal storage.
+- MINOR M1: The cold-charge model deposits 8.5 W at the cells, although the held RS PRO 245-556 sheet p.2 specifies 7.5 W at 12 V. v2/docs/feasibility/POWER-THERMAL.md:243 identifies the balance as buck loss. Correcting its location, while retaining 8.5 W total, changes the uncoupled/coupled minimum temperatures from 14.69/15.68 C to 12.44/12.84 C. Both remain above the +3 C hold threshold. Correct v2/docs/records/l4e10/l4e10_cell_thermal.py:566 and L4E10-CELL-THERMAL.md:93.
+- MINOR M2: The 0.21/0.18 K storage residuals are whole-kit single-node results, not demonstrated upper bounds on cell lag. A two-node interpretation using the same 10 kJ/K total, 660 J/K cells, 0.70 W/K enclosure and 0.148075 W/K block gives 0.351/0.301 K after 24 h. This still fails the storage margins. Qualify v2/docs/records/l4e10/l4e10_cell_thermal.py:578 and L4E10-CELL-THERMAL.md:57.
+- MINOR M3: 'Would blow F2' at +71 C overstates certainty. The recorded U2 network trip spans 62.7 to 77.5 C, so +71 C permits a destructive trip but does not guarantee one. Correct v2/docs/records/l4e10/L4E10-CELL-THERMAL.md:179 against v2/docs/review-packets/battery/THERMAL-COORDINATION.md:152.
+- Bounded alternative search found no qualified replacement within the approved pack demonstrated here. A [Saft MP174565 xtd maker document](https://e2e.ti.com/cfs-file/__key/communityserver-discussions-components-files/196/MP174565-xtd-INT.pdf), preliminary October 2014, pp.1-2, is a credible wide-temperature prismatic lead, but is not held under v2/vendor and remains INCONCLUSIVE for this job. Its 4S1P arithmetic is only 58.4 Wh, with stated 8 A continuous/16 A pulse figures below the pack's 18 A requirement. It therefore does not establish an owner-free substitute. Another form factor or chemistry would need energy, current, fit, charger and protection assessment within option B, not an assumed substitution.

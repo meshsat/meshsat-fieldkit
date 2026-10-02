@@ -1,0 +1,29 @@
+DRAFT FOR THE OWNER TO SEND. The MeshSat session contacts no outside party; it prepared this text only.
+Addressee: Texas Instruments, technical support for the INA169 (the owner chooses the channel, for example the E2E forum).
+Prepared 1 October 2026, task L4-E7R (MESHSAT-1357); revised 2 October 2026 (third round and its CS101 correction).
+
+Subject: INA169NA: a warranted error envelope at V+ = VIN+ of 9 V to 25 V and VSENSE of 44 mV to 51 mV, and the VIN+ current
+
+We use the INA169NA (data sheet SBOS181F, December 2000, revised February 2017) as a high-side monitor on a solar
+converter's input: VIN+ and V+ both at 9 V to 25 V (V+ tied to the shunt's load side, so V+ = VIN+ - VSENSE), its output
+current into 25.35 kOhm to ground (16.9k over 8.45k, a comparator on the 8.45k with 500 nF across it), the air at -20 C
+to about +62 C. The comparator trips at a sense voltage between about 44 mV and 51 mV over the parts' tolerances and life. Our bound uses the
+Electrical Characteristics on page 6: the transconductance (990 to 1010 uA/V, VSENSE 10 mV to 150 mV), the offset (1 mV),
+the nonlinearity (0.1 %), all at V+ = 5 V, VIN+ = 12 V and ROUT = 25 kOhm, and the common-mode rejection (100 dB minimum,
+VIN+ = 2.7 V to 60 V) and supply rejection (10 uV/V maximum, V+ = 2.7 V to 60 V), both printed at VSENSE = 50 mV.
+
+1. What total error of the output current do you warrant, gain and offset together, over V+ = VIN+ = 9 V to 25 V, VSENSE
+   = 44 mV to 51 mV, ROUT = 25 kOhm and TA = -40 C to 85 C? We read the CMR and PSR rows as the change of the whole
+   output at VSENSE = 50 mV. Meanwhile we carry, as our own assumption, a change of the transconductance with V+ and VIN+
+   of at most 1 % (its effect at our 50.2 mV highest trip is 1.7 uV referred to the input); our bound reaches its limit only if
+   that change reaches about 170 %.
+2. The input bias current is printed as 10 uA typical. What maximum current do you warrant into the VIN+ pin, its output
+   current included, over -40 C to 85 C and VIN+ up to 25 V? Meanwhile we carry 1 mA as our own assumption; our bound
+   reaches its limit only at about 20 mA, above the pin's 10 mA absolute maximum (page 4).
+3. During a discharge or a surge the sense voltage may reach about 0.87 V for tens of nanoseconds and 0.49 V for about a
+   millisecond (under the 2 V differential absolute maximum). Is the output current then still the sense voltage over the
+   internal 1 kOhm, or is it limited, and is there any condition under which it exceeds that?
+
+For each item we ask for a limit Texas Instruments warrants, and the conditions under which it applies. Characterization
+over production lots is welcome as supporting evidence, but on its own we cannot treat it as a production guarantee. The
+answers are supporting: our bound does not wait on them. Thank you.
