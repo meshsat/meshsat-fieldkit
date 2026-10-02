@@ -18,7 +18,10 @@ accepted L4-E10 (FEA-008, final), L4-E11 (the vehicle entry replaced by a TPS481
 interconnect, U-04's arrangement) and L4-E12 (the electronics at the margins, T-H1's binding line 2.159 W/K); it answers E11-19
 (every finding that rested on the LM5069's power limit re-judged for the selected entry, out 12), deduplicates the three
 records' downstream items into the register (137 items), and lists the owner's items apart (the page's section 7d). No material
-defect is open; U-01 to U-04 stand, U-03 as it stood while L4-E13 is pending.
+defect is open. Update round 3 (the same day) takes the accepted L4-E13 (merged into this line from `fnd/l4e13` at `fae419d1`):
+U-03 becomes a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC) and moves into the register (R-35, R-52, R-148, R-149; 139
+items), the panel unit's purchase and measurement and SunPower's and Solbian's drafts join the owner's items, LH-02 is amended
+(no new handover row), and the gate stays NOT CLOSED on U-01, U-02 and U-04 (output section 13).
 
 | File | What it is |
 |---|---|
@@ -42,7 +45,8 @@ defect is open; U-01 to U-04 stand, U-03 as it stood while L4-E13 is pending.
 
 **PENDING:** none in the rows. L4-E7R is accepted (the coordinator's check 4, `fnd/l4e7` `91e9a4b5`, its figures at
 `675b8068`); D-01 is resolved in design (drafted, not applied). L4-E11 resolved D-06 in design and made U-04 a CONDITIONAL
-CANDIDATE; L4-E12 made U-02 CONDITIONAL on T-H1 with CFL-002 the owner's question; L4-E13 (U-03) is pending.
+CANDIDATE; L4-E12 made U-02 CONDITIONAL on T-H1 with CFL-002 the owner's question; L4-E13 made U-03 a conditional downstream
+unit selection (PANEL-ACC), no unit bought or measured.
 
 The predicates are held by `v2/ecad/tools/tests/test_l4e9.py`. Run it with
 `env -C v2/ecad/tools/tests python3 run.py test_l4e9 test_public_hygiene`; `test_l4e9` reports 37 tests.

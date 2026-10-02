@@ -30,7 +30,12 @@ output; E11-19's inductance bound reproduces L4-E11's and every start and fault 
 checks print only as drawn or as the alternative, IF-05 reads CONDITIONAL and no material defect is open (D-06 resolved in
 design, D-07 and D-09 superseded); IF-11 carries L4-E12's binding line; every E11 item, every L4-E10 and L4-E12 owner row is in
 the register or the owner's list; the owner's items are kept apart with their documents pinned; L4-E11's entry draft applies on
-this record's hot-swap draft and not before it; U-03 stays as it stood.
+this record's hot-swap draft and not before it.
+
+Update round 3 (2 October 2026, L4-E13 accepted): U-03 is a CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC) with L4-E13's
+figures read from its pinned output; criteria 1 and 5 name exactly the architecture-level choices (a gate naming U-03 there, or
+leaving one of U-01, U-02, U-04 out, is refused); the register carries PANEL-ACC (R-35, R-52, R-148, R-149) at 139 items; the
+owner's list carries the panel's purchase and the two route-1 drafts; the gate reads NOT CLOSED.
 """
 import ast
 import copy
@@ -524,7 +529,7 @@ def t_l4e10_and_meshsat_1478_enter_as_choices_not_tasks():
     assert "FEA-008" in m.CHOICES[0]["title"] and "MESHSAT-1478" in m.CHOICES[1]["title"]
     for g in m.GATE:
         if g["n"] in (1, 5):
-            assert set(g["choices"]) == set(ids) and g["verdict"] != "PASS"
+            assert set(g["choices"]) == {c["id"] for c in m.CHOICES if c["class"] == m.ARCH} and g["verdict"] != "PASS"
     bad = copy.deepcopy(m.GATE)
     bad[4]["verdict"] = "PASS"
     bad[4]["rows"] = []
@@ -548,11 +553,11 @@ def t_the_two_categories_are_kept_apart_on_the_page_and_in_the_register():
         if r[7] == "U-01" or "U-01" in r[7]:
             assert "U-01" in r[2] or "U-01" in r[5] or "under U-01" in r[2].replace("U-01's", "U-01"), r[0]
     page = open(PAGE, encoding="utf-8").read()
-    ch = m.md_table(page, "| Choice | What |")
+    ch = m.md_table(page, "| Choice | Class |")
     assert [r[0] for r in ch] == [c["id"] for c in m.CHOICES]
     for r, c in zip(ch, m.CHOICES):
-        assert r[1] == c["title"] and r[2] == c["constraint"] and r[3] == c["settles"] and r[4] == c["alternatives"], c["id"]
-        assert r[5] == c["owner"] and r[6] == c["overturns"], c["id"]
+        assert r[1] == c["class"] and r[2] == c["title"] and r[3] == c["constraint"] and r[4] == c["settles"], c["id"]
+        assert r[5] == c["alternatives"] and r[6] == c["owner"] and r[7] == c["overturns"], c["id"]
     de = m.md_table(page, "| Defect | What |")
     assert [r[0] for r in de] == [d["id"] for d in m.DEFECTS]
     for r, d in zip(de, m.DEFECTS):
@@ -759,7 +764,7 @@ def t_the_register_carries_the_accepted_records_items():
         for refs in mp.values():
             for x in refs:
                 assert (x in ids) if x.startswith("R-") else (x in ow) if x.startswith("OW-") else x.startswith("this record"), x
-    assert len(reg) == len(ids) >= 137
+    assert len(reg) == len(ids) >= 139
 
 
 def t_the_thermal_line_is_l4e12s_binding_line():
@@ -782,7 +787,7 @@ def t_the_owner_items_are_kept_apart_with_their_documents_pinned():
     assert not any(r[0].startswith("OW-") for r in reg), "an owner item is not a register task"
     labels = " ".join(lab for o in m.OWNER_ITEMS for _k, lab in o["docs"])
     for name in ("Topwell", "Pervasive Displays", "Sensirion", "Analog Devices", "Milliohm", "Vishay", "Texas Instruments", "Eaton",
-                 "Ground Control", "NiceRF", "Bulgin"):
+                 "Ground Control", "NiceRF", "Bulgin", "SunPower", "Solbian"):
         assert name in labels, "the owner's list misses %s" % name
     for o in m.OWNER_ITEMS:
         for key, _lab in o["docs"]:
@@ -793,12 +798,47 @@ def t_the_owner_items_are_kept_apart_with_their_documents_pinned():
     assert [r[0] for r in page] == [o["id"] for o in m.OWNER_ITEMS] and all(r[1] == o["what"] for r, o in zip(page, m.OWNER_ITEMS))
 
 
-def t_u03_stays_as_it_stood():
+def t_u03_is_a_downstream_unit_selection_and_the_gate_stays_not_closed():
     m = _M()
+    F = _C["F"]
+    for key in ("l4e13", "l4e13md", "l4e13chk", "cl_sunpower", "cl_solbian"):
+        rel, sha = m.PINS[key]
+        assert rel.startswith("v2/docs/records/l4e13/") and key not in m.FROM_COMMIT and re.fullmatch(r"[0-9a-f]{64}", sha), key
+        assert sha[:16] in _C["text"].split("1. THE MAKERS")[0], "%s's pin is not printed" % key
     u3 = [c for c in m.CHOICES if c["id"] == "U-03"][0]
-    assert u3["title"] == "O-1: a solar panel with a supported maximum open circuit inside REQ-016's window"
-    assert u3["owner"] == "none until a panel is pinned" and u3["rows"] == ["IF-01"]
-    assert "24.05 V" in u3["constraint"] and "L4-E13" in _C["text"].split("1. THE MAKERS")[0]
+    assert u3["class"] == m.DOWNSTREAM == "CONDITIONAL DOWNSTREAM UNIT SELECTION (PANEL-ACC)" and u3["rows"] == ["IF-01"]
+    assert [c["id"] for c in m.CHOICES if c["class"] == m.ARCH] == ["U-01", "U-02", "U-04"]
+    for fig in ("%s" % F["e13_a1"], "%.3f" % F["e13_a1_lim"], "%s" % F["e13_win"][0], "%s" % F["e13_win"][1], "%s" % F["e13_a3"][2]):
+        assert fig in u3["constraint"], fig
+    assert F["e13_a1"] + F["e13_a1_margin"] == F["e13_a1_lim"] and F["e13_a3"][1] <= 10.0 < F["e13_a3"][2]
+    assert "not the topology" in u3["overturns"] and "L4E13-06" in u3["overturns"]
+    for g in m.GATE:
+        assert "U-03" not in g["choices"], "criterion %d names U-03 as a choice that could overturn the architecture" % g["n"]
+    bad = copy.deepcopy(m.GATE)
+    bad[4]["choices"] = bad[4]["choices"] + ["U-03"]
+    assert m.gate_violations(bad, _C["st"]), "naming the downstream selection in criterion 5 must be refused"
+    bad = copy.deepcopy(m.GATE)
+    bad[0]["choices"] = ["U-02", "U-04"]
+    assert m.gate_violations(bad, _C["st"]), "criterion 1 leaving out an architecture-level choice must be refused"
+    rows = {r["id"]: r for r in _C["R"]}
+    a1 = [c for c in rows["IF-01"]["checks"] if "PANEL-ACC A-1" in c.what][0]
+    assert a1.a == F["e13_a1"] and a1.b == F["e13_a1_lim"] and a1.met and a1.cls == "CONDITIONAL" and "R-35" in a1.src
+    a3c = [c for c in rows["IF-01"]["checks"] if "A-3(c)" in c.what][0]
+    assert a3c.met is None and "R-148" in a3c.src
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    assert "PANEL-ACC" in reg["R-35"][2] and reg["R-35"][4] == "Layer 6 components" and "25.000 V" in reg["R-35"][5]
+    assert "trace rerun" in reg["R-52"][2] and "13.82 A" in reg["R-148"][5] and "n at or under 2" in reg["R-149"][5]
+    assert "8.1817 A" in reg["R-29"][5]
+    assert len(reg) == 139
+    ho = {r[0]: r for r in _md_rows(HAND, "| ID | Target |")}
+    assert "13.82 A" in ho["LH-02"][2] and "R-148" in ho["LH-02"][2] and len(ho) == 11, "J_SOLAR's rating amends LH-02, no new row"
+    ow = {o["id"]: o for o in m.OWNER_ITEMS}
+    assert "SunPower SPR-E-Flex-100" in ow["OW-6"]["what"] and ow["OW-6"]["docs"][0][0] == "l4e13md"
+    sec = _C["text"].split("13. UPDATE ROUND 3")[1]
+    assert "the gate: NOT CLOSED" in sec and "U-01, U-02, U-04" in sec
+    assert "Layer 4's power architecture closes: NO" in _C["text"]
+    page = open(PAGE, encoding="utf-8").read()
+    assert "pending L4-E13" not in page and "L4-E13 (U-03) is pending" not in page
 
 
 def t_the_entry_draft_applies_on_the_hotswap_draft_and_not_before_it():
