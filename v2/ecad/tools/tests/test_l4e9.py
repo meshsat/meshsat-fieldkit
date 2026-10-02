@@ -1540,6 +1540,48 @@ def t_the_review_of_the_provisional_fixes_l4f04_the_thermal_categories():
     assert rows["R-185"][1] == "TEST" and "function read back" in rows["R-185"][2] and "for that lot" in rows["R-185"][5]
 
 
+def t_the_decisions_are_kept_apart():
+    """The second external review (of the 22:30 checkpoint): the page states three separate decisions and the handoff, each with what
+    decides it; the closure gate's decision follows the gate's verdicts (BLOCKED while any criterion is not PASS); the status phrase is
+    unchanged; L4-F03 reads its status wherever D-15 is stated; the solar guard's margin reads as a design target wherever it is quoted
+    as a pass line."""
+    m = _M()
+    F, D, st = _C["F"], _C["D"], _C["st"]
+    names = [w for w, _v, _y in m.DECISIONS]
+    assert names == ["the architecture candidate", "the power-design closure gate", "fabrication release", "the engineer handoff"]
+    v = {w: x for w, x, _y in m.DECISIONS}
+    assert v["the architecture candidate"] == "CONDITIONAL" and v["the power-design closure gate"] == "BLOCKED" and v["fabrication release"] == "BLOCKED"
+    assert v["the engineer handoff"].startswith("READY TO START, PROVISIONAL") and all(y.strip() for _w, _x, y in m.DECISIONS)
+    gate_blocked = any(g["verdict"] != "PASS" for g in m.GATE)
+    assert gate_blocked == (v["the power-design closure gate"] == "BLOCKED"), "the gate's decision follows the gate"
+    assert m.HANDOFF_OMITTED in dict((w, y) for w, _x, y in m.DECISIONS)["the engineer handoff"]
+    lines = m.cons_decisions(F)
+    assert lines[0].startswith("**The decisions, kept apart**") and lines[-1] == "**Status: %s.**" % m.STATUS
+    page = open(PAGE, encoding="utf-8").read()
+    assert page.split("<!-- gen:decisions:begin -->")[1].split("<!-- gen:decisions:end -->")[0].strip() == "\n".join(lines)
+    assert page.index("<!-- gen:decisions:begin -->") < page.index("## 7. Standalone analyses")
+    short = page.split("## In short\n")[1].split("\n## 1. ")[0]
+    for w in ("the architecture candidate CONDITIONAL", "power-design closure gate BLOCKED", "release BLOCKED", "READY TO START, PROVISIONAL"):
+        assert w in short, w
+    assert "the power-design closure gate is BLOCKED" in page.split("## 8. The closure gate")[1].split("### 8a.")[0]
+    assert "**The decisions (section 6), kept apart:**" in page.split("## 12. What stays")[1]
+    out = _C["text"]
+    for w, x, _y in m.DECISIONS:
+        assert "%s: %s" % (w, x) in out, w
+    de = {d["id"]: d for d in m.DEFECTS}
+    assert m.L4F03_STATUS in de["D-15"]["state"] and "hard short's peak CONDITIONAL" not in de["D-15"]["state"]
+    exd = {d[0]: d for d in m.cons_exit_defects(F)}
+    assert m.L4F03_STATUS in exd["D-15"][2] and m.L4F03_STATUS in short
+    g2 = [g for g in m.GATE if g["n"] == 2][0]
+    assert m.L4F03_STATUS in g2["constraint"]
+    assert "DESIGN TARGET" in m.RESERVE_NOTE and "DESIGN TARGET" in de["D-10"]["options"]
+    rows = {r["id"]: r for r in _C["R"]}
+    b6c = [c for c in rows["IF-01"]["checks"] if "already on" in c.what][0]
+    assert m.RESERVE_NOTE in b6c.what and m.RESERVE_NOTE in exd["D-10"][2]
+    reg = {r[0]: r for r in _md_rows(REG, "| ID | Kind |")}
+    assert "DESIGN TARGET" in reg["R-176"][5] and m.L4F03_STATUS in reg["R-184"][2]
+
+
 def t_the_review_of_the_provisional_fixes_l4f02_l4f03():
     """The external review of the provisional fixes (2 October 2026): L4-F02 and L4-F03 as L4-E11's round answers them, carried. Held
     as properties: D-14 reads CONDITIONAL on the three evidence rows with Ciss OPEN, D-15 is the dock branch's protection addressed in

@@ -210,6 +210,10 @@ CAT_MODEL = "MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT"
 CAT_STORE = "MISSING STORAGE QUALIFICATION"
 CAT_CONFLICT = "DEMONSTRATED CONFLICT"
 CATEGORIES = (CAT_MODEL, CAT_STORE, CAT_CONFLICT)
+# The second external review (of the 22:30 checkpoint): L4-F03's status until L4-E11's CP01 says otherwise, and the solar guard's
+# +-0.240 V margin read as a design target unless L4-E7's uncertainty budget supports its reserve
+L4F03_STATUS = "sustained-overload remedy drafted; fault qualification open"
+RESERVE_NOTE = "a DESIGN TARGET until L4-E7's uncertainty budget shows what its 0.060 V reserve covers"
 
 
 def refuse(code, msg):
@@ -3037,8 +3041,8 @@ def rows(F, D, A, E):
                 F["sv"]["rm"]["d1d2"][1], "<=", F["sv"]["lim"], "V", "INFERRED", "L4-E7 out (the remedies; the loop current recorded by R-174)"),
             Chk("CS115 with the block on: U5's differential at the generator's %s A calibration level, not a bound on the cable's current" % fmt(F["sv"]["d2"][1]),
                 F["sv"]["rm"]["b6"]["u5_cs115"], "<=", F["u5_diff_lim"], "V", "CONDITIONAL", "L4-E7 out (B6's round): R-174, the cable's recorded loop current under 15.68 A, or U5's differential measured under 0.3 V; D-12"),
-            Chk("a stiff %s V source stepping onto the port with the guard already on (B6, round 2; D-10): U5's positive differential plus the numerical error at the floor's %.2f uH loop, against the chosen +-%s V margin; a pass only from that loop, which nothing in the design bounds (B6-ENG-1)"
-                % (fmt(F["sv"]["src"][1]), F["sv"]["rm"]["b6"]["l_uh"], ("%.3f" % F["sv"]["rm"]["b6"]["margin"])),
+            Chk("a stiff %s V source stepping onto the port with the guard already on (B6, round 2; D-10): U5's positive differential plus the numerical error at the floor's %.2f uH loop, against the chosen +-%s V margin (%s); a pass only from that loop, which nothing in the design bounds (B6-ENG-1)"
+                % (fmt(F["sv"]["src"][1]), F["sv"]["rm"]["b6"]["l_uh"], ("%.3f" % F["sv"]["rm"]["b6"]["margin"]), RESERVE_NOTE),
                 [r[1] for r in F["sv"]["rm"]["b6"]["rows"] if r[0] == F["sv"]["rm"]["b6"]["bind"]][0], "<=", F["sv"]["rm"]["b6"]["margin"], "V", "CONDITIONAL",
                 "L4-E7 out (THE GUARD ALREADY ON, ROUND 2, MODELED): every rating with its margin from %.2f uH; under it NOT MET (at 1.00 uH U5 %s V, over its %s V absolute maximum); the guard-on case of D-10 NOT CLOSED, B6-ENG-1; R-176 row 3"
                 % (F["sv"]["rm"]["b6"]["l_uh"], fmt(F["sv"]["rm"]["b6"]["at1"]), fmt(F["sv"]["rm"]["b6"]["u5_abs"]))),
@@ -3372,8 +3376,7 @@ GATE = [
                    "in drafts by L4-E11's fix round (board E on VSYS_E, R-177 and R-178; the pair Q39 and Q40, R-157), CONDITIONAL on the "
                    "installed (Zself + Zmut) (E11-29), the docking pulse in one FET (E11-30), the RDS(on) allowance (E11-36) and the bench rows (E11-31), "
                    "with Ciss against TI's 5 nF OPEN (E11-37); D-15 (the dock's new VSYS contact without branch protection, the review of "
-                   "the provisional fixes' L4-F03) is addressed in drafts by the eFuse U42 (R-181), the hard short's peak CONDITIONAL on "
-                   "E11-38; the known defects at the solar entry, D-10 (a stiff 36 V source on the port) and D-11 (a reversed "
+                   "the provisional fixes' L4-F03) is addressed in drafts by the eFuse U42 (R-181): " + L4F03_STATUS + " (E11-38); the known defects at the solar entry, D-10 (a stiff 36 V source on the port) and D-11 (a reversed "
                    "panel), single faults, are addressed in drafts, a selected remedy each (L4-E7, check 5 at 573fd5b8: the over-voltage cut-off U21 "
                    "with Q12 and the return switch Q13, R-173, drafted, not applied), D-10's source arriving with the guard already on NOT CLOSED "
                    "(L4-E7's round 2 at 68bc3bad for the review's B6 and L4-F01: every rating with its margin only from a 3.30 uH source loop, NOT "
@@ -3699,7 +3702,8 @@ DEFECTS = [
                 "with Q12 CSD19532Q5B as an over-voltage cut-off, rising at 28.55 to 31.06 V and falling at 27.07 V or more, with D4 the SMCJ30A: the "
                 "block never turns on and Q12 holds 36 of 100 V (the TVS-only change, SMCJ36A with the 63 V class, evaluated and not taken). With the "
                 "guard already on (the review's B6; the external review's L4-F01; L4-E7's round 2 at 68bc3bad): the margin chosen first, U5's CSPIN "
-                "to CSNIN within +-0.240 V with the numerical error 0.000882 V added on top; each ceramic bank bounded on its own from Samsung's "
+                "to CSNIN within +-0.240 V with the numerical error 0.000882 V added on top (a DESIGN TARGET until L4-E7's uncertainty budget "
+                "shows what its 0.060 V reserve covers); each ceramic bank bounded on its own from Samsung's "
                 "curves (the port bank four CL32B225KCJSNNE, PV_P and TRK_VS CL32B106KBJNNNE, TRK_VIN the drawn CL31B106KBHNNNE), the 16 corners "
                 "searched; R97 28.0k, C126 330 pF: for a stiff 36 V source whose loop lies anywhere from 0.30 to 10.20 uH, every rating holds with "
                 "its margin only from a 3.30 uH loop (U5 0.2396 V; Q12 off at most 60.3 A within 11.4 us, D4 carrying nothing), NOT under it (at "
@@ -3762,7 +3766,7 @@ DEFECTS = [
                    "(R-162: the parts' supply)",
      "rows": ["IF-09", "IF-10"]},
     {"id": "D-15", "title": "the dock's new VSYS contact without branch protection (the review of the provisional fixes, L4-F03)",
-     "state": "ADDRESSED IN DRAFTS (L4-E11's fix round for L4-F03, drafted, not applied); the hard short's peak CONDITIONAL on E11-38",
+     "state": "ADDRESSED IN DRAFTS (L4-E11's fix round for L4-F03, drafted, not applied): %s (E11-38)" % L4F03_STATUS,
      "constraint": "D-13's feed put board A's VSYS, designed for 10 A continuous and 18 A pulses with far higher upstream thresholds, on one "
                    "Preci-Dip 813 contact of 3.5 A with only a 1 A load declaration, which limits nothing; the review's counterexample, "
                    "5 A from 14.4 V (2.88 Ohm) on VSYS_E, is over the contact and under every upstream threshold, in source-only and "
@@ -4264,6 +4268,10 @@ def main():
                 refuse(4, "%s does not quote the round's figure: %r" % (cid, " ".join(s.split())))
     closed = all(g["verdict"] == "PASS" for g in GATE)
     p("   Layer 4's power architecture closes: %s" % ("YES" if closed else "NO, criteria %s are not PASS" % ", ".join(str(g["n"]) for g in GATE if g["verdict"] != "PASS")))
+    for what, verdict, why in DECISIONS:
+        p("   %s: %s (%s)" % (what, verdict, why))
+    if closed != all(v != "BLOCKED" for w, v, _ in DECISIONS if w == "the power-design closure gate"):
+        refuse(4, "the closure gate's decision does not follow the gate")
     opn = [d["id"] for d in DEFECTS if d["state"] == "OPEN"]
     adr = [d["id"] for d in DEFECTS if d["state"].startswith("ADDRESSED IN DRAFTS")]
     p("   MATERIAL POWER-PATH DEFECTS (criterion 2): %d, %d open; %d addressed in drafts (%s: a selected remedy, drafted, not applied)" % (len(DEFECTS), len(opn), len(adr), ", ".join(adr)))
@@ -4408,6 +4416,39 @@ def main():
 # table below is built from figures this script read above; the page's tables are these, and test_l4e9.py holds them equal.
 STATUS = "known defects addressed in drafts; feasibility conditions remain open"
 SVG_NAME = "L4-POWER-DIAGRAM.svg"
+# The second external review (of the 22:30 checkpoint, 2 October 2026) separates the decisions this page states: "conditional candidate" and
+# "closure gate blocked" describe different decisions, and an unresolved material protection or feasibility condition is sufficient to keep a
+# release gate blocked; no mandatory-requirement contradiction is needed. Each decision below names what decides it.
+HANDOFF_OMITTED = ("L4-E11's round 3 (the second review's L4-CP01 to L4-CP03) and L4-E7's round 3 (the reserve's uncertainty budget), their tips "
+                   "not yet taken here; the held-back documents (Littelfuse's 0997 sheet under v2/vendor/power/held/, Samsung's characteristic "
+                   "data under v2/vendor/passives/held/, Saft's MP 176065 xtd sheet), fetched by each record's fetch script, never published; the "
+                   "generators, netlists and configuration files of the repository that the drafts apply to; the findings ledger "
+                   "(records/l4close/, the coordinator's file); no board of this set has a layout")
+DECISIONS = [
+    ("the architecture candidate", "CONDITIONAL",
+     "A1 under D-06 is selected and connected (section 1); its feasibility basis rests on the unresolved choices U-01, U-02 and U-04 and on the "
+     "CONDITIONAL interface rows of 1d; nothing measured"),
+    ("the power-design closure gate", "BLOCKED",
+     "an unresolved material protection or feasibility condition keeps it blocked, and no requirement conflict is needed for that: D-10's "
+     "source arriving with the guard already on is NOT CLOSED (B6-ENG-1), D-14 is CONDITIONAL with Ciss OPEN, D-15 reads %s, U-02 waits on "
+     "T-H1 and the storage evidence, U-01 is not adoptable, U-04 is a closure condition on the board as drawn; criteria 1, 2 and 5 CONDITIONAL" % L4F03_STATUS),
+    ("fabrication release", "BLOCKED",
+     "no circuit change is applied (every change in section 3 is a draft, APPLIED 0), no board of the set has a layout, and the closure gate is blocked"),
+    ("the engineer handoff", "READY TO START, PROVISIONAL",
+     "sections 3 and 5 with the register are the packet an engineer's review can start on now; it is provisional, and its omitted dependencies "
+     "are named: %s" % HANDOFF_OMITTED),
+]
+
+
+def cons_decisions(F):
+    """The decisions this page states, kept apart (the second review): one line each, the status phrase last."""
+    L = ["**The decisions, kept apart** (the second external review, of the 22:30 checkpoint): \"conditional candidate\" and \"closure gate "
+         "blocked\" are different decisions, and an unresolved material protection or feasibility condition is enough to keep a release gate "
+         "blocked."]
+    for what, verdict, why in DECISIONS:
+        L.append("- **%s: %s.** %s." % (what[0].upper() + what[1:], verdict, why))
+    L.append("**Status: %s.**" % STATUS)
+    return L
 
 
 def cons_diagram(F, st):
@@ -5334,9 +5375,9 @@ def cons_behaviour(F, D, st):
         ("a stiff %s V source stepping onto the port with the guard already on (B6, round 2; D-10)" % fmt(F["sv"]["src"][1]),
          "the short-circuit trip (C126 330 pF) or the OV path turns Q12 off: at most %s A within %s us; the port bank (C131, C132, C135, C136, Samsung CL32B225KCJSNNE) takes the source's current, C133 and C134 (CL32B106KBJNNNE) the turn-off's charge on PV_P"
          % (fmt(F["sv"]["rm"]["b6"]["sum"][0]), fmt(F["sv"]["rm"]["b6"]["sum"][1])),
-         "at a %.2f uH loop: PV_F at most %s V (slew %s V/us), PV_P %s V, TRK_VS %s V, D4 carrying nothing; U5 %s V against the chosen +-%s V (the numerical error added); under that loop NOT MET (at 1.00 uH U5 %s V)"
+         "at a %.2f uH loop: PV_F at most %s V (slew %s V/us), PV_P %s V, TRK_VS %s V, D4 carrying nothing; U5 %s V against the chosen +-%s V (the numerical error added; the margin %s); under that loop NOT MET (at 1.00 uH U5 %s V)"
          % (F["sv"]["rm"]["b6"]["l_uh"], fmt(F["sv"]["rm"]["b6"]["sum"][2]), fmt(F["sv"]["rm"]["b6"]["sum"][3]), fmt(F["sv"]["rm"]["b6"]["sum"][4]), fmt(F["sv"]["rm"]["b6"]["sum"][5]),
-            fmt([r[1] for r in F["sv"]["rm"]["b6"]["rows"] if r[0] == F["sv"]["rm"]["b6"]["bind"]][0]), ("%.3f" % F["sv"]["rm"]["b6"]["margin"]), fmt(F["sv"]["rm"]["b6"]["at1"])),
+            fmt([r[1] for r in F["sv"]["rm"]["b6"]["rows"] if r[0] == F["sv"]["rm"]["b6"]["bind"]][0]), ("%.3f" % F["sv"]["rm"]["b6"]["margin"]), RESERVE_NOTE, fmt(F["sv"]["rm"]["b6"]["at1"])),
          "on again under the falling threshold; NOT CLOSED: a pass only from a source loop of at least %.2f uH, which nothing in the design bounds (B6-ENG-1; R-176 row 3)"
          % F["sv"]["rm"]["b6"]["l_uh"], "L4-E7 (THE GUARD ALREADY ON, ROUND 2)"),
         ("a reversed panel (D-11, a single fault)", "Q13 in the return stays off, its body diode reverse biased", "the reversed panel: no current; the high side within 1 V of GND",
@@ -5643,11 +5684,13 @@ def cons_exit_lines(F):
         L.append("      %s %s: %s; the missing step: %s; the evidence still needed: %s; what it decides: %s" % d)
     L.append("   " + cons_ledger(F).replace("**", "").replace("`", ""))
     n = [e[0] for e in cons_exit(F) if e[1] != QUALIFICATION]
+    for s in cons_decisions(F):
+        L.append("   " + s.replace("**", ""))
     L.append("   the exit: Layer 4 power closure is NOT reached on this reading: closure conditions on the board as drawn %s (U-04 becomes a qualification test once R-157, R-177"
              " and R-178 are applied; U-02 decided by T-H1 plus the storage evidence, its four lines over the modelled capacity a modelled shortfall and a missing storage qualification, no demonstrated conflict); the review's B1 and B2 on (B1)'s draft, D-13 and D-14, the provisional fixes' L4-F03, D-15,"
              " and the known defects D-10 and D-11 at the solar entry are addressed in drafts (R-157, R-181, R-177, R-178 and R-173, not applied; D-14"
-             " CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss OPEN (E11-37), D-15's hard short on E11-38; D-11 CONDITIONAL on Q13's hot leakage), the band"
-             " between 25 V and the cut-off a residual for layer 8 (R-175); status: %s" % (", ".join(n), STATUS))
+             " CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss OPEN (E11-37), D-15 %s, E11-38; D-11 CONDITIONAL on Q13's hot leakage), the band"
+             " between 25 V and the cut-off a residual for layer 8 (R-175); status: %s" % (", ".join(n), L4F03_STATUS, STATUS))
     return L
 
 
@@ -5793,7 +5836,7 @@ def cons_surge(F):
            "block never turns on under a %s V source. D-11: Q13 in the return blocks a reversed panel, CONDITIONAL on its leakage above "
            "+25 C (printed at 25 C only). %s **With the guard already on** (the review's B6 and the external review's L4-F01, L4-E7's "
            "round 2 at `68bc3bad`) a 36 V source stepping on is cut, Q12 off at most %s A within %s us and D4 carrying nothing, with the "
-           "margin chosen first (U5 within +-%s V, the numerical error %s V added on top) and each ceramic bank bounded on its own (the "
+           "margin chosen first (U5 within +-%s V, the numerical error %s V added on top; the margin is %s) and each ceramic bank bounded on its own (the "
            "port bank four Samsung CL32B225KCJSNNE, C133, C134 and C71 to C74 CL32B106KBJNNNE, R97 28.0k, C126 330 pF): every rating holds "
            "with its margin only for a stiff source's loop of at least %.2f uH (two conductors %s mm apart over 5 m), NOT under it (at 1.00 uH "
            "U5 %s V, over its 0.3 V absolute maximum); the guard-on case is **NOT CLOSED** and goes to the engineer as B6-ENG-1 (R-176 row 3, "
@@ -5804,7 +5847,7 @@ def cons_surge(F):
            "trip (R-175); the cut-off cannot go below CS101's %s V input peak without a different immunity basis. Owed: the LCSC codes of "
            "D4 and of the Samsung parts, U21's DGX-19 land, the regeneration and the bench rows (R-176). The guard adds protection and changes no topology."
            % (fmt(rm["rise"][0]), fmt(rm["rise"][1]), fmt(rm["fall"][0]), fmt(rm["marg"][0]), fmt(rm["marg"][1]), fmt(rm["marg"][2]), fmt(sv["src"][1]),
-              rm["b6"]["d12"], fmt(rm["b6"]["sum"][0]), fmt(rm["b6"]["sum"][1]), ("%.3f" % rm["b6"]["margin"]), ("%.6f" % rm["b6"]["err"]), rm["b6"]["l_uh"], fmt(rm["b6"]["mm"]), fmt(rm["b6"]["at1"]),
+              rm["b6"]["d12"], fmt(rm["b6"]["sum"][0]), fmt(rm["b6"]["sum"][1]), ("%.3f" % rm["b6"]["margin"]), ("%.6f" % rm["b6"]["err"]), RESERVE_NOTE, rm["b6"]["l_uh"], fmt(rm["b6"]["mm"]), fmt(rm["b6"]["at1"]),
               fmt(rm["b6"]["start"][0]), fmt(rm["b6"]["start"][1]),
               fmt(rm["cs101"][0]), fmt(rm["cs101"][2]), fmt(rm["chkb"][0]), fmt(rm["chkb"][2]), fmt(rm["static"][0]), fmt(rm["static"][1]),
               fmt(rm["loss"][0]), fmt(rm["day"][0]), fmt(rm["day"][2]), fmt(rm["resid"]), fmt(F["cs101_pv"])))
@@ -5890,13 +5933,13 @@ def cons_exit_defects(F):
          "the draft applied (R-157)", "Zself and Zmut on the built board (R-159); RDS(on) at -8.5 V and 150 C at most %s mOhm (R-182); TI's answer on Ciss or BATDRV with the pair on the bench (R-183); VF and ISM hot (R-160)" % fmt(F["f02"]["allow"]),
          "nothing of the topology: a part inside (B1); on a negative Ciss answer the engineer chooses one FET with a heat path through the case"),
         ("D-15", "the dock's new VSYS contact without branch protection (L4-F03)",
-         "ADDRESSED IN DRAFTS: the eFuse U42 (TPS16630, R221 11.0k, C237 22 nF; L4-E11 16e; R-181), not applied; the contact at most %s A (%s %% of %s A), VSYS_E at least %s V; the hard short's peak CONDITIONAL on E11-38"
-         % (fmt(F["f02"]["ef_c"][0]), fmt(F["f02"]["ef_c"][1]), fmt(F["f02"]["ef_c"][2]), fmt(F["f02"]["vsyse"])),
+         "ADDRESSED IN DRAFTS: the eFuse U42 (TPS16630, R221 11.0k, C237 22 nF; L4-E11 16e; R-181), not applied; the contact at most %s A (%s %% of %s A) once the limit settles, VSYS_E at least %s V; %s (E11-38)"
+         % (fmt(F["f02"]["ef_c"][0]), fmt(F["f02"]["ef_c"][1]), fmt(F["f02"]["ef_c"][2]), fmt(F["f02"]["vsyse"]), L4F03_STATUS),
          "the draft applied with R-157 (R-181)", "the limit read at -20, 25 and 70 C, the overload and a hard short at VSYS_E, the contact's resistance after (R-184)",
          "nothing of the topology: a branch protection inside (B1)"),
         ("D-10", "a stiff %s V source on the solar port (a single fault)" % fmt(sv["src"][1]),
-         adr + "; the cut-off rises at %s to %s V, falls back at %s V or more; the source arriving with the guard already on NOT CLOSED: every rating with its margin only from a %.2f uH source loop (U5 %s V of +-%s V), NOT under it (at 1.00 uH U5 %s V)"
-         % (fmt(rm["rise"][0]), fmt(rm["rise"][1]), fmt(rm["fall"][0]), rm["b6"]["l_uh"], fmt([r[1] for r in rm["b6"]["rows"] if r[0] == rm["b6"]["bind"]][0]), ("%.3f" % rm["b6"]["margin"]), fmt(rm["b6"]["at1"])),
+         adr + "; the cut-off rises at %s to %s V, falls back at %s V or more; the source arriving with the guard already on NOT CLOSED: every rating with its margin only from a %.2f uH source loop (U5 %s V of +-%s V, the margin %s), NOT under it (at 1.00 uH U5 %s V)"
+         % (fmt(rm["rise"][0]), fmt(rm["rise"][1]), fmt(rm["fall"][0]), rm["b6"]["l_uh"], fmt([r[1] for r in rm["b6"]["rows"] if r[0] == rm["b6"]["bind"]][0]), ("%.3f" % rm["b6"]["margin"]), RESERVE_NOTE, fmt(rm["b6"]["at1"])),
          "the draft applied after its release record (R-92's L4-E7 RELEASE.md); the guard-on case decided by B6-ENG-1", owed + "; B6-ENG-1: Analog Devices' sense-pin filter (R-186), a stiff source's loop at J_SOLAR at least %.2f uH, measured (R-180), or the input sense moved (R-187)" % rm["b6"]["l_uh"], topo),
         ("D-11", "a reversed panel (E-N1, a single fault)", adr + "; CONDITIONAL on Q13's leakage above +25 C", "the same draft", "Q13's leakage at the hot end (R-176)", topo),
         ("D-12", "CS116 and CS115 on the panel lead, as drawn", "RESOLVED in the drafted entry (R-21, R-173): %s" % rm["b6"]["d12"],
@@ -5949,7 +5992,7 @@ def cons_review_lines(F):
     p("     the limit %s to %s A (%s A typical), timer at most %s ms, auto-retry after %s to %s ms; the contact at most %s A, %s %% of %s A;"
       % (fmt(g["ef"][1]), fmt(g["ef"][2]), fmt(g["ef"][0]), fmt(g["ef_t"][0]), fmt(g["ef_t"][1]), fmt(g["ef_t"][2]), fmt(g["ef_c"][0]), fmt(g["ef_c"][1]), fmt(g["ef_c"][2])))
     p("     the overload at a duty of at most %s; VSYS_E at least %s V at 1.0 A" % (fmt(g["duty"]), fmt(g["vsyse"])))
-    p("   D-15: ADDRESSED IN DRAFTS (R-181, apply_gen_sch_a_charger.py, not applied); the hard short's peak CONDITIONAL on E11-38 (R-184); E11-35 extended (R-179)")
+    p("   D-15: ADDRESSED IN DRAFTS (R-181, apply_gen_sch_a_charger.py, not applied): %s (E11-38, R-184); E11-35 extended (R-179)" % L4F03_STATUS)
     p("   the held pack's drain, corrected: %s" % held_txt(F))
     p("   L4-E11 16f's four drafted texts, carried: %s" % "; ".join(r[0] for r in g["f16"]))
     p("   L4-E11 16g's five engineer's rows, each in the register: Q39, Q40 RDS(on) R-182; the installed path R-159; Ciss R-183; the docking pulse R-160;")
@@ -5969,8 +6012,8 @@ def cons_review_lines(F):
     p("     mixed-air screens; every figure as L4-E12 prints it, none changed by the classification")
     b6 = F["sv"]["rm"]["b6"]
     p("26d L4-F01, THE SOLAR GUARD ALREADY ON (the review's B6; L4-E7's round 2 at 68bc3bad; section 23 carries its figures): NOT CLOSED")
-    p("   the margin chosen first (SESSION): U5's CSPIN to CSNIN within +-%s V, the numerical error %s V added on top; each ceramic bank bounded on its"
-      % (("%.3f" % b6["margin"]), ("%.6f" % b6["err"])))
+    p("   the margin chosen first (SESSION): U5's CSPIN to CSNIN within +-%s V, the numerical error %s V added on top (the margin %s); each ceramic bank bounded on its"
+      % (("%.3f" % b6["margin"]), ("%.6f" % b6["err"]), RESERVE_NOTE))
     p("     own from Samsung's curves, the 16 corners searched; the envelope a stiff %s V source with a loop of %s to %s uH"
       % (fmt(F["sv"]["src"][1]), ("%.2f" % b6["env"][0]), ("%.2f" % b6["env"][1])))
     p("   every rating holds with its margin only from a %.2f uH loop (U5 %s V); under it NOT MET (at 1.00 uH U5 %s V, over its %s V absolute maximum)"
@@ -6195,20 +6238,20 @@ def cons_in_short(F, D, st, reg):
         "adds D-15 (the dock's new VSYS contact without branch protection, L4-F03); all three are ADDRESSED IN DRAFTS by L4-E11's fix "
         "rounds (board E on VSYS_E, R-177 and R-178; the pair, R-157, sized to an RDS(on) allowance of %s mOhm, every protection event "
         "from the held 20 A at TJ 150 C or under for an installed (Zself + Zmut) at most %s K/W steady, 18 A for 60 s kept, D-14 "
-        "CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss against TI's 5 nF OPEN, E11-37; the eFuse U42, R-181, %s to %s A, the hard "
-        "short's peak CONDITIONAL on E11-38; the held pack current at most %s mA on the bench, %s mA its quantified subset; the start "
+        "CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss against TI's 5 nF OPEN, E11-37; the eFuse U42, R-181, %s to %s A, %s, "
+        "E11-38; the held pack current at most %s mA on the bench, %s mA its quantified subset; the start "
         "bounded to VSYS_MIN or a latch within %s s). IF-01 carries the "
         "KNOWN DEFECTS at the solar entry, single faults from L4-E7's panel-lead derivation: D-10, a stiff %s V source on the port, and "
         "D-11, a reversed panel, ADDRESSED IN DRAFTS by L4-E7's selected remedies (the over-voltage cut-off U21 with Q12, the return "
         "switch Q13, and for the guard already on the port bank C131, C132, C135 and C136, C133 and C134, C71 to C74, C126 and R97 28.0k; "
         "R-173, apply_gen_sch_e_solar_guard.py, not applied; D-10's source arriving with the guard already on NOT CLOSED: every rating "
-        "with its margin only from a %.2f uH source loop, the floor the engineer's row B6-ENG-1 (L4-F01, L4-E7's round 2), D-11 on Q13's "
+        "with its margin (U5 within +-0.240 V, %s) only from a %.2f uH source loop, the floor the engineer's row B6-ENG-1 (L4-F01, L4-E7's round 2), D-11 on Q13's "
         "leakage above +25 C), and a residual band between 25 V and the cut-off named for layer 8 (R-175); D-12, CS116 and CS115 on the "
         "panel lead, is resolved in the drafted entry with the guard: %s D-01 to D-05 and D-08 are resolved in design, D-06 by L4-E11, "
         "D-07 and D-09 superseded (8a); every resolution is a DRAFT or a register row, none applied."
         % (len(st), cnt.get("MEETS", 0), cnt.get("CONDITIONAL", 0), cnt.get("NOT MET", 0), cnt.get("PENDING", 0), fmt(F["f02"]["allow"]),
-           fmt(F["f02"]["z_steady"]), fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2]), fmt(F["f02"]["held"][1]), fmt(F["f02"]["held"][0]), fmt(fx["latch_s"]),
-           fmt(F["sv"]["src"][1]), F["sv"]["rm"]["b6"]["l_uh"], F["sv"]["rm"]["b6"]["d12"]),
+           fmt(F["f02"]["z_steady"]), fmt(F["f02"]["ef"][1]), fmt(F["f02"]["ef"][2]), L4F03_STATUS, fmt(F["f02"]["held"][1]), fmt(F["f02"]["held"][0]), fmt(fx["latch_s"]),
+           fmt(F["sv"]["src"][1]), RESERVE_NOTE, F["sv"]["rm"]["b6"]["l_uh"], F["sv"]["rm"]["b6"]["d12"]),
         "**Endurance** (apart from feasibility; the approved profile %s W kept): battery-only %s h ENERGY ONLY (%.3f h with (B1)'s pair; "
         "%s with the tablet's window at the start) at room temperature and %s h with the cells at -10 C (energy only); ENERGY AND "
         "THERMAL (L4-E12 12c): on the conservative bound C1 sheds the profile at %s to %s h and the run with the shed states lasts %s "
@@ -6233,7 +6276,10 @@ def cons_in_short(F, D, st, reg):
         "(OW-10 held for a measured local temperature over a mandatory limit with the route fitted; 2c, section 6)."
         % (M["M1"]["ruled"][1], M["M2"]["ruled"][1], M["M1"]["cab"][1], M["M2"]["cab"][1], M["M5"]["ruled"][1], fmt(fx["bal_b"][1]),
            M["M8"]["ruled"][1], M["M9"]["ruled"][1], sh["M3"][0], sh["M4"][0], sh["M6"][0], sh["M7"][1]),
-        "**The exit** (section 6, the owner's definition): Layer 4 power closure is not reached on this reading. U-02 is a closure "
+        "**The exit** (section 6, the owner's definition): three decisions, kept apart: the architecture candidate CONDITIONAL; the "
+        "power-design closure gate BLOCKED (an unresolved material protection or feasibility condition is enough for that); fabrication "
+        "release BLOCKED; the engineer handoff READY TO START, PROVISIONAL, its omitted dependencies named. Layer 4 power closure is not "
+        "reached on this reading. U-02 is a closure "
         "condition T-H1's points decide for every class (i) and (ii) line (as ruled at +40 C a reading of at least %s W/K on the pack "
         "and %s W/K on shore; under C %s and %s W/K) plus the storage evidence (its four lines over the modelled capacity a "
         "modelled shortfall and a missing storage qualification, no demonstrated conflict); U-04 becomes a downstream "
@@ -6241,14 +6287,14 @@ def cons_in_short(F, D, st, reg):
         "route supported on published evidence for the temperature windows (the Saft MP 176065 xtd), NOT YET ADOPTABLE (current at "
         "temperature and the storage dwell await Saft or the limited sample qualification; the owner's approval required), and the "
         "ruled 35E is unsuitable on its own published evidence for the margins. Beside them D-13, D-14 and D-15 (the review's B1 and "
-        "B2 and the provisional fixes' L4-F03; D-14 CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss OPEN, D-15's hard short on E11-38) and "
+        "B2 and the provisional fixes' L4-F03; D-14 CONDITIONAL on E11-29, E11-30 and E11-36 with Ciss OPEN; D-15 %s, E11-38) and "
         "the solar faults D-10 and D-11 are addressed in drafts, none applied (D-10's source arriving with the guard already on NOT "
         "CLOSED: every rating with its margin only from a 3.30 uH source loop, B6-ENG-1 to the engineer; D-11 on Q13's hot leakage), the band between "
         "25 V and the cut-off a residual for layer 8 (R-175). Each has its exact missing fact and the smallest experiment or "
         "manufacturer clarification that resolves it. The findings ledger, as filed: %d rows, %d CLOSED, %d CLOSED AS CONDITIONAL, %d "
         "OPEN DOWNSTREAM, %d STILL OPEN; the review's E6 found L4-E12:2.1 and 1.2 regressed and L4-E7R:1.6 and 2.4 needing B6's "
         "condition, and this record does not claim them closed. **Status: %s.**"
-        % ((M["M1"]["ruled"][2], M["M2"]["ruled"][2], M["M1"]["cab"][2], M["M2"]["cab"][2]) + F["rc"]["ledger"] + (STATUS,)),
+        % ((M["M1"]["ruled"][2], M["M2"]["ruled"][2], M["M1"]["cab"][2], M["M2"]["cab"][2], L4F03_STATUS) + F["rc"]["ledger"] + (STATUS,)),
     ]
 
 
