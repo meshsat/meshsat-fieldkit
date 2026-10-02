@@ -2024,11 +2024,33 @@ def outside_cap(amb, rise, cfg, geo, lid_state, k_fin=1.0, a_free=0.0, skin=None
     return {"g": sum(q.values()) / rise, "q": q}
 
 
+# The categories of a line over the modelled outside capacity (the external review of the provisional fixes, L4-F04, 2 October 2026).
+# The capacity is a model figure on named coefficient ends, not a physical upper bound on every arrangement the rulings allow, so a line
+# over it is never by itself proof that no measurement can pass it.
+CAT_MODEL = "MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT"   # a held local limit over the analysed arrangement's modelled capacity
+CAT_STORE = "MISSING STORAGE QUALIFICATION"                    # an unpowered part judged on an operating row read to cover storage
+CAT_CONFLICT = "DEMONSTRATED CONFLICT"                          # a measured local temperature over a mandatory limit with the route fitted
+MEASURED_LOCAL = ()   # the measured local temperatures held: (mode, line, temperature in C, route fitted); none, nothing is built or measured
+
+
+def over_category(e, measured=()):
+    """The category of a line over the modelled capacity, decided by its property: a DEMONSTRATED CONFLICT only on a measured local
+    temperature over a mandatory limit with the route fitted (measured: (mode, line, local temperature, route fitted) tuples; none
+    is held); else a MISSING STORAGE QUALIFICATION when the limit is an operating row INFERRED to cover the part unpowered; else a
+    MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT."""
+    for mode, short, t_meas, route_fitted in measured:
+        if mode == e["mode"] and short == e["line"]["short"] and route_fitted and t_meas > e["line"]["t"]:
+            return CAT_CONFLICT
+    return CAT_STORE if "INFERRED to cover it unpowered" in e["line"]["cat"] else CAT_MODEL
+
+
 def caps(C, R):
-    """Section 12e (the addendum to the fix round): every governing and stated line of 12a against the outside surfaces'
-    capacity with a perfect inside film, bare and with the combined heat-rejection route (10b: R-170 fins, R-171 loads into the
-    plate, R-172 the lid skin), at each mode's own ambient and rise; class (i) reachable bare, T-H1 decides; (ii) reachable only
-    with the route, T-H1 with the route decides; (iii) over the capacity even with the route: no measurement passes it."""
+    """Section 12e (the addendum to the fix round, its categories restated by the review of the provisional fixes, L4-F04): every
+    governing and stated line of 12a against the outside surfaces' MODELLED capacity with a perfect inside film, bare and with the
+    combined heat-rejection route (10b: R-170 fins, R-171 loads into the plate, R-172 the lid skin), at each mode's own ambient and
+    rise, on named coefficient ends; class (i) reachable bare, T-H1 decides; (ii) reachable only with the route, T-H1 with the route
+    decides; a line over the modelled capacity even with the route is put in one of three categories (over_category); the capacity
+    is a model figure, not a physical upper bound."""
     import math
     T, pb, red2 = C["T"], C["pb"], C["red2"]
     cb, hr, pm = R["cb"], R["hr"], R["pm"]
@@ -2053,7 +2075,7 @@ def caps(C, R):
         rise = e["line"]["t"] - e["amb"]
         e["rise"] = rise
         if rise <= 1e-9:
-            e.update(bare=(0.0, 0.0), route=(0.0, 0.0), cls="iii", short_g=math.inf, short_w=e["Q"], route_q={})
+            e.update(bare=(0.0, 0.0), route=(0.0, 0.0), cls="over", short_g=math.inf, short_w=e["Q"], route_q={})
             continue
         bare = (outside_cap(e["amb"], rise, cons, geo, e["lid"]), outside_cap(e["amb"], rise, opt, geo, e["lid"], floor=True))
         if e["lid"] == "open":
@@ -2069,10 +2091,12 @@ def caps(C, R):
         elif need <= e["route"][1] + 1e-12:
             e["cls"] = "ii"
         else:
-            e["cls"] = "iii"
+            e["cls"] = "over"
         e["only_opt"] = (e["cls"] == "i" and need > e["bare"][0]) or (e["cls"] == "ii" and need > e["route"][0])
-        e["short_g"] = need - e["route"][1] if e["cls"] == "iii" else 0.0
-        e["short_w"] = e["Q"] - e["route"][1] * rise if e["cls"] == "iii" else 0.0
+        e["short_g"] = need - e["route"][1] if e["cls"] == "over" else 0.0
+        e["short_w"] = e["Q"] - e["route"][1] * rise if e["cls"] == "over" else 0.0
+    for e in lines:
+        e["cat_over"] = over_category(e, MEASURED_LOCAL) if e["cls"] == "over" else None
     # the options' figures: charging only in a shed state (the heat stage charging on the design day, its balance plus the ballasts)
     q_hs_chg = T["chg_hs"]["heat"] + T["qb"]
     t4l = {m_: [x for x in md[m_]["by"]["C"]["lines"] if x["short"] == "T4 on the charging cells"][0] for m_ in ("M8", "M9")}
@@ -2100,6 +2124,7 @@ def caps(C, R):
     k1 = (outside_cap(T["t_use"], 15.0, cons, geo, "open")["g"], outside_cap(T["t_use"], 15.0, opt, geo, "open", floor=True)["g"])
     fin_add = ((K_FIN[0] - 1.0) * hr["a_free"], (K_FIN[1] - 1.0) * hr["a_free"])
     return {"ceil_sgp": ceil_sgp, "k1": k1, "fin_add": fin_add, "lines": lines, "shed": shed, "q_hs_chg": q_hs_chg, "epaper": ep_, "skin": skin,
+            "conflict": [e for e in lines if e["cat_over"] == CAT_CONFLICT],
             "check9": (outside_cap(A_e3o(C), cb["E3-O"]["rise"], cons, geo, "open")["g"], cb["E3-O"]["cap"],
                        outside_cap(C["A"]["e5"][4], cb["E5"]["rise"], cons, geo, "open")["g"], cb["E5"]["cap"])}
 
@@ -2661,12 +2686,14 @@ def compute():
         br["runs"][0]["t_c1"] is not None and br["runs"][0]["t_c1"] < br["t_energy"] and abs(br["rev"][0][1] - 2.063) < 5e-3
         and abs(br["rev"][1][1] - 2.151) < 5e-3 and not any(r_["hot_stop"] for r_ in br["runs"]) and abs(br["t_energy"] - br["h_energy"]) < 5e-3)
     cp = R["cap"]
-    cls3 = sorted(set((e["mode"], e["line"]["short"]) for e in cp["lines"] if e["cls"] == "iii"))
-    p["P26 the addendum: every line classed against the outside capacity with a zero inside resistance (bare and with the route); class (iii) is E3-L lid closed as ruled and the e-paper at E3-O and E5, no other"] = (
-        cls3 == [("M3", "the SGP41's Table 4"), ("M4", "the SGP41's Table 4"), ("M6", "the EPAPER's +60 C"), ("M7", "the EPAPER's +60 C")]
+    over = sorted(set((e["mode"], e["line"]["short"], e["cat_over"]) for e in cp["lines"] if e["cls"] == "over"))
+    p["P26 the addendum (categories after L4-F04): every line classed against the MODELLED outside capacity with a zero inside resistance (bare and with the route); over it even with the route: E3-L lid closed as ruled a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, the e-paper at E3-O and E5 a MISSING STORAGE QUALIFICATION, no DEMONSTRATED CONFLICT (no measured local temperature held)"] = (
+        over == [("M3", "the SGP41's Table 4", CAT_MODEL), ("M4", "the SGP41's Table 4", CAT_MODEL), ("M6", "the EPAPER's +60 C", CAT_STORE),
+                 ("M7", "the EPAPER's +60 C", CAT_STORE)]
+        and not cp["conflict"] and not MEASURED_LOCAL
         and all(e["route"][0] >= e["bare"][0] - 1e-9 and e["route"][1] >= e["bare"][1] - 1e-9 for e in cp["lines"])
         and cp["check9"][0] > R["cb"]["cap"]["E3-O"] and cp["check9"][2] > R["cb"]["cap"]["E5"]
-        and all(e["short_g"] > 0 for e in cp["lines"] if e["cls"] == "iii"))
+        and all(e["short_g"] > 0 for e in cp["lines"] if e["cls"] == "over"))
     R["pred"] = p
     return R
 
@@ -3667,58 +3694,73 @@ def render(R):
          "(the plate's emissivity %.2f, the shell's %.2f, PP at %.2f W/mK, the plate's view %.2f) and optimistic ends (%.2f, %.2f, %.2f, "
          "%.2f, the floor credited). CORRECTION: section 9's 'cap' (%.3f W/K at E5's rise, %.3f at E3-O's) is the bound with a 50 m/s "
          "inside flow, whose film is near 45 W/m2K; the capacity proper at those rises is %.3f and %.3f W/K on the conservative ends. "
-         "Class (i): reachable bare, T-H1 decides; (ii): reachable only with the route fitted, T-H1 with the route decides; (iii): over "
-         "the capacity even with the route and the optimistic ends, so no measurement can pass it: a contradiction between the rulings "
-         "(no vent, the Peli 1450, the device set) and that mode's requirement, the owner's. Each class is read at the optimistic ends "
-         "(what physics may allow); the class at the conservative ends is printed beside it." % (
+         "The capacity is a MODEL FIGURE on the coefficient ends named here and the analysed heat paths, not a physical upper bound on "
+         "every arrangement the rulings allow. Class (i): reachable bare, T-H1 decides; (ii): reachable only with the route fitted, T-H1 with "
+         "the route decides. A line over the modelled capacity even with the route and the optimistic ends is not a proof that no "
+         "measurement can pass it (the review of the provisional fixes, L4-F04); it is put in one of three named categories: %s (a held "
+         "local limit over the analysed arrangement's modelled capacity, judged on the mixed air: an engineering task, which a different "
+         "heat path or the part's local temperature measured apart from the mixed-air screen may change); %s (an unpowered part judged on "
+         "an operating row read to cover storage, INFERRED: an evidence task); %s (a measured local temperature over a mandatory limit "
+         "with the route fitted; the only category that justifies asking the owner to change a requirement or a ruling; none at "
+         "present, no local temperature being measured). Each class is read at the optimistic ends; the class at the conservative "
+         "ends is printed beside it." % (
              K_FIN[0], K_FIN[1], R["hr"]["a_free"], cp["fin_add"][0], cp["fin_add"][1], cp["skin"][1], cp["skin"][0],
              R["cb"]["cons"]["eps_plate"], R["cb"]["cons"]["eps_shell"], R["cb"]["cons"]["k_pp"], R["cb"]["cons"]["f_open"],
              R["cb"]["opt"]["eps_plate"], R["cb"]["opt"]["eps_shell"], R["cb"]["opt"]["k_pp"], R["cb"]["opt"]["f_open"],
-             R["cb"]["cap"]["E5"], R["cb"]["cap"]["E3-O"], cp["check9"][2], cp["check9"][0]), first="")
+             R["cb"]["cap"]["E5"], R["cb"]["cap"]["E3-O"], cp["check9"][2], cp["check9"][0], CAT_MODEL, CAT_STORE, CAT_CONFLICT), first="")
 
     def cls_at(e, i):
         need = e["line"]["g"]
         if not math.isfinite(need):
-            return "iii"
-        return "i" if need <= e["bare"][i] + 1e-12 else ("ii" if need <= e["route"][i] + 1e-12 else "iii")
+            return "over"
+        return "i" if need <= e["bare"][i] + 1e-12 else ("ii" if need <= e["route"][i] + 1e-12 else "over")
+
+    def lab(c):
+        return "over the modelled capacity" if c == "over" else "(%s)" % c
     for e in cp["lines"]:
         ln = e["line"]
         if not math.isfinite(ln["g"]):
-            para("%s, lid %s, +%.1f C: %s (%s) at or under the ambient: no capacity at a zero rise; class (iii), the whole %.3f W short" % (
-                e["mode"], e["lid"], e["amb"], ln["short"], e["tag"], e["Q"]), first="      ", rest="         ")
+            para("%s, lid %s, +%.1f C: %s (%s) at or under the ambient: no modelled capacity at a zero rise; %s, the whole %.3f W on that row" % (
+                e["mode"], e["lid"], e["amb"], ln["short"], e["tag"], e["cat_over"], e["Q"]), first="      ", rest="         ")
             continue
         para("%s, lid %s, +%.1f C, rise %.2f K: %s (%s) needs %.3f W/K; capacity bare %.3f / %.3f, with the route %.3f / %.3f W/K "
-             "(conservative / optimistic): class (%s)%s%s" % (
+             "(conservative / optimistic): %s%s%s" % (
                  e["mode"], e["lid"], e["amb"], e["rise"], ln["short"], e["tag"], ln["g"], e["bare"][0], e["bare"][1], e["route"][0], e["route"][1],
-                 e["cls"], "" if cls_at(e, 0) == e["cls"] else ", (%s) at the conservative ends" % cls_at(e, 0),
-                 "; SHORT by %.3f W/K, %.3f W, of the route's optimistic capacity" % (e["short_g"], e["short_w"]) if e["cls"] == "iii" else ""),
+                 "class (%s)" % e["cls"] if e["cls"] != "over" else "SHORT by %.3f W/K, %.3f W, of the model's optimistic capacity with the route" % (e["short_g"], e["short_w"]),
+                 "" if cls_at(e, 0) == e["cls"] else ", %s at the conservative ends" % lab(cls_at(e, 0)),
+                 ": a %s" % e["cat_over"] if e["cls"] == "over" else ""),
              first="      ", rest="         ")
     sh_ = cp["shed"]
     ep_ = cp["epaper"]
-    para("The class (iii) lines and their options (none lowers a requirement silently; each names its owner): (1) E3-L at +40 C with "
-         "the lid closed as ruled (M3 on the pack, M4 on shore): the SGP41's Table 4 +50 C lies over the closed case's capacity. "
-         "Options: CFL-002's C, A or B (the owner's), which move the line to the cells' hot stop H1, %.3f and %.3f W/K, under the closed "
-         "capacity's optimistic end and over its conservative one, so T-H1's lid-closed point decides; a closed-lid ceiling on REQ-042's "
-         "VOC channel (a requirement change, the owner's: the bay air holds Table 4's +50 C lid closed only to an ambient of +%.1f to "
-         "+%.1f C on the pack and +%.1f to +%.1f C on shore, conservative to optimistic); D-02b's closed-lid test at +40 C restated (a "
-         "ruling change, the owner's); a closed-lid conduction path from the plate to the lid's inner face inside the seal (the "
-         "session's to develop at Layer 7; not modelled here, so it closes nothing yet). (2) E3-O at +55 C (M6): the e-paper, unpowered, "
-         "judged on its +60 C operating row read to cover it (INFERRED), lies over the route's capacity. Options: PDi's storage "
-         "statement (the request is drafted in clarification/pervasive-displays-e2370ks0c1.txt; sending it is the owner's), with a range "
-         "at or over +70 C the line becomes the +70 C class, %.3f W/K, class (i); the e-paper's own temperature at its window in the "
-         "plate rather than the mixed air (the session's: a T-H1 channel at the window), at the bound's plate fraction %.3f it needs "
-         "%.3f W/K and at W4's high fraction %.3f it needs %.3f W/K, both under the route's optimistic capacity, so the measured "
-         "fraction decides; an e-paper with a held range at or over +70 C (CHO-001, the owner's); E3-O run with the e-paper's state as "
-         "a recorded deviation (TEST-PLAN's owner). (3) E5's +60 C dwell (M7): the same e-paper at an ambient equal to its operating "
-         "top: no capacity and no plate fraction carries it. Options: PDi's statement (then the LimeSDR's +70 C storage row, %.3f W/K, "
-         "class (i) at the optimistic ends); a different e-paper (CHO-001, the owner's); E5 run with the e-paper out as a recorded "
-         "deviation (TEST-PLAN's owner). Charging (M8, M9) is not class (iii); for scale, charging only in the heat stage (%.3f W into "
-         "the case) would need %.3f and %.3f W/K at T4's line, class (i) at both ends, at the cost of the profile while charging (the "
-         "48 to 72 h DESIGN OBJECTIVE, already NOT MET, would lose the profile's service during the charge: an owner's choice of "
-         "duty cycle, not taken)." % (
-             md_cap("M3", R, "C"), md_cap("M4", R, "C"), cp["ceil_sgp"]["M3"][0], cp["ceil_sgp"]["M3"][1], cp["ceil_sgp"]["M4"][0],
-             cp["ceil_sgp"]["M4"][1], md_cap("M6", R, "C", stated=True), ep_["M6"]["f"], ep_["M6"]["need"], ep_["M6"]["f_hi"],
-             ep_["M6"]["need_hi"], md_cap("M7", R, "C", stated=True), cp["q_hs_chg"], sh_[0]["need"], sh_[1]["need"]), first="   ")
+    para("The lines over the modelled capacity, by category (none lowers a requirement silently; each names its owner). %s: (1) E3-L "
+         "at +40 C with the lid closed as ruled (M3 on the pack, M4 on shore): the SGP41's Table 4 +50 C sensing row, judged on the bay's "
+         "mixed air, lies over the analysed closed case's modelled capacity (the coefficient ends named above; a model figure, not a "
+         "physical bound). What could change it (the session's, engineering and evidence): a closed-lid conduction path from the plate to "
+         "the lid's inner face inside the seal, the combined route R-170 to R-172 carried to the closed lid (developed at Layer 7; not "
+         "modelled here, so it closes nothing yet), and the SGP41's local air measured at its port, apart from the mixed-air screen (a "
+         "T-H1 channel). The options that change a requirement or a ruling stay the owner's and go to him only when a measurement "
+         "demonstrates the conflict: CFL-002's C, A or B, which move the line to the cells' hot stop H1, %.3f and %.3f W/K, under the "
+         "closed capacity's optimistic end and over its conservative one, so T-H1's lid-closed point decides; a closed-lid ceiling on "
+         "REQ-042's VOC channel (a requirement change: the bay air holds Table 4's +50 C lid closed only to an ambient of +%.1f to +%.1f C "
+         "on the pack and +%.1f to +%.1f C on shore, conservative to optimistic, on the model); D-02b's closed-lid test at +40 C restated "
+         "(a ruling change). %s: (2) E3-O at +55 C (M6) and (3) E5's +60 C dwell (M7): the unpowered e-paper is judged on its +60 C "
+         "operating row read to cover it (INFERRED); no storage row is held, so the shortfall is against an inferred limit, not a "
+         "demonstrated one, and at E5 the ambient equals that row, so no modelled capacity carries it. What resolves it (evidence): PDi's "
+         "storage statement (the request is drafted in clarification/pervasive-displays-e2370ks0c1.txt; sending it is the owner's), with "
+         "a range at or over +70 C M6's line becomes the +70 C class, %.3f W/K, class (i), and M7's the LimeSDR's +70 C storage row, "
+         "%.3f W/K, class (i) at the optimistic ends; or a storage soak of a sample at the mode's temperature with its function read back "
+         "after it (evidence for that lot); at M6 also the e-paper's own temperature at its window in the plate, a local temperature apart "
+         "from the mixed air (a T-H1 channel): at the bound's plate fraction %.3f it needs %.3f W/K and at W4's high fraction %.3f it needs "
+         "%.3f W/K, both under the route's optimistic capacity, so the measured fraction decides. Options that stay the owner's, only if "
+         "the conflict is demonstrated: an e-paper with a held range at or over +70 C (CHO-001); the mode run with the e-paper's state "
+         "recorded as a deviation (TEST-PLAN's owner). %s: none at present; a line enters it only on a measured local temperature over a "
+         "mandatory limit with the route fitted. Charging (M8, M9) lies under the modelled capacity (class (i)); for scale, charging only "
+         "in the heat stage (%.3f W into the case) would need %.3f and %.3f W/K at T4's line, class (i) at both ends, at the cost of the "
+         "profile while charging (the 48 to 72 h DESIGN OBJECTIVE, already NOT MET, would lose the profile's service during the charge: "
+         "an owner's choice of duty cycle, not taken)." % (
+             CAT_MODEL, md_cap("M3", R, "C"), md_cap("M4", R, "C"), cp["ceil_sgp"]["M3"][0], cp["ceil_sgp"]["M3"][1], cp["ceil_sgp"]["M4"][0],
+             cp["ceil_sgp"]["M4"][1], CAT_STORE, md_cap("M6", R, "C", stated=True), md_cap("M7", R, "C", stated=True), ep_["M6"]["f"],
+             ep_["M6"]["need"], ep_["M6"]["f_hi"], ep_["M6"]["need_hi"], CAT_CONFLICT, cp["q_hs_chg"], sh_[0]["need"], sh_[1]["need"]), first="   ")
     w("")
     w("13 Predicates")
     for k, v in R["pred"].items():

@@ -169,9 +169,13 @@ governs the heat stage at +40 C; under option C (the channel reported not covere
 | channel 5 less channel 6 within +-0.899099 K | | | the hold's trigger window exists with the reference where it is; otherwise the reference moves to the mixed air |
 
 **What a reading can pass at all (the record's 17.9).** No reading exceeds the outside surfaces' capacity with a zero inside
-resistance. Four lines lie over it even with the combined route and the optimistic coefficient ends, so no point here can pass
-them and none is run to close them: E3-L at +40 C lid closed as ruled (M3 and M4 on the SGP41's Table 4) and the e-paper's
-unpowered +60 C row at E3-O (M6) and E5 (M7). They are the owner's (the record's 17.9 names the options). Every other line is
+resistance, a model figure on named coefficient ends, not a physical bound. Four lines lie over it even with the combined route
+and the optimistic coefficient ends (the record's 17.9, its categories restated after the review of the provisional fixes, L4-F04):
+E3-L at +40 C lid closed as ruled (M3 and M4 on the SGP41's Table 4), a MODELLED SHORTFALL OF THE ANALYSED ARRANGEMENT, and the
+e-paper's unpowered +60 C row at E3-O (M6) and E5 (M7), a MISSING STORAGE QUALIFICATION. A point here reads the conductance and is
+not expected to pass those lines; the SGP41's local air at its port and the e-paper's window temperature are logged as channels apart
+from the mixed air. A line becomes a DEMONSTRATED CONFLICT, the only case that goes to the owner as a requirement question, on a
+measured local temperature over a mandatory limit with the route fitted. Every other line is
 reachable bare at the optimistic ends; where it is reachable only with the route at the conservative ends (M1 and M2 as ruled, M3
 and M4 under C, M7's stated line, M8 and M9), a bare reading under the line is followed by the same point with the route fitted
 (the fins on the free strips, the large loads led into the plate, the lid skin on its strap), lid open; a reading with the route

@@ -58,6 +58,9 @@ def _R():
                     "v2/vendor/power/held/mil-std-461g-2015-12-11.pdf", "v2/vendor/passives/held/vishay-wsl-30100-2023-11-23.pdf",
                     "v2/vendor/ti/held/ti-tps4811-q1-slusee5e.pdf"):
             need(os.path.join(ROOT, rel), "an input of the L4-E7 record (held documents: its fetch_held_back.py)")
+        for pn in ("CL31B106KBHNNN", "CL32B106KBJNNN", "CL32B225KCJSNN"):
+            need(os.path.join(ROOT, "v2/vendor/passives/held/samsung-%s-2026-10-02.json" % pn),
+                 "an input of the L4-E7 record (Samsung's held excerpts: its fetch_maker_curves.py)")
         if shutil.which("pdftotext") is None or shutil.which("pdftocairo") is None:
             raise Skip("pdftotext and pdftocairo are needed")
         _CACHE["gen_before"] = _sha(GEN_E)
@@ -752,10 +755,11 @@ def t_the_solar_fault_remedies_select_one_for_each_fault_and_keep_the_window():
     assert abs(d4n["v116"] - (36.8 * (1 + 0.001 * (rws["t_air"] - 25.0)) + (48.4 - 36.8) / 31.0 * 10.0)) < 1e-9 and d4n["v116"] <= 50.0
     # each fault and disturbance
     assert [(v["id"], v["ok"]) for v in rm["verd"]] == [("D4", True), ("D5", True), ("CS116/115 on", True), ("CS116/115 off", True),
-                                                        ("already on", True), ("window", True)]
+                                                        ("already on", False), ("window", True)]
     vd = {v["id"]: v.get("note", "") for v in rm["verd"]}
     assert "CONDITIONAL on Q13's leakage" in vd["D5"] and "CS115 CONDITIONAL on R-174" in vd["CS116/115 on"]
-    assert "CONDITIONAL on the lead's loop inductance at least %.2f uH" % (1e6 * rm["b6"]["Lb"]) in vd["already on"]
+    assert "every rating with its margin for a source loop of at least %.2f uH" % (1e6 * rm["b6"]["LA"]) in vd["already on"] and "B6-ENG-1" in vd["already on"]
+    assert rm["verd"][4]["holds"]
     assert vd["D4"] == vd["CS116/115 off"] == vd["window"] == ""
     assert rm["f36"]["st_min"] > 0.04 and rm["f36"]["cut_hi"] < lead["v_src"] and rm["f36"]["ring"] < rm["QF"]["vds"]
     assert rm["rev"]["vds"] < rm["QF"]["vds"] and rm["rev"]["i_be"] > 10 * rm["rev"]["idss"]
@@ -812,10 +816,13 @@ def t_the_solar_guard_draft_follows_the_five_drafts_on_a_copy():
         for want in ('"VH2", {"1": "PV_IN", "2": "PV_RTN"}, "C274411")', '"FUSE", {"1": "PV_IN", "2": "PV_F"})', 'ic("U21", 20, "TPS48110AQDGXRQ1', 'r("R87", "4.5mOhm 1% 2512 3W 50ppm',
                      '{"1": "PV_F", "2": "PV_RTN"}, "C80273")', '"PV_RG", "PV_RTN", "GND", lcsc="C473333")', '"C124196")',
                      '{"switch": "U21", "enable_net": "PV_UVLO"}),', '_intent.rail("PV_RTN"', 'part("D4", "Device", "D_Zener", "SMCJ30A',
-                     'c("C131", "10u 100V X7R 1210', 'c("C132", "10u 100V X7R 1210', 'c("C126", "330p C0G 100V', 'r("R97", "30.0k 1%',
-                     'c("C133", "10u 50V', 'c("C134", "10u 50V"', '"C132", "C133", "C134", "D4", '):
+                     'c("C131", "2.2u 100V X7R 1210 Samsung CL32B225KCJSNNE', 'for _cf in ("C132", "C135", "C136"): c(_cf, "2.2u 100V X7R 1210 Samsung CL32B225KCJSNNE',
+                     'c("C126", "330p C0G 100V', 'r("R97", "28.0k 1%', 'c("C133", "10u 50V X7R 1210 Samsung CL32B106KBJNNNE',
+                     'c("C134", "10u 50V X7R 1210 Samsung CL32B106KBJNNNE"', 'c("C7%d" % (_ca + 1), "10u 50V X7R 1210 Samsung CL32B106KBJNNNE',
+                     '"C132", "C133", "C134", "C135", "C136", "D4", '):
             assert out.count(want) == 1, want
         assert '"1u 100V 1210 (panel port' not in out and 'r("R97", "39k' not in out and 'c("C126", "1n C0G' not in out
+        assert 'c("C7%d" % (_ca + 1), "10u 50V", ' not in out and '"10u 100V X7R 1210 (panel port' not in out
         assert '"SMCJ28A (panel surge' not in out and out.count('r("R10", "115k 1% (RFBOUT1: 15.1 V)"') == 1
     finally:
         shutil.rmtree(dd)
@@ -825,55 +832,91 @@ def t_the_solar_guard_draft_follows_the_five_drafts_on_a_copy():
 
 
 def t_the_guard_already_on_is_bounded_in_the_loaded_network():
-    """The consolidation review's B6 (astra-check-l4close-1): a stiff 36 V source arriving with the solar guard already on.
-    The solver against the closed-form series RLC step; the latest corner bounding (the lead's current still rising at every
-    command); every rating at the binding inductance on its side of its printed limit; the binding rating and the conductor
-    spacing it needs recomputed; below it NOT MET; the drafted network failing and each change necessary; ramps, the cold
-    connection, the SOA reading, D11's energy, CS115 carried CONDITIONAL; the page and the draft carrying the figures."""
+    """B6 round 2 (the external review's L4-F01): the margin decided first (U5 within +-0.240 V, the numerical error added); the
+    round-2 solver reproduces the round-1 solver on flat capacitors and the closed-form series RLC step inside 0.3 %; the maker's
+    curves bound each bank on its own; the timestep study's error is small against the margin; the selected network holds every
+    rating with its margin from its floor and fails under it; the sixteen combinations of the banks' bounds all hold there, the
+    selected corner the worst on U5; the approaches B (excluded by the sheet) and D (no OV pin) are
+    stated; ramps, the cold connection and the start hold; the page and the draft carry the figures and the engineer's row."""
+    import math
     R = _R()
     m = _CACHE["M"]
     rm, b6 = R["remedy"], R["remedy"]["b6"]
-    # the solver: the port alone (cold), D11 out of reach, against the underdamped series RLC step's first peak
+    # the round-2 solver against the round-1 solver, flat banks of the same constants (k = 0.5 in every bank)
+    g1 = dict(b6["G1"])
+    k = 0.5
+    flat = lambda c: m.CerBank([(1, c, None, 1.0, 1.0)])
+    g2 = dict(g1, bF=flat(g1["c131"]), bP=flat(g1["n_pc"] * 10e-6 * 0.9 * k), bS=flat(g1["n_ca"] * 10e-6 * 0.9 * k),
+              bC=flat((20e-6 * k + 4.8e-6) * 1.10), esrP=g1["esr_cer"] / g1["n_pc"], esrS=g1["esr_cer"] / g1["n_ca"])
+    for v0, i0 in ((7.46, 0.0), (25.0, 3.7408)):
+        r1 = m.guard_event(g1, v0, i0, 3.0e-6, b6["bulk_cold"], k)
+        r2 = m.guard_event_b(g2, v0, i0, 3.0e-6, b6["bulk_cold"])
+        for key in ("u5", "vF", "vS", "iQ", "slew"):
+            assert abs(r1[key] - r2[key]) <= 1e-6 * max(1.0, abs(r1[key])), (key, r1[key], r2[key])
+    # the closed-form series RLC step: the port alone (cold), D11 out of reach
     L, C, Rl, E = 3e-6, 4.5e-6, 0.0465, 36.0
-    g = dict(E=E, r_lead=Rl, c131=C, n_ca=4, esr_cer=0.01, n_pc=0, rb=0.0137, r59=0.0155, r_on=0.0045, d4=(1e3, 1.0), d11=(1e3, 1.0),
-             ov=1e3, isc=1e6, tau=1e-6, t_ov=4e-6, t_sc=5e-6, t_f=0.2e-6, v_behind=0.0)
-    r = m.guard_event(g, 0.0, 0.0, L, (0.0, 1e-4), 1.0, cold=True, dt=2e-9, t_end=30e-6)
+    gc = dict(g2, E=E, r_lead=Rl, bF=flat(C), d11=(1e3, 1.0), v_behind=0.0)
+    r = m.guard_event_b(gc, 0.0, 0.0, L, (0.0, 1e-4), cold=True, dt=2e-9, t_end=30e-6)
     zeta = Rl / 2.0 * (C / L) ** 0.5
-    peak = E * (1 + __import__("math").exp(-zeta * __import__("math").pi / (1 - zeta ** 2) ** 0.5))
-    assert abs(r["vF"] - peak) < 0.01 * peak, (r["vF"], peak)
-    assert abs(r["iL"] - E / (L / C) ** 0.5 * __import__("math").exp(-zeta * __import__("math").atan((1 - zeta ** 2) ** 0.5 / zeta) / (1 - zeta ** 2) ** 0.5)) < 0.02 * E / (L / C) ** 0.5
-    # the binding inductance: every rating on its side, U5's positive differential the binding one, below it NOT MET
+    peak = E * (1 + math.exp(-zeta * math.pi / (1 - zeta ** 2) ** 0.5))
+    ipk = E / (L / C) ** 0.5 * math.exp(-zeta * math.atan((1 - zeta ** 2) ** 0.5 / zeta) / (1 - zeta ** 2) ** 0.5)
+    assert abs(r["vF"] - peak) < 0.003 * peak and abs(r["iL"] - ipk) < 0.003 * ipk, (r["vF"], peak, r["iL"], ipk)
+    # the margin and the timestep
+    assert b6["U5_LIM"] == 0.240 and b6["M_OTHER"] == 0.10
+    conv = b6["conv"]
+    assert [dt for dt, _u in conv] == [40e-9, 20e-9, 10e-9, 5e-9, 2e-9, 1e-9, 0.5e-9]
+    assert abs(b6["ERR"] - 2 * max(abs(u - conv[-1][1]) for dt, u in conv if dt <= 20e-9)) < 1e-12
+    assert 0 < b6["ERR"] < 0.1 * (0.3 - b6["U5_LIM"]) and abs(conv[-2][1] - conv[-1][1]) < 0.25 * b6["ERR"]
+    # the makers' curves and the bounds
+    for pn, (tf, esr) in b6["bounds"].items():
+        assert pn in ("CL31B106KBHNNN", "CL32B106KBJNNN", "CL32B225KCJSNN") and 0.9 < tf[0] <= 1.0 <= tf[1] < 1.1 and 0.001 < esr < 0.02
+    ce = b6["ceff"]
+    assert ce["F_lo"][1] < ce["F_lo"][0] < 4 * 2.2e-6 and ce["S_lo"][1] < ce["S_lo"][0] < 4 * 10e-6 and ce["C_hi"][1] < ce["C_hi"][0] <= (20e-6 + 4.8e-6) * 1.1 + 1e-12
+    # the selected network: every rating with its margin at its floor, U5 binding, failing under it
     W = b6["W"]
-    assert W["mono"] and W["why"] == {"SCP"}
-    for id_, v, lim, s in b6["vals"]:
+    for id_, v, lim, s in b6["valsA"]:
         assert (lim - v) * s >= -1e-12, (id_, v, lim)
-    assert b6["bind"] == ["u5p"] and 1.0e-6 < b6["Lb"] < 7.04e-6 and abs(W["u5"] - 0.3) < 0.002
-    assert "u5p" in b6["fail_lo"] and "inp" in b6["fail_lo"]
-    r_c = (4e-6 / __import__("math").pi) ** 0.5
-    assert abs(b6["s_star"] - 2 * r_c * __import__("math").cosh(b6["Lb"] / (4e-7 * 5.0))) < 1e-9
-    assert W["i4"] == 0.0 and W["vS"] < rm["D4N"]["vbr_cold"] and W["vP"] < 50.0 and W["vF"] < 100.0 and W["slew"] < 60e6
-    assert W["soa12"] < 1.0 and W["soa13"] < 1.0 and b6["e11"] < b6["e11_room"] and b6["i_cs"] < b6["ics_abs"]
-    assert b6["der"][0] < 1.0 and b6["tc"][0] > R["decision"]["rows"]["t_air"]
-    # each change necessary; the drafted network fails PV_F, its slew, INP and U5
-    var = dict(b6["var"])
-    assert all(var.values())
-    assert sorted(i for i, _v, _l in var["as drafted in the remedies round (C131 1 uF, R97 39k, CSCP 1 nF, no C133 and C134)"]) == ["inp", "pvf", "slew", "u5p"]
-    # ramps and the cold connection
+    assert b6["bindA"] == ["u5p"] and 1.0e-6 < b6["LD"] < b6["LA"] < 7.0e-6 and abs(W["u5"] + b6["ERR"] - 0.240) < 0.002
+    assert "u5p" in b6["fail1"] and b6["W1u"]["u5"] > 0.3 and W["mono"] and W["i4"] == 0.0 and W["soa12"] < 1.0 and W["soa13"] < 1.0
+    # the corner search: the four banks independent, every combination of their bounds at the floor holds, the selected corner the worst
+    cn = b6["cnr"]
+    assert len(cn) == 16 and len({c["c"] for c in cn}) == 16 and all(c["ok"] and not c["fails"] for c in cn)
+    assert b6["cnr_w"]["c"] == ("lo", "lo", "lo", "hi") and abs(b6["cnr_w"]["u5"] - W["u5"]) < 1e-12
+    assert min(c["u5"] for c in cn) < W["u5"]
+    r_c = (4e-6 / math.pi) ** 0.5
+    assert abs(b6["sA"] - 2 * r_c * math.cosh(b6["LA"] / (4e-7 * 5.0))) < 1e-12
+    # the witnesses, the approaches, ramps, the cold connection and the start
+    wl = [u for _l, u in b6["wit"]]
+    assert 0.2985 < wl[0] < 0.3 and 0 < wl[1] - wl[0] < 0.001 and wl[2] > wl[0] and wl[3] > 0.303 and wl[4] > 0.45 and b6["witA"] < wl[0]
+    assert abs(b6["lim_err"] - 10.0 * b6["ibias_sum"] / (rm["i_reg_hi"] * b6["G6"]["r59"])) < 1e-12 and 0.005 < b6["lim_err"] < 0.01
+    assert b6["ibias_sum"] == 31e-6 and b6["tsc11"][1] == 1.6 and b6["tsc"][1] == 5.0 and b6["tinp"] == 1.0
     assert b6["ramp_ok"] and all(r_["i4"] == 0.0 for r_ in b6["ramp"]) and b6["ramp_w"]["vS"] < rm["D4N"]["vbr_cold"]
-    assert b6["cold_ok"] and max(c["vF"] for c in b6["cold"]) < 100.0
-    assert sum(1 for r_ in b6["ramp"] if 0.7 * b6["s_h"] - 100.0 <= r_["rate"] <= 1.1 * b6["s_h"] + 100.0) >= 35
-    # CS115 carried CONDITIONAL; CS116's screen as the review computes it
+    assert b6["cold_ok"] and b6["i_start"] < rm["ocp_lo"] and b6["e11"] < b6["e11_room"] and b6["i_cs"] < b6["ics_abs"]
     assert abs(b6["d59_116"] - 0.2123) < 0.0005 and abs(b6["be115"] - 15.680) < 0.002
-    assert rm["scp_f"] < rm["scp_lo"] and abs(b6["tau"][0] - 3010 * 0.99 * 330e-12 * 0.95) < 1e-15
     s = _s10(R)
-    for k_ in ("THE GUARD ALREADY ON (B6", "THE BINDING RATING", "THE REVIEWED CASE", "RAMPS (from", "THE COLD CONNECTION",
-               "THE CHANGES, AND WHY EACH", "R-176's bench rows, REVISED", "CS115 CONDITIONAL on R-174"):
+    for k_ in ("THE GUARD ALREADY ON, ROUND 2", "THE MARGIN, decided before any value", "THE REVIEW'S WITNESSES", "THE PARTS AND THEIR BOUNDS",
+               "THE CORNER SEARCH at", "THE THREE APPROACHES", "THE ENGINEER'S ROW B6-ENG-1", "R-176's bench rows, REVISED", "CS115 CONDITIONAL on R-174",
+               "do not place resistors in series with any of the CSxIN or CSxOUT pins"):
         assert k_ in s, k_
     page = " ".join(open(os.path.join(REC, "L4E7-CONTROL-DECISION.md"), encoding="utf-8").read().split())
-    for fig in ("%.2f uH" % (1e6 * b6["Lb"]), "%.2f mm" % (1e3 * b6["s_star"]), "%.4f V" % W["u5"], "%.1f A" % W["iQ"],
-                "%.3f V" % (rm["D4N"]["vbr_cold"] - b6["ramp_w"]["vS"]), "%.3f A" % b6["i_start"], "%.2f A" % b6["be115"],
-                "### The guard already on (B6 of the consolidation review)", "R-176's acceptance, revised"):
+    for fig in ("%.2f uH" % (1e6 * b6["LA"]), "%.2f mm" % (1e3 * b6["sA"]), "%.4f V" % (W["u5"] + b6["ERR"]), "%.6f V" % b6["ERR"],
+                "%.2f uH" % (1e6 * b6["LD"]), "%.6f V" % b6["witA"], "%.3f A" % b6["i_start"], "%.2f A" % b6["be115"], "B6-ENG-1", "**The corner search**", "%.4f to %.4f V" % (min(c["u5"] for c in cn), b6["cnr_w"]["u5"]),
+                "### The guard already on (B6): round 1, and round 2 after the external review (L4-F01)", "R-176's acceptance, revised again"):
         assert fig in page, fig
+
+
+def t_the_external_reviews_witnesses_reproduce_on_the_record_function():
+    """L4-F01 (the external review of the provisional fixes, 2 October 2026): its four witnesses rebuilt with the record's own
+    round-1 function and parameters (36 V step from U21's least turn-off, no load, 2.47 uH, the aged bulk at -40 C), the bias
+    factor per bank (PV_P, TRK_VS, TRK_VIN), as the record prints them."""
+    R = _R()
+    m = _CACHE["M"]
+    b6 = R["remedy"]["b6"]
+    g = dict(b6["G1"])
+    u = lambda k, dt: m.guard_event(g, b6["uvf_lo"], 0.0, 2.47e-6, b6["bulk_cold"], k, dt=dt, t_end=60e-6)["u5"]
+    got = [u(1.0, 20e-9), u(1.0, 1e-9), u((1.0, 0.99, 1.0), 20e-9), u((1.0, 0.95, 1.0), 20e-9), u((0.25, 0.25, 1.0), 20e-9)]
+    assert got == [w for _l, w in b6["wit"]], (got, b6["wit"])
+    assert abs(got[0] - 0.299128) < 2e-5 and abs(got[1] - 0.299598) < 2e-5 and abs(got[2] - 0.300218) < 2e-5 and abs(got[3] - 0.304662) < 2e-5
 
 
 def t_the_clarification_drafts_follow_the_decision():

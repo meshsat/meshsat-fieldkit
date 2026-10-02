@@ -7,7 +7,7 @@ Why (L4E11-SOURCE-ONLY-AND-ENTRY.md section 15a): with TI's BQ25730 and its batt
 CELL_F is the pack side of those FETs. Board E's auxiliary domain sat on CELL_F: U12 (the AP63205 that feeds the sensor
 controller, the Geiger supply and the fans' logic), C31 and both mixer fans with their flyback diodes. With the charge held the
 battery FETs are off (SLUSE65A p.38) and that domain still drained the pack; with the pack absent nothing fed it. It takes board
-A's VSYS over the dock's pin 1 instead (VSYS_E here, VBAT on board A), which the pack (through the battery FETs, on with the
+A's VSYS over the dock's pin 1 instead (VSYS_E here, VSYS_DOCK behind the eFuse U42 on board A), which the pack (through the battery FETs, on with the
 battery alone, p.27) or a source holds, and which the source carries alone while the charge is held.
 
 What it changes in v2/ecad/tools/gen_sch_e.py, and nothing else:
@@ -19,7 +19,7 @@ What it changes in v2/ecad/tools/gen_sch_e.py, and nothing else:
           re-declared to 17.4 V; a power flag on VSYS_E.
 CELL_F keeps the pack path to board A (P_CP), D3, C1, TP8 and the pack monitor R42 and R43 (0.14 mA at 16.884 V, intended).
 
-ORDER: with apply_gen_sch_a_charger.py (board A's J_DOCK pin 1 on VBAT) and apply_pcb_interfaces_dock.py; never alone, or the
+ORDER: with apply_gen_sch_a_charger.py (board A's J_DOCK pin 1 on VSYS_DOCK, behind U42) and apply_pcb_interfaces_dock.py; never alone, or the
 dock's pin 1 meets VSYS_E on E and GND on A.
 
 Usage:  apply_gen_sch_e_aux.py TARGET [--check | --write]     (default --check: nothing is written)

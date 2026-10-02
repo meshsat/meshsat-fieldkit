@@ -4,14 +4,15 @@ round for the consolidation review cx36, B1, 2 October 2026). NOT APPLIED to the
 copies (the tests write scratch copies).
 
 Why (L4E11-SOURCE-ONLY-AND-ENTRY.md section 15a): board E's auxiliary domain moves from CELL_F to board A's VSYS over the dock's
-pin 1 (apply_gen_sch_a_charger.py and apply_gen_sch_e_aux.py). The A/E contract records it: IF-AE-DOCK's pin 1 becomes VBAT (E's
-VSYS_E), BAT-F06's charge share is reversed, the feed and the ground return with seven 813 contacts are stated; and
-check_contracts.py learns that VBAT on A and VSYS_E on E are one contact.
+pin 1 (apply_gen_sch_a_charger.py and apply_gen_sch_e_aux.py), behind board A's eFuse U42 (the review of the provisional fixes,
+L4-F03, section 16e). The A/E contract records it: IF-AE-DOCK's pin 1 becomes VSYS_DOCK (A's VBAT through U42; E's VSYS_E),
+BAT-F06's charge share is reversed, the feed, its protection and the ground return with seven 813 contacts are stated; and
+check_contracts.py (v2/ecad/tools/check_contracts.py, in this tree) learns that VSYS_DOCK on A and VSYS_E on E are one contact.
 
 TARGET selects the edit set by its file name:
   pcb_interfaces.yaml   IF-AE-DOCK: the alias, pin 1, pins_history, charge_share, the new aux_feed, the findings list;
-                        the result must load as YAML and read pin 1 as VBAT.
-  check_contracts.py    the ALIAS table gains {"VBAT", "VSYS_E"}; the result must parse as Python.
+                        the result must load as YAML and read pin 1 as VSYS_DOCK.
+  check_contracts.py    the ALIAS table gains {"VSYS_DOCK", "VSYS_E"}; the result must parse as Python.
 
 ORDER: with the two generator drafts (the dock's pin 1 on both boards at once).
 
@@ -29,12 +30,12 @@ import yaml
 NAME = "apply_pcb_interfaces_dock"
 YAML_EDITS = [
     ('aliases: [["DOCK_SPARE", "BLK_SPARE"], ["CELL+", "CELL_F", "E\'s pack positive after its F3 blade"]]',
-     'aliases: [["DOCK_SPARE", "BLK_SPARE"], ["CELL+", "CELL_F", "E\'s pack positive after its F3 blade"], ["VBAT", "VSYS_E", "A\'s VSYS to E\'s auxiliary domain on pin 1 (L4-E11)"]]'),
+     'aliases: [["DOCK_SPARE", "BLK_SPARE"], ["CELL+", "CELL_F", "E\'s pack positive after its F3 blade"], ["VSYS_DOCK", "VSYS_E", "A\'s VSYS through its eFuse U42 to E\'s auxiliary domain on pin 1 (L4-E11)"]]'),
     ("pins: {1: GND, 2: GND, 3: GND, 4: GND, 5: GND, 6: GND, 7: GND, 8: SHORE_INHIBIT, 9: USB_E6_P,",
-     "pins: {1: VBAT, 2: GND, 3: GND, 4: GND, 5: GND, 6: GND, 7: GND, 8: SHORE_INHIBIT, 9: USB_E6_P,"),
+     "pins: {1: VSYS_DOCK, 2: GND, 3: GND, 4: GND, 5: GND, 6: GND, 7: GND, 8: SHORE_INHIBIT, 9: USB_E6_P,"),
     ('the control line since, beside 5 to 7 and 11"',
-     'the control line since, beside 5 to 7 and 11; pin 1 carries VSYS (A\'s VBAT, E\'s VSYS_E) since L4-E11\'s fix round\n'
-     '        (drafted 2 October 2026), board E\'s auxiliary domain\'s feed"'),
+     'the control line since, beside 5 to 7 and 11; pin 1 carries VSYS (A\'s VSYS_DOCK behind the eFuse U42, E\'s VSYS_E) since\n'
+     '        L4-E11\'s fix rounds (drafted 2 October 2026), board E\'s auxiliary domain\'s feed"'),
     ('charge_share: "BAT-F06, taken by the session under the owner\'s standing rule (ARCHITECTURE.md section 4.4): board E\'s\n'
      '        always-on domain and fans sit on CELL_F, the pack side of A\'s charge shunt R17, so they share the charger\'s host-free\n'
      '        256 mA; stated, and the host sets ChargeCurrent to cover them; the VSYS-side feed through this contract is not taken"',
@@ -43,7 +44,11 @@ YAML_EDITS = [
      '        VSYS_E), so the source carries them while the charge is held and the pack feeds none of them; on CELL_F remain the pack\n'
      '        path, D3, C1 and the pack monitor R42 and R43 (0.14 mA at 16.884 V)"\n'
      '      aux_feed: "pin 1, one 813 contact: 1.0 A declared (U12 0.8 A, the fans 0.1 A each), 29 percent of 3.5 A, about 4.9 K by\n'
-     '        w3de\'s assumed I2 rise; VSYS 9.688 to 17.375 V (L4-E11 section 15d). The ground return keeps seven 813 contacts: at the\n'
+     '        w3de\'s assumed I2 rise; VSYS 9.688 to 17.375 V (L4-E11 section 15d). Protected on board A by the eFuse U42 (TI TPS16630,\n'
+     '        R(ILIM) 11.0k: a sustained overload regulated to 1.47 to 1.80 A, a steady setting and not an instantaneous ceiling;\n'
+     '        current limiting at most 202 ms, auto-retry after 500 to 800 ms): in a sustained overload the contact at most 51.5\n'
+     '        percent of 3.5 A; a short applied while on, a start into a short and the retry are left to the bench\'s qualification (L4-E11\n'
+     '        E11-38); VSYS_E at least 9.539 V at 1.0 A (L4-E11 sections 16e and 17a). The ground return keeps seven 813 contacts: at the\n'
      '        32.1 A coincidence with every Mill-Max pin at 20 mOhm an 813 ground contact carries 2.238 A, 2.406 A with one open (64\n'
      '        and 69 percent), 75.5 and 79.3 C at the 51 C inside air and 89.5 and 93.3 C at the +55 C margin\'s 65 C (w3de\'s model\n'
      '        and assumptions; W3DE-DOCK-R1\'s residual moves by one contact\'s step). A lost pin 1 unpowers E\'s controller, which A\n'
@@ -54,7 +59,7 @@ YAML_EDITS = [
 PY_EDITS = [
     ('         ({"DOCK_SPARE", "BLK_SPARE"}, "the spare contact, named after the connector on each side")]',
      '         ({"DOCK_SPARE", "BLK_SPARE"}, "the spare contact, named after the connector on each side"),\n'
-     '         ({"VBAT", "VSYS_E"}, "A\'s VSYS feeds E\'s auxiliary domain on the dock\'s pin 1; E names its branch (L4-E11)")]'),
+     '         ({"VSYS_DOCK", "VSYS_E"}, "A\'s VSYS through its eFuse U42 feeds E\'s auxiliary domain on the dock\'s pin 1; each board names its branch (L4-E11)")]'),
 ]
 
 
@@ -90,8 +95,8 @@ def patched(text, kind, edits):
         except yaml.YAMLError as e:
             refuse("the result does not load as YAML: %s" % e)
         dock = [v for k, v in _walk(doc) if k == "IF-AE-DOCK"]
-        if len(dock) != 1 or dock[0].get("pins", {}).get(1) != "VBAT" or "aux_feed" not in dock[0]:
-            refuse("IF-AE-DOCK does not read pin 1 as VBAT with its aux_feed")
+        if len(dock) != 1 or dock[0].get("pins", {}).get(1) != "VSYS_DOCK" or "aux_feed" not in dock[0]:
+            refuse("IF-AE-DOCK does not read pin 1 as VSYS_DOCK with its aux_feed")
     else:
         try:
             ast.parse(new)
