@@ -409,7 +409,9 @@ is bought, built, powered or measured. Classes: MAKER, MODELED, INFERRED, ASSUMP
       RM520N    0.720 W/K (MODELED)
       PCM2912A  0.240 W/K (MODELED)
    so the line is G_c = 2.159 W/K (0 K margin; 2.399 with 1 K, 2.698 with 2 K); with the module at its typical 4.5 W instead of
-   idle 2.443 W/K; at HIGH heat 4.304 W/K (not covered). E3-O closes at T-H1's floor (mixed air 67.95 C). Not routed by the air:
+   idle 2.443 W/K; at HIGH heat 4.304 W/K (not covered). As board B is generated (slot 2 alone, the 5G socket's supply dropped
+   too) the hold's heat is 19.497 W (MODELED), so the same line covers it. E3-O closes at T-H1's floor (mixed air 67.95 C).
+   Not routed by the air:
       ATP19     its limit 55 C (operating range) is at or under the margin's ambient
       EPAPER    its limit 60 C (operating range (the only statement held)) is at or under the margin's ambient
    The trigger (SESSION, PROVISIONAL): the heat stage's air at +40 C at the floor, read in the exhaust, is 61.89 C; +2.0 K of
