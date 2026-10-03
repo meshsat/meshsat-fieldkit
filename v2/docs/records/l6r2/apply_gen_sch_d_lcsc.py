@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """apply_gen_sch_d_lcsc.py: DRAFT for board D's generator owner (Layer 6 record l6r2, MESHSAT-1357, 3 October 2026). NOT APPLIED.
 
-It writes the LCSC field of board D's generic parts into v2/ecad/tools/gen_sch_d.py: 122 designators, each keyed by the value
-the code was selected for (v2/docs/records/l6r2/L6R2-PASSIVES.md and l6r2_passives.out; the logic in l6r2_apply.py). Rendered by
+It writes the LCSC field of board D's generic parts into v2/ecad/tools/gen_sch_d.py: 126 designators, each keyed by the value
+the code was selected for; 4 of them correct a code the generator's call writes (the entry's third field is the code
+replaced, finding F7) (v2/docs/records/l6r2/L6R2-PASSIVES.md and l6r2_passives.out; the logic in l6r2_apply.py). Rendered by
 `l6r2_passives.py --write-drafts`; test_l6r2.py holds this file equal to the render and proves its composition with every other
 pending draft of the generator.
 Usage:  apply_gen_sch_d_lcsc.py TARGET [--check | --write]     (default --check: nothing is written)
@@ -68,10 +69,14 @@ ENTRIES = {
     'C58': ('22p 500V NP0 1206', 'C527306'),
     'C59': ('39p 500V NP0 1206', 'C326958'),
     'C60': ('22p 500V NP0 1206', 'C527306'),
+    'C61': ('1u', 'C559769', 'C15849'),
     'C63': ('100n', 'C113803'),
+    'C64': ('1u', 'C559769', 'C15849'),
+    'C65': ('1u', 'C559769', 'C15849'),
     'C66': ('100n', 'C113803'),
     'C67': ('100n', 'C113803'),
     'C68': ('100n', 'C113803'),
+    'C71': ('1u', 'C559769', 'C15849'),
     'FB1': ("600R 2A ferrite (the exciter's 1 A transmit pulses)", 'C21519'),
     'R1': ('2.2k', 'C4190'),
     'R2': ('100k', 'C25803'),

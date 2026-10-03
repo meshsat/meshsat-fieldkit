@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """apply_gen_sch_a_lcsc.py: DRAFT for board A's generator owner (Layer 6 record l6r2, MESHSAT-1357, 3 October 2026). NOT APPLIED.
 
-It writes the LCSC field of board A's generic parts into v2/ecad/tools/gen_sch_a.py: 318 designators, each keyed by the value
-the code was selected for (v2/docs/records/l6r2/L6R2-PASSIVES.md and l6r2_passives.out; the logic in l6r2_apply.py). Rendered by
+It writes the LCSC field of board A's generic parts into v2/ecad/tools/gen_sch_a.py: 331 designators, each keyed by the value
+the code was selected for; 13 of them correct a code the generator's call writes (the entry's third field is the code
+replaced, finding F7) (v2/docs/records/l6r2/L6R2-PASSIVES.md and l6r2_passives.out; the logic in l6r2_apply.py). Rendered by
 `l6r2_passives.py --write-drafts`; test_l6r2.py holds this file equal to the render and proves its composition with every other
 pending draft of the generator.
 Usage:  apply_gen_sch_a_lcsc.py TARGET [--check | --write]     (default --check: nothing is written)
@@ -19,6 +20,8 @@ ENTRIES = {
     'C2': ('47u 25V', 'C403725'),
     'C3': ('10u 25V 1210', 'C2918497'),
     'C4': ('1u', 'C559769'),
+    'C5': ('220n', 'C344195', 'C160828'),
+    'C7': ('4.7u', 'C694229', 'C354262'),
     'C8': ('4.7u', 'C354262'),
     'C9': ('100n 25V', 'C113803'),
     'C10': ('100n 25V', 'C113803'),
@@ -71,11 +74,14 @@ ENTRIES = {
     'C65': ('10u 50V X7R 1210', 'C596319'),
     'C66': ('10u 50V X7R 1210', 'C596319'),
     'C67': ('10u 50V X7R 1210', 'C596319'),
+    'C69': ('1n', 'C113793', 'C1588'),
     'C70': ('47n', 'C576852'),
     'C71': ('4.7u', 'C354262'),
     'C72': ('100n 25V', 'C113803'),
     'C73': ('100n 25V', 'C113803'),
     'C74': ('10u 50V X7R 1210', 'C596319'),
+    'C75': ('100n', 'C113803', 'C14663'),
+    'C76': ('470p', 'C326973', 'C27694'),
     'C77': ('47n', 'C576852'),
     'C78': ('4.7u', 'C354262'),
     'C79': ('100n 25V', 'C113803'),
@@ -85,6 +91,7 @@ ENTRIES = {
     'C83': ('10u 100V X7R 1210', 'C5156756'),
     'C84': ('10u 100V X7R 1210', 'C5156756'),
     'C85': ('10u 100V X7R 1210', 'C5156756'),
+    'C86': ('220n', 'C344195', 'C160828'),
     'C88': ('47n', 'C576852'),
     'C89': ('4.7u', 'C354262'),
     'C90': ('100n 25V', 'C113803'),
@@ -127,16 +134,20 @@ ENTRIES = {
     'C130': ('1n', 'C113793'),
     'C131': ('1n', 'C113793'),
     'C132': ('1n', 'C113793'),
+    'C134': ('1n', 'C113793', 'C1588'),
     'C135': ('47n', 'C576852'),
     'C136': ('4.7u', 'C354262'),
     'C137': ('100n 25V', 'C113803'),
     'C138': ('1n', 'C113793'),
     'C139': ('1n', 'C113793'),
+    'C141': ('1n', 'C113793', 'C1588'),
     'C142': ('47n', 'C576852'),
     'C143': ('4.7u', 'C354262'),
     'C144': ('100n 25V', 'C113803'),
     'C145': ('1n', 'C113793'),
     'C146': ('1n', 'C113793'),
+    'C150': ('560p', 'C513644', 'C43962'),
+    'C152': ('680n', 'C2838708', 'C107067'),
     'C153': ('100n', 'C113803'),
     'C154': ('10n', 'C57112'),
     'C155': ('100n', 'C113803'),
@@ -158,6 +169,7 @@ ENTRIES = {
     'C187': ('10u 50V X7R 1210', 'C596319'),
     'C188': ('10u 50V X7R 1210', 'C596319'),
     'C189': ('10u 50V X7R 1210', 'C596319'),
+    'C191': ('1n', 'C113793', 'C1588'),
     'C192': ('100n', 'C113803'),
     'C193': ('100n', 'C113803'),
     'C194': ('100n', 'C113803'),
@@ -171,6 +183,8 @@ ENTRIES = {
     'C204': ('10u 50V X7R 1210', 'C596319'),
     'C205': ('10u 50V X7R 1210', 'C596319'),
     'C206': ('10u 50V X7R 1210', 'C596319'),
+    'C208': ('1u', 'C559769', 'C15849'),
+    'C209': ('1u', 'C559769', 'C15849'),
     'C224': ('10n', 'C57112'),
     'C225': ('100n', 'C113803'),
     'C227': ('100n', 'C113803'),
