@@ -9,8 +9,11 @@ property that survives the drafts' application: when the generators and netlists
 1 is its own field until then; the eleven power lines of L4-E9 section 4 have their states; the contract rows added carry their
 tables' cell counts with unique ids, FW-C08 and FW-A14 carry the restated texts and the old FW-A16 rule is gone; PANEL.md section 10
 carries the hold sentence; the page's table equals the script's; the apply scripts refuse a second run on the tree and apply once to
-the base they were written against; no em or en dash in the record. Software predicates on text: they establish no electrical
-property and accept nothing.
+the base they were written against; no em or en dash in the record. Set 28's restatement (finding F-12): every restated row is a
+row of the table, its withdrawn figures are figures it cites, every replacing text is matched once in its source with figures
+parsed from the match, no figure is typed in the restatement's prose or patterns, S27-02b's replacing text is L4-E11's PWM-duty
+ramp, a withdrawn text still in a target names its finding, and the page's section 4a equals the script's. Software predicates on
+text: they establish no electrical property and accept nothing.
 """
 import importlib.util
 import os
@@ -99,13 +102,13 @@ def t_every_excerpt_is_in_its_target_and_every_figure_in_a_source():
 
 def t_marks_triggers_and_criteria_are_well_formed():
     m = _M()
-    for e in m.T:
+    for e in list(m.T) + _C["R"]["rows"]:   # as written, and as restated at set 28 (F-12)
         assert any(w in e["mark"] for w in MARKS) or e["mark"].startswith("DRAFTED"), (e["id"], e["mark"])
         assert set(e["criteria"]) <= set(m.CRITERIA) and e["criteria"], e["id"]
         if "PROVISIONAL" in e["mark"]:
             assert re.search(r"(R-\d+|E11-\d+|B6-ENG-1|PANEL-ACC|PWR-F\d+|Q-TI-\d+|U-0\d|V-A0\d|T-H1|M2)", e["trigger"]), \
                 "%s is PROVISIONAL but its trigger names no row or measurement: %r" % (e["id"], e["trigger"])
-    prov = [e for e in m.T if "PROVISIONAL" in e["mark"]]
+    prov = [e for e in _C["R"]["rows"] if "PROVISIONAL" in e["mark"]]
     assert len(prov) == len(_C["R"]["prov"]) >= 15
     for c, st in m.CRITERIA_STATE.items():
         assert c in m.CRITERIA and len(st) > 60
@@ -220,8 +223,43 @@ def t_the_pages_table_equals_the_scripts():
     i, j = page.index("<!-- l5pwr-table:begin -->"), page.index("<!-- l5pwr-table:end -->")
     block = [l for l in page[i:j].split("\n")[1:] if l.strip()]
     assert block == m.md_rows(_C["R"]), "the page's table is not the script's"
+    i, j = page.index("<!-- l5pwr-restated:begin -->"), page.index("<!-- l5pwr-restated:end -->")
+    block = [l for l in page[i:j].split("\n")[1:] if l.strip()]
+    assert block == m.md_restated(_C["R"]), "the page's section 4a is not the script's"
     for s in ("PASS 99 of 99", "## 9.", "PROVISIONAL", "check_contracts.py"):
         assert s in page, s
+
+
+def t_the_set28_restatement_parses_its_figures_and_types_none():
+    """F-12: a row whose cited figure set 27's Layer 4 corrections changed is restated beside the table, its figures parsed."""
+    m = _M()
+    R = _C["R"]
+    ids = {e["id"] for e in m.T}
+    assert set(m.RESTATED) <= ids and "S27-02b" in m.RESTATED
+    page = open(PAGE, encoding="utf-8").read()
+    rows = {e["id"]: e for e in R["rows"]}
+    for i, rs in m.RESTATED.items():
+        e = rows[i]
+        r = e["restated"]
+        assert r and rs["withdrawn"] and set(rs["withdrawn"]) <= set(e["figures"]), i
+        assert len(r["cites"]) == len(rs["now"]) and any(c["figures"] for c in r["cites"]), i
+        for c in r["cites"]:
+            assert c["text"] in " ".join(open(os.path.join(ROOT, c["file"]), encoding="utf-8").read().split()), (i, c["text"][:50])
+            assert all(f in c["text"] for f in c["figures"]), i
+        for key, pat in rs["now"]:
+            assert m.figures_in(pat.replace("\\", "")) == [], "%s: a figure is typed in a pattern: %r" % (i, pat[:60])
+        for kind, key, pat in rs["target"]:
+            assert kind in ("restated", "stale") and m.figures_in(pat.replace("\\", "")) == [], (i, pat[:60])
+        for f in ("why", "value", "mark", "trigger", "where"):
+            assert m.figures_in(rs[f]) == [], "%s: a figure is typed in the restatement's %s: %s" % (i, f, m.figures_in(rs[f]))
+        assert r["state"] in ("RESTATED IN PLACE", "SUPERSEDED IN PLACE", "NOT RESTATED"), i
+        if r["state"] == "NOT RESTATED" or any(c["kind"] == "stale" for c in r["tchecks"]):
+            assert r["finding"] and ("| %s |" % r["finding"]) in page, "%s: a withdrawn text still in a target needs its finding" % i
+        assert e["mark"] == rs["mark"] and e["trigger"] == rs["trigger"] and e["was"]["mark"] != "", i
+    b = rows["S27-02b"]["restated"]
+    assert any(c["key"] == "l4e11out" and "PWM-duty ramp into the fan's PWM input" in c["text"] for c in b["cites"])
+    assert "PWM ramp" in b["withdrawn"]
+    assert "1a. RESTATED AT SET 28" in _C["text"] and "4a. THE RESTATEMENT AS MARKDOWN" in _C["text"]
 
 
 def t_the_apply_script_refuses_a_second_run_on_the_tree_and_applies_once_to_the_base():
