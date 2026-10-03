@@ -5,7 +5,9 @@ The predicates: the committed .out is what the script prints; each draft checks 
 time and refuses the tree's own generator; this record's two board A drafts apply after every power draft of L4-E4 to L4-E11 in
 L4-E9's change-list order, and every one of those drafts' anchors still applies after this record's two (in sequence and each alone);
 the two apply in either order; no two board A drafts add the same designator (L6P-F01's method, H pads and tokens included) and this
-record's are H1, R229 and U43, R230 to R232, C240; the board B draft moves exactly C33's cold end and J_ETH's shield to CHASSIS and
+record's are H1, R229 and U43, R230 to R232, C240; d8dec31's mainpb, whose references are the next free ones at apply time,
+composes last (R233, C241) and, run before this record's drafts, takes R229 and C240 so that they refuse (finding L8G-F12); the
+board B draft moves exactly C33's cold end and J_ETH's shield to CHASSIS and
 adds no part; the netlist check parses, reads the committed netlists NOT DRAWN on A and B, DRAWN on fixtures that carry the drafted
 changes, and FAIL on a second bond or a capacitor left on GND; the keeper holds both levels against the pad's weakest pull-down and
 the panel's drive overrides it inside 4 mA; the land draft is one plated pad on pad 1 at 4.3 over 12.0; the page proposes the two
@@ -80,6 +82,7 @@ def t_the_committed_output_is_what_the_script_prints():
     txt = r.stdout.decode()
     assert "pairwise intersections: none (DISJOINT)" in txt and "GND-002 on the kit: NOT DRAWN (A NOT DRAWN, B NOT DRAWN" in txt
     assert "fixture A: DRAWN" in txt and "fixture B: DRAWN" in txt and "the two results carry the same part calls: YES" in txt
+    assert "mainpb (R233, C241)" in txt and "composes LAST (finding L8G-F12)" in txt
 
 
 def t_each_draft_checks_applies_once_refuses_twice_and_refuses_the_tree():
@@ -115,7 +118,7 @@ def t_this_records_drafts_apply_after_every_power_draft_in_l4e9s_order():
         compile(txt, a, "exec")
 
 
-def t_every_power_drafts_anchor_survives_this_records_drafts():
+def t_every_power_drafts_anchor_still_applies_after_this_records_drafts():
     """This record's two first, then L4-E9's order step by step; and each power draft alone after this record's two (the bank
     draft after R12, which it requires by design). A refusal here is the finding the brief names: an anchor broken by this record."""
     theirs = _theirs()
@@ -146,23 +149,52 @@ def t_the_board_a_designators_are_disjoint_from_every_drafts():
     adds are read from the text it writes (part-call position and tokens outside comments) and no two drafts add the same one."""
     m = _mod(SCRIPT, "l8gnd_drafts_under_test")
     theirs = _theirs()
+    mp, net_a = os.path.join(ROOT, m.MAINPB), os.path.join(ROOT, m.NET_A)
+    need(mp, "d8dec31's board A draft"); need(net_a, "board A's committed netlist (mainpb reads its references)")
     added = {}
     with tempfile.TemporaryDirectory() as d:
         a = os.path.join(d, "gen_sch_a.py"); shutil.copy(GEN_A, a)
         before = open(a, encoding="utf-8").read()
-        for s in theirs + MINE_A:
-            assert _run([s, a, "--write"]).returncode == 0, s
+        for s in theirs + MINE_A + [mp]:
+            args = [s, a, net_a] if s == mp else [s, a, "--write"]
+            assert _run(args).returncode == 0, s
             after = open(a, encoding="utf-8").read()
             new = set(m.added_calls(before, after)) | (set(m.multiline_calls(after)) - set(m.multiline_calls(before))) | m.added_tokens(before, after)
             added[os.path.relpath(s, RECS)] = new
             before = after
     assert added["l8gnd/apply_gen_sch_a_gnd002.py"] == {"H1", "R229"}, sorted(added["l8gnd/apply_gen_sch_a_gnd002.py"])
     assert added["l8gnd/apply_gen_sch_a_hotr1.py"] == {"U43", "R230", "R231", "R232", "C240"}, sorted(added["l8gnd/apply_gen_sch_a_hotr1.py"])
+    assert added["d8dec31/apply_gen_sch_a_mainpb.py"] == {"R233", "C241"}, sorted(added["d8dec31/apply_gen_sch_a_mainpb.py"])
+    assert added["l4e11/apply_gen_sch_a_charger.py"] >= {"R228", "U42", "C236", "C237", "C238", "C239", "D23"}
+    assert added["l4e8/apply_gen_sch_a_bank.py"] == {"R221", "R222", "R223", "R224", "R225", "R226"} and added["l4e9/apply_gen_sch_a_u17.py"] == {"R227"}
     names = sorted(added)
     for i, x in enumerate(names):
         for y in names[i + 1:]:
             both = added[x] & added[y]
             assert not both, "%s and %s both add %s" % (x, y, sorted(both))
+
+
+def t_mainpb_composes_last_and_before_this_records_drafts_it_takes_their_designators():
+    """d8dec31's mainpb takes the next free R and C at apply time (genpatch.next_free): last, it takes R233 and C241 and every
+    draft before it keeps its own; before this record's drafts it takes R229 and C240 and they refuse safely (L8G-F12)."""
+    m = _mod(SCRIPT, "l8gnd_drafts_under_test")
+    mp, net_a = os.path.join(ROOT, m.MAINPB), os.path.join(ROOT, m.NET_A)
+    need(mp, "d8dec31's board A draft"); need(net_a, "board A's committed netlist")
+    theirs = _theirs()
+    with tempfile.TemporaryDirectory() as d:
+        a = os.path.join(d, "last.py"); shutil.copy(GEN_A, a)
+        for s in theirs + MINE_A:
+            assert _run([s, a, "--write"]).returncode == 0, s
+        r = _run([mp, a, net_a])
+        assert r.returncode == 0 and b"(R233, C241)" in r.stdout, r.stdout.decode()[-200:] + r.stderr.decode()[-200:]
+        b = os.path.join(d, "before.py"); shutil.copy(GEN_A, b)
+        for s in theirs:
+            assert _run([s, b, "--write"]).returncode == 0, s
+        r = _run([mp, b, net_a])
+        assert r.returncode == 0 and b"(R229, C240)" in r.stdout
+        for s, ref in zip(MINE_A, ("R229", "C240")):
+            r = _run([s, b, "--write"])
+            assert r.returncode == 3 and ("designator %s is already in use" % ref).encode() in r.stderr, r.stderr.decode()[-200:]
 
 
 def t_the_board_b_draft_moves_c33_and_the_shell_to_chassis_and_adds_no_part():
@@ -177,7 +209,7 @@ def t_the_board_b_draft_moves_c33_and_the_shell_to_chassis_and_adds_no_part():
         sh = lambda t: re.search(r'"SH":\s*"([A-Z]+)"\}\)', m.strip_comments(t)).group(1)
         assert sh(before) == "GND" and sh(after) == "CHASSIS"
         assert after.count('"CHASSIS"') == 3 and '_intent.node("CHASSIS", 0.0' in after, "CHASSIS appears on C33, J_ETH SH and the node declaration only"
-        assert m.strip_comments(after).count("CHASSIS") == 4, "CHASSIS outside comments: C33, SH, the node's name and its text"
+        assert m.strip_comments(after).count("CHASSIS") == 3, "CHASSIS outside comments: C33's return, the SH pin and the node's name"
         compile(after, b, "exec")
 
 
@@ -192,7 +224,7 @@ def t_the_netlist_check_parses_and_judges_the_committed_netlists_and_the_fixture
     assert kit == "NOT DRAWN" and v["a"] == "NOT DRAWN" and v["b"] == "NOT DRAWN" and v["c"] == "HOLDS" and v["e"] == "HOLDS", v
     assert all(l.split(" sha256 ")[1][:16] == _sha(os.path.join(ROOT, l.split(" sha256 ")[0]))[:16] for l in buf.getvalue().splitlines() if " sha256 " in l)
     nl = chk.read_netlist(open(nets["a"], "rb").read())
-    assert ("J_DOCK", "12") in nl["nets"]["DOCK_SPARE"] and nl["pins"] if False else ("R216", "1") in nl["nets"]["DOCK_SPARE"], "the parser reads a known net"
+    assert {("J_DOCK", "12"), ("R216", "1"), ("U27", "18"), ("TP21", "1")} == nl["nets"]["DOCK_SPARE"], "the parser reads a known net"
     assert chk.judge("a", chk.read_netlist(m.fixture_a()))[0] == "DRAWN" and chk.judge("b", chk.read_netlist(m.fixture_b()))[0] == "DRAWN"
     # drawn wrong: a second bond on A; the capacitor left on GND on B; a chassis net on E
     two = m.fixture_a().replace(b'(node (ref "C4") (pin "2"))', b'(node (ref "C4") (pin "2")) (node (ref "H1") (pin "1"))')
@@ -208,10 +240,10 @@ def t_the_keeper_holds_both_levels_and_the_panel_overrides_it():
     K = m.keeper()
     k = {n: v for n, (v, _c, _w) in m.KEEPER.items()}
     for tag in ("rpd_min", "rpd_max"):
-        assert K[tag]["v_high"] > k["vih"] + 0.5, "held high under VIH plus 0.5 V at %s" % tag
-        assert K[tag]["v_high"] > max(k["ap_ven_h_max"], k["lm_ven_op_max"]) + 1.0, "held high too close to an enable's ON threshold"
-        assert K[tag]["v_low"] < k["vil"] - 0.5 and K[tag]["v_low"] < min(k["ap_ven_l_min"], k["lm_ven_stby_min"]) - 0.3
-    assert K["rpd_min"]["v_high"] < K["rpd_max"]["v_high"], "the weaker pull-down is the worse case"
+        assert K[tag]["v_low"] > K[tag]["v_low_div"] and K[tag]["v_high"] < K[tag]["v_high_div"], "the enable current not taken the worse way"
+    assert K["worst_high"] == K["rpd_min"]["v_high"] and K["worst_low"] == K["rpd_max"]["v_low"], "the worst cases are not the two pads' ends"
+    assert K["margin_high_vih"] > 0.5 and K["margin_high_en"] > 1.0, "held high too close to VIH or an enable's ON threshold"
+    assert K["margin_low_vil"] > 0.5 and K["margin_low_en"] > 0.25, "held low too close to VIL or the LM5176's standby threshold"
     assert K["drive_ok"] and K["i_override_ma"] < 1.0 and K["i_sink_held_high_ma"] < 1.0
     assert k["rp_voh_min"] > k["vih"] and k["rp_vol_max"] < k["vil"], "the panel's own levels pass the gate's thresholds"
     rdown = k["rpd_min"] * k["rpull"] / (k["rpd_min"] + k["rpull"])
